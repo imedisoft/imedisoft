@@ -101,7 +101,7 @@ namespace OpenDentBusiness {
 			ConstructChargesData data=new ConstructChargesData();
 			data.ListPaySplits=PaySplits.GetForPats(listPatNums);//Might contain payplan payments.
 			data.ListProcs=Procedures.GetCompleteForPats(listPatNums);//will also contain TP procs if pref is set to ON
-			if(PrefC.GetYN(PrefName.PrePayAllowedForTpProcs) && !isIncomeTransfer) {
+			if(Prefs.GetBool(PrefName.PrePayAllowedForTpProcs) && !isIncomeTransfer) {
 				data.ListProcs.AddRange(Procedures.GetTpForPats(listPatNums));
 			}
 			if(isIncomeTransfer) {
@@ -1421,8 +1421,8 @@ namespace OpenDentBusiness {
 				}
 			}
 			//Get the default unearned types and make as many splits as necessary in order to move amountRemaining from the 0 provider.
-			long unearnedTypePrepayment=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
-			long unearnedTypeTP=PrefC.GetLong(PrefName.TpUnearnedType);
+			long unearnedTypePrepayment=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedTypeTP=Prefs.GetLong(PrefName.TpUnearnedType);
 			foreach(AccountEntry accountEntry in listAllocateEntries) {
 				if(amountRemaining.IsLessThanOrEqualToZero()) {
 					break;
@@ -1521,7 +1521,7 @@ namespace OpenDentBusiness {
 			split.UnearnedType=charge.UnearnedType;
 			//PaySplits for TP procedures should always set the UnearnedType to the TpUnearnedType preference.
 			if(charge.GetType()==typeof(Procedure) && ((Procedure)charge.Tag).ProcStatus==ProcStat.TP) {
-				split.UnearnedType=PrefC.GetLong(PrefName.TpUnearnedType);
+				split.UnearnedType=Prefs.GetLong(PrefName.TpUnearnedType);
 			}
 			if(!isManual && (Math.Abs(charge.AmountEnd)<Math.Abs(payAmt) || textAmount==0)) {
 				//Not a manual charge and user wants to make a split for the full charge amount.
@@ -1722,7 +1722,7 @@ namespace OpenDentBusiness {
 				split.DatePay=autoSplitData.Payment.PayDate;
 				split.PatNum=autoSplitData.Payment.PatNum;
 				split.ProvNum=0;
-				split.UnearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+				split.UnearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 				if(PrefC.HasClinicsEnabled) {
 					split.ClinicNum=autoSplitData.Payment.ClinicNum;
 				}
@@ -2366,7 +2366,7 @@ namespace OpenDentBusiness {
 					return transferSplits;
 				}
 			}
-			if(!PrefC.GetBool(PrefName.AllowPrepayProvider)) {//this pref used to only be available for enforce fully, but now is for all types.
+			if(!Prefs.GetBool(PrefName.AllowPrepayProvider)) {//this pref used to only be available for enforce fully, but now is for all types.
 				if(posSplit.UnearnedType!=0 && posSplit.ProvNum!=0) {//Allow the negative unearned split to have a provider to fix bad scenarios
 					transferSplits.HasInvalidSplits=true;
 					return transferSplits;
@@ -2441,9 +2441,9 @@ namespace OpenDentBusiness {
 				PatNum=patNum,
 				PayPlanNum=0,
 				ProcNum=0,
-				ProvNum=PrefC.GetBool(PrefName.AllowPrepayProvider) ? provNum : 0,
+				ProvNum=Prefs.GetBool(PrefName.AllowPrepayProvider) ? provNum : 0,
 				SplitAmt=0-(double)splitAmount,
-				UnearnedType=(unearnedType==0? PrefC.GetLong(PrefName.PrepaymentUnearnedType) : unearnedType),
+				UnearnedType=(unearnedType==0? Prefs.GetLong(PrefName.PrepaymentUnearnedType) : unearnedType),
 			};
 			List<PaySplit> listPaySplits=new List<PaySplit>() { offsetSplit,unearnedSplit };
 			incomeTransferData.ListSplitsCur.AddRange(listPaySplits);
@@ -2668,7 +2668,7 @@ namespace OpenDentBusiness {
 				allocationSplit.UnearnedType=parentSplit.UnearnedType;
 				allocationSplit.FSplitNum=0;//should be offsetSplit's splitNum but has not been inserted into DB yet
 				if(isTransferToUnearned) {
-					allocationSplit.UnearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+					allocationSplit.UnearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 				}
 				transferReturning.ListSplitsCur.AddRange(new List<PaySplit>{offsetSplit,allocationSplit });
 				transferReturning.ListSplitsAssociated.Add(new PaySplits.PaySplitAssociated(offsetSplit,allocationSplit));

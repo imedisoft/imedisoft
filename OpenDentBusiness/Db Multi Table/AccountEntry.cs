@@ -398,7 +398,7 @@ namespace OpenDentBusiness {
 			this.IsAdjustment=(payPlanCharge.IsCreditAdjustment || payPlanCharge.IsDebitAdjustment);
 			if(this.IsAdjustment) {
 				this.AdjNum=payPlanCharge.FKey;
-				this.UnearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+				this.UnearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			}
 			this.Tag=this;
 		}

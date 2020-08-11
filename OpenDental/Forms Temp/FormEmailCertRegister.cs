@@ -31,7 +31,7 @@ namespace OpenDental {
 			StringBuilder strbuild=new StringBuilder();
 			using(XmlWriter writer=XmlWriter.Create(strbuild,settings)) {
 				writer.WriteStartElement("RequestEmailVeritificationCode");
-					writer.WriteElementString("RegistrationKey",PrefC.GetString(PrefName.RegistrationKey));
+					writer.WriteElementString("RegistrationKey",Prefs.GetString(PrefName.RegistrationKey));
 					writer.WriteElementString("EmailAddress",textEmailAddress.Text);
 				writer.WriteEndElement();
 			}
@@ -39,11 +39,11 @@ namespace OpenDental {
 			Imedisoft.localhost.Service1 updateService=new Imedisoft.localhost.Service1();
 #else
 			OpenDental.customerUpdates.Service1 updateService=new OpenDental.customerUpdates.Service1();
-			updateService.Url=PrefC.GetString(PrefName.UpdateServerAddress);
+			updateService.Url=Prefs.GetString(PrefName.UpdateServerAddress);
 #endif
-			if(PrefC.GetString(PrefName.UpdateWebProxyAddress)!="") {
-				IWebProxy proxy=new WebProxy(PrefC.GetString(PrefName.UpdateWebProxyAddress));
-				ICredentials cred=new NetworkCredential(PrefC.GetString(PrefName.UpdateWebProxyUserName),PrefC.GetString(PrefName.UpdateWebProxyPassword));
+			if(Prefs.GetString(PrefName.UpdateWebProxyAddress)!="") {
+				IWebProxy proxy=new WebProxy(Prefs.GetString(PrefName.UpdateWebProxyAddress));
+				ICredentials cred=new NetworkCredential(Prefs.GetString(PrefName.UpdateWebProxyUserName),Prefs.GetString(PrefName.UpdateWebProxyPassword));
 				proxy.Credentials=cred;
 				updateService.Proxy=proxy;
 			}
@@ -122,7 +122,7 @@ namespace OpenDental {
 			StringBuilder strbuild=new StringBuilder();
 			using(XmlWriter writer=XmlWriter.Create(strbuild,settings)) {
 				writer.WriteStartElement("PostEmailCertificate");
-				writer.WriteElementString("RegistrationKey",PrefC.GetString(PrefName.RegistrationKey));
+				writer.WriteElementString("RegistrationKey",Prefs.GetString(PrefName.RegistrationKey));
 				writer.WriteElementString("EmailAddress",textEmailAddress.Text);
 				writer.WriteElementString("VerificationCode",textVerificationCode.Text);
 				writer.WriteElementString("CertificateData",Convert.ToBase64String(arrayCertificateBytes));
@@ -132,11 +132,11 @@ namespace OpenDental {
 			Imedisoft.localhost.Service1 updateService=new Imedisoft.localhost.Service1();
 #else
 			OpenDental.customerUpdates.Service1 updateService=new OpenDental.customerUpdates.Service1();
-			updateService.Url=PrefC.GetString(PrefName.UpdateServerAddress);
+			updateService.Url=Prefs.GetString(PrefName.UpdateServerAddress);
 #endif
-			if(PrefC.GetString(PrefName.UpdateWebProxyAddress)!="") {
-				IWebProxy proxy=new WebProxy(PrefC.GetString(PrefName.UpdateWebProxyAddress));
-				ICredentials cred=new NetworkCredential(PrefC.GetString(PrefName.UpdateWebProxyUserName),PrefC.GetString(PrefName.UpdateWebProxyPassword));
+			if(Prefs.GetString(PrefName.UpdateWebProxyAddress)!="") {
+				IWebProxy proxy=new WebProxy(Prefs.GetString(PrefName.UpdateWebProxyAddress));
+				ICredentials cred=new NetworkCredential(Prefs.GetString(PrefName.UpdateWebProxyUserName),Prefs.GetString(PrefName.UpdateWebProxyPassword));
 				proxy.Credentials=cred;
 				updateService.Proxy=proxy;
 			}

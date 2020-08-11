@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Forms;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -83,7 +84,7 @@ namespace OpenDental {
 				MessageBox.Show("CallFire Program Link must be enabled.");
 				return false;
 			}
-			if(patNum!=0 && txtMsgOk==YN.Unknown && PrefC.GetBool(PrefName.TextMsgOkStatusTreatAsNo)){
+			if(patNum!=0 && txtMsgOk==YN.Unknown && Prefs.GetBool(PrefName.TextMsgOkStatusTreatAsNo)){
 				MessageBox.Show("It is not OK to text this patient.");
 				return false;
 			}
@@ -163,7 +164,7 @@ namespace OpenDental {
 				}
 				long clinicNum= Clinics.ClinicNum;
 				if(clinicNum==0) {
-						clinicNum=PrefC.GetLong(PrefName.TextingDefaultClinicNum);
+						clinicNum=Prefs.GetLong(PrefName.TextingDefaultClinicNum);
 				}
 				if(!SendText(0,textWirelessPhone.Text,textMessage.Text,YN.Unknown,clinicNum,SmsMessageSource.DirectSms,true)) {  //0 as PatNum to denote no pat specified
 					return;//Allow the user to try again.  A message was already shown to the user inside SendText().
@@ -196,7 +197,7 @@ namespace OpenDental {
 			if(formP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			Patient patCur=Patients.GetPat(formP.SelectedPatNum);
+			Patient patCur=Patients.GetPat(formP.SelectedPatientId);
 			PatNum=patCur.PatNum;
 			TxtMsgOk=patCur.TxtMsgOk;
 			textPatient.Text=patCur.GetNameLF();

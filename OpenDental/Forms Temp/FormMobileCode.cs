@@ -28,7 +28,7 @@ namespace OpenDental {
 		}
 
 		private void FormMobileCode_Shown(object sender,EventArgs e) {
-			if(PrefC.GetBool(PrefName.MobileAutoUnlockCode)) {
+			if(Prefs.GetBool(PrefName.MobileAutoUnlockCode)) {
 				VerifyAndSetUnlockCode(MobileDataBytes.GenerateUnlockCode());
 			}
 			_unlockCodeTimer.Interval=1000;

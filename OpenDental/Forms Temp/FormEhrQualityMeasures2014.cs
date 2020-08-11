@@ -54,7 +54,7 @@ namespace OpenDental {
 			}
 			for(int i=0;i<listProvsKeyed.Count;i++) {
 				comboProv.Items.Add(listProvsKeyed[i].GetLongDesc());
-				if(Security.CurrentUser.ProvNum==listProvsKeyed[i].ProvNum) {
+				if(Security.CurrentUser.ProviderId==listProvsKeyed[i].ProvNum) {
 					comboProv.SelectedIndex=i;
 				}
 			}
@@ -148,7 +148,7 @@ namespace OpenDental {
 				MessageBox.Show("The values in the grid do not apply to the provider selected.  Click Refresh first.");
 				return;
 			}
-			Provider provDefault=Providers.GetProv(PrefC.GetLong(PrefName.PracticeDefaultProv));
+			Provider provDefault=Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv));
 			long provNumLegal=provDefault.ProvNum;
 			//The practice default provider may be set to a non-person, like Apple Tree Dental, in which case there is no first name allowed and an NPI number does not make sense.
 			//Prompt user to select the provider to set as the legal authenticator for the QRDA documents.

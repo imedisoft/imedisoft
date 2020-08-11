@@ -75,7 +75,7 @@ namespace OpenDental {
 				if(string.IsNullOrWhiteSpace(_templateEmail)) {
 					listErrors.Add(Lan.G(this,"Email message cannot be blank."));
 				}				
-				if(PrefC.GetBool(PrefName.EmailDisclaimerIsOn) && !_templateEmail.ToLower().Contains("[emaildisclaimer]")) {
+				if(Prefs.GetBool(PrefName.EmailDisclaimerIsOn) && !_templateEmail.ToLower().Contains("[emaildisclaimer]")) {
 					listErrors.Add(Lan.G(this,"Email must contain the \"[EmailDisclaimer]\" tag."));
 				}
 			}
@@ -92,7 +92,7 @@ namespace OpenDental {
 			}
 			if(Rule.TypeCur==ApptReminderType.ScheduleThankYou) {
 				//ThankYou templates can only use the [AddToCalendar] tag when Confirmations are enabled.
-				if(!PrefC.GetBool(PrefName.ApptConfirmAutoSignedUp)) {
+				if(!Prefs.GetBool(PrefName.ApptConfirmAutoSignedUp)) {
 					string addToCalTag=ApptThankYouSents.ADD_TO_CALENDAR.ToLower();
 					string errorText(string mode) {
 						return Lan.G(this,$"Automated Thank-You {mode} cannot contain ")+ApptThankYouSents.ADD_TO_CALENDAR

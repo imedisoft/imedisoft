@@ -57,10 +57,10 @@ namespace OpenDental{
 		private CheckBox checkUseClinicDefaults;
 		///<summary>Key: ClinicNum, Value: List of ClinicPrefs for clinic.
 		///List contains all existing ClinicPrefs.</summary>
-		private Dictionary<long,List<ClinicPref>> _dictClinicPrefsOld;
+		private Dictionary<long,List<(string, string)>> _dictClinicPrefsOld;
 		///<summary>Key: ClinicNum, Value: List of ClinicPrefs for clinic.
 		///Starts off as a copy of _ListClinicPrefsOld, then is modified.</summary>
-		private Dictionary<long,List<ClinicPref>> _dictClinicPrefsNew;
+		private Dictionary<long,List<(string, string)>> _dictClinicPrefsNew;
 		///<summary>When creating list for all clinics, this stores text we show after completed.</summary>
 		private string _popUpMessage;
 		private CheckBox checkBoxBillShowTransSinceZero;
@@ -697,7 +697,7 @@ namespace OpenDental{
 				labelModesToText.Visible=false;
 			}
 			SetClinicFilters();
-			if(!PrefC.GetBool(PrefName.ShowFeatureSuperfamilies)) {
+			if(!Prefs.GetBool(PrefName.ShowFeatureSuperfamilies)) {
 				checkSuperFam.Visible=false;
 			}
 			//blank is allowed
@@ -707,230 +707,230 @@ namespace OpenDental{
 
 		///<summary>Call when you want to populate/update _dicClinicPrefsOld and _dicClinicPrefsNew.</summary>
 		private void RefreshClinicPrefs() {
-			List<PrefName> listBillingPrefs=new List<PrefName>() {
-				PrefName.BillingIncludeChanged,
-				PrefName.BillingSelectBillingTypes,
-				PrefName.BillingAgeOfAccount,
-				PrefName.BillingExcludeBadAddresses,
-				PrefName.BillingExcludeInactive,
-				PrefName.BillingExcludeNegative,
-				PrefName.BillingExcludeInsPending,
-				PrefName.BillingExcludeIfUnsentProcs,
-				PrefName.BillingExcludeLessThan,
-				PrefName.BillingIgnoreInPerson,
-				PrefName.BillingShowTransSinceBalZero,
-				PrefName.BillingDefaultsNote
-			};
-			_dictClinicPrefsOld=ClinicPrefs.GetWhere(x => listBillingPrefs.Contains(x.PrefName))
-				.GroupBy(x => x.ClinicNum)
-				.ToDictionary(x => x.Key,x => x.ToList());
-			_dictClinicPrefsNew=_dictClinicPrefsOld.ToDictionary(x => x.Key,x => x.Value.Select(y => y.Clone()).ToList());
-			//Originally all ClinicPrefs were inserted together, so you either had none or all.
-			//We have since added new ClincPrefs to this list so we need to identify missing clinicPrefs
-			//Missing ClincPrefs will default to the standard preference table value.
-			foreach(long clincNum in _dictClinicPrefsNew.Keys) {
-				List<PrefName> listExistingClinicPrefs=_dictClinicPrefsNew[clincNum].Select(x => x.PrefName).ToList();
-				List<PrefName> listMissingClincPrefs=listBillingPrefs.FindAll(x => !listExistingClinicPrefs.Contains(x));
-				foreach(PrefName prefName in listMissingClincPrefs) {
-					switch(prefName.GetAttributeOrDefault<PrefNameAttribute>().ValueType) {
-						case PrefValueType.BOOL:
-							bool defaultBool=PrefC.GetBool(prefName);
-							_dictClinicPrefsNew[clincNum].Add(new ClinicPref(clincNum,prefName,defaultBool));
-						break;
-						case PrefValueType.ENUM:
-							//Currently not used.
-						break;
-						case PrefValueType.STRING:
-							string defaultStr=PrefC.GetString(prefName);
-							_dictClinicPrefsNew[clincNum].Add(new ClinicPref(clincNum,prefName,defaultStr));
-						break;
-					}
-				}
-			}
+			//List<string> listBillingPrefs=new List<string>() {
+			//	PrefName.BillingIncludeChanged,
+			//	PrefName.BillingSelectBillingTypes,
+			//	PrefName.BillingAgeOfAccount,
+			//	PrefName.BillingExcludeBadAddresses,
+			//	PrefName.BillingExcludeInactive,
+			//	PrefName.BillingExcludeNegative,
+			//	PrefName.BillingExcludeInsPending,
+			//	PrefName.BillingExcludeIfUnsentProcs,
+			//	PrefName.BillingExcludeLessThan,
+			//	PrefName.BillingIgnoreInPerson,
+			//	PrefName.BillingShowTransSinceBalZero,
+			//	PrefName.BillingDefaultsNote
+			//};
+			//_dictClinicPrefsOld=ClinicPrefs.GetWhere(x => listBillingPrefs.Contains(x.PrefName))
+			//	.GroupBy(x => x.ClinicNum)
+			//	.ToDictionary(x => x.Key,x => x.ToList());
+			//_dictClinicPrefsNew=_dictClinicPrefsOld.ToDictionary(x => x.Key,x => x.Value.Select(y => y.Clone()).ToList());
+			////Originally all ClinicPrefs were inserted together, so you either had none or all.
+			////We have since added new ClincPrefs to this list so we need to identify missing clinicPrefs
+			////Missing ClincPrefs will default to the standard preference table value.
+			//foreach(long clincNum in _dictClinicPrefsNew.Keys) {
+			//	List<string> listExistingClinicPrefs=_dictClinicPrefsNew[clincNum].Select(x => x.PrefName).ToList();
+			//	List<string> listMissingClincPrefs=listBillingPrefs.FindAll(x => !listExistingClinicPrefs.Contains(x));
+			//	foreach(PrefName prefName in listMissingClincPrefs) {
+			//		switch(prefName.GetAttributeOrDefault<PrefNameAttribute>().ValueType) {
+			//			case PrefValueType.BOOL:
+			//				bool defaultBool=Prefs.GetBool(prefName);
+			//				_dictClinicPrefsNew[clincNum].Add(new ClinicPref(clincNum,prefName,defaultBool));
+			//			break;
+			//			case PrefValueType.ENUM:
+			//				//Currently not used.
+			//			break;
+			//			case PrefValueType.STRING:
+			//				string defaultStr=Prefs.GetString(prefName);
+			//				_dictClinicPrefsNew[clincNum].Add(new ClinicPref(clincNum,prefName,defaultStr));
+			//			break;
+			//		}
+			//	}
+			//}
 		}
 		
 		///<summary>Called when we need to update the filter options.
 		///If All, the unassigned clinic, or more than one clinic is selected, or _dicClinicPrefsNew does not 
 		///contain a key for the current selected clinic, the standard preference based defaults will load.</summary>
 		private void SetFiltersForClinicNums(List<long> listClinicNums,bool isTextNoteExcluded=false) {
-			FillDunning();
-			if(listClinicNums.Count != 1 || listClinicNums.Contains(-1) || listClinicNums.Contains(0) 
-				|| !_dictClinicPrefsNew.ContainsKey(listClinicNums[0]))//They have not saved their default filter options for the selected clinic. Use default prefs.
-			{
-				checkIncludeChanged.Checked=PrefC.GetBool(PrefName.BillingIncludeChanged);
-				#region BillTypes
-				listBillType.ClearSelected();
-				string[] selectedBillTypes=PrefC.GetString(PrefName.BillingSelectBillingTypes).Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries);
-				foreach(string billTypeDefNum in selectedBillTypes) {
-					try{
-						int order=Defs.GetOrder(DefCat.BillingTypes,Convert.ToInt64(billTypeDefNum));
-						if(order==-1) {
-							continue;
-						}
-						listBillType.SetSelected(order+1,true);
-					}
-					catch(Exception) {//cannot convert string to int, just continue
-						continue;
-					}
-				}
-				if(listBillType.SelectedIndices.Count==0){
-					listBillType.SelectedIndex=0;
-				}
-				#endregion
-				#region Age
-				switch(PrefC.GetString(PrefName.BillingAgeOfAccount)){
-					default:
-						comboAge.SelectedIndex=0;
-						break;
-					case "30":
-						comboAge.SelectedIndex=1;
-						break;
-					case "60":
-						comboAge.SelectedIndex=2;
-						break;
-					case "90":
-						comboAge.SelectedIndex=3;
-						break;
-				}
-				#endregion
-				checkBadAddress.Checked=PrefC.GetBool(PrefName.BillingExcludeBadAddresses);
-				checkExcludeInactive.Checked=PrefC.GetBool(PrefName.BillingExcludeInactive);
-				checkShowNegative.Checked=!PrefC.GetBool(PrefName.BillingExcludeNegative);
-				checkExcludeInsPending.Checked=PrefC.GetBool(PrefName.BillingExcludeInsPending);
-				checkExcludeIfProcs.Checked=PrefC.GetBool(PrefName.BillingExcludeIfUnsentProcs);
-				textExcludeLessThan.Text=PrefC.GetString(PrefName.BillingExcludeLessThan);
-				checkIgnoreInPerson.Checked=PrefC.GetBool(PrefName.BillingIgnoreInPerson);
-				checkBoxBillShowTransSinceZero.Checked=PrefC.GetBool(PrefName.BillingShowTransSinceBalZero);
-				if(!isTextNoteExcluded) {
-					textNote.Text=PrefC.GetString(PrefName.BillingDefaultsNote);
-				}
-				return;
-			}
-			else {//Update filter UI to reflect ClinicPrefs. //there has to be ONE item in ClinicNums. It MUST be in the dictionary and it MUST NOT be -1 or 0.
-				List<ClinicPref> listClinicPrefs=_dictClinicPrefsNew[listClinicNums[0]];//By definition of how ClinicPrefs are created, First will always return a result.
-				checkIncludeChanged.Checked=PIn.Bool(listClinicPrefs.First(x => x.PrefName==PrefName.BillingIncludeChanged).ValueString);
-				#region BillTypes
-				listBillType.ClearSelected();
-				string[] selectedBillTypes=listClinicPrefs.First(x => x.PrefName==PrefName.BillingSelectBillingTypes).ValueString.Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries);
-				foreach(string billTypeDefNum in selectedBillTypes) {
-					try {
-						int order=Defs.GetOrder(DefCat.BillingTypes,Convert.ToInt64(billTypeDefNum));
-						if(order==-1) {
-							continue;
-						}
-						listBillType.SetSelected(order+1,true);
-					}
-					catch(Exception) {//cannot convert string to int, just continue
-						continue;
-					}
-				}
-				if(listBillType.SelectedIndices.Count==0) {
-					listBillType.SelectedIndex=0;
-				}
-				#endregion
-				#region Age
-				switch(listClinicPrefs.First(x => x.PrefName==PrefName.BillingAgeOfAccount).ValueString) {
-					default:
-						comboAge.SelectedIndex=0;
-						break;
-					case "30":
-						comboAge.SelectedIndex=1;
-						break;
-					case "60":
-						comboAge.SelectedIndex=2;
-						break;
-					case "90":
-						comboAge.SelectedIndex=3;
-						break;
-				}
-				#endregion
-				checkBadAddress.Checked=PIn.Bool(listClinicPrefs.First(x => x.PrefName==PrefName.BillingExcludeBadAddresses).ValueString);
-				checkExcludeInactive.Checked=PIn.Bool(listClinicPrefs.First(x => x.PrefName==PrefName.BillingExcludeInactive).ValueString);
-				checkShowNegative.Checked=!PIn.Bool(listClinicPrefs.First(x => x.PrefName==PrefName.BillingExcludeNegative).ValueString);
-				checkExcludeInsPending.Checked=PIn.Bool(listClinicPrefs.First(x => x.PrefName==PrefName.BillingExcludeInsPending).ValueString);
-				checkExcludeIfProcs.Checked=PIn.Bool(listClinicPrefs.First(x => x.PrefName==PrefName.BillingExcludeIfUnsentProcs).ValueString);
-				textExcludeLessThan.Text=listClinicPrefs.First(x => x.PrefName==PrefName.BillingExcludeLessThan).ValueString;
-				checkIgnoreInPerson.Checked=PIn.Bool(listClinicPrefs.First(x => x.PrefName==PrefName.BillingIgnoreInPerson).ValueString);
-				checkBoxBillShowTransSinceZero.Checked=PIn.Bool(listClinicPrefs.First(x => x.PrefName==PrefName.BillingShowTransSinceBalZero).ValueString);
-				if(!isTextNoteExcluded) {
-					textNote.Text=listClinicPrefs.First(x => x.PrefName==PrefName.BillingDefaultsNote).ValueString;
-				}
-			}
+			//FillDunning();
+			//if(listClinicNums.Count != 1 || listClinicNums.Contains(-1) || listClinicNums.Contains(0) 
+			//	|| !_dictClinicPrefsNew.ContainsKey(listClinicNums[0]))//They have not saved their default filter options for the selected clinic. Use default prefs.
+			//{
+			//	checkIncludeChanged.Checked=Prefs.GetBool(PrefName.BillingIncludeChanged);
+			//	#region BillTypes
+			//	listBillType.ClearSelected();
+			//	string[] selectedBillTypes=Prefs.GetString(PrefName.BillingSelectBillingTypes).Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries);
+			//	foreach(string billTypeDefNum in selectedBillTypes) {
+			//		try{
+			//			int order=Defs.GetOrder(DefCat.BillingTypes,Convert.ToInt64(billTypeDefNum));
+			//			if(order==-1) {
+			//				continue;
+			//			}
+			//			listBillType.SetSelected(order+1,true);
+			//		}
+			//		catch(Exception) {//cannot convert string to int, just continue
+			//			continue;
+			//		}
+			//	}
+			//	if(listBillType.SelectedIndices.Count==0){
+			//		listBillType.SelectedIndex=0;
+			//	}
+			//	#endregion
+			//	#region Age
+			//	switch(Prefs.GetString(PrefName.BillingAgeOfAccount)){
+			//		default:
+			//			comboAge.SelectedIndex=0;
+			//			break;
+			//		case "30":
+			//			comboAge.SelectedIndex=1;
+			//			break;
+			//		case "60":
+			//			comboAge.SelectedIndex=2;
+			//			break;
+			//		case "90":
+			//			comboAge.SelectedIndex=3;
+			//			break;
+			//	}
+			//	#endregion
+			//	checkBadAddress.Checked=Prefs.GetBool(PrefName.BillingExcludeBadAddresses);
+			//	checkExcludeInactive.Checked=Prefs.GetBool(PrefName.BillingExcludeInactive);
+			//	checkShowNegative.Checked=!Prefs.GetBool(PrefName.BillingExcludeNegative);
+			//	checkExcludeInsPending.Checked=Prefs.GetBool(PrefName.BillingExcludeInsPending);
+			//	checkExcludeIfProcs.Checked=Prefs.GetBool(PrefName.BillingExcludeIfUnsentProcs);
+			//	textExcludeLessThan.Text=Prefs.GetString(PrefName.BillingExcludeLessThan);
+			//	checkIgnoreInPerson.Checked=Prefs.GetBool(PrefName.BillingIgnoreInPerson);
+			//	checkBoxBillShowTransSinceZero.Checked=Prefs.GetBool(PrefName.BillingShowTransSinceBalZero);
+			//	if(!isTextNoteExcluded) {
+			//		textNote.Text=Prefs.GetString(PrefName.BillingDefaultsNote);
+			//	}
+			//	return;
+			//}
+			//else {//Update filter UI to reflect ClinicPrefs. //there has to be ONE item in ClinicNums. It MUST be in the dictionary and it MUST NOT be -1 or 0.
+			//	List<ClinicPref> listClinicPrefs=_dictClinicPrefsNew[listClinicNums[0]];//By definition of how ClinicPrefs are created, First will always return a result.
+			//	checkIncludeChanged.Checked=PIn.Bool(listClinicPrefs.First(x => x.PrefName==PrefName.BillingIncludeChanged).ValueString);
+			//	#region BillTypes
+			//	listBillType.ClearSelected();
+			//	string[] selectedBillTypes=listClinicPrefs.First(x => x.PrefName==PrefName.BillingSelectBillingTypes).ValueString.Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries);
+			//	foreach(string billTypeDefNum in selectedBillTypes) {
+			//		try {
+			//			int order=Defs.GetOrder(DefCat.BillingTypes,Convert.ToInt64(billTypeDefNum));
+			//			if(order==-1) {
+			//				continue;
+			//			}
+			//			listBillType.SetSelected(order+1,true);
+			//		}
+			//		catch(Exception) {//cannot convert string to int, just continue
+			//			continue;
+			//		}
+			//	}
+			//	if(listBillType.SelectedIndices.Count==0) {
+			//		listBillType.SelectedIndex=0;
+			//	}
+			//	#endregion
+			//	#region Age
+			//	switch(listClinicPrefs.First(x => x.PrefName==PrefName.BillingAgeOfAccount).ValueString) {
+			//		default:
+			//			comboAge.SelectedIndex=0;
+			//			break;
+			//		case "30":
+			//			comboAge.SelectedIndex=1;
+			//			break;
+			//		case "60":
+			//			comboAge.SelectedIndex=2;
+			//			break;
+			//		case "90":
+			//			comboAge.SelectedIndex=3;
+			//			break;
+			//	}
+			//	#endregion
+			//	checkBadAddress.Checked=PIn.Bool(listClinicPrefs.First(x => x.PrefName==PrefName.BillingExcludeBadAddresses).ValueString);
+			//	checkExcludeInactive.Checked=PIn.Bool(listClinicPrefs.First(x => x.PrefName==PrefName.BillingExcludeInactive).ValueString);
+			//	checkShowNegative.Checked=!PIn.Bool(listClinicPrefs.First(x => x.PrefName==PrefName.BillingExcludeNegative).ValueString);
+			//	checkExcludeInsPending.Checked=PIn.Bool(listClinicPrefs.First(x => x.PrefName==PrefName.BillingExcludeInsPending).ValueString);
+			//	checkExcludeIfProcs.Checked=PIn.Bool(listClinicPrefs.First(x => x.PrefName==PrefName.BillingExcludeIfUnsentProcs).ValueString);
+			//	textExcludeLessThan.Text=listClinicPrefs.First(x => x.PrefName==PrefName.BillingExcludeLessThan).ValueString;
+			//	checkIgnoreInPerson.Checked=PIn.Bool(listClinicPrefs.First(x => x.PrefName==PrefName.BillingIgnoreInPerson).ValueString);
+			//	checkBoxBillShowTransSinceZero.Checked=PIn.Bool(listClinicPrefs.First(x => x.PrefName==PrefName.BillingShowTransSinceBalZero).ValueString);
+			//	if(!isTextNoteExcluded) {
+			//		textNote.Text=listClinicPrefs.First(x => x.PrefName==PrefName.BillingDefaultsNote).ValueString;
+			//	}
+			//}
 		}
 
 		private void butSaveDefault_Click(object sender,System.EventArgs e) {
-			if(textExcludeLessThan.errorProvider1.GetError(textExcludeLessThan)!=""
-				|| textLastStatement.errorProvider1.GetError(textLastStatement)!=""
-				)
-			{
-				MessageBox.Show("Please fix data entry errors first.");
-				return;
-			}
-			if(listBillType.SelectedIndices.Count==0) {
-				MessageBox.Show("Please select at least one billing type first.");
-				return;
-			}
-			string selectedBillingTypes="";//indicates all.
-			if(listBillType.SelectedIndices.Count>0 && !listBillType.SelectedIndices.Contains(0)) {
-				selectedBillingTypes=string.Join(",",listBillType.SelectedIndices.OfType<int>().Select(x => _listBillingTypeDefs[x-1].DefNum));
-			}
-			string ageOfAccount="";
-			if(comboAge.SelectedIndex.In(1,2,3)) {
-				ageOfAccount=(30*comboAge.SelectedIndex).ToString();//ageOfAccount is 30, 60, or 90
-			}
-			List<long> listClinicNums = comboClinic.ListSelectedClinicNums;
-			if(listClinicNums.Count != 1 || listClinicNums.Contains(0))//Clinics not enabled (count 0) or multiple selected(>1) or 'Unassigned' selected.
-			{
-				if(Prefs.UpdateBool(PrefName.BillingIncludeChanged,checkIncludeChanged.Checked)
-					|Prefs.UpdateString(PrefName.BillingSelectBillingTypes,selectedBillingTypes)
-					|Prefs.UpdateString(PrefName.BillingAgeOfAccount,ageOfAccount)
-					|Prefs.UpdateBool(PrefName.BillingExcludeBadAddresses,checkBadAddress.Checked)
-					|Prefs.UpdateBool(PrefName.BillingExcludeInactive,checkExcludeInactive.Checked)
-					|Prefs.UpdateBool(PrefName.BillingExcludeNegative,!checkShowNegative.Checked)
-					|Prefs.UpdateBool(PrefName.BillingExcludeInsPending,checkExcludeInsPending.Checked)
-					|Prefs.UpdateBool(PrefName.BillingExcludeIfUnsentProcs,checkExcludeIfProcs.Checked)
-					|Prefs.UpdateString(PrefName.BillingExcludeLessThan,textExcludeLessThan.Text)
-					|Prefs.UpdateBool(PrefName.BillingIgnoreInPerson,checkIgnoreInPerson.Checked)
-					|Prefs.UpdateString(PrefName.BillingDefaultsNote,textNote.Text))
-				{
-					DataValid.SetInvalid(InvalidType.Prefs);
-				}
-				return;
-			}
-			else if(_dictClinicPrefsNew.Keys.Contains(listClinicNums[0])) {//ClincPrefs exist, update them.
-				_dictClinicPrefsNew[listClinicNums[0]].First(x => x.PrefName==PrefName.BillingIncludeChanged).ValueString=POut.Bool(checkIncludeChanged.Checked);
-				_dictClinicPrefsNew[listClinicNums[0]].First(x => x.PrefName==PrefName.BillingSelectBillingTypes).ValueString=selectedBillingTypes;
-				_dictClinicPrefsNew[listClinicNums[0]].First(x => x.PrefName==PrefName.BillingAgeOfAccount).ValueString=ageOfAccount;
-				_dictClinicPrefsNew[listClinicNums[0]].First(x => x.PrefName==PrefName.BillingExcludeBadAddresses).ValueString=POut.Bool(checkBadAddress.Checked);
-				_dictClinicPrefsNew[listClinicNums[0]].First(x => x.PrefName==PrefName.BillingExcludeInactive).ValueString=POut.Bool(checkExcludeInactive.Checked);
-				_dictClinicPrefsNew[listClinicNums[0]].First(x => x.PrefName==PrefName.BillingExcludeNegative).ValueString=POut.Bool(!checkShowNegative.Checked);
-				_dictClinicPrefsNew[listClinicNums[0]].First(x => x.PrefName==PrefName.BillingExcludeInsPending).ValueString=POut.Bool(checkExcludeInsPending.Checked);
-				_dictClinicPrefsNew[listClinicNums[0]].First(x => x.PrefName==PrefName.BillingExcludeIfUnsentProcs).ValueString=POut.Bool(checkExcludeIfProcs.Checked);
-				_dictClinicPrefsNew[listClinicNums[0]].First(x => x.PrefName==PrefName.BillingExcludeLessThan).ValueString=textExcludeLessThan.Text;
-				_dictClinicPrefsNew[listClinicNums[0]].First(x => x.PrefName==PrefName.BillingIgnoreInPerson).ValueString=POut.Bool(checkIgnoreInPerson.Checked);
-				_dictClinicPrefsNew[listClinicNums[0]].First(x => x.PrefName==PrefName.BillingShowTransSinceBalZero).ValueString=POut.Bool(checkBoxBillShowTransSinceZero.Checked);
-				_dictClinicPrefsNew[listClinicNums[0]].First(x => x.PrefName==PrefName.BillingDefaultsNote).ValueString=textNote.Text;
-			}
-			else {//No existing ClinicPrefs for the currently selected clinic in comboClinics.
-				_dictClinicPrefsNew.Add(listClinicNums[0],new List<ClinicPref>());
-				//Inserts new ClinicPrefs for each of the Filter options for the currently selected clinic.
-				_dictClinicPrefsNew[listClinicNums[0]].Add(new ClinicPref(listClinicNums[0],PrefName.BillingIncludeChanged,checkIncludeChanged.Checked));
-				_dictClinicPrefsNew[listClinicNums[0]].Add(new ClinicPref(listClinicNums[0],PrefName.BillingSelectBillingTypes,selectedBillingTypes));
-				_dictClinicPrefsNew[listClinicNums[0]].Add(new ClinicPref(listClinicNums[0],PrefName.BillingAgeOfAccount,ageOfAccount));
-				_dictClinicPrefsNew[listClinicNums[0]].Add(new ClinicPref(listClinicNums[0],PrefName.BillingExcludeBadAddresses,checkBadAddress.Checked));
-				_dictClinicPrefsNew[listClinicNums[0]].Add(new ClinicPref(listClinicNums[0],PrefName.BillingExcludeInactive,checkExcludeInactive.Checked));
-				_dictClinicPrefsNew[listClinicNums[0]].Add(new ClinicPref(listClinicNums[0],PrefName.BillingExcludeNegative,!checkShowNegative.Checked));
-				_dictClinicPrefsNew[listClinicNums[0]].Add(new ClinicPref(listClinicNums[0],PrefName.BillingExcludeInsPending,checkExcludeInsPending.Checked));
-				_dictClinicPrefsNew[listClinicNums[0]].Add(new ClinicPref(listClinicNums[0],PrefName.BillingExcludeIfUnsentProcs,checkExcludeIfProcs.Checked));
-				_dictClinicPrefsNew[listClinicNums[0]].Add(new ClinicPref(listClinicNums[0],PrefName.BillingExcludeLessThan,textExcludeLessThan.Text));
-				_dictClinicPrefsNew[listClinicNums[0]].Add(new ClinicPref(listClinicNums[0],PrefName.BillingIgnoreInPerson,checkIgnoreInPerson.Checked));
-				_dictClinicPrefsNew[listClinicNums[0]].Add(new ClinicPref(listClinicNums[0],PrefName.BillingShowTransSinceBalZero,checkBoxBillShowTransSinceZero.Checked));
-				_dictClinicPrefsNew[listClinicNums[0]].Add(new ClinicPref(listClinicNums[0],PrefName.BillingDefaultsNote,textNote.Text));
-			}
-			if(ClinicPrefs.Sync(_dictClinicPrefsNew.SelectMany(x => x.Value).ToList(),_dictClinicPrefsOld.SelectMany(x => x.Value).ToList())) {
-				DataValid.SetInvalid(InvalidType.ClinicPrefs);
-				RefreshClinicPrefs();
-			}
+			//if(textExcludeLessThan.errorProvider1.GetError(textExcludeLessThan)!=""
+			//	|| textLastStatement.errorProvider1.GetError(textLastStatement)!=""
+			//	)
+			//{
+			//	MessageBox.Show("Please fix data entry errors first.");
+			//	return;
+			//}
+			//if(listBillType.SelectedIndices.Count==0) {
+			//	MessageBox.Show("Please select at least one billing type first.");
+			//	return;
+			//}
+			//string selectedBillingTypes="";//indicates all.
+			//if(listBillType.SelectedIndices.Count>0 && !listBillType.SelectedIndices.Contains(0)) {
+			//	selectedBillingTypes=string.Join(",",listBillType.SelectedIndices.OfType<int>().Select(x => _listBillingTypeDefs[x-1].DefNum));
+			//}
+			//string ageOfAccount="";
+			//if(comboAge.SelectedIndex.In(1,2,3)) {
+			//	ageOfAccount=(30*comboAge.SelectedIndex).ToString();//ageOfAccount is 30, 60, or 90
+			//}
+			//List<long> listClinicNums = comboClinic.ListSelectedClinicNums;
+			//if(listClinicNums.Count != 1 || listClinicNums.Contains(0))//Clinics not enabled (count 0) or multiple selected(>1) or 'Unassigned' selected.
+			//{
+			//	if(Prefs.Set(PrefName.BillingIncludeChanged,checkIncludeChanged.Checked)
+			//		|Prefs.Set(PrefName.BillingSelectBillingTypes,selectedBillingTypes)
+			//		|Prefs.Set(PrefName.BillingAgeOfAccount,ageOfAccount)
+			//		|Prefs.Set(PrefName.BillingExcludeBadAddresses,checkBadAddress.Checked)
+			//		|Prefs.Set(PrefName.BillingExcludeInactive,checkExcludeInactive.Checked)
+			//		|Prefs.Set(PrefName.BillingExcludeNegative,!checkShowNegative.Checked)
+			//		|Prefs.Set(PrefName.BillingExcludeInsPending,checkExcludeInsPending.Checked)
+			//		|Prefs.Set(PrefName.BillingExcludeIfUnsentProcs,checkExcludeIfProcs.Checked)
+			//		|Prefs.Set(PrefName.BillingExcludeLessThan,textExcludeLessThan.Text)
+			//		|Prefs.Set(PrefName.BillingIgnoreInPerson,checkIgnoreInPerson.Checked)
+			//		|Prefs.Set(PrefName.BillingDefaultsNote,textNote.Text))
+			//	{
+			//		DataValid.SetInvalid(InvalidType.Prefs);
+			//	}
+			//	return;
+			//}
+			//else if(_dictClinicPrefsNew.Keys.Contains(listClinicNums[0])) {//ClincPrefs exist, update them.
+			//	_dictClinicPrefsNew[listClinicNums[0]].First(x => x.Item1==PrefName.BillingIncludeChanged).ValueString=POut.Bool(checkIncludeChanged.Checked);
+			//	_dictClinicPrefsNew[listClinicNums[0]].First(x => x.Item1==PrefName.BillingSelectBillingTypes).ValueString=selectedBillingTypes;
+			//	_dictClinicPrefsNew[listClinicNums[0]].First(x => x.Item1==PrefName.BillingAgeOfAccount).ValueString=ageOfAccount;
+			//	_dictClinicPrefsNew[listClinicNums[0]].First(x => x.Item1==PrefName.BillingExcludeBadAddresses).ValueString=POut.Bool(checkBadAddress.Checked);
+			//	_dictClinicPrefsNew[listClinicNums[0]].First(x => x.Item1==PrefName.BillingExcludeInactive).ValueString=POut.Bool(checkExcludeInactive.Checked);
+			//	_dictClinicPrefsNew[listClinicNums[0]].First(x => x.Item1==PrefName.BillingExcludeNegative).ValueString=POut.Bool(!checkShowNegative.Checked);
+			//	_dictClinicPrefsNew[listClinicNums[0]].First(x => x.Item1==PrefName.BillingExcludeInsPending).ValueString=POut.Bool(checkExcludeInsPending.Checked);
+			//	_dictClinicPrefsNew[listClinicNums[0]].First(x => x.Item1==PrefName.BillingExcludeIfUnsentProcs).ValueString=POut.Bool(checkExcludeIfProcs.Checked);
+			//	_dictClinicPrefsNew[listClinicNums[0]].First(x => x.Item1==PrefName.BillingExcludeLessThan).ValueString=textExcludeLessThan.Text;
+			//	_dictClinicPrefsNew[listClinicNums[0]].First(x => x.Item1==PrefName.BillingIgnoreInPerson).ValueString=POut.Bool(checkIgnoreInPerson.Checked);
+			//	_dictClinicPrefsNew[listClinicNums[0]].First(x => x.Item1==PrefName.BillingShowTransSinceBalZero).ValueString=POut.Bool(checkBoxBillShowTransSinceZero.Checked);
+			//	_dictClinicPrefsNew[listClinicNums[0]].First(x => x.Item1==PrefName.BillingDefaultsNote).ValueString=textNote.Text;
+			//}
+			//else {//No existing ClinicPrefs for the currently selected clinic in comboClinics.
+			//	_dictClinicPrefsNew.Add(listClinicNums[0],new List<ClinicPref>());
+			//	//Inserts new ClinicPrefs for each of the Filter options for the currently selected clinic.
+			//	_dictClinicPrefsNew[listClinicNums[0]].Add(new ClinicPref(listClinicNums[0],PrefName.BillingIncludeChanged,checkIncludeChanged.Checked));
+			//	_dictClinicPrefsNew[listClinicNums[0]].Add(new ClinicPref(listClinicNums[0],PrefName.BillingSelectBillingTypes,selectedBillingTypes));
+			//	_dictClinicPrefsNew[listClinicNums[0]].Add(new ClinicPref(listClinicNums[0],PrefName.BillingAgeOfAccount,ageOfAccount));
+			//	_dictClinicPrefsNew[listClinicNums[0]].Add(new ClinicPref(listClinicNums[0],PrefName.BillingExcludeBadAddresses,checkBadAddress.Checked));
+			//	_dictClinicPrefsNew[listClinicNums[0]].Add(new ClinicPref(listClinicNums[0],PrefName.BillingExcludeInactive,checkExcludeInactive.Checked));
+			//	_dictClinicPrefsNew[listClinicNums[0]].Add(new ClinicPref(listClinicNums[0],PrefName.BillingExcludeNegative,!checkShowNegative.Checked));
+			//	_dictClinicPrefsNew[listClinicNums[0]].Add(new ClinicPref(listClinicNums[0],PrefName.BillingExcludeInsPending,checkExcludeInsPending.Checked));
+			//	_dictClinicPrefsNew[listClinicNums[0]].Add(new ClinicPref(listClinicNums[0],PrefName.BillingExcludeIfUnsentProcs,checkExcludeIfProcs.Checked));
+			//	_dictClinicPrefsNew[listClinicNums[0]].Add(new ClinicPref(listClinicNums[0],PrefName.BillingExcludeLessThan,textExcludeLessThan.Text));
+			//	_dictClinicPrefsNew[listClinicNums[0]].Add(new ClinicPref(listClinicNums[0],PrefName.BillingIgnoreInPerson,checkIgnoreInPerson.Checked));
+			//	_dictClinicPrefsNew[listClinicNums[0]].Add(new ClinicPref(listClinicNums[0],PrefName.BillingShowTransSinceBalZero,checkBoxBillShowTransSinceZero.Checked));
+			//	_dictClinicPrefsNew[listClinicNums[0]].Add(new ClinicPref(listClinicNums[0],PrefName.BillingDefaultsNote,textNote.Text));
+			//}
+			//if(ClinicPrefs.Sync(_dictClinicPrefsNew.SelectMany(x => x.Value).ToList(),_dictClinicPrefsOld.SelectMany(x => x.Value).ToList())) {
+			//	DataValid.SetInvalid(InvalidType.ClinicPrefs);
+			//	RefreshClinicPrefs();
+			//}
 		}
 
 		private void SetClinicFilters() {
@@ -1052,12 +1052,12 @@ namespace OpenDental{
 		}
 
 		private void SetDefaults(){
-			textDateStart.Text=DateTime.Today.AddDays(-PrefC.GetLong(PrefName.BillingDefaultsLastDays)).ToShortDateString();
+			textDateStart.Text=DateTime.Today.AddDays(-Prefs.GetLong(PrefName.BillingDefaultsLastDays)).ToShortDateString();
 			textDateEnd.Text=DateTime.Today.ToShortDateString();
-			checkIntermingled.Checked=PrefC.GetBool(PrefName.BillingDefaultsIntermingle);
-			checkSinglePatient.Checked=PrefC.GetBool(PrefName.BillingDefaultsSinglePatient);
+			checkIntermingled.Checked=Prefs.GetBool(PrefName.BillingDefaultsIntermingle);
+			checkSinglePatient.Checked=Prefs.GetBool(PrefName.BillingDefaultsSinglePatient);
 			if(SmsPhones.IsIntegratedTextingEnabled()) {
-				foreach(string modeIdx in PrefC.GetString(PrefName.BillingDefaultsModesToText)
+				foreach(string modeIdx in Prefs.GetString(PrefName.BillingDefaultsModesToText)
 					.Split(new string[] { "," },StringSplitOptions.RemoveEmptyEntries)) {
 					listModeToText.SetSelected(PIn.Int(modeIdx),true);
 				}
@@ -1138,14 +1138,14 @@ namespace OpenDental{
 				return false;
 			}
 			SecurityLogs.MakeLogEntry(Permissions.AgingRan,0,"Starting Aging - Billing Options");
-			Prefs.UpdateString(PrefName.AgingBeginDateTime,POut.DateT(dtNow,false));//get lock on pref to block others
+			Prefs.Set(PrefName.AgingBeginDateTime,POut.DateT(dtNow,false));//get lock on pref to block others
 			Signalods.SetInvalid(InvalidType.Prefs);//signal a cache refresh so other computers will have the updated pref as quickly as possible
 			Cursor=Cursors.WaitCursor;
 			string msgText=Lan.G(this,"Calculating enterprise aging for all patients as of")+" "+dtToday.ToShortDateString()+"...";
 			bool result=true;
 			ODProgress.ShowAction(() => {
 					Ledgers.ComputeAging(0,dtToday);
-					Prefs.UpdateString(PrefName.DateLastAging,POut.Date(dtToday,false));
+					Prefs.Set(PrefName.DateLastAging,POut.Date(dtToday,false));
 				},
 				startingMessage:msgText,
 				actionException:ex => {
@@ -1155,7 +1155,7 @@ namespace OpenDental{
 			);
 			Cursor=Cursors.Default;
 			SecurityLogs.MakeLogEntry(Permissions.AgingRan,0,"Aging completed - Billing Options");
-			Prefs.UpdateString(PrefName.AgingBeginDateTime,"");//clear lock on pref whether aging was successful or not
+			Prefs.Set(PrefName.AgingBeginDateTime,"");//clear lock on pref whether aging was successful or not
 			Signalods.SetInvalid(InvalidType.Prefs);
 			return result;
 		}
@@ -1199,14 +1199,14 @@ namespace OpenDental{
 				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
-			if(PrefC.GetBool(PrefName.AgingIsEnterprise)) {
+			if(Prefs.GetBool(PrefName.AgingIsEnterprise)) {
 				if(!RunAgingEnterprise()) {
 					return;
 				}
 			}
-			else if(!PrefC.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)) {
+			else if(!Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)) {
 				SecurityLogs.MakeLogEntry(Permissions.AgingRan,0,"Starting Aging - Billing Options");
-				DateTime asOfDate=(PrefC.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)?PrefC.GetDate(PrefName.DateLastAging):DateTime.Today);
+				DateTime asOfDate=(Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)?PrefC.GetDate(PrefName.DateLastAging):DateTime.Today);
 				ODProgress.ShowAction(() => Ledgers.RunAging(),
 					startingMessage:Lan.G(this,"Calculating aging for all patients as of")+" "+asOfDate.ToShortDateString()+"...",
 					actionException:ex => {
@@ -1216,7 +1216,7 @@ namespace OpenDental{
 			}
 			Cursor=Cursors.WaitCursor;
 			//All places in the program that have the ability to run aging against the entire database require the Setup permission because it can take a long time.
-			if(PrefC.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily) 
+			if(Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily) 
 				&& Security.IsAuthorized(Permissions.Setup,true)
 				&& PrefC.GetDate(PrefName.DateLastAging) < DateTime.Today.AddDays(-15)) 
 			{
@@ -1442,7 +1442,7 @@ namespace OpenDental{
 			}
 			Statement stmt;
 			DateTime dateAsOf=DateTime.Today;//used to determine when the balance on this date began
-			if(PrefC.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)) {//if aging calculated monthly, use the last aging date instead of today
+			if(Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)) {//if aging calculated monthly, use the last aging date instead of today
 				dateAsOf=PrefC.GetDate(PrefName.DateLastAging);
 			}
 			List<WebServiceMainHQProxy.ShortGuidResult> listShortGuidUrls=new List<WebServiceMainHQProxy.ShortGuidResult>();
@@ -1450,8 +1450,8 @@ namespace OpenDental{
 			if(//They are going to send texts
 				listModeToText.SelectedIndices.Count > 0 
 				//Or the email body has a statement URL
-				|| PrefC.GetString(PrefName.BillingEmailBodyText).ToLower().Contains("[statementurl]")
-				|| PrefC.GetString(PrefName.BillingEmailBodyText).ToLower().Contains("[statementshorturl]")
+				|| Prefs.GetString(PrefName.BillingEmailBodyText).ToLower().Contains("[statementurl]")
+				|| Prefs.GetString(PrefName.BillingEmailBodyText).ToLower().Contains("[statementshorturl]")
 				//Or the statement sheet has a URL field
 				|| (stmtSheet!=null && stmtSheet.SheetFieldDefs.Any(x => x.FieldType==SheetFieldType.OutputText 
 							&& (x.FieldValue.ToLower().Contains("[statementurl]") || x.FieldValue.ToLower().Contains("[statementshorturl]"))))) 
@@ -1464,8 +1464,8 @@ namespace OpenDental{
 				catch(Exception ex) {
 					FriendlyException.Show(Lans.g(this,"Unable to create a unique URL for each statement. The Patient Portal URL will be used instead."),ex);
 					listShortGuidUrls=listPatAging.Select(x => new WebServiceMainHQProxy.ShortGuidResult {
-						MediumURL=PrefC.GetString(PrefName.PatientPortalURL),
-						ShortURL=PrefC.GetString(PrefName.PatientPortalURL),
+						MediumURL=Prefs.GetString(PrefName.PatientPortalURL),
+						ShortURL=Prefs.GetString(PrefName.PatientPortalURL),
 						ShortGuid=""
 					}).ToList();
 				}

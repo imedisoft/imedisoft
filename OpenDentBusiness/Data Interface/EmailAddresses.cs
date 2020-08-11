@@ -90,12 +90,12 @@ namespace OpenDentBusiness{
 			EmailAddress emailAddress=null;
 			Clinic clinic=Clinics.GetClinic(clinicNum);
 			if(!PrefC.HasClinicsEnabled || clinic==null) {//No clinic, get practice default
-				emailAddress=GetOne(PrefC.GetLong(PrefName.EmailDefaultAddressNum));
+				emailAddress=GetOne(Prefs.GetLong(PrefName.EmailDefaultAddressNum));
 			}
 			else {
 				emailAddress=GetOne(clinic.EmailAddressNum);
 				if(emailAddress==null) {//clinic.EmailAddressNum 0. Use default.
-					emailAddress=GetOne(PrefC.GetLong(PrefName.EmailDefaultAddressNum));
+					emailAddress=GetOne(Prefs.GetLong(PrefName.EmailDefaultAddressNum));
 				}
 			}
 			if(emailAddress==null) {

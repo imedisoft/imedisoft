@@ -59,7 +59,7 @@ namespace OpenDental.User_Controls {
 			FillControl();
 		}
 
-		public string GetPrefValue(PrefName prefName) {
+		public string GetPrefValue(string prefName) {
 			switch(prefName) {
 				case PrefName.WebSchedNewPatAllowChildren:
 					return FromGridCell(0);
@@ -102,18 +102,18 @@ namespace OpenDental.User_Controls {
 			//Rows
 			gridOptions.ListGridRows.Clear();
 			GridRow row=new GridRow();
-			row.Cells.Add(ToGridStr(ClinicPrefs.GetBool(PrefName.WebSchedNewPatAllowChildren,Signup.ClinicNum)));
-			row.Cells.Add(ToGridStr(ClinicPrefs.GetBool(PrefName.WebSchedNewPatVerifyInfo,Signup.ClinicNum)));
-			row.Cells.Add(ToGridStr(ClinicPrefs.GetBool(PrefName.WebSchedNewPatDoAuthEmail,Signup.ClinicNum)));
-			row.Cells.Add(IsTextingEnabled?ToGridStr(ClinicPrefs.GetBool(PrefName.WebSchedNewPatDoAuthText,Signup.ClinicNum)):"");
+			row.Cells.Add(ToGridStr(ClinicPrefs.GetBool(Signup.ClinicNum, PrefName.WebSchedNewPatAllowChildren)));
+			row.Cells.Add(ToGridStr(ClinicPrefs.GetBool(Signup.ClinicNum, PrefName.WebSchedNewPatVerifyInfo)));
+			row.Cells.Add(ToGridStr(ClinicPrefs.GetBool(Signup.ClinicNum, PrefName.WebSchedNewPatDoAuthEmail)));
+			row.Cells.Add(IsTextingEnabled?ToGridStr(ClinicPrefs.GetBool(Signup.ClinicNum, PrefName.WebSchedNewPatDoAuthText)):"");
 			string url="";
 			if(Signup.ClinicNum==0) { //HQ always uses pref.
-				url=PrefC.GetString(PrefName.WebSchedNewPatWebFormsURL);
+				url=Prefs.GetString(PrefName.WebSchedNewPatWebFormsURL);
 			}
 			else { //Clinic should not default back to HQ version of URL. This is unlike typical ClinicPref behavior.
-				ClinicPref pref=ClinicPrefs.GetPref(PrefName.WebSchedNewPatWebFormsURL,Signup.ClinicNum);			
+				var pref=ClinicPrefs.GetString(Signup.ClinicNum, PrefName.WebSchedNewPatWebFormsURL);			
 				if(pref!=null) {
-					url=pref.ValueString;
+					url=pref;
 				}
 			}
 			row.Cells.Add(ToGridStr(!string.IsNullOrWhiteSpace(url)));

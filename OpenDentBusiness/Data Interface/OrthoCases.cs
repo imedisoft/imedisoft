@@ -221,16 +221,16 @@ namespace OpenDentBusiness{
 		#region Misc Methods
 		///<summary>Parses comma delimited list of procCodes from the specified OrthoCase proc type preference
 		///(OrthoBandingCodes, OrthoDebondCodes, OrthoVisitCodes). Returns as list of proc codes.</summary>
-		public static List<string> GetListProcTypeProcCodes(PrefName procType) {
+		public static List<string> GetListProcTypeProcCodes(string procType) {
 			//No remoting role check; no call to db
-			return PrefC.GetString(procType).Split(',').Select(x => x.Trim()).ToList();
+			return Prefs.GetString(procType).Split(',').Select(x => x.Trim()).ToList();
 		}
 
 		///<summary>Returns true if any of the preferences: OrthoBandingCodes, OrthoDebondCodes, OrthoVisitCodes aren't blank.</summary>
 		public static bool HasOrthoCasesEnabled() {
-			return (PrefC.GetString(PrefName.OrthoBandingCodes)!=""	
-				|| PrefC.GetString(PrefName.OrthoVisitCodes)!=""	
-				|| PrefC.GetString(PrefName.OrthoDebondCodes)!="");
+			return (Prefs.GetString(PrefName.OrthoBandingCodes)!=""	
+				|| Prefs.GetString(PrefName.OrthoVisitCodes)!=""	
+				|| Prefs.GetString(PrefName.OrthoDebondCodes)!="");
 		}
 
 		///<summary>For a passed in list of procs, this fills a list of all OrthoProcLinks, a dictionary of OrthoProcLinks associated to procs

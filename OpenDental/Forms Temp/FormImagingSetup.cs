@@ -519,7 +519,7 @@ namespace OpenDental{
 			checkScanDocGrayscale.Checked=ComputerPrefs.LocalComputer.ScanDocGrayscale;
 			textScanDocResolution.Text=ComputerPrefs.LocalComputer.ScanDocResolution.ToString();
 			textScanDocQuality.Text=ComputerPrefs.LocalComputer.ScanDocQuality.ToString();
-			//textScanDocQuality.Text=PrefC.GetLong(PrefName.ScannerCompression).ToString();
+			//textScanDocQuality.Text=Prefs.GetLong(PrefName.ScannerCompression).ToString();
 			slider.MinVal=PrefC.GetInt(PrefName.ImageWindowingMin);
 			slider.MaxVal=PrefC.GetInt(PrefName.ImageWindowingMax);
 			Program programSuni=Programs.GetFirstOrDefault(x => x.Description=="Suni");
@@ -536,8 +536,8 @@ namespace OpenDental{
 			else{
 				groupBoxSuni.Visible=false;
 			}
-			//checkScanDocShowOptions.Checked=PrefC.GetBool(PrefName.ScannerSuppressDialog);
-			//textScanDocResolution.Text=PrefC.GetString(PrefName.ScannerResolution);
+			//checkScanDocShowOptions.Checked=Prefs.GetBool(PrefName.ScannerSuppressDialog);
+			//textScanDocResolution.Text=Prefs.GetString(PrefName.ScannerResolution);
 			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
 				labelPanoBW.Visible=false;
 			}
@@ -577,11 +577,11 @@ namespace OpenDental{
 			ComputerPrefs.LocalComputer.ScanDocGrayscale=checkScanDocGrayscale.Checked;
 			ComputerPrefs.LocalComputer.ScanDocResolution=PIn.Int(textScanDocResolution.Text);
 			ComputerPrefs.LocalComputer.ScanDocQuality=PIn.Byte(textScanDocQuality.Text);
-			//Prefs.UpdateLong(PrefName.ScannerCompression,PIn.Long(textScanDocQuality.Text));
-			Prefs.UpdateLong(PrefName.ImageWindowingMin,slider.MinVal);
-			Prefs.UpdateLong(PrefName.ImageWindowingMax,slider.MaxVal);
+			//Prefs.Set(PrefName.ScannerCompression,PIn.Long(textScanDocQuality.Text));
+			Prefs.Set(PrefName.ImageWindowingMin,slider.MinVal);
+			Prefs.Set(PrefName.ImageWindowingMax,slider.MaxVal);
 			//Prefs.UpdateBool(PrefName.ScannerSuppressDialog,checkScanDocShowOptions.Checked);
-			//Prefs.UpdateLong(PrefName.ScannerResolution,PIn.Long(textScanDocResolution.Text));
+			//Prefs.Set(PrefName.ScannerResolution,PIn.Long(textScanDocResolution.Text));
 			if(groupBoxSuni.Visible){
 				ComputerPrefs.LocalComputer.SensorExposure=(int)upDownExposure.Value;
 				ComputerPrefs.LocalComputer.SensorPort=(int)upDownPort.Value;

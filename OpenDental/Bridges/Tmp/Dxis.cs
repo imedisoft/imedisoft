@@ -21,7 +21,7 @@ namespace OpenDental.Bridges
 				return;
 			}
 
-            string info = "/i /t:" + pat.LName + " " + pat.FName + " " + pat.PatNum.ToString() + " - " + PrefC.GetString(PrefName.PracticeTitle);
+            string info = "/i /t:" + pat.LName + " " + pat.FName + " " + pat.PatNum.ToString() + " - " + Prefs.GetString(PrefName.PracticeTitle);
 			try
 			{
 				Process process = ODFileUtils.ProcessStart(path, info);

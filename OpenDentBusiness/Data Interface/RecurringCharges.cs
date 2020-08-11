@@ -76,7 +76,7 @@ namespace OpenDentBusiness {
 		///In all other instances, it returns false. This is used as a control switch for functionality around the 
 		///RecurringChargesAllowedWhenNoPatBal Preference.</summary>
 		public static bool CanChargeWhenNoBal(bool isCreditCardCanChargeWhenNoBal) {
-			return (PrefC.GetBool(PrefName.RecurringChargesAllowedWhenNoPatBal) && isCreditCardCanChargeWhenNoBal);
+			return (Prefs.GetBool(PrefName.RecurringChargesAllowedWhenNoPatBal) && isCreditCardCanChargeWhenNoBal);
 		}
 
 		/*
@@ -276,7 +276,7 @@ namespace OpenDentBusiness {
 			if(!PaymentsWithinLockDate(listRecurringChargeData)) {
 				return;
 			}
-			Prefs.UpdateDateT(PrefName.RecurringChargesBeginDateTime,MiscData.GetNowDateTime());
+			Prefs.Set(PrefName.RecurringChargesBeginDateTime,MiscData.GetNowDateTime());
 			try {
 				IsCharging=true;
 				InsertRecurringCharges(listRecurringChargeData);
@@ -316,7 +316,7 @@ namespace OpenDentBusiness {
 			}
 			finally {
 				IsCharging=false;
-				Prefs.UpdateString(PrefName.RecurringChargesBeginDateTime,"");
+				Prefs.Set(PrefName.RecurringChargesBeginDateTime,"");
 			}
 		}
 
@@ -614,7 +614,7 @@ namespace OpenDentBusiness {
 			if(PrefC.HasClinicsEnabled) {
 				dictClinicNumDesc=Clinics.GetClinicsNoCache().ToDictionary(x => x.ClinicNum,x => x.Description);
 			}
-			dictClinicNumDesc[0]=PrefC.GetString(PrefName.PracticeTitle);
+			dictClinicNumDesc[0]=Prefs.GetString(PrefName.PracticeTitle);
 			strBuilderResultFile.AppendLine("Recurring charge results for "+DateTime.Now.ToShortDateString()+" ran at "+DateTime.Now.ToShortTimeString());
 			strBuilderResultFile.AppendLine();
 			bool isPayConnectToken=true;
@@ -712,7 +712,7 @@ namespace OpenDentBusiness {
 			if(PrefC.HasClinicsEnabled) {
 				dictClinicNumDesc=Clinics.GetClinicsNoCache().ToDictionary(x => x.ClinicNum,x => x.Description);
 			}
-			dictClinicNumDesc[0]=PrefC.GetString(PrefName.PracticeTitle);
+			dictClinicNumDesc[0]=Prefs.GetString(PrefName.PracticeTitle);
 			strBuilderResultFile.AppendLine("Recurring charge results for "+DateTime.Now.ToShortDateString()+" ran at "+DateTime.Now.ToShortTimeString());
 			strBuilderResultFile.AppendLine();
 			string paySimpleAccountId=chargeData.PaySimpleToken;
@@ -897,7 +897,7 @@ namespace OpenDentBusiness {
 				ppPayTypeDesc=PaySimple.PropertyDescs.PaySimplePayTypeACH;
 			}
 			if(ccSource!=CreditCardSource.PaySimpleACH) {
-				paymentCur.PayType=PrefC.GetLong(PrefName.RecurringChargesPayTypeCC);
+				paymentCur.PayType=Prefs.GetLong(PrefName.RecurringChargesPayTypeCC);
 			}
 			if(paymentCur.PayType==0) {//Pref default not set or this is ACH
 				paymentCur.PayType=PIn.Int(ProgramProperties.GetPropVal(_progCur.Id,ppPayTypeDesc,paymentCur.ClinicNum));
@@ -936,7 +936,7 @@ namespace OpenDentBusiness {
 						continue;
 					}
 					highestAmt=afterIns;
-					if(PrefC.GetBool(PrefName.RecurringChargesUsePriProv)) {
+					if(Prefs.GetBool(PrefName.RecurringChargesUsePriProv)) {
 						provNumRegPmts=patCur.PriProv;
 					}
 					else {
@@ -963,7 +963,7 @@ namespace OpenDentBusiness {
 				split.ClinicNum=patCur.ClinicNum;
 				_dictFamBalNoPPlan[patCur.Guarantor]-=(decimal)split.SplitAmt;
 				if(_dictFamBalNoPPlan[patCur.Guarantor]<0 && RecurringCharges.CanChargeWhenNoBal(recCharge.CanChargeWhenNoBal)) {
-					split.UnearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);//Use default unallocated type
+					split.UnearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);//Use default unallocated type
 					split.ProvNum=0;//unearned paysplits are not associated to a provider unless the user explicitly does so.
 				}
 			}
@@ -988,19 +988,19 @@ namespace OpenDentBusiness {
 				//set the ProvNum to 0 for the unallocated paysplit this creates.
 				_dictFamBalNoPPlan[patCur.Guarantor]-=(decimal)split.SplitAmt;
 				if(_dictFamBalNoPPlan[patCur.Guarantor]<0 && RecurringCharges.CanChargeWhenNoBal(recCharge.CanChargeWhenNoBal)) {
-					split.UnearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);//Use default unallocated type
+					split.UnearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);//Use default unallocated type
 					split.ProvNum=0;//unearned paysplits are not associated to a provider unless the user explicitly does so.
 				}
 				PaySplits.Insert(split);
 			}
 			//consider moving the aging calls up in the Send methods and building a list of actions to feed into RunParallel to thread them.
-			if(PrefC.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)) {
+			if(Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)) {
 				Ledgers.ComputeAging(patCur.Guarantor,PrefC.GetDate(PrefName.DateLastAging));
 			}
 			else {
 				Ledgers.ComputeAging(patCur.Guarantor,_nowDateTime.Date);
 				if(PrefC.GetDate(PrefName.DateLastAging)!=_nowDateTime.Date) {
-					Prefs.UpdateString(PrefName.DateLastAging,POut.Date(_nowDateTime.Date,false));
+					Prefs.Set(PrefName.DateLastAging,POut.Date(_nowDateTime.Date,false));
 					//Since this is always called from UI, the above line works fine to keep the prefs cache current.
 				}
 			}
@@ -1014,7 +1014,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Returns a valid DateTime for the payment's PayDate.  Contains logic if payment should be for the previous or the current month.</summary>
 		private DateTime GetPayDate(RecurringChargeData recCharge) {
-			if(PrefC.GetBool(PrefName.RecurringChargesUseTransDate)) {
+			if(Prefs.GetBool(PrefName.RecurringChargesUseTransDate)) {
 				return _nowDateTime;
 			}
 			return recCharge.RecurringChargeDate;

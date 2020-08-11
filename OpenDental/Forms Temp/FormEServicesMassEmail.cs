@@ -82,7 +82,7 @@ namespace OpenDental
 			}
 			else {
 				//either no clinics, or has clinics but has a real clinic selected.
-				MassEmailStatus massEmailStatus=PIn.Enum<MassEmailStatus>(ClinicPrefs.GetInt(PrefName.MassEmailStatus,_promoClinicCur.ClinicNum));
+				MassEmailStatus massEmailStatus=PIn.Enum<MassEmailStatus>(ClinicPrefs.GetInt(_promoClinicCur.ClinicNum, PrefName.MassEmailStatus));
 				butActivate.Visible=massEmailStatus==MassEmailStatus.NotActivated;
 				checkIsMassEmailEnabled.Visible=!butActivate.Visible;
 				checkIsMassEmailEnabled.Checked=massEmailStatus.HasFlag(MassEmailStatus.Enabled);
@@ -94,75 +94,75 @@ namespace OpenDental
 		}
 
 		private void butActivate_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(MsgBoxButtons.YesNo,_activateMessage))	{
-				return;
-			}
-			IWebServiceMainHQ instance=WebServiceMainHQProxy.GetWebServiceMainHQInstance();
-			string guid="";
-			string secret="";
-			try {
-				ODProgress.ShowAction(() => {
-					string result=instance.EmailHostingSignup(PayloadHelper.CreatePayload(new List<PayloadItem> {
-						new PayloadItem(_promoClinicCur.ClinicNum,"ClinicNum"),
-					},eServiceCode.Undefined));
-					guid=WebSerializer.DeserializeTag<string>(result,"AccountGUID");
-					ODException.SwallowAnyException(() => {
-						//Only sent the first time EmailHostingSignup is called.
-						secret=WebSerializer.DeserializeTag<string>(result,"AccountSecret");
-					});
-				},"Activating promotions...");
-			}
-			catch(Exception ex) {
-				FriendlyException.Show("An error occurred while activating promotions.",ex);
-				return;
-			}
-			//If we made it this far, we have activated that account successfully.
-			ClinicPrefs.Upsert(PrefName.MassEmailStatus,_promoClinicCur.ClinicNum,((int)(MassEmailStatus.Activated | MassEmailStatus.Enabled)).ToString());
-			if(!string.IsNullOrWhiteSpace(guid)) {
-				ClinicPrefs.Upsert(PrefName.MassEmailGuid,_promoClinicCur.ClinicNum,guid);
-			}
-			if(!string.IsNullOrWhiteSpace(secret)) {
-				ClinicPrefs.Upsert(PrefName.MassEmailSecret,_promoClinicCur.ClinicNum,secret);
-			}
-			butActivate.Visible=false;
-			checkIsMassEmailEnabled.Visible=true;
-			checkIsMassEmailEnabled.Checked=true;
-			ClinicPrefs.RefreshCache();
-			_doSetInvalidClinicPrefs=true;
+			//if(!MsgBox.Show(MsgBoxButtons.YesNo,_activateMessage))	{
+			//	return;
+			//}
+			//IWebServiceMainHQ instance=WebServiceMainHQProxy.GetWebServiceMainHQInstance();
+			//string guid="";
+			//string secret="";
+			//try {
+			//	ODProgress.ShowAction(() => {
+			//		string result=instance.EmailHostingSignup(PayloadHelper.CreatePayload(new List<PayloadItem> {
+			//			new PayloadItem(_promoClinicCur.ClinicNum,"ClinicNum"),
+			//		},eServiceCode.Undefined));
+			//		guid=WebSerializer.DeserializeTag<string>(result,"AccountGUID");
+			//		ODException.SwallowAnyException(() => {
+			//			//Only sent the first time EmailHostingSignup is called.
+			//			secret=WebSerializer.DeserializeTag<string>(result,"AccountSecret");
+			//		});
+			//	},"Activating promotions...");
+			//}
+			//catch(Exception ex) {
+			//	FriendlyException.Show("An error occurred while activating promotions.",ex);
+			//	return;
+			//}
+			////If we made it this far, we have activated that account successfully.
+			//ClinicPrefs.Upsert(PrefName.MassEmailStatus,_promoClinicCur.ClinicNum,((int)(MassEmailStatus.Activated | MassEmailStatus.Enabled)).ToString());
+			//if(!string.IsNullOrWhiteSpace(guid)) {
+			//	ClinicPrefs.Upsert(PrefName.MassEmailGuid,_promoClinicCur.ClinicNum,guid);
+			//}
+			//if(!string.IsNullOrWhiteSpace(secret)) {
+			//	ClinicPrefs.Upsert(PrefName.MassEmailSecret,_promoClinicCur.ClinicNum,secret);
+			//}
+			//butActivate.Visible=false;
+			//checkIsMassEmailEnabled.Visible=true;
+			//checkIsMassEmailEnabled.Checked=true;
+			//ClinicPrefs.RefreshCache();
+			//_doSetInvalidClinicPrefs=true;
 		}
 
 		private void checkIsMassEmailEnabled_Click(object sender,EventArgs e) {
-			if(checkIsMassEmailEnabled.Checked && !MsgBox.Show(MsgBoxButtons.YesNo,_activateMessage))	{//box is being checked
-				checkIsMassEmailEnabled.Checked=false;
-				return;
-			}
-			IWebServiceMainHQ instance=WebServiceMainHQProxy.GetWebServiceMainHQInstance();
-			bool isEnabling=checkIsMassEmailEnabled.Checked;
-			try {
-				ODProgress.ShowAction(() => { 			
-					string result=instance.EmailHostingChangeClinicStatus(PayloadHelper.CreatePayload(new List<PayloadItem> {
-						new PayloadItem(_promoClinicCur.ClinicNum,"ClinicNum"),
-						new PayloadItem(isEnabling,"EnableClinic"),
-					},eServiceCode.Undefined));
-					//This will do the job of checking for an error.
-					WebSerializer.DeserializeTag<string>(result,"ChangeClinicStatusResponse");
-				},"Changing promotion status...");
-			}
-			catch(Exception ex) {
-				//Failed. Reverse the state of what they were trying to do.
-				checkIsMassEmailEnabled.Checked=!checkIsMassEmailEnabled.Checked;
-				FriendlyException.Show("An error occurred while changing the promotion status.",ex);
-				return;
-			}
-			MassEmailStatus status=MassEmailStatus.NotActivated;
-			ClinicPref clinicPref=ClinicPrefs.GetPref(PrefName.MassEmailStatus,_promoClinicCur.ClinicNum);
-			if(clinicPref!=null){
-				status=PIn.Enum<MassEmailStatus>(clinicPref.ValueString,false);
-			}
-			status=isEnabling ? status.AddFlag(MassEmailStatus.Enabled) : status.RemoveFlag(MassEmailStatus.Enabled);
-			ClinicPrefs.Upsert(PrefName.MassEmailStatus,_promoClinicCur.ClinicNum,((int)status).ToString());
-			ClinicPrefs.RefreshCache();
-			_doSetInvalidClinicPrefs=true;
+			//if(checkIsMassEmailEnabled.Checked && !MsgBox.Show(MsgBoxButtons.YesNo,_activateMessage))	{//box is being checked
+			//	checkIsMassEmailEnabled.Checked=false;
+			//	return;
+			//}
+			//IWebServiceMainHQ instance=WebServiceMainHQProxy.GetWebServiceMainHQInstance();
+			//bool isEnabling=checkIsMassEmailEnabled.Checked;
+			//try {
+			//	ODProgress.ShowAction(() => { 			
+			//		string result=instance.EmailHostingChangeClinicStatus(PayloadHelper.CreatePayload(new List<PayloadItem> {
+			//			new PayloadItem(_promoClinicCur.ClinicNum,"ClinicNum"),
+			//			new PayloadItem(isEnabling,"EnableClinic"),
+			//		},eServiceCode.Undefined));
+			//		//This will do the job of checking for an error.
+			//		WebSerializer.DeserializeTag<string>(result,"ChangeClinicStatusResponse");
+			//	},"Changing promotion status...");
+			//}
+			//catch(Exception ex) {
+			//	//Failed. Reverse the state of what they were trying to do.
+			//	checkIsMassEmailEnabled.Checked=!checkIsMassEmailEnabled.Checked;
+			//	FriendlyException.Show("An error occurred while changing the promotion status.",ex);
+			//	return;
+			//}
+			//MassEmailStatus status=MassEmailStatus.NotActivated;
+			//ClinicPref clinicPref=ClinicPrefs.GetPref(PrefName.MassEmailStatus,_promoClinicCur.ClinicNum);
+			//if(clinicPref!=null){
+			//	status=PIn.Enum<MassEmailStatus>(clinicPref.ValueString,false);
+			//}
+			//status=isEnabling ? status.AddFlag(MassEmailStatus.Enabled) : status.RemoveFlag(MassEmailStatus.Enabled);
+			//ClinicPrefs.Upsert(PrefName.MassEmailStatus,_promoClinicCur.ClinicNum,((int)status).ToString());
+			//ClinicPrefs.RefreshCache();
+			//_doSetInvalidClinicPrefs=true;
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {

@@ -1,5 +1,6 @@
 using CodeBase;
 using Google.Apis.Util;
+using Imedisoft.Data.Cache;
 using Imedisoft.UI;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -233,6 +234,52 @@ namespace OpenDental
 		{
 		}
 
+
+
+		private static void CheckForNewSignals()
+        {
+			try
+			{
+				Logger.LogTrace($"{nameof(CheckForNewSignals)} Start");
+
+				var signals = Signalods.RefreshTimed(Signalods.SignalLastRefreshed).ToList();
+
+				Logger.LogVerbose($"Found {signals.Count} signals.");
+
+				if (signals.Any(sig => sig.Name == SignalName.Shutdown))
+				{
+					Logger.LogVerbose("Received shutdown signal...");
+
+					// TODO: Shutdown...
+
+					return;
+				}
+
+				var cacheGroups = signals
+					.Where(
+						signal => signal.Name == SignalName.Invalidate && !string.IsNullOrEmpty(signal.Param1))
+					.Select(
+						signal => signal.Param1)
+					.Distinct();
+
+				Logger.LogVerbose($"Refreshing cache groups: " + string.Join(", ", cacheGroups));
+				foreach (var cacheGroup in cacheGroups)
+				{
+					CacheManager.Refresh(cacheGroup);
+				}
+
+				foreach (var form in _listSubscribedForms)
+                {
+					form.ProcessSignals(signals);
+                }
+			}
+            finally
+            {
+				Logger.LogTrace($"{nameof(CheckForNewSignals)} End");
+			}
+        }
+
+
 		/// <summary>
 		/// Spawns a new thread to retrieve new signals from the DB, update caches, and broadcast signals to all subscribed forms.
 		/// </summary>
@@ -242,40 +289,8 @@ namespace OpenDental
 
 			ODThread threadRefreshSignals = new ODThread((o) =>
 			{
-				// Get new signals from DB.
-				Logger.LogAction("RefreshTimed", () => signals = Signalods.RefreshTimed(Signalods.SignalLastRefreshed));
-
-				// Only update the time stamp with signals retreived from the DB. Do NOT use listLocalSignals to set timestamp.
-				if (signals.Count > 0)
-				{
-					Signalods.SignalLastRefreshed = signals.Max(x => x.SigDateTime);
-					Signalods.ApptSignalLastRefreshed = Signalods.SignalLastRefreshed;
-				}
-
-				Logger.LogVerbose("Found " + signals.Count.ToString() + " signals");
-				if (signals.Count == 0)
-				{
-					return;
-				}
-
-				// Logger.LogVerbose("Signal count(s)", string.Join(" - ", listSignals.GroupBy(x => x.IType).Select(x => x.Key.ToString() + ": " + x.Count())));
-				if (signals.Exists(x => x.IType == InvalidType.ShutDownNow))
-				{
-					onShutdown();
-					return;
-				}
-
-				var invalidTypes = signals
-					.FindAll(x => x.FKey == 0 && x.FKeyType == KeyType.Undefined)
-					.Select(x => x.IType)
-					.Distinct()
-					.ToArray();
-
-				Cache.Refresh(invalidTypes);
-
-				onProcess(_listSubscribedForms, signals);
+				CheckForNewSignals();
 			});
-
 
 			threadRefreshSignals.AddExceptionHandler((e) =>
 			{

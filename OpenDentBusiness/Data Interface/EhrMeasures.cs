@@ -358,7 +358,7 @@ namespace OpenDentBusiness{
 					//Jordan's original query
 					//command="SELECT PatNum,LName,FName, "
 					//  +"(SELECT COUNT(*) FROM disease WHERE PatNum=patient.PatNum AND DiseaseDefNum="
-					//    +POut.Long(PrefC.GetLong(PrefName.ProblemsIndicateNone))+") AS problemsNone, "
+					//    +POut.Long(Prefs.GetLong(PrefName.ProblemsIndicateNone))+") AS problemsNone, "
 					//  +"(SELECT COUNT(*) FROM disease WHERE PatNum=patient.PatNum) AS problemsAll "
 					//  +"FROM patient "
 					//  +"WHERE EXISTS(SELECT * FROM procedurelog WHERE patient.PatNum=procedurelog.PatNum "
@@ -373,7 +373,7 @@ namespace OpenDentBusiness{
 					//	+"AND procedurelog.ProvNum IN("+POut.String(provs)+") "
 					//	+"AND procedurelog.ProcDate BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd)+" "
 					//	+"GROUP BY patient.PatNum) A "
-					//	+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM disease WHERE DiseaseDefNum="+POut.Long(PrefC.GetLong(PrefName.ProblemsIndicateNone))+" "
+					//	+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM disease WHERE DiseaseDefNum="+POut.Long(Prefs.GetLong(PrefName.ProblemsIndicateNone))+" "
 					//	+"GROUP BY PatNum) problemsNone ON problemsNone.PatNum=A.PatNum "
 					//	+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM disease GROUP BY PatNum) problemsAll ON problemsAll.PatNum=A.PatNum";
 					//Query modified to count only problems with ICD9 or SNOMED code attached
@@ -385,11 +385,11 @@ namespace OpenDentBusiness{
 						+"INNER JOIN procedurecode ON procedurelog.CodeNum = procedurecode.CodeNum "
 						+"AND procedurecode.ProcCode NOT IN ('D9986','D9987') "
 						+"GROUP BY patient.PatNum) A "
-						+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM disease WHERE DiseaseDefNum="+POut.Long(PrefC.GetLong(PrefName.ProblemsIndicateNone))+" "
+						+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM disease WHERE DiseaseDefNum="+POut.Long(Prefs.GetLong(PrefName.ProblemsIndicateNone))+" "
 						+"AND ProbStatus=0 GROUP BY PatNum) problemsNone ON problemsNone.PatNum=A.PatNum "
 						+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM disease "
 						+"INNER JOIN diseasedef ON disease.DiseaseDefNum=diseasedef.DiseaseDefNum "
-						+"AND disease.DiseaseDefNum!="+POut.Long(PrefC.GetLong(PrefName.ProblemsIndicateNone))+" "
+						+"AND disease.DiseaseDefNum!="+POut.Long(Prefs.GetLong(PrefName.ProblemsIndicateNone))+" "
 						+"WHERE (diseasedef.SnomedCode!='' OR diseasedef.ICD9Code!='') "
 						+"GROUP BY PatNum) problemsAll ON problemsAll.PatNum=A.PatNum";
 					tableRaw=Database.ExecuteDataTable(command);
@@ -406,10 +406,10 @@ namespace OpenDentBusiness{
 						+"AND procedurecode.ProcCode NOT IN ('D9986','D9987') "
 						+"GROUP BY patient.PatNum) A "
 						+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM medicationpat "
-						+"WHERE MedicationNum="+POut.Long(PrefC.GetLong(PrefName.MedicationsIndicateNone))+" "
+						+"WHERE MedicationNum="+POut.Long(Prefs.GetLong(PrefName.MedicationsIndicateNone))+" "
 						+"AND (YEAR(DateStop)<1880 OR DateStop>"+POut.Date(dateEnd)+") GROUP BY PatNum) medsNone ON medsNone.PatNum=A.PatNum "
 						+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM medicationpat "
-						+"WHERE MedicationNum!="+POut.Long(PrefC.GetLong(PrefName.MedicationsIndicateNone))+" "
+						+"WHERE MedicationNum!="+POut.Long(Prefs.GetLong(PrefName.MedicationsIndicateNone))+" "
 						+"GROUP BY PatNum) medsAll ON medsAll.PatNum=A.PatNum";
 					tableRaw=Database.ExecuteDataTable(command);
 					break;
@@ -419,7 +419,7 @@ namespace OpenDentBusiness{
 					//Jordan's original query
 					//command="SELECT PatNum,LName,FName, "
 					//  +"(SELECT COUNT(*) FROM allergy WHERE PatNum=patient.PatNum AND AllergyDefNum="
-					//    +POut.Long(PrefC.GetLong(PrefName.AllergiesIndicateNone))+") AS allergiesNone, "
+					//    +POut.Long(Prefs.GetLong(PrefName.AllergiesIndicateNone))+") AS allergiesNone, "
 					//  +"(SELECT COUNT(*) FROM allergy WHERE PatNum=patient.PatNum) AS allergiesAll "
 					//  +"FROM patient "
 					//  +"WHERE EXISTS(SELECT * FROM procedurelog WHERE patient.PatNum=procedurelog.PatNum "
@@ -437,10 +437,10 @@ namespace OpenDentBusiness{
 						+"AND procedurecode.ProcCode NOT IN ('D9986','D9987') "
 						+"GROUP BY patient.PatNum) A "
 						+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM allergy	"
-						+"WHERE AllergyDefNum="+POut.Long(PrefC.GetLong(PrefName.AllergiesIndicateNone))+" AND StatusIsActive=1 "
+						+"WHERE AllergyDefNum="+POut.Long(Prefs.GetLong(PrefName.AllergiesIndicateNone))+" AND StatusIsActive=1 "
 						+"GROUP BY PatNum) allergiesNone ON allergiesNone.PatNum=A.PatNum "
 						+"LEFT JOIN (SELECT PatNum,COUNT(*) AS 'Count' FROM allergy	"
-						+"WHERE AllergyDefNum!="+POut.Long(PrefC.GetLong(PrefName.AllergiesIndicateNone))+" "
+						+"WHERE AllergyDefNum!="+POut.Long(Prefs.GetLong(PrefName.AllergiesIndicateNone))+" "
 						+"GROUP BY PatNum) allergiesAll ON allergiesAll.PatNum=A.PatNum";
 					tableRaw=Database.ExecuteDataTable(command);
 					break;
@@ -610,7 +610,7 @@ namespace OpenDentBusiness{
 						+"INNER JOIN procedurecode ON procedurelog.CodeNum = procedurecode.CodeNum "
 						+"AND procedurecode.ProcCode NOT IN ('D9986','D9987') "
 						+"INNER JOIN medicationpat ON medicationpat.PatNum=patient.PatNum "
-						+"AND MedicationNum!="+POut.Long(PrefC.GetLong(PrefName.MedicationsIndicateNone))+" "
+						+"AND MedicationNum!="+POut.Long(Prefs.GetLong(PrefName.MedicationsIndicateNone))+" "
 						+"GROUP BY patient.PatNum) allpats "//allpats seen by provider in date range with medication in med list that is not the 'None' medication
 						+"LEFT JOIN (SELECT medicationpat.PatNum,COUNT(*) AS 'Count' FROM medicationpat "
 						+"WHERE medicationpat.IsCpoe=1 GROUP BY medicationpat.PatNum) CountCpoe ON CountCpoe.PatNum=allpats.PatNum";
@@ -1807,7 +1807,7 @@ namespace OpenDentBusiness{
 						}
 						else{
 							bool diseasesNone=false;
-							if(listDisease.Count==1 && listDisease[0].DiseaseDefNum==PrefC.GetLong(PrefName.ProblemsIndicateNone)){
+							if(listDisease.Count==1 && listDisease[0].DiseaseDefNum==Prefs.GetLong(PrefName.ProblemsIndicateNone)){
 								diseasesNone=true;
 							}
 							if(diseasesNone){
@@ -1842,7 +1842,7 @@ namespace OpenDentBusiness{
 						else{
 							mu.Met=MuMet.True;
 							bool medsNone=false;
-							if(medList.Count==1 && medList[0].MedicationNum==PrefC.GetLong(PrefName.MedicationsIndicateNone)) {
+							if(medList.Count==1 && medList[0].MedicationNum==Prefs.GetLong(PrefName.MedicationsIndicateNone)) {
 								medsNone=true;
 							}
 							if(medsNone) {
@@ -1864,7 +1864,7 @@ namespace OpenDentBusiness{
 						else{
 							mu.Met=MuMet.True;
 							bool allergiesNone=false;
-							if(listAllergies.Count==1 && listAllergies[0].AllergyDefId==PrefC.GetLong(PrefName.AllergiesIndicateNone)) {
+							if(listAllergies.Count==1 && listAllergies[0].AllergyDefId==Prefs.GetLong(PrefName.AllergiesIndicateNone)) {
 								allergiesNone=true;
 							}
 							if(allergiesNone) {
@@ -5657,7 +5657,7 @@ namespace OpenDentBusiness{
 						}
 						else{
 							bool diseasesNone=false;
-							if(listDisease.Count==1 && listDisease[0].DiseaseDefNum==PrefC.GetLong(PrefName.ProblemsIndicateNone)){
+							if(listDisease.Count==1 && listDisease[0].DiseaseDefNum==Prefs.GetLong(PrefName.ProblemsIndicateNone)){
 								diseasesNone=true;
 							}
 							if(diseasesNone){
@@ -5692,7 +5692,7 @@ namespace OpenDentBusiness{
 						else{
 							mu.Met=MuMet.True;
 							bool medsNone=false;
-							if(medList.Count==1 && medList[0].MedicationNum==PrefC.GetLong(PrefName.MedicationsIndicateNone)) {
+							if(medList.Count==1 && medList[0].MedicationNum==Prefs.GetLong(PrefName.MedicationsIndicateNone)) {
 								medsNone=true;
 							}
 							if(medsNone) {
@@ -5714,7 +5714,7 @@ namespace OpenDentBusiness{
 						else{
 							mu.Met=MuMet.True;
 							bool allergiesNone=false;
-							if(listAllergies.Count==1 && listAllergies[0].AllergyDefId==PrefC.GetLong(PrefName.AllergiesIndicateNone)) {
+							if(listAllergies.Count==1 && listAllergies[0].AllergyDefId==Prefs.GetLong(PrefName.AllergiesIndicateNone)) {
 								allergiesNone=true;
 							}
 							if(allergiesNone) {

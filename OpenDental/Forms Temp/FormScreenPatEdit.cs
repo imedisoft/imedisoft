@@ -24,7 +24,7 @@ namespace OpenDental {
 		private void FormScreenPatEdit_Load(object sender,EventArgs e) {
 			/*
 			if(IsNew) {
-				ScreenPatCur.SheetNum=PrefC.GetLong(PrefName.PublicHealthScreeningSheet);
+				ScreenPatCur.SheetNum=Prefs.GetLong(PrefName.PublicHealthScreeningSheet);
 			}
 			PatCur=Patients.GetPat(ScreenPatCur.PatNum);
 			if(PatCur!=null) {

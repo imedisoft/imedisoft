@@ -917,13 +917,13 @@ namespace OpenDentBusiness {
 				//Pat Clinic-------------------------------------------------------------------------------------------------------------
 				Clinic clinic=Clinics.GetClinic(pat.ClinicNum);
 				if(clinic==null) {
-					clinicPatDescription=PrefC.GetString(PrefName.PracticeTitle);
-					clinicPatAddress=PrefC.GetString(PrefName.PracticeAddress);
-					if(PrefC.GetString(PrefName.PracticeAddress2)!="") {
-						clinicPatAddress+=", "+PrefC.GetString(PrefName.PracticeAddress2);
+					clinicPatDescription=Prefs.GetString(PrefName.PracticeTitle);
+					clinicPatAddress=Prefs.GetString(PrefName.PracticeAddress);
+					if(Prefs.GetString(PrefName.PracticeAddress2)!="") {
+						clinicPatAddress+=", "+Prefs.GetString(PrefName.PracticeAddress2);
 					}
-					clinicPatCityStZip=PrefC.GetString(PrefName.PracticeCity)+", "+PrefC.GetString(PrefName.PracticeST)+"  "+PrefC.GetString(PrefName.PracticeZip);
-					phone=PrefC.GetString(PrefName.PracticePhone);
+					clinicPatCityStZip=Prefs.GetString(PrefName.PracticeCity)+", "+Prefs.GetString(PrefName.PracticeST)+"  "+Prefs.GetString(PrefName.PracticeZip);
+					phone=Prefs.GetString(PrefName.PracticePhone);
 				}
 				else {
 					clinicPatDescription=clinic.Description;
@@ -938,13 +938,13 @@ namespace OpenDentBusiness {
 				//Current selected Clinic-------------------------------------------------------------------------------------------------------
 				Clinic clinicCur=Clinics.GetClinic(Clinics.ClinicNum);
 				if(clinicCur==null) {
-					clinicCurDescription=PrefC.GetString(PrefName.PracticeTitle);
-					clinicCurAddress=PrefC.GetString(PrefName.PracticeAddress);
-					if(PrefC.GetString(PrefName.PracticeAddress2)!="") {
-						clinicCurAddress+=", "+PrefC.GetString(PrefName.PracticeAddress2);
+					clinicCurDescription=Prefs.GetString(PrefName.PracticeTitle);
+					clinicCurAddress=Prefs.GetString(PrefName.PracticeAddress);
+					if(Prefs.GetString(PrefName.PracticeAddress2)!="") {
+						clinicCurAddress+=", "+Prefs.GetString(PrefName.PracticeAddress2);
 					}
-					clinicCurCityStZip=PrefC.GetString(PrefName.PracticeCity)+", "+PrefC.GetString(PrefName.PracticeST)+"  "+PrefC.GetString(PrefName.PracticeZip);
-					phone=PrefC.GetString(PrefName.PracticePhone);
+					clinicCurCityStZip=Prefs.GetString(PrefName.PracticeCity)+", "+Prefs.GetString(PrefName.PracticeST)+"  "+Prefs.GetString(PrefName.PracticeZip);
+					phone=Prefs.GetString(PrefName.PracticePhone);
 				}
 				else {
 					clinicCurDescription=clinicCur.Description;
@@ -1169,7 +1169,7 @@ namespace OpenDentBusiness {
 				}
 				fldval=fldval.Replace(StaticTextField.dateToday.ToReplacementString(),DateTime.Today.ToShortDateString());
 				fldval=fldval.Replace(StaticTextField.dateTodayLong.ToReplacementString(),DateTime.Today.ToLongDateString());
-				fldval=fldval.Replace(StaticTextField.practiceTitle.ToReplacementString(),PrefC.GetString(PrefName.PracticeTitle));
+				fldval=fldval.Replace(StaticTextField.practiceTitle.ToReplacementString(),Prefs.GetString(PrefName.PracticeTitle));
 				field.FieldValue=fldval;
 			}
 			#endregion
@@ -1473,7 +1473,7 @@ namespace OpenDentBusiness {
 
 		private static void FillFieldsForRx(Sheet sheet,RxPat rx,Patient pat,Provider prov) {
 			Clinic clinic=null;
-			if(PrefC.GetBool(PrefName.ElectronicRxClinicUseSelected)) {
+			if(Prefs.GetBool(PrefName.ElectronicRxClinicUseSelected)) {
 				clinic=Clinics.GetClinic(Clinics.ClinicNum);
 			}
 			else if(pat.ClinicNum!=0) {
@@ -1674,21 +1674,21 @@ namespace OpenDentBusiness {
 						}
 						break;
 					case SheetFieldsAvailable.Practice.Title:
-						field.FieldValue=PrefC.GetString(PrefName.PracticeTitle);
+						field.FieldValue=Prefs.GetString(PrefName.PracticeTitle);
 						break;
 					case SheetFieldsAvailable.Practice.Address:
-						field.FieldValue=PrefC.GetString(PrefName.PracticeAddress);
-						if(PrefC.GetString(PrefName.PracticeAddress2) != ""){
-							field.FieldValue+="\r\n"+PrefC.GetString(PrefName.PracticeAddress2);
+						field.FieldValue=Prefs.GetString(PrefName.PracticeAddress);
+						if(Prefs.GetString(PrefName.PracticeAddress2) != ""){
+							field.FieldValue+="\r\n"+Prefs.GetString(PrefName.PracticeAddress2);
 						}
 						break;
 					case SheetFieldsAvailable.Practice.CityStateZip:
-						field.FieldValue=PrefC.GetString(PrefName.PracticeCity)+", "
-							+PrefC.GetString(PrefName.PracticeST)+"  "
-							+PrefC.GetString(PrefName.PracticeZip);
+						field.FieldValue=Prefs.GetString(PrefName.PracticeCity)+", "
+							+Prefs.GetString(PrefName.PracticeST)+"  "
+							+Prefs.GetString(PrefName.PracticeZip);
 						break;
 					case SheetFieldsAvailable.Practice.Phone:
-						field.FieldValue=PrefC.GetString(PrefName.PracticePhone);
+						field.FieldValue=Prefs.GetString(PrefName.PracticePhone);
 						break;
 					default:
 						break;
@@ -1713,18 +1713,18 @@ namespace OpenDentBusiness {
 			foreach(SheetField field in sheet.SheetFields) {
 				switch(field.FieldName) {
 					case "PracticeTitle":
-						field.FieldValue=PrefC.GetString(PrefName.PracticeTitle);
+						field.FieldValue=Prefs.GetString(PrefName.PracticeTitle);
 						break;
 					case "PracticeAddress":
-						field.FieldValue=PrefC.GetString(PrefName.PracticeAddress);
-						if(PrefC.GetString(PrefName.PracticeAddress2) != ""){
-							field.FieldValue+="\r\n"+PrefC.GetString(PrefName.PracticeAddress2);
+						field.FieldValue=Prefs.GetString(PrefName.PracticeAddress);
+						if(Prefs.GetString(PrefName.PracticeAddress2) != ""){
+							field.FieldValue+="\r\n"+Prefs.GetString(PrefName.PracticeAddress2);
 						}
 						break;
 					case "practiceCityStateZip":
-						field.FieldValue=PrefC.GetString(PrefName.PracticeCity)+", "
-							+PrefC.GetString(PrefName.PracticeST)+"  "
-							+PrefC.GetString(PrefName.PracticeZip);
+						field.FieldValue=Prefs.GetString(PrefName.PracticeCity)+", "
+							+Prefs.GetString(PrefName.PracticeST)+"  "
+							+Prefs.GetString(PrefName.PracticeZip);
 						break;
 					case "patient.nameFL":
 						field.FieldValue=pat.GetNameFLFormal();
@@ -1914,7 +1914,7 @@ namespace OpenDentBusiness {
 						}
 						break;
 					case "sendClinicCEMT":
-						string strClinic=PrefC.GetStringNoCache(PrefName.PracticeTitle);
+						string strClinic=Prefs.GetStringNoCache(PrefName.PracticeTitle);
 						if(Prefs.HasClinicsEnabledNoCache){
 							Clinic clinic=Clinics.GetClinicNoCache(pat.ClinicNum);
 							if(clinic!=null) {
@@ -1973,16 +1973,16 @@ namespace OpenDentBusiness {
 				}
 				switch(field.FieldName) {
 					case "PracticeTitle":
-						field.FieldValue=PrefC.GetString(PrefName.PracticeTitle);
+						field.FieldValue=Prefs.GetString(PrefName.PracticeTitle);
 						break;
 					case "PracticeAddress":
-						field.FieldValue=PrefC.GetString(PrefName.PracticeAddress);
-						if(PrefC.GetString(PrefName.PracticeAddress2) != ""){
-							field.FieldValue+="\r\n"+PrefC.GetString(PrefName.PracticeAddress2);
+						field.FieldValue=Prefs.GetString(PrefName.PracticeAddress);
+						if(Prefs.GetString(PrefName.PracticeAddress2) != ""){
+							field.FieldValue+="\r\n"+Prefs.GetString(PrefName.PracticeAddress2);
 						}
 						break;
 					case "PracticePhoneNumber":
-						string practicePhone=PrefC.GetString(PrefName.PracticePhone);
+						string practicePhone=Prefs.GetString(PrefName.PracticePhone);
 						field.FieldValue=practicePhone;
 						if(practicePhone.Length==10) {
 							field.FieldValue="("+practicePhone.Substring(0,3)+")"
@@ -1991,9 +1991,9 @@ namespace OpenDentBusiness {
 						}
 						break;
 					case "practiceCityStateZip":
-						field.FieldValue=PrefC.GetString(PrefName.PracticeCity)+", "
-							+PrefC.GetString(PrefName.PracticeST)+"  "
-							+PrefC.GetString(PrefName.PracticeZip);
+						field.FieldValue=Prefs.GetString(PrefName.PracticeCity)+", "
+							+Prefs.GetString(PrefName.PracticeST)+"  "
+							+Prefs.GetString(PrefName.PracticeZip);
 						break;
 					case "today.DayDate":
 						field.FieldValue=DateTime.Today.ToString("dddd")+", "+DateTime.Today.ToShortDateString();
@@ -2652,7 +2652,7 @@ namespace OpenDentBusiness {
 				depositItem[3]=bankBranch.PadRight(colSize[3],' ')+" ";
 				depositItem[4]=payCur.PayAmt.ToString("F").PadLeft(colSize[4],' ');
 				depositList.Add(depositItem);
-				if(hasCashSumTotal && payCur.PayType==PrefC.GetLong(PrefName.AccountingCashPaymentType)) {
+				if(hasCashSumTotal && payCur.PayType==Prefs.GetLong(PrefName.AccountingCashPaymentType)) {
 					cashSumTotal+=(decimal)payCur.PayAmt;
 					continue;
 				}
@@ -2682,7 +2682,7 @@ namespace OpenDentBusiness {
 				depositItem[3]=bankBranch.PadRight(colSize[3],' ')+" ";
 				depositItem[4]=claimPayCur.CheckAmt.ToString("F").PadLeft(colSize[4],' ');
 				depositList.Add(depositItem);
-				if(hasCashSumTotal && claimPayCur.PayType==PrefC.GetLong(PrefName.AccountingCashPaymentType)) {
+				if(hasCashSumTotal && claimPayCur.PayType==Prefs.GetLong(PrefName.AccountingCashPaymentType)) {
 					continue;
 				}
 				listDepositItems.Add(depositItem);
@@ -2929,7 +2929,7 @@ namespace OpenDentBusiness {
 					case "accountNumber":
 						#region Account Number
 						field.FieldValue=Lans.g("Statements","Account Number")+" ";
-						if(PrefC.GetBool(PrefName.StatementAccountsUseChartNumber)) {
+						if(Prefs.GetBool(PrefName.StatementAccountsUseChartNumber)) {
 							field.FieldValue+=patGuar.ChartNumber;
 						}
 						else {
@@ -3033,7 +3033,7 @@ namespace OpenDentBusiness {
 						break;
 					case "returnAddress":
 						#region ReturnAddress
-						if(!PrefC.GetBool(PrefName.StatementShowReturnAddress)) {
+						if(!Prefs.GetBool(PrefName.StatementShowReturnAddress)) {
 							field.FieldValue="";
 							break;
 						}
@@ -3044,11 +3044,11 @@ namespace OpenDentBusiness {
 							Clinic clinic=Clinics.GetClinic(patGuar.ClinicNum);
 							field.FieldValue=clinic.Description+"\r\n";
 							if(CultureInfo.CurrentCulture.Name=="en-AU") {//Australia
-								Provider defaultProv=Providers.GetProv(PrefC.GetLong(PrefName.PracticeDefaultProv));
+								Provider defaultProv=Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv));
 								field.FieldValue+="ABN: "+defaultProv.NationalProvID+"\r\n";
 							}
 							if(CultureInfo.CurrentCulture.Name=="en-NZ") {//New Zealand
-								Provider defaultProv=Providers.GetProv(PrefC.GetLong(PrefName.PracticeDefaultProv));
+								Provider defaultProv=Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv));
 								field.FieldValue+="GST: "+defaultProv.SSN+"\r\n";
 							}
 							field.FieldValue+=clinic.Address+"\r\n";
@@ -3072,33 +3072,33 @@ namespace OpenDentBusiness {
 							}
 						}
 						else {//no clinics
-							field.FieldValue=PrefC.GetString(PrefName.PracticeTitle)+"\r\n";
+							field.FieldValue=Prefs.GetString(PrefName.PracticeTitle)+"\r\n";
 							if(CultureInfo.CurrentCulture.Name=="en-AU") {//Australia
-								Provider defaultProv=Providers.GetProv(PrefC.GetLong(PrefName.PracticeDefaultProv));
+								Provider defaultProv=Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv));
 								field.FieldValue+="ABN: "+defaultProv.NationalProvID+"\r\n";
 							}
 							if(CultureInfo.CurrentCulture.Name=="en-NZ") {//New Zealand
-								Provider defaultProv=Providers.GetProv(PrefC.GetLong(PrefName.PracticeDefaultProv));
+								Provider defaultProv=Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv));
 								field.FieldValue+="GST: "+defaultProv.SSN+"\r\n";
 							}
-							field.FieldValue+=PrefC.GetString(PrefName.PracticeAddress)+"\r\n";
-							if(PrefC.GetString(PrefName.PracticeAddress2)!="") {
-								field.FieldValue+=PrefC.GetString(PrefName.PracticeAddress2)+"\r\n";
+							field.FieldValue+=Prefs.GetString(PrefName.PracticeAddress)+"\r\n";
+							if(Prefs.GetString(PrefName.PracticeAddress2)!="") {
+								field.FieldValue+=Prefs.GetString(PrefName.PracticeAddress2)+"\r\n";
 							}
 							if(CultureInfo.CurrentCulture.Name.EndsWith("CH")) {//CH is for switzerland. eg de-CH
-								field.FieldValue+=PrefC.GetString(PrefName.PracticeZip)+" "+PrefC.GetString(PrefName.PracticeCity)+"\r\n";
+								field.FieldValue+=Prefs.GetString(PrefName.PracticeZip)+" "+Prefs.GetString(PrefName.PracticeCity)+"\r\n";
 							}
 							else if(CultureInfo.CurrentCulture.Name.EndsWith("SG")) {//SG=Singapore
-								field.FieldValue+=PrefC.GetString(PrefName.PracticeCity)+" "+PrefC.GetString(PrefName.PracticeZip)+"\r\n";
+								field.FieldValue+=Prefs.GetString(PrefName.PracticeCity)+" "+Prefs.GetString(PrefName.PracticeZip)+"\r\n";
 							}
 							else {
-								field.FieldValue+=PrefC.GetString(PrefName.PracticeCity)+", "+PrefC.GetString(PrefName.PracticeST)+" "+PrefC.GetString(PrefName.PracticeZip)+"\r\n";
+								field.FieldValue+=Prefs.GetString(PrefName.PracticeCity)+", "+Prefs.GetString(PrefName.PracticeST)+" "+Prefs.GetString(PrefName.PracticeZip)+"\r\n";
 							}
-							if(PrefC.GetString(PrefName.PracticePhone).Length==10) {
-								field.FieldValue+="("+PrefC.GetString(PrefName.PracticePhone).Substring(0,3)+")"+PrefC.GetString(PrefName.PracticePhone).Substring(3,3)+"-"+PrefC.GetString(PrefName.PracticePhone).Substring(6)+"\r\n";
+							if(Prefs.GetString(PrefName.PracticePhone).Length==10) {
+								field.FieldValue+="("+Prefs.GetString(PrefName.PracticePhone).Substring(0,3)+")"+Prefs.GetString(PrefName.PracticePhone).Substring(3,3)+"-"+Prefs.GetString(PrefName.PracticePhone).Substring(6)+"\r\n";
 							}
 							else {
-								field.FieldValue+=PrefC.GetString(PrefName.PracticePhone)+"\r\n";
+								field.FieldValue+=Prefs.GetString(PrefName.PracticePhone)+"\r\n";
 							}
 						}
 						#endregion
@@ -3141,7 +3141,7 @@ namespace OpenDentBusiness {
 						#endregion
 						break;
 					case "practiceTitle":
-						field.FieldValue=PrefC.GetString(PrefName.PracticeTitle);
+						field.FieldValue=Prefs.GetString(PrefName.PracticeTitle);
 						break;
 					case "statementIsCopy":
 						field.FieldValue=(Stmt.IsInvoiceCopy?Lans.g("Statements","COPY"):"");
@@ -3151,15 +3151,15 @@ namespace OpenDentBusiness {
 						field.FieldValue=(Stmt.IsReceipt?Lans.g("Statements","KEEP THIS RECEIPT FOR INCOME TAX PURPOSES"):"");
 						break;
 					case "practiceAddress":
-						field.FieldValue=PrefC.GetString(PrefName.PracticeAddress);
-						if(PrefC.GetString(PrefName.PracticeAddress2) != "") {
-							field.FieldValue+="\r\n"+PrefC.GetString(PrefName.PracticeAddress2);
+						field.FieldValue=Prefs.GetString(PrefName.PracticeAddress);
+						if(Prefs.GetString(PrefName.PracticeAddress2) != "") {
+							field.FieldValue+="\r\n"+Prefs.GetString(PrefName.PracticeAddress2);
 						}
 						break;
 					case "practiceCityStateZip":
-						field.FieldValue=PrefC.GetString(PrefName.PracticeCity)+", "
-							+PrefC.GetString(PrefName.PracticeST)+"  "
-							+PrefC.GetString(PrefName.PracticeZip);
+						field.FieldValue=Prefs.GetString(PrefName.PracticeCity)+", "
+							+Prefs.GetString(PrefName.PracticeST)+"  "
+							+Prefs.GetString(PrefName.PracticeZip);
 						break;
 					case "statement.DateSent":
 						field.FieldValue=Stmt.DateSent.ToShortDateString();
@@ -3202,7 +3202,7 @@ namespace OpenDentBusiness {
 							}
 						}
 						catch {
-							field.FieldValue=PrefC.GetString(PrefName.PatientPortalURL);
+							field.FieldValue=Prefs.GetString(PrefName.PatientPortalURL);
 						}
 						break;
 					case "invoicePayPlanValue":
@@ -3574,36 +3574,36 @@ namespace OpenDentBusiness {
 						break;
 					case "practiceAddrCityStZip":
 						field.FieldValue="";
-						if(PrefC.GetString(PrefName.PracticeAddress)!="") {
-							field.FieldValue+=PrefC.GetString(PrefName.PracticeAddress)+"\r\n";
+						if(Prefs.GetString(PrefName.PracticeAddress)!="") {
+							field.FieldValue+=Prefs.GetString(PrefName.PracticeAddress)+"\r\n";
 						}
-						if(PrefC.GetString(PrefName.PracticeAddress2)!="") {
-							field.FieldValue+=PrefC.GetString(PrefName.PracticeAddress2)+"\r\n";
+						if(Prefs.GetString(PrefName.PracticeAddress2)!="") {
+							field.FieldValue+=Prefs.GetString(PrefName.PracticeAddress2)+"\r\n";
 						}
-						if(PrefC.GetString(PrefName.PracticeCity)!="") {
-							field.FieldValue+=PrefC.GetString(PrefName.PracticeCity);
-							if(PrefC.GetString(PrefName.PracticeST)!="" || PrefC.GetString(PrefName.PracticeZip)!="") {
+						if(Prefs.GetString(PrefName.PracticeCity)!="") {
+							field.FieldValue+=Prefs.GetString(PrefName.PracticeCity);
+							if(Prefs.GetString(PrefName.PracticeST)!="" || Prefs.GetString(PrefName.PracticeZip)!="") {
 								field.FieldValue+=", ";
 							}
 						}
-						if(PrefC.GetString(PrefName.PracticeST)!="") {
-							field.FieldValue+=PrefC.GetString(PrefName.PracticeST);
-							if(PrefC.GetString(PrefName.PracticeZip)!="") {
+						if(Prefs.GetString(PrefName.PracticeST)!="") {
+							field.FieldValue+=Prefs.GetString(PrefName.PracticeST);
+							if(Prefs.GetString(PrefName.PracticeZip)!="") {
 								field.FieldValue+=" ";
 							}
 						}
-						field.FieldValue+=PrefC.GetString(PrefName.PracticeZip);
+						field.FieldValue+=Prefs.GetString(PrefName.PracticeZip);
 						break;
 					case "PracticePh":
-						if(PrefC.GetString(PrefName.PracticePhone).Length==10) {
-							field.FieldValue=PrefC.GetString(PrefName.PracticePhone).Substring(0,3)+"-"+PrefC.GetString(PrefName.PracticePhone).Substring(3,3)+
-								"-"+PrefC.GetString(PrefName.PracticePhone).Substring(6);
+						if(Prefs.GetString(PrefName.PracticePhone).Length==10) {
+							field.FieldValue=Prefs.GetString(PrefName.PracticePhone).Substring(0,3)+"-"+Prefs.GetString(PrefName.PracticePhone).Substring(3,3)+
+								"-"+Prefs.GetString(PrefName.PracticePhone).Substring(6);
 							break;
 						}
-						field.FieldValue=PrefC.GetString(PrefName.PracticePhone);
+						field.FieldValue=Prefs.GetString(PrefName.PracticePhone);
 						break;
 					case "PracticeTitle":
-						field.FieldValue=PrefC.GetString(PrefName.PracticeTitle);
+						field.FieldValue=Prefs.GetString(PrefName.PracticeTitle);
 						break;
 				}
 			}
@@ -3746,7 +3746,7 @@ namespace OpenDentBusiness {
 				sLine2=Lans.g("Statements","Adjustments:");
 				sLine6=Lans.g("Statements","Pay Plan Charges:");
 				sLine3=Lans.g("Statements","Total:");
-				if(PrefC.GetBool(PrefName.InvoicePaymentsGridShowNetProd)) {
+				if(Prefs.GetBool(PrefName.InvoicePaymentsGridShowNetProd)) {
 					sLine4=Lans.g("Statements","Payments & WriteOffs");
 				}
 				else {
@@ -3754,7 +3754,7 @@ namespace OpenDentBusiness {
 				}
 				sLine5=Lans.g("Statements","Balance Remaining:");
 			}
-			else if(PrefC.GetBool(PrefName.BalancesDontSubtractIns)) {
+			else if(Prefs.GetBool(PrefName.BalancesDontSubtractIns)) {
 				if(Stmt.SuperFamily!=0) {
 					sLine1=Lans.g("Statements","Sum of Balances:");
 				}
@@ -3765,7 +3765,7 @@ namespace OpenDentBusiness {
 				//sLine3=Lans.g("Statements","After Ins:");
 			}
 			else {//this is more common
-				if(PrefC.GetBool(PrefName.FuchsOptionsOn)) {
+				if(Prefs.GetBool(PrefName.FuchsOptionsOn)) {
 					sLine1=Lans.g("Statements","Balance:");
 					sLine2=Lans.g("Statements","-Ins Estimate:");
 					sLine3=Lans.g("Statements","=Owed Now:");
@@ -3842,7 +3842,7 @@ namespace OpenDentBusiness {
 						|| x["PayNum"].ToString()!="0"//patient payments, will be credits with charges==0
 						|| x["ClaimPaymentNum"].ToString()!="0").ToList()//claimproc payments+writeoffs, will be credits with charges==0
 					.Sum(x => PIn.Double(x["chargesDouble"].ToString())-PIn.Double(x["creditsDouble"].ToString()));//add charges-credits
-				if(PrefC.GetBool(PrefName.BalancesDontSubtractIns)) {
+				if(Prefs.GetBool(PrefName.BalancesDontSubtractIns)) {
 					sLine1+=statementTotal.ToString("c");
 				}
 				else {
@@ -3854,7 +3854,7 @@ namespace OpenDentBusiness {
 					sLine3+=(statementTotal-patInsEst).ToString("c");
 				}
 			}
-			else if(PrefC.GetBool(PrefName.BalancesDontSubtractIns)) {
+			else if(Prefs.GetBool(PrefName.BalancesDontSubtractIns)) {
 				if(Stmt.SinglePatient) {
 					sLine1+=pat.EstBalance.ToString("c");
 				}
@@ -3924,7 +3924,7 @@ namespace OpenDentBusiness {
 			foreach(SheetField field in sheet.SheetFields) {
 				switch(field.FieldName) {
 					case "PracticeTitle":
-						field.FieldValue=PrefC.GetString(PrefName.PracticeTitle);
+						field.FieldValue=Prefs.GetString(PrefName.PracticeTitle);
 						break;
 					case "dateToday":
 						field.FieldValue=DateTime.Today.ToShortDateString();
@@ -4844,9 +4844,9 @@ namespace OpenDentBusiness {
 				}
 			}
 			else {
-				text=PrefC.GetString(PrefName.PracticeAddress);
-				if(PrefC.GetString(PrefName.PracticeAddress2)!="") {
-					text+="\r\n"+PrefC.GetString(PrefName.PracticeAddress2);
+				text=Prefs.GetString(PrefName.PracticeAddress);
+				if(Prefs.GetString(PrefName.PracticeAddress2)!="") {
+					text+="\r\n"+Prefs.GetString(PrefName.PracticeAddress2);
 				}
 			}
 			return text;
@@ -4858,7 +4858,7 @@ namespace OpenDentBusiness {
 				text=clinic.City+", "+clinic.State+" "+clinic.Zip;
 			}
 			else {
-				text=PrefC.GetString(PrefName.PracticeCity)+", "+PrefC.GetString(PrefName.PracticeST)+" "+PrefC.GetString(PrefName.PracticeZip);
+				text=Prefs.GetString(PrefName.PracticeCity)+", "+Prefs.GetString(PrefName.PracticeST)+" "+Prefs.GetString(PrefName.PracticeZip);
 			}
 			return text;
 		}
@@ -4869,7 +4869,7 @@ namespace OpenDentBusiness {
 				text=clinic.Phone;
 			}
 			else {
-				text=PrefC.GetString(PrefName.PracticePhone);
+				text=Prefs.GetString(PrefName.PracticePhone);
 				text=new string(text.Where(x => char.IsDigit(x)).ToArray());
 			}
 			if(text.Length==10) {

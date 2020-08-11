@@ -18,7 +18,7 @@ namespace Imedisoft.CEMT.Forms
 			var connectionGroups = ConnectionGroups.GetAll();
 			var connectionGroupAttached = ConnGroupAttaches.GetAll();
 
-			long defaultConnectionGroupId = PrefC.GetLong(PrefName.ConnGroupCEMT);
+			long defaultConnectionGroupId = Prefs.GetLong(PrefName.ConnGroupCEMT);
 
 			connectionGroupComboBox.Items.Clear();
 			connectionGroupComboBox.Items.Add("All");
@@ -57,11 +57,11 @@ namespace Imedisoft.CEMT.Forms
 		{
 			if (connectionGroupComboBox.SelectedItem is ConnectionGroup connectionGroup)
             {
-				Prefs.UpdateLong(PrefName.ConnGroupCEMT, connectionGroup.ConnectionGroupNum);
+				Prefs.Set(PrefName.ConnGroupCEMT, connectionGroup.ConnectionGroupNum);
 			}
             else
             {
-				Prefs.UpdateLong(PrefName.ConnGroupCEMT, 0);
+				Prefs.Set(PrefName.ConnGroupCEMT, 0);
 			}
 		}
 

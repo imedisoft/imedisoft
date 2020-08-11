@@ -27,9 +27,9 @@ namespace UnitTestsCore {
 				ScheduleNum=sched.ScheduleNum,
 				ShortGUID=(funcCreateShortGUID!=null ? funcCreateShortGUID() : ""),
 				SmsSendStatus=AutoCommStatus.SendNotAttempted,
-				TemplateEmail=PrefC.GetString(PrefName.WebSchedAsapEmailTemplate),
-				TemplateEmailSubj=PrefC.GetString(PrefName.WebSchedAsapEmailSubj),
-				TemplateText=PrefC.GetString(PrefName.WebSchedAsapTextTemplate)
+				TemplateEmail=Prefs.GetString(PrefName.WebSchedAsapEmailTemplate),
+				TemplateEmailSubj=Prefs.GetString(PrefName.WebSchedAsapEmailSubj),
+				TemplateText=Prefs.GetString(PrefName.WebSchedAsapTextTemplate)
 			};
 			if(appt.AptStatus==ApptStatus.UnschedList) {
 				asapComm.FKeyType=AsapCommFKeyType.UnscheduledAppt;
@@ -68,9 +68,9 @@ namespace UnitTestsCore {
 				ScheduleNum=sched.ScheduleNum,
 				ShortGUID=(funcCreateShortGUID!=null ? funcCreateShortGUID() : ""),
 				SmsSendStatus=AutoCommStatus.SendNotAttempted,
-				TemplateEmail=PrefC.GetString(PrefName.WebSchedAsapEmailTemplate),
-				TemplateEmailSubj=PrefC.GetString(PrefName.WebSchedAsapEmailSubj),
-				TemplateText=PrefC.GetString(PrefName.WebSchedAsapTextTemplate)
+				TemplateEmail=Prefs.GetString(PrefName.WebSchedAsapEmailTemplate),
+				TemplateEmailSubj=Prefs.GetString(PrefName.WebSchedAsapEmailSubj),
+				TemplateText=Prefs.GetString(PrefName.WebSchedAsapTextTemplate)
 			};
 			AsapComms.Insert(asapComm);
 			return asapComm;

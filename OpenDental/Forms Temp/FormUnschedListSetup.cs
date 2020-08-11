@@ -35,8 +35,8 @@ namespace OpenDental {
 			if(!string.IsNullOrWhiteSpace(textDaysFuture.Text)) {
 				unschedDaysFutureValue=PIn.Int(textDaysFuture.Text,false);
 			}
-			isPrefsInvalid=Prefs.UpdateInt(PrefName.UnschedDaysPast,unschedDaysPastValue) 
-				| Prefs.UpdateInt(PrefName.UnschedDaysFuture,unschedDaysFutureValue);
+			isPrefsInvalid=Prefs.Set(PrefName.UnschedDaysPast,unschedDaysPastValue) 
+				| Prefs.Set(PrefName.UnschedDaysFuture,unschedDaysFutureValue);
 			if(isPrefsInvalid) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}

@@ -36,13 +36,13 @@ namespace OpenDental {
 			if(updateHistory!=null) {
 				labelVersion.Text+="  "+Lan.G(this,"Since")+": "+updateHistory.InstalledOn.ToShortDateString();
 			}
-			if(PrefC.GetBool(PrefName.UpdateWindowShowsClassicView)) {
+			if(Prefs.GetBool(PrefName.UpdateWindowShowsClassicView)) {
 				//Default location is (74,9).  We move it 5 pixels up since butShowPrev is 5 pixels bigger then labelVersion
 				butShowPrev.Location=new Point(74+labelVersion.Width+2,9-5);
 				panelClassic.Visible=true;
 				panelClassic.Location=new Point(67,29);
-				textUpdateCode.Text=PrefC.GetString(PrefName.UpdateCode);
-				textWebsitePath.Text=PrefC.GetString(PrefName.UpdateWebsitePath);//should include trailing /
+				textUpdateCode.Text=Prefs.GetString(PrefName.UpdateCode);
+				textWebsitePath.Text=Prefs.GetString(PrefName.UpdateWebsitePath);//should include trailing /
 				butDownload.Enabled=false;
 				if(!Security.IsAuthorized(Permissions.Setup)) {//gives a message box if no permission
 					butCheck.Enabled=false;
@@ -59,7 +59,7 @@ namespace OpenDental {
 		}
 
 		private void menuItemSetup_Click(object sender,EventArgs e) {
-			if(PrefC.GetBool(PrefName.UpdateWindowShowsClassicView)) {
+			if(Prefs.GetBool(PrefName.UpdateWindowShowsClassicView)) {
 				return;
 			}
 			if(!Security.IsAuthorized(Permissions.Setup)) {
@@ -72,7 +72,7 @@ namespace OpenDental {
 
 		private void SetButtonVisibility() {
 			_updateTime=PrefC.GetDateT(PrefName.UpdateDateTime);
-			bool showMsi=PrefC.GetBool(PrefName.UpdateShowMsiButtons);
+			bool showMsi=Prefs.GetBool(PrefName.UpdateShowMsiButtons);
 			bool showDownloadAndInstall=(_updateTime < DateTime.Now);
 			butDownloadMsiBuild.Visible=showMsi;
 			butDownloadMsiStable.Visible=showMsi;
@@ -89,10 +89,10 @@ namespace OpenDental {
 		}
 
 		private void butCheckForUpdates_Click(object sender,EventArgs e) {
-			if(PrefC.GetString(PrefName.WebServiceServerName)!="" //using web service
-				&&!ODEnvironment.IdIsThisComputer(PrefC.GetString(PrefName.WebServiceServerName).ToLower()))//and not on web server 
+			if(Prefs.GetString(PrefName.WebServiceServerName)!="" //using web service
+				&&!ODEnvironment.IdIsThisComputer(Prefs.GetString(PrefName.WebServiceServerName).ToLower()))//and not on web server 
 			{
-				MessageBox.Show(Lan.G(this,"Updates are only allowed from the web server")+": "+PrefC.GetString(PrefName.WebServiceServerName));
+				MessageBox.Show(Lan.G(this,"Updates are only allowed from the web server")+": "+Prefs.GetString(PrefName.WebServiceServerName));
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -167,12 +167,12 @@ namespace OpenDental {
 			node=doc.SelectSingleNode("//KeyDisabled");
 			if(node==null) {
 				//no error, and no disabled message
-				if(Prefs.UpdateBool(PrefName.RegistrationKeyIsDisabled,false)) {//this is one of two places in the program where this happens.
+				if(Prefs.Set(PrefName.RegistrationKeyIsDisabled,false)) {//this is one of two places in the program where this happens.
 					DataValid.SetInvalid(InvalidType.Prefs);
 				}
 			}
 			else {
-				if(Prefs.UpdateBool(PrefName.RegistrationKeyIsDisabled,true)) {//this is one of two places in the program where this happens.
+				if(Prefs.Set(PrefName.RegistrationKeyIsDisabled,true)) {//this is one of two places in the program where this happens.
 					DataValid.SetInvalid(InvalidType.Prefs);
 				}
 				throw new Exception(node.InnerText);
@@ -308,7 +308,7 @@ namespace OpenDental {
 				}
 				destPath2=ODFileUtils.CombinePaths(destPath2,fileNameWithVers);
 			}
-			PrefL.DownloadInstallPatchFromURI(PrefC.GetString(PrefName.UpdateWebsitePath)+updateCode+"/"+patchName,//Source URI
+			PrefL.DownloadInstallPatchFromURI(Prefs.GetString(PrefName.UpdateWebsitePath)+updateCode+"/"+patchName,//Source URI
 				ODFileUtils.CombinePaths(destDir,patchName),//Local destination file.
 				true,true,
 				destPath2);//second destination file.  Might be null.
@@ -364,7 +364,7 @@ namespace OpenDental {
 			if(IsDynamicMode()) {
 				return;
 			}
-			string fileName=PrefC.GetString(PrefName.UpdateWebsitePath)+updateCode+"/OpenDental.msi";
+			string fileName=Prefs.GetString(PrefName.UpdateWebsitePath)+updateCode+"/OpenDental.msi";
 			try {
 				Process.Start(fileName);
 			}
@@ -440,10 +440,10 @@ namespace OpenDental {
 
 		private void SavePrefs() {
 			bool changed=false;
-			if(Prefs.UpdateString(PrefName.UpdateCode,textUpdateCode.Text)) {
+			if(Prefs.Set(PrefName.UpdateCode,textUpdateCode.Text)) {
 				changed=true;
 			}
-			if(Prefs.UpdateString(PrefName.UpdateWebsitePath,textWebsitePath.Text)) {
+			if(Prefs.Set(PrefName.UpdateWebsitePath,textWebsitePath.Text)) {
 				changed=true;
 			}
 			if(changed) {
@@ -464,7 +464,7 @@ namespace OpenDental {
 		}
 
 		private void FormUpdate_FormClosing(object sender,FormClosingEventArgs e) {
-			if(Security.IsAuthorized(Permissions.Setup,DateTime.Now,true)	&& PrefC.GetBool(PrefName.UpdateWindowShowsClassicView)) {
+			if(Security.IsAuthorized(Permissions.Setup,DateTime.Now,true)	&& Prefs.GetBool(PrefName.UpdateWindowShowsClassicView)) {
 				SavePrefs();
 			}
 		}

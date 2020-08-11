@@ -11,10 +11,10 @@ using System.Drawing;
 namespace OpenDentBusiness.Crud{
 	public class TaskHistCrud {
 		///<summary>Gets one TaskHist object from the database using the primary key.  Returns null if not found.</summary>
-		public static TaskHist SelectOne(long taskHistNum) {
+		public static TaskHistory SelectOne(long taskHistNum) {
 			string command="SELECT * FROM taskhist "
 				+"WHERE TaskHistNum = "+POut.Long(taskHistNum);
-			List<TaskHist> list=TableToList(Database.ExecuteDataTable(command));
+			List<TaskHistory> list=TableToList(Database.ExecuteDataTable(command));
 			if(list.Count==0) {
 				return null;
 			}
@@ -22,9 +22,9 @@ namespace OpenDentBusiness.Crud{
 		}
 
 		///<summary>Gets one TaskHist object from the database using a query.</summary>
-		public static TaskHist SelectOne(string command) {
+		public static TaskHistory SelectOne(string command) {
 
-			List<TaskHist> list=TableToList(Database.ExecuteDataTable(command));
+			List<TaskHistory> list=TableToList(Database.ExecuteDataTable(command));
 			if(list.Count==0) {
 				return null;
 			}
@@ -32,48 +32,45 @@ namespace OpenDentBusiness.Crud{
 		}
 
 		///<summary>Gets a list of TaskHist objects from the database using a query.</summary>
-		public static List<TaskHist> SelectMany(string command) {
+		public static List<TaskHistory> SelectMany(string command) {
 
-			List<TaskHist> list=TableToList(Database.ExecuteDataTable(command));
+			List<TaskHistory> list=TableToList(Database.ExecuteDataTable(command));
 			return list;
 		}
 
 		///<summary>Converts a DataTable to a list of objects.</summary>
-		public static List<TaskHist> TableToList(DataTable table) {
-			List<TaskHist> retVal=new List<TaskHist>();
-			TaskHist taskHist;
+		public static List<TaskHistory> TableToList(DataTable table) {
+			List<TaskHistory> retVal=new List<TaskHistory>();
+			TaskHistory taskHist;
 			foreach(DataRow row in table.Rows) {
-				taskHist=new TaskHist();
-				taskHist.TaskHistNum      = PIn.Long  (row["TaskHistNum"].ToString());
-				taskHist.UserNumHist      = PIn.Long  (row["UserNumHist"].ToString());
-				taskHist.DateTStamp       = PIn.Date (row["DateTStamp"].ToString());
-				taskHist.IsNoteChange     = PIn.Bool  (row["IsNoteChange"].ToString());
-				taskHist.TaskNum          = PIn.Long  (row["TaskNum"].ToString());
-				taskHist.TaskListNum      = PIn.Long  (row["TaskListNum"].ToString());
-				taskHist.DateTask         = PIn.Date  (row["DateTask"].ToString());
-				taskHist.KeyNum           = PIn.Long  (row["KeyNum"].ToString());
-				taskHist.Descript         = PIn.String(row["Descript"].ToString());
-				taskHist.TaskStatus       = (OpenDentBusiness.TaskStatusEnum)PIn.Int(row["TaskStatus"].ToString());
-				taskHist.IsRepeating      = PIn.Bool  (row["IsRepeating"].ToString());
-				taskHist.DateType         = (OpenDentBusiness.TaskDateType)PIn.Int(row["DateType"].ToString());
-				taskHist.FromNum          = PIn.Long  (row["FromNum"].ToString());
-				taskHist.ObjectType       = (OpenDentBusiness.TaskObjectType)PIn.Int(row["ObjectType"].ToString());
-				taskHist.DateTimeEntry    = PIn.Date (row["DateTimeEntry"].ToString());
-				taskHist.UserNum          = PIn.Long  (row["UserNum"].ToString());
-				taskHist.DateTimeFinished = PIn.Date (row["DateTimeFinished"].ToString());
-				taskHist.PriorityDefNum   = PIn.Long  (row["PriorityDefNum"].ToString());
+				taskHist=new TaskHistory();
+				taskHist.Id      = PIn.Long  (row["TaskHistNum"].ToString());
+				taskHist.HistoryUserId      = PIn.Long  (row["UserNumHist"].ToString());
+				taskHist.HistoryDate       = PIn.Date (row["DateTStamp"].ToString());
+				taskHist.Id          = PIn.Long  (row["TaskNum"].ToString());
+				taskHist.TaskListId      = PIn.Long  (row["TaskListNum"].ToString());
+				taskHist.RepeatDate         = PIn.Date  (row["DateTask"].ToString());
+				taskHist.Description         = PIn.String(row["Descript"].ToString());
+				taskHist.Status       = (OpenDentBusiness.TaskStatus)PIn.Int(row["TaskStatus"].ToString());
+				taskHist.Repeat      = PIn.Bool  (row["IsRepeating"].ToString());
+				taskHist.RepeatInterval         = (OpenDentBusiness.TaskRepeatInterval)PIn.Int(row["DateType"].ToString());
+				taskHist.RepeatSourceTaskId          = PIn.Long  (row["FromNum"].ToString());
+				taskHist.DateStart    = PIn.Date (row["DateTimeEntry"].ToString());
+				taskHist.UserId          = PIn.Long  (row["UserNum"].ToString());
+				taskHist.DateCompleted = PIn.Date (row["DateTimeFinished"].ToString());
+				taskHist.PriorityId   = PIn.Long  (row["PriorityDefNum"].ToString());
 				taskHist.ReminderGroupId  = PIn.String(row["ReminderGroupId"].ToString());
 				taskHist.ReminderType     = (OpenDentBusiness.TaskReminderType)PIn.Int(row["ReminderType"].ToString());
 				taskHist.ReminderFrequency= PIn.Int   (row["ReminderFrequency"].ToString());
-				taskHist.DateTimeOriginal = PIn.Date (row["DateTimeOriginal"].ToString());
-				taskHist.SecDateTEdit     = PIn.Date (row["SecDateTEdit"].ToString());
+				taskHist.DateAdded = PIn.Date (row["DateTimeOriginal"].ToString());
+				taskHist.DateModified     = PIn.Date (row["SecDateTEdit"].ToString());
 				retVal.Add(taskHist);
 			}
 			return retVal;
 		}
 
 		///<summary>Converts a list of TaskHist into a DataTable.</summary>
-		public static DataTable ListToTable(List<TaskHist> listTaskHists,string tableName="") {
+		public static DataTable ListToTable(List<TaskHistory> listTaskHists,string tableName="") {
 			if(string.IsNullOrEmpty(tableName)) {
 				tableName="TaskHist";
 			}
@@ -101,45 +98,40 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("ReminderFrequency");
 			table.Columns.Add("DateTimeOriginal");
 			table.Columns.Add("SecDateTEdit");
-			foreach(TaskHist taskHist in listTaskHists) {
+			foreach(TaskHistory taskHist in listTaskHists) {
 				table.Rows.Add(new object[] {
-					POut.Long  (taskHist.TaskHistNum),
-					POut.Long  (taskHist.UserNumHist),
-					POut.DateT (taskHist.DateTStamp,false),
-					POut.Bool  (taskHist.IsNoteChange),
-					POut.Long  (taskHist.TaskNum),
-					POut.Long  (taskHist.TaskListNum),
-					POut.DateT (taskHist.DateTask,false),
-					POut.Long  (taskHist.KeyNum),
-					            taskHist.Descript,
-					POut.Int   ((int)taskHist.TaskStatus),
-					POut.Bool  (taskHist.IsRepeating),
-					POut.Int   ((int)taskHist.DateType),
-					POut.Long  (taskHist.FromNum),
-					POut.Int   ((int)taskHist.ObjectType),
-					POut.DateT (taskHist.DateTimeEntry,false),
-					POut.Long  (taskHist.UserNum),
-					POut.DateT (taskHist.DateTimeFinished,false),
-					POut.Long  (taskHist.PriorityDefNum),
+					POut.Long  (taskHist.Id),
+					POut.Long  (taskHist.HistoryUserId),
+					POut.DateT (taskHist.HistoryDate,false),
+					POut.Long  (taskHist.Id),
+					POut.Long  (taskHist.TaskListId),
+					            taskHist.Description,
+					POut.Int   ((int)taskHist.Status),
+					POut.Bool  (taskHist.Repeat),
+					POut.Int   ((int)taskHist.RepeatInterval),
+					POut.DateT (taskHist.DateStart.Value,false),
+					POut.Long  (taskHist.UserId),
+					POut.DateT (taskHist.DateCompleted.Value,false),
+					POut.Long  (taskHist.PriorityId),
 					            taskHist.ReminderGroupId,
 					POut.Int   ((int)taskHist.ReminderType),
 					POut.Int   (taskHist.ReminderFrequency),
-					POut.DateT (taskHist.DateTimeOriginal,false),
-					POut.DateT (taskHist.SecDateTEdit,false),
+					POut.DateT (taskHist.DateAdded,false),
+					POut.DateT (taskHist.DateModified,false),
 				});
 			}
 			return table;
 		}
 
 		///<summary>Inserts one TaskHist into the database.  Returns the new priKey.</summary>
-		public static long Insert(TaskHist taskHist) {
+		public static long Insert(TaskHistory taskHist) {
 			return Insert(taskHist,false);
 		}
 
 		///<summary>Inserts one TaskHist into the database.  Provides option to use the existing priKey.</summary>
-		public static long Insert(TaskHist taskHist,bool useExistingPK) {
+		public static long Insert(TaskHistory taskHist,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				taskHist.TaskHistNum=ReplicationServers.GetKey("taskhist","TaskHistNum");
+				taskHist.Id=ReplicationServers.GetKey("taskhist","TaskHistNum");
 			}
 			string command="INSERT INTO taskhist (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -147,97 +139,87 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="UserNumHist,DateTStamp,IsNoteChange,TaskNum,TaskListNum,DateTask,KeyNum,Descript,TaskStatus,IsRepeating,DateType,FromNum,ObjectType,DateTimeEntry,UserNum,DateTimeFinished,PriorityDefNum,ReminderGroupId,ReminderType,ReminderFrequency,DateTimeOriginal,SecDateTEdit) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(taskHist.TaskHistNum)+",";
+				command+=POut.Long(taskHist.Id)+",";
 			}
 			command+=
-				     POut.Long  (taskHist.UserNumHist)+","
+				     POut.Long  (taskHist.HistoryUserId)+","
 				+    DbHelper.Now()+","
-				+    POut.Bool  (taskHist.IsNoteChange)+","
-				+    POut.Long  (taskHist.TaskNum)+","
-				+    POut.Long  (taskHist.TaskListNum)+","
-				+    POut.Date  (taskHist.DateTask)+","
-				+    POut.Long  (taskHist.KeyNum)+","
+				+    POut.Long  (taskHist.Id)+","
+				+    POut.Long  (taskHist.TaskListId)+","
 				+    DbHelper.ParamChar+"paramDescript,"
-				+    POut.Int   ((int)taskHist.TaskStatus)+","
-				+    POut.Bool  (taskHist.IsRepeating)+","
-				+    POut.Int   ((int)taskHist.DateType)+","
-				+    POut.Long  (taskHist.FromNum)+","
-				+    POut.Int   ((int)taskHist.ObjectType)+","
-				+    POut.DateT (taskHist.DateTimeEntry)+","
-				+    POut.Long  (taskHist.UserNum)+","
-				+    POut.DateT (taskHist.DateTimeFinished)+","
-				+    POut.Long  (taskHist.PriorityDefNum)+","
+				+    POut.Int   ((int)taskHist.Status)+","
+				+    POut.Bool  (taskHist.Repeat)+","
+				+    POut.Int   ((int)taskHist.RepeatInterval)+","
+				+    POut.DateT (taskHist.DateStart.Value) +","
+				+    POut.Long  (taskHist.UserId)+","
+				+    POut.DateT (taskHist.DateCompleted.Value) +","
+				+    POut.Long  (taskHist.PriorityId)+","
 				+"'"+POut.String(taskHist.ReminderGroupId)+"',"
 				+    POut.Int   ((int)taskHist.ReminderType)+","
 				+    POut.Int   (taskHist.ReminderFrequency)+","
-				+    POut.DateT (taskHist.DateTimeOriginal)+","
-				+    POut.DateT (taskHist.SecDateTEdit)+")";
-			if(taskHist.Descript==null) {
-				taskHist.Descript="";
+				+    POut.DateT (taskHist.DateAdded)+","
+				+    POut.DateT (taskHist.DateModified)+")";
+			if(taskHist.Description==null) {
+				taskHist.Description="";
 			}
-			var paramDescript = new MySqlParameter("paramDescript", POut.StringParam(taskHist.Descript));
+			var paramDescript = new MySqlParameter("paramDescript", POut.StringParam(taskHist.Description));
 			if(useExistingPK || PrefC.RandomKeys) {
 				Database.ExecuteNonQuery(command,paramDescript);
 			}
 			else {
-				taskHist.TaskHistNum=Database.ExecuteInsert(command,paramDescript);
+				taskHist.Id=Database.ExecuteInsert(command,paramDescript);
 			}
-			return taskHist.TaskHistNum;
+			return taskHist.Id;
 		}
 
 		///<summary>Inserts one TaskHist into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
-		public static long InsertNoCache(TaskHist taskHist) {
+		public static long InsertNoCache(TaskHistory taskHist) {
 			return InsertNoCache(taskHist,false);
 		}
 
 		///<summary>Inserts one TaskHist into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
-		public static long InsertNoCache(TaskHist taskHist,bool useExistingPK) {
+		public static long InsertNoCache(TaskHistory taskHist,bool useExistingPK) {
 			
 			string command="INSERT INTO taskhist (";
 			if(!useExistingPK) {
-				taskHist.TaskHistNum=ReplicationServers.GetKeyNoCache("taskhist","TaskHistNum");
+				taskHist.Id=ReplicationServers.GetKeyNoCache("taskhist","TaskHistNum");
 			}
 			if(useExistingPK) {
 				command+="TaskHistNum,";
 			}
 			command+="UserNumHist,DateTStamp,IsNoteChange,TaskNum,TaskListNum,DateTask,KeyNum,Descript,TaskStatus,IsRepeating,DateType,FromNum,ObjectType,DateTimeEntry,UserNum,DateTimeFinished,PriorityDefNum,ReminderGroupId,ReminderType,ReminderFrequency,DateTimeOriginal,SecDateTEdit) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(taskHist.TaskHistNum)+",";
+				command+=POut.Long(taskHist.Id)+",";
 			}
 			command+=
-				     POut.Long  (taskHist.UserNumHist)+","
+				     POut.Long  (taskHist.HistoryUserId)+","
 				+    DbHelper.Now()+","
-				+    POut.Bool  (taskHist.IsNoteChange)+","
-				+    POut.Long  (taskHist.TaskNum)+","
-				+    POut.Long  (taskHist.TaskListNum)+","
-				+    POut.Date  (taskHist.DateTask)+","
-				+    POut.Long  (taskHist.KeyNum)+","
+				+    POut.Long  (taskHist.Id)+","
+				+    POut.Long  (taskHist.TaskListId)+","
 				+    DbHelper.ParamChar+"paramDescript,"
-				+    POut.Int   ((int)taskHist.TaskStatus)+","
-				+    POut.Bool  (taskHist.IsRepeating)+","
-				+    POut.Int   ((int)taskHist.DateType)+","
-				+    POut.Long  (taskHist.FromNum)+","
-				+    POut.Int   ((int)taskHist.ObjectType)+","
-				+    POut.DateT (taskHist.DateTimeEntry)+","
-				+    POut.Long  (taskHist.UserNum)+","
-				+    POut.DateT (taskHist.DateTimeFinished)+","
-				+    POut.Long  (taskHist.PriorityDefNum)+","
+				+    POut.Int   ((int)taskHist.Status)+","
+				+    POut.Bool  (taskHist.Repeat)+","
+				+    POut.Int   ((int)taskHist.RepeatInterval)+","
+				+    POut.DateT (taskHist.DateStart.Value) +","
+				+    POut.Long  (taskHist.UserId)+","
+				+    POut.DateT (taskHist.DateCompleted.Value) +","
+				+    POut.Long  (taskHist.PriorityId)+","
 				+"'"+POut.String(taskHist.ReminderGroupId)+"',"
 				+    POut.Int   ((int)taskHist.ReminderType)+","
 				+    POut.Int   (taskHist.ReminderFrequency)+","
-				+    POut.DateT (taskHist.DateTimeOriginal)+","
-				+    POut.DateT (taskHist.SecDateTEdit)+")";
-			if(taskHist.Descript==null) {
-				taskHist.Descript="";
+				+    POut.DateT (taskHist.DateAdded)+","
+				+    POut.DateT (taskHist.DateModified)+")";
+			if(taskHist.Description==null) {
+				taskHist.Description="";
 			}
-			var paramDescript = new MySqlParameter("paramDescript", POut.StringParam(taskHist.Descript));
+			var paramDescript = new MySqlParameter("paramDescript", POut.StringParam(taskHist.Description));
 			if(useExistingPK) {
 				Database.ExecuteNonQuery(command,paramDescript);
 			}
 			else {
-				taskHist.TaskHistNum=Database.ExecuteInsert(command,paramDescript);
+				taskHist.Id=Database.ExecuteInsert(command,paramDescript);
 			}
-			return taskHist.TaskHistNum;
+			return taskHist.Id;
 		}
 
 		///<summary>Deletes one TaskHist from the database.</summary>

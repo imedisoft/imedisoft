@@ -640,7 +640,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			//We want to help EHR users meet their summary of care measure.  So all outgoing patient referrals should warn them if they didn't enter data correctly.
-			if((ReferralType)listRefType.SelectedIndex==ReferralType.RefTo && PrefC.GetBool(PrefName.ShowFeatureEhr)) {
+			if((ReferralType)listRefType.SelectedIndex==ReferralType.RefTo && Prefs.GetBool(PrefName.ShowFeatureEhr)) {
 				string warning="";
 				if(comboProvNum.SelectedIndex<0) {
 					warning+=Lans.g(this,"Selected patient referral does not have a referring provider set.");

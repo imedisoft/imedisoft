@@ -670,7 +670,7 @@ namespace UnitTests.Appointments_Tests {
 		public void Appointments_GetSearchResults_SearchForSchedulesAndOperatoriesForSpecificDays() {
 			//Test is specifically for provider time operatory as there is no way to determine operatory when only seraching provider time. 
 			PrefT.UpdateInt(PrefName.AppointmentSearchBehavior,(int)SearchBehaviorCriteria.ProviderTimeOperatory);
-			Prefs.UpdateInt(PrefName.AppointmentTimeIncrement,5);
+			Prefs.Set(PrefName.AppointmentTimeIncrement,5);
 			//Test when a provider is scheduled in multilple ops for different days that ops are only suggested for where the op the provider is in,
 			//for the current day. Ex (Day1 in Op1, Day2 in Op 2 so when searching for opening for Day1 only Op1 is searched for). 
 			//create providers and schedules
@@ -716,7 +716,7 @@ namespace UnitTests.Appointments_Tests {
 		public void Appointments_GetSearchResults_SearchForOpeningsWhenProvidersShareAnOperatory() {
 			//Test is specifically for provider time operatory as there is no way to determine operatory when only seraching provider time. 
 			PrefT.UpdateInt(PrefName.AppointmentSearchBehavior,(int)SearchBehaviorCriteria.ProviderTimeOperatory);
-			Prefs.UpdateInt(PrefName.AppointmentTimeIncrement,5);
+			Prefs.Set(PrefName.AppointmentTimeIncrement,5);
 			//Test when multiple providers are scheduled in the same operatory (ex provA is there from 8-9 and provB from 9-10).
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			long provNumA=ProviderT.CreateProvider(suffix+"A");
@@ -821,7 +821,7 @@ namespace UnitTests.Appointments_Tests {
 		public void Appointments_GetSearchResults_DifferentBlockoutsSameOp() {
 			//Test is specifically for provider time operatory as there is no way to determine operatory when only seraching provider time. 
 			PrefT.UpdateInt(PrefName.AppointmentSearchBehavior,(int)SearchBehaviorCriteria.ProviderTimeOperatory);
-			Prefs.UpdateInt(PrefName.AppointmentTimeIncrement,5);
+			Prefs.Set(PrefName.AppointmentTimeIncrement,5);
 			//Test when a provider is scheduled in multilple ops for different days that ops are only suggested for where the op the provider is in,
 			//for the current day. Ex (Day1 in Op1, Day2 in Op 2 so when searching for opening for Day1 only Op1 is searched for). 
 			//create providers and schedules
@@ -1107,7 +1107,7 @@ namespace UnitTests.Appointments_Tests {
 			double procFee=100d;
 			string strDesc="RecallType_"+MethodBase.GetCurrentMethod().Name;
 			RecallType recallType=RecallTypeT.CreateRecallType(description:strDesc,procedures:strRecallProcCode);
-			PrefT.UpdateString(PrefName.RecallTypesShowingInList,string.Join(",",PrefC.GetString(PrefName.RecallTypesShowingInList),recallType.RecallTypeNum));
+			PrefT.UpdateString(PrefName.RecallTypesShowingInList,string.Join(",",Prefs.GetString(PrefName.RecallTypesShowingInList),recallType.RecallTypeNum));
 			Patient pat=PatientT.CreatePatient(priProvNum:provNum,lName:MethodBase.GetCurrentMethod().Name);
             _ = RecallT.CreateRecall(pat.PatNum, recallType.RecallTypeNum, dateTimeRecall, intervalRecall, dateScheduled: dateTimeRecall);
             Appointment appt=AppointmentT.CreateAppointment(pat.PatNum,dateTimeAppt,opNum,provNum,aptStatus:apptStatus,aptNote:note);
@@ -1131,7 +1131,7 @@ namespace UnitTests.Appointments_Tests {
 			double procFee=100d;
 			string strDesc="RecallType_"+MethodBase.GetCurrentMethod().Name;
 			RecallType recallType=RecallTypeT.CreateRecallType(description:strDesc,procedures:strRecallProcCode);
-			PrefT.UpdateString(PrefName.RecallTypesShowingInList,string.Join(",",PrefC.GetString(PrefName.RecallTypesShowingInList),recallType.RecallTypeNum));
+			PrefT.UpdateString(PrefName.RecallTypesShowingInList,string.Join(",",Prefs.GetString(PrefName.RecallTypesShowingInList),recallType.RecallTypeNum));
 			Patient pat=PatientT.CreatePatient(priProvNum:provNum,lName:MethodBase.GetCurrentMethod().Name);
             _ = RecallT.CreateRecall(pat.PatNum, recallType.RecallTypeNum, dateTimeRecall, intervalRecall, dateScheduled: dateTimeRecall);
             Appointment appt=AppointmentT.CreateAppointment(pat.PatNum,dateTimeAppt,opNum,provNum,aptStatus:apptStatus,aptNote:note);
@@ -1156,7 +1156,7 @@ namespace UnitTests.Appointments_Tests {
 			string strDesc="RecallType_"+MethodBase.GetCurrentMethod().Name;
 			RecallType recallType=RecallTypeT.CreateRecallType(description:strDesc,procedures:strRecallProcCode);
 			Patient pat=PatientT.CreatePatient(priProvNum:provNum,lName:MethodBase.GetCurrentMethod().Name);
-			PrefT.UpdateString(PrefName.RecallTypesShowingInList,string.Join(",",PrefC.GetString(PrefName.RecallTypesShowingInList),recallType.RecallTypeNum));
+			PrefT.UpdateString(PrefName.RecallTypesShowingInList,string.Join(",",Prefs.GetString(PrefName.RecallTypesShowingInList),recallType.RecallTypeNum));
             _ = RecallT.CreateRecall(pat.PatNum, recallType.RecallTypeNum, dateTimeRecall, intervalRecall, dateScheduled: dateTimeRecall);
             Appointment appt=AppointmentT.CreateAppointment(pat.PatNum,dateTimeAppt,opNum,provNum,aptStatus:apptStatus,aptNote:note);
 			ProcedureT.CreateProcedure(pat,strApptProcCode,procStatus,toothNum,procFee,dateTimeAppt,provNum:provNum,aptNum:appt.AptNum);
@@ -1209,7 +1209,7 @@ namespace UnitTests.Appointments_Tests {
 			DateTime tomorrow=DateTime.Today.AddDays(1);
 			AppointmentRuleT.CreateAppointmentRule(desc,"D0110","D1110");
 			//Set the webschednewpat Pref to not allow double booking
-			Prefs.UpdateInt(PrefName.WebSchedNewPatApptDoubleBooking,1);
+			Prefs.Set(PrefName.WebSchedNewPatApptDoubleBooking,1);
 			//Set the appttype as a webschednewpat appt type
 			AppointmentType apptType=AppointmentTypeT.CreateAppointmentType(desc,codeStr:"D0120",pattern:"//XXXX//");
 			Def wsnpApptTypeDef=DefT.CreateDefinition(DefCat.WebSchedNewPatApptTypes,desc,POut.Long(apptType.AppointmentTypeNum));
@@ -1239,7 +1239,7 @@ namespace UnitTests.Appointments_Tests {
 			string desc=MethodBase.GetCurrentMethod().Name;
 			DateTime tomorrow=DateTime.Today.AddDays(1);
 			//Set the webschednewpat Pref to allow double booking
-			Prefs.UpdateInt(PrefName.WebSchedNewPatApptDoubleBooking,0);
+			Prefs.Set(PrefName.WebSchedNewPatApptDoubleBooking,0);
 			//Set the appttype as a webschednewpat appt type
 			AppointmentType apptType=AppointmentTypeT.CreateAppointmentType(desc,codeStr:"D0120",pattern:"//XXXX//");
 			Def wsnpApptTypeDef=DefT.CreateDefinition(DefCat.WebSchedNewPatApptTypes,desc,POut.Long(apptType.AppointmentTypeNum));
@@ -1269,7 +1269,7 @@ namespace UnitTests.Appointments_Tests {
 			string desc=MethodBase.GetCurrentMethod().Name;
 			DateTime tomorrow=DateTime.Today.AddDays(1);
 			//Set the webschednewpat Pref to not allow double booking
-			Prefs.UpdateInt(PrefName.WebSchedNewPatApptDoubleBooking,1);
+			Prefs.Set(PrefName.WebSchedNewPatApptDoubleBooking,1);
 			//Set the appttype as a webschednewpat appt type
 			AppointmentType apptType=AppointmentTypeT.CreateAppointmentType(desc,codeStr:"D0120",pattern:"//XXXX//");
 			Def wsnpApptTypeDef=DefT.CreateDefinition(DefCat.WebSchedNewPatApptTypes,desc,POut.Long(apptType.AppointmentTypeNum));
@@ -1299,7 +1299,7 @@ namespace UnitTests.Appointments_Tests {
 			string desc=MethodBase.GetCurrentMethod().Name;
 			DateTime tomorrow=DateTime.Today.AddDays(1);
 			//Set the webschednewpat Pref to allow double booking
-			Prefs.UpdateInt(PrefName.WebSchedRecallDoubleBooking,0);
+			Prefs.Set(PrefName.WebSchedRecallDoubleBooking,0);
 			//Create a recall type
 			RecallTypeT.ClearRecallTypeTable();
 			RecallType recallType=RecallTypeT.CreateRecallType(timePattern:"XXXX");
@@ -1330,7 +1330,7 @@ namespace UnitTests.Appointments_Tests {
 			string desc=MethodBase.GetCurrentMethod().Name;
 			DateTime tomorrow=DateTime.Today.AddDays(1);
 			//Set the webschednewpat Pref to not allow double booking
-			Prefs.UpdateInt(PrefName.WebSchedRecallDoubleBooking,1);
+			Prefs.Set(PrefName.WebSchedRecallDoubleBooking,1);
 			//Create a recall type
 			RecallTypeT.ClearRecallTypeTable();
 			RecallType recallType=RecallTypeT.CreateRecallType(timePattern:"XXXX");

@@ -34,9 +34,9 @@ namespace OpenDental {
 			Clinic curClinic=Clinics.GetClinic(_clinicNum)??Clinics.GetDefaultForTexting()??Clinics.GetPracticeAsClinicZero();
 			List<long> listPatNums=(_listAppts.Select(x => x.PatNum).Union(_listRecalls.Select(x => x.PatNum))).Distinct().ToList();
 			_listPatComms=Patients.GetPatComms(listPatNums,curClinic,isGetFamily: false);
-			string textTemplate=ClinicPrefs.GetPrefValue(PrefName.WebSchedAsapTextTemplate,_clinicNum);
-			string emailTemplate=ClinicPrefs.GetPrefValue(PrefName.WebSchedAsapEmailTemplate,_clinicNum);
-			string emailSubject=ClinicPrefs.GetPrefValue(PrefName.WebSchedAsapEmailSubj,_clinicNum);
+			string textTemplate=ClinicPrefs.GetString(_clinicNum, PrefName.WebSchedAsapTextTemplate);
+			string emailTemplate=ClinicPrefs.GetString(_clinicNum, PrefName.WebSchedAsapEmailTemplate);
+			string emailSubject=ClinicPrefs.GetString(_clinicNum, PrefName.WebSchedAsapEmailSubj);
 			textTextTemplate.Text=AsapComms.ReplacesTemplateTags(textTemplate,_clinicNum,_dtSlotStart);
 			_emailText=AsapComms.ReplacesTemplateTags(emailTemplate,_clinicNum,_dtSlotStart,isHtmlEmail:true);
 			RefreshEmail();
@@ -47,7 +47,7 @@ namespace OpenDental {
 			else {
 				radioEmail.Checked=true;
 			}
-			_isTemplateRawHtml=PIn.Enum<EmailType>(ClinicPrefs.GetPrefValue(PrefName.WebSchedAsapEmailTemplateType,_clinicNum))==EmailType.RawHtml;
+			_isTemplateRawHtml=PIn.Enum<EmailType>(ClinicPrefs.GetString(_clinicNum, PrefName.WebSchedAsapEmailTemplateType))==EmailType.RawHtml;
 			FillSendDetails();
 			timerUpdateDetails.Start();
 		}

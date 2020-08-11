@@ -291,10 +291,10 @@ namespace OpenDentBusiness{
 			if(!MobileAppDevices.IsClinicSignedUpForEClipboard(PrefC.HasClinicsEnabled?appt.ClinicNum:0)) { //this clinic isn't signed up for this feature
 				return 0;
 			}
-			if(!ClinicPrefs.GetBool(PrefName.EClipboardCreateMissingFormsOnCheckIn,appt.ClinicNum)) { //This feature is turned off
+			if(!ClinicPrefs.GetBool(appt.ClinicNum,PrefName.EClipboardCreateMissingFormsOnCheckIn)) { //This feature is turned off
 				return 0;
 			}
-			bool useDefault=ClinicPrefs.GetBool(PrefName.EClipboardUseDefaults,appt.ClinicNum);
+			bool useDefault=ClinicPrefs.GetBool(appt.ClinicNum,PrefName.EClipboardUseDefaults);
 			List<EClipboardSheetDef> listSheetsToCreate=EClipboardSheetDefs.GetForClinic(useDefault ? 0 : appt.ClinicNum);
 			if(listSheetsToCreate.Count==0) { //There aren't any sheets to create here
 				return 0;
@@ -519,7 +519,7 @@ namespace OpenDentBusiness{
 				+"FROM sheet WHERE IsDeleted=0 "
 				+"AND PatNum ="+POut.Long(patNum)+" "
 				+"AND (SheetType="+POut.Long((int)SheetTypeEnum.PatientForm)+" OR SheetType="+POut.Long((int)SheetTypeEnum.MedicalHistory);
-			if(PrefC.GetBool(PrefName.PatientFormsShowConsent)) {
+			if(Prefs.GetBool(PrefName.PatientFormsShowConsent)) {
 				command+=" OR SheetType="+POut.Long((int)SheetTypeEnum.Consent);//Show consent forms if pref is true.
 			}
 			command+=")";

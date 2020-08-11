@@ -58,7 +58,7 @@ namespace OpenDental {
 					radioDoseSpotLegacy.Checked=true;
 					//HideLegacy();
 				}
-				textNewCropAccountID.Text=PrefC.GetString(PrefName.NewCropAccountId);
+				textNewCropAccountID.Text=Prefs.GetString(PrefName.NewCropAccountId);
 				List<ProgramProperty> listClinicIDs=_listProgramProperties.FindAll(x => x.Name==Erx.PropertyDescs.ClinicID);
 				List<ProgramProperty> listClinicKeys=_listProgramProperties.FindAll(x => x.Name==Erx.PropertyDescs.ClinicKey);
 				//Always make sure clinicnum 0 (HQ) exists, regardless of if clinics are enabled

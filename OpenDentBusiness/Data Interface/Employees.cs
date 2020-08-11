@@ -286,7 +286,7 @@ namespace OpenDentBusiness{
 					continue;
 				}
 				foreach(Userod userCur in listUsers) {//At this point we know there is at least one Userod associated to this employee.
-					if(userCur.ClinicNum==0) {//User's default clinic is HQ
+					if(userCur.ClinicId==0) {//User's default clinic is HQ
 						listEmpsUnassigned.Add(empCur);
 						continue;
 					}

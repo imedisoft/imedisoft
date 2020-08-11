@@ -22,7 +22,7 @@ namespace OpenDental
 		private void FormSupportStatus_Load(object sender, EventArgs e)
 		{
 			//Cursor = Cursors.WaitCursor;
-			//_regKey = PrefC.GetString(PrefName.RegistrationKey);
+			//_regKey = Prefs.GetString(PrefName.RegistrationKey);
 			//textRegKey.Text = _regKey;
 			//XmlWriterSettings settings = new XmlWriterSettings();
 			//settings.Indent = true;

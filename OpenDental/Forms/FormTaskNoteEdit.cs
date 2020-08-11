@@ -1,115 +1,144 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
+using OpenDental;
 using OpenDentBusiness;
+using System;
+using System.Windows.Forms;
 
-namespace OpenDental {
-	public partial class FormTaskNoteEdit:ODForm {
-		public TaskNote TaskNoteCur;
-		///<summary>Only called when DialogResult is OK (for OK button and sometimes delete button).</summary>
-		public delegate void DelegateEditComplete(object sender);
-		///<summary>Called when this form is closed.</summary>
-		public DelegateEditComplete EditComplete;
+namespace Imedisoft.Forms
+{
+    public partial class FormTaskNoteEdit : FormBase
+	{
+		private readonly TaskNote taskNote;
 
-		public FormTaskNoteEdit() {
+		/// <summary>
+		/// Called when this form is closed.
+		/// </summary>
+		public EventHandler EditComplete;
+
+		public FormTaskNoteEdit(TaskNote taskNote)
+        {
 			InitializeComponent();
-			Lan.F(this);
+
+			this.taskNote = taskNote;
 		}
 
-		private void FormTaskNoteEdit_Load(object sender,EventArgs e) {
-			textDateTime.Text=TaskNoteCur.DateTimeNote.ToString();
-			textUser.Text=Userods.GetName(TaskNoteCur.UserNum);
-			textNote.Text=TaskNoteCur.Note;
-			textNote.Select(TaskNoteCur.Note.Length,0);
-			this.Top+=150;
-			if(TaskNoteCur.IsNew) {
-				textDateTime.ReadOnly=true;
+		private void FormTaskNoteEdit_Load(object sender, EventArgs e)
+		{
+			dateTimeTextBox.Text = taskNote.DateModified.ToString();
+			userTextBox.Text = Userods.GetName(taskNote.UserId);
+			noteTextBox.Text = taskNote.Note;
+			noteTextBox.Select(taskNote.Note.Length, 0);
+
+			Top += 150;
+
+			if (taskNote.Id == 0)
+			{
+				dateTimeTextBox.ReadOnly = true;
 			}
-			else if(!Security.IsAuthorized(Permissions.TaskNoteEdit)) {//Tasknotes are not editable unless user has TaskNoteEdit permission.
-				butOK.Enabled=false;
-				butDelete.Enabled=false;
+			else if (!Security.IsAuthorized(Permissions.TaskNoteEdit))
+			{
+				acceptButton.Enabled = false;
+				deleteButton.Enabled = false;
 			}
 		}
 
-		private void OnEditComplete() {
-			if(EditComplete!=null) {
-				EditComplete(this);
+		protected virtual void OnEditComplete() 
+			=> EditComplete?.Invoke(this, EventArgs.Empty);
+
+		private void DeleteButton_Click(object sender, EventArgs e)
+		{
+			if (Prompt("Delete?") == DialogResult.No) return;
+
+			if (taskNote.Id > 0)
+			{
+				TaskNotes.Delete(taskNote.Id);
+
+				DialogResult = DialogResult.OK;
+
+				OnEditComplete();
+
+				Tasks.TaskEditCreateLog(Permissions.TaskNoteEdit, "Deleted note from task", Tasks.GetOne(taskNote.TaskId));
+			}
+            else
+            {
+				DialogResult = DialogResult.Cancel;
+			}
+
+			Close();
+		}
+
+		private void AutoNoteButton_Click(object sender, EventArgs e)
+		{
+			using var formAutoNoteCompose = new FormAutoNoteCompose();
+
+			if (formAutoNoteCompose.ShowDialog() == DialogResult.OK)
+			{
+				noteTextBox.Text += formAutoNoteCompose.CompletedNote;
 			}
 		}
 
-		private void butDelete_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")) {
+		private void AcceptButton_Click(object sender, EventArgs e)
+		{
+			var note = noteTextBox.Text.Trim();
+			if (note.Length == 0)
+			{
+				ShowError("Please enter a note, or delete this entry.");
+
 				return;
 			}
-			if(TaskNoteCur.IsNew) {
-				DialogResult=DialogResult.Cancel;
-				Close();//Needed because the window is called as a non-modal window.
+
+			if (Tasks.IsTaskDeleted(taskNote.TaskId))
+			{
+				ShowError("The task for this note was deleted.");
+
 				return;
 			}
-			TaskNotes.Delete(TaskNoteCur.TaskNoteNum);
-			DialogResult=DialogResult.OK;
-			OnEditComplete();//Signals sent from FormTaskEdit.
-			Tasks.TaskEditCreateLog(Permissions.TaskNoteEdit,Lan.G(this,"Deleted note from task"),Tasks.GetOne(TaskNoteCur.TaskNum));
-			Close();//Needed because the window is called as a non-modal window.
-		}
 
-		private void butAutoNote_Click(object sender,EventArgs e) {
-			FormAutoNoteCompose FormA=new FormAutoNoteCompose();
-			FormA.ShowDialog();
-			if(FormA.DialogResult==DialogResult.OK){
-				textNote.Text+=FormA.CompletedNote;
-			}
-		}
+			if (!DateTime.TryParse(dateTimeTextBox.Text, out var dateModified))
+            {
+				ShowError("Please fix date.");
 
-
-		private void butOK_Click(object sender,EventArgs e) {
-			if(textNote.Text=="") {
-				MessageBox.Show("Please enter a note, or delete this entry.");
 				return;
 			}
-			if(Tasks.IsTaskDeleted(TaskNoteCur.TaskNum)) {  //If this is for a new task we do have a valid TaskNum because of pre-insert
-				MessageBox.Show("The task for this note was deleted.");
-				return;//Don't allow user to create orphaned notes, or try to edit a tasknote that was probably deleted too.
-			}
-			//We need the old datetime to check if the user made any changes.  We overrite TaskNoteCur's date time below so need to get it here.
-			DateTime dateTimeNoteOld=TaskNoteCur.DateTimeNote;
-			try {
-				TaskNoteCur.DateTimeNote=DateTime.Parse(textDateTime.Text);
-			}
-			catch{
-				MessageBox.Show("Please fix date.");
-				return;
-			}
-			if(TaskNoteCur.IsNew) {
-				TaskNoteCur.Note=textNote.Text;
-				TaskNotes.Insert(TaskNoteCur);
-				Tasks.TaskEditCreateLog(Permissions.TaskNoteEdit,Lan.G(this,"Added task note"),Tasks.GetOne(TaskNoteCur.TaskNum));
-				DialogResult=DialogResult.OK;
+
+			if (taskNote.Id == 0)
+			{
+				taskNote.Note = noteTextBox.Text;
+				taskNote.DateModified = dateModified;
+
+				TaskNotes.Insert(taskNote);
+
+				Tasks.TaskEditCreateLog(Permissions.TaskNoteEdit, "Added task note", Tasks.GetOne(taskNote.TaskId));
+
+				DialogResult = DialogResult.OK;
+
 				OnEditComplete();
 			}
-			else if(TaskNoteCur.Note!=textNote.Text || dateTimeNoteOld!=TaskNoteCur.DateTimeNote) {
-				TaskNoteCur.Note=textNote.Text;
-				TaskNotes.Update(TaskNoteCur);
-				Tasks.TaskEditCreateLog(Permissions.TaskNoteEdit,Lan.G(this,"Task note changed"),Tasks.GetOne(TaskNoteCur.TaskNum));
-				DialogResult=DialogResult.OK;
+			else if (taskNote.Note != noteTextBox.Text || dateModified != taskNote.DateModified)
+			{
+				taskNote.Note = noteTextBox.Text;
+				taskNote.DateModified = dateModified;
+
+				TaskNotes.Update(taskNote);
+
+				Tasks.TaskEditCreateLog(Permissions.TaskNoteEdit, "Task note changed", Tasks.GetOne(taskNote.TaskId));
+
+				DialogResult = DialogResult.OK;
+
 				OnEditComplete();
 			}
-			else {
-				//Intentionally blank, user opened an existing task note and did not change the note but clicked OK.
-				//This is effectively equivilent to a Cancel click
-				DialogResult=DialogResult.Cancel;
+			else
+			{
+				DialogResult = DialogResult.Cancel;
 			}
-			Close();//Needed because the window is called as a non-modal window.
+
+			Close();
 		}
 
-		private void butCancel_Click(object sender,EventArgs e) {
-			DialogResult=DialogResult.Cancel;
-			Close();//Needed because the window is called as a non-modal window.
-		}
+		private void CancelButton_Click(object sender, EventArgs e)
+		{
+			DialogResult = DialogResult.Cancel;
 
+			Close();
+		}
 	}
 }

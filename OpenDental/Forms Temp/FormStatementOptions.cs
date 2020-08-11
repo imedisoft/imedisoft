@@ -634,7 +634,7 @@ namespace OpenDental{
 					SetEnabled(false);
 				}
 				textDate.Text=StmtCur.DateSent.ToShortDateString();
-				checkBoxBillShowTransSinceZero.Checked=PrefC.GetBool(PrefName.BillingShowTransSinceBalZero);
+				checkBoxBillShowTransSinceZero.Checked=Prefs.GetBool(PrefName.BillingShowTransSinceBalZero);
 				listMode.Items.Clear();
 				for(int i=0;i<Enum.GetNames(typeof(StatementMode)).Length;i++){
 					listMode.Items.Add(Lan.G("enumStatementMode",Enum.GetNames(typeof(StatementMode))[i]));
@@ -691,7 +691,7 @@ namespace OpenDental{
 				}
 				textNote.Text=StmtCur.Note;
 				textNoteBold.Text=StmtCur.NoteBold;
-				if(StmtCur.StatementType!=StmtType.LimitedStatement && PrefC.GetBool(PrefName.ShowFeatureSuperfamilies)) {
+				if(StmtCur.StatementType!=StmtType.LimitedStatement && Prefs.GetBool(PrefName.ShowFeatureSuperfamilies)) {
 					Patient guarantor=Patients.GetFamily(StmtCur.PatNum).ListPats[0];
 					_superHead=Patients.GetPat(guarantor.SuperFamily);
 					if(StmtCur.IsNew && !StmtCur.IsSent && guarantor.HasSuperBilling && guarantor.SuperFamily>0 && _superHead!=null && _superHead.HasSuperBilling) {
@@ -1027,7 +1027,7 @@ namespace OpenDental{
 				if(checkSuperStatement.Checked && guarantor!=null && guarantor.SuperFamily!=0) {
 					List<Patient> listFamilyGuarantors=Patients.GetSuperFamilyGuarantors(guarantor.SuperFamily).FindAll(x => x.HasSuperBilling);
 					//exclude fams with neg balances in the total for super family stmts (per Nathan 5/25/2016)
-					if(PrefC.GetBool(PrefName.BalancesDontSubtractIns)) {
+					if(Prefs.GetBool(PrefName.BalancesDontSubtractIns)) {
 						listFamilyGuarantors=listFamilyGuarantors.FindAll(x => x.BalTotal>0);
 					}
 					else {
@@ -1194,7 +1194,7 @@ namespace OpenDental{
 			if(checkSuperStatement.Checked && guarantor!=null && guarantor.SuperFamily!=0) {
 				List<Patient> listFamilyGuarantors=Patients.GetSuperFamilyGuarantors(guarantor.SuperFamily).FindAll(x => x.HasSuperBilling);
 				//exclude fams with neg balances in the total for super family stmts (per Nathan 5/25/2016)
-				if(PrefC.GetBool(PrefName.BalancesDontSubtractIns)) {
+				if(Prefs.GetBool(PrefName.BalancesDontSubtractIns)) {
 					listFamilyGuarantors=listFamilyGuarantors.FindAll(x => x.BalTotal>0);
 				}
 				else {
@@ -1301,8 +1301,8 @@ namespace OpenDental{
 		private void butPreviewSheets() {
 			Patient patCur = Patients.GetPat(StmtCur.PatNum);
 			if(StmtCur.DocNum!=0 && checkIsSent.Checked) {//initiallySent && checkIsSent.Checked){
-				string billingType=PrefC.GetString(PrefName.BillingUseElectronic);
-				if(StmtCur.Mode_==StatementMode.Electronic && (billingType=="1" || billingType=="3") && !PrefC.GetBool(PrefName.BillingElectCreatePDF)) {
+				string billingType=Prefs.GetString(PrefName.BillingUseElectronic);
+				if(StmtCur.Mode_==StatementMode.Electronic && (billingType=="1" || billingType=="3") && !Prefs.GetBool(PrefName.BillingElectCreatePDF)) {
 					MessageBox.Show("PDF's are not saved for electronic billing.  Unable to view.");
 					return;
 				}
@@ -1319,7 +1319,7 @@ namespace OpenDental{
 				if(checkSuperStatement.Checked && guarantor!=null && guarantor.SuperFamily!=0) {
 					List<Patient> listFamilyGuarantors=Patients.GetSuperFamilyGuarantors(guarantor.SuperFamily).FindAll(x => x.HasSuperBilling);
 					//exclude fams with neg balances in the total for super family stmts (per Nathan 5/25/2016)
-					if(PrefC.GetBool(PrefName.BalancesDontSubtractIns)) {
+					if(Prefs.GetBool(PrefName.BalancesDontSubtractIns)) {
 						listFamilyGuarantors=listFamilyGuarantors.FindAll(x => x.BalTotal>0);
 					}
 					else {
@@ -1804,7 +1804,7 @@ namespace OpenDental{
 				StmtCur.DateRangeFrom=PIn.Date(textDateStart.Text);//handles blank
 				if(checkBoxBillShowTransSinceZero.Checked) {
 					DateTime dateAsOf=DateTime.Today;//used to determine when the balance on this date began
-					if(PrefC.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)) {//if aging calculated monthly, use the last aging date instead of today
+					if(Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)) {//if aging calculated monthly, use the last aging date instead of today
 						dateAsOf=PrefC.GetDate(PrefName.DateLastAging);
 					}
 					Patient patCur=Patients.GetPat(StmtCur.PatNum);
@@ -1852,7 +1852,7 @@ namespace OpenDental{
 				if(checkBoxBillShowTransSinceZero.Checked) {
 					//make lookup dict of key=PatNum, value=DateBalBegan
 					DateTime dateAsOf=DateTime.Today;//used to determine when the balance on this date began
-					if(PrefC.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)) {//if aging calculated monthly, use the last aging date instead of today
+					if(Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)) {//if aging calculated monthly, use the last aging date instead of today
 						dateAsOf=PrefC.GetDate(PrefName.DateLastAging);
 					}
 					List<Patient> listPatients=Patients.GetMultPats(StmtList.Select(x=>x.PatNum).ToList()).ToList();

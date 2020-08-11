@@ -91,7 +91,7 @@ namespace OpenDentBusiness {
 					+$@"WHERE payplancharge.Principal + payplancharge.Interest>0
 					AND payplancharge.ChargeType = {(int)PayPlanChargeType.Debit} "
 					//include all charges in the past or due 'PayPlanBillInAdvance' days into the future.
-					+$@"AND payplancharge.ChargeDate <= {POut.Date(DateTime.Today.AddDays(PrefC.GetDouble(PrefName.PayPlansBillInAdvanceDays)))}
+					+$@"AND payplancharge.ChargeDate <= {POut.Date(DateTime.Today.AddDays(Prefs.GetDouble(PrefName.PayPlansBillInAdvanceDays)))}
 					{whereAndClinNum}
 					GROUP BY {guarOrPat}.PatNum";
 				using(DataTable tableMaxPPCDate=Database.ExecuteDataTable(command)) {
@@ -129,7 +129,7 @@ namespace OpenDentBusiness {
 				}
 			}
 			DateTime dateAsOf=DateTime.Today;//used to determine when the balance on this date began
-			if(PrefC.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)) {//if aging calculated monthly, use the last aging date instead of today
+			if(Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)) {//if aging calculated monthly, use the last aging date instead of today
 				dateAsOf=PrefC.GetDate(PrefName.DateLastAging);
 			}
 			List<PatComm> listPatComms=new List<PatComm>();
@@ -170,7 +170,7 @@ namespace OpenDentBusiness {
 			if(datePayPlanChargeMax > dateLastTrans) {
 				//There is a chance that this patient has already received a statement due to this payment plan charge due to the fact that we allow
 				//for "billing X days in advance" for payment plans only (via PayPlansBillInAdvanceDays).
-				long billInAdvanceDays=PrefC.GetLong(PrefName.PayPlansBillInAdvanceDays);
+				long billInAdvanceDays=Prefs.GetLong(PrefName.PayPlansBillInAdvanceDays);
 				//Only set dateLastTrans to a payment plan charge date if the charge falls outside of the "bill X days in advance" preference.
 				//E.g. A statement on the 1st of the month is treated as having covored all payment plan charges until the 11th when pref is set to 10 days.
 				//However, dateLastTrans needs to be set when a billing list is created on the 5th with a new payment plan charge on the 14th.

@@ -110,14 +110,14 @@ namespace OpenDentHL7
 				throw new ApplicationException("Connection to database failed.");
 			}
 			//check db version
-			string dbVersion = PrefC.GetString(PrefName.ProgramVersion);
+			string dbVersion = Prefs.GetString(PrefName.ProgramVersion);
 			if (Application.ProductVersion.ToString() != dbVersion)
 			{
 				EventLog.WriteEntry("OpenDentHL7", "Versions do not match.  Db version:" + dbVersion + ".  Application version:" + Application.ProductVersion.ToString(), EventLogEntryType.Error);
 				throw new ApplicationException("Versions do not match.  Db version:" + dbVersion + ".  Application version:" + Application.ProductVersion.ToString());
 			}
 			//connected to the database, set the current user
-			//Security.CurUser=Userods.GetUser(PrefC.GetLong(PrefName.ODServiceSecUserNum));
+			//Security.CurUser=Userods.GetUser(Prefs.GetLong(PrefName.ODServiceSecUserNum));
 			Security.CurrentUser = new Userod() { UserName = "ODServiceSecUser" };
 			#region MedLab HL7
 			_medLabHL7DefEnabled = HL7Defs.GetOneDeepEnabled(true);

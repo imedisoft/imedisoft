@@ -10,6 +10,7 @@ using OpenDentBusiness;
 using OpenDental;
 using OpenDental.UI;
 using CodeBase;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormEhrLabOrderImport:ODForm {
@@ -145,7 +146,7 @@ namespace OpenDental {
 			if(FormPS.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			PatCur=Patients.GetPat(FormPS.SelectedPatNum);
+			PatCur=Patients.GetPat(FormPS.SelectedPatientId);
 			FillPatientPicker();
 		}
 
@@ -174,8 +175,8 @@ namespace OpenDental {
 					}
 				}
 				ListEhrLabs[i].PatNum=PatCur.PatNum; 
-				Provider prov=Providers.GetProv(Security.CurrentUser.ProvNum);
-				if(Security.CurrentUser.ProvNum!=0 && EhrProvKeys.GetKeysByFLName(prov.LName,prov.FName).Count>0) {//The user who is currently logged in is a provider and has a valid EHR key.
+				Provider prov=Providers.GetProv(Security.CurrentUser.ProviderId);
+				if(Security.CurrentUser.ProviderId!=0 && EhrProvKeys.GetKeysByFLName(prov.LName,prov.FName).Count>0) {//The user who is currently logged in is a provider and has a valid EHR key.
 					ListEhrLabs[i].IsCpoe=true;
 				}
 				ListEhrLabs[i]=EhrLabs.SaveToDB(ListEhrLabs[i]);//SAVE

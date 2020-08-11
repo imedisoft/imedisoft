@@ -12,7 +12,7 @@ namespace OpenDentBusiness {
 
 		//IMPORTANT NOTE FOR ANYBODY WHO CODES IN HERE:  This is used in the CEMT so everything MUST be coded in such a way that they don't use the 
 		//cache to look up information.  The CEMT does NOT keep copies of the remote database caches when this is used so things such as 
-		//PrefC.GetBool or Clinics.GetDesc will return incorrect results.
+		//Prefs.GetBool or Clinics.GetDesc will return incorrect results.
 
 		///<summary>If not using clinics then supply an empty list of clinics.</summary>
 		public static DataSet GetData(DateTime dateFrom,DateTime dateTo,List<Provider> listProvs,List<Clinic> listClinics,bool hasAllProvs

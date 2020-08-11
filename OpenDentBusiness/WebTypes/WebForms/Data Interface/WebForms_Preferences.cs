@@ -18,7 +18,7 @@ namespace OpenDentBusiness.WebTypes.WebForms
 			bool retVal = false;
 			if (string.IsNullOrEmpty(regKey))
 			{
-				regKey = PrefC.GetString(PrefName.RegistrationKey);
+				regKey = Prefs.GetString(PrefName.RegistrationKey);
 			}
 
 			try
@@ -44,7 +44,7 @@ namespace OpenDentBusiness.WebTypes.WebForms
 			pref = new WebForms_Preference();
 			if (string.IsNullOrEmpty(regKey))
 			{
-				regKey = PrefC.GetString(PrefName.RegistrationKey);
+				regKey = Prefs.GetString(PrefName.RegistrationKey);
 			}
 
 			try

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using OpenDentBusiness;
 using OpenDentBusiness.HL7;
 using OpenDental.UI;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormMedLabPatSelect:ODForm {
@@ -181,10 +182,10 @@ namespace OpenDental {
 			if(FormPS.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			if(PatCur!=null && PatCur.PatNum==FormPS.SelectedPatNum) {
+			if(PatCur!=null && PatCur.PatNum==FormPS.SelectedPatientId) {
 				return;
 			}
-			PatCur=Patients.GetPat(FormPS.SelectedPatNum);
+			PatCur=Patients.GetPat(FormPS.SelectedPatientId);
 			textName.Text=PatCur.GetNameFL();
 			labelExistingLab.Visible=true;
 		}

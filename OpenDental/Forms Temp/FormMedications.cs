@@ -517,8 +517,8 @@ namespace OpenDental{
 		private string GetFilenameFromUser(bool isImport) {
 			Cursor=Cursors.WaitCursor;
 			string initialDirectory="";
-			if(Directory.Exists(PrefC.GetString(PrefName.DocPath))) {
-				initialDirectory=PrefC.GetString(PrefName.DocPath);
+			if(Directory.Exists(Prefs.GetString(PrefName.DocPath))) {
+				initialDirectory=Prefs.GetString(PrefName.DocPath);
 			}
 			else if(Directory.Exists("C:\\")) {
 				initialDirectory="C:\\";

@@ -42,7 +42,7 @@ namespace UnitTests.RepeatCharges_Tests {
 			Patient patOld=pat.Copy();
 			pat.BillingCycleDay=11;
 			Patients.Update(pat,patOld);
-			Prefs.UpdateBool(PrefName.BillingUseBillingCycleDay,true);
+			Prefs.Set(PrefName.BillingUseBillingCycleDay,true);
 			UpdateHistoryT.CreateUpdateHistory("16.1.1.0");
 			Prefs.RefreshCache();
 			//delete all existing repeating charges
@@ -319,7 +319,7 @@ namespace UnitTests.RepeatCharges_Tests {
 			Patient patOld=pat.Copy();
 			pat.BillingCycleDay=11;
 			Patients.Update(pat,patOld);
-			Prefs.UpdateBool(PrefName.BillingUseBillingCycleDay,true);
+			Prefs.Set(PrefName.BillingUseBillingCycleDay,true);
 			UpdateHistoryT.CreateUpdateHistory("16.1.1.0");
 			Prefs.RefreshCache();
 			List<RepeatCharge> listRepeatingCharges=RepeatCharges.Refresh(0).ToList();
@@ -385,7 +385,7 @@ namespace UnitTests.RepeatCharges_Tests {
 			Patient patOld=pat.Copy();
 			pat.BillingCycleDay=15;
 			Patients.Update(pat,patOld);
-			Prefs.UpdateBool(PrefName.BillingUseBillingCycleDay,true);
+			Prefs.Set(PrefName.BillingUseBillingCycleDay,true);
 			UpdateHistoryT.CreateUpdateHistory("16.1.1.0");
 			Prefs.RefreshCache();
 			List<RepeatCharge> listRepeatingCharges=RepeatCharges.Refresh(0).ToList();
@@ -649,7 +649,7 @@ namespace UnitTests.RepeatCharges_Tests {
 			string strBeginDateTimeExpected="";//Will be empty after a successfully run Repeating Charges.
 			RepeatCharges.RunRepeatingCharges(dateTimeLastRunExpected);
 			Prefs.RefreshCache();
-			Assert.AreEqual(strBeginDateTimeExpected,PrefC.GetString(PrefName.RepeatingChargesBeginDateTime));
+			Assert.AreEqual(strBeginDateTimeExpected,Prefs.GetString(PrefName.RepeatingChargesBeginDateTime));
 			Assert.AreEqual(dateTimeLastRunExpected,PrefC.GetDateT(PrefName.RepeatingChargesLastDateTime));
 		}
 	}

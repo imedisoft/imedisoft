@@ -14,14 +14,14 @@ namespace OpenDentBusiness
 		{
 			get
 			{
-				string newCropName = PrefC.GetString(PrefName.NewCropName);
+				string newCropName = Prefs.GetString(PrefName.NewCropName);
 				if (newCropName != "")
 				{ 
 					// Distributors use this field to send different credentials. Thus, if blank, then send OD credentials.
-					return PrefC.GetString(PrefName.NewCropPartnerName); // Distributor
+					return Prefs.GetString(PrefName.NewCropPartnerName); // Distributor
 				}
 
-				if (PrefC.GetBool(PrefName.NewCropIsLexiData))
+				if (Prefs.GetBool(PrefName.NewCropIsLexiData))
 				{
 					return "OpenDentalLexi";
 				}
@@ -36,7 +36,7 @@ namespace OpenDentBusiness
 		{
 			get
 			{
-				string newCropName = PrefC.GetString(PrefName.NewCropName);
+				string newCropName = Prefs.GetString(PrefName.NewCropName);
 				if (newCropName != "")
 				{ //Distributors use this field to send different credentials. Thus, if blank, then send OD credentials.
 					return newCropName;//Distributor
@@ -45,7 +45,7 @@ namespace OpenDentBusiness
 				return CodeBase.MiscUtils.Decrypt("Xv40GArhEXYjEZxAE3Fw9g==");//Assigned by NewCrop. Used globally for all customers.
 #else
 				//Assigned by NewCrop.  Used globally for all customers.
-				if(PrefC.GetBool(PrefName.NewCropIsLexiData)) {
+				if(Prefs.GetBool(PrefName.NewCropIsLexiData)) {
 					return CodeBase.MiscUtils.Decrypt("22kFdicmXHDom20yKqaLIJAo0iq9fGvQnjjyV7Pb3Pn51zo0gjs0/h8eWNyCPO68");
 				}
 				else {//First Data Bank (FDB) customers.
@@ -59,16 +59,16 @@ namespace OpenDentBusiness
 		{
 			get
 			{
-				string newCropName = PrefC.GetString(PrefName.NewCropName);
+				string newCropName = Prefs.GetString(PrefName.NewCropName);
 				if (newCropName != "")
 				{ //Distributors use this field to send different credentials. Thus, if blank, then send OD credentials.
-					return PrefC.GetString(PrefName.NewCropPassword);//Distributor
+					return Prefs.GetString(PrefName.NewCropPassword);//Distributor
 				}
 #if DEBUG
 				return CodeBase.MiscUtils.Decrypt("Xv40GArhEXYjEZxAE3Fw9g==");//Assigned by NewCrop. Used globally for all customers.
 #else
 				//Assigned by NewCrop. Used globally for all customers.
-				if(PrefC.GetBool(PrefName.NewCropIsLexiData)) {
+				if(Prefs.GetBool(PrefName.NewCropIsLexiData)) {
 					return CodeBase.MiscUtils.Decrypt("tv9uB38IYv1dRddpVgJjDYD9JlEpPhWd3VpmXd9KtpS7DkOxUdYt8ggS+tFZeYsv");
 				}
 				else {//First Data Bank (FDB) customers.

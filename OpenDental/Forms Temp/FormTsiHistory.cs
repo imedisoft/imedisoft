@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Forms;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -457,8 +458,8 @@ namespace OpenDental {
 			if(FormPS.ShowDialog()!=DialogResult.OK) {
 				return;
 			}
-			Family fam=Patients.GetFamily(FormPS.SelectedPatNum);
-			textPatient.Text=fam.GetNameInFamLF(FormPS.SelectedPatNum);
+			Family fam=Patients.GetFamily(FormPS.SelectedPatientId);
+			textPatient.Text=fam.GetNameInFamLF(FormPS.SelectedPatientId);
 			_listSelectedFamPatNums=fam.ListPats.Select(x => x.PatNum).ToList();
 			FillGrid();
 		}

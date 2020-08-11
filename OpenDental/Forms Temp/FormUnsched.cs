@@ -352,7 +352,7 @@ namespace OpenDental{
 			for(int i=0;i<_listProviders.Count;i++) {
 				comboProv.Items.Add(_listProviders[i].GetLongDesc());
 			}
-			if(PrefC.GetBool(PrefName.EasyHidePublicHealth)){
+			if(Prefs.GetBool(PrefName.EasyHidePublicHealth)){
 				comboSite.Visible=false;
 				labelSite.Visible=false;
 			}
@@ -364,7 +364,7 @@ namespace OpenDental{
 					comboSite.Items.Add(_listSites[i].Description);
 				}
 			}
-			if(PrefC.GetBool(PrefName.EnterpriseApptList)){
+			if(Prefs.GetBool(PrefName.EnterpriseApptList)){
 				comboClinic.IncludeAll=false;
 			}
 			_listAptSelected=new List<long>();
@@ -551,7 +551,7 @@ namespace OpenDental{
 						provNum=_listProviders[comboProv.SelectedIndex-1].ProvNum;
 					}
 					long siteNum=0;
-					if(!PrefC.GetBool(PrefName.EasyHidePublicHealth) && comboSite.SelectedIndex!=0) {
+					if(!Prefs.GetBool(PrefName.EasyHidePublicHealth) && comboSite.SelectedIndex!=0) {
 						siteNum=_listSites[comboSite.SelectedIndex-1].SiteNum;
 					}
 					bool showBrokenAppts;

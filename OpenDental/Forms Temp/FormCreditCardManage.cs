@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using OpenDental.Bridges;
 using CodeBase;
 using OpenDentBusiness.IO;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormCreditCardManage:ODForm {
@@ -24,7 +25,7 @@ namespace OpenDental {
 		}
 		
 		private void FormCreditCardManage_Load(object sender,EventArgs e) {
-			if(PrefC.GetBool(PrefName.StoreCCnumbers)
+			if(Prefs.GetBool(PrefName.StoreCCnumbers)
 				&& (Programs.IsEnabled(ProgramName.Xcharge) 
 					|| Programs.IsEnabled(ProgramName.PayConnect) 
 					|| Programs.IsEnabled(ProgramName.PaySimple)))//tokens supported by Xcharge and PayConnect
@@ -106,7 +107,7 @@ namespace OpenDental {
 		}
 
 		private void butAdd_Click(object sender,EventArgs e) {
-			if(!PrefC.GetBool(PrefName.StoreCCnumbers)) {
+			if(!Prefs.GetBool(PrefName.StoreCCnumbers)) {
 				bool hasXCharge=false;
 				bool hasPayConnect=false;
 				bool hasPaySimple=false;
@@ -245,7 +246,7 @@ namespace OpenDental {
 								creditCardCur.CCNumberMasked=accountMasked;
 								creditCardCur.XChargeToken=xChargeToken;
 								creditCardCur.CCExpiration=new DateTime(Convert.ToInt32("20"+PIn.String(exp.Substring(2,2))),Convert.ToInt32(PIn.String(exp.Substring(0,2))),1);
-								creditCardCur.Procedures=PrefC.GetString(PrefName.DefaultCCProcs);
+								creditCardCur.Procedures=Prefs.GetString(PrefName.DefaultCCProcs);
 								creditCardCur.CCSource=CreditCardSource.XServer;
 								creditCardCur.ClinicNum=Clinics.ClinicNum;
 								CreditCards.Insert(creditCardCur);
@@ -274,7 +275,7 @@ namespace OpenDental {
 			FormCreditCardEdit FormCCE=new FormCreditCardEdit(PatCur);
 			FormCCE.CreditCardCur=new CreditCard();
 			FormCCE.CreditCardCur.IsNew=true;
-			FormCCE.CreditCardCur.Procedures=PrefC.GetString(PrefName.DefaultCCProcs);
+			FormCCE.CreditCardCur.Procedures=Prefs.GetString(PrefName.DefaultCCProcs);
 			FormCCE.ShowDialog();
 			if(FormCCE.DialogResult==DialogResult.OK) {
 				FillGrid();
@@ -299,12 +300,12 @@ namespace OpenDental {
 			int selected=gridMain.GetSelectedIndex();
 			CreditCard creditCard=_listCreditCards[selected];
 			long patNumOrig=creditCard.PatNum;
-			creditCard.PatNum=form.SelectedPatNum;
+			creditCard.PatNum=form.SelectedPatientId;
 			CreditCards.Update(creditCard);
 			FillGrid();
 			MessageBox.Show("Credit card moved successfully");
-			SecurityLogs.MakeLogEntry(Permissions.CreditCardMove,patNumOrig,$"Credit card moved to PatNum: {form.SelectedPatNum}");
-			SecurityLogs.MakeLogEntry(Permissions.CreditCardMove,form.SelectedPatNum,$"Credit card moved from PatNum: {patNumOrig}");
+			SecurityLogs.MakeLogEntry(Permissions.CreditCardMove,patNumOrig,$"Credit card moved to PatNum: {form.SelectedPatientId}");
+			SecurityLogs.MakeLogEntry(Permissions.CreditCardMove,form.SelectedPatientId, $"Credit card moved from PatNum: {patNumOrig}");
 		}
 
 		private void butUp_Click(object sender,EventArgs e) {

@@ -275,7 +275,7 @@ namespace OpenDental {
 				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
-			if(PIn.Date(textAdjDate.Text).Date > DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
+			if(PIn.Date(textAdjDate.Text).Date > DateTime.Today.Date && !Prefs.GetBool(PrefName.FutureTransDatesAllowed)) {
 				MessageBox.Show("Adjustment date can not be in the future.");
 				return;
 			}

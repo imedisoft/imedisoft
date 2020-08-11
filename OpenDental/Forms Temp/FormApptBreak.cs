@@ -42,7 +42,7 @@ namespace OpenDental {
 		}
 
 		private void PromptTextASAPList() {
-			if(!PrefC.GetBool(PrefName.WebSchedAsapEnabled) || Appointments.RefreshASAP(0,0,_appt.ClinicNum,new List<ApptStatus>()).Count==0
+			if(!Prefs.GetBool(PrefName.WebSchedAsapEnabled) || Appointments.RefreshASAP(0,0,_appt.ClinicNum,new List<ApptStatus>()).Count==0
 				|| !MsgBox.Show("Appointment",MsgBoxButtons.YesNo,"Text patients on the ASAP List and offer them this opening?")) 
 			{
 				return;
@@ -72,7 +72,7 @@ namespace OpenDental {
 			if(!ValidateSelection()) {
 				return;
 			}
-			if(PrefC.GetBool(PrefName.UnscheduledListNoRecalls) && Appointments.IsRecallAppointment(_appt)) {
+			if(Prefs.GetBool(PrefName.UnscheduledListNoRecalls) && Appointments.IsRecallAppointment(_appt)) {
 				if(MsgBox.Show(MsgBoxButtons.YesNo,"Recall appointments cannot be sent to the Unscheduled List.\r\nDelete appointment instead?")) {
 					FormApptBreakSelection=ApptBreakSelection.Delete;//Set to delete so the parent form can handle the delete. 
 					DialogResult=DialogResult.Cancel;

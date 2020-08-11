@@ -89,7 +89,7 @@ namespace OpenDental {
 			using(XmlWriter writer=XmlWriter.Create(strbuild,settings)) {
 				writer.WriteStartElement("CustomerIdRequest");
 				writer.WriteStartElement("RegistrationKey");
-				writer.WriteString(PrefC.GetString(PrefName.RegistrationKey));
+				writer.WriteString(Prefs.GetString(PrefName.RegistrationKey));
 				writer.WriteEndElement();
 				writer.WriteStartElement("RegKeyDisabledOverride");
 				writer.WriteString("true");
@@ -100,7 +100,7 @@ namespace OpenDental {
 			Imedisoft.localhost.Service1 OIDService=new Imedisoft.localhost.Service1();
 #else
 			OpenDental.customerUpdates.Service1 OIDService=new OpenDental.customerUpdates.Service1();
-			OIDService.Url=PrefC.GetString(PrefName.UpdateServerAddress);
+			OIDService.Url=Prefs.GetString(PrefName.UpdateServerAddress);
 #endif
 			//Send the message and get the result-------------------------------------------------------------------------------------
 			string result="";

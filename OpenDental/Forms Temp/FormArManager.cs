@@ -79,7 +79,7 @@ namespace OpenDental
 			_listProviders.ForEach(x => comboBoxMultiUnsentProvs.Items.Add(x.GetLongDesc()));
 			#endregion Unsent Tab Prov Combo
 			#region Unsent Tab Bill Type Combo
-			List<long> listDefaultBillTypes=PrefC.GetString(PrefName.ArManagerBillingTypes)
+			List<long> listDefaultBillTypes=Prefs.GetString(PrefName.ArManagerBillingTypes)
 				.Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries)
 				.Select(x => PIn.Long(x)).ToList();
 			comboBoxMultiBillTypes.Items.Add("All");
@@ -97,13 +97,13 @@ namespace OpenDental
 			comboUnsentAccountAge.Items.Add(Lan.G(this,"Over 60 Days"));
 			comboUnsentAccountAge.Items.Add(Lan.G(this,"Over 90 Days"));
 			comboUnsentAccountAge.SelectedIndexChanged-=comboUnsentAccountAge_SelectedIndexChanged;
-			comboUnsentAccountAge.SelectedIndex=new List<string>() { "30","60","90" }.IndexOf(PrefC.GetString(PrefName.ArManagerUnsentAgeOfAccount))+1;//+1 for any bal
+			comboUnsentAccountAge.SelectedIndex=new List<string>() { "30","60","90" }.IndexOf(Prefs.GetString(PrefName.ArManagerUnsentAgeOfAccount))+1;//+1 for any bal
 			comboUnsentAccountAge.SelectedIndexChanged+=comboUnsentAccountAge_SelectedIndexChanged;
 			#endregion Unsent Tab Account Age Combo
 			#region Unsent Tab Textbox Filters
 			//text min bal
 			textUnsentMinBal.TextChanged-=textUnsentMinBal_TextChanged;
-			textUnsentMinBal.Text=PrefC.GetDouble(PrefName.ArManagerUnsentMinBal).ToString();
+			textUnsentMinBal.Text=Prefs.GetDouble(PrefName.ArManagerUnsentMinBal).ToString();
 			textUnsentMinBal.TextChanged+=textUnsentMinBal_TextChanged;
 			//text days since last payment
 			textUnsentDaysLastPay.TextChanged-=textUnsentDaysLastPay_TextChanged;
@@ -113,15 +113,15 @@ namespace OpenDental
 			#region Unsent Tab Checkbox Filters
 			//exclude if ins pending
 			checkExcludeInsPending.CheckedChanged-=checkExcludeInsPending_CheckedChanged;
-			checkExcludeInsPending.Checked=PrefC.GetBool(PrefName.ArManagerExcludeInsPending);
+			checkExcludeInsPending.Checked=Prefs.GetBool(PrefName.ArManagerExcludeInsPending);
 			checkExcludeInsPending.CheckedChanged+=checkExcludeInsPending_CheckedChanged;
 			//exclude if unsent procs
 			checkExcludeIfProcs.CheckedChanged-=checkExcludeIfProcs_CheckedChanged;
-			checkExcludeIfProcs.Checked=PrefC.GetBool(PrefName.ArManagerExcludeIfUnsentProcs);
+			checkExcludeIfProcs.Checked=Prefs.GetBool(PrefName.ArManagerExcludeIfUnsentProcs);
 			checkExcludeIfProcs.CheckedChanged+=checkExcludeIfProcs_CheckedChanged;
 			//exclude if bad address (no zipcode)
 			checkExcludeBadAddress.CheckedChanged-=checkExcludeBadAddress_CheckedChanged;
-			checkExcludeBadAddress.Checked=PrefC.GetBool(PrefName.ArManagerExcludeBadAddresses);
+			checkExcludeBadAddress.Checked=Prefs.GetBool(PrefName.ArManagerExcludeBadAddresses);
 			checkExcludeBadAddress.CheckedChanged+=checkExcludeBadAddress_CheckedChanged;
 			#endregion Unsent Tab Checkbox Filters
 			#region Unsent Tab Demand Type Combo
@@ -129,7 +129,7 @@ namespace OpenDental
 			#endregion Unsent Tab Demand Type Combo
 			#region Unsent Tab Show PatNums
 			checkUnsentShowPatNums.CheckedChanged-=checkUnsentShowPatNums_CheckedChanged;
-			checkUnsentShowPatNums.Checked=PrefC.GetBool(PrefName.ReportsShowPatNum);
+			checkUnsentShowPatNums.Checked=Prefs.GetBool(PrefName.ReportsShowPatNum);
 			checkUnsentShowPatNums.CheckedChanged+=checkUnsentShowPatNums_CheckedChanged;
 			#endregion Unsent Tab Show PatNums
 			#endregion Fill Unsent Tab Filter ComboBoxes, CheckBoxes, and Fields
@@ -152,13 +152,13 @@ namespace OpenDental
 			comboExcludedAccountAge.Items.Add(Lan.G(this,"Over 60 Days"));
 			comboExcludedAccountAge.Items.Add(Lan.G(this,"Over 90 Days"));
 			comboExcludedAccountAge.SelectedIndexChanged-=comboExcludedAccountAge_SelectedIndexChanged;
-			comboExcludedAccountAge.SelectedIndex=new List<string>() { "30","60","90" }.IndexOf(PrefC.GetString(PrefName.ArManagerExcludedAgeOfAccount))+1;//+1 for any bal
+			comboExcludedAccountAge.SelectedIndex=new List<string>() { "30","60","90" }.IndexOf(Prefs.GetString(PrefName.ArManagerExcludedAgeOfAccount))+1;//+1 for any bal
 			comboExcludedAccountAge.SelectedIndexChanged+=comboExcludedAccountAge_SelectedIndexChanged;
 			#endregion Excluded Tab Account Age Combo
 			#region Excluded Tab Textbox Filters
 			//text min bal
 			textExcludedMinBal.TextChanged-=textExcludedMinBal_TextChanged;
-			textExcludedMinBal.Text=PrefC.GetDouble(PrefName.ArManagerExcludedMinBal).ToString();
+			textExcludedMinBal.Text=Prefs.GetDouble(PrefName.ArManagerExcludedMinBal).ToString();
 			textExcludedMinBal.TextChanged+=textExcludedMinBal_TextChanged;
 			//text days since last payment
 			textExcludedDaysLastPay.TextChanged-=textExcludedDaysLastPay_TextChanged;
@@ -168,15 +168,15 @@ namespace OpenDental
 			#region Excluded Tab Checkbox Filters
 			//exclude if ins pending
 			checkExcludedExcludeInsPending.CheckedChanged-=checkExcludeExcludedInsPending_CheckedChanged;
-			checkExcludedExcludeInsPending.Checked=PrefC.GetBool(PrefName.ArManagerExcludedExcludeInsPending);
+			checkExcludedExcludeInsPending.Checked=Prefs.GetBool(PrefName.ArManagerExcludedExcludeInsPending);
 			checkExcludedExcludeInsPending.CheckedChanged+=checkExcludeExcludedInsPending_CheckedChanged;
 			//exclude if unsent procs
 			checkExcludedExcludeIfProcs.CheckedChanged-=checkExcludeExcludedIfProcs_CheckedChanged;
-			checkExcludedExcludeIfProcs.Checked=PrefC.GetBool(PrefName.ArManagerExcludedExcludeIfUnsentProcs);
+			checkExcludedExcludeIfProcs.Checked=Prefs.GetBool(PrefName.ArManagerExcludedExcludeIfUnsentProcs);
 			checkExcludedExcludeIfProcs.CheckedChanged+=checkExcludeExcludedIfProcs_CheckedChanged;
 			//exclude if bad address (no zipcode)
 			checkExcludedExcludeBadAddress.CheckedChanged-=checkExcludeExcludedBadAddress_CheckedChanged;
-			checkExcludedExcludeBadAddress.Checked=PrefC.GetBool(PrefName.ArManagerExcludedExcludeBadAddresses);
+			checkExcludedExcludeBadAddress.Checked=Prefs.GetBool(PrefName.ArManagerExcludedExcludeBadAddresses);
 			checkExcludedExcludeBadAddress.CheckedChanged+=checkExcludeExcludedBadAddress_CheckedChanged;
 			#endregion Excluded Tab Checkbox Filters
 			#region Excluded Tab Demand Type Combo
@@ -184,7 +184,7 @@ namespace OpenDental
 			#endregion Excluded Tab Demand Type Combo
 			#region Excluded Tab Show PatNums
 			checkExcludedShowPatNums.CheckedChanged-=checkExcludedShowPatNums_CheckedChanged;
-			checkExcludedShowPatNums.Checked=PrefC.GetBool(PrefName.ReportsShowPatNum);
+			checkExcludedShowPatNums.Checked=Prefs.GetBool(PrefName.ReportsShowPatNum);
 			checkExcludedShowPatNums.CheckedChanged+=checkExcludedShowPatNums_CheckedChanged;
 			#endregion Excluded Tab Show PatNums
 			#endregion Fill Excluded Tab Filter ComboBoxes, CheckBoxes, and Fields
@@ -197,7 +197,7 @@ namespace OpenDental
 			#region Sent Tab Trans Type Combo
 			_listSentTabTransTypes=Enum.GetValues(typeof(TsiTransType)).OfType<TsiTransType>()
 				.Where(x => !x.In(TsiTransType.PF,TsiTransType.PT,TsiTransType.SS,TsiTransType.CN,TsiTransType.Agg)).ToList();
-			List<TsiTransType> listDefaultLastTransTypes=PrefC.GetString(PrefName.ArManagerLastTransTypes)
+			List<TsiTransType> listDefaultLastTransTypes=Prefs.GetString(PrefName.ArManagerLastTransTypes)
 				.Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries)
 				.Select(x => PIn.Enum<TsiTransType>(x,true))
 				.Where(x => !x.In(TsiTransType.PF,TsiTransType.PT,TsiTransType.SS,TsiTransType.CN,TsiTransType.Agg)).ToList();
@@ -216,13 +216,13 @@ namespace OpenDental
 			comboSentAccountAge.Items.Add(Lan.G(this,"Over 60 Days"));
 			comboSentAccountAge.Items.Add(Lan.G(this,"Over 90 Days"));
 			comboSentAccountAge.SelectedIndexChanged-=comboSentAccountAge_SelectedIndexChanged;
-			comboSentAccountAge.SelectedIndex=new List<string>() { "30","60","90" }.IndexOf(PrefC.GetString(PrefName.ArManagerSentAgeOfAccount))+1;//+1 for any bal
+			comboSentAccountAge.SelectedIndex=new List<string>() { "30","60","90" }.IndexOf(Prefs.GetString(PrefName.ArManagerSentAgeOfAccount))+1;//+1 for any bal
 			comboSentAccountAge.SelectedIndexChanged+=comboSentAccountAge_SelectedIndexChanged;
 			#endregion Sent Tab Account Age Combo
 			#region Sent Tab Textbox Filters
 			//text min bal
 			textSentMinBal.TextChanged-=textSentMinBal_TextChanged;
-			textSentMinBal.Text=PrefC.GetDouble(PrefName.ArManagerSentMinBal).ToString();
+			textSentMinBal.Text=Prefs.GetDouble(PrefName.ArManagerSentMinBal).ToString();
 			textSentMinBal.TextChanged+=textSentMinBal_TextChanged;
 			//text days since last payment
 			textSentDaysLastPay.TextChanged-=textSentDaysLastPay_TextChanged;
@@ -239,7 +239,7 @@ namespace OpenDental
 			#endregion Sent Tab New Bill Types Combo
 			#region Sent Tab Show PatNums
 			checkSentShowPatNums.CheckedChanged-=checkSentShowPatNums_CheckedChanged;
-			checkSentShowPatNums.Checked=PrefC.GetBool(PrefName.ReportsShowPatNum);
+			checkSentShowPatNums.Checked=Prefs.GetBool(PrefName.ReportsShowPatNum);
 			checkSentShowPatNums.CheckedChanged+=checkSentShowPatNums_CheckedChanged;
 			#endregion Sent Tab Show PatNums
 			#endregion Fill Sent Tab Filter ComboBoxes, CheckBoxes, and Fields
@@ -273,10 +273,10 @@ namespace OpenDental
 		///<summary>If aging happened automatically, like on load, pass in isAutomatic=true</summary>
 		private bool RunAgingIfNecessary(bool isAutomatic) {
 			string msgText="";
-			if(PrefC.GetBool(PrefName.AgingIsEnterprise)) {
+			if(Prefs.GetBool(PrefName.AgingIsEnterprise)) {
 				return RunAgingEnterprise(isAutomatic);
 			}
-			else if(!PrefC.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)) {
+			else if(!Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)) {
 				SecurityLogs.MakeLogEntry(Permissions.AgingRan,0,"Starting Aging - AR Manager");
 				Cursor=Cursors.WaitCursor;
 				msgText=Lan.G(this,"Calculating aging for all patients as of")+" "+DateTime.Today.ToShortDateString()+"...";
@@ -296,7 +296,7 @@ namespace OpenDental
 			}
 			msgText="Last aging date seems old.  Would you like to run aging now?  The account list will load whether or not aging gets updated.";
 			//All places in the program where aging can be run for all patients, the Setup permission is required because it can take a long time.
-			if(PrefC.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily) 
+			if(Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily) 
 				&& Security.IsAuthorized(Permissions.Setup,true)
 				&& PrefC.GetDate(PrefName.DateLastAging)<DateTime.Today.AddDays(-15)
 				&& MsgBox.Show(MsgBoxButtons.YesNo,msgText))
@@ -329,7 +329,7 @@ namespace OpenDental
 				return false;
 			}
 			SecurityLogs.MakeLogEntry(Permissions.AgingRan,0,"Starting Aging - AR Manager");
-			Prefs.UpdateString(PrefName.AgingBeginDateTime,POut.DateT(dtNow,false));//get lock on pref to block others
+			Prefs.Set(PrefName.AgingBeginDateTime,POut.DateT(dtNow,false));//get lock on pref to block others
 			Signalods.SetInvalid(InvalidType.Prefs);//signal a cache refresh so other computers will have the updated pref as quickly as possible
 			Cursor=Cursors.WaitCursor;
 			msgText=Lan.G(this,"Calculating enterprise aging for all patients as of")+" "+dtToday.ToShortDateString()+"...";
@@ -337,7 +337,7 @@ namespace OpenDental
 			ODProgress.ShowAction(
 				() => {
 					Ledgers.ComputeAging(0,dtToday);
-					Prefs.UpdateString(PrefName.DateLastAging,POut.Date(dtToday,false));
+					Prefs.Set(PrefName.DateLastAging,POut.Date(dtToday,false));
 				},
 				startingMessage:msgText,
 				actionException:ex => {
@@ -346,7 +346,7 @@ namespace OpenDental
 				});
 			Cursor=Cursors.Default;
 			SecurityLogs.MakeLogEntry(Permissions.AgingRan,0,"Aging Complete - AR Manager");
-			Prefs.UpdateString(PrefName.AgingBeginDateTime,"");//clear lock on pref whether aging was successful or not
+			Prefs.Set(PrefName.AgingBeginDateTime,"");//clear lock on pref whether aging was successful or not
 			Signalods.SetInvalid(InvalidType.Prefs);
 			AgingRanAuditHelper(isAutomatic);
 			return result;
@@ -608,23 +608,23 @@ namespace OpenDental
 				excludedMinBal=PIn.Double(textExcludedMinBal.Text);
 			}
 			#endregion Excluded Defaults
-			if( Prefs.UpdateString(PrefName.ArManagerBillingTypes,selectedBillTypes)
-				| Prefs.UpdateBool(PrefName.ArManagerExcludeBadAddresses,checkExcludeBadAddress.Checked)
-				| Prefs.UpdateBool(PrefName.ArManagerExcludeIfUnsentProcs,checkExcludeIfProcs.Checked)
-				| Prefs.UpdateBool(PrefName.ArManagerExcludeInsPending,checkExcludeInsPending.Checked)
-				| Prefs.UpdateString(PrefName.ArManagerLastTransTypes,selectedTransTypes)
-				| Prefs.UpdateString(PrefName.ArManagerSentAgeOfAccount,sentAgeOfAccount)
-				| Prefs.UpdateInt(PrefName.ArManagerSentDaysSinceLastPay,sentDaysSinceLastPay)
-				| Prefs.UpdateString(PrefName.ArManagerSentMinBal,POut.Double(sentMinBal))
-				| Prefs.UpdateString(PrefName.ArManagerUnsentAgeOfAccount,unsentAgeOfAccount)
-				| Prefs.UpdateInt(PrefName.ArManagerUnsentDaysSinceLastPay,unsentDaysSinceLastPay)
-				| Prefs.UpdateString(PrefName.ArManagerUnsentMinBal,POut.Double(unsentMinBal))
-				| Prefs.UpdateBool(PrefName.ArManagerExcludedExcludeBadAddresses,checkExcludedExcludeBadAddress.Checked)
-				| Prefs.UpdateBool(PrefName.ArManagerExcludedExcludeIfUnsentProcs,checkExcludedExcludeIfProcs.Checked)
-				| Prefs.UpdateBool(PrefName.ArManagerExcludedExcludeInsPending,checkExcludedExcludeInsPending.Checked)
-				| Prefs.UpdateString(PrefName.ArManagerExcludedAgeOfAccount,excludedAgeOfAccount)
-				| Prefs.UpdateInt(PrefName.ArManagerExcludedDaysSinceLastPay,excludedDaysSinceLastPay)
-				| Prefs.UpdateString(PrefName.ArManagerExcludedMinBal,POut.Double(excludedMinBal)))
+			if( Prefs.Set(PrefName.ArManagerBillingTypes,selectedBillTypes)
+				| Prefs.Set(PrefName.ArManagerExcludeBadAddresses,checkExcludeBadAddress.Checked)
+				| Prefs.Set(PrefName.ArManagerExcludeIfUnsentProcs,checkExcludeIfProcs.Checked)
+				| Prefs.Set(PrefName.ArManagerExcludeInsPending,checkExcludeInsPending.Checked)
+				| Prefs.Set(PrefName.ArManagerLastTransTypes,selectedTransTypes)
+				| Prefs.Set(PrefName.ArManagerSentAgeOfAccount,sentAgeOfAccount)
+				| Prefs.Set(PrefName.ArManagerSentDaysSinceLastPay,sentDaysSinceLastPay)
+				| Prefs.Set(PrefName.ArManagerSentMinBal,POut.Double(sentMinBal))
+				| Prefs.Set(PrefName.ArManagerUnsentAgeOfAccount,unsentAgeOfAccount)
+				| Prefs.Set(PrefName.ArManagerUnsentDaysSinceLastPay,unsentDaysSinceLastPay)
+				| Prefs.Set(PrefName.ArManagerUnsentMinBal,POut.Double(unsentMinBal))
+				| Prefs.Set(PrefName.ArManagerExcludedExcludeBadAddresses,checkExcludedExcludeBadAddress.Checked)
+				| Prefs.Set(PrefName.ArManagerExcludedExcludeIfUnsentProcs,checkExcludedExcludeIfProcs.Checked)
+				| Prefs.Set(PrefName.ArManagerExcludedExcludeInsPending,checkExcludedExcludeInsPending.Checked)
+				| Prefs.Set(PrefName.ArManagerExcludedAgeOfAccount,excludedAgeOfAccount)
+				| Prefs.Set(PrefName.ArManagerExcludedDaysSinceLastPay,excludedDaysSinceLastPay)
+				| Prefs.Set(PrefName.ArManagerExcludedMinBal,POut.Double(excludedMinBal)))
 			{
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
@@ -749,7 +749,7 @@ namespace OpenDental
 			}
 			else {
 				_listPatAgingUnsentAll.Add(aging);
-				aging.BillingType=PrefC.GetLong(PrefName.TransworldPaidInFullBillingType);
+				aging.BillingType=Prefs.GetLong(PrefName.TransworldPaidInFullBillingType);
 				strNot="not ";
 			}
 			Family famCur=Patients.GetFamily(aging.Guarantor);
@@ -1255,7 +1255,7 @@ namespace OpenDental
 			//TSI connection details validated, at least one clinic the user has access to is setup with valid connection details
 			#region Get Age of Accounts Dictionary
 			DateTime dateAsOf=DateTime.Today;//used to determine when the balance on this date began
-			if(PrefC.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)) {//if aging calculated monthly, use the last aging date instead of today
+			if(Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)) {//if aging calculated monthly, use the last aging date instead of today
 				dateAsOf=PrefC.GetDate(PrefName.DateLastAging);
 			}
 			#endregion Get PatAgings and Age of Accounts Dictionary

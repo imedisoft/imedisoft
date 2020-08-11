@@ -271,7 +271,7 @@ namespace OpenDental{
 			}
 			//We do not allow global fee schedules to be associated to FeeSchedGroups.
 			//Prevent a fee sched that is associated to a group to be turned into a global fee schedule.
-			if(PrefC.GetBool(PrefName.ShowFeeSchedGroups) && checkIsGlobal.Checked) {
+			if(Prefs.GetBool(PrefName.ShowFeeSchedGroups) && checkIsGlobal.Checked) {
 				if(FeeSchedGroups.GetAllForFeeSched(FeeSchedCur.FeeSchedNum).Count()>0) {
 					MessageBox.Show("Not allowed to make Fee Schedule global, a Fee Schedule Group exists for this Fee Schedule.");
 					return;

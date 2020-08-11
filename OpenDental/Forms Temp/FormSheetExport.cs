@@ -77,7 +77,7 @@ namespace OpenDental {
 			string filename="SheetDefCustom.xml";
 
 				SaveFileDialog saveDlg=new SaveFileDialog();
-				saveDlg.InitialDirectory=PrefC.GetString(PrefName.ExportPath);
+				saveDlg.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
 				saveDlg.FileName=filename;
 				if(saveDlg.ShowDialog()!=DialogResult.OK) {
 					return;

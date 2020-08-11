@@ -34,7 +34,7 @@ namespace OpenDental {
 			ActiveControl=textCode;
 			//This check is here to prevent Snomeds from being used in non-member nations.
 			groupBox1.Visible=false;
-			Provider prov=Providers.GetProv(Security.CurrentUser.ProvNum);
+			Provider prov=Providers.GetProv(Security.CurrentUser.ProviderId);
 			if(prov==null) {
 				return;
 			}

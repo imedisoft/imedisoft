@@ -145,7 +145,7 @@ namespace OpenDental{
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
 			report.ReportName=Lan.G(this,"Hidden Payment Splits");
 			report.AddTitle("Title",Lan.G(this,"Hidden Payment Splits"),fontTitle);
-			report.AddSubTitle("PracTitle",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
+			report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
 			report.AddSubTitle("Providers",subtitleProvs,fontSubTitle);
 			report.AddSubTitle("UnearnedTypes",subtitleUnearned,fontSubTitle);
 			if(PrefC.HasClinicsEnabled) {

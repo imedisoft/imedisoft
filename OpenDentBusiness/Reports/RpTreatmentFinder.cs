@@ -131,7 +131,7 @@ namespace OpenDentBusiness {
 					ContactMethod contmeth=PIn.Enum<ContactMethod>(rawRow["PreferRecallMethod"].ToString());
 					switch(contmeth) {
 						case ContactMethod.None:
-							if(PrefC.GetBool(PrefName.RecallUseEmailIfHasEmailAddress) && !string.IsNullOrEmpty(rawRow["Email"].ToString())) {
+							if(Prefs.GetBool(PrefName.RecallUseEmailIfHasEmailAddress) && !string.IsNullOrEmpty(rawRow["Email"].ToString())) {
 								row["contactMethod"]=rawRow["Email"].ToString();
 							}
 							else {

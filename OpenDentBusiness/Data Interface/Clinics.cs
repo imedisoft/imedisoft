@@ -106,7 +106,7 @@ namespace OpenDentBusiness{
 		private class ClinicCache : CacheListAbs<Clinic> {
 			protected override List<Clinic> GetCacheFromDb() {
 				string command="SELECT * FROM clinic ";
-				if(PrefC.GetBool(PrefName.ClinicListIsAlphabetical)) {
+				if(Prefs.GetBool(PrefName.ClinicListIsAlphabetical)) {
 					command+="ORDER BY Abbr";
 				}
 				else {
@@ -201,7 +201,7 @@ namespace OpenDentBusiness{
 					return;
 				}
 
-				if (PrefC.GetString(PrefName.ClinicTrackLast) != "User")
+				if (Prefs.GetString(PrefName.ClinicTrackLast) != "User")
 				{
 					return;
 				}
@@ -217,16 +217,16 @@ namespace OpenDentBusiness{
 				return;
 			}
 			List<Clinic> listClinics = Clinics.GetForUserod(Security.CurrentUser);
-			switch(PrefC.GetString(PrefName.ClinicTrackLast)) {
+			switch(Prefs.GetString(PrefName.ClinicTrackLast)) {
 				case "Workstation":
-					if(Security.CurrentUser.ClinicIsRestricted && Security.CurrentUser.ClinicNum!=ComputerPrefs.LocalComputer.ClinicNum) {//The user is restricted and it's not the clinic this computer has by default
+					if(Security.CurrentUser.ClinicIsRestricted && Security.CurrentUser.ClinicId!=ComputerPrefs.LocalComputer.ClinicNum) {//The user is restricted and it's not the clinic this computer has by default
 						//User's default clinic isn't the LocalComputer's clinic, see if they have access to the Localcomputer's clinic, if so, use it.
 						Clinic clinic=listClinics.Find(x => x.ClinicNum==ComputerPrefs.LocalComputer.ClinicNum);
 						if(clinic!=null) {
 							_clinicNum=clinic.ClinicNum;
 						}
 						else {
-							_clinicNum=Security.CurrentUser.ClinicNum;//Use the user's default clinic if they don't have access to LocalComputer's clinic.
+							_clinicNum=Security.CurrentUser.ClinicId;//Use the user's default clinic if they don't have access to LocalComputer's clinic.
 						}
 					}
 					else {//The user is not restricted, just use the clinic in the ComputerPref table.
@@ -239,7 +239,7 @@ namespace OpenDentBusiness{
 
 					if (clinicId == 0)
                     {
-						clinicId = Security.CurrentUser.ClinicNum;
+						clinicId = Security.CurrentUser.ClinicId;
 
 						UserPreference.Set(UserPreferenceName.ClinicLast, clinicId);
                     }
@@ -249,8 +249,8 @@ namespace OpenDentBusiness{
 
 				case "None":
 				default:
-					if(listClinics.Any(x => x.ClinicNum==Security.CurrentUser.ClinicNum)) {
-						_clinicNum=Security.CurrentUser.ClinicNum;
+					if(listClinics.Any(x => x.ClinicNum==Security.CurrentUser.ClinicId)) {
+						_clinicNum=Security.CurrentUser.ClinicId;
 					}
 					break;
 			}
@@ -265,7 +265,7 @@ namespace OpenDentBusiness{
 				return;
 			}
 
-			switch (PrefC.GetString(PrefName.ClinicTrackLast))
+			switch (Prefs.GetString(PrefName.ClinicTrackLast))
 			{
 				case "Workstation":
 					ComputerPrefs.LocalComputer.ClinicNum = ClinicNum;
@@ -579,7 +579,7 @@ namespace OpenDentBusiness{
 		public static PlaceOfService GetPlaceService(long clinicNum) {
 			//No need to check RemotingRole; no call to db.
 			Clinic clinic=GetFirstOrDefault(x => x.ClinicNum==clinicNum);
-			return (clinic==null ? (PlaceOfService)PrefC.GetLong(PrefName.DefaultProcedurePlaceService) : clinic.DefaultPlaceService);
+			return (clinic==null ? (PlaceOfService)Prefs.GetLong(PrefName.DefaultProcedurePlaceService) : clinic.DefaultPlaceService);
 		}
 
 		///<summary>Used by HL7 when parsing incoming messages.  
@@ -608,7 +608,7 @@ namespace OpenDentBusiness{
 				listClinics.Add(GetPracticeAsClinicZero(hqClinicName));
 			}
 			listClinics.AddRange(GetDeepCopy(true));//don't include hidden clinics
-			if(PrefC.HasClinicsEnabled && curUser.ClinicIsRestricted && curUser.ClinicNum!=0) {
+			if(PrefC.HasClinicsEnabled && curUser.ClinicIsRestricted && curUser.ClinicId!=0) {
 				//If Clinics are enabled and user is restricted, then only return clinics the person has permission for.
 				List<long> listUserClinicNums=UserClinics.GetForUser(curUser.Id).Select(x => x.ClinicId).ToList();
 				listClinics.RemoveAll(x => !listUserClinicNums.Contains(x.ClinicNum));//Remove all clinics that are not in the list of UserClinics.
@@ -623,7 +623,7 @@ namespace OpenDentBusiness{
 			if(!PrefC.HasClinicsEnabled) {
 				return listClinics;
 			}
-			if(curUser.ClinicIsRestricted && curUser.ClinicNum!=0) {
+			if(curUser.ClinicIsRestricted && curUser.ClinicId!=0) {
 				List<UserClinic> listUserClinics=UserClinics.GetForUser(curUser.Id);
 				return listClinics.FindAll(x => listUserClinics.Exists(y => y.ClinicId==x.ClinicNum)).ToList();
 			}
@@ -646,7 +646,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Gets the default clinic for texting. Returns null if no clinic is set as default.</summary>
 		public static Clinic GetDefaultForTexting() {
-			return GetFirstOrDefault(x => x.ClinicNum==PrefC.GetLong(PrefName.TextingDefaultClinicNum));
+			return GetFirstOrDefault(x => x.ClinicNum==Prefs.GetLong(PrefName.TextingDefaultClinicNum));
 		}
 
 		public static bool IsTextingEnabled(long clinicNum) {
@@ -656,7 +656,7 @@ namespace OpenDentBusiness{
 			}
 			if(clinicNum==0) {
 				if(PrefC.HasClinicsEnabled) {
-					clinicNum=PrefC.GetLong(PrefName.TextingDefaultClinicNum);
+					clinicNum=Prefs.GetLong(PrefName.TextingDefaultClinicNum);
 				}
 				else {
 					return SmsPhones.IsIntegratedTextingEnabled();
@@ -676,7 +676,7 @@ namespace OpenDentBusiness{
 		public static bool IsMedicalPracticeOrClinic(long clinicNum) {
 			//No need to check RemotingRole; no call to db.
 			if(clinicNum==0) {//either headquarters is selected or the clinics feature is not enabled, use practice pref
-				return PrefC.GetBool(PrefName.PracticeIsMedicalOnly);
+				return Prefs.GetBool(PrefName.PracticeIsMedicalOnly);
 			}
 			Clinic clinicCur=Clinics.GetClinic(clinicNum);
 			if(clinicCur!=null) {
@@ -690,37 +690,37 @@ namespace OpenDentBusiness{
 		public static Clinic GetPracticeAsClinicZero(string clinicName = null) {
 			//No need to check RemotingRole; no call to db.
 			if(clinicName==null) {
-				clinicName=PrefC.GetString(PrefName.PracticeTitle);
+				clinicName=Prefs.GetString(PrefName.PracticeTitle);
 			}
 			return new Clinic {
 				ClinicNum=0,
 				Abbr=clinicName,
 				Description=clinicName,
-				Address=PrefC.GetString(PrefName.PracticeAddress),
-				Address2=PrefC.GetString(PrefName.PracticeAddress2),
-				City=PrefC.GetString(PrefName.PracticeCity),
-				State=PrefC.GetString(PrefName.PracticeST),
-				Zip=PrefC.GetString(PrefName.PracticeZip),
-				BillingAddress=PrefC.GetString(PrefName.PracticeBillingAddress),
-				BillingAddress2=PrefC.GetString(PrefName.PracticeBillingAddress2),
-				BillingCity=PrefC.GetString(PrefName.PracticeBillingCity),
-				BillingState=PrefC.GetString(PrefName.PracticeBillingST),
-				BillingZip=PrefC.GetString(PrefName.PracticeBillingZip),
-				PayToAddress=PrefC.GetString(PrefName.PracticePayToAddress),
-				PayToAddress2=PrefC.GetString(PrefName.PracticePayToAddress2),
-				PayToCity=PrefC.GetString(PrefName.PracticePayToCity),
-				PayToState=PrefC.GetString(PrefName.PracticePayToST),
-				PayToZip=PrefC.GetString(PrefName.PracticePayToZip),
-				Phone=PrefC.GetString(PrefName.PracticePhone),
-				BankNumber=PrefC.GetString(PrefName.PracticeBankNumber),
+				Address=Prefs.GetString(PrefName.PracticeAddress),
+				Address2=Prefs.GetString(PrefName.PracticeAddress2),
+				City=Prefs.GetString(PrefName.PracticeCity),
+				State=Prefs.GetString(PrefName.PracticeST),
+				Zip=Prefs.GetString(PrefName.PracticeZip),
+				BillingAddress=Prefs.GetString(PrefName.PracticeBillingAddress),
+				BillingAddress2=Prefs.GetString(PrefName.PracticeBillingAddress2),
+				BillingCity=Prefs.GetString(PrefName.PracticeBillingCity),
+				BillingState=Prefs.GetString(PrefName.PracticeBillingST),
+				BillingZip=Prefs.GetString(PrefName.PracticeBillingZip),
+				PayToAddress=Prefs.GetString(PrefName.PracticePayToAddress),
+				PayToAddress2=Prefs.GetString(PrefName.PracticePayToAddress2),
+				PayToCity=Prefs.GetString(PrefName.PracticePayToCity),
+				PayToState=Prefs.GetString(PrefName.PracticePayToST),
+				PayToZip=Prefs.GetString(PrefName.PracticePayToZip),
+				Phone=Prefs.GetString(PrefName.PracticePhone),
+				BankNumber=Prefs.GetString(PrefName.PracticeBankNumber),
 				DefaultPlaceService=(PlaceOfService)PrefC.GetInt(PrefName.DefaultProcedurePlaceService),
-				InsBillingProv=PrefC.GetLong(PrefName.InsBillingProv),
-				Fax=PrefC.GetString(PrefName.PracticeFax),
-				EmailAddressNum=PrefC.GetLong(PrefName.EmailDefaultAddressNum),
-				DefaultProv=PrefC.GetLong(PrefName.PracticeDefaultProv),
+				InsBillingProv=Prefs.GetLong(PrefName.InsBillingProv),
+				Fax=Prefs.GetString(PrefName.PracticeFax),
+				EmailAddressNum=Prefs.GetLong(PrefName.EmailDefaultAddressNum),
+				DefaultProv=Prefs.GetLong(PrefName.PracticeDefaultProv),
 				SmsContractDate=PrefC.GetDate(PrefName.SmsContractDate),
-				SmsMonthlyLimit=PrefC.GetDouble(PrefName.SmsMonthlyLimit,doUseEnUSFormat:true),
-				IsMedicalOnly=PrefC.GetBool(PrefName.PracticeIsMedicalOnly)
+				SmsMonthlyLimit=Prefs.GetDouble(PrefName.SmsMonthlyLimit),
+				IsMedicalOnly=Prefs.GetBool(PrefName.PracticeIsMedicalOnly)
 			};
 		}
 
@@ -737,15 +737,15 @@ namespace OpenDentBusiness{
 		///Will use clinic information when available, otherwise defaults to practice info.
 		///Replaces: [OfficePhone], [OfficeFax], [OfficeName], [OfficeAddress], and possibly [EmailDisclaimer]. </summary>
 		public static void ReplaceOffice(StringBuilder template,Clinic clinic,bool isHtmlEmail=false,bool doReplaceDisclaimer=false) {
-			string officePhone=PrefC.GetString(PrefName.PracticePhone);
-			string officeFax=PrefC.GetString(PrefName.PracticeFax);
-			string officeName=PrefC.GetString(PrefName.PracticeTitle);
+			string officePhone=Prefs.GetString(PrefName.PracticePhone);
+			string officeFax=Prefs.GetString(PrefName.PracticeFax);
+			string officeName=Prefs.GetString(PrefName.PracticeTitle);
 			string officeAddr=Patients.GetAddressFull(
-				PrefC.GetString(PrefName.PracticeAddress),
-				PrefC.GetString(PrefName.PracticeAddress2),
-				PrefC.GetString(PrefName.PracticeCity),
-				PrefC.GetString(PrefName.PracticeST),
-				PrefC.GetString(PrefName.PracticeZip));
+				Prefs.GetString(PrefName.PracticeAddress),
+				Prefs.GetString(PrefName.PracticeAddress2),
+				Prefs.GetString(PrefName.PracticeCity),
+				Prefs.GetString(PrefName.PracticeST),
+				Prefs.GetString(PrefName.PracticeZip));
 			if(clinic!=null && !String.IsNullOrEmpty(clinic.Phone)) {
 				officePhone=clinic.Phone;
 			}
@@ -776,7 +776,7 @@ namespace OpenDentBusiness{
 		public static string GetOfficeName(Clinic clinic) {
 			string officeName=clinic?.Description;
 			if(string.IsNullOrEmpty(officeName)) {
-				officeName=PrefC.GetString(PrefName.PracticeTitle);
+				officeName=Prefs.GetString(PrefName.PracticeTitle);
 			}
 			return officeName;
 		}
@@ -784,7 +784,7 @@ namespace OpenDentBusiness{
 		public static string GetOfficePhone(Clinic clinic) {
 			string officePhone=clinic?.Phone;
 			if(string.IsNullOrEmpty(officePhone)) {
-				officePhone=PrefC.GetString(PrefName.PracticePhone);
+				officePhone=Prefs.GetString(PrefName.PracticePhone);
 			}
 			return officePhone;
 		}

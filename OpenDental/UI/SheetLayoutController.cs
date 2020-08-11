@@ -62,7 +62,7 @@ namespace OpenDental
 		///This should only be called if a dynamic sheetDef was added/modified/deleted, the SheetLayoutMode has changed, or a new user signed in.</summary>
 		public void ReloadSheetLayout(SheetFieldLayoutMode sheetFieldLayoutMode, Dictionary<string, Control> dictionaryControls)
 		{
-			long practiceDefaultSheetDefNum = PrefC.GetLong(PrefName.SheetsDefaultChartModule);
+			long practiceDefaultSheetDefNum = Prefs.GetLong(PrefName.SheetsDefaultChartModule);
 			ListSheetDefsLayout = SheetDefs.GetCustomForType(_sheetType);
 			ListSheetDefsLayout.Add(SheetsInternal.GetSheetDef(SheetsInternal.GetInternalType(_sheetType)));//Internal at bottom of list. UI reflects this too.
 			ListSheetDefsLayout = ListSheetDefsLayout
@@ -100,19 +100,25 @@ namespace OpenDental
 			else
 			{//Try to use the practice default.
 			 //If there is a Clinic default, get it.
-				if (!PrefC.HasClinicsEnabled || Clinics.ClinicNum == 0
-					|| !ClinicPrefs.TryGetLong(PrefName.SheetsDefaultChartModule, Clinics.ClinicNum, out sheetDefNum))
-				{
+
+				if (PrefC.HasClinicsEnabled && Clinics.ClinicNum > 0)
+                {
+					sheetDefNum = ClinicPrefs.GetLong(Clinics.ClinicNum, PrefName.SheetsDefaultChartModule);
+                }
+
+				if (sheetDefNum == 0)
+                {
 					//Either, clinics are off, HQ is selected, or ClinicPref did not exist.
 					if (_hasUserLoggedOff)
 					{//Currently the cache is not loaded fast enough after logging back on to trust.
-						sheetDefNum = PIn.Long(PrefC.GetStringNoCache(PrefName.SheetsDefaultChartModule));
+						sheetDefNum = PIn.Long(Prefs.GetStringNoCache(PrefName.SheetsDefaultChartModule));
 					}
 					else
 					{
-						sheetDefNum = PrefC.GetLong(PrefName.SheetsDefaultChartModule);//Serves as our HQ default.
+						sheetDefNum = Prefs.GetLong(PrefName.SheetsDefaultChartModule);//Serves as our HQ default.
 					}
 				}
+
 				def = ListSheetDefsLayout.FirstOrDefault(x => x.SheetDefNum == sheetDefNum);//Can be null
 			}
 			if (def == null)
@@ -189,9 +195,16 @@ namespace OpenDental
 		{
 			var sheetDefId = _sheetDefDynamicLayoutCur.SheetDefNum;
 
-			if (!PrefC.HasClinicsEnabled || Clinics.ClinicNum == 0|| !ClinicPrefs.TryGetLong(PrefName.SheetsDefaultChartModule, Clinics.ClinicNum, out long defaultSheetDefNum))
+			long defaultSheetDefNum = 0;
+
+			if (PrefC.HasClinicsEnabled && Clinics.ClinicNum > 0)
+            {
+				defaultSheetDefNum = ClinicPrefs.GetLong(Clinics.ClinicNum, PrefName.SheetsDefaultChartModule);
+			}
+
+			if (defaultSheetDefNum == 0)
 			{
-				defaultSheetDefNum = PrefC.GetLong(PrefName.SheetsDefaultChartModule);
+				defaultSheetDefNum = Prefs.GetLong(PrefName.SheetsDefaultChartModule);
 			}
 
 			if (sheetDefId == defaultSheetDefNum)

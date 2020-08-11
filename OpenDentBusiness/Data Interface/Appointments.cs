@@ -714,7 +714,7 @@ namespace OpenDentBusiness
 			listGuarantorsWithIns=listGuarantorsWithIns.Distinct().ToList();
 			//rawInsProc table is usually skipped. Too slow------------------------------------------------------------------------------
 			DataTable rawInsProc=null;
-			if(PrefC.GetBool(PrefName.ApptExclamationShowForUnsentIns) && listGuarantorsWithIns.Count>0) {
+			if(Prefs.GetBool(PrefName.ApptExclamationShowForUnsentIns) && listGuarantorsWithIns.Count>0) {
 				//procs for flag, InsNotSent
 				command ="SELECT patient.PatNum, patient.Guarantor "
 					+"FROM patient,procedurelog,claimproc "
@@ -1404,7 +1404,7 @@ namespace OpenDentBusiness
 			row["value"]=balance.ToString("F");
 			table.Rows.Add(row);
 			//Site----------------------------------------------------------------------------------
-			if(!PrefC.GetBool(PrefName.EasyHidePublicHealth)){
+			if(!Prefs.GetBool(PrefName.EasyHidePublicHealth)){
 				row=table.NewRow();
 				row["field"]=Lans.g("FormApptEdit","Site");
 				row["value"]=Sites.GetDescription(PIn.Long(rawPat.Rows[0]["SiteNum"].ToString()));
@@ -2180,10 +2180,10 @@ namespace OpenDentBusiness
 		public static List<long> GetConfirmedStatuses() {
 			//No need to check RemotingRole; no call to db.
 			return new List<long> {
-				PrefC.GetLong(PrefName.ApptEConfirmStatusAccepted),
-				PrefC.GetLong(PrefName.AppointmentTimeArrivedTrigger),
-				PrefC.GetLong(PrefName.AppointmentTimeSeatedTrigger),
-				PrefC.GetLong(PrefName.AppointmentTimeDismissedTrigger),
+				Prefs.GetLong(PrefName.ApptEConfirmStatusAccepted),
+				Prefs.GetLong(PrefName.AppointmentTimeArrivedTrigger),
+				Prefs.GetLong(PrefName.AppointmentTimeSeatedTrigger),
+				Prefs.GetLong(PrefName.AppointmentTimeDismissedTrigger),
 			};
 		}
 
@@ -2226,9 +2226,9 @@ namespace OpenDentBusiness
 			}
 			//compute the starting row of this appt
 			int convertToY=(int)(((double)apt.AptDateTime.Hour*(double)60
-				/(double)PrefC.GetLong(PrefName.AppointmentTimeIncrement)
+				/(double)Prefs.GetLong(PrefName.AppointmentTimeIncrement)
 				+(double)apt.AptDateTime.Minute
-				/(double)PrefC.GetLong(PrefName.AppointmentTimeIncrement)));
+				/(double)Prefs.GetLong(PrefName.AppointmentTimeIncrement)));
 			int startIndex=convertToY;
 			string pattern=Appointments.ConvertPatternFrom5(apt.Pattern);
 			//keep track of which rows in the entire day would be occupied by provider time for this appt
@@ -2264,9 +2264,9 @@ namespace OpenDentBusiness
 				//calculate starting row
 				//this math is copied from another section of the program, so it's sloppy. Safer than trying to rewrite it:
 				convertToY=(int)(((double)aptDateTime.Hour*(double)60
-					/(double)PrefC.GetLong(PrefName.AppointmentTimeIncrement)
+					/(double)Prefs.GetLong(PrefName.AppointmentTimeIncrement)
 					+(double)aptDateTime.Minute
-					/(double)PrefC.GetLong(PrefName.AppointmentTimeIncrement)));
+					/(double)Prefs.GetLong(PrefName.AppointmentTimeIncrement)));
 				startIndex=convertToY;
 				pattern=Appointments.ConvertPatternFrom5(dayTable.Rows[i]["Pattern"].ToString());
 				//now compare it to apt
@@ -2334,7 +2334,7 @@ namespace OpenDentBusiness
 			//if the pattern passed in is blank, set the time using the default pattern for an appointment with no attached procedures.
 			appointment.Pattern=String.IsNullOrWhiteSpace(pattern) ? GetApptTimePatternForNoProcs() : pattern;
 			if(patCur.PriProv==0) {
-				appointment.ProvNum=PrefC.GetLong(PrefName.PracticeDefaultProv);
+				appointment.ProvNum=Prefs.GetLong(PrefName.PracticeDefaultProv);
 			}
 			else {
 				appointment.ProvNum=patCur.PriProv;
@@ -2361,7 +2361,7 @@ namespace OpenDentBusiness
 			}
 			appointment.ProvHyg=assignedHyg;
 			appointment.IsHygiene=operatory.IsHygiene;
-			appointment.TimeLocked=PrefC.GetBool(PrefName.AppointmentTimeIsLocked);
+			appointment.TimeLocked=Prefs.GetBool(PrefName.AppointmentTimeIsLocked);
 			if(operatory.ClinicNum==0) {
 				appointment.ClinicNum=patCur.ClinicNum;
 			}
@@ -2390,7 +2390,7 @@ namespace OpenDentBusiness
 			aptCur.PatNum=patCur.PatNum;
 			aptCur.AptStatus=ApptStatus.UnschedList;//In all places where this is used, the unsched status with no aptDateTime will cause the appt to be deleted when the pinboard is cleared.
 			if(patCur.PriProv==0) {
-				aptCur.ProvNum=PrefC.GetLong(PrefName.PracticeDefaultProv);
+				aptCur.ProvNum=Prefs.GetLong(PrefName.PracticeDefaultProv);
 			}
 			else {
 				aptCur.ProvNum=patCur.PriProv;
@@ -2402,7 +2402,7 @@ namespace OpenDentBusiness
 			aptCur.ClinicNum=patCur.ClinicNum;
 			string recallPattern=Recalls.GetRecallTimePattern(recallCur,listRecalls,patCur,listProcStrs);
 			aptCur.Pattern=RecallTypes.ConvertTimePattern(recallPattern);
-			aptCur.TimeLocked=PrefC.GetBool(PrefName.AppointmentTimeIsLocked);
+			aptCur.TimeLocked=Prefs.GetBool(PrefName.AppointmentTimeIsLocked);
 			List<PatPlan> listPatPlans=PatPlans.Refresh(patCur.PatNum);
 			List<Benefit> listBenifits=Benefits.Refresh(listPatPlans,listSubs);
 			InsSub sub1=InsSubs.GetSub(PatPlans.GetInsSubNum(listPatPlans,PatPlans.GetOrdinal(PriSecMed.Primary,listPatPlans,listPlans,listSubs)),listSubs);
@@ -2439,13 +2439,13 @@ namespace OpenDentBusiness
 				//claimnum
 				//nextaptnum
 				procCur.BaseUnits=procCodeCur.BaseUnits;
-				procCur.DiagnosticCode=PrefC.GetString(PrefName.ICD9DefaultForNewProcs);
+				procCur.DiagnosticCode=Prefs.GetString(PrefName.ICD9DefaultForNewProcs);
 				procCur.PlaceService=(PlaceOfService)PrefC.GetInt(PrefName.DefaultProcedurePlaceService);//Default Proc Place of Service for the Practice is used.
 				if(Userods.IsUserCpoe(Security.CurrentUser)) {
 					//This procedure is considered CPOE because the provider is the one that has added it.
 					procCur.IsCpoe=true;
 				}
-				if(!PrefC.GetBool(PrefName.EasyHidePublicHealth)) {
+				if(!Prefs.GetBool(PrefName.EasyHidePublicHealth)) {
 					procCur.SiteNum=patCur.SiteNum;
 				}
 				Procedures.Insert(procCur);//no recall synch required
@@ -2479,8 +2479,8 @@ namespace OpenDentBusiness
 			if(appt.ProvNum==0){
 				appt.ProvNum=Providers.GetFirst(true).ProvNum;
 			}
-			double dayInterval=PrefC.GetDouble(PrefName.ApptReminderDayInterval);
-			double hourInterval=PrefC.GetDouble(PrefName.ApptReminderHourInterval);
+			double dayInterval=Prefs.GetDouble(PrefName.ApptReminderDayInterval);
+			double hourInterval=Prefs.GetDouble(PrefName.ApptReminderHourInterval);
 			DateTime automationBeginPref=PrefC.GetDateT(PrefName.AutomaticCommunicationTimeStart);
 			DateTime automationEndPref=PrefC.GetDateT(PrefName.AutomaticCommunicationTimeEnd);
 			//ApptComms.InsertForAppt(appt,dayInterval,hourInterval,automationBeginPref,automationEndPref);
@@ -2546,21 +2546,21 @@ namespace OpenDentBusiness
 		///<summary>The confirmStatus will be a DefNum or 0.  Inserts an invalid appointment signalod.</summary>
 		public static void SetConfirmed(Appointment appt,long confirmStatus,bool createSheetsForCheckin=true) {
 			string command="UPDATE appointment SET Confirmed="+POut.Long(confirmStatus);
-			if(PrefC.GetLong(PrefName.AppointmentTimeArrivedTrigger)==confirmStatus) {
+			if(Prefs.GetLong(PrefName.AppointmentTimeArrivedTrigger)==confirmStatus) {
 				command+=",DateTimeArrived="+POut.DateT(DateTime.Now);
 				if(createSheetsForCheckin) {
 					Sheets.CreateSheetsForCheckIn(appt);
 				}
 			}
-			else if(PrefC.GetLong(PrefName.AppointmentTimeSeatedTrigger)==confirmStatus){
+			else if(Prefs.GetLong(PrefName.AppointmentTimeSeatedTrigger)==confirmStatus){
 				command+=",DateTimeSeated="+POut.DateT(DateTime.Now);
 			}
-			else if(PrefC.GetLong(PrefName.AppointmentTimeDismissedTrigger)==confirmStatus){
+			else if(Prefs.GetLong(PrefName.AppointmentTimeDismissedTrigger)==confirmStatus){
 				command+=",DateTimeDismissed="+POut.DateT(DateTime.Now);
 			}
 			command+=" WHERE AptNum="+POut.Long(appt.AptNum);
 			Database.ExecuteNonQuery(command);
-			if(confirmStatus!=PrefC.GetLong(PrefName.ApptEConfirmStatusDeclined)) {//now the status is not 'Callback'
+			if(confirmStatus!=Prefs.GetLong(PrefName.ApptEConfirmStatusDeclined)) {//now the status is not 'Callback'
 				AlertItems.DeleteFor(AlertType.CallbackRequested,new List<long> { appt.AptNum });
 			}
 			Signalods.SetInvalidAppt(appt);
@@ -2590,14 +2590,14 @@ namespace OpenDentBusiness
 				appointment.Op=0;
 				SetAptStatus(appointment,appointment.AptStatus);
 			}
-			if(appointment.Confirmed!=oldAppointment.Confirmed && appointment.Confirmed==PrefC.GetLong(PrefName.AppointmentTimeArrivedTrigger)) {
+			if(appointment.Confirmed!=oldAppointment.Confirmed && appointment.Confirmed==Prefs.GetLong(PrefName.AppointmentTimeArrivedTrigger)) {
 				Sheets.CreateSheetsForCheckIn(appointment);
 			}
 			else if(retval && !suppressHistory) {//Something actually changed.
 				HistAppointments.CreateHistoryEntry(appointment.AptNum,HistAppointmentAction.Changed);
 			}
-			if((oldAppointment.Confirmed==PrefC.GetLong(PrefName.ApptEConfirmStatusDeclined) //If the status was 'Callback'
-				&& appointment.Confirmed!=PrefC.GetLong(PrefName.ApptEConfirmStatusDeclined))  //and now the status is not 'Callback'.
+			if((oldAppointment.Confirmed==Prefs.GetLong(PrefName.ApptEConfirmStatusDeclined) //If the status was 'Callback'
+				&& appointment.Confirmed!=Prefs.GetLong(PrefName.ApptEConfirmStatusDeclined))  //and now the status is not 'Callback'.
 				|| appointment.AptStatus!=ApptStatus.Scheduled)						 //Or the appointment is no longer scheduled.
 			{
 				AlertItems.DeleteFor(AlertType.CallbackRequested,new List<long> { appointment.AptNum });
@@ -3333,7 +3333,7 @@ namespace OpenDentBusiness
 								apt.ProvNum=assignedDent;
 								provChanged=true;
 							}
-							if(assignedHyg!=0 || PrefC.GetBool(PrefName.ApptSecondaryProviderConsiderOpOnly)) {//the hygienist will only be changed if the spot has a hygienist.
+							if(assignedHyg!=0 || Prefs.GetBool(PrefName.ApptSecondaryProviderConsiderOpOnly)) {//the hygienist will only be changed if the spot has a hygienist.
 								apt.ProvHyg=assignedHyg;
 								hygChanged=true;
 							}
@@ -3365,7 +3365,7 @@ namespace OpenDentBusiness
 							if(!isOpUpdate && doUpdatePattern) {
 								string calcPattern=Appointments.CalculatePattern(apt.ProvNum,apt.ProvHyg,codeNums,true);
 								if(apt.Pattern!=calcPattern
-									&& !PrefC.GetBool(PrefName.AppointmentTimeIsLocked))//Updating op provs will not change apt lengths.
+									&& !Prefs.GetBool(PrefName.AppointmentTimeIsLocked))//Updating op provs will not change apt lengths.
 								{
 									apt.Pattern=calcPattern;
 								}
@@ -3383,7 +3383,7 @@ namespace OpenDentBusiness
 				#endregion Prevent overlap
 				#region Detect Frequency Conflicts
 				//Detect frequency conflicts with procedures in the appointment
-				if(!isOpUpdate && PrefC.GetBool(PrefName.InsChecksFrequency)) {
+				if(!isOpUpdate && Prefs.GetBool(PrefName.InsChecksFrequency)) {
 					procsForSingleApt=Procedures.GetProcsForSingle(apt.AptNum,false);
 					string frequencyConflicts="";
 					try {
@@ -3532,7 +3532,7 @@ namespace OpenDentBusiness
 			Appointment apptNew=apptPlanned.Copy();
 			apptNew.NextAptNum=apptPlanned.AptNum;
 			apptNew.AptStatus=ApptStatus.Scheduled;
-			apptNew.TimeLocked=PrefC.GetBool(PrefName.AppointmentTimeIsLocked);
+			apptNew.TimeLocked=Prefs.GetBool(PrefName.AppointmentTimeIsLocked);
 			apptNew.AptDateTime=aptDateTime;
 			apptNew.Op=opNum;
 			Appointments.Insert(apptNew);//now, aptnum is different.
@@ -3602,7 +3602,7 @@ namespace OpenDentBusiness
 					AptCur.IsNewPatient=true;
 				}
 				if(PatCur.PriProv==0) {
-					AptCur.ProvNum=PrefC.GetLong(PrefName.PracticeDefaultProv);
+					AptCur.ProvNum=Prefs.GetLong(PrefName.PracticeDefaultProv);
 				}
 				else {
 					AptCur.ProvNum=PatCur.PriProv;
@@ -3623,7 +3623,7 @@ namespace OpenDentBusiness
 				//new appt will be placed on pinboard instead of specific time
 				AptCur.AptStatus=ApptStatus.UnschedList;//This is so that if it's on the pinboard when use shuts down OD, no db inconsistency.
 			}
-			AptCur.TimeLocked=PrefC.GetBool(PrefName.AppointmentTimeIsLocked);
+			AptCur.TimeLocked=Prefs.GetBool(PrefName.AppointmentTimeIsLocked);
 			AptCur.ColorOverride=System.Drawing.Color.FromArgb(0);
 			AptCur.Pattern="/X/";
 			return AptCur;
@@ -3636,10 +3636,10 @@ namespace OpenDentBusiness
 			StringBuilder savePattern=new StringBuilder();
 			for(int i=0;i<pattern.Length;i++) {
 				savePattern.Append(pattern.Substring(i,1));
-				if(PrefC.GetLong(PrefName.AppointmentTimeIncrement)==10) {
+				if(Prefs.GetLong(PrefName.AppointmentTimeIncrement)==10) {
 					savePattern.Append(pattern.Substring(i,1));
 				}
-				if(PrefC.GetLong(PrefName.AppointmentTimeIncrement)==15) {
+				if(Prefs.GetLong(PrefName.AppointmentTimeIncrement)==15) {
 					savePattern.Append(pattern.Substring(i,1));
 					savePattern.Append(pattern.Substring(i,1));
 				}
@@ -3656,10 +3656,10 @@ namespace OpenDentBusiness
 			StringBuilder strBTime=new StringBuilder();
 			for(int i=0;i<timepattern.Length;i++) {
 				strBTime.Append(timepattern.Substring(i,1));
-				if(PrefC.GetLong(PrefName.AppointmentTimeIncrement)==10) {
+				if(Prefs.GetLong(PrefName.AppointmentTimeIncrement)==10) {
 					i++;
 				}
-				if(PrefC.GetLong(PrefName.AppointmentTimeIncrement)==15) {
+				if(Prefs.GetLong(PrefName.AppointmentTimeIncrement)==15) {
 					i++;
 					i++;
 				}
@@ -4052,26 +4052,26 @@ namespace OpenDentBusiness
 		}
 
 		///<summary>Sends verification texts and e-mails after a patient confirms any type of appointment via WebSched.</summary>
-		public static void SendWebSchedVerification(Appointment appt,PrefName typePref,PrefName textPref,PrefName emailSubjPref,PrefName emailBodyPref
-			,PrefName emailType,bool logErrors=true) 
+		public static void SendWebSchedVerification(Appointment appt, string typePref,string textPref,string emailSubjPref,string emailBodyPref
+			, string emailType,bool logErrors=true) 
 		{
 			try {
 				Patient pat=Patients.GetPat(appt.PatNum);
 				Clinic clinic=Clinics.GetClinic(appt.ClinicNum);
-				WebSchedVerifyType verificationType=(WebSchedVerifyType)PIn.Int(ClinicPrefs.GetPrefValue(typePref,appt.ClinicNum));
+				WebSchedVerifyType verificationType=(WebSchedVerifyType)PIn.Int(ClinicPrefs.GetString(appt.ClinicNum, typePref));
 				if(verificationType==WebSchedVerifyType.None) {
 					return;
 				}
 				//Load in the templates and insert replacement fields
-				string textTemplate=ClinicPrefs.GetPrefValue(textPref,appt.ClinicNum);
+				string textTemplate=ClinicPrefs.GetString(appt.ClinicNum, textPref);
 				textTemplate=Patients.ReplacePatient(textTemplate,pat);
 				textTemplate=Appointments.ReplaceAppointment(textTemplate,appt);
 				textTemplate=Clinics.ReplaceOffice(textTemplate,clinic);
-				string emailSubj=OpenDentBusiness.EmailMessages.SubjectTidy(ClinicPrefs.GetPrefValue(emailSubjPref,appt.ClinicNum));
+				string emailSubj=OpenDentBusiness.EmailMessages.SubjectTidy(ClinicPrefs.GetString(appt.ClinicNum, emailSubjPref));
 				emailSubj=Patients.ReplacePatient(emailSubj,pat);
 				emailSubj=Appointments.ReplaceAppointment(emailSubj,appt);
 				emailSubj=Clinics.ReplaceOffice(emailSubj,clinic);
-				string emailBody=OpenDentBusiness.EmailMessages.BodyTidy(ClinicPrefs.GetPrefValue(emailBodyPref,appt.ClinicNum));
+				string emailBody=OpenDentBusiness.EmailMessages.BodyTidy(ClinicPrefs.GetString(appt.ClinicNum, emailBodyPref));
 				emailBody=Patients.ReplacePatient(emailBody,pat,isHtmlEmail:true);
 				emailBody=Appointments.ReplaceAppointment(emailBody,appt,isHtmlEmail:true);
 				emailBody=Clinics.ReplaceOffice(emailBody,clinic,isHtmlEmail:true,doReplaceDisclaimer:true);
@@ -4103,7 +4103,7 @@ namespace OpenDentBusiness
 						FromAddress=addr.GetFrom(),
 						Subject=emailSubj,
 						BodyText=emailBody,
-						HtmlType=PIn.Enum<EmailType>(ClinicPrefs.GetPrefValue(emailType,appt.ClinicNum)),
+						HtmlType=PIn.Enum<EmailType>(ClinicPrefs.GetString(appt.ClinicNum, emailType)),
 						MsgDateTime=DateTime.Now,
 						SentOrReceived=EmailSentOrReceived.Sent,
 					};
@@ -4187,7 +4187,7 @@ namespace OpenDentBusiness
 			if(assignedDent!=0) {
 				apt.ProvNum=assignedDent;
 			}
-			if(assignedHyg!=0 || PrefC.GetBool(PrefName.ApptSecondaryProviderConsiderOpOnly)) {
+			if(assignedHyg!=0 || Prefs.GetBool(PrefName.ApptSecondaryProviderConsiderOpOnly)) {
 				apt.ProvHyg=assignedHyg;
 			}
 			if(curOp.IsHygiene) {
@@ -4288,7 +4288,7 @@ namespace OpenDentBusiness
 				return false;
 			}
 			List<Recall> listRecalls=Recalls.GetList(appt.PatNum);//Get the recalls for this patient only.
-			string strRecallTypesShowingInList=PrefC.GetString(PrefName.RecallTypesShowingInList);
+			string strRecallTypesShowingInList=Prefs.GetString(PrefName.RecallTypesShowingInList);
 			if(!string.IsNullOrEmpty(strRecallTypesShowingInList)) {//Limit RecallTypes to check against if RecallTypesShowingInList preference is set.
 				List<long> listRecallTypeNums=strRecallTypesShowingInList.Split(new char[] {',' },StringSplitOptions.RemoveEmptyEntries)
 					.Select(x => PIn.Long(x)).ToList();

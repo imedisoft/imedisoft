@@ -218,57 +218,57 @@ namespace OpenDental {
 		}
 
 		private void SyncSheetDefDicts() {
-			bool hasChanged=false;
-			foreach(KeyValuePair<long,Dictionary<SheetTypeEnum,SheetDef>> dictSheetsCurForClinic in _dictSheetsCur) {
-				if(dictSheetsCurForClinic.Key==0) {//Defaults
-					Dictionary<SheetTypeEnum,SheetDef> defaultDefNumsOld=_dictSheetsCur[0];//Guaranteed to have the key of 0
-					foreach(KeyValuePair<SheetTypeEnum,SheetDef> sheetDef in dictSheetsCurForClinic.Value) {
-						if(defaultDefNumsOld.ContainsKey(sheetDef.Key)) {//Should always happen for defaults
-							if(Prefs.UpdateLong(Prefs.GetSheetDefPref(sheetDef.Key),sheetDef.Value.SheetDefNum)) {
-								hasChanged=true;
-							}
-						}
-					}
-				}
-				else {//Clinic specific
-					//If this clinic had overrides when this window loaded, check to see if any changes were made.
-					if(_dictSheetsOld.ContainsKey(dictSheetsCurForClinic.Key)) {
-						foreach(KeyValuePair<SheetTypeEnum,SheetDef> sheetDef in dictSheetsCurForClinic.Value) {
-							//If current sheetdef already exists in the db, update
-							if(_dictSheetsOld[dictSheetsCurForClinic.Key].ContainsKey(sheetDef.Key)) {
-								//Delete the clinic override if the current Clinic value same as base default
-								if(sheetDef.Value==null) {
-									//We know we want to delete because we found this value from _dictSheetsOld which was filled from the database
-									ClinicPrefs.Delete(ClinicPrefs.GetPref(Prefs.GetSheetDefPref(sheetDef.Key),dictSheetsCurForClinic.Key).ClinicPrefNum);
-									hasChanged=true;
-								}
-								else if(ClinicPrefs.UpdateLong(Prefs.GetSheetDefPref(sheetDef.Key),dictSheetsCurForClinic.Key,sheetDef.Value.SheetDefNum)) {
-									hasChanged=true;
-								}
-							}
-							else {//Current sheetdef doesn't exist in db, insert
-								if(sheetDef.Value!=null) {//Clinic value different than base default
-									ClinicPrefs.InsertPref(Prefs.GetSheetDefPref(sheetDef.Key),dictSheetsCurForClinic.Key,POut.Long(sheetDef.Value.SheetDefNum));
-									hasChanged=true;
-								}
-							}
-						}
-					}
-					else {//No clinicprefs exist for the clinic
-						foreach(KeyValuePair<SheetTypeEnum,SheetDef> sheetDef in dictSheetsCurForClinic.Value) {
-							//No preferences exist for this clinic, so add all that we have stored from being on on this form.
-							if(sheetDef.Value!=null) {//Clinic value set to use a specific sheet def instead of default
-								ClinicPrefs.InsertPref(Prefs.GetSheetDefPref(sheetDef.Key),dictSheetsCurForClinic.Key,POut.Long(sheetDef.Value.SheetDefNum));
-								hasChanged=true;
-							}
-						}
-					}
-				}
-			}
-			if(hasChanged) {
-				DataValid.SetInvalid(InvalidType.Prefs);
-				DataValid.SetInvalid(InvalidType.ClinicPrefs);
-			}
+			//bool hasChanged=false;
+			//foreach(KeyValuePair<long,Dictionary<SheetTypeEnum,SheetDef>> dictSheetsCurForClinic in _dictSheetsCur) {
+			//	if(dictSheetsCurForClinic.Key==0) {//Defaults
+			//		Dictionary<SheetTypeEnum,SheetDef> defaultDefNumsOld=_dictSheetsCur[0];//Guaranteed to have the key of 0
+			//		foreach(KeyValuePair<SheetTypeEnum,SheetDef> sheetDef in dictSheetsCurForClinic.Value) {
+			//			if(defaultDefNumsOld.ContainsKey(sheetDef.Key)) {//Should always happen for defaults
+			//				if(Prefs.Set(Prefs.GetSheetDefPref(sheetDef.Key),sheetDef.Value.SheetDefNum)) {
+			//					hasChanged=true;
+			//				}
+			//			}
+			//		}
+			//	}
+			//	else {//Clinic specific
+			//		//If this clinic had overrides when this window loaded, check to see if any changes were made.
+			//		if(_dictSheetsOld.ContainsKey(dictSheetsCurForClinic.Key)) {
+			//			foreach(KeyValuePair<SheetTypeEnum,SheetDef> sheetDef in dictSheetsCurForClinic.Value) {
+			//				//If current sheetdef already exists in the db, update
+			//				if(_dictSheetsOld[dictSheetsCurForClinic.Key].ContainsKey(sheetDef.Key)) {
+			//					//Delete the clinic override if the current Clinic value same as base default
+			//					if(sheetDef.Value==null) {
+			//						//We know we want to delete because we found this value from _dictSheetsOld which was filled from the database
+			//						ClinicPrefs.Delete(ClinicPrefs.GetPref(Prefs.GetSheetDefPref(sheetDef.Key),dictSheetsCurForClinic.Key).ClinicPrefNum);
+			//						hasChanged=true;
+			//					}
+			//					else if(ClinicPrefs.Set(dictSheetsCurForClinic.Key, Prefs.GetSheetDefPref(sheetDef.Key),sheetDef.Value.SheetDefNum)) {
+			//						hasChanged=true;
+			//					}
+			//				}
+			//				else {//Current sheetdef doesn't exist in db, insert
+			//					if(sheetDef.Value!=null) {//Clinic value different than base default
+			//						ClinicPrefs.InsertPref(Prefs.GetSheetDefPref(sheetDef.Key),dictSheetsCurForClinic.Key,POut.Long(sheetDef.Value.SheetDefNum));
+			//						hasChanged=true;
+			//					}
+			//				}
+			//			}
+			//		}
+			//		else {//No clinicprefs exist for the clinic
+			//			foreach(KeyValuePair<SheetTypeEnum,SheetDef> sheetDef in dictSheetsCurForClinic.Value) {
+			//				//No preferences exist for this clinic, so add all that we have stored from being on on this form.
+			//				if(sheetDef.Value!=null) {//Clinic value set to use a specific sheet def instead of default
+			//					ClinicPrefs.InsertPref(Prefs.GetSheetDefPref(sheetDef.Key),dictSheetsCurForClinic.Key,POut.Long(sheetDef.Value.SheetDefNum));
+			//					hasChanged=true;
+			//				}
+			//			}
+			//		}
+			//	}
+			//}
+			//if(hasChanged) {
+			//	DataValid.SetInvalid(InvalidType.Prefs);
+			//	DataValid.SetInvalid(InvalidType.ClinicPrefs);
+			//}
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {

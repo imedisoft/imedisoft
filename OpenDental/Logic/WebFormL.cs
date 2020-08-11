@@ -380,7 +380,7 @@ namespace OpenDental {
 			newPat.LName=LastName;
 			newPat.FName=FirstName;
 			newPat.Birthdate=birthDate;
-			newPat.BillingType=PrefC.GetLong(PrefName.PracticeDefaultBillType);
+			newPat.BillingType=Prefs.GetLong(PrefName.PracticeDefaultBillType);
 			if(isWebForm) {
 				newPat.ClinicNum=webFormSheet.ClinicNum;
 			}

@@ -474,7 +474,7 @@ namespace OpenDental {
 					else {
 						//handle aggregation of the full document text with the template ourselves so we can display properly but only save the html string. 
 						htmlText=MarkupEdit.TranslateToXhtml(textBodyText.Text,false,false,true,false);
-						_htmlDocument=PrefC.GetString(PrefName.EmailMasterTemplate).Replace("@@@body@@@",htmlText);
+						_htmlDocument=Prefs.GetString(PrefName.EmailMasterTemplate).Replace("@@@body@@@",htmlText);
 					}
 					_hasTextChanged=false;
 				}

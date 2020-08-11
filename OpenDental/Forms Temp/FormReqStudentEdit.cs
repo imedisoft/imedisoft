@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 	/// <summary>
@@ -319,7 +320,7 @@ namespace OpenDental{
 		private void FormReqStudentEdit_Load(object sender, System.EventArgs e) {
 			//There should only be two types of users who are allowed to get this far:
 			//Students editing their own req, and users with setup perm.  But we will double check.
-			Provider provUser=Providers.GetProv(Security.CurrentUser.ProvNum);
+			Provider provUser=Providers.GetProv(Security.CurrentUser.ProviderId);
 			if(provUser!=null && !provUser.IsInstructor) {//A student is logged in
 				//the student only has permission to view/attach/detach their own requirements
 				if(provUser.ProvNum!=ReqCur.ProvNum) {
@@ -395,7 +396,7 @@ namespace OpenDental{
 			if(FormP.DialogResult!=DialogResult.OK){
 				return;
 			}
-			ReqCur.PatNum=FormP.SelectedPatNum;
+			ReqCur.PatNum=FormP.SelectedPatientId;
 			textPatient.Text=Patients.GetPat(ReqCur.PatNum).GetNameFL();
 			//if the patient changed, then the appointment must be detached.
 			ReqCur.AptNum=0;

@@ -289,13 +289,13 @@ namespace OpenDental{
 		#endregion
 
 		private void FormPayPeriods_Load(object sender,System.EventArgs e) {
-			checkUseDecimal.Checked=PrefC.GetBool(PrefName.TimeCardsUseDecimalInsteadOfColon);
-			checkAdjOverBreaks.Checked=PrefC.GetBool(PrefName.TimeCardsMakesAdjustmentsForOverBreaks);
-			checkShowSeconds.Checked=PrefC.GetBool(PrefName.TimeCardShowSeconds);
+			checkUseDecimal.Checked=Prefs.GetBool(PrefName.TimeCardsUseDecimalInsteadOfColon);
+			checkAdjOverBreaks.Checked=Prefs.GetBool(PrefName.TimeCardsMakesAdjustmentsForOverBreaks);
+			checkShowSeconds.Checked=Prefs.GetBool(PrefName.TimeCardShowSeconds);
 			Employees.RefreshCache();
 			FillGrid();
 			FillRules();
-			textADPCompanyCode.Text=PrefC.GetString(PrefName.ADPCompanyCode);
+			textADPCompanyCode.Text=Prefs.GetString(PrefName.ADPCompanyCode);
 		}
 
 		///<summary>Does not refresh the cached list.  Make sure any updates to _listPayPeriods are done before calling this method.</summary>
@@ -453,19 +453,19 @@ namespace OpenDental{
 		}
 
 		private void checkUseDecimal_Click(object sender,EventArgs e) {
-			if(Prefs.UpdateBool(PrefName.TimeCardsUseDecimalInsteadOfColon,checkUseDecimal.Checked)) {
+			if(Prefs.Set(PrefName.TimeCardsUseDecimalInsteadOfColon,checkUseDecimal.Checked)) {
 				changed=true;
 			}
 		}
 
 		private void checkAdjOverBreaks_Click(object sender,EventArgs e) {
-			if(Prefs.UpdateBool(PrefName.TimeCardsMakesAdjustmentsForOverBreaks,checkAdjOverBreaks.Checked)) {
+			if(Prefs.Set(PrefName.TimeCardsMakesAdjustmentsForOverBreaks,checkAdjOverBreaks.Checked)) {
 				changed=true;
 			}
 		}
 
 		private void checkShowSeconds_Click(object sender,EventArgs e) {
-			if(Prefs.UpdateBool(PrefName.TimeCardShowSeconds,checkShowSeconds.Checked)) {
+			if(Prefs.Set(PrefName.TimeCardShowSeconds,checkShowSeconds.Checked)) {
 				changed=true;
 			}
 		}
@@ -549,7 +549,7 @@ namespace OpenDental{
 				MessageBox.Show("ADP Company Code must be two or three alpha-numeric characters.\r\nFix or clear before continuing.");
 				e.Cancel=true;
 			}
-			if(Prefs.UpdateString(PrefName.ADPCompanyCode,textADPCompanyCode.Text)) {
+			if(Prefs.Set(PrefName.ADPCompanyCode,textADPCompanyCode.Text)) {
 				changed=true;
 			}
 			if(changed) {

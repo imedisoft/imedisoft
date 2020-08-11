@@ -28,7 +28,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 		}
 
 		private void FillControls() {
-			string regkey = PrefC.GetString(PrefName.RegistrationKey);
+			string regkey = Prefs.GetString(PrefName.RegistrationKey);
 			if(regkey.Length==16) {
 				textRegKey.Text=regkey.Substring(0,4)+"-"+regkey.Substring(4,4)+"-"+regkey.Substring(8,4)+"-"+regkey.Substring(12,4);
 			}

@@ -40,7 +40,7 @@ namespace OpenDental {
 			}
 			//Path for testing:
 			//@"E:\My Documents\Shared Projects Subversion\EhrProvKeyGenerator\EhrProvKeyGenerator\bin\Debug\EhrProvKeyGenerator.exe"
-			string progPath=PrefC.GetString(PrefName.EhrProvKeyGeneratorPath);
+			string progPath=Prefs.GetString(PrefName.EhrProvKeyGeneratorPath);
 			ProcessStartInfo startInfo=new ProcessStartInfo(progPath);
 			string args="P \""+textLName.Text.Replace("\"","")+"\" \""+textFName.Text.Replace("\"","")+"\" "+textCalYear.Text.Replace("\"","").Trim();
 			startInfo.Arguments=args;

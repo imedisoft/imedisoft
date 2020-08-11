@@ -483,7 +483,7 @@ namespace OpenDentBusiness {
 			//aggregate with master
 			if(isEmail) {
 				if(canAggregate) {
-					s=PrefC.GetString(PrefName.EmailMasterTemplate).Replace("@@@body@@@",strbOut.ToString());
+					s=Prefs.GetString(PrefName.EmailMasterTemplate).Replace("@@@body@@@",strbOut.ToString());
 					return s;
 				}
 				return strbOut.ToString();

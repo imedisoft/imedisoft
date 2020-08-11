@@ -189,8 +189,8 @@ namespace OpenDental {
 				else {//we are going to insert either the default pregnancy problem or a manually selected problem
 					#region Get DiseaseDefNum from global default pregnancy problem
 					//if preg dx doesn't exist, use the default pregnancy code if set to something other than blank or 'none'
-					pregCode=PrefC.GetString(PrefName.PregnancyDefaultCodeValue);//could be 'none' which disables the automatic dx insertion
-					string pregCodeSys=PrefC.GetString(PrefName.PregnancyDefaultCodeSystem);//if 'none' for code, code system will default to 'SNOMEDCT', display will be ""
+					pregCode=Prefs.GetString(PrefName.PregnancyDefaultCodeValue);//could be 'none' which disables the automatic dx insertion
+					string pregCodeSys=Prefs.GetString(PrefName.PregnancyDefaultCodeSystem);//if 'none' for code, code system will default to 'SNOMEDCT', display will be ""
 					if(pregCode!="" && pregCode!="none") {//default pregnancy code set to a code other than 'none', should never be blank, we set in ConvertDB and don't allow blank
 						pregDisDefNumCur=DiseaseDefs.GetNumFromCode(pregCode);//see if the code is attached to a valid diseasedef
 						if(pregDisDefNumCur==0) {//no diseasedef in db for the default code, create and insert def

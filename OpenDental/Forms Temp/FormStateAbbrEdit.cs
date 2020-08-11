@@ -15,7 +15,7 @@ namespace OpenDental {
 		private void FormStateAbbrEdit_Load(object sender,EventArgs e) {
 			textDescription.Text=_stateAbbrCur.Description;
 			textAbbr.Text=_stateAbbrCur.Abbr;
-			if(PrefC.GetBool(PrefName.EnforceMedicaidIDLength)) {
+			if(Prefs.GetBool(PrefName.EnforceMedicaidIDLength)) {
 				if(_stateAbbrCur.MedicaidIDLength!=0) {
 					textMedIDLength.Text=_stateAbbrCur.MedicaidIDLength.ToString();
 				}
@@ -54,7 +54,7 @@ namespace OpenDental {
 			}
 			_stateAbbrCur.Description=textDescription.Text;
 			_stateAbbrCur.Abbr=textAbbr.Text;
-			if(PrefC.GetBool(PrefName.EnforceMedicaidIDLength)) {
+			if(Prefs.GetBool(PrefName.EnforceMedicaidIDLength)) {
 				_stateAbbrCur.MedicaidIDLength=0;
 				if(textMedIDLength.Text!="") {
 					_stateAbbrCur.MedicaidIDLength=PIn.Int(textMedIDLength.Text);

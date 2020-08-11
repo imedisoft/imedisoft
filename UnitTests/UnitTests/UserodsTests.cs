@@ -84,7 +84,7 @@ namespace UnitTests.Userods_Tests
 			string copiedUserName = user.UserName + "(Copy)";
 			//Fields directly copied
 			bool clinicIsRestrictedExpected = user.ClinicIsRestricted;
-			long clinicNumExpected = user.ClinicNum;
+			long clinicNumExpected = user.ClinicId;
 			List<UserGroupAttach> listAttachesExpected = UserGroupAttaches.GetForUser(user.Id);//Mimics Userods.Insert(...)
 			List<UserClinic> listUserClinicsExpected = UserClinics.GetForUser(user.Id);//Mimics 
 			List<AlertSub> listAlertSubsExpected = AlertSubs.GetAllForUser(user.Id);
@@ -100,7 +100,7 @@ namespace UnitTests.Userods_Tests
 			Assert.AreNotEqual(passwordHashNotExpected, copy.PasswordHash);//Source user's password should not have been copied.
 																				  //Fields directly copied
 			Assert.AreEqual(clinicIsRestrictedExpected, copy.ClinicIsRestricted);
-			Assert.AreEqual(clinicNumExpected, copy.ClinicNum);
+			Assert.AreEqual(clinicNumExpected, copy.ClinicId);
 			List<UserGroupAttach> listAttaches = UserGroupAttaches.GetForUser(copy.Id);
 			Assert.AreEqual(listAttachesExpected.Count, listAttaches.Count);
 			foreach (UserGroupAttach expected in listAttachesExpected)
@@ -121,10 +121,10 @@ namespace UnitTests.Userods_Tests
 					&& x.AlertCategoryNum == expected.AlertCategoryNum));
 			}
 			//Fields not copied (set to default)
-			Assert.AreEqual(0, copy.EmployeeNum);
-			Assert.AreEqual(0, copy.ProvNum);
+			Assert.AreEqual(0, copy.EmployeeId);
+			Assert.AreEqual(0, copy.ProviderId);
 			Assert.AreEqual(false, copy.IsHidden);
-			Assert.AreEqual(0, copy.TaskListInBox);
+			Assert.AreEqual(0, copy.InboxTaskListId);
 			Assert.AreEqual(0, copy.AnesthProvType);
 			Assert.AreEqual(false, copy.DefaultHidePopups);
 			Assert.AreEqual(0, copy.UserNumCEMT);

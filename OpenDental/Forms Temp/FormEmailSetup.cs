@@ -269,26 +269,26 @@ namespace OpenDental{
 			if(!Security.IsAuthorized(Permissions.SecurityAdmin,true)){
 				textPassword.PasswordChar='*';
 			}
-			textSMTPserver.Text=PrefC.GetString(PrefName.EmailSMTPserver);
-			textUsername.Text=PrefC.GetString(PrefName.EmailUsername);
-			textPassword.Text=PrefC.GetString(PrefName.EmailPassword);
-			textPort.Text=PrefC.GetString(PrefName.EmailPort);
-			checkSSL.Checked=PrefC.GetBool(PrefName.EmailUseSSL);
-			textSender.Text=PrefC.GetString(PrefName.EmailSenderAddress);
+			textSMTPserver.Text=Prefs.GetString(PrefName.EmailSMTPserver);
+			textUsername.Text=Prefs.GetString(PrefName.EmailUsername);
+			textPassword.Text=Prefs.GetString(PrefName.EmailPassword);
+			textPort.Text=Prefs.GetString(PrefName.EmailPort);
+			checkSSL.Checked=Prefs.GetBool(PrefName.EmailUseSSL);
+			textSender.Text=Prefs.GetString(PrefName.EmailSenderAddress);
 		}
 
 		private void butOK_Click(object sender, System.EventArgs e) {
-			Prefs.UpdateString(PrefName.EmailSMTPserver,textSMTPserver.Text);
-			Prefs.UpdateString(PrefName.EmailUsername,textUsername.Text);
-			Prefs.UpdateString(PrefName.EmailPassword,textPassword.Text);
+			Prefs.Set(PrefName.EmailSMTPserver,textSMTPserver.Text);
+			Prefs.Set(PrefName.EmailUsername,textUsername.Text);
+			Prefs.Set(PrefName.EmailPassword,textPassword.Text);
 			try{
-				Prefs.UpdateLong(PrefName.EmailPort,PIn.Long(textPort.Text));
+				Prefs.Set(PrefName.EmailPort,PIn.Long(textPort.Text));
 			}
 			catch{
 				MessageBox.Show("invalid port number.");
 			}
-			Prefs.UpdateBool(PrefName.EmailUseSSL,checkSSL.Checked);
-			Prefs.UpdateString(PrefName.EmailSenderAddress,textSender.Text);
+			Prefs.Set(PrefName.EmailUseSSL,checkSSL.Checked);
+			Prefs.Set(PrefName.EmailSenderAddress,textSender.Text);
 			DataValid.SetInvalid(InvalidType.Prefs);
 			DialogResult=DialogResult.OK;
 		}

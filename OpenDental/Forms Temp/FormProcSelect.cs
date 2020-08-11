@@ -34,7 +34,7 @@ namespace OpenDental{
 		public List<Procedure> ListSelectedProcs=new List<Procedure>();
 		///<summary>List of paysplits for the current payment.</summary>
 		public List<PaySplit> ListSplitsCur=new List<PaySplit>();
-		public bool ShowTpProcs=PrefC.GetYN(PrefName.PrePayAllowedForTpProcs);
+		public bool ShowTpProcs= Prefs.GetBool(PrefName.PrePayAllowedForTpProcs);
 		#endregion
 
 		///<summary>Displays completed procedures for the passed-in pat. 

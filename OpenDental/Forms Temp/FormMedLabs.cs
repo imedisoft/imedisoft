@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using Imedisoft.Forms;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -30,7 +31,7 @@ namespace OpenDental {
 			}
 			textDateStart.Text=DateTime.Today.AddMonths(-3).ToShortDateString();//default list to start with showing the last three months
 			//One time reconcile may need to be run to create embedded PDFs for MedLabs that are not attached to a patient.
-			if(!PrefC.GetBool(PrefName.MedLabReconcileDone)) {
+			if(!Prefs.GetBool(PrefName.MedLabReconcileDone)) {
 				int countMedLabs=MedLabs.GetCountForPatient(0);
 				if(MessageBox.Show(this,Lan.G(this,"There are MedLabs in the database that have not been associated with a patient.\r\nA one time "
 					+"reconciliation must be performed that will reprocess the HL7 messages for these MedLabs.  This can take some time.\r\nDo you want to "
@@ -46,7 +47,7 @@ namespace OpenDental {
 					MessageBox.Show(this,Lan.G(this,"Some of the MedLab objects in the database could not be reconciled.\r\nThis may be due to an issue "
 						+"processing the original HL7 message text file.\r\nNumber failed")+": "+reconcileFailedCount);
 				}
-				Prefs.UpdateBool(PrefName.MedLabReconcileDone,true);
+				Prefs.Set(PrefName.MedLabReconcileDone,true);
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			_dictLabAcctClinic=new Dictionary<string,string>();
@@ -214,7 +215,7 @@ namespace OpenDental {
 			if(FormPS.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			_selectedPat=Patients.GetPat(FormPS.SelectedPatNum);
+			_selectedPat=Patients.GetPat(FormPS.SelectedPatientId);
 			FillGrid();
 		}
 

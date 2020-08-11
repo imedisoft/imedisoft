@@ -60,38 +60,16 @@ namespace OpenDentBusiness{
 		}
 
 		///<summary>Returns true if the heartbeat is less than 6 minutes old.</summary>
-		public static bool IsODServiceRunning() {
-			
-			string command="SELECT ValueString,NOW() FROM preference WHERE PrefName='OpenDentalServiceHeartbeat'";
-			DataTable table=Database.ExecuteDataTable(command);
-			DateTime lastHeartbeat=PIn.Date(table.Rows[0][0].ToString());
-			DateTime dateTimeNow=PIn.Date(table.Rows[0][1].ToString());
-			if(lastHeartbeat.AddMinutes(6)<dateTimeNow) {
-				return false;
-			}
-			return true;
-		}
+		public static bool IsODServiceRunning()
+		{
+			var dateTime = Prefs.GetDateTimeOrNull(PrefName.OpenDentalServiceHeartbeat);
 
-		///<summary>Returns true if the heartbeat is less than 5 seconds old. Also returns the date time of the heartbeat.</summary>
-		public static ODTuple<bool,DateTime> IsPhoneTrackingServerHeartbeatValid(DateTime dateTimeLastHeartbeat) {
-			
-			//Default to using our local time just in case we can't query MySQL every second (lessens false positives due to query / network failure).
-			DateTime dateTimeNow=DateTime.Now;
-			DateTime dateTimeRecentHeartbeat=dateTimeLastHeartbeat;
-			DataTable table=null;
-			//Check to make sure the asterisk server is still processing messages.
-			ODException.SwallowAnyException(() => {
-				table=Database.ExecuteDataTable("SELECT ValueString,NOW() DateTNow FROM preference WHERE PrefName='AsteriskServerHeartbeat'");
-			});
-			if(table!=null && table.Rows.Count>=1 && table.Columns.Count>=2) {
-				dateTimeRecentHeartbeat=PIn.Date(table.Rows[0]["ValueString"].ToString());
-				dateTimeNow=PIn.Date(table.Rows[0]["DateTNow"].ToString());
-			}
-			//Check to see if the asterisk server heartbeat has stopped beating for the last 5 seconds.
-			if((dateTimeNow-dateTimeRecentHeartbeat).TotalSeconds > 5) {
-				return new ODTuple<bool,DateTime>(false,dateTimeRecentHeartbeat);
-			}
-			return new ODTuple<bool,DateTime>(true,dateTimeRecentHeartbeat);
+			if (!dateTime.HasValue || dateTime.Value.AddMinutes(6) < DateTime.UtcNow)
+            {
+				return false;
+            }
+
+			return true;
 		}
 
 		/// <summary>This method grabs all unread webmails, and creates/modifies/deletes alerts for the providers and linked users the webmails are addressed to.</summary>
@@ -225,7 +203,7 @@ namespace OpenDentBusiness{
 			long provNum = 0;
 			if (Security.CurrentUser != null && Userods.IsUserCpoe(Security.CurrentUser))
 			{
-				provNum = Security.CurrentUser.ProvNum;
+				provNum = Security.CurrentUser.ProviderId;
 			}
 			long curUserNum = 0;
 			if (Security.CurrentUser != null)

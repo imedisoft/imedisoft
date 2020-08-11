@@ -222,7 +222,7 @@ namespace OpenDental{
 			textProgName.Text=ProgramCur.Name;
 			textProgDesc.Text=ProgramCur.Description;
 			checkEnabled.Checked=ProgramCur.Enabled;
-			textHL7FolderOut.Text=PrefC.GetString(PrefName.HL7FolderOut);
+			textHL7FolderOut.Text=Prefs.GetString(PrefName.HL7FolderOut);
 		}
 
 		private void checkEnabled_Click(object sender,EventArgs e) {
@@ -241,7 +241,7 @@ namespace OpenDental{
 			ProgramCur.Description=textProgDesc.Text;
 			ProgramCur.Enabled=checkEnabled.Checked;
 			Programs.Update(ProgramCur);
-			Prefs.UpdateString(PrefName.HL7FolderOut,textHL7FolderOut.Text);
+			Prefs.Set(PrefName.HL7FolderOut,textHL7FolderOut.Text);
 			DataValid.SetInvalid(InvalidType.Programs,InvalidType.Prefs);
 			return true;
 		}

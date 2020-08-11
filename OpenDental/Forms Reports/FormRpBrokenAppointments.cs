@@ -68,7 +68,7 @@ namespace OpenDental {
 			if(value>0){
 				radioProcs.Checked=true;
 			}
-			else if(PrefC.GetBool(PrefName.BrokenApptAdjustment)) {
+			else if(Prefs.GetBool(PrefName.BrokenApptAdjustment)) {
 				radioAdj.Checked=true;
 			}
 			else {
@@ -146,7 +146,7 @@ namespace OpenDental {
 				_listPosAdjTypes.Clear();
 				listOptions.SelectionMode=SelectionMode.MultiSimple;
 				_listPosAdjTypes=Defs.GetPositiveAdjTypes();
-				long brokenApptAdjDefNum=PrefC.GetLong(PrefName.BrokenAppointmentAdjustmentType);
+				long brokenApptAdjDefNum=Prefs.GetLong(PrefName.BrokenAppointmentAdjustmentType);
 				for(int i=0; i<_listPosAdjTypes.Count;i++) {
 					listOptions.Items.Add(_listPosAdjTypes[i].ItemName);
 					if(_listPosAdjTypes[i].DefNum==brokenApptAdjDefNum) {

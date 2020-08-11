@@ -239,51 +239,51 @@ namespace OpenDentBusiness {
 		//IMPORTANT: Every value defined in this enum must have a ShortCodeAttribute with SmsMessageSource and EServicePrefName properly defined.
 		//PrefIsEnabledValues/EnabledValueType are optional/only required if EServicePrefNames are not bool values.
 		[ShortCode(SmsMessageSource=new SmsMessageSource[] { SmsMessageSource.ConfirmationRequest,SmsMessageSource.ConfirmationAutoReply }
-			,EServicePrefNames=new PrefName[] { PrefName.ApptConfirmAutoSignedUp,PrefName.ApptConfirmAutoEnabled })]
+			,EServicePrefNames=new string[] { PrefName.ApptConfirmAutoSignedUp,PrefName.ApptConfirmAutoEnabled })]
 		Confirmations=0b1,
 		[ShortCode(SmsMessageSource = new SmsMessageSource[] { SmsMessageSource.Recall,SmsMessageSource.RecallAuto }
 			//WebSchedRecall is determined to be enabled or not via a web call.
-			,EServicePrefNames=new PrefName[] { PrefName.WebSchedAutomaticSendTextSetting }
+			,EServicePrefNames=new string[] { PrefName.WebSchedAutomaticSendTextSetting }
 			,PrefIsEnabledValues=new int[] { (int)WebSchedAutomaticSend.SendToText }
 			,EnabledValueType=typeof(WebSchedAutomaticSend))]
 		WebSchedRecall = 0b10,
 		[ShortCode(SmsMessageSource = new SmsMessageSource[] { SmsMessageSource.Reminder }
-			,EServicePrefNames=new PrefName[] { PrefName.ApptRemindAutoEnabled })]
+			,EServicePrefNames=new string[] { PrefName.ApptRemindAutoEnabled })]
 		Reminders = 0b100,
 		[ShortCode(SmsMessageSource = new SmsMessageSource[] { SmsMessageSource.ApptThankYou }
-			,EServicePrefNames=new PrefName[] { PrefName.ApptThankYouAutoEnabled })]
+			,EServicePrefNames=new string[] { PrefName.ApptThankYouAutoEnabled })]
 		ThankYous = 0b1000,
 		[ShortCode(SmsMessageSource = new SmsMessageSource[] { SmsMessageSource.WebSchedASAP }
-			,EServicePrefNames=new PrefName[] { PrefName.WebSchedAsapEnabled })]
+			,EServicePrefNames=new string[] { PrefName.WebSchedAsapEnabled })]
 		WebSchedASAP = 0b10000,
 		[ShortCode(SmsMessageSource = new SmsMessageSource[] { SmsMessageSource.Verify }
-			,EServicePrefNames = new PrefName[] { PrefName.WebSchedVerifyASAPType,PrefName.WebSchedVerifyNewPatType,PrefName.WebSchedVerifyRecallType }
+			,EServicePrefNames = new string[] { PrefName.WebSchedVerifyASAPType,PrefName.WebSchedVerifyNewPatType,PrefName.WebSchedVerifyRecallType }
 			,PrefIsEnabledValues=new int[] { (int)WebSchedVerifyType.Text,(int)WebSchedVerifyType.TextAndEmail }
 			,EnabledValueType=typeof(WebSchedVerifyType))]
 		WebSchedVerify = 0b100000,
 		[ShortCode(SmsMessageSource = new SmsMessageSource[] { SmsMessageSource.VerifyWSNP }
-			,EServicePrefNames=new PrefName[] { PrefName.WebSchedNewPatDoAuthText })]
+			,EServicePrefNames=new string[] { PrefName.WebSchedNewPatDoAuthText })]
 		WebSchedNewPat = 0b1000000,
 		[ShortCode(SmsMessageSource = new SmsMessageSource[] { SmsMessageSource.Statements }
 			//BillingDefaultsModesToText is a comma separated string, PIn.Bool() will return false if empty, true otherwise.
-			,EServicePrefNames=new PrefName[] { PrefName.BillingDefaultsModesToText })]
+			,EServicePrefNames=new string[] { PrefName.BillingDefaultsModesToText })]
 		BillingStatements = 0b10000000,
 		[ShortCode(SmsMessageSource=new SmsMessageSource[] { SmsMessageSource.Confirmation }
 			//NotApplicable means only Texting is required for this eService 
-			,EServicePrefNames=new PrefName[] { PrefName.NotApplicable })]
+			,EServicePrefNames=new string[] { })]
 		ManualConfirmations=0b100000000,
 		[ShortCode(SmsMessageSource=new SmsMessageSource[] { SmsMessageSource.AsapManual }
 			//NotApplicable means only Texting is required for this eService 
-			,EServicePrefNames=new PrefName[] { PrefName.NotApplicable })]
+			,EServicePrefNames=new string[] {})]
 		ASAPManual=0b1000000000,		
 		[ShortCode(SmsMessageSource=new SmsMessageSource[] { SmsMessageSource.Arrival }
-			,EServicePrefNames=new PrefName[] { PrefName.ApptConfirmAutoSignedUp,PrefName.ApptConfirmAutoEnabled })]
+			,EServicePrefNames=new string[] { PrefName.ApptConfirmAutoSignedUp,PrefName.ApptConfirmAutoEnabled })]
 		Arrivals=0b10000000000,
 	}
 
 	public class ShortCodeAttribute:Attribute {
 		private SmsMessageSource[] _smsMessageSource=new SmsMessageSource[] { OpenDentBusiness.SmsMessageSource.Undefined };
-		private PrefName[] _eServicePrefNames=new PrefName[] { PrefName.NotApplicable };
+		private string[] _eServicePrefNames=new string[] { };
 		private Type _valueType;
 		private int[] _prefIsEnabledValues=new int[] { };
 
@@ -298,7 +298,7 @@ namespace OpenDentBusiness {
 
 		///<summary>The preference to check to determine if the eService for this Short Code implementation is enabled.  Preference is assumed to return
 		///a bool, unless PrefIsEnabledEnumAsIntValues and EnabledValueType are defined.</summary>
-		public PrefName[] EServicePrefNames {
+		public string[] EServicePrefNames {
 			get {
 				return _eServicePrefNames;
 			}
@@ -338,16 +338,16 @@ namespace OpenDentBusiness {
 		///<summary>If prefName is not configured, returns true.  Otherwise, checks if "enabled" values have been defined.  If so, gets the 
 		///value of the ClinicPref/Pref corresponding to prefName as an int and checks if this value is "enabled".  If "enabled" values are not
 		///defined, considers </summary>
-		private static bool IsPrefEnabled(PrefName prefName,long clinicNum,int[] enabledValues,Type valueType) {
-			if(prefName==PrefName.NotApplicable) {
+		private static bool IsPrefEnabled(string prefName,long clinicNum,int[] enabledValues,Type valueType) {
+			if(prefName=="") {
 				return true;
 			}
 			if(valueType is null || enabledValues.IsNullOrEmpty()) {
 				//No override type/values defined, so we can consider the preference to be a boolean.
-				return ClinicPrefs.GetBool(prefName,clinicNum);
+				return ClinicPrefs.GetBool(clinicNum, prefName);
 			}
 			Array enumValues=Enum.GetValues(valueType);
-			string prefValue=ClinicPrefs.GetPrefValue(prefName,clinicNum);
+			string prefValue=ClinicPrefs.GetString(clinicNum, prefName);
 			int? prefAsInt=null;
 			for(int i = 0;i<enumValues.Length;i++) {
 				object enumValue=enumValues.GetValue(i);

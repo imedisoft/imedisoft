@@ -19,7 +19,7 @@ namespace UnitTestsCore {
 			Userod newUser=new Userod();
 			newUser.UserName=userName;
 			newUser.PasswordHash=Password.Hash(password);
-			newUser.ClinicNum=clinicNum;
+			newUser.ClinicId=clinicNum;
 			newUser.ClinicIsRestricted=isClinicIsRestricted;
 			do {
 				//In case the username is already taken

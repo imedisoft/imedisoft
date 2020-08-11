@@ -25,7 +25,7 @@ namespace OpenDental {
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
 			report.ReportName=Lan.G(this,"Discount Plan List");
 			report.AddTitle("Title",Lan.G(this,"Discount Plan List"),fontTitle);
-			report.AddSubTitle("Practice Title",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
+			report.AddSubTitle("Practice Title",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
 			QueryObject query=report.AddQuery(table,Lan.G(this,"Date")+": "+DateTimeOD.Today.ToString("d"));
 			query.AddColumn("Description",230,font:fontMain);
 			query.AddColumn("FeeSched",175,font:fontMain);

@@ -470,7 +470,7 @@ namespace OpenDental {
 					return;
 				}
 			}
-			if(DoCheckForDisclaimer && PrefC.GetBool(PrefName.EmailDisclaimerIsOn) && !textContentEmail.Text.ToLower().Contains("[emaildisclaimer]")) {
+			if(DoCheckForDisclaimer && Prefs.GetBool(PrefName.EmailDisclaimerIsOn) && !textContentEmail.Text.ToLower().Contains("[emaildisclaimer]")) {
 				MessageBox.Show("Email must contain the \"[EmailDisclaimer]\" tag.");
 				return;
 			}

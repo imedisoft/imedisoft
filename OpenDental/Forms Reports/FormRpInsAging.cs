@@ -427,7 +427,7 @@ namespace OpenDental{
 			if(lastAgingDate.Year<1880) {
 				textDate.Text="";
 			}
-			else if(PrefC.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)){
+			else if(Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)){
 				textDate.Text=lastAgingDate.ToShortDateString();
 			}
 			else{
@@ -454,8 +454,8 @@ namespace OpenDental{
 				listClin.SelectedIndex=listClinics.FindIndex(x => x.ClinicNum==Clinics.ClinicNum);//FindIndex could return -1, which is fine
 				checkAllClin.Checked=(Clinics.ClinicNum==0);//event handler will set visibility
 			}
-			if(PrefC.GetBool(PrefName.FutureTransDatesAllowed) || PrefC.GetBool(PrefName.AccountAllowFutureDebits) 
-				|| PrefC.GetBool(PrefName.AllowFutureInsPayments)) 
+			if(Prefs.GetBool(PrefName.FutureTransDatesAllowed) || Prefs.GetBool(PrefName.AccountAllowFutureDebits) 
+				|| Prefs.GetBool(PrefName.AllowFutureInsPayments)) 
 			{
 				labelFutureTrans.Visible=true;//Set to false in designer
 			}
@@ -554,7 +554,7 @@ namespace OpenDental{
 			tableAging=RpInsAging.GetInsAgingTable(rpo);
 			report.ReportName=Lan.G(this,"Insurance Aging Report");
 			report.AddTitle("InsAging",Lan.G(this, "Insurance Aging Report"));
-			report.AddSubTitle("PracTitle",PrefC.GetString(PrefName.PracticeTitle));
+			report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle));
 			report.AddSubTitle("AsOf",Lan.G(this,"As of")+" "+rpo.AsOfDate.ToShortDateString());
 			if(radioAny.Checked){
 				report.AddSubTitle("Balance",Lan.G(this,"Any Balance"));

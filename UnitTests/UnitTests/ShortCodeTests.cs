@@ -50,18 +50,18 @@ namespace UnitTests {
 			PrefT.UpdateBool(PrefName.EasyNoClinics,true);
 			Prefs.RefreshCache();
 			foreach(ShortCodeAttribute sc in GetAllShortCodeAttributes()) {
-				if(sc.EServicePrefNames.Contains(PrefName.NotApplicable)) {
+				if(sc.EServicePrefNames.Contains("")) {
 					//When NotApplicable is used as the pref, having texting enabled is the only gatekeeper.  We are trying to test the other preferences here,
 					//not simply if Texting is enabled.
 					ToggleTexting(false);
 				}
 				Assert.IsFalse(sc.IsServiceEnabled(0),$"{sc.SmsMessageSource[0]} should not be enabled.");
-				if(sc.EServicePrefNames.Contains(PrefName.NotApplicable)) {
+				if(sc.EServicePrefNames.Contains("")) {
 					ToggleTexting(true);
 				}
 			}
 			foreach(ShortCodeAttribute sc in GetAllShortCodeAttributes()) {
-				foreach(PrefName pref in sc.EServicePrefNames) {
+				foreach(var pref in sc.EServicePrefNames) {
 					int[] arrValues=sc.PrefIsEnabledValues??new int[] { 1 };
 					foreach(int value in arrValues) {
 						ToggleTexting(true);
@@ -89,18 +89,18 @@ namespace UnitTests {
 			foreach(long clinicNum in listClinicNums) {
 				ToggleTexting(false);
 				foreach(ShortCodeAttribute sc in GetAllShortCodeAttributes()) {
-					if(sc.EServicePrefNames.Contains(PrefName.NotApplicable)) {
+					if(sc.EServicePrefNames.Contains("")) {
 						//When NotApplicable is used as the pref, having texting enabled is the only gatekeeper.  We are trying to test the other preferences here,
 						//not simply if Texting is enabled.
 						ToggleTexting(false);
 					}
 					Assert.IsFalse(sc.IsServiceEnabled(clinicNum),$"{sc.SmsMessageSource[0]} should not be enabled.");					
-					if(sc.EServicePrefNames.Contains(PrefName.NotApplicable)) {
+					if(sc.EServicePrefNames.Contains("")) {
 						ToggleTexting(true);
 					}
 				}
 				foreach(ShortCodeAttribute sc in GetAllShortCodeAttributes()) {
-					foreach(PrefName pref in sc.EServicePrefNames) {
+					foreach(string pref in sc.EServicePrefNames) {
 						int[] arrValues=sc.PrefIsEnabledValues??new int[] { 1 };
 						foreach(int value in arrValues) {
 							UpdatePref(pref,clinicNum,value,true);//Turn pref on.
@@ -135,7 +135,7 @@ namespace UnitTests {
 			listClinicNums.AddRange(Clinics.GetDeepCopy().Select(x => x.ClinicNum));
 			foreach(long clinicNum in listClinicNums) {
 				foreach(ShortCodeAttribute sc in GetAllShortCodeAttributes()) {
-					foreach(PrefName pref in sc.EServicePrefNames) {
+					foreach(string pref in sc.EServicePrefNames) {
 						int[] arrValues=sc.PrefIsEnabledValues??new int[] { 1 };
 						foreach(int value in arrValues) {
 							int reset=0;
@@ -149,9 +149,9 @@ namespace UnitTests {
 			Prefs.RefreshCache();
 		}
 
-		private void UpdatePref(PrefName pref,long clinicNum,int value,bool doRefreshCache=false) {
+		private void UpdatePref(string pref,long clinicNum,int value,bool doRefreshCache=false) {
 			if(clinicNum>0){
-				ClinicPrefs.Upsert(pref,clinicNum,value.ToString());
+				ClinicPrefs.Set(clinicNum,pref,value.ToString());
 				if(doRefreshCache) {
 					ClinicPrefs.RefreshCache();
 				}

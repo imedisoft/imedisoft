@@ -515,7 +515,7 @@ namespace OpenDental{
 			comboClinic.SelectedClinicNum=_clinicNumInitial;
 			comboClinicChanged();//fills provs and emps and also fills grid
 			comboProv.Items.AddProvsAbbr(Providers.GetDeepCopy(true));
-			comboProv.SetSelectedProvNum(PrefC.GetLong(PrefName.ScheduleProvUnassigned));
+			comboProv.SetSelectedProvNum(Prefs.GetLong(PrefName.ScheduleProvUnassigned));
 			labelDate.Text=_dateSched.ToString("dddd")+"\r\n"+_dateSched.ToShortDateString();
 			if(_isFromSchedule && (_provAbbrFilter!="" || _employeeNameFilter!="")) {//single person was passed in from the schedule window.
 				if(_provAbbrFilter!="") {//it was a provider schedule
@@ -1012,7 +1012,7 @@ namespace OpenDental{
 				return;
 			}
 			if(comboProv.SelectedIndex!=-1
-				&& Prefs.UpdateLong(PrefName.ScheduleProvUnassigned,comboProv.GetSelectedProvNum()))
+				&& Prefs.Set(PrefName.ScheduleProvUnassigned,comboProv.GetSelectedProvNum()))
 			{
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}

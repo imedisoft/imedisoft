@@ -45,7 +45,7 @@ namespace OpenDental
 			radioDateLongDate.Text=DateTime.Today.ToString(_longDateFormat);//Formats as 'Thursday, March 15, 2018'
 			radioDateMMMMdyyyy.Text=DateTime.Today.ToString(_dateFormatMMMMdyyyy);//Formats as 'March 15, 2018'
 			radioDatem.Text=DateTime.Today.ToString(_dateFormatm);//Formats as 'March 15'
-			string curFormat=PrefC.GetString(PrefName.PatientCommunicationDateFormat);
+			string curFormat=Prefs.GetString(PrefName.PatientCommunicationDateFormat);
 			if(curFormat==CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern) {
 				curFormat=_shortDateFormat;
 			}
@@ -67,7 +67,7 @@ namespace OpenDental
 					break;
 				default:
 					radioDateCustom.Checked=true;
-					textDateCustom.Text=PrefC.GetString(PrefName.PatientCommunicationDateFormat);
+					textDateCustom.Text=Prefs.GetString(PrefName.PatientCommunicationDateFormat);
 					break;
 			}
 			DateTime lastRun=PrefC.GetDateT(PrefName.MobileSyncDateTimeLastRun);
@@ -82,9 +82,9 @@ namespace OpenDental
 		}
 
 		private void SaveTabMisc() {
-			Prefs.UpdateDateT(PrefName.AutomaticCommunicationTimeStart,dateRunStart.Value);
-			Prefs.UpdateDateT(PrefName.AutomaticCommunicationTimeEnd,dateRunEnd.Value);
-			string curFormat=PrefC.GetString(PrefName.PatientCommunicationDateFormat);
+			Prefs.Set(PrefName.AutomaticCommunicationTimeStart,dateRunStart.Value);
+			Prefs.Set(PrefName.AutomaticCommunicationTimeEnd,dateRunEnd.Value);
+			string curFormat=Prefs.GetString(PrefName.PatientCommunicationDateFormat);
 			string dateFormat;
 			if(radioDateShortDate.Checked) {
 				if(_wasShortOrLongDateClicked) {
@@ -111,7 +111,7 @@ namespace OpenDental
 			else {
 				dateFormat=textDateCustom.Text;
 			}
-			Prefs.UpdateString(PrefName.PatientCommunicationDateFormat,dateFormat);
+			Prefs.Set(PrefName.PatientCommunicationDateFormat,dateFormat);
 		}
 
 		private void AuthorizeMisc(bool allowEdit) {

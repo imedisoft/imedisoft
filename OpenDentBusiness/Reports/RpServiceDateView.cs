@@ -13,7 +13,7 @@ namespace OpenDentBusiness
 	{
 		public static DataTable GetData(long patNum, bool isFamily, bool isDetailed)
 		{
-			int payPlanVersion = PIn.Int(PrefC.GetStringNoCache(PrefName.PayPlansVersion));
+			int payPlanVersion = PIn.Int(Prefs.GetStringNoCache(PrefName.PayPlansVersion));
 			if (payPlanVersion == 0)
 			{
 				payPlanVersion = 1;

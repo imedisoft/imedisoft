@@ -14,8 +14,8 @@ namespace OpenDental {
 			if(!Security.IsAuthorized(Permissions.Setup)) {
 				return;
 			}
-			UserGroup studentGroup=UserGroups.GetGroup(PrefC.GetLong(PrefName.SecurityGroupForStudents));
-			UserGroup instructorGroup=UserGroups.GetGroup(PrefC.GetLong(PrefName.SecurityGroupForInstructors));
+			UserGroup studentGroup=UserGroups.GetGroup(Prefs.GetLong(PrefName.SecurityGroupForStudents));
+			UserGroup instructorGroup=UserGroups.GetGroup(Prefs.GetLong(PrefName.SecurityGroupForInstructors));
 			if(studentGroup!=null) {
 				textStudents.Text=studentGroup.Description;
 			}
@@ -49,7 +49,7 @@ namespace OpenDental {
 				}
 			}
 			//For now, only one user group can be defined as the default security group for students/instructors.
-			Prefs.UpdateLong(PrefName.SecurityGroupForStudents,FormUGP.UserGroup.Id);
+			Prefs.Set(PrefName.SecurityGroupForStudents,FormUGP.UserGroup.Id);
 			textStudents.Text=FormUGP.UserGroup.Description;
 			DataValid.SetInvalid(InvalidType.Prefs);
 		}
@@ -79,7 +79,7 @@ namespace OpenDental {
 				}
 			}
 			//For now, only one user group can be defined as the default security group for students/instructors.
-			Prefs.UpdateLong(PrefName.SecurityGroupForInstructors,FormUGP.UserGroup.Id);
+			Prefs.Set(PrefName.SecurityGroupForInstructors,FormUGP.UserGroup.Id);
 			textInstructors.Text=FormUGP.UserGroup.Description;
 			DataValid.SetInvalid(InvalidType.Prefs);
 		}

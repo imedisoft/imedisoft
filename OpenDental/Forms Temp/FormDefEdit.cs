@@ -394,12 +394,12 @@ namespace OpenDental {
 
 		private void FormDefEdit_Load(object sender, System.EventArgs e) {
 			if(DefCur.Category==DefCat.ApptConfirmed) {
-				_listExcludeSendNums=PrefC.GetString(PrefName.ApptConfirmExcludeESend).Split(',').ToList().Select(x => PIn.Long(x)).ToList();
-				_listExcludeConfirmNums=PrefC.GetString(PrefName.ApptConfirmExcludeEConfirm).Split(',').ToList().Select(x => PIn.Long(x)).ToList();
-				_listExcludeRemindNums=PrefC.GetString(PrefName.ApptConfirmExcludeERemind).Split(',').ToList().Select(x => PIn.Long(x)).ToList();
-				_listExcludeThanksNums=PrefC.GetString(PrefName.ApptConfirmExcludeEThankYou).Split(',').ToList().Select(x => PIn.Long(x)).ToList();
-				_listExcludeArrivalSendNums=PrefC.GetString(PrefName.ApptConfirmExcludeArrivalSend).Split(',').ToList().Select(x => PIn.Long(x)).ToList();
-				_listExcludeArrivalResponseNums=PrefC.GetString(PrefName.ApptConfirmExcludeArrivalResponse).Split(',').ToList().Select(x => PIn.Long(x)).ToList();
+				_listExcludeSendNums=Prefs.GetString(PrefName.ApptConfirmExcludeESend).Split(',').ToList().Select(x => PIn.Long(x)).ToList();
+				_listExcludeConfirmNums=Prefs.GetString(PrefName.ApptConfirmExcludeEConfirm).Split(',').ToList().Select(x => PIn.Long(x)).ToList();
+				_listExcludeRemindNums=Prefs.GetString(PrefName.ApptConfirmExcludeERemind).Split(',').ToList().Select(x => PIn.Long(x)).ToList();
+				_listExcludeThanksNums=Prefs.GetString(PrefName.ApptConfirmExcludeEThankYou).Split(',').ToList().Select(x => PIn.Long(x)).ToList();
+				_listExcludeArrivalSendNums=Prefs.GetString(PrefName.ApptConfirmExcludeArrivalSend).Split(',').ToList().Select(x => PIn.Long(x)).ToList();
+				_listExcludeArrivalResponseNums=Prefs.GetString(PrefName.ApptConfirmExcludeArrivalResponse).Split(',').ToList().Select(x => PIn.Long(x)).ToList();
 				//0 will get automatically added to the list when this is the first of its kind.  We never want 0 inserted.
 				_listExcludeSendNums.Remove(0);
 				_listExcludeConfirmNums.Remove(0);
@@ -420,8 +420,8 @@ namespace OpenDental {
 				groupBoxEThanks.Visible=false;
 				groupBoxArrivals.Visible=false;
 			}
-			if(DefCur.DefNum.In(PrefC.GetLong(PrefName.AppointmentTimeArrivedTrigger),PrefC.GetLong(PrefName.AppointmentTimeDismissedTrigger),
-				PrefC.GetLong(PrefName.AppointmentTimeSeatedTrigger))) 
+			if(DefCur.DefNum.In(Prefs.GetLong(PrefName.AppointmentTimeArrivedTrigger),Prefs.GetLong(PrefName.AppointmentTimeDismissedTrigger),
+				Prefs.GetLong(PrefName.AppointmentTimeSeatedTrigger))) 
 			{
 				//We never want to send confirmation or reminders to an appointment when it is in a triggered confirm status.
 				checkExcludeConfirm.Enabled=false;
@@ -736,7 +736,7 @@ namespace OpenDental {
 			DialogResult=DialogResult.OK;
 		}
 
-		private static void UpdateConfirmExcludes(CheckBox check,List<long> listExcludeNums,Def def,PrefName prefName) {
+		private static void UpdateConfirmExcludes(CheckBox check,List<long> listExcludeNums,Def def, string prefName) {
 			if(check.Checked) {
 				listExcludeNums.Add(def.DefNum);
 			}
@@ -744,7 +744,7 @@ namespace OpenDental {
 				listExcludeNums.RemoveAll(x => x==def.DefNum);
 			}
 			string toString=string.Join(",",listExcludeNums.Distinct().OrderBy(x => x));
-			Prefs.UpdateString(prefName,toString);
+			Prefs.Set(prefName,toString);
 		}
 
 		private void butCancel_Click(object sender,System.EventArgs e) {

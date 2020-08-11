@@ -507,7 +507,7 @@ namespace OpenDental
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
 			report.ReportName=Lan.G(this,"Appointments");
 			report.AddTitle("Title",Lan.G(this,"Appointments"),fontTitle);
-			report.AddSubTitle("PracName",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
+			report.AddSubTitle("PracName",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
 			report.AddSubTitle("Date",dateFrom.ToShortDateString()+" - "+dateTo.ToShortDateString(),fontSubTitle);
 			if(checkAllProvs.Checked) {
 				report.AddSubTitle("Providers",Lan.G(this,"All Providers"));

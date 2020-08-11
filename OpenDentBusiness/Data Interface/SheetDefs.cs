@@ -1,5 +1,6 @@
 ﻿using CodeBase;
 using Imedisoft.Data;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -158,58 +159,73 @@ namespace OpenDentBusiness{
 		}
 
 		///<summary></summary>
-		public static void DeleteObject(long sheetDefNum) {
-			
+		public static void DeleteObject(long sheetDefNum)
+		{
+
 			//validate that not already in use by a refferral.
-			string command="SELECT LName,FName FROM referral WHERE Slip="+POut.Long(sheetDefNum);
-			DataTable table=Database.ExecuteDataTable(command);
+			string command = "SELECT LName,FName FROM referral WHERE Slip=" + POut.Long(sheetDefNum);
+			DataTable table = Database.ExecuteDataTable(command);
 			//int count=PIn.PInt(Db.GetCount(command));
-			string referralNames="";
-			for(int i=0;i<table.Rows.Count;i++){
-				if(i>0){
-					referralNames+=", ";
+			string referralNames = "";
+			for (int i = 0; i < table.Rows.Count; i++)
+			{
+				if (i > 0)
+				{
+					referralNames += ", ";
 				}
-				referralNames+=table.Rows[i]["FName"].ToString()+" "+table.Rows[i]["LName"].ToString();
+				referralNames += table.Rows[i]["FName"].ToString() + " " + table.Rows[i]["LName"].ToString();
 			}
-			if(table.Rows.Count>0){
-				throw new ApplicationException(Lans.g("sheetDefs","SheetDef is already in use by referrals. Not allowed to delete.")+" "+referralNames);
+			if (table.Rows.Count > 0)
+			{
+				throw new ApplicationException(Lans.g("sheetDefs", "SheetDef is already in use by referrals. Not allowed to delete.") + " " + referralNames);
 			}
 			//validate that not already in use by automation.
-			command="SELECT AutomationNum FROM automation WHERE SheetDefNum="+POut.Long(sheetDefNum);
-			table=Database.ExecuteDataTable(command);
-			if(table.Rows.Count>0){
-				throw new ApplicationException(Lans.g("sheetDefs","SheetDef is in use by automation. Not allowed to delete."));
+			command = "SELECT AutomationNum FROM automation WHERE SheetDefNum=" + POut.Long(sheetDefNum);
+			table = Database.ExecuteDataTable(command);
+			if (table.Rows.Count > 0)
+			{
+				throw new ApplicationException(Lans.g("sheetDefs", "SheetDef is in use by automation. Not allowed to delete."));
 			}
 			//validate that not already in use by a laboratory
-			command="SELECT Description FROM laboratory WHERE Slip="+POut.Long(sheetDefNum);
-			table=Database.ExecuteDataTable(command);
-			if(table.Rows.Count > 0) {
-				throw new ApplicationException(Lans.g("sheetDefs","SheetDef is in use by laboratories. Not allowed to delete.")
-					+"\r\n"+string.Join(", ",table.Select().Select(x => x["Description"].ToString())));
+			command = "SELECT Description FROM laboratory WHERE Slip=" + POut.Long(sheetDefNum);
+			table = Database.ExecuteDataTable(command);
+			if (table.Rows.Count > 0)
+			{
+				throw new ApplicationException(Lans.g("sheetDefs", "SheetDef is in use by laboratories. Not allowed to delete.")
+					+ "\r\n" + string.Join(", ", table.Select().Select(x => x["Description"].ToString())));
 			}
-			//validate that not already in use by clinicPref.
-			command="SELECT ClinicNum FROM clinicpref WHERE ValueString='"+POut.Long(sheetDefNum)+ "' AND PrefName='"+POut.String(PrefName.SheetsDefaultRx.ToString())+"'";
-			table=Database.ExecuteDataTable(command);
-			if(table.Rows.Count>0) {
-				throw new ApplicationException(Lans.g("sheetDefs","SheetDef is in use by clinics. Not allowed to delete.")
-					+"\r\n"+string.Join(", ",table.Select().Select(x => Clinics.GetAbbr(PIn.Long(x["ClinicNum"].ToString())))));
+
+			var clinicId = 
+				Database.ExecuteLong("SELECT `clinic_id` FROM `clinic_preferences` WHERE `key` = @key AND `value` = @value",
+					new MySqlParameter("key", PrefName.SheetsDefaultRx),
+					new MySqlParameter("value", sheetDefNum));
+			
+			if (clinicId > 0)
+			{
+				throw new ApplicationException(
+					"SheetDef is in use by clinics. Not allowed to delete.\r\n" + 
+						string.Join(", ", table.Select().Select(x => Clinics.GetAbbr(PIn.Long(x["ClinicNum"].ToString())))));
 			}
+
 			//validate that not already in use by eClipboard
-			command="SELECT EClipboardSheetDefNum,ClinicNum FROM eclipboardsheetdef WHERE SheetDefNum="+POut.Long(sheetDefNum);
-			table=Database.ExecuteDataTable(command);
-			if(table.Rows.Count > 0) {
-				if(PrefC.HasClinicsEnabled) {
-					throw new ApplicationException(Lans.g("sheetDefs","SheetDef is in use by eClipboard. Not allowed to delete.")
-					+"\r\n"+string.Join(", ",table.Select()
+			command = "SELECT EClipboardSheetDefNum,ClinicNum FROM eclipboardsheetdef WHERE SheetDefNum=" + POut.Long(sheetDefNum);
+			table = Database.ExecuteDataTable(command);
+			if (table.Rows.Count > 0)
+			{
+				if (PrefC.HasClinicsEnabled)
+				{
+					throw new ApplicationException(Lans.g("sheetDefs", "SheetDef is in use by eClipboard. Not allowed to delete.")
+					+ "\r\n" + string.Join(", ", table.Select()
 						.Select(x => Clinics.GetAbbr(PIn.Long(x["ClinicNum"].ToString())))
 						.Select(x => string.IsNullOrEmpty(x) ? "Default" : x)));
 				}
-				else {
-					throw new ApplicationException(Lans.g("sheetDefs","SheetDef is in use by eClipboard. Not allowed to delete."));
+				else
+				{
+					throw new ApplicationException(Lans.g("sheetDefs", "SheetDef is in use by eClipboard. Not allowed to delete."));
 				}
-				
+
 			}
-			command="DELETE FROM sheetfielddef WHERE SheetDefNum="+POut.Long(sheetDefNum);
+			command = "DELETE FROM sheetfielddef WHERE SheetDefNum=" + POut.Long(sheetDefNum);
 			Database.ExecuteNonQuery(command);
 			Crud.SheetDefCrud.Delete(sheetDefNum);
 		}
@@ -254,25 +270,36 @@ namespace OpenDentBusiness{
 		/// Returns the SheetTypeEnum and Sheet Def defaults for a clinic, if clinics is not on/or user is altering HQ settings 
 		/// it will instead return user defaults, if neither is present then it will return the pratice default.
 		/// </summary>
-		public static Dictionary<SheetTypeEnum,SheetDef> GetDefaultSheetDefs(long clinicNum=0,params SheetTypeEnum[] arrSheetTypes) {
-			//No need to check RemotingRole; no call to db.
-			Dictionary<SheetTypeEnum,SheetDef> retVal=new Dictionary<SheetTypeEnum,SheetDef>();
-			foreach(SheetTypeEnum sheetTypeEnum in arrSheetTypes) {
-				SheetDef defaultSheetDef=GetSheetDef(PrefC.GetDefaultSheetDefNum(sheetTypeEnum),false);
-				if(clinicNum==0) {
-					if(defaultSheetDef==null) {
-						defaultSheetDef=SheetsInternal.GetSheetDef(sheetTypeEnum);
+		public static Dictionary<SheetTypeEnum, SheetDef> GetDefaultSheetDefs(long clinicNum = 0, params SheetTypeEnum[] arrSheetTypes)
+		{
+			Dictionary<SheetTypeEnum, SheetDef> retVal = new Dictionary<SheetTypeEnum, SheetDef>();
+			foreach (SheetTypeEnum sheetTypeEnum in arrSheetTypes)
+			{
+				SheetDef defaultSheetDef = GetSheetDef(PrefC.GetDefaultSheetDefNum(sheetTypeEnum), false);
+				if (clinicNum == 0)
+				{
+					if (defaultSheetDef == null)
+					{
+						defaultSheetDef = SheetsInternal.GetSheetDef(sheetTypeEnum);
 					}
-					retVal.Add(sheetTypeEnum,defaultSheetDef);
+
+					retVal.Add(sheetTypeEnum, defaultSheetDef);
 				}
-				else {
-					ClinicPref clinicPrefCur=ClinicPrefs.GetPref(Prefs.GetSheetDefPref(sheetTypeEnum),clinicNum);
-					defaultSheetDef=SheetsInternal.GetSheetDef(sheetTypeEnum);
-					if(clinicPrefCur!=null && PIn.Long(clinicPrefCur.ValueString)!=0) {//If ValueString is 0 then we want to keep it as the internal sheet def.
-						defaultSheetDef=GetSheetDef(PIn.Long(clinicPrefCur.ValueString),false);
+				else
+				{
+					var clinicPrefCur = ClinicPrefs.GetLong(clinicNum, Prefs.GetSheetDefPref(sheetTypeEnum));
+
+					defaultSheetDef = SheetsInternal.GetSheetDef(sheetTypeEnum);
+					if (clinicPrefCur > 0)
+					{
+						// If ValueString is 0 then we want to keep it as the internal sheet def.
+						defaultSheetDef = GetSheetDef(clinicPrefCur, false);
 					}
-					if(clinicPrefCur!=null) {//If there was a row in the clinicpref table, add whatever the sheetdef was to the retval dictionary.
-						retVal.Add(sheetTypeEnum,defaultSheetDef);
+
+					if (defaultSheetDef != null)
+					{
+						// If there was a row in the clinicpref table, add whatever the sheetdef was to the retval dictionary.
+						retVal.Add(sheetTypeEnum, defaultSheetDef);
 					}
 				}
 			}
@@ -280,24 +307,27 @@ namespace OpenDentBusiness{
 		}
 
 		///<summary>Passing in a clinicNum of 0 will use the base default sheet def.  Otherwise returns the clinic specific default sheetdef.</summary>
-		public static SheetDef GetSheetsDefault(SheetTypeEnum sheetType,long clinicNum=0) {
-			//No need to check RemotingRole; no call to db.
-			ClinicPref clinicPrefCur=ClinicPrefs.GetPref(Prefs.GetSheetDefPref(sheetType),clinicNum);
+		public static SheetDef GetSheetsDefault(SheetTypeEnum sheetType, long clinicNum = 0)
+		{
+			var clinicPrefCur = ClinicPrefs.GetLong(clinicNum, Prefs.GetSheetDefPref(sheetType));
+
 			SheetDef defaultSheetDef;
-			if(clinicPrefCur==null) {//If there wasn't a row for the specific clinic, use the base default sheetdef
-				defaultSheetDef=GetSheetDef(PrefC.GetDefaultSheetDefNum(sheetType),false);
-				if(defaultSheetDef==null) {
-					defaultSheetDef=SheetsInternal.GetSheetDef(sheetType);
+			if (clinicPrefCur == 0)
+			{
+				// If there wasn't a row for the specific clinic, use the base default sheetdef
+				defaultSheetDef = GetSheetDef(PrefC.GetDefaultSheetDefNum(sheetType), false);
+				if (defaultSheetDef == null)
+				{
+					defaultSheetDef = SheetsInternal.GetSheetDef(sheetType);
 				}
-				return defaultSheetDef;//Return the base default sheetdef
+
+				return defaultSheetDef; // Return the base default sheetdef
 			}
-			//Clinic specific sheet def found
-			if(PIn.Long(clinicPrefCur.ValueString)==0) {//If ValueString is 0 then we want to keep it as the internal sheet def.
-				defaultSheetDef=SheetsInternal.GetSheetDef(sheetType);
+			else
+			{
+				defaultSheetDef = GetSheetDef(clinicPrefCur, false);
 			}
-			else {
-				defaultSheetDef=GetSheetDef(PIn.Long(clinicPrefCur.ValueString),false);
-			}
+
 			return defaultSheetDef;
 		}
 

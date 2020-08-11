@@ -162,7 +162,7 @@ namespace OpenDental {
 			if(Rule.TypeCur==ApptReminderType.ScheduleThankYou) {
 				//ThankYou templates can only use the [AddToCalendar] tag when Confirmations are enabled.
 				string addToCalTag=ApptThankYouSents.ADD_TO_CALENDAR.ToLower();
-				if(!PrefC.GetBool(PrefName.ApptConfirmAutoSignedUp)) {
+				if(!Prefs.GetBool(PrefName.ApptConfirmAutoSignedUp)) {
 					if(textSMSAggPerAppt.Text.ToLower().Contains(addToCalTag)) {
 						errors.Add(Lan.G(this,"Automated Thank-You texts cannot contain ")+ApptThankYouSents.ADD_TO_CALENDAR
 							+Lan.G(this," when not signed up for eConfirmations."));
@@ -182,7 +182,7 @@ namespace OpenDental {
 						+Lan.G(this,". Use Per Appointment instead."));
 				}
 			}
-			if(PrefC.GetBool(PrefName.EmailDisclaimerIsOn) && !_templateEmailAggShared.ToLower().Contains("[emaildisclaimer]")) {
+			if(Prefs.GetBool(PrefName.EmailDisclaimerIsOn) && !_templateEmailAggShared.ToLower().Contains("[emaildisclaimer]")) {
 				errors.Add(Lan.G(this,"Email must contain the \"[EmailDisclaimer]\" tag."));
 			}
 			return errors;

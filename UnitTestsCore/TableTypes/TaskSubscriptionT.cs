@@ -6,16 +6,9 @@ namespace UnitTestsCore
 	public class TaskSubscriptionT
 	{
 		///<summary>Creates a TaskSubscription.</summary>
-		public static TaskSubscription CreateTaskSubscription(long userNum = 0, long taskListNum = 0, long taskNum = 0)
+		public static void CreateTaskSubscription(long userId = 0, long taskListId = 0)
 		{
-			TaskSubscription taskSub = new TaskSubscription
-			{
-				UserNum = userNum,
-				TaskListNum = taskListNum,
-				TaskNum = taskNum
-			};
-			TaskSubscriptions.Insert(taskSub);
-			return taskSub;
+			TaskSubscriptions.Subscribe(taskListId, userId);
 		}
 
 		///<summary>Deletes everything from the TaskSubscription table.  Does not truncate the table so that PKs are not reused on accident.</summary>

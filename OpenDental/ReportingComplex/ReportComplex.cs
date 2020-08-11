@@ -132,7 +132,7 @@ namespace OpenDental.ReportingComplex {
 				_actionCloseReportProgress=ODProgress.Show(EventCategory.ReportComplex
 					,typeof(ReportComplexEvent)
 					,startingMessage: Lan.G("ReportComplex","Running Report Query...")
-					,hasHistory:PrefC.GetBool(PrefName.ReportsShowHistory));
+					,hasHistory:Prefs.GetBool(PrefName.ReportsShowHistory));
 			}
 			_grfx=Graphics.FromImage(new Bitmap(1,1));
 			_isLandscape=isLandscape;

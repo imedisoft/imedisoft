@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 	/// <summary>For a given subscriber, this list all their plans.  User then selects one plan from the list or creates a blank plan.</summary>
@@ -145,7 +146,7 @@ namespace OpenDental{
 			if(FormPS.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			SelectedPatNum=FormPS.SelectedPatNum;
+			SelectedPatNum=FormPS.SelectedPatientId;
 			DialogResult=DialogResult.OK;
 		}
 

@@ -655,7 +655,7 @@ namespace OpenDental{
 			_listShownTimeClockStatuses.Clear();
 			foreach(TimeClockStatus timeClockStatus in Enum.GetValues(typeof(TimeClockStatus))){
 				string statusDescript=timeClockStatus.GetDescription();
-				if(!PrefC.GetBool(PrefName.ClockEventAllowBreak)) {
+				if(!Prefs.GetBool(PrefName.ClockEventAllowBreak)) {
 					if(timeClockStatus==TimeClockStatus.Break) {
 						continue;//Skip Break option.
 					}

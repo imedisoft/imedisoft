@@ -147,7 +147,7 @@ namespace OpenDental{
 			else{
 				textDateLast.Text=dateLastAging.ToShortDateString();
 			}
-			if(PrefC.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)){
+			if(Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)){
 				if(dateLastAging < DateTime.Today.AddDays(-15)) {
 					textDateCalc.Text=dateLastAging.AddMonths(1).ToShortDateString();
 				}
@@ -157,7 +157,7 @@ namespace OpenDental{
 			}
 			else{
 				textDateCalc.Text=DateTime.Today.ToShortDateString();
-				if(PrefC.GetBool(PrefName.AgingIsEnterprise)) {//enterprise aging requires daily not monthly calc
+				if(Prefs.GetBool(PrefName.AgingIsEnterprise)) {//enterprise aging requires daily not monthly calc
 					textDateCalc.ReadOnly=true;
 					textDateCalc.BackColor=SystemColors.Control;
 				}
@@ -183,14 +183,14 @@ namespace OpenDental{
 				return false;
 			}
 			SecurityLogs.MakeLogEntry(Permissions.AgingRan,0,"Starting Aging - Aging Form");
-			Prefs.UpdateString(PrefName.AgingBeginDateTime,POut.DateT(MiscData.GetNowDateTime(),false));//get lock on pref to block others
+			Prefs.Set(PrefName.AgingBeginDateTime,POut.DateT(MiscData.GetNowDateTime(),false));//get lock on pref to block others
 			Signalods.SetInvalid(InvalidType.Prefs);//signal a cache refresh so other computers will have the updated pref as quickly as possible
 			Cursor=Cursors.WaitCursor;
 			bool result=true;
 			ODProgress.ShowAction(
 				() => {
 					Ledgers.ComputeAging(0,dateCalc);
-					Prefs.UpdateString(PrefName.DateLastAging,POut.Date(dateCalc,false));
+					Prefs.Set(PrefName.DateLastAging,POut.Date(dateCalc,false));
 				},
 				startingMessage:Lan.G(this,"Calculating enterprise aging for all patients as of")+" "+dateCalc.ToShortDateString()+"...",
 				actionException:ex => {
@@ -200,7 +200,7 @@ namespace OpenDental{
 			);
 			Cursor=Cursors.Default;
 			SecurityLogs.MakeLogEntry(Permissions.AgingRan,0,"Aging complete - Aging Form");
-			Prefs.UpdateString(PrefName.AgingBeginDateTime,"");//clear lock on pref whether aging was successful or not
+			Prefs.Set(PrefName.AgingBeginDateTime,"");//clear lock on pref whether aging was successful or not
 			Signalods.SetInvalid(InvalidType.Prefs);
 			return result;
 		}
@@ -211,7 +211,7 @@ namespace OpenDental{
 				return;
 			}
 			DateTime dateCalc=PIn.Date(textDateCalc.Text);
-			if(PrefC.GetBool(PrefName.AgingIsEnterprise)) {
+			if(Prefs.GetBool(PrefName.AgingIsEnterprise)) {
 				//if this is true, dateCalc has to be DateTime.Today and aging calculated daily not monthly.
 				if(!RunAgingEnterprise(dateCalc)) {
 					//Errors displayed from RunAgingEnterprise
@@ -235,7 +235,7 @@ namespace OpenDental{
 					DialogResult=DialogResult.Cancel;
 					return;
 				}
-				if(Prefs.UpdateString(PrefName.DateLastAging,POut.Date(dateCalc,false))) {
+				if(Prefs.Set(PrefName.DateLastAging,POut.Date(dateCalc,false))) {
 					DataValid.SetInvalid(InvalidType.Prefs);
 				}
 			}

@@ -46,7 +46,7 @@ namespace OpenDental {
 		private void RunReport(List<long> listUserNums,List<long> listClinicsNums) {
 			ReportComplex report = new ReportComplex(true,false);
 			report.AddTitle("Title",Lan.G(this,"Presented Procedure Totals"));
-			report.AddSubTitle("PracTitle",PrefC.GetString(PrefName.PracticeTitle));
+			report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle));
 			report.AddSubTitle("Date",date1.SelectionStart.ToShortDateString()+" - "+date2.SelectionStart.ToShortDateString());
 			List<Userod> listSelectedUsers = new List<Userod>();
 			if(checkAllUsers.Checked) {

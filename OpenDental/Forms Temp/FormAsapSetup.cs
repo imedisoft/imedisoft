@@ -40,37 +40,37 @@ namespace OpenDental {
 			gridMain.ListGridRows.Add(row);
 			gridMain.EndUpdate();
 			if(comboClinic.SelectedClinicNum==0) {
-				textWebSchedPerDay.Text=PrefC.GetString(PrefName.WebSchedAsapTextLimit);
+				textWebSchedPerDay.Text=Prefs.GetString(PrefName.WebSchedAsapTextLimit);
 				checkUseDefaults.Checked=false;
 			}
 			else {
-				ClinicPref clinicPref=ClinicPrefs.GetPref(PrefName.WebSchedAsapTextLimit,comboClinic.SelectedClinicNum);
-				if(clinicPref==null || clinicPref.ValueString==null) {
-					textWebSchedPerDay.Text=PrefC.GetString(PrefName.WebSchedAsapTextLimit);
+				var clinicPref=ClinicPrefs.GetString(comboClinic.SelectedClinicNum,PrefName.WebSchedAsapTextLimit);
+				if(string.IsNullOrEmpty(clinicPref)) {
+					textWebSchedPerDay.Text=Prefs.GetString(PrefName.WebSchedAsapTextLimit);
 				}
 				else {
-					textWebSchedPerDay.Text=clinicPref.ValueString;
+					textWebSchedPerDay.Text=clinicPref;
 					checkUseDefaults.Checked=false;
 				}
 			}
 		}
 
 		///<summary>Creates a row for the passed in template type. Unchecks checkUseDefaults if a clinic-level template is in use.</summary>
-		private GridRow BuildRowForTemplate(PrefName prefName,string templateName,string availableVars) {
+		private GridRow BuildRowForTemplate(string prefName,string templateName,string availableVars) {
 			string templateText;
 			bool doShowDefault=false;
 			if(comboClinic.SelectedClinicNum==0) {
-				templateText=PrefC.GetString(prefName);
+				templateText=Prefs.GetString(prefName);
 				checkUseDefaults.Checked=false;
 			}
 			else {
-				ClinicPref clinicPref=ClinicPrefs.GetPref(prefName,comboClinic.SelectedClinicNum);
-				if(clinicPref==null || clinicPref.ValueString==null) {
-					templateText=PrefC.GetString(prefName);
+				var clinicPref=ClinicPrefs.GetString(comboClinic.SelectedClinicNum, prefName);
+				if(string.IsNullOrEmpty(clinicPref)) {
+					templateText=Prefs.GetString(prefName);
 					doShowDefault=true;
 				}
 				else {
-					templateText=clinicPref.ValueString;
+					templateText=clinicPref;
 					checkUseDefaults.Checked=false;
 				}
 			}
@@ -93,105 +93,106 @@ namespace OpenDental {
 		}
 
 		private void checkUseDefaults_Click(object sender,EventArgs e) {
-			List<PrefName> listPrefs=new List<PrefName> {
-				PrefName.ASAPTextTemplate,
-				PrefName.WebSchedAsapTextTemplate,
-				PrefName.WebSchedAsapEmailTemplate,
-				PrefName.WebSchedAsapEmailSubj,
-				PrefName.WebSchedAsapTextLimit,
-			};
-			if(checkUseDefaults.Checked) {
-				if(MsgBox.Show(MsgBoxButtons.YesNo,"Delete custom templates for this clinic and switch to using defaults? This cannot be undone.")) {
-					ClinicPrefs.DeletePrefs(comboClinic.SelectedClinicNum,listPrefs);
-					DataValid.SetInvalid(InvalidType.ClinicPrefs);
-				}
-				else {
-					checkUseDefaults.Checked=false;
-				}
-			}
-			else {//Was checked, now user is unchecking it.
-				bool wasChanged=false;
-				foreach(PrefName pref in listPrefs) {
-					if(ClinicPrefs.Upsert(pref,comboClinic.SelectedClinicNum,PrefC.GetString(pref))) {
-						wasChanged=true;
-					}
-				}
-				if(wasChanged) {
-					DataValid.SetInvalid(InvalidType.ClinicPrefs);
-				}
-			}
-			FillPrefs();
+			//List<string> listPrefs=new List<string> {
+			//	PrefName.ASAPTextTemplate,
+			//	PrefName.WebSchedAsapTextTemplate,
+			//	PrefName.WebSchedAsapEmailTemplate,
+			//	PrefName.WebSchedAsapEmailSubj,
+			//	PrefName.WebSchedAsapTextLimit,
+			//};
+			//if(checkUseDefaults.Checked) {
+			//	if(MsgBox.Show(MsgBoxButtons.YesNo,"Delete custom templates for this clinic and switch to using defaults? This cannot be undone.")) {
+			//		ClinicPrefs.DeletePrefs(comboClinic.SelectedClinicNum,listPrefs);
+			//		DataValid.SetInvalid(InvalidType.ClinicPrefs);
+			//	}
+			//	else {
+			//		checkUseDefaults.Checked=false;
+			//	}
+			//}
+			//else {//Was checked, now user is unchecking it.
+			//	bool wasChanged=false;
+			//	foreach(string pref in listPrefs) {
+			//		if(ClinicPrefs.Upsert(pref,comboClinic.SelectedClinicNum,Prefs.GetString(pref))) {
+			//			wasChanged=true;
+			//		}
+			//	}
+			//	if(wasChanged) {
+			//		DataValid.SetInvalid(InvalidType.ClinicPrefs);
+			//	}
+			//}
+			//FillPrefs();
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			PrefName prefName=(PrefName)gridMain.ListGridRows[e.Row].Tag;
-			string curPrefValue=GetClinicPrefValue(prefName);
-			EmailType emailType=PIn.Enum<EmailType>(GetClinicPrefValue(PrefName.WebSchedAsapEmailTemplateType));
-			string newPrefValue;
-			bool isHtmlTemplate=prefName==PrefName.WebSchedAsapEmailTemplate;
-			if(isHtmlTemplate) {
-				FormEmailEdit formEmailEdit=new FormEmailEdit {
-					MarkupText=curPrefValue,
-					DoCheckForDisclaimer=true,
-					IsRawAllowed=true,
-					IsRaw=emailType==EmailType.RawHtml,
-				};
-				formEmailEdit.ShowDialog();
-				if(formEmailEdit.DialogResult!=DialogResult.OK) {
-					return;
-				}
-				emailType=formEmailEdit.IsRaw?EmailType.RawHtml:EmailType.Html;
-				newPrefValue=formEmailEdit.MarkupText;
-			}
-			else {
-				FormRecallMessageEdit FormR=new FormRecallMessageEdit(prefName);
-				FormR.MessageVal=curPrefValue;
-				FormR.ShowDialog();
-				if(FormR.DialogResult!=DialogResult.OK) {
-					return;
-				}
-				newPrefValue=FormR.MessageVal;
-			}
-			if(comboClinic.SelectedClinicNum==0) {
-				if(Prefs.UpdateString(prefName,newPrefValue) | Prefs.UpdateInt(PrefName.WebSchedAsapEmailTemplateType,(int)emailType)) {
-					DataValid.SetInvalid(InvalidType.Prefs);
-				}
-			}
-			else {
-				if(ClinicPrefs.Upsert(prefName,comboClinic.SelectedClinicNum,newPrefValue) 
-					| ClinicPrefs.Upsert(PrefName.WebSchedAsapEmailTemplate,comboClinic.SelectedClinicNum,((int)emailType).ToString())) 
-				{
-					DataValid.SetInvalid(InvalidType.ClinicPrefs);
-				}
-			}
-			FillPrefs();
+			//string prefName =(string)gridMain.ListGridRows[e.Row].Tag;
+			//string curPrefValue=GetClinicPrefValue(prefName);
+			//EmailType emailType=PIn.Enum<EmailType>(GetClinicPrefValue(PrefName.WebSchedAsapEmailTemplateType));
+			//string newPrefValue;
+			//bool isHtmlTemplate=prefName==PrefName.WebSchedAsapEmailTemplate;
+			//if(isHtmlTemplate) {
+			//	FormEmailEdit formEmailEdit=new FormEmailEdit {
+			//		MarkupText=curPrefValue,
+			//		DoCheckForDisclaimer=true,
+			//		IsRawAllowed=true,
+			//		IsRaw=emailType==EmailType.RawHtml,
+			//	};
+			//	formEmailEdit.ShowDialog();
+			//	if(formEmailEdit.DialogResult!=DialogResult.OK) {
+			//		return;
+			//	}
+			//	emailType=formEmailEdit.IsRaw?EmailType.RawHtml:EmailType.Html;
+			//	newPrefValue=formEmailEdit.MarkupText;
+			//}
+			//else {
+			//	FormRecallMessageEdit FormR=new FormRecallMessageEdit(prefName);
+			//	FormR.MessageVal=curPrefValue;
+			//	FormR.ShowDialog();
+			//	if(FormR.DialogResult!=DialogResult.OK) {
+			//		return;
+			//	}
+			//	newPrefValue=FormR.MessageVal;
+			//}
+			//if(comboClinic.SelectedClinicNum==0) {
+			//	if(Prefs.Set(prefName,newPrefValue) | Prefs.Set(PrefName.WebSchedAsapEmailTemplateType,(int)emailType)) {
+			//		DataValid.SetInvalid(InvalidType.Prefs);
+			//	}
+			//}
+			//else {
+			//	if(ClinicPrefs.Upsert(prefName,comboClinic.SelectedClinicNum,newPrefValue) 
+			//		| ClinicPrefs.Upsert(PrefName.WebSchedAsapEmailTemplate,comboClinic.SelectedClinicNum,((int)emailType).ToString())) 
+			//	{
+			//		DataValid.SetInvalid(InvalidType.ClinicPrefs);
+			//	}
+			//}
+			//FillPrefs();
 		}
 
-		private string GetClinicPrefValue(PrefName prefName) {
+		private string GetClinicPrefValue(string prefName) {
 			if(comboClinic.SelectedClinicNum==0) {
-				return PrefC.GetString(prefName);
+				return Prefs.GetString(prefName);
 			}
-			ClinicPref clinicPref=ClinicPrefs.GetPref(prefName,comboClinic.SelectedClinicNum);
-			if(clinicPref==null || string.IsNullOrEmpty(clinicPref.ValueString)) {
-				return PrefC.GetString(prefName);
-			}
-			return clinicPref.ValueString;
+			//ClinicPref clinicPref=ClinicPrefs.GetPref(prefName,comboClinic.SelectedClinicNum);
+			//if(clinicPref==null || string.IsNullOrEmpty(clinicPref.ValueString)) {
+			//	return Prefs.GetString(prefName);
+			//}
+			//return clinicPref.ValueString;
+			return "";
 		}
 
 		private void textWebSchedPerDay_Leave(object sender,EventArgs e) {
-			if(!textWebSchedPerDay.IsValid) {
-				return;
-			}
-			if(comboClinic.SelectedClinicNum==0) {
-				if(Prefs.UpdateString(PrefName.WebSchedAsapTextLimit,textWebSchedPerDay.Text)) {
-					DataValid.SetInvalid(InvalidType.Prefs);
-				}
-			}
-			else {
-				if(ClinicPrefs.Upsert(PrefName.WebSchedAsapTextLimit,comboClinic.SelectedClinicNum,textWebSchedPerDay.Text)) {
-					DataValid.SetInvalid(InvalidType.ClinicPrefs);
-				}
-			}
+			//if(!textWebSchedPerDay.IsValid) {
+			//	return;
+			//}
+			//if(comboClinic.SelectedClinicNum==0) {
+			//	if(Prefs.Set(PrefName.WebSchedAsapTextLimit,textWebSchedPerDay.Text)) {
+			//		DataValid.SetInvalid(InvalidType.Prefs);
+			//	}
+			//}
+			//else {
+			//	if(ClinicPrefs.Upsert(PrefName.WebSchedAsapTextLimit,comboClinic.SelectedClinicNum,textWebSchedPerDay.Text)) {
+			//		DataValid.SetInvalid(InvalidType.ClinicPrefs);
+			//	}
+			//}
 		}
 
 		private void butClose_Click(object sender,EventArgs e) {

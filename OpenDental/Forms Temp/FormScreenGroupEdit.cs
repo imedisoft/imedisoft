@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Linq;
 using OpenDentBusiness;
 using OpenDental.UI;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 	/// <summary>
@@ -512,7 +513,7 @@ namespace OpenDental{
 			comboPlaceService.Items.AddRange(Enum.GetNames(typeof(PlaceOfService)));
 			comboPlaceService.SelectedIndex=(int)_screenGroup.PlaceService;
 			_listScreeningSheetDefs=SheetDefs.GetCustomForType(SheetTypeEnum.Screening);
-			if(PrefC.GetBool(PrefName.ScreeningsUseSheets)) {
+			if(Prefs.GetBool(PrefName.ScreeningsUseSheets)) {
 				comboSheetDefs.Items.Add(Lan.G(this,"Default"));
 				foreach(SheetDef def in _listScreeningSheetDefs) {
 					comboSheetDefs.Items.Add(def.Description);
@@ -965,7 +966,7 @@ namespace OpenDental{
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			if(PrefC.GetBool(PrefName.ScreeningsUseSheets)) {
+			if(Prefs.GetBool(PrefName.ScreeningsUseSheets)) {
 				ViewScreenForPatWithSheets(_listScreens[e.Row]);
 			}
 			else {
@@ -996,7 +997,7 @@ namespace OpenDental{
 		}
 
 		private void butAddAnonymous_Click(object sender,System.EventArgs e) {
-			if(PrefC.GetBool(PrefName.ScreeningsUseSheets)) {
+			if(Prefs.GetBool(PrefName.ScreeningsUseSheets)) {
 				AddAnonymousScreensForSheets();
 			}
 			else {
@@ -1008,7 +1009,7 @@ namespace OpenDental{
 			FormPatientSelect FormPS=new FormPatientSelect();
 			FormPS.ShowDialog();
 			if(FormPS.DialogResult==DialogResult.OK) {
-				ScreenPat screenPat=_listScreenPats.FirstOrDefault(x => x.PatNum==FormPS.SelectedPatNum);
+				ScreenPat screenPat=_listScreenPats.FirstOrDefault(x => x.PatNum==FormPS.SelectedPatientId);
 				if(screenPat!=null) {
 					MessageBox.Show("Cannot add patient already in screen group.");
 					for(int i=0;i<_listScreenPats.Count;i++) {
@@ -1020,7 +1021,7 @@ namespace OpenDental{
 					return;
 				}
 				screenPat=new ScreenPat();
-				screenPat.PatNum=FormPS.SelectedPatNum;
+				screenPat.PatNum=FormPS.SelectedPatientId;
 				screenPat.PatScreenPerm=PatScreenPerm.Unknown;
 				screenPat.ScreenGroupNum=_screenGroup.ScreenGroupNum;
 				ScreenPats.Insert(screenPat);
@@ -1052,7 +1053,7 @@ namespace OpenDental{
 				MessageBox.Show("No patients to screen.");
 				return;
 			}
-			if(PrefC.GetBool(PrefName.ScreeningsUseSheets)) {
+			if(Prefs.GetBool(PrefName.ScreeningsUseSheets)) {
 				StartScreensForPatsWithSheets();
 			}
 			else {

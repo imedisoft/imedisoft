@@ -117,7 +117,7 @@ namespace OpenDentBusiness
 			{
 				string url = GetApiUrl(UrlEndpoint.Root);
 				url += "?" + JsonConvert.DeserializeObject(
-						WebServiceMainHQProxy.GetWebServiceMainHQInstance().BuildOAuthUrl(PrefC.GetString(PrefName.RegistrationKey), OAuthApplicationNames.Google.ToString()));
+						WebServiceMainHQProxy.GetWebServiceMainHQInstance().BuildOAuthUrl(Prefs.GetString(PrefName.RegistrationKey), OAuthApplicationNames.Google.ToString()));
 				url += "&login_hint=" + emailAddress;
 				return url;
 			}

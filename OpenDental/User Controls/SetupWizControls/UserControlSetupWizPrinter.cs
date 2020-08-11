@@ -18,7 +18,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 		}
 
 		private void FillControls() {
-			checkSimple.Checked=PrefC.GetBool(PrefName.EasyHidePrinters);
+			checkSimple.Checked=Prefs.GetBool(PrefName.EasyHidePrinters);
 			IsDone=true;
 			SetSimple();
 			SetControls(groupPrinter);
@@ -206,7 +206,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 					return false;
 				}
 			}
-			if(checkSimple.Checked && !PrefC.GetBool(PrefName.EasyHidePrinters)) {
+			if(checkSimple.Checked && !Prefs.GetBool(PrefName.EasyHidePrinters)) {
 				//if user clicked the simple option
 				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Warning! You have selected the easy view option for printers.  This will clear all printing preferences for all computers.  Are you sure you wish to continue?")) {
 					return false;
@@ -217,7 +217,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 
 		private void ControlDone(object sender,EventArgs e) {
 			string compName = SystemInformation.ComputerName;
-			if(checkSimple.Checked && !PrefC.GetBool(PrefName.EasyHidePrinters)) {
+			if(checkSimple.Checked && !Prefs.GetBool(PrefName.EasyHidePrinters)) {
 				Printers.ClearAll();
 				Printers.RefreshCache();
                 string printerName;
@@ -267,8 +267,8 @@ namespace OpenDental.User_Controls.SetupWizard {
 				Printers.PutForSit((PrintSituation)i,compName,printerName,isChecked);
 			}
 			DataValid.SetInvalid(InvalidType.Computers);
-			if(checkSimple.Checked!=PrefC.GetBool(PrefName.EasyHidePrinters)) {
-				Prefs.UpdateBool(PrefName.EasyHidePrinters,checkSimple.Checked);
+			if(checkSimple.Checked!=Prefs.GetBool(PrefName.EasyHidePrinters)) {
+				Prefs.Set(PrefName.EasyHidePrinters,checkSimple.Checked);
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			Printers.RefreshCache();//the other computers don't care

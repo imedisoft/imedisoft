@@ -965,7 +965,7 @@ namespace OpenDental
 			if(doSelectCell) {
 				CurCell=new Point(1,GetTableRow(selectedExam,0,PerioSequenceType.Probing));
 				OnDirectionChangedLeft();//Always start looping to the left.
-				if(!PrefC.GetBool(PrefName.PerioTreatImplantsAsNotMissing) && skippedTeeth.Count==32) {
+				if(!Prefs.GetBool(PrefName.PerioTreatImplantsAsNotMissing) && skippedTeeth.Count==32) {
 					return;
 				}
 				int curTooth = GetToothNumCur(GetSection(CurCell.Y));

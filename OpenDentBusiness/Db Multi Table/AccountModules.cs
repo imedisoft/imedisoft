@@ -718,7 +718,7 @@ namespace OpenDentBusiness
 			bool showProcBreakdown = false;
 			if (!stmtCur.IsInvoice)
 			{
-				showProcBreakdown = PrefC.GetBool(PrefName.StatementShowProcBreakdown);
+				showProcBreakdown = Prefs.GetBool(PrefName.StatementShowProcBreakdown);
 			}
 			List<long> listPayPlanNums = new List<long>();
 			foreach (Patient guarantor in listSuperFamilyGuars)
@@ -733,7 +733,7 @@ namespace OpenDentBusiness
 				decimal dynamicPayPlanDue = 0;
 				decimal balanceForward = 0;
 				DataSet account = GetAccount(guarantor.PatNum, stmtCur.DateRangeFrom, stmtCur.DateRangeTo, true, false, stmtCur.StatementNum, showProcBreakdown,
-					PrefC.GetBool(PrefName.StatementShowNotes), stmtCur.IsInvoice, PrefC.GetBool(PrefName.StatementShowAdjNotes), true, guarantor, fam,
+					Prefs.GetBool(PrefName.StatementShowNotes), stmtCur.IsInvoice, Prefs.GetBool(PrefName.StatementShowAdjNotes), true, guarantor, fam,
 					out patientPayPlanDue, out dynamicPayPlanDue, out balanceForward, stmtCur, isComputeAging, doIncludePatLName, listPayPlanNums,
 					doShowHiddenPaySplits: doShowHiddenPaySplits);
 				//Setting the PatNum for all rows to the guarantor so that each family will be interminged in one grid. 
@@ -814,7 +814,7 @@ namespace OpenDentBusiness
 			bool showProcBreakdown = false;
 			if (!stmt.IsInvoice)
 			{
-				showProcBreakdown = PrefC.GetBool(PrefName.StatementShowProcBreakdown);
+				showProcBreakdown = Prefs.GetBool(PrefName.StatementShowProcBreakdown);
 			}
 			Family fam = Patients.GetFamily(patNum);
 			Patient pat = fam.GetPatient(patNum);
@@ -822,7 +822,7 @@ namespace OpenDentBusiness
 			decimal dynamicPayPlanDue = 0;
 			decimal balanceForward = 0;
 			DataSet retVal = GetAccount(patNum, stmt.DateRangeFrom, stmt.DateRangeTo, stmt.Intermingled, stmt.SinglePatient, stmt.StatementNum, showProcBreakdown,
-				PrefC.GetBool(PrefName.StatementShowNotes), stmt.IsInvoice, PrefC.GetBool(PrefName.StatementShowAdjNotes), true, pat, fam, out patientPayPlanDue,
+				Prefs.GetBool(PrefName.StatementShowNotes), stmt.IsInvoice, Prefs.GetBool(PrefName.StatementShowAdjNotes), true, pat, fam, out patientPayPlanDue,
 				out dynamicPayPlanDue, out balanceForward, stmt, isComputeAging, doIncludePatLName, doShowHiddenPaySplits: doShowHiddenPaySplits);
 			retVal.Tables.Add(GetApptTable(fam, stmt.SinglePatient, patNum));
 			retVal.Tables.Add(GetMisc(fam, patNum, patientPayPlanDue, dynamicPayPlanDue, balanceForward, stmt.StatementType, retVal));//table=misc; Just holds some info we can't find anywhere else.
@@ -856,7 +856,7 @@ namespace OpenDentBusiness
 			if (isComputeAging)
 			{
 				//run aging.-------------------------------------------------------
-				if (PrefC.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily))
+				if (Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily))
 				{
 					Ledgers.ComputeAging(pat.Guarantor, PrefC.GetDate(PrefName.DateLastAging));
 				}
@@ -991,7 +991,7 @@ namespace OpenDentBusiness
 				}
 				if (writeoff != 0)
 				{
-					string writeoffDescript = PrefC.GetString(PrefName.InsWriteoffDescript);
+					string writeoffDescript = Prefs.GetString(PrefName.InsWriteoffDescript);
 					if (writeoffDescript == "")
 					{
 						writeoffDescript = Lans.g("AccountModule", "Writeoff");
@@ -1196,7 +1196,7 @@ namespace OpenDentBusiness
 					extraDetail += Lans.g("AccountModule", "Ins Paid: ") + insPayAmt.ToString("c");
 					if (writeOff > 0)
 					{
-						string writeoffDescript = PrefC.GetString(PrefName.InsWriteoffDescript);
+						string writeoffDescript = Prefs.GetString(PrefName.InsWriteoffDescript);
 						if (writeoffDescript == "")
 						{
 							writeoffDescript = Lans.g("AccountModule", "Writeoff");
@@ -1600,7 +1600,7 @@ namespace OpenDentBusiness
 					}
 					row["description"] += rawPay.Rows[i]["PayNote"].ToString();
 				}
-				if (PrefC.GetBool(PrefName.AccountShowPaymentNums))
+				if (Prefs.GetBool(PrefName.AccountShowPaymentNums))
 				{
 					row["description"] += "\r\n" + Lans.g("AccountModule", "Payment Number: ") + rawPay.Rows[i]["PayNum"].ToString();
 				}
@@ -1812,7 +1812,7 @@ namespace OpenDentBusiness
 				amtpaid = PIn.Decimal(rawClaim.Rows[i]["InsPayAmt"].ToString());
 				writeoff = PIn.Decimal(rawClaim.Rows[i]["WriteOff"].ToString());
 				deductible = PIn.Decimal(rawClaim.Rows[i]["DedApplied"].ToString());
-				if (!PrefC.GetBool(PrefName.BalancesDontSubtractIns)
+				if (!Prefs.GetBool(PrefName.BalancesDontSubtractIns)
 					&& (claimStatus == "W" || claimStatus == "S")
 					&& rawClaim.Rows[i]["ClaimType"].ToString() != "Cap")
 				{
@@ -1838,7 +1838,7 @@ namespace OpenDentBusiness
 				}
 				if (writeoff != 0)
 				{
-					string writeoffDesctipt = PrefC.GetString(PrefName.InsWriteoffDescript);
+					string writeoffDesctipt = Prefs.GetString(PrefName.InsWriteoffDescript);
 					if (writeoffDesctipt == "")
 					{
 						writeoffDesctipt = Lans.g("ContrAccount", "Writeoff");
@@ -1849,7 +1849,7 @@ namespace OpenDentBusiness
 				{
 					row["description"] += "\r\n" + Lans.g("ContrAccount", "Deductible Applied:") + " " + deductible.ToString("c");
 				}
-				if (!PrefC.GetBool(PrefName.BalancesDontSubtractIns)
+				if (!Prefs.GetBool(PrefName.BalancesDontSubtractIns)
 					&& (claimStatus == "W" || claimStatus == "S")
 					&& rawClaim.Rows[i]["ClaimType"].ToString() != "Cap")
 				{
@@ -2964,7 +2964,7 @@ namespace OpenDentBusiness
 				//remove future entries, going backwards
 				for (int d = rawAmort.Rows.Count - 1; d >= 0; d--)
 				{
-					if ((DateTime)rawAmort.Rows[d]["DateTime"] > toDate.AddDays(PrefC.GetLong(PrefName.PayPlansBillInAdvanceDays)))
+					if ((DateTime)rawAmort.Rows[d]["DateTime"] > toDate.AddDays(Prefs.GetLong(PrefName.PayPlansBillInAdvanceDays)))
 					{
 						rawAmort.Rows.RemoveAt(d);
 					}
@@ -3375,7 +3375,7 @@ namespace OpenDentBusiness
 					+ "FROM claimproc "
 					+ "INNER JOIN claimpayment ON claimpayment.ClaimPaymentNum = claimproc.ClaimPaymentNum "
 					+ "WHERE claimproc.PatNum IN (" + POut.String(string.Join(",", listPatNums)) + ") ";
-			if (PrefC.GetBool(PrefName.InvoicePaymentsGridShowNetProd))
+			if (Prefs.GetBool(PrefName.InvoicePaymentsGridShowNetProd))
 			{
 				command += ""
 					//adjustments can already be manually selected to be included in invoices.
@@ -3542,7 +3542,7 @@ namespace OpenDentBusiness
 					claimError = claimError.AppendLine(Lans.g("ContrAccount", "All procedures do not have the same clinic."));
 					return new ODTuple<bool, Claim, string>(false, new Claim(), claimError);
 				}
-				if (!PrefC.GetBool(PrefName.EasyHidePublicHealth) && proc.PlaceService != placeService)
+				if (!Prefs.GetBool(PrefName.EasyHidePublicHealth) && proc.PlaceService != placeService)
 				{
 					claimError = claimError.AppendLine(Lans.g("ContrAccount", "All procedures do not have the same place of service."));
 					return new ODTuple<bool, Claim, string>(false, new Claim(), claimError);
@@ -3697,7 +3697,7 @@ namespace OpenDentBusiness
 				case "Med":
 					ClaimCur.PatRelat = PatPlans.GetFromList(PatPlanList, SubCur.InsSubNum).Relationship;
 					ClaimCur.ClaimType = "Other";
-					if (PrefC.GetBool(PrefName.ClaimMedTypeIsInstWhenInsPlanIsMedical))
+					if (Prefs.GetBool(PrefName.ClaimMedTypeIsInstWhenInsPlanIsMedical))
 					{
 						ClaimCur.MedType = EnumClaimMedType.Institutional;
 					}
@@ -3713,7 +3713,7 @@ namespace OpenDentBusiness
 					ClaimCur.ClaimForm = 0;
 					if (PlanCur.IsMedical)
 					{
-						if (PrefC.GetBool(PrefName.ClaimMedTypeIsInstWhenInsPlanIsMedical))
+						if (Prefs.GetBool(PrefName.ClaimMedTypeIsInstWhenInsPlanIsMedical))
 						{
 							ClaimCur.MedType = EnumClaimMedType.Institutional;
 						}
@@ -3846,7 +3846,7 @@ namespace OpenDentBusiness
 					ClaimCur.ClaimNote += procCodeCur.DefaultClaimNote;
 					listCodeNums.Add(procCodeCur.CodeNum);
 				}
-				if (!ClaimCur.IsOrtho && PrefC.GetBool(PrefName.OrthoClaimMarkAsOrtho))
+				if (!ClaimCur.IsOrtho && Prefs.GetBool(PrefName.OrthoClaimMarkAsOrtho))
 				{//if it's already marked as Ortho (from a previous procedure), just skip this logic.
 					CovCat orthoCategory = CovCats.GetFirstOrDefault(x => x.EbenefitCat == EbenefitCategory.Orthodontics, true);
 					if (orthoCategory != null)
@@ -3861,9 +3861,9 @@ namespace OpenDentBusiness
 							}
 							else if (!Byte.TryParse(patNote.OrthoMonthsTreatOverride.ToString(), out ClaimCur.OrthoTotalM))
 							{
-								ClaimCur.OrthoTotalM = PrefC.GetByte(PrefName.OrthoDefaultMonthsTreat);
+								ClaimCur.OrthoTotalM = Prefs.GetByte(PrefName.OrthoDefaultMonthsTreat);
 							}
-							if (PrefC.GetBool(PrefName.OrthoClaimUseDatePlacement))
+							if (Prefs.GetBool(PrefName.OrthoClaimUseDatePlacement))
 							{
 								DateTime orthoProcDate = Procedures.GetFirstOrthoProcDate(patNote);
 								if (orthoProcDate != DateTime.MinValue)
@@ -3894,8 +3894,8 @@ namespace OpenDentBusiness
 			}
 			Claims.CalculateAndUpdate(procsForPat, planList, ClaimCur, PatPlanList, Benefits.Refresh(PatPlanList, subList), pat, subList);
 			//Insert claim snapshots for historical reporting purposes.
-			if (PrefC.GetBool(PrefName.ClaimSnapshotEnabled)
-				&& PIn.Enum<ClaimSnapshotTrigger>(PrefC.GetString(PrefName.ClaimSnapshotTriggerType), true) == ClaimSnapshotTrigger.ClaimCreate
+			if (Prefs.GetBool(PrefName.ClaimSnapshotEnabled)
+				&& PIn.Enum<ClaimSnapshotTrigger>(Prefs.GetString(PrefName.ClaimSnapshotTriggerType), true) == ClaimSnapshotTrigger.ClaimCreate
 				&& claimType != "PreAuth")
 			{
 				ClaimSnapshots.CreateClaimSnapshot(ClaimProcs.Refresh(pat.PatNum).FindAll(x => x.ClaimNum == ClaimCur.ClaimNum), ClaimSnapshotTrigger.ClaimCreate, claimType);

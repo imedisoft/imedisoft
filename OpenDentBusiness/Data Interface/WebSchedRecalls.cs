@@ -118,7 +118,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns true if any Web Sched Recall text or email template contains a URL tag.</summary>
 		public static bool TemplatesHaveURLTags() {
-			foreach(PrefName pref in new List<PrefName> {
+			foreach(string pref in new List<string> {
 				PrefName.WebSchedSubject,
 				PrefName.WebSchedMessage,
 				PrefName.WebSchedMessageText,
@@ -133,7 +133,7 @@ namespace OpenDentBusiness{
 				PrefName.WebSchedMessageText3,
 			}) 
 			{
-				if(HasURLTag(PrefC.GetString(pref))) {
+				if(HasURLTag(Prefs.GetString(pref))) {
 					return true;
 				}
 			}

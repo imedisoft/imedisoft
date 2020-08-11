@@ -1092,7 +1092,7 @@ namespace OpenDental.UI{
 					//Now, check for overlap with other appts.
 					//Loop through all other appts in the op and make sure the new pattern will not overlap.
 					long aptNumTemp=PIn.Long(_dataRowTempAppt["AptNum"].ToString());
-					if(!PrefC.GetYN(PrefName.ApptsAllowOverlap)){
+					if(!Prefs.GetBool(PrefName.ApptsAllowOverlap, true)){
 						long opNumTemp=PIn.Long(_dataRowTempAppt["Op"].ToString());
 						for(int i=0;i<TableAppointments.Rows.Count;i++){
 							if(PIn.Long(TableAppointments.Rows[i]["Op"].ToString())!=opNumTemp){
@@ -1696,7 +1696,7 @@ namespace OpenDental.UI{
 				long provNum=PIn.Long(dataRow["ProvNum"].ToString());
 				long provHyg=PIn.Long(dataRow["ProvHyg"].ToString());
 				long opNum=PIn.Long(dataRow["Op"].ToString());
-				if(PrefC.GetBool(PrefName.ApptModuleProductionUsesOps)) {
+				if(Prefs.GetBool(PrefName.ApptModuleProductionUsesOps)) {
 					if(isHygiene){
 						if(provHyg==0) {//if no hyg prov set.
 							indexProv=GetIndexOp(opNum);
@@ -1747,7 +1747,7 @@ namespace OpenDental.UI{
 					netproduction+=productionVal-writeoffPPO;
 				}
 			}
-			if(PrefC.GetBool(PrefName.ApptModuleAdjustmentsInProd) && TableAppointments.Rows.Count>0) {
+			if(Prefs.GetBool(PrefName.ApptModuleAdjustmentsInProd) && TableAppointments.Rows.Count>0) {
 				netproduction+=Adjustments.GetAdjustAmtForAptView(start,end,Clinics.ClinicNum,listOpNums,listProvNums);
 			}
 			string production=grossproduction.ToString("c0");
@@ -2481,7 +2481,7 @@ namespace OpenDental.UI{
 							+(schedForType[i].StopTime-schedForType[i].StartTime).Minutes*_heightLine/_minPerRow);
 					}
 					//paint either solid block or outline
-					if(PrefC.GetBool(PrefName.SolidBlockouts)) {
+					if(Prefs.GetBool(PrefName.SolidBlockouts)) {
 						g.FillRectangle(brushBlockBackg,rect);
 						g.DrawLine(Pens.Black,rect.X,rect.Y+1,rect.Right-1,rect.Y+1);
 					}
@@ -3860,7 +3860,7 @@ namespace OpenDental.UI{
 		#region Methods - Private DrawInfoBubble
 		///<summary>Before calling this, do a hit test for appts.  Fills the bubble with data and then positions it.  In coordinates of this UserContrApptsPanel (mouse).</summary>
 		private void BubbleDraw(Point point,int idxAppt) {
-			if((ApptViewCur==null && PrefC.GetBool(PrefName.AppointmentBubblesDisabled))
+			if((ApptViewCur==null && Prefs.GetBool(PrefName.AppointmentBubblesDisabled))
 					|| (ApptViewCur!=null && ApptViewCur.IsApptBubblesDisabled))
 			{
 				//don't show appt bubbles at all
@@ -3896,7 +3896,7 @@ namespace OpenDental.UI{
 			int xval=point.X+10;
 			if(idxAppt==_bubbleApptIdx) {//if the pointer is still on the same appt as last time
 				if(DateTime.Now.AddMilliseconds(-280) > _dateTimeBubble //if it's been .28 seconds
-					| !PrefC.GetBool(PrefName.ApptBubbleDelay)) //or if there is not supposed to be a delay
+					| !Prefs.GetBool(PrefName.ApptBubbleDelay)) //or if there is not supposed to be a delay
 					{
 					if(yval > hScrollBar1.Top-_rectangleBubble.Height) {
 						yval=hScrollBar1.Top-_rectangleBubble.Height;
@@ -4296,7 +4296,7 @@ namespace OpenDental.UI{
 			_rectangleBubble.Location=new Point(xval,yval);
 			//only show right away if option set for no delay, otherwise, it will not show until mouse had hovered for at least 0.28 seconds(arbitrary #)
 			//the timer fires at 0.30 seconds, so the difference was introduced because of what seemed to be inconsistencies in the timer function 
-			if(!PrefC.GetBool(PrefName.ApptBubbleDelay)) {
+			if(!Prefs.GetBool(PrefName.ApptBubbleDelay)) {
 				_isBubbleVisible=true;
 			}
 			else {

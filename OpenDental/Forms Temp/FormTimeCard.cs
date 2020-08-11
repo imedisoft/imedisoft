@@ -78,7 +78,7 @@ namespace OpenDental{
 		private bool _cannotEditOwnTimecard {
 			get {
 				return _isTimeCardSecurityApplicable &&
-					PrefC.GetBool(PrefName.TimecardUsersDontEditOwnCard);
+					Prefs.GetBool(PrefName.TimecardUsersDontEditOwnCard);
 			}
 		}
 
@@ -86,8 +86,8 @@ namespace OpenDental{
 		private bool _isTimeCardSecurityApplicable {
 			get{
 				return Security.CurrentUser!=null &&
-				Security.CurrentUser.EmployeeNum==EmployeeCur.EmployeeNum &&
-				PrefC.GetBool(PrefName.TimecardSecurityEnabled);
+				Security.CurrentUser.EmployeeId==EmployeeCur.EmployeeNum &&
+				Prefs.GetBool(PrefName.TimecardSecurityEnabled);
 			} 
 		}
 
@@ -95,7 +95,7 @@ namespace OpenDental{
 		private bool _cannotEditSelectedPayPeriod {
 			get {
 				return _isTimeCardSecurityApplicable &&
-					PrefC.GetBool(PrefName.TimecardUsersCantEditPastPayPeriods) &&
+					Prefs.GetBool(PrefName.TimecardUsersCantEditPastPayPeriods) &&
 					SelectedPayPeriod!=PayPeriods.GetForDate(DateTimeOD.Today);
 			}
 		}
@@ -617,7 +617,7 @@ namespace OpenDental{
 			if(SelectedPayPeriod==0) {
 				SelectedPayPeriod=PayPeriods.GetForDate(dateInitial);
 			}
-			if(!PrefC.GetBool(PrefName.ClockEventAllowBreak)) {//Breaks turned off, Lunch is now "Break", but maintains Lunch functionality.
+			if(!Prefs.GetBool(PrefName.ClockEventAllowBreak)) {//Breaks turned off, Lunch is now "Break", but maintains Lunch functionality.
 				IsBreaks=false;
 				groupBox2.Visible=false;
 			}
@@ -868,7 +868,7 @@ namespace OpenDental{
 					//status--------------------------------------
 					//row.Cells.Add(clock.ClockStatus.ToString());
 					//in------------------------------------------
-					if(PrefC.GetBool(PrefName.TimeCardShowSeconds)) {
+					if(Prefs.GetBool(PrefName.TimeCardShowSeconds)) {
 						row.Cells.Add(clock.TimeDisplayed1.ToLongTimeString());
 					}
 					else {
@@ -882,7 +882,7 @@ namespace OpenDental{
 						row.Cells.Add("");//not clocked out yet
 					}
 					else{
-						if(PrefC.GetBool(PrefName.TimeCardShowSeconds)) {
+						if(Prefs.GetBool(PrefName.TimeCardShowSeconds)) {
 							row.Cells.Add(clock.TimeDisplayed2.ToLongTimeString());
 						}
 						else {
@@ -1210,7 +1210,7 @@ namespace OpenDental{
 			if(_cannotEditSelectedPayPeriod) {
 				MsgBox.Show("You do not have permission to modify your past pay periods.");
 			}
-			else if(!PrefC.GetBool(PrefName.TimecardSecurityEnabled) && !Security.IsAuthorized(Permissions.TimecardsEditAll)) {
+			else if(!Prefs.GetBool(PrefName.TimecardSecurityEnabled) && !Security.IsAuthorized(Permissions.TimecardsEditAll)) {
 				//Security.IsAuthorized() shows the error to the user already.
 				return;
 			}

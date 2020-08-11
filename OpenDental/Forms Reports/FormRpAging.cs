@@ -538,7 +538,7 @@ namespace OpenDental{
 			if(lastAgingDate.Year<1880) {
 				textDate.Text="";
 			}
-			else if(PrefC.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)){
+			else if(Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)){
 				textDate.Text=lastAgingDate.ToShortDateString();
 			}
 			else{
@@ -578,12 +578,12 @@ namespace OpenDental{
 					listClin.Visible=false;
 				}
 			}
-			if(PrefC.GetBool(PrefName.AgingReportShowAgePatPayplanPayments)) {
+			if(Prefs.GetBool(PrefName.AgingReportShowAgePatPayplanPayments)) {
 				//Visibility set to false in designer, only set to visible here.  No UI for pref, only set true via query for specific customer.
 				checkAgePatPayPlanPayments.Visible=true;
 			}
-			if(PrefC.GetBool(PrefName.FutureTransDatesAllowed) || PrefC.GetBool(PrefName.AccountAllowFutureDebits) 
-				|| PrefC.GetBool(PrefName.AllowFutureInsPayments)) 
+			if(Prefs.GetBool(PrefName.FutureTransDatesAllowed) || Prefs.GetBool(PrefName.AccountAllowFutureDebits) 
+				|| Prefs.GetBool(PrefName.AllowFutureInsPayments)) 
 			{
 				labelFutureTrans.Visible=true;//Set to false in designer
 			}
@@ -732,7 +732,7 @@ namespace OpenDental{
 			report.IsLandscape=checkHasDateLastPay.Checked;
 			report.ReportName=Lan.G(this,"AGING OF ACCOUNTS RECEIVABLE REPORT");
 			report.AddTitle("Aging Report",Lan.G(this,"AGING OF ACCOUNTS RECEIVABLE"));
-			report.AddSubTitle("PracTitle",PrefC.GetString(PrefName.PracticeTitle));
+			report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle));
 			report.AddSubTitle("AsOf",Lan.G(this,"As of ")+textDate.Text);
 			if(radioAny.Checked){
 				report.AddSubTitle("Balance",Lan.G(this,"Any Balance"));

@@ -266,7 +266,7 @@ namespace OpenDentBusiness{
 			DateTime previousDate;
 			List<ClockEvent> ClockEventList=ClockEvents.Refresh(EmployeeCur.EmployeeNum,StartDate,StopDate,false);//PIn.Date(textDateStart.Text),PIn.Date(textDateStop.Text),IsBreaks);
 			//Over breaks-------------------------------------------------------------------------------------------------
-			if(PrefC.GetBool(PrefName.TimeCardsMakesAdjustmentsForOverBreaks)) {
+			if(Prefs.GetBool(PrefName.TimeCardsMakesAdjustmentsForOverBreaks)) {
 				//set adj auto to zero for all.
 				for(int i=0;i<ClockEventList.Count;i++) {
 					ClockEventList[i].AdjustAuto=TimeSpan.Zero;
@@ -618,7 +618,7 @@ namespace OpenDentBusiness{
 				if(i==listClockEvent.Count-1 || listClockEvent[i].TimeDisplayed1.Date!=listClockEvent[i+1].TimeDisplayed1.Date) {
 					//Either the last clock event in the list or last clock event for the day.
 					//OVERBREAKS--------------------------------------------------------------------------------------------------------
-					if(PrefC.GetBool(PrefName.TimeCardsMakesAdjustmentsForOverBreaks)) {//Apply overbreaks to this clockEvent.
+					if(Prefs.GetBool(PrefName.TimeCardsMakesAdjustmentsForOverBreaks)) {//Apply overbreaks to this clockEvent.
 						tsDailyBreaksAdjustTotal=new TimeSpan();//used to adjust the clock event
 						tsDailyBreaksTotal=new TimeSpan();//used in calculating breaks over 30 minutes per day.
 						for(int b=0;b<listClockEventBreak.Count;b++) {//check all breaks for current day.
@@ -704,7 +704,7 @@ namespace OpenDentBusiness{
 				//listClockEvent[i].AdjustAuto+=-listClockEvent[i].OTimeAuto;
 				//}
 				//AdjustAuto due to break overages-------------------------------------------------------------------------
-				if(PrefC.GetBool(PrefName.TimeCardsMakesAdjustmentsForOverBreaks)) {
+				if(Prefs.GetBool(PrefName.TimeCardsMakesAdjustmentsForOverBreaks)) {
 					if(i==listClockEvent.Count-1 || listClockEvent[i].TimeDisplayed1.Date!=listClockEvent[i+1].TimeDisplayed1.Date) {//last item or last item for a given day.
 						TimeSpan tsTotalBreaksToday=TimeSpan.Zero;
 						for(int j=0;j<listClockEventBreak.Count;j++) {
@@ -743,7 +743,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Deprecated.  This function is aesthetic and has no bearing on actual OT calculations. It adds adjustments to breaks so that when viewing them you can see if they went over 30 minutes.</summary>
 		private static void AdjustBreaksHelper(Employee EmployeeCur,DateTime StartDate,DateTime StopDate) {
-			if(!PrefC.GetBool(PrefName.TimeCardsMakesAdjustmentsForOverBreaks)){
+			if(!Prefs.GetBool(PrefName.TimeCardsMakesAdjustmentsForOverBreaks)){
 				//Only adjust breaks if preference is set.
 				return;
 			}

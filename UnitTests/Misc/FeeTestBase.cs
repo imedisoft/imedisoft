@@ -69,7 +69,7 @@ namespace UnitTests {
 				retVal.ListFeeSchedNums.Add(FeeSchedT.CreateFeeSched(FeeScheduleType.Normal,suffix,false));
 			}
 			//Set up clinics
-			Prefs.UpdateBool(PrefName.EasyNoClinics,false);
+			Prefs.Set(PrefName.EasyNoClinics,false);
 			for(int i=0;i<numClinics;i++) {
 				retVal.ListClinics.Add(ClinicT.CreateClinic(suffix+i));
 			}

@@ -9,7 +9,7 @@ namespace OpenDental {
 	public partial class FormInsHistSetup:ODForm {
 		private Patient _patCur;
 		///<summary></summary>
-		private Dictionary<PrefName,Procedure> _dictInsHistProcs;
+		private Dictionary<string,Procedure> _dictInsHistProcs;
 		private InsSub _insSubCur;
 		///<summary></summary>
 		private List<ClaimProc> _listClaimProcsForInsHistProcs;
@@ -34,7 +34,7 @@ namespace OpenDental {
 			Lan.F(this);
 			_patCur=Patients.GetPat(patNum);
 			_insSubCur=insSub;
-			_dictInsHistProcs=Procedures.GetDictInsHistProcs(patNum,insSub.InsSubNum,out _listClaimProcsForInsHistProcs);
+			//_dictInsHistProcs=Procedures.GetDictInsHistProcs(patNum,insSub.InsSubNum,out _listClaimProcsForInsHistProcs);
 		}
 
 		private void FormInsHistSetup_Load(object sender,EventArgs e) {
@@ -43,28 +43,28 @@ namespace OpenDental {
 
 		/// <summary>Returns the text box control corresponding to the given procType</summary>
 		private void FillDates() {
-			List<Pref> listInsHistPref= Prefs.GetInsHistPrefs();
-			string text=NO_INSHIST;
-			foreach(PrefName prefName in Prefs.GetInsHistPrefNames()) {
-				Procedure proc=_dictInsHistProcs[prefName];
-				ClaimProc claimProc=null;
-				if(proc!=null) {
-					claimProc=_listClaimProcsForInsHistProcs.Find(x => x.InsSubNum==_insSubCur.InsSubNum && x.Status.In(ClaimProcStatus.InsHist,ClaimProcStatus.Received)
-						&& x.ProcNum==proc.ProcNum);
-				}
-				text=((claimProc!=null && proc!=null && proc.ProcDate.Year>1880) ? proc.ProcDate.ToShortDateString() : NO_INSHIST);
-				bool isPrefSet=listInsHistPref.Exists(x => x.Name==prefName.ToString() && !string.IsNullOrWhiteSpace(x.Value));
-				TextBox textBoxCur=GetControlForPrefName(prefName);
-				if(!isPrefSet) {
-					text=NO_INSHISTSET;
-					textBoxCur.Enabled=false;
-				}
-				textBoxCur.Text=text;
-			}
+			//List<Pref> listInsHistPref= Prefs.GetInsHistPrefs();
+			//string text=NO_INSHIST;
+			//foreach(PrefName prefName in Prefs.GetInsHistPrefNames()) {
+			//	Procedure proc=_dictInsHistProcs[prefName];
+			//	ClaimProc claimProc=null;
+			//	if(proc!=null) {
+			//		claimProc=_listClaimProcsForInsHistProcs.Find(x => x.InsSubNum==_insSubCur.InsSubNum && x.Status.In(ClaimProcStatus.InsHist,ClaimProcStatus.Received)
+			//			&& x.ProcNum==proc.ProcNum);
+			//	}
+			//	text=((claimProc!=null && proc!=null && proc.ProcDate.Year>1880) ? proc.ProcDate.ToShortDateString() : NO_INSHIST);
+			//	bool isPrefSet=listInsHistPref.Exists(x => x.Name==prefName.ToString() && !string.IsNullOrWhiteSpace(x.Value));
+			//	TextBox textBoxCur=GetControlForPrefName(prefName);
+			//	if(!isPrefSet) {
+			//		text=NO_INSHISTSET;
+			//		textBoxCur.Enabled=false;
+			//	}
+			//	textBoxCur.Text=text;
+			//}
 		}
 		
 		///<summary>Returns the text box control corresponding to the given procType</summary>
-		private TextBox GetControlForPrefName(PrefName prefName) {
+		private TextBox GetControlForPrefName(string prefName) {
 			switch(prefName) {
 				case PrefName.InsHistExamCodes:
 					return textDateExam;
@@ -94,7 +94,7 @@ namespace OpenDental {
 		///<summary></summary>
 		private bool IsValid() {
 			DateTime dateEntry;
-			foreach(PrefName prefName in Prefs.GetInsHistPrefNames()) {
+			foreach(string prefName in Prefs.GetInsHistPrefNames()) {
 				TextBox textBox=GetControlForPrefName(prefName);
 				//Continue if no date is entered or the date entered is valid.
 				if(!textBox.Enabled || string.IsNullOrEmpty(textBox.Text) || textBox.Text.Trim()==NO_INSHIST) {
@@ -152,44 +152,44 @@ namespace OpenDental {
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {
-			if(!IsValid()) {
-				return;
-			}
-			List<Procedure> listProcsForDelete=new List<Procedure>();
-			foreach(PrefName prefName in Prefs.GetInsHistPrefNames()) {
-				TextBox textBox=GetControlForPrefName(prefName);
-				if(!textBox.Enabled || textBox.Text.Trim()==NO_INSHIST) {
-					continue;
-				}
-				Procedure proc=_dictInsHistProcs[prefName];
-				if(string.IsNullOrWhiteSpace(textBox.Text)) {
-					if(proc!=null && proc.ProcStatus==ProcStat.EO) {//Only delete EO procedures
-						listProcsForDelete.Add(proc);//Delete proc if user deleted procedure date from textbox.
-					}
-					continue;
-				}
-				DateTime dateEntered=PIn.Date(textBox.Text);
-				List<ClaimProc> listClaimProcsForProc=new List<ClaimProc>();
-				if(proc!=null) {
-					//Get all of the claimprocs for this procedure.
-					listClaimProcsForProc=_listClaimProcsForInsHistProcs.FindAll(x => x.ProcNum==proc.ProcNum);
-				}
-				Procedures.InsertOrUpdateInsHistProcedure(_patCur,prefName,dateEntered,_insSubCur.PlanNum,_insSubCur.InsSubNum,proc,listClaimProcsForProc);
-			}
-			if(listProcsForDelete.Count>0
-				&& !MsgBox.Show(MsgBoxButtons.YesNo,"Deleting the last procedure date for a category will delete the Existing Other procedure with that date for this patient.  Continue?"))
-			{
-				return;
-			}
-			foreach(Procedure proc in listProcsForDelete) {
-				try {
-					Procedures.Delete(proc.ProcNum);
-				}
-				catch {
-					//Tried deleting the procedure. Do nothing. 
-				}
-			}
-			DialogResult=DialogResult.OK;
+			//if(!IsValid()) {
+			//	return;
+			//}
+			//List<Procedure> listProcsForDelete=new List<Procedure>();
+			//foreach(string prefName in Prefs.GetInsHistPrefNames()) {
+			//	TextBox textBox=GetControlForPrefName(prefName);
+			//	if(!textBox.Enabled || textBox.Text.Trim()==NO_INSHIST) {
+			//		continue;
+			//	}
+			//	//Procedure proc=_dictInsHistProcs[prefName];
+			//	//if(string.IsNullOrWhiteSpace(textBox.Text)) {
+			//	//	if(proc!=null && proc.ProcStatus==ProcStat.EO) {//Only delete EO procedures
+			//	//		listProcsForDelete.Add(proc);//Delete proc if user deleted procedure date from textbox.
+			//	//	}
+			//	//	continue;
+			//	//}
+			//	DateTime dateEntered=PIn.Date(textBox.Text);
+			//	List<ClaimProc> listClaimProcsForProc=new List<ClaimProc>();
+			//	if(proc!=null) {
+			//		//Get all of the claimprocs for this procedure.
+			//		listClaimProcsForProc=_listClaimProcsForInsHistProcs.FindAll(x => x.ProcNum==proc.ProcNum);
+			//	}
+			//	Procedures.InsertOrUpdateInsHistProcedure(_patCur,prefName,dateEntered,_insSubCur.PlanNum,_insSubCur.InsSubNum,proc,listClaimProcsForProc);
+			//}
+			//if(listProcsForDelete.Count>0
+			//	&& !MsgBox.Show(MsgBoxButtons.YesNo,"Deleting the last procedure date for a category will delete the Existing Other procedure with that date for this patient.  Continue?"))
+			//{
+			//	return;
+			//}
+			//foreach(Procedure proc in listProcsForDelete) {
+			//	try {
+			//		Procedures.Delete(proc.ProcNum);
+			//	}
+			//	catch {
+			//		//Tried deleting the procedure. Do nothing. 
+			//	}
+			//}
+			//DialogResult=DialogResult.OK;
 		}
 
 		private void butCancel_Click(object sender,EventArgs e) {

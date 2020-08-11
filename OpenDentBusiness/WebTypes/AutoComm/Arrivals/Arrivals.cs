@@ -30,9 +30,9 @@ namespace OpenDentBusiness.AutoComm
 			{
 				listClinicNums = new List<long> { 0 };
 			}
-			List<long> listSignedUpClinics = listClinicNums.Where(x => ClinicPrefs.GetBool(PrefName.ApptConfirmAutoSignedUp, x)).ToList();
+			List<long> listSignedUpClinics = listClinicNums.Where(x => ClinicPrefs.GetBool(x, PrefName.ApptConfirmAutoSignedUp)).ToList();
 			//Only do the work of looking up ApptReminderSents and ApptReminderRules if the appropriate eServices are enabled and in use.
-			if (!listApptNums.IsNullOrEmpty() && listSignedUpClinics.Any() && PrefC.GetBool(PrefName.ApptArrivalAutoEnabled))
+			if (!listApptNums.IsNullOrEmpty() && listSignedUpClinics.Any() && Prefs.GetBool(PrefName.ApptArrivalAutoEnabled))
 			{
 				arrivals.ListApptReminderRules = GetApptReminderRules(listSignedUpClinics);
 				if (arrivals.ListApptReminderRules.Any())
@@ -113,7 +113,7 @@ namespace OpenDentBusiness.AutoComm
 			}
 			List<Appointment> listApptsAutomationEnabled = listApptsToday
 				//Check if (given clinic exists and has automation enabled) or (HQ "clinic" and Arrivals are enabled)
-				.Where(x => Clinics.GetClinic(x.ClinicNum)?.IsConfirmEnabled ?? (x.ClinicNum == 0 && PrefC.GetBool(PrefName.ApptArrivalAutoEnabled)))
+				.Where(x => Clinics.GetClinic(x.ClinicNum)?.IsConfirmEnabled ?? (x.ClinicNum == 0 && Prefs.GetBool(PrefName.ApptArrivalAutoEnabled)))
 				.ToList();
 			if (listApptsAutomationEnabled.Count == 0)
 			{
@@ -141,7 +141,7 @@ namespace OpenDentBusiness.AutoComm
 		///<summary>Sets appointments.Confirmed to the ArrivedTimeTrigger.</summary>
 		private void MarkArrived(IEnumerable<Appointment> listAppts)
 		{
-			long arrivedTrigger = PrefC.GetLong(PrefName.AppointmentTimeArrivedTrigger);
+			long arrivedTrigger = Prefs.GetLong(PrefName.AppointmentTimeArrivedTrigger);
 			foreach (Appointment appt in listAppts.Where(x => x.Confirmed != arrivedTrigger))
 			{
 				//This update will trigger eClipboard to generate the appropriate check-in sheets if the appointment is not already marked as arrived.
@@ -220,7 +220,7 @@ namespace OpenDentBusiness.AutoComm
 		private List<ApptResponse> GetApptResponses(List<Appointment> listAppts)
 		{
 			List<ApptResponse> listResponses = new List<ApptResponse>();
-			List<long> listConfirmStatusToSkip = PrefC.GetString(PrefName.ApptConfirmExcludeArrivalResponse)
+			List<long> listConfirmStatusToSkip = Prefs.GetString(PrefName.ApptConfirmExcludeArrivalResponse)
 				.Split(",", StringSplitOptions.RemoveEmptyEntries)
 				.Select(x => PIn.Long(x))
 				.ToList();

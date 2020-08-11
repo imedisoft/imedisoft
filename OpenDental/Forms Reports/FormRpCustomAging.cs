@@ -284,7 +284,7 @@ namespace OpenDental {
 			ReportComplex report=new ReportComplex(true,false);
 			report.ReportName=Lan.G(this,"Custom Aging of Accounts Receivable");
 			report.AddTitle("Custom Aging Report",Lan.G(this,"Custom Aging of Accounts Receivable"));
-			report.AddSubTitle("PracTitle",PrefC.GetString(PrefName.PracticeTitle));
+			report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle));
 			report.AddSubTitle("AsOf",Lan.G(this,"As of ")+_agingOptions.DateAsOf.ToShortDateString());
 			List<string> listAgingInc=new List<string>();
 			//Go through every aging option and for every one that is selected, add the descriptions as a subtitle

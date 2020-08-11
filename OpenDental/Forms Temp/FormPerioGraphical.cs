@@ -242,7 +242,7 @@ namespace OpenDental {
 				clinicName=clinic.Description;
 			} 
 			else {
-				clinicName=PrefC.GetString(PrefName.PracticeTitle);
+				clinicName=Prefs.GetString(PrefName.PracticeTitle);
 			}
 			float y=70;
 			SizeF sizeFPage=new SizeF(marginBounds.Width,marginBounds.Height);

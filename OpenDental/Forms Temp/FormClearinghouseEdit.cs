@@ -1147,7 +1147,7 @@ namespace OpenDental{
 				checkIsClaimExportAllowed.Checked=ClearinghouseCur.IsClaimExportAllowed;
 			}
 			//Uncheck and disable if not ClaimConnect as this checkbox only applies to ClaimConnect.
-			checkSaveDXC.Checked=PrefC.GetBool(PrefName.SaveDXCAttachments);
+			checkSaveDXC.Checked=Prefs.GetBool(PrefName.SaveDXCAttachments);
 			if(ClearinghouseCur.CommBridge!=EclaimsCommBridge.ClaimConnect) {
 				checkAllowAttachSend.Enabled=false;
 				checkAllowAttachSend.Checked=false;
@@ -1538,12 +1538,12 @@ namespace OpenDental{
 				return;
 			}
 			Clearinghouses.Delete(ClearinghouseHq);
-			if(PrefC.GetLong(PrefName.ClearinghouseDefaultDent)==ClearinghouseHq.ClearinghouseNum) {
-				Prefs.UpdateLong(PrefName.ClearinghouseDefaultDent,0);
+			if(Prefs.GetLong(PrefName.ClearinghouseDefaultDent)==ClearinghouseHq.ClearinghouseNum) {
+				Prefs.Set(PrefName.ClearinghouseDefaultDent,0);
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
-			if(PrefC.GetLong(PrefName.ClearinghouseDefaultMed)==ClearinghouseHq.ClearinghouseNum) {
-				Prefs.UpdateLong(PrefName.ClearinghouseDefaultMed,0);
+			if(Prefs.GetLong(PrefName.ClearinghouseDefaultMed)==ClearinghouseHq.ClearinghouseNum) {
+				Prefs.Set(PrefName.ClearinghouseDefaultMed,0);
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			ClearinghouseCur=null;
@@ -1584,7 +1584,7 @@ namespace OpenDental{
 				RevealClearinghousePass(c);
 			}
 			//If the DXC attachment saving preference changed send a signal to have all clients update their preference cache.
-			if(Prefs.UpdateBool(PrefName.SaveDXCAttachments,checkSaveDXC.Checked)) {
+			if(Prefs.Set(PrefName.SaveDXCAttachments,checkSaveDXC.Checked)) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			DialogResult=DialogResult.OK;

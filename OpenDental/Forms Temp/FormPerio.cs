@@ -1140,12 +1140,12 @@ namespace OpenDental{
 			butColorPus.BackColor = _listMiscColorDefs[2].ItemColor;
 			butColorPlaque.BackColor = _listMiscColorDefs[4].ItemColor;
 			butColorCalculus.BackColor = _listMiscColorDefs[5].ItemColor;
-			textRedProb.Text = PrefC.GetString(PrefName.PerioRedProb);
-			textRedMGJ.Text = PrefC.GetString(PrefName.PerioRedMGJ);
-			textRedGing.Text = PrefC.GetString(PrefName.PerioRedGing);
-			textRedCAL.Text = PrefC.GetString(PrefName.PerioRedCAL);
-			textRedFurc.Text = PrefC.GetString(PrefName.PerioRedFurc);
-			textRedMob.Text = PrefC.GetString(PrefName.PerioRedMob);
+			textRedProb.Text = Prefs.GetString(PrefName.PerioRedProb);
+			textRedMGJ.Text = Prefs.GetString(PrefName.PerioRedMGJ);
+			textRedGing.Text = Prefs.GetString(PrefName.PerioRedGing);
+			textRedCAL.Text = Prefs.GetString(PrefName.PerioRedCAL);
+			textRedFurc.Text = Prefs.GetString(PrefName.PerioRedFurc);
+			textRedMob.Text = Prefs.GetString(PrefName.PerioRedMob);
 			//Procedure[] procList=Procedures.Refresh(PatCur.PatNum);
 			List<ToothInitial> initialList = ToothInitials.Refresh(PatCur.PatNum);
 			_listMissingTeeth = ToothInitials.GetMissingOrHiddenTeeth(initialList);
@@ -1800,14 +1800,14 @@ namespace OpenDental{
 				listSkippedTeeth=PerioMeasures.GetSkipped(PerioExams.ListExams[PerioExams.ListExams.Count-1].PerioExamNum);
 			}
 			//For patient's first perio chart, any teeth marked missing are automatically marked skipped.
-			if(PerioExams.ListExams.Count==0 || PrefC.GetBool(PrefName.PerioSkipMissingTeeth)) {
+			if(PerioExams.ListExams.Count==0 || Prefs.GetBool(PrefName.PerioSkipMissingTeeth)) {
 				for(int i=0;i<_listMissingTeeth.Count;i++) {
 					if(_listMissingTeeth[i].CompareTo("A") >= 0 && _listMissingTeeth[i].CompareTo("Z") <= 0) {//if is a letter (not a number)
 						continue;//Skipped teeth are only recorded by tooth number within the perio exam.
 					}
 					int toothNum=PIn.Int(_listMissingTeeth[i]);
 					//Check if this tooth has had an implant done AND the office has the preference to SHOW implants
-					if(PrefC.GetBool(PrefName.PerioTreatImplantsAsNotMissing) && ContrPerio.IsImplant(toothNum)) {
+					if(Prefs.GetBool(PrefName.PerioTreatImplantsAsNotMissing) && ContrPerio.IsImplant(toothNum)) {
 						listSkippedTeeth.RemoveAll(x => x==toothNum);//Remove the tooth from the list of skipped teeth if it exists.
 						continue;//We do note want to add it back to the list below.
 					}
@@ -2105,7 +2105,7 @@ namespace OpenDental{
 			}
 			//this is necessary because Microsoft's updown control is too buggy to be useful
 			Cursor=Cursors.WaitCursor;
-			PrefName prefname=PrefName.PerioRedProb;
+			string prefname=PrefName.PerioRedProb;
 			if(sender==updownProb){
 				prefname=PrefName.PerioRedProb;
 			}
@@ -2135,7 +2135,7 @@ namespace OpenDental{
 				}
 				currentValue--;
 			}
-			Prefs.UpdateLong(prefname,currentValue);
+			Prefs.Set(prefname,currentValue);
 			//pref.ValueString=currentValue.ToString();
 			//Prefs.Update(pref);
 			localDefsChanged=true;
@@ -2228,7 +2228,7 @@ namespace OpenDental{
 				clinicName=clinic.Description;
 			} 
 			else {
-				clinicName=PrefC.GetString(PrefName.PracticeTitle);
+				clinicName=Prefs.GetString(PrefName.PracticeTitle);
 			}
 			float y=50f;
 			SizeF m;
@@ -2347,7 +2347,7 @@ namespace OpenDental{
 				clinicName=clinic.Description;
 			} 
 			else {
-				clinicName=PrefC.GetString(PrefName.PracticeTitle);
+				clinicName=Prefs.GetString(PrefName.PracticeTitle);
 			}
 			StringFormat format=new StringFormat();
 			format.Alignment=StringAlignment.Center;

@@ -251,7 +251,7 @@ namespace OpenDental {
 
 		public static void AllocateUnearnedPayment(Patient patcur,Family famcur,double unearnedAmt,Claim ClaimCur) {
 			//do not try to allocate payment if preference is disabled or if there isn't a payment to allocate
-			if(!PrefC.GetBool(PrefName.ShowAllocateUnearnedPaymentPrompt) || ClaimProcs.GetPatPortionForClaim(ClaimCur)<=0) { 
+			if(!Prefs.GetBool(PrefName.ShowAllocateUnearnedPaymentPrompt) || ClaimProcs.GetPatPortionForClaim(ClaimCur)<=0) { 
 				return;
 			}
 			FormProcSelect FormPS=new FormProcSelect(patcur.PatNum,false,true,true);
@@ -514,7 +514,7 @@ namespace OpenDental {
 			Claims.Update(claim);
 			ClaimProcs.RemoveSupplementalTransfersForClaims(claim.ClaimNum);
 			//JM - If we ever decide to enable ERA automation this will need to be considered.
-			if(PrefC.GetBool(PrefName.PromptForSecondaryClaim) && Security.IsAuthorized(Permissions.ClaimSend,true)) {
+			if(Prefs.GetBool(PrefName.PromptForSecondaryClaim) && Security.IsAuthorized(Permissions.ClaimSend,true)) {
 				ClaimL.PromptForSecondaryClaim(listClaimProcsForClaim);
 			}
 		}
@@ -654,7 +654,7 @@ namespace OpenDental {
 					return ClaimIsValidState.FalseClaimProcsChanged;
 				}
 			}
-			if(PrefC.GetBool(PrefName.ClaimsValidateACN)) {
+			if(Prefs.GetBool(PrefName.ClaimsValidateACN)) {
 				InsPlan plan=InsPlans.GetPlan(claimPlanNum,listInsPlans);//Does a query if listInsPlans is null or if claimPlanNum is not in list.
 				if(plan!=null && plan.GroupName.Contains("ADDP")) {
 					if(!Regex.IsMatch(claimNote,"ACN[0-9]{5,}")) {//ACN with at least 5 digits following

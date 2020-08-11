@@ -24,7 +24,7 @@ namespace OpenDentBusiness
         /// This pref is used a lot.
         /// </summary>
         // TODO: [Obsolete]
-        public static bool RandomKeys => GetBool(PrefName.RandomPrimaryKeys);
+        public static bool RandomKeys => Prefs.GetBool(PrefName.RandomPrimaryKeys);
 
 		/// <summary>
 		/// Logical shortcut to the ClaimPaymentNoShowZeroDate pref.
@@ -35,7 +35,7 @@ namespace OpenDentBusiness
 			get
 			{
 				DateTime date = DateTime.MinValue;
-				int days = GetInt(PrefName.ClaimPaymentNoShowZeroDate);
+				int days = Prefs.GetInt(PrefName.ClaimPaymentNoShowZeroDate);
 				if (days >= 0)
 				{
 					date = DateTime.Today.AddDays(-days);
@@ -47,7 +47,7 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// This property returns true if the preference for clinics is on and there is at least one non-hidden clinic.
 		/// </summary>
-		public static bool HasClinicsEnabled => !GetBool(PrefName.EasyNoClinics) && Clinics.GetCount(true) > 0;
+		public static bool HasClinicsEnabled => !Prefs.GetBool(PrefName.EasyNoClinics) && Clinics.GetCount(true) > 0;
 
 		/// <summary>
 		/// Returns a list of DefNums that represent WSNPA Generally Allowed blockout types.
@@ -56,7 +56,7 @@ namespace OpenDentBusiness
 		{
 			get
 			{
-				string value = GetString(PrefName.WebSchedNewPatApptIgnoreBlockoutTypes);
+				string value = Prefs.GetString(PrefName.WebSchedNewPatApptIgnoreBlockoutTypes);
 
 				if (string.IsNullOrEmpty(value))
 				{
@@ -74,7 +74,7 @@ namespace OpenDentBusiness
 		{
 			get
 			{
-				string value = GetString(PrefName.WebSchedRecallIgnoreBlockoutTypes);
+				string value = Prefs.GetString(PrefName.WebSchedRecallIgnoreBlockoutTypes);
 
 				if (string.IsNullOrEmpty(value))
 				{
@@ -92,12 +92,9 @@ namespace OpenDentBusiness
 		{
 			try
 			{
-				if (Prefs.DictIsNull()) throw new Exception("Prefs cache is null");
-				
-
 				if (_isVerboseLoggingSession == YN.Unknown)
 				{
-					if (GetString(PrefName.HasVerboseLogging).ToLower().Split(',').ToList().Exists(x => x == Environment.MachineName.ToLower()))
+					if (Prefs.GetString(PrefName.HasVerboseLogging).ToLower().Split(',').ToList().Exists(x => x == Environment.MachineName.ToLower()))
 					{
 						_isVerboseLoggingSession = YN.Yes;
 					}
@@ -135,7 +132,7 @@ namespace OpenDentBusiness
 		{
 			get
 			{
-				string format = GetString(PrefName.PatientCommunicationDateFormat);
+				string format = Prefs.GetString(PrefName.PatientCommunicationDateFormat);
 
 				try
 				{
@@ -153,13 +150,13 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// Gets a pref of type long.
 		/// </summary>
-		public static long GetLong(PrefName preferenceName) 
-			=> SIn.Long(Prefs.GetOne(preferenceName).Value);
+		public static long GetLong(string preferenceName) 
+			=> Prefs.GetLong(preferenceName);
 
 		/// <summary>
 		/// For UI display when we store a zero/meaningless value as -1. Returns "0" when useZero is true, otherwise "".
 		/// </summary>
-		public static string GetLongHideNegOne(PrefName preferenceName, bool useZero = false)
+		public static string GetLongHideNegOne(string preferenceName, bool useZero = false)
 		{
 			long value = GetLong(preferenceName);
 
@@ -171,75 +168,20 @@ namespace OpenDentBusiness
 			return SOut.Long(value);
 		}
 
-		/// <summary>
-		/// Gets a pref of type int32.
-		/// Used when the pref is an enumeration, itemorder, etc.
-		/// Also used for historical queries in ConvertDatabase.
-		/// </summary>
-		public static int GetInt(PrefName preferenceName) 
-			=> SIn.Int(Prefs.GetOne(preferenceName).Value);
+		public static int GetInt(string key) 
+			=> Prefs.GetInt(key);
 
-		/// <summary>
-		/// Gets a pref of type byte. Used when the pref is a very small integer (0-255).
-		/// </summary>
-		public static byte GetByte(PrefName preferenceName) 
-			=> SIn.Byte(Prefs.GetOne(preferenceName).Value);
-		
-		/// <summary>
-		/// Gets a pref of type double.
-		/// </summary>
-		public static double GetDouble(PrefName preferenceName) 
-			=> SIn.Double(Prefs.GetOne(preferenceName).Value);
 
-		/// <summary>
-		/// Gets a pref of type double.
-		/// </summary>
-		public static double GetDouble(PrefName preferenceName, bool doUseEnUSFormat) 
-			=> SIn.Double(Prefs.GetOne(preferenceName).Value, doUseEnUSFormat);
-
-		/// <summary>
-		/// Gets a pref of type bool.
-		/// </summary>
-		public static bool GetBool(PrefName preferenceName) 
-			=> SIn.Bool(Prefs.GetOne(preferenceName).Value);
-
-		/// <summary>
-		/// Gets the bool value for a YN pref. If Unknown, then returns the default.
-		/// If you want the 3 state version, then use PrefC.GetEnum&lt;YN&gt; or PrefC.GetCheckState.
-		/// </summary>
-		public static bool GetYN(PrefName preferenceName)
-		{
-			YN yn = (YN)SIn.Int(Prefs.GetOne(preferenceName).Value);
-			if (yn == YN.Yes)
-			{
-				return true;
-			}
-
-			if (yn == YN.No)
-			{
-				return false;
-			}
-
-			// Unknown, so use the default
-			PrefValueType prefValueType = preferenceName.GetValueType();
-			if (prefValueType == PrefValueType.YN_DEFAULT_FALSE)
-			{
-				return false;
-			}
-			if (prefValueType == PrefValueType.YN_DEFAULT_TRUE)
-			{
-				return true;
-			}
-
-			throw new ArgumentException("Invalid type");
-		}
+		public static T GetEnum<T>(string key) where T : Enum
+			=> Prefs.GetEnum<T>(key);
 
 		/// <summary>
 		/// Gets YN value for use in pref setup windows with a 3 state checkbox.
 		/// </summary>
-		public static System.Windows.Forms.CheckState GetYNCheckState(PrefName preferenceName)
+		public static System.Windows.Forms.CheckState GetYNCheckState(string preferenceName)
 		{
-			YN yn = (YN)SIn.Int(Prefs.GetOne(preferenceName).Value);
+			YN yn = Prefs.GetEnum<YN>(preferenceName);
+
 			if (yn == YN.Yes)
 			{
 				return System.Windows.Forms.CheckState.Checked;
@@ -253,88 +195,28 @@ namespace OpenDentBusiness
 		}
 
 		/// <summary>
-		/// Gets a pref of the specified enum type.
-		/// </summary>
-		public static T GetEnum<T>(PrefName preferenceName) where T : struct, IConvertible 
-			=> SIn.Enum<T>(GetInt(preferenceName));
-
-		/// <summary>
-		/// Gets a pref of type bool, but will not throw an exception if null or not found.
-		/// Indicate whether the silent default is true or false.
-		/// </summary>
-		public static bool GetBoolSilent(PrefName preferenceName, bool silentDefault)
-		{
-			if (Prefs.DictIsNull()) return silentDefault;
-
-            try
-            {
-				var pref = Prefs.GetOne(preferenceName);
-
-				if (pref != null)
-                {
-					return SIn.Bool(pref.Value);
-                }
-            }
-            catch
-            {
-            }
-
-			return silentDefault;
-		}
-
-		/// <summary>
-		/// Gets a pref of type string.
-		/// </summary>
-		public static string GetString(PrefName preferenceName) 
-			=> Prefs.GetOne(preferenceName).Value;
-
-		/// <summary>
-		/// Gets a pref of type string without using the cache.
-		/// </summary>
-		public static string GetStringNoCache(PrefName preferenceName) 
-			=> Database.ExecuteString("SELECT ValueString FROM preference WHERE PrefName='" + SOut.String(preferenceName.ToString()) + "'");
-
-		/// <summary>
-		/// Gets a pref of type string.  Will not throw an exception if null or not found.
-		/// </summary>
-		public static string GetStringSilent(PrefName preferenceName)
-		{
-			if (Prefs.DictIsNull()) return "";
-
-            try
-            {
-				return Prefs.GetOne(preferenceName)?.Value ?? "";
-            }
-            catch
-            {
-            }
-
-			return "";
-		}
-
-		/// <summary>
 		/// Gets a pref of type date.
 		/// </summary>
-		public static DateTime GetDate(PrefName preferenceName) 
-			=> SIn.Date(Prefs.GetOne(preferenceName).Value);
+		public static DateTime GetDate(string preferenceName) 
+			=> Prefs.GetDateTime(preferenceName);
 
 		/// <summary>
 		/// Gets a pref of type datetime.
 		/// </summary>
-		public static DateTime GetDateT(PrefName preferenceName) // TODO: Deprecate this in favor of GetDate()
-			=> SIn.Date(Prefs.GetOne(preferenceName).Value);
+		public static DateTime GetDateT(string preferenceName) // TODO: Deprecate this in favor of GetDate()
+			=> GetDate(preferenceName);
 
 		/// <summary>
 		/// Gets a color from an int32 pref.
 		/// </summary>
-		public static Color GetColor(PrefName preferenceName) 
-			=> Color.FromArgb(SIn.Int(Prefs.GetOne(preferenceName).Value));
+		public static Color GetColor(string preferenceName) 
+			=> Color.FromArgb(Prefs.GetInt(preferenceName));
 
 		/// <summary>
 		/// Used sometimes for prefs that are not part of the enum, especially for outside developers.
 		/// </summary>
 		public static string GetRaw(string preferenceName) 
-			=> Prefs.GetOne(preferenceName).Value;
+			=> Prefs.GetString(preferenceName);
 
 		/// <summary>
 		/// Gets culture info from DB if possible, if not returns current culture.
@@ -343,15 +225,18 @@ namespace OpenDentBusiness
 		{
 			CultureInfo cultureInfo = CultureInfo.CurrentCulture;
 
-			ODException.SwallowAnyException(() =>
+			try
 			{
-				var preference = Prefs.GetOne("LanguageAndRegion");
+				var cultureName = Prefs.GetString("LanguageAndRegion");
 
-				if (!string.IsNullOrEmpty(preference?.Value))
+				if (!string.IsNullOrEmpty(cultureName))
 				{
-					cultureInfo = CultureInfo.GetCultureInfo(preference.Value);
+					cultureInfo = CultureInfo.GetCultureInfo(cultureName);
 				}
-			});
+			}
+            catch
+            {
+            }
 
 			return cultureInfo;
 		}
@@ -391,18 +276,6 @@ namespace OpenDentBusiness
 			return false;
 		}
 
-		/// <summary>
-		/// Used by an outside developer.
-		/// </summary>
-		public static bool ContainsKey(string preferenceName) 
-			=> Prefs.GetContainsKey(preferenceName);
-
-		/// <summary>
-		/// Used by an outside developer.
-		/// </summary>
-		public static bool HListIsNull() 
-			=> Prefs.DictIsNull();
-
         /// <summary>
 		/// Static variable used to always reflect FormOpenDental.IsTreatPlanSortByTooth.  
 		/// This setter should only be called in FormOpenDental.IsTreatPlanSortByTooth.  
@@ -426,7 +299,7 @@ namespace OpenDentBusiness
 			}
 
 			Directory.CreateDirectory(tempPath);
-			if (DateTime.Today > GetDate(PrefName.TempFolderDateFirstCleaned).AddMonths(1))
+			if (DateTime.Today > Prefs.GetDateTime(PrefName.TempFolderDateFirstCleaned).AddMonths(1))
 			{
 				return tempPath;
 			}
@@ -465,7 +338,7 @@ namespace OpenDentBusiness
 			=> ODFileUtils.CreateRandomFile(GetTempFolderPath(), ext);
 
 		public static long GetDefaultSheetDefNum(SheetTypeEnum sheetType) 
-			=> GetLong(Prefs.GetSheetDefPref(sheetType));
+			=> Prefs.GetLong(Prefs.GetSheetDefPref(sheetType));
 
 		/// <summary>
 		/// Returns true if the office has a report server set up.
@@ -481,7 +354,7 @@ namespace OpenDentBusiness
 		{
 			get
 			{
-				if (GetBool(PrefName.SecurityLogOffAllowUserOverride))
+				if (Prefs.GetBool(PrefName.SecurityLogOffAllowUserOverride))
 				{
 					var logOffTimer = UserPreference.GetInt(UserPreferenceName.LogOffTimerOverride);
 
@@ -491,7 +364,7 @@ namespace OpenDentBusiness
 					}
 				}
 
-				return GetInt(PrefName.SecurityLogOffAfterMinutes);
+				return Prefs.GetInt(PrefName.SecurityLogOffAfterMinutes);
 			}
 		}
 
@@ -516,10 +389,10 @@ namespace OpenDentBusiness
 			}
 
 			public static string Server 
-				=> GetString(PrefName.ReportingServerCompName);
+				=> Prefs.GetString(PrefName.ReportingServerCompName);
 				
 			public static string Database 
-				=> GetString(PrefName.ReportingServerDbName);
+				=> Prefs.GetString(PrefName.ReportingServerDbName);
 		}
 	}
 }

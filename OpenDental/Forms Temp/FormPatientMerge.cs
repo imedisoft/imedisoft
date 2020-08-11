@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Forms;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -24,7 +25,7 @@ namespace OpenDental {
 		private void butChangePatientInto_Click(object sender,EventArgs e) {
 			FormPatientSelect fps=new FormPatientSelect();
 			if(fps.ShowDialog()==DialogResult.OK){
-				long selectedPatNum=fps.SelectedPatNum;//to prevent warning about marshal-by-reference
+				long selectedPatNum=fps.SelectedPatientId;//to prevent warning about marshal-by-reference
 				textPatientIDInto.Text=selectedPatNum.ToString();
 				_patTo=Patients.GetPat(selectedPatNum);
 				textPatientNameInto.Text=_patTo.GetNameFLFormal();
@@ -36,7 +37,7 @@ namespace OpenDental {
 		private void butChangePatientFrom_Click(object sender,EventArgs e) {
 			FormPatientSelect fps=new FormPatientSelect();
 			if(fps.ShowDialog()==DialogResult.OK) {
-				long selectedPatNum=fps.SelectedPatNum;//to prevent warning about marshal-by-reference
+				long selectedPatNum=fps.SelectedPatientId;//to prevent warning about marshal-by-reference
 				textPatientIDFrom.Text=selectedPatNum.ToString();
 				_patFrom=Patients.GetPat(selectedPatNum);
 				textPatientNameFrom.Text=_patFrom.GetNameFLFormal();
@@ -91,7 +92,7 @@ namespace OpenDental {
 				}
 			}
 			Cursor=Cursors.WaitCursor;
-			List<Task> listPatientTasks=Tasks.RefreshPatientTickets(_patFrom.PatNum);//Get this before the merge, because the merge updates Task.KeyNum.
+			List<Task> listPatientTasks=Tasks.GetByPatient(_patFrom.PatNum).ToList();//Get this before the merge, because the merge updates Task.KeyNum.
 			bool isSuccessfulMerge=false;
 			try {
 				isSuccessfulMerge=Patients.MergeTwoPatients(_patTo.PatNum,_patFrom.PatNum);
@@ -105,20 +106,15 @@ namespace OpenDental {
 			if(isSuccessfulMerge) {
 				//The patient has been successfully merged.
 				#region Refresh Patient's Tasks
-				List<Signalod> listSignals=new List<Signalod>();
-				foreach(Task task in listPatientTasks) {
-					Signalod signal=new Signalod();
-					signal.IType=InvalidType.Task;
-					signal.FKeyType=KeyType.Task;
-					signal.FKey=task.TaskNum;
-					signal.DateViewing=DateTime.MinValue;//Mimics Signalods.SetInvalid()
-					listSignals.Add(signal);
+				foreach (Task task in listPatientTasks)
+				{
+					Signalods.Send(SignalName.Invalidate, nameof(Task), task.Id);
 				}
+
 				Signalods.SetInvalid(InvalidType.TaskPatient,KeyType.Undefined,_patTo.PatNum);//Ensure anyone viewing Patient tab of new pat gets refreshed.
-				Signalods.Insert(listSignals.ToArray());//Refreshes existing tasks in all other tabs.
 				//Causes Task area and open Task Edit windows to refresh immediately.  No popups, alright to pass empty lists for listRefreshedTaskNotes and 
 				//listBlockedTaskLists.
-				FormOpenDental.S_HandleRefreshedTasks(listSignals,listPatientTasks.Select(x => x.TaskNum).ToList(),listPatientTasks,new List<TaskNote>());
+				//FormOpenDental.S_HandleRefreshedTasks(listSignals,listPatientTasks.Select(x => x.Id).ToList(),listPatientTasks,new List<TaskNote>());
 				#endregion
 				//Now copy the physical images from the old patient to the new if they are using an AtoZ image share.
 				//This has to happen in the UI because the middle tier server might not have access to the image share.

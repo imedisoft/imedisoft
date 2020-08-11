@@ -168,7 +168,7 @@ namespace OpenDental.ReportingComplex {
 		#endregion
 
 		private void FormReport_Load(object sender, System.EventArgs e) {
-      _isWrappingText=PrefC.GetBool(PrefName.ReportsWrapColumns);
+      _isWrappingText=Prefs.GetBool(PrefName.ReportsWrapColumns);
       RefreshWindow();
 		}
 
@@ -1138,17 +1138,17 @@ namespace OpenDental.ReportingComplex {
 				saveFileDialog2.AddExtension=true;
 				//saveFileDialog2.Title=Lan.g(this,"Select Folder to Save File To");
 				saveFileDialog2.FileName=_myReport.ReportName+".txt";
-				if(!Directory.Exists(PrefC.GetString(PrefName.ExportPath))) {
+				if(!Directory.Exists(Prefs.GetString(PrefName.ExportPath))) {
 					try {
-						Directory.CreateDirectory(PrefC.GetString(PrefName.ExportPath));
-						saveFileDialog2.InitialDirectory=PrefC.GetString(PrefName.ExportPath);
+						Directory.CreateDirectory(Prefs.GetString(PrefName.ExportPath));
+						saveFileDialog2.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
 					}
 					catch {
 						//initialDirectory will be blank
 					}
 				}
 				else {
-					saveFileDialog2.InitialDirectory=PrefC.GetString(PrefName.ExportPath);
+					saveFileDialog2.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
 				}
 				//saveFileDialog2.DefaultExt="txt";
 				saveFileDialog2.Filter="Text files(*.txt)|*.txt|Excel Files(*.xls)|*.xls|All files(*.*)|*.*";

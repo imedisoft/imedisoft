@@ -139,7 +139,7 @@ namespace OpenDental
 		/// </summary>
 		public static string GetMainTitle(Patient patient, long clinicNum)
 		{
-			string result = PrefC.GetString(PrefName.MainWindowTitle);
+			string result = Prefs.GetString(PrefName.MainWindowTitle);
 
 			object[] parameters = { result };
 			Plugins.HookAddCode(null, "PatientL.GetMainTitle_beginning", parameters);
@@ -153,7 +153,7 @@ namespace OpenDental
 					result += " - Clinic: ";
 				}
 
-				if (PrefC.GetBool(PrefName.TitleBarClinicUseAbbr))
+				if (Prefs.GetBool(PrefName.TitleBarClinicUseAbbr))
 				{
 					result += Clinics.GetAbbr(clinicNum);
 				}
@@ -174,20 +174,20 @@ namespace OpenDental
 			}
 
 			result += " - " + patient.GetNameLF();
-			if (PrefC.GetBool(PrefName.TitleBarShowSpecialty))
+			if (Prefs.GetBool(PrefName.TitleBarShowSpecialty))
 			{
 				result += string.IsNullOrWhiteSpace(patient.Specialty) ? "" : " (" + patient.Specialty + ")";
 			}
 
-			if (PrefC.GetLong(PrefName.ShowIDinTitleBar) == 1)
+			if (Prefs.GetLong(PrefName.ShowIDinTitleBar) == 1)
 			{
 				result += " - " + patient.PatNum.ToString();
 			}
-			else if (PrefC.GetLong(PrefName.ShowIDinTitleBar) == 2)
+			else if (Prefs.GetLong(PrefName.ShowIDinTitleBar) == 2)
 			{
 				result += " - " + patient.ChartNumber;
 			}
-			else if (PrefC.GetLong(PrefName.ShowIDinTitleBar) == 3)
+			else if (Prefs.GetLong(PrefName.ShowIDinTitleBar) == 3)
 			{
 				if (patient.Birthdate.Year > 1880)
 				{

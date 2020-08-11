@@ -2,6 +2,7 @@ using CodeBase;
 using DataConnectionBase;
 using Imedisoft.Data;
 using Microsoft.VisualBasic.Devices;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -57,7 +58,7 @@ namespace OpenDentBusiness
 
 			////UpdateStreamLinePassword is purposefully named poorly and used in an odd fashion to sort of obfuscate it from our users.
 			////GetStringNoCache() will return blank if pref does not exist.
-			//if (PrefC.GetStringNoCache(PrefName.UpdateStreamLinePassword) == "abracadabra")
+			//if (Prefs.GetStringNoCache(PrefName.UpdateStreamLinePassword) == "abracadabra")
 			//{
 			//	return;
 			//}
@@ -169,168 +170,68 @@ namespace OpenDentBusiness
 			//}
 		}
 
-		public static string GetCurrentDatabase()
-		{
-			DataTable table = Database.ExecuteDataTable("SELECT database()");
-			return SIn.String(table.Rows[0][0].ToString());
-		}
+		public static string GetCurrentDatabase() 
+			=> Database.ExecuteString("SELECT database()");
 
-		/// <summary>
-		/// Returns the major and minor version of MySQL for the current connection. 
-		/// Returns a version of 0.0 if the MySQL version cannot be determined.
-		/// </summary>
 		public static string GetMySqlVersion()
 		{
-			DataTable table = Database.ExecuteDataTable("SELECT @@version");
-			string version = SIn.String(table.Rows[0][0].ToString());
+			var parts = Database.ExecuteString("SELECT @@version").Split('.');
 
-			string[] arrayVersion = version.Split('.');
-			try
-			{
-				return int.Parse(arrayVersion[0]) + "." + int.Parse(arrayVersion[1]);
-			}
-			catch
-			{
-			}
+			if (parts.Length >= 2)
+            {
+				if (int.TryParse(parts[0], out var major) && 
+					int.TryParse(parts[1], out var minor))
+                {
+					return major + "." + minor;
+                }
+            }
+
 			return "0.0";
 		}
 
-		/// <summary>
-		/// Gets the human readable host name of the database server, even when using the middle-tier. 
-		/// This will return an empty string if Dns lookup fails.
-		/// </summary>
-		public static string GetODServer()
+		public static string GetMySqlServer()
 		{
-			//string command="SELECT @@hostname";//This command fails in MySQL 5.0.22 (the version of MySQL 5.0 we used to use), because the hostname variable was added in MySQL 5.0.38.
-			//string rawHostName=DataConnection.GetServerName();//This could be a human readable name, or it might be "localhost" or "127.0.0.1" or another IP address.
-			//return Dns.GetHostEntry(rawHostName).HostName;//Return the human readable name (full domain name) corresponding to the rawHostName.
-			//Had to strip off the port, caused Dns.GetHostEntry to fail and is not needed to get the hostname
-			string rawHostName = DataConnection.ServerName;
-			if (rawHostName != null)
-			{//rawHostName will be null if the user used a custom ConnectionString when they chose their database.
-				rawHostName = rawHostName.Split(':')[0];//This could be a human readable name, or it might be "localhost" or "127.0.0.1" or another IP address.
-			}
-			string retval = "";
+			var hostName = DataConnection.ServerName;
+			if (!string.IsNullOrEmpty(hostName))
+            {
+				var p = hostName.IndexOf(':');
+				if (p != -1)
+                {
+					hostName = hostName.Substring(p + 1);
+                }
+            }
 
 			try
 			{
-				retval = Dns.GetHostEntry(rawHostName).HostName;//Return the human readable name (full domain name) corresponding to the rawHostName.
+				var hostEntry = Dns.GetHostEntry(hostName);
+				if (hostEntry != null)
+				{
+					hostName = hostEntry.HostName;
+				}
 			}
 			catch
 			{
 			}
 
-			return retval;
+			return hostName;
 		}
 
-		/// <summary>
-		/// Returns the current value in the GLOBAL max_allowed_packet variable.
-		/// max_allowed_packet is stored as an integer in multiples of 1,024 with a min value of 1,024 and a max value of 1,073,741,824.
-		/// </summary>
-		public static int GetMaxAllowedPacket()
-		{
-			int maxAllowedPacket = 0;
-
-			//The SHOW command is used because it was able to run with a user that had no permissions whatsoever.
-			DataTable table = Database.ExecuteDataTable("SHOW GLOBAL VARIABLES WHERE Variable_name='max_allowed_packet'");
-			if (table.Rows.Count > 0)
-			{
-				maxAllowedPacket = SIn.Int(table.Rows[0]["Value"].ToString());
-			}
-
-			return maxAllowedPacket;
-		}
-
-		/// <summary>
-		/// Sets the global MySQL variable max_allowed_packet to the passed in size (in bytes).
-		/// Returns the results of GetMaxAllowedPacket() after running the SET GLOBAL command.
-		/// </summary>
-		public static int SetMaxAllowedPacket(int sizeBytes)
-		{
-			//As of MySQL 5.0.84 the session level max_allowed_packet variable is read only so we only need to change the global.
-			Database.ExecuteNonQuery("SET GLOBAL max_allowed_packet=" + SOut.Int(sizeBytes));
-			return GetMaxAllowedPacket();
-		}
-
-		/// <summary>
-		/// Returns a collection of unique AtoZ folders for the array of dbnames passed in.
-		/// It will not include the current AtoZ folder for this database, even if shared by another db.
-		/// This is used for the feature that updates multiple databases simultaneously.
-		/// </summary>
-		public static List<string> GetAtoZforDb(string[] dbNames)
-		{
-			List<string> retval = new List<string>();
-            string atozName;
-			string atozThisDb = PrefC.GetString(PrefName.DocPath);
-			for (int i = 0; i < dbNames.Length; i++)
-			{
-				try
-				{
-                    DataConnection dcon = new DataConnection(dbNames[i]);
-                    string command = "SELECT ValueString FROM preference WHERE PrefName='DocPath'";
-					atozName = dcon.ExecuteScalar(command)?.ToString()??"";
-					if (retval.Contains(atozName))
-					{
-						continue;
-					}
-					if (atozName == atozThisDb)
-					{
-						continue;
-					}
-					retval.Add(atozName);
-				}
-				catch
-				{
-					//don't add it to the list
-				}
-			}
-			return retval;
-		}
-
-		public static void LockWorkstationsForDbs(string[] dbNames)
-		{
-            for (int i = 0; i < dbNames.Length; i++)
-			{
-				try
-				{
-                    var dcon = new DataConnection(dbNames[i]);
-
-					dcon.ExecuteNonQuery(
-						"UPDATE preference SET ValueString ='" + SOut.String(Environment.MachineName) + "' " +
-						"WHERE PrefName='UpdateInProgressOnComputerName'");
-				}
-				catch { }
-			}
-		}
-
-		public static void UnlockWorkstationsForDbs(string[] dbNames)
-		{
-            for (int i = 0; i < dbNames.Length; i++)
-			{
-				try
-				{
-                    var dcon = new DataConnection(dbNames[i]);
-
-					dcon.ExecuteNonQuery(
-						"UPDATE preference SET ValueString ='' " +
-						"WHERE PrefName='UpdateInProgressOnComputerName'");
-				}
-				catch { }
-			}
-		}
+		public static int GetMaxAllowedPacket() 
+			=> Database.ExecuteInt("SELECT @@max_allowed_packet");
 
 		public static void SetSqlMode()
 		{
-			// The SHOW command is used because it was able to run with a user that had no permissions whatsoever.
-			string command = "SHOW GLOBAL VARIABLES WHERE Variable_name='sql_mode'";
-			DataTable table = Database.ExecuteDataTable(command);
-			
-			// We want to run the SET GLOBAL command when no rows were returned (above query failed) or if the sql_mode is not blank or NO_AUTO_CREATE_USER
-			// (set to something that could cause errors).
-			if (table.Rows.Count < 1 || (table.Rows[0]["Value"].ToString() != "" && table.Rows[0]["Value"].ToString().ToUpper() != "NO_AUTO_CREATE_USER"))
+			var sqlMode = Database.ExecuteString("SELECT @@sql_mode").ToUpper();
+
+			if (string.IsNullOrEmpty(sqlMode) || !sqlMode.Contains("NO_AUTO_CREATE_USER"))
 			{
-				command = "SET GLOBAL sql_mode=''";//in case user did not use our my.ini file.  http://www.opendental.com/manual/mysqlservervariables.html
-				Database.ExecuteNonQuery(command);
+				if (string.IsNullOrEmpty(sqlMode)) sqlMode = "NO_AUTO_CREATE_USER";
+                else
+                {
+					sqlMode += ",NO_AUTO_CREATE_USER";
+                }
+
+				Database.ExecuteNonQuery("SET GLOBAL sql_mode = @sql_mode", new MySqlParameter("sql_mode", sqlMode));
 			}
 		}
 	}

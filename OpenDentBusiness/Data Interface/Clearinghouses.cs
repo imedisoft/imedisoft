@@ -98,7 +98,7 @@ namespace OpenDentBusiness
 		/// You must manually override using OverrideFields if needed.
 		/// If no default present, returns null.
 		/// </summary>
-		public static Clearinghouse GetDefaultEligibility() => GetClearinghouse(PrefC.GetLong(PrefName.ClearinghouseDefaultEligibility));
+		public static Clearinghouse GetDefaultEligibility() => GetClearinghouse(Prefs.GetLong(PrefName.ClearinghouseDefaultEligibility));
 
 		/// <summary>
 		/// Gets the last batch number from db for the HQ version of this clearinghouseClin and increments it by one.
@@ -155,16 +155,16 @@ namespace OpenDentBusiness
 			Clearinghouse clearinghouseHq = null;
 			if (medType == EnumClaimMedType.Dental)
 			{
-				if (PrefC.GetLong(PrefName.ClearinghouseDefaultDent) == 0)
+				if (Prefs.GetLong(PrefName.ClearinghouseDefaultDent) == 0)
 				{
 					return 0;
 				}
-				clearinghouseHq = GetClearinghouse(PrefC.GetLong(PrefName.ClearinghouseDefaultDent));
+				clearinghouseHq = GetClearinghouse(Prefs.GetLong(PrefName.ClearinghouseDefaultDent));
 			}
 
 			if (medType == EnumClaimMedType.Medical || medType == EnumClaimMedType.Institutional)
 			{
-				if (PrefC.GetLong(PrefName.ClearinghouseDefaultMed) == 0)
+				if (Prefs.GetLong(PrefName.ClearinghouseDefaultMed) == 0)
 				{
 					//No default set, substituting emdeon medical otherwise first medical clearinghouse.
 					List<Clearinghouse> listClearingHouses = GetDeepCopy(false);
@@ -180,7 +180,7 @@ namespace OpenDentBusiness
 					}
 					return clearinghouseHq.ClearinghouseNum;
 				}
-				clearinghouseHq = GetClearinghouse(PrefC.GetLong(PrefName.ClearinghouseDefaultMed));
+				clearinghouseHq = GetClearinghouse(Prefs.GetLong(PrefName.ClearinghouseDefaultMed));
 			}
 
 			// We couldn't find a default clearinghouse for that medType.  Needs to always be a default.
@@ -241,7 +241,7 @@ namespace OpenDentBusiness
 		/// If no default present, returns null.
 		/// </summary>
 		public static Clearinghouse GetDefaultDental() 
-			=> GetClearinghouse(PrefC.GetLong(PrefName.ClearinghouseDefaultDent));
+			=> GetClearinghouse(Prefs.GetLong(PrefName.ClearinghouseDefaultDent));
 
 		/// <summary>
 		/// Gets an HQ clearinghouse from cache.
@@ -469,11 +469,11 @@ namespace OpenDentBusiness
             bool isTimeToRetrieve = IsTimeToRetrieveReports(true, out string errMsg);
             if (isTimeToRetrieve)
 			{
-				Prefs.UpdateDateT(PrefName.ClaimReportReceiveLastDateTime, DateTime.Now);
+				Prefs.Set(PrefName.ClaimReportReceiveLastDateTime, DateTime.Now);
 			}
 
 			List<Clearinghouse> listClearinghousesHq = GetDeepCopy();
-			long defaultClearingHouseNum = PrefC.GetLong(PrefName.ClearinghouseDefaultDent);
+			long defaultClearingHouseNum = Prefs.GetLong(PrefName.ClearinghouseDefaultDent);
 			for (int i = 0; i < listClearinghousesHq.Count; i++)
 			{
 				Clearinghouse clearinghouseHq = listClearinghousesHq[i];
@@ -493,8 +493,8 @@ namespace OpenDentBusiness
 		{
 			progress ??= new ODProgressExtendedNull();
 
-			DateTime timeLastReport = SIn.Date(PrefC.GetStringNoCache(PrefName.ClaimReportReceiveLastDateTime));
-			double timeReceiveInternal = SIn.Double(PrefC.GetStringNoCache(PrefName.ClaimReportReceiveInterval));//Interval in minutes.
+			DateTime timeLastReport = SIn.Date(Prefs.GetStringNoCache(PrefName.ClaimReportReceiveLastDateTime));
+			double timeReceiveInternal = SIn.Double(Prefs.GetStringNoCache(PrefName.ClaimReportReceiveInterval));//Interval in minutes.
 			DateTime timeToRecieve = DateTime.Now.Date + PrefC.GetDateT(PrefName.ClaimReportReceiveTime).TimeOfDay;
 			double timeDiff = DateTime.Now.Subtract(timeLastReport).TotalMinutes;
 			errorMessage = "";
@@ -830,7 +830,7 @@ namespace OpenDentBusiness
 				// Timer interval OK.  Now we can retrieve the reports from web services.
 				if (!isAutomaticMode)
 				{
-					Prefs.UpdateDateT(PrefName.ClaimReportReceiveLastDateTime, DateTime.Now);
+					Prefs.Set(PrefName.ClaimReportReceiveLastDateTime, DateTime.Now);
 				}
 				errorMessage = RetrieveReports(clearinghouseClin, isAutomaticMode, progress);
 				if (errorMessage != "")
@@ -881,12 +881,12 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static string CheckClearinghouseDefaults()
 		{
-			if (PrefC.GetLong(PrefName.ClearinghouseDefaultDent) == 0)
+			if (Prefs.GetLong(PrefName.ClearinghouseDefaultDent) == 0)
 			{
 				return "No default dental clearinghouse defined.";
 			}
 
-			if (PrefC.GetBool(PrefName.ShowFeatureMedicalInsurance) && PrefC.GetLong(PrefName.ClearinghouseDefaultMed) == 0)
+			if (Prefs.GetBool(PrefName.ShowFeatureMedicalInsurance) && Prefs.GetLong(PrefName.ClearinghouseDefaultMed) == 0)
 			{
 				return "No default medical clearinghouse defined.";
 			}

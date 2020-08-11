@@ -467,7 +467,7 @@ namespace OpenDental{
 				butAddTemplate.Enabled=false;
 				butDeleteTemplate.Enabled=false;
 			}
-			if(PrefC.GetBool(PrefName.ShowFeatureEhr)) {
+			if(Prefs.GetBool(PrefName.ShowFeatureEhr)) {
 				butDirectMessage.Visible=true;
 			}
 			_isRawHtml=_emailMessage.HtmlType==EmailType.RawHtml;

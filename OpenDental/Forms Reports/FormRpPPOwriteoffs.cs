@@ -289,7 +289,7 @@ namespace OpenDental{
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
 			ReportComplex report=new ReportComplex(true,false);
 			report.AddTitle("Title",Lan.G(this,"PPO Writeoffs"),fontTitle);
-			report.AddSubTitle("PracTitle",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
+			report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
 			report.AddSubTitle("Date SubTitle",date1.SelectionStart.ToShortDateString()+" - "+date2.SelectionStart.ToShortDateString(),fontSubTitle);
 			report.AddSubTitle("Claims",Lan.G(this,"Individual Claims"),fontSubTitle);
 			if(textCarrier.Text!="") {
@@ -321,7 +321,7 @@ namespace OpenDental{
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
 			ReportComplex report=new ReportComplex(true,false);
 			report.AddTitle("Title",Lan.G(this,"PPO Writeoffs"),fontTitle);
-			report.AddSubTitle("PracTitle",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
+			report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
 			report.AddSubTitle("Date SubTitle",date1.SelectionStart.ToShortDateString()+" - "+date2.SelectionStart.ToShortDateString(),fontSubTitle);
 			report.AddSubTitle("Claims",Lan.G(this,"Individual Claims"),fontSubTitle);
 			if(textCarrier.Text!="") {

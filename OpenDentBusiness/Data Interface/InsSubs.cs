@@ -384,7 +384,7 @@ namespace OpenDentBusiness{
 					//Now that the plan has changed for the current subscriber, recalculate estimates.
 					bool prefChanged=false;
 					//Forcefully set pref false to prevent creating new estimates for all procs (including completed, sent procs)
-					if(Prefs.UpdateBool(PrefName.ClaimProcsAllowedToBackdate,false)) {
+					if(Prefs.Set(PrefName.ClaimProcsAllowedToBackdate,false)) {
 						prefChanged=true;//We will turn the preference back on for the user after we finish our computations.
 					}
 					Family fam=Patients.GetFamily(patNum);
@@ -397,7 +397,7 @@ namespace OpenDentBusiness{
 					List<Benefit> listBenefits=Benefits.Refresh(listPatPlans,listInsSubs);
 					Procedures.ComputeEstimatesForAll(patNum,listClaimProcs,listProcs,listInsPlans,listPatPlans,listBenefits,pat.Age,listInsSubs);
 					if(prefChanged) {
-						Prefs.UpdateBool(PrefName.ClaimProcsAllowedToBackdate,true);//set back to original value if changed.
+						Prefs.Set(PrefName.ClaimProcsAllowedToBackdate,true);//set back to original value if changed.
 					}
 				}
 			}

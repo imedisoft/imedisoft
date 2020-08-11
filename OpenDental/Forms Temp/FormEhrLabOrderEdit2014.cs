@@ -531,8 +531,8 @@ namespace OpenDental {
 			if(!EntriesAreValid()) {
 				return;
 			} 
-			Provider prov=Providers.GetProv(Security.CurrentUser.ProvNum);
-			if(Security.CurrentUser.ProvNum!=0 && EhrProvKeys.GetKeysByFLName(prov.LName,prov.FName).Count>0) {//The user who is currently logged in is a provider and has a valid EHR key.
+			Provider prov=Providers.GetProv(Security.CurrentUser.ProviderId);
+			if(Security.CurrentUser.ProviderId!=0 && EhrProvKeys.GetKeysByFLName(prov.LName,prov.FName).Count>0) {//The user who is currently logged in is a provider and has a valid EHR key.
 				EhrLabCur.IsCpoe=true;
 			}
 			//if(EhrLabCur.PatNum==0) {

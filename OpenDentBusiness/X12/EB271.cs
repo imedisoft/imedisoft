@@ -444,8 +444,8 @@ namespace OpenDentBusiness
 		///Only applicable when return value is not DateTime.MinValue.</param>
 		///<returns>Returns valid DateTime when there is an DTP*304 segment and MSG segment that can be matched to internal PrefName,
 		///otherwise DateTime.MinValue.</returns>
-		public DateTime GetInsHistDate(out PrefName prefName) {
-			prefName=PrefName.NotApplicable;
+		public DateTime GetInsHistDate(out string prefName) {
+			prefName="";
 			if(Segment.Get(1)!="F") {//Not a limitation.
 				return DateTime.MinValue;
 			}
@@ -779,7 +779,7 @@ namespace OpenDentBusiness
 		///<param name="msgVal">The MSG01 value.</param>
 		///<returns>Returns true if given value could be matched and sets out pref to matched PrefName,
 		///otherwise returns false and out pref is PrefName.Notapplicable.</returns>
-		private static bool TryGetMatchedMsg(string msgVal,out PrefName pref){
+		private static bool TryGetMatchedMsg(string msgVal,out string pref){
 			msgVal=msgVal.ToUpper().Replace("BENEFITCLASS=","");
 			switch(msgVal) {
 				case "BITEWING X-RAYS":
@@ -816,10 +816,10 @@ namespace OpenDentBusiness
 				case "SEALANTS":
 				case "TMJ TREATMENT":
 				default:
-					pref=PrefName.NotApplicable;
+					pref="";
 					break;
 			}
-			return (pref!=PrefName.NotApplicable);
+			return pref!="";
 		}
 		
 		///<summary>Inserts or updates proc insurance history based on given 271 EB segments.</summary>
@@ -834,9 +834,9 @@ namespace OpenDentBusiness
 			int countValidInsHist=0;
 			Patient patient=Patients.GetLim(patNum);
 			List<ClaimProc> listClaimProcsForInsHistProcs=null;
-			Dictionary<PrefName,Procedure> dictInsHistProcs=Procedures.GetDictInsHistProcs(patient.PatNum,insSub.InsSubNum,out listClaimProcsForInsHistProcs);
+			Dictionary<string, Procedure> dictInsHistProcs=Procedures.GetDictInsHistProcs(patient.PatNum,insSub.InsSubNum,out listClaimProcsForInsHistProcs);
 			foreach(EB271 eb in listEb271s) {
-				PrefName prefName;
+				string prefName;
 				DateTime insHistDate=eb.GetInsHistDate(out prefName);
 				if(insHistDate==DateTime.MinValue) {//When insHistDate is not MinValue, prefName is guarenteed to be valid.
 					continue;//No insurance history date found for this eb271.

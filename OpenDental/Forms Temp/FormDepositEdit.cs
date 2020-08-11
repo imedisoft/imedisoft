@@ -672,7 +672,7 @@ namespace OpenDental{
 					butDelete.Enabled=false;
 				}
 			}
-			if(PrefC.GetBool(PrefName.ShowAutoDeposit)) {
+			if(Prefs.GetBool(PrefName.ShowAutoDeposit)) {
 				labelDepositAccountNum.Visible=true;
 				comboDepositAccountNum.Visible=true;
 				List<Def> listAutoDepositDefsAll=Defs.GetDefsForCategory(DefCat.AutoDeposit);
@@ -681,7 +681,7 @@ namespace OpenDental{
 				comboDepositAccountNum.SetSelectedDefNum(_depositCur.DepositAccountNum);
 			}
 			if(IsNew) {
-				textDateStart.Text=PIn.Date(PrefC.GetString(PrefName.DateDepositsStarted)).ToShortDateString();
+				textDateStart.Text=PIn.Date(Prefs.GetString(PrefName.DateDepositsStarted)).ToShortDateString();
 				if(!PrefC.HasClinicsEnabled) {
 					comboClinic.Visible=false;
 					labelClinic.Visible=false;
@@ -764,7 +764,7 @@ namespace OpenDental{
 					butSendQB.Visible=true;
 				}
 			}
-			if(PrefC.GetBool(PrefName.QuickBooksClassRefsEnabled)) {
+			if(Prefs.GetBool(PrefName.QuickBooksClassRefsEnabled)) {
 				if(!IsNew) {
 					//Show groupbox and hide all the controls except for labelClassRef and comboClassRefs
 					groupSelect.Visible=true;
@@ -780,7 +780,7 @@ namespace OpenDental{
 				}
 				labelClassRef.Visible=true;
 				comboClassRefs.Visible=true;
-				string classStr=PrefC.GetString(PrefName.QuickBooksClassRefs);
+				string classStr=Prefs.GetString(PrefName.QuickBooksClassRefs);
 				_arrayClassesQB=classStr.Split(new char[] { ',' });
 				for(int i = 0;i<_arrayClassesQB.Length;i++) {
 					if(_arrayClassesQB[i]=="") {
@@ -978,7 +978,7 @@ namespace OpenDental{
 				}
 				Cursor.Current=Cursors.WaitCursor;
 				string classRef="";
-				if(PrefC.GetBool(PrefName.QuickBooksClassRefsEnabled)) {
+				if(Prefs.GetBool(PrefName.QuickBooksClassRefsEnabled)) {
 					classRef=comboClassRefs.SelectedItem.ToString();
 				}
 				QuickBooks.CreateDeposit(_depositCur.DateDeposit
@@ -1329,12 +1329,12 @@ namespace OpenDental{
 			gridIns.SetSelected(true);
 			ComputeAmt();
 			if(!PrefC.HasClinicsEnabled || comboClinic.IsAllSelected){
-				textBankAccountInfo.Text=PrefC.GetString(PrefName.PracticeBankNumber);
+				textBankAccountInfo.Text=Prefs.GetString(PrefName.PracticeBankNumber);
 			}
 			else{
 				textBankAccountInfo.Text=Clinics.GetClinic(comboClinic.SelectedClinicNum).BankNumber;
 			}
-			if(Prefs.UpdateString(PrefName.DateDepositsStarted,POut.Date(PIn.Date(textDateStart.Text),false))){
+			if(Prefs.Set(PrefName.DateDepositsStarted,POut.Date(PIn.Date(textDateStart.Text),false))){
 				changed=true;
 			}
 		}
@@ -1397,12 +1397,12 @@ namespace OpenDental{
 					je.DateDisplayed=_depositCur.DateDeposit;//it would be nice to add security here.
 					je.DebitAmt=_depositCur.Amount;
 					je.Memo=Lan.G(this,"Deposit");
-					je.Splits=Accounts.GetDescript(PrefC.GetLong(PrefName.AccountingIncomeAccount));
+					je.Splits=Accounts.GetDescript(Prefs.GetLong(PrefName.AccountingIncomeAccount));
 					je.TransactionNum=trans.TransactionNum;
 					JournalEntries.Insert(je);
 					//then, the income entry
 					je=new JournalEntry();
-					je.AccountNum=PrefC.GetLong(PrefName.AccountingIncomeAccount);
+					je.AccountNum=Prefs.GetLong(PrefName.AccountingIncomeAccount);
 					//je.CheckNumber=;
 					je.DateDisplayed=_depositCur.DateDeposit;//it would be nice to add security here.
 					je.CreditAmt=_depositCur.Amount;

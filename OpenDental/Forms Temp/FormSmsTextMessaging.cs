@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormSmsTextMessaging:ODForm {
@@ -193,9 +194,9 @@ namespace OpenDental {
 			gridMessages.ContextMenu=contextMenuMessages;
 			if(PrefC.HasClinicsEnabled) {
 				//comboClinics.HqDescription="Practice";
-				//hqClinic.Abbr=(PrefC.GetString(PrefName.PracticeTitle)+" ("+Lan.g(this,"Practice")+")");
+				//hqClinic.Abbr=(Prefs.GetString(PrefName.PracticeTitle)+" ("+Lan.g(this,"Practice")+")");
 				comboClinics.SelectedClinicNum=Clinics.ClinicNum;
-				if(PrefC.GetBool(PrefName.EnterpriseApptList)) {//This form behaves differently when compared to the other 6 forms
+				if(Prefs.GetBool(PrefName.EnterpriseApptList)) {//This form behaves differently when compared to the other 6 forms
 					comboClinics.IncludeAll=false;
 				}
 				else {
@@ -310,7 +311,7 @@ namespace OpenDental {
 				row.Cells.Add("0.00");//Cost
 				if(PrefC.HasClinicsEnabled) {
 					if(smsFromMobile.ClinicNum==0) {
-						row.Cells.Add(PrefC.GetString(PrefName.PracticeTitle)+" ("+Lan.G(this,"Practice")+")");
+						row.Cells.Add(Prefs.GetString(PrefName.PracticeTitle)+" ("+Lan.G(this,"Practice")+")");
 					}
 					else { 
 						Clinic clinic=Clinics.GetClinic(smsFromMobile.ClinicNum);
@@ -354,7 +355,7 @@ namespace OpenDental {
 					row.Cells.Add(smsToMobile.MsgChargeUSD.ToString("f"));//Cost
 					if(PrefC.HasClinicsEnabled) {
 						if(smsToMobile.ClinicNum==0) {
-							row.Cells.Add(PrefC.GetString(PrefName.PracticeTitle)+" ("+Lan.G(this,"Practice")+")");
+							row.Cells.Add(Prefs.GetString(PrefName.PracticeTitle)+" ("+Lan.G(this,"Practice")+")");
 						}
 						else { 
 							Clinic clinic=Clinics.GetClinic(smsToMobile.ClinicNum);
@@ -466,7 +467,7 @@ namespace OpenDental {
 					PatPhone=x.First().MobilePhoneNumber,
 					PatNum=x.First().PatNum,
 					ClinicNum=x.First().ClinicNum,
-					ClinicAbbr=PrefC.HasClinicsEnabled ? (x.First().ClinicNum==0 ? PrefC.GetString(PrefName.PracticeTitle)+
+					ClinicAbbr=PrefC.HasClinicsEnabled ? (x.First().ClinicNum==0 ? Prefs.GetString(PrefName.PracticeTitle)+
 						" ("+Lan.G(this,"Practice")+")" : Clinics.GetClinic(x.First().ClinicNum).Abbr) : "",
 					PatName=x.First().PatNum==0 ? Lan.G(this,"Unassigned") : GetPatientName(x.First().PatNum),
 					TextMsg=x.First().MsgText,
@@ -486,7 +487,7 @@ namespace OpenDental {
 						PatPhone=x.First().MobilePhoneNumber,
 						PatNum=x.First().PatNum,
 						ClinicNum=x.First().ClinicNum,
-						ClinicAbbr=PrefC.HasClinicsEnabled ? (x.First().ClinicNum==0 ? PrefC.GetString(PrefName.PracticeTitle)+" ("+Lan.G(this,"Practice")+")"
+						ClinicAbbr=PrefC.HasClinicsEnabled ? (x.First().ClinicNum==0 ? Prefs.GetString(PrefName.PracticeTitle)+" ("+Lan.G(this,"Practice")+")"
 							: Clinics.GetClinic(x.First().ClinicNum).Abbr) : "",
 						PatName=x.First().PatNum==0 ? Lan.G(this,"Unassigned") : GetPatientName(x.First().PatNum),
 						TextMsg=x.First().MsgText,
@@ -612,7 +613,7 @@ namespace OpenDental {
 			if(FormP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			_patNumCur=FormP.SelectedPatNum;
+			_patNumCur=FormP.SelectedPatientId;
 			textPatient.Text=Patients.GetLim(_patNumCur).GetNameLF();
 		}
 
@@ -737,7 +738,7 @@ namespace OpenDental {
 			Cursor=Cursors.WaitCursor;
 			SmsFromMobile smsFromMobile=_selectedSmsFromMobile;
 			SmsFromMobile oldSmsFromMobile=smsFromMobile.Copy();
-			smsFromMobile.PatNum=form.SelectedPatNum;
+			smsFromMobile.PatNum=form.SelectedPatientId;
 			SmsFromMobiles.Update(smsFromMobile,oldSmsFromMobile);
 			//Upsert the Commlog.
 			if(smsFromMobile.CommlogNum==0) {
@@ -756,7 +757,7 @@ namespace OpenDental {
 			else {
 				Commlog commlog=Commlogs.GetOne(smsFromMobile.CommlogNum);
 				Commlog oldCommlog=commlog.Copy();
-				commlog.PatNum=form.SelectedPatNum;
+				commlog.PatNum=form.SelectedPatientId;
 				Commlogs.Update(commlog,oldCommlog);
 			}			
 			FillGridTextMessages();//Refresh grid to show changed patient.
@@ -874,7 +875,7 @@ namespace OpenDental {
 				return;
 			}
 			if(PrefC.HasClinicsEnabled && clinicNum==0) {
-				clinicNum=PrefC.GetLong(PrefName.TextingDefaultClinicNum);
+				clinicNum=Prefs.GetLong(PrefName.TextingDefaultClinicNum);
 				if(clinicNum==0) {
 					MessageBox.Show("No default clinic setup for texting.");
 					return;

@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	///<summary>Summary description for FormPaySplitEdit.</summary>
@@ -130,7 +131,7 @@ namespace OpenDental {
 			else {
 				PaySplitCur.ProvNum=0;
 			}
-			if(_isEditAnyway || PrefC.GetBool(PrefName.AllowPrepayProvider)) {
+			if(_isEditAnyway || Prefs.GetBool(PrefName.AllowPrepayProvider)) {
 				return;
 			}
 			if(PaySplitCur.ProvNum>0) {
@@ -150,7 +151,7 @@ namespace OpenDental {
 			else {
 				PaySplitCur.UnearnedType=0;
 			}
-			if(_isEditAnyway || PrefC.GetBool(PrefName.AllowPrepayProvider)) {
+			if(_isEditAnyway || Prefs.GetBool(PrefName.AllowPrepayProvider)) {
 				return;
 			}
 			if(PaySplitCur.UnearnedType>0) {//If they use an unearned type the provnum must be zero if Edit Anyway isn't pressed
@@ -229,7 +230,7 @@ namespace OpenDental {
 					checkPatOtherFam.Checked=false;
 					return;
 				}
-				PaySplitCur.PatNum=FormPS.SelectedPatNum;
+				PaySplitCur.PatNum=FormPS.SelectedPatientId;
 			}
 			else{//switch to family view
 				PaySplitCur.PatNum=0;//this will reset the selected patient to current patient
@@ -483,7 +484,7 @@ namespace OpenDental {
 			PaySplitCur.ProvNum=FormPS.ListSelectedProcs[0].ProvNum;
 			PaySplitCur.ClinicNum=FormPS.ListSelectedProcs[0].ClinicNum;
 			if(ProcCur.ProcStatus==ProcStat.TP) {
-				PaySplitCur.UnearnedType=PrefC.GetLong(PrefName.TpUnearnedType);//use default tp unearned for tp procedures.
+				PaySplitCur.UnearnedType=Prefs.GetLong(PrefName.TpUnearnedType);//use default tp unearned for tp procedures.
 				comboUnearnedTypes.SetSelectedDefNum(PaySplitCur.UnearnedType);
 			}
 			else {
@@ -632,10 +633,10 @@ namespace OpenDental {
 			if(_procedureOld!=null && _procedureOld.ProcStatus==ProcStat.TP && ProcCur==null && !string.IsNullOrEmpty(_unearnedOld?.ItemValue)) {
 				//user has detached the hidden paysplit 
 				if(MsgBox.Show(MsgBoxButtons.YesNo,"Hidden split is no longer attached to a procedure. Change unearned type to default?")) {
-					comboUnearnedTypes.SetSelectedDefNum(PrefC.GetLong(PrefName.PrepaymentUnearnedType));
+					comboUnearnedTypes.SetSelectedDefNum(Prefs.GetLong(PrefName.PrepaymentUnearnedType));
 					PaySplitCur.UnearnedType=comboUnearnedTypes.GetSelectedDefNum();
 				}
-				if(!PrefC.GetBool(PrefName.AllowPrepayProvider)) {
+				if(!Prefs.GetBool(PrefName.AllowPrepayProvider)) {
 					PaySplitCur.ProvNum=0;
 				}
 			}
@@ -676,7 +677,7 @@ namespace OpenDental {
 			}
 			//at this point in time, TP procs are allowed to have providers even if provs are typically not allowed on prepayments.
 			if((ProcCur==null || ProcCur.ProcStatus==ProcStat.C) && PaySplitCur.UnearnedType!=0) {
-				if(PaySplitCur.ProvNum>0 && !PrefC.GetBool(PrefName.AllowPrepayProvider)) {
+				if(PaySplitCur.ProvNum>0 && !Prefs.GetBool(PrefName.AllowPrepayProvider)) {
 					PaySplitCur.UnearnedType=0;
 				}
 				else if(PaySplitCur.ProvNum<=0){
@@ -687,7 +688,7 @@ namespace OpenDental {
 					}
 					PaySplitCur.ProvNum=0;//This means it's unallocated.
 					if(comboUnearnedTypes.SelectedIndex==0) {
-						PaySplitCur.UnearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+						PaySplitCur.UnearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 					}
 					else {
 						PaySplitCur.UnearnedType=comboUnearnedTypes.GetSelectedDefNum();

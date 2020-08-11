@@ -49,14 +49,14 @@ namespace OpenDental {
 		///<summary>Helper property to get the Web Mail subject preference.</summary>
 		private string SubjectInsecure {
 			get {
-				return PrefC.GetString(PrefName.PatientPortalNotifySubject);
+				return Prefs.GetString(PrefName.PatientPortalNotifySubject);
 			}
 		}
 
 		///<summary>Helper property to get the Web Mail body text preference.  Also replaces all replaceable variables.</summary>
 		private string BodyTextInsecure {
 			get {
-				return PrefC.GetString(PrefName.PatientPortalNotifyBody).Replace("[URL]",PrefC.GetString(PrefName.PatientPortalURL));
+				return Prefs.GetString(PrefName.PatientPortalNotifyBody).Replace("[URL]",Prefs.GetString(PrefName.PatientPortalURL));
 			}
 		}
 
@@ -87,7 +87,7 @@ namespace OpenDental {
 				}
 			}
 			//Webmail notification email address.  One notification email per database (not clinic specific).
-			_emailAddressSender=EmailAddresses.GetOne(PrefC.GetLong(PrefName.EmailNotifyAddressNum));
+			_emailAddressSender=EmailAddresses.GetOne(Prefs.GetLong(PrefName.EmailNotifyAddressNum));
 			if(_emailAddressSender==null
 				|| _emailAddressSender.EmailAddressNum==0
 				|| _emailAddressSender.EmailUsername=="") 
@@ -108,9 +108,9 @@ namespace OpenDental {
 				_patRegarding=Patients.GetLim(_emailMessage.PatNumSubj);
 			}
 			if(Security.CurrentUser!=null) {
-				_provUserCur=Providers.GetProv(Security.CurrentUser.ProvNum);
+				_provUserCur=Providers.GetProv(Security.CurrentUser.ProviderId);
 			}
-			List<long> listProvNums=listUsers.Select(x => x.ProvNum).Distinct().ToList();
+			List<long> listProvNums=listUsers.Select(x => x.ProviderId).Distinct().ToList();
 			_listProviders=Providers.GetProvsByProvNums(listProvNums);
 			FillFields();
 		}
@@ -250,10 +250,10 @@ namespace OpenDental {
 					BlockSendNotificationMessage("Patient who sent this message cannot access PHI for regarding patient.");
 				}
 			}
-			if(PrefC.GetString(PrefName.PatientPortalNotifySubject)=="") {
+			if(Prefs.GetString(PrefName.PatientPortalNotifySubject)=="") {
 				BlockSendNotificationMessage("Missing notification email subject. Create a subject in Setup.");
 			}
-			if(PrefC.GetString(PrefName.PatientPortalNotifyBody)=="") {
+			if(Prefs.GetString(PrefName.PatientPortalNotifyBody)=="") {
 				BlockSendNotificationMessage("Missing notification email body. Create a body in Setup.");
 			}
 			if(_allowSendNotificationMessage && _webMailMode!=WebMailMode.View) {//If in view mode, do not include notification email information.

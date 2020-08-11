@@ -117,7 +117,7 @@ namespace OpenDental
 			{
 				return true;//All completed procs match appt, so ignore completed procedures when running Procedures.UpdateProcsInApptHelper()
 			}
-			if (PrefC.GetBool(PrefName.ProcProvChangesClaimProcWithClaim))
+			if (Prefs.GetBool(PrefName.ProcProvChangesClaimProcWithClaim))
 			{
 				List<ClaimProc> listClaimProcs = ClaimProcs.RefreshForProcs(listCompletedProcWithDifferentProv.Select(x => x.ProcNum).ToList());
 				if (listClaimProcs.Any(x => x.Status == ClaimProcStatus.Received
@@ -195,7 +195,7 @@ namespace OpenDental
 
 		public static bool AreTimesValid(string timeStart, string timeEnd)
 		{
-			if (Programs.UsingOrion || PrefC.GetBool(PrefName.ShowFeatureMedicalInsurance))
+			if (Programs.UsingOrion || Prefs.GetBool(PrefName.ShowFeatureMedicalInsurance))
 			{
 				if (!ValidateTime(timeStart))
 				{
@@ -270,7 +270,7 @@ namespace OpenDental
 		public static bool ValidateProvider(List<ClaimProc> listClaimProcsForProc, long selectedProvNum, long provNumForProc)
 		{
 			//validate for provider change
-			if (provNumForProc != selectedProvNum && PrefC.GetBool(PrefName.ProcProvChangesClaimProcWithClaim))
+			if (provNumForProc != selectedProvNum && Prefs.GetBool(PrefName.ProcProvChangesClaimProcWithClaim))
 			{
 				//if selected prov is null (no selection made), no change will happen to the provider
 				if (listClaimProcsForProc.Any(x => x.Status.In(ClaimProcStatus.Received, ClaimProcStatus.Supplemental, ClaimProcStatus.CapClaim)))

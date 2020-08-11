@@ -17,9 +17,9 @@ namespace Imedisoft.CEMT.Forms
 
 		private void FormCentralSecurity_Load(object sender, EventArgs e)
 		{
-			syncCodeTextBox.Text = PrefC.GetString(PrefName.CentralManagerSyncCode);
-			securityLockCheckBox.Checked = PrefC.GetBool(PrefName.CentralManagerSecurityLock);
-			adminCheckBox.Checked = PrefC.GetBool(PrefName.SecurityLockIncludesAdmin);
+			syncCodeTextBox.Text = Prefs.GetString(PrefName.CentralManagerSyncCode);
+			securityLockCheckBox.Checked = Prefs.GetBool(PrefName.CentralManagerSecurityLock);
+			adminCheckBox.Checked = Prefs.GetBool(PrefName.SecurityLockIncludesAdmin);
 
 			if (PrefC.GetDate(PrefName.SecurityLockDate).Year > 1880)
 			{
@@ -269,10 +269,10 @@ namespace Imedisoft.CEMT.Forms
 				}
 			}
 
-			Prefs.UpdateString(PrefName.SecurityLockDate, SOut.Date(date, false));
-			Prefs.UpdateInt(PrefName.SecurityLockDays, days);
-			Prefs.UpdateBool(PrefName.SecurityLockIncludesAdmin, adminCheckBox.Checked);
-			Prefs.UpdateBool(PrefName.CentralManagerSecurityLock, securityLockCheckBox.Checked);
+			Prefs.Set(PrefName.SecurityLockDate, SOut.Date(date, false));
+			Prefs.Set(PrefName.SecurityLockDays, days);
+			Prefs.Set(PrefName.SecurityLockIncludesAdmin, adminCheckBox.Checked);
+			Prefs.Set(PrefName.CentralManagerSecurityLock, securityLockCheckBox.Checked);
 
 			return true;
 		}

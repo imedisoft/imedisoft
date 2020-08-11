@@ -130,7 +130,7 @@ namespace OpenDentBusiness.HL7 {
 					if(opCur!=null) {
 						opName=opCur.OpName;
 					}
-					string practiceName=PrefC.GetString(PrefName.PracticeTitle);
+					string practiceName=Prefs.GetString(PrefName.PracticeTitle);
 					return gConcat(def.ComponentSeparator,aptClinicDescript,opName,"",def.SubcomponentSeparator+practiceName,"","C");//all of these could be empty strings and it works fine
 				case "apt.length":
 					//Example: 60^min&&ANS+, ANS+ is the name of the coding system
@@ -334,7 +334,7 @@ namespace OpenDentBusiness.HL7 {
 						return "";
 					}
 					string patClinicDescript=Clinics.GetDesc(pat.ClinicNum);
-					practiceName=PrefC.GetString(PrefName.PracticeTitle);
+					practiceName=Prefs.GetString(PrefName.PracticeTitle);
 					return gConcat(def.ComponentSeparator,patClinicDescript,"","",def.SubcomponentSeparator+practiceName,"","C");
 				case "pat.nameLFM":
 					return gConcat(def.ComponentSeparator,pat.LName,pat.FName,pat.MiddleI);
@@ -463,7 +463,7 @@ namespace OpenDentBusiness.HL7 {
 							procOpName=procOp.OpName;
 						}
 					}
-					practiceName=PrefC.GetString(PrefName.PracticeTitle);
+					practiceName=Prefs.GetString(PrefName.PracticeTitle);
 					return gConcat(def.ComponentSeparator,procClinicDescript,procOpName,"",def.SubcomponentSeparator+practiceName,"","C");
 				case "proc.procDateTime":
 					if(proc==null) {

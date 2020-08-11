@@ -15,6 +15,7 @@ using OpenDental.UI;
 using OpenDentBusiness;
 using OpenDental.Thinfinity;
 using OpenDentBusiness.IO;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public delegate void SaveStatementToDocDelegate(Statement stmt,Sheet sheet,string pdfFileName="");
@@ -1271,9 +1272,9 @@ namespace OpenDental {
 			FormPatientSelect FormPS=new FormPatientSelect();
 			FormPS.SelectionModeOnly=true;
 			if(FormPS.ShowDialog()==DialogResult.OK) {
-				SecurityLogs.MakeLogEntry(Permissions.SheetEdit,SheetCur.PatNum,Lan.G(this,"Sheet with ID")+" "+SheetCur.SheetNum+" "+Lan.G(this,"moved to PatNum")+" "+FormPS.SelectedPatNum);
-				SecurityLogs.MakeLogEntry(Permissions.SheetEdit,FormPS.SelectedPatNum,Lan.G(this,"Sheet with ID")+" "+SheetCur.SheetNum+" "+Lan.G(this,"moved from PatNum")+" "+SheetCur.PatNum);
-				SheetCur.PatNum=FormPS.SelectedPatNum;
+				SecurityLogs.MakeLogEntry(Permissions.SheetEdit,SheetCur.PatNum,Lan.G(this,"Sheet with ID")+" "+SheetCur.SheetNum+" "+Lan.G(this,"moved to PatNum")+" "+FormPS.SelectedPatientId);
+				SecurityLogs.MakeLogEntry(Permissions.SheetEdit,FormPS.SelectedPatientId, Lan.G(this,"Sheet with ID")+" "+SheetCur.SheetNum+" "+Lan.G(this,"moved from PatNum")+" "+SheetCur.PatNum);
+				SheetCur.PatNum=FormPS.SelectedPatientId;
 			}
 		}
 

@@ -78,7 +78,7 @@ namespace OpenDentBusiness{
 		private class ProviderCache : CacheListAbs<Provider> {
 			protected override List<Provider> GetCacheFromDb() {
 				string command="SELECT * FROM provider";
-				if(PrefC.GetBool(PrefName.EasyHideDentalSchools)) {
+				if(Prefs.GetBool(PrefName.EasyHideDentalSchools)) {
 					command+=" ORDER BY ItemOrder";
 				}
 				return Crud.ProviderCrud.SelectMany(command);
@@ -406,7 +406,7 @@ namespace OpenDentBusiness{
 			List<Provider> listProvsWithClinics=new List<Provider>();
 			List<Userod> listUsersShort=Userods.GetAll();
 			for(int i=0;i<listUsersShort.Count;i++) {
-				Provider prov=Providers.GetProv(listUsersShort[i].ProvNum);
+				Provider prov=Providers.GetProv(listUsersShort[i].ProviderId);
 				if(prov==null) {
 					continue;
 				}
@@ -416,7 +416,7 @@ namespace OpenDentBusiness{
 				if(clinicNum > 0 && !listUserClinics.Exists(x => x.ClinicId==clinicNum)) {
 					continue;
 				}
-				if(listUsersShort[i].ClinicNum > 0) {//User is associated to a clinic, add the provider to the list of provs with clinics.
+				if(listUsersShort[i].ClinicId > 0) {//User is associated to a clinic, add the provider to the list of provs with clinics.
 					listProvsWithClinics.Add(prov);
 				}
 			}
@@ -469,10 +469,10 @@ namespace OpenDentBusiness{
 			if(Programs.UsingOrion){
 				Userod user=Security.CurrentUser;
 				if(user!=null){
-					Provider prov=Providers.GetProv(user.ProvNum);
+					Provider prov=Providers.GetProv(user.ProviderId);
 					if(prov!=null){
 						if(!prov.IsSecondary){
-							return user.ProvNum;
+							return user.ProviderId;
 						}
 					}
 				}
@@ -501,20 +501,20 @@ namespace OpenDentBusiness{
 		public static long GetBillingProvNum(long treatProv,long clinicNum) {
 			//No need to check RemotingRole; no call to db.
 			if(clinicNum==0 || !PrefC.HasClinicsEnabled) {//If clinics are disabled don't use the clinic defaults, even if a clinicnum was passed in.
-				if(PrefC.GetLong(PrefName.InsBillingProv)==0) {//default=0
-					return PrefC.GetLong(PrefName.PracticeDefaultProv);
+				if(Prefs.GetLong(PrefName.InsBillingProv)==0) {//default=0
+					return Prefs.GetLong(PrefName.PracticeDefaultProv);
 				}
-				else if(PrefC.GetLong(PrefName.InsBillingProv)==-1) {//treat=-1
+				else if(Prefs.GetLong(PrefName.InsBillingProv)==-1) {//treat=-1
 					return treatProv;
 				}
 				else {
-					return PrefC.GetLong(PrefName.InsBillingProv);
+					return Prefs.GetLong(PrefName.InsBillingProv);
 				}
 			}
 			else{//Using clinics, and a clinic was pased in
 				long clinicInsBillingProv=Clinics.GetClinic(clinicNum).InsBillingProv;
 				if(clinicInsBillingProv==0) {//default=0
-					return PrefC.GetLong(PrefName.PracticeDefaultProv);
+					return Prefs.GetLong(PrefName.PracticeDefaultProv);
 				}
 				else if(clinicInsBillingProv==-1) {//treat=-1
 					return treatProv;
@@ -548,7 +548,7 @@ namespace OpenDentBusiness{
 			Dictionary<long,List<long>> dictUserClinicsReference=UserClinics.GetWhere(x => x.Id>-1).GroupBy(x => x.UserId).ToDictionary(x => x.Key,x => x.Select(y => y.ClinicId).ToList());
 			Dictionary<long,List<long>> dictUserClinics=Userods.GetAll()
 				.ToDictionary(x => x.Id,x => dictUserClinicsReference.ContainsKey(x.Id)?dictUserClinicsReference[x.Id]:new List<long>());
-			Dictionary<long,List<long>> dictProvUsers=Userods.GetWhere(x => x.ProvNum>0).GroupBy(x => x.ProvNum)
+			Dictionary<long,List<long>> dictProvUsers=Userods.GetWhere(x => x.ProviderId>0).GroupBy(x => x.ProviderId)
 				.ToDictionary(x => x.Key,x => x.Select(y => y.Id).ToList());
 			HashSet<long> hashSetProvsRestrictedOtherClinic=new HashSet<long>(ProviderClinicLinks.GetProvsRestrictedToOtherClinics(clinicNum));
 			return Providers.GetWhere(x => 
@@ -583,7 +583,7 @@ namespace OpenDentBusiness{
 				provider=Providers.GetProv(clinic.DefaultProv);
 			}
 			if(provider==null) {//If not using clinics or if the specified clinic does not have a valid default provider set.
-				provider=Providers.GetProv(PrefC.GetLong(PrefName.PracticeDefaultProv));//Try to get the practice default.
+				provider=Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv));//Try to get the practice default.
 			}
 			return provider;
 		}
@@ -592,7 +592,7 @@ namespace OpenDentBusiness{
 			
 			string command=@"SELECT FName,LName,Suffix,StateLicense
 				FROM provider
-        WHERE provnum="+PrefC.GetString(PrefName.PracticeDefaultProv);
+        WHERE provnum="+Prefs.GetString(PrefName.PracticeDefaultProv);
 			return Database.ExecuteDataTable(command);
 		}
 
@@ -603,7 +603,7 @@ namespace OpenDentBusiness{
 			
 			string command=@"SELECT FName,LName,Specialty "+
 				"FROM provider WHERE provnum="+
-				POut.Long(PrefC.GetLong(PrefName.PracticeDefaultProv));
+				POut.Long(Prefs.GetLong(PrefName.PracticeDefaultProv));
 				//Convert.ToInt32(((Pref)PrefC.HList["PracticeDefaultProv"]).ValueString);
 			return Database.ExecuteDataTable(command);
 		}
@@ -615,7 +615,7 @@ namespace OpenDentBusiness{
 			
 			string command=@"SELECT NationalProvID "+
 				"FROM provider WHERE provnum="+
-				POut.Long(PrefC.GetLong(PrefName.PracticeDefaultProv));
+				POut.Long(Prefs.GetLong(PrefName.PracticeDefaultProv));
 			return Database.ExecuteDataTable(command);
 		}
 
@@ -650,7 +650,7 @@ namespace OpenDentBusiness{
 			//No need to check RemotingRole; no call to db.
 			List<Provider> listProviders=Providers.GetDeepCopy(true);
 			WebSchedProviderRules providerRule=PIn.Enum<WebSchedProviderRules>(
-					ClinicPrefs.GetPref(PrefName.WebSchedProviderRule,clinicNum)?.ValueString??PrefC.GetString(PrefName.WebSchedProviderRule));
+					ClinicPrefs.GetString(clinicNum,PrefName.WebSchedProviderRule)??Prefs.GetString(PrefName.WebSchedProviderRule));
 			switch(providerRule) {
 				case WebSchedProviderRules.PrimaryProvider:
 					Patient patPri=Patients.GetPat(patNum);
@@ -725,7 +725,7 @@ namespace OpenDentBusiness{
 		public static List<Provider> GetFilteredProviderList(long provNum,string lName,string fName,long classNum) {
 			//No need to check RemotingRole; no call to db.
 			List<Provider> listProvs=Providers.GetDeepCopy(true);
-			if(PrefC.GetBool(PrefName.EasyHideDentalSchools)) {//This is here to save doing the logic below for users who have no way to filter the provider picker list.
+			if(Prefs.GetBool(PrefName.EasyHideDentalSchools)) {//This is here to save doing the logic below for users who have no way to filter the provider picker list.
 				return listProvs;
 			}
 			for(int i=listProvs.Count-1;i>=0;i--) {

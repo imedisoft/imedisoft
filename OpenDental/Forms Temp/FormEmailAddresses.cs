@@ -23,7 +23,7 @@ namespace OpenDental {
 		}
 
 		private void FormEmailAddresses_Load(object sender,EventArgs e) {
-			checkEmailDisclaimer.Checked=PrefC.GetBool(PrefName.EmailDisclaimerIsOn);
+			checkEmailDisclaimer.Checked=Prefs.GetBool(PrefName.EmailDisclaimerIsOn);
 			if(IsSelectionMode) {
 				labelInboxCheckInterval.Visible=false;
 				textInboxCheckInterval.Visible=false;
@@ -90,8 +90,8 @@ namespace OpenDental {
 				row.Cells.Add(emailAddress.EmailUsername);
 				row.Cells.Add(emailAddress.SenderAddress);
 				row.Cells.Add(Userods.GetName(emailAddress.UserNum));
-				row.Cells.Add((emailAddress.EmailAddressNum==PrefC.GetLong(PrefName.EmailDefaultAddressNum))?"X":"");
-				row.Cells.Add((emailAddress.EmailAddressNum==PrefC.GetLong(PrefName.EmailNotifyAddressNum))?"X":"");
+				row.Cells.Add((emailAddress.EmailAddressNum==Prefs.GetLong(PrefName.EmailDefaultAddressNum))?"X":"");
+				row.Cells.Add((emailAddress.EmailAddressNum==Prefs.GetLong(PrefName.EmailNotifyAddressNum))?"X":"");
 				row.Tag=emailAddress;
 				gridMain.ListGridRows.Add(row);
 			}
@@ -107,7 +107,7 @@ namespace OpenDental {
 				MessageBox.Show("User email address cannot be set as the default.");
 				return;
 			}
-			if(Prefs.UpdateLong(PrefName.EmailDefaultAddressNum,_listEmailAddresses[gridMain.GetSelectedIndex()].EmailAddressNum)) {
+			if(Prefs.Set(PrefName.EmailDefaultAddressNum,_listEmailAddresses[gridMain.GetSelectedIndex()].EmailAddressNum)) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			FillGrid();
@@ -122,7 +122,7 @@ namespace OpenDental {
 				MessageBox.Show("User email address cannot be set as WebMail Notify.");
 				return;
 			}
-			if(Prefs.UpdateLong(PrefName.EmailNotifyAddressNum,_listEmailAddresses[gridMain.GetSelectedIndex()].EmailAddressNum)) {
+			if(Prefs.Set(PrefName.EmailNotifyAddressNum,_listEmailAddresses[gridMain.GetSelectedIndex()].EmailAddressNum)) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			FillGrid();
@@ -161,8 +161,8 @@ namespace OpenDental {
 					MessageBox.Show("Inbox check interval must be between 1 and 60 inclusive.");
 					return;
 				}
-				if(Prefs.UpdateInt(PrefName.EmailInboxCheckInterval,inboxCheckIntervalMinuteCount)
-					| Prefs.UpdateBool(PrefName.EmailDisclaimerIsOn,checkEmailDisclaimer.Checked)) 
+				if(Prefs.Set(PrefName.EmailInboxCheckInterval,inboxCheckIntervalMinuteCount)
+					| Prefs.Set(PrefName.EmailDisclaimerIsOn,checkEmailDisclaimer.Checked)) 
 				{
 					DataValid.SetInvalid(InvalidType.Prefs);
 				}

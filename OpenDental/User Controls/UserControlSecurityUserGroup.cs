@@ -133,7 +133,7 @@ namespace OpenDental {
 		///<summary>Fills the filter comboboxes on the "Users" tab.</summary>
 		private void FillFilters() {
 			foreach(UserFilters filterCur in Enum.GetValues(typeof(UserFilters))) {
-				if(PrefC.GetBool(PrefName.EasyHideDentalSchools) && (filterCur == UserFilters.Students || filterCur == UserFilters.Instructors)) {
+				if(Prefs.GetBool(PrefName.EasyHideDentalSchools) && (filterCur == UserFilters.Students || filterCur == UserFilters.Instructors)) {
 					continue;
 				}
 				comboShowOnly.Items.Add(new ODBoxItem<UserFilters>(Lan.G(this,filterCur.GetDescription()),filterCur));
@@ -169,7 +169,7 @@ namespace OpenDental {
 				return retVal;
 			}
 			if(_dictProvNumProvs == null) { //fill the dictionary if needed
-				_dictProvNumProvs=Providers.GetMultProviders(Userods.GetAll().Select(x => x.ProvNum).ToList()).ToDictionary(x => x.ProvNum,x => x);
+				_dictProvNumProvs=Providers.GetMultProviders(Userods.GetAll().Select(x => x.ProviderId).ToList()).ToDictionary(x => x.ProvNum,x => x);
 			}
 			retVal.RemoveAll(x => x.UserNumCEMT>0);//NEVER show CEMT users when not in the CEMT tool.
 			if(!checkShowHidden.Checked) {
@@ -181,33 +181,33 @@ namespace OpenDental {
 			}
 			switch(((ODBoxItem<UserFilters>)comboShowOnly.SelectedItem).Tag) {
 				case UserFilters.Employees:
-					retVal.RemoveAll(x => x.EmployeeNum==0);
+					retVal.RemoveAll(x => x.EmployeeId==0);
 					break;
 				case UserFilters.Providers:
-					retVal.RemoveAll(x => x.ProvNum==0);
+					retVal.RemoveAll(x => x.ProviderId==0);
 					break;
 				case UserFilters.Students:
 					//might not count user as student if attached to invalid providers.
-					retVal.RemoveAll(x => !_dictProvNumProvs.ContainsKey(x.ProvNum) || _dictProvNumProvs[x.ProvNum].IsInstructor);
+					retVal.RemoveAll(x => !_dictProvNumProvs.ContainsKey(x.ProviderId) || _dictProvNumProvs[x.ProviderId].IsInstructor);
 					if(classNum>0) {
-						retVal.RemoveAll(x => _dictProvNumProvs[x.ProvNum].SchoolClassNum!=classNum);
+						retVal.RemoveAll(x => _dictProvNumProvs[x.ProviderId].SchoolClassNum!=classNum);
 					}
 					break;
 				case UserFilters.Instructors:
-					retVal.RemoveAll(x => !_dictProvNumProvs.ContainsKey(x.ProvNum) || !_dictProvNumProvs[x.ProvNum].IsInstructor);
+					retVal.RemoveAll(x => !_dictProvNumProvs.ContainsKey(x.ProviderId) || !_dictProvNumProvs[x.ProviderId].IsInstructor);
 					if(classNum>0) {
-						retVal.RemoveAll(x => _dictProvNumProvs[x.ProvNum].SchoolClassNum!=classNum);
+						retVal.RemoveAll(x => _dictProvNumProvs[x.ProviderId].SchoolClassNum!=classNum);
 					}
 					break;
 				case UserFilters.Other:
-					retVal.RemoveAll(x => x.EmployeeNum!=0 || x.ProvNum!=0);
+					retVal.RemoveAll(x => x.EmployeeId!=0 || x.ProviderId!=0);
 					break;
 				case UserFilters.AllUsers:
 				default:
 					break;
 			}
 			if(comboClinic.SelectedIndex>0) {
-				retVal.RemoveAll(x => x.ClinicNum!=((ODBoxItem<Clinic>)comboClinic.SelectedItem).Tag.ClinicNum);
+				retVal.RemoveAll(x => x.ClinicId!=((ODBoxItem<Clinic>)comboClinic.SelectedItem).Tag.ClinicNum);
 			}
 			if(comboGroups.SelectedIndex>0) {
 				retVal.RemoveAll(x => !x.IsInUserGroup(((ODBoxItem<UserGroup>)comboGroups.SelectedItem).Tag.Id));
@@ -215,12 +215,12 @@ namespace OpenDental {
 			if(!string.IsNullOrWhiteSpace(textPowerSearch.Text)) {
 				switch(((ODBoxItem<UserFilters>)comboShowOnly.SelectedItem).Tag) {
 					case UserFilters.Employees:
-						retVal.RemoveAll(x => !Employees.GetNameFL(x.EmployeeNum).ToLower().Contains(textPowerSearch.Text.ToLower()));
+						retVal.RemoveAll(x => !Employees.GetNameFL(x.EmployeeId).ToLower().Contains(textPowerSearch.Text.ToLower()));
 						break;
 					case UserFilters.Providers:
 					case UserFilters.Students:
 					case UserFilters.Instructors:
-						retVal.RemoveAll(x => !_dictProvNumProvs[x.ProvNum].GetLongDesc().ToLower().Contains(textPowerSearch.Text.ToLower()));
+						retVal.RemoveAll(x => !_dictProvNumProvs[x.ProviderId].GetLongDesc().ToLower().Contains(textPowerSearch.Text.ToLower()));
 						break;
 					case UserFilters.AllUsers:
 					case UserFilters.Other:
@@ -316,10 +316,10 @@ namespace OpenDental {
 			foreach(Userod user in listFilteredUsers) {
 				GridRow row=new GridRow();
 				row.Cells.Add(user.UserName);
-				row.Cells.Add(Employees.GetNameFL(user.EmployeeNum));
-				row.Cells.Add(Providers.GetLongDesc(user.ProvNum));
+				row.Cells.Add(Employees.GetNameFL(user.EmployeeId));
+				row.Cells.Add(Providers.GetLongDesc(user.ProviderId));
 				if(PrefC.HasClinicsEnabled) {
-					row.Cells.Add(Clinics.GetAbbr(user.ClinicNum));
+					row.Cells.Add(Clinics.GetAbbr(user.ClinicId));
 					row.Cells.Add(user.ClinicIsRestricted?"X":"");
 				}
 				row.Cells.Add(user.PasswordIsStrong?"X":"");

@@ -1486,7 +1486,7 @@ namespace OpenDental.UI {
 			try {
 				//NOTE: if this preference is changed while the program is open there MAY be some lingering wiki links in the context menu. 
 				//It is not worth it to force users to log off and back on again, or to run the link removal code below EVERY time, even if the pref is disabled.
-				doWikiLogic=PrefC.GetBool(PrefName.WikiDetectLinks);//if this fails then we do not have a pref table or a wiki, so don't bother going with this part.
+				doWikiLogic=Prefs.GetBool(PrefName.WikiDetectLinks);//if this fails then we do not have a pref table or a wiki, so don't bother going with this part.
 			}
 			catch {
 
@@ -3315,17 +3315,17 @@ namespace OpenDental.UI {
 				SaveFileDialog saveFileDialog=new SaveFileDialog();
 				saveFileDialog.AddExtension=true;
 				saveFileDialog.FileName=fileName;
-				if(!Directory.Exists(PrefC.GetString(PrefName.ExportPath))) {
+				if(!Directory.Exists(Prefs.GetString(PrefName.ExportPath))) {
 					try {
-						Directory.CreateDirectory(PrefC.GetString(PrefName.ExportPath));
-						saveFileDialog.InitialDirectory=PrefC.GetString(PrefName.ExportPath);
+						Directory.CreateDirectory(Prefs.GetString(PrefName.ExportPath));
+						saveFileDialog.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
 					}
 					catch {
 						//initialDirectory will be blank
 					}
 				}
 				else {
-					saveFileDialog.InitialDirectory=PrefC.GetString(PrefName.ExportPath);
+					saveFileDialog.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
 				}
 				saveFileDialog.Filter="Text files(*.txt)|*.txt|Excel Files(*.xls)|*.xls|All files(*.*)|*.*";
 				saveFileDialog.FilterIndex=0;

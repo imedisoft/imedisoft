@@ -43,12 +43,12 @@ namespace OpenDentBusiness.HL7 {
 		private void InitializeVariables() {
 			Provider provFacility=Providers.GetProv(PrefC.GetInt(PrefName.PracticeDefaultProv));
 			_sendingFacilityNpi=provFacility.NationalProvID;
-			_sendingFacilityName=PrefC.GetString(PrefName.PracticeTitle);
-			_sendingFacilityAddress1=PrefC.GetString(PrefName.PracticeAddress);
-			_sendingFacilityAddress2=PrefC.GetString(PrefName.PracticeAddress2);
-			_sendingFacilityCity=PrefC.GetString(PrefName.PracticeCity);
-			_sendingFacilityState=PrefC.GetString(PrefName.PracticeST);
-			_sendingFacilityZip=PrefC.GetString(PrefName.PracticeZip);
+			_sendingFacilityName=Prefs.GetString(PrefName.PracticeTitle);
+			_sendingFacilityAddress1=Prefs.GetString(PrefName.PracticeAddress);
+			_sendingFacilityAddress2=Prefs.GetString(PrefName.PracticeAddress2);
+			_sendingFacilityCity=Prefs.GetString(PrefName.PracticeCity);
+			_sendingFacilityState=Prefs.GetString(PrefName.PracticeST);
+			_sendingFacilityZip=Prefs.GetString(PrefName.PracticeZip);
 			if(PrefC.HasClinicsEnabled && _appt.ClinicNum!=0) {//Using clinics and a clinic is assigned.
 				Clinic clinic=Clinics.GetClinic(_appt.ClinicNum);
 				_sendingFacilityName=clinic.Description;
@@ -552,7 +552,7 @@ namespace OpenDentBusiness.HL7 {
 				}
 			}
 			else {//Not using clinics for this patient
-				if(PrefC.GetString(PrefName.PracticeTitle)=="") {
+				if(Prefs.GetString(PrefName.PracticeTitle)=="") {
 					WriteError(sb,"Missing practice title.");
 				}
 			}

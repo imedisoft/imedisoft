@@ -380,7 +380,7 @@ namespace OpenDental {
 				,DateTime.DaysInMonth(DateTime.Today.Year,DateTime.Today.Month)).ToShortDateString();
 			if(!Security.IsAuthorized(Permissions.ReportProdIncAllProviders,true)) {
 				//They either have permission or have a provider at this point.  If they don't have permission they must have a provider.
-				_listProviders=_listProviders.FindAll(x => x.ProvNum==Security.CurrentUser.ProvNum);
+				_listProviders=_listProviders.FindAll(x => x.ProvNum==Security.CurrentUser.ProviderId);
 				Provider prov=_listProviders.FirstOrDefault();
 				if(prov!=null) {
 					_listProviders.AddRange(Providers.GetWhere(x => x.FName == prov.FName && x.LName == prov.LName && x.ProvNum != prov.ProvNum));
@@ -413,7 +413,7 @@ namespace OpenDental {
 				checkClinicBreakdown.Visible=false;
 			}
 			else {
-				checkClinicBreakdown.Checked=PrefC.GetBool(PrefName.ReportPandIhasClinicBreakdown);
+				checkClinicBreakdown.Checked=Prefs.GetBool(PrefName.ReportPandIhasClinicBreakdown);
 				_listClinics=Clinics.GetForUserod(Security.CurrentUser);
 				if(!Security.CurrentUser.ClinicIsRestricted) {
 					listClin.Items.Add(Lan.G(this,"Unassigned"));
@@ -584,7 +584,7 @@ namespace OpenDental {
 			using(Font font=new Font("Tahoma",8,FontStyle.Regular)) {
 				report.ReportName="MonthlyP&IGoals";
 				report.AddTitle("Title",Lan.G(this,"Monthly Production Goal"));
-				report.AddSubTitle("PracName",PrefC.GetString(PrefName.PracticeTitle));
+				report.AddSubTitle("PracName",Prefs.GetString(PrefName.PracticeTitle));
 				report.AddSubTitle("Date",_dateFrom.ToShortDateString()+" - "+_dateTo.ToShortDateString());
 				report.AddSubTitle("Providers",checkAllProv.Checked?Lan.G(this,"All Providers"):listProvs.Count==0?"":string.Join(", ",listProvs.Select(x => x.Abbr)));
 				if(PrefC.HasClinicsEnabled) {

@@ -38,9 +38,9 @@ namespace OpenDentBusiness.HL7 {
 		}
 
 		private void InitializeVariables() {
-			_sendingFacilityName=PrefC.GetString(PrefName.PracticeTitle);
-			cityWhereEntered=PrefC.GetString(PrefName.PracticeCity);
-			stateWhereEntered=PrefC.GetString(PrefName.PracticeST);
+			_sendingFacilityName=Prefs.GetString(PrefName.PracticeTitle);
+			cityWhereEntered=Prefs.GetString(PrefName.PracticeCity);
+			stateWhereEntered=Prefs.GetString(PrefName.PracticeST);
 			if(PrefC.HasClinicsEnabled && _pat.ClinicNum!=0) {//Using clinics and a clinic is assigned.
 				Clinic clinic=Clinics.GetClinic(_pat.ClinicNum);
 				_sendingFacilityName=clinic.Description;
@@ -456,12 +456,12 @@ namespace OpenDentBusiness.HL7 {
 			//ORD-10 Entered By.  Required if known.  Cardinality [0..1].  Type XCN.  This is the person that entered the immunization record into the system.
 			Userod userod=Userods.GetUser(vaccine.UserNum);//Can be null if vaccine.UserNum=0 for older records before the vaccine.UserNum column existed.
 			if(userod!=null) {
-				if(userod.ProvNum!=0) {
-					Provider provEnteredBy=Providers.GetProv(userod.ProvNum);
+				if(userod.ProviderId!=0) {
+					Provider provEnteredBy=Providers.GetProv(userod.ProviderId);
 					WriteXCN(10,provEnteredBy.FName,provEnteredBy.LName,provEnteredBy.MI,vaccine.UserNum.ToString(),cityWhereEntered,stateWhereEntered,"D");
 				}
-				else if(userod.EmployeeNum!=0) {
-					Employee employee=Employees.GetEmp(userod.EmployeeNum);
+				else if(userod.EmployeeId!=0) {
+					Employee employee=Employees.GetEmp(userod.EmployeeId);
 					WriteXCN(10,employee.FName,employee.LName,employee.MiddleI,vaccine.UserNum.ToString(),cityWhereEntered,stateWhereEntered,"D");
 				}
 			}
@@ -1243,10 +1243,10 @@ namespace OpenDentBusiness.HL7 {
 					}
 				}
 				else {
-					if(stateCodes.IndexOf(PrefC.GetString(PrefName.PracticeST).ToUpper())==-1) {
+					if(stateCodes.IndexOf(Prefs.GetString(PrefName.PracticeST).ToUpper())==-1) {
 						WriteError(sb,"Practice state must be 2 letter state or territory code for the United States.");
 					}
-					if(PrefC.GetString(PrefName.PracticeCity).Trim()=="") {
+					if(Prefs.GetString(PrefName.PracticeCity).Trim()=="") {
 						WriteError(sb,"Missing practice city.");
 					}
 				}

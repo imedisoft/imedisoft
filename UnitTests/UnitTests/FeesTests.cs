@@ -227,7 +227,7 @@ namespace UnitTests.Fees_Tests {
 			prov.FeeSched=fee.FeeSched;
 			ProviderT.Update(prov);
 			//Update the database so that the practice provider is the provider associated to our new fee.
-			long practiceDefaultProvOld=PrefC.GetLong(PrefName.PracticeDefaultProv);
+			long practiceDefaultProvOld=Prefs.GetLong(PrefName.PracticeDefaultProv);
 			PrefT.UpdateLong(PrefName.PracticeDefaultProv,fee.ProvNum);
 			//Since our new fee is associated to the fee schedule of the practice default provider, it should be returned by GetListFromObjects().
 			List<Fee> listFees=Fees.GetListFromObjects(new List<ProcedureCode>(){ procedureCode },

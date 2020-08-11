@@ -21,16 +21,18 @@ namespace OpenDental
 		private long _clinicRuleClinicNum;
 		///<summary>Key = ClinicNum, 0=Practice/Defaults. Value = Rules defined for that clinic. If a clinic uses defaults, its respective list of rules will be empty.</summary>
 		private Dictionary<long,List<ApptReminderRule>> _dictClinicRules;
-		private List<ClinicPref> _listThankYouTitlesLoaded;
+		private List<(string, string)> _listThankYouTitlesLoaded;
 		private ApptReminderType[] _arrApptReminderTypes=new ApptReminderType[] { ApptReminderType.Reminder
 			,ApptReminderType.ConfirmationFutureDay,ApptReminderType.ScheduleThankYou,ApptReminderType.Arrival };
 		WebServiceMainHQProxy.EServiceSetup.SignupOut _signupOut;
 
-		private List<ClinicPref> _listThankYouTitles {
+		private List<(string, string)> _listThankYouTitles {
 			get {
 				//On load only, load all ApptThankYouCalendarTitle ClinicPrefs, including a pseudo 0 ClinicPref.
-				_listThankYouTitlesLoaded=_listThankYouTitlesLoaded??ClinicPrefs.GetPrefAllClinics(PrefName.ApptThankYouCalendarTitle,includeDefault:true);
-				return _listThankYouTitlesLoaded;
+				//_listThankYouTitlesLoaded=_listThankYouTitlesLoaded??ClinicPrefs.GetPrefAllClinics(PrefName.ApptThankYouCalendarTitle,includeDefault:true);
+				//return _listThankYouTitlesLoaded;
+
+				return null;
 			}
 		}
 		
@@ -45,7 +47,7 @@ namespace OpenDental
 				_signupOut=FormEServicesSetup.GetSignupOut();
 			}
 			FillECRActivationButtons();
-			checkEnableNoClinic.Checked=PrefC.GetBool(PrefName.ApptConfirmEnableForClinicZero);
+			checkEnableNoClinic.Checked=Prefs.GetBool(PrefName.ApptConfirmEnableForClinicZero);
 			if(PrefC.HasClinicsEnabled) {//CLINICS
 				checkUseDefaultsEC.Visible=true;
 				checkUseDefaultsEC.Enabled=false;//when loading form we will be viewing defaults.
@@ -71,10 +73,10 @@ namespace OpenDental
 			comboStatusEAccepted.Items.AddDefs(_listDefsApptStatus);
 			comboStatusEDeclined.Items.AddDefs(_listDefsApptStatus);
 			comboStatusEFailed.Items.AddDefs(_listDefsApptStatus);
-			long prefApptEConfirmStatusSent=PrefC.GetLong(PrefName.ApptEConfirmStatusSent);
-			long prefApptEConfirmStatusAccepted=PrefC.GetLong(PrefName.ApptEConfirmStatusAccepted);
-			long prefApptEConfirmStatusDeclined=PrefC.GetLong(PrefName.ApptEConfirmStatusDeclined);
-			long prefApptEConfirmStatusSendFailed=PrefC.GetLong(PrefName.ApptEConfirmStatusSendFailed);
+			long prefApptEConfirmStatusSent=Prefs.GetLong(PrefName.ApptEConfirmStatusSent);
+			long prefApptEConfirmStatusAccepted=Prefs.GetLong(PrefName.ApptEConfirmStatusAccepted);
+			long prefApptEConfirmStatusDeclined=Prefs.GetLong(PrefName.ApptEConfirmStatusDeclined);
+			long prefApptEConfirmStatusSendFailed=Prefs.GetLong(PrefName.ApptEConfirmStatusSendFailed);
 			//SENT
 			if(prefApptEConfirmStatusSent>0) {
 				//Selects combo box option if it exists, if it doesn't it sets the text of the combo box to the hidden one.
@@ -104,7 +106,7 @@ namespace OpenDental
 			else {
 				comboStatusEFailed.SelectedIndex=0;
 			}
-			if(PrefC.GetBool(PrefName.ApptEConfirm2ClickConfirmation)) {
+			if(Prefs.GetBool(PrefName.ApptEConfirm2ClickConfirmation)) {
 				radio2ClickConfirm.Checked=true;
 			}
 			else {
@@ -118,34 +120,34 @@ namespace OpenDental
 
 		private void SaveTabECR() {
 			if(comboStatusESent.SelectedIndex!=-1) {
-				Prefs.UpdateLong(PrefName.ApptEConfirmStatusSent,_listDefsApptStatus[comboStatusESent.SelectedIndex].DefNum);
+				Prefs.Set(PrefName.ApptEConfirmStatusSent,_listDefsApptStatus[comboStatusESent.SelectedIndex].DefNum);
 			}
 			if(comboStatusEAccepted.SelectedIndex!=-1) {
-				Prefs.UpdateLong(PrefName.ApptEConfirmStatusAccepted,_listDefsApptStatus[comboStatusEAccepted.SelectedIndex].DefNum);
+				Prefs.Set(PrefName.ApptEConfirmStatusAccepted,_listDefsApptStatus[comboStatusEAccepted.SelectedIndex].DefNum);
 			}
 			if(comboStatusEDeclined.SelectedIndex!=-1) {
-				Prefs.UpdateLong(PrefName.ApptEConfirmStatusDeclined,_listDefsApptStatus[comboStatusEDeclined.SelectedIndex].DefNum);
+				Prefs.Set(PrefName.ApptEConfirmStatusDeclined,_listDefsApptStatus[comboStatusEDeclined.SelectedIndex].DefNum);
 			}
 			if(comboStatusEFailed.SelectedIndex!=-1) {
-				Prefs.UpdateLong(PrefName.ApptEConfirmStatusSendFailed,_listDefsApptStatus[comboStatusEFailed.SelectedIndex].DefNum);
+				Prefs.Set(PrefName.ApptEConfirmStatusSendFailed,_listDefsApptStatus[comboStatusEFailed.SelectedIndex].DefNum);
 			}
-			Prefs.UpdateBool(PrefName.ApptConfirmEnableForClinicZero,checkEnableNoClinic.Checked);
-			Prefs.UpdateBool(PrefName.ApptEConfirm2ClickConfirmation,radio2ClickConfirm.Checked);
+			Prefs.Set(PrefName.ApptConfirmEnableForClinicZero,checkEnableNoClinic.Checked);
+			Prefs.Set(PrefName.ApptEConfirm2ClickConfirmation,radio2ClickConfirm.Checked);
 			ApptReminderRules.SyncByClinicAndTypes(_dictClinicRules[_ecClinicCur.ClinicNum],_ecClinicCur.ClinicNum,_arrApptReminderTypes);
 			if(_ecClinicCur!=null&&_ecClinicCur.ClinicNum!=0) {
 				_ecClinicCur.IsConfirmEnabled=checkIsConfirmEnabled.Checked;
 				Clinics.Update(_ecClinicCur);
 			}
 			#region ApptThankYou Titles
-			ParseThankYouTitle();
-			foreach(ClinicPref clinicPref in _listThankYouTitles) {
-				if(clinicPref.ClinicNum!=0) {
-					ClinicPrefs.Upsert(clinicPref.PrefName,clinicPref.ClinicNum,clinicPref.ValueString);
-				}
-				else {
-					Prefs.UpdateString(clinicPref.PrefName,clinicPref.ValueString);
-				}
-			}
+			//ParseThankYouTitle();
+			//foreach(ClinicPref clinicPref in _listThankYouTitles) {
+			//	if(clinicPref.ClinicNum!=0) {
+			//		ClinicPrefs.Upsert(clinicPref.PrefName,clinicPref.ClinicNum,clinicPref.ValueString);
+			//	}
+			//	else {
+			//		Prefs.Set(clinicPref.PrefName,clinicPref.ValueString);
+			//	}
+			//}
 			#endregion
 		}
 
@@ -173,18 +175,18 @@ namespace OpenDental
 			comboClinicEConfirm.BeginUpdate();
 			comboClinicEConfirm.Items.Clear();
 			_ecListClinics.ForEach(x => comboClinicEConfirm.Items.Add(x.Abbr));//combo clinics may not be visible.
-			if(idx>-1&&idx<comboClinicEConfirm.Items.Count) {
-				//textThankYouTitle needs to be filled before selecting an index in comboClinicEConfirm so the initial value is not overwritten.
-				textThankYouTitle.Text=_listThankYouTitles.FirstOrDefault(x => x.ClinicNum==_ecListClinics[idx].ClinicNum).ValueString;
-				comboClinicEConfirm.SelectedIndex=idx;
-			}
-			comboClinicEConfirm.EndUpdate();
+			//if(idx>-1&&idx<comboClinicEConfirm.Items.Count) {
+			//	//textThankYouTitle needs to be filled before selecting an index in comboClinicEConfirm so the initial value is not overwritten.
+			//	textThankYouTitle.Text=_listThankYouTitles.FirstOrDefault(x => x.ClinicNum==_ecListClinics[idx].ClinicNum).ValueString;
+			//	comboClinicEConfirm.SelectedIndex=idx;
+			//}
+			//comboClinicEConfirm.EndUpdate();
 		}
 
 		private void FillConfStatusesGrid() {
-			List<long> listDontSendConf=PrefC.GetString(PrefName.ApptConfirmExcludeESend).Split(',').Select(x => PIn.Long(x)).ToList();
-			List<long> listDontChange=PrefC.GetString(PrefName.ApptConfirmExcludeEConfirm).Split(',').Select(x => PIn.Long(x)).ToList();
-			List<long> listDontSendRem=PrefC.GetString(PrefName.ApptConfirmExcludeERemind).Split(',').Select(x => PIn.Long(x)).ToList();
+			List<long> listDontSendConf=Prefs.GetString(PrefName.ApptConfirmExcludeESend).Split(',').Select(x => PIn.Long(x)).ToList();
+			List<long> listDontChange=Prefs.GetString(PrefName.ApptConfirmExcludeEConfirm).Split(',').Select(x => PIn.Long(x)).ToList();
+			List<long> listDontSendRem=Prefs.GetString(PrefName.ApptConfirmExcludeERemind).Split(',').Select(x => PIn.Long(x)).ToList();
 			gridConfStatuses.BeginUpdate();
 			gridConfStatuses.ListGridColumns.Clear();
 			gridConfStatuses.ListGridColumns.Add(new GridColumn(Lan.G(this,"Status"),100));
@@ -270,13 +272,13 @@ namespace OpenDental
 			butAddThankYouVerify.Enabled=allowEdit;
 			#endregion
 			#region Thank You Event Calendar Title
-			ClinicPref thankYouTitle=_listThankYouTitles.FirstOrDefault(x => x.ClinicNum==(_ecClinicCur?.ClinicNum??0));
-			if(thankYouTitle is null) {
-				thankYouTitle=_listThankYouTitles.FirstOrDefault(x => x.ClinicNum==0);
-			}
-			textThankYouTitle.Text=thankYouTitle.ValueString;
-			textThankYouTitle.Enabled=PrefC.GetBool(PrefName.ApptThankYouAutoEnabled) && allowEdit;
-			labelThankYouTitle.Enabled=PrefC.GetBool(PrefName.ApptThankYouAutoEnabled) && allowEdit;
+			//ClinicPref thankYouTitle=_listThankYouTitles.FirstOrDefault(x => x.ClinicNum==(_ecClinicCur?.ClinicNum??0));
+			//if(thankYouTitle is null) {
+			//	thankYouTitle=_listThankYouTitles.FirstOrDefault(x => x.ClinicNum==0);
+			//}
+			//textThankYouTitle.Text=thankYouTitle.ValueString;
+			//textThankYouTitle.Enabled=Prefs.GetBool(PrefName.ApptThankYouAutoEnabled) && allowEdit;
+			//labelThankYouTitle.Enabled=Prefs.GetBool(PrefName.ApptThankYouAutoEnabled) && allowEdit;
 			#endregion
 		}
 
@@ -291,8 +293,8 @@ namespace OpenDental
 			FillActivateButton(PrefName.ApptArrivalAutoEnabled,Lan.G(this,ApptReminderType.Arrival.GetDescription()),butActivateArrivals,textStatusArrivals);
 		}
 
-		private void FillActivateButton(PrefName prefEnabled,string serviceName,UI.Button button,TextBox textBoxStatus) {
-			if(PrefC.GetBool(prefEnabled)) {
+		private void FillActivateButton(string prefEnabled,string serviceName,UI.Button button,TextBox textBoxStatus) {
+			if(Prefs.GetBool(prefEnabled)) {
 				textBoxStatus.Text=serviceName+" : "+Lan.G(this,"Active");
 				textBoxStatus.BackColor=Color.FromArgb(236,255,236);//light green
 				textBoxStatus.ForeColor=Color.Black;//instead of disabled grey
@@ -434,13 +436,13 @@ namespace OpenDental
 
 		///<summary>Parses textThankYouTitle textbox into the appropriate ClinicPref in _listThankYouTitles.</summary>
 		private void ParseThankYouTitle() {
-			long clinicNum=_ecClinicCur?.ClinicNum??0;
-			ClinicPref clinicPref=_listThankYouTitles.FirstOrDefault(x => x.ClinicNum==clinicNum);
-			if(clinicPref is null) {
-				clinicPref=new ClinicPref(clinicNum,PrefName.ApptThankYouCalendarTitle,textThankYouTitle.Text);
-				_listThankYouTitles.Add(clinicPref);
-			}
-			clinicPref.ValueString=textThankYouTitle.Text;
+			//long clinicNum=_ecClinicCur?.ClinicNum??0;
+			//ClinicPref clinicPref=_listThankYouTitles.FirstOrDefault(x => x.ClinicNum==clinicNum);
+			//if(clinicPref is null) {
+			//	clinicPref=new ClinicPref(clinicNum,PrefName.ApptThankYouCalendarTitle,textThankYouTitle.Text);
+			//	_listThankYouTitles.Add(clinicPref);
+			//}
+			//clinicPref.ValueString=textThankYouTitle.Text;
 		}
 
 		///<summary>Switches the currently selected clinic over to using defaults. Also prompts user before continuing. 
@@ -501,43 +503,44 @@ namespace OpenDental
 
 		private void butActivateConfirm_Click(object sender,EventArgs e) {
 			//also validates office is signed up for confirmations.
-			if(ActivateEService(PrefName.ApptConfirmAutoEnabled,ApptReminderType.ConfirmationFutureDay,eServiceCode.ConfirmationRequest)) {
-				AddDefaults(ApptReminderType.ConfirmationFutureDay);//Add one default confirmation rule if none exists.
-			}
+			//if(ActivateEService(PrefName.ApptConfirmAutoEnabled,ApptReminderType.ConfirmationFutureDay,eServiceCode.ConfirmationRequest)) {
+			//	AddDefaults(ApptReminderType.ConfirmationFutureDay);//Add one default confirmation rule if none exists.
+			//}
 		}
 
 		private void butActivateReminder_Click(object sender,EventArgs e) {
-			if(ActivateEService(PrefName.ApptRemindAutoEnabled,ApptReminderType.Reminder)) {
-				AddDefaults(ApptReminderType.Reminder,null,TimeSpan.FromDays(2));//Add two default reminder rules if none exists.
-			}
+			//if(ActivateEService(PrefName.ApptRemindAutoEnabled,ApptReminderType.Reminder)) {
+			//	AddDefaults(ApptReminderType.Reminder,null,TimeSpan.FromDays(2));//Add two default reminder rules if none exists.
+			//}
 		}
 
 		private void butActivateThankYou_Click(object sender,EventArgs e) {
-			if(ActivateEService(PrefName.ApptThankYouAutoEnabled,ApptReminderType.ScheduleThankYou)) {
-				AddDefaults(ApptReminderType.ScheduleThankYou);//Add one default thankyou rule if none exists.
-			}
+			//if(ActivateEService(PrefName.ApptThankYouAutoEnabled,ApptReminderType.ScheduleThankYou)) {
+			//	AddDefaults(ApptReminderType.ScheduleThankYou);//Add one default thankyou rule if none exists.
+			//}
 		}
 
 		private void butActivateArrivals_Click(object sender,EventArgs e) {
 			//also valdates office is signed up for confirmations.
-			if(ActivateEService(PrefName.ApptArrivalAutoEnabled,ApptReminderType.Arrival,eServiceCode.ConfirmationRequest)) {
-				AddDefaults(ApptReminderType.Arrival);//Add one default arrival rule if none exists.
-			}
+			//if(ActivateEService(PrefName.ApptArrivalAutoEnabled,ApptReminderType.Arrival,eServiceCode.ConfirmationRequest)) {
+			//	AddDefaults(ApptReminderType.Arrival);//Add one default arrival rule if none exists.
+			//}
 		}
 
-		private bool ActivateEService(PrefName prefEnabled,ApptReminderType eService,eServiceCode? codeToValidate=null) {			
-			if(codeToValidate!=null && !WebServiceMainHQProxy.IsEServiceActive(_signupOut,(eServiceCode)codeToValidate)) { //Not yet activated with HQ.
-				MessageBox.Show($"You must first signup for {codeToValidate.GetDescription()} via the Signup tab before activating {codeToValidate.GetDescription()}.");
-				return false;
-			}
-			bool isAutoEnabled=PrefC.GetBool(prefEnabled);
-			isAutoEnabled=!isAutoEnabled;
-			Prefs.UpdateBool(prefEnabled,isAutoEnabled);
-			SecurityLogs.MakeLogEntry(Permissions.Setup,0,$"{eService.GetDescription()} "+(isAutoEnabled ? "activated" : "deactivated")+".");
-			Prefs.RefreshCache();
-			Signalods.SetInvalid(InvalidType.Prefs);
-			FillECRActivationButtons();
-			return isAutoEnabled;
+		private bool ActivateEService(string prefEnabled,ApptReminderType eService,eServiceCode? codeToValidate=null) {
+			//if(codeToValidate!=null && !WebServiceMainHQProxy.IsEServiceActive(_signupOut,(eServiceCode)codeToValidate)) { //Not yet activated with HQ.
+			//	MessageBox.Show($"You must first signup for {codeToValidate.GetDescription()} via the Signup tab before activating {codeToValidate.GetDescription()}.");
+			//	return false;
+			//}
+			//bool isAutoEnabled=Prefs.GetBool(prefEnabled);
+			//isAutoEnabled=!isAutoEnabled;
+			//Prefs.Set(prefEnabled,isAutoEnabled);
+			//SecurityLogs.MakeLogEntry(Permissions.Setup,0,$"{eService.GetDescription()} "+(isAutoEnabled ? "activated" : "deactivated")+".");
+			//Prefs.RefreshCache();
+			//Signalods.SetInvalid(InvalidType.Prefs);
+			//FillECRActivationButtons();
+			//return isAutoEnabled;
+			return false;
 		}
 
 		private void AddDefaults(ApptReminderType reminderType,params TimeSpan?[] arrTimeSpans) {

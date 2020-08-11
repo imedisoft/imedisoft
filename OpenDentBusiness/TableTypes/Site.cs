@@ -51,5 +51,7 @@ namespace OpenDentBusiness
 		public PlaceOfService PlaceService;
 
 		public Site Copy() => (Site)MemberwiseClone();
-	}
+
+		public override string ToString() => Description;
+    }
 }

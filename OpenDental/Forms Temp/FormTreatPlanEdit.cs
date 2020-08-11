@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using System.Collections.Generic;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 	/// <summary>
@@ -393,7 +394,7 @@ namespace OpenDental{
 			textDateTP.Text=PlanCur.DateTP.ToShortDateString();
 			textHeading.Text=PlanCur.Heading;
 			textNote.Text=PlanCur.Note;
-			if(PrefC.GetBool(PrefName.EasyHidePublicHealth)){
+			if(Prefs.GetBool(PrefName.EasyHidePublicHealth)){
 				labelResponsParty.Visible=false;
 				textResponsParty.Visible=false;
 				butPickResponsParty.Visible=false;
@@ -445,7 +446,7 @@ namespace OpenDental{
 			if(FormPS.DialogResult!=DialogResult.OK){
 				return;
 			}
-			PlanCur.ResponsParty=FormPS.SelectedPatNum;
+			PlanCur.ResponsParty=FormPS.SelectedPatientId;
 			textResponsParty.Text=Patients.GetLim(PlanCur.ResponsParty).GetNameLF();
 		}
 
@@ -502,7 +503,7 @@ namespace OpenDental{
 
 		private void butPickPresenter_Click(object sender,EventArgs e) {
 			FormUserPick FormUP=new FormUserPick();
-			List<Userod> listUsers=Userods.GetWhere(x => !x.IsHidden && (x.ClinicIsRestricted == false || x.ClinicNum == Clinics.ClinicNum));
+			List<Userod> listUsers=Userods.GetWhere(x => !x.IsHidden && (x.ClinicIsRestricted == false || x.ClinicId == Clinics.ClinicNum));
 			FormUP.ListUserodsFiltered=listUsers;
 			if(_presenterCur!=null) {
 				FormUP.SuggestedUserNum=_presenterCur.Id;

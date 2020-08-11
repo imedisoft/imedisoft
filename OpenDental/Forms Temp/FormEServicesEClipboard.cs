@@ -13,14 +13,14 @@ namespace OpenDental
     public partial class FormEServicesEClipboard:ODForm {
 		#region Fields - Private
 		///<summary>Helper to manager prefs relating to eClipboard and getting them to/from the db.</summary>
-		private ClinicPrefHelper _clinicPrefHelperEClipboard=new ClinicPrefHelper(
-			PrefName.EClipboardUseDefaults,
-			PrefName.EClipboardAllowSelfCheckIn,
-			PrefName.EClipboardAllowSelfPortraitOnCheckIn,
-			PrefName.EClipboardPresentAvailableFormsOnCheckIn,
-			PrefName.EClipboardCreateMissingFormsOnCheckIn,
-			PrefName.EClipboardPopupKioskOnCheckIn,
-			PrefName.EClipboardMessageComplete);
+		//private ClinicPrefHelper _clinicPrefHelperEClipboard=new ClinicPrefHelper(
+		//	PrefName.EClipboardUseDefaults,
+		//	PrefName.EClipboardAllowSelfCheckIn,
+		//	PrefName.EClipboardAllowSelfPortraitOnCheckIn,
+		//	PrefName.EClipboardPresentAvailableFormsOnCheckIn,
+		//	PrefName.EClipboardCreateMissingFormsOnCheckIn,
+		//	PrefName.EClipboardPopupKioskOnCheckIn,
+		//	PrefName.EClipboardMessageComplete);
 		private bool _doSetInvalidClinicPrefs=false;
 		private bool _eClipboardAllowEdit;
 		///<summary>A list of all eclipboard sheet defs that are edited in this window. Synced with the database list on the ok click.</summary>
@@ -194,121 +194,121 @@ namespace OpenDental
 
 		#region Methods - Event Handlers Prefs Section
 		private void CheckEClipboardUseDefaults_Click(object sender, EventArgs e){
-			_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardUseDefaults,clinicPickerEClipboard.SelectedClinicNum,
-				POut.Bool(checkEClipboardUseDefaults.Checked));
-			if(checkEClipboardUseDefaults.Checked) {//If set to true, set the behavior rules and sheets to the default
-				EClipboardSetControlsToPrefDefaults();
-				_listEClipboardSheets.RemoveAll(x => _clinicNumEClipboardTab!=0 && x.ClinicNum==_clinicNumEClipboardTab);
-			}
-			else{
-				//user unchecked the box, but nothing should change.  Other 5 checkboxes just stay with the old default values.  They can edit from here, which would override the defaults.
-			}
-			//disable the ability to edit rules if applicable
-			FillGridEClipboardSheetInUse();
-			SetUIEClipboardEnabled();
+			//_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardUseDefaults,clinicPickerEClipboard.SelectedClinicNum,
+			//	POut.Bool(checkEClipboardUseDefaults.Checked));
+			//if(checkEClipboardUseDefaults.Checked) {//If set to true, set the behavior rules and sheets to the default
+			//	EClipboardSetControlsToPrefDefaults();
+			//	_listEClipboardSheets.RemoveAll(x => _clinicNumEClipboardTab!=0 && x.ClinicNum==_clinicNumEClipboardTab);
+			//}
+			//else{
+			//	//user unchecked the box, but nothing should change.  Other 5 checkboxes just stay with the old default values.  They can edit from here, which would override the defaults.
+			//}
+			////disable the ability to edit rules if applicable
+			//FillGridEClipboardSheetInUse();
+			//SetUIEClipboardEnabled();
 		}
 
 		private void CheckEClipboardAllowCheckIn_Click(object sender, EventArgs e){
-			string newVal=POut.Bool(checkEClipboardAllowCheckIn.Checked);
-			_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardAllowSelfCheckIn,clinicPickerEClipboard.SelectedClinicNum, newVal);
-			UpdateEClipboardDefaultsIfNeeded(PrefName.EClipboardAllowSelfCheckIn,newVal);
+			//string newVal=POut.Bool(checkEClipboardAllowCheckIn.Checked);
+			//_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardAllowSelfCheckIn,clinicPickerEClipboard.SelectedClinicNum, newVal);
+			//UpdateEClipboardDefaultsIfNeeded(PrefName.EClipboardAllowSelfCheckIn,newVal);
 		}
 
 		private void CheckEClipboardAllowSelfPortrait_Click(object sender, EventArgs e){
-			string newVal=POut.Bool(checkEClipboardAllowSelfPortrait.Checked);
-			_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardAllowSelfPortraitOnCheckIn,clinicPickerEClipboard.SelectedClinicNum, newVal);
-			UpdateEClipboardDefaultsIfNeeded(PrefName.EClipboardAllowSelfPortraitOnCheckIn,newVal);
+			//string newVal=POut.Bool(checkEClipboardAllowSelfPortrait.Checked);
+			//_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardAllowSelfPortraitOnCheckIn,clinicPickerEClipboard.SelectedClinicNum, newVal);
+			//UpdateEClipboardDefaultsIfNeeded(PrefName.EClipboardAllowSelfPortraitOnCheckIn,newVal);
 		}
 
 		private void CheckEClipboardAllowSheets_Click(object sender, EventArgs e){
-			string newVal=POut.Bool(checkEClipboardAllowSheets.Checked);
-			_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardPresentAvailableFormsOnCheckIn,clinicPickerEClipboard.SelectedClinicNum,newVal);
-			UpdateEClipboardDefaultsIfNeeded(PrefName.EClipboardPresentAvailableFormsOnCheckIn,newVal);
+			//string newVal=POut.Bool(checkEClipboardAllowSheets.Checked);
+			//_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardPresentAvailableFormsOnCheckIn,clinicPickerEClipboard.SelectedClinicNum,newVal);
+			//UpdateEClipboardDefaultsIfNeeded(PrefName.EClipboardPresentAvailableFormsOnCheckIn,newVal);
 		}
 
 		private void CheckEClipboardCreateMissingForms_Click(object sender, EventArgs e){
-			SetUIEClipboardEnabled();
-			string newVal=POut.Bool(checkEClipboardCreateMissingForms.Checked);
-			_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardCreateMissingFormsOnCheckIn,clinicPickerEClipboard.SelectedClinicNum,newVal);
-			UpdateEClipboardDefaultsIfNeeded(PrefName.EClipboardCreateMissingFormsOnCheckIn,newVal);
+			//SetUIEClipboardEnabled();
+			//string newVal=POut.Bool(checkEClipboardCreateMissingForms.Checked);
+			//_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardCreateMissingFormsOnCheckIn,clinicPickerEClipboard.SelectedClinicNum,newVal);
+			//UpdateEClipboardDefaultsIfNeeded(PrefName.EClipboardCreateMissingFormsOnCheckIn,newVal);
 		}
 
 		private void CheckEClipboardPopupKiosk_Click(object sender, EventArgs e){
-			string newVal=POut.Bool(checkEClipboardPopupKiosk.Checked);
-			_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardPopupKioskOnCheckIn,clinicPickerEClipboard.SelectedClinicNum,newVal);
-			UpdateEClipboardDefaultsIfNeeded(PrefName.EClipboardPopupKioskOnCheckIn,newVal);
+			//string newVal=POut.Bool(checkEClipboardPopupKiosk.Checked);
+			//_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardPopupKioskOnCheckIn,clinicPickerEClipboard.SelectedClinicNum,newVal);
+			//UpdateEClipboardDefaultsIfNeeded(PrefName.EClipboardPopupKioskOnCheckIn,newVal);
 		}
 
 		private void TextEClipboardMessage_TextChanged(object sender, EventArgs e){
-			string newVal=textEClipboardMessage.Text;
-			_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardMessageComplete,clinicPickerEClipboard.SelectedClinicNum,newVal);
-			UpdateEClipboardDefaultsIfNeeded(PrefName.EClipboardMessageComplete,newVal);
+			//string newVal=textEClipboardMessage.Text;
+			//_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardMessageComplete,clinicPickerEClipboard.SelectedClinicNum,newVal);
+			//UpdateEClipboardDefaultsIfNeeded(PrefName.EClipboardMessageComplete,newVal);
 		}
 		#endregion Methods - Event Handlers Prefs Section
 
 		#region Methods - Private
 		private void EClipboardPushPrefs() {
-			//First get all of the clinic nums that have preference changes
-			List<long> listClinicNumsWithChanges=_clinicPrefHelperEClipboard.GetClinicsWithChanges();
-			if(listClinicNumsWithChanges.Contains(0)) {
-				//Default clinic has changed so find any clinics that used defaults. They have changed by association.
-				listClinicNumsWithChanges.AddRange(
-					//The default option only appears for users that don't have restricted clinic access, so start with the list of all non-hidden clinics
-					Clinics.GetDeepCopy(isShort:true)
-					//Filter to only those clinics that currently use defaults (they have no rules of their own).
-					.Where(x => ClinicPrefs.GetBool(PrefName.EClipboardUseDefaults,x.ClinicNum))
-					//Only need the clinicNums.
-					.Select(x => x.ClinicNum)
-				);
-			}
-			//Save to db.  Form's _doSetInvalidClinicPrefs will trigger signals.
-			if(_clinicPrefHelperEClipboard.SyncAllPrefs()) {
-				_doSetInvalidClinicPrefs=true;
-			}
-			//Push all of the new preference values to the clinic nums that have preference changes
-			foreach(long clinicNum in listClinicNumsWithChanges.Distinct()) {
-				OpenDentBusiness.WebTypes.PushNotificationUtils.CI_NewEClipboardPrefs(clinicNum);
-			}
+			////First get all of the clinic nums that have preference changes
+			//List<long> listClinicNumsWithChanges=_clinicPrefHelperEClipboard.GetClinicsWithChanges();
+			//if(listClinicNumsWithChanges.Contains(0)) {
+			//	//Default clinic has changed so find any clinics that used defaults. They have changed by association.
+			//	listClinicNumsWithChanges.AddRange(
+			//		//The default option only appears for users that don't have restricted clinic access, so start with the list of all non-hidden clinics
+			//		Clinics.GetDeepCopy(isShort:true)
+			//		//Filter to only those clinics that currently use defaults (they have no rules of their own).
+			//		.Where(x => ClinicPrefs.GetBool(PrefName.EClipboardUseDefaults,x.ClinicNum))
+			//		//Only need the clinicNums.
+			//		.Select(x => x.ClinicNum)
+			//	);
+			//}
+			////Save to db.  Form's _doSetInvalidClinicPrefs will trigger signals.
+			//if(_clinicPrefHelperEClipboard.SyncAllPrefs()) {
+			//	_doSetInvalidClinicPrefs=true;
+			//}
+			////Push all of the new preference values to the clinic nums that have preference changes
+			//foreach(long clinicNum in listClinicNumsWithChanges.Distinct()) {
+			//	OpenDentBusiness.WebTypes.PushNotificationUtils.CI_NewEClipboardPrefs(clinicNum);
+			//}
 		}
 
 		///<summary>Doesn't touch the Defaults checkbox itself.  Sets the 5 checkboxes and the textbox that are involved in prefs.  Importantly, it also sends those same default values to the list of clinicprefs in memory where they will later be synched.</summary>
 		private void EClipboardSetControlsToPrefDefaults(){
-			//EClipboardUseDefaults not included here
-			checkEClipboardAllowCheckIn.Checked=_clinicPrefHelperEClipboard.GetDefaultBoolVal(PrefName.EClipboardAllowSelfCheckIn);
-			checkEClipboardAllowSelfPortrait.Checked=_clinicPrefHelperEClipboard.GetDefaultBoolVal(PrefName.EClipboardAllowSelfPortraitOnCheckIn);
-			checkEClipboardAllowSheets.Checked=_clinicPrefHelperEClipboard.GetDefaultBoolVal(PrefName.EClipboardPresentAvailableFormsOnCheckIn);
-			checkEClipboardCreateMissingForms.Checked=_clinicPrefHelperEClipboard.GetDefaultBoolVal(PrefName.EClipboardCreateMissingFormsOnCheckIn);
-			checkEClipboardPopupKiosk.Checked=_clinicPrefHelperEClipboard.GetDefaultBoolVal(PrefName.EClipboardPopupKioskOnCheckIn);
-			textEClipboardMessage.Text=_clinicPrefHelperEClipboard.GetDefaultStringVal(PrefName.EClipboardMessageComplete);
-			_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardAllowSelfCheckIn,clinicPickerEClipboard.SelectedClinicNum,
-				POut.Bool(checkEClipboardAllowCheckIn.Checked));
-			_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardAllowSelfPortraitOnCheckIn,clinicPickerEClipboard.SelectedClinicNum,
-				POut.Bool(checkEClipboardAllowSelfPortrait.Checked));
-			_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardPresentAvailableFormsOnCheckIn,clinicPickerEClipboard.SelectedClinicNum,
-				POut.Bool(checkEClipboardAllowSheets.Checked));
-			_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardCreateMissingFormsOnCheckIn,clinicPickerEClipboard.SelectedClinicNum,
-				POut.Bool(checkEClipboardCreateMissingForms.Checked));
-			_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardPopupKioskOnCheckIn,clinicPickerEClipboard.SelectedClinicNum,
-				POut.Bool(checkEClipboardPopupKiosk.Checked));
-			_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardMessageComplete,clinicPickerEClipboard.SelectedClinicNum,
-				textEClipboardMessage.Text);
+			////EClipboardUseDefaults not included here
+			//checkEClipboardAllowCheckIn.Checked=_clinicPrefHelperEClipboard.GetDefaultBoolVal(PrefName.EClipboardAllowSelfCheckIn);
+			//checkEClipboardAllowSelfPortrait.Checked=_clinicPrefHelperEClipboard.GetDefaultBoolVal(PrefName.EClipboardAllowSelfPortraitOnCheckIn);
+			//checkEClipboardAllowSheets.Checked=_clinicPrefHelperEClipboard.GetDefaultBoolVal(PrefName.EClipboardPresentAvailableFormsOnCheckIn);
+			//checkEClipboardCreateMissingForms.Checked=_clinicPrefHelperEClipboard.GetDefaultBoolVal(PrefName.EClipboardCreateMissingFormsOnCheckIn);
+			//checkEClipboardPopupKiosk.Checked=_clinicPrefHelperEClipboard.GetDefaultBoolVal(PrefName.EClipboardPopupKioskOnCheckIn);
+			//textEClipboardMessage.Text=_clinicPrefHelperEClipboard.GetDefaultStringVal(PrefName.EClipboardMessageComplete);
+			//_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardAllowSelfCheckIn,clinicPickerEClipboard.SelectedClinicNum,
+			//	POut.Bool(checkEClipboardAllowCheckIn.Checked));
+			//_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardAllowSelfPortraitOnCheckIn,clinicPickerEClipboard.SelectedClinicNum,
+			//	POut.Bool(checkEClipboardAllowSelfPortrait.Checked));
+			//_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardPresentAvailableFormsOnCheckIn,clinicPickerEClipboard.SelectedClinicNum,
+			//	POut.Bool(checkEClipboardAllowSheets.Checked));
+			//_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardCreateMissingFormsOnCheckIn,clinicPickerEClipboard.SelectedClinicNum,
+			//	POut.Bool(checkEClipboardCreateMissingForms.Checked));
+			//_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardPopupKioskOnCheckIn,clinicPickerEClipboard.SelectedClinicNum,
+			//	POut.Bool(checkEClipboardPopupKiosk.Checked));
+			//_clinicPrefHelperEClipboard.ValChangedByUser(PrefName.EClipboardMessageComplete,clinicPickerEClipboard.SelectedClinicNum,
+			//	textEClipboardMessage.Text);
 		}
 
 		///<summary>Sets the Defaults checkbox itself.  Then sets the 5 other checkboxes and the textbox that are involved in prefs.  Sets them based on the values in the local clinicpref list.  Does not change any of those values.  Called only on startup.</summary>
 		private void EClipboardSetControlsForClinicPrefs(){
-			long clinicNumSelected=clinicPickerEClipboard.SelectedClinicNum;
-			checkEClipboardUseDefaults.Checked=_clinicPrefHelperEClipboard.GetBoolVal(PrefName.EClipboardUseDefaults,clinicNumSelected);
-			if(checkEClipboardUseDefaults.Checked) {
-				EClipboardSetControlsToPrefDefaults();
-			}
-			else {
-				checkEClipboardAllowCheckIn.Checked=_clinicPrefHelperEClipboard.GetBoolVal(PrefName.EClipboardAllowSelfCheckIn,clinicNumSelected);
-				checkEClipboardAllowSelfPortrait.Checked=_clinicPrefHelperEClipboard.GetBoolVal(PrefName.EClipboardAllowSelfPortraitOnCheckIn,clinicNumSelected);
-				checkEClipboardAllowSheets.Checked=_clinicPrefHelperEClipboard.GetBoolVal(PrefName.EClipboardPresentAvailableFormsOnCheckIn,clinicNumSelected);
-				checkEClipboardCreateMissingForms.Checked=_clinicPrefHelperEClipboard.GetBoolVal(PrefName.EClipboardCreateMissingFormsOnCheckIn,clinicNumSelected);
-				checkEClipboardPopupKiosk.Checked=_clinicPrefHelperEClipboard.GetBoolVal(PrefName.EClipboardPopupKioskOnCheckIn,clinicNumSelected);
-				textEClipboardMessage.Text=_clinicPrefHelperEClipboard.GetStringVal(PrefName.EClipboardMessageComplete,clinicNumSelected);
-			}
+			//long clinicNumSelected=clinicPickerEClipboard.SelectedClinicNum;
+			//checkEClipboardUseDefaults.Checked=_clinicPrefHelperEClipboard.GetBoolVal(PrefName.EClipboardUseDefaults,clinicNumSelected);
+			//if(checkEClipboardUseDefaults.Checked) {
+			//	EClipboardSetControlsToPrefDefaults();
+			//}
+			//else {
+			//	checkEClipboardAllowCheckIn.Checked=_clinicPrefHelperEClipboard.GetBoolVal(PrefName.EClipboardAllowSelfCheckIn,clinicNumSelected);
+			//	checkEClipboardAllowSelfPortrait.Checked=_clinicPrefHelperEClipboard.GetBoolVal(PrefName.EClipboardAllowSelfPortraitOnCheckIn,clinicNumSelected);
+			//	checkEClipboardAllowSheets.Checked=_clinicPrefHelperEClipboard.GetBoolVal(PrefName.EClipboardPresentAvailableFormsOnCheckIn,clinicNumSelected);
+			//	checkEClipboardCreateMissingForms.Checked=_clinicPrefHelperEClipboard.GetBoolVal(PrefName.EClipboardCreateMissingFormsOnCheckIn,clinicNumSelected);
+			//	checkEClipboardPopupKiosk.Checked=_clinicPrefHelperEClipboard.GetBoolVal(PrefName.EClipboardPopupKioskOnCheckIn,clinicNumSelected);
+			//	textEClipboardMessage.Text=_clinicPrefHelperEClipboard.GetStringVal(PrefName.EClipboardMessageComplete,clinicNumSelected);
+			//}
 		}
 
 		///<summary>Fills listEClipboardSheetsAvailable and small grid to its right.</summary>
@@ -458,12 +458,12 @@ namespace OpenDental
 			gridEClipboardSheetsInUse.SetSelected(swapIdx,setValue:true);
 		}
 
-		private void UpdateEClipboardDefaultsIfNeeded(PrefName prefName,string newVal) {
-			if(_clinicNumEClipboardTab==0) { //we are making changes to the default
-				foreach(ClinicPref cp in _clinicPrefHelperEClipboard.GetWhere(PrefName.EClipboardUseDefaults,"1")) {
-					_clinicPrefHelperEClipboard.ValChangedByUser(prefName,cp.ClinicNum,newVal);
-				}
-			}
+		private void UpdateEClipboardDefaultsIfNeeded(string prefName,string newVal) {
+			//if(_clinicNumEClipboardTab==0) { //we are making changes to the default
+			//	foreach(ClinicPref cp in _clinicPrefHelperEClipboard.GetWhere(PrefName.EClipboardUseDefaults,"1")) {
+			//		_clinicPrefHelperEClipboard.ValChangedByUser(prefName,cp.ClinicNum,newVal);
+			//	}
+			//}
 		}
 		#endregion Methods - Private
 

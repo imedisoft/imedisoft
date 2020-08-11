@@ -401,7 +401,7 @@ namespace OpenDentBusiness{
 						IsOutsideSendWindow=true;
 					}
 				}
-				string maxTextsPrefVal=ClinicPrefs.GetPrefValue(PrefName.WebSchedAsapTextLimit,clinicNum);
+				string maxTextsPrefVal=ClinicPrefs.GetString(clinicNum,PrefName.WebSchedAsapTextLimit);
 				_maxTextsPerDay=String.IsNullOrWhiteSpace(maxTextsPrefVal) ? int.MaxValue : PIn.Int(maxTextsPrefVal); //The pref may be set to blank to have no limit
 				DtTextSendEnd=DtStartSendText.Date.Add(timeAutoCommEnd);
 				_dtSlotStart=dtSlotStart;

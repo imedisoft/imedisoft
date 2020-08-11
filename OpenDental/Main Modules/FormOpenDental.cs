@@ -499,7 +499,7 @@ namespace OpenDental
 			FillSignalButtons();
 			ContrManage2.InitializeOnStartup();//so that when a signal is received, it can handle it.
 											   //Images module.  The other modules are in constructor because they don't need the pref.
-			if (PrefC.GetBoolSilent(PrefName.ImagesModuleUsesOld2020, false))
+			if (Prefs.GetBool(PrefName.ImagesModuleUsesOld2020, false))
 			{
 				ContrImages2 = new ContrImages() { Visible = false };
 				ContrImages2.Dock = DockStyle.Fill;
@@ -526,16 +526,16 @@ namespace OpenDental
 			{//Create A to Z unsupported on Unix for now.
 				menuItemCreateAtoZFolders.Visible = false;
 			}
-			if (!PrefC.GetBool(PrefName.ProcLockingIsAllowed))
+			if (!Prefs.GetBool(PrefName.ProcLockingIsAllowed))
 			{
 				menuItemProcLockTool.Visible = false;
 			}
 			//Query Monitor does not capture queries from a Middle Tier client, only show Query Monitor menu item when directly connected to the database.
 			menuItemQueryMonitor.Visible = true;
-			if (Security.IsAuthorized(Permissions.ProcCodeEdit, true) && !PrefC.GetBool(PrefName.ADAdescriptionsReset))
+			if (Security.IsAuthorized(Permissions.ProcCodeEdit, true) && !Prefs.GetBool(PrefName.ADAdescriptionsReset))
 			{
 				ProcedureCodes.ResetADAdescriptions();
-				Prefs.UpdateBool(PrefName.ADAdescriptionsReset, true);
+				Prefs.Set(PrefName.ADAdescriptionsReset, true);
 			}
 			//Spawn a thread so that attempting to start services on this computer does not hinder the loading time of Open Dental.
 			//This is placed before login on pupose so it will run even when the user does not login properly.
@@ -568,7 +568,7 @@ namespace OpenDental
 				}
 			}
 
-			IsTreatPlanSortByTooth = PrefC.GetBool(PrefName.TreatPlanSortByTooth); //not a great place for this, but we don't have a better alternative.
+			IsTreatPlanSortByTooth = Prefs.GetBool(PrefName.TreatPlanSortByTooth); //not a great place for this, but we don't have a better alternative.
 			if (userControlTasks1.Visible)
 			{
 				userControlTasks1.InitializeOnStartup();
@@ -584,6 +584,7 @@ namespace OpenDental
 			{
 				moduleBar.SelectedModule = EnumModuleType.Family;
 			}
+
 			moduleBar.Invalidate();
 			LayoutToolBar();
 			RefreshMenuReports();
@@ -592,24 +593,34 @@ namespace OpenDental
 			{
 				MessageBox.Show("You do not have permission to use any modules.");
 			}
+
 			Bridges.Trojan.StartupCheck();
 			FormUAppoint.StartThreadIfEnabled();
 			Bridges.ICat.StartFileWatcher();
 			Bridges.TigerView.StartFileWatcher();
-			if (PrefC.GetDate(PrefName.BackupReminderLastDateRun).AddMonths(1) < DateTime.Today)
-			{
-				FormBackupReminder FormBR = new FormBackupReminder();
-				FormBR.ShowDialog();
-				if (FormBR.DialogResult == DialogResult.OK)
+
+
+			// Show a backup reminder once a month...
+			if (Prefs.GetDateTime(PrefName.BackupReminderLastDateRun).AddMonths(1) < DateTime.UtcNow)
+            {
+				using var formBackupReminder = new FormBackupReminder();
+				if (formBackupReminder.ShowDialog(this) == DialogResult.OK)
 				{
-					Prefs.UpdateDateT(PrefName.BackupReminderLastDateRun, DateTimeOD.Today);
+					Prefs.Set(PrefName.BackupReminderLastDateRun, DateTimeOD.Today);
 				}
 				else
 				{
 					Application.Exit();
+
 					return;
 				}
 			}
+
+
+
+
+
+
 			FillPatientButton(null);
 			ProcessCommandLine(CommandLineArgs);
 			ODException.SwallowAnyException(() =>
@@ -646,7 +657,7 @@ namespace OpenDental
 				formPatientSelect.ShowDialog();
 				if (formPatientSelect.DialogResult == DialogResult.OK)
 				{
-					CurPatNum = formPatientSelect.SelectedPatNum;
+					CurPatNum = formPatientSelect.SelectedPatientId;
 					pat = Patients.GetPat(CurPatNum);
 					if (ContrChart2.Visible)
 					{
@@ -662,7 +673,7 @@ namespace OpenDental
 
 			menuItemAccount.MenuItems.Clear();
 
-			if (PrefC.GetString(PrefName.LanguageAndRegion) != CultureInfo.CurrentCulture.Name && !ComputerPrefs.LocalComputer.NoShowLanguage)
+			if (Prefs.GetString(PrefName.LanguageAndRegion) != CultureInfo.CurrentCulture.Name && !ComputerPrefs.LocalComputer.NoShowLanguage)
 			{
 				if (MsgBox.Show(MsgBoxButtons.YesNo, "Warning, having mismatched language setting between the workstation and server may cause the program "
 					+ "to behave in unexpected ways. Would you like to view the setup window?"))
@@ -698,8 +709,8 @@ namespace OpenDental
 				}
 			}
 			//Only show enterprise setup if it is enabled
-			menuItemEnterprise.Visible = PrefC.GetBool(PrefName.ShowFeatureEnterprise);
-			menuItemReactivation.Visible = PrefC.GetBool(PrefName.ShowFeatureReactivations);
+			menuItemEnterprise.Visible = Prefs.GetBool(PrefName.ShowFeatureEnterprise);
+			menuItemReactivation.Visible = Prefs.GetBool(PrefName.ShowFeatureReactivations);
 			ComputerPrefs.UpdateLocalComputerOS();
 			WikiPages.NavPageDelegate = S_WikiLoadPage;
 			//We are about to start signal processing for the first time so set the initial refresh timestamp.
@@ -799,7 +810,7 @@ namespace OpenDental
 				return false;
 			}
 
-			string updateComputerName = PrefC.GetStringSilent(PrefName.UpdateInProgressOnComputerName);
+			string updateComputerName = Prefs.GetString(PrefName.UpdateInProgressOnComputerName);
 			if (updateComputerName != "" && Environment.MachineName.ToUpper() != updateComputerName.ToUpper())
 			{
 				if (isSilentUpdate)
@@ -825,7 +836,7 @@ namespace OpenDental
 
 
 
-											//menuItemMergeDatabases.Visible=PrefC.GetBool(PrefName.RandomPrimaryKeys");
+											//menuItemMergeDatabases.Visible=Prefs.GetBool(PrefName.RandomPrimaryKeys");
 			return true;
 		}
 
@@ -847,7 +858,7 @@ namespace OpenDental
 			#region IvalidType.Prefs
 			if (arrayITypes.Contains(InvalidType.Prefs) || isAll)
 			{
-				if (PrefC.GetBool(PrefName.EasyHidePublicHealth))
+				if (Prefs.GetBool(PrefName.EasyHidePublicHealth))
 				{
 					menuItemSchools.Visible = false;
 					menuItemCounties.Visible = false;
@@ -859,7 +870,7 @@ namespace OpenDental
 					menuItemCounties.Visible = true;
 					menuItemScreening.Visible = true;
 				}
-				if (PrefC.GetBool(PrefName.EasyNoClinics))
+				if (Prefs.GetBool(PrefName.EasyNoClinics))
 				{
 					menuItemClinics.Visible = false;
 					menuClinics.Visible = false;
@@ -871,7 +882,7 @@ namespace OpenDental
 				}
 				//See other solution @3401 for past commented out code.
 				moduleBar.RefreshButtons();
-				if (PrefC.GetBool(PrefName.EasyHideDentalSchools))
+				if (Prefs.GetBool(PrefName.EasyHideDentalSchools))
 				{
 					menuItemSchoolClass.Visible = false;
 					menuItemSchoolCourses.Visible = false;
@@ -887,7 +898,7 @@ namespace OpenDental
 					menuItemRequirementsNeeded.Visible = true;
 					menuItemReqStudents.Visible = true;
 				}
-				if (PrefC.GetBool(PrefName.EasyHideRepeatCharges))
+				if (Prefs.GetBool(PrefName.EasyHideRepeatCharges))
 				{
 					menuItemRepeatingCharges.Visible = false;
 				}
@@ -909,7 +920,7 @@ namespace OpenDental
 				menuItemCustomerManage.Visible = false;
 				menuItemNewCropBilling.Visible = false;
 
-				menuFeeSchedGroups.Visible = PrefC.GetBool(PrefName.ShowFeeSchedGroups);
+				menuFeeSchedGroups.Visible = Prefs.GetBool(PrefName.ShowFeeSchedGroups);
 				CheckCustomReports();
 				if (NeedsRedraw("ChartModule"))
 				{
@@ -917,7 +928,7 @@ namespace OpenDental
 				}
 				if (NeedsRedraw("TaskLists"))
 				{
-					if (PrefC.GetBool(PrefName.TaskListAlwaysShowsAtBottom))
+					if (Prefs.GetBool(PrefName.TaskListAlwaysShowsAtBottom))
 					{//Refreshing task list here may not be the best course of action.
 					 //separate if statement to prevent database call if not showing task list at bottom to begin with
 					 //ComputerPref computerPref = ComputerPrefs.GetForLocalComputer();
@@ -1012,7 +1023,7 @@ namespace OpenDental
 			#region InvalidType.Programs OR InvalidType.Prefs
 			if (arrayITypes.Contains(InvalidType.Programs) || arrayITypes.Contains(InvalidType.Prefs) || isAll)
 			{
-				if (PrefC.GetBool(PrefName.EasyBasicModules))
+				if (Prefs.GetBool(PrefName.EasyBasicModules))
 				{
 					moduleBar.SetVisible(EnumModuleType.TreatPlan, false);
 					moduleBar.SetVisible(EnumModuleType.Images, false);
@@ -1087,7 +1098,7 @@ namespace OpenDental
 				{
 					ContrChart2.LayoutToolBar();
 				}
-				if (PrefC.GetBoolSilent(PrefName.ImagesModuleUsesOld2020, false))
+				if (Prefs.GetBool(PrefName.ImagesModuleUsesOld2020, false))
 				{
 					if (ContrImages2 != null)
 					{//can be null on startup
@@ -1120,16 +1131,16 @@ namespace OpenDental
 			dictChartPrefsCache.Add("GraphicsUseHardware", ComputerPrefs.LocalComputer.GraphicsUseHardware);
 			dictChartPrefsCache.Add("PreferredPixelFormatNum", ComputerPrefs.LocalComputer.PreferredPixelFormatNum);
 			dictChartPrefsCache.Add("GraphicsSimple", ComputerPrefs.LocalComputer.GraphicsSimple);
-			dictChartPrefsCache.Add(PrefName.ShowFeatureEhr.ToString(), PrefC.GetBool(PrefName.ShowFeatureEhr));
+			dictChartPrefsCache.Add(PrefName.ShowFeatureEhr.ToString(), Prefs.GetBool(PrefName.ShowFeatureEhr));
 			dictChartPrefsCache.Add("DirectXFormat", ComputerPrefs.LocalComputer.DirectXFormat);
 			//Task list drawing prefs
 			dictTaskListPrefsCache.Add("TaskDock", ComputerPrefs.LocalComputer.TaskDock);
 			dictTaskListPrefsCache.Add("TaskY", ComputerPrefs.LocalComputer.TaskY);
 			dictTaskListPrefsCache.Add("TaskX", ComputerPrefs.LocalComputer.TaskX);
-			dictTaskListPrefsCache.Add(PrefName.TaskListAlwaysShowsAtBottom.ToString(), PrefC.GetBool(PrefName.TaskListAlwaysShowsAtBottom));
-			dictTaskListPrefsCache.Add(PrefName.TasksUseRepeating.ToString(), PrefC.GetBool(PrefName.TasksUseRepeating));
-			dictTaskListPrefsCache.Add(PrefName.TasksNewTrackedByUser.ToString(), PrefC.GetBool(PrefName.TasksNewTrackedByUser));
-			dictTaskListPrefsCache.Add(PrefName.TasksShowOpenTickets.ToString(), PrefC.GetBool(PrefName.TasksShowOpenTickets));
+			dictTaskListPrefsCache.Add(PrefName.TaskListAlwaysShowsAtBottom.ToString(), Prefs.GetBool(PrefName.TaskListAlwaysShowsAtBottom));
+			dictTaskListPrefsCache.Add(PrefName.TasksUseRepeating.ToString(), Prefs.GetBool(PrefName.TasksUseRepeating));
+			dictTaskListPrefsCache.Add(PrefName.TasksNewTrackedByUser.ToString(), Prefs.GetBool(PrefName.TasksNewTrackedByUser));
+			dictTaskListPrefsCache.Add(PrefName.TasksShowOpenTickets.ToString(), Prefs.GetBool(PrefName.TasksShowOpenTickets));
 			dictTaskListPrefsCache.Add("TaskKeepListHidden", ComputerPrefs.LocalComputer.TaskKeepListHidden);
 			if (Security.IsAuthorized(Permissions.UserQueryAdmin, true))
 			{
@@ -1154,7 +1165,7 @@ namespace OpenDental
 							|| ComputerPrefs.LocalComputer.GraphicsUseHardware != (bool)dictChartPrefsCache["GraphicsUseHardware"]
 							|| ComputerPrefs.LocalComputer.PreferredPixelFormatNum != (int)dictChartPrefsCache["PreferredPixelFormatNum"]
 							|| ComputerPrefs.LocalComputer.GraphicsSimple != (DrawingMode)dictChartPrefsCache["GraphicsSimple"]
-							|| PrefC.GetBool(PrefName.ShowFeatureEhr) != (bool)dictChartPrefsCache["ShowFeatureEhr"]
+							|| Prefs.GetBool(PrefName.ShowFeatureEhr) != (bool)dictChartPrefsCache["ShowFeatureEhr"]
 							|| ComputerPrefs.LocalComputer.DirectXFormat != (string)dictChartPrefsCache["DirectXFormat"])
 						{
 							return true;
@@ -1165,10 +1176,10 @@ namespace OpenDental
 							|| ComputerPrefs.LocalComputer.TaskDock != (int)dictTaskListPrefsCache["TaskDock"] //Checking for task list redrawing
 							|| ComputerPrefs.LocalComputer.TaskY != (int)dictTaskListPrefsCache["TaskY"]
 							|| ComputerPrefs.LocalComputer.TaskX != (int)dictTaskListPrefsCache["TaskX"]
-							|| PrefC.GetBool(PrefName.TaskListAlwaysShowsAtBottom) != (bool)dictTaskListPrefsCache["TaskListAlwaysShowsAtBottom"]
-							|| PrefC.GetBool(PrefName.TasksUseRepeating) != (bool)dictTaskListPrefsCache["TasksUseRepeating"]
-							|| PrefC.GetBool(PrefName.TasksNewTrackedByUser) != (bool)dictTaskListPrefsCache["TasksNewTrackedByUser"]
-							|| PrefC.GetBool(PrefName.TasksShowOpenTickets) != (bool)dictTaskListPrefsCache["TasksShowOpenTickets"]
+							|| Prefs.GetBool(PrefName.TaskListAlwaysShowsAtBottom) != (bool)dictTaskListPrefsCache["TaskListAlwaysShowsAtBottom"]
+							|| Prefs.GetBool(PrefName.TasksUseRepeating) != (bool)dictTaskListPrefsCache["TasksUseRepeating"]
+							|| Prefs.GetBool(PrefName.TasksNewTrackedByUser) != (bool)dictTaskListPrefsCache["TasksNewTrackedByUser"]
+							|| Prefs.GetBool(PrefName.TasksShowOpenTickets) != (bool)dictTaskListPrefsCache["TasksShowOpenTickets"]
 							|| ComputerPrefs.LocalComputer.TaskKeepListHidden != (bool)dictTaskListPrefsCache["TaskKeepListHidden"])
 						{
 							return true;
@@ -1195,7 +1206,7 @@ namespace OpenDental
 			try
 			{
 				string imagePath = OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath();
-				string reportFolderName = PrefC.GetString(PrefName.ReportFolderName);
+				string reportFolderName = Prefs.GetString(PrefName.ReportFolderName);
 				string reportDir = ODFileUtils.CombinePaths(imagePath, reportFolderName);
 				if (Directory.Exists(reportDir))
 				{
@@ -1416,7 +1427,7 @@ namespace OpenDental
 				{
 					return;
 				}
-				CurPatNum = formPatientSelect.SelectedPatNum;
+				CurPatNum = formPatientSelect.SelectedPatientId;
 			}
 			Patient pat = Patients.GetPat(CurPatNum);
 			if (ContrChart2.Visible)
@@ -1897,25 +1908,26 @@ namespace OpenDental
 
 		private void toolButTasks_Click()
 		{
-			FormTaskListSelect FormT = new FormTaskListSelect(TaskObjectType.Patient);
-			FormT.Location = new Point(50, 50);
-			FormT.Text = Lan.G(FormT, "Add Task") + " - " + FormT.Text;
-			FormT.ShowDialog();
-			if (FormT.DialogResult != DialogResult.OK)
+			using FormTaskListSelect formTaskListSelect = new FormTaskListSelect();
+
+			formTaskListSelect.Location = new Point(50, 50);
+			formTaskListSelect.Text = "Add Task - " + formTaskListSelect.Text;
+			if (formTaskListSelect.ShowDialog(this) != DialogResult.OK)
 			{
 				return;
 			}
+
 			Task task = new Task();
-			task.TaskListNum = -1;//don't show it in any list yet.
+			task.TaskListId = -1;//don't show it in any list yet.
 			Tasks.Insert(task);
+
 			Task taskOld = task.Copy();
-			task.KeyNum = CurPatNum;
-			task.ObjectType = TaskObjectType.Patient;
-			task.TaskListNum = FormT.ListSelectedLists[0];
-			task.UserNum = Security.CurrentUser.Id;
-			FormTaskEdit FormTE = new FormTaskEdit(task, taskOld);
-			FormTE.IsNew = true;
-			FormTE.Show();
+			task.PatientId = CurPatNum;
+			task.TaskListId = formTaskListSelect.SelectedList.Id;
+			task.UserId = Security.CurrentUser.Id;
+
+			var formTaskEdit = new FormTaskEdit(task);
+			formTaskEdit.Show();
 		}
 
 		private void menuTask_Popup(object sender, EventArgs e)
@@ -1963,21 +1975,21 @@ namespace OpenDental
 				return 0;
 			}
 			//Mimics how checkNew is set in FormTaskEdit.
-			if (PrefC.GetBool(PrefName.TasksNewTrackedByUser))
+			if (Prefs.GetBool(PrefName.TasksNewTrackedByUser))
 			{//Per definition of task.IsUnread.
-				return _listReminderTasks.FindAll(x => x.IsUnread && x.DateTimeEntry <= DateTime.Now).Count;
+				return _listReminderTasks.FindAll(x => x.IsUnread && x.DateStart <= DateTime.Now).Count;
 			}
-			return _listReminderTasks.FindAll(x => x.TaskStatus == TaskStatusEnum.New && x.DateTimeEntry <= DateTime.Now).Count;
+			return _listReminderTasks.FindAll(x => x.Status == TaskStatus.New && x.DateStart <= DateTime.Now).Count;
 		}
 
 		private void menuItemTaskNewForUser_Click(object sender, EventArgs e)
 		{
-			ContrManage2.LaunchTaskWindow(false, UserControlTasksTab.ForUser);//Set the tab to the "for [User]" tab.
+			ContrManage2.LaunchTaskWindow();//Set the tab to the "for [User]" tab.
 		}
 
 		private void menuItemTaskReminders_Click(object sender, EventArgs e)
 		{
-			ContrManage2.LaunchTaskWindow(false, UserControlTasksTab.Reminders);//Set the tab to the "Reminders" tab
+			ContrManage2.LaunchTaskWindow();//Set the tab to the "Reminders" tab
 		}
 
 		private delegate void ToolBarMainClick(long patNum);
@@ -2169,7 +2181,7 @@ namespace OpenDental
 					return false;
 				}
 			}
-			if (pat.TxtMsgOk == YN.Unknown && PrefC.GetBool(PrefName.TextMsgOkStatusTreatAsNo))
+			if (pat.TxtMsgOk == YN.Unknown && Prefs.GetBool(PrefName.TextMsgOkStatusTreatAsNo))
 			{
 				if (MsgBox.Show(MsgBoxButtons.YesNo, "This patient might not want to receive text messages. "
 					+ "Would you like to mark this patient as okay to receive text messages?"))
@@ -2245,88 +2257,88 @@ namespace OpenDental
 		///</param>
 		private void SetSmsNotificationText(Signalod signalSmsCount = null, bool doUseSignalInterval = true, int increment = 0)
 		{
-			if (_butText == null)
-			{
-				return;//This button does not exist in eCW tight integration mode.
-			}
-			try
-			{
-				if (!_butText.Enabled)
-				{
-					return;//This button is disabled when neither of the Text Messaging bridges have been enabled.
-				}
-				List<SmsFromMobiles.SmsNotification> listNotifications = null;
-				if (signalSmsCount == null)
-				{
-					//If we are here because the user changed clinics, then get the absolute most recent sms notification signal.
-					//Otherwise, use DateTime since last signal refresh.
-					DateTime signalStartTime = doUseSignalInterval ? Signalods.SignalLastRefreshed : DateTime.MinValue;
-					//Get the most recent SmsTextMsgReceivedUnreadCount. Should only be one, but just in case, order desc.
-					signalSmsCount = Signalods.RefreshTimed(signalStartTime, new List<InvalidType>() { InvalidType.SmsTextMsgReceivedUnreadCount })
-						.OrderByDescending(x => x.SigDateTime)
-						.FirstOrDefault();
-					if (signalSmsCount == null && signalStartTime == DateTime.MinValue)
-					{
-						//No SmsTextMsgReceivedUnreadCount signal in db.  This means the eConnector has not updated the sms notification signal in quite some 
-						//time.  Do the eConnector's job; 
-						listNotifications = Signalods.UpsertSmsNotification();
-					}
-				}
-				if (signalSmsCount != null)
-				{//Either the signal was passed in, or we found it when we queried.
-					listNotifications = SmsFromMobiles.SmsNotification.GetListFromJson(signalSmsCount.MsgValue);//Extract notifications from signal.
-					if (listNotifications == null)
-					{
-						return;//Something went wrong deserializing the signal.  Leave the stale notification count until eConnector updates the signal.
-					}
-				}
-				int smsUnreadCount = 0;
-				if (listNotifications == null)
-				{
-					//listNotifications might still be null if signalSmsCount was not passed in, signal processing had already started, and we didn't find the
-					//sms notification signal in the last signal interval.  We will assume the signal is stale.  We know the count has changed (based on some 
-					//action) if 'increment' is non-zero, so increment according to our known changes.
-					smsUnreadCount = PIn.Int(_butText.NotificationText) + increment;
-				}
-				else if (!PrefC.HasClinicsEnabled || Clinics.ClinicNum == 0)
-				{
-					//No clinics or HQ clinic is active so sum them all.
-					smsUnreadCount = listNotifications.Sum(x => x.Count);
-				}
-				else
-				{
-					//Only count the active clinic.
-					smsUnreadCount = listNotifications.Where(x => x.ClinicNum == Clinics.ClinicNum).Sum(x => x.Count);
-				}
-				//Default to empty so we show nothing if there aren't any notifications.
-				string smsNotificationText = "";
-				if (smsUnreadCount > 99)
-				{ //We only have room in the UI for a 2-digit number.
-					smsNotificationText = "99";
-				}
-				else if (smsUnreadCount > 0)
-				{ //We have a "real" number so show it.
-					smsNotificationText = smsUnreadCount.ToString();
-				}
-				if (_butText.NotificationText == smsNotificationText)
-				{ //Prevent the toolbar from being invalidated unnecessarily.
-					return;
-				}
-				_butText.NotificationText = smsNotificationText;
-				if (menuItemTextMessagesReceived.Text.Contains("("))
-				{//Remove the old count from the menu item.
-					menuItemTextMessagesReceived.Text = menuItemTextMessagesReceived.Text.Substring(0, menuItemTextMessagesReceived.Text.IndexOf("(") - 1);
-				}
-				if (smsNotificationText != "")
-				{
-					menuItemTextMessagesReceived.Text += " (" + smsNotificationText + ")";
-				}
-				Plugins.HookAddCode(this, "FormOpenDental.SetSmsNotificationText_end", _butText, menuItemTextMessagesReceived, increment);
-			}
-			finally
-			{ //Always redraw the toolbar item.
-				ToolBarMain.Invalidate(_butText.Bounds);//To cause the Text button to redraw.			
-			}
+			//if (_butText == null)
+			//{
+			//	return;//This button does not exist in eCW tight integration mode.
+			//}
+			//try
+			//{
+			//	if (!_butText.Enabled)
+			//	{
+			//		return;//This button is disabled when neither of the Text Messaging bridges have been enabled.
+			//	}
+			//	List<SmsFromMobiles.SmsNotification> listNotifications = null;
+			//	if (signalSmsCount == null)
+			//	{
+			//		//If we are here because the user changed clinics, then get the absolute most recent sms notification signal.
+			//		//Otherwise, use DateTime since last signal refresh.
+			//		DateTime signalStartTime = doUseSignalInterval ? Signalods.SignalLastRefreshed : DateTime.MinValue;
+			//		//Get the most recent SmsTextMsgReceivedUnreadCount. Should only be one, but just in case, order desc.
+			//		signalSmsCount = Signalods.RefreshTimed(signalStartTime, new List<InvalidType>() { InvalidType.SmsTextMsgReceivedUnreadCount })
+			//			.OrderByDescending(x => x.Date)
+			//			.FirstOrDefault();
+			//		if (signalSmsCount == null && signalStartTime == DateTime.MinValue)
+			//		{
+			//			//No SmsTextMsgReceivedUnreadCount signal in db.  This means the eConnector has not updated the sms notification signal in quite some 
+			//			//time.  Do the eConnector's job; 
+			//			//listNotifications = Signalods.UpsertSmsNotification();
+			//		}
+			//	}
+			//	if (signalSmsCount != null)
+			//	{//Either the signal was passed in, or we found it when we queried.
+			//		listNotifications = SmsFromMobiles.SmsNotification.GetListFromJson(signalSmsCount.Value);//Extract notifications from signal.
+			//		if (listNotifications == null)
+			//		{
+			//			return;//Something went wrong deserializing the signal.  Leave the stale notification count until eConnector updates the signal.
+			//		}
+			//	}
+			//	int smsUnreadCount = 0;
+			//	if (listNotifications == null)
+			//	{
+			//		//listNotifications might still be null if signalSmsCount was not passed in, signal processing had already started, and we didn't find the
+			//		//sms notification signal in the last signal interval.  We will assume the signal is stale.  We know the count has changed (based on some 
+			//		//action) if 'increment' is non-zero, so increment according to our known changes.
+			//		smsUnreadCount = PIn.Int(_butText.NotificationText) + increment;
+			//	}
+			//	else if (!PrefC.HasClinicsEnabled || Clinics.ClinicNum == 0)
+			//	{
+			//		//No clinics or HQ clinic is active so sum them all.
+			//		smsUnreadCount = listNotifications.Sum(x => x.Count);
+			//	}
+			//	else
+			//	{
+			//		//Only count the active clinic.
+			//		smsUnreadCount = listNotifications.Where(x => x.ClinicNum == Clinics.ClinicNum).Sum(x => x.Count);
+			//	}
+			//	//Default to empty so we show nothing if there aren't any notifications.
+			//	string smsNotificationText = "";
+			//	if (smsUnreadCount > 99)
+			//	{ //We only have room in the UI for a 2-digit number.
+			//		smsNotificationText = "99";
+			//	}
+			//	else if (smsUnreadCount > 0)
+			//	{ //We have a "real" number so show it.
+			//		smsNotificationText = smsUnreadCount.ToString();
+			//	}
+			//	if (_butText.NotificationText == smsNotificationText)
+			//	{ //Prevent the toolbar from being invalidated unnecessarily.
+			//		return;
+			//	}
+			//	_butText.NotificationText = smsNotificationText;
+			//	if (menuItemTextMessagesReceived.Text.Contains("("))
+			//	{//Remove the old count from the menu item.
+			//		menuItemTextMessagesReceived.Text = menuItemTextMessagesReceived.Text.Substring(0, menuItemTextMessagesReceived.Text.IndexOf("(") - 1);
+			//	}
+			//	if (smsNotificationText != "")
+			//	{
+			//		menuItemTextMessagesReceived.Text += " (" + smsNotificationText + ")";
+			//	}
+			//	Plugins.HookAddCode(this, "FormOpenDental.SetSmsNotificationText_end", _butText, menuItemTextMessagesReceived, increment);
+			//}
+			//finally
+			//{ //Always redraw the toolbar item.
+			//	ToolBarMain.Invalidate(_butText.Bounds);//To cause the Text button to redraw.			
+			//}
 		}
 
 		#endregion SMS Text Messaging
@@ -2417,7 +2429,7 @@ namespace OpenDental
 			Clinics.ClinicNum = clinicCur.ClinicNum;
 			Text = PatientL.GetMainTitle(Patients.GetPat(CurPatNum), Clinics.ClinicNum);
 			SetSmsNotificationText(doUseSignalInterval: !isChangingClinic);
-			if (PrefC.GetBool(PrefName.AppointmentClinicTimeReset))
+			if (Prefs.GetBool(PrefName.AppointmentClinicTimeReset))
 			{
 				ContrAppt2.ModuleSelected(DateTimeOD.Today);
 				//this actually refreshes the module, which is possibly different behavior than before the overhaul.
@@ -2428,7 +2440,7 @@ namespace OpenDental
 			{
 				_listNormalTaskNums = null;//Will cause task preprocessing to run again.
 				_listReminderTasks = null;//Will cause task preprocessing to run again.
-				UserControlTasks.ResetGlobalTaskFilterTypesToDefaultAllInstances();
+
 				UserControlTasks.RefreshTasksForAllInstances(null);//Refresh tasks so any filter changes are applied immediately.
 																   //In the future this may need to be enhanced to also consider refreshing other clinic specific features
 				LayoutToolBar();
@@ -2686,17 +2698,11 @@ namespace OpenDental
 				}
 				return;//All task signals should already be sent. Sending more Task signals here would cause unnecessary refreshes.
 			}
-			ODEvent.Fire(EventCategory.Cache, suffix + Lan.G(nameof(Cache), "Inserting Signals"));
-			foreach (InvalidType iType in e.ITypes)
+
+			ODEvent.Fire(EventCategory.Cache, suffix + "Inserting Signals");
+			foreach (var invalidType in e.ITypes)
 			{
-				Signalod sig = new Signalod();
-				sig.IType = iType;
-				if (iType == InvalidType.Task || iType == InvalidType.TaskPopup)
-				{
-					sig.FKey = e.TaskNum;
-					sig.FKeyType = KeyType.Task;
-				}
-				Signalods.Insert(sig);
+				Signalods.Send(SignalName.Invalidate, invalidType.ToString());
 			}
 		}
 
@@ -2750,7 +2756,7 @@ namespace OpenDental
 			}
 			else if (e.DocNum > 0)
 			{
-				if (PrefC.GetBoolSilent(PrefName.ImagesModuleUsesOld2020, false))
+				if (Prefs.GetBool(PrefName.ImagesModuleUsesOld2020, false))
 				{
 					moduleBar.SelectedModule = e.ModuleType;
 					ContrImages2.Visible = true;
@@ -2970,11 +2976,8 @@ namespace OpenDental
 			SigMessages.Insert(sigMessage);
 			FillSignalButtons(new List<SigMessage>() { sigMessage });//Does not run query.
 																	 //Let the other computers in the office know to refresh this specific light.
-			Signalod signal = new Signalod();
-			signal.IType = InvalidType.SigMessages;
-			signal.FKeyType = KeyType.SigMessage;
-			signal.FKey = sigMessage.SigMessageNum;
-			Signalods.Insert(signal);
+
+			Signalods.Send(SignalName.Message, null, sigMessage.SigMessageNum);
 		}
 
 		private void timerTimeIndic_Tick(object sender, System.EventArgs e)
@@ -3043,46 +3046,47 @@ namespace OpenDental
 			{
 				//Currently do nothing.
 			}
+
 			#region Task Preprocessing
 			if (_tasksUserNum != Security.CurrentUser.Id //The user has changed since the last signal tick was run (when logoff then logon),
 				|| _listReminderTasks == null || _listNormalTaskNums == null)//or first time processing signals since the program started.
 			{
 				// TODO: Logger.LogToPath("CurUser change", LogPath.Signals, LogPhase.Start);
 				_tasksUserNum = Security.CurrentUser.Id;
-				List<Task> listRefreshedTasks = Tasks.GetNewTasksThisUser(Security.CurrentUser.Id, Clinics.ClinicNum);//Get all tasks pertaining to current user.
+				List<Task> listRefreshedTasks = Tasks.GetNewTasksThisUser(Security.CurrentUser.Id).ToList();//Get all tasks pertaining to current user.
 				_listNormalTaskNums = new List<long>();
 				_listReminderTasks = new List<Task>();
 				_listReminderTasksOverLimit = new List<Task>();
 				//List<UserOdPref> listBlockedTaskLists = UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id, UserOdFkeyType.TaskListBlock);
-				if (_dictAllTaskLists == null || listRefreshedTasks.Exists(x => !_dictAllTaskLists.ContainsKey(x.TaskListNum)))
+				if (_dictAllTaskLists == null || listRefreshedTasks.Exists(x => !_dictAllTaskLists.ContainsKey(x.TaskListId)))
 				{//Refresh dict if needed.
-					_dictAllTaskLists = TaskLists.GetAll().ToDictionary(x => x.TaskListNum);
+					_dictAllTaskLists = TaskLists.GetAll().ToDictionary(x => x.Id);
 				}
 				foreach (Task taskForUser in listRefreshedTasks)
 				{//Construct the initial task meta data for the current user's tasks.
 				 //If task's taskList is in dictionary and it's archived or has an archived ancestor, ignore it.
-					if (_dictAllTaskLists.ContainsKey(taskForUser.TaskListNum)
-						&& (_dictAllTaskLists[taskForUser.TaskListNum].TaskListStatus == TaskListStatusEnum.Archived
-						|| TaskLists.IsAncestorTaskListArchived(ref _dictAllTaskLists, _dictAllTaskLists[taskForUser.TaskListNum])))
+					if (_dictAllTaskLists.ContainsKey(taskForUser.TaskListId)
+						&& (_dictAllTaskLists[taskForUser.TaskListId].Status == TaskListStatus.Archived
+						|| TaskLists.IsAncestorTaskListArchived(ref _dictAllTaskLists, _dictAllTaskLists[taskForUser.TaskListId])))
 					{
 						continue;
 					}
-					bool isTrackedByUser = PrefC.GetBool(PrefName.TasksNewTrackedByUser);
+					bool isTrackedByUser = Prefs.GetBool(PrefName.TasksNewTrackedByUser);
 					if (String.IsNullOrEmpty(taskForUser.ReminderGroupId))
 					{//A normal task.
 					 //Mimics how checkNew is set in FormTaskEdit.
-						if ((isTrackedByUser && taskForUser.IsUnread) || (!isTrackedByUser && taskForUser.TaskStatus == TaskStatusEnum.New))
+						if ((isTrackedByUser && taskForUser.IsUnread) || (!isTrackedByUser && taskForUser.Status == TaskStatus.New))
 						{//See def of task.IsUnread
-							_listNormalTaskNums.Add(taskForUser.TaskNum);
+							_listNormalTaskNums.Add(taskForUser.Id);
 						}
 					}
-					else if (!PrefC.GetBool(PrefName.TasksUseRepeating))
+					else if (!Prefs.GetBool(PrefName.TasksUseRepeating))
 					{//A reminder task (new or viewed).  Reminders not allowed if repeating tasks enabled.
 						_listReminderTasks.Add(taskForUser);
-						if (taskForUser.DateTimeEntry <= DateTime.Now)
+						if (taskForUser.DateStart <= DateTime.Now)
 						{//Do not show reminder popups for future reminders which are not due yet.
 						 //Mimics how checkNew is set in FormTaskEdit.
-							if ((isTrackedByUser && taskForUser.IsUnread) || (!isTrackedByUser && taskForUser.TaskStatus == TaskStatusEnum.New))
+							if ((isTrackedByUser && taskForUser.IsUnread) || (!isTrackedByUser && taskForUser.Status == TaskStatus.New))
 							{//See def of task.IsUnread
 							 //NOTE: POPUPS ONLY HAPPEN IF THEY ARE MARKED AS NEW. (Also, they will continue to pop up as long as they are marked "new")
 								// TODO: TaskPopupHelper(taskForUser, listBlockedTaskLists);
@@ -3097,22 +3101,22 @@ namespace OpenDental
 				// TODO: Logger.LogToPath("CurUser change", LogPath.Signals, LogPhase.End);
 			}
 			//Check to see if a reminder task became due between the last signal interval and the current signal interval.
-			else if (_listReminderTasks.FindAll(x => x.DateTimeEntry <= DateTime.Now
-				 && x.DateTimeEntry >= DateTime.Now.AddSeconds(-PrefC.GetInt(PrefName.ProcessSigsIntervalInSecs))).Count > 0)
+			else if (_listReminderTasks.FindAll(x => x.DateStart <= DateTime.Now
+				 && x.DateStart >= DateTime.Now.AddSeconds(-PrefC.GetInt(PrefName.ProcessSigsIntervalInSecs))).Count > 0)
 			{
-				List<Task> listDueReminderTasks = _listReminderTasks.FindAll(x => x.DateTimeEntry <= DateTime.Now
-					  && x.DateTimeEntry >= DateTime.Now.AddSeconds(-PrefC.GetInt(PrefName.ProcessSigsIntervalInSecs)));
+				List<Task> listDueReminderTasks = _listReminderTasks.FindAll(x => x.DateStart <= DateTime.Now
+					  && x.DateStart >= DateTime.Now.AddSeconds(-PrefC.GetInt(PrefName.ProcessSigsIntervalInSecs)));
 				// TODO: Logger.LogToPath("Reminder task due", LogPath.Signals, LogPhase.Start);
-				List<Signalod> listSignals = new List<Signalod>();
-				foreach (Task task in listDueReminderTasks)
-				{
-					Signalod sig = new Signalod();
-					sig.IType = InvalidType.TaskList;
-					sig.FKey = task.TaskListNum;
-					sig.FKeyType = KeyType.Undefined;
-					listSignals.Add(sig);
-				}
-				UserControlTasks.RefreshTasksForAllInstances(listSignals);
+				//List<Signalod> listSignals = new List<Signalod>();
+				//foreach (Task task in listDueReminderTasks)
+				//{
+				//	Signalod sig = new Signalod();
+				//	sig.InvalidType = InvalidType.TaskList;
+				//	sig.InvalidForeignKey = task.TaskListId;
+				//	sig.Name = KeyType.Undefined;
+				//	listSignals.Add(sig);
+				//}
+				//UserControlTasks.RefreshTasksForAllInstances(listSignals);
 
 				// TODO:
 				//List<UserOdPref> listBlockedTaskLists = UserOdPrefs.GetByUserAndFkeyType(Security.CurrentUser.Id, UserOdFkeyType.TaskListBlock);
@@ -3142,6 +3146,7 @@ namespace OpenDental
 			}
 			RefreshTasksNotification();
 			#endregion Task Preprocessing
+
 			//Signal Processing
 			timerSignals.Stop();
 			ODForm.SignalsTick(
@@ -3178,20 +3183,20 @@ namespace OpenDental
 			errorMsg = "";
 			Prefs.RefreshCache();//this is a db call, but will only happen once when an inactive workstation is re-activated
 								 //The logic below mimics parts of PrefL.CheckProgramVersion().
-			Version storedVersion = new Version(PrefC.GetString(PrefName.ProgramVersion));
+			Version storedVersion = new Version(Prefs.GetString(PrefName.ProgramVersion));
 			Version currentVersion = new Version(Application.ProductVersion);
 			if (storedVersion != currentVersion)
 			{
 				errorMsg = Lan.G(this, "You are attempting to run version") + " " + currentVersion.ToString(3) + ", "
 					+ Lan.G(this, "but the database is using version") + " " + storedVersion.ToString(3) + ".\r\n\r\n"
-					+ Lan.G(this, "You will have to restart") + " " + PrefC.GetString(PrefName.SoftwareName) + " " + Lan.G(this, "to correct the version mismatch.");
+					+ Lan.G(this, "You will have to restart") + " " + Prefs.GetString(PrefName.SoftwareName) + " " + Lan.G(this, "to correct the version mismatch.");
 				return false;
 			}
-			string updateComputerName = PrefC.GetString(PrefName.UpdateInProgressOnComputerName);
+			string updateComputerName = Prefs.GetString(PrefName.UpdateInProgressOnComputerName);
 			if (!string.IsNullOrEmpty(updateComputerName))
 			{
 				errorMsg = Lan.G(this, "An update is in progress on workstation") + ": '" + updateComputerName + "'.\r\n\r\n"
-					+ Lan.G(this, "You will have to restart") + " " + PrefC.GetString(PrefName.SoftwareName) + " " + Lan.G(this, "once the update has finished.");
+					+ Lan.G(this, "You will have to restart") + " " + Prefs.GetString(PrefName.SoftwareName) + " " + Lan.G(this, "once the update has finished.");
 				return false;
 			}
 			return true;
@@ -3382,49 +3387,49 @@ namespace OpenDental
 					return;
 				}
 				// TODO: Logger.LogToPath("", LogPath.Signals, LogPhase.Start, "TaskNum: " + taskPopup.TaskNum.ToString());
-				if (taskPopup.DateTimeEntry > DateTime.Now && taskPopup.ReminderType != TaskReminderType.NoReminder)
+				if (taskPopup.DateStart > DateTime.Now && taskPopup.ReminderType != TaskReminderType.None)
 				{
 					return;//Don't pop up future dated reminder tasks
 				}
 				//Don't pop up reminders if we reach our upper limit of open FormTaskEdit windows to avoid overwhelming users with popups.
 				//Add the task to another list that temporarily holds the reminder task until it is allowed to popup.
-				if (taskPopup.ReminderType != TaskReminderType.NoReminder)
+				if (taskPopup.ReminderType != TaskReminderType.None)
 				{//Is a reminder task.
 					if (Application.OpenForms.OfType<FormTaskEdit>().ToList().Count >= _popupPressureReliefLimit)
 					{//Open Task Edit windows over display limit.
-						if (!_listReminderTasksOverLimit.Exists(x => x.TaskNum == taskPopup.TaskNum))
+						if (!_listReminderTasksOverLimit.Exists(x => x.Id == taskPopup.Id))
 						{
 							_listReminderTasksOverLimit.Add(taskPopup);//Add to list to be shown later to prevent too many windows from being open at same time.
 						}
 						return;//We are over the display limit for now.   Will try again later after user closes some Task Edit windows.
 					}
-					_listReminderTasksOverLimit.RemoveAll(x => x.TaskNum == taskPopup.TaskNum);//Remove from list if present.
+					_listReminderTasksOverLimit.RemoveAll(x => x.Id == taskPopup.Id);//Remove from list if present.
 				}
 				//Even though this is triggered to popup, if this is my own task, then do not popup.
-				List<TaskNote> notesForThisTask = (listNotesForTask ?? TaskNotes.GetForTask(taskPopup.TaskNum)).OrderBy(x => x.DateTimeNote).ToList();
-				if (taskPopup.ReminderType == TaskReminderType.NoReminder)
+				List<TaskNote> notesForThisTask = (listNotesForTask ?? TaskNotes.GetForTask(taskPopup.Id)).OrderBy(x => x.DateModified).ToList();
+				if (taskPopup.ReminderType == TaskReminderType.None)
 				{//We care about notes and task sender only if it's not a reminder.
 					if (notesForThisTask.Count == 0)
 					{//'sender' is the usernum on the task and it's not a reminder
-						if (taskPopup.UserNum == Security.CurrentUser.Id)
+						if (taskPopup.UserId == Security.CurrentUser.Id)
 						{
 							return;
 						}
 					}
 					else
 					{//'sender' is the user on the last added note
-						if (notesForThisTask[notesForThisTask.Count - 1].UserNum == Security.CurrentUser.Id)
+						if (notesForThisTask[notesForThisTask.Count - 1].UserId == Security.CurrentUser.Id)
 						{
 							return;
 						}
 					}
 				}
-				List<TaskList> listUserTaskListSubsTrunk = TaskLists.RefreshUserTrunk(Security.CurrentUser.Id);//Get the list of directly subscribed tasklists.
-				List<long> listUserTaskListSubNums = listUserTaskListSubsTrunk.Select(x => x.TaskListNum).ToList();
-				bool isUserSubscribed = listUserTaskListSubNums.Contains(taskPopup.TaskListNum);//First check if user is directly subscribed.
+				List<TaskList> listUserTaskListSubsTrunk = TaskLists.RefreshUserTrunk(Security.CurrentUser.Id).ToList();//Get the list of directly subscribed tasklists.
+				List<long> listUserTaskListSubNums = listUserTaskListSubsTrunk.Select(x => x.Id).ToList();
+				bool isUserSubscribed = listUserTaskListSubNums.Contains(taskPopup.TaskListId);//First check if user is directly subscribed.
 				if (!isUserSubscribed)
 				{
-					isUserSubscribed = listUserTaskListSubsTrunk.Any(x => TaskLists.IsAncestor(x.TaskListNum, taskPopup.TaskListNum));//Check ancestors for subscription.
+					isUserSubscribed = listUserTaskListSubsTrunk.Any(x => TaskLists.IsAncestor(x.Id, taskPopup.TaskListId));//Check ancestors for subscription.
 				}
 				if (isUserSubscribed)
 				{//User is subscribed to this TaskList, or one of its ancestors.
@@ -3491,31 +3496,46 @@ namespace OpenDental
 		///<summary>This only contains UI signal processing. See Signalods.SignalsTick() for cache updates.</summary>
 		public override void OnProcessSignals(List<Signalod> listSignals)
 		{
-			if (listSignals.Exists(x => x.IType == InvalidType.Programs))
+			if (listSignals.Exists(x => x.Name == SignalName.Invalidate && x.Param1 == nameof(InvalidType.Programs)))
 			{
 				RefreshMenuReports();
 			}
-			if (listSignals.Exists(x => x.IType == InvalidType.Prefs))
+
+			if (listSignals.Exists(x => x.Name == SignalName.Invalidate && x.Param1 == nameof(InvalidType.Prefs)))
 			{
 				PrefC.InvalidateVerboseLogging();
 			}
-			#region SMS Notifications
-			// TODO: Logger.LogToPath("SMS Notifications", LogPath.Signals, LogPhase.Start);
-			Signalod signalSmsCount = listSignals.OrderByDescending(x => x.SigDateTime)
-				.FirstOrDefault(x => x.IType == InvalidType.SmsTextMsgReceivedUnreadCount && x.FKeyType == KeyType.SmsMsgUnreadCount);
-			if (signalSmsCount != null)
-			{
-				//Provide the pre-existing value here. This will act as a flag indicating that we should not resend the signal.  This would cause infinite signal loop.
-				SetSmsNotificationText(signalSmsCount);
-			}
-			// TODO: Logger.LogToPath("SMS Notifications", LogPath.Signals, LogPhase.End);
-			#endregion SMS Notifications
-			#region Tasks
-			List<Signalod> listSignalTasks = listSignals.FindAll(x => x.IType == InvalidType.Task || x.IType == InvalidType.TaskPopup
-				  || x.IType == InvalidType.TaskList || x.IType == InvalidType.TaskAuthor || x.IType == InvalidType.TaskPatient);
-			List<long> listEditedTaskNums = listSignalTasks.FindAll(x => x.FKeyType == KeyType.Task).Select(x => x.FKey).ToList();
-			BeginTasksThread(listSignalTasks, listEditedTaskNums);
-			#endregion Tasks
+
+			//#region SMS Notifications
+			//// TODO: Logger.LogToPath("SMS Notifications", LogPath.Signals, LogPhase.Start);
+			//Signalod signalSmsCount = listSignals.OrderByDescending(x => x.Date)
+			//	.FirstOrDefault(x => x.InvalidType == InvalidType.SmsTextMsgReceivedUnreadCount && x.Name == KeyType.SmsMsgUnreadCount);
+			//if (signalSmsCount != null)
+			//{
+			//	//Provide the pre-existing value here. This will act as a flag indicating that we should not resend the signal.  This would cause infinite signal loop.
+			//	SetSmsNotificationText(signalSmsCount);
+			//}
+			//// TODO: Logger.LogToPath("SMS Notifications", LogPath.Signals, LogPhase.End);
+			//#endregion SMS Notifications
+
+
+			//#region Tasks
+
+			//List<Signalod> listSignalTasks = listSignals.FindAll(x => 
+			//	x.InvalidType == InvalidType.Task || 
+			//	x.InvalidType == InvalidType.TaskPopup ||
+			//	x.InvalidType == InvalidType.TaskList || 
+			//	x.InvalidType == InvalidType.TaskAuthor || 
+			//	x.InvalidType == InvalidType.TaskPatient);
+
+			//List<long> listEditedTaskNums = listSignalTasks.FindAll(x => x.Name == KeyType.Task).Select(x => x.InvalidForeignKey).ToList();
+
+			//BeginTasksThread(listSignalTasks, listEditedTaskNums);
+
+			//#endregion Tasks
+
+
+
 			#region Appointment Module
 			if (ContrAppt2.Visible)
 			{
@@ -3535,44 +3555,63 @@ namespace OpenDental
 					ContrAppt2.RefreshModuleScreenButtonsRight();
 				}
 			}
-			Signalod signalTP = listSignals.FirstOrDefault(x => x.IType == InvalidType.TPModule && x.FKeyType == KeyType.PatNum);
-			if (ContrTreat2.Visible && signalTP != null && signalTP.FKey == ContrTreat2.PatCur.PatNum)
+
+
+			var signalTP = listSignals.FirstOrDefault(x => x.Name == SignalName.RefreshPatient && x.Param2.HasValue);
+
+			if (ContrTreat2.Visible && signalTP != null && signalTP.Param2 == ContrTreat2.PatCur.PatNum)
 			{
 				RefreshCurrentModule();
 			}
+
+
 			#endregion Appointment Module
 			#region Unfinalize Pay Menu Update
-			UpdateUnfinalizedPayCount(listSignals.FindAll(x => x.IType == InvalidType.UnfinalizedPayMenuUpdate));
+
+			UpdateUnfinalizedPayCount(listSignals.FindAll(x => x.Name == SignalName.UnfinalizedPayMenuUpdate));
+
+
 			#endregion Unfinalize Pay Menu Update
 			#region eClipboard/Kiosk
-			if (listSignals.Exists(x => x.IType == InvalidType.EClipboard))
-			{
-				EClipboardEvent.Fire(EventCategory.eClipboard);
-			}
+			//if (listSignals.Exists(x => x.InvalidType == InvalidType.EClipboard))
+			//{
+			//	EClipboardEvent.Fire(EventCategory.eClipboard);
+			//}
 			#endregion
 			#region Refresh
-			InvalidType[] arrInvalidTypes = Signalods.GetInvalidTypes(listSignals);
+			InvalidType[] arrInvalidTypes = Signalods.GetInvalidTypes(listSignals).ToArray();
 			if (arrInvalidTypes.Length > 0)
 			{
 				RefreshLocalDataPostCleanup(arrInvalidTypes);
 			}
 			#endregion Refresh
 			//Sig Messages must be the last code region to run in the process signals method because it changes the application icon.
+
+
+
+
 			#region Sig Messages (In the manual as "Internal Messages")
-			//Check to see if any signals are sigmessages.
-			List<long> listSigMessageNums = listSignals.FindAll(x => x.IType == InvalidType.SigMessages && x.FKeyType == KeyType.SigMessage).Select(x => x.FKey).ToList();
-			if (listSigMessageNums.Count > 0)
-			{
-				// TODO: Logger.LogToPath("SigMessages", LogPath.Signals, LogPhase.Start);
-				//Any SigMessage iType means we need to refresh our lights or buttons.
-				List<SigMessage> listSigMessages = SigMessages.GetSigMessages(listSigMessageNums);
-				ContrManage2.LogMsgs(listSigMessages);
-				FillSignalButtons(listSigMessages);
-				//Need to add a test to this: do not play messages that are over 2 minutes old.
-				BeginPlaySoundsThread(listSigMessages);
-				// TODO: Logger.LogToPath("SigMessages", LogPath.Signals, LogPhase.End);
-			}
+
+			var sigMessageIds = listSignals
+				.Where(
+					signal => signal.Name == SignalName.Message && signal.Param2.HasValue)
+				.Select(
+					signal => signal.Param2.Value)
+				.ToList();
+
+			if (sigMessageIds.Count > 0)
+            {
+				var sigMessages = SigMessages.GetSigMessages(sigMessageIds);
+
+				ContrManage2.LogMsgs(sigMessages);
+
+				FillSignalButtons(sigMessages);
+
+				BeginPlaySoundsThread(sigMessages);
+            }
+
 			#endregion Sig Messages
+
 			Plugins.HookAddCode(this, "FormOpenDental.ProcessSignals_end", listSignals);
 		}
 
@@ -3614,24 +3653,24 @@ namespace OpenDental
 			for (int i = 0; i < listEditedTaskNums.Count; i++)
 			{//Update the task meta data for the current user based on the query results.
 				long editedTaskNum = listEditedTaskNums[i];//The tasknum mentioned in the signal.
-				Task taskForUser = listRefreshedTasks?.FirstOrDefault(x => x.TaskNum == editedTaskNum);
+				Task taskForUser = listRefreshedTasks?.FirstOrDefault(x => x.Id == editedTaskNum);
 				Task taskNewForUser = null;
 				if (taskForUser != null)
 				{
-					bool isTrackedByUser = PrefC.GetBool(PrefName.TasksNewTrackedByUser);
+					bool isTrackedByUser = Prefs.GetBool(PrefName.TasksNewTrackedByUser);
 					//Mimics how checkNew is set in FormTaskEdit.
-					if (((isTrackedByUser && taskForUser.IsUnread) || (!isTrackedByUser && taskForUser.TaskStatus == TaskStatusEnum.New))//See def of task.IsUnread
+					if (((isTrackedByUser && taskForUser.IsUnread) || (!isTrackedByUser && taskForUser.Status == TaskStatus.New))//See def of task.IsUnread
 																																		 //Reminders not due yet are excluded from Tasks.RefreshUserNew().
-						&& (string.IsNullOrEmpty(taskForUser.ReminderGroupId) || taskForUser.DateTimeEntry <= DateTime.Now))
+						&& (string.IsNullOrEmpty(taskForUser.ReminderGroupId) || taskForUser.DateStart <= DateTime.Now))
 					{
 						taskNewForUser = taskForUser;
 					}
 				}
-				Task taskReminderOld = _listReminderTasks.FirstOrDefault(x => x.TaskNum == editedTaskNum);
+				Task taskReminderOld = _listReminderTasks.FirstOrDefault(x => x.Id == editedTaskNum);
 				if (taskReminderOld != null)
 				{//The task is a reminder which is relevant to the current user.
 					hasChangedReminders = true;
-					_listReminderTasks.RemoveAll(x => x.TaskNum == editedTaskNum);//Remove the old copy of the task.
+					_listReminderTasks.RemoveAll(x => x.Id == editedTaskNum);//Remove the old copy of the task.
 					if (taskForUser != null)
 					{//The updated reminder task is relevant to the current user.
 						_listReminderTasks.Add(taskForUser);//Add the updated reminder task into the list (replacing the old reminder task).
@@ -3660,51 +3699,76 @@ namespace OpenDental
 			return hasChangedReminders;
 		}
 
-		private void RefreshOpenTasksOrPopupNewTasks(List<Signalod> listSignalTasks, List<Task> listRefreshedTasks, List<TaskNote> listRefreshedTaskNotes/*, List<UserOdPref> listBlockedTaskLists*/)
+		private void RefreshOpenTasksOrPopupNewTasks(List<Signalod> signals, List<Task> listRefreshedTasks, List<TaskNote> listRefreshedTaskNotes/*, List<UserOdPref> listBlockedTaskLists*/)
 		{
-			if (listSignalTasks == null)
-			{
-				return;//Nothing to do if there was no signal sent which means no task has been flagged as needing to be refreshed.
-			}
-			List<long> listSignalTasksNums = listSignalTasks.Select(x => x.FKey).ToList();
+			if (signals == null) return;
+
+
+
+
+			List<long> listSignalTasksNums = signals.Where(x => x.Param2.HasValue).Select(x => x.Param2.Value).ToList();
+
 			List<long> listTaskNumsOpen = new List<long>();
+
 			for (int i = 0; i < Application.OpenForms.Count; i++)
 			{
 				Form form = Application.OpenForms[i];
-				if (!(form is FormTaskEdit))
+				if (!(form is FormTaskEdit formTaskEdit))
 				{
 					continue;
 				}
-				FormTaskEdit FormTE = (FormTaskEdit)form;
-				if (listSignalTasksNums.Contains(FormTE.TaskNumCur))
+
+				if (listSignalTasksNums.Contains(formTaskEdit.TaskId))
 				{
-					FormTE.OnTaskEdited();
-					listTaskNumsOpen.Add(FormTE.TaskNumCur);
+					formTaskEdit.OnTaskEdited();
+
+					listTaskNumsOpen.Add(formTaskEdit.TaskId);
 				}
 			}
-			List<Task> tasksPopup = new List<Task>();
-			if (listRefreshedTasks != null)
-			{
-				for (int i = 0; i < listRefreshedTasks.Count; i++)
-				{//Locate any popup tasks in the returned list of tasks.
-				 //Verify the current task is a popup task.
-					if (!listSignalTasks.Exists(x => x.FKeyType == KeyType.Task && x.IType == InvalidType.TaskPopup && x.FKey == listRefreshedTasks[i].TaskNum)
-						|| listTaskNumsOpen.Contains(listRefreshedTasks[i].TaskNum))
-					{
-						continue;//Not a popup task or is already open.
-					}
-					tasksPopup.Add(listRefreshedTasks[i]);
-				}
-			}
-			for (int i = 0; i < tasksPopup.Count; i++)
-			{
-				//Reminders sent to a subscribed tasklist will pop up prior to the reminder date/time.
-				TaskPopupHelper(tasksPopup[i], /*listBlockedTaskLists, */listRefreshedTaskNotes?.FindAll(x => x.TaskNum == tasksPopup[i].TaskNum));
-			}
-			if (listSignalTasks.Count > 0 || tasksPopup.Count > 0)
-			{
-				UserControlTasks.RefreshTasksForAllInstances(listSignalTasks);
-			}
+
+
+			//var popupTaskIds = signals
+			//	.Where(
+			//		signal => signal.Name == "task_popup" && signal.Param2.HasValue)
+			//	.Select(
+			//		signal => signal.Param2.Value);
+
+			//foreach (var taskId in popupTaskIds)
+   //         {
+			//	if (listTaskNumsOpen.Contains(taskId)) continue;
+
+			//	TaskPopupHelper(taskId);
+   //         }
+
+
+			//List<Task> tasksPopup = new List<Task>();
+			//if (listRefreshedTasks != null)
+			//{
+			//	for (int i = 0; i < listRefreshedTasks.Count; i++)
+			//	{//Locate any popup tasks in the returned list of tasks.
+			//	 //Verify the current task is a popup task.
+			//		if (!signals.Exists(x => 
+			//			x.Name == KeyType.Task && x.InvalidType == InvalidType.TaskPopup && x.InvalidForeignKey == listRefreshedTasks[i].Id)
+			//			|| listTaskNumsOpen.Contains(listRefreshedTasks[i].Id))
+			//		{
+			//			continue;//Not a popup task or is already open.
+			//		}
+
+			//		tasksPopup.Add(listRefreshedTasks[i]);
+			//	}
+			//}
+
+
+			//for (int i = 0; i < tasksPopup.Count; i++)
+			//{
+			//	//Reminders sent to a subscribed tasklist will pop up prior to the reminder date/time.
+			//	TaskPopupHelper(tasksPopup[i], /*listBlockedTaskLists, */listRefreshedTaskNotes?.FindAll(x => x.TaskId == tasksPopup[i].Id));
+			//}
+
+			//if (signals.Count > 0 || tasksPopup.Count > 0)
+			//{
+			//	UserControlTasks.RefreshTasksForAllInstances(signals);
+			//}
 		}
 
 		public void ProcessKillCommand()
@@ -3731,7 +3795,7 @@ namespace OpenDental
 					}
 					break;
 				case EnumModuleType.Family:
-					if (PrefC.GetBool(PrefName.EhrEmergencyNow))
+					if (Prefs.GetBool(PrefName.EhrEmergencyNow))
 					{//if red emergency button is on
 						if (Security.IsAuthorized(Permissions.EhrEmergencyAccess, true))
 						{
@@ -3886,7 +3950,7 @@ namespace OpenDental
 					TryNonPatientPopup();
 					break;
 				case EnumModuleType.Images:
-					if (PrefC.GetBoolSilent(PrefName.ImagesModuleUsesOld2020, false))
+					if (Prefs.GetBool(PrefName.ImagesModuleUsesOld2020, false))
 					{
 						ContrImages2.InitializeOnStartup();
 						ContrImages2.Visible = true;
@@ -3918,7 +3982,7 @@ namespace OpenDental
 			ContrAccount2.Visible = false;
 			ContrTreat2.Visible = false;
 			ContrChart2.Visible = false;
-			if (PrefC.GetBoolSilent(PrefName.ImagesModuleUsesOld2020, false))
+			if (Prefs.GetBool(PrefName.ImagesModuleUsesOld2020, false))
 			{
 				ContrImages2.Visible = false;
 			}
@@ -3958,7 +4022,7 @@ namespace OpenDental
 			{
 				ContrChart2.ModuleUnselected(isLoggingOff);
 			}
-			if (PrefC.GetBoolSilent(PrefName.ImagesModuleUsesOld2020, false))
+			if (Prefs.GetBool(PrefName.ImagesModuleUsesOld2020, false))
 			{
 				if (ContrImages2.Visible)
 				{
@@ -4012,7 +4076,7 @@ namespace OpenDental
 			{
 				ContrChart2.ModuleSelected(CurPatNum, isClinicRefresh);
 			}
-			if (PrefC.GetBoolSilent(PrefName.ImagesModuleUsesOld2020, false))
+			if (Prefs.GetBool(PrefName.ImagesModuleUsesOld2020, false))
 			{
 				if (ContrImages2.Visible)
 				{
@@ -4128,62 +4192,48 @@ namespace OpenDental
 			}
 		}
 
-		public static void S_TaskGoTo(TaskObjectType taskOT, long keyNum)
-		{
-			_formOpenDentalS.TaskGoTo(taskOT, keyNum);
-		}
+		//public static void S_TaskGoTo(TaskObjectType taskOT, long keyNum)
+		//{
+		//	_formOpenDentalS.TaskGoTo(taskOT, keyNum);
+		//}
 
-		private void TaskGoTo(TaskObjectType taskOT, long keyNum)
-		{
-			if (taskOT == TaskObjectType.None || keyNum == 0)
-			{
-				return;
-			}
-			if (taskOT == TaskObjectType.Patient)
-			{
-				CurPatNum = keyNum;
-				Patient pat = Patients.GetPat(CurPatNum);
-				RefreshCurrentModule();
-				FillPatientButton(pat);
-			}
-			if (taskOT == TaskObjectType.Appointment)
-			{
-				Appointment apt = Appointments.GetOneApt(keyNum);
-				if (apt == null)
-				{
-					MessageBox.Show("Appointment has been deleted, so it's not available.");
-					return;
-				}
-				DateTime dateSelected = DateTime.MinValue;
-				if (apt.AptStatus == ApptStatus.Planned || apt.AptStatus == ApptStatus.UnschedList)
-				{
-					//I did not add feature to put planned or unsched apt on pinboard.
-					MessageBox.Show("Cannot navigate to appointment.  Use the Other Appointments button.");
-					//return;
-				}
-				else
-				{
-					dateSelected = apt.AptDateTime;
-				}
-				CurPatNum = apt.PatNum;//OnPatientSelected(apt.PatNum);
-				FillPatientButton(Patients.GetPat(CurPatNum));
-				GotoModule.GotoAppointment(dateSelected, apt.AptNum);
-			}
-		}
-
-		private void comboTriageCoordinator_MouseWheel(object sender, MouseEventArgs e)
-		{
-			ComboBox comboControl = (ComboBox)sender;
-			if (!comboControl.DroppedDown)
-			{
-				((HandledMouseEventArgs)e).Handled = true;
-			}
-		}
-
-		private void butTriage_Click(object sender, EventArgs e)
-		{
-			ContrManage2.JumpToTriageTaskWindow();
-		}
+		//private void TaskGoTo(TaskObjectType taskOT, long keyNum)
+		//{
+		//	if (taskOT == TaskObjectType.None || keyNum == 0)
+		//	{
+		//		return;
+		//	}
+		//	if (taskOT == TaskObjectType.Patient)
+		//	{
+		//		CurPatNum = keyNum;
+		//		Patient pat = Patients.GetPat(CurPatNum);
+		//		RefreshCurrentModule();
+		//		FillPatientButton(pat);
+		//	}
+		//	if (taskOT == TaskObjectType.Appointment)
+		//	{
+		//		Appointment apt = Appointments.GetOneApt(keyNum);
+		//		if (apt == null)
+		//		{
+		//			MessageBox.Show("Appointment has been deleted, so it's not available.");
+		//			return;
+		//		}
+		//		DateTime dateSelected = DateTime.MinValue;
+		//		if (apt.AptStatus == ApptStatus.Planned || apt.AptStatus == ApptStatus.UnschedList)
+		//		{
+		//			//I did not add feature to put planned or unsched apt on pinboard.
+		//			MessageBox.Show("Cannot navigate to appointment.  Use the Other Appointments button.");
+		//			//return;
+		//		}
+		//		else
+		//		{
+		//			dateSelected = apt.AptDateTime;
+		//		}
+		//		CurPatNum = apt.PatNum;//OnPatientSelected(apt.PatNum);
+		//		FillPatientButton(Patients.GetPat(CurPatNum));
+		//		GotoModule.GotoAppointment(dateSelected, apt.AptNum);
+		//	}
+		//}
 
 		#region MenuEvents
 		private void menuItemLogOff_Click(object sender, System.EventArgs e)
@@ -5094,7 +5144,7 @@ namespace OpenDental
 			long clinicNumOld = Clinics.ClinicNum;
 			if (Security.CurrentUser.ClinicIsRestricted)
 			{
-				Clinics.ClinicNum = Security.CurrentUser.ClinicNum;
+				Clinics.ClinicNum = Security.CurrentUser.ClinicId;
 			}
 			Text = PatientL.GetMainTitle(Patients.GetPat(CurPatNum), Clinics.ClinicNum);
 			SetSmsNotificationText(doUseSignalInterval: (clinicNumOld == Clinics.ClinicNum));//Clinic selection changed, update sms notifications.
@@ -5111,7 +5161,7 @@ namespace OpenDental
 				MessageBox.Show("Not authorized to add a new user.");
 				return;
 			}
-			if (PrefC.GetLong(PrefName.DefaultUserGroup) == 0)
+			if (Prefs.GetLong(PrefName.DefaultUserGroup) == 0)
 			{
 				if (isAuthorizedSecurityAdmin)
 				{
@@ -5168,7 +5218,7 @@ namespace OpenDental
 			ContrAccount2.LayoutToolBar();//for repeating charges
 			RefreshCurrentModule(true);
 			//Show enterprise setup if it was enabled
-			menuItemEnterprise.Visible = PrefC.GetBool(PrefName.ShowFeatureEnterprise);
+			menuItemEnterprise.Visible = Prefs.GetBool(PrefName.ShowFeatureEnterprise);
 			SecurityLogs.MakeLogEntry(Permissions.Setup, 0, "Show Features");
 		}
 
@@ -5258,7 +5308,7 @@ namespace OpenDental
 			//this menu item is only visible if the clinics show feature is enabled (!EasyNoClinics)
 			if (Clinics.GetDesc(Clinics.ClinicNum) == "")
 			{//will be empty string if ClinicNum is not valid, in case they deleted the clinic
-				Clinics.ClinicNum = Security.CurrentUser.ClinicNum;
+				Clinics.ClinicNum = Security.CurrentUser.ClinicId;
 				SetSmsNotificationText(doUseSignalInterval: true);//Update sms notification text.
 				Text = PatientL.GetMainTitle(Patients.GetPat(CurPatNum), Clinics.ClinicNum);
 			}
@@ -5470,14 +5520,14 @@ namespace OpenDental
 			Cursor = Cursors.WaitCursor;
 			//Check if the user has permission to view all providers in production and income reports
 			bool hasAllProvsPermission = Security.IsAuthorized(Permissions.ReportProdIncAllProviders, true);
-			if (!hasAllProvsPermission && Security.CurrentUser.ProvNum == 0)
+			if (!hasAllProvsPermission && Security.CurrentUser.ProviderId == 0)
 			{
 				if (!MsgBox.Show(MsgBoxButtons.OKCancel, "The current user must be a provider or have the 'All Providers' permission to view provider reports. Continue?"))
 				{
 					return;
 				}
 			}
-			_formDashboardEditTab = new OpenDentalGraph.FormDashboardEditTab(Security.CurrentUser.ProvNum, !Security.IsAuthorized(Permissions.ReportProdIncAllProviders, true)) { IsEditMode = false };
+			_formDashboardEditTab = new OpenDentalGraph.FormDashboardEditTab(Security.CurrentUser.ProviderId, !Security.IsAuthorized(Permissions.ReportProdIncAllProviders, true)) { IsEditMode = false };
 			_formDashboardEditTab.FormClosed += new FormClosedEventHandler((object senderF, FormClosedEventArgs eF) => { _formDashboardEditTab = null; });
 			Cursor = Cursors.Default;
 			_formDashboardEditTab.Show();
@@ -5489,28 +5539,31 @@ namespace OpenDental
 			{
 				return;
 			}
+
 			if (Security.IsAuthorized(Permissions.UserQueryAdmin, true))
 			{
-				SecurityLogs.MakeLogEntry(Permissions.UserQuery, 0, Lan.G(this, "User query form accessed."));
+				SecurityLogs.MakeLogEntry(Permissions.UserQuery, 0,"User query form accessed.");
 				if (_formUserQuery == null || _formUserQuery.IsDisposed)
 				{
 					_formUserQuery = new FormQuery(null);
-					_formUserQuery.FormClosed += new FormClosedEventHandler((object senderF, FormClosedEventArgs eF) => { _formUserQuery = null; });
+					_formUserQuery.FormClosed += (s, e) => { _formUserQuery = null; };
 					_formUserQuery.Show();
 				}
+
 				if (_formUserQuery.WindowState == FormWindowState.Minimized)
 				{
 					_formUserQuery.WindowState = FormWindowState.Normal;
 				}
+
 				_formUserQuery.BringToFront();
 			}
 			else
 			{
-				FormQueryFavorites FormQF = new FormQueryFavorites();
-				FormQF.ShowDialog();
-				if (FormQF.DialogResult == DialogResult.OK)
+				using var formQueryFavorites = new FormQueryFavorites();
+
+				if (formQueryFavorites.ShowDialog(this) == DialogResult.OK)
 				{
-					ExecuteQueryFavorite(FormQF.UserQueryCur);
+					ExecuteQueryFavorite(formQueryFavorites.UserQueryCur);
 				}
 			}
 		}
@@ -5519,22 +5572,27 @@ namespace OpenDental
 		{
 			if (!GroupPermissions.HasReportPermission(DisplayReports.ReportNames.UnfinalizedInsPay, Security.CurrentUser))
 			{
-				MessageBox.Show("You do not have permission to run this report.");
+                ODMessageBox.Show("You do not have permission to run this report.");
 				return;
 			}
-			FormRpUnfinalizedInsPay formRp = new FormRpUnfinalizedInsPay();
-			formRp.ShowDialog();
+
+			using var formRpUnfinalizedInsPay = new FormRpUnfinalizedInsPay();
+
+			formRpUnfinalizedInsPay.ShowDialog(this);
 		}
 
-		private void UpdateUnfinalizedPayCount(List<Signalod> listSignals)
+		private void UpdateUnfinalizedPayCount(IEnumerable<Signalod> signals)
 		{
-			if (listSignals.Count == 0)
+			var signal = signals.OrderByDescending(x => x.Date).FirstOrDefault();
+
+			if (signal == null || !signal.Param2.HasValue)
 			{
-				menuItemReportsUnfinalizedPay.Text = Lan.G(this, "Unfinalized Payments");
+				menuItemReportsUnfinalizedPay.Text = "Unfinalized Payments";
+
 				return;
 			}
-			Signalod signal = listSignals.OrderByDescending(x => x.SigDateTime).First();
-			menuItemReportsUnfinalizedPay.Text = Lan.G(this, "Unfinalized Payments") + ": " + signal.MsgValue;
+
+			menuItemReportsUnfinalizedPay.Text = "Unfinalized Payments" + ": " + signal.Param2.Value;
 		}
 
 		private void RefreshMenuReports()
@@ -5590,7 +5648,7 @@ namespace OpenDental
 			//the image path should exist.
 			FormReportCustom FormR = new FormReportCustom();
 			FormR.SourceFilePath =
-				ODFileUtils.CombinePaths(OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath(), PrefC.GetString(PrefName.ReportFolderName), ((MenuItem)sender).Text + ".rdl");
+				ODFileUtils.CombinePaths(OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath(), Prefs.GetString(PrefName.ReportFolderName), ((MenuItem)sender).Text + ".rdl");
 			FormR.ShowDialog();
 		}
 
@@ -5742,18 +5800,20 @@ namespace OpenDental
 			{
 				return;
 			}
-			FormShutdown FormS = new FormShutdown();
-			FormS.ShowDialog();
-			if (FormS.DialogResult != DialogResult.OK)
+
+			using var formShutdown = new FormShutdown();
+			if (formShutdown.ShowDialog(this) != DialogResult.OK)
 			{
 				return;
 			}
-			//turn off signal reception for 5 seconds so this workstation will not shut down.
-			Signalods.SignalLastRefreshed = MiscData.GetNowDateTime().AddSeconds(5);
-			Signalod sig = new Signalod();
-			sig.IType = InvalidType.ShutDownNow;
-			Signalods.Insert(sig);
-			Computers.ClearAllHeartBeats(Environment.MachineName);//always assume success
+
+			// Turn off signal reception for 5 seconds so this workstation will not shut down.
+			Signalods.SignalLastRefreshed = DateTime.UtcNow.AddSeconds(5);
+
+			Signalods.Send(SignalName.Shutdown);
+
+			Computers.ClearAllHeartBeats(Environment.MachineName);
+
 			SecurityLogs.MakeLogEntry(Permissions.Setup, 0, "Shutdown all workstations.");
 		}
 
@@ -5763,9 +5823,10 @@ namespace OpenDental
 			{
 				return;
 			}
-			FormTelephone FormT = new FormTelephone();
-			FormT.ShowDialog();
-			//Security log entries are made from within the form.
+
+			using var formTelephone = new FormTelephone();
+
+			formTelephone.ShowDialog(this);
 		}
 
 		private void menuItemTestLatency_Click(object sender, EventArgs e)
@@ -5774,8 +5835,10 @@ namespace OpenDental
 			{
 				return;
 			}
-			FormTestLatency formTL = new FormTestLatency();
-			formTL.ShowDialog();
+
+			using var formTestLatency = new FormTestLatency();
+
+			formTestLatency.ShowDialog(this);
 		}
 
 		private void menuItemXChargeReconcile_Click(object sender, EventArgs e)
@@ -5870,7 +5933,7 @@ namespace OpenDental
 
 		private void menuItemEvaluations_Click(object sender, EventArgs e)
 		{
-			if (!Security.IsAuthorized(Permissions.AdminDentalEvaluations, true) && (Security.CurrentUser.ProvNum == 0 || Providers.GetProv(Security.CurrentUser.ProvNum).SchoolClassNum != 0))
+			if (!Security.IsAuthorized(Permissions.AdminDentalEvaluations, true) && (Security.CurrentUser.ProviderId == 0 || Providers.GetProv(Security.CurrentUser.ProviderId).SchoolClassNum != 0))
 			{
 				MessageBox.Show("Only Instructors may view or edit evaluations.");
 				return;
@@ -5881,7 +5944,7 @@ namespace OpenDental
 
 		private void menuItemTerminal_Click(object sender, EventArgs e)
 		{
-			if (PrefC.GetLong(PrefName.ProcessSigsIntervalInSecs) == 0)
+			if (Prefs.GetLong(PrefName.ProcessSigsIntervalInSecs) == 0)
 			{
 				MessageBox.Show("Cannot open terminal unless process signal interval is set. To set it, go to Setup > Miscellaneous.");
 				return;
@@ -5952,7 +6015,7 @@ namespace OpenDental
 
 		private void menuItemReqStudents_Click(object sender, EventArgs e)
 		{
-			Provider prov = Providers.GetProv(Security.CurrentUser.ProvNum);
+			Provider prov = Providers.GetProv(Security.CurrentUser.ProviderId);
 			if (prov == null)
 			{
 				MessageBox.Show("The current user is not attached to a provider. Attach the user to a provider to gain access to this feature.");
@@ -6006,7 +6069,7 @@ namespace OpenDental
 
 		public static void S_WikiLoadPage(string pageTitle)
 		{
-			if (!PrefC.GetBool(PrefName.WikiCreatePageFromLink) && !WikiPages.CheckPageNamesExist(new List<string> { pageTitle })[0])
+			if (!Prefs.GetBool(PrefName.WikiCreatePageFromLink) && !WikiPages.CheckPageNamesExist(new List<string> { pageTitle })[0])
 			{
 				MsgBox.Show("Wiki page does not exist.");
 				return;
@@ -7203,7 +7266,7 @@ namespace OpenDental
 				_datePopupDelay = DateTime.Now;
 				_previousPatNum = CurPatNum;
 			}
-			if (!PrefC.GetBool(PrefName.ChartNonPatientWarn))
+			if (!Prefs.GetBool(PrefName.ChartNonPatientWarn))
 			{
 				return;
 			}
@@ -7267,19 +7330,19 @@ namespace OpenDental
 				}
 				#endregion
 				#region Domain Login
-				else if (PrefC.GetBool(PrefName.DomainLoginEnabled) && !string.IsNullOrWhiteSpace(PrefC.GetString(PrefName.DomainLoginPath)))
+				else if (Prefs.GetBool(PrefName.DomainLoginEnabled) && !string.IsNullOrWhiteSpace(Prefs.GetString(PrefName.DomainLoginPath)))
 				{
-					string loginPath = PrefC.GetString(PrefName.DomainLoginPath);
+					string loginPath = Prefs.GetString(PrefName.DomainLoginPath);
 					try
 					{
 						DirectoryEntry loginEntry = new DirectoryEntry(loginPath);
 						string distinguishedName = loginEntry.Properties["distinguishedName"].Value.ToString();
 						string domainGuid = loginEntry.Guid.ToString();
-						string domainGuidPref = PrefC.GetString(PrefName.DomainObjectGuid);
+						string domainGuidPref = Prefs.GetString(PrefName.DomainObjectGuid);
 						if (domainGuidPref.IsNullOrEmpty())
 						{
 							//Domain login was setup before we started recording the domain's ObjectGuid. We will save it now for future use.
-							Prefs.UpdateString(PrefName.DomainObjectGuid, domainGuid);
+							Prefs.Set(PrefName.DomainObjectGuid, domainGuid);
 							domainGuidPref = domainGuid;
 						}
 						//All LDAP servers must expose a special entry, called the root DSE. This gets the current user's domain path.
@@ -7661,7 +7724,7 @@ namespace OpenDental
 			{
 				//continue //we do not need to blank out patient or menu
 			}
-			else if (!PrefC.GetBool(PrefName.PatientMaintainedOnUserChange))
+			else if (!Prefs.GetBool(PrefName.PatientMaintainedOnUserChange))
 			{//not the same user and clinics are enabled. 
 				CurPatNum = 0;
 				PatientL.RemoveAllFromMenu(menuPatient);
@@ -7744,7 +7807,7 @@ namespace OpenDental
 			{
 				return;
 			}
-			if (!PrefC.GetBool(PrefName.SecurityLogOffWithWindows))
+			if (!Prefs.GetBool(PrefName.SecurityLogOffWithWindows))
 			{
 				return;
 			}
@@ -7864,7 +7927,7 @@ namespace OpenDental
 			//from the SessionSwitch event "Because this is a static event, you must detach your event handlers when your application is disposed, or 
 			//memory leaks will result."
 			SystemEvents.SessionSwitch -= new SessionSwitchEventHandler(SystemEvents_SessionSwitch);
-			//if(PrefC.GetBool(PrefName.DistributorKey)) {//for OD HQ
+			//if(Prefs.GetBool(PrefName.DistributorKey)) {//for OD HQ
 			//  for(int f=Application.OpenForms.Count-1;f>=0;f--) {
 			//    if(Application.OpenForms[f]==this) {// main form
 			//      continue;

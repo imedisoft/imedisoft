@@ -258,7 +258,7 @@ namespace OpenDental{
 		#endregion
 
 		private void FormAbout_Load(object sender, System.EventArgs e) {
-			string softwareName=PrefC.GetString(PrefName.SoftwareName);
+			string softwareName=Prefs.GetString(PrefName.SoftwareName);
 			if(Programs.GetCur(ProgramName.BencoPracticeManagement).Enabled) {
 				pictureOpenDental.Image= Imedisoft.Properties.Resources.bencoLogo;
 			}

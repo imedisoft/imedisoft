@@ -22,7 +22,7 @@ namespace OpenDental {
 		/// <summary>Helper method that sets up the SaveFileDialog form and then returns that </summary>
 		private SaveFileDialog ExportDialogSetup() {
 			string fileName="autonotes.json";
-			string initialDirectory=PrefC.GetString(PrefName.ExportPath);
+			string initialDirectory=Prefs.GetString(PrefName.ExportPath);
 			SaveFileDialog saveDialog=new SaveFileDialog();
 			saveDialog.AddExtension=true;
 			saveDialog.FileName=fileName;

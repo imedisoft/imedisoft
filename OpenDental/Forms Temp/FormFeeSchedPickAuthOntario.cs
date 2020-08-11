@@ -28,8 +28,8 @@ namespace OpenDental {
 		}
 
 		private void FormFeeSchedPickAuthOntario_Load(object sender,EventArgs e) {
-			textODAMemberNumber.Text=PrefC.GetString(PrefName.CanadaODAMemberNumber);
-			textODAMemberPassword.Text=PrefC.GetString(PrefName.CanadaODAMemberPass);
+			textODAMemberNumber.Text=Prefs.GetString(PrefName.CanadaODAMemberNumber);
+			textODAMemberPassword.Text=Prefs.GetString(PrefName.CanadaODAMemberPass);
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {
@@ -41,8 +41,8 @@ namespace OpenDental {
 				MessageBox.Show("ODA Member Password cannot be blank.");
 				return;
 			}
-			Prefs.UpdateString(PrefName.CanadaODAMemberNumber,textODAMemberNumber.Text);
-			Prefs.UpdateString(PrefName.CanadaODAMemberPass,textODAMemberPassword.Text);
+			Prefs.Set(PrefName.CanadaODAMemberNumber,textODAMemberNumber.Text);
+			Prefs.Set(PrefName.CanadaODAMemberPass,textODAMemberPassword.Text);
 			DialogResult=DialogResult.OK;
 		}
 

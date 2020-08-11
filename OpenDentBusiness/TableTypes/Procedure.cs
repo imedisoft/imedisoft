@@ -230,7 +230,7 @@ namespace OpenDentBusiness {
 
 		public Procedure() {
 			UnitQty=1;
-			IcdVersion=PrefC.GetByte(PrefName.DxIcdVersion);
+			IcdVersion=Prefs.GetByte(PrefName.DxIcdVersion);
 		}
 
 		///<summary>Returns a copy of the procedure.</summary>

@@ -16,7 +16,7 @@ namespace OpenDentBusiness {
 			);
 			#region Completed Procs
 			string command="SELECT ";
-			if(PrefC.GetBool(PrefName.ReportsShowPatNum)) {
+			if(Prefs.GetBool(PrefName.ReportsShowPatNum)) {
 				command+=DbHelper.Concat("CAST(patient.PatNum AS CHAR)","'-'","patient.LName","', '","patient.FName","' '","patient.MiddleI");
 			}
 			else {

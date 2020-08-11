@@ -193,7 +193,7 @@ namespace OpenDental{
 			if(PrefC.GetInt(PrefName.SecurityLockDays)>0) {
 				textDays.Text=PrefC.GetInt(PrefName.SecurityLockDays).ToString();
 			}
-			checkAdmin.Checked=PrefC.GetBool(PrefName.SecurityLockIncludesAdmin);
+			checkAdmin.Checked=Prefs.GetBool(PrefName.SecurityLockIncludesAdmin);
 		}
 
 		private void textDate_KeyDown(object sender,System.Windows.Forms.KeyEventArgs e) {
@@ -231,9 +231,9 @@ namespace OpenDental{
 				}
 			}
 			DateTime date=PIn.Date(textDate.Text);
-			if(Prefs.UpdateString(PrefName.SecurityLockDate,POut.Date(date,false))
-				| Prefs.UpdateInt(PrefName.SecurityLockDays,days)
-				| Prefs.UpdateBool(PrefName.SecurityLockIncludesAdmin,checkAdmin.Checked)  )
+			if(Prefs.Set(PrefName.SecurityLockDate,POut.Date(date,false))
+				| Prefs.Set(PrefName.SecurityLockDays,days)
+				| Prefs.Set(PrefName.SecurityLockIncludesAdmin,checkAdmin.Checked)  )
 			{
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}

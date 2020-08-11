@@ -227,14 +227,14 @@ namespace OpenDental {
 
 		///<summary>Only subscribed to signal processing if NOT SimpleMode.  Only processes signals of type InvalidType.Kiosk.</summary>
 		public override void OnProcessSignals(List<Signalod> listSignals) {
-			if(IsSimpleMode) { //Process signals ONLY if not simple mode.
-				return;
-			}
-			int processIdCur=Process.GetCurrentProcess().Id;
-			//load patient if any signals are Kiosk type either without a FKey or with a ProcessId different than this process
-			if(listSignals.Any(x => x.IType==InvalidType.Kiosk && (x.FKeyType!=KeyType.ProcessId || x.FKey!=processIdCur))) {
-				LoadPatient(false);//will load the current patient if PatNum>0, otherwise will force clearing/unloading the patient
-			}
+			//if(IsSimpleMode) { //Process signals ONLY if not simple mode.
+			//	return;
+			//}
+			//int processIdCur=Process.GetCurrentProcess().Id;
+			////load patient if any signals are Kiosk type either without a FKey or with a ProcessId different than this process
+			//if(listSignals.Any(x => x.InvalidType==InvalidType.Kiosk && (x.Name!=KeyType.ProcessId || x.InvalidForeignKey!=processIdCur))) {
+			//	LoadPatient(false);//will load the current patient if PatNum>0, otherwise will force clearing/unloading the patient
+			//}
 		}
 
 		///<summary>Only in nonSimpleMode.  Occurs every 4 seconds. Checks the database to verify that this kiosk should still be running and that the
@@ -405,12 +405,12 @@ namespace OpenDental {
 
 		private void panelClose_Click(object sender,EventArgs e) {
 			//It's fairly safe to not have a password, because the program will exit in remote mode, and in simple mode, the patient is usually supervised.
-			if(PrefC.GetString(PrefName.TerminalClosePassword)!="") {
+			if(Prefs.GetString(PrefName.TerminalClosePassword)!="") {
 				InputBox iBox=new InputBox("Enter password to exit kiosk.");
 				iBox.textResult.PasswordChar='*';
 				iBox.setTitle(Lan.G(this,"Kiosk Password"));
 				iBox.ShowDialog();
-				while(iBox.DialogResult==DialogResult.OK && iBox.textResult.Text!=PrefC.GetString(PrefName.TerminalClosePassword)) {
+				while(iBox.DialogResult==DialogResult.OK && iBox.textResult.Text!=Prefs.GetString(PrefName.TerminalClosePassword)) {
 					MessageBox.Show("Invalid Password");
 					iBox.textResult.Text="";
 					iBox.ShowDialog();

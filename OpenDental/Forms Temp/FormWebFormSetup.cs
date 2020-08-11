@@ -85,7 +85,7 @@ namespace OpenDental {
 				ConstructURLs();
 			}
 			butSave.Enabled=false;
-			checkAutoFillNameAndBirthdate.Checked=PrefC.GetBool(PrefName.WebFormsAutoFillNameAndBirthdate);
+			checkAutoFillNameAndBirthdate.Checked=Prefs.GetBool(PrefName.WebFormsAutoFillNameAndBirthdate);
 		}
 
 		private void FormWebFormSetup_Shown(object sender,EventArgs e) {
@@ -110,7 +110,7 @@ namespace OpenDental {
 
 		private void FetchValuesFromWebServer() {
 			try {
-				String WebHostSynchServerURL=PrefC.GetString(PrefName.WebHostSynchServerURL);
+				String WebHostSynchServerURL=Prefs.GetString(PrefName.WebHostSynchServerURL);
 				textboxWebHostAddress.Text=WebHostSynchServerURL;
 				butSave.Enabled=false;
 				if((WebHostSynchServerURL==WebFormL.SynchUrlStaging) || (WebHostSynchServerURL==WebFormL.SynchUrlDev)) {
@@ -194,8 +194,8 @@ namespace OpenDental {
 			if(_webFormPrefOld.ColorBorder.ToArgb()!=_webFormPref.ColorBorder.ToArgb()
 				|| _webFormPrefOld.CultureName!=_webFormPref.CultureName
 				|| _webFormPrefOld.DisableSignatures!=_webFormPref.DisableSignatures
-				|| textboxWebHostAddress.Text.Trim()!=PrefC.GetString(PrefName.WebHostSynchServerURL) 
-				|| checkAutoFillNameAndBirthdate.Checked!=PrefC.GetBool(PrefName.WebFormsAutoFillNameAndBirthdate))
+				|| textboxWebHostAddress.Text.Trim()!=Prefs.GetString(PrefName.WebHostSynchServerURL) 
+				|| checkAutoFillNameAndBirthdate.Checked!=Prefs.GetBool(PrefName.WebFormsAutoFillNameAndBirthdate))
 			{
 				butSave.Enabled=true;
 			}
@@ -223,8 +223,8 @@ namespace OpenDental {
 				return false;
 			}
 			_webFormPrefOld=_webFormPref.Copy();
-			if(Prefs.UpdateString(PrefName.WebHostSynchServerURL,textboxWebHostAddress.Text.Trim())
-				|| (includeAutoFillBirthdatePref && Prefs.UpdateBool(PrefName.WebFormsAutoFillNameAndBirthdate,checkAutoFillNameAndBirthdate.Checked)))
+			if(Prefs.Set(PrefName.WebHostSynchServerURL,textboxWebHostAddress.Text.Trim())
+				|| (includeAutoFillBirthdatePref && Prefs.Set(PrefName.WebFormsAutoFillNameAndBirthdate,checkAutoFillNameAndBirthdate.Checked)))
 			{
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}

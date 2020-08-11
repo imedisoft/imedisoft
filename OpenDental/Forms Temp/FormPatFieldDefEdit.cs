@@ -257,7 +257,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(OldFieldName!=textName.Text && !IsNew) {
-				if(!PrefC.GetBool(PrefName.DisplayRenamedPatFields)
+				if(!Prefs.GetBool(PrefName.DisplayRenamedPatFields)
 					&& !MsgBox.Show(MsgBoxButtons.YesNo,"Changing the field name will cause existing information for this field to be hidden.  Continue?")) 
 				{
 					textName.Text=OldFieldName;

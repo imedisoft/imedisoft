@@ -41,7 +41,7 @@ namespace OpenDental {
 
 		private void FormUpdateInProgress_Load(object sender,System.EventArgs e) {
 			string warningString=Lan.G("FormUpdateInProgress","An update is in progress on workstation")+": '"+_updateComputerName+"'.\r\n\r\n"
-			+Lan.G(this,"Not allowed to start")+" "+PrefC.GetString(PrefName.SoftwareName)+" "+Lan.G(this,"while an update is in progress.")+"\r\n"
+			+Lan.G(this,"Not allowed to start")+" "+Prefs.GetString(PrefName.SoftwareName)+" "+Lan.G(this,"while an update is in progress.")+"\r\n"
 			+Lan.G(this,"Please wait and click 'Try Again'.");
 			try {
 				if(_listAdminCompNames.Contains(ComputerPrefs.LocalComputer.ComputerName)) {
@@ -57,7 +57,7 @@ namespace OpenDental {
 
 		private void butTryAgain_Click(object sender,EventArgs e) {
 			Prefs.RefreshCache();
-			if(PrefC.GetString(PrefName.UpdateInProgressOnComputerName)!="") {
+			if(Prefs.GetString(PrefName.UpdateInProgressOnComputerName)!="") {
 				MessageBox.Show(Lan.G(this,"Workstation")+": '"+_updateComputerName+"' "+Lan.G(this,"is still updating.  Please wait and 'Try Again'"));
 				return;
 			}
@@ -65,7 +65,7 @@ namespace OpenDental {
 		}
 
 		private void butOverride_Click(object sender,EventArgs e) {
-			Prefs.UpdateString(PrefName.UpdateInProgressOnComputerName,"");
+			Prefs.Set(PrefName.UpdateInProgressOnComputerName,"");
 			MessageBox.Show("You will be allowed access when you restart.");
 			DialogResult=DialogResult.Cancel;
 		}

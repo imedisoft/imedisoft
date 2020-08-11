@@ -44,10 +44,10 @@ namespace OpenDentBusiness.Crud{
 			TaskNote taskNote;
 			foreach(DataRow row in table.Rows) {
 				taskNote=new TaskNote();
-				taskNote.TaskNoteNum = PIn.Long  (row["TaskNoteNum"].ToString());
-				taskNote.TaskNum     = PIn.Long  (row["TaskNum"].ToString());
-				taskNote.UserNum     = PIn.Long  (row["UserNum"].ToString());
-				taskNote.DateTimeNote= PIn.Date (row["DateTimeNote"].ToString());
+				taskNote.Id = PIn.Long  (row["TaskNoteNum"].ToString());
+				taskNote.TaskId     = PIn.Long  (row["TaskNum"].ToString());
+				taskNote.UserId     = PIn.Long  (row["UserNum"].ToString());
+				taskNote.DateModified= PIn.Date (row["DateTimeNote"].ToString());
 				taskNote.Note        = PIn.String(row["Note"].ToString());
 				retVal.Add(taskNote);
 			}
@@ -67,10 +67,10 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("Note");
 			foreach(TaskNote taskNote in listTaskNotes) {
 				table.Rows.Add(new object[] {
-					POut.Long  (taskNote.TaskNoteNum),
-					POut.Long  (taskNote.TaskNum),
-					POut.Long  (taskNote.UserNum),
-					POut.DateT (taskNote.DateTimeNote,false),
+					POut.Long  (taskNote.Id),
+					POut.Long  (taskNote.TaskId),
+					POut.Long  (taskNote.UserId),
+					POut.DateT (taskNote.DateModified,false),
 					            taskNote.Note,
 				});
 			}
@@ -85,7 +85,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one TaskNote into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(TaskNote taskNote,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				taskNote.TaskNoteNum=ReplicationServers.GetKey("tasknote","TaskNoteNum");
+				taskNote.Id=ReplicationServers.GetKey("tasknote","TaskNoteNum");
 			}
 			string command="INSERT INTO tasknote (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -93,11 +93,11 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="TaskNum,UserNum,DateTimeNote,Note) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(taskNote.TaskNoteNum)+",";
+				command+=POut.Long(taskNote.Id)+",";
 			}
 			command+=
-				     POut.Long  (taskNote.TaskNum)+","
-				+    POut.Long  (taskNote.UserNum)+","
+				     POut.Long  (taskNote.TaskId)+","
+				+    POut.Long  (taskNote.UserId)+","
 				+    DbHelper.Now()+","
 				+    DbHelper.ParamChar+"paramNote)";
 			if(taskNote.Note==null) {
@@ -108,9 +108,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramNote);
 			}
 			else {
-				taskNote.TaskNoteNum=Database.ExecuteInsert(command,paramNote);
+				taskNote.Id=Database.ExecuteInsert(command,paramNote);
 			}
-			return taskNote.TaskNoteNum;
+			return taskNote.Id;
 		}
 
 		///<summary>Inserts one TaskNote into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -123,18 +123,18 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO tasknote (";
 			if(!useExistingPK) {
-				taskNote.TaskNoteNum=ReplicationServers.GetKeyNoCache("tasknote","TaskNoteNum");
+				taskNote.Id=ReplicationServers.GetKeyNoCache("tasknote","TaskNoteNum");
 			}
 			if(useExistingPK) {
 				command+="TaskNoteNum,";
 			}
 			command+="TaskNum,UserNum,DateTimeNote,Note) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(taskNote.TaskNoteNum)+",";
+				command+=POut.Long(taskNote.Id)+",";
 			}
 			command+=
-				     POut.Long  (taskNote.TaskNum)+","
-				+    POut.Long  (taskNote.UserNum)+","
+				     POut.Long  (taskNote.TaskId)+","
+				+    POut.Long  (taskNote.UserId)+","
 				+    DbHelper.Now()+","
 				+    DbHelper.ParamChar+"paramNote)";
 			if(taskNote.Note==null) {
@@ -145,19 +145,19 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramNote);
 			}
 			else {
-				taskNote.TaskNoteNum=Database.ExecuteInsert(command,paramNote);
+				taskNote.Id=Database.ExecuteInsert(command,paramNote);
 			}
-			return taskNote.TaskNoteNum;
+			return taskNote.Id;
 		}
 
 		///<summary>Updates one TaskNote in the database.</summary>
 		public static void Update(TaskNote taskNote) {
 			string command="UPDATE tasknote SET "
-				+"TaskNum     =  "+POut.Long  (taskNote.TaskNum)+", "
-				+"UserNum     =  "+POut.Long  (taskNote.UserNum)+", "
-				+"DateTimeNote=  "+POut.DateT (taskNote.DateTimeNote)+", "
+				+"TaskNum     =  "+POut.Long  (taskNote.TaskId)+", "
+				+"UserNum     =  "+POut.Long  (taskNote.UserId)+", "
+				+"DateTimeNote=  "+POut.DateT (taskNote.DateModified)+", "
 				+"Note        =  "+DbHelper.ParamChar+"paramNote "
-				+"WHERE TaskNoteNum = "+POut.Long(taskNote.TaskNoteNum);
+				+"WHERE TaskNoteNum = "+POut.Long(taskNote.Id);
 			if(taskNote.Note==null) {
 				taskNote.Note="";
 			}
@@ -168,17 +168,17 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Updates one TaskNote in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
 		public static bool Update(TaskNote taskNote,TaskNote oldTaskNote) {
 			string command="";
-			if(taskNote.TaskNum != oldTaskNote.TaskNum) {
+			if(taskNote.TaskId != oldTaskNote.TaskId) {
 				if(command!="") { command+=",";}
-				command+="TaskNum = "+POut.Long(taskNote.TaskNum)+"";
+				command+="TaskNum = "+POut.Long(taskNote.TaskId)+"";
 			}
-			if(taskNote.UserNum != oldTaskNote.UserNum) {
+			if(taskNote.UserId != oldTaskNote.UserId) {
 				if(command!="") { command+=",";}
-				command+="UserNum = "+POut.Long(taskNote.UserNum)+"";
+				command+="UserNum = "+POut.Long(taskNote.UserId)+"";
 			}
-			if(taskNote.DateTimeNote != oldTaskNote.DateTimeNote) {
+			if(taskNote.DateModified != oldTaskNote.DateModified) {
 				if(command!="") { command+=",";}
-				command+="DateTimeNote = "+POut.DateT(taskNote.DateTimeNote)+"";
+				command+="DateTimeNote = "+POut.DateT(taskNote.DateModified)+"";
 			}
 			if(taskNote.Note != oldTaskNote.Note) {
 				if(command!="") { command+=",";}
@@ -192,7 +192,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			var paramNote = new MySqlParameter("paramNote", POut.StringParam(taskNote.Note));
 			command="UPDATE tasknote SET "+command
-				+" WHERE TaskNoteNum = "+POut.Long(taskNote.TaskNoteNum);
+				+" WHERE TaskNoteNum = "+POut.Long(taskNote.Id);
 			Database.ExecuteNonQuery(command,paramNote);
 			return true;
 		}
@@ -200,13 +200,13 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Returns true if Update(TaskNote,TaskNote) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
 		public static bool UpdateComparison(TaskNote taskNote,TaskNote oldTaskNote) {
-			if(taskNote.TaskNum != oldTaskNote.TaskNum) {
+			if(taskNote.TaskId != oldTaskNote.TaskId) {
 				return true;
 			}
-			if(taskNote.UserNum != oldTaskNote.UserNum) {
+			if(taskNote.UserId != oldTaskNote.UserId) {
 				return true;
 			}
-			if(taskNote.DateTimeNote != oldTaskNote.DateTimeNote) {
+			if(taskNote.DateModified != oldTaskNote.DateModified) {
 				return true;
 			}
 			if(taskNote.Note != oldTaskNote.Note) {

@@ -190,7 +190,7 @@ namespace OpenDental {
 					row.Cells.Add(clinicCur!=null?clinicCur.Description:"");//get description from cache if clinics are enabled
 				}
 				int billingDay=0;
-				if(PrefC.GetBool(PrefName.BillingUseBillingCycleDay)) {
+				if(Prefs.GetBool(PrefName.BillingUseBillingCycleDay)) {
 					billingDay=chargeCur.BillingCycleDay;
 				}
 				else {

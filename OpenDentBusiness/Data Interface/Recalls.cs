@@ -340,7 +340,7 @@ namespace OpenDentBusiness {
 					+"INNER JOIN recalltype ON recall.RecallTypeNum=recalltype.RecallTypeNum "
 					+"WHERE recall.DateDue BETWEEN "+POut.Date(fromDate)+" AND "+POut.Date(toDate)+" "
 					+"AND recall.IsDisabled=0 ";
-				List<string> listRecallTypesCur=PrefC.GetString(PrefName.RecallTypesShowingInList).Split(",",StringSplitOptions.RemoveEmptyEntries).ToList();
+				List<string> listRecallTypesCur=Prefs.GetString(PrefName.RecallTypesShowingInList).Split(",",StringSplitOptions.RemoveEmptyEntries).ToList();
 				if(!listRecallTypes.IsNullOrEmpty()) {
 					if(!listRecallTypesCur.IsNullOrEmpty()) {
 						listRecallTypesCur=listRecallTypesCur.Intersect(listRecallTypes.Select(x => POut.Long(x.RecallTypeNum))).ToList();
@@ -352,7 +352,7 @@ namespace OpenDentBusiness {
 				if(!listRecallTypesCur.IsNullOrEmpty()) {
 					command+=$"AND recall.RecallTypeNum IN({string.Join(",",listRecallTypesCur)}) ";
 				}
-				if(PrefC.GetBool(PrefName.RecallExcludeIfAnyFutureAppt)) {
+				if(Prefs.GetBool(PrefName.RecallExcludeIfAnyFutureAppt)) {
 					command+="AND NOT EXISTS(SELECT * FROM appointment "
 						+"WHERE appointment.PatNum=recall.PatNum "
 						+"AND appointment.AptDateTime>"+DbHelper.Curdate()+" "//early this morning
@@ -509,7 +509,7 @@ namespace OpenDentBusiness {
 					listDatesRemindersSent=new List<DateTime>();
 				}
 				familyBalance=PIn.Double(rowPat["BalTotal"].ToString());//from the guarantor's patient table
-				if(!PrefC.GetBool(PrefName.BalancesDontSubtractIns)) {//typical
+				if(!Prefs.GetBool(PrefName.BalancesDontSubtractIns)) {//typical
 					familyBalance-=PIn.Double(rowPat["InsEst"].ToString());
 				}
 				//loop through the recalls for each patient
@@ -660,7 +660,7 @@ namespace OpenDentBusiness {
 					break;
 				case ContactMethod.None:
 				default:
-					if(PrefC.GetBool(PrefName.RecallUseEmailIfHasEmailAddress)) {//if user wants to use email if there is an email address
+					if(Prefs.GetBool(PrefName.RecallUseEmailIfHasEmailAddress)) {//if user wants to use email if there is an email address
 						if(isGroupByFamilies && guarEmail!="") {
 							contactMethod=guarEmail;
 							break;
@@ -736,7 +736,7 @@ namespace OpenDentBusiness {
 					return true;
 				}
 			}			
-			long recallMaxNumberReminders=PrefC.GetLong(PrefName.RecallMaxNumberReminders);
+			long recallMaxNumberReminders=Prefs.GetLong(PrefName.RecallMaxNumberReminders);
 			if(recallMaxNumberReminders>-1 && numberOfReminders>recallMaxNumberReminders) {
 				return true;
 			}
@@ -756,7 +756,7 @@ namespace OpenDentBusiness {
 				retVal=retVal.Replace("[DueDate]",listRecalls.Max(x => x.DateDue).ToShortDateString());
 			}
 			//The link where a patient can go to schedule a recall from the web.
-			retVal=retVal.Replace("[URL]",PrefC.GetString(PrefName.PatientPortalURL));
+			retVal=retVal.Replace("[URL]",Prefs.GetString(PrefName.PatientPortalURL));
 			return retVal;
 		}
 
@@ -821,8 +821,8 @@ namespace OpenDentBusiness {
 			//last group of pats could be partial group, that count will be added to total in QueueDataBatches once we gather data for that partial group.
 			//Setting this now prevents a possible divide by zero error in the progress bar and will be updated later to include the partial group count.
 			_totalPatCount=(_listPatNumMaxPerGroup.Count-1)*BATCH_SIZE;
-			long prophyTypeNum=PrefC.GetLong(PrefName.RecallTypeSpecialProphy);
-			long perioTypeNum=PrefC.GetLong(PrefName.RecallTypeSpecialPerio);
+			long prophyTypeNum=Prefs.GetLong(PrefName.RecallTypeSpecialProphy);
+			long perioTypeNum=Prefs.GetLong(PrefName.RecallTypeSpecialPerio);
 			string command="SELECT recalltype.RecallTypeNum,recalltype.DefaultInterval,recalltrigger.CodeNum "
 				+"FROM recalltype "
 				+"INNER JOIN recalltrigger ON recalltype.RecallTypeNum=recalltrigger.RecallTypeNum";
@@ -1157,7 +1157,7 @@ namespace OpenDentBusiness {
 			//determine if this patient is a perio patient.
 			bool isPerio=false;
 			for(int i=0;i<recallList.Count;i++){
-				if(PrefC.GetLong(PrefName.RecallTypeSpecialPerio)==recallList[i].RecallTypeNum){
+				if(Prefs.GetLong(PrefName.RecallTypeSpecialPerio)==recallList[i].RecallTypeNum){
 					isPerio=true;
 					break;
 				}
@@ -1165,13 +1165,13 @@ namespace OpenDentBusiness {
 			//remove types from the list which do not apply to this patient.
 			for(int i=0;i<typeList.Count;i++){//it's ok to not go backwards because we immediately break.
 				if(isPerio) {
-					if(PrefC.GetLong(PrefName.RecallTypeSpecialProphy)==typeList[i].RecallTypeNum) {
+					if(Prefs.GetLong(PrefName.RecallTypeSpecialProphy)==typeList[i].RecallTypeNum) {
 						typeList.RemoveAt(i);
 						break;
 					}
 				}
 				else {
-					if(PrefC.GetLong(PrefName.RecallTypeSpecialPerio)==typeList[i].RecallTypeNum) {
+					if(Prefs.GetLong(PrefName.RecallTypeSpecialPerio)==typeList[i].RecallTypeNum) {
 						typeList.RemoveAt(i);
 						break;
 					}
@@ -1209,8 +1209,8 @@ namespace OpenDentBusiness {
 			DateTime prevDateProphy=DateTime.MinValue;
 			DateTime dateProphyTesting;
 			for(int i=0;i<typeListActive.Count;i++) {
-				if(PrefC.GetLong(PrefName.RecallTypeSpecialProphy)!=typeListActive[i].RecallTypeNum
-					&& PrefC.GetLong(PrefName.RecallTypeSpecialPerio)!=typeListActive[i].RecallTypeNum) 
+				if(Prefs.GetLong(PrefName.RecallTypeSpecialProphy)!=typeListActive[i].RecallTypeNum
+					&& Prefs.GetLong(PrefName.RecallTypeSpecialPerio)!=typeListActive[i].RecallTypeNum) 
 				{
 					//we are only working with prophy and perio in this loop.
 					continue;
@@ -1233,8 +1233,8 @@ namespace OpenDentBusiness {
 					continue;
 				}
 				//set prevDate:
-				if(PrefC.GetLong(PrefName.RecallTypeSpecialProphy)==typeList[i].RecallTypeNum
-					|| PrefC.GetLong(PrefName.RecallTypeSpecialPerio)==typeList[i].RecallTypeNum) 
+				if(Prefs.GetLong(PrefName.RecallTypeSpecialProphy)==typeList[i].RecallTypeNum
+					|| Prefs.GetLong(PrefName.RecallTypeSpecialPerio)==typeList[i].RecallTypeNum) 
 				{
 					prevDate=prevDateProphy;
 				}
@@ -1255,8 +1255,8 @@ namespace OpenDentBusiness {
 					}
 				}
 				if(matchingRecall==null){//if there is no existing recall,
-					if(PrefC.GetLong(PrefName.RecallTypeSpecialProphy)==typeList[i].RecallTypeNum
-						|| PrefC.GetLong(PrefName.RecallTypeSpecialPerio)==typeList[i].RecallTypeNum
+					if(Prefs.GetLong(PrefName.RecallTypeSpecialProphy)==typeList[i].RecallTypeNum
+						|| Prefs.GetLong(PrefName.RecallTypeSpecialPerio)==typeList[i].RecallTypeNum
 						|| prevDate.Year>1880)//for other types, if date is not minVal, then add a recall
 					{
 						//add a recall
@@ -1916,7 +1916,7 @@ namespace OpenDentBusiness {
 				aptCur.AptStatus=ApptStatus.Scheduled;
 				aptCur.Op=opCur.OperatoryNum;
 				aptCur.Priority=isASAP ? ApptPriority.ASAP : ApptPriority.Normal;
-				aptCur.Confirmed=PrefC.GetLong(PrefName.WebSchedRecallConfirmStatus);
+				aptCur.Confirmed=Prefs.GetLong(PrefName.WebSchedRecallConfirmStatus);
 				//Make sure that operatory specific settings are applied to the appointment.
 				List<Schedule> listSchedules=Schedules.RefreshDayEdit(aptCur.AptDateTime);
 				if(!PrefC.HasClinicsEnabled) {
@@ -1929,13 +1929,17 @@ namespace OpenDentBusiness {
 					aptCur.ClinicNum=opCur.ClinicNum;
 				}
 				WebSchedProviderRules rule;
-				if(PrefC.HasClinicsEnabled) {
-					rule=PIn.Enum<WebSchedProviderRules>(
-						ClinicPrefs.GetPref(PrefName.WebSchedProviderRule,aptCur.ClinicNum)?.ValueString??PrefC.GetString(PrefName.WebSchedProviderRule));
+				if (PrefC.HasClinicsEnabled)
+				{
+					rule = PIn.Enum<WebSchedProviderRules>(
+						ClinicPrefs.GetString(aptCur.ClinicNum, PrefName.WebSchedProviderRule) ??
+							Prefs.GetString(PrefName.WebSchedProviderRule));
 				}
-				else {
-					rule=PIn.Enum<WebSchedProviderRules>(PrefC.GetString(PrefName.WebSchedProviderRule));
+				else
+				{
+					rule = PIn.Enum<WebSchedProviderRules>(Prefs.GetString(PrefName.WebSchedProviderRule));
 				}
+
 				long preferredProvNum=0;
 				if(rule!=WebSchedProviderRules.FirstAvailable) {
 					//If the recall is supposed to be with a particular provider, then the listAvailableTimeSlots should all have a ProvNum of that 

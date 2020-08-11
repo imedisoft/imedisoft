@@ -325,7 +325,7 @@ namespace OpenDental{
 				description=claimFormCur.Description;
 				GridRow row = new GridRow();
 				row.Cells.Add(claimFormCur.Description);
-				if(claimFormCur.ClaimFormNum==PrefC.GetLong(PrefName.DefaultClaimForm)) {
+				if(claimFormCur.ClaimFormNum==Prefs.GetLong(PrefName.DefaultClaimForm)) {
 					description+=" "+Lan.G(this,"(default)");
 					row.Cells.Add("X");
 				}
@@ -439,7 +439,7 @@ namespace OpenDental{
 			string filename = "ClaimForm"+claimFormCur.Description+".xml";
 			try {
 				using(SaveFileDialog saveDlg=new SaveFileDialog()) {
-					saveDlg.InitialDirectory=PrefC.GetString(PrefName.ExportPath);
+					saveDlg.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
 					saveDlg.FileName=filename;
 					if(saveDlg.ShowDialog()!=DialogResult.OK) {
 						return;
@@ -459,7 +459,7 @@ namespace OpenDental{
 		///<summary>Import an XML file into the custom claim forms list.</summary>
 		private void butImport_Click(object sender, System.EventArgs e) {
 			OpenFileDialog openDlg=new OpenFileDialog();
-			openDlg.InitialDirectory=PrefC.GetString(PrefName.ExportPath);
+			openDlg.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
 			ClaimForm claimForm;
 			if(openDlg.ShowDialog()!=DialogResult.OK){
 				return;
@@ -484,7 +484,7 @@ namespace OpenDental{
 				return;
 			}
 			ClaimForm claimFormCur = (ClaimForm)gridCustom.ListGridRows[gridCustom.GetSelectedIndex()].Tag;
-			if(Prefs.UpdateLong(PrefName.DefaultClaimForm,claimFormCur.ClaimFormNum)){
+			if(Prefs.Set(PrefName.DefaultClaimForm,claimFormCur.ClaimFormNum)){
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			FillGridCustom();

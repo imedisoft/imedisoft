@@ -52,7 +52,7 @@ namespace OpenDentBusiness
 			}
 
 			return Database.SelectMany(
-				"SELECT DISTINCT patient_id FROM allergies WHERE patient_id IN (" + string.Join(",", patientIds) + ") AND allergies.allergy_def_id != " + PrefC.GetLong(PrefName.AllergiesIndicateNone),
+				"SELECT DISTINCT patient_id FROM allergies WHERE patient_id IN (" + string.Join(",", patientIds) + ") AND allergies.allergy_def_id != " + Prefs.GetLong(PrefName.AllergiesIndicateNone),
 					dataReader => Convert.ToInt64(dataReader["id"])).ToList();
 		}
 

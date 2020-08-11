@@ -38,7 +38,7 @@ namespace UnitTests.PaymentEdit_Tests {
 			//All excess unearned should apply to the 0 / 'None' provider if there is no actual unearned for specific providers to take from.
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			long provNum=ProviderT.CreateProvider(suffix);
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat=PatientT.CreatePatient(suffix);
 			Procedure proc=ProcedureT.CreateProcedure(pat,"NU001",ProcStat.C,"",100,provNum:provNum);
 			List<AccountEntry> listAccountEntries=ConstructListCharges(listProcs:new List<Procedure>(){ proc });
@@ -59,7 +59,7 @@ namespace UnitTests.PaymentEdit_Tests {
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			long provNum2=ProviderT.CreateProvider($"{suffix}-2");
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat=PatientT.CreatePatient(suffix);
 			Procedure proc=ProcedureT.CreateProcedure(pat,"OP001",ProcStat.C,"",100,provNum:provNum1);
 			//Fill unearned with some money for provNum2.
@@ -83,7 +83,7 @@ namespace UnitTests.PaymentEdit_Tests {
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			long provNum2=ProviderT.CreateProvider($"{suffix}-2");
 			long provNum3=ProviderT.CreateProvider($"{suffix}-3");
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat=PatientT.CreatePatient(suffix);
 			Procedure proc=ProcedureT.CreateProcedure(pat,"OP002",ProcStat.C,"",100,provNum:provNum1);
 			//Fill unearned with some money for provNum2 and provNum3.
@@ -114,7 +114,7 @@ namespace UnitTests.PaymentEdit_Tests {
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			long provNum2=ProviderT.CreateProvider($"{suffix}-2");
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat=PatientT.CreatePatient(suffix);
 			Procedure proc=ProcedureT.CreateProcedure(pat,"NARP1",ProcStat.C,"",100,provNum:provNum1);
 			//Fill unearned with some money for provNum2 and the None provider.
@@ -144,7 +144,7 @@ namespace UnitTests.PaymentEdit_Tests {
 		public void PaymentEdit_AllocateUnearned_MultipleProcsOneProvider() {
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat=PatientT.CreatePatient(suffix);
 			Procedure proc1=ProcedureT.CreateProcedure(pat,"MPOP1",ProcStat.C,"",45,provNum:provNum1);
 			Procedure proc2=ProcedureT.CreateProcedure(pat,"MPOP2",ProcStat.C,"",55,provNum:provNum1);
@@ -176,7 +176,7 @@ namespace UnitTests.PaymentEdit_Tests {
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			long provNum2=ProviderT.CreateProvider($"{suffix}-2");
 			long provNum3=ProviderT.CreateProvider($"{suffix}-3");
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat=PatientT.CreatePatient(suffix);
 			Procedure proc1=ProcedureT.CreateProcedure(pat,"MPOP1",ProcStat.C,"",45,provNum:provNum1);
 			Procedure proc2=ProcedureT.CreateProcedure(pat,"MPOP2",ProcStat.C,"",55,provNum:provNum1);
@@ -220,7 +220,7 @@ namespace UnitTests.PaymentEdit_Tests {
 				Procedure  proc1        pat1  provNum1  Today-3D   $50
 			******************************************************/
 			string suffix=MethodBase.GetCurrentMethod().Name;
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			Patient pat1=PatientT.CreatePatient($"{suffix}-1");
 			//Make a prepayment for one hundred dollars to unearned that the user will allocate later.
@@ -728,7 +728,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					PPC2	Prov2	-500	Unallocated
 					PPD1	Prov2	500		Unallocated
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			long provNum2=ProviderT.CreateProvider($"{suffix}-2");
@@ -802,7 +802,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					PPC2	Prov2	-500	Unallocated
 					PPD1	Prov2	500		Unallocated
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			long provNum2=ProviderT.CreateProvider($"{suffix}-2");
@@ -892,7 +892,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					PPC3	Prov2	1000	Attached to Proc2
 					PPD1	Prov2	1500	Unallocated
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			long provNum2=ProviderT.CreateProvider($"{suffix}-2");
@@ -997,7 +997,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					PPD2	Prov2	-500	Adj Debit
 					PPC2	Prov2	-500	Adj Credit (offset)
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			long provNum2=ProviderT.CreateProvider($"{suffix}-2");
@@ -1087,7 +1087,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					PPD2	Prov2	-500	Adj Debit
 					PPC2	Prov2	-500	Adj Credit (offset)
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			long provNum2=ProviderT.CreateProvider($"{suffix}-2");
@@ -1192,7 +1192,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					PPD1	Prov2	1500	Unallocated
 					PPD2	Prov2	-500	Unallocated
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			long provNum2=ProviderT.CreateProvider($"{suffix}-2");
@@ -1316,7 +1316,7 @@ namespace UnitTests.PaymentEdit_Tests {
 				Adj		Prov2	-500
 			******************************************************/
 			string suffix=MethodBase.GetCurrentMethod().Name;
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			long provNum2=ProviderT.CreateProvider($"{suffix}-2");
 			Patient pat=PatientT.CreatePatient(suffix);
@@ -1404,7 +1404,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					PPD2	Prov2	-500	Unallocated
 				Adj		Prov2	-500
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			long provNum2=ProviderT.CreateProvider($"{suffix}-2");
@@ -1545,7 +1545,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					PPD2	Prov2	-500	Unallocated
 				Adj		Prov2	-500
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			long provNum2=ProviderT.CreateProvider($"{suffix}-2");
@@ -1662,7 +1662,7 @@ namespace UnitTests.PaymentEdit_Tests {
 		public void PaymentEdit_AutoSplitForPayment_SplitsAttachedToProcedureOrAdjustment() {
 			//The PaySplits that the auto-split system suggests should not be attached to both a procedure and an adjustment.
 			//Make a procedure for provNum1 and an adjustment for provNum2 that is attached to the procedure.
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			Patient pat=PatientT.CreatePatient(suffix);
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
@@ -1702,7 +1702,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					^Associated to proc, APR=10, payment amount=$269.01, total amount=$1614.04 (including interest)
 			******************************************************/
 			string suffix=MethodBase.GetCurrentMethod().Name;
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat=PatientT.CreatePatient(suffix);
 			long provNum=ProviderT.CreateProvider(suffix);
 			DateTime dateTimePP=DateTime.Today.AddYears(-2);
@@ -1843,7 +1843,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					^attached to Proc1
 			******************************************************/
 			string suffix=MethodBase.GetCurrentMethod().Name;
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			Patient pat=PatientT.CreatePatient(suffix);
 			Procedure proc1=ProcedureT.CreateProcedure(pat,"TPPPCWA",ProcStat.C,"",1000,provNum:provNum1);
@@ -1947,7 +1947,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					^attached to Proc1
 			******************************************************/
 			string suffix=MethodBase.GetCurrentMethod().Name;
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			long provNum2=ProviderT.CreateProvider($"{suffix}-2");
 			Patient pat=PatientT.CreatePatient(suffix);
@@ -2078,7 +2078,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					^Attached to proc1, proc2, proc3, adj2, adj3
 			******************************************************/
 			string suffix=MethodBase.GetCurrentMethod().Name;
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			long provNum2=ProviderT.CreateProvider($"{suffix}-2");
 			Patient pat=PatientT.CreatePatient(suffix);
@@ -2211,7 +2211,7 @@ namespace UnitTests.PaymentEdit_Tests {
 			******************************************************/
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			PrefT.UpdateYN(PrefName.PrePayAllowedForTpProcs,YN.No);
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			Patient pat=PatientT.CreatePatient(suffix);
 			Procedure proc1=ProcedureT.CreateProcedure(pat,"PPWTP",ProcStat.C,"",250,procDate:DateTime.Today.AddYears(-1),provNum:provNum1);
@@ -2292,7 +2292,7 @@ namespace UnitTests.PaymentEdit_Tests {
 			******************************************************/
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			PrefT.UpdateYN(PrefName.PrePayAllowedForTpProcs,YN.Yes);
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			Patient pat=PatientT.CreatePatient(suffix);
 			Procedure proc1=ProcedureT.CreateProcedure(pat,"PPWTP",ProcStat.C,"",250,procDate:DateTime.Today.AddYears(-1),provNum:provNum1);
@@ -2566,7 +2566,7 @@ namespace UnitTests.PaymentEdit_Tests {
 				&& x.ProvNum==0
 				&& x.AdjNum==0
 				&& x.SplitAmt==10
-				&& x.UnearnedType==PrefC.GetLong(PrefName.PrepaymentUnearnedType)));
+				&& x.UnearnedType==Prefs.GetLong(PrefName.PrepaymentUnearnedType)));
 		}
 
 		///<summary>Make sure if there is a negative procedure and a negative payment amount that a new payment goes fully to unallocated.</summary>
@@ -4099,7 +4099,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					^Associated to payment plan
 			******************************************************/
 			string suffix=MethodBase.GetCurrentMethod().Name;
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat=PatientT.CreatePatient(suffix);
 			long provNum=ProviderT.CreateProvider(suffix);
 			Procedure proc=ProcedureT.CreateProcedure(pat,"D0220",ProcStat.C,"",165,DateTime.Today,provNum:provNum);
@@ -4183,7 +4183,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					^Associated to payment plan
 			******************************************************/
 			string suffix=MethodBase.GetCurrentMethod().Name;
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat=PatientT.CreatePatient(suffix);
 			long provNum=ProviderT.CreateProvider(suffix);
 			Procedure proc=ProcedureT.CreateProcedure(pat,"D0220",ProcStat.C,"",165,DateTime.Today,provNum:provNum);
@@ -4284,7 +4284,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					^Associated to proc and adj2
 			******************************************************/
 			string suffix=MethodBase.GetCurrentMethod().Name;
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat=PatientT.CreatePatient(suffix);
 			long provNum=ProviderT.CreateProvider(suffix);
 			Procedure proc=ProcedureT.CreateProcedure(pat,"D0220",ProcStat.C,"",165,DateTime.Today,provNum:provNum);
@@ -4365,7 +4365,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					^Manually link adj2 to payplan (act like the user came in later and did this after initial creation).
 			******************************************************/
 			string suffix=MethodBase.GetCurrentMethod().Name;
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat=PatientT.CreatePatient(suffix);
 			long provNum=ProviderT.CreateProvider(suffix);
 			Procedure proc=ProcedureT.CreateProcedure(pat,"D0220",ProcStat.C,"",165,DateTime.Today,provNum:provNum);
@@ -4439,7 +4439,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					^Associated to proc, APR=10, payment amount=$269.01, total amount=$1614.04 (including interest)
 			******************************************************/
 			string suffix=MethodBase.GetCurrentMethod().Name;
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat=PatientT.CreatePatient(suffix);
 			long provNum=ProviderT.CreateProvider(suffix);
 			DateTime dateTimePP=DateTime.Today.AddYears(-2);
@@ -4581,7 +4581,7 @@ namespace UnitTests.PaymentEdit_Tests {
 				Create pay1:     Today  provNum2  pat   $10
 					^Attached to proc1 but notice that the provider is wrong.
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			Patient pat=PatientT.CreatePatient(suffix);
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
@@ -4854,7 +4854,7 @@ namespace UnitTests.PaymentEdit_Tests {
 				&& x.PatNum==pat.PatNum
 				&& x.SplitAmt==35
 				&& x.ProcNum==0
-				&& x.UnearnedType==PrefC.GetLong(PrefName.PrepaymentUnearnedType)));
+				&& x.UnearnedType==Prefs.GetLong(PrefName.PrepaymentUnearnedType)));
 			//Make the income transfer official by inserting the splits into the database and then run the transfer again.  No splits should be made!
 			PaySplits.InsertMany(0,transferResults.ListSplitsCur);
 			transferResults=PaymentT.BalanceAndIncomeTransfer(pat.PatNum);
@@ -5015,7 +5015,7 @@ namespace UnitTests.PaymentEdit_Tests {
 			//The auto-split and income transfer system should honor these links since the dynamic payment plan system went to the trouble of setting them.
 			//This does not change much about the transfer system but helps the 'overpaid payment plan' report break overpayments down to a proc level.
 			string suffix=MethodBase.GetCurrentMethod().Name;
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat=PatientT.CreatePatient(suffix);
 			long provNum1=ProviderT.CreateProvider(suffix);
 			Procedure proc1=ProcedureT.CreateProcedure(pat,"TDLP1",ProcStat.C,"",58,DateTime.Today,provNum:provNum1);
@@ -5087,7 +5087,7 @@ namespace UnitTests.PaymentEdit_Tests {
 			//The auto-split and income transfer system should honor these links since the dynamic payment plan system went to the trouble of setting them.
 			//This does not change much about the transfer system but may be used by some entity in the future (like reports).
 			string suffix=MethodBase.GetCurrentMethod().Name;
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Def defPosAdjType=DefT.CreateDefinition(DefCat.AdjTypes,suffix,"+");
 			Patient pat=PatientT.CreatePatient(suffix);
 			long provNum1=ProviderT.CreateProvider(suffix);
@@ -5135,7 +5135,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					^attached to Proc1
 			******************************************************/
 			string suffix=MethodBase.GetCurrentMethod().Name;
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			Patient pat=PatientT.CreatePatient(suffix);
 			Procedure proc1=ProcedureT.CreateProcedure(pat,"TPPPCWA",ProcStat.C,"",1000,provNum:provNum1);
@@ -5193,7 +5193,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					^attached to Proc1
 			******************************************************/
 			string suffix=MethodBase.GetCurrentMethod().Name;
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			long provNum2=ProviderT.CreateProvider($"{suffix}-2");
 			Patient pat=PatientT.CreatePatient(suffix);
@@ -5508,7 +5508,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					^paySplit3:   Today  provNum1  pat   $10
 						^^Attached to unearned
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			Patient pat=PatientT.CreatePatient(suffix);
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
@@ -5570,7 +5570,7 @@ namespace UnitTests.PaymentEdit_Tests {
 				Create pay1:  Today  provNum1  pat   $60
 					^Unearned
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			Patient pat=PatientT.CreatePatient(suffix);
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
@@ -5615,7 +5615,7 @@ namespace UnitTests.PaymentEdit_Tests {
 			******************************************************/
 			PrefT.UpdateBool(PrefName.EasyNoClinics,false);//Not-no clinics
 			string suffix=MethodBase.GetCurrentMethod().Name;
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat1=PatientT.CreatePatient(suffix);
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			Clinic clinic1=ClinicT.CreateClinic($"{suffix}-1");
@@ -5676,7 +5676,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					^Attached to paymentplan1
 			******************************************************/
 			string suffix=MethodBase.GetCurrentMethod().Name;
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat1=PatientT.CreatePatient(suffix);
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			PayPlan paymentPlan1=PayPlanT.CreatePayPlanWithCredits(pat1.PatNum,100,DateTime.Today,provNum:provNum1,totalAmt:100);
@@ -5716,7 +5716,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					^Attached to paymentplan1
 			******************************************************/
 			string suffix=MethodBase.GetCurrentMethod().Name;
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat1=PatientT.CreatePatient(suffix);
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			long provNum2=ProviderT.CreateProvider($"{suffix}-2");
@@ -5780,7 +5780,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					^Attached to payPlan1
 			******************************************************/
 			string suffix=MethodBase.GetCurrentMethod().Name;
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat1=PatientT.CreatePatient($"{suffix}-1");
 			Patient pat2=PatientT.CreatePatient($"{suffix}-2");
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
@@ -5865,7 +5865,7 @@ namespace UnitTests.PaymentEdit_Tests {
 				Create payment1:        Today     provNum1  pat1   $10
 					^Attached to payPlan1 (this is like a manual prepayment)
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			Patient pat1=PatientT.CreatePatient($"{suffix}-1");
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
@@ -5925,7 +5925,7 @@ namespace UnitTests.PaymentEdit_Tests {
 				Create payment1:        Today     provNum0  pat1   $10
 					^Prepayment that should be available for transfer.  Notice that there is no provider set.
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			Patient pat1=PatientT.CreatePatient($"{suffix}-1");
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
@@ -5976,7 +5976,7 @@ namespace UnitTests.PaymentEdit_Tests {
 				Create paySplit1:       Today     provNum1  pat1   $100
 					^Attached to payPlan1
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			Patient pat1=PatientT.CreatePatient($"{suffix}-1");
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
@@ -6088,7 +6088,7 @@ namespace UnitTests.PaymentEdit_Tests {
 						^^posSplit:  Today  provA  pat   $50
 							^^^Attached to proc
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat=PatientT.CreatePatient(MethodBase.GetCurrentMethod().Name);
 			long provA=ProviderT.CreateProvider("ProvA");
 			long provB=ProviderT.CreateProvider("ProvB");
@@ -6147,7 +6147,7 @@ namespace UnitTests.PaymentEdit_Tests {
 			//Make a payment on that procedure (in full) for Provider B
 			//"Correct" the mistake by creating a negative split for Provider B, but unattached
 			//When making another payment it should show the procedure as owing money for Provider A (instead of owing none)
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat=PatientT.CreatePatient(MethodBase.GetCurrentMethod().Name);
 			long provNumA=ProviderT.CreateProvider("ProvA");
 			long provNumB=ProviderT.CreateProvider("ProvB");
@@ -6207,7 +6207,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					^Attached to adjPaid
 				Create unallocatedPayment:Today  provNum  pat   $100
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat=PatientT.CreatePatient(MethodBase.GetCurrentMethod().Name);
 			long provNum=ProviderT.CreateProvider("UnearnedTxfr");
 			//create procedure that gets overpaid by 100
@@ -6277,7 +6277,7 @@ namespace UnitTests.PaymentEdit_Tests {
 				Create unearnedPayment:Today  provNum  pat   $100
 					^Unearned
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat=PatientT.CreatePatient(MethodBase.GetCurrentMethod().Name);
 			long provNum=ProviderT.CreateProvider("UnearnedTxfr");
 			//create procedure that gets overpaid by 100
@@ -6357,7 +6357,7 @@ namespace UnitTests.PaymentEdit_Tests {
 				Create procPos:  Today-1  Prov?  pat   $50
 			******************************************************/
 			//^Note that Prov? = PracticeDefaultProv due to enheriting the primary provider for the patient... Not sure if this is intended but W/E.
-			long practiceDefaultProvNum=PrefC.GetLong(PrefName.PracticeDefaultProv);
+			long practiceDefaultProvNum=Prefs.GetLong(PrefName.PracticeDefaultProv);
 			Patient pat=PatientT.CreatePatient(MethodBase.GetCurrentMethod().Name);
 			long provNum=ProviderT.CreateProvider("NoNegProcs");
 			//create negative completed procedure
@@ -6429,7 +6429,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					^splitA     Today  provNumB  pat  -$100
 					^splitB     Today  provNumA  pat   $100
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat=PatientT.CreatePatient(MethodBase.GetCurrentMethod().Name);
 			long provNumA=ProviderT.CreateProvider("LSA");
 			long provNumB=ProviderT.CreateProvider("LSB");
@@ -6593,7 +6593,7 @@ namespace UnitTests.PaymentEdit_Tests {
 				Create pay2:   Today-1  provNum  pat  -$100
 					^Unearned
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat=PatientT.CreatePatient(MethodBase.GetCurrentMethod().Name);
 			long provNum=ProviderT.CreateProvider("LS");
 			ProcedureT.CreateProcedure(pat,"D0220",ProcStat.C,"",100,provNum:provNum,procDate:DateTime.Today);//procedure
@@ -6622,7 +6622,7 @@ namespace UnitTests.PaymentEdit_Tests {
 				Create pay2:   Today-1  provNum  pat  -$100
 					^Unallocated
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat=PatientT.CreatePatient(MethodBase.GetCurrentMethod().Name);
 			long provNum=ProviderT.CreateProvider("LS");
 			Procedure proc=ProcedureT.CreateProcedure(pat,"D0220",ProcStat.C,"",100,provNum:provNum,procDate:DateTime.Today);//procedure
@@ -6660,7 +6660,7 @@ namespace UnitTests.PaymentEdit_Tests {
 				Create pay2:   Today  provNum  pat  -$100
 					^Unearned
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat=PatientT.CreatePatient(MethodBase.GetCurrentMethod().Name);
 			long provNum=ProviderT.CreateProvider("LS");
 			Procedure proc=ProcedureT.CreateProcedure(pat,"D0220",ProcStat.C,"",100,provNum:provNum,procDate:DateTime.Today);//procedure
@@ -6693,7 +6693,7 @@ namespace UnitTests.PaymentEdit_Tests {
 				Create pay2:   Today  provNum  pat  -$100
 					^Unearned
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			Patient pat=PatientT.CreatePatient(suffix);
 			long provNum=ProviderT.CreateProvider(suffix);
@@ -6716,7 +6716,7 @@ namespace UnitTests.PaymentEdit_Tests {
 				Create pay2:   Today  provNum  pat  -$100
 					^Unearned
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			Patient pat=PatientT.CreatePatient(suffix);
 			long provNum=ProviderT.CreateProvider(suffix);
@@ -6754,7 +6754,7 @@ namespace UnitTests.PaymentEdit_Tests {
 				Create pay2:   Today  provNum  pat  -$100
 					^Unearned
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			Patient pat=PatientT.CreatePatient(suffix);
 			long provNum=ProviderT.CreateProvider(suffix);
@@ -6777,7 +6777,7 @@ namespace UnitTests.PaymentEdit_Tests {
 				Create pay2:   Today  provNum  pat  -$100
 					^Unearned
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			Patient pat=PatientT.CreatePatient(suffix);
 			long provNum=ProviderT.CreateProvider(suffix);
@@ -6833,7 +6833,7 @@ namespace UnitTests.PaymentEdit_Tests {
 						^^Attached to Procedure1
 					^PaySplit1:       Today-2  provNum  pat  -$200
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat=PatientT.CreatePatient(MethodBase.GetCurrentMethod().Name);
 			long provNum=ProviderT.CreateProvider("LS");
 			Procedure proc=ProcedureT.CreateProcedure(pat,"D0220",ProcStat.C,"",200,provNum:provNum,procDate:DateTime.Today.AddDays(-5));
@@ -7098,7 +7098,7 @@ namespace UnitTests.PaymentEdit_Tests {
 				Create Payment3:  Today  Prov2  Pat1  -$500
 					^Unearned
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			Patient pat1=PatientT.CreatePatient(suffix);
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
@@ -7263,7 +7263,7 @@ namespace UnitTests.PaymentEdit_Tests {
 				&& x.PatNum==pat1.PatNum
 				&& x.SplitAmt==50
 				&& x.ProcNum==0
-				&& x.UnearnedType==PrefC.GetLong(PrefName.PrepaymentUnearnedType)));
+				&& x.UnearnedType==Prefs.GetLong(PrefName.PrepaymentUnearnedType)));
 			//Make the income transfer official by inserting the splits into the database and then run the transfer again.  No splits should be made!
 			PaySplits.InsertMany(0,transferResults.ListSplitsCur);
 			transferResults=PaymentT.BalanceAndIncomeTransfer(pat1.PatNum);
@@ -7643,7 +7643,7 @@ namespace UnitTests.PaymentEdit_Tests {
 			Procedure procedure3=ProcedureT.CreateProcedure(pat1,"I0003",ProcStat.C,"",50,procDate:new DateTime(2019,1,1),provNum:provNum3);
 			Procedure procedure4=ProcedureT.CreateProcedure(pat1,"I0004",ProcStat.C,"",600,procDate:new DateTime(2019,1,1),provNum:provNum4);
 			Payment payment1=PaymentT.MakePayment(pat1.PatNum,500,payDate:new DateTime(2019,1,2),
-				unearnedType:PrefC.GetLong(PrefName.PrepaymentUnearnedType));
+				unearnedType:Prefs.GetLong(PrefName.PrepaymentUnearnedType));
 			PaymentEdit.IncomeTransferData transferResults=PaymentT.BalanceAndIncomeTransfer(pat1.PatNum);
 			/*****************************************************
 			Paysplit1:  1/5/2019  Prov1  Pat1  -$50
@@ -7738,7 +7738,7 @@ namespace UnitTests.PaymentEdit_Tests {
 			Procedure procedure3=ProcedureT.CreateProcedure(pat1,"I0003",ProcStat.C,"",100,procDate:new DateTime(2019,1,1),provNum:provNum1);
 			Procedure procedure4=ProcedureT.CreateProcedure(pat1,"I0004",ProcStat.C,"",200,procDate:new DateTime(2019,1,1),provNum:provNum2);
 			Payment payment1=PaymentT.MakePayment(pat1.PatNum,500,payDate:new DateTime(2019,1,2),
-				unearnedType:PrefC.GetLong(PrefName.PrepaymentUnearnedType));
+				unearnedType:Prefs.GetLong(PrefName.PrepaymentUnearnedType));
 			PaymentEdit.IncomeTransferData transferResults=PaymentT.BalanceAndIncomeTransfer(pat1.PatNum);
 			/*****************************************************
 			Paysplit1:  1/5/2019  Prov2  Pat1  -$300
@@ -7810,7 +7810,7 @@ namespace UnitTests.PaymentEdit_Tests {
 				Create Payment2:    1/1/2019  Prov2  Pat1   $600
 					^Attached to Procedure2
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			Patient pat1=PatientT.CreatePatient(suffix);
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
@@ -7953,7 +7953,7 @@ namespace UnitTests.PaymentEdit_Tests {
 				Create Payment1:    1/2/2019  provNum1  pat1   $25
 					^Attached to Adjustment1
 			******************************************************/
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			Patient pat1=PatientT.CreatePatient(suffix);
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
@@ -8000,7 +8000,7 @@ namespace UnitTests.PaymentEdit_Tests {
 		public void PaymentEdit_BalanceAndIncomeTransfer_SplitsAttachedToProcedureOrAdjustment() {
 			//The PaySplits that the income transfer system suggests should not be attached to both a procedure and an adjustment.
 			//Make a procedure for provNum1 and an adjustment for provNum2 that is attached to the procedure.
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			Patient pat=PatientT.CreatePatient(suffix);
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
@@ -8075,7 +8075,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					^split7:  prov1  pat1   $7.30   --  unallocated
 			******************************************************/
 			string suffix=MethodBase.GetCurrentMethod().Name;
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat1=PatientT.CreatePatient(suffix);
 			ProcedureCode procCode1=ProcedureCodeT.CreateProcCode("UWNP1");
 			ProcedureCode procCode2=ProcedureCodeT.CreateProcCode("UWNP2");
@@ -8131,7 +8131,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					^split4:  prov1  pat1   $50  --  attached to proc1
 			******************************************************/
 			string suffix=MethodBase.GetCurrentMethod().Name;
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat=PatientT.CreatePatient(suffix);
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			long provNum2=ProviderT.CreateProvider($"{suffix}-2");
@@ -8165,7 +8165,7 @@ namespace UnitTests.PaymentEdit_Tests {
 					^split4:  prov1  pat1   $50  --  attached to proc1
 			******************************************************/
 			string suffix=MethodBase.GetCurrentMethod().Name;
-			long unearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);
+			long unearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
 			Patient pat=PatientT.CreatePatient(suffix);
 			long provNum1=ProviderT.CreateProvider($"{suffix}-1");
 			long provNum2=ProviderT.CreateProvider($"{suffix}-2");

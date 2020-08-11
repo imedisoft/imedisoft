@@ -15,6 +15,7 @@ using OpenDentBusiness.HL7;
 using System.Diagnostics;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -61,7 +62,7 @@ namespace OpenDental{
 		///<summary>Because adding the new feature where patients can choose their race from hundreds of options would cause us to need to recertify EHR, 
 		///we committed all the code for the new feature while keeping the old behavior for EHR users. When we are ready to switch to the new feature, 
 		///all we need to do is set this boolean to true (hopefully).</summary>
-		private bool _isUsingNewRaceFeature=!PrefC.GetBool(PrefName.ShowFeatureEhr);
+		private bool _isUsingNewRaceFeature=!Prefs.GetBool(PrefName.ShowFeatureEhr);
 		private DefLink _defLinkPatCur;
 		private List<CommOptOut> _listCommOptOuts;
 		///<summary>List of PatientStatuses shown in listStatus, must be 1:1 with listStatus.
@@ -203,8 +204,8 @@ namespace OpenDental{
 				}
 			}			
 			//SuperFamilies is enabled, Syncing SuperFam Info is enabled, and this is the superfamily head.  Show the sync checkbox.
-			if(PrefC.GetBool(PrefName.ShowFeatureSuperfamilies)
-				&& PrefC.GetBool(PrefName.PatientAllSuperFamilySync)
+			if(Prefs.GetBool(PrefName.ShowFeatureSuperfamilies)
+				&& Prefs.GetBool(PrefName.PatientAllSuperFamilySync)
 				&& PatCur.SuperFamily!=0
 				&& PatCur.PatNum==PatCur.SuperFamily) //Has to be the Super Head.
 			{
@@ -223,7 +224,7 @@ namespace OpenDental{
 			textIceName.Text=_patCurNote.ICEName;
 			textIcePhone.Text=_patCurNote.ICEPhone;
 			_ehrPatientCur=EhrPatients.Refresh(PatCur.PatNum);
-			if(PrefC.GetBool(PrefName.ShowFeatureEhr)) {//Show mother's maiden name UI if using EHR.
+			if(Prefs.GetBool(PrefName.ShowFeatureEhr)) {//Show mother's maiden name UI if using EHR.
 				labelMotherMaidenFname.Visible=true;
 				textMotherMaidenFname.Visible=true;
 				textMotherMaidenFname.Text=_ehrPatientCur.MotherMaidenFname;
@@ -275,7 +276,7 @@ namespace OpenDental{
 				case PatientPosition.Divorced : listPosition.SelectedIndex=4; break;}
 			FillGuardians();
 			_listGuardiansForFamOld=FamCur.ListPats.SelectMany(x => Guardians.Refresh(x.PatNum)).ToList();
-			if(PrefC.GetBool(PrefName.PatientDOBMasked)) {
+			if(Prefs.GetBool(PrefName.PatientDOBMasked)) {
 				//turn off validation until the user changes text, or unmasks.
 				textBirthdate.Text=Patients.DOBFormatHelper(PatCur.Birthdate,true);//If birthdate is not set this will return ""
 				_maskedDOBOld=textBirthdate.Text;
@@ -296,7 +297,7 @@ namespace OpenDental{
 				textDateDeceased.Text=PatCur.DateTimeDeceased.ToShortDateString()+"  "+PatCur.DateTimeDeceased.ToShortTimeString();
 			}
 			textAge.Text=PatientLogic.DateToAgeString(PatCur.Birthdate,PatCur.DateTimeDeceased);
-			if(PrefC.GetBool(PrefName.PatientSSNMasked)) {
+			if(Prefs.GetBool(PrefName.PatientSSNMasked)) {
 				textSSN.Text=Patients.SSNFormatHelper(PatCur.SSN,true);//If PatCur.SSN is null or empty, returns empty string.
 				_maskedSSNOld=textSSN.Text;
 				butViewSSN.Enabled=(Security.IsAuthorized(Permissions.PatientSSNView,true) && textSSN.Text!="");//Disable button if no SSN entered
@@ -334,8 +335,8 @@ namespace OpenDental{
 			textEmployer.Text=Employers.GetName(PatCur.EmployerNum);
 			//textEmploymentNote.Text=PatCur.EmploymentNote;
 			languageList=new List<string>();
-			if(PrefC.GetString(PrefName.LanguagesUsedByPatients)!="") {
-				string[] lanstring=PrefC.GetString(PrefName.LanguagesUsedByPatients).Split(',');
+			if(Prefs.GetString(PrefName.LanguagesUsedByPatients)!="") {
+				string[] lanstring=Prefs.GetString(PrefName.LanguagesUsedByPatients).Split(',');
 				for(int i=0;i<lanstring.Length;i++) {
 					if(lanstring[i]=="") {
 						continue;
@@ -431,10 +432,10 @@ namespace OpenDental{
 				comboCanadianEligibilityCode.SelectedIndex=PatCur.CanadianEligibilityCode;
 			}
 			textAddrNotes.Text=PatCur.AddrNote;
-			if(PrefC.GetBool(PrefName.EasyHidePublicHealth)){
+			if(Prefs.GetBool(PrefName.EasyHidePublicHealth)){
 				tabControlPatInfo.TabPages.Remove(tabPublicHealth);
 			}
-			if(PrefC.GetBool(PrefName.EasyHideMedicaid)){
+			if(Prefs.GetBool(PrefName.EasyHideMedicaid)){
 				labelMedicaidID.Visible=false;
 				labelPutInInsPlan.Visible=false;
 				textMedicaidID.Visible=false;
@@ -533,7 +534,7 @@ namespace OpenDental{
 				labelTrophyFolder.Visible=false;
 				textTrophyFolder.Visible=false;
 			}
-			if(PrefC.GetBool(PrefName.EasyHideHospitals)){
+			if(Prefs.GetBool(PrefName.EasyHideHospitals)){
 				tabControlPatInfo.TabPages.Remove(tabHospitals);
 				//textWard.Visible=false;
 				//labelWard.Visible=false;
@@ -565,11 +566,11 @@ namespace OpenDental{
 					butOK.Enabled=false;
 				}
 			}
-			if(PrefC.GetBool(PrefName.ShowFeatureGoogleMaps)) {
+			if(Prefs.GetBool(PrefName.ShowFeatureGoogleMaps)) {
 				butShowMap.Visible=true;
 			}
 			_errorProv.BlinkStyle=ErrorBlinkStyle.NeverBlink;
-			if(PrefC.GetBool(PrefName.ShowFeatureSuperfamilies)
+			if(Prefs.GetBool(PrefName.ShowFeatureSuperfamilies)
 				&& PatCur.SuperFamily!=0 
 				&& PatCur.Guarantor==PatCur.PatNum) 
 			{
@@ -684,10 +685,10 @@ namespace OpenDental{
 			long provNum=comboPriProv.GetSelectedProvNum();
 			List<Provider> listProviders=Providers.GetProvsForClinic(comboClinic.SelectedClinicNum);
 			comboPriProv.Items.Clear();
-			if(PrefC.GetBool(PrefName.PriProvDefaultToSelectProv)) {
+			if(Prefs.GetBool(PrefName.PriProvDefaultToSelectProv)) {
 				comboPriProv.Items.AddProvNone("Select Provider");
 			}
-			if(PrefC.GetBool(PrefName.EasyHideDentalSchools)) {//not dental school
+			if(Prefs.GetBool(PrefName.EasyHideDentalSchools)) {//not dental school
 				comboPriProv.Items.AddProvsAbbr(listProviders);
 			}
 			else{
@@ -697,7 +698,7 @@ namespace OpenDental{
 			provNum=comboSecProv.GetSelectedProvNum();
 			comboSecProv.Items.Clear();
 			comboSecProv.Items.AddProvNone();
-			if(PrefC.GetBool(PrefName.EasyHideDentalSchools)) {//not dental school
+			if(Prefs.GetBool(PrefName.EasyHideDentalSchools)) {//not dental school
 				comboSecProv.Items.AddProvsAbbr(listProviders);
 			}
 			else{
@@ -746,7 +747,7 @@ namespace OpenDental{
 			_listRequiredFields.RemoveAll(x => x.FieldName==RequiredFieldName.GroupName);
 			_listRequiredFields.RemoveAll(x => x.FieldName==RequiredFieldName.GroupNum);
 			//Remove RequiredFields where the text field is invisible.
-			if(!PrefC.GetBool(PrefName.ShowFeatureEhr)) {
+			if(!Prefs.GetBool(PrefName.ShowFeatureEhr)) {
 				_listRequiredFields.RemoveAll(x => x.FieldName==RequiredFieldName.MothersMaidenFirstName);
 				_listRequiredFields.RemoveAll(x => x.FieldName==RequiredFieldName.MothersMaidenLastName);
 				_listRequiredFields.RemoveAll(x => x.FieldName==RequiredFieldName.DateTimeDeceased);
@@ -754,7 +755,7 @@ namespace OpenDental{
 			if(!Programs.IsEnabled(Programs.GetProgramNum(ProgramName.TrophyEnhanced))) {
 				_listRequiredFields.RemoveAll(x => x.FieldName==RequiredFieldName.TrophyFolder);
 			}
-			if(PrefC.GetBool(PrefName.EasyHideHospitals)) {
+			if(Prefs.GetBool(PrefName.EasyHideHospitals)) {
 				_listRequiredFields.RemoveAll(x => x.FieldName==RequiredFieldName.Ward);
 				_listRequiredFields.RemoveAll(x => x.FieldName==RequiredFieldName.AdmitDate);
 			}
@@ -765,7 +766,7 @@ namespace OpenDental{
 				_listRequiredFields.RemoveAll(x => x.FieldName==RequiredFieldName.EligibilityExceptCode);
 			}
 			//Remove Required Fields if the Public Health Tab(tabPublicHealth) is hidden
-			if(PrefC.GetBool(PrefName.EasyHidePublicHealth)) {
+			if(Prefs.GetBool(PrefName.EasyHidePublicHealth)) {
 				_listRequiredFields.RemoveAll(x => x.FieldName.In(
 						RequiredFieldName.Race,RequiredFieldName.Ethnicity,RequiredFieldName.County,
 						RequiredFieldName.Site,RequiredFieldName.GradeLevel,RequiredFieldName.TreatmentUrgency,
@@ -953,12 +954,12 @@ namespace OpenDental{
 						SetRequiredTextBox(labelPreferredAndMiddleI,textPreferred,areConditionsMet);
 						break;
 					case RequiredFieldName.PrimaryProvider:
-						if(PrefC.GetBool(PrefName.PriProvDefaultToSelectProv)) {
+						if(Prefs.GetBool(PrefName.PriProvDefaultToSelectProv)) {
 							SetRequiredComboBoxPlus(labelPriProv,comboPriProv,areConditionsMet,0,"Selection cannot be 'Select Provider'.");
 						}
 						break;
 					case RequiredFieldName.Race:
-						if(PrefC.GetBool(PrefName.ShowFeatureEhr)) {
+						if(Prefs.GetBool(PrefName.ShowFeatureEhr)) {
 							SetRequiredComboBoxMulti(labelRace,comboBoxMultiRace,areConditionsMet,new List<int> {0},"Race is required");
 						}
 						else {
@@ -1081,7 +1082,7 @@ namespace OpenDental{
 				areConditionsMet=false;
 				switch(listConditions[i].ConditionType) {
 					case RequiredFieldName.AdmitDate:
-						if(PrefC.GetBool(PrefName.EasyHideHospitals)) {
+						if(Prefs.GetBool(PrefName.EasyHideHospitals)) {
 							areConditionsMet=true;
 							break;
 						}
@@ -1121,7 +1122,7 @@ namespace OpenDental{
 						areConditionsMet=ConditionComparerHelper(comboClinic.SelectedClinicNum.ToString(),i,listConditions);//includes none clinic
 						break;								
 					case RequiredFieldName.DateTimeDeceased:
-						if(!PrefC.GetBool(PrefName.ShowFeatureEhr)) {
+						if(!Prefs.GetBool(PrefName.ShowFeatureEhr)) {
 							areConditionsMet=true;
 							break;
 						}
@@ -1134,7 +1135,7 @@ namespace OpenDental{
 						areConditionsMet=ConditionComparerHelper(comboLanguage.Items[comboLanguage.SelectedIndex].ToString(),i,listConditions);
 						break;
 					case RequiredFieldName.MedicaidID:
-						if(PrefC.GetBool(PrefName.EasyHideMedicaid)) {
+						if(Prefs.GetBool(PrefName.EasyHideMedicaid)) {
 							areConditionsMet=true;
 							break;
 						}
@@ -1145,7 +1146,7 @@ namespace OpenDental{
 						}
 						break;
 					case RequiredFieldName.MedicaidState:
-						if(PrefC.GetBool(PrefName.EasyHideMedicaid)) {
+						if(Prefs.GetBool(PrefName.EasyHideMedicaid)) {
 							areConditionsMet=true;
 							break;
 						}
@@ -1452,7 +1453,7 @@ namespace OpenDental{
 			if(textSSN.Text==""){
 				return;
 			}
-			if(PrefC.GetBool(PrefName.PatientSSNMasked) && textSSN.Text==_maskedSSNOld) {//If SSN hasn't changed, don't validate.  It is masked.
+			if(Prefs.GetBool(PrefName.PatientSSNMasked) && textSSN.Text==_maskedSSNOld) {//If SSN hasn't changed, don't validate.  It is masked.
 				return;
 			}
 			if(textSSN.Text.Length==9){//if just numbers, try to reformat.
@@ -2393,7 +2394,7 @@ namespace OpenDental{
 			}
 			int declinedIdx;
 			int otherIdx;
-			if(PrefC.GetBool(PrefName.ShowFeatureEhr)) {
+			if(Prefs.GetBool(PrefName.ShowFeatureEhr)) {
 				declinedIdx=4;
 				otherIdx=6;
 			}
@@ -2440,7 +2441,7 @@ namespace OpenDental{
 				comboBoxMultiRace.SetSelected(otherIdx,true);
 				return;
 			}
-			if(PrefC.GetBool(PrefName.ShowFeatureEhr)) {
+			if(Prefs.GetBool(PrefName.ShowFeatureEhr)) {
 				return;
 			}
 			//Guaranteed to be at least 2 selected indices if we get here
@@ -2505,9 +2506,9 @@ namespace OpenDental{
 				if(FormPS.DialogResult!=DialogResult.OK) {
 					return;
 				}
-				refCur.PatNum=FormPS.SelectedPatNum;
+				refCur.PatNum=FormPS.SelectedPatientId;
 				bool referralIsNew=true;
-				Referral referralMatch=Referrals.GetFirstOrDefault(x => x.PatNum==FormPS.SelectedPatNum);
+				Referral referralMatch=Referrals.GetFirstOrDefault(x => x.PatNum==FormPS.SelectedPatientId);
 				if(referralMatch!=null) {
 					refCur=referralMatch;
 					referralIsNew=false;
@@ -2724,7 +2725,7 @@ namespace OpenDental{
 				}
 			}
 			//If public health is enabled and the combo box is in an invalid state, warn the user.
-			if(!PrefC.GetBool(PrefName.EasyHidePublicHealth) && comboGradeLevel.SelectedIndex < 0) {
+			if(!Prefs.GetBool(PrefName.EasyHidePublicHealth) && comboGradeLevel.SelectedIndex < 0) {
 				//This isn't really here to get valid data from the user but to prevent the value of -1 getting entered into the database.
 				MessageBox.Show("Grade Level is invalid.");
 				return;
@@ -2738,7 +2739,7 @@ namespace OpenDental{
 			else {
 				PatCur.PriProv=comboPriProv.GetSelectedProvNum();
 			}
-			if(IsNew && PrefC.HasClinicsEnabled && !PrefC.GetBool(PrefName.ClinicAllowPatientsAtHeadquarters) && comboClinic.SelectedClinicNum==0) {
+			if(IsNew && PrefC.HasClinicsEnabled && !Prefs.GetBool(PrefName.ClinicAllowPatientsAtHeadquarters) && comboClinic.SelectedClinicNum==0) {
 				MessageBox.Show("Current settings for clinics do not allow patients to be added to the 'Unassigned' clinic. Please select a clinic.");
 				return;
 			}
@@ -2751,8 +2752,8 @@ namespace OpenDental{
 			}
 			//Check SSN for US Formatting.  If SSN is masked and hasn't been changed, don't check.  Same checks from textSSN_Validating()
 			if(CultureInfo.CurrentCulture.Name=="en-US"	&& textSSN.Text!=""//Only validate if US and SSN is not blank.
-				&& ((PrefC.GetBool(PrefName.PatientSSNMasked) && textSSN.Text!=_maskedSSNOld)//If SSN masked, only validate if changed
-					|| (!PrefC.GetBool(PrefName.PatientSSNMasked) && textSSN.Text!=PatOld.SSN)))//If SSN isn't masked only validate if changed
+				&& ((Prefs.GetBool(PrefName.PatientSSNMasked) && textSSN.Text!=_maskedSSNOld)//If SSN masked, only validate if changed
+					|| (!Prefs.GetBool(PrefName.PatientSSNMasked) && textSSN.Text!=PatOld.SSN)))//If SSN isn't masked only validate if changed
 			{
 				if(!Regex.IsMatch(textSSN.Text,@"^\d\d\d-\d\d-\d\d\d\d$")) {
 					if(MessageBox.Show("SSN not valid. Continue anyway?","",MessageBoxButtons.OKCancel)
@@ -2776,7 +2777,7 @@ namespace OpenDental{
 			PatCur.Preferred=textPreferred.Text;
 			PatCur.Title=textTitle.Text;
 			PatCur.Salutation=textSalutation.Text;
-			if(PrefC.GetBool(PrefName.ShowFeatureEhr)) {//Mother's maiden name UI is only used when EHR is enabled.
+			if(Prefs.GetBool(PrefName.ShowFeatureEhr)) {//Mother's maiden name UI is only used when EHR is enabled.
 				_ehrPatientCur.MotherMaidenFname=textMotherMaidenFname.Text;
 				_ehrPatientCur.MotherMaidenLname=textMotherMaidenLname.Text;
 			}
@@ -2819,11 +2820,11 @@ namespace OpenDental{
 				case 4: PatCur.Position=PatientPosition.Divorced; break;
 			}
 			//Only update birthdate if it was changed, might be masked.
-			if(!PrefC.GetBool(PrefName.PatientDOBMasked) || _maskedDOBOld!=textBirthdate.Text) {
+			if(!Prefs.GetBool(PrefName.PatientDOBMasked) || _maskedDOBOld!=textBirthdate.Text) {
 				PatCur.Birthdate=PIn.Date(textBirthdate.Text);
 			}
 			PatCur.DateTimeDeceased=dateTimeDeceased;
-			if(!PrefC.GetBool(PrefName.PatientSSNMasked) || _maskedSSNOld!=textSSN.Text) {//Only update SSN if it was changed, might be masked.
+			if(!Prefs.GetBool(PrefName.PatientSSNMasked) || _maskedSSNOld!=textSSN.Text) {//Only update SSN if it was changed, might be masked.
 				if(CultureInfo.CurrentCulture.Name=="en-US") {
 					if(Regex.IsMatch(textSSN.Text,@"^\d\d\d-\d\d-\d\d\d\d$")) {
 						PatCur.SSN=textSSN.Text.Substring(0,3)+textSSN.Text.Substring(4,2)
@@ -2855,7 +2856,7 @@ namespace OpenDental{
 			if(!_patCurNote.Consent.HasFlag(PatConsentFlags.ShareMedicationHistoryErx) && checkDoseSpotConsent.Checked) {
 				try {
 					long clinicNum=Clinics.ClinicNum;
-					if(PrefC.HasClinicsEnabled && !PrefC.GetBool(PrefName.ElectronicRxClinicUseSelected)) {
+					if(PrefC.HasClinicsEnabled && !Prefs.GetBool(PrefName.ElectronicRxClinicUseSelected)) {
 						clinicNum=PatCur.ClinicNum;
 					}
 					//Create a temporary patient to set important information to give to DoseSpot in case a patient is needed to be created in DoseSpot.

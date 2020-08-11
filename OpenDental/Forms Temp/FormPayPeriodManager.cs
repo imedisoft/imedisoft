@@ -402,10 +402,10 @@ namespace OpenDental {
 			}
 			else {
 				comboDay.SelectedIndex=0;
-				numDaysAfterPayPeriod.Text=PrefC.GetString(PrefName.PayPeriodPayAfterNumberOfDays);
-				checkExcludeWeekends.Checked=PrefC.GetBool(PrefName.PayPeriodPayDateExcludesWeekends);
+				numDaysAfterPayPeriod.Text=Prefs.GetString(PrefName.PayPeriodPayAfterNumberOfDays);
+				checkExcludeWeekends.Checked=Prefs.GetBool(PrefName.PayPeriodPayDateExcludesWeekends);
 				if(checkExcludeWeekends.Checked) {
-					if(PrefC.GetBool(PrefName.PayPeriodPayDateBeforeWeekend)) {
+					if(Prefs.GetBool(PrefName.PayPeriodPayDateBeforeWeekend)) {
 						radioPayBefore.Checked=true;
 					}
 					else {
@@ -633,22 +633,22 @@ namespace OpenDental {
 			}
 			//Save Preferences
 			if(radioWeekly.Checked) {
-				Prefs.UpdateInt(PrefName.PayPeriodIntervalSetting,(int)PayPeriodInterval.Weekly);
+				Prefs.Set(PrefName.PayPeriodIntervalSetting,(int)PayPeriodInterval.Weekly);
 			}
 			else if(radioBiWeekly.Checked) {
-				Prefs.UpdateInt(PrefName.PayPeriodIntervalSetting,(int)PayPeriodInterval.BiWeekly);
+				Prefs.Set(PrefName.PayPeriodIntervalSetting,(int)PayPeriodInterval.BiWeekly);
 			}
 			else {
-				Prefs.UpdateInt(PrefName.PayPeriodIntervalSetting,(int)PayPeriodInterval.Monthly);
+				Prefs.Set(PrefName.PayPeriodIntervalSetting,(int)PayPeriodInterval.Monthly);
 			}
-			Prefs.UpdateInt(PrefName.PayPeriodPayDay,comboDay.SelectedIndex);
-			Prefs.UpdateInt(PrefName.PayPeriodPayAfterNumberOfDays,PIn.Int(numDaysAfterPayPeriod.Text));
-			Prefs.UpdateBool(PrefName.PayPeriodPayDateExcludesWeekends,checkExcludeWeekends.Checked);
+			Prefs.Set(PrefName.PayPeriodPayDay,comboDay.SelectedIndex);
+			Prefs.Set(PrefName.PayPeriodPayAfterNumberOfDays,PIn.Int(numDaysAfterPayPeriod.Text));
+			Prefs.Set(PrefName.PayPeriodPayDateExcludesWeekends,checkExcludeWeekends.Checked);
 			if(radioPayBefore.Checked) {
-				Prefs.UpdateBool(PrefName.PayPeriodPayDateBeforeWeekend,true);
+				Prefs.Set(PrefName.PayPeriodPayDateBeforeWeekend,true);
 			}
 			else if(radioPayAfter.Checked) {
-				Prefs.UpdateBool(PrefName.PayPeriodPayDateBeforeWeekend,false);
+				Prefs.Set(PrefName.PayPeriodPayDateBeforeWeekend,false);
 			}
 			DialogResult=DialogResult.OK;
 		}

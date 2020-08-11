@@ -11,6 +11,7 @@ using OpenDental.UI;
 using CodeBase;
 using System.Runtime.ExceptionServices;
 using System.Linq;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormDatabaseMaintenancePat:ODForm {
@@ -254,7 +255,7 @@ namespace OpenDental {
 			if(FormPs.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			_patNum=FormPs.SelectedPatNum;
+			_patNum=FormPs.SelectedPatientId;
 			UpdateTextPatient();
 		}
 

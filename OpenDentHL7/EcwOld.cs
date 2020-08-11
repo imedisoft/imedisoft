@@ -41,7 +41,7 @@ namespace OpenDentHL7
 			//#if DEBUG//just so I don't forget to remove it later.
 			//IsStandalone=false;
 			//#endif
-			ecwOldHl7FolderOut = PrefC.GetString(PrefName.HL7FolderOut);
+			ecwOldHl7FolderOut = Prefs.GetString(PrefName.HL7FolderOut);
 			if (!Directory.Exists(ecwOldHl7FolderOut))
 			{
 				throw new ApplicationException(ecwOldHl7FolderOut + " does not exist.");
@@ -54,7 +54,7 @@ namespace OpenDentHL7
 				return;//do not continue with the HL7 sending code below
 			}
 			//start polling the db for new HL7 messages to send. Every 1.8 seconds.
-			ecwOldHl7FolderIn = PrefC.GetString(PrefName.HL7FolderIn);
+			ecwOldHl7FolderIn = Prefs.GetString(PrefName.HL7FolderIn);
 			if (!Directory.Exists(ecwOldHl7FolderIn))
 			{
 				throw new ApplicationException(ecwOldHl7FolderIn + " does not exist.");

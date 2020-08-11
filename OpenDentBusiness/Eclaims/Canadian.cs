@@ -1435,7 +1435,7 @@ namespace OpenDentBusiness.Eclaims {
 //						settings.IndentChars=("    ");
 //						StringBuilder strbuild=new StringBuilder();
 //						using(XmlWriter writer=XmlWriter.Create(strbuild,settings)){
-//							writer.WriteElementString("RegistrationKey",PrefC.GetString(PrefName.RegistrationKey));
+//							writer.WriteElementString("RegistrationKey",Prefs.GetString(PrefName.RegistrationKey));
 //						}
 //						string response=null;
 //						if(network.Abbrev=="ABC") {//Alberta Blue Cross
@@ -1840,7 +1840,7 @@ namespace OpenDentBusiness.Eclaims {
 				}
 			}
 			//Return the default dental clearinghouse if it is a Canadian clearinghouse.
-			Clearinghouse clearinghouse=Clearinghouses.GetFirstOrDefault(x => PrefC.GetLong(PrefName.ClearinghouseDefaultDent)==x.ClearinghouseNum 
+			Clearinghouse clearinghouse=Clearinghouses.GetFirstOrDefault(x => Prefs.GetLong(PrefName.ClearinghouseDefaultDent)==x.ClearinghouseNum 
 				&& x.Eformat==ElectronicClaimFormat.Canadian);
 			if(clearinghouse==null) {
 				//Return the first Canadian clearinghouse if one exists.
@@ -2141,7 +2141,7 @@ namespace OpenDentBusiness.Eclaims {
 		///We need this helper function in order to identify when special circumstances are necessary.
 		///Be sure to also check that the region is set to Canada.</summary>
 		public static bool IsQuebec() {
-			string state=PrefC.GetString(PrefName.PracticeST).ToLower();
+			string state=Prefs.GetString(PrefName.PracticeST).ToLower();
 			if(state=="qc" || state=="quebec" || state=="québec") {//Alt code 0233 for the é
 				return true;
 			}
@@ -2634,7 +2634,7 @@ namespace OpenDentBusiness.Eclaims {
 			if(!CultureInfo.CurrentCulture.Name.EndsWith("CA")) {
 				return false;
 			}
-			return (plan.PlanType=="" || (plan.PlanType=="p" && PrefC.GetBool(PrefName.CanadaCreatePpoLabEst)));
+			return (plan.PlanType=="" || (plan.PlanType=="p" && Prefs.GetBool(PrefName.CanadaCreatePpoLabEst)));
 		}
 
 	}

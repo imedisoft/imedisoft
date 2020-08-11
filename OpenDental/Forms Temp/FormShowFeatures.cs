@@ -30,24 +30,24 @@ namespace OpenDental{
 		}
 
 		private void FormShowFeatures_Load(object sender, System.EventArgs e) {
-			checkCapitation.Checked=!PrefC.GetBool(PrefName.EasyHideCapitation);
-			checkMedicaid.Checked=!PrefC.GetBool(PrefName.EasyHideMedicaid);
-			checkPublicHealth.Checked=!PrefC.GetBool(PrefName.EasyHidePublicHealth);
-			checkDentalSchools.Checked=!PrefC.GetBool(PrefName.EasyHideDentalSchools);
-			checkHospitals.Checked=!PrefC.GetBool(PrefName.EasyHideHospitals);
-			checkInsurance.Checked=!PrefC.GetBool(PrefName.EasyHideInsurance);
-			checkClinical.Checked=!PrefC.GetBool(PrefName.EasyHideClinical);
-			checkBasicModules.Checked=PrefC.GetBool(PrefName.EasyBasicModules);
-			_isClinicsEnabledInDb=!PrefC.GetBool(PrefName.EasyNoClinics);
+			checkCapitation.Checked=!Prefs.GetBool(PrefName.EasyHideCapitation);
+			checkMedicaid.Checked=!Prefs.GetBool(PrefName.EasyHideMedicaid);
+			checkPublicHealth.Checked=!Prefs.GetBool(PrefName.EasyHidePublicHealth);
+			checkDentalSchools.Checked=!Prefs.GetBool(PrefName.EasyHideDentalSchools);
+			checkHospitals.Checked=!Prefs.GetBool(PrefName.EasyHideHospitals);
+			checkInsurance.Checked=!Prefs.GetBool(PrefName.EasyHideInsurance);
+			checkClinical.Checked=!Prefs.GetBool(PrefName.EasyHideClinical);
+			checkBasicModules.Checked=Prefs.GetBool(PrefName.EasyBasicModules);
+			_isClinicsEnabledInDb=!Prefs.GetBool(PrefName.EasyNoClinics);
 			RestoreClinicCheckBox();
-			checkRepeatCharges.Checked=!PrefC.GetBool(PrefName.EasyHideRepeatCharges);
-			checkMedicalIns.Checked=PrefC.GetBool(PrefName.ShowFeatureMedicalInsurance);
-			checkEhr.Checked=PrefC.GetBool(PrefName.ShowFeatureEhr);
-			checkSuperFam.Checked=PrefC.GetBool(PrefName.ShowFeatureSuperfamilies);
-			checkPatClone.Checked=PrefC.GetBool(PrefName.ShowFeaturePatientClone);
-			checkShowEnterprise.Checked=PrefC.GetBool(PrefName.ShowFeatureEnterprise);
-			checkShowReactivations.Checked=PrefC.GetBool(PrefName.ShowFeatureReactivations);
-			checkEraShowControlId.Checked=PrefC.GetBool(PrefName.EraShowControlIdFilter);
+			checkRepeatCharges.Checked=!Prefs.GetBool(PrefName.EasyHideRepeatCharges);
+			checkMedicalIns.Checked=Prefs.GetBool(PrefName.ShowFeatureMedicalInsurance);
+			checkEhr.Checked=Prefs.GetBool(PrefName.ShowFeatureEhr);
+			checkSuperFam.Checked=Prefs.GetBool(PrefName.ShowFeatureSuperfamilies);
+			checkPatClone.Checked=Prefs.GetBool(PrefName.ShowFeaturePatientClone);
+			checkShowEnterprise.Checked=Prefs.GetBool(PrefName.ShowFeatureEnterprise);
+			checkShowReactivations.Checked=Prefs.GetBool(PrefName.ShowFeatureReactivations);
+			checkEraShowControlId.Checked=Prefs.GetBool(PrefName.EraShowControlIdFilter);
 		}
 
 		private void checkEnableClinics_Click(object sender,EventArgs e) {
@@ -83,7 +83,7 @@ namespace OpenDental{
 					return true;
 				}
 				//Turn clinics on/off locally and send the signal to other workstations. This must happen before we call HQ so we tell HQ the new value.
-				Prefs.UpdateBool(PrefName.EasyNoClinics,!checkEnableClinics.Checked);
+				Prefs.Set(PrefName.EasyNoClinics,!checkEnableClinics.Checked);
 				DataValid.SetInvalid(InvalidType.Prefs);
 				//Create an alert for the user to know they may need to restart the eConnector if they are subscribed to eServices
 				AlertItems.Insert(new AlertItem()
@@ -119,22 +119,22 @@ namespace OpenDental{
 				return;
 			}
 			bool hasChanged=false;
-			hasChanged |= Prefs.UpdateBool(PrefName.EasyHideCapitation,!checkCapitation.Checked);
-			hasChanged |= Prefs.UpdateBool(PrefName.EasyHideMedicaid,!checkMedicaid.Checked);
-			hasChanged |= Prefs.UpdateBool(PrefName.EasyHidePublicHealth,!checkPublicHealth.Checked);
-			hasChanged |= Prefs.UpdateBool(PrefName.EasyHideDentalSchools,!checkDentalSchools.Checked);
-			hasChanged |= Prefs.UpdateBool(PrefName.EasyHideHospitals,!checkHospitals.Checked);
-			hasChanged |= Prefs.UpdateBool(PrefName.EasyHideInsurance,!checkInsurance.Checked);
-			hasChanged |= Prefs.UpdateBool(PrefName.EasyHideClinical,!checkClinical.Checked);
-			hasChanged |= Prefs.UpdateBool(PrefName.EasyBasicModules,checkBasicModules.Checked);
-			hasChanged |= Prefs.UpdateBool(PrefName.EasyHideRepeatCharges,!checkRepeatCharges.Checked);
-			hasChanged |= Prefs.UpdateBool(PrefName.ShowFeatureMedicalInsurance,checkMedicalIns.Checked);
-			hasChanged |= Prefs.UpdateBool(PrefName.ShowFeatureEhr,checkEhr.Checked);
-			hasChanged |= Prefs.UpdateBool(PrefName.ShowFeatureSuperfamilies,checkSuperFam.Checked);
-			hasChanged |= Prefs.UpdateBool(PrefName.ShowFeaturePatientClone,checkPatClone.Checked);
-			hasChanged |= Prefs.UpdateBool(PrefName.ShowFeatureEnterprise,checkShowEnterprise.Checked);
-			hasChanged |= Prefs.UpdateBool(PrefName.ShowFeatureReactivations,checkShowReactivations.Checked);
-			hasChanged |= Prefs.UpdateBool(PrefName.EraShowControlIdFilter,checkEraShowControlId.Checked);
+			hasChanged |= Prefs.Set(PrefName.EasyHideCapitation,!checkCapitation.Checked);
+			hasChanged |= Prefs.Set(PrefName.EasyHideMedicaid,!checkMedicaid.Checked);
+			hasChanged |= Prefs.Set(PrefName.EasyHidePublicHealth,!checkPublicHealth.Checked);
+			hasChanged |= Prefs.Set(PrefName.EasyHideDentalSchools,!checkDentalSchools.Checked);
+			hasChanged |= Prefs.Set(PrefName.EasyHideHospitals,!checkHospitals.Checked);
+			hasChanged |= Prefs.Set(PrefName.EasyHideInsurance,!checkInsurance.Checked);
+			hasChanged |= Prefs.Set(PrefName.EasyHideClinical,!checkClinical.Checked);
+			hasChanged |= Prefs.Set(PrefName.EasyBasicModules,checkBasicModules.Checked);
+			hasChanged |= Prefs.Set(PrefName.EasyHideRepeatCharges,!checkRepeatCharges.Checked);
+			hasChanged |= Prefs.Set(PrefName.ShowFeatureMedicalInsurance,checkMedicalIns.Checked);
+			hasChanged |= Prefs.Set(PrefName.ShowFeatureEhr,checkEhr.Checked);
+			hasChanged |= Prefs.Set(PrefName.ShowFeatureSuperfamilies,checkSuperFam.Checked);
+			hasChanged |= Prefs.Set(PrefName.ShowFeaturePatientClone,checkPatClone.Checked);
+			hasChanged |= Prefs.Set(PrefName.ShowFeatureEnterprise,checkShowEnterprise.Checked);
+			hasChanged |= Prefs.Set(PrefName.ShowFeatureReactivations,checkShowReactivations.Checked);
+			hasChanged |= Prefs.Set(PrefName.EraShowControlIdFilter,checkEraShowControlId.Checked);
 			if(hasChanged) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}

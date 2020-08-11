@@ -22,8 +22,8 @@ namespace OpenDental {
 		}
 
 		private void FormPatListResults_Load(object sender,EventArgs e) {
-			if(PrefC.GetString(PrefName.SoftwareName)!="") {
-				this.Text+=" - "+PrefC.GetString(PrefName.SoftwareName);
+			if(Prefs.GetString(PrefName.SoftwareName)!="") {
+				this.Text+=" - "+Prefs.GetString(PrefName.SoftwareName);
 			}
 			EhrMeasureEvent measureEvent=new EhrMeasureEvent();
 			measureEvent.DateTEvent=DateTime.Now;
@@ -203,13 +203,13 @@ namespace OpenDental {
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
 				//Subheading required by some states for EHR reporting.  Shows software name, date the report was generated, and which provider is logged in at time of report.
 				string providerName="";
-				if(Security.CurrentUser.ProvNum != 0) {
-					providerName=Providers.GetProv(Security.CurrentUser.ProvNum).GetLongDesc(); //Used GetLongDesc to match the EHR measures printout.  In the future we may want to enhance to use Formal Name and NPI
+				if(Security.CurrentUser.ProviderId != 0) {
+					providerName=Providers.GetProv(Security.CurrentUser.ProviderId).GetLongDesc(); //Used GetLongDesc to match the EHR measures printout.  In the future we may want to enhance to use Formal Name and NPI
 				}
 				text=providerName;
 				g.DrawString(text,subHeadingFont,Brushes.Black,center-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,subHeadingFont).Height;
-				text=PrefC.GetString(PrefName.SoftwareName);
+				text=Prefs.GetString(PrefName.SoftwareName);
 				g.DrawString(text,subHeadingFont,Brushes.Black,center-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,subHeadingFont).Height;
 				text=DateTime.Now.ToShortDateString();

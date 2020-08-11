@@ -985,7 +985,7 @@ namespace OpenDentBusiness{
 				if(plan.ClaimsUseUCR) {//use UCR for the provider of the procedure
 					long provNum=ProcCur.ProvNum;
 					if(provNum==0) {//if no prov set, then use practice default.
-						provNum=PrefC.GetLong(PrefName.PracticeDefaultProv);
+						provNum=Prefs.GetLong(PrefName.PracticeDefaultProv);
 					}
 					Provider providerFirst=Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
 					Provider provider=Providers.GetFirstOrDefault(x => x.ProvNum==provNum)??providerFirst;
@@ -1113,7 +1113,7 @@ namespace OpenDentBusiness{
 				case "Med":
 					claimCur.PatRelat=PatPlans.GetFromList(patPlanList,subCur.InsSubNum).Relationship;
 					claimCur.ClaimType="Other";
-					if(PrefC.GetBool(PrefName.ClaimMedTypeIsInstWhenInsPlanIsMedical)) {
+					if(Prefs.GetBool(PrefName.ClaimMedTypeIsInstWhenInsPlanIsMedical)) {
 						claimCur.MedType=EnumClaimMedType.Institutional;
 					}
 					else {
@@ -1126,7 +1126,7 @@ namespace OpenDentBusiness{
 					//plannum2 is not automatically filled in.
 					claimCur.ClaimForm=claimFormNum;
 					if(planCur.IsMedical) {
-						if(PrefC.GetBool(PrefName.ClaimMedTypeIsInstWhenInsPlanIsMedical)) {
+						if(Prefs.GetBool(PrefName.ClaimMedTypeIsInstWhenInsPlanIsMedical)) {
 							claimCur.MedType=EnumClaimMedType.Institutional;
 						}
 						else {
@@ -1204,10 +1204,10 @@ namespace OpenDentBusiness{
 			claimCur.PlanNum=insPlanCur.PlanNum;
 			claimCur.InsSubNum=inssubCur.InsSubNum;
 			claimCur.ClaimFee=feeBilled;
-			if(PrefC.GetBool(PrefName.OrthoClaimMarkAsOrtho)) {
+			if(Prefs.GetBool(PrefName.OrthoClaimMarkAsOrtho)) {
 				claimCur.IsOrtho=true;
 			}
-			if(PrefC.GetBool(PrefName.OrthoClaimUseDatePlacement)) {
+			if(Prefs.GetBool(PrefName.OrthoClaimUseDatePlacement)) {
 				claimCur.OrthoDate=dateBanding;
 				claimCur.OrthoTotalM=PIn.Byte(totalMonths.ToString(),false);
 				claimCur.OrthoRemainM=PIn.Byte(monthsRem.ToString(),false);
@@ -1320,7 +1320,7 @@ namespace OpenDentBusiness{
 
 		public static DateTime GetDateLastOrthoClaim(PatPlan patPlanCur,OrthoClaimType claimType) {
 			
-			long orthoDefaultAutoCodeNum=PrefC.GetLong(PrefName.OrthoAutoProcCodeNum);
+			long orthoDefaultAutoCodeNum=Prefs.GetLong(PrefName.OrthoAutoProcCodeNum);
 			string command="";
 			if(claimType == OrthoClaimType.InitialPlusPeriodic) {
 				command = @"	
@@ -1391,7 +1391,7 @@ namespace OpenDentBusiness{
 			if(pat==null) {
 				pat=Patients.GetPat(claim.PatNum);
 			}
-			return Patients.ReplacePatient(PrefC.GetString(PrefName.ClaimIdPrefix),pat)+claim.ClaimNum;
+			return Patients.ReplacePatient(Prefs.GetString(PrefName.ClaimIdPrefix),pat)+claim.ClaimNum;
 		}
 
 		///<summary>Caller should validate claim and listClaimProcsToSplit prior to calling.

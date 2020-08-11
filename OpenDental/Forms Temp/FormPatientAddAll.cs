@@ -8,6 +8,7 @@ using OpenDentBusiness.HL7;
 using System.Linq;
 using OpenDental.UI;
 using CodeBase;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormPatientAddAll:ODForm {
@@ -163,7 +164,7 @@ namespace OpenDental {
 			listGender5.SelectedIndex = 2;
 			listPosition1.SelectedIndex = 1;
 			listPosition2.SelectedIndex = 1;
-			if (PrefC.GetBool(PrefName.PriProvDefaultToSelectProv))
+			if (Prefs.GetBool(PrefName.PriProvDefaultToSelectProv))
 			{
 				comboPriProv1.Items.Add(Lan.G(this, "Select Provider"));
 				comboPriProv2.Items.Add(Lan.G(this, "Select Provider"));
@@ -196,7 +197,7 @@ namespace OpenDental {
 				comboSecProv5.Items.Add(_listProviders[i].GetLongDesc());
 			}
 			int defaultindex = 0;
-			if (!PrefC.GetBool(PrefName.PriProvDefaultToSelectProv))
+			if (!Prefs.GetBool(PrefName.PriProvDefaultToSelectProv))
 			{
 				if (PrefC.HasClinicsEnabled && Clinics.ClinicNum != 0)
 				{
@@ -204,7 +205,7 @@ namespace OpenDental {
 				}
 				else
 				{
-					defaultindex = Providers.GetIndex(PrefC.GetLong(PrefName.PracticeDefaultProv));
+					defaultindex = Providers.GetIndex(Prefs.GetLong(PrefName.PracticeDefaultProv));
 				}
 				if (defaultindex == -1)
 				{//default provider hidden
@@ -230,7 +231,7 @@ namespace OpenDental {
 			{
 				labelClinic.Visible = false;
 			}
-			else if (PrefC.GetBool(PrefName.ClinicAllowPatientsAtHeadquarters))
+			else if (Prefs.GetBool(PrefName.ClinicAllowPatientsAtHeadquarters))
 			{
 				comboClinic1.IncludeUnassigned = true;
 				comboClinic2.IncludeUnassigned = true;
@@ -474,7 +475,7 @@ namespace OpenDental {
 						}
 						break;
 					case RequiredFieldName.PrimaryProvider:
-						if(PrefC.GetBool(PrefName.PriProvDefaultToSelectProv)) {
+						if(Prefs.GetBool(PrefName.PriProvDefaultToSelectProv)) {
 							SetRequiredListControl(labelPriProv,comboPriProv1,areConditionsMet,0,"Selection cannot be 'Select Provider'");
 							SetRequiredListControlNonGuarantor(labelPriProv,textFName2,textLName2,comboPriProv2,areConditionsMet,0,"Selection cannot be 'Select Provider'");
 							SetRequiredListControlNonGuarantor(labelPriProv,textFName3,textLName3,comboPriProv3,areConditionsMet,0,"Selection cannot be 'Select Provider'");
@@ -648,7 +649,7 @@ namespace OpenDental {
 						listProviderCombos.Add(comboPriProv5);
 						for(int j=0;j<listProviderCombos.Count;j++) {
 							int provIdx=listProviderCombos[j].SelectedIndex;
-							if(PrefC.GetBool(PrefName.PriProvDefaultToSelectProv)) {
+							if(Prefs.GetBool(PrefName.PriProvDefaultToSelectProv)) {
 								provIdx--;//To account for 'Select Provider'
 							}
 							if(provIdx<0) {
@@ -1206,7 +1207,7 @@ namespace OpenDental {
 			comboBox.Items.Clear();
 			for(int i=0;i<_listBillingTypeDefs.Count;i++){
 				comboBox.Items.Add(_listBillingTypeDefs[i].ItemName);
-				if(_listBillingTypeDefs[i].DefNum==PrefC.GetLong(PrefName.PracticeDefaultBillType)) {
+				if(_listBillingTypeDefs[i].DefNum==Prefs.GetLong(PrefName.PracticeDefaultBillType)) {
 					comboBox.SelectedIndex=i;
 				}
 			}
@@ -1432,9 +1433,9 @@ namespace OpenDental {
 				if(FormPS.DialogResult!=DialogResult.OK) {
 					return;
 				}
-				refCur.PatNum=FormPS.SelectedPatNum;
+				refCur.PatNum=FormPS.SelectedPatientId;
 				bool referralIsNew=true;
-				Referral referralMatch=Referrals.GetFirstOrDefault(x => x.PatNum==FormPS.SelectedPatNum);
+				Referral referralMatch=Referrals.GetFirstOrDefault(x => x.PatNum==FormPS.SelectedPatientId);
 				if(referralMatch!=null) {
 					refCur=referralMatch;
 					referralIsNew=false;
@@ -2206,7 +2207,7 @@ namespace OpenDental {
 			}
 			#endregion Validate Insurance Subscriptions
 			#region Validate Clinics
-			if(PrefC.HasClinicsEnabled && !PrefC.GetBool(PrefName.ClinicAllowPatientsAtHeadquarters)) {
+			if(PrefC.HasClinicsEnabled && !Prefs.GetBool(PrefName.ClinicAllowPatientsAtHeadquarters)) {
 				if((comboClinic1.SelectedClinicNum==0 && textLName1.Text!="" && textFName1.Text!="")
 					|| (comboClinic2.SelectedClinicNum==0 && textLName2.Text!="" && textFName2.Text!="")
 					|| (comboClinic3.SelectedClinicNum==0 && textLName3.Text!="" && textFName3.Text!="")
@@ -2218,7 +2219,7 @@ namespace OpenDental {
 				}
 			}
 			#endregion
-			if(PrefC.GetBool(PrefName.PriProvDefaultToSelectProv)) {
+			if(Prefs.GetBool(PrefName.PriProvDefaultToSelectProv)) {
 				if((comboPriProv1.SelectedIndex==0 && textLName1.Text!="" && textFName1.Text!="")//Patient has 'Select Provider' as Primary Provider
 					|| (comboPriProv2.SelectedIndex==0 && textLName2.Text!="" && textFName2.Text!="")
 					|| (comboPriProv3.SelectedIndex==0 && textLName3.Text!="" && textFName3.Text!="")
@@ -2271,7 +2272,7 @@ namespace OpenDental {
 			#region Create Family
 			Patient[] arrayPatsInFam=new Patient[5];
 			Patient pat=new Patient();
-			pat.BillingType=PrefC.GetLong(PrefName.PracticeDefaultBillType);
+			pat.BillingType=Prefs.GetLong(PrefName.PracticeDefaultBillType);
 			pat.PatStatus=PatientStatus.Patient;
 			pat.HmPhone=textHmPhone.Text;
 			pat.Address=textAddress.Text;
@@ -2303,7 +2304,7 @@ namespace OpenDental {
 						pat.Gender=(PatientGender)listGender1.SelectedIndex;
 						pat.Position=(PatientPosition)listPosition1.SelectedIndex;
 						pat.Birthdate=PIn.Date(textBirthdate1.Text);
-						if(PrefC.GetBool(PrefName.PriProvDefaultToSelectProv)) {
+						if(Prefs.GetBool(PrefName.PriProvDefaultToSelectProv)) {
 							if(comboPriProv1.SelectedIndex>0) {//'Select Provider'
 								pat.PriProv=_listProviders[comboPriProv1.SelectedIndex-1].ProvNum;
 							}
@@ -2334,7 +2335,7 @@ namespace OpenDental {
 						pat.Gender=(PatientGender)listGender2.SelectedIndex;
 						pat.Position=(PatientPosition)listPosition2.SelectedIndex;
 						pat.Birthdate=PIn.Date(textBirthdate2.Text);
-						if(PrefC.GetBool(PrefName.PriProvDefaultToSelectProv)) {
+						if(Prefs.GetBool(PrefName.PriProvDefaultToSelectProv)) {
 							if(comboPriProv2.SelectedIndex>0) {//'Select Provider'
 								pat.PriProv=_listProviders[comboPriProv2.SelectedIndex-1].ProvNum;
 							}
@@ -2365,7 +2366,7 @@ namespace OpenDental {
 						pat.Gender=(PatientGender)listGender3.SelectedIndex;
 						pat.Position=PatientPosition.Child;
 						pat.Birthdate=PIn.Date(textBirthdate3.Text);
-						if(PrefC.GetBool(PrefName.PriProvDefaultToSelectProv)) {
+						if(Prefs.GetBool(PrefName.PriProvDefaultToSelectProv)) {
 							if(comboPriProv3.SelectedIndex>0) {//'Select Provider'
 								pat.PriProv=_listProviders[comboPriProv3.SelectedIndex-1].ProvNum;
 							}
@@ -2396,7 +2397,7 @@ namespace OpenDental {
 						pat.Gender=(PatientGender)listGender4.SelectedIndex;
 						pat.Position=PatientPosition.Child;
 						pat.Birthdate=PIn.Date(textBirthdate4.Text);
-						if(PrefC.GetBool(PrefName.PriProvDefaultToSelectProv)) {
+						if(Prefs.GetBool(PrefName.PriProvDefaultToSelectProv)) {
 							if(comboPriProv4.SelectedIndex>0) {//'Select Provider'
 								pat.PriProv=_listProviders[comboPriProv4.SelectedIndex-1].ProvNum;
 							}
@@ -2427,7 +2428,7 @@ namespace OpenDental {
 						pat.Gender=(PatientGender)listGender5.SelectedIndex;
 						pat.Position=PatientPosition.Child;
 						pat.Birthdate=PIn.Date(textBirthdate5.Text);
-						if(PrefC.GetBool(PrefName.PriProvDefaultToSelectProv)) {
+						if(Prefs.GetBool(PrefName.PriProvDefaultToSelectProv)) {
 							if(comboPriProv5.SelectedIndex>0) {//'Select Provider'
 								pat.PriProv=_listProviders[comboPriProv5.SelectedIndex-1].ProvNum;
 							}
@@ -2525,10 +2526,10 @@ namespace OpenDental {
 					selectedPlan1.GroupName=textGroupName1.Text;
 					selectedPlan1.GroupNum=textGroupNum1.Text;
 					selectedPlan1.PlanType="";
-					if(PrefC.GetBool(PrefName.InsDefaultPPOpercent)) {
+					if(Prefs.GetBool(PrefName.InsDefaultPPOpercent)) {
 						selectedPlan1.PlanType="p";
 					}
-					if(selectedPlan1.PlanType=="" && PrefC.GetBool(PrefName.InsDefaultShowUCRonClaims)) {
+					if(selectedPlan1.PlanType=="" && Prefs.GetBool(PrefName.InsDefaultShowUCRonClaims)) {
 						selectedPlan1.ClaimsUseUCR=true;
 					}
 					selectedPlan1.CobRule=(EnumCobRule)PrefC.GetInt(PrefName.InsDefaultCobRule);
@@ -2562,7 +2563,7 @@ namespace OpenDental {
 				}
 				sub1=new InsSub();
 				sub1.PlanNum=selectedPlan1.PlanNum;
-				sub1.AssignBen=PrefC.GetBool(PrefName.InsDefaultAssignBen);
+				sub1.AssignBen=Prefs.GetBool(PrefName.InsDefaultAssignBen);
 				sub1.ReleaseInfo=true;
 				sub1.DateEffective=DateTime.MinValue;
 				sub1.DateTerm=DateTime.MinValue;
@@ -2586,10 +2587,10 @@ namespace OpenDental {
 					selectedPlan2.GroupName=textGroupName2.Text;
 					selectedPlan2.GroupNum=textGroupNum2.Text;
 					selectedPlan2.PlanType="";
-					if(PrefC.GetBool(PrefName.InsDefaultPPOpercent)) {
+					if(Prefs.GetBool(PrefName.InsDefaultPPOpercent)) {
 						selectedPlan2.PlanType="p";
 					}
-					if(selectedPlan2.PlanType=="" && PrefC.GetBool(PrefName.InsDefaultShowUCRonClaims)) {
+					if(selectedPlan2.PlanType=="" && Prefs.GetBool(PrefName.InsDefaultShowUCRonClaims)) {
 						selectedPlan2.ClaimsUseUCR=true;
 					}
 					selectedPlan2.CobRule=(EnumCobRule)PrefC.GetInt(PrefName.InsDefaultCobRule);
@@ -2623,7 +2624,7 @@ namespace OpenDental {
 				}
 				sub2=new InsSub();
 				sub2.PlanNum=selectedPlan2.PlanNum;
-				sub2.AssignBen=PrefC.GetBool(PrefName.InsDefaultAssignBen);
+				sub2.AssignBen=Prefs.GetBool(PrefName.InsDefaultAssignBen);
 				sub2.ReleaseInfo=true;
 				sub2.DateEffective=DateTime.MinValue;
 				sub2.DateTerm=DateTime.MinValue;

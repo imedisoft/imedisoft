@@ -220,7 +220,7 @@ namespace OpenDental{
 			DisplayFields.RefreshCache();
 			ListShowing=DisplayFields.GetForCategory(Category);
 			if(Category==DisplayFieldCategory.ChartPatientInformation
-				&& !PrefC.GetBool(PrefName.ShowFeatureEhr)
+				&& !Prefs.GetBool(PrefName.ShowFeatureEhr)
 				&& ListShowing.Any(x => x.InternalName=="Tobacco Use"))
 			{
 				//user may have enable EHR features, added the tobacco use display field, and then disabled EHR features, remove the tobacco use display field

@@ -30,7 +30,7 @@ namespace OpenDental {
 		private void butImport_Click(object sender,EventArgs e) {
 			Cursor=Cursors.WaitCursor;
 			OpenFileDialog openDlg=new OpenFileDialog();
-			string initDir=PrefC.GetString(PrefName.ExportPath);
+			string initDir=Prefs.GetString(PrefName.ExportPath);
 			if(Directory.Exists(initDir)) {
 				openDlg.InitialDirectory=initDir;
 			}

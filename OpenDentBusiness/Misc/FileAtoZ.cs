@@ -48,7 +48,7 @@ namespace OpenDentBusiness.FileIO
 			if (!string.IsNullOrEmpty(LocalAtoZpath)) return LocalAtoZpath.Trim();
 
 			// Use this to handle possible multiple paths separated by semicolons.
-			return GetValidPathFromString(PrefC.GetString(PrefName.DocPath))?.Trim();
+			return GetValidPathFromString(Prefs.GetString(PrefName.DocPath))?.Trim();
 		}
 
 		/// <summary>

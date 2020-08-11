@@ -407,7 +407,7 @@ namespace OpenDental{
 		#endregion
 
 		private void FormMedPat_Load(object sender, System.EventArgs e) {
-			if(PrefC.GetBool(PrefName.ShowFeatureEhr)) {
+			if(Prefs.GetBool(PrefName.ShowFeatureEhr)) {
 				labelPatNote.Text="Count, Instructions, and Refills";
 				groupOrder.Text="Medication Order";
 			}

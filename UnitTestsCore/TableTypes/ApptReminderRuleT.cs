@@ -20,8 +20,7 @@ namespace UnitTestsCore
 			if(type==ApptReminderType.PatientPortalInvite && clinicNum > 0) {
 				clinicRule.SendOrder="2";//Email only
 				clinicRule.IsSendAll=false;
-				if(ClinicPrefs.Upsert(PrefName.PatientPortalInviteEnabled,clinicNum,"1")
-					| ClinicPrefs.Upsert(PrefName.PatientPortalInviteUseDefaults,clinicNum,"0")) {
+				if(ClinicPrefs.Set(clinicNum,PrefName.PatientPortalInviteEnabled,"1") | ClinicPrefs.Set(clinicNum,PrefName.PatientPortalInviteUseDefaults,"0")) {
 					ClinicPrefs.RefreshCache();
 				}
 			}

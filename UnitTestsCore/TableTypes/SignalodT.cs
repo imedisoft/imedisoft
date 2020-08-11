@@ -26,19 +26,21 @@ namespace UnitTestsCore
 		/// </summary>
 		public static List<Signalod> GetAllSignalods()
 		{
-            List<Signalod> listSignals;
+            //List<Signalod> listSignals;
 
-            try
-			{
-				listSignals = OpenDentBusiness.Crud.SignalodCrud.TableToList(
-					Database.ExecuteDataTable("SELECT * FROM signalod"));
-			}
-			catch
-			{
-				listSignals = new List<Signalod>();
-			}
+			// TODO: Fix me...
 
-			return listSignals;
+   //         try
+			//{
+			//	listSignals = OpenDentBusiness.Crud.SignalodCrud.TableToList(
+			//		Database.ExecuteDataTable("SELECT * FROM signalod"));
+			//}
+			//catch
+			//{
+			//	listSignals = new List<Signalod>();
+			//}
+
+			return null;
 		}
 	}
 }

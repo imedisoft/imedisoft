@@ -63,7 +63,7 @@ namespace OpenDentBusiness{
 			insVerify.DefNum=0;
 			insVerify.Note="";
 			insVerify.DateLastAssigned=DateTime.MinValue;
-			if(PrefC.GetBool(PrefName.InsVerifyFutureDateBenefitYear) && insVerify.AppointmentDateTime>DateTime.MinValue) {
+			if(Prefs.GetBool(PrefName.InsVerifyFutureDateBenefitYear) && insVerify.AppointmentDateTime>DateTime.MinValue) {
 				insVerify.DateLastVerified=insVerify.AppointmentDateTime;
 			}
 			InsVerifies.Update(insVerify);

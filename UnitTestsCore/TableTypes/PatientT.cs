@@ -24,7 +24,7 @@ namespace UnitTestsCore
 				IsNew=true,
 				LName=lName+suffix,
 				FName=fName+suffix,
-				BillingType=PrefC.GetLong(PrefName.PracticeDefaultBillType),
+				BillingType=Prefs.GetLong(PrefName.PracticeDefaultBillType),
 				ClinicNum=clinicNum,
 				Preferred=preferredName,
 				Birthdate=birthDate,
@@ -39,12 +39,12 @@ namespace UnitTestsCore
 				pat.PriProv=priProvNum;
 			}
 			else {
-				long practiceProvNum=PrefC.GetLong(PrefName.PracticeDefaultProv);
+				long practiceProvNum=Prefs.GetLong(PrefName.PracticeDefaultProv);
 				//Check the provider cache to see if the ProvNum set for the PracticeDefaultProv pref actually exists.
 				if(!Providers.GetExists(x => x.ProvNum==practiceProvNum)) {
 					practiceProvNum=Providers.GetFirst().ProvNum;
 					//Update the preference in the database NOT the unit test preference cache to a valid provider if the current pref value is invalid.
-					Prefs.UpdateLong(PrefName.PracticeDefaultProv,practiceProvNum);
+					Prefs.Set(PrefName.PracticeDefaultProv,practiceProvNum);
 				}
 				pat.PriProv=practiceProvNum;
 			}

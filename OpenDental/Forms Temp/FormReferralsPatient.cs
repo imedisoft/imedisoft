@@ -378,8 +378,8 @@ namespace OpenDental{
 			//We want to help EHR users meet their measures.  Therefore, we are going to make an educated guess as to who is making this referral.
 			//We are doing this for non-EHR users as well because we think it might be nice automation.
 			long provNumLastAppt=Appointments.GetProvNumFromLastApptForPat(PatNum);
-			if(Security.CurrentUser.ProvNum!=0) {
-				refattach.ProvNum=Security.CurrentUser.ProvNum;
+			if(Security.CurrentUser.ProviderId!=0) {
+				refattach.ProvNum=Security.CurrentUser.ProviderId;
 			}
 			else if(provNumLastAppt!=0) {
 				refattach.ProvNum=provNumLastAppt;
@@ -389,7 +389,7 @@ namespace OpenDental{
 			}
 			RefAttaches.Insert(refattach);
 			SecurityLogs.MakeLogEntry(Permissions.RefAttachAdd,PatNum,"Referred To "+Referrals.GetNameFL(refattach.ReferralNum));
-			if(PrefC.GetBool(PrefName.AutomaticSummaryOfCareWebmail)) {
+			if(Prefs.GetBool(PrefName.AutomaticSummaryOfCareWebmail)) {
 				FormRefAttachEdit FormRAE=new FormRefAttachEdit();
 				FormRAE.RefAttachCur=refattach;
 				FormRAE.ShowDialog();
@@ -410,8 +410,8 @@ namespace OpenDental{
 							throw new Exception();
 						}
 						Provider prov=null;
-						if(Security.CurrentUser.ProvNum!=0) {
-							prov=Providers.GetProv(Security.CurrentUser.ProvNum);
+						if(Security.CurrentUser.ProviderId!=0) {
+							prov=Providers.GetProv(Security.CurrentUser.ProviderId);
 						}
 						else {
 							prov=Providers.GetProv(PatCur.PriProv);
@@ -581,7 +581,7 @@ namespace OpenDental{
 				MessageBox.Show("Please select a referral first");
 				return;
 			}
-			if(IsSelectionMode && PrefC.GetBool(PrefName.ShowFeatureEhr)) {
+			if(IsSelectionMode && Prefs.GetBool(PrefName.ShowFeatureEhr)) {
 				string warning="";
 				if(RefAttachList[gridMain.GetSelectedIndex()].ProvNum==0) {
 					warning+=Lans.g(this,"Selected patient referral does not have a referring provider set.");

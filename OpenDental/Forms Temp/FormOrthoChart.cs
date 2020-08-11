@@ -78,7 +78,7 @@ namespace OpenDental {
 				});
 			}
 			FillGridPat();
-			if(PrefC.GetBool(PrefName.OrthoCaseInfoInOrthoChart)) {
+			if(Prefs.GetBool(PrefName.OrthoCaseInfoInOrthoChart)) {
 				gridOrtho.Visible=true;
 				FillOrtho();
 			}
@@ -150,7 +150,7 @@ namespace OpenDental {
 			List<DisplayField> listSelectedTabDisplayFields=
 				OrthoChartTabLinks.GetWhere(x => x.OrthoChartTabNum==orthoChartTab.OrthoChartTabNum)//Determines the number of items that will be returned
 				.OrderBy(x => x.ItemOrder)//Each tab is ordered based on the ortho tab link entry
-				.Select(x => _listOrthDisplayFields.FirstOrDefault(y => y.DisplayFieldNum==x.DisplayFieldNum))//Project all corresponding display fields in order
+				.Select(x => _listOrthDisplayFields.FirstOrDefault(y => y.Id==x.DisplayFieldNum))//Project all corresponding display fields in order
 				.Where(x => x!=null)//Can happen when there is an OrthoChartTabLink in the database pointing to an invalid display field.
 				.ToList();//Casts the projection to a list of display fields
 			_sigColIdx=-1;//Clear out the signature column index cause it will most likely change or disappear (switching tabs)
@@ -166,7 +166,7 @@ namespace OpenDental {
 			foreach(DisplayField field in listSelectedTabDisplayFields) {
 				string columnHeader=string.IsNullOrEmpty(field.DescriptionOverride) ? field.Description : field.DescriptionOverride;
 				int colWidth=field.ColumnWidth;
-				OrthoChartTabLink link=OrthoChartTabLinks.GetWhere(x => x.OrthoChartTabNum==orthoChartTab.OrthoChartTabNum && x.DisplayFieldNum==field.DisplayFieldNum).FirstOrDefault();
+				OrthoChartTabLink link=OrthoChartTabLinks.GetWhere(x => x.OrthoChartTabNum==orthoChartTab.OrthoChartTabNum && x.DisplayFieldNum==field.Id).FirstOrDefault();
 				if(link?.ColumnWidthOverride>0) {
 					colWidth=link.ColumnWidthOverride;
 				}
@@ -297,7 +297,7 @@ namespace OpenDental {
 
 				row = new GridRow();
 				row.Cells.Add(Lan.G(this,"Tx Months Total")+": "); //this patient's OrthoClaimMonthsTreatment, or the practice default if 0.
-				int txMonthsTotal=(_patNoteCur.OrthoMonthsTreatOverride==-1?PrefC.GetByte(PrefName.OrthoDefaultMonthsTreat):_patNoteCur.OrthoMonthsTreatOverride);
+				int txMonthsTotal=(_patNoteCur.OrthoMonthsTreatOverride==-1?Prefs.GetByte(PrefName.OrthoDefaultMonthsTreat):_patNoteCur.OrthoMonthsTreatOverride);
 				row.Cells.Add(txMonthsTotal.ToString());
 				gridOrtho.ListGridRows.Add(row);
 

@@ -52,7 +52,7 @@ namespace OpenDental {
 			textBirthDate.Text=(_patientMaster.Birthdate.Year < 1880) ? "" : _patientMaster.Birthdate.ToShortDateString();
 			textAge.Text=PatientLogic.DateToAgeString(_patientMaster.Birthdate,_patientMaster.DateTimeDeceased);
 			//We intentionally don't synch the patient's provider since the clone feature is so the clone can be assigned to a different provider for tracking production.
-			_provNumSelected=PrefC.GetLong(PrefName.PracticeDefaultProv);
+			_provNumSelected=Prefs.GetLong(PrefName.PracticeDefaultProv);
 			_listProviders=Providers.GetDeepCopy(true);
 			comboPriProv.Items.Clear();
 			for(int i = 0;i<_listProviders.Count;i++) {

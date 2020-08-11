@@ -724,7 +724,7 @@ namespace OpenDental
 		}
 
 		private void RefreshModuleData(long patNum) {
-      if(PrefC.GetBool(PrefName.LocalTimeOverridesServerTime)) {
+      if(Prefs.GetBool(PrefName.LocalTimeOverridesServerTime)) {
         TimeDelta=new TimeSpan(0);
       }
       else {
@@ -735,7 +735,7 @@ namespace OpenDental
 		}
 
 		private void RefreshModuleScreen(){
-      if(PrefC.GetBool(PrefName.LocalTimeOverridesServerTime)) {
+      if(Prefs.GetBool(PrefName.LocalTimeOverridesServerTime)) {
         labelCurrentTime.Text="Local Time";
       }
       else {
@@ -750,14 +750,14 @@ namespace OpenDental
 			else {
 				butManage.Enabled=false;
 			}
-			if(!PrefC.GetBool(PrefName.ClockEventAllowBreak)) {//Breaks turned off, Lunch is now "Break", but maintains Lunch functionality.
+			if(!Prefs.GetBool(PrefName.ClockEventAllowBreak)) {//Breaks turned off, Lunch is now "Break", but maintains Lunch functionality.
 				butBreaks.Visible=false;
 			}
 			else {
 				butBreaks.Visible=true;
 			}
 			butImportInsPlans.Visible=true;
-			if(PrefC.GetBool(PrefName.EasyHidePublicHealth)) {
+			if(Prefs.GetBool(PrefName.EasyHidePublicHealth)) {
 				butImportInsPlans.Visible=false;//Import Ins Plans button is only visible when Public Health feature is enabled.
 			}
 			butManageAR.Visible=!ProgramProperties.IsAdvertisingDisabled(ProgramName.Transworld);
@@ -994,62 +994,21 @@ namespace OpenDental
 			}
 			//ok signifies that a database was restored
 			FormOpenDental.S_Contr_PatientSelected(new Patient(),false);//unload patient after restore.
-			//ParentForm.Text=PrefC.GetString(PrefName.MainWindowTitle");
+			//ParentForm.Text=Prefs.GetString(PrefName.MainWindowTitle");
 			DataValid.SetInvalid();
 			ModuleSelected(PatCurNum);
 		}
 
-		private void butTasks_Click(object sender, System.EventArgs e) {
-			LaunchTaskWindow(false);
-			/*  //This is the old code exactly how it was before making the task window non-modal in case issues arise.
-			FormTasks FormT=new FormTasks();
-			FormT.ShowDialog();
-			if(FormT.GotoType==TaskObjectType.Patient){
-				if(FormT.GotoKeyNum!=0){
-					Patient pat=Patients.GetPat(FormT.GotoKeyNum);
-					OnPatientSelected(pat);
-					GotoModule.GotoAccount(0);
-				}
-			}
-			if(FormT.GotoType==TaskObjectType.Appointment){
-				if(FormT.GotoKeyNum!=0){
-					Appointment apt=Appointments.GetOneApt(FormT.GotoKeyNum);
-					if(apt==null){
-						MessageBox.Show("Appointment has been deleted, so it's not available.");
-						return;
-						//this could be a little better, because window has closed, but they will learn not to push that button.
-					}
-					DateTime dateSelected=DateTime.MinValue;
-					if(apt.AptStatus==ApptStatus.Planned || apt.AptStatus==ApptStatus.UnschedList){
-						//I did not add feature to put planned or unsched apt on pinboard.
-						MessageBox.Show("Cannot navigate to appointment.  Use the Other Appointments button.");
-						//return;
-					}
-					else{
-						dateSelected=apt.AptDateTime;
-					}
-					Patient pat=Patients.GetPat(apt.PatNum);
-					OnPatientSelected(pat);
-					GotoModule.GotoAppointment(dateSelected,apt.AptNum);
-				}
-			}
-			*/
-		}
-
-		///<summary>Only used internally to launch the task window with the Triage task list.</summary>
-		public void JumpToTriageTaskWindow() {
-			LaunchTaskWindow(true);
+		private void butTasks_Click(object sender, EventArgs e) {
+			LaunchTaskWindow();
 		}
 
 		///<summary>Used to launch the task window preloaded with a certain task list open.  isTriage is only used at OD HQ.</summary>
-		public void LaunchTaskWindow(bool isTriage,UserControlTasksTab tab=UserControlTasksTab.Invalid) {
+		public void LaunchTaskWindow() {
 			if(FormT==null || FormT.IsDisposed) {
 				FormT=new FormTasks();
 			}
 			FormT.Show();
-			if(tab!=UserControlTasksTab.Invalid) {
-				FormT.TaskTab=tab;
-			}
 			if(FormT.WindowState==FormWindowState.Minimized) {
 				FormT.WindowState=FormWindowState.Normal;
 			}
@@ -1130,7 +1089,7 @@ namespace OpenDental
 			_listShownTimeClockStatuses.Clear();
 			foreach(TimeClockStatus timeClockStatus in Enum.GetValues(typeof(TimeClockStatus))){
 				string statusDescript=timeClockStatus.GetDescription();
-				if(!PrefC.GetBool(PrefName.ClockEventAllowBreak)) {
+				if(!Prefs.GetBool(PrefName.ClockEventAllowBreak)) {
 					if(timeClockStatus==TimeClockStatus.Break) {
 						continue;//Skip Break option.
 					}
@@ -1142,7 +1101,7 @@ namespace OpenDental
 				listStatus.Items.Add(Lan.G("enumTimeClockStatus",statusDescript));
 			}
 			for(int i=0;i<_listEmployees.Count;i++) {
-				if(_listEmployees[i].EmployeeNum==Security.CurrentUser.EmployeeNum) {
+				if(_listEmployees[i].EmployeeNum==Security.CurrentUser.EmployeeId) {
 					SelectEmpI(i);
 					return;
 				}
@@ -1153,7 +1112,7 @@ namespace OpenDental
 		/// <summary>Returns a translated TimeClockStatus enum description from the given status.
 		/// Also considers PrefName.ClockEventAllowBreak to switch 'Lunch' to 'Break' for the UI.</summary>
 		private string ConvertClockStatus(string status) {
-			if(!PrefC.GetBool(PrefName.ClockEventAllowBreak) && status==TimeClockStatus.Lunch.GetDescription()) {
+			if(!Prefs.GetBool(PrefName.ClockEventAllowBreak) && status==TimeClockStatus.Lunch.GetDescription()) {
 				status=TimeClockStatus.Break.GetDescription();
 			}
 			return Lans.g("enumTimeClockStatus",status);
@@ -1189,7 +1148,7 @@ namespace OpenDental
 				butClockOut.Enabled=false;
 				butTimeCard.Enabled=true;
 				butBreaks.Enabled=true;
-				if(PrefC.GetBool(PrefName.ClockEventAllowBreak)) {
+				if(Prefs.GetBool(PrefName.ClockEventAllowBreak)) {
 					listStatus.SelectedIndex=_listShownTimeClockStatuses.IndexOf(TimeClockStatus.Break);
 				}
 				else {
@@ -1225,8 +1184,8 @@ namespace OpenDental
 				SelectEmpI(-1,false);//Disable various UI elements.
 				return;
 			}
-			if(PrefC.GetBool(PrefName.TimecardSecurityEnabled)){
-				if(Security.CurrentUser.EmployeeNum!=_listEmployees[e.Row].EmployeeNum) {
+			if(Prefs.GetBool(PrefName.TimecardSecurityEnabled)){
+				if(Security.CurrentUser.EmployeeId!=_listEmployees[e.Row].EmployeeNum) {
 					if(!Security.IsAuthorized(Permissions.TimecardsEditAll,true)){
 						SelectEmpI(-1,false);
 						return;
@@ -1358,8 +1317,8 @@ namespace OpenDental
 
 		private void butViewSched_Click(object sender,EventArgs e) {
 			List<long> listPreSelectedEmpNums=gridEmp.SelectedGridRows.Select(x => ((Employee)x.Tag).EmployeeNum).ToList();
-			List<long> listPreSelectedProvNums=Userods.GetWhere(x => listPreSelectedEmpNums.Contains(x.EmployeeNum) && x.ProvNum!=0)
-				.Select(x => x.ProvNum)
+			List<long> listPreSelectedProvNums=Userods.GetWhere(x => listPreSelectedEmpNums.Contains(x.EmployeeId) && x.ProviderId!=0)
+				.Select(x => x.ProviderId)
 				.ToList();
 			FormSchedule formSched=new FormSchedule(listPreSelectedEmpNums,listPreSelectedProvNums);
 			formSched.ShowDialog();

@@ -5,130 +5,102 @@ using System.Data;
 using System.Reflection;
 using System.Text;
 
-namespace OpenDentBusiness{
-	///<summary></summary>
-	public class TaskHists{
-		#region Get Methods
-		#endregion
-
-		#region Modification Methods
-		
-		#region Insert
-		#endregion
-
-		#region Update
-		#endregion
-
-		#region Delete
-		#endregion
-
-		#endregion
-
-		#region Misc Methods
-		#endregion
-
-
-		///<summary>Gets one TaskHist from the db.</summary>
-		public static TaskHist GetOne(long taskHistNum){
-			
-			return Crud.TaskHistCrud.SelectOne(taskHistNum);
-		}
-
-		public static string GetChangesDescription(TaskHist taskCur,TaskHist taskNext) {
-			if(taskCur.Descript.StartsWith("This task was cut from task list ") || taskCur.Descript.StartsWith("This task was copied from task ")) {
-				return taskCur.Descript;
-			}
-			if(taskCur.DateTimeEntry==DateTime.MinValue) {
-				return Lans.g("TaskHists","New task.");
-			}
-			StringBuilder strb=new StringBuilder();
-			strb.Append("");
-			if(taskNext.TaskListNum!=taskCur.TaskListNum){
-				string descOne=Lans.g("TaskHists","(DELETED)");
-				string descTwo=Lans.g("TaskHists","(DELETED)");
-				TaskList taskList=TaskLists.GetOne(taskCur.TaskListNum);
-				if(taskList!=null) {
-					descOne=taskList.Descript;
-				}
-				taskList=TaskLists.GetOne(taskNext.TaskListNum);
-				if(taskList!=null) {
-					descTwo=taskList.Descript;
-				}
-				strb.Append(Lans.g("TaskHists","Task list changed from")+" "+descOne+" "+Lans.g("TaskHists","to")+" "+descTwo+".\r\n");
-			}
-			if(taskNext.ObjectType!=taskCur.ObjectType){
-				strb.Append(Lans.g("TaskHists","Task attachment changed from")+" "
-					+taskCur.ObjectType.ToString()+" "+Lans.g("TaskHists","to")+" "+taskNext.ObjectType.ToString()+".\r\n");
-			}
-			if(taskNext.KeyNum!=taskCur.KeyNum){
-				strb.Append(Lans.g("TaskHists","Task account attachment changed.")+"\r\n");
-			}
-			if(taskNext.Descript!=taskCur.Descript && !taskNext.Descript.StartsWith("This task was cut from task list ") 
-				&& !taskNext.Descript.StartsWith("This task was copied from task "))
+namespace OpenDentBusiness
+{
+    public class TaskHists
+	{
+		public static string GetChangesDescription(TaskHistory taskCur, TaskHistory taskNext)
+		{
+			if (taskCur.Description.StartsWith("This task was cut from task list ") || 
+				taskCur.Description.StartsWith("This task was copied from task "))
 			{
-				//We change the description of a task when it is cut/copied. 
-				//This prevents the history grid from showing a description changed when it wasn't changed by the user.
-				strb.Append(Lans.g("TaskHists","Task description changed.")+"\r\n");
+				return taskCur.Description;
 			}
-			if(taskNext.TaskStatus!=taskCur.TaskStatus){
-				strb.Append(Lans.g("TaskHists","Task status changed from")+" "
-					+taskCur.TaskStatus.ToString()+" "+Lans.g("TaskHists","to")+" "+taskNext.TaskStatus.ToString()+".\r\n");
+
+			if (!taskCur.DateStart.HasValue) return "New task.";
+
+			var stringBuilder = new StringBuilder();
+
+			if (taskNext.TaskListId != taskCur.TaskListId)
+			{
+				string descOne = "(DELETED)";
+				string descTwo = "(DELETED)";
+
+				var taskList = TaskLists.GetOne(taskCur.TaskListId);
+				if (taskList != null)
+				{
+					descOne = taskList.Description;
+				}
+
+				taskList = TaskLists.GetOne(taskNext.TaskListId);
+				if (taskList != null)
+				{
+					descTwo = taskList.Description;
+				}
+
+				stringBuilder.AppendLine(
+					$"Task list changed from {descOne} to {descTwo}.");
 			}
-			if(taskNext.DateTimeEntry!=taskCur.DateTimeEntry){
-				strb.Append(Lans.g("TaskHists","Task date added changed from")+" "
-					+taskCur.DateTimeEntry.ToString()
-					+" "+Lans.g("TaskHists","to")+" "
-					+taskNext.DateTimeEntry.ToString()+".\r\n");
+
+			if (taskNext.PatientId != taskCur.PatientId)
+			{
+				stringBuilder.AppendLine(
+					"Task patient attachment changed.");
 			}
-			if(taskNext.UserNum!=taskCur.UserNum){
-				strb.Append(Lans.g("TaskHists","Task author changed from ")
-					+Userods.GetUser(taskCur.UserNum).UserName
-					+" "+Lans.g("TaskHists","to")+" "
-					+Userods.GetUser(taskNext.UserNum).UserName+".\r\n");
+
+			if (taskNext.AppointmentId != taskCur.AppointmentId)
+			{
+				stringBuilder.AppendLine(
+					"Task appointment attachment changed.");
 			}
-			if(taskNext.DateTimeFinished!=taskCur.DateTimeFinished){
-				strb.Append(Lans.g("TaskHists","Task date finished changed from")+" "
-					+taskCur.DateTimeFinished.ToString()
-					+" "+Lans.g("TaskHists","to")+" "
-					+taskNext.DateTimeFinished.ToString()+".\r\n");
+
+			if (taskNext.Description != taskCur.Description && 
+				!taskNext.Description.StartsWith("This task was cut from task list ") && 
+				!taskNext.Description.StartsWith("This task was copied from task "))
+			{
+				stringBuilder.AppendLine("Task description changed.");
 			}
-			if(taskNext.PriorityDefNum!=taskCur.PriorityDefNum){
-				strb.Append(Lans.g("TaskHists","Task priority changed from")+" "
-					+Defs.GetDef(DefCat.TaskPriorities,taskCur.PriorityDefNum).ItemName
-					+" "+Lans.g("TaskHists","to")+" "
-					+Defs.GetDef(DefCat.TaskPriorities,taskNext.PriorityDefNum).ItemName+".\r\n");
+
+			if (taskNext.Status != taskCur.Status)
+			{
+				stringBuilder.AppendLine(
+					$"Task status changed from {taskCur.Status} to {taskNext.Status}.");
 			}
-			if(taskCur.IsNoteChange) { //Using taskOld because the notes changed from the old one to the new one.
-				strb.Append(Lans.g("TaskHists","Task notes changed."));
+
+			if (taskNext.DateStart != taskCur.DateStart)
+			{
+				stringBuilder.AppendLine(
+					$"Task date added changed from {taskCur.DateStart} to {taskNext.DateStart}.");
 			}
-			return strb.ToString();
+
+			if (taskNext.UserId != taskCur.UserId)
+			{
+				stringBuilder.AppendLine(
+					$"Task author changed from {Userods.GetUser(taskCur.UserId).UserName} to {Userods.GetUser(taskNext.UserId).UserName}.");
+			}
+
+			if (taskNext.DateCompleted != taskCur.DateCompleted)
+			{
+				stringBuilder.AppendLine(
+					$"Task date finished changed from {taskCur.DateCompleted} to {taskNext.DateCompleted}.");
+			}
+
+			if (taskNext.PriorityId != taskCur.PriorityId)
+			{
+				stringBuilder.AppendLine(
+					"Task priority changed from " + 
+					Defs.GetDef(DefCat.TaskPriorities, taskCur.PriorityId).ItemName + " to " + 
+					Defs.GetDef(DefCat.TaskPriorities, taskNext.PriorityId).ItemName + ".");
+			}
+
+
+			return stringBuilder.ToString();
 		}
 
-		///<summary></summary>
-		public static long Insert(TaskHist taskHist){
-			
-			return Crud.TaskHistCrud.Insert(taskHist);
-		}
+		public static long Insert(TaskHistory taskHistory) 
+			=> Crud.TaskHistCrud.Insert(taskHistory);
 
-		///<summary>Updates TaskHist references when an old task is cut (not copied) and pasted somewhere so history is continuous.</summary>
-		public static void UpdateTaskNums(Task oldTask,Task newTask) {
-			
-			string command="UPDATE taskhist SET TaskNum="+POut.Long(newTask.TaskNum)+" WHERE TaskNum="+POut.Long(oldTask.TaskNum);
-			Database.ExecuteNonQuery(command);
-		}
-
-		///<summary>Gets a list of task histories for a given taskNum.</summary>
-		public static List<TaskHist> GetArchivesForTask(long taskNum) {
-			
-			string command="SELECT * FROM taskhist WHERE TaskNum="+POut.Long(taskNum)+" ORDER BY DateTStamp";
-			return Crud.TaskHistCrud.SelectMany(command);
-		}
-
-		///<summary></summary>
-		public static void Delete(long taskHistNum) {
-			
-			Crud.TaskHistCrud.Delete(taskHistNum);
-		}
-
+		public static List<TaskHistory> GetArchivesForTask(long taskId) 
+			=> Crud.TaskHistCrud.SelectMany("SELECT * FROM `task_history` WHERE `task_id` =" + taskId + " ORDER BY `date_added`");
 	}
 }

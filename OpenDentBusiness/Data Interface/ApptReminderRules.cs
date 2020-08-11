@@ -56,7 +56,7 @@ namespace OpenDentBusiness{
 
 		///<summary>Returns whether appt reminders are enabled and at least one rule with TSPrior set.</summary>
 		public static bool UsesApptReminders() {
-			bool isEnabled=PrefC.GetBool(PrefName.ApptRemindAutoEnabled);
+			bool isEnabled=Prefs.GetBool(PrefName.ApptRemindAutoEnabled);
 			if(!isEnabled) {
 				return false;
 			}
@@ -301,8 +301,8 @@ Password: [Password]
 						break;
 					}
 				case ApptReminderType.ScheduleThankYou:
-					string strAddToCalendar=PrefC.GetBool(PrefName.ApptConfirmAutoEnabled) ? " To add this to your calendar, visit [AddToCalendar]." : "";
-					string strAddToCalendarPerAppt=PrefC.GetBool(PrefName.ApptConfirmAutoEnabled) ? " Add to calendar: [AddToCalendar]" : "";
+					string strAddToCalendar=Prefs.GetBool(PrefName.ApptConfirmAutoEnabled) ? " To add this to your calendar, visit [AddToCalendar]." : "";
+					string strAddToCalendarPerAppt=Prefs.GetBool(PrefName.ApptConfirmAutoEnabled) ? " Add to calendar: [AddToCalendar]" : "";
 					rule=new ApptReminderRule() {
 						ClinicNum=clinicNum,//works with practice too because _listClinics[0] is a spoofed "Practice/Defaults" clinic with ClinicNum=0
 						TypeCur=ApptReminderType.ScheduleThankYou,
@@ -346,7 +346,7 @@ If you have questions, call <a href=""tel:[OfficePhone]"">[OfficePhone]</a>.",
 					};
 					break;
 			}
-			if(PrefC.GetBool(PrefName.EmailDisclaimerIsOn)) {
+			if(Prefs.GetBool(PrefName.EmailDisclaimerIsOn)) {
 				rule.TemplateEmail+="\r\n\r\n\r\n[EmailDisclaimer]";
 				rule.TemplateEmailAggShared+="\r\n\r\n\r\n[EmailDisclaimer]";
 			}

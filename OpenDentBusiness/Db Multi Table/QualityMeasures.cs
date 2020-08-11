@@ -5860,10 +5860,10 @@ BMI 18.5-25.";
 				Start("assignedAuthor");
 				StartAndEnd("id","root","2.16.840.1.113883.3.4337","assigningAuthorityName","HL7 OID Registry");
 				Start("assignedAuthoringDevice");
-				_w.WriteElementString("softwareName","Open Dental version "+PrefC.GetString(PrefName.ProgramVersion));
+				_w.WriteElementString("softwareName","Open Dental version "+Prefs.GetString(PrefName.ProgramVersion));
 				End("assignedAuthoringDevice");
 				Start("representedOrganization");
-				_w.WriteElementString("name",PrefC.GetString(PrefName.PracticeTitle));//Validated
+				_w.WriteElementString("name",Prefs.GetString(PrefName.PracticeTitle));//Validated
 				End("representedOrganizaion");
 				End("assignedAuthor");
 				End("author");
@@ -5875,7 +5875,7 @@ BMI 18.5-25.";
 				Start("assignedCustodian");
 				Start("representedCustodianOrganization");
 				StartAndEnd("id","root",_strOIDInternalRoot);//This is the root assigned to the practice, based on the OD root 2.16.840.1.113883.3.4337
-				_w.WriteElementString("name",PrefC.GetString(PrefName.PracticeTitle));//Validated
+				_w.WriteElementString("name",Prefs.GetString(PrefName.PracticeTitle));//Validated
 				End("representedCustodianOrganization");
 				End("assignedCustodian");
 				End("custodian");
@@ -5890,7 +5890,7 @@ BMI 18.5-25.";
 				StartAndEnd("id","root","2.16.840.1.113883.4.6","extension",provLegal.NationalProvID,"assigningAuthorityName","NPI");//Validated NPI
 				Start("representedOrganization");
 				StartAndEnd("id","root",_strOIDInternalRoot);//This is the root assigned to the practice, based on the OD root 2.16.840.1.113883.3.4337
-				_w.WriteElementString("name",PrefC.GetString(PrefName.PracticeTitle));//Validated
+				_w.WriteElementString("name",Prefs.GetString(PrefName.PracticeTitle));//Validated
 				End("representedOrganization");
 				End("assignedEntity");
 				End("legalAuthenticator");
@@ -5924,7 +5924,7 @@ BMI 18.5-25.";
 				Start("representedOrganization");
 				//we don't currently have an organization level TIN or an organization Facility CMS Certification Number (CCN)
 				//both id's are identified as "SHOULD" elements.  We will include the practice name
-				_w.WriteElementString("name",PrefC.GetString(PrefName.PracticeTitle));//Validated
+				_w.WriteElementString("name",Prefs.GetString(PrefName.PracticeTitle));//Validated
 				End("representedOrganization");
 				End("assignedEntity");
 				End("performer");
@@ -7205,7 +7205,7 @@ BMI 18.5-25.";
 					AddressUnitedStates("3995 Fairview Industrial Dr. SE","Suite 110","Salem","OR","97302","WP");
 					StartAndEnd("telecom","use","WP","value","tel:(503)363-5432");
 					Start("assignedAuthoringDevice");
-					_w.WriteElementString("manufacturerModelName","Open Dental version "+PrefC.GetString(PrefName.ProgramVersion));
+					_w.WriteElementString("manufacturerModelName","Open Dental version "+Prefs.GetString(PrefName.ProgramVersion));
 					_w.WriteElementString("softwareName","Open Dental Software Inc.");
 					End("assignedAuthoringDevice");
 					End("assignedAuthor");
@@ -7218,11 +7218,11 @@ BMI 18.5-25.";
 					Start("assignedCustodian");
 					Start("representedCustodianOrganization");
 					StartAndEnd("id","root",_strOIDInternalRoot);//This is the root assigned to the practice, based on the OD root 2.16.840.1.113883.3.4337
-					_w.WriteElementString("name",PrefC.GetString(PrefName.PracticeTitle));//Validated
-					string strPracticePhone=PrefC.GetString(PrefName.PracticePhone);//Validated
+					_w.WriteElementString("name",Prefs.GetString(PrefName.PracticeTitle));//Validated
+					string strPracticePhone=Prefs.GetString(PrefName.PracticePhone);//Validated
 					strPracticePhone="("+strPracticePhone.Substring(0,3)+")"+strPracticePhone.Substring(3,3)+"-"+strPracticePhone.Substring(6);
 					StartAndEnd("telecom","use","WP","value","tel:"+strPracticePhone);//Validated
-					AddressUnitedStates(PrefC.GetString(PrefName.PracticeAddress),PrefC.GetString(PrefName.PracticeAddress2),PrefC.GetString(PrefName.PracticeCity),PrefC.GetString(PrefName.PracticeST),PrefC.GetString(PrefName.PracticeZip),"WP");//Validated
+					AddressUnitedStates(Prefs.GetString(PrefName.PracticeAddress),Prefs.GetString(PrefName.PracticeAddress2),Prefs.GetString(PrefName.PracticeCity),Prefs.GetString(PrefName.PracticeST),Prefs.GetString(PrefName.PracticeZip),"WP");//Validated
 					End("representedCustodianOrganization");
 					End("assignedCustodian");
 					End("custodian");
@@ -7235,7 +7235,7 @@ BMI 18.5-25.";
 					Start("assignedEntity");
 					Provider provLegal=Providers.GetProv(_provNumLegal);
 					StartAndEnd("id","root","2.16.840.1.113883.4.6","extension",provLegal.NationalProvID,"assigningAuthorityName","NPI");//Validated NPI
-					AddressUnitedStates(PrefC.GetString(PrefName.PracticeAddress),PrefC.GetString(PrefName.PracticeAddress2),PrefC.GetString(PrefName.PracticeCity),PrefC.GetString(PrefName.PracticeST),PrefC.GetString(PrefName.PracticeZip),"WP");//Validated
+					AddressUnitedStates(Prefs.GetString(PrefName.PracticeAddress),Prefs.GetString(PrefName.PracticeAddress2),Prefs.GetString(PrefName.PracticeCity),Prefs.GetString(PrefName.PracticeST),Prefs.GetString(PrefName.PracticeZip),"WP");//Validated
 					StartAndEnd("telecom","use","WP","value","tel:"+strPracticePhone);//Validated
 					Start("assignedPerson");
 					Start("name");
@@ -7272,7 +7272,7 @@ BMI 18.5-25.";
 					//both id's are identified as "SHOULD" elements.  We will include the practice name
 					//_w.WriteComment("This is the organization TIN");
 					//_w.WriteComment("This is the organization CCN");
-					_w.WriteElementString("name",PrefC.GetString(PrefName.PracticeTitle));//Validated
+					_w.WriteElementString("name",Prefs.GetString(PrefName.PracticeTitle));//Validated
 					End("representedOrganization");
 					End("assignedEntity");
 					End("performer");
@@ -8910,37 +8910,37 @@ BMI 18.5-25.";
 		///Returns empty string if no errors, otherwise returns a string containing error messages.</summary>
 		private static string ValidateSettings() {
 			string strErrors="";
-			if(PrefC.GetString(PrefName.PracticeTitle).Trim()=="") {
+			if(Prefs.GetString(PrefName.PracticeTitle).Trim()=="") {
 				if(strErrors!="") {
 					strErrors+="\r\n";
 				}
 				strErrors+="Missing practice title.";
 			}
-			if(PrefC.GetString(PrefName.PracticePhone).Trim()=="") {
+			if(Prefs.GetString(PrefName.PracticePhone).Trim()=="") {
 				if(strErrors!="") {
 					strErrors+="\r\n";
 				}
 				strErrors+="Missing practice phone.";
 			}
-			if(PrefC.GetString(PrefName.PracticeAddress).Trim()=="") {
+			if(Prefs.GetString(PrefName.PracticeAddress).Trim()=="") {
 				if(strErrors!="") {
 					strErrors+="\r\n";
 				}
 				strErrors+="Missing practice address line 1.";
 			}
-			if(PrefC.GetString(PrefName.PracticeCity).Trim()=="") {
+			if(Prefs.GetString(PrefName.PracticeCity).Trim()=="") {
 				if(strErrors!="") {
 					strErrors+="\r\n";
 				}
 				strErrors+="Missing practice city.";
 			}
-			if(PrefC.GetString(PrefName.PracticeST).Trim().Length!=2) {
+			if(Prefs.GetString(PrefName.PracticeST).Trim().Length!=2) {
 				if(strErrors!="") {
 					strErrors+="\r\n";
 				}
 				strErrors+="Invalid practice state.  Must be two letters.";
 			}
-			if(PrefC.GetString(PrefName.PracticeZip).Trim().Length<5) {
+			if(Prefs.GetString(PrefName.PracticeZip).Trim().Length<5) {
 				if(strErrors!="") {
 					strErrors+="\r\n";
 				}

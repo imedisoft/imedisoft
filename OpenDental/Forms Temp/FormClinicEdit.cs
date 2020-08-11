@@ -1042,7 +1042,7 @@ namespace OpenDental {
 			textFax.Text=TelephoneNumbers.ReFormat(ClinicCur.Fax);
 			checkUseBillingAddressOnClaims.Checked=ClinicCur.UseBillAddrOnClaims;
 			checkExcludeFromInsVerifyList.Checked=ClinicCur.IsInsVerifyExcluded;
-			if(PrefC.GetBool(PrefName.RxHasProc)) {
+			if(Prefs.GetBool(PrefName.RxHasProc)) {
 				checkProcCodeRequired.Enabled=true;
 				checkProcCodeRequired.Checked=(ClinicCur.IsNew || ClinicCur.HasProcOnRx);
 			}

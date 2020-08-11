@@ -112,16 +112,16 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label1.Text" xml:space="preserve">
-    <value>You must answer these questions in order to continue.
-You will be seeing this window once every month as a reminder of the importance of good backups.
+  <data name="infoLabel.Text" xml:space="preserve">
+    <value>You must answer these questions in order to continue. You will be seeing this window once every month as a reminder of the importance of good backups.
+
 If someone else is in charge of backups, ask them for the answers.
-If your supervisor is not available, and you need to get through this window, it's OK to guess.
-But in that case, you must followup with your supervisor to ensure they are making good backups.</value>
+
+If your supervisor is not available, and you need to get through this window, it's OK to guess. But in that case, you must followup with your supervisor to ensure they are making good backups.</value>
   </data>
 </root>

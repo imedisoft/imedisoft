@@ -220,7 +220,7 @@ namespace OpenDentBusiness{
 		#region InsHist Preference Procedures
 
 		///<summary>Returns the first procedure code for the InsHist preference passed in.</summary>
-		public static ProcedureCode GetByInsHistPref(PrefName prefName) {
+		public static ProcedureCode GetByInsHistPref(string prefName) {
 			return GetProcCode(GetCodeNumsForPref(prefName).FirstOrDefault());
 		}
 
@@ -563,13 +563,13 @@ namespace OpenDentBusiness{
 		}
 		
 		///<summary>Gets the proc codes as a comma separated list from the preference and finds the corresponding code nums.</summary>
-		public static List<long> GetCodeNumsForPref(PrefName pref) {
-			List<string> listCodes=PrefC.GetString(pref).Split(',').Select(x => x.Trim()).ToList();
+		public static List<long> GetCodeNumsForPref(string pref) {
+			List<string> listCodes=Prefs.GetString(pref).Split(',').Select(x => x.Trim()).ToList();
 			return GetWhereFromList(x => x.ProcCode.In(listCodes)).Select(x => x.CodeNum).ToList();
 		}
 
 		///<summary>Gets the CodeNums for the passed in InsHist preference.</summary>
-		public static List<long> GetCodeNumsForInsHistPref(PrefName pref) {
+		public static List<long> GetCodeNumsForInsHistPref(string pref) {
 			List<long> retVal=GetCodeNumsForPref(pref);
 			switch(pref) {
 				case PrefName.InsHistBWCodes:
@@ -1008,7 +1008,7 @@ namespace OpenDentBusiness{
 		///Otherwise gets all procedure codes that start with D8</summary>
 		public static List<long> GetOrthoBandingCodeNums() {
 			//No need to check RemotingRole; no call to db.
-			string strListOrthoNums = PrefC.GetString(PrefName.OrthoPlacementProcsList);
+			string strListOrthoNums = Prefs.GetString(PrefName.OrthoPlacementProcsList);
 			List<long> listCodeNums = new List<long>();
 			if(strListOrthoNums!="") {
 				return strListOrthoNums.Split(new char[] { ',' }).ToList().Select(x => PIn.Long(x)).ToList();

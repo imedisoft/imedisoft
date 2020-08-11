@@ -27,7 +27,7 @@ namespace OpenDental.Bridges
 			writer.WriteStartElement("SenderAddress");
 			if (clinic == null)
 			{
-				writer.WriteElementString("Name", PrefC.GetString(PrefName.PracticeTitle));
+				writer.WriteElementString("Name", Prefs.GetString(PrefName.PracticeTitle));
 			}
 			else
 			{
@@ -43,30 +43,30 @@ namespace OpenDental.Bridges
 			//If using practice information or using the default (no clinic) Ebill and a clinic enum is specified, use the practice level information.
 			if (eBillAddress == EbillAddress.PracticePhysical || (clinic == null && eBillAddress == EbillAddress.ClinicPhysical))
 			{
-				writer.WriteElementString("Address1", PrefC.GetString(PrefName.PracticeAddress));
-				writer.WriteElementString("Address2", PrefC.GetString(PrefName.PracticeAddress2));
-				writer.WriteElementString("City", PrefC.GetString(PrefName.PracticeCity));
-				writer.WriteElementString("State", PrefC.GetString(PrefName.PracticeST));
-				writer.WriteElementString("Zip", PrefC.GetString(PrefName.PracticeZip));
-				writer.WriteElementString("Phone", PrefC.GetString(PrefName.PracticePhone));//enforced to be 10 digit fairly rigidly by the UI
+				writer.WriteElementString("Address1", Prefs.GetString(PrefName.PracticeAddress));
+				writer.WriteElementString("Address2", Prefs.GetString(PrefName.PracticeAddress2));
+				writer.WriteElementString("City", Prefs.GetString(PrefName.PracticeCity));
+				writer.WriteElementString("State", Prefs.GetString(PrefName.PracticeST));
+				writer.WriteElementString("Zip", Prefs.GetString(PrefName.PracticeZip));
+				writer.WriteElementString("Phone", Prefs.GetString(PrefName.PracticePhone));//enforced to be 10 digit fairly rigidly by the UI
 			}
 			else if (eBillAddress == EbillAddress.PracticePayTo || (clinic == null && eBillAddress == EbillAddress.ClinicPayTo))
 			{
-				writer.WriteElementString("Address1", PrefC.GetString(PrefName.PracticePayToAddress));
-				writer.WriteElementString("Address2", PrefC.GetString(PrefName.PracticePayToAddress2));
-				writer.WriteElementString("City", PrefC.GetString(PrefName.PracticePayToCity));
-				writer.WriteElementString("State", PrefC.GetString(PrefName.PracticePayToST));
-				writer.WriteElementString("Zip", PrefC.GetString(PrefName.PracticePayToZip));
-				writer.WriteElementString("Phone", PrefC.GetString(PrefName.PracticePhone));//enforced to be 10 digit fairly rigidly by the UI
+				writer.WriteElementString("Address1", Prefs.GetString(PrefName.PracticePayToAddress));
+				writer.WriteElementString("Address2", Prefs.GetString(PrefName.PracticePayToAddress2));
+				writer.WriteElementString("City", Prefs.GetString(PrefName.PracticePayToCity));
+				writer.WriteElementString("State", Prefs.GetString(PrefName.PracticePayToST));
+				writer.WriteElementString("Zip", Prefs.GetString(PrefName.PracticePayToZip));
+				writer.WriteElementString("Phone", Prefs.GetString(PrefName.PracticePhone));//enforced to be 10 digit fairly rigidly by the UI
 			}
 			else if (eBillAddress == EbillAddress.PracticeBilling || (clinic == null && eBillAddress == EbillAddress.ClinicBilling))
 			{
-				writer.WriteElementString("Address1", PrefC.GetString(PrefName.PracticeBillingAddress));
-				writer.WriteElementString("Address2", PrefC.GetString(PrefName.PracticeBillingAddress2));
-				writer.WriteElementString("City", PrefC.GetString(PrefName.PracticeBillingCity));
-				writer.WriteElementString("State", PrefC.GetString(PrefName.PracticeBillingST));
-				writer.WriteElementString("Zip", PrefC.GetString(PrefName.PracticeBillingZip));
-				writer.WriteElementString("Phone", PrefC.GetString(PrefName.PracticePhone));//enforced to be 10 digit fairly rigidly by the UI
+				writer.WriteElementString("Address1", Prefs.GetString(PrefName.PracticeBillingAddress));
+				writer.WriteElementString("Address2", Prefs.GetString(PrefName.PracticeBillingAddress2));
+				writer.WriteElementString("City", Prefs.GetString(PrefName.PracticeBillingCity));
+				writer.WriteElementString("State", Prefs.GetString(PrefName.PracticeBillingST));
+				writer.WriteElementString("Zip", Prefs.GetString(PrefName.PracticeBillingZip));
+				writer.WriteElementString("Phone", Prefs.GetString(PrefName.PracticePhone));//enforced to be 10 digit fairly rigidly by the UI
 			}
 			else if (eBillAddress == EbillAddress.ClinicPhysical)
 			{
@@ -106,7 +106,7 @@ namespace OpenDental.Bridges
 			writer.WriteStartElement("RecipientAddress");
 			Patient guar = fam.ListPats[0];
 			writer.WriteElementString("Name", guar.GetNameFLFormal());
-			if (PrefC.GetBool(PrefName.StatementAccountsUseChartNumber))
+			if (Prefs.GetBool(PrefName.StatementAccountsUseChartNumber))
 			{
 				writer.WriteElementString("Account", guar.ChartNumber);
 			}
@@ -137,13 +137,13 @@ namespace OpenDental.Bridges
 				writer.WriteElementString("PriorStatementDate", stmt.DateRangeFrom.AddDays(-1).ToString("MM/dd/yyyy"));
 			}
 			DateTime dueDate;
-			if (PrefC.GetLong(PrefName.StatementsCalcDueDate) == -1)
+			if (Prefs.GetLong(PrefName.StatementsCalcDueDate) == -1)
 			{
 				dueDate = DateTime.Today.AddDays(10);
 			}
 			else
 			{
-				dueDate = DateTime.Today.AddDays(PrefC.GetLong(PrefName.StatementsCalcDueDate));
+				dueDate = DateTime.Today.AddDays(Prefs.GetLong(PrefName.StatementsCalcDueDate));
 			}
 			writer.WriteElementString("DueDate", dueDate.ToString("MM/dd/yyyy"));
 			writer.WriteElementString("StatementDate", stmt.DateSent.ToString("MM/dd/yyyy"));
@@ -180,7 +180,7 @@ namespace OpenDental.Bridges
 				}
 			}
 			writer.WriteElementString("PayPlanDue", payPlanDue.ToString("F2"));
-			if (PrefC.GetBool(PrefName.BalancesDontSubtractIns))
+			if (Prefs.GetBool(PrefName.BalancesDontSubtractIns))
 			{
 				writer.WriteElementString("EstInsPayments", "");//optional.
 			}

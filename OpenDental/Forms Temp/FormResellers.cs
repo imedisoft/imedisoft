@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormResellers:ODForm {
@@ -89,8 +90,8 @@ namespace OpenDental {
 			if(FormPS.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			Patient patientSelected=Patients.GetPat(FormPS.SelectedPatNum);
-			if(patientSelected.Guarantor!=FormPS.SelectedPatNum) {
+			Patient patientSelected=Patients.GetPat(FormPS.SelectedPatientId);
+			if(patientSelected.Guarantor!=FormPS.SelectedPatientId) {
 				MessageBox.Show("Customer must be a guarantor before they can be added as a reseller.");
 				return;
 			}
@@ -99,7 +100,7 @@ namespace OpenDental {
 				return;
 			}
 			Reseller reseller=new Reseller() {
-				PatNum=FormPS.SelectedPatNum,
+				PatNum=FormPS.SelectedPatientId,
 				BillingType=42,//Hardcoded to HQs "No Support: Developer/Reseller"
 				VotesAllotted=0,
 				Note="This is a customer of a reseller.  We do not directly support this customer.",

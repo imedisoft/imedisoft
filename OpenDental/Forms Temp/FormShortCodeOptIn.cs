@@ -22,7 +22,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			string script=_pat.ShortCodeOptIn==YN.No ? PrefC.GetString(PrefName.ShortCodeOptedOutScript) : PrefC.GetString(PrefName.ShortCodeOptInScript);
+			string script=_pat.ShortCodeOptIn==YN.No ? Prefs.GetString(PrefName.ShortCodeOptedOutScript) : Prefs.GetString(PrefName.ShortCodeOptInScript);
 			if(!string.IsNullOrWhiteSpace(script)) {
 				label1.Text=script
 					.Replace("[FName]",_pat.GetNameFirstOrPreferred())
@@ -40,7 +40,7 @@ namespace OpenDental {
 			if(patComm is null) {
 				return;
 			}
-			bool isClinicPrompting=ClinicPrefs.GetBool(PrefName.ShortCodeOptInOnApptComplete,clinicNum);
+			bool isClinicPrompting=ClinicPrefs.GetBool(clinicNum, PrefName.ShortCodeOptInOnApptComplete);
 			if(!isClinicPrompting//Auto prompt is disabled (practice pref if not found for clinic)
 				&& patComm.IsPatientShortCodeEligible(clinicNum)//The patient might be able to receive short code sms.
 				&& pat.ShortCodeOptIn==YN.Unknown)//And the patient has not explicitly opted in or out yet.

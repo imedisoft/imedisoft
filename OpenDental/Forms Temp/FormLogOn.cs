@@ -42,7 +42,7 @@ namespace Imedisoft.Forms
 
 		private void FormLogOn_Load(object sender, EventArgs e)
 		{
-			if (PrefC.GetBool(PrefName.UserNameManualEntry))
+			if (Prefs.GetBool(PrefName.UserNameManualEntry))
 			{
 				usersListBox.Visible = false;
 				userTextBox.Visible = true;
@@ -99,7 +99,7 @@ namespace Imedisoft.Forms
 		{
             string userName;
 
-            if (PrefC.GetBool(PrefName.UserNameManualEntry))
+            if (Prefs.GetBool(PrefName.UserNameManualEntry))
 			{
 				userName = userTextBox.Text.Trim();
 				if (userName.Length == 0)
@@ -137,7 +137,7 @@ namespace Imedisoft.Forms
 			{
 				Security.CurrentUser = User;
 
-				if (PrefC.GetBool(PrefName.PasswordsMustBeStrong) && PrefC.GetBool(PrefName.PasswordsWeakChangeToStrong))
+				if (Prefs.GetBool(PrefName.PasswordsMustBeStrong) && Prefs.GetBool(PrefName.PasswordsWeakChangeToStrong))
 				{
 					if (Userods.IsPasswordStrong(password) != "")
 					{

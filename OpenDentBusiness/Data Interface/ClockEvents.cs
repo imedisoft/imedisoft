@@ -179,7 +179,7 @@ namespace OpenDentBusiness{
 			
       long clockEventNum=0;
 			clockEventNum=Crud.ClockEventCrud.Insert(clockEvent);
-      if(PrefC.GetBool(PrefName.LocalTimeOverridesServerTime)) {
+      if(Prefs.GetBool(PrefName.LocalTimeOverridesServerTime)) {
         //Cannot call update since we manually have to update the TimeEntered1 because it is a DateEntry column
         string command="UPDATE clockevent SET TimeEntered1="+POut.DateT(DateTime.Now)+", TimeDisplayed1="+POut.DateT(DateTime.Now)+" WHERE clockEventNum="+POut.Long(clockEventNum);
         Database.ExecuteNonQuery(command);
@@ -264,7 +264,7 @@ namespace OpenDentBusiness{
 			}
 			else if(clockEvent.ClockStatus==TimeClockStatus.Break) {//only incomplete breaks will have been returned.
 				//clocking back in from break
-        if(PrefC.GetBool(PrefName.LocalTimeOverridesServerTime)) {
+        if(Prefs.GetBool(PrefName.LocalTimeOverridesServerTime)) {
           clockEvent.TimeEntered2=DateTime.Now;
         }
         else {
@@ -314,7 +314,7 @@ namespace OpenDentBusiness{
 				ClockEvents.Insert(clockEvent);//times handled
 			}
 			else {//finish the existing event
-        if(PrefC.GetBool(PrefName.LocalTimeOverridesServerTime)) {
+        if(Prefs.GetBool(PrefName.LocalTimeOverridesServerTime)) {
           clockEvent.TimeEntered2=DateTime.Now;
         }
         else {
@@ -400,13 +400,13 @@ namespace OpenDentBusiness{
 
 		///<summary>-hh:mm or -hh.mm.ss or -hh.mm, depending on the pref.TimeCardsUseDecimalInsteadOfColon and pref.TimeCardShowSeconds.  Blank if zero.</summary>
 		public static string Format(TimeSpan span) {
-			if(PrefC.GetBool(PrefName.TimeCardsUseDecimalInsteadOfColon)){
+			if(Prefs.GetBool(PrefName.TimeCardsUseDecimalInsteadOfColon)){
 				if(span==TimeSpan.Zero){
 					return "";
 				}
 				return span.TotalHours.ToString("n");
 			}
-			else if(PrefC.GetBool(PrefName.TimeCardShowSeconds)) {//Colon format with seconds
+			else if(Prefs.GetBool(PrefName.TimeCardShowSeconds)) {//Colon format with seconds
 				return span.ToStringHmmss();
 			}
 			else {//Colon format without seconds

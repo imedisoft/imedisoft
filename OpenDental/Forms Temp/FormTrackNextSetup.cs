@@ -12,8 +12,8 @@ namespace OpenDental {
 		}
 		
 		private void FormTrackNextSetup_Load(object sender,EventArgs e) {
-			textDaysPast.Text=PrefC.GetLong(PrefName.PlannedApptDaysPast).ToString();
-			textDaysFuture.Text=PrefC.GetLong(PrefName.PlannedApptDaysFuture).ToString();
+			textDaysPast.Text=Prefs.GetLong(PrefName.PlannedApptDaysPast).ToString();
+			textDaysFuture.Text=Prefs.GetLong(PrefName.PlannedApptDaysFuture).ToString();
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {
@@ -23,8 +23,8 @@ namespace OpenDental {
 			}
 			int uschedDaysPastValue=PIn.Int(textDaysPast.Text,false);
 			int uschedDaysFutureValue=PIn.Int(textDaysFuture.Text,false);
-			if(Prefs.UpdateInt(PrefName.PlannedApptDaysPast,uschedDaysPastValue) 
-				|Prefs.UpdateLong(PrefName.PlannedApptDaysFuture,uschedDaysFutureValue)) 
+			if(Prefs.Set(PrefName.PlannedApptDaysPast,uschedDaysPastValue) 
+				|Prefs.Set(PrefName.PlannedApptDaysFuture,uschedDaysFutureValue)) 
 			{
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}

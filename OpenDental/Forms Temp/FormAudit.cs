@@ -10,6 +10,7 @@ using OpenDentBusiness;
 using System.Data;
 using CodeBase;
 using Imedisoft.UI;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 	[HelpSubject]
@@ -365,7 +366,7 @@ namespace OpenDental{
 			else {
 				textPatient.Text=Patients.GetLim(PatNum).GetNameLF();
 			}
-			textRows.Text=PrefC.GetString(PrefName.AuditTrailEntriesDisplayed);
+			textRows.Text=Prefs.GetString(PrefName.AuditTrailEntriesDisplayed);
 			FillGrid();
 		}
 
@@ -394,7 +395,7 @@ namespace OpenDental{
 			if(FormP.DialogResult!=DialogResult.OK){
 				return;
 			}
-			PatNum=FormP.SelectedPatNum;
+			PatNum=FormP.SelectedPatientId;
 			textPatient.Text=Patients.GetLim(PatNum).GetNameLF();
 			FillGrid();
 		}

@@ -112,7 +112,7 @@ namespace OpenDental{
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
 			report.ReportName=Lan.G(this,"Insurance Plan List");
 			report.AddTitle("Title",Lan.G(this,"Insurance Plan List"),fontTitle);
-			report.AddSubTitle("PracticeTitle",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
+			report.AddSubTitle("PracticeTitle",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
 			QueryObject query=report.AddQuery(table,Lan.G(this,"Date")+": "+DateTimeOD.Today.ToString("d"));
 			query.AddColumn("Carrier Name",230,font:fontMain);
 			query.AddColumn("Subscriber Name",175,font:fontMain);

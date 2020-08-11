@@ -21,13 +21,13 @@ namespace OpenDental {
 		private void FormSpellCheck_Load(object sender,EventArgs e) {
 			//If the Ime Composition Compatibility preference is enabled, disable the spell check, and display a label notify the user 
 			//that the spell check is disabled when the foreign language input method editor is enabled.
-			if(PrefC.GetBool(PrefName.ImeCompositionCompatibility)) {
+			if(Prefs.GetBool(PrefName.ImeCompositionCompatibility)) {
 				checkBox1.Checked=false;
 				checkBox1.Enabled=false;
 				label1.Visible=true;
 			}
 			else {
-				checkBox1.Checked=PrefC.GetBool(PrefName.SpellCheckIsEnabled);
+				checkBox1.Checked=Prefs.GetBool(PrefName.SpellCheckIsEnabled);
 			}
 			FillGrid();
 		}
@@ -114,7 +114,7 @@ namespace OpenDental {
 		}
 
 		private void FormSpellCheck_FormClosing(object sender,FormClosingEventArgs e) {
-			if(Prefs.UpdateBool(PrefName.SpellCheckIsEnabled,checkBox1.Checked)) {
+			if(Prefs.Set(PrefName.SpellCheckIsEnabled,checkBox1.Checked)) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 		}

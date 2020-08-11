@@ -11,11 +11,11 @@ namespace OpenDental {
 		}
 
 		private void FormEmailSetupMasterTemplate_Load(object sender,EventArgs e) {
-			textMaster.Text=PrefC.GetString(PrefName.EmailMasterTemplate);
+			textMaster.Text=Prefs.GetString(PrefName.EmailMasterTemplate);
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {
-			if(Prefs.UpdateString(PrefName.EmailMasterTemplate,textMaster.Text)) {
+			if(Prefs.Set(PrefName.EmailMasterTemplate,textMaster.Text)) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			DialogResult=DialogResult.OK;

@@ -179,7 +179,7 @@ namespace OpenDentBusiness
 			AdjustmentCur.ProcDate = procedure.ProcDate;
 			AdjustmentCur.ProvNum = procedure.ProvNum;
 			AdjustmentCur.PatNum = procedure.PatNum;
-			AdjustmentCur.AdjType = PrefC.GetLong(PrefName.TreatPlanDiscountAdjustmentType);
+			AdjustmentCur.AdjType = Prefs.GetLong(PrefName.TreatPlanDiscountAdjustmentType);
 			AdjustmentCur.ClinicNum = procedure.ClinicNum;
 			AdjustmentCur.AdjAmt = -procedure.Discount;//Discount must be negative here.
 			AdjustmentCur.ProcNum = procedure.ProcNum;
@@ -300,11 +300,11 @@ namespace OpenDentBusiness
 		public static long UndoFinanceOrBillingCharges(DateTime dateUndo, bool isBillingCharges)
 		{
 			string adjTypeStr = "Finance";
-			long adjTypeDefNum = PrefC.GetLong(PrefName.FinanceChargeAdjustmentType);
+			long adjTypeDefNum = Prefs.GetLong(PrefName.FinanceChargeAdjustmentType);
 			if (isBillingCharges)
 			{
 				adjTypeStr = "Billing";
-				adjTypeDefNum = PrefC.GetLong(PrefName.BillingChargeAdjustmentType);
+				adjTypeDefNum = Prefs.GetLong(PrefName.BillingChargeAdjustmentType);
 			}
 			string command = "SELECT adjustment.AdjAmt,patient.PatNum,patient.Guarantor,patient.LName,patient.FName,patient.Preferred,patient.MiddleI,"
 				+ "adjustment.SecDateTEdit "

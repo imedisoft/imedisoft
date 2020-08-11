@@ -240,7 +240,7 @@ namespace OpenDental {
 				MessageBox.Show("Please enter a valid date.");
 				return false;
 			}
-			if(PIn.Date(dateAdjustment.Text).Date > DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
+			if(PIn.Date(dateAdjustment.Text).Date > DateTime.Today.Date && !Prefs.GetBool(PrefName.FutureTransDatesAllowed)) {
 				MessageBox.Show("Adjustments cannot be made for future dates");
 				return false;
 			}

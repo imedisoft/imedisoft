@@ -31,8 +31,8 @@ namespace OpenDentBusiness.AutoComm
 			ReplaceOneTag(retVal, "[ClinicPhone]", TelephoneNumbers.ReFormat(clinic.Phone.ToString()), isEmailBody);
 			ReplaceOneTag(retVal, "[OfficePhone]", TelephoneNumbers.ReFormat(OpenDentBusiness.Clinics.GetOfficePhone(clinic)), isEmailBody);
 			ReplaceOneTag(retVal, "[OfficeName]", OpenDentBusiness.Clinics.GetOfficeName(clinic), isEmailBody);
-			ReplaceOneTag(retVal, "[PracticeName]", PrefC.GetString(PrefName.PracticeTitle), isEmailBody);
-			ReplaceOneTag(retVal, "[PracticePhone]", TelephoneNumbers.ReFormat(PrefC.GetString(PrefName.PracticePhone)), isEmailBody);
+			ReplaceOneTag(retVal, "[PracticeName]", Prefs.GetString(PrefName.PracticeTitle), isEmailBody);
+			ReplaceOneTag(retVal, "[PracticePhone]", TelephoneNumbers.ReFormat(Prefs.GetString(PrefName.PracticePhone)), isEmailBody);
 			ReplaceOneTag(retVal, "[ProvName]", OpenDentBusiness.Providers.GetFormalName(autoCommObj.ProvNum), isEmailBody);
 			ReplaceOneTag(retVal, "[ProvAbbr]", OpenDentBusiness.Providers.GetAbbr(autoCommObj.ProvNum), isEmailBody);
 			ReplaceOneTag(retVal, "[EmailDisclaimer]", OpenDentBusiness.EmailMessages.GetEmailDisclaimer(clinic.ClinicNum), isEmailBody);

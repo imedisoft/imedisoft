@@ -53,7 +53,7 @@ namespace CentralManager {
 			//The CM tool runs against many databases thus does not care about default preferences.
 			//If we enhance the CM tool to have default preferences, we will need to make sure that  the cache 
 			//has been refreshed with the CM's cache instead of the potentially stale cache from an unknown source.
-			//if(PrefC.GetBool(PrefName.ReportsPPOwriteoffDefaultToProcDate)) {
+			//if(Prefs.GetBool(PrefName.ReportsPPOwriteoffDefaultToProcDate)) {
 			//	radioWriteoffProc.Checked=true;
 			//}
 			if(DateStart.Year>1880) {
@@ -206,7 +206,7 @@ namespace CentralManager {
 			}
 			report.ReportName="DailyP&I";
 			report.AddTitle("Title",Lan.G(this,"Daily Production and Income"));
-			report.AddSubTitle("PracName",PrefC.GetString(PrefName.PracticeTitle));
+			report.AddSubTitle("PracName",Prefs.GetString(PrefName.PracticeTitle));
 			string dateRangeStr=_dateFrom.ToShortDateString()+" - "+_dateTo.ToShortDateString();
 			if(_dateFrom.Date==_dateTo.Date) {
 				dateRangeStr=_dateFrom.ToShortDateString();//Do not show a date range for the same day...
@@ -550,7 +550,7 @@ namespace CentralManager {
 			}
 			report.ReportName="Appointments";
 			report.AddTitle("Title",Lan.G(this,"Annual Production and Income"));
-			report.AddSubTitle("PracName",PrefC.GetString(PrefName.PracticeTitle));
+			report.AddSubTitle("PracName",Prefs.GetString(PrefName.PracticeTitle));
 			report.AddSubTitle("Date",_dateFrom.ToShortDateString()+" - "+_dateTo.ToShortDateString());
 			report.AddSubTitle("Providers",Lan.G(this,"All Providers"));
 			report.AddSubTitle("Clinics",Lan.G(this,"All Clinics"));
@@ -696,7 +696,7 @@ namespace CentralManager {
 			}
 			report.ReportName="Provider P&I";
 			report.AddTitle("Title",Lan.G(this,"Provider Production and Income"));
-			report.AddSubTitle("PracName",PrefC.GetString(PrefName.PracticeTitle));
+			report.AddSubTitle("PracName",Prefs.GetString(PrefName.PracticeTitle));
 			report.AddSubTitle("Date",_dateFrom.ToShortDateString()+" - "+_dateTo.ToShortDateString());
 			report.AddSubTitle("Providers",Lan.G(this,"All Providers"));
 			report.AddSubTitle("Clinics",Lan.G(this,"All Clinics"));

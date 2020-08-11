@@ -129,8 +129,8 @@ namespace OpenDentBusiness {
 				return listDiseaseDefNumsNotDeletable;
 			}
 			//In use by preference
-			if(listDiseaseDefNums.Contains(PrefC.GetLong(PrefName.ProblemsIndicateNone))) {
-				listDiseaseDefNumsNotDeletable.Add(PrefC.GetLong(PrefName.ProblemsIndicateNone));
+			if(listDiseaseDefNums.Contains(Prefs.GetLong(PrefName.ProblemsIndicateNone))) {
+				listDiseaseDefNumsNotDeletable.Add(Prefs.GetLong(PrefName.ProblemsIndicateNone));
 			}
 			//Validate patient attached
 			string command = "SELECT DISTINCT disease.DiseaseDefNum "

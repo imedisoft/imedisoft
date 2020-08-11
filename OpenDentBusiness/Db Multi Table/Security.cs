@@ -262,7 +262,7 @@ namespace OpenDentBusiness
 			{
 				return false;//Invalid or MinDate passed in.
 			}
-			if (!PrefC.GetBool(PrefName.SecurityLockIncludesAdmin) && GroupPermissions.HasPermission(Security.CurrentUser, Permissions.SecurityAdmin, 0))
+			if (!Prefs.GetBool(PrefName.SecurityLockIncludesAdmin) && GroupPermissions.HasPermission(Security.CurrentUser, Permissions.SecurityAdmin, 0))
 			{
 				return false;//admins are never affected by global date limitation when preference is false.
 			}

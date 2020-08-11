@@ -108,7 +108,7 @@ namespace OpenDental {
 				ProvCur=Providers.GetProv(PatCur.PriProv);
 			}
 			if(ProvCur==null) {
-				ProvCur=Providers.GetProv(PrefC.GetLong(PrefName.PracticeDefaultProv));
+				ProvCur=Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv));
 			}
 			if(ProvCur!=null) {
 				textProvName.Text=ProvCur.GetFormalName();
@@ -116,7 +116,7 @@ namespace OpenDental {
 				comboProvLang.SelectedIndex=comboPatLang.Items.IndexOf(System.Globalization.CultureInfo.CurrentCulture.DisplayName);
 			}
 			//Fill Organization--------------------------------------------------------------------------------------------------------------
-			textOrgName.Text=PrefC.GetString(PrefName.PracticeTitle);
+			textOrgName.Text=Prefs.GetString(PrefName.PracticeTitle);
 			//Fill Encounter-----------------------------------------------------------------------------------------------------------------
 			ActEC=ActEncounterCode.AMB;
 			comboEncType.SelectedIndex=(int)ActEC;//ambulatory
@@ -625,10 +625,10 @@ namespace OpenDental {
 		#region helper Functions Start
 
 		private string knowledgeRequestIDAAHelper() {
-			if(PrefC.GetString(PrefName.PracticeTitle)!="") {
-				return PrefC.GetString(PrefName.PracticeTitle);
+			if(Prefs.GetString(PrefName.PracticeTitle)!="") {
+				return Prefs.GetString(PrefName.PracticeTitle);
 			}
-			return "Open Dental Software, version"+PrefC.GetString(PrefName.ProgramVersion);
+			return "Open Dental Software, version"+Prefs.GetString(PrefName.ProgramVersion);
 		}
 
 		private string knowledgeRequestIDHelper() {

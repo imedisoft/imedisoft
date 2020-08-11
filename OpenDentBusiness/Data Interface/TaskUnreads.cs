@@ -48,7 +48,7 @@ namespace OpenDentBusiness{
 			List<TaskUnread> listUnreads=new List<TaskUnread>();
 			foreach(Task task in listTasks) {
 				listUnreads.Add(new TaskUnread(){ 
-					TaskNum=task.TaskNum,
+					TaskNum=task.Id,
 					UserNum=currUserNum
 				});
 				task.IsUnread=true;
@@ -66,22 +66,22 @@ namespace OpenDentBusiness{
 			}
 			
 			string command="DELETE FROM taskunread WHERE UserNum = "+POut.Long(userNum)+" "
-				+"AND TaskNum IN ("+string.Join(",",arrayTasks.Select(x => POut.Long(x.TaskNum)))+")";
+				+"AND TaskNum IN ("+string.Join(",",arrayTasks.Select(x => POut.Long(x.Id)))+")";
 			Database.ExecuteNonQuery(command);
 		}
 
 		public static bool AddUnreads(Task task,long curUserNum) {
 			
 			//if the task is done, don't add unreads
-			string command = "SELECT TaskStatus,UserNum,ReminderGroupId,DateTimeEntry,"+DbHelper.Now()+" DbTime "
-				+"FROM task WHERE TaskNum = "+POut.Long(task.TaskNum);
+			string command = "SELECT TaskStatus,UserNum,ReminderGroupId,DateTimeEntry,NOW() DbTime "
+				+"FROM task WHERE TaskNum = "+POut.Long(task.Id);
 			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count==0) {
 				return task.IsUnread;//only happens when a task was deleted by one user but left open on another user's computer.
 			}
-			TaskStatusEnum taskStatus=(TaskStatusEnum)PIn.Int(table.Rows[0]["TaskStatus"].ToString());
+			TaskStatus taskStatus=(TaskStatus)PIn.Int(table.Rows[0]["TaskStatus"].ToString());
 			long userNumOwner=PIn.Long(table.Rows[0]["UserNum"].ToString());
-			if(taskStatus==TaskStatusEnum.Done) {
+			if(taskStatus==TaskStatus.Done) {
 				return task.IsUnread;
 			}
 			//Set it unread for the original owner of the task.
@@ -106,7 +106,7 @@ namespace OpenDentBusiness{
 								FROM tasksubscription
 								INNER JOIN tasklist ON tasksubscription.TaskListNum = tasklist.TaskListNum 
 								INNER JOIN taskancestor ON taskancestor.TaskListNum = tasklist.TaskListNum 
-									AND taskancestor.TaskNum = "+POut.Long(task.TaskNum)+" ";
+									AND taskancestor.TaskNum = "+POut.Long(task.Id)+" ";
 			command+="LEFT JOIN taskunread ON taskunread.UserNum = tasksubscription.UserNum AND taskunread.TaskNum=taskancestor.TaskNum";
 			table=Database.ExecuteDataTable(command);
 			List<long> listUserNums=new List<long>();
@@ -130,7 +130,7 @@ namespace OpenDentBusiness{
 			
 			task.IsUnread=true;
 			string command="SELECT COUNT(*) FROM taskunread WHERE UserNum = "+POut.Long(userNum)+" "
-				+"AND TaskNum = "+POut.Long(task.TaskNum);
+				+"AND TaskNum = "+POut.Long(task.Id);
 			if(Database.ExecuteString(command)=="0") {
 				task.IsUnread=false;
 			}
@@ -143,7 +143,7 @@ namespace OpenDentBusiness{
 				return;//Already set to unread, so nothing else to do
 			}
 			TaskUnread taskUnread=new TaskUnread();
-			taskUnread.TaskNum=task.TaskNum;
+			taskUnread.TaskNum=task.Id;
 			taskUnread.UserNum=userNum;
 			task.IsUnread=true;
 			Insert(taskUnread);
@@ -155,7 +155,7 @@ namespace OpenDentBusiness{
 			List<TaskUnread> listUnreadsToInsert=new List<TaskUnread>();
 			foreach(long userNum in listUserNums) {
 				TaskUnread taskUnread=new TaskUnread();
-				taskUnread.TaskNum=task.TaskNum;
+				taskUnread.TaskNum=task.Id;
 				taskUnread.UserNum=userNum;
 				listUnreadsToInsert.Add(taskUnread);
 			}
@@ -168,7 +168,7 @@ namespace OpenDentBusiness{
 
 		public static void DeleteForTask(Task task) {
 			
-			string command="DELETE FROM taskunread WHERE TaskNum = "+POut.Long(task.TaskNum);
+			string command="DELETE FROM taskunread WHERE TaskNum = "+POut.Long(task.Id);
 			Database.ExecuteNonQuery(command);
 		}
 

@@ -34,7 +34,7 @@ namespace OpenDental {
 		///<summary>Indicates whether the "All" option is enabled for the listbox for clinics.</summary>
 		private bool _isAllClinicsEnabled {
 			get{
-				return PrefC.HasClinicsEnabled && !Security.CurrentUser.ClinicIsRestricted && !PrefC.GetBool(PrefName.EnterpriseApptList);
+				return PrefC.HasClinicsEnabled && !Security.CurrentUser.ClinicIsRestricted && !Prefs.GetBool(PrefName.EnterpriseApptList);
 			}
 		}
 
@@ -60,7 +60,7 @@ namespace OpenDental {
 			}
 			SetFilterControlsAndAction(() => FillGrids(),
 				textPatientEnrollmentDays,textInsBenefitEligibilityDays,textAppointmentScheduledDays,textVerifyCarrier);
-			if(PrefC.GetBool(PrefName.InsVerifyDefaultToCurrentUser)) {
+			if(Prefs.GetBool(PrefName.InsVerifyDefaultToCurrentUser)) {
 				_verifyUserNum=Security.CurrentUser.Id;
 			}
 			if(!PrefC.HasClinicsEnabled) {
@@ -311,8 +311,8 @@ namespace OpenDental {
 			{
 				return listGridRows;
 			}
-			bool excludePatVerifyWhenNoIns=PrefC.GetBool(PrefName.InsVerifyExcludePatVerify);
-			bool excludePatClones=(PrefC.GetBool(PrefName.ShowFeaturePatientClone)==true) && PrefC.GetBool(PrefName.InsVerifyExcludePatientClones);
+			bool excludePatVerifyWhenNoIns=Prefs.GetBool(PrefName.InsVerifyExcludePatVerify);
+			bool excludePatClones=(Prefs.GetBool(PrefName.ShowFeaturePatientClone)==true) && Prefs.GetBool(PrefName.InsVerifyExcludePatientClones);
 			DateTime dateTimeStart=DateTime.Today;
 			DateTime dateTimeEnd=DateTime.Today.AddDays(PIn.Int(textAppointmentScheduledDays.Text));//Don't need to add 1 because we will be getting only the date portion of this datetime.
 			if(!isAssignGrid && tabControlVerificationList.SelectedTab==tabPastDue) {

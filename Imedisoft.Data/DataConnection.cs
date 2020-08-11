@@ -325,7 +325,7 @@ namespace Imedisoft.Data
 			{
 				var command = connection.CreateCommand();
 
-				command.CommandText = "UPDATE `preference` SET `ValueString` = '0' WHERE `ValueString` = '0'";
+				command.CommandText = "UPDATE `preferences` SET `value` = '0' WHERE `value` = '0'";
 
 				RunAction(() => command.ExecuteNonQuery(), connection, command);
 			}

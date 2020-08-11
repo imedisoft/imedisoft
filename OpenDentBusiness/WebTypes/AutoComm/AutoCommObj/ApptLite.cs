@@ -78,7 +78,7 @@ namespace OpenDentBusiness.AutoComm
 			return new ApptThankYouSent.CalendarIcsInfo()
 			{
 				PatNum = PatNum,
-				Title = ClinicPrefs.GetPrefValue(PrefName.ApptThankYouCalendarTitle, ClinicNum),
+				Title = ClinicPrefs.GetString(ClinicNum, PrefName.ApptThankYouCalendarTitle),
 				Location = OfficeName,
 				AptNum = PrimaryKey,
 				DateStart = AptDateTime,

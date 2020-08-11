@@ -96,7 +96,7 @@ namespace OpenDental
 		/// <summary>
 		/// Returns true if PrefName.BrokenApptProcedure is greater than 0.
 		/// </summary>
-		public static bool HasBrokenApptProcs() => PrefC.GetLong(PrefName.BrokenApptProcedure) > 0;
+		public static bool HasBrokenApptProcs() => Prefs.GetLong(PrefName.BrokenApptProcedure) > 0;
 
 		/// <summary>
 		/// Sets given appt.AptStatus to broken.
@@ -163,7 +163,7 @@ namespace OpenDental
 			double brokenProcAmount = 0;
 			Procedure brokenProcedure = new Procedure();
 			bool wasBrokenProcDeleted = false;
-			if (PrefC.GetYN(PrefName.PrePayAllowedForTpProcs))
+			if (Prefs.GetBool(PrefName.PrePayAllowedForTpProcs))
 			{
 				listProcedures = Procedures.GetProcsForSingle(appt.AptNum, false);
 				if (listProcedures.Count > 0)
@@ -220,7 +220,7 @@ namespace OpenDental
 					brokenProcedure.ProvNum);
 					brokenProcedure.ProcFee = Math.Max(provFee, procFee);
 				}
-				else if (listSplitsForApptProcs.Count > 0 && PrefC.GetBool(PrefName.TpPrePayIsNonRefundable) && procCode.ProcCode == "D9986")
+				else if (listSplitsForApptProcs.Count > 0 && Prefs.GetBool(PrefName.TpPrePayIsNonRefundable) && procCode.ProcCode == "D9986")
 				{
 					//if there are pre-payments, non-refundable pre-payments is turned on, and the broken appointment is a missed code then auto-fill 
 					//the window with the sum of the procs for the appointment. Transfer money below after broken procedure is confirmed by the user.
@@ -231,7 +231,7 @@ namespace OpenDental
 				{
 					brokenProcedure.ProcFee = procFee;
 				}
-				if (!PrefC.GetBool(PrefName.EasyHidePublicHealth))
+				if (!Prefs.GetBool(PrefName.EasyHidePublicHealth))
 				{
 					brokenProcedure.SiteNum = pat.SiteNum;
 				}
@@ -248,7 +248,7 @@ namespace OpenDental
 			}
 			#endregion
 			#region BrokenApptAdjustment
-			if (PrefC.GetBool(PrefName.BrokenApptAdjustment))
+			if (Prefs.GetBool(PrefName.BrokenApptAdjustment))
 			{
                 Adjustment AdjustmentCur = new Adjustment
                 {
@@ -257,7 +257,7 @@ namespace OpenDental
                     ProcDate = DateTime.Today,
                     ProvNum = appt.ProvNum,
                     PatNum = pat.PatNum,
-                    AdjType = PrefC.GetLong(PrefName.BrokenAppointmentAdjustmentType),
+                    AdjType = Prefs.GetLong(PrefName.BrokenAppointmentAdjustmentType),
                     ClinicNum = appt.ClinicNum
                 };
                 FormAdjust FormA = new FormAdjust(pat, AdjustmentCur);
@@ -266,7 +266,7 @@ namespace OpenDental
 			}
 			#endregion
 			#region BrokenApptCommLog
-			if (PrefC.GetBool(PrefName.BrokenApptCommLog))
+			if (Prefs.GetBool(PrefName.BrokenApptCommLog))
 			{
                 Commlog commlogCur = new Commlog
                 {
@@ -547,7 +547,7 @@ namespace OpenDental
 																							   //See Appointments.GetApptTimePatternForNoProcs().
 
 			AptCur.Pattern = Appointments.CalculatePattern(pat, AptCur.ProvNum, AptCur.ProvHyg, listProcs);
-			AptCur.TimeLocked = PrefC.GetBool(PrefName.AppointmentTimeIsLocked);
+			AptCur.TimeLocked = Prefs.GetBool(PrefName.AppointmentTimeIsLocked);
 			Appointments.Insert(AptCur);
 
             PlannedAppt plannedAppt = new PlannedAppt
@@ -678,15 +678,15 @@ namespace OpenDental
 			if (MobileAppDevices.IsClinicSignedUpForEClipboard(clinicNum))
 			{
 				// If they have eClipboard and want to pop up the kiosk on check-in, show the kiosk manager.
-				if (ClinicPrefs.GetBool(PrefName.EClipboardPopupKioskOnCheckIn, clinicNum)
+				if (ClinicPrefs.GetBool(clinicNum, PrefName.EClipboardPopupKioskOnCheckIn)
 					&& newConfirmed != oldAppt.Confirmed
-					&& newConfirmed == PrefC.GetLong(PrefName.AppointmentTimeArrivedTrigger))
+					&& newConfirmed == Prefs.GetLong(PrefName.AppointmentTimeArrivedTrigger))
 				{
 					FormTerminalManager formTM = new FormTerminalManager();
 					formTM.ShowDialog();
 				}
 			}
-			else if (newConfirmed != oldAppt.Confirmed && newConfirmed == PrefC.GetLong(PrefName.AppointmentTimeArrivedTrigger))
+			else if (newConfirmed != oldAppt.Confirmed && newConfirmed == Prefs.GetLong(PrefName.AppointmentTimeArrivedTrigger))
 			{
 				//Manually marked as Arrived, if they had been sent an Arrival sms, try to process and send the Arrival Response.
 				OpenDentBusiness.AutoComm.Arrivals.ProcessArrival(oldAppt.PatNum, oldAppt.PatNum.SingleItemToList(), oldAppt.ClinicNum, listAppts: oldAppt.SingleItemToList());//Pass oldAppt so it still has the old confirmation status; which has already updated in db.
@@ -716,7 +716,7 @@ namespace OpenDental
 			{
 				return true;
 			}
-			if (!PrefC.GetBool(PrefName.ApptPreventChangesToCompleted) //The preference is turned off.
+			if (!Prefs.GetBool(PrefName.ApptPreventChangesToCompleted) //The preference is turned off.
 				|| (apt.AptStatus != ApptStatus.Complete)//The appointment status is not complete. Allow changes.
 				|| !Appointments.HasCompletedProcsAttached(apt.AptNum, listAttachedProcs))//Apt does not have completed procedures attached
 			{

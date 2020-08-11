@@ -1013,21 +1013,21 @@ namespace OpenDentBusiness
 				command = "SELECT task.*,COALESCE(tasklist.Descript,'') ListDisc,fampat.FName,fampat.PatNum "
 				+ "FROM patient pat "
 				+ "INNER JOIN patient fampat ON fampat.Guarantor=pat.Guarantor "
-				+ "INNER JOIN task ON task.KeyNum=fampat.PatNum AND task.ObjectType=" + POut.Int((int)TaskObjectType.Patient) + " "
+				+ "INNER JOIN task ON task.patient_id=fampat.PatNum "
 				+ "LEFT JOIN tasklist ON task.TaskListNum=tasklist.TaskListNum "
-				+ "WHERE pat.PatNum=" + POut.Long(patNum) + " "
+				+ "WHERE pat.PatNum=" + patNum + " "
 				+ "UNION ALL "
 				+ "SELECT task.*,COALESCE(tasklist.Descript,'') ListDisc,patient.FName,patient.PatNum "
 				+ "FROM task "
-				+ "INNER JOIN appointment ON appointment.AptNum=task.KeyNum AND task.ObjectType=" + POut.Int((int)TaskObjectType.Appointment) + " "
+				+ "INNER JOIN appointment ON appointment.AptNum=task.appointment_id "
 				+ "LEFT JOIN tasklist ON task.TaskListNum=tasklist.TaskListNum "
 				+ "LEFT JOIN patient ON patient.PatNum=appointment.PatNum "
 				+ "WHERE appointment.PatNum IN (" + string.Join(",", family.ListPats.Select(x => x.PatNum)) + ") "
 				+ "ORDER BY DateTimeEntry";
 				DataTable rawTask = dcon.ExecuteDataTable(command);
 				List<long> taskNums = rawTask.Select().Select(x => PIn.Long(x["TaskNum"].ToString())).ToList();
-				List<TaskList> listTaskLists = TaskLists.GetAll();
-				Dictionary<long, List<TaskNote>> dictTaskNotes = TaskNotes.RefreshForTasks(taskNums).GroupBy(x => x.TaskNum).ToDictionary(x => x.Key, x => x.ToList());
+				List<TaskList> listTaskLists = TaskLists.GetAll().ToList();
+				Dictionary<long, List<TaskNote>> dictTaskNotes = TaskNotes.RefreshForTasks(taskNums).GroupBy(x => x.TaskId).ToDictionary(x => x.Key, x => x.ToList());
 				for (int i = 0; i < rawTask.Rows.Count; i++)
 				{
 					DataRow rawTaskRow = rawTask.Rows[i];
@@ -1046,21 +1046,8 @@ namespace OpenDentBusiness
 					row["dateEntryC"] = "";
 					row["dateTP"] = "";
 					txt = "";
-					switch (PIn.Enum<TaskObjectType>(rawTaskRow["ObjectType"].ToString()))
-					{
-						case TaskObjectType.Patient:
-						case TaskObjectType.Appointment:
-							//Prepend the name of the family member so that it is apparent that this task is not for this specific patient.
-							if (rawTaskRow["PatNum"].ToString() != patNum.ToString())
-							{
-								txt = "(" + rawTaskRow["FName"].ToString() + ") ";
-							}
-							break;
-						case TaskObjectType.None:
-						default:
-							//Do nothing.
-							break;
-					}
+
+
 					if (rawTaskRow["TaskStatus"].ToString() == "2")
 					{//completed
 						txt += Lans.g("ChartModule", "Completed ");
@@ -1070,7 +1057,7 @@ namespace OpenDentBusiness
 						row["colorBackG"] = listProgNoteColorDefs[21].ItemColor.ToArgb().ToString();
 					}
 					long taskListNum = PIn.Long(rawTaskRow["TaskListNum"].ToString());
-					row["description"] = txt + Lans.g("ChartModule", "Task - In List: ") + TaskLists.GetFullPath(taskListNum, listTaskLists);
+					row["description"] = txt + Lans.g("ChartModule", "Task - In List: ") + TaskLists.GetFullPath(taskListNum);
 					row["DocNum"] = 0;
 					row["dx"] = "";
 					row["Dx"] = "";
@@ -1098,14 +1085,14 @@ namespace OpenDentBusiness
 						foreach (TaskNote noteCur in listNotesCur)
 						{
 							string noteUserName;
-							if (!dictUserNames.TryGetValue(noteCur.UserNum.ToString(), out noteUserName))
+							if (!dictUserNames.TryGetValue(noteCur.UserId.ToString(), out noteUserName))
 							{
-								noteUserName = Userods.GetName(noteCur.UserNum);
+								noteUserName = Userods.GetName(noteCur.UserId);
 							}
 							txt += "\r\n"//even on the first loop
 								+ "==" + noteUserName + " - "
-								+ noteCur.DateTimeNote.ToShortDateString() + " "
-								+ noteCur.DateTimeNote.ToShortTimeString()
+								+ noteCur.DateModified.ToShortDateString() + " "
+								+ noteCur.DateModified.ToShortTimeString()
 								+ " - " + noteCur.Note;
 						}
 					}
@@ -1422,7 +1409,7 @@ namespace OpenDentBusiness
 					+ "AND sheetfield.FieldType=" + POut.Long((int)SheetFieldType.SigBox) + " "
 					+ "WHERE (sheet.PatNum=" + POut.Long(patNum);
 				List<Patient> listPatientClonesAll = new List<Patient>();
-				if (PrefC.GetBool(PrefName.ShowFeaturePatientClone))
+				if (Prefs.GetBool(PrefName.ShowFeaturePatientClone))
 				{
 					List<long> listPatientClonePatNums = Patients.GetClonePatNumsAll(patNum);
 					//Always include every single sheet for ANY clone or master of said clones.
@@ -1464,7 +1451,7 @@ namespace OpenDentBusiness
 						row["dateTP"] = dateT.ToString(Lans.GetShortDateTimeFormat());
 					}
 					//Add patient name if using clone feature and the sheet belongs to the clone.
-					if (PrefC.GetBool(PrefName.ShowFeaturePatientClone) && rawSheet.Rows[i]["PatNum"].ToString() != patNum.ToString())
+					if (Prefs.GetBool(PrefName.ShowFeaturePatientClone) && rawSheet.Rows[i]["PatNum"].ToString() != patNum.ToString())
 					{
 						Patient patientClone = listPatientClonesAll.FirstOrDefault(x => x.PatNum == PIn.Long(rawSheet.Rows[i]["PatNum"].ToString()));
 						if (patientClone != null && !string.IsNullOrWhiteSpace(patientClone.FName))

@@ -18,7 +18,7 @@ namespace OpenDentBusiness.WebTypes.WebForms
 			listWebFormsSheets = new List<WebForms_Sheet>();
 			if (string.IsNullOrEmpty(regKey))
 			{
-				regKey = PrefC.GetString(PrefName.RegistrationKey);
+				regKey = Prefs.GetString(PrefName.RegistrationKey);
 			}
 			try
 			{
@@ -41,7 +41,7 @@ namespace OpenDentBusiness.WebTypes.WebForms
 		{
 			if (string.IsNullOrEmpty(regKey))
 			{
-				regKey = PrefC.GetString(PrefName.RegistrationKey);
+				regKey = Prefs.GetString(PrefName.RegistrationKey);
 			}
 			try
 			{
@@ -114,7 +114,7 @@ namespace OpenDentBusiness.WebTypes.WebForms
 				}
 				else
 				{
-					webFormPrefCulture = PrefC.GetString(PrefName.LanguageAndRegion);
+					webFormPrefCulture = Prefs.GetString(PrefName.LanguageAndRegion);
 				}
 			}
 

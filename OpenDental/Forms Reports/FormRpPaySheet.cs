@@ -347,7 +347,7 @@ namespace OpenDental{
 			date2.SelectionStart=DateTime.Today;
 			if(!Security.IsAuthorized(Permissions.ReportDailyAllProviders,true)) {
 				//They either have permission or have a provider at this point.  If they don't have permission they must have a provider.
-				_listProviders=_listProviders.FindAll(x => x.ProvNum==Security.CurrentUser.ProvNum);
+				_listProviders=_listProviders.FindAll(x => x.ProvNum==Security.CurrentUser.ProviderId);
 				Provider prov=_listProviders.FirstOrDefault();
 				if(prov!=null) {
 					_listProviders.AddRange(Providers.GetWhere(x => x.FName==prov.FName && x.LName==prov.LName && x.ProvNum!=prov.ProvNum));
@@ -390,7 +390,7 @@ namespace OpenDental{
 					}
 				}
 			}
-			checkReportDisplayUnearnedTP.Checked=PrefC.GetBool(PrefName.ReportsDoShowHiddenTPPrepayments);
+			checkReportDisplayUnearnedTP.Checked=Prefs.GetBool(PrefName.ReportsDoShowHiddenTPPrepayments);
 			_listPayDefs=Defs.GetDefsForCategory(DefCat.PaymentTypes,true);
 			_listInsDefs=Defs.GetDefsForCategory(DefCat.InsurancePaymentType,true);
 			_listClaimPayGroupDefs=Defs.GetDefsForCategory(DefCat.ClaimPaymentGroups,true);
@@ -575,7 +575,7 @@ namespace OpenDental{
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
 			report.ReportName=Lan.G(this,"Daily Payments");
 			report.AddTitle("Title",Lan.G(this,"Daily Payments"),fontTitle);
-			report.AddSubTitle("PracTitle",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
+			report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
 			report.AddSubTitle("Providers",subtitleProvs,fontSubTitle);
 			if(PrefC.HasClinicsEnabled) {
 				report.AddSubTitle("Clinics",subtitleClinics,fontSubTitle);

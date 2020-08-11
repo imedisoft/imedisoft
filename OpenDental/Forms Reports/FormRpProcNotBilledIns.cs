@@ -40,10 +40,10 @@ namespace OpenDental{
 			gridMain.ContextMenu=contextMenuGrid;
 			dateRangePicker.SetDateTimeTo(DateTime.Today);
 			dateRangePicker.SetDateTimeFrom(DateTime.Today);
-			if(PrefC.GetBool(PrefName.ShowFeatureMedicalInsurance)) {
+			if(Prefs.GetBool(PrefName.ShowFeatureMedicalInsurance)) {
 				checkMedical.Visible=true;
 			}
-			if(PrefC.GetBool(PrefName.ClaimProcsNotBilledToInsAutoGroup)) {
+			if(Prefs.GetBool(PrefName.ClaimProcsNotBilledToInsAutoGroup)) {
 				checkAutoGroupProcs.Checked=true;
 			}
 			FillGrid();
@@ -118,7 +118,7 @@ namespace OpenDental{
 			_myReport=new ReportComplex(true,false,false);
 			_myReport.ReportName=Lan.G(this,"Procedures Not Billed to Insurance");
 			_myReport.AddTitle("Title",Lan.G(this,"Procedures Not Billed to Insurance"));
-			_myReport.AddSubTitle("Practice Name",PrefC.GetString(PrefName.PracticeTitle));
+			_myReport.AddSubTitle("Practice Name",Prefs.GetString(PrefName.PracticeTitle));
 			if(_myReportDateFrom==_myReportDateTo) {
 				_myReport.AddSubTitle("Report Dates",_myReportDateFrom.ToShortDateString());
 			}
@@ -289,7 +289,7 @@ namespace OpenDental{
 					if(PrefC.HasClinicsEnabled) {//Group by clinic only if clinics enabled.
 						listProcs=listProcs.FindAll(x => x.ClinicNum==procNotBilled.ClinicNum);
 					}
-					else if(!PrefC.GetBool(PrefName.EasyHidePublicHealth)) {//Group by Place of Service only if Public Health feature is enabled.
+					else if(!Prefs.GetBool(PrefName.EasyHidePublicHealth)) {//Group by Place of Service only if Public Health feature is enabled.
 						listProcs=listProcs.FindAll(x => x.PlaceService==procNotBilled.PlaceService);
 					}
 				}
@@ -416,7 +416,7 @@ namespace OpenDental{
 		}
 
 		private void FormRpProcNotBilledIns_FormClosing(object sender,FormClosingEventArgs e) {
-			Prefs.UpdateBool(PrefName.ClaimProcsNotBilledToInsAutoGroup,checkAutoGroupProcs.Checked);
+			Prefs.Set(PrefName.ClaimProcsNotBilledToInsAutoGroup,checkAutoGroupProcs.Checked);
 		}
 
 		public delegate void OnPostClaimCreationHandler();

@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormHL7Msgs:ODForm {
@@ -110,7 +111,7 @@ namespace OpenDental {
 			if(FormPS.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			SelectedPatNum=FormPS.SelectedPatNum;
+			SelectedPatNum=FormPS.SelectedPatientId;
 			FillGrid();
 		}
 

@@ -42,6 +42,13 @@ namespace Imedisoft.Data.Cache
 		}
 
 		/// <summary>
+		/// Updates the value of the item with the specified key.
+		/// </summary>
+		/// <param name="key">The key of the cache entry.</param>
+		/// <param name="value">The value of the cache entry.</param>
+		public void Set(TKey key, TValue value) => items[key] = value;
+
+		/// <summary>
 		/// Finds the cache entry with the specified <paramref name="key"/>.
 		/// </summary>
 		/// <param name="key">The key of the cache entry.</param>

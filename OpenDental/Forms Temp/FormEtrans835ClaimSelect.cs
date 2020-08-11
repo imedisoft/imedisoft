@@ -8,6 +8,7 @@ using OpenDentBusiness;
 using System.Linq;
 using CodeBase;
 using System.Text.RegularExpressions;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormEtrans835ClaimSelect:ODForm {
@@ -178,7 +179,7 @@ namespace OpenDental {
 				return;
 			}
 			_errorProvider.Clear();
-			_patNum=formP.SelectedPatNum;
+			_patNum=formP.SelectedPatientId;
 			textPatient.Text=Patients.GetLim(_patNum).GetNameLF();
 			FillGridClaims();
 		}

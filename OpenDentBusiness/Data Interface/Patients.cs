@@ -12,31 +12,37 @@ using System.Windows.Forms;
 using CodeBase;
 using DataConnectionBase;
 using Imedisoft.Data;
+using MySql.Data.MySqlClient;
 
 namespace OpenDentBusiness
 {
-
-	///<summary></summary>
 	public class Patients
 	{
 		public const string LANGUAGE_DECLINED_TO_SPECIFY = "Declined to Specify";
-		#region Get Methods
-		///<summary>Returns a list of all potential clones for the patient passed in.  The list returned will always contain the patNum passed in.
-		///It is okay for patNum passed in to be a clone, a master, or even a patient that is not even related to clones at all.</summary>
+
+		/// <summary>
+		/// Returns a list of all potential clones for the patient passed in. 
+		/// The list returned will always contain the patNum passed in.
+		/// It is okay for patNum passed in to be a clone, a master, or even a patient that is not even related to clones at all.
+		/// </summary>
 		public static List<long> GetClonePatNumsAll(long patNum)
 		{
-			//No need to check RemotingRole; no call to db.
 			long patNumOriginal = patNum;
+
 			//Figure out if the patNum passed in is in fact the original patient and if it isn't, go get it from the database.
+
 			if (PatientLinks.IsPatientAClone(patNum))
 			{
 				patNumOriginal = PatientLinks.GetOriginalPatNumFromClone(patNum);
 			}
+
 			return PatientLinks.GetPatNumsLinkedFromRecursive(patNumOriginal, PatientLinkType.Clone);
 		}
 
-		///<summary>Returns a Def representing the patient specialty associated through DefLinks to the passed in Patient.
-		///Returns null if no specialty found.</summary>
+		/// <summary>
+		/// Returns a Def representing the patient specialty associated through DefLinks to the passed in Patient.
+		/// Returns null if no specialty found.
+		/// </summary>
 		public static Def GetPatientSpecialtyDef(long patNum)
 		{
 			Dictionary<Patient, Def> dictSpecialties = GetClonesAndSpecialtiesForPatients(new List<long> { patNum });
@@ -47,19 +53,29 @@ namespace OpenDentBusiness
 			return null;
 		}
 
-		///<summary>Gets all potential clones and their corresponding specialty for the patient passed in.
-		///Even if the patNum passed in is itself a clone, all clones for the clone's master will still get returned.
-		///The returned dictionary will always contain the master patient so that it can be displayed to the user if desired.
-		///Specialties are only important if clinics are enabled.  If clinics are disabled then the corresponding Def will be null.</summary>
+
+		#region Get Methods
+
+
+
+		/// <summary>
+		/// Gets all potential clones and their corresponding specialty for the patient passed in.
+		/// Even if the patNum passed in is itself a clone, all clones for the clone's master will still get returned.
+		/// The returned dictionary will always contain the master patient so that it can be displayed to the user if desired.
+		/// Specialties are only important if clinics are enabled. 
+		/// If clinics are disabled then the corresponding Def will be null.
+		/// </summary>
 		public static SerializableDictionary<Patient, Def> GetClonesAndSpecialties(long patNum)
 		{
-			//No need to check RemotingRole; no call to db.
 			return GetClonesAndSpecialtiesForPatients(GetClonePatNumsAll(patNum));
 		}
 
-		///<summary>Gets all potential clones and their corresponding specialty for the original patients passed in.
-		///The returned dictionary will always contain the master patient so that it can be displayed to the user if desired.
-		///Specialties are only important if clinics are enabled.  If clinics are disabled then the corresponding Def will be null.</summary>
+		/// <summary>
+		/// Gets all potential clones and their corresponding specialty for the original patients passed in.
+		/// The returned dictionary will always contain the master patient so that it can be displayed to the user if desired.
+		/// Specialties are only important if clinics are enabled. 
+		/// If clinics are disabled then the corresponding Def will be null.
+		/// </summary>
 		public static SerializableDictionary<Patient, Def> GetClonesAndSpecialtiesForPatients(List<long> listPatNums)
 		{
 			//No need to check RemotingRole; no call to db.
@@ -90,27 +106,34 @@ namespace OpenDentBusiness
 			return dictCloneSpecialty;
 		}
 
-		///<summary>Returns the master or original patient for the clone passed in otherwise returns the patient passed in if patCur is not a clone.
-		///Will return null if the patCur is a clone but the master or original patient could not be found in the database.</summary>
+		/// <summary>
+		/// Returns the master or original patient for the clone passed in otherwise returns the patient passed in if patCur is not a clone.
+		/// Will return null if the patCur is a clone but the master or original patient could not be found in the database.
+		/// </summary>
 		public static Patient GetOriginalPatientForClone(Patient patCur)
 		{
-			//No need to check RemotingRole; no call to db.
 			if (patCur == null || !IsPatientAClone(patCur.PatNum))
 			{
 				return patCur;
 			}
+
 			//Go get the master or original patient from the database for the clone patient passed in.
 			return GetPat(PatientLinks.GetOriginalPatNumFromClone(patCur.PatNum));
 		}
 
-		///<summary>Be careful with what you pass in as wirelessNumber. If you pass in '1', you will get almost every patient.</summary>
+		/// <summary>
+		/// Be careful with what you pass in as wirelessNumber. 
+		/// If you pass in '1', you will get almost every patient.
+		/// </summary>
 		public static List<Patient> GetPatientsByWirelessPhone(string wirelessNumber)
 		{
-			string phoneRegex = string.Join("[^0-9]*", wirelessNumber.Where(x => char.IsDigit(x)));//So that any intervening non-digit characters will still match
-			string command = @"SELECT *
-				FROM patient 
-				WHERE patient.WirelessPhone REGEXP '" + POut.String(phoneRegex) + @"' 
-				AND patient.PatStatus!=" + POut.Int((int)PatientStatus.Deleted);
+			string phoneRegex = string.Join("[^0-9]*", wirelessNumber.Where(x => char.IsDigit(x))); // So that any intervening non-digit characters will still match
+			
+			string command = 
+				"SELECT * FROM patient " +
+				"WHERE patient.WirelessPhone REGEXP '" + POut.String(phoneRegex) + "' " +
+				"AND patient.PatStatus != " + (int)PatientStatus.Deleted;
+
 			return Crud.PatientCrud.SelectMany(command);
 		}
 
@@ -192,6 +215,7 @@ namespace OpenDentBusiness
 				) ps
 				GROUP BY ps.Guarantor
 				ORDER BY NULL";
+
 			using (DataTable table = Database.ExecuteDataTable(command))
 			{
 				foreach (DataRow row in table.Rows)
@@ -204,11 +228,12 @@ namespace OpenDentBusiness
 					dictAll[guarNum].DateLastPay = PIn.Date(row["DateLastPay"].ToString());
 				}
 			}
-			command = @"SELECT DISTINCT patient.Guarantor
-				FROM patient
-				INNER JOIN claim ON patient.PatNum=claim.PatNum
-					AND claim.ClaimStatus IN ('U','H','W','S')
-					AND claim.ClaimType IN ('P','S','Other')";
+
+			command = 
+				"SELECT DISTINCT patient.Guarantor " +
+				"FROM patient " +
+				"INNER JOIN claim ON patient.PatNum=claim.PatNum AND claim.ClaimStatus IN ('U','H','W','S') AND claim.ClaimType IN ('P','S','Other')";
+
 			foreach (long guarNum in Database.GetListLong(command))
 			{
 				if (!dictAll.ContainsKey(guarNum))
@@ -217,6 +242,7 @@ namespace OpenDentBusiness
 				}
 				dictAll[guarNum].HasInsPending = true;
 			}
+
 			command = @"SELECT patient.Guarantor,MAX(procedurelog.ProcDate) MaxProcDate,COALESCE(MAX(claimproc.ProcNum),0)>0 HasUnsentProcs
 				FROM patient
 				INNER JOIN procedurelog ON procedurelog.PatNum=patient.PatNum
@@ -247,60 +273,73 @@ namespace OpenDentBusiness
 		public static void SetDateBalBegan(ref List<PatAging> listPatAgingAll)
 		{
 			Dictionary<long, PatAging> dictAll = listPatAgingAll.ToDictionary(x => x.PatNum);
-			Dictionary<long, DateTime> dictDateBals = Ledgers.GetDateBalanceBegan();//uses today's date, doesn't consider super families
+			Dictionary<long, DateTime> dictDateBals = Ledgers.GetDateBalanceBegan(); // uses today's date, doesn't consider super families
+
 			foreach (long patNum in dictAll.Keys)
 			{
 				if (!dictDateBals.ContainsKey(patNum))
 				{
 					continue;
 				}
+
 				dictAll[patNum].DateBalBegan = dictDateBals[patNum];
 			}
 		}
 
-		///<summary>Used by the OpenDentalService Transworld thread to sync accounts sent to collection.</summary>
+		/// <summary>
+		/// Used by the OpenDentalService Transworld thread to sync accounts sent to collection.
+		/// </summary>
 		public static List<long> GetListCollectionGuarNums(bool doIncludeSuspended = true)
 		{
-			List<Def> listBillTypes = Defs.GetDefsForCategory(DefCat.BillingTypes, true).FindAll(x => x.ItemValue.ToLower() == "c");
-			List<long> listSuspendedGuarNums = new List<long>();
+			var billingTypes = Defs.GetDefsForCategory(DefCat.BillingTypes, true).FindAll(x => x.ItemValue.ToLower() == "c");
+
+			var suspendedGuardianIds = new List<long>();
 			if (doIncludeSuspended)
 			{
-				listSuspendedGuarNums = TsiTransLogs.GetSuspendedGuarNums();
+				suspendedGuardianIds = TsiTransLogs.GetSuspendedGuarNums();
 			}
-			if (listBillTypes.Count == 0)
+
+			if (billingTypes.Count == 0)
 			{
-				return listSuspendedGuarNums;//no collection billing type, return suspended guar nums, could be empty
+				return suspendedGuardianIds; // no collection billing type, return suspended guar nums, could be empty
 			}
-			string command = "SELECT patient.Guarantor "
-				+ "FROM patient "
-				+ "WHERE patient.PatNum=patient.Guarantor "
-				+ "AND patient.BillingType IN (" + string.Join(",", listBillTypes.Select(x => POut.Long(x.DefNum))) + ")";
-			return Database.GetListLong(command).Union(listSuspendedGuarNums).ToList();
+
+			return Database.GetListLong(
+				"SELECT patient.Guarantor FROM patient " +
+				"WHERE patient.PatNum=patient.Guarantor " +
+				"AND patient.BillingType IN (" + string.Join(",", billingTypes.Select(x => x.DefNum)) + ")")
+				.Union(suspendedGuardianIds)
+				.ToList();
 		}
 
-		///<summary>Used to determine whether or not the guarantor of a family is sent to collections.  Used in order to prompt the user to specify
-		///whether the payment or adjustment being entered on a collection patient came from Transworld and therefore shouldn't be sent to Transworld.</summary>
-		public static bool IsGuarCollections(long guarNum, bool includeSuspended = true)
+		/// <summary>
+		/// Used to determine whether or not the guarantor of a family is sent to collections. 
+		/// Used in order to prompt the user to specify whether the payment or adjustment being entered on a collection patient came from Transworld and therefore shouldn't be sent to Transworld.
+		/// </summary>
+		public static bool IsGuarCollections(long guarantorId, bool includeSuspended = true)
 		{
-			if (includeSuspended && TsiTransLogs.IsGuarSuspended(guarNum))
+			if (includeSuspended && TsiTransLogs.IsGuarSuspended(guarantorId))
 			{
 				return true;
 			}
-			Def billTypeColl = Defs.GetDefsForCategory(DefCat.BillingTypes, true).FirstOrDefault(x => x.ItemValue.ToLower() == "c");
-			if (billTypeColl == null)
+
+			Def collectionBillingType = Defs.GetDefsForCategory(DefCat.BillingTypes, true).FirstOrDefault(x => x.ItemValue.ToLower() == "c");
+			if (collectionBillingType == null)
 			{
-				return false;//if not suspended and no billing type marked as collection billing type, return false, guar not a collection guar
+				return false; // if not suspended and no billing type marked as collection billing type, return false, guar not a collection guar
 			}
-			string command = "SELECT 1 isGuarCollection "
-				+ "FROM patient "
-				+ "WHERE PatNum=" + POut.Long(guarNum) + " "
-				+ "AND PatNum=Guarantor "
-				+ "AND BillingType=" + POut.Long(billTypeColl.DefNum) + " "
-				+ DbHelper.LimitAnd(1);
-			return PIn.Bool(Database.ExecuteString(command));
+
+			return Database.ExecuteLong(
+				"SELECT 1 isGuarCollection FROM patient " +
+				"WHERE PatNum = " + guarantorId + " " +
+				"AND PatNum = Guarantor " +
+				"AND BillingType = " + collectionBillingType.DefNum + " " +
+				"LIMIT 1") == 1;
 		}
 
-		///<summary>Fetches all Gurantor patnums who have family members where some have a positive estimated balance and some negative.</summary>
+		/// <summary>
+		/// Fetches all Gurantor patnums who have family members where some have a positive estimated balance and some negative.
+		/// </summary>
 		public static List<long> GetAllTransferGuarantors()
 		{
 			//We use SUM() in this query so the GROUP BY behaves correctly and summarizes GreaterThan and Lessthan.
@@ -315,29 +354,30 @@ namespace OpenDentBusiness
 			return Database.GetListLong(command);
 		}
 
-		public static List<long> GetGuarantorsForPatNums(List<long> listPatNums)
+		public static List<long> GetGuarantorsForPatNums(List<long> patientIds)
 		{
-			if (listPatNums == null || listPatNums.Count <= 0)
+			if (patientIds == null || patientIds.Count <= 0)
 			{
 				return new List<long>();
 			}
-			//If two patients in the same family are passed in, it will still only return that families guarantor once.
-			string command = "SELECT DISTINCT Guarantor FROM patient WHERE PatNum IN (" + String.Join<long>(",", listPatNums) + ") ";
-			return Database.GetListLong(command);
+
+			// If two patients in the same family are passed in, it will still only return that families guarantor once.
+			return Database.GetListLong(
+				"SELECT DISTINCT Guarantor FROM patient WHERE PatNum IN (" + string.Join(",", patientIds) + ")");
 		}
 
-		///<summary>Returns a list of PatNums for every guarantor in the database that hasn't been flagged as deleted.</summary>
-		public static List<long> GetAllGuarantors()
-		{
-			string command = $"SELECT DISTINCT Guarantor FROM patient WHERE patient.PatStatus!={POut.Int((int)PatientStatus.Deleted)}";
-			return Database.GetListLong(command);
-		}
+		/// <summary>
+		/// Returns a list of PatNums for every guarantor in the database that hasn't been flagged as deleted.
+		/// </summary>
+		public static List<long> GetAllGuarantors() 
+			=> Database.GetListLong(
+				"SELECT DISTINCT Guarantor " +
+				"FROM patient " +
+				"WHERE patient.PatStatus != " + (int)PatientStatus.Deleted);
 
-		public static List<long> GetAllGuarantorsWithFamilies()
-		{
-			string command = "SELECT DISTINCT Guarantor FROM patient WHERE Guarantor<>PatNum";
-			return Database.GetListLong(command);
-		}
+		public static List<long> GetAllGuarantorsWithFamilies() 
+			=> Database.GetListLong(
+				"SELECT DISTINCT Guarantor FROM patient WHERE Guarantor <> PatNum");
 
 		///<summary>Returns a list of PatNums for every guarantor in the database that has at least one other patient in the family.</summary>
 		public static List<long> GetAllGuarantorsWithFamiliesAlphabetical()
@@ -352,16 +392,14 @@ namespace OpenDentBusiness
 			return Database.GetListLong(command);
 		}
 
-		public static Patient GetGuarForPat(long patNum)
+		public static Patient GetGuarForPat(long patientId)
 		{
-			if (patNum == 0)
-			{
-				return null;
-			}
+			if (patientId == 0) return null;
 
-			string command = $@"SELECT * FROM patient guar
-				WHERE guar.PatNum=(SELECT patient.Guarantor FROM patient WHERE patient.PatNum={POut.Long(patNum)})";
-			return Crud.PatientCrud.SelectOne(command);
+			return Crud.PatientCrud.SelectOne(
+				"SELECT * FROM patient guar " +
+				"WHERE guar.PatNum = " +
+					"(SELECT patient.Guarantor FROM patient WHERE patient.PatNum=" + patientId + ")");
 		}
 
 		public static DataTable GetPatientsWithFirstLastAppointments(List<PatientStatus> listPatStatus, bool doExcludePatsWithFutureAppts, long clinicNum,
@@ -460,7 +498,7 @@ namespace OpenDentBusiness
 			//PriPro is intentionally not synched so the clone can be assigned to a different provider for tracking production.
 			if (primaryProvNum == 0)
 			{
-				primaryProvNum = PrefC.GetLong(PrefName.PracticeDefaultProv);
+				primaryProvNum = Prefs.GetLong(PrefName.PracticeDefaultProv);
 			}
 			patientSynch.PriProv = primaryProvNum;
 			patientSynch.ClinicNum = clinicNum;
@@ -477,7 +515,7 @@ namespace OpenDentBusiness
 			patientSynch = Patients.GetPat(patientSynch.PatNum);
 			Patient patientSynchOld = patientSynch.Copy();
 			//Now that the clone has been inserted and has a primary key we can consider what family and/or super family the clone should be part of.
-			if (PrefC.GetBool(PrefName.CloneCreateSuperFamily))
+			if (Prefs.GetBool(PrefName.CloneCreateSuperFamily))
 			{
 				//Put the clone into their own family.
 				patientSynch.Guarantor = patientSynch.PatNum;
@@ -549,7 +587,7 @@ namespace OpenDentBusiness
 			Patient patCloneOld = patientSynch.Copy();
 			PatientCloneDemographicChanges patientCloneDemoChanges = SynchCloneDemographics(patient, patientSynch);
 			if (Update(patientSynch, patCloneOld)
-				&& PrefC.GetYN(PrefName.PatientPhoneUsePhonenumberTable)
+				&& Prefs.GetBool(PrefName.PatientPhoneUsePhonenumberTable)
 				&& patientCloneDemoChanges.ListFieldsCleared
 					.Union(patientCloneDemoChanges.ListFieldsUpdated.Select(y => y.FieldName))
 					.Any(x => x.In("Home Phone", "Wireless Phone", "Work Phone")))
@@ -1089,76 +1127,76 @@ namespace OpenDentBusiness
 		}
 		#endregion
 
-		#region Delete
-		#endregion
 
 		#endregion
 
 		#region Misc Methods
 
-		///<summary>Returns true if the patient passed in is a clone otherwise false.</summary>
-		public static bool IsPatientAClone(long patNum)
-		{
-			//No need to check RemotingRole; no call to db.
-			return PatientLinks.IsPatientAClone(patNum);
-		}
+		/// <summary>
+		/// Returns true if the patient passed in is a clone otherwise false.
+		/// </summary>
+		public static bool IsPatientAClone(long patientId) 
+			=> PatientLinks.IsPatientAClone(patientId);
 
-		///<summary>Returns true if the patient passed in is a clone or the original patient of clones, otherwise false.
-		///This method is helpful when trying to determine if the patient passed in is related in any way to the clone system.</summary>
-		public static bool IsPatientACloneOrOriginal(long patNum)
-		{
-			//No need to check RemotingRole; no call to db.
-			return PatientLinks.IsPatientACloneOrOriginal(patNum);
-		}
+		/// <summary>
+		/// Returns true if the patient passed in is a clone or the original patient of clones, otherwise false.
+		/// This method is helpful when trying to determine if the patient passed in is related in any way to the clone system.
+		/// </summary>
+		public static bool IsPatientACloneOrOriginal(long patientId) 
+			=> PatientLinks.IsPatientACloneOrOriginal(patientId);
 
-		///<summary>Returns true if one patient is a clone of the other or if both are clones of the same master, otherwise false.
-		///Always returns false if patNum1 and patNum2 are the same PatNum.</summary>
-		public static bool ArePatientsClonesOfEachOther(long patNum1, long patNum2)
-		{
-			//No need to check RemotingRole; no call to db.
-			return PatientLinks.ArePatientsClonesOfEachOther(patNum1, patNum2);
-		}
+		/// <summary>
+		/// Returns true if one patient is a clone of the other or if both are clones of the same master, otherwise false.
+		/// Always returns false if patNum1 and patNum2 are the same PatNum.
+		/// </summary>
+		public static bool ArePatientsClonesOfEachOther(long patNum1, long patNum2) 
+			=> PatientLinks.ArePatientsClonesOfEachOther(patNum1, patNum2);
 
-		///<summary>Replaces all patient fields in the given message with the given patient's information.  Returns the resulting string.
-		///Replaces: [FName], [LName], [LNameLetter], [NameF], [NameFL], [PatNum], 
-		///[ChartNumber], [HmPhone], [WkPhone], [WirelessPhone], [ReferredFromProvNameFL], etc.</summary>
-		public static string ReplacePatient(string message, Patient pat, bool isHtmlEmail = false)
+		/// <summary>
+		/// Replaces all patient fields in the given message with the given patient's information. 
+		/// Returns the resulting string.
+		/// Replaces: 
+		/// [FName], [LName], [LNameLetter], [NameF], [NameFL], [PatNum], [ChartNumber], [HmPhone], [WkPhone], [WirelessPhone], [ReferredFromProvNameFL], etc.
+		/// </summary>
+		public static string ReplacePatient(string message, Patient patient, bool isHtmlEmail = false)
 		{
-			if (pat == null)
+			if (patient == null)
 			{
 				return message;
 			}
+
 			StringBuilder template = new StringBuilder(message);
-			ReplaceTags.ReplaceOneTag(template, "[FName]", pat.FName, isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[LName]", pat.LName, isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[LNameLetter]", pat.LName.Substring(0, 1).ToUpper(), isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[NameF]", pat.FName, isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[NameFL]", Patients.GetNameFL(pat.LName, pat.FName, "", ""), isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[PatNum]", pat.PatNum.ToString(), isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[ChartNumber]", pat.ChartNumber, isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[HmPhone]", pat.HmPhone, isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[WkPhone]", pat.WkPhone, isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[Gender]", pat.Gender.ToString(), isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[Email]", pat.Email, isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[ProvNum]", pat.PriProv.ToString(), isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[ClinicNum]", pat.ClinicNum.ToString(), isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[WirelessPhone]", pat.WirelessPhone, isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[Birthdate]", pat.Birthdate.ToShortDateString(), isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[Birthdate_yyyyMMdd]", pat.Birthdate.ToString("yyyyMMdd"), isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[SSN]", pat.SSN, isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[Address]", pat.Address, isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[Address2]", pat.Address2, isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[City]", pat.City, isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[State]", pat.State, isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[Zip]", pat.Zip, isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[MonthlyCardsOnFile]", CreditCards.GetMonthlyCardsOnFile(pat.PatNum), isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[PatientTitle]", pat.Title, isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[PatientMiddleInitial]", pat.MiddleI, isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[PatientPreferredName]", pat.Preferred, isHtmlEmail);
-			ReplaceTags.ReplaceOneTag(template, "[PrimaryProviderNameFLSuffix]", Providers.GetFormalName(pat.PriProv), isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[FName]", patient.FName, isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[LName]", patient.LName, isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[LNameLetter]", patient.LName.Substring(0, 1).ToUpper(), isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[NameF]", patient.FName, isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[NameFL]", Patients.GetNameFL(patient.LName, patient.FName, "", ""), isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[PatNum]", patient.PatNum.ToString(), isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[ChartNumber]", patient.ChartNumber, isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[HmPhone]", patient.HmPhone, isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[WkPhone]", patient.WkPhone, isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[Gender]", patient.Gender.ToString(), isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[Email]", patient.Email, isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[ProvNum]", patient.PriProv.ToString(), isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[ClinicNum]", patient.ClinicNum.ToString(), isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[WirelessPhone]", patient.WirelessPhone, isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[Birthdate]", patient.Birthdate.ToShortDateString(), isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[Birthdate_yyyyMMdd]", patient.Birthdate.ToString("yyyyMMdd"), isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[SSN]", patient.SSN, isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[Address]", patient.Address, isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[Address2]", patient.Address2, isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[City]", patient.City, isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[State]", patient.State, isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[Zip]", patient.Zip, isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[MonthlyCardsOnFile]", CreditCards.GetMonthlyCardsOnFile(patient.PatNum), isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[PatientTitle]", patient.Title, isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[PatientMiddleInitial]", patient.MiddleI, isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[PatientPreferredName]", patient.Preferred, isHtmlEmail);
+			ReplaceTags.ReplaceOneTag(template, "[PrimaryProviderNameFLSuffix]", Providers.GetFormalName(patient.PriProv), isHtmlEmail);
+
 			if (message.Contains("[ReferredFromProvNameFL]"))
 			{
-				Referral patRef = Referrals.GetReferralForPat(pat.PatNum);
+				Referral patRef = Referrals.GetReferralForPat(patient.PatNum);
 				if (patRef != null)
 				{
 					ReplaceTags.ReplaceOneTag(template, "[ReferredFromProvNameFL]", Patients.GetNameFL(patRef.LName, patRef.FName, "", ""), isHtmlEmail);
@@ -1168,13 +1206,14 @@ namespace OpenDentBusiness
 					ReplaceTags.ReplaceOneTag(template, "[ReferredFromProvNameFL]", "", isHtmlEmail);
 				}
 			}
+
 			if (message.Contains("[PatientGenderMF]"))
 			{
-				if (pat.Gender == PatientGender.Male)
+				if (patient.Gender == PatientGender.Male)
 				{
 					ReplaceTags.ReplaceOneTag(template, "[PatientGenderMF]", "M", isHtmlEmail);
 				}
-				else if (pat.Gender == PatientGender.Female)
+				else if (patient.Gender == PatientGender.Female)
 				{
 					ReplaceTags.ReplaceOneTag(template, "[PatientGenderMF]", "F", isHtmlEmail);
 				}
@@ -1183,43 +1222,46 @@ namespace OpenDentBusiness
 					ReplaceTags.ReplaceOneTag(template, "[PatientGenderMF]", "", isHtmlEmail);
 				}
 			}
+
 			return template.ToString();
 		}
 
-		///<summary>Replaces all patient guarantor fields in the given message with the given patient's guarantor information.  Returns the resulting string.
-		///Replaces: [GuarantorPatnum], [GuarantorTitle], [GuarantorNameF], [GuarantorNameL], [GuarantorMiddleInitial],etc.</summary>
-		public static string ReplaceGuarantor(string message, Patient pat)
+		/// <summary>
+		/// Replaces all patient guarantor fields in the given message with the given patient's guarantor information. 
+		/// Returns the resulting string.
+		/// Replaces: 
+		/// [GuarantorPatnum], [GuarantorTitle], [GuarantorNameF], [GuarantorNameL], [GuarantorMiddleInitial],etc.
+		/// </summary>
+		public static string ReplaceGuarantor(string message, Patient patient)
 		{
-			if (pat == null)
+			if (patient == null) return message;
+
+			var guarantor = GetPat(patient.Guarantor);
+			if (guarantor == null)
 			{
 				return message;
 			}
-			Patient guar = Patients.GetPat(pat.Guarantor);
-			if (guar == null)
-			{
-				return message;
-			}
-			string retVal = message;
-			retVal = retVal.Replace("[GuarantorPatNum]", guar.PatNum.ToString());
-			retVal = retVal.Replace("[GuarantorTitle]", guar.Title);
-			retVal = retVal.Replace("[GuarantorNameF]", guar.FName);
-			retVal = retVal.Replace("[GuarantorNameL]", guar.LName);
-			retVal = retVal.Replace("[GuarantorMiddleInitial]", guar.MiddleI);
-			retVal = retVal.Replace("[GuarantorHmPhone]", guar.HmPhone);
-			retVal = retVal.Replace("[GuarantorWkPhone]", guar.WkPhone);
-			retVal = retVal.Replace("[GuarantorAddress]", guar.Address);
-			retVal = retVal.Replace("[GuarantorAddress2]", guar.Address2);
-			retVal = retVal.Replace("[GuarantorCity]", guar.City);
-			retVal = retVal.Replace("[GuarantorState]", guar.State);
-			retVal = retVal.Replace("[GuarantorZip]", guar.Zip);
-			return retVal;
+
+			message = message.Replace("[GuarantorPatNum]", guarantor.PatNum.ToString());
+			message = message.Replace("[GuarantorTitle]", guarantor.Title);
+			message = message.Replace("[GuarantorNameF]", guarantor.FName);
+			message = message.Replace("[GuarantorNameL]", guarantor.LName);
+			message = message.Replace("[GuarantorMiddleInitial]", guarantor.MiddleI);
+			message = message.Replace("[GuarantorHmPhone]", guarantor.HmPhone);
+			message = message.Replace("[GuarantorWkPhone]", guarantor.WkPhone);
+			message = message.Replace("[GuarantorAddress]", guarantor.Address);
+			message = message.Replace("[GuarantorAddress2]", guarantor.Address2);
+			message = message.Replace("[GuarantorCity]", guarantor.City);
+			message = message.Replace("[GuarantorState]", guarantor.State);
+			message = message.Replace("[GuarantorZip]", guarantor.Zip);
+
+			return message;
 		}
 
-		///<summary>Returns true if the replacement field is PHI. Case insensitive.</summary>
-		public static bool IsFieldPHI(string field)
-		{
-			return field.ToLower().In(ListPHIFields.Select(x => x.ToLower()));
-		}
+		/// <summary>
+		/// Returns true if the replacement field is PHI. Case insensitive.</summary>
+		public static bool IsFieldPHI(string field) => field.ToLower().In(ListPHIFields.Select(x => x.ToLower()));
+		
 
 		///<summary>Returns true if the text contains a replacement field that is PHI. Case insensitive.</summary>
 		public static bool DoesContainPHIField(string text)
@@ -1228,8 +1270,10 @@ namespace OpenDentBusiness
 			return Patients.ListPHIFields.Select(x => x.ToLower()).Any(x => textLower.Contains(x));
 		}
 
-		///<summary>The list of fields that are considered PHI. 
-		///<para/>According to the United States Electronic Code of Federal Regulations Title 45 160.103, protected health information is individually 
+		/// <summary>
+		/// The list of fields that are considered PHI. 
+		/// <para/>
+		/// According to the United States Electronic Code of Federal Regulations Title 45 160.103, protected health information is individually 
 		///identifiable health information that:
 		///"... (1) Is created or received by a health care provider, health plan, employer, or health care clearinghouse; and
 		///(2) Relates to the past, present, or future physical or mental health or condition of an individual; the provision of health care to an individual; or the past, present, or future payment for the provision of health care to an individual; and
@@ -1257,56 +1301,68 @@ namespace OpenDentBusiness
 			}
 		}
 
-		///<summary>For sales tax. True if the patient zipcode matches the pattern "12345" or "12345-6789" </summary>
+		/// <summary>
+		/// For sales tax. True if the patient zipcode matches the pattern "12345" or "12345-6789"
+		/// </summary>
 		public static bool HasValidUSZipCode(Patient patient)
 		{
-			//No need to check RemotingRole; no call to db.
-			//Patient pat=Patients.GetPat(patNum);
-			//Regular Expression found at:
-			//https://www.oreilly.com/library/view/regular-expressions-cookbook/9781449327453/ch04s14.html
-			string regexp = "^[0-9]{5}(?:-[0-9]{4})?$";
-			if (Regex.IsMatch(patient.Zip, regexp))
+			if (Regex.IsMatch(patient.Zip, "^[0-9]{5}(?:-[0-9]{4})?$"))
 			{
 				return true;
 			}
+
 			return false;
 		}
 
 		#endregion
 
+		private static string Capitalize(string str)
+        {
+			if (null != str && str.Length > 1)
+            {
+				return char.ToUpper(str[0]) + str.Substring(1);
+            }
 
-		///<summary>Creates and inserts a "new patient" using the information passed in.  Validation must be done prior to calling this.
-		///securityLogMsg is typically set to something that lets the customer know where this new patient was created from.
-		///Used by multiple applications so be very careful when changing this method.  E.g. Open Dental and Web Sched.</summary>
-		public static Patient CreateNewPatient(string lName, string fName, DateTime birthDate, long priProv, long clinicNum, string securityLogMsg
-			, LogSources logSource = LogSources.None, string email = "", string hmPhone = "", string wirelessPhone = "")
+			return str;
+        }
+
+
+		/// <summary>
+		/// Creates and inserts a "new patient" using the information passed in. 
+		/// Validation must be done prior to calling this.
+		/// securityLogMsg is typically set to something that lets the customer know where this new patient was created from.
+		/// Used by multiple applications so be very careful when changing this method. 
+		/// E.g. Open Dental and Web Sched.
+		/// </summary>
+		public static Patient CreateNewPatient(string lastName, string firstName, DateTime birthDate, long? primaryProviderId, long? clinicId, string securityLogMsg, LogSources logSource = LogSources.None, string email = "", string homePhone = "", string wirelessPhone = "")
 		{
-			//No need to check RemotingRole; no call to db.
-			Patient patient = new Patient();
-			if (lName.Length > 1)
-			{//eg Sp
-				patient.LName = lName.Substring(0, 1).ToUpper() + lName.Substring(1);
-			}
-			if (fName.Length > 1)
-			{
-				patient.FName = fName.Substring(0, 1).ToUpper() + fName.Substring(1);
-			}
-			patient.Birthdate = birthDate;
-			patient.PatStatus = PatientStatus.Patient;
-			patient.BillingType = PrefC.GetLong(PrefName.PracticeDefaultBillType);
-			patient.PriProv = priProv;
-			patient.Gender = PatientGender.Unknown;
-			patient.ClinicNum = clinicNum;
-			patient.Email = email;
-			patient.HmPhone = TelephoneNumbers.AutoFormat(hmPhone);
-			patient.WirelessPhone = TelephoneNumbers.AutoFormat(wirelessPhone);
-			Patients.Insert(patient, false);
+            var patient = new Patient
+            {
+                LName = Capitalize(lastName),
+                FName = Capitalize(firstName),
+                Birthdate = birthDate,
+                PatStatus = PatientStatus.Patient,
+                BillingType = Prefs.GetLong(PrefName.PracticeDefaultBillType),
+                PriProv = primaryProviderId ?? 0,
+                Gender = PatientGender.Unknown,
+                ClinicNum = clinicId ?? 0,
+                Email = email,
+                HmPhone = TelephoneNumbers.AutoFormat(homePhone),
+                WirelessPhone = TelephoneNumbers.AutoFormat(wirelessPhone)
+            };
+
+            Insert(patient, false);
+
 			SecurityLogs.MakeLogEntry(Permissions.PatientCreate, patient.PatNum, securityLogMsg, logSource);
-			CustReference custRef = new CustReference();
-			custRef.PatNum = patient.PatNum;
-			CustReferences.Insert(custRef);
+
+            CustReferences.Insert(new CustReference
+			{
+				PatNum = patient.PatNum
+			});
+
 			Patient PatOld = patient.Copy();
 			patient.Guarantor = patient.PatNum;
+
 			Patients.Update(patient, PatOld);
 			return patient;
 		}
@@ -1315,52 +1371,55 @@ namespace OpenDentBusiness
 		/// Returns a Family object for the supplied patNum.
 		/// Use Family.GetPatient to extract the desired patient from the family.
 		/// </summary>
-		public static Family GetFamily(long patNum) 
-			=> GetFamilies(new List<long>() { patNum }).FirstOrDefault() ?? new Family();
+		public static Family GetFamily(long patientId) 
+			=> GetFamilies(new List<long>() { patientId }).FirstOrDefault() ?? new Family();
 
-		public static List<Family> GetFamilies(List<long> listPatNums)
+		public static List<Family> GetFamilies(List<long> patientIds)
 		{
-			if (listPatNums == null || listPatNums.Count < 1)
+			if (patientIds == null || patientIds.Count < 1)
 			{
-				return new List<OpenDentBusiness.Family>();
+				return new List<Family>();
 			}
+
 			string command = @"SELECT DISTINCT f.*,CASE WHEN f.Guarantor != f.PatNum THEN 1 ELSE 0 END AS IsNotGuar 
 				FROM patient p
 				INNER JOIN patient f ON f.Guarantor=p.Guarantor
-				WHERE p.PatNum IN (" + string.Join(",", listPatNums.Select(x => POut.Long(x))) + @")
+				WHERE p.PatNum IN (" + string.Join(",", patientIds.Select(x => POut.Long(x))) + @")
 				ORDER BY IsNotGuar, f.Birthdate";
+
 			List<Family> listFamilies = new List<Family>();
 			List<Patient> listPatients = Crud.PatientCrud.SelectMany(command);
-			foreach (Patient patient in listPatients)
-			{
-				patient.Age = DateToAge(patient.Birthdate);
-			}
-			Dictionary<long, List<Patient>> dictFamilyPatients = listPatients.GroupBy(x => x.Guarantor)
-				.ToDictionary(y => y.Key, y => y.ToList());
+
+			Dictionary<long, List<Patient>> dictFamilyPatients = listPatients.GroupBy(x => x.Guarantor).ToDictionary(y => y.Key, y => y.ToList());
+
 			foreach (KeyValuePair<long, List<Patient>> kvp in dictFamilyPatients)
 			{
 				Family family = new Family();
 				family.ListPats = kvp.Value.ToArray();
 				listFamilies.Add(family);
 			}
+
 			return listFamilies;
 		}
 
-		///<summary>Returns a list of patients that have the associated FeeSchedNum.  Used when attempting to hide FeeScheds.</summary>
-		public static List<Patient> GetForFeeSched(long feeSchedNum)
-		{
-			string command = "SELECT * FROM patient WHERE FeeSched=" + POut.Long(feeSchedNum);
-			return Crud.PatientCrud.SelectMany(command);
-		}
+		/// <summary>
+		/// Returns a list of patients that have the associated FeeSchedNum. 
+		/// Used when attempting to hide FeeScheds.
+		/// </summary>
+		public static List<Patient> GetForFeeSched(long feeSchedNum) 
+			=> Crud.PatientCrud.SelectMany("SELECT * FROM patient WHERE FeeSched=" + feeSchedNum);
 
-		/// <summary>Returns a patient, or null, based on an internally defined or externally defined globaly unique identifier.  This can be an OID, GUID, IID, UUID, etc.</summary>
+		/// <summary>
+		/// Returns a patient, or null, based on an internally defined or externally defined globaly unique identifier. 
+		/// This can be an OID, GUID, IID, UUID, etc.
+		/// </summary>
 		/// <param name="IDNumber">The extension portion of the GUID/OID.  Example: 333224444 if using SSN as a the unique identifier</param>
 		/// <param name="OID">root OID that the IDNumber extends.  Example: 2.16.840.1.113883.4.1 is the OID for the Social Security Numbers.</param>
 		public static Patient GetByGUID(string IDNumber, string OID)
 		{
 			if (OID == OIDInternals.GetForType(IdentifierType.Patient).IDRoot)
 			{//OID matches the localy defined patnum OID.
-				return Patients.GetPat(PIn.Long(IDNumber));
+				return GetPat(PIn.Long(IDNumber));
 			}
 			else
 			{
@@ -1373,63 +1432,57 @@ namespace OpenDentBusiness
 			}
 		}
 
-		///<summary>This is a way to get a single patient from the database if you don't already have a family object to use.  Will return null if not found.</summary>
-		public static Patient GetPat(long patNum)
+		/// <summary>
+		/// This is a way to get a single patient from the database if you don't already have a family object to use. 
+		/// Will return null if not found.
+		/// </summary>
+		public static Patient GetPat(long patientId)
 		{
-			if (patNum == 0)
+			if (patientId == 0)
 			{
 				return null;
 			}
-			Patient pat = Crud.PatientCrud.SelectOne(patNum);
-			if (pat == null)
-			{
-				return null;//used in eCW bridge
-			}
-			pat.Age = DateToAge(pat.Birthdate);
-			return pat;
+
+			return Crud.PatientCrud.SelectOne(patientId);
 		}
 
-		///<summary>Will return null if not found.</summary>
+		/// <summary>
+		/// Will return null if not found.
+		/// </summary>
 		public static Patient GetPatByChartNumber(string chartNumber)
 		{
 			if (chartNumber == "")
 			{
 				return null;
 			}
-			string command = "SELECT * FROM patient WHERE ChartNumber='" + POut.String(chartNumber) + "'";
+
 			Patient pat = null;
 			try
 			{
-				pat = Crud.PatientCrud.SelectOne(command);
+				pat = Crud.PatientCrud.SelectOne("SELECT * FROM patient WHERE ChartNumber='" + POut.String(chartNumber) + "'");
 			}
 			catch { }
-			if (pat == null)
-			{
-				return null;
-			}
-			pat.Age = DateToAge(pat.Birthdate);
+
 			return pat;
 		}
 
-		///<summary>Will return null if not found.</summary>
+		/// <summary>
+		/// Will return null if not found.
+		/// </summary>
 		public static Patient GetPatBySSN(string ssn)
 		{
 			if (ssn == "")
 			{
 				return null;
 			}
-			string command = "SELECT * FROM patient WHERE SSN='" + POut.String(ssn) + "'";
+
 			Patient pat = null;
 			try
 			{
-				pat = Crud.PatientCrud.SelectOne(command);
+				pat = Crud.PatientCrud.SelectOne("SELECT * FROM patient WHERE SSN='" + POut.String(ssn) + "'");
 			}
 			catch { }
-			if (pat == null)
-			{
-				return null;
-			}
-			pat.Age = DateToAge(pat.Birthdate);
+
 			return pat;
 		}
 
@@ -1507,7 +1560,7 @@ namespace OpenDentBusiness
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			pat.SecUserNumEntry = Security.CurrentUser.Id;
 			pat.PatNum = Crud.PatientCrud.Insert(pat, useExistingPK);
-			if (PrefC.GetYN(PrefName.PatientPhoneUsePhonenumberTable))
+			if (Prefs.GetBool(PrefName.PatientPhoneUsePhonenumberTable))
 			{
 				PhoneNumbers.SyncPat(pat);
 			}
@@ -1518,7 +1571,7 @@ namespace OpenDentBusiness
 		public static bool Update(Patient patient, Patient oldPatient)
 		{
 			bool retval = Crud.PatientCrud.Update(patient, oldPatient);
-			if (PrefC.GetYN(PrefName.PatientPhoneUsePhonenumberTable)
+			if (Prefs.GetBool(PrefName.PatientPhoneUsePhonenumberTable)
 				&& (patient.HmPhone != oldPatient.HmPhone
 					|| patient.WkPhone != oldPatient.WkPhone
 					|| patient.WirelessPhone != oldPatient.WirelessPhone))
@@ -1539,12 +1592,15 @@ namespace OpenDentBusiness
 			//no need to call PhoneNumbers.SyncPat since only the status and guar are changed here
 		}
 
-		///<summary>Only used for the Select Patient dialog.  Pass in a billing type of 0 for all billing types.</summary>
+
+
+
 		public static DataTable GetPtDataTable(PtTableSearchParams ptSearchArgs)
 		{
 			string exactMatchSnippet = GetExactMatchSnippet(ptSearchArgs);
 			string phonedigits = ptSearchArgs.Phone.StripNonDigits();
 			string regexp = "";
+
 			for (int i = 0; i < phonedigits.Length; i++)
 			{
 				if (i != 0)
@@ -1552,7 +1608,8 @@ namespace OpenDentBusiness
 					regexp += "[^0-9]*";//zero or more intervening digits that are not numbers
 				}
 				if (i == 3)
-				{//If there is more than three digits and the first digit is 1, make it optional.
+				{
+					// If there is more than three digits and the first digit is 1, make it optional.
 					if (phonedigits.StartsWith("1"))
 					{
 						regexp = "1?" + regexp.Substring(1);
@@ -1564,17 +1621,43 @@ namespace OpenDentBusiness
 				}
 				regexp += phonedigits[i];
 			}
+
+
 			regexp = SOut.String(regexp);//just escape necessary characters here one time
 										 //Replaces spaces and punctation with wildcards because users should be able to type the following example and match certain addresses:
 										 //Search term: "4145 S Court St" should match "4145 S. Court St." in the database.
 			string strAddress = Regex.Replace(ptSearchArgs.Address, @"[°\-.,:;_""'/\\)(#\s&]", "%");
 			string phDigitsTrimmed = phonedigits.TrimStart('0', '1');
+
+
 			//a single digit search is faster using REGEXP, so only use the phonenumber table if the pref is set and the phDigitsTrimmed length>1
-			bool usePhonenumTable = PrefC.GetYN(PrefName.PatientPhoneUsePhonenumberTable) && phDigitsTrimmed.Length > 0;
-			string command = $@"SELECT DISTINCT patient.PatNum,patient.LName,patient.FName,patient.MiddleI,patient.Preferred,patient.Birthdate,patient.SSN,
-				patient.HmPhone,patient.WkPhone,patient.Address,patient.PatStatus,patient.BillingType,patient.ChartNumber,patient.City,patient.State,
-				patient.PriProv,patient.SiteNum,patient.Email,patient.Country,patient.ClinicNum,patient.SecProv,patient.WirelessPhone,
-				{exactMatchSnippet} isExactMatch,"
+			bool usePhonenumTable = Prefs.GetBool(PrefName.PatientPhoneUsePhonenumberTable, false) && phDigitsTrimmed.Length > 0;
+
+			
+
+			string command = 
+				"SELECT DISTINCT patient.PatNum, " +
+				"patient.LName, patient.FName, " +
+				"patient.MiddleI, " +
+				"patient.Preferred, " +
+				"patient.Birthdate, " +
+				"patient.SSN, " +
+				"patient.HmPhone, patient.WkPhone, " +
+				"patient.Address, " +
+				"patient.PatStatus, " +
+				"patient.BillingType, " +
+				"patient.ChartNumber, " +
+				"patient.City, " +
+				"patient.State, " +
+				"patient.PriProv, " +
+				"patient.SiteNum, " +
+				"patient.Email, " +
+				"patient.Country, " +
+				"patient.ClinicNum, " +
+				"patient.SecProv, " +
+				"patient.WirelessPhone, " + exactMatchSnippet + " isExactMatch,"
+
+
 			//using this sub-select instead of joining these two tables because the runtime is much better this way
 			//Example: large db with joins single clinic 19.8 sec, all clinics 32.484 sec; with sub-select single clinic 0.054 sec, all clinics 0.007 sec
 			+ (!ptSearchArgs.HasSpecialty ? "''" : $@"
@@ -1585,10 +1668,15 @@ namespace OpenDentBusiness
 					AND deflink.FKey=patient.PatNum
 					AND definition.Category={SOut.Int((int)DefCat.ClinicSpecialty)}
 				)") + $@" Specialty,"//always include Specialty column, only populate if displaying specialty field
-			+ (string.IsNullOrEmpty(ptSearchArgs.InvoiceNumber) ? "'' " : "statement.") + $@"StatementNum
-				FROM patient"
+
+
+			+ (string.IsNullOrEmpty(ptSearchArgs.InvoiceNumber) ? "'' " : "statement.") + "StatementNum " +
+			"FROM patient"
+
+
 			+ (!usePhonenumTable ? "" : $@"
 				INNER JOIN phonenumber ON phonenumber.PatNum=patient.PatNum")
+
 			+ (string.IsNullOrEmpty(ptSearchArgs.SubscriberId) ? "" : $@"
 				LEFT JOIN patplan ON patplan.PatNum=patient.PatNum
 				LEFT JOIN inssub ON patplan.InsSubNum=inssub.InsSubNum")
@@ -1775,41 +1863,46 @@ namespace OpenDentBusiness
 			return PtDataTable;
 		}
 
-		///<summary>Returns a query snippet intended to be used within the ORDER BY clause in order to push exact matches towards the top.
-		///Returns '0' if there were no search parameters set that the user could type into (e.g. LName, FName, etc).
-		///Note: some of the clauses in the snippet are dependent on join clauses of the query constructed in GetPtDataTable().</summary>
+		/// <summary>
+		/// Returns a query snippet intended to be used within the ORDER BY clause in order to push exact matches towards the top.
+		/// Returns '0' if there were no search parameters set that the user could type into (e.g. LName, FName, etc).
+		/// Note: some of the clauses in the snippet are dependent on join clauses of the query constructed in GetPtDataTable().
+		/// </summary>
 		private static string GetExactMatchSnippet(PtTableSearchParams args)
 		{
-			List<string> listClauses = new List<string>();
-			listClauses.Add(string.IsNullOrEmpty(args.LName) ? "" : "(patient.LName='" + args.LName + "')");
-			listClauses.Add(string.IsNullOrEmpty(args.FName) ? "" : "(patient.FName='" + args.FName + "')");
-			listClauses.Add(string.IsNullOrEmpty(args.Phone) ? "" : "(patient.WirelessPhone='" + args.Phone + "' OR patient.HmPhone='" + args.Phone + "' OR patient.WkPhone='" + args.Phone + "')");
-			listClauses.Add(string.IsNullOrEmpty(args.Address) ? "" : "(patient.Address='" + args.Address + "')");
-			listClauses.Add(string.IsNullOrEmpty(args.City) ? "" : "(patient.City='" + args.City + "')");
-			listClauses.Add(string.IsNullOrEmpty(args.State) ? "" : "(patient.State='" + args.State + "')");
-			listClauses.Add(string.IsNullOrEmpty(args.Ssn) ? "" : "(patient.Ssn='" + args.Ssn + "')");
-			listClauses.Add(string.IsNullOrEmpty(args.PatNumStr) ? "" : "(patient.PatNum='" + args.PatNumStr + "')");
-			listClauses.Add(string.IsNullOrEmpty(args.ChartNumber) ? "" : "(patient.ChartNumber='" + args.ChartNumber + "')");
-			listClauses.Add(string.IsNullOrEmpty(args.SubscriberId) ? "" : "(inssub.SubscriberId='" + args.SubscriberId + "')"); //Join
-			listClauses.Add(string.IsNullOrEmpty(args.Email) ? "" : "(patient.Email='" + args.Email + "')");
-			listClauses.Add(string.IsNullOrEmpty(args.Country) ? "" : "(patient.Country='" + args.Country + "')");
-			listClauses.Add(args.Birthdate.Year < 1880 ? "" : "(patient.Birthdate=" + SOut.Date(args.Birthdate) + ")");
-			listClauses.Add(string.IsNullOrEmpty(args.InvoiceNumber) ? "" : "(statement.StatementNum='" + args.InvoiceNumber + "')");
-			listClauses.RemoveAll(string.IsNullOrEmpty);
-			if (listClauses.Count > 0)
+			var clauses = new List<string>();
+			clauses.Add(string.IsNullOrEmpty(args.LName) ? "" : "(patient.LName='" + args.LName + "')");
+			clauses.Add(string.IsNullOrEmpty(args.FName) ? "" : "(patient.FName='" + args.FName + "')");
+			clauses.Add(string.IsNullOrEmpty(args.Phone) ? "" : "(patient.WirelessPhone='" + args.Phone + "' OR patient.HmPhone='" + args.Phone + "' OR patient.WkPhone='" + args.Phone + "')");
+			clauses.Add(string.IsNullOrEmpty(args.Address) ? "" : "(patient.Address='" + args.Address + "')");
+			clauses.Add(string.IsNullOrEmpty(args.City) ? "" : "(patient.City='" + args.City + "')");
+			clauses.Add(string.IsNullOrEmpty(args.State) ? "" : "(patient.State='" + args.State + "')");
+			clauses.Add(string.IsNullOrEmpty(args.Ssn) ? "" : "(patient.Ssn='" + args.Ssn + "')");
+			clauses.Add(string.IsNullOrEmpty(args.PatNumStr) ? "" : "(patient.PatNum='" + args.PatNumStr + "')");
+			clauses.Add(string.IsNullOrEmpty(args.ChartNumber) ? "" : "(patient.ChartNumber='" + args.ChartNumber + "')");
+			clauses.Add(string.IsNullOrEmpty(args.SubscriberId) ? "" : "(inssub.SubscriberId='" + args.SubscriberId + "')"); //Join
+			clauses.Add(string.IsNullOrEmpty(args.Email) ? "" : "(patient.Email='" + args.Email + "')");
+			clauses.Add(string.IsNullOrEmpty(args.Country) ? "" : "(patient.Country='" + args.Country + "')");
+			clauses.Add(args.Birthdate.Year < 1880 ? "" : "(patient.Birthdate=" + SOut.Date(args.Birthdate) + ")");
+			clauses.Add(string.IsNullOrEmpty(args.InvoiceNumber) ? "" : "(statement.StatementNum='" + args.InvoiceNumber + "')");
+			clauses.RemoveAll(string.IsNullOrEmpty);
+
+			if (clauses.Count > 0)
 			{
-				return "(" + string.Join(" AND ", listClauses) + ")";
+				return "(" + string.Join(" AND ", clauses) + ")";
 			}
+
 			return "'0'";
 		}
 
 		public static bool HasPatientPortalAccess(long patNum)
 		{
-			UserWeb uwCur = UserWebs.GetByFKeyAndType(patNum, UserWebFKeyType.PatientPortal);
-			if (uwCur != null && uwCur.PasswordHash != "")
+			var userWeb = UserWebs.GetByFKeyAndType(patNum, UserWebFKeyType.PatientPortal);
+			if (userWeb != null && userWeb.PasswordHash != "")
 			{
 				return true;
 			}
+
 			return false;
 		}
 
@@ -1826,10 +1919,11 @@ namespace OpenDentBusiness
 			return multPats;
 		}
 
-		///<summary>First call GetMultPats to fill the list of multPats. Then, use this to return one patient from that list.</summary>
+		/// <summary>
+		/// First call GetMultPats to fill the list of multPats. Then, use this to return one patient from that list.
+		/// </summary>
 		public static Patient GetOnePat(Patient[] multPats, long patNum)
 		{
-			//No need to check RemotingRole; no call to db.
 			for (int i = 0; i < multPats.Length; i++)
 			{
 				if (multPats[i].PatNum == patNum)
@@ -1837,94 +1931,83 @@ namespace OpenDentBusiness
 					return multPats[i];
 				}
 			}
+
 			return new Patient();
 		}
 
-		/// <summary>Gets nine of the most useful fields from the db for the given patnum.  If invalid PatNum, returns new Patient rather than null.</summary>
-		public static Patient GetLim(long patNum)
+		private static Patient FromReaderLimited(MySqlDataReader dataReader)
+        {
+			return new Patient
+			{
+				PatNum = (long)dataReader["PatNum"],
+				LName = (string)dataReader["LName"],
+				FName = (string)dataReader["FName"],
+				MiddleI = (string)dataReader["MiddleI"],
+				Preferred = (string)dataReader["Preferred"],
+				CreditType = (string)dataReader["CreditType"],
+				Guarantor = (long)dataReader["Guarantor"],
+				HasIns = (string)dataReader["HasIns"],
+				SSN = (string)dataReader["SSN"],
+				ClinicNum = (long)dataReader["ClinicNum"]
+			};
+        }
+
+		/// <summary>
+		/// Gets nine of the most useful fields from the db for the given patnum.  If invalid PatNum, returns new Patient rather than null.
+		/// </summary>
+		public static Patient GetLim(long patientId)
 		{
-			if (patNum == 0)
+			if (patientId == 0)
 			{
 				return new Patient();
 			}
-			string command =
-				"SELECT PatNum,LName,FName,MiddleI,Preferred,CreditType,Guarantor,HasIns,SSN "
-				+ "FROM patient "
-				+ "WHERE PatNum = '" + patNum.ToString() + "'";
-			DataTable table = Database.ExecuteDataTable(command);
-			if (table.Rows.Count == 0)
-			{
-				return new Patient();
-			}
-			Patient Lim = new Patient();
-			Lim.PatNum = PIn.Long(table.Rows[0][0].ToString());
-			Lim.LName = PIn.String(table.Rows[0][1].ToString());
-			Lim.FName = PIn.String(table.Rows[0][2].ToString());
-			Lim.MiddleI = PIn.String(table.Rows[0][3].ToString());
-			Lim.Preferred = PIn.String(table.Rows[0][4].ToString());
-			Lim.CreditType = PIn.String(table.Rows[0][5].ToString());
-			Lim.Guarantor = PIn.Long(table.Rows[0][6].ToString());
-			Lim.HasIns = PIn.String(table.Rows[0][7].ToString());
-			Lim.SSN = PIn.String(table.Rows[0][8].ToString());
-			return Lim;
+
+			return Database.SelectOne(
+				"SELECT PatNum, LName, FName, MiddleI, Preferred, CreditType, Guarantor, HasIns, SSN, ClinicNum FROM patient WHERE PatNum = " + patientId, 
+					FromReaderLimited);
 		}
 
-		///<summary></summary>
-		public static SerializableDictionary<long, string> GetStatesForPats(List<long> listPatNums)
+		public static Dictionary<long, string> GetStatesForPats(List<long> patientIds)
 		{
-			SerializableDictionary<long, string> retVal = new SerializableDictionary<long, string>();
-			if (listPatNums == null || listPatNums.Count < 1)
+			var results = new Dictionary<long, string>();
+
+			if (patientIds == null || patientIds.Count < 1)
 			{
-				return new SerializableDictionary<long, string>();
+				return results;
 			}
-			string command = "SELECT PatNum,State "
-				+ "FROM patient "
-				+ "WHERE PatNum IN (" + string.Join(",", listPatNums) + ")";
-			DataTable table = Database.ExecuteDataTable(command);
-			for (int i = 0; i < table.Rows.Count; i++)
-			{
-				Patient patLim = new Patient();
-				patLim.PatNum = PIn.Long(table.Rows[i]["PatNum"].ToString());
-				patLim.State = PIn.String(table.Rows[i]["State"].ToString());
-				retVal.Add(patLim.PatNum, patLim.State);
-			}
-			return retVal;
+
+			var states = Database.SelectMany(
+				"SELECT PatNum, State FROM patient WHERE PatNum IN (" + string.Join(",", patientIds) + ")", 
+					dataReader => ((long)dataReader["PatNum"], (string)dataReader["State"]));
+
+			foreach (var state in states)
+            {
+				results.Add(state.Item1, state.Item2);
+            }
+
+			return results;
 		}
 
-		///<summary>Gets nine of the most useful fields from the db for the given PatNums, with option to include patient.ClinicNum.</summary>
-		public static List<Patient> GetLimForPats(List<long> listPatNums, bool doIncludeClinicNum = false)
+		/// <summary>
+		/// Gets nine of the most useful fields from the db for the given PatNums, with option to include patient.ClinicNum.
+		/// </summary>
+		public static List<Patient> GetLimForPats(List<long> patientIds, bool doIncludeClinicNum = false)
 		{
-			if (listPatNums == null || listPatNums.Count < 1)
+			if (patientIds == null || patientIds.Count < 1)
 			{
 				return new List<Patient>();
 			}
-			List<Patient> retVal = new List<Patient>();
-			string command = "SELECT PatNum,LName,FName,MiddleI,Preferred,CreditType,Guarantor,HasIns,SSN" + (doIncludeClinicNum ? ",ClinicNum" : "") + " "
-				+ "FROM patient "
-				+ "WHERE PatNum IN (" + string.Join(",", listPatNums) + ")";
-			DataTable table = Database.ExecuteDataTable(command);
-			foreach (DataRow row in table.Rows)
-			{
-				Patient patLim = new Patient();
-				patLim.PatNum = PIn.Long(row["PatNum"].ToString());
-				patLim.LName = PIn.String(row["LName"].ToString());
-				patLim.FName = PIn.String(row["FName"].ToString());
-				patLim.MiddleI = PIn.String(row["MiddleI"].ToString());
-				patLim.Preferred = PIn.String(row["Preferred"].ToString());
-				patLim.CreditType = PIn.String(row["CreditType"].ToString());
-				patLim.Guarantor = PIn.Long(row["Guarantor"].ToString());
-				patLim.HasIns = PIn.String(row["HasIns"].ToString());
-				patLim.SSN = PIn.String(row["SSN"].ToString());
-				if (doIncludeClinicNum)
-				{
-					patLim.ClinicNum = PIn.Long(row["ClinicNum"].ToString());
-				}
-				retVal.Add(patLim);
-			}
-			return retVal;
+
+			return Database.SelectMany(
+				"SELECT PatNum, LName, FName, MiddleI, Preferred, CreditType, Guarantor, HasIns, SSN, ClinicNum " +
+				"FROM patient WHERE PatNum IN (" + string.Join(",", patientIds) + ")",
+					FromReaderLimited).ToList();
 		}
 
-		///<summary>Gets the patient and provider balances for all patients in the family.  Used from the payment window to help visualize and automate the family splits.</summary>
+		/// <summary>
+		/// Gets the patient and provider balances for all patients in the family. 
+		/// Used from the payment window to help visualize and automate the family splits.
+		/// </summary>
 		public static DataTable GetPaymentStartingBalances(long guarNum, long excludePayNum)
 		{
 			return GetPaymentStartingBalances(guarNum, excludePayNum, false);
@@ -2020,80 +2103,65 @@ namespace OpenDentBusiness
 			return Database.ExecuteDataTable(command);
 		}
 
-		///<summary></summary>
-		public static void ChangeGuarantorToCur(Family Fam, Patient Pat)
+		public static void ChangeGuarantorToCur(Family family, Patient patient)
 		{
-			//Move famfinurgnote to current patient:
-			string command = "UPDATE patient SET "
-				+ "FamFinUrgNote = '" + POut.String(Fam.ListPats[0].FamFinUrgNote) + "' "
-				+ "WHERE PatNum = " + POut.Long(Pat.PatNum);
-			Database.ExecuteNonQuery(command);
-			command = "UPDATE patient SET FamFinUrgNote = '' "
-				+ "WHERE PatNum = '" + Pat.Guarantor.ToString() + "'";
-			Database.ExecuteNonQuery(command);
-			//Move family financial note to current patient:
-			command = "SELECT FamFinancial FROM patientnote "
-				+ "WHERE PatNum = " + POut.Long(Pat.Guarantor);
-			DataTable table = Database.ExecuteDataTable(command);
+			// Move famfinurgnote to current patient:
+			Database.ExecuteNonQuery("UPDATE patient SET FamFinUrgNote = '" + POut.String(family.ListPats[0].FamFinUrgNote) + "' WHERE PatNum = " + patient.PatNum);
+			Database.ExecuteNonQuery("UPDATE patient SET FamFinUrgNote = '' WHERE PatNum = " + patient.Guarantor);
+
+			DataTable table = Database.ExecuteDataTable(
+				"SELECT FamFinancial FROM patientnote WHERE PatNum = " + patient.Guarantor);
+
 			if (table.Rows.Count == 1)
 			{
-				command = "UPDATE patientnote SET "
-					+ "FamFinancial = '" + POut.String(table.Rows[0][0].ToString()) + "' "
-					+ "WHERE PatNum = " + POut.Long(Pat.PatNum);
-				Database.ExecuteNonQuery(command);
+				Database.ExecuteNonQuery(
+					"UPDATE patientnote " +
+					"SET FamFinancial = '" + POut.String(table.Rows[0][0].ToString()) + "' " +
+					"WHERE PatNum = " + patient.PatNum);
 			}
-			command = "UPDATE patientnote SET FamFinancial = '' "
-				+ "WHERE PatNum = " + POut.Long(Pat.Guarantor);
-			Database.ExecuteNonQuery(command);
-			//change guarantor of all family members:
-			command = "UPDATE patient SET "
-				+ "Guarantor = " + POut.Long(Pat.PatNum)
-				+ " WHERE Guarantor = " + POut.Long(Pat.Guarantor);
-			Database.ExecuteNonQuery(command);
+
+			Database.ExecuteNonQuery(
+				"UPDATE patientnote SET FamFinancial = '' WHERE PatNum = " + patient.Guarantor);
+
+			// Change guarantor of all family members:
+			Database.ExecuteNonQuery(
+				"UPDATE patient SET Guarantor = " + patient.PatNum + " " +
+				"WHERE Guarantor = " + patient.Guarantor);
 		}
 
-		///<summary></summary>
 		public static void CombineGuarantors(Family Fam, Patient Pat)
 		{
-			//concat cur notes with guarantor notes
-			string command =
-				"UPDATE patient SET "
-				//+"addrnote = '"+POut.PString(FamilyList[GuarIndex].FamAddrNote)
-				//									+POut.PString(cur.FamAddrNote)+"', "
-				+ "famfinurgnote = '" + POut.String(Fam.ListPats[0].FamFinUrgNote)
-				+ POut.String(Pat.FamFinUrgNote) + "' "
-				+ "WHERE patnum = '" + Pat.Guarantor.ToString() + "'";
-			Database.ExecuteNonQuery(command);
-			//delete cur notes
-			command =
-				"UPDATE patient SET "
-				//+"famaddrnote = '', "
-				+ "famfinurgnote = '' "
-				+ "WHERE patnum = '" + Pat.PatNum + "'";
-			Database.ExecuteNonQuery(command);
-			//concat family financial notes
+			// Concat cur notes with guarantor notes
+			Database.ExecuteNonQuery(
+				"UPDATE patient " +
+				"SET famfinurgnote = '" + POut.String(Fam.ListPats[0].FamFinUrgNote) + POut.String(Pat.FamFinUrgNote) + "' " +
+				"WHERE patnum = " + Pat.Guarantor);
+
+			// Delete cur notes
+			Database.ExecuteNonQuery(
+				"UPDATE patient " +
+				"SET famfinurgnote = '' " +
+				"WHERE patnum = " + Pat.PatNum);
+
+			// Concat family financial notes
 			PatientNote PatientNoteCur = PatientNotes.Refresh(Pat.PatNum, Pat.Guarantor);
-			//patientnote table must have been refreshed for this to work.
-			//Makes sure there are entries for patient and for guarantor.
-			//Also, PatientNotes.cur.FamFinancial will now have the guar info in it.
+
+			// Patientnote table must have been refreshed for this to work.
+			// Makes sure there are entries for patient and for guarantor.
+			// Also, PatientNotes.cur.FamFinancial will now have the guar info in it.
 			string strGuar = PatientNoteCur.FamFinancial;
-			command =
-				"SELECT famfinancial "
-				+ "FROM patientnote WHERE patnum ='" + POut.Long(Pat.PatNum) + "'";
-			//MessageBox.Show(string command);
-			DataTable table = Database.ExecuteDataTable(command);
+
+			DataTable table = Database.ExecuteDataTable(
+				"SELECT famfinancial FROM patientnote WHERE patnum = " + Pat.PatNum);
+
 			string strCur = PIn.String(table.Rows[0][0].ToString());
-			command =
-				"UPDATE patientnote SET "
-				+ "famfinancial = '" + POut.String(strGuar + strCur) + "' "
-				+ "WHERE patnum = '" + Pat.Guarantor.ToString() + "'";
-			Database.ExecuteNonQuery(command);
-			//delete cur financial notes
-			command =
-				"UPDATE patientnote SET "
-				+ "famfinancial = ''"
-				+ "WHERE patnum = '" + Pat.PatNum.ToString() + "'";
-			Database.ExecuteNonQuery(command);
+
+			Database.ExecuteNonQuery(
+				"UPDATE patientnote SET famfinancial = '" + POut.String(strGuar + strCur) + "' WHERE patnum = " + Pat.Guarantor);
+
+			// Delete cur financial notes
+			Database.ExecuteNonQuery(
+				"UPDATE patientnote SET famfinancial = '' WHERE patnum = " + Pat.PatNum);
 		}
 
 		///<summary>Key=patNum, value=formatted name.</summary>
@@ -2103,16 +2171,17 @@ namespace OpenDentBusiness
 				.ToDictionary(x => x.PatNum, x => x.GetNameLF());
 		}
 
-		///<summary>DEPRECATED. This method should not be used because it will take a long time on large databases. 
-		///Call Patients.GetPatientNames() instead.
-		///Key=patNum, value=formatted name.</summary>
+		/// <summary>
+		/// DEPRECATED. This method should not be used because it will take a long time on large databases. 
+		/// Call Patients.GetPatientNames() instead. Key=patNum, value=formatted name.
+		/// </summary>
 		[Obsolete("Call Patients.GetPatientNames(List<long>) instead.")]
 		public static Dictionary<long, string> GetAllPatientNames()
 		{
-			//No need to check RemotingRole; no call to db.
 			DataTable table = GetAllPatientNamesTable();
 			Dictionary<long, string> dict = new Dictionary<long, string>();
 			long patnum;
+
 			string lname, fname, middlei, preferred;
 			for (int i = 0; i < table.Rows.Count; i++)
 			{
@@ -2130,24 +2199,20 @@ namespace OpenDentBusiness
 					dict.Add(patnum, lname + ", '" + preferred + "' " + fname + " " + middlei);
 				}
 			}
+
 			return dict;
 		}
 
-		public static DataTable GetAllPatientNamesTable()
-		{
-			string command = "SELECT patnum,lname,fname,middlei,preferred "
-				+ "FROM patient";
-			DataTable table = Database.ExecuteDataTable(command);
-			return table;
-		}
+		public static DataTable GetAllPatientNamesTable() 
+			=> Database.ExecuteDataTable("SELECT patnum,lname,fname,middlei,preferred FROM patient");
 
-		///<summary>Useful when you expect to individually examine most of the patients in the database during a data import.  Excludes deleted patients.
-		///Saves time and database calls to call this method once and keep a short term cache than it is to run a series of select statements.</summary>
-		public static List<Patient> GetAllPatients()
-		{
-			string command = "SELECT * FROM patient WHERE PatStatus != " + POut.Int((int)PatientStatus.Deleted);
-			return Crud.PatientCrud.SelectMany(command);
-		}
+		/// <summary>
+		/// Useful when you expect to individually examine most of the patients in the database during a data import.
+		/// Excludes deleted patients.
+		/// Saves time and database calls to call this method once and keep a short term cache than it is to run a series of select statements.
+		/// </summary>
+		public static List<Patient> GetAllPatients() 
+			=> Crud.PatientCrud.SelectMany("SELECT * FROM patient WHERE PatStatus != " + (int)PatientStatus.Deleted);
 
 		/// <summary>Determines if all Patients in the Superfamily have ths same HmPhone, Address, Address2, City, State, Country, and Zip.</summary>
 		/// <param name="pat">A Patient in the Superfamily.</param>
@@ -2221,57 +2286,62 @@ namespace OpenDentBusiness
 				didPhoneChange |= patOld.HmPhone != patNew.HmPhone;
 				InsertAddressChangeSecurityLogEntry(patOld, patNew);
 			}
-			if (didPhoneChange && PrefC.GetYN(PrefName.PatientPhoneUsePhonenumberTable))
+			if (didPhoneChange && Prefs.GetBool(PrefName.PatientPhoneUsePhonenumberTable))
 			{
 				PhoneNumbers.SyncPats(listPatsNew);
 			}
 		}
 
-		///<summary>Adds a securitylog entry if any of the patient's information (patient name, status, or address) is changed.</summary>
+		/// <summary>
+		/// Adds a securitylog entry if any of the patient's information (patient name, status, or address) is changed.
+		/// </summary>
 		public static void InsertAddressChangeSecurityLogEntry(Patient patOld, Patient patCur)
 		{
-			//No need to check RemotingRole; no call to db.
-			StringBuilder secLogText = new StringBuilder();
-			secLogText.Append(SecurityLogEntryHelper(patOld.PatStatus.GetDescription(), patCur.PatStatus.GetDescription(), "status"));
-			secLogText.Append(SecurityLogEntryHelper(patOld.LName, patCur.LName, "last name"));
-			secLogText.Append(SecurityLogEntryHelper(patOld.FName, patCur.FName, "first name"));
-			secLogText.Append(SecurityLogEntryHelper(patOld.WkPhone, patCur.WkPhone, "work phone"));
-			secLogText.Append(SecurityLogEntryHelper(patOld.WirelessPhone, patCur.WirelessPhone, "wireless phone"));
-			secLogText.Append(SecurityLogEntryHelper(patOld.HmPhone, patCur.HmPhone, "home phone"));
-			secLogText.Append(SecurityLogEntryHelper(patOld.Address, patCur.Address, "address"));
-			secLogText.Append(SecurityLogEntryHelper(patOld.Address2, patCur.Address2, "address 2"));
-			secLogText.Append(SecurityLogEntryHelper(patOld.City, patCur.City, "city"));
-			secLogText.Append(SecurityLogEntryHelper(patOld.State, patCur.State, "state"));
-			secLogText.Append(SecurityLogEntryHelper(patOld.Country, patCur.Country, "country"));
-			secLogText.Append(SecurityLogEntryHelper(patOld.Zip, patCur.Zip, "zip code"));
-			secLogText.Append(SecurityLogEntryHelper(patOld.TxtMsgOk.ToString(), patCur.TxtMsgOk.ToString(), "Text OK"));
-			secLogText.Append(SecurityLogEntryHelper(patOld.Email, patCur.Email, "Email"));
-			if (secLogText.ToString() != "")
+			StringBuilder stringBuilder = new StringBuilder();
+			stringBuilder.Append(SecurityLogEntryHelper(patOld.PatStatus.GetDescription(), patCur.PatStatus.GetDescription(), "status"));
+			stringBuilder.Append(SecurityLogEntryHelper(patOld.LName, patCur.LName, "last name"));
+			stringBuilder.Append(SecurityLogEntryHelper(patOld.FName, patCur.FName, "first name"));
+			stringBuilder.Append(SecurityLogEntryHelper(patOld.WkPhone, patCur.WkPhone, "work phone"));
+			stringBuilder.Append(SecurityLogEntryHelper(patOld.WirelessPhone, patCur.WirelessPhone, "wireless phone"));
+			stringBuilder.Append(SecurityLogEntryHelper(patOld.HmPhone, patCur.HmPhone, "home phone"));
+			stringBuilder.Append(SecurityLogEntryHelper(patOld.Address, patCur.Address, "address"));
+			stringBuilder.Append(SecurityLogEntryHelper(patOld.Address2, patCur.Address2, "address 2"));
+			stringBuilder.Append(SecurityLogEntryHelper(patOld.City, patCur.City, "city"));
+			stringBuilder.Append(SecurityLogEntryHelper(patOld.State, patCur.State, "state"));
+			stringBuilder.Append(SecurityLogEntryHelper(patOld.Country, patCur.Country, "country"));
+			stringBuilder.Append(SecurityLogEntryHelper(patOld.Zip, patCur.Zip, "zip code"));
+			stringBuilder.Append(SecurityLogEntryHelper(patOld.TxtMsgOk.ToString(), patCur.TxtMsgOk.ToString(), "Text OK"));
+			stringBuilder.Append(SecurityLogEntryHelper(patOld.Email, patCur.Email, "Email"));
+
+			if (stringBuilder.ToString() != "")
 			{
-				SecurityLogs.MakeLogEntry(Permissions.PatientEdit, patCur.PatNum, secLogText.ToString());
+				SecurityLogs.MakeLogEntry(Permissions.PatientEdit, patCur.PatNum, stringBuilder.ToString());
 			}
 		}
 
-		///<summary>Adds a PatientBillingEdit securitylog entry if the patient's billing type is changed.</summary>
+		/// <summary>
+		/// Adds a PatientBillingEdit securitylog entry if the patient's billing type is changed.
+		/// </summary>
 		public static void InsertBillTypeChangeSecurityLogEntry(Patient patOld, Patient patCur)
 		{
-			//No need to check RemotingRole; no call to db.
-			string strLog = SecurityLogEntryHelper(Defs.GetName(DefCat.BillingTypes, patOld.BillingType), Defs.GetName(DefCat.BillingTypes, patCur.BillingType),
-				"billing type");
+			string strLog = 
+				SecurityLogEntryHelper(Defs.GetName(DefCat.BillingTypes, patOld.BillingType), Defs.GetName(DefCat.BillingTypes, patCur.BillingType), "billing type");
+
 			if (string.IsNullOrEmpty(strLog))
 			{
 				return;
 			}
+
 			SecurityLogs.MakeLogEntry(Permissions.PatientBillingEdit, patCur.PatNum, strLog);
 		}
 
-		///<summary>Adds a PatPriProvEdit securitylog entry if the patient's primary provider is changed.</summary>
+		/// <summary>
+		/// Adds a PatPriProvEdit securitylog entry if the patient's primary provider is changed.
+		/// </summary>
 		public static void InsertPrimaryProviderChangeSecurityLogEntry(Patient patOld, Patient patCur)
 		{
-			//No need to check RemotingRole; no call to db.
-			string strLog = SecurityLogEntryHelper(patOld.PriProv == 0 ? "'blank'" : Providers.GetLongDesc(patOld.PriProv),
-				patCur.PriProv == 0 ? "'blank'" : Providers.GetLongDesc(patCur.PriProv),
-				"Primary Provider");
+			string strLog = SecurityLogEntryHelper(patOld.PriProv == 0 ? "'blank'" : Providers.GetLongDesc(patOld.PriProv), patCur.PriProv == 0 ? "'blank'" : Providers.GetLongDesc(patCur.PriProv), "Primary Provider");
+
 			if (string.IsNullOrEmpty(strLog))
 			{
 				return;
@@ -2279,50 +2349,51 @@ namespace OpenDentBusiness
 			SecurityLogs.MakeLogEntry(Permissions.PatPriProvEdit, patCur.PatNum, strLog);
 		}
 
-		///<summary>Returns a line that can be used in a security log entry if the entries are changed.</summary>
-		private static string SecurityLogEntryHelper(string oldVal, string newVal, string textInLog)
+		/// <summary>
+		/// Returns a line that can be used in a security log entry if the entries are changed.
+		/// </summary>
+		private static string SecurityLogEntryHelper(string oldValue, string newValue, string fieldName)
 		{
-			//No need to check RemotingRole; private method.
-			if (oldVal != newVal)
+			if (oldValue != newValue)
 			{
-				return "Patient " + textInLog + " changed from '" + oldVal + "' to '" + newVal + "'\r\n";
+				return $"Patient {fieldName} changed from '{oldValue}' to '{newValue}'\r\n";
 			}
-			return "";
+
+			return string.Empty;
 		}
 
 		public static void UpdateBillingProviderForFam(Patient pat, bool isAuthPriProvEdit, bool isAuthArchivedEdit)
 		{
-			string strWhere = " WHERE Guarantor = " + POut.Long(pat.Guarantor);
-			//Get the list of patients before the changes.
-			string strSelect = "SELECT * FROM patient " + strWhere;
-			List<Patient> listPatsOld = Crud.PatientCrud.SelectMany(strSelect);
-			string command = "UPDATE patient SET "
-				+ "credittype      = '" + POut.String(pat.CreditType) + "',";
+			var oldPatients = Crud.PatientCrud.SelectMany("SELECT * FROM patient  WHERE Guarantor = " + pat.Guarantor);
+
+			string command = "UPDATE patient SET credittype = '" + POut.String(pat.CreditType) + "',";
 			if (isAuthPriProvEdit)
 			{
-				command += "priprov = " + POut.Long(pat.PriProv) + ",";
+				command += "priprov = " + pat.PriProv + ",";
 			}
-			command +=
-				 "secprov         = " + POut.Long(pat.SecProv) + ","
-				+ "feesched        = " + POut.Long(pat.FeeSched) + ","
-				+ "billingtype     = " + POut.Long(pat.BillingType) + " "
-				+ strWhere;
+
+			command += 
+				"secprov = " + pat.SecProv + ", feesched = " + pat.FeeSched + ", billingtype = " + pat.BillingType + " WHERE Guarantor = " + pat.Guarantor;
+
 			if (!isAuthArchivedEdit)
 			{
-				command += " AND patient.PatStatus!=" + POut.Int((int)PatientStatus.Archived);
+				command += " AND patient.PatStatus!=" + (int)PatientStatus.Archived;
 			}
+
 			Database.ExecuteNonQuery(command);
-			//Get the list of patients after the changes
-			List<Patient> listPatsNew = Crud.PatientCrud.SelectMany(strSelect);
-			foreach (Patient patOld in listPatsOld)
+
+			// Get the list of patients after the changes
+			var newPatients = Crud.PatientCrud.SelectMany("SELECT * FROM patient  WHERE Guarantor = " + pat.Guarantor);
+			foreach (var oldPatient in oldPatients)
 			{
-				Patient patNew = listPatsNew.FirstOrDefault(x => x.PatNum == patOld.PatNum);
-				if (patNew == null)
+				var newPatient = newPatients.FirstOrDefault(x => x.PatNum == oldPatient.PatNum);
+				if (newPatient == null)
 				{
-					continue;//This shouldn't happen.
+					continue; // This shouldn't happen.
 				}
-				InsertBillTypeChangeSecurityLogEntry(patOld, patNew);
-				InsertPrimaryProviderChangeSecurityLogEntry(patOld, patNew);
+
+				InsertBillTypeChangeSecurityLogEntry(oldPatient, newPatient);
+				InsertPrimaryProviderChangeSecurityLogEntry(oldPatient, newPatient);
 			}
 		}
 
@@ -2338,36 +2409,35 @@ namespace OpenDentBusiness
 				+ ",HmPhone = '" + POut.String(pat.HmPhone) + "'"
 				+ " WHERE guarantor = '" + POut.Long(pat.Guarantor) + "'";
 			Database.ExecuteNonQuery(command);
-			if (PrefC.GetYN(PrefName.PatientPhoneUsePhonenumberTable))
+			if (Prefs.GetBool(PrefName.PatientPhoneUsePhonenumberTable))
 			{
 				PhoneNumbers.SyncPats(GetFamily(pat.PatNum).ListPats.ToList());
 			}
 		}
 
-		///<summary>Updates the 'AskToArriveEarly' field for all members of this patient's family.</summary>
-		///<param name="isAuthArchivedEdit">Indicates whether Archived patients in the family should be synced.</param>
-		public static void UpdateArriveEarlyForFam(Patient pat, bool isAuthArchivedEdit)
+		/// <summary>
+		/// Updates the 'AskToArriveEarly' field for all members of this patient's family.
+		/// </summary>
+		/// <param name="isAuthArchivedEdit">Indicates whether Archived patients in the family should be synced.</param>
+		public static void UpdateArriveEarlyForFam(Patient patient, bool isAuthArchivedEdit)
 		{
-			string command = "UPDATE patient SET "
-				+ "AskToArriveEarly = '" + POut.Int(pat.AskToArriveEarly) + "'"
-				+ " WHERE guarantor = '" + POut.Long(pat.Guarantor) + "'";
+			var command = "UPDATE patient SET AskToArriveEarly = " + patient.AskToArriveEarly + " WHERE guarantor = " + patient.Guarantor;
 			if (!isAuthArchivedEdit)
 			{
-				command += " AND patient.PatStatus!=" + POut.Int((int)PatientStatus.Archived);
+				command += " AND patient.PatStatus != " + (int)PatientStatus.Archived;
 			}
-			DataTable table = Database.ExecuteDataTable(command);
+
+			Database.ExecuteNonQuery(command);
 		}
 
-		///<summary></summary>
-		public static void UpdateNotesForFam(Patient pat, bool isAuthArchivedEdit)
+		public static void UpdateNotesForFam(Patient patient, bool isAuthArchivedEdit)
 		{
-			string command = "UPDATE patient SET "
-				+ "addrnote = '" + POut.String(pat.AddrNote) + "'"
-				+ " WHERE guarantor = '" + POut.Long(pat.Guarantor) + "'";
+			var command = "UPDATE patient SET addrnote = '" + POut.String(patient.AddrNote) + "' WHERE guarantor = " + patient.Guarantor;
 			if (!isAuthArchivedEdit)
 			{
-				command += " AND patient.PatStatus!=" + POut.Int((int)PatientStatus.Archived);
+				command += " AND patient.PatStatus!=" + (int)PatientStatus.Archived;
 			}
+
 			Database.ExecuteNonQuery(command);
 		}
 
@@ -2389,7 +2459,7 @@ namespace OpenDentBusiness
 				command += " AND patient.PatStatus!=" + POut.Int((int)PatientStatus.Archived);
 			}
 			Database.ExecuteNonQuery(command);
-			if (PrefC.GetYN(PrefName.PatientPhoneUsePhonenumberTable))
+			if (Prefs.GetBool(PrefName.PatientPhoneUsePhonenumberTable))
 			{
 				PhoneNumbers.SyncPats(GetFamily(pat.PatNum).ListPats.ToList());
 			}
@@ -2459,6 +2529,7 @@ namespace OpenDentBusiness
 			{
 				listPatStatusExclude.Add((int)PatientStatus.Inactive);
 			}
+
 			string guarOrPat = "";
 			if (isSinglePatient)
 			{
@@ -2468,12 +2539,14 @@ namespace OpenDentBusiness
 			{
 				guarOrPat = "guar";
 			}
+
 			List<string> listWhereAnds = new List<string>();
 			string strMinusIns = "";
-			if (!PrefC.GetBool(PrefName.BalancesDontSubtractIns))
+			if (!Prefs.GetBool(PrefName.BalancesDontSubtractIns))
 			{
 				strMinusIns = "-guar.InsEst";
 			}
+
 			string strBalExclude = "(ROUND(guar.BalTotal" + strMinusIns + ",3) >= ROUND(" + POut.Double(excludeLessThan) + ",3) OR guar.PayPlanDue > 0";
 			if (!excludeNeg)
 			{//include credits
@@ -2800,9 +2873,7 @@ namespace OpenDentBusiness
 		///<summary>Gets the next available integer chart number.  Will later add a where clause based on preferred format.</summary>
 		public static string GetNextChartNum()
 		{
-			string command = "SELECT ChartNumber from patient WHERE "
-				+ DbHelper.Regexp("ChartNumber", "^[0-9]+$") + " "//matches any positive number of digits
-				+ "ORDER BY (chartnumber+0) DESC";//1/13/05 by Keyush Shaw-added 0.
+			string command = "SELECT ChartNumber from patient WHERE " + DbHelper.Regexp("ChartNumber", "^[0-9]+$") + " ORDER BY (chartnumber+0) DESC";
 			command = DbHelper.LimitOrderBy(command, 1);
 			DataTable table = Database.ExecuteDataTable(command);
 			if (table.Rows.Count == 0)
@@ -2821,28 +2892,14 @@ namespace OpenDentBusiness
 			}
 		}
 
-		///<summary>Returns the name(only one) of the patient using this chartnumber.</summary>
-		public static string ChartNumUsedBy(string chartNum, long excludePatNum)
-		{
-			string command = "SELECT LName,FName from patient WHERE "
-				+ "ChartNumber = '" + POut.String(chartNum)
-				+ "' AND PatNum != '" + excludePatNum.ToString() + "'";
-			DataTable table = Database.ExecuteDataTable(command);
-			string retVal = "";
-			if (table.Rows.Count != 0)
-			{//found duplicate chart number
-				retVal = PIn.String(table.Rows[0][1].ToString()) + " " + PIn.String(table.Rows[0][0].ToString());
-			}
-			return retVal;
-		}
-
-		///<summary>Used in the patient select window to determine if a trial version user is over their limit.</summary>
-		public static int GetNumberPatients()
-		{
-			string command = "SELECT Count(*) FROM patient";
-			DataTable table = Database.ExecuteDataTable(command);
-			return PIn.Int(table.Rows[0][0].ToString());
-		}
+		/// <summary>
+		/// Returns the name (only one) of the patient using this chartnumber.
+		/// </summary>
+		public static string ChartNumUsedBy(string chartNumber, long excludePatientId) 
+			=> Database.SelectOne(
+				"SELECT CONCAT(FName, '', LName) from patient WHERE ChartNumber = @chart_number AND PatNum != " + excludePatientId,
+				Database.ToScalar<string>,
+					new MySqlParameter("chart_number", chartNumber ?? "")) ?? "";
 
 		///<summary>Makes a call to the db to figure out if the current HasIns status is correct.  If not, then it changes it.</summary>
 		public static void SetHasIns(long patNum)
@@ -2865,35 +2922,39 @@ namespace OpenDentBusiness
 			}
 		}
 
-		///<summary>Gets the provider for this patient.  If provNum==0, then it gets the practice default prov.
-		///If no practice default set, returns the first non-hidden ProvNum from the provider cache.</summary>
-		public static long GetProvNum(Patient pat)
+		/// <summary>
+		/// Gets the provider for this patient. 
+		/// If provNum==0, then it gets the practice default prov.
+		/// If no practice default set, returns the first non-hidden ProvNum from the provider cache.
+		/// </summary>
+		public static long GetProvNum(Patient patient)
 		{
-			//No need to check RemotingRole; no call to db.
-			long retval = pat.PriProv;
+			long retval = patient.PriProv;
 			if (retval == 0)
 			{
-				retval = PrefC.GetLong(PrefName.PracticeDefaultProv);
+				retval = Prefs.GetLong(PrefName.PracticeDefaultProv);
 			}
+
 			if (retval == 0)
 			{
 				retval = Providers.GetFirstOrDefault(x => true, true)?.ProvNum ?? 0;
 			}
+
 			return retval;
 		}
 
-		///<summary>Calls Patients.GetProvNum after getting the patient with this patNum. Gets the provider for this patient.  If pat.PriProv==0, then it
-		///gets the practice default prov.  If no practice default set, returns the first non-hidden ProvNum from the provider cache.</summary>
-		public static long GetProvNum(long patNum)
-		{
-			//No need to check RemotingRole; no call to db.
-			return GetProvNum(GetPat(patNum));
-		}
+		/// <summary>
+		/// Calls Patients.GetProvNum after getting the patient with this patNum. 
+		/// Gets the provider for this patient. 
+		/// If pat.PriProv==0, then it gets the practice default prov. 
+		/// If no practice default set, returns the first non-hidden ProvNum from the provider cache.
+		/// </summary>
+		public static long GetProvNum(long patientId) => GetProvNum(GetPat(patientId));
 
 		///<summary>Gets the list of all valid patient primary keys. Allows user to specify whether to include non-deleted patients. Used when checking for missing ADA procedure codes after a user has begun entering them manually. This function is necessary because not all patient numbers are necessarily consecutive (say if the database was created due to a conversion from another program and the customer wanted to keep their old patient ids after the conversion).</summary>
 		public static long[] GetAllPatNums(bool hasDeleted)
 		{
-			string command = "";
+			string command;
 			if (hasDeleted)
 			{
 				command = "SELECT PatNum FROM patient";
@@ -2902,62 +2963,66 @@ namespace OpenDentBusiness
 			{
 				command = "SELECT PatNum FROM patient WHERE patient.PatStatus!=4";
 			}
+
 			DataTable dt = Database.ExecuteDataTable(command);
 			long[] patnums = new long[dt.Rows.Count];
 			for (int i = 0; i < patnums.Length; i++)
 			{
 				patnums[i] = PIn.Long(dt.Rows[i]["PatNum"].ToString());
 			}
+
 			return patnums;
 		}
 
-		///<summary>Converts a date to an age. If age is over 115, then returns 0.</summary>
+		/// <summary>
+		/// Converts a date to an age. If age is over 115, then returns 0.
+		/// </summary>
 		public static int DateToAge(DateTime date)
 		{
-			//No need to check RemotingRole; no call to db.
 			if (date.Year < 1880)
 				return 0;
-			if (date.Month < DateTime.Now.Month)
-			{//birthday in previous month
+
+			if (date.Month < DateTime.Now.Month) // birthday in previous month
+			{
 				return DateTime.Now.Year - date.Year;
 			}
-			if (date.Month == DateTime.Now.Month && date.Day <= DateTime.Now.Day)
-			{//birthday in this month
+
+			if (date.Month == DateTime.Now.Month && date.Day <= DateTime.Now.Day) // birthday in this month
+			{
 				return DateTime.Now.Year - date.Year;
 			}
+
 			return DateTime.Now.Year - date.Year - 1;
 		}
 
-		///<summary>Converts a date to an age. If age is over 115, then returns 0.</summary>
+		/// <summary>
+		/// Converts a date to an age. If age is over 115, then returns 0.
+		/// </summary>
 		public static int DateToAge(DateTime birthdate, DateTime asofDate)
 		{
-			//No need to check RemotingRole; no call to db.
 			if (birthdate.Year < 1880)
 				return 0;
+
 			if (birthdate.Month < asofDate.Month)
-			{//birthday in previous month
+			{
 				return asofDate.Year - birthdate.Year;
 			}
+
 			if (birthdate.Month == asofDate.Month && birthdate.Day <= asofDate.Day)
-			{//birthday in this month
+			{
 				return asofDate.Year - birthdate.Year;
 			}
+
 			return asofDate.Year - birthdate.Year - 1;
 		}
 
-		///<summary>If zero, returns empty string.  Otherwise returns simple year.  Also see PatientLogic.DateToAgeString().</summary>
-		public static string AgeToString(int age)
-		{
-			//No need to check RemotingRole; no call to db.
-			if (age == 0)
-			{
-				return "";
-			}
-			else
-			{
-				return age.ToString();
-			}
-		}
+		/// <summary>
+		/// If zero, returns empty string.
+		/// Otherwise returns simple year.
+		/// Also see PatientLogic.DateToAgeString().
+		/// </summary>
+		public static string AgeToString(int age) => age > 0 ? age.ToString() : "";
+		
 
 		public static void ReformatAllPhoneNumbers()
 		{
@@ -2967,7 +3032,7 @@ namespace OpenDentBusiness
 			string command = "select * from patient";
 			DataTable table = Database.ExecuteDataTable(command);
 			List<long> listPatNumsForPhNumSync = new List<long>();
-			bool doSyncPhNumTable = PrefC.GetYN(PrefName.PatientPhoneUsePhonenumberTable);
+			bool doSyncPhNumTable = Prefs.GetBool(PrefName.PatientPhoneUsePhonenumberTable);
 			for (int i = 0; i < table.Rows.Count; i++)
 			{
 				long patNum = PIn.Long(table.Rows[i]["PatNum"].ToString());
@@ -3180,16 +3245,16 @@ namespace OpenDentBusiness
 			//We are going to look at every single phone number and email address on all family members just in case.
 			List<long> listFamilyPatNums = GetAllFamilyPatNums(listPatNums);//Should never return an empty list.
 																			//Only waste time checking for patients with the same email address if an email was passed in.
+
+
 			if (!string.IsNullOrEmpty(email))
 			{
-				command = "SELECT COUNT(*) FROM patient "
-				+ "WHERE patient.Email='" + POut.String(email) + "' "
-				+ "AND PatNum IN (" + string.Join(",", listFamilyPatNums) + ")";
-				if (Database.ExecuteString(command) != "0")
+				if (Database.ExecuteLong("SELECT COUNT(*) FROM patient WHERE patient.Email='" + POut.String(email) + "' AND PatNum IN (" + string.Join(",", listFamilyPatNums) + ")") != 0)
 				{
-					return true;//The name and birth date match AND someone in the family has the exact email address passed in.  This is consider a duplicate.
+					return true; // The name and birth date match AND someone in the family has the exact email address passed in. This is consider a duplicate.
 				}
 			}
+
 			//Query to get all phone numbers from both the patient table and the 
 			command = "SELECT HmPhone FROM patient WHERE PatNum IN (" + string.Join(",", listFamilyPatNums) + ") "
 				+ "UNION SELECT WkPhone Phone FROM patient WHERE PatNum IN (" + string.Join(",", listFamilyPatNums) + ") "
@@ -3218,6 +3283,7 @@ namespace OpenDentBusiness
 				+ "AND FName='" + POut.String(fName) + "' "
 				+ "AND PatStatus!=4 "//not deleted
 				+ "LIMIT 1";
+
 			return Database.ExecuteLong(command);
 		}
 
@@ -3283,22 +3349,18 @@ namespace OpenDentBusiness
 			return Crud.PatientCrud.SelectMany(command);
 		}
 
-		public static void UpdateFamilyBillingType(long billingType, long Guarantor)
+		public static void UpdateFamilyBillingType(long billingType, long guarantorId) 
+			=> Database.ExecuteNonQuery("UPDATE patient SET BillingType=" + billingType + " WHERE Guarantor=" + guarantorId);
+		
+		public static void UpdateAllFamilyBillingTypes(long billingType, List<long> guarantorIds)
 		{
-			string command = "UPDATE patient SET BillingType=" + POut.Long(billingType) +
-				" WHERE Guarantor=" + POut.Long(Guarantor);
-			Database.ExecuteNonQuery(command);
-		}
-
-		public static void UpdateAllFamilyBillingTypes(long billingType, List<long> listGuarNums)
-		{
-			if (listGuarNums.Count < 1)
+			if (guarantorIds.Count == 0)
 			{
 				return;
 			}
-			string command = "UPDATE patient SET BillingType=" + POut.Long(billingType) + " "
-				+ "WHERE Guarantor IN (" + string.Join(",", listGuarNums.Select(x => POut.Long(x))) + ")";
-			Database.ExecuteNonQuery(command);
+
+			Database.ExecuteNonQuery(
+				"UPDATE patient SET BillingType=" + billingType + " WHERE Guarantor IN (" + string.Join(",", guarantorIds) + ")");
 		}
 
 		public static DataTable GetPartialPatientData(long PatNum)
@@ -3358,7 +3420,7 @@ namespace OpenDentBusiness
 					PrefName.ApptConfirmExcludeERemind,PrefName.ApptConfirmExcludeESend,PrefName.ApptConfirmExcludeEThankYou,
 					PrefName.BrokenAppointmentAdjustmentType,PrefName.ConfirmStatusEmailed,
 					PrefName.ConfirmStatusTextMessaged,PrefName.PrepaymentUnearnedType,PrefName.SalesTaxAdjustmentType }
-				.Select(x => PrefC.GetString(x))
+				.Select(x => Prefs.GetString(x))
 				.SelectMany(x => x.Split(',').Select(y => PIn.Long(y, false)).Where(y => y > 0))//some prefs are comma delimited lists of longs. SelectMany will return a single list of longs
 				.Any(x => x == defNum))
 			{
@@ -3379,7 +3441,9 @@ namespace OpenDentBusiness
 			return Regex.IsMatch(formattedSSN, @"^\d\d\d-\d\d-\d\d\d\d$");
 		}
 
-		///<summary>If the current culture is U.S. and the ssn is 9 digits with dashes, removes the dashes.</summary>
+		/// <summary>
+		/// If the current culture is U.S. and the ssn is 9 digits with dashes, removes the dashes.
+		/// </summary>
 		public static string SSNRemoveDashes(string ssn)
 		{
 			if (CultureInfo.CurrentCulture.Name == "en-US")
@@ -3392,15 +3456,19 @@ namespace OpenDentBusiness
 			return ssn; //other cultures
 		}
 
-		///<summary>Updated 06/12/2018 v18.2.0(Check this convert method when updating merge methods).  To prevent orphaned patients, if patFrom is a guarantor then all family members of patFrom are moved into the family patTo belongs to, and then the merge of the two specified accounts is performed.  Returns false if the merge was canceled by the user.</summary>
+		/// <summary>
+		/// Updated 06/12/2018 v18.2.0 (Check this convert method when updating merge methods). 
+		/// To prevent orphaned patients, if patFrom is a guarantor then all family members of patFrom are moved into the family patTo belongs to, and then the merge of the two specified accounts is performed.
+		/// Returns false if the merge was canceled by the user.
+		/// </summary>
 		public static bool MergeTwoPatients(long patTo, long patFrom)
 		{
-			//No need to check RemotingRole; no call to db.
 			if (patTo == patFrom)
 			{
 				//Do not merge the same patient onto itself.
 				return true;
 			}
+
 			//We need to test patfields before doing anything else because the user may wish to cancel and abort the merge.
 			PatField[] patToFields = PatFields.Refresh(patTo);
 			PatField[] patFromFields = PatFields.Refresh(patFrom);
@@ -3461,7 +3529,9 @@ namespace OpenDentBusiness
 			return isMergeSuccessful;
 		}
 
-		///<summary>Only call this method after all checks have been done to make sure the user wants these patients merged.</summary>
+		/// <summary>
+		/// Only call this method after all checks have been done to make sure the user wants these patients merged.
+		/// </summary>
 		public static bool MergeTwoPatientPointOfNoReturn(long patTo, long patFrom, List<PatField> patFieldsToDelete, List<PatField> patFieldsToUpdate)
 		{
 			string[] patNumForeignKeys = new string[]{
@@ -3668,19 +3738,16 @@ namespace OpenDentBusiness
 					+ " WHERE " + tableAndKeyName[1] + "=" + POut.Long(patFrom);
 				Database.ExecuteNonQuery(command);
 			}
+
 			//We have to move over the tasks belonging to the 'patFrom' patient in a seperate step because
 			//the KeyNum field of the task table might be a foreign key to something other than a patnum,
 			//including possibly an appointment number.
-			command = "UPDATE task "
-				+ "SET KeyNum=" + POut.Long(patTo) + " "
-				+ "WHERE KeyNum=" + POut.Long(patFrom) + " AND ObjectType=" + ((int)TaskObjectType.Patient);
-			Database.ExecuteNonQuery(command);
+			Database.ExecuteNonQuery("UPDATE task SET patient_id=" + patTo + " WHERE patient_id=" + patFrom);
+			
 			//We have to move over the tasks belonging to the 'patFrom' patient in a seperate step because the KeyNum field of the taskhist table might be 
 			//  a foreign key to something other than a patnum, including possibly an appointment number.
-			command = "UPDATE taskhist "
-				+ "SET KeyNum=" + POut.Long(patTo) + " "
-				+ "WHERE KeyNum=" + POut.Long(patFrom) + " AND ObjectType=" + ((int)TaskObjectType.Patient);
-			Database.ExecuteNonQuery(command);
+			Database.ExecuteNonQuery("UPDATE taskhist SET KeyNum=" + patTo + " WHERE patient_id=" + patFrom);
+			
 			//We have to move over the tasks belonging to the 'patFrom' patient in a seperate step because the IDInternal field of the oidexternal table 
 			//  might be a foreign key to something other than a patnum depending on the IDType
 			//There are 4 cases:
@@ -3773,36 +3840,42 @@ namespace OpenDentBusiness
 			return retVal;
 		}
 
-		///<summary>LName, 'Preferred' FName M for the patnum passed in.  Uses the database.</summary>
-		public static string GetNameLF(long patNum)
-		{
-			Patient pat = Patients.GetLim(patNum);
-			return GetNameLF(pat);
-		}
+		/// <summary>
+		/// LName, 'Preferred' FName M for the patnum passed in.  
+		/// Uses the database.
+		/// </summary>
+		public static string GetNameLF(long patientId) => GetNameLF(GetLim(patientId));
 
-		///<summary>Does not call DB to retrieve a patient, only uses the passed in object.</summary>
+		/// <summary>
+		/// Does not call DB to retrieve a patient, only uses the passed in object.
+		/// </summary>
 		public static string GetNameLF(Patient pat)
 		{
 			string retVal = "";
+
 			retVal += pat.LName;
 			if (pat.FName != "" || pat.MiddleI != "" || pat.Preferred != "")
 			{
 				retVal += ",";
 			}
+
 			if (pat.Preferred != "")
 			{
 				retVal += " '" + pat.Preferred + "'";
 			}
+
 			if (pat.FName != "")
 			{
 				retVal = AddSpaceIfNeeded(retVal);
 				retVal += pat.FName;
 			}
+
 			if (pat.MiddleI != "")
 			{
 				retVal = AddSpaceIfNeeded(retVal);
 				retVal += pat.MiddleI;
 			}
+
 			return retVal;
 		}
 
@@ -4315,7 +4388,7 @@ namespace OpenDentBusiness
 			List<long> listPatNums = new List<long>();
 			listPatNums.Add(patNum);
 			string command = "";
-			if (PrefC.GetBool(PrefName.FamPhiAccess))
+			if (Prefs.GetBool(PrefName.FamPhiAccess))
 			{ //Include guarantor's family if pref is set.
 			  //Include any patient where this PatNum is the Guarantor.
 				command = "SELECT PatNum FROM patient WHERE Guarantor = " + POut.Long(patNum);
@@ -4485,7 +4558,7 @@ namespace OpenDentBusiness
 				command += clinic.ClinicNum;
 			}
 			command += " ClinicNum FROM patient WHERE PatNum IN (" + string.Join(",", patNumsSearch.Distinct()) + ") ";
-			bool isUnknownNo = PrefC.GetBool(PrefName.TextMsgOkStatusTreatAsNo);
+			bool isUnknownNo = Prefs.GetBool(PrefName.TextMsgOkStatusTreatAsNo);
 			List<Clinic> listAllClinics;
 			if (clinic == null)
 			{
@@ -4531,7 +4604,7 @@ namespace OpenDentBusiness
 		public static List<PatComm> GetPatComms(List<Patient> listPats)
 		{
 			//No need to check RemotingRole; no call to db.
-			bool isUnknownNo = PrefC.GetBool(PrefName.TextMsgOkStatusTreatAsNo);
+			bool isUnknownNo = Prefs.GetBool(PrefName.TextMsgOkStatusTreatAsNo);
 			string curCulture = System.Globalization.CultureInfo.CurrentCulture.Name.Right(2);
 			List<PatComm> listPatComms = new List<PatComm>();
 			foreach (Patient pat in listPats)
@@ -4880,7 +4953,7 @@ namespace OpenDentBusiness
 			{
 				return "Not sending text because texting is not enabled for this clinic.";
 			}
-			if (TxtMsgOk == YN.No || (TxtMsgOk == YN.Unknown && PrefC.GetBool(PrefName.TextMsgOkStatusTreatAsNo)))
+			if (TxtMsgOk == YN.No || (TxtMsgOk == YN.Unknown && Prefs.GetBool(PrefName.TextMsgOkStatusTreatAsNo)))
 			{
 				return "Not sending text because this patient is set to not receive texts.";
 			}
@@ -4926,9 +4999,9 @@ namespace OpenDentBusiness
 		{
 			string message = contactMethod switch
 			{
-				ContactMethod.Email => PrefC.GetString(PrefName.ConfirmEmailMessage),
-				ContactMethod.TextMessage => PrefC.GetString(PrefName.ConfirmTextMessage),
-				_ => PrefC.GetString(PrefName.ConfirmTextMessage),
+				ContactMethod.Email => Prefs.GetString(PrefName.ConfirmEmailMessage),
+				ContactMethod.TextMessage => Prefs.GetString(PrefName.ConfirmTextMessage),
+				_ => Prefs.GetString(PrefName.ConfirmTextMessage),
 			};
 			message = message.Replace("[NameF]", pat.FName);
 			//Last name should NOT be included in confirmations (HIPPA).  But, prior to B19814, [NameFL] had been an available tag, so we have to 
@@ -4952,7 +5025,7 @@ namespace OpenDentBusiness
 		///<summary>Determines if any of the eServices the clinic is set to use Short Codes are actually enabled.</summary>
 		public static bool IsAnyShortCodeServiceEnabled(long clinicNum)
 		{
-			return ((ShortCodeTypeFlag)ClinicPrefs.GetLong(PrefName.ShortCodeApptReminderTypes, clinicNum))
+			return ((ShortCodeTypeFlag)ClinicPrefs.GetLong(clinicNum, PrefName.ShortCodeApptReminderTypes))
 				.GetFlags()
 				.Any(x => x.GetAttributeOrDefault<ShortCodeAttribute>().IsServiceEnabled(clinicNum));
 		}
@@ -4998,41 +5071,45 @@ namespace OpenDentBusiness
 		public bool HasSuperBilling;
 		///<summary></summary>
 		public long Guarantor;
+
 		///<summary>Signed Truth in Lending</summary>
 		public bool HasSignedTil;
+
 		///<summary>Only used for Transworld AR Manager.</summary>
 		public DateTime DateLastPay;
+
 		///<summary>Only used for Transworld AR Manager.</summary>
 		public DateTime DateLastProc;
+
 		///<summary>Only used for Transworld AR Manager.</summary>
 		public DateTime DateBalBegan;
+
 		///<summary>Only used for Transworld AR Manager.</summary>
 		public string Address;
+
 		///<summary>Only used for Transworld AR Manager.</summary>
 		public string City;
+
 		///<summary>Only used for Transworld AR Manager.</summary>
 		public string State;
+
 		///<summary>Only used for Transworld AR Manager.  Used to exclude bad addresses from the list.</summary>
 		public string Zip;
+
 		///<summary>Only used for Transworld AR Manager.</summary>
 		public DateTime Birthdate;
+
 		///<summary>Only used for Transworld AR Manager.</summary>
 		public bool HasUnsentProcs;
+
 		///<summary>Only used for Transworld AR Manager.</summary>
 		public bool HasInsPending;
+
 		///<summary>Only used for Transworld AR Manager.  All trans sent to TSI for this guarantor, ordered by TransDateTime descending.</summary>
 		public List<TsiTransLog> ListTsiLogs;
-
-		///<summary></summary>
-		public PatAging Copy()
-		{
-			PatAging retval = (PatAging)this.MemberwiseClone();
-			retval.ListTsiLogs = this.ListTsiLogs.Select(x => x.Copy()).ToList();
-			return retval;
-		}
 	}
 
-	[Serializable]
+
 	public class PtTableSearchParams
 	{
 		public bool DoLimit;
@@ -5056,8 +5133,10 @@ namespace OpenDentBusiness
 		public string Country;
 		public string RegKey;
 		public string ClinicNums;
+
 		///<summary>Used in CEMT because we don't have access to ClinicNums</summary>
 		public string ClinicName;
+
 		public string InvoiceNumber;
 		public long InitialPatNum;
 		public bool ShowMerged;
@@ -5068,7 +5147,6 @@ namespace OpenDentBusiness
 		///<summary>Only for serialization purposes.  Private so it won't be used.  Use the constructor that takes all of the necessary params instead.</summary>
 		private PtTableSearchParams() { }
 
-		///<summary>SOut's all string values to be used in search query.</summary>
 		public PtTableSearchParams(bool doLimit, string lname, string fname, string phone, string address, bool hideInactive, string city,
 			string state, string ssn, string patNumStr, string chartNumber, long billingType, bool guarOnly, bool showArchived, DateTime birthdate, long siteNum,
 			string subscriberId, string email, string country, string regKey, string clinicNums, string clinicName, string invoiceNumber, List<long> listExplicitPatNums = null,

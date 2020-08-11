@@ -58,8 +58,8 @@ namespace OpenDental {
 				tabControl.TabPages.Remove(tabACH);
 			}
 			else {
-				checkOneTimePayment.Checked=!PrefC.GetBool(PrefName.StoreCCtokens);
-				checkOneTimePaymentACH.Checked=!PrefC.GetBool(PrefName.StoreCCtokens);
+				checkOneTimePayment.Checked=!Prefs.GetBool(PrefName.StoreCCtokens);
+				checkOneTimePaymentACH.Checked=!Prefs.GetBool(PrefName.StoreCCtokens);
 				textZipCode.Text=_patCur.Zip;
 				textNameOnCard.Text=_patCur.GetNameFL();
 				if(_creditCardCur!=null) {
@@ -439,7 +439,7 @@ namespace OpenDental {
 			_creditCardCur.CCSource=ccSource;
 			if(_creditCardCur.IsNew) {
 				_creditCardCur.ClinicNum=_clinicNum;
-				_creditCardCur.Procedures=PrefC.GetString(PrefName.DefaultCCProcs);
+				_creditCardCur.Procedures=Prefs.GetString(PrefName.DefaultCCProcs);
 				CreditCards.Insert(_creditCardCur);
 			}
 			else {

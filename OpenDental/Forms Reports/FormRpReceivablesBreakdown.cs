@@ -225,7 +225,7 @@ namespace OpenDental {
 				listProv.Items.Add(_listProvs[i].GetLongDesc());
 			}
 			listProv.SetSelected(0,true);
-			//if(PrefC.GetBool(PrefName.EasyNoClinics")){
+			//if(Prefs.GetBool(PrefName.EasyNoClinics")){
 			listClinic.Visible = false;
 			labClinic.Visible = false;
 			/*}
@@ -498,7 +498,7 @@ namespace OpenDental {
 					Font fontSubTitle = new Font("Tahoma",10,FontStyle.Bold);
 					report.ReportName=Lan.G(this,"Receivables Breakdown");
 					report.AddTitle("Title",Lan.G(this,"Receivables Breakdown"),fontTitle);
-					report.AddSubTitle("PracticeTitle",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
+					report.AddSubTitle("PracticeTitle",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
 					report.AddSubTitle("Date SubTitle",date1.SelectionStart.ToString("d"),fontSubTitle);
 					string provNames = "";
 					for(int i=0;i<listProv.SelectedIndices.Count;i++) {

@@ -24,12 +24,11 @@ namespace OpenDentBusiness.Crud
 				Id = (long)dataReader["UserNum"],
 				UserName = (string)dataReader["UserName"],
 				PasswordHash = (string)dataReader["Password"],
-				UserGroupNum = (long)dataReader["UserGroupNum"],
-				EmployeeNum = (long)dataReader["EmployeeNum"],
-				ClinicNum = (long)dataReader["ClinicNum"],
-				ProvNum = (long)dataReader["ProvNum"],
+				EmployeeId = (long)dataReader["EmployeeNum"],
+				ClinicId = (long)dataReader["ClinicNum"],
+				ProviderId = (long)dataReader["ProvNum"],
 				IsHidden = (Convert.ToInt32(dataReader["IsHidden"]) == 1),
-				TaskListInBox = (long)dataReader["TaskListInBox"],
+				InboxTaskListId = (long)dataReader["TaskListInBox"],
 				AnesthProvType = (int)dataReader["AnesthProvType"],
 				DefaultHidePopups = (Convert.ToInt32(dataReader["DefaultHidePopups"]) == 1),
 				PasswordIsStrong = (Convert.ToInt32(dataReader["PasswordIsStrong"]) == 1),
@@ -83,7 +82,6 @@ namespace OpenDentBusiness.Crud
 				"UPDATE `Userod` SET " + 
 					"`UserName` = @UserName, " + 
 					"`Password` = @Password, " + 
-					"`UserGroupNum` = @UserGroupNum, " + 
 					"`EmployeeNum` = @EmployeeNum, " + 
 					"`ClinicNum` = @ClinicNum, " + 
 					"`ProvNum` = @ProvNum, " + 
@@ -106,12 +104,11 @@ namespace OpenDentBusiness.Crud
 					new MySqlParameter("UserNum", userod.Id),
 					new MySqlParameter("UserName", userod.UserName ?? ""),
 					new MySqlParameter("Password", userod.PasswordHash ?? ""),
-					new MySqlParameter("UserGroupNum", userod.UserGroupNum),
-					new MySqlParameter("EmployeeNum", userod.EmployeeNum),
-					new MySqlParameter("ClinicNum", userod.ClinicNum),
-					new MySqlParameter("ProvNum", userod.ProvNum),
+					new MySqlParameter("EmployeeNum", userod.EmployeeId),
+					new MySqlParameter("ClinicNum", userod.ClinicId),
+					new MySqlParameter("ProvNum", userod.ProviderId),
 					new MySqlParameter("IsHidden", (userod.IsHidden ? 1 : 0)),
-					new MySqlParameter("TaskListInBox", userod.TaskListInBox),
+					new MySqlParameter("TaskListInBox", userod.InboxTaskListId),
 					new MySqlParameter("AnesthProvType", userod.AnesthProvType),
 					new MySqlParameter("DefaultHidePopups", (userod.DefaultHidePopups ? 1 : 0)),
 					new MySqlParameter("PasswordIsStrong", (userod.PasswordIsStrong ? 1 : 0)),
@@ -146,28 +143,22 @@ namespace OpenDentBusiness.Crud
 				parameters.Add(new MySqlParameter("Password", userodNew.PasswordHash ?? ""));
 			}
 
-			if (userodNew.UserGroupNum != userodOld.UserGroupNum)
-			{
-				updates.Add("`UserGroupNum` = @UserGroupNum");
-				parameters.Add(new MySqlParameter("UserGroupNum", userodNew.UserGroupNum));
-			}
-
-			if (userodNew.EmployeeNum != userodOld.EmployeeNum)
+			if (userodNew.EmployeeId != userodOld.EmployeeId)
 			{
 				updates.Add("`EmployeeNum` = @EmployeeNum");
-				parameters.Add(new MySqlParameter("EmployeeNum", userodNew.EmployeeNum));
+				parameters.Add(new MySqlParameter("EmployeeNum", userodNew.EmployeeId));
 			}
 
-			if (userodNew.ClinicNum != userodOld.ClinicNum)
+			if (userodNew.ClinicId != userodOld.ClinicId)
 			{
 				updates.Add("`ClinicNum` = @ClinicNum");
-				parameters.Add(new MySqlParameter("ClinicNum", userodNew.ClinicNum));
+				parameters.Add(new MySqlParameter("ClinicNum", userodNew.ClinicId));
 			}
 
-			if (userodNew.ProvNum != userodOld.ProvNum)
+			if (userodNew.ProviderId != userodOld.ProviderId)
 			{
 				updates.Add("`ProvNum` = @ProvNum");
-				parameters.Add(new MySqlParameter("ProvNum", userodNew.ProvNum));
+				parameters.Add(new MySqlParameter("ProvNum", userodNew.ProviderId));
 			}
 
 			if (userodNew.IsHidden != userodOld.IsHidden)
@@ -176,10 +167,10 @@ namespace OpenDentBusiness.Crud
 				parameters.Add(new MySqlParameter("IsHidden", (userodNew.IsHidden ? 1 : 0)));
 			}
 
-			if (userodNew.TaskListInBox != userodOld.TaskListInBox)
+			if (userodNew.InboxTaskListId != userodOld.InboxTaskListId)
 			{
 				updates.Add("`TaskListInBox` = @TaskListInBox");
-				parameters.Add(new MySqlParameter("TaskListInBox", userodNew.TaskListInBox));
+				parameters.Add(new MySqlParameter("TaskListInBox", userodNew.InboxTaskListId));
 			}
 
 			if (userodNew.AnesthProvType != userodOld.AnesthProvType)

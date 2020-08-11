@@ -41,19 +41,19 @@ namespace OpenDental {
 			string bencoTitle="Benco Practice Management powered by Open Dental";
 			string bencoSoftware="Benco Practice Management";
 			if(_prog.Enabled) {
-				if(PrefC.GetString(PrefName.MainWindowTitle)==odTitle) {
-					hasPrefChanged|=Prefs.UpdateString(PrefName.MainWindowTitle,bencoTitle);
+				if(Prefs.GetString(PrefName.MainWindowTitle)==odTitle) {
+					hasPrefChanged|=Prefs.Set(PrefName.MainWindowTitle,bencoTitle);
 				}
-				if(PrefC.GetString(PrefName.SoftwareName)!=bencoSoftware) {
-					hasPrefChanged|=Prefs.UpdateString(PrefName.SoftwareName,bencoSoftware);
+				if(Prefs.GetString(PrefName.SoftwareName)!=bencoSoftware) {
+					hasPrefChanged|=Prefs.Set(PrefName.SoftwareName,bencoSoftware);
 				}
 			}
 			else {
-				if(PrefC.GetString(PrefName.MainWindowTitle)==bencoTitle) {
-					hasPrefChanged|=Prefs.UpdateString(PrefName.MainWindowTitle,odTitle);
+				if(Prefs.GetString(PrefName.MainWindowTitle)==bencoTitle) {
+					hasPrefChanged|=Prefs.Set(PrefName.MainWindowTitle,odTitle);
 				}
-				if(PrefC.GetString(PrefName.SoftwareName)!=odSoftware) {
-					hasPrefChanged|=Prefs.UpdateString(PrefName.SoftwareName,odSoftware);
+				if(Prefs.GetString(PrefName.SoftwareName)!=odSoftware) {
+					hasPrefChanged|=Prefs.Set(PrefName.SoftwareName,odSoftware);
 				}
 			}
 			if(hasPrefChanged) {

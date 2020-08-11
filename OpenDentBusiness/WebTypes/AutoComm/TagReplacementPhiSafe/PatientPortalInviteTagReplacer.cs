@@ -9,7 +9,7 @@ namespace OpenDentBusiness.AutoComm {
 			PatPortalInviteLite invite=(PatPortalInviteLite)autoCommObj;
 			ReplaceOneTag(sbTemplate,"[UserName]",invite.UserWeb.Item1.UserName,isEmail);
 			ReplaceOneTag(sbTemplate,"[Password]",invite.UserWeb.Item2,isEmail);
-			ReplaceOneTag(sbTemplate,"[PatientPortalURL]",PrefC.GetString(PrefName.PatientPortalURL),isEmail);
+			ReplaceOneTag(sbTemplate,"[PatientPortalURL]",Prefs.GetString(PrefName.PatientPortalURL),isEmail);
 		}
 			
 		protected override void ReplaceTagsAggregateChild(StringBuilder sbTemplate,StringBuilder sbAutoCommObjsAggregate) {

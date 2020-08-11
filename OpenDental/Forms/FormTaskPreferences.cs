@@ -1,152 +1,132 @@
-using System;
-using System.Linq;
-using System.Windows.Forms;
-using CodeBase;
+using Imedisoft.Data.Cache;
+using OpenDental;
 using OpenDentBusiness;
+using System;
+using System.Windows.Forms;
 
-namespace OpenDental {
-	public partial class FormTaskPreferences:ODForm {
+namespace Imedisoft.Forms
+{
+    public partial class FormTaskPreferences : FormBase
+	{
+		public FormTaskPreferences() => InitializeComponent();
 
-		public FormTaskPreferences() {
-			InitializeComponent();
-			Lan.F(this);
+		private void FormTaskPreferences_Load(object sender, EventArgs e)
+		{
+			alwaysShowTaskListCheckBox.Checked = Prefs.GetBool(PrefName.TaskListAlwaysShowsAtBottom);
+			localGroupBox.Enabled = alwaysShowTaskListCheckBox.Checked;
+			showOpenTicketsCheckBox.Checked = Prefs.GetBool(PrefName.TasksShowOpenTickets);
+			keepTaskListHiddenCheckBox.Checked = ComputerPrefs.LocalComputer.TaskKeepListHidden;
+
+			if (ComputerPrefs.LocalComputer.TaskDock == 0)
+			{
+				dockBottomRadioButton.Checked = true;
+			}
+			else
+			{
+				dockRightRadioButton.Checked = true;
+			}
+
+			xDefaultTextBox.Text = ComputerPrefs.LocalComputer.TaskX.ToString();
+			yDefaultTextBox.Text = ComputerPrefs.LocalComputer.TaskY.ToString();
+			sortApptDateTimeCheckBox.Checked = Prefs.GetBool(PrefName.TaskSortApptDateTime);
 		}
 
-		private void FormTaskPreferences_Load(object sender,EventArgs e) {
-			checkShowLegacyRepeatingTasks.Checked=PrefC.GetBool(PrefName.TasksUseRepeating);
-			checkTaskListAlwaysShow.Checked=PrefC.GetBool(PrefName.TaskListAlwaysShowsAtBottom);
-			if(checkTaskListAlwaysShow.Checked) {
-				groupBoxComputerDefaults.Enabled=true;
-			}
-			else {
-				groupBoxComputerDefaults.Enabled=false;
-			}
-			checkTasksNewTrackedByUser.Checked=PrefC.GetBool(PrefName.TasksNewTrackedByUser);
-			checkShowOpenTickets.Checked=PrefC.GetBool(PrefName.TasksShowOpenTickets);
-			checkBoxTaskKeepListHidden.Checked=ComputerPrefs.LocalComputer.TaskKeepListHidden;
-			if(ComputerPrefs.LocalComputer.TaskDock==0) {
-				radioBottom.Checked=true;
-			}
-			else {
-				radioRight.Checked=true;
-			}
-			validNumX.Text=ComputerPrefs.LocalComputer.TaskX.ToString();
-			validNumY.Text=ComputerPrefs.LocalComputer.TaskY.ToString();
-			checkTaskSortApptDateTime.Checked=PrefC.GetBool(PrefName.TaskSortApptDateTime);
-			FillComboGlobalFilter();
-		}
+		private void InboxSetupButton_Click(object sender, EventArgs e)
+		{
+            using var formTaskInboxSetup = new FormTaskInboxSetup();
 
-		///<summary>Fills the Global Task filter combobox with options.  Only visible if Clinics are enabled, or if previous selection no is longer 
-		///available, example: Clinics have been turned off, Clinic filter no longer available.</summary>
-		private void FillComboGlobalFilter() {
-			GlobalTaskFilterType globalPref=(GlobalTaskFilterType)PrefC.GetInt(PrefName.TasksGlobalFilterType);
-			comboGlobalFilter.Items.Add(Lan.G(this,GlobalTaskFilterType.Disabled.GetDescription()),GlobalTaskFilterType.Disabled);
-			comboGlobalFilter.Items.Add(Lan.G(this,GlobalTaskFilterType.None.GetDescription()),GlobalTaskFilterType.None);
-			if(PrefC.HasClinicsEnabled) {
-				labelGlobalFilter.Visible=true;
-				comboGlobalFilter.Visible=true;
-				comboGlobalFilter.Items.Add(Lan.G(this,GlobalTaskFilterType.Clinic.GetDescription()),GlobalTaskFilterType.Clinic);
-				if(Defs.GetDefsForCategory(DefCat.Regions).Count>0) {
-					comboGlobalFilter.Items.Add(Lan.G(this,GlobalTaskFilterType.Region.GetDescription()),GlobalTaskFilterType.Region);
-				}
-			}
-			comboGlobalFilter.SetSelectedEnum(globalPref);
-			if(comboGlobalFilter.SelectedIndex==-1) {
-				labelGlobalFilter.Visible=true;
-				comboGlobalFilter.Visible=true;
-				errorProvider1.SetError(comboGlobalFilter,$"Previous selection \"{globalPref.GetDescription()}\" is no longer available.  "
-					+"Saving will overwrite previous setting.");
-				comboGlobalFilter.SelectedIndex=0;
-			}
-		}
+            formTaskInboxSetup.ShowDialog(this);
+        }
 
-		private void comboGlobalFilter_SelectionChangeCommitted(object sender,EventArgs e) {
-			errorProvider1.SetError(comboGlobalFilter,string.Empty);//Clear the error, if applicable.
-		}
+		private void AlwaysShowTaskListCheckBox_CheckedChanged(object sender, EventArgs e) 
+			=> localGroupBox.Enabled = alwaysShowTaskListCheckBox.Checked;
 
-		private void butTaskInboxSetup_Click(object sender,EventArgs e) {
-			//If we ever allow users to enter this window without Setup permissions add Setup permission check here.
-			FormTaskInboxSetup FormT=new FormTaskInboxSetup();
-			FormT.ShowDialog();
-		}
+		private void KeepTaskListHiddenCheckBox_CheckedChanged(object sender, EventArgs e) 
+			=> dockBottomRadioButton.Enabled =
+				dockRightRadioButton.Enabled =
+				xDefaultLabel.Enabled =
+				yDefaultLabel.Enabled =
+				xDefaultTextBox.Enabled =
+				yDefaultTextBox.Enabled = !keepTaskListHiddenCheckBox.Checked;
 
-		private void checkTaskListAlwaysShow_CheckedChanged(object sender,EventArgs e) {
-			if(checkTaskListAlwaysShow.Checked) {
-				groupBoxComputerDefaults.Enabled=true;
-			}
-			else {
-				groupBoxComputerDefaults.Enabled=false;
-			}
-		}
+		private void AcceptButton_Click(object sender, EventArgs e)
+		{
+			int.TryParse(xDefaultTextBox.Text, out var xDefault);
+			int.TryParse(yDefaultTextBox.Text, out var yDefault);
 
-		private void checkBoxTaskKeepListHidden_CheckedChanged(object sender,EventArgs e) {
-			if(checkBoxTaskKeepListHidden.Checked) {
-				radioBottom.Enabled=false;
-				radioRight.Enabled=false;
-				labelX.Enabled=false;
-				labelY.Enabled=false;
-				validNumX.Enabled=false;
-				validNumY.Enabled=false;
-			}
-			else {
-				radioBottom.Enabled=true;
-				radioRight.Enabled=true;
-				labelX.Enabled=true;
-				labelY.Enabled=true;
-				validNumX.Enabled=true;
-				validNumY.Enabled=true;
-			}
-		}
+			if (FormOpenDental.IsDashboardVisible && alwaysShowTaskListCheckBox.Checked && !keepTaskListHiddenCheckBox.Checked && dockRightRadioButton.Checked)
+			{
+				ShowError("Tasks cannot be docked to the right when Dashboards are in use.");
 
-		private void butOK_Click(object sender,EventArgs e) {
-			if(validNumX.errorProvider1.GetError(validNumX)!="" | validNumY.errorProvider1.GetError(validNumY)!="") {
-				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return;
 			}
-			if(FormOpenDental.IsDashboardVisible && checkTaskListAlwaysShow.Checked && !checkBoxTaskKeepListHidden.Checked && radioRight.Checked) {
-				MessageBox.Show("Tasks cannot be docked to the right when Dashboards are in use.");
-				return;
+
+			bool changed =
+				Prefs.Set(PrefName.TaskListAlwaysShowsAtBottom, alwaysShowTaskListCheckBox.Checked) |
+				Prefs.Set(PrefName.TasksShowOpenTickets, showOpenTicketsCheckBox.Checked) |
+				Prefs.Set(PrefName.TaskSortApptDateTime, sortApptDateTimeCheckBox.Checked);
+
+			if (ComputerPrefs.LocalComputer.TaskKeepListHidden != keepTaskListHiddenCheckBox.Checked)
+			{
+				ComputerPrefs.LocalComputer.TaskKeepListHidden = keepTaskListHiddenCheckBox.Checked;
+
+				changed = true; // needed to trigger screen refresh
 			}
-			bool changed = false;
-			if(Prefs.UpdateBool(PrefName.TaskListAlwaysShowsAtBottom,checkTaskListAlwaysShow.Checked)
-				| Prefs.UpdateBool(PrefName.TasksUseRepeating,checkShowLegacyRepeatingTasks.Checked)
-				| Prefs.UpdateBool(PrefName.TasksNewTrackedByUser,checkTasksNewTrackedByUser.Checked)
-				| Prefs.UpdateBool(PrefName.TasksShowOpenTickets,checkShowOpenTickets.Checked)
-				| Prefs.UpdateBool(PrefName.TaskSortApptDateTime,checkTaskSortApptDateTime.Checked)
-				| Prefs.UpdateInt(PrefName.TasksGlobalFilterType,(int)comboGlobalFilter.GetSelected<GlobalTaskFilterType>())
-				) {
-				changed=true;
+
+			var dock = dockBottomRadioButton.Checked ? 0 : 1;
+			if (ComputerPrefs.LocalComputer.TaskDock != dock)
+			{
+				ComputerPrefs.LocalComputer.TaskDock = dock;
+
+				changed = true;
 			}
-			if(ComputerPrefs.LocalComputer.TaskKeepListHidden!=checkBoxTaskKeepListHidden.Checked) {
-				ComputerPrefs.LocalComputer.TaskKeepListHidden=checkBoxTaskKeepListHidden.Checked;
-				changed=true;//needed to trigger screen refresh
+
+			if (xDefault != ComputerPrefs.LocalComputer.TaskX)
+			{
+				ComputerPrefs.LocalComputer.TaskX = xDefault;
+
+				changed = true;
 			}
-			if(radioBottom.Checked && ComputerPrefs.LocalComputer.TaskDock!=0) {
-				ComputerPrefs.LocalComputer.TaskDock=0;
-				changed=true;
+
+			if (yDefault != ComputerPrefs.LocalComputer.TaskY)
+			{
+				ComputerPrefs.LocalComputer.TaskY = yDefault;
+
+				changed = true;
 			}
-			else if(!radioBottom.Checked && ComputerPrefs.LocalComputer.TaskDock!=1) {
-				ComputerPrefs.LocalComputer.TaskDock=1;
-				changed=true;
-			}
-			if(ComputerPrefs.LocalComputer.TaskX!=PIn.Int(validNumX.Text)) {
-				ComputerPrefs.LocalComputer.TaskX=PIn.Int(validNumX.Text);
-				changed=true;
-			}
-			if(ComputerPrefs.LocalComputer.TaskY!=PIn.Int(validNumY.Text)) {
-				ComputerPrefs.LocalComputer.TaskY=PIn.Int(validNumY.Text);
-				changed=true;
-			}
-			if(changed) {
-				DataValid.SetInvalid(InvalidType.Prefs,InvalidType.Computers);
+
+			if (changed)
+			{
+				CacheManager.Refresh(nameof(InvalidType.Computers));
+				CacheManager.Refresh(nameof(InvalidType.Prefs));
+
 				ComputerPrefs.Update(ComputerPrefs.LocalComputer);
 			}
-			DialogResult=DialogResult.OK;
+
+			DialogResult = DialogResult.OK;
 		}
 
-		private void butCancel_Click(object sender,EventArgs e) {
-			DialogResult=DialogResult.Cancel;
-		}
+        private void DefaultTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+			if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+				e.Handled = true;
+            }
+        }
 
-	}
+        private void DefaultTextBox_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+			if (sender is TextBox textBox)
+            {
+				if (int.TryParse(textBox.Text, out var value))
+                {
+					textBox.Text = value.ToString();
+                }
+                else
+                {
+					textBox.Text = 0.ToString();
+                }
+            }
+        }
+    }
 }

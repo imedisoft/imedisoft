@@ -163,7 +163,7 @@ namespace OpenDental{
 		private void FillClaimForms(){
 			for(int i=0;i<ClaimForms.ListShort.Length;i++) {
 				comboClaimForm.Items.Add(ClaimForms.ListShort[i].Description);
-				if(ClaimForms.ListShort[i].ClaimFormNum==PrefC.GetLong(PrefName.DefaultClaimForm)) {
+				if(ClaimForms.ListShort[i].ClaimFormNum==Prefs.GetLong(PrefName.DefaultClaimForm)) {
 					comboClaimForm.SelectedIndex=i;
 				}
 			}

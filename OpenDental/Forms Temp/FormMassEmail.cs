@@ -38,7 +38,7 @@ namespace OpenDental {
 
 		private void FormMassEmail_Load(object sender,EventArgs e) {
 			_isLoading=true;
-			MassEmailStatus massEmailStatus=PIn.Enum<MassEmailStatus>(ClinicPrefs.GetInt(PrefName.MassEmailStatus,Clinics.ClinicNum));
+			MassEmailStatus massEmailStatus=PIn.Enum<MassEmailStatus>(ClinicPrefs.GetInt(Clinics.ClinicNum, PrefName.MassEmailStatus));
 			bool onHQClinic=PrefC.HasClinicsEnabled && Clinics.ClinicNum==0;
 			if(
 				//Pref has never been set.
@@ -425,8 +425,8 @@ namespace OpenDental {
 			#region Get Imported HTML 
 			OpenFileDialog openFileDialog=new OpenFileDialog();
 			openFileDialog.Multiselect=false;
-			if(Directory.Exists(PrefC.GetString(PrefName.ExportPath))) {
-				openFileDialog.InitialDirectory=PrefC.GetString(PrefName.ExportPath);
+			if(Directory.Exists(Prefs.GetString(PrefName.ExportPath))) {
+				openFileDialog.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
 			}
 			else if(Directory.Exists("C:\\")) {
 				openFileDialog.InitialDirectory="C:\\";

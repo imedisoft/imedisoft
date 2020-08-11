@@ -21,21 +21,21 @@ namespace OpenDental {
 
 		private void FormGlobalSecurity_Load(object sender,EventArgs e) {
 			textLogOffAfterMinutes.Text=PrefC.GetInt(PrefName.SecurityLogOffAfterMinutes).ToString();
-			checkAllowLogoffOverride.Checked=PrefC.GetBool(PrefName.SecurityLogOffAllowUserOverride);
-			checkPasswordsMustBeStrong.Checked=PrefC.GetBool(PrefName.PasswordsMustBeStrong);
-			checkPasswordsStrongIncludeSpecial.Checked=PrefC.GetBool(PrefName.PasswordsStrongIncludeSpecial);
-			checkPasswordForceWeakToStrong.Checked=PrefC.GetBool(PrefName.PasswordsWeakChangeToStrong);
-			checkTimecardSecurityEnabled.Checked=PrefC.GetBool(PrefName.TimecardSecurityEnabled);
-			checkCannotEditPastPayPeriods.Checked=PrefC.GetBool(PrefName.TimecardUsersCantEditPastPayPeriods);
-			checkCannotEditOwn.Checked=PrefC.GetBool(PrefName.TimecardUsersDontEditOwnCard);
+			checkAllowLogoffOverride.Checked=Prefs.GetBool(PrefName.SecurityLogOffAllowUserOverride);
+			checkPasswordsMustBeStrong.Checked=Prefs.GetBool(PrefName.PasswordsMustBeStrong);
+			checkPasswordsStrongIncludeSpecial.Checked=Prefs.GetBool(PrefName.PasswordsStrongIncludeSpecial);
+			checkPasswordForceWeakToStrong.Checked=Prefs.GetBool(PrefName.PasswordsWeakChangeToStrong);
+			checkTimecardSecurityEnabled.Checked=Prefs.GetBool(PrefName.TimecardSecurityEnabled);
+			checkCannotEditPastPayPeriods.Checked=Prefs.GetBool(PrefName.TimecardUsersCantEditPastPayPeriods);
+			checkCannotEditOwn.Checked=Prefs.GetBool(PrefName.TimecardUsersDontEditOwnCard);
 			checkCannotEditOwn.Enabled=checkTimecardSecurityEnabled.Checked;
 			checkCannotEditPastPayPeriods.Enabled=checkTimecardSecurityEnabled.Checked;
-			checkDomainLoginEnabled.Checked=PrefC.GetBool(PrefName.DomainLoginEnabled);
+			checkDomainLoginEnabled.Checked=Prefs.GetBool(PrefName.DomainLoginEnabled);
 			textDomainLoginPath.ReadOnly=!checkDomainLoginEnabled.Checked;
-			textDomainLoginPath.Text=PrefC.GetString(PrefName.DomainLoginPath);
-			checkLogOffWindows.Checked=PrefC.GetBool(PrefName.SecurityLogOffWithWindows);
-			checkUserNameManualEntry.Checked=PrefC.GetBool(PrefName.UserNameManualEntry);
-			checkMaintainPatient.Checked=PrefC.GetBool(PrefName.PatientMaintainedOnUserChange);
+			textDomainLoginPath.Text=Prefs.GetString(PrefName.DomainLoginPath);
+			checkLogOffWindows.Checked=Prefs.GetBool(PrefName.SecurityLogOffWithWindows);
+			checkUserNameManualEntry.Checked=Prefs.GetBool(PrefName.UserNameManualEntry);
+			checkMaintainPatient.Checked=Prefs.GetBool(PrefName.PatientMaintainedOnUserChange);
 			if(!PrefC.HasClinicsEnabled) {
 				//This pref only matters when clinics are turned on. When clinics are off it behaves the same as if the pref were on. 
 				checkMaintainPatient.Visible=false;
@@ -49,14 +49,14 @@ namespace OpenDental {
 			if(PrefC.GetDate(PrefName.SecurityLockDate).Year>1880) {
 				textDateLock.Text=PrefC.GetDate(PrefName.SecurityLockDate).ToShortDateString();
 			}
-			if(PrefC.GetBool(PrefName.CentralManagerSecurityLock)) {
+			if(Prefs.GetBool(PrefName.CentralManagerSecurityLock)) {
 				butChange.Enabled=false;
 				labelGlobalDateLockDisabled.Visible=true;
 			}
 			List<UserGroup> listGroupsNotAdmin=UserGroups.GetList().FindAll(x => !GroupPermissions.HasPermission(x.Id,Permissions.SecurityAdmin,0));
 			for(int i=0;i<listGroupsNotAdmin.Count;i++){
 				comboGroups.Items.Add(listGroupsNotAdmin[i].Description,listGroupsNotAdmin[i]);
-				if(PrefC.GetLong(PrefName.DefaultUserGroup)==listGroupsNotAdmin[i].Id) {
+				if(Prefs.GetLong(PrefName.DefaultUserGroup)==listGroupsNotAdmin[i].Id) {
 					comboGroups.SelectedIndex=i;
 				}
 			}
@@ -187,36 +187,36 @@ namespace OpenDental {
 			DataValid.SetInvalid(InvalidType.Security);
 			bool invalidatePrefs=false;
 			if( //Prefs.UpdateBool(PrefName.PasswordsMustBeStrong,checkPasswordsMustBeStrong.Checked) //handled when box clicked.
-				Prefs.UpdateBool(PrefName.TimecardSecurityEnabled,checkTimecardSecurityEnabled.Checked)
-				| Prefs.UpdateBool(PrefName.TimecardUsersCantEditPastPayPeriods,checkCannotEditPastPayPeriods.Checked)
-				| Prefs.UpdateBool(PrefName.TimecardUsersDontEditOwnCard,checkCannotEditOwn.Checked)
-				| Prefs.UpdateBool(PrefName.SecurityLogOffWithWindows,checkLogOffWindows.Checked)
-				| Prefs.UpdateBool(PrefName.UserNameManualEntry,checkUserNameManualEntry.Checked)
-				| Prefs.UpdateBool(PrefName.PasswordsStrongIncludeSpecial,checkPasswordsStrongIncludeSpecial.Checked)
-				| Prefs.UpdateBool(PrefName.PasswordsWeakChangeToStrong,checkPasswordForceWeakToStrong.Checked)
-				| Prefs.UpdateInt(PrefName.SecurityLogOffAfterMinutes,PIn.Int(textLogOffAfterMinutes.Text))
-				| Prefs.UpdateString(PrefName.DomainLoginPath,PIn.String(textDomainLoginPath.Text))
-				| Prefs.UpdateString(PrefName.DomainLoginPath,textDomainLoginPath.Text)
-				| Prefs.UpdateString(PrefName.DomainLoginPath,textDomainLoginPath.Text)
-				| Prefs.UpdateBool(PrefName.DomainLoginEnabled,checkDomainLoginEnabled.Checked)
-				| (_domainObjectGuid!=null && Prefs.UpdateString(PrefName.DomainObjectGuid,_domainObjectGuid))
-				| Prefs.UpdateLong(PrefName.DefaultUserGroup,comboGroups.SelectedIndex==-1?0:comboGroups.GetSelected<UserGroup>().Id)
-				| Prefs.UpdateBool(PrefName.SecurityLogOffAllowUserOverride,checkAllowLogoffOverride.Checked)
-				| Prefs.UpdateBool(PrefName.PatientMaintainedOnUserChange,checkMaintainPatient.Checked)
+				Prefs.Set(PrefName.TimecardSecurityEnabled,checkTimecardSecurityEnabled.Checked)
+				| Prefs.Set(PrefName.TimecardUsersCantEditPastPayPeriods,checkCannotEditPastPayPeriods.Checked)
+				| Prefs.Set(PrefName.TimecardUsersDontEditOwnCard,checkCannotEditOwn.Checked)
+				| Prefs.Set(PrefName.SecurityLogOffWithWindows,checkLogOffWindows.Checked)
+				| Prefs.Set(PrefName.UserNameManualEntry,checkUserNameManualEntry.Checked)
+				| Prefs.Set(PrefName.PasswordsStrongIncludeSpecial,checkPasswordsStrongIncludeSpecial.Checked)
+				| Prefs.Set(PrefName.PasswordsWeakChangeToStrong,checkPasswordForceWeakToStrong.Checked)
+				| Prefs.Set(PrefName.SecurityLogOffAfterMinutes,PIn.Int(textLogOffAfterMinutes.Text))
+				| Prefs.Set(PrefName.DomainLoginPath,PIn.String(textDomainLoginPath.Text))
+				| Prefs.Set(PrefName.DomainLoginPath,textDomainLoginPath.Text)
+				| Prefs.Set(PrefName.DomainLoginPath,textDomainLoginPath.Text)
+				| Prefs.Set(PrefName.DomainLoginEnabled,checkDomainLoginEnabled.Checked)
+				| (_domainObjectGuid!=null && Prefs.Set(PrefName.DomainObjectGuid,_domainObjectGuid))
+				| Prefs.Set(PrefName.DefaultUserGroup,comboGroups.SelectedIndex==-1?0:comboGroups.GetSelected<UserGroup>().Id)
+				| Prefs.Set(PrefName.SecurityLogOffAllowUserOverride,checkAllowLogoffOverride.Checked)
+				| Prefs.Set(PrefName.PatientMaintainedOnUserChange,checkMaintainPatient.Checked)
 				) 
 			{
 				invalidatePrefs=true;
 			}
 			//if PasswordsMustBeStrong was unchecked, then reset the strong password flags.
-			if(Prefs.UpdateBool(PrefName.PasswordsMustBeStrong,checkPasswordsMustBeStrong.Checked) && !checkPasswordsMustBeStrong.Checked) {
+			if(Prefs.Set(PrefName.PasswordsMustBeStrong,checkPasswordsMustBeStrong.Checked) && !checkPasswordsMustBeStrong.Checked) {
 				invalidatePrefs=true;
 				Userods.ResetStrongPasswordFlags();
 			}
 			if(checkDisableBackupReminder.Checked) {
-				invalidatePrefs|=Prefs.UpdateDateT(PrefName.BackupReminderLastDateRun,DateTime.MaxValue.AddMonths(-1)); //if MaxValue, gives error on startup.
+				invalidatePrefs|=Prefs.Set(PrefName.BackupReminderLastDateRun,DateTime.MaxValue.AddMonths(-1)); //if MaxValue, gives error on startup.
 			}
 			else {
-				invalidatePrefs|=Prefs.UpdateDateT(PrefName.BackupReminderLastDateRun,DateTimeOD.Today);
+				invalidatePrefs|=Prefs.Set(PrefName.BackupReminderLastDateRun,DateTimeOD.Today);
 			}
 			if(invalidatePrefs) {
 				DataValid.SetInvalid(InvalidType.Prefs);

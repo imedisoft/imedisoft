@@ -164,7 +164,7 @@ namespace OpenDental.Bridges
 		{
 			//Print the header on the report.
 			Font font = new Font(FontFamily.GenericMonospace, 12);
-			string text = PrefC.GetString(PrefName.PracticeTitle);
+			string text = Prefs.GetString(PrefName.PracticeTitle);
 			SizeF size = fpr.Graph.MeasureString(text, font);
 			float y = 20;
 			fpr.Graph.DrawString(text, font, Brushes.Black, fpr.GraphWidth / 2 - size.Width / 2, y);
@@ -270,7 +270,7 @@ namespace OpenDental.Bridges
 		{
 			//Print the header on the report.
 			Font font = new Font(FontFamily.GenericMonospace, 12);
-			string text = PrefC.GetString(PrefName.PracticeTitle);
+			string text = Prefs.GetString(PrefName.PracticeTitle);
 			SizeF size = fpr.Graph.MeasureString(text, font);
 			float y = 20;
 			fpr.Graph.DrawString(text, font, Brushes.Black, fpr.GraphWidth / 2 - size.Width / 2, y);

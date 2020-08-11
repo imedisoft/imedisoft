@@ -126,7 +126,7 @@ namespace OpenDental{
 				MessageBox.Show("Please fix error first.");
 				return;
 			}
-			if(Prefs.UpdateString(PrefName.AccountingLockDate,POut.Date(PIn.Date(textDate.Text),false))){
+			if(Prefs.Set(PrefName.AccountingLockDate,POut.Date(PIn.Date(textDate.Text),false))){
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			DialogResult=DialogResult.OK;

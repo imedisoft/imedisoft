@@ -41,7 +41,7 @@ namespace OpenDentBusiness{
 			string command="SELECT * FROM codesystem";// WHERE CodeSystemName IN ('ICD9CM','RXNORM','SNOMEDCT','CPT')";
 #else
 			string command="SELECT * FROM codesystem WHERE CodeSystemName NOT IN ('AdministrativeSex','CDT')";
-			if(!PrefC.GetBool(PrefName.ShowFeatureEhr)) {//When EHR is disabled, only show code systems which are not EHR specific. 
+			if(!Prefs.GetBool(PrefName.ShowFeatureEhr)) {//When EHR is disabled, only show code systems which are not EHR specific. 
 				command+=" AND CodeSystemName IN ('CPT','ICD10CM','ICD9CM','RXNORM','SNOMEDCT')";//Snomed used for drug/problem interactions
 			}
 #endif

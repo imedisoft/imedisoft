@@ -536,7 +536,7 @@ namespace OpenDental{
 					return;
 				}
 			}
-			Prefs.UpdateInt(PrefName.ItransImportFields,(int)fieldsToImport);
+			Prefs.Set(PrefName.ItransImportFields,(int)fieldsToImport);
 			DataValid.SetInvalid(InvalidType.Prefs);
 			string errorMsg=ItransNCpl.TryCarrierUpdate(false,fieldsToImport);
 			if(!string.IsNullOrEmpty(errorMsg)) {

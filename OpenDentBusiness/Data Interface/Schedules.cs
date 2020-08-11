@@ -781,7 +781,7 @@ namespace OpenDentBusiness{
 					}
 				}
 				else {//op is either a hygiene op with no hygienist set or not a hygiene op with no provider set
-					if(schedule.ProvNum==PrefC.GetLong(PrefName.ScheduleProvUnassigned)) {//use the provider for unassigned ops
+					if(schedule.ProvNum==Prefs.GetLong(PrefName.ScheduleProvUnassigned)) {//use the provider for unassigned ops
 						listSchedules.Add(schedule.Copy());
 					}
 				}

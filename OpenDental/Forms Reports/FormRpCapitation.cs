@@ -204,7 +204,7 @@ namespace OpenDental{
 			Font fontTitle=new Font("Tahoma",17,FontStyle.Bold);
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
 			report.AddTitle("Title",Lan.G(this,"Capitation Utilization"),fontTitle);
-			report.AddSubTitle("PracTitle",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
+			report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
 			report.AddSubTitle("Date",textDateStart.Text+" - "+textDateEnd.Text,fontSubTitle);
 			DataTable table=RpCapitation.GetCapitationTable(dateStart,dateEnd,textCarrier.Text,isMedOrClinic);
 			QueryObject query=report.AddQuery(table,"","",SplitByKind.None,1,true);

@@ -41,7 +41,7 @@ namespace UnitTests.TimeSlots_Tests {
 			long clinicNumA=ClinicT.CreateClinic("Clinic A-"+suffix).ClinicNum;
 			long clinicNumB=ClinicT.CreateClinic("Clinic B-"+suffix).ClinicNum;
 			//Make sure the that Appointment View time increment is set to 10 min.
-			Prefs.UpdateInt(PrefName.AppointmentTimeIncrement,10);
+			Prefs.Set(PrefName.AppointmentTimeIncrement,10);
 			//Create a date that will always be in the future.  This date will be used for schedules and recalls.
 			DateTime dateTimeSchedule=DateTime.Now.AddYears(1);
 			long provNumDocA=ProviderT.CreateProvider("Doc A-"+suffix);
@@ -100,7 +100,7 @@ namespace UnitTests.TimeSlots_Tests {
 		[TestMethod]
 		public void TimeSlots_GetAvailableNewPatApptTimeSlots_DoubleBooking() {
 			string suffix=MethodBase.GetCurrentMethod().Name;
-			Prefs.UpdateBool(PrefName.WebSchedNewPatApptDoubleBooking,true);
+			Prefs.Set(PrefName.WebSchedNewPatApptDoubleBooking,true);
 			//Create a date that will always be in the future.  This date will be used for schedules and appointments.
 			DateTime dateTimeSchedule=DateTime.Now.AddYears(1);
 			DateTime dateTimeScheduleNextDay=dateTimeSchedule.AddDays(1);
@@ -114,7 +114,7 @@ namespace UnitTests.TimeSlots_Tests {
 			Operatory opExtra=OperatoryT.CreateOperatory("3-"+suffix,"Extra Op - "+suffix,provNumDoc,provNumHyg,itemOrder:0);
 			Patient pat=PatientT.CreatePatient(suffix,provNumHyg);
 			//Make sure the that Appointment View time increment is set to 10 min.
-			Prefs.UpdateInt(PrefName.AppointmentTimeIncrement,10);
+			Prefs.Set(PrefName.AppointmentTimeIncrement,10);
 			//Create a ProcedureCode specifically for the Web Sched New Pat appointment type.
 			ProcedureCode procCode=ProcedureCodeT.CreateProcCode("T5743");
 			//Create a new patient appointment type that has a pattern that will fit within an hour block (40 mins).
@@ -163,8 +163,8 @@ namespace UnitTests.TimeSlots_Tests {
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			Patient pat=PatientT.CreatePatient(suffix);
 			//Make sure the that Appointment View time increment is set to 10 min.
-			Prefs.UpdateInt(PrefName.AppointmentTimeIncrement,10);
-			Prefs.UpdateBool(PrefName.WebSchedNewPatApptDoubleBooking,true);
+			Prefs.Set(PrefName.AppointmentTimeIncrement,10);
+			Prefs.Set(PrefName.WebSchedNewPatApptDoubleBooking,true);
 			//Create a date that will always be in the future.  This date will be used for schedules and appointments.
 			DateTime dateTimeSchedule=DateTime.Now.AddYears(1);
 			DateTime dateTimeScheduleNextDay=dateTimeSchedule.AddDays(1);
@@ -222,8 +222,8 @@ namespace UnitTests.TimeSlots_Tests {
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			Patient pat=PatientT.CreatePatient(suffix);
 			//Make sure the that Appointment View time increment is set to 10 min.
-			Prefs.UpdateInt(PrefName.AppointmentTimeIncrement,10);
-			Prefs.UpdateBool(PrefName.WebSchedNewPatApptDoubleBooking,false);//Set the pref false so that the Appt Rule restricts via double booking.
+			Prefs.Set(PrefName.AppointmentTimeIncrement,10);
+			Prefs.Set(PrefName.WebSchedNewPatApptDoubleBooking,false);//Set the pref false so that the Appt Rule restricts via double booking.
 			//Create a date that will always be in the future.  This date will be used for schedules and appointments.
 			DateTime dateTimeSchedule=DateTime.Now.AddYears(1);
 			DateTime dateTimeScheduleNextDay=dateTimeSchedule.AddDays(1);
@@ -280,7 +280,7 @@ namespace UnitTests.TimeSlots_Tests {
 		public void TimeSlots_GetAvailableWebSchedTimeSlots_ClinicPriority() {
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			//Turn clinics ON!
-			Prefs.UpdateBool(PrefName.EasyNoClinics,false);//Not no clinics.
+			Prefs.Set(PrefName.EasyNoClinics,false);//Not no clinics.
 			long clinicNum1=ClinicT.CreateClinic("1 - "+suffix).ClinicNum;
 			long clinicNum2=ClinicT.CreateClinic("2 - "+suffix).ClinicNum;
 			//Create a date that will always be in the future.  This date will be used for schedules and recalls.
@@ -290,7 +290,7 @@ namespace UnitTests.TimeSlots_Tests {
 			//Create the patient and have them associated to the second clinic.
 			Patient pat=PatientT.CreatePatient(suffix,provNumDoc,clinicNum2);
 			//Make sure the that Appointment View time increment is set to 10 min.
-			Prefs.UpdateInt(PrefName.AppointmentTimeIncrement,10);
+			Prefs.Set(PrefName.AppointmentTimeIncrement,10);
 			Def defLunchBlockout=DefT.CreateDefinition(DefCat.BlockoutTypes,"Lunch-"+suffix,itemColor:System.Drawing.Color.Azure);
 			//Create a psudo prophy recall type that lasts 40 mins and has an interval of every 6 months and 1 day.
 			RecallType recallType=RecallTypeT.CreateRecallType("Prophy-"+suffix,"D1110,D1330","//X/",new Interval(1,0,6,0));
@@ -371,7 +371,7 @@ namespace UnitTests.TimeSlots_Tests {
 			long provNumHyg=ProviderT.CreateProvider("Hyg-"+suffix,isSecondary:true);
 			Patient pat=PatientT.CreatePatient(suffix,provNumHyg);
 			//Make sure the that Appointment View time increment is set to 10 min.
-			Prefs.UpdateInt(PrefName.AppointmentTimeIncrement,10);
+			Prefs.Set(PrefName.AppointmentTimeIncrement,10);
 			Def defLunchBlockout=DefT.CreateDefinition(DefCat.BlockoutTypes,"Lunch-"+suffix,itemColor:System.Drawing.Color.Azure);
 			//Create a psudo prophy recall type that lasts 40 mins and has an interval of every 6 months and 1 day.
 			RecallType recallType=RecallTypeT.CreateRecallType("Prophy-"+suffix,"D1110,D1330","//X/",new Interval(1,0,6,0));
@@ -414,7 +414,7 @@ namespace UnitTests.TimeSlots_Tests {
 		[TestMethod]
 		public void TimeSlots_GetAvailableWebSchedTimeSlots_DoubleBooking() {
 			string suffix=MethodBase.GetCurrentMethod().Name;
-			Prefs.UpdateBool(PrefName.WebSchedRecallDoubleBooking,true);
+			Prefs.Set(PrefName.WebSchedRecallDoubleBooking,true);
 			//Create a date that will always be in the future.  This date will be used for schedules and recalls.
 			DateTime dateTimeSchedule=DateTime.Now.AddYears(1);
 			DateTime dateTimeScheduleNextDay=dateTimeSchedule.AddDays(1);
@@ -422,7 +422,7 @@ namespace UnitTests.TimeSlots_Tests {
 			long provNumHyg=ProviderT.CreateProvider("Hyg-"+suffix,isSecondary:true);
 			Patient pat=PatientT.CreatePatient(suffix,provNumHyg);
 			//Make sure the that Appointment View time increment is set to 10 min.
-			Prefs.UpdateInt(PrefName.AppointmentTimeIncrement,10);
+			Prefs.Set(PrefName.AppointmentTimeIncrement,10);
 			Def defLunchBlockout=DefT.CreateDefinition(DefCat.BlockoutTypes,"Lunch-"+suffix,itemColor:System.Drawing.Color.Azure);
 			//Create a psudo prophy recall type that lasts 40 mins and has an interval of every 6 months and 1 day.
 			RecallType recallType=RecallTypeT.CreateRecallType("Prophy-"+suffix,"D1110,D1330","//X/",new Interval(1,0,6,0));
@@ -473,7 +473,7 @@ namespace UnitTests.TimeSlots_Tests {
 			long provNumHyg=ProviderT.CreateProvider("Hyg-"+suffix,isSecondary:true);
 			Patient pat=PatientT.CreatePatient(suffix,provNumDoc);
 			//Make sure the that Appointment View time increment is set to 10 min.
-			Prefs.UpdateInt(PrefName.AppointmentTimeIncrement,10);
+			Prefs.Set(PrefName.AppointmentTimeIncrement,10);
 			Def defLunchBlockout=DefT.CreateDefinition(DefCat.BlockoutTypes,"Lunch-"+suffix,itemColor:System.Drawing.Color.Azure);
 			//Create a psudo prophy recall type that lasts 40 mins and has an interval of every 6 months and 1 day.
 			RecallType recallType=RecallTypeT.CreateRecallType("Prophy-"+suffix,"D1110,D1330","//X/",new Interval(1,0,6,0));
@@ -552,7 +552,7 @@ namespace UnitTests.TimeSlots_Tests {
 			long provNumHyg=ProviderT.CreateProvider("Hyg-"+suffix,isSecondary:true);
 			Patient pat=PatientT.CreatePatient(suffix,provNumHyg);
 			//Make sure the that Appointment View time increment is set to 10 min.
-			Prefs.UpdateInt(PrefName.AppointmentTimeIncrement,10);
+			Prefs.Set(PrefName.AppointmentTimeIncrement,10);
 			Def defLunchBlockout=DefT.CreateDefinition(DefCat.BlockoutTypes,"Lunch-"+suffix,itemColor:System.Drawing.Color.Azure);
 			//Create a psudo prophy recall type that lasts 40 mins and has an interval of every 6 months and 1 day.
 			RecallType recallType=RecallTypeT.CreateRecallType("Prophy-"+suffix,"D1110,D1330","//X/",new Interval(1,0,6,0));
@@ -601,7 +601,7 @@ namespace UnitTests.TimeSlots_Tests {
 			long provNumHyg=ProviderT.CreateProvider("Hyg-"+suffix,isSecondary:true);
 			Patient pat=PatientT.CreatePatient(suffix,provNumHyg);
 			//Make sure the that Appointment View time increment is set to 10 min.
-			Prefs.UpdateInt(PrefName.AppointmentTimeIncrement,10);
+			Prefs.Set(PrefName.AppointmentTimeIncrement,10);
 			//Create a psudo prophy recall type that lasts 30 mins with prov time in the middle and has an interval of every 6 months and 1 day.
 			RecallType recallType=RecallTypeT.CreateRecallType("Prophy-"+suffix,"D1110,D1330","/X/",new Interval(1,0,6,0));
 			//Create a recall for our patient.
@@ -643,7 +643,7 @@ namespace UnitTests.TimeSlots_Tests {
 			long provNumHyg=ProviderT.CreateProvider("Hyg-"+suffix,isSecondary:true);
 			Patient pat=PatientT.CreatePatient(suffix,provNumDoc);
 			//Make sure the that Appointment View time increment is set to 10 min.
-			Prefs.UpdateInt(PrefName.AppointmentTimeIncrement,10);
+			Prefs.Set(PrefName.AppointmentTimeIncrement,10);
 			Def defLunchBlockout=DefT.CreateDefinition(DefCat.BlockoutTypes,"Lunch-"+suffix,itemColor:System.Drawing.Color.Azure);
 			//Create operatories for the providers but make the Hygiene op NON-WEB SCHED.
 			Operatory opDoc=OperatoryT.CreateOperatory("1-"+suffix,"Doc Op - "+suffix,provNumDoc,provNumHyg,isWebSched:true,itemOrder:0);
@@ -720,7 +720,7 @@ namespace UnitTests.TimeSlots_Tests {
 			long provNumDoc=ProviderT.CreateProvider("Doc-"+suffix);
 			Patient pat=PatientT.CreatePatient(suffix,provNumDoc);
 			//Make sure the that Appointment View time increment is set to 5 min.
-			Prefs.UpdateInt(PrefName.AppointmentTimeIncrement,5);
+			Prefs.Set(PrefName.AppointmentTimeIncrement,5);
 			//Create operatories for the provider.
 			Operatory opDoc=OperatoryT.CreateOperatory("1-"+suffix,"Doc Op - "+suffix,provNumDoc,isWebSched:true,itemOrder:0);
 			//Create a schedule for the doctor from 08:00 - 18:00
@@ -800,7 +800,7 @@ namespace UnitTests.TimeSlots_Tests {
 			long provNumHyg=ProviderT.CreateProvider("Hyg-"+suffix);
 			Patient pat=PatientT.CreatePatient(suffix,provNumHyg);
 			//Make sure the that Appointment View time increment is set to 15 min.
-			Prefs.UpdateInt(PrefName.AppointmentTimeIncrement,15);
+			Prefs.Set(PrefName.AppointmentTimeIncrement,15);
 			//Create an operatory for the provider.
 			Operatory opHyg=OperatoryT.CreateOperatory("1-"+suffix,"Hyg Op - "+suffix,provHygienist:provNumHyg,isWebSched:true,itemOrder:0);
 			//Create a schedule for the provider from 08:00 - 19:00

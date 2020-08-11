@@ -18,19 +18,25 @@ namespace OpenDentBusiness {
 		///This getter will check the preference cache for the aforementioned preference until it finds it.
 		///Once found, _dictOverrides will be instantiated and filled with the contents of the preference.  Once instatiated, this getter will never repopulate the dictionary.
 		///If the preference is present in the database but is malformed JSON, _dictOverrides will be an empty dictionary which will throw exceptions later on in the program.</summary>
-		private static Dictionary<IntrospectionEntity,string> DictOverrides {
-			get {
-				if(_dictOverrides!=null || !Prefs.GetContainsKey(nameof(PrefName.IntrospectionItems))) {
+		private static Dictionary<IntrospectionEntity, string> DictOverrides
+		{
+			get
+			{
+				if (_dictOverrides != null || !Prefs.Exists(PrefName.IntrospectionItems))
+				{
 					return _dictOverrides;
 				}
+
 				//Try to extract the introspection overrides from the preference. 
-				try {
-					string introspectionItems=PrefC.GetString(PrefName.IntrospectionItems);//Cache call so it is fine to do this a lot.  Purposefully throws exceptions.
-					//At this point we know the database has the IntrospectionItems preference so we need to instantiate _dictOverrides.
-					_dictOverrides=JsonConvert.DeserializeObject<Dictionary<IntrospectionEntity,string>>(introspectionItems);
+				try
+				{
+					string introspectionItems = Prefs.GetString(PrefName.IntrospectionItems);//Cache call so it is fine to do this a lot.  Purposefully throws exceptions.
+																							 //At this point we know the database has the IntrospectionItems preference so we need to instantiate _dictOverrides.
+					_dictOverrides = JsonConvert.DeserializeObject<Dictionary<IntrospectionEntity, string>>(introspectionItems);
 				}
-				catch(Exception ex) {
-					throw new ApplicationException("Error encountered while deserializing introspection JSON. \r\nError: "+ex.Message);
+				catch (Exception ex)
+				{
+					throw new ApplicationException("Error encountered while deserializing introspection JSON. \r\nError: " + ex.Message);
 				}
 				return _dictOverrides;
 			}

@@ -30,7 +30,7 @@ namespace OpenDental {
 			foreach(Carrier carrier in carriers) {
 				listCarriers.Items.Add(carrier.CarrierName);
 			}
-			long defaultProvNum=PrefC.GetLong(PrefName.PracticeDefaultProv);
+			long defaultProvNum=Prefs.GetLong(PrefName.PracticeDefaultProv);
 			_listProviders=Providers.GetDeepCopy(true);
 			for(int i=0;i<_listProviders.Count;i++) {
 				listTreatingProvider.Items.Add(_listProviders[i].Abbr);

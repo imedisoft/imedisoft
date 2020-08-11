@@ -535,4 +535,49 @@
   <data name="Icon32Images" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon32Images.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="IconCopy" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconCopy.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconInbox" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconInbox.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconMagic" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconMagic.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconReply" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconReply.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconShare" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconShare.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSyncAlt" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconSyncAlt.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Folder.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FolderMinus" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\FolderMinus.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FolderOpen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\FolderOpen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FolderOpenRegular" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\FolderOpenRegular.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FolderPlus" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\FolderPlus.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FolderRegular" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\FolderRegular.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconEllipsisH" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconEllipsisH.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconList" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconList.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSearch" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconSearch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

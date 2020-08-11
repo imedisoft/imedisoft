@@ -16,14 +16,14 @@ namespace OpenDental {
 			textPatientEnrollmentDays.Text=POut.Int(PrefC.GetInt(PrefName.InsVerifyPatientEnrollmentDays));
 			textScheduledAppointmentDays.Text=POut.Int(PrefC.GetInt(PrefName.InsVerifyAppointmentScheduledDays));
 			textPastDueDays.Text=POut.Int(PrefC.GetInt(PrefName.InsVerifyDaysFromPastDueAppt));
-			checkInsVerifyUseCurrentUser.Checked=PrefC.GetBool(PrefName.InsVerifyDefaultToCurrentUser);
-			checkInsVerifyExcludePatVerify.Checked=PrefC.GetBool(PrefName.InsVerifyExcludePatVerify);
-			checkFutureDateBenefitYear.Checked=PrefC.GetBool(PrefName.InsVerifyFutureDateBenefitYear);
-			if(!PrefC.GetBool(PrefName.ShowFeaturePatientClone)) {
+			checkInsVerifyUseCurrentUser.Checked=Prefs.GetBool(PrefName.InsVerifyDefaultToCurrentUser);
+			checkInsVerifyExcludePatVerify.Checked=Prefs.GetBool(PrefName.InsVerifyExcludePatVerify);
+			checkFutureDateBenefitYear.Checked=Prefs.GetBool(PrefName.InsVerifyFutureDateBenefitYear);
+			if(!Prefs.GetBool(PrefName.ShowFeaturePatientClone)) {
 				checkExcludePatientClones.Visible=false;
 			}
 			else {
-				checkExcludePatientClones.Checked=PrefC.GetBool(PrefName.InsVerifyExcludePatientClones);
+				checkExcludePatientClones.Checked=Prefs.GetBool(PrefName.InsVerifyExcludePatientClones);
 			}
 		}
 
@@ -48,14 +48,14 @@ namespace OpenDental {
 			int patientEnrollmentDays=PIn.Int(textPatientEnrollmentDays.Text);
 			int scheduledAppointmentDays=PIn.Int(textScheduledAppointmentDays.Text);
 			int pastDueDays=PIn.Int(textPastDueDays.Text);
-			if(Prefs.UpdateInt(PrefName.InsVerifyBenefitEligibilityDays,insBenefitEligibilityDays)
-				| Prefs.UpdateInt(PrefName.InsVerifyPatientEnrollmentDays,patientEnrollmentDays)
-				| Prefs.UpdateInt(PrefName.InsVerifyAppointmentScheduledDays,scheduledAppointmentDays)
-				| Prefs.UpdateInt(PrefName.InsVerifyDaysFromPastDueAppt,pastDueDays)
-				| Prefs.UpdateBool(PrefName.InsVerifyExcludePatVerify,checkInsVerifyExcludePatVerify.Checked)
-				| Prefs.UpdateBool(PrefName.InsVerifyExcludePatientClones,checkExcludePatientClones.Checked)
-				| Prefs.UpdateBool(PrefName.InsVerifyFutureDateBenefitYear,checkFutureDateBenefitYear.Checked)
-				| Prefs.UpdateBool(PrefName.InsVerifyDefaultToCurrentUser,checkInsVerifyUseCurrentUser.Checked)) 
+			if(Prefs.Set(PrefName.InsVerifyBenefitEligibilityDays,insBenefitEligibilityDays)
+				| Prefs.Set(PrefName.InsVerifyPatientEnrollmentDays,patientEnrollmentDays)
+				| Prefs.Set(PrefName.InsVerifyAppointmentScheduledDays,scheduledAppointmentDays)
+				| Prefs.Set(PrefName.InsVerifyDaysFromPastDueAppt,pastDueDays)
+				| Prefs.Set(PrefName.InsVerifyExcludePatVerify,checkInsVerifyExcludePatVerify.Checked)
+				| Prefs.Set(PrefName.InsVerifyExcludePatientClones,checkExcludePatientClones.Checked)
+				| Prefs.Set(PrefName.InsVerifyFutureDateBenefitYear,checkFutureDateBenefitYear.Checked)
+				| Prefs.Set(PrefName.InsVerifyDefaultToCurrentUser,checkInsVerifyUseCurrentUser.Checked)) 
 			{
 				_hasChanged=true;
 			}

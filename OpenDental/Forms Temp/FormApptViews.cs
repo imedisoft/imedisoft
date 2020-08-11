@@ -378,7 +378,7 @@ namespace OpenDental{
 			if(radioTen.Checked) {
 				newIncrement=10;
 			}
-			if(Prefs.UpdateInt(PrefName.AppointmentTimeIncrement,newIncrement)){
+			if(Prefs.Set(PrefName.AppointmentTimeIncrement,newIncrement)){
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			if(viewChanged){

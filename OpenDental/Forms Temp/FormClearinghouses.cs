@@ -335,9 +335,9 @@ namespace OpenDental{
 		#endregion
 
 		private void FormClearinghouses_Load(object sender, System.EventArgs e) {
-			textReportComputerName.Text=PrefC.GetString(PrefName.ClaimReportComputerName);
+			textReportComputerName.Text=Prefs.GetString(PrefName.ClaimReportComputerName);
 			int claimReportReceiveInterval=PrefC.GetInt(PrefName.ClaimReportReceiveInterval);
-			checkReceiveReportsService.Checked=PrefC.GetBool(PrefName.ClaimReportReceivedByService);
+			checkReceiveReportsService.Checked=Prefs.GetBool(PrefName.ClaimReportReceivedByService);
 			_listClearinghousesHq=Clearinghouses.GetDeepCopy(true);
 			_listClearinghousesClinicAll=Clearinghouses.GetAllNonHq();
 			_listClearinghousesClinicCur=new List<Clearinghouse>();
@@ -396,16 +396,16 @@ namespace OpenDental{
 				row.Cells.Add(clearinghouseCur.ExportPath);
 				row.Cells.Add(clearinghouseCur.Eformat.ToString());
 				string s="";
-				if(PrefC.GetLong(PrefName.ClearinghouseDefaultDent)==_listClearinghousesHq[i].ClearinghouseNum) {
+				if(Prefs.GetLong(PrefName.ClearinghouseDefaultDent)==_listClearinghousesHq[i].ClearinghouseNum) {
 					s+="Dent";
 				}
-				if(PrefC.GetLong(PrefName.ClearinghouseDefaultMed)==_listClearinghousesHq[i].ClearinghouseNum) {
+				if(Prefs.GetLong(PrefName.ClearinghouseDefaultMed)==_listClearinghousesHq[i].ClearinghouseNum) {
 					if(s!="") {
 						s+=",";
 					}
 					s+="Med";
 				}
-				if(PrefC.GetLong(PrefName.ClearinghouseDefaultEligibility)==_listClearinghousesHq[i].ClearinghouseNum 
+				if(Prefs.GetLong(PrefName.ClearinghouseDefaultEligibility)==_listClearinghousesHq[i].ClearinghouseNum 
 					&& !CultureInfo.CurrentCulture.Name.EndsWith("CA")) //Canadian. en-CA or fr-CA
 				{
 					if(s!="") {
@@ -484,12 +484,12 @@ namespace OpenDental{
 			}
 			bool isInvalid=false;
 			if(!CultureInfo.CurrentCulture.Name.EndsWith("CA") 
-				&& PrefC.GetLong(PrefName.ClearinghouseDefaultEligibility)==0
-				&& Prefs.UpdateLong(PrefName.ClearinghouseDefaultEligibility,ch.ClearinghouseNum)) 
+				&& Prefs.GetLong(PrefName.ClearinghouseDefaultEligibility)==0
+				&& Prefs.Set(PrefName.ClearinghouseDefaultEligibility,ch.ClearinghouseNum)) 
 			{
 				isInvalid=true;
 			}
-			if(Prefs.UpdateLong(PrefName.ClearinghouseDefaultDent,ch.ClearinghouseNum)) {
+			if(Prefs.Set(PrefName.ClearinghouseDefaultDent,ch.ClearinghouseNum)) {
 				isInvalid=true;
 			}
 			if(isInvalid) {
@@ -510,12 +510,12 @@ namespace OpenDental{
 			}
 			bool isInvalid=false;
 			if(!CultureInfo.CurrentCulture.Name.EndsWith("CA") 
-				&& PrefC.GetLong(PrefName.ClearinghouseDefaultEligibility)==0
-				&& Prefs.UpdateLong(PrefName.ClearinghouseDefaultEligibility,ch.ClearinghouseNum)) 
+				&& Prefs.GetLong(PrefName.ClearinghouseDefaultEligibility)==0
+				&& Prefs.Set(PrefName.ClearinghouseDefaultEligibility,ch.ClearinghouseNum)) 
 			{
 				isInvalid=true;
 			}
-			if(Prefs.UpdateLong(PrefName.ClearinghouseDefaultMed,ch.ClearinghouseNum)) {
+			if(Prefs.Set(PrefName.ClearinghouseDefaultMed,ch.ClearinghouseNum)) {
 				isInvalid=true;
 			}
 			if(isInvalid) {
@@ -530,7 +530,7 @@ namespace OpenDental{
 					return;
 			}
 			Clearinghouse ch=_listClearinghousesHq[gridMain.GetSelectedIndex()];
-			if(Prefs.UpdateLong(PrefName.ClearinghouseDefaultEligibility,ch.ClearinghouseNum)) {
+			if(Prefs.Set(PrefName.ClearinghouseDefaultEligibility,ch.ClearinghouseNum)) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			FillGrid();
@@ -589,22 +589,22 @@ namespace OpenDental{
 			}
 			bool doRestartToShowChanges=false;
 			bool doInvalidateCache=false;
-			if(Prefs.UpdateString(PrefName.ClaimReportComputerName,textReportComputerName.Text)) {
+			if(Prefs.Set(PrefName.ClaimReportComputerName,textReportComputerName.Text)) {
 				doRestartToShowChanges=true;
 				//No point in invalidating prefs since this only affects a workstation on startup.
 			}
-			if(Prefs.UpdateInt(PrefName.ClaimReportReceiveInterval,reportCheckIntervalMinuteCount)) {
+			if(Prefs.Set(PrefName.ClaimReportReceiveInterval,reportCheckIntervalMinuteCount)) {
 				doInvalidateCache=true;
 			}
 			if(radioTime.Checked) {
-				if(Prefs.UpdateDateT(PrefName.ClaimReportReceiveTime,PIn.Date(textReportCheckTime.Text))) {
+				if(Prefs.Set(PrefName.ClaimReportReceiveTime,PIn.Date(textReportCheckTime.Text))) {
 					doInvalidateCache=true;
 				}
 			}
-			else if(textReportCheckTime.Text=="" && Prefs.UpdateDateT(PrefName.ClaimReportReceiveTime,DateTime.MinValue)) {
+			else if(textReportCheckTime.Text=="" && Prefs.Set(PrefName.ClaimReportReceiveTime,DateTime.MinValue)) {
 				doInvalidateCache=true;
 			}
-			if(Prefs.UpdateBool(PrefName.ClaimReportReceivedByService,checkReceiveReportsService.Checked)) {
+			if(Prefs.Set(PrefName.ClaimReportReceivedByService,checkReceiveReportsService.Checked)) {
 				if(checkReceiveReportsService.Checked) {
 					doInvalidateCache=true;
 				}
@@ -622,7 +622,7 @@ namespace OpenDental{
 		}
 
 		private void FormClearinghouses_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
-			if(PrefC.GetLong(PrefName.ClearinghouseDefaultDent)==0){
+			if(Prefs.GetLong(PrefName.ClearinghouseDefaultDent)==0){
 				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"A default clearinghouse should be set. Continue anyway?")){
 					e.Cancel=true;
 					return;
@@ -633,7 +633,7 @@ namespace OpenDental{
 				DataValid.SetInvalid(InvalidType.ClearHouses);  //This needs to be done before the cache calls below.
 			}
 			//validate that the default dental clearinghouse is not type mismatched.
-			Clearinghouse chDent=Clearinghouses.GetClearinghouse(PrefC.GetLong(PrefName.ClearinghouseDefaultDent));
+			Clearinghouse chDent=Clearinghouses.GetClearinghouse(Prefs.GetLong(PrefName.ClearinghouseDefaultDent));
 			if(chDent!=null) {
 				if(chDent.Eformat==ElectronicClaimFormat.x837_5010_med_inst) {//mismatch
 					if(!MsgBox.Show(MsgBoxButtons.OKCancel,"The default dental clearinghouse should be set to a dental e-claim format.  Continue anyway?")) {
@@ -643,7 +643,7 @@ namespace OpenDental{
 				}
 			}
 			//validate medical clearinghouse
-			Clearinghouse chMed=Clearinghouses.GetClearinghouse(PrefC.GetLong(PrefName.ClearinghouseDefaultMed));
+			Clearinghouse chMed=Clearinghouses.GetClearinghouse(Prefs.GetLong(PrefName.ClearinghouseDefaultMed));
 			if(chMed!=null) {
 				if(chMed.Eformat!=ElectronicClaimFormat.x837_5010_med_inst) {//mismatch
 					if(!MsgBox.Show(MsgBoxButtons.OKCancel,"The default medical clearinghouse should be set to a med/inst e-claim format.  Continue anyway?")) {

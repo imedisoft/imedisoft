@@ -125,7 +125,7 @@ namespace OpenDental{
 		#endregion
 
 		private void FormRepeatChargesUpdate_Load(object sender, EventArgs e) {
-			checkRunAging.Checked=PrefC.GetBool(PrefName.RepeatingChargesRunAging);//this will cause the label text to be updated
+			checkRunAging.Checked=Prefs.GetBool(PrefName.RepeatingChargesRunAging);//this will cause the label text to be updated
 		}
 
 		///<summary>Do not use this method in release code. This is only to be used for Unit Tests 53-56.</summary>
@@ -151,7 +151,7 @@ namespace OpenDental{
 		///</summary>
 		private bool CheckBeginDateTime() {
 			Prefs.RefreshCache();//Just to be sure we don't miss someone who has just started running repeating charges.
-			if(PrefC.GetString(PrefName.RepeatingChargesBeginDateTime)=="") {
+			if(Prefs.GetString(PrefName.RepeatingChargesBeginDateTime)=="") {
 				return true;
 			}
 			DateTime repeatingChargesBeginDateTime=PrefC.GetDateT(PrefName.RepeatingChargesBeginDateTime);

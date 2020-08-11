@@ -18,7 +18,7 @@ namespace OpenDental {
 		}
 
 		private void FormDefaultCCProcs_Load(object sender,EventArgs e) {
-			_defaultCCProcs=PrefC.GetString(PrefName.DefaultCCProcs);
+			_defaultCCProcs=Prefs.GetString(PrefName.DefaultCCProcs);
 			_listCCProcs=_defaultCCProcs.Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries).ToList();
 			_listCCProcs.Sort();
 			FillProcs();
@@ -65,7 +65,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			_defaultCCProcs=string.Join(",",_listCCProcs);
-			if(Prefs.UpdateString(PrefName.DefaultCCProcs,_defaultCCProcs)) {
+			if(Prefs.Set(PrefName.DefaultCCProcs,_defaultCCProcs)) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			DialogResult=DialogResult.OK;

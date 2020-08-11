@@ -189,10 +189,10 @@ namespace OpenDental{
 		#endregion
 
 		private void FormLetterSetup_Load(object sender, System.EventArgs e) {
-			//if(PrefC.GetBool(PrefName.LettersIncludeReturnAddress")){
+			//if(Prefs.GetBool(PrefName.LettersIncludeReturnAddress")){
 			//	checkIncludeRet.Checked=true;
 			//}
-			//if(PrefC.GetBool(PrefName.FuchsOptionsOn")) {
+			//if(Prefs.GetBool(PrefName.FuchsOptionsOn")) {
 				//buttonTYDMF.Visible = true;
 				//buttonTYREF.Visible = true;
 			//}
@@ -219,13 +219,13 @@ namespace OpenDental{
 			StringBuilder str = new StringBuilder();
 			//return address
 			//if (checkIncludeRet.Checked) {
-				str.Append(PrefC.GetString(PrefName.PracticeTitle) + "\r\n");
-				str.Append(PrefC.GetString(PrefName.PracticeAddress) + "\r\n");
-				if (PrefC.GetString(PrefName.PracticeAddress2) != "")
-					str.Append(PrefC.GetString(PrefName.PracticeAddress2) + "\r\n");
-				str.Append(PrefC.GetString(PrefName.PracticeCity) + ", ");
-				str.Append(PrefC.GetString(PrefName.PracticeST) + "  ");
-				str.Append(PrefC.GetString(PrefName.PracticeZip) + "\r\n");
+				str.Append(Prefs.GetString(PrefName.PracticeTitle) + "\r\n");
+				str.Append(Prefs.GetString(PrefName.PracticeAddress) + "\r\n");
+				if (Prefs.GetString(PrefName.PracticeAddress2) != "")
+					str.Append(Prefs.GetString(PrefName.PracticeAddress2) + "\r\n");
+				str.Append(Prefs.GetString(PrefName.PracticeCity) + ", ");
+				str.Append(Prefs.GetString(PrefName.PracticeST) + "  ");
+				str.Append(Prefs.GetString(PrefName.PracticeZip) + "\r\n");
 			//}
 			//else {
 			//	str.Append("\r\n\r\n\r\n\r\n");
@@ -291,7 +291,7 @@ namespace OpenDental{
 			else {
 				str.Append("\r\n\r\n" + Lan.G(this, "Sincerely,") + "\r\n\r\n\r\n\r\n");
 			}
-			str.Append(PrefC.GetString(PrefName.PracticeTitle));
+			str.Append(Prefs.GetString(PrefName.PracticeTitle));
 			textBody.Text = str.ToString();
 			//bodyChanged = false;
 		}

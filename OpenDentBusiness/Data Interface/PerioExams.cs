@@ -87,7 +87,7 @@ namespace OpenDentBusiness{
 				listSkippedTeeth=PerioMeasures.GetSkipped(listOtherExamsForPat.Last().PerioExamNum);
 			}
 			//For patient's first perio chart, any teeth marked missing are automatically marked skipped.
-			else if(PrefC.GetBool(PrefName.PerioSkipMissingTeeth)) {
+			else if(Prefs.GetBool(PrefName.PerioSkipMissingTeeth)) {
 				//Procedures will only be queried for as needed.
 				List<Procedure> listProcs=null;
 				foreach(string missingTooth in ToothInitials.GetMissingOrHiddenTeeth(ToothInitials.Refresh(pat.PatNum))) {
@@ -98,7 +98,7 @@ namespace OpenDentBusiness{
 					}
 					int toothNum=PIn.Int(missingTooth);
 					//Check if this tooth has had an implant done AND the office has the preference to SHOW implants
-					if(PrefC.GetBool(PrefName.PerioTreatImplantsAsNotMissing)) {
+					if(Prefs.GetBool(PrefName.PerioTreatImplantsAsNotMissing)) {
 						if(listProcs==null) {
 							listProcs=Procedures.Refresh(pat.PatNum);
 						}

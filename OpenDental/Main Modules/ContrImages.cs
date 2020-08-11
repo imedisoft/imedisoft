@@ -1910,7 +1910,7 @@ namespace OpenDental {
 			}
 			OpenFileDialog openFileDialog=new OpenFileDialog();
 			openFileDialog.Multiselect=true;
-			if(Prefs.GetContainsKey(nameof(PrefName.UseAlternateOpenFileDialogWindow)) && PrefC.GetBool(PrefName.UseAlternateOpenFileDialogWindow)){//Hidden pref, almost always false.
+			if(Prefs.Exists(PrefName.UseAlternateOpenFileDialogWindow) && Prefs.GetBool(PrefName.UseAlternateOpenFileDialogWindow)){//Hidden pref, almost always false.
 				//We don't know why this makes any difference but people have mentioned this will stop some hanging issues.
 				//https://stackoverflow.com/questions/6718148/windows-forms-gui-hangs-when-calling-openfiledialog-showdialog
 				openFileDialog.ShowHelp=true;

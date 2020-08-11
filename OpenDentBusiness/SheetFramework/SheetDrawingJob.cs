@@ -288,7 +288,7 @@ namespace OpenDentBusiness {
 			SheetParameter param=SheetParameter.GetParamByName(sheet.Parameters,"IsSingleClaimPaid");
 			bool isSingleClaim=(param.ParamValue==null)?false:true;//param is only set when true
 			//This logic mimics SheetUtil.CalculateHeights(...)
-			bool isOneClaimPerPage=PrefC.GetBool(PrefName.EraPrintOneClaimPerPage);
+			bool isOneClaimPerPage=Prefs.GetBool(PrefName.EraPrintOneClaimPerPage);
 			if(isSingleClaim) {
 				//When printing a single claim we do not want to print the claim on the next page like we would when printing every claim.
 				isOneClaimPerPage=false;
@@ -695,7 +695,7 @@ namespace OpenDentBusiness {
 								g.FillRectangle(Brushes.White,rf);
 								StringFormat sf=new StringFormat();
 								sf.Alignment=StringAlignment.Far;
-								if(PrefC.GetBool(PrefName.InvoicePaymentsGridShowNetProd)) {
+								if(Prefs.GetBool(PrefName.InvoicePaymentsGridShowNetProd)) {
 									g.DrawString("Total Payments & WriteOffs: "+totalPayments.ToString("c"),new Font("Arial",9,FontStyle.Bold),new SolidBrush(Color.Black),rf,sf);
 								}
 								else {
@@ -705,7 +705,7 @@ namespace OpenDentBusiness {
 							else {
 								gx.DrawRectangle(Brushes.White,p(sheet.Width-field.Width-60),p(gridSheetRow.YPos-_yPosPrint+_yAdjCurRow),p(field.Width),p(heightGridTitle));
 								using(Font _font = new Font("Arial",9,FontStyle.Bold)) {
-									if(PrefC.GetBool(PrefName.InvoicePaymentsGridShowNetProd)) {
+									if(Prefs.GetBool(PrefName.InvoicePaymentsGridShowNetProd)) {
 										GraphicsHelper.DrawStringX(gx,"Total Payments & WriteOffs: "+totalPayments.ToString("c"),new XFont(_font.FontFamily.ToString(),_font.Size,XFontStyle.Bold),XBrushes.Black,new RectangleF(sheet.Width-field.Width-60,gridSheetRow.YPos-_yPosPrint+_yAdjCurRow,field.Width,heightGridTitle),HorizontalAlignment.Right);
 									}
 									else {

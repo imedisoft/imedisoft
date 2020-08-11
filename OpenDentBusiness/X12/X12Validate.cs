@@ -144,28 +144,28 @@ namespace OpenDentBusiness
 
 		public static void PracticeAddress(StringBuilder strb)
 		{
-			if (PrefC.GetString(PrefName.PracticePhone).Length != 10)
+			if (Prefs.GetString(PrefName.PracticePhone).Length != 10)
 			{
 				//10 digit phone is required by WebMD (Emdeon Dental) and is universally assumed
 				Comma(strb);
 				strb.Append("Practice Phone");
 			}
-			if (PrefC.GetString(PrefName.PracticeAddress).Trim() == "")
+			if (Prefs.GetString(PrefName.PracticeAddress).Trim() == "")
 			{
 				Comma(strb);
 				strb.Append("Practice Address");
 			}
-			if (PrefC.GetString(PrefName.PracticeCity).Trim().Length < 2)
+			if (Prefs.GetString(PrefName.PracticeCity).Trim().Length < 2)
 			{
 				Comma(strb);
 				strb.Append("Practice City");
 			}
-			if (PrefC.GetString(PrefName.PracticeST).Trim().Length != 2)
+			if (Prefs.GetString(PrefName.PracticeST).Trim().Length != 2)
 			{
 				Comma(strb);
 				strb.Append("Practice State(2 char)");
 			}
-			if (!Regex.IsMatch(PrefC.GetString(PrefName.PracticeZip).Trim(), "^[0-9]{5}\\-?([0-9]{4})?$"))
+			if (!Regex.IsMatch(Prefs.GetString(PrefName.PracticeZip).Trim(), "^[0-9]{5}\\-?([0-9]{4})?$"))
 			{//#####, or #####-, or #####-####, or #########. Dashes are removed when X12 is generated.
 				Comma(strb);
 				strb.Append("Practice Zip");
@@ -174,28 +174,28 @@ namespace OpenDentBusiness
 
 		public static void BillingAddress(StringBuilder strb)
 		{
-			if (PrefC.GetString(PrefName.PracticePhone).Length != 10)
+			if (Prefs.GetString(PrefName.PracticePhone).Length != 10)
 			{ //There is no billing phone, so the practice phone is sent electronically.
 			  //10 digit phone is required by WebMD and is universally assumed 
 				Comma(strb);
 				strb.Append("Practice Phone");
 			}
-			if (PrefC.GetString(PrefName.PracticeBillingAddress).Trim() == "")
+			if (Prefs.GetString(PrefName.PracticeBillingAddress).Trim() == "")
 			{
 				Comma(strb);
 				strb.Append("Practice Billing Address");
 			}
-			if (PrefC.GetString(PrefName.PracticeBillingCity).Trim().Length < 2)
+			if (Prefs.GetString(PrefName.PracticeBillingCity).Trim().Length < 2)
 			{
 				Comma(strb);
 				strb.Append("Practice Billing City");
 			}
-			if (PrefC.GetString(PrefName.PracticeBillingST).Trim().Length != 2)
+			if (Prefs.GetString(PrefName.PracticeBillingST).Trim().Length != 2)
 			{
 				Comma(strb);
 				strb.Append("Practice Billing State(2 char)");
 			}
-			if (!Regex.IsMatch(PrefC.GetString(PrefName.PracticeBillingZip).Trim(), "^[0-9]{5}\\-?([0-9]{4})?$"))
+			if (!Regex.IsMatch(Prefs.GetString(PrefName.PracticeBillingZip).Trim(), "^[0-9]{5}\\-?([0-9]{4})?$"))
 			{
 				//#####, or #####-, or #####-####, or #########. Dashes are removed when X12 is generated.
 				Comma(strb);

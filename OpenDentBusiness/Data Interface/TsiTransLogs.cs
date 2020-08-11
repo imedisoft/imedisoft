@@ -319,7 +319,7 @@ namespace OpenDentBusiness
 					+ Lans.g("TsiTransLogs", "or is not setup properly.");
 			}
 			List<ProgramProperty> listProps = dictAllProps[clinicNum];
-			Def newBillType = Defs.GetDef(DefCat.BillingTypes, PrefC.GetLong(PrefName.TransworldPaidInFullBillingType));
+			Def newBillType = Defs.GetDef(DefCat.BillingTypes, Prefs.GetLong(PrefName.TransworldPaidInFullBillingType));
 			if (newBillType == null)
 			{
 				return Lans.g("TsiTransLogs", "The default paid in full billing type is not set.  An automated suspend message cannot be sent until the "

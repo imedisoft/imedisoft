@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using OpenDental.UI;
 using OpenDentBusiness;
 using CodeBase;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	///<summary></summary>
@@ -261,7 +262,7 @@ namespace OpenDental {
 			checkShowPat.Checked=IsShowPat;
 			checkShowDoctor.Checked=IsShowDoc;
 			checkShowOther.Checked=IsShowOther;
-			checkPreferred.Checked=PrefC.GetBool(PrefName.ShowPreferedReferrals);
+			checkPreferred.Checked=Prefs.GetBool(PrefName.ShowPreferedReferrals);
 			FillTable();
 			//labelResultCount.Text="";
 		}
@@ -357,8 +358,8 @@ namespace OpenDental {
 				if(FormPS.DialogResult!=DialogResult.OK) {
 					return;
 				}
-				refCur.PatNum=FormPS.SelectedPatNum;
-				Referral referral=Referrals.GetFirstOrDefault(x => x.PatNum==FormPS.SelectedPatNum);
+				refCur.PatNum=FormPS.SelectedPatientId;
+				Referral referral=Referrals.GetFirstOrDefault(x => x.PatNum==FormPS.SelectedPatientId);
 				if(referral!=null) {
 					refCur=referral;
 					referralIsNew=false;

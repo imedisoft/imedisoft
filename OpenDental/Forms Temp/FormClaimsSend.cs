@@ -454,7 +454,7 @@ namespace OpenDental{
 			}
 			FillGrid(isRefreshRequired:false);//no need to refresh, we just got the list from the db (_arrayQueueAll above)
 			//Validate all claims if the preference is enabled.
-			if(PrefC.GetBool(PrefName.ClaimsSendWindowValidatesOnLoad)) {
+			if(Prefs.GetBool(PrefName.ClaimsSendWindowValidatesOnLoad)) {
 				//This can be very slow if there are lots of claims to validate.
 				ValidateClaims(_arrayQueueAll.ToList());
 			}

@@ -17,6 +17,7 @@ using OpenDental.UI;
 using OpenDentBusiness;
 using CodeBase;
 using OpenDentBusiness.IO;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 
@@ -126,7 +127,7 @@ namespace OpenDental {
 
 		private void butAutoOrthoDefaultMonthsTreat_Click(object sender,EventArgs e) {
 			//Setting OrthoMonthsTreatOverride locks this value into place just in case it the pref changes down the road.
-			_patientNoteCur.OrthoMonthsTreatOverride=PrefC.GetByte(PrefName.OrthoDefaultMonthsTreat);
+			_patientNoteCur.OrthoMonthsTreatOverride=Prefs.GetByte(PrefName.OrthoDefaultMonthsTreat);
 			PatientNotes.Update(_patientNoteCur,_patCur.Guarantor);
 			FillAutoOrtho();
 		}
@@ -228,7 +229,7 @@ namespace OpenDental {
 		}
 
 		private void checkShowCompletePayPlans_Click(object sender,EventArgs e) {
-			Prefs.UpdateBool(PrefName.AccountShowCompletedPaymentPlans,checkShowCompletePayPlans.Checked);
+			Prefs.Set(PrefName.AccountShowCompletedPaymentPlans,checkShowCompletePayPlans.Checked);
 			FillPaymentPlans();
 			RefreshModuleScreen(false); //so the grids get redrawn if the payment plans grid hides/shows itself.
 		}
@@ -289,9 +290,9 @@ namespace OpenDental {
 		}
 
 		private void ContrAccount_Resize(object sender,EventArgs e) {
-			if(PrefC.HListIsNull()){
-				return;//helps on startup.
-			}
+			//if(PrefC.HListIsNull()){
+			//	return;//helps on startup.
+			//}
 			LayoutPanels();
 		}
 		#endregion Methods - Event Handlers ContrAccount
@@ -898,7 +899,7 @@ namespace OpenDental {
 			Patient guarantor=Patients.GetPat(_patCur.Guarantor);
 			Patient superHead=Patients.GetPat(_patCur.SuperFamily);
 			if(gridAccount.SelectedIndices.Length==0 
-				&& (!PrefC.GetBool(PrefName.ShowFeatureSuperfamilies) || !guarantor.HasSuperBilling || !superHead.HasSuperBilling)) 
+				&& (!Prefs.GetBool(PrefName.ShowFeatureSuperfamilies) || !guarantor.HasSuperBilling || !superHead.HasSuperBilling)) 
 			{
 				//autoselect procedures, adjustments, and some pay plan charges
 				for(int i=0;i<table.Rows.Count;i++) {//loop through every line showing on screen
@@ -949,7 +950,7 @@ namespace OpenDental {
 				}
 			}
 			else if(gridAccount.SelectedIndices.Length==0 
-				&& (PrefC.GetBool(PrefName.ShowFeatureSuperfamilies) && guarantor.HasSuperBilling && superHead.HasSuperBilling)) 
+				&& (Prefs.GetBool(PrefName.ShowFeatureSuperfamilies) && guarantor.HasSuperBilling && superHead.HasSuperBilling)) 
 			{
 				//No selections and superbilling is enabled for this family.  Show a window to select and attach procs to this statement for the superfamily.
 				FormInvoiceItemSelect formIIS=new FormInvoiceItemSelect(_patCur.SuperFamily);
@@ -1001,7 +1002,7 @@ namespace OpenDental {
 				}
 				else{//the selected item must be an adjustment
 					Adjustment adj=Adjustments.GetOne(PIn.Long(row["AdjNum"].ToString()));
-					if(adj.AdjDate.Date > DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
+					if(adj.AdjDate.Date > DateTime.Today.Date && !Prefs.GetBool(PrefName.FutureTransDatesAllowed)) {
 						MessageBox.Show("Adjustments cannot be made for future dates");
 						return;
 					}
@@ -1031,7 +1032,7 @@ namespace OpenDental {
 			stmt.StatementType=StmtType.NotSet;
 			stmt.DateRangeFrom=DateTime.MinValue;
 			stmt.DateRangeTo=DateTimeOD.Today;
-			stmt.Note=PrefC.GetString(PrefName.BillingDefaultsInvoiceNote);
+			stmt.Note=Prefs.GetString(PrefName.BillingDefaultsInvoiceNote);
 			stmt.NoteBold="";
 			stmt.IsBalValid=true;
 			stmt.BalTotal=guarantor.BalTotal;
@@ -1048,7 +1049,7 @@ namespace OpenDental {
 					Procedure proc=Procedures.GetProcFromList(procsForPat,PIn.Long(row["ProcNum"].ToString()));
 					Procedure oldProc=proc.Copy();
 					proc.StatementNum=stmt.StatementNum;
-					if(proc.ProcStatus==ProcStat.C && proc.ProcDate.Date > DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
+					if(proc.ProcStatus==ProcStat.C && proc.ProcDate.Date > DateTime.Today.Date && !Prefs.GetBool(PrefName.FutureTransDatesAllowed)) {
 						MessageBox.Show("Completed procedures cannot be set for future dates.");
 						return;
 					}
@@ -1071,7 +1072,7 @@ namespace OpenDental {
 						Procedure newProc=Procedures.GetOneProc(priKey,false);
 						Procedure oldProc=newProc.Copy();
 						newProc.StatementNum=stmt.StatementNum;
-						if(newProc.ProcStatus==ProcStat.C && newProc.ProcDate.Date>DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
+						if(newProc.ProcStatus==ProcStat.C && newProc.ProcDate.Date>DateTime.Today.Date && !Prefs.GetBool(PrefName.FutureTransDatesAllowed)) {
 							MessageBox.Show("Procedures cannot be set for future dates.");
 							return;
 						}
@@ -1287,7 +1288,7 @@ namespace OpenDental {
 			stmt.IsSent=true;
 			stmt.Mode_=StatementMode.InPerson;
 			stmt.HidePayment=true;
-			stmt.Intermingled=PrefC.GetBool(PrefName.IntermingleFamilyDefault);
+			stmt.Intermingled=Prefs.GetBool(PrefName.IntermingleFamilyDefault);
 			stmt.SinglePatient=!stmt.Intermingled;
 			stmt.IsReceipt=true;
 			stmt.StatementType=StmtType.NotSet;
@@ -1430,8 +1431,8 @@ namespace OpenDental {
 					" Please deselect these items and try again.");
 				return;
 			}
-			double taxPercent=PrefC.GetDouble(PrefName.SalesTaxPercentage);
-			long adjType=PrefC.GetLong(PrefName.SalesTaxAdjustmentType);
+			double taxPercent=Prefs.GetDouble(PrefName.SalesTaxPercentage);
+			long adjType=Prefs.GetLong(PrefName.SalesTaxAdjustmentType);
 			foreach(int idx in gridAccount.SelectedIndices) {
 				if(table.Rows[idx]["ProcNum"].ToString()=="0") {
 					continue;//They selected a whole bunch, if it's not a proc don't make a sales tax adjustment
@@ -1455,7 +1456,7 @@ namespace OpenDental {
 				Adjustment adjustment=new Adjustment();
 				adjustment.AdjDate=DateTime.Today;
 				adjustment.ProcDate=proc.ProcDate;
-				adjustment.ProvNum=PrefC.GetLong(PrefName.PracticeDefaultProv);
+				adjustment.ProvNum=Prefs.GetLong(PrefName.PracticeDefaultProv);
 				Clinic procClinic=Clinics.GetClinic(proc.ClinicNum);
 				if(proc.ClinicNum!=0 && procClinic.DefaultProv!=0) {
 					adjustment.ProvNum=procClinic.DefaultProv;
@@ -1484,7 +1485,7 @@ namespace OpenDental {
 			stmt.Mode_=StatementMode.Email;
 			stmt.HidePayment=false;
 			stmt.SinglePatient=false;
-			stmt.Intermingled=PrefC.GetBool(PrefName.IntermingleFamilyDefault);
+			stmt.Intermingled=Prefs.GetBool(PrefName.IntermingleFamilyDefault);
 			stmt.IsReceipt=false;
 			stmt.StatementType=StmtType.NotSet;
 			stmt.DateRangeFrom=DateTime.MinValue;
@@ -1523,7 +1524,7 @@ namespace OpenDental {
 			stmt.Mode_=StatementMode.InPerson;
 			stmt.HidePayment=false;
 			stmt.SinglePatient=false;
-			stmt.Intermingled=PrefC.GetBool(PrefName.IntermingleFamilyDefault);
+			stmt.Intermingled=Prefs.GetBool(PrefName.IntermingleFamilyDefault);
 			stmt.IsReceipt=false;
 			stmt.StatementType=StmtType.NotSet;
 			stmt.DateRangeFrom=DateTime.MinValue;
@@ -1565,7 +1566,7 @@ namespace OpenDental {
 			stmt.IsSent=true;
 			stmt.Mode_=StatementMode.InPerson;
 			stmt.HidePayment=true;
-			stmt.Intermingled=PrefC.GetBool(PrefName.IntermingleFamilyDefault);
+			stmt.Intermingled=Prefs.GetBool(PrefName.IntermingleFamilyDefault);
 			stmt.SinglePatient=!stmt.Intermingled;
 			stmt.IsReceipt=false;
 			stmt.StatementType=StmtType.NotSet;
@@ -1610,24 +1611,24 @@ namespace OpenDental {
 
 		#region Methods - Event Handlers TaskGoToEvent
 		public void TaskGoToEvent(object sender,CancelEventArgs e) {
-			FormTaskEdit formTaskEdit=(FormTaskEdit)sender;
-			TaskObjectType taskObjectType=formTaskEdit.GotoType;
-			long keyNum=formTaskEdit.GotoKeyNum;
-			if(taskObjectType==TaskObjectType.None) {
-				return;
-			}
-			if(taskObjectType==TaskObjectType.Patient) {
-				if(keyNum!=0) {
-					Patient pat=Patients.GetPat(keyNum);
-					FormOpenDental.S_Contr_PatientSelected(pat,false);
-					ModuleSelected(pat.PatNum);
-					return;
-				}
-			}
-			if(taskObjectType==TaskObjectType.Appointment) {
-				//There's nothing to do here, since we're not in the appt module.
-				return;
-			}
+			//FormTaskEdit formTaskEdit=(FormTaskEdit)sender;
+			//TaskObjectType taskObjectType=formTaskEdit.GotoType;
+			//long keyNum=formTaskEdit.GotoKeyNum;
+			//if(taskObjectType==TaskObjectType.None) {
+			//	return;
+			//}
+			//if(taskObjectType==TaskObjectType.Patient) {
+			//	if(keyNum!=0) {
+			//		Patient pat=Patients.GetPat(keyNum);
+			//		FormOpenDental.S_Contr_PatientSelected(pat,false);
+			//		ModuleSelected(pat.PatNum);
+			//		return;
+			//	}
+			//}
+			//if(taskObjectType==TaskObjectType.Appointment) {
+			//	//There's nothing to do here, since we're not in the appt module.
+			//	return;
+			//}
 		}
 		#endregion Methods - Event Handlers TaskGoToEvent 
 
@@ -1822,8 +1823,8 @@ namespace OpenDental {
 			//This just makes the patient information grid show up or not.
 			_listPatInfoDisplayFields=DisplayFields.GetForCategory(DisplayFieldCategory.AccountPatientInformation);
 			LayoutPanels();
-			checkShowFamilyComm.Checked=PrefC.GetBoolSilent(PrefName.ShowAccountFamilyCommEntries,true);
-			checkShowCompletePayPlans.Checked=PrefC.GetBool(PrefName.AccountShowCompletedPaymentPlans);
+			checkShowFamilyComm.Checked=Prefs.GetBool(PrefName.ShowAccountFamilyCommEntries,true);
+			checkShowCompletePayPlans.Checked=Prefs.GetBool(PrefName.AccountShowCompletedPaymentPlans);
 			Plugins.HookAddCode(this,"ContrAccount.InitializeOnStartup_end");
 		}
 
@@ -1858,7 +1859,7 @@ namespace OpenDental {
 				contextMenuQuickProcs.Popup+=new EventHandler(contextMenuQuickProcs_Popup);
 				ToolBarMain.Buttons.Add(_butQuickProcs);
 			}
-			if(!PrefC.GetBool(PrefName.EasyHideRepeatCharges)) {
+			if(!Prefs.GetBool(PrefName.EasyHideRepeatCharges)) {
 				button=new ODToolBarButton(Lan.G(this,"Repeating Charge"),-1,"","RepeatCharge");
 				button.Style=ODToolBarButtonStyle.PushButton;
 				ToolBarMain.Buttons.Add(button);
@@ -1868,7 +1869,7 @@ namespace OpenDental {
 			button.Style=ODToolBarButtonStyle.DropDownButton;
 			button.DropDownMenu=contextMenuStatement;
 			ToolBarMain.Buttons.Add(button);
-			if(PrefC.GetBool(PrefName.AccountShowQuestionnaire)) {
+			if(Prefs.GetBool(PrefName.AccountShowQuestionnaire)) {
 				ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
 				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Questionnaire"),-1,"","Questionnaire"));
 			}
@@ -2044,7 +2045,7 @@ namespace OpenDental {
 				formPayment.UnearnedAmt=unearnedAmt;
 			}
 			formPayment.ListEntriesPayFirst=listAcctEntries;
-			if(paymentCur.PayDate.Date>DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed) && !PrefC.GetBool(PrefName.AccountAllowFutureDebits)) {
+			if(paymentCur.PayDate.Date>DateTime.Today.Date && !Prefs.GetBool(PrefName.FutureTransDatesAllowed) && !Prefs.GetBool(PrefName.AccountAllowFutureDebits)) {
 				MessageBox.Show("Payments cannot be in the future.");
 				return;
 			}
@@ -2129,7 +2130,7 @@ namespace OpenDental {
 			stmt.Mode_=StatementMode.InPerson;
 			stmt.HidePayment=false;
 			stmt.SinglePatient=false;
-			stmt.Intermingled=PrefC.GetBool(PrefName.IntermingleFamilyDefault);
+			stmt.Intermingled=Prefs.GetBool(PrefName.IntermingleFamilyDefault);
 			stmt.StatementType=StmtType.NotSet;
 			stmt.DateRangeFrom=DateTime.MinValue;
 			if(textDateStart.errorProvider1.GetError(textDateStart)=="") {
@@ -2193,7 +2194,7 @@ namespace OpenDental {
 				doMakeSecLog = true;
 				_patNumLast = patNum;
 			}
-			bool doGetAutoOrtho = PrefC.GetBool(PrefName.OrthoEnabled);
+			bool doGetAutoOrtho = Prefs.GetBool(PrefName.OrthoEnabled);
 			try
 			{
 				_loadData = await AccountModules.GetLoadDataAsync(
@@ -2245,7 +2246,7 @@ namespace OpenDental {
 					ToolBarMain.Buttons["RepeatCharge"].Enabled=false;
 				}
 				ToolBarMain.Buttons["Statement"].Enabled=false;
-				if(ToolBarMain.Buttons["Questionnaire"]!=null && PrefC.GetBool(PrefName.AccountShowQuestionnaire)) {
+				if(ToolBarMain.Buttons["Questionnaire"]!=null && Prefs.GetBool(PrefName.AccountShowQuestionnaire)) {
 					ToolBarMain.Buttons["Questionnaire"].Enabled=false;
 				}
 				ToolBarMain.Invalidate();
@@ -2269,7 +2270,7 @@ namespace OpenDental {
 					ToolBarMain.Buttons["RepeatCharge"].Enabled=true;
 				} 
 				ToolBarMain.Buttons["Statement"].Enabled=true;
-				if(ToolBarMain.Buttons["Questionnaire"]!=null && PrefC.GetBool(PrefName.AccountShowQuestionnaire)) {
+				if(ToolBarMain.Buttons["Questionnaire"]!=null && Prefs.GetBool(PrefName.AccountShowQuestionnaire)) {
 					ToolBarMain.Buttons["Questionnaire"].Enabled=true;
 				}
 				ToolBarMain.Invalidate();
@@ -2285,7 +2286,7 @@ namespace OpenDental {
 			Logger.LogAction("FillRepeatCharges",() => FillRepeatCharges());//1
 			Logger.LogAction("FillPaymentPlans",() => FillPaymentPlans());//2
 			Logger.LogAction("FillMain",() => FillMain());//3
-			if(PrefC.GetBool(PrefName.OrthoEnabled)){
+			if(Prefs.GetBool(PrefName.OrthoEnabled)){
 				FillAutoOrtho(false);
 			}
 			if(OrthoCases.HasOrthoCasesEnabled()) {
@@ -2429,7 +2430,7 @@ namespace OpenDental {
 				//In the new way of doing it, they are all visible and calculated identically,
 				//but the emphasis simply changes by slight renaming of labels
 				//and by font size changes.
-				if(PrefC.GetBool(PrefName.BalancesDontSubtractIns)){
+				if(Prefs.GetBool(PrefName.BalancesDontSubtractIns)){
 					labelTotal.Text=Lan.G(this,"Balance");
 					labelTotalAmt.Font=fontBold;
 					labelTotalAmt.ForeColor=Color.Firebrick;
@@ -2448,7 +2449,7 @@ namespace OpenDental {
 					labelBalance.Text=Lan.G(this,"=Est Bal");
 					labelBalanceAmt.Font=fontBold;
 					labelBalanceAmt.ForeColor=Color.Firebrick;
-					if(PrefC.GetBool(PrefName.FuchsOptionsOn)){
+					if(Prefs.GetBool(PrefName.FuchsOptionsOn)){
 						labelTotal.Text=Lan.G(this,"Balance");
 						labelBalance.Text=Lan.G(this,"=Owed Now");
 						labelTotalAmt.Font=fontBold;
@@ -2615,7 +2616,7 @@ namespace OpenDental {
 				//Tx Months Total
 				row = new GridRow();
 				row.Cells.Add(Lan.G(this,"Tx Months Total")); //this patient's OrthoClaimMonthsTreatment, or the practice default if 0.
-				int txMonthsTotal=(_patientNoteCur.OrthoMonthsTreatOverride==-1?PrefC.GetByte(PrefName.OrthoDefaultMonthsTreat):_patientNoteCur.OrthoMonthsTreatOverride);
+				int txMonthsTotal=(_patientNoteCur.OrthoMonthsTreatOverride==-1?Prefs.GetByte(PrefName.OrthoDefaultMonthsTreat):_patientNoteCur.OrthoMonthsTreatOverride);
 				row.Cells.Add(txMonthsTotal.ToString());
 				gridAutoOrtho.ListGridRows.Add(row);
 				//Months in treatment
@@ -3033,7 +3034,7 @@ namespace OpenDental {
 			gridPayPlan.ListGridColumns.Add(col);
 			col=new GridColumn(Lan.G("TablePaymentPlans","Balance"),60,HorizontalAlignment.Right);
 			gridPayPlan.ListGridColumns.Add(col);
-			if(PrefC.GetBool(PrefName.PayPlanHideDueNow)) {
+			if(Prefs.GetBool(PrefName.PayPlanHideDueNow)) {
 				col=new GridColumn("Closed",60,HorizontalAlignment.Center);
 			}
 			else {
@@ -3078,7 +3079,7 @@ namespace OpenDental {
 					cell=new GridCell(Lan.G(this,"Closed"));
 					row.ColorText=Color.Gray;
 				}
-				else if(PrefC.GetBool(PrefName.PayPlanHideDueNow)) {//pref can only be enabled when PayPlansVersion == 2.
+				else if(Prefs.GetBool(PrefName.PayPlanHideDueNow)) {//pref can only be enabled when PayPlansVersion == 2.
 					cell=new GridCell("");
 				}
 				else { //they aren't hiding the "Due Now" cell text.
@@ -3103,7 +3104,7 @@ namespace OpenDental {
 				_PPBalanceTotal+=(Convert.ToDecimal(PIn.Double(table.Rows[i]["balance"].ToString())));
 			}
 			gridPayPlan.EndUpdate();
-			if(PrefC.GetBool(PrefName.FuchsOptionsOn)) {
+			if(Prefs.GetBool(PrefName.FuchsOptionsOn)) {
 				panelTotalOwes.Top=1;
 				labelTotalPtOwes.Text=(_PPBalanceTotal + (decimal)_famCur.ListPats[0].BalTotal - (decimal)_famCur.ListPats[0].InsEst).ToString("F");
 			}				
@@ -3122,7 +3123,7 @@ namespace OpenDental {
 			if(_arrayRepeatCharge.Length==0) {
 				return;
 			}
-			if(PrefC.GetBool(PrefName.BillingUseBillingCycleDay)) {
+			if(Prefs.GetBool(PrefName.BillingUseBillingCycleDay)) {
 				gridRepeat.Title=Lan.G(gridRepeat,"Repeat Charges")+" - Billing Day "+_patCur.BillingCycleDay;
 			}
 			else {
@@ -3392,7 +3393,7 @@ namespace OpenDental {
 			proc.ProcDate=DateTime.Now;
 			proc.ToothRange="";
 			proc.PlaceService=(PlaceOfService)PrefC.GetInt(PrefName.DefaultProcedurePlaceService);//Default Proc Place of Service for the Practice is used. 
-			if(!PrefC.GetBool(PrefName.EasyHidePublicHealth)) {
+			if(!Prefs.GetBool(PrefName.EasyHidePublicHealth)) {
 				proc.SiteNum=_patCur.SiteNum;
 			}
 			proc.ProvNum=procCode.ProvNumDefault;//use proc default prov if set
@@ -3481,7 +3482,7 @@ namespace OpenDental {
 			textFinNote.Height=tabMain.Height-textFinNote.Top;
 			//only show the auto ortho grid and tab control if they have the show feature enabled.
 			//otherwise, hide the tabs and re-size the account grid.
-			if(!PrefC.GetBool(PrefName.OrthoEnabled)) {
+			if(!Prefs.GetBool(PrefName.OrthoEnabled)) {
 				tabControlAccount.TabPages.Remove(tabPageAutoOrtho);
 			}
 			else if(!tabControlAccount.TabPages.Contains(tabPageAutoOrtho)) {
@@ -3551,7 +3552,7 @@ namespace OpenDental {
 
 		private string GetPatNameFromTable(DataTable table,int index) {
 			string name=table.Rows[index]["name"].ToString();
-			if(PrefC.GetBool(PrefName.TitleBarShowSpecialty) && string.Compare(name,"Entire Family",true)!=0) {
+			if(Prefs.GetBool(PrefName.TitleBarShowSpecialty) && string.Compare(name,"Entire Family",true)!=0) {
 				long patNum=PIn.Long(table.Rows[index]["PatNum"].ToString());
 				string specialty=Patients.GetPatientSpecialtyDef(patNum)?.ItemName??"";
 				name+=string.IsNullOrWhiteSpace(specialty)?"":"\r\n"+specialty;
@@ -3778,7 +3779,7 @@ namespace OpenDental {
 					MessageBox.Show(this,msg);
 					return;
 				}
-				string billingType=Defs.GetName(DefCat.BillingTypes,PrefC.GetLong(PrefName.TransworldPaidInFullBillingType));
+				string billingType=Defs.GetName(DefCat.BillingTypes,Prefs.GetLong(PrefName.TransworldPaidInFullBillingType));
 				msg=Lan.G(this,"The guarantor of this family has been sent to TSI for a past due balance.")+"\r\n"
 					+Lan.G(this,"Creating this payment plan will suspend the TSI account for a maximum of 50 days if the account is in the Accelerator or "
 						+"Profit Recovery stage.")+"\r\n"

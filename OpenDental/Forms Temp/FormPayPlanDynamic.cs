@@ -1,4 +1,5 @@
  using CodeBase;
+using Imedisoft.Forms;
 using OpenDental.ReportingComplex;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -117,9 +118,9 @@ namespace OpenDental {
 				butGoToGuar.Visible=false;
 				butGoToPat.Visible=false;
 			}
-			checkExcludePast.Checked=PrefC.GetBool(PrefName.PayPlansExcludePastActivity);
+			checkExcludePast.Checked=Prefs.GetBool(PrefName.PayPlansExcludePastActivity);
 			#endregion
-			if(PrefC.GetBool(PrefName.PayPlansUseSheets)) {
+			if(Prefs.GetBool(PrefName.PayPlansUseSheets)) {
 				Sheet sheetPP=null;
 				sheetPP=PayPlanToSheet(_payPlanCur);
 				//check to see if sig box is on the sheet
@@ -687,7 +688,7 @@ namespace OpenDental {
 			if(formPatientSelect.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			_payPlanCur.Guarantor=formPatientSelect.SelectedPatNum;
+			_payPlanCur.Guarantor=formPatientSelect.SelectedPatientId;
 			textGuarantor.Text=Patients.GetLim(_payPlanCur.Guarantor).GetNameLF();
 			FillCharges();
 		}
@@ -756,7 +757,7 @@ namespace OpenDental {
 				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return false;
 			}
-			if(PIn.Date(textDate.Text).Date > DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
+			if(PIn.Date(textDate.Text).Date > DateTime.Today.Date && !Prefs.GetBool(PrefName.FutureTransDatesAllowed)) {
 				MessageBox.Show("Payment plan date cannot be set for the future.");
 				return false;
 			}
@@ -954,7 +955,7 @@ namespace OpenDental {
 			if(!ValidateTerms()) {
 				return;
 			} 
-			if(PrefC.GetBool(PrefName.PayPlansUseSheets)) {
+			if(Prefs.GetBool(PrefName.PayPlansUseSheets)) {
 				Sheet sheetPP=null;
 				sheetPP=PayPlanToSheet(_payPlanCur);
 				SheetPrinting.Print(sheetPP);
@@ -966,7 +967,7 @@ namespace OpenDental {
 				Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
 				ReportComplex report=new ReportComplex(false,false);
 				report.AddTitle("Title",Lan.G(this,"Payment Plan Terms"),fontTitle);
-				report.AddSubTitle("PracTitle",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
+				report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
 				report.AddSubTitle("Date SubTitle",DateTime.Today.ToShortDateString(),fontSubTitle);
 				AreaSectionType sectType=AreaSectionType.ReportHeader;
 				Section section=report.Sections[AreaSectionType.ReportHeader];

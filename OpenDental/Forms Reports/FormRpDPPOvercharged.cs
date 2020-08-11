@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Forms;
 using OpenDental.ReportingComplex;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -186,7 +187,7 @@ namespace OpenDental {
 			_reportCur=new ReportComplex(true,true,false);
 			_reportCur.ReportName=Lan.G(this,"Overcharged Dynamic Payment Plans");
 			_reportCur.AddTitle("Title",Lan.G(this,"Overcharged Dynamic Payment Plans"));
-			_reportCur.AddSubTitle("Practice Name",PrefC.GetString(PrefName.PracticeTitle));
+			_reportCur.AddSubTitle("Practice Name",Prefs.GetString(PrefName.PracticeTitle));
 			if(_dateFrom==_dateTo) {
 				_reportCur.AddSubTitle("Report Dates",_dateFrom.ToShortDateString());
 			}
@@ -266,7 +267,7 @@ namespace OpenDental {
 			if(formPatientSelect.ShowDialog()!=DialogResult.OK) {
 				return;
 			}
-			_patNum=formPatientSelect.SelectedPatNum;
+			_patNum=formPatientSelect.SelectedPatientId;
 			textPatient.Text=Patients.GetLim(_patNum).GetNameLF();
 		}
 

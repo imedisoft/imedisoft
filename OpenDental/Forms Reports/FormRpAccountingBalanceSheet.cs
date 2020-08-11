@@ -130,7 +130,7 @@ namespace OpenDental{
 			tableEquity.LoadDataRow(new object[] { "NetIncomeThisYear",Accounts.NetIncomeThisYear(date1.SelectionStart) },LoadOption.OverwriteChanges);
 			reportComplex.ReportName="Balance Sheet";
 			reportComplex.AddTitle("Title",Lan.G(this,"Balance Sheet"),fontTitle);
-			reportComplex.AddSubTitle("PracName",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
+			reportComplex.AddSubTitle("PracName",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
 			reportComplex.AddSubTitle("Date",date1.SelectionStart.ToShortDateString(),fontSubTitle);
 			//setup query
 			QueryObject queryObject;

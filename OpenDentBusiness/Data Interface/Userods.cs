@@ -72,7 +72,7 @@ namespace OpenDentBusiness
 		{
 			string command = $@"SELECT userod.UserName FROM userod 
 				WHERE userod.IsHidden=0 
-				{ (PrefC.GetBool(PrefName.UserNameManualEntry) ? " " : " AND userod.UserNumCEMT" + (hasOnlyCEMT ? "!=" : "=") + @"0 ") }
+				{ (Prefs.GetBool(PrefName.UserNameManualEntry) ? " " : " AND userod.UserNumCEMT" + (hasOnlyCEMT ? "!=" : "=") + @"0 ") }
 				ORDER BY userod.UserName";
 			return Database.GetListString(command);
 		}
@@ -118,7 +118,7 @@ namespace OpenDentBusiness
 		{
 			//No need to check RemotingRole; no call to db.
 			Userod userSig = user == null ? Security.CurrentUser : user;
-			if (PrefC.GetBool(PrefName.NotesProviderSignatureOnly) && userSig.ProvNum == 0)
+			if (Prefs.GetBool(PrefName.NotesProviderSignatureOnly) && userSig.ProviderId == 0)
 			{
 				return false;//Prefernce is on and our user is not a provider.
 			}
@@ -181,7 +181,7 @@ namespace OpenDentBusiness
 		public static List<Userod> GetUsersByClinic(long clinicNum)
         {
             return cache.Find(
-                user => !user.IsHidden && (user.ClinicIsRestricted || user.ClinicNum == clinicNum)).ToList();
+                user => !user.IsHidden && (user.ClinicIsRestricted || user.ClinicId == clinicNum)).ToList();
         }
 
         public static List<Userod> GetWhere(Predicate<Userod> predicate)
@@ -225,7 +225,7 @@ namespace OpenDentBusiness
 		public static Userod GetUserByEmployeeNum(long employeeNum)
 		{
 			//No need to check RemotingRole; no call to db.
-			return GetFirstOrDefault(x => x.EmployeeNum == employeeNum);
+			return GetFirstOrDefault(x => x.EmployeeId == employeeNum);
 		}
 
 		/// <summary>
@@ -234,7 +234,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static List<Userod> GetUsersByEmployeeNum(long employeeNum)
 		{
-            return cache.Find(x => x.EmployeeNum == employeeNum).ToList();
+            return cache.Find(x => x.EmployeeId == employeeNum).ToList();
 		}
 
 		/// <summary>
@@ -252,7 +252,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static List<Userod> GetUsersWithProviders()
 		{
-            return cache.Find(x => x.ProvNum != 0).ToList();
+            return cache.Find(x => x.ProviderId != 0).ToList();
 		}
 
 		/// <summary>
@@ -261,12 +261,12 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static List<Userod> GetUsersByProvNum(long provNum)
 		{
-            return cache.Find(x => x.ProvNum == provNum).ToList();
+            return cache.Find(x => x.ProviderId == provNum).ToList();
 		}
 
 		public static List<Userod> GetUsersByInbox(long taskListNum)
 		{
-            return cache.Find(x => x.TaskListInBox == taskListNum).ToList();
+            return cache.Find(x => x.InboxTaskListId == taskListNum).ToList();
 		}
 
 		/// <summary>
@@ -335,7 +335,7 @@ namespace OpenDentBusiness
 			{
 				return false;
 			}
-			Provider prov = Providers.GetProv(user.ProvNum);
+			Provider prov = Providers.GetProv(user.ProviderId);
 			if (prov == null)
 			{
 				return false;
@@ -456,11 +456,13 @@ namespace OpenDentBusiness
 		public static void Update(Userod userod, List<long> listUserGroupNums = null)
 		{
 			Validate(false, userod, false, listUserGroupNums);
-			Crud.UserodCrud.Update(userod);
+
+			UserodCrud.Update(userod);
 			if (listUserGroupNums == null)
 			{
 				return;
 			}
+
 			UserGroupAttaches.SyncForUser(userod, listUserGroupNums);
 		}
 
@@ -477,11 +479,11 @@ namespace OpenDentBusiness
 				+ "UserName          = '" + POut.String(userod.UserName) + "', "
 				+ "Password          = '" + POut.String(userod.PasswordHash) + "', "
 				//+"UserGroupNum      =  "+POut.Long(userod.UserGroupNum)+", "//need to find primary key of remote user group
-				+ "EmployeeNum       =  " + POut.Long(userod.EmployeeNum) + ", "
-				+ "ClinicNum         =  " + POut.Long(userod.ClinicNum) + ", "
-				+ "ProvNum           =  " + POut.Long(userod.ProvNum) + ", "
+				+ "EmployeeNum       =  " + POut.Long(userod.EmployeeId) + ", "
+				+ "ClinicNum         =  " + POut.Long(userod.ClinicId) + ", "
+				+ "ProvNum           =  " + POut.Long(userod.ProviderId) + ", "
 				+ "IsHidden          =  " + POut.Bool(userod.IsHidden) + ", "
-				+ "TaskListInBox     =  " + POut.Long(userod.TaskListInBox) + ", "
+				//+ "TaskListInBox     =  " + POut.Long(userod.InboxTaskListId) + ", "
 				+ "AnesthProvType    =  " + POut.Int(userod.AnesthProvType) + ", "
 				+ "DefaultHidePopups =  " + POut.Bool(userod.DefaultHidePopups) + ", "
 				+ "PasswordIsStrong  =  " + POut.Bool(userod.PasswordIsStrong) + ", "
@@ -697,7 +699,7 @@ namespace OpenDentBusiness
 			copy.PasswordHash = passwordHash;
 			copy.PasswordIsStrong = isPasswordStrong;
 			copy.ClinicIsRestricted = user.ClinicIsRestricted;
-			copy.ClinicNum = user.ClinicNum;
+			copy.ClinicId = user.ClinicId;
 			//Insert also validates the user.
 			copy.Id = Insert(copy, UserGroups.GetForUser(user.Id, isForCemt).Select(x => x.Id).ToList(), isForCemt);
 			#region UserClinics
@@ -741,7 +743,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static long GetInbox(long userNum)
 		{
-            return GetFirstOrDefault(x => x.Id == userNum)?.TaskListInBox ?? 0;
+            return GetFirstOrDefault(x => x.Id == userNum)?.InboxTaskListId ?? 0;
         }
 
 		/// <summary>
@@ -796,7 +798,7 @@ namespace OpenDentBusiness
 			{
 				return Lans.g("FormUserPassword", "Password must contain at least one lower case letter when the strong password feature is turned on.");
 			}
-			if (PrefC.GetBool(PrefName.PasswordsStrongIncludeSpecial))
+			if (Prefs.GetBool(PrefName.PasswordsStrongIncludeSpecial))
 			{
 				bool hasSpecial = false;
 				for (int i = 0; i < pass.Length; i++)

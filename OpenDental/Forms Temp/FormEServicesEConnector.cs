@@ -75,7 +75,7 @@ namespace OpenDental
 			//DialogResult result;
 			//Check to see if the update server preference is set.
 			//If set, make sure that this is set to the computer currently logged on.
-			//string updateServerName=PrefC.GetString(PrefName.WebServiceServerName);
+			//string updateServerName=Prefs.GetString(PrefName.WebServiceServerName);
 			//if(!string.IsNullOrEmpty(updateServerName)&&!ODEnvironment.IdIsThisComputer(updateServerName.ToLower())) {
 			//	result=MessageBox.Show(Lan.G(this,"The eConnector service should be installed on the Update Server")+": "+updateServerName+"\r\n"
 			//		+Lan.G(this,"Are you trying to install the eConnector on a different computer by accident?"),"",MessageBoxButtons.YesNoCancel);
@@ -216,13 +216,13 @@ namespace OpenDental
 
 		private void butOk_Click(object sender,EventArgs e) {
 			if(checkEmailsWithDiffProcess.Checked) {
-				Prefs.UpdateInt(PrefName.SendEmailsInDiffProcess,(int)YN.Yes);
+				Prefs.Set(PrefName.SendEmailsInDiffProcess,(int)YN.Yes);
 			}
 			else {
 				//Not checked.
 				if((YN)PrefC.GetInt(PrefName.SendEmailsInDiffProcess)==YN.Yes) {
 					//If it was yes before, switch it to no.
-					Prefs.UpdateInt(PrefName.SendEmailsInDiffProcess,(int)YN.No);
+					Prefs.Set(PrefName.SendEmailsInDiffProcess,(int)YN.No);
 				}
 				//Otherwise do not update it. It is either no or unknown.
 			}

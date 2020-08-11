@@ -75,7 +75,7 @@ namespace OpenDental {
 			}
 			checkChrgWithNoBal.Checked = CreditCardCur.CanChargeWhenNoBal;
 			//Only visible if preference is on.
-			checkChrgWithNoBal.Visible = PrefC.GetBool(PrefName.RecurringChargesAllowedWhenNoPatBal);
+			checkChrgWithNoBal.Visible = Prefs.GetBool(PrefName.RecurringChargesAllowedWhenNoPatBal);
 			Plugins.HookAddCode(this, "FormCreditCardEdit.Load_end", PatCur);
 		}
 
@@ -495,7 +495,7 @@ namespace OpenDental {
 				}
 				catch(Exception ex) {
 					if(MessageBox.Show(Lans.g(this,"Error when deleting from PaySimple:")+"\r\n"+ex.Message+"\r\n\r\n"
-						+Lans.g(this,"Do you still want to delete the card from ")+PrefC.GetString(PrefName.SoftwareName)+"?",
+						+Lans.g(this,"Do you still want to delete the card from ")+Prefs.GetString(PrefName.SoftwareName)+"?",
 						"",MessageBoxButtons.YesNo)==DialogResult.No) 
 					{
 						return false;

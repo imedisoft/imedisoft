@@ -7,6 +7,7 @@ using System.Threading;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormEtrans834Preview:ODForm {
@@ -25,8 +26,8 @@ namespace OpenDental {
 		}
 
 		private void FormEtrans834Preview_Load(object sender,EventArgs e) {
-			checkDropExistingIns.Checked=PrefC.GetBool(PrefName.Ins834DropExistingPatPlans);
-			checkIsPatientCreate.Checked=PrefC.GetBool(PrefName.Ins834IsPatientCreate);
+			checkDropExistingIns.Checked=Prefs.GetBool(PrefName.Ins834DropExistingPatPlans);
+			checkIsPatientCreate.Checked=Prefs.GetBool(PrefName.Ins834IsPatientCreate);
 			FillGridInsPlans();
 		}
 
@@ -195,7 +196,7 @@ namespace OpenDental {
 			}
 			FormPatientSelect FormPS=new FormPatientSelect(member.Pat);
 			if(FormPS.ShowDialog()==DialogResult.OK) {
-				member.Pat.PatNum=FormPS.SelectedPatNum;
+				member.Pat.PatNum=FormPS.SelectedPatientId;
 				gridInsPlans.BeginUpdate();
 				//Refresh all rows for this member to show the newly selected PatNum.
 				//There will be multiple rows if there are multiple insurance plans for the member.
@@ -234,8 +235,8 @@ namespace OpenDental {
 			butOK.Enabled=false;
 			butCancel.Enabled=false;
 			Cursor=Cursors.WaitCursor;
-			Prefs.UpdateBool(PrefName.Ins834DropExistingPatPlans,checkDropExistingIns.Checked);
-			Prefs.UpdateBool(PrefName.Ins834IsPatientCreate,checkIsPatientCreate.Checked);
+			Prefs.Set(PrefName.Ins834DropExistingPatPlans,checkDropExistingIns.Checked);
+			Prefs.Set(PrefName.Ins834IsPatientCreate,checkIsPatientCreate.Checked);
 			//Create all of our count variables.
 			int createdPatsCount,updatedPatsCount,skippedPatsCount,createdCarrierCount,createdInsPlanCount,updatedInsPlanCount,createdInsSubCount,
 				updatedInsSubCount,createdPatPlanCount,droppedPatPlanCount,updatedPatPlanCount;

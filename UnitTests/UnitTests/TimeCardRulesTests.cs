@@ -41,8 +41,8 @@ namespace UnitTests.TimeCardRules_Tests {
 			Employee emp=EmployeeT.CreateEmployee(suffix);
 			PayPeriod payP1=PayPeriodT.CreateTwoWeekPayPeriodIfNotExists(startDate);
 			PayPeriods.RefreshCache();
-			Prefs.UpdateInt(PrefName.TimeCardOvertimeFirstDayOfWeek,0);
-			Prefs.UpdateBool(PrefName.TimeCardsMakesAdjustmentsForOverBreaks,true);
+			Prefs.Set(PrefName.TimeCardOvertimeFirstDayOfWeek,0);
+			Prefs.Set(PrefName.TimeCardsMakesAdjustmentsForOverBreaks,true);
 			TimeCardRuleT.CreateHoursTimeRule(emp.EmployeeNum,TimeSpan.FromHours(10));
 			TimeCardRules.RefreshCache();
 			long clockEvent1=ClockEventT.InsertWorkPeriod(emp.EmployeeNum,startDate.AddHours(8),startDate.AddHours(13),0);
@@ -63,7 +63,7 @@ namespace UnitTests.TimeCardRules_Tests {
 			Employee emp=EmployeeT.CreateEmployee(suffix);
 			PayPeriod payP1=PayPeriodT.CreateTwoWeekPayPeriodIfNotExists(startDate);
 			PayPeriods.RefreshCache();
-			Prefs.UpdateInt(PrefName.TimeCardOvertimeFirstDayOfWeek,0);
+			Prefs.Set(PrefName.TimeCardOvertimeFirstDayOfWeek,0);
 			TimeCardRules.RefreshCache();
 			long clockEvent1=ClockEventT.InsertWorkPeriod(emp.EmployeeNum,startDate.AddDays(0).AddHours(6),startDate.AddDays(0).AddHours(17));
 			long clockEvent2=ClockEventT.InsertWorkPeriod(emp.EmployeeNum,startDate.AddDays(1).AddHours(6),startDate.AddDays(1).AddHours(17));
@@ -86,7 +86,7 @@ namespace UnitTests.TimeCardRules_Tests {
 			PayPeriod payP1=PayPeriodT.CreateTwoWeekPayPeriodIfNotExists(startDate);
 			PayPeriod payP2=PayPeriodT.CreateTwoWeekPayPeriodIfNotExists(startDate.AddDays(14));
 			PayPeriods.RefreshCache();
-			Prefs.UpdateInt(PrefName.TimeCardOvertimeFirstDayOfWeek,0);
+			Prefs.Set(PrefName.TimeCardOvertimeFirstDayOfWeek,0);
 			TimeCardRules.RefreshCache();
 			long clockEvent1=ClockEventT.InsertWorkPeriod(emp.EmployeeNum,startDate.AddDays(10).AddHours(6),startDate.AddDays(10).AddHours(17),0);
 			long clockEvent2=ClockEventT.InsertWorkPeriod(emp.EmployeeNum,startDate.AddDays(11).AddHours(6),startDate.AddDays(11).AddHours(17),0);
@@ -112,7 +112,7 @@ namespace UnitTests.TimeCardRules_Tests {
 			Employee emp=EmployeeT.CreateEmployee(suffix);
 			PayPeriod payP1=PayPeriodT.CreateTwoWeekPayPeriodIfNotExists(startDate);
 			PayPeriods.RefreshCache();
-			Prefs.UpdateInt(PrefName.TimeCardOvertimeFirstDayOfWeek,3);
+			Prefs.Set(PrefName.TimeCardOvertimeFirstDayOfWeek,3);
 			TimeCardRules.RefreshCache();
 			long clockEvent1=ClockEventT.InsertWorkPeriod(emp.EmployeeNum,startDate.AddDays(0).AddHours(6),startDate.AddDays(0).AddHours(17),0);
 			long clockEvent2=ClockEventT.InsertWorkPeriod(emp.EmployeeNum,startDate.AddDays(1).AddHours(6),startDate.AddDays(1).AddHours(17),0);
@@ -138,8 +138,8 @@ namespace UnitTests.TimeCardRules_Tests {
 			Employee emp=EmployeeT.CreateEmployee(suffix);
 			PayPeriod payP1=PayPeriodT.CreateTwoWeekPayPeriodIfNotExists(startDate);
 			PayPeriods.RefreshCache();
-			Prefs.UpdateInt(PrefName.TimeCardOvertimeFirstDayOfWeek,0);
-			Prefs.UpdateBool(PrefName.TimeCardsMakesAdjustmentsForOverBreaks,true);
+			Prefs.Set(PrefName.TimeCardOvertimeFirstDayOfWeek,0);
+			Prefs.Set(PrefName.TimeCardsMakesAdjustmentsForOverBreaks,true);
 			Prefs.RefreshCache();
 			TimeCardRuleT.CreatePMTimeRule(emp.EmployeeNum,TimeSpan.FromHours(16));
 			TimeCardRules.RefreshCache();
@@ -161,8 +161,8 @@ namespace UnitTests.TimeCardRules_Tests {
 			Employee emp=EmployeeT.CreateEmployee(suffix);
 			PayPeriod payP1=PayPeriodT.CreateTwoWeekPayPeriodIfNotExists(startDate);
 			PayPeriods.RefreshCache();
-			Prefs.UpdateInt(PrefName.TimeCardOvertimeFirstDayOfWeek,0);
-			Prefs.UpdateBool(PrefName.TimeCardsMakesAdjustmentsForOverBreaks,true);
+			Prefs.Set(PrefName.TimeCardOvertimeFirstDayOfWeek,0);
+			Prefs.Set(PrefName.TimeCardsMakesAdjustmentsForOverBreaks,true);
 			TimeCardRuleT.CreateAMTimeRule(emp.EmployeeNum,TimeSpan.FromHours(7.5));
 			TimeCardRules.RefreshCache();
 			long clockEvent1=ClockEventT.InsertWorkPeriod(emp.EmployeeNum,startDate.AddHours(6),startDate.AddHours(16),0);
@@ -181,7 +181,7 @@ namespace UnitTests.TimeCardRules_Tests {
 			Employee emp=EmployeeT.CreateEmployee(suffix);
 			PayPeriod payP1=PayPeriodT.CreateTwoWeekPayPeriodIfNotExists(startDate);
 			PayPeriods.RefreshCache();
-			Prefs.UpdateInt(PrefName.TimeCardOvertimeFirstDayOfWeek,0);
+			Prefs.Set(PrefName.TimeCardOvertimeFirstDayOfWeek,0);
 			TimeCardRules.RefreshCache();
 			//Each of these are 11 hour days. Should have 4 hours of OT with clinic 3 and 11 hours OT with clinic 4 the end of the pay period.
 			long clockEvent1=ClockEventT.InsertWorkPeriod(emp.EmployeeNum,startDate.AddDays(0).AddHours(6),startDate.AddDays(0).AddHours(17),0);
@@ -210,7 +210,7 @@ namespace UnitTests.TimeCardRules_Tests {
 			PayPeriod payP1=PayPeriodT.CreateTwoWeekPayPeriodIfNotExists(startDate);
 			PayPeriod payP2=PayPeriodT.CreateTwoWeekPayPeriodIfNotExists(startDate.AddDays(14));
 			PayPeriods.RefreshCache();
-			Prefs.UpdateInt(PrefName.TimeCardOvertimeFirstDayOfWeek,0);
+			Prefs.Set(PrefName.TimeCardOvertimeFirstDayOfWeek,0);
 			TimeCardRules.RefreshCache();
 			//Each of these are 11 hour days. Should have 4 hours of OT with clinic 3 in the second pay period.
 			long clockEvent1=ClockEventT.InsertWorkPeriod(emp.EmployeeNum,startDate.AddDays(10).AddHours(6),startDate.AddDays(10).AddHours(17),0);
@@ -238,7 +238,7 @@ namespace UnitTests.TimeCardRules_Tests {
 			PayPeriod payP1=PayPeriodT.CreateTwoWeekPayPeriodIfNotExists(startDate);
 			PayPeriod payP2=PayPeriodT.CreateTwoWeekPayPeriodIfNotExists(startDate.AddDays(14));
 			PayPeriods.RefreshCache();
-			Prefs.UpdateInt(PrefName.TimeCardOvertimeFirstDayOfWeek,0);
+			Prefs.Set(PrefName.TimeCardOvertimeFirstDayOfWeek,0);
 			TimeCardRules.RefreshCache();
 			//Each of these are 11 hour days. Should have 4 hours of OT with clinic 3 in the second pay period and 11 hours for clinic 4.
 			long clockEvent1=ClockEventT.InsertWorkPeriod(emp.EmployeeNum,startDate.AddDays(10).AddHours(6),startDate.AddDays(10).AddHours(17),0);//Sun
@@ -271,7 +271,7 @@ namespace UnitTests.TimeCardRules_Tests {
 			Employee emp=EmployeeT.CreateEmployee(suffix);
 			PayPeriod payP1=PayPeriodT.CreateTwoWeekPayPeriodIfNotExists(startDate);
 			PayPeriods.RefreshCache();
-			Prefs.UpdateInt(PrefName.TimeCardOvertimeFirstDayOfWeek,0);
+			Prefs.Set(PrefName.TimeCardOvertimeFirstDayOfWeek,0);
 			TimeCardRules.RefreshCache();
 			//Each of these are 11 hour days. Should have 4 hours of OT with clinic 3 in the second pay period and 11 hours for clinic 4.
 			//Week 1 - 40.4 hours
@@ -305,7 +305,7 @@ namespace UnitTests.TimeCardRules_Tests {
 			Employee emp=EmployeeT.CreateEmployee(suffix);
 			PayPeriod payP1=PayPeriodT.CreateTwoWeekPayPeriodIfNotExists(startDate);
 			PayPeriods.RefreshCache();
-			Prefs.UpdateInt(PrefName.TimeCardOvertimeFirstDayOfWeek,0);
+			Prefs.Set(PrefName.TimeCardOvertimeFirstDayOfWeek,0);
 			TimeCardRules.RefreshCache();
 			//Each of these are 11 hour days. Should have 4 hours of OT with clinic 3 in the second pay period and 11 hours for clinic 4.
 			//Week 1 - 40.13 (Note: These appear as they should after CalculateDaily is run.)
@@ -351,8 +351,8 @@ namespace UnitTests.TimeCardRules_Tests {
 			Employee emp=EmployeeT.CreateEmployee("CalculateDailyWhileEmployeeClockedInDuringPayPeriod");
 			PayPeriod payP1=PayPeriodT.CreateTwoWeekPayPeriodIfNotExists(startDate);
 			PayPeriods.RefreshCache();
-			Prefs.UpdateInt(PrefName.TimeCardOvertimeFirstDayOfWeek,0);
-			Prefs.UpdateBool(PrefName.TimeCardsMakesAdjustmentsForOverBreaks,true);
+			Prefs.Set(PrefName.TimeCardOvertimeFirstDayOfWeek,0);
+			Prefs.Set(PrefName.TimeCardsMakesAdjustmentsForOverBreaks,true);
 			Prefs.RefreshCache();
 			TimeCardRules.RefreshCache();
 			//10 hour day with 45 minute break
@@ -374,8 +374,8 @@ namespace UnitTests.TimeCardRules_Tests {
 			Employee emp=EmployeeT.CreateEmployee("CalculateDailyWhileEmployeeClockedOutDuringPayPeriod");
 			PayPeriod payP1=PayPeriodT.CreateTwoWeekPayPeriodIfNotExists(startDate);
 			PayPeriods.RefreshCache();
-			Prefs.UpdateInt(PrefName.TimeCardOvertimeFirstDayOfWeek,0);
-			Prefs.UpdateBool(PrefName.TimeCardsMakesAdjustmentsForOverBreaks,true);
+			Prefs.Set(PrefName.TimeCardOvertimeFirstDayOfWeek,0);
+			Prefs.Set(PrefName.TimeCardsMakesAdjustmentsForOverBreaks,true);
 			Prefs.RefreshCache();
 			TimeCardRules.RefreshCache();
 			//10 hour day with 45 minute break

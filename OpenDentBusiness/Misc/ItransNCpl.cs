@@ -39,8 +39,8 @@ namespace OpenDentBusiness {
 				if(!File.Exists(ODFileUtils.CombinePaths(clearinghouse.ResponsePath,"ITRANS Claims Director.exe"))) {
 					return Lans.g("Clearinghouse","Unable to find 'ITRANS Claims Director.exe'. Make sure the file exists and the path is correct.");
 				}
-				if(isAutomatic && PrefC.GetString(PrefName.WebServiceServerName).ToLower()!=Dns.GetHostName().ToLower()) {//Only server can run when isOnlyServer is true.
-					return Lans.g("Clearinghouse","Update can only run on the web service server "+PrefC.GetString(PrefName.WebServiceServerName))+
+				if(isAutomatic && Prefs.GetString(PrefName.WebServiceServerName).ToLower()!=Dns.GetHostName().ToLower()) {//Only server can run when isOnlyServer is true.
+					return Lans.g("Clearinghouse","Update can only run on the web service server "+Prefs.GetString(PrefName.WebServiceServerName))+
 						". "+Lans.g("Clearinghouse","Connect to the server and try again.");
 				}
 				Process process=new Process {

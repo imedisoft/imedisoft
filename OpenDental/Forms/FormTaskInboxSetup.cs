@@ -1,124 +1,151 @@
+using Imedisoft.Data.Cache;
+using OpenDental.UI;
+using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using OpenDentBusiness;
-using OpenDental.UI;
 
-namespace OpenDental {
-	public partial class FormTaskInboxSetup:ODForm {
-		private List<Userod> UserList;
-		private List<Userod> UserListOld;
-		private List<TaskList> TrunkList;
+namespace Imedisoft.Forms
+{
+    public partial class FormTaskInboxSetup : FormBase
+	{
+		private List<Userod> users;
+		private readonly Dictionary<long, long?> userInboxIds = new Dictionary<long, long?>();
+		private List<TaskList> taskLists;
 
-		public FormTaskInboxSetup() {
+		public FormTaskInboxSetup()
+		{
 			InitializeComponent();
-			Lan.F(this);
 		}
 
-		private void FormTaskInboxSetup_Load(object sender,EventArgs e) {
-			UserList=Userods.GetAll(true);
-			UserListOld=Userods.GetAll(true);
-			TrunkList=TaskLists.RefreshMainTrunk(Security.CurrentUser.Id,TaskType.All)
-				.FindAll(x => x.TaskListStatus==TaskListStatusEnum.Active);
-			listMain.Items.Add(Lan.G(this,"none"));
-			for(int i=0;i<TrunkList.Count;i++){
-				listMain.Items.Add(TrunkList[i].Descript);
+		private void FormTaskInboxSetup_Load(object sender, EventArgs e)
+		{
+			users = Userods.GetAll(true);
+			foreach (var user in users)
+            {
+				userInboxIds[user.Id] = user.InboxTaskListId;
+            }
+
+			taskLists = TaskLists.GetTrunk().ToList().FindAll(x => x.Status == TaskListStatus.Active);
+
+			trunkListBox.Items.Add("none");
+			foreach (var taskList in taskLists)
+			{
+				trunkListBox.Items.Add(taskList);
 			}
+
 			FillGrid();
 		}
 
-		private void FillGrid(){
-			//doesn't refresh from db because nothing actually gets saved until we hit the OK button.
-			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableTaskSetup","User"),100);
-			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableTaskSetup","Inbox"),100);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
-			GridRow row;
-			for(int i=0;i<UserList.Count;i++){
-				row=new GridRow();
-				row.Cells.Add(UserList[i].UserName);
-				row.Cells.Add(GetDescription(UserList[i].TaskListInBox));
-				gridMain.ListGridRows.Add(row);
+		private void FillGrid()
+		{
+			usersGrid.BeginUpdate();
+			usersGrid.ListGridColumns.Clear();
+			usersGrid.ListGridColumns.Add(new GridColumn("User", 100));
+			usersGrid.ListGridColumns.Add(new GridColumn("Inbox", 100));
+			usersGrid.ListGridRows.Clear();
+
+			foreach (var user in users)
+			{
+				var row = new GridRow();
+
+				row.Cells.Add(user.UserName);
+				row.Cells.Add(GetDescription(user.InboxTaskListId));
+
+				usersGrid.ListGridRows.Add(row);
 			}
-			gridMain.EndUpdate();
+
+			usersGrid.EndUpdate();
 		}
 
-		private string GetDescription(long taskListNum) {
-			if(taskListNum==0){
-				return "";
-			}
-			for(int i=0;i<TrunkList.Count;i++){
-				if(TrunkList[i].TaskListNum==taskListNum){
-					return TrunkList[i].Descript;
-				}
-			}
-			return "";
+		private string GetDescription(long? taskListId)
+		{
+			if (!taskListId.HasValue) return "";
+
+			return taskLists.FirstOrDefault(tl => tl.Id == taskListId)?.Description ?? "";
 		}
 
-		private void butSet_Click(object sender,EventArgs e) {
-			if(gridMain.GetSelectedIndex()==-1){
-				MessageBox.Show("Please select a user first.");
+		private void SetButton_Click(object sender, EventArgs e)
+		{
+			if (usersGrid.GetSelectedIndex() == -1)
+			{
+				ShowError("Please select a user first.");
 				return;
 			}
-			if(listMain.SelectedIndex==-1){
-				MessageBox.Show("Please select an item from the list first.");
+
+			if (trunkListBox.SelectedIndex == -1)
+			{
+				ShowError("Please select an item from the list first.");
 				return;
 			}
-			if(listMain.SelectedIndex==0){
-				UserList[gridMain.GetSelectedIndex()].TaskListInBox=0;
+
+			if (trunkListBox.SelectedItem is TaskList taskList)
+            {
+				users[usersGrid.GetSelectedIndex()].InboxTaskListId = taskList.Id;
+            }
+            else
+            {
+				users[usersGrid.GetSelectedIndex()].InboxTaskListId = null;
 			}
-			else{
-				UserList[gridMain.GetSelectedIndex()].TaskListInBox=TrunkList[listMain.SelectedIndex-1].TaskListNum;
-			}
+
 			FillGrid();
-			listMain.SelectedIndex=-1;
+
+			trunkListBox.SelectedIndex = -1;
 		}
 
-		private void butOK_Click(object sender,EventArgs e) {
-			bool changed=false;
-			Dictionary<string,List<Userod>> dictFailedUserUpdates=new Dictionary<string, List<Userod>>();
-			for(int i=0;i<UserList.Count;i++){
-				if(UserList[i].TaskListInBox!=UserListOld[i].TaskListInBox){
-					try {
-						Userods.Update(UserList[i]);
-						changed=true;
+		private void AcceptButton_Click(object sender, EventArgs e)
+		{
+			bool changed = false;
+
+			var updateErrors = new Dictionary<string, List<Userod>>();
+
+			foreach (var user in users)
+			{
+				if (!userInboxIds.TryGetValue(user.Id, out var inboxId) || user.InboxTaskListId != inboxId)
+				{
+					try
+					{
+						Userods.Update(user);
+
+						changed = true;
 					}
-					catch(Exception ex) {
-						if(!dictFailedUserUpdates.ContainsKey(ex.Message)){
-							dictFailedUserUpdates.Add(ex.Message,new List<Userod>());
-						}
-						dictFailedUserUpdates[ex.Message].Add(UserList[i]);
+					catch (Exception exception)
+					{
+						if (!updateErrors.TryGetValue(exception.Message, out var errorUsers))
+                        {
+							updateErrors[exception.Message] 
+								= errorUsers = new List<Userod>();
+                        }
+
+						errorUsers.Add(user);
 					}
 				}
 			}
-			if(dictFailedUserUpdates.Count>0) {//Inform user that user inboxes could not be updated.
-				StringBuilder sb=new StringBuilder();
-				foreach(string exceptionMsgKey in dictFailedUserUpdates.Keys) {
-					foreach(Userod user in dictFailedUserUpdates[exceptionMsgKey]) {
-						sb.AppendLine("  "+user.UserName+" - "+exceptionMsgKey);
+
+			if (updateErrors.Count > 0)
+			{
+				var stringBuilder = new StringBuilder();
+
+				foreach (var kvp in updateErrors)
+				{
+					foreach (var user in kvp.Value)
+					{
+						stringBuilder.AppendLine("  " + user.UserName + " - " + kvp.Key);
 					}
 				}
-				MessageBox.Show(this,Lans.g(this,"The following users could not be updated:\r\n")+sb.ToString());
+
+				ShowError(
+					"The following users could not be updated:\r\n" + stringBuilder.ToString());
 			}
-			if(changed){
-				DataValid.SetInvalid(InvalidType.Security);
+
+			if (changed)
+			{
+				CacheManager.Refresh(nameof(InvalidType.Security));
 			}
-			DialogResult=DialogResult.OK;
+
+			DialogResult = DialogResult.OK;
 		}
-
-		private void butCancel_Click(object sender,EventArgs e) {
-			DialogResult=DialogResult.Cancel;
-		}
-
-		
-
-		
 	}
 }

@@ -53,7 +53,7 @@ namespace OpenDental{
 			}
 			textUserName.Text=UserCur.UserName;
 			textDomainUser.Text=UserCur.DomainUser;
-			if(!PrefC.GetBool(PrefName.DomainLoginEnabled)) {
+			if(!Prefs.GetBool(PrefName.DomainLoginEnabled)) {
 				labelDomainUser.Visible=false;
 				textDomainUser.Visible=false;
 				butPickDomainUser.Visible=false;
@@ -66,7 +66,7 @@ namespace OpenDental{
 				if(!_isFromAddUser && UserCur.IsInUserGroup(_listUserGroups[i].Id)) {
 					listUserGroup.SetSelected(i,true);
 				}
-				if(_isFromAddUser && _listUserGroups[i].Id==PrefC.GetLong(PrefName.DefaultUserGroup)) {
+				if(_isFromAddUser && _listUserGroups[i].Id==Prefs.GetLong(PrefName.DefaultUserGroup)) {
 					listUserGroup.SetSelected(i,true);
 				}
 			}
@@ -82,7 +82,7 @@ namespace OpenDental{
 			_listEmployees=Employees.GetDeepCopy(true);
 			for(int i=0;i<_listEmployees.Count;i++){
 				listEmployee.Items.Add(Employees.GetNameFL(_listEmployees[i]));
-				if(UserCur.EmployeeNum==_listEmployees[i].EmployeeNum) {
+				if(UserCur.EmployeeId==_listEmployees[i].EmployeeNum) {
 					listEmployee.SelectedIndex=i+1;
 				}
 			}
@@ -92,7 +92,7 @@ namespace OpenDental{
 			_listProviders=Providers.GetDeepCopy(true);
 			for(int i=0;i<_listProviders.Count;i++) {
 				listProv.Items.Add(_listProviders[i].GetLongDesc());
-				if(UserCur.ProvNum==_listProviders[i].ProvNum) {
+				if(UserCur.ProviderId==_listProviders[i].ProvNum) {
 					listProv.SelectedIndex=i+1;
 				}
 			}
@@ -125,7 +125,7 @@ namespace OpenDental{
 				listClinic.Items.Add(Lan.G(this,"All"));
 				listAlertSubsClinicsMulti.Items.Add(Lan.G(this,"All"));
 				listAlertSubsClinicsMulti.Items.Add(Lan.G(this,"Headquarters"));
-				if(UserCur.ClinicNum==0) {//Unrestricted
+				if(UserCur.ClinicId==0) {//Unrestricted
 					listClinic.SetSelected(0,true);
 					checkClinicIsRestricted.Enabled=false;//We don't really need this checkbox any more but it's probably better for users to keep it....
 				}
@@ -140,10 +140,10 @@ namespace OpenDental{
 					listClinic.Items.Add(_listClinics[i].Abbr);
 					listClinicMulti.Items.Add(_listClinics[i].Abbr);
 					listAlertSubsClinicsMulti.Items.Add(_listClinics[i].Abbr);
-					if(UserCur.ClinicNum==_listClinics[i].ClinicNum) {
+					if(UserCur.ClinicId==_listClinics[i].ClinicNum) {
 						listClinic.SetSelected(i+1,true);
 					}
-					if(UserCur.ClinicNum!=0 && listUserClinics.Exists(x => x.ClinicId==_listClinics[i].ClinicNum)) {
+					if(UserCur.ClinicId!=0 && listUserClinics.Exists(x => x.ClinicId==_listClinics[i].ClinicNum)) {
 						listClinicMulti.SetSelected(i,true);//No "All" option, don't select i+1
 					}
 					if(!isAllClinicsSubscribed && _listUserAlertTypesOld.Exists(x => x.ClinicNum==_listClinics[i].ClinicNum)) {
@@ -199,13 +199,13 @@ namespace OpenDental{
 		private void butPickDomainUser_Click(object sender,EventArgs e) {
 			//DirectoryEntry does recognize an empty string as a valid LDAP entry and will just return all logins from all available domains
 			//But all logins should be on the same domain, so this field is required
-			if(string.IsNullOrWhiteSpace(PrefC.GetString(PrefName.DomainLoginPath))) {
+			if(string.IsNullOrWhiteSpace(Prefs.GetString(PrefName.DomainLoginPath))) {
 				MessageBox.Show("DomainLoginPath is missing in security settings. DomainLoginPath is required before assigning domain logins to user accounts.");
 				return;
 			}
 			//Try to access the specified DomainLoginPath
 			try {
-				DirectoryEntry.Exists(PrefC.GetString(PrefName.DomainLoginPath));
+				DirectoryEntry.Exists(Prefs.GetString(PrefName.DomainLoginPath));
 			}
 			catch(Exception ex) {
 				MessageBox.Show(Lan.G(this,"An error occurred while attempting to access the provided DomainLoginPath:")+" "+ex.Message);
@@ -298,7 +298,7 @@ namespace OpenDental{
 			{
 				UserPreference.Set(UserPreferenceName.LogOffTimerOverride, logOffTimerOverride);
 
-				if (!PrefC.GetBool(PrefName.SecurityLogOffAllowUserOverride))
+				if (!Prefs.GetBool(PrefName.SecurityLogOffAllowUserOverride))
 				{
 					ODMessageBox.Show("User logoff overrides will not take effect until the Global Security setting \"Allow user override for automatic logoff\" is checked");
 				}
@@ -310,7 +310,7 @@ namespace OpenDental{
 				MessageBox.Show("Please enter a username.");
 				return;
 			}
-			if(!_isFromAddUser && IsNew && PrefC.GetBool(PrefName.PasswordsMustBeStrong) && string.IsNullOrWhiteSpace(_passwordTyped)) {
+			if(!_isFromAddUser && IsNew && Prefs.GetBool(PrefName.PasswordsMustBeStrong) && string.IsNullOrWhiteSpace(_passwordTyped)) {
 				MessageBox.Show("Password may not be blank when the strong password feature is turned on.");
 				return;
 			}
@@ -323,11 +323,11 @@ namespace OpenDental{
 				return;
 			}
 			if(_isFromAddUser && !Security.IsAuthorized(Permissions.SecurityAdmin,true)
-				&& (listUserGroup.SelectedItems.Count!=1 || listUserGroup.GetSelected<UserGroup>().Id!=PrefC.GetLong(PrefName.DefaultUserGroup)))
+				&& (listUserGroup.SelectedItems.Count!=1 || listUserGroup.GetSelected<UserGroup>().Id!=Prefs.GetLong(PrefName.DefaultUserGroup)))
 			{
 				MessageBox.Show("This user must be assigned to the default user group.");
 				for(int i=0;i<listUserGroup.Items.Count;i++) {
-					if(((ODBoxItem<UserGroup>)listUserGroup.Items[i]).Tag.Id==PrefC.GetLong(PrefName.DefaultUserGroup)) {
+					if(((ODBoxItem<UserGroup>)listUserGroup.Items[i]).Tag.Id==Prefs.GetLong(PrefName.DefaultUserGroup)) {
 						listUserGroup.SetSelected(i,true);
 					}
 					else {
@@ -351,38 +351,38 @@ namespace OpenDental{
 				}
 			}
 			if(!PrefC.HasClinicsEnabled || listClinic.SelectedIndex==0) {
-				UserCur.ClinicNum=0;
+				UserCur.ClinicId=0;
 			}
 			else {
-				UserCur.ClinicNum=_listClinics[listClinic.SelectedIndex-1].ClinicNum;
+				UserCur.ClinicId=_listClinics[listClinic.SelectedIndex-1].ClinicNum;
 			}
 			UserCur.ClinicIsRestricted=checkClinicIsRestricted.Checked;//This is kept in sync with their choice of "All".
 			UserCur.IsHidden=checkIsHidden.Checked;
 			UserCur.IsPasswordResetRequired=checkRequireReset.Checked;
 			UserCur.UserName=textUserName.Text;
 			if(listEmployee.SelectedIndex==0){
-				UserCur.EmployeeNum=0;
+				UserCur.EmployeeId=0;
 			}
 			else{
-				UserCur.EmployeeNum=_listEmployees[listEmployee.SelectedIndex-1].EmployeeNum;
+				UserCur.EmployeeId=_listEmployees[listEmployee.SelectedIndex-1].EmployeeNum;
 			}
 			if(listProv.SelectedIndex==0) {
-				Provider prov=Providers.GetProv(UserCur.ProvNum);
+				Provider prov=Providers.GetProv(UserCur.ProviderId);
 				if(prov!=null) {
 					prov.IsInstructor=false;//If there are more than 1 users associated to this provider, they will no longer be an instructor.
 					Providers.Update(prov);	
 				}
-				UserCur.ProvNum=0;
+				UserCur.ProviderId=0;
 			}
 			else {
-				Provider prov=Providers.GetProv(UserCur.ProvNum);
+				Provider prov=Providers.GetProv(UserCur.ProviderId);
 				if(prov!=null) {
 					if(prov.ProvNum!=_listProviders[listProv.SelectedIndex-1].ProvNum) {
 						prov.IsInstructor=false;//If there are more than 1 users associated to this provider, they will no longer be an instructor.
 					}
 					Providers.Update(prov);
 				}
-				UserCur.ProvNum=_listProviders[listProv.SelectedIndex-1].ProvNum;
+				UserCur.ProviderId=_listProviders[listProv.SelectedIndex-1].ProvNum;
 			}
 			try{
 				if(IsNew){

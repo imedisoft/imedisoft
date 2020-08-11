@@ -21,7 +21,7 @@ namespace OpenDental
 		}
 
 		private void FormEhrSetup_Load(object sender,EventArgs e) {
-			if(PrefC.GetBool(PrefName.EhrEmergencyNow)) {
+			if(Prefs.GetBool(PrefName.EhrEmergencyNow)) {
 				panelEmergencyNow.BackColor=Color.Red;
 			}
 			else {
@@ -87,13 +87,13 @@ namespace OpenDental
 		}
 
 		private void butEmergencyNow_Click(object sender,EventArgs e) {
-			if(PrefC.GetBool(PrefName.EhrEmergencyNow)) {
+			if(Prefs.GetBool(PrefName.EhrEmergencyNow)) {
 				panelEmergencyNow.BackColor=SystemColors.Control;
-				Prefs.UpdateBool(PrefName.EhrEmergencyNow,false);
+				Prefs.Set(PrefName.EhrEmergencyNow,false);
 			}
 			else {
 				panelEmergencyNow.BackColor=Color.Red;
-				Prefs.UpdateBool(PrefName.EhrEmergencyNow,true);
+				Prefs.Set(PrefName.EhrEmergencyNow,true);
 			}
 			DataValid.SetInvalid(InvalidType.Prefs);
 		}
@@ -213,19 +213,19 @@ namespace OpenDental
 				//TODO: include more user information
 				writer.WriteStartElement("UpdateRequest");
 				writer.WriteStartElement("RegistrationKey");
-				writer.WriteString(PrefC.GetString(PrefName.RegistrationKey));
+				writer.WriteString(Prefs.GetString(PrefName.RegistrationKey));
 				writer.WriteEndElement();
 				writer.WriteStartElement("PracticeTitle");
-				writer.WriteString(PrefC.GetString(PrefName.PracticeTitle));
+				writer.WriteString(Prefs.GetString(PrefName.PracticeTitle));
 				writer.WriteEndElement();
 				writer.WriteStartElement("PracticeAddress");
-				writer.WriteString(PrefC.GetString(PrefName.PracticeAddress));
+				writer.WriteString(Prefs.GetString(PrefName.PracticeAddress));
 				writer.WriteEndElement();
 				writer.WriteStartElement("PracticePhone");
-				writer.WriteString(PrefC.GetString(PrefName.PracticePhone));
+				writer.WriteString(Prefs.GetString(PrefName.PracticePhone));
 				writer.WriteEndElement();
 				writer.WriteStartElement("ProgramVersion");
-				writer.WriteString(PrefC.GetString(PrefName.ProgramVersion));
+				writer.WriteString(Prefs.GetString(PrefName.ProgramVersion));
 				writer.WriteEndElement();
 				writer.WriteStartElement("CodeSystemRequested");
 				writer.WriteString(codeSystemName);
@@ -236,11 +236,11 @@ namespace OpenDental
 			Imedisoft.localhost.Service1 updateService=new Imedisoft.localhost.Service1();
 #else
 			OpenDental.customerUpdates.Service1 updateService=new OpenDental.customerUpdates.Service1();
-			updateService.Url=PrefC.GetString(PrefName.UpdateServerAddress);
+			updateService.Url=Prefs.GetString(PrefName.UpdateServerAddress);
 #endif
-			if(PrefC.GetString(PrefName.UpdateWebProxyAddress) !="") {
-				IWebProxy proxy = new WebProxy(PrefC.GetString(PrefName.UpdateWebProxyAddress));
-				ICredentials cred=new NetworkCredential(PrefC.GetString(PrefName.UpdateWebProxyUserName),PrefC.GetString(PrefName.UpdateWebProxyPassword));
+			if(Prefs.GetString(PrefName.UpdateWebProxyAddress) !="") {
+				IWebProxy proxy = new WebProxy(Prefs.GetString(PrefName.UpdateWebProxyAddress));
+				ICredentials cred=new NetworkCredential(Prefs.GetString(PrefName.UpdateWebProxyUserName),Prefs.GetString(PrefName.UpdateWebProxyPassword));
 				proxy.Credentials=cred;
 				updateService.Proxy=proxy;
 			}

@@ -27,7 +27,7 @@ namespace OpenDental {
 				//We are using the This Month/Last Month buttons instead of the comboBox.
 				DateTime thisMonth=GetValidPayDate(DateTime.Today);
 				DateTime lastMonth=GetValidPayDate(DateTime.Today.AddMonths(-1));
-				if(PrefC.GetBool(PrefName.RecurringChargesUseTransDate)) {
+				if(Prefs.GetBool(PrefName.RecurringChargesUseTransDate)) {
 					//Labels set here, buttons set in respective button methods butLastMonth_Click/butThisMonth_Click
 					labelLastMonth.Text=Lan.G(this,"Recurring charge date will be:")+" "+lastMonth.ToShortDateString();
 					labelThisMonth.Text=Lan.G(this,"Recurring charge date will be:")+" "+thisMonth.ToShortDateString();

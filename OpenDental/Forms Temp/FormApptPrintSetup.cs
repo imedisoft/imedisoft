@@ -44,7 +44,7 @@ namespace OpenDental {
 					comboStop.SelectedIndex=i;
 				}
 			}
-			textFontSize.Text=PrefC.GetString(PrefName.ApptPrintFontSize);
+			textFontSize.Text=Prefs.GetString(PrefName.ApptPrintFontSize);
 			textColumnsPerPage.Text=PrefC.GetInt(PrefName.ApptPrintColumnsPerPage).ToString();
 			if(PrefC.HasClinicsEnabled && Clinics.ClinicNum==0) {//Hide if clinics is enabled and headquarters is selected
 				groupBoxPrintRouting.Enabled=false;
@@ -100,10 +100,10 @@ namespace OpenDental {
 
 		private void SaveChanges(bool suppressMessage) {
 			if(ValidEntries()) {
-				Prefs.UpdateDateT(PrefName.ApptPrintTimeStart,PIn.Date(comboStart.SelectedItem.ToString()));
-				Prefs.UpdateDateT(PrefName.ApptPrintTimeStop,PIn.Date(comboStop.SelectedItem.ToString()));
-				Prefs.UpdateString(PrefName.ApptPrintFontSize,textFontSize.Text);
-				Prefs.UpdateInt(PrefName.ApptPrintColumnsPerPage,PIn.Int(textColumnsPerPage.Text));
+				Prefs.Set(PrefName.ApptPrintTimeStart,PIn.Date(comboStart.SelectedItem.ToString()));
+				Prefs.Set(PrefName.ApptPrintTimeStop,PIn.Date(comboStop.SelectedItem.ToString()));
+				Prefs.Set(PrefName.ApptPrintFontSize,textFontSize.Text);
+				Prefs.Set(PrefName.ApptPrintColumnsPerPage,PIn.Int(textColumnsPerPage.Text));
 				if(!suppressMessage) {
 					MessageBox.Show("Settings saved.");
 				}
@@ -117,7 +117,7 @@ namespace OpenDental {
 			}
 			if(PIn.Date(comboStart.SelectedItem.ToString()).Hour!=PrefC.GetDateT(PrefName.ApptPrintTimeStart).Hour
 				|| PIn.Date(comboStop.SelectedItem.ToString()).Hour!=PrefC.GetDateT(PrefName.ApptPrintTimeStop).Hour
-				|| textFontSize.Text!=PrefC.GetString(PrefName.ApptPrintFontSize)
+				|| textFontSize.Text!=Prefs.GetString(PrefName.ApptPrintFontSize)
 				|| textColumnsPerPage.Text!=PrefC.GetInt(PrefName.ApptPrintColumnsPerPage).ToString())
 			{
 				changed=true;

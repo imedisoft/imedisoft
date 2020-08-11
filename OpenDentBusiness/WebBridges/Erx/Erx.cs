@@ -106,7 +106,7 @@ namespace OpenDentBusiness
 		///All intended exceptions are ODExceptions and should be translated by the caller.</summary>
 		public static void ValidatePracticeInfo()
 		{
-			string practicePhone = PrefC.GetString(PrefName.PracticePhone);
+			string practicePhone = Prefs.GetString(PrefName.PracticePhone);
 			if (!Regex.IsMatch(practicePhone, "^[0-9]{10}$"))
 			{//"^[0-9]{10}(x[0-9]+)?$")) {
 				throw new ODException(Lans.g("Erx", "Practice phone must be exactly 10 digits."));
@@ -119,7 +119,7 @@ namespace OpenDentBusiness
 			{
 				throw new ODException(Lans.g("Erx", "Practice phone cannot contain 555 in the middle 3 digits."));
 			}
-			string practiceFax = PrefC.GetString(PrefName.PracticeFax);
+			string practiceFax = Prefs.GetString(PrefName.PracticeFax);
 			if (!Regex.IsMatch(practiceFax, "^[0-9]{10}(x[0-9]+)?$"))
 			{
 				throw new ODException(Lans.g("Erx", "Practice fax must be exactly 10 digits."));
@@ -132,23 +132,23 @@ namespace OpenDentBusiness
 			{
 				throw new ODException(Lans.g("Erx", "Practice fax cannot contain 555 in the middle 3 digits."));
 			}
-			if (PrefC.GetString(PrefName.PracticeAddress) == "")
+			if (Prefs.GetString(PrefName.PracticeAddress) == "")
 			{
 				throw new ODException(Lans.g("Erx", "Practice address blank."));
 			}
-			if (Regex.IsMatch(PrefC.GetString(PrefName.PracticeAddress), ".*P\\.?O\\.? .*", RegexOptions.IgnoreCase))
+			if (Regex.IsMatch(Prefs.GetString(PrefName.PracticeAddress), ".*P\\.?O\\.? .*", RegexOptions.IgnoreCase))
 			{
 				throw new ODException(Lans.g("Erx", "Practice address cannot be a PO BOX."));
 			}
-			if (PrefC.GetString(PrefName.PracticeCity) == "")
+			if (Prefs.GetString(PrefName.PracticeCity) == "")
 			{
 				throw new ODException(Lans.g("Erx", "Practice city blank."));
 			}
-			if (!USlocales.IsValidAbbr(PrefC.GetString(PrefName.PracticeST)))
+			if (!USlocales.IsValidAbbr(Prefs.GetString(PrefName.PracticeST)))
 			{
 				throw new ODException(Lans.g("Erx", "Practice state abbreviation invalid."));
 			}
-			string practiceZip = Regex.Replace(PrefC.GetString(PrefName.PracticeZip), "[^0-9]*", "");//Zip with all non-numeric characters removed.
+			string practiceZip = Regex.Replace(Prefs.GetString(PrefName.PracticeZip), "[^0-9]*", "");//Zip with all non-numeric characters removed.
 			if (practiceZip.Length != 9)
 			{
 				throw new ODException(Lans.g("Erx", "Practice zip must be 9 digits."));
@@ -300,17 +300,17 @@ namespace OpenDentBusiness
 		public static bool IsUserAnEmployee(Userod user)
 		{
 			bool isEmp = false;
-			if (user.EmployeeNum == 0)
+			if (user.EmployeeId == 0)
 			{//The current user does not have an employee associated.
 				isEmp = false;
 			}
-			else if (user.ProvNum == 0)
+			else if (user.ProviderId == 0)
 			{//The current user has an employee associated and no provider associated.
 				isEmp = true;
 			}
 			else
 			{//Both an employee and provider are associated to the current user.
-				Provider provUser = Providers.GetProv(user.ProvNum);
+				Provider provUser = Providers.GetProv(user.ProviderId);
 				if (provUser.IsSecondary && provUser.NationalProvID == "")
 				{
 					isEmp = true;

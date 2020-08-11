@@ -141,7 +141,7 @@ namespace OpenDental {
 			EmailAddress emailAddress=null;
 			long emailAddressNum=PrefC.HasClinicsEnabled
 				? Clinics.GetClinic(Clinics.ClinicNum)?.EmailAddressNum??0
-				: PrefC.GetLong(PrefName.EmailDefaultAddressNum);
+				: Prefs.GetLong(PrefName.EmailDefaultAddressNum);
 			if(emailAddressNum > 0) {
 				emailAddress=EmailAddresses.GetOne(emailAddressNum);
 			}

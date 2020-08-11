@@ -617,7 +617,7 @@ namespace OpenDental{
 			checkDynamicScroll.Checked=ApptViewCur.IsScrollStartDynamic;
 			checkApptBubblesDisabled.Checked=ApptViewCur.IsApptBubblesDisabled;
 			if(IsNew) {
-				checkApptBubblesDisabled.Checked=PrefC.GetBool(PrefName.AppointmentBubblesDisabled);
+				checkApptBubblesDisabled.Checked=Prefs.GetBool(PrefName.AppointmentBubblesDisabled);
 			}
 			checkOnlyScheduledProvs.Checked=ApptViewCur.OnlyScheduledProvs;
 			if(ApptViewCur.OnlySchedBeforeTime > new TimeSpan(0,0,0)) {

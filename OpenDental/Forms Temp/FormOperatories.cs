@@ -359,7 +359,7 @@ namespace OpenDental{
 			#region Determine if any appts conflict exist and potentially show them
 			//List of all appointments for all child ops. If conflict was detected the appointments OperatoryNum will bet set to -1
 			List<ODTuple<Appointment,bool>> listTupleApptsToMerge=Operatories.MergeApptCheck(masterOpNum,listSelectedOpNums.FindAll(x => x!=masterOpNum));
-			if(!PrefC.GetYN(PrefName.ApptsAllowOverlap)) { //We only want to check appt overlap and return if the customer has the relevant pref turned off
+			if(!Prefs.GetBool(PrefName.ApptsAllowOverlap, true)) { //We only want to check appt overlap and return if the customer has the relevant pref turned off
 				ListConflictingAppts=listTupleApptsToMerge.Where(x => x.Item2).Select(x => x.Item1).ToList();
 				if(ListConflictingAppts.Count > 0) {//Appointments conflicts exist, can not merge
 					if(!MsgBox.Show(MsgBoxButtons.YesNo,"Cannot merge operatories due to appointment conflicts.\r\n\r\n"

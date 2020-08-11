@@ -1,5 +1,7 @@
-namespace OpenDental{
-	partial class FormBackupReminder {
+namespace Imedisoft.Forms
+{
+	partial class FormBackupReminder
+	{
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -9,8 +11,10 @@ namespace OpenDental{
 		/// Clean up any resources being used.
 		/// </summary>
 		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-		protected override void Dispose(bool disposing) {
-			if(disposing && (components != null)) {
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && (components != null))
+			{
 				components.Dispose();
 			}
 			base.Dispose(disposing);
@@ -22,214 +26,247 @@ namespace OpenDental{
 		/// Required method for Designer support - do not modify
 		/// the contents of this method with the code editor.
 		/// </summary>
-		private void InitializeComponent() {
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormBackupReminder));
-			this.butOK = new OpenDental.UI.Button();
-			this.label1 = new System.Windows.Forms.Label();
-			this.checkNoBackups = new System.Windows.Forms.CheckBox();
-			this.checkA1 = new System.Windows.Forms.CheckBox();
-			this.label3 = new System.Windows.Forms.Label();
-			this.checkA2 = new System.Windows.Forms.CheckBox();
-			this.checkA4 = new System.Windows.Forms.CheckBox();
-			this.checkA3 = new System.Windows.Forms.CheckBox();
-			this.checkB2 = new System.Windows.Forms.CheckBox();
-			this.checkB1 = new System.Windows.Forms.CheckBox();
-			this.label2 = new System.Windows.Forms.Label();
-			this.checkNoProof = new System.Windows.Forms.CheckBox();
-			this.checkNoStrategy = new System.Windows.Forms.CheckBox();
-			this.checkC2 = new System.Windows.Forms.CheckBox();
-			this.checkC1 = new System.Windows.Forms.CheckBox();
-			this.label4 = new System.Windows.Forms.Label();
-			this.SuspendLayout();
-			// 
-			// butOK
-			// 
-			this.butOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butOK.Location = new System.Drawing.Point(525,406);
-			this.butOK.Name = "butOK";
-			this.butOK.Size = new System.Drawing.Size(75,24);
-			this.butOK.TabIndex = 3;
-			this.butOK.Text = "&OK";
-			this.butOK.Click += new System.EventHandler(this.butOK_Click);
-			// 
-			// label1
-			// 
-			this.label1.Location = new System.Drawing.Point(12,9);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(552,74);
-			this.label1.TabIndex = 4;
-			this.label1.Text = resources.GetString("label1.Text");
-			// 
-			// checkNoBackups
-			// 
-			this.checkNoBackups.Location = new System.Drawing.Point(45,191);
-			this.checkNoBackups.Name = "checkNoBackups";
-			this.checkNoBackups.Size = new System.Drawing.Size(151,20);
-			this.checkNoBackups.TabIndex = 6;
-			this.checkNoBackups.Text = "No backups";
-			this.checkNoBackups.UseVisualStyleBackColor = true;
-			// 
-			// checkA1
-			// 
-			this.checkA1.Location = new System.Drawing.Point(45,111);
-			this.checkA1.Name = "checkA1";
-			this.checkA1.Size = new System.Drawing.Size(200,20);
-			this.checkA1.TabIndex = 8;
-			this.checkA1.Text = "Online";
-			this.checkA1.UseVisualStyleBackColor = true;
-			// 
-			// label3
-			// 
-			this.label3.Location = new System.Drawing.Point(42,95);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(523,18);
-			this.label3.TabIndex = 7;
-			this.label3.Text = "Do you make backups every single day?  Backup method:";
-			// 
-			// checkA2
-			// 
-			this.checkA2.Location = new System.Drawing.Point(45,131);
-			this.checkA2.Name = "checkA2";
-			this.checkA2.Size = new System.Drawing.Size(530,20);
-			this.checkA2.TabIndex = 9;
-			this.checkA2.Text = "Removable (external HD, USB drive, etc)";
-			this.checkA2.UseVisualStyleBackColor = true;
-			// 
-			// checkA4
-			// 
-			this.checkA4.Location = new System.Drawing.Point(45,171);
-			this.checkA4.Name = "checkA4";
-			this.checkA4.Size = new System.Drawing.Size(151,20);
-			this.checkA4.TabIndex = 11;
-			this.checkA4.Text = "Other backup method";
-			this.checkA4.UseVisualStyleBackColor = true;
-			// 
-			// checkA3
-			// 
-			this.checkA3.Location = new System.Drawing.Point(45,151);
-			this.checkA3.Name = "checkA3";
-			this.checkA3.Size = new System.Drawing.Size(302,20);
-			this.checkA3.TabIndex = 10;
-			this.checkA3.Text = "Network (to another computer in your office)";
-			this.checkA3.UseVisualStyleBackColor = true;
-			// 
-			// checkB2
-			// 
-			this.checkB2.Location = new System.Drawing.Point(45,261);
-			this.checkB2.Name = "checkB2";
-			this.checkB2.Size = new System.Drawing.Size(250,20);
-			this.checkB2.TabIndex = 14;
-			this.checkB2.Text = "Run backup from a second server";
-			this.checkB2.UseVisualStyleBackColor = true;
-			// 
-			// checkB1
-			// 
-			this.checkB1.Location = new System.Drawing.Point(45,241);
-			this.checkB1.Name = "checkB1";
-			this.checkB1.Size = new System.Drawing.Size(352,20);
-			this.checkB1.TabIndex = 13;
-			this.checkB1.Text = "Restore to home computer at least once a week";
-			this.checkB1.UseVisualStyleBackColor = true;
-			// 
-			// label2
-			// 
-			this.label2.Location = new System.Drawing.Point(42,225);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(523,18);
-			this.label2.TabIndex = 12;
-			this.label2.Text = "What proof do you have that your recent backups are good?";
-			// 
-			// checkNoProof
-			// 
-			this.checkNoProof.Location = new System.Drawing.Point(45,281);
-			this.checkNoProof.Name = "checkNoProof";
-			this.checkNoProof.Size = new System.Drawing.Size(250,20);
-			this.checkNoProof.TabIndex = 15;
-			this.checkNoProof.Text = "No proof";
-			this.checkNoProof.UseVisualStyleBackColor = true;
-			// 
-			// checkNoStrategy
-			// 
-			this.checkNoStrategy.Location = new System.Drawing.Point(45,369);
-			this.checkNoStrategy.Name = "checkNoStrategy";
-			this.checkNoStrategy.Size = new System.Drawing.Size(250,20);
-			this.checkNoStrategy.TabIndex = 19;
-			this.checkNoStrategy.Text = "No strategy";
-			this.checkNoStrategy.UseVisualStyleBackColor = true;
-			// 
-			// checkC2
-			// 
-			this.checkC2.Location = new System.Drawing.Point(45,349);
-			this.checkC2.Name = "checkC2";
-			this.checkC2.Size = new System.Drawing.Size(312,20);
-			this.checkC2.TabIndex = 18;
-			this.checkC2.Text = "Saved hardcopy paper reports";
-			this.checkC2.UseVisualStyleBackColor = true;
-			// 
-			// checkC1
-			// 
-			this.checkC1.Location = new System.Drawing.Point(45,329);
-			this.checkC1.Name = "checkC1";
-			this.checkC1.Size = new System.Drawing.Size(352,20);
-			this.checkC1.TabIndex = 17;
-			this.checkC1.Text = "Completely separate archives stored offsite (DVD, HD, etc)";
-			this.checkC1.UseVisualStyleBackColor = true;
-			// 
-			// label4
-			// 
-			this.label4.Location = new System.Drawing.Point(42,313);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(523,18);
-			this.label4.TabIndex = 16;
-			this.label4.Text = "What secondary long-term mechanism do you use to ensure minimal data loss?";
-			// 
-			// FormBackupReminder
-			// 
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-			this.ClientSize = new System.Drawing.Size(612,442);
-			this.ControlBox = false;
-			this.Controls.Add(this.checkNoStrategy);
-			this.Controls.Add(this.checkC2);
-			this.Controls.Add(this.checkC1);
-			this.Controls.Add(this.label4);
-			this.Controls.Add(this.checkNoProof);
-			this.Controls.Add(this.checkB2);
-			this.Controls.Add(this.checkB1);
-			this.Controls.Add(this.label2);
-			this.Controls.Add(this.checkA4);
-			this.Controls.Add(this.checkA3);
-			this.Controls.Add(this.checkA2);
-			this.Controls.Add(this.checkA1);
-			this.Controls.Add(this.label3);
-			this.Controls.Add(this.checkNoBackups);
-			this.Controls.Add(this.label1);
-			this.Controls.Add(this.butOK);
-			this.Name = "FormBackupReminder";
-			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "Backup Reminder";
-			this.TopMost = true;
-			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormBackupReminder_FormClosing);
-			this.ResumeLayout(false);
+		private void InitializeComponent()
+		{
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormBackupReminder));
+            this.acceptButton = new OpenDental.UI.Button();
+            this.infoLabel = new System.Windows.Forms.Label();
+            this.a5CheckBox = new System.Windows.Forms.CheckBox();
+            this.a1CheckBox = new System.Windows.Forms.CheckBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.a2CheckBox = new System.Windows.Forms.CheckBox();
+            this.a4CheckBox = new System.Windows.Forms.CheckBox();
+            this.a3CheckBox = new System.Windows.Forms.CheckBox();
+            this.b2CheckBox = new System.Windows.Forms.CheckBox();
+            this.b1CheckBox = new System.Windows.Forms.CheckBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.b3CheckBox = new System.Windows.Forms.CheckBox();
+            this.c3CheckBox = new System.Windows.Forms.CheckBox();
+            this.c2CheckBox = new System.Windows.Forms.CheckBox();
+            this.c1CheckBox = new System.Windows.Forms.CheckBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.SuspendLayout();
+            // 
+            // acceptButton
+            // 
+            this.acceptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.acceptButton.Location = new System.Drawing.Point(442, 474);
+            this.acceptButton.Name = "acceptButton";
+            this.acceptButton.Size = new System.Drawing.Size(80, 25);
+            this.acceptButton.TabIndex = 15;
+            this.acceptButton.Text = "&OK";
+            this.acceptButton.Click += new System.EventHandler(this.AcceptButton_Click);
+            // 
+            // infoLabel
+            // 
+            this.infoLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.infoLabel.Location = new System.Drawing.Point(12, 9);
+            this.infoLabel.Name = "infoLabel";
+            this.infoLabel.Size = new System.Drawing.Size(510, 110);
+            this.infoLabel.TabIndex = 0;
+            this.infoLabel.Text = resources.GetString("infoLabel.Text");
+            // 
+            // a5CheckBox
+            // 
+            this.a5CheckBox.AutoSize = true;
+            this.a5CheckBox.Location = new System.Drawing.Point(39, 242);
+            this.a5CheckBox.Margin = new System.Windows.Forms.Padding(30, 3, 3, 3);
+            this.a5CheckBox.Name = "a5CheckBox";
+            this.a5CheckBox.Size = new System.Drawing.Size(81, 17);
+            this.a5CheckBox.TabIndex = 6;
+            this.a5CheckBox.Text = "No backups";
+            this.a5CheckBox.UseVisualStyleBackColor = true;
+            // 
+            // a1CheckBox
+            // 
+            this.a1CheckBox.AutoSize = true;
+            this.a1CheckBox.Location = new System.Drawing.Point(39, 150);
+            this.a1CheckBox.Margin = new System.Windows.Forms.Padding(30, 3, 3, 3);
+            this.a1CheckBox.Name = "a1CheckBox";
+            this.a1CheckBox.Size = new System.Drawing.Size(56, 17);
+            this.a1CheckBox.TabIndex = 2;
+            this.a1CheckBox.Text = "Online";
+            this.a1CheckBox.UseVisualStyleBackColor = true;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(29, 129);
+            this.label3.Margin = new System.Windows.Forms.Padding(20, 10, 3, 5);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(281, 13);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "Do you make backups every single day?  Backup method:";
+            // 
+            // a2CheckBox
+            // 
+            this.a2CheckBox.AutoSize = true;
+            this.a2CheckBox.Location = new System.Drawing.Point(39, 173);
+            this.a2CheckBox.Margin = new System.Windows.Forms.Padding(30, 3, 3, 3);
+            this.a2CheckBox.Name = "a2CheckBox";
+            this.a2CheckBox.Size = new System.Drawing.Size(222, 17);
+            this.a2CheckBox.TabIndex = 3;
+            this.a2CheckBox.Text = "Removable (external HD, USB drive, etc)";
+            this.a2CheckBox.UseVisualStyleBackColor = true;
+            // 
+            // a4CheckBox
+            // 
+            this.a4CheckBox.AutoSize = true;
+            this.a4CheckBox.Location = new System.Drawing.Point(39, 219);
+            this.a4CheckBox.Margin = new System.Windows.Forms.Padding(30, 3, 3, 3);
+            this.a4CheckBox.Name = "a4CheckBox";
+            this.a4CheckBox.Size = new System.Drawing.Size(130, 17);
+            this.a4CheckBox.TabIndex = 5;
+            this.a4CheckBox.Text = "Other backup method";
+            this.a4CheckBox.UseVisualStyleBackColor = true;
+            // 
+            // a3CheckBox
+            // 
+            this.a3CheckBox.AutoSize = true;
+            this.a3CheckBox.Location = new System.Drawing.Point(39, 196);
+            this.a3CheckBox.Margin = new System.Windows.Forms.Padding(30, 3, 3, 3);
+            this.a3CheckBox.Name = "a3CheckBox";
+            this.a3CheckBox.Size = new System.Drawing.Size(242, 17);
+            this.a3CheckBox.TabIndex = 4;
+            this.a3CheckBox.Text = "Network (to another computer in your office)";
+            this.a3CheckBox.UseVisualStyleBackColor = true;
+            // 
+            // b2CheckBox
+            // 
+            this.b2CheckBox.AutoSize = true;
+            this.b2CheckBox.Location = new System.Drawing.Point(39, 316);
+            this.b2CheckBox.Margin = new System.Windows.Forms.Padding(30, 3, 3, 3);
+            this.b2CheckBox.Name = "b2CheckBox";
+            this.b2CheckBox.Size = new System.Drawing.Size(187, 17);
+            this.b2CheckBox.TabIndex = 9;
+            this.b2CheckBox.Text = "Run backup from a second server";
+            this.b2CheckBox.UseVisualStyleBackColor = true;
+            // 
+            // b1CheckBox
+            // 
+            this.b1CheckBox.AutoSize = true;
+            this.b1CheckBox.Location = new System.Drawing.Point(39, 293);
+            this.b1CheckBox.Margin = new System.Windows.Forms.Padding(30, 3, 3, 3);
+            this.b1CheckBox.Name = "b1CheckBox";
+            this.b1CheckBox.Size = new System.Drawing.Size(256, 17);
+            this.b1CheckBox.TabIndex = 8;
+            this.b1CheckBox.Text = "Restore to home computer at least once a week";
+            this.b1CheckBox.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(29, 272);
+            this.label2.Margin = new System.Windows.Forms.Padding(20, 10, 3, 5);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(300, 13);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "What proof do you have that your recent backups are good?";
+            // 
+            // b3CheckBox
+            // 
+            this.b3CheckBox.AutoSize = true;
+            this.b3CheckBox.Location = new System.Drawing.Point(39, 339);
+            this.b3CheckBox.Margin = new System.Windows.Forms.Padding(30, 3, 3, 3);
+            this.b3CheckBox.Name = "b3CheckBox";
+            this.b3CheckBox.Size = new System.Drawing.Size(68, 17);
+            this.b3CheckBox.TabIndex = 10;
+            this.b3CheckBox.Text = "No proof";
+            this.b3CheckBox.UseVisualStyleBackColor = true;
+            // 
+            // c3CheckBox
+            // 
+            this.c3CheckBox.AutoSize = true;
+            this.c3CheckBox.Location = new System.Drawing.Point(39, 436);
+            this.c3CheckBox.Margin = new System.Windows.Forms.Padding(30, 3, 3, 3);
+            this.c3CheckBox.Name = "c3CheckBox";
+            this.c3CheckBox.Size = new System.Drawing.Size(83, 17);
+            this.c3CheckBox.TabIndex = 14;
+            this.c3CheckBox.Text = "No strategy";
+            this.c3CheckBox.UseVisualStyleBackColor = true;
+            // 
+            // c2CheckBox
+            // 
+            this.c2CheckBox.AutoSize = true;
+            this.c2CheckBox.Location = new System.Drawing.Point(39, 413);
+            this.c2CheckBox.Margin = new System.Windows.Forms.Padding(30, 3, 3, 3);
+            this.c2CheckBox.Name = "c2CheckBox";
+            this.c2CheckBox.Size = new System.Drawing.Size(173, 17);
+            this.c2CheckBox.TabIndex = 13;
+            this.c2CheckBox.Text = "Saved hardcopy paper reports";
+            this.c2CheckBox.UseVisualStyleBackColor = true;
+            // 
+            // c1CheckBox
+            // 
+            this.c1CheckBox.AutoSize = true;
+            this.c1CheckBox.Location = new System.Drawing.Point(39, 390);
+            this.c1CheckBox.Margin = new System.Windows.Forms.Padding(30, 3, 3, 3);
+            this.c1CheckBox.Name = "c1CheckBox";
+            this.c1CheckBox.Size = new System.Drawing.Size(310, 17);
+            this.c1CheckBox.TabIndex = 12;
+            this.c1CheckBox.Text = "Completely separate archives stored offsite (DVD, HD, etc)";
+            this.c1CheckBox.UseVisualStyleBackColor = true;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(29, 369);
+            this.label4.Margin = new System.Windows.Forms.Padding(20, 10, 3, 5);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(383, 13);
+            this.label4.TabIndex = 11;
+            this.label4.Text = "What secondary long-term mechanism do you use to ensure minimal data loss?";
+            // 
+            // FormBackupReminder
+            // 
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.ClientSize = new System.Drawing.Size(534, 511);
+            this.ControlBox = false;
+            this.Controls.Add(this.c3CheckBox);
+            this.Controls.Add(this.c2CheckBox);
+            this.Controls.Add(this.c1CheckBox);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.b3CheckBox);
+            this.Controls.Add(this.b2CheckBox);
+            this.Controls.Add(this.b1CheckBox);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.a4CheckBox);
+            this.Controls.Add(this.a3CheckBox);
+            this.Controls.Add(this.a2CheckBox);
+            this.Controls.Add(this.a1CheckBox);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.a5CheckBox);
+            this.Controls.Add(this.infoLabel);
+            this.Controls.Add(this.acceptButton);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Name = "FormBackupReminder";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Backup Reminder";
+            this.TopMost = true;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormBackupReminder_FormClosing);
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
 		}
 
 		#endregion
 
-		private OpenDental.UI.Button butOK;
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.CheckBox checkNoBackups;
-		private System.Windows.Forms.CheckBox checkA1;
+		private OpenDental.UI.Button acceptButton;
+		private System.Windows.Forms.Label infoLabel;
+		private System.Windows.Forms.CheckBox a5CheckBox;
+		private System.Windows.Forms.CheckBox a1CheckBox;
 		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.CheckBox checkA2;
-		private System.Windows.Forms.CheckBox checkA4;
-		private System.Windows.Forms.CheckBox checkA3;
-		private System.Windows.Forms.CheckBox checkB2;
-		private System.Windows.Forms.CheckBox checkB1;
+		private System.Windows.Forms.CheckBox a2CheckBox;
+		private System.Windows.Forms.CheckBox a4CheckBox;
+		private System.Windows.Forms.CheckBox a3CheckBox;
+		private System.Windows.Forms.CheckBox b2CheckBox;
+		private System.Windows.Forms.CheckBox b1CheckBox;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.CheckBox checkNoProof;
-		private System.Windows.Forms.CheckBox checkNoStrategy;
-		private System.Windows.Forms.CheckBox checkC2;
-		private System.Windows.Forms.CheckBox checkC1;
+		private System.Windows.Forms.CheckBox b3CheckBox;
+		private System.Windows.Forms.CheckBox c3CheckBox;
+		private System.Windows.Forms.CheckBox c2CheckBox;
+		private System.Windows.Forms.CheckBox c1CheckBox;
 		private System.Windows.Forms.Label label4;
 	}
 }

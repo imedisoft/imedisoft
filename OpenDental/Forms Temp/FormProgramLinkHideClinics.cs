@@ -32,7 +32,7 @@ namespace Imedisoft.Forms
 			InitializeComponent();
 
 			showClinicStateWarning(Security.CurrentUser.ClinicIsRestricted);
-			alphabeticalCheckBox.Checked = PrefC.GetBool(PrefName.ClinicListIsAlphabetical);
+			alphabeticalCheckBox.Checked = Prefs.GetBool(PrefName.ClinicListIsAlphabetical);
 			programId = programCur.Id;
 			List<Clinic> listVisibleButtonsForClinics = listUserClinics.Select(x => x.Copy()).ToList();//Copy so we don't affect the source list.
 			List<Clinic> listHiddenButtonsForClinics = new List<Clinic>();

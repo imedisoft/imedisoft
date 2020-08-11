@@ -113,12 +113,12 @@ namespace OpenDental {
 			if(listValueType.SelectedIndex==(int)EhrAptObsType.Address) {
 				labelValue.Text="Facility Address";
 				textValue.ReadOnly=true;
-				string sendingFacilityName=PrefC.GetString(PrefName.PracticeTitle);
-				string sendingFacilityAddress1=PrefC.GetString(PrefName.PracticeAddress);
-				string sendingFacilityAddress2=PrefC.GetString(PrefName.PracticeAddress2);
-				string sendingFacilityCity=PrefC.GetString(PrefName.PracticeCity);
-				string sendingFacilityState=PrefC.GetString(PrefName.PracticeST);
-				string sendingFacilityZip=PrefC.GetString(PrefName.PracticeZip);
+				string sendingFacilityName=Prefs.GetString(PrefName.PracticeTitle);
+				string sendingFacilityAddress1=Prefs.GetString(PrefName.PracticeAddress);
+				string sendingFacilityAddress2=Prefs.GetString(PrefName.PracticeAddress2);
+				string sendingFacilityCity=Prefs.GetString(PrefName.PracticeCity);
+				string sendingFacilityState=Prefs.GetString(PrefName.PracticeST);
+				string sendingFacilityZip=Prefs.GetString(PrefName.PracticeZip);
 				if(PrefC.HasClinicsEnabled && _appt.ClinicNum!=0) {//Using clinics and a clinic is assigned.
 					Clinic clinic=Clinics.GetClinic(_appt.ClinicNum);
 					sendingFacilityName=clinic.Description;

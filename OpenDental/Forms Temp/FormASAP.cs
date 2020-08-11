@@ -784,10 +784,10 @@ namespace OpenDental {
 			for(int i=0;i<_listProviders.Count;i++) {
 				comboProv.Items.Add(_listProviders[i].GetLongDesc());
 			}
-			if(PrefC.GetBool(PrefName.EnterpriseApptList)){
+			if(Prefs.GetBool(PrefName.EnterpriseApptList)){
 				comboClinic.IncludeAll=false;
 			}
-			if(PrefC.GetBool(PrefName.EasyHidePublicHealth)){
+			if(Prefs.GetBool(PrefName.EasyHidePublicHealth)){
 				comboSite.Visible=false;
 				labelSite.Visible=false;
 			}
@@ -800,7 +800,7 @@ namespace OpenDental {
 				}
 			}
 			splitContainer.Panel2Collapsed=true;
-			if(PrefC.GetBool(PrefName.WebSchedAsapEnabled)) {
+			if(Prefs.GetBool(PrefName.WebSchedAsapEnabled)) {
 				if(_isSendingWebSched) {
 					FillForWebSched();
 				}
@@ -824,7 +824,7 @@ namespace OpenDental {
 			comboAptStatus.Items.Add(boxItem);
 			boxItem=new ODBoxItem<ApptStatus>(Lan.G(this,ApptStatus.Broken.ToString()),ApptStatus.Broken);
 			comboAptStatus.Items.Add(boxItem);
-			checkGroupFamilies.Checked=PrefC.GetBool(PrefName.RecallGroupByFamily);
+			checkGroupFamilies.Checked=Prefs.GetBool(PrefName.RecallGroupByFamily);
 			comboNumberReminders.Items.Add(Lan.G(this,"All"));
 			comboNumberReminders.Items.Add("0");
 			comboNumberReminders.Items.Add("1");
@@ -883,7 +883,7 @@ namespace OpenDental {
 						provNum=_listProviders[comboProv.SelectedIndex-1].ProvNum;
 					}
 					long siteNum=0;
-					if(!PrefC.GetBool(PrefName.EasyHidePublicHealth) && comboSite.SelectedIndex!=0) {
+					if(!Prefs.GetBool(PrefName.EasyHidePublicHealth) && comboSite.SelectedIndex!=0) {
 						siteNum=_listSites[comboSite.SelectedIndex-1].SiteNum;
 					}
 					if(!SmsPhones.IsIntegratedTextingEnabled()) {
@@ -1094,7 +1094,7 @@ namespace OpenDental {
 						provNum=_listProviders[comboProv.SelectedIndex-1].ProvNum;
 					}
 					long siteNum=0;
-					if(!PrefC.GetBool(PrefName.EasyHidePublicHealth) && comboSite.SelectedIndex!=0) {
+					if(!Prefs.GetBool(PrefName.EasyHidePublicHealth) && comboSite.SelectedIndex!=0) {
 						siteNum=_listSites[comboSite.SelectedIndex-1].SiteNum;
 					}
 					long clinicNum=PrefC.HasClinicsEnabled ? comboClinic.SelectedClinicNum : -1;
@@ -1366,12 +1366,12 @@ namespace OpenDental {
 		///<summary>Gets the template for this clinic and fills in the tags.</summary>
 		private string GetTextMessageText(Clinic curClinic) {
 			string textTemplate;
-			ClinicPref clinicPref=ClinicPrefs.GetPref(PrefName.ASAPTextTemplate,Clinics.ClinicNum);
-			if(clinicPref==null) {
-				textTemplate=PrefC.GetString(PrefName.ASAPTextTemplate);
+			string clinicPref=ClinicPrefs.GetString(Clinics.ClinicNum, PrefName.ASAPTextTemplate);
+			if(string.IsNullOrEmpty(clinicPref)) {
+				textTemplate=Prefs.GetString(PrefName.ASAPTextTemplate);
 			}
 			else {
-				textTemplate=clinicPref.ValueString;
+				textTemplate=clinicPref;
 			}
 			textTemplate=textTemplate.Replace("[OfficeName]",curClinic.Description);
 			textTemplate=textTemplate.Replace("[OfficePhone]",curClinic.Phone);
@@ -1588,8 +1588,8 @@ namespace OpenDental {
 					Clinics.GetDeepCopy().Select(x => x.ClinicNum).ToList(),
 					eServiceCode.WebSchedASAP);
 				bool isAllowedByHq=(_listClinicNumsWebSched.Count > 0);
-				if(isAllowedByHq!=PrefC.GetBool(PrefName.WebSchedAsapEnabled)) {
-					Prefs.UpdateBool(PrefName.WebSchedAsapEnabled,isAllowedByHq);
+				if(isAllowedByHq!=Prefs.GetBool(PrefName.WebSchedAsapEnabled)) {
+					Prefs.Set(PrefName.WebSchedAsapEnabled,isAllowedByHq);
 					DataValid.SetInvalid(InvalidType.Prefs);
 				}
 			}));

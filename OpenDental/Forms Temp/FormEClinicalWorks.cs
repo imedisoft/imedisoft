@@ -667,12 +667,12 @@ namespace OpenDental{
 			else {
 				textHL7Server.Text=GetProp("HL7Server");//this property will not exist if using Oracle, eCW will never use Oracle
 				textHL7ServiceName.Text=GetProp("HL7ServiceName");//this property will not exist if using Oracle, eCW will never use Oracle
-				textHL7FolderIn.Text=PrefC.GetString(PrefName.HL7FolderIn);
-				textHL7FolderOut.Text=PrefC.GetString(PrefName.HL7FolderOut);
+				textHL7FolderIn.Text=Prefs.GetString(PrefName.HL7FolderIn);
+				textHL7FolderOut.Text=Prefs.GetString(PrefName.HL7FolderOut);
 				//if a def is enabled, the value associated with the def will override this setting
 				checkQuadAsToothNum.Checked=GetProp("IsQuadAsToothNum")=="1";//this property will not exist if using Oracle, eCW will never use Oracle
 			}
-			textODServer.Text=MiscData.GetODServer();
+			textODServer.Text=MiscData.GetMySqlServer();
 			comboDefaultUserGroup.Items.Clear();
 			_listUserGroups=UserGroups.GetList();
 			for(int i=0;i<_listUserGroups.Count;i++) {
@@ -819,7 +819,7 @@ namespace OpenDental{
 			ProgramCur.Description=textProgDesc.Text;
 			ProgramCur.Enabled=checkEnabled.Checked;
 			Programs.Update(ProgramCur);
-			Prefs.UpdateString(PrefName.HL7FolderOut,textHL7FolderOut.Text);
+			Prefs.Set(PrefName.HL7FolderOut,textHL7FolderOut.Text);
 			ProgramProperties.SetProperty(ProgramCur.Id,"HL7Server",textHL7Server.Text);//this property will not exist if using Oracle, eCW will never use Oracle
 			ProgramProperties.SetProperty(ProgramCur.Id,"HL7ServiceName",textHL7ServiceName.Text);//this property will not exist if using Oracle, eCW will never use Oracle
 			ProgramProperties.SetProperty(ProgramCur.Id,"MedicalPanelUrl",textMedPanelURL.Text);//this property will not exist if using Oracle, eCW will never use Oracle
@@ -861,7 +861,7 @@ namespace OpenDental{
 					ProgramProperties.SetProperty(ProgramCur.Id,"eClinicalWorksMode","2");//Full
 				}
 				ProgramProperties.SetProperty(ProgramCur.Id,"eCWServer",textECWServer.Text);//this property will not exist if using Oracle, eCW will never use Oracle
-				Prefs.UpdateString(PrefName.HL7FolderIn,textHL7FolderIn.Text);
+				Prefs.Set(PrefName.HL7FolderIn,textHL7FolderIn.Text);
 				ProgramProperties.SetProperty(ProgramCur.Id,"DefaultUserGroup",
 					_listUserGroups[comboDefaultUserGroup.SelectedIndex].Id.ToString());
 				if(checkShowImages.Checked) {
@@ -879,7 +879,7 @@ namespace OpenDental{
 			}
 			else if(radioModeStandalone.Checked) {
 				ProgramProperties.SetProperty(ProgramCur.Id,"eClinicalWorksMode","1");
-				Prefs.UpdateString(PrefName.HL7FolderIn,"");
+				Prefs.Set(PrefName.HL7FolderIn,"");
 				ProgramProperties.SetProperty(ProgramCur.Id,"DefaultUserGroup","0");
 				ProgramProperties.SetProperty(ProgramCur.Id,"ShowImagesModule","1");
 				ProgramProperties.SetProperty(ProgramCur.Id,"FeeSchedulesSetManually","0");

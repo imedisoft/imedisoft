@@ -444,7 +444,7 @@ namespace OpenDental
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
 			report.ReportName=Lan.G(this,"PaymentPlans");
 			report.AddTitle("Title",Lan.G(this,"Payment Plans"),fontTitle);
-			report.AddSubTitle("PracticeTitle",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
+			report.AddSubTitle("PracticeTitle",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
 			if(checkHasDateRange.Checked) {
 				report.AddSubTitle("Date SubTitle",dateStart.Value.ToShortDateString()+" - "+dateEnd.Value.ToShortDateString(),fontSubTitle);
 			}

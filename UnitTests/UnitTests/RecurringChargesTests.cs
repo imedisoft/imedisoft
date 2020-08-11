@@ -154,7 +154,7 @@ namespace UnitTests.RecurringCharges_Tests
 			{
 				if (split.PayPlanNum == 0)
 				{
-					Assert.AreEqual(split.UnearnedType, PrefC.GetLong(PrefName.PrepaymentUnearnedType));
+					Assert.AreEqual(split.UnearnedType, Prefs.GetLong(PrefName.PrepaymentUnearnedType));
 				}
 			}
 			Assert.AreEqual((balStarting + payPlanTotal + proc.ProcFee) - chargeAmt, pat.BalTotal);
@@ -677,7 +677,7 @@ namespace UnitTests.RecurringCharges_Tests
 			PrefT.UpdateString(PrefName.RecurringChargesBeginDateTime, strRecurringChargesBeginDateTimeStarting);
 			RecurringChargerator charger = new RecurringChargerator(false);
 			charger.SendCharges(new List<RecurringChargeData>(), false);//Passing an empty list won't actually send anything.  Just updates pref.
-			Assert.AreEqual(strRecurringChargesBeginDateTimeExpected, PrefC.GetString(PrefName.RecurringChargesBeginDateTime));
+			Assert.AreEqual(strRecurringChargesBeginDateTimeExpected, Prefs.GetString(PrefName.RecurringChargesBeginDateTime));
 		}
 
 		///<summary>Tests that a card that gets charged once per month sets the RecurringChargeDate on the payment properly.</summary>
@@ -835,7 +835,7 @@ namespace UnitTests.RecurringCharges_Tests
 			PaymentT.MakePayment(patNum, 100, DateTime.Today.AddMonths(-3), payPlan.PayPlanNum);
 			CreditCardT.CreateCard(patNum, 50, DateTime.Today.AddMonths(-3), payPlan.PayPlanNum);
 			//Test with PayPlanVersion 2--------------------------------------------------------------------------------------------------------
-			Prefs.UpdateInt(PrefName.PayPlansVersion, 2);
+			Prefs.Set(PrefName.PayPlansVersion, 2);
 			Prefs.RefreshCache();
 			Ledgers.ComputeAging(0, DateTime.Today);
 			FormCreditRecurringCharges FormCRC = new FormCreditRecurringCharges();
@@ -880,7 +880,7 @@ namespace UnitTests.RecurringCharges_Tests
 				listFailedTests.Add(4);//PayPlanVersion 2 Scenario 4: Pay plan due more than repeat amount
 			}
 			//Test with PayPlanVersion 1--------------------------------------------------------------------------------------------------------
-			Prefs.UpdateInt(PrefName.PayPlansVersion, 1);
+			Prefs.Set(PrefName.PayPlansVersion, 1);
 			Prefs.RefreshCache();
 			Ledgers.ComputeAging(0, DateTime.Today);
 			FormCRC = new FormCreditRecurringCharges();

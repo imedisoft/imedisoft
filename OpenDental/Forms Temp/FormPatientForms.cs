@@ -161,7 +161,7 @@ namespace OpenDental {
 				MessageBox.Show("No forms for this patient are set to show in the kiosk.");
 				return;
 			}
-			if(PrefC.GetLong(PrefName.ProcessSigsIntervalInSecs)==0) {
+			if(Prefs.GetLong(PrefName.ProcessSigsIntervalInSecs)==0) {
 				MessageBox.Show("Cannot open kiosk unless process signal interval is set. To set it, go to Setup > Miscellaneous.");
 				return;
 			}

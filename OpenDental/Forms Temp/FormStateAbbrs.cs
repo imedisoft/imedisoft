@@ -117,7 +117,7 @@ namespace OpenDental{
 				butAdd.Visible=false;
 				butClose.Text="Cancel";
 			}
-			if(PrefC.GetBool(PrefName.EnforceMedicaidIDLength)) {
+			if(Prefs.GetBool(PrefName.EnforceMedicaidIDLength)) {
 				this.Width+=100;
 				gridMain.Width+=100;
 			}
@@ -136,7 +136,7 @@ namespace OpenDental{
 			gridMain.ListGridColumns.Add(col);
 			col=new GridColumn(Lan.G("FormStateAbbrs","Abbr"),70);
 			gridMain.ListGridColumns.Add(col);
-			if(PrefC.GetBool(PrefName.EnforceMedicaidIDLength)) {
+			if(Prefs.GetBool(PrefName.EnforceMedicaidIDLength)) {
 				col=new GridColumn(Lan.G("FormStateAbbrs","Medicaid ID Length"),200);
 				gridMain.ListGridColumns.Add(col);
 			}
@@ -147,7 +147,7 @@ namespace OpenDental{
 				row=new GridRow();
 				row.Cells.Add(stateAbbrs[i].Description);
 				row.Cells.Add(stateAbbrs[i].Abbr);
-				if(PrefC.GetBool(PrefName.EnforceMedicaidIDLength)) {
+				if(Prefs.GetBool(PrefName.EnforceMedicaidIDLength)) {
 					if(stateAbbrs[i].MedicaidIDLength==0) {
 						row.Cells.Add("");
 					}

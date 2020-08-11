@@ -36,7 +36,7 @@ namespace OpenDental {
 
 		public FormEHR() {
 			InitializeComponent();
-			if(PrefC.GetBoolSilent(PrefName.ShowFeatureEhr,false)) {
+			if(Prefs.GetBool(PrefName.ShowFeatureEhr,false)) {
 				constructObjFormEhrMeasuresHelper();
 			}
 		}
@@ -94,11 +94,11 @@ namespace OpenDental {
 			if(EhrProvKeys.GetKeysByFLName(ProvPat.LName,ProvPat.FName).Count==0) {
 				labelProvPat.Text+=" (no ehr provider key entered)";
 			}
-			if(Security.CurrentUser.ProvNum==0) {
+			if(Security.CurrentUser.ProviderId==0) {
 				labelProvUser.Text="none";
 			}
 			else {
-				Provider provUser=Providers.GetProv(Security.CurrentUser.ProvNum);
+				Provider provUser=Providers.GetProv(Security.CurrentUser.ProviderId);
 				labelProvUser.Text=Providers.GetLongDesc(provUser.ProvNum);
 				if(EhrProvKeys.GetKeysByFLName(provUser.LName,provUser.FName).Count==0) {
 					labelProvUser.Text+=" (no ehr provider key entered)";

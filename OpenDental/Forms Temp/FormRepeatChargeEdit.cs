@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using Button = OpenDental.UI.Button;
 using CodeBase;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 	/// <summary>
@@ -677,7 +678,7 @@ namespace OpenDental{
 			else {
 				textBillingDay.Text=pat.BillingCycleDay.ToString();
 			}
-			if(PrefC.GetBool(PrefName.BillingUseBillingCycleDay)) {
+			if(Prefs.GetBool(PrefName.BillingUseBillingCycleDay)) {
 				labelBillingCycleDay.Visible=true;
 				textBillingDay.Visible=true;
 			}
@@ -766,7 +767,7 @@ namespace OpenDental{
 
 		private void butManual_Click(object sender,EventArgs e) {
 			Prefs.RefreshCache();//Refresh the cache in case another machine has updated this pref
-			if(PrefC.GetString(PrefName.RepeatingChargesBeginDateTime)!="") {
+			if(Prefs.GetString(PrefName.RepeatingChargesBeginDateTime)!="") {
 				MessageBox.Show("Repeating charges already running on another workstation, you must wait for them to finish before continuing.");
 				return;
 			}
@@ -818,7 +819,7 @@ namespace OpenDental{
 			if(form.ShowDialog()!=DialogResult.OK) {
 				return;
 			}
-			RepeatCur.PatNum=form.SelectedPatNum;
+			RepeatCur.PatNum=form.SelectedPatientId;
 			SetPatient();
 			Patient pat=Patients.GetPat(RepeatCur.PatNum);
 			textBillingDay.Text=pat.BillingCycleDay.ToString();
@@ -898,7 +899,7 @@ namespace OpenDental{
 			if(!UpdateRepeatCharge(RepeatCur)) {
 				return;
 			}
-			if(PrefC.GetBool(PrefName.BillingUseBillingCycleDay) && textBillingDay.Text!="") {
+			if(Prefs.GetBool(PrefName.BillingUseBillingCycleDay) && textBillingDay.Text!="") {
 				Patient patOld=Patients.GetPat(RepeatCur.PatNum);
 				Patient patNew=patOld.Copy();
 				patNew.BillingCycleDay=PIn.Int(textBillingDay.Text);

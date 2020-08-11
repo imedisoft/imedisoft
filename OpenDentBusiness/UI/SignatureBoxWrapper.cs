@@ -125,7 +125,7 @@ namespace OpenDental.UI {
 		}
 
 		public void SetAllowDigitalSig(bool allowDigitalSig) {
-			butESign.Visible=allowDigitalSig && PrefC.GetBool(PrefName.SignatureAllowDigital);
+			butESign.Visible=allowDigitalSig && Prefs.GetBool(PrefName.SignatureAllowDigital);
 		}
 
 		protected void OnSignatureChanged() {
@@ -534,7 +534,7 @@ namespace OpenDental.UI {
 
 		private void butESign_Click(object sender,EventArgs e) {
 			Userod curUser=_userSig??Security.CurrentUser;
-			Provider provCur=Providers.GetProv(curUser.ProvNum);
+			Provider provCur=Providers.GetProv(curUser.ProviderId);
 			string digitalSignature=Lans.g(this,"Digitally Signed by ");
 			if(provCur!=null) {
 				digitalSignature+=provCur.GetLongDesc();

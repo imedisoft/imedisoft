@@ -32,7 +32,7 @@ namespace OpenDental {
 				_listAllDunnings=Dunnings.Refresh(Clinics.GetForUserod(Security.CurrentUser,true).Select(x => x.ClinicNum).ToList());
 			}
 			List<Dunning> listSubDunnings=_listAllDunnings.FindAll(x => ValidateDunningFilters(x));
-			if(!PrefC.GetBool(PrefName.ShowFeatureSuperfamilies)) {
+			if(!Prefs.GetBool(PrefName.ShowFeatureSuperfamilies)) {
 				listSubDunnings.RemoveAll(x => x.IsSuperFamily);
 			}
 			gridDunning.BeginUpdate();
@@ -43,7 +43,7 @@ namespace OpenDental {
 			gridDunning.ListGridColumns.Add(new GridColumn("Message",150));
 			gridDunning.ListGridColumns.Add(new GridColumn("Bold Message",150));
 			gridDunning.ListGridColumns.Add(new GridColumn("Email",35,HorizontalAlignment.Center));
-			if(PrefC.GetBool(PrefName.ShowFeatureSuperfamilies)) {
+			if(Prefs.GetBool(PrefName.ShowFeatureSuperfamilies)) {
 				gridDunning.ListGridColumns.Add(new GridColumn("SF",30,HorizontalAlignment.Center));
 			}
 			if(PrefC.HasClinicsEnabled) {
@@ -77,7 +77,7 @@ namespace OpenDental {
 				row.Cells.Add(dunnCur.DunMessage);
 				row.Cells.Add(new GridCell(dunnCur.MessageBold) { Bold=YN.Yes,ColorText=Color.DarkRed });
 				row.Cells.Add((!string.IsNullOrEmpty(dunnCur.EmailBody) || !string.IsNullOrEmpty(dunnCur.EmailSubject))?"X":"");
-				if(PrefC.GetBool(PrefName.ShowFeatureSuperfamilies)) {
+				if(Prefs.GetBool(PrefName.ShowFeatureSuperfamilies)) {
 					row.Cells.Add(dunnCur.IsSuperFamily?"X":"");
 				}
 				if(PrefC.HasClinicsEnabled) {

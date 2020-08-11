@@ -752,52 +752,52 @@ namespace OpenDental {
 		#endregion
 
 		private void FormMisc_Load(object sender, System.EventArgs e) {
-			if(PrefC.GetLong(PrefName.ProcessSigsIntervalInSecs)==0){
+			if(Prefs.GetLong(PrefName.ProcessSigsIntervalInSecs)==0){
 				textSigInterval.Text="";
 			}
 			else{
-				textSigInterval.Text=PrefC.GetLong(PrefName.ProcessSigsIntervalInSecs).ToString();
+				textSigInterval.Text=Prefs.GetLong(PrefName.ProcessSigsIntervalInSecs).ToString();
 			}
-			if(PrefC.GetLong(PrefName.SignalInactiveMinutes)==0) {
+			if(Prefs.GetLong(PrefName.SignalInactiveMinutes)==0) {
 				textInactiveSignal.Text="";
 			}
 			else {
-				textInactiveSignal.Text=PrefC.GetLong(PrefName.SignalInactiveMinutes).ToString();
+				textInactiveSignal.Text=Prefs.GetLong(PrefName.SignalInactiveMinutes).ToString();
 			}
-			checkAlternateIcons.Checked=PrefC.GetBool(PrefName.ColorTheme);
-			checkUserTheme.Checked=PrefC.GetBool(PrefName.ThemeSetByUser);
-      checkTimeCardUseLocal.Checked=PrefC.GetBool(PrefName.LocalTimeOverridesServerTime);
-			checkRefresh.Checked=!PrefC.GetBool(PrefName.PatientSelectUsesSearchButton);
-			checkPrefFName.Checked=PrefC.GetBool(PrefName.PatientSelectUseFNameForPreferred);
+			checkAlternateIcons.Checked=Prefs.GetBool(PrefName.ColorTheme);
+			checkUserTheme.Checked=Prefs.GetBool(PrefName.ThemeSetByUser);
+      checkTimeCardUseLocal.Checked=Prefs.GetBool(PrefName.LocalTimeOverridesServerTime);
+			checkRefresh.Checked=!Prefs.GetBool(PrefName.PatientSelectUsesSearchButton);
+			checkPrefFName.Checked=Prefs.GetBool(PrefName.PatientSelectUseFNameForPreferred);
 			if(PrefC.HasClinicsEnabled){
 				checkPatientSelectFilterRestrictedClinics.Visible=true;
-				checkPatientSelectFilterRestrictedClinics.Checked=PrefC.GetBool(PrefName.PatientSelectFilterRestrictedClinics);
+				checkPatientSelectFilterRestrictedClinics.Checked=Prefs.GetBool(PrefName.PatientSelectFilterRestrictedClinics);
 			}
-			checkShowInactivePatientsDefault.Checked=PrefC.GetBool(PrefName.PatientSelectShowInactive);
-			textMainWindowTitle.Text=PrefC.GetString(PrefName.MainWindowTitle);
-			checkUseClinicAbbr.Checked=PrefC.GetBool(PrefName.TitleBarClinicUseAbbr);
-			checkTitleBarShowSpecialty.Checked=PrefC.GetBool(PrefName.TitleBarShowSpecialty);
+			checkShowInactivePatientsDefault.Checked=Prefs.GetBool(PrefName.PatientSelectShowInactive);
+			textMainWindowTitle.Text=Prefs.GetString(PrefName.MainWindowTitle);
+			checkUseClinicAbbr.Checked=Prefs.GetBool(PrefName.TitleBarClinicUseAbbr);
+			checkTitleBarShowSpecialty.Checked=Prefs.GetBool(PrefName.TitleBarShowSpecialty);
 			comboShowID.Items.Add(Lan.G(this,"None"));
 			comboShowID.Items.Add(Lan.G(this,"PatNum"));
 			comboShowID.Items.Add(Lan.G(this,"ChartNumber"));
 			comboShowID.Items.Add(Lan.G(this,"Birthdate"));
 			comboShowID.SelectedIndex=PrefC.GetInt(PrefName.ShowIDinTitleBar);
-			checkImeCompositionCompatibility.Checked=PrefC.GetBool(PrefName.ImeCompositionCompatibility);
-			checkTitleBarShowSite.Checked=PrefC.GetBool(PrefName.TitleBarShowSite);
-			textWebServiceServerName.Text=PrefC.GetString(PrefName.WebServiceServerName);
-			if(PrefC.GetLong(PrefName.AlertCheckFrequencySeconds)==0) {
+			checkImeCompositionCompatibility.Checked=Prefs.GetBool(PrefName.ImeCompositionCompatibility);
+			checkTitleBarShowSite.Checked=Prefs.GetBool(PrefName.TitleBarShowSite);
+			textWebServiceServerName.Text=Prefs.GetString(PrefName.WebServiceServerName);
+			if(Prefs.GetLong(PrefName.AlertCheckFrequencySeconds)==0) {
 				textAlertInterval.Text="";
 			}
 			else {
-				textAlertInterval.Text=PrefC.GetString(PrefName.AlertCheckFrequencySeconds);
+				textAlertInterval.Text=Prefs.GetString(PrefName.AlertCheckFrequencySeconds);
 			}
-			if(PrefC.GetLong(PrefName.AlertInactiveMinutes)==0) {
+			if(Prefs.GetLong(PrefName.AlertInactiveMinutes)==0) {
 				textInactiveAlert.Text="";
 			}
 			else {
-				textInactiveAlert.Text=PrefC.GetString(PrefName.AlertInactiveMinutes);
+				textInactiveAlert.Text=Prefs.GetString(PrefName.AlertInactiveMinutes);
 			}
-			if(PrefC.GetString(PrefName.LanguageAndRegion)!="") {
+			if(Prefs.GetString(PrefName.LanguageAndRegion)!="") {
 				textLanguageAndRegion.Text=PrefC.GetLanguageAndRegion().DisplayName;
 			}
 			else {
@@ -806,7 +806,7 @@ namespace OpenDental {
 			textNumDecimals.Text=CultureInfo.CurrentCulture.NumberFormat.CurrencyDecimalDigits.ToString();
 			_trackLastClinicBy=new List<string> { "None","Workstation","User" };//must be in english because these values are stored in DB.
 			_trackLastClinicBy.ForEach(x => comboTrackClinic.Items.Add(Lan.G(this,x)));//translation is for display only.
-			comboTrackClinic.SelectedIndex=_trackLastClinicBy.FindIndex(x => x==PrefC.GetString(PrefName.ClinicTrackLast));
+			comboTrackClinic.SelectedIndex=_trackLastClinicBy.FindIndex(x => x==Prefs.GetString(PrefName.ClinicTrackLast));
 			if(comboTrackClinic.SelectedIndex==-1) {
 				comboTrackClinic.SelectedIndex=0;
 			}
@@ -815,9 +815,9 @@ namespace OpenDental {
 				comboTrackClinic.Visible=false;
 				checkUseClinicAbbr.Visible=false;
 			}
-			textSyncCode.Text=PrefC.GetString(PrefName.CentralManagerSyncCode);
-			textAuditEntries.Text=PrefC.GetString(PrefName.AuditTrailEntriesDisplayed);
-			if(PrefC.GetBool(PrefName.AgingIsEnterprise)) {
+			textSyncCode.Text=Prefs.GetString(PrefName.CentralManagerSyncCode);
+			textAuditEntries.Text=Prefs.GetString(PrefName.AuditTrailEntriesDisplayed);
+			if(Prefs.GetBool(PrefName.AgingIsEnterprise)) {
 				//Enterprise
 				checkAgingIsEnterprise.Checked=true;
 				DateTime agingBeginDateT=PrefC.GetDateT(PrefName.AgingBeginDateTime);
@@ -831,7 +831,7 @@ namespace OpenDental {
 				textAgingBeginDateT.Visible=false;
 				butClearAgingBeginDateT.Visible=false;
 			}
-			if(PrefC.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)) {
+			if(Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)) {
 				textAutoAgingRunTime.Enabled=false;
 			}
 			else {
@@ -840,7 +840,7 @@ namespace OpenDental {
 					textAutoAgingRunTime.Text=agingDateTDue.ToShortTimeString();
 				}
 			}
-			checkSubmitExceptions.Checked=PrefC.GetBool(PrefName.SendUnhandledExceptionsToHQ);
+			checkSubmitExceptions.Checked=Prefs.GetBool(PrefName.SendUnhandledExceptionsToHQ);
 		}
 
 		private void butLanguages_Click(object sender,EventArgs e) {
@@ -854,7 +854,7 @@ namespace OpenDental {
 		private void butPickLanguageAndRegion_Click(object sender,EventArgs e) {
 			FormLanguageAndRegion FormLAR=new FormLanguageAndRegion();//FormLanguageAndRegion saves pref to DB.
 			FormLAR.ShowDialog();
-			if(PrefC.GetString(PrefName.LanguageAndRegion)!="") {
+			if(Prefs.GetString(PrefName.LanguageAndRegion)!="") {
 				textLanguageAndRegion.Text=PrefC.GetLanguageAndRegion().DisplayName;
 			}
 			else {
@@ -872,10 +872,10 @@ namespace OpenDental {
 		}
 
 		private void checkUseFamAgingTable_Click(object sender,EventArgs e) {
-			if(checkAgingIsEnterprise.Checked && !PrefC.GetBool(PrefName.AgingIsEnterprise)) {
+			if(checkAgingIsEnterprise.Checked && !Prefs.GetBool(PrefName.AgingIsEnterprise)) {
 				//Enabling feature that is turned off according to pref table.
 				string msgTxt=Lan.G(this,"In order to enable enterprise aging, enter the password from our manual below.");
-				if(PrefC.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)) {
+				if(Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)) {
 					//Conditional warning that only affects Monthly Aging customers.
 					msgTxt+="\r\n"+Lan.G(this,"Note: This will change your aging from calculated monthly to calculated daily.");
 				}
@@ -908,7 +908,7 @@ namespace OpenDental {
 				return;
 			}
 			textAgingBeginDateT.Text="";
-			Prefs.UpdateString(PrefName.AgingBeginDateTime,"");
+			Prefs.Set(PrefName.AgingBeginDateTime,"");
 			DataValid.SetInvalid(InvalidType.Prefs);
 		}
 
@@ -917,12 +917,12 @@ namespace OpenDental {
 				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
 				return;
 			}
-			if(string.IsNullOrWhiteSpace(textSigInterval.Text) && PrefC.GetLong(PrefName.ProcessSigsIntervalInSecs)!=0) {
+			if(string.IsNullOrWhiteSpace(textSigInterval.Text) && Prefs.GetLong(PrefName.ProcessSigsIntervalInSecs)!=0) {
 				bool proceed=MsgBox.Show(sender,MsgBoxButtons.YesNo,"Disabling the process signal interval prevents the use of kiosks.\r\n"
 					+"This should not be done if there are multiple workstations in the office.\r\n"
 					+"Proceed?");
 				if (!proceed) {
-					textSigInterval.Text=PrefC.GetLong(PrefName.ProcessSigsIntervalInSecs).ToString();
+					textSigInterval.Text=Prefs.GetLong(PrefName.ProcessSigsIntervalInSecs).ToString();
 					return;
 				}
 			}
@@ -935,7 +935,7 @@ namespace OpenDental {
 			}
 			DateTime autoAgingRunTime=DateTime.MinValue;
 			if(!string.IsNullOrWhiteSpace(textAutoAgingRunTime.Text)
-				&& !PrefC.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)
+				&& !Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)
 				&& !DateTime.TryParse(textAutoAgingRunTime.Text,out autoAgingRunTime))
 			{
 				MessageBox.Show("Automated Aging Run Time must be blank or a valid time of day.");
@@ -945,74 +945,74 @@ namespace OpenDental {
 				comboTrackClinic.SelectedIndex=0;
 			}
 			bool changed=false;
-			if( Prefs.UpdateString(PrefName.MainWindowTitle,textMainWindowTitle.Text)
-				| Prefs.UpdateLong(PrefName.ShowIDinTitleBar,comboShowID.SelectedIndex)
-				| Prefs.UpdateBool(PrefName.TitleBarShowSite, checkTitleBarShowSite.Checked)
-				| Prefs.UpdateString(PrefName.WebServiceServerName,textWebServiceServerName.Text)
-        | Prefs.UpdateBool(PrefName.LocalTimeOverridesServerTime,checkTimeCardUseLocal.Checked)
-				| Prefs.UpdateBool(PrefName.PatientSelectUseFNameForPreferred,checkPrefFName.Checked)
-				| Prefs.UpdateBool(PrefName.PatientSelectUsesSearchButton,!checkRefresh.Checked)
-				| Prefs.UpdateBool(PrefName.ImeCompositionCompatibility,checkImeCompositionCompatibility.Checked)
-				| Prefs.UpdateString(PrefName.ClinicTrackLast,_trackLastClinicBy[comboTrackClinic.SelectedIndex])
-				| Prefs.UpdateString(PrefName.CentralManagerSyncCode,textSyncCode.Text)
-				| Prefs.UpdateString(PrefName.AuditTrailEntriesDisplayed,textAuditEntries.Text)
-				| Prefs.UpdateBool(PrefName.AgingIsEnterprise,checkAgingIsEnterprise.Checked)
-				| Prefs.UpdateBool(PrefName.TitleBarClinicUseAbbr,checkUseClinicAbbr.Checked)
-				| Prefs.UpdateBool(PrefName.TitleBarShowSpecialty,checkTitleBarShowSpecialty.Checked)
-				| Prefs.UpdateBool(PrefName.SendUnhandledExceptionsToHQ,checkSubmitExceptions.Checked)
-				| Prefs.UpdateBool(PrefName.ThemeSetByUser,checkUserTheme.Checked)
-				| Prefs.UpdateBool(PrefName.PatientSelectFilterRestrictedClinics,checkPatientSelectFilterRestrictedClinics.Checked)
-				| Prefs.UpdateBool(PrefName.PatientSelectShowInactive,checkShowInactivePatientsDefault.Checked)
+			if( Prefs.Set(PrefName.MainWindowTitle,textMainWindowTitle.Text)
+				| Prefs.Set(PrefName.ShowIDinTitleBar,comboShowID.SelectedIndex)
+				| Prefs.Set(PrefName.TitleBarShowSite, checkTitleBarShowSite.Checked)
+				| Prefs.Set(PrefName.WebServiceServerName,textWebServiceServerName.Text)
+        | Prefs.Set(PrefName.LocalTimeOverridesServerTime,checkTimeCardUseLocal.Checked)
+				| Prefs.Set(PrefName.PatientSelectUseFNameForPreferred,checkPrefFName.Checked)
+				| Prefs.Set(PrefName.PatientSelectUsesSearchButton,!checkRefresh.Checked)
+				| Prefs.Set(PrefName.ImeCompositionCompatibility,checkImeCompositionCompatibility.Checked)
+				| Prefs.Set(PrefName.ClinicTrackLast,_trackLastClinicBy[comboTrackClinic.SelectedIndex])
+				| Prefs.Set(PrefName.CentralManagerSyncCode,textSyncCode.Text)
+				| Prefs.Set(PrefName.AuditTrailEntriesDisplayed,textAuditEntries.Text)
+				| Prefs.Set(PrefName.AgingIsEnterprise,checkAgingIsEnterprise.Checked)
+				| Prefs.Set(PrefName.TitleBarClinicUseAbbr,checkUseClinicAbbr.Checked)
+				| Prefs.Set(PrefName.TitleBarShowSpecialty,checkTitleBarShowSpecialty.Checked)
+				| Prefs.Set(PrefName.SendUnhandledExceptionsToHQ,checkSubmitExceptions.Checked)
+				| Prefs.Set(PrefName.ThemeSetByUser,checkUserTheme.Checked)
+				| Prefs.Set(PrefName.PatientSelectFilterRestrictedClinics,checkPatientSelectFilterRestrictedClinics.Checked)
+				| Prefs.Set(PrefName.PatientSelectShowInactive,checkShowInactivePatientsDefault.Checked)
 			)
 			{
 				changed=true;
 			}
-			if(Prefs.UpdateBool(PrefName.ColorTheme,checkAlternateIcons.Checked)) {
+			if(Prefs.Set(PrefName.ColorTheme,checkAlternateIcons.Checked)) {
 				changed=true;
 			}
 			if(textSigInterval.Text==""){
-				if(Prefs.UpdateLong(PrefName.ProcessSigsIntervalInSecs,0)){
+				if(Prefs.Set(PrefName.ProcessSigsIntervalInSecs,0)){
 					changed=true;
 				}
 			}
 			else{
-				if(Prefs.UpdateLong(PrefName.ProcessSigsIntervalInSecs,PIn.Long(textSigInterval.Text))){
+				if(Prefs.Set(PrefName.ProcessSigsIntervalInSecs,PIn.Long(textSigInterval.Text))){
 					changed=true;
 				}
 			}
 			if(textInactiveSignal.Text=="") {
-				if(Prefs.UpdateLong(PrefName.SignalInactiveMinutes,0)) {
+				if(Prefs.Set(PrefName.SignalInactiveMinutes,0)) {
 					changed=true;
 				}
 			}
 			else {
-				if(Prefs.UpdateLong(PrefName.SignalInactiveMinutes,PIn.Long(textInactiveSignal.Text))) {
+				if(Prefs.Set(PrefName.SignalInactiveMinutes,PIn.Long(textInactiveSignal.Text))) {
 					changed=true;
 				}
 			}
 			if(textAlertInterval.Text=="") {
-				changed|=Prefs.UpdateLong(PrefName.AlertCheckFrequencySeconds,0);
+				changed|=Prefs.Set(PrefName.AlertCheckFrequencySeconds,0);
 			}
 			else {
-				changed|=Prefs.UpdateLong(PrefName.AlertCheckFrequencySeconds,PIn.Long(textAlertInterval.Text));
+				changed|=Prefs.Set(PrefName.AlertCheckFrequencySeconds,PIn.Long(textAlertInterval.Text));
 			}
 			if(textInactiveAlert.Text=="") {
-				changed|=Prefs.UpdateLong(PrefName.AlertInactiveMinutes,0);
+				changed|=Prefs.Set(PrefName.AlertInactiveMinutes,0);
 			}
 			else {
-				changed|=Prefs.UpdateLong(PrefName.AlertInactiveMinutes,PIn.Long(textInactiveAlert.Text));
+				changed|=Prefs.Set(PrefName.AlertInactiveMinutes,PIn.Long(textInactiveAlert.Text));
 			}
 			//if AgingIsEnterprise, change the aging to daily aging if it is currently set to monthly.  AgingIsEnterprise requires daily aging.
-			if(checkAgingIsEnterprise.Checked && Prefs.UpdateBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily,false)) {
+			if(checkAgingIsEnterprise.Checked && Prefs.Set(PrefName.AgingCalculatedMonthlyInsteadOfDaily,false)) {
 				changed=true;
 			}
 			if(autoAgingRunTime==DateTime.MinValue) {
-				if(Prefs.UpdateString(PrefName.AgingServiceTimeDue,"")) {
+				if(Prefs.Set(PrefName.AgingServiceTimeDue,"")) {
 					changed=true;
 				}
 			}
 			else {
-				if(Prefs.UpdateString(PrefName.AgingServiceTimeDue,POut.DateT(autoAgingRunTime,false))) {
+				if(Prefs.Set(PrefName.AgingServiceTimeDue,POut.DateT(autoAgingRunTime,false))) {
 					changed=true;
 				}
 			}

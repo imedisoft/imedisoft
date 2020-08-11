@@ -92,7 +92,7 @@ namespace OpenDentBusiness{
 			}
 			#endregion insurance verification
 			#region Benifit Renewal
-			if(PrefC.GetBool(PrefName.InsVerifyFutureDateBenefitYear)) {
+			if(Prefs.GetBool(PrefName.InsVerifyFutureDateBenefitYear)) {
 				InsPlan insPlan=InsPlans.GetPlan(insVer.PlanNum,null);
 				//Setup the month renew dates.  Need all 3 years in case the appointment verify window crosses over a year
 				//e.g. Appt verify date: 12/30/2016 and Appt Date: 1/6/2017
@@ -223,7 +223,7 @@ namespace OpenDentBusiness{
 					whereClinic+=" AND clinic.Region IN("+string.Join(",",listRegionDefNums.Select(x => POut.Long(x)))+") ";
 				}
 			}
-			bool checkBenefitYear=PrefC.GetBool(PrefName.InsVerifyFutureDateBenefitYear);
+			bool checkBenefitYear=Prefs.GetBool(PrefName.InsVerifyFutureDateBenefitYear);
 			string mainQuery=@"
 				SELECT insverify.*,
 				patient.LName,patient.FName,patient.Preferred,appointment.PatNum,appointment.AptNum,appointment.AptDateTime,patplan.PatPlanNum,insplan.PlanNum,carrier.CarrierName,
@@ -381,8 +381,8 @@ namespace OpenDentBusiness{
 		///Only runs for carriers that are flagged with TrustedEtransTypes.RealTimeEligibility.</summary>
 		public static List<InsVerify> TryBatchPatInsVerify() {
 			//Mimics FormInsVerificaitonList.GetRowsForGrid(...)
-			bool excludePatVerifyWhenNoIns=PrefC.GetBool(PrefName.InsVerifyExcludePatVerify);
-			bool excludePatClones=(PrefC.GetBool(PrefName.ShowFeaturePatientClone) && PrefC.GetBool(PrefName.InsVerifyExcludePatientClones));
+			bool excludePatVerifyWhenNoIns=Prefs.GetBool(PrefName.InsVerifyExcludePatVerify);
+			bool excludePatClones=(Prefs.GetBool(PrefName.ShowFeaturePatientClone) && Prefs.GetBool(PrefName.InsVerifyExcludePatientClones));
 			DateTime dateTimeStart=DateTime.Today.AddDays(-PrefC.GetInt(PrefName.InsVerifyDaysFromPastDueAppt));//Mimics past due ins verifies logic
 			DateTime dateTimeEnd=DateTime.Today.AddDays(PrefC.GetInt(PrefName.InsVerifyAppointmentScheduledDays));//Non past due logic
 			DateTime dateTimeLastPatEligibility=DateTime.Today.AddDays(-PrefC.GetInt(PrefName.InsVerifyPatientEnrollmentDays));

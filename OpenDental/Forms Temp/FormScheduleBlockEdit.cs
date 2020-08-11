@@ -313,7 +313,7 @@ namespace OpenDental{
 			}
 			List<Schedule> listOverlapSchedules;
 			if(Schedules.Overlaps(_schedCur,out listOverlapSchedules)) {
-				if(!PrefC.GetBool(PrefName.ReplaceExistingBlockout) || !Schedules.IsAppointmentBlocking(_schedCur.BlockoutType)) {
+				if(!Prefs.GetBool(PrefName.ReplaceExistingBlockout) || !Schedules.IsAppointmentBlocking(_schedCur.BlockoutType)) {
 					MessageBox.Show("Blockouts not allowed to overlap.");
 					return;
 				}

@@ -51,7 +51,7 @@ namespace OpenDental {
 				Cursor=Cursors.Default;
 			}
 			SecurityLogs.MakeLogEntry(Permissions.SecurityAdmin,0,"Changed Cloud office password.");
-			Prefs.UpdateInt(PrefName.CloudPasswordNeedsReset,(int)YN.No);//No refresh needed because this is only checked on startup.
+			Prefs.Set(PrefName.CloudPasswordNeedsReset,(int)YN.No);//No refresh needed because this is only checked on startup.
 			MessageBox.Show("Password changed.");
 		}
 

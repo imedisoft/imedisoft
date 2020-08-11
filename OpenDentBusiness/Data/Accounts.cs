@@ -151,7 +151,7 @@ namespace OpenDentBusiness
 
 			// TODO: Use Prefs class to access preferences...
 
-			var result = Database.ExecuteString("SELECT ValueString FROM preference WHERE PrefName='AccountingDepositAccounts'");
+			var result = Prefs.GetString(PrefName.AccountingDepositAccounts);
 			string[] strArray = result.Split(new char[] { ',' });
 			for (int i = 0; i < strArray.Length; i++)
 			{
@@ -161,13 +161,13 @@ namespace OpenDentBusiness
 				}
 			}
 
-			result = Database.ExecuteString("SELECT ValueString FROM preference WHERE PrefName='AccountingIncomeAccount'");
+			result = Prefs.GetString(PrefName.AccountingIncomeAccount);
 			if (result == account.Id.ToString())
 			{
 				throw new ApplicationException("Account is in use in the setup section.");
 			}
 
-			result = Database.ExecuteString("SELECT ValueString FROM preference WHERE PrefName='AccountingCashIncomeAccount'");
+			result = Prefs.GetString(PrefName.AccountingCashIncomeAccount);
 			if (result == account.Id.ToString())
 			{
 				throw new ApplicationException("Account is in use in the setup section.");
@@ -237,22 +237,22 @@ namespace OpenDentBusiness
 		{
 			if (PrefC.GetInt(PrefName.AccountingSoftware) == (int)AccountingSoftware.QuickBooks)
 			{
-				if (PrefC.GetString(PrefName.QuickBooksDepositAccounts) == "")
+				if (Prefs.GetString(PrefName.QuickBooksDepositAccounts) == "")
 				{
 					return false;
 				}
-				if (PrefC.GetString(PrefName.QuickBooksIncomeAccount) == "")
+				if (Prefs.GetString(PrefName.QuickBooksIncomeAccount) == "")
 				{
 					return false;
 				}
 			}
 			else
 			{
-				if (PrefC.GetString(PrefName.AccountingDepositAccounts) == "")
+				if (Prefs.GetString(PrefName.AccountingDepositAccounts) == "")
 				{
 					return false;
 				}
-				if (PrefC.GetLong(PrefName.AccountingIncomeAccount) == 0)
+				if (Prefs.GetLong(PrefName.AccountingIncomeAccount) == 0)
 				{
 					return false;
 				}
@@ -269,7 +269,7 @@ namespace OpenDentBusiness
 			{
 				return false;
 			}
-			if (PrefC.GetLong(PrefName.AccountingCashIncomeAccount) == 0)
+			if (Prefs.GetLong(PrefName.AccountingCashIncomeAccount) == 0)
 			{
 				return false;
 			}
@@ -281,7 +281,7 @@ namespace OpenDentBusiness
 		public static long[] GetDepositAccounts()
 		{
 			//No need to check RemotingRole; no call to db.
-			string depStr = PrefC.GetString(PrefName.AccountingDepositAccounts);
+			string depStr = Prefs.GetString(PrefName.AccountingDepositAccounts);
 			string[] depStrArray = depStr.Split(new char[] { ',' });
 			ArrayList depAL = new ArrayList();
 			for (int i = 0; i < depStrArray.Length; i++)
@@ -301,7 +301,7 @@ namespace OpenDentBusiness
 		public static List<string> GetDepositAccountsQB()
 		{
 			//No need to check RemotingRole; no call to db.
-			string depStr = PrefC.GetString(PrefName.QuickBooksDepositAccounts);
+			string depStr = Prefs.GetString(PrefName.QuickBooksDepositAccounts);
 			string[] depStrArray = depStr.Split(new char[] { ',' });
 			List<string> retVal = new List<string>();
 			for (int i = 0; i < depStrArray.Length; i++)
@@ -319,7 +319,7 @@ namespace OpenDentBusiness
 		public static List<string> GetIncomeAccountsQB()
 		{
 			//No need to check RemotingRole; no call to db.
-			string incomeStr = PrefC.GetString(PrefName.QuickBooksIncomeAccount);
+			string incomeStr = Prefs.GetString(PrefName.QuickBooksIncomeAccount);
 			string[] incomeStrArray = incomeStr.Split(new char[] { ',' });
 			List<string> retVal = new List<string>();
 			for (int i = 0; i < incomeStrArray.Length; i++)

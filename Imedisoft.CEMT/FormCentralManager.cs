@@ -260,7 +260,7 @@ namespace CentralManager
 				return;
 			}
 			
-			string syncCode = PrefC.GetString(PrefName.CentralManagerSyncCode);
+			string syncCode = Prefs.GetString(PrefName.CentralManagerSyncCode);
 			if (string.IsNullOrEmpty(syncCode))
 			{
 				var random = new Random();
@@ -271,7 +271,7 @@ namespace CentralManager
 					syncCode += allowedChars[random.Next(allowedChars.Length)];
 				}
 
-				Prefs.UpdateString(PrefName.CentralManagerSyncCode, syncCode);
+				Prefs.Set(PrefName.CentralManagerSyncCode, syncCode);
 			}
 
 			DisplayFields.RefreshCache();
@@ -280,9 +280,9 @@ namespace CentralManager
 
 			connections = CentralConnections.GetConnections();
 
-			versionLabel.Text = "Version: " + PrefC.GetString(PrefName.ProgramVersion);
+			versionLabel.Text = "Version: " + Prefs.GetString(PrefName.ProgramVersion);
 
-			FillComboGroups(PrefC.GetLong(PrefName.ConnGroupCEMT));
+			FillComboGroups(Prefs.GetLong(PrefName.ConnGroupCEMT));
 			FillConnectionsGrid();
 
 			reportPermissions = GroupPermissions.GetPermsForReports().Where(x => Security.CurrentUser.IsInUserGroup(x.UserGroupNum)).ToList();
@@ -439,7 +439,7 @@ namespace CentralManager
 				return;
 			}
 
-			if (Security.CurrentUser.ProvNum == 0 && !Security.IsAuthorized(Permissions.ReportProdIncAllProviders, true))
+			if (Security.CurrentUser.ProviderId == 0 && !Security.IsAuthorized(Permissions.ReportProdIncAllProviders, true))
 			{
 				ShowInfo("The current user needs to have the 'All Providers' permission for this report");
 				return;

@@ -25,7 +25,7 @@ namespace OpenDental {
 		}
 
 		private void FormEtrans834Import_Load(object sender,EventArgs e) {
-			textImportPath.Text=PrefC.GetString(PrefName.Ins834ImportPath);
+			textImportPath.Text=Prefs.GetString(PrefName.Ins834ImportPath);
 			FillGridInsPlanFiles();
 		}
 
@@ -170,7 +170,7 @@ namespace OpenDental {
 				MessageBox.Show("Invalid import path.");
 				return;
 			}
-			Prefs.UpdateString(PrefName.Ins834ImportPath,textImportPath.Text);
+			Prefs.Set(PrefName.Ins834ImportPath,textImportPath.Text);
 			if(_x834selected==null) {
 				MessageBox.Show("No files to import.");
 				return;

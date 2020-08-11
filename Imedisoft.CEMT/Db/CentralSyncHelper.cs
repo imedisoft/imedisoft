@@ -60,9 +60,9 @@ namespace CentralManager
 			_listCEMTUsers = Userods.GetUsersForCEMT();
 			_securityLockDate = PrefC.GetDate(PrefName.SecurityLockDate).ToShortDateString();
 			_securityLockDays = PrefC.GetInt(PrefName.SecurityLockDays);
-			_securityLockAdmin = PrefC.GetBool(PrefName.SecurityLockIncludesAdmin);
-			_securityCentralLock = PrefC.GetBool(PrefName.CentralManagerSecurityLock);
-			_syncCode = PrefC.GetString(PrefName.CentralManagerSyncCode);
+			_securityLockAdmin = Prefs.GetBool(PrefName.SecurityLockIncludesAdmin);
+			_securityCentralLock = Prefs.GetBool(PrefName.CentralManagerSecurityLock);
+			_syncCode = Prefs.GetString(PrefName.CentralManagerSyncCode);
 			_listAlertSubs = AlertSubs.GetAll();
 			List<CentralUserData> listCentralUserData = new List<CentralUserData>();
 			List<UserGroup> listUserGroups = UserGroups.GetCEMTGroups();
@@ -152,12 +152,12 @@ namespace CentralManager
 				connection.ConnectionStatus = "OFFLINE";
 				return;
 			}
-			string remoteSyncCode = PrefC.GetStringNoCache(PrefName.CentralManagerSyncCode);
+			string remoteSyncCode = Prefs.GetStringNoCache(PrefName.CentralManagerSyncCode);
 			if (remoteSyncCode != _syncCode)
 			{
 				if (remoteSyncCode == "")
 				{
-					Prefs.UpdateStringNoCache(PrefName.CentralManagerSyncCode, _syncCode);//Lock in the sync code for the remote server.
+					Prefs.Set(PrefName.CentralManagerSyncCode, _syncCode);//Lock in the sync code for the remote server.
 				}
 				else
 				{
@@ -166,10 +166,10 @@ namespace CentralManager
 				}
 			}
 			//Push the preferences to the server.
-			Prefs.UpdateStringNoCache(PrefName.SecurityLockDate, _securityLockDate);
-			Prefs.UpdateIntNoCache(PrefName.SecurityLockDays, _securityLockDays);
-			Prefs.UpdateBoolNoCache(PrefName.SecurityLockIncludesAdmin, _securityLockAdmin);
-			Prefs.UpdateBoolNoCache(PrefName.CentralManagerSecurityLock, _securityCentralLock);
+			Prefs.Set(PrefName.SecurityLockDate, _securityLockDate);
+			Prefs.SetNoCache(PrefName.SecurityLockDays, _securityLockDays);
+			Prefs.SetNoCache(PrefName.SecurityLockIncludesAdmin, _securityLockAdmin);
+			Prefs.SetNoCache(PrefName.CentralManagerSecurityLock, _securityCentralLock);
 			Signalods.SetInvalidNoCache(InvalidType.Prefs);
 			SecurityLogs.MakeLogEntryNoCache(Permissions.SecurityAdmin, 0, "Enterprise Management Tool updated security settings");
 			//Get remote users, usergroups, associated permissions, and alertsubs
@@ -272,12 +272,12 @@ namespace CentralManager
 				connection.ConnectionStatus = "OFFLINE";
 				return;
 			}
-			string remoteSyncCode = PrefC.GetStringNoCache(PrefName.CentralManagerSyncCode);
+			string remoteSyncCode = Prefs.GetStringNoCache(PrefName.CentralManagerSyncCode);
 			if (remoteSyncCode != _syncCode)
 			{
 				if (remoteSyncCode == "")
 				{
-					Prefs.UpdateStringNoCache(PrefName.CentralManagerSyncCode, _syncCode);//Lock in the sync code for the remote server.
+					Prefs.Set(PrefName.CentralManagerSyncCode, _syncCode);//Lock in the sync code for the remote server.
 				}
 				else
 				{
@@ -388,12 +388,12 @@ namespace CentralManager
 				connection.ConnectionStatus = "OFFLINE";
 				return;
 			}
-			string remoteSyncCode = PrefC.GetString(PrefName.CentralManagerSyncCode);
+			string remoteSyncCode = Prefs.GetString(PrefName.CentralManagerSyncCode);
 			if (remoteSyncCode != _syncCode)
 			{
 				if (remoteSyncCode == "")
 				{
-					Prefs.UpdateStringNoCache(PrefName.CentralManagerSyncCode, _syncCode);//Lock in the sync code for the remote server.
+					Prefs.Set(PrefName.CentralManagerSyncCode, _syncCode);//Lock in the sync code for the remote server.
 				}
 				else
 				{
@@ -402,10 +402,10 @@ namespace CentralManager
 				}
 			}
 			//Push the preferences to the server.
-			Prefs.UpdateStringNoCache(PrefName.SecurityLockDate, _securityLockDate);
-			Prefs.UpdateIntNoCache(PrefName.SecurityLockDays, _securityLockDays);
-			Prefs.UpdateBoolNoCache(PrefName.SecurityLockIncludesAdmin, _securityLockAdmin);
-			Prefs.UpdateBoolNoCache(PrefName.CentralManagerSecurityLock, _securityCentralLock);
+			Prefs.Set(PrefName.SecurityLockDate, _securityLockDate);
+			Prefs.SetNoCache(PrefName.SecurityLockDays, _securityLockDays);
+			Prefs.SetNoCache(PrefName.SecurityLockIncludesAdmin, _securityLockAdmin);
+			Prefs.SetNoCache(PrefName.CentralManagerSecurityLock, _securityCentralLock);
 			Signalods.SetInvalidNoCache(InvalidType.Prefs);
 			SecurityLogs.MakeLogEntryNoCache(Permissions.SecurityAdmin, 0, "Enterprise Management Tool updated security settings");
 			odThread.Tag = new List<string>() { "", "", "" };//No errors.

@@ -14,7 +14,7 @@ namespace OpenDentBusiness {
 
 		//IMPORTANT NOTE FOR ANYBODY WHO CODES IN HERE:  This is used in the CEMT so everything MUST be coded in such a way that they don't use the 
 		//cache to look up information.  The CEMT does NOT keep copies of the remote database caches when this is used so things such as 
-		//PrefC.GetBool or Clinics.GetDesc will return incorrect results.
+		//Prefs.GetBool or Clinics.GetDesc will return incorrect results.
 
 		#region Daily and Provider P&I Reports
 		///<summary>If not using clinics then supply an empty list of clinicNums.  Also used for the CEMT Provider P and I report.  
@@ -1169,7 +1169,7 @@ namespace OpenDentBusiness {
 			if(hasClinics) {
 				whereClin="AND adjustment.ClinicNum IN ("+String.Join(",",listClinicNums)+") ";
 			}
-			string listBadDebtAdj= ReportsComplex.RunFuncOnReportServer(() => PrefC.GetStringNoCache(PrefName.BadDebtAdjustmentTypes));
+			string listBadDebtAdj= ReportsComplex.RunFuncOnReportServer(() => Prefs.GetStringNoCache(PrefName.BadDebtAdjustmentTypes));
 			if(String.IsNullOrEmpty(listBadDebtAdj)) {
 				listBadDebtAdj="0";
 			}
@@ -1394,7 +1394,7 @@ namespace OpenDentBusiness {
 			if(hasClinics) {
 				whereClin="AND adjustment.ClinicNum IN ("+String.Join(",",listClinicNums)+") ";
 			}
-			string listBadDebtAdj = ReportsComplex.RunFuncOnReportServer(() => PrefC.GetStringNoCache(PrefName.BadDebtAdjustmentTypes));
+			string listBadDebtAdj = ReportsComplex.RunFuncOnReportServer(() => Prefs.GetStringNoCache(PrefName.BadDebtAdjustmentTypes));
 			if(String.IsNullOrEmpty(listBadDebtAdj)) {
 				listBadDebtAdj="0";
 			}

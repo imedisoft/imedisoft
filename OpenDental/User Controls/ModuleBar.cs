@@ -193,7 +193,7 @@ namespace OpenDental
 						_listButtons[i].Caption = Lan.G(this, "Treat' Plan");
 						break;
 					case EnumModuleType.Chart:
-						if (PrefC.GetBool(PrefName.EasyHideClinical))
+						if (Prefs.GetBool(PrefName.EasyHideClinical))
 						{
 							_listButtons[i].Caption = Lan.G(this, "Procs");
 						}

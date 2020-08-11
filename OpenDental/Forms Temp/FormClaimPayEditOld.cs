@@ -448,8 +448,8 @@ namespace OpenDental{
 				MessageBox.Show("Please enter a date first.");
 				return;
 			}
-			if(PIn.Date(textDate.Text).Date > DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed) 
-				&& !PrefC.GetBool(PrefName.AllowFutureInsPayments)) 
+			if(PIn.Date(textDate.Text).Date > DateTime.Today.Date && !Prefs.GetBool(PrefName.FutureTransDatesAllowed) 
+				&& !Prefs.GetBool(PrefName.AllowFutureInsPayments)) 
 			{
 				MessageBox.Show("Payments cannot be for a date in the future.");
 				return; //probably not necesasary since this is an old form, but just in case we use it again

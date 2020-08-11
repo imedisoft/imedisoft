@@ -33,7 +33,7 @@ namespace OpenDental {
 
 		private string[] _arrLanguages {
 			get {
-				return PrefC.GetString(PrefName.LanguagesUsedByPatients).Split(',');
+				return Prefs.GetString(PrefName.LanguagesUsedByPatients).Split(',');
 			}
 		}
 
@@ -114,7 +114,7 @@ namespace OpenDental {
 				checkEConfirmationAutoReplies.Visible=false;
 			}
 			if(_arrLanguages.Length==0 
-				|| (_arrLanguages.Length==1 && _arrLanguages[0].ToLower().Trim()==PrefC.GetString(PrefName.LanguagesIndicateNone).ToLower().Trim())) 
+				|| (_arrLanguages.Length==1 && _arrLanguages[0].ToLower().Trim()==Prefs.GetString(PrefName.LanguagesIndicateNone).ToLower().Trim())) 
 			{
 				butLanguage.Visible=false;
 			}
@@ -304,21 +304,21 @@ namespace OpenDental {
 		///<summary>Removes 'Do not send eConfirmations' from the confirmed status for 'eConfirm Sent' if multiple eConfirmations are set up.</summary>
 		private void CheckMultipleEConfirms() {
 			int countEConfirm=_listRulesClinic?.Count(x => x.TypeCur==ApptReminderType.ConfirmationFutureDay && x.Language=="")??0;
-			string confStatusEConfirmSent=Defs.GetDef(DefCat.ApptConfirmed,PrefC.GetLong(PrefName.ApptEConfirmStatusSent)).ItemName;
-			List<string> listExclude=PrefC.GetString(PrefName.ApptConfirmExcludeESend)
+			string confStatusEConfirmSent=Defs.GetDef(DefCat.ApptConfirmed,Prefs.GetLong(PrefName.ApptEConfirmStatusSent)).ItemName;
+			List<string> listExclude=Prefs.GetString(PrefName.ApptConfirmExcludeESend)
 				.Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries).ToList();
 			if(ApptReminderRuleCur.TypeCur==ApptReminderType.ConfirmationFutureDay
 				//And there is more than 1 eConfirmation rule.
 				&& (countEConfirm > 1 || (countEConfirm==1 && ApptReminderRuleCur.ApptReminderRuleNum==0))
 				//And the confirmed status for 'eConfirm Sent' is marked 'Do not send eConfirmations'
-				&& listExclude.Contains(PrefC.GetString(PrefName.ApptEConfirmStatusSent))
+				&& listExclude.Contains(Prefs.GetString(PrefName.ApptEConfirmStatusSent))
 				//Ask them to fix their exclude send statuses
 				&& MessageBox.Show(Lans.g(this,"Appointments will not receive multiple eConfirmations if the '")+confStatusEConfirmSent+"' "+
 						Lans.g(this,"status is set as 'Don't Send'. Would you like to remove 'Don't Send' from that status?"),
 					"",MessageBoxButtons.YesNo)==DialogResult.Yes) 
 			{
-				listExclude.RemoveAll(x => x==PrefC.GetString(PrefName.ApptEConfirmStatusSent));
-				IsPrefsChanged|=Prefs.UpdateString(PrefName.ApptConfirmExcludeESend,string.Join(",",listExclude));
+				listExclude.RemoveAll(x => x==Prefs.GetString(PrefName.ApptEConfirmStatusSent));
+				IsPrefsChanged|=Prefs.Set(PrefName.ApptConfirmExcludeESend,string.Join(",",listExclude));
 			}
 		}
 
@@ -330,7 +330,7 @@ namespace OpenDental {
 				listCurrentControls.Add((ApptReminderRule)page.Tag);
 			}
 			foreach(string language in _arrLanguages) {
-				if(language.IsNullOrEmpty() || language.ToLower().Trim()==PrefC.GetString(PrefName.LanguagesIndicateNone).ToLower().Trim()) {
+				if(language.IsNullOrEmpty() || language.ToLower().Trim()==Prefs.GetString(PrefName.LanguagesIndicateNone).ToLower().Trim()) {
 					continue;
 				}
 				if(language.In(listCurrentControls.Select(x => x.Language).ToList()))	{

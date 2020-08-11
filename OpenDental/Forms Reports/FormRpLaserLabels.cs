@@ -33,7 +33,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Win32;
 using CodeBase;
 using DataConnectionBase;
-
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormRpLaserLabels:ODForm {
@@ -1343,7 +1343,7 @@ namespace OpenDental {
 			if(FormPS.DialogResult != DialogResult.OK) {
 				return;
 			}
-			textStartName.Text=Patients.GetPat(FormPS.SelectedPatNum).GetNameLFnoPref();
+			textStartName.Text=Patients.GetPat(FormPS.SelectedPatientId).GetNameLFnoPref();
 		}
 
 		private void butEndName_Click(object sender,EventArgs e) {
@@ -1353,7 +1353,7 @@ namespace OpenDental {
 			if(FormPS.DialogResult != DialogResult.OK) {
 				return;
 			}
-			textEndName.Text=Patients.GetPat(FormPS.SelectedPatNum).GetNameLFnoPref();
+			textEndName.Text=Patients.GetPat(FormPS.SelectedPatientId).GetNameLFnoPref();
 			if(String.Compare(textStartName.Text,textEndName.Text)==1) {
 				textEndName.Text = textStartName.Text.ToString();
 

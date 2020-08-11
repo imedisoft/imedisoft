@@ -450,7 +450,7 @@ namespace Imedisoft.Forms
 
 			if (mustReset)
 			{
-				Prefs.UpdateBool(PrefName.ImagesModuleUsesOld2020, enabledCheckBox.Checked);
+				Prefs.Set(PrefName.ImagesModuleUsesOld2020, enabledCheckBox.Checked);
 
 				Cursor = Cursors.WaitCursor;
 

@@ -86,7 +86,7 @@ namespace Imedisoft.Forms
 
 			string explanation = Userods.IsPasswordStrong(newPasswordTextBox.Text);
 
-			if (PrefC.GetBool(PrefName.PasswordsMustBeStrong))
+			if (Prefs.GetBool(PrefName.PasswordsMustBeStrong))
 			{
 				if (explanation != "")
 				{

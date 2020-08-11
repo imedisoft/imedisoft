@@ -198,7 +198,7 @@ namespace UnitTestsCore {
 				else {
 					brokenProcedure.ProcFee=procFee;
 				}
-				if(!PrefC.GetBool(PrefName.EasyHidePublicHealth)) {
+				if(!Prefs.GetBool(PrefName.EasyHidePublicHealth)) {
 					brokenProcedure.SiteNum=pat.SiteNum;
 				}
 				Procedures.Insert(brokenProcedure);
@@ -207,7 +207,7 @@ namespace UnitTestsCore {
 				List<Benefit> listBenefits=Benefits.Refresh(listPatPlans,listInsSubs);
 				List<ClaimProc> listClaimProcsForProc=ClaimProcs.RefreshForProc(brokenProcedure.ProcNum);
 				Procedures.ComputeEstimates(brokenProcedure,pat.PatNum,listClaimProcsForProc,false,listInsPlans,listPatPlans,listBenefits,pat.Age,listInsSubs);
-				if(listSplitsForApptProcs.Count>0 && PrefC.GetBool(PrefName.TpPrePayIsNonRefundable) && procCode.ProcCode=="D9986") {
+				if(listSplitsForApptProcs.Count>0 && Prefs.GetBool(PrefName.TpPrePayIsNonRefundable) && procCode.ProcCode=="D9986") {
 					//if there are pre-payments, non-refundable pre-payments is turned on, and the broken appointment is a missed code then auto-fill 
 					//the window with the sum of the procs for the appointment. Transfer money below after broken procedure is confirmed by the user.
 					//normally goes to the form to let the user speficy, this is the auto filled amount for the form. 

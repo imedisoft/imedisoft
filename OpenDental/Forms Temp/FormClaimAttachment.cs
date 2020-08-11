@@ -369,7 +369,7 @@ namespace OpenDental {
 			List<ClaimAttach> listClaimAttachments=new List<ClaimAttach>();
 			for(int i=0;i<gridAttachedImages.ListGridRows.Count;i++) {
 				ClaimConnect.ImageAttachment imageRow=((ClaimConnect.ImageAttachment)gridAttachedImages.ListGridRows[i].Tag);
-				if(PrefC.GetBool(PrefName.SaveDXCAttachments)) {
+				if(Prefs.GetBool(PrefName.SaveDXCAttachments)) {
 					Bitmap imageBitmap=new Bitmap(imageRow.Image);
 					Document docCur=ImageStore.Import(imageBitmap,imageTypeDefNum,ImageType.Document,_claimPat);
 					imageRow.ImageFileNameActual=docCur.FileName;

@@ -47,7 +47,7 @@ namespace OpenDental {
 			ReportComplex report=new ReportComplex(true,false);
 			report.AddTitle("Title",Lan.G(this,"Presented Treatment Production"));
 			report.AddSubTitle("SubTitle","Totals Report");
-			report.AddSubTitle("PracTitle",PrefC.GetString(PrefName.PracticeTitle));
+			report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle));
 			report.AddSubTitle("Date",date1.SelectionStart.ToShortDateString()+" - "+date2.SelectionStart.ToShortDateString());
 			if(checkAllUsers.Checked) {
 				report.AddSubTitle("Users",Lan.G(this,"All Users"));
@@ -111,7 +111,7 @@ namespace OpenDental {
 			ReportComplex report=new ReportComplex(true,false);
 			report.AddTitle("Title",Lan.G(this,"Presented Treatment Production"));
 			report.AddSubTitle("SubTitle", "Detailed Report");
-			report.AddSubTitle("PracTitle",PrefC.GetString(PrefName.PracticeTitle));
+			report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle));
 			report.AddSubTitle("Date",date1.SelectionStart.ToShortDateString()+" - "+date2.SelectionStart.ToShortDateString());
 			if(checkAllUsers.Checked) {
 				report.AddSubTitle("Users",Lan.G(this,"All Users"));

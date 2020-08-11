@@ -601,10 +601,10 @@ namespace OpenDental{
 			text=Accounts.GetAccount(ReconcileCur.AccountNum).Description.ToUpper();
 			par.AddFormattedText(text,totalFontx);
 			par.AddLineBreak();
-			text=PrefC.GetString(PrefName.PracticeTitle);
+			text=Prefs.GetString(PrefName.PracticeTitle);
 			par.AddText(text);
 			par.AddLineBreak();
-			text=PrefC.GetString(PrefName.PracticePhone);
+			text=Prefs.GetString(PrefName.PracticePhone);
 			if(text.Length==10&&Application.CurrentCulture.Name=="en-US") {
 				text="("+text.Substring(0,3)+")"+text.Substring(3,3)+"-"+text.Substring(6);
 			}

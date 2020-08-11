@@ -14,13 +14,14 @@ namespace OpenDentBusiness{
 		///<summary>Returns an instance of the account api for the given Clinic Num.</summary>
 		public static IAccountApi GetAccountApi(long clinicNum)
 		{
-			string guid = ClinicPrefs.GetPrefValue(PrefName.MassEmailGuid, clinicNum);
-			string secret = ClinicPrefs.GetPrefValue(PrefName.MassEmailSecret, clinicNum);
+			string guid = ClinicPrefs.GetString(clinicNum, PrefName.MassEmailGuid);
+			string secret = ClinicPrefs.GetString(clinicNum, PrefName.MassEmailSecret);
+
 			if (string.IsNullOrWhiteSpace(guid) || string.IsNullOrWhiteSpace(secret))
 			{
 				//Huge assumption that we have already checked that the current clinic is signed up.
-				guid = ClinicPrefs.GetPrefValue(PrefName.MassEmailGuid, Clinics.ClinicNum);
-				secret = ClinicPrefs.GetPrefValue(PrefName.MassEmailSecret, Clinics.ClinicNum);
+				guid = ClinicPrefs.GetString(Clinics.ClinicNum, PrefName.MassEmailGuid);
+				secret = ClinicPrefs.GetString(Clinics.ClinicNum, PrefName.MassEmailSecret);
 			}
 			return new AccountApi(guid, secret);
 		}

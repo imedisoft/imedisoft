@@ -48,7 +48,7 @@ namespace OpenDental {
 					}
 				}
 				labelSheetType.Text=Lan.G(this,"Patient Forms and Medical Histories");//Change name?
-				if(PrefC.GetBool(PrefName.PatientFormsShowConsent)) {//only if they want to see consent forms with patient forms.
+				if(Prefs.GetBool(PrefName.PatientFormsShowConsent)) {//only if they want to see consent forms with patient forms.
 					if(listConSheets.Count==0) {//use internal consent forms
 						listSheets.Add(SheetsInternal.GetSheetDef(SheetInternalType.Consent));
 					}

@@ -43,7 +43,7 @@ namespace OpenDentBusiness
 
 			if (string.IsNullOrEmpty(UrlOverride))
 			{
-				service.Url = PrefC.GetString(PrefName.WebHostSynchServerURL);
+				service.Url = Prefs.GetString(PrefName.WebHostSynchServerURL);
 			}
 			else
 			{

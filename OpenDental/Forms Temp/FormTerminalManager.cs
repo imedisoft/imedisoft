@@ -25,20 +25,20 @@ namespace OpenDental {
 		private void FormTerminalManager_Load(object sender,EventArgs e) {
 			PatientChangedEvent.Fired+=PatientChangedEvent_Fired;
 			EClipboardEvent.Fired+=eClipboardChangedEvent_Fired;
-			textPassword.Text=PrefC.GetString(PrefName.TerminalClosePassword);
+			textPassword.Text=Prefs.GetString(PrefName.TerminalClosePassword);
 			FillGrid();
 			contrClinicPicker.SelectionChangeCommitted+=contrClinicPick_SelectionChangeCommitted;
 		}
 
 		public override void OnProcessSignals(List<Signalod> listSignals) {
-			if(listSignals.Any(x => x.IType==InvalidType.Prefs)) {
-				textPassword.Text=PrefC.GetString(PrefName.TerminalClosePassword);
-			}
-			int processIdCur=Process.GetCurrentProcess().Id;
-			if(listSignals.All(x => x.IType!=InvalidType.Kiosk || (x.FKeyType==KeyType.ProcessId && x.FKey==processIdCur))) {
-				return;
-			}
-			FillGrid();
+			//if(listSignals.Any(x => x.InvalidType==InvalidType.Prefs)) {
+			//	textPassword.Text=Prefs.GetString(PrefName.TerminalClosePassword);
+			//}
+			//int processIdCur=Process.GetCurrentProcess().Id;
+			//if(listSignals.All(x => x.InvalidType!=InvalidType.Kiosk || (x.Name==KeyType.ProcessId && x.InvalidForeignKey==processIdCur))) {
+			//	return;
+			//}
+			//FillGrid();
 		}
 
 		private void FillGrid() {
@@ -53,7 +53,7 @@ namespace OpenDental {
 			List<MobileAppDevice> listMobileDevices=new List<MobileAppDevice>();
 			if(PrefC.HasClinicsEnabled) {
 				//Option "All" is selected and at least one clinic is signed up for the eClipboard feature
-				if(contrClinicPicker.IsAllSelected && PrefC.GetString(PrefName.EClipboardClinicsSignedUp)!="") {
+				if(contrClinicPicker.IsAllSelected && Prefs.GetString(PrefName.EClipboardClinicsSignedUp)!="") {
 					listMobileDevices=MobileAppDevices.GetForUser(Security.CurrentUser).FindAll(x => x.IsAllowed);
 				}
 				//A specific clinic is selected and that is signed up for the eClipboard feature
@@ -141,7 +141,7 @@ namespace OpenDental {
 							//They are in setup mode (not normal workflow) and there are no sheets for this patient. They have not run the rules to generate
 							//sheets as the patient has not been marked as arrived. When they push the patient to the device, they will not generate the sheets
 							//from there either. Ask them if they want to generate the sheets in this case.
-							if(_isSetupMode && listSheets.Items.Count==0 && ClinicPrefs.GetBool(PrefName.EClipboardCreateMissingFormsOnCheckIn,apptForToday.ClinicNum)) {
+							if(_isSetupMode && listSheets.Items.Count==0 && ClinicPrefs.GetBool(apptForToday.ClinicNum, PrefName.EClipboardCreateMissingFormsOnCheckIn)) {
 								bool generateSheets=MsgBox.Show(MsgBoxButtons.YesNo,"This patient has no forms to load. Would you like to generate the "+
 									"forms based on the eClipboard rules?");
 								if(generateSheets) {
@@ -264,7 +264,7 @@ namespace OpenDental {
 		}			
 
 		private void butSave_Click(object sender,EventArgs e) {
-			if(Prefs.UpdateString(PrefName.TerminalClosePassword,textPassword.Text)){
+			if(Prefs.Set(PrefName.TerminalClosePassword,textPassword.Text)){
 				Signalods.SetInvalid(InvalidType.Prefs);
 			}
 			MessageBox.Show("Done.");
@@ -277,7 +277,7 @@ namespace OpenDental {
 		private void FormTerminalManager_FormClosing(object sender,FormClosingEventArgs e) {
 			PatientChangedEvent.Fired-=PatientChangedEvent_Fired;
 			EClipboardEvent.Fired-=eClipboardChangedEvent_Fired;
-			if(Prefs.UpdateString(PrefName.TerminalClosePassword,textPassword.Text)){
+			if(Prefs.Set(PrefName.TerminalClosePassword,textPassword.Text)){
 				Signalods.SetInvalid(InvalidType.Prefs);
 			}
 		}

@@ -320,7 +320,7 @@ namespace OpenDental{
 			listComputer.Items.Clear();
 			//Database Server----------------------------------------------------------		
 			List<string> serviceList=Computers.GetServiceInfo();
-			textName.Text=MiscData.GetODServer();//server name
+			textName.Text=MiscData.GetMySqlServer();//server name
 			textService.Text=(serviceList[0].ToString());//service name
 			textVersion.Text=(serviceList[3].ToString());//service version
 			textServComment.Text=(serviceList[1].ToString());//service comment

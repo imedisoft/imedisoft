@@ -169,7 +169,7 @@ namespace OpenDentBusiness{
 				return "Not allowed to delete medication because it is in use by an Rx alert";
 			}
 			//If any more tables are added here in the future, then also update GetAllInUseMedicationNums() to include the new table.
-			if(PrefC.GetLong(PrefName.MedicationsIndicateNone)==med.MedicationNum) {
+			if(Prefs.GetLong(PrefName.MedicationsIndicateNone)==med.MedicationNum) {
 				return "Not allowed to delete medication because it is in use by a medication";
 			}
 			return "";
@@ -183,8 +183,8 @@ namespace OpenDentBusiness{
 				+"UNION SELECT MedicationNum FROM eduresource WHERE MedicationNum!=0 "
 				+"GROUP BY MedicationNum";
 			List <long> listMedicationNums=Database.GetListLong(command);
-			if(PrefC.GetLong(PrefName.MedicationsIndicateNone)!=0) {
-				listMedicationNums.Add(PrefC.GetLong(PrefName.MedicationsIndicateNone));
+			if(Prefs.GetLong(PrefName.MedicationsIndicateNone)!=0) {
+				listMedicationNums.Add(Prefs.GetLong(PrefName.MedicationsIndicateNone));
 			}
 			return listMedicationNums;
 		}

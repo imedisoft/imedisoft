@@ -116,7 +116,7 @@ namespace OpenDental {
 			comboClinic.Items.Add("",null);
 			comboClinic.SelectedIndex=0;//Selection is not changed if isAllProcsForSameClinic is false.
 			bool isAllProcsForSameClinic=ProcList.Select(x => x.ClinicNum).Distinct().ToList().Count==1;
-			bool isListAlpha = PrefC.GetBool(PrefName.ClinicListIsAlphabetical);
+			bool isListAlpha = Prefs.GetBool(PrefName.ClinicListIsAlphabetical);
 			_listClinics=Clinics.GetForUserod(Security.CurrentUser);
 			if(isListAlpha) {
 				_listClinics=_listClinics.OrderBy(x => x.Abbr).ToList();
@@ -203,7 +203,7 @@ namespace OpenDental {
 				Appointment apt;
 				foreach(Procedure proc in ProcList){//first validate for all dates. 
 					#region Future dating completed procedures validation.
-					if(!PrefC.GetBool(PrefName.FutureTransDatesAllowed) && proc.ProcStatus==ProcStat.C && procDate>DateTime.Today) {
+					if(!Prefs.GetBool(PrefName.FutureTransDatesAllowed) && proc.ProcStatus==ProcStat.C && procDate>DateTime.Today) {
 						MessageBox.Show("Completed procedures cannot have future dates.");
 						return false;
 					}

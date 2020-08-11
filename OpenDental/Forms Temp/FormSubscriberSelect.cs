@@ -7,6 +7,7 @@ using OpenDentBusiness;
 using System.Linq;
 using CodeBase;
 using System.Collections.Generic;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 	/// <summary>Only used when adding an insurance plan from ContrFamily.  Lets user select the subscriber from </summary>
@@ -166,7 +167,7 @@ namespace OpenDental{
 			if(FormP.DialogResult!=DialogResult.OK){
 				return;
 			}
-			SelectedPatNum=FormP.SelectedPatNum;
+			SelectedPatNum=FormP.SelectedPatientId;
 			DialogResult=DialogResult.OK;
 		}
 

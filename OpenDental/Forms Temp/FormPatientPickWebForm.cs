@@ -9,6 +9,7 @@ using OpenDentBusiness;
 using OpenDental.UI;
 using OpenDentBusiness.WebTypes.WebForms;
 using System.Linq;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormPatientPickWebForm:ODForm {
@@ -121,7 +122,7 @@ namespace OpenDental {
 			if(FormPs.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			SelectedPatNum=FormPs.SelectedPatNum;
+			SelectedPatNum=FormPs.SelectedPatientId;
 			//Security log for patient select.
 			Patient pat=Patients.GetPat(SelectedPatNum);
 			SecurityLogs.MakeLogEntry(Permissions.SheetEdit,SelectedPatNum,"In the 'Pick Patient for Web Form', this user clicked the 'Select' button.  "

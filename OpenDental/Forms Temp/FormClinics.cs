@@ -338,7 +338,7 @@ namespace OpenDental {
 		#endregion
 
 		private void FormClinics_Load(object sender, System.EventArgs e) {
-			checkOrderAlphabetical.Checked=PrefC.GetBool(PrefName.ClinicListIsAlphabetical);
+			checkOrderAlphabetical.Checked=Prefs.GetBool(PrefName.ClinicListIsAlphabetical);
 			if(ListClinics==null) {
 				ListClinics=Clinics.GetAllForUserod(Security.CurrentUser);
 				if(IncludeHQInList) {
@@ -438,7 +438,7 @@ namespace OpenDental {
 		private void butAdd_Click(object sender, System.EventArgs e) {
 			Clinic clinicCur=new Clinic();
 			clinicCur.IsNew=true;
-			if(PrefC.GetBool(PrefName.PracticeIsMedicalOnly)) {
+			if(Prefs.GetBool(PrefName.PracticeIsMedicalOnly)) {
 				clinicCur.IsMedicalOnly=true;
 			}
 			clinicCur.ItemOrder=gridMain.ListGridRows.Count-(IncludeHQInList?1:0);//Set it last in the last position (minus 1 for HQ)
@@ -690,7 +690,7 @@ namespace OpenDental {
 			if(IsSelectionMode) {
 				return;
 			}
-			if(Prefs.UpdateBool(PrefName.ClinicListIsAlphabetical,checkOrderAlphabetical.Checked)) {
+			if(Prefs.Set(PrefName.ClinicListIsAlphabetical,checkOrderAlphabetical.Checked)) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			bool hasClinicChanges=Clinics.Sync(ListClinics,_listClinicsOld);//returns true if clinics were updated/inserted/deleted

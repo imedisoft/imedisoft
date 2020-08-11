@@ -25,20 +25,20 @@ namespace OpenDental {
 		}
 
 		public void FormReactivationSetup_Load(object sender, System.EventArgs e) {
-			checkGroupFamilies.Checked = PrefC.GetBool(PrefName.ReactivationGroupByFamily);
-			textPostcardsPerSheet.Text=PrefC.GetLong(PrefName.ReactivationPostcardsPerSheet).ToString();
-			textDaysPast.Text=PrefC.GetLongHideNegOne(PrefName.ReactivationDaysPast);
+			checkGroupFamilies.Checked = Prefs.GetBool(PrefName.ReactivationGroupByFamily);
+			textPostcardsPerSheet.Text=Prefs.GetLong(PrefName.ReactivationPostcardsPerSheet).ToString();
+			textDaysPast.Text=Prefs.GetLongHideNegOne(PrefName.ReactivationDaysPast);
 			List<Def> listRecallUnschedStatusDefs=Defs.GetDefsForCategory(DefCat.RecallUnschedStatus,true);
 			comboStatusMailedReactivation.Items.AddDefs(listRecallUnschedStatusDefs);
-			comboStatusMailedReactivation.SetSelectedDefNum(PrefC.GetLong(PrefName.ReactivationStatusMailed));
+			comboStatusMailedReactivation.SetSelectedDefNum(Prefs.GetLong(PrefName.ReactivationStatusMailed));
 			comboStatusEmailedReactivation.Items.AddDefs(listRecallUnschedStatusDefs);
-			comboStatusEmailedReactivation.SetSelectedDefNum(PrefC.GetLong(PrefName.ReactivationStatusEmailed));
+			comboStatusEmailedReactivation.SetSelectedDefNum(Prefs.GetLong(PrefName.ReactivationStatusEmailed));
 			comboStatusTextedReactivation.Items.AddDefs(listRecallUnschedStatusDefs);
-			comboStatusTextedReactivation.SetSelectedDefNum(PrefC.GetLong(PrefName.ReactivationStatusTexted));
+			comboStatusTextedReactivation.SetSelectedDefNum(Prefs.GetLong(PrefName.ReactivationStatusTexted));
 			comboStatusEmailTextReactivation.Items.AddDefs(listRecallUnschedStatusDefs);
-			comboStatusEmailTextReactivation.SetSelectedDefNum(PrefC.GetLong(PrefName.ReactivationStatusEmailedTexted));
-			textDaysContactInterval.Text=PrefC.GetLongHideNegOne(PrefName.ReactivationContactInterval,useZero:true);
-			textMaxReminders.Text=PrefC.GetLongHideNegOne(PrefName.ReactivationCountContactMax);
+			comboStatusEmailTextReactivation.SetSelectedDefNum(Prefs.GetLong(PrefName.ReactivationStatusEmailedTexted));
+			textDaysContactInterval.Text=Prefs.GetLongHideNegOne(PrefName.ReactivationContactInterval);
+			textMaxReminders.Text=Prefs.GetLongHideNegOne(PrefName.ReactivationCountContactMax);
 			FillGrid();
 		}
 
@@ -58,35 +58,35 @@ namespace OpenDental {
 			GridRow gridRow=new GridRow();
 			gridRow.Cells.Add(Lan.G(this,"E-mail"));
 			gridRow.Cells.Add(Lan.G(this,"Subject line"));
-			gridRow.Cells.Add(PrefC.GetString(PrefName.ReactivationEmailSubject));
+			gridRow.Cells.Add(Prefs.GetString(PrefName.ReactivationEmailSubject));
 			gridRow.Tag=PrefName.ReactivationEmailSubject;
 			gridMain.ListGridRows.Add(gridRow);
 			//ReactivationEmailMessage
 			gridRow=new GridRow();
 			gridRow.Cells.Add(Lan.G(this,"E-mail"));
 			gridRow.Cells.Add(Lan.G(this,"Available variables")+": "+availableFields);
-			gridRow.Cells.Add(PrefC.GetString(PrefName.ReactivationEmailMessage));
+			gridRow.Cells.Add(Prefs.GetString(PrefName.ReactivationEmailMessage));
 			gridRow.Tag=PrefName.ReactivationEmailMessage;
 			gridMain.ListGridRows.Add(gridRow);
 			//ReactivationEmailFamMsg
 			gridRow=new GridRow();
 			gridRow.Cells.Add(Lan.G(this,"E-mail"));
 			gridRow.Cells.Add(Lan.G(this,"For multiple patients in one family.  Use [FamilyList] where the list of family members should show."));
-			gridRow.Cells.Add(PrefC.GetString(PrefName.ReactivationEmailFamMsg));
+			gridRow.Cells.Add(Prefs.GetString(PrefName.ReactivationEmailFamMsg));
 			gridRow.Tag=PrefName.ReactivationEmailFamMsg;
 			gridMain.ListGridRows.Add(gridRow);
 			//ReactivationPostcardMessage
 			gridRow=new GridRow();
 			gridRow.Cells.Add(Lan.G(this,"Postcard"));
 			gridRow.Cells.Add(Lan.G(this,"Available variables")+": "+availableFields);
-			gridRow.Cells.Add(PrefC.GetString(PrefName.ReactivationPostcardMessage));
+			gridRow.Cells.Add(Prefs.GetString(PrefName.ReactivationPostcardMessage));
 			gridRow.Tag=PrefName.ReactivationPostcardMessage;
 			gridMain.ListGridRows.Add(gridRow);
 			//ReactivationPostcardFamMsg
 			gridRow=new GridRow();
 			gridRow.Cells.Add(Lan.G(this,"Postcard"));
 			gridRow.Cells.Add(Lan.G(this,"For multiple patients in one family.  Use [FamilyList] where the list of family members should show."));
-			gridRow.Cells.Add(PrefC.GetString(PrefName.ReactivationPostcardFamMsg));
+			gridRow.Cells.Add(Prefs.GetString(PrefName.ReactivationPostcardFamMsg));
 			gridRow.Tag=PrefName.ReactivationPostcardFamMsg;
 			gridMain.ListGridRows.Add(gridRow);
 			#endregion
@@ -94,14 +94,14 @@ namespace OpenDental {
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			PrefName prefName=gridMain.SelectedTag<PrefName>();
+			string prefName=gridMain.SelectedTag<string>();
 			FormRecallMessageEdit FormR = new FormRecallMessageEdit(prefName);
-			FormR.MessageVal=PrefC.GetString(prefName);
+			FormR.MessageVal=Prefs.GetString(prefName);
 			FormR.ShowDialog();
 			if(FormR.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			if(Prefs.UpdateString(prefName,FormR.MessageVal)) {
+			if(Prefs.Set(prefName,FormR.MessageVal)) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			FillGrid();
@@ -131,21 +131,21 @@ namespace OpenDental {
 			}
 			//End of Validation
 			bool didChange=false;
-			didChange |= Prefs.UpdateString(PrefName.ReactivationPostcardsPerSheet,textPostcardsPerSheet.Text);
+			didChange |= Prefs.Set(PrefName.ReactivationPostcardsPerSheet,textPostcardsPerSheet.Text);
 			if(didChange) {
 				if(textPostcardsPerSheet.Text=="1") {
 					MessageBox.Show("If using 1 postcard per sheet, you must adjust the position, and also the preview will not work");
 				}
 			}
-			didChange |= Prefs.UpdateBool(PrefName.ReactivationGroupByFamily,checkGroupFamilies.Checked);
-			didChange |= Prefs.UpdateLongAsNegOne(PrefName.ReactivationDaysPast,textDaysPast.Text);
-			didChange |= Prefs.UpdateLongAsNegOne(PrefName.ReactivationContactInterval,textDaysContactInterval.Text);
-			didChange |= Prefs.UpdateLongAsNegOne(PrefName.ReactivationCountContactMax,textMaxReminders.Text);
+			didChange |= Prefs.Set(PrefName.ReactivationGroupByFamily,checkGroupFamilies.Checked);
+			didChange |= Prefs.Set(PrefName.ReactivationDaysPast,textDaysPast.Text);
+			didChange |= Prefs.Set(PrefName.ReactivationContactInterval,textDaysContactInterval.Text);
+			didChange |= Prefs.Set(PrefName.ReactivationCountContactMax,textMaxReminders.Text);
 			//combo boxes These have already been checked for -1
-			didChange |= Prefs.UpdateLong(PrefName.ReactivationStatusEmailed,comboStatusEmailedReactivation.GetSelected<Def>().DefNum);
-			didChange |= Prefs.UpdateLong(PrefName.ReactivationStatusMailed,comboStatusMailedReactivation.GetSelected<Def>().DefNum);
-			didChange |= Prefs.UpdateLong(PrefName.ReactivationStatusTexted,comboStatusTextedReactivation.GetSelected<Def>().DefNum);
-			didChange |= Prefs.UpdateLong(PrefName.ReactivationStatusEmailedTexted,comboStatusEmailTextReactivation.GetSelected<Def>().DefNum);
+			didChange |= Prefs.Set(PrefName.ReactivationStatusEmailed,comboStatusEmailedReactivation.GetSelected<Def>().DefNum);
+			didChange |= Prefs.Set(PrefName.ReactivationStatusMailed,comboStatusMailedReactivation.GetSelected<Def>().DefNum);
+			didChange |= Prefs.Set(PrefName.ReactivationStatusTexted,comboStatusTextedReactivation.GetSelected<Def>().DefNum);
+			didChange |= Prefs.Set(PrefName.ReactivationStatusEmailedTexted,comboStatusEmailTextReactivation.GetSelected<Def>().DefNum);
 			if(didChange) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}

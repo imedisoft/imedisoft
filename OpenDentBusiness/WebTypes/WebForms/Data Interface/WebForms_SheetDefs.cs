@@ -21,7 +21,7 @@ namespace OpenDentBusiness.WebTypes.WebForms
 		{
 			if (string.IsNullOrEmpty(regKey))
 			{
-				regKey = PrefC.GetString(PrefName.RegistrationKey);
+				regKey = Prefs.GetString(PrefName.RegistrationKey);
 			}
 			listWebFormSheetDefs = new List<WebForms_SheetDef>();
 			try
@@ -42,7 +42,7 @@ namespace OpenDentBusiness.WebTypes.WebForms
 		///<param name="sheetDef">The SheetDef object to be uploaded.</param>
 		public static void TryUploadSheetDef(SheetDef sheetDef)
 		{
-			string regKey = PrefC.GetString(PrefName.RegistrationKey);
+			string regKey = Prefs.GetString(PrefName.RegistrationKey);
 			List<PayloadItem> listPayloadItems = new List<PayloadItem> {
 				new PayloadItem(regKey,"RegKey"),
 				new PayloadItem(sheetDef,"SheetDef")
@@ -56,7 +56,7 @@ namespace OpenDentBusiness.WebTypes.WebForms
 		/// than the provided chunkSize. Size is measured in bytes.</summary>
 		public static void TryUploadSheetDefChunked(SheetDef sheetDef, int chunkSize)
 		{
-			string regKey = PrefC.GetString(PrefName.RegistrationKey);
+			string regKey = Prefs.GetString(PrefName.RegistrationKey);
 			List<PayloadItem> listPayloadItems = new List<PayloadItem> {
 				new PayloadItem(regKey,"RegKey"),
 				new PayloadItem(sheetDef,"SheetDef")
@@ -74,7 +74,7 @@ namespace OpenDentBusiness.WebTypes.WebForms
 		{
 			if (string.IsNullOrEmpty(regKey))
 			{
-				regKey = PrefC.GetString(PrefName.RegistrationKey);
+				regKey = Prefs.GetString(PrefName.RegistrationKey);
 			}
 			try
 			{
@@ -100,7 +100,7 @@ namespace OpenDentBusiness.WebTypes.WebForms
 		{
 			if (string.IsNullOrEmpty(regKey))
 			{
-				regKey = PrefC.GetString(PrefName.RegistrationKey);
+				regKey = Prefs.GetString(PrefName.RegistrationKey);
 			}
 			try
 			{
@@ -127,7 +127,7 @@ namespace OpenDentBusiness.WebTypes.WebForms
 		/// than the provided chunkSize. Size is measured in bytes.</summary>
 		public static bool UpdateSheetDefChunked(long webSheetDefId, SheetDef sheetDef, int chunkSize)
 		{
-			string regKey = PrefC.GetString(PrefName.RegistrationKey);
+			string regKey = Prefs.GetString(PrefName.RegistrationKey);
 			List<PayloadItem> listPayloadItems = new List<PayloadItem> {
 				new PayloadItem(regKey,"RegKey"),
 				new PayloadItem(webSheetDefId,"WebSheetDefID"),

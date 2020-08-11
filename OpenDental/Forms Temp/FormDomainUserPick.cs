@@ -80,7 +80,7 @@ namespace OpenDental {
 			DirectoryEntry myLdapConnection=null;
 			DirectorySearcher search=null;
 			try {
-				myLdapConnection=new DirectoryEntry(PrefC.GetString(PrefName.DomainLoginPath));
+				myLdapConnection=new DirectoryEntry(Prefs.GetString(PrefName.DomainLoginPath));
 				search=new DirectorySearcher(myLdapConnection);
 				search.PageSize=10_000;//When PageSize is not set, it limits results to 1000. With PageSize set, that limit is ignored.
 				search.Filter="(&(objectClass=user)(objectCategory=person))";

@@ -41,7 +41,7 @@ namespace OpenDental {
 			}
 			_user=user;
 			//Add all non-CPOE radiology procedures
-			_listNonCpoeProcs=Procedures.GetProcsNonCpoeAttachedToApptsForProv(_user.ProvNum);
+			_listNonCpoeProcs=Procedures.GetProcsNonCpoeAttachedToApptsForProv(_user.ProviderId);
 			//Keep a deep copy of the procedure code cache around for ease of use.
 			_listProcCodes=ProcedureCodes.GetListDeep();
 			//This list of appointments can be enhanced to include many more appointments when needed.

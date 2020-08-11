@@ -618,16 +618,16 @@ namespace OpenDental{
 				butView.Visible=false;
 				labelView.Visible=false;
 				sheet=null;
-				if(PrefC.GetBool(PrefName.ShowFeatureEhr) && Security.CurrentUser.ProvNum!=0) {//Is CPOE
+				if(Prefs.GetBool(PrefName.ShowFeatureEhr) && Security.CurrentUser.ProviderId!=0) {//Is CPOE
 					labelCPOE.Visible=true;
 					comboProv.Enabled=false;
 					butPickProv.Enabled=false;
-					RxPatCur.ProvNum=Security.CurrentUser.ProvNum;
+					RxPatCur.ProvNum=Security.CurrentUser.ProviderId;
 				}
 				else {
-					Provider provUser=Providers.GetProv(Security.CurrentUser.ProvNum);
+					Provider provUser=Providers.GetProv(Security.CurrentUser.ProviderId);
 					if(provUser!=null && !provUser.IsSecondary) {//Only set the provider on the Rx if the provider is not a hygienist.
-						RxPatCur.ProvNum=Security.CurrentUser.ProvNum;
+						RxPatCur.ProvNum=Security.CurrentUser.ProviderId;
 					}
 				}
 			}
@@ -666,7 +666,7 @@ namespace OpenDental{
 			textDate.Text=RxPatCur.RxDate.ToString("d");
 			checkControlled.Checked=RxPatCur.IsControlled;
 			comboProcCode.Items.Clear();
-			if(PrefC.GetBool(PrefName.RxHasProc)) {
+			if(Prefs.GetBool(PrefName.RxHasProc)) {
 				checkProcRequired.Checked=RxPatCur.IsProcRequired;
 				comboProcCode.Items.Add(Lan.G(this,"none"));
 				comboProcCode.SelectedIndex=0;
@@ -720,7 +720,7 @@ namespace OpenDental{
 			textDisp.Text=RxPatCur.Disp;
 			textRefills.Text=RxPatCur.Refills;
 			textPatInstructions.Text=RxPatCur.PatientInstruction;
-			if(PrefC.GetBool(PrefName.ShowFeatureEhr)){
+			if(Prefs.GetBool(PrefName.ShowFeatureEhr)){
 				textDosageCode.Text=RxPatCur.DosageCode;
 			}
 			else{
@@ -805,7 +805,7 @@ namespace OpenDental{
 			RxPatCur.RxDate=PIn.Date(textDate.Text);
 			RxPatCur.Drug=textDrug.Text;
 			RxPatCur.IsControlled=checkControlled.Checked;
-			if(PrefC.GetBool(PrefName.RxHasProc)) {
+			if(Prefs.GetBool(PrefName.RxHasProc)) {
 				RxPatCur.IsProcRequired=checkProcRequired.Checked;
 				if(comboProcCode.SelectedIndex==0) {//none
 					RxPatCur.ProcNum=0;

@@ -20,7 +20,7 @@ namespace OpenDental
 			List<string> allergiesMatches = new List<string>();
 			List<string> medicationsMatches = new List<string>();
 			List<string> customMessages = new List<string>();
-			bool showHighSigOnly = PrefC.GetBool(PrefName.EhrRxAlertHighSeverity);
+			bool showHighSigOnly = Prefs.GetBool(PrefName.EhrRxAlertHighSeverity);
 
 			for (int i = 0; i < alertList.Count; i++)
 			{

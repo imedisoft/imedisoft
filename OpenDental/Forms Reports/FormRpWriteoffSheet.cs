@@ -262,7 +262,7 @@ namespace OpenDental{
 			date2.SelectionStart=DateTime.Today;
 			if(!Security.IsAuthorized(Permissions.ReportDailyAllProviders,true)) {
 				//They either have permission or have a provider at this point.  If they don't have permission they must have a provider.
-				_listProviders=_listProviders.FindAll(x => x.ProvNum==Security.CurrentUser.ProvNum);
+				_listProviders=_listProviders.FindAll(x => x.ProvNum==Security.CurrentUser.ProviderId);
 				checkAllProv.Checked=false;
 				checkAllProv.Enabled=false;
 			}
@@ -398,7 +398,7 @@ namespace OpenDental{
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
 			report.ReportName=Lan.G(this,"Daily Writeoffs");
 			report.AddTitle("Title",Lan.G(this,"Daily Writeoffs"),fontTitle);
-			report.AddSubTitle("PracticeTitle",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
+			report.AddSubTitle("PracticeTitle",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
 			report.AddSubTitle("Date SubTitle",date1.SelectionStart.ToString("d")+" - "+date2.SelectionStart.ToString("d"),fontSubTitle);
 			if(checkAllProv.Checked) {
 				report.AddSubTitle("Providers",Lan.G(this,"All Providers")); 

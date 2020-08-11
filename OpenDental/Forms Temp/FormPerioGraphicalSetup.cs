@@ -75,13 +75,13 @@ namespace OpenDental {
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {
-			Prefs.UpdateLong(PrefName.PerioColorCAL,this.butColorCal.BackColor.ToArgb());
-			Prefs.UpdateLong(PrefName.PerioColorFurcations,this.butColorFurc.BackColor.ToArgb());
-			Prefs.UpdateLong(PrefName.PerioColorFurcationsRed,this.butColorFurcRed.BackColor.ToArgb());
-			Prefs.UpdateLong(PrefName.PerioColorGM,this.butColorGM.BackColor.ToArgb());
-			Prefs.UpdateLong(PrefName.PerioColorMGJ,this.butColorMGJ.BackColor.ToArgb());
-			Prefs.UpdateLong(PrefName.PerioColorProbing,this.butColorProbing.BackColor.ToArgb());
-			Prefs.UpdateLong(PrefName.PerioColorProbingRed,this.butColorProbingRed.BackColor.ToArgb());
+			Prefs.Set(PrefName.PerioColorCAL,this.butColorCal.BackColor.ToArgb());
+			Prefs.Set(PrefName.PerioColorFurcations,this.butColorFurc.BackColor.ToArgb());
+			Prefs.Set(PrefName.PerioColorFurcationsRed,this.butColorFurcRed.BackColor.ToArgb());
+			Prefs.Set(PrefName.PerioColorGM,this.butColorGM.BackColor.ToArgb());
+			Prefs.Set(PrefName.PerioColorMGJ,this.butColorMGJ.BackColor.ToArgb());
+			Prefs.Set(PrefName.PerioColorProbing,this.butColorProbing.BackColor.ToArgb());
+			Prefs.Set(PrefName.PerioColorProbingRed,this.butColorProbingRed.BackColor.ToArgb());
 			DialogResult=DialogResult.OK;
 		}
 

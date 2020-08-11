@@ -58,7 +58,7 @@ namespace OpenDental {
 				textUpdatesTimeOfDay.Text=dateTSend.ToShortTimeString();
 			}
 			comboSendFrequencyUnits.Items.AddRange(Enum.GetNames(typeof(FrequencyUnit)));
-			string[] sendFreqStrs=PrefC.GetString(PrefName.TransworldServiceSendFrequency).Split(new char[] { ' ' },StringSplitOptions.RemoveEmptyEntries);
+			string[] sendFreqStrs=Prefs.GetString(PrefName.TransworldServiceSendFrequency).Split(new char[] { ' ' },StringSplitOptions.RemoveEmptyEntries);
 			if(sendFreqStrs.Length==2) {
 				int sendFreq=PIn.Int(sendFreqStrs[0],false);
 				FrequencyUnit sendFreqUnit;
@@ -78,7 +78,7 @@ namespace OpenDental {
 		/// <summary>Fill the combo boxes with items. Some will have their indicies set later in FillFields() </summary>
 		private void FillComboBoxes() {
 			comboPaidInFullBillType.Items.AddDefs(Defs.GetDefsForCategory(DefCat.BillingTypes,true).Where(x => x.ItemValue.ToLower()!="c").ToList());
-			comboPaidInFullBillType.SetSelectedDefNum(PrefC.GetLong(PrefName.TransworldPaidInFullBillingType));
+			comboPaidInFullBillType.SetSelectedDefNum(Prefs.GetLong(PrefName.TransworldPaidInFullBillingType));
 			comboPosAdjType.Items.AddDefNone();
 			comboPosAdjType.SetSelected(0);
 			comboPosAdjType.Items.AddDefs(Defs.GetDefsForCategory(DefCat.AdjTypes,true).Where(x => x.ItemValue.Contains("+")).ToList());
@@ -331,13 +331,13 @@ namespace OpenDental {
 			DataValid.SetInvalid(InvalidType.Programs);
 			string updateFreq=numericSendFrequency.Value+" "+(FrequencyUnit)comboSendFrequencyUnits.SelectedIndex;
 			bool hasChanged=false;
-			if(Prefs.UpdateString(PrefName.TransworldServiceTimeDue,accountUpdatesRuntime==DateTime.MinValue?"":POut.Time(accountUpdatesRuntime.TimeOfDay,false))
-				| Prefs.UpdateString(PrefName.TransworldServiceSendFrequency,updateFreq))
+			if(Prefs.Set(PrefName.TransworldServiceTimeDue,accountUpdatesRuntime==DateTime.MinValue?"":POut.Time(accountUpdatesRuntime.TimeOfDay,false))
+				| Prefs.Set(PrefName.TransworldServiceSendFrequency,updateFreq))
 			{
-				Prefs.UpdateDateT(PrefName.TransworldDateTimeLastUpdated,DateTime.MinValue);
+				Prefs.Set(PrefName.TransworldDateTimeLastUpdated,DateTime.MinValue);
 				hasChanged=true;
 			}
-			if(Prefs.UpdateLong(PrefName.TransworldPaidInFullBillingType,billTypePaidInFullDefNum) | hasChanged) {
+			if(Prefs.Set(PrefName.TransworldPaidInFullBillingType,billTypePaidInFullDefNum) | hasChanged) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			DialogResult=DialogResult.OK;

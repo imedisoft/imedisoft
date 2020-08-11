@@ -15,18 +15,18 @@ namespace OpenDental {
 		}
 
 		private void FormEmailSetupEHR_Load(object sender,EventArgs e) {
-			textPOPserver.Text=PrefC.GetString(PrefName.EHREmailPOPserver);
-			textUsername.Text=PrefC.GetString(PrefName.EHREmailFromAddress);
-			textPassword.Text=PrefC.GetString(PrefName.EHREmailPassword);
-			textPort.Text=PrefC.GetString(PrefName.EHREmailPort);
+			textPOPserver.Text=Prefs.GetString(PrefName.EHREmailPOPserver);
+			textUsername.Text=Prefs.GetString(PrefName.EHREmailFromAddress);
+			textPassword.Text=Prefs.GetString(PrefName.EHREmailPassword);
+			textPort.Text=Prefs.GetString(PrefName.EHREmailPort);
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {
-			Prefs.UpdateString(PrefName.EHREmailPOPserver,textPOPserver.Text);
-			Prefs.UpdateString(PrefName.EHREmailFromAddress,textUsername.Text);
-			Prefs.UpdateString(PrefName.EHREmailPassword,textPassword.Text);
+			Prefs.Set(PrefName.EHREmailPOPserver,textPOPserver.Text);
+			Prefs.Set(PrefName.EHREmailFromAddress,textUsername.Text);
+			Prefs.Set(PrefName.EHREmailPassword,textPassword.Text);
 			try{
-				Prefs.UpdateLong(PrefName.EHREmailPort,PIn.Long(textPort.Text));
+				Prefs.Set(PrefName.EHREmailPort,PIn.Long(textPort.Text));
 			}
 			catch{
 				MessageBox.Show("invalid port number.");

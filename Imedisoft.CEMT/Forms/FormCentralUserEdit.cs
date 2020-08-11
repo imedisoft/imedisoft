@@ -153,9 +153,9 @@ namespace Imedisoft.CEMT.Forms
 
 			user.IsHidden = checkIsHidden.Checked;
 			user.UserName = username;
-			user.EmployeeNum = 0;
-			user.ProvNum = 0;
-			user.ClinicNum = 0;
+			user.EmployeeId = 0;
+			user.ProviderId = 0;
+			user.ClinicId = 0;
 			user.ClinicIsRestricted = false;
 
 			if (user.Id == Security.CurrentUser.Id)

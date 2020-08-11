@@ -1049,7 +1049,7 @@ namespace OpenDental{
 				gridMain.SelectionMode=GridSelectionMode.MultiExtended;
 			}
 			if(_canShowHidden) {
-				checkShowHidden.Checked=PrefC.GetBool(PrefName.ProcCodeListShowHidden);
+				checkShowHidden.Checked=Prefs.GetBool(PrefName.ProcCodeListShowHidden);
 			}
 			else {//checkShowHidden will always be unchecked.
 				checkShowHidden.Visible=false;
@@ -1079,7 +1079,7 @@ namespace OpenDental{
 			labelProvider1.ForeColor=_colorProv;
 			labelProvider2.ForeColor=_colorProv;
 			labelProvider3.ForeColor=_colorProv;
-			bool _isShowingGroups=PrefC.GetBool(PrefName.ShowFeeSchedGroups);
+			bool _isShowingGroups=Prefs.GetBool(PrefName.ShowFeeSchedGroups);
 			checkGroups1.Visible=_isShowingGroups;
 			checkGroups2.Visible=_isShowingGroups;
 			checkGroups3.Visible=_isShowingGroups;
@@ -1214,7 +1214,7 @@ namespace OpenDental{
 				for(int i=0;i<_listClinics.Count;i++) {
 					ODBoxItem<Clinic> boxItemClinic=new ODBoxItem<Clinic>(_listClinics[i].Abbr,_listClinics[i]);
 					//When FeeSchedGroups are on don't include clinics that are in a group for that particular fee schedule.
-					if(PrefC.GetBool(PrefName.ShowFeeSchedGroups)) {
+					if(Prefs.GetBool(PrefName.ShowFeeSchedGroups)) {
 						//At this point, we do not know if we are going to display fee sched groups
 						AddFeeSchedGroupToComboBox(comboFeeSchedGroup1,feeSchedNum1Selected
 							,feeSchedGroup1Num,listCombo1GroupNums,boxItemClinic);
@@ -1364,7 +1364,7 @@ namespace OpenDental{
 			long clinic2Num=0;
 			long clinic3Num=0;
 			if(PrefC.HasClinicsEnabled) { //Clinics is on
-				if(PrefC.GetBool(PrefName.ShowFeeSchedGroups)) {
+				if(Prefs.GetBool(PrefName.ShowFeeSchedGroups)) {
 					//First groupbox
 					if(checkGroups1.Checked && comboFeeSchedGroup1.SelectedIndex>-1) {
 						clinic1Num=comboFeeSchedGroup1.GetSelected<FeeSchedGroup>().ListClinicNumsAll.FirstOrDefault();
@@ -1472,7 +1472,7 @@ namespace OpenDental{
 			long clinic2Num=0;
 			long clinic3Num=0;
 			if(PrefC.HasClinicsEnabled) { //Clinics is on
-				if(PrefC.GetBool(PrefName.ShowFeeSchedGroups)) {
+				if(Prefs.GetBool(PrefName.ShowFeeSchedGroups)) {
 					//First groupbox
 					if(checkGroups1.Checked && comboFeeSchedGroup1.SelectedIndex>-1) {
 						clinic1Num=comboFeeSchedGroup1.GetSelected<FeeSchedGroup>().ListClinicNumsAll.FirstOrDefault();
@@ -1747,7 +1747,7 @@ namespace OpenDental{
 				return;
 			}
 			//Can't use values from fee object as it could be null. Instead use values pulled from UI that are also used to set new fees below.
-			if(PrefC.GetBool(PrefName.ShowFeeSchedGroups) && provNum==0 && !isEditingGroup) {//Ignore provider fees and don't block from editing a group.
+			if(Prefs.GetBool(PrefName.ShowFeeSchedGroups) && provNum==0 && !isEditingGroup) {//Ignore provider fees and don't block from editing a group.
 				FeeSchedGroup groupForClinic=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSched.FeeSchedNum,clinicNum);
 				if(groupForClinic!=null) {
 					MsgBox.Show(Lans.g(this,"Fee Schedule: ")+feeSched.Description+Lans.g(this," for Clinic: ")+(_listClinics.FirstOrDefault(x => x.ClinicNum==clinicNum)).Abbr+
@@ -1890,7 +1890,7 @@ namespace OpenDental{
 		}
 
 		private void butShowHiddenDefault_Click(object sender,EventArgs e) {
-			Prefs.UpdateBool(PrefName.ProcCodeListShowHidden,checkShowHidden.Checked);
+			Prefs.Set(PrefName.ProcCodeListShowHidden,checkShowHidden.Checked);
 			string hiddenStatus="";
 			if(checkShowHidden.Checked) {
 				hiddenStatus=Lan.G(this,"checked.");
@@ -1963,7 +1963,7 @@ namespace OpenDental{
 			string filePath=ODFileUtils.CombinePaths(Path.GetTempPath(),filename); 
 
 				SaveFileDialog saveDlg=new SaveFileDialog();
-				saveDlg.InitialDirectory=PrefC.GetString(PrefName.ExportPath);
+				saveDlg.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
 				saveDlg.FileName=filename;
 				if(saveDlg.ShowDialog()!=DialogResult.OK) {
 					return;
@@ -1984,7 +1984,7 @@ namespace OpenDental{
 				SynchAndFillListFees(true);
 			}
 			OpenFileDialog openDlg=new OpenFileDialog();
-			openDlg.InitialDirectory=PrefC.GetString(PrefName.ExportPath);
+			openDlg.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
 			if(openDlg.ShowDialog()!=DialogResult.OK) {
 				return;
 			}

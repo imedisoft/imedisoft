@@ -37,9 +37,9 @@ namespace UnitTestsCore {
 		///<summary>Returns the practice as clinic zero.</summary>
 		public static Clinic CreatePracticeClinic(string practiceTitle="The Land of Mordor",long emailAddressNum=0) {
 			if(emailAddressNum!=0) {
-				Prefs.UpdateLong(PrefName.EmailDefaultAddressNum,emailAddressNum);
+				Prefs.Set(PrefName.EmailDefaultAddressNum,emailAddressNum);
 			}
-			Prefs.UpdateString(PrefName.PracticeTitle,practiceTitle);
+			Prefs.Set(PrefName.PracticeTitle,practiceTitle);
 			return Clinics.GetPracticeAsClinicZero();
 		}
 

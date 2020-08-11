@@ -310,8 +310,8 @@ namespace OpenDental{
 		#endregion
 
 		private void FormRpProcNote_Load(object sender,System.EventArgs e) {
-			checkNoNotes.Checked=PrefC.GetBool(PrefName.ReportsIncompleteProcsNoNotes);
-			checkUnsignedNote.Checked=PrefC.GetBool(PrefName.ReportsIncompleteProcsUnsigned);
+			checkNoNotes.Checked=Prefs.GetBool(PrefName.ReportsIncompleteProcsNoNotes);
+			checkUnsignedNote.Checked=Prefs.GetBool(PrefName.ReportsIncompleteProcsUnsigned);
 			FillProvs();
 			dateRangePicker.SetDateTimeFrom(DateTime.Today);
 			dateRangePicker.SetDateTimeTo(DateTime.Today);
@@ -487,7 +487,7 @@ namespace OpenDental{
 				text=Lan.G(this,"Incomplete Procedure Notes");
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
-				text=PrefC.GetString(PrefName.PracticeTitle);
+				text=Prefs.GetString(PrefName.PracticeTitle);
 				g.DrawString(text,subHeadingFont,Brushes.Black,center-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
 				if(comboProvs.IsAllSelected){

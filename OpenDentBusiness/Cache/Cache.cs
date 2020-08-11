@@ -109,7 +109,7 @@ namespace OpenDentBusiness
 			if (invalidTypes.Contains(InvalidType.ClinicPrefs) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.ClinicPrefs.ToString());
-				ClinicPrefs.GetTableFromCache(true);
+				ClinicPrefs.RefreshCache();
 			}
 
 			//InvalidType.Clinics see InvalidType.Providers
@@ -250,7 +250,7 @@ namespace OpenDentBusiness
 			if (invalidTypes.Contains(InvalidType.Prefs) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Prefs.ToString());
-				Prefs.GetTableFromCache(true);
+				Prefs.RefreshCache();
 			}
 			if (invalidTypes.Contains(InvalidType.ProcButtons) || refreshAll)
 			{

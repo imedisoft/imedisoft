@@ -131,7 +131,8 @@ namespace OpenDental
 		/// </summary>
 		public static void DownloadInstallPatchFromURI(string downloadUri, string destinationPath, bool runSetupAfterDownload, bool showShutdownWindow, string destinationPath2)
 		{
-			string[] dblist = PrefC.GetString(PrefName.UpdateMultipleDatabases).Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+			string[] databases = Prefs.GetString(PrefName.UpdateMultipleDatabases).Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+
 			bool isShutdownWindowNeeded = showShutdownWindow;
 			while (isShutdownWindowNeeded)
 			{
@@ -144,11 +145,8 @@ namespace OpenDental
 					{
 						// Turn off signal reception for 5 seconds so this workstation will not shut down.
 						Signalods.SignalLastRefreshed = MiscData.GetNowDateTime().AddSeconds(5);
-						Signalod sig = new Signalod
-						{
-							IType = InvalidType.ShutDownNow
-						};
-						Signalods.Insert(sig);
+						Signalods.Send(SignalName.Shutdown);
+
 						Computers.ClearAllHeartBeats(Environment.MachineName);//always assume success
 						isShutdownWindowNeeded = false;
 						//SecurityLogs.MakeLogEntry(Permissions.Setup,0,"Shutdown all workstations.");//can't do this because sometimes no user.
@@ -165,10 +163,11 @@ namespace OpenDental
 				}
 
 				// No other workstation will be able to start up until this value is reset.
-				Prefs.UpdateString(PrefName.UpdateInProgressOnComputerName, Environment.MachineName);
+				Prefs.Set(PrefName.UpdateInProgressOnComputerName, Environment.MachineName);
 			}
 
-			MiscData.LockWorkstationsForDbs(dblist);//lock workstations for other db's.
+			Prefs.Set(PrefName.UpdateInProgressOnComputerName, Environment.MachineName);
+
 			try
 			{
 				File.Delete(destinationPath);
@@ -176,8 +175,9 @@ namespace OpenDental
 			catch (Exception ex)
 			{
 				FriendlyException.Show("Error deleting file:\r\n" + ex.Message, ex);
-				MiscData.UnlockWorkstationsForDbs(dblist);//unlock workstations since nothing was actually done.
-				Prefs.UpdateString(PrefName.UpdateInProgressOnComputerName, "");
+
+				Prefs.Set(PrefName.UpdateInProgressOnComputerName, "");
+
 				return;
 			}
 
@@ -191,8 +191,9 @@ namespace OpenDental
 			{
 				CodeBase.MsgBoxCopyPaste msgbox = new MsgBoxCopyPaste(ex.Message + "\r\nUri: " + downloadUri);
 				msgbox.ShowDialog();
-				MiscData.UnlockWorkstationsForDbs(dblist);//unlock workstations since nothing was actually done.
-				Prefs.UpdateString(PrefName.UpdateInProgressOnComputerName, "");
+
+				Prefs.Set(PrefName.UpdateInProgressOnComputerName, "");
+
 				return;
 			}
 
@@ -202,6 +203,7 @@ namespace OpenDental
 			ThreadStart downloadDelegate = delegate { DownloadInstallPatchWorker(downloadUri, destinationPath, webResp.ContentLength, ref FormP); };
 			Thread workerThread = new Thread(downloadDelegate);
 			workerThread.Start();
+
 			//display the progress dialog to the user:
 			FormP.MaxVal = (double)fileSize / 1024;
 			FormP.NumberMultiplication = 100;
@@ -211,8 +213,9 @@ namespace OpenDental
 			if (FormP.DialogResult == DialogResult.Cancel)
 			{
 				workerThread.Abort();
-				MiscData.UnlockWorkstationsForDbs(dblist);//unlock workstations since nothing was actually done.
-				Prefs.UpdateString(PrefName.UpdateInProgressOnComputerName, "");
+
+				Prefs.Set(PrefName.UpdateInProgressOnComputerName, "");
+
 				return;
 			}
 
@@ -229,8 +232,9 @@ namespace OpenDental
 					catch (Exception ex)
 					{
 						FriendlyException.Show("Error deleting file:\r\n" + ex.Message, ex);
-						MiscData.UnlockWorkstationsForDbs(dblist);//unlock workstations since nothing was actually done.
-						Prefs.UpdateString(PrefName.UpdateInProgressOnComputerName, "");
+
+						Prefs.Set(PrefName.UpdateInProgressOnComputerName, "");
+
 						return;
 					}
 				}
@@ -238,38 +242,29 @@ namespace OpenDental
 				File.Copy(destinationPath, destinationPath2);
 			}
 
-			// copy the Setup.exe to the AtoZ folders for the other db's.
-
-			List<string> atozNameList = MiscData.GetAtoZforDb(dblist);
-			for (int i = 0; i < atozNameList.Count; i++)
-			{
-				if (destinationPath == Path.Combine(atozNameList[i], "Setup.exe"))
-				{//if they are sharing an AtoZ folder.
-					continue;
-				}
-				if (Directory.Exists(atozNameList[i]))
-				{
-					File.Copy(destinationPath,//copy the Setup.exe that was just downloaded to this AtoZ folder
-						Path.Combine(atozNameList[i], "Setup.exe"),//to the other atozFolder
-						true);//overwrite
-				}
-			}
-
 			if (!runSetupAfterDownload)
 			{
 				return;
 			}
 
-			string msg = "Download succeeded.  Setup program will now begin.  When done, restart the program on this computer, then on the other computers.";
-			if (dblist.Length > 0)
+			string msg = 
+				"Download succeeded. " +
+				"Setup program will now begin. " +
+				"When done, restart the program on this computer, then on the other computers.";
+
+			if (databases.Length > 0)
 			{
-				msg = "Download succeeded.  Setup file probably copied to other AtoZ folders as well.  Setup program will now begin.  When done, restart the program for each database on this computer, then on the other computers.";
+				msg = 
+					"Download succeeded. " +
+					"Setup file probably copied to other AtoZ folders as well. " +
+					"Setup program will now begin. " +
+					"When done, restart the program for each database on this computer, then on the other computers.";
 			}
 
-			if (MessageBox.Show(msg, "", MessageBoxButtons.OKCancel) != DialogResult.OK)
+			if (CodeBase.ODMessageBox.Show(msg, "", MessageBoxButtons.OKCancel) != DialogResult.OK)
 			{
 				//Clicking cancel gives the user a chance to avoid running the setup program,
-				Prefs.UpdateString(PrefName.UpdateInProgressOnComputerName, "");//unlock workstations, since nothing was actually done.
+				Prefs.Set(PrefName.UpdateInProgressOnComputerName, "");//unlock workstations, since nothing was actually done.
 				return;
 			}
 
@@ -280,7 +275,7 @@ namespace OpenDental
 			}
 			catch
 			{
-				Prefs.UpdateString(PrefName.UpdateInProgressOnComputerName, "");//unlock workstations, since nothing was actually done.
+				Prefs.Set(PrefName.UpdateInProgressOnComputerName, "");//unlock workstations, since nothing was actually done.
 				MsgBox.Show("Could not launch setup");
 			}
 		}
@@ -356,46 +351,47 @@ namespace OpenDental
 				return false;
 			}
 
-			if (!PrefC.ContainsKey("MySqlVersion"))
-			{//db has not yet been updated to store this pref
-			 //We're going to skip this.  We will recommend that people first upgrade OD, then MySQL, so this won't be an issue.
+
+			// Using a version that stores the MySQL version as a preference.
+			// There was an old bug where the MySQLVersion preference could be stored as 5,5 instead of 5.5 due to converting the version into a float.
+			// Replace any commas with periods before checking if the preference is going to change.
+			// This is simply an attempt to avoid making unnecessary backups for users with a corrupt version (e.g. 5,5).
+			if (Prefs.GetString(PrefName.MySqlVersion).Contains(","))
+			{
+				Prefs.Set(PrefName.MySqlVersion, Prefs.GetString(PrefName.MySqlVersion).Replace(",", "."));
 			}
-			else
-			{//Using a version that stores the MySQL version as a preference.
-			 //There was an old bug where the MySQLVersion preference could be stored as 5,5 instead of 5.5 due to converting the version into a float.
-			 //Replace any commas with periods before checking if the preference is going to change.
-			 //This is simply an attempt to avoid making unnecessary backups for users with a corrupt version (e.g. 5,5).
-				if (PrefC.GetString(PrefName.MySqlVersion).Contains(","))
-				{
-					Prefs.UpdateString(PrefName.MySqlVersion, PrefC.GetString(PrefName.MySqlVersion).Replace(",", "."));
-				}
-				//Now check to see if the MySQL version has been updated.  If it has, make an automatic backup, repair, and optimize all tables.
-				if (Prefs.UpdateString(PrefName.MySqlVersion, thisVersion))
-				{
+
+			//Now check to see if the MySQL version has been updated. If it has, make an automatic backup, repair, and optimize all tables.
+			if (Prefs.Set(PrefName.MySqlVersion, thisVersion))
+			{
 #if !DEBUG
-					if(!isSilent) {
-						if(!MsgBox.Show("Prefs",MsgBoxButtons.OKCancel,"Tables will now be backed up, optimized, and repaired.  This will take a minute or two.  Continue?")) {
-							FormOpenDental.ExitCode=0;
-							return false;
-						}
-					}
-					if(!Shared.BackupRepairAndOptimize(isSilent,BackupLocation.ConvertScript,false)) {
-						FormOpenDental.ExitCode=101;//Database Backup failed
+				if (!isSilent)
+				{
+					if (!MsgBox.Show("Prefs", MsgBoxButtons.OKCancel, "Tables will now be backed up, optimized, and repaired.  This will take a minute or two.  Continue?"))
+					{
+						FormOpenDental.ExitCode = 0;
 						return false;
 					}
-					hasBackup=true;
-#endif
 				}
-			}
 
-
-			//ClassConvertDatabase CCD=new ClassConvertDatabase();
-			if (!hasBackup)
-			{//A backup could have been made if the tables were optimized and repaired above.
-				if (!Shared.MakeABackup(isSilent, BackupLocation.ConvertScript, false))
+				if (!Shared.BackupRepairAndOptimize(isSilent, BackupLocation.ConvertScript, false))
 				{
 					FormOpenDental.ExitCode = 101;//Database Backup failed
-					return false;//but this should never happen
+					return false;
+				}
+
+				hasBackup = true;
+#endif
+			}
+
+			// ClassConvertDatabase CCD=new ClassConvertDatabase();
+			if (!hasBackup)
+			{
+				// A backup could have been made if the tables were optimized and repaired above.
+				if (!Shared.MakeABackup(isSilent, BackupLocation.ConvertScript, false))
+				{
+					FormOpenDental.ExitCode = 101; // Database Backup failed
+					return false; // but this should never happen
 				}
 			}
 
@@ -426,13 +422,13 @@ namespace OpenDental
 
 		private static bool CheckProgramVersionClassic()
 		{
-			Version storedVersion = new Version(PrefC.GetString(PrefName.ProgramVersion));
+			Version storedVersion = new Version(Prefs.GetString(PrefName.ProgramVersion));
 			Version currentVersion = new Version(Application.ProductVersion);
 
 			string database = MiscData.GetCurrentDatabase();
 			if (storedVersion < currentVersion)
 			{
-				Prefs.UpdateString(PrefName.ProgramVersion, currentVersion.ToString());
+				Prefs.Set(PrefName.ProgramVersion, currentVersion.ToString());
 				UpdateHistory updateHistory = new UpdateHistory(currentVersion.ToString());
 				UpdateHistories.Insert(updateHistory);
 				Cache.Refresh(InvalidType.Prefs);
@@ -474,8 +470,8 @@ namespace OpenDental
 				//else {//Not using image path.
 				//	//perform program update automatically.
 				//	string patchName="Setup.exe";
-				//	string updateUri=PrefC.GetString(PrefName.UpdateWebsitePath);
-				//	string updateCode=PrefC.GetString(PrefName.UpdateCode);
+				//	string updateUri=Prefs.GetString(PrefName.UpdateWebsitePath);
+				//	string updateCode=Prefs.GetString(PrefName.UpdateCode);
 				//	string updateInfoMajor="";
 				//	string updateInfoMinor="";
 				//	if(ShouldDownloadUpdate(updateUri,updateCode,out updateInfoMajor,out updateInfoMinor)) {

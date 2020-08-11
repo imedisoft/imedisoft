@@ -270,13 +270,13 @@ namespace OpenDental {
 			if(!checkAllBilling.Checked) {
 				listBillingDefNums.AddRange(listBillingType.SelectedIndices.OfType<int>().Select(x => _listBillingTypeDefs[x].DefNum).ToList());
 			}
-			DataTable table=RpFinanceCharge.GetFinanceChargeTable(dateFrom,dateTo,PrefC.GetLong(PrefName.FinanceChargeAdjustmentType),listProvNums,listBillingDefNums);
+			DataTable table=RpFinanceCharge.GetFinanceChargeTable(dateFrom,dateTo,Prefs.GetLong(PrefName.FinanceChargeAdjustmentType),listProvNums,listBillingDefNums);
 			Font font=new Font("Tahoma",9);
 			Font fontTitle=new Font("Tahoma",17,FontStyle.Bold);
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
 			report.ReportName=Lan.G(this,"Finance Charge Report");
 			report.AddTitle("Title",Lan.G(this,"Finance Charge Report"),fontTitle);
-			report.AddSubTitle("PracticeTitle",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
+			report.AddSubTitle("PracticeTitle",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
 			report.AddSubTitle("Date SubTitle",dateFrom.ToString("d")+" - "+dateTo.ToString("d"),fontSubTitle);
 			string subtitleProvs="";
 			if(listProvNums.Count>0) {

@@ -30,15 +30,15 @@ namespace OpenDentBusiness
 			string userNameF = "";
 			string userNameL = "";
 
-			if (userod.ProvNum != 0)
+			if (userod.ProviderId != 0)
 			{
-				Provider prov = Providers.GetProv(userod.ProvNum);
+				Provider prov = Providers.GetProv(userod.ProviderId);
 				userNameF = prov.FName;
 				userNameL = prov.LName;
 			}
-			else if (userod.EmployeeNum != 0)
+			else if (userod.EmployeeId != 0)
 			{
-				Employee emp = Employees.GetEmp(userod.EmployeeNum);
+				Employee emp = Employees.GetEmp(userod.EmployeeId);
 				userNameF = emp.FName;
 				userNameL = emp.LName;
 			}

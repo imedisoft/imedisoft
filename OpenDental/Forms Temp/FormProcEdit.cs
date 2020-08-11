@@ -126,7 +126,7 @@ namespace OpenDental {
 			//LoopList=null;
 			InitializeComponent();
 			Lan.F(this);
-			if(!PrefC.GetBool(PrefName.ShowFeatureMedicalInsurance)) {
+			if(!Prefs.GetBool(PrefName.ShowFeatureMedicalInsurance)) {
 				tabControl.TabPages.Remove(tabPageMedical);
 				//groupMedical.Visible=false;
 			}
@@ -155,7 +155,7 @@ namespace OpenDental {
 			//Set the title bar to show the patient's name much like the main screen does.
 			this.Text+=" - "+_patCur.GetNameLF();
 			textDateEntry.Text=_procCur.DateEntryC.ToShortDateString();
-			if(PrefC.GetBool(PrefName.EasyHidePublicHealth)){
+			if(Prefs.GetBool(PrefName.EasyHidePublicHealth)){
 				labelPlaceService.Visible=false;
 				comboPlaceService.Visible=false;
 				labelSite.Visible=false;
@@ -170,7 +170,7 @@ namespace OpenDental {
 			}
 			_listClaims=_loadData.ListClaims;
 			_procedureCode2=ProcedureCodes.GetProcCode(_procCur.CodeNum);
-			if(_procCur.ProcStatus==ProcStat.C && PrefC.GetBool(PrefName.ProcLockingIsAllowed) && !_procCur.IsLocked) {
+			if(_procCur.ProcStatus==ProcStat.C && Prefs.GetBool(PrefName.ProcLockingIsAllowed) && !_procCur.IsLocked) {
 				butLock.Visible=true;
 			}
 			else {
@@ -229,13 +229,13 @@ namespace OpenDental {
 				labelClaim.Visible=true;
 				butAddEstimate.Enabled=false;
 			}
-			if(PrefC.GetBool(PrefName.EasyHideClinical)){
+			if(Prefs.GetBool(PrefName.EasyHideClinical)){
 				labelDx.Visible=false;
 				comboDx.Visible=false;
 				labelPrognosis.Visible=false;
 				comboPrognosis.Visible=false;
 			}
-			if(PrefC.GetBool(PrefName.EasyHideMedicaid)) {
+			if(Prefs.GetBool(PrefName.EasyHideMedicaid)) {
 				comboBillingTypeOne.Visible=false;
 				labelBillingTypeOne.Visible=false;
 				comboBillingTypeTwo.Visible=false;
@@ -318,14 +318,14 @@ namespace OpenDental {
 			else {
 				tabControl.Controls.Remove(tabPageOrion);
 			}
-			if(Programs.UsingOrion || PrefC.GetBool(PrefName.ShowFeatureMedicalInsurance)) {
+			if(Programs.UsingOrion || Prefs.GetBool(PrefName.ShowFeatureMedicalInsurance)) {
 				labelEndTime.Visible=true;
 				textTimeEnd.Visible=true;
 				butNow.Visible=true;
 				labelTimeFinal.Visible=true;
 				textTimeFinal.Visible=true;
 			}
-			if(PrefC.GetBool(PrefName.ShowFeatureEhr)) {
+			if(Prefs.GetBool(PrefName.ShowFeatureEhr)) {
 				textNotes.HideSelection=false;//When text is selected programmatically using our Search function, this causes the selection to be visible to the users.
 			}
 			else {
@@ -495,7 +495,7 @@ namespace OpenDental {
 				//show what the value would represent if set to complete, in case user changes to complete from another status.
 				bool isInProcess=ProcMultiVisits.IsProcInProcess(_procCur.ProcNum,true);
 				comboProcStatus.Items.Add(Lan.G("Procedures","Complete"+(isInProcess?" (In Process)":"")),ProcStat.C);
-				if(!PrefC.GetBool(PrefName.EasyHideClinical)) {
+				if(!Prefs.GetBool(PrefName.EasyHideClinical)) {
 					comboProcStatus.Items.Add(Lan.G("Procedures","Existing-Current Prov"),ProcStat.EC);
 					comboProcStatus.Items.Add(Lan.G("Procedures","Existing-Other Prov"),ProcStat.EO);
 					comboProcStatus.Items.Add(Lan.G("Procedures","Referred Out"),ProcStat.R);
@@ -761,7 +761,7 @@ namespace OpenDental {
 
 		private void FormProcEdit_Shown(object sender,EventArgs e) {
 			//Prompt users for auto notes if they have the preference set.
-			if(PrefC.GetBool(PrefName.ProcPromptForAutoNote)) {//Replace [[text]] sections within the note with AutoNotes.
+			if(Prefs.GetBool(PrefName.ProcPromptForAutoNote)) {//Replace [[text]] sections within the note with AutoNotes.
 				PromptForAutoNotes();
 			}
 			//Scroll to the end of the note for procedures for today (or completed today).
@@ -845,7 +845,7 @@ namespace OpenDental {
 				if(dateT.ToShortTimeString()!="12:00 AM"){
 					textTimeStart.Text+=dateT.ToShortTimeString();
 				}
-				if(Programs.UsingOrion || PrefC.GetBool(PrefName.ShowFeatureMedicalInsurance)) {
+				if(Programs.UsingOrion || Prefs.GetBool(PrefName.ShowFeatureMedicalInsurance)) {
 					dateT=PIn.Date(_procCur.ProcTimeEnd.ToString());
 					if(dateT.ToShortTimeString()!="12:00 AM") {
 						textTimeEnd.Text=dateT.ToShortTimeString();
@@ -1426,7 +1426,7 @@ namespace OpenDental {
 				row.Cells.Add(Defs.GetName(DefCat.AdjTypes,adjustment.AdjType));
 				row.Cells.Add(adjustment.AdjNote);
 				gridAdj.ListGridRows.Add(row);
-				if(adjustment.AdjType==PrefC.GetLong(PrefName.TreatPlanDiscountAdjustmentType)) {
+				if(adjustment.AdjType==Prefs.GetLong(PrefName.TreatPlanDiscountAdjustmentType)) {
 					discountAmt-=adjustment.AdjAmt;//Discounts are stored as negatives, we want a positive discount value.
 				}
 			}
@@ -1757,7 +1757,7 @@ namespace OpenDental {
 			}
 			if(comboProcStatus.GetSelected<ProcStat>()==ProcStat.C) {
 				bool isAllowedToCompl=true;
-				if(!PrefC.GetBool(PrefName.AllowSettingProcsComplete)) {
+				if(!Prefs.GetBool(PrefName.AllowSettingProcsComplete)) {
 					MessageBox.Show("Set the procedure complete by setting the appointment complete.  "
 						+"If you want to be able to set procedures complete, you must turn on that option in Setup | Chart | Chart Preferences.");
 					isAllowedToCompl=false;
@@ -1772,7 +1772,7 @@ namespace OpenDental {
 					if(_procCur.ProcStatus==ProcStat.TP) {
 						comboProcStatus.SetSelectedEnum(ProcStat.TP);
 					}
-					else if(PrefC.GetBool(PrefName.EasyHideClinical)) {
+					else if(Prefs.GetBool(PrefName.EasyHideClinical)) {
 						comboProcStatus.SelectedIndex=-1;//original status must not be visible
 					}
 					else {
@@ -1816,7 +1816,7 @@ namespace OpenDental {
 			//If it's already locked, there's simply no way to save the changes made to this control.
 			//If status was just changed to C, then we should show the lock button.
 			if(_procCur.ProcStatus==ProcStat.C) {
-				if(PrefC.GetBool(PrefName.ProcLockingIsAllowed) && !_procCur.IsLocked) {
+				if(Prefs.GetBool(PrefName.ProcLockingIsAllowed) && !_procCur.IsLocked) {
 					butLock.Visible=true;
 				}
 			}
@@ -1828,7 +1828,7 @@ namespace OpenDental {
 				MessageBox.Show("Procedure was already set complete.");
 				return;
 			}
-			if(!PrefC.GetBool(PrefName.AllowSettingProcsComplete)) {
+			if(!Prefs.GetBool(PrefName.AllowSettingProcsComplete)) {
 				MessageBox.Show("Set the procedure complete by setting the appointment complete.  "
 					+"If you want to be able to set procedures complete, you must turn on that option in Setup | Chart | Chart Preferences.");
 				return;
@@ -1894,7 +1894,7 @@ namespace OpenDental {
 			if(!string.IsNullOrEmpty(procNoteDefault)) {
 				textNotes.Text+=procNoteDefault;
 			}
-			if(!PrefC.GetBool(PrefName.ProcPromptForAutoNote)) {
+			if(!Prefs.GetBool(PrefName.ProcPromptForAutoNote)) {
 				//Users do not want to be prompted for auto notes, so remove them all from the procedure note.
 				textNotes.Text=Regex.Replace(textNotes.Text,@"\[\[.+?\]\]","");
 			}
@@ -2684,7 +2684,7 @@ namespace OpenDental {
 				MessageBox.Show("Procedures cannot be set complete in this window.  Set the procedure complete by setting the appointment complete.");
 				return false;
 			}
-			if(_procCur.ProcStatus==ProcStat.C && PIn.Date(textDate.Text).Date > DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
+			if(_procCur.ProcStatus==ProcStat.C && PIn.Date(textDate.Text).Date > DateTime.Today.Date && !Prefs.GetBool(PrefName.FutureTransDatesAllowed)) {
 				MessageBox.Show("Completed procedures cannot have future dates.");
 				return false;
 			}
@@ -2944,8 +2944,8 @@ namespace OpenDental {
 			else if(_procOld.ProcStatus!=ProcStat.C && _procCur.ProcStatus==ProcStat.C) {//Proc set complete.
 				_procCur.DateEntryC=DateTime.Now;//this triggers it to set to server time NOW().
 				if(_procCur.DiagnosticCode=="") {
-					_procCur.DiagnosticCode=PrefC.GetString(PrefName.ICD9DefaultForNewProcs);
-					_procCur.IcdVersion=PrefC.GetByte(PrefName.DxIcdVersion);
+					_procCur.DiagnosticCode=Prefs.GetString(PrefName.ICD9DefaultForNewProcs);
+					_procCur.IcdVersion=Prefs.GetByte(PrefName.DxIcdVersion);
 				}
 			}
 			// textDateTP.Text is blank upon load if date in DB is before 1/1/1880. We don't want to update this if the DateTP box is left blank.
@@ -2955,7 +2955,7 @@ namespace OpenDental {
 			_procCur.ProcDate=PIn.Date(this.textDate.Text);
 			DateTime dateT=PIn.Date(this.textTimeStart.Text);
 			_procCur.ProcTime=new TimeSpan(dateT.Hour,dateT.Minute,0);
-			if(Programs.UsingOrion || PrefC.GetBool(PrefName.ShowFeatureMedicalInsurance)) {
+			if(Programs.UsingOrion || Prefs.GetBool(PrefName.ShowFeatureMedicalInsurance)) {
 				dateT=ParseTime(textTimeStart.Text);
 				_procCur.ProcTime=new TimeSpan(dateT.Hour,dateT.Minute,0);
 				dateT=ParseTime(textTimeEnd.Text);
@@ -3034,7 +3034,7 @@ namespace OpenDental {
 			//Larger offices have trouble with doctors editing specific procedure notes at the same time.
 			//One of our customers paid for custom programming that will merge the two notes together in a specific fashion if there was concurrency issues.
 			//A specific preference was added because this functionality is so custom.  Typical users can just use the Chart View Audit mode for this info.
-			if(_procOld.ProcNum > 0 && PrefC.GetBool(PrefName.ProcNoteConcurrencyMerge)) {
+			if(_procOld.ProcNum > 0 && Prefs.GetBool(PrefName.ProcNoteConcurrencyMerge)) {
 				//Go to the database to get the most recent version of the current procedure's note and check it against ProcOld.Note to see if they differ.
 				List<ProcNote> listProcNotes=ProcNotes.GetProcNotesForProc(_procOld.ProcNum)
 					.OrderByDescending(x => x.EntryDateTime)
@@ -3305,7 +3305,7 @@ namespace OpenDental {
 					FormAutoCodeLessIntrusive FormACLI=new FormAutoCodeLessIntrusive(_patCur,_procCur,_procedureCode2,verifyCode,_listPatPlans,_listInsSubs,_listInsPlans,
 						_listBenefits,_listClaimProcsForProc,listBoxTeeth.Text);
 					if(FormACLI.ShowDialog() != DialogResult.OK
-						&& PrefC.GetBool(PrefName.ProcEditRequireAutoCodes)) 
+						&& Prefs.GetBool(PrefName.ProcEditRequireAutoCodes)) 
 					{
 						return;//send user back to fix information or use suggested auto code.
 					}

@@ -697,7 +697,7 @@ namespace OpenDental{
 			message.PatNum=CurPatNum;
 			Patient pat=Patients.GetPat(CurPatNum);
 			message.ToAddress="";//pat.Email;
-			message.FromAddress=PrefC.GetString(PrefName.EmailSenderAddress");
+			message.FromAddress=Prefs.GetString(PrefName.EmailSenderAddress");
 			message.Subject=Lan.g(this,"RE: ")+pat.GetNameFL();
 			FormEmailMessageEdit FormE=new FormEmailMessageEdit(message);
 			FormE.IsNew=true;

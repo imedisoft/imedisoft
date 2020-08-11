@@ -409,6 +409,7 @@
     <Compile Include="Data Interface\Promotions.cs" />
     <Compile Include="Data\Models\AutomationAction.cs" />
     <Compile Include="Data\Models\AutomationTrigger.cs" />
+    <Compile Include="Data\PreferenceName.cs" />
     <Compile Include="Email\EmailHosting\Account\AccountApi.cs" />
     <Compile Include="Email\EmailHosting\Account\IAccountApi.cs" />
     <Compile Include="Email\EmailHosting\Account\Models\AppendAttachmentDataRequest.cs" />
@@ -537,7 +538,7 @@
     <Compile Include="TableTypes\Reactivation.cs" />
     <Compile Include="TableTypes\ProviderClinicLink.cs" />
     <Compile Include="TableTypes\ScheduledProcess.cs" />
-    <Compile Include="Data\UserOdPref.cs" />
+    <Compile Include="Data\UserPreferenceName.cs" />
     <Compile Include="UI\ODGridPageNav.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -645,7 +646,6 @@
     <Compile Include="Crud\AutoNoteCrud.cs" />
     <Compile Include="Crud\CDSPermissionCrud.cs" />
     <Compile Include="Crud\ClaimSnapshotCrud.cs" />
-    <Compile Include="Crud\ClinicPrefCrud.cs" />
     <Compile Include="Crud\ConfirmationRequestCrud.cs" />
     <Compile Include="Crud\ConnectionGroupCrud.cs" />
     <Compile Include="Crud\ConnGroupAttachCrud.cs" />
@@ -819,7 +819,6 @@
     <Compile Include="Crud\PhoneNumberCrud.cs" />
     <Compile Include="Crud\PlannedApptCrud.cs" />
     <Compile Include="Crud\PopupCrud.cs" />
-    <Compile Include="Crud\PrefCrud.cs" />
     <Compile Include="Crud\PrinterCrud.cs" />
     <Compile Include="Crud\ProcApptColorCrud.cs" />
     <Compile Include="Crud\ProcButtonCrud.cs" />
@@ -876,7 +875,6 @@
     <Compile Include="Crud\SigButDefCrud.cs" />
     <Compile Include="Crud\SigElementDefCrud.cs" />
     <Compile Include="Crud\SigMessageCrud.cs" />
-    <Compile Include="Crud\SignalodCrud.cs" />
     <Compile Include="Crud\SiteCrud.cs" />
     <Compile Include="Crud\StateAbbrCrud.cs" />
     <Compile Include="Crud\TreatPlanAttachCrud.cs" />
@@ -890,7 +888,7 @@
     <Compile Include="Data Interface\ApptReminderRules.cs" />
     <Compile Include="Data Interface\ApptReminderSents.cs" />
     <Compile Include="Data Interface\ClaimSnapshots.cs" />
-    <Compile Include="Data Interface\ClinicPrefs.cs" />
+    <Compile Include="Data\ClinicPrefs.cs" />
     <Compile Include="Data Interface\ConfirmationRequests.cs" />
     <Compile Include="Data Interface\DashboardCells.cs" />
     <Compile Include="Data Interface\DashboardLayouts.cs" />
@@ -929,12 +927,10 @@
     <Compile Include="Crud\SupplyNeededCrud.cs" />
     <Compile Include="Crud\SupplyOrderCrud.cs" />
     <Compile Include="Crud\SupplyOrderItemCrud.cs" />
-    <Compile Include="Crud\TaskAncestorCrud.cs" />
     <Compile Include="Crud\TaskCrud.cs" />
     <Compile Include="Crud\TaskHistCrud.cs" />
     <Compile Include="Crud\TaskListCrud.cs" />
     <Compile Include="Crud\TaskNoteCrud.cs" />
-    <Compile Include="Crud\TaskSubscriptionCrud.cs" />
     <Compile Include="Crud\TaskUnreadCrud.cs" />
     <Compile Include="Crud\TerminalActiveCrud.cs" />
     <Compile Include="Crud\TimeAdjustCrud.cs" />
@@ -1257,7 +1253,7 @@
     <Compile Include="Db Multi Table\FamilyModules.cs" />
     <Compile Include="Data Interface\GroupPermissions.cs" />
     <Compile Include="Data Interface\Operatories.cs" />
-    <Compile Include="Data Interface\Prefs.cs" />
+    <Compile Include="Data\Prefs.cs" />
     <Compile Include="Data Interface\SigButDefs.cs" />
     <Compile Include="Data Interface\SigElementDefs.cs" />
     <Compile Include="Data Interface\Statements.cs" />
@@ -1276,7 +1272,6 @@
     <Compile Include="Data Interface\SupplyNeededs.cs" />
     <Compile Include="Data Interface\SupplyOrderItems.cs" />
     <Compile Include="Data Interface\SupplyOrders.cs" />
-    <Compile Include="Data Interface\TaskAncestors.cs" />
     <Compile Include="Data Interface\TaskLists.cs" />
     <Compile Include="Data Interface\Tasks.cs" />
     <Compile Include="Data Interface\TaskSubscriptions.cs" />
@@ -1371,7 +1366,6 @@
     <Compile Include="TableTypes\DiscountPlan.cs" />
     <Compile Include="TableTypes\FamAging.cs" />
     <Compile Include="TableTypes\FieldDefLink.cs" />
-    <Compile Include="TableTypes\ClinicPref.cs" />
     <Compile Include="TableTypes\AlertItem.cs" />
     <Compile Include="TableTypes\AlertRead.cs" />
     <Compile Include="TableTypes\AlertSub.cs" />

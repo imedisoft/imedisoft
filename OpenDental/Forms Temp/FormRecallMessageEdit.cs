@@ -5,9 +5,9 @@ using System.Windows.Forms;
 namespace OpenDental {
 	public partial class FormRecallMessageEdit:ODForm {
 		public string MessageVal;
-		private PrefName _prefName;
+		private string _prefName;
 
-		public FormRecallMessageEdit(PrefName prefName) {
+		public FormRecallMessageEdit(string prefName) {
 			InitializeComponent();
 			Lan.F(this);
 			_prefName=prefName;

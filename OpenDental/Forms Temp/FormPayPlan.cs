@@ -14,6 +14,7 @@ using OpenDentBusiness;
 using System.Linq;
 using CodeBase;
 using System.Text;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 	/// <summary></summary>
@@ -1255,7 +1256,7 @@ namespace OpenDental{
 				butClosePlan.Enabled=false;
 				labelClosed.Visible=true;
 			}
-			if(PrefC.GetBool(PrefName.PayPlansUseSheets)) {
+			if(Prefs.GetBool(PrefName.PayPlansUseSheets)) {
 				Sheet sheetPP=null;
 				sheetPP=PayPlanToSheet(_payPlanCur);
 				//check to see if sig box is on the sheet
@@ -1267,7 +1268,7 @@ namespace OpenDental{
 					}
 				}
 			}
-			checkExcludePast.Checked=PrefC.GetBool(PrefName.PayPlansExcludePastActivity);
+			checkExcludePast.Checked=Prefs.GetBool(PrefName.PayPlansExcludePastActivity);
 			FillCharges();
 			if(_payPlanCur.Signature!="" && _payPlanCur.Signature!=null) {
 				//check to see if sheet is signed before showing
@@ -1499,7 +1500,7 @@ namespace OpenDental{
 			if(FormPS.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			_payPlanCur.Guarantor=FormPS.SelectedPatNum;
+			_payPlanCur.Guarantor=FormPS.SelectedPatientId;
 			textGuarantor.Text=Patients.GetLim(_payPlanCur.Guarantor).GetNameLF();
 		}
 		
@@ -1804,7 +1805,7 @@ namespace OpenDental{
 				return;
 			}
 			SaveData(true);
-			if(PrefC.GetBool(PrefName.PayPlansUseSheets)) {
+			if(Prefs.GetBool(PrefName.PayPlansUseSheets)) {
 				Sheet sheetPP=null;
 				sheetPP=PayPlanToSheet(_payPlanCur);
 				SheetPrinting.Print(sheetPP);
@@ -1816,7 +1817,7 @@ namespace OpenDental{
 				Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
 				ReportComplex report=new ReportComplex(false,false);
 				report.AddTitle("Title",Lan.G(this,"Payment Plan Terms"),fontTitle);
-				report.AddSubTitle("PracTitle",PrefC.GetString(PrefName.PracticeTitle),fontSubTitle);
+				report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
 				report.AddSubTitle("Date SubTitle",DateTime.Today.ToShortDateString(),fontSubTitle);
 				AreaSectionType sectType=AreaSectionType.ReportHeader;
 				Section section=report.Sections[AreaSectionType.ReportHeader];
@@ -1990,7 +1991,7 @@ namespace OpenDental{
 				MessageBox.Show("A provider must be selected first.");
 				return true;
 			}
-			if(PIn.Date(textDate.Text).Date > DateTime.Today.Date && !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) {
+			if(PIn.Date(textDate.Text).Date > DateTime.Today.Date && !Prefs.GetBool(PrefName.FutureTransDatesAllowed)) {
 				MessageBox.Show("Payment plan date cannot be set for the future.");
 				return true;
 			}
@@ -2148,8 +2149,8 @@ namespace OpenDental{
 				adj.SecUserNumEntry=Security.CurrentUser.Id;
 				adj.SecDateTEdit=DateTime.Now;
 				adj.ClinicNum=comboClinic.SelectedClinicNum;
-				if(Defs.GetDef(DefCat.AdjTypes,PrefC.GetLong(PrefName.PayPlanAdjType))!=null) {
-					adj.AdjType=Defs.GetDef(DefCat.AdjTypes,PrefC.GetLong(PrefName.PayPlanAdjType)).DefNum;
+				if(Defs.GetDef(DefCat.AdjTypes,Prefs.GetLong(PrefName.PayPlanAdjType))!=null) {
+					adj.AdjType=Defs.GetDef(DefCat.AdjTypes,Prefs.GetLong(PrefName.PayPlanAdjType)).DefNum;
 				}
 				_listAdjustments.Add(adj);
 			}

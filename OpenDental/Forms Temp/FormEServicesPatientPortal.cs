@@ -22,42 +22,58 @@ namespace OpenDental
 		private string _webMailNotificationBody="";
 		private bool _isWebMailRawHtml;
 
-		private bool _useDefaultsPPInvite {
-			get {
-				if(_clinicCurPPInvite==null) {
+		private bool _useDefaultsPPInvite
+		{
+			get
+			{
+				if (_clinicCurPPInvite == null)
+				{
 					return true;
 				}
-				ClinicPref clinicPref=ClinicPrefs.GetPref(PrefName.PatientPortalInviteUseDefaults,_clinicCurPPInvite.ClinicNum);
-				return clinicPref==null || clinicPref.ValueString=="1";
+
+				return ClinicPrefs.GetBool(_clinicCurPPInvite.ClinicNum, PrefName.PatientPortalInviteUseDefaults);
 			}
-			set {
-				if(_clinicCurPPInvite==null) {
+			set
+			{
+				if (_clinicCurPPInvite == null)
+				{
 					return;
 				}
-				if(ClinicPrefs.Upsert(PrefName.PatientPortalInviteUseDefaults,_clinicCurPPInvite.ClinicNum,value ? "1": "0")) {
+
+				if (ClinicPrefs.Set(_clinicCurPPInvite.ClinicNum, PrefName.PatientPortalInviteUseDefaults, value))
+				{
 					ClinicPrefs.RefreshCache();
-					_doSetInvalidClinicPrefs=true;
+					_doSetInvalidClinicPrefs = true;
 				}
 			}
 		}
-		private bool _isClinicEnabledPPInvite {
-			get {
-				if(_clinicCurPPInvite==null) {
+
+        private bool _isClinicEnabledPPInvite
+		{
+			get
+			{
+				if (_clinicCurPPInvite == null)
+				{
 					return true;
 				}
-				ClinicPref clinicPref=ClinicPrefs.GetPref(PrefName.PatientPortalInviteEnabled,_clinicCurPPInvite.ClinicNum);
-				return clinicPref!=null && clinicPref.ValueString=="1";
+				var clinicPref = ClinicPrefs.GetBool(_clinicCurPPInvite.ClinicNum, PrefName.PatientPortalInviteEnabled);
+				return clinicPref;
 			}
-			set {
-				if(_clinicCurPPInvite==null) {
+			set
+			{
+				if (_clinicCurPPInvite == null)
+				{
 					return;
 				}
-				if(ClinicPrefs.Upsert(PrefName.PatientPortalInviteEnabled,_clinicCurPPInvite.ClinicNum,value ? "1" : "0")) {
+
+
+				if (ClinicPrefs.Set(_clinicCurPPInvite.ClinicNum, PrefName.PatientPortalInviteEnabled, value))
+				{
 					ClinicPrefs.RefreshCache();
-					_doSetInvalidClinicPrefs=true;
+					_doSetInvalidClinicPrefs = true;
 				}
 			}
-		}		
+		}	
 
 		public FormEServicesPatientPortal(WebServiceMainHQProxy.EServiceSetup.SignupOut signupOut=null) {
 			InitializeComponent();
@@ -70,15 +86,15 @@ namespace OpenDental
 				_signupOut=FormEServicesSetup.GetSignupOut();
 			}
 			//Office may have set a customer URL
-			textPatientFacingUrlPortal.Text=PrefC.GetString(PrefName.PatientPortalURL);
+			textPatientFacingUrlPortal.Text=Prefs.GetString(PrefName.PatientPortalURL);
 			//HQ provides this URL for this customer.
 			_urlsFromHQ=WebServiceMainHQProxy.GetSignups<WebServiceMainHQProxy.EServiceSetup.SignupOut.SignupOutEService>(_signupOut,eServiceCode.PatientPortal).FirstOrDefault()??new WebServiceMainHQProxy.EServiceSetup.SignupOut.SignupOutEService() { HostedUrl="", HostedUrlPayment="" };
 			textHostedUrlPortal.Text=_urlsFromHQ.HostedUrl;
 			if(textPatientFacingUrlPortal.Text=="") { //Customer has not set their own URL so use the URL provided by OD.
 				textPatientFacingUrlPortal.Text=_urlsFromHQ.HostedUrl;
 			}
-			textBoxNotificationSubject.Text=PrefC.GetString(PrefName.PatientPortalNotifySubject);
-			_webMailNotificationBody=PrefC.GetString(PrefName.PatientPortalNotifyBody);
+			textBoxNotificationSubject.Text=Prefs.GetString(PrefName.PatientPortalNotifySubject);
+			_webMailNotificationBody=Prefs.GetString(PrefName.PatientPortalNotifyBody);
 			RefreshEmail(browserWebMailNotificatonBody,_webMailNotificationBody);
 			_listPatPortalInviteRules=ApptReminderRules.GetForTypes(ApptReminderType.PatientPortalInvite);
 			if(PrefC.HasClinicsEnabled) {
@@ -162,9 +178,9 @@ namespace OpenDental
 				MessageBox.Show("You must first signup for Patient Portal via the Signup tab before activating Patient Portal Invites.");
 				return;
 			}
-			bool isPatPortalInvitesEnabled=PrefC.GetBool(PrefName.PatientPortalInviteEnabled);
+			bool isPatPortalInvitesEnabled=Prefs.GetBool(PrefName.PatientPortalInviteEnabled);
 			isPatPortalInvitesEnabled=!isPatPortalInvitesEnabled;
-			Prefs.UpdateBool(PrefName.PatientPortalInviteEnabled,isPatPortalInvitesEnabled);
+			Prefs.Set(PrefName.PatientPortalInviteEnabled,isPatPortalInvitesEnabled);
 			SecurityLogs.MakeLogEntry(Permissions.Setup,0,"Patient Portal Invites "+(isPatPortalInvitesEnabled ? "activated" : "deactivated")+".");
 			Prefs.RefreshCache();
 			Signalods.SetInvalid(InvalidType.Prefs);
@@ -177,7 +193,7 @@ namespace OpenDental
 		}
 
 		private void FillPPInviteActivationButton() {
-			if(PrefC.GetBool(PrefName.PatientPortalInviteEnabled)) {
+			if(Prefs.GetBool(PrefName.PatientPortalInviteEnabled)) {
 				textStatusInvites.Text=Lan.G(this,"Invites")+" : "+Lan.G(this,"Active");
 				textStatusInvites.BackColor=Color.FromArgb(236,255,236);//light green
 				textStatusInvites.ForeColor=Color.Black;//instead of disabled grey
@@ -358,10 +374,10 @@ namespace OpenDental
 		}
 
 		private void SaveTabPatientPortal() {
-			Prefs.UpdateString(PrefName.PatientPortalURL,textPatientFacingUrlPortal.Text);
-			Prefs.UpdateString(PrefName.PatientPortalNotifySubject,textBoxNotificationSubject.Text);
-			Prefs.UpdateString(PrefName.PatientPortalNotifyBody,_webMailNotificationBody);
-			Prefs.UpdateInt(PrefName.PortalWebEmailTemplateType,_isWebMailRawHtml?(int)EmailType.RawHtml:(int)EmailType.Html);
+			Prefs.Set(PrefName.PatientPortalURL,textPatientFacingUrlPortal.Text);
+			Prefs.Set(PrefName.PatientPortalNotifySubject,textBoxNotificationSubject.Text);
+			Prefs.Set(PrefName.PatientPortalNotifyBody,_webMailNotificationBody);
+			Prefs.Set(PrefName.PortalWebEmailTemplateType,_isWebMailRawHtml?(int)EmailType.RawHtml:(int)EmailType.Html);
 			ApptReminderRules.SyncByClinicAndTypes(_listPatPortalInviteRules.FindAll(x => x.ClinicNum==_clinicCurPPInvite.ClinicNum),
 				_clinicCurPPInvite.ClinicNum,ApptReminderType.PatientPortalInvite);
 			if(_clinicCurPPInvite.ClinicNum!=0) {

@@ -426,8 +426,8 @@ namespace OpenDentBusiness{
 		///<summary>Gets all patplans with DateNextClaims that are today or in the past.</summary>
 		public static DataTable GetOutstandingOrtho() {
 			
-			byte orthoMonthsTreat=PrefC.GetByte(PrefName.OrthoDefaultMonthsTreat);
-			long orthoDefaultAutoCodeNum=PrefC.GetLong(PrefName.OrthoAutoProcCodeNum);
+			byte orthoMonthsTreat=Prefs.GetByte(PrefName.OrthoDefaultMonthsTreat);
+			long orthoDefaultAutoCodeNum=Prefs.GetLong(PrefName.OrthoAutoProcCodeNum);
 			List<long> listOrthoBandingCodeNums = ProcedureCodes.GetOrthoBandingCodeNums();
 			string command=@"
 				SELECT CONCAT(patient.LName,', ', patient.FName) Patient, 

@@ -119,7 +119,7 @@ namespace OpenDentBusiness {
 			}
 			//get a list of users that correspond to a non-hidden provider
 			List<Provider> listProviders=Providers.GetWhere(x => x.NationalProvID==providerErx.NationalProviderID,true);
-			List<Userod> listDoseUsers=Userods.GetWhere(x => !x.IsHidden && listProviders.Exists(y => y.ProvNum==x.ProvNum));//Only consider non-hidden users.
+			List<Userod> listDoseUsers=Userods.GetWhere(x => !x.IsHidden && listProviders.Exists(y => y.ProvNum==x.ProviderId));//Only consider non-hidden users.
 			if(listDoseUsers.Count==1) {//One provider matched so simply notify the office and set the DoseSpot User Id.
 				alert=new AlertItem {
 					Actions=ActionType.MarkAsRead | ActionType.Delete | ActionType.ShowItemValue,
@@ -716,7 +716,7 @@ namespace OpenDentBusiness {
 			using(XmlWriter writer=XmlWriter.Create(strbuild,settings)) {
 				writer.WriteStartElement("ErxClinicAccessRequest");
 				writer.WriteStartElement("RegistrationKey");
-				writer.WriteString(PrefC.GetString(PrefName.RegistrationKey));
+				writer.WriteString(Prefs.GetString(PrefName.RegistrationKey));
 				writer.WriteEndElement();//End reg key
 				writer.WriteStartElement("RegKeyDisabledOverride");
 				//Allow disabled regkeys to use eRx.  This functionality matches how we handle a disabled regkey for providererx
@@ -738,7 +738,7 @@ namespace OpenDentBusiness {
 
 #else
 			OpenDentBusiness.customerUpdates.Service1 updateService=new OpenDentBusiness.customerUpdates.Service1();
-			updateService.Url=PrefC.GetString(PrefName.UpdateServerAddress);
+			updateService.Url=Prefs.GetString(PrefName.UpdateServerAddress);
 #endif
 			try {
 				string result=updateService.GetClinicErxAccess(strbuild.ToString());
@@ -856,14 +856,14 @@ namespace OpenDentBusiness {
 			bool isPractice=false;
 			if(clinicCur==null) {//Make a fake ClinicNum 0 clinic containing practice info for validation/registering a new clinician if needed.
 				clinicCur=new Clinic();
-				clinicCur.Abbr=PrefC.GetString(PrefName.PracticeTitle);
-				clinicCur.Address=PrefC.GetString(PrefName.PracticeAddress);
-				clinicCur.Address2=PrefC.GetString(PrefName.PracticeAddress2);
-				clinicCur.City=PrefC.GetString(PrefName.PracticeCity);
-				clinicCur.State=PrefC.GetString(PrefName.PracticeST);
-				clinicCur.Zip=PrefC.GetString(PrefName.PracticeZip);
-				clinicCur.Phone=PrefC.GetString(PrefName.PracticePhone);
-				clinicCur.Fax=PrefC.GetString(PrefName.PracticeFax);
+				clinicCur.Abbr=Prefs.GetString(PrefName.PracticeTitle);
+				clinicCur.Address=Prefs.GetString(PrefName.PracticeAddress);
+				clinicCur.Address2=Prefs.GetString(PrefName.PracticeAddress2);
+				clinicCur.City=Prefs.GetString(PrefName.PracticeCity);
+				clinicCur.State=Prefs.GetString(PrefName.PracticeST);
+				clinicCur.Zip=Prefs.GetString(PrefName.PracticeZip);
+				clinicCur.Phone=Prefs.GetString(PrefName.PracticePhone);
+				clinicCur.Fax=Prefs.GetString(PrefName.PracticeFax);
 				isPractice=true;
 			}
 			ValidateClinic(clinicCur,isPractice);

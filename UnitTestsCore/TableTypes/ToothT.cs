@@ -13,7 +13,7 @@ namespace UnitTestsCore {
 			//pref.ValueString="0";
 			//PrefC.DictRef.Add(pref.PrefName,pref);
 			Prefs.RefreshCache();
-			if(Prefs.UpdateInt(PrefName.UseInternationalToothNumbers,0)) {
+			if(Prefs.Set(PrefName.UseInternationalToothNumbers,0)) {
 				Prefs.RefreshCache();
 			}
 			//for display----------------------------------------------------------------

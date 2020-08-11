@@ -66,7 +66,7 @@ namespace OpenDental
 		///Some Rx require certain data to be present when printing.</summary>
 		public static string ValidateRxForSheet(RxPat rx)
 		{
-			if (!PrefC.GetBool(PrefName.RxHasProc))
+			if (!Prefs.GetBool(PrefName.RxHasProc))
 			{
 				return "";//The global preference allows the user to completely disable Rx ProcCode validation, even if some Rx are flagged as required.
 			}

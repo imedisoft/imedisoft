@@ -18,6 +18,7 @@ using CodeBase;
 using System.Collections;
 using System.Threading;
 using System.Globalization;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 	///<summary> AptCur.AptNum cannot be trusted fully inside of this form. This form can create new appointments without inserting them into the DB.
@@ -183,7 +184,7 @@ namespace OpenDental{
 			}
 			_selectedAptType=null;
 			_aptTypeIndex=0;
-			if(PrefC.GetBool(PrefName.AppointmentTypeShowPrompt) && IsNew
+			if(Prefs.GetBool(PrefName.AppointmentTypeShowPrompt) && IsNew
 				&& !AptCur.AptStatus.In(ApptStatus.PtNote,ApptStatus.PtNoteCompleted))
 			{
 				FormApptTypes FormAT=new FormApptTypes();
@@ -197,7 +198,7 @@ namespace OpenDental{
 			_isOnLoad=true;
 			new ODThread((o) => {
 				//Sleep for the delay and then set the variable to false.
-				Thread.Sleep(Math.Max((int)(TimeSpan.FromSeconds(PrefC.GetDouble(PrefName.FormClickDelay,doUseEnUSFormat:true)).TotalMilliseconds),1));
+				Thread.Sleep(Math.Max((int)(TimeSpan.FromSeconds(Prefs.GetDouble(PrefName.FormClickDelay)).TotalMilliseconds),1));
 				_isClickLocked=false;
 			}).Start();
 			_loadData=ApptEdit.GetLoadData(AptCur,IsNew);
@@ -265,11 +266,11 @@ namespace OpenDental{
 			_listAdjustments=_loadData.ListAdjustments;
 			_listClaimProcs=_loadData.ListClaimProcs;
 			_labCur=_loadData.Lab;
-			if(PrefC.GetBool(PrefName.EasyHideDentalSchools)) {
+			if(Prefs.GetBool(PrefName.EasyHideDentalSchools)) {
 				butRequirement.Visible=false;
 				textRequirement.Visible=false;
 			}
-			if(PrefC.GetBool(PrefName.ShowFeatureEhr)) {
+			if(Prefs.GetBool(PrefName.ShowFeatureEhr)) {
 				butSyndromicObservations.Visible=true;
 				labelSyndromicObservations.Visible=true;
 			}
@@ -416,7 +417,7 @@ namespace OpenDental{
 				textInsPlan1.Text=InsPlans.GetCarrierName(AptCur.InsPlan1,PlanList);
 				textInsPlan2.Text=InsPlans.GetCarrierName(AptCur.InsPlan2,PlanList);
 			}
-			if(!PrefC.GetBool(PrefName.EasyHideDentalSchools)) {
+			if(!Prefs.GetBool(PrefName.EasyHideDentalSchools)) {
 				List<ReqStudent> listStudents=_loadData.ListStudents;
 				string requirements="";
 				for(int i=0;i<listStudents.Count;i++) {
@@ -938,7 +939,7 @@ namespace OpenDental{
 					return;
 				}
 			}
-			if(pat.TxtMsgOk==YN.Unknown && PrefC.GetBool(PrefName.TextMsgOkStatusTreatAsNo)) {
+			if(pat.TxtMsgOk==YN.Unknown && Prefs.GetBool(PrefName.TextMsgOkStatusTreatAsNo)) {
 				if(MsgBox.Show(MsgBoxButtons.YesNo,"This patient might not want to receive text messages. "
 					+"Would you like to mark this patient as okay to receive text messages?")) {
 					updateTextYN=true;
@@ -1565,7 +1566,7 @@ namespace OpenDental{
 			//First check that they have an procedures attached to this appointment. If the appointment is an existing appointment that did not originally
 			//have any procedures attached, the prompt will not come up.
 			if((IsNew || _listProcNumsAttachedStart.Count>0)
-				&& PrefC.GetBool(PrefName.ApptsRequireProc)
+				&& Prefs.GetBool(PrefName.ApptsRequireProc)
 				&& gridProc.SelectedIndices.Length==0
 				&& !AptCur.AptStatus.In(ApptStatus.PtNote,ApptStatus.PtNoteCompleted)) 
 			{
@@ -1617,7 +1618,7 @@ namespace OpenDental{
 					}
 				}
 			}
-			if(PrefC.GetBool(PrefName.ApptsRequireProc) && dictProcsBeingMoved.Count>0) {//Only check if we are actually moving procedures.
+			if(Prefs.GetBool(PrefName.ApptsRequireProc) && dictProcsBeingMoved.Count>0) {//Only check if we are actually moving procedures.
 				Dictionary<long,int> dictAptsProcCount=Appointments.GetProcCountForUnscheduledApts(dictProcsBeingMoved.Keys.ToList());
 				//Check to see if the number of procedures we are stealing from the original appointment is the same
 				//as the total number of procedures on the appointment. If this is the case the appointment must be deleted.
@@ -1669,7 +1670,7 @@ namespace OpenDental{
 						+PatRestrictions.GetPatRestrictDesc(PatRestrict.ApptSchedule)+".");
 					return false;
 				}
-				if(PrefC.GetBool(PrefName.UnscheduledListNoRecalls) 
+				if(Prefs.GetBool(PrefName.UnscheduledListNoRecalls) 
 					&& Appointments.IsRecallAppointment(AptCur,gridProc.SelectedGridRows.Select(x => (Procedure)(x.Tag)).ToList())) 
 				{
 					if(MsgBox.Show(MsgBoxButtons.YesNo,"Recall appointments cannot be sent to the Unscheduled List.\r\nDelete appointment instead?")) {
@@ -1735,7 +1736,7 @@ namespace OpenDental{
 				}
 			}
 			//This change was just slightly too risky to make to 6.9, so 7.0 only
-			if(!PrefC.GetBool(PrefName.ApptAllowFutureComplete)//Not allowed to set future appts complete.
+			if(!Prefs.GetBool(PrefName.ApptAllowFutureComplete)//Not allowed to set future appts complete.
 				&& AptCur.AptStatus!=ApptStatus.Complete//was not originally complete
 				&& AptCur.AptStatus!=ApptStatus.PtNote
 				&& AptCur.AptStatus!=ApptStatus.PtNoteCompleted
@@ -1750,7 +1751,7 @@ namespace OpenDental{
 				.Select(x=>gridProc.ListGridRows[x].Tag as Procedure)
 				//true if any row had a valid procedure as a tag
 				.Any(x=>x!=null);
-			if(!PrefC.GetBool(PrefName.ApptAllowEmptyComplete)
+			if(!Prefs.GetBool(PrefName.ApptAllowEmptyComplete)
 				&& AptCur.AptStatus!=ApptStatus.Complete//was not originally complete
 				&& AptCur.AptStatus!=ApptStatus.PtNote
 				&& AptCur.AptStatus!=ApptStatus.PtNoteCompleted
@@ -1791,7 +1792,7 @@ namespace OpenDental{
 			#endregion Provider Term Date Check
 			List<Procedure> listProcs=gridProc.SelectedIndices.OfType<int>().Select(x => (Procedure)gridProc.ListGridRows[x].Tag).ToList();
 			if(listProcs.Count > 0 && comboStatus.SelectedIndex==1 && AptCur.AptDateTime.Date > DateTime.Today.Date 
-				&& !PrefC.GetBool(PrefName.FutureTransDatesAllowed)) 
+				&& !Prefs.GetBool(PrefName.FutureTransDatesAllowed)) 
 			{
 				MessageBox.Show("Not allowed to set procedures complete with future dates.");
 				return false;
@@ -1827,7 +1828,7 @@ namespace OpenDental{
 				&& !isAuxiliaryRole)//generic HL7 def enabled, appt module hidden and an inbound SIU msg defined, appts created from msgs so no overlap check
 			{
 				//Adjusts AptCur.Pattern directly when necessary.
-				if(!PrefC.GetYN(PrefName.ApptsAllowOverlap)){
+				if(!Prefs.GetBool(PrefName.ApptsAllowOverlap, true)){
 					if(ContrAppt.TryAdjustAppointmentPattern(AptCur,ContrApptPanel.GetListOpsVisible())) {
 						MessageBox.Show("Appointment is too long and would overlap another appointment.  Automatically shortened to fit.");
 //todo? Consider changing PatternSecondary length to match Pattern length.  But there are many places in the program where this would need to be done.  Probably easier to assume they can be out of synch.
@@ -1941,7 +1942,7 @@ namespace OpenDental{
 			//Do the appointment "break" automation for appointments that were just broken or going to the unscheduled list (sometimes).
 			//If BrokenApptRequiredOnMove is on and a user selects the unsched list drop down item, the appointment 
 			//ends up here with a status of UnschedList because the appointment has not been broken yet.
-			if(AptCur.AptStatus==ApptStatus.Broken && AptOld.AptStatus!=ApptStatus.Broken || (PrefC.GetBool(PrefName.BrokenApptRequiredOnMove) 
+			if(AptCur.AptStatus==ApptStatus.Broken && AptOld.AptStatus!=ApptStatus.Broken || (Prefs.GetBool(PrefName.BrokenApptRequiredOnMove) 
 				&& AptCur.AptStatus==ApptStatus.UnschedList && AptOld.AptStatus==ApptStatus.Scheduled)) 
 			{
 				AppointmentL.BreakApptHelper(AptCur,pat,_procCodeBroken);
@@ -2283,27 +2284,32 @@ namespace OpenDental{
 			FormA.ShowDialog();
 		}
 
-		private void butTask_Click(object sender,EventArgs e) {
-			if(_isInsertRequired && !UpdateListAndDB(false)) {
+		private void butTask_Click(object sender, EventArgs e)
+		{
+			if (_isInsertRequired && !UpdateListAndDB(false))
+			{
 				return;
 			}
-			FormTaskListSelect FormT=new FormTaskListSelect(TaskObjectType.Appointment);//,AptCur.AptNum);
-			FormT.Text=Lan.G(FormT,"Add Task")+" - "+FormT.Text;
+
+			FormTaskListSelect FormT = new FormTaskListSelect();
+			FormT.Text = Lan.G(FormT, "Add Task") + " - " + FormT.Text;
 			FormT.ShowDialog();
-			if(FormT.DialogResult!=DialogResult.OK) {
+			if (FormT.DialogResult != DialogResult.OK)
+			{
 				return;
 			}
-			Task task=new Task();
-			task.TaskListNum=-1;//don't show it in any list yet.
+
+			Task task = new Task();
+			task.TaskListId = -1;//don't show it in any list yet.
 			Tasks.Insert(task);
-			Task taskOld=task.Copy();
-			task.KeyNum=AptCur.AptNum;
-			task.ObjectType=TaskObjectType.Appointment;
-			task.TaskListNum=FormT.ListSelectedLists[0];
-			task.UserNum=Security.CurrentUser.Id;
-			FormTaskEdit FormTE=new FormTaskEdit(task,taskOld);
-			FormTE.IsNew=true;
-			FormTE.ShowDialog();
+			Task taskOld = task.Copy();
+			task.AppointmentId = AptCur.AptNum;
+			task.TaskListId = FormT.SelectedList.Id;
+			task.UserId = Security.CurrentUser.Id;
+
+			using var formTaskEdit = new FormTaskEdit(task);
+
+			formTaskEdit.ShowDialog(this);
 		}
 
 		private void butPin_Click(object sender,System.EventArgs e) {
@@ -2342,7 +2348,7 @@ namespace OpenDental{
 				//if there are procedures that would get detached
 				//and if they have the preference AppointmentTypeWarning on,
 				//Display the warning
-				if(listProcCodeNumsToDetach.Count>0 && PrefC.GetBool(PrefName.AppointmentTypeShowWarning)) {
+				if(listProcCodeNumsToDetach.Count>0 && Prefs.GetBool(PrefName.AppointmentTypeShowWarning)) {
 					if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Selecting this appointment type will dissociate the current procedures from this "
 						+"appointment and attach the procedures defined for this appointment type.  Do you want to continue?")) {
 						return false;
@@ -2404,20 +2410,20 @@ namespace OpenDental{
 		}
 
 		private void comboConfirmed_SelectionChangeCommitted(object sender,EventArgs e) {
-			if(PrefC.GetLong(PrefName.AppointmentTimeArrivedTrigger)!=0 //Using appointmentTimeArrivedTrigger preference
-				&& _listApptConfirmedDefs[comboConfirmed.SelectedIndex].DefNum==PrefC.GetLong(PrefName.AppointmentTimeArrivedTrigger) //selected index matches pref
+			if(Prefs.GetLong(PrefName.AppointmentTimeArrivedTrigger)!=0 //Using appointmentTimeArrivedTrigger preference
+				&& _listApptConfirmedDefs[comboConfirmed.SelectedIndex].DefNum==Prefs.GetLong(PrefName.AppointmentTimeArrivedTrigger) //selected index matches pref
 				&& String.IsNullOrWhiteSpace(textTimeArrived.Text))//time not already set 
 			{
 				textTimeArrived.Text=DateTime.Now.ToShortTimeString();
 			}
-			if(PrefC.GetLong(PrefName.AppointmentTimeSeatedTrigger)!=0 //Using AppointmentTimeSeatedTrigger preference
-				&& _listApptConfirmedDefs[comboConfirmed.SelectedIndex].DefNum==PrefC.GetLong(PrefName.AppointmentTimeSeatedTrigger) //selected index matches pref
+			if(Prefs.GetLong(PrefName.AppointmentTimeSeatedTrigger)!=0 //Using AppointmentTimeSeatedTrigger preference
+				&& _listApptConfirmedDefs[comboConfirmed.SelectedIndex].DefNum==Prefs.GetLong(PrefName.AppointmentTimeSeatedTrigger) //selected index matches pref
 				&& String.IsNullOrWhiteSpace(textTimeSeated.Text))//time not already set 
 			{
 				textTimeSeated.Text=DateTime.Now.ToShortTimeString();
 			}
-			if(PrefC.GetLong(PrefName.AppointmentTimeDismissedTrigger)!=0 //Using AppointmentTimeDismissedTrigger preference
-				&& _listApptConfirmedDefs[comboConfirmed.SelectedIndex].DefNum==PrefC.GetLong(PrefName.AppointmentTimeDismissedTrigger) //selected index matches pref
+			if(Prefs.GetLong(PrefName.AppointmentTimeDismissedTrigger)!=0 //Using AppointmentTimeDismissedTrigger preference
+				&& _listApptConfirmedDefs[comboConfirmed.SelectedIndex].DefNum==Prefs.GetLong(PrefName.AppointmentTimeDismissedTrigger) //selected index matches pref
 				&& String.IsNullOrWhiteSpace(textTimeDismissed.Text))//time not already set 
 			{
 				textTimeDismissed.Text=DateTime.Now.ToShortTimeString();
@@ -2426,7 +2432,7 @@ namespace OpenDental{
 
 		private void comboStatus_SelectionChangeCommitted(object sender,EventArgs e) {
 			//This block of logic must happen first(The if statement).
-			if(PrefC.GetBool(PrefName.BrokenApptRequiredOnMove)) {
+			if(Prefs.GetBool(PrefName.BrokenApptRequiredOnMove)) {
 				if(AptOld.AptStatus==ApptStatus.Scheduled && _selectedApptStatus==ApptStatus.UnschedList) {
 					FormApptBreakRequired formApptForceBreak=new FormApptBreakRequired();
 					formApptForceBreak.ShowDialog();
@@ -2573,7 +2579,7 @@ namespace OpenDental{
 					return;
 				}
 				//Only want to be able to break already scheduled appointments, this does not include new appointments in "schedule" status.
-				if(AptOld.AptNum!=0 && AptCur.AptStatus==ApptStatus.Scheduled && PrefC.GetBool(PrefName.BrokenApptRequiredOnMove)) {
+				if(AptOld.AptNum!=0 && AptCur.AptStatus==ApptStatus.Scheduled && Prefs.GetBool(PrefName.BrokenApptRequiredOnMove)) {
 					FormApptBreakRequired formApptForceBreak=new FormApptBreakRequired();
 					formApptForceBreak.ShowDialog();
 					if(formApptForceBreak.DialogResult!=DialogResult.OK) {
@@ -2734,7 +2740,7 @@ namespace OpenDental{
 					//any changes to AptCur. We had an issue with changes to AptCur were happening outside of the OK_Click method.
 					_listAppointments.RemoveAll(x => x.AptNum==AptCur.AptNum);
 					_listAppointments.Add(AptCur);
-					if(AptCur.AptStatus==ApptStatus.Scheduled && PrefC.GetBool(PrefName.InsChecksFrequency) && !CheckFrequencies()) {
+					if(AptCur.AptStatus==ApptStatus.Scheduled && Prefs.GetBool(PrefName.InsChecksFrequency) && !CheckFrequencies()) {
 						e.Cancel=true;
 						return;
 					}
@@ -2744,7 +2750,7 @@ namespace OpenDental{
 				//Note that Procedures.Sync is never used.  This is intentional.  In order to properly use procedure.Sync logic in this form we would
 				//need to enhance ProcEdit and all its possible child forms to also not insert into DB until OK is clicked.  This would be a massive undertaking
 				//and as such we just immediately push changes to DB.
-				if(AptCur.AptStatus==ApptStatus.Scheduled && !_isDeleted && PrefC.GetBool(PrefName.InsChecksFrequency) && !CheckFrequencies()) {
+				if(AptCur.AptStatus==ApptStatus.Scheduled && !_isDeleted && Prefs.GetBool(PrefName.InsChecksFrequency) && !CheckFrequencies()) {
 					e.Cancel=true;
 					return;
 				}

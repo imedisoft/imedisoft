@@ -220,14 +220,14 @@ namespace OpenDental
 			{
 				return;
 			}
-			if (PrefC.GetBool(PrefName.ClaimReportReceivedByService))
+			if (Prefs.GetBool(PrefName.ClaimReportReceivedByService))
 			{
 				return;
 			}
 			int claimReportRetrieveIntervalMS = (int)TimeSpan.FromMinutes(PrefC.GetInt(PrefName.ClaimReportReceiveInterval)).TotalMilliseconds;
 			ODThread odThread = new ODThread(claimReportRetrieveIntervalMS, (o) =>
 			{
-				string claimReportComputer = PrefC.GetString(PrefName.ClaimReportComputerName);
+				string claimReportComputer = Prefs.GetString(PrefName.ClaimReportComputerName);
 				if (claimReportComputer == "" || claimReportComputer != Dns.GetHostName())
 				{
 					return;
@@ -327,7 +327,7 @@ namespace OpenDental
 				return;
 			}
 			//For EHR users we want to load up the EHR code list from the obfuscated dll in a background thread because it takes roughly 11 seconds to load up.
-			if (!PrefC.GetBool(PrefName.ShowFeatureEhr))
+			if (!Prefs.GetBool(PrefName.ShowFeatureEhr))
 			{
 				return;
 			}
@@ -367,14 +367,19 @@ namespace OpenDental
 
 		private void EnableFeaturesWorker()
 		{
-			Pref featurePref = Prefs.GetPref(PrefName.ProgramAdditionalFeatures.ToString());
-			if (featurePref == null || PrefC.GetDateT(PrefName.ProgramAdditionalFeatures) > MiscData.GetNowDateTime())
-			{
+			var featureDate = Prefs.GetDateTimeOrNull(PrefName.ProgramAdditionalFeatures);
+			if (!featureDate.HasValue || featureDate > DateTime.UtcNow)
+            {
 				return;
-			}
+            }
+
+
+
+
 			DateTime dateOriginal = MiscData.GetNowDateTime().AddMinutes(-30);
-			featurePref.Value = dateOriginal.AddDays(1).ToString(CultureInfo.InvariantCulture);//default try again in one day unless set below.
-			Prefs.Update(featurePref);
+
+			Prefs.Set(PrefName.ProgramAdditionalFeatures, dateOriginal.AddDays(1));
+
 			Signalods.SetInvalid(InvalidType.Prefs);
 			string response = WebServiceMainHQProxy.GetWebServiceMainHQInstance()
 				.EnableAdditionalFeatures(PayloadHelper.CreatePayload("", eServiceCode.Undefined));
@@ -401,8 +406,8 @@ namespace OpenDental
 			{
 				long days = 7;//default value;
 				long.TryParse(node.InnerText, out days);
-				Prefs.UpdateDateT(PrefName.ProgramAdditionalFeatures, dateOriginal.AddDays(days));
-				Prefs.Update(featurePref);
+
+				Prefs.Set(PrefName.ProgramAdditionalFeatures, dateOriginal.AddDays(days));
 			}
 		}
 
@@ -777,7 +782,7 @@ namespace OpenDental
 				//List<UserOdPref> listBlockedTaskLists = null;
 				//JM: Bug fix, but we do not know what would cause Security.CurUser to be null. Worst case task wont show till next signal tick.
 				long userNumCur = Security.CurrentUser?.Id ?? 0;
-				List<OpenDentBusiness.Task> listRefreshedTasks = Tasks.GetNewTasksThisUser(userNumCur, Clinics.ClinicNum, listEditedTaskNums);
+				List<OpenDentBusiness.Task> listRefreshedTasks = Tasks.GetNewTasksThisUser(userNumCur, listEditedTaskNums).ToList();
 
 				// TODO: Fix me...
 
@@ -807,7 +812,7 @@ namespace OpenDental
 			{
 				return;
 			}
-			if (!(ODEnvironment.IsRunningOnDbServer(MiscData.GetODServer()) && PrefC.GetBool(PrefName.ShowFeatureEhr)))
+			if (!(ODEnvironment.IsRunningOnDbServer(MiscData.GetMySqlServer()) && Prefs.GetBool(PrefName.ShowFeatureEhr)))
 			{
 				return;
 			}
@@ -826,7 +831,7 @@ namespace OpenDental
 			double nistOffset = double.MaxValue;
 			ODException.SwallowAnyException(() =>
 			{//Invalid NIST Server URL if fails
-				nistOffset = ntp.getTime(PrefC.GetString(PrefName.NistTimeServerUrl));
+				nistOffset = ntp.getTime(Prefs.GetString(PrefName.NistTimeServerUrl));
 			});
 			if (nistOffset != double.MaxValue)
 			{
@@ -849,12 +854,12 @@ namespace OpenDental
 			{
 				return;
 			}
-			string interval = PrefC.GetStringSilent(PrefName.MobileSyncIntervalMinutes);
+			string interval = Prefs.GetString(PrefName.MobileSyncIntervalMinutes);
 			if (interval == "" || interval == "0")
 			{//not a paid customer or chooses not to synch
 				return;
 			}
-			if (System.Environment.MachineName.ToUpper() != PrefC.GetStringSilent(PrefName.MobileSyncWorkstationName).ToUpper())
+			if (System.Environment.MachineName.ToUpper() != Prefs.GetString(PrefName.MobileSyncWorkstationName).ToUpper())
 			{
 				//Since GetStringSilent returns "" before OD is connected to db, this gracefully loops out
 				return;

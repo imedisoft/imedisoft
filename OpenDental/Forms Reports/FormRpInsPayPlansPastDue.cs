@@ -197,17 +197,17 @@ namespace OpenDental {
 				SaveFileDialog saveFileDialog=new SaveFileDialog();
 				saveFileDialog.AddExtension=true;
 				saveFileDialog.FileName=fileName;
-				if(!Directory.Exists(PrefC.GetString(PrefName.ExportPath))) {
+				if(!Directory.Exists(Prefs.GetString(PrefName.ExportPath))) {
 					try {
-						Directory.CreateDirectory(PrefC.GetString(PrefName.ExportPath));
-						saveFileDialog.InitialDirectory=PrefC.GetString(PrefName.ExportPath);
+						Directory.CreateDirectory(Prefs.GetString(PrefName.ExportPath));
+						saveFileDialog.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
 					}
 					catch {
 						//initialDirectory will be blank
 					}
 				}
 				else {
-					saveFileDialog.InitialDirectory=PrefC.GetString(PrefName.ExportPath);
+					saveFileDialog.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
 				}
 				saveFileDialog.Filter="Text files(*.txt)|*.txt|Excel Files(*.xls)|*.xls|All files(*.*)|*.*";
 				saveFileDialog.FilterIndex=0;

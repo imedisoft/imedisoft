@@ -296,8 +296,8 @@ namespace UnitTests.Procedures_Test {
 
 		///<summary>Creates a procedure and returns its procedure fee.</summary>
 		private double GetProcFee(string suffix,bool doUseMedicalCode) {
-			Prefs.UpdateBool(PrefName.InsPpoAlwaysUseUcrFee,true);
-			Prefs.UpdateBool(PrefName.MedicalFeeUsedForNewProcs,doUseMedicalCode);
+			Prefs.Set(PrefName.InsPpoAlwaysUseUcrFee,true);
+			Prefs.Set(PrefName.MedicalFeeUsedForNewProcs,doUseMedicalCode);
 			Patient pat=PatientT.CreatePatient(suffix);
 			long ucrFeeSchedNum=FeeSchedT.CreateFeeSched(FeeScheduleType.Normal,"UCR "+suffix);
 			FeeSchedT.UpdateUCRFeeSched(pat,ucrFeeSchedNum);
@@ -466,7 +466,7 @@ namespace UnitTests.Procedures_Test {
 			//Change the proc date
 			date=date.AddDays(4);
 			List<ClaimProc> listClaimProcsForEoProcs;
-			Dictionary<PrefName,Procedure> listEoProcs=Procedures.GetDictInsHistProcs(pat.PatNum,priClaimProc.InsSubNum,out listClaimProcsForEoProcs);
+			Dictionary<string, Procedure> listEoProcs=Procedures.GetDictInsHistProcs(pat.PatNum,priClaimProc.InsSubNum,out listClaimProcsForEoProcs);
 			//The procedure and claimproc need the new date.
 			Procedures.InsertOrUpdateInsHistProcedure(pat,PrefName.InsHistPerioULCodes,date,ins.ListInsPlans.FirstOrDefault().PlanNum,
 				ins.ListInsSubs.FirstOrDefault().InsSubNum,listEoProcs[PrefName.InsHistPerioULCodes],listClaimProcsForEoProcs);
@@ -491,7 +491,7 @@ namespace UnitTests.Procedures_Test {
 			//Change the proc date
 			date=date.AddDays(4);
 			List<ClaimProc> listClaimProcsForEoProcs;
-			Dictionary<PrefName,Procedure> dictEOAndCProcs=Procedures.GetDictInsHistProcs(pat.PatNum,ins.PriInsSub.InsSubNum,out listClaimProcsForEoProcs);
+			Dictionary<string, Procedure> dictEOAndCProcs=Procedures.GetDictInsHistProcs(pat.PatNum,ins.PriInsSub.InsSubNum,out listClaimProcsForEoProcs);
 			//The procedure and claimproc need the new date.
 			Procedures.InsertOrUpdateInsHistProcedure(pat,PrefName.InsHistPerioULCodes,date,ins.ListInsPlans.FirstOrDefault().PlanNum,
 				ins.ListInsSubs.FirstOrDefault().InsSubNum,dictEOAndCProcs[PrefName.InsHistPerioULCodes],listClaimProcsForEoProcs);
@@ -516,7 +516,7 @@ namespace UnitTests.Procedures_Test {
 			List<ClaimProc> listClaimProcs=ClaimProcs.Refresh(pat.PatNum);
 			ClaimT.ReceiveClaim(claim,listClaimProcs);
 			List<ClaimProc> listClaimProcsForEoProcs;
-			Dictionary<PrefName,Procedure> dictEOAndCProcs=Procedures.GetDictInsHistProcs(pat.PatNum,ins.PriInsSub.InsSubNum,out listClaimProcsForEoProcs);
+			Dictionary<string,Procedure> dictEOAndCProcs=Procedures.GetDictInsHistProcs(pat.PatNum,ins.PriInsSub.InsSubNum,out listClaimProcsForEoProcs);
 			Procedure procFromDict=dictEOAndCProcs[PrefName.InsHistPerioULCodes];
 			Assert.AreEqual(date.Date,procFromDict.ProcDate.Date);
 			Assert.AreEqual(ProcStat.C,procFromDict.ProcStatus);
@@ -530,7 +530,7 @@ namespace UnitTests.Procedures_Test {
 			DateTime date=DateTime.Today;
 			InsuranceInfo ins=InsuranceT.AddInsurance(pat,suffix);
 			List<ClaimProc> listClaimProcsForEoProcs;
-			Dictionary<PrefName,Procedure> listEoProcs=Procedures.GetDictInsHistProcs(pat.PatNum,ins.ListInsSubs.FirstOrDefault().InsSubNum,out listClaimProcsForEoProcs);
+			Dictionary<string, Procedure> listEoProcs=Procedures.GetDictInsHistProcs(pat.PatNum,ins.ListInsSubs.FirstOrDefault().InsSubNum,out listClaimProcsForEoProcs);
 			//The procedure and claimproc need the new date.
 			Procedures.InsertOrUpdateInsHistProcedure(pat,PrefName.InsHistProphyCodes,date,ins.ListInsPlans.FirstOrDefault().PlanNum,
 				ins.ListInsSubs.FirstOrDefault().InsSubNum,listEoProcs[PrefName.InsHistProphyCodes],listClaimProcsForEoProcs);
@@ -2704,7 +2704,7 @@ namespace UnitTests.Procedures_Test {
 			Assert.AreEqual(6.39,claimProc.InsEstTotal);
 			Assert.AreEqual(0,claimProc.WriteOffEst);
 			//Now test insurance numbers with calculating secondary PPO insurance writeoffs
-			Prefs.UpdateBool(PrefName.InsPPOsecWriteoffs,true);
+			Prefs.Set(PrefName.InsPPOsecWriteoffs,true);
 			Procedures.ComputeEstimates(proc,patNum,ref claimProcs,false,planList,patPlans,benefitList,histList,loopList,true,pat.Age,subList);
 			claimProcs=ClaimProcs.Refresh(patNum);
 			claimProc=ClaimProcs.GetEstimate(claimProcs,procNum,planNum1,subNum1);
@@ -2713,7 +2713,7 @@ namespace UnitTests.Procedures_Test {
 			claimProc=ClaimProcs.GetEstimate(claimProcs,procNum,planNum2,subNum2);
 			Assert.AreEqual(6.39,claimProc.InsEstTotal);
 			Assert.AreEqual(148.01,claimProc.WriteOffEst);
-			Prefs.UpdateBool(PrefName.InsPPOsecWriteoffs,false);
+			Prefs.Set(PrefName.InsPPOsecWriteoffs,false);
 		}
 
 		///<summary></summary>

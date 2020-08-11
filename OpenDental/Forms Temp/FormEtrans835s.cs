@@ -108,8 +108,8 @@ namespace OpenDental {
 			string carrierName,string checkTraceNum,string amountMin,string amountMax,string controlId)
 		{
 			Cursor=Cursors.WaitCursor;
-			labelControlId.Visible=PrefC.GetBool(PrefName.EraShowControlIdFilter);
-			textControlId.Visible=PrefC.GetBool(PrefName.EraShowControlIdFilter);
+			labelControlId.Visible=Prefs.GetBool(PrefName.EraShowControlIdFilter);
+			textControlId.Visible=Prefs.GetBool(PrefName.EraShowControlIdFilter);
 			Action actionCloseProgress=null;
 			if(isRefreshNeeded) {
 				actionCloseProgress=ODProgress.Show(EventCategory.Etrans,typeof(EtransEvent),Lan.G(this,"Gathering data")+"...");
@@ -180,7 +180,7 @@ namespace OpenDental {
 				gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableEtrans835s","Clinic"),70));
 			}
 			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableEtrans835s","Code"),37,HorizontalAlignment.Center));
-			if(PrefC.GetBool(PrefName.EraShowControlIdFilter)) {
+			if(Prefs.GetBool(PrefName.EraShowControlIdFilter)) {
 				gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableEtrans835s","ControlID"),70){ IsWidthDynamic=true });
 			}
 			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableEtrans835s","Note"),250){ IsWidthDynamic=true,DynamicWeight=2 });
@@ -252,7 +252,7 @@ namespace OpenDental {
 				}
 				#endregion
 				row.Cells.Add(x835._paymentMethodCode);
-				if(PrefC.GetBool(PrefName.EraShowControlIdFilter)) {
+				if(Prefs.GetBool(PrefName.EraShowControlIdFilter)) {
 					row.Cells.Add(x835.ControlId);
 				}
 				row.Cells.Add(etrans.Note);

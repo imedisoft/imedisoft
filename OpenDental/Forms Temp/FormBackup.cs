@@ -30,14 +30,14 @@ namespace OpenDental {
 
 		private void FormBackup_Load(object sender, System.EventArgs e) {
 			#region Backup Tab
-			//usesInternalImages=(PrefC.GetString(PrefName.ImageStore)=="OpenDental.Imaging.SqlStore");
-			checkExcludeImages.Checked=PrefC.GetBool(PrefName.BackupExcludeImageFolder);
-			checkArchiveDoBackupFirst.Checked=PrefC.GetBool(PrefName.ArchiveDoBackupFirst);
-			textBackupFromPath.Text=PrefC.GetString(PrefName.BackupFromPath);
-			textBackupToPath.Text=PrefC.GetString(PrefName.BackupToPath);
-			textBackupRestoreFromPath.Text=PrefC.GetString(PrefName.BackupRestoreFromPath);
-			textBackupRestoreToPath.Text=PrefC.GetString(PrefName.BackupRestoreToPath);
-			textBackupRestoreAtoZToPath.Text=PrefC.GetString(PrefName.BackupRestoreAtoZToPath);
+			//usesInternalImages=(Prefs.GetString(PrefName.ImageStore)=="OpenDental.Imaging.SqlStore");
+			checkExcludeImages.Checked=Prefs.GetBool(PrefName.BackupExcludeImageFolder);
+			checkArchiveDoBackupFirst.Checked=Prefs.GetBool(PrefName.ArchiveDoBackupFirst);
+			textBackupFromPath.Text=Prefs.GetString(PrefName.BackupFromPath);
+			textBackupToPath.Text=Prefs.GetString(PrefName.BackupToPath);
+			textBackupRestoreFromPath.Text=Prefs.GetString(PrefName.BackupRestoreFromPath);
+			textBackupRestoreToPath.Text=Prefs.GetString(PrefName.BackupRestoreToPath);
+			textBackupRestoreAtoZToPath.Text=Prefs.GetString(PrefName.BackupRestoreAtoZToPath);
 			textBackupRestoreAtoZToPath.Enabled=ShouldUseAtoZFolder();
 			butBrowseRestoreAtoZTo.Enabled=ShouldUseAtoZFolder();
 			if(ProgramProperties.IsAdvertisingDisabled(ProgramName.CentralDataStorage)) {
@@ -45,20 +45,20 @@ namespace OpenDental {
 			}
 			#endregion
 			#region Archive Tab
-			textArchivePass.Text= PrefC.GetString(PrefName.ArchivePassHash);
+			textArchivePass.Text= Prefs.GetString(PrefName.ArchivePassHash);
 			textArchivePass.PasswordChar=(textArchivePass.Text=="" ? default(char) : '*');
-			textArchiveServerName.Text=PrefC.GetString(PrefName.ArchiveServerName);
-			textArchiveUser.Text=PrefC.GetString(PrefName.ArchiveUserName);
+			textArchiveServerName.Text=Prefs.GetString(PrefName.ArchiveServerName);
+			textArchiveUser.Text=Prefs.GetString(PrefName.ArchiveUserName);
 			//If pref is set, use it.  Otherwise, 3 years ago.
 			dateTimeArchive.Value=PrefC.GetDate(PrefName.ArchiveDate)==DateTime.MinValue?DateTime.Today.AddYears(-3):PrefC.GetDate(PrefName.ArchiveDate);
 			ToggleBackupSettings();
 		#endregion
 			#region Supplemental Tab
-			checkSupplementalBackupEnabled.Checked=PrefC.GetBool(PrefName.SupplementalBackupEnabled);
+			checkSupplementalBackupEnabled.Checked=Prefs.GetBool(PrefName.SupplementalBackupEnabled);
 			if(PrefC.GetDate(PrefName.SupplementalBackupDateLastComplete).Year > 1880) {
 				textSupplementalBackupDateLastComplete.Text=PrefC.GetDate(PrefName.SupplementalBackupDateLastComplete).ToString();
 			}
-			textSupplementalBackupCopyNetworkPath.Text=PrefC.GetString(PrefName.SupplementalBackupNetworkPath);
+			textSupplementalBackupCopyNetworkPath.Text=Prefs.GetString(PrefName.SupplementalBackupNetworkPath);
 			#endregion Supplemental Tab
 		}
 
@@ -91,16 +91,16 @@ namespace OpenDental {
 
 		private bool SaveTabPrefs() {
 			bool hasChanged=false;
-			hasChanged |= Prefs.UpdateBool(PrefName.BackupExcludeImageFolder,checkExcludeImages.Checked);
-			hasChanged |= Prefs.UpdateBool(PrefName.ArchiveDoBackupFirst,checkArchiveDoBackupFirst.Checked);
-			hasChanged |= Prefs.UpdateString(PrefName.BackupFromPath,textBackupFromPath.Text);
-			hasChanged |= Prefs.UpdateString(PrefName.BackupToPath,textBackupToPath.Text);
-			hasChanged |= Prefs.UpdateString(PrefName.BackupRestoreFromPath,textBackupRestoreFromPath.Text);
-			hasChanged |= Prefs.UpdateString(PrefName.BackupRestoreToPath,textBackupRestoreToPath.Text);
-			hasChanged |= Prefs.UpdateString(PrefName.BackupRestoreAtoZToPath,textBackupRestoreAtoZToPath.Text);
-			hasChanged |= Prefs.UpdateString(PrefName.ArchiveServerName,textArchiveServerName.Text);
-			hasChanged |= Prefs.UpdateString(PrefName.ArchiveUserName,textArchiveUser.Text);
-			hasChanged |= Prefs.UpdateString(PrefName.ArchivePassHash, textArchivePass.Text);
+			hasChanged |= Prefs.Set(PrefName.BackupExcludeImageFolder,checkExcludeImages.Checked);
+			hasChanged |= Prefs.Set(PrefName.ArchiveDoBackupFirst,checkArchiveDoBackupFirst.Checked);
+			hasChanged |= Prefs.Set(PrefName.BackupFromPath,textBackupFromPath.Text);
+			hasChanged |= Prefs.Set(PrefName.BackupToPath,textBackupToPath.Text);
+			hasChanged |= Prefs.Set(PrefName.BackupRestoreFromPath,textBackupRestoreFromPath.Text);
+			hasChanged |= Prefs.Set(PrefName.BackupRestoreToPath,textBackupRestoreToPath.Text);
+			hasChanged |= Prefs.Set(PrefName.BackupRestoreAtoZToPath,textBackupRestoreAtoZToPath.Text);
+			hasChanged |= Prefs.Set(PrefName.ArchiveServerName,textArchiveServerName.Text);
+			hasChanged |= Prefs.Set(PrefName.ArchiveUserName,textArchiveUser.Text);
+			hasChanged |= Prefs.Set(PrefName.ArchivePassHash, textArchivePass.Text);
 			return hasChanged;
 		}
 
@@ -164,11 +164,11 @@ namespace OpenDental {
 				return;
 			}
 			//test saving defaults
-			if(textBackupFromPath.Text!=PrefC.GetString(PrefName.BackupFromPath)
-				|| textBackupToPath.Text!=PrefC.GetString(PrefName.BackupToPath)
-				|| textBackupRestoreFromPath.Text!=PrefC.GetString(PrefName.BackupRestoreFromPath)
-				|| textBackupRestoreToPath.Text!=PrefC.GetString(PrefName.BackupRestoreToPath)
-				|| textBackupRestoreAtoZToPath.Text!=PrefC.GetString(PrefName.BackupRestoreAtoZToPath)) 
+			if(textBackupFromPath.Text!=Prefs.GetString(PrefName.BackupFromPath)
+				|| textBackupToPath.Text!=Prefs.GetString(PrefName.BackupToPath)
+				|| textBackupRestoreFromPath.Text!=Prefs.GetString(PrefName.BackupRestoreFromPath)
+				|| textBackupRestoreToPath.Text!=Prefs.GetString(PrefName.BackupRestoreToPath)
+				|| textBackupRestoreAtoZToPath.Text!=Prefs.GetString(PrefName.BackupRestoreAtoZToPath)) 
 			{
 				if(MsgBox.Show(MsgBoxButtons.YesNo,"Set as default?") && SaveTabPrefs()) {
 					DataValid.SetInvalid(InvalidType.Prefs);
@@ -540,7 +540,7 @@ namespace OpenDental {
 					return;
 				}
 			}
-			Version programVersionDb=new Version(PrefC.GetStringNoCache(PrefName.ProgramVersion));
+			Version programVersionDb=new Version(Prefs.GetStringNoCache(PrefName.ProgramVersion));
 			Version programVersionCur=new Version(Application.ProductVersion);
 			if(programVersionDb!=programVersionCur) {
 				MessageBox.Show("The restored database version is different than the version installed and requires a restart.  The program will now close.");
@@ -604,9 +604,9 @@ namespace OpenDental {
 					MessageBox.Show("Please enter a User.");
 					return;
 				}
-				if(string.IsNullOrWhiteSpace(PrefC.GetString(PrefName.ArchiveKey))) {//If archive key isn't set, generate a new one.
+				if(string.IsNullOrWhiteSpace(Prefs.GetString(PrefName.ArchiveKey))) {//If archive key isn't set, generate a new one.
 					string archiveKey=MiscUtils.CreateRandomAlphaNumericString(10);
-					Prefs.UpdateString(PrefName.ArchiveKey,archiveKey);
+					Prefs.Set(PrefName.ArchiveKey,archiveKey);
 				}
 			}
 			#endregion
@@ -636,7 +636,8 @@ namespace OpenDental {
 				DataValid.SetInvalid(InvalidType.Prefs);
 				MessageBox.Show("Saved");
 			}
-            PrefName.ArchiveDate.Update(dateTimeArchive.Value);
+
+			Prefs.Set(PrefName.ArchiveDate, dateTimeArchive.Value);
         }
 
 		#endregion
@@ -663,7 +664,7 @@ namespace OpenDental {
 				MessageBox.Show("Invalid or inaccessible "+labelSupplementalBackupCopyNetworkPath.Text+".");//This label text will rarely change.
 				return;
 			}
-			if(Prefs.UpdateBool(PrefName.SupplementalBackupEnabled,checkSupplementalBackupEnabled.Checked)) {
+			if(Prefs.Set(PrefName.SupplementalBackupEnabled,checkSupplementalBackupEnabled.Checked)) {
 				try {
 					//Inform HQ when the supplemental backups are enabled/disabled and which security admin performed the change.
 					PayloadItem pliStatus=new PayloadItem(
@@ -679,7 +680,7 @@ namespace OpenDental {
 				SecurityLogs.MakeLogEntry(Permissions.SupplementalBackup,0,
 					"Supplemental backup has been "+(checkSupplementalBackupEnabled.Checked?"Enabled":"Disabled")+".");
 			}
-			if(Prefs.UpdateString(PrefName.SupplementalBackupNetworkPath,textSupplementalBackupCopyNetworkPath.Text)) {
+			if(Prefs.Set(PrefName.SupplementalBackupNetworkPath,textSupplementalBackupCopyNetworkPath.Text)) {
 				SecurityLogs.MakeLogEntry(Permissions.SupplementalBackup,0,
 					labelSupplementalBackupCopyNetworkPath.Text+" changed to '"+textSupplementalBackupCopyNetworkPath.Text+"'.");
 			}

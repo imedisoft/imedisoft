@@ -106,8 +106,8 @@ namespace UnitTests.HL7_Tests {
 				Assert.Fail("Test 1: Couldn't locate guarantor.");
 			}
 			//Set up the rest of pat information
-			correctPat.PriProv=PrefC.GetLong(PrefName.PracticeDefaultProv);
-			correctPat.BillingType=PrefC.GetLong(PrefName.PracticeDefaultBillType);
+			correctPat.PriProv=Prefs.GetLong(PrefName.PracticeDefaultProv);
+			correctPat.BillingType=Prefs.GetLong(PrefName.PracticeDefaultBillType);
 			correctPat.FName="Jan";
 			correctPat.MiddleI="F";
 			correctPat.LName="Smiths";
@@ -129,8 +129,8 @@ namespace UnitTests.HL7_Tests {
 			correctPat.SSN="111226666";
 			correctPat.FeeSched=FeeScheds.GetByExactName("Standard").FeeSchedNum;
 			//Set up the rest of guar information
-			correctGuar.PriProv=PrefC.GetLong(PrefName.PracticeDefaultProv);
-			correctGuar.BillingType=PrefC.GetLong(PrefName.PracticeDefaultBillType);
+			correctGuar.PriProv=Prefs.GetLong(PrefName.PracticeDefaultProv);
+			correctGuar.BillingType=Prefs.GetLong(PrefName.PracticeDefaultBillType);
 			correctGuar.FName="Jon";
 			correctGuar.MiddleI="F";
 			correctGuar.LName="Smiths";
@@ -199,8 +199,8 @@ namespace UnitTests.HL7_Tests {
 				Assert.Fail("Test 2: Couldn't locate guarantor.");
 			}
 			//Set up the rest of pat information
-			correctPat.PriProv=PrefC.GetLong(PrefName.PracticeDefaultProv);
-			correctPat.BillingType=PrefC.GetLong(PrefName.PracticeDefaultBillType);
+			correctPat.PriProv=Prefs.GetLong(PrefName.PracticeDefaultProv);
+			correctPat.BillingType=Prefs.GetLong(PrefName.PracticeDefaultBillType);
 			correctPat.FName="Jane";
 			correctPat.MiddleI="N";
 			correctPat.LName="Smith";
@@ -221,8 +221,8 @@ namespace UnitTests.HL7_Tests {
 			correctPat.SSN="111224444";
 			correctPat.FeeSched=FeeScheds.GetByExactName("Standard").FeeSchedNum;
 			//Set up the rest of guar information
-			correctGuar.PriProv=PrefC.GetLong(PrefName.PracticeDefaultProv);
-			correctGuar.BillingType=PrefC.GetLong(PrefName.PracticeDefaultBillType);
+			correctGuar.PriProv=Prefs.GetLong(PrefName.PracticeDefaultProv);
+			correctGuar.BillingType=Prefs.GetLong(PrefName.PracticeDefaultBillType);
 			correctGuar.FName="John";
 			correctGuar.MiddleI="L";
 			correctGuar.LName="Smith";
@@ -413,7 +413,7 @@ namespace UnitTests.HL7_Tests {
 			if(apt.Pattern!="XXXX") {
 				retval+="Appointment.Pattern is not 'XXXX'.\r\n";
 			}
-			if(apt.ProvNum!=pat.PriProv || pat.PriProv!=PrefC.GetLong(PrefName.PracticeDefaultProv)) {
+			if(apt.ProvNum!=pat.PriProv || pat.PriProv!=Prefs.GetLong(PrefName.PracticeDefaultProv)) {
 				retval+="Appointment.ProvNum is not PracticeDefaultProv.\r\n";
 			}
 			if(retval.Length>0) {
@@ -457,8 +457,8 @@ namespace UnitTests.HL7_Tests {
 				Assert.Fail("Test 6: Couldn't locate patient.");
 			}
 			//Set up the rest of pat information
-			correctPat.PriProv=PrefC.GetLong(PrefName.PracticeDefaultProv);
-			correctPat.BillingType=PrefC.GetLong(PrefName.PracticeDefaultBillType);
+			correctPat.PriProv=Prefs.GetLong(PrefName.PracticeDefaultProv);
+			correctPat.BillingType=Prefs.GetLong(PrefName.PracticeDefaultBillType);
 			correctPat.FName="Jane2";
 			correctPat.MiddleI="N";
 			correctPat.LName="Smith2";
@@ -507,7 +507,7 @@ namespace UnitTests.HL7_Tests {
 			if(apt.Pattern!="XXXXXXXX") {
 				retval+="Appointment.Pattern is not 'XXXXXXXX'.\r\n";
 			}
-			if(apt.ProvNum!=pat.PriProv || pat.PriProv!=PrefC.GetLong(PrefName.PracticeDefaultProv)) {
+			if(apt.ProvNum!=pat.PriProv || pat.PriProv!=Prefs.GetLong(PrefName.PracticeDefaultProv)) {
 				retval+="Appointment.ProvNum is not PracticeDefaultProv.\r\n";
 			}
 			CompareGuarAndPat(pat,correctPat,guar,correctGuar,hl7TestInterfaceEnum,races);

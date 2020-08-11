@@ -1,50 +1,37 @@
-﻿using System;
+﻿using Imedisoft.Data.Annotations;
+using System;
 using System.Collections;
 
-namespace OpenDentBusiness {
+namespace OpenDentBusiness
+{
+    [Table("task_notes")]
+	public class TaskNote
+	{
+		[PrimaryKey]
+		public long Id;
 
-	///<summary>A tasknote is a note that may be added to a task. Many notes may be attached to a task. A user may only edit their own tasknotes within a task.</summary>
-	[Serializable]
-	public class TaskNote:TableBase {
-		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
-		public long TaskNoteNum;
-		///<summary>FK to task.TaskNum. The task this tasknote is attached to.</summary>
-		public long TaskNum;
-		///<summary>FK to userod.UserNum. The user who created this tasknote.</summary>
-		public long UserNum;
-		///<summary>Date and time the note was created or last modified (editable).</summary>
-		[CrudColumn(SpecialType=CrudSpecialColType.DateTEntryEditable)]
-		public DateTime DateTimeNote;
-		///<summary>Note. Text that the user wishes to show on the task.</summary>
-		[CrudColumn(SpecialType=CrudSpecialColType.TextIsClob)]
-		public string Note;
+		/// <summary>
+		/// The ID of the task the note is attached to.
+		/// </summary>
+		[ForeignKey(typeof(Task), nameof(Task.Id))]
+		public long TaskId;
 
-		///<summary></summary>
-		public TaskNote Copy() {
-			return (TaskNote)MemberwiseClone();
-		}
+		/// <summary>
+		/// The ID of the user that created the note.
+		/// </summary>
+		[ForeignKey(typeof(Userod), nameof(Userod.Id))]
+		public long UserId;
 
+		/// <summary>
+		/// The note.
+		/// </summary>
+		public string Note = "";
 
+		/// <summary>
+		/// The date and time on which the note was created or last modified.
+		/// </summary>
+		public DateTime DateModified;
 
+		public TaskNote Copy() => (TaskNote)MemberwiseClone();
 	}
-
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

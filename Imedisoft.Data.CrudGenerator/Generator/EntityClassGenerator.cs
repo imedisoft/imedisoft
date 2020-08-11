@@ -1,6 +1,7 @@
 ﻿using Imedisoft.Data.CrudGenerator.Schema;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Drawing;
 using System.Reflection;
 using System.Text;
@@ -236,6 +237,25 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 
 		private static string Unpack(string value, Column column)
         {
+			if (column.Type.IsGenericType && column.Type.GetGenericTypeDefinition() == typeof(Nullable<>))
+			{
+				var underlyingType = Nullable.GetUnderlyingType(column.Type);
+
+				if (underlyingType == typeof(bool)) return $"({value} == DBNull.Value ? null : (Convert.ToInt32({value}) == 1))";
+				if (underlyingType == typeof(byte)) return $"{value} as byte?";
+				if (underlyingType == typeof(sbyte)) return $"{value} as sybte?";
+				if (underlyingType == typeof(char)) return $"{value} as char?";
+				if (underlyingType == typeof(double)) return $"{value} as double?";
+				if (underlyingType == typeof(float)) return $"{value} as float?";
+				if (underlyingType == typeof(int)) return $"{value} as int?";
+				if (underlyingType == typeof(uint)) return $"{value} as uint?";
+				if (underlyingType == typeof(long)) return $"{value} as long?";
+				if (underlyingType == typeof(ulong)) return $"{value} as ulong?";
+				if (underlyingType == typeof(short)) return $"{value} as short?";
+				if (underlyingType == typeof(ushort)) return $"{value} as ushort?";
+				if (underlyingType == typeof(DateTime)) return $"{value} as DateTime?";
+			}
+
 			if (column.Type.IsEnum)
             {
 				return $"({column.Type.Name})Convert.ToInt32({value})";
@@ -272,6 +292,11 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 
         private static string Pack(string value, Column column)
         {
+			if (column.Type.IsGenericType && column.Type.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+				return $"({value}.HasValue ? (object){value}.Value : DBNull.Value)";
+            }
+
 			if (column.Type.IsEnum) return $"(int){value}";
 			if (column.Type == typeof(bool)) return $"({value} ? 1 : 0)";
 			if (column.Type == typeof(byte)) return value;
@@ -425,7 +450,7 @@ namespace Imedisoft.Data.CrudGenerator.Generator
         {
             if (table.PrimaryKey == null) return;
 
-			var param = ParamName(table.Name);
+			var param = ParamName(table.Type.Name);
 			var paramNew = param + "New";
 			var paramOld = param + "Old";
 

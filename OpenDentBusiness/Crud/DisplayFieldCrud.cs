@@ -44,9 +44,9 @@ namespace OpenDentBusiness.Crud{
 			DisplayField displayField;
 			foreach(DataRow row in table.Rows) {
 				displayField=new DisplayField();
-				displayField.DisplayFieldNum    = PIn.Long  (row["DisplayFieldNum"].ToString());
+				displayField.Id    = PIn.Long  (row["DisplayFieldNum"].ToString());
 				displayField.InternalName       = PIn.String(row["InternalName"].ToString());
-				displayField.ItemOrder          = PIn.Int   (row["ItemOrder"].ToString());
+				displayField.Order          = PIn.Int   (row["ItemOrder"].ToString());
 				displayField.Description        = PIn.String(row["Description"].ToString());
 				displayField.ColumnWidth        = PIn.Int   (row["ColumnWidth"].ToString());
 				displayField.Category           = (OpenDentBusiness.DisplayFieldCategory)PIn.Int(row["Category"].ToString());
@@ -75,9 +75,9 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("DescriptionOverride");
 			foreach(DisplayField displayField in listDisplayFields) {
 				table.Rows.Add(new object[] {
-					POut.Long  (displayField.DisplayFieldNum),
+					POut.Long  (displayField.Id),
 					            displayField.InternalName,
-					POut.Int   (displayField.ItemOrder),
+					POut.Int   (displayField.Order),
 					            displayField.Description,
 					POut.Int   (displayField.ColumnWidth),
 					POut.Int   ((int)displayField.Category),
@@ -97,7 +97,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one DisplayField into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(DisplayField displayField,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				displayField.DisplayFieldNum=ReplicationServers.GetKey("displayfield","DisplayFieldNum");
+				displayField.Id=ReplicationServers.GetKey("displayfield","DisplayFieldNum");
 			}
 			string command="INSERT INTO displayfield (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -105,11 +105,11 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="InternalName,ItemOrder,Description,ColumnWidth,Category,ChartViewNum,PickList,DescriptionOverride) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(displayField.DisplayFieldNum)+",";
+				command+=POut.Long(displayField.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(displayField.InternalName)+"',"
-				+    POut.Int   (displayField.ItemOrder)+","
+				+    POut.Int   (displayField.Order)+","
 				+"'"+POut.String(displayField.Description)+"',"
 				+    POut.Int   (displayField.ColumnWidth)+","
 				+    POut.Int   ((int)displayField.Category)+","
@@ -124,9 +124,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramPickList);
 			}
 			else {
-				displayField.DisplayFieldNum=Database.ExecuteInsert(command,paramPickList);
+				displayField.Id=Database.ExecuteInsert(command,paramPickList);
 			}
-			return displayField.DisplayFieldNum;
+			return displayField.Id;
 		}
 
 		///<summary>Inserts one DisplayField into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -139,18 +139,18 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO displayfield (";
 			if(!useExistingPK) {
-				displayField.DisplayFieldNum=ReplicationServers.GetKeyNoCache("displayfield","DisplayFieldNum");
+				displayField.Id=ReplicationServers.GetKeyNoCache("displayfield","DisplayFieldNum");
 			}
 			if(useExistingPK) {
 				command+="DisplayFieldNum,";
 			}
 			command+="InternalName,ItemOrder,Description,ColumnWidth,Category,ChartViewNum,PickList,DescriptionOverride) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(displayField.DisplayFieldNum)+",";
+				command+=POut.Long(displayField.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(displayField.InternalName)+"',"
-				+    POut.Int   (displayField.ItemOrder)+","
+				+    POut.Int   (displayField.Order)+","
 				+"'"+POut.String(displayField.Description)+"',"
 				+    POut.Int   (displayField.ColumnWidth)+","
 				+    POut.Int   ((int)displayField.Category)+","
@@ -165,23 +165,23 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramPickList);
 			}
 			else {
-				displayField.DisplayFieldNum=Database.ExecuteInsert(command,paramPickList);
+				displayField.Id=Database.ExecuteInsert(command,paramPickList);
 			}
-			return displayField.DisplayFieldNum;
+			return displayField.Id;
 		}
 
 		///<summary>Updates one DisplayField in the database.</summary>
 		public static void Update(DisplayField displayField) {
 			string command="UPDATE displayfield SET "
 				+"InternalName       = '"+POut.String(displayField.InternalName)+"', "
-				+"ItemOrder          =  "+POut.Int   (displayField.ItemOrder)+", "
+				+"ItemOrder          =  "+POut.Int   (displayField.Order)+", "
 				+"Description        = '"+POut.String(displayField.Description)+"', "
 				+"ColumnWidth        =  "+POut.Int   (displayField.ColumnWidth)+", "
 				+"Category           =  "+POut.Int   ((int)displayField.Category)+", "
 				+"ChartViewNum       =  "+POut.Long  (displayField.ChartViewNum)+", "
 				+"PickList           =  "+DbHelper.ParamChar+"paramPickList, "
 				+"DescriptionOverride= '"+POut.String(displayField.DescriptionOverride)+"' "
-				+"WHERE DisplayFieldNum = "+POut.Long(displayField.DisplayFieldNum);
+				+"WHERE DisplayFieldNum = "+POut.Long(displayField.Id);
 			if(displayField.PickList==null) {
 				displayField.PickList="";
 			}
@@ -196,9 +196,9 @@ namespace OpenDentBusiness.Crud{
 				if(command!="") { command+=",";}
 				command+="InternalName = '"+POut.String(displayField.InternalName)+"'";
 			}
-			if(displayField.ItemOrder != oldDisplayField.ItemOrder) {
+			if(displayField.Order != oldDisplayField.Order) {
 				if(command!="") { command+=",";}
-				command+="ItemOrder = "+POut.Int(displayField.ItemOrder)+"";
+				command+="ItemOrder = "+POut.Int(displayField.Order)+"";
 			}
 			if(displayField.Description != oldDisplayField.Description) {
 				if(command!="") { command+=",";}
@@ -232,7 +232,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			var paramPickList = new MySqlParameter("paramPickList", POut.StringParam(displayField.PickList));
 			command="UPDATE displayfield SET "+command
-				+" WHERE DisplayFieldNum = "+POut.Long(displayField.DisplayFieldNum);
+				+" WHERE DisplayFieldNum = "+POut.Long(displayField.Id);
 			Database.ExecuteNonQuery(command,paramPickList);
 			return true;
 		}
@@ -243,7 +243,7 @@ namespace OpenDentBusiness.Crud{
 			if(displayField.InternalName != oldDisplayField.InternalName) {
 				return true;
 			}
-			if(displayField.ItemOrder != oldDisplayField.ItemOrder) {
+			if(displayField.Order != oldDisplayField.Order) {
 				return true;
 			}
 			if(displayField.Description != oldDisplayField.Description) {

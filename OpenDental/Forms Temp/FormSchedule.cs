@@ -596,7 +596,7 @@ namespace OpenDental{
 					listBoxProvs.SelectedIndex=0;//select the 'none' entry; 
 				}
 			}
-			else if(PrefC.GetBool(PrefName.ScheduleProvEmpSelectAll)) {
+			else if(Prefs.GetBool(PrefName.ScheduleProvEmpSelectAll)) {
 				//Employee Listbox
 				for(int i=1;i<listBoxEmps.Items.Count;i++) {
 					listBoxEmps.SetSelected(i,true);

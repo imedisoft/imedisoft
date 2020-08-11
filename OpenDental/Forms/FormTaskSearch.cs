@@ -1,239 +1,308 @@
+using OpenDental;
+using OpenDental.UI;
+using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using OpenDentBusiness;
-using OpenDental.UI;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Windows.Forms;
 
-namespace OpenDental {
-	public partial class FormTaskSearch:ODForm {
+namespace Imedisoft.Forms
+{
+    public partial class FormTaskSearch : FormBase
+	{
+		private readonly List<Def> taskPriorities;
+		private readonly List<long> preloadedTaskIds = new List<long>();
+		private List<Userod> users;
+		private List<Tasks.TaskSearchResult> searchResults;
 
-		private DataTable _tableTasks;
-		private List<long> _listPreLoadedTaskNums;
-		private List<Def> _listTaskPriorities;
-		private List<Userod> _listUsers;
-		public TaskObjectType GotoType;
-		public long UserNum;
-		public long GotoKeyNum;
-		public bool IsSelectionMode;
-		public long SelectedTaskNum;
-		public string TaskNum;
+		public bool IsSelectionMode { get; set; }
 
-		public FormTaskSearch(List<long> listPreLoadedTask=null) {
+		/// <summary>
+		/// Gets the ID of the selected task.
+		/// </summary>
+		public long SelectedTaskId { get; set; }
+
+		/// <summary>
+		/// Gets the ID of the task.
+		/// </summary>
+		public long? TaskId { get; set; }
+
+		public FormTaskSearch(List<long> preloadedTaskIds = null)
+		{
 			InitializeComponent();
-			Lan.F(this);
-			_listPreLoadedTaskNums=listPreLoadedTask;
+
+			taskPriorities = Defs.GetDefsForCategory(DefCat.TaskPriorities);
+
+			if (preloadedTaskIds != null)
+			{
+				this.preloadedTaskIds.AddRange(preloadedTaskIds);
+			}
 		}
 
-		private void FormTaskSearch_Load(object sender,EventArgs e) {
-			if(IsSelectionMode) {
-				butClose.Text="Cancel";
-			}
-			//Note: DateTime strings that are empty actually are " " due to how the empty datetime control behaves.
-			_listTaskPriorities=Defs.GetDefsForCategory(DefCat.TaskPriorities);
-			long userNum=0;
-			comboUsers.Items.Add(Lan.G(this,"All"));
-			comboUsers.Items.Add(Lan.G(this,"Me"));
-			comboUsers.SelectedIndex=0;//Always default to All.
-			_listUsers=Userods.GetAll();//List of all users for searching.  I figure we don't want to exclude hidden ones for searching.
-			_listUsers.ForEach(x => comboUsers.Items.Add(x.UserName));
-			comboPriority.Items.Add(Lan.G(this,"All"));
-			for(int i=0;i<_listTaskPriorities.Count;i++) {
-				comboPriority.Items.Add(_listTaskPriorities[i].ItemName);
-			}
-			comboPriority.SelectedIndex=0;
-			checkLimit.Checked=true;
-			if(PrefC.HasReportServer) {
-				checkReportServer.Checked=true;
-			}
-			else {
-				checkReportServer.Visible=false;
-			}
-			List<long> listTaskNums=new List<long>() {};
-			if(_listPreLoadedTaskNums!=null) {
-				listTaskNums=_listPreLoadedTaskNums;
-				textTaskNum.Text=string.Join(",",listTaskNums);//Reflect taskNums in UI
-			}
-			if(!string.IsNullOrEmpty(TaskNum)) {
-				listTaskNums.Add(PIn.Long(TaskNum));
-				textTaskNum.Text=string.Join(",",listTaskNums);
-			}
-			_tableTasks=Tasks.GetDataSet(userNum,new List<long>(),listTaskNums," "," "," "," ",textDescription.Text,0,0,checkBoxIncludesTaskNotes.Checked,
-				checkBoxIncludeCompleted.Checked,true,checkReportServer.Checked);
-			FillGrid();
-		}
+		private void FormTaskSearch_Load(object sender, EventArgs e)
+		{
+			if (IsSelectionMode) cancelButton.Text = "&Cancel";
 
-		private void FillGrid() {
-			gridTasks.BeginUpdate();
-			gridTasks.ListGridColumns.Clear();
-			gridTasks.ListGridRows.Clear();
-			GridColumn col=new GridColumn("Created",70,HorizontalAlignment.Left);
-			gridTasks.ListGridColumns.Add(col);
-			col=new GridColumn("Completed",70,HorizontalAlignment.Left);
-			gridTasks.ListGridColumns.Add(col);
-			col=new GridColumn("Description",70){ IsWidthDynamic=true };
-			gridTasks.ListGridColumns.Add(col);
-			GridRow row;
-			for(int i=0;i<_tableTasks.Rows.Count;i++) {
-				row=new GridRow();
-				row.Cells.Add(_tableTasks.Rows[i]["dateCreate"].ToString());
-				row.Cells.Add(_tableTasks.Rows[i]["dateComplete"].ToString());
-				row.Cells.Add(_tableTasks.Rows[i]["description"].ToString());
-				row.Note=_tableTasks.Rows[i]["note"].ToString();
-				row.ColorLborder=Color.Black;
-				row.ColorText=Color.FromArgb(PIn.Int(_tableTasks.Rows[i]["color"].ToString()));
-				gridTasks.ListGridRows.Add(row);
-				row.Tag=_tableTasks.Rows[i]["TaskNum"].ToString();
-			}
-			gridTasks.EndUpdate();
-		}
+			users = Userods.GetAll();
+			userComboBox.Items.Add("All");
+			userComboBox.Items.Add("Me");
+			userComboBox.SelectedIndex = 0;
+			foreach (var user in users)
+            {
+				userComboBox.Items.Add(user);
+            }
 
-		private void butRefresh_Click(object sender,EventArgs e) {
+			priorityComboBox.Items.Add("All");
+			priorityComboBox.SelectedIndex = 0;
+			foreach (var priority in taskPriorities)
+			{
+				priorityComboBox.Items.Add(priority);
+			}
+
+			if (TaskId.HasValue && !preloadedTaskIds.Contains(TaskId.Value)) 
+				preloadedTaskIds.Add(TaskId.Value);
+
+			if (preloadedTaskIds.Count > 0)
+				taskIdTextBox.Text = string.Join(", ", preloadedTaskIds);
+
 			RefreshTable();
+		}
+
+		private void FillGrid()
+		{
+			tasksGrid.BeginUpdate();
+			tasksGrid.ListGridColumns.Clear();
+			tasksGrid.ListGridRows.Clear();
+			tasksGrid.ListGridColumns.Add(new GridColumn("Created", 70, HorizontalAlignment.Left));
+			tasksGrid.ListGridColumns.Add(new GridColumn("Completed", 70, HorizontalAlignment.Left));
+			tasksGrid.ListGridColumns.Add(new GridColumn("Description", 70) { IsWidthDynamic = true });
+
+			foreach (var searchResult in searchResults)
+			{
+				var gridRow = new GridRow();
+
+				gridRow.Cells.Add(searchResult.DateAdded);
+				gridRow.Cells.Add(searchResult.DateCompleted);
+				gridRow.Cells.Add(searchResult.Description);
+				gridRow.ColorLborder = Color.Black;
+				gridRow.ColorText = Color.FromArgb(searchResult.Color);
+				gridRow.Tag = searchResult;
+
+				tasksGrid.ListGridRows.Add(gridRow);
+			}
+
+			tasksGrid.EndUpdate();
+		}
+
+		private void RefreshButton_Click(object sender, EventArgs e) 
+			=> RefreshTable();
+
+		private void RefreshTable()
+		{
+			long? priorityId = null;
+			if (priorityComboBox.SelectedItem is Def priority)
+            {
+				priorityId = priority.DefNum;
+            }
+
+			long? userId = null;
+			if (userComboBox.SelectedIndex == 1) userId = Security.CurrentUser.Id;
+			else if (userComboBox.SelectedItem is Userod user)
+            {
+				userId = user.Id;
+            }
+
+			IEnumerable<long> taskListIds = null;
+			if (taskListTextBox.Text != "")
+			{
+				taskListIds = TaskLists.GetIdsByDescription(taskListTextBox.Text);
+				if (!taskListIds.Any())
+				{
+					ShowError("Task List not found.");
+
+					return;
+				}
+			}
+
+			IEnumerable<long> taskIds = null;
+			if (taskIdTextBox.Text != "")
+			{
+				try
+				{
+					taskIds = taskIdTextBox.Text
+						.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+						.Select(long.Parse)
+						.ToList();
+				}
+				catch
+				{
+					ShowError("Invalid task number format.");
+
+					return;
+				}
+			}
+
+			long? patientId = null;
+
+			var patientIdStr = patientIdTextBox.Text.Trim();
+			if (patientIdStr.Length > 0)
+			{
+				if (long.TryParse(patientIdStr, out var result))
+                {
+					ShowError("Invalid patient number format.");
+
+					return;
+				}
+
+				patientId = result;
+			}
+
+			searchResults = Tasks.GetDataSet(
+				userId,
+				taskListIds,
+				taskIds,
+				dateCreatedFromDateTimePicker.Text,
+				dateCreatedToDateTimePicker.Text,
+				dateCompletedFromDateTimePicker.Text,
+				dateCompletedToDateTimePicker.Text,
+				descriptionTextBox.Text,
+				priorityId, patientId,
+				includeCompletedCheckBox.Checked,
+				limitCheckBox.Checked).ToList();
+
 			FillGrid();
 		}
 
-		private void RefreshTable() {
-			long priority=0;
-			if(comboPriority.SelectedIndex!=0) {
-				priority=_listTaskPriorities[comboPriority.SelectedIndex-1].DefNum;
-			}
-			long userNum=0;
-			if(comboUsers.SelectedIndex==1){//Me
-				userNum=Security.CurrentUser.Id;
-			}
-			else if(comboUsers.SelectedIndex!=0) {
-				userNum=_listUsers[comboUsers.SelectedIndex-2].Id;//1(All) + 1(Me)= 2
-			}
-			List<long> listTaskListNums=new List<long>();
-			if(textTaskList.Text!="") {
-				listTaskListNums=TaskLists.GetNumsByDescription(textTaskList.Text,checkReportServer.Checked);
-				if(listTaskListNums.Count==0) {
-					MessageBox.Show("Task List not found.");
+		private void TasksGrid_CellDoubleClick(object sender, ODGridClickEventArgs e)
+		{
+			if (tasksGrid.ListGridRows[e.Row].Tag is Tasks.TaskSearchResult searchResult)
+			{
+				if (IsSelectionMode)
+				{
+					SelectedTaskId = searchResult.Id;
+
+					DialogResult = DialogResult.OK;
+
 					return;
 				}
-			}
-			List<long> listTaskNums=new List<long>() {};
-			if(textTaskNum.Text!="") {
-				try {
-					listTaskNums=textTaskNum.Text.Split(new[] { ',' },StringSplitOptions.RemoveEmptyEntries).Select(x =>PIn.Long(x)).ToList();
+
+				var task = Tasks.GetOne(searchResult.Id);
+				if (task != null)
+				{
+					var formTaskEdit = new FormTaskEdit(task);
+
+					formTaskEdit.Show();
 				}
-				catch {
-					MessageBox.Show("Invalid Task Num format.");
+				else
+				{
+					ShowError("The task no longer exists.");
+				}
+			}
+		}
+
+		private void PickUserButton_Click(object sender, EventArgs e)
+		{
+            using var formUserPick = new FormUserPick
+            {
+                ListUserodsFiltered = Userods.GetAll()
+            };
+
+            if (formUserPick.ShowDialog(this) != DialogResult.OK)
+            {
+                return;
+            }
+
+            userComboBox.SelectedIndex = users.FindIndex(x => x.Id == formUserPick.SelectedUserNum) + 2;
+        }
+
+		private void PickPatientButton_Click(object sender, EventArgs e)
+		{
+            using var formPatientSelect = new FormPatientSelect
+            {
+                SelectionModeOnly = true
+            };
+
+            if (formPatientSelect.ShowDialog(this) != DialogResult.OK)
+            {
+                return;
+            }
+
+            patientIdTextBox.Text = formPatientSelect.SelectedPatientId.ToString();
+        }
+
+		private void DateCreatedFromDateTimePicker_ValueChanged(object sender, EventArgs e) 
+			=> dateCreatedFromDateTimePicker.CustomFormat = CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
+
+		private void DateCreatedToDateTimePicker_ValueChanged(object sender, EventArgs e) 
+			=> dateCreatedToDateTimePicker.CustomFormat = CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
+
+		private void ClearCreatedButton_Click(object sender, EventArgs e)
+		{
+			dateCreatedFromDateTimePicker.Value = DateTime.UtcNow;
+			dateCreatedToDateTimePicker.Value = DateTime.UtcNow;
+			dateCreatedFromDateTimePicker.CustomFormat = " ";
+			dateCreatedToDateTimePicker.CustomFormat = " ";
+		}
+
+		private void DateCompletedFromDateTimePicker_ValueChanged(object sender, EventArgs e) 
+			=> dateCompletedFromDateTimePicker.CustomFormat = CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
+
+		private void DateCompletedToDateTimePicker_ValueChanged(object sender, EventArgs e) 
+			=> dateCompletedToDateTimePicker.CustomFormat = CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
+
+		private void ClearCompletedButton_Click(object sender, EventArgs e)
+		{
+			dateCompletedFromDateTimePicker.Value = DateTime.UtcNow;
+			dateCompletedToDateTimePicker.Value = DateTime.UtcNow;
+			dateCompletedFromDateTimePicker.CustomFormat = " ";
+			dateCompletedToDateTimePicker.CustomFormat = " ";
+		}
+
+		private void NewTaskButton_Click(object sender, EventArgs e)
+		{
+			var task = new Task()
+			{
+				UserId = Security.CurrentUser.Id
+			};
+
+			using (var formTaskListSelect = new FormTaskListSelect())
+			{
+				formTaskListSelect.Text = "Add Task - " + formTaskListSelect.Text;
+
+				if (formTaskListSelect.ShowDialog(this) != DialogResult.OK ||
+					formTaskListSelect.SelectedList == null)
+				{
 					return;
 				}
+
+				task.TaskListId = formTaskListSelect.SelectedList.Id;
 			}
-			long patNum=0;
-			if(textPatNum.Text!="") {
-				try {
-					patNum=PIn.Long(textPatNum.Text);
-				}
-				catch {
-					MessageBox.Show("Invalid PatNum format.");
+
+			using (var formTaskEdit = new FormTaskEdit(task))
+			{
+				if (formTaskEdit.ShowDialog(this) != DialogResult.OK)
+				{
 					return;
 				}
+
+				Tasks.Insert(task);
+
+				SelectedTaskId = task.Id;
 			}
-			_tableTasks=Tasks.GetDataSet(userNum,listTaskListNums,listTaskNums,dateCreatedFrom.Text,dateCreatedTo.Text,dateCompletedFrom.Text,
-				dateCompletedTo.Text,textDescription.Text,priority,patNum,checkBoxIncludesTaskNotes.Checked,checkBoxIncludeCompleted.Checked,
-				checkLimit.Checked,checkReportServer.Checked);
-		}
 
-		private void gridTasks_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			long taskNum=PIn.Long(gridTasks.ListGridRows[e.Row].Tag.ToString());
-			if(IsSelectionMode) {
-				SelectedTaskNum=taskNum;
-				DialogResult=DialogResult.OK;
-				return;
-			}
-			Task task=Tasks.GetOne(taskNum);
-			if(task!=null) {
-				FormTaskEdit FormTE=new FormTaskEdit(task);
-				FormTE.Show();
-			}
-			else {
-				MessageBox.Show("The task no longer exists.");
-			}
-		}
+			DialogResult = DialogResult.OK;
 
-		private void butPatPicker_Click(object sender,EventArgs e) {
-			FormPatientSelect FormPS=new FormPatientSelect();
-			FormPS.SelectionModeOnly=true;
-			if(FormPS.ShowDialog()==DialogResult.OK) {
-				long patNum=FormPS.SelectedPatNum;
-				textPatNum.Text=patNum.ToString();
-			}
-		}
-
-		private void butUserPicker_Click(object sender,EventArgs e) {
-			FormUserPick FormUP=new FormUserPick();
-			FormUP.ListUserodsFiltered=Userods.GetAll();
-			if(FormUP.ShowDialog()==DialogResult.OK) {
-				comboUsers.SelectedIndex=_listUsers.FindIndex(x => x.Id==FormUP.SelectedUserNum)+2;
-			}
-		}
-
-		private void dateCreatedFrom_ValueChanged(object sender,EventArgs e) {
-			dateCreatedFrom.CustomFormat=CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
-		}
-
-		private void dateCreatedTo_ValueChanged(object sender,EventArgs e) {
-			dateCreatedTo.CustomFormat=CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
-		}
-
-		private void dateCompletedFrom_ValueChanged(object sender,EventArgs e) {
-			dateCompletedFrom.CustomFormat=CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
-		}
-
-		private void dateCompletedTo_ValueChanged(object sender,EventArgs e) {
-			dateCompletedTo.CustomFormat=CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
-		}
-
-		private void butClearCreated_Click(object sender,EventArgs e) {
-			dateCreatedFrom.Value=DateTime.UtcNow;
-			dateCreatedTo.Value=DateTime.UtcNow;
-			dateCreatedFrom.CustomFormat=" ";
-			dateCreatedTo.CustomFormat=" ";
-		}
-
-		private void butClearCompleted_Click(object sender,EventArgs e) {
-			dateCompletedFrom.Value=DateTime.UtcNow;
-			dateCompletedTo.Value=DateTime.UtcNow;
-			dateCompletedFrom.CustomFormat=" ";
-			dateCompletedTo.CustomFormat=" ";
-		}
-
-		private void butNewTask_Click(object sender,EventArgs e) {
-			FormTaskListSelect FormTLS = new FormTaskListSelect(TaskObjectType.Patient);
-			FormTLS.Text=Lan.G(FormTLS,"Add Task")+" - "+FormTLS.Text;
-			FormTLS.ShowDialog();
-			if(FormTLS.DialogResult!=DialogResult.OK || FormTLS.ListSelectedLists[0]==0) {
-				return;
-			}
-			Task task = new Task() { TaskListNum=-1 };//don't show it in any list yet.
-			Tasks.Insert(task);
-			Task taskOld = task.Copy();
-			task.UserNum=Security.CurrentUser.Id;
-			task.TaskListNum=FormTLS.ListSelectedLists[0];
-			FormTaskEdit FormTE = new FormTaskEdit(task,taskOld);
-			FormTE.IsNew=true;
-			FormTE.ShowDialog();//modal
-			if(FormTE.DialogResult!=DialogResult.OK) {
-				return;
-			}
-			SelectedTaskNum=task.TaskNum;
-			DialogResult=DialogResult.OK;
 			Close();
 		}
 
-		private void butClose_Click(object sender,EventArgs e) {
-			DialogResult=DialogResult.Cancel;
+		private void CancelButton_Click(object sender, EventArgs e)
+		{
+			DialogResult = DialogResult.Cancel;
+
 			Close();
 		}
-
 	}
 }

@@ -22,23 +22,23 @@ namespace OpenDental {
 		}
 
 		private void FormOrthoSetup_Load(object sender,EventArgs e) {
-			checkPatClone.Checked=PrefC.GetBool(PrefName.ShowFeaturePatientClone);
-			checkApptModuleShowOrthoChartItem.Checked=PrefC.GetBool(PrefName.ApptModuleShowOrthoChartItem);
-			checkOrthoEnabled.Checked=PrefC.GetBool(PrefName.OrthoEnabled);
-			checkOrthoFinancialInfoInChart.Checked=PrefC.GetBool(PrefName.OrthoCaseInfoInOrthoChart);
-			checkOrthoClaimMarkAsOrtho.Checked=PrefC.GetBool(PrefName.OrthoClaimMarkAsOrtho);
-			checkOrthoClaimUseDatePlacement.Checked=PrefC.GetBool(PrefName.OrthoClaimUseDatePlacement);
-			textOrthoMonthsTreat.Text=PrefC.GetByte(PrefName.OrthoDefaultMonthsTreat).ToString();
-			_orthoAutoProcCodeNum=PrefC.GetLong(PrefName.OrthoAutoProcCodeNum);
+			checkPatClone.Checked=Prefs.GetBool(PrefName.ShowFeaturePatientClone);
+			checkApptModuleShowOrthoChartItem.Checked=Prefs.GetBool(PrefName.ApptModuleShowOrthoChartItem);
+			checkOrthoEnabled.Checked=Prefs.GetBool(PrefName.OrthoEnabled);
+			checkOrthoFinancialInfoInChart.Checked=Prefs.GetBool(PrefName.OrthoCaseInfoInOrthoChart);
+			checkOrthoClaimMarkAsOrtho.Checked=Prefs.GetBool(PrefName.OrthoClaimMarkAsOrtho);
+			checkOrthoClaimUseDatePlacement.Checked=Prefs.GetBool(PrefName.OrthoClaimUseDatePlacement);
+			textOrthoMonthsTreat.Text=Prefs.GetByte(PrefName.OrthoDefaultMonthsTreat).ToString();
+			_orthoAutoProcCodeNum=Prefs.GetLong(PrefName.OrthoAutoProcCodeNum);
 			textOrthoAutoProc.Text=ProcedureCodes.GetStringProcCode(_orthoAutoProcCodeNum);
-			checkConsolidateInsPayment.Checked=PrefC.GetBool(PrefName.OrthoInsPayConsolidated);
-			string strListOrthoNums = PrefC.GetString(PrefName.OrthoPlacementProcsList);
+			checkConsolidateInsPayment.Checked=Prefs.GetBool(PrefName.OrthoInsPayConsolidated);
+			string strListOrthoNums = Prefs.GetString(PrefName.OrthoPlacementProcsList);
 			if(strListOrthoNums!="") {
 				_listOrthoPlacementCodeNums.AddRange(strListOrthoNums.Split(new char[] { ',' }).ToList().Select(x => PIn.Long(x)));
 			}
-			textBandingCodes.Text=PrefC.GetString(PrefName.OrthoBandingCodes);
-			textVisitCodes.Text=PrefC.GetString(PrefName.OrthoVisitCodes);
-			textDebondCodes.Text=PrefC.GetString(PrefName.OrthoDebondCodes);
+			textBandingCodes.Text=Prefs.GetString(PrefName.OrthoBandingCodes);
+			textVisitCodes.Text=Prefs.GetString(PrefName.OrthoVisitCodes);
+			textDebondCodes.Text=Prefs.GetString(PrefName.OrthoDebondCodes);
 			RefreshListBoxProcs();
 		}
 
@@ -95,22 +95,22 @@ namespace OpenDental {
 				MessageBox.Show("Default months treatment must be between 0 and 255 months.");
 				return;
 			}
-			if(PrefC.GetBool(PrefName.ShowFeaturePatientClone)!=checkPatClone.Checked) {
+			if(Prefs.GetBool(PrefName.ShowFeaturePatientClone)!=checkPatClone.Checked) {
 				MessageBox.Show("You will need to restart OpenDental for this change to take effect.");
 			}
-			if(Prefs.UpdateBool(PrefName.ShowFeaturePatientClone,checkPatClone.Checked)
-			| Prefs.UpdateBool(PrefName.ApptModuleShowOrthoChartItem,checkApptModuleShowOrthoChartItem.Checked)
-			| Prefs.UpdateBool(PrefName.OrthoEnabled,checkOrthoEnabled.Checked)
-			| Prefs.UpdateBool(PrefName.OrthoCaseInfoInOrthoChart,checkOrthoFinancialInfoInChart.Checked)
-			| Prefs.UpdateBool(PrefName.OrthoClaimMarkAsOrtho,checkOrthoClaimMarkAsOrtho.Checked)
-			| Prefs.UpdateBool(PrefName.OrthoClaimUseDatePlacement,checkOrthoClaimUseDatePlacement.Checked)
-			| Prefs.UpdateByte(PrefName.OrthoDefaultMonthsTreat,PIn.Byte(textOrthoMonthsTreat.Text))
-			| Prefs.UpdateBool(PrefName.OrthoInsPayConsolidated,checkConsolidateInsPayment.Checked)
-			| Prefs.UpdateLong(PrefName.OrthoAutoProcCodeNum,_orthoAutoProcCodeNum)
-			| Prefs.UpdateString(PrefName.OrthoPlacementProcsList,string.Join(",",_listOrthoPlacementCodeNums))
-			| Prefs.UpdateString(PrefName.OrthoBandingCodes,PIn.String(textBandingCodes.Text))
-			| Prefs.UpdateString(PrefName.OrthoVisitCodes,PIn.String(textVisitCodes.Text))
-			| Prefs.UpdateString(PrefName.OrthoDebondCodes,PIn.String(textDebondCodes.Text))
+			if(Prefs.Set(PrefName.ShowFeaturePatientClone,checkPatClone.Checked)
+			| Prefs.Set(PrefName.ApptModuleShowOrthoChartItem,checkApptModuleShowOrthoChartItem.Checked)
+			| Prefs.Set(PrefName.OrthoEnabled,checkOrthoEnabled.Checked)
+			| Prefs.Set(PrefName.OrthoCaseInfoInOrthoChart,checkOrthoFinancialInfoInChart.Checked)
+			| Prefs.Set(PrefName.OrthoClaimMarkAsOrtho,checkOrthoClaimMarkAsOrtho.Checked)
+			| Prefs.Set(PrefName.OrthoClaimUseDatePlacement,checkOrthoClaimUseDatePlacement.Checked)
+			| Prefs.Set(PrefName.OrthoDefaultMonthsTreat,PIn.Byte(textOrthoMonthsTreat.Text))
+			| Prefs.Set(PrefName.OrthoInsPayConsolidated,checkConsolidateInsPayment.Checked)
+			| Prefs.Set(PrefName.OrthoAutoProcCodeNum,_orthoAutoProcCodeNum)
+			| Prefs.Set(PrefName.OrthoPlacementProcsList,string.Join(",",_listOrthoPlacementCodeNums))
+			| Prefs.Set(PrefName.OrthoBandingCodes,PIn.String(textBandingCodes.Text))
+			| Prefs.Set(PrefName.OrthoVisitCodes,PIn.String(textVisitCodes.Text))
+			| Prefs.Set(PrefName.OrthoDebondCodes,PIn.String(textDebondCodes.Text))
 			) {
 				_hasChanges=true;
 			}

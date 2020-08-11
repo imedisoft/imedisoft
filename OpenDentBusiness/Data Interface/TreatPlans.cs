@@ -209,7 +209,7 @@ namespace OpenDentBusiness{
 			if(activePlan==null && listProcsForActive.Count>0) {
 				activePlan=new TreatPlan() {
 					Heading=Lans.g("TreatPlans","Active Treatment Plan"),
-					Note=PrefC.GetString(PrefName.TreatmentPlanNote),
+					Note=Prefs.GetString(PrefName.TreatmentPlanNote),
 					TPStatus=TreatPlanStatus.Active,
 					PatNum=patNum,
 					//UserNumPresenter=userNum,
@@ -230,7 +230,7 @@ namespace OpenDentBusiness{
 			if(unassignedPlan==null && listProcsForInactive.Any(x => !arrayTpaProcNums.Contains(x.ProcNum))) {
 				unassignedPlan=new TreatPlan() {
 					Heading=Lans.g("TreatPlans","Unassigned"),
-					Note=PrefC.GetString(PrefName.TreatmentPlanNote),
+					Note=Prefs.GetString(PrefName.TreatmentPlanNote),
 					TPStatus=TreatPlanStatus.Inactive,
 					PatNum=patNum,
 					//UserNumPresenter=userNum,

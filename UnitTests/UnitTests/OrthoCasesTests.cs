@@ -57,9 +57,9 @@ namespace UnitTests.OrthoCases_Tests {
 		///<summary>Make sure that deleting an OrthoCase, deletes all associated objects.</summary>
 		[TestMethod]
 		public void OrthoCases_Delete_DeleteOrthoCaseAndAssociatedObjects() {
-			Prefs.UpdateString(PrefName.OrthoBandingCodes,"D8080");
-			Prefs.UpdateString(PrefName.OrthoDebondCodes,"D8070");
-			Prefs.UpdateString(PrefName.OrthoVisitCodes,"D8060");
+			Prefs.Set(PrefName.OrthoBandingCodes,"D8080");
+			Prefs.Set(PrefName.OrthoDebondCodes,"D8070");
+			Prefs.Set(PrefName.OrthoVisitCodes,"D8060");
 			Userod user=UserodT.CreateUser();
 			Security.CurrentUser=user;
 			Patient pat=PatientT.CreatePatient(MethodBase.GetCurrentMethod().Name);
@@ -89,7 +89,7 @@ namespace UnitTests.OrthoCases_Tests {
 		///<summary>Make sure that the proper date updates for an OrthoCase when syncing dates with procedures.</summary>
 		[TestMethod]
 		public void OrthoCases_UpdateDatesByLinkedProc_UpdateBandingAndDebondDates() {
-			Prefs.UpdateString(PrefName.OrthoDebondCodes,"D8070");
+			Prefs.Set(PrefName.OrthoDebondCodes,"D8070");
 			Userod user=UserodT.CreateUser();
 			Security.CurrentUser=user;
 			Patient pat=PatientT.CreatePatient(MethodBase.GetCurrentMethod().Name);
@@ -117,9 +117,9 @@ namespace UnitTests.OrthoCases_Tests {
 		///<summary>Make sure that procedures get linked to OrthoCase and that OrthoCase gets inactivated if a debond proc is linked.</summary>
 		[TestMethod]
 		public void OrthoProcLinks_LinkProcForActiveOrthoCase_LinkCompletedProcsToOrthoCase() {
-			Prefs.UpdateString(PrefName.OrthoBandingCodes,"D8080");
-			Prefs.UpdateString(PrefName.OrthoDebondCodes,"D8070");
-			Prefs.UpdateString(PrefName.OrthoVisitCodes,"D8060");
+			Prefs.Set(PrefName.OrthoBandingCodes,"D8080");
+			Prefs.Set(PrefName.OrthoDebondCodes,"D8070");
+			Prefs.Set(PrefName.OrthoVisitCodes,"D8060");
 			Patient pat=PatientT.CreatePatient(MethodBase.GetCurrentMethod().Name);
 			Procedure bandingProc=ProcedureT.CreateProcedure(pat,"D8080",ProcStat.C,"",0);
 			Procedure visitProc=ProcedureT.CreateProcedure(pat,"D8060",ProcStat.C,"",0);
@@ -164,9 +164,9 @@ namespace UnitTests.OrthoCases_Tests {
 		///<summary>Make Sure that ClaimProc overrides for procedures linked to orthocases are set correctly</summary>
 		[TestMethod]
 		public void ClaimProcs_ComputeEstimatesByOrthoCase_SetClaimProcForEachProcType() {
-			Prefs.UpdateString(PrefName.OrthoBandingCodes,"D8080");
-			Prefs.UpdateString(PrefName.OrthoDebondCodes,"D8070");
-			Prefs.UpdateString(PrefName.OrthoVisitCodes,"D8060");
+			Prefs.Set(PrefName.OrthoBandingCodes,"D8080");
+			Prefs.Set(PrefName.OrthoDebondCodes,"D8070");
+			Prefs.Set(PrefName.OrthoVisitCodes,"D8060");
 			Patient pat=PatientT.CreatePatient(MethodBase.GetCurrentMethod().Name);
 			Procedure bandingProc=ProcedureT.CreateProcedure(pat,"D8080",ProcStat.C,"",0);
 			PatPlan patPlan=PatPlanT.CreatePatPlan(1,pat.PatNum,0);
@@ -220,7 +220,7 @@ namespace UnitTests.OrthoCases_Tests {
 		[TestMethod]
 		public void OrthoProcLinks_LinkProcForActiveOrthoCase_ProcLinksToPayPlanWhenTheyShould() {
 			//Set Prefs
-			Prefs.UpdateString(PrefName.OrthoVisitCodes,"D8060");
+			Prefs.Set(PrefName.OrthoVisitCodes,"D8060");
 			//Create required objects
 			Patient pat=PatientT.CreatePatient(MethodBase.GetCurrentMethod().Name);
 			Procedure visitProc1=ProcedureT.CreateProcedure(pat,"D8060",ProcStat.C,"",50);

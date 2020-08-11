@@ -135,10 +135,6 @@ namespace OpenDental{
 				if(cat == DisplayFieldCategory.None) {//skip None because user not allowed to select that
 					continue;
 				}
-				bool displayIsCemtOnly=cat.GetAttributeOrDefault<PermissionAttribute>().IsCEMT;
-				if(_isCemtMode != displayIsCemtOnly) {
-					continue;
-				}
 				if(cat == DisplayFieldCategory.OrthoChart) { //orthochart tabs can have their own name.
 					listCategory.Items.Add(new ODBoxItem<DisplayFieldCategory>(OrthoChartTabs.GetFirst(true).TabName,cat));
 					continue;

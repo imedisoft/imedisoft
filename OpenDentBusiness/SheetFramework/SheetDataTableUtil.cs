@@ -238,7 +238,7 @@ namespace OpenDentBusiness.SheetFramework {
 					double balCur;
 					foreach(Patient guarantor in listSuperFamGuars) {
 						balCur=guarantor.BalTotal;
-						if(!PrefC.GetBool(PrefName.BalancesDontSubtractIns)) {
+						if(!Prefs.GetBool(PrefName.BalancesDontSubtractIns)) {
 							balCur-=guarantor.InsEst;
 						}
 						if(balCur<=0) {//if this guarantor has a negative balance, don't subtract from the super statement amount due (Ryan says so)
@@ -249,7 +249,7 @@ namespace OpenDentBusiness.SheetFramework {
 				}
 				else {
 					balTotal=patGuar.BalTotal;
-					if(!PrefC.GetBool(PrefName.BalancesDontSubtractIns)) {
+					if(!Prefs.GetBool(PrefName.BalancesDontSubtractIns)) {
 						balTotal-=patGuar.InsEst;
 					}
 				}
@@ -310,7 +310,7 @@ namespace OpenDentBusiness.SheetFramework {
 						|| x["PayNum"].ToString()!="0"//patient payments, will be credits with charges==0
 						|| x["ClaimPaymentNum"].ToString()!="0").ToList()//claimproc payments+writeoffs, will be credits with charges==0
 					.Sum(x => PIn.Double(x["chargesDouble"].ToString())-PIn.Double(x["creditsDouble"].ToString()));//add charges-credits
-				if(PrefC.GetBool(PrefName.BalancesDontSubtractIns)) {
+				if(Prefs.GetBool(PrefName.BalancesDontSubtractIns)) {
 					text=statementTotal.ToString("c");
 				}
 				else {
@@ -322,11 +322,11 @@ namespace OpenDentBusiness.SheetFramework {
 			}
 			#endregion Statement Type LimitedStatement
 			row[0]=text;
-			if(PrefC.GetLong(PrefName.StatementsCalcDueDate)==-1) {
+			if(Prefs.GetLong(PrefName.StatementsCalcDueDate)==-1) {
 				text=Lans.g("Statements","Upon Receipt");
 			}
 			else {
-				text=DateTime.Today.AddDays(PrefC.GetLong(PrefName.StatementsCalcDueDate)).ToShortDateString();
+				text=DateTime.Today.AddDays(Prefs.GetLong(PrefName.StatementsCalcDueDate)).ToShortDateString();
 			}
 			row[1]=text;
 			row[2]="";
@@ -762,7 +762,7 @@ namespace OpenDentBusiness.SheetFramework {
 				//If any plan allows substitution, show X
 				dRow["Sub"]=SubstitutionLinks.HasSubstCodeForProcCode(procCode,tpRow.Tth,listSubLinks,listInsPlans) ? "X" : "";
 				dRow["Description"]            =tpRow.Description;
-				if(PrefC.GetBool(PrefName.TreatPlanItemized)
+				if(Prefs.GetBool(PrefName.TreatPlanItemized)
 					|| tpRow.Description==Lans.g("TableTP","Subtotal") || tpRow.Description==Lans.g("TableTP","Total")) {
 					dRow["Fee"]                  =tpRow.Fee.ToString("F");
 					dRow["Pri Ins"]              =tpRow.PriIns.ToString("F");

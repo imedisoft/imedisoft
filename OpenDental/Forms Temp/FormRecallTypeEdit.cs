@@ -563,7 +563,7 @@ namespace OpenDental{
 			TriggerList=RecallTriggers.GetForType(RecallTypeCur.RecallTypeNum);//works if 0, too.
 			SetSpecialText();
 			FillTriggers();
-			if(PrefC.GetLong(PrefName.RecallTypeSpecialChildProphy)==RecallTypeCur.RecallTypeNum){
+			if(Prefs.GetLong(PrefName.RecallTypeSpecialChildProphy)==RecallTypeCur.RecallTypeNum){
 				textRecallAgeAdult.Text=PrefC.GetInt(PrefName.RecallAgeAdult).ToString();
 			}
 			textYears.Text=RecallTypeCur.DefaultInterval.Years.ToString();
@@ -577,13 +577,13 @@ namespace OpenDental{
 
 		private void SetSpecialIdx() {
 			comboSpecial.SelectedIndex=0;
-			if(PrefC.GetLong(PrefName.RecallTypeSpecialProphy)==RecallTypeCur.RecallTypeNum){
+			if(Prefs.GetLong(PrefName.RecallTypeSpecialProphy)==RecallTypeCur.RecallTypeNum){
 				comboSpecial.SelectedIndex=1;
 			}
-			else if(PrefC.GetLong(PrefName.RecallTypeSpecialChildProphy)==RecallTypeCur.RecallTypeNum){
+			else if(Prefs.GetLong(PrefName.RecallTypeSpecialChildProphy)==RecallTypeCur.RecallTypeNum){
 				comboSpecial.SelectedIndex=2;
 			}
-			else if(PrefC.GetLong(PrefName.RecallTypeSpecialPerio)==RecallTypeCur.RecallTypeNum){
+			else if(Prefs.GetLong(PrefName.RecallTypeSpecialPerio)==RecallTypeCur.RecallTypeNum){
 				comboSpecial.SelectedIndex=3;
 			}
 		}
@@ -598,13 +598,13 @@ namespace OpenDental{
 			long recallTypeNumPrev=0;
 			switch(comboSpecial.SelectedIndex) {
 				case 1:
-					recallTypeNumPrev=PrefC.GetLong(PrefName.RecallTypeSpecialProphy);
+					recallTypeNumPrev=Prefs.GetLong(PrefName.RecallTypeSpecialProphy);
 					break;
 				case 2:
-					recallTypeNumPrev=PrefC.GetLong(PrefName.RecallTypeSpecialChildProphy);
+					recallTypeNumPrev=Prefs.GetLong(PrefName.RecallTypeSpecialChildProphy);
 					break;
 				case 3:
-					recallTypeNumPrev=PrefC.GetLong(PrefName.RecallTypeSpecialPerio);
+					recallTypeNumPrev=Prefs.GetLong(PrefName.RecallTypeSpecialPerio);
 					break;
 			}
 			int countForTypePrev=0;
@@ -810,7 +810,7 @@ namespace OpenDental{
 					MessageBox.Show("Please fix data entry errors first.");
 					return;
 				}
-				if(Prefs.UpdateInt(PrefName.RecallAgeAdult,PIn.Int(textRecallAgeAdult.Text))) {
+				if(Prefs.Set(PrefName.RecallAgeAdult,PIn.Int(textRecallAgeAdult.Text))) {
 					changed=true;
 				}
 				TriggerList.Clear();//triggers for child prophy special type are handled by the prophy special type
@@ -847,55 +847,55 @@ namespace OpenDental{
 			RecallTriggers.SetForType(RecallTypeCur.RecallTypeNum,TriggerList);
 			//The combo for special type is allowed to be changed by user.  But since the field is in the pref table instead of in the RecallType table, there's extra work involved in saving the selection.
 			if(comboSpecial.SelectedIndex==0){//none:  If this recall type is now not any special type
-				if(PrefC.GetLong(PrefName.RecallTypeSpecialProphy)==RecallTypeCur.RecallTypeNum){//and it used to be the special prophy type
-					Prefs.UpdateLong(PrefName.RecallTypeSpecialProphy,0);
+				if(Prefs.GetLong(PrefName.RecallTypeSpecialProphy)==RecallTypeCur.RecallTypeNum){//and it used to be the special prophy type
+					Prefs.Set(PrefName.RecallTypeSpecialProphy,0);
 					changed=true;
 				}
-				if(PrefC.GetLong(PrefName.RecallTypeSpecialChildProphy)==RecallTypeCur.RecallTypeNum){
-					Prefs.UpdateLong(PrefName.RecallTypeSpecialChildProphy,0);
+				if(Prefs.GetLong(PrefName.RecallTypeSpecialChildProphy)==RecallTypeCur.RecallTypeNum){
+					Prefs.Set(PrefName.RecallTypeSpecialChildProphy,0);
 					changed=true;
 				}
-				if(PrefC.GetLong(PrefName.RecallTypeSpecialPerio)==RecallTypeCur.RecallTypeNum){
-					Prefs.UpdateLong(PrefName.RecallTypeSpecialPerio,0);
+				if(Prefs.GetLong(PrefName.RecallTypeSpecialPerio)==RecallTypeCur.RecallTypeNum){
+					Prefs.Set(PrefName.RecallTypeSpecialPerio,0);
 					changed=true;
 				}
 			}
 			else if(comboSpecial.SelectedIndex==1){//Prophy: If this recall type is now the prophy type.
-				if(Prefs.UpdateLong(PrefName.RecallTypeSpecialProphy,RecallTypeCur.RecallTypeNum)){//and it was already the prophy type
+				if(Prefs.Set(PrefName.RecallTypeSpecialProphy,RecallTypeCur.RecallTypeNum)){//and it was already the prophy type
 					changed=true;
 				}
-				if(PrefC.GetLong(PrefName.RecallTypeSpecialChildProphy)==RecallTypeCur.RecallTypeNum){//but it used to be the childprophy type.
-					Prefs.UpdateLong(PrefName.RecallTypeSpecialChildProphy,0);
+				if(Prefs.GetLong(PrefName.RecallTypeSpecialChildProphy)==RecallTypeCur.RecallTypeNum){//but it used to be the childprophy type.
+					Prefs.Set(PrefName.RecallTypeSpecialChildProphy,0);
 					changed=true;
 				}
-				if(PrefC.GetLong(PrefName.RecallTypeSpecialPerio)==RecallTypeCur.RecallTypeNum){
-					Prefs.UpdateLong(PrefName.RecallTypeSpecialPerio,0);
+				if(Prefs.GetLong(PrefName.RecallTypeSpecialPerio)==RecallTypeCur.RecallTypeNum){
+					Prefs.Set(PrefName.RecallTypeSpecialPerio,0);
 					changed=true;
 				}
 			}
 			else if(comboSpecial.SelectedIndex==2){//ChildProphy
-				if(PrefC.GetLong(PrefName.RecallTypeSpecialProphy)==RecallTypeCur.RecallTypeNum){
-					Prefs.UpdateLong(PrefName.RecallTypeSpecialProphy,0);
+				if(Prefs.GetLong(PrefName.RecallTypeSpecialProphy)==RecallTypeCur.RecallTypeNum){
+					Prefs.Set(PrefName.RecallTypeSpecialProphy,0);
 					changed=true;
 				}
-				if(Prefs.UpdateLong(PrefName.RecallTypeSpecialChildProphy,RecallTypeCur.RecallTypeNum)){
+				if(Prefs.Set(PrefName.RecallTypeSpecialChildProphy,RecallTypeCur.RecallTypeNum)){
 					changed=true;
 				}
-				if(PrefC.GetLong(PrefName.RecallTypeSpecialPerio)==RecallTypeCur.RecallTypeNum){
-					Prefs.UpdateLong(PrefName.RecallTypeSpecialPerio,0);
+				if(Prefs.GetLong(PrefName.RecallTypeSpecialPerio)==RecallTypeCur.RecallTypeNum){
+					Prefs.Set(PrefName.RecallTypeSpecialPerio,0);
 					changed=true;
 				}
 			}
 			else if(comboSpecial.SelectedIndex==3){//Perio
-				if(PrefC.GetLong(PrefName.RecallTypeSpecialProphy)==RecallTypeCur.RecallTypeNum){
-					Prefs.UpdateLong(PrefName.RecallTypeSpecialProphy,0);
+				if(Prefs.GetLong(PrefName.RecallTypeSpecialProphy)==RecallTypeCur.RecallTypeNum){
+					Prefs.Set(PrefName.RecallTypeSpecialProphy,0);
 					changed=true;
 				}
-				if(PrefC.GetLong(PrefName.RecallTypeSpecialChildProphy)==RecallTypeCur.RecallTypeNum){
-					Prefs.UpdateLong(PrefName.RecallTypeSpecialChildProphy,0);
+				if(Prefs.GetLong(PrefName.RecallTypeSpecialChildProphy)==RecallTypeCur.RecallTypeNum){
+					Prefs.Set(PrefName.RecallTypeSpecialChildProphy,0);
 					changed=true;
 				}
-				if(Prefs.UpdateLong(PrefName.RecallTypeSpecialPerio,RecallTypeCur.RecallTypeNum)){
+				if(Prefs.Set(PrefName.RecallTypeSpecialPerio,RecallTypeCur.RecallTypeNum)){
 					changed=true;
 				}
 			}

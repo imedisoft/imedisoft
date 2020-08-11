@@ -13,8 +13,12 @@ namespace OpenDental {
 	///<summary></summary>
 	public partial class FormApptsOther : ODForm {
 		#region Fields - Public
-		///<summary>Set to true to allow selecting appointments.</summary>
-		public bool AllowSelectOnly;
+
+		/// <summary>
+		/// Gets or sets a value indicating whether the form is in selection mode.
+		/// </summary>
+		public bool SelectionMode { get; set; }
+
 		///<summary>DateTime that the user clicked in the Appt module before arriving here. Pass in if IsInitialDoubleClick.</summary>
 		public DateTime DateTimeClicked;
 		public DateTime DateTNew;
@@ -64,7 +68,7 @@ namespace OpenDental {
 		private void FormApptsOther_Load(object sender, System.EventArgs e) {
 			Text=Lan.G(this,"Appointments for")+" "+_patCur.GetNameLF();
 			textApptModNote.Text=_patCur.ApptModNote;
-			if(AllowSelectOnly) {
+			if(SelectionMode) {
 				butGoTo.Visible=false;
 				butPin.Visible=false;
 				butNew.Visible=false;
@@ -354,7 +358,7 @@ namespace OpenDental {
 			}
 			aptCur.Pattern="/X/";
 			if(_patCur.PriProv==0) {
-				aptCur.ProvNum=PrefC.GetLong(PrefName.PracticeDefaultProv);
+				aptCur.ProvNum=Prefs.GetLong(PrefName.PracticeDefaultProv);
 			}
 			else {
 				aptCur.ProvNum=_patCur.PriProv;
@@ -362,7 +366,7 @@ namespace OpenDental {
 			aptCur.ProvHyg=_patCur.SecProv;
 			aptCur.AptStatus=ApptStatus.PtNote;
 			aptCur.ClinicNum=_patCur.ClinicNum;
-			aptCur.TimeLocked=PrefC.GetBool(PrefName.AppointmentTimeIsLocked);
+			aptCur.TimeLocked=Prefs.GetBool(PrefName.AppointmentTimeIsLocked);
 			if(IsInitialDoubleClick) {//initially double clicked on appt module
 				aptCur.AptDateTime=DateTimeClicked;
 				aptCur.Op=OpNumClicked;

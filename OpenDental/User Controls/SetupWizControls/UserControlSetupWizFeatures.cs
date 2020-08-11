@@ -16,13 +16,13 @@ namespace OpenDental.User_Controls.SetupWizard {
 		}
 
 		private void RefreshControls() {
-			checkCapitation.Checked=!PrefC.GetBool(PrefName.EasyHideCapitation);
-			checkMedicaid.Checked=!PrefC.GetBool(PrefName.EasyHideMedicaid);
-			checkInsurance.Checked=!PrefC.GetBool(PrefName.EasyHideInsurance);
-			checkClinical.Checked=!PrefC.GetBool(PrefName.EasyHideClinical);
+			checkCapitation.Checked=!Prefs.GetBool(PrefName.EasyHideCapitation);
+			checkMedicaid.Checked=!Prefs.GetBool(PrefName.EasyHideMedicaid);
+			checkInsurance.Checked=!Prefs.GetBool(PrefName.EasyHideInsurance);
+			checkClinical.Checked=!Prefs.GetBool(PrefName.EasyHideClinical);
 			checkNoClinics.Checked=PrefC.HasClinicsEnabled;
-			checkMedicalIns.Checked=PrefC.GetBool(PrefName.ShowFeatureMedicalInsurance);
-			checkEhr.Checked=PrefC.GetBool(PrefName.ShowFeatureEhr);
+			checkMedicalIns.Checked=Prefs.GetBool(PrefName.ShowFeatureMedicalInsurance);
+			checkEhr.Checked=Prefs.GetBool(PrefName.ShowFeatureEhr);
 			IsDone=true;
 		}
 
@@ -44,13 +44,13 @@ namespace OpenDental.User_Controls.SetupWizard {
 
 		private void ControlDone(object sender, EventArgs e) {
 			if(
-				Prefs.UpdateBool(PrefName.EasyHideCapitation,!checkCapitation.Checked)
-				| Prefs.UpdateBool(PrefName.EasyHideMedicaid,!checkMedicaid.Checked)
-				| Prefs.UpdateBool(PrefName.EasyHideInsurance,!checkInsurance.Checked)
-				| Prefs.UpdateBool(PrefName.EasyHideClinical,!checkClinical.Checked)
-				| Prefs.UpdateBool(PrefName.EasyNoClinics,!checkNoClinics.Checked)
-				| Prefs.UpdateBool(PrefName.ShowFeatureMedicalInsurance,checkMedicalIns.Checked)
-				| Prefs.UpdateBool(PrefName.ShowFeatureEhr,checkEhr.Checked)
+				Prefs.Set(PrefName.EasyHideCapitation,!checkCapitation.Checked)
+				| Prefs.Set(PrefName.EasyHideMedicaid,!checkMedicaid.Checked)
+				| Prefs.Set(PrefName.EasyHideInsurance,!checkInsurance.Checked)
+				| Prefs.Set(PrefName.EasyHideClinical,!checkClinical.Checked)
+				| Prefs.Set(PrefName.EasyNoClinics,!checkNoClinics.Checked)
+				| Prefs.Set(PrefName.ShowFeatureMedicalInsurance,checkMedicalIns.Checked)
+				| Prefs.Set(PrefName.ShowFeatureEhr,checkEhr.Checked)
 			) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}

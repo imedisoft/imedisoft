@@ -57,7 +57,7 @@ namespace OpenDental
 			bool enabled=PatComm.IsAnyShortCodeServiceEnabled(comboShortCodeClinic.SelectedClinicNum);
 			labelUnsavedShortCodeChanges.Visible=false;
 			checkOptInPrompt.Enabled=enabled;
-			checkOptInPrompt.Checked=ClinicPrefs.GetBool(PrefName.ShortCodeOptInOnApptComplete,comboShortCodeClinic.SelectedClinicNum);
+			checkOptInPrompt.Checked=ClinicPrefs.GetBool(comboShortCodeClinic.SelectedClinicNum, PrefName.ShortCodeOptInOnApptComplete);
 			textShortCodeOptInClinicTitle.Enabled=enabled;
 			textShortCodeOptInClinicTitle.Text=GetShortCodeOptInClinicTitle();
 		}
@@ -65,17 +65,17 @@ namespace OpenDental
 		///<summary></summary>
 		private string GetShortCodeOptInClinicTitle() {			
 			//Clinic 0 will be saved as a ClinicPref, not a practice wide Pref, so do not includeDefault here.
-			string title=ClinicPrefs.GetPrefValue(PrefName.ShortCodeOptInClinicTitle,comboShortCodeClinic.SelectedClinicNum);
+			string title=ClinicPrefs.GetString(comboShortCodeClinic.SelectedClinicNum, PrefName.ShortCodeOptInClinicTitle);
 			if(!string.IsNullOrWhiteSpace(title)) {
 				return title;
 			}
-			title=(comboShortCodeClinic.SelectedClinicNum==0) ? PrefC.GetString(PrefName.PracticeTitle) 
+			title=(comboShortCodeClinic.SelectedClinicNum==0) ? Prefs.GetString(PrefName.PracticeTitle) 
 					: Clinics.GetDesc(comboShortCodeClinic.SelectedClinicNum);
 			if(!string.IsNullOrWhiteSpace(title)) {
 				return title;
 			}
 			//In case a clinic had an empty Description
-			return PrefC.GetString(PrefName.PracticeTitle);
+			return Prefs.GetString(PrefName.PracticeTitle);
 		}
 
 		private void comboShortCodeClinic_SelectionChangeCommitted(object sender,EventArgs e) {
@@ -88,9 +88,9 @@ namespace OpenDental
 
 		private void checkOptInPrompt_Click(object sender,EventArgs e) {
 			if(!checkOptInPrompt.Checked) {
-				string prompt=Lan.G(this,string.IsNullOrWhiteSpace(PrefC.GetString(PrefName.ShortCodeOptInOnApptCompleteOffScript)) 
+				string prompt=Lan.G(this,string.IsNullOrWhiteSpace(Prefs.GetString(PrefName.ShortCodeOptInOnApptCompleteOffScript)) 
 					? "By disabling this prompt, you agree to obtain verbal confirmation from patients to send Appt Texts."
-					: PrefC.GetString(PrefName.ShortCodeOptInOnApptCompleteOffScript));
+					: Prefs.GetString(PrefName.ShortCodeOptInOnApptCompleteOffScript));
 				MessageBox.Show(prompt);
 			}
 			labelUnsavedShortCodeChanges.Visible=AreShortCodeSettingsUnsaved();
@@ -98,41 +98,41 @@ namespace OpenDental
 
 		private bool AreShortCodeSettingsUnsaved() {
 			return textShortCodeOptInClinicTitle.Text!=GetShortCodeOptInClinicTitle() 
-				|| checkOptInPrompt.Checked!=ClinicPrefs.GetBool(PrefName.ShortCodeOptInOnApptComplete,comboShortCodeClinic.SelectedClinicNum);
+				|| checkOptInPrompt.Checked!=ClinicPrefs.GetBool(comboShortCodeClinic.SelectedClinicNum, PrefName.ShortCodeOptInOnApptComplete);
 		}
 
 		private void butSaveShortCodes_Click(object sender,EventArgs e) {
-			if(string.IsNullOrWhiteSpace(textShortCodeOptInClinicTitle.Text)) {
-				string err=Lan.G(this,"Not allowed to set ")+labelShortCodeOptInClinicTitle.Text+Lan.G(this," to an empty value.");
-				MessageBox.Show(err);
-				return;
-			}
-			bool doSetInvalidClinicPrefs=false;
-			bool doSetInvalidPrefs=false;
-			//Only Update/Upsert if the textbox doesn't match the current setting.
-			if(textShortCodeOptInClinicTitle.Text!=GetShortCodeOptInClinicTitle()) {
-				if(comboShortCodeClinic.SelectedClinicNum==0) {
-					doSetInvalidPrefs=Prefs.UpdateString(PrefName.ShortCodeOptInClinicTitle,textShortCodeOptInClinicTitle.Text);
-				}
-				else {
-					doSetInvalidClinicPrefs=ClinicPrefs.Upsert(PrefName.ShortCodeOptInClinicTitle,comboShortCodeClinic.SelectedClinicNum,
-						textShortCodeOptInClinicTitle.Text);
-				}
-			}
-			if(comboShortCodeClinic.SelectedClinicNum==0) {
-					doSetInvalidPrefs|=Prefs.UpdateBool(PrefName.ShortCodeOptInOnApptComplete,checkOptInPrompt.Checked);
-				}
-			else {
-				doSetInvalidClinicPrefs|=ClinicPrefs.Upsert(PrefName.ShortCodeOptInOnApptComplete,comboShortCodeClinic.SelectedClinicNum
-					,POut.Bool(checkOptInPrompt.Checked));
-			}
-			if(doSetInvalidPrefs) {
-				DataValid.SetInvalid(InvalidType.Prefs);
-			}
-			if(doSetInvalidClinicPrefs) {
-				DataValid.SetInvalid(InvalidType.ClinicPrefs);
-			}
-			FillShortCodes();
+			//if(string.IsNullOrWhiteSpace(textShortCodeOptInClinicTitle.Text)) {
+			//	string err=Lan.G(this,"Not allowed to set ")+labelShortCodeOptInClinicTitle.Text+Lan.G(this," to an empty value.");
+			//	MessageBox.Show(err);
+			//	return;
+			//}
+			//bool doSetInvalidClinicPrefs=false;
+			//bool doSetInvalidPrefs=false;
+			////Only Update/Upsert if the textbox doesn't match the current setting.
+			//if(textShortCodeOptInClinicTitle.Text!=GetShortCodeOptInClinicTitle()) {
+			//	if(comboShortCodeClinic.SelectedClinicNum==0) {
+			//		doSetInvalidPrefs=Prefs.Set(PrefName.ShortCodeOptInClinicTitle,textShortCodeOptInClinicTitle.Text);
+			//	}
+			//	else {
+			//		doSetInvalidClinicPrefs=ClinicPrefs.Upsert(PrefName.ShortCodeOptInClinicTitle,comboShortCodeClinic.SelectedClinicNum,
+			//			textShortCodeOptInClinicTitle.Text);
+			//	}
+			//}
+			//if(comboShortCodeClinic.SelectedClinicNum==0) {
+			//		doSetInvalidPrefs|=Prefs.Set(PrefName.ShortCodeOptInOnApptComplete,checkOptInPrompt.Checked);
+			//	}
+			//else {
+			//	doSetInvalidClinicPrefs|=ClinicPrefs.Upsert(PrefName.ShortCodeOptInOnApptComplete,comboShortCodeClinic.SelectedClinicNum
+			//		,POut.Bool(checkOptInPrompt.Checked));
+			//}
+			//if(doSetInvalidPrefs) {
+			//	DataValid.SetInvalid(InvalidType.Prefs);
+			//}
+			//if(doSetInvalidClinicPrefs) {
+			//	DataValid.SetInvalid(InvalidType.ClinicPrefs);
+			//}
+			//FillShortCodes();
 		}
 
 		private void AuthorizeTexting(bool allowEdit) {
@@ -145,13 +145,13 @@ namespace OpenDental
 				MessageBox.Show("Select clinic to make default.");
 				return;
 			}
-			Prefs.UpdateLong(PrefName.TextingDefaultClinicNum,(_smsClinicSelected.ClinicNum));
+			Prefs.Set(PrefName.TextingDefaultClinicNum,(_smsClinicSelected.ClinicNum));
 			Signalods.SetInvalid(InvalidType.Prefs);
 			FillGridSmsUsage();
 		}
 
 		private void butDefaultClinicClear_Click(object sender,EventArgs e) {
-			Prefs.UpdateLong(PrefName.TextingDefaultClinicNum,0);
+			Prefs.Set(PrefName.TextingDefaultClinicNum,0);
 			Signalods.SetInvalid(InvalidType.Prefs);
 			FillGridSmsUsage();
 		}
@@ -198,7 +198,7 @@ namespace OpenDental
 			foreach(Clinic clinic in listClinics) {
 				GridRow row=new GridRow();
 				if(PrefC.HasClinicsEnabled) { //Default texting clinic?
-					row.Cells.Add(clinic.ClinicNum==PrefC.GetLong(PrefName.TextingDefaultClinicNum) ? "X" : "");
+					row.Cells.Add(clinic.ClinicNum==Prefs.GetLong(PrefName.TextingDefaultClinicNum) ? "X" : "");
 				}
 				row.Cells.Add(clinic.Abbr); //Location.				
 				var dataRow=items.FirstOrDefault(x => x.ClinicNum==clinic.ClinicNum);				

@@ -496,7 +496,7 @@ namespace OpenDental {
 				split.DatePay=date;
 				split.PatNum=PaymentCur.PatNum;
 				split.ProvNum=0;
-				split.UnearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);//Use default unallocated type
+				split.UnearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);//Use default unallocated type
 				if(PrefC.HasClinicsEnabled) {//Clinics
 					split.ClinicNum=PaymentCur.ClinicNum;
 				}
@@ -510,7 +510,7 @@ namespace OpenDental {
 				split.DatePay=date;
 				split.PatNum=PaymentCur.PatNum;
 				split.ProvNum=0;
-				split.UnearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);//Use default unallocated type
+				split.UnearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);//Use default unallocated type
 				if(PrefC.HasClinicsEnabled) {//Clinics
 					split.ClinicNum=PaymentCur.ClinicNum;
 				}
@@ -816,7 +816,7 @@ namespace OpenDental {
 				split.DatePay=PaymentCur.DateEntry;
 				split.PatNum=PaymentCur.PatNum;
 				split.ProvNum=0; //unallocated. This will make the text appear red so that the user knows to check it. If saved, will default to being a prepayment.
-				split.UnearnedType=PrefC.GetLong(PrefName.PrepaymentUnearnedType);//Use default unallocated type
+				split.UnearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);//Use default unallocated type
 				if(PrefC.HasClinicsEnabled) {//Clinics
 					split.ClinicNum=PaymentCur.ClinicNum;
 				}

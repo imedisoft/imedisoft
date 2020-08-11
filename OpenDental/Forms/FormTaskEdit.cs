@@ -1,2460 +1,1083 @@
-using System;
-using System.Drawing;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Windows.Forms;
+using CodeBase;
+using OpenDental;
 using OpenDental.UI;
 using OpenDentBusiness;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
-using CodeBase;
-using Newtonsoft.Json;
+using System.Text;
 using System.Text.RegularExpressions;
-using Imedisoft.Forms;
+using System.Windows.Forms;
 
-namespace OpenDental {
-	/// <summary>
-	/// Summary description for FormBasicTemplate.
-	/// </summary>
-	public class FormTaskEdit:ODForm {
-		private OpenDental.UI.Button butCancel;
-		private OpenDental.UI.Button butOK;
-		private IContainer components=null;
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.Label labelDateTask;
-		private System.Windows.Forms.Label labelDateAdvice;
-		private System.Windows.Forms.Label labelDateType;
-		private OpenDental.ODtextBox textDescript;
-		private Task _taskCur;
-		private Task _taskOld;
-		private OpenDental.ValidDate textDateTask;
-		private OpenDental.UI.Button butChange;
-		private OpenDental.UI.Button butGoto;
-		///<summary></summary>
-		public bool IsNew;
-		private System.Windows.Forms.CheckBox checkFromNum;
-		private System.Windows.Forms.Label labelObjectDesc;
-		private System.Windows.Forms.TextBox textObjectDesc;
-		private System.Windows.Forms.ListBox listObjectType;
-		private System.Windows.Forms.Label label6;
-		private System.Windows.Forms.Panel panelObject;
-		///<summary>After closing, if this is not zero, then it will jump to the object specified in GotoKeyNum.</summary>
-		public TaskObjectType GotoType;
-		private Label label5;
-		private TextBox textDateTimeEntry;
-		private OpenDental.UI.Button butNow;
-		private OpenDental.UI.Button butDelete;
-		private TextBox textUser;
-		private Label label16;
-		private OpenDental.UI.Button butNowFinished;
-		private TextBox textDateTimeFinished;
-		private Label label7;
-		private TextBox textTaskNum;
-		private Label labelTaskNum;
-		///<summary>After closing, if this is not zero, then it will jump to the specified patient.</summary>
-		public long GotoKeyNum;
-		private Label labelReply;
-		private OpenDental.UI.Button butReply;
-		private OpenDental.UI.Button butSend;
-		private TextBox textTaskList;
-		private Label label10;
-		private ComboBox comboDateType;
-		private TaskList _taskListCur;
-		private UI.ODGrid gridMain;
-		///<summary>Will be set to true if any note was added or an existing note changed. Does not track changes in the description.</summary>
-		public bool NotesChanged;
-		private UI.Button butAddNote;
-		private UI.Button butChangeUser;
-		private List<TaskNote> _listTaskNotes;
-		private CheckBox checkNew;
-		private CheckBox checkDone;
-		private Label labelDoneAffectsAll;
-		///<summary>If the reply button is visible, this stores who to reply to.  It's determined when loading the form.</summary>
-		private long _replyToUserNum;
-		///<summary>Gets set to true externally if this window popped up without user interaction.  It will behave slightly differently.  
-		///Specifically, the New checkbox will be unchecked so that if user clicks OK, the task will be marked as read.
-		///Also if IsPop is set to true, this window will not steal focus from other windows when poping up.</summary>
-		public bool IsPopup;
-		///<summary>When tracking status by user, this tracks whether it has changed.  This is so that if it has changed, a signal can be sent for a refresh of lists.</summary>
-		private bool _statusChanged;
-		///<summary>If this task starts out 'unread', then this starts out true.  If the user changes the description, changes a note, or simply clicks 
-		///"OK", then the task gets set to read.  But the user can manually change it back and this variable gets set to false.  From then on, any 
-		///changes to description or note do not trigger the task to get set to read.  In other words, the automation only happens once.</summary>
-		private bool _mightNeedSetRead;
-		private UI.Button butCopy;
-		private TextBox textBox1;
-		private UI.Button butRed;
-		private UI.Button butBlue;
-		private ComboBox comboTaskPriorities;
-		private Label label8;
-		///<summary>When this window is first opened, if this task is in someone else's inbox, then the "new" status is meaningless and will not show.  In that case, this variable is set to true.  Only used when tracking new status by user.</summary>
-		private bool _startedInOthersInbox;
-		private System.Windows.Forms.Button butColor;
-		///<summary>Filled on load with all non-hidden task priority definitions.</summary>
-		private List<Def> _listTaskPriorities;
-		private long _priorityDefNumSelected;
-		///<summary>Keeps track of the number of notes that were associated to this task on load and after refilling the task note grid.  Only used for HQ in order to keep track of task note manipulation.</summary>
-		//private int _numNotes=-1;
-		///<summary>FK to the definition.DefNum at HQ for the triage priority color for red.</summary>
-		private const long _triageRedNum=501;
-		///<summary>FK to the definition.DefNum at HQ for the triage priority color for blue.</summary>
-		private const long _triageBlueNum=502;
-		///<summary>FK to the definition.DefNum at HQ for the triage priority color for white.</summary>
-		private const long _triageWhiteNum=503;
-		private UI.Button butAudit;
-		private ComboBox comboJobs;
-		private Label labelJobs;
-		private ComboBox comboReminderRepeat;
-		private Label labelReminderRepeat;
-		private ValidNumber textReminderRepeatFrequency;
-		private Label label2;
-		private GroupBox groupReminder;
-		private Label labelRemindFrequency;
-		private Label labelReminderRepeatDays;
-		private CheckBox checkReminderRepeatSunday;
-		private CheckBox checkReminderRepeatSaturday;
-		private CheckBox checkReminderRepeatFriday;
-		private CheckBox checkReminderRepeatThursday;
-		private CheckBox checkReminderRepeatWednesday;
-		private CheckBox checkReminderRepeatTuesday;
-		private CheckBox checkReminderRepeatMonday;
-		private Label labelReminderRepeatDayKey;
-		private PanelOD panelReminderDays;
-		private PanelOD panelRepeating;
-		private PanelOD panelReminderFrequency;
-		private List<TaskReminderType> _listTaskReminderTypeNames;
-		private SplitContainerNoFlicker splitContainerDescriptNote;
-		private UI.Button butAutoNote;
-		private DateTimePicker datePickerReminder;
-		private DateTimePicker timePickerReminder;
-		private UI.Button butCreateJob;
-		private Label labelTaskChanged;
-		private TextBox textBoxDateTimeCreated;
-		private Label label3;
-		private UI.Button butRefresh;
-		///<summary>Do not allow any task or task related changes.  Only allow copy and cancel buttons, and copying of text.
-		///Used when task has been deleted from elsewhere while still open.</summary>
-		private bool _isTaskDeleted=false;
-		///<summary>UserNum attached to task when form was loaded.  Used in OK click to detect changes.  Can be 0.</summary>
-		private long _userNumFrom;
-		private UI.Button butEditAutoNote;
-		private const string _autoNotePromptRegex=@"\[Prompt:""[a-zA-Z_0-9 ]+""\]";
-		///<summary>PatNum attached to task when form was loaded.  Used in OK click to detect changes.  Can be 0.</summary>
-		private long _patientPatNum;
+namespace Imedisoft.Forms
+{
+    public partial class FormTaskEdit : FormBase
+	{
+		private List<Def> priorities;
+		private List<TaskNote> taskNotes;
+		private long taskListId;
+		private Task task;
+		private bool taskDeleted;
+		private long userId;
+		private long? patientId;
+		private long? appointmentId;
+		private long? replyToUserId;
+		private Def defaultPriority;
 
-		///<summary>This is used to make the task window not steal focus when opening as a popup.</summary>
-		protected override bool ShowWithoutActivation
+		/// <summary>
+		///		<para>
+		///			Gets or sets a value indicating whether the window is a automatic popup (i.e. 
+		///			the window was opened without user interaction). 
+		///		</para>
+		///		<para>
+		///			When set to true, this window will not activate and steal focus upon opening.
+		///		</para>
+		/// </summary>
+		public bool IsPopup { get; set; }
+
+		protected override bool ShowWithoutActivation => IsPopup;
+
+		/// <summary>
+		/// Gets the ID of the task that is being edited.
+		/// </summary>
+		public long TaskId => task.Id;
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="FormTaskEdit"/> class.
+		/// </summary>
+		/// <param name="task">The task to edit.</param>
+		public FormTaskEdit(Task task)
 		{
-			get { return IsPopup; }
-		}
-
-		///<summary>Checks if FormTaskNoteEdit is currently open. This form being open
-		///must block a number of actions in this form. </summary>
-		private bool TaskNoteEditExists {
-			get {
-				if(OwnedForms==null || OwnedForms.Length<=0) {
-					return false;
-				}
-				foreach(Form form in OwnedForms) {
-					if(form.Name=="FormTaskNoteEdit") {
-						return true;
-					}
-				}
-				return false;
-			}
-		}
-
-		public long TaskNumCur {
-			get {
-				return _taskCur.TaskNum;
-			}
-		}
-
-		///<summary>Task gets inserted ahead of time, then frequently altered before passing in here.  The taskOld that is passed in should be the task as it is in the database.  When saving, taskOld will be compared with db to make sure no changes.</summary>
-		public FormTaskEdit(Task taskCur,Task taskOld=null) {
-			//
-			// Required for Windows Form Designer support
-			//
 			InitializeComponent();
-			_taskCur=taskCur;
-			if(taskOld==null) {
-				_taskOld=taskCur.Copy();
-			}
-			else {
-				_taskOld=taskOld;
-			}
-			_taskListCur=TaskLists.GetOne(taskCur.TaskListNum);
-			Lan.F(this);
+
+			this.task = task;
 		}
 
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		protected override void Dispose(bool disposing) {
-			if(disposing) {
-				if(components != null) {
-					components.Dispose();
-				}
-			}
-			base.Dispose(disposing);
-		}
-
-		#region Windows Form Designer generated code
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent() {
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormTaskEdit));
-			this.timePickerReminder = new System.Windows.Forms.DateTimePicker();
-			this.butCreateJob = new OpenDental.UI.Button();
-			this.label6 = new System.Windows.Forms.Label();
-			this.labelJobs = new System.Windows.Forms.Label();
-			this.panelRepeating = new OpenDental.UI.PanelOD();
-			this.labelDateTask = new System.Windows.Forms.Label();
-			this.labelDateType = new System.Windows.Forms.Label();
-			this.checkFromNum = new System.Windows.Forms.CheckBox();
-			this.textDateTask = new OpenDental.ValidDate();
-			this.comboDateType = new System.Windows.Forms.ComboBox();
-			this.labelDateAdvice = new System.Windows.Forms.Label();
-			this.groupReminder = new System.Windows.Forms.GroupBox();
-			this.datePickerReminder = new System.Windows.Forms.DateTimePicker();
-			this.panelReminderFrequency = new OpenDental.UI.PanelOD();
-			this.labelRemindFrequency = new System.Windows.Forms.Label();
-			this.textReminderRepeatFrequency = new OpenDental.ValidNumber();
-			this.label2 = new System.Windows.Forms.Label();
-			this.labelReminderRepeat = new System.Windows.Forms.Label();
-			this.comboReminderRepeat = new System.Windows.Forms.ComboBox();
-			this.panelReminderDays = new OpenDental.UI.PanelOD();
-			this.labelReminderRepeatDayKey = new System.Windows.Forms.Label();
-			this.labelReminderRepeatDays = new System.Windows.Forms.Label();
-			this.checkReminderRepeatMonday = new System.Windows.Forms.CheckBox();
-			this.checkReminderRepeatSunday = new System.Windows.Forms.CheckBox();
-			this.checkReminderRepeatTuesday = new System.Windows.Forms.CheckBox();
-			this.checkReminderRepeatSaturday = new System.Windows.Forms.CheckBox();
-			this.checkReminderRepeatWednesday = new System.Windows.Forms.CheckBox();
-			this.checkReminderRepeatFriday = new System.Windows.Forms.CheckBox();
-			this.checkReminderRepeatThursday = new System.Windows.Forms.CheckBox();
-			this.comboJobs = new System.Windows.Forms.ComboBox();
-			this.butAudit = new OpenDental.UI.Button();
-			this.butColor = new System.Windows.Forms.Button();
-			this.label8 = new System.Windows.Forms.Label();
-			this.comboTaskPriorities = new System.Windows.Forms.ComboBox();
-			this.textBox1 = new System.Windows.Forms.TextBox();
-			this.textTaskNum = new System.Windows.Forms.TextBox();
-			this.labelTaskNum = new System.Windows.Forms.Label();
-			this.checkDone = new System.Windows.Forms.CheckBox();
-			this.labelDoneAffectsAll = new System.Windows.Forms.Label();
-			this.checkNew = new System.Windows.Forms.CheckBox();
-			this.butChangeUser = new OpenDental.UI.Button();
-			this.butAddNote = new OpenDental.UI.Button();
-			this.textTaskList = new System.Windows.Forms.TextBox();
-			this.label10 = new System.Windows.Forms.Label();
-			this.butSend = new OpenDental.UI.Button();
-			this.labelReply = new System.Windows.Forms.Label();
-			this.butReply = new OpenDental.UI.Button();
-			this.butNowFinished = new OpenDental.UI.Button();
-			this.textDateTimeFinished = new System.Windows.Forms.TextBox();
-			this.label7 = new System.Windows.Forms.Label();
-			this.textUser = new System.Windows.Forms.TextBox();
-			this.label16 = new System.Windows.Forms.Label();
-			this.butDelete = new OpenDental.UI.Button();
-			this.butNow = new OpenDental.UI.Button();
-			this.textDateTimeEntry = new System.Windows.Forms.TextBox();
-			this.label5 = new System.Windows.Forms.Label();
-			this.panelObject = new System.Windows.Forms.Panel();
-			this.textObjectDesc = new System.Windows.Forms.TextBox();
-			this.labelObjectDesc = new System.Windows.Forms.Label();
-			this.butGoto = new OpenDental.UI.Button();
-			this.butChange = new OpenDental.UI.Button();
-			this.listObjectType = new System.Windows.Forms.ListBox();
-			this.butCopy = new OpenDental.UI.Button();
-			this.butOK = new OpenDental.UI.Button();
-			this.butCancel = new OpenDental.UI.Button();
-			this.splitContainerDescriptNote = new OpenDental.SplitContainerNoFlicker();
-			this.butEditAutoNote = new OpenDental.UI.Button();
-			this.butAutoNote = new OpenDental.UI.Button();
-			this.butBlue = new OpenDental.UI.Button();
-			this.butRed = new OpenDental.UI.Button();
-			this.textDescript = new OpenDental.ODtextBox();
-			this.label1 = new System.Windows.Forms.Label();
-			this.gridMain = new OpenDental.UI.ODGrid();
-			this.labelTaskChanged = new System.Windows.Forms.Label();
-			this.butRefresh = new OpenDental.UI.Button();
-			this.textBoxDateTimeCreated = new System.Windows.Forms.TextBox();
-			this.label3 = new System.Windows.Forms.Label();
-			this.panelRepeating.SuspendLayout();
-			this.groupReminder.SuspendLayout();
-			this.panelReminderFrequency.SuspendLayout();
-			this.panelReminderDays.SuspendLayout();
-			this.panelObject.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.splitContainerDescriptNote)).BeginInit();
-			this.splitContainerDescriptNote.Panel1.SuspendLayout();
-			this.splitContainerDescriptNote.Panel2.SuspendLayout();
-			this.splitContainerDescriptNote.SuspendLayout();
-			this.SuspendLayout();
-			// 
-			// timePickerReminder
-			// 
-			this.timePickerReminder.CustomFormat = "hh:mm:ss tt";
-			this.timePickerReminder.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-			this.timePickerReminder.Location = new System.Drawing.Point(485, 37);
-			this.timePickerReminder.Name = "timePickerReminder";
-			this.timePickerReminder.ShowUpDown = true;
-			this.timePickerReminder.Size = new System.Drawing.Size(89, 20);
-			this.timePickerReminder.TabIndex = 4;
-			this.timePickerReminder.Visible = false;
-			// 
-			// butCreateJob
-			// 
-			this.butCreateJob.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butCreateJob.Location = new System.Drawing.Point(702, 567);
-			this.butCreateJob.Name = "butCreateJob";
-			this.butCreateJob.Size = new System.Drawing.Size(75, 24);
-			this.butCreateJob.TabIndex = 172;
-			this.butCreateJob.Text = "Create Job";
-			this.butCreateJob.Visible = false;
-			this.butCreateJob.Click += new System.EventHandler(this.butCreateJob_Click);
-			// 
-			// label6
-			// 
-			this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.label6.Location = new System.Drawing.Point(312, 564);
-			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(116, 19);
-			this.label6.TabIndex = 14;
-			this.label6.Text = "Object Type";
-			this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelJobs
-			// 
-			this.labelJobs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.labelJobs.Location = new System.Drawing.Point(382, 540);
-			this.labelJobs.Name = "labelJobs";
-			this.labelJobs.Size = new System.Drawing.Size(47, 19);
-			this.labelJobs.TabIndex = 162;
-			this.labelJobs.Text = "Jobs";
-			this.labelJobs.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.labelJobs.Visible = false;
-			// 
-			// panelRepeating
-			// 
-			this.panelRepeating.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.panelRepeating.BorderColor = System.Drawing.Color.Transparent;
-			this.panelRepeating.Controls.Add(this.labelDateTask);
-			this.panelRepeating.Controls.Add(this.labelDateType);
-			this.panelRepeating.Controls.Add(this.checkFromNum);
-			this.panelRepeating.Controls.Add(this.textDateTask);
-			this.panelRepeating.Controls.Add(this.comboDateType);
-			this.panelRepeating.Controls.Add(this.labelDateAdvice);
-			this.panelRepeating.Location = new System.Drawing.Point(12, 535);
-			this.panelRepeating.Name = "panelRepeating";
-			this.panelRepeating.Size = new System.Drawing.Size(383, 75);
-			this.panelRepeating.TabIndex = 170;
-			// 
-			// labelDateTask
-			// 
-			this.labelDateTask.Location = new System.Drawing.Point(1, 1);
-			this.labelDateTask.Name = "labelDateTask";
-			this.labelDateTask.Size = new System.Drawing.Size(102, 19);
-			this.labelDateTask.TabIndex = 4;
-			this.labelDateTask.Text = "Date";
-			this.labelDateTask.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelDateType
-			// 
-			this.labelDateType.Location = new System.Drawing.Point(1, 27);
-			this.labelDateType.Name = "labelDateType";
-			this.labelDateType.Size = new System.Drawing.Size(102, 19);
-			this.labelDateType.TabIndex = 7;
-			this.labelDateType.Text = "Date Type";
-			this.labelDateType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// checkFromNum
-			// 
-			this.checkFromNum.CheckAlign = System.Drawing.ContentAlignment.TopRight;
-			this.checkFromNum.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.checkFromNum.Location = new System.Drawing.Point(1, 53);
-			this.checkFromNum.Name = "checkFromNum";
-			this.checkFromNum.Size = new System.Drawing.Size(116, 18);
-			this.checkFromNum.TabIndex = 3;
-			this.checkFromNum.Text = "Is From Repeating";
-			this.checkFromNum.TextAlign = System.Drawing.ContentAlignment.TopRight;
-			// 
-			// textDateTask
-			// 
-			this.textDateTask.Location = new System.Drawing.Point(105, 1);
-			this.textDateTask.Name = "textDateTask";
-			this.textDateTask.Size = new System.Drawing.Size(87, 20);
-			this.textDateTask.TabIndex = 2;
-			// 
-			// comboDateType
-			// 
-			this.comboDateType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboDateType.FormattingEnabled = true;
-			this.comboDateType.Location = new System.Drawing.Point(105, 27);
-			this.comboDateType.Name = "comboDateType";
-			this.comboDateType.Size = new System.Drawing.Size(145, 21);
-			this.comboDateType.TabIndex = 148;
-			// 
-			// labelDateAdvice
-			// 
-			this.labelDateAdvice.Location = new System.Drawing.Point(193, -1);
-			this.labelDateAdvice.Name = "labelDateAdvice";
-			this.labelDateAdvice.Size = new System.Drawing.Size(185, 32);
-			this.labelDateAdvice.TabIndex = 6;
-			this.labelDateAdvice.Text = "Leave blank unless you want this task to show on a dated list";
-			// 
-			// groupReminder
-			// 
-			this.groupReminder.Controls.Add(this.datePickerReminder);
-			this.groupReminder.Controls.Add(this.panelReminderFrequency);
-			this.groupReminder.Controls.Add(this.labelReminderRepeat);
-			this.groupReminder.Controls.Add(this.comboReminderRepeat);
-			this.groupReminder.Controls.Add(this.panelReminderDays);
-			this.groupReminder.Location = new System.Drawing.Point(336, 1);
-			this.groupReminder.Name = "groupReminder";
-			this.groupReminder.Size = new System.Drawing.Size(242, 84);
-			this.groupReminder.TabIndex = 169;
-			this.groupReminder.TabStop = false;
-			this.groupReminder.Text = "Reminder";
-			this.groupReminder.Visible = false;
-			// 
-			// datePickerReminder
-			// 
-			this.datePickerReminder.CustomFormat = "MMMM  dd,   yyyy";
-			this.datePickerReminder.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-			this.datePickerReminder.Location = new System.Drawing.Point(4, 36);
-			this.datePickerReminder.Name = "datePickerReminder";
-			this.datePickerReminder.Size = new System.Drawing.Size(144, 20);
-			this.datePickerReminder.TabIndex = 2;
-			this.datePickerReminder.Visible = false;
-			// 
-			// panelReminderFrequency
-			// 
-			this.panelReminderFrequency.BorderColor = System.Drawing.Color.Transparent;
-			this.panelReminderFrequency.Controls.Add(this.labelRemindFrequency);
-			this.panelReminderFrequency.Controls.Add(this.textReminderRepeatFrequency);
-			this.panelReminderFrequency.Controls.Add(this.label2);
-			this.panelReminderFrequency.Location = new System.Drawing.Point(1, 34);
-			this.panelReminderFrequency.Name = "panelReminderFrequency";
-			this.panelReminderFrequency.Size = new System.Drawing.Size(240, 22);
-			this.panelReminderFrequency.TabIndex = 2;
-			this.panelReminderFrequency.TabStop = true;
-			// 
-			// labelRemindFrequency
-			// 
-			this.labelRemindFrequency.Location = new System.Drawing.Point(157, 1);
-			this.labelRemindFrequency.Name = "labelRemindFrequency";
-			this.labelRemindFrequency.Size = new System.Drawing.Size(80, 20);
-			this.labelRemindFrequency.TabIndex = 0;
-			this.labelRemindFrequency.Text = "Days";
-			this.labelRemindFrequency.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textReminderRepeatFrequency
-			// 
-			this.textReminderRepeatFrequency.Location = new System.Drawing.Point(92, 1);
-			this.textReminderRepeatFrequency.MaxVal = 999999999;
-			this.textReminderRepeatFrequency.MinVal = 1;
-			this.textReminderRepeatFrequency.Name = "textReminderRepeatFrequency";
-			this.textReminderRepeatFrequency.Size = new System.Drawing.Size(50, 20);
-			this.textReminderRepeatFrequency.TabIndex = 1;
-			this.textReminderRepeatFrequency.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textReminderRepeatFrequency_KeyUp);
-			// 
-			// label2
-			// 
-			this.label2.Location = new System.Drawing.Point(1, 1);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(90, 20);
-			this.label2.TabIndex = 0;
-			this.label2.Text = "Every";
-			this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelReminderRepeat
-			// 
-			this.labelReminderRepeat.Location = new System.Drawing.Point(2, 13);
-			this.labelReminderRepeat.Name = "labelReminderRepeat";
-			this.labelReminderRepeat.Size = new System.Drawing.Size(90, 21);
-			this.labelReminderRepeat.TabIndex = 0;
-			this.labelReminderRepeat.Text = "Type";
-			this.labelReminderRepeat.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// comboReminderRepeat
-			// 
-			this.comboReminderRepeat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboReminderRepeat.FormattingEnabled = true;
-			this.comboReminderRepeat.Location = new System.Drawing.Point(93, 12);
-			this.comboReminderRepeat.Name = "comboReminderRepeat";
-			this.comboReminderRepeat.Size = new System.Drawing.Size(145, 21);
-			this.comboReminderRepeat.TabIndex = 1;
-			this.comboReminderRepeat.SelectedIndexChanged += new System.EventHandler(this.comboReminderRepeat_SelectedIndexChanged);
-			// 
-			// panelReminderDays
-			// 
-			this.panelReminderDays.BorderColor = System.Drawing.Color.Transparent;
-			this.panelReminderDays.Controls.Add(this.labelReminderRepeatDayKey);
-			this.panelReminderDays.Controls.Add(this.labelReminderRepeatDays);
-			this.panelReminderDays.Controls.Add(this.checkReminderRepeatMonday);
-			this.panelReminderDays.Controls.Add(this.checkReminderRepeatSunday);
-			this.panelReminderDays.Controls.Add(this.checkReminderRepeatTuesday);
-			this.panelReminderDays.Controls.Add(this.checkReminderRepeatSaturday);
-			this.panelReminderDays.Controls.Add(this.checkReminderRepeatWednesday);
-			this.panelReminderDays.Controls.Add(this.checkReminderRepeatFriday);
-			this.panelReminderDays.Controls.Add(this.checkReminderRepeatThursday);
-			this.panelReminderDays.Location = new System.Drawing.Point(1, 55);
-			this.panelReminderDays.Name = "panelReminderDays";
-			this.panelReminderDays.Size = new System.Drawing.Size(240, 28);
-			this.panelReminderDays.TabIndex = 3;
-			this.panelReminderDays.TabStop = true;
-			// 
-			// labelReminderRepeatDayKey
-			// 
-			this.labelReminderRepeatDayKey.Location = new System.Drawing.Point(91, 15);
-			this.labelReminderRepeatDayKey.Name = "labelReminderRepeatDayKey";
-			this.labelReminderRepeatDayKey.Size = new System.Drawing.Size(109, 11);
-			this.labelReminderRepeatDayKey.TabIndex = 0;
-			this.labelReminderRepeatDayKey.Text = "M  T  W  R  F  S  U";
-			// 
-			// labelReminderRepeatDays
-			// 
-			this.labelReminderRepeatDays.Location = new System.Drawing.Point(18, 1);
-			this.labelReminderRepeatDays.Name = "labelReminderRepeatDays";
-			this.labelReminderRepeatDays.Size = new System.Drawing.Size(73, 17);
-			this.labelReminderRepeatDays.TabIndex = 0;
-			this.labelReminderRepeatDays.Text = "Days";
-			this.labelReminderRepeatDays.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// checkReminderRepeatMonday
-			// 
-			this.checkReminderRepeatMonday.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.checkReminderRepeatMonday.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.checkReminderRepeatMonday.Location = new System.Drawing.Point(92, 0);
-			this.checkReminderRepeatMonday.Name = "checkReminderRepeatMonday";
-			this.checkReminderRepeatMonday.Size = new System.Drawing.Size(13, 17);
-			this.checkReminderRepeatMonday.TabIndex = 1;
-			this.checkReminderRepeatMonday.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// checkReminderRepeatSunday
-			// 
-			this.checkReminderRepeatSunday.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.checkReminderRepeatSunday.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.checkReminderRepeatSunday.Location = new System.Drawing.Point(176, 0);
-			this.checkReminderRepeatSunday.Name = "checkReminderRepeatSunday";
-			this.checkReminderRepeatSunday.Size = new System.Drawing.Size(13, 17);
-			this.checkReminderRepeatSunday.TabIndex = 7;
-			this.checkReminderRepeatSunday.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// checkReminderRepeatTuesday
-			// 
-			this.checkReminderRepeatTuesday.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.checkReminderRepeatTuesday.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.checkReminderRepeatTuesday.Location = new System.Drawing.Point(106, 0);
-			this.checkReminderRepeatTuesday.Name = "checkReminderRepeatTuesday";
-			this.checkReminderRepeatTuesday.Size = new System.Drawing.Size(13, 17);
-			this.checkReminderRepeatTuesday.TabIndex = 2;
-			this.checkReminderRepeatTuesday.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// checkReminderRepeatSaturday
-			// 
-			this.checkReminderRepeatSaturday.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.checkReminderRepeatSaturday.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.checkReminderRepeatSaturday.Location = new System.Drawing.Point(162, 0);
-			this.checkReminderRepeatSaturday.Name = "checkReminderRepeatSaturday";
-			this.checkReminderRepeatSaturday.Size = new System.Drawing.Size(13, 17);
-			this.checkReminderRepeatSaturday.TabIndex = 6;
-			this.checkReminderRepeatSaturday.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// checkReminderRepeatWednesday
-			// 
-			this.checkReminderRepeatWednesday.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.checkReminderRepeatWednesday.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.checkReminderRepeatWednesday.Location = new System.Drawing.Point(120, 0);
-			this.checkReminderRepeatWednesday.Name = "checkReminderRepeatWednesday";
-			this.checkReminderRepeatWednesday.Size = new System.Drawing.Size(13, 17);
-			this.checkReminderRepeatWednesday.TabIndex = 3;
-			this.checkReminderRepeatWednesday.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// checkReminderRepeatFriday
-			// 
-			this.checkReminderRepeatFriday.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.checkReminderRepeatFriday.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.checkReminderRepeatFriday.Location = new System.Drawing.Point(148, 0);
-			this.checkReminderRepeatFriday.Name = "checkReminderRepeatFriday";
-			this.checkReminderRepeatFriday.Size = new System.Drawing.Size(13, 17);
-			this.checkReminderRepeatFriday.TabIndex = 5;
-			this.checkReminderRepeatFriday.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// checkReminderRepeatThursday
-			// 
-			this.checkReminderRepeatThursday.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.checkReminderRepeatThursday.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.checkReminderRepeatThursday.Location = new System.Drawing.Point(134, 0);
-			this.checkReminderRepeatThursday.Name = "checkReminderRepeatThursday";
-			this.checkReminderRepeatThursday.Size = new System.Drawing.Size(13, 17);
-			this.checkReminderRepeatThursday.TabIndex = 4;
-			this.checkReminderRepeatThursday.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// comboJobs
-			// 
-			this.comboJobs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.comboJobs.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboJobs.FormattingEnabled = true;
-			this.comboJobs.Location = new System.Drawing.Point(431, 540);
-			this.comboJobs.Name = "comboJobs";
-			this.comboJobs.Size = new System.Drawing.Size(346, 21);
-			this.comboJobs.TabIndex = 163;
-			this.comboJobs.Visible = false;
-			this.comboJobs.SelectedIndexChanged += new System.EventHandler(this.comboJobs_SelectedIndexChanged);
-			// 
-			// butAudit
-			// 
-			this.butAudit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.butAudit.Location = new System.Drawing.Point(887, 59);
-			this.butAudit.Name = "butAudit";
-			this.butAudit.Size = new System.Drawing.Size(61, 24);
-			this.butAudit.TabIndex = 160;
-			this.butAudit.Text = "History";
-			this.butAudit.Click += new System.EventHandler(this.butAudit_Click);
-			// 
-			// butColor
-			// 
-			this.butColor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.butColor.Enabled = false;
-			this.butColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.butColor.Location = new System.Drawing.Point(857, 61);
-			this.butColor.Name = "butColor";
-			this.butColor.Size = new System.Drawing.Size(24, 21);
-			this.butColor.TabIndex = 159;
-			// 
-			// label8
-			// 
-			this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.label8.Location = new System.Drawing.Point(625, 61);
-			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(94, 21);
-			this.label8.TabIndex = 158;
-			this.label8.Text = "Task Priority";
-			this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// comboTaskPriorities
-			// 
-			this.comboTaskPriorities.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.comboTaskPriorities.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboTaskPriorities.FormattingEnabled = true;
-			this.comboTaskPriorities.Location = new System.Drawing.Point(720, 61);
-			this.comboTaskPriorities.Name = "comboTaskPriorities";
-			this.comboTaskPriorities.Size = new System.Drawing.Size(134, 21);
-			this.comboTaskPriorities.TabIndex = 157;
-			this.comboTaskPriorities.SelectedIndexChanged += new System.EventHandler(this.comboTaskPriorities_SelectedIndexChanged);
-			this.comboTaskPriorities.SelectionChangeCommitted += new System.EventHandler(this.comboTaskPriorities_SelectionChangeCommitted);
-			// 
-			// textBox1
-			// 
-			this.textBox1.Location = new System.Drawing.Point(454, -72);
-			this.textBox1.Name = "textBox1";
-			this.textBox1.ReadOnly = true;
-			this.textBox1.Size = new System.Drawing.Size(54, 20);
-			this.textBox1.TabIndex = 134;
-			this.textBox1.Visible = false;
-			// 
-			// textTaskNum
-			// 
-			this.textTaskNum.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.textTaskNum.Location = new System.Drawing.Point(894, 617);
-			this.textTaskNum.Name = "textTaskNum";
-			this.textTaskNum.ReadOnly = true;
-			this.textTaskNum.Size = new System.Drawing.Size(54, 20);
-			this.textTaskNum.TabIndex = 134;
-			this.textTaskNum.Visible = false;
-			// 
-			// labelTaskNum
-			// 
-			this.labelTaskNum.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelTaskNum.Location = new System.Drawing.Point(819, 618);
-			this.labelTaskNum.Name = "labelTaskNum";
-			this.labelTaskNum.Size = new System.Drawing.Size(73, 16);
-			this.labelTaskNum.TabIndex = 133;
-			this.labelTaskNum.Text = "TaskNum";
-			this.labelTaskNum.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.labelTaskNum.Visible = false;
-			// 
-			// checkDone
-			// 
-			this.checkDone.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.checkDone.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.checkDone.Location = new System.Drawing.Point(134, 3);
-			this.checkDone.Name = "checkDone";
-			this.checkDone.Size = new System.Drawing.Size(82, 17);
-			this.checkDone.TabIndex = 153;
-			this.checkDone.Text = "Done";
-			this.checkDone.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.checkDone.Click += new System.EventHandler(this.checkDone_Click);
-			// 
-			// labelDoneAffectsAll
-			// 
-			this.labelDoneAffectsAll.Location = new System.Drawing.Point(217, 3);
-			this.labelDoneAffectsAll.Name = "labelDoneAffectsAll";
-			this.labelDoneAffectsAll.Size = new System.Drawing.Size(110, 17);
-			this.labelDoneAffectsAll.TabIndex = 154;
-			this.labelDoneAffectsAll.Text = "(affects all users)";
-			this.labelDoneAffectsAll.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// checkNew
-			// 
-			this.checkNew.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.checkNew.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.checkNew.Location = new System.Drawing.Point(12, 3);
-			this.checkNew.Name = "checkNew";
-			this.checkNew.Size = new System.Drawing.Size(109, 17);
-			this.checkNew.TabIndex = 152;
-			this.checkNew.Text = "New";
-			this.checkNew.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.checkNew.Click += new System.EventHandler(this.checkNew_Click);
-			// 
-			// butChangeUser
-			// 
-			this.butChangeUser.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.butChangeUser.Location = new System.Drawing.Point(857, 14);
-			this.butChangeUser.Name = "butChangeUser";
-			this.butChangeUser.Size = new System.Drawing.Size(24, 22);
-			this.butChangeUser.TabIndex = 151;
-			this.butChangeUser.Text = "...";
-			this.butChangeUser.Click += new System.EventHandler(this.butChangeUser_Click);
-			// 
-			// butAddNote
-			// 
-			this.butAddNote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butAddNote.Image = global::Imedisoft.Properties.Resources.Add;
-			this.butAddNote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.butAddNote.Location = new System.Drawing.Point(873, 540);
-			this.butAddNote.Name = "butAddNote";
-			this.butAddNote.Size = new System.Drawing.Size(75, 24);
-			this.butAddNote.TabIndex = 150;
-			this.butAddNote.Text = "Add";
-			this.butAddNote.Click += new System.EventHandler(this.butAddNote_Click);
-			// 
-			// textTaskList
-			// 
-			this.textTaskList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.textTaskList.Location = new System.Drawing.Point(720, 39);
-			this.textTaskList.Name = "textTaskList";
-			this.textTaskList.ReadOnly = true;
-			this.textTaskList.Size = new System.Drawing.Size(134, 20);
-			this.textTaskList.TabIndex = 146;
-			// 
-			// label10
-			// 
-			this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.label10.Location = new System.Drawing.Point(625, 39);
-			this.label10.Name = "label10";
-			this.label10.Size = new System.Drawing.Size(94, 20);
-			this.label10.TabIndex = 147;
-			this.label10.Text = "Task List";
-			this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// butSend
-			// 
-			this.butSend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butSend.Location = new System.Drawing.Point(478, 649);
-			this.butSend.Name = "butSend";
-			this.butSend.Size = new System.Drawing.Size(75, 24);
-			this.butSend.TabIndex = 142;
-			this.butSend.Text = "&Send To...";
-			this.butSend.Click += new System.EventHandler(this.butSend_Click);
-			// 
-			// labelReply
-			// 
-			this.labelReply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.labelReply.Location = new System.Drawing.Point(312, 652);
-			this.labelReply.Name = "labelReply";
-			this.labelReply.Size = new System.Drawing.Size(162, 19);
-			this.labelReply.TabIndex = 141;
-			this.labelReply.Text = "(Send to author)";
-			this.labelReply.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// butReply
-			// 
-			this.butReply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butReply.Location = new System.Drawing.Point(233, 649);
-			this.butReply.Name = "butReply";
-			this.butReply.Size = new System.Drawing.Size(75, 24);
-			this.butReply.TabIndex = 140;
-			this.butReply.Text = "Reply";
-			this.butReply.Click += new System.EventHandler(this.butReply_Click);
-			// 
-			// butNowFinished
-			// 
-			this.butNowFinished.Location = new System.Drawing.Point(264, 65);
-			this.butNowFinished.Name = "butNowFinished";
-			this.butNowFinished.Size = new System.Drawing.Size(62, 19);
-			this.butNowFinished.TabIndex = 132;
-			this.butNowFinished.Text = "Now";
-			this.butNowFinished.Click += new System.EventHandler(this.butNowFinished_Click);
-			// 
-			// textDateTimeFinished
-			// 
-			this.textDateTimeFinished.Location = new System.Drawing.Point(107, 65);
-			this.textDateTimeFinished.Name = "textDateTimeFinished";
-			this.textDateTimeFinished.Size = new System.Drawing.Size(151, 20);
-			this.textDateTimeFinished.TabIndex = 131;
-			// 
-			// label7
-			// 
-			this.label7.Location = new System.Drawing.Point(1, 64);
-			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(105, 20);
-			this.label7.TabIndex = 130;
-			this.label7.Text = "Date/Time Finished";
-			this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textUser
-			// 
-			this.textUser.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.textUser.Location = new System.Drawing.Point(720, 16);
-			this.textUser.Name = "textUser";
-			this.textUser.ReadOnly = true;
-			this.textUser.Size = new System.Drawing.Size(134, 20);
-			this.textUser.TabIndex = 0;
-			// 
-			// label16
-			// 
-			this.label16.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.label16.Location = new System.Drawing.Point(625, 16);
-			this.label16.Name = "label16";
-			this.label16.Size = new System.Drawing.Size(94, 20);
-			this.label16.TabIndex = 125;
-			this.label16.Text = "From User";
-			this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// butDelete
-			// 
-			this.butDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
-			this.butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.butDelete.Location = new System.Drawing.Point(21, 649);
-			this.butDelete.Name = "butDelete";
-			this.butDelete.Size = new System.Drawing.Size(80, 24);
-			this.butDelete.TabIndex = 124;
-			this.butDelete.Text = "&Delete";
-			this.butDelete.Click += new System.EventHandler(this.butDelete_Click);
-			// 
-			// butNow
-			// 
-			this.butNow.Location = new System.Drawing.Point(264, 43);
-			this.butNow.Name = "butNow";
-			this.butNow.Size = new System.Drawing.Size(62, 19);
-			this.butNow.TabIndex = 19;
-			this.butNow.Text = "Now";
-			this.butNow.Click += new System.EventHandler(this.butNow_Click);
-			// 
-			// textDateTimeEntry
-			// 
-			this.textDateTimeEntry.Location = new System.Drawing.Point(107, 43);
-			this.textDateTimeEntry.Name = "textDateTimeEntry";
-			this.textDateTimeEntry.Size = new System.Drawing.Size(151, 20);
-			this.textDateTimeEntry.TabIndex = 18;
-			// 
-			// label5
-			// 
-			this.label5.Location = new System.Drawing.Point(1, 42);
-			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(105, 20);
-			this.label5.TabIndex = 17;
-			this.label5.Text = "Date/Time Task";
-			this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// panelObject
-			// 
-			this.panelObject.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.panelObject.Controls.Add(this.textObjectDesc);
-			this.panelObject.Controls.Add(this.labelObjectDesc);
-			this.panelObject.Controls.Add(this.butGoto);
-			this.panelObject.Controls.Add(this.butChange);
-			this.panelObject.Location = new System.Drawing.Point(3, 611);
-			this.panelObject.Name = "panelObject";
-			this.panelObject.Size = new System.Drawing.Size(590, 34);
-			this.panelObject.TabIndex = 15;
-			// 
-			// textObjectDesc
-			// 
-			this.textObjectDesc.BackColor = System.Drawing.SystemColors.Window;
-			this.textObjectDesc.Location = new System.Drawing.Point(103, 0);
-			this.textObjectDesc.Multiline = true;
-			this.textObjectDesc.Name = "textObjectDesc";
-			this.textObjectDesc.ReadOnly = true;
-			this.textObjectDesc.Size = new System.Drawing.Size(302, 34);
-			this.textObjectDesc.TabIndex = 0;
-			this.textObjectDesc.Text = "line 1\r\nline 2";
-			// 
-			// labelObjectDesc
-			// 
-			this.labelObjectDesc.Location = new System.Drawing.Point(26, 1);
-			this.labelObjectDesc.Name = "labelObjectDesc";
-			this.labelObjectDesc.Size = new System.Drawing.Size(77, 19);
-			this.labelObjectDesc.TabIndex = 8;
-			this.labelObjectDesc.Text = "ObjectDesc";
-			this.labelObjectDesc.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// butGoto
-			// 
-			this.butGoto.Location = new System.Drawing.Point(501, 5);
-			this.butGoto.Name = "butGoto";
-			this.butGoto.Size = new System.Drawing.Size(75, 24);
-			this.butGoto.TabIndex = 12;
-			this.butGoto.Text = "Go To";
-			this.butGoto.Click += new System.EventHandler(this.butGoto_Click);
-			// 
-			// butChange
-			// 
-			this.butChange.Location = new System.Drawing.Point(418, 5);
-			this.butChange.Name = "butChange";
-			this.butChange.Size = new System.Drawing.Size(75, 24);
-			this.butChange.TabIndex = 10;
-			this.butChange.Text = "Change";
-			this.butChange.Click += new System.EventHandler(this.butChange_Click);
-			// 
-			// listObjectType
-			// 
-			this.listObjectType.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.listObjectType.Location = new System.Drawing.Point(431, 565);
-			this.listObjectType.Name = "listObjectType";
-			this.listObjectType.Size = new System.Drawing.Size(120, 43);
-			this.listObjectType.TabIndex = 13;
-			this.listObjectType.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listObjectType_MouseDown);
-			// 
-			// butCopy
-			// 
-			this.butCopy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butCopy.Image = global::Imedisoft.Properties.Resources.butCopy;
-			this.butCopy.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.butCopy.Location = new System.Drawing.Point(791, 540);
-			this.butCopy.Name = "butCopy";
-			this.butCopy.Size = new System.Drawing.Size(75, 24);
-			this.butCopy.TabIndex = 4;
-			this.butCopy.Text = "Copy";
-			this.butCopy.Click += new System.EventHandler(this.butCopy_Click);
-			// 
-			// butOK
-			// 
-			this.butOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butOK.Location = new System.Drawing.Point(791, 649);
-			this.butOK.Name = "butOK";
-			this.butOK.Size = new System.Drawing.Size(75, 24);
-			this.butOK.TabIndex = 4;
-			this.butOK.Text = "&OK";
-			this.butOK.Click += new System.EventHandler(this.butOK_Click);
-			// 
-			// butCancel
-			// 
-			this.butCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butCancel.Location = new System.Drawing.Point(873, 649);
-			this.butCancel.Name = "butCancel";
-			this.butCancel.Size = new System.Drawing.Size(75, 24);
-			this.butCancel.TabIndex = 5;
-			this.butCancel.Text = "&Cancel";
-			this.butCancel.Click += new System.EventHandler(this.butCancel_Click);
-			// 
-			// splitContainerDescriptNote
-			// 
-			this.splitContainerDescriptNote.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.splitContainerDescriptNote.Location = new System.Drawing.Point(12, 85);
-			this.splitContainerDescriptNote.Name = "splitContainerDescriptNote";
-			this.splitContainerDescriptNote.Orientation = System.Windows.Forms.Orientation.Horizontal;
-			// 
-			// splitContainerDescriptNote.Panel1
-			// 
-			this.splitContainerDescriptNote.Panel1.Controls.Add(this.butEditAutoNote);
-			this.splitContainerDescriptNote.Panel1.Controls.Add(this.butAutoNote);
-			this.splitContainerDescriptNote.Panel1.Controls.Add(this.butBlue);
-			this.splitContainerDescriptNote.Panel1.Controls.Add(this.butRed);
-			this.splitContainerDescriptNote.Panel1.Controls.Add(this.textDescript);
-			this.splitContainerDescriptNote.Panel1.Controls.Add(this.label1);
-			this.splitContainerDescriptNote.Panel1MinSize = 106;
-			// 
-			// splitContainerDescriptNote.Panel2
-			// 
-			this.splitContainerDescriptNote.Panel2.Controls.Add(this.gridMain);
-			this.splitContainerDescriptNote.Panel2MinSize = 50;
-			this.splitContainerDescriptNote.Size = new System.Drawing.Size(936, 450);
-			this.splitContainerDescriptNote.SplitterDistance = 106;
-			this.splitContainerDescriptNote.TabIndex = 171;
-			this.splitContainerDescriptNote.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainerNoFlicker1_SplitterMoved);
-			// 
-			// butEditAutoNote
-			// 
-			this.butEditAutoNote.Location = new System.Drawing.Point(4, 54);
-			this.butEditAutoNote.Name = "butEditAutoNote";
-			this.butEditAutoNote.Size = new System.Drawing.Size(85, 24);
-			this.butEditAutoNote.TabIndex = 158;
-			this.butEditAutoNote.Text = "Edit Auto Note";
-			this.butEditAutoNote.UseVisualStyleBackColor = true;
-			this.butEditAutoNote.Click += new System.EventHandler(this.ButEditAutoNote_Click);
-			// 
-			// butAutoNote
-			// 
-			this.butAutoNote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butAutoNote.Location = new System.Drawing.Point(4, 80);
-			this.butAutoNote.Name = "butAutoNote";
-			this.butAutoNote.Size = new System.Drawing.Size(85, 22);
-			this.butAutoNote.TabIndex = 157;
-			this.butAutoNote.Text = "Auto Note";
-			this.butAutoNote.Click += new System.EventHandler(this.butAutoNote_Click);
-			// 
-			// butBlue
-			// 
-			this.butBlue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butBlue.Location = new System.Drawing.Point(47, 27);
-			this.butBlue.Name = "butBlue";
-			this.butBlue.Size = new System.Drawing.Size(42, 24);
-			this.butBlue.TabIndex = 156;
-			this.butBlue.Text = "Blue";
-			this.butBlue.Visible = false;
-			this.butBlue.Click += new System.EventHandler(this.butBlue_Click);
-			// 
-			// butRed
-			// 
-			this.butRed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butRed.Location = new System.Drawing.Point(4, 27);
-			this.butRed.Name = "butRed";
-			this.butRed.Size = new System.Drawing.Size(42, 24);
-			this.butRed.TabIndex = 155;
-			this.butRed.Text = "Red";
-			this.butRed.Visible = false;
-			this.butRed.Click += new System.EventHandler(this.butRed_Click);
-			// 
-			// textDescript
-			// 
-			this.textDescript.AcceptsTab = true;
-			this.textDescript.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.textDescript.BackColor = System.Drawing.SystemColors.Window;
-			this.textDescript.DetectLinksEnabled = false;
-			this.textDescript.DetectUrls = false;
-			this.textDescript.Location = new System.Drawing.Point(92, 5);
-			this.textDescript.Name = "textDescript";
-			this.textDescript.QuickPasteType = OpenDentBusiness.QuickPasteType.Task;
-			this.textDescript.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-			this.textDescript.Size = new System.Drawing.Size(841, 97);
-			this.textDescript.TabIndex = 1;
-			this.textDescript.Text = "";
-			this.textDescript.TextChanged += new System.EventHandler(this.textDescript_TextChanged);
-			this.textDescript.HasAutoNotes=true;
-			// 
-			// label1
-			// 
-			this.label1.Location = new System.Drawing.Point(9, 4);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(84, 20);
-			this.label1.TabIndex = 2;
-			this.label1.Text = "Description";
-			this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// gridMain
-			// 
-			this.gridMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.gridMain.Location = new System.Drawing.Point(0, 3);
-			this.gridMain.Name = "gridMain";
-			this.gridMain.Size = new System.Drawing.Size(933, 333);
-			this.gridMain.TabIndex = 149;
-			this.gridMain.Title = "Notes";
-			this.gridMain.TranslationName = "FormTaskEdit";
-			this.gridMain.CellDoubleClick += new OpenDental.UI.ODGridClickEventHandler(this.gridMain_CellDoubleClick);
-			// 
-			// labelTaskChanged
-			// 
-			this.labelTaskChanged.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelTaskChanged.ForeColor = System.Drawing.Color.Red;
-			this.labelTaskChanged.Location = new System.Drawing.Point(599, 624);
-			this.labelTaskChanged.Name = "labelTaskChanged";
-			this.labelTaskChanged.Size = new System.Drawing.Size(185, 23);
-			this.labelTaskChanged.TabIndex = 173;
-			this.labelTaskChanged.Text = "The task has been changed ";
-			this.labelTaskChanged.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			this.labelTaskChanged.Visible = false;
-			// 
-			// butRefresh
-			// 
-			this.butRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butRefresh.Location = new System.Drawing.Point(648, 649);
-			this.butRefresh.Name = "butRefresh";
-			this.butRefresh.Size = new System.Drawing.Size(75, 24);
-			this.butRefresh.TabIndex = 174;
-			this.butRefresh.Text = "Refresh";
-			this.butRefresh.UseVisualStyleBackColor = true;
-			this.butRefresh.Visible = false;
-			this.butRefresh.Click += new System.EventHandler(this.butRefresh_Click);
-			// 
-			// textBoxDateTimeCreated
-			// 
-			this.textBoxDateTimeCreated.Location = new System.Drawing.Point(107, 21);
-			this.textBoxDateTimeCreated.Name = "textBoxDateTimeCreated";
-			this.textBoxDateTimeCreated.ReadOnly = true;
-			this.textBoxDateTimeCreated.Size = new System.Drawing.Size(151, 20);
-			this.textBoxDateTimeCreated.TabIndex = 175;
-			// 
-			// label3
-			// 
-			this.label3.Location = new System.Drawing.Point(1, 21);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(105, 20);
-			this.label3.TabIndex = 176;
-			this.label3.Text = "Date/Time Created";
-			this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// FormTaskEdit
-			// 
-			this.ClientSize = new System.Drawing.Size(974, 676);
-			this.Controls.Add(this.label3);
-			this.Controls.Add(this.textBoxDateTimeCreated);
-			this.Controls.Add(this.butRefresh);
-			this.Controls.Add(this.labelTaskChanged);
-			this.Controls.Add(this.timePickerReminder);
-			this.Controls.Add(this.butCreateJob);
-			this.Controls.Add(this.label6);
-			this.Controls.Add(this.labelJobs);
-			this.Controls.Add(this.panelRepeating);
-			this.Controls.Add(this.groupReminder);
-			this.Controls.Add(this.comboJobs);
-			this.Controls.Add(this.butAudit);
-			this.Controls.Add(this.butColor);
-			this.Controls.Add(this.label8);
-			this.Controls.Add(this.comboTaskPriorities);
-			this.Controls.Add(this.textBox1);
-			this.Controls.Add(this.textTaskNum);
-			this.Controls.Add(this.labelTaskNum);
-			this.Controls.Add(this.checkDone);
-			this.Controls.Add(this.labelDoneAffectsAll);
-			this.Controls.Add(this.checkNew);
-			this.Controls.Add(this.butChangeUser);
-			this.Controls.Add(this.butAddNote);
-			this.Controls.Add(this.textTaskList);
-			this.Controls.Add(this.label10);
-			this.Controls.Add(this.butSend);
-			this.Controls.Add(this.labelReply);
-			this.Controls.Add(this.butReply);
-			this.Controls.Add(this.butNowFinished);
-			this.Controls.Add(this.textDateTimeFinished);
-			this.Controls.Add(this.label7);
-			this.Controls.Add(this.textUser);
-			this.Controls.Add(this.label16);
-			this.Controls.Add(this.butDelete);
-			this.Controls.Add(this.butNow);
-			this.Controls.Add(this.textDateTimeEntry);
-			this.Controls.Add(this.label5);
-			this.Controls.Add(this.panelObject);
-			this.Controls.Add(this.listObjectType);
-			this.Controls.Add(this.butCopy);
-			this.Controls.Add(this.butOK);
-			this.Controls.Add(this.butCancel);
-			this.Controls.Add(this.splitContainerDescriptNote);
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.MinimumSize = new System.Drawing.Size(990, 714);
-			this.Name = "FormTaskEdit";
-			this.Text = "Task";
-			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormTaskEdit_FormClosing);
-			this.Load += new System.EventHandler(this.FormTaskListEdit_Load);
-			this.panelRepeating.ResumeLayout(false);
-			this.panelRepeating.PerformLayout();
-			this.groupReminder.ResumeLayout(false);
-			this.panelReminderFrequency.ResumeLayout(false);
-			this.panelReminderFrequency.PerformLayout();
-			this.panelReminderDays.ResumeLayout(false);
-			this.panelObject.ResumeLayout(false);
-			this.panelObject.PerformLayout();
-			this.splitContainerDescriptNote.Panel1.ResumeLayout(false);
-			this.splitContainerDescriptNote.Panel2.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.splitContainerDescriptNote)).EndInit();
-			this.splitContainerDescriptNote.ResumeLayout(false);
-			this.ResumeLayout(false);
-			this.PerformLayout();
-
-		}
-		#endregion
-
-		private void FormTaskListEdit_Load(object sender,System.EventArgs e) {
+		private void FormTaskListEdit_Load(object sender, EventArgs e)
+		{
 			LoadTask();
-			gridMain.ScrollToEnd();
+
+			notesGrid.ScrollToEnd();
 		}
 
-		private void LoadTask() { 
-			#if DEBUG
-				labelTaskNum.Visible=true;
-				textTaskNum.Visible=true;
-				textTaskNum.Text=_taskCur.TaskNum.ToString();
-			#endif
-			if(IsNew) {
-				//butDelete.Enabled always stays true
-				//textDescript always editable
-			}
-			else {//trying to edit an existing task, so need to block some things
-				bool isTaskForCurUser=true;
-				if(_taskCur.UserNum!=Security.CurrentUser.Id) {//current user didn't write this task, so block them.
-					isTaskForCurUser=false;//Delete will only be enabled if the user has the TaskEdit and TaskNoteEdit permissions.
+		private void LoadTask()
+		{
+			// If there is no user assigned, assign the task to the current user.
+			if (task.UserId == 0)
+            {
+				userId = task.UserId = Security.CurrentUser.Id;
+            }
+
+			// Is this an existing task?
+			if (task.Id > 0)
+			{
+				// If the task is not assigned to the current user and the user doesn't have the task edit permission, disable the delete button.
+				if (task.UserId != Security.CurrentUser.Id && !Security.IsAuthorized(Permissions.TaskNoteEdit, true))
+				{
+					deleteButton.Enabled = true;
 				}
-				if(_taskCur.TaskListNum!=Security.CurrentUser.TaskListInBox) {//the task is not in the logged-in user's inbox
-					isTaskForCurUser=false;
-				}
-				if(isTaskForCurUser) {//this just allows getting the NoteList less often
-					_listTaskNotes=TaskNotes.GetForTask(_taskCur.TaskNum);//so we can check so see if other users have added notes
-					for(int i=0;i<_listTaskNotes.Count;i++) {
-						if(Security.CurrentUser.Id!=_listTaskNotes[i].UserNum) {
-							isTaskForCurUser=false;
-							break;
-						}
-					}
-				}
-				if(!isTaskForCurUser && !Security.IsAuthorized(Permissions.TaskNoteEdit,true)) {//but only need to block them if they don't have TaskNoteEdit permission
-					butDelete.Enabled=false;
-				}
-				if(!isTaskForCurUser && !Security.IsAuthorized(Permissions.TaskEdit,true)) {
-					butDelete.Enabled=false;
-					butAutoNote.Enabled=false;
-					butEditAutoNote.Enabled=false;
-					textDescript.ReadOnly=true;
-					textDescript.BackColor=System.Drawing.SystemColors.Window;
+
+				// If the tsak is not assigned to the current user and the user doesn't have the 'TaskEdit' permission, set form to readonly...
+				if (task.UserId != Security.CurrentUser.Id && !Security.IsAuthorized(Permissions.TaskEdit, true))
+				{
+					DisableMostControls();
 				}
 			}
-			_listTaskPriorities=Defs.GetDefsForCategory(DefCat.TaskPriorities,true);//Fill list with non-hidden priorities.
-			//There must be at least one priority in Setup | Definitions.  Do not let them load the task edit window without at least one priority.
-			if(_listTaskPriorities.Count < 1) {
-				MessageBox.Show("There are no task priorities in Setup | Definitions.  There must be at least one in order to use the task system.");
-				DialogResult=DialogResult.Cancel;
+
+			// Check whether there are priorities defined.
+			priorities = Defs.GetDefsForCategory(DefCat.TaskPriorities, true);
+			if (priorities.Count < 1)
+			{
+				ShowError("There are no task priorities in Setup | Definitions. There must be at least one in order to use the task system.");
+
+				DialogResult = DialogResult.Cancel;
+
 				Close();
 			}
-			bool hasDefault=false;
-			_priorityDefNumSelected=_taskCur.PriorityDefNum;
-			if(_priorityDefNumSelected==0 && IsNew && _taskCur.ReminderType!=TaskReminderType.NoReminder) {
-				foreach(Def defTaskPriority in _listTaskPriorities) {
-					if(defTaskPriority.ItemValue=="R") {
-						_priorityDefNumSelected=defTaskPriority.DefNum;
-						hasDefault=true;
-						break;
-					}
+
+			defaultPriority = priorities.FirstOrDefault();
+
+			foreach (var priority in priorities)
+			{
+				if (!priority.IsHidden && priority.ItemValue == "D")
+				{
+					defaultPriority = priority;
+
+					break;
 				}
 			}
-			if(_priorityDefNumSelected==0) {//The task does not yet have a priority assigned.  Find the default and assign it, if available.
-				for(int i=0;i<_listTaskPriorities.Count;i++) {
-					if(_listTaskPriorities[i].ItemValue=="D") {
-						_priorityDefNumSelected=_listTaskPriorities[i].DefNum;
-						hasDefault=true;
-						break;
-					}
-				}
+
+			priorityComboBox.Items.Clear();
+			foreach (var priority in priorities)
+            {
+				if (priority.IsHidden && priority.DefNum != task.PriorityId) continue;
+
+				priorityComboBox.Items.Add(priority);
+				if (priority.DefNum == task.PriorityId)
+                {
+					priorityComboBox.SelectedItem = priority;
+                }
+            }
+
+			// If no priority was selected, select the default priority.
+			if (task.PriorityId == 0 || priorityComboBox.SelectedIndex == -1)
+            {
+				priorityComboBox.SelectedItem = defaultPriority;
+            }
+
+			userTextBox.Text = Userods.GetName(task.UserId);//might be blank.
+			taskListId = task.TaskListId;
+			taskListTextBox.Text = TaskLists.GetOne(taskListId)?.Description;
+
+			dateCreatedTextBox.Text = task.DateAdded.ToString();
+			dateStartTextBox.Text = task.DateStart?.ToString() ?? DateTime.Now.ToString();
+			dateCompletedTextBox.Text = task.DateCompleted?.ToString() ?? "";
+
+			descriptionTextBox.Text = task.Description;
+			descriptionTextBox.Select();
+			descriptionTextBox.Select(task.Description.Length, 0);
+			
+			if (task.Status == TaskStatus.Done)
+			{
+				doneCheckBox.Checked = true;
 			}
-			comboTaskPriorities.Items.Clear();
-			for(int i=0;i<_listTaskPriorities.Count;i++) {//Add non-hidden defs first
-				comboTaskPriorities.Items.Add(_listTaskPriorities[i].ItemName);
-				if(_priorityDefNumSelected==_listTaskPriorities[i].DefNum) {//Use priority listed within the database.
-					comboTaskPriorities.SelectedIndex=i;//Sets combo text too
-				}
+
+			repeatIntervalComboBox.SelectedIndex = (int)task.RepeatInterval;
+			if (task.RepeatDate.HasValue)
+			{
+				repeatDateTextBox.Text = task.RepeatDate.Value.ToShortDateString();
 			}
-			if(_priorityDefNumSelected==0 && !hasDefault) {//If no default has been set in the definitions, select the last item in the list.
-				comboTaskPriorities.SelectedIndex=comboTaskPriorities.Items.Count-1;
-				_priorityDefNumSelected=_listTaskPriorities[_listTaskPriorities.Count-1].DefNum;
+
+			editAutoNoteButton.Visible = GetHasAutoNotePrompt();
+			if (task.Repeat)
+			{
+				newCheckBox.Enabled = false;
+				doneCheckBox.Enabled = false;
+				repeatDateTextBox.Enabled = false;
+				repeatIntervalComboBox.Enabled = false;
 			}
-			if(comboTaskPriorities.SelectedIndex==-1) {//Priority for task wasn't found in the non-hidden priorities list (and isn't triageBlue), so it must be a hidden priority.
-				List<Def> listTaskDefsLong=Defs.GetDefsForCategory(DefCat.TaskPriorities);//Get all priorities
-				for(int i=0;i<listTaskDefsLong.Count;i++) {
-					if(listTaskDefsLong[i].DefNum==_priorityDefNumSelected) {//We find the hidden priority and set the text of the combo box.
-						comboTaskPriorities.DropDownStyle=ComboBoxStyle.DropDown;
-						comboTaskPriorities.Text=(listTaskDefsLong[i].ItemName+" (Hidden)");
-						butColor.BackColor=listTaskDefsLong[i].ItemColor;
-					}
-				}
-			}
-			textUser.Text=Userods.GetName(_taskCur.UserNum);//might be blank.
-			if(_taskListCur!=null) {
-				_taskCur.ParentDesc=_taskListCur.Descript;
-				textTaskList.Text=_taskListCur.Descript;
-			}
-			if(_taskCur.DateTimeOriginal==DateTime.MinValue) {
-				label3.Visible=false;
-				textBoxDateTimeCreated.Visible=false;
-			}
-			else {
-				textBoxDateTimeCreated.Text=_taskCur.DateTimeOriginal.ToString();
-			}
-			if(_taskCur.DateTimeEntry.Year<1880) {
-				textDateTimeEntry.Text=DateTime.Now.ToString();
-			}
-			else {
-				textDateTimeEntry.Text=_taskCur.DateTimeEntry.ToString();
-			}
-			if(_taskCur.DateTimeFinished.Year<1880) {
-				textDateTimeFinished.Text="";//DateTime.Now.ToString();
-			}
-			else {
-				textDateTimeFinished.Text=_taskCur.DateTimeFinished.ToString();
-			}
-			textDescript.Text=_taskCur.Descript;
-			if(!IsPopup) {//otherwise, TextUser is selected, and it cannot accept input.  This prevents a popup from accepting using input accidentally.
-				textDescript.Select();//Focus does not work for some reason.
-				textDescript.Select(_taskCur.Descript.Length,0);//Place the cursor at the end of the description box.
-			}
-			long mailboxUserNum=0;
-			if(PrefC.GetBool(PrefName.TasksNewTrackedByUser) && _taskCur.TaskListNum !=0) {
-				mailboxUserNum=TaskLists.GetMailboxUserNum(_taskCur.TaskListNum);
-				if(mailboxUserNum != 0 && mailboxUserNum != Security.CurrentUser.Id) {
-					_startedInOthersInbox=true;
-					checkNew.Checked=false;
-					checkNew.Enabled=false;
-				}
-			}
-			//this section must come after textDescript is set:
-			if(_taskCur.TaskStatus==TaskStatusEnum.Done) {//global even if new status is tracked by user
-				checkDone.Checked=true;
-			}
-			else {//because it can't be both new and done.
-				checkDone.Checked=false;
-				if(IsPopup) {//It clearly is Unread, but we don't want to leave it that way upon close OK.
-					checkNew.Checked=false;
-					_statusChanged=true;
-				}
-				else if(PrefC.GetBool(PrefName.TasksNewTrackedByUser)) {
-					if(_startedInOthersInbox) {
-						_taskCur.IsUnread=TaskUnreads.IsUnread(mailboxUserNum,_taskCur);
-					}
-					else {
-						_taskCur.IsUnread=TaskUnreads.IsUnread(Security.CurrentUser.Id,_taskCur);
-						if(_taskCur.IsUnread) {
-							checkNew.Checked=true;
-							_mightNeedSetRead=true;
-						}
-					}
-				}
-				else {//tracked globally, the old way
-					if(_taskCur.TaskStatus==TaskStatusEnum.New) {
-						_taskCur.IsUnread=true;//Not using taskunread table.
-						checkNew.Checked=true;
-					}
-				}
-			}
-			groupReminder.Visible=(!PrefC.GetBool(PrefName.TasksUseRepeating));
-			panelRepeating.Visible=PrefC.GetBool(PrefName.TasksUseRepeating);
-			textReminderRepeatFrequency.Text=(IsNew?"1":_taskCur.ReminderFrequency.ToString());
-			//Fill comboReminderRepeat with repeating options.
-			_listTaskReminderTypeNames=new List<TaskReminderType>() {
-				TaskReminderType.NoReminder,
-				TaskReminderType.Once,
-				TaskReminderType.Daily,
-				TaskReminderType.Weekly,
-				TaskReminderType.Monthly,
-				TaskReminderType.Yearly
-			};
-			comboReminderRepeat.Items.Clear();
-			for(int i=0;i<_listTaskReminderTypeNames.Count;i++) {
-				comboReminderRepeat.Items.Add(_listTaskReminderTypeNames[i].ToString());
-				if(_taskCur.ReminderType.HasFlag(_listTaskReminderTypeNames[i])) {
-					comboReminderRepeat.SelectedIndex=i;
-				}
-			}
-			if(_taskCur.ReminderType==TaskReminderType.Once) {
-				if(IsNew) {
-					datePickerReminder.Value=DateTime.Now;
-					timePickerReminder.Value=DateTime.Now;
-				}
-				else {
-					datePickerReminder.Value=_taskCur.DateTimeEntry;
-					timePickerReminder.Value=_taskCur.DateTimeEntry;
-				}
-			}
-			checkReminderRepeatMonday.Checked=_taskCur.ReminderType.HasFlag(TaskReminderType.Monday);
-			checkReminderRepeatTuesday.Checked=_taskCur.ReminderType.HasFlag(TaskReminderType.Tuesday);
-			checkReminderRepeatWednesday.Checked=_taskCur.ReminderType.HasFlag(TaskReminderType.Wednesday);
-			checkReminderRepeatThursday.Checked=_taskCur.ReminderType.HasFlag(TaskReminderType.Thursday);
-			checkReminderRepeatFriday.Checked=_taskCur.ReminderType.HasFlag(TaskReminderType.Friday);
-			checkReminderRepeatSaturday.Checked=_taskCur.ReminderType.HasFlag(TaskReminderType.Saturday);
-			checkReminderRepeatSunday.Checked=_taskCur.ReminderType.HasFlag(TaskReminderType.Sunday);
-			if(_taskCur.DateTask.Year>1880) {
-				textDateTask.Text=_taskCur.DateTask.ToShortDateString();
-			}
-			butEditAutoNote.Visible=GetHasAutoNotePrompt();
-			if(_taskCur.IsRepeating) {
-				checkNew.Enabled=false;
-				checkDone.Enabled=false;
-				textDateTask.Enabled=false;
-				listObjectType.Enabled=false;
-				if(_taskCur.TaskListNum!=0) {//not a main parent
-					comboDateType.Enabled=false;
-				}
-			}
-			for(int i=0;i<Enum.GetNames(typeof(TaskDateType)).Length;i++) {
-				comboDateType.Items.Add(Lan.G("enumTaskDateType",Enum.GetNames(typeof(TaskDateType))[i]));
-				if((int)_taskCur.DateType==i) {
-					comboDateType.SelectedIndex=i;
-				}
-			}
-			if(_taskCur.FromNum==0) {
-				checkFromNum.Checked=false;
-				checkFromNum.Enabled=false;
-			}
-			else {
-				checkFromNum.Checked=true;
-			}
-			listObjectType.Items.Clear();
-			for(int i=0;i<Enum.GetNames(typeof(TaskObjectType)).Length;i++) {
-				listObjectType.Items.Add(Lan.G("enumTaskObjectType",Enum.GetNames(typeof(TaskObjectType))[i]));
-			}
-			_listTaskPriorities=Defs.GetDefsForCategory(DefCat.TaskPriorities,true);//Fill list with non-hidden priorities.
-			//There must be at least one priority in Setup | Definitions.  Do not let them load the task edit window without at least one priority.
-			if(_listTaskPriorities.Count < 1) {
-				MessageBox.Show("There are no task priorities in Setup | Definitions.  There must be at least one in order to use the task system.");
-				DialogResult=DialogResult.Cancel;
+
+			// Get all the available task priorities
+			priorities = Defs.GetDefsForCategory(DefCat.TaskPriorities, true);
+			if (priorities.Count < 1)
+			{
+				ShowError("There are no task priorities in Setup | Definitions.  There must be at least one in order to use the task system.");
+
+				DialogResult = DialogResult.Cancel;
+
 				Close();
 			}
-			FillObject();
-			FillGrid();//Need this in order to pick ReplyToUserNum next.
-			if(IsNew) {
-				labelReply.Visible=false;
-				butReply.Visible=false;
+
+			patientId = task.PatientId;
+			appointmentId = task.AppointmentId;
+
+			FillPatient();
+			FillAppointment();
+			FillNotesGrid();
+
+			// If this is a existing task, try to the ID of the user that added the last note...
+			if (task.Id > 0)
+            {
+				replyToUserId = taskNotes.Where(tn => tn.UserId != Security.CurrentUser.Id).LastOrDefault()?.UserId;
+				if (!replyToUserId.HasValue)
+                {
+					replyToUserId = Security.CurrentUser.Id;
+                }
 			}
-			else if(_taskListCur==null) {
-				//|| TaskListCur.TaskListNum!=Security.CurUser.TaskListInBox) {//if this task is not in my inbox
-				labelReply.Visible=false;
-				butReply.Visible=false;
+
+			// If we don't know who to reply to, hide the reply to button...
+			if (!replyToUserId.HasValue)
+            {
+				replyLabel.Visible = false;
+				replyButton.Visible = false;
 			}
-			else if(_listTaskNotes.Count==0 && _taskCur.UserNum==Security.CurrentUser.Id) {//if this is my task
-				labelReply.Visible=false;
-				butReply.Visible=false;
+            else
+            {
+				replyLabel.Text = "(Send to " + Userods.GetName(replyToUserId.Value) + ")";
+            }
+
+			// If the user is not allowed to edit tasks, hide the audit button.
+			if (!Security.IsAuthorized(Permissions.TaskEdit, true))
+			{
+				auditButton.Visible = false;
 			}
-			else {//reply button will be visible
-				if(_listTaskNotes.Count==0) {//no notes, so reply to owner
-					_replyToUserNum=_taskCur.UserNum;
+
+			SetStartingLocation();
+		}
+
+		/// <summary>
+		///		<para>
+		///			Determines the starting position of the form. If there are no other task forms
+		///			open, the form will be displayed in the center of the screen.
+		///		</para>
+		///		<para>
+		///			If there are other task forms open, the position of this form will be set to be
+		///			slighly offset relative to the previous task form. This ensures that when 
+		///			multiple task forms are opened, they are not displayed on top of eachother, 
+		///			instead they are displayed in a cascading manner.
+		///		</para>
+		/// </summary>
+		private void SetStartingLocation()
+		{
+			const int Offset = 20;
+
+			// Default to center screen.
+			StartPosition = FormStartPosition.CenterScreen;
+
+			// Get a list of all the currently open task forms.
+			var formTaskEdits = Application.OpenForms.OfType<FormTaskEdit>().ToList();
+			if (formTaskEdits.Count <= 1)
+			{
+				return;
+			}
+
+			// Search backwards through the list to find the first visible task form.
+			Form previousForm = null;
+			for (int i = formTaskEdits.Count - 2; i >= 0; i--)
+            {
+				var form = formTaskEdits[i];
+
+				if (form != null && !form.IsDisposed && form.WindowState != FormWindowState.Minimized)
+                {
+					previousForm = form;
+
+					break;
 				}
-				else {//reply to most recent author who is not me
-					//loop backward through the notes to find who to reply to
-					for(int i=_listTaskNotes.Count-1;i>=0;i--) {
-						if(_listTaskNotes[i].UserNum!=Security.CurrentUser.Id) {
-							_replyToUserNum=_listTaskNotes[i].UserNum;
-							break;
-						}
-					}
-					if(_replyToUserNum==0) {//can't figure out who to reply to.
-						labelReply.Visible=false;
-						butReply.Visible=false;
-					}
+            }
+
+			// If we couldn't find another task edit form, just display this one centered.
+			if (previousForm == null) return;
+
+			var currentScreen = System.Windows.Forms.Screen.FromControl(previousForm);
+			var currentPos = previousForm.Location;
+
+			// Determine the position of this form, if it's going offscreen reset to the top left corner.
+			var startPos = new Point(currentPos.X + Offset, currentPos.Y + Offset);
+			if (currentScreen.WorkingArea.Contains(new Rectangle(startPos, Size)))
+            {
+				startPos = new Point(
+					currentScreen.WorkingArea.X, 
+					currentScreen.WorkingArea.Y);
+            }
+
+			StartPosition = FormStartPosition.Manual;
+
+			Location = startPos;
+		}
+
+		private void FillNotesGrid()
+		{
+			if (taskDeleted) return;
+
+			notesGrid.BeginUpdate();
+			notesGrid.ListGridColumns.Clear();
+			notesGrid.ListGridColumns.Add(new GridColumn("Date Time", 120));
+			notesGrid.ListGridColumns.Add(new GridColumn("User", 80));
+			notesGrid.ListGridColumns.Add(new GridColumn("Note", 400));
+			notesGrid.ListGridRows.Clear();
+
+			taskNotes = TaskNotes.GetForTask(task.Id);
+			foreach (var taskNote in taskNotes)
+			{
+				var gridRow = new GridRow();
+
+				gridRow.Cells.Add(taskNote.DateModified.ToShortDateString() + " " + taskNote.DateModified.ToShortTimeString());
+				gridRow.Cells.Add(Userods.GetName(taskNote.UserId));
+				gridRow.Cells.Add(taskNote.Note);
+				gridRow.Tag = taskNote;
+
+				notesGrid.ListGridRows.Add(gridRow);
+			}
+
+			notesGrid.EndUpdate();
+		}
+
+		private void NotesGrid_CellDoubleClick(object sender, ODGridClickEventArgs e)
+		{
+			if (taskDeleted) return;
+
+			if (!(notesGrid.ListGridRows[e.Row].Tag is TaskNote taskNote))
+			{
+				return;
+			}
+
+			EditTaskNote(taskNote);
+		}
+
+		private void EditTaskNote(TaskNote taskNote)
+        {
+			using var formTaskNoteEdit = new FormTaskNoteEdit(taskNote);
+			{
+				if (formTaskNoteEdit.ShowDialog(this) != DialogResult.OK)
+				{
+					return;
 				}
-				labelReply.Text=Lan.G(this,"(Send to ")+Userods.GetName(_replyToUserNum)+")";
 			}
-			if(!Security.IsAuthorized(Permissions.TaskEdit,true)){
-				butAudit.Visible=false;
+
+			if (task.Status == TaskStatus.Done)
+			{
+				doneCheckBox.Checked = false;
 			}
-			SetTaskStartingLocation();
-			_userNumFrom=_taskOld.UserNum;
-			_patientPatNum=0;
-			if(_taskOld.ObjectType==TaskObjectType.Patient && _taskOld.KeyNum>0) {//Patient is attached.
-				_patientPatNum=_taskOld.KeyNum;
-			}
+
+			FillNotesGrid();
+
+			Signalods.SetInvalid(InvalidType.TaskPopup, KeyType.Task, task.Id);
+
+			TaskUnreads.AddUnreads(task, Security.CurrentUser.Id);
+
+			SendSignalsRefillLocal(task);
 		}
 
-		///<summary>Sets the starting location of this form. Should only be called on load.
-		///The first Task window will default to CenterScreen. After that we will cascade down.
-		///If any part of this form will be off screen we will default the next task to the top left of the primary monitor.</summary>
-		private void SetTaskStartingLocation() { 
-			List<FormTaskEdit> listTaskEdits=Application.OpenForms.OfType<FormTaskEdit>().ToList();
-			//Since this form has already gone through the initilize, there will be at least 1. Except when running unit tests.
-			if(listTaskEdits.Count<=1) {
-				this.StartPosition=FormStartPosition.CenterScreen;
-				return;
-			}
-			Point pointStart;
-			//There are multiple task edit windows open, so offset the new window by a little so that it does not show up directly over the old one.
-			const int OFFSET=20;//Sets how far to offset the cascaded form location.
-			this.StartPosition=FormStartPosition.Manual;
-			//Count is 1 based, list index is 0 based, -2 to get the "last" window
-			FormTaskEdit formPrevious=listTaskEdits[listTaskEdits.Count-2];
-			System.Windows.Forms.Screen screenCur=System.Windows.Forms.Screen.PrimaryScreen;
-			//Figure out what monitor the previous task edit window is on.
-			if(formPrevious!=null && !formPrevious.IsDisposed && formPrevious.WindowState!=FormWindowState.Minimized) {
-				screenCur=System.Windows.Forms.Screen.FromControl(formPrevious);
-				//Get the start point relative to the screen the form will open on.
-				//pointStart=new Point(formPrevious.Location.X-screenCur.Bounds.Left,formPrevious.Location.Y-screenCur.Bounds.Top);
-				pointStart=formPrevious.Location;
-			}
-			else {
-				pointStart=new Point(screenCur.WorkingArea.X,screenCur.WorkingArea.Y);
-			}
-			//Temporarily apply the offset and see if that rectangle can fit on screenCur, if not, default to a high location on the primary screen.
-			pointStart.X+=OFFSET;
-			pointStart.Y+=OFFSET;
-			Rectangle rect=new Rectangle(pointStart,this.Size);
-			if(!screenCur.WorkingArea.Contains(rect)) {
-				//A portion of the new window is outside of the usable area on the current monitor.
-				//Force the new window to be at "0,50" (relatively) in regards to the primary monitor.
-				pointStart=new Point(screenCur.WorkingArea.X,screenCur.WorkingArea.Y+50);
-			}
-			this.Location=pointStart;
+		/// <summary>
+		/// Adds a new note to the task, and opens it for editing by the user. 
+		/// Will not open if the task is not visible, is deleted, or if a child form is already open.
+		/// </summary>
+		public void AddNoteToTaskAndEdit(string initialText = "")
+		{
+			if (!Visible || taskDeleted) return;
+
+            var taskNote = new TaskNote
+            {
+                TaskId = task.Id,
+                DateModified = DateTime.Now,
+                UserId = Security.CurrentUser.Id,
+                Note = initialText
+            };
+
+			EditTaskNote(taskNote);
 		}
 
-		private void FillComboJobs() {
-		}
-
-		private void comboJobs_SelectedIndexChanged(object sender,EventArgs e) {
-		}
-
-		private void FillGrid() {
-			if(_isTaskDeleted) {
-				return;
-			}
-			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G(this,"Date Time"),120);
-			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"User"),80);
-			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Note"),400);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
-			GridRow row;
-			_listTaskNotes=TaskNotes.GetForTask(_taskCur.TaskNum);
-			for(int i=0;i<_listTaskNotes.Count;i++) {
-				row=new GridRow();
-				row.Cells.Add(_listTaskNotes[i].DateTimeNote.ToShortDateString()+" "+_listTaskNotes[i].DateTimeNote.ToShortTimeString());
-				row.Cells.Add(Userods.GetName(_listTaskNotes[i].UserNum));
-				row.Cells.Add(_listTaskNotes[i].Note);
-				row.Tag=_listTaskNotes[i];
-				gridMain.ListGridRows.Add(row);
-			}
-			gridMain.EndUpdate();
-		}
-
-		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			if(_isTaskDeleted) {
-				return;//The user can copy text with right click, or copy button.
-			}
-			if(TaskNoteEditExists) {
-				MessageBox.Show("One or more task note edit windows are open and must be closed.");
-				return;
-			}
-			FormTaskNoteEdit form=new FormTaskNoteEdit();
-			form.TaskNoteCur=(TaskNote)gridMain.ListGridRows[e.Row].Tag;
-			form.EditComplete=OnNoteEditComplete_CellDoubleClick;
-			form.Show(this);//non-modal subwindow, but if the parent is closed by the user when the child is open, then the child is forced closed along with the parent and after the parent.
-		}
-
-		/// <summary>Adds a new note to the task, and opens it for editing by the user.  Will not open if the task is not visible, is deleted, 
-		/// or if a child form is already open.</summary>
-		public bool AddNoteToTaskAndEdit(string initialText="") {
-			//We only want to show the note edit window if the task is visible, it's not deleted, and another window from this task isn't open.
-			if(!this.Visible || _isTaskDeleted || TaskNoteEditExists) {
-				return false;
-			}
-			FormTaskNoteEdit form=new FormTaskNoteEdit();
-			form.TaskNoteCur=new TaskNote();
-			form.TaskNoteCur.TaskNum=_taskCur.TaskNum;
-			form.TaskNoteCur.DateTimeNote=DateTime.Now;//Will be slightly adjusted at server.
-			form.TaskNoteCur.UserNum=Security.CurrentUser.Id;
-			form.TaskNoteCur.IsNew=true;
-			form.TaskNoteCur.Note=initialText;
-			form.EditComplete=OnNoteEditComplete_Add;
-			//non-modal subwindow, but if the parent is closed by the user when the child is open, then the child is forced closed along with the parent and after the parent.
-			form.Show(this);
-			return true;
-		}
-
-		private void OnNoteEditComplete_CellDoubleClick(object sender) {
-			NotesChanged=true;
-			if(_taskOld.TaskStatus==TaskStatusEnum.Done) {//If task was marked Done when opened, we uncheck the Done checkbox so people can see the changes.
-				checkDone.Checked=false;
-			}
-			FillGrid();
-			Signalods.SetInvalid(InvalidType.TaskPopup,KeyType.Task,_taskCur.TaskNum);//popup
-			TaskUnreads.AddUnreads(_taskCur,Security.CurrentUser.Id);//we also need to tell the database about all the users with unread tasks
-			SendSignalsRefillLocal(_taskCur);
-		}
-
-		private void butAddNote_Click(object sender,EventArgs e) {
-			if(TaskNoteEditExists) {
-				MessageBox.Show("One or more task note edit windows are open and must be closed.");
-				return;
-			}
+		private void AddNoteButton_Click(object sender, EventArgs e)
+		{
 			AddNoteToTaskAndEdit();
 		}
 
-		private void OnNoteEditComplete_Add(object sender) {
-			NotesChanged=true;
-			if(_taskOld.TaskStatus==TaskStatusEnum.Done) {//If task was marked Done when opened, we uncheck the Done checkbox so people can see the changes.
-				checkDone.Checked=false;
+		private void NewCheckBox_Click(object sender, EventArgs e)
+		{
+			if (newCheckBox.Checked && doneCheckBox.Checked)
+			{
+				doneCheckBox.Checked = false;
 			}
-			FillGrid();
-			if(_mightNeedSetRead) {//'new' box is checked
-				checkNew.Checked=false;
-				_statusChanged=true;
-				_mightNeedSetRead=false;//so that the automation won't happen again
-			}
-			Signalods.SetInvalid(InvalidType.TaskPopup,KeyType.Task,_taskCur.TaskNum);//popup
-			TaskUnreads.AddUnreads(_taskCur,Security.CurrentUser.Id);//we also need to tell the database about all the users with unread tasks
-			SendSignalsRefillLocal(_taskCur);
 		}
 
-		private void checkNew_Click(object sender,EventArgs e) {
-			if(checkNew.Checked && checkDone.Checked) {
-				checkDone.Checked=false;
+		private void DoneCheckBox_Click(object sender, EventArgs e)
+		{
+			if (newCheckBox.Checked && doneCheckBox.Checked)
+			{
+				newCheckBox.Checked = false;
 			}
-			_statusChanged=true;
-			_mightNeedSetRead=false;//don't override user's intent
 		}
 
-		private void checkDone_Click(object sender,EventArgs e) {
-			if(checkNew.Checked && checkDone.Checked) {
-				checkNew.Checked=false;
-			}
-			_mightNeedSetRead=false;//don't override user's intent
-		}
+		private void FillPatient()
+        {
+			if (patientId.HasValue)
+            {
+				patientTextBox.Text = $"{Patients.GetPat(patientId.Value).GetNameLF()} - {patientId}";
+            }
+            else
+            {
+				patientTextBox.Text = "(none)";
+            }
+        }
 
-		private void FillObject() {
-			if(_isTaskDeleted) {
-				return;
-			}
-			if(_taskCur.ObjectType==TaskObjectType.None) {
-				listObjectType.SelectedIndex=0;
-				panelObject.Visible=false;
-			}
-			else if(_taskCur.ObjectType==TaskObjectType.Patient) {
-				listObjectType.SelectedIndex=1;
-				panelObject.Visible=true;
-				labelObjectDesc.Text=Lan.G(this,"Patient Name");
-				if(_taskCur.KeyNum>0) {
-					_taskCur.PatientName=Patients.GetPat(_taskCur.KeyNum).GetNameLF();
-					textObjectDesc.Text=_taskCur.PatientName+" - "+_taskCur.KeyNum; ;
-				}
-				else {
-					textObjectDesc.Text="";
+		private void FillAppointment()
+        {
+			if (appointmentId.HasValue)
+            {
+				var appt = Appointments.GetOneApt(appointmentId.Value);
+				if (appt == null)
+                {
+					appointmentTextBox.Text = "(deleted)";
+                }
+                else
+                {
+					appointmentTextBox.Text = $"{Patients.GetPat(appt.PatNum).GetNameLF()}  {appt.AptDateTime}  {appt.ProcDescript}  {appt.Note}";
 				}
 			}
-			else if(_taskCur.ObjectType==TaskObjectType.Appointment) {
-				listObjectType.SelectedIndex=2;
-				panelObject.Visible=true;
-				labelObjectDesc.Text=Lan.G(this,"Appointment Desc");
-				if(_taskCur.KeyNum>0) {
-					Appointment AptCur=Appointments.GetOneApt(_taskCur.KeyNum);
-					if(AptCur==null) {
-						textObjectDesc.Text=Lan.G(this,"(appointment deleted)");
-					}
-					else {
-						textObjectDesc.Text=Patients.GetPat(AptCur.PatNum).GetNameLF()
-							+"  "+AptCur.AptDateTime.ToString()
-							+"  "+AptCur.ProcDescript
-							+"  "+AptCur.Note;
-					}
-				}
-				else {
-					textObjectDesc.Text="";
-				}
+            else
+            {
+				appointmentTextBox.Text = "(none)";
+            }
+        }
+
+		private void DateStartNowButton_Click(object sender, EventArgs e)
+		{
+			dateStartTextBox.Text = DateTime.Now.ToString();
+		}
+
+		private void DateCompletedNowButton_Click(object sender, EventArgs e)
+		{
+			dateCompletedTextBox.Text = DateTime.Now.ToString();
+		}
+
+		private void AutoNoteButton_Click(object sender, EventArgs e)
+		{
+			using var formAutoNoteCompose = new FormAutoNoteCompose();
+
+			if (formAutoNoteCompose.ShowDialog() == DialogResult.OK)
+			{
+				descriptionTextBox.AppendText(formAutoNoteCompose.CompletedNote);
+
+				editAutoNoteButton.Visible = GetHasAutoNotePrompt();
 			}
 		}
 
-		private void butNow_Click(object sender,EventArgs e) {
-			textDateTimeEntry.Text=MiscData.GetNowDateTime().ToString();
+		private void TaskDescriptionNotesSplitContainer_SplitterMoved(object sender, SplitterEventArgs e)
+		{
+			descriptionTextBox.Invalidate();
 		}
 
-		private void butNowFinished_Click(object sender,EventArgs e) {
-			textDateTimeFinished.Text=MiscData.GetNowDateTime().ToString();
-		}
-
-		private void comboReminderRepeat_SelectedIndexChanged(object sender,EventArgs e) {
-			RefreshReminderGroup();
-		}
-
-		private void textReminderRepeatFrequency_KeyUp(object sender,KeyEventArgs e) {
-			RefreshReminderGroup();
-		}
-
-		private void RefreshReminderGroup() {
-			TaskReminderType taskReminderType=_listTaskReminderTypeNames[comboReminderRepeat.SelectedIndex];
-			panelReminderFrequency.Visible=true;
-			panelReminderDays.Visible=false;
-			datePickerReminder.Visible=false;
-			timePickerReminder.Visible=false;
-			int reminderFrequency=PIn.Int(textReminderRepeatFrequency.Text,false);
-			if(taskReminderType==TaskReminderType.NoReminder) {
-				panelReminderFrequency.Visible=false;
-			}
-			else if(taskReminderType==TaskReminderType.Once) {
-				panelReminderFrequency.Visible=false;
-				datePickerReminder.Visible=true;
-				timePickerReminder.Visible=true;
-			}
-			else if(taskReminderType==TaskReminderType.Daily) {
-				if(reminderFrequency==1) {
-					labelRemindFrequency.Text=Lan.G(this,"Day");
-				}
-				else {
-					labelRemindFrequency.Text=Lan.G(this,"Days");
-				}
-			}
-			else if(taskReminderType==TaskReminderType.Weekly) {
-				panelReminderDays.Visible=true;
-				if(reminderFrequency==1) {
-					labelRemindFrequency.Text=Lan.G(this,"Week");
-				}
-				else {
-					labelRemindFrequency.Text=Lan.G(this,"Weeks");
-				}
-			}
-			else if(taskReminderType==TaskReminderType.Monthly) {
-				if(reminderFrequency==1) {
-					labelRemindFrequency.Text=Lan.G(this,"Month");
-				}
-				else {
-					labelRemindFrequency.Text=Lan.G(this,"Months");
-				}
-			}
-			else if(taskReminderType==TaskReminderType.Yearly) {
-				if(reminderFrequency==1) {
-					labelRemindFrequency.Text=Lan.G(this,"Year");
-				}
-				else {
-					labelRemindFrequency.Text=Lan.G(this,"Years");
-				}
+		private void PriorityComboBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (priorityComboBox.SelectedItem is Def priority)
+            {
+				colorButton.BackColor = Defs.GetColor(DefCat.TaskPriorities, priority.DefNum);
 			}
 		}
 
-		private void butBlue_Click(object sender,EventArgs e) {
-			if(_priorityDefNumSelected==_triageBlueNum) {//Blue button is clicked while it's already blue
-				_priorityDefNumSelected=_triageWhiteNum;//Change to white.
-				for(int i=0;i<_listTaskPriorities.Count;i++) {
-					if(_listTaskPriorities[i].DefNum==_triageWhiteNum) {
-						comboTaskPriorities.SelectedIndex=i;//Change selection to the triage white
-					}
-				}	
-			}
-			else {//Blue button is clicked while it's red or white, simply change it to blue
-				_priorityDefNumSelected=_triageBlueNum;//Change to blue.
-				for(int i=0;i<_listTaskPriorities.Count;i++) {
-					if(_listTaskPriorities[i].DefNum==_triageBlueNum) {
-						comboTaskPriorities.SelectedIndex=i;//Change selection to the triage blue
-					}
-				}	
-			}
-		}
-
-		private void butRed_Click(object sender,EventArgs e) {
-			if(_priorityDefNumSelected==_triageRedNum) {//Red button is clicked while it's already red
-				_priorityDefNumSelected=_triageWhiteNum;//Change to white.
-				for(int i=0;i<_listTaskPriorities.Count;i++) {
-					if(_listTaskPriorities[i].DefNum==_triageWhiteNum) {
-						comboTaskPriorities.SelectedIndex=i;//Change combo selection to the triage white
-					}
-				}	
-			}
-			else {//Red button is clicked while it's blue or white, simply change it to red
-				_priorityDefNumSelected=_triageRedNum;//Change to red.
-				for(int i=0;i<_listTaskPriorities.Count;i++) {
-					if(_listTaskPriorities[i].DefNum==_triageRedNum) {
-						comboTaskPriorities.SelectedIndex=i;//Change combo selection to the triage red
-					}
-				}
-				if(_taskListCur!=null && _taskListCur.TaskListNum==Tasks.TriageTaskListNum) {
-					textDateTimeEntry.Text=MiscData.GetNowDateTime().ToString();
-				}
-			}
-		}
-
-		private void butAutoNote_Click(object sender,EventArgs e) {
-			FormAutoNoteCompose FormA=new FormAutoNoteCompose();
-			FormA.ShowDialog();
-			if(FormA.DialogResult==DialogResult.OK) {
-				textDescript.AppendText(FormA.CompletedNote);
-				butEditAutoNote.Visible=GetHasAutoNotePrompt();
-			}
-		}
-
-		private void splitContainerNoFlicker1_SplitterMoved(object sender,SplitterEventArgs e) {
-			textDescript.Invalidate();//We do this so that the scrollbar will not disappear. The size is set through the anchors.
-		}
-
-		///<summary>This event is fired whenever the combo box is changed manually or the index is changed programmatically.</summary>
-		private void comboTaskPriorities_SelectedIndexChanged(object sender,EventArgs e) {
-			_priorityDefNumSelected=_listTaskPriorities[comboTaskPriorities.SelectedIndex].DefNum;
-			butColor.BackColor=Defs.GetColor(DefCat.TaskPriorities,_priorityDefNumSelected);//Change the color swatch so people know the priority's color
-		}
-
-		private void comboTaskPriorities_SelectionChangeCommitted(object sender,EventArgs e) {
-		}
-
-		private void listObjectType_MouseDown(object sender,System.Windows.Forms.MouseEventArgs e) {
-			if(_taskCur.KeyNum>0) {
-				if(!MsgBox.Show(MsgBoxButtons.YesNo,"The linked object will no longer be attached.  Continue?")) {
-					FillObject();
-					return;
-				}
-			}
-			_taskCur.KeyNum=0;
-			_taskCur.ObjectType=(TaskObjectType)listObjectType.SelectedIndex;
-			FillObject();
-		}
-
-		private void butAudit_Click(object sender,EventArgs e) {
-			if(Tasks.IsTaskDeleted(_taskCur.TaskNum)){
+		private void AuditButton_Click(object sender, EventArgs e)
+		{
+			if (Tasks.IsTaskDeleted(task.Id))
+			{
 				SetFormToDeletedMode();
-				MessageBox.Show("Task has been deleted, no history can be retrieved.");
+
+				ShowError("Task has been deleted, no history can be retrieved.");
+
 				return;
 			}
-			FormTaskHist FormTH=new FormTaskHist();
-			FormTH.TaskNumCur=_taskCur.TaskNum;
-			FormTH.Show();
+
+			var formTaskHistory = new FormTaskHistory(task.Id);
+
+			formTaskHistory.Show();
 		}
 
-		private void butChange_Click(object sender,System.EventArgs e) {
-			FormPatientSelect FormPS=new FormPatientSelect();
-			FormPS.SelectionModeOnly=true;
-			FormPS.ShowDialog();
-			if(FormPS.DialogResult!=DialogResult.OK) {
+		private void PatientPickButton_Click(object sender, EventArgs e)
+		{
+            using var formPatientSelect = new FormPatientSelect
+            {
+                SelectionModeOnly = true
+            };
+
+			if (formPatientSelect.ShowDialog(this) != DialogResult.OK) return;
+
+			patientId = formPatientSelect.SelectedPatientId;
+
+			FillPatient();
+		}
+
+		private void PatientGoButton_Click(object sender, EventArgs e)
+		{
+			if (!TrySave(out var _)) return;
+
+			// TODO: Close form and navigate to patient...
+		}
+
+		private void AppointmentPickButton_Click(object sender, EventArgs e)
+		{
+            using var formPatientSelect = new FormPatientSelect
+            {
+                SelectionModeOnly = true
+            };
+
+            if (formPatientSelect.ShowDialog(this) != DialogResult.OK) 
 				return;
-			}
-			if(_taskCur.ObjectType==TaskObjectType.Patient) {
-				_taskCur.KeyNum=FormPS.SelectedPatNum;
-			}
-			if(_taskCur.ObjectType==TaskObjectType.Appointment) {
-				FormApptsOther FormA=new FormApptsOther(FormPS.SelectedPatNum,null);//Select only, can't create new appt so don't need pinboard appointments.
-				FormA.AllowSelectOnly=true;
-				FormA.ShowDialog();
-				if(FormA.DialogResult==DialogResult.Cancel) {
-					return;
-				}
-				_taskCur.KeyNum=FormA.ListAptNumsSelected[0];
-			}
-			FillObject();
-		}
 
-		private void butGoto_Click(object sender,System.EventArgs e) {
-			if(TaskNoteEditExists) {
-				MessageBox.Show("One or more task note edit windows are open and must be closed.");
+            var formApptsOther = new FormApptsOther(formPatientSelect.SelectedPatientId, null)
+            {
+                SelectionMode = true
+            };
+
+            if (formApptsOther.ShowDialog(this) != DialogResult.OK)
 				return;
-			}
-			if(!SaveCur()) {
-				return;
-			}
-			GotoType=_taskCur.ObjectType;
-			GotoKeyNum=_taskCur.KeyNum;
-			DialogResult=DialogResult.OK;
-			Close();
-			FormOpenDental.S_TaskGoTo(GotoType,GotoKeyNum);
+
+			appointmentId = formApptsOther.ListAptNumsSelected[0];
 		}
 
-		private void butChangeUser_Click(object sender,EventArgs e) {
-			FormLogOn FormChangeUser=new FormLogOn(isTemporary:true);
-			FormChangeUser.ShowDialog();
-			if(FormChangeUser.DialogResult==DialogResult.OK) {
-				_taskCur.UserNum=FormChangeUser.User.Id; //assign task new UserNum
-				textUser.Text=Userods.GetName(_taskCur.UserNum); //update user textbox on task.
-			}
+        private void AppointmentGoButton_Click(object sender, EventArgs e)
+		{
+			if (!TrySave(out var _)) return;
+
+			// TODO: Close form and navigate to appointment...
 		}
 
-		private void textDescript_TextChanged(object sender,EventArgs e) {
-			if(_mightNeedSetRead) {//'new' box is checked
-				checkNew.Checked=false;
-				_statusChanged=true;
-				_mightNeedSetRead=false;//so that the automation won't happen again
-			}
-			if(_taskOld.TaskStatus==TaskStatusEnum.Done && textDescript.Text!=_taskOld.Descript) {
-				checkDone.Checked=false;
+		private void UserPickButton_Click(object sender, EventArgs e)
+		{
+			using var formLogOn = new FormLogOn(isTemporary: true);
+
+			if (formLogOn.ShowDialog(this) == DialogResult.OK)
+			{
+				task.UserId = formLogOn.User.Id;
+
+				userTextBox.Text = Userods.GetName(task.UserId);
 			}
 		}
 
-		private void butCopy_Click(object sender,EventArgs e) {
-			try {
+		private void DescriptionTextBox_TextChanged(object sender, EventArgs e)
+		{
+			if (task.Status == TaskStatus.Done && descriptionTextBox.Text != task.Description)
+			{
+				doneCheckBox.Checked = false;
+			}
+		}
+
+		private void CopyButton_Click(object sender, EventArgs e)
+		{
+			try
+			{
 				ODClipboard.Text = CreateCopyTask();
 			}
-			catch {
-				MessageBox.Show("Could not copy contents to the clipboard.  Please try again.");
+			catch
+			{
+				ShowError("Could not copy contents to the clipboard. Please try again.");
+
 				return;
 			}
-			Tasks.TaskEditCreateLog(Lan.G(this,"Copied Task Note"),_taskCur);
+
+			Tasks.TaskEditCreateLog("Copied Task Note", task);
 		}
 
-		private string CreateCopyTask() {
-			string taskText=
-				Lan.G(this,"Tasknum")+" #"+_taskCur.TaskNum //tasknum
-				+((_taskCur.ObjectType==TaskObjectType.Patient && _taskCur.KeyNum!=0) ? (" - "+Lan.G(this,"Patnum")+" #"+_taskCur.KeyNum) : ("")) //patnum
-				+"\r\n"+_taskCur.DateTimeEntry.ToShortDateString() //date
-				+" "+_taskCur.DateTimeEntry.ToShortTimeString() //time
-				+(textObjectDesc.Visible?" - "+textObjectDesc.Text:"")//patient name, time, etc
-				+" - "+textUser.Text //user name
-				+" - "+textDescript.Text; //task desc
-			for(int i=0;i<_listTaskNotes.Count;i++) {
-				taskText+="\r\n--------------------------------------------------\r\n";
-				taskText+="=="+Userods.GetName(_listTaskNotes[i].UserNum)+" - "+_listTaskNotes[i].DateTimeNote.ToShortDateString()+" "+_listTaskNotes[i].DateTimeNote.ToShortTimeString()+" - "+_listTaskNotes[i].Note;
-			}
-			return taskText;
+		private string CreateCopyTask()
+		{
+			var stringBuilder = new StringBuilder();
+
+			stringBuilder.Append($"Task #{task.Id}");
+
+			if (patientId.HasValue)
+				stringBuilder.Append($" - Patient #{patientId}");
+
+			stringBuilder.AppendLine();
+			stringBuilder.Append(task.DateStart.Value.ToShortDateString() + " " + task.DateStart.Value.ToShortTimeString());
+			if (!string.IsNullOrWhiteSpace(patientTextBox.Text))
+            {
+				stringBuilder.Append($" - {patientTextBox.Text.Trim()}");
+            }
+			stringBuilder.Append($" - {userTextBox.Text.Trim()}");
+			stringBuilder.AppendLine($" - {descriptionTextBox.Text.Trim()}");
+
+			foreach (var taskNote in taskNotes)
+            {
+				stringBuilder.AppendLine("--------------------------------------------------");
+				stringBuilder.Append($"== {Userods.GetName(taskNote.UserId)}");
+				stringBuilder.Append($" - {taskNote.DateModified.ToShortDateString()} {taskNote.DateModified.ToShortTimeString()}");
+				stringBuilder.Append($" - {taskNote.Note}");
+				stringBuilder.AppendLine();
+            }
+
+			return stringBuilder.ToString();
 		}
 
-		private void butCreateJob_Click(object sender,EventArgs e) {
-			
-		}
+		public void OnTaskEdited()
+		{
+            var task = Tasks.GetOne(this.task.Id);
+            if (task == null)
+            {
+                SetFormToDeletedMode();
 
-		public void OnTaskEdited() {
-			//This gets hit even when this window is the one that made a change.  This means we will refresh the grid even though we just did.
-			//In the future we might think about enhancing this window to keep track of which signals it inserted.
-			// TODO: Logger.LogToPath("",LogPath.Signals,LogPhase.Start,"TaskNum: "+_taskCur.TaskNum.ToString());
-			Task taskDb=Tasks.GetOne(_taskCur.TaskNum);
-			if(taskDb==null) {//Task was deleted
-				SetFormToDeletedMode();
-				// TODO: Logger.LogToPath("",LogPath.Signals,LogPhase.End,"TaskNum: "+_taskCur.TaskNum.ToString());
-				return;
-			}
-			if(!taskDb.Equals(_taskOld)) {
-				butRefresh.Visible=true;
-				labelTaskChanged.Visible=true;
-			}
-			_taskOld=taskDb;
-			FillGrid();
-			FillComboJobs();
-			FillObject();
-			// TODO: Logger.LogToPath("",LogPath.Signals,LogPhase.End,"TaskNum: "+_taskCur.TaskNum.ToString());
-		}
+                return;
+            }
 
-		///<summary>Does validation and then updates the _taskCur object with the current content of the TaskEdit window.</summary>
-		private bool SaveCur() {
-			if(textDateTask.errorProvider1.GetError(textDateTask)!="") {
-				MessageBox.Show("Please fix data entry errors first.");
+            if (!this.task.Equals(task))
+            {
+                refreshButton.Visible = true;
+                taskChangedLabel.Visible = true;
+            }
+
+            this.task = task;
+        }
+
+		/// <summary>
+		///		<para>
+		///			Validates all the fields and if valid saves the changes to the database.
+		///		</para>
+		///		<para>
+		///			Any validation errors will result in a error message being displayed to the user.
+		///		</para>
+		/// </summary>
+		/// <returns>
+		///		True if the task was updated succesfully; otherwise, false.
+		/// </returns>
+		private bool TrySave(out bool wasChanged)
+		{
+			wasChanged = false;
+
+			var newDescription = descriptionTextBox.Text.Trim();
+			if (string.IsNullOrWhiteSpace(newDescription))
+			{
+				ShowError("Please enter a description.");
+
 				return false;
 			}
-			DateTime dateTimeEntry=DateTime.MinValue;
-			TaskReminderType taskReminderType=_listTaskReminderTypeNames[comboReminderRepeat.SelectedIndex];
-			if(textDateTimeEntry.Text!="" || taskReminderType!=TaskReminderType.NoReminder) {//Reminders always require a DateTimeEntry
-				try {
-					dateTimeEntry=DateTime.Parse(textDateTimeEntry.Text);
-				}
-				catch {
-					MessageBox.Show("Please fix Date/Time Entry.");
+
+			// Determine whether a priority has been selected.
+			long newPriorityId;
+			if (!(priorityComboBox.SelectedItem is Def priority))
+            {
+				ShowError("Please select a priority for this task.");
+
+				return false;
+			}
+			newPriorityId = priority.DefNum;
+
+			// If a start date was entered, check whether a valid date and time was entered...
+			DateTime? newDateStart = null;
+			if (!string.IsNullOrWhiteSpace(dateStartTextBox.Text))
+            {
+				if (!DateTime.TryParse(dateStartTextBox.Text, out var date))
+                {
+					ShowError("Please fix date/time entry.");
+
 					return false;
-				}
-			}
-			if(textDateTimeFinished.Text!="") {
-				try {
-					DateTime.Parse(textDateTimeFinished.Text);
-				}
-				catch {
-					MessageBox.Show("Please fix Date/Time Finished.");
-					return false;
-				}
-			}
-			if(_taskCur.TaskListNum==-1) {
-				MessageBox.Show("Since no task list is selected, the Send To button must be used.");
-				return false;
-			}
-			if(textDescript.Text=="") {
-				MessageBox.Show("Please enter a description.");
-				return false;
-			}
-			if(taskReminderType!=TaskReminderType.NoReminder && !PrefC.GetBool(PrefName.TasksUseRepeating)) {//Is a reminder and not using legacy task system
-				if(taskReminderType!=TaskReminderType.Once &&
-					(textReminderRepeatFrequency.errorProvider1.GetError(textReminderRepeatFrequency)!="" || PIn.Int(textReminderRepeatFrequency.Text) < 1))
+                }
+
+				newDateStart = date;
+            }
+
+			// If a completion date was entered, check whether a valid date and time was entered...
+			DateTime? newDateCompleted = null;
+			if (!string.IsNullOrWhiteSpace(dateCompletedTextBox.Text))
+            {
+				if (!DateTime.TryParse(dateCompletedTextBox.Text, out var date))
 				{
-					MessageBox.Show("Reminder frequency must be a positive number.");
+					ShowError("Please fix date/time entry.");
+
 					return false;
 				}
-				if(taskReminderType==TaskReminderType.Weekly && ! checkReminderRepeatMonday.Checked && !checkReminderRepeatTuesday.Checked
-					&& !checkReminderRepeatWednesday.Checked && !checkReminderRepeatThursday.Checked && !checkReminderRepeatFriday.Checked
-					&& !checkReminderRepeatSaturday.Checked && !checkReminderRepeatSunday.Checked)
+
+				newDateCompleted = date;
+			}
+
+
+			var newStatus = doneCheckBox.Checked ? TaskStatus.Done : TaskStatus.New;
+
+			// If the task is marked as 'done', there must be a completion date. If the user didn't enter one we use the current date and time.
+			if (newStatus == TaskStatus.Done && newDateCompleted == null) newDateCompleted = DateTime.Now;
+
+			// Determine the new repeat interval.
+			var newRepeatInterval = (TaskRepeatInterval)repeatIntervalComboBox.SelectedIndex;
+			var newRepeat = newRepeatInterval != TaskRepeatInterval.Never;
+
+			// Determine the new repeat date of the task...
+			var newRepeatDate = task.RepeatDate;
+			if (string.IsNullOrWhiteSpace(repeatDateTextBox.Text))
+			{
+				if (!newRepeatDate.HasValue && newRepeatInterval == TaskRepeatInterval.Once)
+                {
+					ShowError("Please specify the date on which to repeat this task.");
+
+					return false;
+                }
+
+				if (!newRepeatDate.HasValue && newRepeatInterval != TaskRepeatInterval.Never)
+                {
+					newRepeatDate = newRepeatInterval switch
+                    {
+                        TaskRepeatInterval.Daily => DateTime.UtcNow.AddDays(1),
+                        TaskRepeatInterval.Weekly => DateTime.UtcNow.AddDays(7),
+                        TaskRepeatInterval.Monthly => DateTime.UtcNow.AddMonths(1),
+                        _ => null,
+                    };
+                }
+			}
+            else
+            {
+				if (!DateTime.TryParse(repeatDateTextBox.Text, out var date))
 				{
-					MessageBox.Show("Since the weekly reminder repeat option is selected, at least one day option must be chosen.");
+					ShowError("Please enter a valid repeat date.");
+
 					return false;
 				}
-				if(checkReminderRepeatMonday.Checked) {
-					taskReminderType|=TaskReminderType.Monday;
-				}
-				if(checkReminderRepeatTuesday.Checked) {
-					taskReminderType|=TaskReminderType.Tuesday;
-				}
-				if(checkReminderRepeatWednesday.Checked) {
-					taskReminderType|=TaskReminderType.Wednesday;
-				}
-				if(checkReminderRepeatThursday.Checked) {
-					taskReminderType|=TaskReminderType.Thursday;
-				}
-				if(checkReminderRepeatFriday.Checked) {
-					taskReminderType|=TaskReminderType.Friday;
-				}
-				if(checkReminderRepeatSaturday.Checked) {
-					taskReminderType|=TaskReminderType.Saturday;
-				}
-				if(checkReminderRepeatSunday.Checked) {
-					taskReminderType|=TaskReminderType.Sunday;
-				}
-				_taskCur.ReminderType=taskReminderType;
-				_taskCur.ReminderFrequency=0;
-				if(taskReminderType!=TaskReminderType.Once) {
-					_taskCur.ReminderFrequency=PIn.Int(textReminderRepeatFrequency.Text);
-				}
-				if(String.IsNullOrEmpty(_taskCur.ReminderGroupId)) {//Make a new ID if it's blank no matter what.  Could be an old task being changed.
-					Tasks.SetReminderGroupId(_taskCur);
-				}
+
+				newRepeatDate = date;
 			}
-			else {
-				_taskCur.ReminderType=TaskReminderType.NoReminder;
-				_taskCur.ReminderGroupId="";
-			}
-			if(taskReminderType==TaskReminderType.Once) {
-				_taskCur.DateTimeEntry=new DateTime(datePickerReminder.Value.Date.Year,datePickerReminder.Value.Date.Month,datePickerReminder.Value.Date.Day,
-					timePickerReminder.Value.TimeOfDay.Hours,timePickerReminder.Value.TimeOfDay.Minutes,timePickerReminder.Value.TimeOfDay.Seconds);
-			}
-			else {
-				_taskCur.DateTimeEntry=PIn.Date(textDateTimeEntry.Text);
-			}
-			//Techs want to be notified of any changes made to completed tasks.
-			//Check if the task list changed on a task marked Done.
-			if(_taskCur.TaskListNum!=_taskOld.TaskListNum	&& _taskOld.TaskStatus==TaskStatusEnum.Done) {
-				//Forcing the status to viewed will put the task in other user's "New for" task list but not the user that made the change.
-				_taskCur.TaskStatus=TaskStatusEnum.Viewed;
-				checkDone.Checked=false;
-			}
-			if(checkDone.Checked) {
-				_taskCur.TaskStatus=TaskStatusEnum.Done;//global even if new status is tracked by user
-				TaskUnreads.DeleteForTask(_taskCur);//clear out taskunreads. We have too many tasks to read the done ones.
-			}
-			else {//because it can't be both new and done.
-				if(PrefC.GetBool(PrefName.TasksNewTrackedByUser)) {
-					if(_taskCur.TaskStatus==TaskStatusEnum.Done) {
-						_taskCur.TaskStatus=TaskStatusEnum.Viewed;
-					}
-					if(Tasks.IsReminderTask(_taskCur) && _taskCur.DateTimeEntry>DateTime.Now) {//Future Reminder.
-						if(!_taskCur.IsUnread) {
-							TaskUnreads.SetUnread(Security.CurrentUser.Id,_taskCur);//Future Reminders need to stay Unread for this user so they popup at due time.
-						}
-					}
-					else if(!_startedInOthersInbox) {
-						if(_mightNeedSetRead && _taskCur.IsUnread) {//This user opened the task, therefore, unless they manually changed checkNew, it's now read.
-							checkNew.Checked=false;
-							_statusChanged=true;
-						}
-						//Because the task could have been modified by another user at this point
-						//RefreshTask();
-						if(checkNew.Checked) {
-							TaskUnreads.SetUnread(Security.CurrentUser.Id,_taskCur);
-						}
-						else {
-							TaskUnreads.SetRead(Security.CurrentUser.Id,_taskCur);
-						}
-					}
-					else if(!checkNew.Checked) {//Just in case, checkbox should not be enabled or checked when _startedInOthersInbox is true.
-						//A task was sent to a tasklist I'm subscribed to, but before I had a chance to open it, it was sent to someone else's inbox.
-						//If I open this task, I've read it, so it should still be marked as read for me.
-						TaskUnreads.SetRead(Security.CurrentUser.Id,_taskCur);
-						_statusChanged=true;
-					}
-				}
-				else {//tracked globally, the old way
-					if(checkNew.Checked) {
-						_taskCur.TaskStatus=TaskStatusEnum.New;
-					}
-					else {
-						_taskCur.TaskStatus=TaskStatusEnum.Viewed;
-					}
-				}
-			}
-			//UserNum no longer allowed to change automatically
-			//if(resetUser && TaskCur.Descript!=textDescript.Text){
-			//	TaskCur.UserNum=Security.CurUser.UserNum;
-			//}
-			if(_taskCur.TaskStatus==TaskStatusEnum.Done && textDateTimeFinished.Text=="") {
-				_taskCur.DateTimeFinished=DateTime.Now;
-			}
-			else {
-				_taskCur.DateTimeFinished=PIn.Date(textDateTimeFinished.Text);
-			}
-			_taskCur.Descript=textDescript.Text;
-			_taskCur.DateTask=PIn.Date(textDateTask.Text);
-			_taskCur.DateType=(TaskDateType)comboDateType.SelectedIndex;
-			if(!checkFromNum.Checked) {//user unchecked the box. Never allowed to check if initially unchecked
-				_taskCur.FromNum=0;
-			}
-			//ObjectType already handled
-			//Cur.KeyNum already handled
-			_taskCur.PriorityDefNum=_priorityDefNumSelected;
-			try {
-				if(IsNew) {
-					_taskCur.IsNew=true;
-					Tasks.Update(_taskCur,_taskOld);
-				}
-				else {
-					if(butRefresh.Visible) {	
-						//force them to refresh before pressing ok.
-						if(MsgBox.Show(MsgBoxButtons.YesNo,"There have been changes to the task since it has been loaded. "+
-						" You must refresh before saving. Would you like to refresh now?")) 
+
+			// Determine the new repeat task ID, if the user modified the interval or date we'll assume the user
+			// wants the task to repeat again so we clear the ID of the repeat task...
+			var newRepeatTaskId = task.RepeatTaskId;
+			if (newRepeatTaskId.HasValue)
+            {
+				if (newRepeatInterval != task.RepeatInterval || newRepeatDate != task.RepeatDate)
+                {
+					newRepeatTaskId = null;
+                }
+            }
+
+			// Check whether any details have been changed. If there are no changes we don't need to do anything, simply return true.
+			var taskChanged = 
+				task.TaskListId != taskListId ||
+				task.Description != newDescription ||
+				task.Repeat != newRepeat ||
+				task.RepeatInterval != newRepeatInterval ||
+				task.RepeatDate != newRepeatDate ||
+				task.RepeatTaskId != newRepeatTaskId ||
+				task.PatientId != patientId ||
+				task.AppointmentId != appointmentId ||
+				task.UserId != userId ||
+				task.PriorityId != newPriorityId ||
+				task.DateStart != newDateStart ||
+				task.DateCompleted != newDateCompleted ||
+				task.Status != newStatus;
+
+			if (!taskChanged) return true;
+
+			task.TaskListId = taskListId;
+			task.Description = newDescription;
+			task.Repeat = newRepeat;
+			task.RepeatInterval = newRepeatInterval;
+			task.RepeatDate = newRepeatDate;
+			task.RepeatTaskId = newRepeatTaskId;
+			task.PatientId = patientId;
+			task.AppointmentId = appointmentId;
+			task.UserId = userId;
+			task.PriorityId = newPriorityId;
+			task.DateStart = newDateStart;
+			task.DateCompleted = newDateCompleted;
+			task.Status = newStatus;
+
+			// Save the task to the database...
+			try
+			{
+				if (task.Id > 0)
+				{
+					if (refreshButton.Visible)
+					{
+						if (Prompt(
+							"There have been changes to the task since it has been loaded. " +
+							"You must refresh before saving. Would you like to refresh now?") == DialogResult.Yes)
 						{
 							RefreshTask();
 						}
-						return false;					
+
+						return false;
 					}
-					if(!_taskCur.Equals(_taskOld)) {//If user clicks OK without making any changes, then skip.
-						Cursor=Cursors.WaitCursor;
-						Tasks.Update(_taskCur,_taskOld);//if task has already been altered, then this is where it will fail.
-						Cursor=Cursors.Default;
-					}
-					if(!_taskCur.Equals(_taskOld) || NotesChanged) {//We want to make a TaskHist entry if notes were changed as well as if the task was changed.
-						TaskHist taskHist=new TaskHist(_taskOld);
-						taskHist.UserNumHist=Security.CurrentUser.Id;
-						taskHist.IsNoteChange=NotesChanged;
-						TaskHists.Insert(taskHist);
-					}
+
+					// TODO: Create a task history record...
+
+					// TODO: Update the task...
 				}
+                else
+                {
+					// TODO: Create the task...
+                }
 			}
-			catch(Exception ex) {
-				Cursor=Cursors.Default;
-				MessageBox.Show(ex.Message);
+			catch (Exception exception)
+			{
+				Cursor = Cursors.Default;
+
+				ShowError(exception.Message);
+
 				return false;
 			}
+
+			wasChanged = true;
+
 			return true;
 		}
 
-		private void butRefresh_Click(object sender,EventArgs e) {
+		private void RefreshButton_Click(object sender, EventArgs e)
+		{
 			RefreshTask();
 		}
 
-		private void RefreshTask() {
-			if(_taskCur==null) {
-				MessageBox.Show("This task is in an invalid state. The task will now be closed so it can be opened again in a valid state.");
-				DialogResult=DialogResult.Abort;
+		private void RefreshTask()
+		{
+			if (task == null)
+			{
+				ShowError("This task is in an invalid state. The task will now be closed so it can be opened again in a valid state.");
+
+				DialogResult = DialogResult.Abort;
+
 				Close();
+
 				return;
 			}
-			_taskCur=Tasks.GetOne(_taskCur.TaskNum);
-			if(_taskCur==null) {
-				MessageBox.Show("This task has been deleted and must be closed.");
-				DialogResult=DialogResult.Abort;
+
+			task = Tasks.GetOne(task.Id);
+			if (task == null)
+			{
+				ShowError("This task has been deleted and must be closed.");
+
+				DialogResult = DialogResult.Abort;
+
 				Close();
+
 				return;
 			}
-			_taskListCur=TaskLists.GetOne(_taskCur.TaskListNum);
+
 			LoadTask();
-			butRefresh.Visible=false;
-			labelTaskChanged.Visible=false;
+
+			refreshButton.Visible = false;
+			taskChangedLabel.Visible = false;
 		}
 
-		private void butDelete_Click(object sender,EventArgs e) {
-			//NOTE: Any changes here need to be made to UserControlTasks.Delete_Clicked() as well.
-			if(TaskNoteEditExists) {
-				MessageBox.Show("One or more task note edit windows are open and must be closed.");
-				return;
-			}
-			if(!IsNew) {
-				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete?")) {
+		private void DeleteButton_Click(object sender, EventArgs e)
+		{
+			if (task.Id > 0)
+			{
+				if (Prompt("Delete?") == DialogResult.No) return;
+
+				if (Tasks.GetOne(task.Id) == null)
+				{
+					ShowInfo("Task already deleted.");
+
+					deleteButton.Enabled = false;
+					acceptButton.Enabled = false;
+					sendButton.Enabled = false;
+					addNoteButton.Enabled = false;
+					Text += " - {Deleted}";
+
 					return;
 				}
-				if(Tasks.GetOne(_taskCur.TaskNum)==null) {
-					MessageBox.Show("Task already deleted.");//if task has remained open and has become stale on a workstation.
-					butDelete.Enabled=false;
-					butOK.Enabled=false;
-					butSend.Enabled=false;
-					butAddNote.Enabled=false;
-					Text+=" - {"+Lan.G(this,"Deleted")+"}";
+
+				var taskList = TaskLists.GetOne(task.TaskListId);
+
+				Tasks.TaskEditCreateLog($"Deleted task from task list {taskList.Description}.", task);
+			}
+
+			Tasks.Delete(task.Id);
+
+			SendSignalsRefillLocal(task, task.TaskListId);
+
+            TaskHists.Insert(new TaskHistory(task));
+
+			SecurityLogs.MakeLogEntry(Permissions.TaskEdit, 0, "Task " + task.Id + " deleted", 0);
+
+			DialogResult = DialogResult.OK;
+
+			Close();
+		}
+
+		private void ReplyButton_Click(object sender, EventArgs e)
+		{
+			if (!replyToUserId.HasValue) return;
+
+			long oldTaskListId = task.TaskListId;
+
+			long inboxTaskListId = Userods.GetInbox(replyToUserId.Value);
+			if (inboxTaskListId == 0)
+			{
+				ShowError("No inbox has been set up for this user yet.");
+
+				return;
+			}
+
+			if (descriptionTextBox.Text == task.Description)
+			{
+				var taskNote = new TaskNote
+				{
+					TaskId = task.Id,
+					DateModified = DateTime.Now,
+					UserId = Security.CurrentUser.Id,
+				};
+
+				using var formTaskNoteEdit = new FormTaskNoteEdit(taskNote);
+				{
+					if (formTaskNoteEdit.ShowDialog(this) != DialogResult.OK)
+					{
+						return;
+					}
+				}
+
+				taskListId = inboxTaskListId;
+				if (!TrySave(out var _))
+				{
 					return;
 				}
-				//TaskListNum=-1 is only possible if it's new.  This will never get hit if it's new.
-				if(_taskCur.TaskListNum==0) {
-					Tasks.TaskEditCreateLog(Lan.G(this,"Deleted task"),_taskCur);
-				}
-				else {
-					string logText=Lan.G(this,"Deleted task from tasklist");
-					TaskList tList=TaskLists.GetOne(_taskCur.TaskListNum);
-					if(tList!=null) {
-						logText+=" "+tList.Descript;
-					}
-					else {
-						logText+=". Task list no longer exists";
-					}
-					logText+=".";
-					Tasks.TaskEditCreateLog(logText,_taskCur);
-				}
-			}
-			Tasks.Delete(_taskCur.TaskNum);//always do it this way to clean up all four tables
-			SendSignalsRefillLocal(_taskCur,_taskCur.TaskListNum,false);
-			TaskHist taskHistory=new TaskHist(_taskOld);
-			taskHistory.IsNoteChange=NotesChanged;
-			taskHistory.UserNum=Security.CurrentUser.Id;
-			TaskHists.Insert(taskHistory);
-			SecurityLogs.MakeLogEntry(Permissions.TaskEdit,0,"Task "+POut.Long(_taskCur.TaskNum)+" deleted",0);
-			DialogResult=DialogResult.OK;
-			Close();
-		}
 
-		private void butReply_Click(object sender,EventArgs e) {
-			//This can't happen if IsNew
-			//This also can't happen if the task is mine with no replies.
-			//Button not visible unless a ReplyToUserNum has been calculated successfully.
-			if(TaskNoteEditExists) {
-				MessageBox.Show("One or more task note edit windows are open and must be closed.");
-				return;
-			}
-			long taskListNumCur=_taskCur.TaskListNum;
-			long inbox=Userods.GetInbox(_replyToUserNum);
-			if(inbox==0) {
-				MessageBox.Show("No inbox has been set up for this user yet.");
-				return;
-			}
-			if(!NotesChanged && textDescript.Text==_taskCur.Descript) {//nothing changed
-				FormTaskNoteEdit form=new FormTaskNoteEdit();
-				form.TaskNoteCur=new TaskNote();
-				form.TaskNoteCur.TaskNum=_taskCur.TaskNum;
-				form.TaskNoteCur.DateTimeNote=DateTime.Now;//Will be slightly adjusted at server.
-				form.TaskNoteCur.UserNum=Security.CurrentUser.Id;
-				form.TaskNoteCur.IsNew=true;
-				form.TaskNoteCur.Note="";
-				form.EditComplete=OnNoteEditComplete_Reply;
-				form.Show(this);//non-modal subwindow, but if the parent is closed by the user when the child is open, then the child is forced closed along with the parent and after the parent.
-				return;
-			}
-			_taskCur.TaskListNum=inbox;
-			if(!SaveCur()) {
-				return;
-			}
-			Signalods.SetInvalid(InvalidType.TaskPopup,KeyType.Task,_taskCur.TaskNum);//popup
-			TaskUnreads.AddUnreads(_taskCur,Security.CurrentUser.Id);//we also need to tell the database about all the users with unread tasks
-			//Both tasklistnums are different, since SaveCur() returned true.  Thereore, send signals for both task lists.
-			SendSignalsRefillLocal(_taskCur,taskListNumCur);
-			DialogResult=DialogResult.OK;
-			Close();
-		}
+				Signalods.SetInvalid(InvalidType.TaskPopup, KeyType.Task, task.Id);
 
-		private void OnNoteEditComplete_Reply(object sender) {
-			if(_mightNeedSetRead) {//'new' box is checked
-				checkNew.Checked=false;
-				_statusChanged=true;
-				_mightNeedSetRead=false;//so that the automation won't happen again
-			}
-			long taskListNumCur=_taskCur.TaskListNum;
-			_taskCur.TaskListNum=Userods.GetInbox(_replyToUserNum);
-			if(!SaveCur()) {
-				return;
-			}
-			Signalods.SetInvalid(InvalidType.TaskPopup,KeyType.Task,_taskCur.TaskNum);//popup
-			TaskUnreads.AddUnreads(_taskCur,Security.CurrentUser.Id);//we also need to tell the database about all the users with unread tasks
-			SendSignalsRefillLocal(_taskCur,taskListNumCur);
-			DialogResult=DialogResult.OK;
-			Close();
-		}
+				TaskUnreads.AddUnreads(task, Security.CurrentUser.Id);
 
-		///<summary>Send to another user.</summary>
-		private void butSend_Click(object sender,EventArgs e) {
-			//This button is always present.
-			if(TaskNoteEditExists) {
-				MessageBox.Show("One or more task note edit windows are open and must be closed.");
-				return;
-			}
-			long taskListNumCur=_taskCur.TaskListNum;
-			FormTaskListSelect FormT=new FormTaskListSelect((TaskObjectType)listObjectType.SelectedIndex,IsNew);
-			FormT.ShowDialog();
-			if(FormT.DialogResult!=DialogResult.OK) {
-				return;
-			}
-			_taskCur.TaskListNum=FormT.ListSelectedLists[0];
-			_taskListCur=TaskLists.GetOne(_taskCur.TaskListNum);
-			_taskCur.ParentDesc=_taskListCur.Descript;
-			textTaskList.Text=_taskListCur.Descript;
-			if(!SaveCur()) {
-				return;
-			}
-			SaveCopy(FormT.ListSelectedLists.Skip(1).ToList());//Copies/Inserts task and sends to inboxes if multiple lists were selected.
-			//Check for changes.  If something changed, send a signal.
-			if(NotesChanged || !_taskCur.Equals(_taskOld) || _statusChanged) {
-				Signalods.SetInvalid(InvalidType.TaskPopup,KeyType.Task,_taskCur.TaskNum);//popup
-				TaskUnreads.AddUnreads(_taskCur,Security.CurrentUser.Id);//we also need to tell the database about all the users with unread tasks
-			}
-			SendSignalsRefillLocal(_taskCur,taskListNumCur);
-			DialogResult=DialogResult.OK;
-			Close();
-		}
+				SendSignalsRefillLocal(task, task.TaskListId);
 
-		///<summary>Saves a copy of the task</summary>
-		private bool SaveCopy(List<long> listTaskListNums) {
-			foreach(long taskListNum in listTaskListNums) {
-				Task taskCopy=_taskCur.Copy();
-				taskCopy.TaskListNum=taskListNum;
-				taskCopy.IsUnread=true;
-				taskCopy.ReminderGroupId="";
-				if(taskCopy.ReminderType!=TaskReminderType.NoReminder && !PrefC.GetBool(PrefName.TasksUseRepeating)) {//Make a new ID if it's blank no matter what.  Could be an old task being changed.
-					Tasks.SetReminderGroupId(taskCopy);
-				}
-				try {
-					taskCopy.IsNew=true;
-					Tasks.Insert(taskCopy);
-					foreach(TaskNote note in _listTaskNotes) {
-						TaskNote noteCopy=note.Copy();
-						noteCopy.TaskNum=taskCopy.TaskNum;
-						TaskNotes.Insert(noteCopy);
-					}
-				}
-				catch(Exception ex) {
-					MessageBox.Show(ex.Message);
-					return false;
-				}
-				if(taskCopy.TaskListNum==Userods.GetInbox(Security.CurrentUser.Id)) {//My inbox.
-					FormTaskEdit formT=new OpenDental.FormTaskEdit(taskCopy);//Maintain previous behavior. If I send to myself, should popup.
-					formT.Show();//Non-modal. 
-					UserControlTasks.RefillLocalTaskGrids(taskCopy,_listTaskNotes,null);//Refills local grids with _taskCur, which has a new taskNum now.
-				}
-				else {//Sent to someone else. Task should popup for that user.
-					TaskUnreads.AddUnreads(taskCopy,Security.CurrentUser.Id);//Tell the database about all the users with unread tasks prior to sending signals.
-					Signalods.SetInvalid(InvalidType.TaskPopup,KeyType.Task,taskCopy.TaskNum);//popup
-					Signalods.SetInvalid(InvalidType.TaskList,KeyType.Undefined,taskCopy.TaskListNum);//signal so all instances of UserControlTasks refreshes.
-				}
-			}
-			return true;
-		}
-		
-		///<summary>Sets the form into "Deleted" mode to disallow changes to be made.</summary>
-		private void SetFormToDeletedMode() {
-				_isTaskDeleted=true;
-				labelTaskChanged.Visible=true;
-				labelTaskChanged.Text=Lan.G(this,"The task has been deleted");
-				DisableMostControls();//Set form into a "read-only" mode to allow user to copy text only.
-		}
-		
-		///<summary>Sets all controls to read-only or disabled except cancel and copy button.</summary>
-		private void DisableMostControls() {
-			//Disable most controls.
-			this.DisableAllExcept(butCancel,butCopy,textDateTimeEntry,textDateTimeFinished,labelTaskChanged,splitContainerDescriptNote);
-			//Enable and set read-only for fields we want to allow copying from.
-			#region splitContainerDescriptNote
-			splitContainerDescriptNote.Enabled=true;  //This was probably already true but just in case
-			butBlue.Enabled=false;
-			butRed.Enabled=false;
-			butAutoNote.Enabled=false;
-			textDateTimeEntry.ReadOnly=true;
-			textDateTimeFinished.ReadOnly=true;
-			textDescript.ReadOnly=true;
-			#endregion splitContainerDescriptNote
-		}
+				DialogResult = DialogResult.OK;
 
-		private void butOK_Click(object sender,System.EventArgs e) {
-			if(TaskNoteEditExists) {
-				MessageBox.Show("One or more task note edit windows are open and must be closed.");
-				return;
-			}
-			if(!SaveCur()) {//If user clicked OK without changing anything, then this will have no effect.
-				return;
-			}
-			if(_taskCur.Equals(_taskOld) && !_statusChanged) {//if there were no changes, then don't bother with the signal
-				DialogResult=DialogResult.OK;
 				Close();
+
 				return;
 			}
-			if(IsNew || textDescript.Text!=_taskCur.Descript //notes or descript changed
-				|| (NotesChanged && _taskOld.TaskStatus==TaskStatusEnum.Done) //Because the taskunread would not have been inserted when saving the note
-				|| (_taskOld.ReminderType==TaskReminderType.NoReminder && _taskCur.ReminderType!=TaskReminderType.NoReminder)) //Add taskunread for when "due"
-			{ 
-				Signalods.SetInvalid(InvalidType.TaskPopup,KeyType.Task,_taskCur.TaskNum);//popup
-				TaskUnreads.AddUnreads(_taskCur,Security.CurrentUser.Id);//we also need to tell the database about all the users with unread tasks
+
+			taskListId = inboxTaskListId;
+			if (!TrySave(out var wasChanged))
+			{
+				return;
 			}
-			SendSignalsRefillLocal(_taskCur);
-			DialogResult=DialogResult.OK;
+
+			if (wasChanged)
+			{
+				Signalods.SetInvalid(InvalidType.TaskPopup, KeyType.Task, task.Id);
+
+				TaskUnreads.AddUnreads(task, Security.CurrentUser.Id);
+
+				SendSignalsRefillLocal(task, oldTaskListId);
+			}
+
+			DialogResult = DialogResult.OK;
+
 			Close();
 		}
 
-		///<summary>Determines which signals need to be sent, and sends them.  Pass in taskListNumOld if the taskListNum has possibly changed.</summary>
-		private void SendSignalsRefillLocal(Task task,long taskListNumOld=-1,bool canKeepTask=true) {
-			List<long> listSignalNums=new List<long>();
-			listSignalNums.Add(Signalods.SetInvalid(InvalidType.TaskList,KeyType.Undefined,task.TaskListNum));//Signal for current tasklist.
-			listSignalNums.Add(Signalods.SetInvalid(InvalidType.Task,KeyType.Task,task.TaskNum));//Signal for current task.
-			if(taskListNumOld!=-1 && task.TaskListNum!=taskListNumOld) {
-				listSignalNums.Add(Signalods.SetInvalid(InvalidType.TaskList,KeyType.Undefined,taskListNumOld));//Signal for old tasklist.
-			}
-			if(_userNumFrom!=task.UserNum) {//From User has changed.
-				if(_userNumFrom!=0) {//Should never be 0, but might be 0 in much older databases?
-					listSignalNums.Add(Signalods.SetInvalid(InvalidType.TaskAuthor,KeyType.Undefined,_userNumFrom));//Signal for previous From User.
-				}
-				if(task.UserNum!=0) {//Should never be 0, but might be 0 in much older databases?
-					listSignalNums.Add(Signalods.SetInvalid(InvalidType.TaskAuthor,KeyType.Undefined,task.UserNum));//Signal for new From User.
-				}
-			}
-			if(_patientPatNum!=task.KeyNum) {//Attached patient changed.
-				if(_patientPatNum!=0) {//Previous Object was a Patient
-					listSignalNums.Add(Signalods.SetInvalid(InvalidType.TaskPatient,KeyType.Undefined,_patientPatNum));//Signal for previous Patient.
-				}
-				if(_taskCur.ObjectType==TaskObjectType.Patient && task.KeyNum!=0) {//New Object is a Patient
-					listSignalNums.Add(Signalods.SetInvalid(InvalidType.TaskPatient,KeyType.Undefined,task.KeyNum));//Signal for new Patient.
-				}
-			}
-			UserControlTasks.RefillLocalTaskGrids(_taskCur,_listTaskNotes,listSignalNums,canKeepTask);
+		private void SendButton_Click(object sender, EventArgs e)
+		{
+            using var formTaskListSelect = new FormTaskListSelect();
+            if (formTaskListSelect.ShowDialog(this) != DialogResult.OK)
+            {
+                return;
+            }
+
+			taskListId = formTaskListSelect.SelectedList.Id;
+            taskListTextBox.Text = TaskLists.GetOne(taskListId)?.Description;
+
+            if (!TrySave(out var wasChanged))
+            {
+                return;
+            }
+
+            if (wasChanged)
+            {
+                Signalods.SetInvalid(InvalidType.TaskPopup, KeyType.Task, task.Id);
+
+                TaskUnreads.AddUnreads(task, Security.CurrentUser.Id);
+            }
+
+            SendSignalsRefillLocal(task, task.TaskListId);
+
+            DialogResult = DialogResult.OK;
+
+            Close();
+        }
+
+		/// <summary>
+		/// Sets the form into "Deleted" mode to disallow changes to be made.
+		/// </summary>
+		private void SetFormToDeletedMode()
+		{
+			taskDeleted = true;
+			taskChangedLabel.Visible = true;
+			taskChangedLabel.Text = "The task has been deleted";
+
+			DisableMostControls();
 		}
 
-		private void butCancel_Click(object sender,System.EventArgs e) {
-			if(TaskNoteEditExists) {
-				MessageBox.Show("One or more task note edit windows are open and must be closed.");
+		/// <summary>
+		/// Sets all controls to read-only or disabled except cancel and copy button.
+		/// </summary>
+		private void DisableMostControls()
+		{
+			DisableAllExcept(cancelButton, copyButton, dateStartTextBox, dateCompletedTextBox, taskChangedLabel, taskDescriptionNotesSplitContainer);
+
+			// Enable and set read-only for fields we want to allow copying from.
+			taskDescriptionNotesSplitContainer.Enabled = true;
+			autoNoteButton.Enabled = false;
+			dateStartTextBox.ReadOnly = true;
+			dateCompletedTextBox.ReadOnly = true;
+			descriptionTextBox.ReadOnly = true;
+		}
+
+		private void AcceptButton_Click(object sender, EventArgs e)
+		{
+			if (!TrySave(out var wasChanged)) return;
+
+			if (!wasChanged)
+			{
+				DialogResult = DialogResult.OK;
+
+				Close();
+
 				return;
 			}
-			DialogResult=DialogResult.Cancel;
+
+			Signalods.SetInvalid(InvalidType.TaskPopup, KeyType.Task, task.Id);
+
+			TaskUnreads.AddUnreads(task, Security.CurrentUser.Id);
+
+			SendSignalsRefillLocal(task);
+
+			DialogResult = DialogResult.OK;
+
 			Close();
 		}
 
-		private void FormTaskEdit_FormClosing(object sender,FormClosingEventArgs e) {
-			if(DialogResult==DialogResult.Abort) {
-				return;
+		/// <summary>
+		/// Determines which signals need to be sent, and sends them.
+		/// Pass in taskListNumOld if the taskListNum has possibly changed.
+		/// </summary>
+		private void SendSignalsRefillLocal(Task task, long? oldTaskListId = null)
+		{
+            var signalIds = new List<long>
+            {
+                Signalods.SetInvalid(InvalidType.TaskList, KeyType.Undefined, task.TaskListId),
+                Signalods.SetInvalid(InvalidType.Task, KeyType.Task, task.Id)
+            };
+
+            if (oldTaskListId.HasValue && task.TaskListId != oldTaskListId)
+            {
+                signalIds.Add(Signalods.SetInvalid(InvalidType.TaskList, KeyType.Undefined, oldTaskListId.Value));
+            }
+
+			if (userId != task.UserId)
+			{
+				signalIds.Add(Signalods.SetInvalid(InvalidType.TaskAuthor, KeyType.Undefined, userId));
+				signalIds.Add(Signalods.SetInvalid(InvalidType.TaskAuthor, KeyType.Undefined, task.UserId));
 			}
-			if(DialogResult==DialogResult.None && TaskNoteEditExists) {//This can only happen if the user closes the window using the X in the upper right.
-				MessageBox.Show("One or more task note edit windows are open and must be closed.");
-				e.Cancel=true;
-				return;
-			}
-			if(PrefC.GetBool(PrefName.TasksNewTrackedByUser)) {
-				//No more automation here
-			}
-			else {
-				if(Security.CurrentUser!=null) {//Because tasks are modal, user may log off and this form may close with no user.
-					TaskUnreads.SetRead(Security.CurrentUser.Id,_taskCur);//no matter why it was closed
+
+            if (patientId != task.PatientId)
+            {
+				if (patientId.HasValue)
+                {
+					signalIds.Add(Signalods.SetInvalid(InvalidType.TaskPatient, KeyType.Undefined, patientId.Value));
 				}
-			}
-			if(DialogResult==DialogResult.OK) {
-				return;
-			}
-			if(IsNew) {
-				Tasks.Delete(_taskCur.TaskNum);//Shouldn't be displayed in UserControlTasks yet, so no refill needed.
-				SecurityLogs.MakeLogEntry(Permissions.TaskEdit,0,"Task "+POut.Long(_taskCur.TaskNum)+" deleted",0);
-			}
-			else if(NotesChanged) {//Note changed and dialogue result was not OK
-				//This should only ever be hit if the user clicked cancel or X.  Everything else will have dialogue result OK and exit above.
-				//Make a TaskHist entry to note that the task notes were changed.
-				TaskHist taskHist = new TaskHist(_taskOld);
-				taskHist.UserNumHist=Security.CurrentUser.Id;
-				taskHist.IsNoteChange=true;
-				TaskHists.Insert(taskHist);
-				//Task has already been invalidated in FromTaskNoteEdit when the Note was added/edited.  Other Users have already been notified the task changed.
-				//Do not send new TaskInvalid signal.
-			}
-			//If a note was added to a Done task and the user hits cancel, the task status is set to Viewed because the note is still there and the task didn't move lists.
-			if(NotesChanged && _taskOld.TaskStatus==TaskStatusEnum.Done && !butRefresh.Visible) {//notes changed on a task marked Done when the task was opened.
-				if(checkDone.Checked) {//Will happen when the Done checkbox has been manually re-checked by the user or refreshing the task checked the box.
-					return;
+
+				if (task.PatientId.HasValue)
+                {
+					signalIds.Add(Signalods.SetInvalid(InvalidType.TaskPatient, KeyType.Undefined, task.PatientId.Value));
 				}
-				_taskCur.TaskStatus=TaskStatusEnum.Viewed;
-				try {
-					Tasks.Update(_taskCur,_taskOld);//if task has already been altered, then this is where it will fail.
-				}
-				catch {
-					return;//Silently leave because the user could be trying to cancel out of a task that had been edited by another user.
-				}
-				Signalods.SetInvalid(InvalidType.TaskPopup,KeyType.Task,_taskCur.TaskNum);//popup
-				TaskUnreads.AddUnreads(_taskCur,Security.CurrentUser.Id);//we also need to tell the database about all the users with unread tasks
-				SendSignalsRefillLocal(_taskCur);
+            }
+
+            UserControlTasks.RefillLocalTaskGrids(this.task, signalIds);
+        }
+
+		private void CancelButton_Click(object sender, EventArgs e)
+		{
+			DialogResult = DialogResult.Cancel;
+
+			Close();
+		}
+
+		private void FormTaskEdit_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			if (DialogResult == DialogResult.Abort) return;
+
+			if (Security.CurrentUser != null)
+			{
+				TaskUnreads.SetRead(Security.CurrentUser.Id, task);
 			}
 		}
 
-		private void ButEditAutoNote_Click(object sender,EventArgs e) {
-			if(GetHasAutoNotePrompt()) {
-				FormAutoNoteCompose FormA=new FormAutoNoteCompose();
-				FormA.MainTextNote=textDescript.Text;
-				FormA.ShowDialog();
-				if(FormA.DialogResult==DialogResult.OK) {
-					textDescript.Text=FormA.CompletedNote;
-					butEditAutoNote.Visible=GetHasAutoNotePrompt();
+		private void EditAutoNoteButton_Click(object sender, EventArgs e)
+		{
+			if (GetHasAutoNotePrompt())
+			{
+                using var formAutoNoteCompose = new FormAutoNoteCompose
+                {
+                    MainTextNote = descriptionTextBox.Text
+                };
+
+                if (formAutoNoteCompose.ShowDialog(this) == DialogResult.OK)
+				{
+					descriptionTextBox.Text = formAutoNoteCompose.CompletedNote;
+					editAutoNoteButton.Visible = GetHasAutoNotePrompt();
 				}
 			}
-			else {
-				MessageBox.Show(Lan.G(this,"No Auto Note available to edit."));
+			else
+			{
+				ShowError("No auto note available to edit.");
 			}
 		}
 
-		private bool GetHasAutoNotePrompt() {
-			return Regex.IsMatch(textDescript.Text,_autoNotePromptRegex);
+		private bool GetHasAutoNotePrompt()
+		{
+			return Regex.IsMatch(descriptionTextBox.Text, @"\[Prompt:""[a-zA-Z_0-9 ]+""\]");
 		}
-	}
+    }
 }

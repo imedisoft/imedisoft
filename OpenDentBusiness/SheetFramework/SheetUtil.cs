@@ -75,7 +75,7 @@ namespace OpenDentBusiness{
 							//This logic mimics SheetPrinting.drawFieldGrid(...)
 							SheetParameter param=SheetParameter.GetParamByName(sheet.Parameters,"IsSingleClaimPaid");
 							bool isSingleClaim=(param.ParamValue==null)?false:true;//param is only set when true
-							bool isOneClaimPerPage=PrefC.GetBool(PrefName.EraPrintOneClaimPerPage);
+							bool isOneClaimPerPage=Prefs.GetBool(PrefName.EraPrintOneClaimPerPage);
 							X835 era=(X835)SheetParameter.GetParamByName(sheet.Parameters,"ERA").ParamValue;//Required field.
 							DataTable tableClaimsPaid=SheetDataTableUtil.GetDataTableForGridType(sheet,dataSet,field.FieldName,stmt,medLab);
 							DataTable tableRemarks=SheetDataTableUtil.GetDataTableForGridType(sheet,dataSet,"EraClaimsPaidProcRemarks",stmt,medLab);
@@ -261,106 +261,106 @@ namespace OpenDentBusiness{
 					retVal=DisplayFields.GetForCategory(DisplayFieldCategory.StatementMainGrid);
 					break;
 				case "StatementEnclosed":
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="AmountDue",Description="Amount Due",ColumnWidth=107,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="DateDue",Description="Date Due",ColumnWidth=107,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="AmountEnclosed",Description="Amount Enclosed",ColumnWidth=107,ItemOrder=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="AmountDue",Description="Amount Due",ColumnWidth=107,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="DateDue",Description="Date Due",ColumnWidth=107,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="AmountEnclosed",Description="Amount Enclosed",ColumnWidth=107,Order=++i });
 					break;
 				case "StatementAging":
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="PatNum",Description="PatNum",ColumnWidth=75,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Account",Description="Account",ColumnWidth=200,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Age00to30",Description="0-30",ColumnWidth=75,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Age31to60",Description="31-60",ColumnWidth=75,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Age61to90",Description="61-90",ColumnWidth=75,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Age90plus",Description="over 90",ColumnWidth=75,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="AcctTotal",Description="Total",ColumnWidth=75,ItemOrder=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="PatNum",Description="PatNum",ColumnWidth=75,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Account",Description="Account",ColumnWidth=200,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Age00to30",Description="0-30",ColumnWidth=75,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Age31to60",Description="31-60",ColumnWidth=75,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Age61to90",Description="61-90",ColumnWidth=75,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Age90plus",Description="over 90",ColumnWidth=75,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="AcctTotal",Description="Total",ColumnWidth=75,Order=++i });
 					break;
 				case "StatementDynamicPayPlan":
 				case "StatementPayPlan":
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="date",Description="Date",ColumnWidth=80,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="description",Description="Description",ColumnWidth=250,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="charges",Description="Charges",ColumnWidth=60,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="credits",Description="Credits",ColumnWidth=60,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="balance",Description="Balance",ColumnWidth=60,ItemOrder=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="date",Description="Date",ColumnWidth=80,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="description",Description="Description",ColumnWidth=250,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="charges",Description="Charges",ColumnWidth=60,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="credits",Description="Credits",ColumnWidth=60,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="balance",Description="Balance",ColumnWidth=60,Order=++i });
 					break;
 				case "StatementInvoicePayment":
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="date",Description="Date",ColumnWidth=80,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="prov",Description="Prov",ColumnWidth=60,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="patient",Description="Patient",ColumnWidth=60,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="type",Description="Type",ColumnWidth=60,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="ProcCode",Description="Proc",ColumnWidth=60,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="description",Description="Description",ColumnWidth=250,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="amt",Description="Amt",ColumnWidth=60,ItemOrder=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="date",Description="Date",ColumnWidth=80,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="prov",Description="Prov",ColumnWidth=60,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="patient",Description="Patient",ColumnWidth=60,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="type",Description="Type",ColumnWidth=60,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="ProcCode",Description="Proc",ColumnWidth=60,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="description",Description="Description",ColumnWidth=250,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="amt",Description="Amt",ColumnWidth=60,Order=++i });
 					break;
 				case "MedLabResults":
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="obsIDValue",Description="Test / Result",ColumnWidth=500,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="obsAbnormalFlag",Description="Flag",ColumnWidth=75,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="obsUnits",Description="Units",ColumnWidth=70,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="obsRefRange",Description="Ref Interval",ColumnWidth=97,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="facilityID",Description="Lab",ColumnWidth=28,ItemOrder=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="obsIDValue",Description="Test / Result",ColumnWidth=500,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="obsAbnormalFlag",Description="Flag",ColumnWidth=75,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="obsUnits",Description="Units",ColumnWidth=70,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="obsRefRange",Description="Ref Interval",ColumnWidth=97,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="facilityID",Description="Lab",ColumnWidth=28,Order=++i });
 					break;
 				case "PayPlanMain":
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="ChargeDate",Description="Date",ColumnWidth=75,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Provider",Description="Provider",ColumnWidth=60,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Description",Description="Description",ColumnWidth=140,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Principal",Description="Principal",ColumnWidth=75,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Interest",Description="Interest",ColumnWidth=75,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="due",Description="Due",ColumnWidth=75,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="payment",Description="Payment",ColumnWidth=75,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Adjustment",Description="Adjustment",ColumnWidth=70,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="balance",Description="Balance",ColumnWidth=75,ItemOrder=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="ChargeDate",Description="Date",ColumnWidth=75,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Provider",Description="Provider",ColumnWidth=60,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Description",Description="Description",ColumnWidth=140,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Principal",Description="Principal",ColumnWidth=75,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Interest",Description="Interest",ColumnWidth=75,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="due",Description="Due",ColumnWidth=75,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="payment",Description="Payment",ColumnWidth=75,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Adjustment",Description="Adjustment",ColumnWidth=70,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="balance",Description="Balance",ColumnWidth=75,Order=++i });
 					break;
 				case "TreatPlanMain":
 					retVal=DisplayFields.GetForCategory(DisplayFieldCategory.TreatmentPlanModule);
 					break;
 				case "TreatPlanBenefitsFamily":
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="BenefitName",Description="",ColumnWidth=150,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Primary",Description="Primary",ColumnWidth=75,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Secondary",Description="Secondary",ColumnWidth=75,ItemOrder=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="BenefitName",Description="",ColumnWidth=150,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Primary",Description="Primary",ColumnWidth=75,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Secondary",Description="Secondary",ColumnWidth=75,Order=++i });
 					break;
 				case "TreatPlanBenefitsIndividual":
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="BenefitName",Description="",ColumnWidth=150,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Primary",Description="Primary",ColumnWidth=75,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Secondary",Description="Secondary",ColumnWidth=75,ItemOrder=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="BenefitName",Description="",ColumnWidth=150,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Primary",Description="Primary",ColumnWidth=75,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Secondary",Description="Secondary",ColumnWidth=75,Order=++i });
 					break;
 				case "EraClaimsPaid":
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="ProcCode",Description="Proc Code",ColumnWidth=70,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="ProcDescript",Description="Proc Descript",ColumnWidth=100,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="FeeBilled",Description="Fee Billed",ColumnWidth=90,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="PatResp",Description="Pat Resp.",ColumnWidth=90,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Contractual",Description="Contractual",ColumnWidth=90,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="PayorReduct",Description="Payor Reduct.",ColumnWidth=90,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="OtherAdjust",Description="Other Adjust",ColumnWidth=90,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="InsPaid",Description="Ins Paid.",ColumnWidth=90,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="RemarkCodes",Description="Remark Codes",ColumnWidth=90,ItemOrder=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="ProcCode",Description="Proc Code",ColumnWidth=70,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="ProcDescript",Description="Proc Descript",ColumnWidth=100,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="FeeBilled",Description="Fee Billed",ColumnWidth=90,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="PatResp",Description="Pat Resp.",ColumnWidth=90,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Contractual",Description="Contractual",ColumnWidth=90,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="PayorReduct",Description="Payor Reduct.",ColumnWidth=90,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="OtherAdjust",Description="Other Adjust",ColumnWidth=90,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="InsPaid",Description="Ins Paid.",ColumnWidth=90,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="RemarkCodes",Description="Remark Codes",ColumnWidth=90,Order=++i });
 					break;
 				case "ReferralLetterProceduresCompleted":
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Date",Description="Date",ColumnWidth=65,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Prov",Description="Prov",ColumnWidth=70,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="ProcCode",Description="Proc Code",ColumnWidth=90,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Tth",Description="Tth",ColumnWidth=25,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Surf",Description="Surf",ColumnWidth=35,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Description",Description="Description",ColumnWidth=200,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Note",Description="Note",ColumnWidth=200,ItemOrder=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Date",Description="Date",ColumnWidth=65,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Prov",Description="Prov",ColumnWidth=70,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="ProcCode",Description="Proc Code",ColumnWidth=90,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Tth",Description="Tth",ColumnWidth=25,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Surf",Description="Surf",ColumnWidth=35,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Description",Description="Description",ColumnWidth=200,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Note",Description="Note",ColumnWidth=200,Order=++i });
 					break;
 				case "EraClaimsPaidProcRemarks":
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="RemarkCode",Description="Remark",ColumnWidth=70,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="RemarkDescription",Description="Remark Description",ColumnWidth=730,ItemOrder=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="RemarkCode",Description="Remark",ColumnWidth=70,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="RemarkDescription",Description="Remark Description",ColumnWidth=730,Order=++i });
 					break;
 				case "ApptsGrid":
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="ApptStatus",Description="ApptStatus",ColumnWidth=70,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Prov",Description="Prov",ColumnWidth=40,ItemOrder=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="ApptStatus",Description="ApptStatus",ColumnWidth=70,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Prov",Description="Prov",ColumnWidth=40,Order=++i });
 					if(PrefC.HasClinicsEnabled) {
-						retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Clinic",Description="Clinic",ColumnWidth=60,ItemOrder=++i });
+						retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Clinic",Description="Clinic",ColumnWidth=60,Order=++i });
 					}
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Date",Description="Date",ColumnWidth=65,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Time",Description="Time",ColumnWidth=55,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Min",Description="Min",ColumnWidth=20,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Procedures",Description="Procedures",ColumnWidth=100,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Notes",Description="Notes",ColumnWidth=75,ItemOrder=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Date",Description="Date",ColumnWidth=65,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Time",Description="Time",ColumnWidth=55,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Min",Description="Min",ColumnWidth=20,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Procedures",Description="Procedures",ColumnWidth=100,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Notes",Description="Notes",ColumnWidth=75,Order=++i });
 					break;
 				case "PatientInfo":
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="FieldName",Description="FieldName",ColumnWidth=100,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="FieldValue",Description="FieldValue",ColumnWidth=0,ItemOrder=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="FieldName",Description="FieldName",ColumnWidth=100,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="FieldValue",Description="FieldValue",ColumnWidth=0,Order=++i });
 					break;
 				case "ProgressNotes":
 					if(ChartViews.GetDeepCopy().Count==0) {
@@ -387,16 +387,16 @@ namespace OpenDentBusiness{
 					retVal.ForEach(x => x.Description=x.InternalName);
 					break;
 				case "TreatmentPlans":
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Status",Description="Status",ColumnWidth=50,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Heading",Description="Heading",ColumnWidth=315,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Procs",Description="Procs",ColumnWidth=0,ItemOrder=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Status",Description="Status",ColumnWidth=50,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Heading",Description="Heading",ColumnWidth=315,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Procs",Description="Procs",ColumnWidth=0,Order=++i });
 					break;
 				case "Procedures":
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Priority",Description="Priority",ColumnWidth=50,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Tth",Description="Tth",ColumnWidth=35,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Surf",Description="Surf",ColumnWidth=40,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Code",Description="Code",ColumnWidth=50,ItemOrder=++i });
-					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Description",Description="Description",ColumnWidth=0,ItemOrder=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Priority",Description="Priority",ColumnWidth=50,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Tth",Description="Tth",ColumnWidth=35,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Surf",Description="Surf",ColumnWidth=40,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Code",Description="Code",ColumnWidth=50,Order=++i });
+					retVal.Add(new DisplayField { Category=DisplayFieldCategory.None,InternalName="Description",Description="Description",ColumnWidth=0,Order=++i });
 					break;
 			}
 			return retVal;

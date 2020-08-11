@@ -1,66 +1,75 @@
+using OpenDentBusiness;
 using System;
 using System.Windows.Forms;
-using OpenDentBusiness;
-using System.Collections.Generic;
-using CodeBase;
 
-namespace OpenDental {
-	public partial class FormTaskOptions:ODForm {
-		public bool IsShowFinishedTasks;
-		public bool IsShowArchivedTaskLists;
-		public DateTime DateTimeStartShowFinished;
-		public bool IsSortApptDateTime;
+namespace Imedisoft.Forms
+{
+    public partial class FormTaskOptions : FormBase
+	{
+		public bool IsShowFinishedTasks { get; set; }
 
-		public FormTaskOptions(bool isShowFinishedTasks,DateTime dateTimeStartShowFinished,bool isAptDateTimeSort,bool isShowArchivedTaskLists) {
+		public bool IsShowArchivedTaskLists { get; set; }
+
+		public DateTime DateTimeStartShowFinished { get; set; }
+
+		public bool IsSortApptDateTime { get; set; }
+
+		public FormTaskOptions(bool isShowFinishedTasks, DateTime dateTimeStartShowFinished, bool isAptDateTimeSort, bool isShowArchivedTaskLists)
+		{
 			InitializeComponent();
-			Lan.F(this);
-			checkShowFinished.Checked=isShowFinishedTasks;
-			checkShowArchivedTaskLists.Checked=isShowArchivedTaskLists;
-			textStartDate.Text=dateTimeStartShowFinished.ToShortDateString();
-			checkTaskSortApptDateTime.Checked=isAptDateTimeSort;
 
-			checkCollapsed.Checked = UserPreference.GetBool(UserPreferenceName.TaskCollapse);
+			showFinishedCheckBox.Checked = isShowFinishedTasks;
+			showArchivedTaskListsCheckBox.Checked = isShowArchivedTaskLists;
+			startDateTextBox.Text = dateTimeStartShowFinished.ToShortDateString();
+			sortApptDateTimeCheckBox.Checked = isAptDateTimeSort;
 
-			if(!isShowFinishedTasks) {
-				labelStartDate.Enabled=false;
-				textStartDate.Enabled=false;
+			defaultCollapsedCheckBox.Checked = UserPreference.GetBool(UserPreferenceName.TaskCollapse);
+
+			if (!isShowFinishedTasks)
+			{
+				startDateLabel.Enabled = false;
+				startDateTextBox.Enabled = false;
 			}
 		}
 
-		private void checkShowFinished_Click(object sender,EventArgs e) {
-			if(checkShowFinished.Checked) {
-				labelStartDate.Enabled=true;
-				textStartDate.Enabled=true;
+		private void checkShowFinished_Click(object sender, EventArgs e)
+		{
+			if (showFinishedCheckBox.Checked)
+			{
+				startDateLabel.Enabled = true;
+				startDateTextBox.Enabled = true;
 			}
-			else {
-				labelStartDate.Enabled=false;
-				textStartDate.Enabled=false;
+			else
+			{
+				startDateLabel.Enabled = false;
+				startDateTextBox.Enabled = false;
 			}
 		}
 
-		private void butOK_Click(object sender,EventArgs e) {
-			if(!(textStartDate.errorProvider1.GetError(textStartDate)=="")) {
-				if(checkShowFinished.Checked) {
+		private void AcceptButton_Click(object sender, EventArgs e)
+		{
+			if (!(startDateTextBox.errorProvider1.GetError(startDateTextBox) == ""))
+			{
+				if (showFinishedCheckBox.Checked)
+				{
 					MessageBox.Show("Invalid finished task start date");
 					return;
 				}
-				else {
-					//We are not going to be using the textStartDate so not reason to warn the user, just reset it back to the default value.
-					textStartDate.Text=DateTimeOD.Today.AddDays(-7).ToShortDateString();
+				else
+				{
+					// We are not going to be using the textStartDate so not reason to warn the user, just reset it back to the default value.
+					startDateTextBox.Text = DateTime.Today.AddDays(-7).ToShortDateString();
 				}
 			}
 
-			UserPreference.Set(UserPreferenceName.TaskCollapse, checkCollapsed.Checked);
+			UserPreference.Set(UserPreferenceName.TaskCollapse, defaultCollapsedCheckBox.Checked);
 
-			IsShowFinishedTasks=checkShowFinished.Checked;
-			IsShowArchivedTaskLists=checkShowArchivedTaskLists.Checked;
-			DateTimeStartShowFinished=PIn.Date(textStartDate.Text);//Note that this may have not been enabled but we'll pass it back anyway, won't be used.
-			IsSortApptDateTime=checkTaskSortApptDateTime.Checked;
-			DialogResult=DialogResult.OK;
-		}
+			IsShowFinishedTasks = showFinishedCheckBox.Checked;
+			IsShowArchivedTaskLists = showArchivedTaskListsCheckBox.Checked;
+			DateTimeStartShowFinished = PIn.Date(startDateTextBox.Text);
+			IsSortApptDateTime = sortApptDateTimeCheckBox.Checked;
 
-		private void butCancel_Click(object sender,EventArgs e) {
-			DialogResult=DialogResult.Cancel;
+			DialogResult = DialogResult.OK;
 		}
 	}
 }

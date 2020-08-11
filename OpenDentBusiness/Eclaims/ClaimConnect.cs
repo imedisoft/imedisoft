@@ -508,19 +508,19 @@ namespace OpenDentBusiness.Eclaims {
 			string billingState="";
 			string billingZip="";
 			if(clinic==null) {
-				if(PrefC.GetBool(PrefName.UseBillingAddressOnClaims)) {
-					billingAddress1=PrefC.GetString(PrefName.PracticeBillingAddress);
-					billingAddress2=PrefC.GetString(PrefName.PracticeBillingAddress2);
-					billingCity=PrefC.GetString(PrefName.PracticeBillingCity);
-					billingState=PrefC.GetString(PrefName.PracticeBillingST);
-					billingZip=PrefC.GetString(PrefName.PracticeBillingZip);
+				if(Prefs.GetBool(PrefName.UseBillingAddressOnClaims)) {
+					billingAddress1=Prefs.GetString(PrefName.PracticeBillingAddress);
+					billingAddress2=Prefs.GetString(PrefName.PracticeBillingAddress2);
+					billingCity=Prefs.GetString(PrefName.PracticeBillingCity);
+					billingState=Prefs.GetString(PrefName.PracticeBillingST);
+					billingZip=Prefs.GetString(PrefName.PracticeBillingZip);
 				}
 				else {
-					billingAddress1=PrefC.GetString(PrefName.PracticeAddress);
-					billingAddress2=PrefC.GetString(PrefName.PracticeAddress2);
-					billingCity=PrefC.GetString(PrefName.PracticeCity);
-					billingState=PrefC.GetString(PrefName.PracticeST);
-					billingZip=PrefC.GetString(PrefName.PracticeZip);
+					billingAddress1=Prefs.GetString(PrefName.PracticeAddress);
+					billingAddress2=Prefs.GetString(PrefName.PracticeAddress2);
+					billingCity=Prefs.GetString(PrefName.PracticeCity);
+					billingState=Prefs.GetString(PrefName.PracticeST);
+					billingZip=Prefs.GetString(PrefName.PracticeZip);
 				}
 			}
 			else {
@@ -558,11 +558,11 @@ namespace OpenDentBusiness.Eclaims {
 			}
 			attachment.Narrative=narrative;
 			if(clinic==null) {//Clinics disabled or Headquarters
-				attachment.RenderingProviderAdd1=PrefC.GetString(PrefName.PracticeAddress);
-				attachment.RenderingProviderAdd2=PrefC.GetString(PrefName.PracticeAddress2);
-				attachment.RenderingProviderCity=PrefC.GetString(PrefName.PracticeCity);
-				attachment.RenderingProviderState=PrefC.GetString(PrefName.PracticeST);
-				attachment.RenderingProviderZip=PrefC.GetString(PrefName.PracticeZip);
+				attachment.RenderingProviderAdd1=Prefs.GetString(PrefName.PracticeAddress);
+				attachment.RenderingProviderAdd2=Prefs.GetString(PrefName.PracticeAddress2);
+				attachment.RenderingProviderCity=Prefs.GetString(PrefName.PracticeCity);
+				attachment.RenderingProviderState=Prefs.GetString(PrefName.PracticeST);
+				attachment.RenderingProviderZip=Prefs.GetString(PrefName.PracticeZip);
 			}
 			else {//Clinic enabled
 				attachment.RenderingProviderAdd1=clinic.Address;
@@ -634,7 +634,7 @@ namespace OpenDentBusiness.Eclaims {
 					return false;
 			}
 			Dentalxchange2016.Credentials cred=new Dentalxchange2016.Credentials();
-			if(PrefC.GetBool(PrefName.CustomizedForPracticeWeb)) {//even though they currently use code from a different part of the program.
+			if(Prefs.GetBool(PrefName.CustomizedForPracticeWeb)) {//even though they currently use code from a different part of the program.
 				cred.Client="Practice-Web";
 				cred.ServiceID="DCI Web Service ID: 001513";
 			}
@@ -895,7 +895,7 @@ namespace OpenDentBusiness.Eclaims {
 					clearingHouse=GetClearingHouseForClaim(claim);
 				}
 				DxcCredentials cred=new DxcCredentials();
-				if(PrefC.GetBool(PrefName.CustomizedForPracticeWeb)) {//even though they currently use code from a different part of the program.
+				if(Prefs.GetBool(PrefName.CustomizedForPracticeWeb)) {//even though they currently use code from a different part of the program.
 					cred.Client="Practice-Web";
 					cred.ServiceID="DCI Web Service ID: 001513";
 				}
