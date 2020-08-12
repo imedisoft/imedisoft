@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Forms;
 using OpenDentBusiness;
 using OpenDentBusiness.IO;
 using System;
@@ -449,12 +450,6 @@ namespace OpenDental {
 			if(changed) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
-		}
-
-		///<summary>No longer used here. Moved to FormAbout.</summary>
-		private void butLicense_Click(object sender,EventArgs e) {
-			FormLicense FormL=new FormLicense();
-			FormL.ShowDialog();
 		}
 
 		#endregion

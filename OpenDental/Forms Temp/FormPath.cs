@@ -41,10 +41,7 @@ namespace Imedisoft.Forms
 			if (notConfigured)
 			{
 				Show();
-
-				MessageBox.Show(this, 
-					"Could not find the path for storing images and documents.", "Imedisoft", 
-					MessageBoxButtons.OK, MessageBoxIcon.Information);
+				ShowInfo("Could not find the path for storing images and documents.");
 
 				if (Security.CurrentUser == null || !Security.IsAuthorized(Permissions.Setup))
 				{
@@ -94,7 +91,7 @@ namespace Imedisoft.Forms
 			}
             catch
             {
-				MessageBox.Show(
+				ShowError(
 					"There was an error showing the browse window.\r\n" +
 					"Try running as an Administrator or manually typing in a path.");
 			}
@@ -127,9 +124,7 @@ namespace Imedisoft.Forms
 				}
                 catch (Exception exception)
                 {
-					MessageBox.Show(this,
-						exception.Message, "Imedisoft", 
-						MessageBoxButtons.OK, MessageBoxIcon.Error);
+					ShowError(exception.Message);
                 }
 
 				return false;

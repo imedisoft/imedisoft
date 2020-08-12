@@ -959,5 +959,10 @@ namespace Imedisoft.Forms
 
 			CloseFormIfPatientSelected();
 		}
-	}
+
+        private void searchGroupBox_Enter(object sender, EventArgs e)
+        {
+
+        }
+    }
 }

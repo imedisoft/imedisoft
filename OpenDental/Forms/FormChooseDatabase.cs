@@ -1,12 +1,11 @@
 using Imedisoft.Data;
-using Imedisoft.Forms;
 using MySql.Data.MySqlClient;
 using OpenDentBusiness;
 using System;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace OpenDental
+namespace Imedisoft.Forms
 {
     public partial class FormChooseDatabase : FormBase
 	{

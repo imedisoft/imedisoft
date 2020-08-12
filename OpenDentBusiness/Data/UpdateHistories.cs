@@ -1,4 +1,5 @@
 using CodeBase;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,25 +15,20 @@ namespace OpenDentBusiness
 		/// All updatehistory entries ordered by DateTimeUpdated.
 		/// </summary>
 		public static IEnumerable<UpdateHistory> GetAll() 
-			=> SelectMany("SELECT * FROM updatehistory ORDER BY DateTimeUpdated");
+			=> SelectMany("SELECT * FROM `update_histories` ORDER BY `installed_on`");
 
 		/// <summary>
 		/// Get the most recently inserted updatehistory entry. Ordered by DateTimeUpdated.
 		/// </summary>
 		public static UpdateHistory GetLastUpdateHistory() 
-			=> SelectOne("SELECT * FROM updatehistory ORDER BY DateTimeUpdated DESC LIMIT 1");
-
-		/// <summary>
-		/// Gets the most recently inserted updatehistory entries. Ordered by DateTimeUpdated.
-		/// </summary>
-		public static IEnumerable<UpdateHistory> GetPreviousUpdateHistories(int count) 
-			=> SelectMany("SELECT * FROM updatehistory ORDER BY DateTimeUpdated DESC LIMIT " + count);
+			=> SelectOne("SELECT * FROM `update_histories` ORDER BY `installed_on` DESC LIMIT 1");
 
 		/// <summary>
 		/// Returns the latest version information.
 		/// </summary>
 		public static UpdateHistory GetForVersion(string version) 
-			=> SelectOne("SELECT * FROM updatehistory WHERE ProgramVersion='" + POut.String(version.ToString()) + "'");
+			=> SelectOne("SELECT * FROM `update_histories` WHERE `version` = @version",
+				new MySqlParameter("version", version ?? ""));
 
 		/// <summary>
 		/// Returns the earliest datetime that a version was reached. If that version has not been reached, returns the MinDate.

@@ -319,11 +319,11 @@ namespace OpenDental{
 			_listComputers=Computers.GetDeepCopy();
 			listComputer.Items.Clear();
 			//Database Server----------------------------------------------------------		
-			List<string> serviceList=Computers.GetServiceInfo();
-			textName.Text=MiscData.GetMySqlServer();//server name
-			textService.Text=(serviceList[0].ToString());//service name
-			textVersion.Text=(serviceList[3].ToString());//service version
-			textServComment.Text=(serviceList[1].ToString());//service comment
+			var serviceList=Computers.GetServiceInfo();
+			textName.Text = serviceList.hostname;
+			textService.Text = serviceList.name;
+			textVersion.Text = serviceList.version;
+			textServComment.Text = serviceList.comment;
 			//workstation--------------------------------------------------------------
 			textCurComp.Text=Environment.MachineName.ToUpper();//current computer name
 			string itemName="";

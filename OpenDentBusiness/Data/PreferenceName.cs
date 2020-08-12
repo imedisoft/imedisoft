@@ -1904,8 +1904,11 @@ namespace OpenDentBusiness
 		public const string SmsContractName = "SmsContractName";
 		///<summary>Always stored in US dollars. This is the desired limit for SMS outbound messages per month.</summary>
 		public const string SmsMonthlyLimit = "SmsMonthlyLimit";
+
 		/// <summary>Name of this Software.  Defaults to 'Open Dental Software'.</summary>
 		public const string SoftwareName = "SoftwareName";
+
+
 		public const string SolidBlockouts = "SolidBlockouts";
 		public const string SpellCheckIsEnabled = "SpellCheckIsEnabled";
 		public const string StatementAccountsUseChartNumber = "StatementAccountsUseChartNumber";

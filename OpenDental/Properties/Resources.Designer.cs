@@ -142,16 +142,6 @@ namespace Imedisoft.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap bencoLogo {
-            get {
-                object obj = ResourceManager.GetObject("bencoLogo", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The Bouncy Castle Cryptographic C#® API
         ///
         ///License:
@@ -1093,6 +1083,16 @@ namespace Imedisoft.Properties {
         public static System.Drawing.Bitmap Left {
             get {
                 object obj = ResourceManager.GetObject("Left", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap LogoSmall {
+            get {
+                object obj = ResourceManager.GetObject("LogoSmall", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

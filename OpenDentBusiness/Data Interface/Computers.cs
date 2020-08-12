@@ -1,12 +1,14 @@
 using CodeBase;
 using DataConnectionBase;
 using Imedisoft.Data;
+using Renci.SshNet.Messages;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Reflection;
+using System.Windows.Input;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -153,40 +155,14 @@ namespace OpenDentBusiness{
 			Database.ExecuteNonQuery(command);
 		}
 
-		///<summary>Returns a list of strings in a specific order.  
-		///The strings are as follows; socket (service name), version_comment (service comment), hostname (server name), and MySQL version
-		///Oracle is not supported and will throw an exception to have the customer call us to add support.</summary>
-		public static List<string> GetServiceInfo() {
-			
-			List<string> retVal=new List<string>();
-			DataTable table=Database.ExecuteDataTable("SHOW VARIABLES WHERE Variable_name='socket'");//service name
-			if(table.Rows.Count>0) {
-				retVal.Add(table.Rows[0]["VALUE"].ToString());
-			}
-			else {
-				retVal.Add("Not Found");
-			}
-			table=Database.ExecuteDataTable("SHOW VARIABLES WHERE Variable_name='version_comment'");//service comment
-			if(table.Rows.Count>0) {
-				retVal.Add(table.Rows[0]["VALUE"].ToString());
-			}
-			else {
-				retVal.Add("Not Found");
-			}
-			try { 
-				table=Database.ExecuteDataTable("SELECT @@hostname");//server name
-				if(table.Rows.Count>0) {
-					retVal.Add(table.Rows[0][0].ToString());
-				}
-				else {
-					retVal.Add("Not Found");
-				}
-			}
-			catch {
-				retVal.Add("Not Found");//hostname variable doesn't exist
-			}
-			retVal.Add(MiscData.GetMySqlVersion());
-			return retVal;
-		}
+		/// <summary>
+		/// Gets details of the database service.
+		///</summary>
+		public static (string name, string comment, string hostname, string version) GetServiceInfo() 
+			=> (Database.ExecuteString("SELECT @@socket"),
+				Database.ExecuteString("SELECT @@version_comment"),
+				Database.ExecuteString("SELECT @@hostname"),
+				Database.ExecuteString("SELECT @@version"));
+
 	}
 }

@@ -434,6 +434,7 @@ namespace Imedisoft.Forms
             this.Controls.Add(this.tasksGrid);
             this.Controls.Add(this.cancelButton);
             this.Name = "FormTaskSearch";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Task Search";
             this.Load += new System.EventHandler(this.FormTaskSearch_Load);
             this.criteriaGroupBox.ResumeLayout(false);

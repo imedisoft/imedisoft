@@ -55,9 +55,9 @@
             // acceptButton
             // 
             this.acceptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.acceptButton.Location = new System.Drawing.Point(436, 473);
+            this.acceptButton.Location = new System.Drawing.Point(426, 474);
             this.acceptButton.Name = "acceptButton";
-            this.acceptButton.Size = new System.Drawing.Size(75, 26);
+            this.acceptButton.Size = new System.Drawing.Size(80, 25);
             this.acceptButton.TabIndex = 3;
             this.acceptButton.Text = "&OK";
             this.acceptButton.Click += new System.EventHandler(this.AcceptButton_Click);
@@ -66,9 +66,9 @@
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.Location = new System.Drawing.Point(517, 473);
+            this.cancelButton.Location = new System.Drawing.Point(512, 474);
             this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(75, 26);
+            this.cancelButton.Size = new System.Drawing.Size(80, 25);
             this.cancelButton.TabIndex = 4;
             this.cancelButton.Text = "&Cancel";
             // 
@@ -78,7 +78,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pathTextBox.Location = new System.Drawing.Point(6, 69);
             this.pathTextBox.Name = "pathTextBox";
-            this.pathTextBox.Size = new System.Drawing.Size(486, 20);
+            this.pathTextBox.Size = new System.Drawing.Size(492, 20);
             this.pathTextBox.TabIndex = 1;
             // 
             // exportPathTextBox
@@ -87,15 +87,15 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.exportPathTextBox.Location = new System.Drawing.Point(6, 89);
             this.exportPathTextBox.Name = "exportPathTextBox";
-            this.exportPathTextBox.Size = new System.Drawing.Size(486, 20);
+            this.exportPathTextBox.Size = new System.Drawing.Size(492, 20);
             this.exportPathTextBox.TabIndex = 1;
             // 
             // exportPathButton
             // 
             this.exportPathButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.exportPathButton.Location = new System.Drawing.Point(498, 86);
+            this.exportPathButton.Location = new System.Drawing.Point(504, 88);
             this.exportPathButton.Name = "exportPathButton";
-            this.exportPathButton.Size = new System.Drawing.Size(76, 25);
+            this.exportPathButton.Size = new System.Drawing.Size(70, 20);
             this.exportPathButton.TabIndex = 2;
             this.exportPathButton.Text = "Browse";
             this.exportPathButton.Click += new System.EventHandler(this.ExportPathButton_Click);
@@ -103,9 +103,9 @@
             // pathButton
             // 
             this.pathButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.pathButton.Location = new System.Drawing.Point(498, 66);
+            this.pathButton.Location = new System.Drawing.Point(504, 69);
             this.pathButton.Name = "pathButton";
-            this.pathButton.Size = new System.Drawing.Size(76, 25);
+            this.pathButton.Size = new System.Drawing.Size(70, 20);
             this.pathButton.TabIndex = 2;
             this.pathButton.Text = "&Browse";
             this.pathButton.Click += new System.EventHandler(this.PathButton_Click);
@@ -146,9 +146,9 @@
             // letterMergeButton
             // 
             this.letterMergeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.letterMergeButton.Location = new System.Drawing.Point(498, 86);
+            this.letterMergeButton.Location = new System.Drawing.Point(504, 89);
             this.letterMergeButton.Name = "letterMergeButton";
-            this.letterMergeButton.Size = new System.Drawing.Size(76, 25);
+            this.letterMergeButton.Size = new System.Drawing.Size(70, 20);
             this.letterMergeButton.TabIndex = 2;
             this.letterMergeButton.Text = "Browse";
             this.letterMergeButton.Click += new System.EventHandler(this.LetterMergeButton_Click);
@@ -159,7 +159,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.letterMergePathTextBox.Location = new System.Drawing.Point(6, 89);
             this.letterMergePathTextBox.Name = "letterMergePathTextBox";
-            this.letterMergePathTextBox.Size = new System.Drawing.Size(486, 20);
+            this.letterMergePathTextBox.Size = new System.Drawing.Size(492, 20);
             this.letterMergePathTextBox.TabIndex = 1;
             // 
             // storageGroupBox
@@ -182,9 +182,9 @@
             // localPathButton
             // 
             this.localPathButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.localPathButton.Location = new System.Drawing.Point(498, 115);
+            this.localPathButton.Location = new System.Drawing.Point(504, 118);
             this.localPathButton.Name = "localPathButton";
-            this.localPathButton.Size = new System.Drawing.Size(76, 25);
+            this.localPathButton.Size = new System.Drawing.Size(70, 20);
             this.localPathButton.TabIndex = 5;
             this.localPathButton.Text = "Browse";
             this.localPathButton.Click += new System.EventHandler(this.LocalPathButton_Click);
@@ -195,7 +195,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.localPathTextBox.Location = new System.Drawing.Point(6, 118);
             this.localPathTextBox.Name = "localPathTextBox";
-            this.localPathTextBox.Size = new System.Drawing.Size(486, 20);
+            this.localPathTextBox.Size = new System.Drawing.Size(492, 20);
             this.localPathTextBox.TabIndex = 4;
             // 
             // localPathLabel

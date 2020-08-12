@@ -240,9 +240,12 @@ namespace Imedisoft.Forms
             this.Controls.Add(this.acceptButton);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.globalGroupBox);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormTaskPreferences";
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Tasks Preferences";
             this.Load += new System.EventHandler(this.FormTaskPreferences_Load);
             this.localGroupBox.ResumeLayout(false);

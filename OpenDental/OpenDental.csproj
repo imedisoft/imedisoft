@@ -517,6 +517,9 @@
     <Compile Include="Forms Reports\FormRpServiceDateView.designer.cs">
       <DependentUpon>FormRpServiceDateView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FormAbout.Designer.cs">
+      <DependentUpon>FormAbout.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms Temp\FormBase.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -929,6 +932,9 @@
     <Compile Include="Forms Temp\FormTsiHistory.designer.cs">
       <DependentUpon>FormTsiHistory.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FormLicense.Designer.cs">
+      <DependentUpon>FormLicense.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FormTaskEdit.Designer.cs">
       <DependentUpon>FormTaskEdit.cs</DependentUpon>
     </Compile>
@@ -1192,10 +1198,10 @@
     <Compile Include="Forms Reports\FormRpProdGoal.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormChooseDatabase.cs">
+    <Compile Include="Forms\FormChooseDatabase.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormChooseDatabase.Designer.cs">
+    <Compile Include="Forms\FormChooseDatabase.Designer.cs">
       <DependentUpon>FormChooseDatabase.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormCommItem.cs">
@@ -4100,7 +4106,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Reports\ReportSimpleGrid.cs" />
-    <Compile Include="Forms Temp\FormLicense.cs">
+    <Compile Include="Forms\FormLicense.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormUpdateSetup.cs">
@@ -4229,7 +4235,7 @@
     <Compile Include="Forms Temp\FormLanguagesUsed.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormAbout.cs">
+    <Compile Include="Forms\FormAbout.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormAccountEdit.cs">
@@ -5514,7 +5520,7 @@
     <EmbeddedResource Include="Forms Temp\FormPaySimple.resx">
       <DependentUpon>FormPaySimple.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormChooseDatabase.resx">
+    <EmbeddedResource Include="Forms\FormChooseDatabase.resx">
       <DependentUpon>FormChooseDatabase.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormCommItem.resx">
@@ -6967,7 +6973,7 @@
       <DependentUpon>FormRpStatement.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormLicense.resx">
+    <EmbeddedResource Include="Forms\FormLicense.resx">
       <DependentUpon>FormLicense.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7127,7 +7133,7 @@
       <DependentUpon>FormLanguagesUsed.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAbout.resx">
+    <EmbeddedResource Include="Forms\FormAbout.resx">
       <DependentUpon>FormAbout.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -8661,6 +8667,7 @@
     <None Include="Web References\NewCrop\Update1.wsdl" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\LogoSmall.png" />
     <None Include="Resources\IconSearch.png" />
     <None Include="Resources\IconList.png" />
     <None Include="Resources\IconEllipsisH.png" />

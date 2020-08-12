@@ -1,4 +1,4 @@
-namespace OpenDental
+namespace Imedisoft.Forms
 {
     partial class FormChooseDatabase
     {

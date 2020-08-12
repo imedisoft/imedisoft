@@ -140,841 +140,840 @@ namespace OpenDental {
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
-			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormDatabaseMaintenance));
-			this.butClose = new OpenDental.UI.Button();
-			this.textBox1 = new System.Windows.Forms.TextBox();
-			this.butCheck = new OpenDental.UI.Button();
-			this.checkShow = new System.Windows.Forms.CheckBox();
-			this.butPrint = new OpenDental.UI.Button();
-			this.butFix = new OpenDental.UI.Button();
-			this.label4 = new System.Windows.Forms.Label();
-			this.butActiveTPs = new OpenDental.UI.Button();
-			this.label1 = new System.Windows.Forms.Label();
-			this.butEtrans = new OpenDental.UI.Button();
-			this.label8 = new System.Windows.Forms.Label();
-			this.butRemoveNulls = new OpenDental.UI.Button();
-			this.label7 = new System.Windows.Forms.Label();
-			this.butTokens = new OpenDental.UI.Button();
-			this.labelInnoDb = new System.Windows.Forms.Label();
-			this.butInnoDB = new OpenDental.UI.Button();
-			this.label5 = new System.Windows.Forms.Label();
-			this.labelApptProcs = new System.Windows.Forms.Label();
-			this.label3 = new System.Windows.Forms.Label();
-			this.label2 = new System.Windows.Forms.Label();
-			this.butSpecChar = new OpenDental.UI.Button();
-			this.butApptProcs = new OpenDental.UI.Button();
-			this.butOptimize = new OpenDental.UI.Button();
-			this.butInsPayFix = new OpenDental.UI.Button();
-			this.gridMain = new OpenDental.UI.ODGrid();
-			this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.hideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.unhideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.butNone = new OpenDental.UI.Button();
-			this.textBox2 = new System.Windows.Forms.TextBox();
-			this.tabControlDBM = new System.Windows.Forms.TabControl();
-			this.tabChecks = new System.Windows.Forms.TabPage();
-			this.butStopDBM = new OpenDental.UI.Button();
-			this.tabHidden = new System.Windows.Forms.TabPage();
-			this.butSelectAll = new OpenDental.UI.Button();
-			this.textBox4 = new System.Windows.Forms.TextBox();
-			this.gridHidden = new OpenDental.UI.ODGrid();
-			this.tabOld = new System.Windows.Forms.TabPage();
-			this.checkShowHidden = new System.Windows.Forms.CheckBox();
-			this.butStopDBMOld = new OpenDental.UI.Button();
-			this.textNoneOld = new System.Windows.Forms.TextBox();
-			this.butNoneOld = new OpenDental.UI.Button();
-			this.butFixOld = new OpenDental.UI.Button();
-			this.butCheckOld = new OpenDental.UI.Button();
-			this.textBox5 = new System.Windows.Forms.TextBox();
-			this.gridOld = new OpenDental.UI.ODGrid();
-			this.tabTools = new System.Windows.Forms.TabPage();
-			this.labelRedundantIndexes = new System.Windows.Forms.Label();
-			this.butRedundantIndexes = new OpenDental.UI.Button();
-			this.label13 = new System.Windows.Forms.Label();
-			this.butEmailAttaches = new OpenDental.UI.Button();
-			this.label12 = new System.Windows.Forms.Label();
-			this.butFamilyBalance = new OpenDental.UI.Button();
-			this.label11 = new System.Windows.Forms.Label();
-			this.butPayPlanPayments = new OpenDental.UI.Button();
-			this.groupBoxUpdateInProg = new System.Windows.Forms.GroupBox();
-			this.labelUpdateInProgress = new System.Windows.Forms.Label();
-			this.textBoxUpdateInProg = new System.Windows.Forms.TextBox();
-			this.butClearUpdateInProgress = new OpenDental.UI.Button();
-			this.label10 = new System.Windows.Forms.Label();
-			this.butRecalcEst = new OpenDental.UI.Button();
-			this.textBox3 = new System.Windows.Forms.TextBox();
-			this.label9 = new System.Windows.Forms.Label();
-			this.butRawEmails = new OpenDental.UI.Button();
-			this.labelSkipCheckTable = new System.Windows.Forms.Label();
-			this.contextMenuStrip1.SuspendLayout();
-			this.tabControlDBM.SuspendLayout();
-			this.tabChecks.SuspendLayout();
-			this.tabHidden.SuspendLayout();
-			this.tabOld.SuspendLayout();
-			this.tabTools.SuspendLayout();
-			this.groupBoxUpdateInProg.SuspendLayout();
-			this.SuspendLayout();
-			// 
-			// butClose
-			// 
-			this.butClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.butClose.Location = new System.Drawing.Point(747, 654);
-			this.butClose.Name = "butClose";
-			this.butClose.Size = new System.Drawing.Size(75, 26);
-			this.butClose.TabIndex = 1;
-			this.butClose.Text = "&Close";
-			this.butClose.Click += new System.EventHandler(this.butClose_Click);
-			// 
-			// textBox1
-			// 
-			this.textBox1.BackColor = System.Drawing.SystemColors.Control;
-			this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.textBox1.Location = new System.Drawing.Point(6, 6);
-			this.textBox1.Multiline = true;
-			this.textBox1.Name = "textBox1";
-			this.textBox1.ReadOnly = true;
-			this.textBox1.Size = new System.Drawing.Size(779, 40);
-			this.textBox1.TabIndex = 1;
-			this.textBox1.TabStop = false;
-			this.textBox1.Text = "This tool will check the entire database for any improper settings, inconsistenci" +
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormDatabaseMaintenance));
+            this.butClose = new OpenDental.UI.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.butCheck = new OpenDental.UI.Button();
+            this.checkShow = new System.Windows.Forms.CheckBox();
+            this.butPrint = new OpenDental.UI.Button();
+            this.butFix = new OpenDental.UI.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.butActiveTPs = new OpenDental.UI.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.butEtrans = new OpenDental.UI.Button();
+            this.label8 = new System.Windows.Forms.Label();
+            this.butRemoveNulls = new OpenDental.UI.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.butTokens = new OpenDental.UI.Button();
+            this.labelInnoDb = new System.Windows.Forms.Label();
+            this.butInnoDB = new OpenDental.UI.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.labelApptProcs = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.butSpecChar = new OpenDental.UI.Button();
+            this.butApptProcs = new OpenDental.UI.Button();
+            this.butOptimize = new OpenDental.UI.Button();
+            this.butInsPayFix = new OpenDental.UI.Button();
+            this.gridMain = new OpenDental.UI.ODGrid();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.hideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.unhideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.butNone = new OpenDental.UI.Button();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.tabControlDBM = new System.Windows.Forms.TabControl();
+            this.tabChecks = new System.Windows.Forms.TabPage();
+            this.butStopDBM = new OpenDental.UI.Button();
+            this.tabHidden = new System.Windows.Forms.TabPage();
+            this.butSelectAll = new OpenDental.UI.Button();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.gridHidden = new OpenDental.UI.ODGrid();
+            this.tabOld = new System.Windows.Forms.TabPage();
+            this.checkShowHidden = new System.Windows.Forms.CheckBox();
+            this.butStopDBMOld = new OpenDental.UI.Button();
+            this.textNoneOld = new System.Windows.Forms.TextBox();
+            this.butNoneOld = new OpenDental.UI.Button();
+            this.butFixOld = new OpenDental.UI.Button();
+            this.butCheckOld = new OpenDental.UI.Button();
+            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.gridOld = new OpenDental.UI.ODGrid();
+            this.tabTools = new System.Windows.Forms.TabPage();
+            this.labelRedundantIndexes = new System.Windows.Forms.Label();
+            this.butRedundantIndexes = new OpenDental.UI.Button();
+            this.label13 = new System.Windows.Forms.Label();
+            this.butEmailAttaches = new OpenDental.UI.Button();
+            this.label12 = new System.Windows.Forms.Label();
+            this.butFamilyBalance = new OpenDental.UI.Button();
+            this.label11 = new System.Windows.Forms.Label();
+            this.butPayPlanPayments = new OpenDental.UI.Button();
+            this.groupBoxUpdateInProg = new System.Windows.Forms.GroupBox();
+            this.labelUpdateInProgress = new System.Windows.Forms.Label();
+            this.textBoxUpdateInProg = new System.Windows.Forms.TextBox();
+            this.butClearUpdateInProgress = new OpenDental.UI.Button();
+            this.label10 = new System.Windows.Forms.Label();
+            this.butRecalcEst = new OpenDental.UI.Button();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.butRawEmails = new OpenDental.UI.Button();
+            this.labelSkipCheckTable = new System.Windows.Forms.Label();
+            this.contextMenuStrip1.SuspendLayout();
+            this.tabControlDBM.SuspendLayout();
+            this.tabChecks.SuspendLayout();
+            this.tabHidden.SuspendLayout();
+            this.tabOld.SuspendLayout();
+            this.tabTools.SuspendLayout();
+            this.groupBoxUpdateInProg.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // butClose
+            // 
+            this.butClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.butClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.butClose.Location = new System.Drawing.Point(742, 655);
+            this.butClose.Name = "butClose";
+            this.butClose.Size = new System.Drawing.Size(80, 25);
+            this.butClose.TabIndex = 1;
+            this.butClose.Text = "&Close";
+            this.butClose.Click += new System.EventHandler(this.butClose_Click);
+            // 
+            // textBox1
+            // 
+            this.textBox1.BackColor = System.Drawing.SystemColors.Control;
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox1.Location = new System.Drawing.Point(6, 6);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(779, 40);
+            this.textBox1.TabIndex = 1;
+            this.textBox1.TabStop = false;
+            this.textBox1.Text = "This tool will check the entire database for any improper settings, inconsistenci" +
     "es, or corruption.\r\nA log is automatically saved in RepairLog.txt if user has pe" +
     "rmission.";
-			// 
-			// butCheck
-			// 
-			this.butCheck.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-			this.butCheck.Location = new System.Drawing.Point(301, 570);
-			this.butCheck.Name = "butCheck";
-			this.butCheck.Size = new System.Drawing.Size(75, 26);
-			this.butCheck.TabIndex = 4;
-			this.butCheck.Text = "C&heck";
-			this.butCheck.Click += new System.EventHandler(this.butCheck_Click);
-			// 
-			// checkShow
-			// 
-			this.checkShow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.checkShow.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.checkShow.Location = new System.Drawing.Point(6, 515);
-			this.checkShow.Name = "checkShow";
-			this.checkShow.Size = new System.Drawing.Size(447, 20);
-			this.checkShow.TabIndex = 1;
-			this.checkShow.Text = "Show me everything in the log  (only for advanced users)";
-			// 
-			// butPrint
-			// 
-			this.butPrint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butPrint.Image = global::Imedisoft.Properties.Resources.butPrint;
-			this.butPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.butPrint.Location = new System.Drawing.Point(6, 570);
-			this.butPrint.Name = "butPrint";
-			this.butPrint.Size = new System.Drawing.Size(87, 26);
-			this.butPrint.TabIndex = 3;
-			this.butPrint.Text = "Print";
-			this.butPrint.Click += new System.EventHandler(this.butPrint_Click);
-			// 
-			// butFix
-			// 
-			this.butFix.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-			this.butFix.Location = new System.Drawing.Point(426, 570);
-			this.butFix.Name = "butFix";
-			this.butFix.Size = new System.Drawing.Size(75, 26);
-			this.butFix.TabIndex = 5;
-			this.butFix.Text = "&Fix";
-			this.butFix.Click += new System.EventHandler(this.butFix_Click);
-			// 
-			// label4
-			// 
-			this.label4.Location = new System.Drawing.Point(132, 391);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(664, 18);
-			this.label4.TabIndex = 48;
-			this.label4.Text = "Creates an active treatment plan for all pats with treatment planned procs.";
-			this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// butActiveTPs
-			// 
-			this.butActiveTPs.Location = new System.Drawing.Point(12, 387);
-			this.butActiveTPs.Name = "butActiveTPs";
-			this.butActiveTPs.Size = new System.Drawing.Size(114, 26);
-			this.butActiveTPs.TabIndex = 8;
-			this.butActiveTPs.Text = "Active TPs";
-			this.butActiveTPs.Click += new System.EventHandler(this.butActiveTPs_Click);
-			// 
-			// label1
-			// 
-			this.label1.Location = new System.Drawing.Point(132, 359);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(664, 18);
-			this.label1.TabIndex = 46;
-			this.label1.Text = "Clear out etrans entries older than a year old.";
-			this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// butEtrans
-			// 
-			this.butEtrans.Enabled = false;
-			this.butEtrans.Location = new System.Drawing.Point(12, 355);
-			this.butEtrans.Name = "butEtrans";
-			this.butEtrans.Size = new System.Drawing.Size(114, 26);
-			this.butEtrans.TabIndex = 7;
-			this.butEtrans.Text = "Etrans";
-			this.butEtrans.Click += new System.EventHandler(this.butEtrans_Click);
-			// 
-			// label8
-			// 
-			this.label8.Location = new System.Drawing.Point(132, 327);
-			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(664, 18);
-			this.label8.TabIndex = 44;
-			this.label8.Text = "Replace all null strings with empty strings.";
-			this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// butRemoveNulls
-			// 
-			this.butRemoveNulls.Location = new System.Drawing.Point(12, 323);
-			this.butRemoveNulls.Name = "butRemoveNulls";
-			this.butRemoveNulls.Size = new System.Drawing.Size(114, 26);
-			this.butRemoveNulls.TabIndex = 6;
-			this.butRemoveNulls.Text = "Remove Nulls";
-			this.butRemoveNulls.Click += new System.EventHandler(this.butRemoveNulls_Click);
-			// 
-			// label7
-			// 
-			this.label7.Location = new System.Drawing.Point(132, 295);
-			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(664, 18);
-			this.label7.TabIndex = 42;
-			this.label7.Text = "Validates tokens on file with the X-Charge server.";
-			this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// butTokens
-			// 
-			this.butTokens.Location = new System.Drawing.Point(12, 291);
-			this.butTokens.Name = "butTokens";
-			this.butTokens.Size = new System.Drawing.Size(114, 26);
-			this.butTokens.TabIndex = 5;
-			this.butTokens.Text = "Tokens";
-			this.butTokens.Click += new System.EventHandler(this.butTokens_Click);
-			// 
-			// labelInnoDb
-			// 
-			this.labelInnoDb.Location = new System.Drawing.Point(132, 263);
-			this.labelInnoDb.Name = "labelInnoDb";
-			this.labelInnoDb.Size = new System.Drawing.Size(664, 18);
-			this.labelInnoDb.TabIndex = 40;
-			this.labelInnoDb.Text = "Converts database storage engine to/from InnoDb.";
-			this.labelInnoDb.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// butInnoDB
-			// 
-			this.butInnoDB.Location = new System.Drawing.Point(12, 259);
-			this.butInnoDB.Name = "butInnoDB";
-			this.butInnoDB.Size = new System.Drawing.Size(114, 26);
-			this.butInnoDB.TabIndex = 4;
-			this.butInnoDB.Text = "InnoDb";
-			this.butInnoDB.Click += new System.EventHandler(this.butInnoDB_Click);
-			// 
-			// label5
-			// 
-			this.label5.Location = new System.Drawing.Point(132, 231);
-			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(664, 18);
-			this.label5.TabIndex = 38;
-			this.label5.Text = "Removes special characters from appt notes and appt proc descriptions.";
-			this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelApptProcs
-			// 
-			this.labelApptProcs.Location = new System.Drawing.Point(132, 199);
-			this.labelApptProcs.Name = "labelApptProcs";
-			this.labelApptProcs.Size = new System.Drawing.Size(664, 18);
-			this.labelApptProcs.TabIndex = 37;
-			this.labelApptProcs.Text = "Fixes procs in the Appt module that aren\'t correctly showing tooth nums.";
-			this.labelApptProcs.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// label3
-			// 
-			this.label3.Location = new System.Drawing.Point(132, 167);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(664, 18);
-			this.label3.TabIndex = 36;
-			this.label3.Text = "Back up, optimize, and repair tables.";
-			this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// label2
-			// 
-			this.label2.Location = new System.Drawing.Point(132, 135);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(664, 18);
-			this.label2.TabIndex = 35;
-			this.label2.Text = "Creates checks for insurance payments that are not attached to a check.";
-			this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// butSpecChar
-			// 
-			this.butSpecChar.Location = new System.Drawing.Point(12, 227);
-			this.butSpecChar.Name = "butSpecChar";
-			this.butSpecChar.Size = new System.Drawing.Size(114, 26);
-			this.butSpecChar.TabIndex = 3;
-			this.butSpecChar.Text = "Spec Char";
-			this.butSpecChar.Click += new System.EventHandler(this.butSpecChar_Click);
-			// 
-			// butApptProcs
-			// 
-			this.butApptProcs.Location = new System.Drawing.Point(12, 195);
-			this.butApptProcs.Name = "butApptProcs";
-			this.butApptProcs.Size = new System.Drawing.Size(114, 26);
-			this.butApptProcs.TabIndex = 2;
-			this.butApptProcs.Text = "Appt Procs";
-			this.butApptProcs.Click += new System.EventHandler(this.butApptProcs_Click);
-			// 
-			// butOptimize
-			// 
-			this.butOptimize.Location = new System.Drawing.Point(12, 163);
-			this.butOptimize.Name = "butOptimize";
-			this.butOptimize.Size = new System.Drawing.Size(114, 26);
-			this.butOptimize.TabIndex = 1;
-			this.butOptimize.Text = "Optimize";
-			this.butOptimize.Click += new System.EventHandler(this.butOptimize_Click);
-			// 
-			// butInsPayFix
-			// 
-			this.butInsPayFix.Location = new System.Drawing.Point(12, 131);
-			this.butInsPayFix.Name = "butInsPayFix";
-			this.butInsPayFix.Size = new System.Drawing.Size(114, 26);
-			this.butInsPayFix.TabIndex = 0;
-			this.butInsPayFix.Text = "Ins Pay Fix";
-			this.butInsPayFix.Click += new System.EventHandler(this.butInsPayFix_Click);
-			// 
-			// gridMain
-			// 
-			this.gridMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            // 
+            // butCheck
+            // 
+            this.butCheck.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.butCheck.Location = new System.Drawing.Point(301, 570);
+            this.butCheck.Name = "butCheck";
+            this.butCheck.Size = new System.Drawing.Size(75, 26);
+            this.butCheck.TabIndex = 4;
+            this.butCheck.Text = "C&heck";
+            this.butCheck.Click += new System.EventHandler(this.butCheck_Click);
+            // 
+            // checkShow
+            // 
+            this.checkShow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkShow.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.checkShow.Location = new System.Drawing.Point(6, 515);
+            this.checkShow.Name = "checkShow";
+            this.checkShow.Size = new System.Drawing.Size(447, 20);
+            this.checkShow.TabIndex = 1;
+            this.checkShow.Text = "Show me everything in the log  (only for advanced users)";
+            // 
+            // butPrint
+            // 
+            this.butPrint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.butPrint.Image = global::Imedisoft.Properties.Resources.butPrint;
+            this.butPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.butPrint.Location = new System.Drawing.Point(6, 570);
+            this.butPrint.Name = "butPrint";
+            this.butPrint.Size = new System.Drawing.Size(87, 26);
+            this.butPrint.TabIndex = 3;
+            this.butPrint.Text = "Print";
+            this.butPrint.Click += new System.EventHandler(this.butPrint_Click);
+            // 
+            // butFix
+            // 
+            this.butFix.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.butFix.Location = new System.Drawing.Point(426, 570);
+            this.butFix.Name = "butFix";
+            this.butFix.Size = new System.Drawing.Size(75, 26);
+            this.butFix.TabIndex = 5;
+            this.butFix.Text = "&Fix";
+            this.butFix.Click += new System.EventHandler(this.butFix_Click);
+            // 
+            // label4
+            // 
+            this.label4.Location = new System.Drawing.Point(132, 391);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(664, 18);
+            this.label4.TabIndex = 48;
+            this.label4.Text = "Creates an active treatment plan for all pats with treatment planned procs.";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // butActiveTPs
+            // 
+            this.butActiveTPs.Location = new System.Drawing.Point(12, 387);
+            this.butActiveTPs.Name = "butActiveTPs";
+            this.butActiveTPs.Size = new System.Drawing.Size(114, 26);
+            this.butActiveTPs.TabIndex = 8;
+            this.butActiveTPs.Text = "Active TPs";
+            this.butActiveTPs.Click += new System.EventHandler(this.butActiveTPs_Click);
+            // 
+            // label1
+            // 
+            this.label1.Location = new System.Drawing.Point(132, 359);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(664, 18);
+            this.label1.TabIndex = 46;
+            this.label1.Text = "Clear out etrans entries older than a year old.";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // butEtrans
+            // 
+            this.butEtrans.Enabled = false;
+            this.butEtrans.Location = new System.Drawing.Point(12, 355);
+            this.butEtrans.Name = "butEtrans";
+            this.butEtrans.Size = new System.Drawing.Size(114, 26);
+            this.butEtrans.TabIndex = 7;
+            this.butEtrans.Text = "Etrans";
+            this.butEtrans.Click += new System.EventHandler(this.butEtrans_Click);
+            // 
+            // label8
+            // 
+            this.label8.Location = new System.Drawing.Point(132, 327);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(664, 18);
+            this.label8.TabIndex = 44;
+            this.label8.Text = "Replace all null strings with empty strings.";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // butRemoveNulls
+            // 
+            this.butRemoveNulls.Location = new System.Drawing.Point(12, 323);
+            this.butRemoveNulls.Name = "butRemoveNulls";
+            this.butRemoveNulls.Size = new System.Drawing.Size(114, 26);
+            this.butRemoveNulls.TabIndex = 6;
+            this.butRemoveNulls.Text = "Remove Nulls";
+            this.butRemoveNulls.Click += new System.EventHandler(this.butRemoveNulls_Click);
+            // 
+            // label7
+            // 
+            this.label7.Location = new System.Drawing.Point(132, 295);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(664, 18);
+            this.label7.TabIndex = 42;
+            this.label7.Text = "Validates tokens on file with the X-Charge server.";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // butTokens
+            // 
+            this.butTokens.Location = new System.Drawing.Point(12, 291);
+            this.butTokens.Name = "butTokens";
+            this.butTokens.Size = new System.Drawing.Size(114, 26);
+            this.butTokens.TabIndex = 5;
+            this.butTokens.Text = "Tokens";
+            this.butTokens.Click += new System.EventHandler(this.butTokens_Click);
+            // 
+            // labelInnoDb
+            // 
+            this.labelInnoDb.Location = new System.Drawing.Point(132, 263);
+            this.labelInnoDb.Name = "labelInnoDb";
+            this.labelInnoDb.Size = new System.Drawing.Size(664, 18);
+            this.labelInnoDb.TabIndex = 40;
+            this.labelInnoDb.Text = "Converts database storage engine to/from InnoDb.";
+            this.labelInnoDb.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // butInnoDB
+            // 
+            this.butInnoDB.Location = new System.Drawing.Point(12, 259);
+            this.butInnoDB.Name = "butInnoDB";
+            this.butInnoDB.Size = new System.Drawing.Size(114, 26);
+            this.butInnoDB.TabIndex = 4;
+            this.butInnoDB.Text = "InnoDb";
+            this.butInnoDB.Click += new System.EventHandler(this.butInnoDB_Click);
+            // 
+            // label5
+            // 
+            this.label5.Location = new System.Drawing.Point(132, 231);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(664, 18);
+            this.label5.TabIndex = 38;
+            this.label5.Text = "Removes special characters from appt notes and appt proc descriptions.";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // labelApptProcs
+            // 
+            this.labelApptProcs.Location = new System.Drawing.Point(132, 199);
+            this.labelApptProcs.Name = "labelApptProcs";
+            this.labelApptProcs.Size = new System.Drawing.Size(664, 18);
+            this.labelApptProcs.TabIndex = 37;
+            this.labelApptProcs.Text = "Fixes procs in the Appt module that aren\'t correctly showing tooth nums.";
+            this.labelApptProcs.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label3
+            // 
+            this.label3.Location = new System.Drawing.Point(132, 167);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(664, 18);
+            this.label3.TabIndex = 36;
+            this.label3.Text = "Back up, optimize, and repair tables.";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label2
+            // 
+            this.label2.Location = new System.Drawing.Point(132, 135);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(664, 18);
+            this.label2.TabIndex = 35;
+            this.label2.Text = "Creates checks for insurance payments that are not attached to a check.";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // butSpecChar
+            // 
+            this.butSpecChar.Location = new System.Drawing.Point(12, 227);
+            this.butSpecChar.Name = "butSpecChar";
+            this.butSpecChar.Size = new System.Drawing.Size(114, 26);
+            this.butSpecChar.TabIndex = 3;
+            this.butSpecChar.Text = "Spec Char";
+            this.butSpecChar.Click += new System.EventHandler(this.butSpecChar_Click);
+            // 
+            // butApptProcs
+            // 
+            this.butApptProcs.Location = new System.Drawing.Point(12, 195);
+            this.butApptProcs.Name = "butApptProcs";
+            this.butApptProcs.Size = new System.Drawing.Size(114, 26);
+            this.butApptProcs.TabIndex = 2;
+            this.butApptProcs.Text = "Appt Procs";
+            this.butApptProcs.Click += new System.EventHandler(this.butApptProcs_Click);
+            // 
+            // butOptimize
+            // 
+            this.butOptimize.Location = new System.Drawing.Point(12, 163);
+            this.butOptimize.Name = "butOptimize";
+            this.butOptimize.Size = new System.Drawing.Size(114, 26);
+            this.butOptimize.TabIndex = 1;
+            this.butOptimize.Text = "Optimize";
+            this.butOptimize.Click += new System.EventHandler(this.butOptimize_Click);
+            // 
+            // butInsPayFix
+            // 
+            this.butInsPayFix.Location = new System.Drawing.Point(12, 131);
+            this.butInsPayFix.Name = "butInsPayFix";
+            this.butInsPayFix.Size = new System.Drawing.Size(114, 26);
+            this.butInsPayFix.TabIndex = 0;
+            this.butInsPayFix.Text = "Ins Pay Fix";
+            this.butInsPayFix.Click += new System.EventHandler(this.butInsPayFix_Click);
+            // 
+            // gridMain
+            // 
+            this.gridMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.gridMain.ContextMenuStrip = this.contextMenuStrip1;
-			this.gridMain.HasMultilineHeaders = true;
-			this.gridMain.Location = new System.Drawing.Point(6, 52);
-			this.gridMain.Name = "gridMain";
-			this.gridMain.SelectionMode = OpenDental.UI.GridSelectionMode.MultiExtended;
-			this.gridMain.Size = new System.Drawing.Size(790, 457);
-			this.gridMain.TabIndex = 0;
-			this.gridMain.Title = "Database Methods";
-			this.gridMain.TranslationName = "TableClaimPaySplits";
-			this.gridMain.CellDoubleClick += new OpenDental.UI.ODGridClickEventHandler(this.gridMain_CellDoubleClick);
-			this.gridMain.MouseUp += new System.Windows.Forms.MouseEventHandler(this.gridMain_MouseUp);
-			// 
-			// contextMenuStrip1
-			// 
-			this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.gridMain.ContextMenuStrip = this.contextMenuStrip1;
+            this.gridMain.HasMultilineHeaders = true;
+            this.gridMain.Location = new System.Drawing.Point(6, 52);
+            this.gridMain.Name = "gridMain";
+            this.gridMain.SelectionMode = OpenDental.UI.GridSelectionMode.MultiExtended;
+            this.gridMain.Size = new System.Drawing.Size(790, 457);
+            this.gridMain.TabIndex = 0;
+            this.gridMain.Title = "Database Methods";
+            this.gridMain.TranslationName = "TableClaimPaySplits";
+            this.gridMain.CellDoubleClick += new OpenDental.UI.ODGridClickEventHandler(this.gridMain_CellDoubleClick);
+            this.gridMain.MouseUp += new System.Windows.Forms.MouseEventHandler(this.gridMain_MouseUp);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.hideToolStripMenuItem,
             this.unhideToolStripMenuItem});
-			this.contextMenuStrip1.Name = "contextMenuStrip1";
-			this.contextMenuStrip1.Size = new System.Drawing.Size(113, 48);
-			// 
-			// hideToolStripMenuItem
-			// 
-			this.hideToolStripMenuItem.Name = "hideToolStripMenuItem";
-			this.hideToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
-			this.hideToolStripMenuItem.Text = "Hide";
-			this.hideToolStripMenuItem.Click += new System.EventHandler(this.hideToolStripMenuItem_Click);
-			// 
-			// unhideToolStripMenuItem
-			// 
-			this.unhideToolStripMenuItem.Name = "unhideToolStripMenuItem";
-			this.unhideToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
-			this.unhideToolStripMenuItem.Text = "Unhide";
-			this.unhideToolStripMenuItem.Click += new System.EventHandler(this.unhideToolStripMenuItem_Click);
-			// 
-			// butNone
-			// 
-			this.butNone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butNone.Location = new System.Drawing.Point(721, 515);
-			this.butNone.Name = "butNone";
-			this.butNone.Size = new System.Drawing.Size(75, 26);
-			this.butNone.TabIndex = 2;
-			this.butNone.Text = "None";
-			this.butNone.Click += new System.EventHandler(this.butNone_Click);
-			// 
-			// textBox2
-			// 
-			this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBox2.BackColor = System.Drawing.SystemColors.Control;
-			this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.textBox2.Location = new System.Drawing.Point(350, 515);
-			this.textBox2.Multiline = true;
-			this.textBox2.Name = "textBox2";
-			this.textBox2.ReadOnly = true;
-			this.textBox2.Size = new System.Drawing.Size(365, 26);
-			this.textBox2.TabIndex = 99;
-			this.textBox2.TabStop = false;
-			this.textBox2.Text = "No selections will cause all database methods to run.\r\nOtherwise only selected me" +
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(113, 48);
+            // 
+            // hideToolStripMenuItem
+            // 
+            this.hideToolStripMenuItem.Name = "hideToolStripMenuItem";
+            this.hideToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.hideToolStripMenuItem.Text = "Hide";
+            this.hideToolStripMenuItem.Click += new System.EventHandler(this.hideToolStripMenuItem_Click);
+            // 
+            // unhideToolStripMenuItem
+            // 
+            this.unhideToolStripMenuItem.Name = "unhideToolStripMenuItem";
+            this.unhideToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.unhideToolStripMenuItem.Text = "Unhide";
+            this.unhideToolStripMenuItem.Click += new System.EventHandler(this.unhideToolStripMenuItem_Click);
+            // 
+            // butNone
+            // 
+            this.butNone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.butNone.Location = new System.Drawing.Point(721, 515);
+            this.butNone.Name = "butNone";
+            this.butNone.Size = new System.Drawing.Size(75, 26);
+            this.butNone.TabIndex = 2;
+            this.butNone.Text = "None";
+            this.butNone.Click += new System.EventHandler(this.butNone_Click);
+            // 
+            // textBox2
+            // 
+            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox2.BackColor = System.Drawing.SystemColors.Control;
+            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox2.Location = new System.Drawing.Point(350, 515);
+            this.textBox2.Multiline = true;
+            this.textBox2.Name = "textBox2";
+            this.textBox2.ReadOnly = true;
+            this.textBox2.Size = new System.Drawing.Size(365, 26);
+            this.textBox2.TabIndex = 99;
+            this.textBox2.TabStop = false;
+            this.textBox2.Text = "No selections will cause all database methods to run.\r\nOtherwise only selected me" +
     "thods will run.\r\n";
-			this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			// 
-			// tabControlDBM
-			// 
-			this.tabControlDBM.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // tabControlDBM
+            // 
+            this.tabControlDBM.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tabControlDBM.Controls.Add(this.tabChecks);
-			this.tabControlDBM.Controls.Add(this.tabHidden);
-			this.tabControlDBM.Controls.Add(this.tabOld);
-			this.tabControlDBM.Controls.Add(this.tabTools);
-			this.tabControlDBM.Location = new System.Drawing.Point(12, 12);
-			this.tabControlDBM.Name = "tabControlDBM";
-			this.tabControlDBM.SelectedIndex = 0;
-			this.tabControlDBM.Size = new System.Drawing.Size(810, 637);
-			this.tabControlDBM.TabIndex = 0;
-			// 
-			// tabChecks
-			// 
-			this.tabChecks.BackColor = System.Drawing.SystemColors.Control;
-			this.tabChecks.Controls.Add(this.butStopDBM);
-			this.tabChecks.Controls.Add(this.textBox1);
-			this.tabChecks.Controls.Add(this.butFix);
-			this.tabChecks.Controls.Add(this.butPrint);
-			this.tabChecks.Controls.Add(this.textBox2);
-			this.tabChecks.Controls.Add(this.butCheck);
-			this.tabChecks.Controls.Add(this.checkShow);
-			this.tabChecks.Controls.Add(this.butNone);
-			this.tabChecks.Controls.Add(this.gridMain);
-			this.tabChecks.Location = new System.Drawing.Point(4, 22);
-			this.tabChecks.Name = "tabChecks";
-			this.tabChecks.Padding = new System.Windows.Forms.Padding(3);
-			this.tabChecks.Size = new System.Drawing.Size(802, 611);
-			this.tabChecks.TabIndex = 0;
-			this.tabChecks.Text = "Checks";
-			// 
-			// butStopDBM
-			// 
-			this.butStopDBM.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butStopDBM.Enabled = false;
-			this.butStopDBM.Location = new System.Drawing.Point(545, 570);
-			this.butStopDBM.Name = "butStopDBM";
-			this.butStopDBM.Size = new System.Drawing.Size(75, 26);
-			this.butStopDBM.TabIndex = 6;
-			this.butStopDBM.Text = "&Stop DBM";
-			this.butStopDBM.Click += new System.EventHandler(this.butStopDBM_Click);
-			// 
-			// tabHidden
-			// 
-			this.tabHidden.BackColor = System.Drawing.Color.Transparent;
-			this.tabHidden.Controls.Add(this.butSelectAll);
-			this.tabHidden.Controls.Add(this.textBox4);
-			this.tabHidden.Controls.Add(this.gridHidden);
-			this.tabHidden.Location = new System.Drawing.Point(4, 22);
-			this.tabHidden.Name = "tabHidden";
-			this.tabHidden.Padding = new System.Windows.Forms.Padding(3);
-			this.tabHidden.Size = new System.Drawing.Size(802, 611);
-			this.tabHidden.TabIndex = 2;
-			this.tabHidden.Text = "Hidden";
-			// 
-			// butSelectAll
-			// 
-			this.butSelectAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butSelectAll.Location = new System.Drawing.Point(721, 496);
-			this.butSelectAll.Name = "butSelectAll";
-			this.butSelectAll.Size = new System.Drawing.Size(75, 26);
-			this.butSelectAll.TabIndex = 101;
-			this.butSelectAll.Text = "Select All";
-			this.butSelectAll.Click += new System.EventHandler(this.butSelectAll_Click);
-			// 
-			// textBox4
-			// 
-			this.textBox4.BackColor = System.Drawing.SystemColors.Control;
-			this.textBox4.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.textBox4.Location = new System.Drawing.Point(6, 3);
-			this.textBox4.Multiline = true;
-			this.textBox4.Name = "textBox4";
-			this.textBox4.ReadOnly = true;
-			this.textBox4.Size = new System.Drawing.Size(779, 40);
-			this.textBox4.TabIndex = 3;
-			this.textBox4.TabStop = false;
-			this.textBox4.Text = "This table shows all of the hidden database maintenance methods. You can unhide a" +
+            this.tabControlDBM.Controls.Add(this.tabChecks);
+            this.tabControlDBM.Controls.Add(this.tabHidden);
+            this.tabControlDBM.Controls.Add(this.tabOld);
+            this.tabControlDBM.Controls.Add(this.tabTools);
+            this.tabControlDBM.Location = new System.Drawing.Point(12, 12);
+            this.tabControlDBM.Name = "tabControlDBM";
+            this.tabControlDBM.SelectedIndex = 0;
+            this.tabControlDBM.Size = new System.Drawing.Size(810, 637);
+            this.tabControlDBM.TabIndex = 0;
+            // 
+            // tabChecks
+            // 
+            this.tabChecks.Controls.Add(this.butStopDBM);
+            this.tabChecks.Controls.Add(this.textBox1);
+            this.tabChecks.Controls.Add(this.butFix);
+            this.tabChecks.Controls.Add(this.butPrint);
+            this.tabChecks.Controls.Add(this.textBox2);
+            this.tabChecks.Controls.Add(this.butCheck);
+            this.tabChecks.Controls.Add(this.checkShow);
+            this.tabChecks.Controls.Add(this.butNone);
+            this.tabChecks.Controls.Add(this.gridMain);
+            this.tabChecks.Location = new System.Drawing.Point(4, 22);
+            this.tabChecks.Name = "tabChecks";
+            this.tabChecks.Padding = new System.Windows.Forms.Padding(3);
+            this.tabChecks.Size = new System.Drawing.Size(802, 611);
+            this.tabChecks.TabIndex = 0;
+            this.tabChecks.Text = "Checks";
+            this.tabChecks.UseVisualStyleBackColor = true;
+            // 
+            // butStopDBM
+            // 
+            this.butStopDBM.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.butStopDBM.Enabled = false;
+            this.butStopDBM.Location = new System.Drawing.Point(545, 570);
+            this.butStopDBM.Name = "butStopDBM";
+            this.butStopDBM.Size = new System.Drawing.Size(75, 26);
+            this.butStopDBM.TabIndex = 6;
+            this.butStopDBM.Text = "&Stop DBM";
+            this.butStopDBM.Click += new System.EventHandler(this.butStopDBM_Click);
+            // 
+            // tabHidden
+            // 
+            this.tabHidden.BackColor = System.Drawing.Color.Transparent;
+            this.tabHidden.Controls.Add(this.butSelectAll);
+            this.tabHidden.Controls.Add(this.textBox4);
+            this.tabHidden.Controls.Add(this.gridHidden);
+            this.tabHidden.Location = new System.Drawing.Point(4, 22);
+            this.tabHidden.Name = "tabHidden";
+            this.tabHidden.Padding = new System.Windows.Forms.Padding(3);
+            this.tabHidden.Size = new System.Drawing.Size(802, 611);
+            this.tabHidden.TabIndex = 2;
+            this.tabHidden.Text = "Hidden";
+            // 
+            // butSelectAll
+            // 
+            this.butSelectAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.butSelectAll.Location = new System.Drawing.Point(721, 496);
+            this.butSelectAll.Name = "butSelectAll";
+            this.butSelectAll.Size = new System.Drawing.Size(75, 26);
+            this.butSelectAll.TabIndex = 101;
+            this.butSelectAll.Text = "Select All";
+            this.butSelectAll.Click += new System.EventHandler(this.butSelectAll_Click);
+            // 
+            // textBox4
+            // 
+            this.textBox4.BackColor = System.Drawing.SystemColors.Control;
+            this.textBox4.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox4.Location = new System.Drawing.Point(6, 3);
+            this.textBox4.Multiline = true;
+            this.textBox4.Name = "textBox4";
+            this.textBox4.ReadOnly = true;
+            this.textBox4.Size = new System.Drawing.Size(779, 40);
+            this.textBox4.TabIndex = 3;
+            this.textBox4.TabStop = false;
+            this.textBox4.Text = "This table shows all of the hidden database maintenance methods. You can unhide a" +
     " method by selecting a method, right clicking, and select Unhide.\r\n\r\n";
-			// 
-			// gridHidden
-			// 
-			this.gridHidden.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            // 
+            // gridHidden
+            // 
+            this.gridHidden.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.gridHidden.ContextMenuStrip = this.contextMenuStrip1;
-			this.gridHidden.HasMultilineHeaders = true;
-			this.gridHidden.Location = new System.Drawing.Point(6, 52);
-			this.gridHidden.Name = "gridHidden";
-			this.gridHidden.SelectionMode = OpenDental.UI.GridSelectionMode.MultiExtended;
-			this.gridHidden.Size = new System.Drawing.Size(790, 438);
-			this.gridHidden.TabIndex = 2;
-			this.gridHidden.Title = "Hidden Methods";
-			this.gridHidden.TranslationName = "TableHiddenDbmMethods";
-			this.gridHidden.MouseUp += new System.Windows.Forms.MouseEventHandler(this.gridHidden_MouseUp);
-			// 
-			// tabOld
-			// 
-			this.tabOld.BackColor = System.Drawing.Color.Transparent;
-			this.tabOld.Controls.Add(this.checkShowHidden);
-			this.tabOld.Controls.Add(this.butStopDBMOld);
-			this.tabOld.Controls.Add(this.textNoneOld);
-			this.tabOld.Controls.Add(this.butNoneOld);
-			this.tabOld.Controls.Add(this.butFixOld);
-			this.tabOld.Controls.Add(this.butCheckOld);
-			this.tabOld.Controls.Add(this.textBox5);
-			this.tabOld.Controls.Add(this.gridOld);
-			this.tabOld.Location = new System.Drawing.Point(4, 22);
-			this.tabOld.Name = "tabOld";
-			this.tabOld.Padding = new System.Windows.Forms.Padding(3);
-			this.tabOld.Size = new System.Drawing.Size(802, 611);
-			this.tabOld.TabIndex = 3;
-			this.tabOld.Text = "Old";
-			// 
-			// checkShowHidden
-			// 
-			this.checkShowHidden.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.checkShowHidden.Location = new System.Drawing.Point(6, 563);
-			this.checkShowHidden.Name = "checkShowHidden";
-			this.checkShowHidden.Size = new System.Drawing.Size(134, 17);
-			this.checkShowHidden.TabIndex = 103;
-			this.checkShowHidden.Text = "Show Hidden";
-			this.checkShowHidden.UseVisualStyleBackColor = true;
-			this.checkShowHidden.CheckedChanged += new System.EventHandler(this.checkShowHidden_CheckedChanged);
-			// 
-			// butStopDBMOld
-			// 
-			this.butStopDBMOld.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butStopDBMOld.Enabled = false;
-			this.butStopDBMOld.Location = new System.Drawing.Point(545, 551);
-			this.butStopDBMOld.Name = "butStopDBMOld";
-			this.butStopDBMOld.Size = new System.Drawing.Size(75, 26);
-			this.butStopDBMOld.TabIndex = 102;
-			this.butStopDBMOld.Text = "&Stop DBM";
-			this.butStopDBMOld.Click += new System.EventHandler(this.butStopDBMOld_Click);
-			// 
-			// textNoneOld
-			// 
-			this.textNoneOld.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.textNoneOld.BackColor = System.Drawing.SystemColors.Control;
-			this.textNoneOld.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.textNoneOld.Location = new System.Drawing.Point(350, 496);
-			this.textNoneOld.Multiline = true;
-			this.textNoneOld.Name = "textNoneOld";
-			this.textNoneOld.ReadOnly = true;
-			this.textNoneOld.Size = new System.Drawing.Size(365, 26);
-			this.textNoneOld.TabIndex = 101;
-			this.textNoneOld.TabStop = false;
-			this.textNoneOld.Text = "No selections will cause all database checks to run.\r\nOtherwise only selected che" +
+            this.gridHidden.ContextMenuStrip = this.contextMenuStrip1;
+            this.gridHidden.HasMultilineHeaders = true;
+            this.gridHidden.Location = new System.Drawing.Point(6, 52);
+            this.gridHidden.Name = "gridHidden";
+            this.gridHidden.SelectionMode = OpenDental.UI.GridSelectionMode.MultiExtended;
+            this.gridHidden.Size = new System.Drawing.Size(790, 438);
+            this.gridHidden.TabIndex = 2;
+            this.gridHidden.Title = "Hidden Methods";
+            this.gridHidden.TranslationName = "TableHiddenDbmMethods";
+            this.gridHidden.MouseUp += new System.Windows.Forms.MouseEventHandler(this.gridHidden_MouseUp);
+            // 
+            // tabOld
+            // 
+            this.tabOld.BackColor = System.Drawing.Color.Transparent;
+            this.tabOld.Controls.Add(this.checkShowHidden);
+            this.tabOld.Controls.Add(this.butStopDBMOld);
+            this.tabOld.Controls.Add(this.textNoneOld);
+            this.tabOld.Controls.Add(this.butNoneOld);
+            this.tabOld.Controls.Add(this.butFixOld);
+            this.tabOld.Controls.Add(this.butCheckOld);
+            this.tabOld.Controls.Add(this.textBox5);
+            this.tabOld.Controls.Add(this.gridOld);
+            this.tabOld.Location = new System.Drawing.Point(4, 22);
+            this.tabOld.Name = "tabOld";
+            this.tabOld.Padding = new System.Windows.Forms.Padding(3);
+            this.tabOld.Size = new System.Drawing.Size(802, 611);
+            this.tabOld.TabIndex = 3;
+            this.tabOld.Text = "Old";
+            // 
+            // checkShowHidden
+            // 
+            this.checkShowHidden.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkShowHidden.Location = new System.Drawing.Point(6, 563);
+            this.checkShowHidden.Name = "checkShowHidden";
+            this.checkShowHidden.Size = new System.Drawing.Size(134, 17);
+            this.checkShowHidden.TabIndex = 103;
+            this.checkShowHidden.Text = "Show Hidden";
+            this.checkShowHidden.UseVisualStyleBackColor = true;
+            this.checkShowHidden.CheckedChanged += new System.EventHandler(this.checkShowHidden_CheckedChanged);
+            // 
+            // butStopDBMOld
+            // 
+            this.butStopDBMOld.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.butStopDBMOld.Enabled = false;
+            this.butStopDBMOld.Location = new System.Drawing.Point(545, 551);
+            this.butStopDBMOld.Name = "butStopDBMOld";
+            this.butStopDBMOld.Size = new System.Drawing.Size(75, 26);
+            this.butStopDBMOld.TabIndex = 102;
+            this.butStopDBMOld.Text = "&Stop DBM";
+            this.butStopDBMOld.Click += new System.EventHandler(this.butStopDBMOld_Click);
+            // 
+            // textNoneOld
+            // 
+            this.textNoneOld.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.textNoneOld.BackColor = System.Drawing.SystemColors.Control;
+            this.textNoneOld.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textNoneOld.Location = new System.Drawing.Point(350, 496);
+            this.textNoneOld.Multiline = true;
+            this.textNoneOld.Name = "textNoneOld";
+            this.textNoneOld.ReadOnly = true;
+            this.textNoneOld.Size = new System.Drawing.Size(365, 26);
+            this.textNoneOld.TabIndex = 101;
+            this.textNoneOld.TabStop = false;
+            this.textNoneOld.Text = "No selections will cause all database checks to run.\r\nOtherwise only selected che" +
     "cks will run.\r\n";
-			this.textNoneOld.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			// 
-			// butNoneOld
-			// 
-			this.butNoneOld.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butNoneOld.Location = new System.Drawing.Point(721, 496);
-			this.butNoneOld.Name = "butNoneOld";
-			this.butNoneOld.Size = new System.Drawing.Size(75, 26);
-			this.butNoneOld.TabIndex = 100;
-			this.butNoneOld.Text = "None";
-			this.butNoneOld.Click += new System.EventHandler(this.butNoneOld_Click);
-			// 
-			// butFixOld
-			// 
-			this.butFixOld.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-			this.butFixOld.Location = new System.Drawing.Point(423, 551);
-			this.butFixOld.Name = "butFixOld";
-			this.butFixOld.Size = new System.Drawing.Size(75, 26);
-			this.butFixOld.TabIndex = 7;
-			this.butFixOld.Text = "&Fix";
-			this.butFixOld.Click += new System.EventHandler(this.butFixOld_Click);
-			// 
-			// butCheckOld
-			// 
-			this.butCheckOld.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-			this.butCheckOld.Location = new System.Drawing.Point(298, 551);
-			this.butCheckOld.Name = "butCheckOld";
-			this.butCheckOld.Size = new System.Drawing.Size(75, 26);
-			this.butCheckOld.TabIndex = 6;
-			this.butCheckOld.Text = "C&heck";
-			this.butCheckOld.Click += new System.EventHandler(this.butCheckOld_Click);
-			// 
-			// textBox5
-			// 
-			this.textBox5.BackColor = System.Drawing.SystemColors.Control;
-			this.textBox5.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.textBox5.Location = new System.Drawing.Point(6, 3);
-			this.textBox5.Multiline = true;
-			this.textBox5.Name = "textBox5";
-			this.textBox5.ReadOnly = true;
-			this.textBox5.Size = new System.Drawing.Size(779, 40);
-			this.textBox5.TabIndex = 5;
-			this.textBox5.TabStop = false;
-			this.textBox5.Text = "This table shows database maintenance methods that have been deemed no longer nec" +
+            this.textNoneOld.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // butNoneOld
+            // 
+            this.butNoneOld.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.butNoneOld.Location = new System.Drawing.Point(721, 496);
+            this.butNoneOld.Name = "butNoneOld";
+            this.butNoneOld.Size = new System.Drawing.Size(75, 26);
+            this.butNoneOld.TabIndex = 100;
+            this.butNoneOld.Text = "None";
+            this.butNoneOld.Click += new System.EventHandler(this.butNoneOld_Click);
+            // 
+            // butFixOld
+            // 
+            this.butFixOld.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.butFixOld.Location = new System.Drawing.Point(423, 551);
+            this.butFixOld.Name = "butFixOld";
+            this.butFixOld.Size = new System.Drawing.Size(75, 26);
+            this.butFixOld.TabIndex = 7;
+            this.butFixOld.Text = "&Fix";
+            this.butFixOld.Click += new System.EventHandler(this.butFixOld_Click);
+            // 
+            // butCheckOld
+            // 
+            this.butCheckOld.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.butCheckOld.Location = new System.Drawing.Point(298, 551);
+            this.butCheckOld.Name = "butCheckOld";
+            this.butCheckOld.Size = new System.Drawing.Size(75, 26);
+            this.butCheckOld.TabIndex = 6;
+            this.butCheckOld.Text = "C&heck";
+            this.butCheckOld.Click += new System.EventHandler(this.butCheckOld_Click);
+            // 
+            // textBox5
+            // 
+            this.textBox5.BackColor = System.Drawing.SystemColors.Control;
+            this.textBox5.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox5.Location = new System.Drawing.Point(6, 3);
+            this.textBox5.Multiline = true;
+            this.textBox5.Name = "textBox5";
+            this.textBox5.ReadOnly = true;
+            this.textBox5.Size = new System.Drawing.Size(779, 40);
+            this.textBox5.TabIndex = 5;
+            this.textBox5.TabStop = false;
+            this.textBox5.Text = "This table shows database maintenance methods that have been deemed no longer nec" +
     "essary. Should not be ran unless directly told to do so.\r\n\r\n";
-			// 
-			// gridOld
-			// 
-			this.gridOld.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            // 
+            // gridOld
+            // 
+            this.gridOld.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.gridOld.ContextMenuStrip = this.contextMenuStrip1;
-			this.gridOld.HasMultilineHeaders = true;
-			this.gridOld.Location = new System.Drawing.Point(6, 52);
-			this.gridOld.Name = "gridOld";
-			this.gridOld.SelectionMode = OpenDental.UI.GridSelectionMode.MultiExtended;
-			this.gridOld.Size = new System.Drawing.Size(790, 438);
-			this.gridOld.TabIndex = 4;
-			this.gridOld.Title = "Old Methods";
-			this.gridOld.TranslationName = "TableOldDbmMethods";
-			this.gridOld.CellDoubleClick += new OpenDental.UI.ODGridClickEventHandler(this.gridOld_CellDoubleClick);
-			this.gridOld.MouseUp += new System.Windows.Forms.MouseEventHandler(this.gridOld_MouseUp);
-			// 
-			// tabTools
-			// 
-			this.tabTools.BackColor = System.Drawing.SystemColors.Control;
-			this.tabTools.Controls.Add(this.labelRedundantIndexes);
-			this.tabTools.Controls.Add(this.butRedundantIndexes);
-			this.tabTools.Controls.Add(this.label13);
-			this.tabTools.Controls.Add(this.butEmailAttaches);
-			this.tabTools.Controls.Add(this.label12);
-			this.tabTools.Controls.Add(this.butFamilyBalance);
-			this.tabTools.Controls.Add(this.label11);
-			this.tabTools.Controls.Add(this.butPayPlanPayments);
-			this.tabTools.Controls.Add(this.groupBoxUpdateInProg);
-			this.tabTools.Controls.Add(this.label10);
-			this.tabTools.Controls.Add(this.butRecalcEst);
-			this.tabTools.Controls.Add(this.textBox3);
-			this.tabTools.Controls.Add(this.label9);
-			this.tabTools.Controls.Add(this.butRawEmails);
-			this.tabTools.Controls.Add(this.label4);
-			this.tabTools.Controls.Add(this.butActiveTPs);
-			this.tabTools.Controls.Add(this.butInsPayFix);
-			this.tabTools.Controls.Add(this.label1);
-			this.tabTools.Controls.Add(this.butOptimize);
-			this.tabTools.Controls.Add(this.butEtrans);
-			this.tabTools.Controls.Add(this.butApptProcs);
-			this.tabTools.Controls.Add(this.label8);
-			this.tabTools.Controls.Add(this.butSpecChar);
-			this.tabTools.Controls.Add(this.butRemoveNulls);
-			this.tabTools.Controls.Add(this.label2);
-			this.tabTools.Controls.Add(this.label7);
-			this.tabTools.Controls.Add(this.label3);
-			this.tabTools.Controls.Add(this.butTokens);
-			this.tabTools.Controls.Add(this.labelApptProcs);
-			this.tabTools.Controls.Add(this.labelInnoDb);
-			this.tabTools.Controls.Add(this.label5);
-			this.tabTools.Controls.Add(this.butInnoDB);
-			this.tabTools.Location = new System.Drawing.Point(4, 22);
-			this.tabTools.Name = "tabTools";
-			this.tabTools.Padding = new System.Windows.Forms.Padding(3);
-			this.tabTools.Size = new System.Drawing.Size(802, 611);
-			this.tabTools.TabIndex = 1;
-			this.tabTools.Text = "Tools";
-			// 
-			// labelRedundantIndexes
-			// 
-			this.labelRedundantIndexes.Location = new System.Drawing.Point(132, 583);
-			this.labelRedundantIndexes.Name = "labelRedundantIndexes";
-			this.labelRedundantIndexes.Size = new System.Drawing.Size(664, 18);
-			this.labelRedundantIndexes.TabIndex = 65;
-			this.labelRedundantIndexes.Text = "Removes redundant/unecessary indexes from all tables in the database.";
-			this.labelRedundantIndexes.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// butRedundantIndexes
-			// 
-			this.butRedundantIndexes.Location = new System.Drawing.Point(12, 579);
-			this.butRedundantIndexes.Name = "butRedundantIndexes";
-			this.butRedundantIndexes.Size = new System.Drawing.Size(114, 26);
-			this.butRedundantIndexes.TabIndex = 64;
-			this.butRedundantIndexes.Text = "Redundant Indexes";
-			this.butRedundantIndexes.Click += new System.EventHandler(this.butRedundantIndexes_Click);
-			// 
-			// label13
-			// 
-			this.label13.Location = new System.Drawing.Point(132, 455);
-			this.label13.Name = "label13";
-			this.label13.Size = new System.Drawing.Size(664, 18);
-			this.label13.TabIndex = 63;
-			this.label13.Text = "Moves email attachment files into the correct In or Out folders.";
-			this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// butEmailAttaches
-			// 
-			this.butEmailAttaches.Location = new System.Drawing.Point(12, 451);
-			this.butEmailAttaches.Name = "butEmailAttaches";
-			this.butEmailAttaches.Size = new System.Drawing.Size(114, 26);
-			this.butEmailAttaches.TabIndex = 62;
-			this.butEmailAttaches.Text = "Email Attaches";
-			this.butEmailAttaches.Click += new System.EventHandler(this.butEmailAttaches_Click);
-			// 
-			// label12
-			// 
-			this.label12.Location = new System.Drawing.Point(132, 551);
-			this.label12.Name = "label12";
-			this.label12.Size = new System.Drawing.Size(664, 18);
-			this.label12.TabIndex = 61;
-			this.label12.Text = "Runs income transfer logic for multiple familes at once to zero out family balanc" +
+            this.gridOld.ContextMenuStrip = this.contextMenuStrip1;
+            this.gridOld.HasMultilineHeaders = true;
+            this.gridOld.Location = new System.Drawing.Point(6, 52);
+            this.gridOld.Name = "gridOld";
+            this.gridOld.SelectionMode = OpenDental.UI.GridSelectionMode.MultiExtended;
+            this.gridOld.Size = new System.Drawing.Size(790, 438);
+            this.gridOld.TabIndex = 4;
+            this.gridOld.Title = "Old Methods";
+            this.gridOld.TranslationName = "TableOldDbmMethods";
+            this.gridOld.CellDoubleClick += new OpenDental.UI.ODGridClickEventHandler(this.gridOld_CellDoubleClick);
+            this.gridOld.MouseUp += new System.Windows.Forms.MouseEventHandler(this.gridOld_MouseUp);
+            // 
+            // tabTools
+            // 
+            this.tabTools.BackColor = System.Drawing.SystemColors.Control;
+            this.tabTools.Controls.Add(this.labelRedundantIndexes);
+            this.tabTools.Controls.Add(this.butRedundantIndexes);
+            this.tabTools.Controls.Add(this.label13);
+            this.tabTools.Controls.Add(this.butEmailAttaches);
+            this.tabTools.Controls.Add(this.label12);
+            this.tabTools.Controls.Add(this.butFamilyBalance);
+            this.tabTools.Controls.Add(this.label11);
+            this.tabTools.Controls.Add(this.butPayPlanPayments);
+            this.tabTools.Controls.Add(this.groupBoxUpdateInProg);
+            this.tabTools.Controls.Add(this.label10);
+            this.tabTools.Controls.Add(this.butRecalcEst);
+            this.tabTools.Controls.Add(this.textBox3);
+            this.tabTools.Controls.Add(this.label9);
+            this.tabTools.Controls.Add(this.butRawEmails);
+            this.tabTools.Controls.Add(this.label4);
+            this.tabTools.Controls.Add(this.butActiveTPs);
+            this.tabTools.Controls.Add(this.butInsPayFix);
+            this.tabTools.Controls.Add(this.label1);
+            this.tabTools.Controls.Add(this.butOptimize);
+            this.tabTools.Controls.Add(this.butEtrans);
+            this.tabTools.Controls.Add(this.butApptProcs);
+            this.tabTools.Controls.Add(this.label8);
+            this.tabTools.Controls.Add(this.butSpecChar);
+            this.tabTools.Controls.Add(this.butRemoveNulls);
+            this.tabTools.Controls.Add(this.label2);
+            this.tabTools.Controls.Add(this.label7);
+            this.tabTools.Controls.Add(this.label3);
+            this.tabTools.Controls.Add(this.butTokens);
+            this.tabTools.Controls.Add(this.labelApptProcs);
+            this.tabTools.Controls.Add(this.labelInnoDb);
+            this.tabTools.Controls.Add(this.label5);
+            this.tabTools.Controls.Add(this.butInnoDB);
+            this.tabTools.Location = new System.Drawing.Point(4, 22);
+            this.tabTools.Name = "tabTools";
+            this.tabTools.Padding = new System.Windows.Forms.Padding(3);
+            this.tabTools.Size = new System.Drawing.Size(802, 611);
+            this.tabTools.TabIndex = 1;
+            this.tabTools.Text = "Tools";
+            // 
+            // labelRedundantIndexes
+            // 
+            this.labelRedundantIndexes.Location = new System.Drawing.Point(132, 583);
+            this.labelRedundantIndexes.Name = "labelRedundantIndexes";
+            this.labelRedundantIndexes.Size = new System.Drawing.Size(664, 18);
+            this.labelRedundantIndexes.TabIndex = 65;
+            this.labelRedundantIndexes.Text = "Removes redundant/unecessary indexes from all tables in the database.";
+            this.labelRedundantIndexes.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // butRedundantIndexes
+            // 
+            this.butRedundantIndexes.Location = new System.Drawing.Point(12, 579);
+            this.butRedundantIndexes.Name = "butRedundantIndexes";
+            this.butRedundantIndexes.Size = new System.Drawing.Size(114, 26);
+            this.butRedundantIndexes.TabIndex = 64;
+            this.butRedundantIndexes.Text = "Redundant Indexes";
+            this.butRedundantIndexes.Click += new System.EventHandler(this.butRedundantIndexes_Click);
+            // 
+            // label13
+            // 
+            this.label13.Location = new System.Drawing.Point(132, 455);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(664, 18);
+            this.label13.TabIndex = 63;
+            this.label13.Text = "Moves email attachment files into the correct In or Out folders.";
+            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // butEmailAttaches
+            // 
+            this.butEmailAttaches.Location = new System.Drawing.Point(12, 451);
+            this.butEmailAttaches.Name = "butEmailAttaches";
+            this.butEmailAttaches.Size = new System.Drawing.Size(114, 26);
+            this.butEmailAttaches.TabIndex = 62;
+            this.butEmailAttaches.Text = "Email Attaches";
+            this.butEmailAttaches.Click += new System.EventHandler(this.butEmailAttaches_Click);
+            // 
+            // label12
+            // 
+            this.label12.Location = new System.Drawing.Point(132, 551);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(664, 18);
+            this.label12.TabIndex = 61;
+            this.label12.Text = "Runs income transfer logic for multiple familes at once to zero out family balanc" +
     "es.";
-			this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// butFamilyBalance
-			// 
-			this.butFamilyBalance.Location = new System.Drawing.Point(12, 547);
-			this.butFamilyBalance.Name = "butFamilyBalance";
-			this.butFamilyBalance.Size = new System.Drawing.Size(114, 26);
-			this.butFamilyBalance.TabIndex = 60;
-			this.butFamilyBalance.Text = "Balance Families";
-			this.butFamilyBalance.Click += new System.EventHandler(this.butFamilyBalance_Click);
-			// 
-			// label11
-			// 
-			this.label11.Location = new System.Drawing.Point(132, 519);
-			this.label11.Name = "label11";
-			this.label11.Size = new System.Drawing.Size(664, 18);
-			this.label11.TabIndex = 59;
-			this.label11.Text = "Detaches patient payments attached to insurance payment plans and insurance payme" +
+            this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // butFamilyBalance
+            // 
+            this.butFamilyBalance.Location = new System.Drawing.Point(12, 547);
+            this.butFamilyBalance.Name = "butFamilyBalance";
+            this.butFamilyBalance.Size = new System.Drawing.Size(114, 26);
+            this.butFamilyBalance.TabIndex = 60;
+            this.butFamilyBalance.Text = "Balance Families";
+            this.butFamilyBalance.Click += new System.EventHandler(this.butFamilyBalance_Click);
+            // 
+            // label11
+            // 
+            this.label11.Location = new System.Drawing.Point(132, 519);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(664, 18);
+            this.label11.TabIndex = 59;
+            this.label11.Text = "Detaches patient payments attached to insurance payment plans and insurance payme" +
     "nts attached to patient payment plans.";
-			this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// butPayPlanPayments
-			// 
-			this.butPayPlanPayments.Location = new System.Drawing.Point(12, 515);
-			this.butPayPlanPayments.Name = "butPayPlanPayments";
-			this.butPayPlanPayments.Size = new System.Drawing.Size(114, 26);
-			this.butPayPlanPayments.TabIndex = 58;
-			this.butPayPlanPayments.Text = "Pay Plan Payments";
-			this.butPayPlanPayments.Click += new System.EventHandler(this.butPayPlanPayments_Click);
-			// 
-			// groupBoxUpdateInProg
-			// 
-			this.groupBoxUpdateInProg.Controls.Add(this.labelUpdateInProgress);
-			this.groupBoxUpdateInProg.Controls.Add(this.textBoxUpdateInProg);
-			this.groupBoxUpdateInProg.Controls.Add(this.butClearUpdateInProgress);
-			this.groupBoxUpdateInProg.Location = new System.Drawing.Point(6, 8);
-			this.groupBoxUpdateInProg.Name = "groupBoxUpdateInProg";
-			this.groupBoxUpdateInProg.Size = new System.Drawing.Size(790, 66);
-			this.groupBoxUpdateInProg.TabIndex = 57;
-			this.groupBoxUpdateInProg.TabStop = false;
-			this.groupBoxUpdateInProg.Text = "Update in progress on computer: ";
-			// 
-			// labelUpdateInProgress
-			// 
-			this.labelUpdateInProgress.Location = new System.Drawing.Point(6, 17);
-			this.labelUpdateInProgress.Name = "labelUpdateInProgress";
-			this.labelUpdateInProgress.Size = new System.Drawing.Size(778, 18);
-			this.labelUpdateInProgress.TabIndex = 58;
-			this.labelUpdateInProgress.Text = "Clear this value only if you are unable to start the program on other workstation" +
+            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // butPayPlanPayments
+            // 
+            this.butPayPlanPayments.Location = new System.Drawing.Point(12, 515);
+            this.butPayPlanPayments.Name = "butPayPlanPayments";
+            this.butPayPlanPayments.Size = new System.Drawing.Size(114, 26);
+            this.butPayPlanPayments.TabIndex = 58;
+            this.butPayPlanPayments.Text = "Pay Plan Payments";
+            this.butPayPlanPayments.Click += new System.EventHandler(this.butPayPlanPayments_Click);
+            // 
+            // groupBoxUpdateInProg
+            // 
+            this.groupBoxUpdateInProg.Controls.Add(this.labelUpdateInProgress);
+            this.groupBoxUpdateInProg.Controls.Add(this.textBoxUpdateInProg);
+            this.groupBoxUpdateInProg.Controls.Add(this.butClearUpdateInProgress);
+            this.groupBoxUpdateInProg.Location = new System.Drawing.Point(6, 8);
+            this.groupBoxUpdateInProg.Name = "groupBoxUpdateInProg";
+            this.groupBoxUpdateInProg.Size = new System.Drawing.Size(790, 66);
+            this.groupBoxUpdateInProg.TabIndex = 57;
+            this.groupBoxUpdateInProg.TabStop = false;
+            this.groupBoxUpdateInProg.Text = "Update in progress on computer: ";
+            // 
+            // labelUpdateInProgress
+            // 
+            this.labelUpdateInProgress.Location = new System.Drawing.Point(6, 17);
+            this.labelUpdateInProgress.Name = "labelUpdateInProgress";
+            this.labelUpdateInProgress.Size = new System.Drawing.Size(778, 18);
+            this.labelUpdateInProgress.TabIndex = 58;
+            this.labelUpdateInProgress.Text = "Clear this value only if you are unable to start the program on other workstation" +
     "s and you are sure an update is not currently in progress.";
-			this.labelUpdateInProgress.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textBoxUpdateInProg
-			// 
-			this.textBoxUpdateInProg.Location = new System.Drawing.Point(6, 41);
-			this.textBoxUpdateInProg.Name = "textBoxUpdateInProg";
-			this.textBoxUpdateInProg.ReadOnly = true;
-			this.textBoxUpdateInProg.Size = new System.Drawing.Size(149, 20);
-			this.textBoxUpdateInProg.TabIndex = 55;
-			// 
-			// butClearUpdateInProgress
-			// 
-			this.butClearUpdateInProgress.Location = new System.Drawing.Point(161, 39);
-			this.butClearUpdateInProgress.Name = "butClearUpdateInProgress";
-			this.butClearUpdateInProgress.Size = new System.Drawing.Size(78, 23);
-			this.butClearUpdateInProgress.TabIndex = 54;
-			this.butClearUpdateInProgress.Text = "Clear";
-			this.butClearUpdateInProgress.UseVisualStyleBackColor = true;
-			this.butClearUpdateInProgress.Click += new System.EventHandler(this.butClearUpdateInProgress_Click);
-			// 
-			// label10
-			// 
-			this.label10.Location = new System.Drawing.Point(132, 487);
-			this.label10.Name = "label10";
-			this.label10.Size = new System.Drawing.Size(664, 18);
-			this.label10.TabIndex = 53;
-			this.label10.Text = "Recalc estimates that are associated to non active coverage for the patient.";
-			this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// butRecalcEst
-			// 
-			this.butRecalcEst.Location = new System.Drawing.Point(12, 483);
-			this.butRecalcEst.Name = "butRecalcEst";
-			this.butRecalcEst.Size = new System.Drawing.Size(114, 26);
-			this.butRecalcEst.TabIndex = 52;
-			this.butRecalcEst.Text = "Recalc Estimates";
-			this.butRecalcEst.Click += new System.EventHandler(this.butRecalcEst_Click);
-			// 
-			// textBox3
-			// 
-			this.textBox3.BackColor = System.Drawing.SystemColors.Control;
-			this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.textBox3.Location = new System.Drawing.Point(6, 84);
-			this.textBox3.Multiline = true;
-			this.textBox3.Name = "textBox3";
-			this.textBox3.ReadOnly = true;
-			this.textBox3.Size = new System.Drawing.Size(790, 40);
-			this.textBox3.TabIndex = 51;
-			this.textBox3.TabStop = false;
-			this.textBox3.Text = resources.GetString("textBox3.Text");
-			// 
-			// label9
-			// 
-			this.label9.Location = new System.Drawing.Point(132, 423);
-			this.label9.Name = "label9";
-			this.label9.Size = new System.Drawing.Size(664, 18);
-			this.label9.TabIndex = 50;
-			this.label9.Text = "Fixes emails which are encoded in the Chart progress notes.  Also clears unused a" +
+            this.labelUpdateInProgress.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // textBoxUpdateInProg
+            // 
+            this.textBoxUpdateInProg.Location = new System.Drawing.Point(6, 41);
+            this.textBoxUpdateInProg.Name = "textBoxUpdateInProg";
+            this.textBoxUpdateInProg.ReadOnly = true;
+            this.textBoxUpdateInProg.Size = new System.Drawing.Size(149, 20);
+            this.textBoxUpdateInProg.TabIndex = 55;
+            // 
+            // butClearUpdateInProgress
+            // 
+            this.butClearUpdateInProgress.Location = new System.Drawing.Point(161, 39);
+            this.butClearUpdateInProgress.Name = "butClearUpdateInProgress";
+            this.butClearUpdateInProgress.Size = new System.Drawing.Size(78, 23);
+            this.butClearUpdateInProgress.TabIndex = 54;
+            this.butClearUpdateInProgress.Text = "Clear";
+            this.butClearUpdateInProgress.UseVisualStyleBackColor = true;
+            this.butClearUpdateInProgress.Click += new System.EventHandler(this.butClearUpdateInProgress_Click);
+            // 
+            // label10
+            // 
+            this.label10.Location = new System.Drawing.Point(132, 487);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(664, 18);
+            this.label10.TabIndex = 53;
+            this.label10.Text = "Recalc estimates that are associated to non active coverage for the patient.";
+            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // butRecalcEst
+            // 
+            this.butRecalcEst.Location = new System.Drawing.Point(12, 483);
+            this.butRecalcEst.Name = "butRecalcEst";
+            this.butRecalcEst.Size = new System.Drawing.Size(114, 26);
+            this.butRecalcEst.TabIndex = 52;
+            this.butRecalcEst.Text = "Recalc Estimates";
+            this.butRecalcEst.Click += new System.EventHandler(this.butRecalcEst_Click);
+            // 
+            // textBox3
+            // 
+            this.textBox3.BackColor = System.Drawing.SystemColors.Control;
+            this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox3.Location = new System.Drawing.Point(6, 84);
+            this.textBox3.Multiline = true;
+            this.textBox3.Name = "textBox3";
+            this.textBox3.ReadOnly = true;
+            this.textBox3.Size = new System.Drawing.Size(790, 40);
+            this.textBox3.TabIndex = 51;
+            this.textBox3.TabStop = false;
+            this.textBox3.Text = resources.GetString("textBox3.Text");
+            // 
+            // label9
+            // 
+            this.label9.Location = new System.Drawing.Point(132, 423);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(664, 18);
+            this.label9.TabIndex = 50;
+            this.label9.Text = "Fixes emails which are encoded in the Chart progress notes.  Also clears unused a" +
     "ttachments.";
-			this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// butRawEmails
-			// 
-			this.butRawEmails.Location = new System.Drawing.Point(12, 419);
-			this.butRawEmails.Name = "butRawEmails";
-			this.butRawEmails.Size = new System.Drawing.Size(114, 26);
-			this.butRawEmails.TabIndex = 9;
-			this.butRawEmails.Text = "Raw Emails";
-			this.butRawEmails.Click += new System.EventHandler(this.butRawEmails_Click);
-			// 
-			// labelSkipCheckTable
-			// 
-			this.labelSkipCheckTable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelSkipCheckTable.ForeColor = System.Drawing.Color.Red;
-			this.labelSkipCheckTable.Location = new System.Drawing.Point(587, 661);
-			this.labelSkipCheckTable.Name = "labelSkipCheckTable";
-			this.labelSkipCheckTable.Size = new System.Drawing.Size(144, 16);
-			this.labelSkipCheckTable.TabIndex = 2;
-			this.labelSkipCheckTable.Text = "Table check is disabled";
-			this.labelSkipCheckTable.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-			this.labelSkipCheckTable.Visible = false;
-			// 
-			// FormDatabaseMaintenance
-			// 
-			this.AcceptButton = this.butCheck;
-			this.CancelButton = this.butClose;
-			this.ClientSize = new System.Drawing.Size(834, 692);
-			this.Controls.Add(this.labelSkipCheckTable);
-			this.Controls.Add(this.tabControlDBM);
-			this.Controls.Add(this.butClose);
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.MaximizeBox = false;
-			this.MinimizeBox = false;
-			this.MinimumSize = new System.Drawing.Size(850, 731);
-			this.Name = "FormDatabaseMaintenance";
-			this.ShowInTaskbar = false;
-			this.Text = "Database Maintenance";
-			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormDatabaseMaintenance_FormClosing);
-			this.Load += new System.EventHandler(this.FormDatabaseMaintenance_Load);
-			this.contextMenuStrip1.ResumeLayout(false);
-			this.tabControlDBM.ResumeLayout(false);
-			this.tabChecks.ResumeLayout(false);
-			this.tabChecks.PerformLayout();
-			this.tabHidden.ResumeLayout(false);
-			this.tabHidden.PerformLayout();
-			this.tabOld.ResumeLayout(false);
-			this.tabOld.PerformLayout();
-			this.tabTools.ResumeLayout(false);
-			this.tabTools.PerformLayout();
-			this.groupBoxUpdateInProg.ResumeLayout(false);
-			this.groupBoxUpdateInProg.PerformLayout();
-			this.ResumeLayout(false);
+            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // butRawEmails
+            // 
+            this.butRawEmails.Location = new System.Drawing.Point(12, 419);
+            this.butRawEmails.Name = "butRawEmails";
+            this.butRawEmails.Size = new System.Drawing.Size(114, 26);
+            this.butRawEmails.TabIndex = 9;
+            this.butRawEmails.Text = "Raw Emails";
+            this.butRawEmails.Click += new System.EventHandler(this.butRawEmails_Click);
+            // 
+            // labelSkipCheckTable
+            // 
+            this.labelSkipCheckTable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelSkipCheckTable.ForeColor = System.Drawing.Color.Red;
+            this.labelSkipCheckTable.Location = new System.Drawing.Point(586, 655);
+            this.labelSkipCheckTable.Name = "labelSkipCheckTable";
+            this.labelSkipCheckTable.Size = new System.Drawing.Size(150, 25);
+            this.labelSkipCheckTable.TabIndex = 2;
+            this.labelSkipCheckTable.Text = "Table check is disabled";
+            this.labelSkipCheckTable.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelSkipCheckTable.Visible = false;
+            // 
+            // FormDatabaseMaintenance
+            // 
+            this.AcceptButton = this.butCheck;
+            this.CancelButton = this.butClose;
+            this.ClientSize = new System.Drawing.Size(834, 692);
+            this.Controls.Add(this.labelSkipCheckTable);
+            this.Controls.Add(this.tabControlDBM);
+            this.Controls.Add(this.butClose);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(850, 731);
+            this.Name = "FormDatabaseMaintenance";
+            this.ShowInTaskbar = false;
+            this.Text = "Database Maintenance";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormDatabaseMaintenance_FormClosing);
+            this.Load += new System.EventHandler(this.FormDatabaseMaintenance_Load);
+            this.contextMenuStrip1.ResumeLayout(false);
+            this.tabControlDBM.ResumeLayout(false);
+            this.tabChecks.ResumeLayout(false);
+            this.tabChecks.PerformLayout();
+            this.tabHidden.ResumeLayout(false);
+            this.tabHidden.PerformLayout();
+            this.tabOld.ResumeLayout(false);
+            this.tabOld.PerformLayout();
+            this.tabTools.ResumeLayout(false);
+            this.tabTools.PerformLayout();
+            this.groupBoxUpdateInProg.ResumeLayout(false);
+            this.groupBoxUpdateInProg.PerformLayout();
+            this.ResumeLayout(false);
 
 		}
 		#endregion
