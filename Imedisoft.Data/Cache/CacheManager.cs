@@ -96,7 +96,9 @@ namespace Imedisoft.Data.Cache
             {
                 foreach (var group in groups)
                 {
-                    if (!cachesByGroup.TryGetValue(group, out var caches))
+                    if (string.IsNullOrEmpty(group)) continue;
+
+                    if (!cachesByGroup.TryGetValue(group.ToLower(), out var caches))
                     {
                         continue;
                     }
@@ -122,7 +124,7 @@ namespace Imedisoft.Data.Cache
         {
             if (string.IsNullOrEmpty(group)) return;
 
-            var caches = GetCachesForGroup(group);
+            var caches = GetCachesForGroup(group.ToLower());
 
             lock (caches)
             {
