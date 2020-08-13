@@ -98,7 +98,7 @@ namespace OpenDentBusiness{
 			}
 			command+="))) C "
 				+"WHERE D.InsSubNum=C.InsSubNum "
-				+"ORDER BY "+DbHelper.UnionOrderBy("DateEffective",4);
+				+"ORDER BY DateEffective";
 			return Crud.InsSubCrud.SelectMany(command);
 		}
 
@@ -135,7 +135,7 @@ namespace OpenDentBusiness{
 						+"WHERE B.InsSubNum=P.InsSubNum AND P.PatNum IN("+string.Join(",",listPatNums.Select(x => POut.Long(x)))+"))"
 					+") C "
 				+"WHERE D.InsSubNum=C.InsSubNum "
-				+"ORDER BY "+DbHelper.UnionOrderBy("DateEffective",4);
+				+"ORDER BY DateEffective";
 			DataTable table=Database.ExecuteDataTable(command);
 			foreach(Family family in listFamilies) {
 				List<long> listOnBehalfOfs=family.ListPats.Select(x => x.PatNum).ToList();

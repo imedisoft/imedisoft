@@ -820,7 +820,7 @@ namespace OpenDental {
 			if(Prefs.GetBool(PrefName.AgingIsEnterprise)) {
 				//Enterprise
 				checkAgingIsEnterprise.Checked=true;
-				DateTime agingBeginDateT=PrefC.GetDateT(PrefName.AgingBeginDateTime);
+				DateTime agingBeginDateT=PrefC.GetDate(PrefName.AgingBeginDateTime);
 				if(agingBeginDateT>DateTime.MinValue) {
 					textAgingBeginDateT.Text=agingBeginDateT.ToString();
 				}
@@ -835,7 +835,7 @@ namespace OpenDental {
 				textAutoAgingRunTime.Enabled=false;
 			}
 			else {
-				DateTime agingDateTDue=PrefC.GetDateT(PrefName.AgingServiceTimeDue);
+				DateTime agingDateTDue=PrefC.GetDate(PrefName.AgingServiceTimeDue);
 				if(agingDateTDue!=DateTime.MinValue) {
 					textAutoAgingRunTime.Text=agingDateTDue.ToShortTimeString();
 				}
@@ -898,7 +898,7 @@ namespace OpenDental {
 		///AgingIsEnterprise is enabled, the next time the form is accessed they may have the option to clear the DateTime.  Requires SecurityAdmin permission.</summary>
 		private void butClearAgingBeginDateT_Click(object sender,EventArgs e) {
 			//user doesn't have permission or the pref is already cleared
-			if(!Security.IsAuthorized(Permissions.SecurityAdmin) || PrefC.GetDateT(PrefName.AgingBeginDateTime)==DateTime.MinValue) {//blank=DateTime.MinValue
+			if(!Security.IsAuthorized(Permissions.SecurityAdmin) || PrefC.GetDate(PrefName.AgingBeginDateTime)==DateTime.MinValue) {//blank=DateTime.MinValue
 				return;
 			}
 			if(!MsgBox.Show(MsgBoxButtons.YesNo,"This will override the lock on the famaging table, potentially allowing a second connection to start "

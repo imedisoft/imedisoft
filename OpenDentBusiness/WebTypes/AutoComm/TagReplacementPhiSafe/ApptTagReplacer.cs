@@ -7,19 +7,17 @@ namespace OpenDentBusiness.AutoComm
 	{
 		protected override void ReplaceTagsChild(StringBuilder stringBuilder, AutoCommObj autoCommObj, bool isEmail)
 		{
-			ApptLite appt = autoCommObj as ApptLite;
-			if (appt != null)
-			{
-				ReplaceOneTag(stringBuilder, "[ApptTime]", appt.AptDateTime.ToShortTimeString(), isEmail);
-				ReplaceOneTag(stringBuilder, "[ApptDate]", appt.AptDateTime.ToString(PrefC.PatientCommunicationDateFormat), isEmail);
-				ReplaceOneTag(stringBuilder, "[ApptTimeAskedArrive]", appt.DateTimeAskedToArrive.ToShortTimeString(), isEmail);
-			}
-		}
+            if (autoCommObj is ApptLite appt)
+            {
+                ReplaceOneTag(stringBuilder, "[ApptTime]", appt.AptDateTime.ToShortTimeString(), isEmail);
+                ReplaceOneTag(stringBuilder, "[ApptDate]", appt.AptDateTime.ToString(PrefC.PatientCommunicationDateFormat), isEmail);
+                ReplaceOneTag(stringBuilder, "[ApptTimeAskedArrive]", appt.DateTimeAskedToArrive.ToShortTimeString(), isEmail);
+            }
+        }
 
-		///<summary>Replaces appointment related tags.</summary>
 		protected override void ReplaceTagsAggregateChild(StringBuilder sbTemplate, StringBuilder sbAutoCommObjsAggregate)
 		{
-			sbTemplate.RegReplace("\\[Appts]", sbAutoCommObjsAggregate.ToString());//We don't need to escape '<' here.
+			sbTemplate.RegReplace("\\[Appts]", sbAutoCommObjsAggregate.ToString());
 		}
 	}
 }

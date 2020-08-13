@@ -276,7 +276,7 @@ namespace OpenDentBusiness
 
 			if (!PrefC.HasClinicsEnabled)
 			{
-				return PrefC.GetDateT(PrefName.SmsContractDate).Year > 1880;
+				return PrefC.GetDate(PrefName.SmsContractDate).Year > 1880;
 			}
 
 			return (Clinics.GetFirstOrDefault(x => x.SmsContractDate.Year > 1880) != null);

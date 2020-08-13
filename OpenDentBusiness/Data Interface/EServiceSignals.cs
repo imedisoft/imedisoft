@@ -127,7 +127,7 @@ namespace OpenDentBusiness{
 				+POut.Int((int)eServiceSignalSeverity.NotEnabled)+","
 				+POut.Int((int)eServiceSignalSeverity.Working)+","
 				+POut.Int((int)eServiceSignalSeverity.Critical)
-				+") ORDER BY SigDateTime DESC "+DbHelper.LimitWhere(1);//only select not enabled, working, and critical statuses.
+				+") ORDER BY SigDateTime DESC LIMIT 1";//only select not enabled, working, and critical statuses.
 			EServiceSignal eServiceSignalLast=Crud.EServiceSignalCrud.SelectOne(command);
 			DateTime dtNow=MiscData.GetNowDateTime();
 			//If initializing or changing state to working from not working, insert two signals; An anchor and a rolling timestamp.

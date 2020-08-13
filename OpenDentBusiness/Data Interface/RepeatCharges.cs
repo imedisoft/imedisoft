@@ -200,7 +200,7 @@ namespace OpenDentBusiness {
 					bool isFamaging=(Prefs.GetBool(PrefName.AgingIsEnterprise) && listGuarantors.Count>1);//will only use the famaging table if more than 1 guar
 					if(isFamaging) {//if this will utilize the famaging table we need to check and set the pref to block others from starting aging
 						Prefs.RefreshCache();
-						dateTAgingBeganPref=PrefC.GetDateT(PrefName.AgingBeginDateTime);
+						dateTAgingBeganPref=PrefC.GetDate(PrefName.AgingBeginDateTime);
 						if(dateTAgingBeganPref>DateTime.MinValue) {//pref has been set by another process, don't run aging and notify user
 							result.ErrorMsg+=Lans.g("RepeatCharges","Aging failed to run for patients who had repeat charges added to their account. This is due to "
 								+"the currently running aging calculations which began on")+" "+dateTAgingBeganPref.ToString()+".  "+Lans.g("RepeatCharges","If you "

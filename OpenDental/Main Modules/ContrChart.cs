@@ -7084,7 +7084,7 @@ namespace OpenDental {
 			catch { //In case NewCrop returns invalid XML.
 				return false;//abort gracefully
 			}
-			DateTime rxStartDateT=PrefC.GetDateT(PrefName.ElectronicRxDateStartedUsing131);
+			DateTime rxStartDateT=PrefC.GetDate(PrefName.ElectronicRxDateStartedUsing131);
 			XmlNode nodeNewDataSet=xml.FirstChild;
 			List <long> listActiveMedicationPatNums=new List<long>();
 			List<RxPat> listNewRx=new List<RxPat>();

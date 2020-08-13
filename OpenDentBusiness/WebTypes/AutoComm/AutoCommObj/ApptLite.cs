@@ -5,27 +5,39 @@ using System.Linq;
 
 namespace OpenDentBusiness.AutoComm
 {
-	///<summary>This class contains fields that are useful in appointment-type AutoComms.</summary>
+	/// <summary>
+	/// This class contains fields that are useful in appointment-type AutoComms.
+	/// </summary>
 	public class ApptLite : AutoCommObj
 	{
-		///<summary>From Appointment table.</summary>
-		public ApptStatus AptStatus;
-		///<summary>From Appointment table.</summary>
-		public DateTime AptDateTime;
-		///<summary>From Appointment table.</summary>
-		public DateTime DateTimeAskedToArrive;
-		///<summary>Indicates the name of the Office.</summary>
-		public string OfficeName;
-		///<summary>Indicates the phone number of the Office.</summary>
-		public string OfficePhone;
-		///<summary>Indicates the email of the Office.</summary>
-		public string OfficeEmail;
-		///<summary>From Appointment table, in minutes.</summary>
-		public int Length;
+		public ApptStatus AptStatus { get; set; }
+
+		public DateTime AptDateTime { get; set; }
+
+		public DateTime DateTimeAskedToArrive { get; set; }
+
+		/// <summary>
+		/// Indicates the name of the Office.
+		/// </summary>
+		public string OfficeName { get; set; }
+
+		/// <summary>
+		/// Indicates the phone number of the Office.
+		/// </summary>
+		public string OfficePhone { get; set; }
+
+		/// <summary>
+		/// Indicates the email of the Office.
+		/// </summary>
+		public string OfficeEmail { get; set; }
+
+		/// <summary>
+		/// From Appointment table, in minutes.
+		/// </summary>
+		public int Length { get; set; }
 
 		public ApptLite()
 		{
-			//Required for PatPortInviteLite
 		}
 
 		public ApptLite(Appointment appt, PatComm patComm, bool isForThankYou = false)
@@ -49,43 +61,6 @@ namespace OpenDentBusiness.AutoComm
 			OfficeEmail = EmailAddresses.GetByClinic(clinic?.ClinicNum ?? 0).EmailUsername;
 			Length = appt.Length;
 			SetPatientContact(patComm);
-		}
-
-		public ApptLite(DataRow row, List<ClinicRule> listClinicRules)
-		{
-			PrimaryKey = PIn.Long(row["AptNum"].ToString());
-			//For most AutoCommApptAbs, this will be AptDateTime, but for ApptThankYous, SecDateTEntry is used.
-			DateTimeEvent = PIn.Date(row["DateTimeEvent"].ToString());
-			AptDateTime = PIn.Date(row["AptDateTime"].ToString());
-			DateTimeAskedToArrive = PIn.Date(row["DateTimeAskedToArrive"].ToString());
-			if (DateTimeAskedToArrive.Year < 1880)
-			{
-				DateTimeAskedToArrive = DateTimeEvent;
-			}
-			AptStatus = (ApptStatus)PIn.Int(row["AptStatus"].ToString());
-			ClinicNum = PIn.Long(row["ClinicNum"].ToString());
-			PatNum = PIn.Long(row["PatNum"].ToString());
-			ProvNum = PIn.Long(row["ProvNum"].ToString());
-			Clinic clinic = listClinicRules.FirstOrDefault(x => x.RuleClinic.ClinicNum == ClinicNum)?.RuleClinic ?? new Clinic();
-			OfficeName = Clinics.GetOfficeName(clinic);
-			OfficePhone = Clinics.GetOfficePhone(clinic);
-			OfficeEmail = EmailAddresses.GetByClinic(clinic.ClinicNum).EmailUsername;
-			Length = PIn.Int(row["AptLength"].ToString());
-		}
-
-		public ApptThankYouSent.CalendarIcsInfo ToCalendarIcs()
-		{
-			return new ApptThankYouSent.CalendarIcsInfo()
-			{
-				PatNum = PatNum,
-				Title = ClinicPrefs.GetString(ClinicNum, PrefName.ApptThankYouCalendarTitle),
-				Location = OfficeName,
-				AptNum = PrimaryKey,
-				DateStart = AptDateTime,
-				DateEnd = AptDateTime.AddMinutes(Length),
-				OfficeEmail = OfficeEmail,
-				Method = ApptThankYouSent.CalendarIcsInfo.CalMethod.Request,
-			};
 		}
 	}
 }

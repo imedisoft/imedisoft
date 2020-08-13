@@ -8,25 +8,21 @@ using System.Text;
 
 namespace OpenDentBusiness
 {
-	public class LetterMergesQueries
+    public class LetterMergesQueries
 	{
-
-		///<summary>Throws exceptions.</summary>
 		public static DataTable GetLetterMergeInfo(Patient PatCur, LetterMerge letter)
 		{
 			//Throw explicit arguement exceptions so that we can hopefully get more information as to what is actually failing for our users.
 			if (PatCur == null)
-			{
-				throw new ArgumentException("Invalid patient", "PatCur");
-			}
+				throw new ArgumentException("Invalid patient", nameof(PatCur));
+			
 			if (letter == null)
-			{
-				throw new ArgumentException("Invalid letter", "letter");
-			}
+				throw new ArgumentException("Invalid letter", nameof(letter));
+			
+
 			if (letter.Fields == null)
-			{
-				throw new ArgumentException("Invalid letter fields", "letter.Fields");
-			}
+				throw new ArgumentException("Invalid letter fields", nameof(letter.Fields));
+			
 			//jsparks- This is messy and prone to bugs.  It needs to be reworked to work just like
 			//in SheetFiller.FillFieldsInStaticText.  Just grab a bunch of separate objects
 			//instead of one result row.

@@ -10,20 +10,20 @@ using System.Text;
 
 namespace OpenDentBusiness
 {
-	public class TrojanQueries
+    public class TrojanQueries
 	{
 		public static DateTime GetMaxProcedureDate(long PatNum) 
-			=> SIn.Date(Database.ExecuteString(
+			=> Database.ExecuteDateTime(
 				$"SELECT MAX(ProcDate) FROM procedurelog,patient " +
 				$"WHERE patient.PatNum=procedurelog.PatNum " +
-				$"AND procedurelog.ProcStatus={SOut.Int((int)ProcStat.C)} " +
-				$"AND patient.Guarantor={SOut.Long(PatNum)}"));
+				$"AND procedurelog.ProcStatus={(int)ProcStat.C} " +
+				$"AND patient.Guarantor={PatNum}") ?? DateTime.MinValue;
 
 		public static DateTime GetMaxPaymentDate(long PatNum) 
-			=> SIn.Date(Database.ExecuteString(
+			=> Database.ExecuteDateTime(
 				$"SELECT MAX(DatePay) FROM paysplit,patient " +
 				$"WHERE patient.PatNum=paysplit.PatNum " +
-				$"AND patient.Guarantor={SOut.Long(PatNum)}"));
+				$"AND patient.Guarantor={PatNum}") ?? DateTime.MinValue;;
 		
 
 		/// <summary>

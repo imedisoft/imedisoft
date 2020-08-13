@@ -348,7 +348,7 @@ namespace OpenDental{
 			FillGrid();
 			if(claimReportReceiveInterval==0) {
 				radioTime.Checked=true;
-				DateTime fullDateTime=PrefC.GetDateT(PrefName.ClaimReportReceiveTime);
+				DateTime fullDateTime=PrefC.GetDate(PrefName.ClaimReportReceiveTime);
 				textReportCheckTime.Text=fullDateTime.ToShortTimeString();
 			}
 			else {

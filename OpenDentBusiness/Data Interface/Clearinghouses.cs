@@ -495,7 +495,7 @@ namespace OpenDentBusiness
 
 			DateTime timeLastReport = SIn.Date(Prefs.GetStringNoCache(PrefName.ClaimReportReceiveLastDateTime));
 			double timeReceiveInternal = SIn.Double(Prefs.GetStringNoCache(PrefName.ClaimReportReceiveInterval));//Interval in minutes.
-			DateTime timeToRecieve = DateTime.Now.Date + PrefC.GetDateT(PrefName.ClaimReportReceiveTime).TimeOfDay;
+			DateTime timeToRecieve = DateTime.Now.Date + PrefC.GetDate(PrefName.ClaimReportReceiveTime).TimeOfDay;
 			double timeDiff = DateTime.Now.Subtract(timeLastReport).TotalMinutes;
 			errorMessage = "";
 

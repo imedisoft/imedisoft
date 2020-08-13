@@ -57,7 +57,7 @@ namespace OpenDental
 			textMobileSynchWorkStation.Text=Prefs.GetString(PrefName.MobileSyncWorkstationName);
 			textMobileUserName.Text=Prefs.GetString(PrefName.MobileUserName);
 			textMobilePassword.Text="";//not stored locally, and not pulled from web server
-			DateTime lastRun=PrefC.GetDateT(PrefName.MobileSyncDateTimeLastRun);
+			DateTime lastRun=PrefC.GetDate(PrefName.MobileSyncDateTimeLastRun);
 			if(lastRun.Year>1880) {
 				textDateTimeLastRun.Text=lastRun.ToShortDateString()+" "+lastRun.ToShortTimeString();
 			}
@@ -210,7 +210,7 @@ namespace OpenDental
 				MessageBox.Show("Full synch has never been run before.");
 				return;
 			}
-			DateTime changedSince=PrefC.GetDateT(PrefName.MobileSyncDateTimeLastRun);
+			DateTime changedSince=PrefC.GetDate(PrefName.MobileSyncDateTimeLastRun);
 			ShowProgressForm(changedSince);
 		}
 		
@@ -231,7 +231,7 @@ namespace OpenDental
 				workerThread.Abort();
 			}
 			changed=true;
-			textDateTimeLastRun.Text=PrefC.GetDateT(PrefName.MobileSyncDateTimeLastRun).ToShortDateString()+" "+PrefC.GetDateT(PrefName.MobileSyncDateTimeLastRun).ToShortTimeString();
+			textDateTimeLastRun.Text=PrefC.GetDate(PrefName.MobileSyncDateTimeLastRun).ToShortDateString()+" "+PrefC.GetDate(PrefName.MobileSyncDateTimeLastRun).ToShortTimeString();
 		}
 
 
@@ -260,7 +260,7 @@ namespace OpenDental
 					UploadPreference(PrefName.PracticeTitle); //done again because the previous upload did not include the prefnum
 				}
 				bool synchDelPat=true;
-				if(PrefC.GetDateT(PrefName.MobileSyncDateTimeLastRun).Hour==timeSynchStarted.Hour) {
+				if(PrefC.GetDate(PrefName.MobileSyncDateTimeLastRun).Hour==timeSynchStarted.Hour) {
 					synchDelPat=false;// synching delPatNumList is timeconsuming (15 seconds) for a dental office with around 5000 patients and it's mostly the same records that have to be deleted every time a synch happens. So it's done only once hourly.
 				}
 				//MobileWeb
@@ -538,7 +538,7 @@ namespace OpenDental
 			}
 			DateTime timeSynchStarted=MiscData.GetNowDateTime();
 			if(!doForce) {//if doForce, we skip checking the interval
-				if(timeSynchStarted < PrefC.GetDateT(PrefName.MobileSyncDateTimeLastRun).AddMinutes(PrefC.GetInt(PrefName.MobileSyncIntervalMinutes))) {
+				if(timeSynchStarted < PrefC.GetDate(PrefName.MobileSyncDateTimeLastRun).AddMinutes(PrefC.GetInt(PrefName.MobileSyncIntervalMinutes))) {
 					return;
 				}
 			}
@@ -561,7 +561,7 @@ namespace OpenDental
 			else {
 				IsServerAvail=true;
 			}
-			DateTime changedSince=PrefC.GetDateT(PrefName.MobileSyncDateTimeLastRun);			
+			DateTime changedSince=PrefC.GetDate(PrefName.MobileSyncDateTimeLastRun);			
 			//FormProgress FormP=new FormProgress();//but we won't display it.
 			//FormP.NumberFormat="";
 			//FormP.DisplayText="";

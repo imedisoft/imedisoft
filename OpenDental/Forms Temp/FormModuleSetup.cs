@@ -666,7 +666,7 @@ namespace OpenDental{
 				comboClaimSnapshotTrigger.Items.Add(trigger.GetDescription());
 			}
 			comboClaimSnapshotTrigger.SelectedIndex=(int)PIn.Enum<ClaimSnapshotTrigger>(Prefs.GetString(PrefName.ClaimSnapshotTriggerType),true);
-			textClaimSnapshotRunTime.Text=PrefC.GetDateT(PrefName.ClaimSnapshotRunTime).ToShortTimeString();
+			textClaimSnapshotRunTime.Text=PrefC.GetDate(PrefName.ClaimSnapshotRunTime).ToShortTimeString();
 			checkClaimUseOverrideProcDescript.Checked=Prefs.GetBool(PrefName.ClaimPrintProcChartedDesc);
 			checkClaimTrackingRequireError.Checked=Prefs.GetBool(PrefName.ClaimTrackingRequiresError);
 			checkPatInitBillingTypeFromPriInsPlan.Checked=Prefs.GetBool(PrefName.PatInitBillingTypeFromPriInsPlan);
@@ -839,15 +839,15 @@ namespace OpenDental{
 				checkHideDueNow.Checked=false;
 			}
 			checkRecurringChargesAutomated.Checked=Prefs.GetBool(PrefName.RecurringChargesAutomatedEnabled);
-			textRecurringChargesTime.Text=PrefC.GetDateT(PrefName.RecurringChargesAutomatedTime).TimeOfDay.ToShortTimeString();
+			textRecurringChargesTime.Text=PrefC.GetDate(PrefName.RecurringChargesAutomatedTime).TimeOfDay.ToShortTimeString();
 			checkRecurPatBal0.Checked=Prefs.GetBool(PrefName.RecurringChargesAllowedWhenNoPatBal);
 			checkRepeatingChargesRunAging.Checked=Prefs.GetBool(PrefName.RepeatingChargesRunAging);
 			checkRepeatingChargesAutomated.Checked=Prefs.GetBool(PrefName.RepeatingChargesAutomated);
-			textRepeatingChargesAutomatedTime.Text=PrefC.GetDateT(PrefName.RepeatingChargesAutomatedTime).TimeOfDay.ToShortTimeString();
+			textRepeatingChargesAutomatedTime.Text=PrefC.GetDate(PrefName.RepeatingChargesAutomatedTime).TimeOfDay.ToShortTimeString();
 			if(!CultureInfo.CurrentCulture.Name.EndsWith("CA")) {
 				checkCanadianPpoLabEst.Visible=false;
 			}
-			textDynamicPayPlan.Text=PrefC.GetDateT(PrefName.DynamicPayPlanRunTime).TimeOfDay.ToShortTimeString();
+			textDynamicPayPlan.Text=PrefC.GetDate(PrefName.DynamicPayPlanRunTime).TimeOfDay.ToShortTimeString();
 			#endregion Misc Account Tab
 		}
 

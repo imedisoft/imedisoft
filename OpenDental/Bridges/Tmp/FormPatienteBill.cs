@@ -86,7 +86,7 @@ namespace OpenDental {
 
 			Progress("Get Clearinghouse Authentication & Authorization..");
 			// Make 1st HTTP Call And Get the authenticaton
-			PatienteBillServerAddress = PrefC.GetRaw("PatienteBillServerAddress");
+			PatienteBillServerAddress = Prefs.GetString("PatienteBillServerAddress");
 			if(PatienteBillServerAddress.Length == 0) {
 				Error("Missing Patient eBill Server Information."+PWContactInfo);
 				return false;
@@ -158,9 +158,9 @@ namespace OpenDental {
 		private bool isValidFolder() {
 			try {
 				Progress("Verify Folder Location..");
-				if(Directory.Exists(PrefC.GetRaw("PatienteBillPath")) == false) {
+				if(Directory.Exists(Prefs.GetString("PatienteBillPath")) == false) {
 					// Create Directory
-					Directory.CreateDirectory(PrefC.GetRaw("PatienteBillPath"));
+					Directory.CreateDirectory(Prefs.GetString("PatienteBillPath"));
 				}
 			}
 			catch(Exception ex) {
@@ -217,7 +217,7 @@ namespace OpenDental {
 
 				// Prepare AccountNumber Attribute
 				XmlAttribute AccountNumber = Doc.CreateAttribute("AccountNumber");
-				AccountNumber.Value = PrefC.GetRaw("PWClientAccountNumber");
+				AccountNumber.Value = Prefs.GetString("PWClientAccountNumber");
 				Practice.Attributes.Append(AccountNumber);
 
 				//**********************************************
@@ -763,7 +763,7 @@ namespace OpenDental {
 		// Store file
 		private bool isPatientFileCreated() {
 			Progress("Store Statements for Transmission..");
-			fileName = PrefC.GetRaw("PatienteBillPath") + "\\patientebill.xml";
+			fileName = Prefs.GetString("PatienteBillPath") + "\\patientebill.xml";
 			try {
 				// remove any prior trasmitted file
 				if(File.Exists(fileName)) {
@@ -790,7 +790,7 @@ namespace OpenDental {
 					string gc_MimeSource = "Content-Disposition: form-data; name=\"Source\"";
 					string gc_MimeAuth = "Content-Disposition: form-data; name=\"AuthenticationID\"";
 					string gc_MimeFile = "Content-Disposition: form-data; name=\"File\"; filename=\"";
-					string tempFile = PrefC.GetRaw("PatienteBillPath") + "\\tmp.xml";
+					string tempFile = Prefs.GetString("PatienteBillPath") + "\\tmp.xml";
 					string RequestStr = "--" + gc_MimeSep + "\r\n" + gc_MimeFunction +
                                              "\r\n\r\n" + "Upload\r\n" + "--" + gc_MimeSep + "\r\n" +
                                               gc_MimeSource + "\r\n\r\n" + "STM\r\n" + "--" + gc_MimeSep + "\r\n"

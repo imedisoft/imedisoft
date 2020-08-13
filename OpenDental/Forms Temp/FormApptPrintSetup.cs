@@ -31,8 +31,8 @@ namespace OpenDental {
 
 		private void FormApptPrintSetup_Load(object sender,EventArgs e) {
 			TimeSpan time;
-			string timeStart=PrefC.GetDateT(PrefName.ApptPrintTimeStart).ToShortTimeString();
-			string timeStop=PrefC.GetDateT(PrefName.ApptPrintTimeStop).ToShortTimeString();
+			string timeStart=PrefC.GetDate(PrefName.ApptPrintTimeStart).ToShortTimeString();
+			string timeStop=PrefC.GetDate(PrefName.ApptPrintTimeStop).ToShortTimeString();
 			for(int i=0;i<=24;i++) {
 				time=new TimeSpan(i,0,0);
 				comboStart.Items.Add(time.ToShortTimeString());
@@ -115,8 +115,8 @@ namespace OpenDental {
 			if(!ValidEntries()) {
 				return false;
 			}
-			if(PIn.Date(comboStart.SelectedItem.ToString()).Hour!=PrefC.GetDateT(PrefName.ApptPrintTimeStart).Hour
-				|| PIn.Date(comboStop.SelectedItem.ToString()).Hour!=PrefC.GetDateT(PrefName.ApptPrintTimeStop).Hour
+			if(PIn.Date(comboStart.SelectedItem.ToString()).Hour!=PrefC.GetDate(PrefName.ApptPrintTimeStart).Hour
+				|| PIn.Date(comboStop.SelectedItem.ToString()).Hour!=PrefC.GetDate(PrefName.ApptPrintTimeStop).Hour
 				|| textFontSize.Text!=Prefs.GetString(PrefName.ApptPrintFontSize)
 				|| textColumnsPerPage.Text!=PrefC.GetInt(PrefName.ApptPrintColumnsPerPage).ToString())
 			{

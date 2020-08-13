@@ -175,7 +175,7 @@ namespace OpenDental{
 			}
 			//Refresh prefs because AgingBeginDateTime is very time sensitive
 			Prefs.RefreshCache();
-			DateTime dateTAgingBeganPref=PrefC.GetDateT(PrefName.AgingBeginDateTime);
+			DateTime dateTAgingBeganPref=PrefC.GetDate(PrefName.AgingBeginDateTime);
 			if(dateTAgingBeganPref>DateTime.MinValue) {
 				MessageBox.Show(this,Lan.G(this,"You cannot run aging until it has finished the current calculations which began on")+" "
 					+dateTAgingBeganPref.ToString()+".\r\n"+Lans.g(this,"If you believe the current aging process has finished, a user with SecurityAdmin permission "

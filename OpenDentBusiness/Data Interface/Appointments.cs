@@ -2481,8 +2481,8 @@ namespace OpenDentBusiness
 			}
 			double dayInterval=Prefs.GetDouble(PrefName.ApptReminderDayInterval);
 			double hourInterval=Prefs.GetDouble(PrefName.ApptReminderHourInterval);
-			DateTime automationBeginPref=PrefC.GetDateT(PrefName.AutomaticCommunicationTimeStart);
-			DateTime automationEndPref=PrefC.GetDateT(PrefName.AutomaticCommunicationTimeEnd);
+			DateTime automationBeginPref=PrefC.GetDate(PrefName.AutomaticCommunicationTimeStart);
+			DateTime automationEndPref=PrefC.GetDate(PrefName.AutomaticCommunicationTimeEnd);
 			//ApptComms.InsertForAppt(appt,dayInterval,hourInterval,automationBeginPref,automationEndPref);
 			long retVal=Crud.AppointmentCrud.Insert(appt,useExistingPK);
 			HistAppointments.CreateHistoryEntry(appt.AptNum,HistAppointmentAction.Created);

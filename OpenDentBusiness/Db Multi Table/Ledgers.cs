@@ -207,7 +207,7 @@ namespace OpenDentBusiness
 			if (isFamaging)
 			{//if this will utilize the famaging table we need to check and set the pref to block others from starting aging
 				Prefs.RefreshCache();
-				dateTAgingBeganPref = PrefC.GetDateT(PrefName.AgingBeginDateTime);
+				dateTAgingBeganPref = PrefC.GetDate(PrefName.AgingBeginDateTime);
 				if (dateTAgingBeganPref > DateTime.MinValue)
 				{//pref has been set by another process, don't run aging and notify user
 					strErrorMsg = Lans.g("Ledgers", "Aging failed to run for patients who had paysplits created outside of the current family. This is due to "

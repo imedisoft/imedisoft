@@ -53,7 +53,7 @@ namespace OpenDental {
 			_dictClinicListProgProps=ProgramProperties.GetForProgram(_progCur.Id)//get list of all props for the program
 				.GroupBy(x => x.ClinicId)//group each clinic
 				.ToDictionary(x => x.Key,x => x.ToList());//turn list into a dictionary of key=ClinicNum, value=List<ProgramProperty> for the clinic
-			DateTime dateTSend=PrefC.GetDateT(PrefName.TransworldServiceTimeDue);
+			DateTime dateTSend=PrefC.GetDate(PrefName.TransworldServiceTimeDue);
 			if(dateTSend!=DateTime.MinValue) {
 				textUpdatesTimeOfDay.Text=dateTSend.ToShortTimeString();
 			}

@@ -34,12 +34,12 @@ namespace OpenDental
 			//This is bad for our customers because setting both of the date pickers to the same date and time will cause automation to stop.
 			dateRunStart.Checked=true;
 			dateRunEnd.Checked=true;
-			//Now that the DateTimePicker controls are ready to display the DateTime we set, go ahead and set them.
-			//If loading the picker controls with the DateTime fields from the database failed, the date picker controls default to 7 AM and 10 PM.
-			ODException.SwallowAnyException(() => {
-				dateRunStart.Value=PrefC.GetDateT(PrefName.AutomaticCommunicationTimeStart);
-				dateRunEnd.Value=PrefC.GetDateT(PrefName.AutomaticCommunicationTimeEnd);
-			});
+            //Now that the DateTimePicker controls are ready to display the DateTime we set, go ahead and set them.
+            //If loading the picker controls with the DateTime fields from the database failed, the date picker controls default to 7 AM and 10 PM.
+            ODException.SwallowAnyException((Action)(() => {
+                dateRunStart.Value = PrefC.GetDate((string)PrefName.AutomaticCommunicationTimeStart);
+                dateRunEnd.Value = PrefC.GetDate((string)PrefName.AutomaticCommunicationTimeEnd);
+			}));
 			labelDateCustom.Text="";
 			radioDateShortDate.Text=DateTime.Today.ToString(_shortDateFormat);//Formats as '3/15/2018'
 			radioDateLongDate.Text=DateTime.Today.ToString(_longDateFormat);//Formats as 'Thursday, March 15, 2018'
@@ -70,7 +70,7 @@ namespace OpenDental
 					textDateCustom.Text=Prefs.GetString(PrefName.PatientCommunicationDateFormat);
 					break;
 			}
-			DateTime lastRun=PrefC.GetDateT(PrefName.MobileSyncDateTimeLastRun);
+			DateTime lastRun=PrefC.GetDate(PrefName.MobileSyncDateTimeLastRun);
 			//Hide the Old-style Mobile Synch components 
 			//only if mobile synch has not been used for at least a month. If used again, the clock will reset
 			if(MiscData.GetNowDateTime().Subtract(lastRun.Date).TotalDays>30) {

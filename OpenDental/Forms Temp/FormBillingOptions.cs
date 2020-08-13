@@ -1129,7 +1129,7 @@ namespace OpenDental{
 				return true;//already ran aging for this date, just move on
 			}
 			Prefs.RefreshCache();
-			DateTime dateTAgingBeganPref=PrefC.GetDateT(PrefName.AgingBeginDateTime);
+			DateTime dateTAgingBeganPref=PrefC.GetDate(PrefName.AgingBeginDateTime);
 			if(dateTAgingBeganPref>DateTime.MinValue) {
 				MessageBox.Show(this,Lan.G(this,"In order to create statments, aging must be calculated, but you cannot run aging until it has finished the "
 					+"current calculations which began on")+" "+dateTAgingBeganPref.ToString()+".\r\n"+Lans.g(this,"If you believe the current aging process "

@@ -72,7 +72,7 @@ namespace OpenDental {
 		}
 
 		private void SetButtonVisibility() {
-			_updateTime=PrefC.GetDateT(PrefName.UpdateDateTime);
+			_updateTime=PrefC.GetDate(PrefName.UpdateDateTime);
 			bool showMsi=Prefs.GetBool(PrefName.UpdateShowMsiButtons);
 			bool showDownloadAndInstall=(_updateTime < DateTime.Now);
 			butDownloadMsiBuild.Visible=showMsi;

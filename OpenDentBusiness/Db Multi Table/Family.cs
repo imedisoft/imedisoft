@@ -218,6 +218,5 @@ namespace OpenDentBusiness
 				.Select(x => Patients.GetNameFirstOrPrefML(x.LName, x.FName, x.Preferred, x.MiddleI))));
 			return retVal;
 		}
-
 	}
 }

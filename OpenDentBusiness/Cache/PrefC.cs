@@ -121,7 +121,7 @@ namespace OpenDentBusiness
 		/// True if the practice has set a window to restrict the times that automatic communications will be sent out.
 		/// </summary>
 		public static bool DoRestrictAutoSendWindow 
-			=> GetDateT(PrefName.AutomaticCommunicationTimeStart).TimeOfDay != GetDateT(PrefName.AutomaticCommunicationTimeEnd).TimeOfDay;
+			=> GetDate(PrefName.AutomaticCommunicationTimeStart).TimeOfDay != GetDate(PrefName.AutomaticCommunicationTimeEnd).TimeOfDay;
 
 
 		/// <summary>
@@ -148,17 +148,11 @@ namespace OpenDentBusiness
 		}
 
 		/// <summary>
-		/// Gets a pref of type long.
-		/// </summary>
-		public static long GetLong(string preferenceName) 
-			=> Prefs.GetLong(preferenceName);
-
-		/// <summary>
 		/// For UI display when we store a zero/meaningless value as -1. Returns "0" when useZero is true, otherwise "".
 		/// </summary>
 		public static string GetLongHideNegOne(string preferenceName, bool useZero = false)
 		{
-			long value = GetLong(preferenceName);
+			long value = Prefs.GetLong(preferenceName);
 
 			if (value == -1)
 			{
@@ -201,22 +195,10 @@ namespace OpenDentBusiness
 			=> Prefs.GetDateTime(preferenceName);
 
 		/// <summary>
-		/// Gets a pref of type datetime.
-		/// </summary>
-		public static DateTime GetDateT(string preferenceName) // TODO: Deprecate this in favor of GetDate()
-			=> GetDate(preferenceName);
-
-		/// <summary>
 		/// Gets a color from an int32 pref.
 		/// </summary>
 		public static Color GetColor(string preferenceName) 
 			=> Color.FromArgb(Prefs.GetInt(preferenceName));
-
-		/// <summary>
-		/// Used sometimes for prefs that are not part of the enum, especially for outside developers.
-		/// </summary>
-		public static string GetRaw(string preferenceName) 
-			=> Prefs.GetString(preferenceName);
 
 		/// <summary>
 		/// Gets culture info from DB if possible, if not returns current culture.

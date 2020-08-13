@@ -427,7 +427,7 @@ namespace OpenDental
 				return;//Do not start the listener service monitor for users without permission.
 			}
 			//Process any Error signals that happened due to an update:
-			EServiceSignals.ProcessErrorSignalsAroundTime(PrefC.GetDateT(PrefName.ProgramVersionLastUpdated));
+			EServiceSignals.ProcessErrorSignalsAroundTime(PrefC.GetDate(PrefName.ProgramVersionLastUpdated));
 			//Create a separate thread that will run every 60 seconds to monitor eService signals.
 			ODThread odThread = new ODThread(60000, EServiceMonitorWorker);
 			//Currently we don't want to do anything if the eService signal processing fails.  Simply try again in a minute.  

@@ -13,7 +13,6 @@ namespace OpenDentBusiness
     public class Cache
 	{
 		/// <summary>
-		/// itypesStr= comma-delimited list of int.
 		/// Called directly from UI in one spot.
 		/// Called from above repeatedly.
 		/// The end result is that both server and client have been properly refreshed.

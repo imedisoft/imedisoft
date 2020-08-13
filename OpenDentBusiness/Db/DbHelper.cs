@@ -18,9 +18,6 @@ namespace OpenDentBusiness
 		public static string LimitAnd(int n) 
 			=> "LIMIT " + n;
 
-		public static string LimitWhere(int n) 
-			=> "LIMIT " + n;
-
 		public static string LimitOrderBy(string query, int n) 
 			=> query + " LIMIT " + n;
 
@@ -117,12 +114,6 @@ namespace OpenDentBusiness
 
 			return string.Join(separator, listQueries);
 		}
-
-		public static string UnionOrderBy(string colName, int ordinal) 
-			=> colName;
-
-		public static string UseIndex(string indexName, string tableName) 
-			=> "USE INDEX(" + indexName + ")";
 
 		public static string DateAddDay(string date, string days) 
 			=> "ADDDATE(" + date + "," + days + ")";
@@ -226,21 +217,25 @@ namespace OpenDentBusiness
 		///Note that the time portions of the dates are ignored.</summary>
 		public static string BetweenDates(string colName, DateTime dateTimeFrom, DateTime dateTimeTo)
 		{
-			return DateTConditionColumn(colName, ConditionOperator.GreaterThanOrEqual, dateTimeFrom) + " AND "
-				+ DateTConditionColumn(colName, ConditionOperator.LessThanOrEqual, dateTimeTo);
+			return 
+				DateTConditionColumn(colName, ConditionOperator.GreaterThanOrEqual, dateTimeFrom) + " AND " + 
+				DateTConditionColumn(colName, ConditionOperator.LessThanOrEqual, dateTimeTo);
 		}
 
-		///<summary>The format must be the MySQL format. The following formats are currently acceptable as input: %c/%d/%Y , %m/%d/%Y</summary>
+		/// <summary>
+		/// The format must be the MySQL format. 
+		/// The following formats are currently acceptable as input: %c/%d/%Y , %m/%d/%Y
+		/// </summary>
 		public static string DateFormatColumn(string colName, string format)
 		{
 			//MySQL DATE_FORMAT() reference: http://dev.mysql.com/doc/refman/5.0/en/date-and-time-functions.html#function_date-format
-			//Oracle TO_CHAR() reference: http://download.oracle.com/docs/cd/B19306_01/server.102/b14200/sql_elements004.htm#i34510
 
 			//MySQL-----------------------------------------------------------------------------
 			if (System.Globalization.CultureInfo.CurrentCulture.Name.EndsWith("US"))
 			{
 				return "DATE_FORMAT(" + colName + ",'" + format + "')";
 			}
+
 			//foreign, assume d/m/y
 			if (format == "%c/%d/%Y")
 			{
@@ -250,10 +245,14 @@ namespace OpenDentBusiness
 			{
 				return "DATE_FORMAT(" + colName + ",'%d/%m/%Y')";
 			}
+
 			throw new Exception("Unrecognized date format string.");
 		}
 
-		///<summary>The format must be the MySQL format.  The following formats are currently acceptable as input: %c/%d/%Y %H:%i:%s and %m/%d/%Y %H:%i:%s.</summary>
+		/// <summary>
+		/// The format must be the MySQL format. 
+		/// The following formats are currently acceptable as input: %c/%d/%Y %H:%i:%s and %m/%d/%Y %H:%i:%s.
+		/// </summary>
 		public static string DateTFormatColumn(string colName, string format)
 		{
 			//MySQL-----------------------------------------------------------------------------
@@ -294,27 +293,6 @@ namespace OpenDentBusiness
 		/// Gets the database specific character used for parameters.  For example, : or @.
 		/// </summary>
 		public static string ParamChar => "@";
-			
-
-		///<summary>Gets the maximum value for the specified field within the specified table. This key will always be the MAX(field)+1 and will usually be the correct key to use for new inserts, but not always.</summary>
-		public static long GetNextOracleKey(string tablename, string field)
-		{
-			//When inserting a new record with the key value returned by this function, these are some possible errors that can occur. 
-			//The actual error text starts after the ... on each line. Note especially the duplicate key exception, as this exception 
-			//must be considered by the insertion algorithm:
-			//DUPLICATE PRIMARY KEY....ORA-00001: unique constraint (DEV77.PRIMARY_87) violated
-			//MISSING WHOLE TABLE......ORA-00942: table or view does not exist
-			//MISSING TABLE COLUMN.....ORA-00904: "ITEMORDER": invalid identifier
-			//MISSING OPENING PAREND...ORA-00926: missing VALUES keyword
-			//CONNECTION LOST..........ORA-03113: end-of-file on communication channel
-			string command = "SELECT MAX(" + field + ")+1 FROM " + tablename;
-			long retval = SIn.Long(Database.ExecuteString(command));
-			if (retval == 0)
-			{//Happens when the table has no records
-				return 1;
-			}
-			return retval;
-		}
 
 		/// <summary>
 		/// Returns true if the input string is a reserved word in MySQL 5.6.25.

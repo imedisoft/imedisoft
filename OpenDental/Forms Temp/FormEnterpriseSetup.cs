@@ -45,7 +45,7 @@ namespace OpenDental {
 			_claimReportReceiveInterval=PrefC.GetInt(PrefName.ClaimReportReceiveInterval);
 			if(_claimReportReceiveInterval==0) {
 				radioTime.Checked=true;
-				DateTime fullDateTime=PrefC.GetDateT(PrefName.ClaimReportReceiveTime);
+				DateTime fullDateTime=PrefC.GetDate(PrefName.ClaimReportReceiveTime);
 				textReportCheckTime.Text=fullDateTime.ToShortTimeString();
 			}
 			else {
@@ -120,7 +120,7 @@ namespace OpenDental {
 				comboClaimSnapshotTrigger.Items.Add(trigger.GetDescription());
 			}
 			comboClaimSnapshotTrigger.SelectedIndex=(int)PIn.Enum<ClaimSnapshotTrigger>(Prefs.GetString(PrefName.ClaimSnapshotTriggerType),true);
-			textClaimSnapshotRunTime.Text=PrefC.GetDateT(PrefName.ClaimSnapshotRunTime).ToShortTimeString();
+			textClaimSnapshotRunTime.Text=PrefC.GetDate(PrefName.ClaimSnapshotRunTime).ToShortTimeString();
 			#endregion Family Tab
 			#region Reports Tab
 			checkUseReportServer.Checked=(Prefs.GetString(PrefName.ReportingServerCompName)!="" || Prefs.GetString(PrefName.ReportingServerURI)!="");
@@ -141,7 +141,7 @@ namespace OpenDental {
 			FillOptionalPrefBool(checkClaimSnapshotEnabled,PrefName.ClaimSnapshotEnabled);
 			FillOptionalPrefBool(checkDBMDisableOptimize,PrefName.DatabaseMaintenanceDisableOptimize);
 			FillOptionalPrefBool(checkDBMSkipCheckTable,PrefName.DatabaseMaintenanceSkipCheckTable);
-			validDateAgingServiceTimeDue.Text=PrefC.GetDateT(PrefName.AgingServiceTimeDue).ToShortTimeString();
+			validDateAgingServiceTimeDue.Text=PrefC.GetDate(PrefName.AgingServiceTimeDue).ToShortTimeString();
 			checkEnableClinics.Checked=PrefC.HasClinicsEnabled;
 			string updateStreamline=GetHiddenPrefString(PrefName.UpdateStreamLinePassword);
 			if(updateStreamline!=null) {

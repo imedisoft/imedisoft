@@ -650,7 +650,7 @@ namespace UnitTests.RepeatCharges_Tests {
 			RepeatCharges.RunRepeatingCharges(dateTimeLastRunExpected);
 			Prefs.RefreshCache();
 			Assert.AreEqual(strBeginDateTimeExpected,Prefs.GetString(PrefName.RepeatingChargesBeginDateTime));
-			Assert.AreEqual(dateTimeLastRunExpected,PrefC.GetDateT(PrefName.RepeatingChargesLastDateTime));
+			Assert.AreEqual(dateTimeLastRunExpected,PrefC.GetDate(PrefName.RepeatingChargesLastDateTime));
 		}
 	}
 }

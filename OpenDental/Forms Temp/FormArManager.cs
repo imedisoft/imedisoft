@@ -320,7 +320,7 @@ namespace OpenDental
 				return true;
 			}
 			Prefs.RefreshCache();
-			DateTime dateTAgingBeganPref=PrefC.GetDateT(PrefName.AgingBeginDateTime);
+			DateTime dateTAgingBeganPref=PrefC.GetDate(PrefName.AgingBeginDateTime);
 			if(dateTAgingBeganPref>DateTime.MinValue) {
 				msgText=Lan.G(this,"In order to manage accounts receivable, aging must be calculated, but you cannot run aging until it has finished the current "
 					+"calculations which began on")+" "+dateTAgingBeganPref.ToString()+".\r\n"+Lans.g(this,"If you believe the current aging process has finished, "

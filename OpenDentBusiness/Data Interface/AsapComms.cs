@@ -385,8 +385,8 @@ namespace OpenDentBusiness{
 				_dictPatComms=listPatComms.GroupBy(x => x.PatNum).ToDictionary(x => x.Key,x => x.First());
 				_dictPatDetails=listPatComms.GroupBy(x => x.PatNum).ToDictionary(x => x.Key,x => new PatientDetail(x.First()));
 				_dictPatAsapComms=GetForPats(listPatComms.Select(x => x.PatNum).ToList()).GroupBy(x => x.PatNum).ToDictionary(x => x.Key,x => x.ToList());
-				TimeSpan timeAutoCommStart=PrefC.GetDateT(PrefName.AutomaticCommunicationTimeStart).TimeOfDay;
-				TimeSpan timeAutoCommEnd=PrefC.GetDateT(PrefName.AutomaticCommunicationTimeEnd).TimeOfDay;
+				TimeSpan timeAutoCommStart=PrefC.GetDate(PrefName.AutomaticCommunicationTimeStart).TimeOfDay;
+				TimeSpan timeAutoCommEnd=PrefC.GetDate(PrefName.AutomaticCommunicationTimeEnd).TimeOfDay;
 				DtSendEmail=dtStartSend;//All emails will be sent immediately.
 				DtStartSendText=dtStartSend;
 				if(PrefC.DoRestrictAutoSendWindow) {

@@ -154,7 +154,7 @@ namespace OpenDental{
 			if(Prefs.GetString(PrefName.RepeatingChargesBeginDateTime)=="") {
 				return true;
 			}
-			DateTime repeatingChargesBeginDateTime=PrefC.GetDateT(PrefName.RepeatingChargesBeginDateTime);
+			DateTime repeatingChargesBeginDateTime=PrefC.GetDate(PrefName.RepeatingChargesBeginDateTime);
 			if((MiscData.GetNowDateTime()-repeatingChargesBeginDateTime).TotalHours < 24) {
 				MessageBox.Show("Repeating charges already running on another workstation, you must wait for them to finish before continuing.");
 				return false;

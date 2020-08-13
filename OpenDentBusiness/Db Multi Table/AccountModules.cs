@@ -1049,7 +1049,7 @@ namespace OpenDentBusiness
 				FROM procedurelog
 				INNER JOIN procedurecode ON procedurelog.CodeNum=procedurecode.CodeNum "
 				//indexAcctCov will always exists because the convert script fails if it can't be added.
-				+ "LEFT JOIN claimproc " + DbHelper.UseIndex("indexAcctCov", "claimproc") + @" ON procedurelog.ProcNum=claimproc.ProcNum 
+				+ @"LEFT JOIN claimproc USE INDEX(indexAcctCov) ON procedurelog.ProcNum=claimproc.ProcNum 
 				LEFT JOIN insplan ON insplan.PlanNum=claimproc.PlanNum
 				WHERE ProcStatus=" + POut.Int((int)ProcStat.C) + " ";
 			if (familyPatNums != "")

@@ -1594,15 +1594,9 @@
     <Compile Include="WebTypes\AutoComm\Arrivals\Arrivals.cs" />
     <Compile Include="WebTypes\AutoComm\AutoCommObj\ApptLite.cs" />
     <Compile Include="WebTypes\AutoComm\AutoCommObj\AutoCommObj.cs" />
-    <Compile Include="WebTypes\AutoComm\AutoCommObj\ClinicRule.cs" />
-    <Compile Include="WebTypes\AutoComm\AutoCommObj\PatPortalInviteLite.cs" />
-    <Compile Include="WebTypes\AutoComm\AutoCommObj\WebSchedAgg.cs" />
     <Compile Include="WebTypes\AutoComm\TagReplacementPhiSafe\ApptTagReplacer.cs" />
     <Compile Include="WebTypes\AutoComm\TagReplacementPhiSafe\ArrivalsTagReplacer.cs" />
-    <Compile Include="WebTypes\AutoComm\TagReplacementPhiSafe\PatientPortalInviteTagReplacer.cs" />
-    <Compile Include="WebTypes\AutoComm\TagReplacementPhiSafe\RecallTagReplacer.cs" />
     <Compile Include="WebTypes\AutoComm\TagReplacementPhiSafe\TagReplacer.cs" />
-    <Compile Include="WebTypes\AutoComm\TagReplacementPhiSafe\ThankYouTagReplacer.cs" />
     <Compile Include="WebTypes\PushNotifications\PushNotificationAction.cs" />
     <Compile Include="WebTypes\PushNotifications\PushNotificationPayload.cs" />
     <Compile Include="WebTypes\PushNotifications\PushNotificationConstants.cs" />
@@ -1613,7 +1607,6 @@
     <Compile Include="WebTypes\WebForms\Data Interface\WebForms_Preferences.cs" />
     <Compile Include="WebTypes\WebForms\Data Interface\WebForms_SheetDefs.cs" />
     <Compile Include="WebTypes\WebForms\Data Interface\WebForms_Sheets.cs" />
-    <Compile Include="WebTypes\WebForms\TableTypes\WebForms_Log.cs" />
     <Compile Include="WebTypes\WebForms\TableTypes\WebForms_Preference.cs" />
     <Compile Include="WebTypes\WebForms\TableTypes\WebForms_Sheet.cs" />
     <Compile Include="WebTypes\WebForms\TableTypes\WebForms_SheetDef.cs" />

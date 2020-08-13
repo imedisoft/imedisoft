@@ -379,7 +379,7 @@ namespace OpenDental
             textWebProxyPassword.Text = Prefs.GetString(PrefName.UpdateWebProxyPassword);
             textMultiple.Text = Prefs.GetString(PrefName.UpdateMultipleDatabases);
             checkShowMsi.Checked = Prefs.GetBool(PrefName.UpdateShowMsiButtons);
-            _updateTime = PrefC.GetDateT(PrefName.UpdateDateTime);
+            _updateTime = PrefC.GetDate(PrefName.UpdateDateTime);
             textUpdateTime.Text = _updateTime.ToString();
         }
 

@@ -43,24 +43,6 @@ namespace OpenDentBusiness
 			return result + ((timeSpan.Days * 24) + timeSpan.Hours).ToString().PadLeft(2, '0') + ":" + timeSpan.Minutes.ToString().PadLeft(2, '0');
 		}
 
-		/// <summary>
-		/// -mm:ss.
-		/// If zero, then returns empty string.
-		/// </summary>
-		public static string ToStringmmss(this TimeSpan timeSpan)
-		{
-			if (timeSpan == TimeSpan.Zero) return "";
-
-			string result = "";
-			if (timeSpan < TimeSpan.Zero)
-			{
-				result += "-";
-				timeSpan = timeSpan.Duration();
-			}
-
-			return result + ((int)timeSpan.TotalMinutes).ToString().PadLeft(2, '0') + ":" + timeSpan.Seconds.ToString().PadLeft(2, '0');
-		}
-
 		public static string ToString(this TimeSpan timeSpan, string format) 
 			=> (DateTime.Today + timeSpan).ToString(format);
 

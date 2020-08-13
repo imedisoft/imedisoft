@@ -747,7 +747,7 @@ namespace OpenDental{
 				return true;//this is prior to inserting/deleting charges and aging has already been run for this date
 			}
 			Prefs.RefreshCache();
-			DateTime dateTAgingBeganPref=PrefC.GetDateT(PrefName.AgingBeginDateTime);
+			DateTime dateTAgingBeganPref=PrefC.GetDate(PrefName.AgingBeginDateTime);
 			if(dateTAgingBeganPref>DateTime.MinValue) {
 				if(isOnLoad) {
 					MessageBox.Show(this,Lan.G(this,"In order to add finance charges, aging must be calculated, but you cannot run aging until it has finished "
