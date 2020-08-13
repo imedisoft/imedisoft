@@ -644,7 +644,7 @@ namespace OpenDentBusiness {
 							insType=Lans.g("InsurancePlans","Category Percentage");
 							break;
 					}
-					insEmployer=Employers.GetEmployer(plan.EmployerNum).EmpName; //blank if no Employer listed
+					insEmployer=Employers.GetEmployer(plan.EmployerNum).Name; //blank if no Employer listed
 				}
 				subNum=PatPlans.GetInsSubNum(listPatPlans,PatPlans.GetOrdinal(PriSecMed.Secondary,listPatPlans,listInsPlans,listInsSubs));
 				patPlanNum=PatPlans.GetPatPlanNum(subNum,listPatPlans);
@@ -710,7 +710,7 @@ namespace OpenDentBusiness {
 						ins2FreqExams=Benefits.GetFrequencyDisplay(FrequencyType.Exam,benefitList,plan.PlanNum);
 						ins2FreqPanoFMX=Benefits.GetFrequencyDisplay(FrequencyType.PanoFMX,benefitList,plan.PlanNum);
 					}
-					ins2Employer=Employers.GetEmployer(plan.EmployerNum).EmpName;//blank if no Employer listed
+					ins2Employer=Employers.GetEmployer(plan.EmployerNum).Name;//blank if no Employer listed
 				}
 				#endregion
 				#region Treatment Plan
@@ -1818,7 +1818,7 @@ namespace OpenDentBusiness {
 						break;
 					case "ins1EmployerName":
 						if(insplan1!=null) {
-							field.FieldValue=Employers.GetEmployerNoCache(insplan1.EmployerNum)?.EmpName ?? "";
+							field.FieldValue=Employers.GetEmployerNoCache(insplan1.EmployerNum)?.Name ?? "";
 						}
 						break;
 					case "ins1GroupName":
@@ -1858,7 +1858,7 @@ namespace OpenDentBusiness {
 						break;
 					case "ins2EmployerName":
 						if(insplan2!=null) {
-							field.FieldValue=Employers.GetEmployerNoCache(insplan2.EmployerNum)?.EmpName ?? "";
+							field.FieldValue=Employers.GetEmployerNoCache(insplan2.EmployerNum)?.Name ?? "";
 						}
 						break;
 					case "ins2GroupName":

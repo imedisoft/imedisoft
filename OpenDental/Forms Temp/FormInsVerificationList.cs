@@ -148,7 +148,7 @@ namespace OpenDental {
 			textInsPlanNote.Text=insPlanVerify.PlanNote;
 			Employer employer=Employers.GetEmployer(insPlanVerify.EmployerNum);
 			if(employer!=null) {
-				textInsPlanEmployer.Text=employer.EmpName;
+				textInsPlanEmployer.Text=employer.Name;
 			}
 			Carrier carrierVerify=Carriers.GetCarrier(insPlanVerify.CarrierNum);
 			if(carrierVerify!=null) {

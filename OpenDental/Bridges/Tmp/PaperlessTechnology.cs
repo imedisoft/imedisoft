@@ -606,7 +606,7 @@ namespace OpenDental.Bridges
 				}
 				else
 				{
-					sw.Write(Tidy(emp.EmpName) + ",");//PAT_EMPNM
+					sw.Write(Tidy(emp.Name) + ",");//PAT_EMPNM
 				}
 				sw.Write(",");//PAT_EMPAD1
 				sw.Write(",");//PAT_EMPAD2

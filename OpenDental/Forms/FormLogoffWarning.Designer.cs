@@ -71,6 +71,7 @@
             this.ClientSize = new System.Drawing.Size(424, 101);
             this.Controls.Add(this.messageLabel);
             this.Controls.Add(this.cancelButton);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormLogoffWarning";

@@ -227,7 +227,7 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// FK to employer.EmployerNum.
 		/// </summary>
-		[ForeignKey(typeof(Employer), nameof(Employer.EmployerNum))]
+		[ForeignKey(typeof(Employer), nameof(Employer.Id))]
 		public long EmployerNum;
 
 		/// <summary>

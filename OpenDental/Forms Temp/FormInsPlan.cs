@@ -3056,7 +3056,7 @@ namespace OpenDental{
 			listEmps.Items.Clear();
 			List<Employer> similarEmps=Employers.GetSimilarNames(textEmployer.Text);
 			for(int i=0;i<similarEmps.Count;i++) {
-				listEmps.Items.Add(similarEmps[i].EmpName);
+				listEmps.Items.Add(similarEmps[i].Name);
 			}
 			int h=13*similarEmps.Count+5;
 			if(h > ClientSize.Height-listEmps.Top){

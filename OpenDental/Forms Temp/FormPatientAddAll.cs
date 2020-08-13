@@ -1615,7 +1615,7 @@ namespace OpenDental {
 			listEmps1.Items.Clear();
 			List<Employer> similarEmps=Employers.GetSimilarNames(textEmployer1.Text);
 			for(int i=0;i<similarEmps.Count;i++) {
-				listEmps1.Items.Add(similarEmps[i].EmpName);
+				listEmps1.Items.Add(similarEmps[i].Name);
 			}
 			int h=13*similarEmps.Count+5;
 			if(h > ClientSize.Height-listEmps1.Top){
@@ -1716,7 +1716,7 @@ namespace OpenDental {
 			listEmps2.Items.Clear();
 			List<Employer> similarEmps2=Employers.GetSimilarNames(textEmployer2.Text);
 			for(int i=0;i<similarEmps2.Count;i++) {
-				listEmps2.Items.Add(similarEmps2[i].EmpName);
+				listEmps2.Items.Add(similarEmps2[i].Name);
 			}
 			int h=13*similarEmps2.Count+5;
 			if(h > ClientSize.Height-listEmps2.Top){

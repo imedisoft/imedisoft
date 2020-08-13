@@ -580,4 +580,10 @@
   <data name="LogoSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\LogoSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="IconObjectGroup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconObjectGroup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconPencil" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconPencil.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

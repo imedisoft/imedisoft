@@ -7,242 +7,211 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 
-namespace OpenDentBusiness.Crud{
-	public class EmployerCrud {
+namespace OpenDentBusiness.Crud
+{
+    public class EmployerCrud
+	{
 		///<summary>Gets one Employer object from the database using the primary key.  Returns null if not found.</summary>
-		public static Employer SelectOne(long employerNum) {
-			string command="SELECT * FROM employer "
-				+"WHERE EmployerNum = "+POut.Long(employerNum);
-			List<Employer> list=TableToList(Database.ExecuteDataTable(command));
-			if(list.Count==0) {
+		public static Employer SelectOne(long employerNum)
+		{
+			string command = "SELECT * FROM employer "
+				+ "WHERE EmployerNum = " + POut.Long(employerNum);
+			List<Employer> list = TableToList(Database.ExecuteDataTable(command));
+			if (list.Count == 0)
+			{
 				return null;
 			}
 			return list[0];
 		}
 
 		///<summary>Gets one Employer object from the database using a query.</summary>
-		public static Employer SelectOne(string command) {
+		public static Employer SelectOne(string command)
+		{
 
-			List<Employer> list=TableToList(Database.ExecuteDataTable(command));
-			if(list.Count==0) {
+			List<Employer> list = TableToList(Database.ExecuteDataTable(command));
+			if (list.Count == 0)
+			{
 				return null;
 			}
 			return list[0];
 		}
 
 		///<summary>Gets a list of Employer objects from the database using a query.</summary>
-		public static List<Employer> SelectMany(string command) {
+		public static List<Employer> SelectMany(string command)
+		{
 
-			List<Employer> list=TableToList(Database.ExecuteDataTable(command));
+			List<Employer> list = TableToList(Database.ExecuteDataTable(command));
 			return list;
 		}
 
 		///<summary>Converts a DataTable to a list of objects.</summary>
-		public static List<Employer> TableToList(DataTable table) {
-			List<Employer> retVal=new List<Employer>();
+		public static List<Employer> TableToList(DataTable table)
+		{
+			List<Employer> retVal = new List<Employer>();
 			Employer employer;
-			foreach(DataRow row in table.Rows) {
-				employer=new Employer();
-				employer.EmployerNum= PIn.Long  (row["EmployerNum"].ToString());
-				employer.EmpName    = PIn.String(row["EmpName"].ToString());
-				employer.Address    = PIn.String(row["Address"].ToString());
-				employer.Address2   = PIn.String(row["Address2"].ToString());
-				employer.City       = PIn.String(row["City"].ToString());
-				employer.State      = PIn.String(row["State"].ToString());
-				employer.Zip        = PIn.String(row["Zip"].ToString());
-				employer.Phone      = PIn.String(row["Phone"].ToString());
+			foreach (DataRow row in table.Rows)
+			{
+				employer = new Employer();
+				employer.Id = PIn.Long(row["EmployerNum"].ToString());
+				employer.Name = PIn.String(row["EmpName"].ToString());
+				employer.Phone = PIn.String(row["Phone"].ToString());
 				retVal.Add(employer);
 			}
 			return retVal;
 		}
 
 		///<summary>Converts a list of Employer into a DataTable.</summary>
-		public static DataTable ListToTable(List<Employer> listEmployers,string tableName="") {
-			if(string.IsNullOrEmpty(tableName)) {
-				tableName="Employer";
+		public static DataTable ListToTable(List<Employer> listEmployers, string tableName = "")
+		{
+			if (string.IsNullOrEmpty(tableName))
+			{
+				tableName = "Employer";
 			}
-			DataTable table=new DataTable(tableName);
+			DataTable table = new DataTable(tableName);
 			table.Columns.Add("EmployerNum");
 			table.Columns.Add("EmpName");
-			table.Columns.Add("Address");
-			table.Columns.Add("Address2");
-			table.Columns.Add("City");
-			table.Columns.Add("State");
-			table.Columns.Add("Zip");
 			table.Columns.Add("Phone");
-			foreach(Employer employer in listEmployers) {
+			foreach (Employer employer in listEmployers)
+			{
 				table.Rows.Add(new object[] {
-					POut.Long  (employer.EmployerNum),
-					            employer.EmpName,
-					            employer.Address,
-					            employer.Address2,
-					            employer.City,
-					            employer.State,
-					            employer.Zip,
-					            employer.Phone,
+					POut.Long  (employer.Id),
+								employer.Name,
+								employer.Phone,
 				});
 			}
 			return table;
 		}
 
 		///<summary>Inserts one Employer into the database.  Returns the new priKey.</summary>
-		public static long Insert(Employer employer) {
-			return Insert(employer,false);
+		public static long Insert(Employer employer)
+		{
+			return Insert(employer, false);
 		}
 
 		///<summary>Inserts one Employer into the database.  Provides option to use the existing priKey.</summary>
-		public static long Insert(Employer employer,bool useExistingPK) {
-			if(!useExistingPK && PrefC.RandomKeys) {
-				employer.EmployerNum=ReplicationServers.GetKey("employer","EmployerNum");
+		public static long Insert(Employer employer, bool useExistingPK)
+		{
+			if (!useExistingPK && PrefC.RandomKeys)
+			{
+				employer.Id = ReplicationServers.GetKey("employer", "EmployerNum");
 			}
-			string command="INSERT INTO employer (";
-			if(useExistingPK || PrefC.RandomKeys) {
-				command+="EmployerNum,";
+			string command = "INSERT INTO employer (";
+			if (useExistingPK || PrefC.RandomKeys)
+			{
+				command += "EmployerNum,";
 			}
-			command+="EmpName,Address,Address2,City,State,Zip,Phone) VALUES(";
-			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(employer.EmployerNum)+",";
+			command += "EmpName,Phone) VALUES(";
+			if (useExistingPK || PrefC.RandomKeys)
+			{
+				command += POut.Long(employer.Id) + ",";
 			}
-			command+=
-				 "'"+POut.String(employer.EmpName)+"',"
-				+"'"+POut.String(employer.Address)+"',"
-				+"'"+POut.String(employer.Address2)+"',"
-				+"'"+POut.String(employer.City)+"',"
-				+"'"+POut.String(employer.State)+"',"
-				+"'"+POut.String(employer.Zip)+"',"
-				+"'"+POut.String(employer.Phone)+"')";
-			if(useExistingPK || PrefC.RandomKeys) {
+			command +=
+				 "'" + POut.String(employer.Name) + "',"
+				+ "'" + POut.String(employer.Phone) + "')";
+			if (useExistingPK || PrefC.RandomKeys)
+			{
 				Database.ExecuteNonQuery(command);
 			}
-			else {
-				employer.EmployerNum=Database.ExecuteInsert(command);
+			else
+			{
+				employer.Id = Database.ExecuteInsert(command);
 			}
-			return employer.EmployerNum;
+			return employer.Id;
 		}
 
 		///<summary>Inserts one Employer into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
-		public static long InsertNoCache(Employer employer) {
-			return InsertNoCache(employer,false);
+		public static long InsertNoCache(Employer employer)
+		{
+			return InsertNoCache(employer, false);
 		}
 
 		///<summary>Inserts one Employer into the database.  Provides option to use the existing priKey.  Doesn't use the cache.</summary>
-		public static long InsertNoCache(Employer employer,bool useExistingPK) {
-			
-			string command="INSERT INTO employer (";
-			if(!useExistingPK) {
-				employer.EmployerNum=ReplicationServers.GetKeyNoCache("employer","EmployerNum");
+		public static long InsertNoCache(Employer employer, bool useExistingPK)
+		{
+
+			string command = "INSERT INTO employer (";
+			if (!useExistingPK)
+			{
+				employer.Id = ReplicationServers.GetKeyNoCache("employer", "EmployerNum");
 			}
-			if(useExistingPK) {
-				command+="EmployerNum,";
+			if (useExistingPK)
+			{
+				command += "EmployerNum,";
 			}
-			command+="EmpName,Address,Address2,City,State,Zip,Phone) VALUES(";
-			if(useExistingPK) {
-				command+=POut.Long(employer.EmployerNum)+",";
+			command += "EmpName,Phone) VALUES(";
+			if (useExistingPK)
+			{
+				command += POut.Long(employer.Id) + ",";
 			}
-			command+=
-				 "'"+POut.String(employer.EmpName)+"',"
-				+"'"+POut.String(employer.Address)+"',"
-				+"'"+POut.String(employer.Address2)+"',"
-				+"'"+POut.String(employer.City)+"',"
-				+"'"+POut.String(employer.State)+"',"
-				+"'"+POut.String(employer.Zip)+"',"
-				+"'"+POut.String(employer.Phone)+"')";
-			if(useExistingPK) {
+			command +=
+				 "'" + POut.String(employer.Name) + "',"
+				+ "'" + POut.String(employer.Phone) + "')";
+			if (useExistingPK)
+			{
 				Database.ExecuteNonQuery(command);
 			}
-			else {
-				employer.EmployerNum=Database.ExecuteInsert(command);
+			else
+			{
+				employer.Id = Database.ExecuteInsert(command);
 			}
-			return employer.EmployerNum;
+			return employer.Id;
 		}
 
 		///<summary>Updates one Employer in the database.</summary>
-		public static void Update(Employer employer) {
-			string command="UPDATE employer SET "
-				+"EmpName    = '"+POut.String(employer.EmpName)+"', "
-				+"Address    = '"+POut.String(employer.Address)+"', "
-				+"Address2   = '"+POut.String(employer.Address2)+"', "
-				+"City       = '"+POut.String(employer.City)+"', "
-				+"State      = '"+POut.String(employer.State)+"', "
-				+"Zip        = '"+POut.String(employer.Zip)+"', "
-				+"Phone      = '"+POut.String(employer.Phone)+"' "
-				+"WHERE EmployerNum = "+POut.Long(employer.EmployerNum);
+		public static void Update(Employer employer)
+		{
+			string command = "UPDATE employer SET "
+				+ "EmpName    = '" + POut.String(employer.Name) + "', "
+				+ "Phone      = '" + POut.String(employer.Phone) + "' "
+				+ "WHERE EmployerNum = " + POut.Long(employer.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Updates one Employer in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
-		public static bool Update(Employer employer,Employer oldEmployer) {
-			string command="";
-			if(employer.EmpName != oldEmployer.EmpName) {
-				if(command!="") { command+=",";}
-				command+="EmpName = '"+POut.String(employer.EmpName)+"'";
+		public static bool Update(Employer employer, Employer oldEmployer)
+		{
+			string command = "";
+			if (employer.Name != oldEmployer.Name)
+			{
+				if (command != "") { command += ","; }
+				command += "EmpName = '" + POut.String(employer.Name) + "'";
 			}
-			if(employer.Address != oldEmployer.Address) {
-				if(command!="") { command+=",";}
-				command+="Address = '"+POut.String(employer.Address)+"'";
+			if (employer.Phone != oldEmployer.Phone)
+			{
+				if (command != "") { command += ","; }
+				command += "Phone = '" + POut.String(employer.Phone) + "'";
 			}
-			if(employer.Address2 != oldEmployer.Address2) {
-				if(command!="") { command+=",";}
-				command+="Address2 = '"+POut.String(employer.Address2)+"'";
-			}
-			if(employer.City != oldEmployer.City) {
-				if(command!="") { command+=",";}
-				command+="City = '"+POut.String(employer.City)+"'";
-			}
-			if(employer.State != oldEmployer.State) {
-				if(command!="") { command+=",";}
-				command+="State = '"+POut.String(employer.State)+"'";
-			}
-			if(employer.Zip != oldEmployer.Zip) {
-				if(command!="") { command+=",";}
-				command+="Zip = '"+POut.String(employer.Zip)+"'";
-			}
-			if(employer.Phone != oldEmployer.Phone) {
-				if(command!="") { command+=",";}
-				command+="Phone = '"+POut.String(employer.Phone)+"'";
-			}
-			if(command=="") {
+			if (command == "")
+			{
 				return false;
 			}
-			command="UPDATE employer SET "+command
-				+" WHERE EmployerNum = "+POut.Long(employer.EmployerNum);
+			command = "UPDATE employer SET " + command
+				+ " WHERE EmployerNum = " + POut.Long(employer.Id);
 			Database.ExecuteNonQuery(command);
 			return true;
 		}
 
 		///<summary>Returns true if Update(Employer,Employer) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
-		public static bool UpdateComparison(Employer employer,Employer oldEmployer) {
-			if(employer.EmpName != oldEmployer.EmpName) {
+		public static bool UpdateComparison(Employer employer, Employer oldEmployer)
+		{
+			if (employer.Name != oldEmployer.Name)
+			{
 				return true;
 			}
-			if(employer.Address != oldEmployer.Address) {
-				return true;
-			}
-			if(employer.Address2 != oldEmployer.Address2) {
-				return true;
-			}
-			if(employer.City != oldEmployer.City) {
-				return true;
-			}
-			if(employer.State != oldEmployer.State) {
-				return true;
-			}
-			if(employer.Zip != oldEmployer.Zip) {
-				return true;
-			}
-			if(employer.Phone != oldEmployer.Phone) {
+			if (employer.Phone != oldEmployer.Phone)
+			{
 				return true;
 			}
 			return false;
 		}
 
 		///<summary>Deletes one Employer from the database.</summary>
-		public static void Delete(long employerNum) {
-			string command="DELETE FROM employer "
-				+"WHERE EmployerNum = "+POut.Long(employerNum);
+		public static void Delete(long employerNum)
+		{
+			string command = "DELETE FROM employer "
+				+ "WHERE EmployerNum = " + POut.Long(employerNum);
 			Database.ExecuteNonQuery(command);
 		}
-
 	}
 }

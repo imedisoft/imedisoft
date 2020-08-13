@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Linq;
 using Imedisoft.Data;
+using Imedisoft.Data.Annotations;
 
 namespace OpenDentBusiness {
 	///<summary></summary>
@@ -147,8 +148,13 @@ namespace OpenDentBusiness {
 		public static void MakeLogEntry<T>(T itemCur,T itemOld, InsEditLogType logType, long userNumCur) {
 			//No need to check RemotingRole; no call to db.
 			T priKeyItem = itemCur==null ? itemOld : itemCur;
-			FieldInfo priKeyField = priKeyItem.GetType().GetFields().Where(x => x.IsDefined(typeof(CrudColumnAttribute))
-			 && ((CrudColumnAttribute)x.GetCustomAttribute(typeof(CrudColumnAttribute))).IsPriKey).First();
+
+			FieldInfo priKeyField = 
+				priKeyItem.GetType()
+					.GetFields()
+					.Where(x => x.IsDefined(typeof(PrimaryKeyAttribute)))
+					.First();
+
 			long priKey = (long) priKeyField.GetValue(priKeyItem);
 			string priKeyColName = priKeyField.Name;
 			long parentKey = priKeyItem.GetType() == typeof(Benefit) ? ((Benefit)(object)priKeyItem).PlanNum : 0; //parentKey only filled for Benefits.
@@ -164,7 +170,7 @@ namespace OpenDentBusiness {
 					descript = priKeyItem is Benefit ? Benefits.GetCategoryString(priKeyItem as Benefit) : "";
 					break;
 				case InsEditLogType.Employer:
-					descript = (priKeyItem as Employer)?.EmpName ?? "";
+					descript = (priKeyItem as Employer)?.Name ?? "";
 					break;
 				default:
 					break;

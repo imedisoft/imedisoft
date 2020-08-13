@@ -463,7 +463,7 @@ namespace OpenDental {
 			labelSSN.Text=_guarCur.SSN.Substring(0,3)+"-"+_guarCur.SSN.Substring(3,2)+"-"+_guarCur.SSN.Substring(5,4);
 			labelDOB.Text=_guarCur.Birthdate.Year<1880?"":_guarCur.Birthdate.ToShortDateString();
 			labelPhone.Text=Clip(_guarCur.HmPhone,13);
-			labelEmployer.Text=_empCur?.EmpName??"";
+			labelEmployer.Text=_empCur?.Name??"";
 			labelEmpPhone.Text=_empCur?.Phone??"";
 			labelPatient.Text=_patCur.GetNameFL();
 			DateTime lastProcDate=TrojanQueries.GetMaxProcedureDate(_guarCur.PatNum);
@@ -581,7 +581,7 @@ namespace OpenDental {
 			}
 			str.Append("*");
 			str.Append(Clip(_guarCur.HmPhone,13)+"*");
-			str.Append(Clip(_empCur?.EmpName,35)+"*");
+			str.Append(Clip(_empCur?.Name,35)+"*");
 			str.Append(Clip(_empCur?.Phone,13)+"*");
 			string address=_guarCur.Address;//validated
 			if(!string.IsNullOrEmpty(_guarCur.Address2)){

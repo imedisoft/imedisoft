@@ -182,7 +182,7 @@ namespace OpenDentBusiness
 			if (invalidTypes.Contains(InvalidType.Employers) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Employers.ToString());
-				Employers.GetTableFromCache(true);
+				Employers.RefreshCache();
 			}
 			if (invalidTypes.Contains(InvalidType.FeeScheds) || refreshAll)
 			{

@@ -937,7 +937,7 @@ namespace OpenDental{
 						displayStrings[i]=planCur.DivisionNo;
 						break;
 					case "EmployerName":
-						displayStrings[i]=Employers.GetEmployer(planCur.EmployerNum).EmpName;;
+						displayStrings[i]=Employers.GetEmployer(planCur.EmployerNum).Name;;
 						break;
 					case "RelatIsSelf":
 						if(ClaimCur.PatRelat==Relat.Self) {
