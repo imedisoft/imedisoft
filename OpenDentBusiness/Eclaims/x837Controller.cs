@@ -153,8 +153,8 @@ namespace OpenDentBusiness.Eclaims
 				//Eventually we loop through claimProcs, calling Procedures.GetProcFromList(), which returns a "blank" procedure if no procedure in 
 				//procList exists that matches the claimproc.  This results in a Procedure with null properties (ex: Procedure.CodeMod1), which cannot be
 				//written to the functional group.  A solution is for the user to delete the claim, then run DBM, which will remove the orphaned claimproc.
-				error=Lans.g("x837","The following claim is linked to an invalid estimate:\r\nPatNum: "+claim.PatNum
-					+"\r\nDate: "+claim.DateService+"\r\nDelete the claim, run Database Maintenance, and recreate the claim.");
+				error="The following claim is linked to an invalid estimate:\r\nPatNum: "+claim.PatNum
+					+"\r\nDate: "+claim.DateService+"\r\nDelete the claim, run Database Maintenance, and recreate the claim.";
 			}
 			return error.IsNullOrEmpty();
 		}

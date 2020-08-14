@@ -19,7 +19,7 @@ namespace OpenDental {
 
 		public FormAmountEdit(string text) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_text=text;
 		}
 

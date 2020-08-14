@@ -17,7 +17,7 @@ namespace OpenDental {
 
 		public FormApptBreak(Appointment appt) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_appt=appt;
 		}
 

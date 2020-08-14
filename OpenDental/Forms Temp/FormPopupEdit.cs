@@ -43,7 +43,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -309,7 +309,7 @@ namespace OpenDental{
 			else {
 				if(PopupCur.UserNum!=0) {//This check is so that any old popups without a user will still display correctly.
 					//Display last user to edit PopupCur, or "Unknown(5)" if user not found.
-					textUser.Text=Userods.GetUser(PopupCur.UserNum)?.UserName??(Lan.G(this,"Unknown")+$"({POut.Long(PopupCur.UserNum)})");
+					textUser.Text=Userods.GetUser(PopupCur.UserNum)?.UserName??("Unknown"+$"({POut.Long(PopupCur.UserNum)})");
 				}
 				if(PopupAudit!=null) {//This checks if this window opened from FormPopupAudit
 					textCreateDate.Text="";
@@ -333,12 +333,12 @@ namespace OpenDental{
 					}
 				}
 			}
-			comboPopupLevel.Items.Add(Lan.G("enumEnumPopupFamily",Enum.GetNames(typeof(EnumPopupLevel))[0]));//Patient
-			comboPopupLevel.Items.Add(Lan.G("enumEnumPopupFamily",Enum.GetNames(typeof(EnumPopupLevel))[1]));//Family
+			comboPopupLevel.Items.Add(Enum.GetNames(typeof(EnumPopupLevel))[0]);//Patient
+			comboPopupLevel.Items.Add(Enum.GetNames(typeof(EnumPopupLevel))[1]);//Family
 			if(Pat.SuperFamily!=0 || PopupCur.PopupLevel==EnumPopupLevel.SuperFamily) {
 				//Previously if a superfamily head was moved out to their own family the associated superfamily popups were incorrectly copied.
 				//This would cause the comboPopupLevel selection logic below to error.
-				comboPopupLevel.Items.Add(Lan.G("enumEnumPopupFamily",Enum.GetNames(typeof(EnumPopupLevel))[2]));//SuperFamily
+				comboPopupLevel.Items.Add(Enum.GetNames(typeof(EnumPopupLevel))[2]);//SuperFamily
 			}
 			comboPopupLevel.SelectedIndex=(int)PopupCur.PopupLevel;
 			checkIsDisabled.Checked=PopupCur.IsDisabled;

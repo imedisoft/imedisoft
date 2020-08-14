@@ -111,7 +111,7 @@ namespace OpenDental {
 			_famCur=famCur;
 			_paymentCur=paymentCur;
 			_preferCurrentPat=preferCurrentPat;
-			Lan.F(this);
+			
 			panelXcharge.ContextMenu=contextMenuXcharge;
 			butPayConnect.ContextMenu=contextMenuPayConnect;
 			butPaySimple.ContextMenu=contextMenuPaySimple;
@@ -477,10 +477,10 @@ namespace OpenDental {
 			}
 			List<string> errors=new List<string>();
 			if(!EmailAddresses.ExistsValidEmail()) {
-				errors.Add(Lan.G(this,"SMTP server name missing in e-mail setup."));
+				errors.Add("SMTP server name missing in e-mail setup.");
 			}
 			if(errors.Count>0) {
-				MessageBox.Show(this,Lan.G(this,"The following errors need to be resolved before creating an email")+":\r\n"+string.Join("\r\n",errors));
+				MessageBox.Show(this,"The following errors need to be resolved before creating an email"+":\r\n"+string.Join("\r\n",errors));
 				return;
 			}
 			string attachPath=EmailAttaches.GetAttachPath();
@@ -499,7 +499,7 @@ namespace OpenDental {
 			message.ToAddress=_patCur.Email;
 			EmailAddress address=EmailAddresses.GetByClinic(_patCur.ClinicNum);
 			message.FromAddress=address.GetFrom();
-			message.Subject=Lan.G(this,"Receipt for payment received ")+_paymentCur.PayDate.ToShortDateString();
+			message.Subject="Receipt for payment received "+_paymentCur.PayDate.ToShortDateString();
 			EmailAttach attachRcpt=new EmailAttach() {
 				DisplayedFileName="Receipt.pdf",
 				ActualFileName=Path.GetFileName(tempFile)
@@ -611,11 +611,11 @@ namespace OpenDental {
 		}
 
 		private void butPrintReceipt_Click(object sender,EventArgs e) {
-			PrintReceipt(_paymentCur.Receipt,Lan.G(this,"Receipt printed"));
+			PrintReceipt(_paymentCur.Receipt,"Receipt printed");
 		}
 
 		private void butReturn_Click(object sender,EventArgs e) {
-			if(MsgBox.Show(MsgBoxButtons.YesNo,Lan.G(this,"Are you sure you want to return this transaction?"))) {
+			if(MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure you want to return this transaction?")) {
 				if(_xWebResponse!=null) {
 					XWebReturn();
 				}
@@ -630,7 +630,7 @@ namespace OpenDental {
 		}
 
 		private void butVoid_Click(object sender,EventArgs e) {
-			if(MsgBox.Show(MsgBoxButtons.YesNo,Lan.G(this,"Are you sure you want to void this transaction?"))) {
+			if(MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure you want to void this transaction?")) {
 				if(_xWebResponse!=null) {
 					XWebVoid();
 				}
@@ -765,7 +765,7 @@ namespace OpenDental {
 				MakeXChargeTransaction();
 			}
 			catch(Exception ex) {
-				FriendlyException.Show(Lan.G(this,"Error processing transaction.\r\n\r\nPlease contact support with the details of this error:")
+				FriendlyException.Show("Error processing transaction.\r\n\r\nPlease contact support with the details of this error:"
 					//The rest of the message is not translated on purpose because we here at HQ need to always be able to quickly read this part.
 					+"\r\nLast valid milestone reached: "+_xChargeMilestone,ex);
 			}
@@ -779,7 +779,7 @@ namespace OpenDental {
 				checkShowAll.Checked=false;
 				checkShowAll.Enabled=false;
 				listPayType.Visible=false;
-				butPay.Text=Lan.G(this,"Transfer");
+				butPay.Text="Transfer";
 				if(PrefC.HasClinicsEnabled) {
 					comboGroupBy.SelectedIndex=2;
 				}
@@ -788,7 +788,7 @@ namespace OpenDental {
 				}
 				comboGroupBy.Enabled=false;
 				if(PrefC.GetInt(PrefName.RigorousAccounting)==(int)RigorousAccounting.EnforceFully) {
-					butCreatePartial.Text=Lan.G(this,"Proc Breakdown");
+					butCreatePartial.Text="Proc Breakdown";
 					butPay.Visible=false;
 				}
 				else {
@@ -802,10 +802,10 @@ namespace OpenDental {
 			else {
 				checkShowAll.Enabled=true;
 				listPayType.Visible=true;
-				butPay.Text=Lan.G(this,"Pay");
+				butPay.Text="Pay";
 				comboGroupBy.Enabled=true;
 				butCreatePartial.Visible=true;
-				butCreatePartial.Text=Lan.G(this,"Add Partials");
+				butCreatePartial.Text="Add Partials";
 				butPay.Visible=true;
 				checkIncludeExplicitCreditsOnly.Enabled=true;
 				groupBoxFiltering.Enabled=true;
@@ -868,7 +868,7 @@ namespace OpenDental {
 					comboCreditCards.SelectedIndex=i;
 				}
 			}
-			comboCreditCards.Items.Add(Lan.G(this,"New Card"),new CreditCard()); //CreditCardNum=0
+			comboCreditCards.Items.Add("New Card",new CreditCard()); //CreditCardNum=0
 			if(comboCreditCards.SelectedIndex < 0) {
 				comboCreditCards.SelectedIndex=comboCreditCards.Items.Count-1;
 			}
@@ -1297,7 +1297,7 @@ namespace OpenDental {
 			amtMaxEnd.Value=0; 
 			//Fill Patient Combo
 			comboPatientFilter.Items.Clear();
-			comboPatientFilter.Items.Add(new ODBoxItem<Patient>(Lan.G(this,"All")));
+			comboPatientFilter.Items.Add(new ODBoxItem<Patient>("All"));
 			//Fill the patient filter combo box with the known patients relating to the list of account charges.
 			foreach(long patNum in _listAccountCharges.Select(x => x.PatNum).Distinct()) {
 				if(_dictPatients.TryGetValue(patNum,out Patient pat)) {
@@ -1318,7 +1318,7 @@ namespace OpenDental {
 			//Fill Clinics Combo
 			if(PrefC.HasClinicsEnabled) {
 				List<Clinic> listClinicsTemp=Clinics.GetDeepCopy();
-				listClinicsTemp.Add(new Clinic() {Abbr=Lan.G(this,"Unassigned")});
+				listClinicsTemp.Add(new Clinic() {Abbr="Unassigned"});
 				comboClinicFilter.Items.Clear();
 				foreach(Clinic clinic in _listAccountCharges.Select(x => listClinicsTemp.FirstOrDefault(y => y.ClinicNum==x.ClinicNum))
 					.DistinctBy(x => x.ClinicNum))
@@ -1329,7 +1329,7 @@ namespace OpenDental {
 			}
 			//Fill Type Combo
 			comboTypeFilter.Items.Clear();
-			comboTypeFilter.Items.Add(Lan.G(this,"All"));
+			comboTypeFilter.Items.Add("All");
 			comboTypeFilter.Items.AddRange(_listAccountCharges.Select(x => x.GetType().Name).Distinct().ToList());
 			comboTypeFilter.SetSelected(0,true);
 		}
@@ -1340,15 +1340,15 @@ namespace OpenDental {
 			}
 			gridAllocated.BeginUpdate();
 			gridAllocated.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TablePaySplitAllocations","Date"),80);
+			GridColumn col=new GridColumn("Date",80);
 			gridAllocated.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TablePaySplitAllocations","Clinic"),80);
+			col=new GridColumn("Clinic",80);
 			gridAllocated.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TablePaySplitAllocations","Patient"),140);
+			col=new GridColumn("Patient",140);
 			gridAllocated.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TablePaySplitAllocations","Amount"),80,HorizontalAlignment.Right);
+			col=new GridColumn("Amount",80,HorizontalAlignment.Right);
 			gridAllocated.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TablePaySplitAllocations","Unearned"),50);
+			col=new GridColumn("Unearned",50);
 			gridAllocated.ListGridColumns.Add(col);
 			gridAllocated.ListGridRows.Clear();
 			GridRow row;
@@ -1376,15 +1376,15 @@ namespace OpenDental {
 				&& (x.GetType()!=typeof(Procedure) || (x.GetType()==typeof(Procedure) && ((Procedure)x.Tag).ProcStatus==ProcStat.C)));
 			#region Group By Provider
 			if(comboGroupBy.SelectedIndex==1) {//Group by 'Provider'
-				col=new GridColumn(Lan.G(this,"Prov"),checkPayTypeNone.Checked?70:110);
+				col=new GridColumn("Prov",checkPayTypeNone.Checked?70:110);
 				gridCharges.ListGridColumns.Add(col);
 				if(checkPayTypeNone.Checked) {
-					col=new GridColumn(Lan.G(this,"Patient"),119);
+					col=new GridColumn("Patient",119);
 					gridCharges.ListGridColumns.Add(col);
 				}
-				col=new GridColumn(Lan.G(this,"Codes"),50){ IsWidthDynamic=true,DynamicWeight=1 };
+				col=new GridColumn("Codes",50){ IsWidthDynamic=true,DynamicWeight=1 };
 				gridCharges.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"Amt End"),70,HorizontalAlignment.Right,GridSortingStrategy.AmountParse);
+				col=new GridColumn("Amt End",70,HorizontalAlignment.Right,GridSortingStrategy.AmountParse);
 				gridCharges.ListGridColumns.Add(col);
 				gridCharges.ListGridRows.Clear();
 				var dictProvPatEntries=listOutstandingCharges.Where(x => (checkShowAll.Checked || !x.AmountAvailable.IsZero()))
@@ -1401,17 +1401,17 @@ namespace OpenDental {
 			#endregion
 			#region Group By Clinic and Provider
 			else if(comboGroupBy.SelectedIndex==2) {//Group by 'Clinic and Provider'
-				col=new GridColumn(Lan.G(this,"Prov"),checkPayTypeNone.Checked?70:100);
+				col=new GridColumn("Prov",checkPayTypeNone.Checked?70:100);
 				gridCharges.ListGridColumns.Add(col);
 				if(checkPayTypeNone.Checked) {
-					col=new GridColumn(Lan.G(this,"Patient"),100);
+					col=new GridColumn("Patient",100);
 					gridCharges.ListGridColumns.Add(col);
 				}
-				col=new GridColumn(Lan.G(this,"Clinic"),60);
+				col=new GridColumn("Clinic",60);
 				gridCharges.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"Codes"),50){ IsWidthDynamic=true };
+				col=new GridColumn("Codes",50){ IsWidthDynamic=true };
 				gridCharges.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"Amt End"),70,HorizontalAlignment.Right,GridSortingStrategy.AmountParse);
+				col=new GridColumn("Amt End",70,HorizontalAlignment.Right,GridSortingStrategy.AmountParse);
 				gridCharges.ListGridColumns.Add(col);
 				gridCharges.ListGridRows.Clear();
 				var dictProvPatClinicEntries=listOutstandingCharges.Where(x => (checkShowAll.Checked || !x.AmountAvailable.IsZero()))
@@ -1428,27 +1428,27 @@ namespace OpenDental {
 			#endregion
 			#region Group By None
 			else { //Group by 'None'
-				col=new GridColumn(Lan.G(this,"Date"),65,GridSortingStrategy.DateParse);
+				col=new GridColumn("Date",65,GridSortingStrategy.DateParse);
 				gridCharges.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"Patient"),92,GridSortingStrategy.StringCompare);
+				col=new GridColumn("Patient",92,GridSortingStrategy.StringCompare);
 				gridCharges.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"Prov"),40,GridSortingStrategy.StringCompare);
+				col=new GridColumn("Prov",40,GridSortingStrategy.StringCompare);
 				gridCharges.ListGridColumns.Add(col);
 				if(PrefC.HasClinicsEnabled) {//Clinics
-					col=new GridColumn(Lan.G(this,"Clinic"),55,GridSortingStrategy.StringCompare);
+					col=new GridColumn("Clinic",55,GridSortingStrategy.StringCompare);
 					gridCharges.ListGridColumns.Add(col);
 				}
-				col=new GridColumn(Lan.G(this,"Code"),45,GridSortingStrategy.StringCompare);
+				col=new GridColumn("Code",45,GridSortingStrategy.StringCompare);
 				gridCharges.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"Tth"),25,GridSortingStrategy.ToothNumberParse);
+				col=new GridColumn("Tth",25,GridSortingStrategy.ToothNumberParse);
 				gridCharges.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"Type"),90,GridSortingStrategy.StringCompare);
+				col=new GridColumn("Type",90,GridSortingStrategy.StringCompare);
 				gridCharges.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"AmtOrig"),55,HorizontalAlignment.Right,GridSortingStrategy.AmountParse);
+				col=new GridColumn("AmtOrig",55,HorizontalAlignment.Right,GridSortingStrategy.AmountParse);
 				gridCharges.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"AmtAvail"),57,HorizontalAlignment.Right,GridSortingStrategy.AmountParse);
+				col=new GridColumn("AmtAvail",57,HorizontalAlignment.Right,GridSortingStrategy.AmountParse);
 				gridCharges.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"AmtEnd"),55,HorizontalAlignment.Right,GridSortingStrategy.AmountParse);
+				col=new GridColumn("AmtEnd",55,HorizontalAlignment.Right,GridSortingStrategy.AmountParse);
 				gridCharges.ListGridColumns.Add(col);
 				gridCharges.ListGridRows.Clear();
 				GridRow row;
@@ -1496,7 +1496,7 @@ namespace OpenDental {
 							guarantor=Patients.GetLim(((FauxAccountEntry)entryCharge).Guarantor);
 							_dictPatients[guarantor.PatNum]=guarantor;
 						}
-						patName+="\r\n"+Lan.G(this,"Guar")+": "+guarantor.GetNameLFnoPref();
+						patName+="\r\n"+"Guar"+": "+guarantor.GetNameLFnoPref();
 					}
 					row.Cells.Add(patName);//Patient
 					row.Cells.Add(Providers.GetAbbr(entryCharge.ProvNum));//Provider
@@ -1514,29 +1514,29 @@ namespace OpenDental {
 					row.Cells.Add(procCode);//ProcCode
 					row.Cells.Add(tth);
 					if(entryCharge.GetType()==typeof(PaySplit)) {
-						row.Cells.Add(Lan.G(this,"Unallocated"));
+						row.Cells.Add("Unallocated");
 					}
 					else if(entryCharge.GetType()==typeof(Procedure)) {
 						//Get the proc and add its description if the row is a proc.
-						row.Cells.Add(Lan.G(this,"Proc")+": "+Procedures.GetDescription(proc));
+						row.Cells.Add("Proc"+": "+Procedures.GetDescription(proc));
 					}
 					else if(entryCharge.Tag.GetType()==typeof(FauxAccountEntry)) {
-						string strFaux=Lan.G(this,"PayPlanCharge");
+						string strFaux="PayPlanCharge";
 						FauxAccountEntry fauxAccountEntry=(FauxAccountEntry)entryCharge;
 						if(fauxAccountEntry.AccountEntryProc!=null
 							&& fauxAccountEntry.AccountEntryProc.Tag!=null
 							&& fauxAccountEntry.AccountEntryProc.GetType()==typeof(Procedure))
 						{
-							strFaux+="\r\n"+Lan.G(this,"Proc")+": "+Procedures.GetDescription((Procedure)fauxAccountEntry.AccountEntryProc.Tag);
+							strFaux+="\r\n"+"Proc"+": "+Procedures.GetDescription((Procedure)fauxAccountEntry.AccountEntryProc.Tag);
 						}
 						else if(fauxAccountEntry.IsAdjustment) {
-							strFaux+="\r\n"+Lan.G(this,"Adjustment");
+							strFaux+="\r\n"+"Adjustment";
 						}
 						else if(fauxAccountEntry.Interest.IsGreaterThanZero()) {
-							strFaux+="\r\n"+Lan.G(this,"Interest");
+							strFaux+="\r\n"+"Interest";
 						}
 						else if(entryCharge.ProcNum==0 && entryCharge.AdjNum==0) {
-							strFaux+="\r\n"+Lan.G(this,"Unattached");
+							strFaux+="\r\n"+"Unattached";
 						}
 						row.Cells.Add(strFaux);
 					}
@@ -1574,21 +1574,21 @@ namespace OpenDental {
 			gridSplits.ListGridColumns.Clear();
 			_dictGridSplitsPaySplitIndices.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G(this,"Date"),65,HorizontalAlignment.Center,GridSortingStrategy.DateParse);
+			col=new GridColumn("Date",65,HorizontalAlignment.Center,GridSortingStrategy.DateParse);
 			gridSplits.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Prov"),40, GridSortingStrategy.StringCompare);
+			col=new GridColumn("Prov",40, GridSortingStrategy.StringCompare);
 			gridSplits.ListGridColumns.Add(col);
 			if(PrefC.HasClinicsEnabled) {//Clinics
-				col=new GridColumn(Lan.G(this,"Clinic"),40, GridSortingStrategy.StringCompare);
+				col=new GridColumn("Clinic",40, GridSortingStrategy.StringCompare);
 				gridSplits.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.G(this,"Patient"),100,GridSortingStrategy.StringCompare);
+			col=new GridColumn("Patient",100,GridSortingStrategy.StringCompare);
 			gridSplits.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Code"),60, GridSortingStrategy.StringCompare);
+			col=new GridColumn("Code",60, GridSortingStrategy.StringCompare);
 			gridSplits.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Type"),100, GridSortingStrategy.StringCompare);
+			col=new GridColumn("Type",100, GridSortingStrategy.StringCompare);
 			gridSplits.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Amount"),55,HorizontalAlignment.Right, GridSortingStrategy.AmountParse);
+			col=new GridColumn("Amount",55,HorizontalAlignment.Right, GridSortingStrategy.AmountParse);
 			gridSplits.ListGridColumns.Add(col);
 			gridSplits.ListGridRows.Clear();
 			GridRow row;
@@ -1676,27 +1676,27 @@ namespace OpenDental {
 			_dictGridTreatPlanPaySplitIndices.Clear();
 			GridColumn col;
 			#region Group By None
-			col=new GridColumn(Lan.G(this,"Date"),65,GridSortingStrategy.DateParse);
+			col=new GridColumn("Date",65,GridSortingStrategy.DateParse);
 			gridTreatPlan.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Patient"),92,GridSortingStrategy.StringCompare);
+			col=new GridColumn("Patient",92,GridSortingStrategy.StringCompare);
 			gridTreatPlan.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Prov"),40,GridSortingStrategy.StringCompare);
+			col=new GridColumn("Prov",40,GridSortingStrategy.StringCompare);
 			gridTreatPlan.ListGridColumns.Add(col);
 			if(PrefC.HasClinicsEnabled) {//Clinics
-				col=new GridColumn(Lan.G(this,"Clinic"),55,GridSortingStrategy.StringCompare);
+				col=new GridColumn("Clinic",55,GridSortingStrategy.StringCompare);
 				gridTreatPlan.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.G(this,"Code"),45,GridSortingStrategy.StringCompare);
+			col=new GridColumn("Code",45,GridSortingStrategy.StringCompare);
 			gridTreatPlan.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Tth"),25,GridSortingStrategy.ToothNumberParse);
+			col=new GridColumn("Tth",25,GridSortingStrategy.ToothNumberParse);
 			gridTreatPlan.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Type"),90,GridSortingStrategy.StringCompare);
+			col=new GridColumn("Type",90,GridSortingStrategy.StringCompare);
 			gridTreatPlan.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"AmtOrig"),55,HorizontalAlignment.Right,GridSortingStrategy.AmountParse);
+			col=new GridColumn("AmtOrig",55,HorizontalAlignment.Right,GridSortingStrategy.AmountParse);
 			gridTreatPlan.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"AmtAvail"),57,HorizontalAlignment.Right,GridSortingStrategy.AmountParse);
+			col=new GridColumn("AmtAvail",57,HorizontalAlignment.Right,GridSortingStrategy.AmountParse);
 			gridTreatPlan.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"AmtEnd"),55,HorizontalAlignment.Right,GridSortingStrategy.AmountParse);
+			col=new GridColumn("AmtEnd",55,HorizontalAlignment.Right,GridSortingStrategy.AmountParse);
 			gridTreatPlan.ListGridColumns.Add(col);
 			gridTreatPlan.ListGridRows.Clear();
 			GridRow row;
@@ -1720,7 +1720,7 @@ namespace OpenDental {
 						guarantor=Patients.GetLim(((FauxAccountEntry)entryCharge).Guarantor);
 						_dictPatients[patCur.PatNum]=guarantor;
 					}
-					patName+="\r\n"+Lan.G(this,"Guar")+": "+guarantor.GetNameLFnoPref();
+					patName+="\r\n"+"Guar"+": "+guarantor.GetNameLFnoPref();
 				}
 				row.Cells.Add(patName);//Patient
 				row.Cells.Add(Providers.GetAbbr(entryCharge.ProvNum));//Provider
@@ -1745,7 +1745,7 @@ namespace OpenDental {
 				}
 				if(entryCharge.GetType()==typeof(Procedure)) {
 					//Get the proc and add its description if the row is a proc.
-					row.Cells[row.Cells.Count-1].Text=Lan.G(this,"Proc")+": "+Procedures.GetDescription(proc);
+					row.Cells[row.Cells.Count-1].Text="Proc"+": "+Procedures.GetDescription(proc);
 				}
 				row.Cells.Add(entryCharge.AmountOriginal.ToString("f"));//Amount Original
 				row.Cells.Add(entryCharge.AmountAvailable.ToString("f"));//Amount Start
@@ -2125,7 +2125,7 @@ namespace OpenDental {
 					printdoc.Print();
 				}
 				catch(Exception ex) {
-					MessageBox.Show(Lan.g(this,"Unable to print receipt")+". "+ex.Message);
+					MessageBox.Show("Unable to print receipt"+". "+ex.Message);
 				}
 			}
 #endif
@@ -2149,7 +2149,7 @@ namespace OpenDental {
 
 		private bool SavePaymentToDb() {
 			if(textDate.errorProvider1.GetError(textDate)!="" || textAmount.errorProvider1.GetError(textAmount)!="") {
-				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
+				MessageBox.Show("Please fix data entry errors first.");
 				return false;
 			}
 			if(PIn.Date(textDate.Text).Date > DateTime.Today.Date
@@ -2167,7 +2167,7 @@ namespace OpenDental {
 			else {
 				double amt=PIn.Double(textAmount.Text);
 				if(amt==0 && _listSplitsCur.Count==0) {
-					MessageBox.Show(Lan.G(this,"Please enter an amount or create payment splits."));
+					MessageBox.Show("Please enter an amount or create payment splits.");
 					return false;
 				}
 				if(amt!=0 && listPayType.SelectedIndex==-1) {
@@ -2462,12 +2462,12 @@ namespace OpenDental {
 		private void ToggleShowHideSplits() {
 			splitContainerCharges.Panel2Collapsed = !splitContainerCharges.Panel2Collapsed;
 			if(splitContainerCharges.Panel2Collapsed) {
-				butShowHide.Text=Lan.G(this,"Show Splits");
+				butShowHide.Text="Show Splits";
 				Height = splitContainerCharges.SplitterDistance+100;//Plus 100 to give room for the buttons
 				this.butShowHide.Image = global::Imedisoft.Properties.Resources.arrowDownTriangle;
 			}
 			else {
-				butShowHide.Text=Lan.G(this,"Hide Splits");
+				butShowHide.Text="Hide Splits";
 				Height = _originalHeight;
 				this.butShowHide.Image = global::Imedisoft.Properties.Resources.arrowUpTriangle;
 			}
@@ -2494,11 +2494,11 @@ namespace OpenDental {
 						response=PayConnectTerminal.ToPayConnectResponse(posResponse);
 						receiptStr=PayConnectTerminal.BuildReceiptString(posRequest,posResponse,null,0);
 					},
-					startingMessage:Lan.G(this,"Processing void on terminal."),
+					startingMessage:"Processing void on terminal.",
 					actionException:ex => {
 						this.Invoke(() => {
 							Cursor=Cursors.Default;
-							MessageBox.Show(Lan.G(this,"Error voiding payment:")+" "+ex.Message);
+							MessageBox.Show("Error voiding payment:"+" "+ex.Message);
 						});
 					});
 			}
@@ -2519,11 +2519,11 @@ namespace OpenDental {
 				Payment voidPayment=_paymentCur.Clone();
 				voidPayment.PayAmt*=-1; //The negated amount of the original payment
 				voidPayment.Receipt=receiptStr;
-				voidPayment.PayNote=Lan.G(this,"Transaction Type")+": "+Enum.GetName(typeof(PayConnectService.transType),PayConnectService.transType.VOID)
-					+Environment.NewLine+Lan.G(this,"Status")+": "+response.Description+Environment.NewLine
-					+Lan.G(this,"Amount")+": "+voidPayment.PayAmt+Environment.NewLine
-					+Lan.G(this,"Auth Code")+": "+response.AuthCode+Environment.NewLine
-					+Lan.G(this,"Ref Number")+": "+response.RefNumber;
+				voidPayment.PayNote="Transaction Type"+": "+Enum.GetName(typeof(PayConnectService.transType),PayConnectService.transType.VOID)
+					+Environment.NewLine+"Status"+": "+response.Description+Environment.NewLine
+					+"Amount"+": "+voidPayment.PayAmt+Environment.NewLine
+					+"Auth Code"+": "+response.AuthCode+Environment.NewLine
+					+"Ref Number"+": "+response.RefNumber;
 				voidPayment.PaymentSource=CreditCardSource.PayConnect;
 				voidPayment.ProcessStatus=ProcessStat.OfficeProcessed;
 				voidPayment.PayNum=Payments.Insert(voidPayment);
@@ -2559,7 +2559,7 @@ namespace OpenDental {
 				return;
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.G(this,"Error:")+" "+ex.Message);
+				MessageBox.Show("Error:"+" "+ex.Message);
 				return;
 			}
 			string[] arrayReceiptFields=originalReceipt.Replace("\r\n","\n").Replace("\r","\n").Split(new string[] { "\n" },StringSplitOptions.RemoveEmptyEntries);
@@ -2695,15 +2695,15 @@ namespace OpenDental {
 				}
 			}
 			catch {
-				MessageBox.Show(Lan.G(this,"There was a problem voiding this transaction.")+"\r\n"+Lan.G(this,"Please run the credit card report from inside "
-					+"X-Charge to verify that the transaction was voided.")+"\r\n"+Lan.G(this,"If the transaction was not voided, please create a new payment "
-					+"to void the transaction."));
+				MessageBox.Show("There was a problem voiding this transaction."+"\r\n"+"Please run the credit card report from inside "
+					+"X-Charge to verify that the transaction was voided."+"\r\n"+"If the transaction was not voided, please create a new payment "
+					+"to void the transaction.");
 				return;
 			}
 			if(showApprovedAmtNotice) {
-				MessageBox.Show(Lan.G(this,"The amount of the original transaction")+": "+_paymentCur.PayAmt.ToString("C")+"\r\n"+Lan.G(this,"does not match "
-					+"the approved amount returned")+": "+approvedAmt.ToString("C")+".\r\n"+Lan.G(this,"The amount will be changed to reflect the approved "
-					+"amount charged."),"Alert",MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
+				MessageBox.Show("The amount of the original transaction"+": "+_paymentCur.PayAmt.ToString("C")+"\r\n"+"does not match "
+					+"the approved amount returned"+": "+approvedAmt.ToString("C")+".\r\n"+"The amount will be changed to reflect the approved "
+					+"amount charged.","Alert",MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
 				voidPayment.PayAmt=approvedAmt;
 			}
 			if(textNote.Text!="") {
@@ -2712,7 +2712,7 @@ namespace OpenDental {
 			voidPayment.PayNote=resulttext;
 			voidPayment.Receipt=receipt;
 			if(_printReceipt && receipt!="") {
-				PrintReceipt(receipt,Lan.G(this,"X-Charge receipt printed"));
+				PrintReceipt(receipt,"X-Charge receipt printed");
 			}
 			voidPayment.PaymentSource=CreditCardSource.XServer;
 			voidPayment.ProcessStatus=ProcessStat.OfficeProcessed;
@@ -2768,14 +2768,14 @@ namespace OpenDental {
 			{
 				amount=-amount;//The amount in an xwebresponse is always stored as a positive number.
 			}
-			if(MessageBox.Show(Lan.G(this,"Void the XWeb transaction of amount")+" "+amount.ToString("f")+" "+Lan.G(this,"attached to this payment?"),
+			if(MessageBox.Show("Void the XWeb transaction of amount"+" "+amount.ToString("f")+" "+"attached to this payment?",
 				"",MessageBoxButtons.YesNo)==DialogResult.No)
 			{
 				return;
 			}
 			try {
 				Cursor=Cursors.WaitCursor;
-				string payNote=Lan.G(this,"Void XWeb payment made from within Open Dental");
+				string payNote="Void XWeb payment made from within Open Dental";
 				XWebs.VoidPayment(_patCur.PatNum,payNote,_xWebResponse.XWebResponseNum);
 				Cursor=Cursors.Default;
 				MessageBox.Show("Void successful. A new payment has been created for this void transaction.");
@@ -2842,11 +2842,11 @@ namespace OpenDental {
 			}
 			string resultNote=null;
 			if(FormP.Response!=null) {
-				resultNote=Lan.G(this,"Transaction Type")+": "+Enum.GetName(typeof(PayConnectService.transType),FormP.TranType)+Environment.NewLine+
-					Lan.G(this,"Status")+": "+FormP.Response.Description+Environment.NewLine+
-					Lan.G(this,"Amount")+": "+FormP.AmountCharged+Environment.NewLine+
-					Lan.G(this,"Card Type")+": "+FormP.Response.CardType+Environment.NewLine+
-					Lan.G(this,"Account")+": "+FormP.CardNumber.Right(4).PadLeft(FormP.CardNumber.Length,'X');
+				resultNote="Transaction Type"+": "+Enum.GetName(typeof(PayConnectService.transType),FormP.TranType)+Environment.NewLine+
+					"Status"+": "+FormP.Response.Description+Environment.NewLine+
+					"Amount"+": "+FormP.AmountCharged+Environment.NewLine+
+					"Card Type"+": "+FormP.Response.CardType+Environment.NewLine+
+					"Account"+": "+FormP.CardNumber.Right(4).PadLeft(FormP.CardNumber.Length,'X');
 			}
 			if(prepaidAmt!=0) {
 				if(FormP.Response!=null && FormP.Response.StatusCode=="0") { //The transaction succeeded.
@@ -2858,8 +2858,8 @@ namespace OpenDental {
 				if(FormP.Response.StatusCode=="0") { //The transaction succeeded.
 					_isCCDeclined=false;
 					resultNote+=Environment.NewLine
-						+Lan.G(this,"Auth Code")+": "+FormP.Response.AuthCode+Environment.NewLine
-						+Lan.G(this,"Ref Number")+": "+FormP.Response.RefNumber;
+						+"Auth Code"+": "+FormP.Response.AuthCode+Environment.NewLine
+						+"Ref Number"+": "+FormP.Response.RefNumber;
 					if(FormP.TranType==PayConnectService.transType.RETURN) {
 						textAmount.Text="-"+FormP.AmountCharged;
 						_paymentCur.Receipt=FormP.ReceiptStr;
@@ -3450,12 +3450,12 @@ namespace OpenDental {
 							textNote.Text+="\r\n";
 						}
 						if(cc.CCNumberMasked != newAccount) {
-							textNote.Text+=Lan.G(this,"Account number changed from")+" "+cc.CCNumberMasked+" "
-								+Lan.G(this,"to")+" "+newAccount;
+							textNote.Text+="Account number changed from"+" "+cc.CCNumberMasked+" "
+								+"to"+" "+newAccount;
 						}
 						if(cc.CCExpiration != newExpiration) {
-							textNote.Text+=Lan.G(this,"Expiration changed from")+" "+cc.CCExpiration.ToString("MMyy")+" "
-								+Lan.G(this,"to")+" "+newExpiration.ToString("MMyy");
+							textNote.Text+="Expiration changed from"+" "+cc.CCExpiration.ToString("MMyy")+" "
+								+"to"+" "+newExpiration.ToString("MMyy");
 						}
 						cc.CCNumberMasked=newAccount;
 						cc.CCExpiration=newExpiration;
@@ -3464,21 +3464,21 @@ namespace OpenDental {
 				}
 			}
 			catch {
-				MessageBox.Show(Lan.G(this,"There was a problem charging the card.  Please run the credit card report from inside X-Charge to verify that "
-					+"the card was not actually charged.")+"\r\n"+Lan.G(this,"If the card was charged, you need to make sure that the payment amount matches.")
-					+"\r\n"+Lan.G(this,"If the card was not charged, please try again."));
+				MessageBox.Show("There was a problem charging the card.  Please run the credit card report from inside X-Charge to verify that "
+					+"the card was not actually charged."+"\r\n"+"If the card was charged, you need to make sure that the payment amount matches."
+					+"\r\n"+"If the card was not charged, please try again.");
 				return null;
 			}
 			_xChargeMilestone="Check Approved Amount";
 			if(showApprovedAmtNotice && !xVoid && !xAdjust && !xReturn) {
-				MessageBox.Show(Lan.G(this,"The amount you typed in")+": "+amt.ToString("C")+"\r\n"+Lan.G(this,"does not match the approved amount returned")
-					+": "+approvedAmt.ToString("C")+".\r\n"+Lan.G(this,"The amount will be changed to reflect the approved amount charged."),"Alert",
+				MessageBox.Show("The amount you typed in"+": "+amt.ToString("C")+"\r\n"+"does not match the approved amount returned"
+					+": "+approvedAmt.ToString("C")+".\r\n"+"The amount will be changed to reflect the approved amount charged.","Alert",
 					MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
 				textAmount.Text=approvedAmt.ToString("F");
 			}
 			if(xAdjust) {
 				_xChargeMilestone="Check Adjust";
-				MessageBox.Show(Lan.G(this,"The amount will be changed to the X-Charge approved amount")+": "+approvedAmt.ToString("C"));
+				MessageBox.Show("The amount will be changed to the X-Charge approved amount"+": "+approvedAmt.ToString("C"));
 				textNote.Text="";
 				textAmount.Text=approvedAmt.ToString("F");
 			}
@@ -3495,7 +3495,7 @@ namespace OpenDental {
 					}
 					_paymentCur.Receipt=receipt;
 					if(_printReceipt && receipt!="") {
-						PrintReceipt(receipt,Lan.G(this,"X-Charge receipt printed"));
+						PrintReceipt(receipt,"X-Charge receipt printed");
 						_printReceipt=false;
 					}
 					if(SavePaymentToDb()) {
@@ -3522,7 +3522,7 @@ namespace OpenDental {
 					voidPayment.PayNote=resulttext;
 					voidPayment.Receipt=receipt;
 					if(_printReceipt && receipt!="") {
-						PrintReceipt(receipt,Lan.G(this,"X-Charge receipt printed"));
+						PrintReceipt(receipt,"X-Charge receipt printed");
 					}
 					voidPayment.PaymentSource=CreditCardSource.XServer;
 					voidPayment.ProcessStatus=ProcessStat.OfficeProcessed;
@@ -3544,7 +3544,7 @@ namespace OpenDental {
 			_xChargeMilestone="Check Additional Funds";
 			_wasCreditCardSuccessful=!_isCCDeclined;//If the transaction is not a void transaction, we will void this transaction if the user hits Cancel
 			if(additionalFunds>0) {
-				MessageBox.Show(Lan.G(this,"Additional funds required")+": "+additionalFunds.ToString("C"));
+				MessageBox.Show("Additional funds required"+": "+additionalFunds.ToString("C"));
 			}
 			if(textNote.Text!="") {
 				textNote.Text+="\r\n";
@@ -3558,7 +3558,7 @@ namespace OpenDental {
 					butEmailReceipt.Visible=true;
 				}
 				if(_printReceipt && prepaidAmt==0) {
-					PrintReceipt(receipt,Lan.G(this,"X-Charge receipt printed"));
+					PrintReceipt(receipt,"X-Charge receipt printed");
 				}
 			}
 			_xChargeMilestone="Reselect Credit Card in Combo";
@@ -3786,7 +3786,7 @@ namespace OpenDental {
 				if(noteField.StartsWith("TYPE=") && noteField.Substring(5)=="Debit Purchase") {
 					isDebit=true;
 				}
-				if(noteField.StartsWith(Lan.G("PaySimple","PaySimple Transaction Number"))) {
+				if(noteField.StartsWith("PaySimple Transaction Number")) {
 					paySimplePaymentId=noteField.Split(':')[1].Trim();//Better than substring 28, because we do not know how long the translation will be.
 				}
 			}

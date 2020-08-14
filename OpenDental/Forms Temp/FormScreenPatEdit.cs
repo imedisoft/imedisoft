@@ -18,7 +18,7 @@ namespace OpenDental {
 
 		public FormScreenPatEdit() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormScreenPatEdit_Load(object sender,EventArgs e) {

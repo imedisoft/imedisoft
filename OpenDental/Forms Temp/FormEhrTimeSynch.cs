@@ -19,7 +19,7 @@ namespace OpenDental {
 
 		public FormEhrTimeSynch() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormEhrTime_Load(object sender,EventArgs e) {

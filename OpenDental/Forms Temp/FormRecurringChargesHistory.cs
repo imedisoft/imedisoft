@@ -20,7 +20,7 @@ namespace OpenDental {
 
 		public FormRecurringChargesHistory() {
 			InitializeComponent();
-			Lan.F(this);
+			
 			gridMain.ContextMenu=contextMenu;
 		}
 
@@ -30,9 +30,9 @@ namespace OpenDental {
 			comboStatuses.FillWithEnum<RecurringChargeStatus>();
 			comboStatuses.SetSelected(true);
 			comboAutomated.Items.AddRange(new[] {
-				Lans.g(this,"Automated and Manual"),
-				Lans.g(this,"Automated Only"),
-				Lans.g(this,"Manual Only"),
+				"Automated and Manual",
+				"Automated Only",
+				"Manual Only",
 			});
 			comboAutomated.SelectedIndex=0;
 			RefreshRecurringCharges();
@@ -67,24 +67,24 @@ namespace OpenDental {
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"PatNum"),55,GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Name"),185));
+			gridMain.ListGridColumns.Add(new GridColumn("PatNum",55,GridSortingStrategy.AmountParse));
+			gridMain.ListGridColumns.Add(new GridColumn("Name",185));
 			if(PrefC.HasClinicsEnabled) {
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Clinic"),65));
+				gridMain.ListGridColumns.Add(new GridColumn("Clinic",65));
 			}
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Date Charge"),135,HorizontalAlignment.Center,
+			gridMain.ListGridColumns.Add(new GridColumn("Date Charge",135,HorizontalAlignment.Center,
 				GridSortingStrategy.DateParse));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Charge Status"),90));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"User"),90));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Family Bal"),PrefC.HasClinicsEnabled ? 70 : 85,HorizontalAlignment.Right,
+			gridMain.ListGridColumns.Add(new GridColumn("Charge Status",90));
+			gridMain.ListGridColumns.Add(new GridColumn("User",90));
+			gridMain.ListGridColumns.Add(new GridColumn("Family Bal",PrefC.HasClinicsEnabled ? 70 : 85,HorizontalAlignment.Right,
 				GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"PayPlan Due"),PrefC.HasClinicsEnabled ? 80 : 90,HorizontalAlignment.Right,
+			gridMain.ListGridColumns.Add(new GridColumn("PayPlan Due",PrefC.HasClinicsEnabled ? 80 : 90,HorizontalAlignment.Right,
 				GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Total Due"),PrefC.HasClinicsEnabled ? 65 : 80,HorizontalAlignment.Right,
+			gridMain.ListGridColumns.Add(new GridColumn("Total Due",PrefC.HasClinicsEnabled ? 65 : 80,HorizontalAlignment.Right,
 				GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Repeat Amt"),PrefC.HasClinicsEnabled ? 75 : 90,HorizontalAlignment.Right,
+			gridMain.ListGridColumns.Add(new GridColumn("Repeat Amt",PrefC.HasClinicsEnabled ? 75 : 90,HorizontalAlignment.Right,
 				GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Charge Amt"),PrefC.HasClinicsEnabled ? 85 : 95,HorizontalAlignment.Right,
+			gridMain.ListGridColumns.Add(new GridColumn("Charge Amt",PrefC.HasClinicsEnabled ? 85 : 95,HorizontalAlignment.Right,
 				GridSortingStrategy.AmountParse));
 			if(gridMain.WidthAllColumns > gridMain.Width) {
 				gridMain.HScrollVisible=true;
@@ -103,14 +103,14 @@ namespace OpenDental {
 				row.Cells.Add(charge.PatNum.ToString());
 				string patName;
 				if(!_dictPatNames.TryGetValue(charge.PatNum,out patName)) {
-					patName=Lans.g(this,"UNKNOWN");
+					patName="UNKNOWN";
 				}
 				row.Cells.Add(patName);
 				if(PrefC.HasClinicsEnabled) {
 					row.Cells.Add(Clinics.GetFirstOrDefault(x => x.ClinicNum==charge.ClinicNum)?.Description??"");
 				}
 				row.Cells.Add(charge.DateTimeCharge.ToString());
-				row.Cells.Add(Lans.g(this,charge.ChargeStatus.GetDescription()));
+				row.Cells.Add(charge.ChargeStatus.GetDescription());
 				row.Cells.Add(Userods.GetFirstOrDefault(x => x.Id==charge.UserNum)?.UserName??"");
 				row.Cells.Add(charge.FamBal.ToString("c"));
 				row.Cells.Add(charge.PayPlanDue.ToString("c"));

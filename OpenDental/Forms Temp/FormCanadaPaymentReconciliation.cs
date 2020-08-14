@@ -16,7 +16,7 @@ namespace OpenDental {
 
 		public FormCanadaPaymentReconciliation() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormCanadaPaymentReconciliation_Load(object sender,EventArgs e) {
@@ -83,7 +83,7 @@ namespace OpenDental {
 			}
 			catch(Exception ex) {
 				Cursor=Cursors.Default;
-				MessageBox.Show(Lan.G(this,"Request failed: ")+ex.Message);
+				MessageBox.Show("Request failed: "+ex.Message);
 			}
 			DialogResult=DialogResult.OK;
 		}

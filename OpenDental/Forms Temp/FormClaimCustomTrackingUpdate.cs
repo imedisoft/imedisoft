@@ -15,7 +15,7 @@ namespace OpenDental {
 		///<summary>Used when creating a brand new claimcustomtracking.</summary>
 		public FormClaimCustomTrackingUpdate(List<Claim> listClaims) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_listClaims=listClaims;
 			ListNewClaimTracks=new List<ClaimTracking>(new ClaimTracking[_listClaims.Count]);
 		}
@@ -23,7 +23,7 @@ namespace OpenDental {
 		///<summary>Used when creating a brand new claimcustomtracking.</summary>
 		public FormClaimCustomTrackingUpdate(Claim claimCur,string noteText) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_listClaims=new List<Claim>() {claimCur};
 			ListNewClaimTracks=new List<ClaimTracking>(new ClaimTracking[_listClaims.Count]);//Default to list of nulls.
 			textNotes.Text=noteText;
@@ -32,7 +32,7 @@ namespace OpenDental {
 		///<summary>Used for editing a ClaimTracking object from FormClaimEdit.</summary>
 		public FormClaimCustomTrackingUpdate(Claim claimCur,ClaimTracking claimTrack) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_listClaims=new List<Claim>() { claimCur };
 			ListNewClaimTracks=new List<ClaimTracking>() { claimTrack };
 		}
@@ -63,7 +63,7 @@ namespace OpenDental {
 			Def[] arrayErrorCodeDefs = Defs.GetDefsForCategory(DefCat.ClaimErrorCode,true).ToArray();
 			comboErrorCode.Items.Clear();
 			//Add "none" option.
-			comboErrorCode.Items.Add(new ODBoxItem<Def>(Lan.G(this,"None"),new Def() {ItemValue="",DefNum=0}));
+			comboErrorCode.Items.Add(new ODBoxItem<Def>("None",new Def() {ItemValue="",DefNum=0}));
 			comboErrorCode.SelectedIndex=0;
 			if(arrayErrorCodeDefs.Length==0) {
 				//if the list is empty, then disable the comboBox.

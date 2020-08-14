@@ -45,7 +45,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 			tbTime.CellClicked += new OpenDental.ContrTable.CellEventHandler(tbTime_CellClicked);
 		}
 
@@ -55,7 +55,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 			tbTime.CellClicked+=new OpenDental.ContrTable.CellEventHandler(tbTime_CellClicked);
 			_isTp=isTp;
 		}

@@ -20,7 +20,7 @@ namespace OpenDental {
 
 		public FormWikiListItemEdit() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormWikiListEdit_Load(object sender,EventArgs e) {
@@ -34,12 +34,12 @@ namespace OpenDental {
 		private void FillGrid() {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Column"),200));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Value"),400,true));
+			gridMain.ListGridColumns.Add(new GridColumn("Column",200));
+			gridMain.ListGridColumns.Add(new GridColumn("Value",400,true));
 			gridMain.ListGridRows.Clear();
 			gridMain.ListGridRows.AddRange(_tableWikiList.Columns.OfType<DataColumn>().Skip(1).Select(x => new GridRow(x.ColumnName,_tableWikiList.Rows[0][x].ToString())));
 			gridMain.EndUpdate();
-			gridMain.Title=Lan.G(this,"Edit List Item");
+			gridMain.Title="Edit List Item";
 		}
 
 		private void gridMain_CellEnter(object sender,ODGridClickEventArgs e) {

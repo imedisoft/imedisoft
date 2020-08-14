@@ -83,7 +83,7 @@ namespace OpenDentBusiness {
 				|| (string.IsNullOrEmpty(XChargeToken) && string.IsNullOrEmpty(PayConnectToken) && string.IsNullOrEmpty(PaySimpleToken))) 
 			{
 				if(CCSource==CreditCardSource.PaySimpleACH) {
-					return "("+Lans.g(this,"ACH")+")";
+					return "(ACH)";
 				}
 				return "";
 			}
@@ -95,7 +95,7 @@ namespace OpenDentBusiness {
 				listTokens.Add("PayConnect"+(IsPayConnectPortal() ? " Portal" : ""));
 			}
 			if(!string.IsNullOrEmpty(PaySimpleToken)) {
-				listTokens.Add("PaySimple"+(CCSource==CreditCardSource.PaySimpleACH ? " "+Lans.g(this,"ACH") : ""));
+				listTokens.Add("PaySimple"+(CCSource==CreditCardSource.PaySimpleACH ? " ACH" : ""));
 			}
 			return "("+string.Join(", ",listTokens)+")";
 		}

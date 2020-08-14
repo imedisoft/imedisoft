@@ -29,7 +29,7 @@ namespace OpenDental
 			InitializeComponent();
 			SourceFilePath = null;
 			SourceRdlString = null;
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -198,22 +198,22 @@ namespace OpenDental
 		public void LayoutToolBar()
 		{
 			ToolBarMain.Buttons.Clear();
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this, "Print"), 0, "", "Print"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this, "Save PDF"), 4, "Save as Adobe PDF", "PDF"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this, "Export"), 3, "", "Export"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Print", 0, "", "Print"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Save PDF", 4, "Save as Adobe PDF", "PDF"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Export", 3, "", "Export"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
 			//ToolBarMain.Buttons.Add(new ODToolBarButton("",1,"Go Back One Page","Back"));
 			//ODToolBarButton button=new ODToolBarButton("",-1,"","PageNum");
 			//button.Style=ODToolBarButtonStyle.Label;
 			//ToolBarMain.Buttons.Add(button);
 			//ToolBarMain.Buttons.Add(new ODToolBarButton("",2,"Go Forward One Page","Fwd"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this, "Zoom In"), 6, "", "Zoom"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Zoom In", 6, "", "Zoom"));
 			//ODToolBarButton button=new ODToolBarButton("Scroll Mode",-1,"","");
 			//button.Style=ODToolBarButtonStyle.DropDownButton;
 			//button.DropDownMenu=menuScrollMode;
 			//ToolBarMain.Buttons.Add(button);
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this, "Close"), -1, "Close This Window", "Close"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Close", -1, "Close This Window", "Close"));
 			//ToolBarMain.Invalidate();
 		}
 
@@ -267,7 +267,7 @@ namespace OpenDental
 			}
 			catch
 			{
-				MessageBox.Show(Lan.G(this, "Printer not available"));
+				MessageBox.Show("Printer not available");
 			}
 		}
 
@@ -295,14 +295,14 @@ namespace OpenDental
 			{
 				//then zoom in
 				viewer.ZoomMode = fyiReporting.RdlViewer.ZoomEnum.FitWidth;
-				ToolBarMain.Buttons["Zoom"].Text = Lan.G(this, "Zoom Out");
+				ToolBarMain.Buttons["Zoom"].Text = "Zoom Out";
 				ToolBarMain.Buttons["Zoom"].ImageIndex = 6;
 			}
 			else
 			{
 				//zoom out
 				viewer.ZoomMode = fyiReporting.RdlViewer.ZoomEnum.FitPage;
-				ToolBarMain.Buttons["Zoom"].Text = Lan.G(this, "Zoom In");
+				ToolBarMain.Buttons["Zoom"].Text = "Zoom In";
 				ToolBarMain.Buttons["Zoom"].ImageIndex = 5;
 			}
 			ToolBarMain.Invalidate();

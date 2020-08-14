@@ -59,7 +59,7 @@ namespace OpenDental{
 		public FormLetterMerges(Patient patCur){
 			InitializeComponent();// Required for Windows Form Designer support
 			PatCur=patCur;
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -394,7 +394,7 @@ namespace OpenDental{
 				table=LetterMergesQueries.GetLetterMergeInfo(PatCur,letter);
 			}
 			catch(Exception ex) {
-				string message=Lan.G(this,"There was a error getting letter merge info:");
+				string message="There was a error getting letter merge info:";
 				MessageBox.Show(message+"\r\n"+ex.Message);
 				return false;
 			}
@@ -506,7 +506,7 @@ namespace OpenDental{
 				WrdApp=LetterMerges.WordApp;
 			}
 			catch(Exception ex) {
-				FriendlyException.Show(Lan.G(this,"Error. Is MS Word installed?"),ex);
+				FriendlyException.Show("Error. Is MS Word installed?",ex);
 				return;
 			}
 			//Open a document.
@@ -541,7 +541,7 @@ namespace OpenDental{
 					SaveToImageFolder(tempFilePath,letterCur);
 				}
 				catch(Exception ex) {
-					FriendlyException.Show(Lan.G(this,"Error saving file to the Image module:")+"\r\n"+ex.Message,ex);
+					FriendlyException.Show("Error saving file to the Image module:"+"\r\n"+ex.Message,ex);
 				}
 			}
 			//Close the original form document since just one record.
@@ -587,7 +587,7 @@ namespace OpenDental{
 				WrdApp=LetterMerges.WordApp;
 			}
 			catch(Exception ex) {
-				FriendlyException.Show(Lan.G(this,"Error. Is MS Word installed?"),ex);
+				FriendlyException.Show("Error. Is MS Word installed?",ex);
 				return;
 			}
 			string errorMessage="";
@@ -600,7 +600,7 @@ namespace OpenDental{
 				wrdDoc.Select();
 			}
 			catch(Exception ex) {
-				errorMessage=Lan.G(this,"Error opening document:")+"\r\n"+ex.Message;
+				errorMessage="Error opening document:"+"\r\n"+ex.Message;
 				MessageBox.Show(errorMessage);
 				return;
 			}
@@ -614,7 +614,7 @@ namespace OpenDental{
 				wrdMailMerge.Execute(ref oFalse);
 			}
 			catch(Exception ex) {
-				errorMessage=Lan.G(this,"Error attaching data file:")+"\r\n"+ex.Message;
+				errorMessage="Error attaching data file:"+"\r\n"+ex.Message;
 				MessageBox.Show(errorMessage);
 				return;
 			}
@@ -629,7 +629,7 @@ namespace OpenDental{
 					string patFolder=ImageStore.GetPatientFolder(PatCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
 					string fileName=ImageStore.GetFilePath(doc,patFolder);
 					if(!Storage.FileExists(fileName)) {
-						throw new ApplicationException(Lans.g("LetterMerge","Error opening document"+" "+doc.FileName));
+						throw new ApplicationException("Error opening document "+doc.FileName);
 					}
 					Storage.Run(fileName);
 					WrdApp.ActiveDocument.Close();//Necessary since we created an extra document
@@ -640,7 +640,7 @@ namespace OpenDental{
 					}
 				}
 				catch(Exception ex) {
-					FriendlyException.Show(Lan.G(this,"Error saving file to the Image module:")+"\r\n"+ex.Message,ex);
+					FriendlyException.Show("Error saving file to the Image module:"+"\r\n"+ex.Message,ex);
 				}
 			}
 			//Close the original form document since just one record.
@@ -649,7 +649,7 @@ namespace OpenDental{
 				wrdDoc.Close(ref oFalse,ref oMissing,ref oMissing);
 			}
 			catch(Exception ex) {
-				errorMessage=Lan.G(this,"Error closing document:")+"\r\n"+ex.Message;
+				errorMessage="Error closing document:"+"\r\n"+ex.Message;
 				MessageBox.Show(errorMessage);
 				return;
 			}
@@ -661,7 +661,7 @@ namespace OpenDental{
 				}
 			}
 			catch(Exception ex) {
-				errorMessage=Lan.G(this,"Error showing Microsoft Word:")+"\r\n"+ex.Message;
+				errorMessage="Error showing Microsoft Word:"+"\r\n"+ex.Message;
 				MessageBox.Show(errorMessage);
 				return;
 			}
@@ -722,7 +722,7 @@ namespace OpenDental{
 			string templateFile=ODFileUtils.CombinePaths(Prefs.GetString(PrefName.LetterMergePath),letterCur.TemplateName);
 			string dataFile=ODFileUtils.CombinePaths(Prefs.GetString(PrefName.LetterMergePath),letterCur.DataFileName);
 			if(!File.Exists(templateFile)){
-				MessageBox.Show(Lan.G(this,"Template file does not exist:")+"  "+templateFile);
+				MessageBox.Show("Template file does not exist:"+"  "+templateFile);
 				return;
 			}
 			if(!CreateDataFile(dataFile,letterCur)){
@@ -734,7 +734,7 @@ namespace OpenDental{
 				WrdApp=LetterMerges.WordApp;
 			}
 			catch(Exception ex) {
-				FriendlyException.Show(Lan.G(this,"Error. Is MS Word installed?"),ex);
+				FriendlyException.Show("Error. Is MS Word installed?",ex);
 				return;
 			}
 			//Open a document.

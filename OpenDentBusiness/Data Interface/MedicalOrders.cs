@@ -195,7 +195,7 @@ namespace OpenDentBusiness{
 			//validation
 			command="SELECT COUNT(*) FROM labpanel WHERE MedicalOrderNum="+POut.Long(medicalOrderNum);
 			if(Database.ExecuteString(command)!="0") {
-				throw new ApplicationException(Lans.g("MedicalOrders","Not allowed to delete a lab order that has attached lab panels."));
+				throw new ApplicationException("Not allowed to delete a lab order that has attached lab panels.");
 			}
 			//end of validation
 			command = "DELETE FROM medicalorder WHERE MedicalOrderNum = "+POut.Long(medicalOrderNum);

@@ -12,7 +12,7 @@ namespace OpenDental {
 
 		public FormUpdateInstallMsg() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {

@@ -29,7 +29,7 @@ namespace OpenDental {
 		
 		public FormRpServiceDateView(long patNum,bool isFamily) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			PatNum=patNum;
 			IsFamily=isFamily;
 			_fam=Patients.GetFamily(patNum);
@@ -37,7 +37,7 @@ namespace OpenDental {
 
 		private void FormRpServiceDate_Load(object sender,EventArgs e) {
 			FillGrid();
-			Text=Lans.g(this,"Service Date View -")+" "+_fam.GetPatient(PatNum).GetNameFL()+(IsFamily ? " "+Lans.g(this,"(Family)") : "");
+			Text="Service Date View -"+" "+_fam.GetPatient(PatNum).GetNameFL()+(IsFamily ? " "+"(Family)" : "");
 		}
 
 		private void FillGrid() {
@@ -45,15 +45,15 @@ namespace OpenDental {
 			gridMain.BeginUpdate();
 			//Columns
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Service Date"),90));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Trans Date"),80));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Patient"),150));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Reference"),220));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Charge"),80,HorizontalAlignment.Right));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Credit"),80,HorizontalAlignment.Right));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Prov"),80));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"InsBal"),80,HorizontalAlignment.Right));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"AcctBal"),80,HorizontalAlignment.Right));
+			gridMain.ListGridColumns.Add(new GridColumn("Service Date",90));
+			gridMain.ListGridColumns.Add(new GridColumn("Trans Date",80));
+			gridMain.ListGridColumns.Add(new GridColumn("Patient",150));
+			gridMain.ListGridColumns.Add(new GridColumn("Reference",220));
+			gridMain.ListGridColumns.Add(new GridColumn("Charge",80,HorizontalAlignment.Right));
+			gridMain.ListGridColumns.Add(new GridColumn("Credit",80,HorizontalAlignment.Right));
+			gridMain.ListGridColumns.Add(new GridColumn("Prov",80));
+			gridMain.ListGridColumns.Add(new GridColumn("InsBal",80,HorizontalAlignment.Right));
+			gridMain.ListGridColumns.Add(new GridColumn("AcctBal",80,HorizontalAlignment.Right));
 			//Rows
 			gridMain.ListGridRows.Clear();
 			DataRow lastRow=table.Select().LastOrDefault();
@@ -155,14 +155,14 @@ namespace OpenDental {
 			MigraDoc.DocumentObjectModel.ParagraphFormat parformat=new MigraDoc.DocumentObjectModel.ParagraphFormat();
 			parformat.Alignment=MigraDoc.DocumentObjectModel.ParagraphAlignment.Center;
 			par.Format=parformat;
-			string text=Lans.g(this,"Service Date View");
+			string text="Service Date View";
 			par.AddFormattedText(text,headingFont);
 			par.AddLineBreak();
 			//SubHeading---------------------------------------------------------------------------------------------------------------
-			text=(IsFamily ? Lans.g(this,"Entire Family:")+" " : "")+$"{_fam.GetNameInFamFL(PatNum)}";
+			text=(IsFamily ? "Entire Family:"+" " : "")+$"{_fam.GetNameInFamFL(PatNum)}";
 			par.AddFormattedText(text,subHeadingFont);
 			par.AddLineBreak();
-			text=Lans.g(this,"Date")+" "+DateTime.Now.ToShortDateString();
+			text="Date"+" "+DateTime.Now.ToShortDateString();
 			par.AddFormattedText(text,subHeadingFont);
 			#endregion
 			MigraDocHelper.InsertSpacer(section,10);
@@ -178,7 +178,7 @@ namespace OpenDental {
 			}
 			_pagesPrinted=0;
 			_headingPrinted=false;
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"Service date view printed"),PrintoutOrientation.Landscape);
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,"Service date view printed",PrintoutOrientation.Landscape);
 		}
 
 		private void pd_PrintPage(object sender,PrintPageEventArgs e) {
@@ -191,10 +191,10 @@ namespace OpenDental {
 			int center=bounds.X+bounds.Width/2;
 			#region printHeading
 			if(!_headingPrinted) {
-				text=Lan.G(this,"Service Date View");
+				text="Service Date View";
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
-				text=(IsFamily ? Lans.g(this,"Entire Family:")+" " : "")+$"{_fam.GetNameInFamFL(PatNum)}";
+				text=(IsFamily ? "Entire Family:"+" " : "")+$"{_fam.GetNameInFamFL(PatNum)}";
 				g.DrawString(text,subHeadingFont,Brushes.Black,center-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,subHeadingFont).Height;
 				text=DateTime.Now.ToShortDateString();

@@ -49,9 +49,9 @@ namespace OpenDentBusiness.Eclaims {
 			Channel channel=null;
 			ChannelSftp ch=null;
 			JSch jsch=new JSch();
-			progress.UpdateProgress(Lans.g(progress.LanThis,"Contacting web server"),"reports","17%",17);
+			progress.UpdateProgress("Contacting web server","reports","17%",17);
 			if(progress.IsPauseOrCancel()) {
-				progress.UpdateProgress(Lans.g(progress.LanThis,"Canceled by user."));
+				progress.UpdateProgress("Canceled by user.");
 				return false;
 			}
 			try {
@@ -81,21 +81,21 @@ namespace OpenDentBusiness.Eclaims {
 				ch=(ChannelSftp)channel;
 			}
 			catch(Exception ex) {
-				ErrorMessage=Lans.g("DentiCal","Connection Failed")+": "+ex.Message;
+				ErrorMessage="Connection Failed"+": "+ex.Message;
 				return false;
 			}
-			progress.UpdateProgress(Lans.g(progress.LanThis,"Web server contact successful."));
+			progress.UpdateProgress("Web server contact successful.");
 			try {
 				string homeDir="/";//new production home root dir
 				//At this point we are connected to the Denti-Cal SFTP server.
 				if(batchNum==0) { //Retrieve reports.
-					progress.UpdateProgress(Lans.g(progress.LanThis,"Downloading reports"),"reports","33%",33);
+					progress.UpdateProgress("Downloading reports","reports","33%",33);
 					if(progress.IsPauseOrCancel()) {
-						progress.UpdateProgress(Lans.g(progress.LanThis,"Canceled by user."));
+						progress.UpdateProgress("Canceled by user.");
 						return false;
 					}
 					if(!Directory.Exists(clearinghouseClin.ResponsePath)) {
-						progress.UpdateProgress(Lans.g(progress.LanThis,"Clearinghouse response path is invalid."));
+						progress.UpdateProgress("Clearinghouse response path is invalid.");
 						return false;
 						throw new Exception("Clearinghouse response path is invalid.");
 					}
@@ -115,9 +115,9 @@ namespace OpenDentBusiness.Eclaims {
 					for(int i=0;i<fileList.Count;i++) {
 						int percent=(i/fileList.Count)*100;
 						//We re-use the bar again for importing later, hence the tag.
-						progress.UpdateProgress(Lans.g(progress.LanThis,"Getting file:")+i+" / "+fileList.Count,"import",percent+"%",percent);
+						progress.UpdateProgress("Getting file:"+i+" / "+fileList.Count,"import",percent+"%",percent);
 						if(progress.IsPauseOrCancel()) {
-							progress.UpdateProgress(Lans.g(progress.LanThis,"Canceled by user."));
+							progress.UpdateProgress("Canceled by user.");
 							return false;
 						}
 						string listItem=fileList[i].ToString().Trim();
@@ -140,9 +140,9 @@ namespace OpenDentBusiness.Eclaims {
 								numBytes=fileStream.Read(dataBytes,0,dataBytes.Length);
 							}
 							float overallpercent=33+(i/fileList.Count)*17;//33 is starting point. 17 is the amount of bar space we have before our next major spot (50%)
-							progress.UpdateProgress(Lans.g(progress.LanThis,"Getting files"),"reports",overallpercent+"%",(int)overallpercent);
+							progress.UpdateProgress("Getting files","reports",overallpercent+"%",(int)overallpercent);
 							if(progress.IsPauseOrCancel()) {
-								progress.UpdateProgress(Lans.g(progress.LanThis,"Canceled by user."));
+								progress.UpdateProgress("Canceled by user.");
 								return false;
 							}
 						}
@@ -162,7 +162,7 @@ namespace OpenDentBusiness.Eclaims {
 							//Removed the processed report from the Denti-Cal SFTP so it does not get processed again in the future.
 							try {
 								ch.rm(getFilePath);
-								progress.UpdateProgress(Lans.g(progress.LanThis,"Reports downloaded successfully."));
+								progress.UpdateProgress("Reports downloaded successfully.");
 							}
 							catch {
 							}
@@ -170,13 +170,13 @@ namespace OpenDentBusiness.Eclaims {
 					}
 				}
 				else { //Send batch of claims.
-					progress.UpdateProgress(Lans.g(progress.LanThis,"Sending batch of claims"),"reports","33%",33);
+					progress.UpdateProgress("Sending batch of claims","reports","33%",33);
 					if(progress.IsPauseOrCancel()) {
-						progress.UpdateProgress(Lans.g(progress.LanThis,"Canceled by user."));
+						progress.UpdateProgress("Canceled by user.");
 						return false;
 					}
 					if(!Directory.Exists(clearinghouseClin.ExportPath)) {
-						throw new Exception(Lans.g(progress.LanThis,"Clearinghouse export path is invalid."));
+						throw new Exception("Clearinghouse export path is invalid.");
 					}
 					string[] files=Directory.GetFiles(clearinghouseClin.ExportPath);
 					//Try to find a folder that starts with "dcaprod" or "OXi".
@@ -194,9 +194,9 @@ namespace OpenDentBusiness.Eclaims {
 					//We have successfully found the folder where we need to put the files.
 					for(int i=0;i<files.Length;i++) {
 						float overallpercent=33+(i/files.Length)*17;//33 is starting point. 17 is the amount of bar space we have before our next major spot (50%)
-						progress.UpdateProgress(Lans.g(progress.LanThis,"Sending claims"),"reports",overallpercent+"%",(int)overallpercent);
+						progress.UpdateProgress("Sending claims","reports",overallpercent+"%",(int)overallpercent);
 						if(progress.IsPauseOrCancel()) {
-							progress.UpdateProgress(Lans.g(progress.LanThis,"Canceled by user."));
+							progress.UpdateProgress("Canceled by user.");
 							return false;
 						}
 						//First upload the batch file to a temporary file name. Denti-Cal does not process file names unless they start with the Login ID.
@@ -209,7 +209,7 @@ namespace OpenDentBusiness.Eclaims {
 						ch.rename(tempRemoteFilePath,remoteFilePath);
 						File.Delete(files[i]);//Remove the processed file.
 					}
-					progress.UpdateProgress(Lans.g(progress.LanThis,"Claims sent successfully."));
+					progress.UpdateProgress("Claims sent successfully.");
 				}
 			}
 			catch(Exception ex) {
@@ -217,7 +217,7 @@ namespace OpenDentBusiness.Eclaims {
 				ErrorMessage+=ex.Message;
 			}
 			finally {
-				progress.UpdateProgress(Lans.g(progress.LanThis,"Closing connection"),"reports","50%",50);
+				progress.UpdateProgress("Closing connection","reports","50%",50);
 				//Disconnect from the Denti-Cal SFTP server.
 				channel.disconnect();
 				ch.disconnect();

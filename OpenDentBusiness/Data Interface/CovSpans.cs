@@ -101,10 +101,10 @@ namespace OpenDentBusiness{
 		private static void Validate(CovSpan span){
 			//No need to check RemotingRole; no call to db.
 			if(span.FromCode=="" || span.ToCode=="") {
-				throw new ApplicationException(Lans.g("FormInsSpanEdit","Codes not allowed to be blank."));
+				throw new ApplicationException("Codes not allowed to be blank.");
 			}
 			if(String.Compare(span.ToCode,span.FromCode)<0){
-				throw new ApplicationException(Lans.g("FormInsSpanEdit","From Code must be less than To Code.  Remember that the comparison is alphabetical, not numeric.  For instance, 100 would come before 2, but after 02."));
+				throw new ApplicationException("From Code must be less than To Code.  Remember that the comparison is alphabetical, not numeric.  For instance, 100 would come before 2, but after 02.");
 			}
 		}
 

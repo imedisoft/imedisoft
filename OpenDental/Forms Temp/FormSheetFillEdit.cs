@@ -82,7 +82,7 @@ namespace OpenDental {
 		public FormSheetFillEdit(Sheet sheet, DataSet dataSet=null){
 			InitializeComponent();
 			MouseWheel+=FormSheetFillEdit_MouseWheelScroll;
-			Lan.F(this);
+			
 			SheetCur=sheet;
 			_dataSet=dataSet;
 			if(sheet.IsLandscape){
@@ -194,7 +194,7 @@ namespace OpenDental {
 					}
 				}
 				else {//The user does not have the permission. Show them the message and return.
-					FriendlyException.Show(Lans.g(this,message),ex);
+					FriendlyException.Show(message,ex);
 				}
 				OkClose();
 				return;
@@ -463,7 +463,7 @@ namespace OpenDental {
 					textbox.ScrollBars=RichTextBoxScrollBars.None;
 					textbox.SelectionAlignment=HorizontalAlignment.Left;
 					string signed=sigBox.GetIsTypedFromWebForms() ? "Typed signature in WebForms" : "Signed";
-					textbox.Text=Lan.G(this,signed)+": "+field.DateTimeSig.ToShortDateString()+" "+field.DateTimeSig.ToShortTimeString();
+					textbox.Text=signed+": "+field.DateTimeSig.ToShortDateString()+" "+field.DateTimeSig.ToShortTimeString();
 					textbox.Multiline=false;
 					textbox.Height=14;
 					textbox.ReadOnly=true;
@@ -500,7 +500,7 @@ namespace OpenDental {
 						}
 					}
 					catch(Exception ex) {
-						FriendlyException.Show(Lan.G(this,"Error pasting clipboard content."),ex);
+						FriendlyException.Show("Error pasting clipboard content.",ex);
 					}
 					e.Handled=true;//Do not let the base Paste function to be invoked because it allows pasting formatted text, pictures, etc.
 				}));
@@ -1044,7 +1044,7 @@ namespace OpenDental {
 				pdfFile=EmailSheet(FormS.EmailPatOrLabAddress,SheetCur.Description.ToString());//subject could be improved
 			}
 			if((SheetCur.SheetType==SheetTypeEnum.ReferralSlip || SheetCur.SheetType==SheetTypeEnum.ReferralLetter) && FormS.Email2) {
-				pdfFile=EmailSheet(FormS.Email2Address,Lan.G(this,"RE: ")+Patients.GetLim(SheetCur.PatNum).GetNameLF());//subject will work even if patnum invalid
+				pdfFile=EmailSheet(FormS.Email2Address,"RE: "+Patients.GetLim(SheetCur.PatNum).GetNameLF());//subject will work even if patnum invalid
 			}
 			if(SheetCur.SheetType==SheetTypeEnum.Statement && SaveStatementToDocDelegate!=null) {
 				SaveStatementToDocDelegate(Stmt,SheetCur,pdfFile);
@@ -1205,7 +1205,7 @@ namespace OpenDental {
 					if(Referrals.TryGetReferral(referralNum,out referral) && referral.EMail!="") {
 						emailAddress=referral.EMail;
 					}
-					subject=Lan.G(this,"RE: ")+Patients.GetLim(SheetCur.PatNum).GetNameLF();
+					subject="RE: "+Patients.GetLim(SheetCur.PatNum).GetNameLF();
 				}
 			}
 			string pdfFile=EmailSheet(emailAddress,subject);
@@ -1252,7 +1252,7 @@ namespace OpenDental {
 			}
 			catch (Exception ex)
 			{
-				FriendlyException.Show(Lan.G(this, "Unable to open the file."), ex);
+				FriendlyException.Show("Unable to open the file.", ex);
 				return;
 			}
 			SecurityLogs.MakeLogEntry(Permissions.SheetEdit,SheetCur.PatNum,SheetCur.Description+" from "+SheetCur.DateTimeSheet.ToShortDateString()+" pdf was created");
@@ -1272,8 +1272,8 @@ namespace OpenDental {
 			FormPatientSelect FormPS=new FormPatientSelect();
 			FormPS.SelectionModeOnly=true;
 			if(FormPS.ShowDialog()==DialogResult.OK) {
-				SecurityLogs.MakeLogEntry(Permissions.SheetEdit,SheetCur.PatNum,Lan.G(this,"Sheet with ID")+" "+SheetCur.SheetNum+" "+Lan.G(this,"moved to PatNum")+" "+FormPS.SelectedPatientId);
-				SecurityLogs.MakeLogEntry(Permissions.SheetEdit,FormPS.SelectedPatientId, Lan.G(this,"Sheet with ID")+" "+SheetCur.SheetNum+" "+Lan.G(this,"moved from PatNum")+" "+SheetCur.PatNum);
+				SecurityLogs.MakeLogEntry(Permissions.SheetEdit,SheetCur.PatNum,"Sheet with ID"+" "+SheetCur.SheetNum+" "+"moved to PatNum"+" "+FormPS.SelectedPatientId);
+				SecurityLogs.MakeLogEntry(Permissions.SheetEdit,FormPS.SelectedPatientId, "Sheet with ID"+" "+SheetCur.SheetNum+" "+"moved from PatNum"+" "+SheetCur.PatNum);
 				SheetCur.PatNum=FormPS.SelectedPatientId;
 			}
 		}
@@ -1410,7 +1410,7 @@ namespace OpenDental {
 					//at least one of these definitions is not hidden.
 					Def def=Defs.GetCatList((int)DefCat.ImageCats).FirstOrDefault(x => !x.IsHidden);
 					defNum=def.DefNum;
-					MessageBox.Show(this,Lan.G(this,"The Image Category Definition \"Letters\" could not be found.  Referral letter saved to:\r\n")+def.ItemName);
+					MessageBox.Show(this,"The Image Category Definition \"Letters\" could not be found.  Referral letter saved to:\r\n"+def.ItemName);
 				}
 				Document doc=ImageStore.Import(_tempPdfFile,defNum,patCur);
 				//Update sheetCur with the docnum
@@ -1538,10 +1538,10 @@ namespace OpenDental {
 					RichTextBox inputBox=(RichTextBox)control;
 					if(field.IsRequired && inputBox.Text.Trim()==""){
 						if(field.FieldName=="misc" && !string.IsNullOrWhiteSpace(field.ReportableName)) {
-							MessageBox.Show(Lan.G(this,"You must enter a value for")+" "+field.ReportableName+" "+Lan.G(this,"before continuing."));
+							MessageBox.Show("You must enter a value for"+" "+field.ReportableName+" "+"before continuing.");
 						}
 						else {
-							MessageBox.Show(Lan.G(this,"You must enter a value for")+" "+field.FieldName+" "+Lan.G(this,"before continuing."));
+							MessageBox.Show("You must enter a value for"+" "+field.FieldName+" "+"before continuing.");
 						}
 						return false;			
 					}	
@@ -1558,10 +1558,10 @@ namespace OpenDental {
 					System.Windows.Controls.RichTextBox richTextBox=(System.Windows.Controls.RichTextBox)elementHost.Child;
 					if(field.IsRequired && GetTextFromWpfRichTextBox(richTextBox).Trim()=="") {
 						if(field.FieldName=="misc" && !string.IsNullOrWhiteSpace(field.ReportableName)) {
-							MessageBox.Show(Lan.G(this,"You must enter a value for")+" "+field.ReportableName+" "+Lan.G(this,"before continuing."));
+							MessageBox.Show("You must enter a value for"+" "+field.ReportableName+" "+"before continuing.");
 						}
 						else {
-							MessageBox.Show(Lan.G(this,"You must enter a value for")+" "+field.FieldName+" "+Lan.G(this,"before continuing."));
+							MessageBox.Show("You must enter a value for"+" "+field.FieldName+" "+"before continuing.");
 						}
 						return false;
 					}
@@ -1588,7 +1588,7 @@ namespace OpenDental {
 							//int widthActual=(SheetCur.IsLandscape?SheetCur.Height:SheetCur.Width);
 							//int heightActual=(SheetCur.IsLandscape?SheetCur.Width:SheetCur.Height);
 							//int topMidBottom=(heightActual/3)
-							MessageBox.Show(Lan.G(this,"You must check the required checkbox."));
+							MessageBox.Show("You must check the required checkbox.");
 							return false;
 						}
 						else{//then radiobuttons (of both kinds)
@@ -1615,10 +1615,10 @@ namespace OpenDental {
 							}
 							if(numGroupButtons>0 && !valueSet){//there is not at least one radiobutton in the group that's checked.
 								if(field.RadioButtonGroup!="") {//if they are in a custom group
-									MessageBox.Show(Lan.G(this,"You must select a value for radio button group")+" '"+field.RadioButtonGroup+"'. ");
+									MessageBox.Show("You must select a value for radio button group"+" '"+field.RadioButtonGroup+"'. ");
 								}
 								else {
-									MessageBox.Show(Lan.G(this,"You must select a value for radio button group")+" '"+field.FieldName+"'. ");
+									MessageBox.Show("You must select a value for radio button group"+" '"+field.FieldName+"'. ");
 								}
 								return false;
 							}
@@ -1797,7 +1797,7 @@ namespace OpenDental {
 			}
 			Sheets.Delete(SheetCur.SheetNum,SheetCur.PatNum,SheetCur.ShowInTerminal);
 			SecurityLogs.MakeLogEntry(Permissions.SheetEdit,SheetCur.PatNum,SheetCur.Description
-				+" "+Lan.G(this,"deleted from")+" "+SheetCur.DateTimeSheet.ToShortDateString());
+				+" "+"deleted from"+" "+SheetCur.DateTimeSheet.ToShortDateString());
 			if(SheetCur.ShowInTerminal>0) {
 				Signalods.SetInvalid(InvalidType.Kiosk);
 			}
@@ -1818,7 +1818,7 @@ namespace OpenDental {
 				OkClose();
 			}
 			else if(SheetCur.SheetType==SheetTypeEnum.ExamSheet) {//Exam sheet saves and keeps the window open
-				butSave.Text=Lans.g(this,"Save");//If they decide to click it again, change the button text back
+				butSave.Text="Save";//If they decide to click it again, change the button text back
 				//Quit any threads still alive so that they do not change the button text too soon.
 				ODThread.QuitAsyncThreadsByGroupName("FormSheetFillEdit_ShowSaved_"+_uniqueFormIdentifier);
 				if(!VerifyRequiredFields()) {//If invalid, return.
@@ -1835,14 +1835,14 @@ namespace OpenDental {
 
 		///<summary>Shows the saved text on the save button for 3 seconds after clicking the save exam button.</summary>
 		private void ShowSaved() {
-			butSave.Text=Lans.g(this,"Saved!");
+			butSave.Text="Saved!";
 			ODThread thread=new ODThread((o) => {
 				o.Wait(3000);
 				this.InvokeIfNotDisposed(() => {
 					if(o.HasQuit) {//If the thread was quit because the user reclicked the save button within the three seconds.
 						return;
 					}
-					butSave.Text=Lans.g(this,"Save");
+					butSave.Text="Save";
 				});
 			});
 			thread.AddExceptionHandler((ex) => { });//Swallow the exception if something goes wrong.

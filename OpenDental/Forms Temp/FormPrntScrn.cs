@@ -59,7 +59,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormPrntScrn(){
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -256,7 +256,7 @@ namespace OpenDental{
         PrintReport(true);  //sets image as preview document
 			}
 			catch{
-  	    MessageBox.Show(Lan.G(this,"Before using this tool, you must first save a screen shot by holding the Alt key down and pressing the PrntScrn button which is just above and to the right of the Backspace key.  You will not notice anything happen, but now you will have a screenshot in memory.  Then, open this tool again to view or print your screenshot."));	
+  	    MessageBox.Show("Before using this tool, you must first save a screen shot by holding the Alt key down and pressing the PrntScrn button which is just above and to the right of the Backspace key.  You will not notice anything happen, but now you will have a screenshot in memory.  Then, open this tool again to view or print your screenshot.");	
 				butPrint.Enabled=false;
 				butExport.Enabled=false;
 				DialogResult=DialogResult.Cancel;	
@@ -313,7 +313,7 @@ namespace OpenDental{
 				}
 			}
 			catch{
-				MessageBox.Show(Lan.G(this,"Printer not available"));
+				MessageBox.Show("Printer not available");
 			}
 	  }
 
@@ -333,7 +333,7 @@ namespace OpenDental{
 		private void butExport_Click(object sender, System.EventArgs e) {
 			saveFileDialog2=new SaveFileDialog();
       saveFileDialog2.AddExtension=true;
-			saveFileDialog2.Title=Lan.G(this,"Select Folder to Save Image To");
+			saveFileDialog2.Title="Select Folder to Save Image To";
       saveFileDialog2.InitialDirectory=Prefs.GetString(PrefName.ExportPath); 
 			saveFileDialog2.DefaultExt="jpg";
 			saveFileDialog2.Filter="jpg files(*.jpg)|*.jpg|All files(*.*)|*.*";
@@ -345,7 +345,7 @@ namespace OpenDental{
         imageTemp.Save(saveFileDialog2.FileName, ImageFormat.Jpeg);
       }
       catch{
-        MessageBox.Show(Lan.G(this,"File in use by another program.  Close and try again."));  
+        MessageBox.Show("File in use by another program.  Close and try again.");  
 			}
 		}
 

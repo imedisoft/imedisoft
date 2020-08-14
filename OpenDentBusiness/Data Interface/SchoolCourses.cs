@@ -113,14 +113,14 @@ namespace OpenDentBusiness{
 				+POut.Long(courseNum)+"'";
 			DataTable table=Database.ExecuteDataTable(command);
 			if(PIn.String(table.Rows[0][0].ToString())!="0") {
-				throw new Exception(Lans.g("SchoolCourses","Course already in use by 'requirements needed' table."));
+				throw new Exception("Course already in use by 'requirements needed' table.");
 			}
 			//check for attached reqstudents--------------------------------------------------------------------------
 			command="SELECT COUNT(*) FROM reqstudent WHERE SchoolCourseNum = '"
 				+POut.Long(courseNum)+"'";
 			table=Database.ExecuteDataTable(command);
 			if(PIn.String(table.Rows[0][0].ToString())!="0") {
-				throw new Exception(Lans.g("SchoolCourses","Course already in use by 'student requirements' table."));
+				throw new Exception("Course already in use by 'student requirements' table.");
 			}
 			//delete---------------------------------------------------------------------------------------------
 			command= "DELETE from schoolcourse WHERE SchoolCourseNum = '"

@@ -24,7 +24,7 @@ namespace OpenDental {
 
 		public FormFeeSchedPickAuthOntario() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormFeeSchedPickAuthOntario_Load(object sender,EventArgs e) {

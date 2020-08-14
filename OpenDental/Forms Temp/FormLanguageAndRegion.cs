@@ -11,7 +11,7 @@ namespace OpenDental {
 
 		public FormLanguageAndRegion() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormLanguageAndRegion_Load(object sender,EventArgs e) {
@@ -32,7 +32,7 @@ namespace OpenDental {
 				comboLanguageAndRegion.Visible=false;
 				labelNewLAR.Visible=false;
 				butOK.Enabled=false;
-				butCancel.Text=Lan.G(this,"&Close");
+				butCancel.Text="&Close";
 				checkNoShow.Enabled=false;
 			}
 		}

@@ -21,7 +21,7 @@ namespace OpenDental {
 
 		public FormApptTypeEdit() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormApptTypeEdit_Load(object sender,EventArgs e) {

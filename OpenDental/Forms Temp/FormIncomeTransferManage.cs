@@ -19,7 +19,7 @@ namespace OpenDental {
 			_famCur=famCur;
 			_patCur=patCur;
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormIncomeTransferManage_Load(object sender,EventArgs e) {
@@ -49,11 +49,11 @@ namespace OpenDental {
 			string translationName=gridTransfers.TranslationName;
 			gridTransfers.BeginUpdate();
 			gridTransfers.ListGridColumns.Clear();
-			gridTransfers.ListGridColumns.Add(new GridColumn(Lan.G(translationName,"Date"),65,HorizontalAlignment.Center));
+			gridTransfers.ListGridColumns.Add(new GridColumn("Date",65,HorizontalAlignment.Center));
 			if(PrefC.HasClinicsEnabled) {//Clinics
-				gridTransfers.ListGridColumns.Add(new GridColumn(Lan.G(translationName,"Clinic"),80){ IsWidthDynamic=true });
+				gridTransfers.ListGridColumns.Add(new GridColumn("Clinic",80){ IsWidthDynamic=true });
 			}
-			gridTransfers.ListGridColumns.Add(new GridColumn(Lan.G(translationName,"Paid By"),80){ IsWidthDynamic=true });
+			gridTransfers.ListGridColumns.Add(new GridColumn("Paid By",80){ IsWidthDynamic=true });
 			gridTransfers.ListGridRows.Clear();
 			List<Payment> transfers=Payments.GetTransfers(_famCur.GetPatNums().ToArray());
 			foreach(Payment transfer in transfers.OrderBy(x => x.PayDate)) {
@@ -74,14 +74,14 @@ namespace OpenDental {
 		private void FillGridCharges() {
 			gridImbalances.BeginUpdate();
 			gridImbalances.ListGridColumns.Clear();
-			gridImbalances.ListGridColumns.Add(new GridColumn(Lan.G(this,"Prov"),80){ IsWidthDynamic=true });
-			gridImbalances.ListGridColumns.Add(new GridColumn(Lan.G(this,"Patient"),80){ IsWidthDynamic=true });
+			gridImbalances.ListGridColumns.Add(new GridColumn("Prov",80){ IsWidthDynamic=true });
+			gridImbalances.ListGridColumns.Add(new GridColumn("Patient",80){ IsWidthDynamic=true });
 			if(PrefC.HasClinicsEnabled) {
-				gridImbalances.ListGridColumns.Add(new GridColumn(Lan.G(this,"Clinic"),80){ IsWidthDynamic=true });
+				gridImbalances.ListGridColumns.Add(new GridColumn("Clinic",80){ IsWidthDynamic=true });
 			}
-			gridImbalances.ListGridColumns.Add(new GridColumn(Lan.G(this,"Charges"),80,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-			gridImbalances.ListGridColumns.Add(new GridColumn(Lan.G(this,"Credits"),80,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-			gridImbalances.ListGridColumns.Add(new GridColumn(Lan.G(this,"Balance"),80,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
+			gridImbalances.ListGridColumns.Add(new GridColumn("Charges",80,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
+			gridImbalances.ListGridColumns.Add(new GridColumn("Credits",80,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
+			gridImbalances.ListGridColumns.Add(new GridColumn("Balance",80,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
 			gridImbalances.ListGridRows.Clear();
 			_constructResults=PaymentEdit.ConstructAndLinkChargeCredits(_famCur.GetPatNums(),_patCur.PatNum,
 				new List<PaySplit>(),new Payment(),new List<AccountEntry>(),isIncomeTxfr:true);
@@ -189,7 +189,7 @@ namespace OpenDental {
 			paymentCur.PayType=0;
 			Payments.Insert(paymentCur);
 			PaySplits.InsertManyWithAssociated(paymentCur.PayNum,results.ListSplitsCur,results.ListSplitsAssociated);
-			string logText=Payments.GetSecuritylogEntryText(paymentCur,paymentCur,isNew:true)+", "+Lans.g(this,"from Income Transfer Manager.");
+			string logText=Payments.GetSecuritylogEntryText(paymentCur,paymentCur,isNew:true)+", "+"from Income Transfer Manager.";
 			SecurityLogs.MakeLogEntry(Permissions.PaymentCreate,paymentCur.PatNum,logText);
 			string strErrorMsg=Ledgers.ComputeAgingForPaysplitsAllocatedToDiffPats(_patCur.PatNum,results.ListSplitsCur);
 			if(!string.IsNullOrEmpty(strErrorMsg)) {
@@ -199,7 +199,7 @@ namespace OpenDental {
 			//Check to see if any providers have PaySplit entries associated to unallocated or unearned that have positive value.
 			//Negative unallocated or unearned should never be a thing after an income transfer has been made.
 			if(PaymentEdit.IsUnallocatedOrUnearnedNegative(_patCur.PatNum,_famCur,out string warningMessage,_constructResults.ListAccountCharges)) {
-				string displayText=Lans.g("PaymentEdit","The following pre-existing payment splits cannot be processed by the income transfer tool:")
+				string displayText="The following pre-existing payment splits cannot be processed by the income transfer tool:"
 					+"\r\n"+warningMessage;
 				MsgBoxCopyPaste msgBoxCopyPaste=new MsgBoxCopyPaste(displayText);
 				msgBoxCopyPaste.Show();

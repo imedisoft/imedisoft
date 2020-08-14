@@ -43,7 +43,7 @@ namespace OpenDental.User_Controls {
 				butSetAll.Visible=true;
 				comboUserGroup.Visible=true;
 				labelUserGroup.Visible=true;
-				label1.Text=Lan.G(this,"The current selection's internal name is:");
+				label1.Text="The current selection's internal name is:";
 			}
 			else {
 				butUp.Visible=true;
@@ -51,7 +51,7 @@ namespace OpenDental.User_Controls {
 				butSetAll.Visible=false;
 				comboUserGroup.Visible=false;
 				labelUserGroup.Visible=false;
-				label1.Text=Lan.G(this,"Move the selected item within its list.")+"\r\n"+Lan.G(this,"The current selection's internal name is:");
+				label1.Text="Move the selected item within its list."+"\r\n"+"The current selection's internal name is:";
 			}
 			if(refreshData) {
 				ListDisplayReportAll=DisplayReports.GetAll(true);
@@ -92,10 +92,10 @@ namespace OpenDental.User_Controls {
 			//Add Columns
 			int widthDisplayNameCol=140;
 			gridProdInc.ListGridColumns.Clear();
-			string displayColumnTitle=Lans.g(this,"Display Name");
-			string allowedColumnTitle=Lans.g(this,"Allowed");
-			string subMenuColumnTitle=Lans.g(this,"Sub\r\nMenu");
-			string hiddenColumnTitle=Lans.g(this,"Hidden");
+			string displayColumnTitle="Display Name";
+			string allowedColumnTitle="Allowed";
+			string subMenuColumnTitle="Sub\r\nMenu";
+			string hiddenColumnTitle="Hidden";
 			gridProdInc.ListGridColumns.Add(new GridColumn(displayColumnTitle,widthDisplayNameCol,!_isPermissionMode));
 			if(_isPermissionMode) {
 				gridProdInc.ListGridColumns.Add(new GridColumn(allowedColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });

@@ -27,7 +27,7 @@ namespace OpenDental
 
 			if (IsUpdate)
 			{
-				butShutdown.Text = Lan.G(this, "Continue");
+				butShutdown.Text = "Continue";
 			}
 		}
 

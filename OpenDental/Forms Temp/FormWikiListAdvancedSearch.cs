@@ -14,7 +14,7 @@ namespace OpenDental {
 		public FormWikiListAdvancedSearch(List<WikiListHeaderWidth> headers) {
 			InitializeComponent();
 			_listColHeaders=headers;
-			Lan.F(this);
+			
 		}
 
 		private void FormWikiListAdvancedSearch_Load(object sender,EventArgs e) {

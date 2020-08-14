@@ -23,7 +23,7 @@ namespace OpenDental {
 		public FormInCaseOfEmergency(PatField field) 
 		{
 			InitializeComponent();
-			Lan.F(this);
+			
 			_fieldCur=field;
 			_fieldOld=_fieldCur.Copy();
 	}

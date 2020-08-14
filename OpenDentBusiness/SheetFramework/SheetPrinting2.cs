@@ -62,29 +62,29 @@ namespace OpenDentBusiness{
 				else {
 					//Always centered on page.
 					xPos=0.5f*(width-
-														(TextRenderer.MeasureText(Lans.g("ContrTreat","Existing"),bodyFont).Width
-														+TextRenderer.MeasureText(Lans.g("ContrTreat","Complete"),bodyFont).Width
-														+TextRenderer.MeasureText(Lans.g("ContrTreat","Referred Out"),bodyFont).Width
-														+TextRenderer.MeasureText(Lans.g("ContrTreat","Treatment Planned"),bodyFont).Width
+														(TextRenderer.MeasureText("Existing",bodyFont).Width
+														+TextRenderer.MeasureText("Complete",bodyFont).Width
+														+TextRenderer.MeasureText("Referred Out",bodyFont).Width
+														+TextRenderer.MeasureText("Treatment Planned",bodyFont).Width
 														+123)); //inter-field spacing
 				}
 				g.FillRectangle(Brushes.White,new Rectangle((int)xPos,y-yPosPrint,width-2*(int)xPos+10,14)); //buffer the image for smooth drawing.
 				//Existing
 				g.FillRectangle(brushEx,xPos,yPos,14,14);
-				g.DrawString(Lans.g("ContrTreat","Existing"),bodyFont,Brushes.Black,xPos+16,yPos);
-				xPos+=TextRenderer.MeasureText(Lans.g("ContrTreat","Existing"),bodyFont).Width+23+16;
+				g.DrawString("Existing",bodyFont,Brushes.Black,xPos+16,yPos);
+				xPos+=TextRenderer.MeasureText("Existing",bodyFont).Width+23+16;
 				//Complete/ExistingComplete
 				g.FillRectangle(brushCo,xPos,yPos,7,14);
 				g.FillRectangle(brushEc,xPos+7,yPos,7,14);
-				g.DrawString(Lans.g("ContrTreat","Complete"),bodyFont,Brushes.Black,xPos+16,yPos);
-				xPos+=TextRenderer.MeasureText(Lans.g("ContrTreat","Complete"),bodyFont).Width+23+16;
+				g.DrawString("Complete",bodyFont,Brushes.Black,xPos+16,yPos);
+				xPos+=TextRenderer.MeasureText("Complete",bodyFont).Width+23+16;
 				//ReferredOut
 				g.FillRectangle(brushRo,xPos,yPos,14,14);
-				g.DrawString(Lans.g("ContrTreat","Referred Out"),bodyFont,Brushes.Black,xPos+16,yPos);
-				xPos+=TextRenderer.MeasureText(Lans.g("ContrTreat","Referred Out"),bodyFont).Width+23+16;
+				g.DrawString("Referred Out",bodyFont,Brushes.Black,xPos+16,yPos);
+				xPos+=TextRenderer.MeasureText("Referred Out",bodyFont).Width+23+16;
 				//TreatmentPlanned
 				g.FillRectangle(brushTp,xPos,yPos,14,14);
-				g.DrawString(Lans.g("ContrTreat","Treatment Planned"),bodyFont,Brushes.Black,xPos+16,yPos);
+				g.DrawString("Treatment Planned",bodyFont,Brushes.Black,xPos+16,yPos);
 			}
 			else {
 				XFont bodyFontX;
@@ -102,37 +102,37 @@ namespace OpenDentBusiness{
 				else {
 					//Always centered on page.
 					xPos=0.5f*(width-
-							          (TextRenderer.MeasureText(Lans.g("ContrTreat","Existing"),bodyFont).Width
-							          +TextRenderer.MeasureText(Lans.g("ContrTreat","Complete"),bodyFont).Width
-							          +TextRenderer.MeasureText(Lans.g("ContrTreat","Referred Out"),bodyFont).Width
-							          +TextRenderer.MeasureText(Lans.g("ContrTreat","Treatment Planned"),bodyFont).Width
+							          (TextRenderer.MeasureText("Existing",bodyFont).Width
+							          +TextRenderer.MeasureText("Complete",bodyFont).Width
+							          +TextRenderer.MeasureText("Referred Out",bodyFont).Width
+							          +TextRenderer.MeasureText("Treatment Planned",bodyFont).Width
 							          +123)); //inter-field spacing
 				}
 				gx.DrawRectangle(XBrushes.White,new RectangleF((float)p(xPos),(float)p(y-yPosPrint),(float)p(width-2*xPos+10),(float)p(14))); //buffer the image for smooth drawing.
 				//Existing
 				gx.DrawRectangle(brushEx,p(xPos),p(yPos),p(14),p(14));
-				GraphicsHelper.DrawStringX(gx,Lans.g("ContrTreat","Existing"),bodyFontX,XBrushes.Black,
-					new RectangleF(xPos+16,yPos-1,TextRenderer.MeasureText(Lans.g("ContrTreat","Existing"),bodyFont).Width,14),HorizontalAlignment.Left);
-				//gx.DrawString(Lans.g("ContrTreat","Existing"),bodyFontX,Brushes.Black,p(xPos+16),p(yPos));
-				xPos+=TextRenderer.MeasureText(Lans.g("ContrTreat","Existing"),bodyFont).Width+23+16;
+				GraphicsHelper.DrawStringX(gx,"Existing",bodyFontX,XBrushes.Black,
+					new RectangleF(xPos+16,yPos-1,TextRenderer.MeasureText("Existing",bodyFont).Width,14),HorizontalAlignment.Left);
+				//gx.DrawString("Existing",bodyFontX,Brushes.Black,p(xPos+16),p(yPos));
+				xPos+=TextRenderer.MeasureText("Existing",bodyFont).Width+23+16;
 				//Complete/ExistingComplete
 				gx.DrawRectangle(brushCo,p(xPos),p(yPos),p(7),p(14));
 				gx.DrawRectangle(brushEc,p(xPos+7),p(yPos),p(7),p(14));
-				GraphicsHelper.DrawStringX(gx,Lans.g("ContrTreat","Complete"),bodyFontX,XBrushes.Black,
-					new RectangleF(xPos+16,yPos-1,TextRenderer.MeasureText(Lans.g("ContrTreat","Complete"),bodyFont).Width,14),HorizontalAlignment.Left);
-				//gx.DrawString(Lans.g("ContrTreat","Complete"),bodyFontX,Brushes.Black,p(xPos+16),p(yPos));
-				xPos+=TextRenderer.MeasureText(Lans.g("ContrTreat","Complete"),bodyFont).Width+23+16;
+				GraphicsHelper.DrawStringX(gx,"Complete",bodyFontX,XBrushes.Black,
+					new RectangleF(xPos+16,yPos-1,TextRenderer.MeasureText("Complete",bodyFont).Width,14),HorizontalAlignment.Left);
+				//gx.DrawString("Complete",bodyFontX,Brushes.Black,p(xPos+16),p(yPos));
+				xPos+=TextRenderer.MeasureText("Complete",bodyFont).Width+23+16;
 				//ReferredOut
 				gx.DrawRectangle(brushRo,p(xPos),p(yPos),p(14),p(14));
-				GraphicsHelper.DrawStringX(gx,Lans.g("ContrTreat","Referred Out"),bodyFontX,XBrushes.Black,
-					new RectangleF(xPos+16,yPos-1,TextRenderer.MeasureText(Lans.g("ContrTreat","Referred Out"),bodyFont).Width,14),HorizontalAlignment.Left);
-				//gx.DrawString(Lans.g("ContrTreat","Referred Out"),bodyFontX,Brushes.Black,p(xPos+16),p(yPos));
-				xPos+=TextRenderer.MeasureText(Lans.g("ContrTreat","Referred Out"),bodyFont).Width+23+16;
+				GraphicsHelper.DrawStringX(gx,"Referred Out",bodyFontX,XBrushes.Black,
+					new RectangleF(xPos+16,yPos-1,TextRenderer.MeasureText("Referred Out",bodyFont).Width,14),HorizontalAlignment.Left);
+				//gx.DrawString("Referred Out",bodyFontX,Brushes.Black,p(xPos+16),p(yPos));
+				xPos+=TextRenderer.MeasureText("Referred Out",bodyFont).Width+23+16;
 				//TreatmentPlanned
 				gx.DrawRectangle(brushTp,p(xPos),p(yPos),p(14),p(14));
-				GraphicsHelper.DrawStringX(gx,Lans.g("ContrTreat","Treatment Planned"),bodyFontX,XBrushes.Black,
-					new RectangleF(xPos+16,yPos-1,TextRenderer.MeasureText(Lans.g("ContrTreat","Treatment Planned"),bodyFont).Width,14),HorizontalAlignment.Left);
-				//gx.DrawString(Lans.g("ContrTreat","Treatment Planned"),bodyFontX,Brushes.Black,p(xPos+16),p(yPos));
+				GraphicsHelper.DrawStringX(gx,"Treatment Planned",bodyFontX,XBrushes.Black,
+					new RectangleF(xPos+16,yPos-1,TextRenderer.MeasureText("Treatment Planned",bodyFont).Width,14),HorizontalAlignment.Left);
+				//gx.DrawString("Treatment Planned",bodyFontX,Brushes.Black,p(xPos+16),p(yPos));
 			}
 		}
 

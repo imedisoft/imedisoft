@@ -25,7 +25,7 @@ namespace OpenDental {
 
 		public FormBenefitFrequencies(List<Benefit> listBenefits,long planNum,bool useCalendarYear) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_listBenefitsAll=listBenefits;
 			_planNum=planNum;
 			_useCalendarYear=useCalendarYear;

@@ -503,7 +503,7 @@ namespace OpenDentBusiness
 			patientSynch.PriProv = primaryProvNum;
 			patientSynch.ClinicNum = clinicNum;
 			Patients.Insert(patientSynch, false);
-			SecurityLogs.MakeLogEntry(Permissions.PatientCreate, patientSynch.PatNum, Lans.g("ContrFamily", "Created from Family Module Clones Add button."));
+			SecurityLogs.MakeLogEntry(Permissions.PatientCreate, patientSynch.PatNum, "Created from Family Module Clones Add button.");
 			PatientLinks.Insert(new PatientLink()
 			{
 				PatNumFrom = patient.PatNum,
@@ -570,7 +570,7 @@ namespace OpenDentBusiness
 				string changes = SynchCloneWithPatient(patient, patientSynch, familyCur, listInsPlans, listInsSubs, listBenefits, listPatPlans);
 				if (!string.IsNullOrWhiteSpace(changes))
 				{
-					stringBuilder.AppendLine(Lans.g("ContrFamily", "The following changes were made to the patient")
+					stringBuilder.AppendLine("The following changes were made to the patient"
 							+ " " + patientSynch.PatNum + " - " + Patients.GetNameFL(patientSynch.LName, patientSynch.FName, patientSynch.Preferred, patientSynch.MiddleI)
 							+ ":\r\n" + changes);
 				}
@@ -596,15 +596,15 @@ namespace OpenDentBusiness
 			}
 			InsertBillTypeChangeSecurityLogEntry(patCloneOld, patientSynch);
 			string strDataUpdated = "";
-			string strChngFrom = " " + Lans.g("ContrFamily", "changed from") + " ";
-			string strChngTo = " " + Lans.g("ContrFamily", "to") + " ";
-			string strBlank = Lans.g("ContrFamily", "blank");
+			string strChngFrom = " " + "changed from" + " ";
+			string strChngTo = " " + "to" + " ";
+			string strBlank = "blank";
 			foreach (PatientCloneField patientCloneField in patientCloneDemoChanges.ListFieldsUpdated)
 			{
-				strDataUpdated += Lans.g("ContrFamily", patientCloneField.FieldName) + strChngFrom;
-				strDataUpdated += (string.IsNullOrEmpty(patientCloneField.OldValue)) ? strBlank : patientCloneField.OldValue;
+				strDataUpdated += patientCloneField.FieldName + strChngFrom;
+				strDataUpdated += string.IsNullOrEmpty(patientCloneField.OldValue) ? strBlank : patientCloneField.OldValue;
 				strDataUpdated += strChngTo;
-				strDataUpdated += (string.IsNullOrEmpty(patientCloneField.NewValue)) ? strBlank : patientCloneField.NewValue;
+				strDataUpdated += string.IsNullOrEmpty(patientCloneField.NewValue) ? strBlank : patientCloneField.NewValue;
 				strDataUpdated += "\r\n";
 			}
 			if (familyCur == null)
@@ -1012,8 +1012,8 @@ namespace OpenDentBusiness
 					{//different insplan
 						continue;
 					}
-					patientClonePatPlanChanges.StrDataUpdated += Lans.g("ContrFamily", "Insurance Plans do not match.  "
-						+ "Due to a claim with today's date we cannot synch the plans, the issue must be corrected manually on the following plan")
+					patientClonePatPlanChanges.StrDataUpdated += "Insurance Plans do not match.  "
+						+ "Due to a claim with today's date we cannot synch the plans, the issue must be corrected manually on the following plan"
 						+ ": " + InsPlans.GetDescript(insSubCloneCur.PlanNum, familyCur, listInsPlans, listPatPlansForSynch[i].InsSubNum, listInsSubs) + ".\r\n";
 					isAttachedToClaim = true;
 					break;
@@ -1022,7 +1022,7 @@ namespace OpenDentBusiness
 				{//we will continue trying to drop non-clone additional plans, but only if no claim for today exists
 					continue;
 				}
-				patientClonePatPlanChanges.StrDataUpdated += Lans.g("ContrFamily", "The following insurance plan was dropped due to it not existing with the same ordinal on the original patient") + ": "
+				patientClonePatPlanChanges.StrDataUpdated += "The following insurance plan was dropped due to it not existing with the same ordinal on the original patient" + ": "
 					+ InsPlans.GetDescript(insSubCloneCur.PlanNum, familyCur, listInsPlans, listPatPlansForSynch[i].InsSubNum, listInsSubs) + ".\r\n";
 				patientClonePatPlanChanges.PatPlansChanged = true;
 				PatPlans.DeleteNonContiguous(listPatPlansForSynch[i].PatPlanNum);
@@ -1038,7 +1038,7 @@ namespace OpenDentBusiness
 					patPlanNew.PatNum = patientSynch.PatNum;
 					PatPlans.Insert(patPlanNew);
 					patientClonePatPlanChanges.PatPlansInserted = true;
-					patientClonePatPlanChanges.StrDataUpdated += Lans.g("ContrFamily", "The following insurance was added") + ": " + insPlanNonCloneDescriptCur + ".\r\n";
+					patientClonePatPlanChanges.StrDataUpdated += "The following insurance was added" + ": " + insPlanNonCloneDescriptCur + ".\r\n";
 					patientClonePatPlanChanges.PatPlansChanged = true;
 					continue;
 				}
@@ -1055,8 +1055,8 @@ namespace OpenDentBusiness
 						{//different insplan
 							continue;
 						}
-						patientClonePatPlanChanges.StrDataUpdated += Lans.g("ContrFamily", "Insurance Plans do not match.  "
-							+ "Due to a claim with today's date we cannot synch the plans, the issue must be corrected manually on the following plan")
+						patientClonePatPlanChanges.StrDataUpdated += "Insurance Plans do not match.  "
+							+ "Due to a claim with today's date we cannot synch the plans, the issue must be corrected manually on the following plan"
 							+ ": " + insPlanCloneDescriptCur + ".\r\n";
 						isAttachedToClaim = true;
 						break;
@@ -1065,7 +1065,7 @@ namespace OpenDentBusiness
 					{//if we cannot change this plan to match the non-clone's plan at the same ordinal, we will synch the rest of the plans and let the user know to fix manually
 						continue;
 					}
-					patientClonePatPlanChanges.StrDataUpdated += Lans.g("ContrFamily", "The following plan was updated to match the selected patient's plan") + ": " + insPlanCloneDescriptCur + ".\r\n";
+					patientClonePatPlanChanges.StrDataUpdated += "The following plan was updated to match the selected patient's plan" + ": " + insPlanCloneDescriptCur + ".\r\n";
 					patientClonePatPlanChanges.PatPlansChanged = true;
 					PatPlans.DeleteNonContiguous(listPatPlansForSynch[i].PatPlanNum);//we use the NonContiguous version because we are going to insert into this same ordinal, compute estimates will happen at the end of all the changes
 					PatPlan patPlanCopy = listPatPlans[i].Copy();
@@ -1077,29 +1077,29 @@ namespace OpenDentBusiness
 					//both clone and non-clone have the same patplan.InsSubNum at this position in their list, just make sure all data in the patplans match
 					if (listPatPlans[i].Ordinal != listPatPlansForSynch[i].Ordinal)
 					{
-						patientClonePatPlanChanges.StrDataUpdated += Lans.g("ContrFamily", "The ordinal of the insurance plan") + " " + insPlanCloneDescriptCur + " "
-							+ Lans.g("ContrFamily", "was updated to") + " " + listPatPlans[i].Ordinal.ToString() + ".\r\n";
+						patientClonePatPlanChanges.StrDataUpdated += "The ordinal of the insurance plan" + " " + insPlanCloneDescriptCur + " "
+							+ "was updated to" + " " + listPatPlans[i].Ordinal.ToString() + ".\r\n";
 						patientClonePatPlanChanges.PatPlansChanged = true;
 						listPatPlansForSynch[i].Ordinal = listPatPlans[i].Ordinal;
 					}
 					if (listPatPlans[i].IsPending != listPatPlansForSynch[i].IsPending)
 					{
-						patientClonePatPlanChanges.StrDataUpdated += Lans.g("ContrFamily", "The pending status of the insurance plan") + " " + insPlanCloneDescriptCur + " "
-							+ Lans.g("ContrFamily", "was updated to") + " " + listPatPlans[i].IsPending.ToString() + ".\r\n";
+						patientClonePatPlanChanges.StrDataUpdated += "The pending status of the insurance plan" + " " + insPlanCloneDescriptCur + " "
+							+ "was updated to" + " " + listPatPlans[i].IsPending.ToString() + ".\r\n";
 						patientClonePatPlanChanges.PatPlansChanged = true;
 						listPatPlansForSynch[i].IsPending = listPatPlans[i].IsPending;
 					}
 					if (listPatPlans[i].Relationship != listPatPlansForSynch[i].Relationship)
 					{
-						patientClonePatPlanChanges.StrDataUpdated += Lans.g("ContrFamily", "The relationship to the subscriber of the insurance plan") + " " + insPlanCloneDescriptCur + " "
-							+ Lans.g("ContrFamily", "was updated to") + " " + listPatPlans[i].Relationship.ToString() + ".\r\n";
+						patientClonePatPlanChanges.StrDataUpdated += "The relationship to the subscriber of the insurance plan" + " " + insPlanCloneDescriptCur + " "
+							+ "was updated to" + " " + listPatPlans[i].Relationship.ToString() + ".\r\n";
 						patientClonePatPlanChanges.PatPlansChanged = true;
 						listPatPlansForSynch[i].Relationship = listPatPlans[i].Relationship;
 					}
 					if (listPatPlans[i].PatID != listPatPlansForSynch[i].PatID)
 					{
-						patientClonePatPlanChanges.StrDataUpdated += Lans.g("ContrFamily", "The patient ID of the insurance plan") + " " + insPlanCloneDescriptCur + " "
-							+ Lans.g("ContrFamily", "was updated to") + " " + listPatPlans[i].PatID + ".\r\n";
+						patientClonePatPlanChanges.StrDataUpdated += "The patient ID of the insurance plan" + " " + insPlanCloneDescriptCur + " "
+							+ "was updated to" + " " + listPatPlans[i].PatID + ".\r\n";
 						patientClonePatPlanChanges.PatPlansChanged = true;
 						listPatPlansForSynch[i].PatID = listPatPlans[i].PatID;
 					}
@@ -1108,7 +1108,7 @@ namespace OpenDentBusiness
 			}
 			if (patientClonePatPlanChanges.PatPlansInserted)
 			{
-				SecurityLogs.MakeLogEntry(Permissions.PatPlanCreate, 0, Lans.g("ContrFamily", "One or more PatPlans created via Synch Clone tool."));
+				SecurityLogs.MakeLogEntry(Permissions.PatPlanCreate, 0, "One or more PatPlans created via Synch Clone tool.");
 			}
 			if (patientClonePatPlanChanges.PatPlansChanged)
 			{
@@ -4422,19 +4422,19 @@ namespace OpenDentBusiness
 			//No need to check RemotingRole; no call to db.
 			if (newPassword.Length < 8)
 			{
-				return Lans.g("FormPatientPortal", "Password must be at least 8 characters long.");
+				return "Password must be at least 8 characters long.";
 			}
 			if (!Regex.IsMatch(newPassword, "[A-Z]+"))
 			{
-				return Lans.g("FormPatientPortal", "Password must contain an uppercase letter.");
+				return "Password must contain an uppercase letter.";
 			}
 			if (!Regex.IsMatch(newPassword, "[a-z]+"))
 			{
-				return Lans.g("FormPatientPortal", "Password must contain an lowercase letter.");
+				return "Password must contain an lowercase letter.";
 			}
 			if (!Regex.IsMatch(newPassword, "[0-9]+"))
 			{
-				return Lans.g("FormPatientPortal", "Password must contain a number.");
+				return "Password must contain a number.";
 			}
 			return "";
 		}

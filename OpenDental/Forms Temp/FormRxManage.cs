@@ -21,7 +21,7 @@ namespace OpenDental {
 		public FormRxManage(Patient patCur) {
 			InitializeComponent();
 			_patCur=patCur;
-			Lan.F(this);
+			
 		}
 
 		private void FormRxManage_Load(object sender,System.EventArgs e) {
@@ -31,21 +31,21 @@ namespace OpenDental {
 		private void FillGrid() {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableRxManage","Date"),70);
+			GridColumn col=new GridColumn("Date",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRxManage","Drug"),140);
+			col=new GridColumn("Drug",140);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRxManage","Sig"),70){ IsWidthDynamic=true };
+			col=new GridColumn("Sig",70){ IsWidthDynamic=true };
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRxManage","Disp"),70);
+			col=new GridColumn("Disp",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRxManage","Refills"),70);
+			col=new GridColumn("Refills",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRxManage","Provider"),70);
+			col=new GridColumn("Provider",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRxManage","Notes"),70){ IsWidthDynamic=true };
+			col=new GridColumn("Notes",70){ IsWidthDynamic=true };
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRxManage","Missing Info"),70){ IsWidthDynamic=true };
+			col=new GridColumn("Missing Info",70){ IsWidthDynamic=true };
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			_listRx=RxPats.GetAllForPat(_patCur.PatNum);

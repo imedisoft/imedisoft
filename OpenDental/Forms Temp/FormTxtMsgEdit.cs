@@ -22,7 +22,7 @@ namespace OpenDental {
 		
 		public FormTxtMsgEdit() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormTxtMsgEdit_Load(object sender,EventArgs e) {
@@ -71,7 +71,7 @@ namespace OpenDental {
 				else if(PrefC.HasClinicsEnabled && !Clinics.IsTextingEnabled(clinicNum)) { //Checking for specific clinic.
 					//This is likely to happen a few times per office until they setup texting properly.
 					if(clinicNum!=0) {
-						MessageBox.Show(Lans.g(this,"Integrated Texting has not been enabled for the following clinic")+":\r\n"+Clinics.GetClinic(clinicNum).Description+".");
+						MessageBox.Show("Integrated Texting has not been enabled for the following clinic"+":\r\n"+Clinics.GetClinic(clinicNum).Description+".");
 					}
 					else {
 						//Should never happen. This message is precautionary.

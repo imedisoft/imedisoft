@@ -70,7 +70,7 @@ namespace OpenDental {
 		///<summary></summary>
 		public FormMisc(){
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -777,10 +777,10 @@ namespace OpenDental {
 			textMainWindowTitle.Text=Prefs.GetString(PrefName.MainWindowTitle);
 			checkUseClinicAbbr.Checked=Prefs.GetBool(PrefName.TitleBarClinicUseAbbr);
 			checkTitleBarShowSpecialty.Checked=Prefs.GetBool(PrefName.TitleBarShowSpecialty);
-			comboShowID.Items.Add(Lan.G(this,"None"));
-			comboShowID.Items.Add(Lan.G(this,"PatNum"));
-			comboShowID.Items.Add(Lan.G(this,"ChartNumber"));
-			comboShowID.Items.Add(Lan.G(this,"Birthdate"));
+			comboShowID.Items.Add("None");
+			comboShowID.Items.Add("PatNum");
+			comboShowID.Items.Add("ChartNumber");
+			comboShowID.Items.Add("Birthdate");
 			comboShowID.SelectedIndex=PrefC.GetInt(PrefName.ShowIDinTitleBar);
 			checkImeCompositionCompatibility.Checked=Prefs.GetBool(PrefName.ImeCompositionCompatibility);
 			checkTitleBarShowSite.Checked=Prefs.GetBool(PrefName.TitleBarShowSite);
@@ -801,11 +801,11 @@ namespace OpenDental {
 				textLanguageAndRegion.Text=PrefC.GetLanguageAndRegion().DisplayName;
 			}
 			else {
-				textLanguageAndRegion.Text=Lan.G(this,"None");
+				textLanguageAndRegion.Text="None";
 			}
 			textNumDecimals.Text=CultureInfo.CurrentCulture.NumberFormat.CurrencyDecimalDigits.ToString();
 			_trackLastClinicBy=new List<string> { "None","Workstation","User" };//must be in english because these values are stored in DB.
-			_trackLastClinicBy.ForEach(x => comboTrackClinic.Items.Add(Lan.G(this,x)));//translation is for display only.
+			_trackLastClinicBy.ForEach(x => comboTrackClinic.Items.Add(x));//translation is for display only.
 			comboTrackClinic.SelectedIndex=_trackLastClinicBy.FindIndex(x => x==Prefs.GetString(PrefName.ClinicTrackLast));
 			if(comboTrackClinic.SelectedIndex==-1) {
 				comboTrackClinic.SelectedIndex=0;
@@ -858,7 +858,7 @@ namespace OpenDental {
 				textLanguageAndRegion.Text=PrefC.GetLanguageAndRegion().DisplayName;
 			}
 			else {
-				textLanguageAndRegion.Text=Lan.G(this,"None");
+				textLanguageAndRegion.Text="None";
 			}
 		}
 
@@ -874,12 +874,12 @@ namespace OpenDental {
 		private void checkUseFamAgingTable_Click(object sender,EventArgs e) {
 			if(checkAgingIsEnterprise.Checked && !Prefs.GetBool(PrefName.AgingIsEnterprise)) {
 				//Enabling feature that is turned off according to pref table.
-				string msgTxt=Lan.G(this,"In order to enable enterprise aging, enter the password from our manual below.");
+				string msgTxt="In order to enable enterprise aging, enter the password from our manual below.";
 				if(Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)) {
 					//Conditional warning that only affects Monthly Aging customers.
-					msgTxt+="\r\n"+Lan.G(this,"Note: This will change your aging from calculated monthly to calculated daily.");
+					msgTxt+="\r\n"+"Note: This will change your aging from calculated monthly to calculated daily.";
 				}
-				InputBox iBox=new InputBox(msgTxt) { Text=Lan.G(this,"Enter Password") };
+				InputBox iBox=new InputBox(msgTxt) { Text="Enter Password" };
 				iBox.ShowDialog();
 				if(iBox.DialogResult!=DialogResult.OK) {
 					checkAgingIsEnterprise.Checked=false;
@@ -914,7 +914,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textAuditEntries.errorProvider1.GetError(textAuditEntries)!="" || !textAlertInterval.IsValid || !textInactiveAlert.IsValid) {
-				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(string.IsNullOrWhiteSpace(textSigInterval.Text) && Prefs.GetLong(PrefName.ProcessSigsIntervalInSecs)!=0) {
@@ -927,8 +927,8 @@ namespace OpenDental {
 				}
 			}
 			if(PIn.Long(textSigInterval.Text)>=(5+(PIn.Long(textInactiveSignal.Text)*60)) && PIn.Long(textInactiveSignal.Text)!=0) {//Signal Refresh time is less than or equal to 5 seconds plus the number of seconds in textSigInterval
-				string question=Lans.g(this,"The inactive signal time is less than or equal to the signal refresh time.")+"\r\n"
-					+Lans.g(this,"This could inadvertently cause signals to not correctly refresh.  Continue?");
+				string question="The inactive signal time is less than or equal to the signal refresh time."+"\r\n"
+					+"This could inadvertently cause signals to not correctly refresh.  Continue?";
 				if(MessageBox.Show(question,"",MessageBoxButtons.YesNo)!=DialogResult.Yes) {
 					return;
 				}

@@ -43,7 +43,7 @@ namespace OpenDental {
 			_provNum=provNum;
 			_patCur=Patients.GetPat(payPlanCur.PatNum);
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormPayPlanCredits_Load(object sender,EventArgs e) {
@@ -56,7 +56,7 @@ namespace OpenDental {
 			_listPayments=loadData.ListPayments;
 			_listInsPayAsTotal=loadData.ListInsPayAsTotal;
 			_listClaimProcs=loadData.ListClaimProcs;
-			textCode.Text=Lan.G(this,"None");
+			textCode.Text="None";
 			FillGrid();
 			if(!Security.IsAuthorized(Permissions.PayPlanEdit,true)) {
 				this.DisableAllExcept(butCancel,checkHideUnattached,checkShowImplicit,butPrint,gridMain);
@@ -96,25 +96,25 @@ namespace OpenDental {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G("TablePaymentPlanProcsAndCreds","Date"),70);
+			col=new GridColumn("Date",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TablePaymentPlanProcsAndCreds","Provider"),65);
+			col=new GridColumn("Provider",65);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TablePaymentPlanProcsAndCreds","Stat"),30);
+			col=new GridColumn("Stat",30);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TablePaymentPlanProcsAndCreds","Code"),70);
+			col=new GridColumn("Code",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TablePaymentPlanProcsAndCreds","Fee"),55,HorizontalAlignment.Right);
+			col=new GridColumn("Fee",55,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TablePaymentPlanProcsAndCreds","Rem Before"),70,HorizontalAlignment.Right);
+			col=new GridColumn("Rem Before",70,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TablePaymentPlanProcsAndCreds","Credit Date"),70);
+			col=new GridColumn("Credit Date",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TablePaymentPlanProcsAndCreds","Amount"),55,HorizontalAlignment.Right);
+			col=new GridColumn("Amount",55,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TablePaymentPlanProcsAndCreds","Rem After"),60,HorizontalAlignment.Right);
+			col=new GridColumn("Rem After",60,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TablePaymentPlanProcsAndCreds","Note"),70){ IsWidthDynamic=true };
+			col=new GridColumn("Note",70){ IsWidthDynamic=true };
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -188,10 +188,10 @@ namespace OpenDental {
 			bool isUpdateButton=false;//keep track of the state of the button, if it is add or update. 
 			if(listSelectedEntries.Count==0) { //if there are no entries selected
 				//button should say Add, textboxes should be editable. No attached procedure.
-				butAddOrUpdate.Text=Lan.G(this,"Add");
+				butAddOrUpdate.Text="Add";
 				textAmt.Text="";
 				textDate.Text="";
-				textCode.Text=Lan.G(this,"None");
+				textCode.Text="None";
 				textNote.Text="";
 				textAmt.ReadOnly=false;
 				textDate.ReadOnly=false;
@@ -204,7 +204,7 @@ namespace OpenDental {
 				textNote.ReadOnly=false;
 				if(selectedEntry.IsChargeOrd) { //if it's a PayPlanCharge
 					//button should say Update, text boxes should fill with info from that charge.
-					butAddOrUpdate.Text=Lan.G(this,"Update");
+					butAddOrUpdate.Text="Update";
 					isUpdateButton=true;
 					textAmt.Text=selectedEntry.AmtStr;
 					textNote.Text=selectedEntry.NoteStr;
@@ -217,7 +217,7 @@ namespace OpenDental {
 						textDate.Text=selectedEntry.CredDateStr;
 					}
 					if(selectedEntry.Proc==null) { //selected charge could be unattached.
-						textCode.Text=Lan.G(this,"Unattached");
+						textCode.Text="Unattached";
 					}
 					else {
 						textCode.Text=ProcedureCodes.GetStringProcCode(selectedEntry.Proc.CodeNum);
@@ -225,9 +225,9 @@ namespace OpenDental {
 				}
 				else {// selected line item is a procedure (or the "Unattached" entry)
 					//button should say "Add", text boxes should fill with info from that procedure (or "unattached").
-					butAddOrUpdate.Text=Lan.G(this,"Add");
+					butAddOrUpdate.Text="Add";
 					if(selectedEntry.Proc==null) {
-						textCode.Text=Lan.G(this,"Unattached");
+						textCode.Text="Unattached";
 						textAmt.Text="0.00";
 						textNote.Text="";
 						textDate.Text=DateTimeOD.Today.ToShortDateString();
@@ -251,11 +251,11 @@ namespace OpenDental {
 			else if(listSelectedEntries.Count>1) { //if they selected multiple line items
 				//change the button to say "add"
 				//blank out and make read-only all text boxes.
-				butAddOrUpdate.Text=Lan.G(this,"Add");
+				butAddOrUpdate.Text="Add";
 				textAmt.Text="";
 				textDate.Text="";
 				textNote.Text="";
-				textCode.Text=Lan.G(this,"Multiple");
+				textCode.Text="Multiple";
 				textAmt.ReadOnly=true;
 				textDate.ReadOnly=true;
 				textNote.ReadOnly=true;
@@ -376,7 +376,7 @@ namespace OpenDental {
 		private void butPrint_Click(object sender,EventArgs e) {
 			pagesPrinted=0;
 			headingPrinted=false;
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"Outstanding insurance report printed"),PrintoutOrientation.Landscape);
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,"Outstanding insurance report printed",PrintoutOrientation.Landscape);
 		}
 
 		private void pd_PrintPage(object sender,System.Drawing.Printing.PrintPageEventArgs e) {
@@ -390,7 +390,7 @@ namespace OpenDental {
 			int center=bounds.X+bounds.Width/2;
 			#region printHeading
 			if(!headingPrinted) {
-				text=Lan.G(this,"Payment Plan Credits");
+				text="Payment Plan Credits";
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
 				text=DateTime.Today.ToShortDateString();
@@ -410,7 +410,7 @@ namespace OpenDental {
 			}
 			else {
 				e.HasMorePages=false;
-				text=Lan.G(this,"Total")+": "+PIn.Double(textTotal.Text).ToString("c");
+				text="Total"+": "+PIn.Double(textTotal.Text).ToString("c");
 				g.DrawString(text,subHeadingFont,Brushes.Black,center+gridMain.Width/2-g.MeasureString(text,subHeadingFont).Width-10,yPos);
 			}
 			g.Dispose();

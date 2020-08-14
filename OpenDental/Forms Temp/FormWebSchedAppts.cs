@@ -16,7 +16,7 @@ namespace OpenDental {
 		///<summary>Form showing new appointments made using web sched.</summary>
 		public FormWebSchedAppts() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		public FormWebSchedAppts(bool isNewPat,bool isRecall,bool isASAP):this() {
@@ -61,20 +61,20 @@ namespace OpenDental {
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
 			if(PrefC.HasClinicsEnabled) {
-				col=new GridColumn(Lan.G(this,"Clinic"),100);
+				col=new GridColumn("Clinic",100);
 				gridMain.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.G(this,"Date Time Created"),150);
+			col=new GridColumn("Date Time Created",150);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Appt Date Time"),150);
+			col=new GridColumn("Appt Date Time",150);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Patient Name"),150);
+			col=new GridColumn("Patient Name",150);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Patient DOB"),100);
+			col=new GridColumn("Patient DOB",100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Confirmation Status"),150);
+			col=new GridColumn("Confirmation Status",150);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Appt Note"),300);
+			col=new GridColumn("Appt Note",300);
 			gridMain.ListGridColumns.Add(col);
 			//Rows
 			gridMain.ListGridRows.Clear();

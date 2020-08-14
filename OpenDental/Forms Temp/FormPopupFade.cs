@@ -87,9 +87,6 @@ namespace OpenDental {
 		///<param name="doDisplayClose">Set to true to display a Close button.</param>
 		///<param name="doTranslate">Set to false if you don't want to translate the message.</param>
 		public static void ShowMessage(object sender,string message,bool doDisplayClose=true,bool doTranslate=true) {
-			if(doTranslate) {
-				message=Lan.G(sender.GetType().Name,message);
-			}
 			FormPopupFade FormPF=new FormPopupFade(message,doDisplayClose);
 			FormPF.ShowInTaskbar=false;
 			FormPF.TopMost=true;
@@ -98,7 +95,7 @@ namespace OpenDental {
 
 		private FormPopupFade(string message,bool doDisplayClose) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_doDisplayCloseButton=doDisplayClose;
 			//Creates a border with rounded corners
 			if(_doDisplayCloseButton) {

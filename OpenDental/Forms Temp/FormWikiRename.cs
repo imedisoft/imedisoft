@@ -13,7 +13,7 @@ namespace OpenDental {
 
 		public FormWikiRename() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormWikiRename_Load(object sender,EventArgs e) {

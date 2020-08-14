@@ -81,7 +81,7 @@ namespace OpenDentBusiness {
 				row["secProv"]=Providers.GetLName(PIn.Long(raw.Rows[i]["SecProv"].ToString()),listProvs);
 				if(hasClinicsEnabled) {//Using clinics
 					string clinicDesc=Clinics.GetDesc(PIn.Long(raw.Rows[i]["ClinicNum"].ToString()),listClinics);
-					row["clinic"]=(clinicDesc=="")?Lans.g("FormRpPayPlans","Unassigned"):clinicDesc;
+					row["clinic"]=(clinicDesc=="")?"Unassigned":clinicDesc;
 				}
 				table.Rows.Add(row);
 			}

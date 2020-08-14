@@ -28,7 +28,7 @@ namespace OpenDental {
 		///<summary>Pass in the currently selected apptNum along with all ApptNums that are associated to the current pinboard.</summary>
 		public FormApptSearchAdvanced(long apptNum) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_appt=Appointments.GetOneApt(apptNum);
 			if(_appt==null) {
 				MessageBox.Show("Invalid appointment on the Pinboard.");
@@ -68,7 +68,7 @@ namespace OpenDental {
 			}
 			List<int> listSelectedIndices=new List<int>();
 			comboBoxMultiProv.Items.Clear();
-			comboBoxMultiProv.Items.Add(new ODBoxItem<Provider>(Lan.G(this,"None"),null));//tag=null
+			comboBoxMultiProv.Items.Add(new ODBoxItem<Provider>("None",null));//tag=null
 			foreach(Provider prov in listProvsForClinic) {
 				int index=comboBoxMultiProv.Items.Count;
 				ODBoxItem<Provider> boxProvItem=new ODBoxItem<Provider>(prov.GetLongDesc(),prov);
@@ -146,11 +146,11 @@ namespace OpenDental {
 		private void FillGrid() {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G(gridMain.TranslationName,"Day"),85);
+			GridColumn col=new GridColumn("Day",85);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(gridMain.TranslationName,"Date"),85,HorizontalAlignment.Center);
+			col=new GridColumn("Date",85,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(gridMain.TranslationName,"Time"),85,HorizontalAlignment.Center);
+			col=new GridColumn("Time",85,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

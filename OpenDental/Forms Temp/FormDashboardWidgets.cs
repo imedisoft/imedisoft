@@ -14,7 +14,7 @@ namespace OpenDental {
 
 		public FormDashboardWidgets(bool isCEMT=false) {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 		
 		private void FormDashboard_Load(object sender,EventArgs e) {

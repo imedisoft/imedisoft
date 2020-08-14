@@ -59,7 +59,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 			ProcCur=procCur.Copy();
 			DateTP=dateTP;
 			_isSigned=isSigned;
@@ -463,7 +463,7 @@ namespace OpenDental{
 				butOK.Enabled=false;
 				butDelete.Enabled=false;
 			}
-			comboPriority.Items.Add(Lan.G(this,"none"));
+			comboPriority.Items.Add("none");
 			comboPriority.SelectedIndex=0;
 			_listTxPriorityDefs=Defs.GetDefsForCategory(DefCat.TxPriorities,true);
 			for(int i=0;i<_listTxPriorityDefs.Count;i++){

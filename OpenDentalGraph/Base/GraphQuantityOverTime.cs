@@ -717,7 +717,7 @@ namespace OpenDentalGraph {
 				topGrossingCount-=_listHiddenLegendItems.FindAll(x => x.ItemName != "All" && x.ItemName != "All Other").Count();
 			}
 			if(topGrossingCount<0) {
-				//MessageBox.Show(OpenDentBusiness.Lans.g("OpenDentalGraph","Not allowed to disable the last series."));
+				//MessageBox.Show(OpenDentBusiness."Not allowed to disable the last series.");
 				//I mean, sure, if they want to disable every single series in the graph, who am I to stop them?
 				chartLegend1.SetLegendItems(_listHiddenLegendItems);
 				if(FilterDataComplete!=null) {

@@ -25,7 +25,7 @@ namespace OpenDental {
 
 		public FormMarkupTableEdit() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormMarkupTableEdit_Load(object sender,EventArgs e) {
@@ -432,7 +432,7 @@ namespace OpenDental {
 			//access data as arrayTblBuilder[Y][X], arrayTblBuilder contains all of the table data in a potentially uneven array (technically a list), 
 			//Check for enough columns---------------------------------------------------------------------------------------------------------
 			if(pointStarting.X + colsNeeded > Table.Columns.Count) {
-				MessageBox.Show(this,Lan.G(this,"Additional columns required to paste")+": "+(pointStarting.X+colsNeeded-gridMain.ListGridColumns.Count));
+				MessageBox.Show(this,"Additional columns required to paste"+": "+(pointStarting.X+colsNeeded-gridMain.ListGridColumns.Count));
 				return;
 			}
 			//Check for Content----------------------------------------------------------------------------------------------------------------
@@ -482,7 +482,7 @@ namespace OpenDental {
 						doc.Load(reader);//Loading this document provides error checking
 					}
 					catch {
-						MessageBox.Show(Lan.G(this,"The header for column "+(h+1)+" is invalid."));
+						MessageBox.Show("The header for column "+(h+1)+" is invalid.");
 						return;
 					}
 				}
@@ -501,7 +501,7 @@ namespace OpenDental {
 							doc.Load(reader);
 						}
 						catch {
-							MessageBox.Show(Lan.G(this,"The cell at column "+(j+1)+", row "+(i+1)+" is invalid"));
+							MessageBox.Show("The cell at column "+(j+1)+", row "+(i+1)+" is invalid");
 							return;
 						}
 					}

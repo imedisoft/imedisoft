@@ -36,7 +36,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormRpWriteoffSheet(){
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -282,7 +282,7 @@ namespace OpenDental{
 				_listClinics=Clinics.GetForUserod(Security.CurrentUser);
 				_hasClinicsEnabled=true;
 				if(!Security.CurrentUser.ClinicIsRestricted) {
-					listClin.Items.Add(Lan.G(this,"Unassigned"));
+					listClin.Items.Add("Unassigned");
 					listClin.SetSelected(0,true);
 				}
 				for(int i=0;i<_listClinics.Count;i++) {
@@ -396,19 +396,19 @@ namespace OpenDental{
 			Font font=new Font("Tahoma",9);
 			Font fontTitle=new Font("Tahoma",17,FontStyle.Bold);
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
-			report.ReportName=Lan.G(this,"Daily Writeoffs");
-			report.AddTitle("Title",Lan.G(this,"Daily Writeoffs"),fontTitle);
+			report.ReportName="Daily Writeoffs";
+			report.AddTitle("Title","Daily Writeoffs",fontTitle);
 			report.AddSubTitle("PracticeTitle",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
 			report.AddSubTitle("Date SubTitle",date1.SelectionStart.ToString("d")+" - "+date2.SelectionStart.ToString("d"),fontSubTitle);
 			if(checkAllProv.Checked) {
-				report.AddSubTitle("Providers",Lan.G(this,"All Providers")); 
+				report.AddSubTitle("Providers","All Providers"); 
 			}
 			else {
 				report.AddSubTitle("Providers",string.Join(", ",listProvNames));
 			}
 			if(_hasClinicsEnabled) {
 				if(checkAllClin.Checked) {
-					report.AddSubTitle("Clinics",Lan.G(this,"All Clinics"));
+					report.AddSubTitle("Clinics","All Clinics");
 				}
 				else {
 					string clinNames="";
@@ -421,7 +421,7 @@ namespace OpenDental{
 						}
 						else {
 							if(listClin.SelectedIndices[i]==0) {
-								clinNames+=Lan.G(this,"Unassigned");
+								clinNames+="Unassigned";
 							}
 							else {
 								clinNames+=_listClinics[listClin.SelectedIndices[i]-1].Abbr;//Minus 1 from the selected index
@@ -431,7 +431,7 @@ namespace OpenDental{
 					report.AddSubTitle("Clinics",clinNames);
 				}
 			}
-			QueryObject query=report.AddQuery(table,Lan.G(this,"Date")+": "+DateTimeOD.Today.ToString("d"));
+			QueryObject query=report.AddQuery(table,"Date"+": "+DateTimeOD.Today.ToString("d"));
 			query.AddColumn("Date",100,FieldValueType.Date);
 			query.AddColumn("Patient Name",150);
 			query.AddColumn("Carrier",225);

@@ -64,7 +64,7 @@ namespace OpenDental {
 			_famCur=Patients.GetFamily(_patCur.PatNum);
 			_hasGoToButtons=hasGoToButtons;
 			_listProcsForNewPayPlan=listProcsForNewPayPlan;
-			Lan.F(this);
+			
 		}
 
 		private void FormPayPlanDynamic_Load(object sender,System.EventArgs e) {
@@ -109,7 +109,7 @@ namespace OpenDental {
 				FillUiForSavedPayPlan();
 			}
 			if(_payPlanCur.IsClosed) {
-				butOK.Text=Lan.G(this,"Reopen");
+				butOK.Text="Reopen";
 				butDelete.Enabled=false;
 				butClosePlan.Enabled=false;
 				labelClosed.Visible=true;
@@ -186,21 +186,21 @@ namespace OpenDental {
 			int widthClinic=140;
 			int widthDesc=(PrefC.HasClinicsEnabled ? 170 : 170 + widthClinic);
 			GridColumn col;
-			col=new GridColumn(Lan.G(gridLinkedProduction.TranslationName,"Date\r\nAdded"),70,HorizontalAlignment.Center);
+			col=new GridColumn("Date\r\nAdded",70,HorizontalAlignment.Center);
 			gridLinkedProduction.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(gridLinkedProduction.TranslationName,"Date"),70,HorizontalAlignment.Center);
+			col=new GridColumn("Date",70,HorizontalAlignment.Center);
 			gridLinkedProduction.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(gridLinkedProduction.TranslationName,"Provider"),70);
+			col=new GridColumn("Provider",70);
 			gridLinkedProduction.ListGridColumns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
-				col=new GridColumn(Lan.G(gridLinkedProduction.TranslationName,"Clinic"),widthClinic);
+				col=new GridColumn("Clinic",widthClinic);
 				gridLinkedProduction.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.G(gridLinkedProduction.TranslationName,"Description"),widthDesc);
+			col=new GridColumn("Description",widthDesc);
 			gridLinkedProduction.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(gridLinkedProduction.TranslationName,"Amount"),60,HorizontalAlignment.Right);//amount from production value.
+			col=new GridColumn("Amount",60,HorizontalAlignment.Right);//amount from production value.
 			gridLinkedProduction.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(gridLinkedProduction.TranslationName,"Amount")+"\r\n"+Lan.G(gridLinkedProduction.TranslationName,"Attached"),60,HorizontalAlignment.Right,true);
+			col=new GridColumn("Amount"+"\r\n"+"Attached",60,HorizontalAlignment.Right,true);
 			gridLinkedProduction.ListGridColumns.Add(col);
 			gridLinkedProduction.ListGridRows.Clear();
 			foreach(PayPlanProductionEntry entry in _listPayPlanProductionEntries) {
@@ -243,21 +243,21 @@ namespace OpenDental {
 			GridColumn col;
 			//If this column is changed from a date column then the comparer method (ComparePayPlanRows) needs to be updated.
 			//If changes are made to the order of the grid, changes need to also be made for butPrint_Click
-			col=new GridColumn(Lan.G("PayPlanAmortization","Date"),64,HorizontalAlignment.Center);//0
+			col=new GridColumn("Date",64,HorizontalAlignment.Center);//0
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("PayPlanAmortization","Provider"),50);//1
+			col=new GridColumn("Provider",50);//1
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("PayPlanAmortization","Description"),147);//2
+			col=new GridColumn("Description",147);//2
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("PayPlanAmortization","Principal"),75,HorizontalAlignment.Right);//3
+			col=new GridColumn("Principal",75,HorizontalAlignment.Right);//3
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("PayPlanAmortization","Interest"),67,HorizontalAlignment.Right);//4
+			col=new GridColumn("Interest",67,HorizontalAlignment.Right);//4
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("PayPlanAmortization","Due"),75,HorizontalAlignment.Right);//5
+			col=new GridColumn("Due",75,HorizontalAlignment.Right);//5
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("PayPlanAmortization","Payment"),75,HorizontalAlignment.Right);//6
+			col=new GridColumn("Payment",75,HorizontalAlignment.Right);//6
 			gridCharges.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("PayPlanAmortization","Balance"),70,HorizontalAlignment.Right);//7
+			col=new GridColumn("Balance",70,HorizontalAlignment.Right);//7
 			gridCharges.ListGridColumns.Add(col);
 			gridCharges.ListGridRows.Clear();
 			List<PayPlanCharge> listChargesExpected=new List<PayPlanCharge>();
@@ -754,7 +754,7 @@ namespace OpenDental {
 				|| textCompletedAmt.errorProvider1.GetError(textCompletedAmt)!=""
 				) 
 			{
-				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
+				MessageBox.Show("Please fix data entry errors first.");
 				return false;
 			}
 			if(PIn.Date(textDate.Text).Date > DateTime.Today.Date && !Prefs.GetBool(PrefName.FutureTransDatesAllowed)) {
@@ -817,7 +817,7 @@ namespace OpenDental {
 				PaySplit paySplit=(PaySplit)gridCharges.ListGridRows[e.Row].Tag;
 				Payment pay=Payments.GetPayment(paySplit.PayNum);
 				if(pay==null) {
-					MessageBox.Show(Lans.g(this,"No payment exists.  Please run database maintenance method")+" "+nameof(DatabaseMaintenances.PaySplitWithInvalidPayNum));
+					MessageBox.Show("No payment exists.  Please run database maintenance method"+" "+nameof(DatabaseMaintenances.PaySplitWithInvalidPayNum));
 					return;
 				}
 				FormPayment formPayment=new FormPayment(_patCur,_famCur,pay,false);//FormPayment may insert and/or update the paysplits. 
@@ -908,7 +908,7 @@ namespace OpenDental {
 		}
 
 		private void ButPrintProduction_Click(object sender,EventArgs e) {
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"Attached PayPlan Production printed"),PrintoutOrientation.Landscape);
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,"Attached PayPlan Production printed",PrintoutOrientation.Landscape);
 		}
 
 		private void pd_PrintPage(object sender,PrintPageEventArgs e) {
@@ -925,7 +925,7 @@ namespace OpenDental {
 			int headingPrintH=0;
 			#region printHeading
 			if(!headingPrinted) {
-				text=Lan.G(this,"Payment Plan Credits");
+				text="Payment Plan Credits";
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
 				text=DateTime.Today.ToShortDateString();
@@ -945,7 +945,7 @@ namespace OpenDental {
 			}
 			else {
 				e.HasMorePages=false;
-				text=Lan.G(this,"Total")+": "+_sumAttachedProduction.ToString("c");
+				text="Total"+": "+_sumAttachedProduction.ToString("c");
 				g.DrawString(text,subHeadingFont,Brushes.Black,center+gridLinkedProduction.Width/2-g.MeasureString(text,subHeadingFont).Width-10,yPos);
 			}
 			g.Dispose();
@@ -966,7 +966,7 @@ namespace OpenDental {
 				Font fontTitle=new Font("Tahoma",17,FontStyle.Bold);
 				Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
 				ReportComplex report=new ReportComplex(false,false);
-				report.AddTitle("Title",Lan.G(this,"Payment Plan Terms"),fontTitle);
+				report.AddTitle("Title","Payment Plan Terms",fontTitle);
 				report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
 				report.AddSubTitle("Date SubTitle",DateTime.Today.ToShortDateString(),fontSubTitle);
 				AreaSectionType sectType=AreaSectionType.ReportHeader;
@@ -1089,7 +1089,7 @@ namespace OpenDental {
 				}
 				//make a charge for the amount that has yet to be put on the plan
 				PayPlanCharge charge=PayPlanEdit.CreateDebitChargeDynamic(_payPlanCur,_famCur,entry.ProvNum,entry.ClinicNum,(double)entry.AmountRemaining,0
-					,DateTime.Today,Lans.g(this,"Close Out Charge"),entry.PriKey,entry.LinkType);
+					,DateTime.Today,"Close Out Charge",entry.PriKey,entry.LinkType);
 				listChargesClosing.Add(charge);
 			}
 			_payPlanCur.IsClosed=true;
@@ -1120,10 +1120,10 @@ namespace OpenDental {
 
 		private void SetNote() {
 			textNote.Text=_payPlanCur.Note+DateTime.Today.ToShortDateString()
-				+" - "+Lan.G(this,"Date of Agreement")+": "+textDate.Text
-				+", "+Lan.G(this,"Total Amount")+": "+textTotalPrincipal.Text
-				+", "+Lan.G(this,"APR")+": "+textAPR.Text
-				+", "+Lan.G(this,"Total Cost of Loan")+": "+textTotalCost.Text;
+				+" - "+"Date of Agreement"+": "+textDate.Text
+				+", "+"Total Amount"+": "+textTotalPrincipal.Text
+				+", "+"APR"+": "+textAPR.Text
+				+", "+"Total Cost of Loan"+": "+textTotalCost.Text;
 		}
 
 		///<summary>Creates a new sheet from a given Pay plan.</summary>

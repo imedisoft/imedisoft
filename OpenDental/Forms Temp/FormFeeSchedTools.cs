@@ -85,7 +85,7 @@ namespace OpenDental {
 		public FormFeeSchedTools(long schedNum,List<FeeSched> listFeeScheds,List<Provider> listProvs,List<Clinic> listClinics) {
 			// Required for Windows Form Designer support
 			InitializeComponent();
-			Lan.F(this);
+			
 			_schedNum=schedNum;
 			_listFeeScheds=listFeeScheds;
 			_listProvs=listProvs;
@@ -746,8 +746,8 @@ namespace OpenDental {
 				}
 			}
 			if(_listFeeScheds.Count==0) {//No fee schedules in the database so set the first item to none.
-				comboFeeSched.Items.Add(Lan.G(this,"None"));
-				comboFeeSchedTo.Items.Add(Lan.G(this,"None"));
+				comboFeeSched.Items.Add("None");
+				comboFeeSchedTo.Items.Add("None");
 			}
 			if(comboFeeSched.SelectedIndex==-1) {
 				comboFeeSched.SelectedIndex=0;
@@ -766,8 +766,8 @@ namespace OpenDental {
 				FillFeeSchedGroupComboBox(comboGroupTo,_listFeeScheds[comboFeeSchedTo.SelectedIndex].FeeSchedNum,feeSchedGroupToNum);
 			}
 			//Providers
-			comboProvider.Items.Add(Lan.G(this,"None"));
-			comboProviderTo.Items.Add(Lan.G(this,"None"));
+			comboProvider.Items.Add("None");
+			comboProviderTo.Items.Add("None");
 			for(int i=0;i<_listProvs.Count;i++) {
 				comboProvider.Items.Add(_listProvs[i].Abbr);
 				comboProviderTo.Items.Add(_listProvs[i].Abbr);
@@ -853,8 +853,8 @@ namespace OpenDental {
 			if(Prefs.GetBool(PrefName.ShowFeeSchedGroups) && !checkShowGroups.Checked) {
 				FeeSchedGroup groupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSchedNum,comboClinic.SelectedClinicNum);//get the selected clinic num
 				if(groupCur!=null) {
-					MsgBox.Show(Lans.g(this,"Selected clinic is a member of Fee Schedule Group: ")+groupCur.Description
-						+Lans.g(this," and must be cleared at the group level."));
+					MsgBox.Show("Selected clinic is a member of Fee Schedule Group: "+groupCur.Description
+						+" and must be cleared at the group level.");
 					return;
 				}
 			}
@@ -877,16 +877,16 @@ namespace OpenDental {
 			string logText="";
 			foreach(long clinicNum in listClinicNums) {
 				Fees.DeleteFees(feeSchedNum,clinicNum,provNum);
-				logText+=Lan.G(this,"Procedures for Fee Schedule")+" "+FeeScheds.GetDescription(feeSchedNum);
+				logText+="Procedures for Fee Schedule"+" "+FeeScheds.GetDescription(feeSchedNum);
 				if(PrefC.HasClinicsEnabled) {
 					if(Clinics.GetAbbr(Clinics.ClinicNum)=="") {
-						logText+=Lan.G(this," at Headquarters");
+						logText+=" at Headquarters";
 					}
 					else {
-						logText+=Lan.G(this," at clinic")+" "+Clinics.GetAbbr(Clinics.ClinicNum);
+						logText+=" at clinic"+" "+Clinics.GetAbbr(Clinics.ClinicNum);
 					}
 				}
-				logText+=" "+Lan.G(this,"were all cleared.")+"\r\n";
+				logText+=" "+"were all cleared."+"\r\n";
 			}
 			SecurityLogs.MakeLogEntry(Permissions.ProcFeeEdit,0,logText);
 			//	});
@@ -942,8 +942,8 @@ namespace OpenDental {
 					FeeSchedGroup groupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(toFeeSched.FeeSchedNum,clinicNumTo);
 					if(groupCur!=null) {
 						Clinic clinicCur=Clinics.GetClinic(clinicNumTo);
-						MessageBox.Show(Lans.g(this,"Clinic: ")+clinicCur.Abbr+Lans.g(this," is a member of Fee Schedule Group: ")+groupCur.Description
-							+Lans.g(this," for the selected Fee Schedule and must be copied at the Fee Schedule Group level."));
+						MessageBox.Show("Clinic: "+clinicCur.Abbr+" is a member of Fee Schedule Group: "+groupCur.Description
+							+" for the selected Fee Schedule and must be copied at the Fee Schedule Group level.");
 						return;
 					}
 				}
@@ -997,8 +997,8 @@ namespace OpenDental {
 			if(Prefs.GetBool(PrefName.ShowFeeSchedGroups) && !checkShowGroups.Checked) {
 				FeeSchedGroup groupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSchedNum,clinicNum);
 				if(groupCur!=null) {
-					MsgBox.Show(Lans.g(this,"Selected clinic is a member of Fee Schedule Group: ")+groupCur.Description
-						+Lans.g(this," and must be increased at the group level."));
+					MsgBox.Show("Selected clinic is a member of Fee Schedule Group: "+groupCur.Description
+						+" and must be increased at the group level.");
 					return;
 				}
 			}
@@ -1061,7 +1061,7 @@ namespace OpenDental {
 						FeeSchedEvent.Fire(EventCategory.FeeSched,"Modifying fees, please wait...");
 					}
 				},
-				startingMessage:Lan.G(this,"Preparing to modify fees")+"...",
+				startingMessage:"Preparing to modify fees"+"...",
 				eventType:typeof(FeeSchedEvent),
 				odEventType:EventCategory.FeeSched);
 			MessageBox.Show("Done.");
@@ -1189,7 +1189,7 @@ namespace OpenDental {
 				() => {
 					FeeScheds.ExportFeeSchedule(feeSched.FeeSchedNum,clinicNum,provNum,filePath);
 				},
-				startingMessage:Lan.G(this,"Preparing to export fees")+"...",
+				startingMessage:"Preparing to export fees"+"...",
 				progStyle:ProgressBarStyle.Continuous,
 				eventType:typeof(FeeSchedEvent),
 				odEventType:EventCategory.FeeSched);
@@ -1228,8 +1228,8 @@ namespace OpenDental {
 			if(Prefs.GetBool(PrefName.ShowFeeSchedGroups) && !checkShowGroups.Checked) {
 				FeeSchedGroup groupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSched.FeeSchedNum,clinicNum);
 				if(groupCur!=null) {
-					MsgBox.Show(Lans.g(this,"Selected clinic is a member of Fee Schedule Group: ")+groupCur.Description
-						+Lans.g(this," and must be imported at the group level."));
+					MsgBox.Show("Selected clinic is a member of Fee Schedule Group: "+groupCur.Description
+						+" and must be imported at the group level.");
 					return;
 				}
 			}
@@ -1328,7 +1328,7 @@ namespace OpenDental {
 				//Send the message and get the result-------------------------------------------------------------------------------------
 				string result="";
 				try {
-					FeeSchedEvent.Fire(EventCategory.FeeSched,Lan.G(this,"Retrieving fee schedule")+"...");
+					FeeSchedEvent.Fire(EventCategory.FeeSched,"Retrieving fee schedule"+"...");
 					result=updateService.RequestFeeSched(strbuild.ToString());
 				}
 				catch(Exception ex) {
@@ -1369,7 +1369,7 @@ namespace OpenDental {
 				feeData=Encoding.UTF8.GetString(feeDataBytes);
 			}
 			else {
-				FeeSchedEvent.Fire(EventCategory.FeeSched,Lan.G(this,"Downloading fee schedule")+"...");
+				FeeSchedEvent.Fire(EventCategory.FeeSched,"Downloading fee schedule"+"...");
 				string tempFile= Storage.GetTempFileName(".tmp");
 				WebClient myWebClient=new WebClient();
 				try {
@@ -1377,7 +1377,7 @@ namespace OpenDental {
 				}
 				catch(Exception ex) {
 					actionCloseFeeSchedImportCanadaProgress?.Invoke();
-					MessageBox.Show(Lan.G(this,"Failed to download fee schedule file")+": "+ex.Message);
+					MessageBox.Show("Failed to download fee schedule file"+": "+ex.Message);
 					Cursor=Cursors.Default;
 					return;
 				}
@@ -1394,8 +1394,8 @@ namespace OpenDental {
 			if(Prefs.GetBool(PrefName.ShowFeeSchedGroups) && !checkShowGroups.Checked) {
 				FeeSchedGroup groupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSched.FeeSchedNum,clinicNum);
 				if(groupCur!=null) {
-					MsgBox.Show(Lans.g(this,"Selected clinic is a member of Fee Schedule Group: ")+groupCur.Description
-						+Lans.g(this," and must be imported at the group level."));
+					MsgBox.Show("Selected clinic is a member of Fee Schedule Group: "+groupCur.Description
+						+" and must be imported at the group level.");
 					return;
 				}
 			}
@@ -1429,7 +1429,7 @@ namespace OpenDental {
 				return;
 			}
 			ODProgressExtended progExtended=new ODProgressExtended(EventCategory.FeeSched,new FeeSchedEvent(),this,
-				tag:new ProgressBarHelper("Fee Schedule Update Progress",progressBarEventType:ProgBarEventType.Header),cancelButtonText:Lan.G(this,"Close"));
+				tag:new ProgressBarHelper("Fee Schedule Update Progress",progressBarEventType:ProgBarEventType.Header),cancelButtonText:"Close");
 			Cursor=Cursors.WaitCursor;
 			List<Fee> listFeesHQ=Fees.GetByClinicNum(0);//All HQ fees
 			try {
@@ -1522,10 +1522,10 @@ namespace OpenDental {
 			if(indexPrevClinic>-1 //only true if clinics are enabled, the user is not restricted, updating all clinics, and the pref has been set from previous run
 				&& listWriteoffClinics.Count>indexPrevClinic+1) //we will skip indexPrevClinic+1 items and there needs to be at least one more clinic to process
 			{
-				string msgText=Lan.G(this,"This tool was paused or interrupted during a previous run.  Would you like to resume the previous run?")+"\r\n\r\n"
-					+Lan.G(this,"Yes - Run the tool beginning where the previous run left off.")+"\r\n\r\n"
-					+Lan.G(this,"No - Run the tool for all clinics and replace the previous run progress with the progress of this run.")+"\r\n\r\n"
-					+Lan.G(this,"Cancel - Don't run the tool and retain the previous run progress.");
+				string msgText="This tool was paused or interrupted during a previous run.  Would you like to resume the previous run?"+"\r\n\r\n"
+					+"Yes - Run the tool beginning where the previous run left off."+"\r\n\r\n"
+					+"No - Run the tool for all clinics and replace the previous run progress with the progress of this run."+"\r\n\r\n"
+					+"Cancel - Don't run the tool and retain the previous run progress.";
 				DialogResult diagRes=MessageBox.Show(this,msgText,"",MessageBoxButtons.YesNoCancel);
 				if(diagRes==DialogResult.Cancel) {
 					return;
@@ -1538,8 +1538,8 @@ namespace OpenDental {
 				}
 			}
 			ODProgressExtended progress=new ODProgressExtended(EventCategory.FeeSched,new FeeSchedEvent(),this,
-				tag:new ProgressBarHelper(Lan.G(this,"Write-off Update Progress"),progressBarEventType:ProgBarEventType.Header),
-				cancelButtonText:Lan.G(this,"Close"));
+				tag:new ProgressBarHelper("Write-off Update Progress",progressBarEventType:ProgBarEventType.Header),
+				cancelButtonText:"Close");
 			progress.Fire(EventCategory.FeeSched,new ProgressBarHelper("","0%",0,100,ProgBarStyle.Blocks,"WriteoffProgress"));
 			Cursor=Cursors.WaitCursor;
 			try {
@@ -1582,7 +1582,7 @@ namespace OpenDental {
 			if(checkShowGroups.Checked) {
 				List<FeeSchedGroup> listGroupsToShow= comboGroup.Items.OfType<ODBoxItem<FeeSchedGroup>>().Select(x => x.Tag).ToList(); ;
 				List<GridColumn> listColumnHeaders=new List<GridColumn>() {
-					new GridColumn(Lan.G(this,"Description"),50){ IsWidthDynamic=true }
+					new GridColumn("Description",50){ IsWidthDynamic=true }
 				};
 				List<GridRow> listRowValues=new List<GridRow>();
 				listGroupsToShow.ForEach(x => {
@@ -1590,8 +1590,8 @@ namespace OpenDental {
 					row.Tag=x;
 					listRowValues.Add(row);
 				});
-				string formTitle=Lan.G(this,"Fee Schedule Group Picker");
-				string gridTitle=Lan.G(this,"Fee Schedule Groups");
+				string formTitle="Fee Schedule Group Picker";
+				string gridTitle="Fee Schedule Groups";
 				FormGridSelection form=new FormGridSelection(listColumnHeaders,listRowValues,formTitle,gridTitle);
 				if(form.ShowDialog()==DialogResult.OK) {
 					comboGroup.SelectedIndex=listGroupsToShow.FindIndex((x => x.FeeSchedGroupNum==((FeeSchedGroup)form.ListSelectedTags[0]).FeeSchedGroupNum));
@@ -1606,7 +1606,7 @@ namespace OpenDental {
 			if(checkShowGroups.Checked) {
 				List<FeeSchedGroup> listGroupsToShow=(comboGroupTo.Items.OfType<ODBoxItem<FeeSchedGroup>>()).Select(x => x.Tag).ToList();
 				List<GridColumn> listColumnHeaders=new List<GridColumn>() {
-					new GridColumn(Lan.G(this,"Description"),50){ IsWidthDynamic=true }
+					new GridColumn("Description",50){ IsWidthDynamic=true }
 				};
 				List<GridRow> listRowValues=new List<GridRow>();
 				listGroupsToShow.ForEach(x => {
@@ -1614,8 +1614,8 @@ namespace OpenDental {
 					row.Tag=x;
 					listRowValues.Add(row);
 				});
-				string formTitle=Lan.G(this,"Fee Schedule Group Picker");
-				string gridTitle=Lan.G(this,"Fee Schedule Groups");
+				string formTitle="Fee Schedule Group Picker";
+				string gridTitle="Fee Schedule Groups";
 				FormGridSelection form=new FormGridSelection(listColumnHeaders,listRowValues,formTitle,gridTitle);
 				if(form.ShowDialog()==DialogResult.OK) {
 					comboGroupTo.SelectedIndex=listGroupsToShow.FindIndex((x => x.FeeSchedGroupNum==((FeeSchedGroup)form.ListSelectedTags[0]).FeeSchedGroupNum));

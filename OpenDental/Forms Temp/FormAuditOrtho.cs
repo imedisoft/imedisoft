@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormAuditOrtho() {
 			InitializeComponent();
-			Lan.F(this);
+			
 			DictDateOrthoLogs=new SortedDictionary<DateTime,List<SecurityLog>>();
 			PatientFieldLogs=new List<SecurityLog>();
 		}
@@ -29,9 +29,9 @@ namespace OpenDental {
 			gridHist.BeginUpdate();
 			gridHist.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G("TableOrthoAudit","Date"),70);
+			col=new GridColumn("Date",70);
 			gridHist.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableOrthoAudit","Entries"),50,HorizontalAlignment.Center);
+			col=new GridColumn("Entries",50,HorizontalAlignment.Center);
 			gridHist.ListGridColumns.Add(col);
 			gridHist.ListGridRows.Clear();
 			GridRow row;
@@ -51,13 +51,13 @@ namespace OpenDental {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G("TableOrthoAudit","Date Time"),120);
+			col=new GridColumn("Date Time",120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableOrthoAudit","User"),70);
+			col=new GridColumn("User",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableOrthoAudit","Permission"),110);
+			col=new GridColumn("Permission",110);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableOrthoAudit","Log Text"),569);
+			col=new GridColumn("Log Text",569);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

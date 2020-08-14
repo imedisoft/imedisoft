@@ -31,7 +31,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -119,11 +119,11 @@ namespace OpenDental{
 		private void FillGrid(){
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G(this,"Date"),100);
+			GridColumn col=new GridColumn("Date",100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Category"),120);
+			col=new GridColumn("Category",120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Description"),300);
+			col=new GridColumn("Description",300);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -197,7 +197,7 @@ namespace OpenDental{
 				DialogResult=DialogResult.OK;
 			}
 			catch(FileNotFoundException ex) {
-				MessageBox.Show(Lan.G(this,"File not found: ")+ex.Message);
+				MessageBox.Show("File not found: "+ex.Message);
 				return;
 			}
 			catch(Exception ex) {

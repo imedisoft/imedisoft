@@ -179,7 +179,7 @@ namespace OpenDental{
 		public InputBox(List<InputBoxParam> listInputBoxParams,Func<string,bool> onOkClick=null) {
 			InitializeComponent();
 			_listInputParams=listInputBoxParams;
-			Lan.F(this);
+			
 			AddInputControls();
 			_onOkClick=onOkClick;
 		}

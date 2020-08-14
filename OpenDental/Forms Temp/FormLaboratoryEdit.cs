@@ -55,7 +55,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -399,7 +399,7 @@ namespace OpenDental{
 			textEmail.Text=LabCur.Email;
 			textNotes.Text=LabCur.Notes;
 			turnaroundList=LabTurnarounds.GetForLab(LabCur.LaboratoryNum);
-			comboSlip.Items.Add(Lan.G(this,"Default"));
+			comboSlip.Items.Add("Default");
 			comboSlip.SelectedIndex=0;
 			SlipList=SheetDefs.GetCustomForType(SheetTypeEnum.LabSlip);
 			for(int i=0;i<SlipList.Count;i++) {
@@ -416,11 +416,11 @@ namespace OpenDental{
 			//does not refresh from database.
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableLabTurnaround","Service Description"),300);
+			GridColumn col=new GridColumn("Service Description",300);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableLabTurnaround","Days Published"),120);
+			col=new GridColumn("Days Published",120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableLabTurnaround","Actual Days"),120);
+			col=new GridColumn("Actual Days",120);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

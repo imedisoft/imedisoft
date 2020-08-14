@@ -36,7 +36,7 @@ namespace OpenDental {
 		public FormTimeCardManage(List<Employee> listEmployees) {
 			InitializeComponent();
 			_listEmployees=listEmployees;
-			Lan.F(this);
+			
 		}
 
 		private void FormTimeCardManage_Load(object sender,EventArgs e) {
@@ -90,45 +90,45 @@ namespace OpenDental {
 			MainTable=ClockEvents.GetTimeCardManage(DateStart,DateStop,clinicNum,isAll);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G(this,"Employee"),140);
+			GridColumn col=new GridColumn("Employee",140);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Total Hrs"),75);
+			col=new GridColumn("Total Hrs",75);
 			col.TextAlign=HorizontalAlignment.Right;
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Rate1"),75);
+			col=new GridColumn("Rate1",75);
 			col.TextAlign=HorizontalAlignment.Right;
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Rate1 OT"),75);
+			col=new GridColumn("Rate1 OT",75);
 			col.TextAlign=HorizontalAlignment.Right;
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Rate2"),75);
+			col=new GridColumn("Rate2",75);
 			col.TextAlign=HorizontalAlignment.Right;
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Rate2 OT"),75);
+			col=new GridColumn("Rate2 OT",75);
 			col.TextAlign=HorizontalAlignment.Right;
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Rate3 PTO"),75);
+			col=new GridColumn("Rate3 PTO",75);
 			col.TextAlign=HorizontalAlignment.Right;
 			gridMain.ListGridColumns.Add(col);
-			//col=new ODGridColumn(Lan.g(this,"Auto Adj"),64);
+			//col=new ODGridColumn("Auto Adj",64);
 			//col.TextAlign=HorizontalAlignment.Right;
 			//gridMain.Columns.Add(col);
-			//col=new ODGridColumn(Lan.g(this,"Reg Adj"),64);
+			//col=new ODGridColumn("Reg Adj",64);
 			//col.TextAlign=HorizontalAlignment.Right;
 			//gridMain.Columns.Add(col);
-			//col=new ODGridColumn(Lan.g(this,"OT Adj"),64);
+			//col=new ODGridColumn("OT Adj",64);
 			//col.TextAlign=HorizontalAlignment.Right;
 			//gridMain.Columns.Add(col);
-			//col=new ODGridColumn(Lan.g(this,"Diff Adj"),64);
+			//col=new ODGridColumn("Diff Adj",64);
 			//col.TextAlign=HorizontalAlignment.Right;
 			//gridMain.Columns.Add(col);
-			//col=new ODGridColumn(Lan.g(this,"Diff Auto"),64);
+			//col=new ODGridColumn("Diff Auto",64);
 			//col.TextAlign=HorizontalAlignment.Right;
 			//gridMain.Columns.Add(col);
-			//col=new ODGridColumn(Lan.g(this,"Breaks"),64);
+			//col=new ODGridColumn("Breaks",64);
 			//col.TextAlign=HorizontalAlignment.Right;
 			//gridMain.Columns.Add(col);
-			col=new GridColumn(Lan.G(this,"Notes"),140){ IsWidthDynamic=true };
+			col=new GridColumn("Notes",140){ IsWidthDynamic=true };
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -220,33 +220,33 @@ namespace OpenDental {
 			mergedAL.Sort(myComparer);
 			gridTimeCard.BeginUpdate();
 			gridTimeCard.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G(this,"Date"),70);
+			GridColumn col=new GridColumn("Date",70);
 			gridTimeCard.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Day"),45);
+			col=new GridColumn("Day",45);
 			gridTimeCard.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"In"),60,HorizontalAlignment.Right);
+			col=new GridColumn("In",60,HorizontalAlignment.Right);
 			gridTimeCard.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Out"),60,HorizontalAlignment.Right);
+			col=new GridColumn("Out",60,HorizontalAlignment.Right);
 			gridTimeCard.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Total"),50,HorizontalAlignment.Right);
+			col=new GridColumn("Total",50,HorizontalAlignment.Right);
 			gridTimeCard.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Adjust"),45,HorizontalAlignment.Right);
+			col=new GridColumn("Adjust",45,HorizontalAlignment.Right);
 			gridTimeCard.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Rate2"),45,HorizontalAlignment.Right);
+			col=new GridColumn("Rate2",45,HorizontalAlignment.Right);
 			gridTimeCard.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"PTO"),45,HorizontalAlignment.Right);
+			col=new GridColumn("PTO",45,HorizontalAlignment.Right);
 			gridTimeCard.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"OT"),45,HorizontalAlignment.Right);
+			col=new GridColumn("OT",45,HorizontalAlignment.Right);
 			gridTimeCard.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Day"),50,HorizontalAlignment.Right);
+			col=new GridColumn("Day",50,HorizontalAlignment.Right);
 			gridTimeCard.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Week"),50,HorizontalAlignment.Right);
+			col=new GridColumn("Week",50,HorizontalAlignment.Right);
 			gridTimeCard.ListGridColumns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
-				col=new GridColumn(Lan.G(this,"Clinic"),50,HorizontalAlignment.Left);
+				col=new GridColumn("Clinic",50,HorizontalAlignment.Left);
 				gridTimeCard.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.G(this,"Note"),70){ IsWidthDynamic=true };
+			col=new GridColumn("Note",70){ IsWidthDynamic=true };
 			gridTimeCard.ListGridColumns.Add(col);
 			gridTimeCard.ListGridRows.Clear();
 			GridRow row;
@@ -506,7 +506,7 @@ namespace OpenDental {
 			}
 			_pagesPrinted=0;
 			PrinterL.TryPreview(pd2_PrintPage,
-				Lan.G(this,Lans.g(this,"Employee time cards printed")),
+				"Employee time cards printed",
 				totalPages:gridMain.ListGridRows.Count
 			);
 		}
@@ -529,7 +529,7 @@ namespace OpenDental {
 			}
 			_pagesPrinted=0;
 			PrinterL.TryPreview(pd2_PrintPageSelective,
-				Lan.G(this,"Employee time cards printed"),
+				"Employee time cards printed",
 				totalPages:gridMain.SelectedIndices.Length
 			);
 		}
@@ -560,7 +560,7 @@ namespace OpenDental {
 			Pen pen=new Pen(Color.Black);
 			//Title
 			str=employeeCur.FName+" "+employeeCur.LName;
-			str+="\r\n"+Lan.G(this,"Note")+": "+_timeAdjustNote?.Note.ToString()??"";
+			str+="\r\n"+"Note"+": "+_timeAdjustNote?.Note.ToString()??"";
 			int threeLineHeight=(int)e.Graphics.MeasureString("1\r\n2\r\n3",fontTitle).Height;
 			int marginBothSides=(int)xPos*2;//110
 			int noteStringHeight=(int)e.Graphics.MeasureString(str,fontTitle,e.PageBounds.Width-marginBothSides).Height;
@@ -598,21 +598,21 @@ namespace OpenDental {
 			if(PrefC.HasClinicsEnabled) {
 				ColCaption=new string[13];
 			}
-			ColCaption[0]=Lan.G(this,"Date");
-			ColCaption[1]=Lan.G(this,"Day");
-			ColCaption[2]=Lan.G(this,"In");
-			ColCaption[3]=Lan.G(this,"Out");
-			ColCaption[4]=Lan.G(this,"Total");
-			ColCaption[5]=Lan.G(this,"Adjust");
-			ColCaption[6]=Lan.G(this,"Rate 2");
-			ColCaption[7]=Lan.G(this,"PTO");
-			ColCaption[8]=Lan.G(this,"OT");
-			ColCaption[9]=Lan.G(this,"Day");
-			ColCaption[10]=Lan.G(this,"Week");
-			ColCaption[11]=Lan.G(this,"Note");
+			ColCaption[0]="Date";
+			ColCaption[1]="Day";
+			ColCaption[2]="In";
+			ColCaption[3]="Out";
+			ColCaption[4]="Total";
+			ColCaption[5]="Adjust";
+			ColCaption[6]="Rate 2";
+			ColCaption[7]="PTO";
+			ColCaption[8]="OT";
+			ColCaption[9]="Day";
+			ColCaption[10]="Week";
+			ColCaption[11]="Note";
 			if(PrefC.HasClinicsEnabled) {
-				ColCaption[11]=Lan.G(this,"Clinic");
-				ColCaption[12]=Lan.G(this,"Note");
+				ColCaption[11]="Clinic";
+				ColCaption[12]="Note";
 			}
 			//column headers-----------------------------------------------------------------------------------------
 			e.Graphics.FillRectangle(Brushes.LightGray,colPos[0],yPos,colPos[colPos.Length-1]-colPos[0],18);
@@ -646,13 +646,13 @@ namespace OpenDental {
 			}
 			//totals will print on every page for simplicity
 			yPos+=10;
-			g.DrawString(Lan.G(this,"Regular Time")+": "+totalTime+" ("+totalTime2+")",fontHeader,brush,xPos,yPos);
+			g.DrawString("Regular Time"+": "+totalTime+" ("+totalTime2+")",fontHeader,brush,xPos,yPos);
 			yPos+=16;
-			g.DrawString(Lan.G(this,"Overtime")+": "+overTime+" ("+overTime2+")",fontHeader,brush,xPos,yPos);
+			g.DrawString("Overtime"+": "+overTime+" ("+overTime2+")",fontHeader,brush,xPos,yPos);
 			yPos+=16;
-			g.DrawString(Lan.G(this,"Rate 2 Time")+": "+rate2Time+" ("+rate2Time2+")",fontHeader,brush,xPos,yPos);
+			g.DrawString("Rate 2 Time"+": "+rate2Time+" ("+rate2Time2+")",fontHeader,brush,xPos,yPos);
 			yPos+=16;
-			g.DrawString(Lan.G(this,"PTO Time")+": "+ptoTime+" ("+ptoTime2+")",fontHeader,brush,xPos,yPos);
+			g.DrawString("PTO Time"+": "+ptoTime+" ("+ptoTime2+")",fontHeader,brush,xPos,yPos);
 			_pagesPrinted++;
 			if(pagesToPrint==_pagesPrinted) {
 				_pagesPrinted=0;
@@ -735,7 +735,7 @@ namespace OpenDental {
 				MessageBox.Show("Done.");
 			}
 			else {
-				MessageBox.Show(this,Lan.G(this,"Time cards were not calculated for some Employees for the following reasons")+":\r\n"+aggregateErrors);
+				MessageBox.Show(this,"Time cards were not calculated for some Employees for the following reasons"+":\r\n"+aggregateErrors);
 			}
 		}
 
@@ -775,7 +775,7 @@ namespace OpenDental {
 				MessageBox.Show("Done.");
 			}
 			else {
-				MessageBox.Show(this,Lan.G(this,"Time cards were not calculated for some Employees for the following reasons")+":\r\n"+aggregateErrors);
+				MessageBox.Show(this,"Time cards were not calculated for some Employees for the following reasons"+":\r\n"+aggregateErrors);
 			}
 		}
 
@@ -830,7 +830,7 @@ namespace OpenDental {
 		private void butPrintGrid_Click(object sender,EventArgs e) {
 			_pagesPrinted=0;
 			HeadingPrinted=false;
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"Printed employee time card grid."));
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,"Printed employee time card grid.");
 		}
 
 		private void pd_PrintPage(object sender,PrintPageEventArgs e) {
@@ -843,19 +843,19 @@ namespace OpenDental {
 			#region printHeading
 			int headingPrintH=0;
 			if(!HeadingPrinted) {
-				text=Lan.G(this,"Pay Period")+": "+textDateStart.Text+" - "+textDateStop.Text+"\r\n"
-					+Lan.G(this,"Paycheck Date")+": "+textDatePaycheck.Text;
+				text="Pay Period"+": "+textDateStart.Text+" - "+textDateStop.Text+"\r\n"
+					+"Paycheck Date"+": "+textDatePaycheck.Text;
 				if(PrefC.HasClinicsEnabled) {
-					text+="\r\n"+Lan.G(this,"Clinic")+": ";
+					text+="\r\n"+"Clinic"+": ";
 					if(Security.CurrentUser.ClinicIsRestricted) {
 						text+=Clinics.GetAbbr(comboClinic.SelectedClinicNum);
 					}
 					else {//All and Headquarters are the first two available options.
 						if(comboClinic.IsAllSelected) {
-							text+=Lan.G(this,"All");
+							text+="All";
 						}
 						else if(comboClinic.IsUnassignedSelected) {
-							text+=Lan.G(this,"Headquarters");
+							text+="Headquarters";
 						}
 						else {//A specific clinic was selected.
 							text+=Clinics.GetAbbr(comboClinic.SelectedClinicNum);
@@ -943,7 +943,7 @@ namespace OpenDental {
 			string fileName="ODPayroll"+DateTime.Now.ToString("yyyyMMdd_hhmmss")+".TXT";
 			try {
 				System.IO.File.WriteAllText(fbd.SelectedPath+"\\"+fileName,strb.ToString());
-				MessageBox.Show(this,Lan.G(this,"File created")+" : "+fbd.SelectedPath+"\\"+fileName);
+				MessageBox.Show(this,"File created"+" : "+fbd.SelectedPath+"\\"+fileName);
 			}
 			catch(Exception ex) {
 				MessageBox.Show(this,"File not created:\r\n"+ex.Message);
@@ -1112,7 +1112,7 @@ namespace OpenDental {
 						"The following warnings were detected:\r\n"+warnings);
 					msgBox.Show(this);
 				}
-				MessageBox.Show(this,Lan.G(this,"File created")+" : "+fbd.SelectedPath+"\\EPI"+coCode+fileSuffix+".CSV");
+				MessageBox.Show(this,"File created"+" : "+fbd.SelectedPath+"\\EPI"+coCode+fileSuffix+".CSV");
 			}
 			catch(Exception ex) {
 				MessageBox.Show(this,"File not created:\r\n"+ex.Message);

@@ -38,7 +38,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -232,8 +232,8 @@ namespace OpenDental{
 			}
 			List<InsPlan> listInsPlanForFeeSched = InsPlans.GetForFeeSchedNum(FeeSchedCur.FeeSchedNum);
 			if(listInsPlanForFeeSched.Count > 0) {
-				string insPlanMsg = Lan.G(this,"This fee schedule is tied to")+" "
-					+listInsPlanForFeeSched.Count+" "+Lan.G(this,"insurance plans.")+" "+Lan.G(this,"Continue?");
+				string insPlanMsg = "This fee schedule is tied to"+" "
+					+listInsPlanForFeeSched.Count+" "+"insurance plans."+" "+"Continue?";
 				if(!MsgBox.Show(MsgBoxButtons.OKCancel,insPlanMsg)) {
 					checkIsHidden.Checked=false;
 					return;
@@ -249,7 +249,7 @@ namespace OpenDental{
 				}
 			}
 			if(providersUsingFee!="") {
-				MessageBox.Show(Lan.G(this,"Cannot hide. Fee schedule is currently in use by the following providers")+":\r\n"+providersUsingFee);
+				MessageBox.Show("Cannot hide. Fee schedule is currently in use by the following providers"+":\r\n"+providersUsingFee);
 				checkIsHidden.Checked=false;
 			}
 			string patsUsingFee="";
@@ -257,7 +257,7 @@ namespace OpenDental{
 			List<Patient> listPats=Patients.GetForFeeSched(FeeSchedCur.FeeSchedNum).FindAll(x => x.PatStatus!=PatientStatus.Deleted);
 			patsUsingFee=string.Join("\r\n",listPats.Select(x => x.LName+", "+x.FName));
 			if(patsUsingFee!="") {
-				MsgBoxCopyPaste msgBoxCP=new MsgBoxCopyPaste(Lan.G(this,"Cannot hide. Fee schedule currently in use by the following non-deleted patients")
+				MsgBoxCopyPaste msgBoxCP=new MsgBoxCopyPaste("Cannot hide. Fee schedule currently in use by the following non-deleted patients"
 					+":\r\n"+patsUsingFee);
 				msgBoxCP.ShowDialog();
 				checkIsHidden.Checked=false;

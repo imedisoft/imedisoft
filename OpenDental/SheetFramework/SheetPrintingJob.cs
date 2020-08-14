@@ -142,7 +142,7 @@ namespace OpenDental
 			margins=new Margins(0,0,0,0);
 #endif
 			PrinterL.TryPrintOrDebugClassicPreview(pd_PrintPage,
-				Lan.G(nameof(PrinterL), "Batch of") + " " + sheetBatch[0].Description + " " + Lan.G(nameof(PrinterL), "printed"),
+				"Batch of " + sheetBatch[0].Description + " printed",
 				margins,
 				pageCount,
 				sit,
@@ -164,8 +164,8 @@ namespace OpenDental
 			List<Sheet> batchRxList = new List<Sheet>();//list of sheets to be batch printed
 			if (rxSheetCountList.Count == 0)
 			{
-				MessageBox.Show(Lan.G("Sheets", "MuitiRx sheet is invalid."
-					+ "Please visit the manual to see what output fields must be added to the MultiRx Sheet."));
+				MessageBox.Show("MuitiRx sheet is invalid."
+					+ "Please visit the manual to see what output fields must be added to the MultiRx Sheet.");
 				return;
 			}
 			//Sort RxPats into batches. rxSheetCount is most rx's we can print on one sheet.
@@ -207,7 +207,7 @@ namespace OpenDental
 			string validationErrors = SheetPrinting.ValidateRxForSheet(rx);
 			if (validationErrors != "")
 			{
-				MessageBox.Show(Lan.G("Sheets", "Cannot print until missing info is fixed: ") + validationErrors);
+				MessageBox.Show("Cannot print until missing info is fixed: " + validationErrors);
 				return false;
 			}
 			Print(sheet, 1, rx.IsControlled);
@@ -298,7 +298,7 @@ namespace OpenDental
 			ODprintout.InvalidMinDefaultPageWidth = 0;
 			ODprintout.InvalidMinDefaultPageHeight = -1;//Disable page height test.
 			PrinterL.TryPrintOrDebugClassicPreview(pd_PrintPage,
-				sheet.Description + " " + Lans.g(nameof(PrinterL), "sheet from") + " " + sheet.DateTimeSheet.ToShortDateString() + " " + Lans.g(nameof(PrinterL), "printed"),
+				sheet.Description + " " + "sheet from" + " " + sheet.DateTimeSheet.ToShortDateString() + " " + "printed",
 				printSit: sit,
 				margins: new Margins(0, 0, 0, 0),
 				printoutOrigin: PrintoutOrigin.AtMargin,

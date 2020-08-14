@@ -333,7 +333,7 @@ namespace OpenDentBusiness.Eclaims {
 		public static ValidateClaimResponse ValidateClaim(Claim claim,bool doValidateForAttachment) {
 			Clearinghouse clearingHouse=GetClearingHouseForClaim(claim);
 			if(!clearingHouse.IsAttachmentSendAllowed) {
-				throw new ODException(Lans.g("ClaimConnect", "Attachment sending is not enabled. Please see our manual for instructions."));
+				throw new ODException("Attachment sending is not enabled. Please see our manual for instructions.");
 			}
 			Dentalxchange2016.DwsService service=new Dentalxchange2016.DwsService();
 			Dentalxchange2016.textRequest textRequest=new Dentalxchange2016.textRequest();
@@ -353,10 +353,10 @@ namespace OpenDentBusiness.Eclaims {
 #endif
 			Dentalxchange2016.textResponse response=service.validateClaim(DxcCredentials.GetDentalxchangeCredentials(claim,clearingHouse),textRequest);
 			if(response==null) {
-				throw new ODException(Lans.g("ClaimConnect","No response from ClaimConnect was received."));
+				throw new ODException("No response from ClaimConnect was received.");
 			}
 			if(response.Status==null || response.Status.code!=0) {//The API call failed for some reason
-				string errorMsg=Lans.g("ClaimConnect","ClaimConnect error:");
+				string errorMsg="ClaimConnect error:";
 				if(response.Status==null) {
 					errorMsg+=" Invalid response status";
 				}
@@ -418,13 +418,13 @@ namespace OpenDentBusiness.Eclaims {
 			);
 			//Not sure which one to trust
 			if(response==null) {
-				throw new ODException(Lans.g("ClaimConnect","No response from ClaimConnect was received."));
+				throw new ODException("No response from ClaimConnect was received.");
 			}
 			if(!response.MsgSuccess || response.Status==null || response.Status.code!=0) {
-				throw new ODException(response.Status==null ? Lans.g("ClaimConnect","Invalid ClaimConnect response status") : response.Status.description);
+				throw new ODException(response.Status==null ? "Invalid ClaimConnect response status" : response.Status.description);
 			}
 			if(response.AttachmentReference==null) {
-				throw new ODException(Lans.g("ClaimConnect","Invalid attachment reference received."));
+				throw new ODException("Invalid attachment reference received.");
 			}
 			return response.AttachmentReference.AttachmentID;
 		}
@@ -461,35 +461,35 @@ namespace OpenDentBusiness.Eclaims {
 			//Billing provider
 			Provider prov=Providers.GetProv(claim.ProvBill);
 			if(prov==null) {
-				throw new ODException(Lans.g("ClaimConnect","Invalid provider associated to claim."));
+				throw new ODException("Invalid provider associated to claim.");
 			}
 			//Patient on the claim
 			Patient pat=Patients.GetPat(claim.PatNum);
 			if(pat==null) {
-				throw new ODException(Lans.g("ClaimConnect","Invalid patient associated to claim."));
+				throw new ODException("Invalid patient associated to claim.");
 			}
 			//Inssub
 			InsSub insSub=InsSubs.GetOne(claim.InsSubNum);
 			if(insSub==null) {
-				throw new ODException(Lans.g("ClaimConnect","Invalid insurance subscriber associated to claim."));
+				throw new ODException("Invalid insurance subscriber associated to claim.");
 			}
 			//Insplan
 			InsPlan insPlan=InsPlans.GetPlan(claim.PlanNum,null);
 			if(insPlan==null) {
-				throw new ODException(Lans.g("ClaimConnect","Invalid insurance plan associated to claim."));
+				throw new ODException("Invalid insurance plan associated to claim.");
 			}
 			//Carrier
 			Carrier carrier=Carriers.GetCarrier(insPlan.CarrierNum);
 			if(carrier==null) {
-				throw new ODException(Lans.g("ClaimConnect","Invalid carrier associated to claim."));
+				throw new ODException("Invalid carrier associated to claim.");
 			}
 			if(carrier.ElectID.Length<2) {
-				throw new ODException(Lans.g("ClaimConnect","Invalid ElectID."));
+				throw new ODException("Invalid ElectID.");
 			}
 			//Subscriber
 			Patient subscriber=Patients.GetPat(insSub.Subscriber);
 			if(carrier==null) {
-				throw new ODException(Lans.g("ClaimConnect","Invalid patient subscriber associated to claim."));
+				throw new ODException("Invalid patient subscriber associated to claim.");
 			}
 			attachment.BillProviderFirstName=prov.FName;
 			attachment.BillProviderLastName=prov.LName;
@@ -586,14 +586,14 @@ namespace OpenDentBusiness.Eclaims {
 		private static Clearinghouse GetClearingHouseForClaim(Claim claim) {
 			InsPlan insPlan=InsPlans.GetPlan(claim.PlanNum,null);
 			if(insPlan==null) {
-				throw new ODException(Lans.g("ClaimConnect","Invalid insurance plan associated to claim."));
+				throw new ODException("Invalid insurance plan associated to claim.");
 			}
 			Carrier carrier=Carriers.GetCarrier(insPlan.CarrierNum);
 			if(carrier==null) {
-				throw new ODException(Lans.g("ClaimConnect","Invalid carrier associated to claim."));
+				throw new ODException("Invalid carrier associated to claim.");
 			}
 			if(carrier.ElectID.Length<2) {
-				throw new ODException(Lans.g("ClaimConnect","Invalid ElectID."));
+				throw new ODException("Invalid ElectID.");
 			}
 			//Fill clearing house with HQ fields
 			long clearingHouseNum=Clearinghouses.AutomateClearinghouseHqSelection(carrier.ElectID,claim.MedType);
@@ -628,9 +628,9 @@ namespace OpenDentBusiness.Eclaims {
 				return false;
 			}
 			progress=progress??new ODProgressExtendedNull();
-			progress.UpdateProgress(Lans.g(progress.LanThis,"Contacting web server and downloading reports"),"reports","17%",17);
+			progress.UpdateProgress("Contacting web server and downloading reports","reports","17%",17);
 			if(progress.IsPauseOrCancel()) {
-					progress.UpdateProgress(Lans.g(progress.LanThis,"Canceled by user."));
+					progress.UpdateProgress("Canceled by user.");
 					return false;
 			}
 			Dentalxchange2016.Credentials cred=new Dentalxchange2016.Credentials();
@@ -689,24 +689,24 @@ namespace OpenDentBusiness.Eclaims {
 				*/
 			}
 			catch(Exception ex) {
-				ErrorMessage=Lans.g(progress.LanThis,"If this is a new customer, this error might be due to an invalid Username or Password.  "
-					+"Servers may need a few hours before ready to accept new user information.")+"\r\n"
-					+Lans.g(progress.LanThis,"Error message received directly from Claim Connect:")+"  "+ex.ToString();
+				ErrorMessage="If this is a new customer, this error might be due to an invalid Username or Password.  "
+					+"Servers may need a few hours before ready to accept new user information."+"\r\n"
+					+"Error message received directly from Claim Connect:"+"  "+ex.ToString();
 				return false;
 			}
-			progress.UpdateProgress(Lans.g(progress.LanThis,"Web server contact successful."));
+			progress.UpdateProgress("Web server contact successful.");
 			string path=clearinghouse.ResponsePath;
-			progress.UpdateProgress(Lans.g(progress.LanThis,"Writing files"),"reports","40%",40);
+			progress.UpdateProgress("Writing files","reports","40%",40);
 			if(progress.IsPauseOrCancel()) {
-				progress.UpdateProgress(Lans.g(progress.LanThis,"Canceled by user."));
+				progress.UpdateProgress("Canceled by user.");
 				return false;
 			}
 			//write each message to a distinct file in the export path.	
 			listEraStrings.ForEach(x => File.WriteAllText(ODFileUtils.CreateRandomFile(path,".txt"),x));
-			progress.UpdateProgress(Lans.g(progress.LanThis,"Files written successfully."));
-			progress.UpdateProgress(Lans.g(progress.LanThis,"Finalizing"),"reports","50%",50);
+			progress.UpdateProgress("Files written successfully.");
+			progress.UpdateProgress("Finalizing","reports","50%",50);
 			if(progress.IsPauseOrCancel()) {
-				progress.UpdateProgress(Lans.g(progress.LanThis,"Canceled by user."));
+				progress.UpdateProgress("Canceled by user.");
 				return false;
 			}
 			return true;

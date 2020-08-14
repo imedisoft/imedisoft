@@ -106,7 +106,7 @@ namespace OpenDentBusiness{
 			string command;
 			command="SELECT COUNT(*) FROM VaccineDef WHERE drugManufacturerNum="+POut.Long(drugManufacturerNum);
 			if(Database.ExecuteString(command)!="0") {
-				throw new ApplicationException(Lans.g("FormDrugUnitEdit","Cannot delete: DrugManufacturer is in use by VaccineDef."));
+				throw new ApplicationException("Cannot delete: DrugManufacturer is in use by VaccineDef.");
 			}
 			command= "DELETE FROM drugmanufacturer WHERE DrugManufacturerNum = "+POut.Long(drugManufacturerNum);
 			Database.ExecuteNonQuery(command);

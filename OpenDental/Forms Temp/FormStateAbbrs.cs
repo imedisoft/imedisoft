@@ -19,7 +19,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormStateAbbrs() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -132,12 +132,12 @@ namespace OpenDental{
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("FormStateAbbrs","Description"),175);
+			GridColumn col=new GridColumn("Description",175);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormStateAbbrs","Abbr"),70);
+			col=new GridColumn("Abbr",70);
 			gridMain.ListGridColumns.Add(col);
 			if(Prefs.GetBool(PrefName.EnforceMedicaidIDLength)) {
-				col=new GridColumn(Lan.G("FormStateAbbrs","Medicaid ID Length"),200);
+				col=new GridColumn("Medicaid ID Length",200);
 				gridMain.ListGridColumns.Add(col);
 			}
 			gridMain.ListGridRows.Clear();

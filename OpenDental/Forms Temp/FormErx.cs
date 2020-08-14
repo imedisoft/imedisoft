@@ -76,7 +76,7 @@ namespace OpenDental {
 		}
 
 		protected override void SetTitle() {
-			Text=Lan.G(this,"eRx");
+			Text="eRx";
 			if(browser.DocumentTitle.Trim()!="") {
 				Text+=" - "+browser.DocumentTitle;
 			}

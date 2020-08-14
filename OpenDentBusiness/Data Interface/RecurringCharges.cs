@@ -370,12 +370,12 @@ namespace OpenDentBusiness {
 			int tokenCount=CreditCards.GetXChargeTokenCount(chargeData.XChargeToken,false);
 			if(chargeData.XChargeToken!="" && tokenCount!=1) {
 				string msg=(tokenCount>1)?"A duplicate token was found":"A token no longer exists";
-				MarkFailed(chargeData,Lans.g(_lanThis,msg+", the card cannot be charged."));
+				MarkFailed(chargeData,msg+", the card cannot be charged.");
 				return;
 			}
 			Patient patCur=Patients.GetPat(chargeData.RecurringCharge.PatNum);
 			if(patCur==null) {
-				MarkFailed(chargeData,Lans.g(_lanThis,"Unable to find patient")+" "+chargeData.RecurringCharge.PatNum);
+				MarkFailed(chargeData,"Unable to find patient"+" "+chargeData.RecurringCharge.PatNum);
 				return;
 			}
 			bool wasChargeAttempted;
@@ -412,7 +412,7 @@ namespace OpenDentBusiness {
 				clinicNumCur=chargeData.RecurringCharge.ClinicNum;//If clinics were enabled but no longer are, use credentials for headquarters.
 			}
 			if(listClinicNumsBadCredentials.Contains(clinicNumCur)) {//username or password is blank, don't try to process
-				MarkFailed(chargeData,Lans.g(_lanThis,"The X-Charge Username or Password for the clinic has not been set."),LogLevel.Info);
+				MarkFailed(chargeData,"The X-Charge Username or Password for the clinic has not been set.",LogLevel.Info);
 				return false;
 			}
 			string username=ProgramProperties.GetPropVal(_progCur.Id,"Username",clinicNumCur);
@@ -422,8 +422,8 @@ namespace OpenDentBusiness {
 				if(clinicNumCur>0) {
 					clinicAbbr=Clinics.GetAbbr(clinicNumCur);
 				}
-				MarkFailed(chargeData,Lans.g(_lanThis,"The X-Charge Username or Password for the following clinic has not been set")+":\r\n"+clinicAbbr+"\r\n"
-					+Lans.g(_lanThis,"All charges for that clinic will be skipped."));
+				MarkFailed(chargeData,"The X-Charge Username or Password for the following clinic has not been set"+":\r\n"+clinicAbbr+"\r\n"
+					+"All charges for that clinic will be skipped.");
 				listClinicNumsBadCredentials.Add(clinicNumCur);
 				return false;
 			}
@@ -435,7 +435,7 @@ namespace OpenDentBusiness {
 			catch {
 				//Probably did not have permissions to delete the file.  Don't do anything, because a message will show telling them that the cards left in the grid failed.
 				//They will then go try and run the cards in the Account module and will then get a detailed message telling them what is wrong.
-				MarkFailed(chargeData,Lans.g(_lanThis,"Unable to delete result file."),LogLevel.Info);
+				MarkFailed(chargeData,"Unable to delete result file.",LogLevel.Info);
 				return false;
 			}
 			string xPath=Programs.GetProgramPath(_progCur);
@@ -546,12 +546,12 @@ namespace OpenDentBusiness {
 						Success++;
 					}
 					else {
-						MarkFailed(chargeData,Lans.g(_lanThis,"Result from XCharge:")+" "+strBuilderResultText.ToString(),LogLevel.Info);
+						MarkFailed(chargeData,"Result from XCharge:"+" "+strBuilderResultText.ToString(),LogLevel.Info);
 					}
 				}
 			}
 			catch(Exception ex) {
-				MarkFailed(chargeData,Lans.g(_lanThis,"XCharge error:")+" "+ex.Message,LogLevel.Info);
+				MarkFailed(chargeData,"XCharge error:"+" "+ex.Message,LogLevel.Info);
 				return false;
 			}
 			//If the decline minimizer updated the card, returned a value in the ACCOUNT field, and returned a valid exp date.  Update our record.
@@ -559,12 +559,12 @@ namespace OpenDentBusiness {
 				CreditCard creditCardCur=CreditCards.GetOne(creditCardNum);
 				//Update the payment note with the changes.
 				if(creditCardCur.CCNumberMasked != newAccount) {
-					strBuilderResultText.AppendLine(Lans.g(_lanThis,"Account number changed from")+" "+creditCardCur.CCNumberMasked+" "
-						+Lans.g(_lanThis,"to")+" "+newAccount);
+					strBuilderResultText.AppendLine("Account number changed from"+" "+creditCardCur.CCNumberMasked+" "
+						+"to"+" "+newAccount);
 				}
 				if(creditCardCur.CCExpiration != newExpiration) {
-					strBuilderResultText.AppendLine(Lans.g(_lanThis,"Expiration changed from")+" "+creditCardCur.CCExpiration.ToString("MMyy")+" "
-						+Lans.g(_lanThis,"to")+" "+newExpiration.ToString("MMyy"));
+					strBuilderResultText.AppendLine("Expiration changed from"+" "+creditCardCur.CCExpiration.ToString("MMyy")+" "
+						+"to"+" "+newExpiration.ToString("MMyy"));
 				}
 				creditCardCur.CCNumberMasked=newAccount;
 				creditCardCur.CCExpiration=newExpiration;
@@ -580,7 +580,7 @@ namespace OpenDentBusiness {
 			receipt=new StringBuilder();//Automated payments won't have receipts
 			strBuilderResultText=new StringBuilder();
 			try {
-				XWebResponse response=XWebs.MakePaymentWithAlias(chargeData.RecurringCharge.PatNum,Lans.g(_lanThis,"Made from automated recurring charge"),
+				XWebResponse response=XWebs.MakePaymentWithAlias(chargeData.RecurringCharge.PatNum,"Made from automated recurring charge",
 					chargeData.RecurringCharge.ChargeAmt,chargeData.RecurringCharge.CreditCardNum,false,ChargeSource.RecurringCharges,forceDuplicates);				
 				amount=response.Amount;
 				if(response.XWebResponseCode==XWebResponseCodes.Approval) {
@@ -588,8 +588,8 @@ namespace OpenDentBusiness {
 					Success++;
 				}
 				else {
-					MarkFailed(chargeData,Lans.g(_lanThis,"Response from XWeb:")+" "+response.XWebResponseCode.ToString(),LogLevel.Info);
-					response.PayNote+="\r\n"+Lans.g(this,"Response from XWeb:")+" "+response.XWebResponseCode.ToString();
+					MarkFailed(chargeData,"Response from XWeb:"+" "+response.XWebResponseCode.ToString(),LogLevel.Info);
+					response.PayNote+="\r\n"+"Response from XWeb:"+" "+response.XWebResponseCode.ToString();
 				}
 				strBuilderResultText.Append(response.GetFormattedNote(true));
 				xWebResponseNum=response.XWebResponseNum;
@@ -622,13 +622,13 @@ namespace OpenDentBusiness {
 			int tokenCount=CreditCards.GetPayConnectTokenCount(tokenOrCCMasked);
 			if(tokenOrCCMasked!="" && tokenCount!=1) {
 				string msg=(tokenCount>1)?"A duplicate token was found":"A token no longer exists";
-				MarkFailed(chargeData,Lans.g(_lanThis,msg+", the card cannot be charged."));
+				MarkFailed(chargeData,msg+", the card cannot be charged.");
 				return;
 			}
 			long patNum=chargeData.RecurringCharge.PatNum;
 			Patient patCur=Patients.GetPat(patNum);
 			if(patCur==null) {
-				MarkFailed(chargeData,Lans.g(_lanThis,"Unable to find patient")+" "+chargeData.RecurringCharge.PatNum);
+				MarkFailed(chargeData,"Unable to find patient"+" "+chargeData.RecurringCharge.PatNum);
 				return;
 			}
 			DateTime exp=chargeData.PayConnectTokenExp;
@@ -654,20 +654,20 @@ namespace OpenDentBusiness {
 			StringBuilder strBuilderResultText=new StringBuilder();//this payment's result text, used in payment note and then appended to file string builder
 			strBuilderResultFile.AppendLine("PatNum: "+patNum+" Name: "+patCur.GetNameFLnoPref());
 			if(payConnectResponse==null || payConnectResponse.Status==null) {
-				MarkFailed(chargeData,Lans.g(_lanThis,"Transaction Failed, unknown error"),LogLevel.Info);
+				MarkFailed(chargeData,"Transaction Failed, unknown error",LogLevel.Info);
 				if(PrefC.HasClinicsEnabled && dictClinicNumDesc.ContainsKey(clinicNumCur)) {
 					strBuilderResultText.AppendLine("CLINIC="+dictClinicNumDesc[clinicNumCur]);
 				}
-				strBuilderResultText.AppendLine(Lans.g(_lanThis,"Transaction Failed, unknown error"));
+				strBuilderResultText.AppendLine("Transaction Failed, unknown error");
 				strBuilderResultFile.AppendLine(strBuilderResultText.ToString());//add to the file string builder
 			}
 			else if(payConnectResponse.Status.code!=0) {//error in transaction
-				MarkFailed(chargeData,Lans.g(_lanThis,"Transaction Failed, error status")+" "+payConnectResponse.Status.description,LogLevel.Info);
+				MarkFailed(chargeData,"Transaction Failed, error status"+" "+payConnectResponse.Status.description,LogLevel.Info);
 				if(PrefC.HasClinicsEnabled && dictClinicNumDesc.ContainsKey(clinicNumCur)) {
 					strBuilderResultText.AppendLine("CLINIC="+dictClinicNumDesc[clinicNumCur]);
 				}
-				strBuilderResultText.AppendLine(Lans.g(_lanThis,"Transaction Type")+": "+PayConnectService.transType.SALE.ToString());
-				strBuilderResultText.AppendLine(Lans.g(_lanThis,"Status")+": "+payConnectResponse.Status.description);
+				strBuilderResultText.AppendLine("Transaction Type"+": "+PayConnectService.transType.SALE.ToString());
+				strBuilderResultText.AppendLine("Status"+": "+payConnectResponse.Status.description);
 				strBuilderResultFile.AppendLine(strBuilderResultText.ToString());//add to the file string builder
 			}
 			else {//approved sale, update CC, add result to file string builder		
@@ -719,13 +719,13 @@ namespace OpenDentBusiness {
 			int tokenCount=CreditCards.GetPaySimpleTokenCount(paySimpleAccountId,chargeData.CCSource==CreditCardSource.PaySimpleACH);
 			if(string.IsNullOrWhiteSpace(paySimpleAccountId) || tokenCount!=1) {
 				string msg=(tokenCount>1)?"A duplicate token was found":"A token was not found";
-				MarkFailed(chargeData,Lans.g(_lanThis,msg+", the card cannot be charged."));
+				MarkFailed(chargeData,msg+", the card cannot be charged.");
 				return;
 			}
 			long patNum=chargeData.RecurringCharge.PatNum;
 			Patient patCur=Patients.GetPat(patNum);
 			if(patCur==null) {
-				MarkFailed(chargeData,Lans.g(_lanThis,"Unable to find patient")+" "+chargeData.RecurringCharge.PatNum);
+				MarkFailed(chargeData,"Unable to find patient"+" "+chargeData.RecurringCharge.PatNum);
 				return;
 			}
 			DateTime exp=chargeData.CCExpiration;//We don't have a PaySimpleTokenExpiration, so use the CC's stored one.
@@ -746,7 +746,7 @@ namespace OpenDentBusiness {
 				if(response==null) {
 					//If this happens, the API method returned successfully and somehow we didn't create a response.
 					//The intent of the PaySimple API integration is that we always get a response or throw exceptions.
-					throw new ODException(Lans.g(_lanThis,"Unknown error making payment.  Please contact support."));
+					throw new ODException("Unknown error making payment.  Please contact support.");
 				}
 				//approved sale, update CC, add result to file string builder		
 				chargeData.RecurringCharge.ChargeStatus=RecurringChargeStatus.ChargeSuccessful;
@@ -775,7 +775,7 @@ namespace OpenDentBusiness {
 				receipt=response.TransactionReceipt;
 			}
 			catch(Exception ex) {
-				MarkFailed(chargeData,Lans.g(_lanThis,"Error processing card:")+" "+ex.Message,LogLevel.Info);
+				MarkFailed(chargeData,"Error processing card:"+" "+ex.Message,LogLevel.Info);
 				string clinicDesc="";
 				if(PrefC.HasClinicsEnabled && dictClinicNumDesc.ContainsKey(clinicNumCur)) {
 					clinicDesc=dictClinicNumDesc[clinicNumCur];
@@ -790,11 +790,11 @@ namespace OpenDentBusiness {
 
 		///<summary>For PaySimple only. Adds the error message to the StringBuilder.</summary>
 		private void AddErrorToStrb(StringBuilder strb,string errorMsg,string clinicDesc) {
-			strb.AppendLine(Lans.g(_lanThis,"Transaction Type")+": "+PaySimple.TransType.SALE.ToString());
+			strb.AppendLine("Transaction Type"+": "+PaySimple.TransType.SALE.ToString());
 			if(!string.IsNullOrWhiteSpace(clinicDesc)) {
 				strb.AppendLine("CLINIC="+clinicDesc);
 			}
-			strb.AppendLine(Lans.g(_lanThis,"Error")+": "+errorMsg);
+			strb.AppendLine("Error"+": "+errorMsg);
 		}
 
 		///<summary>Updates the credit card's masked number and expiration.</summary>
@@ -823,7 +823,7 @@ namespace OpenDentBusiness {
 				Failed++;
 			}
 			chargeData.RecurringCharge.ErrorMsg=chargeData.RecurringCharge.ErrorMsg?.AppendLine(errorMsg)??errorMsg;
-			Logger.Write(logLevel,errorMsg + (errorMsg[errorMsg.Length-1]=='\n'?"":"\r\n")+"  "+Lans.g(_lanThis,"Patient:")+" "+chargeData.PatName);
+			Logger.Write(logLevel,errorMsg + (errorMsg[errorMsg.Length-1]=='\n'?"":"\r\n")+"  "+"Patient:"+" "+chargeData.PatName);
 		}
 
 		///<summary>Sets the fields that are keeping count of the number of successes and failures.</summary>
@@ -857,7 +857,7 @@ namespace OpenDentBusiness {
 				}
 				if(isBeforeLockDate) {
 					if(warnings.Count==0) {
-						warnings.Add(Lans.g(_lanThis,"Lock date limitation is preventing the recurring charges from running")+":");
+						warnings.Add("Lock date limitation is preventing the recurring charges from running"+":");
 					}
 					warnings.Add(newPayDate.ToShortDateString()+" - "+chargeCur.RecurringCharge.PatNum+": "+chargeCur.PatName+" - "
 						+chargeCur.RecurringCharge.FamBal.ToString("c")+" - "+chargeCur.RecurringCharge.ChargeAmt.ToString("c"));
@@ -913,7 +913,7 @@ namespace OpenDentBusiness {
 			paymentCur.Receipt=receipt;
 			Payments.Insert(paymentCur);
 			SecurityLogs.MakeLogEntry(Permissions.PaymentCreate,paymentCur.PatNum,patCur.GetNameLF()+", "
-				+paymentCur.PayAmt.ToString("c")+", "+Lans.g(_lanThis,"created from the Recurring Charges List"));
+				+paymentCur.PayAmt.ToString("c")+", "+"created from the Recurring Charges List");
 			recCharge.RecurringCharge.PayNum=paymentCur.PayNum;
 			if(xWebResponseNum>0) {
 				XWebResponse xWebResponse=XWebResponses.GetOne(xWebResponseNum);

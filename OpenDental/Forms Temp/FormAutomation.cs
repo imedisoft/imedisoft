@@ -31,7 +31,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -171,7 +171,7 @@ namespace OpenDental{
 					detail+=SheetDefs.GetDescription(_listAutomations[i].SheetDefinitionId);
 				}
 				else if(_listAutomations[i].AutoAction==AutomationAction.ChangePatStatus) {
-					detail+=Lans.g("enum"+nameof(PatientStatus),_listAutomations[i].PatStatus.GetDescription());
+					detail+=_listAutomations[i].PatStatus.GetDescription();
 				}
 				row.Cells.Add(detail);
 				gridMain.ListGridRows.Add(row);

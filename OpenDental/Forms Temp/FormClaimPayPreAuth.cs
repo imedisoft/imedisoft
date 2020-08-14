@@ -40,7 +40,7 @@ namespace OpenDental
 			PlanList=planList;
 			SubList=subList;
 			PatPlanList=patPlanList;
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -173,22 +173,22 @@ namespace OpenDental
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
 			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
-				col=new GridColumn(Lan.G(this,"Code"),85);
+				col=new GridColumn("Code",85);
 				gridMain.ListGridColumns.Add(col);
 			}
 			else {
-				col=new GridColumn(Lan.G(this,"Code"),50);
+				col=new GridColumn("Code",50);
 				gridMain.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"Tth"),35);
+				col=new GridColumn("Tth",35);
 				gridMain.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.G(this,"Description"),120);
+			col=new GridColumn("Description",120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Fee"),55,HorizontalAlignment.Right);
+			col=new GridColumn("Fee",55,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Estimate"),55,HorizontalAlignment.Right,true);
+			col=new GridColumn("Estimate",55,HorizontalAlignment.Right,true);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Remarks"),170,true);
+			col=new GridColumn("Remarks",170,true);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -268,7 +268,7 @@ namespace OpenDental
 						dbl=Convert.ToDouble(gridMain.ListGridRows[i].Cells[4-toothIndexOffset].Text);
 					}
 					catch{
-						throw new ApplicationException(Lan.G(this,"Amount not valid: ")+gridMain.ListGridRows[i].Cells[4-toothIndexOffset].Text);
+						throw new ApplicationException("Amount not valid: "+gridMain.ListGridRows[i].Cells[4-toothIndexOffset].Text);
 					}
 				}
 			}

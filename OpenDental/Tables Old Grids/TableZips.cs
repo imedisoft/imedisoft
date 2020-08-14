@@ -19,10 +19,10 @@ namespace OpenDental{
 			HeadingIsPresent=false;
 			InstantClassesPar();
 			SetRowHeight(0,19,14);
-			Fields[0]=Lan.G("TableZips","ZipCode");
-			Fields[1]=Lan.G("TableZips","City");
-			Fields[2]=Lan.G("TableZips","State");
-			Fields[3]=Lan.G("TableZips","Frequent");
+			Fields[0]="ZipCode";
+			Fields[1]="City";
+			Fields[2]="State";
+			Fields[3]="Frequent";
 			ColWidth[0]=100;
 			ColWidth[1]=200;
 			ColWidth[2]=100;

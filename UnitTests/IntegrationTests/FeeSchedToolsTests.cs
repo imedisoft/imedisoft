@@ -298,8 +298,8 @@ namespace UnitTests.FeeSchedTools_Tests {
 		private long GlobalUpdateWriteoffs(long clinicNum) {
 			List<long> listWriteoffClinics=new List<long>() { clinicNum };
 			ODProgressExtended progress=new ODProgressExtended(EventCategory.FeeSched,new FeeSchedEvent(),new System.Windows.Forms.Form(),
-				tag:new ProgressBarHelper(Lans.g(this,"Write-off Update Progress"),progressBarEventType: ProgBarEventType.Header),
-				cancelButtonText:Lans.g(this,"Close"));
+				tag:new ProgressBarHelper("Write-off Update Progress",progressBarEventType: ProgBarEventType.Header),
+				cancelButtonText:"Close");
 			progress.Fire(EventCategory.FeeSched,new ProgressBarHelper("","0%"
 						,0,100,ProgBarStyle.Blocks,"WriteoffProgress"));
 			return FeeScheds.GlobalUpdateWriteoffs(listWriteoffClinics,progress);

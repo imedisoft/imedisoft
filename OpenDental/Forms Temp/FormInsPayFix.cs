@@ -36,7 +36,7 @@ namespace OpenDental
 				}
 				if (claim.DateReceived.Date > curDate && !Prefs.GetBool(PrefName.AllowFutureInsPayments) && !Prefs.GetBool(PrefName.FutureTransDatesAllowed))
 				{
-					invalidClaimDate += "\r\n" + Lan.G(this, "PatNum") + " " + claim.PatNum + ", " + claim.DateService.ToShortDateString();
+					invalidClaimDate += "\r\n" + "PatNum" + " " + claim.PatNum + ", " + claim.DateService.ToShortDateString();
 					continue;
 				}
 				ClaimPayment cp = new ClaimPayment();
@@ -65,7 +65,7 @@ namespace OpenDental
 				invalidClaimDate = "\r\n" + "Cannot make future-dated insurance payments for these claims:" + invalidClaimDate;
 			}
 
-			MsgBoxCopyPaste messageBox = new MsgBoxCopyPaste(Lan.G(this, "Insurance checks created:") + " " + splits.Count + invalidClaimDate);
+			MsgBoxCopyPaste messageBox = new MsgBoxCopyPaste("Insurance checks created:" + " " + splits.Count + invalidClaimDate);
 			messageBox.ShowDialog();
 
 			DialogResult = DialogResult.OK;//Close the window because there is nothing else to do

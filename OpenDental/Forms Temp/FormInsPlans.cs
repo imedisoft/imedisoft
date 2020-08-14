@@ -64,7 +64,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormInsPlans(){
 			InitializeComponent();// Required for Windows Form Designer support
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -392,7 +392,7 @@ namespace OpenDental{
 
 		private void FormInsTemplates_Load(object sender, System.EventArgs e) {
 			if(!IsSelectMode){
-				butCancel.Text=Lan.G(this,"Close");
+				butCancel.Text="Close";
 				butOK.Visible=false;
 			}
 			Program prog=Programs.GetCur(ProgramName.Trojan);
@@ -426,36 +426,36 @@ namespace OpenDental{
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lans.g("TableInsurancePlans","Employer"),140);
+			GridColumn col=new GridColumn("Employer",140);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lans.g("TableInsurancePlans","Carrier"),140);
+			col=new GridColumn("Carrier",140);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lans.g("TableInsurancePlans","Phone"),82);
+			col=new GridColumn("Phone",82);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lans.g("TableInsurancePlans","Address"),120);
+			col=new GridColumn("Address",120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lans.g("TableInsurancePlans","City"),80);
+			col=new GridColumn("City",80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lans.g("TableInsurancePlans","ST"),25);
+			col=new GridColumn("ST",25);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lans.g("TableInsurancePlans","Zip"),50);
+			col=new GridColumn("Zip",50);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lans.g("TableInsurancePlans","Group#"),70);
+			col=new GridColumn("Group#",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lans.g("TableInsurancePlans","Group Name"),90);
+			col=new GridColumn("Group Name",90);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lans.g("TableInsurancePlans","noE"),35);
+			col=new GridColumn("noE",35);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lans.g("TableInsurancePlans","ElectID"),45);
+			col=new GridColumn("ElectID",45);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lans.g("TableInsurancePlans","Subs"),40);
+			col=new GridColumn("Subs",40);
 			gridMain.ListGridColumns.Add(col);
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
-				col=new GridColumn(Lan.G("TableCarriers","CDAnet"),50);
+				col=new GridColumn("CDAnet",50);
 				gridMain.ListGridColumns.Add(col);
 			}
 			if(trojan){
-				col=new GridColumn(Lans.g("TableInsurancePlans","TrojanID"),60);
+				col=new GridColumn("TrojanID",60);
 				gridMain.ListGridColumns.Add(col);
 			}
 			//PlanNote not shown
@@ -561,7 +561,7 @@ namespace OpenDental{
 				return;
 			}
 			if(gridMain.SelectedIndices.Length<2) {
-				MessageBox.Show(Lan.G(this,"Please select at least two items first."));
+				MessageBox.Show("Please select at least two items first.");
 				return;
 			}
 			InsPlan[] listSelected=new InsPlan[gridMain.SelectedIndices.Length];
@@ -596,7 +596,7 @@ namespace OpenDental{
 				catch (ApplicationException ex){
 					MessageBox.Show(ex.Message);
 					SecurityLogs.MakeLogEntry(Permissions.InsPlanEdit,0,
-						Lan.G(this,"InsPlan Combine delete validation failed.  Plan was not deleted."),
+						"InsPlan Combine delete validation failed.  Plan was not deleted.",
 						listSelected[i].PlanNum,listSelected[i].SecDateTEdit); //new plan, no date needed.
 					//Since we already deleted/changed all of the other dependencies, 
 					//we should continue in making the Securitylog entry and cleaning up. 
@@ -609,7 +609,7 @@ namespace OpenDental{
 				//}
 			}
 			if(didMerge) {
-				string logText=Lan.G(this,"Merged the following PlanNum(s): ")+string.Join(", ",listMergedPlanNums)+" "+Lan.G(this,"into")+" "+planToMergeTo.PlanNum;
+				string logText="Merged the following PlanNum(s): "+string.Join(", ",listMergedPlanNums)+" "+"into"+" "+planToMergeTo.PlanNum;
 				SecurityLogs.MakeLogEntry(Permissions.InsPlanMerge,0,logText);
 			}
 			FillGrid();
@@ -636,7 +636,7 @@ namespace OpenDental{
 				MessageBox.Show("All plans are in use.");
 				return;
 			}
-			string msgText=unusedCount.ToString()+" "+Lan.G(this,"plans found that are not in use by any subscribers.  Hide all of them?");
+			string msgText=unusedCount.ToString()+" "+"plans found that are not in use by any subscribers.  Hide all of them?";
 			if(MessageBox.Show(msgText,"",MessageBoxButtons.YesNo)!=DialogResult.Yes){
 				return;
 			}
@@ -648,11 +648,11 @@ namespace OpenDental{
 		private void butOK_Click(object sender, System.EventArgs e) {
 			//only visible if IsSelectMode
 			if(gridMain.SelectedIndices.Length==0){
-				MessageBox.Show(Lan.G(this,"Please select an item first."));
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			if(gridMain.SelectedIndices.Length>1) {
-				MessageBox.Show(Lan.G(this,"Please select only one item first."));
+				MessageBox.Show("Please select only one item first.");
 				return;
 			}
 			InsPlan plan=InsPlans.GetPlan(PIn.Long(table.Rows[gridMain.SelectedIndices[0]]["PlanNum"].ToString()),null);

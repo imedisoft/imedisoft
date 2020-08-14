@@ -47,7 +47,7 @@ namespace OpenDental {
 
 		public FormSheetFieldCheckBox(SheetDef sheetDef,SheetFieldDef sheetFieldDef,bool isReadOnly,bool isEditMobile=false):base(sheetDef,sheetFieldDef,isReadOnly,isEditMobile) {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormSheetFieldCheckBox_Load(object sender,EventArgs e) {
@@ -356,9 +356,9 @@ namespace OpenDental {
 
 		private void butAddProc_Click(object sender,EventArgs e) {
 			List<GridColumn> listGridCols=new List<GridColumn>() {
-				new GridColumn(Lan.G(this,"Code"),70),
-				new GridColumn(Lan.G(this,"Abbreviation"),90,HorizontalAlignment.Center),
-				new GridColumn(Lan.G(this,"Description"),100,HorizontalAlignment.Right){ IsWidthDynamic=true }
+				new GridColumn("Code",70),
+				new GridColumn("Abbreviation",90,HorizontalAlignment.Center),
+				new GridColumn("Description",100,HorizontalAlignment.Right){ IsWidthDynamic=true }
 			};
 			List<ProcedureCode> listMouthProcCodes=ProcedureCodes.GetProcCodesByTreatmentArea(false,TreatmentArea.Mouth,TreatmentArea.None)
 				.OrderBy(x => x.ProcCode).ToList();

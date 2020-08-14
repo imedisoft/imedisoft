@@ -810,8 +810,8 @@ namespace OpenDentBusiness {
 						GraphicsUnit.Pixel);
 				}
 				catch(OutOfMemoryException) {
-					throw new OutOfMemoryException(Lans.g("Sheets","A static image on this sheet is too high in quality and cannot be printed.")+"\r\n"
-						+Lans.g("Sheets","Try printing to a different printer or lower the quality of the static image")+":\r\n"
+					throw new OutOfMemoryException("A static image on this sheet is too high in quality and cannot be printed."+"\r\n"
+						+"Try printing to a different printer or lower the quality of the static image"+":\r\n"
 						+filePathAndName);
 				}
 			}
@@ -1055,7 +1055,7 @@ namespace OpenDentBusiness {
 			}
 			string fontName=(string.IsNullOrEmpty(sheet.FontName) ? FontFamily.GenericMonospace.ToString() : sheet.FontName);
 			double fontSizeSigned=8.25;//Mimics FormSheetFillEdit.LayoutFields
-			string strSigned=(isTypedFromWebforms ? Lans.g("","Typed Signature in Webforms: ") : Lans.g("","Signed: "))+field.DateTimeSig.ToString();
+			string strSigned=(isTypedFromWebforms ? "Typed Signature in Webforms: " : "Signed: ")+field.DateTimeSig.ToString();
 			int sigWidth=field.Width-2;
 			int sigHeight=field.Height-2;
 			if(g!=null) {

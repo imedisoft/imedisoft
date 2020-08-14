@@ -20,7 +20,7 @@ namespace OpenDental {
 		///<summary>Not currently used.  Might use again some day as a sub window of FormApptEdit.  Specify AptCur before opening this form.</summary>
 		public FormApptProcs() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormApptProcs_Load(object sender,EventArgs e) {
@@ -64,17 +64,17 @@ namespace OpenDental {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G("TableProcSelect","OtherAppt"),70,HorizontalAlignment.Center);
+			col=new GridColumn("OtherAppt",70,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProcSelect","Code"),55);
+			col=new GridColumn("Code",55);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProcSelect","Priority"),55);
+			col=new GridColumn("Priority",55);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProcSelect","Tooth"),50);
+			col=new GridColumn("Tooth",50);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProcSelect","Description"),250);
+			col=new GridColumn("Description",250);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProcSelect","Fee"),60,HorizontalAlignment.Right);
+			col=new GridColumn("Fee",60,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

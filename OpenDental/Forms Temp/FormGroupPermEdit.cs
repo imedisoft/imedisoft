@@ -27,7 +27,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormGroupPermEdit(GroupPermission cur){
 			InitializeComponent();
-			Lan.F(this);
+			
 			Cur=cur.Copy();
 		}
 
@@ -207,13 +207,13 @@ namespace OpenDental{
 			}
 			try{
 				if(Convert.ToInt32(textDays.Text)<0){
-					MessageBox.Show(Lan.g(this,"Value cannot be less than 0"));
+					MessageBox.Show("Value cannot be less than 0");
 					e.Cancel=true;
 					return;
 				}
 			}
 			catch{
-				MessageBox.Show(Lan.g(this,"Cannot contain letters or symbols"));
+				MessageBox.Show("Cannot contain letters or symbols");
 				e.Cancel=true;
 				return;
 			}

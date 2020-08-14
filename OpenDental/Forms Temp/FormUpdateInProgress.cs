@@ -16,7 +16,7 @@ namespace OpenDental {
 
 		public FormUpdateInProgress(string updateComputerName) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_updateComputerName=updateComputerName;
 			_listAdminCompNames=new List<string>();
 			string xmlPath=ODFileUtils.CombinePaths(Application.StartupPath,"FreeDentalConfig.xml");
@@ -40,13 +40,13 @@ namespace OpenDental {
 		}
 
 		private void FormUpdateInProgress_Load(object sender,System.EventArgs e) {
-			string warningString=Lan.G("FormUpdateInProgress","An update is in progress on workstation")+": '"+_updateComputerName+"'.\r\n\r\n"
-			+Lan.G(this,"Not allowed to start")+" "+Prefs.GetString(PrefName.SoftwareName)+" "+Lan.G(this,"while an update is in progress.")+"\r\n"
-			+Lan.G(this,"Please wait and click 'Try Again'.");
+			string warningString="An update is in progress on workstation"+": '"+_updateComputerName+"'.\r\n\r\n"
+			+"Not allowed to start"+" "+Prefs.GetString(PrefName.SoftwareName)+" "+"while an update is in progress."+"\r\n"
+			+"Please wait and click 'Try Again'.";
 			try {
 				if(_listAdminCompNames.Contains(ComputerPrefs.LocalComputer.ComputerName)) {
-					warningString+="\r\n\r\n"+Lan.G(this,"If you are the person who started the update and you wish to override"
-						+" this message because an update is not in progress, click 'Override'.");
+					warningString+="\r\n\r\n"+"If you are the person who started the update and you wish to override"
+						+" this message because an update is not in progress, click 'Override'.";
 					butOverride.Visible=true;
 				}
 			}
@@ -58,7 +58,7 @@ namespace OpenDental {
 		private void butTryAgain_Click(object sender,EventArgs e) {
 			Prefs.RefreshCache();
 			if(Prefs.GetString(PrefName.UpdateInProgressOnComputerName)!="") {
-				MessageBox.Show(Lan.G(this,"Workstation")+": '"+_updateComputerName+"' "+Lan.G(this,"is still updating.  Please wait and 'Try Again'"));
+				MessageBox.Show("Workstation"+": '"+_updateComputerName+"' "+"is still updating.  Please wait and 'Try Again'");
 				return;
 			}
 			DialogResult=DialogResult.OK;

@@ -10,7 +10,7 @@ namespace OpenDental
 		
 		public FormEServicesSignup(WebServiceMainHQProxy.EServiceSetup.SignupOut signupOut=null) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_signupOut=signupOut;
 		}
 

@@ -11,7 +11,7 @@ namespace OpenDental {
 
 		public FormMedLabResultHist() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormMedLabResultHist_Load(object sender, EventArgs e) {

@@ -23,8 +23,8 @@ namespace OpenDentBusiness.WebTypes.WebSched.TimeSlot
 			Recall recall = Recalls.GetRecall(recallNum);
 			if (recall == null)
 			{
-				throw new ODException(Lans.g("WebSched", "The recall appointment you are trying to schedule is no longer available.") + "\r\n"
-					+ Lans.g("WebSched", "Please call us to schedule your appointment."));
+				throw new ODException("The recall appointment you are trying to schedule is no longer available." + "\r\n"
+					+ "Please call us to schedule your appointment.");
 			}
 			List<Provider> listProviders = Providers.GetProvidersForWebSched(recall.PatNum, clinic?.ClinicNum ?? 0);
 			if (provNum > 0 && !allowOtherProv)
@@ -50,15 +50,15 @@ namespace OpenDentBusiness.WebTypes.WebSched.TimeSlot
 			//No need to check RemotingRole; no call to db.
 			if (recallType == null)
 			{//Validate that recallType is not null.
-				throw new ODException(Lans.g("WebSched", "The recall appointment you are trying to schedule is no longer available.") + "\r\n"
-					+ Lans.g("WebSched", "Please call us to schedule your appointment."));
+				throw new ODException("The recall appointment you are trying to schedule is no longer available." + "\r\n"
+					+ "Please call us to schedule your appointment.");
 			}
 			//Get all the Operatories that are flagged for Web Sched.
 			List<Operatory> listOperatories = Operatories.GetOpsForWebSched();
 			if (listOperatories.Count < 1)
 			{//This is very possible for offices that aren't set up the way that we expect them to be.
-				throw new ODException(Lans.g("WebSched", "There are no operatories set up for Web Sched.") + "\r\n"
-					+ Lans.g("WebSched", "Please call us to schedule your appointment."), ODException.ErrorCodes.NoOperatoriesSetup);
+				throw new ODException("There are no operatories set up for Web Sched." + "\r\n"
+					+ "Please call us to schedule your appointment.", ODException.ErrorCodes.NoOperatoriesSetup);
 			}
 			Logger.LogVerbose("listOperatories:\r\n\t" + string.Join(",\r\n\t", listOperatories.Select(x => x.OperatoryNum + " - " + x.Abbrev)));
 			List<long> listProvNums = listProviders.Select(x => x.ProvNum).Distinct().ToList();
@@ -95,8 +95,8 @@ namespace OpenDentBusiness.WebTypes.WebSched.TimeSlot
 			if (appointmentType == null)
 			{
 				//This message will typically show to a patient and we want them to call in OR to refresh the web app which should no longer show the reason.
-				throw new ODException(Lans.g("WebSched", "The reason for your appointment is no longer available.") + "\r\n"
-					+ Lans.g("WebSched", "Please call us to schedule your appointment."));
+				throw new ODException("The reason for your appointment is no longer available." + "\r\n"
+					+ "Please call us to schedule your appointment.");
 			}
 			//Now we need to find all operatories that are associated to the aforementioned appointment type.
 			List<Operatory> listOperatories = Operatories.GetOpsForWebSchedNewPatApptDef(defNumApptType);

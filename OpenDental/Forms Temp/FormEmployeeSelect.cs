@@ -35,7 +35,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormEmployeeSelect(){
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -296,23 +296,23 @@ namespace OpenDental{
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("FormEmployeeSelect","FName"),70);
+			GridColumn col=new GridColumn("FName",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormEmployeeSelect","LName"),70);
+			col=new GridColumn("LName",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormEmployeeSelect","MI"),30);
+			col=new GridColumn("MI",30);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormEmployeeSelect","Hid"),30,HorizontalAlignment.Center);
+			col=new GridColumn("Hid",30,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormEmployeeSelect","Wireless"),120);
+			col=new GridColumn("Wireless",120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormEmployeeSelect","Email Work"),220);
+			col=new GridColumn("Email Work",220);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormEmployeeSelect","Email Personal"),220);
+			col=new GridColumn("Email Personal",220);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormEmployeeSelect","Furlo"),35,HorizontalAlignment.Center);
+			col=new GridColumn("Furlo",35,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormEmployeeSelect","Home"),30,HorizontalAlignment.Center);
+			col=new GridColumn("Home",30,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

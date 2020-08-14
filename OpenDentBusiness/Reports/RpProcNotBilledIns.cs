@@ -22,8 +22,8 @@ namespace OpenDentBusiness {
 				query+=DbHelper.Concat("patient.LName","', '","patient.FName","' '","patient.MiddleI");
 			}
 			query+=$@" PatientName,
-				CASE WHEN procmultivisit.ProcMultiVisitNum IS NULL THEN '{Lans.g("enumProcStat",ProcStat.C.ToString())}'
-					ELSE '{Lans.g("enumProcStat",ProcStatExt.InProcess)}' END Stat,
+				CASE WHEN procmultivisit.ProcMultiVisitNum IS NULL THEN '{ProcStat.C}'
+					ELSE '{ProcStatExt.InProcess}' END Stat,
 				procedurelog.ProcDate,'' Descript,
 				procedurelog.ProcFee*(procedurelog.UnitQty+procedurelog.BaseUnits) procFee,
 				procedurelog.ProcNum,procedurelog.ClinicNum,patient.PatNum,procedurelog.CodeNum

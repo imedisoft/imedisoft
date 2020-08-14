@@ -660,9 +660,9 @@ namespace OpenDentBusiness.HL7 {
 			if(apt.Confirmed!=aptOld.Confirmed) {
 				//Log confirmation status changes.
 				SecurityLogs.MakeLogEntry(Permissions.ApptConfirmStatusEdit,apt.PatNum,
-					Lans.g("MessageParser","Appointment confirmation status automatically changed from")+" "
-					+Defs.GetName(DefCat.ApptConfirmed,aptOld.Confirmed)+" "+Lans.g("MessageParser","to")+" "+Defs.GetName(DefCat.ApptConfirmed,apt.Confirmed)
-					+" "+Lans.g("MessageParser","due to an indound HL7 message")+".",apt.AptNum,LogSources.HL7,aptOld.DateTStamp);
+					"Appointment confirmation status automatically changed from"+" "
+					+Defs.GetName(DefCat.ApptConfirmed,aptOld.Confirmed)+" "+"to"+" "+Defs.GetName(DefCat.ApptConfirmed,apt.Confirmed)
+					+" "+"due to an indound HL7 message"+".",apt.AptNum,LogSources.HL7,aptOld.DateTStamp);
 			}
 			_aptProcessed=apt;
 			if(_isVerboseLogging) {
@@ -710,9 +710,9 @@ namespace OpenDentBusiness.HL7 {
 			if(apt.Confirmed!=aptOld.Confirmed) {
 				//Log confirmation status changes.
 				SecurityLogs.MakeLogEntry(Permissions.ApptConfirmStatusEdit,apt.PatNum,
-					Lans.g("MessageParser","Appointment confirmation status automatically changed from")+" "
-					+Defs.GetName(DefCat.ApptConfirmed,aptOld.Confirmed)+" "+Lans.g("MessageParser","to")+" "+Defs.GetName(DefCat.ApptConfirmed,apt.Confirmed)
-					+" "+Lans.g("MessageParser","due to an indound HL7 message")+".",apt.AptNum,LogSources.HL7,aptOld.DateTStamp);
+					"Appointment confirmation status automatically changed from"+" "
+					+Defs.GetName(DefCat.ApptConfirmed,aptOld.Confirmed)+" "+"to"+" "+Defs.GetName(DefCat.ApptConfirmed,apt.Confirmed)
+					+" "+"due to an indound HL7 message"+".",apt.AptNum,LogSources.HL7,aptOld.DateTStamp);
 			}
 			_aptProcessed=apt;
 			if(_isVerboseLogging) {
@@ -1854,9 +1854,9 @@ namespace OpenDentBusiness.HL7 {
 				Procedures.SetOrthoProcComplete(procCur,procCode);
 				string logText=procCode.ProcCode+", ";
 				if(!string.IsNullOrWhiteSpace(procCur.ToothNum)) {
-					logText+=Lans.g("Procedures","Teeth")+": "+procCur.ToothNum+", ";
+					logText+="Teeth"+": "+procCur.ToothNum+", ";
 				}
-				logText+=Lans.g("Procedures","Fee")+": "+procCur.ProcFee.ToString("F")+", "+procCode.Descript;
+				logText+="Fee"+": "+procCur.ProcFee.ToString("F")+", "+procCode.Descript;
 				SecurityLogs.MakeLogEntry(Permissions.ProcComplCreate,procCur.PatNum,logText,LogSources.HL7);
 			}
 			if(procStatus.In(ProcStat.C,ProcStat.EC,ProcStat.EO) && procCode.PaintType==ToothPaintingType.Extraction) {

@@ -38,7 +38,7 @@ namespace OpenDental{
 			_schedCur=schedCur;
 			_clinicNum=clinicNum;
 			_listBlockoutCatDefs=listDefsToShow;
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -279,7 +279,7 @@ namespace OpenDental{
 		}
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
-			if(MessageBox.Show(Lan.G(this,"Delete Blockout?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK){
+			if(MessageBox.Show("Delete Blockout?","",MessageBoxButtons.OKCancel)!=DialogResult.OK){
 			  return;   
 			}
       if(IsNew){

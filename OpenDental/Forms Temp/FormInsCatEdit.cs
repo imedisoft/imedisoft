@@ -31,7 +31,7 @@ namespace OpenDental {
 		public FormInsCatEdit(CovCat covCatCur) {
 			InitializeComponent();
 			_covCatCur=covCatCur.Copy();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -217,7 +217,7 @@ namespace OpenDental {
 			if(  textPercent.errorProvider1.GetError(textPercent)!=""
 				//|| textPriBasicPercent.errorProvider1.GetError(textPriBasicPercent)!=""
 				){
-				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			_covCatCur.Description=textDescription.Text;

@@ -14,7 +14,7 @@ namespace OpenDental {
 
 		public FormEquipmentEdit() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormEquipmentEdit_Load(object sender,EventArgs e) {

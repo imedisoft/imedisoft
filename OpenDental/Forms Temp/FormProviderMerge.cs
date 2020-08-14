@@ -12,7 +12,7 @@ namespace OpenDental {
 
 		public FormProviderMerge() {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_listActiveProvs=Providers.GetWhere(x => x.ProvStatus != ProviderStatus.Deleted,true);
 		}
 
@@ -66,17 +66,17 @@ namespace OpenDental {
 			}
 			string msgText="";
 			if(differentFields!="") {
-				msgText=Lan.G(this,"The following provider fields do not match")+": "+differentFields+"\r\n";
+				msgText="The following provider fields do not match"+": "+differentFields+"\r\n";
 			}
-			msgText+=Lan.G(this,"This change is irreversible")+".  "+Lan.G(this,"This provider is the primary or secondary provider for")+" "+numPats+" "+Lan.G(this,"active patients")
-				+", "+Lan.G(this,"and the billing or treating provider for")+" "+numClaims+" "+Lan.G(this,"claims")+".  "
-				+Lan.G(this,"Continue anyways?");
+			msgText+="This change is irreversible"+".  "+"This provider is the primary or secondary provider for"+" "+numPats+" "+"active patients"
+				+", "+"and the billing or treating provider for"+" "+numClaims+" "+"claims"+".  "
+				+"Continue anyways?";
 			if(MessageBox.Show(msgText,"",MessageBoxButtons.OKCancel)!=DialogResult.OK)	{
 				return;
 			}
 			long rowsChanged=Providers.Merge(PIn.Long(textProvNumFrom.Text),PIn.Long(textProvNumInto.Text));
-			string logText=Lan.G(this,"Providers merged")+": "+textAbbrFrom.Text+" "+Lan.G(this,"merged into")+" "+textAbbrInto.Text+".\r\n"
-			+Lan.G(this,"Rows changed")+": "+POut.Long(rowsChanged);
+			string logText="Providers merged"+": "+textAbbrFrom.Text+" "+"merged into"+" "+textAbbrInto.Text+".\r\n"
+			+"Rows changed"+": "+POut.Long(rowsChanged);
 			SecurityLogs.MakeLogEntry(Permissions.ProviderMerge,0,logText);
 			textAbbrFrom.Clear();
 			textProvNumFrom.Clear();

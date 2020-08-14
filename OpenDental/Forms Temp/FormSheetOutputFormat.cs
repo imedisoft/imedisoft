@@ -19,14 +19,14 @@ namespace OpenDental {
 
 		public FormSheetOutputFormat() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormSheetOutputFormat_Load(object sender,EventArgs e) {
 			textPaperCopies.Text=PaperCopies.ToString();
 			checkEmailPat.Checked=EmailPatOrLab;
 			if(IsForLab) {
-				checkEmailPat.Text=Lan.G(this,"E-mail to Lab:");
+				checkEmailPat.Text="E-mail to Lab:";
 			}
 			textEmailPat.Text=EmailPatOrLabAddress;
 			if(Email2Visible){

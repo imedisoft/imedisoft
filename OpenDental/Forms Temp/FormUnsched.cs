@@ -49,7 +49,7 @@ namespace OpenDental{
 		///<summary>PatientGoTo must be set before calling Show() or ShowDialog().</summary>
 		public FormUnsched(){
 			InitializeComponent();// Required for Windows Form Designer support
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -342,11 +342,11 @@ namespace OpenDental{
 
 		private void FormUnsched_Load(object sender, System.EventArgs e) {
 			Cursor=Cursors.WaitCursor;
-			comboOrder.Items.Add(Lan.G(this,"UnschedStatus"));
-			comboOrder.Items.Add(Lan.G(this,"Alphabetical"));
-			comboOrder.Items.Add(Lan.G(this,"Date"));
+			comboOrder.Items.Add("UnschedStatus");
+			comboOrder.Items.Add("Alphabetical");
+			comboOrder.Items.Add("Date");
 			comboOrder.SelectedIndex=0;
-			comboProv.Items.Add(Lan.G(this,"All"));
+			comboProv.Items.Add("All");
 			comboProv.SelectedIndex=0;
 			_listProviders=Providers.GetDeepCopy(true);
 			for(int i=0;i<_listProviders.Count;i++) {
@@ -357,7 +357,7 @@ namespace OpenDental{
 				labelSite.Visible=false;
 			}
 			else{
-				comboSite.Items.Add(Lan.G(this,"All"));
+				comboSite.Items.Add("All");
 				comboSite.SelectedIndex=0;
 				_listSites=Sites.GetDeepCopy();
 				for(int i=0;i<_listSites.Count;i++) {
@@ -429,7 +429,7 @@ namespace OpenDental{
 			if(e.Button==MouseButtons.Right && grid.SelectedIndices.Length>0) {
 				//To maintain legacy behavior we will use the last selected index if multiple are selected.
 				Patient pat=Patients.GetLim(_listUnschedApt[grid.SelectedIndices[grid.SelectedIndices.Length-1]].PatNum);
-				toolStripMenuItemSelectPatient.Text=Lan.G(grid.TranslationName,"Select Patient")+" ("+pat.GetNameFL()+")";
+				toolStripMenuItemSelectPatient.Text="Select Patient"+" ("+pat.GetNameFL()+")";
 			}
 		}
 
@@ -512,7 +512,7 @@ namespace OpenDental{
 						commlogCur.PatNum=apptCur.PatNum;
 						commlogCur.CommDateTime=DateTime.Now;
 						commlogCur.CommType=Commlogs.GetTypeAuto(CommItemTypeAuto.APPT);
-						commlogCur.Note=Lan.G(this,"Deleted Appt. & saved note")+": ";
+						commlogCur.Note="Deleted Appt. & saved note"+": ";
 						if(apptCur.ProcDescript!="") {
 							commlogCur.Note+=apptCur.ProcDescript+": ";
 						}
@@ -526,7 +526,7 @@ namespace OpenDental{
 			Appointments.Delete(listSelectedAptNums);
 			foreach(int i in grid.SelectedIndices) {
 				SecurityLogs.MakeLogEntry(Permissions.AppointmentEdit,_listUnschedApt[i].PatNum,
-					Lan.G(this,"Appointment deleted from the Unscheduled list."),_listUnschedApt[i].AptNum,_listUnschedApt[i].DateTStamp);
+					"Appointment deleted from the Unscheduled list.",_listUnschedApt[i].AptNum,_listUnschedApt[i].DateTStamp);
 			}
 			FillGrid();
 		}
@@ -559,30 +559,30 @@ namespace OpenDental{
 					long clinicNum=PrefC.HasClinicsEnabled ? comboClinic.SelectedClinicNum : -1;
 					_listUnschedApt=Appointments.RefreshUnsched(order,provNum,siteNum,showBrokenAppts,clinicNum,
 						codeRangeFilter.StartRange,codeRangeFilter.EndRange,dateRangePicker.GetDateTimeFrom(),dateRangePicker.GetDateTimeTo());
-					UnscheduleListEvent.Fire(EventCategory.UnscheduledList,Lans.g(this,"Filling the Unscheduled List grid..."));
+					UnscheduleListEvent.Fire(EventCategory.UnscheduledList,"Filling the Unscheduled List grid...");
 					int scrollVal=grid.ScrollValue;
 					grid.BeginUpdate();
 					grid.ListGridColumns.Clear();
-					GridColumn col=new GridColumn(Lan.G("TableUnsched","Patient"),140);
+					GridColumn col=new GridColumn("Patient",140);
 					grid.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.G("TableUnsched","Date"),65);
+					col=new GridColumn("Date",65);
 					grid.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.G("TableUnsched","AptStatus"),90);
+					col=new GridColumn("AptStatus",90);
 					grid.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.G("TableUnsched","UnschedStatus"),110);
+					col=new GridColumn("UnschedStatus",110);
 					grid.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.G("TableUnsched","Prov"),50);
+					col=new GridColumn("Prov",50);
 					grid.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.G("TableUnsched","Procedures"),150);
+					col=new GridColumn("Procedures",150);
 					grid.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.G("TableUnsched","Notes"),200);
+					col=new GridColumn("Notes",200);
 					grid.ListGridColumns.Add(col);
 					grid.ListGridRows.Clear();
 					GridRow row;
 					Dictionary<long,string> dictPatNames=Patients.GetPatientNames(_listUnschedApt.Select(x => x.PatNum).ToList());
 					foreach(Appointment apt in _listUnschedApt) {
 						row=new GridRow();
-						string patName=Lan.G(this,"UNKNOWN");
+						string patName="UNKNOWN";
 						dictPatNames.TryGetValue(apt.PatNum,out patName);
 						row.Cells.Add(patName);
 						if(apt.AptDateTime.Year < 1880) {
@@ -592,10 +592,10 @@ namespace OpenDental{
 							row.Cells.Add(apt.AptDateTime.ToShortDateString());
 						}
 						if(apt.AptStatus == ApptStatus.Broken) {
-							row.Cells.Add(Lan.G(this,"Broken"));
+							row.Cells.Add("Broken");
 						}
 						else {
-							row.Cells.Add(Lan.G(this,"Unscheduled"));
+							row.Cells.Add("Unscheduled");
 						}
 						row.Cells.Add(Defs.GetName(DefCat.RecallUnschedStatus,apt.UnschedStatus));
 						row.Cells.Add(Providers.GetAbbr(apt.ProvNum));
@@ -606,7 +606,7 @@ namespace OpenDental{
 					grid.EndUpdate();
 					grid.ScrollValue=scrollVal;
 				},
-				startingMessage:Lans.g(this,"Retrieving data for the Unscheduled List grid..."),
+				startingMessage:"Retrieving data for the Unscheduled List grid...",
 				eventType:typeof(UnscheduleListEvent),
 				odEventType:EventCategory.UnscheduledList
 			);
@@ -641,7 +641,7 @@ namespace OpenDental{
 		private void butPrint_Click(object sender,EventArgs e) {
 			pagesPrinted=0;
 			headingPrinted=false;
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"Unscheduled appointment list printed"));
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,"Unscheduled appointment list printed");
 		}
 
 		private void pd_PrintPage(object sender,System.Drawing.Printing.PrintPageEventArgs e) {
@@ -655,10 +655,10 @@ namespace OpenDental{
 			int center=bounds.X+bounds.Width/2;
 			#region printHeading
 			if(!headingPrinted) {
-				text=Lan.G(this,"Unscheduled List");
+				text="Unscheduled List";
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				//yPos+=(int)g.MeasureString(text,headingFont).Height;
-				//text=textDateFrom.Text+" "+Lan.g(this,"to")+" "+textDateTo.Text;
+				//text=textDateFrom.Text+" "+"to"+" "+textDateTo.Text;
 				//g.DrawString(text,subHeadingFont,Brushes.Black,center-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 				yPos+=25;
 				headingPrinted=true;

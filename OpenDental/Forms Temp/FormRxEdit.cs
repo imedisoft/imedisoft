@@ -69,7 +69,7 @@ namespace OpenDental{
 			InitializeComponent();
 			RxPatCur=rxPatCur;
 			PatCur=patCur;
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -668,7 +668,7 @@ namespace OpenDental{
 			comboProcCode.Items.Clear();
 			if(Prefs.GetBool(PrefName.RxHasProc)) {
 				checkProcRequired.Checked=RxPatCur.IsProcRequired;
-				comboProcCode.Items.Add(Lan.G(this,"none"));
+				comboProcCode.Items.Add("none");
 				comboProcCode.SelectedIndex=0;
 				List <ProcedureCode> listProcCodes=ProcedureCodes.GetListDeep();
 				DateTime rxDate=PIn.Date(textDate.Text);
@@ -684,9 +684,9 @@ namespace OpenDental{
 					.ToList();
 				foreach(Procedure proc in _listInUseProcs) {
 					ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum,listProcCodes);
-					string itemText=Lan.G("enumProcStat",proc.ProcStatus.ToString());
+					string itemText=proc.ProcStatus.ToString();
 					if(ProcMultiVisits.IsProcInProcess(proc.ProcNum)) {
-						itemText=Lan.G("enumProcStat",ProcStatExt.InProcess);
+						itemText=ProcStatExt.InProcess;
 					}
 					if(proc.ProcStatus==ProcStat.C) {
 						itemText+=" "+proc.DateComplete.ToShortDateString();
@@ -778,7 +778,7 @@ namespace OpenDental{
 			List<Permissions> perms=new List<Permissions>();
 			perms.Add(Permissions.RxCreate);
 			perms.Add(Permissions.RxEdit);
-			FormAuditOneType FormA=new FormAuditOneType(RxPatCur.PatNum,perms,Lan.G(this,"Audit Trail for Rx"),RxPatCur.RxNum);
+			FormAuditOneType FormA=new FormAuditOneType(RxPatCur.PatNum,perms,"Audit Trail for Rx",RxPatCur.RxNum);
 			FormA.ShowDialog();
 		}
 
@@ -787,12 +787,12 @@ namespace OpenDental{
 			if(textDate.errorProvider1.GetError(textDate)!="" || 
 				(textDaysOfSupply.Text!="" && textDaysOfSupply.errorProvider1.GetError(textDaysOfSupply)!=""))
 			{
-				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
+				MessageBox.Show("Please fix data entry errors first.");
 				return false;
 			}
 			long selectedProvNum=comboProv.GetSelectedProvNum();
 			if(selectedProvNum==0) {//should not happen
-				MessageBox.Show(Lan.G(this,"Invalid provider."));
+				MessageBox.Show("Invalid provider.");
 				return false;
 			}
 			//Prevents prescriptions from being added that have a provider selected that is past their term date
@@ -860,7 +860,7 @@ namespace OpenDental{
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(MessageBox.Show(Lan.G(this,"Delete Prescription?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK) {
+			if(MessageBox.Show("Delete Prescription?","",MessageBoxButtons.OKCancel)!=DialogResult.OK) {
 				return;
 			}
 			SecurityLogs.MakeLogEntry(Permissions.RxEdit,RxPatCur.PatNum,"FROM("+_rxPatOld.RxDate.ToShortDateString()+","+_rxPatOld.Drug+","+_rxPatOld.ProvNum+","+_rxPatOld.Disp+","+_rxPatOld.Refills+")"+"\r\nTO('deleted')",RxPatCur.RxNum,_rxPatOld.DateTStamp);

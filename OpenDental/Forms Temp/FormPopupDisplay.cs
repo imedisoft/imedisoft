@@ -40,7 +40,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -279,7 +279,7 @@ namespace OpenDental{
 			textDescription.Text=PopupCur.Description.Replace("\r\n","\n").Replace("\n","\r\n");
 			if(PopupCur.UserNum!=0) {
 				//Display last user to edit PopupCur, or "Unknown(5)" if user not found.
-				textUser.Text=Userods.GetUser(PopupCur.UserNum)?.UserName??(Lan.G(this,"Unknown")+$"({POut.Long(PopupCur.UserNum)})");
+				textUser.Text=Userods.GetUser(PopupCur.UserNum)?.UserName??("Unknown"+$"({POut.Long(PopupCur.UserNum)})");
 			}
 			textCreateDate.Text="";
 			if(PopupCur.DateTimeEntry.Year>1880) {

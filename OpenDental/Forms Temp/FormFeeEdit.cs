@@ -28,11 +28,6 @@ namespace OpenDental{
 			//FeeCur=feeCur;
 			//checkDefFee.Checked=FeeCur.UseDefaultFee;
 			//checkDefCov.Checked=FeeCur.UseDefaultCov;
-			Lan.F(this, new System.Windows.Forms.Control[] {
-				//exclude:
-				this.checkDefCov,
-				this.checkDefFee,
-			});
 		}
 
 		///<summary></summary>
@@ -171,7 +166,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textFee.errorProvider1.GetError(textFee)!=""){
-				MessageBox.Show(Lan.G(this,"Please fix data entry error first."));
+				MessageBox.Show("Please fix data entry error first.");
 				return;
 			}
 			DateTime datePrevious=FeeCur.SecDateTEdit;
@@ -183,10 +178,10 @@ namespace OpenDental{
 				//Fee object always created and inserted externally first
 				Fees.Update(FeeCur);
 			}
-			SecurityLogs.MakeLogEntry(Permissions.ProcFeeEdit,0,Lan.G(this,"Procedure")+": "+ProcedureCodes.GetStringProcCode(FeeCur.CodeNum)
-				+", "+Lan.G(this,"Fee: ")+""+FeeCur.Amount.ToString("c")+", "+Lan.G(this,"Fee Schedule")+": "+FeeScheds.GetDescription(FeeCur.FeeSched)
-				+". "+Lan.G(this,"Manual edit in Edit Fee window."),FeeCur.CodeNum,DateTime.MinValue);
-			SecurityLogs.MakeLogEntry(Permissions.LogFeeEdit,0,Lan.G(this,"Fee Updated"),FeeCur.FeeNum,datePrevious);
+			SecurityLogs.MakeLogEntry(Permissions.ProcFeeEdit,0,"Procedure"+": "+ProcedureCodes.GetStringProcCode(FeeCur.CodeNum)
+				+", "+"Fee: "+""+FeeCur.Amount.ToString("c")+", "+"Fee Schedule"+": "+FeeScheds.GetDescription(FeeCur.FeeSched)
+				+". "+"Manual edit in Edit Fee window.",FeeCur.CodeNum,DateTime.MinValue);
+			SecurityLogs.MakeLogEntry(Permissions.LogFeeEdit,0,"Fee Updated",FeeCur.FeeNum,datePrevious);
 			//FeeCur.UseDefaultCov=checkDefCov.Checked;
 			//FeeCur.UseDefaultFee=checkDefFee.Checked;			
 			DialogResult=DialogResult.OK;

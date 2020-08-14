@@ -224,9 +224,9 @@ namespace OpenDentBusiness {
 				//Replace the ClinicNum with the actual description of the clinic.
 				if(_hasClinics) {
 					string clinicDesc=listClinics.Find(x => x.ClinicNum==PIn.Long(tableDailyProdSorted.Rows[i]["Clinic"].ToString())).Description;
-					tableDailyProdSorted.Rows[i]["Clinic"]=clinicDesc=="" ? Lans.g("FormRpProdInc","Unassigned"):clinicDesc;
+					tableDailyProdSorted.Rows[i]["Clinic"]=clinicDesc=="" ? "Unassigned":clinicDesc;
 					if(hasBreakdown) {
-						tableDailyProdSorted.Rows[i]["ClinicSplit"]=clinicDesc=="" ? Lans.g("FormRpProdInc","Unassigned"):clinicDesc;
+						tableDailyProdSorted.Rows[i]["ClinicSplit"]=clinicDesc=="" ? "Unassigned":clinicDesc;
 					}
 				}
 			}
@@ -424,7 +424,7 @@ namespace OpenDentBusiness {
 					row["Total Pt Income"]=totalPtIncome.ToString("n");
 					row["Ins Income"]=insincome.ToString("n");
 					row["Total Income"]=totalincome.ToString("n");
-					row["Clinic"]=clinicDesc=="" ? Lans.g("FormRpProdInc","Unassigned"):clinicDesc;
+					row["Clinic"]=clinicDesc=="" ? "Unassigned":clinicDesc;
 					if(hasData) {
 						dtClinic.Rows.Add(row);//prevents adding row if there is no data for the provider
 					}
@@ -1675,7 +1675,7 @@ namespace OpenDentBusiness {
 					row["Total Pt Income"]=totalPtIncome.ToString("n");
 					row["Ins Income"]=insincome.ToString("n");
 					row["Total Income"]=totalincome.ToString("n");
-					row["Clinic"]=clinicDesc=="" ? Lans.g("FormRpProdInc","Unassigned"):clinicDesc;
+					row["Clinic"]=clinicDesc=="" ? "Unassigned":clinicDesc;
 					dtClinic.Rows.Add(row);
 				}
 			}
@@ -2260,7 +2260,7 @@ namespace OpenDentBusiness {
 					row["Ins Income"]=insincome.ToString("n");
 					row["Total Income"]=totalincome.ToString("n");
 					row["Total Pt Income"]=totalPtIncome.ToString("n");
-					row["Clinic"]=clinicDesc=="" ? Lans.g("FormRpProdInc","Unassigned"):clinicDesc;
+					row["Clinic"]=clinicDesc=="" ? "Unassigned":clinicDesc;
 					dtClinic.Rows.Add(row);  //adds row to table
 				}
 			}

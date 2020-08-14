@@ -62,10 +62,6 @@ namespace OpenDental{
 		///<summary>Can pass in null if not a report.</summary>
 		public FormQuery(ReportSimpleGrid report, bool submitQueryOnLoad = false){
 			InitializeComponent();// Required for Windows Form Designer support
-			Lan.F(this,new System.Windows.Forms.Control[] {
-				//exclude:
-				labelTotPages,
-			});
 			if(report!=null) {
 				this._reportSimpleGrid=report;
 			}
@@ -110,7 +106,7 @@ namespace OpenDental{
 			/*
 			saveFileDialog2=new SaveFileDialog();
       saveFileDialog2.AddExtension=true;
-			saveFileDialog2.Title=Lan.g(this,"Select Folder to Save File To");
+			saveFileDialog2.Title="Select Folder to Save File To";
 		  if(IsReport){
 				saveFileDialog2.FileName=report.Title;
 			}
@@ -144,13 +140,13 @@ namespace OpenDental{
 			range.FormulaR1C1="12345";
 			excel.Save(saveFileDialog2.FileName);
 	//this test case worked, so now it is just a matter of finishing this off, and Excel export will be done.
-			MessageBox.Show(Lan.g(this,"File created successfully"));
+			MessageBox.Show("File created successfully");
 			*/
 		}
 
 		private void butExport_Click(object sender, System.EventArgs e){
 			if(_reportSimpleGrid.TableQ==null){
-				MessageBox.Show(Lan.G(this,"Please run query first"));
+				MessageBox.Show("Please run query first");
 				return;
 			}
 			string fileName=_reportSimpleGrid.Title;
@@ -161,7 +157,7 @@ namespace OpenDental{
 
 				saveFileDialog2=new SaveFileDialog();
 				saveFileDialog2.AddExtension=true;
-				//saveFileDialog2.Title=Lan.g(this,"Select Folder to Save File To");
+				//saveFileDialog2.Title="Select Folder to Save File To";
 				if(IsReport) {
 					saveFileDialog2.FileName=fileName;
 				}
@@ -231,11 +227,11 @@ namespace OpenDental{
 				}
       }
       catch{
-        MessageBox.Show(Lan.G(this,"File in use by another program.  Close and try again."));
+        MessageBox.Show("File in use by another program.  Close and try again.");
 				return;
 			}
 
-				MessageBox.Show(Lan.G(this,"File created successfully"));
+				MessageBox.Show("File created successfully");
 			
 		}
 
@@ -272,14 +268,14 @@ namespace OpenDental{
 				textQuery.Text=(String)iData.GetData(DataFormats.Text); 
 			}
 			else{
-				MessageBox.Show(Lan.G(this,"Could not retrieve data off the clipboard."));
+				MessageBox.Show("Could not retrieve data off the clipboard.");
 			}
 
 		}
 
 		private void butPrintPreview_Click(object sender, System.EventArgs e) {
 			if(_reportSimpleGrid.TableQ==null) {
-				MessageBox.Show(Lan.G(this,"Please run query first"));
+				MessageBox.Show("Please run query first");
 				return;
 			}
 			printPreviewControl2.Visible=true;
@@ -298,7 +294,7 @@ namespace OpenDental{
 
 		private void butPrint_Click(object sender, System.EventArgs e) {
 			if(_reportSimpleGrid.TableQ==null) {
-				MessageBox.Show(Lan.G(this,"Please run query first"));
+				MessageBox.Show("Please run query first");
 				return;
 			}
 			PrintReport(false);
@@ -322,7 +318,7 @@ namespace OpenDental{
 		}
 
 		private void butSubmit_Click(object sender, System.EventArgs e) {
-			if(butSubmit.Text==Lan.G(this,"Stop Execution")) { //Abort abort!
+			if(butSubmit.Text=="Stop Execution") { //Abort abort!
 				//Flag the currently running query to stop.
 				if(_threadQuery!=null) {
 					_threadQuery.QuitAsync(true);
@@ -371,7 +367,7 @@ namespace OpenDental{
 			if(IsReport){
 				printPreviewControl2.Visible=true;
 				splitContainerQuery.Visible=false;
-				Text=Lan.G(this,"Report");
+				Text="Report";
 				butPrintPreview.Visible=false;
 				panelZoom.Visible=true;
 				PrintReport(true);
@@ -380,7 +376,7 @@ namespace OpenDental{
       }
 			else {
 				printPreviewControl2.Visible=false;
-				Text=Lan.G(this,"Query");
+				Text="Query";
 			}
 			if(!Security.IsAuthorized(Permissions.UserQueryAdmin,true)) { 
 				//lock the query textbox, add button, and paste button for users without permissions.
@@ -842,7 +838,7 @@ namespace OpenDental{
 			}
 			_pagesPrinted=0;
 			_linesPrinted=0;
-			ODprintout printout=PrinterL.CreateODprintout(pd2_PrintPage,Lan.G(this,"Query printed"),margins:margins,printoutOrientation:orient);
+			ODprintout printout=PrinterL.CreateODprintout(pd2_PrintPage,"Query printed",margins:margins,printoutOrientation:orient);
 			if(printout!=null && printout.PrintDoc!=null) {
 				//Make sure FormQuery is brought to the foreground when printing is complete, if FormQuery is still open.
 				printout.PrintDoc.EndPrint+=(o,e) => {
@@ -882,7 +878,7 @@ namespace OpenDental{
 			}
 			catch(Exception ex) {
 				Cursor=Cursors.Default;
-				MessageBox.Show(Lan.G(this,"Invalid Query")+": "+ex.Message);
+				MessageBox.Show("Invalid Query"+": "+ex.Message);
 				return;
 			}
 			FillForm();
@@ -964,10 +960,10 @@ namespace OpenDental{
 					default:
 						if(e.Message.ToLower().Contains("critical error")) {
 							//we want to to see all the details and stacktrace for critical errors.
-							new MsgBoxCopyPaste(e.Message+"\r\n"+Lans.g(this,"Please call support.")+"\r\n\r\n"+e.StackTrace).ShowDialog();
+							new MsgBoxCopyPaste(e.Message+"\r\n"+"Please call support."+"\r\n\r\n"+e.StackTrace).ShowDialog();
 						}
 						else {
-							MessageBox.Show(Lan.G(this,"Invalid query")+": "+e.Message);
+							MessageBox.Show("Invalid query"+": "+e.Message);
 						}
 						break;
 				}
@@ -1025,8 +1021,8 @@ namespace OpenDental{
 		private void LayoutHelperForState(QueryExecuteState executeState) {
 			switch (executeState) {
 				case QueryExecuteState.Idle:
-					butSubmit.Text=Lan.G(this,"Submit Query"); //all controls enabled
-					this.Text=Lan.G(this,"Query");
+					butSubmit.Text="Submit Query"; //all controls enabled
+					this.Text="Query";
 					textQuery.Enabled=true;
 					butSubmit.Enabled=true;
 					butFavorite.Enabled=true;
@@ -1044,9 +1040,9 @@ namespace OpenDental{
 					butClose.Enabled=true;
 					break;
 				case QueryExecuteState.Executing:
-					butSubmit.Text=Lan.G(this,"Stop Execution"); //the submit button and the close button should be enabled.
+					butSubmit.Text="Stop Execution"; //the submit button and the close button should be enabled.
 					butClose.Enabled=true;
-					this.Text=Lans.g(this,"Query - Executing Query...");
+					this.Text="Query - Executing Query...";
 					textQuery.Enabled=false;
 					butFavorite.Enabled=false;
 					groupBox1.Enabled=false;
@@ -1062,8 +1058,8 @@ namespace OpenDental{
 					textTitle.Enabled=false;
 					break;
 				case QueryExecuteState.Formatting:
-					butSubmit.Text=Lan.G(this,"Submit Query"); //no enabled controls
-					this.Text=Lans.g(this,"Query - Formatting Query...");
+					butSubmit.Text="Submit Query"; //no enabled controls
+					this.Text="Query - Formatting Query...";
 					butSubmit.Enabled=false;
 					textQuery.Enabled=false;
 					butFavorite.Enabled=false;
@@ -1137,12 +1133,12 @@ namespace OpenDental{
 			}
 			yPos+=10; 
 			if(isPrintablePage) {
-				ev.Graphics.DrawString(Lan.G(this,"Date:")+" "+DateTime.Today.ToString("d")
+				ev.Graphics.DrawString("Date:"+" "+DateTime.Today.ToString("d")
 					,bodyFont,Brushes.Black,bounds.Left,yPos);
-				ev.Graphics.DrawString(Lan.G(this,"Page:")+" "+(_currentPage).ToString()
+				ev.Graphics.DrawString("Page:"+" "+(_currentPage).ToString()
 					,bodyFont,Brushes.Black
 					,bounds.Right
-					-ev.Graphics.MeasureString(Lan.G(this,"Page:")+" "+(_currentPage).ToString()
+					-ev.Graphics.MeasureString("Page:"+" "+(_currentPage).ToString()
 					,bodyFont).Width,yPos);
 			}
 			yPos+=bodyFont.GetHeight(ev.Graphics)+10;

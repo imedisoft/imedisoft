@@ -2036,7 +2036,7 @@ Fam Urgent Fin Note: [famFinUrgNote]"
 				case SheetTypeEnum.PatientForm://This should be handled outside of this method because it has 5 internal form types
 				case SheetTypeEnum.LabelPatient://This should be handled outside of this method because it has 5 internal label types
 				default:
-					throw new Exception(Lans.g("SheetsInternal","Unsupported SheetTypeEnum")+"\r\n"+sheetType.ToString());
+					throw new Exception("Unsupported SheetTypeEnum"+"\r\n"+sheetType.ToString());
 			}
 			return retVal;
 		}

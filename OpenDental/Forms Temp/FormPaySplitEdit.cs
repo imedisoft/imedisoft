@@ -41,7 +41,7 @@ namespace OpenDental {
 		public FormPaySplitEdit(Family famCur) {
 			InitializeComponent();
 			_famCur=famCur;
-			Lan.F(this);
+			
 		}
 
 		private void FormPaySplitEdit_Load(object sender, System.EventArgs e) {

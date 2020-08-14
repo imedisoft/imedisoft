@@ -9,7 +9,7 @@ namespace OpenDental {
 		///<summary>Only used from FormEhrProviderKeys.  keyCur can be a blank new key.  keyCur cannot be null.</summary>
 		public FormEhrProviderKeyEdit(EhrProvKey keyCur) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_keyCur=keyCur;
 		}
 

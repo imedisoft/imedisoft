@@ -150,14 +150,14 @@ namespace OpenDental{
 		private void FillGridMain() {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"LName"),100));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"FName"),100));
+			gridMain.ListGridColumns.Add(new GridColumn("LName",100));
+			gridMain.ListGridColumns.Add(new GridColumn("FName",100));
 			gridMain.ListGridColumns.Add(new GridColumn(_monthT2.ToString("MMMM yyyy"),100,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
 			gridMain.ListGridColumns.Add(new GridColumn(_monthT1.ToString("MMMM yyyy"),100,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
 			if(!checkIgnore.Checked) {
 				gridMain.ListGridColumns.Add(new GridColumn(_monthT0.ToString("MMMM yyyy"),100,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
 			}
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Letter"),100));
+			gridMain.ListGridColumns.Add(new GridColumn("Letter",100));
 			gridMain.ListGridRows.Clear();
 			List<Employee> listEmpsAll = Employees.GetDeepCopy(true).OrderBy(x => x.LName).ThenBy(x => x.FName).ToList();
 			List<ClockEvent> listClockEventsAll = ClockEvents.GetAllForPeriod(_monthT2,_monthT2.AddMonths(3));//get all three months of clock events
@@ -253,7 +253,7 @@ namespace OpenDental{
 		private void butPrint_Click(object sender,EventArgs e) {
 			pagesPrinted=0;
 			headingPrinted=false;
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"Payroll benefits report printed."));
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,"Payroll benefits report printed.");
 		}
 
 		private void pd_PrintPage(object sender,System.Drawing.Printing.PrintPageEventArgs e) {
@@ -266,7 +266,7 @@ namespace OpenDental{
 			int center = bounds.X+bounds.Width/2;
 			#region printHeading
 			if(!headingPrinted) {
-				text=Lan.G(this,"Payroll Benefits Report");
+				text="Payroll Benefits Report";
 				StringFormat sf = StringFormat.GenericDefault;
 				sf.Alignment=StringAlignment.Center;
 				g.DrawString(text,headingFont,Brushes.Black,center,yPos,sf);

@@ -18,7 +18,7 @@ namespace OpenDental {
 		///<summary>Security handled in calling form.</summary>
 		public FormApptQuickAdd() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormApptQuickAdd_Load(object sender,EventArgs e) {
@@ -43,7 +43,7 @@ namespace OpenDental {
 			for(int i=0;i<procCodeStrArray.Length;i++) {
 				codeNum=ProcedureCodes.GetCodeNum(procCodeStrArray[i]);
 				if(codeNum==0){
-					MessageBox.Show(Lan.G(this,"Definition contains invalid code: ")+procCodeStrArray[i]);
+					MessageBox.Show("Definition contains invalid code: "+procCodeStrArray[i]);
 					return;
 				}
 				SelectedCodeNums.Add(codeNum);
@@ -64,7 +64,7 @@ namespace OpenDental {
 				for(int i=0;i<procCodeStrArray.Length;i++) {
 					codeNum=ProcedureCodes.GetCodeNum(procCodeStrArray[i]);
 					if(codeNum==0) {
-						MessageBox.Show(Lan.G(this,"Definition contains invalid code: ")+procCodeStrArray[i]);
+						MessageBox.Show("Definition contains invalid code: "+procCodeStrArray[i]);
 						return;
 					}
 					SelectedCodeNums.Add(codeNum);

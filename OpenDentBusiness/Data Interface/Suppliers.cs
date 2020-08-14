@@ -61,12 +61,12 @@ namespace OpenDentBusiness{
 			string command="SELECT COUNT(*) FROM supplyorder WHERE SupplierNum="+POut.Long(supp.SupplierNum);
 			int count=PIn.Int(Database.ExecuteString(command));
 			if(count>0) {
-				throw new ApplicationException(Lans.g("Supplies","Supplier is already in use on an order. Not allowed to delete."));
+				throw new ApplicationException("Supplier is already in use on an order. Not allowed to delete.");
 			}
 			command="SELECT COUNT(*) FROM supply WHERE SupplierNum="+POut.Long(supp.SupplierNum);
 			count=PIn.Int(Database.ExecuteString(command));
 			if(count>0) {
-				throw new ApplicationException(Lans.g("Supplies","Supplier is already in use on a supply. Not allowed to delete."));
+				throw new ApplicationException("Supplier is already in use on a supply. Not allowed to delete.");
 			}
 			Crud.SupplierCrud.Delete(supp.SupplierNum);
 		}

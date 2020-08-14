@@ -1233,19 +1233,19 @@ namespace OpenDental
 					curY=GetTableRow(sect,i);
 					switch(RowTypes[sect][i]){
 						case PerioSequenceType.Mobility:
-							DataArray[0,curY].Text=Lan.G(this,"Mobility");
+							DataArray[0,curY].Text="Mobility";
 							break;
 						case PerioSequenceType.Furcation:
-							DataArray[0,curY].Text=Lan.G(this,"Furc");
+							DataArray[0,curY].Text="Furc";
 							break;
 						case PerioSequenceType.CAL:
-							DataArray[0,curY].Text=Lan.G(this,"auto CAL");
+							DataArray[0,curY].Text="auto CAL";
 							break;
 						case PerioSequenceType.GingMargin:
-							DataArray[0,curY].Text=Lan.G(this,"Ging Marg");
+							DataArray[0,curY].Text="Ging Marg";
 							break;
 						case PerioSequenceType.MGJ:
-							DataArray[0,curY].Text=Lan.G(this,"MGJ");
+							DataArray[0,curY].Text="MGJ";
 							break;
 						case PerioSequenceType.Probing:
 							break;
@@ -1508,7 +1508,7 @@ namespace OpenDental
 			}
 			if (selectedExam == -1)
 			{
-				MessageBox.Show(Lan.G(this, "Please add or select an exam first in the list to the left."));
+				MessageBox.Show("Please add or select an exam first in the list to the left.");
 				return;
 			}
 			PerioCell curPerioCell=GetPerioCell(CurCell,false);
@@ -2261,7 +2261,7 @@ namespace OpenDental
 		///<summary></summary>
 		public void ToggleSkip(long perioExamNum) {
 			if(selectedTeeth.Count==0){
-				MessageBox.Show(Lan.G(this,"Please select teeth first."));
+				MessageBox.Show("Please select teeth first.");
 				return;
 			}
 			for(int i=0;i<selectedTeeth.Count;i++){

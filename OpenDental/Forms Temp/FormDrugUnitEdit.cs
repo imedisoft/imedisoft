@@ -14,7 +14,7 @@ namespace OpenDental {
 
 		public FormDrugUnitEdit() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormDrugUnitEdit_Load(object sender,EventArgs e) {

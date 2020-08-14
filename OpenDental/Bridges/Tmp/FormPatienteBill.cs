@@ -33,7 +33,7 @@ namespace OpenDental {
 		public FormPatienteBill(ArrayList _PatientList) {
 			InitializeComponent();
 			PatientList = _PatientList;
-			Lan.F(this);
+			
 		}
 
 		private void FormPatienteBill_Load(object sender,EventArgs e) {

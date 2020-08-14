@@ -23,7 +23,7 @@ namespace OpenDental {
 
 		public FormSheetTools(bool isOpenedFromDashboardSetup=false) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_isOpenedFromDashboardSetup=isOpenedFromDashboardSetup;
 		}
 
@@ -44,7 +44,7 @@ namespace OpenDental {
 				XmlSerializer serializer=new XmlSerializer(typeof(SheetDef));
 				if(openDlg.FileName!="") {
 					if(!File.Exists(openDlg.FileName)) {
-						throw new ApplicationException(Lan.G("FormSheetDefs","File does not exist."));
+						throw new ApplicationException("File does not exist.");
 					}
 					try {
 						using(TextReader reader=new StreamReader(openDlg.FileName)) {
@@ -52,19 +52,19 @@ namespace OpenDental {
 						}
 					}
 					catch {
-						throw new ApplicationException(Lan.G("FormSheetDefs","Invalid file format"));
+						throw new ApplicationException("Invalid file format");
 					}
 				}
 				sheetdef.IsNew=true;
 				//the Form that called this is not the PatientDashboard but the sheetdefs are of type PatientDashboard
 				if(!_isOpenedFromDashboardSetup && SheetDefs.IsDashboardType(sheetdef)) {
-					throw new ApplicationException(Lan.G("FormSheetDefs",
-						"Sheets of type '"+sheetdef.SheetType.GetDescription()+"' cannot be imported from Sheets. Use Dashboard Setup instead."));
+					throw new ApplicationException(
+						"Sheets of type '"+sheetdef.SheetType.GetDescription()+"' cannot be imported from Sheets. Use Dashboard Setup instead.");
 				}
 				//the Form that called this is the PatientDashboard but the sheetdefs are not of type PatientDashboard
 				if(_isOpenedFromDashboardSetup && !SheetDefs.IsDashboardType(sheetdef)) {
-					throw new ApplicationException(Lan.G("FormSheetDefs",
-						"Sheets of type '"+sheetdef.SheetType.GetDescription()+"' cannot be imported from Dashboard Setup. Use Sheets instead."));
+					throw new ApplicationException(
+						"Sheets of type '"+sheetdef.SheetType.GetDescription()+"' cannot be imported from Dashboard Setup. Use Sheets instead.");
 				}
 				List<SheetFieldDef> listUnsupportedSheetDefs=new List<SheetFieldDef>();
 				for(int i=sheetdef.SheetFieldDefs.Count-1;i>=0;i--) {

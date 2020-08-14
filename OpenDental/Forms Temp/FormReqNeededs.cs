@@ -40,7 +40,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormReqNeededs(){
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -270,7 +270,7 @@ namespace OpenDental{
 		#endregion
 
 		private void FormRequirementsNeeded_Load(object sender, System.EventArgs e) {
-			//comboClass.Items.Add(Lan.g(this,"All"));
+			//comboClass.Items.Add("All");
 			//comboClass.SelectedIndex=0;
 			_listSchoolClasses=SchoolClasses.GetDeepCopy();
 			_listSchoolCourses=SchoolCourses.GetDeepCopy();
@@ -323,7 +323,7 @@ namespace OpenDental{
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G("TableRequirementsNeeded","Description"),200);
+			col=new GridColumn("Description",200);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

@@ -17,7 +17,7 @@ namespace OpenDental {
 
 		public FormProcEditExplain() {
 			InitializeComponent();
-			Lan.F(this);
+			
 			textSummary.Text=Changes;
 		}
 

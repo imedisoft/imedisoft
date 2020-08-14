@@ -40,11 +40,11 @@ namespace OpenDentBusiness{
 					insVerifyOld=listInsVerifyHists[i+1];//get next
 				}
 				//If the insVerifyOld is null, then this was a new verification. 
-				string oldVal=insVerifyOld==null ? Lans.g("FormInsEditPatLog","NEW") : insVerifyOld.DateLastVerified.ToShortDateString();
+				string oldVal=insVerifyOld==null ? "NEW" : insVerifyOld.DateLastVerified.ToShortDateString();
 				listLogs.Add(new InsEditPatLog {
 					FKey=patPlanNum,
 					LogType=InsEditPatLogType.PatPlan,
-					FieldName=Lans.g("FormInsEditPatLog","Eligibility Last Verified"),
+					FieldName="Eligibility Last Verified",
 					OldValue=oldVal,
 					NewValue=insVerifyNew.DateLastVerified.ToShortDateString(),
 					UserNum=insVerifyNew.VerifyUserNum,
@@ -107,7 +107,7 @@ namespace OpenDentBusiness{
 				logCur=new InsEditPatLog() {
 					FieldName=priKeyColName,
 					UserNum=curUserNum,
-					OldValue=Lans.g("FormInsEditPatLog","NEW"),
+					OldValue="NEW",
 					NewValue=priKey.ToString(),
 					LogType=logType,
 					FKey=priKey,
@@ -127,7 +127,7 @@ namespace OpenDentBusiness{
 						FieldName=tableColumn.Name,
 						UserNum=curUserNum,
 						OldValue=valOld.ToString(),
-						NewValue=Lans.g("FormInsEditPatLog","DELETED"),
+						NewValue="DELETED",
 						LogType=logType,
 						FKey=priKey,
 						ParentKey=parentKey,

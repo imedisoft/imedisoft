@@ -12,7 +12,7 @@ namespace OpenDental {
 	public partial class FormTestLatency:ODForm {
 		public FormTestLatency() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormTestLatency_Load(object sender,EventArgs e) {

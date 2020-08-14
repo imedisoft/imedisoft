@@ -1144,11 +1144,11 @@ namespace OpenDental
 			dictTaskListPrefsCache.Add("TaskKeepListHidden", ComputerPrefs.LocalComputer.TaskKeepListHidden);
 			if (Security.IsAuthorized(Permissions.UserQueryAdmin, true))
 			{
-				menuItemReportsUserQuery.Text = Lan.G(this, "User Query");
+				menuItemReportsUserQuery.Text = "User Query";
 			}
 			else
 			{
-				menuItemReportsUserQuery.Text = Lan.G(this, "Released User Queries");
+				menuItemReportsUserQuery.Text = "Released User Queries";
 			}
 		}
 
@@ -1248,24 +1248,24 @@ namespace OpenDental
 				ToolBarMain.ImageList = imageListMain;
 			}
 			ODToolBarButton button;
-			button = new ODToolBarButton(Lan.G(this, "Select Patient"), 0, "", "Patient");
+			button = new ODToolBarButton("Select Patient", 0, "", "Patient");
 			button.Style = ODToolBarButtonStyle.DropDownButton;
 			button.DropDownMenu = menuPatient;
 			ToolBarMain.Buttons.Add(button);
 			if (!Programs.UsingEcwTightMode())
 			{//eCW tight only gets Patient Select and Popups toolbar buttons
-				button = new ODToolBarButton(Lan.G(this, "Commlog"), 1, Lan.G(this, "New Commlog Entry"), "Commlog");
+				button = new ODToolBarButton("Commlog", 1, "New Commlog Entry", "Commlog");
 				ToolBarMain.Buttons.Add(button);
-				button = new ODToolBarButton(Lan.G(this, "E-mail"), 2, Lan.G(this, "Send E-mail"), "Email");
+				button = new ODToolBarButton("E-mail", 2, "Send E-mail", "Email");
 				button.Style = ODToolBarButtonStyle.DropDownButton;
 				button.DropDownMenu = menuEmail;
 				ToolBarMain.Buttons.Add(button);
-				button = new ODToolBarButton(Lan.G(this, "WebMail"), 2, Lan.G(this, "Secure WebMail"), "WebMail");
+				button = new ODToolBarButton("WebMail", 2, "Secure WebMail", "WebMail");
 				button.Enabled = true;//Always enabled.  If the patient does not have an email address, then the user will be blocked from the FormWebMailMessageEdit window.
 				ToolBarMain.Buttons.Add(button);
 				if (_butText == null)
 				{//If laying out again (after modifying setup), we keep the button to preserve the current notification text.
-					_butText = new ODToolBarButton(Lan.G(this, "Text"), 5, Lan.G(this, "Send Text Message"), "Text");
+					_butText = new ODToolBarButton("Text", 5, "Send Text Message", "Text");
 					_butText.Style = ODToolBarButtonStyle.DropDownButton;
 					_butText.DropDownMenu = menuText;
 					_butText.Enabled = Programs.IsEnabled(ProgramName.CallFire) || SmsPhones.IsIntegratedTextingEnabled();
@@ -1278,27 +1278,27 @@ namespace OpenDental
 					}
 				}
 				ToolBarMain.Buttons.Add(_butText);
-				button = new ODToolBarButton(Lan.G(this, "Letter"), -1, Lan.G(this, "Quick Letter"), "Letter");
+				button = new ODToolBarButton("Letter", -1, "Quick Letter", "Letter");
 				button.Style = ODToolBarButtonStyle.DropDownButton;
 				button.DropDownMenu = menuLetter;
 				ToolBarMain.Buttons.Add(button);
-				button = new ODToolBarButton(Lan.G(this, "Forms"), -1, "", "Form");
+				button = new ODToolBarButton("Forms", -1, "", "Form");
 				//button.Style=ODToolBarButtonStyle.DropDownButton;
 				//button.DropDownMenu=menuForm;
 				ToolBarMain.Buttons.Add(button);
 				if (_butTask == null)
 				{
-					_butTask = new ODToolBarButton(Lan.G(this, "Tasks"), 3, Lan.G(this, "Open Tasks"), "Tasklist");
+					_butTask = new ODToolBarButton("Tasks", 3, "Open Tasks", "Tasklist");
 					_butTask.Style = ODToolBarButtonStyle.DropDownButton;
 					_butTask.DropDownMenu = menuTask;
 				}
 				ToolBarMain.Buttons.Add(_butTask);
-				button = new ODToolBarButton(Lan.G(this, "Label"), 4, Lan.G(this, "Print Label"), "Label");
+				button = new ODToolBarButton("Label", 4, "Print Label", "Label");
 				button.Style = ODToolBarButtonStyle.DropDownButton;
 				button.DropDownMenu = menuLabel;
 				ToolBarMain.Buttons.Add(button);
 			}
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this, "Popups"), -1, Lan.G(this, "Edit popups for this patient"), "Popups"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Popups", -1, "Edit popups for this patient", "Popups"));
 			ProgramL.LoadToolbar(ToolBarMain, ToolBarsAvail.MainToolbar);
 			Plugins.HookAddCode(this, "FormOpenDental.LayoutToolBar_end");
 			ToolBarMain.Invalidate();
@@ -1623,7 +1623,7 @@ namespace OpenDental
 		{
 			menuEmail.MenuItems.Clear();
 			MenuItem menuItem;
-			menuItem = new MenuItem(Lan.G(this, "Referrals:"));
+			menuItem = new MenuItem("Referrals:");
 			menuItem.Tag = null;
 			menuEmail.MenuItems.Add(menuItem);
 			List<RefAttach> refAttaches = RefAttaches.Refresh(CurPatNum);
@@ -1631,7 +1631,7 @@ namespace OpenDental
 				.FirstOrDefault(x => x.InternalName == "Referrals")?.Description;
 			if (string.IsNullOrWhiteSpace(referralDescript))
 			{//either not displaying the Referral field or no description entered, default to 'Referral'
-				referralDescript = Lan.G(this, "Referral");
+				referralDescript = "Referral";
 			}
 			Referral refer;
 			string str;
@@ -1643,11 +1643,11 @@ namespace OpenDental
 				}
 				if (refAttaches[i].RefType == ReferralType.RefFrom)
 				{
-					str = Lan.G(this, "From");
+					str = "From";
 				}
 				else if (refAttaches[i].RefType == ReferralType.RefTo)
 				{
-					str = Lan.G(this, "To");
+					str = "To";
 				}
 				else
 				{
@@ -1656,7 +1656,7 @@ namespace OpenDental
 				str += " " + Referrals.GetNameFL(refer.ReferralNum) + " <";
 				if (refer.EMail == "")
 				{
-					str += Lan.G(this, "no email");
+					str += "no email";
 				}
 				else
 				{
@@ -1700,7 +1700,7 @@ namespace OpenDental
 				message.ToAddress = refer.EMail;//pat.Email;
 				EmailAddress address = EmailAddresses.GetByClinic(pat.ClinicNum);
 				message.FromAddress = address.GetFrom();
-				message.Subject = Lan.G(this, "RE: ") + pat.GetNameFL();
+				message.Subject = "RE: " + pat.GetNameFL();
 				FormEmailMessageEdit FormE = new FormEmailMessageEdit(message, address);
 				FormE.IsNew = true;
 				FormE.ShowDialog();
@@ -1782,22 +1782,22 @@ namespace OpenDental
 		{
 			menuLetter.MenuItems.Clear();
 			MenuItem menuItem;
-			menuItem = new MenuItem(Lan.G(this, "Merge"), menuLetter_Click);
+			menuItem = new MenuItem("Merge", menuLetter_Click);
 			menuItem.Tag = "Merge";
 			menuLetter.MenuItems.Add(menuItem);
-			//menuItem=new MenuItem(Lan.g(this,"Stationery"),menuLetter_Click);
+			//menuItem=new MenuItem("Stationery",menuLetter_Click);
 			//menuItem.Tag="Stationery";
 			//menuLetter.MenuItems.Add(menuItem);
 			menuLetter.MenuItems.Add("-");
 			//Referrals---------------------------------------------------------------------------------------
-			menuItem = new MenuItem(Lan.G(this, "Referrals:"));
+			menuItem = new MenuItem("Referrals:");
 			menuItem.Tag = null;
 			menuLetter.MenuItems.Add(menuItem);
 			string referralDescript = DisplayFields.GetForCategory(DisplayFieldCategory.PatientInformation)
 				.FirstOrDefault(x => x.InternalName == "Referrals")?.Description;
 			if (string.IsNullOrWhiteSpace(referralDescript))
 			{//either not displaying the Referral field or no description entered, default to 'Referral'
-				referralDescript = Lan.G(this, "Referral");
+				referralDescript = "Referral";
 			}
 			List<RefAttach> refAttaches = RefAttaches.Refresh(CurPatNum);
 			Referral refer;
@@ -1810,11 +1810,11 @@ namespace OpenDental
 				}
 				if (refAttaches[i].RefType == ReferralType.RefFrom)
 				{
-					str = Lan.G(this, "From");
+					str = "From";
 				}
 				else if (refAttaches[i].RefType == ReferralType.RefTo)
 				{
-					str = Lan.G(this, "To");
+					str = "To";
 				}
 				else
 				{
@@ -1932,8 +1932,8 @@ namespace OpenDental
 
 		private void menuTask_Popup(object sender, EventArgs e)
 		{
-			menuItemTaskNewForUser.Text = Lan.G(this, "for") + " " + Security.CurrentUser.UserName;
-			menuItemTaskReminders.Text = Lan.G(this, "Reminders");
+			menuItemTaskNewForUser.Text = "for" + " " + Security.CurrentUser.UserName;
+			menuItemTaskReminders.Text = "Reminders";
 			int reminderTaskNewCount = GetNewReminderTaskCount();
 			if (reminderTaskNewCount > 0)
 			{
@@ -2010,16 +2010,16 @@ namespace OpenDental
 			List<SheetDef> LabelList = SheetDefs.GetCustomForType(SheetTypeEnum.LabelPatient);
 			if (LabelList.Count == 0)
 			{
-				menuItem = new MenuItem(Lan.G(this, "LName, FName, Address"), menuLabel_Click);
+				menuItem = new MenuItem("LName, FName, Address", menuLabel_Click);
 				menuItem.Tag = "PatientLFAddress";
 				menuLabel.MenuItems.Add(menuItem);
-				menuItem = new MenuItem(Lan.G(this, "Name, ChartNumber"), menuLabel_Click);
+				menuItem = new MenuItem("Name, ChartNumber", menuLabel_Click);
 				menuItem.Tag = "PatientLFChartNumber";
 				menuLabel.MenuItems.Add(menuItem);
-				menuItem = new MenuItem(Lan.G(this, "Name, PatNum"), menuLabel_Click);
+				menuItem = new MenuItem("Name, PatNum", menuLabel_Click);
 				menuItem.Tag = "PatientLFPatNum";
 				menuLabel.MenuItems.Add(menuItem);
-				menuItem = new MenuItem(Lan.G(this, "Radiograph"), menuLabel_Click);
+				menuItem = new MenuItem("Radiograph", menuLabel_Click);
 				menuItem.Tag = "PatRadiograph";
 				menuLabel.MenuItems.Add(menuItem);
 			}
@@ -2056,14 +2056,14 @@ namespace OpenDental
 				menuLabel.MenuItems.Add("-");
 			}
 			//Referrals---------------------------------------------------------------------------------------
-			menuItem = new MenuItem(Lan.G(this, "Referrals:"));
+			menuItem = new MenuItem("Referrals:");
 			menuItem.Tag = null;
 			menuLabel.MenuItems.Add(menuItem);
 			string referralDescript = DisplayFields.GetForCategory(DisplayFieldCategory.PatientInformation)
 				.FirstOrDefault(x => x.InternalName == "Referrals")?.Description;
 			if (string.IsNullOrWhiteSpace(referralDescript))
 			{//either not displaying the Referral field or no description entered, default to 'Referral'
-				referralDescript = Lan.G(this, "Referral");
+				referralDescript = "Referral";
 			}
 			List<RefAttach> refAttaches = RefAttaches.Refresh(CurPatNum);
 			Referral refer;
@@ -2076,11 +2076,11 @@ namespace OpenDental
 				}
 				if (refAttaches[i].RefType == ReferralType.RefFrom)
 				{
-					str = Lan.G(this, "From");
+					str = "From";
 				}
 				else if (refAttaches[i].RefType == ReferralType.RefTo)
 				{
-					str = Lan.G(this, "To");
+					str = "To";
 				}
 				else
 				{
@@ -2352,7 +2352,7 @@ namespace OpenDental
 				MenuItem menuItem;
 				if (!Security.CurrentUser.ClinicIsRestricted)
 				{
-					menuItem = new MenuItem(Lan.G(this, "Headquarters"), menuClinic_Click);
+					menuItem = new MenuItem("Headquarters", menuClinic_Click);
 					menuItem.Tag = new Clinic();//Having a ClinicNum of 0 will make OD act like 'Headquarters'.  This allows the user to see unassigned appt views, all operatories, etc.
 					if (Clinics.ClinicNum == 0)
 					{
@@ -2669,16 +2669,16 @@ namespace OpenDental
 		///<summary>This is called when any local data becomes outdated.  It's purpose is to tell the other computers to update certain local data.</summary>
 		private void DataValid_BecameInvalid(OpenDental.ValidEventArgs e)
 		{
-			string suffix = Lan.G(nameof(Cache), "Refreshing Caches") + ": ";
+			string suffix = "Refreshing Caches: ";
 			ODEvent.Fire(EventCategory.Cache, suffix);
 			if (e.OnlyLocal)
 			{//Currently used after doing a restore from FormBackup so that the local cache is forcefully updated.
-				ODEvent.Fire(EventCategory.Cache, suffix + Lan.G(nameof(Cache), "PrefsStartup"));
+				ODEvent.Fire(EventCategory.Cache, suffix + "PrefsStartup");
 				if (!PrefsStartup())
 				{//??
 					return;
 				}
-				ODEvent.Fire(EventCategory.Cache, suffix + Lan.G(nameof(Cache), "AllLocal"));
+				ODEvent.Fire(EventCategory.Cache, suffix + "AllLocal");
 				RefreshLocalData(InvalidType.AllLocal);//does local computer only
 				return;
 			}
@@ -2693,7 +2693,7 @@ namespace OpenDental
 				Plugins.HookAddCode(this, "FormOpenDental.DataValid_BecameInvalid_taskInvalidTypes");
 				if (ContrChart2?.Visible ?? false)
 				{
-					ODEvent.Fire(EventCategory.Cache, suffix + Lan.G(nameof(Cache), "Chart Module"));
+					ODEvent.Fire(EventCategory.Cache, suffix + "Chart Module");
 					ContrChart2.ModuleSelected(CurPatNum);
 				}
 				return;//All task signals should already be sent. Sending more Task signals here would cause unnecessary refreshes.
@@ -3187,16 +3187,16 @@ namespace OpenDental
 			Version currentVersion = new Version(Application.ProductVersion);
 			if (storedVersion != currentVersion)
 			{
-				errorMsg = Lan.G(this, "You are attempting to run version") + " " + currentVersion.ToString(3) + ", "
-					+ Lan.G(this, "but the database is using version") + " " + storedVersion.ToString(3) + ".\r\n\r\n"
-					+ Lan.G(this, "You will have to restart") + " " + Prefs.GetString(PrefName.SoftwareName) + " " + Lan.G(this, "to correct the version mismatch.");
+				errorMsg = "You are attempting to run version" + " " + currentVersion.ToString(3) + ", "
+					+ "but the database is using version" + " " + storedVersion.ToString(3) + ".\r\n\r\n"
+					+ "You will have to restart" + " " + Prefs.GetString(PrefName.SoftwareName) + " " + "to correct the version mismatch.";
 				return false;
 			}
 			string updateComputerName = Prefs.GetString(PrefName.UpdateInProgressOnComputerName);
 			if (!string.IsNullOrEmpty(updateComputerName))
 			{
-				errorMsg = Lan.G(this, "An update is in progress on workstation") + ": '" + updateComputerName + "'.\r\n\r\n"
-					+ Lan.G(this, "You will have to restart") + " " + Prefs.GetString(PrefName.SoftwareName) + " " + Lan.G(this, "once the update has finished.");
+				errorMsg = "An update is in progress on workstation" + ": '" + updateComputerName + "'.\r\n\r\n"
+					+ "You will have to restart" + " " + Prefs.GetString(PrefName.SoftwareName) + " " + "once the update has finished.";
 				return false;
 			}
 			return true;
@@ -3226,11 +3226,11 @@ namespace OpenDental
 			int alertCount = _listAlertItems.Count - _listAlertReads.Count;
 			if (alertCount > 99)
 			{
-				menuItemAlerts.Text = Lan.G(this, "Alerts") + " (99)";
+				menuItemAlerts.Text = "Alerts" + " (99)";
 			}
 			else
 			{
-				menuItemAlerts.Text = Lan.G(this, "Alerts") + " (" + alertCount + ")";
+				menuItemAlerts.Text = "Alerts" + " (" + alertCount + ")";
 			}
 			List<MenuItem> listMenuItem = menuItemAlerts.MenuItems.Cast<MenuItem>().ToList();
 			bool doRedrawMenu = false;
@@ -3308,31 +3308,31 @@ namespace OpenDental
 				case AlertType.ClinicsChangedInternal:
 					break;
 				case AlertType.OnlinePaymentsPending:
-					value += Lan.G(this, "Pending Online Payments") + ": ";
+					value += "Pending Online Payments" + ": ";
 					break;
 				case AlertType.RadiologyProcedures:
-					value += Lan.G(this, "Radiology Orders") + ": ";
+					value += "Radiology Orders" + ": ";
 					break;
 				case AlertType.CallbackRequested:
-					value += Lan.G(this, "Patient would like a callback regarding this appointment") + ": ";
+					value += "Patient would like a callback regarding this appointment" + ": ";
 					break;
 				case AlertType.WebSchedNewPat:
-					value += Lan.G(this, "eServices") + ": ";
+					value += "eServices" + ": ";
 					break;
 				case AlertType.WebSchedNewPatApptCreated:
-					value += Lan.G(this, "New Web Sched New Patient Appointment") + ": ";
+					value += "New Web Sched New Patient Appointment" + ": ";
 					break;
 				case AlertType.MaxConnectionsMonitor:
-					value += Lan.G(this, "MySQL Max Connections") + ": ";
+					value += "MySQL Max Connections" + ": ";
 					break;
 				case AlertType.WebSchedASAPApptCreated:
-					value += Lan.G(this, "New Web Sched ASAP Appointment") + ": ";
+					value += "New Web Sched ASAP Appointment" + ": ";
 					break;
 				case AlertType.WebSchedRecallApptCreated:
-					value += Lan.G(this, "New Web Sched Recall Appointment") + ": ";
+					value += "New Web Sched Recall Appointment" + ": ";
 					break;
 				case AlertType.WebMailRecieved:
-					value += Lan.G(this, "Unread Web Mails") + ": ";
+					value += "Unread Web Mails" + ": ";
 					break;
 				case AlertType.EconnectorEmailTooManySendFails:
 				case AlertType.NumberBarredFromTexting:
@@ -3343,7 +3343,7 @@ namespace OpenDental
 				case AlertType.DoseSpotClinicRegistered:
 				case AlertType.ClinicsChanged:
 				default:
-					value += Lan.G(this, alertItem.Type.GetDescription()) + ": ";
+					value += alertItem.Type.GetDescription() + ": ";
 					break;
 			}
 			return value;
@@ -3356,19 +3356,19 @@ namespace OpenDental
 			switch (actionType)
 			{
 				case ActionType.None://This should never happen.
-					value += Lan.G(this, "None");
+					value += "None";
 					break;
 				case ActionType.MarkAsRead:
-					value += Lan.G(this, "Mark As Read");
+					value += "Mark As Read";
 					break;
 				case ActionType.OpenForm:
-					value += Lan.G(this, "Open " + parentAlertItem.FormToOpen.GetDescription());
+					value += "Open " + parentAlertItem.FormToOpen.GetDescription();
 					break;
 				case ActionType.Delete:
-					value += Lan.G(this, "Delete Alert");
+					value += "Delete Alert";
 					break;
 				case ActionType.ShowItemValue:
-					value += Lan.G(this, "View Details");
+					value += "View Details";
 					break;
 			}
 			return value;
@@ -3382,7 +3382,7 @@ namespace OpenDental
 				//Check if application is in kiosk mode. If so, no popups should happen. 
 				if (Application.OpenForms.OfType<FormTerminal>().Count() > 0)
 				{
-					string msg = Lan.G(this, "Kiosk mode enabled, popup blocked for TaskNum:");
+					string msg = "Kiosk mode enabled, popup blocked for TaskNum:";
 					// TODO: Logger.LogToPath("", LogPath.Signals, LogPhase.Start, msg + " " + POut.Long(taskPopup.TaskNum));
 					return;
 				}
@@ -3484,7 +3484,7 @@ namespace OpenDental
 			{
 				msg += Process.GetCurrentProcess().ProcessName + " ";
 			}
-			msg += Lan.G(this, "will shut down in 15 seconds.  Quickly click OK on any open windows with unsaved data.");
+			msg += "will shut down in 15 seconds.  Quickly click OK on any open windows with unsaved data.";
 			MsgBoxCopyPaste msgbox = new MsgBoxCopyPaste(msg);
 			msgbox.Size = new Size(300, 300);
 			msgbox.TopMost = true;
@@ -4239,7 +4239,7 @@ namespace OpenDental
 		private void menuItemLogOff_Click(object sender, System.EventArgs e)
 		{
 			NullUserCheck("menuItemLogOff_Click");
-			if (!AreYouSurePrompt(Security.CurrentUser.Id, Lan.G(this, "Are you sure you would like to log off?")))
+			if (!AreYouSurePrompt(Security.CurrentUser.Id, "Are you sure you would like to log off?"))
 			{
 				return;
 			}
@@ -5429,8 +5429,8 @@ namespace OpenDental
 		{
 			if (!Security.IsAuthorized(Permissions.Providers, true) && !Security.IsAuthorized(Permissions.AdminDentalStudents, true))
 			{
-				MessageBox.Show(Lans.g("Security", "Not authorized for") + "\r\n"
-					+ GroupPermissions.GetDesc(Permissions.Providers) + " " + Lans.g("Security", "or") + " " + GroupPermissions.GetDesc(Permissions.AdminDentalStudents));
+				MessageBox.Show("Not authorized for" + "\r\n"
+					+ GroupPermissions.GetDesc(Permissions.Providers) + " " + "or" + " " + GroupPermissions.GetDesc(Permissions.AdminDentalStudents));
 				return;
 			}
 			FormProviderSetup FormPS = new FormProviderSetup();
@@ -6094,11 +6094,11 @@ namespace OpenDental
 			string msgText;
 			if (plansClosed > 0)
 			{
-				msgText = Lan.G(this, "Success.") + "  " + plansClosed + " " + Lan.G(this, "plan(s) closed.");
+				msgText = "Success." + "  " + plansClosed + " " + "plan(s) closed.";
 			}
 			else
 			{
-				msgText = Lan.G(this, "There were no plans to close.");
+				msgText = "There were no plans to close.";
 			}
 			MessageBox.Show(msgText);
 		}
@@ -6253,7 +6253,7 @@ namespace OpenDental
 			//		}
 			//	});
 			//}
-			//ODProgress.ShowAction(actionOpenNewDashboard, Lan.G(this, "Starting Patient Dashboard"));
+			//ODProgress.ShowAction(actionOpenNewDashboard, "Starting Patient Dashboard");
 			//return userControlPatientDashboard.IsInitialized;
 			return true;
 		}
@@ -6724,7 +6724,7 @@ namespace OpenDental
 					.Select(x => x.FKey)
 					.ToList();
 				listDisplayReports.RemoveAll(x => !listReportPermissionFkeys.Contains(x.DisplayReportNum));//Remove reports user does not have permission for
-				menuItemReportsStandard.MenuItems.Add(Lans.g(this, "Standard Reports"), menuItemReportsStandard_Click);
+				menuItemReportsStandard.MenuItems.Add("Standard Reports", menuItemReportsStandard_Click);
 				menuItemReportsStandard.MenuItems.Add("-");//Horizontal line.
 				listDisplayReports.ForEach(x =>
 				{
@@ -6738,7 +6738,7 @@ namespace OpenDental
 			List<UserQuery> listReleasedQuries = UserQueries.GetDeepCopy(true);
 			if (listReleasedQuries.Count > 0)
 			{
-				menuItemReportsUserQuery.MenuItems.Add(Lans.g(this, "User Query"), menuItemReportsUserQuery_Click);
+				menuItemReportsUserQuery.MenuItems.Add("User Query", menuItemReportsUserQuery_Click);
 				menuItemReportsUserQuery.MenuItems.Add("-");//Horizontal line.
 				listReleasedQuries.ForEach(x =>
 				{
@@ -6834,7 +6834,7 @@ namespace OpenDental
 
 		private void ExecuteQueryFavorite(UserQuery userQuery)
 		{
-			SecurityLogs.MakeLogEntry(Permissions.UserQuery, 0, Lan.G(this, "User query form accessed."));
+			SecurityLogs.MakeLogEntry(Permissions.UserQuery, 0, "User query form accessed.");
 			//ReportSimpleGrid report=new ReportSimpleGrid();
 			if (userQuery.IsPromptSetup && UserQueries.ParseSetStatements(userQuery.QueryText).Count > 0)
 			{
@@ -6881,8 +6881,8 @@ namespace OpenDental
 			}
 			catch (Exception)
 			{
-				MessageBox.Show(Lan.G(this, "Could not find") + " " + site + "\r\n"
-					+ Lan.G(this, "Please set up a default web browser."));
+				MessageBox.Show("Could not find" + " " + site + "\r\n"
+					+ "Please set up a default web browser.");
 			}
 			/*
 			if(!MsgBox.Show(MsgBoxButtons.YesNo,"A remote connection will now be attempted. Do NOT continue unless you are already on the phone with us.  Do you want to continue?"))
@@ -7167,7 +7167,7 @@ namespace OpenDental
 				{//password accepted and using eCW tight.
 				 //this part usually happens in the logon window
 					Security.CurrentUser = user.Copy();
-					SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, Lan.G(this, "User:") + " " + Security.CurrentUser.UserName + " " + Lan.G(this, "has logged on via command line."));
+					SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, "User:" + " " + Security.CurrentUser.UserName + " " + "has logged on via command line.");
 				}
 				moduleBar.SelectedIndex = Security.GetModule(moduleBar.IndexOf(LastModule));
 				moduleBar.Invalidate();
@@ -7288,7 +7288,7 @@ namespace OpenDental
 			if (Security.CurrentUser != null)
 			{
 				CheckForPasswordReset();
-				SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, Lan.G(this, "User:") + " " + Security.CurrentUser.UserName + " " + Lan.G(this, "has logged on."));
+				SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, "User:" + " " + Security.CurrentUser.UserName + " " + "has logged on.");
 				return;
 			}
 
@@ -7307,7 +7307,7 @@ namespace OpenDental
 					Application.Exit();
 					return;
 				}
-				SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, Lan.G(this, "User:") + " " + Security.CurrentUser.UserName + " " + Lan.G(this, "has logged on via command line."));
+				SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, "User:" + " " + Security.CurrentUser.UserName + " " + "has logged on via command line.");
 			}
 			#endregion
 			#region Good Old-fashioned Log On
@@ -7326,7 +7326,7 @@ namespace OpenDental
 					Security.CurrentUser = Userods.GetUserNoCache(userNumFirstAdminNoPass);
 					CheckForPasswordReset();
 
-					SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, Lan.G(this, "User:") + " " + Security.CurrentUser.UserName + " " + Lan.G(this, "has logged on."));
+					SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, "User:" + " " + Security.CurrentUser.UserName + " " + "has logged on.");
 				}
 				#endregion
 				#region Domain Login
@@ -7363,15 +7363,15 @@ namespace OpenDental
 						}
 						else if (dictDomainUserNumsAndNames.Count > 1)
 						{ //Select a user if multiple users linked to the current domain user
-							InputBox box = new InputBox(Lan.G(this, "Select an Open Dental user to log in with:"), dictDomainUserNumsAndNames.Select(x => x.Value).ToList());
+							InputBox box = new InputBox("Select an Open Dental user to log in with:", dictDomainUserNumsAndNames.Select(x => x.Value).ToList());
 							box.ShowDialog();
 							if (box.DialogResult == DialogResult.OK)
 							{
 								Security.CurrentUser = Userods.GetUserNoCache(dictDomainUserNumsAndNames.Keys.ElementAt(box.SelectedIndex));
 								CheckForPasswordReset();
 
-								SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, Lan.G(this, "User:") + " " + Security.CurrentUser.UserName + " "
-									+ Lan.G(this, "has logged on automatically via ActiveDirectory."));
+								SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, "User:" + " " + Security.CurrentUser.UserName + " "
+									+ "has logged on automatically via ActiveDirectory.");
 							}
 							else
 							{
@@ -7383,8 +7383,8 @@ namespace OpenDental
 							Security.CurrentUser = Userods.GetUserNoCache(dictDomainUserNumsAndNames.Keys.First());
 							CheckForPasswordReset();
 
-							SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, Lan.G(this, "User:") + " " + Security.CurrentUser.UserName + " "
-									+ Lan.G(this, "has logged on automatically via ActiveDirectory."));
+							SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, "User:" + " " + Security.CurrentUser.UserName + " "
+									+ "has logged on automatically via ActiveDirectory.");
 						}
 					}
 					catch

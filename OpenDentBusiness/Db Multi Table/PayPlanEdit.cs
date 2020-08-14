@@ -283,7 +283,7 @@ namespace OpenDentBusiness {
 			}
 			descript+=" "+payPlanSplit.SplitAmt.ToString("c");
 			if(PIn.Double(rowBundlePayment["PayAmt"].ToString())!=payPlanSplit.SplitAmt) {
-				descript+=Lans.g("FormPayPlan","(split)");
+				descript+="(split)";
 			}
 			retVal["ChargeDate"]=payPlanSplit.DatePay.ToShortDateString();//0 Date
 			retVal["Provider"]=Providers.GetAbbr(PIn.Long(rowBundlePayment["ProvNum"].ToString()));//1 Prov Abbr
@@ -316,7 +316,7 @@ namespace OpenDentBusiness {
 				descript+=" "+checkAmt.ToString("c");
 				double insPayAmt=PIn.Double(rowBundleClaimProc["InsPayAmt"].ToString());
 				if(checkAmt!=insPayAmt) {
-					descript+=" "+Lans.g("FormPayPlan","(split)");
+					descript+=" "+"(split)";
 				}
 			}
 			retVal["ChargeDate"]=PIn.Date(rowBundleClaimProc["DateCP"].ToString()).ToShortDateString();//0 Date
@@ -372,7 +372,7 @@ namespace OpenDentBusiness {
 				ChargeDate=dateToday,
 				Interest=0,
 				Principal=sumCredits-sumPastDebits,
-				Note=Lans.g("FormPayPlan","Close Out Charge"),
+				Note="Close Out Charge",
 				ChargeType=PayPlanChargeType.Debit,
 			};
 			return closeoutCharge;
@@ -390,7 +390,7 @@ namespace OpenDentBusiness {
 			//Add charge for down payment
 			if(terms.DownPayment!=0) {
 				listPayPlanCharges.Add(PayPlanEdit.CreateDebitCharge(payPlan,fam,provNum,clinicNum,terms.DownPayment,0,DateTimeOD.Today
-					,Lans.g("PayPlanEdit","Downpayment")));
+					,"Downpayment"));
 			}
 			//Add charges
 			while(principalDecrementingAmt.IsGreaterThanZero() && chargesCount < payPlanChargesCeiling) {//the ceiling prevents infinite loop
@@ -473,7 +473,7 @@ namespace OpenDentBusiness {
 					note="Recalculated based on prepayment";
 				}
 				recalcData.ListPayPlanCharges.Add(CreateDebitCharge(recalcData.PayPlan,recalcData.Fam,recalcData.ProvNum,recalcData.ClinicNum,overPaidAmount,
-					0,DateTimeOD.Today,Lans.g("PayPlanEdit",note)));
+					0,DateTimeOD.Today,note));
 			}
 			return overPaidAmount;
 		}
@@ -546,7 +546,7 @@ namespace OpenDentBusiness {
 					retVal=(decimal)(ppCharge.Principal+ppCharge.Interest);
 					ppCharge.Principal=0;
 					ppCharge.Interest=0;
-					ppCharge.Note=Lans.g("PayPlanEdit","Prepaid");
+					ppCharge.Note="Prepaid";
 				}
 				else {
 					ppCharge.Principal-=(double)recalcData.OverPaidDecrementingAmt;
@@ -583,14 +583,14 @@ namespace OpenDentBusiness {
 				if(recalcData.ListChargesToAdd.Count!=0 && recalcData.ListChargesToAdd[0].ChargeDate>=terms.DateInterestStart) {
 					double increasedInterestAmt=interest-recalcData.ListChargesToAdd[0].Interest;
 					recalcData.ListChargesToAdd[0].Interest=interest;
-					recalcData.ListChargesToAdd[0].Note=Lans.g("PayPlanEdit","Increased interest")+": "+increasedInterestAmt.ToString("c");
+					recalcData.ListChargesToAdd[0].Note="Increased interest"+": "+increasedInterestAmt.ToString("c");
 				}
 				else if(recalcData.ListChargesToAdd.Count==0 
 					&& recalcData.FirstFutureChargeDate.Date>=terms.DateInterestStart.Date
 					&& recalcData.ListPayPlanCharges.FindAll(x => x.ChargeType==PayPlanChargeType.Debit).Count==recalcData.ListPastDebits.Count) 
 				{
 					recalcData.ListPayPlanCharges.Add(CreateDebitCharge(recalcData.PayPlan,recalcData.Fam,recalcData.ProvNum,recalcData.ClinicNum,
-						0,interest,recalcData.FirstFutureChargeDate,Lans.g("PayPlanEdit","Increased interest")+": "+interest.ToString("c")));
+						0,interest,recalcData.FirstFutureChargeDate,"Increased interest"+": "+interest.ToString("c")));
 				}
 			}
 		}
@@ -713,7 +713,7 @@ namespace OpenDentBusiness {
 				}
 				addEntry.IsChargeOrd=true;
 				if(procCur!=null && procCur.ProcStatus==ProcStat.TP) {
-					addEntry.CredDateStr=Lans.g("PayPlanEdit","None");
+					addEntry.CredDateStr="None";
 				}
 				else {
 					addEntry.CredDateStr=credCur.ChargeDate.ToShortDateString();
@@ -744,7 +744,7 @@ namespace OpenDentBusiness {
 			payPlanEntry.ProcStatOrd=ProcStat.TP; //for ordering purposes, since we want unattached to always show up last.
 			payPlanEntry.IsChargeOrd=false;
 			payPlanEntry.ProcNumOrd=0;
-			payPlanEntry.DateStr=Lans.g("PayPlanEdit","Unattached");
+			payPlanEntry.DateStr="Unattached";
 			payPlanEntry.PatStr=patFName;
 			payPlanEntry.StatStr="";
 			payPlanEntry.ProcStr="";

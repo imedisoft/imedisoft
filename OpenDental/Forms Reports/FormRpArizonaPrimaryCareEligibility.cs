@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormRpArizonaPrimaryCareEligibility() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormRpArizonaPrimaryCareEligibility_Load(object sender,EventArgs e) {

@@ -26,7 +26,7 @@ namespace OpenDental
 
 		public FormEServicesTexting(WebServiceMainHQProxy.EServiceSetup.SignupOut signupOut=null) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_signupOut=signupOut;
 		}
 
@@ -88,9 +88,9 @@ namespace OpenDental
 
 		private void checkOptInPrompt_Click(object sender,EventArgs e) {
 			if(!checkOptInPrompt.Checked) {
-				string prompt=Lan.G(this,string.IsNullOrWhiteSpace(Prefs.GetString(PrefName.ShortCodeOptInOnApptCompleteOffScript)) 
+				string prompt=string.IsNullOrWhiteSpace(Prefs.GetString(PrefName.ShortCodeOptInOnApptCompleteOffScript)) 
 					? "By disabling this prompt, you agree to obtain verbal confirmation from patients to send Appt Texts."
-					: Prefs.GetString(PrefName.ShortCodeOptInOnApptCompleteOffScript));
+					: Prefs.GetString(PrefName.ShortCodeOptInOnApptCompleteOffScript);
 				MessageBox.Show(prompt);
 			}
 			labelUnsavedShortCodeChanges.Visible=AreShortCodeSettingsUnsaved();
@@ -103,7 +103,7 @@ namespace OpenDental
 
 		private void butSaveShortCodes_Click(object sender,EventArgs e) {
 			//if(string.IsNullOrWhiteSpace(textShortCodeOptInClinicTitle.Text)) {
-			//	string err=Lan.G(this,"Not allowed to set ")+labelShortCodeOptInClinicTitle.Text+Lan.G(this," to an empty value.");
+			//	string err="Not allowed to set "+labelShortCodeOptInClinicTitle.Text+" to an empty value.";
 			//	MessageBox.Show(err);
 			//	return;
 			//}
@@ -179,21 +179,21 @@ namespace OpenDental
 			gridSmsSummary.BeginUpdate();
 			gridSmsSummary.ListGridColumns.Clear();
 			if(PrefC.HasClinicsEnabled) {
-				gridSmsSummary.ListGridColumns.Add(new GridColumn(Lan.G(this,"Default"),80) { TextAlign=HorizontalAlignment.Center });
+				gridSmsSummary.ListGridColumns.Add(new GridColumn("Default",80) { TextAlign=HorizontalAlignment.Center });
 			}
-			gridSmsSummary.ListGridColumns.Add(new GridColumn(Lan.G(this,"Location"),170,HorizontalAlignment.Left));
-			gridSmsSummary.ListGridColumns.Add(new GridColumn(Lan.G(this,"Subscribed"),80,HorizontalAlignment.Center));
-			gridSmsSummary.ListGridColumns.Add(new GridColumn(Lan.G(this,"Primary\r\nPhone Number"),105,HorizontalAlignment.Center));
-			gridSmsSummary.ListGridColumns.Add(new GridColumn(Lan.G(this,"Country\r\nCode"),60,HorizontalAlignment.Center));
-			gridSmsSummary.ListGridColumns.Add(new GridColumn(Lan.G(this,"Limit"),80,HorizontalAlignment.Right));
-			gridSmsSummary.ListGridColumns.Add(new GridColumn(Lan.G(this,"Sent\r\nFor Month"),70,HorizontalAlignment.Right));
+			gridSmsSummary.ListGridColumns.Add(new GridColumn("Location",170,HorizontalAlignment.Left));
+			gridSmsSummary.ListGridColumns.Add(new GridColumn("Subscribed",80,HorizontalAlignment.Center));
+			gridSmsSummary.ListGridColumns.Add(new GridColumn("Primary\r\nPhone Number",105,HorizontalAlignment.Center));
+			gridSmsSummary.ListGridColumns.Add(new GridColumn("Country\r\nCode",60,HorizontalAlignment.Center));
+			gridSmsSummary.ListGridColumns.Add(new GridColumn("Limit",80,HorizontalAlignment.Right));
+			gridSmsSummary.ListGridColumns.Add(new GridColumn("Sent\r\nFor Month",70,HorizontalAlignment.Right));
 			if(doShowDiscount) {
-				gridSmsSummary.ListGridColumns.Add(new GridColumn(Lan.G(this,"Sent\r\nPre-Discount"),80,HorizontalAlignment.Right));
-				gridSmsSummary.ListGridColumns.Add(new GridColumn(Lan.G(this,"Sent\r\nDiscount"),70,HorizontalAlignment.Right));
+				gridSmsSummary.ListGridColumns.Add(new GridColumn("Sent\r\nPre-Discount",80,HorizontalAlignment.Right));
+				gridSmsSummary.ListGridColumns.Add(new GridColumn("Sent\r\nDiscount",70,HorizontalAlignment.Right));
 			}
-			gridSmsSummary.ListGridColumns.Add(new GridColumn(Lan.G(this,"Sent\r\nCharges"),70,HorizontalAlignment.Right));
-			gridSmsSummary.ListGridColumns.Add(new GridColumn(Lan.G(this,"Received\r\nFor Month"),70,HorizontalAlignment.Right));
-			gridSmsSummary.ListGridColumns.Add(new GridColumn(Lan.G(this,"Received\r\nCharges"),70,HorizontalAlignment.Right));
+			gridSmsSummary.ListGridColumns.Add(new GridColumn("Sent\r\nCharges",70,HorizontalAlignment.Right));
+			gridSmsSummary.ListGridColumns.Add(new GridColumn("Received\r\nFor Month",70,HorizontalAlignment.Right));
+			gridSmsSummary.ListGridColumns.Add(new GridColumn("Received\r\nCharges",70,HorizontalAlignment.Right));
 			gridSmsSummary.ListGridRows.Clear();
 			foreach(Clinic clinic in listClinics) {
 				GridRow row=new GridRow();
@@ -217,7 +217,7 @@ namespace OpenDental
 					row.Cells.Add((0f).ToString("c",new CultureInfo("en-US")));//Rcvd Charge
 				}
 				else {
-					row.Cells.Add(clinic.SmsContractDate.Year>1800 ? Lan.G(this,"Yes") : Lan.G(this,"No"));
+					row.Cells.Add(clinic.SmsContractDate.Year>1800 ? "Yes" : "No");
 					row.Cells.Add(dataRow.PhoneNumber);
 					row.Cells.Add(dataRow.CountryCode);
 					row.Cells.Add(clinic.SmsMonthlyLimit.ToString("c",new CultureInfo("en-US")));//Charge this month (Must always be in USD)
@@ -239,7 +239,7 @@ namespace OpenDental
 				row.Cells.Add("");
 				row.Cells.Add("");
 				row.Cells.Add("");
-				row.Cells.Add(Lans.g(this,"Total"));
+				row.Cells.Add("Total");
 				row.Cells.Add(listClinics.Where(x => items.Any(y => y.ClinicNum==x.ClinicNum)).Sum(x => x.SmsMonthlyLimit).ToString("c",new CultureInfo("en-US")));
 				row.Cells.Add(items.Sum(x => x.SentMonth).ToString());
 				if(doShowDiscount) {

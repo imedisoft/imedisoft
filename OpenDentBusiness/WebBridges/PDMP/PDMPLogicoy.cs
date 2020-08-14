@@ -96,7 +96,7 @@ namespace OpenDentBusiness {
 							HttpStatusCode statusCode = ((HttpWebResponse)wex.Response).StatusCode;
 							if (statusCode == HttpStatusCode.Unauthorized)
 							{
-								throw new ODException(Lans.g("PDMP", "Invalid PDMP credentials."));
+								throw new ODException("Invalid PDMP credentials.");
 							}
 						}
 					}

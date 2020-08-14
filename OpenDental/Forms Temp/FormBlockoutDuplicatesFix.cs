@@ -11,7 +11,7 @@ namespace OpenDental {
 	public partial class FormBlockoutDuplicatesFix:ODForm {
 		public FormBlockoutDuplicatesFix() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormBlockoutDuplicatesFix_Load(object sender,EventArgs e) {
@@ -25,7 +25,7 @@ namespace OpenDental {
 				labelInstructions.Text="";
 			}
 			else {
-				labelInstructions.Text=Lan.G(this,"Click the Clear button to fix the duplicates.");
+				labelInstructions.Text="Click the Clear button to fix the duplicates.";
 			}
 		}
 

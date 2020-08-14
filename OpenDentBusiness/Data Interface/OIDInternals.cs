@@ -59,7 +59,7 @@ namespace OpenDentBusiness
 					}
 					catch (Exception ex)
 					{
-						throw new Exception(Lans.g("OIDInternals", "Error obtaining CustomerID:") + " " + ex.Message);
+						throw new Exception("Error obtaining CustomerID:" + " " + ex.Message);
 					}
 
 					XmlDocument doc = new XmlDocument();

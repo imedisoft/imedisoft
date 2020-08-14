@@ -13,16 +13,16 @@ namespace OpenDental {
 		
 		public FormPatientStatusTool() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormPatientStatusTool_Load(object sender,EventArgs e) {
 			//Auto set the date picker to two years in the past.
 			odDatePickerSince.SetDateTime(DateTime.Today.AddYears(-2));
 			//Fill listbox
-			listOptions.Items.Add(Lan.G(this,"Planned Procedures"));
-			listOptions.Items.Add(Lan.G(this,"Completed Procedures"));
-			listOptions.Items.Add(Lan.G(this,"Appointments"));
+			listOptions.Items.Add("Planned Procedures");
+			listOptions.Items.Add("Completed Procedures");
+			listOptions.Items.Add("Appointments");
 			//Fill and enable ComboBoxClinic if clinics are enabled
 			if(PrefC.HasClinicsEnabled) {
 				comboClinic.IsAllSelected=true;
@@ -48,20 +48,20 @@ namespace OpenDental {
 				,includeTPProc,includeCompletedProc,includeAppointments,listClinicNums);
 			gridMain.BeginUpdate();
 			if(gridMain.ListGridColumns.Count==0) {
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"PatNum"),75,GridSortingStrategy.AmountParse));
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"PatStatusCur"),100,GridSortingStrategy.StringCompare));
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"PatStatusNew"),100,GridSortingStrategy.StringCompare));
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"First Name"),125,GridSortingStrategy.StringCompare));
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Last Name"),125,GridSortingStrategy.StringCompare));
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Birthdate"),75,GridSortingStrategy.DateParse));
+				gridMain.ListGridColumns.Add(new GridColumn("PatNum",75,GridSortingStrategy.AmountParse));
+				gridMain.ListGridColumns.Add(new GridColumn("PatStatusCur",100,GridSortingStrategy.StringCompare));
+				gridMain.ListGridColumns.Add(new GridColumn("PatStatusNew",100,GridSortingStrategy.StringCompare));
+				gridMain.ListGridColumns.Add(new GridColumn("First Name",125,GridSortingStrategy.StringCompare));
+				gridMain.ListGridColumns.Add(new GridColumn("Last Name",125,GridSortingStrategy.StringCompare));
+				gridMain.ListGridColumns.Add(new GridColumn("Birthdate",75,GridSortingStrategy.DateParse));
 				if(PrefC.HasClinicsEnabled) {
-					gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Clinic"),75,GridSortingStrategy.StringCompare));
+					gridMain.ListGridColumns.Add(new GridColumn("Clinic",75,GridSortingStrategy.StringCompare));
 				}
 			}
 			gridMain.ListGridRows.Clear();
 			//Mimics FormPatientEdit
-			string patientStatus=Lan.G("enumPatientStatus","Patient");
-			string inactiveStatus=Lan.G("enumPatientStatus","Inactive");
+			string patientStatus="Patient";
+			string inactiveStatus="Inactive";
 			GridRow row;
 			foreach(Patient pat in listPatients) {
 				row=new GridRow();
@@ -106,13 +106,13 @@ namespace OpenDental {
 				MessageBox.Show("Please make a selection first");
 				return;
 			}
-			string patientStatus=Lan.G("enumPatientStatus","Patient");
-			string inactiveStatus=Lan.G("enumPatientStatus","Inactive");
-			string msgText=Lan.G(this,"This will change the status for selected patients from")+" "
+			string patientStatus="Patient";
+			string inactiveStatus="Inactive";
+			string msgText="This will change the status for selected patients from"+" "
 				+(_isConvertToPatient? inactiveStatus : patientStatus)+" "
-				+Lans.g(this,"to")+" "
+				+"to"+" "
 				+(_isConvertToPatient ? patientStatus : inactiveStatus)+".\r\n"+
-				Lan.G(this,"Do you wish to continue?");
+				"Do you wish to continue?";
 			if(MessageBox.Show(msgText,"",MessageBoxButtons.YesNo)!=DialogResult.Yes) {
 				return;//The user chose not to change the statuses.
 			}
@@ -126,18 +126,18 @@ namespace OpenDental {
 				Patients.UpdateRecalls(patCur,patOld,"Patient Status Tool");
 				Patients.Update(patCur,patOld);
 				builder.AppendLine(
-					Lans.g(this,"Patient")+" "+POut.Long(patCur.PatNum)+": "+patCur.GetNameLF()+" "
-					+Lans.g(this,"patient status changed from")+" "+(_isConvertToPatient ? inactiveStatus : patientStatus)+" "
-					+Lans.g(this,"to")+" "+(_isConvertToPatient ? patientStatus : inactiveStatus)
+					"Patient"+" "+POut.Long(patCur.PatNum)+": "+patCur.GetNameLF()+" "
+					+"patient status changed from"+" "+(_isConvertToPatient ? inactiveStatus : patientStatus)+" "
+					+"to"+" "+(_isConvertToPatient ? patientStatus : inactiveStatus)
 				);//Like "Patient 123: John Doe patient status changed from X to Y"
 			}
 			MsgBoxCopyPaste msg=new MsgBoxCopyPaste(builder.ToString());
-			msg.Text=Lans.g(this,"Done");
+			msg.Text="Done";
 			msg.ShowDialog();
-			SecurityLogs.MakeLogEntry(Permissions.SecurityAdmin,listPatNums,Lans.g(this,"Patient status changed from")+" "
+			SecurityLogs.MakeLogEntry(Permissions.SecurityAdmin,listPatNums,"Patient status changed from"+" "
 				+(_isConvertToPatient ? inactiveStatus : patientStatus)+" "
-				+Lans.g(this,"to")+" "+(_isConvertToPatient ? patientStatus : inactiveStatus)
-				+Lans.g(this," by the Patient Status Setter tool."));
+				+"to"+" "+(_isConvertToPatient ? patientStatus : inactiveStatus)
+				+" by the Patient Status Setter tool.");
 			DialogResult=DialogResult.OK;
 		}
 

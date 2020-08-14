@@ -15,7 +15,7 @@ namespace OpenDental {
 		private List<Clinic> _listClinics;
 		public FormRpPresentedTreatmentProduction() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormRpTreatPlanPresenter_Load(object sender,EventArgs e) {
@@ -26,7 +26,7 @@ namespace OpenDental {
 			checkAllUsers.Checked=true;
 			if(PrefC.HasClinicsEnabled) {
 				if(!Security.CurrentUser.ClinicIsRestricted) {
-					listClin.Items.Add(Lan.G(this,"Unassigned"));
+					listClin.Items.Add("Unassigned");
 				}
 				_listClinics=Clinics.GetForUserod(Security.CurrentUser);
 				listClin.Items.AddRange(_listClinics.Select(x => x.Abbr).ToArray());
@@ -45,12 +45,12 @@ namespace OpenDental {
 
 		private void RunTotals(List<long> listUserNums,List<long> listClinicsNums) {
 			ReportComplex report=new ReportComplex(true,false);
-			report.AddTitle("Title",Lan.G(this,"Presented Treatment Production"));
+			report.AddTitle("Title","Presented Treatment Production");
 			report.AddSubTitle("SubTitle","Totals Report");
 			report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle));
 			report.AddSubTitle("Date",date1.SelectionStart.ToShortDateString()+" - "+date2.SelectionStart.ToShortDateString());
 			if(checkAllUsers.Checked) {
-				report.AddSubTitle("Users",Lan.G(this,"All Users"));
+				report.AddSubTitle("Users","All Users");
 			}
 			else {
 				string strUsers="";
@@ -66,7 +66,7 @@ namespace OpenDental {
 			}
 			if(PrefC.HasClinicsEnabled) {
 				if(checkAllClinics.Checked) {
-					report.AddSubTitle("Clinics",Lan.G(this,"All Clinics"));
+					report.AddSubTitle("Clinics","All Clinics");
 				}
 				else {
 					string clinNames="";
@@ -79,7 +79,7 @@ namespace OpenDental {
 						}
 						else {
 							if(listClin.SelectedIndices[i]==0) {
-								clinNames+=Lan.G(this,"Unassigned");
+								clinNames+="Unassigned";
 							}
 							else {
 								clinNames+=_listClinics[listClin.SelectedIndices[i]-1].Abbr;//Minus 1 from the selected index
@@ -92,12 +92,12 @@ namespace OpenDental {
 			DataTable table=RpPresentedTreatmentProduction.GetPresentedTreatmentProductionTable(date1.SelectionStart,date2.SelectionStart,listClinicsNums,checkAllClinics.Checked
 				,PrefC.HasClinicsEnabled,radioPresenter.Checked,radioFirstPresented.Checked,listUserNums,false);
 			QueryObject query=report.AddQuery(table,"","",SplitByKind.None,1,true);
-			query.AddColumn(Lan.G(this,"Presenter"),100,FieldValueType.String);
-			query.AddColumn(Lan.G(this,"# of Procs"),70,FieldValueType.Integer);
-			query.AddColumn(Lan.G(this,"GrossProd"),100,FieldValueType.Number);
-			query.AddColumn(Lan.G(this,"WriteOffs"),100,FieldValueType.Number);
-			query.AddColumn(Lan.G(this,"Adjustments"),100,FieldValueType.Number);
-			query.AddColumn(Lan.G(this,"NetProduction"),100,FieldValueType.Number);
+			query.AddColumn("Presenter",100,FieldValueType.String);
+			query.AddColumn("# of Procs",70,FieldValueType.Integer);
+			query.AddColumn("GrossProd",100,FieldValueType.Number);
+			query.AddColumn("WriteOffs",100,FieldValueType.Number);
+			query.AddColumn("Adjustments",100,FieldValueType.Number);
+			query.AddColumn("NetProduction",100,FieldValueType.Number);
 			if(!report.SubmitQueries()) {
 				DialogResult=DialogResult.Cancel;
 				return;
@@ -109,12 +109,12 @@ namespace OpenDental {
 
 		private void RunDetailed(List<long> listUserNums,List<long> listClinicsNums) {
 			ReportComplex report=new ReportComplex(true,false);
-			report.AddTitle("Title",Lan.G(this,"Presented Treatment Production"));
+			report.AddTitle("Title","Presented Treatment Production");
 			report.AddSubTitle("SubTitle", "Detailed Report");
 			report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle));
 			report.AddSubTitle("Date",date1.SelectionStart.ToShortDateString()+" - "+date2.SelectionStart.ToShortDateString());
 			if(checkAllUsers.Checked) {
-				report.AddSubTitle("Users",Lan.G(this,"All Users"));
+				report.AddSubTitle("Users","All Users");
 			}
 			else {
 				string strUsers="";
@@ -130,7 +130,7 @@ namespace OpenDental {
 			}
 			if(PrefC.HasClinicsEnabled) {
 				if(checkAllClinics.Checked) {
-					report.AddSubTitle("Clinics",Lan.G(this,"All Clinics"));
+					report.AddSubTitle("Clinics","All Clinics");
 				}
 				else {
 					string clinNames="";
@@ -143,7 +143,7 @@ namespace OpenDental {
 						}
 						else {
 							if(listClin.SelectedIndices[i]==0) {
-								clinNames+=Lan.G(this,"Unassigned");
+								clinNames+="Unassigned";
 							}
 							else {
 								clinNames+=_listClinics[listClin.SelectedIndices[i]-1].Abbr;//Minus 1 from the selected index
@@ -156,14 +156,14 @@ namespace OpenDental {
 			DataTable tableReport=RpPresentedTreatmentProduction.GetPresentedTreatmentProductionTable(date1.SelectionStart,date2.SelectionStart,listClinicsNums,checkAllClinics.Checked
 				,PrefC.HasClinicsEnabled,radioPresenter.Checked,radioFirstPresented.Checked,listUserNums,true);
 			QueryObject query=report.AddQuery(tableReport,"","",SplitByKind.None,1,true);
-			query.AddColumn("\r\n"+Lan.G(this,"Presenter"),90,FieldValueType.String);
-			query.AddColumn(Lan.G(this,"Date")+"\r\n"+Lan.G(this,"Presented"),75,FieldValueType.Date);
-			query.AddColumn(Lan.G(this,"Date")+"\r\n"+Lan.G(this,"Completed"),75,FieldValueType.Date);
-			query.AddColumn("\r\n"+Lan.G(this,"Descript"),200,FieldValueType.String);
-			query.AddColumn("\r\n"+Lan.G(this,"GrossProd"),90,FieldValueType.Number);
-			query.AddColumn("\r\n"+Lan.G(this,"WriteOffs"),90,FieldValueType.Number);
-			query.AddColumn("\r\n"+Lan.G(this,"Adjustments"),90,FieldValueType.Number);
-			query.AddColumn("\r\n"+Lan.G(this,"NetProduction"),90,FieldValueType.Number);
+			query.AddColumn("\r\n"+"Presenter",90,FieldValueType.String);
+			query.AddColumn("Date"+"\r\n"+"Presented",75,FieldValueType.Date);
+			query.AddColumn("Date"+"\r\n"+"Completed",75,FieldValueType.Date);
+			query.AddColumn("\r\n"+"Descript",200,FieldValueType.String);
+			query.AddColumn("\r\n"+"GrossProd",90,FieldValueType.Number);
+			query.AddColumn("\r\n"+"WriteOffs",90,FieldValueType.Number);
+			query.AddColumn("\r\n"+"Adjustments",90,FieldValueType.Number);
+			query.AddColumn("\r\n"+"NetProduction",90,FieldValueType.Number);
 			if(!report.SubmitQueries()) {
 				DialogResult=DialogResult.Cancel;
 				return;

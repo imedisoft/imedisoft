@@ -27,7 +27,7 @@ namespace OpenDental {
 		///<summary></summary>
 		public FormInsCatsSetup() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -201,15 +201,15 @@ namespace OpenDental {
 			_listCovCats=CovCats.GetDeepCopy();
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G(this,"Category"),90);
+			GridColumn col=new GridColumn("Category",90);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"From Code"),70);
+			col=new GridColumn("From Code",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"To Code"),70);
+			col=new GridColumn("To Code",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Hidden"),45);
+			col=new GridColumn("Hidden",45);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"E-Benefit Category"),100);
+			col=new GridColumn("E-Benefit Category",100);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

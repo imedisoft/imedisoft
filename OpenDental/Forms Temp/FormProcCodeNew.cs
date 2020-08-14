@@ -44,7 +44,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormProcCodeNew(){
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -377,35 +377,35 @@ namespace OpenDental{
 		
 		private void FormProcCodeNew_Load(object sender,EventArgs e) {
 			ProcedureCodes.RefreshCache();
-			listType.Items.Add(Lan.G(this,"none"));
-			listType.Items.Add(Lan.G(this,"Exam"));
-			listType.Items.Add(Lan.G(this,"Xray"));
-			listType.Items.Add(Lan.G(this,"Prophy"));
-			listType.Items.Add(Lan.G(this,"Fluoride"));
-			listType.Items.Add(Lan.G(this,"Sealant"));
-			listType.Items.Add(Lan.G(this,"Amalgam"));
-			listType.Items.Add(Lan.G(this,"Composite, Anterior"));
-			listType.Items.Add(Lan.G(this,"Composite, Posterior"));
-			listType.Items.Add(Lan.G(this,"Buildup/Post"));
-			listType.Items.Add(Lan.G(this,"Pulpotomy"));
-			listType.Items.Add(Lan.G(this,"RCT"));
-			listType.Items.Add(Lan.G(this,"SRP"));
-			listType.Items.Add(Lan.G(this,"Denture"));
-			listType.Items.Add(Lan.G(this,"RPD"));
-			listType.Items.Add(Lan.G(this,"Denture Repair"));
-			listType.Items.Add(Lan.G(this,"Reline"));
-			listType.Items.Add(Lan.G(this,"Ceramic Inlay"));
-			listType.Items.Add(Lan.G(this,"Metallic Inlay"));
-			listType.Items.Add(Lan.G(this,"Whitening"));
-			listType.Items.Add(Lan.G(this,"All-Ceramic Crown"));
-			listType.Items.Add(Lan.G(this,"PFM Crown"));
-			listType.Items.Add(Lan.G(this,"Full Gold Crown"));
-			listType.Items.Add(Lan.G(this,"Bridge Pontic or Retainer - Ceramic"));
-			listType.Items.Add(Lan.G(this,"Bridge Pontic or Retainer - PFM"));
-			listType.Items.Add(Lan.G(this,"Bridge Pontic or Retainer - Metal"));
-			listType.Items.Add(Lan.G(this,"Extraction"));
-			listType.Items.Add(Lan.G(this,"Ortho"));
-			listType.Items.Add(Lan.G(this,"Nitrous"));
+			listType.Items.Add("none");
+			listType.Items.Add("Exam");
+			listType.Items.Add("Xray");
+			listType.Items.Add("Prophy");
+			listType.Items.Add("Fluoride");
+			listType.Items.Add("Sealant");
+			listType.Items.Add("Amalgam");
+			listType.Items.Add("Composite, Anterior");
+			listType.Items.Add("Composite, Posterior");
+			listType.Items.Add("Buildup/Post");
+			listType.Items.Add("Pulpotomy");
+			listType.Items.Add("RCT");
+			listType.Items.Add("SRP");
+			listType.Items.Add("Denture");
+			listType.Items.Add("RPD");
+			listType.Items.Add("Denture Repair");
+			listType.Items.Add("Reline");
+			listType.Items.Add("Ceramic Inlay");
+			listType.Items.Add("Metallic Inlay");
+			listType.Items.Add("Whitening");
+			listType.Items.Add("All-Ceramic Crown");
+			listType.Items.Add("PFM Crown");
+			listType.Items.Add("Full Gold Crown");
+			listType.Items.Add("Bridge Pontic or Retainer - Ceramic");
+			listType.Items.Add("Bridge Pontic or Retainer - PFM");
+			listType.Items.Add("Bridge Pontic or Retainer - Metal");
+			listType.Items.Add("Extraction");
+			listType.Items.Add("Ortho");
+			listType.Items.Add("Nitrous");
 			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
 				labelListType.Visible=false;
 				listType.Visible=false;
@@ -418,7 +418,7 @@ namespace OpenDental{
 			}
 			comboPaintType.SelectedIndex=(int)ToothPaintingType.None;
 			for(int i=1;i<Enum.GetNames(typeof(TreatmentArea)).Length;i++) {
-				comboTreatArea.Items.Add(Lan.G(this,Enum.GetNames(typeof(TreatmentArea))[i]));
+				comboTreatArea.Items.Add(Enum.GetNames(typeof(TreatmentArea))[i]);
 			}
 			comboTreatArea.SelectedIndex=(int)TreatmentArea.Mouth-1;
 			_listProcCodeCatDefs=Defs.GetDefsForCategory(DefCat.ProcCodeCats,true);

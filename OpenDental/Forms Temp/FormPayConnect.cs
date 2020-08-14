@@ -73,7 +73,7 @@ namespace OpenDental {
 		///<summary>Can handle CreditCard being null.</summary>
 		public FormPayConnect(long clinicNum,Patient pat,decimal amount,CreditCard creditCard,bool isAddingCard=false) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_clinicNum=clinicNum;
 			_patCur=pat;
 			_amountInit=amount;
@@ -224,7 +224,7 @@ namespace OpenDental {
 			radioForce.Checked=false;
 			textRefNumber.Visible=true;
 			labelRefNumber.Visible=true;
-			labelRefNumber.Text=Lan.G(this,"Ref Number");
+			labelRefNumber.Text="Ref Number";
 			_trantype=PayConnectService.transType.VOID;
 			if(radioWebService.Checked) {
 				textCardNumber.Focus();//Usually transaction type is chosen before card number is entered, but textCardNumber box must be selected in order for card swipe to work.
@@ -242,7 +242,7 @@ namespace OpenDental {
 			radioForce.Checked=false;
 			textRefNumber.Visible=true;
 			labelRefNumber.Visible=true;
-			labelRefNumber.Text=Lan.G(this,"Ref Number");
+			labelRefNumber.Text="Ref Number";
 			_trantype=PayConnectService.transType.RETURN;
 			//If a security code (cvv) is provided for returns, PayConnect will throw an error saying it shouldn't have been provided.
 			textSecurityCode.Text="";
@@ -266,7 +266,7 @@ namespace OpenDental {
 			radioForce.Checked=true;
 			textRefNumber.Visible=true;
 			labelRefNumber.Visible=true;
-			labelRefNumber.Text=Lan.G(this,"Authorization Code");
+			labelRefNumber.Text="Authorization Code";
 			_trantype=PayConnectService.transType.FORCE;
 			if(radioWebService.Checked) {
 				textCardNumber.Focus();//Usually transaction type is chosen before card number is entered, but textCardNumber box must be selected in order for card swipe to work.
@@ -465,7 +465,7 @@ namespace OpenDental {
 				ODprintout printout=PrinterL.CreateODprintout(
 					printSit:PrintSituation.Receipt,
 					auditPatNum:_patCur.PatNum,
-					auditDescription:Lans.g(this,"PayConnect receipt printed")
+					auditDescription:"PayConnect receipt printed"
 				);
 				if(PrinterL.TrySetPrinter(printout)) {
 					printdoc.PrinterSettings=printout.PrintDoc.PrinterSettings;
@@ -473,7 +473,7 @@ namespace OpenDental {
 				}
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.g(this,"Printer not available.")+"\r\n"+Lan.g(this,"Original error")+": "+ex.Message);
+				MessageBox.Show("Printer not available."+"\r\n"+"Original error"+": "+ex.Message);
 			}
 #endif
 		}
@@ -625,17 +625,17 @@ namespace OpenDental {
 				posRequest.ForceDuplicate=checkForceDuplicate.Checked;
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.G(this,"Error creating request:")+" "+ex.Message);
+				MessageBox.Show("Error creating request:"+" "+ex.Message);
 				return false;
 			}
 			bool result=true;
 			ODProgress.ShowAction(() => {
 					_posResponse=DpsPos.ProcessCreditCard(posRequest); 
 				},
-				startingMessage:Lan.G(this,"Processing payment on terminal"),
+				startingMessage:"Processing payment on terminal",
 				actionException:ex => {
 					this.Invoke(() => {
-						MessageBox.Show(Lan.G(this,"Error processing card:")+" "+ex.Message);
+						MessageBox.Show("Error processing card:"+" "+ex.Message);
 						result=false;
 					});
 				});
@@ -643,11 +643,11 @@ namespace OpenDental {
 				return false;
 			}
 			if(_posResponse==null) {
-				MessageBox.Show(Lan.G(this,"Error processing card"));
+				MessageBox.Show("Error processing card");
 				return false;
 			}
 			if(_posResponse.ResponseCode!="0") {//"0" indicates success. May need to check the AuthCode field too to determine if this was a success.
-				MessageBox.Show(Lan.G(this,"Error message from Pay Connect:")+"\r\n"+_posResponse.ResponseDescription);
+				MessageBox.Show("Error message from Pay Connect:"+"\r\n"+_posResponse.ResponseDescription);
 				return false;
 			}
 			PayConnectService.signatureResponse sigResponse=null;
@@ -658,7 +658,7 @@ namespace OpenDental {
 			}
 			catch(Exception ex) {
 				Cursor=Cursors.Default;
-				MessageBox.Show(Lan.G(this,"Card successfully charged. Error processing signature:")+" "+ex.Message);
+				MessageBox.Show("Card successfully charged. Error processing signature:"+" "+ex.Message);
 			}
 			textCardNumber.Text=_posResponse.CardNumber;
 			textAmount.Text=_posResponse.Amount.ToString("f");

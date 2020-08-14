@@ -21,10 +21,10 @@ namespace OpenDental
 			HeadingIsPresent=false;
 			InstantClassesPar();
 			SetRowHeight(0,19,14);
-			//Heading=Lan.g("TableQueue","Provider Identifiers");
-			Fields[0]=Lan.G("TableQueue","Payor ID");
-			Fields[1]=Lan.G("TableQueue","Type");
-			Fields[2]=Lan.G("TableQueue","ID Number");
+			//Heading="Provider Identifiers";
+			Fields[0]="Payor ID";
+			Fields[1]="Type";
+			Fields[2]="ID Number";
 			ColWidth[0]=90;
 			ColWidth[1]=110;
 			ColWidth[2]=100;

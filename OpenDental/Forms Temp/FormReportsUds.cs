@@ -19,7 +19,7 @@ namespace OpenDental {
 
 		public FormReportsUds() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormReportsUds_Load(object sender,EventArgs e) {

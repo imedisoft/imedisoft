@@ -27,7 +27,7 @@ namespace OpenDental {
 
 		public FormPaySimpleSetup() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormPaySimpleSetup_Load(object sender,EventArgs e) {
@@ -38,15 +38,15 @@ namespace OpenDental {
 			}
 			checkEnabled.Checked=_progCur.Enabled;
 			if(!PrefC.HasClinicsEnabled) {//clinics are not enabled, use ClinicNum 0 to indicate 'Headquarters' or practice level program properties
-				checkEnabled.Text=Lan.G(this,"Enabled");
-				groupPaySettings.Text=Lan.G(this,"Payment Settings");
+				checkEnabled.Text="Enabled";
+				groupPaySettings.Text="Payment Settings";
 				comboClinic.Visible=false;
 				labelClinic.Visible=false;
 				labelClinicEnable.Visible=false;
 				_listUserClinicNums=new List<long>() { 0 };//if clinics are disabled, programproperty.ClinicNum will be set to 0
 			}
 			else {//Using clinics
-				groupPaySettings.Text=Lan.G(this,"Clinic Payment Settings");
+				groupPaySettings.Text="Clinic Payment Settings";
 				_listUserClinicNums=new List<long>();
 				comboClinic.Items.Clear();
 				//if PaySimple is enabled and the user is restricted to a clinic, don't allow the user to disable for all clinics
@@ -56,7 +56,7 @@ namespace OpenDental {
 					}
 				}
 				else {
-					comboClinic.Items.Add(Lan.G(this,"Headquarters"));
+					comboClinic.Items.Add("Headquarters");
 					//this way both lists have the same number of items in it and if 'Headquarters' is selected the programproperty.ClinicNum will be set to 0
 					_listUserClinicNums.Add(0);
 					comboClinic.SelectedIndex=0;

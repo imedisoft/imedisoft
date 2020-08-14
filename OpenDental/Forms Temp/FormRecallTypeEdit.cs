@@ -66,7 +66,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -554,10 +554,10 @@ namespace OpenDental{
 		private void FormRecallTypeEdit_Load(object sender, System.EventArgs e) {
 			textDescription.Text=RecallTypeCur.Description;
 		 	defaultIntervalOld=RecallTypeCur.DefaultInterval;
-			comboSpecial.Items.Add(Lan.G(this,"none"));
-			comboSpecial.Items.Add(Lan.G(this,"Prophy"));
-			comboSpecial.Items.Add(Lan.G(this,"ChildProphy"));
-			comboSpecial.Items.Add(Lan.G(this,"Perio"));
+			comboSpecial.Items.Add("none");
+			comboSpecial.Items.Add("Prophy");
+			comboSpecial.Items.Add("ChildProphy");
+			comboSpecial.Items.Add("Perio");
 			SetSpecialIdx();
 			CountForType=Recalls.GetCountForType(RecallTypeCur.RecallTypeNum);
 			TriggerList=RecallTriggers.GetForType(RecallTypeCur.RecallTypeNum);//works if 0, too.
@@ -590,7 +590,7 @@ namespace OpenDental{
 
 		private void comboSpecial_SelectionChangeCommitted(object sender,EventArgs e) {
 			if(CountForType>0){
-				MessageBox.Show(Lan.G(this,"Cannot change Special Type. Patients using this recall type: ") + CountForType.ToString());
+				MessageBox.Show("Cannot change Special Type. Patients using this recall type: " + CountForType.ToString());
 				SetSpecialIdx();//sets back to what it was when form opened
 				return;
 			}
@@ -612,8 +612,8 @@ namespace OpenDental{
 				countForTypePrev=Recalls.GetCountForType(recallTypeNumPrev);
 			}
 			if(countForTypePrev>0) {
-				MessageBox.Show(Lan.G(this,"Cannot change Special Type to one that is set for another recall type and in use by patients.  "
-					+"Patients using the other recall type: ")+countForTypePrev.ToString());
+				MessageBox.Show("Cannot change Special Type to one that is set for another recall type and in use by patients.  "
+					+"Patients using the other recall type: "+countForTypePrev.ToString());
 				SetSpecialIdx();//sets back to what it was when form opened
 				return;
 			}

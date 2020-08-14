@@ -15,7 +15,7 @@ namespace OpenDental {
 		///<summary>Patient must be valid.  Do not pass null.</summary>
 		public FormReconcileMedication(Patient patCur) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_patCur=patCur;
 		}
 
@@ -291,7 +291,7 @@ namespace OpenDental {
 				}
 			}
 			if(skipCount>0) {
-				MessageBox.Show(Lan.G(this," Row(s) skipped because medication already present in the reconcile list")+": "+skipCount);
+				MessageBox.Show(" Row(s) skipped because medication already present in the reconcile list"+": "+skipCount);
 			}
 			FillReconcileGrid();
 		}
@@ -325,7 +325,7 @@ namespace OpenDental {
 				}
 			}
 			if(skipCount>0) {
-				MessageBox.Show(Lan.G(this," Row(s) skipped because medication already present in the reconcile list")+": "+skipCount);
+				MessageBox.Show(" Row(s) skipped because medication already present in the reconcile list"+": "+skipCount);
 			}
 			FillReconcileGrid();
 		}

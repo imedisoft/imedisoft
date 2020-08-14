@@ -89,7 +89,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -949,14 +949,14 @@ namespace OpenDental{
 			textMiddleI.Text=PatCur.MiddleI;
 			textPreferred.Text=PatCur.Preferred;
 			comboGender.Items.Clear();
-			comboGender.Items.Add(Lan.G("enumPatientGender","Male"));
-			comboGender.Items.Add(Lan.G("enumPatientGender","Female"));
+			comboGender.Items.Add("Male");
+			comboGender.Items.Add("Female");
 			comboPosition.Items.Clear();
-			comboPosition.Items.Add(Lan.G("enumPatientPosition","Single"));
-			comboPosition.Items.Add(Lan.G("enumPatientPosition","Married"));
-			comboPosition.Items.Add(Lan.G("enumPatientPosition","Child"));
-			comboPosition.Items.Add(Lan.G("enumPatientPosition","Widowed"));
-			comboPosition.Items.Add(Lan.G("enumPatientPosition","Divorced"));
+			comboPosition.Items.Add("Single");
+			comboPosition.Items.Add("Married");
+			comboPosition.Items.Add("Child");
+			comboPosition.Items.Add("Widowed");
+			comboPosition.Items.Add("Divorced");
 			switch(PatCur.Gender) {
 				case PatientGender.Male: comboGender.SelectedIndex=0; break;
 				case PatientGender.Female: comboGender.SelectedIndex=1; break;
@@ -992,9 +992,9 @@ namespace OpenDental{
 			textWirelessPhone.Text=PatCur.WirelessPhone;
 			textEmail.Text=PatCur.Email;
 			comboStudentStatus.Items.Clear();
-			comboStudentStatus.Items.Add(Lan.G(this,"Nonstudent"));
-			comboStudentStatus.Items.Add(Lan.G(this,"Parttime"));
-			comboStudentStatus.Items.Add(Lan.G(this,"Fulltime"));
+			comboStudentStatus.Items.Add("Nonstudent");
+			comboStudentStatus.Items.Add("Parttime");
+			comboStudentStatus.Items.Add("Fulltime");
 			switch(PatCur.StudentStatus) {
 				case "N"://non
 				case "": 
@@ -1212,23 +1212,23 @@ namespace OpenDental{
 		///<summary>Throws an exception if error on the page.</summary>
 		private void SavePtInfo(){
 			if(TerminalStatus!=TerminalStatusEnum.UpdateOnly && !checkInsYes.Checked && !checkInsNo.Checked) {
-				throw new ApplicationException(Lan.G(this,"Please indicate whether you have insurance."));
+				throw new ApplicationException("Please indicate whether you have insurance.");
 			}
 			if(textLName.Text=="") {
-				throw new ApplicationException(Lan.G(this,"Last Name must be entered."));
+				throw new ApplicationException("Last Name must be entered.");
 			}
 			if(textFName.Text=="") {
-				throw new ApplicationException(Lan.G(this,"First Name must be entered."));
+				throw new ApplicationException("First Name must be entered.");
 			}
 			if(textBirthdate.errorProvider1.GetError(textBirthdate)!=""){
-				throw new ApplicationException(Lan.G(this,"Please fix data entry errors first."));
+				throw new ApplicationException("Please fix data entry errors first.");
 			}
 			if(textBirthdate.Text==""){
-				throw new ApplicationException(Lan.G(this,"Birthdate must be entered."));
+				throw new ApplicationException("Birthdate must be entered.");
 			}
 			if(TerminalStatus!=TerminalStatusEnum.UpdateOnly && textReferral.Text=="") {
 				textReferral.BackColor=Color.Yellow;
-				throw new ApplicationException(Lan.G(this,"Referral must be entered (on the right)."));
+				throw new ApplicationException("Referral must be entered (on the right).");
 			}
 			Patient PatOld=PatCur.Copy();
 			PatCur.LName=textLName.Text;
@@ -1277,13 +1277,13 @@ namespace OpenDental{
 			PatCur.Zip=textZip.Text;
 			if(TerminalStatus!=TerminalStatusEnum.UpdateOnly){
 				if(checkInsYes.Checked){
-					PatCur.AddrNote=Lan.G(this,"Insurance: Yes")+"\r\n"+PatCur.AddrNote;
+					PatCur.AddrNote="Insurance: Yes"+"\r\n"+PatCur.AddrNote;
 				}
 				else if(checkInsNo.Checked) {
-					PatCur.AddrNote=Lan.G(this,"Insurance: No")+"\r\n"+PatCur.AddrNote;
+					PatCur.AddrNote="Insurance: No"+"\r\n"+PatCur.AddrNote;
 				}
 				if(textReferral.Text!=""){
-					PatCur.AddrNote=Lan.G(this,"Referral: ")+textReferral.Text+"\r\n"+PatCur.AddrNote;
+					PatCur.AddrNote="Referral: "+textReferral.Text+"\r\n"+PatCur.AddrNote;
 				}
 				if(textAddrNotes.Text!=""){
 					PatCur.AddrNote=textAddrNotes.Text+"\r\n"+PatCur.AddrNote;
@@ -1343,7 +1343,7 @@ namespace OpenDental{
 					//else it will just be blank
 				}
 				else if(QuestionDefList[i].QuestType==QuestionType.YesNoUnknown) {
-					quest.Answer=Lan.G("enumYN",multInput.GetCurrentValues(i)[0].ToString());
+					quest.Answer=multInput.GetCurrentValues(i)[0].ToString();
 				}
 				quest.FormPatNum=form.FormPatNum;
 				Questions.Insert(quest);

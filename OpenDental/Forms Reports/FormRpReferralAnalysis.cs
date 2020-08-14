@@ -37,7 +37,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormRpReferralAnalysis() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -287,7 +287,7 @@ namespace OpenDental{
 			textDateFrom.Text=new DateTime(DateTime.Today.Year,DateTime.Today.Month,1).ToShortDateString();
 			textDateTo.Text=new DateTime(DateTime.Today.Year,DateTime.Today.Month
 				,DateTime.DaysInMonth(DateTime.Today.Year,DateTime.Today.Month)).ToShortDateString();
-			listProv.Items.Add(Lan.G(this,"All"));
+			listProv.Items.Add("All");
 			for(int i=0;i<_listProviders.Count;i++){
 				listProv.Items.Add(_listProviders[i].GetLongDesc());
 			}
@@ -313,7 +313,7 @@ namespace OpenDental{
 			if(  textDateFrom.errorProvider1.GetError(textDateFrom)!=""
 				|| textDateTo.errorProvider1.GetError(textDateTo)!=""
 				){
-				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			DateTime dateFrom=PIn.Date(textDateFrom.Text);
@@ -336,7 +336,7 @@ namespace OpenDental{
 			if(  textDateFrom.errorProvider1.GetError(textDateFrom)!=""
 				|| textDateTo.errorProvider1.GetError(textDateTo)!=""
 				){
-				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			DateTime dateFrom=PIn.Date(textDateFrom.Text);
@@ -359,7 +359,7 @@ namespace OpenDental{
 			if(  textDateFrom.errorProvider1.GetError(textDateFrom)!=""
 				|| textDateTo.errorProvider1.GetError(textDateTo)!=""
 				){
-				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(listProv.SelectedIndices.Count==0) {
@@ -401,20 +401,20 @@ namespace OpenDental{
 			Font font=new Font("Tahoma",9);
 			Font fontTitle=new Font("Tahoma",17,FontStyle.Bold);
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
-			report.ReportName=Lan.G(this,"Referral Analysis");
-			report.AddTitle("Title",Lan.G(this,"Referral Analysis"),fontTitle);
+			report.ReportName="Referral Analysis";
+			report.AddTitle("Title","Referral Analysis",fontTitle);
 			report.AddSubTitle("PracticeTitle",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
 			report.AddSubTitle("Date SubTitle",dateFrom.ToString("d")+" - "+dateTo.ToString("d"),fontSubTitle);
 			if(hasAllProvs){
-				report.AddSubTitle("Provider Subtitle",Lan.G(this,"All Providers"));
+				report.AddSubTitle("Provider Subtitle","All Providers");
 			}
 			else if(listProv.SelectedIndices.Count==1) {
-				report.AddSubTitle("Provider SubTitle",Lan.G(this,"Prov:")+" "+_listProviders[listProv.SelectedIndices[0]-1].GetLongDesc());
+				report.AddSubTitle("Provider SubTitle","Prov:"+" "+_listProviders[listProv.SelectedIndices[0]-1].GetLongDesc());
 			}
 			else {
 				report.AddSubTitle("Provider SubTitle",string.Join(", ",listProvNames));
 			}
-			QueryObject query=report.AddQuery(table,Lan.G(this,"Date")+": "+DateTimeOD.Today.ToString("d"));
+			QueryObject query=report.AddQuery(table,"Date"+": "+DateTimeOD.Today.ToString("d"));
 			query.AddColumn("Last Name",100,FieldValueType.String);
 			query.AddColumn("First Name",100,FieldValueType.String);
 			query.AddColumn("Count",40,FieldValueType.Integer);

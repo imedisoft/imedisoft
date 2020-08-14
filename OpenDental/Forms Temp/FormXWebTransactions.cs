@@ -19,7 +19,7 @@ namespace OpenDental {
 
 		public FormXWebTransactions() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormXWebTransactions_Load(object sender,EventArgs e) {
@@ -38,11 +38,11 @@ namespace OpenDental {
 		///<summary>Fills the clinics combo box with the clincs available to this user.</summary>
 		private void FillClinics() {
 			_listClinics=Clinics.GetForUserod(Security.CurrentUser);
-			comboClinic.Items.Add(Lan.G(this,"All"));
+			comboClinic.Items.Add("All");
 			comboClinic.SelectedIndex=0;
 			int offset=1;
 			if(!Security.CurrentUser.ClinicIsRestricted) {
-				comboClinic.Items.Add(Lan.G(this,"Unassigned"));
+				comboClinic.Items.Add("Unassigned");
 				offset++;
 			}
 			_listClinics.ForEach(x => comboClinic.Items.Add(x.Abbr));
@@ -76,23 +76,23 @@ namespace OpenDental {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G(this,"Patient"),120);
+			col=new GridColumn("Patient",120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Amount"),60,HorizontalAlignment.Right);
+			col=new GridColumn("Amount",60,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Date"),80);
+			col=new GridColumn("Date",80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Tran Type"),80);
+			col=new GridColumn("Tran Type",80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Card Number"),140);
+			col=new GridColumn("Card Number",140);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Expiration"),70);
+			col=new GridColumn("Expiration",70);
 			gridMain.ListGridColumns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
-				col=new GridColumn(Lan.G(this,"Clinic"),100);
+				col=new GridColumn("Clinic",100);
 				gridMain.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.G(this,"Transaction ID"),110);
+			col=new GridColumn("Transaction ID",110);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -244,11 +244,11 @@ namespace OpenDental {
 				if(IsXWebTransaction(gridMain.SelectedIndices[0])) {
 					long patNum=PIn.Long(_tableTrans.Rows[gridMain.SelectedIndices[0]]["PatNum"].ToString());
 					long responseNum=PIn.Long(_tableTrans.Rows[gridMain.SelectedIndices[0]]["ResponseNum"].ToString());
-					string payNote=Lan.G(this,"Void XWeb payment made from within Open Dental")+"\r\n"
-						+Lan.G(this,"Amount:")+" "+PIn.Double(_tableTrans.Rows[gridMain.SelectedIndices[0]]["Amount"].ToString()).ToString("f")+"\r\n"
-						+Lan.G(this,"Transaction ID:")+" "+_tableTrans.Rows[gridMain.SelectedIndices[0]]["TransactionID"].ToString()+"\r\n"
-						+Lan.G(this,"Card Number:")+" "+_tableTrans.Rows[gridMain.SelectedIndices[0]]["MaskedAcctNum"].ToString()+"\r\n"
-						+Lan.G(this,"Processed:")+" "+DateTime.Now.ToShortDateString()+" "+DateTime.Now.ToShortTimeString();
+					string payNote="Void XWeb payment made from within Open Dental"+"\r\n"
+						+"Amount:"+" "+PIn.Double(_tableTrans.Rows[gridMain.SelectedIndices[0]]["Amount"].ToString()).ToString("f")+"\r\n"
+						+"Transaction ID:"+" "+_tableTrans.Rows[gridMain.SelectedIndices[0]]["TransactionID"].ToString()+"\r\n"
+						+"Card Number:"+" "+_tableTrans.Rows[gridMain.SelectedIndices[0]]["MaskedAcctNum"].ToString()+"\r\n"
+						+"Processed:"+" "+DateTime.Now.ToShortDateString()+" "+DateTime.Now.ToShortTimeString();
 					XWebs.VoidPayment(patNum,payNote,responseNum); 
 				}
 				else {

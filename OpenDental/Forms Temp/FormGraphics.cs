@@ -61,7 +61,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 			
 		}
 
@@ -537,23 +537,23 @@ namespace OpenDental{
 				textSelected.Text="";
 				gridFormats.BeginUpdate();
 				gridFormats.ListGridColumns.Clear();
-				GridColumn col=new GridColumn(Lan.G(this,"FormatNum"),80);
+				GridColumn col=new GridColumn("FormatNum",80);
 				gridFormats.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"Adapter"),60);
+				col=new GridColumn("Adapter",60);
 				gridFormats.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"Accelerated"),80);
+				col=new GridColumn("Accelerated",80);
 				gridFormats.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"Buffered"),75);
+				col=new GridColumn("Buffered",75);
 				gridFormats.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"ColorBits"),75);
+				col=new GridColumn("ColorBits",75);
 				gridFormats.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"ColorFormat"),75);
+				col=new GridColumn("ColorFormat",75);
 				gridFormats.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"DepthBits"),75);
+				col=new GridColumn("DepthBits",75);
 				gridFormats.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"DepthFormat"),75);
+				col=new GridColumn("DepthFormat",75);
 				gridFormats.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"Antialiasing"),75);
+				col=new GridColumn("Antialiasing",75);
 				gridFormats.ListGridColumns.Add(col);
 				gridFormats.EndUpdate();
 				for(int i=0;i<xformats.Length;i++) {
@@ -578,23 +578,23 @@ namespace OpenDental{
 				textSelected.Text=selectedFormatNum.ToString();
 				gridFormats.BeginUpdate();
 				gridFormats.ListGridColumns.Clear();
-				GridColumn col=new GridColumn(Lan.G(this,"FormatNum"),80);
+				GridColumn col=new GridColumn("FormatNum",80);
 				gridFormats.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"OpenGL"),60);
+				col=new GridColumn("OpenGL",60);
 				gridFormats.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"Windowed"),80);
+				col=new GridColumn("Windowed",80);
 				gridFormats.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"Bitmapped"),80);
+				col=new GridColumn("Bitmapped",80);
 				gridFormats.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"Palette"),75);
+				col=new GridColumn("Palette",75);
 				gridFormats.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"Accelerated"),80);
+				col=new GridColumn("Accelerated",80);
 				gridFormats.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"Buffered"),75);
+				col=new GridColumn("Buffered",75);
 				gridFormats.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"ColorBits"),75);
+				col=new GridColumn("ColorBits",75);
 				gridFormats.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G(this,"DepthBits"),75);
+				col=new GridColumn("DepthBits",75);
 				gridFormats.ListGridColumns.Add(col);
 				gridFormats.EndUpdate();
 				for(int i=0;i<formats.Length;i++) {
@@ -752,8 +752,8 @@ namespace OpenDental{
 			//ComputerPref computerPref=ComputerPrefs.GetForLocalComputer();
 			if(radioDirectXChart.Checked) {
 				if(!_isRemoteEdit && !TestDirectXFormat(this,selectedDirectXFormat)){
-					MessageBox.Show(Lan.G(this,"Please choose a different device format, "+
-						"the selected device format will not support the DirectX 3D tooth chart on this computer"));
+					MessageBox.Show("Please choose a different device format, "+
+						"the selected device format will not support the DirectX 3D tooth chart on this computer");
 					return;
 				}
 				ComputerPrefCur.GraphicsSimple=DrawingMode.DirectX;
@@ -766,11 +766,12 @@ namespace OpenDental{
 				OpenGLWinFormsControl contextTester=new OpenGLWinFormsControl();
 				try {
 					if(!_isRemoteEdit && contextTester.TaoInitializeContexts(selectedFormatNum)!=selectedFormatNum) {
-						throw new Exception(Lan.G(this,"Could not initialize pixel format ")+selectedFormatNum.ToString()+".");
+						throw new Exception("Could not initialize pixel format "+selectedFormatNum.ToString()+".");
 					}
 				} 
 				catch(Exception ex) {
-					MessageBox.Show(Lan.G(this,"Please choose a different pixel format, the selected pixel format will not support the 3D tooth chart on this computer: "+ex.Message));
+					MessageBox.Show(
+						"Please choose a different pixel format, the selected pixel format will not support the 3D tooth chart on this computer: "+ex.Message);
 					contextTester.Dispose();
 					return;
 				}

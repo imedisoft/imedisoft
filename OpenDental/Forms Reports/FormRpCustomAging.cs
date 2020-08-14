@@ -17,7 +17,7 @@ namespace OpenDental {
 
 		public FormRpCustomAging() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormRpCustomAging_Load(object sender,EventArgs e) {
@@ -282,10 +282,10 @@ namespace OpenDental {
 				tableReportCur.Rows.Add(row);
 			}
 			ReportComplex report=new ReportComplex(true,false);
-			report.ReportName=Lan.G(this,"Custom Aging of Accounts Receivable");
-			report.AddTitle("Custom Aging Report",Lan.G(this,"Custom Aging of Accounts Receivable"));
+			report.ReportName="Custom Aging of Accounts Receivable";
+			report.AddTitle("Custom Aging Report","Custom Aging of Accounts Receivable");
 			report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle));
-			report.AddSubTitle("AsOf",Lan.G(this,"As of ")+_agingOptions.DateAsOf.ToShortDateString());
+			report.AddSubTitle("AsOf","As of "+_agingOptions.DateAsOf.ToShortDateString());
 			List<string> listAgingInc=new List<string>();
 			//Go through every aging option and for every one that is selected, add the descriptions as a subtitle
 			foreach(AgingOptions.AgingInclude agingInc in Enum.GetValues(typeof(AgingOptions.AgingInclude))) {
@@ -293,40 +293,40 @@ namespace OpenDental {
 					continue;
 				}
 				if(_agingOptions.AgingInc.HasFlag(agingInc)) {
-					listAgingInc.Add(Lan.G(this,agingInc.GetDescription()));
+					listAgingInc.Add(agingInc.GetDescription());
 				}
 			}
 			//Add a newline to the list if it's too long.
 			if(listAgingInc.Count>5) {
 				listAgingInc[(listAgingInc.Count+1)/2]="\r\n"+listAgingInc[(listAgingInc.Count+1)/2];
 			}
-			report.AddSubTitle("AgeInc",Lan.G(this,"For")+": "+string.Join(", ",listAgingInc));
+			report.AddSubTitle("AgeInc","For"+": "+string.Join(", ",listAgingInc));
 			if(_agingOptions.AgeAccount==AgeOfAccount.Any) {
-				report.AddSubTitle("Balance",Lan.G(this,"Any Balance"));
+				report.AddSubTitle("Balance","Any Balance");
 			}
 			else if(_agingOptions.AgeAccount==AgeOfAccount.Over30) {
-				report.AddSubTitle("Over30",Lan.G(this,"Over 30 Days"));
+				report.AddSubTitle("Over30","Over 30 Days");
 			}
 			else if(_agingOptions.AgeAccount==AgeOfAccount.Over60) {
-				report.AddSubTitle("Over60",Lan.G(this,"Over 60 Days"));
+				report.AddSubTitle("Over60","Over 60 Days");
 			}
 			else if(_agingOptions.AgeAccount==AgeOfAccount.Over90) {
-				report.AddSubTitle("Over90",Lan.G(this,"Over 90 Days"));
+				report.AddSubTitle("Over90","Over 90 Days");
 			}
 			if(_agingOptions.ListBillTypes==null) {
-				report.AddSubTitle("BillingTypes",Lan.G(this,"All Billing Types"));
+				report.AddSubTitle("BillingTypes","All Billing Types");
 			}
 			else {
 				report.AddSubTitle("BillingTypes",string.Join(", ",_agingOptions.ListBillTypes.Select(x => x.ItemName)));
 			}
 			if(_agingOptions.ListProvs==null) {
-				report.AddSubTitle("Providers",Lan.G(this,"All Providers"));
+				report.AddSubTitle("Providers","All Providers");
 			}
 			else {
 				report.AddSubTitle("Providers",string.Join(", ",_agingOptions.ListProvs.Select(x => x.Abbr)));
 			}
 			if(_agingOptions.ListClins==null) {
-				report.AddSubTitle("Clinics",Lan.G(this,"All Clinics"));
+				report.AddSubTitle("Clinics","All Clinics");
 			}
 			else {
 				report.AddSubTitle("Clinics",string.Join(", ",_agingOptions.ListClins.Select(x => x.Abbr)));

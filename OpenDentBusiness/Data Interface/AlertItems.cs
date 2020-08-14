@@ -51,7 +51,7 @@ namespace OpenDentBusiness{
 					AlertItem alert=new AlertItem();
 					alert.Actions=ActionType.MarkAsRead;
 					alert.ClinicNum=-1;//all clinics
-					alert.Description=Lans.g("Alerts","No instance of Open Dental Service is running.");
+					alert.Description="No instance of Open Dental Service is running.";
 					alert.Type=AlertType.OpenDentalServiceDown;
 					alert.Severity=SeverityType.Medium;
 					Insert(alert);

@@ -535,7 +535,7 @@ namespace OpenDental.UI {
 		private void butESign_Click(object sender,EventArgs e) {
 			Userod curUser=_userSig??Security.CurrentUser;
 			Provider provCur=Providers.GetProv(curUser.ProviderId);
-			string digitalSignature=Lans.g(this,"Digitally Signed by ");
+			string digitalSignature="Digitally Signed by ";
 			if(provCur!=null) {
 				digitalSignature+=provCur.GetLongDesc();
 			}
@@ -544,9 +544,9 @@ namespace OpenDental.UI {
 			}
 			else {
 				//should never happen
-				digitalSignature= Lans.g(this,"Digitally signed by unknown user.");
+				digitalSignature= "Digitally signed by unknown user.";
 			}
-			digitalSignature+="\r\n"+Lans.g(this,"Date Signed")+": "+MiscData.GetNowDateTime().ToString();
+			digitalSignature+="\r\n"+"Date Signed"+": "+MiscData.GetNowDateTime().ToString();
 			List<Point> pList = sigBox.EncryptString(digitalSignature);
 			sigBox.SetPointList(pList);
 			OnSignatureChanged();

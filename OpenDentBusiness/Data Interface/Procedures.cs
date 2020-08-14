@@ -1084,13 +1084,13 @@ namespace OpenDentBusiness {
 					Permissions perm=Permissions.ProcCompleteEdit;//If was complete before the window loaded.
 					string logText=procCode.ProcCode+" ("+procOld.ProcStatus+"), ";
 					if(procOld.ProcStatus!=procNew.ProcStatus) {//Status changed.
-						string statusText=logText+Lans.g("Procedures"," changed from ")+procOld.ProcStatus+Lans.g("Procedures"," to ")+procNew.ProcStatus;
+						string statusText=logText+" changed from "+procOld.ProcStatus+" to "+procNew.ProcStatus;
 						SecurityLogs.MakeLogEntry(Permissions.ProcCompleteStatusEdit,procNew.PatNum,statusText);
 					}
 					if(!string.IsNullOrEmpty(procTeethStr)) {
-						logText+=Lans.g("Procedures","Teeth")+": "+procTeethStr+", ";
+						logText+="Teeth"+": "+procTeethStr+", ";
 					}
-					logText+=Lans.g("Procedures","Fee")+": "+procNew.ProcFee.ToString("F")+", "+procCode.Descript;
+					logText+="Fee"+": "+procNew.ProcFee.ToString("F")+", "+procCode.Descript;
 					if(procOld.ProcStatus.In(ProcStat.EO,ProcStat.EC)) {
 						perm=Permissions.ProcExistingEdit;
 					}
@@ -1626,10 +1626,10 @@ namespace OpenDentBusiness {
 			if(procNew.Discount==procOld.Discount) {
 				return;
 			}
-			string message=Lans.g("Procedures","Discount created or changed from Proc Edit window for procedure")
-					+": "+ProcedureCodes.GetProcCode(procNew.CodeNum).ProcCode+"  "+Lans.g("Procedures","Dated")
-					+": "+procNew.ProcDate.ToShortDateString()+"  "+Lans.g("Procedures","With a Fee of")+": "+procNew.ProcFee.ToString("c")+".  "
-					+Lans.g("Procedures","Changed the discount value from")+" "+procOld.Discount.ToString("c")+" "+Lans.g("Procedures","to")+" "
+			string message="Discount created or changed from Proc Edit window for procedure"
+					+": "+ProcedureCodes.GetProcCode(procNew.CodeNum).ProcCode+"  "+"Dated"
+					+": "+procNew.ProcDate.ToShortDateString()+"  "+"With a Fee of"+": "+procNew.ProcFee.ToString("c")+".  "
+					+"Changed the discount value from"+" "+procOld.Discount.ToString("c")+" "+"to"+" "
 					+procNew.Discount.ToString("c");
 			SecurityLogs.MakeLogEntry(Permissions.TreatPlanDiscountEdit,procNew.PatNum,message);
 		}
@@ -1707,41 +1707,41 @@ namespace OpenDentBusiness {
 			string command="SELECT COUNT(*) FROM claimproc WHERE ProcNum="+POut.Long(procNum)
 				+" AND ClaimNum > 0 AND Status!="+POut.Int((int)ClaimProcStatus.Preauth);
 			if(Database.ExecuteString(command)!="0") {
-				throw new Exception(Lans.g("Procedures","Not allowed to delete a procedure that is attached to a claim."));
+				throw new Exception("Not allowed to delete a procedure that is attached to a claim.");
 			}
 			//Test to see if any payment at all has been received for this proc
 			command="SELECT COUNT(*) FROM claimproc WHERE ProcNum="+POut.Long(procNum)
 				+" AND InsPayAmt > 0 AND Status IN ("+POut.Int((int)ClaimProcStatus.Received)+","+POut.Int((int)ClaimProcStatus.Supplemental)+","
 					+POut.Int((int)ClaimProcStatus.CapClaim)+","+POut.Int((int)ClaimProcStatus.CapComplete)+")";
 			if(Database.ExecuteString(command)!="0") {
-				throw new Exception(Lans.g("Procedures","Not allowed to delete a procedure that is attached to an insurance payment."));
+				throw new Exception("Not allowed to delete a procedure that is attached to an insurance payment.");
 			}
 			//Test to see if any referrals exist for this proc
 			command="SELECT COUNT(*) FROM refattach WHERE ProcNum="+POut.Long(procNum);
 			if(Database.ExecuteString(command)!="0") {
-				throw new Exception(Lans.g("Procedures","Not allowed to delete a procedure with referrals attached."));
+				throw new Exception("Not allowed to delete a procedure with referrals attached.");
 			}
 			//Test to see if any paysplits are attached to this proc
 			command="SELECT COUNT(*) FROM paysplit WHERE ProcNum="+POut.Long(procNum);
 			if(Database.ExecuteString(command)!="0") {
-				throw new Exception(Lans.g("Procedures","Not allowed to delete a procedure that is attached to a patient payment."));
+				throw new Exception("Not allowed to delete a procedure that is attached to a patient payment.");
 			}
 			command="SELECT COUNT(*) FROM adjustment WHERE ProcNum="+POut.Long(procNum);
 			if(Database.ExecuteString(command)!="0") {
-				throw new Exception(Lans.g("Procedures","Not allowed to delete a procedure that is attached to an adjustment."));
+				throw new Exception("Not allowed to delete a procedure that is attached to an adjustment.");
 			}
 			command="SELECT COUNT(*) FROM rxpat WHERE ProcNum="+POut.Long(procNum);
 			if(Database.ExecuteString(command)!="0") {
-				throw new Exception(Lans.g("Procedures","Not allowed to delete a procedure that is attached to a prescription."));
+				throw new Exception("Not allowed to delete a procedure that is attached to a prescription.");
 			}
 			command=$"SELECT COUNT(*) FROM payplancharge WHERE payplancharge.ProcNum={POut.Long(procNum)}";
 			if(Database.ExecuteString(command)!="0") {
-				throw new Exception(Lans.g("Procedures","Not allowed to delete procedure that is attached to a payment plan."));
+				throw new Exception("Not allowed to delete procedure that is attached to a payment plan.");
 			}
 			command=$"SELECT COUNT(*) FROM payplanlink WHERE payplanlink.FKey={POut.Long(procNum)} " +
 				$"AND payplanlink.LinkType={POut.Int((int)PayPlanLinkType.Procedure)}";
 			if(Database.ExecuteString(command)!="0") {
-				throw new Exception(Lans.g("Procedures","Not allowed to delete a procedure that is attached to a dynamic payment plan."));
+				throw new Exception("Not allowed to delete a procedure that is attached to a dynamic payment plan.");
 			}
 		}
 
@@ -3082,7 +3082,7 @@ namespace OpenDentBusiness {
 					if(claimProcs[i].EstimateNote!="") {
 						claimProcs[i].EstimateNote+=", ";
 					}
-					claimProcs[i].EstimateNote+=Lans.g("Procedures","Frequency Limitation");
+					claimProcs[i].EstimateNote+="Frequency Limitation";
 				}				
 				#region Waiting Periods
 				//Determine if there is a waiting period associated to this procedure, if there is and it falls within the bounds of the waiting
@@ -3113,7 +3113,7 @@ namespace OpenDentBusiness {
 							if(claimProcs[i].EstimateNote!="") {
 								claimProcs[i].EstimateNote+=", ";
 							}
-							claimProcs[i].EstimateNote+=Lans.g("Procedures","Waiting Period");
+							claimProcs[i].EstimateNote+="Waiting Period";
 							break;
 						}
 					}
@@ -3626,9 +3626,9 @@ namespace OpenDentBusiness {
 					if(proc.PlannedAptNum!=0 && proc.PlannedAptNum != AptCur.AptNum) {//Currently attached to another planned appointment.
 						Appointment apptOldPlanned=listAppointments.FirstOrDefault(x => x.AptNum==proc.PlannedAptNum && x.AptStatus==ApptStatus.Planned);
 						string apptOldPlannedDateStr=(apptOldPlanned==null ? "[INVALID #"+proc.PlannedAptNum+"]" : apptOldPlanned.AptDateTime.ToShortDateString());
-						SecurityLogs.MakeLogEntry(Permissions.AppointmentEdit,AptCur.PatNum,Lans.g("AppointmentEdit","Procedure")+" "
-							+ProcedureCodes.GetProcCode(proc.CodeNum).AbbrDesc+" "+Lans.g("AppointmentEdit","moved from planned appointment created on")+" "
-							+apptOldPlannedDateStr+" "+Lans.g("AppointmentEdit","to planned appointment created on")+" "
+						SecurityLogs.MakeLogEntry(Permissions.AppointmentEdit,AptCur.PatNum,"Procedure"+" "
+							+ProcedureCodes.GetProcCode(proc.CodeNum).AbbrDesc+" "+"moved from planned appointment created on"+" "
+							+apptOldPlannedDateStr+" "+"to planned appointment created on"+" "
 							+AptCur.AptDateTime.ToShortDateString(),AptCur.AptNum,logSource,AptCur.DateTStamp);
 						UpdateOtherApptDesc(proc,AptCur,isAptPlanned,listAppointments,listProcs);
 					}
@@ -3638,9 +3638,9 @@ namespace OpenDentBusiness {
 					if(proc.AptNum!=0 && proc.AptNum != AptCur.AptNum) {//Currently attached to another appointment.
 						Appointment apptOld=listAppointments.FirstOrDefault(x => x.AptNum==proc.AptNum);
 						string apptOldDateStr=(apptOld==null ? "[INVALID #"+proc.AptNum+"]" : apptOld.AptDateTime.ToShortDateString());
-						SecurityLogs.MakeLogEntry(Permissions.AppointmentEdit,AptCur.PatNum,Lans.g("AppointmentEdit","Procedure")+" "
-							+ProcedureCodes.GetProcCode(proc.CodeNum).AbbrDesc+" "+Lans.g("AppointmentEdit","moved from appointment on")+" "+apptOldDateStr
-							+" "+Lans.g("AppointmentEdit","to appointment on")+" "+AptCur.AptDateTime,AptCur.AptNum,logSource,AptCur.DateTStamp);
+						SecurityLogs.MakeLogEntry(Permissions.AppointmentEdit,AptCur.PatNum,"Procedure"+" "
+							+ProcedureCodes.GetProcCode(proc.CodeNum).AbbrDesc+" "+"moved from appointment on"+" "+apptOldDateStr
+							+" "+"to appointment on"+" "+AptCur.AptDateTime,AptCur.AptNum,logSource,AptCur.DateTStamp);
 						UpdateOtherApptDesc(proc,AptCur,isAptPlanned,listAppointments,listProcs);
 					}
 					proc.AptNum=AptCur.AptNum;
@@ -3680,19 +3680,19 @@ namespace OpenDentBusiness {
 			ProcedureCode procCode=ProcedureCodes.GetProcCode(procCur.CodeNum);
 			string logText=procCode.ProcCode+", ";
 			if(toothNums!=null && toothNums.Trim()!="") {
-				logText+=Lans.g("Procedures","Teeth")+": "+toothNums+", ";
+				logText+="Teeth"+": "+toothNums+", ";
 			}
-			logText+=Lans.g("Procedures","Fee")+": "+procCur.ProcFee.ToString("F")+", "+procCode.Descript;
+			logText+="Fee"+": "+procCur.ProcFee.ToString("F")+", "+procCode.Descript;
 			SecurityLogs.MakeLogEntry(Permissions.ProcComplCreate,patNum,logText);
 		}
 
 		///<summary>Creates securitylog entry for completed procedure where appointment ProvNum is different than the procedures provnum.</summary>
 		private static void LogProcComplEdit(Procedure proc,Procedure procOld,List<ProcedureCode> listProcedureCodes=null) {
 			ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum,listProcedureCodes);
-			string logText=Lans.g("Procedures","Completed procedure")+" "+procCode.ProcCode.ToString()+" "
-				+Lans.g("Procedures","edited by setting appointment complete.");
+			string logText="Completed procedure"+" "+procCode.ProcCode.ToString()+" "
+				+"edited by setting appointment complete.";
 			if(proc.ProvNum!=procOld.ProvNum) {
-				logText+=" "+Lans.g("Procedures","Provider was changed from")+" "+Providers.GetAbbr(procOld.ProvNum)+" "+Lans.g("Procedures","to")+" "+
+				logText+=" "+"Provider was changed from"+" "+Providers.GetAbbr(procOld.ProvNum)+" "+"to"+" "+
 					Providers.GetAbbr(proc.ProvNum)+".";
 			}
 			SecurityLogs.MakeLogEntry(Permissions.ProcCompleteEdit,proc.PatNum,logText,proc.ProcNum,LogSources.None,procOld.DateTStamp);

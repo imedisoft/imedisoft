@@ -99,7 +99,7 @@ namespace OpenDental{
 
 		public FormProcGroup() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary>Inserts are no longer done within this dialog, but must be done ahead of time from outside.You must specify a procedure to edit, and only the changes that are made in this dialog get saved.  Only used when double click in Account, Chart, TP, and in ContrChart.AddProcedure().  The procedure may be deleted if new, and user hits Cancel.</summary>
@@ -110,7 +110,7 @@ namespace OpenDental{
 			ProcGroupItem=ProcGroupItems.Refresh(groupNum);
 			//Proc
 			InitializeComponent();
-			Lan.F(this);
+			
 		}*/
 
 		#region Windows Form Designer generated code
@@ -791,7 +791,7 @@ namespace OpenDental{
 			else if(!Userods.CanUserSignNote()) {
 				signatureBoxWrapper.Enabled=false;
 				labelPermAlert.Visible=true;
-				labelPermAlert.Text=Lans.g(this,"Notes can only be signed by providers.");
+				labelPermAlert.Text="Notes can only be signed by providers.";
 			}
 			_listPatFieldDefs=PatFieldDefs.GetDeepCopy(true);
 			FillPatientData();
@@ -915,10 +915,10 @@ namespace OpenDental{
 							break;
 						case "Stat":
 							if(ProcMultiVisits.IsProcInProcess(ProcList[i].ProcNum)) {
-								row.Cells.Add(Lan.G("enumProcStat",ProcStatExt.InProcess));
+								row.Cells.Add(ProcStatExt.InProcess);
 							}
 							else {
-								row.Cells.Add(Lan.G("enumProcStat",ProcList[i].ProcStatus.ToString()));
+								row.Cells.Add(ProcList[i].ProcStatus.ToString());
 							}
 							break;
 						case "Prov":
@@ -1036,15 +1036,15 @@ namespace OpenDental{
 			gridPlanned.BeginUpdate();
 			gridPlanned.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G("TablePlannedAppts","#"),15,HorizontalAlignment.Center);
+			col=new GridColumn("#",15,HorizontalAlignment.Center);
 			gridPlanned.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TablePlannedAppts","Min"),25);
+			col=new GridColumn("Min",25);
 			gridPlanned.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TablePlannedAppts","Procedures"),160);
+			col=new GridColumn("Procedures",160);
 			gridPlanned.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TablePlannedAppts","Note"),115);
+			col=new GridColumn("Note",115);
 			gridPlanned.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TablePlannedAppts","SchedBy"),50);
+			col=new GridColumn("SchedBy",50);
 			gridPlanned.ListGridColumns.Add(col);
 			gridPlanned.ListGridRows.Clear();
 			GridRow row;
@@ -1104,7 +1104,7 @@ namespace OpenDental{
 
 		private void butNew_Click(object sender,EventArgs e) {
 			/*if(ApptPlanned.Visible){
-				if(MessageBox.Show(Lan.g(this,"Replace existing planned appointment?")
+				if(MessageBox.Show("Replace existing planned appointment?"
 					,"",MessageBoxButtons.OKCancel)!=DialogResult.OK)
 					return;
 				//Procedures.UnattachProcsInPlannedAppt(ApptPlanned.Info.MyApt.AptNum);
@@ -1281,7 +1281,7 @@ namespace OpenDental{
 				}
 			}
 			else {
-				MessageBox.Show(Lan.G(this,"No Auto Note available to edit."));
+				MessageBox.Show("No Auto Note available to edit.");
 			}
 		}
 
@@ -1326,7 +1326,7 @@ namespace OpenDental{
 				bool canUserSignNote=Userods.CanUserSignNote(_curUser);//only show if user can sign
 				signatureBoxWrapper.Enabled=canUserSignNote;
 				if(!labelPermAlert.Visible && !canUserSignNote) {
-					labelPermAlert.Text=Lans.g(this,"Notes can only be signed by providers.");
+					labelPermAlert.Text="Notes can only be signed by providers.";
 					labelPermAlert.Visible=true;
 				}
 				signatureBoxWrapper.ClearSignature(); //clear sig
@@ -1430,7 +1430,7 @@ namespace OpenDental{
 				return;
 			}
 			//Log entry does not show procstatus because group notes don't technically have a status, always EC.
-			SecurityLogs.MakeLogEntry(Permissions.ProcDelete,PatCur.PatNum,Lan.G(this,"Invalidated: ")+
+			SecurityLogs.MakeLogEntry(Permissions.ProcDelete,PatCur.PatNum,"Invalidated: "+
 				ProcedureCodes.GetStringProcCode(GroupCur.CodeNum).ToString()+", "+GroupCur.ProcDate.ToShortDateString());
 			DialogResult=DialogResult.OK;
 		}
@@ -1520,7 +1520,7 @@ namespace OpenDental{
 				SaveSignature();
 			}
 			catch(Exception ex){
-				MessageBox.Show(Lan.G(this,"Error saving signature.")+"\r\n"+ex.Message);
+				MessageBox.Show("Error saving signature."+"\r\n"+ex.Message);
 			}
 			Procedures.Update(GroupCur,GroupOld);
 			for(int i=0;i<ProcList.Count;i++){
@@ -1546,7 +1546,7 @@ namespace OpenDental{
 				Procedures.Delete(GroupCur.ProcNum);
 			}
 			catch(Exception ex){
-				MessageBox.Show(ex.Message+"\r\n"+Lan.G(this,"Please call support."));//GroupNotes should never fail deletion.
+				MessageBox.Show(ex.Message+"\r\n"+"Please call support.");//GroupNotes should never fail deletion.
 				return;
 			}
 			for(int i=0;i<GroupItemList.Count;i++){

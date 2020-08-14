@@ -25,7 +25,7 @@ namespace OpenDental {
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormBackup_Load(object sender, System.EventArgs e) {
@@ -204,8 +204,8 @@ namespace OpenDental {
 				return;
 			}
 			if(_errorMessage=="") {
-				SecurityLogs.MakeLogEntry(Permissions.Backup,0,Lan.G(this,"Database backup created at ")+textBackupToPath.Text);
-				MessageBox.Show(Lan.G(this,"Backup complete."));
+				SecurityLogs.MakeLogEntry(Permissions.Backup,0,"Database backup created at "+textBackupToPath.Text);
+				MessageBox.Show("Backup complete.");
 			}
 			else {//Backup failed for some reason.
 				MessageBox.Show(_errorMessage);
@@ -217,7 +217,7 @@ namespace OpenDental {
 		private void InstanceMethodBackup(){
 			curVal=0;
 			Invoke(new PassProgressDelegate(PassProgressToDialog),new object [] { curVal,
-				Lan.G(this,"Preparing to copy database"),//this happens very fast and probably won't be noticed.
+				"Preparing to copy database",//this happens very fast and probably won't be noticed.
 				100,"" });//max of 100 keeps dlg from closing
 			string dbName=MiscData.GetCurrentDatabase();
 			ulong driveFreeSpace=0;
@@ -226,7 +226,7 @@ namespace OpenDental {
 			//If the free space cannot be determined the backup will be attempted anyway (old behavior).
 			if(ODFileUtils.GetDiskFreeSpace(textBackupToPath.Text,out driveFreeSpace)) {
 				if((ulong)dbSize*1024*1024>=driveFreeSpace) {//dbSize is in megabytes, cast to ulong to compare. It will never be negative so this is safe.
-					Invoke(new ErrorMessageDelegate(SetErrorMessage),new object[] { Lan.G(this,"Not enough free disk space available on the destination drive to backup the database.") });
+					Invoke(new ErrorMessageDelegate(SetErrorMessage),new object[] { "Not enough free disk space available on the destination drive to backup the database." });
 					//We now want to automatically close FormProgress.  This is done by clearing out the variables.
 					Invoke(new PassProgressDelegate(PassProgressToDialog),new object[] { 0,"",0,"" });
 					return;
@@ -267,14 +267,14 @@ namespace OpenDental {
 					curVal+=(double)files[i].Length/(double)1024/(double)1024;
 					if(curVal<dbSize){//this avoids setting progress bar to max, which would close the dialog.
 						Invoke(new PassProgressDelegate(PassProgressToDialog),new object [] { curVal,
-							Lan.G(this,"Database: ?currentVal MB of ?maxVal MB copied"),
+							"Database: ?currentVal MB of ?maxVal MB copied",
 							dbSize,""});
 					}
 				}
 			}
 			catch{//for instance, if abort.
 				//If the user aborted, FormP will return DialogResult.Cancel which will not cause this error text to be displayed to the user.  See butBackup_Click for more info.
-				Invoke(new ErrorMessageDelegate(SetErrorMessage),new object[] { Lan.G(this,"Backup failed.") });
+				Invoke(new ErrorMessageDelegate(SetErrorMessage),new object[] { "Backup failed." });
 				//We now want to automatically close FormProgress.  This is done by clearing out the variables.
 				Invoke(new PassProgressDelegate(PassProgressToDialog),new object[] { 0,"",0,"" });
 				return;
@@ -285,7 +285,7 @@ namespace OpenDental {
 					string atozFull=ODFileUtils.RemoveTrailingSeparators(OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
 					string atozDir=atozFull.Substring(atozFull.LastIndexOf(Path.DirectorySeparatorChar)+1);//OpenDentalData
 					Invoke(new PassProgressDelegate(PassProgressToDialog),new object[] { 0,
-					Lan.G(this,"Calculating size of files in A to Z folder."),
+					"Calculating size of files in A to Z folder.",
 					100,"" });//max of 100 keeps dlg from closing
 					long atozSize=GetFileSizes(ODFileUtils.CombinePaths(atozFull,""),
 						ODFileUtils.CombinePaths(new string[] { textBackupToPath.Text,atozDir,"" }))/1024; 
@@ -295,9 +295,9 @@ namespace OpenDental {
 					if(ODFileUtils.GetDiskFreeSpace(textBackupToPath.Text,out driveFreeSpace)) {
 						if((ulong)(atozSize*1024*1024)>=driveFreeSpace) {//atozSize is in megabytes, cast to ulong in order to compare.  It will never be negative so it's safe.
 							//Not enough free space to perform the backup.
-							throw new ApplicationException(Lan.G(this,"Backing up A to Z images folder failed.  Not enough free disk space available on the destination drive.")
-								+"\r\n"+Lan.G(this,"AtoZ folder size:")+" "+atozSize*1024*1024+"B\r\n"
-								+Lan.G(this,"Destination available space:")+" "+driveFreeSpace+"B");
+							throw new ApplicationException("Backing up A to Z images folder failed.  Not enough free disk space available on the destination drive."
+								+"\r\n"+"AtoZ folder size:"+" "+atozSize*1024*1024+"B\r\n"
+								+"Destination available space:"+" "+driveFreeSpace+"B");
 						}
 					}
 					if(!Directory.Exists(ODFileUtils.CombinePaths(textBackupToPath.Text,atozDir))) {// D:\OpenDentalData
@@ -313,7 +313,7 @@ namespace OpenDental {
 				Invoke(new ErrorMessageDelegate(SetErrorMessage),new object[] { ex.Message }); 
 			}
 			catch {
-				Invoke(new ErrorMessageDelegate(SetErrorMessage),new object[] { Lan.G(this,"Backing up A to Z images folder failed.  User might not have enough permissions or a file might be in use.") });
+				Invoke(new ErrorMessageDelegate(SetErrorMessage),new object[] { "Backing up A to Z images folder failed.  User might not have enough permissions or a file might be in use." });
 			}
 			//force dialog to close even if no files copied or calculation was slightly off.
 			Invoke(new PassProgressDelegate(PassProgressToDialog),new object[] { 0,"",0,"" });
@@ -327,7 +327,7 @@ namespace OpenDental {
 			atozFull=atozFull.Substring(0,atozFull.Length-1);// C:\OpenDentalData
 			string atozDir=atozFull.Substring(atozFull.LastIndexOf(Path.DirectorySeparatorChar)+1);// OpenDentalData
 			Invoke(new PassProgressDelegate(PassProgressToDialog),new object [] { 0,
-				Lan.G(this,"Database restored.\r\nCalculating size of files in A to Z folder."),
+				"Database restored.\r\nCalculating size of files in A to Z folder.",
 				100,"" });//max of 100 keeps dlg from closing
 			long atozSize=GetFileSizes(ODFileUtils.CombinePaths(new string[] {textBackupRestoreFromPath.Text,atozDir,""}),
 				ODFileUtils.CombinePaths(atozFull,""))/1024;// C:\OpenDentalData\
@@ -424,7 +424,7 @@ namespace OpenDental {
 				curVal+=(double)files[i].Length/1048576.0; //Number of megabytes.
 				if(curVal<maxSize) {//this avoids setting progress bar to max, which would close the dialog.
 					Invoke(new PassProgressDelegate(PassProgressToDialog),new object[] { curVal,
-							Lan.G(this,"A to Z folder: ?currentVal MB of ?maxVal MB copied"),
+							"A to Z folder: ?currentVal MB of ?maxVal MB copied",
 							maxSize,""});
 				}
 			}
@@ -432,16 +432,16 @@ namespace OpenDental {
 
 		private void butRestore_Click(object sender, System.EventArgs e) {			
 			if(textBackupRestoreFromPath.Text!="" && !textBackupRestoreFromPath.Text.EndsWith(""+Path.DirectorySeparatorChar)){
-				MessageBox.Show(Lan.G(this,"Paths must end with ")+Path.DirectorySeparatorChar+".");
+				MessageBox.Show("Paths must end with "+Path.DirectorySeparatorChar+".");
 				return;
 			}
 			if(textBackupRestoreToPath.Text!="" && !textBackupRestoreToPath.Text.EndsWith(""+Path.DirectorySeparatorChar)){
-				MessageBox.Show(Lan.G(this,"Paths must end with ")+Path.DirectorySeparatorChar+".");
+				MessageBox.Show("Paths must end with "+Path.DirectorySeparatorChar+".");
 				return;
 			}
 			if(ShouldUseAtoZFolder()) {
 				if(textBackupRestoreAtoZToPath.Text!="" && !textBackupRestoreAtoZToPath.Text.EndsWith(""+Path.DirectorySeparatorChar)){
-					MessageBox.Show(Lan.G(this,"Paths must end with ")+Path.DirectorySeparatorChar+".");
+					MessageBox.Show("Paths must end with "+Path.DirectorySeparatorChar+".");
 					return;
 				}
 			}
@@ -461,11 +461,11 @@ namespace OpenDental {
 				return;
 			}
 			if(!Directory.Exists(ODFileUtils.CombinePaths(textBackupRestoreFromPath.Text,dbName))){// D:\opendental
-				MessageBox.Show(Lan.G(this,"Restore FROM path is invalid.  Unable to find folder named ")+dbName);
+				MessageBox.Show("Restore FROM path is invalid.  Unable to find folder named "+dbName);
 				return;
 			}
 			if(!Directory.Exists(ODFileUtils.CombinePaths(textBackupRestoreToPath.Text,dbName))) {// C:\mysql\data\opendental
-				MessageBox.Show(Lan.G(this,"Restore TO path is invalid.  Unable to find folder named ")+dbName);
+				MessageBox.Show("Restore TO path is invalid.  Unable to find folder named "+dbName);
 				return;
 			}
 			if(ShouldUseAtoZFolder()) {
@@ -484,7 +484,7 @@ namespace OpenDental {
 			}
 			string fromPath=ODFileUtils.CombinePaths(new string[] {textBackupRestoreFromPath.Text,dbName,""});// D:\opendental\
 			DirectoryInfo dirInfo=new DirectoryInfo(fromPath);//does not check to see if dir exists
-			if(MessageBox.Show(Lan.G(this,"Restore from backup created on")+"\r\n"
+			if(MessageBox.Show("Restore from backup created on"+"\r\n"
 				+dirInfo.LastWriteTime.ToString("dddd")+"  "+dirInfo.LastWriteTime.ToString()
 				,"",MessageBoxButtons.OKCancel,MessageBoxIcon.Question)==DialogResult.Cancel) {
 				return;

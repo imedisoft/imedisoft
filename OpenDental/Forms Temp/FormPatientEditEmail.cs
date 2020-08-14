@@ -14,7 +14,7 @@ namespace OpenDental {
 
 		public FormPatientEditEmail(string email) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			PatientEmails=email;
 		}
 

@@ -20,7 +20,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormAutoCode(){
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -160,7 +160,7 @@ namespace OpenDental{
 
 		private void butDelete_Click(object sender,System.EventArgs e) {
 			if(listAutoCodes.SelectedIndex < 0) {
-				MessageBox.Show(Lan.G(this,"You must first select a row"));
+				MessageBox.Show("You must first select a row");
 				return;
 			}
 			AutoCode autoCodeCur=_listAutoCodes[listAutoCodes.SelectedIndex];

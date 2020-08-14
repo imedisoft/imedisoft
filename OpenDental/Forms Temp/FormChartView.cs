@@ -62,7 +62,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -715,11 +715,11 @@ namespace OpenDental{
 		private void FillGrids() {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("FormChartView","FieldName"),110);
+			GridColumn col=new GridColumn("FieldName",110);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormChartView","New Descript"),110);
+			col=new GridColumn("New Descript",110);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormChartView","Width"),60);
+			col=new GridColumn("Width",60);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

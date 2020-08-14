@@ -34,7 +34,7 @@ namespace OpenDental {
 
 		public FormUserPick(bool isMultiSelect=false) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_isMultiSelect=isMultiSelect;
 		}
 
@@ -56,7 +56,7 @@ namespace OpenDental {
 			}
 			if(_isMultiSelect) {
 				listUser.SelectionMode=SelectionMode.MultiExtended;
-				Text=Lans.g(this,"Pick Users");
+				Text="Pick Users";
 			}
 			FillList(ListUserodsFiltered);
 		}

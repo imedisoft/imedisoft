@@ -208,18 +208,18 @@ namespace OpenDental {
 			contextMenu.MenuItems.Add("",onClick);
 			contextMenu.MenuItems.Add("",onClick);
 			contextMenu.MenuItems.Add("-");
-			contextMenu.MenuItems.Add(Lan.G(this,"Add to Dictionary"),onClick);
-			contextMenu.MenuItems.Add(Lan.G(this,"Disable Spell Check"),onClick);
+			contextMenu.MenuItems.Add("Add to Dictionary",onClick);
+			contextMenu.MenuItems.Add("Disable Spell Check",onClick);
 			contextMenu.MenuItems.Add("-");
-			contextMenu.MenuItems.Add(new MenuItem(Lan.G(this,"Insert Date"),onClick,Shortcut.CtrlD));
-			contextMenu.MenuItems.Add(new MenuItem(Lan.G(this,"Insert Quick Note"),onClick,Shortcut.CtrlQ));
-			contextMenu.MenuItems.Add(new MenuItem(Lan.G(this,"Insert Auto Note"),onClick));
+			contextMenu.MenuItems.Add(new MenuItem("Insert Date",onClick,Shortcut.CtrlD));
+			contextMenu.MenuItems.Add(new MenuItem("Insert Quick Note",onClick,Shortcut.CtrlQ));
+			contextMenu.MenuItems.Add(new MenuItem("Insert Auto Note",onClick));
 			contextMenu.MenuItems.Add("-");
-			contextMenu.MenuItems.Add(new MenuItem(Lan.G(this,"Cut"),onClick,Shortcut.CtrlX));
-			contextMenu.MenuItems.Add(new MenuItem(Lan.G(this,"Copy"),onClick,Shortcut.CtrlC));
-			contextMenu.MenuItems.Add(new MenuItem(Lan.G(this,"Paste"),onClick,Shortcut.CtrlV));
-			contextMenu.MenuItems.Add(new MenuItem(Lan.G(this,"Paste Plain Text"),onClick));
-			contextMenu.MenuItems.Add(new MenuItem(Lan.G(this,"Edit Auto Note"),onClick));
+			contextMenu.MenuItems.Add(new MenuItem("Cut",onClick,Shortcut.CtrlX));
+			contextMenu.MenuItems.Add(new MenuItem("Copy",onClick,Shortcut.CtrlC));
+			contextMenu.MenuItems.Add(new MenuItem("Paste",onClick,Shortcut.CtrlV));
+			contextMenu.MenuItems.Add(new MenuItem("Paste Plain Text",onClick));
+			contextMenu.MenuItems.Add(new MenuItem("Edit Auto Note",onClick));
 			base.BackColor=SystemColors.Window;//Needed for OnReadOnlyChanged() to change backcolor when ReadOnly because of an issue with RichTextBox.
 		}
 
@@ -393,7 +393,7 @@ namespace OpenDental {
 			  && IsOnMisspelled(PositionOfClick)) {//clicked on or near a misspelled word AND spell check is enabled
 				List<string> suggestions=SpellSuggest();
 				if(suggestions.Count==0) {//no suggestions
-					contextMenu.MenuItems[0].Text=Lan.G(this,"No Spelling Suggestions");
+					contextMenu.MenuItems[0].Text="No Spelling Suggestions";
 					contextMenu.MenuItems[0].Visible=true;
 					contextMenu.MenuItems[0].Enabled=false;//suggestion 1 set to "No Spelling Suggestions"
 					contextMenu.MenuItems[1].Visible=false;//suggestion 2
@@ -479,7 +479,7 @@ namespace OpenDental {
 					Process.Start(folderPath);
 				}
 				else {
-					MessageBox.Show(Lans.g("ODtextBox","Failed to open file location. Please make sure file path is valid."));
+					MessageBox.Show("Failed to open file location. Please make sure file path is valid.");
 				}
 			}
 			catch(Exception e) {

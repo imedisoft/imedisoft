@@ -35,7 +35,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -159,7 +159,7 @@ namespace OpenDental{
 
 		private void FormSites_Load(object sender, System.EventArgs e) {
 			if(IsSelectionMode){
-				butClose.Text=Lan.G(this,"Cancel");
+				butClose.Text="Cancel";
 				if(!Security.IsAuthorized(Permissions.Setup,true)){
 					butAdd.Visible=false;
 				}
@@ -184,9 +184,9 @@ namespace OpenDental{
 			_listSites=Sites.GetDeepCopy();
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableSites","Description"),220));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableSites","PlaceOfService"),142));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableSites","Note"),90){ IsWidthDynamic=true });
+			gridMain.ListGridColumns.Add(new GridColumn("Description",220));
+			gridMain.ListGridColumns.Add(new GridColumn("PlaceOfService",142));
+			gridMain.ListGridColumns.Add(new GridColumn("Note",90){ IsWidthDynamic=true });
 			gridMain.ListGridRows.Clear();
 			GridRow row;
 			foreach(Site site in _listSites) {

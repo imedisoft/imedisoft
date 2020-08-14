@@ -87,7 +87,7 @@ namespace OpenDentBusiness{
 				row["OfficeSequenceNumber"]=table.Rows[i]["OfficeSequenceNumber"].ToString();
 				row["CarrierTransCounter"]=table.Rows[i]["CarrierTransCounter"].ToString();
 				row["Etype"]=table.Rows[i]["Etype"].ToString();
-				etype=Lans.g("enumEtransType",((EtransType)PIn.Long(table.Rows[i]["Etype"].ToString())).ToString());
+				etype=((EtransType)PIn.Long(table.Rows[i]["Etype"].ToString())).ToString();
 				if(etype.EndsWith("_CA")){
 					etype=etype.Substring(0,etype.Length-3);
 				}
@@ -95,13 +95,13 @@ namespace OpenDentBusiness{
 				row["ClaimNum"]=table.Rows[i]["ClaimNum"].ToString();
 				row["EtransNum"]=table.Rows[i]["EtransNum"].ToString();
 				if(table.Rows[i]["AckCode"].ToString()=="A"){
-					row["ack"]=Lans.g("Etrans","Accepted");
+					row["ack"]="Accepted";
 				}
 				else if(table.Rows[i]["AckCode"].ToString()=="R") {
-					row["ack"]=Lans.g("Etrans","Rejected");
+					row["ack"]="Rejected";
 				}
 				else if(table.Rows[i]["AckCode"].ToString()=="Recd") {
-					row["ack"]=Lans.g("Etrans","Received");
+					row["ack"]="Received";
 				}
 				else {
 					row["ack"]="";
@@ -483,8 +483,8 @@ namespace OpenDentBusiness{
 				etrans.CarrierNum2=PIn.Long(table.Rows[0][1].ToString());//might be 0 if no secondary on this claim
 			}
 			else {
-				etrans.Note=Lans.g(nameof(Etrans),"Primry carrier and secondary carrier are unknown due to missing claim.  Invalid ClaimNum.  "
-					+"Claim may have been deleted during sending.");
+				etrans.Note="Primry carrier and secondary carrier are unknown due to missing claim.  Invalid ClaimNum.  "
+					+"Claim may have been deleted during sending.";
 			}
 			etrans.BatchNumber=batchNumber;
 			return etrans;
@@ -643,7 +643,7 @@ namespace OpenDentBusiness{
 							etrans.PatientNameRaw=listUniquePatientNames[0];
 						}
 						else {
-							etrans.PatientNameRaw="("+listUniquePatientNames.Count+" "+Lans.g("Etranss","patients")+")";
+							etrans.PatientNameRaw="("+listUniquePatientNames.Count+" "+"patients"+")";
 						}
 						listEtrans.Add(etrans.Copy());
 						list835s.Add(x835);

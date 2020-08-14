@@ -10,7 +10,7 @@ namespace OpenDental {
 	public partial class FormMonthView:ODForm {
 		public FormMonthView() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormMonthView_Load(object sender,EventArgs e) {

@@ -1051,7 +1051,6 @@
     <Compile Include="Logic\EmailAttachL.cs" />
     <Compile Include="Logic\EtransL.cs" />
     <Compile Include="Logic\FeeL.cs" />
-    <Compile Include="Logic\Lan.cs" />
     <Compile Include="Logic\MarkupL.cs" />
     <Compile Include="Logic\MedicationL.cs" />
     <Compile Include="Logic\PatFieldL.cs" />

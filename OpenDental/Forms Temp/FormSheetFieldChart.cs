@@ -13,7 +13,7 @@ namespace OpenDental {
 
 		public FormSheetFieldChart(SheetDef sheetDef,SheetFieldDef sheetFieldDef,bool isReadOnly): base(sheetDef,sheetFieldDef,isReadOnly) {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormSheetFieldChart_Load(object sender,EventArgs e) {

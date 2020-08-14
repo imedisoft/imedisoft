@@ -54,7 +54,7 @@ namespace OpenDental {
 			//This default menu item does not fire a DateSelected event and handling the DateChanged event specifically for this one control is tricky.
 			//Therefore, simply override the default context menu with a custom "Go to today" menu item that is compatible with the Appts module.
 			Calendar2.ContextMenu=new ContextMenu();
-			Calendar2.ContextMenu.MenuItems.Add(Lan.G(this,"Go to today"),butToday_Click);
+			Calendar2.ContextMenu.MenuItems.Add("Go to today",butToday_Click);
 		}
 		#endregion Constructor
 
@@ -150,7 +150,7 @@ namespace OpenDental {
 				FormOpenDental.S_Contr_PatientSelected(_patCur,true,false);
 			}
 			if(_patCur!=null && _patCur.PatStatus.In(PatientStatus.Archived,PatientStatus.Deceased)) {
-				MsgBox.Show(Lan.G(this,"Appointments cannot be scheduled for ")+_patCur.PatStatus.ToString().ToLower()+Lan.G(this," patients."));
+				MsgBox.Show("Appointments cannot be scheduled for "+_patCur.PatStatus.ToString().ToLower()+" patients.");
 				return;
 			}
 			Appointment appt=null;
@@ -162,8 +162,8 @@ namespace OpenDental {
 				DateTime dateTimeAskedToArrive=DateTime.MinValue;
 				if(_patCur.AskToArriveEarly > 0) {
 					dateTimeAskedToArrive=e.DateT.AddMinutes(-_patCur.AskToArriveEarly);
-					MessageBox.Show(Lan.G(this,"Ask patient to arrive ")+_patCur.AskToArriveEarly
-						+Lan.G(this," minutes early at ")+dateTimeAskedToArrive.ToShortTimeString()+".");
+					MessageBox.Show("Ask patient to arrive "+_patCur.AskToArriveEarly
+						+" minutes early at "+dateTimeAskedToArrive.ToShortTimeString()+".");
 				}
 				appt=Appointments.CreateApptForNewPatient(_patCur,curOp,e.DateT,dateTimeAskedToArrive,null,contrApptPanel.ListSchedules);
 				//New patient. Set to prospective if operatory is set to set prospective.
@@ -387,7 +387,7 @@ namespace OpenDental {
 			MenuItem[] arrMenuItems=menuBlockout.MenuItems.Find(MenuItemNames.TextAsapList,false);
 			if(arrMenuItems.Length > 0) {
 				arrMenuItems[0].Visible=isVisible;
-				arrMenuItems[0].Text=Lans.g(this,itemText);
+				arrMenuItems[0].Text=itemText;
 			}
 		}
 
@@ -455,7 +455,7 @@ namespace OpenDental {
 			menuApt.MenuItems.RemoveByKey(MenuItemNames.OrthoChart);
 			MenuItem menuItem;
 			if(Prefs.GetBool(PrefName.ApptModuleShowOrthoChartItem)) {
-				menuItem=menuApt.MenuItems.Add(Lan.G(this,"Go To ")+OrthoChartTabs.GetFirst(true).TabName,new EventHandler(menuApt_Click));
+				menuItem=menuApt.MenuItems.Add("Go To "+OrthoChartTabs.GetFirst(true).TabName,new EventHandler(menuApt_Click));
 				menuItem.Name=MenuItemNames.OrthoChart;
 			}
 			//Phone numbers
@@ -469,32 +469,32 @@ namespace OpenDental {
 					menuItem.Name=MenuItemNames.PhoneDiv;
 				}
 				if(!String.IsNullOrEmpty(_patCur.HmPhone)) {
-					menuItem=menuApt.MenuItems.Add(Lan.G(this,"Call Home Phone ")+_patCur.HmPhone,new EventHandler(menuApt_Click));
+					menuItem=menuApt.MenuItems.Add("Call Home Phone "+_patCur.HmPhone,new EventHandler(menuApt_Click));
 					menuItem.Name=MenuItemNames.HomePhone;
 				}
 				if(!String.IsNullOrEmpty(_patCur.WkPhone)) {
-					menuItem=menuApt.MenuItems.Add(Lan.G(this,"Call Work Phone ")+_patCur.WkPhone,new EventHandler(menuApt_Click));
+					menuItem=menuApt.MenuItems.Add("Call Work Phone "+_patCur.WkPhone,new EventHandler(menuApt_Click));
 					menuItem.Name=MenuItemNames.WorkPhone;
 				}
 				if(!String.IsNullOrEmpty(_patCur.WirelessPhone)) {
-					menuItem=menuApt.MenuItems.Add(Lan.G(this,"Call Wireless Phone ")+_patCur.WirelessPhone,new EventHandler(menuApt_Click));
+					menuItem=menuApt.MenuItems.Add("Call Wireless Phone "+_patCur.WirelessPhone,new EventHandler(menuApt_Click));
 					menuItem.Name=MenuItemNames.WirelessPhone;
 				}
 			}
 			//Texting
 			menuItem=menuApt.MenuItems.Add("-");
 			menuItem.Name=MenuItemNames.TextDiv;
-			menuItem=menuApt.MenuItems.Add(Lan.G(this,"Send Text"),menuApt_Click);
+			menuItem=menuApt.MenuItems.Add("Send Text",menuApt_Click);
 			menuItem.Name=MenuItemNames.SendText;
 			if(!SmsPhones.IsIntegratedTextingEnabled() && !Programs.IsEnabled(ProgramName.CallFire)) {
 				menuItem.Enabled=false;
 			}
-			menuItem=menuApt.MenuItems.Add(Lan.G(this,"Send Confirmation Text"),menuApt_Click);
+			menuItem=menuApt.MenuItems.Add("Send Confirmation Text",menuApt_Click);
 			menuItem.Name=MenuItemNames.SendConfirmationText;
 			if(!SmsPhones.IsIntegratedTextingEnabled() && !Programs.IsEnabled(ProgramName.CallFire)) {
 				menuItem.Enabled=false;
 			}
-			menuItem=menuApt.MenuItems.Add(Lan.G(this,MenuItemNames.SendComeInText),menuApt_Click);
+			menuItem=menuApt.MenuItems.Add(MenuItemNames.SendComeInText,menuApt_Click);
 			menuItem.Name=MenuItemNames.SendComeInText;
 			if(!_arrivals.HasComeInMsg(contrApptPanel.SelectedAptNum) || (!SmsPhones.IsIntegratedTextingEnabled() && !Programs.IsEnabled(ProgramName.CallFire))) {
 				menuItem.Enabled=false;
@@ -712,7 +712,7 @@ namespace OpenDental {
 			contrApptPanel.PrintingPageColumn=0;
 			DateTime dateTimePrintStart=formApptPrintSetup.ApptPrintStartTime;//to avoid marshal by reference error in next line
 			PrinterL.TryPrintOrDebugClassicPreview(contrApptPanel.PrintPage,
-				Lan.G(this,"Daily appointment view for ")+dateTimePrintStart.ToShortDateString()+Lan.G(this," printed"),
+				"Daily appointment view for "+dateTimePrintStart.ToShortDateString()+" printed",
 				totalPages:0,
 				printSit:PrintSituation.Appointments,
 				isForcedPreview:contrApptPanel.IsPrintPreview
@@ -947,12 +947,12 @@ namespace OpenDental {
 					return;
 				}
 				if(appt.Note != "") {
-					if(MessageBox.Show(Commlogs.GetDeleteApptCommlogMessage(appt.Note,appt.AptStatus),Lan.G(this,"Question..."),MessageBoxButtons.YesNo) == DialogResult.Yes) {
+					if(MessageBox.Show(Commlogs.GetDeleteApptCommlogMessage(appt.Note,appt.AptStatus),"Question...",MessageBoxButtons.YesNo) == DialogResult.Yes) {
 						Commlog CommlogCur = new Commlog();
 						CommlogCur.PatNum = appt.PatNum;
 						CommlogCur.CommDateTime = DateTime.Now;
 						CommlogCur.CommType =Commlogs.GetTypeAuto(CommItemTypeAuto.APPT);
-						CommlogCur.Note = Lan.G(this,"Deleted Patient NOTE from schedule, saved copy: ");
+						CommlogCur.Note = "Deleted Patient NOTE from schedule, saved copy: ";
 						CommlogCur.Note += appt.Note;
 						CommlogCur.UserNum=Security.CurrentUser.Id;
 						//there is no dialog here because it is just a simple entry
@@ -960,7 +960,7 @@ namespace OpenDental {
 					}
 				}
 				SecurityLogs.MakeLogEntry(Permissions.AppointmentEdit,_patCur.PatNum,
-					dataRow["procs"].ToString()+", "+dataRow["AptDateTime"].ToString()+", "+Lan.G(this,"NOTE Deleted"),
+					dataRow["procs"].ToString()+", "+dataRow["AptDateTime"].ToString()+", "+"NOTE Deleted",
 					appt.AptNum,appt.DateTStamp);
 			}
 			else {
@@ -968,7 +968,7 @@ namespace OpenDental {
 					return;
 				}
 				if(appt.Note != "") {
-					if(MessageBox.Show(Commlogs.GetDeleteApptCommlogMessage(appt.Note,appt.AptStatus),Lan.G(this,"Question..."),MessageBoxButtons.YesNo) == DialogResult.Yes) {
+					if(MessageBox.Show(Commlogs.GetDeleteApptCommlogMessage(appt.Note,appt.AptStatus),"Question...",MessageBoxButtons.YesNo) == DialogResult.Yes) {
 						Commlog CommlogCur = new Commlog();
 						CommlogCur.PatNum = appt.PatNum;
 						CommlogCur.CommDateTime = DateTime.Now;
@@ -985,12 +985,12 @@ namespace OpenDental {
 				}
 				if(appt.AptStatus!=ApptStatus.Complete) {// seperate log entry for editing completed appointments.
 					SecurityLogs.MakeLogEntry(Permissions.AppointmentEdit,_patCur.PatNum,
-						dataRow["procs"].ToString()+", "+dataRow["AptDateTime"].ToString()+", "+Lan.G(this,"Deleted"),
+						dataRow["procs"].ToString()+", "+dataRow["AptDateTime"].ToString()+", "+"Deleted",
 						appt.AptNum,appt.DateTStamp);
 				}
 				else {
 					SecurityLogs.MakeLogEntry(Permissions.AppointmentCompleteEdit,_patCur.PatNum,
-						dataRow["procs"].ToString()+", "+dataRow["AptDateTime"].ToString()+", "+Lan.G(this,"Deleted"),
+						dataRow["procs"].ToString()+", "+dataRow["AptDateTime"].ToString()+", "+"Deleted",
 						appt.AptNum,appt.DateTStamp);
 				}
 				//If there is an existing HL7 def enabled, send a SIU message if there is an outbound SIU message defined
@@ -1085,9 +1085,9 @@ namespace OpenDental {
 			Appointments.SetConfirmed(aptOld,newStatus);//Appointments S-Class handles Signalods
 			if(newStatus!=oldStatus) {
 				//Log confirmation status changes.
-				SecurityLogs.MakeLogEntry(Permissions.ApptConfirmStatusEdit,aptOld.PatNum,Lan.G(this,"Appointment confirmation status changed from")+" "
-					+Defs.GetName(DefCat.ApptConfirmed,oldStatus)+" "+Lan.G(this,"to")+" "+Defs.GetName(DefCat.ApptConfirmed,newStatus)
-					+" "+Lans.g(this,"from the appointment module")+".",contrApptPanel.SelectedAptNum,datePrevious);
+				SecurityLogs.MakeLogEntry(Permissions.ApptConfirmStatusEdit,aptOld.PatNum,"Appointment confirmation status changed from"+" "
+					+Defs.GetName(DefCat.ApptConfirmed,oldStatus)+" "+"to"+" "+Defs.GetName(DefCat.ApptConfirmed,newStatus)
+					+" "+"from the appointment module"+".",contrApptPanel.SelectedAptNum,datePrevious);
 			}
 			RefreshPeriod();
 			AppointmentL.ShowKioskManagerIfNeeded(aptOld,newStatus);
@@ -1137,7 +1137,7 @@ namespace OpenDental {
 				FormOpenDental.S_Contr_PatientSelected(_patCur,true,false);
 			}
 			if(_patCur!=null && _patCur.PatStatus.In(PatientStatus.Archived,PatientStatus.Deceased)) {
-				MsgBox.Show(Lans.g(this,"Appointments cannot be scheduled for")+" "+_patCur.PatStatus.ToString().ToLower()+" "+Lans.g(this,"patients."));
+				MsgBox.Show("Appointments cannot be scheduled for"+" "+_patCur.PatStatus.ToString().ToLower()+" "+"patients.");
 				return;
 			}
 			if(Appointments.HasOutstandingAppts(_patCur.PatNum)) {
@@ -1166,7 +1166,7 @@ namespace OpenDental {
 				FormOpenDental.S_Contr_PatientSelected(_patCur,true,false);
 			}
 			if(_patCur!=null && _patCur.PatStatus.In(PatientStatus.Archived,PatientStatus.Deceased)) {
-				MsgBox.Show(Lans.g(this,"Appointments cannot be scheduled for")+" "+_patCur.PatStatus.ToString().ToLower()+" "+Lans.g(this,"patients."));
+				MsgBox.Show("Appointments cannot be scheduled for"+" "+_patCur.PatStatus.ToString().ToLower()+" "+"patients.");
 				return;
 			}
 			if(Appointments.HasOutstandingAppts(_patCur.PatNum,true)) {
@@ -1326,8 +1326,8 @@ namespace OpenDental {
 					#region Update Appt's DateTimeAskedToArrive
 					if(_patCur.AskToArriveEarly>0) {
 						apptCur.DateTimeAskedToArrive=apptCur.AptDateTime.AddMinutes(-_patCur.AskToArriveEarly);
-						MessageBox.Show(Lan.G(this,"Ask patient to arrive")+" "+_patCur.AskToArriveEarly
-							+" "+Lan.G(this,"minutes early at")+" "+apptCur.DateTimeAskedToArrive.ToShortTimeString()+".");
+						MessageBox.Show("Ask patient to arrive"+" "+_patCur.AskToArriveEarly
+							+" "+"minutes early at"+" "+apptCur.DateTimeAskedToArrive.ToShortTimeString()+".");
 					}
 					else {
 						apptCur.DateTimeAskedToArrive=DateTime.MinValue;
@@ -1418,13 +1418,13 @@ namespace OpenDental {
 						frequencyConflicts=Procedures.CheckFrequency(procsForSingleApt,apptCur.PatNum,apptCur.AptDateTime);
 					}
 					catch(Exception ex) {
-						MessageBox.Show(Lan.G(this,"There was an error checking frequencies.  Disable the Insurance Frequency Checking feature or try to fix the following error:")
+						MessageBox.Show("There was an error checking frequencies.  Disable the Insurance Frequency Checking feature or try to fix the following error:"
 							+"\r\n"+ex.Message);
 						return;
 					}
 					if(frequencyConflicts!="" && MessageBox.Show(
-						Lan.G(this,"Scheduling this appointment for this date will cause frequency conflicts for the following procedures")
-							+":\r\n"+frequencyConflicts+"\r\n"+Lan.G(this,"Do you want to continue?"),"",MessageBoxButtons.YesNo)==DialogResult.No) 
+						"Scheduling this appointment for this date will cause frequency conflicts for the following procedures"
+							+":\r\n"+frequencyConflicts+"\r\n"+"Do you want to continue?","",MessageBoxButtons.YesNo)==DialogResult.No) 
 					{
 						return;
 					}
@@ -1538,9 +1538,9 @@ namespace OpenDental {
 						if(apptCur.Confirmed!=apptOld.Confirmed) {
 							//Log confirmation status changes.
 							SecurityLogs.MakeLogEntry(Permissions.ApptConfirmStatusEdit,apptCur.PatNum,
-								Lan.G(this,"Appointment confirmation status automatically changed from ")
+								"Appointment confirmation status automatically changed from "
 								+Defs.GetName(DefCat.ApptConfirmed,apptOld.Confirmed)+" to "+Defs.GetName(DefCat.ApptConfirmed,apptCur.Confirmed)
-								+Lan.G(this," from the appointment module")+".",apptCur.AptNum,apptOld.DateTStamp);
+								+" from the appointment module"+".",apptCur.AptNum,apptOld.DateTStamp);
 						}
 						//If there is an existing HL7 def enabled, send a SIU message if there is an outbound SIU message defined
 						if(HL7Defs.IsExistingHL7Enabled()) {
@@ -1823,18 +1823,18 @@ namespace OpenDental {
 			BrokenApptProcedure brokenApptProcs=(BrokenApptProcedure)PrefC.GetInt(PrefName.BrokenApptProcedure);
 			if(brokenApptProcs.In(BrokenApptProcedure.Missed,BrokenApptProcedure.Both)) {
 				if(dontAllowUnscheduled) {
-					item=menuItemBreakAppt.MenuItems.Add(Lan.G(this,"Missed - Delete Appointment"));
+					item=menuItemBreakAppt.MenuItems.Add("Missed - Delete Appointment");
 					item.Click+=new EventHandler(menuBreakDelete_Click);
 				}
 				else {
-					item=menuItemBreakAppt.MenuItems.Add(Lan.G(this,"Missed - Send to Unscheduled List"));
+					item=menuItemBreakAppt.MenuItems.Add("Missed - Send to Unscheduled List");
 					item.Click+=new EventHandler(menuBreakToUnsched_Click);
 				}
 				item.Tag=ProcedureCodes.GetProcCode("D9986");
-				item=menuItemBreakAppt.MenuItems.Add(Lan.G(this,"Missed - Copy To Pinboard"));
+				item=menuItemBreakAppt.MenuItems.Add("Missed - Copy To Pinboard");
 				item.Click+=new EventHandler(menuBreakToPin_Click);
 				item.Tag=ProcedureCodes.GetProcCode("D9986");
-				item=menuItemBreakAppt.MenuItems.Add(Lan.G(this,"Missed - Leave on Appt Book"));
+				item=menuItemBreakAppt.MenuItems.Add("Missed - Leave on Appt Book");
 				item.Click+=new EventHandler(menuBreak_Click);
 				item.Tag=ProcedureCodes.GetProcCode("D9986");
 			}
@@ -1843,18 +1843,18 @@ namespace OpenDental {
 					menuItemBreakAppt.MenuItems.Add("-");//Horizontal bar.
 				}
 				if(dontAllowUnscheduled) {
-					item=menuItemBreakAppt.MenuItems.Add(Lan.G(this,"Cancelled - Delete Appointment"));
+					item=menuItemBreakAppt.MenuItems.Add("Cancelled - Delete Appointment");
 					item.Click+=new EventHandler(menuBreakDelete_Click);
 				}		
 				else {
-					item=menuItemBreakAppt.MenuItems.Add(Lan.G(this,"Cancelled - Send to Unscheduled List"));
+					item=menuItemBreakAppt.MenuItems.Add("Cancelled - Send to Unscheduled List");
 					item.Click+=new EventHandler(menuBreakToUnsched_Click);
 				}
 				item.Tag=ProcedureCodes.GetProcCode("D9987");
-				item=menuItemBreakAppt.MenuItems.Add(Lan.G(this,"Cancelled - Copy To Pinboard"));
+				item=menuItemBreakAppt.MenuItems.Add("Cancelled - Copy To Pinboard");
 				item.Click+=new EventHandler(menuBreakToPin_Click);
 				item.Tag=ProcedureCodes.GetProcCode("D9987");
-				item=menuItemBreakAppt.MenuItems.Add(Lan.G(this,"Cancelled - Leave on Appt Book"));
+				item=menuItemBreakAppt.MenuItems.Add("Cancelled - Leave on Appt Book");
 				item.Click+=new EventHandler(menuBreak_Click);
 				item.Tag=ProcedureCodes.GetProcCode("D9987");
 			}
@@ -2481,76 +2481,76 @@ namespace OpenDental {
 			FillViews();
 			MenuItem menuItem;
 			menuApt.MenuItems.Clear();
-			menuItem=menuApt.MenuItems.Add(Lan.G(this,"Copy to Pinboard"),new EventHandler(menuApt_Click));
+			menuItem=menuApt.MenuItems.Add("Copy to Pinboard",new EventHandler(menuApt_Click));
 			menuItem.Name=MenuItemNames.CopyToPinboard;
 			menuApt.MenuItems.Add("-");
-			menuItem=menuApt.MenuItems.Add(Lan.G(this,"Send to Unscheduled List"),new EventHandler(menuApt_Click));
+			menuItem=menuApt.MenuItems.Add("Send to Unscheduled List",new EventHandler(menuApt_Click));
 			menuItem.Name=MenuItemNames.SendToUnscheduledList;
-			menuItemBreakAppt=menuApt.MenuItems.Add(Lan.G(this,"Break Appointment"),new EventHandler(menuApt_Click));
+			menuItemBreakAppt=menuApt.MenuItems.Add("Break Appointment",new EventHandler(menuApt_Click));
 			menuItemBreakAppt.Name=MenuItemNames.BreakAppointment;
-			menuItem=menuApt.MenuItems.Add(Lan.G(this,"Mark as ASAP"),new EventHandler(menuApt_Click));
+			menuItem=menuApt.MenuItems.Add("Mark as ASAP",new EventHandler(menuApt_Click));
 			menuItem.Name=MenuItemNames.MarkAsAsap;
-			menuItem=menuApt.MenuItems.Add(Lan.G(this,"Set Complete"),new EventHandler(menuApt_Click));
+			menuItem=menuApt.MenuItems.Add("Set Complete",new EventHandler(menuApt_Click));
 			menuItem.Name=MenuItemNames.SetComplete;
-			menuItem=menuApt.MenuItems.Add(Lan.G(this,"Delete"),new EventHandler(menuApt_Click));
+			menuItem=menuApt.MenuItems.Add("Delete",new EventHandler(menuApt_Click));
 			menuItem.Name=MenuItemNames.Delete;
-			menuItem=menuApt.MenuItems.Add(Lan.G(this,"Other Appointments"),new EventHandler(menuApt_Click));
+			menuItem=menuApt.MenuItems.Add("Other Appointments",new EventHandler(menuApt_Click));
 			menuItem.Name=MenuItemNames.OtherAppointments;
 			menuApt.MenuItems.Add("-");
-			menuItem=menuApt.MenuItems.Add(Lan.G(this,"Print Label"),new EventHandler(menuApt_Click));
+			menuItem=menuApt.MenuItems.Add("Print Label",new EventHandler(menuApt_Click));
 			menuItem.Name=MenuItemNames.PrintLabel;
-			menuItem=menuApt.MenuItems.Add(Lan.G(this,"Print Card"),new EventHandler(menuApt_Click));
+			menuItem=menuApt.MenuItems.Add("Print Card",new EventHandler(menuApt_Click));
 			menuItem.Name=MenuItemNames.PrintCard;
-			menuItem=menuApt.MenuItems.Add(Lan.G(this,"Print Card for Entire Family"),new EventHandler(menuApt_Click));
+			menuItem=menuApt.MenuItems.Add("Print Card for Entire Family",new EventHandler(menuApt_Click));
 			menuItem.Name=MenuItemNames.PrintCardEntireFamily;
-			menuItem=menuApt.MenuItems.Add(Lan.G(this,"Routing Slip"),new EventHandler(menuApt_Click));
+			menuItem=menuApt.MenuItems.Add("Routing Slip",new EventHandler(menuApt_Click));
 			menuItem.Name=MenuItemNames.RoutingSlip;
 			menuBlockout.MenuItems.Clear();
-			menuItem=menuBlockout.MenuItems.Add(Lan.G(this,"Edit Blockout"),menuBlockEdit_Click);
+			menuItem=menuBlockout.MenuItems.Add("Edit Blockout",menuBlockEdit_Click);
 			menuItem.Name=MenuItemNames.EditBlockout;
-			menuItem=menuBlockout.MenuItems.Add(Lan.G(this,"Cut Blockout"),menuBlockCut_Click);
+			menuItem=menuBlockout.MenuItems.Add("Cut Blockout",menuBlockCut_Click);
 			menuItem.Name=MenuItemNames.CutBlockout;
-			menuItem=menuBlockout.MenuItems.Add(Lan.G(this,"Copy Blockout"),menuBlockCopy_Click);
+			menuItem=menuBlockout.MenuItems.Add("Copy Blockout",menuBlockCopy_Click);
 			menuItem.Name=MenuItemNames.CopyBlockout;
-			menuItem=menuBlockout.MenuItems.Add(Lan.G(this,"Paste Blockout"),menuBlockPaste_Click);
+			menuItem=menuBlockout.MenuItems.Add("Paste Blockout",menuBlockPaste_Click);
 			menuItem.Name=MenuItemNames.PasteBlockout;
-			menuItem=menuBlockout.MenuItems.Add(Lan.G(this,"Delete Blockout"),menuBlockDelete_Click);
+			menuItem=menuBlockout.MenuItems.Add("Delete Blockout",menuBlockDelete_Click);
 			menuItem.Name=MenuItemNames.DeleteBlockout;
-			menuItem=menuBlockout.MenuItems.Add(Lan.G(this,MenuItemNames.DeleteWebSchedAsapBlockout),DeleteWebSchedAsapBlockout_Click);
+			menuItem=menuBlockout.MenuItems.Add(MenuItemNames.DeleteWebSchedAsapBlockout,DeleteWebSchedAsapBlockout_Click);
 			menuItem.Name=MenuItemNames.DeleteWebSchedAsapBlockout;
-			menuItem=menuBlockout.MenuItems.Add(Lan.G(this,"Add Blockout"),menuBlockAdd_Click);
+			menuItem=menuBlockout.MenuItems.Add("Add Blockout",menuBlockAdd_Click);
 			menuItem.Name=MenuItemNames.AddBlockout;
-			menuItem=menuBlockout.MenuItems.Add(Lan.G(this,"Blockout Cut-Copy-Paste"),menuBlockCutCopyPaste_Click);
+			menuItem=menuBlockout.MenuItems.Add("Blockout Cut-Copy-Paste",menuBlockCutCopyPaste_Click);
 			menuItem.Name=MenuItemNames.BlockoutCutCopyPaste;
 			if(!PrefC.HasClinicsEnabled) {//Clear All Blockouts for Day is too aggressive when Clinics are enabled.
-				menuItem=menuBlockout.MenuItems.Add(Lan.G(this,"Clear All Blockouts for Day"),menuBlockClearDay_Click);
+				menuItem=menuBlockout.MenuItems.Add("Clear All Blockouts for Day",menuBlockClearDay_Click);
 				menuItem.Name=MenuItemNames.ClearAllBlockoutsForDay;
 			}
-			menuItem=menuBlockout.MenuItems.Add(Lan.G(this,"Clear All Blockouts for Day, Op only"),menuBlockClearOp_Click);
+			menuItem=menuBlockout.MenuItems.Add("Clear All Blockouts for Day, Op only",menuBlockClearOp_Click);
 			menuItem.Name=MenuItemNames.ClearAllBlockoutsForDayOpOnly;
 			if(PrefC.HasClinicsEnabled) {
-				menuItem=menuBlockout.MenuItems.Add(Lan.G(this,"Clear All Blockouts for Day, Clinic only"),menuBlockClearClinic_Click);
+				menuItem=menuBlockout.MenuItems.Add("Clear All Blockouts for Day, Clinic only",menuBlockClearClinic_Click);
 				menuItem.Name=MenuItemNames.ClearAllBlockoutsForDayClinicOnly;
 			}
-			menuItem=menuBlockout.MenuItems.Add(Lan.G(this,"Edit Blockout Types"),menuBlockTypes_Click);
+			menuItem=menuBlockout.MenuItems.Add("Edit Blockout Types",menuBlockTypes_Click);
 			menuItem.Name=MenuItemNames.EditBlockoutTypes;
 			menuItem=menuBlockout.MenuItems.Add("-");//Designer code to insert a horizontal separator
 			menuItem.Name=MenuItemNames.BlockoutSpacer;
-			menuItem=menuBlockout.MenuItems.Add(Lan.G(this,"Text ASAP List"),menuTextASAPList_Click);
+			menuItem=menuBlockout.MenuItems.Add("Text ASAP List",menuTextASAPList_Click);
 			menuItem.Name=MenuItemNames.TextAsapList;
-			menuItem=menuBlockout.MenuItems.Add(Lan.G(this,MenuItemNames.TextApptsForDayOp),menuTextApptsForDayOp_Click);
+			menuItem=menuBlockout.MenuItems.Add(MenuItemNames.TextApptsForDayOp,menuTextApptsForDayOp_Click);
 			menuItem.Name=MenuItemNames.TextApptsForDayOp;
-			menuItem=menuBlockout.MenuItems.Add(Lan.G(this,MenuItemNames.TextApptsForDayView),menuTextApptsForDayView_Click);
+			menuItem=menuBlockout.MenuItems.Add(MenuItemNames.TextApptsForDayView,menuTextApptsForDayView_Click);
 			menuItem.Name=MenuItemNames.TextApptsForDayView;
-			menuItem=menuBlockout.MenuItems.Add(Lan.G(this,MenuItemNames.TextApptsForDay),menuTextApptsForDay_Click);
+			menuItem=menuBlockout.MenuItems.Add(MenuItemNames.TextApptsForDay,menuTextApptsForDay_Click);
 			menuItem.Name=MenuItemNames.TextApptsForDay;
 			//skippped translation
 			LayoutToolBar();
 			//Appointment action buttons
-			toolTip1.SetToolTip(butUnsched,Lan.G(this,"Send to Unscheduled List"));
-			toolTip1.SetToolTip(butBreak,Lan.G(this,"Break"));
-			toolTip1.SetToolTip(butComplete,Lan.G(this,"Set Complete"));
-			toolTip1.SetToolTip(butDelete,Lan.G(this,"Delete"));
+			toolTip1.SetToolTip(butUnsched,"Send to Unscheduled List");
+			toolTip1.SetToolTip(butBreak,"Break");
+			toolTip1.SetToolTip(butComplete,"Set Complete");
+			toolTip1.SetToolTip(butDelete,"Delete");
 			//toolTip1.SetToolTip(butOther,,"Other Appointments");
 			SetWeeklyView(Prefs.GetBool(PrefName.ApptModuleDefaultToWeek));
 			SendToPinboardEvent.Fired+=HandlePinClicked;
@@ -2560,10 +2560,10 @@ namespace OpenDental {
 		///<summary></summary>
 		public void LayoutToolBar(){
 			toolBarMain.Buttons.Clear();
-			toolBarMain.Buttons.Add(new ODToolBarButton("",2,Lan.G(this,"Appointment Lists"),"Lists"));
-			toolBarMain.Buttons.Add(new ODToolBarButton("",1,Lan.G(this,"Print Appointments"),"Print"));
+			toolBarMain.Buttons.Add(new ODToolBarButton("",2,"Appointment Lists","Lists"));
+			toolBarMain.Buttons.Add(new ODToolBarButton("",1,"Print Appointments","Print"));
 			if(!ProgramProperties.IsAdvertisingDisabled(ProgramName.RapidCall)) {
-				toolBarMain.Buttons.Add(new ODToolBarButton("",3,Lan.G(this,"Rapid Call"),"RapidCall"));
+				toolBarMain.Buttons.Add(new ODToolBarButton("",3,"Rapid Call","RapidCall"));
 			}
 			ProgramL.LoadToolbar(toolBarMain,ToolBarsAvail.ApptModule);
 			toolBarMain.Invalidate();
@@ -2729,7 +2729,7 @@ namespace OpenDental {
 				.Where(x => x.DateStart.Value.Date <= DateTimeOD.Today)
 				.OrderBy(x => x.DateStart)
 				.ToList();
-			tabReminders.Text=Lan.G(this,"Reminders");
+			tabReminders.Text="Reminders";
 			if(listSortedReminderTasks.Count > 0) {
 				tabReminders.Text+="*";
 			}
@@ -2739,7 +2739,7 @@ namespace OpenDental {
 				GridColumn col=new GridColumn("",17);//The status column showing new/viewed in a checkbox.
 				col.ImageList=imageListTasks;
 				gridReminders.ListGridColumns.Add(col);
-				col=new GridColumn(Lan.G("TableTasks","Description"),200);//any width
+				col=new GridColumn("Description",200);//any width
 				gridReminders.ListGridColumns.Add(col);
 			}
 			gridReminders.ListGridRows.Clear();
@@ -2763,7 +2763,7 @@ namespace OpenDental {
 					dateStr+=reminderTask.RepeatDate.Value.ToShortDateString()+" - ";
 				}
 				else if(reminderTask.RepeatInterval==TaskRepeatInterval.Weekly) {
-					dateStr+=Lan.G(this,"Week of")+" "+reminderTask.RepeatDate.Value.ToShortDateString()+" - ";
+					dateStr+="Week of"+" "+reminderTask.RepeatDate.Value.ToShortDateString()+" - ";
 				}
 				else if(reminderTask.RepeatInterval==TaskRepeatInterval.Monthly) {
 					dateStr+=reminderTask.RepeatDate.Value.ToString("MMMM")+" - ";
@@ -2774,7 +2774,7 @@ namespace OpenDental {
 			}
 			string objDesc="";
 			if(reminderTask.Status==TaskStatus.Done){
-				objDesc=Lan.G(this,"Done:")+reminderTask.DateCompleted.Value.ToShortDateString()+" - ";
+				objDesc="Done:"+reminderTask.DateCompleted.Value.ToShortDateString()+" - ";
 			}
 			if(reminderTask.PatientId.HasValue) {
 				objDesc+=Patients.GetPat(reminderTask.PatientId.Value).GetNameLF()+" - ";
@@ -2924,12 +2924,12 @@ namespace OpenDental {
 			DataTable table=contrApptPanel.TableEmpSched;
 			gridEmpSched.BeginUpdate();
 			gridEmpSched.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableApptEmpSched","Employee"),80);
+			GridColumn col=new GridColumn("Employee",80);
 			gridEmpSched.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableApptEmpSched","Schedule"),70);
+			col=new GridColumn("Schedule",70);
 			gridEmpSched.ListGridColumns.Add(col);
 			if(hasNotes) {
-				col=new GridColumn(Lan.G("TableApptEmpSched","Notes"),100);
+				col=new GridColumn("Notes",100);
 				gridEmpSched.ListGridColumns.Add(col);
 			}
 			gridEmpSched.ListGridRows.Clear();
@@ -2961,12 +2961,12 @@ namespace OpenDental {
 			if(notRec==0) {
 				textLab.Font=new Font(FontFamily.GenericSansSerif,8,FontStyle.Regular);
 				textLab.ForeColor=Color.Black;
-				textLab.Text=Lan.G(this,"All Received");
+				textLab.Text="All Received";
 			}
 			else {
 				textLab.Font=new Font(FontFamily.GenericSansSerif,8,FontStyle.Bold);
 				textLab.ForeColor=Color.DarkRed;
-				textLab.Text=notRec.ToString()+Lan.G(this," NOT RECEIVED");
+				textLab.Text=notRec.ToString()+" NOT RECEIVED";
 			}
 		}
 
@@ -3021,12 +3021,12 @@ namespace OpenDental {
 			DataTable table=contrApptPanel.TableProvSched;
 			gridProv.BeginUpdate();
 			gridProv.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableAppProv","Provider"),80);
+			GridColumn col=new GridColumn("Provider",80);
 			gridProv.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableAppProv","Schedule"),70);
+			col=new GridColumn("Schedule",70);
 			gridProv.ListGridColumns.Add(col);
 			if(hasNotes) {
-				col=new GridColumn(Lan.G("TableAppProv","Notes"),100);
+				col=new GridColumn("Notes",100);
 				gridProv.ListGridColumns.Add(col);
 			}
 			gridProv.ListGridRows.Clear();
@@ -3049,7 +3049,7 @@ namespace OpenDental {
 			List<ApptView> listApptViews=new List<ApptView>() {
 				new ApptView() {
 					ApptViewNum=ApptViews.APPTVIEWNUM_NONE,
-					Description=Lan.G(this,"none")
+					Description="none"
 				}
 			};
 			//Do NOT allow 'Headquarters' to have access to clinic specific apptviews.
@@ -3088,9 +3088,9 @@ namespace OpenDental {
 			}
 			gridWaiting.BeginUpdate();
 			gridWaiting.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableApptWaiting","Patient"),130);
+			GridColumn col=new GridColumn("Patient",130);
 			gridWaiting.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableApptWaiting","Waited"),100,HorizontalAlignment.Center);
+			col=new GridColumn("Waited",100,HorizontalAlignment.Center);
 			gridWaiting.ListGridColumns.Add(col);
 			gridWaiting.ListGridRows.Clear();
 			DateTime waitTime;
@@ -3822,14 +3822,14 @@ namespace OpenDental {
 					#region Update Appt's DateTimeAskedToArrive
 					if(patCur.AskToArriveEarly>0) {
 						appt.DateTimeAskedToArrive=appt.AptDateTime.AddMinutes(-patCur.AskToArriveEarly);
-						MessageBox.Show(Lan.G(this,"Ask patient to arrive")+" "+patCur.AskToArriveEarly
-							+" "+Lan.G(this,"minutes early at")+" "+appt.DateTimeAskedToArrive.ToShortTimeString()+".");
+						MessageBox.Show("Ask patient to arrive"+" "+patCur.AskToArriveEarly
+							+" "+"minutes early at"+" "+appt.DateTimeAskedToArrive.ToShortTimeString()+".");
 					}
 					else {
 						if(appt.DateTimeAskedToArrive.Year>1880 && (apptOld.AptDateTime-apptOld.DateTimeAskedToArrive).TotalMinutes>0) {
 							appt.DateTimeAskedToArrive=appt.AptDateTime-(apptOld.AptDateTime-apptOld.DateTimeAskedToArrive);
-							if(MessageBox.Show(Lan.G(this,"Ask patient to arrive")+" "+(apptOld.AptDateTime-apptOld.DateTimeAskedToArrive).TotalMinutes
-								+" "+Lan.G(this,"minutes early at")+" "+appt.DateTimeAskedToArrive.ToShortTimeString()+"?","",MessageBoxButtons.YesNo)==DialogResult.No) {
+							if(MessageBox.Show("Ask patient to arrive"+" "+(apptOld.AptDateTime-apptOld.DateTimeAskedToArrive).TotalMinutes
+								+" "+"minutes early at"+" "+appt.DateTimeAskedToArrive.ToShortTimeString()+"?","",MessageBoxButtons.YesNo)==DialogResult.No) {
 								appt.DateTimeAskedToArrive=apptOld.DateTimeAskedToArrive;
 							}
 						}
@@ -3935,12 +3935,12 @@ namespace OpenDental {
 					frequencyConflicts=Procedures.CheckFrequency(procsForSingleApt,appt.PatNum,appt.AptDateTime);
 				}
 				catch(Exception e) {
-					MessageBox.Show(Lan.G(this,"There was an error checking frequencies.  Disable the Insurance Frequency Checking feature or try to fix the following error:")
+					MessageBox.Show("There was an error checking frequencies.  Disable the Insurance Frequency Checking feature or try to fix the following error:"
 						+"\r\n"+e.Message);
 					return;
 				}
-				if(frequencyConflicts!="" && MessageBox.Show(Lan.G(this,"Scheduling this appointment for this date will cause frequency conflicts for the following procedures")
-					+":\r\n"+frequencyConflicts+"\r\n"+Lan.G(this,"Do you want to continue?"),"",MessageBoxButtons.YesNo)==DialogResult.No)
+				if(frequencyConflicts!="" && MessageBox.Show("Scheduling this appointment for this date will cause frequency conflicts for the following procedures"
+					+":\r\n"+frequencyConflicts+"\r\n"+"Do you want to continue?","",MessageBoxButtons.YesNo)==DialogResult.No)
 				{
 					return;
 				}
@@ -3996,13 +3996,13 @@ namespace OpenDental {
 			{
 				string prompt;
 				if(Prefs.GetBool(PrefName.ApptConfirmAutoEnabled)){
-					prompt=Lan.G(this,"Do you want to resend the eConfirmation?");
+					prompt="Do you want to resend the eConfirmation?";
 				}
 				else if(Prefs.GetBool(PrefName.ApptThankYouAutoEnabled)) {
-					prompt=Lan.G(this,"Do you want to resend the eThankYou?");
+					prompt="Do you want to resend the eThankYou?";
 				}
 				else{
-					prompt=Lan.G(this,"Reset Confirmation Status?");
+					prompt="Reset Confirmation Status?";
 				}
 				bool doResetConf=MsgBox.Show(MsgBoxButtons.YesNo,prompt);
 				if(doResetConf) {
@@ -4048,7 +4048,7 @@ namespace OpenDental {
 		///<summary></summary>
 		private void PrintApptCard() {
 			PrinterL.TryPrintOrDebugRpPreview(pd2_PrintApptCard,
-				Lan.G(this,"Appointment reminder postcard printed"),
+				"Appointment reminder postcard printed",
 				printSit:PrintSituation.Postcard,
 				auditPatNum:_patCur.PatNum,
 				margins:new Margins(0,0,0,0),
@@ -4097,7 +4097,7 @@ namespace OpenDental {
 			g.DrawString(str,new Font(FontFamily.GenericSansSerif,8),Brushes.Black,60,75);
 			//Body text-------------------------------------------------------------------------------
 			string name;
-			str=Lan.G(this,"Appointment Reminders:")+"\r\n\r\n";
+			str="Appointment Reminders:"+"\r\n\r\n";
 			Appointment[] aptsOnePat;
 			Family fam=Patients.GetFamily(_patCur.PatNum);
 			Patient pat=fam.GetPatient(_patCur.PatNum);
@@ -4140,7 +4140,7 @@ namespace OpenDental {
 			Commlog CommlogCur=new Commlog();
 			CommlogCur.CommDateTime=DateTime.Now;
 			CommlogCur.CommType=Commlogs.GetTypeAuto(CommItemTypeAuto.MISC);
-			CommlogCur.Note=Lan.G(this,"Appointment card sent");
+			CommlogCur.Note="Appointment card sent";
 			CommlogCur.PatNum=pat.PatNum;
 			CommlogCur.UserNum=Security.CurrentUser.Id;
 			//there is no dialog here because it is just a simple entry
@@ -4253,8 +4253,8 @@ namespace OpenDental {
 				listPatComms.RemoveAt(i);
 			}
 			if(listPatsSkipped.Count > 0) {
-				string msg=listPatsSkipped.Count+Lan.G(this," of the ")+listPatNums.Distinct().Count()+" "
-					+Lan.G(this,"patients cannot receive text messages:")+"\r\n"+string.Join("\r\n",listPatsSkipped);
+				string msg=listPatsSkipped.Count+" of the "+listPatNums.Distinct().Count()+" "
+					+"patients cannot receive text messages:"+"\r\n"+string.Join("\r\n",listPatsSkipped);
 				if(listPatsSkipped.Count < 8) {
 					MessageBox.Show(msg);
 				}
@@ -4438,7 +4438,7 @@ namespace OpenDental {
 
 		/// <summary>Sets the index of comboView for the specified ApptViewNum.  Then, does a ModuleSelected().  If saveToDb, then it will remember the ApptViewNum and currently selected ClinicNum for this workstation.</summary>
 		private void SetView(long apptViewNum,bool saveToDb) {
-			comboView.SetSelectedKey<ApptView>(apptViewNum,x=>x.ApptViewNum,x=>Lan.G(this,"none"));//First item is None/0 view.
+			comboView.SetSelectedKey<ApptView>(apptViewNum,x=>x.ApptViewNum,x=>"none");//First item is None/0 view.
 			contrApptPanel.ApptViewCur=comboView.GetSelected<ApptView>();
 			if(!_hasInitializedOnStartup) {
 				return;//prevent ModuleSelected().

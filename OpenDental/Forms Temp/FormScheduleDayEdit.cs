@@ -79,7 +79,7 @@ namespace OpenDental{
 			_isFromSchedule=isFromSchedule;
 			_provAbbrFilter=provAbbr;
 			_employeeNameFilter=empFName;
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -535,12 +535,12 @@ namespace OpenDental{
 
 		private void comboClinicChanged(){
 			long clinicNumOrig=comboClinic.SelectedClinicNum;
-			this.Text=Lan.G(this,"Edit Day")+" - "+comboClinic.Text;
+			this.Text="Edit Day"+" - "+comboClinic.Text;
 			if(comboClinic.SelectedClinicNum==0) {
-				groupPractice.Text=Lan.G(this,"Practice");
+				groupPractice.Text="Practice";
 			}
 			else {
-				groupPractice.Text=Lan.G(this,"Clinic");
+				groupPractice.Text="Clinic";
 			}
 			if(_listScheds!=null) {
 				//skips on startup
@@ -562,8 +562,8 @@ namespace OpenDental{
 		}
 
 		private void FillProvsAndEmps() {
-			tabPageProv.Text=Lan.G(this,"Providers")+" (0)";
-			tabPageEmp.Text=Lan.G(this,"Employees")+" (0)";
+			tabPageProv.Text="Providers"+" (0)";
+			tabPageEmp.Text="Employees"+" (0)";
 			//Seed emp list and prov list with a dummy emp/prov with 'none' for the field that fills the list, FName and Abbr respectively.
 			//That way we don't have to add/subtract one in order when selecting from the list based on selected indexes.
 			_listEmps=new List<Employee>() { new Employee() { EmployeeNum=0,FName="none" } };
@@ -593,11 +593,11 @@ namespace OpenDental{
 		}
 
 		private void listProv_SelectedIndexChanged(object sender,EventArgs e) {
-			tabPageProv.Text=Lan.G(this,"Providers")+" ("+listProv.SelectedIndices.OfType<int>().Count(x => x>0)+")";
+			tabPageProv.Text="Providers"+" ("+listProv.SelectedIndices.OfType<int>().Count(x => x>0)+")";
 		}
 
 		private void listEmp_SelectedIndexChanged(object sender,EventArgs e) {
-			tabPageEmp.Text=Lan.G(this,"Employees")+" ("+listEmp.SelectedIndices.OfType<int>().Count(x => x>0)+")";
+			tabPageEmp.Text="Employees"+" ("+listEmp.SelectedIndices.OfType<int>().Count(x => x>0)+")";
 		}
 
 		private void FillGrid() {
@@ -612,17 +612,17 @@ namespace OpenDental{
 			graphScheduleDay.SetSchedules(_listScheds);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableSchedDay","Provider"),100);
+			GridColumn col=new GridColumn("Provider",100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableSchedDay","Employee"),100);
+			col=new GridColumn("Employee",100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableSchedDay","Start Time"),80);
+			col=new GridColumn("Start Time",80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableSchedDay","Stop Time"),80);
+			col=new GridColumn("Stop Time",80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableSchedDay","Ops"),150);
+			col=new GridColumn("Ops",150);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableSchedDay","Note"),100);
+			col=new GridColumn("Note",100);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -677,11 +677,11 @@ namespace OpenDental{
 						}
 						clinicAbbr=" ("+clinicAbbr+")";
 						if(schedCur.Status!=SchedStatus.Holiday) {//must be a Note, only add 'Note' if clinics are enabled
-							note=Lan.G(this,"Note")+clinicAbbr+": ";
+							note="Note"+clinicAbbr+": ";
 						}
 					}
 					if(schedCur.Status==SchedStatus.Holiday) {
-						note=Lan.G(this,"Holiday")+clinicAbbr+": ";
+						note="Holiday"+clinicAbbr+": ";
 					}
 				}
 				note+=schedCur.Note;
@@ -795,13 +795,13 @@ namespace OpenDental{
 		private bool ValidateLists() {
 			List<string> listErrorMsgs=new List<string>();
 			if(listProv.SelectedIndices.Count>1 && listProv.SelectedIndices.Contains(0)) {//'none' selected with additional provs
-				listErrorMsgs.Add(Lan.G(this,"Invalid selection of providers."));
+				listErrorMsgs.Add("Invalid selection of providers.");
 			}
 			if(listEmp.SelectedIndices.Count>1 && listEmp.SelectedIndices.Contains(0)) {//'none' selected with additional emps
-				listErrorMsgs.Add(Lan.G(this,"Invalid selection of employees."));
+				listErrorMsgs.Add("Invalid selection of employees.");
 			}
 			if(listProv.SelectedIndices.OfType<int>().Count(x => x>0)==0 && listEmp.SelectedIndices.OfType<int>().Count(x => x>0)==0) {
-				listErrorMsgs.Add(Lan.G(this,"Please select at least one provider or one employee first."));
+				listErrorMsgs.Add("Please select at least one provider or one employee first.");
 			}
 			if(listErrorMsgs.Count>0) {
 				MessageBox.Show(string.Join("\r\n",listErrorMsgs));
@@ -984,7 +984,7 @@ namespace OpenDental{
 			}
 			countProviders=listSchedsToRemove.Where(x => x.ProvNum!=0).Select(y => y.ProvNum).Distinct().Count();
 			if(countProviders>0) {
-				string message=Lan.G(this,"Delete schedules on this day for")+" "+countProviders+" "+Lan.G(this,"provider(s)?");
+				string message="Delete schedules on this day for"+" "+countProviders+" "+"provider(s)?";
 				if(MessageBox.Show(message,"",MessageBoxButtons.YesNo)!=DialogResult.Yes) {
 					return;
 				}

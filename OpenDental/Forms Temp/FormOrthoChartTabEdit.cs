@@ -13,7 +13,7 @@ namespace OpenDental {
 
 		public FormOrthoChartTabEdit(OrthoChartTab orthoChartTab) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_orthoChartTab=orthoChartTab;
 		}
 

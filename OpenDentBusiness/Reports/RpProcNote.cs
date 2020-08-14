@@ -46,7 +46,7 @@ namespace OpenDentBusiness {
 			}
 			string command=@"SELECT MAX(procedurelog.ProcDate) ProcDate,MAX(CONCAT(CONCAT(patient.LName, ', '),patient.FName)) PatName,procedurelog.PatNum,
 				(CASE WHEN COUNT(procedurelog.ProcNum)=1 THEN MAX(procedurecode.ProcCode) ELSE '' END) ProcCode,
-				(CASE WHEN COUNT(procedurelog.ProcNum)=1 THEN MAX(procedurecode.Descript) ELSE '"+Lans.g("FormRpProcNote","Multiple procedures")+@"' END) Descript,
+				(CASE WHEN COUNT(procedurelog.ProcNum)=1 THEN MAX(procedurecode.Descript) ELSE '"+"Multiple procedures"+@"' END) Descript,
 				(CASE WHEN COUNT(procedurelog.ProcNum)=1 THEN MAX(procedurelog.ToothNum) ELSE '' END) ToothNum,
 				(CASE WHEN COUNT(procedurelog.ProcNum)=1 THEN MAX(procedurelog.Surf) ELSE '' END) Surf "
 				+(includeNoNotes || includeUnsignedNotes?",(CASE WHEN MAX(n1.ProcNum) IS NOT NULL THEN 'X' ELSE '' END) AS Incomplete ":"")

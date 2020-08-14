@@ -60,7 +60,7 @@ namespace OpenDental {
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -342,7 +342,7 @@ namespace OpenDental {
 			if(ListClinics==null) {
 				ListClinics=Clinics.GetAllForUserod(Security.CurrentUser);
 				if(IncludeHQInList) {
-					ListClinics.Insert(0,new Clinic() { ClinicNum=0,Description=Lan.G(this,"Headquarters"),Abbr=Lan.G(this,"HQ") });
+					ListClinics.Insert(0,new Clinic() { ClinicNum=0,Description="Headquarters",Abbr="HQ" });
 				}
 				//if alphabetical checkbox is checked/unchecked it triggers a pref cache refresh, but does not refill the clinic cache, so we need to sort here
 				//in case the pref was changed since last time this was opened.
@@ -394,12 +394,12 @@ namespace OpenDental {
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableClinics","Abbr"),120));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableClinics","Description"),200));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableClinics","Specialty"),150));
+			gridMain.ListGridColumns.Add(new GridColumn("Abbr",120));
+			gridMain.ListGridColumns.Add(new GridColumn("Description",200));
+			gridMain.ListGridColumns.Add(new GridColumn("Specialty",150));
 			if(!IsSelectionMode) {
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableClinics","Pat Count"),80,HorizontalAlignment.Center));
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableClinics","Hidden"),40,HorizontalAlignment.Center){ IsWidthDynamic=true });
+				gridMain.ListGridColumns.Add(new GridColumn("Pat Count",80,HorizontalAlignment.Center));
+				gridMain.ListGridColumns.Add(new GridColumn("Hidden",40,HorizontalAlignment.Center){ IsWidthDynamic=true });
 			}
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -520,8 +520,8 @@ namespace OpenDental {
 				MessageBox.Show("There are no patients assigned to the selected clinics.");
 				return;
 			}
-			string msg=Lan.G(this,"This will move all patients to")+" "+clinicTo.Abbr+" "+Lan.G(this,"from the following clinics")+":\r\n"
-				+string.Join("\r\n",dictClinFromCounts.Select(x => dictClinicsFrom[x.Key].Abbr))+"\r\n"+Lan.G(this,"Continue?");
+			string msg="This will move all patients to"+" "+clinicTo.Abbr+" "+"from the following clinics"+":\r\n"
+				+string.Join("\r\n",dictClinFromCounts.Select(x => dictClinicsFrom[x.Key].Abbr))+"\r\n"+"Continue?";
 			if(MessageBox.Show(msg,"",MessageBoxButtons.YesNo)!=DialogResult.Yes) {
 				return;
 			}
@@ -533,12 +533,12 @@ namespace OpenDental {
 						SecurityLogs.MakeLogEntry(Permissions.PatientEdit,0,"Clinic changed for "+x.Value+" patients from "
 							+(dictClinicsFrom.TryGetValue(x.Key,out clinicCur)?clinicCur.Abbr:"")+" to "+clinicTo.Abbr+".");
 						patsMoved+=x.Value;
-						ClinicEvent.Fire(EventCategory.Clinic,Lan.G(this,"Moved patients")+": "+patsMoved+" "+Lan.G(this,"out of")+" "
+						ClinicEvent.Fire(EventCategory.Clinic,"Moved patients"+": "+patsMoved+" "+"out of"+" "
 							+dictClinFromCounts.Sum(y => y.Value));
 					})).ToList();
 					ODThread.RunParallel(listActions,TimeSpan.FromMinutes(2));
 				},
-				startingMessage:Lan.G(this,"Moving patients")+"...",
+				startingMessage:"Moving patients"+"...",
 				eventType:typeof(ClinicEvent),
 				odEventType:EventCategory.Clinic);
 			_dictClinicalCounts=Clinics.GetClinicalPatientCount();

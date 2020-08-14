@@ -140,7 +140,7 @@ namespace OpenDental{
 			PatCur=patCur;
 			PatientNoteCur=patientNoteCur;
 			_selectedTab=selectedTab;
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -1188,16 +1188,16 @@ namespace OpenDental{
 				col.ImageList=imageListInfoButton;
 				gridToFill.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.G("TableMedications","Medication"),200);
+			col=new GridColumn("Medication",200);
 			gridToFill.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableMedications","Notes"),100){ IsWidthDynamic=true };
+			col=new GridColumn("Notes",100){ IsWidthDynamic=true };
 			gridToFill.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableMedications","Notes for Patient"),100){ IsWidthDynamic=true };
+			col=new GridColumn("Notes for Patient",100){ IsWidthDynamic=true };
 			gridToFill.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableMedications","Status"),45,HorizontalAlignment.Center);
+			col=new GridColumn("Status",45,HorizontalAlignment.Center);
 			gridToFill.ListGridColumns.Add(col);
 			if(!isForPrinting) {
-				col=new GridColumn(Lan.G("TableMedications","Source"),60);
+				col=new GridColumn("Source",60);
 				gridToFill.ListGridColumns.Add(col);
 			}
 			gridToFill.ListGridRows.Clear();
@@ -1337,7 +1337,7 @@ namespace OpenDental{
 			FillMeds(isForPrinting:true);//not nessecary to explicity name parameter but makes code easier to read.
 			pagesPrinted=0;
 			headingPrinted=false;
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"Medications printed"),auditPatNum:PatCur.PatNum);
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,"Medications printed",auditPatNum:PatCur.PatNum);
 			Cursor=Cursors.Default;
 		}
 
@@ -1352,10 +1352,10 @@ namespace OpenDental{
 			int center=bounds.X+bounds.Width/2;
 			#region printHeading
 			if(!headingPrinted) {
-				text=Lan.G(this,"Medications List For ")+PatCur.FName+" "+PatCur.LName;
+				text="Medications List For "+PatCur.FName+" "+PatCur.LName;
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
-				text=Lan.G(this,"Created ")+DateTime.Now.ToString();
+				text="Created "+DateTime.Now.ToString();
 				g.DrawString(text,subHeadingFont,Brushes.Black,center-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 				yPos+=20;
 				headingPrinted=true;
@@ -1393,7 +1393,7 @@ namespace OpenDental{
 		/// <summary>This report is a brute force, one page medical history report. It is not designed to handle more than one page. It does not print service notes or medications.</summary>
 		private void butPrintMedical_Click(object sender,EventArgs e) {
 			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPageMedical,
-				Lan.G(this,"Medications information printed"),
+				"Medications information printed",
 				auditPatNum:PatCur.PatNum,
 				printoutOrigin:PrintoutOrigin.AtMargin
 			);
@@ -1411,18 +1411,18 @@ namespace OpenDental{
 			int center=bounds.X+bounds.Width/2;
 			int textHeight;
 			RectangleF textRect;
-			text=Lan.G(this,"Medical History For ")+PatCur.FName+" "+PatCur.LName;
+			text="Medical History For "+PatCur.FName+" "+PatCur.LName;
 			g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 			yPos+=(int)g.MeasureString(text,headingFont).Height;
-			text=Lan.G(this,"Birthdate: ")+PatCur.Birthdate.ToShortDateString();
+			text="Birthdate: "+PatCur.Birthdate.ToShortDateString();
 			g.DrawString(text,subHeadingFont,Brushes.Black,center-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 			yPos+=(int)g.MeasureString(text,subHeadingFont).Height;
-			text=Lan.G(this,"Created ")+DateTime.Now.ToString();
+			text="Created "+DateTime.Now.ToString();
 			g.DrawString(text,subHeadingFont,Brushes.Black,center-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 			yPos+=(int)g.MeasureString(text,subHeadingFont).Height;
 			yPos+=25;
 			if(gridDiseases.ListGridRows.Count>0) {
-				text=Lan.G(this,"Problems");
+				text="Problems";
 				g.DrawString(text,subHeadingFont,Brushes.Black,center-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,subHeadingFont).Height;
 				yPos+=2;
@@ -1430,20 +1430,20 @@ namespace OpenDental{
 				yPos+=25;
 			}
 			if(gridAllergies.ListGridRows.Count>0) {
-				text=Lan.G(this,"Allergies");
+				text="Allergies";
 				g.DrawString(text,subHeadingFont,Brushes.Black,center-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,subHeadingFont).Height;
 				yPos+=2;
 				yPos=gridAllergies.PrintPage(g,0,bounds,yPos);
 				yPos+=25;
 			}
-			text=Lan.G(this,"Premedicate (PAC or other): ")+(checkPremed.Checked?"Y":"N");
+			text="Premedicate (PAC or other): "+(checkPremed.Checked?"Y":"N");
 			textHeight=(int)g.MeasureString(text,bodyFont,bounds.Width).Height;
 			textRect=new Rectangle(bounds.Left,yPos,bounds.Width,textHeight);
 			g.DrawString(text,subHeadingFont,Brushes.Black,textRect);
 			yPos+=textHeight;
 			yPos+=10;
-			text=Lan.G(this,"Medical Urgent Note");
+			text="Medical Urgent Note";
 			g.DrawString(text,subHeadingFont,Brushes.Black,bounds.Left,yPos);
 			yPos+=(int)g.MeasureString(text,subHeadingFont).Height;
 			text=textMedUrgNote.Text;
@@ -1452,7 +1452,7 @@ namespace OpenDental{
 			g.DrawString(text,bodyFont,Brushes.Black,textRect);//maybe red?
 			yPos+=textHeight;
 			yPos+=10;
-			text=Lan.G(this,"Medical Summary");
+			text="Medical Summary";
 			g.DrawString(text,subHeadingFont,Brushes.Black,bounds.Left,yPos);
 			yPos+=(int)g.MeasureString(text,subHeadingFont).Height;
 			text=textMedical.Text;
@@ -1461,7 +1461,7 @@ namespace OpenDental{
 			g.DrawString(text,bodyFont,Brushes.Black,textRect);
 			yPos+=textHeight;
 			yPos+=10;
-			text=Lan.G(this,"Medical History - Complete and Detailed");
+			text="Medical History - Complete and Detailed";
 			g.DrawString(text,subHeadingFont,Brushes.Black,bounds.Left,yPos);
 			yPos+=(int)g.MeasureString(text,subHeadingFont).Height;
 			text=textMedicalComp.Text;
@@ -1478,17 +1478,17 @@ namespace OpenDental{
 			ListFamHealth=FamilyHealths.GetFamilyHealthForPat(PatCur.PatNum);
 			gridFamilyHealth.BeginUpdate();
 			gridFamilyHealth.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableFamilyHealth","Relationship"),150,HorizontalAlignment.Center);
+			GridColumn col=new GridColumn("Relationship",150,HorizontalAlignment.Center);
 			gridFamilyHealth.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableFamilyHealth","Name"),150);
+			col=new GridColumn("Name",150);
 			gridFamilyHealth.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableFamilyHealth","Problem"),180);
+			col=new GridColumn("Problem",180);
 			gridFamilyHealth.ListGridColumns.Add(col);
 			gridFamilyHealth.ListGridRows.Clear();
 			GridRow row;
 			for(int i=0;i<ListFamHealth.Count;i++) {
 				row=new GridRow();
-				row.Cells.Add(Lan.G("enumFamilyRelationship",ListFamHealth[i].Relationship.ToString()));
+				row.Cells.Add(ListFamHealth[i].Relationship.ToString());
 				row.Cells.Add(ListFamHealth[i].PersonName);
 				row.Cells.Add(DiseaseDefs.GetName(ListFamHealth[i].DiseaseDefNum));
 				gridFamilyHealth.ListGridRows.Add(row);
@@ -1528,11 +1528,11 @@ namespace OpenDental{
 				col.ImageList=imageListInfoButton;
 				gridDiseases.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.G("TableDiseases","Name"),200);//total is about 325
+			col=new GridColumn("Name",200);//total is about 325
 			gridDiseases.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableDiseases","Patient Note"),450);
+			col=new GridColumn("Patient Note",450);
 			gridDiseases.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableDisease","Status"),40,HorizontalAlignment.Center);
+			col=new GridColumn("Status",40,HorizontalAlignment.Center);
 			gridDiseases.ListGridColumns.Add(col);
 			gridDiseases.ListGridRows.Clear();
 			GridRow row;
@@ -1615,7 +1615,7 @@ namespace OpenDental{
 
 		private void gridDiseases_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			if(DiseaseDefs.GetItem(DiseaseList[e.Row].DiseaseDefNum)==null) {
-				MessageBox.Show(Lan.G(this,"Invalid disease.  Please run database maintenance method")+" "
+				MessageBox.Show("Invalid disease.  Please run database maintenance method"+" "
 					+nameof(DatabaseMaintenances.DiseaseWithInvalidDiseaseDef));
 				return;
 			}
@@ -1648,11 +1648,11 @@ namespace OpenDental{
 				col.ImageList=imageListInfoButton;
 				gridAllergies.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.G("TableAllergies","Allergy"),150);
+			col=new GridColumn("Allergy",150);
 			gridAllergies.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableAllergies","Reaction"),500);
+			col=new GridColumn("Reaction",500);
 			gridAllergies.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableAllergies","Status"),40,HorizontalAlignment.Center);
+			col=new GridColumn("Status",40,HorizontalAlignment.Center);
 			gridAllergies.ListGridColumns.Add(col);
 			gridAllergies.ListGridRows.Clear();
 			GridRow row;
@@ -2118,7 +2118,7 @@ namespace OpenDental{
 			//selected code guaranteed to exist in the drop down at this point
 			comboTobaccoStatus.Items.Clear();
 			comboTobaccoStatus.Items.AddRange(_listTobaccoStatuses.Select(x => x.Description).ToArray());
-			comboTobaccoStatus.Items.Add(Lan.G(this,"Choose from all SNOMED CT codes")+"...");
+			comboTobaccoStatus.Items.Add("Choose from all SNOMED CT codes"+"...");
 			comboTobaccoStatus.SelectedIndex=_listTobaccoStatuses.FindIndex(x => x.CodeValue==FormS.SelectedSnomed.SnomedCode);//add 1 for ...choose from
 		}
 
@@ -2193,7 +2193,7 @@ namespace OpenDental{
 			_listTobaccoStatuses=_listTobaccoStatuses.OrderBy(x => x.Description).ToList();
 			comboTobaccoStatus.Items.Clear();
 			comboTobaccoStatus.Items.AddRange(_listTobaccoStatuses.Select(x => x.Description).ToArray());
-			comboTobaccoStatus.Items.Add(Lan.G(this,"Choose from all SNOMED CT codes")+"...");
+			comboTobaccoStatus.Items.Add("Choose from all SNOMED CT codes"+"...");
 		}
 
 		///<summary>If the LOINC table has not been imported, the Tobacco Use tab is disabled, but we want it to remain visible like the other EHR show

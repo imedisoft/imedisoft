@@ -81,7 +81,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormBilling(){
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -502,12 +502,12 @@ namespace OpenDental{
 			//  the LastStatement, PatNum and then stitch them together in C#. 
 			//  In testing this improved execution time from 1.3 seconds to return ~2500 rows down to 0.08 for the main query and 0.05 for the LastStatement date
 			//  Stitching the data sets together was not tested but should be faster than MySQL.
-			labelPrinted.Text=Lan.G(this,"Printed=")+"0";
-			labelEmailed.Text=Lan.G(this,"E-mailed=")+"0";
-			labelSentElect.Text=Lan.G(this,"SentElect=")+"0";
-			labelTexted.Text=Lan.G(this,"Texted=")+"0";
-			comboOrder.Items.Add(Lan.G(this,"BillingType"));
-			comboOrder.Items.Add(Lan.G(this,"PatientName"));
+			labelPrinted.Text="Printed="+"0";
+			labelEmailed.Text="E-mailed="+"0";
+			labelSentElect.Text="SentElect="+"0";
+			labelTexted.Text="Texted="+"0";
+			comboOrder.Items.Add("BillingType");
+			comboOrder.Items.Add("PatientName");
 			comboOrder.SelectedIndex=0;
 			//ListClinics can be called even when Clinics is not turned on, therefore it needs to be set to something to avoid a null reference.
 			ListClinics=new List<Clinic>();
@@ -566,28 +566,28 @@ namespace OpenDental{
 			gridBill.ListGridColumns.Clear();
 			GridColumn col=null;
 			if(Prefs.GetBool(PrefName.ShowFeatureSuperfamilies)) {
-				col=new GridColumn(Lan.G("TableBilling","Name"),150);
+				col=new GridColumn("Name",150);
 			}
 			else {
-				col=new GridColumn(Lan.G("TableBilling","Name"),180);
+				col=new GridColumn("Name",180);
 			}
 			gridBill.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableBilling","BillType"),110);
+			col=new GridColumn("BillType",110);
 			gridBill.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableBilling","Mode"),80);
+			col=new GridColumn("Mode",80);
 			gridBill.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableBilling","LastStatement"),100);
+			col=new GridColumn("LastStatement",100);
 			gridBill.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableBilling","BalTot"),70,HorizontalAlignment.Right);
+			col=new GridColumn("BalTot",70,HorizontalAlignment.Right);
 			gridBill.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableBilling","-InsEst"),70,HorizontalAlignment.Right);
+			col=new GridColumn("-InsEst",70,HorizontalAlignment.Right);
 			gridBill.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableBilling","=AmtDue"),70,HorizontalAlignment.Right);
+			col=new GridColumn("=AmtDue",70,HorizontalAlignment.Right);
 			gridBill.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableBilling","PayPlanDue"),70,HorizontalAlignment.Right);
+			col=new GridColumn("PayPlanDue",70,HorizontalAlignment.Right);
 			gridBill.ListGridColumns.Add(col);
 			if(Prefs.GetBool(PrefName.ShowFeatureSuperfamilies)) {
-				col=new GridColumn(Lan.G("TableBilling","SF"),30);
+				col=new GridColumn("SF",30);
 				gridBill.ListGridColumns.Add(col);
 			}
 			gridBill.ListGridRows.Clear();
@@ -624,8 +624,8 @@ namespace OpenDental{
 				}
 			}
 			gridBill.ScrollValue=scrollPos;
-			labelTotal.Text=Lan.G(this,"Total=")+table.Rows.Count.ToString();
-			labelSelected.Text=Lan.G(this,"Selected=")+gridBill.SelectedIndices.Length.ToString();
+			labelTotal.Text="Total="+table.Rows.Count.ToString();
+			labelSelected.Text="Selected="+gridBill.SelectedIndices.Length.ToString();
 		}
 
 		private void FillComboEmail() {
@@ -638,7 +638,7 @@ namespace OpenDental{
 			_listEmailAddresses.RemoveAll(x => x.EmailAddressNum==Prefs.GetLong(PrefName.EmailDefaultAddressNum));
 			//Exclude web mail notification email address.
 			_listEmailAddresses.RemoveAll(x => x.EmailAddressNum==Prefs.GetLong(PrefName.EmailNotifyAddressNum));
-			comboEmailFrom.Items.Add(Lan.G(this,"Practice/Clinic"));//default
+			comboEmailFrom.Items.Add("Practice/Clinic");//default
 			comboEmailFrom.SelectedIndex=0;
 			//Add all email addresses which are not associated to a user, a clinic, or either of the default email addresses.
 			for(int i=0;i<_listEmailAddresses.Count;i++) {
@@ -648,18 +648,18 @@ namespace OpenDental{
 			EmailAddress emailAddressMe=EmailAddresses.GetForUser(Security.CurrentUser.Id);//can be null
 			if(emailAddressMe!=null) {
 				_listEmailAddresses.Insert(0,emailAddressMe);
-				comboEmailFrom.Items.Insert(1,Lan.G(this,"Me")+" <"+emailAddressMe.EmailUsername+">");//Just below Practice/Clinic
+				comboEmailFrom.Items.Insert(1,"Me"+" <"+emailAddressMe.EmailUsername+">");//Just below Practice/Clinic
 			}
 		}
 
 		private void butAll_Click(object sender, System.EventArgs e) {
 			gridBill.SetSelected(true);
-			labelSelected.Text=Lan.G(this,"Selected=")+gridBill.SelectedIndices.Length.ToString();
+			labelSelected.Text="Selected="+gridBill.SelectedIndices.Length.ToString();
 		}
 
 		private void butNone_Click(object sender, System.EventArgs e) {	
 			gridBill.SetSelected(false);
-			labelSelected.Text=Lan.G(this,"Selected=")+gridBill.SelectedIndices.Length.ToString();
+			labelSelected.Text="Selected="+gridBill.SelectedIndices.Length.ToString();
 		}
 
 		private void radioUnsent_Click(object sender,EventArgs e) {
@@ -692,7 +692,7 @@ namespace OpenDental{
 		}
 
 		private void gridBill_CellClick(object sender,ODGridClickEventArgs e) {
-			labelSelected.Text=Lan.G(this,"Selected=")+gridBill.SelectedIndices.Length.ToString();
+			labelSelected.Text="Selected="+gridBill.SelectedIndices.Length.ToString();
 		}
 
 		private void gridBill_CellDoubleClick(object sender,ODGridClickEventArgs e) {
@@ -742,7 +742,7 @@ namespace OpenDental{
 		private void butPrintList_Click(object sender,EventArgs e) {
 			pagesPrinted=0;
 			headingPrinted=false;
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"Billing list printed"));
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,"Billing list printed");
 		}
 
 		private void pd_PrintPage(object sender,System.Drawing.Printing.PrintPageEventArgs e) {
@@ -756,10 +756,10 @@ namespace OpenDental{
 			int center=bounds.X+bounds.Width/2;
 			#region printHeading
 			if(!headingPrinted) {
-				text=Lan.G(this,"Billing List");
+				text="Billing List";
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				//yPos+=(int)g.MeasureString(text,headingFont).Height;
-				//text=textDateFrom.Text+" "+Lan.g(this,"to")+" "+textDateTo.Text;
+				//text=textDateFrom.Text+" "+"to"+" "+textDateTo.Text;
 				//g.DrawString(text,subHeadingFont,Brushes.Black,center-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 				yPos+=25;
 				headingPrinted=true;
@@ -780,13 +780,13 @@ namespace OpenDental{
 		private void butSend_Click(object sender,System.EventArgs e) {
 			_listStatementNumsSent=new List<long>();
 			if(gridBill.SelectedIndices.Length==0){
-				MessageBox.Show(Lan.G(this,"Please select items first."));
+				MessageBox.Show("Please select items first.");
 				return;
 			}
-			labelPrinted.Text=Lan.G(this,"Printed=")+"0";
-			labelEmailed.Text=Lan.G(this,"E-mailed=")+"0";
-			labelSentElect.Text=Lan.G(this,"SentElect=")+"0";
-			labelTexted.Text=Lan.G(this,"Texted=")+"0";
+			labelPrinted.Text="Printed="+"0";
+			labelEmailed.Text="E-mailed="+"0";
+			labelSentElect.Text="SentElect="+"0";
+			labelTexted.Text="Texted="+"0";
 			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Please be prepared to wait up to ten minutes while all the bills get processed.\r\nOnce complete, the pdf print preview will be launched in Adobe Reader.  You will print from that program.  Continue?")){
 				return;
 			}
@@ -806,7 +806,7 @@ namespace OpenDental{
 			int sentElect=0;
 			int texted=0;
 			SendStatements(listDictPatnumsSkipped,ref emailed,ref printed,ref sentElect,ref outputDocument,ref skippedDeleted,ref texted);
-			_progExtended?.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Overall"),"100%",100,100,ProgBarStyle.Blocks,"1")));
+			_progExtended?.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Overall","100%",100,100,ProgBarStyle.Blocks,"1")));
 			_progExtended?.Close();
 			#region Printing Statements
 			//now print-------------------------------------------------------------------------------------
@@ -818,28 +818,28 @@ namespace OpenDental{
 						Process.Start(tempFileOutputDocument);
 					}
 					catch(Exception ex) {
-						MessageBox.Show(Lan.G(this,"Error: Please make sure Adobe Reader is installed.")+ex.Message);
+						MessageBox.Show("Error: Please make sure Adobe Reader is installed."+ex.Message);
 					}
 				
 			}
 			#endregion
 			string msg="";
 			if(listDictPatnumsSkipped[0].Count>0){
-				msg+=Lan.G(this,"Skipped due to missing or bad email address:")+" "+listDictPatnumsSkipped[0].Count.ToString()+"\r\n";
+				msg+="Skipped due to missing or bad email address:"+" "+listDictPatnumsSkipped[0].Count.ToString()+"\r\n";
 			}
 			if(listDictPatnumsSkipped[1].Count>0) {
-				msg+=Lan.G(this,"Skipped due to missing or bad mailing address:")+" "+listDictPatnumsSkipped[1].Count.ToString()+"\r\n";
+				msg+="Skipped due to missing or bad mailing address:"+" "+listDictPatnumsSkipped[1].Count.ToString()+"\r\n";
 			}
 			if(skippedDeleted>0) {
-				msg+=Lan.G(this,"Skipped due to being deleted by another user:")+" "+skippedDeleted.ToString()+"\r\n";
+				msg+="Skipped due to being deleted by another user:"+" "+skippedDeleted.ToString()+"\r\n";
 			}
 			if(listDictPatnumsSkipped[2].Count>0) {
-				msg+=Lan.G(this,"Skipped due to miscellaneous error")+": "+listDictPatnumsSkipped[2].Count.ToString()+"\r\n";
+				msg+="Skipped due to miscellaneous error"+": "+listDictPatnumsSkipped[2].Count.ToString()+"\r\n";
 			}
-			msg+=Lan.G(this,"Printed:")+" "+printed.ToString()+"\r\n"
-				+Lan.G(this,"E-mailed:")+" "+emailed.ToString()+"\r\n"
-				+Lan.G(this,"SentElect:")+" "+sentElect.ToString()+"\r\n"
-				+Lan.G(this,"Texted:")+" "+texted.ToString();
+			msg+="Printed:"+" "+printed.ToString()+"\r\n"
+				+"E-mailed:"+" "+emailed.ToString()+"\r\n"
+				+"SentElect:"+" "+sentElect.ToString()+"\r\n"
+				+"Texted:"+" "+texted.ToString();
 			if(listDictPatnumsSkipped.Count(x => x.Count>0)>0) {
 				//Modify original box to have yes/no buttons to see if they want to see who errored out
 				msg+="\r\n\r\n"+"Would you like to see skipped patnums?";
@@ -847,7 +847,7 @@ namespace OpenDental{
 					string skippedPatNums="";
 					foreach(Dictionary<long,string> dictSkipReasons in listDictPatnumsSkipped) {
 						foreach(KeyValuePair<long,string> kvp in dictSkipReasons) {
-							skippedPatNums+=Lans.g(this,"PatNum:")+" "+kvp.Key.ToString()+" - "+kvp.Value.ToString()+"\r\n";
+							skippedPatNums+="PatNum:"+" "+kvp.Key.ToString()+" - "+kvp.Value.ToString()+"\r\n";
 						}
 					}
 					MsgBoxCopyPaste msgBoxPatErrors=new MsgBoxCopyPaste(skippedPatNums);
@@ -881,14 +881,14 @@ namespace OpenDental{
 			}
 			numOfBatchesTotal=(int)Math.Ceiling((decimal)gridBill.SelectedIndices.Length/maxStmtsPerBatch);
 			//FormProgressExtended will insert new bars on top. Statment is on bottom, batch middle, and overall on top. 
-			_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Statement")+"\r\n0 / 0","0%",0,100
+			_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Statement"+"\r\n0 / 0","0%",0,100
 				,ProgBarStyle.Blocks,"3",isTopHidden:true)));
-			_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Batch")+"\r\n0 / 0","0%",0,maxStmtsPerBatch
+			_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Batch"+"\r\n0 / 0","0%",0,maxStmtsPerBatch
 				,ProgBarStyle.Blocks,"2",isTopHidden:true)));
-			_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Overall"),"1%",0,gridBill.SelectedIndices.Length
+			_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Overall","1%",0,gridBill.SelectedIndices.Length
 				,ProgBarStyle.Blocks,"1",isTopHidden:true)));
-			_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Progress Log"),progressBarEventType:ProgBarEventType.ProgressLog)));
-			_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Preparing First Batch")+"..."
+			_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Progress Log",progressBarEventType:ProgBarEventType.ProgressLog)));
+			_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Preparing First Batch"+"..."
 				,progressBarEventType:ProgBarEventType.TextMsg)));
 			List<long> listStatementNums=gridBill.SelectedTags<DataRow>().Select(x => PIn.Long(x["StatementNum"].ToString())).ToList();
 			List<Statement> listStatements=Statements.GetStatements(listStatementNums);
@@ -933,12 +933,12 @@ namespace OpenDental{
 					return;
 				}
 				curStatementsProcessed = 0;
-				_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Overall"),Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
-				_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Preparing Batch")+" "+numOfBatchesSent
+				_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Overall",Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
+				_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Preparing Batch"+" "+numOfBatchesSent
 					,progressBarEventType:ProgBarEventType.TextMsg)));
 				dictEbills.Clear();
 				int pdfsToPrint = 0;
-				_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Calculating # of PDFs to print")+"..."
+				_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Calculating # of PDFs to print"+"..."
 					,progressBarEventType:ProgBarEventType.TextMsg)));
 				foreach(Statement stmt in dictStatementsForSend[numOfBatchesSent]) {
 					if(stmt==null) {//The statement was probably deleted by another user.
@@ -961,7 +961,7 @@ namespace OpenDental{
 				{
 					return;
 				}
-				_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Batch Completed")+"..."
+				_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Batch Completed"+"..."
 					,progressBarEventType:ProgBarEventType.TextMsg)));
 				numOfBatchesSent++;
 			}//End while loop
@@ -1003,8 +1003,8 @@ namespace OpenDental{
 				if(stmt==null) {//The statement was probably deleted by another user.
 					skippedDeleted++;
 					curStatementsProcessed++;
-					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Overall"),Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
-					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Batch")+"\r\n"+numOfBatchesSent+" / "
+					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Overall",Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
+					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Batch"+"\r\n"+numOfBatchesSent+" / "
 						+dictStatementsForSend.Count,Math.Ceiling(((double)curStatementsProcessed/dictStatementsForSend[numOfBatchesSent].Count)*100)+"%",curStatementsProcessed,dictStatementsForSend[numOfBatchesSent].Count,ProgBarStyle.Blocks,"2")));
 					continue;
 				}
@@ -1015,13 +1015,13 @@ namespace OpenDental{
 				if(_listStatementNumsToSkip.Contains(stmt.StatementNum)) {
 					//The user never selected this statement, so we don't need to note why we skipped it.
 					curStatementsProcessed++;
-					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Overall"),Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
-					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Batch")+"\r\n"+numOfBatchesSent+" / "
+					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Overall",Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
+					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Batch"+"\r\n"+numOfBatchesSent+" / "
 						+dictStatementsForSend.Count,Math.Ceiling(((double)curStatementsProcessed/dictStatementsForSend[numOfBatchesSent].Count)*100)+"%",curStatementsProcessed,dictStatementsForSend[numOfBatchesSent].Count,ProgBarStyle.Blocks,"2")));
 					continue;
 				}
-				_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Statement")+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"5%",5,100,ProgBarStyle.Blocks,"3")));
-				_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Generating Single PDFs")+"..."
+				_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Statement"+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"5%",5,100,ProgBarStyle.Blocks,"3")));
+				_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Generating Single PDFs"+"..."
 					,progressBarEventType:ProgBarEventType.TextMsg)));
 				Family fam=null;
 				if(!_dictFams.TryGetValue(stmt.PatNum,out fam)) {
@@ -1036,7 +1036,7 @@ namespace OpenDental{
 				else { //me or static email address, email address for 'me' is the first one in _listEmailAddresses
 					emailAddress=_listEmailAddresses[comboEmailFrom.SelectedIndex-1];//-1 to account for predefined "Clinic/Practice" item in combobox
 				}
-				_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Statement")+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"10%",10,100,ProgBarStyle.Blocks,"3")));
+				_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Statement"+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"10%",10,100,ProgBarStyle.Blocks,"3")));
 				if(stmt.Mode_==StatementMode.Email) {
 					if(emailAddress.SMTPserver=="") {
 						_progExtended.Close();
@@ -1047,15 +1047,15 @@ namespace OpenDental{
 						return false;
 					}
 					if(pat.Email=="") {
-						listDictPatnumsSkipped[0][pat.PatNum]=Lan.G(this,"Empty patient Email");
+						listDictPatnumsSkipped[0][pat.PatNum]="Empty patient Email";
 						curStatementsProcessed++;
-						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Overall"),Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
-						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Batch")+"\r\n"+numOfBatchesSent+" / "
+						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Overall",Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
+						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Batch"+"\r\n"+numOfBatchesSent+" / "
 							+dictStatementsForSend.Count,Math.Ceiling(((double)curStatementsProcessed/dictStatementsForSend[numOfBatchesSent].Count)*100)+"%",curStatementsProcessed,dictStatementsForSend[numOfBatchesSent].Count,ProgBarStyle.Blocks,"2")));
 						continue;
 					}
 				}
-				_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Statement")+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"15%",15,100,ProgBarStyle.Blocks,"3")));
+				_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Statement"+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"15%",15,100,ProgBarStyle.Blocks,"3")));
 				stmt.IsSent=true;
 				stmt.DateSent=DateTimeOD.Today;
 				#region Print PDFs
@@ -1065,7 +1065,7 @@ namespace OpenDental{
 					//Do not create a pdf
 				}
 				else {
-					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Statement")+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"100%",100,100,ProgBarStyle.Blocks,"3")));
+					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Statement"+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"100%",100,100,ProgBarStyle.Blocks,"3")));
 					try {
 						tempPdfFile=FormRpStatement.CreateStatementPdfSheets(stmt,pat,fam,dataSet,true);
 						//The above methods return an empty string if they were unable to create a PDF.
@@ -1074,19 +1074,19 @@ namespace OpenDental{
 						}
 					}
 					catch(Exception ex) {
-						listDictPatnumsSkipped[2][pat.PatNum]=Lan.G(this,"Error creating PDF")+": "+ex.ToString();
+						listDictPatnumsSkipped[2][pat.PatNum]="Error creating PDF"+": "+ex.ToString();
 						curStatementsProcessed++;
-						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Overall"),
+						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Overall",
 							Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,
 							ProgBarStyle.Blocks,"1")));
-						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Batch")+"\r\n"+numOfBatchesSent+" / "
+						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Batch"+"\r\n"+numOfBatchesSent+" / "
 							+dictStatementsForSend.Count,Math.Ceiling(((double)curStatementsProcessed/dictStatementsForSend[numOfBatchesSent].Count)*100)+"%",
 							curStatementsProcessed,dictStatementsForSend[numOfBatchesSent].Count,ProgBarStyle.Blocks,"2")));
 						continue;
 					}
 					pdfsPrinted++;
-					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Statement")+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"100%",100,100,ProgBarStyle.Blocks,"3")));
-					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"PDF Created")+"..."
+					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Statement"+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"100%",100,100,ProgBarStyle.Blocks,"3")));
+					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("PDF Created"+"..."
 						,progressBarEventType:ProgBarEventType.TextMsg)));
 					if(stmt.DocNum==0) {
 						_progExtended.Close();
@@ -1110,16 +1110,16 @@ namespace OpenDental{
 					for(int idx = 0;idx<inputDocument.PageCount;idx++) {
 						page=inputDocument.Pages[idx];
 						outputDocument.AddPage(page);
-						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Statement")+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,(((idx/inputDocument.PageCount)*85)+15)+"%",((idx/inputDocument.PageCount)*85)+15,100,ProgBarStyle.Blocks,"3")));
-						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"PDF Added to Print List")+"..."
+						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Statement"+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,(((idx/inputDocument.PageCount)*85)+15)+"%",((idx/inputDocument.PageCount)*85)+15,100,ProgBarStyle.Blocks,"3")));
+						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("PDF Added to Print List"+"..."
 							,progressBarEventType:ProgBarEventType.TextMsg)));
 					}
 					curStatementsProcessed++;
-					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Overall"),Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
-					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Batch")+"\r\n"+numOfBatchesSent+" / "
+					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Overall",Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
+					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Batch"+"\r\n"+numOfBatchesSent+" / "
 						+dictStatementsForSend.Count,Math.Ceiling(((double)curStatementsProcessed/dictStatementsForSend[numOfBatchesSent].Count)*100)+"%",curStatementsProcessed,dictStatementsForSend[numOfBatchesSent].Count,ProgBarStyle.Blocks,"2")));
 					printed++;
-					labelPrinted.Text=Lan.G(this,"Printed=")+printed.ToString();
+					labelPrinted.Text="Printed="+printed.ToString();
 					Application.DoEvents();
 					_listStatementNumsSent.Add(stmt.StatementNum);
 					Statements.MarkSent(stmt.StatementNum,stmt.DateSent);
@@ -1127,7 +1127,7 @@ namespace OpenDental{
 				#endregion
 				#region Preparing Email
 				if(stmt.Mode_==StatementMode.Email) {
-					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Preparing Email")+"..."
+					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Preparing Email"+"..."
 						,progressBarEventType:ProgBarEventType.TextMsg)));
 					attachPath=EmailAttaches.GetAttachPath();
 					rnd=new Random();
@@ -1137,9 +1137,9 @@ namespace OpenDental{
 					Storage.Copy(savedPdfPath,filePathAndName/*,FileAtoZSourceDestination.LocalToAtoZ,uploadMessage:"Uploading statement..."*/);
 					
 					//Process.Start(filePathAndName);
-					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Statement")+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"40%",40,100,ProgBarStyle.Blocks,"3")));
+					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Statement"+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"40%",40,100,ProgBarStyle.Blocks,"3")));
 					message=Statements.GetEmailMessageForStatement(stmt,pat);
-					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Statement")+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"70%",70,100,ProgBarStyle.Blocks,"3")));
+					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Statement"+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"70%",70,100,ProgBarStyle.Blocks,"3")));
 					attach=new EmailAttach();
 					attach.DisplayedFileName="Statement.pdf";
 					attach.ActualFileName=fileName;
@@ -1147,28 +1147,28 @@ namespace OpenDental{
 					try {
 						//If IsCloudStorage==true, then we will end up downloading the file again in EmailMessages.SendEmailUnsecure.
 						EmailMessages.SendEmailUnsecure(message,emailAddress);
-						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Statement")+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"90%",90,100,ProgBarStyle.Blocks,"3")));
+						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Statement"+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"90%",90,100,ProgBarStyle.Blocks,"3")));
 						message.SentOrReceived=EmailSentOrReceived.Sent;
 						message.MsgDateTime=DateTime.Now;
 						EmailMessages.Insert(message);
-						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Statement")+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"95%",95,100,ProgBarStyle.Blocks,"3")));
+						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Statement"+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"95%",95,100,ProgBarStyle.Blocks,"3")));
 						emailed++;
 						curStatementsProcessed++;
-						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Overall"),Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
-						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Batch")+"\r\n"+numOfBatchesSent+" / "
+						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Overall",Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
+						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Batch"+"\r\n"+numOfBatchesSent+" / "
 							+dictStatementsForSend.Count,Math.Ceiling(((double)curStatementsProcessed/dictStatementsForSend[numOfBatchesSent].Count)*100)+"%",curStatementsProcessed,dictStatementsForSend[numOfBatchesSent].Count,ProgBarStyle.Blocks,"2")));
-						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Email Sent")+"...",
+						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Email Sent"+"...",
 							progressBarEventType:ProgBarEventType.TextMsg)));
-						labelEmailed.Text=Lan.G(this,"E-mailed=")+emailed.ToString();
+						labelEmailed.Text="E-mailed="+emailed.ToString();
 						Application.DoEvents();
 					}
 					catch(Exception ex) {
-						listDictPatnumsSkipped[2][pat.PatNum]=Lan.G(this,"Error sending email")+": "+ex.ToString();
+						listDictPatnumsSkipped[2][pat.PatNum]="Error sending email"+": "+ex.ToString();
 						curStatementsProcessed++;
-						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Overall"),Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
-						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Batch")+"\r\n"+numOfBatchesSent+" / "
+						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Overall",Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
+						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Batch"+"\r\n"+numOfBatchesSent+" / "
 							+dictStatementsForSend.Count,Math.Ceiling(((double)curStatementsProcessed/dictStatementsForSend[numOfBatchesSent].Count)*100)+"%",curStatementsProcessed,dictStatementsForSend[numOfBatchesSent].Count,ProgBarStyle.Blocks,"2")));
-						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Statement")+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"100%",100,100,ProgBarStyle.Blocks,"3")));
+						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Statement"+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"100%",100,100,ProgBarStyle.Blocks,"3")));
 						continue;
 					}
 					_listStatementNumsSent.Add(stmt.StatementNum);
@@ -1183,15 +1183,15 @@ namespace OpenDental{
 				#endregion
 				#region Preparing E-Bills
 				if(stmt.Mode_==StatementMode.Electronic) {
-					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Statement")+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"65%",65,100,ProgBarStyle.Blocks,"3")));
-					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Preparing E-Bills")+"...",
+					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Statement"+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"65%",65,100,ProgBarStyle.Blocks,"3")));
+					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Preparing E-Bills"+"...",
 						progressBarEventType:ProgBarEventType.TextMsg)));
 					Patient guar = fam.ListPats[0];
 					if(guar.Address.Trim()=="" || guar.City.Trim()=="" || guar.State.Trim()=="" || guar.Zip.Trim()=="") {
-						listDictPatnumsSkipped[1][pat.PatNum]=Lan.G(this,"Error with patient address");
+						listDictPatnumsSkipped[1][pat.PatNum]="Error with patient address";
 						curStatementsProcessed++;
-						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Overall"),Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
-						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Batch")+"\r\n"+numOfBatchesSent+" / "
+						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Overall",Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
+						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Batch"+"\r\n"+numOfBatchesSent+" / "
 							+dictStatementsForSend.Count,Math.Ceiling(((double)curStatementsProcessed/dictStatementsForSend[numOfBatchesSent].Count)*100)+"%",curStatementsProcessed,dictStatementsForSend[numOfBatchesSent].Count,ProgBarStyle.Blocks,"2")));
 						continue;
 					}
@@ -1211,8 +1211,8 @@ namespace OpenDental{
 							listDictPatnumsSkipped[2][pat.PatNum]=errorElect;
 						}
 						curStatementsProcessed++;
-						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Overall"),Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
-						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Batch")+"\r\n"+numOfBatchesSent+" / "
+						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Overall",Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
+						_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Batch"+"\r\n"+numOfBatchesSent+" / "
 							+dictStatementsForSend.Count,Math.Ceiling(((double)curStatementsProcessed/dictStatementsForSend[numOfBatchesSent].Count)*100)+"%",curStatementsProcessed,dictStatementsForSend[numOfBatchesSent].Count,ProgBarStyle.Blocks,"2")));
 						continue;//skip the current statement, since there are errors.
 					}
@@ -1220,8 +1220,8 @@ namespace OpenDental{
 						dictEbills.Add(clinicNum,new List<EbillStatement>());
 					}
 					dictEbills[clinicNum].Add(ebillStatement);
-					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Statement")+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"70%",70,100,ProgBarStyle.Blocks,"3")));
-					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"E-Bill Added To Send List")+"..."
+					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Statement"+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"70%",70,100,ProgBarStyle.Blocks,"3")));
+					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("E-Bill Added To Send List"+"..."
 						,progressBarEventType:ProgBarEventType.TextMsg)));
 				}
 				#endregion
@@ -1247,9 +1247,9 @@ namespace OpenDental{
 				}
 				isComputeAging=false;
 			}
-			_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Statement")+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"80%",80,100,ProgBarStyle.Blocks,"3")));
+			_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Statement"+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"80%",80,100,ProgBarStyle.Blocks,"3")));
 			foreach(KeyValuePair<long,List<EbillStatement>> entryForClinic in dictEbills) {//Go through the dictionary entries
-				_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Sending E-Bills")+"..."
+				_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Sending E-Bills"+"..."
 					,progressBarEventType:ProgBarEventType.TextMsg)));
 				if(!BillingProgressPause()) {
 					return false;
@@ -1288,7 +1288,7 @@ namespace OpenDental{
 					}
 					int stmtCountCur = 0;
 					//Generate the statements for each batch.
-					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Statement")+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"85%",85,100,ProgBarStyle.Blocks,"3")));
+					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Statement"+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"85%",85,100,ProgBarStyle.Blocks,"3")));
 					for(int j = listClinicStmts.Count-1;j>=0;j--) {//Construct the string for sending this clinic's ebills
 						if(!BillingProgressPause()) {
 							return false;
@@ -1297,16 +1297,16 @@ namespace OpenDental{
 						if(stmtCur==null) {//The statement was probably deleted by another user.
 							skippedDeleted++;
 							curStatementsProcessed++;
-							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Overall"),Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
-							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Batch")+"\r\n"+numOfBatchesSent+" / "
+							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Overall",Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
+							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Batch"+"\r\n"+numOfBatchesSent+" / "
 								+dictStatementsForSend.Count,Math.Ceiling(((double)curStatementsProcessed/dictStatementsForSend[numOfBatchesSent].Count)*100)+"%",curStatementsProcessed,dictStatementsForSend[numOfBatchesSent].Count,ProgBarStyle.Blocks,"2")));
 							continue;
 						}
 						if(_listStatementNumsToSkip.Contains(stmtCur.StatementNum)) {
 							//The user never selected this statement, so we don't need to note why we skipped it.
 							curStatementsProcessed++;
-							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Overall"),Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
-							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Batch")+"\r\n"+numOfBatchesSent+" / "
+							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Overall",Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
+							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Batch"+"\r\n"+numOfBatchesSent+" / "
 								+dictStatementsForSend.Count,Math.Ceiling(((double)curStatementsProcessed/dictStatementsForSend[numOfBatchesSent].Count)*100)+"%",curStatementsProcessed,dictStatementsForSend[numOfBatchesSent].Count,ProgBarStyle.Blocks,"2")));
 							continue;
 						}
@@ -1321,7 +1321,7 @@ namespace OpenDental{
 							StringBuilder strBuildStatement = new StringBuilder();
 							using(XmlWriter writerStatement = XmlWriter.Create(strBuildStatement,writerElect.Settings)) {
 								if(Prefs.GetString(PrefName.BillingUseElectronic)=="0") {
-									throw new Exception(Lan.G(this,"\'No billing electronic\' is currently selected in Billing Defaults."));
+									throw new Exception("\'No billing electronic\' is currently selected in Billing Defaults.");
 								}
 								else if(Prefs.GetString(PrefName.BillingUseElectronic)=="1") {
 									OpenDental.Bridges.EHG_statements.GenerateOneStatement(writerStatement,stmtCur,pat,fam,dataSet);
@@ -1342,7 +1342,7 @@ namespace OpenDental{
 							}
 						}
 						catch(Exception ex) {
-							listDictPatnumsSkipped[2][pat.PatNum]=Lan.G(this,"Error sending statement")+": "+ex.ToString();
+							listDictPatnumsSkipped[2][pat.PatNum]="Error sending statement"+": "+ex.ToString();
 							statementWritten=false;
 						}
 						if(statementWritten) {
@@ -1357,7 +1357,7 @@ namespace OpenDental{
 					if(stmtCountCur==0) {//All statements for this batch were either deleted or had an exception thrown while generating.
 						continue;//Go on to next batch
 					}
-					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Statement")+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"90%",90,100,ProgBarStyle.Blocks,"3")));
+					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Statement"+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"90%",90,100,ProgBarStyle.Blocks,"3")));
 					if(Prefs.GetString(PrefName.BillingUseElectronic)=="1") {
 						writerElect.Close();
 						for(int attempts = 0;attempts<3;attempts++) {
@@ -1368,9 +1368,9 @@ namespace OpenDental{
 									_listStatementNumsSent.Add(listElectStmtNums[i]);
 									Statements.MarkSent(listElectStmtNums[i],DateTimeOD.Today);
 									curStatementsProcessed++;
-									_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Statement")+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"100%",100,100,ProgBarStyle.Blocks,"3")));
-									_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Overall"),Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
-									_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Batch")+"\r\n"+numOfBatchesSent+" / "
+									_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Statement"+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"100%",100,100,ProgBarStyle.Blocks,"3")));
+									_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Overall",Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
+									_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Batch"+"\r\n"+numOfBatchesSent+" / "
 										+dictStatementsForSend.Count,Math.Ceiling(((double)curStatementsProcessed/dictStatementsForSend[numOfBatchesSent].Count)*100)+"%",curStatementsProcessed,dictStatementsForSend[numOfBatchesSent].Count,ProgBarStyle.Blocks,"2")));
 								}
 								break;//At this point the batch was successfully sent so there is no need to loop through additional attempts.
@@ -1384,18 +1384,18 @@ namespace OpenDental{
 									listDictPatnumsSkipped[2][0]="";
 								}				
 								if(ex.Message.Contains("(404) Not Found")) {//Custom 404 error message
-									listDictPatnumsSkipped[2][0]+=Lan.G(this,"The connection to the server could not be established or was lost, or the upload timed out.  "
+									listDictPatnumsSkipped[2][0]+="The connection to the server could not be established or was lost, or the upload timed out.  "
 									+"Ensure your internet connection is working and that your firewall is not blocking this application.  "
-									+"If the upload timed out after 10 minutes, try sending 25 statements or less in each batch to reduce upload time.");
+									+"If the upload timed out after 10 minutes, try sending 25 statements or less in each batch to reduce upload time.";
 								}
 								else {//Document any other errors to make troubleshooting much easier.
-									listDictPatnumsSkipped[2][0]+=Lan.G(this,ex.Message);
+									listDictPatnumsSkipped[2][0]+=ex.Message;
 								}
 							}
 							//This occurs so we can count unsent bills in the overall.
 							curStatementsProcessed++;
-							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Overall"),Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
-							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Batch")+"\r\n"+numOfBatchesSent+" / "
+							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Overall",Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
+							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Batch"+"\r\n"+numOfBatchesSent+" / "
 								+dictStatementsForSend.Count,Math.Ceiling(((double)curStatementsProcessed/dictStatementsForSend[numOfBatchesSent].Count)*100)+"%",curStatementsProcessed,dictStatementsForSend[numOfBatchesSent].Count,ProgBarStyle.Blocks,"2")));
 						}
 					}
@@ -1428,13 +1428,13 @@ namespace OpenDental{
 						filePath=GetEbillFilePathForClinic(filePath,entryForClinic.Key);
 						File.WriteAllText(filePath,strBuildElect.ToString());
 						for(int i = 0;i<listElectStmtNums.Count;i++) {
-							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Statement")+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"10%",10,100,ProgBarStyle.Blocks,"3")));
+							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Statement"+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"10%",10,100,ProgBarStyle.Blocks,"3")));
 							_listStatementNumsSent.Add(listElectStmtNums[i]);
 							Statements.MarkSent(listElectStmtNums[i],DateTimeOD.Today);
 							curStatementsProcessed++;
-							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Statement")+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"100%",100,100,ProgBarStyle.Blocks,"3")));
-							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Overall"),Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
-							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Batch")+"\r\n"+numOfBatchesSent+" / "
+							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Statement"+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"100%",100,100,ProgBarStyle.Blocks,"3")));
+							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Overall",Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
+							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Batch"+"\r\n"+numOfBatchesSent+" / "
 								+dictStatementsForSend.Count,Math.Ceiling(((double)curStatementsProcessed /dictStatementsForSend[numOfBatchesSent].Count)*100)+"%",curStatementsProcessed,dictStatementsForSend[numOfBatchesSent].Count,ProgBarStyle.Blocks,"2")));
 						}
 					}
@@ -1470,9 +1470,9 @@ namespace OpenDental{
 							_listStatementNumsSent.Add(listElectStmtNums[i]);
 							Statements.MarkSent(listElectStmtNums[i],DateTimeOD.Today);
 							curStatementsProcessed++;
-							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Statement")+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"100%",100,100,ProgBarStyle.Blocks,"3")));
-							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Overall"),Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
-							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Batch")+"\r\n"+numOfBatchesSent+" / "
+							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Statement"+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"100%",100,100,ProgBarStyle.Blocks,"3")));
+							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Overall",Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
+							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Batch"+"\r\n"+numOfBatchesSent+" / "
 								+dictStatementsForSend.Count,Math.Ceiling(((double)curStatementsProcessed/dictStatementsForSend[numOfBatchesSent].Count)*100)+"%",curStatementsProcessed,dictStatementsForSend[numOfBatchesSent].Count,ProgBarStyle.Blocks,"2")));
 						}
 					}
@@ -1490,7 +1490,7 @@ namespace OpenDental{
 							continue;//Go on to next batch
 						}
 						else {
-							MsgBoxCopyPaste msg=new MsgBoxCopyPaste(Lan.G(this,"Billing Defaults Output Path value is invalid.\r\nPlease specify the path to save the file to."));
+							MsgBoxCopyPaste msg=new MsgBoxCopyPaste("Billing Defaults Output Path value is invalid.\r\nPlease specify the path to save the file to.");
 							msg.ShowDialog();
 							SaveFileDialog dlg=new SaveFileDialog();
 							dlg.FileName="Statements.xml";
@@ -1506,19 +1506,19 @@ namespace OpenDental{
 						filePath=GetEbillFilePathForClinic(filePath,entryForClinic.Key);
 						File.WriteAllText(filePath,strBuildElect.ToString());
 						for(int i=0;i<listElectStmtNums.Count;i++) {
-							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Statement")+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"10%",10,100,ProgBarStyle.Blocks,"3")));
+							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Statement"+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"10%",10,100,ProgBarStyle.Blocks,"3")));
 							_listStatementNumsSent.Add(listElectStmtNums[i]);
 							Statements.MarkSent(listElectStmtNums[i],DateTimeOD.Today);
 							curStatementsProcessed++;
-							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Statement")+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"100%",100,100,ProgBarStyle.Blocks,"3")));
-							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Overall"),Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
-							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Batch")+"\r\n"+numOfBatchesSent+" / "
+							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Statement"+"\r\n"+curStmtIdx+" / "+gridBill.SelectedIndices.Length,"100%",100,100,ProgBarStyle.Blocks,"3")));
+							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Overall",Math.Ceiling(((double)curStmtIdx/gridBill.SelectedIndices.Length)*100)+"%",curStmtIdx,gridBill.SelectedIndices.Length,ProgBarStyle.Blocks,"1")));
+							_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Batch"+"\r\n"+numOfBatchesSent+" / "
 								+dictStatementsForSend.Count,Math.Ceiling(((double)curStatementsProcessed /dictStatementsForSend[numOfBatchesSent].Count)*100)+"%",curStatementsProcessed,dictStatementsForSend[numOfBatchesSent].Count,ProgBarStyle.Blocks,"2")));
 						}
 					}
-					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"E-Bills Sent")+"..."
+					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("E-Bills Sent"+"..."
 						,progressBarEventType:ProgBarEventType.TextMsg)));
-					labelSentElect.Text=Lan.G(this,"SentElect=")+sentElect.ToString();
+					labelSentElect.Text="SentElect="+sentElect.ToString();
 					Application.DoEvents();
 				}
 			}
@@ -1533,7 +1533,7 @@ namespace OpenDental{
 			string clinicAbbr;
 			//Check for zero clinic
 			if(clinicNum==0) {
-				clinicAbbr=Lan.G(this,"Unassigned");
+				clinicAbbr="Unassigned";
 			}
 			else {
 				clinicAbbr=Clinics.GetClinic(clinicNum).Abbr;//Abbr is required by our interface, so no need to check if blank.
@@ -1561,7 +1561,7 @@ namespace OpenDental{
 				}
 				PatComm patComm;
 				if(!dictPatComms.TryGetValue(stmt.PatNum,out patComm)) {
-					listDictPatnumsSkipped[2][stmt.PatNum]=Lan.G(this,"Unable to find patient communication method");
+					listDictPatnumsSkipped[2][stmt.PatNum]="Unable to find patient communication method";
 					continue;
 				}
 				if(!patComm.IsSmsAnOption) {
@@ -1593,20 +1593,20 @@ namespace OpenDental{
 				return true;
 			}
 			try {
-				_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Sending text messages")+"..."
+				_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Sending text messages"+"..."
 					,progressBarEventType: ProgBarEventType.TextMsg)));
 				List<SmsToMobile> listSmsToMobiles=SmsToMobiles.SendSmsMany(listTextsToSend,user:Security.CurrentUser);
 				//listDictPatnumsSkipped[2] tracks errors for patients skipped due to Misc reasons.
 				HandleSmsSent(listSmsToMobiles,listStmtNumsToUpdate,listDictPatnumsSkipped[2]);
 				texted+=listSmsToMobiles.Where(x => x.SmsStatus!=SmsDeliveryStatus.FailNoCharge).Count();
-				labelTexted.Text=Lan.G(this,"Texted=")+texted;
+				labelTexted.Text="Texted="+texted;
 				Application.DoEvents();
 			}
 			catch(Exception ex) {
 				if(!listDictPatnumsSkipped[2].ContainsKey(0)) {
 					listDictPatnumsSkipped[2][0]="";
 				}
-				listDictPatnumsSkipped[2][0]+=Lan.G(this,"Error Sending text messages")+": "+ex.ToString();
+				listDictPatnumsSkipped[2][0]+="Error Sending text messages"+": "+ex.ToString();
 				Statements.UpdateSmsSendStatus(listStmtNumsToUpdate.Select(x => x.Item2).ToList(),AutoCommStatus.SendFailed);
 			}
 			return true;
@@ -1636,7 +1636,7 @@ namespace OpenDental{
 				if(!dictPatnumsSkippedMisc.ContainsKey(sms.PatNum)) {
 					dictPatnumsSkippedMisc[sms.PatNum]="";
 				}
-				dictPatnumsSkippedMisc[sms.PatNum]+=Lan.G(this,"Error Sending text messages")+": "+sms.CustErrorText;
+				dictPatnumsSkippedMisc[sms.PatNum]+="Error Sending text messages"+": "+sms.CustErrorText;
 			}
 		}
 
@@ -1673,10 +1673,10 @@ namespace OpenDental{
 			Prefs.RefreshCache();
 			DateTime dateTAgingBeganPref=PrefC.GetDate(PrefName.AgingBeginDateTime);
 			if(dateTAgingBeganPref>DateTime.MinValue) {
-				MessageBox.Show(this,Lan.G(this,"In order to print or send statments, aging must be re-calculated, but you cannot run aging until it has "
-					+"finished the current calculations which began on")+" "+dateTAgingBeganPref.ToString()+".\r\n"+Lans.g(this,"If you believe the current "
+				MessageBox.Show(this,"In order to print or send statments, aging must be re-calculated, but you cannot run aging until it has "
+					+"finished the current calculations which began on"+" "+dateTAgingBeganPref.ToString()+".\r\n"+"If you believe the current "
 					+"aging process has finished, a user with SecurityAdmin permission can manually clear the date and time by going to Setup | Miscellaneous "
-					+"and pressing the 'Clear' button."));
+					+"and pressing the 'Clear' button.");
 				return false;
 			}
 			SecurityLogs.MakeLogEntry(Permissions.AgingRan,0,"Starting Aging - Billing");
@@ -1684,7 +1684,7 @@ namespace OpenDental{
 			Signalods.SetInvalid(InvalidType.Prefs);//signal a cache refresh so other computers will have the updated pref as quickly as possible
 			Cursor=Cursors.WaitCursor;
 			bool result=true;
-			string msgText=Lan.G(this,"Calculating enterprise aging for all patients as of")+" "+dtToday.ToShortDateString()+"...";
+			string msgText="Calculating enterprise aging for all patients as of"+" "+dtToday.ToShortDateString()+"...";
 			ODProgress.ShowAction(
 				() => {
 					Ledgers.ComputeAging(0,dtToday);
@@ -1714,7 +1714,7 @@ namespace OpenDental{
 			List<long> clinicNums=new List<long>();//an empty list indicates to Statements.GetBilling to run for all clinics
 			while(_progExtended.IsPaused) {
 				if(!hasEventFired) {//Don't fire this event more than once.
-					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper(Lan.G(this,"Warning")
+					_progExtended.Fire(new ODEventArgs(EventCategory.Billing,new ProgressBarHelper("Warning"
 						,progressBarEventType:ProgBarEventType.WarningOff)));
 					hasEventFired=true;
 				}
@@ -1753,7 +1753,7 @@ namespace OpenDental{
 		private void butCancel_Click(object sender,EventArgs e) {
 			if(gridBill.ListGridRows.Count>0){
 				_isActivateFillDisabled=true;
-				DialogResult result=MessageBox.Show(Lan.G(this,"You may leave this window open while you work.  If you do close it, do you want to delete all unsent bills?"),
+				DialogResult result=MessageBox.Show("You may leave this window open while you work.  If you do close it, do you want to delete all unsent bills?",
 					"",MessageBoxButtons.YesNoCancel);
 				if(result==DialogResult.Yes){
 					Dictionary<long,List<long>> dictClinicStatmentsToDelete=null;
@@ -1768,8 +1768,8 @@ namespace OpenDental{
 							int runningTotal=0;
 							foreach(long clinicNum in dictClinicStatmentsToDelete.Keys) {
 								BillingEvent.Fire(EventCategory.Billing,
-									Lan.G(this,"Deleting")+" "+dictClinicStatmentsToDelete[clinicNum].Count+" "+Lan.G(this,"statements.")+"\r\n"
-									+Lan.G(this,"Processed")+" "+runningTotal+" "+Lan.G(this,"out of")+" "+totalCount);
+									"Deleting"+" "+dictClinicStatmentsToDelete[clinicNum].Count+" "+"statements."+"\r\n"
+									+"Processed"+" "+runningTotal+" "+"out of"+" "+totalCount);
 								Statements.DeleteAll(dictClinicStatmentsToDelete[clinicNum]);
 								runningTotal+=dictClinicStatmentsToDelete[clinicNum].Count;
 							}
@@ -1778,13 +1778,13 @@ namespace OpenDental{
 						},
 						startingMessage:"Deleteing Statements...",
 						actionException:ex => this.Invoke(() => {
-							FriendlyException.Show(Lan.G(this,"Error deleting statements."),ex);
+							FriendlyException.Show("Error deleting statements.",ex);
 						}),
 						eventType:typeof(BillingEvent),
 						odEventType:EventCategory.Billing
 					);
 					if(dictClinicStatmentsToDelete!=null) {//No error.
-						MessageBox.Show(Lan.G(this,"Unsent statements deleted: ")+totalCount);
+						MessageBox.Show("Unsent statements deleted: "+totalCount);
 					}
 				}
 				else if(result==DialogResult.No){
@@ -1809,7 +1809,7 @@ namespace OpenDental{
 		///// <summary></summary>
 		//private void butSendEbill_Click(object sender,EventArgs e) {
 		//	if (gridBill.SelectedIndices.Length == 0){
-		//		MessageBox.Show(Lan.g(this, "Please select items first."));
+		//		MessageBox.Show("Please select items first.");
 		//		return;
 		//	}
 		//	Cursor.Current = Cursors.WaitCursor;

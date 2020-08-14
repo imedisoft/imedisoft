@@ -26,7 +26,7 @@ namespace OpenDental {
 
 		public FormInsPlanSubstitution(InsPlan insPlan) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_insPlan=insPlan;
 		}
 
@@ -37,7 +37,7 @@ namespace OpenDental {
 			_listSubstLinksOld=_listSubstLinks.DeepCopyList<SubstitutionLink,SubstitutionLink>();
 			_listSubConditions=new List<string>();
 			for(int i=0;i<Enum.GetNames(typeof(SubstitutionCondition)).Length;i++) {
-				_listSubConditions.Add(Lan.G("enumSubstitutionCondition",Enum.GetNames(typeof(SubstitutionCondition))[i]));
+				_listSubConditions.Add(Enum.GetNames(typeof(SubstitutionCondition))[i]);
 			}
 			FillGridMain();
 		}
@@ -47,12 +47,12 @@ namespace OpenDental {
 			gridMain.BeginUpdate();
 			gridMain.ListGridRows.Clear();
 			if(gridMain.ListGridColumns.Count==0) {
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.G(gridMain.TranslationName,"ProcCode"),90));
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.G(gridMain.TranslationName,"AbbrDesc"),100));
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.G(gridMain.TranslationName,"SubstOnlyIf"),100){ListDisplayStrings=_listSubConditions });//Dropdown combobox
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.G(gridMain.TranslationName,"SubstCode"),90,true));//Can edit cell
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.G(gridMain.TranslationName,"SubstDesc"),90));
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.G(gridMain.TranslationName,"InsOnly"),15){ IsWidthDynamic=true });
+				gridMain.ListGridColumns.Add(new GridColumn("ProcCode",90));
+				gridMain.ListGridColumns.Add(new GridColumn("AbbrDesc",100));
+				gridMain.ListGridColumns.Add(new GridColumn("SubstOnlyIf",100){ListDisplayStrings=_listSubConditions });//Dropdown combobox
+				gridMain.ListGridColumns.Add(new GridColumn("SubstCode",90,true));//Can edit cell
+				gridMain.ListGridColumns.Add(new GridColumn("SubstDesc",90));
+				gridMain.ListGridColumns.Add(new GridColumn("InsOnly",15){ IsWidthDynamic=true });
 			}
 			//Add all substitution codes for procedure code level
 			foreach(ProcedureCode procCode in _listSubstProcCodes) {
@@ -110,7 +110,7 @@ namespace OpenDental {
 			GridRow row=new GridRow();
 			row.Cells.Add(procCode.ProcCode);
 			row.Cells.Add(procCode.AbbrDesc);
-			GridCell cell=new GridCell(Lan.G("enumSubstitutionCondition",enumSubstCondition));
+			GridCell cell=new GridCell(enumSubstCondition);
 			cell.ComboSelectedIndex=_listSubConditions.FindIndex(x => x==enumSubstCondition);
 			row.Cells.Add(cell);
 			row.Cells.Add(subCode);
@@ -243,7 +243,7 @@ namespace OpenDental {
 			}
 			string msgText="Delete the selected insurance specific substitution code?\r\nDeleting the insurance specific substitution code will default to "
 				+"the global substitution code for procedure";
-			if(!MsgBox.Show(MsgBoxButtons.YesNo,Lan.G(this,msgText)+" \""+procCode.ProcCode+"\".")) {
+			if(!MsgBox.Show(MsgBoxButtons.YesNo,msgText+" \""+procCode.ProcCode+"\".")) {
 				return;
 			}
 			_listSubstLinks.Remove(subLink);
@@ -252,10 +252,10 @@ namespace OpenDental {
 
 		///<summary>Syncs _listDbSubstLinks and _listDbSubstLinksOld. Does not modify any of the procedure level SubstitutionCodes.</summary>
 		private void butOK_Click(object sender,EventArgs e) {
-			string msgText=Lan.G(this,"You have chosen to exclude all substitution codes.  "
+			string msgText="You have chosen to exclude all substitution codes.  "
 				+"The checkbox option named 'Don't Substitute Codes (e.g. posterior composites)' "
 				+"in the Other Ins Info tab of the Edit Insurance Plan window can be used to exclude all substitution codes.\r\n"
-				+"Would you like to enable this option instead of excluding specific codes?");
+				+"Would you like to enable this option instead of excluding specific codes?";
 			if(!_insPlan.CodeSubstNone
 				&& _listSubstProcCodes.Select(x =>x.CodeNum).All(x => _listSubstLinks.Find(y => y.CodeNum==x)?.SubstOnlyIf==SubstitutionCondition.Never)
 				&& MessageBox.Show(this,msgText,null,MessageBoxButtons.YesNo)==DialogResult.Yes)

@@ -19,7 +19,7 @@ namespace OpenDental {
 			InitializeComponent();
 			//get providerErx from provErxNum that was passed in
 			_providerErxCur=ProviderErxs.GetFirstOrDefault(x => x.ProviderErxNum==provErxNum);
-			Lan.F(this);
+			
 		}
 
 		private void FormDoseSpotAssignUserId_Load(object sender,EventArgs e) {
@@ -54,7 +54,7 @@ namespace OpenDental {
 
 		private void FillComboBox() {
 			comboDoseUsers.Items.Clear();
-			comboDoseUsers.Items.Add(new ODBoxItem<Userod>(Lan.G(this,"None")));
+			comboDoseUsers.Items.Add(new ODBoxItem<Userod>("None"));
 			comboDoseUsers.SelectedIndex=0;
 			foreach(Userod userCur in _listUsersInComboBox) {
 				ODBoxItem<Userod> boxItemCur=new ODBoxItem<Userod>(userCur.UserName,userCur);

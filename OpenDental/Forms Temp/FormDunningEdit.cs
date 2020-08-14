@@ -55,7 +55,7 @@ namespace OpenDental{
 			//
 			_dunningCur=dunningCur.Copy();
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -463,7 +463,7 @@ namespace OpenDental{
 				checkSuperFamily.Visible=true;
 				checkSuperFamily.Checked=_dunningCur.IsSuperFamily;
 			}
-			listBillType.Items.Add(Lan.G(this,"all"));
+			listBillType.Items.Add("all");
 			listBillType.SetSelected(0,true);
 			_listBillingTypeDefs=Defs.GetDefsForCategory(DefCat.BillingTypes,true);
 			for(int i=0;i<_listBillingTypeDefs.Count;i++){

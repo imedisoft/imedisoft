@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormEtrans835PickEob(List <string> listEobTranIds,string messageText835,Etrans etrans) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_listEobTranIds=listEobTranIds;
 			_messageText835=messageText835;
 			_etrans=etrans;

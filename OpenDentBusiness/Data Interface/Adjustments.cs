@@ -325,15 +325,15 @@ namespace OpenDentBusiness
 						+ ", " + PIn.Double(row["AdjAmt"].ToString()).ToString("c"), 0, PIn.Date(row["SecDateTEdit"].ToString()));
 					if (++loopCount % 5 == 0)
 					{
-						BillingEvent.Fire(EventCategory.Billing, Lans.g("FinanceCharge", "Creating log entries for " + adjTypeStr.ToLower() + " charges")
+						BillingEvent.Fire(EventCategory.Billing, "Creating log entries for " + adjTypeStr.ToLower() + " charges"
 							+ ": " + loopCount + " out of " + table.Rows.Count);
 					}
 				}));
 			}
 			ODThread.RunParallel(listActions, TimeSpan.FromMinutes(2));
 			command = "DELETE FROM adjustment WHERE AdjDate=" + POut.Date(dateUndo) + " AND AdjType=" + POut.Long(adjTypeDefNum);
-			BillingEvent.Fire(EventCategory.Billing, Lans.g("FinanceCharge", "Deleting") + " " + table.Rows.Count + " "
-				+ Lans.g("FinanceCharge", adjTypeStr.ToLower() + " charge adjustments") + "...");
+			BillingEvent.Fire(EventCategory.Billing, "Deleting" + " " + table.Rows.Count + " "
+				+  adjTypeStr.ToLower() + " charge adjustments" + "...");
 			return Database.ExecuteNonQuery(command);
 		}
 

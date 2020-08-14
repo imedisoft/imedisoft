@@ -11,43 +11,52 @@ using System.Linq;
 using System.ComponentModel;
 using OpenDental.User_Controls.SetupWizard;
 
-namespace OpenDental {
-	public partial class FormSetupWizardProgress:ODForm {
+namespace OpenDental
+{
+	public partial class FormSetupWizardProgress : ODForm
+	{
 		private List<OpenDental.SetupWizard.SetupWizClass> _listSetupClasses;
 		///<summary>The current setup control that is being viewed.  Used in conjunction with _listSetupClasses.</summary>
 		private int _indexSetupClasses = 0;
 		private bool _isSetupAll;
 
-		public FormSetupWizardProgress(List<SetupWizard.SetupWizClass> listSetupClasses, bool isSetupAll) {
+		public FormSetupWizardProgress(List<SetupWizard.SetupWizClass> listSetupClasses, bool isSetupAll)
+		{
 			InitializeComponent();
-			Lan.F(this);
-			_isSetupAll=isSetupAll;
-			_listSetupClasses=listSetupClasses;
+
+			_isSetupAll = isSetupAll;
+			_listSetupClasses = listSetupClasses;
 		}
 
-		private void FormSetupWizardProgress_Load(object sender,EventArgs e) {
+		private void FormSetupWizardProgress_Load(object sender, EventArgs e)
+		{
 			SetCurrentUserControl(_listSetupClasses[_indexSetupClasses].SetupControl);
 			butNext.Focus();
 		}
 
-		private void butBack_Click(object sender,EventArgs e) {
+		private void butBack_Click(object sender, EventArgs e)
+		{
 			SetCurrentUserControl(_listSetupClasses[--_indexSetupClasses].SetupControl);
 		}
 
-		private void butNext_Click(object sender,EventArgs e) {
-			if(!ControlValidated()) {
+		private void butNext_Click(object sender, EventArgs e)
+		{
+			if (!ControlValidated())
+			{
 				return;
 			}
-			if(!_listSetupClasses[_indexSetupClasses].SetupControl.IsDone) {
-				string strMsg = Lan.G("FormSetupWizard","You have not finished setting this section up yet.") 
+			if (!_listSetupClasses[_indexSetupClasses].SetupControl.IsDone)
+			{
+				string strMsg = "You have not finished setting this section up yet."
 					+ "\r\n" + _listSetupClasses[_indexSetupClasses].SetupControl.StrIncomplete;
-				strMsg+="\r\n" + Lan.G("FormSetupWizard","Click 'Skip' if you do not wish to finish setting this section up at this time.");
+				strMsg += "\r\n" + "Click 'Skip' if you do not wish to finish setting this section up at this time.";
 				MessageBox.Show(strMsg);
 				return;
 			}
 			//Call the Control Done method for the setup class.
 			ControlDone();
-			if(_listSetupClasses.Count-1 < ++_indexSetupClasses) {
+			if (_listSetupClasses.Count - 1 < ++_indexSetupClasses)
+			{
 				MsgBox.Show("You have finished setup.");
 				Close();
 				return;
@@ -56,52 +65,64 @@ namespace OpenDental {
 		}
 
 		///<summary>Any validation should be done here.</summary>
-		private bool ControlValidated() {
-			return _listSetupClasses[_indexSetupClasses].SetupControl.OnControlValidated?.Invoke(this,new EventArgs())??true;
+		private bool ControlValidated()
+		{
+			return _listSetupClasses[_indexSetupClasses].SetupControl.OnControlValidated?.Invoke(this, new EventArgs()) ?? true;
 		}
 
 		///<summary>Any conditional relational setup should be done here. 
 		///Eg, clinic setup should be added if the user the user is setting up "All" and they checked "Clinics" when setting up Basic Features.</summary>
-		private void ControlDone() {
-			_listSetupClasses[_indexSetupClasses].SetupControl.OnControlDone?.Invoke(this,new EventArgs());
-			if(!_isSetupAll) {
+		private void ControlDone()
+		{
+			_listSetupClasses[_indexSetupClasses].SetupControl.OnControlDone?.Invoke(this, new EventArgs());
+			if (!_isSetupAll)
+			{
 				return;
 			}
 			#region Clinic Show Feature
-			if(_listSetupClasses[_indexSetupClasses].GetType() != typeof(SetupWizard.FeatureSetup)) {
+			if (_listSetupClasses[_indexSetupClasses].GetType() != typeof(SetupWizard.FeatureSetup))
+			{
 				SetupWizard.ClinicSetup clinSetup = new SetupWizard.ClinicSetup();
 				//if Clinics got enabled but there is no clinic setup item, add it.
-				if(PrefC.HasClinicsEnabled && _listSetupClasses.Where(x => x.Name == clinSetup.Name).Count() ==0) {
+				if (PrefC.HasClinicsEnabled && _listSetupClasses.Where(x => x.Name == clinSetup.Name).Count() == 0)
+				{
 					int endCat = _indexSetupClasses;
-					for(int i = _indexSetupClasses;i < _listSetupClasses.Count;i++) {
-						if(_listSetupClasses[i].GetType()==typeof(SetupWizard.ProvSetup)) {
-							endCat+=2;
+					for (int i = _indexSetupClasses; i < _listSetupClasses.Count; i++)
+					{
+						if (_listSetupClasses[i].GetType() == typeof(SetupWizard.ProvSetup))
+						{
+							endCat += 2;
 							break;
 						}
 						endCat++;
 					}
-					_listSetupClasses.Insert(endCat++,new SetupWizard.SetupIntro(clinSetup.Name,clinSetup.Description));
-					_listSetupClasses.Insert(endCat++,clinSetup);
-					_listSetupClasses.Insert(endCat,new SetupWizard.SetupComplete(clinSetup.Name));
+					_listSetupClasses.Insert(endCat++, new SetupWizard.SetupIntro(clinSetup.Name, clinSetup.Description));
+					_listSetupClasses.Insert(endCat++, clinSetup);
+					_listSetupClasses.Insert(endCat, new SetupWizard.SetupComplete(clinSetup.Name));
 				}
 				//otherwise, if clinics got disabled and there is a clinic setup item, remove it.
-				else if(!PrefC.HasClinicsEnabled && _listSetupClasses.Where(x => x.Name == clinSetup.Name).Count()!=0) {
+				else if (!PrefC.HasClinicsEnabled && _listSetupClasses.Where(x => x.Name == clinSetup.Name).Count() != 0)
+				{
 					_listSetupClasses.RemoveAll(x => x.Name == clinSetup.Name);
 				}
 			}
 			#endregion
 		}
 
-		private void butSkip_Click(object sender,EventArgs e) {
+		private void butSkip_Click(object sender, EventArgs e)
+		{
 			//find the next Complete, then add one.
-			for(int i = _indexSetupClasses;i < _listSetupClasses.Count;i++) {
-				if(_listSetupClasses[i].GetType()==typeof(SetupWizard.SetupComplete)) {
+			for (int i = _indexSetupClasses; i < _listSetupClasses.Count; i++)
+			{
+				if (_listSetupClasses[i].GetType() == typeof(SetupWizard.SetupComplete))
+				{
 					_indexSetupClasses++;
 					break;
 				}
 				_indexSetupClasses++;
 			}
-			if(_listSetupClasses.Count-1 < _indexSetupClasses) {
+			if (_listSetupClasses.Count - 1 < _indexSetupClasses)
+			{
 				MsgBox.Show("You have finished setup.");
 				Close();
 				return;
@@ -109,8 +130,10 @@ namespace OpenDental {
 			SetCurrentUserControl(_listSetupClasses[_indexSetupClasses].SetupControl);
 		}
 
-		private void SetCurrentUserControl(SetupWizControl ctrl) {
-			for(int i = splitContainer2.Panel2.Controls.Count-1;i > -1;i--) {
+		private void SetCurrentUserControl(SetupWizControl ctrl)
+		{
+			for (int i = splitContainer2.Panel2.Controls.Count - 1; i > -1; i--)
+			{
 				splitContainer2.Panel2.Controls.RemoveAt(i);
 			}
 			splitContainer2.Panel2.Controls.Add(ctrl);
@@ -145,20 +168,21 @@ namespace OpenDental {
 			//	Application.DoEvents();
 			//}
 			//this.FormBorderStyle = FormBorderStyle.FixedSingle;
-			ctrl.Dock=DockStyle.Fill;
-			if(_indexSetupClasses == 0) {
-				butBack.Enabled=false;
+			ctrl.Dock = DockStyle.Fill;
+			if (_indexSetupClasses == 0)
+			{
+				butBack.Enabled = false;
 			}
-			else {
-				butBack.Enabled=true;
+			else
+			{
+				butBack.Enabled = true;
 			}
-			labelTitle.Text=Lan.G("FormSetupWizard", _listSetupClasses[_indexSetupClasses].Name + " Setup");
+			labelTitle.Text = _listSetupClasses[_indexSetupClasses].Name + " Setup";
 		}
 
-		private void butClose_Click(object sender,EventArgs e) {
+		private void butClose_Click(object sender, EventArgs e)
+		{
 			Close();
 		}
-
-		
 	}
 }

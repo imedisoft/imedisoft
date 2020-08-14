@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormPayPlanRecalculate() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormPayPlanRecalculate_Load(object sender,EventArgs e) {

@@ -14,9 +14,6 @@ namespace OpenDentBusiness
 {
     public class Lans
 	{
-		public static string g(object sender, string text)
-			=> text;
-
 		public static string GetShortDateTimeFormat()
 		{
 			if (CultureInfo.CurrentCulture.Name == "en-US")

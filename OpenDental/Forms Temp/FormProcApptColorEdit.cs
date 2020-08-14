@@ -36,7 +36,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -242,7 +242,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textCodeRange.Text.Trim()=="") {
-				MessageBox.Show(Lan.G(this,"Code range cannot be blank."));
+				MessageBox.Show("Code range cannot be blank.");
 				return;
 			}
 			ProcApptColorCur.ColorText=panelColor.BackColor;

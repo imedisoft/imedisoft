@@ -34,7 +34,7 @@ namespace OpenDental {
 
 		public FormApptTypes() {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_listApptTypes=new List<AppointmentType>();
 		}
 
@@ -47,11 +47,11 @@ namespace OpenDental {
 				checkWarn.Visible=false;
 				checkPrompt.Visible=false;
 				if(AllowMultipleSelections) {
-					this.Text=Lan.G(this,"Select Appointment Types");
+					this.Text="Select Appointment Types";
 					gridMain.SelectionMode=GridSelectionMode.MultiExtended;
 				}
 				else {
-					this.Text=Lan.G(this,"Select Appointment Type");
+					this.Text="Select Appointment Type";
 				}
 				gridMain.Location=new Point(8,6);
 				gridMain.Size=new Size(320,447);
@@ -80,11 +80,11 @@ namespace OpenDental {
 		private void FillMain() {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableApptTypes","Name"),200);
+			GridColumn col=new GridColumn("Name",200);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableApptTypes","Color"),50,HorizontalAlignment.Center);
+			col=new GridColumn("Color",50,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableApptTypes","Hidden"),60,HorizontalAlignment.Center){ IsWidthDynamic=true };
+			col=new GridColumn("Hidden",60,HorizontalAlignment.Center){ IsWidthDynamic=true };
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -101,7 +101,7 @@ namespace OpenDental {
 			//Always add a None option to the end of the list when in selection mode.
 			if(IsNoneAllowed) {
 				row=new GridRow();
-				row.Cells.Add(Lan.G(this,"None"));
+				row.Cells.Add("None");
 				row.Cells.Add("");
 				row.Cells.Add("");
 				gridMain.ListGridRows.Add(row);

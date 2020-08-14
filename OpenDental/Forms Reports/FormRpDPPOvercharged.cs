@@ -37,7 +37,7 @@ namespace OpenDental {
 		///<summary></summary>
 		public FormRpDPPOvercharged() {
 			InitializeComponent();
- 			Lan.F(this);
+ 			
 		}
 
 		private void FormRpDPPOvercharged_Load(object sender,System.EventArgs e) {
@@ -77,33 +77,33 @@ namespace OpenDental {
 					gridMain.BeginUpdate();
 					if(gridMain.ListGridColumns.Count==0) {
 						#region Set Column Header Values
-						gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Start Date"),
+						gridMain.ListGridColumns.Add(new GridColumn("Start Date",
 							colWidthStartDate,HorizontalAlignment.Center,GridSortingStrategy.DateParse));
-						gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Patient"),colWidthNames,GridSortingStrategy.StringCompare));
-						gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Guarantor"),colWidthNames,GridSortingStrategy.StringCompare));
-						gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Provider"),
+						gridMain.ListGridColumns.Add(new GridColumn("Patient",colWidthNames,GridSortingStrategy.StringCompare));
+						gridMain.ListGridColumns.Add(new GridColumn("Guarantor",colWidthNames,GridSortingStrategy.StringCompare));
+						gridMain.ListGridColumns.Add(new GridColumn("Provider",
 							colWidthPovAndClin,HorizontalAlignment.Center,GridSortingStrategy.StringCompare));
 						if(PrefC.HasClinicsEnabled) {//Only show when clinics are on
-							gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Clinic"),
+							gridMain.ListGridColumns.Add(new GridColumn("Clinic",
 								colWidthPovAndClin,HorizontalAlignment.Center,GridSortingStrategy.StringCompare));
 						}
-						gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Description"),
+						gridMain.ListGridColumns.Add(new GridColumn("Description",
 							colAmtsAndDescript,HorizontalAlignment.Center,GridSortingStrategy.StringCompare));
-						gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Overridden"),
+						gridMain.ListGridColumns.Add(new GridColumn("Overridden",
 							colWidthOverriden,HorizontalAlignment.Center,GridSortingStrategy.StringCompare));
-						gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Pat Portion"),
+						gridMain.ListGridColumns.Add(new GridColumn("Pat Portion",
 							colAmtsAndDescript,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-						gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Pat Paid Outside Plan"),
+						gridMain.ListGridColumns.Add(new GridColumn("Pat Paid Outside Plan",
 							colWidthWideAmts,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-						gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Pat Portion On Plan"),
+						gridMain.ListGridColumns.Add(new GridColumn("Pat Portion On Plan",
 							colAmtsAndDescript,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-						gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Plan Debits"),
+						gridMain.ListGridColumns.Add(new GridColumn("Plan Debits",
 							colAmtsAndDescript,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-						gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Overcharged"),
+						gridMain.ListGridColumns.Add(new GridColumn("Overcharged",
 							colWidthWideAmts,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-						gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Pat Paid\r\nOn Plan"),
+						gridMain.ListGridColumns.Add(new GridColumn("Pat Paid\r\nOn Plan",
 							colAmtsAndDescript,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-						gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Pat Overpaid"),
+						gridMain.ListGridColumns.Add(new GridColumn("Pat Overpaid",
 							colWidthWideAmts,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
 						#endregion
 					}
@@ -145,13 +145,13 @@ namespace OpenDental {
 				},
 				startingMessage: "Refreshing Grid...",
 				actionException: e => this.Invoke(() => {
-					FriendlyException.Show(Lan.G(this,"Error filling the Dynamic Payment Plans Overcharged grid."),e);
+					FriendlyException.Show("Error filling the Dynamic Payment Plans Overcharged grid.",e);
 				})
 			);
 		}
 
 		private void FillProvs() {
-			comboBoxMultiProv.Items.Add(new ODBoxItem<Provider>(Lan.G(this,"All"))); //tag = null
+			comboBoxMultiProv.Items.Add(new ODBoxItem<Provider>("All")); //tag = null
 			foreach(Provider provCur in Providers.GetListReports()) {
 				comboBoxMultiProv.Items.Add(new ODBoxItem<Provider>(provCur.GetLongDesc(),provCur));
 			}
@@ -170,13 +170,13 @@ namespace OpenDental {
 					},
 					startingMessage: "Refreshing the Grid Data...",
 					actionException: e => this.Invoke(() => {
-						FriendlyException.Show(Lan.G(this,"Error filling the Dynamic Payment Plans Overcharged grid."),e);
+						FriendlyException.Show("Error filling the Dynamic Payment Plans Overcharged grid.",e);
 					})
 				);
 			}
-			string subTitleProviders=Lan.G(this,"All Providers");
+			string subTitleProviders="All Providers";
 			if(_listSelectedProvNums.Count>0) {
-				subTitleProviders=Lan.G(this,"For Providers:")+" "+string.Join(",",_listSelectedProvNums.Select(x => Providers.GetFormalName(x)));
+				subTitleProviders="For Providers:"+" "+string.Join(",",_listSelectedProvNums.Select(x => Providers.GetFormalName(x)));
 			}
 			string subtitleClinics="";
 			if(PrefC.HasClinicsEnabled){//Do not show if clinics are not on
@@ -185,8 +185,8 @@ namespace OpenDental {
 			#region Report Logic
 			//This report will never show progress for printing.  This is because the report is being rebuilt whenever the grid is refreshed.
 			_reportCur=new ReportComplex(true,true,false);
-			_reportCur.ReportName=Lan.G(this,"Overcharged Dynamic Payment Plans");
-			_reportCur.AddTitle("Title",Lan.G(this,"Overcharged Dynamic Payment Plans"));
+			_reportCur.ReportName="Overcharged Dynamic Payment Plans";
+			_reportCur.AddTitle("Title","Overcharged Dynamic Payment Plans");
 			_reportCur.AddSubTitle("Practice Name",Prefs.GetString(PrefName.PracticeTitle));
 			if(_dateFrom==_dateTo) {
 				_reportCur.AddSubTitle("Report Dates",_dateFrom.ToShortDateString());

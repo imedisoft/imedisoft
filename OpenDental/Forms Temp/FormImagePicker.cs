@@ -19,7 +19,7 @@ namespace OpenDental {
 		public FormImagePicker(string imageFolder) {
 			InitializeComponent();
 			_imageFolder=imageFolder;
-			Lan.F(this);
+			
 		}
 
 		private void FormImagePicker_Load(object sender,EventArgs e) {
@@ -30,7 +30,7 @@ namespace OpenDental {
 		private void FillGrid() {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G(this,"Image Name"),70);
+			GridColumn col=new GridColumn("Image Name",70);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			List<string> listFileNames=null;
@@ -59,7 +59,7 @@ namespace OpenDental {
 				gridMain.ListGridRows.Add(row);
 			}
 			gridMain.EndUpdate();
-			labelImageSize.Text=Lan.G(this,"Image Size")+":";
+			labelImageSize.Text="Image Size"+":";
 			picturePreview.Image=null;
 			picturePreview.Invalidate();
 		}
@@ -89,7 +89,7 @@ namespace OpenDental {
 				picturePreview.Image=null;
 			}
 			picturePreview.Image=new Bitmap(tmpImg,(int)(tmpImg.PhysicalDimension.Width*imgScale),(int)(tmpImg.PhysicalDimension.Height*imgScale));
-			labelImageSize.Text=Lan.G(this,"Image Size")+": "+(int)tmpImg.PhysicalDimension.Width+" x "+(int)tmpImg.PhysicalDimension.Height;
+			labelImageSize.Text="Image Size"+": "+(int)tmpImg.PhysicalDimension.Width+" x "+(int)tmpImg.PhysicalDimension.Height;
 			picturePreview.Invalidate();
 			if(tmpImg!=null) {
 				tmpImg.Dispose();
@@ -112,9 +112,9 @@ namespace OpenDental {
 				//check file types?
 				string destinationPath=Storage.CombinePaths(_imageFolder,Path.GetFileName(fileName));
 				if(Storage.FileExists(destinationPath)){
-					switch(MessageBox.Show(Lan.G(this,"Overwrite Existing File")+": "+destinationPath,"",MessageBoxButtons.YesNoCancel)){
+					switch(MessageBox.Show("Overwrite Existing File"+": "+destinationPath,"",MessageBoxButtons.YesNoCancel)){
 						case DialogResult.No://rename, do not overwrite
-							InputBox ip=new InputBox(Lan.G(this,"New file name."));
+							InputBox ip=new InputBox("New file name.");
 							ip.textResult.Text=Path.GetFileName(fileName);
 							ip.ShowDialog();
 							if(ip.DialogResult!=DialogResult.OK) {
@@ -137,7 +137,7 @@ namespace OpenDental {
 								Storage.DeleteFile(destinationPath);
 							}
 							catch(Exception ex){
-								MessageBox.Show(Lan.G(this,"Cannot copy file")+":" +fileName+"\r\n"+ex.Message);
+								MessageBox.Show("Cannot copy file"+":" +fileName+"\r\n"+ex.Message);
 								continue;
 							}
 							break;//file deleted, proceed to save.

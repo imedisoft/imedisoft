@@ -202,11 +202,11 @@ namespace OpenDentBusiness {
 						Prefs.RefreshCache();
 						dateTAgingBeganPref=PrefC.GetDate(PrefName.AgingBeginDateTime);
 						if(dateTAgingBeganPref>DateTime.MinValue) {//pref has been set by another process, don't run aging and notify user
-							result.ErrorMsg+=Lans.g("RepeatCharges","Aging failed to run for patients who had repeat charges added to their account. This is due to "
-								+"the currently running aging calculations which began on")+" "+dateTAgingBeganPref.ToString()+".  "+Lans.g("RepeatCharges","If you "
+							result.ErrorMsg+="Aging failed to run for patients who had repeat charges added to their account. This is due to "
+								+"the currently running aging calculations which began on"+" "+dateTAgingBeganPref.ToString()+".  "+"If you "
 								+"believe the current aging process has finished, a user with SecurityAdmin permission can manually clear the date and time by going " 
 								+"to Setup | Miscellaneous and pressing the 'Clear' button.  You will need to run aging manually once the current aging process has "
-								+"finished or date and time is cleared.");
+								+"finished or date and time is cleared.";
 						}
 						else {
 							Prefs.Set(PrefName.AgingBeginDateTime,POut.DateT(dtNow,false));//get lock on pref to block others

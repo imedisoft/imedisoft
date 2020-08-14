@@ -87,7 +87,7 @@ namespace OpenDentBusiness {
         //A clinic was associated with the clinicerx successfully, no user action needed.
         alert=new AlertItem {
           Actions=ActionType.MarkAsRead | ActionType.Delete,
-          Description=(clinicErx.ClinicDesc=="" ? "Headquarters" : clinicErx.ClinicDesc)+" "+Lans.g("DoseSpot","has been registered"),
+          Description=(clinicErx.ClinicDesc=="" ? "Headquarters" : clinicErx.ClinicDesc)+" "+"has been registered",
           Severity=SeverityType.Low,
           Type=AlertType.DoseSpotClinicRegistered,
           FKey=clinicErx.ClinicErxNum,
@@ -98,7 +98,7 @@ namespace OpenDentBusiness {
         //User action needed to make a link to an existing clinic that was registered.
         alert=new AlertItem {
           Actions=ActionType.MarkAsRead | ActionType.Delete | ActionType.OpenForm,
-          Description=Lans.g("DoseSpot","Select clinic to assign ID"),
+          Description="Select clinic to assign ID",
           Severity=SeverityType.Low,
           Type=AlertType.DoseSpotClinicRegistered,
           ClinicNum=-1,//Show in all clinics.  We only want 1 alert, but that alert can be processed from any clinic because we don't know which clinic to display in.
@@ -123,13 +123,13 @@ namespace OpenDentBusiness {
 			if(listDoseUsers.Count==1) {//One provider matched so simply notify the office and set the DoseSpot User Id.
 				alert=new AlertItem {
 					Actions=ActionType.MarkAsRead | ActionType.Delete | ActionType.ShowItemValue,
-					Description=Lans.g("DoseSpot","User automatically assigned."),
+					Description="User automatically assigned.",
 					Severity=SeverityType.Low,
 					Type=AlertType.DoseSpotProviderRegistered,
 					FKey=providerErx.ProviderErxNum,
 					ClinicNum=-1,//Show in all clinics.  We only want 1 alert, but that alert can be processed from any clinic because providers aren't clinic specific
-					ItemValue=Lans.g("DoseSpot","User: ")+listDoseUsers[0].Id+", "+listDoseUsers[0].UserName+" "
-					+Lans.g("DoseSpot","has been assigned a DoseSpot User ID of: ")+providerErx.UserId,
+					ItemValue="User: "+listDoseUsers[0].Id+", "+listDoseUsers[0].UserName+" "
+					+"has been assigned a DoseSpot User ID of: "+providerErx.UserId,
 				};
 				AlertItems.Insert(alert);
 				//set userodpref to UserId
@@ -141,7 +141,7 @@ namespace OpenDentBusiness {
 			else {//More than one or no user associated to the NPI, generate alert with form to have the office choose which user to assign.
 				alert=new AlertItem {
 					Actions=ActionType.MarkAsRead | ActionType.Delete | ActionType.OpenForm,
-					Description=Lans.g("DoseSpot","Select user to assign ID"),
+					Description="Select user to assign ID",
 					Severity=SeverityType.Low,
 					Type=AlertType.DoseSpotProviderRegistered,
 					FKey=providerErx.ProviderErxNum,
@@ -562,7 +562,7 @@ namespace OpenDentBusiness {
 				|| ppClinicKey==null || string.IsNullOrWhiteSpace(ppClinicKey.Value))
 			{
 				throw new ODException(((clinicNum==0)?"HQ ":Clinics.GetAbbr(clinicNum)+" ")
-					+Lans.g("DoseSpot","is missing a valid ClinicID or Clinic Key.  This should have been entered when setting up DoseSpot."));
+					+"is missing a valid ClinicID or Clinic Key.  This should have been entered when setting up DoseSpot.");
 			}
 			else {
 				clinicID=ppClinicID.Value;
@@ -988,52 +988,52 @@ namespace OpenDentBusiness {
 			ProviderClinic provClinic=ProviderClinics.GetOneOrDefault(prov.ProvNum,clinicNum);
 			StringBuilder sbErrors=new StringBuilder();
 			if(prov.IsErxEnabled==ErxEnabledStatus.Disabled) {
-				sbErrors.AppendLine(Lans.g("DoseSpot","Erx is disabled for provider.  "
-					+"To enable, edit provider in Lists | Providers and acknowledge Electronic Prescription fees."));
+				sbErrors.AppendLine("Erx is disabled for provider.  "
+					+"To enable, edit provider in Lists | Providers and acknowledge Electronic Prescription fees.");
 			}
 			if(prov.IsHidden) {
-				sbErrors.AppendLine(Lans.g("DoseSpot","Provider is hidden"));
+				sbErrors.AppendLine("Provider is hidden");
 			}
 			if(prov.IsNotPerson) {
-				sbErrors.AppendLine(Lans.g("DoseSpot","Provider must be a person"));
+				sbErrors.AppendLine("Provider must be a person");
 			}
 			string fname=prov.FName.Trim();
 			if(fname=="") {
-				sbErrors.AppendLine(Lans.g("DoseSpot","First name missing"));
+				sbErrors.AppendLine("First name missing");
 			}
 			if(Regex.Replace(fname,"[^A-Za-z\\- ]*","")!=fname) {
-				sbErrors.AppendLine(Lans.g("DoseSpot","First name can only contain letters, dashes, or spaces"));
+				sbErrors.AppendLine("First name can only contain letters, dashes, or spaces");
 			}
 			string lname=prov.LName.Trim();
 			if(lname=="") {
-				sbErrors.AppendLine(Lans.g("DoseSpot","Last name missing"));
+				sbErrors.AppendLine("Last name missing");
 			}
 			string deaNum="";
 			if(provClinic!=null) {
 				deaNum=provClinic.DEANum;
 			}
 			if(deaNum.ToLower()!="none" && !Regex.IsMatch(deaNum,"^[A-Za-z]{2}[0-9]{7}$") ) {
-				sbErrors.AppendLine(Lans.g("DoseSpot","Provider DEA Number must be 2 letters followed by 7 digits.  If no DEA Number, enter NONE."));
+				sbErrors.AppendLine("Provider DEA Number must be 2 letters followed by 7 digits.  If no DEA Number, enter NONE.");
 			}
 			string npi=Regex.Replace(prov.NationalProvID,"[^0-9]*","");//NPI with all non-numeric characters removed.
 			if(npi.Length!=10) {
-				sbErrors.AppendLine(Lans.g("DoseSpot","NPI must be exactly 10 digits"));
+				sbErrors.AppendLine("NPI must be exactly 10 digits");
 			}
 			if(provClinic==null || provClinic.StateLicense=="") {
-				sbErrors.AppendLine(Lans.g("DoseSpot","State license missing"));
+				sbErrors.AppendLine("State license missing");
 			}
 			if(provClinic==null || !USlocales.IsValidAbbr(provClinic.StateWhereLicensed)) {
-				sbErrors.AppendLine(Lans.g("DoseSpot","State where licensed invalid"));
+				sbErrors.AppendLine("State where licensed invalid");
 			}
 			if(prov.Birthdate.Year<1880) {
-				sbErrors.AppendLine(Lans.g("DoseSpot","Birthdate invalid"));
+				sbErrors.AppendLine("Birthdate invalid");
 			}
 			if(sbErrors.ToString().Length>0) {
 				string clinicText="";
 				if(PrefC.HasClinicsEnabled) {
-					clinicText=" "+Lans.g("DoseSpot","in clinic")+" "+(clinicNum==0?Lans.g("DoseSpot","Headquarters"):Clinics.GetAbbr(clinicNum));
+					clinicText=" "+"in clinic"+" "+(clinicNum==0?"Headquarters":Clinics.GetAbbr(clinicNum));
 				}
-				throw new ODException(Lans.g("DoseSpot","Issues found for provider")+" "+prov.Abbr+clinicText+":\r\n"+sbErrors.ToString());
+				throw new ODException("Issues found for provider"+" "+prov.Abbr+clinicText+":\r\n"+sbErrors.ToString());
 			}
 		}
 
@@ -1043,48 +1043,48 @@ namespace OpenDentBusiness {
 		/// practice information in it.</summary>
 		private static void ValidateClinic(Clinic clinic,bool isPractice = false) {
 			if(clinic==null) {
-				throw new Exception(Lans.g("DoseSpot","Invalid "+(isPractice ? "practice info." : "clinic.")));
+				throw new Exception("Invalid "+(isPractice ? "practice info." : "clinic."));
 			}
 			StringBuilder sbErrors=new StringBuilder();
 			if(clinic.IsHidden) {
-				sbErrors.AppendLine(Lans.g("DoseSpot","Clinic is hidden"));
+				sbErrors.AppendLine("Clinic is hidden");
 			}
 			if(string.IsNullOrWhiteSpace(clinic.Phone)) {
-				sbErrors.AppendLine(Lans.g("DoseSpot","Phone number is blank"));
+				sbErrors.AppendLine("Phone number is blank");
 			}
 			else if(!IsPhoneNumberValid(clinic.Phone)) {//If the phone number isn't valid, DoseSpot will break.
-				sbErrors.AppendLine(Lans.g("DoseSpot","Phone number invalid: ")+clinic.Phone);
+				sbErrors.AppendLine("Phone number invalid: "+clinic.Phone);
 			}
 			if(string.IsNullOrWhiteSpace(clinic.Fax)) {
-				sbErrors.AppendLine(Lans.g("DoseSpot","Fax number is blank"));
+				sbErrors.AppendLine("Fax number is blank");
 			}
 			else if(!IsPhoneNumberValid(clinic.Fax)) {//If the fax number isn't valid, DoseSpot will break.
-				sbErrors.AppendLine(Lans.g("DoseSpot","Fax number invalid: ")+clinic.Fax);
+				sbErrors.AppendLine("Fax number invalid: "+clinic.Fax);
 			}
 			if(clinic.Address=="") {
-				sbErrors.AppendLine(Lans.g("DoseSpot","Address is blank"));
+				sbErrors.AppendLine("Address is blank");
 			}
 			if(IsAddressPOBox(clinic.Address)) {
-				sbErrors.AppendLine(Lans.g("DoseSpot","Address cannot be a PO BOX"));
+				sbErrors.AppendLine("Address cannot be a PO BOX");
 			}
 			if(clinic.City=="") {
-				sbErrors.AppendLine(Lans.g("DoseSpot","City is blank"));
+				sbErrors.AppendLine("City is blank");
 			}
 			if(string.IsNullOrWhiteSpace(clinic.State)) {
-				sbErrors.AppendLine(Lans.g("DoseSpot","State abbreviation is blank"));
+				sbErrors.AppendLine("State abbreviation is blank");
 			}
 			else if(clinic.State.Length<=2 && (clinic.State=="" || (clinic.State!="" && !USlocales.IsValidAbbr(clinic.State)))) {
 				//Don't validate state values that are longer than 2 characters.
-				sbErrors.AppendLine(Lans.g("DoseSpot","State abbreviation is invalid"));
+				sbErrors.AppendLine("State abbreviation is invalid");
 			}
 			if(clinic.Zip=="" && !Regex.IsMatch(clinic.Zip,@"^([0-9]{9})$|^([0-9]{5}-[0-9]{4})$|^([0-9]{5})$")) {//Blank, or #####, or #####-####, or #########
-				sbErrors.AppendLine(Lans.g("DoseSpot","Zip invalid."));
+				sbErrors.AppendLine("Zip invalid.");
 			}
 			if(sbErrors.ToString().Length>0) {
 				if(isPractice) {
-					throw new ODException(Lans.g("DoseSpot","Issues found for practice information:")+"\r\n"+sbErrors.ToString());
+					throw new ODException("Issues found for practice information:"+"\r\n"+sbErrors.ToString());
 				}
-				throw new ODException(Lans.g("DoseSpot","Issues found for clinic")+" "+clinic.Abbr+":\r\n"+sbErrors.ToString());
+				throw new ODException("Issues found for clinic"+" "+clinic.Abbr+":\r\n"+sbErrors.ToString());
 			}
 		}
 
@@ -1099,40 +1099,40 @@ namespace OpenDentBusiness {
 			string primaryPhone=GetPhoneAndType(pat,0,out string phoneType);
 			StringBuilder sbErrors=new StringBuilder();
 			if(pat.FName=="") {
-				sbErrors.AppendLine(Lans.g("DoseSpot","Missing first name."));
+				sbErrors.AppendLine("Missing first name.");
 			}
 			if(pat.LName=="") {
-				sbErrors.AppendLine(Lans.g("DoseSpot","Missing last name."));
+				sbErrors.AppendLine("Missing last name.");
 			}
 			if(pat.Birthdate.Year<1880) {
-				sbErrors.AppendLine(Lans.g("DoseSpot","Missing birthdate."));
+				sbErrors.AppendLine("Missing birthdate.");
 			}
 			if(pat.Birthdate>DateTime.Today) {
-				sbErrors.AppendLine(Lans.g("DoseSpot","Invalid birthdate."));
+				sbErrors.AppendLine("Invalid birthdate.");
 			}
 			if(pat.Address.Length==0) {
-				sbErrors.AppendLine(Lans.g("DoseSpot","Missing address."));
+				sbErrors.AppendLine("Missing address.");
 			}
 			if(pat.City.Length<2) {
-				sbErrors.AppendLine(Lans.g("DoseSpot","Invalid city."));
+				sbErrors.AppendLine("Invalid city.");
 			}
 			if(string.IsNullOrWhiteSpace(pat.State)) {
-				sbErrors.AppendLine(Lans.g("DoseSpot","Blank state abbreviation."));
+				sbErrors.AppendLine("Blank state abbreviation.");
 			}
 			else if(pat.State.Length<=2 && !USlocales.IsValidAbbr(pat.State)) {//Don't validate state values that are longer than 2 characters.
-				sbErrors.AppendLine(Lans.g("DoseSpot","Invalid state abbreviation."));
+				sbErrors.AppendLine("Invalid state abbreviation.");
 			}
 			if(string.IsNullOrWhiteSpace(pat.Zip)) {
-				sbErrors.AppendLine(Lans.g("DoseSpot","Blank zip."));
+				sbErrors.AppendLine("Blank zip.");
 			}
 			else if(!Regex.IsMatch(pat.Zip,@"^([0-9]{9})$|^([0-9]{5}-[0-9]{4})$|^([0-9]{5})$")) {//#####, #####-####, or #########
-				sbErrors.AppendLine(Lans.g("DoseSpot","Invalid zip."));
+				sbErrors.AppendLine("Invalid zip.");
 			}
 			if(!IsPhoneNumberValid(primaryPhone)) {//If the primary phone number isn't valid, DoseSpot will break.
-				sbErrors.AppendLine(Lans.g("DoseSpot","Invalid phone number: ")+primaryPhone);
+				sbErrors.AppendLine("Invalid phone number: "+primaryPhone);
 			}
 			if(sbErrors.ToString().Length>0) {
-				throw new ODException(Lans.g("DoseSpot","Issues found for current patient:")+"\r\n"+sbErrors.ToString());
+				throw new ODException("Issues found for current patient:"+"\r\n"+sbErrors.ToString());
 			}
 		}
 
@@ -1331,7 +1331,7 @@ namespace OpenDentBusiness {
 				Result=new {ResultCode="",ResultDescription=""}
 			},"application/json",patientId);
 			if(resObj.Result.ResultCode.ToUpper().Contains("ERROR")) {
-				throw new ODException(Lans.g("DoseSpot","Error getting Prescriptions: ")+resObj.Result.ResultDescription);
+				throw new ODException("Error getting Prescriptions: "+resObj.Result.ResultDescription);
 			}
 			return resObj.Items;
 		}
@@ -1345,7 +1345,7 @@ namespace OpenDentBusiness {
 				Result=new {ResultCode="",ResultDescription=""}
 			},"application/json",patientId);
 			if(resObj.Result.ResultCode.ToUpper().Contains("ERROR")) {
-				throw new ODException(Lans.g("DoseSpot","Error getting self reported medications: ")+resObj.Result.ResultDescription);
+				throw new ODException("Error getting self reported medications: "+resObj.Result.ResultDescription);
 			}
 			return resObj.Items;
 		}
@@ -1364,9 +1364,9 @@ namespace OpenDentBusiness {
 				}
 			},"application/json",pharmacyID.ToString());
 			if(resObj.Result.ResultCode.ToUpper().Contains("ERROR") || resObj.Item==null) {
-				throw new ODException(Lans.g("DoseSpot","Error getting Pharmacy: ")+(resObj.Result.ResultCode.ToUpper().Contains("ERROR")
+				throw new ODException("Error getting Pharmacy: "+(resObj.Result.ResultCode.ToUpper().Contains("ERROR")
 					? resObj.Result.ResultDescription 
-					: Lans.g("DoseSpot","Malformed response from DoseSpot")));
+					: "Malformed response from DoseSpot"));
 			}
 			return resObj.Item.StoreName;
 		}
@@ -1421,7 +1421,7 @@ namespace OpenDentBusiness {
 				Result=new {ResultCode="",ResultDescription=""}
 			});
 			if(resObj.Result.ResultCode.ToUpper().Contains("ERROR")) {
-				throw new ODException(Lans.g("DoseSpot","Error adding patient: ")+resObj.Result.ResultDescription);
+				throw new ODException("Error adding patient: "+resObj.Result.ResultDescription);
 			}
 			return resObj.Id;
 		}
@@ -1432,7 +1432,7 @@ namespace OpenDentBusiness {
 				Result=new { ResultCode="",ResultDescription=""}
 			},"application/json",patientId);
 			if(resObj.Result.ResultCode.ToUpper().Contains("ERROR")) {
-				throw new ODException(Lans.g("DoseSpot","Error posting medication history consent: ")+resObj.Result.ResultDescription);
+				throw new ODException("Error posting medication history consent: "+resObj.Result.ResultDescription);
 			}
 		}
 
@@ -1462,7 +1462,7 @@ namespace OpenDentBusiness {
 				Result=new {ResultCode="",ResultDescription=""}
 			});
 			if(resObj.Result.ResultCode.ToUpper().Contains("ERROR")) {
-				throw new ODException(Lans.g("DoseSpot","Error posting clinic: ")+resObj.Result.ResultDescription);
+				throw new ODException("Error posting clinic: "+resObj.Result.ResultDescription);
 			}
 			clinicID=resObj.ClinicId;
 			clinicKey=resObj.ClinicKey;
@@ -1474,7 +1474,7 @@ namespace OpenDentBusiness {
 		///<summary>PUT a self reported medication to DoseSpot.  Can be used as an Add/Update.</summary>
 		public static void PutSelfReportedMedications(string authToken,string patientId,DoseSpotSelfReported medCur) {
 			if(medCur==null || medCur.SelfReportedMedicationId==null) {
-				throw new ODException(Lans.g("DoseSpot","Error creating self reported medication ID: Could not convert medication ID to DoseSpot ID."));
+				throw new ODException("Error creating self reported medication ID: Could not convert medication ID to DoseSpot ID.");
 			}
 			string body=$@"
 			{{
@@ -1488,7 +1488,7 @@ namespace OpenDentBusiness {
 				Result=new { ResultCode="",ResultDescription=""}
 			},"application/json",patientId,medCur.SelfReportedMedicationId.ToString());
 			if(resObj.Result.ResultCode.ToUpper().Contains("ERROR")) {
-				throw new ODException(Lans.g("DoseSpot","Error posting medication: ")+resObj.Result.ResultDescription);
+				throw new ODException("Error posting medication: "+resObj.Result.ResultDescription);
 			}
 		}
 
@@ -1526,7 +1526,7 @@ namespace OpenDentBusiness {
 				}
 				catch(WebException wex) {
 					if(!(wex.Response is HttpWebResponse)) {
-						throw new ODException(Lans.g("DoseSpot","Could not connect to the DoseSpot server:")+"\r\n"+wex.Message,wex);
+						throw new ODException("Could not connect to the DoseSpot server:"+"\r\n"+wex.Message,wex);
 					}
 					string res="";
 					using(var sr=new StreamReader(((HttpWebResponse)wex.Response).GetResponseStream())) {
@@ -1537,7 +1537,7 @@ namespace OpenDentBusiness {
 						if(wex.Response.GetType()==typeof(HttpWebResponse)) {
 							HttpStatusCode statusCode=((HttpWebResponse)wex.Response).StatusCode;
 							if(statusCode==HttpStatusCode.Unauthorized) {
-								throw new ODException(Lans.g("DoseSpot","Invalid DoseSpot credentials."));
+								throw new ODException("Invalid DoseSpot credentials.");
 							}
 						}
 					}

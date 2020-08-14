@@ -117,7 +117,7 @@ namespace OpenDentBusiness{
 			XmlSerializer serializer = new XmlSerializer(typeof(ClaimForm));
 			if(xmlData=="") {//use path
 				if(!File.Exists(path)) {
-					throw new ApplicationException(Lans.g("FormClaimForm","File does not exist."));
+					throw new ApplicationException("File does not exist.");
 				}
 				try {
 					using(TextReader reader = new StreamReader(path)) {
@@ -125,7 +125,7 @@ namespace OpenDentBusiness{
 					}
 				}
 				catch {
-					throw new ApplicationException(Lans.g("FormClaimForm","Invalid file format"));
+					throw new ApplicationException("Invalid file format");
 				}
 			}
 			else {//use xmlData
@@ -135,7 +135,7 @@ namespace OpenDentBusiness{
 					}
 				}
 				catch {
-					throw new ApplicationException(Lans.g("FormClaimForm","Invalid file format"));
+					throw new ApplicationException("Invalid file format");
 				}
 			}
 			return tempClaimForm;

@@ -221,7 +221,7 @@ namespace OpenDentBusiness {
 						row["Writeoff"]=inswriteoffsForDay.ToString("n");
 					}
 					row["Tot Prod"]=totalproductionForDay.ToString("n");
-					row["Clinic"]=clinicDesc=="" ? Lans.g("FormRpProdInc","Unassigned"):clinicDesc;
+					row["Clinic"]=clinicDesc=="" ? "Unassigned":clinicDesc;
 					dtClinic.Rows.Add(row);
 				}
 			}

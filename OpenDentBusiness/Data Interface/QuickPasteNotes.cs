@@ -82,10 +82,10 @@ namespace OpenDentBusiness
 			{
 				return msgText;
 			}
-			msgText = Lans.g("FormQuickPasteNoteEdit", "The abbreviation")
-				+ " '" + note.Abbreviation + "' " + Lans.g("FormQuickPasteNoteEdit", "is in use in the categories:") + "\r\n"
+			msgText = "The abbreviation"
+				+ " '" + note.Abbreviation + "' " + "is in use in the categories:" + "\r\n"
 				+ String.Join(", ", listQuickPasteCats.Where(x => x.QuickPasteCatNum.In(listDuplicates.Select(z => z.QuickPasteCatNum))).Select(x => x.Description))
-				+ "\r\n" + Lans.g("FormQuickPasteNoteEdit", "Do you wish to continue?");
+				+ "\r\n" + "Do you wish to continue?";
 			return msgText;
 		}
 

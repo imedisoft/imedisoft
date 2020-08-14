@@ -29,7 +29,7 @@ namespace OpenDental {
 
 		public FormMassEmailTemplate(EmailHostingTemplate template) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_templateCur=template;
 		}
 

@@ -44,7 +44,7 @@ namespace OpenDental {
 		///<summary></summary>
 		public FormRpReceivablesBreakdown() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -220,7 +220,7 @@ namespace OpenDental {
 		private void FormRpReceivablesBreakdown_Load(object sender,EventArgs e) {
 			_listProvs=Providers.GetListReports();
 			radioWriteoffPay.Checked = true;
-			listProv.Items.Add(Lan.G(this,"Practice"));
+			listProv.Items.Add("Practice");
 			for(int i = 0;i < _listProvs.Count;i++) {
 				listProv.Items.Add(_listProvs[i].GetLongDesc());
 			}
@@ -230,7 +230,7 @@ namespace OpenDental {
 			labClinic.Visible = false;
 			/*}
 			else{
-					listClinic.Items.Add(Lan.g(this,"Unassigned"));
+					listClinic.Items.Add("Unassigned");
 					listClinic.SetSelected(0,true);
 					for(int i=0;i<Clinics.List.Length;i++) {
 							listClinic.Items.Add(Clinics.List[i].Description);
@@ -496,8 +496,8 @@ namespace OpenDental {
 					Font boldFont = new Font("Tahoma",9,FontStyle.Bold);
 					Font fontTitle = new Font("Tahoma",17,FontStyle.Bold);
 					Font fontSubTitle = new Font("Tahoma",10,FontStyle.Bold);
-					report.ReportName=Lan.G(this,"Receivables Breakdown");
-					report.AddTitle("Title",Lan.G(this,"Receivables Breakdown"),fontTitle);
+					report.ReportName="Receivables Breakdown";
+					report.AddTitle("Title","Receivables Breakdown",fontTitle);
 					report.AddSubTitle("PracticeTitle",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
 					report.AddSubTitle("Date SubTitle",date1.SelectionStart.ToString("d"),fontSubTitle);
 					string provNames = "";
@@ -513,7 +513,7 @@ namespace OpenDental {
 					}
 					report.AddSubTitle("Provider SubTitle",provNames);
 					int[] summaryGroups1 = {1};
-					QueryObject query=report.AddQuery(TableQ,Lan.G(this,"Date")+": "+DateTimeOD.Today.ToString("d"));
+					QueryObject query=report.AddQuery(TableQ,"Date"+": "+DateTimeOD.Today.ToString("d"));
 					query.AddColumn("Date",72,FieldValueType.Date);
 					query.AddColumn("Production",80,FieldValueType.Number);
 					query.GetColumnDetail("Production").ContentAlignment=ContentAlignment.MiddleRight;

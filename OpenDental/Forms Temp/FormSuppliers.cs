@@ -14,7 +14,7 @@ namespace OpenDental {
 
 		public FormSuppliers() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormSuppliers_Load(object sender,EventArgs e) {
@@ -25,19 +25,19 @@ namespace OpenDental {
 			_listSuppliers=Suppliers.GetAll();
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G(this,"Name"),110);
+			GridColumn col=new GridColumn("Name",110);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Phone"),90);
+			col=new GridColumn("Phone",90);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"CustomerID"),80);
+			col=new GridColumn("CustomerID",80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Website"),180);
+			col=new GridColumn("Website",180);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"UserName"),80);
+			col=new GridColumn("UserName",80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Password"),80);
+			col=new GridColumn("Password",80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Note"),150);
+			col=new GridColumn("Note",150);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

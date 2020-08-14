@@ -21,7 +21,7 @@ namespace OpenDental {
 
 		public FormWebSchedASAPSend(long clinicNum,long opNum,DateTime dtSlotStart,DateTime dtSlotEnd,List<Appointment> listAppts,List<Recall> listRecalls) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_clinicNum=clinicNum;
 			_opNum=opNum;
 			_dtSlotStart=dtSlotStart;
@@ -72,15 +72,15 @@ namespace OpenDental {
 			gridSendDetails.BeginUpdate();
 			gridSendDetails.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G(this,"Patient"),120);
+			col=new GridColumn("Patient",120);
 			gridSendDetails.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Sending Text"),100,HorizontalAlignment.Center);
+			col=new GridColumn("Sending Text",100,HorizontalAlignment.Center);
 			gridSendDetails.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Sending Email"),100,HorizontalAlignment.Center);
+			col=new GridColumn("Sending Email",100,HorizontalAlignment.Center);
 			gridSendDetails.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Type"),150);
+			col=new GridColumn("Type",150);
 			gridSendDetails.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Notes"),300);
+			col=new GridColumn("Notes",300);
 			gridSendDetails.ListGridColumns.Add(col);
 			gridSendDetails.ListGridRows.Clear();
 			foreach(AsapComm comm in _asapListSender.ListAsapComms) {
@@ -89,7 +89,7 @@ namespace OpenDental {
 				row.Cells.Add(patDetail.PatName);
 				row.Cells.Add(patDetail.IsSendingText ? "X" : "");
 				row.Cells.Add(patDetail.IsSendingEmail ? "X" : "");
-				row.Cells.Add(Lan.G(this,Enum.GetName(typeof(AsapCommFKeyType),comm.FKeyType)));
+				row.Cells.Add(Enum.GetName(typeof(AsapCommFKeyType),comm.FKeyType));
 				row.Cells.Add(patDetail.Note);
 				row.Tag=patDetail;
 				gridSendDetails.ListGridRows.Add(row);
@@ -97,29 +97,29 @@ namespace OpenDental {
 			gridSendDetails.SortForced(0,false);
 			gridSendDetails.EndUpdate();
 			if(countTexts==1) {
-				labelAnticipated.Text+=countTexts+" "+Lan.G(this,"text will be sent at")+" "
+				labelAnticipated.Text+=countTexts+" "+"text will be sent at"+" "
 					+_asapListSender.DtStartSendText.ToShortTimeString()+".\r\n";
 			}
 			else if(countTexts > 1) {
 				int minutesBetweenTexts=_asapListSender.MinutesBetweenTexts;
-				labelAnticipated.Text+=countTexts+" "+Lan.G(this,"texts will be sent starting at")+" "
-					+_asapListSender.DtStartSendText.ToShortTimeString()+" "+Lan.G(this,"with")+" "+minutesBetweenTexts+" "
-					+Lan.G(this,"minute"+(minutesBetweenTexts==1 ? "" : "s")+" between each text")+".\r\n";
+				labelAnticipated.Text+=countTexts+" "+"texts will be sent starting at"+" "
+					+_asapListSender.DtStartSendText.ToShortTimeString()+" "+"with"+" "+minutesBetweenTexts+" "
+					+"minute"+(minutesBetweenTexts==1 ? "" : "s"+" between each text")+".\r\n";
 			}
 			if(GetSendMode()!=AsapComms.SendMode.Email && _asapListSender.IsOutsideSendWindow) {
-				labelAnticipated.Text+=Lan.G(this,"Because it is currently outside the automatic send window, texts will not start sending until")+" "
+				labelAnticipated.Text+="Because it is currently outside the automatic send window, texts will not start sending until"+" "
 					+_asapListSender.DtStartSendText.ToString()+".\r\n";
 			}
 			int countTextToSendAtEndTime=_asapListSender.ListAsapComms.Count(x => x.DateTimeSmsScheduled==_asapListSender.DtTextSendEnd);
 			if(PrefC.DoRestrictAutoSendWindow && countTextToSendAtEndTime > 1) {
-				labelAnticipated.Text+=Lan.G(this,"In order to not send texts outside the automatic send window,")+" "+countTextToSendAtEndTime
-					+" "+Lan.G(this,"texts will be sent at")+" "+_asapListSender.DtTextSendEnd.ToString()+".\r\n";
+				labelAnticipated.Text+="In order to not send texts outside the automatic send window,"+" "+countTextToSendAtEndTime
+					+" "+"texts will be sent at"+" "+_asapListSender.DtTextSendEnd.ToString()+".\r\n";
 			}
 			if(countEmails > 0) {
-				labelAnticipated.Text+=countEmails+" "+Lan.G(this,"email"+(countEmails==1 ? "" : "s")+" will be sent upon clicking Send.");
+				labelAnticipated.Text+=countEmails+" "+"email"+(countEmails==1 ? "" : "s"+" will be sent upon clicking Send.");
 			}
 			if(countTexts==0 && countEmails==0) {
-				labelAnticipated.Text+=Lan.G(this,"No patients selected are able to receive communication using this send method.");
+				labelAnticipated.Text+="No patients selected are able to receive communication using this send method.";
 			}
 		}
 
@@ -167,8 +167,8 @@ namespace OpenDental {
 		private void butOK_Click(object sender,EventArgs e) {
 			FillSendDetails();
 			AsapComms.InsertForSending(_asapListSender.ListAsapComms,_dtSlotStart,_dtSlotEnd,_opNum);
-			string message=_asapListSender.CountTextsToSend+" "+Lan.G(this,"text"+(_asapListSender.CountTextsToSend==1?"":"s")+" and")+" "
-				+_asapListSender.CountEmailsToSend+" "+Lan.G(this,"email"+(_asapListSender.CountEmailsToSend==1?"":"s")+" have been entered to be sent.");
+			string message=_asapListSender.CountTextsToSend+" "+"text"+(_asapListSender.CountTextsToSend==1?"":"s"+" and")+" "
+				+_asapListSender.CountEmailsToSend+" "+"email"+(_asapListSender.CountEmailsToSend==1?"":"s"+" have been entered to be sent.");
 			PopupFade.Show(this,message);
 			DialogResult=DialogResult.OK;
 		}

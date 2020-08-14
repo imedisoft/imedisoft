@@ -133,7 +133,7 @@ namespace OpenDentBusiness{
 			
 			string s=IsInUse(Cur);
 			if(s!="") {
-				throw new ApplicationException(Lans.g("Medications",s));
+				throw new ApplicationException(s);
 			}
 			string command = "DELETE from medication WHERE medicationNum = '"+Cur.MedicationNum.ToString()+"'";
 			Database.ExecuteNonQuery(command);

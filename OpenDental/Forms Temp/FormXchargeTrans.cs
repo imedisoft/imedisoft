@@ -18,7 +18,7 @@ namespace OpenDental {
 
 		public FormXchargeTrans() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormXchargeTrans_Load(object sender,EventArgs e) {

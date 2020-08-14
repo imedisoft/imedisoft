@@ -18,7 +18,7 @@ namespace OpenDentBusiness{
 			string retVal="";
 			AppointmentType appointmentType=GetFirstOrDefault(x => x.AppointmentTypeNum==AppointmentTypeNum);
 			if(appointmentType!=null) {
-				retVal=appointmentType.AppointmentTypeName+(appointmentType.IsHidden ? " "+Lans.g("AppointmentTypes","(hidden)") : "");
+				retVal=appointmentType.AppointmentTypeName+(appointmentType.IsHidden ? " "+"(hidden)" : "");
 			}
 			return retVal;
 		}
@@ -140,12 +140,14 @@ namespace OpenDentBusiness{
 		}
 
 		///<summary>Surround with try catch.</summary>
-		public static void Delete(long appointmentTypeNum) {
-			string s=AppointmentTypes.CheckInUse(appointmentTypeNum);
-			if(s!="") {
-				throw new ApplicationException(Lans.g("AppointmentTypes",s));
+		public static void Delete(long appointmentTypeNum)
+		{
+			string s = CheckInUse(appointmentTypeNum);
+			if (s != "")
+			{
+				throw new ApplicationException(s);
 			}
-			string command="DELETE FROM appointmenttype WHERE AppointmentTypeNum = "+POut.Long(appointmentTypeNum);
+			string command = "DELETE FROM appointmenttype WHERE AppointmentTypeNum = " + POut.Long(appointmentTypeNum);
 			Database.ExecuteNonQuery(command);
 		}
 

@@ -11,7 +11,7 @@ namespace OpenDental {
 
 		public FormAutoNoteResponsePicker() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormAutoNoteResponsePicker_Load(object sender,EventArgs e) {

@@ -24,7 +24,7 @@ namespace OpenDentBusiness.Eclaims {
 			//validation.  Throw exception if missing info----------------------------------------
 			string validationResult=X270.Validate(clearinghouseClin,carrier,billProv,clinic,plan,subsc,insSub,pat);
 			if(validationResult != "") {
-				throw new Exception(Lans.g("FormInsPlan","Please fix the following errors first:")+"\r\n"+validationResult);
+				throw new Exception("Please fix the following errors first:"+"\r\n"+validationResult);
 			}
 			//create a 270 message---------------------------------------------------------------
 			string x12message=X270.GenerateMessageText(clearinghouseClin,carrier,billProv,clinic,plan,subsc,insSub,pat);
@@ -62,7 +62,7 @@ namespace OpenDentBusiness.Eclaims {
 			catch(Exception ex) {
 				EtransMessageTexts.Delete(etrans.EtransMessageTextNum);
 				Etranss.Delete(etrans.EtransNum);
-				throw new ApplicationException(Lans.g("FormInsPlan","Connection Error:")+"\r\n"+ex.GetType().Name+"\r\n"+ex.Message);
+				throw new ApplicationException("Connection Error:"+"\r\n"+ex.GetType().Name+"\r\n"+ex.Message);
 			}
 			//start to process the 271----------------------------------------------------------
 			X271 x271=null;
@@ -75,7 +75,7 @@ namespace OpenDentBusiness.Eclaims {
 			else {//not a 997, 999, 277 or 271
 				EtransMessageTexts.Delete(etrans.EtransMessageTextNum);
 				Etranss.Delete(etrans.EtransNum);
-				throw new ApplicationException(Lans.g("FormInsPlan","Error:")+"\r\n"+x12response);
+				throw new ApplicationException("Error:"+"\r\n"+x12response);
 			}
 			/*
 			//In realtime mode, X12 limits the request to one patient.

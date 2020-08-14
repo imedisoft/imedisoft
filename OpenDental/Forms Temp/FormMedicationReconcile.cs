@@ -18,7 +18,7 @@ namespace OpenDental {
 
 		public FormMedicationReconcile() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormMedicationReconcile_Load(object sender,EventArgs e) {
@@ -31,11 +31,11 @@ namespace OpenDental {
 			medList=MedicationPats.Refresh(PatCur.PatNum,checkDiscontinued.Checked);
 			gridMeds.BeginUpdate();
 			gridMeds.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableMedications","Medication"),140);
+			GridColumn col=new GridColumn("Medication",140);
 			gridMeds.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableMedications","Notes for Patient"),225);
+			col=new GridColumn("Notes for Patient",225);
 			gridMeds.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableMedications","Disc"),10,HorizontalAlignment.Center);//discontinued
+			col=new GridColumn("Disc",10,HorizontalAlignment.Center);//discontinued
 			gridMeds.ListGridColumns.Add(col);
 			gridMeds.ListGridRows.Clear();
 			GridRow row;

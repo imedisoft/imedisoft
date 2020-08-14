@@ -13,14 +13,14 @@ namespace OpenDental {
 
 		public FormFieldDefLink(FieldLocations fieldLocation=FieldLocations.Account) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_fieldLocation=fieldLocation;
 		}
 
 		private void FormFieldDefLink_Load(object sender,EventArgs e) {
 			string[] arrayFieldLocations=Enum.GetNames(typeof(FieldLocations));
 			for(int i=0;i<arrayFieldLocations.Length;i++) {
-				comboFieldLocation.Items.Add(Lan.G("enumFieldLocations",arrayFieldLocations[i]));
+				comboFieldLocation.Items.Add(arrayFieldLocations[i]);
 				if(i==(int)_fieldLocation) {
 					comboFieldLocation.SelectedIndex=i;
 				}

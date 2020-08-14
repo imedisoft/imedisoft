@@ -53,7 +53,7 @@ namespace OpenDental {
 		///<summary></summary>
 		public FormRpProdGoal(){
 			InitializeComponent();
- 			Lan.F(this);
+ 			
 		}
 
 		///<summary></summary>
@@ -416,7 +416,7 @@ namespace OpenDental {
 				checkClinicBreakdown.Checked=Prefs.GetBool(PrefName.ReportPandIhasClinicBreakdown);
 				_listClinics=Clinics.GetForUserod(Security.CurrentUser);
 				if(!Security.CurrentUser.ClinicIsRestricted) {
-					listClin.Items.Add(Lan.G(this,"Unassigned"));
+					listClin.Items.Add("Unassigned");
 					listClin.SetSelected(0,true);
 				}
 				for(int i=0;i<_listClinics.Count;i++) {
@@ -438,7 +438,7 @@ namespace OpenDental {
 				default:
 					radioWriteoffClaim.Checked=true; break;
 			}
-			Text+=PrefC.ReportingServer.DisplayStr=="" ? "" : " - "+Lan.G(this,"Reporting Server:") +" "+ PrefC.ReportingServer.DisplayStr;
+			Text+=PrefC.ReportingServer.DisplayStr=="" ? "" : " - "+"Reporting Server:" +" "+ PrefC.ReportingServer.DisplayStr;
 		}
 
 		private PPOWriteoffDateCalc GetWriteoffType() {
@@ -492,7 +492,7 @@ namespace OpenDental {
 			if(textDateFrom.errorProvider1.GetError(textDateFrom)!=""
 				|| textDateTo.errorProvider1.GetError(textDateTo)!="")
 			{
-				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			_dateFrom=PIn.Date(textDateFrom.Text);
@@ -514,7 +514,7 @@ namespace OpenDental {
 			if(  textDateFrom.errorProvider1.GetError(textDateFrom)!=""
 				|| textDateTo.errorProvider1.GetError(textDateTo)!="")
 			{
-				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			_dateFrom=PIn.Date(textDateFrom.Text);
@@ -554,7 +554,7 @@ namespace OpenDental {
 				if(listClin.SelectedIndices.Count>0) {
 					int offset=Security.CurrentUser.ClinicIsRestricted?0:1;
 					listClinics.AddRange(listClin.SelectedIndices.OfType<int>()
-						.Select(x => offset==1 && x==0?new Clinic { ClinicNum=0,Abbr=Lan.G(this,"Unassigned") }:_listClinics[x-offset]));
+						.Select(x => offset==1 && x==0?new Clinic { ClinicNum=0,Abbr="Unassigned" }:_listClinics[x-offset]));
 				}
 				//Check here for multi clinic schedule overlap and give notification.
 				listSelectedClinicNums=listClinics.Select(x => x.ClinicNum).ToList();
@@ -583,12 +583,12 @@ namespace OpenDental {
 			using(DataTable dtClinic=PrefC.HasClinicsEnabled?ds.Tables["Clinic"]:new DataTable())
 			using(Font font=new Font("Tahoma",8,FontStyle.Regular)) {
 				report.ReportName="MonthlyP&IGoals";
-				report.AddTitle("Title",Lan.G(this,"Monthly Production Goal"));
+				report.AddTitle("Title","Monthly Production Goal");
 				report.AddSubTitle("PracName",Prefs.GetString(PrefName.PracticeTitle));
 				report.AddSubTitle("Date",_dateFrom.ToShortDateString()+" - "+_dateTo.ToShortDateString());
-				report.AddSubTitle("Providers",checkAllProv.Checked?Lan.G(this,"All Providers"):listProvs.Count==0?"":string.Join(", ",listProvs.Select(x => x.Abbr)));
+				report.AddSubTitle("Providers",checkAllProv.Checked?"All Providers":listProvs.Count==0?"":string.Join(", ",listProvs.Select(x => x.Abbr)));
 				if(PrefC.HasClinicsEnabled) {
-					report.AddSubTitle("Clinics",hasAllClinics?Lan.G(this,"All Clinics"):listClinics.Count==0?"":string.Join(", ",listClinics.Select(x => x.Abbr)));
+					report.AddSubTitle("Clinics",hasAllClinics?"All Clinics":listClinics.Count==0?"":string.Join(", ",listClinics.Select(x => x.Abbr)));
 				}
 				//setup query
 				QueryObject query;

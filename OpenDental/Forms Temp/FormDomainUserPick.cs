@@ -24,7 +24,7 @@ namespace OpenDental {
 
 		public FormDomainUserPick() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 				
 		private void FormDomainUserPick_Load(object sender,EventArgs e) {
@@ -41,7 +41,7 @@ namespace OpenDental {
 			gridMain.ListGridRows.Clear();
 			GridColumn col;
 			for(int i=0;i<_fields.Length;i++) {
-				col=new GridColumn(Lan.G(this,_fields[i]),175);
+				col=new GridColumn(_fields[i],175);
 				gridMain.ListGridColumns.Add(col);
 			}
 			GridRow row;
@@ -91,7 +91,7 @@ namespace OpenDental {
 				return search.FindAll();
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.G(this,"An error occurred fetching domain users: ")+" "+ex.Message);
+				MessageBox.Show("An error occurred fetching domain users: "+" "+ex.Message);
 				return null;
 			}
 			finally {

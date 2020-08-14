@@ -17,12 +17,12 @@ namespace OpenDental {
 
 		public FormWikiFileFolder() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormWikiFileFolder_Load(object sender,EventArgs e) {
 			if(IsFolderMode) {
-				Text=Lan.G(this,"Insert Folder Link");
+				Text="Insert Folder Link";
 			}
 		}
 

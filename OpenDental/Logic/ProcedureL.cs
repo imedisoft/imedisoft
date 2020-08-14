@@ -82,7 +82,7 @@ namespace OpenDental
 			}
 			if (info != "")
 			{
-				info = Lan.G("ProcedureL", "Duplicate procedures") + ": " + info;
+				info = "Duplicate procedures" + ": " + info;
 			}
 			return info;
 		}
@@ -150,9 +150,9 @@ namespace OpenDental
 				}
 				if (!Security.IsAuthorized(perm, proc.ProcDate, true, true))
 				{
-					MessageBox.Show(Lan.G("Procedures", "The appointment provider does not match the provider on at least one completed procedure.") + "\r\n"
-						+ Lans.g("Procedures", "Not authorized for") + ": " + GroupPermissions.GetDesc(perm) + "\r\n"
-						+ Lan.G("Procedures", "Any change to the provider on the completed procedure(s) will have to be made manually."));
+					MessageBox.Show("The appointment provider does not match the provider on at least one completed procedure." + "\r\n"
+						+ "Not authorized for" + ": " + GroupPermissions.GetDesc(perm) + "\r\n"
+						+ "Any change to the provider on the completed procedure(s) will have to be made manually.");
 					return true;//user does not have permission to change the provider. Don't change provider.
 				}
 			}
@@ -199,12 +199,12 @@ namespace OpenDental
 			{
 				if (!ValidateTime(timeStart))
 				{
-					MessageBox.Show(Lan.G("Procedures", "Start time is invalid."));
+					MessageBox.Show("Start time is invalid.");
 					return false;
 				}
 				if (!ValidateTime(timeEnd))
 				{
-					MessageBox.Show(Lan.G("Procedures", "End time is invalid."));
+					MessageBox.Show("End time is invalid.");
 					return false;
 				}
 			}
@@ -218,7 +218,7 @@ namespace OpenDental
 					}
 					catch
 					{
-						MessageBox.Show(Lan.G("Procedures", "Start time is invalid."));
+						MessageBox.Show("Start time is invalid.");
 						return false;
 					}
 				}

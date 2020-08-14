@@ -251,7 +251,7 @@ namespace OpenDentBusiness{
 			TimeSpan minClockInTime=TimeCardRules.GetWhere(x => x.EmployeeNum.In(0,employeeNum) && x.MinClockInTime!=TimeSpan.Zero)
 				.OrderBy(x => x.MinClockInTime).FirstOrDefault()?.MinClockInTime??TimeSpan.Zero;
 			if(DateTime.Now.TimeOfDay<minClockInTime) {
-				throw new Exception(Lans.g("ClockEvents","Error. Cannot clock in until")+": "+minClockInTime.ToStringHmm());
+				throw new Exception("Error. Cannot clock in until"+": "+minClockInTime.ToStringHmm());
 			}
 			//we'll get this again, because it may have been a while and may be out of date
 			ClockEvent clockEvent=ClockEvents.GetLastEvent(employeeNum);
@@ -275,7 +275,7 @@ namespace OpenDentBusiness{
       }
 			else {//normal clock in/out
 				if(clockEvent.TimeDisplayed2.Year<1880) {//already clocked in
-					throw new Exception(Lans.g("ClockEvents","Error.  Already clocked in."));
+					throw new Exception("Error.  Already clocked in.");
 				}
 				else {//clocked out for home or lunch.  Need to clock back in by starting a new row.
 					TimeClockStatus tcs=clockEvent.ClockStatus;
@@ -294,14 +294,14 @@ namespace OpenDentBusiness{
 		public static void ClockOut(long employeeNum,TimeClockStatus clockStatus) {
 			ClockEvent clockEvent=ClockEvents.GetLastEvent(employeeNum);
 			if(clockEvent==null) {//new employee never clocked in
-				throw new Exception(Lans.g("ClockEvents","Error.  New employee never clocked in."));
+				throw new Exception("Error.  New employee never clocked in.");
 			}
 			else if(clockEvent.ClockStatus==TimeClockStatus.Break) {//only incomplete breaks will have been returned.
-				throw new Exception(Lans.g("ClockEvents","Error.  Already clocked out for break."));
+				throw new Exception("Error.  Already clocked out for break.");
 			}
 			//normal clock in/out
 			if(clockEvent.TimeDisplayed2.Year>1880) {//clocked out for home or lunch. 
-				throw new Exception(Lans.g("ClockEvents","Error.  Already clocked out."));
+				throw new Exception("Error.  Already clocked out.");
 			}
 			//clocked in.
 			if(clockStatus==TimeClockStatus.Break) {//clocking out on break

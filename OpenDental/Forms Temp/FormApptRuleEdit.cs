@@ -35,7 +35,7 @@ namespace OpenDental{
 			//
 			ApptRuleCur=apptRuleCur.Clone();
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>

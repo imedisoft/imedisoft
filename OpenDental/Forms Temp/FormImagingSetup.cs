@@ -47,28 +47,6 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormImagingSetup(){
 			InitializeComponent();
-			//too many labels to use Lan.F()
-			Lan.C(this, new System.Windows.Forms.Control[]
-			{
-				this,
-				this.groupBox1,
-				this.groupBox2,
-				this.groupBox3,
-				this.label1,
-				this.label2,
-				this.label3,
-				this.label4,
-				this.label5,
-				this.label6,
-				this.label7,
-				this.label12,
-				this.labelPanoBW,
-				this.label37
-			});
-			Lan.C("All", new System.Windows.Forms.Control[] {
-				butOK,
-				butCancel,
-			});
 		}
 
 		///<summary></summary>
@@ -561,7 +539,7 @@ namespace OpenDental{
 			if(  textScanDocQuality.errorProvider1.GetError(textScanDocQuality)!=""
 				|| textScanDocResolution.errorProvider1.GetError(textScanDocResolution)!="")
 			{
-				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(textScanDocQuality.Text=="100"
@@ -592,9 +570,9 @@ namespace OpenDental{
 			DataValid.SetInvalid(InvalidType.Prefs);
 			if(_scanDocSelectSourceOld!=checkScanDocSelectSource.Checked) {
 				SecurityLogs.MakeLogEntry(Permissions.Setup,0
-					,Lan.G(this,"Show Select Scanner Window option changed from")+" "
-					+(_scanDocSelectSourceOld?Lan.G(this,"true"):Lan.G(this,"false"))+" "
-					+Lan.G(this,"to")+" "+(checkScanDocSelectSource.Checked?Lan.G(this,"true"):Lan.G(this,"false")));
+					,"Show Select Scanner Window option changed from"+" "
+					+(_scanDocSelectSourceOld?"true":"false")+" "
+					+"to"+" "+(checkScanDocSelectSource.Checked?"true":"false"));
 			}
 			DialogResult=DialogResult.OK;
 		}

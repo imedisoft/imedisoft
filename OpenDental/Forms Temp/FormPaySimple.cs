@@ -34,7 +34,7 @@ namespace OpenDental {
 
 		public FormPaySimple(long clinicNum,Patient pat,decimal amount,CreditCard creditCard,bool isAddingCard=false,string carrierName="") {
 			InitializeComponent();
-			Lan.F(this);
+			
 			textAmount.Text=POut.Decimal(amount);
 			textAmountACH.Text=POut.Decimal(amount);
 			_clinicNum=clinicNum;
@@ -171,7 +171,7 @@ namespace OpenDental {
 			radioReturn.Checked=false;
 			textRefNumber.Visible=true;
 			labelRefNumber.Visible=true;
-			labelRefNumber.Text=Lan.G(this,"Ref Number");
+			labelRefNumber.Text="Ref Number";
 			textAmount.Visible=false;
 			_trantype=PaySimple.TransType.VOID;
 			textCardNumber.Focus();//Usually transaction type is chosen before card number is entered, but textCardNumber box must be selected in order for card swipe to work.
@@ -184,7 +184,7 @@ namespace OpenDental {
 			radioReturn.Checked=true;
 			textRefNumber.Visible=true;
 			labelRefNumber.Visible=true;
-			labelRefNumber.Text=Lan.G(this,"Ref Number");
+			labelRefNumber.Text="Ref Number";
 			textAmount.Visible=false;
 			_trantype=PaySimple.TransType.RETURN;
 			textCardNumber.Focus();//Usually transaction type is chosen before card number is entered, but textCardNumber box must be selected in order for card swipe to work.
@@ -296,7 +296,7 @@ namespace OpenDental {
 								paySimpleCustomerId=PaySimple.AddCustomer("UNKNOWN","UNKNOWN","",_clinicNum);
 							}
 							else {
-								throw new ODException(Lan.G(this,"Invalid PaySimple Customer Id found."));
+								throw new ODException("Invalid PaySimple Customer Id found.");
 							}
 						}
 						try {
@@ -308,19 +308,19 @@ namespace OpenDental {
 						break;
 					case PaySimple.TransType.RETURN:
 						if(string.IsNullOrWhiteSpace(textRefNumber.Text)) {
-							throw new ODException(Lan.G(this,"Invalid PaySimple Payment ID."));
+							throw new ODException("Invalid PaySimple Payment ID.");
 						}
 						if(!MsgBox.Show(MsgBoxButtons.OKCancel,"You are about to return a payment.  This action is irreversible.  Continue?")) {
-							throw new ODException(Lan.G(this,"Payment return was cancelled by user."));
+							throw new ODException("Payment return was cancelled by user.");
 						}
 						retVal=PaySimple.ReversePayment(textRefNumber.Text,_clinicNum);
 						break;
 					case PaySimple.TransType.VOID:
 						if(string.IsNullOrWhiteSpace(textRefNumber.Text)) {
-							throw new ODException(Lan.G(this,"Invalid PaySimple Payment ID."));
+							throw new ODException("Invalid PaySimple Payment ID.");
 						}
 						if(!MsgBox.Show(MsgBoxButtons.OKCancel,"You are about to void a payment.  This action is irreversible.  Continue?")) {
-							throw new ODException(Lan.G(this,"Payment void was cancelled by user."));
+							throw new ODException("Payment void was cancelled by user.");
 						}
 						retVal=PaySimple.VoidPayment(textRefNumber.Text,_clinicNum);
 						break;
@@ -342,7 +342,7 @@ namespace OpenDental {
 				return null;
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.G(this,"Error:")+" "+ex.Message);
+				MessageBox.Show("Error:"+" "+ex.Message);
 				return null;
 			}
 			if(_trantype.In(PaySimple.TransType.SALE,PaySimple.TransType.RETURN,PaySimple.TransType.VOID)) {//Only print a receipt if transaction is an approved SALE, RETURN, or VOID			
@@ -407,7 +407,7 @@ namespace OpenDental {
 				return null;
 			}
 			catch(Exception ex) {
-				FriendlyException.Show(Lan.G(this,"Error:")+" "+ex.Message,ex);
+				FriendlyException.Show("Error:"+" "+ex.Message,ex);
 				return null;
 			}
 			if(!_isAddingCard) {
@@ -480,7 +480,7 @@ namespace OpenDental {
 				}
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.g(this,"Printer not available.")+"\r\n"+Lan.g(this,"Original error")+": "+ex.Message);
+				MessageBox.Show("Printer not available."+"\r\n"+"Original error"+": "+ex.Message);
 			}
 #endif
 		}

@@ -7,7 +7,7 @@ namespace OpenDental {
 
 		public FormEmailMasterTemplate() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormEmailSetupMasterTemplate_Load(object sender,EventArgs e) {

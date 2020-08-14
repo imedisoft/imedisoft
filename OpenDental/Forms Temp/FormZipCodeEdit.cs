@@ -26,7 +26,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormZipCodeEdit(){
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -177,10 +177,10 @@ namespace OpenDental{
 			}
 			else {
 				if(IsNew) {
-					this.Text=Lan.G(this,"Add Zip Code");
+					this.Text="Add Zip Code";
 				}
 				else {
-					this.Text=Lan.G(this,"Edit Zip Code");
+					this.Text="Edit Zip Code";
 				}
 			}
 			textZip.Text=ZipCodeCur.ZipCodeDigits;
@@ -214,7 +214,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textZip.Text=="" || textCity.Text=="" || textState.Text==""){
-				MessageBox.Show(Lan.G(this,"City,State, or Zip Cannot be left blank"));
+				MessageBox.Show("City,State, or Zip Cannot be left blank");
 				return;
 			}
       ZipCodeCur.City=textCity.Text;

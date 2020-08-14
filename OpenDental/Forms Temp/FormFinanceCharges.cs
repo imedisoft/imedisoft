@@ -64,7 +64,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormFinanceCharges(){
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -694,7 +694,7 @@ namespace OpenDental{
 				ODProgress.ShowAction(() => {
 						Ledgers.RunAging();
 					},
-					startingMessage:Lan.G(this,"Calculating aging for all patients as of")+" "+asOfDate.ToShortDateString()+"...",
+					startingMessage:"Calculating aging for all patients as of"+" "+asOfDate.ToShortDateString()+"...",
 					actionException:ex => {
 						Ledgers.AgingExceptionHandler(ex,this);
 						result=false;
@@ -750,10 +750,10 @@ namespace OpenDental{
 			DateTime dateTAgingBeganPref=PrefC.GetDate(PrefName.AgingBeginDateTime);
 			if(dateTAgingBeganPref>DateTime.MinValue) {
 				if(isOnLoad) {
-					MessageBox.Show(this,Lan.G(this,"In order to add finance charges, aging must be calculated, but you cannot run aging until it has finished "
-						+"the current calculations which began on")+" "+dateTAgingBeganPref.ToString()+".\r\n"+Lans.g(this,"If you believe the current aging "
+					MessageBox.Show(this,"In order to add finance charges, aging must be calculated, but you cannot run aging until it has finished "
+						+"the current calculations which began on"+" "+dateTAgingBeganPref.ToString()+".\r\n"+"If you believe the current aging "
 						+"process has finished, a user with SecurityAdmin permission can manually clear the date and time by going to Setup | Miscellaneous and "
-						+"pressing the 'Clear' button."));
+						+"pressing the 'Clear' button.");
 				}
 				return false;
 			}
@@ -766,7 +766,7 @@ namespace OpenDental{
 					Ledgers.ComputeAging(0,dtToday);
 					Prefs.Set(PrefName.DateLastAging,POut.Date(dtToday,false));
 				},
-				startingMessage:Lan.G(this,"Calculating enterprise aging for all patients as of")+" "+dtToday.ToShortDateString()+"...",
+				startingMessage:"Calculating enterprise aging for all patients as of"+" "+dtToday.ToShortDateString()+"...",
 				actionException:ex => {
 					Ledgers.AgingExceptionHandler(ex,this,isOnLoad);
 					result=false;
@@ -868,7 +868,7 @@ namespace OpenDental{
 
 		private void butUndo_Click(object sender,EventArgs e) {
 			string chargeType=(radioFinanceCharge.Checked?"Finance":"Billing");
-			if(MessageBox.Show(Lan.G(this,"Undo all "+chargeType.ToLower()+" charges for")+" "+textDateUndo.Text+"?","",MessageBoxButtons.OKCancel)
+			if(MessageBox.Show("Undo all "+chargeType.ToLower()+" charges for"+" "+textDateUndo.Text+"?","",MessageBoxButtons.OKCancel)
 				!=DialogResult.OK)
 			{
 				return;
@@ -878,11 +878,11 @@ namespace OpenDental{
 			DateTime dateUndo=PIn.Date(textDateUndo.Text);
 			bool billingCharge=radioBillingCharge.Checked;
 			ODProgress.ShowAction(() => rowsAffected=(int)Adjustments.UndoFinanceOrBillingCharges(dateUndo,billingCharge),
-				startingMessage:Lan.G(this,"Deleting "+chargeType.ToLower()+" charge adjustments")+"...",
+				startingMessage:"Deleting "+chargeType.ToLower()+" charge adjustments"+"...",
 				eventType:typeof(BillingEvent),
 				odEventType:EventCategory.Billing);
 			Cursor=Cursors.Default;
-			MessageBox.Show(Lan.G(this,chargeType+" charge adjustments deleted")+": "+rowsAffected);
+			MessageBox.Show(chargeType+" charge adjustments deleted"+": "+rowsAffected);
 			if(rowsAffected==0) {
 				DialogResult=DialogResult.OK;
 				return;
@@ -901,7 +901,7 @@ namespace OpenDental{
 					() => {
 						Ledgers.RunAging();
 					},
-					startingMessage:Lan.G(this,"Calculating aging for all patients as of")+" "+asOfDate.ToShortDateString()+"...",
+					startingMessage:"Calculating aging for all patients as of"+" "+asOfDate.ToShortDateString()+"...",
 					actionException:ex => Ledgers.AgingExceptionHandler(ex,this));
 				SecurityLogs.MakeLogEntry(Permissions.AgingRan,0,"Aging complete - Finance Charges window");
 				Cursor=Cursors.Default;
@@ -953,7 +953,7 @@ namespace OpenDental{
 			Action actionCloseProgress=null;
 			int chargesAdded=0;
 			try {
-				actionCloseProgress=ODProgress.Show(EventCategory.Billing,typeof(BillingEvent),Lan.G(this,"Gathering patients with aged balances")+"...");
+				actionCloseProgress=ODProgress.Show(EventCategory.Billing,typeof(BillingEvent),"Gathering patients with aged balances"+"...");
 				List<PatAging> listPatAgings=GetFinanceBillingAgingList();//Get the Aging List for Finance and Billing
 				long adjType=Prefs.GetLong(PrefName.FinanceChargeAdjustmentType);
 				Dictionary<long,List<Adjustment>> dictPatAdjustments=new Dictionary<long, List<Adjustment>>();
@@ -981,7 +981,7 @@ namespace OpenDental{
 				foreach(PatAging patAgingCur in listPatAgings) {
 					listActions.Add(new Action(() => {
 						if(++chargesProcessed%5==0) {
-							BillingEvent.Fire(EventCategory.Billing,Lan.G(this,"Processing "+chargeType+" charges")+": "+chargesProcessed+" out of "
+							BillingEvent.Fire(EventCategory.Billing,"Processing "+chargeType+" charges"+": "+chargesProcessed+" out of "
 								+listPatAgings.Count);
 						}
 						//This WILL NOT be the same as the patient's total balance. Start with BalOver90 since all options include that bucket. Add others if needed.
@@ -1038,7 +1038,7 @@ namespace OpenDental{
 			finally {
 				actionCloseProgress?.Invoke();//terminates progress bar
 			}
-			MessageBox.Show(Lan.G(this,chargeType+" charges added")+": "+chargesAdded);
+			MessageBox.Show(chargeType+" charges added"+": "+chargesAdded);
 			if(Prefs.GetBool(PrefName.AgingIsEnterprise)) {
 				if(!RunAgingEnterprise()) {
 					MessageBox.Show("There was an error calculating aging after the "+chargeType.ToLower()+" charge adjustments were added.\r\n"
@@ -1050,7 +1050,7 @@ namespace OpenDental{
 				DateTime asOfDate=(Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)?PrefC.GetDate(PrefName.DateLastAging):DateTime.Today);
 				Cursor=Cursors.WaitCursor;
 				ODProgress.ShowAction(() => Ledgers.RunAging(),
-					startingMessage:Lan.G(this,"Calculating aging for all patients as of")+" "+asOfDate.ToShortDateString()+"...",
+					startingMessage:"Calculating aging for all patients as of"+" "+asOfDate.ToShortDateString()+"...",
 					actionException:ex => Ledgers.AgingExceptionHandler(ex,this));
 				SecurityLogs.MakeLogEntry(Permissions.AgingRan,0,"Aging complete - Finance Charges window");
 				Cursor=Cursors.Default;

@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormPayorTypes() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormPayorTypes_Load(object sender,EventArgs e) {

@@ -53,7 +53,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -377,7 +377,7 @@ namespace OpenDental{
 			textDescription.Text=SiteCur.Description;
 			comboPlaceService.Items.Clear();
 			foreach(string name in Enum.GetNames(typeof(PlaceOfService))) {
-				comboPlaceService.Items.Add(Lan.G("enumPlaceOfService",name));
+				comboPlaceService.Items.Add(name);
 			}
 			comboPlaceService.SelectedIndex=(int)SiteCur.PlaceService;
 			comboProv.Items.AddProvNone();
@@ -479,7 +479,7 @@ namespace OpenDental{
 
 		private void butEditZip_Click(object sender,EventArgs e) {
 			if(textZip.Text.Length==0) {
-				MessageBox.Show(Lan.G(this,"Please enter a zipcode first."));
+				MessageBox.Show("Please enter a zipcode first.");
 				return;
 			}
 			List<ZipCode> listZipCodes=ZipCodes.GetALMatches(textZip.Text);
@@ -533,7 +533,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(textDescription.Text==""){
-				MessageBox.Show(Lan.G(this,"Description cannot be blank."));
+				MessageBox.Show("Description cannot be blank.");
 				return;
 			}
 			SiteCur.Description=textDescription.Text;

@@ -14,7 +14,7 @@ namespace OpenDental {
 
 		public FormOrthoChartEdit() {
 			InitializeComponent();
-			Lan.F(this);
+			
 			OrthoCur = new OrthoChart();
 		}
 

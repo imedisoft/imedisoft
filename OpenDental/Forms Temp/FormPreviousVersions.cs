@@ -12,7 +12,7 @@ namespace OpenDental {
 
 		public FormPreviousVersions() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormPreviousVersions_Load(object sender,EventArgs e) {
@@ -22,9 +22,9 @@ namespace OpenDental {
 		private void FillGrid() {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G(this,"Version"),117);
+			GridColumn col=new GridColumn("Version",117);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Date"),117);
+			col=new GridColumn("Date",117);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row=null;

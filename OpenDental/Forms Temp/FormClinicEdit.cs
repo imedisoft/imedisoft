@@ -109,7 +109,7 @@ namespace OpenDental {
 			//
 			ClinicCur=clinicCur;
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -1084,7 +1084,7 @@ namespace OpenDental {
 			}
 			FillSpecialty();
 			comboRegion.Items.Clear();
-			comboRegion.Items.Add(Lan.G(this,"None"));
+			comboRegion.Items.Add("None");
 			comboRegion.SelectedIndex=0;
 			_listRegionDefs=Defs.GetDefsForCategory(DefCat.Regions,true);
 			for(int i=0;i<_listRegionDefs.Count;i++) {
@@ -1137,7 +1137,7 @@ namespace OpenDental {
 			Dictionary<long,Def> dictClinicDefs=Defs.GetDefsForCategory(DefCat.ClinicSpecialty).ToDictionary(x => x.DefNum);
 			gridSpecialty.BeginUpdate();
 			gridSpecialty.ListGridColumns.Clear();
-			gridSpecialty.ListGridColumns.Add(new GridColumn(Lan.G(gridSpecialty.TranslationName,"Specialty"),100));
+			gridSpecialty.ListGridColumns.Add(new GridColumn("Specialty",100));
 			gridSpecialty.ListGridRows.Clear();
 			GridRow row;
 			string specialtyDescript;
@@ -1146,7 +1146,7 @@ namespace OpenDental {
 				Def defCur;
 				specialtyDescript="";
 				if(dictClinicDefs.TryGetValue(defLink.DefNum,out defCur)) {
-					specialtyDescript=defCur.ItemName+(defCur.IsHidden?(" ("+Lan.G(this,"hidden")+")"):"");
+					specialtyDescript=defCur.ItemName+(defCur.IsHidden?(" ("+"hidden"+")"):"");
 				}
 				row.Cells.Add(specialtyDescript);
 				row.Tag=defLink;
@@ -1177,7 +1177,7 @@ namespace OpenDental {
 
 		private void butRemove_Click(object sender,EventArgs e) {
 			if(gridSpecialty.SelectedIndices.Length==0) {
-				MessageBox.Show(Lan.G(this,"Please select a specialty first."));
+				MessageBox.Show("Please select a specialty first.");
 				return;
 			}
 			gridSpecialty.SelectedIndices
@@ -1252,7 +1252,7 @@ namespace OpenDental {
 				//ensure that there are no users who have only this clinic assigned to them.
 				List<Userod> listUsersRestricted = Userods.GetUsersOnlyThisClinic(ClinicCur.ClinicNum);
 				if(listUsersRestricted.Count > 0) {
-					MessageBox.Show(Lan.G(this,"You may not hide this clinic as the following users are restricted to only this clinic") + ": "
+					MessageBox.Show("You may not hide this clinic as the following users are restricted to only this clinic" + ": "
 						+ string.Join(", ",listUsersRestricted.Select(x => x.UserName)));
 					return;
 				}

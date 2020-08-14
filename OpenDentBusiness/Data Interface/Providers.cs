@@ -67,7 +67,7 @@ namespace OpenDentBusiness{
 				message="The "+message+" selected for this appointment has a Term Date prior to the selected day and time. "
 					+"Please select another "+message+(isSetComplete ? " to set the appointment complete." : ".");
 			}
-			Lans.g("Providers",message);
+
 			return message;
 		}
 
@@ -656,20 +656,20 @@ namespace OpenDentBusiness{
 					Patient patPri=Patients.GetPat(patNum);
 					Provider patPriProv=listProviders.Find(x => x.ProvNum==patPri.PriProv);
 					if(patPriProv==null) {
-						throw new Exception(Lans.g("Providers","Invalid primary provider set for patient."));
+						throw new Exception("Invalid primary provider set for patient.");
 					}
 					return new List<Provider>() { patPriProv };
 				case WebSchedProviderRules.SecondaryProvider:
 					Patient patSec=Patients.GetPat(patNum);
 					Provider patSecProv=listProviders.Find(x => x.ProvNum==patSec.SecProv);
 					if(patSecProv==null) {
-						throw new Exception(Lans.g("Providers","No secondary provider set for patient."));
+						throw new Exception("No secondary provider set for patient.");
 					}
 					return new List<Provider>() { patSecProv };
 				case WebSchedProviderRules.LastSeenHygienist:
 					Provider lastHygProvider=GetLastSeenHygienistForPat(patNum);
 					if(lastHygProvider==null) {
-						throw new Exception(Lans.g("Providers","No last seen hygienist found for patient."));
+						throw new Exception("No last seen hygienist found for patient.");
 					}
 					return new List<Provider>() { lastHygProvider };
 				case WebSchedProviderRules.FirstAvailable:
@@ -941,7 +941,7 @@ namespace OpenDentBusiness{
 		public static Provider GetUnearnedProv() {
 			return new Provider() {
 				ProvNum=0,
-				Abbr=Lans.g("Providers","No Provider")
+				Abbr="No Provider"
 			};
 		}
 

@@ -18,7 +18,7 @@ namespace OpenDental {
 
 		public FormFHIRAPIKeyEdit(APIKey apiKey) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_apiKeyCur=apiKey;
 		}
 
@@ -28,7 +28,7 @@ namespace OpenDental {
 
 		private void FillForm() {
 			textKey.Text=_apiKeyCur.Key;
-			textStatus.Text=Lan.G("enumFHIRAPIKeyStatus",_apiKeyCur.KeyStatus.GetDescription());
+			textStatus.Text=_apiKeyCur.KeyStatus.GetDescription();
 			textName.Text=_apiKeyCur.DeveloperName;
 			textEmail.Text=_apiKeyCur.DeveloperEmail;
 			textPhone.Text=_apiKeyCur.DeveloperPhone;
@@ -42,10 +42,10 @@ namespace OpenDental {
 				butDisable.Enabled=false;
 			}
 			if(_apiKeyCur.KeyStatus.In(FHIRKeyStatus.Enabled,FHIRKeyStatus.EnabledReadOnly)) {
-				butDisable.Text=Lan.G(this,"&Disable Key");
+				butDisable.Text="&Disable Key";
 			}
 			if(_apiKeyCur.KeyStatus==FHIRKeyStatus.DisabledByCustomer) {
-				butDisable.Text=Lan.G(this,"&Enable Key");
+				butDisable.Text="&Enable Key";
 			}
 		}
 

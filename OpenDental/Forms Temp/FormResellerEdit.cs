@@ -19,7 +19,7 @@ namespace OpenDental {
 		public FormResellerEdit(Reseller reseller) {
 			_resellerCur=reseller;
 			InitializeComponent();
-			Lan.F(this);
+			
 			gridMain.ContextMenu=menuRightClick;
 		}
 

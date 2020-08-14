@@ -178,7 +178,7 @@ namespace OpenDentBusiness{
 				ValidateNoKeys(insSubNum,true);
 			}
 			catch(ApplicationException ex) {
-				throw new ApplicationException(Lans.g("FormInsPlan","Not allowed to delete: ")+ex.Message);
+				throw new ApplicationException("Not allowed to delete: "+ex.Message);
 			}
 			string command;
 			DataTable table;
@@ -199,21 +199,21 @@ namespace OpenDentBusiness{
 			
 			string command="SELECT 1 FROM claim WHERE InsSubNum="+POut.Long(subNum)+" OR InsSubNum2="+POut.Long(subNum)+" "+DbHelper.LimitAnd(1);
 			if(!string.IsNullOrEmpty(Database.ExecuteString(command))) {
-				throw new ApplicationException(Lans.g("FormInsPlan","Subscriber has existing claims and so the subscriber cannot be deleted."));
+				throw new ApplicationException("Subscriber has existing claims and so the subscriber cannot be deleted.");
 			}
 			if(strict) {
 				command="SELECT 1 FROM claimproc WHERE InsSubNum="+POut.Long(subNum)+" AND Status!="+POut.Int((int)ClaimProcStatus.Estimate)+" "+DbHelper.LimitAnd(1);//ignore estimates
 				if(!string.IsNullOrEmpty(Database.ExecuteString(command))) {
-					throw new ApplicationException(Lans.g("FormInsPlan","Subscriber has existing claim procedures and so the subscriber cannot be deleted."));
+					throw new ApplicationException("Subscriber has existing claim procedures and so the subscriber cannot be deleted.");
 				}
 			}
 			command="SELECT 1 FROM etrans WHERE InsSubNum="+POut.Long(subNum)+" "+DbHelper.LimitAnd(1);
 			if(!string.IsNullOrEmpty(Database.ExecuteString(command))) {
-				throw new ApplicationException(Lans.g("FormInsPlan","Subscriber has existing etrans entry and so the subscriber cannot be deleted."));
+				throw new ApplicationException("Subscriber has existing etrans entry and so the subscriber cannot be deleted.");
 			}
 			command="SELECT 1 FROM payplan WHERE InsSubNum="+POut.Long(subNum)+" "+DbHelper.LimitAnd(1);
 			if(!string.IsNullOrEmpty(Database.ExecuteString(command))) {
-				throw new ApplicationException(Lans.g("FormInsPlan","Subscriber has existing insurance linked payment plans and so the subscriber cannot be deleted."));
+				throw new ApplicationException("Subscriber has existing insurance linked payment plans and so the subscriber cannot be deleted.");
 			}
 		}
 
@@ -348,7 +348,7 @@ namespace OpenDentBusiness{
 					Patient pat=Patients.GetPat(listBlockedPatNums[i]);
 					sb.Append("#"+listBlockedPatNums[i]+" "+pat.GetNameFLFormal());
 				}
-				throw new ApplicationException(Lans.g("InsSubs","Before changing the subscribers on the insurance plan being moved from, please delete all of today's claims related to the insurance plan being moved from for the following patients")+":"+sb.ToString());
+				throw new ApplicationException("Before changing the subscribers on the insurance plan being moved from, please delete all of today's claims related to the insurance plan being moved from for the following patients"+":"+sb.ToString());
 			}
 			//This loop mimics some of the logic in PatPlans.Delete().
 			int insSubMovedCount=0;

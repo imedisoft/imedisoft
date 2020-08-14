@@ -68,7 +68,7 @@ namespace OpenDental{
 		///<summary>Not used for selection.  Use FormProviderPick or FormProviderMultiPick for that.</summary>
 		public FormProviderSetup(){
 			InitializeComponent();
-			Lan.F(this);
+			
 			if(Prefs.GetBool(PrefName.EasyHideDentalSchools)) {
 				this.Width=960;
 			}
@@ -622,7 +622,7 @@ namespace OpenDental{
 				butStudBulkEdit.Visible=false;
 			}
 			else{
-				comboClass.Items.Add(Lan.G(this,"All"));
+				comboClass.Items.Add("All");
 				comboClass.SelectedIndex=0;
 				_listSchoolClasses=SchoolClasses.GetDeepCopy();
 				for(int i=0;i<_listSchoolClasses.Count;i++){
@@ -633,7 +633,7 @@ namespace OpenDental{
 			}
 			checkShowHidden.Checked=Prefs.GetBool(PrefName.EasyHideDentalSchools);
 			if(!Security.IsAuthorized(Permissions.PatPriProvEdit,DateTime.MinValue,true,true)) {
-				string strToolTip=Lan.G("Security","Not authorized for")+" "+GroupPermissions.GetDesc(Permissions.PatPriProvEdit);
+				string strToolTip="Not authorized for"+" "+GroupPermissions.GetDesc(Permissions.PatPriProvEdit);
 				_priProvEditToolTip.SetToolTip(butReassign,strToolTip);
 				_priProvEditToolTip.SetToolTip(butMovePri,strToolTip);
 			}
@@ -687,21 +687,21 @@ namespace OpenDental{
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			if(!Prefs.GetBool(PrefName.EasyHideDentalSchools)) {
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableProviderSetup","ProvNum"),60,GridSortingStrategy.AmountParse));
+				gridMain.ListGridColumns.Add(new GridColumn("ProvNum",60,GridSortingStrategy.AmountParse));
 			}
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableProviderSetup","Abbrev"),90));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableProviderSetup","Last Name"),90));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableProviderSetup","First Name"),90));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableProviderSetup","User Name"),90));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableProviderSetup","Hidden"),50,HorizontalAlignment.Center));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableProviderSetup","HideOnReports"),100,HorizontalAlignment.Center));
+			gridMain.ListGridColumns.Add(new GridColumn("Abbrev",90));
+			gridMain.ListGridColumns.Add(new GridColumn("Last Name",90));
+			gridMain.ListGridColumns.Add(new GridColumn("First Name",90));
+			gridMain.ListGridColumns.Add(new GridColumn("User Name",90));
+			gridMain.ListGridColumns.Add(new GridColumn("Hidden",50,HorizontalAlignment.Center));
+			gridMain.ListGridColumns.Add(new GridColumn("HideOnReports",100,HorizontalAlignment.Center));
 			if(!Prefs.GetBool(PrefName.EasyHideDentalSchools)) {
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableProviderSetup","Class"),90));
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableProviderSetup","Instructor"),60,HorizontalAlignment.Center));
+				gridMain.ListGridColumns.Add(new GridColumn("Class",90));
+				gridMain.ListGridColumns.Add(new GridColumn("Instructor",60,HorizontalAlignment.Center));
 			}
 			if(checkShowPatientCount.Checked) {
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableProviderSetup","PriPats"),50,HorizontalAlignment.Center,GridSortingStrategy.AmountParse));
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableProviderSetup","SecPats"),50,HorizontalAlignment.Center,GridSortingStrategy.AmountParse));
+				gridMain.ListGridColumns.Add(new GridColumn("PriPats",50,HorizontalAlignment.Center,GridSortingStrategy.AmountParse));
+				gridMain.ListGridColumns.Add(new GridColumn("SecPats",50,HorizontalAlignment.Center,GridSortingStrategy.AmountParse));
 			}
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -1024,7 +1024,7 @@ namespace OpenDental{
 						.GroupBy(x => PIn.Long(x["PriProv"].ToString()),x => PIn.Long(x["PatNum"].ToString()))
 						.ToDictionary(x => x.Key,x => x.ToList());
 				},
-				startingMessage:Lan.G(this,"Gathering patient data")+"...");
+				startingMessage:"Gathering patient data"+"...");
 			Cursor=Cursors.Default;
 			int totalPatCount=dictPriProvPats.Sum(x => x.Value.Count);
 			if(totalPatCount==0) {
@@ -1033,7 +1033,7 @@ namespace OpenDental{
 			}
 			string strProvFromDesc=string.Join(", ",listProvsFrom.FindAll(x => dictPriProvPats.ContainsKey(x.ProvNum)).Select(x => x.Abbr));
 			string strProvToDesc=provTo.Abbr;
-			string msg=Lan.G(this,"Move all primary patients to")+" "+strProvToDesc+" "+Lan.G(this,"from the following providers")+": "+strProvFromDesc+"?";
+			string msg="Move all primary patients to"+" "+strProvToDesc+" "+"from the following providers"+": "+strProvFromDesc+"?";
 			if(MessageBox.Show(msg,"",MessageBoxButtons.OKCancel)!=DialogResult.OK) {
 				return;
 			}
@@ -1042,14 +1042,14 @@ namespace OpenDental{
 			ODProgress.ShowAction(() => {
 					List<Action> listActions=dictPriProvPats.Select(x => new Action(() => {
 						patsMoved+=x.Value.Count;
-						PatientEvent.Fire(EventCategory.Patient,Lan.G(this,"Moving patients")+": "+patsMoved+" out of "+totalPatCount);
+						PatientEvent.Fire(EventCategory.Patient,"Moving patients"+": "+patsMoved+" out of "+totalPatCount);
 						Patients.ChangePrimaryProviders(x.Key,provTo.ProvNum);//update all priprovs to new provider
 						SecurityLogs.MakeLogEntry(Permissions.PatPriProvEdit,0,"Primary provider changed for "+x.Value.Count+" patients from "
 							+Providers.GetLongDesc(x.Key)+" to "+provTo.GetLongDesc()+".");
 					})).ToList();
 					ODThread.RunParallel(listActions,TimeSpan.FromMinutes(2));
 				},
-				startingMessage:Lan.G(this,"Moving patients")+"...",
+				startingMessage:"Moving patients"+"...",
 				eventType:typeof(PatientEvent),
 				odEventType:EventCategory.Patient);
 			Cursor=Cursors.Default;
@@ -1071,11 +1071,11 @@ namespace OpenDental{
 			Provider provTo=_listProvs.FirstOrDefault(x => x.ProvNum==_provNumMoveTo);
 			string msg;
 			if(provTo==null) {
-				msg=Lan.G(this,"Remove all secondary patients from the selected providers")+"?";
+				msg="Remove all secondary patients from the selected providers"+"?";
 			}
 			else {
 				string strProvsFrom=string.Join(", ",listProvsFrom.Select(x => x.Abbr));
-				msg=Lan.G(this,"Move all secondary patients to")+" "+provTo.Abbr+" "+Lan.G(this,"from the following providers")+": "+strProvsFrom+"?";
+				msg="Move all secondary patients to"+" "+provTo.Abbr+" "+"from the following providers"+": "+strProvsFrom+"?";
 			}
 			if(MessageBox.Show(msg,"",MessageBoxButtons.OKCancel)!=DialogResult.OK) {
 				return;
@@ -1086,7 +1086,7 @@ namespace OpenDental{
 						provTo?.ProvNum??0); })).ToList();
 					ODThread.RunParallel(listActions,TimeSpan.FromMinutes(2));//each group of actions gets 2 minutes
 				},
-				startingMessage:Lan.G(this,"Reassigning patients")+"...");
+				startingMessage:"Reassigning patients"+"...");
 			Cursor=Cursors.Default;
 			_hasChanged=true;
 			FillGrid();
@@ -1102,7 +1102,7 @@ namespace OpenDental{
 			{
 				return;
 			}
-			Action actionCloseProgress=ODProgress.Show(EventCategory.Provider,startingMessage:Lan.G(this,"Gathering patient and provider details")+"...");
+			Action actionCloseProgress=ODProgress.Show(EventCategory.Provider,startingMessage:"Gathering patient and provider details"+"...");
 			Cursor=Cursors.WaitCursor;
 			List<long> listProvNumsFrom=gridMain.SelectedIndices.OfType<int>().Select(x => ((Provider)gridMain.ListGridRows[x].Tag).ProvNum).ToList();
 			DataTable tablePatNums=Patients.GetPatNumsByPriProvs(listProvNumsFrom);//list of all patients who are using the selected providers.
@@ -1126,7 +1126,7 @@ namespace OpenDental{
 			listPatProvFrom.RemoveAll(x => !dictPatProvTo.ContainsKey(x.PatNum) || x.ProvNum==dictPatProvTo[x.PatNum]);
 			actionCloseProgress?.Invoke();
 			Cursor=Cursors.Default;
-			string msg=Lan.G(this,"You are about to reassign")+" "+listPatProvFrom.Count+" "+Lan.G(this,"patients to different providers.  Continue?");
+			string msg="You are about to reassign"+" "+listPatProvFrom.Count+" "+"patients to different providers.  Continue?";
 			if(MessageBox.Show(msg,"",MessageBoxButtons.OKCancel)!=DialogResult.OK) {
 				return;
 			}
@@ -1140,15 +1140,15 @@ namespace OpenDental{
 						.ToDictionary(x => x.Key,x=>x.Select(y=>y.PatNum).ToList())
 						.Select(x => new Action(() => {
 							patsReassigned+=x.Value.Count;
-							PatientEvent.Fire(EventCategory.Patient,Lan.G(this,"Reassigning patients")+": "+patsReassigned
-								+" "+Lan.G(this,"out of")+" "+listPatProvFrom.Count);
+							PatientEvent.Fire(EventCategory.Patient,"Reassigning patients"+": "+patsReassigned
+								+" "+"out of"+" "+listPatProvFrom.Count);
 							Patients.ReassignProv(x.Key.To,x.Value);
 							SecurityLogs.MakeLogEntry(Permissions.PatPriProvEdit,0,"Primary provider changed for "+x.Value.Count+" patients from "
 								+Providers.GetLongDesc(x.Key.From)+" to "+Providers.GetLongDesc(x.Key.To)+".");
 						})).ToList();
 					ODThread.RunParallel(listActions,TimeSpan.FromMinutes(2));//each group of actions gets 2 minutes
 				},
-				startingMessage:Lan.G(this,"Reassigning patients")+"...",
+				startingMessage:"Reassigning patients"+"...",
 				eventType:typeof(PatientEvent),
 				odEventType:EventCategory.Patient);
 			Cursor=Cursors.Default;
@@ -1262,7 +1262,7 @@ namespace OpenDental{
 		private void FormProviderSelect_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
 			string duplicates=Providers.GetDuplicateAbbrs();
 			if(duplicates!="" && Prefs.GetBool(PrefName.EasyHideDentalSchools)) {
-				if(MessageBox.Show(Lan.G(this,"Warning.  The following abbreviations are duplicates.  Continue anyway?\r\n")+duplicates,
+				if(MessageBox.Show("Warning.  The following abbreviations are duplicates.  Continue anyway?\r\n"+duplicates,
 					"",MessageBoxButtons.OKCancel)!=DialogResult.OK)
 				{
 					e.Cancel=true;

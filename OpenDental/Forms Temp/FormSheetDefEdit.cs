@@ -131,7 +131,7 @@ namespace OpenDental {
 		public FormSheetDefEdit(SheetDef sheetDef) {
 			InitializeComponent();
 			InitializeComponentSheetEditMobile();
-			Lan.F(this);
+			
 			_sheetDefCur=sheetDef;
 			if(sheetDef.IsLandscape){
 				Width=sheetDef.Height+190;
@@ -160,7 +160,7 @@ namespace OpenDental {
 			if(IsInternal) {
 				butDelete.Visible=false;
 				butOK.Visible=false;
-				butCancel.Text=Lan.G(this,"Close");
+				butCancel.Text="Close";
 				groupAddNew.Visible=false;
 				groupPage.Visible=false;
 				groupAlignH.Visible=false;
@@ -273,7 +273,7 @@ namespace OpenDental {
 			sheetEditMobile.HasMobileLayoutChanged+=new EventHandler<bool>((o,hasMobileLayout) => {
 				_sheetDefCur.HasMobileLayout=hasMobileLayout;
 			});
-			sheetEditMobile.TranslationProvider=new Func<string,string>((s) => { return Lan.G(this,s); });
+			sheetEditMobile.TranslationProvider=new Func<string,string>((s) => { return s; });
 			sheetEditMobile.NewMobileHeader+=new EventHandler<SheetEditMobileCtrl.NewMobileFieldValueArgs>((o,e) => {
 				var item=_sheetDefCur.SheetFieldDefs.FirstOrDefault(x => x.SheetFieldDefNum==e.SheetFieldDefNum);
 				if(item!=null) {
@@ -357,7 +357,7 @@ namespace OpenDental {
 					}
 					radioLayoutDefault.Tag=_sheetLayoutModeCur;//Used in radioLayoutDefault_CheckedChanged()
 					radioLayoutTP.Tag=treatPlanLayout;//Used in radioLayoutDefault_CheckedChanged()
-					groupBoxSubViews.Text=Lan.G(this,"Layout Modes");//group box defaults to 'Language'
+					groupBoxSubViews.Text="Layout Modes";//group box defaults to 'Language'
 					comboLanguages.Visible=false;
 					radioLayoutDefault.Checked=true;
 					return true;
@@ -403,8 +403,8 @@ namespace OpenDental {
 			radioLayoutTP.Visible=false;
 			groupBoxSubViews.Visible=true;
 			comboLanguages.Items.Clear();
-			comboLanguages.Items.Add(Lan.G(this,"Add New"));
-			comboLanguages.Items.Add(Lan.G(this,"Default"));
+			comboLanguages.Items.Add("Add New");
+			comboLanguages.Items.Add("Default");
 			comboLanguages.SelectedIndex=1;
 			_listUsedLanguages.ForEach(x => comboLanguages.Items.Add(x.Display));
 			if(selectedThreeLetterLanguage!=null) {
@@ -448,7 +448,7 @@ namespace OpenDental {
 		///<summary>Returns true if user selected a new language via InputBox to translate to, otherwise false.</summary>
 		private bool TryAddTranslation(out string selectedLangauge) {
 			selectedLangauge=null;
-			string prompt=Lan.G(this,"Please select a new language to translate to.");
+			string prompt="Please select a new language to translate to.";
 			List<InputBoxParam> listParams=new List<InputBoxParam> { 
 				new InputBoxParam(InputBoxType.ComboSelect,prompt,_listUnusedLanguages.Select(x => x.Display).ToList()) 
 			};
@@ -495,22 +495,22 @@ namespace OpenDental {
 						txt=fieldDef.FieldValue;
 						break;
 					case SheetFieldType.Image:
-						txt=Lan.G(this,"Image:")+fieldDef.FieldName;
+						txt="Image:"+fieldDef.FieldName;
 						break;
 					case SheetFieldType.PatImage:
-						txt=Lan.G(this,"PatImg:")+Defs.GetName(DefCat.ImageCats,PIn.Long(fieldDef.FieldName));
+						txt="PatImg:"+Defs.GetName(DefCat.ImageCats,PIn.Long(fieldDef.FieldName));
 						break;
 					case SheetFieldType.Line:
-						txt=Lan.G(this,"Line:")+fieldDef.XPos.ToString()+","+fieldDef.YPos.ToString()+","+"W:"+fieldDef.Width.ToString()+","+"H:"+fieldDef.Height.ToString();
+						txt="Line:"+fieldDef.XPos.ToString()+","+fieldDef.YPos.ToString()+","+"W:"+fieldDef.Width.ToString()+","+"H:"+fieldDef.Height.ToString();
 						break;
 					case SheetFieldType.Rectangle:
-						txt=Lan.G(this,"Rect:")+fieldDef.XPos.ToString()+","+fieldDef.YPos.ToString()+","+"W:"+fieldDef.Width.ToString()+","+"H:"+fieldDef.Height.ToString();
+						txt="Rect:"+fieldDef.XPos.ToString()+","+fieldDef.YPos.ToString()+","+"W:"+fieldDef.Width.ToString()+","+"H:"+fieldDef.Height.ToString();
 						break;
 					case SheetFieldType.SigBox:
-						txt=Lan.G(this,"Signature Box");
+						txt="Signature Box";
 						break;
 					case SheetFieldType.SigBoxPractice:
-						txt=Lan.G(this,"Practice Signature Box");
+						txt="Practice Signature Box";
 						break;
 					case SheetFieldType.CheckBox:
 						txt=fieldDef.TabOrder.ToString()+": ";
@@ -526,7 +526,7 @@ namespace OpenDental {
 						break;
 					case SheetFieldType.ComboBox:
 						txt=fieldDef.TabOrder > 0 ? fieldDef.TabOrder.ToString()+": " : "";
-						txt+=Lan.G(this,"ComboBox:")+fieldDef.XPos.ToString()+","+fieldDef.YPos.ToString()
+						txt+="ComboBox:"+fieldDef.XPos.ToString()+","+fieldDef.YPos.ToString()
 							+","+"W:"+fieldDef.Width.ToString();
 						break;
 					case SheetFieldType.InputField:
@@ -536,7 +536,7 @@ namespace OpenDental {
 						txt="Grid:"+fieldDef.FieldName;
 						break;
 					case SheetFieldType.MobileHeader:
-						txt=Lan.G(this,"Mobile Only:")+" "+fieldDef.UiLabelMobile;
+						txt="Mobile Only:"+" "+fieldDef.UiLabelMobile;
 						break;
 					default:
 						txt=fieldDef.FieldName;
@@ -713,7 +713,7 @@ namespace OpenDental {
 				_argsDF.brush=_argsDF.brushBlue;
 			}
 			g.DrawRectangle(_argsDF.pen,sheetFieldDef.XPos,sheetFieldDef.YPos,sheetFieldDef.Width,sheetFieldDef.Height);
-			g.DrawString("("+Lan.G(this,"combo box")+")",Font,_argsDF.brush,sheetFieldDef.XPos,sheetFieldDef.YPos);
+			g.DrawString("("+"combo box"+")",Font,_argsDF.brush,sheetFieldDef.XPos,sheetFieldDef.YPos);
 		}
 
 		private void DrawToothChartHelper(SheetFieldDef sheetFieldDef,Graphics g,bool isSelected) {
@@ -726,12 +726,12 @@ namespace OpenDental {
 				_argsDF.brush=_argsDF.brushBlue;
 			}
 			g.DrawRectangle(_argsDF.pen,sheetFieldDef.XPos,sheetFieldDef.YPos,sheetFieldDef.Width,sheetFieldDef.Height);
-			string toothChart="("+Lan.G(this,"tooth chart")+" "+sheetFieldDef.FieldName;
+			string toothChart="("+"tooth chart"+" "+sheetFieldDef.FieldName;
 			if(sheetFieldDef.FieldValue[0]=='1') {//Primary teeth chart
-				toothChart+=" "+Lan.G(this,"primary teeth");
+				toothChart+=" "+"primary teeth";
 			}
 			else {//Permanent teeth chart
-				toothChart+=" "+Lan.G(this,"permanent teeth");
+				toothChart+=" "+"permanent teeth";
 			}
 			toothChart+=")";
 			g.DrawString(toothChart,Font,_argsDF.brush,sheetFieldDef.XPos,sheetFieldDef.YPos);
@@ -1011,7 +1011,7 @@ namespace OpenDental {
 			else {
 #if DEBUG
 				g.DrawRectangle(GetOutlinePenForSheetFieldDef(sheetFieldDef,new Pen(Brushes.IndianRed)),sheetFieldDef.XPos,sheetFieldDef.YPos,sheetFieldDef.Width,sheetFieldDef.Height);
-					g.DrawString(Lan.G(this,"Cannot find image")+": "+sheetFieldDef.FieldName,Font,_argsDF.brush??Brushes.Black,sheetFieldDef.XPos,sheetFieldDef.YPos);
+					g.DrawString("Cannot find image"+": "+sheetFieldDef.FieldName,Font,_argsDF.brush??Brushes.Black,sheetFieldDef.XPos,sheetFieldDef.YPos);
 #endif
 				return;
 			}
@@ -1211,7 +1211,7 @@ namespace OpenDental {
 					label.TextAlign=ContentAlignment.BottomLeft;
 					label.Location=new Point(0,0);
 					ListBox listBox=new ListBox();
-					listBox.Items.Add(Lan.G("ContrChart","No Priority"));
+					listBox.Items.Add("No Priority");
 					Defs.GetDefsForCategory(DefCat.TxPriorities,true).ForEach(def => listBox.Items.Add(def.ItemName));
 					listBox.Width=sheetFieldDef.Width;
 					listBox.Top=label.Bottom;
@@ -1751,7 +1751,7 @@ namespace OpenDental {
 		}
 		
 		private void butAddMobileHeader_Click(object sender,EventArgs e) {
-			InputBox FormIB=new InputBox(Lan.G(this,"Mobile Header")) {
+			InputBox FormIB=new InputBox("Mobile Header") {
 				MaxInputTextLength=255,
 				ShowDelete=true,
 			};
@@ -1854,7 +1854,7 @@ namespace OpenDental {
 					FormS=new FormSheetFieldChart(_sheetDefCur,field,IsInternal); //not available for mobile
 					break;
 				case SheetFieldType.MobileHeader: //This is the one weird/different one
-					InputBox FormIB=new InputBox(Lan.G(this,"Mobile Header"),field.UiLabelMobile) {
+					InputBox FormIB=new InputBox("Mobile Header",field.UiLabelMobile) {
 						MaxInputTextLength=255,
 						ShowDelete=true,
 					};
@@ -2240,7 +2240,7 @@ namespace OpenDental {
 				return;
 			}
 			List<SheetFieldDef> listSheetFieldDefs=GetPertinentSheetFieldDefs();
-			string strPrompt=Lan.G(this,"The following selected fields can cause conflicts if they are copied:\r\n");
+			string strPrompt="The following selected fields can cause conflicts if they are copied:\r\n";
 			bool conflictingfield=false;
 			for(int i=0;i<listFields.SelectedIndices.Count;i++) {
 				SheetFieldDef fielddef=listSheetFieldDefs[listFields.SelectedIndices[i]];
@@ -2271,8 +2271,8 @@ namespace OpenDental {
 						break;
 				}
 			}
-			strPrompt+=Lan.G(this,"Would you like to continue anyways?");
-			if(conflictingfield && MessageBox.Show(strPrompt,Lan.G(this,"Warning"),MessageBoxButtons.OKCancel)!=DialogResult.OK) {
+			strPrompt+="Would you like to continue anyways?";
+			if(conflictingfield && MessageBox.Show(strPrompt,"Warning",MessageBoxButtons.OKCancel)!=DialogResult.OK) {
 				splitContainer1.Panel1.Select();
 				CtrlIsDown=false;
 				return;
@@ -2373,7 +2373,7 @@ namespace OpenDental {
 			}
 			try {
 				SheetDefs.DeleteObject(_sheetDefCur.SheetDefNum);
-				SecurityLogs.MakeLogEntry(Permissions.Setup,0,Lan.G(this,"SheetDef")+" "+_sheetDefCur.Description+" "+Lan.G(this,"was deleted."));
+				SecurityLogs.MakeLogEntry(Permissions.Setup,0,"SheetDef"+" "+_sheetDefCur.Description+" "+"was deleted.");
 				DialogResult=DialogResult.OK;
 			}
 			catch(Exception ex) {
@@ -2398,7 +2398,7 @@ namespace OpenDental {
 						if(field2.FieldType==SheetFieldType.CheckBox && !field2.IsRequired && field2.RadioButtonGroup.ToLower()==field.RadioButtonGroup.ToLower() //for misc groups
 						   && field2.FieldName.ToLower()==field.FieldName.ToLower()) //for misc groups
 						{
-							MessageBox.Show(Lan.G(this,"Radio buttons in radio button group")+" '"+(field.RadioButtonGroup==""?field.FieldName:field.RadioButtonGroup)+"' "+Lan.G(this,"must all be marked required or all be marked not required."));
+							MessageBox.Show("Radio buttons in radio button group"+" '"+(field.RadioButtonGroup==""?field.FieldName:field.RadioButtonGroup)+"' "+"must all be marked required or all be marked not required.");
 							return false;
 						}
 					}
@@ -2406,7 +2406,7 @@ namespace OpenDental {
 				if(field.FieldType==SheetFieldType.CheckBox && (field.FieldName.StartsWith("allergy:")) || field.FieldName.StartsWith("checkMed") || field.FieldName.StartsWith("problem:")) {
 					foreach(SheetFieldDef medChkBox in medChkBoxList) { //Check for duplicates.
 						if(medChkBox.FieldName==field.FieldName && medChkBox.RadioButtonValue==field.RadioButtonValue && medChkBox.Language==field.Language) {
-							MessageBox.Show(Lan.G(this,"Duplicate check box found")+": '"+field.FieldName+" "+field.RadioButtonValue+"'. "+Lan.G(this,"Only one of each type is allowed."));
+							MessageBox.Show("Duplicate check box found"+": '"+field.FieldName+" "+field.RadioButtonValue+"'. "+"Only one of each type is allowed.");
 							return false;
 						}
 					}
@@ -2416,7 +2416,7 @@ namespace OpenDental {
 				else if(field.FieldType==SheetFieldType.InputField && field.FieldName.StartsWith("inputMed")) {
 					foreach(SheetFieldDef inputMed in inputMedList) {
 						if(inputMed.FieldName==field.FieldName && inputMed.Language==field.Language) {
-							MessageBox.Show(Lan.G(this,"Duplicate inputMed boxes found")+": '"+field.FieldName+"'. "+Lan.G(this,"Only one of each is allowed."));
+							MessageBox.Show("Duplicate inputMed boxes found"+": '"+field.FieldName+"'. "+"Only one of each is allowed.");
 							return false;
 						}
 					}
@@ -2426,15 +2426,15 @@ namespace OpenDental {
 			switch(_sheetDefCur.SheetType) {
 				case SheetTypeEnum.TreatmentPlan:
 					if(_sheetDefCur.SheetFieldDefs.FindAll(x => x.FieldType==SheetFieldType.SigBox).GroupBy(x => x.Language).Any(x => x.ToList().Count!=1)) {
-						MessageBox.Show(Lan.G(this,"Treatment plans must have exactly one patient signature box."));
+						MessageBox.Show("Treatment plans must have exactly one patient signature box.");
 						return false;
 					}
 					if(_sheetDefCur.SheetFieldDefs.FindAll(x => x.FieldType==SheetFieldType.SigBoxPractice).GroupBy(x => x.Language).Any(x => x.ToList().Count>1)) {
-						MessageBox.Show(Lan.G(this,"Treatment plans cannot have more than one practice signature box."));
+						MessageBox.Show("Treatment plans cannot have more than one practice signature box.");
 						return false;
 					}
 					if(_sheetDefCur.SheetFieldDefs.FindAll(x => x.FieldType==SheetFieldType.Grid && x.FieldName=="TreatPlanMain").GroupBy(x => x.Language).Any(x => x.ToList().Count<1)) {
-						MessageBox.Show(Lan.G(this,"Treatment plans must have one main grid."));
+						MessageBox.Show("Treatment plans must have one main grid.");
 						return false;
 					}
 					break;
@@ -2459,9 +2459,9 @@ namespace OpenDental {
 			if(_listWebSheetDefs==null || _listWebSheetDefs.Count==0) {//No web forms use this sheet def.
 				return true;
 			}
-			string message=Lan.G(this,"This Sheet Def is used by the following web "+(_listWebSheetDefs.Count==1?"form":"forms"))+":\r\n"
+			string message="This Sheet Def is used by the following web "+(_listWebSheetDefs.Count==1?"form":"forms")+":\r\n"
 				+string.Join("\r\n",_listWebSheetDefs.Select(x => x.Description))+"\r\n"
-				+Lan.G(this,"Do you want to update "+(_listWebSheetDefs.Count==1?"that web form":"those web forms")+"?");
+				+"Do you want to update "+(_listWebSheetDefs.Count==1?"that web form":"those web forms"+"?");
 			if(MessageBox.Show(message,"",MessageBoxButtons.YesNo)==DialogResult.No) {
 				return true;
 			}
@@ -2493,7 +2493,7 @@ namespace OpenDental {
 			tips+="CTRL + Click + Drag : Add a group of fields to the selection.\r\n";
 			tips+="\r\n";
 			tips+="Delete or Backspace : Delete selected field(s).\r\n";
-			MessageBox.Show(Lan.G(this,tips));
+			MessageBox.Show(tips);
 		}
 
 		private void butAlignLeft_Click(object sender,EventArgs e) {

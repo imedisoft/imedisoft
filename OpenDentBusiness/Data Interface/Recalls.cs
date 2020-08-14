@@ -586,17 +586,17 @@ namespace OpenDentBusiness {
 						if(webSchedSendMostRecent.EmailSendStatus==AutoCommStatus.SendNotAttempted
 							&& webSchedSendMostRecent.SmsSendStatus==AutoCommStatus.SendNotAttempted) 
 						{
-							row["webSchedSendDesc"]=Lans.g("FormRecallList","Sending");
+							row["webSchedSendDesc"]="Sending";
 						}
 						else if(webSchedSendMostRecent.EmailSendStatus!=AutoCommStatus.SendSuccessful
 							&& webSchedSendMostRecent.SmsSendStatus==AutoCommStatus.SentAwaitingReceipt) 
 						{
-							row["webSchedSendDesc"]=Lans.g("FormRecallList","Awaiting Delivery Receipt");
+							row["webSchedSendDesc"]="Awaiting Delivery Receipt";
 						}
 						else if(webSchedSendMostRecent.EmailSendStatus==AutoCommStatus.SendFailed
 							|| webSchedSendMostRecent.SmsSendStatus==AutoCommStatus.SendFailed)
 						{
-							row["webSchedSendDesc"]=Lans.g("FormRecallList","Send Failed");
+							row["webSchedSendDesc"]="Send Failed";
 						}
 						row["webSchedSendError"]=webSchedSendMostRecent.ResponseDescript;
 					}
@@ -632,16 +632,16 @@ namespace OpenDentBusiness {
 			string contactMethod;
 			switch(contMeth) {
 				case ContactMethod.HmPhone:
-					contactMethod=Lans.g("FormRecallList","Hm")+":"+hmPhone;
+					contactMethod="Hm"+":"+hmPhone;
 					break;
 				case ContactMethod.WkPhone:
-					contactMethod=Lans.g("FormRecallList","Wk")+":"+wkPhone;
+					contactMethod="Wk"+":"+wkPhone;
 					break;
 				case ContactMethod.WirelessPh:
-					contactMethod=Lans.g("FormRecallList","Cell")+":"+wirelessPhone;
+					contactMethod="Cell"+":"+wirelessPhone;
 					break;
 				case ContactMethod.TextMessage:
-					contactMethod=Lans.g("FormRecallList","Text")+":"+wirelessPhone;
+					contactMethod="Text"+":"+wirelessPhone;
 					break;
 				case ContactMethod.Email:
 					if(isGroupByFamilies) {
@@ -652,11 +652,11 @@ namespace OpenDentBusiness {
 					}
 					break;
 				case ContactMethod.Mail:
-					contactMethod=Lans.g("FormRecallList","Mail");
+					contactMethod="Mail";
 					break;
 				case ContactMethod.DoNotCall:
 				case ContactMethod.SeeNotes:
-					contactMethod=Lans.g("enumContactMethod",contMeth.GetDescription());
+					contactMethod=contMeth.GetDescription();
 					break;
 				case ContactMethod.None:
 				default:
@@ -671,7 +671,7 @@ namespace OpenDentBusiness {
 						}
 					}
 					//no email, or user doesn't want to use email even if there is one, default to using HmPhone
-					contactMethod=Lans.g("FormRecallList","Hm")+":"+hmPhone;
+					contactMethod="Hm"+":"+hmPhone;
 					break;
 			}
 			return contactMethod;
@@ -890,7 +890,7 @@ namespace OpenDentBusiness {
 							//Updating too infrequently will cause the main thread to spin too fast.  Mod 5 is a good throttle.
 							if(++curBatchCount%5==0 || curBatchCount==dictPatBatchData.Count) {
 								RecallSyncEvent.Fire(EventCategory.RecallSync,new ProgressBarHelper(
-									Lans.g("Recalls","Recalls Completed")+" "+patProcessedCount+"/"+_totalPatCount+" - "
+									"Recalls Completed"+" "+patProcessedCount+"/"+_totalPatCount+" - "
 										+Math.Floor(((double)patProcessedCount/_totalPatCount)*100).ToString()+"%",
 									Math.Floor(((double)patProcessedCount/_totalPatCount)*100)+"%",
 									patProcessedCount,
@@ -1016,9 +1016,9 @@ namespace OpenDentBusiness {
 						continue;
 					}
 					RecallSyncEvent.Fire(EventCategory.RecallSync,new ProgressBarHelper(
-						Lans.g("Recalls","Recalls Completed")+" "+patProcessedCount+"/"+_totalPatCount+" - "
+						"Recalls Completed"+" "+patProcessedCount+"/"+_totalPatCount+" - "
 							+Math.Floor(((double)patProcessedCount/_totalPatCount)*100).ToString()+"% - "
-							+Lans.g("Recalls","Inserting Recalls")+": "+listRecallsForInsert.Count,
+							+"Inserting Recalls"+": "+listRecallsForInsert.Count,
 						Math.Floor(((double)patProcessedCount/_totalPatCount)*100)+"%",
 						patProcessedCount,
 						_totalPatCount,
@@ -1796,17 +1796,17 @@ namespace OpenDentBusiness {
 				};
 				switch(PIn.Int(row["CommMode"].ToString())) {
 					case -2:
-						recent.ReminderType=Lans.g(lanThis,"Automatic Web Sched Recall");
+						recent.ReminderType="Automatic Web Sched Recall";
 						break;
 					case -1:
-						recent.ReminderType=Lans.g(lanThis,"Manual Web Sched Recall");
+						recent.ReminderType="Manual Web Sched Recall";
 						break;
 					default:
 						try {
-							recent.ReminderType=Lans.g(lanThis,PIn.Enum<CommItemMode>(PIn.Int(row["CommMode"].ToString())).GetDescription());
+							recent.ReminderType=PIn.Enum<CommItemMode>(PIn.Int(row["CommMode"].ToString())).GetDescription();
 						}
 						catch {
-							recent.ReminderType=Lans.g(lanThis,"UNKNOWN");
+							recent.ReminderType="UNKNOWN";
 						}
 						break;
 				}
@@ -1832,7 +1832,7 @@ namespace OpenDentBusiness {
 			//No need to check RemotingRole; no call to db.
 			List<string> listErrors=new List<string>();
 			if(listRecallNums==null || listRecallNums.Count < 1) {
-				listErrors.Add(Lans.g("WebSched","No Recalls to schedule"));
+				listErrors.Add("No Recalls to schedule");
 				return listErrors;
 			}
 			//Loop through the selected patients and insert WebSchedRecalls so that the Auto Comm Web Sched thread can aggregate the recalls and send

@@ -15,7 +15,7 @@ namespace OpenDentBusiness{
 		public static void Update(Employee Cur) {
 			
 			if(Cur.LName=="" && Cur.FName=="") {
-				throw new ApplicationException(Lans.g("FormEmployeeEdit","Must include either first name or last name"));
+				throw new ApplicationException("Must include either first name or last name");
 			}
 			Crud.EmployeeCrud.Update(Cur);
 		}
@@ -24,7 +24,7 @@ namespace OpenDentBusiness{
 		public static void UpdateChanged(Employee employee,Employee employeeOld) {
 			
 			if(employee.LName=="" && employee.FName=="") {
-				throw new ApplicationException(Lans.g("FormEmployeeEdit","Must include either first name or last name"));
+				throw new ApplicationException("Must include either first name or last name");
 			}
 			Crud.EmployeeCrud.Update(employee,employeeOld);
 		}
@@ -43,24 +43,24 @@ namespace OpenDentBusiness{
 			Employee employee=GetEmp(employeeNum);
 			Employee employeeOld=employee.Copy();
 			if(clockEvent!=null && clockEvent.TimeDisplayed2>DateTime.Now) {//Future time manual clock out.
-				employee.ClockStatus=Lans.g("ContrStaff","Manual Entry");
+				employee.ClockStatus="Manual Entry";
 			}
 			else if(clockEvent==null //Employee has never clocked in
 				|| (clockEvent.TimeDisplayed2.Year > 1880 && clockEvent.ClockStatus==TimeClockStatus.Home))//Clocked out for home
 			{
-				employee.ClockStatus=Lans.g("enumTimeClockStatus",TimeClockStatus.Home.ToString());
+				employee.ClockStatus=TimeClockStatus.Home.ToString();
 			}
 			else if(clockEvent.TimeDisplayed2.Year > 1880 && clockEvent.ClockStatus==TimeClockStatus.Lunch) {//Clocked out for lunch
-				employee.ClockStatus=Lans.g("enumTimeClockStatus",TimeClockStatus.Lunch.ToString());
+				employee.ClockStatus=TimeClockStatus.Lunch.ToString();
 			}
 			else if(clockEvent.TimeDisplayed1.Year > 1880 && clockEvent.TimeDisplayed2.Year < 1880 && clockEvent.ClockStatus==TimeClockStatus.Break) {
-				employee.ClockStatus=Lans.g("enumTimeClockStatus",TimeClockStatus.Break.ToString());
+				employee.ClockStatus=TimeClockStatus.Break.ToString();
 			}
 			else if(clockEvent.TimeDisplayed2.Year > 1880 && clockEvent.ClockStatus==TimeClockStatus.Break) {//Clocked back in from break
-				employee.ClockStatus=Lans.g("ContrStaff","Working");
+				employee.ClockStatus="Working";
 			}
 			else {//The employee has not clocked out yet.
-				employee.ClockStatus=Lans.g("ContrStaff","Working");
+				employee.ClockStatus="Working";
 			}
 			Crud.EmployeeCrud.Update(employee,employeeOld);
 		}
@@ -148,7 +148,7 @@ namespace OpenDentBusiness{
 		///<summary></summary>
 		public static long Insert(Employee Cur){
 			if(Cur.LName=="" && Cur.FName=="") {
-				throw new ApplicationException(Lans.g("FormEmployeeEdit","Must include either first name or last name"));
+				throw new ApplicationException("Must include either first name or last name");
 			}
 			return Crud.EmployeeCrud.Insert(Cur);
 		}
@@ -160,18 +160,15 @@ namespace OpenDentBusiness{
 			//schedule.EmployeeNum will not block deletion
 			string command="SELECT COUNT(*) FROM clockevent WHERE EmployeeNum="+POut.Long(employeeNum);
 			if(Database.ExecuteString(command)!="0"){
-				throw new ApplicationException(Lans.g("FormEmployeeSelect",
-					"Not allowed to delete employee because of attached clock events."));
+				throw new ApplicationException("Not allowed to delete employee because of attached clock events.");
 			}
 			command="SELECT COUNT(*) FROM timeadjust WHERE EmployeeNum="+POut.Long(employeeNum);
 			if(Database.ExecuteString(command)!="0") {
-				throw new ApplicationException(Lans.g("FormEmployeeSelect",
-					"Not allowed to delete employee because of attached time adjustments."));
+				throw new ApplicationException("Not allowed to delete employee because of attached time adjustments.");
 			}
 			command="SELECT COUNT(*) FROM userod WHERE EmployeeNum="+POut.Long(employeeNum);
 			if(Database.ExecuteString(command)!="0") {
-				throw new ApplicationException(Lans.g("FormEmployeeSelect",
-					"Not allowed to delete employee because of attached user."));
+				throw new ApplicationException("Not allowed to delete employee because of attached user.");
 			}
 			command="UPDATE appointment SET Assistant=0 WHERE Assistant="+POut.Long(employeeNum);
 			Database.ExecuteNonQuery(command);

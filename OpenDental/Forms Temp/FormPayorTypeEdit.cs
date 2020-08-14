@@ -17,7 +17,7 @@ namespace OpenDental {
 
 		public FormPayorTypeEdit(PayorType payorType) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			PayorTypeCur=payorType;
 			_listSops=Sops.GetDeepCopy();
 		}

@@ -22,7 +22,7 @@ namespace OpenDental {
 
 		public FormFeeSchedGroupEdit(FeeSchedGroup feeSchedGroupCur) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_feeSchedGroupCur=feeSchedGroupCur;
 			_listClinicsInGroup=Clinics.GetClinics(_feeSchedGroupCur.ListClinicNumsAll??new List<long>());
 			if(_feeSchedGroupCur.FeeSchedNum>0) {
@@ -47,9 +47,9 @@ namespace OpenDental {
 			gridAvailable.BeginUpdate();
 			gridAvailable.ListGridColumns.Clear();
 			GridColumn col; 
-			col=new GridColumn(Lan.G(this,"Abbr"),75);
+			col=new GridColumn("Abbr",75);
 			gridAvailable.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Description"),200);
+			col=new GridColumn("Description",200);
 			gridAvailable.ListGridColumns.Add(col);
 			gridAvailable.ListGridRows.Clear();
 			GridRow row;
@@ -67,9 +67,9 @@ namespace OpenDental {
 			gridGroup.BeginUpdate();
 			gridGroup.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G(this,"Abbr"),75);
+			col=new GridColumn("Abbr",75);
 			gridGroup.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Description"),200);
+			col=new GridColumn("Description",200);
 			gridGroup.ListGridColumns.Add(col);
 			gridGroup.ListGridRows.Clear();
 			GridRow row;
@@ -123,10 +123,10 @@ namespace OpenDental {
 		private bool ValidateUserInput() {
 			string error="";
 			if(String.IsNullOrWhiteSpace(textDescription.Text)) {
-				error+=Lan.G(this,"Please enter a description.")+"\r\n";
+				error+="Please enter a description."+"\r\n";
 			}
 			if(comboFeeSched.SelectedIndex<0) {
-				error+=Lan.G(this,"Please select a fee schedule.")+"\r\n";
+				error+="Please select a fee schedule."+"\r\n";
 			}
 			string invalidClinics="";
 			foreach(Clinic clinicCur in _listClinicsInGroup) {
@@ -138,7 +138,7 @@ namespace OpenDental {
 				}
 			}
 			if(invalidClinics.Length>0) {
-				error+=Lan.G(this,"The following clinic(s) already exist in a fee schedule group for the selected fee schedule:")+invalidClinics;
+				error+="The following clinic(s) already exist in a fee schedule group for the selected fee schedule:"+invalidClinics;
 			}
 			if(error.Length>0) {
 				//Translation handled above due to variable nature of clinic.Abbr.
@@ -160,8 +160,8 @@ namespace OpenDental {
 
 		private void butPickFeeSched_Click(object sender,EventArgs e) {
 			List<GridColumn> listColumnHeaders=new List<GridColumn>() {
-				new GridColumn(Lan.G(this,"Description"),250),
-				new GridColumn(Lan.G(this,"Hidden"),25)
+				new GridColumn("Description",250),
+				new GridColumn("Hidden",25)
 			};
 			List<GridRow> listRowValues=new List<GridRow>();
 			_listFeeScheds.ForEach(x => {
@@ -169,8 +169,8 @@ namespace OpenDental {
 				row.Tag=x;
 				listRowValues.Add(row);
 			});
-			string formTitle=Lan.G(this,"Fee Schedule Picker");
-			string gridTitle=Lan.G(this,"Fee Schedules");
+			string formTitle="Fee Schedule Picker";
+			string gridTitle="Fee Schedules";
 			FormGridSelection form=new FormGridSelection(listColumnHeaders,listRowValues,formTitle,gridTitle);
 			if(form.ShowDialog()==DialogResult.OK) {
 				comboFeeSched.SelectedIndex=comboFeeSched.Items.IndexOf((comboFeeSched.Items.OfType<ODBoxItem<FeeSched>>().Where(x => x.Tag.FeeSchedNum==((FeeSched)form.ListSelectedTags[0]).FeeSchedNum).First()));
@@ -221,8 +221,8 @@ namespace OpenDental {
 					+"  Answering no will result in the default fees for the fee schedule being used."))
 				{
 					List<GridColumn> listColumnHeaders=new List<GridColumn>() {
-						new GridColumn(Lan.G(this,"Abbr"),75),
-						new GridColumn(Lan.G(this,"Description"),200)
+						new GridColumn("Abbr",75),
+						new GridColumn("Description",200)
 					};
 					List<GridRow> listRowValues=new List<GridRow>();
 					_listClinicsInGroup.ForEach(x => {
@@ -230,8 +230,8 @@ namespace OpenDental {
 						row.Tag=x;
 						listRowValues.Add(row);
 					});
-					string formTitle=Lan.G(this,"Clinic Picker");
-					string gridTitle=Lan.G(this,"Clinics");
+					string formTitle="Clinic Picker";
+					string gridTitle="Clinics";
 					FormGridSelection form=new FormGridSelection(listColumnHeaders,listRowValues,formTitle,gridTitle);
 					if(form.ShowDialog()!=DialogResult.OK) {
 						MessageBox.Show("A default clinic was not selected.");
@@ -248,7 +248,7 @@ namespace OpenDental {
 						listClinicNumsNew.Remove(clinicNumMaster);
 						FeeScheds.CopyFeeSchedule(feeSchedCur,clinicNumMaster,0,feeSchedCur,listClinicNumsNew,0);
 						listClinicNumsNew.Add(clinicNumMaster);
-					},Lans.g(this,"Creating Group, Please Wait..."));
+					},"Creating Group, Please Wait...");
 				}
 				else {//Default fees.
 					//Give the user an out before potentially changing a lot of data in the db.
@@ -257,7 +257,7 @@ namespace OpenDental {
 					}
 					ODProgress.ShowAction(() => {
 						FeeScheds.CopyFeeSchedule(feeSchedCur,0,0,feeSchedCur,listClinicNumsNew,0);
-					},Lans.g(this,"Creating Group, Please Wait..."));
+					},"Creating Group, Please Wait...");
 				}
 			}
 			//Existing group, change the fees for all the new clinics in the group. Use the first clinic in the old clinic list as we already did an empty check

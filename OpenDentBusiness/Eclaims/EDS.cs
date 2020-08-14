@@ -136,19 +136,19 @@ namespace OpenDentBusiness.Eclaims {
 		///No need to pass in a date as this web call will retrieve a 277 containing all data since last called.</summary>
 		public static bool Retrieve277s(Clearinghouse clearinghouseClin,IODProgressExtended progress) {
 			progress=progress??new ODProgressExtendedNull();
-			progress.UpdateProgress(Lans.g(progress.LanThis,"Contacting web server and downloading reports"),"reports","17%",17);
+			progress.UpdateProgress("Contacting web server and downloading reports","reports","17%",17);
 			bool retVal=false;
 			if(progress.IsPauseOrCancel()) {
-				progress.UpdateProgress(Lans.g(progress.LanThis,"Canceled by user."));
+				progress.UpdateProgress("Canceled by user.");
 				return false;
 			}
-			progress.UpdateProgress(Lans.g(progress.LanThis,"Downloading 277s"),"reports","33%",33);
+			progress.UpdateProgress("Downloading 277s","reports","33%",33);
 			retVal=Retrieve277s(clearinghouseClin);
 			if(retVal) {
-				progress.UpdateProgress(Lans.g(progress.LanThis,"Retrieved 277s successfully."));
+				progress.UpdateProgress("Retrieved 277s successfully.");
 			}
 			else {
-				progress.UpdateProgress(Lans.g(progress.LanThis,"Retrieving 277s was unsuccessful."));
+				progress.UpdateProgress("Retrieving 277s was unsuccessful.");
 			}
 			return retVal;
 		}
@@ -161,22 +161,22 @@ namespace OpenDentBusiness.Eclaims {
 					return true;
 			}
 			progress=progress??new ODProgressExtendedNull();
-			progress.UpdateProgress(Lans.g(progress.LanThis,"Contacting web server and downloading reports"),"reports","40%",40);
+			progress.UpdateProgress("Contacting web server and downloading reports","reports","40%",40);
 			if(progress.IsPauseOrCancel()) {
-				progress.UpdateProgress(Lans.g(progress.LanThis,"Canceled by user."));
+				progress.UpdateProgress("Canceled by user.");
 				return false;
 			}
-			progress.UpdateProgress(Lans.g(progress.LanThis,"Downloading ERAs"),"reports","50%",50);
+			progress.UpdateProgress("Downloading ERAs","reports","50%",50);
 			if(progress.IsPauseOrCancel()) {
-				progress.UpdateProgress(Lans.g(progress.LanThis,"Canceled by user."));
+				progress.UpdateProgress("Canceled by user.");
 				return false;
 			}
 			bool retVal=Retrieve835s(clearinghouseClin);
 			if(retVal) {
-				progress.UpdateProgress(Lans.g(progress.LanThis,"Retrieved 835s successfully."));
+				progress.UpdateProgress("Retrieved 835s successfully.");
 			}
 			else {
-				progress.UpdateProgress(Lans.g(progress.LanThis,"Retrieving 835s was unsuccessful."));
+				progress.UpdateProgress("Retrieving 835s was unsuccessful.");
 			}
 			return retVal;
 		}

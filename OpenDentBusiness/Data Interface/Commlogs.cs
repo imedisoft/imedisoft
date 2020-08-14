@@ -115,7 +115,7 @@ namespace OpenDentBusiness{
 			string command = "SELECT COUNT(*) FROM smsfrommobile WHERE CommlogNum=" + POut.Long(comm.CommlogNum);
 			if (Database.ExecuteString(command) != "0")
 			{
-				throw new Exception(Lans.g("CommLogs", "Not allowed to delete a commlog attached to a text message."));
+				throw new Exception("Not allowed to delete a commlog attached to a text message.");
 			}
 			Crud.CommlogCrud.Delete(comm.CommlogNum);
 		}
@@ -150,23 +150,23 @@ namespace OpenDentBusiness{
 			com.Note = "";
 			if (numberOfReminders == 0)
 			{
-				com.Note = Lans.g("FormRecallList", $"{commTypeStr} reminder.");
+				com.Note = $"{commTypeStr} reminder.";
 			}
 			else if (numberOfReminders == 1)
 			{
-				com.Note = Lans.g("FormRecallList", $"Second {commTypeStr} reminder.");
+				com.Note = $"Second {commTypeStr} reminder.";
 			}
 			else if (numberOfReminders == 2)
 			{
-				com.Note = Lans.g("FormRecallList", $"Third {commTypeStr} reminder.");
+				com.Note = $"Third {commTypeStr} reminder.";
 			}
 			else
 			{
-				com.Note = Lans.g("FormRecallList", $"{commTypeStr} reminder:") + " " + (numberOfReminders + 1).ToString();
+				com.Note = $"{commTypeStr} reminder:" + " " + (numberOfReminders + 1).ToString();
 			}
 			if (defNumNewStatus == 0)
 			{
-				com.Note += "  " + Lans.g("Commlogs", "Status None");
+				com.Note += "  " + "Status None";
 			}
 			else
 			{
@@ -246,11 +246,11 @@ namespace OpenDentBusiness{
 			{
 				if (apptStatus == ApptStatus.PtNote || apptStatus == ApptStatus.PtNoteCompleted)
 				{
-					commlogMsgText = Lans.g("Commlogs", "Save patient note in CommLog?") + "\r\n" + "\r\n";
+					commlogMsgText = "Save patient note in CommLog?" + "\r\n" + "\r\n";
 				}
 				else
 				{
-					commlogMsgText = Lans.g("Commlogs", "Save appointment note in CommLog?") + "\r\n" + "\r\n";
+					commlogMsgText = "Save appointment note in CommLog?" + "\r\n" + "\r\n";
 				}
 				//Show up to 30 characters of the note because they can get rather large thus pushing the buttons off the screen.
 				commlogMsgText += noteText.Substring(0, Math.Min(noteText.Length, 30));

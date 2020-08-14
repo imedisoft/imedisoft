@@ -18,7 +18,7 @@ namespace OpenDental {
 
 		public FormAdjustmentPicker(long patNum,bool isUnattachedMode=false,List<Adjustment> listAdjustments=null) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_patNum=patNum;
 			_isUnattachedMode=isUnattachedMode;
 			_listAdjustments=listAdjustments;
@@ -42,15 +42,15 @@ namespace OpenDental {
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G(this,"Date"),90);
+			GridColumn col=new GridColumn("Date",90);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"PatNum"),100);
+			col=new GridColumn("PatNum",100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Type"),120);
+			col=new GridColumn("Type",120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Amount"),70);
+			col=new GridColumn("Amount",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Has Proc"),0,HorizontalAlignment.Center);
+			col=new GridColumn("Has Proc",0,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

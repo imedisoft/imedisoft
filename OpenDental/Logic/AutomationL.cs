@@ -225,9 +225,9 @@ namespace OpenDental {
 											apptDates+="(...)";
 										}
 										if(MessageBox.Show(
-											Lan.G("FormPatientEdit","This patient has scheduled appointments in the future")+":\r\n"+apptDates+"\r\n"
-												+Lan.G("FormPatientEdit","Would you like to delete them and set the patient to Deceased?"),
-											Lan.G("FormPatientEdit","Delete future appointments?"),
+											"This patient has scheduled appointments in the future"+":\r\n"+apptDates+"\r\n"
+												+"Would you like to delete them and set the patient to Deceased?",
+											"Delete future appointments?",
 											MessageBoxButtons.YesNo)==DialogResult.Yes)
 										{
 											foreach(Appointment appt in listFutureAppts) {

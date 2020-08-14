@@ -50,7 +50,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -312,7 +312,7 @@ namespace OpenDental{
 			textDisplayName.Text=_fieldCur.DescriptionOverride;
 			textInternalName.Text=_fieldCur.Description;
 			if(_isOverrideMode) {//Not in default mode, changes to ColWidth override for this tab only.
-				labelDefaultMode.Text="("+Lan.G(this,"this tab only")+")";
+				labelDefaultMode.Text="("+"this tab only"+")";
 			}
 			int columnWidth=_fieldCur.ColumnWidth;
 			if(_tabLinkCur!=null && _tabLinkCur.ColumnWidthOverride>0) {

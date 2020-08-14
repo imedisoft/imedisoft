@@ -123,7 +123,7 @@ namespace OpenDentBusiness
 			}
 			catch
 			{
-				throw new Exception(Lans.g("Podium", "Failed to open web browser.  Please make sure you have a default browser set and are connected to the internet and then try again."));
+				throw new Exception("Failed to open web browser.  Please make sure you have a default browser set and are connected to the internet and then try again.");
 			}
 		}
 
@@ -260,57 +260,58 @@ namespace OpenDentBusiness
 			switch (statusCode / 100)
 			{   //Get general http status codes e.g. -100=-1, 203=2
 				case -1:    //Failure, no phone number
-					commText = Lans.g("Podium", "Podium review invitation request failed because there was no phone number.  Error code:") + " " + statusCode;
+					commText = "Podium review invitation request failed because there was no phone number.  Error code:" + " " + statusCode;
 					break;
 				case -2:    //Failure, no email
-					commText = Lans.g("Podium", "Podium review invitation request failed because the patient doesn't accept texts "
-						+ "and there was no email address.  Error code:") + " " + statusCode;
+					commText = 
+						"Podium review invitation request failed because the patient doesn't accept texts and there was no email address. " +
+						"Error code: " + statusCode;
 					break;
 				case 2: //Success https://httpstatusdogs.com/200-ok
-					commText = Lans.g("Podium", "Podium review invitation request successfully sent.");
+					commText = "Podium review invitation request successfully sent.";
 					break;
 				case 4: //Client side communication failure https://httpstatusdogs.com/400-bad-request
 					if (statusCode == 422)
 					{//422 is Unprocessable Entity, which is sent in this case when a phone number has received an invite already.
-						commText = Lans.g("Podium", "The request failed because an identical request was previously sent.");
+						commText = "The request failed because an identical request was previously sent.";
 					}
 					else
 					{
-						commText = Lans.g("Podium", "The request failed to reach Podium with error code:") + " " + statusCode;
+						commText = "The request failed to reach Podium with error code:" + " " + statusCode;
 					}
 					break;
 				case 5: //Server side internal failure. https://httpstatusdogs.com/500-internal-server-error
-					commText = Lans.g("Podium", "The request was rejected by the Podium server with error code:") + " " + statusCode;
+					commText = "The request was rejected by the Podium server with error code:" + " " + statusCode;
 					break;
 				default:    //General Failure 
-					commText = Lans.g("Podium", "The request failed to send with error code:") + " " + statusCode;
+					commText = "The request failed to send with error code:" + " " + statusCode;
 					break;
 			}
 			if (!string.IsNullOrEmpty(commText))
 			{
 				commText += "\r\n";
 			}
-			commText += Lans.g("Podium", "The information sent in the request was") + ": \r\n"
-				+ Lans.g("Podium", "First name") + ": \"" + pat.FName + "\", "
-				+ Lans.g("Podium", "Last name") + ": \"" + pat.LName + "\", "
-				+ Lans.g("Podium", "Email") + ": \"" + pat.Email + "\"";
+			commText += "The information sent in the request was" + ": \r\n"
+				+ "First name" + ": \"" + pat.FName + "\", "
+				+ "Last name" + ": \"" + pat.LName + "\", "
+				+ "Email" + ": \"" + pat.Email + "\"";
 			if (phoneNumber != "")
 			{//If "successful".
-				commText += ", " + Lans.g("Podium", "Phone number") + ": \"" + phoneNumber + "\"";
+				commText += ", " + "Phone number" + ": \"" + phoneNumber + "\"";
 			}
 			else
 			{
 				string wirelessPhone = new string(pat.WirelessPhone.Where(x => char.IsDigit(x)).ToArray());
 				string homePhone = new string(pat.HmPhone.Where(x => char.IsDigit(x)).ToArray());
 				List<string> phonesTried = new List<string> { wirelessPhone, homePhone }.FindAll(x => x != "");
-				string phoneNumbersTried = ", " + Lans.g("Podium", "No valid phone number found.");
+				string phoneNumbersTried = ", " + "No valid phone number found.";
 				if (pat.TxtMsgOk == YN.No || (pat.TxtMsgOk == YN.Unknown && Prefs.GetBool(PrefName.TextMsgOkStatusTreatAsNo)))
 				{//Used email
 					phoneNumbersTried = "";
 				}
 				else if (phonesTried.Count > 0)
 				{
-					phoneNumbersTried = ", " + Lans.g("Podium", "Phone numbers tried") + ": " + string.Join(", ", phonesTried);
+					phoneNumbersTried = ", " + "Phone numbers tried" + ": " + string.Join(", ", phonesTried);
 				}
 				commText += phoneNumbersTried;
 			}

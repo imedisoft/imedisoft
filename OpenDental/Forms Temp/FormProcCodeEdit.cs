@@ -111,7 +111,7 @@ namespace OpenDental{
 		public FormProcCodeEdit(ProcedureCode procCode){
 			InitializeComponent();// Required for Windows Form Designer support
 			tbTime.CellClicked += new OpenDental.ContrTable.CellEventHandler(tbTime_CellClicked);
-			Lan.F(this);
+			
 			ProcCode=procCode;
 			_procCodeOld=procCode.Copy();
 		}
@@ -1099,7 +1099,7 @@ namespace OpenDental{
 			textMedicalCode.Text=ProcCode.MedicalCode;
 			textSubstitutionCode.Text=ProcCode.SubstitutionCode;
 			for(int i=0;i<Enum.GetNames(typeof(SubstitutionCondition)).Length;i++) {
-				comboSubstOnlyIf.Items.Add(Lan.G("enumSubstitutionCondition",Enum.GetNames(typeof(SubstitutionCondition))[i]));
+				comboSubstOnlyIf.Items.Add(Enum.GetNames(typeof(SubstitutionCondition))[i]);
 			}
 			comboSubstOnlyIf.SelectedIndex=(int)ProcCode.SubstOnlyIf;
 			textDescription.Text=ProcCode.Descript;
@@ -1128,7 +1128,7 @@ namespace OpenDental{
 			textDefaultClaimNote.Text=ProcCode.DefaultClaimNote;
 			listTreatArea.Items.Clear();
 			for(int i=1;i<Enum.GetNames(typeof(TreatmentArea)).Length;i++){
-				listTreatArea.Items.Add(Lan.G("enumTreatmentArea",Enum.GetNames(typeof(TreatmentArea))[i]));
+				listTreatArea.Items.Add(Enum.GetNames(typeof(TreatmentArea))[i]);
 			}
 			listTreatArea.SelectedIndex=(int)ProcCode.TreatArea-1;
 			if(listTreatArea.SelectedIndex==-1) listTreatArea.SelectedIndex=2;
@@ -1189,9 +1189,9 @@ namespace OpenDental{
 			_listFees=Fees.GetFeesForCodeNoOverrides(ProcCode.CodeNum);
 			gridFees.BeginUpdate();
 			gridFees.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableProcFee","Sched"),120);
+			GridColumn col=new GridColumn("Sched",120);
 			gridFees.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProcFee","Amount"),60,HorizontalAlignment.Right);
+			col=new GridColumn("Amount",60,HorizontalAlignment.Right);
 			gridFees.ListGridColumns.Add(col); 
 			gridFees.ListGridRows.Clear();
 			GridRow row;
@@ -1237,19 +1237,19 @@ namespace OpenDental{
 			gridNotes.ListGridColumns.Clear();
 			gridTpNotes.ListGridColumns.Clear();
 			#region gridNotes
-			GridColumn col=new GridColumn(Lan.G("TableProcedureNotes","Prov"),80);
+			GridColumn col=new GridColumn("Prov",80);
 			gridNotes.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProcedureNotes","Time"),150);
+			col=new GridColumn("Time",150);
 			gridNotes.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProcedureNotes","Note"),400);
+			col=new GridColumn("Note",400);
 			gridNotes.ListGridColumns.Add(col);
 			#endregion
 			#region gridTpNotes
-			GridColumn column=new GridColumn(Lan.G("TableTpProcedureNotes","Prov"),80);
+			GridColumn column=new GridColumn("Prov",80);
 			gridTpNotes.ListGridColumns.Add(column);
-			column=new GridColumn(Lan.G("TableTpProcedureNotes","Time"),150);
+			column=new GridColumn("Time",150);
 			gridTpNotes.ListGridColumns.Add(column);
-			column=new GridColumn(Lan.G("TableTpProcedureNotes","Note"),400);
+			column=new GridColumn("Note",400);
 			gridTpNotes.ListGridColumns.Add(column);
 			#endregion
 			gridNotes.ListGridRows.Clear();
@@ -1391,7 +1391,7 @@ namespace OpenDental{
 		private void butAuditTrail_Click(object sender,EventArgs e) {
 			List<Permissions> perms=new List<Permissions>();
 			perms.Add(Permissions.ProcFeeEdit);
-			FormAuditOneType FormA=new FormAuditOneType(0,perms,Lan.G(this,"All changes for")+" "+ProcCode.AbbrDesc+" - "+ProcCode.ProcCode,ProcCode.CodeNum);
+			FormAuditOneType FormA=new FormAuditOneType(0,perms,"All changes for"+" "+ProcCode.AbbrDesc+" - "+ProcCode.ProcCode,ProcCode.CodeNum);
 			FormA.ShowDialog();
 		}
 

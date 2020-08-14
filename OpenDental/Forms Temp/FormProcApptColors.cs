@@ -29,7 +29,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -145,7 +145,7 @@ namespace OpenDental{
 			_listProcApptColors=ProcApptColors.GetDeepCopy();
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("FormProcApptColors","Code Range"),20){ IsWidthDynamic=true };
+			GridColumn col=new GridColumn("Code Range",20){ IsWidthDynamic=true };
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

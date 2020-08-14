@@ -15,10 +15,6 @@ namespace OpenDental {
 		/// <summary></summary>
 		public FormInnoDb() {
 			InitializeComponent();
-			Lan.C(this,new System.Windows.Forms.Control[]{
-				this.textBox1
-			});
-			Lan.F(this);
 		}
 
 		private void FormInnoDb_Load(object sender,EventArgs e) {
@@ -27,7 +23,7 @@ namespace OpenDental {
 			strB.Append('-',60);
 			textBox1.Text=DateTime.Now.ToString()+strB.ToString()+"\r\n";
 			Application.DoEvents();
-			textBox1.Text+=Lans.g("FormInnoDb","Default Storage Engine: "+InnoDb.GetDefaultEngine().ToString()+"\r\n");
+			textBox1.Text+="Default Storage Engine: "+InnoDb.GetDefaultEngine().ToString()+"\r\n";
 			Application.DoEvents();
 			textBox1.Text+=InnoDb.GetEngineCount();
 			Application.DoEvents();
@@ -41,9 +37,9 @@ namespace OpenDental {
 			}
 			if(InnoDb.GetDefaultEngine()=="InnoDB") {
 				MsgBoxCopyPaste msgbox=new MsgBoxCopyPaste(
-					Lan.G("FormInnoDB","You will first need to change your default storage engine to MyISAM.  Make sure that the following line is in your my.ini file: \r\n"
+					"You will first need to change your default storage engine to MyISAM.  Make sure that the following line is in your my.ini file: \r\n"
 					+"default-storage-engine=MyISAM.\r\n"
-					+"Then, restart the MySQL service and return here."));
+					+"Then, restart the MySQL service and return here.");
 				msgbox.ShowDialog();
 				return;
 			}
@@ -51,10 +47,10 @@ namespace OpenDental {
 				return;//A message has already shown that the backup failed.
 			}
 			Cursor=Cursors.WaitCursor;
-			textBox1.Text+=Lans.g("FormInnoDb","Default Storage Engine: "+InnoDb.GetDefaultEngine().ToString()+"\r\n");
+			textBox1.Text+="Default Storage Engine: "+InnoDb.GetDefaultEngine().ToString()+"\r\n";
 			Application.DoEvents();
 			int numchanged=InnoDb.ConvertTables("InnoDB","MyISAM");
-			textBox1.Text+=Lan.G("FormInnoDb","Number of tables converted to MyISAM: ")+numchanged.ToString()+"\r\n";
+			textBox1.Text+="Number of tables converted to MyISAM: "+numchanged.ToString()+"\r\n";
 			Application.DoEvents();
 			textBox1.Text+=InnoDb.GetEngineCount();
 			Application.DoEvents();
@@ -67,20 +63,20 @@ namespace OpenDental {
 				return;
 			}
 			if(!InnoDb.IsInnodbAvail()) {
-				MsgBoxCopyPaste msgbox=new MsgBoxCopyPaste(
-					Lan.G("FormInnoDb","InnoDB storage engine is disabled.  In order for InnoDB tables to work you must comment out the skip-innodb line in your my.ini file, like this:\r\n"
-					+"#skip-innodb\r\n"
-					+"and, if present, comment out the default-storage-engine line like this: \r\n"
-					+"#default-storage-engine=MyISAM.\r\n"
-					+"Then, restart the MySQL service and return here."));
+				MsgBoxCopyPaste msgbox = new MsgBoxCopyPaste(
+					"InnoDB storage engine is disabled.  In order for InnoDB tables to work you must comment out the skip-innodb line in your my.ini file, like this:\r\n"
+					+ "#skip-innodb\r\n"
+					+ "and, if present, comment out the default-storage-engine line like this: \r\n"
+					+ "#default-storage-engine=MyISAM.\r\n"
+					+ "Then, restart the MySQL service and return here.");
 				msgbox.ShowDialog();
 				return;
 			}
 			if(InnoDb.GetDefaultEngine()=="MyISAM") {
 				MsgBoxCopyPaste msgbox=new MsgBoxCopyPaste(
-					Lan.G("FormInnoDB","You will first need to change your default storage engine to InnoDB.  In your my.ini file, comment out the default-storage-engine line like this: \r\n"
+					"You will first need to change your default storage engine to InnoDB.  In your my.ini file, comment out the default-storage-engine line like this: \r\n"
 					+"#default-storage-engine=MyISAM.\r\n"
-					+"Then, restart the MySQL service and return here."));
+					+"Then, restart the MySQL service and return here.");
 				msgbox.ShowDialog();
 				return;
 			}
@@ -88,10 +84,10 @@ namespace OpenDental {
 				return;//A message has already shown that the backup failed.
 			}
 			Cursor=Cursors.WaitCursor;
-			textBox1.Text+=Lans.g("FormInnoDb","Default Storage Engine: "+InnoDb.GetDefaultEngine().ToString()+"\r\n");
+			textBox1.Text+="Default Storage Engine: "+InnoDb.GetDefaultEngine().ToString()+"\r\n";
 			Application.DoEvents();
 			int numchanged=InnoDb.ConvertTables("MyISAM","InnoDB");
-			textBox1.Text+=Lan.G("FormInnoDb","Number of tables converted to InnoDB: ")+numchanged.ToString()+"\r\n";
+			textBox1.Text+="Number of tables converted to InnoDB: "+numchanged.ToString()+"\r\n";
 			Application.DoEvents();
 			textBox1.Text+=InnoDb.GetEngineCount();
 			Application.DoEvents();

@@ -28,7 +28,7 @@ namespace OpenDental
 		
 		public FormCodeSystemsImport(params CodeSystemName[] arrayAutoImportCodeSystemNames) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_arrayAutoImportCodeSystemNames=arrayAutoImportCodeSystemNames;
 		}
 
@@ -117,7 +117,7 @@ namespace OpenDental
 				checkKeepDescriptions.Enabled=true;
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.G("CodeSystemImporter","Error"+": "+ex.Message));
+				MessageBox.Show("Error"+": "+ex.Message);
 			}
 			Cursor=Cursors.Default;
 		}
@@ -137,7 +137,7 @@ namespace OpenDental
 				try {
 					//Show warnings and prompts
 					if(!PreDownloadHelper(codeSystem.CodeSystemName)) {
-						_mapCodeSystemStatus[codeSystem.CodeSystemName]=Lan.G("CodeSystemImporter","Import cancelled");
+						_mapCodeSystemStatus[codeSystem.CodeSystemName]="Import cancelled";
 						continue;
 					}
 					//CPT codes require user to choose a local file so we will not do this on a thread.
@@ -145,14 +145,14 @@ namespace OpenDental
 					if(codeSystem.CodeSystemName=="CPT") {
 						#region Import CPT codes
 						//Default status for CPT codes. We will clear this below if the file is selected and unzipped succesfully.
-						_mapCodeSystemStatus[codeSystem.CodeSystemName]=Lan.G("CodeSystemImporter","To purchase CPT codes go to https://commerce.ama-assn.org/store/");
+						_mapCodeSystemStatus[codeSystem.CodeSystemName]="To purchase CPT codes go to https://commerce.ama-assn.org/store/";
 						if(!MsgBox.Show("CodeSystemImporter",MsgBoxButtons.OKCancel,"CPT codes must be purchased from the American Medical Association separately in the data file format. "
 							+"Please consult the online manual to help determine if you should purchase these codes and how to purchase them. Most offices are not required to purchase these codes. "
 							+"If you have already purchased the code file click OK to browse to the downloaded file.")) {
 							continue;
 						}
 						OpenFileDialog fdlg=new OpenFileDialog();
-						fdlg.Title=Lan.G("CodeSystemImporter","Choose CPT .zip file");
+						fdlg.Title="Choose CPT .zip file";
 						fdlg.InitialDirectory=Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 						fdlg.Filter="zip|*.zip";
 						fdlg.RestoreDirectory=true;
@@ -161,7 +161,7 @@ namespace OpenDental
 							continue;
 						}
 						if(!fdlg.FileName.ToLower().EndsWith(".zip")) {
-							_mapCodeSystemStatus[codeSystem.CodeSystemName]=Lan.G("CodeSystemImporter","Could not locate .zip file in specified folder.");
+							_mapCodeSystemStatus[codeSystem.CodeSystemName]="Could not locate .zip file in specified folder.";
 							continue;
 						}
 						string versionID="";
@@ -200,7 +200,7 @@ namespace OpenDental
                         }
 
 						if(!foundFile) {
-							_mapCodeSystemStatus[codeSystem.CodeSystemName]=Lan.G("CodeSystemImporter","MEDU.txt file not found in zip archive.");  //Used to be MEDU.txt.txt, For error purposes we'll just show .txt
+							_mapCodeSystemStatus[codeSystem.CodeSystemName]="MEDU.txt file not found in zip archive.";  //Used to be MEDU.txt.txt, For error purposes we'll just show .txt
 							continue;
 						}
 						if(versionID=="") {
@@ -209,7 +209,7 @@ namespace OpenDental
 							//detected inside the MEDU file.
 							InputBox input=new InputBox("What year are these CPT codes for?");
 							if(input.ShowDialog()==DialogResult.Cancel || !Regex.IsMatch(input.textResult.Text,@"^\d{4}$")) {//A four digit value was not entered.
-								_mapCodeSystemStatus[codeSystem.CodeSystemName]=Lan.G("CodeSystemImporter","CPT code year must be specified.");
+								_mapCodeSystemStatus[codeSystem.CodeSystemName]="CPT code year must be specified.";
 								continue;
 							}
 							versionID=input.textResult.Text;
@@ -262,7 +262,7 @@ namespace OpenDental
 								}
 							}
 							if(isForeignKey) {
-								string errorMessage=Lan.G(this,"SNOMEDCT has been skipped")+":\r\n";
+								string errorMessage="SNOMEDCT has been skipped"+":\r\n";
 								node=doc.SelectSingleNode("//ErrorMessage");
 								if(node!=null) {
 									errorMessage+=node.InnerText;
@@ -280,7 +280,7 @@ namespace OpenDental
 				}
 				catch(Exception ex) {
 					//Set status for this code system.
-					_mapCodeSystemStatus[codeSystem.CodeSystemName]=Lan.G("CodeSystemImporter",ex.Message);
+					_mapCodeSystemStatus[codeSystem.CodeSystemName]=ex.Message;
 				}
 			}
 			//Threads are all ready to go start them all in parallel. We will re-enable these buttons when we handle the UpdateCodeSystemThread.Finished event.
@@ -565,11 +565,11 @@ If the master term dictionary or software program containing the UCUM table, UCU
 					if(success) {
 						//If done==true percentDone is the number of codes that were imported, not the percent done.  
 						//This is done so we don't have to change the signatures of exisiting functions but can still alert the user when no codes were actually imported.
-						cellText=Lan.G("CodeSystemImporter","Import complete")+"! -- "+Lan.G("CodeSystemImporter","Number of codes imported")+": "
-							+Convert.ToInt32(percentDone).ToString()+" "+Lan.G("CodeSystemImporter","Number of codes updated")+": "+numUpdated;
+						cellText="Import complete"+"! -- "+"Number of codes imported"+": "
+							+Convert.ToInt32(percentDone).ToString()+" "+"Number of codes updated"+": "+numUpdated;
 					}
 					else {
-						cellText=Lan.G("CodeSystemImporter","Import failed")+"! -- "+status;
+						cellText="Import failed"+"! -- "+status;
 					}
 				}
 				gridMain.ListGridRows[i].Cells[3].Text=cellText;
@@ -709,12 +709,12 @@ If the master term dictionary or software program containing the UCUM table, UCU
 
 			///<summary>Helper used internally.</summary>
 			private void ImportProgress(int numDone,int numTotal) {
-				Update(Lan.G("CodeSystemImporter","Importing"),numDone,numTotal);
+				Update("Importing",numDone,numTotal);
 			}
 
 			///<summary>Helper used internally.</summary>
 			private void DownloadProgress(int numDone,int numTotal) {
-				Update(Lan.G("CodeSystemImporter","Downloading"),numDone,numTotal);
+				Update("Downloading",numDone,numTotal);
 			}
 
 			///<summary>The thread function.</summary>
@@ -734,11 +734,11 @@ If the master term dictionary or software program containing the UCUM table, UCU
 						CodeSystems.UpdateCurrentVersion(_codeSystem);
 					}
 					//All good!
-					Done(Lan.G("CodeSystemImporter","Import Complete"),true,_numCodesImported,numCodesUpdated);
+					Done("Import Complete",true,_numCodesImported,numCodesUpdated);
 				}
 				catch(Exception ex) {
 					//Something failed!
-					Done(Lan.G("CodeSystemImporter","Error")+": "+ex.Message,false,0,0);
+					Done("Error"+": "+ex.Message,false,0,0);
 				}
 			}
 
@@ -757,13 +757,13 @@ If the master term dictionary or software program containing the UCUM table, UCU
 						}
 						XmlNode node=doc.SelectSingleNode("//CodeSystemURL");
 						if(node==null) {
-							throw new Exception(Lan.G("CodeSystemImporter","Code System URL is empty for ")+": "+_codeSystem.CodeSystemName);
+							throw new Exception("Code System URL is empty for "+": "+_codeSystem.CodeSystemName);
 						}
 						//Node's inner text contains the URL
 						_localFilePath=DownloadFileHelper(node.InnerText);					
 					}
 					if(!File.Exists(_localFilePath)) {
-						throw new Exception(Lan.G("CodeSystemImporter","Local file not found ")+": "+_localFilePath);
+						throw new Exception("Local file not found "+": "+_localFilePath);
 					}
 					switch(_codeSystem.CodeSystemName) {
 						case "CDCREC":
@@ -813,7 +813,7 @@ If the master term dictionary or software program containing the UCUM table, UCU
 						case "CDT":  //import not supported
 						case "AdministrativeSex":  //import not supported
 						default:  //new code system perhaps?
-							throw new Exception(Lan.G("CodeSystemImporter","Unsupported Code System")+": "+_codeSystem.CodeSystemName);
+							throw new Exception("Unsupported Code System"+": "+_codeSystem.CodeSystemName);
 					}
 					//Import succeded so delete the import file where necessary.
 					DeleteImportFileIfNecessary();
@@ -885,7 +885,7 @@ If the master term dictionary or software program containing the UCUM table, UCU
 				using(BinaryWriter bw=new BinaryWriter(writeStream)) {
 					while(true) {
 						if(_quit) {
-							throw new Exception(Lan.G("CodeSystemImporter","Download aborted"));
+							throw new Exception("Download aborted");
 						}
 						//Update the progress.
 						DownloadProgress(CHUNK_SIZE*KB_SIZE*chunkIndex,fileSize);

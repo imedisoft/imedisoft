@@ -30,7 +30,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -157,7 +157,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(this.textDescription.Text==""){
-				MessageBox.Show(Lan.G(this,"Please enter a description."));
+				MessageBox.Show("Please enter a description.");
 				return;
 			}
 			InsFilingCodeSubtypeCur.Descript=textDescription.Text;

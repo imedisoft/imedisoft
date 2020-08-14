@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormSheetFieldGrid(SheetDef sheetDef,SheetFieldDef sheetFieldDef,bool isReadOnly): base(sheetDef,sheetFieldDef,isReadOnly) {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormSheetFieldGrid_Load(object sender,EventArgs e) {

@@ -11,7 +11,7 @@ namespace OpenDental {
 
 		public FormOrthoChartSetup() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormOrthoChartSetup_Load(object sender,EventArgs e) {

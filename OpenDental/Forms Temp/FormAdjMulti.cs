@@ -22,14 +22,14 @@ namespace OpenDental {
 		///<summary>Pass in a list to always display certain procedures. If none are provided, we will dynamically get unpaid procedures</summary>
 		public FormAdjMulti(Patient patCur,List<Procedure> selectedProcs=null) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_patCur=patCur;
 			_listSelectedProcs=selectedProcs;
 		}
 		
 		private void FormMultiAdj_Load(object sender,EventArgs e) {
 			if(!Security.IsAuthorized(Permissions.AdjustmentCreate,true) && !Security.IsAuthorized(Permissions.AdjustmentEditZero,true)) {
-				MessageBox.Show(Lans.g("Security","Not authorized for")+"\r\n"+GroupPermissions.GetDesc(Permissions.AdjustmentCreate));
+				MessageBox.Show("Not authorized for"+"\r\n"+GroupPermissions.GetDesc(Permissions.AdjustmentCreate));
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
@@ -79,23 +79,23 @@ namespace OpenDental {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G("TableMultiAdjs","Date"),70,HorizontalAlignment.Center);
+			col=new GridColumn("Date",70,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn() { Heading=Lan.G("TableMultiAdjs","Provider"), IsWidthDynamic=true };
+			col=new GridColumn() { Heading="Provider", IsWidthDynamic=true };
 			gridMain.ListGridColumns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
-				col=new GridColumn() { Heading=Lan.G("TableMultiAdjs","Clinic"), IsWidthDynamic=true };
+				col=new GridColumn() { Heading="Clinic", IsWidthDynamic=true };
 				gridMain.ListGridColumns.Add(col);
 			}		 	 
-			col=new GridColumn() { Heading=Lan.G("TableMultiAdjs","Type"), IsWidthDynamic=true };
+			col=new GridColumn() { Heading="Type", IsWidthDynamic=true };
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableMultiAdjs","Fee"),70,HorizontalAlignment.Right);
+			col=new GridColumn("Fee",70,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableMultiAdjs","Rem Before"),70,HorizontalAlignment.Right);
+			col=new GridColumn("Rem Before",70,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableMultiAdjs","Adj Amt"),70,HorizontalAlignment.Left);
+			col=new GridColumn("Adj Amt",70,HorizontalAlignment.Left);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableMultiAdjs","Rem After"),70,HorizontalAlignment.Left);
+			col=new GridColumn("Rem After",70,HorizontalAlignment.Left);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			RecalculateGridEntries();
@@ -105,7 +105,7 @@ namespace OpenDental {
 				gridMain.ListGridRows.Add(row);
 			}
 			gridMain.EndUpdate();
-			butAdd.Text=Lan.G(this,"Add Adjustments");
+			butAdd.Text="Add Adjustments";
 		}
 
 		private void FillListBoxAdjTypes() {
@@ -387,15 +387,15 @@ namespace OpenDental {
 			List<MultiAdjEntry> listSelectedEntries=gridMain.SelectedTags<MultiAdjEntry>();
 			butAdd.Enabled=true;
 			if(listSelectedEntries.Count==0) {//if there are no entries selected
-				butAdd.Text=Lan.G(this,"Add Adjustments");
+				butAdd.Text="Add Adjustments";
 			}
 			else if(listSelectedEntries.Count==1) {
 				if(listSelectedEntries[0].Adj!=null) {//user selected an adjustment row
-					butAdd.Text=Lan.G(this,"Update");
+					butAdd.Text="Update";
 					textNote.Text=listSelectedEntries[0].Adj.AdjNote;
 				}
 				else {//Selected a procedure row
-					butAdd.Text=Lan.G(this,"Add Adjustments");
+					butAdd.Text="Add Adjustments";
 				}
 			}
 			else {//Multiple entries selected
@@ -403,10 +403,10 @@ namespace OpenDental {
 					butAdd.Enabled=false;
 				}
 				else if(listSelectedEntries.All(x => x.Adj!=null)) {//User has selected multiple adjustments
-					butAdd.Text=Lan.G(this,"Update");
+					butAdd.Text="Update";
 				}
 				else if(listSelectedEntries.All(x => x.IsProcedureRow())) {//User has selected multiple proc rows
-					butAdd.Text=Lan.G(this,"Add Adjustments");
+					butAdd.Text="Add Adjustments";
 				}
 			}
 		}
@@ -531,7 +531,7 @@ namespace OpenDental {
 				listAdjustmentAmounts.Add(row.Adj.AdjAmt.ToString("c"));
 			}
 			if(listAdjustmentAmounts.Count>0) {
-				string log=Lan.G(this,"Adjustment(s) created from Multiple Adjustments window:")+" ";
+				string log="Adjustment(s) created from Multiple Adjustments window:"+" ";
 				SecurityLogs.MakeLogEntry(Permissions.AdjustmentCreate,_patCur.PatNum,log+string.Join(",",listAdjustmentAmounts));
 			}
 			DialogResult=DialogResult.OK;

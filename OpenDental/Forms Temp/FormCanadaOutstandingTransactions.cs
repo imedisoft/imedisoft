@@ -16,7 +16,7 @@ namespace OpenDental {
 
 		public FormCanadaOutstandingTransactions() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormCanadaOutstandingTransactions_Load(object sender,EventArgs e) {
@@ -96,11 +96,11 @@ namespace OpenDental {
 			}
 			catch(ApplicationException aex) {
 				Cursor=Cursors.Default;
-				MessageBox.Show(Lan.G(this,"Request failed:")+"\r\n"+aex.Message);
+				MessageBox.Show("Request failed:"+"\r\n"+aex.Message);
 			}
 			catch(Exception ex) {
 				Cursor=Cursors.Default;
-				MessageBox.Show(Lan.G(this,"Request failed:")+"\r\n"+ex.ToString());
+				MessageBox.Show("Request failed:"+"\r\n"+ex.ToString());
 			}
 			DialogResult=DialogResult.OK;
 		}

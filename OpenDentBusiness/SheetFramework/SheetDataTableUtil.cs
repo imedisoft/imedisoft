@@ -128,7 +128,7 @@ namespace OpenDentBusiness.SheetFramework {
 						DateTime.Today.ToShortDateString(),//"date"
 						DateTime.Today,//"DateTime"
 						DateTime.MinValue,//dateTimeSort
-						Lans.g("Statements","No Account Activity"),//"description"
+						"No Account Activity",//"description"
 						"", //"InvoiceNum"
 						0,//IsTransfer
 						p.FName,//"patient"
@@ -323,7 +323,7 @@ namespace OpenDentBusiness.SheetFramework {
 			#endregion Statement Type LimitedStatement
 			row[0]=text;
 			if(Prefs.GetLong(PrefName.StatementsCalcDueDate)==-1) {
-				text=Lans.g("Statements","Upon Receipt");
+				text="Upon Receipt";
 			}
 			else {
 				text=DateTime.Today.AddDays(Prefs.GetLong(PrefName.StatementsCalcDueDate)).ToShortDateString();
@@ -704,7 +704,7 @@ namespace OpenDentBusiness.SheetFramework {
 				if(checkShowSubtotals &&
 					(i==treatPlan.ListProcTPs.Count-1 || treatPlan.ListProcTPs[i+1].Priority != treatPlan.ListProcTPs[i].Priority)) {
 					row=new TpRow();
-					row.Description=Lans.g("TableTP","Subtotal");
+					row.Description="Subtotal";
 					row.Fee=subfee;
 					row.PriIns=subpriIns;
 					row.SecIns=subsecIns;
@@ -735,7 +735,7 @@ namespace OpenDentBusiness.SheetFramework {
 			#region Totals
 			if(checkShowTotals) {
 				row=new TpRow();
-				row.Description=Lans.g("TableTP","Total");
+				row.Description="Total";
 				row.Fee=totFee;
 				row.PriIns=totPriIns;
 				row.SecIns=totSecIns;
@@ -763,7 +763,7 @@ namespace OpenDentBusiness.SheetFramework {
 				dRow["Sub"]=SubstitutionLinks.HasSubstCodeForProcCode(procCode,tpRow.Tth,listSubLinks,listInsPlans) ? "X" : "";
 				dRow["Description"]            =tpRow.Description;
 				if(Prefs.GetBool(PrefName.TreatPlanItemized)
-					|| tpRow.Description==Lans.g("TableTP","Subtotal") || tpRow.Description==Lans.g("TableTP","Total")) {
+					|| tpRow.Description=="Subtotal" || tpRow.Description=="Total") {
 					dRow["Fee"]                  =tpRow.Fee.ToString("F");
 					dRow["Pri Ins"]              =tpRow.PriIns.ToString("F");
 					dRow["Sec Ins"]              =tpRow.SecIns.ToString("F");

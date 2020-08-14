@@ -32,7 +32,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -151,15 +151,15 @@ namespace OpenDental{
 		private void FillGrid(){
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableChartOfAccounts","Type"),70);
+			GridColumn col=new GridColumn("Type",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableChartOfAccounts","Description"),170);
+			col=new GridColumn("Description",170);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableChartOfAccounts","Balance"),65,HorizontalAlignment.Right);
+			col=new GridColumn("Balance",65,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableChartOfAccounts","Bank Number"),100);
+			col=new GridColumn("Bank Number",100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableChartOfAccounts","Inactive"),70);
+			col=new GridColumn("Inactive",70);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -169,7 +169,7 @@ namespace OpenDental{
 					continue;
 				}
 				row=new GridRow();
-				row.Cells.Add(Lan.G("enumAccountType",listAccounts[i].Type.ToString()));
+				row.Cells.Add(listAccounts[i].Type.ToString());
 				row.Cells.Add(listAccounts[i].Description);
 				if(listAccounts[i].Type==AccountType.Asset){
 					row.Cells.Add(Accounts.GetBalance(listAccounts[i].Id,listAccounts[i].Type).ToString("n"));
@@ -198,7 +198,7 @@ namespace OpenDental{
 		private void FillGridQB(){
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableChartOfAccountsQB","Description"),200);
+			GridColumn col=new GridColumn("Description",200);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

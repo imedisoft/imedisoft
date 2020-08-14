@@ -21,7 +21,7 @@ namespace OpenDental {
 
 		public FormEtrans834Preview(X834 x834) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_x834=x834;
 		}
 
@@ -249,47 +249,47 @@ namespace OpenDental {
 			});
 			Cursor=Cursors.Default;
 			#region summary output
-			string msg=Lan.G(this,"Done.");
+			string msg="Done.";
 			if(createdPatsCount > 0) {
-				msg+="\r\n"+Lan.G(this,"Number of patients created:")+" "+createdPatsCount;
+				msg+="\r\n"+"Number of patients created:"+" "+createdPatsCount;
 			}
 			if(updatedPatsCount > 0) {
-				msg+="\r\n"+Lan.G(this,"Number of patients updated:")+" "+updatedPatsCount;
+				msg+="\r\n"+"Number of patients updated:"+" "+updatedPatsCount;
 			}
 			if(skippedPatsCount > 0) {
-				msg+="\r\n"+Lan.G(this,"Number of patients skipped:")+" "+skippedPatsCount;
+				msg+="\r\n"+"Number of patients skipped:"+" "+skippedPatsCount;
 				msg+=sbErrorMessages.ToString();
 			}
 			if(createdCarrierCount > 0) {
-				msg+="\r\n"+Lan.G(this,"Number of carriers created:")+" "+createdCarrierCount;
+				msg+="\r\n"+"Number of carriers created:"+" "+createdCarrierCount;
 				msg+=sbErrorMessages.ToString();
 			}
 			if(createdInsPlanCount > 0) {
-				msg+="\r\n"+Lan.G(this,"Number of insurance plans created:")+" "+createdInsPlanCount;
+				msg+="\r\n"+"Number of insurance plans created:"+" "+createdInsPlanCount;
 				msg+=sbErrorMessages.ToString();
 			}
 			if(updatedInsPlanCount > 0) {
-				msg+="\r\n"+Lan.G(this,"Number of insurance plan updates:")+" "+updatedInsPlanCount;
+				msg+="\r\n"+"Number of insurance plan updates:"+" "+updatedInsPlanCount;
 				msg+=sbErrorMessages.ToString();
 			}
 			if(createdInsSubCount > 0) {
-				msg+="\r\n"+Lan.G(this,"Number of insurance subscriptions created:")+" "+createdInsSubCount;
+				msg+="\r\n"+"Number of insurance subscriptions created:"+" "+createdInsSubCount;
 				msg+=sbErrorMessages.ToString();
 			}
 			if(updatedInsSubCount > 0) {
-				msg+="\r\n"+Lan.G(this,"Number of insurance subscriptions updated:")+" "+updatedInsSubCount;
+				msg+="\r\n"+"Number of insurance subscriptions updated:"+" "+updatedInsSubCount;
 				msg+=sbErrorMessages.ToString();
 			}
 			if(createdPatPlanCount > 0) {
-				msg+="\r\n"+Lan.G(this,"Number of patients added to insurance:")+" "+createdPatPlanCount;
+				msg+="\r\n"+"Number of patients added to insurance:"+" "+createdPatPlanCount;
 				msg+=sbErrorMessages.ToString();
 			}
 			if(droppedPatPlanCount > 0) {
-				msg+="\r\n"+Lan.G(this,"Number of patients dropped from insurance:")+" "+droppedPatPlanCount;
+				msg+="\r\n"+"Number of patients dropped from insurance:"+" "+droppedPatPlanCount;
 				msg+=sbErrorMessages.ToString();
 			}
 			if(updatedPatPlanCount > 0) {
-				msg+="\r\n"+Lan.G(this,"Number of patients insurance information updated:")+" "+updatedPatPlanCount;
+				msg+="\r\n"+"Number of patients insurance information updated:"+" "+updatedPatPlanCount;
 				msg+=sbErrorMessages.ToString();
 			}
 			#endregion summary output

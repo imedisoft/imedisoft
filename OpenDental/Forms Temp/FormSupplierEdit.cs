@@ -13,7 +13,7 @@ namespace OpenDental {
 
 		public FormSupplierEdit() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormSupplierEdit_Load(object sender,EventArgs e) {

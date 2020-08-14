@@ -18,7 +18,7 @@ namespace OpenDental {
 
 		public FormWebSchedASAPHistory() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormWebSchedASAPHistory_Load(object sender,EventArgs e) {
@@ -54,37 +54,37 @@ namespace OpenDental {
 			gridHistory.BeginUpdate();
 			gridHistory.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G(this,"Patient"),120);
+			col=new GridColumn("Patient",120);
 			gridHistory.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Status"),120);
+			col=new GridColumn("Status",120);
 			gridHistory.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"SMS Send Time"),140);
+			col=new GridColumn("SMS Send Time",140);
 			gridHistory.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Email Send Time"),140);
+			col=new GridColumn("Email Send Time",140);
 			gridHistory.ListGridColumns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
-				col=new GridColumn(Lan.G(this,"Clinic"),120);
+				col=new GridColumn("Clinic",120);
 				gridHistory.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.G(this,"Original Appt Time"),140);
+			col=new GridColumn("Original Appt Time",140);
 			gridHistory.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Slot Start"),140);
+			col=new GridColumn("Slot Start",140);
 			gridHistory.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Slot Stop"),140);
+			col=new GridColumn("Slot Stop",140);
 			gridHistory.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Date Entry"),140);
+			col=new GridColumn("Date Entry",140);
 			gridHistory.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"SMS Message Text"),250);
+			col=new GridColumn("SMS Message Text",250);
 			gridHistory.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Email Message Text"),250);
+			col=new GridColumn("Email Message Text",250);
 			gridHistory.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Note"),250);
+			col=new GridColumn("Note",250);
 			gridHistory.ListGridColumns.Add(col);
 			gridHistory.ListGridRows.Clear();
 			foreach(AsapComms.AsapCommHist asapHist in listHist) {
 				GridRow row=new GridRow();
 				row.Cells.Add(asapHist.PatientName);
-				row.Cells.Add(Lan.G(this,asapHist.AsapComm.ResponseStatus.GetDescription()));
+				row.Cells.Add(asapHist.AsapComm.ResponseStatus.GetDescription());
 				string smsSent;
 				if(asapHist.AsapComm.SmsSendStatus==AutoCommStatus.SendSuccessful) {
 					smsSent=asapHist.AsapComm.DateTimeSmsSent.ToString();

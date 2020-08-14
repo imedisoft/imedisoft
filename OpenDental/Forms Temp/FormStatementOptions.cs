@@ -76,12 +76,12 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		public FormStatementOptions(bool isFromBilling=false) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			if(isFromBilling) {
 				checkSinglePatient.Enabled=false;
 			}
@@ -637,7 +637,7 @@ namespace OpenDental{
 				checkBoxBillShowTransSinceZero.Checked=Prefs.GetBool(PrefName.BillingShowTransSinceBalZero);
 				listMode.Items.Clear();
 				for(int i=0;i<Enum.GetNames(typeof(StatementMode)).Length;i++){
-					listMode.Items.Add(Lan.G("enumStatementMode",Enum.GetNames(typeof(StatementMode))[i]));
+					listMode.Items.Add(Enum.GetNames(typeof(StatementMode))[i]);
 					if((int)StmtCur.Mode_==i){
 						listMode.SelectedIndex=i;
 					}
@@ -705,7 +705,7 @@ namespace OpenDental{
 					checkSuperStatement.Visible=false;
 				}
 				if(!_isFromBilling) {
-					checkSendSms.Text=Lans.g(this,"Sent text");//The user cannot send a text from this window, so we want to make it clear that they can't.
+					checkSendSms.Text="Sent text";//The user cannot send a text from this window, so we want to make it clear that they can't.
 					checkSendSms.Enabled=false;
 					checkSendSms.Checked=StmtCur.SmsSendStatus==AutoCommStatus.SendSuccessful;
 				}
@@ -750,7 +750,7 @@ namespace OpenDental{
 				}
 				listMode.Items.Clear();
 				for(int i=0;i<Enum.GetNames(typeof(StatementMode)).Length;i++){
-					listMode.Items.Add(Lan.G("enumStatementMode",Enum.GetNames(typeof(StatementMode))[i]));
+					listMode.Items.Add(Enum.GetNames(typeof(StatementMode))[i]);
 					if(allSame && (int)StmtList[0].Mode_==i){
 						listMode.SelectedIndex=i;
 					}
@@ -1116,14 +1116,14 @@ namespace OpenDental{
 			}
 			docc.ImgType=ImageType.Document;
 			if(StmtCur.IsInvoice) {
-				docc.Description=Lan.G(this,"Invoice");
+				docc.Description="Invoice";
 			}
 			else {
 				if(StmtCur.IsReceipt==true) {
-					docc.Description=Lan.G(this,"Receipt");
+					docc.Description="Receipt";
 				}
 				else {
-					docc.Description=Lan.G(this,"Statement");
+					docc.Description="Statement";
 				}
 			}
 			//Some customers have wanted to sort their statements in the images module by date and time.  
@@ -1250,14 +1250,14 @@ namespace OpenDental{
 			}
 			docc.ImgType=ImageType.Document;
 			if(StmtCur.IsInvoice) {
-				docc.Description=Lan.G(this,"Invoice");
+				docc.Description="Invoice";
 			}
 			else {
 				if(StmtCur.IsReceipt==true) {
-					docc.Description=Lan.G(this,"Receipt");
+					docc.Description="Receipt";
 				}
 				else {
-					docc.Description=Lan.G(this,"Statement");
+					docc.Description="Statement";
 				}
 			}
 			docc.DateCreated=StmtCur.DateSent;
@@ -1381,7 +1381,7 @@ namespace OpenDental{
 			Document doc=Documents.GetByNum(StmtCur.DocNum);
 			string fileName=ImageStore.GetFilePath(doc,patFolder);
 			if(!Storage.FileExists(fileName)) {
-				MessageBox.Show(Lan.G(this,"File not found:")+" "+doc.FileName);
+				MessageBox.Show("File not found:"+" "+doc.FileName);
 				return;
 			}
 			try {
@@ -1696,7 +1696,7 @@ namespace OpenDental{
 				}
 			}
 			catch(Exception ex) {
-				FriendlyException.Show(Lan.G(this,"Error retrieving patient folder."),ex);
+				FriendlyException.Show("Error retrieving patient folder.",ex);
 				return;
 			}
 			DialogResult=DialogResult.OK;
@@ -1932,7 +1932,7 @@ namespace OpenDental{
 					Statements.DeleteStatements(new List<Statement> { StmtCur },forceImageDelete:true);
 				}
 				catch(Exception ex) {
-					FriendlyException.Show(Lan.G(this,"Error retrieving patient folder."),ex);
+					FriendlyException.Show("Error retrieving patient folder.",ex);
 				}
 			}
 			DialogResult=DialogResult.Cancel;

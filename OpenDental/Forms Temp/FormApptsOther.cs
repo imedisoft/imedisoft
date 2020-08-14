@@ -50,9 +50,9 @@ namespace OpenDental {
 			InitializeComponent();
 			_famCur=Patients.GetFamily(patNum);
 			_patCur=_famCur.GetPatient(patNum);
-			Lan.F(this);
+			
 			for(int i=0;i<listViewFamily.Columns.Count;i++) {
-				listViewFamily.Columns[i].Text=Lan.G(this,listViewFamily.Columns[i].Text);
+				listViewFamily.Columns[i].Text=listViewFamily.Columns[i].Text;
 			}
 			ListAptNumsSelected=new List<long>();
 			odApptGrid.PatCur=_patCur;
@@ -66,7 +66,7 @@ namespace OpenDental {
 		}
 
 		private void FormApptsOther_Load(object sender, System.EventArgs e) {
-			Text=Lan.G(this,"Appointments for")+" "+_patCur.GetNameLF();
+			Text="Appointments for"+" "+_patCur.GetNameLF();
 			textApptModNote.Text=_patCur.ApptModNote;
 			if(SelectionMode) {
 				butGoTo.Visible=false;
@@ -130,7 +130,7 @@ namespace OpenDental {
 					}
 				}
 				if(isdisabled) {
-					item.SubItems.Add(Lan.G(this,"disabled"));
+					item.SubItems.Add("disabled");
 				}
 				else if(dateDue.Year<1880) {
 					item.SubItems.Add("");
@@ -209,8 +209,8 @@ namespace OpenDental {
 				Appointment oldApt=apt.Copy();
 				if(_patCur.AskToArriveEarly>0) {
 					apt.DateTimeAskedToArrive=apt.AptDateTime.AddMinutes(-_patCur.AskToArriveEarly);
-					MessageBox.Show(Lan.G(this,"Ask patient to arrive")+" "+_patCur.AskToArriveEarly
-						+" "+Lan.G(this,"minutes early at")+" "+apt.DateTimeAskedToArrive.ToShortTimeString()+".");
+					MessageBox.Show("Ask patient to arrive"+" "+_patCur.AskToArriveEarly
+						+" "+"minutes early at"+" "+apt.DateTimeAskedToArrive.ToShortTimeString()+".");
 				}
 				apt.AptStatus=ApptStatus.Scheduled;
 				apt.ClinicNum=_patCur.ClinicNum;
@@ -318,20 +318,20 @@ namespace OpenDental {
 			}
 			List<string> listUserMsgs=new List<string>();
 			if(countPatsRestricted > 0) {
-				listUserMsgs.Add(Lan.G(this,"Family members skipped due to patient restriction")+" "
+				listUserMsgs.Add("Family members skipped due to patient restriction"+" "
 					+PatRestrictions.GetPatRestrictDesc(PatRestrict.ApptSchedule)+": "+countPatsRestricted+".");
 			}
 			if(countNoRecalls > 0) {
-				listUserMsgs.Add(Lan.G(this,"Family members skipped because recall disabled")+": "+countNoRecalls+".");
+				listUserMsgs.Add("Family members skipped because recall disabled"+": "+countNoRecalls+".");
 			}
 			if(countAlreadySched > 0) {
-				listUserMsgs.Add(Lan.G(this,"Family members skipped because already scheduled")+": "+countAlreadySched+".");
+				listUserMsgs.Add("Family members skipped because already scheduled"+": "+countAlreadySched+".");
 			}
 			if(countPatsArchivedOrDeceased > 0) {
-				listUserMsgs.Add(Lan.G(this,"Family members skipped because status is archived or deceased")+": "+countPatsArchivedOrDeceased+".");
+				listUserMsgs.Add("Family members skipped because status is archived or deceased"+": "+countPatsArchivedOrDeceased+".");
 			}
 			if(ListAptNumsSelected.Count==0) {
-				listUserMsgs.Add(Lan.G(this,"There are no recall appointments to schedule."));
+				listUserMsgs.Add("There are no recall appointments to schedule.");
 			}
 			if(listUserMsgs.Count > 0) {
 				MessageBox.Show(string.Join("\r\n",listUserMsgs));
@@ -529,7 +529,7 @@ namespace OpenDental {
 				return;
 			}
 			_patCur=_famCur.GetPatient(newPatNum);
-			Text=Lan.G(this,"Appointments for")+" "+_patCur.GetNameLF();
+			Text="Appointments for"+" "+_patCur.GetNameLF();
 			textApptModNote.Text=_patCur.ApptModNote;
 			FillFamily();
 			odApptGrid.PatCur=_patCur;

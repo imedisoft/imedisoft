@@ -22,14 +22,14 @@ namespace OpenDentBusiness
 			Program progCur = Programs.GetCur(ProgramName.eRx);
 			if (progCur == null)
 			{
-				throw new ODException(Lans.g("eRx", "The eRx bridge is missing from the database."));
+				throw new ODException("The eRx bridge is missing from the database.");
 			}
 
 			List<ProgramProperty> listProgramProperties = ProgramProperties.GetForProgram(progCur.Id);
 			ProgramProperty propCur = listProgramProperties.FirstOrDefault(x => x.Name == PropertyDescs.ErxOption);
 			if (propCur == null)
 			{
-				throw new ODException(Lans.g("eRx", "The eRx Option program property is missing from the database."));
+				throw new ODException("The eRx Option program property is missing from the database.");
 			}
 			return PIn.Enum<ErxOption>(propCur.Value);
 		}
@@ -109,49 +109,49 @@ namespace OpenDentBusiness
 			string practicePhone = Prefs.GetString(PrefName.PracticePhone);
 			if (!Regex.IsMatch(practicePhone, "^[0-9]{10}$"))
 			{//"^[0-9]{10}(x[0-9]+)?$")) {
-				throw new ODException(Lans.g("Erx", "Practice phone must be exactly 10 digits."));
+				throw new ODException("Practice phone must be exactly 10 digits.");
 			}
 			if (practicePhone.StartsWith("555"))
 			{
-				throw new ODException(Lans.g("Erx", "Practice phone cannot start with 555."));
+				throw new ODException("Practice phone cannot start with 555.");
 			}
 			if (Regex.IsMatch(practicePhone, "^[0-9]{3}555[0-9]{4}$"))
 			{
-				throw new ODException(Lans.g("Erx", "Practice phone cannot contain 555 in the middle 3 digits."));
+				throw new ODException("Practice phone cannot contain 555 in the middle 3 digits.");
 			}
 			string practiceFax = Prefs.GetString(PrefName.PracticeFax);
 			if (!Regex.IsMatch(practiceFax, "^[0-9]{10}(x[0-9]+)?$"))
 			{
-				throw new ODException(Lans.g("Erx", "Practice fax must be exactly 10 digits."));
+				throw new ODException("Practice fax must be exactly 10 digits.");
 			}
 			if (practiceFax.StartsWith("555"))
 			{
-				throw new ODException(Lans.g("Erx", "Practice fax cannot start with 555."));
+				throw new ODException("Practice fax cannot start with 555.");
 			}
 			if (Regex.IsMatch(practiceFax, "^[0-9]{3}555[0-9]{4}$"))
 			{
-				throw new ODException(Lans.g("Erx", "Practice fax cannot contain 555 in the middle 3 digits."));
+				throw new ODException("Practice fax cannot contain 555 in the middle 3 digits.");
 			}
 			if (Prefs.GetString(PrefName.PracticeAddress) == "")
 			{
-				throw new ODException(Lans.g("Erx", "Practice address blank."));
+				throw new ODException("Practice address blank.");
 			}
 			if (Regex.IsMatch(Prefs.GetString(PrefName.PracticeAddress), ".*P\\.?O\\.? .*", RegexOptions.IgnoreCase))
 			{
-				throw new ODException(Lans.g("Erx", "Practice address cannot be a PO BOX."));
+				throw new ODException("Practice address cannot be a PO BOX.");
 			}
 			if (Prefs.GetString(PrefName.PracticeCity) == "")
 			{
-				throw new ODException(Lans.g("Erx", "Practice city blank."));
+				throw new ODException("Practice city blank.");
 			}
 			if (!USlocales.IsValidAbbr(Prefs.GetString(PrefName.PracticeST)))
 			{
-				throw new ODException(Lans.g("Erx", "Practice state abbreviation invalid."));
+				throw new ODException("Practice state abbreviation invalid.");
 			}
 			string practiceZip = Regex.Replace(Prefs.GetString(PrefName.PracticeZip), "[^0-9]*", "");//Zip with all non-numeric characters removed.
 			if (practiceZip.Length != 9)
 			{
-				throw new ODException(Lans.g("Erx", "Practice zip must be 9 digits."));
+				throw new ODException("Practice zip must be 9 digits.");
 			}
 		}
 
@@ -165,48 +165,48 @@ namespace OpenDentBusiness
 			}
 			if (!Regex.IsMatch(clinic.Phone, "^[0-9]{10}?$"))
 			{
-				throw new ODException(Lans.g("Erx", "Clinic phone must be exactly 10 digits") + ": " + clinic.Description);
+				throw new ODException("Clinic phone must be exactly 10 digits" + ": " + clinic.Description);
 			}
 			if (clinic.Phone.StartsWith("555"))
 			{
-				throw new ODException(Lans.g("Erx", "Clinic phone cannot start with 555") + ": " + clinic.Description);
+				throw new ODException("Clinic phone cannot start with 555" + ": " + clinic.Description);
 			}
 			if (Regex.IsMatch(clinic.Phone, "^[0-9]{3}555[0-9]{4}$"))
 			{
-				throw new ODException(Lans.g("Erx", "Clinic phone cannot contain 555 in the middle 3 digits") + ": " + clinic.Description);
+				throw new ODException("Clinic phone cannot contain 555 in the middle 3 digits" + ": " + clinic.Description);
 			}
 			if (!Regex.IsMatch(clinic.Fax, "^[0-9]{10}?$"))
 			{
-				throw new ODException(Lans.g("Erx", "Clinic fax must be exactly 10 digits") + ": " + clinic.Description);
+				throw new ODException("Clinic fax must be exactly 10 digits" + ": " + clinic.Description);
 			}
 			if (clinic.Fax.StartsWith("555"))
 			{
-				throw new ODException(Lans.g("Erx", "Clinic fax cannot start with 555") + ": " + clinic.Description);
+				throw new ODException("Clinic fax cannot start with 555" + ": " + clinic.Description);
 			}
 			if (Regex.IsMatch(clinic.Fax, "^[0-9]{3}555[0-9]{4}$"))
 			{
-				throw new ODException(Lans.g("Erx", "Clinic fax cannot contain 555 in the middle 3 digits") + ": " + clinic.Description);
+				throw new ODException("Clinic fax cannot contain 555 in the middle 3 digits" + ": " + clinic.Description);
 			}
 			if (clinic.Address == "")
 			{
-				throw new ODException(Lans.g("Erx", "Clinic address blank") + ": " + clinic.Description);
+				throw new ODException("Clinic address blank" + ": " + clinic.Description);
 			}
 			if (Regex.IsMatch(clinic.Address, ".*P\\.?O\\.? .*", RegexOptions.IgnoreCase))
 			{
-				throw new ODException(Lans.g("Erx", "Clinic address cannot be a PO BOX") + ": " + clinic.Description);
+				throw new ODException("Clinic address cannot be a PO BOX" + ": " + clinic.Description);
 			}
 			if (clinic.City == "")
 			{
-				throw new ODException(Lans.g("Erx", "Clinic city blank") + ": " + clinic.Description);
+				throw new ODException("Clinic city blank" + ": " + clinic.Description);
 			}
 			if (!USlocales.IsValidAbbr(clinic.State))
 			{
-				throw new ODException(Lans.g("Erx", "Clinic state abbreviation invalid") + ": " + clinic.Description);
+				throw new ODException("Clinic state abbreviation invalid" + ": " + clinic.Description);
 			}
 			string clinicZip = Regex.Replace(clinic.Zip, "[^0-9]*", "");//Zip with all non-numeric characters removed.
 			if (clinicZip.Length != 9)
 			{
-				throw new ODException(Lans.g("Erx", "Clinic zip must be 9 digits") + ": " + clinic.Description);
+				throw new ODException("Clinic zip must be 9 digits" + ": " + clinic.Description);
 			}
 		}
 
@@ -216,38 +216,38 @@ namespace OpenDentBusiness
 		{
 			if (prov == null)
 			{
-				throw new ODException(Lans.g("Erx", "Provider not found"));
+				throw new ODException("Provider not found");
 			}
 			ProviderClinic provClinic = ProviderClinics.GetOneOrDefault(prov.ProvNum, (clinic == null ? 0 : clinic.ClinicNum));
 			if (prov.IsErxEnabled == ErxEnabledStatus.Disabled)
 			{
-				throw new ODException(Lans.g("Erx", "Erx is disabled for provider") + ": " + prov.Abbr + ".  " + Lans.g("Erx", "To enable, edit provider in Lists | Providers and acknowledge Electronic Prescription fees."));
+				throw new ODException("Erx is disabled for provider" + ": " + prov.Abbr + ".  " + "To enable, edit provider in Lists | Providers and acknowledge Electronic Prescription fees.");
 			}
 			if (prov.IsHidden)
 			{
-				throw new ODException(Lans.g("Erx", "Provider") + ": " + prov.Abbr + " " + Lans.g("Erx", "is hidden") + ".  " + Lans.g("Erx", "Unhide the provider to use Erx features."));
+				throw new ODException("Provider" + ": " + prov.Abbr + " " + "is hidden" + ".  " + "Unhide the provider to use Erx features.");
 			}
 			if (prov.IsNotPerson)
 			{
-				throw new ODException(Lans.g("Erx", "Provider must be a person") + ": " + prov.Abbr);
+				throw new ODException("Provider must be a person" + ": " + prov.Abbr);
 			}
 			string fname = prov.FName.Trim();
 			if (fname == "")
 			{
-				throw new ODException(Lans.g("Erx", "Provider first name missing") + ": " + prov.Abbr);
+				throw new ODException("Provider first name missing" + ": " + prov.Abbr);
 			}
 			if (Regex.Replace(fname, "[^A-Za-z'\\- ]*", "") != fname)
 			{
-				throw new ODException(Lans.g("Erx", "Provider first name can only contain letters, dashes, apostrophes, or spaces.") + ": " + prov.Abbr);
+				throw new ODException("Provider first name can only contain letters, dashes, apostrophes, or spaces." + ": " + prov.Abbr);
 			}
 			string lname = prov.LName.Trim();
 			if (lname == "")
 			{
-				throw new ODException(Lans.g("Erx", "Provider last name missing") + ": " + prov.Abbr);
+				throw new ODException("Provider last name missing" + ": " + prov.Abbr);
 			}
 			if (Regex.Replace(lname, "[^A-Za-z'\\- ]*", "") != lname)
 			{ //Will catch situations such as "Dale Jr. III" and "Ross DMD".
-				throw new ODException(Lans.g("Erx", "Provider last name can only contain letters, dashes, apostrophes, or spaces.  Use the suffix box for I, II, III, Jr, or Sr") + ": " + prov.Abbr);
+				throw new ODException("Provider last name can only contain letters, dashes, apostrophes, or spaces.  Use the suffix box for I, II, III, Jr, or Sr" + ": " + prov.Abbr);
 			}
 			//prov.Suffix is not validated here. In ErxXml.cs, the suffix is converted to the appropriate suffix enumeration value, or defaults to DDS if the suffix does not make sense.
 			string deaNum = prov.DEANum;
@@ -257,20 +257,20 @@ namespace OpenDentBusiness
 			}
 			if (deaNum.ToLower() != "none" && !Regex.IsMatch(deaNum, "^[A-Za-z]{2}[0-9]{7}$"))
 			{
-				throw new ODException(Lans.g("Erx", "Provider DEA Number must be 2 letters followed by 7 digits.  If no DEA Number, enter NONE.") + ": " + prov.Abbr);
+				throw new ODException("Provider DEA Number must be 2 letters followed by 7 digits.  If no DEA Number, enter NONE." + ": " + prov.Abbr);
 			}
 			string npi = Regex.Replace(prov.NationalProvID, "[^0-9]*", "");//NPI with all non-numeric characters removed.
 			if (npi.Length != 10)
 			{
-				throw new ODException(Lans.g("Erx", "Provider NPI must be exactly 10 digits") + ": " + prov.Abbr);
+				throw new ODException("Provider NPI must be exactly 10 digits" + ": " + prov.Abbr);
 			}
 			if (provClinic == null || provClinic.StateLicense == "")
 			{
-				throw new ODException(Lans.g("Erx", "Provider state license missing") + ": " + prov.Abbr);
+				throw new ODException("Provider state license missing" + ": " + prov.Abbr);
 			}
 			if (provClinic == null || !USlocales.IsValidAbbr(provClinic.StateWhereLicensed))
 			{
-				throw new ODException(Lans.g("Erx", "Provider state where licensed invalid") + ": " + prov.Abbr);
+				throw new ODException("Provider state where licensed invalid" + ": " + prov.Abbr);
 			}
 		}
 
@@ -280,19 +280,19 @@ namespace OpenDentBusiness
 		{
 			if (pat == null)
 			{
-				throw new Exception(Lans.g("Erx", "Patient not found."));
+				throw new Exception("Patient not found.");
 			}
 			if (pat.Birthdate.Year < 1880)
 			{
-				throw new ODException(Lans.g("Erx", "Patient birthdate missing."));
+				throw new ODException("Patient birthdate missing.");
 			}
 			if (pat.State != "" && !USlocales.IsValidAbbr(pat.State))
 			{
-				throw new ODException(Lans.g("Erx", "Patient state abbreviation invalid"));
+				throw new ODException("Patient state abbreviation invalid");
 			}
 			if (pat.Zip != "" && !Regex.IsMatch(pat.Zip, @"^[0-9]{5}\-?([0-9]{4})?$"))
 			{//Blank, or #####, or #####-####, or #########
-				throw new ODException(Lans.g("Erx", "Patient zip invalid"));
+				throw new ODException("Patient zip invalid");
 			}
 		}
 

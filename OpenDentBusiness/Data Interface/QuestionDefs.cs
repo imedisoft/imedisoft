@@ -60,13 +60,13 @@ namespace OpenDentBusiness {
 		public static void MoveUp(int selected,QuestionDef[] List){
 			//No need to check RemotingRole; no call to db.
 			if(selected<0) {
-				throw new ApplicationException(Lans.g("QuestionDefs","Please select an item first."));
+				throw new ApplicationException("Please select an item first.");
 			}
 			if(selected==0) {//already at top
 				return;
 			}
 			if(selected>List.Length-1){
-				throw new ApplicationException(Lans.g("QuestionDefs","Invalid selection."));
+				throw new ApplicationException("Invalid selection.");
 			}
 			SetOrder(selected-1,List[selected].ItemOrder,List);
 			SetOrder(selected,List[selected].ItemOrder-1,List);
@@ -76,13 +76,13 @@ namespace OpenDentBusiness {
 		public static void MoveDown(int selected,QuestionDef[] List) {
 			//No need to check RemotingRole; no call to db.
 			if(selected<0) {
-				throw new ApplicationException(Lans.g("QuestionDefs","Please select an item first."));
+				throw new ApplicationException("Please select an item first.");
 			}
 			if(selected==List.Length-1){//already at bottom
 				return;
 			}
 			if(selected>List.Length-1) {
-				throw new ApplicationException(Lans.g("QuestionDefs","Invalid selection."));
+				throw new ApplicationException("Invalid selection.");
 			}
 			SetOrder(selected+1,List[selected].ItemOrder,List);
 			SetOrder(selected,List[selected].ItemOrder+1,List);

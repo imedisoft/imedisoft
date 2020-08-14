@@ -8,7 +8,7 @@ namespace OpenDental {
 
 		public FormTrackNextSetup() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 		
 		private void FormTrackNextSetup_Load(object sender,EventArgs e) {

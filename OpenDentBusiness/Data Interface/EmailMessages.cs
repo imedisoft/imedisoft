@@ -454,9 +454,9 @@ namespace OpenDentBusiness{
 					if(strErrors!="") {
 						strErrors+="\r\n";
 					}
-					strErrors+=Lans.g("EmailMessages","No active certificates discovered for recipient: ")+" "+receiveAddress;
+					strErrors+="No active certificates discovered for recipient: "+" "+receiveAddress;
 					if(untrustedCount > 0) {
-						strErrors+="\r\n"+Lans.g("EmailMessages","Inactive certificates discovered")+": "+untrustedCount;
+						strErrors+="\r\n"+"Inactive certificates discovered"+": "+untrustedCount;
 					}
 				}
 			}
@@ -497,7 +497,7 @@ namespace OpenDentBusiness{
 				if(strErrors!="") {
 					strErrors+="\r\n";
 				}
-				strErrors+=Lans.g("EmailMessages","Direct messages cannot be sent over implicit SSL.");
+				strErrors+="Direct messages cannot be sent over implicit SSL.";
 			}
 			else {
 				WireEmailUnsecure(emailMessageEncrypted,emailAddressFrom,nameValueCollectionHeaders,arrayAlternateViews: alternateView);//Not really unsecure in this spot, because the message is already encrypted.
@@ -718,7 +718,7 @@ namespace OpenDentBusiness{
 				//For a signed unencrypted message, the Content-Type header in the msgOut is "Content-Type: multipart/signed; boundary=PartA; protocol="application/pkcs7-signature"; micalg=sha1"
 				//If the Content-Type header is added to the System.Web.Mail.MailMessage.Headers,
 				//the Content-Type is modified to the following by C# when sending: "Content-Type: text/plain; boundary=PartA; protocol="application/pkcs7-signature"; micalg=sha1"
-				throw new Exception(Lans.g("EmailMessages","Cannot send this type of message over implicit SSL."));
+				throw new Exception("Cannot send this type of message over implicit SSL.");
 			}
 			SmtpClient client=null;
 			MailMessage message=null;
@@ -845,7 +845,7 @@ namespace OpenDentBusiness{
 		///The provided certificate must contain a private key, or else the signing will fail (exception) when computing the signature digest.</summary>
 		public static void SendEmailUnsecureWithSig(EmailMessage emailMessage,EmailAddress emailAddressFrom,X509Certificate2 certPrivate) {
 			if(emailAddressFrom.IsImplicitSsl) {
-				throw new Exception(Lans.g("EmailMessages","Digitally signed messages cannot be sent over implicit SSL."));//See detailed comments in the private version of SendEmailUnsecure().
+				throw new Exception("Digitally signed messages cannot be sent over implicit SSL.");//See detailed comments in the private version of SendEmailUnsecure().
 			}
 			//No need to check RemotingRole; no call to db.
 			emailMessage.UserNum=Security.CurrentUser.Id;
@@ -859,7 +859,7 @@ namespace OpenDentBusiness{
 				msgOut.Message.UpdateBody(signedEntity);//Modify the relevant message headers as well as the entire message body to include the signature digest.
 			}
 			catch(Exception ex) {
-				throw new ApplicationException(Lans.g("EmailMessages","Failed to sign outgoing email message, probably due to permissions: ")+ex.Message);
+				throw new ApplicationException("Failed to sign outgoing email message, probably due to permissions: "+ex.Message);
 			}
 			WireEmailUnsecure(msgOut,emailAddressFrom,emailMessage.PatNum);
 		}
@@ -1680,7 +1680,7 @@ namespace OpenDentBusiness{
 				signedCert2=new X509Certificate2(signedCert1);
 			}
 			catch(Exception ex) {
-				throw new Exception(Lans.g("EmailMessages","Failed to load signature file")+". "+ex.Message);
+				throw new Exception("Failed to load signature file"+". "+ex.Message);
 			}
 			return signedCert2;
 		}
@@ -1718,14 +1718,14 @@ namespace OpenDentBusiness{
 				storePublicCerts.Add(signedCert);//Write the pubic encryption certificate to the Windows certificate store.
 			}
 			catch(Exception ex) {
-				throw new Exception(Lans.g("EmailMessages","Failed to save signature to encryption certificate store")+". "+ex.Message);
+				throw new Exception("Failed to save signature to encryption certificate store"+". "+ex.Message);
 			}
 			try {
 				Health.Direct.Common.Certificates.SystemX509Store storeAnchors=Health.Direct.Common.Certificates.SystemX509Store.OpenAnchorEdit();//Open for read and write.  Corresponds to NHINDAnchors/Certificates.
 				storeAnchors.Add(signedCert);//Adds to NHINDAnchors/Certificates within the windows certificate store manager (mmc).
 			}
 			catch(Exception ex) {
-				throw new Exception(Lans.g("EmailMessages","Failed to save signature to trust certificate store")+". "+ex.Message);
+				throw new Exception("Failed to save signature to trust certificate store"+". "+ex.Message);
 			}
 		}
 
@@ -2295,16 +2295,16 @@ namespace OpenDentBusiness{
 		public static string GetEmailSentOrReceivedDescript(EmailSentOrReceived sentOrReceived) {
 			//No need to check RemotingRole; no call to db.
 			if(IsRegularEmail(sentOrReceived)) {
-				return Lans.g("EmailMessages","Regular Email");
+				return "Regular Email";
 			}
 			if(IsEncryptedEmail(sentOrReceived)) {
-				return Lans.g("EmailMessages","Encrypted Email");
+				return "Encrypted Email";
 			}
 			if(IsSecureWebMail(sentOrReceived)) {
-				return Lans.g("EmailMessages","Secure Web Mail");
+				return "Secure Web Mail";
 			}
 			if(IsUnsent(sentOrReceived)) {
-				return Lans.g("EmailMessages","Unsent");
+				return "Unsent";
 			}			
 			return "";
 		}

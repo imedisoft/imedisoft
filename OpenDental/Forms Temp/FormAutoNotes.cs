@@ -33,7 +33,7 @@ namespace OpenDental {
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -393,12 +393,12 @@ namespace OpenDental {
 					AutoNoteL.FillListTree(treeNotes,_userOdCurPref);
 					SecurityLogs.MakeLogEntry(Permissions.AutoNoteQuickNoteEdit,0,
 						$"Auto Note Import. {import.AutoNotes.Count} new Auto Notes, {import.AutoNoteControls.Count} new Prompts");
-					MsgBox.Show(Lans.g(this,"Auto Notes successfully imported!")+"\r\n"+import.AutoNotes.Count+" "+Lans.g(this,"new Auto Notes")
-						+"\r\n"+import.AutoNoteControls.Count+" "+Lans.g(this,"new Prompts"));
+					MsgBox.Show("Auto Notes successfully imported!"+"\r\n"+import.AutoNotes.Count+" "+"new Auto Notes"
+						+"\r\n"+import.AutoNoteControls.Count+" "+"new Prompts");
 				}
 			}
 			catch(Exception err) {
-				FriendlyException.Show(Lans.g(this,"Auto Note(s) failed to import."),err);
+				FriendlyException.Show("Auto Note(s) failed to import.",err);
 			}
 		}
 

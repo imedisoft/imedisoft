@@ -31,7 +31,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -158,8 +158,8 @@ namespace OpenDental{
 			else{
 				string inuseby=ReqStudents.InUseBy(ReqCur.ReqNeededNum);
 				if(inuseby!=""){
-					MsgBoxCopyPaste msgBox=new MsgBoxCopyPaste(Lan.G(this,"Requirement is already in use by student(s) with grade point(s) attached."
-						+"\r\n"+Lan.G(this,"Delete anyway?  Student grades will not be affected."))
+					MsgBoxCopyPaste msgBox=new MsgBoxCopyPaste("Requirement is already in use by student(s) with grade point(s) attached."
+						+"\r\n"+"Delete anyway?  Student grades will not be affected."
 						+"\r\n"+inuseby);
 					msgBox.ShowDialog();
 					if(msgBox.DialogResult != DialogResult.OK) {

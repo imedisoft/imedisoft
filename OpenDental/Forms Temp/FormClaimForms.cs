@@ -50,7 +50,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -298,7 +298,7 @@ namespace OpenDental{
 		private void FillGridInternal() {
 			gridInternal.BeginUpdate();
 			gridInternal.ListGridColumns.Clear();
-			gridInternal.ListGridColumns.Add(new GridColumn(Lan.G("TableClaimFormsInternal","ClaimForm"),150));
+			gridInternal.ListGridColumns.Add(new GridColumn("ClaimForm",150));
 			gridInternal.ListGridRows.Clear();
 			foreach(ClaimForm internalForm in ClaimForms.GetInternalClaims()) {
 				GridRow row = new GridRow();
@@ -316,9 +316,9 @@ namespace OpenDental{
 			comboReassign.Items.Clear();
 			gridCustom.BeginUpdate();
 			gridCustom.ListGridColumns.Clear();
-			gridCustom.ListGridColumns.Add(new GridColumn(Lan.G("TableClaimFormsCustom","ClaimForm"),145));
-			gridCustom.ListGridColumns.Add(new GridColumn(Lan.G("TableClaimFormsCustom","Default"),50,HorizontalAlignment.Center));
-			gridCustom.ListGridColumns.Add(new GridColumn(Lan.G("TableClaimFormsCustom","Hidden"),0,HorizontalAlignment.Center));
+			gridCustom.ListGridColumns.Add(new GridColumn("ClaimForm",145));
+			gridCustom.ListGridColumns.Add(new GridColumn("Default",50,HorizontalAlignment.Center));
+			gridCustom.ListGridColumns.Add(new GridColumn("Hidden",0,HorizontalAlignment.Center));
 			gridCustom.ListGridRows.Clear();
 			string description;
 			foreach(ClaimForm claimFormCur in ClaimForms.GetDeepCopy()) {
@@ -326,14 +326,14 @@ namespace OpenDental{
 				GridRow row = new GridRow();
 				row.Cells.Add(claimFormCur.Description);
 				if(claimFormCur.ClaimFormNum==Prefs.GetLong(PrefName.DefaultClaimForm)) {
-					description+=" "+Lan.G(this,"(default)");
+					description+=" "+"(default)";
 					row.Cells.Add("X");
 				}
 				else {
 					row.Cells.Add("");
 				}
 				if(claimFormCur.IsHidden) {
-					description+=" "+Lan.G(this,"(hidden)");
+					description+=" "+"(hidden)";
 					row.Cells.Add("X");
 				}
 				else {
@@ -349,7 +349,7 @@ namespace OpenDental{
 		///<summary>Copy an internal form over to a new custom form.</summary>
 		private void butCopy_Click(object sender,EventArgs e) {
 			if(gridInternal.GetSelectedIndex()==-1) {
-				MessageBox.Show(Lan.G(this,"Please select an item from the internal grid to copy over to the custom grid."));
+				MessageBox.Show("Please select an item from the internal grid to copy over to the custom grid.");
 				return;
 			}
 			//just insert it into the db.
@@ -399,7 +399,7 @@ namespace OpenDental{
 		///<summary>Delete an unusued custom claim form.</summary>
 		private void butDelete_Click(object sender, System.EventArgs e) {
 			if(gridCustom.GetSelectedIndex()==-1){
-				MessageBox.Show(Lan.G(this,"Please select a Custom Claim Form first."));
+				MessageBox.Show("Please select a Custom Claim Form first.");
 				return;
 			}
 			ClaimForm claimFormCur = (ClaimForm)gridCustom.ListGridRows[gridCustom.GetSelectedIndex()].Tag;
@@ -503,7 +503,7 @@ namespace OpenDental{
 			ClaimForm claimFormCur = (ClaimForm)gridCustom.ListGridRows[gridCustom.GetSelectedIndex()].Tag;
 			ClaimForm claimFormNew = ((ODBoxItem<ClaimForm>)comboReassign.SelectedItem).Tag;
 			long result=ClaimForms.Reassign(claimFormCur.ClaimFormNum,claimFormNew.ClaimFormNum);
-			MessageBox.Show(result.ToString()+Lan.G(this," plans changed."));
+			MessageBox.Show(result.ToString()+" plans changed.");
 		}
 
 		private void butClose_Click(object sender, System.EventArgs e) {

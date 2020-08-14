@@ -1145,7 +1145,7 @@ Do you want to remove the pregnancy diagnosis?"))
 					return;
 				}
 				if(DiseaseDefs.GetItem(disCur.DiseaseDefNum)==null) {
-					MessageBox.Show(Lan.G(this,"Invalid disease.  Please run database maintenance method")+" "
+					MessageBox.Show("Invalid disease.  Please run database maintenance method"+" "
 						+nameof(DatabaseMaintenances.DiseaseWithInvalidDiseaseDef));
 					return;
 				}

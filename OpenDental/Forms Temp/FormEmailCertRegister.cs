@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormEmailCertRegister(string emailAddress) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			textEmailAddress.Text=emailAddress;
 		}
 
@@ -53,7 +53,7 @@ namespace OpenDental {
 			}
 			catch(Exception ex) {
 				Cursor=Cursors.Default;
-				MessageBox.Show(Lan.G(this,"Error.")+"  "+ex.Message);
+				MessageBox.Show("Error."+"  "+ex.Message);
 				return;
 			}
 			XmlDocument doc=new XmlDocument();
@@ -61,12 +61,12 @@ namespace OpenDental {
 			string strError=WebServiceRequest.CheckForErrors(doc);
 			if(!string.IsNullOrEmpty(strError)) {
 				Cursor=Cursors.Default;
-				MessageBox.Show(Lan.G(this,"Error.")+"  "+Lan.G(this,"Verification code was not sent.")+"  "+strError);
+				MessageBox.Show("Error."+"  "+"Verification code was not sent."+"  "+strError);
 				return;
 			}
 			Cursor=Cursors.Default;
 			textVerificationCode.Text="";//Clear the old verification code if there was one.
-			MessageBox.Show(Lan.G(this,"Done.")+"  "+Lan.G(this,"The verification code has been sent to")+" "+textEmailAddress.Text);
+			MessageBox.Show("Done."+"  "+"The verification code has been sent to"+" "+textEmailAddress.Text);
 		}
 
 		private void butBrowse_Click(object sender,EventArgs e) {
@@ -94,7 +94,7 @@ namespace OpenDental {
 				arrayCertificateBytes=File.ReadAllBytes(textCertFilePath.Text);
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.G(this,"Failed to read the certificate file.")+"  "+ex.Message);
+				MessageBox.Show("Failed to read the certificate file."+"  "+ex.Message);
 				return;
 			}
 			X509Certificate2 cert=null;
@@ -102,13 +102,13 @@ namespace OpenDental {
 				cert=new X509Certificate2(arrayCertificateBytes);
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.G(this,"Invalid certificate file.")+"  "+ex.Message);
+				MessageBox.Show("Invalid certificate file."+"  "+ex.Message);
 				return;
 			}
 			if(EmailNameResolver.GetCertSubjectName(cert).ToLower()!=textEmailAddress.Text.ToLower()) {
-				MessageBox.Show(Lan.G(this,"Email certificates are tied to specific addresses or domains.")+"  "
-					+Lan.G(this,"The email address on the certificate is")+" "+EmailNameResolver.GetCertSubjectName(cert)+", "
-					+Lan.G(this,"but the email address you specified is")+" "+textEmailAddress.Text);
+				MessageBox.Show("Email certificates are tied to specific addresses or domains."+"  "
+					+"The email address on the certificate is"+" "+EmailNameResolver.GetCertSubjectName(cert)+", "
+					+"but the email address you specified is"+" "+textEmailAddress.Text);
 				return;
 			}
 			if(cert.HasPrivateKey) {
@@ -154,15 +154,15 @@ namespace OpenDental {
 			XmlNode node=doc.SelectSingleNode("//Error");
 			if(node!=null) {
 				Cursor=Cursors.Default;
-				MessageBox.Show(Lan.G(this,"Error.")+"  "+Lan.G(this,"Email certificate was not registered.")+"  "+node.InnerText);
+				MessageBox.Show("Error."+"  "+"Email certificate was not registered."+"  "+node.InnerText);
 				return;
 			}
 			Cursor=Cursors.Default;
 			if(doc.InnerText=="Insert") {
-				MessageBox.Show(Lan.G(this,"Done.")+"  "+Lan.G(this,"The email certificate has been registered for address")+" "+textEmailAddress.Text);
+				MessageBox.Show("Done."+"  "+"The email certificate has been registered for address"+" "+textEmailAddress.Text);
 			}
 			else {//Updated
-				MessageBox.Show(Lan.G(this,"Done.")+"  "+Lan.G(this,"The email certificate has been updated for address")+" "+textEmailAddress.Text);
+				MessageBox.Show("Done."+"  "+"The email certificate has been updated for address"+" "+textEmailAddress.Text);
 			}
 			DialogResult=DialogResult.OK;
 		}

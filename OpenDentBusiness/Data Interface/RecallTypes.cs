@@ -194,13 +194,13 @@ namespace OpenDentBusiness{
 		public static string GetSpecialTypeStr(long recallTypeNum) {
 			//No need to check RemotingRole; no call to db.
 			if(recallTypeNum==Prefs.GetLong(PrefName.RecallTypeSpecialProphy)){
-				return Lans.g("FormRecallTypeEdit","Prophy");
+				return "Prophy";
 			}
 			if(recallTypeNum==Prefs.GetLong(PrefName.RecallTypeSpecialChildProphy)){
-				return Lans.g("FormRecallTypeEdit","ChildProphy");
+				return "ChildProphy";
 			}
 			if(recallTypeNum==Prefs.GetLong(PrefName.RecallTypeSpecialPerio)){
-				return Lans.g("FormRecallTypeEdit","Perio");
+				return "Perio";
 			}
 			return "";
 		}

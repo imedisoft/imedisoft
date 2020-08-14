@@ -16,7 +16,7 @@ namespace OpenDental {
     public FormDoseSpotAssignClinicId(long clinicErxNum) {
 			InitializeComponent();
 			_clinicErxCur=ClinicErxs.GetFirstOrDefault(x => x.ClinicErxNum==clinicErxNum);
-			Lan.F(this);
+			
 		}
 
 		private void FormDoseSpotAssignUserId_Load(object sender,EventArgs e) {

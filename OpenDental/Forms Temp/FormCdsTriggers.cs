@@ -19,7 +19,7 @@ namespace OpenDental {
 
 		public FormCdsTriggers() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormEhrTriggers_Load(object sender,EventArgs e) {
@@ -37,11 +37,11 @@ namespace OpenDental {
 		private void FillGrid() {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableCDSTriggers","Description"),200);
+			GridColumn col=new GridColumn("Description",200);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableCDSTriggers","Cardinality"),140);
+			col=new GridColumn("Cardinality",140);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableCDSTriggers","Trigger Categories"),200);
+			col=new GridColumn("Trigger Categories",200);
 			gridMain.ListGridColumns.Add(col);
 			ListEhrTriggers=EhrTriggers.GetAll();
 			gridMain.ListGridRows.Clear();
@@ -92,7 +92,7 @@ namespace OpenDental {
 			EhrMeasureEvent measureEvent=new EhrMeasureEvent();
 			measureEvent.DateTEvent=DateTime.Now;
 			measureEvent.EventType=EhrMeasureEventType.ClinicalInterventionRules;
-			measureEvent.MoreInfo=Lan.G(this,"Triggers currently enabled")+": "+ListEhrTriggers.Count;
+			measureEvent.MoreInfo="Triggers currently enabled"+": "+ListEhrTriggers.Count;
 			EhrMeasureEvents.Insert(measureEvent);
 		}
 

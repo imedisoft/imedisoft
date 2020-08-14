@@ -10,7 +10,7 @@ namespace OpenDental {
 
 		public FormScheduledProcesses() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 		private void FormScheduledProcesses_Load(object sender,EventArgs e) {
 			FillGrid();
@@ -21,13 +21,13 @@ namespace OpenDental {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G(this,"Scheduled Action"),120);
+			col=new GridColumn("Scheduled Action",120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Frequency to Run"),150);
+			col=new GridColumn("Frequency to Run",150);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Time To Run"),75);
+			col=new GridColumn("Time To Run",75);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Time of Last Run"),155);
+			col=new GridColumn("Time of Last Run",155);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

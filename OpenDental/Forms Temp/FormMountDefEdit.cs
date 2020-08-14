@@ -387,7 +387,7 @@ namespace OpenDental{
 		public FormMountDefEdit()	{
 			//Required for Windows Form Designer support
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 		#endregion Constructor
 
@@ -746,7 +746,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textDescription.Text==""){
-				MessageBox.Show(Lan.G(this,"Description cannot be blank."));
+				MessageBox.Show("Description cannot be blank.");
 				return;
 			}
 			if(textWidth.errorProvider1.GetError(textWidth)!=""

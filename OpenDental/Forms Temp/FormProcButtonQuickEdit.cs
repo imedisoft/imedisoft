@@ -14,7 +14,7 @@ namespace OpenDental {
 
 		public FormProcButtonQuickEdit() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormProcButtonQuickEdit_Load(object sender,EventArgs e) {

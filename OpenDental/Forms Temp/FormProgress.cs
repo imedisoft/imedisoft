@@ -45,7 +45,7 @@ namespace OpenDental
 			MaxVal = maxVal;
 			NumberMultiplication = numberMultiplication;
 			NumberFormat = numFormat;
-			Lan.F(this);
+			
 			butCancel.Visible = showCancelButton;
 		}
 

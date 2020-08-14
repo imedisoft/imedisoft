@@ -42,7 +42,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -264,7 +264,7 @@ namespace OpenDental{
 		}
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
-			if(MessageBox.Show(Lan.G(this,"Delete contact"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK){
+			if(MessageBox.Show("Delete contact","",MessageBoxButtons.OKCancel)!=DialogResult.OK){
 				return;
 			}
 			if(IsNew){
@@ -292,7 +292,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textLName.Text==""){
-				MessageBox.Show(Lan.G(this,"Last Name cannot be blank."));
+				MessageBox.Show("Last Name cannot be blank.");
 				return;
 			}
 			//a category will always be selected because of the manner in which Contact is accessed

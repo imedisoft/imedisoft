@@ -53,11 +53,11 @@ namespace OpenDentBusiness {
 					insVerifyOld=listInsVerifyHists[i+1];//get next
 				}
 				//If the insVerifyOld is null, then the previous value was MinDate. 
-				string oldVal=insVerifyOld==null ? Lans.g("FormInsEditLog","NEW") : insVerifyOld.DateLastVerified.ToShortDateString();
+				string oldVal=insVerifyOld==null ? "NEW" : insVerifyOld.DateLastVerified.ToShortDateString();
 				listLogs.Add(new InsEditLog {
 					FKey=insPlanNum,
 					LogType=InsEditLogType.InsPlan,
-					FieldName=Lans.g("FormInsEditLog","Benefits Last Verified"),
+					FieldName="Benefits Last Verified",
 					OldValue=oldVal,
 					NewValue=insVerifyNew.DateLastVerified.ToShortDateString(),
 					UserNum=insVerifyNew.VerifyUserNum,

@@ -54,7 +54,7 @@ namespace OpenDental{
 			//
 			AutoCur=autoCur.Copy();
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -322,9 +322,9 @@ namespace OpenDental{
 			autoList=AutomationConditions.GetListByAutomationNum(AutoCur.Id);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("AutomationCondition","Field"),200));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("AutomationCondition","Comparison"),75));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("AutomationCondition","Text"),100));
+			gridMain.ListGridColumns.Add(new GridColumn("Field",200));
+			gridMain.ListGridColumns.Add(new GridColumn("Comparison",75));
+			gridMain.ListGridColumns.Add(new GridColumn("Text",100));
 			gridMain.ListGridRows.Clear();
 			autoList.ForEach(x => gridMain.ListGridRows.Add(new GridRow(x.CompareField.ToString(),x.Comparison.ToString(),x.CompareString)));
 			gridMain.EndUpdate();
@@ -376,7 +376,7 @@ namespace OpenDental{
 			switch(_listAutoActions[comboAction.SelectedIndex]) {
 				case AutomationAction.CreateCommlog:
 					labelActionObject.Visible=true;
-					labelActionObject.Text=Lan.G(this,"Commlog Type");
+					labelActionObject.Text="Commlog Type";
 					comboActionObject.Visible=true;
 					_listCommLogTypeDefs.ForEach(x => comboActionObject.Items.Add(x.ItemName));
 					comboActionObject.SelectedIndex=_listCommLogTypeDefs.FindIndex(x => x.DefNum==AutoCur.CommType);
@@ -392,7 +392,7 @@ namespace OpenDental{
 					return;
 				case AutomationAction.SetApptType:
 					labelActionObject.Visible=true;
-					labelActionObject.Text=Lan.G(this,"Appointment Type");
+					labelActionObject.Text="Appointment Type";
 					comboActionObject.Visible=true;
 					//_listAppointmentType contains 'none' with AppointmentTypeNum of 0 at index 0, just add list to combo and FindIndex will always be valid
 					_listAptTypes.ForEach(x => comboActionObject.Items.Add(x.AppointmentTypeName));
@@ -404,7 +404,7 @@ namespace OpenDental{
 				case AutomationAction.ShowExamSheet:
 				case AutomationAction.PrintRxInstruction:
 					labelActionObject.Visible=true;
-					labelActionObject.Text=Lan.G(this,"Sheet Definition");
+					labelActionObject.Text="Sheet Definition";
 					comboActionObject.Visible=true;
 					List<SheetDef> listSheetDefs=SheetDefs.GetDeepCopy().FindAll(x => !SheetDefs.IsDashboardType(x));
 					listSheetDefs.ForEach(x => comboActionObject.Items.Add(x.Description));
@@ -412,7 +412,7 @@ namespace OpenDental{
 					return;
 				case AutomationAction.ChangePatStatus:
 					labelActionObject.Visible=true;
-					labelActionObject.Text=Lan.G(this,"Patient Status");
+					labelActionObject.Text="Patient Status";
 					comboActionObject.Visible=true;
 					//comboActionObject.Items.AddEnums<PatientStatus>();//can't use this because we are not including all the enums
 					List<PatientStatus> listPatStatus=new List<PatientStatus>();
@@ -421,7 +421,7 @@ namespace OpenDental{
 						if(patStatus==PatientStatus.Deleted) {
 							continue;//'Deleted' should not be automationAction
 						}
-						comboActionObject.Items.Add(Lan.G("enum"+nameof(PatientStatus),patStatus.GetDescription()),patStatus);
+						comboActionObject.Items.Add(patStatus.GetDescription(),patStatus);
 					}
 					comboActionObject.SetSelectedEnum(AutoCur.PatStatus);
 					return;
@@ -492,7 +492,7 @@ namespace OpenDental{
 				}
 				string strInvalidCodes=string.Join(", ",textProcCodes.Text.Split(',').Where(x => !ProcedureCodes.IsValidCode(x)));
 				if(!string.IsNullOrEmpty(strInvalidCodes)) {
-					MessageBox.Show(Lan.G(this,"The following procedure code(s) are not valid")+": "+strInvalidCodes);
+					MessageBox.Show("The following procedure code(s) are not valid"+": "+strInvalidCodes);
 					return;
 				}
 				AutoCur.ProcedureCodes=textProcCodes.Text;
@@ -542,7 +542,7 @@ namespace OpenDental{
 					}
 					List<SheetDef> listSheets=SheetDefs.GetDeepCopy().FindAll(x => !SheetDefs.IsDashboardType(x));
 					if(listSheets[comboActionObject.SelectedIndex].SheetType!=dictAutoActionSheetType[AutoCur.AutoAction].Item1) {
-						MessageBox.Show(this,Lan.G(this,"The selected sheet type must be")+" "+dictAutoActionSheetType[AutoCur.AutoAction].Item2+".");
+						MessageBox.Show(this,"The selected sheet type must be"+" "+dictAutoActionSheetType[AutoCur.AutoAction].Item2+".");
 						return;
 					}
 					AutoCur.SheetDefinitionId=listSheets[comboActionObject.SelectedIndex].SheetDefNum;

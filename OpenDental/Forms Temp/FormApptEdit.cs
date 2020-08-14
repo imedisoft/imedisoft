@@ -142,7 +142,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 			_isClickLocked=true;
 			if(aptNum==0) {//Creating a new appointment
 				_isInsertRequired=true;
@@ -281,7 +281,7 @@ namespace OpenDental{
 			_isPlanned=false;
 			if(AptCur.AptStatus==ApptStatus.Planned) {
 				_isPlanned=true;
-				titleText=Lan.G(this,"Edit Planned Appointment")+" - "+pat.GetNameFL();
+				titleText="Edit Planned Appointment"+" - "+pat.GetNameFL();
 				labelStatus.Visible=false;
 				comboStatus.Visible=false;
 				butDelete.Visible=false;
@@ -293,9 +293,9 @@ namespace OpenDental{
 			}
 			else if(AptCur.AptStatus==ApptStatus.PtNote) {
 				labelApptNote.Text="Patient NOTE:";
-				titleText=Lan.G(this,"Edit Patient Note")+" - "+pat.GetNameFL()+" on "+AptCur.AptDateTime.DayOfWeek+", "+AptCur.AptDateTime;
-				comboStatus.Items.Add(Lan.G("enumApptStatus","Patient Note"));
-				comboStatus.Items.Add(Lan.G("enumApptStatus","Completed Pt. Note"));
+				titleText="Edit Patient Note"+" - "+pat.GetNameFL()+" on "+AptCur.AptDateTime.DayOfWeek+", "+AptCur.AptDateTime;
+				comboStatus.Items.Add("Patient Note");
+				comboStatus.Items.Add("Completed Pt. Note");
 				labelQuickAdd.Visible=false;
 				labelStatus.Visible=false;
 				gridProc.Visible=false;
@@ -307,9 +307,9 @@ namespace OpenDental{
 			}
 			else if(AptCur.AptStatus==ApptStatus.PtNoteCompleted) {
 				labelApptNote.Text="Completed Patient NOTE:";
-				titleText=Lan.G(this,"Edit Completed Patient Note")+" - "+pat.GetNameFL()+" on "+AptCur.AptDateTime.DayOfWeek+", "+AptCur.AptDateTime;
-				comboStatus.Items.Add(Lan.G("enumApptStatus","Patient Note"));
-				comboStatus.Items.Add(Lan.G("enumApptStatus","Completed Pt. Note"));
+				titleText="Edit Completed Patient Note"+" - "+pat.GetNameFL()+" on "+AptCur.AptDateTime.DayOfWeek+", "+AptCur.AptDateTime;
+				comboStatus.Items.Add("Patient Note");
+				comboStatus.Items.Add("Completed Pt. Note");
 				labelQuickAdd.Visible=false;
 				labelStatus.Visible=false;
 				gridProc.Visible=false;
@@ -320,11 +320,11 @@ namespace OpenDental{
 				//textNote.Width = 400;
 			}
 			else {
-				titleText=Lan.G(this, "Edit Appointment")+" - "+pat.GetNameFL()+" on "+AptCur.AptDateTime.DayOfWeek+", "+AptCur.AptDateTime;
-				comboStatus.Items.Add(Lan.G("enumApptStatus","Scheduled"));
-				comboStatus.Items.Add(Lan.G("enumApptStatus","Complete"));
-				comboStatus.Items.Add(Lan.G("enumApptStatus","UnschedList"));
-				_indexStatusBroken=comboStatus.Items.Add(Lan.G("enumApptStatus","Broken"));
+				titleText="Edit Appointment"+" - "+pat.GetNameFL()+" on "+AptCur.AptDateTime.DayOfWeek+", "+AptCur.AptDateTime;
+				comboStatus.Items.Add("Scheduled");
+				comboStatus.Items.Add("Complete");
+				comboStatus.Items.Add("UnschedList");
+				_indexStatusBroken=comboStatus.Items.Add("Broken");
 			}
 			SetAptCurComboStatusSelection();
 			if(AptCur.Op != 0) {
@@ -344,7 +344,7 @@ namespace OpenDental{
 					comboStatus.Enabled=false;
 				}
 			}
-			comboUnschedStatus.Items.Add(Lan.G(this,"none"));
+			comboUnschedStatus.Items.Add("none");
 			comboUnschedStatus.SelectedIndex=0;
 			_listRecallUnschedStatusDefs=Defs.GetDefsForCategory(DefCat.RecallUnschedStatus,true);
 			_listApptConfirmedDefs=Defs.GetDefsForCategory(DefCat.ApptConfirmed,true);
@@ -375,7 +375,7 @@ namespace OpenDental{
 			comboProvHyg.SetSelectedProvNum(AptCur.ProvHyg);//ok if 0
 			checkIsHygiene.Checked=AptCur.IsHygiene;
 			//Fill comboAssistant with employees and none option
-			comboAssistant.Items.Add(Lan.G(this,"none"));
+			comboAssistant.Items.Add("none");
 			comboAssistant.SelectedIndex=0;
 			_listEmployees=Employees.GetDeepCopy(true);
 			for(int i=0;i<_listEmployees.Count;i++) {
@@ -479,7 +479,7 @@ namespace OpenDental{
 			}
 			//AppointmentType
 			_listAppointmentType=AppointmentTypes.GetWhere(x => !x.IsHidden || x.AppointmentTypeNum==AptCur.AppointmentTypeNum);
-			comboApptType.Items.Add(Lan.G(this,"None"));
+			comboApptType.Items.Add("None");
 			comboApptType.SelectedIndex=0;
 			foreach(AppointmentType aptType in _listAppointmentType) {
 				comboApptType.Items.Add(aptType.AppointmentTypeName);
@@ -623,7 +623,7 @@ namespace OpenDental{
 			}
 			//Add a UI managed row to display the total fee for the selected procedures in this appointment.
 			row=new GridRow();
-			row.Cells.Add(Lan.G(this,"Fee This Appt"));
+			row.Cells.Add("Fee This Appt");
 			row.Cells.Add("");//Calculated below
 			gridPatient.ListGridRows.Add(row);
 			CalcPatientFeeThisAppt();
@@ -655,7 +655,7 @@ namespace OpenDental{
 			foreach(Procedure proc in listSelectedProcedures) {
 				totalEstPatientPortion+=ClaimProcs.GetPatPortion(proc,_listClaimProcs,_listAdjustments);
 			}
-			GridRow row=gridPatient.ListGridRows.ToList().Find(x => x.Cells[0].Text==Lans.g("FormApptEdit","Est. Patient Portion"));
+			GridRow row=gridPatient.ListGridRows.ToList().Find(x => x.Cells[0].Text=="Est. Patient Portion");
 			if(row==null) {
 				return;//Probably some weird translation issue
 			}
@@ -683,9 +683,9 @@ namespace OpenDental{
 		private void FillComm(){
 			gridComm.BeginUpdate();
 			gridComm.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableCommLog","DateTime"),80);
+			GridColumn col=new GridColumn("DateTime",80);
 			gridComm.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableCommLog","Description"),80);
+			col=new GridColumn("Description",80);
 			gridComm.ListGridColumns.Add(col);
 			gridComm.ListGridRows.Clear();
 			GridRow row;
@@ -798,10 +798,10 @@ namespace OpenDental{
 					switch (displayField.InternalName) {
 						case "Stat":
 							if(ProcMultiVisits.IsProcInProcess(proc.ProcNum)) {
-								row.Cells.Add(Lan.G("enumProcStat",ProcStatExt.InProcess));
+								row.Cells.Add(ProcStatExt.InProcess);
 							}
 							else {
-								row.Cells.Add(Lans.g("enumProcStat",proc.ProcStatus.ToString()));
+								row.Cells.Add(proc.ProcStatus.ToString());
 							}
 							break;
 						case "Priority":
@@ -829,16 +829,16 @@ namespace OpenDental{
 								descript="^ ^ "+descript;//Visual indicator that this lab is linked to the procedure on the row above this row.
 							}
 							if(_isPlanned && proc.PlannedAptNum!=0 && proc.PlannedAptNum!=AptCur.AptNum) {
-								descript+=Lan.G(this,"(other appt) ");
+								descript+="(other appt) ";
 							}
 							else if (_isPlanned && proc.AptNum!=0 && proc.AptNum!=AptCur.AptNum) {
-								descript+=Lan.G(this,"(scheduled appt) ");
+								descript+="(scheduled appt) ";
 							}
 							else if (!_isPlanned && proc.PlannedAptNum!=0 && proc.PlannedAptNum!=AptCur.AptNum) {
-								descript+=Lan.G(this,"(planned appt) ");
+								descript+="(planned appt) ";
 							}
 							else if(!_isPlanned && proc.AptNum!=0 && proc.AptNum!=AptCur.AptNum) {
-								descript+=Lan.G(this,"(other appt) ");
+								descript+="(other appt) ";
 							}
 							if(procCode.LaymanTerm=="") {
 								descript+=procCode.Descript;
@@ -884,24 +884,24 @@ namespace OpenDental{
 					descript.Append(lab.Description);
 				}
 				else {
-					descript.Append(Lan.G(this,"ERROR retrieving laboratory."));
+					descript.Append("ERROR retrieving laboratory.");
 				}
 				if(_labCur.DateTimeChecked.Year>1880) {//Logic from Appointments.cs lines 1818 to 1840
-					descript.Append(", "+Lan.G(this,"Quality Checked"));
+					descript.Append(", "+"Quality Checked");
 				}
 				else {
 					if(_labCur.DateTimeRecd.Year>1880) {
-						descript.Append(", "+Lan.G(this,"Received"));
+						descript.Append(", "+"Received");
 					}
 					else {
 						if(_labCur.DateTimeSent.Year>1880) {
-							descript.Append(", "+Lan.G(this,"Sent"));
+							descript.Append(", "+"Sent");
 						}
 						else {
-							descript.Append(", "+Lan.G(this,"Not Sent"));
+							descript.Append(", "+"Not Sent");
 						}
 						if(_labCur.DateTimeDue.Year>1880) {
-							descript.Append(", "+Lan.G(this,"Due: ")+_labCur.DateTimeDue.ToString("ddd")+" "
+							descript.Append(", "+"Due: "+_labCur.DateTimeDue.ToString("ddd")+" "
 								+_labCur.DateTimeDue.ToShortDateString()+" "
 								+_labCur.DateTimeDue.ToShortTimeString()
 							);
@@ -1132,13 +1132,13 @@ namespace OpenDental{
 			CalcPatientFeeThisAppt();
 			RefreshEstPatientPortion();
 			if(skipped>0) {
-				MessageBox.Show(Lan.G(this,"Procedures skipped due to lack of permission to edit completed procedures: ")+skipped.ToString());
+				MessageBox.Show("Procedures skipped due to lack of permission to edit completed procedures: "+skipped.ToString());
 			}
 			if(skippedSecurity>0) {
-				MessageBox.Show(Lan.G(this,"Procedures skipped due to lack of permission to delete procedures: ")+skippedSecurity.ToString());
+				MessageBox.Show("Procedures skipped due to lack of permission to delete procedures: "+skippedSecurity.ToString());
 			}
 			if(skippedLinkedToOrthoCase>0) {
-				MessageBox.Show(Lan.G(this,"Procedures skipped because they are linked to one or more ortho cases: ")+skippedLinkedToOrthoCase.ToString()+"\r"
+				MessageBox.Show("Procedures skipped because they are linked to one or more ortho cases: "+skippedLinkedToOrthoCase.ToString()+"\r"
 					+"Detach the procedure(s) or delete the ortho case(s) first.");
 			}
 		}
@@ -1666,7 +1666,7 @@ namespace OpenDental{
 			}
 			if(AptOld.AptStatus!=ApptStatus.UnschedList && comboStatus.SelectedIndex==2) {//previously not on unsched list and sending to unscheduled list
 				if(PatRestrictionL.IsRestricted(AptCur.PatNum,PatRestrict.ApptSchedule,true)) {
-					MessageBox.Show(Lan.G(this,"Not allowed to send this appointment to the unscheduled list due to patient restriction")+" "
+					MessageBox.Show("Not allowed to send this appointment to the unscheduled list due to patient restriction"+" "
 						+PatRestrictions.GetPatRestrictDesc(PatRestrict.ApptSchedule)+".");
 					return false;
 				}
@@ -2037,7 +2037,7 @@ namespace OpenDental{
 			parformat.Alignment=ParagraphAlignment.Center;
 			parformat.Font=MigraDocHelper.CreateFont(10,true);
 			par.Format=parformat;
-			text=Lan.G(this,"procedures").ToUpper();
+			text="procedures".ToUpper();
 			par.AddFormattedText(text,headingFont);
 			par.AddLineBreak();
 			text=pat.GetNameFLFormal();
@@ -2111,10 +2111,10 @@ namespace OpenDental{
 							break;
 						case "Stat":
 							if(ProcMultiVisits.IsProcInProcess(proc.ProcNum)) {
-								row.Cells.Add(Lan.G("enumProcStat",ProcStatExt.InProcess));
+								row.Cells.Add(ProcStatExt.InProcess);
 							}
 							else {
-								row.Cells.Add(Lans.g("enumProcStat",proc.ProcStatus.ToString()));
+								row.Cells.Add(proc.ProcStatus.ToString());
 							}
 							break;
 						case "Prov":
@@ -2280,7 +2280,7 @@ namespace OpenDental{
 			perms.Add(Permissions.AppointmentMove);
 			perms.Add(Permissions.AppointmentCompleteEdit);
 			perms.Add(Permissions.ApptConfirmStatusEdit);
-			FormAuditOneType FormA=new FormAuditOneType(pat.PatNum,perms,Lan.G(this,"Audit Trail for Appointment"),AptCur.AptNum);
+			FormAuditOneType FormA=new FormAuditOneType(pat.PatNum,perms,"Audit Trail for Appointment",AptCur.AptNum);
 			FormA.ShowDialog();
 		}
 
@@ -2292,7 +2292,7 @@ namespace OpenDental{
 			}
 
 			FormTaskListSelect FormT = new FormTaskListSelect();
-			FormT.Text = Lan.G(FormT, "Add Task") + " - " + FormT.Text;
+			FormT.Text = "Add Task" + " - " + FormT.Text;
 			FormT.ShowDialog();
 			if (FormT.DialogResult != DialogResult.OK)
 			{
@@ -2532,13 +2532,13 @@ namespace OpenDental{
 					frequencyConflicts=Procedures.CheckFrequency(listProcsForFrequency,pat.PatNum,AptCur.AptDateTime);
 				}
 				catch(Exception e) {
-					MessageBox.Show(Lan.G(this,"There was an error checking frequencies."
-						+"  Disable the Insurance Frequency Checking feature or try to fix the following error:")
+					MessageBox.Show("There was an error checking frequencies."
+						+"  Disable the Insurance Frequency Checking feature or try to fix the following error:"
 						+"\r\n"+e.Message);
 					return false;
 				}
-				if(frequencyConflicts!="" && MessageBox.Show(Lan.G(this,"This appointment will cause frequency conflicts for the following procedures")
-					+":\r\n"+frequencyConflicts+"\r\n"+Lan.G(this,"Do you want to continue?"),"",MessageBoxButtons.YesNo)==DialogResult.No)
+				if(frequencyConflicts!="" && MessageBox.Show("This appointment will cause frequency conflicts for the following procedures"
+					+":\r\n"+frequencyConflicts+"\r\n"+"Do you want to continue?","",MessageBoxButtons.YesNo)==DialogResult.No)
 				{
 					return false;
 				}
@@ -2575,7 +2575,7 @@ namespace OpenDental{
 				}
 			}
 			else {//ordinary appointment
-				if (!isSkipDeletePrompt && MessageBox.Show(Lan.G(this, "Delete appointment?"), "", MessageBoxButtons.OKCancel) != DialogResult.OK) {
+				if (!isSkipDeletePrompt && MessageBox.Show("Delete appointment?", "", MessageBoxButtons.OKCancel) != DialogResult.OK) {
 					return;
 				}
 				//Only want to be able to break already scheduled appointments, this does not include new appointments in "schedule" status.

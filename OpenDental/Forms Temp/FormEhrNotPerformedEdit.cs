@@ -17,7 +17,7 @@ namespace OpenDental {
 		public FormEhrNotPerformedEdit() {
 			InitializeComponent();
 			SelectedItemIndex=-1;//this will be set to the value of the enum EhrNotPerformedItem when this form is called
-			Lan.F(this);
+			
 		}
 
 		///<summary>If using the Add button on FormEhrNotPerformed, an input box will allow the user to select from the list of available items that are not being performed.  The SelectedItemIndex will hold the index of the item selected wich corresponds to the enum EhrNotPerformedItem.  We will use this selected item index to set the EhrNotPerformed code and code system.</summary>
@@ -61,7 +61,7 @@ namespace OpenDental {
 					for(int i=0;i<listEhrCodes.Count;i++) {
 						listCodeDescripts.Add(listEhrCodes[i].CodeValue+" - "+listEhrCodes[i].Description);
 					}
-					InputBox chooseItem=new InputBox(Lan.G(this,"Select the "+Enum.GetNames(typeof(EhrNotPerformedItem))[SelectedItemIndex]+" not being performed from the list below."),listCodeDescripts);
+					InputBox chooseItem=new InputBox("Select the "+Enum.GetNames(typeof(EhrNotPerformedItem))[SelectedItemIndex]+" not being performed from the list below.",listCodeDescripts);
 					if(SelectedItemIndex==(int)EhrNotPerformedItem.InfluenzaVaccination) {
 						//chooseItem.comboSelection.DropDownWidth=730;
 					}

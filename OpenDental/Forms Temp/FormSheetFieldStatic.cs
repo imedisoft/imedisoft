@@ -12,7 +12,7 @@ namespace OpenDental {
 
 		public FormSheetFieldStatic(SheetDef sheetDef,SheetFieldDef sheetFieldDef,bool isReadOnly,bool isEditMobile=false): base(sheetDef,sheetFieldDef,isReadOnly,isEditMobile) {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormSheetFieldStatic_Load(object sender,EventArgs e) {
@@ -112,8 +112,8 @@ namespace OpenDental {
 				//This correctly reports the text size for how we are drawing the text.
 				sizeText=TextRenderer.MeasureText(textFieldValue.Text,font);
 			}
-			labelTextW.Text=Lan.G(this,"TextW:")+" "+sizeText.Width.ToString();
-			labelTextH.Text=Lan.G(this,"TextH:")+" "+sizeText.Height.ToString();
+			labelTextW.Text="TextW:"+" "+sizeText.Width.ToString();
+			labelTextH.Text="TextH:"+" "+sizeText.Height.ToString();
 		}
 
 		private void butExamSheet_Click(object sender,EventArgs e) {

@@ -44,7 +44,7 @@ namespace OpenDental {
 				comboFeeSched.Enabled=false;
 			}
 			comboFeeSched.Items.Clear();
-			comboFeeSched.Items.Add(Lan.G(this,"none"));
+			comboFeeSched.Items.Add("none");
 			comboFeeSched.SelectedIndex=0;
 			_listFeeSchedShort=FeeScheds.GetDeepCopy(true);
 			for(int i=0;i<_listFeeSchedShort.Count;i++) {

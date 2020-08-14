@@ -18,7 +18,7 @@ namespace OpenDental {
 
 		public FormProvAdditional(List<ProviderClinic> listProvClinic,Provider provCur) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_listProvClinic=listProvClinic.Select(x => x.Copy()).ToList();
 			_provCur=provCur;
 		}
@@ -31,15 +31,15 @@ namespace OpenDental {
 			Cursor=Cursors.WaitCursor;
 			gridProvProperties.BeginUpdate();
 			gridProvProperties.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableProviderProperties","Clinic"),120);
+			GridColumn col=new GridColumn("Clinic",120);
 			gridProvProperties.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProviderProperties","DEA Num"),120,true);
+			col=new GridColumn("DEA Num",120,true);
 			gridProvProperties.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProviderProperties","State License Num"),120,true);
+			col=new GridColumn("State License Num",120,true);
 			gridProvProperties.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProviderProperties","State Rx ID"),120,true);
+			col=new GridColumn("State Rx ID",120,true);
 			gridProvProperties.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProviderProperties","State Where Licensed"),120,true);
+			col=new GridColumn("State Where Licensed",120,true);
 			gridProvProperties.ListGridColumns.Add(col);
 			gridProvProperties.ListGridRows.Clear();
 			GridRow row;

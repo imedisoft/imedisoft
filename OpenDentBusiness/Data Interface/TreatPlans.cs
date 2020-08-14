@@ -103,7 +103,7 @@ namespace OpenDentBusiness{
 			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0) {
 				//this should never happen
-				throw new ApplicationException(Lans.g("TreatPlans","Cannot delete treatment plan because it has ProcTP's attached"));
+				throw new ApplicationException("Cannot delete treatment plan because it has ProcTP's attached");
 			}
 			command= "DELETE from treatplan WHERE TreatPlanNum = '"+POut.Long(tp.TreatPlanNum)+"'";
  			Database.ExecuteNonQuery(command);
@@ -184,7 +184,7 @@ namespace OpenDentBusiness{
 			#region Variables
 			List<TreatPlan> listTreatPlans=TreatPlans.GetAllForPat(patNum);//All treatplans for the pat. [([Includes Saved Plans]}};
 			TreatPlan activePlan=listTreatPlans.FirstOrDefault(x => x.TPStatus==TreatPlanStatus.Active);//can be null
-			TreatPlan unassignedPlan=listTreatPlans.FirstOrDefault(x => x.TPStatus==TreatPlanStatus.Inactive && x.Heading==Lans.g("TreatPlans","Unassigned"));//can be null
+			TreatPlan unassignedPlan=listTreatPlans.FirstOrDefault(x => x.TPStatus==TreatPlanStatus.Inactive && x.Heading=="Unassigned");//can be null
 			List<TreatPlanAttach> listTPAs=TreatPlanAttaches.GetAllForTPs(listTreatPlans.Select(x => x.TreatPlanNum).ToList());
 			List<Procedure> listProcsTpTpi=Procedures.GetProcsByStatusForPat(patNum,new[] { ProcStat.TP,ProcStat.TPi });//All TP and TPi procs for the pat.
 			List<Procedure> listProcsForActive=new List<Procedure>();//All procs that should be linked to the active plan (can be linked to inactive plans as well)
@@ -208,7 +208,7 @@ namespace OpenDentBusiness{
 			//Create active plan if needed
 			if(activePlan==null && listProcsForActive.Count>0) {
 				activePlan=new TreatPlan() {
-					Heading=Lans.g("TreatPlans","Active Treatment Plan"),
+					Heading="Active Treatment Plan",
 					Note=Prefs.GetString(PrefName.TreatmentPlanNote),
 					TPStatus=TreatPlanStatus.Active,
 					PatNum=patNum,
@@ -229,7 +229,7 @@ namespace OpenDentBusiness{
 			//Create unassigned plan if needed
 			if(unassignedPlan==null && listProcsForInactive.Any(x => !arrayTpaProcNums.Contains(x.ProcNum))) {
 				unassignedPlan=new TreatPlan() {
-					Heading=Lans.g("TreatPlans","Unassigned"),
+					Heading="Unassigned",
 					Note=Prefs.GetString(PrefName.TreatmentPlanNote),
 					TPStatus=TreatPlanStatus.Inactive,
 					PatNum=patNum,
@@ -305,7 +305,7 @@ namespace OpenDentBusiness{
 			string command="SELECT * FROM treatplan "
 				+"WHERE PatNum="+POut.Long(patNum)+" "
 				+"AND TPStatus="+POut.Int((int)TreatPlanStatus.Inactive)+" "
-				+"AND Heading='"+POut.String(Lans.g("TreatPlans","Unassigned"))+"'";
+				+"AND Heading='"+POut.String("Unassigned")+"'";
 			return Crud.TreatPlanCrud.SelectOne(command)??new TreatPlan();
 		}
 
@@ -321,15 +321,15 @@ namespace OpenDentBusiness{
 			//Make Active TP's inactive. Rename if TP's still have default name.
 			List<TreatPlan> listActivePlans=Crud.TreatPlanCrud.SelectMany(command);
 			foreach(TreatPlan tp in listActivePlans) {//should only ever be one, but just in case there are multiple this will rectify the problem.
-				if(tp.Heading==Lans.g("TreatPlans","Active Treatment Plan")) {
-					tp.Heading=Lans.g("TreatPlans","Inactive Treatment Plan");
+				if(tp.Heading=="Active Treatment Plan") {
+					tp.Heading="Inactive Treatment Plan";
 				}
 				tp.TPStatus=TreatPlanStatus.Inactive;
 				TreatPlans.Update(tp);
 			}
 			//Heading is changed from within the form, if they have changed it back to Inactive Treatment Plan it was deliberate.
-			//if(treatPlanCur.Heading==Lans.g("TreatPlans","Inactive Treatment Plan")) {
-			//	treatPlanCur.Heading=Lans.g("TreatPlans","Active Treatment Plan");
+			//if(treatPlanCur.Heading=="Inactive Treatment Plan") {
+			//	treatPlanCur.Heading="Active Treatment Plan";
 			//}
 			//Not necessary, treatPlanCur should be set to Active prior to calling this function.
 			//treatPlanCur.TPStatus=TreatPlanStatus.Active;

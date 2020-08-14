@@ -30,7 +30,7 @@ namespace OpenDental {
 			server=ProgramProperties.GetPropVal(Programs.GetProgramNum(ProgramName.eClinicalWorks),"eCWServer");//this property will not exist if using Oracle, eCW will never use Oracle
 			port=ProgramProperties.GetPropVal(Programs.GetProgramNum(ProgramName.eClinicalWorks),"eCWPort");//this property will not exist if using Oracle, eCW will never use Oracle
 			buildConnectionString();
-			Lan.F(this);
+			
 		}
 
 		private void FormEcwDiagAdv_Load(object sender,EventArgs e) {

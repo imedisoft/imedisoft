@@ -85,13 +85,13 @@ namespace OpenDental {
 
 		private void butResults_Click(object sender,EventArgs e) {
 			if(gridMain.ListGridRows.Count<1) {
-				MessageBox.Show(Lans.g(this,"Please add a data element."));
+				MessageBox.Show("Please add a data element.");
 				return;
 			}
 			bool hasOrder=false;
 			for(int i=0;i<ElementList.Count;i++) {
 				if(hasOrder && ElementList[i].OrderBy) {
-					MessageBox.Show(Lans.g(this,"You can only 'Order By' exactly one data element."));
+					MessageBox.Show("You can only 'Order By' exactly one data element.");
 					return;
 				}
 				if(ElementList[i].OrderBy) {

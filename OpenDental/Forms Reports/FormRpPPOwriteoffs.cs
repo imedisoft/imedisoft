@@ -45,10 +45,6 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.C("All", new System.Windows.Forms.Control[] {
-				butOK,
-				butCancel,
-			});
 		}
 
 		/// <summary>
@@ -288,12 +284,12 @@ namespace OpenDental{
 			Font fontTitle=new Font("Tahoma",17,FontStyle.Bold);
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
 			ReportComplex report=new ReportComplex(true,false);
-			report.AddTitle("Title",Lan.G(this,"PPO Writeoffs"),fontTitle);
+			report.AddTitle("Title","PPO Writeoffs",fontTitle);
 			report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
 			report.AddSubTitle("Date SubTitle",date1.SelectionStart.ToShortDateString()+" - "+date2.SelectionStart.ToShortDateString(),fontSubTitle);
-			report.AddSubTitle("Claims",Lan.G(this,"Individual Claims"),fontSubTitle);
+			report.AddSubTitle("Claims","Individual Claims",fontSubTitle);
 			if(textCarrier.Text!="") {
-				report.AddSubTitle("Carrier",Lan.G(this,"Carrier like: ")+textCarrier.Text,fontSubTitle);
+				report.AddSubTitle("Carrier","Carrier like: "+textCarrier.Text,fontSubTitle);
 			}
 			DataTable table=new DataTable();
 			table=RpPPOwriteoff.GetWriteoffTable(date1.SelectionStart,date2.SelectionStart,radioIndividual.Checked,textCarrier.Text,GetWriteoffType());
@@ -320,18 +316,18 @@ namespace OpenDental{
 			Font fontTitle=new Font("Tahoma",17,FontStyle.Bold);
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
 			ReportComplex report=new ReportComplex(true,false);
-			report.AddTitle("Title",Lan.G(this,"PPO Writeoffs"),fontTitle);
+			report.AddTitle("Title","PPO Writeoffs",fontTitle);
 			report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
 			report.AddSubTitle("Date SubTitle",date1.SelectionStart.ToShortDateString()+" - "+date2.SelectionStart.ToShortDateString(),fontSubTitle);
-			report.AddSubTitle("Claims",Lan.G(this,"Individual Claims"),fontSubTitle);
+			report.AddSubTitle("Claims","Individual Claims",fontSubTitle);
 			if(textCarrier.Text!="") {
-				report.AddSubTitle("Carrier",Lan.G(this,"Carrier like: ")+textCarrier.Text,fontSubTitle);
+				report.AddSubTitle("Carrier","Carrier like: "+textCarrier.Text,fontSubTitle);
 			}
 			if(textCarrier.Text!="") {
-				report.AddSubTitle("Carrier",Lan.G(this,"Carrier like: ")+textCarrier.Text,fontSubTitle);
+				report.AddSubTitle("Carrier","Carrier like: "+textCarrier.Text,fontSubTitle);
 			}
 			DataTable table=RpPPOwriteoff.GetWriteoffTable(date1.SelectionStart,date2.SelectionStart,radioIndividual.Checked,textCarrier.Text,GetWriteoffType());
-			QueryObject query=report.AddQuery(table,Lan.G(this,"Date")+": "+DateTimeOD.Today.ToString("d"),"",SplitByKind.None,1,true);
+			QueryObject query=report.AddQuery(table,"Date"+": "+DateTimeOD.Today.ToString("d"),"",SplitByKind.None,1,true);
 			query.AddColumn("Carrier",180,FieldValueType.String,font);
 			query.AddColumn("Stand Fee",80,FieldValueType.Number,font);
 			query.AddColumn("PPO Fee",80,FieldValueType.Number,font);

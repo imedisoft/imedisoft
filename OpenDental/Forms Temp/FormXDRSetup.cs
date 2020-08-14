@@ -27,14 +27,14 @@ namespace OpenDental {
 
 		public FormXDRSetup() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormXDRSetup_Load(object sender,EventArgs e) {
 			if(PrefC.HasClinicsEnabled) {//Using clinics
 				_listUserClinicNums=new List<long>();
 				comboClinic.Items.Clear();
-				comboClinic.Items.Add(Lan.G(this,"Headquarters"));
+				comboClinic.Items.Add("Headquarters");
 				//This way both lists have the same number of items in it and if 'Headquarters' is selected the programproperty.ClinicNum will be set to 0
 				_listUserClinicNums.Add(0);
 				comboClinic.SelectedIndex=0;
@@ -240,8 +240,8 @@ namespace OpenDental {
 			try {
 				Image importedImg=Image.FromFile(dlg.FileName);
 				if(importedImg.Size!=new Size(22,22)) {
-					MessageBox.Show(Lan.G(this,"Required image dimensions are 22x22.")
-						+"\r\n"+Lan.G(this,"Selected image dimensions are")+": "+importedImg.Size.Width+"x"+importedImg.Size.Height);
+					MessageBox.Show("Required image dimensions are 22x22."
+						+"\r\n"+"Selected image dimensions are"+": "+importedImg.Size.Width+"x"+importedImg.Size.Height);
 					return;
 				}
 				pictureBox.Image=importedImg;

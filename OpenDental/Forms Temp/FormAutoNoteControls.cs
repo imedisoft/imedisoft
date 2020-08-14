@@ -21,7 +21,7 @@ namespace OpenDental {
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormAutoNoteControls_Load(object sender, EventArgs e) {
@@ -33,13 +33,13 @@ namespace OpenDental {
 			_listAutoNoteControls=AutoNoteControls.GetDeepCopy();
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("FormAutoNoteControls","Description"),100);
+			GridColumn col=new GridColumn("Description",100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormAutoNoteControls","Type"),100);
+			col=new GridColumn("Type",100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormAutoNoteControls","Prompt Text"),100);
+			col=new GridColumn("Prompt Text",100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormAutoNoteControls","Options"),100);
+			col=new GridColumn("Options",100);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

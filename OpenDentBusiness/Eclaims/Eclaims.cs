@@ -73,7 +73,7 @@ namespace OpenDentBusiness.Eclaims
 			{
 				if (!WebMD.Launch(clearinghouseClin, batchNum))
 				{
-					MessageBox.Show(Lans.g("Eclaims", "Error sending.") + "\r\n" + WebMD.ErrorMessage);
+					MessageBox.Show("Error sending." + "\r\n" + WebMD.ErrorMessage);
 					return;
 				}
 			}
@@ -81,7 +81,7 @@ namespace OpenDentBusiness.Eclaims
 			{
 				if (!BCBSGA.Launch(clearinghouseClin, batchNum, terminalConnector))
 				{
-					MessageBox.Show(Lans.g("Eclaims", "Error sending.") + "\r\n" + BCBSGA.ErrorMessage);
+					MessageBox.Show("Error sending." + "\r\n" + BCBSGA.ErrorMessage);
 					return;
 				}
 			}
@@ -97,7 +97,7 @@ namespace OpenDentBusiness.Eclaims
 				}
 				else
 				{
-					MessageBox.Show(Lans.g("Eclaims", "Error sending.") + "\r\n" + ClaimConnect.ErrorMessage);
+					MessageBox.Show("Error sending." + "\r\n" + ClaimConnect.ErrorMessage);
 					return;
 				}
 			}
@@ -105,7 +105,7 @@ namespace OpenDentBusiness.Eclaims
 			{
 				if (!RECS.Launch(clearinghouseClin, batchNum))
 				{
-					MessageBox.Show(Lans.g("Eclaims", "Claim file created, but could not launch RECS client.") + "\r\n" + RECS.ErrorMessage);
+					MessageBox.Show("Claim file created, but could not launch RECS client." + "\r\n" + RECS.ErrorMessage);
 					//continue;
 				}
 			}
@@ -113,7 +113,7 @@ namespace OpenDentBusiness.Eclaims
 			{
 				if (!Inmediata.Launch(clearinghouseClin, batchNum))
 				{
-					MessageBox.Show(Lans.g("Eclaims", "Claim file created, but could not launch Inmediata client.") + "\r\n" + Inmediata.ErrorMessage);
+					MessageBox.Show("Claim file created, but could not launch Inmediata client." + "\r\n" + Inmediata.ErrorMessage);
 					//continue;
 				}
 			}
@@ -121,7 +121,7 @@ namespace OpenDentBusiness.Eclaims
 			{ // added by SPK 7/13/05
 				if (!AOS.Launch(clearinghouseClin, batchNum))
 				{
-					MessageBox.Show(Lans.g("Eclaims", "Claim file created, but could not launch AOS Communicator.") + "\r\n" + AOS.ErrorMessage);
+					MessageBox.Show("Claim file created, but could not launch AOS Communicator." + "\r\n" + AOS.ErrorMessage);
 					//continue;
 				}
 			}
@@ -133,7 +133,7 @@ namespace OpenDentBusiness.Eclaims
 			{
 				if (!MercuryDE.Launch(clearinghouseClin, batchNum))
 				{
-					MessageBox.Show(Lans.g("Eclaims", "Error sending.") + "\r\n" + MercuryDE.ErrorMessage);
+					MessageBox.Show("Error sending." + "\r\n" + MercuryDE.ErrorMessage);
 					return;
 				}
 			}
@@ -141,14 +141,14 @@ namespace OpenDentBusiness.Eclaims
 			{
 				if (!ClaimX.Launch(clearinghouseClin, batchNum))
 				{
-					MessageBox.Show(Lans.g("Eclaims", "Claim file created, but encountered an error while launching ClaimX Client.") + ":\r\n" + ClaimX.ErrorMessage);
+					MessageBox.Show("Claim file created, but encountered an error while launching ClaimX Client." + ":\r\n" + ClaimX.ErrorMessage);
 				}
 			}
 			else if (clearinghouseClin.CommBridge == EclaimsCommBridge.EmdeonMedical)
 			{
 				if (!EmdeonMedical.Launch(clearinghouseClin, batchNum, medType))
 				{
-					MessageBox.Show(Lans.g("Eclaims", "Error sending.") + "\r\n" + EmdeonMedical.ErrorMessage);
+					MessageBox.Show("Error sending." + "\r\n" + EmdeonMedical.ErrorMessage);
 					return;
 				}
 			}
@@ -156,7 +156,7 @@ namespace OpenDentBusiness.Eclaims
 			{
 				if (!DentiCal.Launch(clearinghouseClin, batchNum))
 				{
-					MessageBox.Show(Lans.g("Eclaims", "Error sending.") + DentiCal.ErrorMessage);
+					MessageBox.Show("Error sending." + DentiCal.ErrorMessage);
 					return;
 				}
 			}
@@ -164,7 +164,7 @@ namespace OpenDentBusiness.Eclaims
 			{
 				if (!NHS.Launch(clearinghouseClin, batchNum))
 				{
-					MessageBox.Show(Lans.g("Eclaims", "Error sending.") + "\r\n" + NHS.ErrorMessage);
+					MessageBox.Show("Error sending." + "\r\n" + NHS.ErrorMessage);
 					return;
 				}
 			}
@@ -172,7 +172,7 @@ namespace OpenDentBusiness.Eclaims
 			{
 				if (!EDS.Launch(clearinghouseClin, messageText))
 				{
-					MessageBox.Show(Lans.g("Eclaims", "Error sending.") + "\r\n" + EDS.ErrorMessage);
+					MessageBox.Show("Error sending." + "\r\n" + EDS.ErrorMessage);
 					return;
 				}
 			}
@@ -180,7 +180,7 @@ namespace OpenDentBusiness.Eclaims
 			{
 				if (!EdsMedical.Launch(clearinghouseClin, messageText))
 				{
-					MessageBox.Show(Lans.g("Eclaims", "Error sending.") + "\r\n" + EdsMedical.ErrorMessage);
+					MessageBox.Show("Error sending." + "\r\n" + EdsMedical.ErrorMessage);
 					return;
 				}
 			}
@@ -188,7 +188,7 @@ namespace OpenDentBusiness.Eclaims
 			{
 				if (!Ramq.Launch(clearinghouseClin, batchNum))
 				{
-					MessageBox.Show(Lans.g("Eclaims", "Error sending.") + Ramq.ErrorMessage);
+					MessageBox.Show("Error sending." + Ramq.ErrorMessage);
 					return;
 				}
 			}
@@ -261,7 +261,7 @@ namespace OpenDentBusiness.Eclaims
 		{
 			if (queueItem == null)
 			{
-				return new ClaimSendQueueItem() { MissingData = Lans.g("Eclaims", "Unable to fill claim data. Please recreate claim.") };
+				return new ClaimSendQueueItem() { MissingData = "Unable to fill claim data. Please recreate claim." };
 			}
 			queueItem.Warnings = "";
 			queueItem.MissingData = "";
@@ -291,8 +291,8 @@ namespace OpenDentBusiness.Eclaims
 			InsPlan insPlan = InsPlans.RefreshOne(claim.PlanNum);
 			if (insPlan == null)
 			{//Check for missing PlanNums
-				queueItem.ErrorsPreventingSave = Lans.g("Eclaims", "Claim insurance plan record missing.  Please recreate claim.");
-				queueItem.MissingData = Lans.g("Eclaims", "Claim insurance plan record missing.  Please recreate claim.");
+				queueItem.ErrorsPreventingSave = "Claim insurance plan record missing.  Please recreate claim.";
+				queueItem.MissingData = "Claim insurance plan record missing.  Please recreate claim.";
 				return queueItem;
 			}
 			if (claim.InsSubNum2 != 0)
@@ -300,7 +300,7 @@ namespace OpenDentBusiness.Eclaims
 				InsPlan insPlan2 = InsPlans.RefreshOne(claim.PlanNum2);
 				if (insPlan2 == null)
 				{//Check for missing PlanNums
-					queueItem.MissingData = Lans.g("Eclaims", "Claim other insurance plan record missing.  Please recreate claim.");
+					queueItem.MissingData = "Claim other insurance plan record missing.  Please recreate claim.";
 					return queueItem;//This will let the office send other claims that passed validation without throwing an exception.
 				}
 			}

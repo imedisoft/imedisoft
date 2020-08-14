@@ -21,7 +21,7 @@ namespace OpenDental {
 
 		public FormEtrans834Import() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormEtrans834Import_Load(object sender,EventArgs e) {
@@ -114,7 +114,7 @@ namespace OpenDental {
 					gridInsPlanFiles.BeginUpdate();
 				}
 				string filePath=(string)row.Tag;
-				ShowStatus(Lan.G(this,"Parsing file")+" "+Path.GetFileName(filePath));
+				ShowStatus("Parsing file"+" "+Path.GetFileName(filePath));
 				string messageText=File.ReadAllText(filePath);
 				X12object xobj=X12object.ToX12object(messageText);
 				if(xobj==null) {

@@ -43,7 +43,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -228,7 +228,7 @@ namespace OpenDental{
 				butOK.Visible=true;
 			}
 			if(ProcNum!=0) {
-				Text=Lan.G(this,"Referrals");
+				Text="Referrals";
 				butAddFrom.Visible=false;
 				butAddCustom.Visible=false;
 			}
@@ -251,21 +251,21 @@ namespace OpenDental{
 			string referralDescript=DisplayFields.GetForCategory(DisplayFieldCategory.PatientInformation)
 				.FirstOrDefault(x => x.InternalName=="Referrals")?.Description;
 			if(string.IsNullOrWhiteSpace(referralDescript)) {//either not displaying the Referral field or no description entered, default to 'Referral (other)'
-				referralDescript=Lan.G(this,"Referral (other)");
+				referralDescript="Referral (other)";
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableRefList","Referral Type"),85));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableRefList","Name"),120));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableRefList","Date"),65));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableRefList","Status"),70));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableRefList","Proc"),120));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableRefList","Note"),170));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableRefList","Email"),190));
+			gridMain.ListGridColumns.Add(new GridColumn("Referral Type",85));
+			gridMain.ListGridColumns.Add(new GridColumn("Name",120));
+			gridMain.ListGridColumns.Add(new GridColumn("Date",65));
+			gridMain.ListGridColumns.Add(new GridColumn("Status",70));
+			gridMain.ListGridColumns.Add(new GridColumn("Proc",120));
+			gridMain.ListGridColumns.Add(new GridColumn("Note",170));
+			gridMain.ListGridColumns.Add(new GridColumn("Email",190));
 			gridMain.ListGridRows.Clear();
 			bool hasInvalidRef=false;
 			GridRow row;
-			List<string> listRefTypeNames=new List<string>() {Lan.G(this,"To"),Lan.G(this,"From"),referralDescript };
+			List<string> listRefTypeNames=new List<string>() {"To","From",referralDescript };
 			for(int i=0;i<RefAttachList.Count;i++) {
 				RefAttach refAttachCur=RefAttachList[i];
 				if(ProcNum != 0 && !checkShowAll.Checked
@@ -282,7 +282,7 @@ namespace OpenDental{
 				else {
 					row.Cells.Add(refAttachCur.RefDate.ToShortDateString());
 				}
-				row.Cells.Add(Lan.G("enumReferralToStatus",refAttachCur.RefToStatus.ToString()));
+				row.Cells.Add(refAttachCur.RefToStatus.ToString());
 				if(refAttachCur.ProcNum==0) {
 					row.Cells.Add("");
 				}
@@ -584,23 +584,23 @@ namespace OpenDental{
 			if(IsSelectionMode && Prefs.GetBool(PrefName.ShowFeatureEhr)) {
 				string warning="";
 				if(RefAttachList[gridMain.GetSelectedIndex()].ProvNum==0) {
-					warning+=Lans.g(this,"Selected patient referral does not have a referring provider set.");
+					warning+="Selected patient referral does not have a referring provider set.";
 				}
 				if(RefAttachList[gridMain.GetSelectedIndex()].RefType!=ReferralType.RefTo) {
 					if(warning!="") {
 						warning+="\r\n";
 					}
-					warning+=Lans.g(this,"Selected patient referral is not an outgoing referral.");
+					warning+="Selected patient referral is not an outgoing referral.";
 				}
 				if(!RefAttachList[gridMain.GetSelectedIndex()].IsTransitionOfCare) {
 					if(warning!="") {
 						warning+="\r\n";
 					}
-					warning+=Lans.g(this,"Selected patient referral is not flagged as a transition of care.");
+					warning+="Selected patient referral is not flagged as a transition of care.";
 				}
 				if(warning!="") {
-					warning+="\r\n"+Lans.g(this,"It does not meet the EHR summary of care requirements.")+"  "+Lans.g(this,"Continue anyway?");
-					if(MessageBox.Show(warning,Lans.g(this,"EHR Measure Warning"),MessageBoxButtons.OKCancel)==DialogResult.Cancel) {
+					warning+="\r\n"+"It does not meet the EHR summary of care requirements."+"  "+"Continue anyway?";
+					if(MessageBox.Show(warning,"EHR Measure Warning",MessageBoxButtons.OKCancel)==DialogResult.Cancel) {
 						return;
 					}
 				}

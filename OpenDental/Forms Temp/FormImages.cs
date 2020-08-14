@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormImages() {
 			InitializeComponent();
-			Lan.F(this);
+			
 			contrImagesMain.CloseClick+=new EventHandler(contrImagesMain_CloseClick);
 		}
 

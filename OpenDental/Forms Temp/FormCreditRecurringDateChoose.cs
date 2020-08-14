@@ -16,7 +16,7 @@ namespace OpenDental {
 			InitializeComponent();
 			_creditCardCur=creditCard;
 			_pat=pat;
-			Lan.F(this);
+			
 		}
 
 		private void FormCreditRecurringDateChoose_Load(object sender,EventArgs e) {
@@ -29,8 +29,8 @@ namespace OpenDental {
 				DateTime lastMonth=GetValidPayDate(DateTime.Today.AddMonths(-1));
 				if(Prefs.GetBool(PrefName.RecurringChargesUseTransDate)) {
 					//Labels set here, buttons set in respective button methods butLastMonth_Click/butThisMonth_Click
-					labelLastMonth.Text=Lan.G(this,"Recurring charge date will be:")+" "+lastMonth.ToShortDateString();
-					labelThisMonth.Text=Lan.G(this,"Recurring charge date will be:")+" "+thisMonth.ToShortDateString();
+					labelLastMonth.Text="Recurring charge date will be:"+" "+lastMonth.ToShortDateString();
+					labelThisMonth.Text="Recurring charge date will be:"+" "+thisMonth.ToShortDateString();
 				}
 				else {
 					labelLastMonth.Text+=" "+lastMonth.ToShortDateString();
@@ -39,14 +39,14 @@ namespace OpenDental {
 				//If the recurring pay date is in the future do not let them choose that option.
 				if(thisMonth>DateTime.Now) {
 					butThisMonth.Enabled=false;
-					labelThisMonth.Text=Lan.G(this,"Cannot make payment for future date:")+" "+thisMonth.ToShortDateString();
+					labelThisMonth.Text="Cannot make payment for future date:"+" "+thisMonth.ToShortDateString();
 				}
 				if(lastMonth<_creditCardCur.DateStart) {
-					labelLastMonth.Text=Lan.G(this,"Cannot make payment before start date:")+" "+ _creditCardCur.DateStart;
+					labelLastMonth.Text="Cannot make payment before start date:"+" "+ _creditCardCur.DateStart;
 					butLastMonth.Enabled=false;
 				}
 				if(thisMonth<_creditCardCur.DateStart) {
-					labelThisMonth.Text=Lan.G(this,"Cannot make payment before start date:")+" "+ _creditCardCur.DateStart;
+					labelThisMonth.Text="Cannot make payment before start date:"+" "+ _creditCardCur.DateStart;
 					butThisMonth.Enabled=false;
 				}
 			}
@@ -95,7 +95,7 @@ namespace OpenDental {
 					}
 					break;
 				default:
-					throw new ODException(Lan.G(this,"Invalid ChargeFrequency."));
+					throw new ODException("Invalid ChargeFrequency.");
 			}
 			return false;//Either the frequency is FixedDayOfMonth with 1 day per month, or it is FixedWeekDay with nth day frequency (1st, 2nd, 3rd, etc.)
 		}
@@ -114,7 +114,7 @@ namespace OpenDental {
 						retVal=GetDateForDayOfMonth(date,dayOfMonth);
 					}
 					else {
-						throw new ODException(Lan.G(this,"Invalid ChargeFrequency."));
+						throw new ODException("Invalid ChargeFrequency.");
 					}
 					break;
 				case ChargeFrequencyType.FixedWeekDay:
@@ -124,11 +124,11 @@ namespace OpenDental {
 						//This may result in a future date for the "This Month" button. The button will get disabled later.
 					}
 					else {
-						throw new ODException(Lan.G(this,"Invalid ChargeFrequency."));
+						throw new ODException("Invalid ChargeFrequency.");
 					}
 					break;
 				default:
-					throw new ODException(Lan.G(this,"Invalid ChargeFrequency."));
+					throw new ODException("Invalid ChargeFrequency.");
 			}
 			return retVal;
 		}

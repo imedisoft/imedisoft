@@ -14,7 +14,7 @@ namespace OpenDental {
 
 		public FormEhrCarePlanEdit(EhrCarePlan ehrCarePlan) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_ehrCarePlan=ehrCarePlan;
 		}
 

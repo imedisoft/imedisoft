@@ -217,10 +217,10 @@ namespace OpenDentBusiness{
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
 				if(carrier.IsCDA) {
 					if(carrier.ElectID=="") {
-						throw new ApplicationException(Lans.g("Carriers","Carrier Identification Number required."));
+						throw new ApplicationException("Carrier Identification Number required.");
 					}
 					if(!Regex.IsMatch(carrier.ElectID,"^[0-9]{6}$")) {
-						throw new ApplicationException(Lans.g("Carriers","Carrier Identification Number must be exactly 6 numbers."));
+						throw new ApplicationException("Carrier Identification Number must be exactly 6 numbers.");
 					}
 				}
 				//so the edited carrier looks good, but now we need to make sure that the original was allowed to be changed.
@@ -233,7 +233,7 @@ namespace OpenDentBusiness{
 					command="SELECT COUNT(*) FROM etrans WHERE CarrierNum= "+POut.Long(carrier.CarrierNum)
 						+" OR CarrierNum2="+POut.Long(carrier.CarrierNum);
 					if(Database.ExecuteString(command)!="0"){
-						throw new ApplicationException(Lans.g("Carriers","Not allowed to change Carrier Identification Number because it's in use in the claim history."));
+						throw new ApplicationException("Not allowed to change Carrier Identification Number because it's in use in the claim history.");
 					}
 				}
 			}
@@ -250,10 +250,10 @@ namespace OpenDentBusiness{
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
 				if(carrier.IsCDA){
 					if(carrier.ElectID==""){
-						throw new ApplicationException(Lans.g("Carriers","Carrier Identification Number required."));
+						throw new ApplicationException("Carrier Identification Number required.");
 					}
 					if(!Regex.IsMatch(carrier.ElectID,"^[0-9]{6}$")) {
-						throw new ApplicationException(Lans.g("Carriers","Carrier Identification Number must be exactly 6 numbers."));
+						throw new ApplicationException("Carrier Identification Number must be exactly 6 numbers.");
 					}
 				}
 			}
@@ -290,7 +290,7 @@ namespace OpenDentBusiness{
 					}
 					strInUse+=PIn.String(table.Rows[i][1].ToString());
 				}
-				throw new ApplicationException(Lans.g("Carriers","Not allowed to delete carrier because it is in use.  Subscribers using this carrier include ")+strInUse);
+				throw new ApplicationException("Not allowed to delete carrier because it is in use.  Subscribers using this carrier include "+strInUse);
 			}
 			//look for dependencies in etrans table.
 			command="SELECT DateTimeTrans FROM etrans WHERE CarrierNum="+POut.Long(Cur.CarrierNum)
@@ -304,7 +304,7 @@ namespace OpenDentBusiness{
 					}
 					strInUse+=PIn.Date(table.Rows[i][0].ToString()).ToShortDateString();
 				}
-				throw new ApplicationException(Lans.g("Carriers","Not allowed to delete carrier because it is in use in the etrans table.  Dates of claim sent history include ")+strInUse);
+				throw new ApplicationException("Not allowed to delete carrier because it is in use in the etrans table.  Dates of claim sent history include "+strInUse);
 			}
 			command="DELETE from carrier WHERE CarrierNum = "+POut.Long(Cur.CarrierNum);
 			Database.ExecuteNonQuery(command);
@@ -400,7 +400,7 @@ namespace OpenDentBusiness{
 			//No match found.  Decide what to do.  Usually add carrier.--------------------------------------------------------------
 			//Canada:
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
-				throw new ApplicationException(Lans.g("Carriers","Carrier not found."));//gives user a chance to add manually.
+				throw new ApplicationException("Carrier not found.");//gives user a chance to add manually.
 			}
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			carrier.SecUserNumEntry=Security.CurrentUser.Id;

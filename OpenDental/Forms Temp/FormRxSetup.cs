@@ -20,7 +20,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormRxSetup(){
 			InitializeComponent();// Required for Windows Form Designer support
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -136,17 +136,17 @@ namespace OpenDental{
 			RxDefList=RxDefs.Refresh();
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableRxSetup","Drug"),140);
+			GridColumn col=new GridColumn("Drug",140);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRxSetup","Controlled"),70,HorizontalAlignment.Center);
+			col=new GridColumn("Controlled",70,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRxSetup","Sig"),320);
+			col=new GridColumn("Sig",320);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRxSetup","Disp"),70);
+			col=new GridColumn("Disp",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRxSetup","Refills"),70);
+			col=new GridColumn("Refills",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRxSetup","Notes"),300);
+			col=new GridColumn("Notes",300);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -191,7 +191,7 @@ namespace OpenDental{
 
 		private void butAdd2_Click(object sender, System.EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1){
-				MessageBox.Show(Lan.G(this,"Please select item first"));
+				MessageBox.Show("Please select item first");
 				return;
 			}
 			RxDef RxDefCur=RxDefList[gridMain.GetSelectedIndex()].Copy();

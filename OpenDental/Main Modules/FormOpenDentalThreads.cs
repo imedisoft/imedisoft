@@ -468,7 +468,7 @@ namespace OpenDental
 			{
 				//Do not allow delete. The only way for this alert to be deleted is for the eConnector to insert a heartbeat, which will in-turn delete this alert.
 				Actions = ActionType.MarkAsRead | ActionType.OpenForm,
-				Description = Lans.g("EConnector", "eConnector needs to be restarted"),
+				Description = "eConnector needs to be restarted",
 				Severity = SeverityType.High,
 				Type = AlertType.EConnectorDown,
 				//Show for all clinics.

@@ -152,7 +152,7 @@ namespace OpenDentBusiness{
 						}
 						SecurityLogs.MakeLogEntry(Permissions.FeeSchedEdit,0,securityLogText);
 						FeeSchedEvent.Fire(EventCategory.FeeSched,
-							new ProgressBarHelper(Lans.g("FormFeeSchedTools","Copying fees, please wait")+"...",blockValue:blockValue,blockMax:blockMax,
+							new ProgressBarHelper("Copying fees, please wait"+"...",blockValue:blockValue,blockMax:blockMax,
 							progressStyle:ProgBarStyle.Continuous));
 						lock(locker) {
 							blockValue++;
@@ -212,7 +212,7 @@ namespace OpenDentBusiness{
 						numSkipped++;
 					}
 					FeeSchedEvent.Fire(EventCategory.FeeSched,
-					new ProgressBarHelper(Lans.g("FeeScheds","Processing fees, please wait")+"...","",(numImported+numSkipped),feeLines.Length,
+					new ProgressBarHelper("Processing fees, please wait"+"...","",(numImported+numSkipped),feeLines.Length,
 					ProgBarStyle.Continuous));
 				}
 			}
@@ -320,7 +320,7 @@ namespace OpenDentBusiness{
 				progress.Fire(EventCategory.FeeSched,new ProgressBarHelper(Clinics.GetAbbr(clinicNumCur),"0%",0,100,ProgBarStyle.Blocks,"WriteoffProgress"));
 				long rowCurIndex = 0; //reset for each clinic.
 				object lockObj=new object();//used to lock rowCurIndex so the threads will correctly increment the count
-				progress.Fire(EventCategory.FeeSched,new ProgressBarHelper(Lans.g("FeeSchedEvent","Getting list to update writeoffs..."),
+				progress.Fire(EventCategory.FeeSched,new ProgressBarHelper("Getting list to update writeoffs...",
 						progressBarEventType: ProgBarEventType.TextMsg));
 				listFeesHQandClinic=listFeesHQ;
 				if(PrefC.HasClinicsEnabled && clinicNumCur>0) {//listFeesHQ is already the fees for ClinicNum 0, only add to list if > 0
@@ -394,7 +394,7 @@ namespace OpenDentBusiness{
 					break;
 				}
 				#endregion Has Paused or Cancelled
-				progress.Fire(EventCategory.FeeSched,new ProgressBarHelper(Lans.g("FeeSchedEvent","Updating writeoff estimates for patients..."),
+				progress.Fire(EventCategory.FeeSched,new ProgressBarHelper("Updating writeoff estimates for patients...",
 						progressBarEventType: ProgBarEventType.TextMsg));
 				listActions=listFamProcs.Select(x => new Action(() => {
 					#region Has Cancelled
@@ -447,7 +447,7 @@ namespace OpenDentBusiness{
 				);
 				if(listWriteoffClinicNums.Count>1) {//only show if more than one clinic
 					progress.Fire(EventCategory.FeeSched,
-						new ProgressBarHelper(rowCurIndex+" "+Lans.g("FeeSchedTools","procedures processed from")+" "+Clinics.GetAbbr(clinicNumCur),
+						new ProgressBarHelper(rowCurIndex+" "+"procedures processed from"+" "+Clinics.GetAbbr(clinicNumCur),
 							progressBarEventType:ProgBarEventType.TextMsg));
 				}
 				totalWriteoffsUpdated+=rowCurIndex;
@@ -572,7 +572,7 @@ namespace OpenDentBusiness{
 			string feeSchedDesc="";
 			FeeSched feeSched=GetFirstOrDefault(x => x.FeeSchedNum==feeSchedNum);
 			if(feeSched!=null) {
-				feeSchedDesc=feeSched.Description+(feeSched.IsHidden ? " ("+Lans.g("FeeScheds","hidden")+")" : "");
+				feeSchedDesc=feeSched.Description+(feeSched.IsHidden ? " ("+"hidden"+")" : "");
 			}
 			return feeSchedDesc;
 		}
@@ -644,7 +644,7 @@ namespace OpenDentBusiness{
 		///<summary>Hides FeeScheds that are not hidden and not in use by anything. Returns the number of fee scheds that were hidden.</summary>
 		public static long HideUnusedScheds() {
 			
-			ODEvent.Fire(EventCategory.HideUnusedFeeSchedules,Lans.g("FormFeeScheds","Finding unused fee schedules..."));
+			ODEvent.Fire(EventCategory.HideUnusedFeeSchedules,"Finding unused fee schedules...");
 			string command=@"SELECT feesched.FeeSchedNum 
 				FROM feesched
 				LEFT JOIN provider ON provider.FeeSched=feesched.FeeSchedNum
@@ -659,7 +659,7 @@ namespace OpenDentBusiness{
 			if(listFeeScheds.Count==0) {
 				return 0;
 			}
-			ODEvent.Fire(EventCategory.HideUnusedFeeSchedules,Lans.g("FormFeeScheds","Hiding unused fee schedules..."));
+			ODEvent.Fire(EventCategory.HideUnusedFeeSchedules,"Hiding unused fee schedules...");
 			command="UPDATE feesched SET IsHidden=1 WHERE FeeSchedNum IN("+string.Join(",",listFeeScheds.Select(x => POut.Long(x)))+")";
 			long rowsChanged=Database.ExecuteNonQuery(command);
 			return rowsChanged;

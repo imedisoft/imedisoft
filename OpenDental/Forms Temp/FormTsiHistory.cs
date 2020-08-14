@@ -24,7 +24,7 @@ namespace OpenDental {
 
 		public FormTsiHistory() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormTsiHistory_Load(object sender,EventArgs e) {
@@ -38,11 +38,11 @@ namespace OpenDental {
 				);
 			}
 			else {//clinics disabled
-				_listClinics.Add(Clinics.GetPracticeAsClinicZero(Lan.G(this,"Unassigned")));
+				_listClinics.Add(Clinics.GetPracticeAsClinicZero("Unassigned"));
 			}
 			#endregion Fill Clinics
 			#region Fill Client IDs
-			comboBoxMultiClientIDs.Items.Add(Lan.G(this,"All"));
+			comboBoxMultiClientIDs.Items.Add("All");
 			comboBoxMultiClientIDs.SetSelected(0,true);
 			_listClientIDs=new List<string>();
 			long progNum=Programs.GetProgramNum(ProgramName.Transworld);
@@ -54,13 +54,13 @@ namespace OpenDental {
 			#endregion Fill Client IDs
 			#region Fill Trans Types
 			_listTransTypes=Enum.GetValues(typeof(TsiTransType)).OfType<TsiTransType>().ToList();
-			comboBoxMultiTransTypes.Items.Add(Lan.G(this,"All"));
+			comboBoxMultiTransTypes.Items.Add("All");
 			comboBoxMultiTransTypes.SetSelected(0,true);
 			_listTransTypes.ForEach(x => comboBoxMultiTransTypes.Items.Add(x.GetDescription()));
 			#endregion Fill Trans Types
 			#region Fill Account Statuses
 			_listAcctStatuses=new[] { "Active","Suspended","Inactive" }.ToList();
-			comboBoxMultiAcctStatuses.Items.Add(Lan.G(this,"All"));
+			comboBoxMultiAcctStatuses.Items.Add("All");
 			comboBoxMultiAcctStatuses.SetSelected(0,true);
 			_listAcctStatuses.ForEach(x => comboBoxMultiAcctStatuses.Items.Add(x));
 			#endregion Fill Account Statuses

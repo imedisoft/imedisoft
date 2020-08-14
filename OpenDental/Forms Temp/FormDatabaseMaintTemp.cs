@@ -11,39 +11,48 @@ using CodeBase;
 using OpenDentBusiness;
 using OpenDentBusiness.IO;
 
-namespace OpenDental {
-	public partial class FormDatabaseMaintTemp:ODForm {
+namespace OpenDental
+{
+	public partial class FormDatabaseMaintTemp : ODForm
+	{
 		//private bool backupMade;
 		private string duplicateClaimProcInfo;
 		private string duplicateSuppInfo;
 		private string missingSuppInfo;
 
-		public FormDatabaseMaintTemp() {
+		public FormDatabaseMaintTemp()
+		{
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
-		private void FormDatabaseMaintTemp_Load(object sender,EventArgs e) {
+		private void FormDatabaseMaintTemp_Load(object sender, EventArgs e)
+		{
 			FillDatabaseNames();
 		}
 
-		private void FillDatabaseNames(){
+		private void FillDatabaseNames()
+		{
 			comboDbs.Items.Clear();
-			List<string> dbNames=DatabaseMaintenances.GetDatabaseNames();
-			for(int i=0;i<dbNames.Count;i++){
+			List<string> dbNames = DatabaseMaintenances.GetDatabaseNames();
+			for (int i = 0; i < dbNames.Count; i++)
+			{
 				comboDbs.Items.Add(dbNames[i]);
 			}
 			//automatic selection will come later.
 
 		}
 
-		private void butRun_Click(object sender,EventArgs e) {
-			if(comboDbs.SelectedIndex==-1){
+		private void butRun_Click(object sender, EventArgs e)
+		{
+			if (comboDbs.SelectedIndex == -1)
+			{
 				MessageBox.Show("Please select a backup database first.");
 				return;
 			}
 			//make sure it's not this database
-			if(comboDbs.SelectedItem.ToString()==MiscData.GetCurrentDatabase()){
+			if (comboDbs.SelectedItem.ToString() == MiscData.GetCurrentDatabase())
+			{
 				MessageBox.Show("Please choose a database other than the current database.");
 				return;
 			}
@@ -52,80 +61,88 @@ namespace OpenDental {
 			//	MessageBox.Show("The backup database must be older than March 17, 2010.");
 			//	return;
 			//}
-			Cursor=Cursors.WaitCursor;
-			textResults.Text="";
-			duplicateClaimProcInfo=DatabaseMaintenances.GetDuplicateClaimProcs();
-			if(duplicateClaimProcInfo==""){
-				textResults.Text+="Duplicate claim payments: None found.  Database OK.\r\n\r\n";
+			Cursor = Cursors.WaitCursor;
+			textResults.Text = "";
+			duplicateClaimProcInfo = DatabaseMaintenances.GetDuplicateClaimProcs();
+			if (duplicateClaimProcInfo == "")
+			{
+				textResults.Text += "Duplicate claim payments: None found.  Database OK.\r\n\r\n";
 			}
-			else{
-				textResults.Text+=duplicateClaimProcInfo;
+			else
+			{
+				textResults.Text += duplicateClaimProcInfo;
 			}
-			duplicateSuppInfo=DatabaseMaintenances.GetDuplicateSupplementalPayments();
-			if(duplicateSuppInfo==""){
-				textResults.Text+="Duplicate supplemental payments: None found.  Database OK.\r\n\r\n";
+			duplicateSuppInfo = DatabaseMaintenances.GetDuplicateSupplementalPayments();
+			if (duplicateSuppInfo == "")
+			{
+				textResults.Text += "Duplicate supplemental payments: None found.  Database OK.\r\n\r\n";
 			}
-			else{
-				textResults.Text+=duplicateSuppInfo;
+			else
+			{
+				textResults.Text += duplicateSuppInfo;
 			}
-			missingSuppInfo=DatabaseMaintenances.GetMissingClaimProcs(comboDbs.SelectedItem.ToString());
-			if(missingSuppInfo==""){
-				textResults.Text+="Missing claim payments: None found.  Database OK.";
+			missingSuppInfo = DatabaseMaintenances.GetMissingClaimProcs(comboDbs.SelectedItem.ToString());
+			if (missingSuppInfo == "")
+			{
+				textResults.Text += "Missing claim payments: None found.  Database OK.";
 			}
-			else{
-				textResults.Text+=missingSuppInfo;
+			else
+			{
+				textResults.Text += missingSuppInfo;
 			}
-			Cursor=Cursors.Default;
+			Cursor = Cursors.Default;
 		}
 
-		private void butCancel_Click(object sender,EventArgs e) {
-			DialogResult=DialogResult.Cancel;
+		private void butCancel_Click(object sender, EventArgs e)
+		{
+			DialogResult = DialogResult.Cancel;
 		}
 
-		private void butPrint_Click(object sender,EventArgs e) {
-			string fileName=Storage.CombinePaths(Storage.GetTempPath(), "results.txt");
-			ODFileUtils.WriteAllTextThenStart(fileName,textResults.Text,"");
+		private void butPrint_Click(object sender, EventArgs e)
+		{
+			string fileName = Storage.CombinePaths(Storage.GetTempPath(), "results.txt");
+			ODFileUtils.WriteAllTextThenStart(fileName, textResults.Text, "");
 			MessageBox.Show("Please print from the text editor.");
 		}
 
-		private void linkLabel1_LinkClicked(object sender,LinkLabelLinkClickedEventArgs e) {
+		private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
 			Process.Start("http://www.opendental.com/manual/bugcp.html");
 		}
 
-		private void butBackup_Click(object sender,EventArgs e) {
-			Cursor=Cursors.WaitCursor;
-			#if !DEBUG
+		private void butBackup_Click(object sender, EventArgs e)
+		{
+			Cursor = Cursors.WaitCursor;
+#if !DEBUG
 			Shared.MakeABackup(BackupLocation.DatabaseMaintenanceTool);
-			#endif
+#endif
 			//backupMade=true;
-			if(duplicateClaimProcInfo!=""){
-				butFix1.Enabled=true;
+			if (duplicateClaimProcInfo != "")
+			{
+				butFix1.Enabled = true;
 			}
-			if(duplicateSuppInfo!=""){
-				butFix2.Enabled=true;
+			if (duplicateSuppInfo != "")
+			{
+				butFix2.Enabled = true;
 			}
-			if(missingSuppInfo!=""){
-				butFix3.Enabled=true;
+			if (missingSuppInfo != "")
+			{
+				butFix3.Enabled = true;
 			}
-			Cursor=Cursors.Default;
+			Cursor = Cursors.Default;
 		}
 
-		private void butFix1_Click(object sender,EventArgs e) {
-			Cursor=Cursors.WaitCursor;
-			textResults.Text=DatabaseMaintenances.FixClaimProcDeleteDuplicates();
-			Cursor=Cursors.Default;
+		private void butFix1_Click(object sender, EventArgs e)
+		{
 		}
 
-		private void butFix2_Click(object sender,EventArgs e) {
+		private void butFix2_Click(object sender, EventArgs e)
+		{
 			MessageBox.Show("There is not yet a fix for duplicate supplemental payments due to concern about false positives. If you have duplicates, we will need to get a copy of your database to analyze it here.");
 		}
 
-		private void butFix3_Click(object sender,EventArgs e) {
-			Cursor=Cursors.WaitCursor;
-			textResults.Text=DatabaseMaintenances.FixMissingClaimProcs(comboDbs.SelectedItem.ToString());
-			Cursor=Cursors.Default;
+		private void butFix3_Click(object sender, EventArgs e)
+		{
 		}
-
-		
 	}
 }

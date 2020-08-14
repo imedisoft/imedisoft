@@ -19,9 +19,6 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormAging(){
 			InitializeComponent();
-			Lan.F(this);
-			Lan.C(this,new Control[]
-				{this.textBox1});
 		}
 
 		///<summary></summary>
@@ -167,8 +164,8 @@ namespace OpenDental{
 		private bool RunAgingEnterprise(DateTime dateCalc) {
 			DateTime dateLastAging=PrefC.GetDate(PrefName.DateLastAging);
 			if(dateLastAging.Date==dateCalc.Date) {
-				if(MessageBox.Show(this,Lan.G(this,"Aging has already been calculated for")+" "+dateCalc.ToShortDateString()+" "
-					+Lan.G(this,"and does not normally need to run more than once per day.\r\n\r\nRun anyway?"),"",MessageBoxButtons.YesNo)!=DialogResult.Yes)
+				if(MessageBox.Show(this,"Aging has already been calculated for"+" "+dateCalc.ToShortDateString()+" "
+					+"and does not normally need to run more than once per day.\r\n\r\nRun anyway?","",MessageBoxButtons.YesNo)!=DialogResult.Yes)
 				{
 					return false;
 				}
@@ -177,9 +174,9 @@ namespace OpenDental{
 			Prefs.RefreshCache();
 			DateTime dateTAgingBeganPref=PrefC.GetDate(PrefName.AgingBeginDateTime);
 			if(dateTAgingBeganPref>DateTime.MinValue) {
-				MessageBox.Show(this,Lan.G(this,"You cannot run aging until it has finished the current calculations which began on")+" "
-					+dateTAgingBeganPref.ToString()+".\r\n"+Lans.g(this,"If you believe the current aging process has finished, a user with SecurityAdmin permission "
-					+"can manually clear the date and time by going to Setup | Miscellaneous and pressing the 'Clear' button."));
+				MessageBox.Show(this,"You cannot run aging until it has finished the current calculations which began on"+" "
+					+dateTAgingBeganPref.ToString()+".\r\n"+"If you believe the current aging process has finished, a user with SecurityAdmin permission "
+					+"can manually clear the date and time by going to Setup | Miscellaneous and pressing the 'Clear' button.");
 				return false;
 			}
 			SecurityLogs.MakeLogEntry(Permissions.AgingRan,0,"Starting Aging - Aging Form");
@@ -192,7 +189,7 @@ namespace OpenDental{
 					Ledgers.ComputeAging(0,dateCalc);
 					Prefs.Set(PrefName.DateLastAging,POut.Date(dateCalc,false));
 				},
-				startingMessage:Lan.G(this,"Calculating enterprise aging for all patients as of")+" "+dateCalc.ToShortDateString()+"...",
+				startingMessage:"Calculating enterprise aging for all patients as of"+" "+dateCalc.ToShortDateString()+"...",
 				actionException:ex => {
 					Ledgers.AgingExceptionHandler(ex,this);
 					result=false;
@@ -223,7 +220,7 @@ namespace OpenDental{
 				Cursor=Cursors.WaitCursor;
 				bool result=true;
 				ODProgress.ShowAction(() => Ledgers.ComputeAging(0,dateCalc),
-					startingMessage:Lan.G(this,"Calculating aging for all patients as of")+" "+dateCalc.ToShortDateString()+"...",
+					startingMessage:"Calculating aging for all patients as of"+" "+dateCalc.ToShortDateString()+"...",
 					actionException:ex => {
 						Ledgers.AgingExceptionHandler(ex,this);
 						result=false;

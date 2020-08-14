@@ -17,7 +17,7 @@ namespace OpenDental {
 
 		public FormEServicesSetup() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormEServicesSetup2_Load(object sender,EventArgs e) {
@@ -29,7 +29,7 @@ namespace OpenDental {
 			catch(WebException we) {
 				this.ForceBringToFront();
 				actionCloseProgress?.Invoke();
-				FriendlyException.Show(Lan.G(this,"Could not reach HQ.  Please make sure you have an internet connection and try again or call support."),we);
+				FriendlyException.Show("Could not reach HQ.  Please make sure you have an internet connection and try again or call support.",we);
 				//Set the dialog result to Abort so that FormClosing knows to not try and save any changes.
 				DialogResult=DialogResult.Abort;
 				Close();
@@ -37,7 +37,7 @@ namespace OpenDental {
 			catch(Exception ex) {
 				this.ForceBringToFront();
 				actionCloseProgress?.Invoke();
-				FriendlyException.Show(Lan.G(this,"There was a problem loading the eServices Setup window.  Please try again or call support."),ex);
+				FriendlyException.Show("There was a problem loading the eServices Setup window.  Please try again or call support.",ex);
 				//Set the dialog result to Abort so that FormClosing knows to not try and save any changes.
 				DialogResult=DialogResult.Abort;
 				Close();

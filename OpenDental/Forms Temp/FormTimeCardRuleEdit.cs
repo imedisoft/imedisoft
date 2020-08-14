@@ -16,7 +16,7 @@ namespace OpenDental {
 		///This form is used to edit an existing timeCardRule or insert many new timeCardRules.</summary>
 		public FormTimeCardRuleEdit(TimeCardRule timeCardRule=null) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_timeCardRule=timeCardRule;
 			if(_timeCardRule==null) {//No timeCardRule provided, we must be inserting new entries.
 				_timeCardRule=new TimeCardRule();//Allows Load(...) to set empty values.
@@ -32,7 +32,7 @@ namespace OpenDental {
 			else {
 				_listEmployees=Employees.GetEmpsForClinic(Clinics.ClinicNum);
 			}
-			listEmp.Items.Add(Lan.G(this,"All Employees"));
+			listEmp.Items.Add("All Employees");
 			listEmp.SelectedIndex=0;
 			foreach(Employee emp in _listEmployees) {
 				int index=listEmp.Items.Add(emp.FName+" "+emp.LName);

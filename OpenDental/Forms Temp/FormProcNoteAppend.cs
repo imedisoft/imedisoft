@@ -14,7 +14,7 @@ namespace OpenDental {
 
 		public FormProcNoteAppend() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormProcNoteAppend_Load(object sender,EventArgs e) {
@@ -79,7 +79,7 @@ namespace OpenDental {
 				SaveSignature();
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.G(this,"Error saving signature.")+"\r\n"+ex.Message);
+				MessageBox.Show("Error saving signature."+"\r\n"+ex.Message);
 				//and continue with the rest of this method
 			}
 			Procedures.Update(ProcCur,procOld);

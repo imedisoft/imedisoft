@@ -64,7 +64,7 @@ namespace OpenDental{
 					}
 				}
 			}
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -74,7 +74,7 @@ namespace OpenDental{
 			_documentCur=docCur;
 			_documentOld=_documentCur.Copy();
 			_isOkDisabled=isOkDisabled;
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -443,13 +443,13 @@ namespace OpenDental{
 			List<Permissions> listPermissions=new List<Permissions>();
 			listPermissions.Add(Permissions.ImageEdit);
 			listPermissions.Add(Permissions.ImageDelete);
-			FormAuditOneType formA=new FormAuditOneType(0,listPermissions,Lan.G(this,"Audit Trail for Document"),_documentCur.DocNum);
+			FormAuditOneType formA=new FormAuditOneType(0,listPermissions,"Audit Trail for Document",_documentCur.DocNum);
 			formA.ShowDialog();
 		}
 
 		private void butOK_Click(object sender, System.EventArgs e){
 			if(textDate.errorProvider1.GetError(textDate)!="") {
-				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(textDate.Text=="") {
@@ -473,9 +473,9 @@ namespace OpenDental{
 				//is the new doc date allowed?
 				if(!Security.IsAuthorized(Permissions.ImageDelete,_documentCur.DateCreated,true)) {
 					//suppress the default security message above (it's too confusing for this case) and generate our own here
-					MessageBox.Show(this,Lan.G(this,"Not allowed to future date this image from")+": "
+					MessageBox.Show(this,"Not allowed to future date this image from"+": "
 						+"\r\n"+_documentCur.DateCreated.ToString()+" to "+dateTimeEntered.ToString()
-						+"\r\n\r\n"+Lan.G(this,"A user with the SecurityAdmin permission must grant you access for")
+						+"\r\n\r\n"+"A user with the SecurityAdmin permission must grant you access for"
 						+":\r\n"+GroupPermissions.GetDesc(Permissions.ImageDelete));
 					return;
 				}
@@ -505,7 +505,7 @@ namespace OpenDental{
 			//}
 			//else{
 			if(Documents.Update(_documentCur,_documentOld)) {
-				ImageStore.LogDocument(Lan.G(this,"Document Edited")+": ",Permissions.ImageEdit,_documentCur,_documentOld.DateTStamp);
+				ImageStore.LogDocument("Document Edited"+": ",Permissions.ImageEdit,_documentCur,_documentOld.DateTStamp);
 			}
 			//}
 			DialogResult=DialogResult.OK;

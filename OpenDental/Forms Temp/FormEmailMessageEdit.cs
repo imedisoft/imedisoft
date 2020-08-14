@@ -55,7 +55,7 @@ namespace OpenDental{
 			,params List<EmailMessage>[] listAllEmailMessages)
 		{
 			InitializeComponent();// Required for Windows Form Designer support
-			Lan.F(this);
+			
       _isDeleteAllowed=isDeleteAllowed;
       _emailMessage=emailMessage.Copy();
 			if(emailAddress==null) {
@@ -517,7 +517,7 @@ namespace OpenDental{
 				butRefresh.Visible=true;
 				butRawMessage.Visible=true;
         butSend.Visible=true;
-        butSend.Text=Lan.G(this,"Reply");
+        butSend.Text="Reply";
       }
 			labelDecrypt.Visible=false;
 			butDecrypt.Visible=false;
@@ -571,10 +571,10 @@ namespace OpenDental{
 
 		private void butDeleteTemplate_Click(object sender, System.EventArgs e) {
 			if(listTemplates.SelectedIndex==-1){
-				MessageBox.Show(Lan.G(this,"Please select an item first."));
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
-			if(MessageBox.Show(Lan.G(this,"Delete e-mail template?"),"",MessageBoxButtons.OKCancel)
+			if(MessageBox.Show("Delete e-mail template?","",MessageBoxButtons.OKCancel)
 				!=DialogResult.OK){
 				return;
 			}
@@ -586,11 +586,11 @@ namespace OpenDental{
 
 		private void butInsertTemplate_Click(object sender, System.EventArgs e) {
 			if(listTemplates.SelectedIndex==-1){
-				MessageBox.Show(Lan.G(this,"Please select an item first."));
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			if(emailPreview.BodyText!="" || emailPreview.Subject!="" || emailPreview.HasAttachments){
-				if(MessageBox.Show(Lan.G(this,"Replace existing e-mail text with text from the template?  Existing attachments will not be deleted.")
+				if(MessageBox.Show("Replace existing e-mail text with text from the template?  Existing attachments will not be deleted."
 					,"",MessageBoxButtons.OKCancel)!=DialogResult.OK){
 					return;
 				}
@@ -715,7 +715,7 @@ namespace OpenDental{
 
 		private void butInsertAutograph_Click(object sender,EventArgs e) {
 			if(listAutographs.SelectedIndex==-1) {
-				MessageBox.Show(Lan.G(this,"Please select an autograph before inserting."));
+				MessageBox.Show("Please select an autograph before inserting.");
 				return;
 			}
 			if(emailPreview.IsHtml) {
@@ -732,10 +732,10 @@ namespace OpenDental{
 		
 		private void butDeleteAutograph_Click(object sender,EventArgs e) {
 			if(listAutographs.SelectedIndex==-1) {
-				MessageBox.Show(Lan.G(this,"Please select an item first."));
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
-			if(MessageBox.Show(Lan.G(this,"Delete autograph?"),"",MessageBoxButtons.OKCancel) != DialogResult.OK) {
+			if(MessageBox.Show("Delete autograph?","",MessageBoxButtons.OKCancel) != DialogResult.OK) {
 				return;
 			}
 			EmailAutographs.Delete(_listEmailAutographs[listAutographs.SelectedIndex].EmailAutographNum);
@@ -760,8 +760,8 @@ namespace OpenDental{
 
 		private void butDecrypt_Click(object sender,EventArgs e) {
 			if(EmailMessages.GetReceiverUntrustedCount(_emailMessage.FromAddress) >= 0) {//Not trusted yet.
-				string strTrustMessage=Lan.G(this,"The sender address must be added to your trusted addresses before you can decrypt the email")
-					+". "+Lan.G(this,"Add")+" "+_emailMessage.FromAddress+" "+Lan.G(this,"to trusted addresses")+"?";
+				string strTrustMessage="The sender address must be added to your trusted addresses before you can decrypt the email"
+					+". "+"Add"+" "+_emailMessage.FromAddress+" "+"to trusted addresses"+"?";
 				if(MessageBox.Show(strTrustMessage,"",MessageBoxButtons.OKCancel)==DialogResult.OK) {
 					Cursor=Cursors.WaitCursor;
 					EmailMessages.TryAddTrustDirect(_emailMessage.FromAddress);
@@ -786,7 +786,7 @@ namespace OpenDental{
         HasEmailChanged=true;
       }
 			catch(Exception ex) {
-				MessageBox.Show(Lan.G(this,"Decryption failed.")+"\r\n"+ex.Message);
+				MessageBox.Show("Decryption failed."+"\r\n"+ex.Message);
 				//Error=InvalidEncryption: means that someone used the wrong certificate when sending the email to this inbox, and we tried to decrypt with a different certificate.
 				//Error=NoTrustedRecipients: means the sender is not added to the trust anchors in mmc.
 			}
@@ -866,7 +866,7 @@ namespace OpenDental{
         HasEmailChanged=true;
       }
 			catch(Exception ex) {
-				MessageBox.Show(Lan.G(this,"Refreshing failed.")+"\r\n"+ex.Message);
+				MessageBox.Show("Refreshing failed."+"\r\n"+ex.Message);
 				Cursor=Cursors.Default;
 				return;
 			}
@@ -913,16 +913,16 @@ namespace OpenDental{
 			FromAddressMatchResult result=emailPreview.TryGetFromEmailAddress(out emailAddress);
 			switch(result) {
 				case FromAddressMatchResult.Failed:
-					MessageBox.Show(Lan.G(this,"No email account found in Email Setup for")+": "+emailPreview.FromAddress);
+					MessageBox.Show("No email account found in Email Setup for"+": "+emailPreview.FromAddress);
 					break;
 				case FromAddressMatchResult.Success:
 					//emailAddress set succesfully
 					break;
 				case FromAddressMatchResult.Multi:
-					if(MessageBox.Show(Lan.G(this,"Multiple email accounts matching")+" "+emailPreview.FromAddress+"\r\n"
-						+Lan.G(this,"Send using")+":\r\n"
-						+Lan.G(this,"Username")+": "+emailAddress.EmailUsername+"\r\n"
-						+Lan.G(this,"Sending Address")+": "+emailAddress.GetFrom()+"?","Email Address",MessageBoxButtons.YesNo)
+					if(MessageBox.Show("Multiple email accounts matching"+" "+emailPreview.FromAddress+"\r\n"
+						+"Send using"+":\r\n"
+						+"Username"+": "+emailAddress.EmailUsername+"\r\n"
+						+"Sending Address"+": "+emailAddress.GetFrom()+"?","Email Address",MessageBoxButtons.YesNo)
 						==DialogResult.No)
 					{
 						emailAddress=emailPreview.PickEmailAccount();
@@ -947,7 +947,7 @@ namespace OpenDental{
 			}
 			if(emailPreview.FromAddress!=emailAddressFrom.EmailUsername) {
 				//Without this block, encryption would fail with an obscure error message, because the from address would not match the digital signature of the sender.
-				MessageBox.Show(Lan.G(this,"From address must match email address username in email setup.")+"\r\n"+Lan.G(this,"From address must be exactly")+" "+emailAddressFrom.EmailUsername);
+				MessageBox.Show("From address must match email address username in email setup."+"\r\n"+"From address must be exactly"+" "+emailAddressFrom.EmailUsername);
 				return;
 			}
 			if(emailAddressFrom.SMTPserver=="") {
@@ -1049,7 +1049,7 @@ namespace OpenDental{
 			}
 			catch(Exception ex){
 				Cursor=Cursors.Default;
-				string message=Lan.G(this,"Failed to send email.")+"\r\n\r\n"+Lan.G(this,"Error message from the email client was")+":\r\n  "+ex.Message;
+				string message="Failed to send email."+"\r\n\r\n"+"Error message from the email client was"+":\r\n  "+ex.Message;
 				MsgBoxCopyPaste msgBox=new MsgBoxCopyPaste(message);
 				msgBox.ShowDialog();
 				return;

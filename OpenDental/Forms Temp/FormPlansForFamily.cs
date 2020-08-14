@@ -32,7 +32,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -126,17 +126,17 @@ namespace OpenDental{
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			//=new ODGridColumn(Lan.g("TableInsPlans","#"),20);
+			//=new ODGridColumn("#",20);
 			//gridMain.Columns.Add(col);
-			col=new GridColumn(Lan.G("TableInsPlans","Subscriber"),140);
+			col=new GridColumn("Subscriber",140);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableInsPlans","Ins Carrier"),100);
+			col=new GridColumn("Ins Carrier",100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableInsPlans","Date Effect."),90);
+			col=new GridColumn("Date Effect.",90);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableInsPlans","Date Term."),90);
+			col=new GridColumn("Date Term.",90);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableInsPlans","Used By"),90);
+			col=new GridColumn("Used By",90);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

@@ -75,7 +75,7 @@ namespace OpenDental {
 
 		public FormOrthoCase(bool isNew,Patient patCur,OrthoCase orthoCase=null) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_isNew=isNew;
 			_patCur=patCur;
 			_orthoCaseCur=orthoCase;
@@ -139,13 +139,13 @@ namespace OpenDental {
 			gridOrthoSchedule.BeginUpdate();
 			gridOrthoSchedule.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G("TableOrthoSchedule","Procedure"),80);
+			col=new GridColumn("Procedure",80);
 			gridOrthoSchedule.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableOrthoSchedule","Percent"),60,HorizontalAlignment.Right);
+			col=new GridColumn("Percent",60,HorizontalAlignment.Right);
 			gridOrthoSchedule.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableOrthoSchedule","Amount"),80,HorizontalAlignment.Right);
+			col=new GridColumn("Amount",80,HorizontalAlignment.Right);
 			gridOrthoSchedule.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableOrthoSchedule","Date Completed"),90,HorizontalAlignment.Right){ IsWidthDynamic=true };
+			col=new GridColumn("Date Completed",90,HorizontalAlignment.Right){ IsWidthDynamic=true };
 			gridOrthoSchedule.ListGridColumns.Add(col);
 			gridOrthoSchedule.EndUpdate();
 		}
@@ -154,10 +154,10 @@ namespace OpenDental {
 			_doPreventTextChangedEvent=true;
 			//Is Transfer
 			if(checkIsTransfer.Checked) {
-				labelBandingDate.Text=Lans.g(this,"Transfer Date");
+				labelBandingDate.Text="Transfer Date";
 			}
 			else {
-				labelBandingDate.Text=Lans.g(this,"Banding Date");
+				labelBandingDate.Text="Banding Date";
 				FillTextBandingProc();
 				textBandingAmount.Text=_orthoScheduleCur.BandingAmount.ToString("f");
 				textBandingPercent.Text=(_orthoScheduleCur.BandingAmount/_orthoCaseCur.Fee*100).ToString("f");
@@ -204,12 +204,12 @@ namespace OpenDental {
 			//Dates
 			textBandingDate.Text=_orthoCaseCur.BandingDate.ToShortDateString();
 			textExpectedDebondDate.Text=_orthoCaseCur.DebondDateExpected.ToShortDateString();
-			labelExpectedDebondDate.Text=Lans.g(this,"Expected Debond Date");
-			labelTreatmentLength.Text=Lans.g(this,"Expected days of treatment");
+			labelExpectedDebondDate.Text="Expected Debond Date";
+			labelTreatmentLength.Text="Expected days of treatment";
 			if(_debondProc!=null && _debondProc.ProcStatus==ProcStat.C) {
 				textExpectedDebondDate.Text=_orthoCaseCur.DebondDate.ToShortDateString();
-				labelExpectedDebondDate.Text=Lans.g(this,"Debond Date");
-				labelTreatmentLength.Text=Lans.g(this,"Days of treatment");
+				labelExpectedDebondDate.Text="Debond Date";
+				labelTreatmentLength.Text="Days of treatment";
 			}
 			textTreatmentLength.Text=(PIn.Date(textExpectedDebondDate.Text)-PIn.Date(textBandingDate.Text)).Days.ToString();
 			EnableControls();
@@ -263,11 +263,11 @@ namespace OpenDental {
 			}
 			//Add Banding
 			GridRow row;
-			string notCompleteText=Lans.g("TableOrthoSchedule","Not Complete");
+			string notCompleteText="Not Complete";
 			string dateCompleted=notCompleteText;
 			if(!checkIsTransfer.Checked) {
 				row=new GridRow();
-				row.Cells.Add(Lans.g("TableOrthoSchedule","Banding"));
+				row.Cells.Add("Banding");
 				row.Cells.Add(textBandingPercent.Text);
 				row.Cells.Add(textBandingAmount.Text);
 				if(_bandingProc!=null && _bandingProc.ProcStatus==ProcStat.C) {
@@ -282,7 +282,7 @@ namespace OpenDental {
 			int visitRowCount=Math.Max(PIn.Int(textVisitCountPlanned.Text,false),_listVisitProcs.Count);
 			for(int i=0;i<visitRowCount;i++) {
 				row=new GridRow();
-				row.Cells.Add(Lans.g("TableOrthoSchedule","Visit"));
+				row.Cells.Add("Visit");
 				if(i+1<PIn.Int(textVisitCountPlanned.Text,false)) {
 					row.Cells.Add(PIn.Double(textVisitPercent.Text).ToString("f"));
 					row.Cells.Add(PIn.Double(textVisitAmount.Text).ToString("f"));
@@ -308,7 +308,7 @@ namespace OpenDental {
 			}
 			//Add Debond
 			row=new GridRow();
-			row.Cells.Add(Lans.g("TableOrthoSchedule","Debond"));
+			row.Cells.Add("Debond");
 			row.Cells.Add(textDebondPercent.Text);
 			row.Cells.Add(textDebondAmount.Text);
 			dateCompleted=notCompleteText;
@@ -353,10 +353,10 @@ namespace OpenDental {
 				EnableTextFields();
 				textBandingAmount.Enabled=false;
 				textBandingPercent.Enabled=false;
-				labelBandingDate.Text=Lans.g(this,"Transfer Date");
+				labelBandingDate.Text="Transfer Date";
 			}
 			else {
-				labelBandingDate.Text=Lans.g(this,"Banding Date");
+				labelBandingDate.Text="Banding Date";
 				if(_doClearAndDisableTextFields) {//Only want to clear text fields and disable them if we have unchecked this without adding a banding proc.
 					ClearTextFields();
 					DisableTextFields();

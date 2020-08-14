@@ -67,10 +67,6 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormClaimPrint(){
 			InitializeComponent();
-			Lan.F(this,new Control[] 
-			{
-				this.labelTotPages//exclude
-			});
 		}
 
 		///<summary></summary>
@@ -424,7 +420,7 @@ namespace OpenDental{
 		public bool PrintClaim(){
 			pagesPrinted=0;
 			return PrinterL.TryPrint(pd2_PrintPage,
-				Lan.G(this,"Claim from")+" "+ClaimCur.DateService.ToShortDateString()+" "+Lan.G(this,"printed"),
+				"Claim from"+" "+ClaimCur.DateService.ToShortDateString()+" "+"printed",
 				PatNumCur,
 				PrintSituation.Claim,
 				new Margins(0,0,0,0),
@@ -4682,7 +4678,7 @@ namespace OpenDental{
 				FormCP.PatNumCur=claim.PatNum;
 				FormCP.ClaimNumCur=claim.ClaimNum;
 				FormCP.ClaimFormCur=null;//so that it will pull from the individual claim or plan.
-				if(FormCP.PrintImmediate(Lan.G(nameof(PrinterL),"CDA claim form printed"),PrintSituation.Claim,claim.PatNum)) {
+				if(FormCP.PrintImmediate("CDA claim form printed",PrintSituation.Claim,claim.PatNum)) {
 					Etranss.SetClaimSentOrPrinted(claim.ClaimNum,claim.PatNum,0,EtransType.ClaimPrinted,0,Security.CurrentUser.Id);
 				}
 			}
@@ -4796,7 +4792,7 @@ namespace OpenDental{
 			if(PrintClaim()){
 				Etranss.SetClaimSentOrPrinted(ClaimNumCur,ClaimCur.PatNum,0,EtransType.ClaimPrinted,0,Security.CurrentUser.Id);
 				//Claims.UpdateStatus(ThisClaimNum,"P");
-				SecurityLogs.MakeLogEntry(Permissions.ClaimSend,ClaimCur.PatNum,Lan.G(this,"Claim printed from Claim Preview window."));
+				SecurityLogs.MakeLogEntry(Permissions.ClaimSend,ClaimCur.PatNum,"Claim printed from Claim Preview window.");
 				DialogResult=DialogResult.OK;
 			}
 			else{

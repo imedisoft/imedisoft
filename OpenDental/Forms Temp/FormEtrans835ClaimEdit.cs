@@ -20,7 +20,7 @@ namespace OpenDental {
 
 		public FormEtrans835ClaimEdit(X835 x835,Hx835_Claim claimPaid) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_x835=x835;
 			_claimPaid=claimPaid;
 		}

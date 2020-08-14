@@ -33,7 +33,7 @@ namespace OpenDental {
 
 		public FormSpellChecker() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormSpellChecker_Load(object sender,EventArgs e) {

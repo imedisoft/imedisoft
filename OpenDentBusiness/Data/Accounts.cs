@@ -370,7 +370,7 @@ namespace OpenDentBusiness
 			{
 				row = table.NewRow();
 				aType = (AccountType)PIn.Long(rawTable.Rows[i]["AcctType"].ToString());
-				row["type"] = Lans.g("enumAccountType", aType.ToString());
+				row["type"] = aType.ToString();
 				row["Description"] = rawTable.Rows[i]["Description"].ToString();
 				debit = PIn.Decimal(rawTable.Rows[i]["SumDebit"].ToString());
 				credit = PIn.Decimal(rawTable.Rows[i]["SumCredit"].ToString());
@@ -414,8 +414,8 @@ namespace OpenDentBusiness
 				balance += credit - debit;
 			}
 			row = table.NewRow();
-			row["type"] = Lans.g("enumAccountType", AccountType.Equity.ToString());
-			row["Description"] = Lans.g("Accounts", "Retained Earnings (auto)");
+			row["type"] = AccountType.Equity.ToString();
+			row["Description"] = "Retained Earnings (auto)";
 			row["balance"] = balance.ToString("N");
 			row["BankNumber"] = "";
 			row["color"] = Color.White.ToArgb();
@@ -440,7 +440,7 @@ namespace OpenDentBusiness
 			{
 				row = table.NewRow();
 				aType = (AccountType)PIn.Long(rawTable.Rows[i]["AcctType"].ToString());
-				row["type"] = Lans.g("enumAccountType", aType.ToString());
+				row["type"] = aType.ToString();
 				row["Description"] = rawTable.Rows[i]["Description"].ToString();
 				debit = PIn.Decimal(rawTable.Rows[i]["SumDebit"].ToString());
 				credit = PIn.Decimal(rawTable.Rows[i]["SumCredit"].ToString());

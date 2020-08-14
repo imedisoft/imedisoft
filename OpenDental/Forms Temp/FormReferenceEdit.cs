@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormReferenceEdit(CustReference refCur) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			RefCur=refCur;
 		}
 

@@ -28,7 +28,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormRpInsOverpaid() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -180,7 +180,7 @@ namespace OpenDental{
 			if(PrefC.HasClinicsEnabled) {
 				_listClinics=Clinics.GetForUserod(Security.CurrentUser);
 				if(!Security.CurrentUser.ClinicIsRestricted) {
-					listClin.Items.Add(Lan.G(this,"Unassigned"));
+					listClin.Items.Add("Unassigned");
 					listClin.SetSelected(0,true);
 				}
 				for(int i=0;i<_listClinics.Count;i++) {
@@ -252,7 +252,7 @@ namespace OpenDental{
 			string subtitleClinics="";
 			if(PrefC.HasClinicsEnabled) {
 				if(checkAllClin.Checked) {
-					subtitleClinics=Lan.G(this,"All Clinics");
+					subtitleClinics="All Clinics";
 				}
 				else {
 					for(int i=0;i<listClin.SelectedIndices.Count;i++) {
@@ -264,7 +264,7 @@ namespace OpenDental{
 						}
 						else {
 							if(listClin.SelectedIndices[i]==0) {
-								subtitleClinics+=Lan.G(this,"Unassigned");
+								subtitleClinics+="Unassigned";
 							}
 							else {
 								subtitleClinics+=_listClinics[listClin.SelectedIndices[i]-1].Abbr;//Minus 1 from the selected index
@@ -273,8 +273,8 @@ namespace OpenDental{
 					}
 				}
 			}
-			report.ReportName=Lan.G(this,"Insurance Overpaid");
-			report.AddTitle("Title",Lan.G(this,"Insurance Overpaid"));
+			report.ReportName="Insurance Overpaid";
+			report.AddTitle("Title","Insurance Overpaid");
 			report.AddSubTitle("Practice Name",Prefs.GetString(PrefName.PracticeTitle));
 			if(PrefC.HasClinicsEnabled) {
 				report.AddSubTitle("Clinics",subtitleClinics);

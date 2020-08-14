@@ -51,7 +51,7 @@ namespace OpenDental {
 			gridMain.ContextMenu=menuRightClick;
 			gridPastDue.ContextMenu=menuRightClick;
 			gridAssign.ContextMenu=menuRightClick;
-			Lan.F(this);
+			
 		}
 
 		private void FormInsVerificationList_Load(object sender,EventArgs e) {
@@ -186,7 +186,7 @@ namespace OpenDental {
 				List<Clinic> listClinicsForUser=Clinics.GetForUserod(Security.CurrentUser);
 				if(_listRegionDefs.Count!=0) {
 					_listRegionDefs.RemoveAll(x => !listClinicsForUser.Any(y => y.Region==x.DefNum));
-					listBoxVerifyRegions.Items.Add(Lan.G(this,"All"));
+					listBoxVerifyRegions.Items.Add("All");
 					for(int i = 0;i<_listRegionDefs.Count;i++) {
 						listBoxVerifyRegions.Items.Add(_listRegionDefs[i].ItemName);
 						if(_listDefNumsVerifyRegionsFilter.Contains(_listRegionDefs[i].DefNum)) {
@@ -214,7 +214,7 @@ namespace OpenDental {
 			if(_isAllClinicsEnabled) {
 				//"All" will only show if the user isn't restricted to a clinic and if the enterprise preference is off
 				//Even so, "All" will be restricted down to whatever region(s) are selected when getting the verification list.
-				listBoxVerifyClinics.Items.Add(new ODBoxItem<Clinic>(Lan.G(this,"All"),new Clinic { ClinicNum=-1 }));
+				listBoxVerifyClinics.Items.Add(new ODBoxItem<Clinic>("All",new Clinic { ClinicNum=-1 }));
 				indexCur++;
 			}
 			foreach(Clinic clinic in listClinicsForUser) {
@@ -229,7 +229,7 @@ namespace OpenDental {
 			}
 			if(!Security.CurrentUser.ClinicIsRestricted && !_isRegionSelected) {//Show "Unassigned" if user is not restricted and no region is selected.
 				//Add Unassigned at the bottom. ClinicNum of 0.
-				listBoxVerifyClinics.Items.Add(new ODBoxItem<Clinic>(Lan.G(this,"Unassigned"),new Clinic { ClinicNum=0 }));
+				listBoxVerifyClinics.Items.Add(new ODBoxItem<Clinic>("Unassigned",new Clinic { ClinicNum=0 }));
 				if(_listClinicNumsVerifyClinicsFilter.Contains(0)) {
 					listBoxVerifyClinics.SelectedIndex=indexCur;
 				}
@@ -245,8 +245,8 @@ namespace OpenDental {
 		private void FillUsers() {
 			comboVerifyUser.Items.Clear();
 			comboVerifyUser.SelectedIndex=-1;
-			comboVerifyUser.Items.Add(Lan.G(this,"All Users"));
-			comboVerifyUser.Items.Add(Lan.G(this,"Unassigned"));
+			comboVerifyUser.Items.Add("All Users");
+			comboVerifyUser.Items.Add("Unassigned");
 			List<long> listClinicNums=new List<long>();
 			if(!_listClinicNumsVerifyClinicsFilter.Contains(-1)) {
 				listClinicNums=new List<long>();
@@ -381,38 +381,38 @@ namespace OpenDental {
 					grid.BeginUpdate();
 					grid.ListGridColumns.Clear();
 					GridColumn col;
-					col=new GridColumn(Lans.g(this,"Type"),45);
+					col=new GridColumn("Type",45);
 					grid.ListGridColumns.Add(col);
 					if(PrefC.HasClinicsEnabled) {
-						col=new GridColumn(Lans.g(this,"Clinic"),90);
+						col=new GridColumn("Clinic",90);
 						grid.ListGridColumns.Add(col);
 					}
-					col=new GridColumn(Lans.g(this,"Patient"),120);
+					col=new GridColumn("Patient",120);
 					grid.ListGridColumns.Add(col);
-					col=new GridColumn(Lans.g(this,"Appt Date Time"),130,HorizontalAlignment.Center,GridSortingStrategy.DateParse);
+					col=new GridColumn("Appt Date Time",130,HorizontalAlignment.Center,GridSortingStrategy.DateParse);
 					grid.ListGridColumns.Add(col);
-					col=new GridColumn(Lans.g(this,"Carrier"),160);
+					col=new GridColumn("Carrier",160);
 					grid.ListGridColumns.Add(col);
-					col=new GridColumn(Lans.g(this,"Last Verified"),90,HorizontalAlignment.Center,GridSortingStrategy.DateParse);
+					col=new GridColumn("Last Verified",90,HorizontalAlignment.Center,GridSortingStrategy.DateParse);
 					grid.ListGridColumns.Add(col);
-					col=new GridColumn(Lans.g(this,"Status"),110);
+					col=new GridColumn("Status",110);
 					grid.ListGridColumns.Add(col);
-					col=new GridColumn(Lans.g(this,"Status Date"),80,HorizontalAlignment.Center);
+					col=new GridColumn("Status Date",80,HorizontalAlignment.Center);
 					grid.ListGridColumns.Add(col);
-					col=new GridColumn(Lans.g(this,"Assigned to"),120){ IsWidthDynamic=true };
+					col=new GridColumn("Assigned to",120){ IsWidthDynamic=true };
 					grid.ListGridColumns.Add(col);
 					grid.ListGridRows.Clear();
 					List<InsVerifyGridRow> listGridRows=GetRowsForGrid(false);
-					InsuranceVerificationEvent.Fire(EventCategory.InsVerification,Lans.g(this,"Sorting Rows..."));
+					InsuranceVerificationEvent.Fire(EventCategory.InsVerification,"Sorting Rows...");
 					listGridRows.Sort(CompareGridRows);
-					InsuranceVerificationEvent.Fire(EventCategory.InsVerification,Lans.g(this,"Filling the grid..."));
+					InsuranceVerificationEvent.Fire(EventCategory.InsVerification,"Filling the grid...");
 					for(int i=0;i<listGridRows.Count;i++) {
 						grid.ListGridRows.Add(VerifyRowToODGridRow(listGridRows[i],false));
 					}
 					grid.EndUpdate();
 					grid.SetSelected(_selectedRowVerifyGrid,true);
 				},
-				startingMessage:Lans.g(this,"Retrieving data for the grid..."),
+				startingMessage:"Retrieving data for the grid...",
 				eventType:typeof(InsuranceVerificationEvent),
 				odEventType:EventCategory.InsVerification
 			);
@@ -512,13 +512,13 @@ namespace OpenDental {
 			}
 			//The _gridRowSelected needs to get updated before we run our menu item logic because Popup fires before CellClick.
 			_gridRowSelected=(InsVerifyGridObject)grid.ListGridRows[grid.GetSelectedIndex()].Tag;
-			menuRightClick.MenuItems.Add(new MenuItem(Lan.G(this,"Go to Patient"),gridMainRight_click));
-			string verifyDescription=Lan.G(this,"Go to Insurance Plan");
+			menuRightClick.MenuItems.Add(new MenuItem("Go to Patient",gridMainRight_click));
+			string verifyDescription="Go to Insurance Plan";
 			if(_gridRowSelected.PatInsVerify!=null) {
-				verifyDescription=Lan.G(this,"Go to Patient Plan");
+				verifyDescription="Go to Patient Plan";
 			}
 			menuRightClick.MenuItems.Add(new MenuItem(verifyDescription,gridMainRight_click));
-			MenuItem assignUserToolItem=new MenuItem(Lan.G(this,"Assign to User"));
+			MenuItem assignUserToolItem=new MenuItem("Assign to User");
 			foreach(Userod user in _listUsersInRegion) {
 				MenuItem assignUserDropDownCur=new MenuItem(user.UserName);
 				assignUserDropDownCur.Tag=user;
@@ -526,7 +526,7 @@ namespace OpenDental {
 				assignUserToolItem.MenuItems.Add(assignUserDropDownCur);
 			}
 			menuRightClick.MenuItems.Add(assignUserToolItem);
-			MenuItem verifyStatusToolItem=new MenuItem(Lan.G(this,"Set Verify Status to"));
+			MenuItem verifyStatusToolItem=new MenuItem("Set Verify Status to");
 			foreach(Def status in _listVerifyStatuses) {
 				MenuItem verifyStatusDropDownCur=new MenuItem(status.ItemName);
 				verifyStatusDropDownCur.Tag=status;
@@ -535,15 +535,15 @@ namespace OpenDental {
 			}
 			menuRightClick.MenuItems.Add(verifyStatusToolItem);
 			if(_gridRowSelected.IsPatAndInsRow()) {
-				menuRightClick.MenuItems.Add(new MenuItem(Lan.G(this,"Verify Patient Eligibility"),gridMainRight_click));//Number 3 in gridMainRight_click
-				menuRightClick.MenuItems.Add(new MenuItem(Lan.G(this,"Verify Insurance Benefits"),gridMainRight_click));//Number 4 in gridMainRight_click
-				menuRightClick.MenuItems.Add(new MenuItem(Lan.G(this,"Verify Both"),gridMainRight_click));//Number 5 in gridMainRight_click
+				menuRightClick.MenuItems.Add(new MenuItem("Verify Patient Eligibility",gridMainRight_click));//Number 3 in gridMainRight_click
+				menuRightClick.MenuItems.Add(new MenuItem("Verify Insurance Benefits",gridMainRight_click));//Number 4 in gridMainRight_click
+				menuRightClick.MenuItems.Add(new MenuItem("Verify Both",gridMainRight_click));//Number 5 in gridMainRight_click
 			}
 			else if(_gridRowSelected.IsOnlyPatRow()) {
-				menuRightClick.MenuItems.Add(new MenuItem(Lan.G(this,"Verify Patient Eligibility"),gridMainRight_click));//Number 3 in gridMainRight_click
+				menuRightClick.MenuItems.Add(new MenuItem("Verify Patient Eligibility",gridMainRight_click));//Number 3 in gridMainRight_click
 			}
 			else if(_gridRowSelected.IsOnlyInsRow()) {
-				menuRightClick.MenuItems.Add(new MenuItem(Lan.G(this,"Verify Insurance Benefits"),gridMainRight_click));//Number 3 in gridMainRight_click
+				menuRightClick.MenuItems.Add(new MenuItem("Verify Insurance Benefits",gridMainRight_click));//Number 3 in gridMainRight_click
 			}
 		}
 
@@ -636,25 +636,25 @@ namespace OpenDental {
 					gridAssign.BeginUpdate();
 					gridAssign.ListGridColumns.Clear();
 					GridColumn col;
-					col=new GridColumn(Lans.g(this,"Type"),45);
+					col=new GridColumn("Type",45);
 					gridAssign.ListGridColumns.Add(col);
 					if(PrefC.HasClinicsEnabled) {
-						col=new GridColumn(Lans.g(this,"Clinic"),90);
+						col=new GridColumn("Clinic",90);
 						gridAssign.ListGridColumns.Add(col);
 					}
-					col=new GridColumn(Lans.g(this,"Patient"),120);
+					col=new GridColumn("Patient",120);
 					gridAssign.ListGridColumns.Add(col);
-					col=new GridColumn(Lans.g(this,"Appt Date Time"),130,GridSortingStrategy.DateParse);
+					col=new GridColumn("Appt Date Time",130,GridSortingStrategy.DateParse);
 					col.TextAlign=HorizontalAlignment.Center;
 					gridAssign.ListGridColumns.Add(col);
-					col=new GridColumn(Lans.g(this,"Carrier"),160);
+					col=new GridColumn("Carrier",160);
 					gridAssign.ListGridColumns.Add(col);
-					col=new GridColumn(Lans.g(this,"Last Verified"),90,GridSortingStrategy.DateParse);
+					col=new GridColumn("Last Verified",90,GridSortingStrategy.DateParse);
 					col.TextAlign=HorizontalAlignment.Center;
 					gridAssign.ListGridColumns.Add(col);
-					col=new GridColumn(Lans.g(this,"Status"),110);
+					col=new GridColumn("Status",110);
 					gridAssign.ListGridColumns.Add(col);
-					col=new GridColumn(Lans.g(this,"Assigned to"),120){ IsWidthDynamic=true };
+					col=new GridColumn("Assigned to",120){ IsWidthDynamic=true };
 					gridAssign.ListGridColumns.Add(col);
 					gridAssign.ListGridRows.Clear();
 					List<InsVerifyGridRow> listGridRows=GetRowsForGrid(true);
@@ -665,7 +665,7 @@ namespace OpenDental {
 					gridAssign.EndUpdate();
 					gridAssign.SetSelected(_selectedRowAssignGrid,true);
 				},
-				startingMessage:Lans.g(this,"Retrieving data for the grid..."),
+				startingMessage:"Retrieving data for the grid...",
 				eventType:typeof(InsuranceVerificationEvent),
 				odEventType:EventCategory.InsVerification
 			);
@@ -710,7 +710,7 @@ namespace OpenDental {
 		}
 
 		private void gridAssign_Popup(object sender,EventArgs e) {
-			MenuItem assignUserToolItem=new MenuItem(Lan.G(this,"Assign to User"));
+			MenuItem assignUserToolItem=new MenuItem("Assign to User");
 			foreach(Userod user in _listUsersInRegion) {
 				MenuItem assignUserDropDownCur=new MenuItem(user.UserName);
 				assignUserDropDownCur.Tag=user;
@@ -718,7 +718,7 @@ namespace OpenDental {
 				assignUserToolItem.MenuItems.Add(assignUserDropDownCur);
 			}
 			menuRightClick.MenuItems.Add(assignUserToolItem);
-			MenuItem verifyStatusToolItem=new MenuItem(Lan.G(this,"Set Verify Status to"));
+			MenuItem verifyStatusToolItem=new MenuItem("Set Verify Status to");
 			foreach(Def status in _listVerifyStatuses) {
 				MenuItem verifyStatusDropDownCur=new MenuItem(status.ItemName);
 				verifyStatusDropDownCur.Tag=status;
@@ -856,8 +856,8 @@ namespace OpenDental {
 		private void SetStatus(long statusDefNum,bool isVerifyGrid) {
 			string statusNote="";
 			bool hasChanged=false;
-			InputBox ib=new InputBox(Lan.G(this,"Add a status note:"),true);
-			ib.setTitle(Lan.G(this,"Add Status Note"));
+			InputBox ib=new InputBox("Add a status note:",true);
+			ib.setTitle("Add Status Note");
 			if(!isVerifyGrid) {
 				ib.textResult.Text=textInsVerifyNote.Text;
 			}

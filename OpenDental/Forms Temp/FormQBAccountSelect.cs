@@ -16,7 +16,7 @@ namespace OpenDental {
 
 		public FormQBAccountSelect() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormQBAccountSelect_Load(object sender,EventArgs e) {

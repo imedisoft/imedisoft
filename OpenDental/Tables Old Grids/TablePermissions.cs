@@ -19,10 +19,10 @@ namespace OpenDental{
 			HeadingIsPresent=false;
 			InstantClassesPar();
 			SetRowHeight(0,19,14);
-			Fields[0]=Lan.G("TablePermissions","Name");
-			Fields[1]=Lan.G("TablePermissions","Require Password");
-			Fields[2]=Lan.G("TablePermissions","Before Date");
-			Fields[3]=Lan.G("TablePermissions","Before Days");
+			Fields[0]="Name";
+			Fields[1]="Require Password";
+			Fields[2]="Before Date";
+			Fields[3]="Before Days";
 			ColWidth[0]=200;
 			ColWidth[1]=110;
 			ColWidth[2]=100;

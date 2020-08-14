@@ -49,7 +49,7 @@ namespace OpenDental {
 		public FormTrojanCollect(Patient pat) {
 			_patCur=pat;
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary>Clean up any resources being used.</summary>
@@ -540,8 +540,8 @@ namespace OpenDental {
 			Cursor=Cursors.WaitCursor;
 			if(!File.Exists(ODFileUtils.CombinePaths(folderPath,"TROBEN.HB"))){
 				Cursor=Cursors.Default;
-				MessageBox.Show(Lan.G(this,"The Trojan Communicator is not installed or is not configured for the folder")+": "
-					+folderPath+".  "+Lan.G(this,"Please contact Trojan Software Support at 800-451-9723 x1 or x2"));
+				MessageBox.Show("The Trojan Communicator is not installed or is not configured for the folder"+": "
+					+folderPath+".  "+"Please contact Trojan Software Support at 800-451-9723 x1 or x2");
 				return;
 			}
 			try {

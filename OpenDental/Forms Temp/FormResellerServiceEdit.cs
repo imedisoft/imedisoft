@@ -17,7 +17,7 @@ namespace OpenDental {
 		public FormResellerServiceEdit(ResellerService resellerService) {
 			ResellerServiceCur=resellerService;
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormResellerServiceEdit_Load(object sender,EventArgs e) {

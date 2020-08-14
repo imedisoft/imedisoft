@@ -77,7 +77,7 @@ namespace OpenDental
 
 		public FormEServicesPatientPortal(WebServiceMainHQProxy.EServiceSetup.SignupOut signupOut=null) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_signupOut=signupOut;
 		}
 
@@ -116,8 +116,8 @@ namespace OpenDental
 		private void FillPatPortalInvites() {			
 			gridPatPortalInviteRules.BeginUpdate();
 			gridPatPortalInviteRules.ListGridColumns.Clear();
-			gridPatPortalInviteRules.ListGridColumns.Add(new GridColumn(Lan.G(this,"Send Time"),100));
-			gridPatPortalInviteRules.ListGridColumns.Add(new GridColumn(Lan.G(this,"Templates"),200));
+			gridPatPortalInviteRules.ListGridColumns.Add(new GridColumn("Send Time",100));
+			gridPatPortalInviteRules.ListGridColumns.Add(new GridColumn("Templates",200));
 			gridPatPortalInviteRules.ListGridRows.Clear();
 			long clinicNum;
 			if(_clinicCurPPInvite==null || _useDefaultsPPInvite) {
@@ -135,24 +135,24 @@ namespace OpenDental
 				GridRow row=new GridRow();
 				string sendTime;
 				if(apptRule.TSPrior==TimeSpan.Zero) {
-					sendTime=Lan.G(this,"Disabled");
+					sendTime="Disabled";
 				}
 				else {
 					sendTime=apptRule.TSPrior.ToStringDH();
 				}
 				if(apptRule.TSPrior > TimeSpan.Zero) {
-					sendTime+="\r\n"+Lan.G(this,"before appt");
+					sendTime+="\r\n"+"before appt";
 				}
 				else
 				if(apptRule.TSPrior < TimeSpan.Zero) {
-					sendTime+="\r\n"+Lan.G(this,"after appt");
+					sendTime+="\r\n"+"after appt";
 				}
 				if(_clinicCurPPInvite.ClinicNum > 0 && _useDefaultsPPInvite) {
-					sendTime+="\r\n"+Lan.G(this,"(Defaults)");
+					sendTime+="\r\n"+"(Defaults)";
 				}
 				row.Cells.Add(sendTime);
-				row.Cells.Add(Lan.G(this,"Email Subject Template")+":\r\n"+apptRule.TemplateEmailSubject+"\r\n"
-					+Lan.G(this,"Email Template")+":\r\n"+apptRule.TemplateEmail);
+				row.Cells.Add("Email Subject Template"+":\r\n"+apptRule.TemplateEmailSubject+"\r\n"
+					+"Email Template"+":\r\n"+apptRule.TemplateEmail);
 				row.Tag=apptRule;
 				if(gridPatPortalInviteRules.ListGridRows.Count%2==1) {
 					row.ColorBackG=Color.FromArgb(240,240,240);//light gray every other row.
@@ -194,16 +194,16 @@ namespace OpenDental
 
 		private void FillPPInviteActivationButton() {
 			if(Prefs.GetBool(PrefName.PatientPortalInviteEnabled)) {
-				textStatusInvites.Text=Lan.G(this,"Invites")+" : "+Lan.G(this,"Active");
+				textStatusInvites.Text="Invites"+" : "+"Active";
 				textStatusInvites.BackColor=Color.FromArgb(236,255,236);//light green
 				textStatusInvites.ForeColor=Color.Black;//instead of disabled grey
-				butActivateInvites.Text=Lan.G(this,"Deactivate Invites");
+				butActivateInvites.Text="Deactivate Invites";
 			}
 			else {
-				textStatusInvites.Text=Lan.G(this,"Invites")+" : "+Lan.G(this,"Inactive");
+				textStatusInvites.Text="Invites"+" : "+"Inactive";
 				textStatusInvites.BackColor=Color.FromArgb(254,235,233);//light red;
 				textStatusInvites.ForeColor=Color.Black;//instead of disabled grey
-				butActivateInvites.Text=Lan.G(this,"Activate Invites");
+				butActivateInvites.Text="Activate Invites";
 			}
 		}
 

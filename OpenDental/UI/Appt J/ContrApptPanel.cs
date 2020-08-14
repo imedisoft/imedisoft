@@ -866,12 +866,12 @@ namespace OpenDental.UI{
 						//_opNumHeaderTipLast=ListOpsVisible[i].OperatoryNum;//not needed here.  Handled in mouseMove
 						Provider prov=Providers.GetProv(ListOpsVisible[i].ProvDentist);//We can enhance this later to show Hygienist.
 						if(prov==null){
-							txt+="\r\n"+Lan.G(this,"There is no provider associated with this operatory.");
+							txt+="\r\n"+"There is no provider associated with this operatory.";
 						}
 						else{
 							Def defProvSpecialty=Defs.GetDef(DefCat.ProviderSpecialties,prov.Specialty);
 							if(defProvSpecialty!=null) {
-								txt+="\r\n"+Lan.G(this,"Default: ")+prov.FName+" "+prov.LName+", "+defProvSpecialty.ItemName;
+								txt+="\r\n"+"Default: "+prov.FName+" "+prov.LName+", "+defProvSpecialty.ItemName;
 							}
 						}
 						//Get the subset of schedules from ListSchedules that is linked to this op
@@ -888,7 +888,7 @@ namespace OpenDental.UI{
 							if(defScheduledProv!=null) {
 								schedProcDef=", "+defScheduledProv.ItemName;
 							}
-							txt+="\r\n"+Lan.G(this,"Scheduled ")+schedule.StartTime.ToShortTimeString()+"-"+schedule.StopTime.ToShortTimeString()+": "
+							txt+="\r\n"+"Scheduled "+schedule.StartTime.ToShortTimeString()+"-"+schedule.StopTime.ToShortTimeString()+": "
 								+providerScheduled.GetFormalName()+schedProcDef;
 							txt+=string.IsNullOrWhiteSpace(providerScheduled.SchedNote) ? "": "\r\n\t("+providerScheduled.SchedNote+")";
 						}
@@ -1139,7 +1139,7 @@ namespace OpenDental.UI{
 						pattern="///";
 					}
 					Appointments.SetPattern(curApt,pattern); //Appointments S-Class handles Signalods
-					SecurityLogs.MakeLogEntry(Permissions.AppointmentEdit,curApt.PatNum,Lan.G(this,"Appointment resized from the appointment module."), curApt.AptNum,datePrevious);//Generate FKey to the appointment to show the audit entry in the ApptEdit window.
+					SecurityLogs.MakeLogEntry(Permissions.AppointmentEdit,curApt.PatNum,"Appointment resized from the appointment module.", curApt.AptNum,datePrevious);//Generate FKey to the appointment to show the audit entry in the ApptEdit window.
 					OnApptResized(curApt);
 					#endregion Resizing, not moving.
 					return;					
@@ -1353,12 +1353,12 @@ namespace OpenDental.UI{
 			string title;
 			string date;
 			if(IsWeeklyView) {
-				title=Lan.G(this,"Weekly Appointments");
+				title="Weekly Appointments";
 				date=DateStart.DayOfWeek.ToString()+" "+DateStart.ToShortDateString()
 					+" - "+DateEnd.DayOfWeek.ToString()+" "+DateEnd.ToShortDateString();
 			}
 			else {
-				title=Lan.G(this,"Daily Appointments");
+				title="Daily Appointments";
 				date=DateSelected.DayOfWeek.ToString()+"   "+DateSelected.ToShortDateString();
 			}
 			Font titleFont=new Font("Arial",12,FontStyle.Bold);
@@ -1752,7 +1752,7 @@ namespace OpenDental.UI{
 			}
 			string production=grossproduction.ToString("c0");
 			if(grossproduction!=netproduction) {
-				production+=Lan.G(this,", net:")+netproduction.ToString("c0");
+				production+=", net:"+netproduction.ToString("c0");
 			}
 			return production;
 		}
@@ -2142,7 +2142,7 @@ namespace OpenDental.UI{
 			}
 			//if some codes would be double booked
 			if(AppointmentRules.IsBlocked(doubleBookedCodes)) {
-				MessageBox.Show(Lan.G(this,"Not allowed to double book: ")
+				MessageBox.Show("Not allowed to double book: "
 					+AppointmentRules.GetBlockedDescription(doubleBookedCodes));
 				return true;
 			}
@@ -2640,7 +2640,7 @@ namespace OpenDental.UI{
 			string txtBlock;
 			RectangleF rectF;
 			for(int i=0;i<schedulesForWebSchedASAP.Length;i++) {
-				txtBlock=Lan.G(this,"Web Sched ASAP Slot")+"\r\n"+schedulesForWebSchedASAP[i].Note;
+				txtBlock="Web Sched ASAP Slot"+"\r\n"+schedulesForWebSchedASAP[i].Note;
 				for(int o=0;o<schedulesForWebSchedASAP[i].Ops.Count;o++) {
 					TimeSpan timeSpan=schedulesForWebSchedASAP[i].StopTime-schedulesForWebSchedASAP[i].StartTime;
 					if(IsWeeklyView) {
@@ -3219,13 +3219,13 @@ namespace OpenDental.UI{
 						}
 						else {
 							if(PIn.Long(dataRoww["Priority"].ToString())==(int)ApptPriority.ASAP) {
-								text=Lan.G("ContrAppt","ASAP");
+								text="ASAP";
 							}
 						}
 						break;
 					case "ASAP[A]":
 						if(PIn.Long(dataRoww["Priority"].ToString())==(int)ApptPriority.ASAP) {
-							text=Lan.G("ContrAppt","A");
+							text="A";
 						}
 						break;
 					case "AssistantAbbr":
@@ -4258,7 +4258,7 @@ namespace OpenDental.UI{
 						continue;
 					case "Estimated Patient Portion":
 						decimal decimalPatPort=PIn.Decimal(dataRow["estPatientPortionRaw"].ToString());
-						s=Lan.G(this,"Est Patient Portion: ")+decimalPatPort.ToString("c");
+						s="Est Patient Portion: "+decimalPatPort.ToString("c");
 						h=g.MeasureString(s,font,widthBubble-(int)x).Height;
 						g.DrawString(s,font,brush,new RectangleF(x,y,widthBubble-(int)x,h));
 						y+=h;
@@ -4277,7 +4277,7 @@ namespace OpenDental.UI{
 					StringFormat stringFormat=new StringFormat();
 					stringFormat.Alignment=StringAlignment.Center;
 					RectangleF rectangleFUnavail=new RectangleF(rectanglePict.X,rectanglePict.Y+40F,rectanglePict.Width,30);
-					g.DrawString(Lan.G(this,"Patient Picture Unavailable"),_font8,Brushes.Gray,rectangleFUnavail,stringFormat);//this wraps to 2 lines
+					g.DrawString("Patient Picture Unavailable",_font8,Brushes.Gray,rectangleFUnavail,stringFormat);//this wraps to 2 lines
 				}
 				else{
 					g.DrawImage(bitmapPatPict,6,imageOffset);

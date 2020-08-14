@@ -21,7 +21,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormZipCodes(){
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -121,13 +121,13 @@ namespace OpenDental{
 			gridZipCode.BeginUpdate();
 			gridZipCode.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G(this,"ZipCode"),75);
+			col=new GridColumn("ZipCode",75);
 			gridZipCode.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"City"),270);
+			col=new GridColumn("City",270);
 			gridZipCode.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"State"),50);
+			col=new GridColumn("State",50);
 			gridZipCode.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Frequent"),80);
+			col=new GridColumn("Frequent",80);
 			gridZipCode.ListGridColumns.Add(col);
 			gridZipCode.ListGridRows.Clear();
 			GridRow row;
@@ -159,11 +159,11 @@ namespace OpenDental{
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
 			if(gridZipCode.SelectedIndices.Length==0) {
-				MessageBox.Show(Lan.G(this,"Please select an item first."));
+				MessageBox.Show("Please select an item first.");
 				return;
 			}	
 			ZipCode ZipCur=gridZipCode.SelectedTag<ZipCode>();
-			if(MessageBox.Show(Lan.G(this,"Delete Zipcode?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK){
+			if(MessageBox.Show("Delete Zipcode?","",MessageBoxButtons.OKCancel)!=DialogResult.OK){
 				return;   
 			}
 			changed=true;

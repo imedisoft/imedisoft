@@ -115,7 +115,7 @@ namespace OpenDental {
 							birthdate=FieldParser.DateTimeParse(listFields[itemOrder].GetComponentVal(0)).ToShortDateString();
 							continue;
 						case "pat.Gender":
-							gender=Lan.G("enumPatientGender",FieldParser.GenderParse(listFields[itemOrder].GetComponentVal(0)).ToString());
+							gender=FieldParser.GenderParse(listFields[itemOrder].GetComponentVal(0)).ToString();
 							continue;
 						case "pat.SSN":
 							if(listFields[itemOrder].GetComponentVal(0).Length>3) {

@@ -16,7 +16,7 @@ namespace OpenDental {
 
 		public FormAlertCategorySetup() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 		
 		private void FormAlertCategorySetup_Load(object sender,EventArgs e) {
@@ -44,7 +44,7 @@ namespace OpenDental {
 		private void FillInternalGrid(long selectedIneranlKey) {
 			gridInternal.BeginUpdate();
 			gridInternal.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G(this,"Description"),100);
+			GridColumn col=new GridColumn("Description",100);
 			gridInternal.ListGridColumns.Add(col);
 			gridInternal.ListGridRows.Clear();
 			GridRow row;
@@ -64,7 +64,7 @@ namespace OpenDental {
 		private void FillCustomGrid(long selectedCustomKey) {
 			gridCustom.BeginUpdate();
 			gridCustom.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G(this,"Description"),100);
+			GridColumn col=new GridColumn("Description",100);
 			gridCustom.ListGridColumns.Add(col);
 			gridCustom.ListGridRows.Clear();
 			GridRow row;
@@ -117,7 +117,7 @@ namespace OpenDental {
 
 		private void InsertCopyAlertCategory(AlertCategory alertCat) {
 			alertCat.IsHqCategory=false;
-			alertCat.Description+=Lan.G(this,"(Copy)");
+			alertCat.Description+="(Copy)";
 			//alertCat.AlertCategoryNum reflects the original pre-copied PK. After Insert this will be a new PK for the new row.
 			List<AlertCategoryLink> listAlertCategoryType=AlertCategoryLinks.GetForCategory(alertCat.Id);
 			alertCat.Id=AlertCategories.Insert(alertCat);

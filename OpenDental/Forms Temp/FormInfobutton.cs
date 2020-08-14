@@ -38,13 +38,13 @@ namespace OpenDental {
 		public FormInfobutton() {
 			_listKnowledgeRequests=new List<KnowledgeRequest>();
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		public FormInfobutton(List<KnowledgeRequest> listKnowledgeRequests) {
 			_listKnowledgeRequests=listKnowledgeRequests;
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormInfobutton_Load(object sender,EventArgs e) {
@@ -175,7 +175,7 @@ namespace OpenDental {
 			string bullet="  - ";//should be used at the beggining of every warning/error
 			//Patient information-------------------------------------------------------------------------------------------------
 			if(PatCur==null) {//should never happen
-				warnings+=bullet+Lan.G(this,"No patient selected.")+"\r\n";
+				warnings+=bullet+"No patient selected."+"\r\n";
 			}
 			else {
 				try {
@@ -183,99 +183,99 @@ namespace OpenDental {
 				}
 				catch {
 
-					warnings+=bullet+Lan.G(this,"Birthday.")+"\r\n";
+					warnings+=bullet+"Birthday."+"\r\n";
 				}
 				if(PatCur.Birthdate==DateTime.MinValue) {
-					warnings+=bullet+Lan.G(this,"Patient does not have a valid birthday.")+"\r\n";
+					warnings+=bullet+"Patient does not have a valid birthday."+"\r\n";
 				}
 			}
 			//Provider information------------------------------------------------------------------------------------------------
 			if(ProvCur==null) {
-				warnings+=bullet+Lan.G(this,"No provider selected.")+"\r\n";
+				warnings+=bullet+"No provider selected."+"\r\n";
 			}
 			else {
 				if(textProvID.Text=="") {
-					warnings+=bullet+Lan.G(this,"No povider ID.")+"\r\n";
+					warnings+=bullet+"No povider ID."+"\r\n";
 				}
 			}
 			//Organization information--------------------------------------------------------------------------------------------
 			if(textOrgName.Text=="") {
-				warnings+=bullet+Lan.G(this,"No organization name.")+"\r\n";
+				warnings+=bullet+"No organization name."+"\r\n";
 			}
 			if(textOrgID.Text=="") {
-				warnings+=bullet+Lan.G(this,"No organization ID.")+"\r\n";
+				warnings+=bullet+"No organization ID."+"\r\n";
 			}
 			//Encounter information-----------------------------------------------------------------------------------------------
 			if(textEncLocID.Text=="") {
-				warnings+=bullet+Lan.G(this,"No encounter location ID.")+"\r\n";
+				warnings+=bullet+"No encounter location ID."+"\r\n";
 			}
 			//Requestor information-----------------------------------------------------------------------------------------------
 			if(radioReqPat.Checked && radioRecProv.Checked) {
-				warnings+=bullet+Lan.G(this,"It is uncommon for the requestor to be the patient and the recipient to be the provider.")+"\r\n";
+				warnings+=bullet+"It is uncommon for the requestor to be the patient and the recipient to be the provider."+"\r\n";
 			}
 			//Recipient information-----------------------------------------------------------------------------------------------
 			//Problem, Medication, Lab Result information-------------------------------------------------------------------------
 			//switch(""){//tabControl1.SelectedTab.Name) {
 			//	case "tabProblem"://------------------------------------------------------------------------------------------------
 			//		if(ProblemCur==null) {
-			//			errors+=bullet+Lan.g(this,"No problem is selected.")+"\r\n";
+			//			errors+=bullet+"No problem is selected."+"\r\n";
 			//		}
 			//		else {
 			//			if(textProbSnomedCode.Text=="") {
-			//				errors+=bullet+Lan.g(this,"No SNOMED CT problem code.")+"\r\n";
+			//				errors+=bullet+"No SNOMED CT problem code."+"\r\n";
 			//				break;
 			//			}
 			//			if(textProbSnomedCode.Text!=ProblemCur.SnomedCode) {
-			//				warnings+=bullet+Lan.g(this,"SNOMED CT problem code has been manualy altered.")+"\r\n";
+			//				warnings+=bullet+"SNOMED CT problem code has been manualy altered."+"\r\n";
 			//			}
 			//			if(Snomeds.GetByCode(textProbSnomedCode.Text)==null) {
-			//				errors+=bullet+Lan.g(this,"SNOMED CT problem code does not exist in database.")+"\r\n";
+			//				errors+=bullet+"SNOMED CT problem code does not exist in database."+"\r\n";
 			//			}
 			//		}
 			//		break;
 			//	case "tabMedication"://---------------------------------------------------------------------------------------------
 			//		if(MedicationCur==null) {
-			//			errors+=bullet+Lan.g(this,"No medication is selected.")+"\r\n";
+			//			errors+=bullet+"No medication is selected."+"\r\n";
 			//		}
 			//		else {
 			//			if(textMedSnomedCode.Text=="") {
-			//				errors+=bullet+Lan.g(this,"No SNOMED CT medication code.")+"\r\n";
+			//				errors+=bullet+"No SNOMED CT medication code."+"\r\n";
 			//			}
 			//			//if(textProbSnomedCode.Text!=MedicationCur.SnomedCode) {
-			//			//  warnings+=bullet+Lan.g(this,"SNOMED CT medication code has been manualy altered.")+"\r\n";
+			//			//  warnings+=bullet+"SNOMED CT medication code has been manualy altered."+"\r\n";
 			//			//}
 			//		}
 			//		break;
 			//	case "tabLabResult"://----------------------------------------------------------------------------------------------
 			//		if(LabCur==null) {
-			//			errors+=bullet+Lan.g(this,"No lab result is selected.")+"\r\n";
+			//			errors+=bullet+"No lab result is selected."+"\r\n";
 			//		}
 			//		else {
 			//			if(textMedSnomedCode.Text=="") {
-			//				errors+=bullet+Lan.g(this,"No SNOMED CT lab result code.")+"\r\n";
+			//				errors+=bullet+"No SNOMED CT lab result code."+"\r\n";
 			//			}
 			//			//if(textProbSnomedCode.Text!=LabCur.SnomedCode) {
-			//			//  warnings+=bullet+Lan.g(this,"SNOMED CT lab result code has been manualy altered.")+"\r\n";
+			//			//  warnings+=bullet+"SNOMED CT lab result code has been manualy altered."+"\r\n";
 			//			//}
 			//		}
 			//		break;
 			//	default://----------------------------------------------------------------------------------------------------------
-			//		errors+=bullet+Lan.g(this,"Problem, medication, or lab result not selected.")+"\r\n";
+			//		errors+=bullet+"Problem, medication, or lab result not selected."+"\r\n";
 			//		break;
 			//}
 			//Generate messagebox-------------------------------------------------------------------------------------------------
 			if(errors!="") {
-				message+=Lan.G(this,"The following errors must be corrected in order to comply with HL7 standard:")+"\r\n";
+				message+="The following errors must be corrected in order to comply with HL7 standard:"+"\r\n";
 				message+=errors;
 				message+="\r\n";
 			}
 			if(warnings!="") {
-				message+=Lan.G(this,"Fixing the following warnings may provide better knowledge request results:")+"\r\n";
+				message+="Fixing the following warnings may provide better knowledge request results:"+"\r\n";
 				message+=warnings;
 				message+="\r\n";
 			}
 			if(message!="") {
-				message+=Lan.G(this,"Would you like to continue anyways?");
+				message+="Would you like to continue anyways?";
 				if(MessageBox.Show(message,"",MessageBoxButtons.YesNo)!=DialogResult.Yes) {
 					return false;
 				}

@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormResellers() {
 			InitializeComponent();
-			Lan.F(this);
+			
 			gridMain.ContextMenu=menuRightClick;
 		}
 

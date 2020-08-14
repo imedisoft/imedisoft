@@ -73,7 +73,7 @@ namespace OpenDentBusiness {
 				patient.HmPhone,
 				patient.WkPhone,
 				patient.WirelessPhone,
-				COALESCE(clinic.Description,'"+POut.String(Lans.g("formSender","Unassigned"))+@"') ClinicDesc,
+				COALESCE(clinic.Description,'"+POut.String("Unassigned")+@"') ClinicDesc,
 				appointment.SecDateTEntry AS 'DateTimeCreated',
 				appointment.Confirmed,
 				appointment.Note,

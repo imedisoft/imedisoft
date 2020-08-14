@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormImageCatMerge() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void buttonChangeInto_Click(object sender,EventArgs e) {
@@ -53,14 +53,14 @@ namespace OpenDental {
 				Defs.MergeImageCatDefNums(_defNumFrom,_defNumInto);
 			}
 			catch(Exception ex) {
-				FriendlyException.Show(Lans.g(this,"Image Categories failed to merge."),ex);
+				FriendlyException.Show("Image Categories failed to merge.",ex);
 				return;
 			}
 			Defs.HideDef(Defs.GetDef(DefCat.ImageCats,_defNumFrom));
 			DataValid.SetInvalid(InvalidType.Defs);
 			MessageBox.Show("Image Categories merged successfully.");
-			string logText=Lan.G(this,"Image Category Merge from")
-				+" "+Defs.GetName(DefCat.ImageCats,_defNumFrom)+" "+Lan.G(this,"to")+" "+Defs.GetName(DefCat.ImageCats,_defNumInto);
+			string logText="Image Category Merge from"
+				+" "+Defs.GetName(DefCat.ImageCats,_defNumFrom)+" "+"to"+" "+Defs.GetName(DefCat.ImageCats,_defNumInto);
 			//Make log entry here.
 			SecurityLogs.MakeLogEntry(Permissions.Setup,0,logText);
 			textBoxFrom.Clear();

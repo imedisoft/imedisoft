@@ -34,7 +34,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -176,13 +176,13 @@ namespace OpenDental{
 			table=ReqStudents.RefreshManyStudents(schoolClass,schoolCourse);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableReqStudentMany","Last"),100);
+			GridColumn col=new GridColumn("Last",100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableReqStudentMany","First"),100);
+			col=new GridColumn("First",100);
 			gridMain.ListGridColumns.Add(col);
-			//col=new ODGridColumn(Lan.g("TableReqStudentMany","Total"),50);
+			//col=new ODGridColumn("Total",50);
 			//gridMain.Columns.Add(col);
-			col=new GridColumn(Lan.G("TableReqStudentMany","Done"),50);
+			col=new GridColumn("Done",50);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

@@ -14,7 +14,7 @@ namespace OpenDental {
 
 		public FormEhrCarePlans(Patient patCur) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_patCur=patCur;
 		}
 

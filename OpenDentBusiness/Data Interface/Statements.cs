@@ -162,7 +162,7 @@ namespace OpenDentBusiness
 				{
 					row["lastStatement"] = lastStatement.ToShortDateString();
 				}
-				row["mode"] = Lans.g("enumStatementMode", ((StatementMode)PIn.Int(rawRow["Mode_"].ToString())).ToString());
+				row["mode"] = ((StatementMode)PIn.Int(rawRow["Mode_"].ToString())).ToString();
 				row["name"] = Patients.GetNameLF(rawRow["LName"].ToString(), rawRow["FName"].ToString(), rawRow["Preferred"].ToString(), rawRow["MiddleI"].ToString());
 				row["PatNum"] = rawRow["PatNum"].ToString();
 				if (payPlanDue == 0)
@@ -259,9 +259,9 @@ namespace OpenDentBusiness
 		{
 			if (stmt.PatNum != pat.PatNum)
 			{
-				string logMsg = Lans.g("Statements", "Mismatched PatNums detected between current patient and current statement:") + "\r\n"
-					+ Lans.g("Statements", "Statement PatNum:") + " " + stmt.PatNum + " " + Lans.g("Statements", "(assumed correct)") + "\r\n"
-					+ Lans.g("Statements", "Patient PatNum:") + " " + pat.PatNum + " " + Lans.g("Statements", "(possibly incorrect)");
+				string logMsg = "Mismatched PatNums detected between current patient and current statement:" + "\r\n"
+					+ "Statement PatNum:" + " " + stmt.PatNum + " " + "(assumed correct)" + "\r\n"
+					+ "Patient PatNum:" + " " + pat.PatNum + " " + "(possibly incorrect)";
 				SecurityLogs.MakeLogEntry(Permissions.StatementPatNumMismatch, stmt.PatNum, logMsg, LogSources.Diagnostic);
 			}
 			//No need to check RemotingRole; no call to db.
@@ -296,9 +296,9 @@ namespace OpenDentBusiness
 			//No need to check RemotingRole; no call to db.
 			if (stmt.PatNum != pat.PatNum)
 			{
-				string logMsg = Lans.g("Statements", "Mismatched PatNums detected between current patient and current statement:") + "\r\n"
-					+ Lans.g("Statements", "Statement PatNum:") + " " + stmt.PatNum + " " + Lans.g("Statements", "(assumed correct)") + "\r\n"
-					+ Lans.g("Statements", "Patient PatNum:") + " " + pat.PatNum + " " + Lans.g("Statements", "(possibly incorrect)");
+				string logMsg = "Mismatched PatNums detected between current patient and current statement:" + "\r\n"
+					+ "Statement PatNum:" + " " + stmt.PatNum + " " + "(assumed correct)" + "\r\n"
+					+ "Patient PatNum:" + " " + pat.PatNum + " " + "(possibly incorrect)";
 				SecurityLogs.MakeLogEntry(Permissions.StatementPatNumMismatch, stmt.PatNum, logMsg, LogSources.Diagnostic);
 			}
 			EmailMessage message = new EmailMessage();
@@ -312,7 +312,7 @@ namespace OpenDentBusiness
 			}
 			else
 			{//Subject was not preset, set a default subject.
-				message.Subject = Lans.g("Statements", "New Statement Available");
+				message.Subject = "New Statement Available";
 			}
 			if (stmt.EmailBody != null && stmt.EmailBody != "")
 			{
@@ -320,12 +320,12 @@ namespace OpenDentBusiness
 			}
 			else
 			{//Body was not preset, set a body text.
-				emailBody = Lans.g("Statements", "Dear") + " [nameFLnoPref],\r\n\r\n"
-					+ Lans.g("Statements", "A new account statement is available.") + "\r\n\r\n"
-					+ Lans.g("Statements", "To view your account statement, log on to our portal by following these steps:") + "\r\n\r\n"
-					+ Lans.g("Statements", "1. Visit the following URL in a web browser:") + " " + Prefs.GetString(PrefName.PatientPortalURL) + ".\r\n"
-					+ Lans.g("Statements", "2. Enter your credentials to gain access to your account.") + "\r\n"
-					+ Lans.g("Statements", "3. Click the Account icon on the left and select the Statements tab.");
+				emailBody = "Dear" + " [nameFLnoPref],\r\n\r\n"
+					+ "A new account statement is available." + "\r\n\r\n"
+					+ "To view your account statement, log on to our portal by following these steps:" + "\r\n\r\n"
+					+ "1. Visit the following URL in a web browser:" + " " + Prefs.GetString(PrefName.PatientPortalURL) + ".\r\n"
+					+ "2. Enter your credentials to gain access to your account." + "\r\n"
+					+ "3. Click the Account icon on the left and select the Statements tab.";
 			}
 			message.BodyText = Statements.ReplaceVarsForEmail(emailBody, pat, stmt);
 			return message;

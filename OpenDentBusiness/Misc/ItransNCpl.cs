@@ -32,16 +32,16 @@ namespace OpenDentBusiness {
 			DateTime dateTimeTrans=DateTime.Now;
 			Clearinghouse clearinghouse=Clearinghouses.GetDefaultDental();
 			if(clearinghouse==null) {
-				return Lans.g("Clearinghosue","Unable to update. No default dental clearinghouse set.");
+				return "Unable to update. No default dental clearinghouse set.";
 			}
 			//If ITRANS2 is fully setup, then use the local ITRANS2 install on server to import carrier data.
 			if(clearinghouse.CommBridge==EclaimsCommBridge.ITRANS && !string.IsNullOrEmpty(clearinghouse.ResponsePath)) {
 				if(!File.Exists(ODFileUtils.CombinePaths(clearinghouse.ResponsePath,"ITRANS Claims Director.exe"))) {
-					return Lans.g("Clearinghouse","Unable to find 'ITRANS Claims Director.exe'. Make sure the file exists and the path is correct.");
+					return "Unable to find 'ITRANS Claims Director.exe'. Make sure the file exists and the path is correct.";
 				}
 				if(isAutomatic && Prefs.GetString(PrefName.WebServiceServerName).ToLower()!=Dns.GetHostName().ToLower()) {//Only server can run when isOnlyServer is true.
-					return Lans.g("Clearinghouse","Update can only run on the web service server "+Prefs.GetString(PrefName.WebServiceServerName))+
-						". "+Lans.g("Clearinghouse","Connect to the server and try again.");
+					return "Update can only run on the web service server "+Prefs.GetString(PrefName.WebServiceServerName)+
+						". "+"Connect to the server and try again.";
 				}
 				Process process=new Process {
 					StartInfo=new ProcessStartInfo {
@@ -61,7 +61,7 @@ namespace OpenDentBusiness {
 					json=WebSerializer.DeserializePrimitiveOrThrow<string>(result);
 				}
 				catch(Exception ex) {
-					return Lans.g("Clearinghouse","Unable to update carrier list from HQ web services.")+"\r\n"+ex.Message.ToString();
+					return "Unable to update carrier list from HQ web services."+"\r\n"+ex.Message.ToString();
 				}
 			}
 			EtransMessageText msgTextPrev=EtransMessageTexts.GetMostRecentForType(EtransType.ItransNcpl);
@@ -69,7 +69,7 @@ namespace OpenDentBusiness {
 				if(isAutomatic || 
 					ODMessageBox.Show("Carrier list has not changed since last checked.\r\nContinue?","",MessageBoxButtons.YesNo)!=DialogResult.Yes)
 				{
-					return Lans.g("Clearinghouse","Carrier list has not changed since last checked.");//json has not changed since we last checked, no need to update.
+					return "Carrier list has not changed since last checked.";//json has not changed since we last checked, no need to update.
 				}
 			}
 			//Save json as new etrans entry.
@@ -81,7 +81,7 @@ namespace OpenDentBusiness {
 				iTransNCpl=JsonConvert.DeserializeObject<ItransNCpl>(json);//Deserialize n-cpl.json
 			}
 			catch {
-				return Lans.g("Clearinghouse","Failed to import json.");
+				return "Failed to import json.";
 			}
 			List<CanadianNetwork> listCanadianNetworks=CanadianNetworks.GetDeepCopy();
 			//List of carriers from json file that were matched by electId to multiple internal carriers

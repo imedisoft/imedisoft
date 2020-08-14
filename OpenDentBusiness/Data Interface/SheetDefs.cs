@@ -177,21 +177,21 @@ namespace OpenDentBusiness{
 			}
 			if (table.Rows.Count > 0)
 			{
-				throw new ApplicationException(Lans.g("sheetDefs", "SheetDef is already in use by referrals. Not allowed to delete.") + " " + referralNames);
+				throw new ApplicationException("SheetDef is already in use by referrals. Not allowed to delete." + " " + referralNames);
 			}
 			//validate that not already in use by automation.
 			command = "SELECT AutomationNum FROM automation WHERE SheetDefNum=" + POut.Long(sheetDefNum);
 			table = Database.ExecuteDataTable(command);
 			if (table.Rows.Count > 0)
 			{
-				throw new ApplicationException(Lans.g("sheetDefs", "SheetDef is in use by automation. Not allowed to delete."));
+				throw new ApplicationException("SheetDef is in use by automation. Not allowed to delete.");
 			}
 			//validate that not already in use by a laboratory
 			command = "SELECT Description FROM laboratory WHERE Slip=" + POut.Long(sheetDefNum);
 			table = Database.ExecuteDataTable(command);
 			if (table.Rows.Count > 0)
 			{
-				throw new ApplicationException(Lans.g("sheetDefs", "SheetDef is in use by laboratories. Not allowed to delete.")
+				throw new ApplicationException("SheetDef is in use by laboratories. Not allowed to delete."
 					+ "\r\n" + string.Join(", ", table.Select().Select(x => x["Description"].ToString())));
 			}
 
@@ -214,14 +214,14 @@ namespace OpenDentBusiness{
 			{
 				if (PrefC.HasClinicsEnabled)
 				{
-					throw new ApplicationException(Lans.g("sheetDefs", "SheetDef is in use by eClipboard. Not allowed to delete.")
+					throw new ApplicationException("SheetDef is in use by eClipboard. Not allowed to delete."
 					+ "\r\n" + string.Join(", ", table.Select()
 						.Select(x => Clinics.GetAbbr(PIn.Long(x["ClinicNum"].ToString())))
 						.Select(x => string.IsNullOrEmpty(x) ? "Default" : x)));
 				}
 				else
 				{
-					throw new ApplicationException(Lans.g("sheetDefs", "SheetDef is in use by eClipboard. Not allowed to delete."));
+					throw new ApplicationException("SheetDef is in use by eClipboard. Not allowed to delete.");
 				}
 
 			}

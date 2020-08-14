@@ -13,7 +13,7 @@ namespace OpenDental {
 
 		public FormAllergyDefEdit() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormAllergyEdit_Load(object sender,EventArgs e) {
@@ -76,7 +76,7 @@ namespace OpenDental {
 				}
 			}
 			if(notAllowed.ToString()!="") {
-				MessageBox.Show(Lan.G(this,"UNII code has invalid characters: ")+notAllowed);
+				MessageBox.Show("UNII code has invalid characters: "+notAllowed);
 				return;
 			}
 			if(textUnii.Text!="" && textUnii.Text.Length!=10) {

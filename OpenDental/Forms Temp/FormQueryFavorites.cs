@@ -33,7 +33,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormQueryFavorites() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -283,9 +283,9 @@ namespace OpenDental{
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(gridMain.TranslationName,"Query"),350));
+			gridMain.ListGridColumns.Add(new GridColumn("Query",350));
 			if(Security.IsAuthorized(Permissions.UserQueryAdmin,true)) {
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.G(gridMain.TranslationName,"Released"),55,HorizontalAlignment.Center));
+				gridMain.ListGridColumns.Add(new GridColumn("Released",55,HorizontalAlignment.Center));
 			}
 			gridMain.ListGridRows.Clear();
 			foreach(UserQuery queryCur in listDisplayQueries) {
@@ -386,11 +386,11 @@ namespace OpenDental{
 			splitContainer1.Panel2Collapsed = !splitContainer1.Panel2Collapsed;
 			if(splitContainer1.Panel2Collapsed) {
 				Width = 500;
-				butShowHide.Text=Lan.G(this,"Show Text") +" >";
+				butShowHide.Text="Show Text" +" >";
 			}
 			else {
 				Width = 1100;
-				butShowHide.Text=Lan.G(this,"Hide Text") + " <";
+				butShowHide.Text="Hide Text" + " <";
 			}
 		}
 
@@ -408,7 +408,7 @@ namespace OpenDental{
 				MessageBox.Show("Please select an item first.");
 				return;
 			}
-			if(MessageBox.Show(Lan.G(this,"Delete Item?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK){
+			if(MessageBox.Show("Delete Item?","",MessageBoxButtons.OKCancel)!=DialogResult.OK){
 				return;
 			}
 			UserQueries.Delete(UserQueryCur);

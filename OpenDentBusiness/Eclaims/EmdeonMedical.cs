@@ -71,11 +71,11 @@ namespace OpenDentBusiness.Eclaims {
 			progress=progress??new ODProgressExtendedNull();
 			try {
 				if(!Directory.Exists(clearinghouseClin.ResponsePath)) {
-					throw new ODException(Lans.g(progress.LanThis,"Clearinghouse response path is invalid."));
+					throw new ODException("Clearinghouse response path is invalid.");
 				}
-				progress.UpdateProgress(Lans.g(progress.LanThis,"Contacting web server"),"reports","17%",17);
+				progress.UpdateProgress("Contacting web server","reports","17%",17);
 				if(progress.IsPauseOrCancel()) {
-					progress.UpdateProgress(Lans.g(progress.LanThis,"Canceled by user."));
+					progress.UpdateProgress("Canceled by user.");
 					return false;
 				}
 				bool reportsDownloaded=false;
@@ -90,14 +90,14 @@ namespace OpenDentBusiness.Eclaims {
 				if(clearinghouseClin.IsEraDownloadAllowed!=EraBehaviors.None) {//ERA download is enabled.
 					listReportTypes.Add(new EmdeonMedicalReportType("Electronic Remittance Acceptance (ERA) 835","EDT","EDP","EAT","EAP"));
 				}
-				progress.UpdateProgress(Lans.g(progress.LanThis,"Downloading files"),"reports","33%",33);
+				progress.UpdateProgress("Downloading files","reports","33%",33);
 				if(progress.IsPauseOrCancel()) {
-					progress.UpdateProgress(Lans.g(progress.LanThis,"Canceled by user."));
+					progress.UpdateProgress("Canceled by user.");
 					return false;
 				}
 				for(int i=0;i<listReportTypes.Count;i++) {
 					float overallpercent=33+(i/listReportTypes.Count)*17;//33 is starting point. 17 is the amount of bar space we have before our next major spot (50%)
-					progress.UpdateProgress(Lans.g(progress.LanThis,"Downloading files"),"reports",overallpercent+"%",(int)overallpercent);
+					progress.UpdateProgress("Downloading files","reports",overallpercent+"%",(int)overallpercent);
 					EmdeonITS.ITSWS itsws=new EmdeonITS.ITSWS();
 					itsws.Url=(isTest?emdeonITSUrlTest:emdeonITSUrl);
 					EmdeonMedicalReportType reportType=listReportTypes[i];
@@ -121,7 +121,7 @@ namespace OpenDentBusiness.Eclaims {
 							zipFile.ExtractAll(clearinghouseClin.ResponsePath);
 						}
 						catch(Exception ex) {
-							errorMsg=Lans.g(progress.LanThis,"Report zip file downloaded but could not be extracted.")+"\r\n"
+							errorMsg="Report zip file downloaded but could not be extracted."+"\r\n"
 								+"File: "+reportFilePath+"\r\n"
 								+ex.Message;
 						}
@@ -141,22 +141,22 @@ namespace OpenDentBusiness.Eclaims {
 						//Now that the file has been saved, remove the report file from the Emdeon production server.
 						//If deleting the report fails, we don't care because that will simply mean that we download it again next time.
 						//Thus we don't need to check the status after this next call.
-						progress.UpdateProgress(Lans.g(progress.LanThis,"Removing report file from server"));
+						progress.UpdateProgress("Removing report file from server");
 						itsws.GetFile(clearinghouseClin.LoginID,clearinghouseClin.Password,reportType.GetCodeForDeleteReport(isTest));
 					}
 					else if(response.ErrorCode!=209) {//Error 209 means mailbox is empty for requested report type.
-						throw new ODException(Lans.g(progress.LanThis,"Failed to get reports. Error number from Emdeon:")+" "+response.ErrorCode+". "
-							+Lans.g(progress.LanThis,"Error message from Emdeon: ")+response.Response);
+						throw new ODException("Failed to get reports. Error number from Emdeon:"+" "+response.ErrorCode+". "
+							+"Error message from Emdeon: "+response.Response);
 					}
 				}
-				progress.UpdateProgress(Lans.g(progress.LanThis,"Download successful."));
-				progress.UpdateProgress(Lans.g(progress.LanThis,"Finalizing"),"reports","50%",50);
+				progress.UpdateProgress("Download successful.");
+				progress.UpdateProgress("Finalizing","reports","50%",50);
 				if(progress.IsPauseOrCancel()) {
-					progress.UpdateProgress(Lans.g(progress.LanThis,"Canceled by user."));
+					progress.UpdateProgress("Canceled by user.");
 					return false;
 				}
 				if(!reportsDownloaded) {
-					ErrorMessage=Lans.g(progress.LanThis,"Report mailbox is empty.");
+					ErrorMessage="Report mailbox is empty.";
 				}
 			}
 			catch(Exception ex) {

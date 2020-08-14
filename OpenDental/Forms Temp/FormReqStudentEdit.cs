@@ -41,7 +41,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormReqStudentEdit(){
 			InitializeComponent();// Required for Windows Form Designer support
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -357,14 +357,14 @@ namespace OpenDental{
 			Appointment apt=Appointments.GetOneApt(ReqCur.AptNum);
 			if(apt!=null) {
 				if(apt.AptStatus==ApptStatus.UnschedList) {
-					textAppointment.Text=Lan.G(this,"Unscheduled");
+					textAppointment.Text="Unscheduled";
 				}
 				else {
 					textAppointment.Text=apt.AptDateTime.ToShortDateString()+" "+apt.AptDateTime.ToShortTimeString();
 				}
 				textAppointment.Text+=", "+apt.ProcDescript;
 			}
-			comboInstructor.Items.Add(Lan.G(this,"None"));
+			comboInstructor.Items.Add("None");
 			comboInstructor.SelectedIndex=0;
 			_listProviders=Providers.GetDeepCopy(true);
 			for(int i=0;i<_listProviders.Count;i++) {

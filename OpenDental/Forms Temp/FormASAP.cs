@@ -145,7 +145,7 @@ namespace OpenDental {
 		///<summary></summary>
 		public FormASAP() {
 			InitializeComponent();// Required for Windows Form Designer support
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -778,7 +778,7 @@ namespace OpenDental {
 					}
 				},comboProv,comboSite,comboClinic,comboAptStatus,comboNumberReminders,checkGroupFamilies);
 			CheckClinicsSignedUpForWebSched();
-			comboProv.Items.Add(Lan.G(this,"All"));
+			comboProv.Items.Add("All");
 			comboProv.SelectedIndex=0;
 			_listProviders=Providers.GetDeepCopy(true);
 			for(int i=0;i<_listProviders.Count;i++) {
@@ -792,7 +792,7 @@ namespace OpenDental {
 				labelSite.Visible=false;
 			}
 			else{
-				comboSite.Items.Add(Lan.G(this,"All"));
+				comboSite.Items.Add("All");
 				comboSite.SelectedIndex=0;
 				_listSites=Sites.GetDeepCopy();
 				for(int i=0;i<_listSites.Count;i++) {
@@ -812,20 +812,20 @@ namespace OpenDental {
 			}
 			else {//Not signed up for Web Sched ASAP
 				butSendWebSched.Location=new Point(butSendWebSched.Location.X,labelOperatory.Location.Y+2);
-				butSendWebSched.Text=Lan.G(this,"Sign up");
+				butSendWebSched.Text="Sign up";
 				butWebSchedHist.Visible=false;
 				groupWebSched.Height=butSendWebSched.Height+26;
 			}
-			ODBoxItem<ApptStatus> boxItem=new ODBoxItem<ApptStatus>(Lan.G(this,ApptStatus.Scheduled.ToString()),ApptStatus.Scheduled);
+			ODBoxItem<ApptStatus> boxItem=new ODBoxItem<ApptStatus>(ApptStatus.Scheduled.ToString(),ApptStatus.Scheduled);
 			comboAptStatus.Items.Add(boxItem);
-			boxItem=new ODBoxItem<ApptStatus>(Lan.G(this,ApptStatus.Planned.ToString()),ApptStatus.Planned);
+			boxItem=new ODBoxItem<ApptStatus>(ApptStatus.Planned.ToString(),ApptStatus.Planned);
 			comboAptStatus.Items.Add(boxItem);
-			boxItem=new ODBoxItem<ApptStatus>(Lan.G(this,ApptStatus.UnschedList.ToString()),ApptStatus.UnschedList);
+			boxItem=new ODBoxItem<ApptStatus>(ApptStatus.UnschedList.ToString(),ApptStatus.UnschedList);
 			comboAptStatus.Items.Add(boxItem);
-			boxItem=new ODBoxItem<ApptStatus>(Lan.G(this,ApptStatus.Broken.ToString()),ApptStatus.Broken);
+			boxItem=new ODBoxItem<ApptStatus>(ApptStatus.Broken.ToString(),ApptStatus.Broken);
 			comboAptStatus.Items.Add(boxItem);
 			checkGroupFamilies.Checked=Prefs.GetBool(PrefName.RecallGroupByFamily);
-			comboNumberReminders.Items.Add(Lan.G(this,"All"));
+			comboNumberReminders.Items.Add("All");
 			comboNumberReminders.Items.Add("0");
 			comboNumberReminders.Items.Add("1");
 			comboNumberReminders.Items.Add("2");
@@ -893,26 +893,26 @@ namespace OpenDental {
 					long clinicNum=PrefC.HasClinicsEnabled ? comboClinic.SelectedClinicNum : -1;
 					_listASAPs=Appointments.RefreshASAP(provNum,siteNum,clinicNum,listAppStatuses,codeRangeFilter.StartRange,
 						codeRangeFilter.EndRange);
-					ASAPEvent.Fire(EventCategory.ASAP,Lans.g(this,"Filling Appointment ASAP grid..."));
+					ASAPEvent.Fire(EventCategory.ASAP,"Filling Appointment ASAP grid...");
 					int scrollVal=gridAppts.ScrollValue;
 					List<long> listAptNumsSelected=gridAppts.SelectedTags<Appointment>().Select(x => x.AptNum).ToList();
 					gridAppts.BeginUpdate();
 					gridAppts.ListGridColumns.Clear();
-					GridColumn col=new GridColumn(Lan.G("TableASAP","Patient"),140);
+					GridColumn col=new GridColumn("Patient",140);
 					gridAppts.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.G("TableASAP","Date"),65);
+					col=new GridColumn("Date",65);
 					gridAppts.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.G("TableASAP","Unsched Status"),110);
+					col=new GridColumn("Unsched Status",110);
 					gridAppts.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.G("TableASAP","Apt Status"),75);
+					col=new GridColumn("Apt Status",75);
 					gridAppts.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.G("TableASAP","Prov"),50);
+					col=new GridColumn("Prov",50);
 					gridAppts.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.G("TableASAP","Procedures"),150);
+					col=new GridColumn("Procedures",150);
 					gridAppts.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.G("TableASAP","Length"),60);
+					col=new GridColumn("Length",60);
 					gridAppts.ListGridColumns.Add(col);
-					col=new GridColumn(Lan.G("TableASAP","Notes"),160);
+					col=new GridColumn("Notes",160);
 					gridAppts.ListGridColumns.Add(col);
 					int widths=0;
 					for(int i=0;i<gridAppts.ListGridColumns.Count;i++) {
@@ -928,7 +928,7 @@ namespace OpenDental {
 					}
 					for(int i=0;i<_listASAPs.Count;i++) {
 						row=new GridRow();
-						string patName=Lan.G(this,"UNKNOWN");
+						string patName="UNKNOWN";
 						if(!_dictPatientNames.TryGetValue(_listASAPs[i].PatNum,out patName)) {
 							//The sorting algorithm within FillWebSchedSent() makes the assumption that this dictionary has an entry for every possible PatNum.
 							_dictPatientNames[_listASAPs[i].PatNum]=patName;
@@ -962,7 +962,7 @@ namespace OpenDental {
 						}
 					}
 				},
-				startingMessage:Lans.g(this,"Retrieving data for the Appointment ASAP grid..."),
+				startingMessage:"Retrieving data for the Appointment ASAP grid...",
 				eventType:typeof(ASAPEvent),
 				odEventType:EventCategory.ASAP
 			);
@@ -1055,10 +1055,10 @@ namespace OpenDental {
 			}
 			List<string> listUserMsgs=new List<string>();
 			if(patsArchivedOrDeceased > 0) {
-				listUserMsgs.Add(Lan.G(this,"Appointments skipped because patient status is archived or deceased:")+" "+patsArchivedOrDeceased+".");
+				listUserMsgs.Add("Appointments skipped because patient status is archived or deceased:"+" "+patsArchivedOrDeceased+".");
 			}
 			if(listAptSelected.Count==0) {
-				listUserMsgs.Add(Lan.G(this,"There are no appointments to send to the pinboard."));
+				listUserMsgs.Add("There are no appointments to send to the pinboard.");
 			}
 			if(listUserMsgs.Count>0) {
 				MessageBox.Show(string.Join("\r\n",listUserMsgs));
@@ -1103,7 +1103,7 @@ namespace OpenDental {
 						siteNum,RecallListSort.DueDate,showReminders,true,codeRangeFilter.StartRange,codeRangeFilter.EndRange);
 					List<Recall> listRecalls=Recalls.GetMultRecalls(tableRecalls.Rows.OfType<DataRow>().Select(x => PIn.Long(x["RecallNum"]
 						.ToString())).ToList());
-					ASAPEvent.Fire(EventCategory.ASAP,Lans.g(this,"Filling the Recall ASAP grid..."));
+					ASAPEvent.Fire(EventCategory.ASAP,"Filling the Recall ASAP grid...");
 					List<long> listRecallNumsSelected=gridRecalls.SelectedTags<Recall>().Select(x => x.RecallNum).ToList();
 					bool hasGridBeenFilledBefore=(gridRecalls.ListGridColumns.Count > 0);
 					gridRecalls.BeginUpdate();
@@ -1178,7 +1178,7 @@ namespace OpenDental {
 						}
 					}
 				},
-				startingMessage:Lans.g(this,"Retrieving data for the Recall ASAP grid..."),
+				startingMessage:"Retrieving data for the Recall ASAP grid...",
 				eventType:typeof(ASAPEvent),
 				odEventType:EventCategory.ASAP
 			);
@@ -1349,16 +1349,16 @@ namespace OpenDental {
 				}
 				//Cannot send text message to this patient
 				if(patCommForAppt==null) {//Shouldn't happen
-					listPatsSkipped.Add(Lan.G(this,"Unknown patient")+": "+Lan.G(this,"Cannot find contact info"));
+					listPatsSkipped.Add("Unknown patient"+": "+"Cannot find contact info");
 				}
 				else {
-					listPatsSkipped.Add(patCommForAppt.FName+" "+patCommForAppt.LName+": "+Lan.G(this,patCommForAppt.GetReasonCantText()));
+					listPatsSkipped.Add(patCommForAppt.FName+" "+patCommForAppt.LName+": "+patCommForAppt.GetReasonCantText());
 				}
 				grid.SetSelected(grid.SelectedIndices[i],false);
 			}
 			if(listPatsSkipped.Count > 0) {
-				MessageBox.Show(listPatsSkipped.Count+" "+Lan.G(this,"of the")+" "+numRowsSelected+" "
-					+Lan.G(this,"selected patients cannot receive text messages and have been deselected:")+"\r\n"+string.Join("\r\n",listPatsSkipped));
+				MessageBox.Show(listPatsSkipped.Count+" "+"of the"+" "+numRowsSelected+" "
+					+"selected patients cannot receive text messages and have been deselected:"+"\r\n"+string.Join("\r\n",listPatsSkipped));
 			}
 			return listPatCommsToSend;
 		}		
@@ -1422,14 +1422,14 @@ namespace OpenDental {
 
 		private void FillForWebSched() {
 			if(_dateTimeChosen.Date < DateTimeOD.Today) {
-				labelOperatory.Text=Lan.G(this,"Cannot send for a past time slot.");
+				labelOperatory.Text="Cannot send for a past time slot.";
 				labelOperatory.Visible=true;
 				_isSendingWebSched=false;
 				return;
 			}
 			comboClinic.SelectedClinicNum=ODMethodsT.Coalesce(Operatories.GetOperatory(_opNum)).ClinicNum;
 			comboClinic.Enabled=false;//We only want them to choose appointments from the clinic of the operatory selected.
-			labelOperatory.Text=Lan.G(this,"Operatory:")+" "+Operatories.GetOperatory(_opNum).Abbrev;
+			labelOperatory.Text="Operatory:"+" "+Operatories.GetOperatory(_opNum).Abbrev;
 			splitContainer.Panel2Collapsed=false;
 			labelOperatory.Visible=true;
 			labelStart.Visible=true;
@@ -1504,15 +1504,15 @@ namespace OpenDental {
 			gridWebSched.BeginUpdate();
 			gridWebSched.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G(this,"Patient"),150);
+			col=new GridColumn("Patient",150);
 			gridWebSched.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Text Send Time"),120);
+			col=new GridColumn("Text Send Time",120);
 			gridWebSched.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Email Send Time"),120);
+			col=new GridColumn("Email Send Time",120);
 			gridWebSched.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Time Slot Start"),120);
+			col=new GridColumn("Time Slot Start",120);
 			gridWebSched.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Notes"),300);
+			col=new GridColumn("Notes",300);
 			gridWebSched.ListGridColumns.Add(col);
 			gridWebSched.ListGridRows.Clear();
 			foreach(AsapComms.AsapCommHist asapCommHist in listAsapHists) {
@@ -1621,7 +1621,7 @@ namespace OpenDental {
 					SendWebSched();
 				}
 				catch(Exception ex) {
-					FriendlyException.Show(Lan.G(this,"Error sending Web Sched messages."),ex);
+					FriendlyException.Show("Error sending Web Sched messages.",ex);
 				}
 			}
 			_hasClickedWebSched=false;
@@ -1739,7 +1739,7 @@ namespace OpenDental {
 		private void butPrint_Click(object sender,EventArgs e) {
 			pagesPrinted=0;	
 			headingPrinted=false;
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"ASAP list printed"));
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,"ASAP list printed");
 		}
 
 		private void pd_PrintPage(object sender,System.Drawing.Printing.PrintPageEventArgs e) {
@@ -1754,10 +1754,10 @@ namespace OpenDental {
 			#region printHeading
 			int headingPrintH=0;
 			if(!headingPrinted) {
-				text=Lan.G(this,"ASAP List");
+				text="ASAP List";
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,y);
 				//yPos+=(int)g.MeasureString(text,headingFont).Height;
-				//text=textDateFrom.Text+" "+Lan.g(this,"to")+" "+textDateTo.Text;
+				//text=textDateFrom.Text+" "+"to"+" "+textDateTo.Text;
 				//g.DrawString(text,subHeadingFont,Brushes.Black,center-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 				y+=25;
 				headingPrinted=true;

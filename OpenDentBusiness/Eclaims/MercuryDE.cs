@@ -54,9 +54,9 @@ namespace OpenDentBusiness.Eclaims
 			Channel channel=null;
 			ChannelSftp ch=null;
 			JSch jsch=new JSch();
-			progress.UpdateProgress(Lans.g(progress.LanThis,"Contacting web server"),"reports","17%",17);
+			progress.UpdateProgress("Contacting web server","reports","17%",17);
 			if(progress.IsPauseOrCancel()) {
-				progress.UpdateProgress(Lans.g(progress.LanThis,"Canceled by user."));
+				progress.UpdateProgress("Canceled by user.");
 				return false;
 			}
 			try{
@@ -71,20 +71,20 @@ namespace OpenDentBusiness.Eclaims
 				ch=(ChannelSftp)channel;
 			}
 			catch(Exception ex){
-				progress.UpdateProgress(Lans.g(progress.LanThis,"Connection Failed"));
-				ErrorMessage=Lans.g("MercuryDE","Connection Failed")+": "+ex.Message;
+				progress.UpdateProgress("Connection Failed");
+				ErrorMessage="Connection Failed"+": "+ex.Message;
 				return false;
 			}
-			progress.UpdateProgress(Lans.g(progress.LanThis,"Web server contact successful."));
+			progress.UpdateProgress("Web server contact successful.");
 			try{
 				//At this point we are connected to the MDE SFTP server.
 				if(batchNum==0){
 					if(!Directory.Exists(clearinghouseClin.ResponsePath)){
-						throw new Exception(Lans.g(progress.LanThis,"Clearinghouse response path is invalid."));
+						throw new Exception("Clearinghouse response path is invalid.");
 					}
-					progress.UpdateProgress(Lans.g(progress.LanThis,"Getting files"),"reports","33%",33);
+					progress.UpdateProgress("Getting files","reports","33%",33);
 					if(progress.IsPauseOrCancel()) {
-						progress.UpdateProgress(Lans.g(progress.LanThis,"Canceled by user."));
+						progress.UpdateProgress("Canceled by user.");
 						return false;
 					}
 					//Only retrieving reports so do not send new claims.
@@ -93,9 +93,9 @@ namespace OpenDentBusiness.Eclaims
 					for(int i=0;i<fileList.Count;i++){
 						int percent=(i/fileList.Count)*100;
 						//We re-use the bar again for importing later, hence the tag.
-						progress.UpdateProgress(Lans.g(progress.LanThis,"Getting file:")+i+" / "+fileList.Count,"import",percent+"%",percent);
+						progress.UpdateProgress("Getting file:"+i+" / "+fileList.Count,"import",percent+"%",percent);
 						if(progress.IsPauseOrCancel()) {
-							progress.UpdateProgress(Lans.g(progress.LanThis,"Canceled by user."));
+							progress.UpdateProgress("Canceled by user.");
 							return false;
 						}
 						string listItem=fileList[i].ToString().Trim();
@@ -118,9 +118,9 @@ namespace OpenDentBusiness.Eclaims
 								numBytes=fileStream.Read(dataBytes,0,dataBytes.Length);
 							}
 							float overallpercent=33+(i/fileList.Count)*17;//33 is starting point. 17 is the amount of bar space we have before our next major spot (50%)
-							progress.UpdateProgress(Lans.g(progress.LanThis,"Getting files"),"reports",overallpercent+"%",(int)overallpercent);
+							progress.UpdateProgress("Getting files","reports",overallpercent+"%",(int)overallpercent);
 							if(progress.IsPauseOrCancel()) {
-								progress.UpdateProgress(Lans.g(progress.LanThis,"Canceled by user."));
+								progress.UpdateProgress("Canceled by user.");
 								return false;
 							}
 						}
@@ -148,21 +148,21 @@ namespace OpenDentBusiness.Eclaims
 				}
 				else {
 					if(!Directory.Exists(clearinghouseClin.ExportPath)){
-						throw new Exception(Lans.g(progress.LanThis,"Clearinghouse export path is invalid."));
+						throw new Exception("Clearinghouse export path is invalid.");
 					}
 					//First upload the batch to the temporary directory.
-					progress.UpdateProgress(Lans.g(progress.LanThis,"Uploading files to temp directory"),"reports","33%",33);
+					progress.UpdateProgress("Uploading files to temp directory","reports","33%",33);
 					if(progress.IsPauseOrCancel()) {
-						progress.UpdateProgress(Lans.g(progress.LanThis,"Canceled by user."));
+						progress.UpdateProgress("Canceled by user.");
 						return false;
 					}
 					string[] files=Directory.GetFiles(clearinghouseClin.ExportPath);
 					for(int i=0;i<files.Length;i++){
 						int percent=(i/files.Length)*100;
 						//We re-use the bar again for importing later, hence the tag.
-						progress.UpdateProgress(Lans.g(progress.LanThis,"Uploading file:")+i+" / "+files.Length,"import",percent+"%",percent);
+						progress.UpdateProgress("Uploading file:"+i+" / "+files.Length,"import",percent+"%",percent);
 						if(progress.IsPauseOrCancel()) {
-							progress.UpdateProgress(Lans.g(progress.LanThis,"Canceled by user."));
+							progress.UpdateProgress("Canceled by user.");
 							return false;
 						}
 						string accountNumber=_clearinghouseClin.ISA08;
@@ -176,9 +176,9 @@ namespace OpenDentBusiness.Eclaims
 						ch.rename(remoteTempFilePath,remoteFilePath);
 						File.Delete(files[i]);//Remove the processed file.
 						float overallpercent=33+(i/files.Length)*17;//33 is starting point. 17 is the amount of bar space we have before our next major spot (50%)
-						progress.UpdateProgress(Lans.g(progress.LanThis,"Uploading files"),"reports",overallpercent+"%",(int)overallpercent);
+						progress.UpdateProgress("Uploading files","reports",overallpercent+"%",(int)overallpercent);
 						if(progress.IsPauseOrCancel()) {
-							progress.UpdateProgress(Lans.g(progress.LanThis,"Canceled by user."));
+							progress.UpdateProgress("Canceled by user.");
 							return false;
 						}
 					}

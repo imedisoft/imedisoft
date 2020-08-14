@@ -13,11 +13,11 @@ namespace OpenDental {
 
 		public FormDispensary() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormDispensary_Load(object sender,EventArgs e) {
-			comboClass.Items.Add(Lan.G(this,"All"));
+			comboClass.Items.Add("All");
 			comboClass.SelectedIndex=0;
 			_listSchoolClasses=SchoolClasses.GetDeepCopy();
 			for(int i=0;i<_listSchoolClasses.Count;i++) {
@@ -37,13 +37,13 @@ namespace OpenDental {
 			gridStudents.BeginUpdate();
 			gridStudents.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G("TableProviderSetup","ProvNum"),60);
+			col=new GridColumn("ProvNum",60);
 			gridStudents.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProviderSetup","Last Name"),90);
+			col=new GridColumn("Last Name",90);
 			gridStudents.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProviderSetup","First Name"),90);
+			col=new GridColumn("First Name",90);
 			gridStudents.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProviderSetup","Class"),100);
+			col=new GridColumn("Class",100);
 			gridStudents.ListGridColumns.Add(col);
 			gridStudents.ListGridRows.Clear();
 			GridRow row;
@@ -77,13 +77,13 @@ namespace OpenDental {
 			gridDispSupply.BeginUpdate();
 			gridDispSupply.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G("TableProviderSetup","DateDispensed"),100);
+			col=new GridColumn("DateDispensed",100);
 			gridDispSupply.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProviderSetup","Description"),90);
+			col=new GridColumn("Description",90);
 			gridDispSupply.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProviderSetup","Qty"),40);
+			col=new GridColumn("Qty",40);
 			gridDispSupply.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProviderSetup","Note"),100);
+			col=new GridColumn("Note",100);
 			gridDispSupply.ListGridColumns.Add(col);
 			gridDispSupply.ListGridRows.Clear();
 			GridRow row;

@@ -23,7 +23,7 @@ namespace OpenDental {
 		public FormAutoNotePromptMultiResp(string noteDescription) {
 			InitializeComponent();
 			_noteDescript=noteDescription;
-			Lan.F(this);
+			
 		}
 
 		private void FormAutoNotePromptMultiResp_Load(object sender,EventArgs e) {

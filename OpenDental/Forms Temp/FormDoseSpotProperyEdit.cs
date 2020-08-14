@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormDoseSpotPropertyEdit(Clinic clinicCur,string ppClinicIdVal,string ppClinicKeyVal,List<ProgramProperty> listProperties) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_clinicCur=clinicCur;
 			ClinicIdVal=ppClinicIdVal;
 			ClinicKeyVal=ppClinicKeyVal;
@@ -94,7 +94,7 @@ namespace OpenDental {
 				return;
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.G(this,"Error: ")+ex.Message);
+				MessageBox.Show("Error: "+ex.Message);
 				return;
 			}
 			finally {

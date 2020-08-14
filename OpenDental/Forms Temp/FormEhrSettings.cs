@@ -18,7 +18,7 @@ namespace OpenDental {
 
 		public FormEhrSettings() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormEhrSettings_Load(object sender,EventArgs e) {

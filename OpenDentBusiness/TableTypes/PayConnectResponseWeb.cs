@@ -127,11 +127,11 @@ namespace OpenDentBusiness {
 			else {
 				dateTimeProcessed=DateTime.Now;
 			}
-			return Lans.g(this,"Amount:")+" "+(keepAmountPositive ? Amount : -Amount).ToString("f")+"\r\n"
-				+Lans.g(this,"Card Number:")+" "+responseValues.CreditCardNumber+"\r\n"
-				+Lans.g(this,"Transaction ID:")+" "+responseValues.TransactionID+"\r\n"
-				+Lans.g(this,"Processed:")+" "+dateTimeProcessed.ToShortDateString()+" "+dateTimeProcessed.ToShortTimeString()+"\r\n"
-				+Lans.g(this,"Note:")+" "+PayNote;
+			return "Amount:"+" "+(keepAmountPositive ? Amount : -Amount).ToString("f")+"\r\n"
+				+"Card Number:"+" "+responseValues.CreditCardNumber+"\r\n"
+				+"Transaction ID:"+" "+responseValues.TransactionID+"\r\n"
+				+"Processed:"+" "+dateTimeProcessed.ToShortDateString()+" "+dateTimeProcessed.ToShortTimeString()+"\r\n"
+				+"Note:"+" "+PayNote;
 		}
 	}
 

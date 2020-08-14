@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormWikiListHistory() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormWikiListHistory_Load(object sender,EventArgs e) {
@@ -43,7 +43,7 @@ namespace OpenDental {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			gridMain.ListGridRows.Clear();
-			gridMain.ListGridColumns.AddRange(new[] { new GridColumn(Lan.G(this,"User"),70),new GridColumn(Lan.G(this,"Saved"),80) });
+			gridMain.ListGridColumns.AddRange(new[] { new GridColumn("User",70),new GridColumn("Saved",80) });
 			gridMain.ListGridRows.AddRange(WikiListHists.GetByNameNoContent(ListNameCur)
 				.Select(x => new GridRow(Userods.GetName(x.UserNum),x.DateTimeSaved.ToString()) { Tag=x }));
 			gridMain.EndUpdate();

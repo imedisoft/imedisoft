@@ -55,7 +55,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 			_isSelectionMode=isSelectionMode;
 		}
 
@@ -327,7 +327,7 @@ namespace OpenDental{
 		private void FormFeeSchedules_Load(object sender, System.EventArgs e) {
 			_listFeeScheds=FeeScheds.GetDeepCopy(_isSelectionMode);
 			CheckItemOrders();
-			listType.Items.Add(Lan.G(this,"All"));
+			listType.Items.Add("All");
 			Array arrayValues=Enum.GetValues(typeof(FeeScheduleType));
 			for(int i=0;i<arrayValues.Length;i++) {
 				FeeScheduleType feeSchedType=((FeeScheduleType)arrayValues.GetValue(i));
@@ -395,11 +395,11 @@ namespace OpenDental{
 			_listFeeSchedsForType.Sort(CompareItemOrder);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableFeeScheds","Description"),145);
+			GridColumn col=new GridColumn("Description",145);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableFeeScheds","Type"),70);
+			col=new GridColumn("Type",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableFeeScheds","Hidden"),60,HorizontalAlignment.Center);
+			col=new GridColumn("Hidden",60,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -595,7 +595,7 @@ namespace OpenDental{
 				return;
 			}
 			long changed=FeeScheds.CleanupAllowedScheds();
-			MessageBox.Show(changed.ToString()+" "+Lan.G(this,"unused fee schedules deleted."));
+			MessageBox.Show(changed.ToString()+" "+"unused fee schedules deleted.");
 			if(changed==0) {
 				return;
 			}
@@ -612,19 +612,19 @@ namespace OpenDental{
 			{
 				return;
 			}
-			Action actionProgress=ODProgress.Show(EventCategory.HideUnusedFeeSchedules,startingMessage:Lans.g(this,"Backing up database..."));
+			Action actionProgress=ODProgress.Show(EventCategory.HideUnusedFeeSchedules,startingMessage:"Backing up database...");
 			try {
 				MiscData.MakeABackup();
 			} 
 			catch(Exception ex) {
 				actionProgress?.Invoke();
-				FriendlyException.Show(Lans.g(this,"Unable to make a backup. No fee schedules have been altered."),ex);
+				FriendlyException.Show("Unable to make a backup. No fee schedules have been altered.",ex);
 				return;
 			}
-			ODEvent.Fire(EventCategory.HideUnusedFeeSchedules,Lans.g(this,"Hiding unused fee schedules..."));
+			ODEvent.Fire(EventCategory.HideUnusedFeeSchedules,"Hiding unused fee schedules...");
 			long countChanged=FeeScheds.HideUnusedScheds();
 			actionProgress?.Invoke();
-			MessageBox.Show(countChanged.ToString()+" "+Lans.g(this,"unused fee schedules hidden."));
+			MessageBox.Show(countChanged.ToString()+" "+"unused fee schedules hidden.");
 			if(countChanged==0) {
 				return;
 			}

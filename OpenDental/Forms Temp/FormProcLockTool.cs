@@ -11,7 +11,7 @@ namespace OpenDental {
 	public partial class FormProcLockTool:ODForm {
 		public FormProcLockTool() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormProcLockTool_Load(object sender,EventArgs e) {

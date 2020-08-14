@@ -18,7 +18,7 @@ namespace OpenDental{
 		public FormInstructors(){
 			InitializeComponent();
 			//Providers.Selected=-1;
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>

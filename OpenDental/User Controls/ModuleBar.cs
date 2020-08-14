@@ -181,29 +181,29 @@ namespace OpenDental
 				switch (_listButtons[i].ModuleType)
 				{
 					case EnumModuleType.Appointments:
-						_listButtons[i].Caption = Lan.G(this, "Appts");
+						_listButtons[i].Caption = "Appts";
 						break;
 					case EnumModuleType.Family:
-						_listButtons[i].Caption = Lan.G(this, "Family");
+						_listButtons[i].Caption = "Family";
 						break;
 					case EnumModuleType.Account:
-						_listButtons[i].Caption = Lan.G(this, "Account");
+						_listButtons[i].Caption = "Account";
 						break;
 					case EnumModuleType.TreatPlan:
-						_listButtons[i].Caption = Lan.G(this, "Treat' Plan");
+						_listButtons[i].Caption = "Treat' Plan";
 						break;
 					case EnumModuleType.Chart:
 						if (Prefs.GetBool(PrefName.EasyHideClinical))
 						{
-							_listButtons[i].Caption = Lan.G(this, "Procs");
+							_listButtons[i].Caption = "Procs";
 						}
-						_listButtons[i].Caption = Lan.G(this, "Chart");
+						_listButtons[i].Caption = "Chart";
 						break;
 					case EnumModuleType.Images:
-						_listButtons[i].Caption = Lan.G(this, "Imaging");
+						_listButtons[i].Caption = "Imaging";
 						break;
 					case EnumModuleType.Manage:
-						_listButtons[i].Caption = Lan.G(this, "Manage");
+						_listButtons[i].Caption = "Manage";
 						break;
 				}
 			}

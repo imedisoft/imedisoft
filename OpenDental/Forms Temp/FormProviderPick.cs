@@ -43,7 +43,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormProviderPick(List<Provider> listProviders=null) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_listProviders=listProviders;
 		}
 
@@ -311,14 +311,14 @@ namespace OpenDental{
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
 			if(!Prefs.GetBool(PrefName.EasyHideDentalSchools)) {
-				col=new GridColumn(Lan.G("TableProviders","ProvNum"),60);
+				col=new GridColumn("ProvNum",60);
 				gridMain.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.G("TableProviders","Abbrev"),80);
+			col=new GridColumn("Abbrev",80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProviders","LName"),100);
+			col=new GridColumn("LName",100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProviders","FName"),100);
+			col=new GridColumn("FName",100);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

@@ -17,7 +17,7 @@ namespace OpenDental {
 		///<summary></summary>
 		public FormTerminalManager(bool setupMode=false) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_isSetupMode=setupMode;
 			groupBoxPassword.Visible=_isSetupMode;
 		}

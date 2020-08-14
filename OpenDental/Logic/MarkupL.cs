@@ -239,7 +239,7 @@ namespace OpenDental
 				}
 				//This is not needed because our regex doesn't even catch them if the span a line break.  It's just interpreted as plain text.
 				//if(match.Value.Contains("\r") || match.Value.Contains("\n")) {
-				//	MessageBox.Show(Lan.g(this,"Link cannot contain carriage returns: ")+match.Value);
+				//	MessageBox.Show("Link cannot contain carriage returns: "+match.Value);
 				//	return false;
 				//}
 				if (match.Value.StartsWith("[[img:")

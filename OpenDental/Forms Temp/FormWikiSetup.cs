@@ -12,7 +12,7 @@ namespace OpenDental {
 
 		public FormWikiSetup() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormWikiSetup_Load(object sender,EventArgs e) {

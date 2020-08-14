@@ -34,7 +34,7 @@ namespace OpenDental {
 
 		public FormDatabaseMaintenancePat(long patNum=0) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_patNum=patNum;
 		}
 
@@ -57,9 +57,9 @@ namespace OpenDental {
 			_listDbmMethodsGrid=DbmMethodsForGridHelper(isHidden: false,isOld: false);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,"Name"),300));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,BREAKDOWN_COLUMN_NAME),40,HorizontalAlignment.Center));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(this,RESULTS_COLUMN_NAME),300){ IsWidthDynamic=true });
+			gridMain.ListGridColumns.Add(new GridColumn("Name",300));
+			gridMain.ListGridColumns.Add(new GridColumn(BREAKDOWN_COLUMN_NAME,40,HorizontalAlignment.Center));
+			gridMain.ListGridColumns.Add(new GridColumn(RESULTS_COLUMN_NAME,300){ IsWidthDynamic=true });
 			gridMain.ListGridRows.Clear();
 			GridRow row;
 			//_listDbmMethodsGrid has already been filled on load with the correct methods to display in the grid.
@@ -84,10 +84,10 @@ namespace OpenDental {
 			}
 			gridOld.BeginUpdate();
 			gridOld.ListGridColumns.Clear();
-			gridOld.ListGridColumns.Add(new GridColumn(Lan.G(this,"Name"),300));
-			gridOld.ListGridColumns.Add(new GridColumn(Lan.G(this,"Hidden"),45,HorizontalAlignment.Center));
-			gridOld.ListGridColumns.Add(new GridColumn(Lan.G(this,BREAKDOWN_COLUMN_NAME),40,HorizontalAlignment.Center));
-			gridOld.ListGridColumns.Add(new GridColumn(Lan.G(this,RESULTS_COLUMN_NAME),300){ IsWidthDynamic=true });
+			gridOld.ListGridColumns.Add(new GridColumn("Name",300));
+			gridOld.ListGridColumns.Add(new GridColumn("Hidden",45,HorizontalAlignment.Center));
+			gridOld.ListGridColumns.Add(new GridColumn(BREAKDOWN_COLUMN_NAME,40,HorizontalAlignment.Center));
+			gridOld.ListGridColumns.Add(new GridColumn(RESULTS_COLUMN_NAME,300){ IsWidthDynamic=true });
 			gridOld.ListGridRows.Clear();
 			GridRow row;
 			for(int i=0;i<_listDbmMethodsGridOld.Count;i++) {
@@ -107,7 +107,7 @@ namespace OpenDental {
 			_listDbmMethodsGridHidden=DbmMethodsForGridHelper(isHidden: true,isOld: false);
 			gridHidden.BeginUpdate();
 			gridHidden.ListGridColumns.Clear();
-			gridHidden.ListGridColumns.Add(new GridColumn(Lan.G(this,"Name"),340));
+			gridHidden.ListGridColumns.Add(new GridColumn("Name",340));
 			gridHidden.ListGridRows.Clear();
 			GridRow row;
 			for(int i=0;i<_listDbmMethodsGridHidden.Count;i++) {
@@ -150,7 +150,7 @@ namespace OpenDental {
 				
 				try {
 					gridCur.ScrollToIndexBottom(i);
-					UpdateResultTextForRow(i,Lan.G("FormDatabaseMaintenance","Running")+"...",gridCur);
+					UpdateResultTextForRow(i,"Running"+"...",gridCur);
 					gridCur.SetSelected(selectedIndices,true);//Reselect all rows that were originally selected.
 					result=(string)((MethodInfo)gridCur.ListGridRows[i].Tag).Invoke(null,parameters.ToArray());
 					if(modeCur==DbmMode.Fix) {
@@ -165,7 +165,7 @@ namespace OpenDental {
 				}
 				string status="";
 				if(result=="") {//Only possible if running a check / fix in non-verbose mode and nothing happened or needs to happen.
-					status=Lan.G("FormDatabaseMaintenance","Done.  No maintenance needed.");
+					status="Done.  No maintenance needed.";
 				}
 				UpdateResultTextForRow(i,result+status,gridCur);
 				logText.Append(result);
@@ -226,7 +226,7 @@ namespace OpenDental {
 			Cursor=Cursors.WaitCursor;
 			string result=(string)method.Invoke(null,parameters.ToArray());
 			if(result=="") {//Only possible if running a check / fix in non-verbose mode and nothing happened or needs to happen.
-				result=Lan.G("FormDatabaseMaintenance","Done.  No maintenance needed.");
+				result="Done.  No maintenance needed.";
 			}
 			SaveLogToFile(method.Name+":\r\n"+result);
 			//Show the result of the dbm method in a simple copy paste msg box.
@@ -306,7 +306,7 @@ namespace OpenDental {
 			Cursor=Cursors.WaitCursor;
 			string result=(string)_listDbmMethodsGridOld[e.Row].Invoke(null,parameters.ToArray());
 			if(result=="") {//Only possible if running a check / fix in non-verbose mode and nothing happened or needs to happen.
-				result=Lan.G("FormDatabaseMaintenance","Done.  No maintenance needed.");
+				result="Done.  No maintenance needed.";
 			}
 			//Show the result of the dbm method in a simple copy paste msg box.
 			MsgBoxCopyPaste msgBoxCP=new MsgBoxCopyPaste(result);
@@ -321,7 +321,7 @@ namespace OpenDental {
 
 		private void FormDatabaseMaintenancePat_FormClosing(object sender,FormClosingEventArgs e) {
 			//if(_isCacheInvalid) {
-			//	Action actionCloseDBM=ODProgress.ShowProgressStatus("DatabaseMaintEvent",this,Lan.g(this,"Refreshing all caches, this can take a while..."));
+			//	Action actionCloseDBM=ODProgress.ShowProgressStatus("DatabaseMaintEvent",this,"Refreshing all caches, this can take a while...");
 			//	//Invalidate all cached tables.  DBM could have touched anything so blast them all.  
 			//	//Failure to invalidate cache can cause UEs in the main program.
 			//	DataValid.SetInvalid(Cache.GetAllCachedInvalidTypes().ToArray());

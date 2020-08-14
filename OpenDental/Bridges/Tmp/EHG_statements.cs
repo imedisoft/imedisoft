@@ -45,7 +45,7 @@ namespace OpenDental.Bridges
 			if (addressRemit.Address1.Trim().Length == 0 || addressRemit.City.Trim().Length == 0
 				|| addressRemit.State.Trim().Length == 0 || addressRemit.Zip.Trim().Length == 0)
 			{
-				listErrors.Add(Lan.G("EHG_Statements", "invalid") + " " + Lan.G("EHG_Statements", addressRemit.Source));
+				listErrors.Add("invalid" + " " + addressRemit.Source);
 			}
 			return listErrors;
 		}
@@ -213,7 +213,7 @@ namespace OpenDental.Bridges
 			Patient guar = fam.ListPats[0];
 			if (!Regex.IsMatch(guar.State, "^[A-Z]{2}$"))
 			{
-				throw new ApplicationException(Lan.G("EHG_Statements", "Guarantor state must be two uppercase characters.") + " " + guar.FName + " " + guar.LName + " #" + guar.PatNum);
+				throw new ApplicationException("Guarantor state must be two uppercase characters." + " " + guar.FName + " " + guar.LName + " #" + guar.PatNum);
 			}
 			writer.WriteStartElement("EisStatement");
 			writer.WriteAttributeString("OutputFormat", "StmOut_Blue6Col");

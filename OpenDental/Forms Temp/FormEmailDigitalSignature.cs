@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormEmailDigitalSignature(X509Certificate2 certSig) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_certSig=certSig;
 		}
 
@@ -29,14 +29,14 @@ namespace OpenDental {
 			_isTrusted=(EmailMessages.GetReceiverUntrustedCount(signedByAddress)==-1);
 			if(_isTrusted) {
 				butTrust.Visible=false;
-				textTrustStatus.Text=Lan.G(this,"Trusted");
-				textTrustExplanation.Text=Lan.G(this,"Encrypted email and EHR Direct messaging are currently enabled for the signer.");
+				textTrustStatus.Text="Trusted";
+				textTrustExplanation.Text="Encrypted email and EHR Direct messaging are currently enabled for the signer.";
 			}
 			else {
 				butTrust.Visible=true;
-				textTrustStatus.Text=Lan.G(this,"Untrusted or invalid");
-				textTrustExplanation.Text=Lan.G(this,"Encrypted email and EHR Direct messaging will not work until this digital signature is trusted by you.")+"  "
-					+Lan.G(this,"Click the Trust button to add trust for this digital signature.");
+				textTrustStatus.Text="Untrusted or invalid";
+				textTrustExplanation.Text="Encrypted email and EHR Direct messaging will not work until this digital signature is trusted by you."+"  "
+					+"Click the Trust button to add trust for this digital signature.";
 			}
 		}
 

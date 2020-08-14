@@ -19,7 +19,7 @@ namespace OpenDental {
 
 		public FormWikiListHeaders(string wikiListCurName) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_wikiListCurName=wikiListCurName;
 		}
 
@@ -32,8 +32,8 @@ namespace OpenDental {
 		private void FillGrid() {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableWikiListHeaders","Column Name"),100,true));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableWikiListHeaders","Width"),0,true));
+			gridMain.ListGridColumns.Add(new GridColumn("Column Name",100,true));
+			gridMain.ListGridColumns.Add(new GridColumn("Width",0,true));
 			gridMain.ListGridRows.Clear();
 			gridMain.ListGridRows.AddRange(_listTableHeaders.Select(x => new GridRow(x.ColName,x.ColWidth.ToString())));
 			gridMain.EndUpdate();
@@ -43,7 +43,7 @@ namespace OpenDental {
 		private void FillGridPickList() {
 			gridPickList.BeginUpdate();
 			gridPickList.ListGridColumns.Clear();
-			gridPickList.ListGridColumns.Add(new GridColumn(Lan.G(gridPickList.TranslationName,"Input Text"),100,true));
+			gridPickList.ListGridColumns.Add(new GridColumn("Input Text",100,true));
 			gridPickList.ListGridRows.Clear();
 			if(gridMain.SelectedCell.Y!=-1 && _listStringPick.Count>0) {
 				gridPickList.ListGridRows.AddRange(_listStringPick.Select(x => new GridRow(x)));
@@ -92,7 +92,7 @@ namespace OpenDental {
 				return;
 			}
 			//Get input from user
-			InputBox newOption=new InputBox(Lan.G(this,"New Pick List Option"));
+			InputBox newOption=new InputBox("New Pick List Option");
 			if(newOption.ShowDialog()==DialogResult.OK) {
 				_listStringPick.Add(newOption.textResult.Text);
 				_pickListIndex=_listStringPick.Count-1;
@@ -131,7 +131,7 @@ namespace OpenDental {
 				#endregion Validate Column Widths
 				#region Validate Column Names
 				if(listColNames.Contains(colName)) {
-					MessageBox.Show(Lan.G(this,$"Duplicate column name detected")+": "+colName);
+					MessageBox.Show("Duplicate column name detected"+": "+colName);
 					return;
 				}
 				listColNames.Add(colName);
@@ -152,7 +152,7 @@ namespace OpenDental {
 				}
 				//Check for reserved words--------------------------------------------------------------------------------
 				if(DbHelper.IsMySQLReservedWord(colName)) {
-					MessageBox.Show(Lan.G(this,"Column name is a reserved word in MySQL")+": "+colName);
+					MessageBox.Show("Column name is a reserved word in MySQL"+": "+colName);
 					return;
 				}
 				#endregion Validate Column Names

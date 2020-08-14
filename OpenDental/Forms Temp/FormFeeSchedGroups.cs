@@ -20,7 +20,7 @@ namespace OpenDental {
 
 		public FormFeeSchedGroups() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormFeeSchedGroups_Load(object sender,EventArgs e) {
@@ -64,9 +64,9 @@ namespace OpenDental {
 			gridGroups.BeginUpdate();
 			gridGroups.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G(this,"Group Name"),200);
+			col=new GridColumn("Group Name",200);
 			gridGroups.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Fee Schedule"),75);
+			col=new GridColumn("Fee Schedule",75);
 			gridGroups.ListGridColumns.Add(col);
 			gridGroups.ListGridRows.Clear();
 			GridRow row;
@@ -88,9 +88,9 @@ namespace OpenDental {
 			gridClinics.BeginUpdate();
 			gridClinics.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G(this,"Abbr"),100){ IsWidthDynamic=true };
+			col=new GridColumn("Abbr",100){ IsWidthDynamic=true };
 			gridClinics.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Description"),100){ IsWidthDynamic=true,DynamicWeight=2 };
+			col=new GridColumn("Description",100){ IsWidthDynamic=true,DynamicWeight=2 };
 			gridClinics.ListGridColumns.Add(col);
 			gridClinics.ListGridRows.Clear();
 			GridRow row;

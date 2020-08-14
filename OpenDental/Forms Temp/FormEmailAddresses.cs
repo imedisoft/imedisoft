@@ -19,7 +19,7 @@ namespace OpenDental {
 
 		public FormEmailAddresses() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormEmailAddresses_Load(object sender,EventArgs e) {
@@ -73,15 +73,15 @@ namespace OpenDental {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G(this,"User Name"),240);
+			col=new GridColumn("User Name",240);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Sender Address"),270);
+			col=new GridColumn("Sender Address",270);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"User"),135);
+			col=new GridColumn("User",135);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Default"),50,HorizontalAlignment.Center);
+			col=new GridColumn("Default",50,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Notify"),50,HorizontalAlignment.Center) { IsWidthDynamic=true };
+			col=new GridColumn("Notify",50,HorizontalAlignment.Center) { IsWidthDynamic=true };
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

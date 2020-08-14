@@ -36,7 +36,7 @@ namespace OpenDental {
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -222,7 +222,7 @@ namespace OpenDental {
 			insFilingCodeSubtypes=InsFilingCodeSubtypes.GetForInsFilingCode(InsFilingCodeCur.InsFilingCodeNum);
 			gridInsFilingCodeSubtypes.BeginUpdate();
 			gridInsFilingCodeSubtypes.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableInsFilingCodes","Description"),100);
+			GridColumn col=new GridColumn("Description",100);
 			gridInsFilingCodeSubtypes.ListGridColumns.Add(col);
 			gridInsFilingCodeSubtypes.ListGridRows.Clear();
 			GridRow row;
@@ -296,11 +296,11 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(this.textDescription.Text==""){
-				MessageBox.Show(Lan.G(this,"Please enter a description."));
+				MessageBox.Show("Please enter a description.");
 				return;
 			}
 			if(this.textEclaimCode.Text==""){
-				MessageBox.Show(Lan.G(this,"Please enter an electronic claim code."));
+				MessageBox.Show("Please enter an electronic claim code.");
 				return;
 			}
 			if(comboGroup.GetSelectedDefNum()==0) {

@@ -74,7 +74,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormPractice(){
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -767,7 +767,7 @@ namespace OpenDental{
 			}
 			listPlaceService.Items.Clear();
 			for(int i=0;i<Enum.GetNames(typeof(PlaceOfService)).Length;i++){
-				listPlaceService.Items.Add(Lan.G("enumPlaceOfService",Enum.GetNames(typeof(PlaceOfService))[i]));
+				listPlaceService.Items.Add(Enum.GetNames(typeof(PlaceOfService))[i]);
 			}
 			listPlaceService.SelectedIndex=PrefC.GetInt(PrefName.DefaultProcedurePlaceService);
 			long selectedBillingProvNum=Prefs.GetLong(PrefName.InsBillingProv);
@@ -787,12 +787,12 @@ namespace OpenDental{
 		private void butOK_Click(object sender, System.EventArgs e) {
 			string phone=textPhone.Text;
 			if(!TelephoneNumbers.IsNumberValidTenDigit(ref phone)) {
-				MessageBox.Show(Lan.G(this,"Invalid phone.  Must contain exactly ten digits."));
+				MessageBox.Show("Invalid phone.  Must contain exactly ten digits.");
 				return;
 			}
 			string fax=textFax.Text;
 			if(!TelephoneNumbers.IsNumberValidTenDigit(ref fax)) {
-				MessageBox.Show(Lan.G(this,"Invalid fax.  Must contain exactly ten digits."));
+				MessageBox.Show("Invalid fax.  Must contain exactly ten digits.");
 				return;
 			}
 			if(radioInsBillingProvSpecific.Checked && comboInsBillingProv.SelectedIndex ==-1){

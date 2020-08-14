@@ -16,7 +16,7 @@ namespace OpenDental {
 
 		public FormEhrExportCCD(Patient patCur) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_patCur=patCur;
 			_ccd="";
 		}

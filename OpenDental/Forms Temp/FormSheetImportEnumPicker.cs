@@ -12,7 +12,7 @@ namespace OpenDental {
 
 		public FormSheetImportEnumPicker(string prompt) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			labelPrompt.Text=prompt;
 		}
 

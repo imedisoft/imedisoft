@@ -218,7 +218,7 @@ namespace OpenDentBusiness{
 					}
 					if(!doReplace && Schedules.Overlaps(sched,listSchedulesPossibleOverlap)) {
 						Schedules.Insert(false,true,listNewScheds.ToArray());
-						string error=Lans.g("Schedule","A blockout overlaps with an existing blockout. Could not paste the blockout on")
+						string error="A blockout overlaps with an existing blockout. Could not paste the blockout on"
 							+" "+sched.SchedDate.ToShortDateString()+" "+sched.StartTime.ToShortTimeString();
 						return error;
 					}
@@ -234,16 +234,16 @@ namespace OpenDentBusiness{
 				}
 			}
 			Schedules.Insert(false,true,listNewScheds.ToArray());
-			string logText=Lans.g("Schedule","Blockouts for operatories")+" ";
+			string logText="Blockouts for operatories"+" ";
 			for(int i=0;i<listOpNums.Count;i++) {
 				if(i>0) {
 					logText+=", ";
 				}
 				logText+=Operatories.GetOpName(listOpNums[i]);
 			}
-			logText+=" "+Lans.g("Schedule","copied from")+" "+dateCopyStart.ToShortDateString()+" "
-				+(dateCopyStart==dateCopyEnd? "" : Lans.g("Schedule","through")+" "+dateCopyEnd.ToShortDateString()+" ")
-				+(numRepeat>1?Lans.g("Schedule","and pasted from")+" "+dateSelectedStart.ToShortDateString()+" "+Lans.g("Schedule","until"):Lans.g("Schedule","and pasted to"))
+			logText+=" "+"copied from"+" "+dateCopyStart.ToShortDateString()+" "
+				+(dateCopyStart==dateCopyEnd? "" : "through"+" "+dateCopyEnd.ToShortDateString()+" ")
+				+(numRepeat>1?"and pasted from"+" "+dateSelectedStart.ToShortDateString()+" "+"until":"and pasted to")
 				+" "+dateEnd.ToShortDateString();
 			SecurityLogs.MakeLogEntry(Permissions.Blockouts,0,logText);
 			return "";
@@ -257,58 +257,58 @@ namespace OpenDentBusiness{
 		public static void BlockoutLogHelper(BlockoutAction action,Schedule blockout=null,DateTime dateTime=new DateTime(),long opNum=0,long clinicNum=-1) {
 			string logText="";
 			if(blockout==null) {//Day cleared
-				logText+=Lans.g("Schedule","Blockouts")+" ";
+				logText+="Blockouts"+" ";
 			}
 			else if(blockout.SchedType==ScheduleType.WebSchedASAP) {
-				logText+=Lans.g("Schedule","Blockout of type Web Schedule ASAP Blockout ");
+				logText+="Blockout of type Web Schedule ASAP Blockout ";
 			}
 			else {
-				logText+=Lans.g("Schedule","Blockout of type")+" "+Defs.GetName(DefCat.BlockoutTypes,blockout.BlockoutType)+" ";
+				logText+="Blockout of type"+" "+Defs.GetName(DefCat.BlockoutTypes,blockout.BlockoutType)+" ";
 			}
 			switch(action) {
 				case BlockoutAction.Copy:
-					logText+=Lans.g("Schedule","copied from")+" ";
+					logText+="copied from"+" ";
 					break;
 				case BlockoutAction.Create:
-					logText+=Lans.g("Schedule","created for")+" ";
+					logText+="created for"+" ";
 					break;
 				case BlockoutAction.Edit:
-					logText+=Lans.g("Schedule","edited to")+" ";//For edit logs do we want to add where the blockout originated from?  If so, this will have to change some.
+					logText+="edited to"+" ";//For edit logs do we want to add where the blockout originated from?  If so, this will have to change some.
 					break;
 				case BlockoutAction.Cut:
-					logText+=Lans.g("Schedule","cut from")+" ";
+					logText+="cut from"+" ";
 					break;
 				case BlockoutAction.Delete:
-					logText+=Lans.g("Schedule","deleted from")+" ";
+					logText+="deleted from"+" ";
 					break;
 				case BlockoutAction.Paste:
-					logText+=Lans.g("Schedule","pasted to")+" ";
+					logText+="pasted to"+" ";
 					break;
 				case BlockoutAction.Clear:
-					logText+=Lans.g("Schedule","cleared on")+" ";
+					logText+="cleared on"+" ";
 					break;
 			}
 			if(blockout==null) {//Clear action taken for specific date
 				logText+=dateTime.Date.ToShortDateString()+" ";
 				if(opNum!=0) {
-					logText+=Lans.g("Schedule","for operatory")+" "+Operatories.GetOpName(opNum);
+					logText+="for operatory"+" "+Operatories.GetOpName(opNum);
 				}
 				if(clinicNum!=-1) {
 					if(opNum!=0) {//Not currently an option to clear via op and clinic, but may be in the future.
-						logText+=Lans.g("Schedule","and clinic")+" ";
+						logText+="and clinic"+" ";
 					}
 					else {
-						logText+=Lans.g("Schedule","for clinic")+" ";
+						logText+="for clinic"+" ";
 					}
-					logText+=(clinicNum==0? Lans.g("Schedule","Headquarters") : Clinics.GetDesc(clinicNum));
+					logText+=(clinicNum==0? "Headquarters" : Clinics.GetDesc(clinicNum));
 				}
 			}
 			else {
 				if(blockout.Ops.Count>1) {
-					logText+=Lans.g("Schedule","operatories")+" ";
+					logText+="operatories"+" ";
 				}
 				else {
-					logText+=Lans.g("Schedule","operatory")+" ";
+					logText+="operatory"+" ";
 				}
 				for(int i=0;i<blockout.Ops.Count;i++) {
 					if(i>0) {
@@ -316,8 +316,8 @@ namespace OpenDentBusiness{
 					}
 					logText+=Operatories.GetOpName(blockout.Ops[i]);
 				}
-				logText+=" "+Lans.g("Schedule","on")+" "+blockout.SchedDate.ToShortDateString()+" "
-					+Lans.g("Schedule","for")+" "+blockout.StartTime.ToShortTimeString()+" - "+blockout.StopTime.ToShortTimeString();
+				logText+=" "+"on"+" "+blockout.SchedDate.ToShortDateString()+" "
+					+"for"+" "+blockout.StartTime.ToShortTimeString()+" - "+blockout.StopTime.ToShortTimeString();
 			}
 			SecurityLogs.MakeLogEntry(Permissions.Blockouts,0,logText);
 		}
@@ -645,13 +645,13 @@ namespace OpenDentBusiness{
 		///<summary></summary>
 		private static void Validate(Schedule sched){
 			if(sched.StopTime>TimeSpan.FromDays(1)) {//if pasting to late afternoon, the stop time might be calculated as early the next morning.
-				throw new Exception(Lans.g("Schedule","Stop time must be later than start time."));
+				throw new Exception("Stop time must be later than start time.");
 			}
 			if(sched.StartTime>sched.StopTime) {
-				throw new Exception(Lans.g("Schedule","Stop time must be later than start time."));
+				throw new Exception("Stop time must be later than start time.");
 			}
 			if(sched.StartTime+TimeSpan.FromMinutes(5)>sched.StopTime	&& sched.Status==SchedStatus.Open) {
-				throw new Exception(Lans.g("Schedule","Stop time cannot be the same as the start time."));
+				throw new Exception("Stop time cannot be the same as the start time.");
 			}
 		}
 
@@ -1155,10 +1155,10 @@ namespace OpenDentBusiness{
 						{
 							table.Rows[rowI][(int)dateSched.DayOfWeek]+="\r\n";
 							if(raw.Rows[i]["Status"].ToString()=="2") {//if holiday
-								table.Rows[rowI][(int)dateSched.DayOfWeek]+=Lans.g("Schedules","Holiday");
+								table.Rows[rowI][(int)dateSched.DayOfWeek]+="Holiday";
 							}
 							else {
-								table.Rows[rowI][(int)dateSched.DayOfWeek]+=Lans.g("Schedules","Note");
+								table.Rows[rowI][(int)dateSched.DayOfWeek]+="Note";
 							}
 							if(PrefC.HasClinicsEnabled && raw.Rows[i]["SchedType"].ToString()=="0") {//a practice sched type, prov/emp notes do not have a clinic associated
 								string clinicAbbr=Clinics.GetAbbr(PIn.Long(raw.Rows[i]["ClinicNum"].ToString()));
@@ -1186,7 +1186,7 @@ namespace OpenDentBusiness{
 					if(startTime.TimeOfDay==PIn.Date("12 AM").TimeOfDay && stopTime.TimeOfDay==PIn.Date("12 AM").TimeOfDay) {
 						#region Note or Holiday
 						if(raw.Rows[i]["Status"].ToString()=="2"){//if holiday
-							table.Rows[rowI][(int)dateSched.DayOfWeek]+=Lans.g("Schedules","Holiday");
+							table.Rows[rowI][(int)dateSched.DayOfWeek]+="Holiday";
 						}
 						else {//note
 							if(raw.Rows[i]["Abbr"].ToString()!=""){
@@ -1195,7 +1195,7 @@ namespace OpenDentBusiness{
 							if(raw.Rows[i]["FName"].ToString()!="") {
 								table.Rows[rowI][(int)dateSched.DayOfWeek]+=raw.Rows[i]["FName"].ToString()+" ";
 							}
-							table.Rows[rowI][(int)dateSched.DayOfWeek]+=Lans.g("Schedules","Note");
+							table.Rows[rowI][(int)dateSched.DayOfWeek]+="Note";
 						}
 						if(PrefC.HasClinicsEnabled && raw.Rows[i]["SchedType"].ToString()=="0") {//a practice sched type, prov/emp notes do not have a clinic associated
 							string clinicAbbr=Clinics.GetAbbr(PIn.Long(raw.Rows[i]["ClinicNum"].ToString()));
@@ -1369,7 +1369,7 @@ namespace OpenDentBusiness{
 		///<summary>Surround with try/catch.  Uses Sync to update the database with the changes made to listScheds from the stale listSchedsOld.</summary>
 		public static void SetForDay(List<Schedule> listScheds,List<Schedule> listSchedsOld) {
 			if(listScheds.Any(x=>x.StartTime>x.StopTime)) {
-				throw new Exception(Lans.g("Schedule","Stop time must be later than start time."));
+				throw new Exception("Stop time must be later than start time.");
 			}
 			Sync(listScheds,listSchedsOld);
 		}

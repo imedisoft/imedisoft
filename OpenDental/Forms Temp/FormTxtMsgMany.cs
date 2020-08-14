@@ -21,7 +21,7 @@ namespace OpenDental {
 		
 		public FormTxtMsgMany(List<PatComm> listPatComms,string textMessageText,long clinicNum,SmsMessageSource messageSource) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_listPatComms=listPatComms;
 			textMessage.Text=textMessageText;
 			_clinicNum=clinicNum;
@@ -36,9 +36,9 @@ namespace OpenDental {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G(this,"Phone Number"),120);
+			col=new GridColumn("Phone Number",120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Patient"),200);
+			col=new GridColumn("Patient",200);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			foreach(IGrouping<string,PatComm> patCommGroup in _listPatComms.GroupBy(x => DoCombineNumbers ? x.WirelessPhone : x.PatNum.ToString())) {
@@ -55,7 +55,7 @@ namespace OpenDental {
 		private bool SendText(PatComm patComm,long clinicNum,string message) {	
 			if(!patComm.IsSmsAnOption)	{
 				Cursor=Cursors.Default;
-				MessageBox.Show(Lan.G(this,"It is not OK to text patient")+" "+patComm.FName+" "+patComm.LName+".");
+				MessageBox.Show("It is not OK to text patient"+" "+patComm.FName+" "+patComm.LName+".");
 				Cursor=Cursors.WaitCursor;
 				return false;
 			}
@@ -78,7 +78,7 @@ namespace OpenDental {
 			}
 			if(PrefC.HasClinicsEnabled && !Clinics.IsTextingEnabled(_clinicNum)) { //Checking for specific clinic.
 				if(_clinicNum!=0) {
-					MessageBox.Show(Lans.g(this,"Integrated Texting has not been enabled for the following clinic")+":\r\n"+Clinics.GetClinic(_clinicNum).Description+".");
+					MessageBox.Show("Integrated Texting has not been enabled for the following clinic"+":\r\n"+Clinics.GetClinic(_clinicNum).Description+".");
 				}
 				else {
 					//Should never happen. This message is precautionary.
@@ -99,9 +99,9 @@ namespace OpenDental {
 				}
 				catch(ODException odex) {
 					Cursor=Cursors.Default;
-					string errorMsg=Lan.G(this,"There was an error sending to")+" "+listPatComms.First().WirelessPhone+". "
+					string errorMsg="There was an error sending to"+" "+listPatComms.First().WirelessPhone+". "
 						+odex.Message+" "
-						+Lan.G(this,"Do you want to continue sending messages?");
+						+"Do you want to continue sending messages?";
 					if(MessageBox.Show(errorMsg,"",MessageBoxButtons.YesNo)==DialogResult.No) {
 						break;
 					}
@@ -109,8 +109,8 @@ namespace OpenDental {
 				}
 				catch {
 					Cursor=Cursors.Default;
-					string errorMsg=Lan.G(this,"There was an error sending to")+" "+listPatComms.First().WirelessPhone+". "
-						+Lan.G(this,"Do you want to continue sending messages?");
+					string errorMsg="There was an error sending to"+" "+listPatComms.First().WirelessPhone+". "
+						+"Do you want to continue sending messages?";
 					if(MessageBox.Show(errorMsg,"",MessageBoxButtons.YesNo)==DialogResult.No) {
 						break;
 					}
@@ -118,7 +118,7 @@ namespace OpenDental {
 				}
 			}
 			Cursor=Cursors.Default;
-			MessageBox.Show(numTextsSent+" "+Lan.G(this,"texts sent successfully."));
+			MessageBox.Show(numTextsSent+" "+"texts sent successfully.");
 			DialogResult=DialogResult.OK;
 			Close();
 		}

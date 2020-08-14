@@ -15,7 +15,7 @@ namespace OpenDental {
 	public partial class FormRpArizonaPrimaryCareEncounter:ODForm {
 		public FormRpArizonaPrimaryCareEncounter() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {

@@ -31,7 +31,7 @@ namespace OpenDental {
 		public FormWebForms() {
 			InitializeComponent();
 			gridMain.ContextMenu=menuWebFormsRight;
-			Lan.F(this);
+			
 		}
 
 		private void FormWebForms_Load(object sender,EventArgs e) {
@@ -64,17 +64,17 @@ namespace OpenDental {
 				return;
 			}
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G(this,"Date"),70);
+			GridColumn col=new GridColumn("Date",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Time"),42);
+			col=new GridColumn("Time",42);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Patient Last Name"),110);
+			col=new GridColumn("Patient Last Name",110);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Patient First Name"),110);
+			col=new GridColumn("Patient First Name",110);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Description"),240);
+			col=new GridColumn("Description",240);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Deleted"),40,HorizontalAlignment.Center){ IsWidthDynamic=true };
+			col=new GridColumn("Deleted",40,HorizontalAlignment.Center){ IsWidthDynamic=true };
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			DataTable table=Sheets.GetWebFormSheetsTable(dateFrom,dateTo,comboClinics.ListSelectedClinicNums);

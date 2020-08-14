@@ -32,7 +32,7 @@ namespace OpenDental{
 		///<summary>Opens the form with a specific tab selected.  Currently 0-6 are the only valid values.  Defaults to Appts tab if invalid value passed in. 0=Appts, 1=Family, 2=Account, 3=Treat' Plan, 4=Chart, 5=Images, 6=Manage</summary>
 		public FormModuleSetup(int selectedTab) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			if(selectedTab<0 || selectedTab>6) {
 				selectedTab=0;//Default to Appts tab.
 			}
@@ -53,7 +53,7 @@ namespace OpenDental{
 				FillManage();
 			}
 			catch(Exception ex) {
-				FriendlyException.Show(Lan.G(this,"An error has occurred while attempting to load preferences.  Run database maintenance and try again."),ex);
+				FriendlyException.Show("An error has occurred while attempting to load preferences.  Run database maintenance and try again.",ex);
 				DialogResult=DialogResult.Abort;
 				return;
 			}
@@ -132,7 +132,7 @@ namespace OpenDental{
 			Cursor=Cursors.WaitCursor;
 			long schedsAdded=InsPlans.GenerateAllowedFeeSchedules();
 			Cursor=Cursors.Default;
-			MessageBox.Show(Lan.G(this,"Done.  Allowed fee schedules added: ")+schedsAdded.ToString());
+			MessageBox.Show("Done.  Allowed fee schedules added: "+schedsAdded.ToString());
 			DataValid.SetInvalid(InvalidType.FeeScheds);
 		}
 
@@ -142,20 +142,20 @@ namespace OpenDental{
 			if(!Security.IsAuthorized(Permissions.InsPlanChangeAssign,true)) {
 				return;
 			}
-			string promptMsg=Lan.G(this,"Would you like to immediately change all plans to use assignment of benefits?\r\n"
-					+$"Warning: This will update all existing plans to render payment to the provider on all future claims.");
+			string promptMsg="Would you like to immediately change all plans to use assignment of benefits?\r\n"
+					+$"Warning: This will update all existing plans to render payment to the provider on all future claims.";
 			if(!checkInsDefaultAssignmentOfBenefits.Checked) {
-				promptMsg=Lan.G(this,"Would you like to immediately change all plans to use assignment of benefits?\r\n"
-					+$"Warning: This will update all existing plans to render payment to the patient on all future claims.");
+				promptMsg="Would you like to immediately change all plans to use assignment of benefits?\r\n"
+					+$"Warning: This will update all existing plans to render payment to the patient on all future claims.";
 			}
-			if(MessageBox.Show(promptMsg,Lan.G(this,"Change all plans?"),MessageBoxButtons.YesNo)==DialogResult.No) {
+			if(MessageBox.Show(promptMsg,"Change all plans?",MessageBoxButtons.YesNo)==DialogResult.No) {
 				return;
 			}
 			long subsAffected=InsSubs.SetAllSubsAssignBen(checkInsDefaultAssignmentOfBenefits.Checked);
 			SecurityLogs.MakeLogEntry(Permissions.InsPlanChangeAssign,0
-				,Lan.G(this,"The following count of plan(s) had their assignment of benefits updated in the Family tab in Module Preferences:")+" "+POut.Long(subsAffected)
+				,"The following count of plan(s) had their assignment of benefits updated in the Family tab in Module Preferences:"+" "+POut.Long(subsAffected)
 			);
-			MessageBox.Show(Lan.G(this,"Plans affected:")+" "+POut.Long(subsAffected));
+			MessageBox.Show("Plans affected:"+" "+POut.Long(subsAffected));
 		}
 
 		private void checkInsDefaultShowUCRonClaims_Click(object sender,EventArgs e) {
@@ -166,7 +166,7 @@ namespace OpenDental{
 				return;
 			}
 			long plansAffected=InsPlans.SetAllPlansToShowUCR();
-			MessageBox.Show(Lan.G(this,"Plans affected: ")+plansAffected.ToString());
+			MessageBox.Show("Plans affected: "+plansAffected.ToString());
 		}
 
 		private void comboCobRule_SelectionChangeCommitted(object sender,EventArgs e) {
@@ -392,7 +392,7 @@ namespace OpenDental{
 					continue;
 				}
 				_listBrokenApptProcedures.Add(option);
-				int index=comboBrokenApptProc.Items.Add(Lans.g(this,option.ToString()));
+				int index=comboBrokenApptProc.Items.Add(option.ToString());
 				if(option==brokenApptCodeDB) {
 					comboBrokenApptProc.SelectedIndex=index;
 				}
@@ -429,16 +429,16 @@ namespace OpenDental{
 			comboTimeDismissed.SetSelectedDefNum(Prefs.GetLong(PrefName.AppointmentTimeDismissedTrigger));
 			checkApptRefreshEveryMinute.Checked=Prefs.GetBool(PrefName.ApptModuleRefreshesEveryMinute);
 			foreach(SearchBehaviorCriteria searchBehavior in Enum.GetValues(typeof(SearchBehaviorCriteria))) {
-				comboSearchBehavior.Items.Add(Lan.G(this,searchBehavior.GetDescription()));
+				comboSearchBehavior.Items.Add(searchBehavior.GetDescription());
 			}
 			ODBoxItem<double> comboItem;
 			for(int i=0;i<11;i++) {
 				double seconds=(double)i/10;
 				if(i==0) {
-					comboItem = new ODBoxItem<double>(Lan.G(this,"No delay"),seconds);
+					comboItem = new ODBoxItem<double>("No delay",seconds);
 				}
 				else {
-					comboItem = new ODBoxItem<double>(seconds.ToString("f1") + " "+Lan.G(this,"seconds"),seconds);
+					comboItem = new ODBoxItem<double>(seconds.ToString("f1") + " "+"seconds",seconds);
 				}
 				comboDelay.Items.Add(comboItem);
 				if(Prefs.GetDouble(PrefName.FormClickDelay)==seconds) {
@@ -520,7 +520,7 @@ namespace OpenDental{
 			if(textApptWithoutProcsDefaultLength.errorProvider1.GetError(textApptWithoutProcsDefaultLength)!=""
 				| textApptAutoRefreshRange.errorProvider1.GetError(textApptAutoRefreshRange)!="")
 			{
-				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
+				MessageBox.Show("Please fix data entry errors first.");
 				return false;
 			}
 			float apptFontSize=0;
@@ -637,7 +637,7 @@ namespace OpenDental{
 			checkInsDefaultAssignmentOfBenefits.Checked=Prefs.GetBool(PrefName.InsDefaultAssignBen);
 			checkInsPPOsecWriteoffs.Checked=Prefs.GetBool(PrefName.InsPPOsecWriteoffs);
 			for(int i=0;i<Enum.GetNames(typeof(EnumCobRule)).Length;i++) {
-				comboCobRule.Items.Add(Lan.G("enumEnumCobRule",Enum.GetNames(typeof(EnumCobRule))[i]));
+				comboCobRule.Items.Add(Enum.GetNames(typeof(EnumCobRule))[i]);
 			}
 			comboCobRule.SelectedIndex=PrefC.GetInt(PrefName.InsDefaultCobRule);
 			checkTextMsgOkStatusTreatAsNo.Checked=Prefs.GetBool(PrefName.TextMsgOkStatusTreatAsNo);
@@ -680,7 +680,7 @@ namespace OpenDental{
 			checkInsPlanExclusionsMarkDoNotBill.Checked=Prefs.GetBool(PrefName.InsPlanExclusionsMarkDoNotBillIns);
 			checkPatientSSNMasked.Checked=Prefs.GetBool(PrefName.PatientSSNMasked);
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
-				checkPatientSSNMasked.Text=Lan.G(this,"Mask patient Social Insurance Numbers");
+				checkPatientSSNMasked.Text="Mask patient Social Insurance Numbers";
 			}
 			checkPatientDOBMasked.Checked=Prefs.GetBool(PrefName.PatientDOBMasked);
 		}
@@ -738,7 +738,7 @@ namespace OpenDental{
 			#region Pay/Adj Tab
 			checkStoreCCTokens.Checked=Prefs.GetBool(PrefName.StoreCCtokens);
 			foreach(PayClinicSetting prompt in Enum.GetValues(typeof(PayClinicSetting))) {
-				comboPaymentClinicSetting.Items.Add(Lan.G(this,prompt.GetDescription()));
+				comboPaymentClinicSetting.Items.Add(prompt.GetDescription());
 			}
 			comboPaymentClinicSetting.SelectedIndex=PrefC.GetInt(PrefName.PaymentClinicSetting);
 			checkPaymentsPromptForPayType.Checked=Prefs.GetBool(PrefName.PaymentsPromptForPayType);
@@ -774,7 +774,7 @@ namespace OpenDental{
 			checkHidePaysplits.Checked=Prefs.GetBool(PrefName.PaymentWindowDefaultHideSplits);
 			checkPaymentsTransferPatientIncomeOnly.Checked=Prefs.GetBool(PrefName.PaymentsTransferPatientIncomeOnly);
 			checkAllowPrepayProvider.Checked=Prefs.GetBool(PrefName.AllowPrepayProvider);
-			comboRecurringChargePayType.Items.AddDefNone("("+Lan.G(this,"default")+")");
+			comboRecurringChargePayType.Items.AddDefNone("("+"default"+")");
 			comboRecurringChargePayType.Items.AddDefs(Defs.GetDefsForCategory(DefCat.PaymentTypes,true));
 			comboRecurringChargePayType.SetSelectedDefNum(Prefs.GetLong(PrefName.RecurringChargesPayTypeCC)); 
 			_ynPrePayAllowedForTpProcs=Prefs.GetBool(PrefName.PrePayAllowedForTpProcs);
@@ -799,7 +799,7 @@ namespace OpenDental{
 			checkAllowFuturePayments.Checked=Prefs.GetBool(PrefName.AllowFutureInsPayments);
 			textClaimIdentifier.Text=Prefs.GetString(PrefName.ClaimIdPrefix);
 			foreach(ClaimZeroDollarProcBehavior procBehavior in Enum.GetValues(typeof(ClaimZeroDollarProcBehavior))) {
-				comboZeroDollarProcClaimBehavior.Items.Add(Lan.G(this,procBehavior.ToString()));
+				comboZeroDollarProcClaimBehavior.Items.Add(procBehavior.ToString());
 			}
 			comboZeroDollarProcClaimBehavior.SelectedIndex=PrefC.GetInt(PrefName.ClaimZeroDollarProcBehavior);
 			checkClaimTrackingExcludeNone.Checked=Prefs.GetBool(PrefName.ClaimTrackingStatusExcludesNone);
@@ -812,7 +812,7 @@ namespace OpenDental{
 			checkBalancesDontSubtractIns.Checked=Prefs.GetBool(PrefName.BalancesDontSubtractIns);
 			checkAgingMonthly.Checked=Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily);
 			if(!Prefs.GetBool(PrefName.AgingIsEnterprise)) {//AgingIsEnterprise requires aging to be daily
-				checkAgingMonthly.Text=Lan.G(this,"Aging calculated monthly instead of daily");
+				checkAgingMonthly.Text="Aging calculated monthly instead of daily";
 				checkAgingMonthly.Enabled=true;
 			}
 			checkAccountShowPaymentNums.Checked=Prefs.GetBool(PrefName.AccountShowPaymentNums);
@@ -827,7 +827,7 @@ namespace OpenDental{
 			checkAllowFutureTrans.Checked=Prefs.GetBool(PrefName.FutureTransDatesAllowed);
 			checkAgingProcLifo.CheckState=PrefC.GetYNCheckState(PrefName.AgingProcLifo);
 			foreach(PayPlanVersions version in Enum.GetValues(typeof(PayPlanVersions))) {
-				comboPayPlansVersion.Items.Add(Lan.G("enumPayPlanVersions",version.GetDescription()));
+				comboPayPlansVersion.Items.Add(version.GetDescription());
 			}
 			comboPayPlansVersion.SelectedIndex=PrefC.GetInt(PrefName.PayPlansVersion) - 1;
 			if(comboPayPlansVersion.SelectedIndex==(int)PayPlanVersions.AgeCreditsAndDebits-1) {//Minus 1 because the enum starts at 1.
@@ -1043,8 +1043,8 @@ namespace OpenDental{
 			if(Prefs.GetString(PrefName.TreatmentPlanNote)!=textTreatNote.Text) {
 				List<long> listTreatPlanNums=TreatPlans.GetNumsByNote(Prefs.GetString(PrefName.TreatmentPlanNote));//Find active/inactive TP's that match exactly.
 				if(listTreatPlanNums.Count>0) {
-					DialogResult dr=MessageBox.Show(Lan.G(this,"Unsaved treatment plans found with default notes")+": "+listTreatPlanNums.Count+"\r\n"
-						+Lan.G(this,"Would you like to change them now?"),"",MessageBoxButtons.YesNoCancel);
+					DialogResult dr=MessageBox.Show("Unsaved treatment plans found with default notes"+": "+listTreatPlanNums.Count+"\r\n"
+						+"Would you like to change them now?","",MessageBoxButtons.YesNoCancel);
 					switch(dr) {
 						case DialogResult.Cancel:
 							return false;
@@ -1095,10 +1095,10 @@ namespace OpenDental{
 
 		#region Methods - Chart
 		private void FillChart(){
-			comboToothNomenclature.Items.Add(Lan.G(this,"Universal (Common in the US, 1-32)"));
-			comboToothNomenclature.Items.Add(Lan.G(this,"FDI Notation (International, 11-48)"));
-			comboToothNomenclature.Items.Add(Lan.G(this,"Haderup (Danish)"));
-			comboToothNomenclature.Items.Add(Lan.G(this,"Palmer (Ortho)"));
+			comboToothNomenclature.Items.Add("Universal (Common in the US, 1-32)");
+			comboToothNomenclature.Items.Add("FDI Notation (International, 11-48)");
+			comboToothNomenclature.Items.Add("Haderup (Danish)");
+			comboToothNomenclature.Items.Add("Palmer (Ortho)");
 			comboToothNomenclature.SelectedIndex = PrefC.GetInt(PrefName.UseInternationalToothNumbers);
 			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
 				labelToothNomenclature.Visible=false;
@@ -1141,10 +1141,10 @@ namespace OpenDental{
 			checkClaimProcsAllowEstimatesOnCompl.Checked=Prefs.GetBool(PrefName.ClaimProcsAllowedToBackdate);
 			checkSignatureAllowDigital.Checked=Prefs.GetBool(PrefName.SignatureAllowDigital);
 			checkCommLogAutoSave.Checked=Prefs.GetBool(PrefName.CommLogAutoSave);
-			comboProcFeeUpdatePrompt.Items.Add(Lan.G(this,"No prompt, don't change fee"));
-			comboProcFeeUpdatePrompt.Items.Add(Lan.G(this,"No prompt, always change fee"));
-			comboProcFeeUpdatePrompt.Items.Add(Lan.G(this,"Prompt, when patient portion changes"));
-			comboProcFeeUpdatePrompt.Items.Add(Lan.G(this,"Prompt, always"));
+			comboProcFeeUpdatePrompt.Items.Add("No prompt, don't change fee");
+			comboProcFeeUpdatePrompt.Items.Add("No prompt, always change fee");
+			comboProcFeeUpdatePrompt.Items.Add("Prompt, when patient portion changes");
+			comboProcFeeUpdatePrompt.Items.Add("Prompt, always");
 			comboProcFeeUpdatePrompt.SelectedIndex=PrefC.GetInt(PrefName.ProcFeeUpdatePrompt);
 			checkProcProvChangesCp.Checked=Prefs.GetBool(PrefName.ProcProvChangesClaimProcWithClaim);
 			checkBoxRxClinicUseSelected.Checked=Prefs.GetBool(PrefName.ElectronicRxClinicUseSelected);
@@ -1208,7 +1208,7 @@ namespace OpenDental{
 			if(checkDxIcdVersion.Checked) {
 				icdVersion=10;
 			}
-			labelIcdCodeDefault.Text=Lan.G(this,"Default ICD")+"-"+icdVersion+" "+Lan.G(this,"code for new procedures and when set complete");
+			labelIcdCodeDefault.Text="Default ICD"+"-"+icdVersion+" "+"code for new procedures and when set complete";
 		}
 		#endregion Methods - Chart
 
@@ -1252,7 +1252,7 @@ namespace OpenDental{
 				textClaimsReceivedDays.Text=(claimZeroPayRollingDays+1).ToString();//The minimum value is now 1 ("today"), to match other areas of OD.
 			}
 			for(int i=0;i<7;i++) {
-				comboTimeCardOvertimeFirstDayOfWeek.Items.Add(Lan.G("enumDayOfWeek",Enum.GetNames(typeof(DayOfWeek))[i]));
+				comboTimeCardOvertimeFirstDayOfWeek.Items.Add(Enum.GetNames(typeof(DayOfWeek))[i]);
 			}
 			comboTimeCardOvertimeFirstDayOfWeek.SelectedIndex=PrefC.GetInt(PrefName.TimeCardOvertimeFirstDayOfWeek);
 			checkTimeCardADP.Checked=Prefs.GetBool(PrefName.TimeCardADPExportIncludesName);
@@ -1265,8 +1265,8 @@ namespace OpenDental{
 			checkStatementShowNotes.Checked=Prefs.GetBool(PrefName.StatementShowNotes);
 			checkStatementShowAdjNotes.Checked=Prefs.GetBool(PrefName.StatementShowAdjNotes);
 			checkStatementShowProcBreakdown.Checked=Prefs.GetBool(PrefName.StatementShowProcBreakdown);
-			comboUseChartNum.Items.Add(Lan.G(this,"PatNum"));
-			comboUseChartNum.Items.Add(Lan.G(this,"ChartNumber"));
+			comboUseChartNum.Items.Add("PatNum");
+			comboUseChartNum.Items.Add("ChartNumber");
 			if(Prefs.GetBool(PrefName.StatementAccountsUseChartNumber)) {
 				comboUseChartNum.SelectedIndex=1;
 			}
@@ -1294,7 +1294,7 @@ namespace OpenDental{
 				| textPayPlansBillInAdvanceDays.errorProvider1.GetError(textPayPlansBillInAdvanceDays)!=""
 				| textBillingElectBatchMax.errorProvider1.GetError(textBillingElectBatchMax)!="")
 			{
-				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
+				MessageBox.Show("Please fix data entry errors first.");
 				return false;
 			}
 			if(textClaimsReceivedDays.errorProvider1.GetError(textClaimsReceivedDays)!="") {

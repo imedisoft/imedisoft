@@ -19,7 +19,7 @@ namespace OpenDental {
 
 		public FormCDSIntervention() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormCDSIntervention_Load(object sender,EventArgs e) {

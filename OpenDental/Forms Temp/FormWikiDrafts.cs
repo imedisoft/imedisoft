@@ -16,7 +16,7 @@ namespace OpenDental {
 
 		public FormWikiDrafts() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormWikiDrafts_Load(object sender,EventArgs e) {
@@ -24,7 +24,7 @@ namespace OpenDental {
 			FillGrid();
 			gridMain.SetSelected(gridMain.ListGridRows.Count-1,true);//select most recent draft
 			LoadWikiPage(_listWikiPage[gridMain.SelectedIndices[0]]);
-			Text=Lan.G(this,"Wiki Drafts")+" - "+OwnerForm.WikiPageCur.PageTitle;
+			Text="Wiki Drafts"+" - "+OwnerForm.WikiPageCur.PageTitle;
 		}
 
 		///<summary>Resize text boxes to each occupy ~1/2 of screen from top to bottom.</summary>
@@ -52,7 +52,7 @@ namespace OpenDental {
 			}
 			catch(Exception ex) {
 				webBrowserWiki.DocumentText="";
-				MessageBox.Show(this,Lan.G(this,"This page is broken and cannot be viewed.  Error message:")+" "+ex.Message);
+				MessageBox.Show(this,"This page is broken and cannot be viewed.  Error message:"+" "+ex.Message);
 			}
 		}
 
@@ -60,9 +60,9 @@ namespace OpenDental {
 		private void FillGrid() {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G(this,"User"),70);
+			GridColumn col=new GridColumn("User",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Last Saved"),80);
+			col=new GridColumn("Last Saved",80);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			_listWikiPage=WikiPages.GetDraftsByTitle(OwnerForm.WikiPageCur.PageTitle);

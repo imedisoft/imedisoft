@@ -3309,60 +3309,73 @@ namespace OpenDental.UI {
 		}
 
 		///<summary>Exports the grid to a text or Excel file. The user will have the opportunity to choose the location of the export file.</summary>
-		public void Export(string fileName) {
-			string selectedFilePath=ODFileUtils.CombinePaths(Path.GetTempPath(),fileName);
+		public void Export(string fileName)
+		{
+			string selectedFilePath = ODFileUtils.CombinePaths(Path.GetTempPath(), fileName);
 
-				SaveFileDialog saveFileDialog=new SaveFileDialog();
-				saveFileDialog.AddExtension=true;
-				saveFileDialog.FileName=fileName;
-				if(!Directory.Exists(Prefs.GetString(PrefName.ExportPath))) {
-					try {
-						Directory.CreateDirectory(Prefs.GetString(PrefName.ExportPath));
-						saveFileDialog.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
-					}
-					catch {
-						//initialDirectory will be blank
-					}
+			SaveFileDialog saveFileDialog = new SaveFileDialog();
+			saveFileDialog.AddExtension = true;
+			saveFileDialog.FileName = fileName;
+			if (!Directory.Exists(Prefs.GetString(PrefName.ExportPath)))
+			{
+				try
+				{
+					Directory.CreateDirectory(Prefs.GetString(PrefName.ExportPath));
+					saveFileDialog.InitialDirectory = Prefs.GetString(PrefName.ExportPath);
 				}
-				else {
-					saveFileDialog.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
+				catch
+				{
+					//initialDirectory will be blank
 				}
-				saveFileDialog.Filter="Text files(*.txt)|*.txt|Excel Files(*.xls)|*.xls|All files(*.*)|*.*";
-				saveFileDialog.FilterIndex=0;
-				if(saveFileDialog.ShowDialog()!=DialogResult.OK) {
-					return;
-				}
-				selectedFilePath=saveFileDialog.FileName;
-			
-			try {
-				using(StreamWriter sw=new StreamWriter(selectedFilePath,false)) {
-					String line="";
-					for(int i = 0; i < ListGridColumns.Count; i++) {
-						line+="\""+ListGridColumns[i].Heading+"\"";
-						if(i < ListGridColumns.Count-1) {
-							line+="\t";
+			}
+			else
+			{
+				saveFileDialog.InitialDirectory = Prefs.GetString(PrefName.ExportPath);
+			}
+			saveFileDialog.Filter = "Text files(*.txt)|*.txt|Excel Files(*.xls)|*.xls|All files(*.*)|*.*";
+			saveFileDialog.FilterIndex = 0;
+			if (saveFileDialog.ShowDialog() != DialogResult.OK)
+			{
+				return;
+			}
+			selectedFilePath = saveFileDialog.FileName;
+
+			try
+			{
+				using (StreamWriter sw = new StreamWriter(selectedFilePath, false))
+				{
+					String line = "";
+					for (int i = 0; i < ListGridColumns.Count; i++)
+					{
+						line += "\"" + ListGridColumns[i].Heading + "\"";
+						if (i < ListGridColumns.Count - 1)
+						{
+							line += "\t";
 						}
 					}
 					sw.WriteLine(line);
-					for(int i = 0;i<ListGridRows.Count;i++) {
-						line="";
-						for(int j = 0; j < ListGridColumns.Count; j++) {
-							line+="\""+ListGridRows[i].Cells[j].Text.Replace("\r\n",", ")+"\"";
-							if(j < ListGridColumns.Count-1) {
-								line+="\t";
+					for (int i = 0; i < ListGridRows.Count; i++)
+					{
+						line = "";
+						for (int j = 0; j < ListGridColumns.Count; j++)
+						{
+							line += "\"" + ListGridRows[i].Cells[j].Text.Replace("\r\n", ", ") + "\"";
+							if (j < ListGridColumns.Count - 1)
+							{
+								line += "\t";
 							}
 						}
 						sw.WriteLine(line);
 					}
 				}
 			}
-			catch {
-				MessageBox.Show(Lans.g(this,"File in use by another program.  Close and try again."));
+			catch
+			{
+				MessageBox.Show("File in use by another program.  Close and try again.");
 				return;
 			}
 
-				MessageBox.Show(Lans.g(this,"File created successfully"));
-			
+			MessageBox.Show("File created successfully");
 		}
 
 		///<summary>Returns the text in the cell for the given row and column. Will throw if either index is invalid.</summary>
@@ -3865,7 +3878,7 @@ namespace OpenDental.UI {
 				Process.Start(url);
 			}
 			catch {
-				MessageBox.Show(Lans.g("OdGrid","Failed to open web browser.  Please make sure you have a default browser set and are connected to the internet then try again."),Lans.g("OdGrid","Attention"));
+				MessageBox.Show("Failed to open web browser.  Please make sure you have a default browser set and are connected to the internet then try again.","Attention");
 			}
 		}
 
@@ -3878,7 +3891,7 @@ namespace OpenDental.UI {
 					Process.Start(folderPath);
 				}
 				else {
-					MessageBox.Show(Lans.g("ODGrid","Failed to open file location. Please make sure file path is valid."));
+					MessageBox.Show("Failed to open file location. Please make sure file path is valid.");
 				}
 			}
 			catch(Exception e) {

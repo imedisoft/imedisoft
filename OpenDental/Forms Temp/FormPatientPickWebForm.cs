@@ -38,7 +38,7 @@ namespace OpenDental {
 
 		public FormPatientPickWebForm(WebForms_Sheet sheetAndSheetField,int countMatchingSheets,Sheet sheetCemt=null) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_webFormsSheet=sheetAndSheetField;
 			_sheetCemt=sheetCemt;
 			_isWebForm=_webFormsSheet!=null;
@@ -50,12 +50,12 @@ namespace OpenDental {
 			textFName.Text=FnameEntered;
 			textBirthdate.Text=BdateEntered.ToShortDateString();
 			if(HasMoreThanOneMatch) {
-				labelExplanation.Text=Lan.G(this,"More than one matching patient was found for this submitted web form.");
+				labelExplanation.Text="More than one matching patient was found for this submitted web form.";
 			}
 			if(_sheetCemt!=null && _sheetCemt.SheetFields.Any(x => x.FieldName=="isTransfer" && PIn.Bool(x.FieldValue))) {
 				string strCemtSendClinic=_sheetCemt.SheetFields.FirstOrDefault(x => x.FieldName=="sendClinicCEMT")?.FieldValue??"";
 				if(!string.IsNullOrEmpty(strCemtSendClinic)) {
-					labelExplanation.Text+="\r\n"+Lan.G(this,"Patient was transferred from clinic:")+"  "+strCemtSendClinic;
+					labelExplanation.Text+="\r\n"+"Patient was transferred from clinic:"+"  "+strCemtSendClinic;
 				}
 			}
 			FillGrid();
@@ -64,17 +64,17 @@ namespace OpenDental {
 		private void FillGrid(){
 			gridMain.BeginUpdate();
 			if(HasMoreThanOneMatch) {
-				gridMain.Title=Lan.G(this,"Matches");
+				gridMain.Title="Matches";
 			}
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G(this,"Last Name"),110);
+			GridColumn col=new GridColumn("Last Name",110);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"First Name"),110);
+			col=new GridColumn("First Name",110);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Birthdate"),110);
+			col=new GridColumn("Birthdate",110);
 			gridMain.ListGridColumns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
-				col=new GridColumn(Lan.G(this,"Clinic Name"),110);
+				col=new GridColumn("Clinic Name",110);
 				gridMain.ListGridColumns.Add(col);
 			}
 			listPats=Patients.GetSimilarList(LnameEntered,FnameEntered,BdateEntered);
@@ -145,16 +145,16 @@ namespace OpenDental {
 		}
 
 		private void butDiscard_Click(object sender,EventArgs e) {
-			string msg=Lan.G(this,"Are you sure you want to discard this webform");
+			string msg="Are you sure you want to discard this webform";
 			if(_countMatchingSheets>1) {
-				msg+=Lan.G(this," and all ")+(_countMatchingSheets-1)
-					+Lan.G(this," remaining webforms that match this name, birthdate, email, and phone numbers?");
+				msg+=" and all "+(_countMatchingSheets-1)
+					+" remaining webforms that match this name, birthdate, email, and phone numbers?";
 			}
 			else {
-				msg+="? "+Lan.G(this,"There are no other matching forms for this patient")+".";
+				msg+="? "+"There are no other matching forms for this patient"+".";
 			}
-			msg+=Lan.G(this," Discarded webforms will not be able to be accessed later.");
-			if(MessageBox.Show(this,msg,Lan.G(this,"Discard WebForms?"),MessageBoxButtons.YesNo)==DialogResult.Yes) {
+			msg+=" Discarded webforms will not be able to be accessed later.";
+			if(MessageBox.Show(this,msg,"Discard WebForms?",MessageBoxButtons.YesNo)==DialogResult.Yes) {
 				_isDiscardAll=true;
 				DialogResult=DialogResult.Ignore;
 			}

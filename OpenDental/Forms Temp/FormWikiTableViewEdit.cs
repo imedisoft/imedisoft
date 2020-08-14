@@ -19,7 +19,7 @@ namespace OpenDental {
 
 		public FormWikiTableViewEdit() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormWikiTableViewEdit_Load(object sender,EventArgs e) {
@@ -51,7 +51,7 @@ namespace OpenDental {
 				listShowing.Items.Add(WikiViewCur.Columns[i]);
 			}
 			comboOrderBy.Items.Clear();
-			comboOrderBy.Items.Add(Lan.G(this,"none"));
+			comboOrderBy.Items.Add("none");
 			for(int i=0;i<WikiViewCur.Columns.Count;i++) {
 				comboOrderBy.Items.Add(WikiViewCur.Columns[i]);
 				if(WikiViewCur.OrderBy==WikiViewCur.Columns[i]) {

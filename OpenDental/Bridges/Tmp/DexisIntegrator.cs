@@ -67,7 +67,7 @@ namespace OpenDental.Bridges
 			{
 				if (_isRetry)
 				{
-					FriendlyException.Show(Lans.g("DexisIntegrator", "There was an error trying to launch Dexis with the selected patient."), ode);
+					FriendlyException.Show("There was an error trying to launch Dexis with the selected patient.", ode);
 					return;
 				}
 				_isRetry = true;
@@ -81,7 +81,7 @@ namespace OpenDental.Bridges
 			}
 			catch (Exception ex)
 			{
-				FriendlyException.Show(Lans.g("DexisIntegrator", "There was an error trying to launch Dexis with the selected patient."), ex);
+				FriendlyException.Show("There was an error trying to launch Dexis with the selected patient.", ex);
 				return;
 			}
 			finally

@@ -30,7 +30,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 			_fieldCur=field;
 			_fieldOld=_fieldCur.Copy();
 		}

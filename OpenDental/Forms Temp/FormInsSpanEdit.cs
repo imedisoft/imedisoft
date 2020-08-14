@@ -26,7 +26,7 @@ namespace OpenDental{
 		public FormInsSpanEdit(CovSpan covSpanCur){
 			InitializeComponent();// Required for Windows Form Designer support
 			CovSpanCur=covSpanCur.Copy();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>

@@ -25,7 +25,7 @@ namespace OpenDental {
 			_procOld=proc.Copy();
 			_isNonRefundable=isNonRefundable;
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormProcBroken_Load(object sender,EventArgs e) {
@@ -119,7 +119,7 @@ namespace OpenDental {
 			_procCur.ClinicNum=comboClinic.SelectedClinicNum;
 			Procedures.Update(_procCur,_procOld);
 			ProcedureCode procedureCode=ProcedureCodes.GetProcCode(_procCur.CodeNum);
-			string logText=procedureCode.ProcCode+" ("+_procCur.ProcStatus+"), "+Lan.G(this,"Fee")+": "+_procCur.ProcFee.ToString("c")+", "+procedureCode.Descript;
+			string logText=procedureCode.ProcCode+" ("+_procCur.ProcStatus+"), "+"Fee"+": "+_procCur.ProcFee.ToString("c")+", "+procedureCode.Descript;
 			SecurityLogs.MakeLogEntry(IsNew ? Permissions.ProcComplCreate : Permissions.ProcCompleteEdit,_procCur.PatNum,logText);
 			DialogResult=DialogResult.OK;
 		}

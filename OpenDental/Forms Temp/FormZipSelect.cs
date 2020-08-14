@@ -25,7 +25,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormZipSelect(){
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary>Pass in a 5 digit zipcode to filter down the loaded list of ZipCodes.</summary>
@@ -175,7 +175,7 @@ namespace OpenDental{
 				itemText=(_listZipCodes[i]).City+" "
 					+(_listZipCodes[i]).State;
 				if((_listZipCodes[i]).IsFrequent){
-					itemText+=Lan.G(this," (freq)");
+					itemText+=" (freq)";
 				}
 				listMatches.Items.Add(itemText);
 			}
@@ -199,7 +199,7 @@ namespace OpenDental{
 
 		private void butEdit_Click(object sender, System.EventArgs e) {
 			if(listMatches.SelectedIndex==-1){
-				MessageBox.Show(Lan.G(this,"Please select an item first."));
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			FormZipCodeEdit FormZCE=new FormZipCodeEdit();
@@ -216,7 +216,7 @@ namespace OpenDental{
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
 			if(listMatches.SelectedIndex==-1){
-				MessageBox.Show(Lan.G(this,"Please select an item first."));
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			ZipCode ZipCodeCur=_listZipCodes[listMatches.SelectedIndex];
@@ -236,7 +236,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(listMatches.SelectedIndex==-1){
-				MessageBox.Show(Lan.G(this,"Please select an item first."));
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			ZipSelected=_listZipCodes[listMatches.SelectedIndex];

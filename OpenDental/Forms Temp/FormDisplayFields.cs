@@ -35,7 +35,7 @@ namespace OpenDental{
 
 		public FormDisplayFields() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		protected override void Dispose(bool disposing) {
@@ -235,11 +235,11 @@ namespace OpenDental{
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G("FormDisplayFields","FieldName"),110);
+			col=new GridColumn("FieldName",110);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormDisplayFields","New Descript"),110);
+			col=new GridColumn("New Descript",110);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormDisplayFields","Width"),60);
+			col=new GridColumn("Width",60);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

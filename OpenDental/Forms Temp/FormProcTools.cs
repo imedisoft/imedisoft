@@ -41,7 +41,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -266,7 +266,7 @@ namespace OpenDental{
 				myWebClient.DownloadFile(url,tempFile);
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.G(this,"Failed to download procedure codes")+":\r\n"+ex.Message);
+				MessageBox.Show("Failed to download procedure codes"+":\r\n"+ex.Message);
 				Cursor=Cursors.Default;
 				return;
 			}
@@ -303,9 +303,9 @@ namespace OpenDental{
 			DateTime datePromptEnd=new DateTime(datePromptStart.Year,12,31);
 			if(DateTime.Now.Between(datePromptStart,datePromptEnd) && checkDcodes.Checked) {//Only validate if attempting to update D Codes
 				if(MessageBox.Show(//Still between datePromptStart and the first of the next year, prompt that these codes may cause problems.
-						Lan.G(this,"Updating D Codes at this time could result in acquiring codes which are not valid until ")
-						+datePromptEnd.AddDays(1).ToShortDateString()+Lan.G(this,". Using these codes could cause claims to be rejected, continue?")
-						,Lan.G(this,"D Codes"),MessageBoxButtons.YesNo)==DialogResult.No) 
+						"Updating D Codes at this time could result in acquiring codes which are not valid until "
+						+datePromptEnd.AddDays(1).ToShortDateString()+". Using these codes could cause claims to be rejected, continue?"
+						,"D Codes",MessageBoxButtons.YesNo)==DialogResult.No) 
 				{
 					return;//Early return if the user is between datePromptStart and the first of the next year and they've said no to updating D Codes.
 				}
@@ -356,12 +356,12 @@ namespace OpenDental{
 			if(checkAutocodes.Checked) {
 				//checking for any AutoCodes and prompting the user if they exist
 				if(AutoCodes.GetCount() > 0) {
-					string msgText=Lan.G(this,"This tool will delete all current autocodes and then add in the default autocodes.")+"\r\n";
+					string msgText="This tool will delete all current autocodes and then add in the default autocodes."+"\r\n";
 					//If the proc tool isn't going to put the procedure buttons back to default, warn them that they will need to reassociate them.
 					if(!checkProcButtons.Checked) {
-						msgText+=Lan.G(this,"Any procedure buttons associated with the current autocodes will be dissociated and will need to be reassociated manually.")+"\r\n";
+						msgText+="Any procedure buttons associated with the current autocodes will be dissociated and will need to be reassociated manually."+"\r\n";
 					}
-					msgText+=Lan.G(this,"Continue?");
+					msgText+="Continue?";
 					if(MsgBox.Show(MsgBoxButtons.YesNo,msgText)) {
 						AutoCodes.SetToDefault();
 						Changed=true;
@@ -442,7 +442,7 @@ namespace OpenDental{
 			}
 			#endregion
 			if(Changed) {
-				MessageBox.Show(Lan.G(this,"Done."));
+				MessageBox.Show("Done.");
 				SecurityLogs.MakeLogEntry(Permissions.Setup,0,"New Customer Procedure codes tool was run.");
 			}
 		}

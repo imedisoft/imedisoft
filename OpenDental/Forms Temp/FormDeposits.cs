@@ -37,7 +37,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -179,12 +179,12 @@ namespace OpenDental{
 			}
 			grid.BeginUpdate();
 			grid.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableDepositSlips","Date"),80);
+			GridColumn col=new GridColumn("Date",80);
 			grid.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableDepositSlips","Amount"),90,HorizontalAlignment.Right);
+			col=new GridColumn("Amount",90,HorizontalAlignment.Right);
 			grid.ListGridColumns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
-				col=new GridColumn(Lan.G("TableDepositSlips","Clinic"),150);
+				col=new GridColumn("Clinic",150);
 				grid.ListGridColumns.Add(col);
 			}
 			grid.ListGridRows.Clear();

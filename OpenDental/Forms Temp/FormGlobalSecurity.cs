@@ -16,7 +16,7 @@ namespace OpenDental {
 
 		public FormGlobalSecurity() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormGlobalSecurity_Load(object sender,EventArgs e) {
@@ -98,7 +98,7 @@ namespace OpenDental {
 						_domainObjectGuid=testEntry.Guid.ToString();
 					}
 					catch(Exception ex) {
-						FriendlyException.Show(Lan.G(this,"Unable to bind to the current domain."),ex);
+						FriendlyException.Show("Unable to bind to the current domain.",ex);
 					}
 				}
 			}
@@ -122,7 +122,7 @@ namespace OpenDental {
 						_domainObjectGuid=testEntry.Guid.ToString();
 					}
 					catch(Exception ex) {
-						FriendlyException.Show(Lan.G(this,"An error occurred while attempting to access the provided Domain Login Path."),ex);
+						FriendlyException.Show("An error occurred while attempting to access the provided Domain Login Path.",ex);
 					}
 				}
 			}

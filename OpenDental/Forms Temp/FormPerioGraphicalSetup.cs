@@ -12,7 +12,7 @@ namespace OpenDental {
 
 		public FormPerioGraphicalSetup() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormPerioGraphicalSetup_Load(object sender,EventArgs e) {

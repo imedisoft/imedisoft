@@ -803,8 +803,8 @@ namespace OpenDental {
 			}
 			catch(Exception ex) {
 				if(!ODInitialize.IsRunningInUnitTest) {
-					MessageBox.Show(Lan.G("FormEtrans834Preview","Failed to move file")+" '"+x834.FilePath+"' "
-						+Lan.G("FormEtrans834Preview","to archive, probably due to a permission issue.")+"  "+ex.Message);
+					MessageBox.Show("Failed to move file"+" '"+x834.FilePath+"' "
+						+"to archive, probably due to a permission issue."+"  "+ex.Message);
 				}
 				return false;
 			}

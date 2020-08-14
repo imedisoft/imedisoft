@@ -167,7 +167,7 @@ namespace OpenDentBusiness
 				{
 					if (!suppressMessage && !suppressLockDateMessage)
 					{
-						throw new Exception(Lans.g("Security", "Locked by Administrator."));
+						throw new Exception("Locked by Administrator.");
 					}
 					return false;
 				}

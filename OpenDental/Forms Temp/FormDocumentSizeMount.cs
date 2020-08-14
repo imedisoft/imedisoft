@@ -17,7 +17,7 @@ namespace OpenDental {
 
 		public FormDocumentSizeMount() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormDocumentSizeMount_Load(object sender, EventArgs e){

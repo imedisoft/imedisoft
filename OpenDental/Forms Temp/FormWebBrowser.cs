@@ -26,7 +26,7 @@ namespace OpenDental {
 		///passed in.</summary>
 		public FormWebBrowser(string url="",string htmlContent="",string postData=null,string additionalHeaders="",bool canWrapNewWindow=true) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			SHDocVw.WebBrowser axBrowser=(SHDocVw.WebBrowser)browser.ActiveXInstance;
 			if(axBrowser!=null) {//This was null once during testing.  Not sure when null can happen.  Not sure if we should allow the user to continue.
 				axBrowser.NewWindow2+=axBrowser_NewWindow2;
@@ -52,7 +52,7 @@ namespace OpenDental {
 		private void FormWebBrowser_Load(object sender,EventArgs e) {
 			Cursor=Cursors.WaitCursor;//Is set back to default cursor after the document loads inside the browser.
 			Application.DoEvents();//To show cursor change.
-			Text=Lan.G(this,"Loading")+"...";
+			Text="Loading"+"...";
 			LayoutToolBars();
 			if(_urlBrowseTo=="") {
 				Text="";//Since we are not browsing, we need to clear the title stored within the Text.
@@ -72,11 +72,11 @@ namespace OpenDental {
 		///<summary></summary>
 		public void LayoutToolBars() {
 			ToolBarMain.Buttons.Clear();
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Back"),0,"","Back"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Forward"),1,"","Forward"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Refresh"),-1,"","Refresh"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Print"),-1,"","Print"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Close"),-1,"","Close"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Back",0,"","Back"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Forward",1,"","Forward"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Refresh",-1,"","Refresh"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Print",-1,"","Print"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Close",-1,"","Close"));
 			ToolBarMain.Invalidate();
 		}
 
@@ -147,7 +147,7 @@ namespace OpenDental {
 					if(browser.CanGoBack) {
 						Cursor=Cursors.WaitCursor;//Is set back to default cursor after the document loads inside the browser.
 						Application.DoEvents();//To show cursor change.
-						Text=Lan.G(this,"Loading")+"...";
+						Text="Loading"+"...";
 						browser.GoBack();
 					}
 					break;
@@ -155,7 +155,7 @@ namespace OpenDental {
 					if(browser.CanGoForward) {
 						Cursor=Cursors.WaitCursor;//Is set back to default cursor after the document loads inside the browser.
 						Application.DoEvents();//To show cursor change.
-						Text=Lan.G(this,"Loading")+"...";
+						Text="Loading"+"...";
 						browser.GoForward();
 					}
 					break;

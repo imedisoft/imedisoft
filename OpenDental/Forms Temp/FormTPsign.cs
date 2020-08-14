@@ -368,21 +368,21 @@ namespace OpenDental{
 		///<summary>Causes the toolbar to be laid out again.</summary>
 		public void LayoutToolBar(){
 			ToolBarMain.Buttons.Clear();
-			//ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Print"),0,"","Print"));
+			//ToolBarMain.Buttons.Add(new ODToolBarButton("Print",0,"","Print"));
 			//ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
 			ToolBarMain.Buttons.Add(new ODToolBarButton("",1,"Go Back One Page","Back"));
 			ODToolBarButton button=new ODToolBarButton("",-1,"","PageNum");
 			button.Style=ODToolBarButtonStyle.Label;
 			ToolBarMain.Buttons.Add(button);
 			ToolBarMain.Buttons.Add(new ODToolBarButton("",2,"Go Forward One Page","Fwd"));
-			button=new ODToolBarButton(Lan.G(this,"FullPage"),-1,Lan.G(this,"FullPage"),"FullPage");
+			button=new ODToolBarButton("FullPage",-1,"FullPage","FullPage");
 			button.Style=ODToolBarButtonStyle.ToggleButton;
 			ToolBarMain.Buttons.Add(button);
-			button=new ODToolBarButton(Lan.G(this,"100%"),-1,Lan.G(this,"100%"),"100");
+			button=new ODToolBarButton("100%",-1,"100%","100");
 			button.Style=ODToolBarButtonStyle.ToggleButton;
 			ToolBarMain.Buttons.Add(button);
 			//ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			//ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Close"),-1,"Close This Window","Close"));
+			//ToolBarMain.Buttons.Add(new ODToolBarButton("Close",-1,"Close This Window","Close"));
 		}
 
 		private void FormReport_Layout(object sender, System.Windows.Forms.LayoutEventArgs e) {
@@ -482,7 +482,7 @@ namespace OpenDental{
 				Document.Print();
 			}
 			catch(Exception e){
-				MessageBox.Show(Lan.G(this,"Error: ")+e.Message);
+				MessageBox.Show("Error: "+e.Message);
 			}
 			DialogResult=DialogResult.OK;
 		}

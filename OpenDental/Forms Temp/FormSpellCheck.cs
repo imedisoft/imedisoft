@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormSpellCheck() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormSpellCheck_Load(object sender,EventArgs e) {

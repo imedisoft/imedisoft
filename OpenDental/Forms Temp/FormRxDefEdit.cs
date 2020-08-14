@@ -45,7 +45,7 @@ namespace OpenDental{
 		///<summary>Must have already saved it to db so that we have a RxDefNum to work with.</summary>
 		public FormRxDefEdit(RxDef rxDefCur){
 			InitializeComponent();// Required for Windows Form Designer support
-			Lan.F(this);
+			
 			RxDefCur=rxDefCur.Copy();
 		}
 

@@ -69,24 +69,24 @@ namespace OpenDentBusiness {
 				PayConnectService.transResponse response=ms.processCreditCard(cred,request);
 				ms.Dispose();
 				if(response.Status.code!=0 && response.Status.description.ToLower().Contains("duplicate")) {
-					showError(Lans.g("PayConnect","Payment failed")+". \r\n"+Lans.g("PayConnect","Error message from")+" Pay Connect: \""
+					showError("Payment failed"+". \r\n"+"Error message from"+" Pay Connect: \""
 						+response.Status.description+"\"\r\n"
-						+Lans.g("PayConnect","Try using the Force Duplicate checkbox if a duplicate is intended."));
+						+"Try using the Force Duplicate checkbox if a duplicate is intended.");
 				}
 				if(response.Status.code!=0 && response.Status.description.ToLower().Contains("invalid user")) {
-					showError(Lans.g("PayConnect","Payment failed")+".\r\n"
-						+Lans.g("PayConnect","PayConnect username and password combination invalid.")+"\r\n"
-						+Lans.g("PayConnect","Verify account settings by going to")+"\r\n"
-						+Lans.g("PayConnect","Setup | Program Links | PayConnect. The PayConnect username and password are probably the same as the DentalXChange login ID and password."));
+					showError("Payment failed"+".\r\n"
+						+"PayConnect username and password combination invalid."+"\r\n"
+						+"Verify account settings by going to"+"\r\n"
+						+"Setup | Program Links | PayConnect. The PayConnect username and password are probably the same as the DentalXChange login ID and password.");
 				}
 				else if(response.Status.code!=0) {//Error
-					showError(Lans.g("PayConnect","Payment failed")+". \r\n"+Lans.g("PayConnect","Error message from")+" Pay Connect: \""
+					showError("Payment failed"+". \r\n"+"Error message from"+" Pay Connect: \""
 						+response.Status.description+"\"");
 				}
 				return response;
 			}
 			catch(Exception ex) {
-				showError(Lans.g("PayConnect","Payment failed")+". \r\n"+Lans.g("PayConnect","Error message")+": \""+ex.Message+"\"");
+				showError("Payment failed"+". \r\n"+"Error message"+": \""+ex.Message+"\"");
 			}
 			return null;
 		}
@@ -106,12 +106,12 @@ namespace OpenDentBusiness {
 				PayConnectService.signatureResponse response=ms.processSignature(cred,sigRequest);
 				ms.Dispose();
 				if(response.Status.code!=0) {//Error
-					showError(Lans.g("PayConnect","Signature capture failed")+". \r\n"+Lans.g("PayConnect","Error message from")+" Pay Connect: \""+response.Status.description+"\"");
+					showError("Signature capture failed"+". \r\n"+"Error message from"+" Pay Connect: \""+response.Status.description+"\"");
 				}
 				return response;
 			}
 			catch(Exception ex) {
-				showError(Lans.g("PayConnect","Signature capture failed")+". \r\n"+Lans.g("PayConnect","Error message from")+" Open Dental: \""+ex.Message+"\"");
+				showError("Signature capture failed"+". \r\n"+"Error message from"+" Open Dental: \""+ex.Message+"\"");
 			}
 			return null;
 		}
@@ -132,7 +132,7 @@ namespace OpenDentBusiness {
 				ms.Dispose();
 			}
 			catch(Exception ex) {
-				showError(Lans.g("PayConnect","Credit Card validation failed")+". \r\n"+Lans.g("PayConnect","Error message from")
+				showError("Credit Card validation failed"+". \r\n"+"Error message from"
 					+" Open Dental: \""+ex.Message+"\"");
 			}
 			return isValid;
@@ -288,11 +288,11 @@ namespace OpenDentBusiness {
 					payConnectRequest.MagData,payConnectResponse.AuthCode,payConnectResponse.Status.description,payConnectResponse.Messages.ToList(),payConnectRequest.Amount,
 					false,pat.ClinicNum);
 				DateTime dateTimeProcessed=DateTime.Now;
-				string formattedNote=Lans.g("PayConnect","Amount:")+" "+amount.ToString("f")+"\r\n"
-				+Lans.g("PayConnect","Card Number:")+" "+cc.CCNumberMasked+"\r\n"
-				+Lans.g("PayConnect","Transaction ID:")+" "+payConnectRequest.RefNumber+"\r\n"
-				+Lans.g("PayConnect","Processed:")+" "+dateTimeProcessed.ToShortDateString()+" "+dateTimeProcessed.ToShortTimeString()+"\r\n"
-				+Lans.g("PayConnect","Note:")+" "+payNote;
+				string formattedNote="Amount:"+" "+amount.ToString("f")+"\r\n"
+				+"Card Number:"+" "+cc.CCNumberMasked+"\r\n"
+				+"Transaction ID:"+" "+payConnectRequest.RefNumber+"\r\n"
+				+"Processed:"+" "+dateTimeProcessed.ToShortDateString()+" "+dateTimeProcessed.ToShortTimeString()+"\r\n"
+				+"Note:"+" "+payNote;
 				long payNum=Payments.InsertFromPayConnect(pat.PatNum,pat.PriProv,pat.ClinicNum,amount,formattedNote,receipt,CreditCardSource.PayConnectPortal);
 				PayConnectResponseWeb responseWeb=new PayConnectResponseWeb() {
 					Amount=amount,
@@ -662,7 +662,7 @@ namespace OpenDentBusiness {
 						if(wex.Response.GetType()==typeof(HttpWebResponse)) {
 							HttpStatusCode statusCode=((HttpWebResponse)wex.Response).StatusCode;
 							if(statusCode==HttpStatusCode.Unauthorized) {
-								throw new ODException(Lans.g("PayConnect","Invalid PayConnect credentials."));
+								throw new ODException("Invalid PayConnect credentials.");
 							}
 						}
 					}

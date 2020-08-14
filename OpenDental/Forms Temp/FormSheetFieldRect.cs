@@ -13,7 +13,7 @@ namespace OpenDental {
 
 		public FormSheetFieldRect(SheetDef sheetDef,SheetFieldDef sheetFieldDef,bool isReadOnly): base(sheetDef,sheetFieldDef,isReadOnly) {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormSheetFieldRect_Load(object sender,EventArgs e) {

@@ -91,7 +91,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -639,8 +639,8 @@ namespace OpenDental{
 				}
 			}
 			for(int i=0;i<Enum.GetNames(typeof(ApptViewStackBehavior)).Length;i++){
-				listStackUR.Items.Add(Lan.G("enumApptViewStackBehavior",Enum.GetNames(typeof(ApptViewStackBehavior))[i]));
-				listStackLR.Items.Add(Lan.G("enumApptViewStackBehavior",Enum.GetNames(typeof(ApptViewStackBehavior))[i]));
+				listStackUR.Items.Add(Enum.GetNames(typeof(ApptViewStackBehavior))[i]);
+				listStackLR.Items.Add(Enum.GetNames(typeof(ApptViewStackBehavior))[i]);
 			}
 			listStackUR.SelectedIndex=(int)ApptViewCur.StackBehavUR;
 			listStackLR.SelectedIndex=(int)ApptViewCur.StackBehavLR;
@@ -815,7 +815,7 @@ namespace OpenDental{
 				if(!ElementIsDisplayed(elementsAll[i])) {
 					displayedAvailable.Add(i);
 					row=new GridRow();
-					row.Cells.Add(Lan.G(this,elementsAll[i]));
+					row.Cells.Add(elementsAll[i]);
 					gridAvailable.ListGridRows.Add(row);
 				}
 			}
@@ -1186,12 +1186,12 @@ namespace OpenDental{
 				Convert.ToInt32(textRowsPerIncr.Text);
 			}
 			catch{
-				MessageBox.Show(Lan.G(this,"Must be a number between 1 and 3."));
+				MessageBox.Show("Must be a number between 1 and 3.");
 				e.Cancel=true;
 				return;
 			}
 			if(PIn.Long(textRowsPerIncr.Text)<1 || PIn.Long(textRowsPerIncr.Text)>3){
-				MessageBox.Show(Lan.G(this,"Must be a number between 1 and 3."));
+				MessageBox.Show("Must be a number between 1 and 3.");
 				e.Cancel=true;
 			}
 		}
@@ -1203,7 +1203,7 @@ namespace OpenDental{
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
 			//this does mess up the item orders a little, but missing numbers don't actually hurt anything.
-			if(MessageBox.Show(Lan.G(this,"Delete this category?"),"",MessageBoxButtons.OKCancel)
+			if(MessageBox.Show("Delete this category?","",MessageBoxButtons.OKCancel)
 				!=DialogResult.OK){
 				return;
 			}
@@ -1222,7 +1222,7 @@ namespace OpenDental{
 				return;
 			}
 			if(textDescription.Text==""){
-				MessageBox.Show(Lan.G(this,"A description must be entered."));
+				MessageBox.Show("A description must be entered.");
 				return;
 			}
 			int widthOpMinimum=0;
@@ -1237,7 +1237,7 @@ namespace OpenDental{
 				return;
 			}
 			if(displayedElementsMain.Count==0){
-				MessageBox.Show(Lan.G(this,"At least one row type must be displayed."));
+				MessageBox.Show("At least one row type must be displayed.");
 				return;
 			}
 			DateTime timeBefore=new DateTime();//only the time portion will be used.

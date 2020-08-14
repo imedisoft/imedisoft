@@ -18,18 +18,18 @@ namespace OpenDental {
 
 		public FormProvidersMultiPick(List<Provider> listProviders=null) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_listProviders=listProviders;
 		}
 
 		private void FormProvidersMultiPick_Load(object sender,EventArgs e) {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableProviders","Abbrev"),90);
+			GridColumn col=new GridColumn("Abbrev",90);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProviders","Last Name"),90);
+			col=new GridColumn("Last Name",90);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProviders","First Name"),90);
+			col=new GridColumn("First Name",90);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

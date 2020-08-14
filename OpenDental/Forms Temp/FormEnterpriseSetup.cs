@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormEnterpriseSetup() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormEnterpriseSetup_Load(object sender,EventArgs e) {
@@ -35,7 +35,7 @@ namespace OpenDental {
 			#region Account Tab
 			checkAgingMonthly.Checked=Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily);
 			foreach(PayClinicSetting prompt in Enum.GetValues(typeof(PayClinicSetting))) {
-				comboPaymentClinicSetting.Items.Add(Lan.G(this,prompt.GetDescription()));
+				comboPaymentClinicSetting.Items.Add(prompt.GetDescription());
 			}
 			comboPaymentClinicSetting.SelectedIndex=PrefC.GetInt(PrefName.PaymentClinicSetting);
 			checkPaymentsPromptForPayType.Checked=Prefs.GetBool(PrefName.PaymentsPromptForPayType);
@@ -64,7 +64,7 @@ namespace OpenDental {
 			comboRigorousAdjustments.SelectedIndex=PrefC.GetInt(PrefName.RigorousAdjustments);
 			checkHidePaysplits.Checked=Prefs.GetBool(PrefName.PaymentWindowDefaultHideSplits);
 			foreach(PayPlanVersions version in Enum.GetValues(typeof(PayPlanVersions))) {
-				comboPayPlansVersion.Items.Add(Lan.G("enumPayPlanVersions",version.GetDescription()));
+				comboPayPlansVersion.Items.Add(version.GetDescription());
 			}
 			comboPayPlansVersion.SelectedIndex=PrefC.GetInt(PrefName.PayPlansVersion)-1;
 			textBillingElectBatchMax.Text=PrefC.GetInt(PrefName.BillingElectBatchMax).ToString();
@@ -433,8 +433,8 @@ namespace OpenDental {
 			Cursor=Cursors.WaitCursor;
 			ODProgress.ShowAction(
 				() => PhoneNumbers.SyncAllPats(),
-				startingMessage: Lan.G(this,"Syncing all patient phone numbers to the phonenumber table")+"...",
-				actionException: ex => syncError=Lan.G(this,"The patient phone number sync failed with the message")+":\r\n"+ex.Message+"\r\n"+Lan.G(this,"Please try again.")
+				startingMessage: "Syncing all patient phone numbers to the phonenumber table"+"...",
+				actionException: ex => syncError="The patient phone number sync failed with the message"+":\r\n"+ex.Message+"\r\n"+"Please try again."
 			);
 			Cursor=Cursors.Default;
 			if(!string.IsNullOrEmpty(syncError)) {

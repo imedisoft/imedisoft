@@ -65,7 +65,7 @@ namespace OpenDental {
 				gridUsers.SetSelected(false);
 				butCopyUser.Enabled=(_selectedUser!=null);
 				if(_selectedUser==null) {
-					labelUserCurr.Text=Lan.G(this,"No User Selected");
+					labelUserCurr.Text="No User Selected";
 					return;
 				}
 				labelUserCurr.Text=_selectedUser.UserName;
@@ -103,7 +103,7 @@ namespace OpenDental {
 
 		private void UserControlUserGroupSecurity_Load(object sender,EventArgs e) {
 			if(CopyUserClick!=null) {//CEMT currently does not define/allow a user to be copied.
-				contextMenuUsers.MenuItems.Add(Lan.G(this,"Copy User"),new EventHandler(butCopyUser_Click));
+				contextMenuUsers.MenuItems.Add("Copy User",new EventHandler(butCopyUser_Click));
 				gridUsers.ContextMenu=contextMenuUsers;
 				butCopyUser.Visible=true;//False by default
 			}
@@ -136,10 +136,10 @@ namespace OpenDental {
 				if(Prefs.GetBool(PrefName.EasyHideDentalSchools) && (filterCur == UserFilters.Students || filterCur == UserFilters.Instructors)) {
 					continue;
 				}
-				comboShowOnly.Items.Add(new ODBoxItem<UserFilters>(Lan.G(this,filterCur.GetDescription()),filterCur));
+				comboShowOnly.Items.Add(new ODBoxItem<UserFilters>(filterCur.GetDescription(),filterCur));
 			}
 			comboShowOnly.SelectedIndex=0;
-			comboSchoolClass.Items.Add(new ODBoxItem<SchoolClass>(Lan.G(this,"All")));
+			comboSchoolClass.Items.Add(new ODBoxItem<SchoolClass>("All"));
 			comboSchoolClass.SelectedIndex=0;
 			foreach(SchoolClass schoolClassCur in SchoolClasses.GetDeepCopy()) {
 				comboSchoolClass.Items.Add(new ODBoxItem<SchoolClass>(SchoolClasses.GetDescript(schoolClassCur),schoolClassCur));
@@ -148,14 +148,14 @@ namespace OpenDental {
 				comboClinic.Visible=true;
 				labelClinic.Visible=true;
 				comboClinic.Items.Clear();
-				comboClinic.Items.Add(new ODBoxItem<Clinic>(Lan.G(this,"All Clinics")));
+				comboClinic.Items.Add(new ODBoxItem<Clinic>("All Clinics"));
 				comboClinic.SelectedIndex=0;
 				foreach(Clinic clinicCur in Clinics.GetDeepCopy(true)) {
 					comboClinic.Items.Add(new ODBoxItem<Clinic>(clinicCur.Abbr,clinicCur));
 				}
 			}
 			comboGroups.Items.Clear();
-			comboGroups.Items.Add(new ODBoxItem<UserGroup>(Lan.G(this,"All Groups")));
+			comboGroups.Items.Add(new ODBoxItem<UserGroup>("All Groups"));
 			comboGroups.SelectedIndex=0;
 			foreach(UserGroup groupCur in UserGroups.GetList(IsForCEMT)) {
 				comboGroups.Items.Add(new ODBoxItem<UserGroup>(groupCur.Description,groupCur));
@@ -287,7 +287,7 @@ namespace OpenDental {
 				labelSchoolClass.Visible=false;
 				comboSchoolClass.Visible=false;
 			}
-			labelFilterType.Text=Lan.G(this,filterType);
+			labelFilterType.Text=filterType;
 			textPowerSearch.Text=string.Empty;
 			FillGridUsers();
 		}
@@ -303,14 +303,14 @@ namespace OpenDental {
 			gridUsers.BeginUpdate();
 			gridUsers.ListGridColumns.Clear();
 			string tableName="TableSecurity";
-			gridUsers.ListGridColumns.Add(new GridColumn(Lan.G(tableName,"Username"),90));
-			gridUsers.ListGridColumns.Add(new GridColumn(Lan.G(tableName,"Employee"),90));
-			gridUsers.ListGridColumns.Add(new GridColumn(Lan.G(tableName,"Provider"),90));
+			gridUsers.ListGridColumns.Add(new GridColumn("Username",90));
+			gridUsers.ListGridColumns.Add(new GridColumn("Employee",90));
+			gridUsers.ListGridColumns.Add(new GridColumn("Provider",90));
 			if(PrefC.HasClinicsEnabled) {
-				gridUsers.ListGridColumns.Add(new GridColumn(Lan.G(tableName,"Clinic"),80));
-				gridUsers.ListGridColumns.Add(new GridColumn(Lan.G(tableName,"Clinic\r\nRestr"),38,HorizontalAlignment.Center));
+				gridUsers.ListGridColumns.Add(new GridColumn("Clinic",80));
+				gridUsers.ListGridColumns.Add(new GridColumn("Clinic\r\nRestr",38,HorizontalAlignment.Center));
 			}
-			gridUsers.ListGridColumns.Add(new GridColumn(Lan.G(tableName,"Strong\r\nPwd"),45,HorizontalAlignment.Center));
+			gridUsers.ListGridColumns.Add(new GridColumn("Strong\r\nPwd",45,HorizontalAlignment.Center));
 			gridUsers.ListGridRows.Clear();
 			List<Userod> listFilteredUsers=GetFilteredUsersHelper();
 			foreach(Userod user in listFilteredUsers) {
@@ -399,7 +399,7 @@ namespace OpenDental {
 				listAssociatedUsers.Items.Add(new ODBoxItem<Userod>(userCur.UserName,userCur));
 			}
 			if(listAssociatedUsers.Items.Count == 0) {
-				listAssociatedUsers.Items.Add(new ODBoxItem<Userod>(Lan.G(this,"None")));
+				listAssociatedUsers.Items.Add(new ODBoxItem<Userod>("None"));
 			}
 		}
 

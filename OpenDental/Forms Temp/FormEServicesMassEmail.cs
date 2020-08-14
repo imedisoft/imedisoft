@@ -30,7 +30,7 @@ namespace OpenDental
 		
 		public FormEServicesMassEmail(WebServiceMainHQProxy.EServiceSetup.SignupOut signupOut) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_signupOut=signupOut;
 		}
 

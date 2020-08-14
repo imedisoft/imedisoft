@@ -25,7 +25,7 @@ namespace OpenDental
 		
 		public FormEServicesEConnector() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormEServicesEConnector_Load(object sender,EventArgs e) {
@@ -77,8 +77,8 @@ namespace OpenDental
 			//If set, make sure that this is set to the computer currently logged on.
 			//string updateServerName=Prefs.GetString(PrefName.WebServiceServerName);
 			//if(!string.IsNullOrEmpty(updateServerName)&&!ODEnvironment.IdIsThisComputer(updateServerName.ToLower())) {
-			//	result=MessageBox.Show(Lan.G(this,"The eConnector service should be installed on the Update Server")+": "+updateServerName+"\r\n"
-			//		+Lan.G(this,"Are you trying to install the eConnector on a different computer by accident?"),"",MessageBoxButtons.YesNoCancel);
+			//	result=MessageBox.Show("The eConnector service should be installed on the Update Server"+": "+updateServerName+"\r\n"
+			//		+"Are you trying to install the eConnector on a different computer by accident?","",MessageBoxButtons.YesNoCancel);
 			//	//Only saying No to this message box pop up will allow the user to continue (meaning they fully understand what they are getting into).
 			//	if(result!=DialogResult.No) {
 			//		return;
@@ -86,8 +86,8 @@ namespace OpenDental
 			//}
 			////Only ask the user if they want to set the Update Server Name preference if it is not already set.
 			//if(string.IsNullOrEmpty(updateServerName)) {
-			//	result=MessageBox.Show(Lan.G(this,"The computer that has the eConnector service installed should be set as the Update Server.")+"\r\n"
-			//		+Lan.G(this,"Would you like to make this computer the Update Server?"),"",MessageBoxButtons.YesNoCancel);
+			//	result=MessageBox.Show("The computer that has the eConnector service installed should be set as the Update Server."+"\r\n"
+			//		+"Would you like to make this computer the Update Server?","",MessageBoxButtons.YesNoCancel);
 			//	if(result==DialogResult.Cancel) {
 			//		return;
 			//	}
@@ -121,11 +121,11 @@ namespace OpenDental
 			List<EServiceSignal> listESignals=EServiceSignals.GetServiceHistory(eServiceCode.ListenerService,DateTime.Today.AddDays(-30),DateTime.Today);
 			gridListenerServiceStatusHistory.BeginUpdate();
 			gridListenerServiceStatusHistory.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G(this,"DateTime"),120);
+			GridColumn col=new GridColumn("DateTime",120);
 			gridListenerServiceStatusHistory.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Status"),90);
+			col=new GridColumn("Status",90);
 			gridListenerServiceStatusHistory.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Details"),80){ IsWidthDynamic=true };
+			col=new GridColumn("Details",80){ IsWidthDynamic=true };
 			gridListenerServiceStatusHistory.ListGridColumns.Add(col);
 			gridListenerServiceStatusHistory.ListGridRows.Clear();
 			GridRow row;
@@ -170,7 +170,7 @@ namespace OpenDental
 			//string serviceErrors=ServicesHelper.StartServices(listEConnectorServices);
 			//Cursor=Cursors.Default;
 			//if(!string.IsNullOrEmpty(serviceErrors)) {
-			//	string error=Lan.G(this,"There was a problem starting eConnector Services.  Please go manually start the following eConnector Services")
+			//	string error="There was a problem starting eConnector Services.  Please go manually start the following eConnector Services"
 			//		+":\r\n"+serviceErrors;
 			//	MessageBox.Show(error);
 			//}

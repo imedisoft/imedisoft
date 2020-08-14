@@ -249,7 +249,7 @@ namespace OpenDental {
 			}
 			FillTree(true);
 			if(errorMessage!="") {
-				MessageBox.Show(Lan.G(this,"The following items are directories and were not copied into the images folder for this patient.")+errorMessage);
+				MessageBox.Show("The following items are directories and were not copied into the images folder for this patient."+errorMessage);
 			}
 		}
 
@@ -419,8 +419,8 @@ namespace OpenDental {
 				string mountSourceCat=Defs.GetDef(DefCat.ImageCats,mount.DocCategory).ItemName;
 				string mountDestCat=Defs.GetDef(DefCat.ImageCats,nodeOverCategoryDefNum).ItemName;
 				mount.DocCategory=nodeOverCategoryDefNum;
-				SecurityLogs.MakeLogEntry(Permissions.ImageEdit,mount.PatNum,Lan.G(this,"Mount moved from")+" "+mountSourceCat+" "
-					+Lan.G(this,"to")+" "+mountDestCat);
+				SecurityLogs.MakeLogEntry(Permissions.ImageEdit,mount.PatNum,"Mount moved from"+" "+mountSourceCat+" "
+					+"to"+" "+mountDestCat);
 				Mounts.Update(mount);
 			}
 			else if(_nodeIdTagDown.NodeType==EnumNodeType.Doc) {
@@ -428,15 +428,15 @@ namespace OpenDental {
 				string docSourceCat=Defs.GetDef(DefCat.ImageCats,doc.DocCategory).ItemName;
 				string docDestCat=Defs.GetDef(DefCat.ImageCats,nodeOverCategoryDefNum).ItemName;
 				doc.DocCategory=nodeOverCategoryDefNum;
-				string logText=Lan.G(this,"Document moved")+": "+doc.FileName;
+				string logText="Document moved"+": "+doc.FileName;
 				if(doc.Description!="") {
 					string docDescript=doc.Description;
 					if(docDescript.Length>50) {
 						docDescript=docDescript.Substring(0,50);
 					}
-					logText+=" "+Lan.G(this,"with description")+" "+docDescript;
+					logText+=" "+"with description"+" "+docDescript;
 				}
-				logText+=" "+Lan.G(this,"from category")+" "+docSourceCat+" "+Lan.G(this,"to category")+" "+docDestCat;
+				logText+=" "+"from category"+" "+docSourceCat+" "+"to category"+" "+docDestCat;
 				SecurityLogs.MakeLogEntry(Permissions.ImageEdit,doc.PatNum,logText,doc.DocNum,doc.DateTStamp);
 				Documents.Update(doc);
 			}
@@ -1220,9 +1220,7 @@ namespace OpenDental {
 			}
 			_initializedOnStartup=true;
 			_pointMouseDown=new Point();
-			Lan.C(this,new System.Windows.Forms.Control[] {
-				//this.button1,
-			});
+
 			LayoutToolBar();
 			contextTree.MenuItems.Clear();
 			contextTree.MenuItems.Add("Print",new System.EventHandler(menuTree_Click));
@@ -1237,24 +1235,24 @@ namespace OpenDental {
 			ToolBarMain.Buttons.Clear();
 			ToolBarPaint.Buttons.Clear();
 			ODToolBarButton button;
-			ToolBarMain.Buttons.Add(new ODToolBarButton("",1,Lan.G(this,"Print"),"Print"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton("",2,Lan.G(this,"Delete"),"Delete"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("",1,"Print","Print"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("",2,"Delete","Delete"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			button=new ODToolBarButton(Lan.G(this,"Scan:"),-1,"","");
+			button=new ODToolBarButton("Scan:",-1,"","");
 			button.Style=ODToolBarButtonStyle.Label;
 			ToolBarMain.Buttons.Add(button);
-			ToolBarMain.Buttons.Add(new ODToolBarButton("",14,Lan.G(this,"Scan Document"),"ScanDoc"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton("",18,Lan.G(this,"Scan Multi-Page Document"),"ScanMultiDoc"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("",14,"Scan Document","ScanDoc"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("",18,"Scan Multi-Page Document","ScanMultiDoc"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Import"),5,Lan.G(this,"Import From File"),"Import"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Export"),19,Lan.G(this,"Export To File"),"Export"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Copy"),17,Lan.G(this,"Copy displayed image to clipboard"),"Copy"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Paste"),6,Lan.G(this,"Paste From Clipboard"),"Paste"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Import",5,"Import From File","Import"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Export",19,"Export To File","Export"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Copy",17,"Copy displayed image to clipboard","Copy"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Paste",6,"Paste From Clipboard","Paste"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Close"),-1,Lan.G(this,"Close window"),"Close"));
-			ToolBarPaint.Buttons.Add(new ODToolBarButton("",8,Lan.G(this,"Zoom In"),"ZoomIn"));
-			ToolBarPaint.Buttons.Add(new ODToolBarButton("",9,Lan.G(this,"Zoom Out"),"ZoomOut"));
-			ToolBarPaint.Buttons.Add(new ODToolBarButton("100",-1,Lan.G(this,"Zoom 100"),"Zoom100"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Close",-1,"Close window","Close"));
+			ToolBarPaint.Buttons.Add(new ODToolBarButton("",8,"Zoom In","ZoomIn"));
+			ToolBarPaint.Buttons.Add(new ODToolBarButton("",9,"Zoom Out","ZoomOut"));
+			ToolBarPaint.Buttons.Add(new ODToolBarButton("100",-1,"Zoom 100","Zoom100"));
 			ToolBarMain.Invalidate();
 			ToolBarPaint.Invalidate();
 		}
@@ -1264,29 +1262,29 @@ namespace OpenDental {
 			ToolBarMain.Buttons.Clear();
 			ToolBarPaint.Buttons.Clear();
 			ODToolBarButton button;
-			ToolBarMain.Buttons.Add(new ODToolBarButton("",1,Lan.G(this,"Print"),"Print"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton("",2,Lan.G(this,"Delete"),"Delete"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("",1,"Print","Print"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("",2,"Delete","Delete"));
 			if(_claimPaymentNum==0) {
-				ToolBarMain.Buttons.Add(new ODToolBarButton("",3,Lan.G(this,"Item Info"),"Info"));
-				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Sign"),-1,Lan.G(this,"Sign this document"),"Sign"));
+				ToolBarMain.Buttons.Add(new ODToolBarButton("",3,"Item Info","Info"));
+				ToolBarMain.Buttons.Add(new ODToolBarButton("Sign",-1,"Sign this document","Sign"));
 			}
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			button=new ODToolBarButton(Lan.G(this,"Scan:"),-1,"","");
+			button=new ODToolBarButton("Scan:",-1,"","");
 			button.Style=ODToolBarButtonStyle.Label;
 			ToolBarMain.Buttons.Add(button);
-			ToolBarMain.Buttons.Add(new ODToolBarButton("",14,Lan.G(this,"Scan Document"),"ScanDoc"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton("",18,Lan.G(this,"Scan Multi-Page Document"),"ScanMultiDoc"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("",14,"Scan Document","ScanDoc"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("",18,"Scan Multi-Page Document","ScanMultiDoc"));
 			if(_claimPaymentNum==0) {
-				ToolBarMain.Buttons.Add(new ODToolBarButton("",16,Lan.G(this,"Scan Radiograph"),"ScanXRay"));
-				ToolBarMain.Buttons.Add(new ODToolBarButton("",15,Lan.G(this,"Scan Photo"),"ScanPhoto"));
+				ToolBarMain.Buttons.Add(new ODToolBarButton("",16,"Scan Radiograph","ScanXRay"));
+				ToolBarMain.Buttons.Add(new ODToolBarButton("",15,"Scan Photo","ScanPhoto"));
 			}
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Import"),5,Lan.G(this,"Import From File"),"Import"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Export"),19,Lan.G(this,"Export To File"),"Export"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Copy"),17,Lan.G(this,"Copy displayed image to clipboard"),"Copy"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Paste"),6,Lan.G(this,"Paste From Clipboard"),"Paste"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Import",5,"Import From File","Import"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Export",19,"Export To File","Export"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Copy",17,"Copy displayed image to clipboard","Copy"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Paste",6,"Paste From Clipboard","Paste"));
 			if(_claimPaymentNum==0) {
-				button=new ODToolBarButton(Lan.G(this,"Templates"),-1,"","Forms");
+				button=new ODToolBarButton("Templates",-1,"","Forms");
 				button.Style=ODToolBarButtonStyle.DropDownButton;
 				menuForms=new ContextMenu();
 				string formDir=Storage.CombinePaths(OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath(),"Forms");
@@ -1303,7 +1301,7 @@ namespace OpenDental {
 				
 				button.DropDownMenu=menuForms;
 				ToolBarMain.Buttons.Add(button);
-				button=new ODToolBarButton(Lan.G(this,"Mounts"),-1,"","Mounts");
+				button=new ODToolBarButton("Mounts",-1,"","Mounts");
 				button.Style=ODToolBarButtonStyle.DropDownButton;
 				menuMounts=new ContextMenu();
 				List<MountDef> listMountDefs=MountDefs.GetDeepCopy();
@@ -1312,7 +1310,7 @@ namespace OpenDental {
 				}
 				button.DropDownMenu=menuMounts;
 				//ToolBarMain.Buttons.Add(button);//future
-				button=new ODToolBarButton(Lan.G(this,"Capture"),-1,"Capture Image From Device","Capture");
+				button=new ODToolBarButton("Capture",-1,"Capture Image From Device","Capture");
 				button.Style=ODToolBarButtonStyle.ToggleButton;
 				ToolBarMain.Buttons.Add(button);
 				//Program links:
@@ -1320,30 +1318,30 @@ namespace OpenDental {
 			}
 			else {//claimpayment
 				ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Close"),-1,Lan.G(this,"Close window"),"Close"));
+				ToolBarMain.Buttons.Add(new ODToolBarButton("Close",-1,"Close window","Close"));
 			}
 			if(_claimPaymentNum==0) {
-				button=new ODToolBarButton("",7,Lan.G(this,"Crop Tool"),"Crop");
+				button=new ODToolBarButton("",7,"Crop Tool","Crop");
 				button.Style=ODToolBarButtonStyle.ToggleButton;
 				button.Pushed=_isCropMode;
 				ToolBarPaint.Buttons.Add(button);
-				button=new ODToolBarButton("",10,Lan.G(this,"Hand Tool"),"Hand");
+				button=new ODToolBarButton("",10,"Hand Tool","Hand");
 				button.Style=ODToolBarButtonStyle.ToggleButton;
 				button.Pushed=!_isCropMode;
 				ToolBarPaint.Buttons.Add(button);
 				ToolBarPaint.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
 			}
-			ToolBarPaint.Buttons.Add(new ODToolBarButton("",8,Lan.G(this,"Zoom In"),"ZoomIn"));
-			ToolBarPaint.Buttons.Add(new ODToolBarButton("",9,Lan.G(this,"Zoom Out"),"ZoomOut"));
-			ToolBarPaint.Buttons.Add(new ODToolBarButton("100",-1,Lan.G(this,"Zoom 100"),"Zoom100"));
+			ToolBarPaint.Buttons.Add(new ODToolBarButton("",8,"Zoom In","ZoomIn"));
+			ToolBarPaint.Buttons.Add(new ODToolBarButton("",9,"Zoom Out","ZoomOut"));
+			ToolBarPaint.Buttons.Add(new ODToolBarButton("100",-1,"Zoom 100","Zoom100"));
 			if(_claimPaymentNum==0) {
 				ToolBarPaint.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-				button=new ODToolBarButton(Lan.G(this,"Rotate:"),-1,"","");
+				button=new ODToolBarButton("Rotate:",-1,"","");
 				button.Style=ODToolBarButtonStyle.Label;
 				ToolBarPaint.Buttons.Add(button);
-				ToolBarPaint.Buttons.Add(new ODToolBarButton("",11,Lan.G(this,"Flip"),"Flip"));
-				ToolBarPaint.Buttons.Add(new ODToolBarButton("",12,Lan.G(this,"Rotate Left"),"RotateL"));
-				ToolBarPaint.Buttons.Add(new ODToolBarButton("",13,Lan.G(this,"Rotate Right"),"RotateR"));
+				ToolBarPaint.Buttons.Add(new ODToolBarButton("",11,"Flip","Flip"));
+				ToolBarPaint.Buttons.Add(new ODToolBarButton("",12,"Rotate Left","RotateL"));
+				ToolBarPaint.Buttons.Add(new ODToolBarButton("",13,"Rotate Right","RotateR"));
 			}
 			ToolBarMain.Invalidate();
 			ToolBarPaint.Invalidate();
@@ -1361,7 +1359,7 @@ namespace OpenDental {
 				RefreshModuleData(patNum);
 			}
 			catch(Exception ex) {
-				FriendlyException.Show(Lan.G(this,"Error accessing images."),ex);
+				FriendlyException.Show("Error accessing images.",ex);
 			}
 			RefreshModuleScreen();
 			if(panelNote.Visible) {//Notes and sig box may have been visible previously, with info from another image/patient
@@ -1543,10 +1541,10 @@ namespace OpenDental {
 					if(ImageHelper.HasImageExtension(_documentShowing.FileName)) {
 						string srcFileName = ODFileUtils.CombinePaths(_patFolder,_documentShowing.FileName);
 						if(File.Exists(srcFileName)) {
-							MessageBox.Show(Lan.G(this,"File found but cannot be opened")+": " + _documentShowing.FileName);
+							MessageBox.Show("File found but cannot be opened"+": " + _documentShowing.FileName);
 						}
 						else {
-							MessageBox.Show(Lan.G(this,"File not found")+": " + _documentShowing.FileName);
+							MessageBox.Show("File not found"+": " + _documentShowing.FileName);
 						}
 					}
 					else if(Path.GetExtension(_documentShowing.FileName).ToLower()==".pdf") {//Adobe acrobat file.
@@ -1808,7 +1806,7 @@ namespace OpenDental {
 					ImageStore.Export(fileName,doc,_patCur);
 				}
 				catch(Exception ex) {
-					MessageBox.Show(Lan.G(this,"Unable to export file, May be in use")+": " + ex.Message + ": " + fileName);
+					MessageBox.Show("Unable to export file, May be in use"+": " + ex.Message + ": " + fileName);
 					return;
 				}
 			}
@@ -1828,7 +1826,7 @@ namespace OpenDental {
 					ImageStore.ExportEobAttach(fileName,eob);
 				}
 				catch(Exception ex) {
-					MessageBox.Show(Lan.G(this,"Unable to export file, May be in use")+": " + ex.Message + ": " + fileName);
+					MessageBox.Show("Unable to export file, May be in use"+": " + ex.Message + ": " + fileName);
 					return;
 				}
 			}
@@ -1848,11 +1846,11 @@ namespace OpenDental {
 					ImageStore.ExportAmdAttach(fileName,amd);
 				}
 				catch(Exception ex) {
-					MessageBox.Show(Lan.G(this,"Unable to export file, May be in use")+": " + ex.Message + ": " + fileName);
+					MessageBox.Show("Unable to export file, May be in use"+": " + ex.Message + ": " + fileName);
 					return;
 				}
 			}
-			MessageBox.Show(Lan.G(this,"Successfully exported to ")+fileName);
+			MessageBox.Show("Successfully exported to "+fileName);
 			if(nodeIdTag.NodeType==EnumNodeType.ApteryxImage && apteryxDoc!=null) {
 				try {
 					ImageStore.DeleteDocuments(new List<Document> { apteryxDoc },_patFolder);
@@ -1936,7 +1934,7 @@ namespace OpenDental {
 					}
 					catch(Exception ex) {
 						actionCloseUploadProgress?.Invoke();
-						MessageBox.Show(Lan.G(this,"Unable to copy file, May be in use: ")+ex.Message+": "+openFileDialog.FileName);
+						MessageBox.Show("Unable to copy file, May be in use: "+ex.Message+": "+openFileDialog.FileName);
 						copied = false;
 					}
 				}
@@ -1959,7 +1957,7 @@ namespace OpenDental {
 					}
 					catch(Exception ex) {
 						actionCloseUploadProgress?.Invoke();
-						MessageBox.Show(Lan.G(this,"Unable to copy file, May be in use: ")+ex.Message+": "+openFileDialog.FileName);
+						MessageBox.Show("Unable to copy file, May be in use: "+ex.Message+": "+openFileDialog.FileName);
 						copied = false;
 					}
 				}
@@ -1980,7 +1978,7 @@ namespace OpenDental {
 					}
 					catch(Exception ex) {
 						actionCloseUploadProgress?.Invoke();
-						MessageBox.Show(Lan.G(this,"Unable to copy file, May be in use: ")+ex.Message+": "+openFileDialog.FileName);
+						MessageBox.Show("Unable to copy file, May be in use: "+ex.Message+": "+openFileDialog.FileName);
 						copied = false;
 					}
 					if(copied) {
@@ -2052,7 +2050,7 @@ namespace OpenDental {
 				return;
 			}
 			if(!iDataObject.GetDataPresent(DataFormats.Bitmap)) {
-				MessageBox.Show(Lan.G(this,"No bitmap present on clipboard"));
+				MessageBox.Show("No bitmap present on clipboard");
 				return;
 			}
 			Bitmap bitmapPaste=(Bitmap)iDataObject.GetData(DataFormats.Bitmap);
@@ -2068,7 +2066,7 @@ namespace OpenDental {
 					eob=ImageStore.ImportEobAttach(bitmapPaste,_claimPaymentNum);
 				}
 				catch {
-					MessageBox.Show(Lan.G(this,"Error saving eob."));
+					MessageBox.Show("Error saving eob.");
 					Cursor=Cursors.Default;
 					return;
 				}
@@ -2081,7 +2079,7 @@ namespace OpenDental {
 					amd=ImageStore.ImportAmdAttach(bitmapPaste,_ehrAmendmentCur);
 				}
 				catch {
-					MessageBox.Show(Lan.G(this,"Error saving amendment."));
+					MessageBox.Show("Error saving amendment.");
 					Cursor=Cursors.Default;
 					return;
 				}
@@ -2103,7 +2101,7 @@ namespace OpenDental {
 					Documents.Update(doc);
 				}
 				catch {
-					MessageBox.Show(Lan.G(this,"Error saving document."));
+					MessageBox.Show("Error saving document.");
 					Cursor=Cursors.Default;
 					return;
 				}
@@ -2115,7 +2113,7 @@ namespace OpenDental {
 					doc=ImageStore.Import(bitmapPaste,GetCurrentCategory(),ImageType.Photo,_patCur);//Makes log entry
 				}
 				catch {
-					MessageBox.Show(Lan.G(this,"Error saving document."));
+					MessageBox.Show("Error saving document.");
 					Cursor=Cursors.Default;
 					return;
 				}
@@ -2207,7 +2205,7 @@ namespace OpenDental {
 				}
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.G(this,"An error occurred while printing")+"\r\n"+ex.ToString());
+				MessageBox.Show("An error occurred while printing"+"\r\n"+ex.ToString());
 			}
 		}
 
@@ -2304,7 +2302,7 @@ namespace OpenDental {
 				else {
 					message=errorCode+" "+((EZTwainErrorCode)errorCode).ToString();
 				}
-				MessageBox.Show(Lan.G(this,"Unable to scan. Please make sure you can scan using other software. Error: "+message));
+				MessageBox.Show("Unable to scan. Please make sure you can scan using other software. Error: "+message);
 				return;
 			}
 			if(hdib==(IntPtr)0) {//This is down here because there might also be an informative error code that we would like to use above.
@@ -2317,7 +2315,7 @@ namespace OpenDental {
 				bitmapScanned=Bitmap.FromHbitmap(hbitmap);//Sometimes throws 'A generic error occurred in GDI+.'
 			}
 			catch(Exception ex) {
-				FriendlyException.Show(Lan.G(this,"Error importing eob")+": "+ex.Message,ex);
+				FriendlyException.Show("Error importing eob"+": "+ex.Message,ex);
 				return;
 			}			
 			bitmapScanned.SetResolution((float)xdpi,(float)ydpi);
@@ -2346,7 +2344,7 @@ namespace OpenDental {
 				catch(Exception ex) {
 					saved=false;
 					Cursor=Cursors.Default;
-					MessageBox.Show(Lan.G(this,"Error saving eob")+": "+ex.Message);
+					MessageBox.Show("Error saving eob"+": "+ex.Message);
 				}
 				if(bitmapScanned!=null) {
 					bitmapScanned.Dispose();
@@ -2372,7 +2370,7 @@ namespace OpenDental {
 				catch(Exception ex) {
 					saved=false;
 					Cursor=Cursors.Default;
-					MessageBox.Show(Lan.G(this,"Error saving amendment")+": "+ex.Message);
+					MessageBox.Show("Error saving amendment"+": "+ex.Message);
 				}
 				if(bitmapScanned!=null) {
 					bitmapScanned.Dispose();
@@ -2395,7 +2393,7 @@ namespace OpenDental {
 				catch(Exception ex) {
 					saved=false;
 					Cursor=Cursors.Default;
-					MessageBox.Show(Lan.G(this,"Unable to save document")+": "+ex.Message);
+					MessageBox.Show("Unable to save document"+": "+ex.Message);
 				}
 				if(bitmapScanned!=null) {
 					bitmapScanned.Dispose();
@@ -2488,7 +2486,7 @@ namespace OpenDental {
 				else {
 					message=errorCode+" "+((EZTwainErrorCode)errorCode).ToString();
 				}
-				MessageBox.Show(Lan.G(this,"Unable to scan. Please make sure you can scan using other software. Error: "+message));
+				MessageBox.Show("Unable to scan. Please make sure you can scan using other software. Error: "+message);
 				return;
 			}
 			NodeIdTag nodeIdTag=new NodeIdTag();
@@ -2499,7 +2497,7 @@ namespace OpenDental {
 					eob=ImageStore.ImportEobAttach(tempFile,_claimPaymentNum);
 				}
 				catch(Exception ex) {
-					MessageBox.Show(Lan.G(this,"Unable to copy file, May be in use: ") + ex.Message + ": " + tempFile);
+					MessageBox.Show("Unable to copy file, May be in use: " + ex.Message + ": " + tempFile);
 					copied = false;
 				}
 				if(copied) {
@@ -2517,7 +2515,7 @@ namespace OpenDental {
 					ImageStore.CleanAmdAttach(fileNameOld);
 				}
 				catch(Exception ex) {
-					MessageBox.Show(Lan.G(this,"Unable to copy file, May be in use: ") + ex.Message + ": " + tempFile);
+					MessageBox.Show("Unable to copy file, May be in use: " + ex.Message + ": " + tempFile);
 					copied = false;
 				}
 				if(copied) {
@@ -2534,7 +2532,7 @@ namespace OpenDental {
 					doc=ImageStore.Import(tempFile,GetCurrentCategory(),_patCur);
 				}
 				catch(Exception ex) {
-					MessageBox.Show(Lan.G(this,"Unable to copy file, May be in use: ") + ex.Message + ": " + tempFile);
+					MessageBox.Show("Unable to copy file, May be in use: " + ex.Message + ": " + tempFile);
 					copied = false;
 				}
 				if(copied) {
@@ -2700,10 +2698,10 @@ namespace OpenDental {
 				_threadImageRequest=new ODThread(ImagesOnThreadStart,_patCur.Copy());
 				_threadImageRequest.AddExceptionHandler(new ODThread.ExceptionDelegate((ex) => {
 					if(InvokeRequired) {
-						Invoke((Action)(() => FriendlyException.Show(Lan.G(this,"Unable to display Apteryx Images"),ex)));
+						Invoke((Action)(() => FriendlyException.Show("Unable to display Apteryx Images",ex)));
 					}
 					else {
-						FriendlyException.Show(Lan.G(this,"Unable to display Apteryx Images"),ex);
+						FriendlyException.Show("Unable to display Apteryx Images",ex);
 					}
 				}));
 				_threadImageRequest.Name="ImageRequestThread";
@@ -2800,7 +2798,7 @@ namespace OpenDental {
 				pdfFilePath=ODFileUtils.CombinePaths(atoZFolder,atoZFileName);
 
 				if(!File.Exists(pdfFilePath)) {
-					MessageBox.Show(Lan.G(this,"File not found")+": " + atoZFileName);
+					MessageBox.Show("File not found"+": " + atoZFileName);
 				}
 				else {
 					Application.DoEvents();//Show the browser control before loading, in case loading a large PDF, so the user can see the preview has started without waiting.
@@ -2857,10 +2855,10 @@ namespace OpenDental {
 			}));
 			threadGetBitmap.AddExceptionHandler(new ODThread.ExceptionDelegate((ex) => {
 				if(InvokeRequired) {
-						Invoke((Action)(() => FriendlyException.Show(Lan.G(this,"Unable to download image."),ex)));
+						Invoke((Action)(() => FriendlyException.Show("Unable to download image.",ex)));
 					}
 					else {
-						FriendlyException.Show(Lan.G(this,"Unable to download image."),ex);
+						FriendlyException.Show("Unable to download image.",ex);
 					}
 			}));
 			//display the progress dialog to the user:
@@ -3352,7 +3350,7 @@ namespace OpenDental {
 				if(lab!=null) {
 					string dateSt=lab.ObservationDateTimeStart.PadRight(8,'0').Substring(0,8);//stored in DB as yyyyMMddhhmmss-zzzz
 					DateTime dateT=PIn.Date(dateSt.Substring(4,2)+"/"+dateSt.Substring(6,2)+"/"+dateSt.Substring(0,4));
-					MessageBox.Show(Lan.G(this,"This image is attached to a lab order for this patient on "+dateT.ToShortDateString()+". "+Lan.G(this,"Detach image from this lab order before deleting the image.")));
+					MessageBox.Show("This image is attached to a lab order for this patient on "+dateT.ToShortDateString()+". "+"Detach image from this lab order before deleting the image.");
 					return;
 				}
 			}

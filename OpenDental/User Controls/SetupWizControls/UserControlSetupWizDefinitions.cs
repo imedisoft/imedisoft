@@ -58,7 +58,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 			listDefCatsOrdered = listDefCatsOrdered.OrderBy(x => x.DefCat.GetDescription()).ToList(); //orders alphabetically.
 			ODBoxItem<DefCatOptions> defCatItem;
 			foreach(DefCatOptions defCOpt in listDefCatsOrdered) {
-				defCatItem=new ODBoxItem<DefCatOptions>(Lans.g(this,defCOpt.DefCat.GetDescription()),defCOpt);
+				defCatItem=new ODBoxItem<DefCatOptions>(defCOpt.DefCat.GetDescription(),defCOpt);
 				listCategory.Items.Add(defCatItem);
 				if(defCOpt.DefCat==listDefCatsOrdered[0].DefCat) {
 					listCategory.SelectedItem=defCatItem;
@@ -80,11 +80,11 @@ namespace OpenDental.User_Controls.SetupWizard {
 			}
 			if(_selectedDefCatOpt.CanEditName) {
 				groupEdit.Enabled=true;
-				groupEdit.Text=Lans.g(this,"Edit Items");
+				groupEdit.Text="Edit Items";
 			}
 			else {
 				groupEdit.Enabled=false;
-				groupEdit.Text=Lans.g(this,"Not allowed");
+				groupEdit.Text="Not allowed";
 			}
 			textGuide.Text=_selectedDefCatOpt.HelpText;
 		}

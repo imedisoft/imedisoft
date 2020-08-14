@@ -54,7 +54,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormRpProviderPayroll(bool isDetailed=false){
 			InitializeComponent();
- 			Lan.F(this);
+ 			
 			if(isDetailed) {
 				radioDetailedReport.Checked=true;
 			}
@@ -393,7 +393,7 @@ namespace OpenDental{
 				checkClinicBreakdown.Checked=Prefs.GetBool(PrefName.ReportPandIhasClinicBreakdown);
 				_listClinics=Clinics.GetForUserod(Security.CurrentUser);
 				if(!Security.CurrentUser.ClinicIsRestricted) {
-					listClin.Items.Add(Lan.G(this,"Unassigned"));
+					listClin.Items.Add("Unassigned");
 					listClin.SetSelected(0,true);
 				}
 				for(int i=0;i<_listClinics.Count;i++) {
@@ -429,7 +429,7 @@ namespace OpenDental{
 				dtPickerFrom.Value=_listPayPeriods[_selectedPayPeriodIdx].DateStart;
 				dtPickerTo.Value=_listPayPeriods[_selectedPayPeriodIdx].DateStop;
 			}
-			butThis.Text=Lan.G(this,"This Period");
+			butThis.Text="This Period";
 			SetDates();
 		}
 
@@ -576,7 +576,7 @@ namespace OpenDental{
 						if(listClin.SelectedIndices[i]==0) {
 							Clinic unassigned=new Clinic();
 							unassigned.ClinicNum=0;
-							unassigned.Abbr=Lan.G(this,"Unassigned");
+							unassigned.Abbr="Unassigned";
 							listClinics.Add(unassigned);
 						}
 						else {
@@ -588,11 +588,11 @@ namespace OpenDental{
 			DataSet ds=RpProdInc.GetProviderPayrollDataForClinics(dateFrom,dateTo,listProvs,listClinics
 				,checkAllProv.Checked,checkAllClin.Checked,radioDetailedReport.Checked);
 			report.ReportName="Provider Payroll P&I";
-			report.AddTitle("Title",Lan.G(this,"Provider Payroll Production and Income"));
+			report.AddTitle("Title","Provider Payroll Production and Income");
 			report.AddSubTitle("PracName",Prefs.GetString(PrefName.PracticeTitle));
 			report.AddSubTitle("Date",dateFrom.ToShortDateString()+" - "+dateTo.ToShortDateString());
 			if(checkAllProv.Checked) {
-				report.AddSubTitle("Providers",Lan.G(this,"All Providers"));
+				report.AddSubTitle("Providers","All Providers");
 			}
 			else {
 				string str="";
@@ -606,7 +606,7 @@ namespace OpenDental{
 			}
 			if(PrefC.HasClinicsEnabled) {
 				if(checkAllClin.Checked) {
-					report.AddSubTitle("Clinics",Lan.G(this,"All Clinics"));
+					report.AddSubTitle("Clinics","All Clinics");
 				}
 				else {
 					string clinNames="";
@@ -619,7 +619,7 @@ namespace OpenDental{
 						}
 						else {
 							if(listClin.SelectedIndices[i]==0) {
-								clinNames+=Lan.G(this,"Unassigned");
+								clinNames+="Unassigned";
 							}
 							else {
 								clinNames+=_listClinics[listClin.SelectedIndices[i]-1].Abbr;//Minus 1 from the selected index

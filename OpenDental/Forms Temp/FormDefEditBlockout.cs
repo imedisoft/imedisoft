@@ -36,7 +36,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormDefEditBlockout(Def defCur) {
 			InitializeComponent();// Required for Windows Form Designer support
-			Lan.F(this);
+			
 			DefCur=defCur.Copy();
 		}
 

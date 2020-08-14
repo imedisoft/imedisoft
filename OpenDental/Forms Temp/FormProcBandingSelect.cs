@@ -18,7 +18,7 @@ namespace OpenDental {
 
 		public FormProcBandingSelect(long patNum) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_patNum=patNum;
 		}
 
@@ -31,9 +31,9 @@ namespace OpenDental {
 			gridTpBandingProcs.BeginUpdate();
 			gridTpBandingProcs.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G("TableBandingProcs","Code"),70);
+			col=new GridColumn("Code",70);
 			gridTpBandingProcs.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableBandingProcs","Description"),140){ IsWidthDynamic=true };
+			col=new GridColumn("Description",140){ IsWidthDynamic=true };
 			gridTpBandingProcs.ListGridColumns.Add(col);
 			gridTpBandingProcs.ListGridRows.Clear();
 			GridRow row;

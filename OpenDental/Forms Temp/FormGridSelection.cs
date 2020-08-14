@@ -16,7 +16,7 @@ namespace OpenDental {
 		/// <summary>listGridRows must have tags set.</summary>
 		public FormGridSelection(List<GridColumn> listGridColumns,List<GridRow> listGridRows,string formTitle,string gridTitle,GridSelectionMode selectMode=GridSelectionMode.One) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_listGridColumns=listGridColumns;
 			_listGridRows=listGridRows;
 			this.Text=formTitle;
@@ -42,7 +42,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(gridMain.SelectedIndices.Length==0) {
-				MessageBox.Show(Lan.G(this.Text+" "+gridMain.Title,"No items are selected.  Please select an item before continuing."));
+				MessageBox.Show("No items are selected.  Please select an item before continuing.");
 				return;
 			}
 			ListSelectedTags=new List<object>(gridMain.SelectedTags<object>());

@@ -41,7 +41,7 @@ namespace OpenDental{
 		public FormDefinitions(DefCat initialCat){
 			InitializeComponent();// Required for Windows Form Designer support
 			_initialCat=initialCat;
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -236,7 +236,7 @@ namespace OpenDental{
 			listDefCatsOrdered = listDefCatsOrdered.OrderBy(x => x.DefCat.GetDescription()).ToList(); //orders alphabetically.
 			ODBoxItem<DefCatOptions> defCatItem;
 			foreach(DefCatOptions defCOpt in listDefCatsOrdered) {
-				defCatItem=new ODBoxItem<DefCatOptions>(Lan.G(this,defCOpt.DefCat.GetDescription()),defCOpt);
+				defCatItem=new ODBoxItem<DefCatOptions>(defCOpt.DefCat.GetDescription(),defCOpt);
 				listCategory.Items.Add(defCatItem);
 				if(_initialCat == defCOpt.DefCat) {
 					listCategory.SelectedItem=defCatItem;
@@ -267,11 +267,11 @@ namespace OpenDental{
 			}
 			if(_selectedDefCatOpt.CanEditName) {
 				groupEdit.Enabled=true;
-				groupEdit.Text=Lans.g(this,"Edit Items");
+				groupEdit.Text="Edit Items";
 			}
 			else {
 				groupEdit.Enabled=false;
-				groupEdit.Text=Lans.g(this,"Not allowed");
+				groupEdit.Text="Not allowed";
 			}
 			textGuide.Text=_selectedDefCatOpt.HelpText;
 		}

@@ -92,7 +92,7 @@ namespace OpenDental{
 					myMessage=ex.Message;
 				}
 				//this.Select(0,this.Text.Length);
-				errorProvider1.SetError(this,Lan.G("ValidDate",myMessage));
+				errorProvider1.SetError(this,myMessage);
 			}
 		}
 

@@ -320,14 +320,14 @@ namespace OpenDentBusiness.Eclaims {
 			StringBuilder strb=new StringBuilder();
 			Carrier carrier=Carriers.GetCarrier(plan.CarrierNum);
 			if(clearinghouseClin==null) {
-				throw new ApplicationException(Lans.g("CanadianOutput","Canadian clearinghouse not found."));
+				throw new ApplicationException("Canadian clearinghouse not found.");
 			}
 			string saveFolder=clearinghouseClin.ExportPath;
 			if(!Directory.Exists(saveFolder)) {
 				throw new ApplicationException(saveFolder+" not found.");
 			}
 			if((carrier.CanadianSupportedTypes&CanSupTransTypes.ClaimReversal_02)!=CanSupTransTypes.ClaimReversal_02) {
-				throw new ApplicationException(Lans.g("CanadianOutput","The carrier does not support reversal transactions."));
+				throw new ApplicationException("The carrier does not support reversal transactions.");
 			}
 			if(carrier.CanadianNetworkNum==0) {
 				throw new ApplicationException("Carrier network not set.");
@@ -340,12 +340,12 @@ namespace OpenDentBusiness.Eclaims {
 			Patient patient=Patients.GetPat(claim.PatNum);
 			Provider prov=Providers.GetProv(claim.ProvTreat);
 			if(!prov.IsCDAnet) {
-				throw new ApplicationException(Lans.g("CanadianOutput","Treating provider is not setup to use CDANet."));
+				throw new ApplicationException("Treating provider is not setup to use CDANet.");
 			}
 			Provider providerFirst=Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
 			Provider billProv=Providers.GetFirstOrDefault(x => x.ProvNum==claim.ProvBill)??providerFirst;
 			if(!billProv.IsCDAnet) {
-				throw new ApplicationException(Lans.g("CanadianOutput","Billing provider is not setup to use CDANet."));
+				throw new ApplicationException("Billing provider is not setup to use CDANet.");
 			}
 			InsPlan insPlan=InsPlans.GetPlan(claim.PlanNum,new List<InsPlan>());
 			Patient subscriber=Patients.GetPat(insSub.Subscriber);
@@ -374,7 +374,7 @@ namespace OpenDentBusiness.Eclaims {
 			}
 			DateTime serverDate=MiscData.GetNowDateTime().Date;
 			if(originalEtransDateTime.Date!=serverDate) {
-				throw new ApplicationException(Lans.g("CanadianOutput","Claims can only be reversed on the day that they were sent. The claim can only be manually reversed."));
+				throw new ApplicationException("Claims can only be reversed on the day that they were sent. The claim can only be manually reversed.");
 			}
 			strb.Append(Canadian.TidyN(etrans.OfficeSequenceNumber,6));
 			//A03 format version number 2 N
@@ -512,7 +512,7 @@ namespace OpenDentBusiness.Eclaims {
 				printCCD(etrans,result,true);//Physically print the form.
 			}
 			if(etrans.AckCode=="R") {
-				throw new ApplicationException(Lans.g("CanadianOutput","Reversal was rejected by clearinghouse. The claim must be reversed manually."));
+				throw new ApplicationException("Reversal was rejected by clearinghouse. The claim must be reversed manually.");
 			}
 			return etransAck.EtransNum;
 		}
@@ -875,7 +875,7 @@ namespace OpenDentBusiness.Eclaims {
 							CCDField fieldG07=fieldInputter.GetFieldById("G07");//disposition message
 							CCDField fieldG08=fieldInputter.GetFieldById("G08");//error code
 							if(!isAutomatic) {
-								MessageBox.Show(Lans.g("","Failed to receive outstanding transactions. Messages from CDANet")+": "+Environment.NewLine+
+								MessageBox.Show("Failed to receive outstanding transactions. Messages from CDANet"+": "+Environment.NewLine+
 									fieldG07.valuestr.Trim()+Environment.NewLine+((fieldG08!=null) ? CCDerror.message(Convert.ToInt32(fieldG08.valuestr),false) : ""));
 							}
 						}
@@ -942,7 +942,7 @@ namespace OpenDentBusiness.Eclaims {
 						printCCD(etrans,result,true);//Physically print the form.
 					}
 					catch {
-						CodeBase.MsgBoxCopyPaste msgbox=new CodeBase.MsgBoxCopyPaste(Lans.g("CanadianOutput","Failed to display one of the ROT responses, here is the raw message")+": "+Environment.NewLine+result);
+						CodeBase.MsgBoxCopyPaste msgbox=new CodeBase.MsgBoxCopyPaste("Failed to display one of the ROT responses, here is the raw message"+": "+Environment.NewLine+result);
 						msgbox.ShowDialog();
 					}
 				}

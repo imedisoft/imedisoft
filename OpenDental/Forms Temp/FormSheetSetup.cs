@@ -13,7 +13,7 @@ namespace OpenDental {
 
 		public FormSheetSetup() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormReportSetup_Load(object sender,EventArgs e) {

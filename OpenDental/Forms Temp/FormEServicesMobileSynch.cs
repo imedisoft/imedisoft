@@ -19,7 +19,7 @@ namespace OpenDental
 		
 		public FormEServicesMobileSynch() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormEServicesMobileSynch_Load(object sender,EventArgs e) {

@@ -17,7 +17,7 @@ namespace OpenDental {
 
 		public FormMedicationMerge() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void CheckUIState() {
@@ -61,19 +61,19 @@ namespace OpenDental {
 				return;
 			}
 			if(_medFrom.MedicationNum==_medFrom.GenericNum && _medInto.MedicationNum!=_medInto.GenericNum) {
-				msgText=Lan.G(this,"You may not merge a generic medication into a brand")+".  "+
-					Lan.G(this,"Select the generic version of the medication to merge into instead")+".";
+				msgText="You may not merge a generic medication into a brand"+".  "+
+					"Select the generic version of the medication to merge into instead"+".";
 				MessageBox.Show(msgText);
 				return;
 			}
 			if(textMedNameFrom.Text!=textMedNameInto.Text) {
-				differentFields+="\r\n"+Lan.G(this,"Medication Name");
+				differentFields+="\r\n"+"Medication Name";
 			}
 			if(textGenNumFrom.Text!=textGenNumInto.Text) {
-				differentFields+="\r\n"+Lan.G(this,"GenericNum");
+				differentFields+="\r\n"+"GenericNum";
 			}
 			if(textRxFrom.Text!=textRxInto.Text) {
-				differentFields+="\r\n"+Lan.G(this,"RxCui");
+				differentFields+="\r\n"+"RxCui";
 			}
 			long numPats=Medications.CountPats(_medFrom.MedicationNum);
 			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure?  The results are permanent and cannot be undone.")) {
@@ -81,16 +81,16 @@ namespace OpenDental {
 			}
 			msgText="";
 			if(differentFields!="") {
-				msgText=Lan.G(this,"The following medication fields do not match")+": "+differentFields+"\r\n";
+				msgText="The following medication fields do not match"+": "+differentFields+"\r\n";
 			}
-			msgText+=Lan.G(this,"This change is irreversible")+".  "+Lan.G(this,"This medication is assigned to")+" "+numPats+" "
-				+Lan.G(this,"patients")+".  "+Lan.G(this,"Continue anyways?");
+			msgText+="This change is irreversible"+".  "+"This medication is assigned to"+" "+numPats+" "
+				+"patients"+".  "+"Continue anyways?";
 			if(MessageBox.Show(msgText,"",MessageBoxButtons.OKCancel)!=DialogResult.OK) {
 				return;
 			}
 			long rowsChanged=Medications.Merge(_medFrom.MedicationNum,_medInto.MedicationNum);
-			string logText=Lan.G(this,"Medications merged")+": "+_medFrom.MedName+" "+Lan.G(this,"merged into")+" "+_medInto.MedName+".\r\n"
-			+Lan.G(this,"Rows changed")+": "+POut.Long(rowsChanged);
+			string logText="Medications merged"+": "+_medFrom.MedName+" "+"merged into"+" "+_medInto.MedName+".\r\n"
+			+"Rows changed"+": "+POut.Long(rowsChanged);
 			SecurityLogs.MakeLogEntry(Permissions.MedicationMerge,0,logText);
 			textRxFrom.Clear();
 			textMedNumFrom.Clear();

@@ -192,20 +192,22 @@ namespace OpenDentBusiness{
 			//Check that all objects are actually associated by primary keys.
 			string errorText="Error: Failed to delete ortho case. Attempted to delete";
 			if(schedulePlanLink!=null && schedulePlanLink.OrthoCaseNum!=orthoCaseNum) {
-				throw new ApplicationException(Lans.g(
-					"OrthoCases",$"{errorText} an ortho plan link for an ortho schedule that does not belong to the ortho case."));
+				throw new ApplicationException(
+					$"{errorText} an ortho plan link for an ortho schedule that does not belong to the ortho case.");
 			}
 			if(orthoSchedule!=null && orthoSchedule.OrthoScheduleNum!=schedulePlanLink.FKey) {
-				throw new ApplicationException(Lans.g("OrthoCases",$"{errorText} an ortho schedule that does not belong to the ortho case."));
+				throw new ApplicationException(
+					$"{errorText} an ortho schedule that does not belong to the ortho case.");
 			}
 			foreach(OrthoProcLink procLink in listProcLinks) {
 				if(procLink.OrthoCaseNum!=orthoCaseNum) {
-					throw new ApplicationException(Lans.g("OrthoCases",$"{errorText} an ortho procedure link that does not belong to the ortho case."));
+					throw new ApplicationException(
+						$"{errorText} an ortho procedure link that does not belong to the ortho case.");
 				}
 			}
 			if(orthoPlanLinkPatPayPlan!=null && orthoPlanLinkPatPayPlan.OrthoCaseNum!=orthoCaseNum) {
-				throw new ApplicationException(Lans.g(
-					"Orthocases",$"{errorText} an ortho plan link for a patient payment plan that does not belong to the ortho case."));
+				throw new ApplicationException(
+					$"{errorText} an ortho plan link for a patient payment plan that does not belong to the ortho case.");
 			}
 			//Delete objects
 			Crud.OrthoCaseCrud.Delete(orthoCaseNum);

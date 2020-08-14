@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormSnomedEdit(Snomed snomedCur) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			SnomedCur=snomedCur;
 		}
 

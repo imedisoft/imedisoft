@@ -18,13 +18,13 @@ namespace OpenDental {
 
 		public FormHL7Msgs() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormHL7Msgs_Load(object sender,EventArgs e) {
 			textDateStart.Text=DateTime.Today.ToShortDateString();//Set both start and stop date to today to limit the number of messages that load immediately
 			textDateEnd.Text=DateTime.Today.ToShortDateString();
-			comboHL7Status.Items.Add(Lan.G(this,"All"));
+			comboHL7Status.Items.Add("All");
 			comboHL7Status.SelectedIndex=0;
 			for(int i=0;i<Enum.GetNames(typeof(HL7MessageStatus)).Length;i++) {
 				comboHL7Status.Items.Add(Enum.GetName(typeof(HL7MessageStatus),i));
@@ -49,15 +49,15 @@ namespace OpenDental {
 			MsgList=HL7Msgs.GetHL7Msgs(PIn.Date(textDateStart.Text),PIn.Date(textDateEnd.Text),SelectedPatNum,comboHL7Status.SelectedIndex);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G(this,"DateTime"),180);
+			GridColumn col=new GridColumn("DateTime",180);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Patient"),170);
+			col=new GridColumn("Patient",170);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"AptNum"),60);
+			col=new GridColumn("AptNum",60);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Status"),75);
+			col=new GridColumn("Status",75);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Note"),400);
+			col=new GridColumn("Note",400);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			if(MsgList!=null) {

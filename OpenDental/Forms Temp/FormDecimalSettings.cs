@@ -8,7 +8,7 @@ namespace OpenDental {
 
 		public FormDecimalSettings() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 		
 		private void FormDecimalSettings_Load(object sender,EventArgs e) {

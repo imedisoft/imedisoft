@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormIcd9Edit(ICD9 icd9Cur) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			Icd9Cur=icd9Cur;
 		}
 

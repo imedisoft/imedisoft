@@ -32,7 +32,7 @@ namespace OpenDental {
 		///<summary></summary>
 		public FormRpFinanceCharge(){
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 
@@ -274,8 +274,8 @@ namespace OpenDental {
 			Font font=new Font("Tahoma",9);
 			Font fontTitle=new Font("Tahoma",17,FontStyle.Bold);
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
-			report.ReportName=Lan.G(this,"Finance Charge Report");
-			report.AddTitle("Title",Lan.G(this,"Finance Charge Report"),fontTitle);
+			report.ReportName="Finance Charge Report";
+			report.AddTitle("Title","Finance Charge Report",fontTitle);
 			report.AddSubTitle("PracticeTitle",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
 			report.AddSubTitle("Date SubTitle",dateFrom.ToString("d")+" - "+dateTo.ToString("d"),fontSubTitle);
 			string subtitleProvs="";
@@ -283,7 +283,7 @@ namespace OpenDental {
 				subtitleProvs+=string.Join(", ",listProv.SelectedIndices.OfType<int>().ToList().Select(x =>_listProviders[x].Abbr));
 			}
 			else {
-				subtitleProvs=Lan.G(this,"All Providers");
+				subtitleProvs="All Providers";
 			}
 			report.AddSubTitle("Provider Subtitle",subtitleProvs);
 			string subtBillingTypes="";
@@ -291,10 +291,10 @@ namespace OpenDental {
 				subtBillingTypes+=string.Join(", ",listBillingType.SelectedIndices.OfType<int>().Select(x => _listBillingTypeDefs[x].ItemName));
 			}
 			else {
-				subtBillingTypes=Lan.G(this,"All Billing Types");
+				subtBillingTypes="All Billing Types";
 			}
 			report.AddSubTitle("Billing Subtitle",subtBillingTypes);
-			QueryObject query=report.AddQuery(table,Lan.G(this,"Date")+": "+DateTimeOD.Today.ToString("d"));
+			QueryObject query=report.AddQuery(table,"Date"+": "+DateTimeOD.Today.ToString("d"));
 			query.AddColumn("PatNum",75);
 			query.AddColumn("Patient Name",180);
 			query.AddColumn("Preferred Name",130);

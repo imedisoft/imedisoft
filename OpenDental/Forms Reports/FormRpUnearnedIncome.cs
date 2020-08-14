@@ -28,7 +28,7 @@ namespace OpenDental {
 		#region Fill Methods
 		private void FillClinics() {
 			if(PrefC.HasClinicsEnabled) {//fill clinic list
-				List<Clinic> listClinics=Clinics.GetForUserod(Security.CurrentUser,true,Lan.G(this,"Unassigned"));
+				List<Clinic> listClinics=Clinics.GetForUserod(Security.CurrentUser,true,"Unassigned");
 				foreach(Clinic clinCur in listClinics) {
 					ODBoxItem<Clinic> boxItemCur = new ODBoxItem<Clinic>(clinCur.Abbr,clinCur);
 					listUnearnedAllocationClins.Items.Add(boxItemCur);
@@ -182,7 +182,7 @@ namespace OpenDental {
 				report.AddSubTitle("UnearnedTypes",unearnedTypes);
 			}
 			if(checkUnearnedAllocationAllProvs.Checked) {
-				report.AddSubTitle("Provs",Lan.G(this,"All Providers"));
+				report.AddSubTitle("Provs","All Providers");
 			}
 			else {
 				string provNames = string.Join(", ",listUnearnedAllocationProvs.SelectedItems.OfType<ODBoxItem<Provider>>().Select(x => x.Tag.Abbr));
@@ -190,7 +190,7 @@ namespace OpenDental {
 			}
 			if(PrefC.HasClinicsEnabled) {//show sub titles if clinics are enabled. 
 				if(checkUnearnedAllocationAllClins.Checked) {
-					report.AddSubTitle("Clinics",Lan.G(this,"All Clinics"));
+					report.AddSubTitle("Clinics","All Clinics");
 				}
 				else {
 					string clinNames = string.Join(", ",listUnearnedAllocationClins.SelectedItems.OfType<ODBoxItem<Clinic>>().Select(x => x.Tag.Abbr));
@@ -283,7 +283,7 @@ namespace OpenDental {
 				report.AddSubTitle("UnearnedTypes",unearnedTypes);
 			}
 			if(checkNetUnearnedAllProvs.Checked) {
-				report.AddSubTitle("Provs",Lan.G(this,"All Providers"));
+				report.AddSubTitle("Provs","All Providers");
 			}
 			else {
 				string provNames = string.Join(", ",listNetUnearnedProvs.SelectedItems.OfType<ODBoxItem<Provider>>().Select(x => x.Tag.Abbr));
@@ -291,7 +291,7 @@ namespace OpenDental {
 			}
 			if(PrefC.HasClinicsEnabled) {//show sub titles if clinics are enabled. 
 				if(checkNetUnearnedAllClins.Checked) {
-					report.AddSubTitle("Clinics",Lan.G(this,"All Clinics"));
+					report.AddSubTitle("Clinics","All Clinics");
 				}
 				else {
 					string clinNames = string.Join(", ",listNetUnearnedClins.SelectedItems.OfType<ODBoxItem<Clinic>>().Select(x => x.Tag.Abbr));
@@ -346,7 +346,7 @@ namespace OpenDental {
 			report.AddSubTitle("Date",dateRange);			
 			if(PrefC.HasClinicsEnabled) {//show sub titles if clinics are enabled. 
 				if(checkLineItemAllClins.Checked) {
-					report.AddSubTitle("Clinics",Lan.G(this,"All Clinics"));
+					report.AddSubTitle("Clinics","All Clinics");
 				}
 				else {
 					string clinNames = string.Join(",",listLineItemClins.SelectedItems.OfType<ODBoxItem<Clinic>>().Select(x => x.Tag.Abbr));
@@ -416,7 +416,7 @@ namespace OpenDental {
 			report.AddSubTitle("Practice Title",Prefs.GetString(PrefName.PracticeTitle));
 			if(PrefC.HasClinicsEnabled) {//show sub titles if clinics are enabled. 
 				if(checkUnearnedAcctAllClins.Checked) {
-					report.AddSubTitle("Clinics",Lan.G(this,"All Clinics"));
+					report.AddSubTitle("Clinics","All Clinics");
 				}
 				else {
 					string clinNames = string.Join(",",listUnearnedAcctClins.SelectedItems.OfType<ODBoxItem<Clinic>>().Select(x => x.Tag.Abbr));

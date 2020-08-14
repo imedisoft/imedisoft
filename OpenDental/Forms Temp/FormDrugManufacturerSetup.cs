@@ -13,7 +13,7 @@ namespace OpenDental {
 
 		public FormDrugManufacturerSetup() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormDrugManufacturerSetup_Load(object sender,EventArgs e) {

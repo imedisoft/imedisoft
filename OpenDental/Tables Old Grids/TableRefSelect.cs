@@ -48,15 +48,15 @@ namespace OpenDental{
 			SetRowHeight(0,19,14);
 			SetGridColor(Color.LightGray);
 			SetBackGColor(Color.White);
-			Heading=Lan.G("TableRefSelect","Select Referral");
+			Heading="Select Referral";
 
-			Fields[0]=Lan.G("TableRefSelect","Last Name");
-      Fields[1]=Lan.G("TableRefSelect","FirstName"); 
-			Fields[2]=Lan.G("TableRefSelect","MI");
-			Fields[3]=Lan.G("TableRefSelect","Title");
-			Fields[4]=Lan.G("TableRefSelect","Specialty");
-			Fields[5]=Lan.G("TableRefSelect","Patient");
-			Fields[6]=Lan.G("TableRefSelect","Note");
+			Fields[0]="Last Name";
+      Fields[1]="FirstName"; 
+			Fields[2]="MI";
+			Fields[3]="Title";
+			Fields[4]="Specialty";
+			Fields[5]="Patient";
+			Fields[6]="Note";
 
 			ColWidth[0]=140;
 			ColWidth[1]=80;

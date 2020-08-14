@@ -50,7 +50,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -266,7 +266,7 @@ namespace OpenDental{
 			if(comboCourse.Items.Count>0) {
 				comboCourse.SelectedIndex=0;
 			}
-			comboInstructor.Items.Add(Lan.G(this,"None"));
+			comboInstructor.Items.Add("None");
 			comboInstructor.SelectedIndex=0;
 			_listProviders=Providers.GetDeepCopy(true);
 			for(int i=0;i<_listProviders.Count;i++) {

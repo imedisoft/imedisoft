@@ -21,7 +21,7 @@ namespace OpenDental {
 
 		public FormRadOrderList(Userod user) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			gridMain.ContextMenu=menuRightClick;
 			_user=user;
 		}
@@ -55,15 +55,15 @@ namespace OpenDental {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			gridMain.AllowSortingByColumn=true;
-			GridColumn col=new GridColumn(Lan.G("TableRadiologyOrders","Date"),90,HorizontalAlignment.Center,GridSortingStrategy.DateParse);
+			GridColumn col=new GridColumn("Date",90,HorizontalAlignment.Center,GridSortingStrategy.DateParse);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRadiologyOrders","Name"),220);
+			col=new GridColumn("Name",220);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRadiologyOrders","Code"),50);
+			col=new GridColumn("Code",50);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRadiologyOrders","Abbr"),90);
+			col=new GridColumn("Abbr",90);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRadiologyOrders","Description"),110){ IsWidthDynamic=true };
+			col=new GridColumn("Description",110){ IsWidthDynamic=true };
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

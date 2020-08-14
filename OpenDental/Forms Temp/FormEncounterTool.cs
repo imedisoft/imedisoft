@@ -16,7 +16,7 @@ namespace OpenDental {
 
 		public FormEncounterTool() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormEncounterTool_Load(object sender,EventArgs e) {
@@ -145,7 +145,7 @@ namespace OpenDental {
 				codeValue=comboEncCodes.SelectedItem.ToString();
 			}
 			long encInserted=Encounters.InsertEncsFromProcDates(PIn.Date(textDateStart.Text),PIn.Date(textDateEnd.Text),codeValue,EncCodeSystem);
-			MessageBox.Show(Lan.G("FormEncounterTool","Number of encounters inserted:")+" "+encInserted.ToString());
+			MessageBox.Show("Number of encounters inserted:"+" "+encInserted.ToString());
 			if(Prefs.GetString(PrefName.CQMDefaultEncounterCodeValue)=="none") {
 				if(MsgBox.Show(MsgBoxButtons.YesNo,"Do you want to set this code as the default encounter code?")) {
 					Prefs.Set(PrefName.CQMDefaultEncounterCodeValue,codeValue);

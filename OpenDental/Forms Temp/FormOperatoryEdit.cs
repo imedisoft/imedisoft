@@ -61,7 +61,7 @@ namespace OpenDental{
 			//
 			OpCur=opCur;
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -537,7 +537,7 @@ namespace OpenDental{
 			{
 				return;
 			}
-			SecurityLogs.MakeLogEntry(Permissions.Setup,0,Lan.G(this,"Update Provs on Future Appts tool run on operatory ")+OpCur.Abbrev+".");
+			SecurityLogs.MakeLogEntry(Permissions.Setup,0,"Update Provs on Future Appts tool run on operatory "+OpCur.Abbrev+".");
 			List<Appointment> listAppts=Appointments.GetAppointmentsForOpsByPeriod(new List<long>() {OpCur.OperatoryNum},DateTime.Now);//no end date, so all future
 			List<Appointment> listApptsOld=new List<Appointment>();
 			foreach(Appointment appt in listAppts) {

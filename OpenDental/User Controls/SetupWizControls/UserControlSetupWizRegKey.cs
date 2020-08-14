@@ -36,7 +36,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 				textRegKey.Text=regkey;
 			}
 			IsDone=!string.IsNullOrEmpty(textRegKey.Text);
-			this.StrIncomplete = Lan.G("FormSetupWizard","Please click the 'Change' button and type in your registration key.");
+			this.StrIncomplete = "Please click the 'Change' button and type in your registration key.";
 			groupProcTools.Enabled=IsDone;
 		}
 

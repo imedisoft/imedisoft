@@ -26,8 +26,8 @@ namespace OpenDental {
 		public FormGraphEmployeeTime(DateTime dateShowing) {
 			InitializeComponent();
 			DateShowing=dateShowing;
-			Lan.F(this);
-			toolTip.ToolTipTitle=Lan.G(this,"Employees");
+			
+			toolTip.ToolTipTitle="Employees";
 			_listRegions=new List<Region>();
 		}
 
@@ -237,11 +237,11 @@ namespace OpenDental {
 				e.Graphics.DrawString(str,Font,Brushes.Black,x1,y1);
 			}
 			//find the biggest bar
-			float peak=PIn.Int(PrefC.GetRaw("GraphEmployeeTimesPeak"));//The ideal peak.  Each day should look the same, except Friday.
+			float peak=PIn.Int(Prefs.GetString("GraphEmployeeTimesPeak"));//The ideal peak.  Each day should look the same, except Friday.
 			if(DateShowing.DayOfWeek==DayOfWeek.Friday) {
 				peak=peak*0.95f;//The Friday graph is actually smaller than the other graphs.
 			}
-			float superPeak=PIn.Int(PrefC.GetRaw("GraphEmployeeTimesSuperPeak"));//the most staff possible to schedule
+			float superPeak=PIn.Int(Prefs.GetString("GraphEmployeeTimesSuperPeak"));//the most staff possible to schedule
 			/*for(int i=0;i<buckets.Length;i++){
 				if(buckets[i]>biggest){
 					biggest=buckets[i];
@@ -366,7 +366,7 @@ namespace OpenDental {
 		}
 
 		private void butPrint_Click(object sender,EventArgs e) {
-			PrinterL.TryPrint(pd2_PrintPage,Lan.G(this,"Employee time graph printed"));
+			PrinterL.TryPrint(pd2_PrintPage,"Employee time graph printed");
 		}
 
 		private void pd2_PrintPage(object sender,System.Drawing.Printing.PrintPageEventArgs e) {

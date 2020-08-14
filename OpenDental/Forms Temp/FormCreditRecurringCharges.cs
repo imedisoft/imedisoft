@@ -31,7 +31,7 @@ namespace OpenDental {
 		///<summary>Only works for XCharge,PayConnect, and PaySimple so far.</summary>
 		public FormCreditRecurringCharges() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormRecurringCharges_Load(object sender, EventArgs e)
@@ -104,7 +104,7 @@ namespace OpenDental {
 			{
 				if (!Security.CurrentUser.ClinicIsRestricted)
 				{
-					_listUserClinics.Add(new Clinic() { Description = Lan.G(this, "Unassigned") });
+					_listUserClinics.Add(new Clinic() { Description = "Unassigned" });
 				}
 				Clinics.GetForUserod(Security.CurrentUser).ForEach(x => _listUserClinics.Add(x));
 				for (int i = 0; i < _listUserClinics.Count; i++)
@@ -123,17 +123,17 @@ namespace OpenDental {
 			{
 				this.Invoke(() =>
 				{
-					labelCharged.Text = Lans.g(this, "Charged=") + _charger.Success;
-					labelFailed.Text = Lans.g(this, "Failed=") + _charger.Failed;
-					labelUpdated.Text = Lans.g(this, "Updated=") + _charger.Updated;
+					labelCharged.Text = "Charged=" + _charger.Success;
+					labelFailed.Text = "Failed=" + _charger.Failed;
+					labelUpdated.Text = "Updated=" + _charger.Updated;
 				});
 			});
 			GeneralProgramEvent.Fired += StopRecurringCharges;//This is so we'll be alerted in case of a shutdown.
-			labelCharged.Text = Lan.G(this, "Charged=") + "0";
-			labelFailed.Text = Lan.G(this, "Failed=") + "0";
+			labelCharged.Text = "Charged=" + "0";
+			labelFailed.Text = "Failed=" + "0";
 			FillGrid(true);
 			gridMain.SetSelected(true);
-			labelSelected.Text = Lan.G(this, "Selected=") + gridMain.SelectedIndices.Length.ToString();
+			labelSelected.Text = "Selected=" + gridMain.SelectedIndices.Length.ToString();
 		}
 
 		///<summary>The DataTable used to fill the grid will only be refreshed from the db if isFromDb is true.  Otherwise the grid will be refilled using
@@ -153,17 +153,17 @@ namespace OpenDental {
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableRecurring","PatNum"),55));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableRecurring","Name"),PrefC.HasClinicsEnabled?190:220));
+			gridMain.ListGridColumns.Add(new GridColumn("PatNum",55));
+			gridMain.ListGridColumns.Add(new GridColumn("Name",PrefC.HasClinicsEnabled?190:220));
 			if(PrefC.HasClinicsEnabled) {
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableRecurring","Clinic"),65));
+				gridMain.ListGridColumns.Add(new GridColumn("Clinic",65));
 			}
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableRecurring","Date"),PrefC.HasClinicsEnabled?80:80,HorizontalAlignment.Right));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableRecurring","Family Bal"),PrefC.HasClinicsEnabled?70:85,HorizontalAlignment.Right));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableRecurring","PayPlan Due"),PrefC.HasClinicsEnabled?75:85,HorizontalAlignment.Right));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableRecurring","Total Due"),PrefC.HasClinicsEnabled?65:80,HorizontalAlignment.Right));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableRecurring","Repeat Amt"),PrefC.HasClinicsEnabled?75:90,HorizontalAlignment.Right));//RptChrgAmt
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableRecurring","Charge Amt"),PrefC.HasClinicsEnabled?85:100,HorizontalAlignment.Right));
+			gridMain.ListGridColumns.Add(new GridColumn("Date",PrefC.HasClinicsEnabled?80:80,HorizontalAlignment.Right));
+			gridMain.ListGridColumns.Add(new GridColumn("Family Bal",PrefC.HasClinicsEnabled?70:85,HorizontalAlignment.Right));
+			gridMain.ListGridColumns.Add(new GridColumn("PayPlan Due",PrefC.HasClinicsEnabled?75:85,HorizontalAlignment.Right));
+			gridMain.ListGridColumns.Add(new GridColumn("Total Due",PrefC.HasClinicsEnabled?65:80,HorizontalAlignment.Right));
+			gridMain.ListGridColumns.Add(new GridColumn("Repeat Amt",PrefC.HasClinicsEnabled?75:90,HorizontalAlignment.Right));//RptChrgAmt
+			gridMain.ListGridColumns.Add(new GridColumn("Charge Amt",PrefC.HasClinicsEnabled?85:100,HorizontalAlignment.Right));
 			if(Programs.HasMultipleCreditCardProgramsEnabled()) {
 				if(Programs.IsEnabled(ProgramName.Xcharge)) {
 					gridMain.ListGridColumns.Add(new GridColumn("X-Charge",PrefC.HasClinicsEnabled ? 70 : 80,HorizontalAlignment.Center));
@@ -244,8 +244,8 @@ namespace OpenDental {
 				gridMain.ListGridRows.Add(row);
 			}
 			gridMain.EndUpdate();
-			labelTotal.Text=Lan.G(this,"Total=")+gridMain.ListGridRows.Count.ToString();
-			labelSelected.Text=Lan.G(this,"Selected=")+gridMain.SelectedIndices.Length.ToString();
+			labelTotal.Text="Total="+gridMain.ListGridRows.Count.ToString();
+			labelSelected.Text="Selected="+gridMain.SelectedIndices.Length.ToString();
 			Cursor=Cursors.Default;
 		}
 				
@@ -271,7 +271,7 @@ namespace OpenDental {
 		}
 		
 		private void gridMain_CellClick(object sender,ODGridClickEventArgs e) {
-			labelSelected.Text=Lan.G(this,"Selected=")+gridMain.SelectedIndices.Length.ToString();
+			labelSelected.Text="Selected="+gridMain.SelectedIndices.Length.ToString();
 		}
 		
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
@@ -295,9 +295,9 @@ namespace OpenDental {
 			List<long> listSelectedCCNums=gridMain.SelectedTags<RecurringChargeData>()
 				.Select(x => x.RecurringCharge.CreditCardNum).ToList();
 			FillGrid(isFromDb);
-			labelCharged.Text=Lan.G(this,"Charged=")+"0";
-			labelFailed.Text=Lan.G(this,"Failed=")+"0";
-			labelUpdated.Text=Lan.G(this,"Updated=")+"0";
+			labelCharged.Text="Charged="+"0";
+			labelFailed.Text="Failed="+"0";
+			labelUpdated.Text="Updated="+"0";
 			if(isSelectAll) {
 				gridMain.SetSelected(true);
 			}
@@ -309,7 +309,7 @@ namespace OpenDental {
 					}
 				}
 			}
-			labelSelected.Text=Lan.G(this,"Selected=")+gridMain.SelectedIndices.Length.ToString();
+			labelSelected.Text="Selected="+gridMain.SelectedIndices.Length.ToString();
 			Cursor=Cursors.Default;
 		}
 
@@ -328,7 +328,7 @@ namespace OpenDental {
 		private void butPrintList_Click(object sender,EventArgs e) {
 			pagesPrinted=0;
 			headingPrinted=false;
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"CreditCard recurring charges list printed"),PrintoutOrientation.Landscape);
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,"CreditCard recurring charges list printed",PrintoutOrientation.Landscape);
 		}
 
 		private void pd_PrintPage(object sender,System.Drawing.Printing.PrintPageEventArgs e) {
@@ -342,7 +342,7 @@ namespace OpenDental {
 			int center=bounds.X+bounds.Width/2;
 			#region printHeading
 			if(!headingPrinted) {
-				text=Lan.G(this,"Recurring Charges");
+				text="Recurring Charges";
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
 				yPos+=20;
@@ -363,12 +363,12 @@ namespace OpenDental {
 
 		private void butAll_Click(object sender,EventArgs e) {
 			gridMain.SetSelected(true);
-			labelSelected.Text=Lan.G(this,"Selected=")+gridMain.SelectedIndices.Length.ToString();
+			labelSelected.Text="Selected="+gridMain.SelectedIndices.Length.ToString();
 		}
 
 		private void butNone_Click(object sender,EventArgs e) {
 			gridMain.SetSelected(false);
-			labelSelected.Text=Lan.G(this,"Selected=")+gridMain.SelectedIndices.Length.ToString();
+			labelSelected.Text="Selected="+gridMain.SelectedIndices.Length.ToString();
 		}
 
 		private void butHistory_Click(object sender,EventArgs e) {

@@ -76,7 +76,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormBillingOptions(){
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -674,22 +674,22 @@ namespace OpenDental{
 			checkUseClinicDefaults.Visible=false;
 			if(PrefC.HasClinicsEnabled) {
 				RefreshClinicPrefs();
-				labelSaveDefaults.Text="("+Lan.G(this,"except the date at the top and clinic at the bottom")+")";
+				labelSaveDefaults.Text="("+"except the date at the top and clinic at the bottom"+")";
 				if(comboClinic.IsUnassignedSelected){
 					comboClinic.IsAllSelected=true;
 				}
 			}
 			_listBillingTypeDefs=Defs.GetDefsForCategory(DefCat.BillingTypes,true);
-			listBillType.Items.Add(Lan.G(this,"(all)"));
+			listBillType.Items.Add("(all)");
 			listBillType.Items.AddRange(_listBillingTypeDefs.Select(x => x.ItemName).ToArray());
-			comboAge.Items.Add(Lan.G(this,"Any Balance"));
-			comboAge.Items.Add(Lan.G(this,"Over 30 Days"));
-			comboAge.Items.Add(Lan.G(this,"Over 60 Days"));
-			comboAge.Items.Add(Lan.G(this,"Over 90 Days"));
+			comboAge.Items.Add("Any Balance");
+			comboAge.Items.Add("Over 30 Days");
+			comboAge.Items.Add("Over 60 Days");
+			comboAge.Items.Add("Over 90 Days");
 			listModeToText.Items.Clear();
 			if(SmsPhones.IsIntegratedTextingEnabled()) {
 				foreach(StatementMode stateMode in Enum.GetValues(typeof(StatementMode))) {
-					listModeToText.Items.Add(new ODBoxItem<StatementMode>(Lan.G("enumStatementMode",stateMode.GetDescription()),stateMode));
+					listModeToText.Items.Add(new ODBoxItem<StatementMode>(stateMode.GetDescription(),stateMode));
 				}
 			}
 			else {
@@ -987,25 +987,25 @@ namespace OpenDental{
 			foreach(Dunning dunnCur in _listDunnings) {
 				row=new GridRow();
 				if(dunnCur.BillingType==0){
-					row.Cells.Add(Lan.G(this,"all"));
+					row.Cells.Add("all");
 				}
 				else{
 					row.Cells.Add(Defs.GetName(DefCat.BillingTypes,dunnCur.BillingType));
 				}
 				if(dunnCur.AgeAccount==0){
-					row.Cells.Add(Lan.G(this,"any"));
+					row.Cells.Add("any");
 				}
 				else{
-					row.Cells.Add(Lan.G(this,"Over ")+dunnCur.AgeAccount.ToString());
+					row.Cells.Add("Over "+dunnCur.AgeAccount.ToString());
 				}
 				if(dunnCur.InsIsPending==YN.Yes) {
-					row.Cells.Add(Lan.G(this,"Y"));
+					row.Cells.Add("Y");
 				}
 				else if(dunnCur.InsIsPending==YN.No) {
-					row.Cells.Add(Lan.G(this,"N"));
+					row.Cells.Add("N");
 				}
 				else {//YN.Unknown
-					row.Cells.Add(Lan.G(this,"any"));
+					row.Cells.Add("any");
 				}
 				row.Cells.Add(dunnCur.DunMessage);
 				row.Cells.Add(new GridCell(dunnCur.MessageBold) { Bold=YN.Yes,ColorText=Color.DarkRed });
@@ -1131,17 +1131,17 @@ namespace OpenDental{
 			Prefs.RefreshCache();
 			DateTime dateTAgingBeganPref=PrefC.GetDate(PrefName.AgingBeginDateTime);
 			if(dateTAgingBeganPref>DateTime.MinValue) {
-				MessageBox.Show(this,Lan.G(this,"In order to create statments, aging must be calculated, but you cannot run aging until it has finished the "
-					+"current calculations which began on")+" "+dateTAgingBeganPref.ToString()+".\r\n"+Lans.g(this,"If you believe the current aging process "
+				MessageBox.Show("In order to create statments, aging must be calculated, but you cannot run aging until it has finished the "
+					+"current calculations which began on"+" "+dateTAgingBeganPref.ToString()+".\r\n"+"If you believe the current aging process "
 					+"has finished, a user with SecurityAdmin permission can manually clear the date and time by going to Setup | Miscellaneous and pressing "
-					+"the 'Clear' button."));
+					+"the 'Clear' button.");
 				return false;
 			}
 			SecurityLogs.MakeLogEntry(Permissions.AgingRan,0,"Starting Aging - Billing Options");
 			Prefs.Set(PrefName.AgingBeginDateTime,POut.DateT(dtNow,false));//get lock on pref to block others
 			Signalods.SetInvalid(InvalidType.Prefs);//signal a cache refresh so other computers will have the updated pref as quickly as possible
 			Cursor=Cursors.WaitCursor;
-			string msgText=Lan.G(this,"Calculating enterprise aging for all patients as of")+" "+dtToday.ToShortDateString()+"...";
+			string msgText="Calculating enterprise aging for all patients as of"+" "+dtToday.ToShortDateString()+"...";
 			bool result=true;
 			ODProgress.ShowAction(() => {
 					Ledgers.ComputeAging(0,dtToday);
@@ -1208,7 +1208,7 @@ namespace OpenDental{
 				SecurityLogs.MakeLogEntry(Permissions.AgingRan,0,"Starting Aging - Billing Options");
 				DateTime asOfDate=(Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)?PrefC.GetDate(PrefName.DateLastAging):DateTime.Today);
 				ODProgress.ShowAction(() => Ledgers.RunAging(),
-					startingMessage:Lan.G(this,"Calculating aging for all patients as of")+" "+asOfDate.ToShortDateString()+"...",
+					startingMessage:"Calculating aging for all patients as of"+" "+asOfDate.ToShortDateString()+"...",
 					actionException:ex => {
 						Ledgers.AgingExceptionHandler(ex,this,true);
 					});
@@ -1230,13 +1230,13 @@ namespace OpenDental{
 			}
 			else if(comboClinic.ListSelectedClinicNums.Count == 1) { 
 				ODProgress.ShowAction(() => CreateHelper(comboClinic.ListSelectedClinicNums[0]),
-					startingMessage: Lan.G(this,"Creating Billing List")+"...",
+					startingMessage: "Creating Billing List"+"...",
 					odEventType: EventCategory.Billing,
 					eventType: typeof(BillingEvent));
 			}
 			else { //Clinics are not enabled.
 				ODProgress.ShowAction(() => CreateHelper(-2),
-					startingMessage: Lan.G(this,"Creating Billing List")+"...",
+					startingMessage: "Creating Billing List"+"...",
 					odEventType: EventCategory.Billing,
 					eventType: typeof(BillingEvent));
 			}
@@ -1248,11 +1248,11 @@ namespace OpenDental{
 		private void CreateManyHelper(List<long> listClinicNums) {
 			_popUpMessage="";
 			Cursor=Cursors.WaitCursor;
-			Action actionClosingProgress=ODProgress.Show(EventCategory.Billing,typeof(BillingEvent),Lan.G(this,"Creating Billing Lists")+"...");
+			Action actionClosingProgress=ODProgress.Show(EventCategory.Billing,typeof(BillingEvent),"Creating Billing Lists"+"...");
 			Dictionary<long,PatAgingData> dictPatAgingData=AgingData.GetAgingData(checkSinglePatient.Checked,checkIncludeChanged.Checked,
 				checkExcludeInsPending.Checked,checkExcludeIfProcs.Checked,checkSuperFam.Checked,listClinicNums);
 			for(int i=0;i<listClinicNums.Count;i++) {
-				BillingEvent.Fire(EventCategory.Billing,Lan.G(this,"Creating Billing Lists")+"..."+"("+(i+1).ToString()+"/"
+				BillingEvent.Fire(EventCategory.Billing,"Creating Billing Lists"+"..."+"("+(i+1).ToString()+"/"
 					+listClinicNums.Count.ToString()+")");
 				CreateHelper(listClinicNums[i],checkUseClinicDefaults.Checked,true,dictPatAgingData);
 			}
@@ -1262,7 +1262,7 @@ namespace OpenDental{
 				return;
 			}
 			MsgBoxCopyPaste msgBox=new MsgBoxCopyPaste(_popUpMessage);
-			msgBox.Text=Lan.G(this,"Billing List Results");
+			msgBox.Text="Billing List Results";
 			msgBox.ShowDialog();
 		}
 
@@ -1339,7 +1339,7 @@ namespace OpenDental{
 					checkSinglePatient.Checked,listPendingInsPatNums,listUnsentPatNums,dictPatAgingTransactions);
 			}
 			catch (Exception ex){
-				string text=Lan.G(this,"Error getting list:")+" "+ex.Message+"\r\n\n\n"+ex.StackTrace;
+				string text="Error getting list:"+" "+ex.Message+"\r\n\n\n"+ex.StackTrace;
 				if(ex.InnerException!=null) {
 					text+="\r\n\r\nInner Exception: "+ex.InnerException.Message+"\r\n\r\n"+ex.InnerException.StackTrace;
 				}
@@ -1410,28 +1410,28 @@ namespace OpenDental{
 				switch(clinicNum) {
 					case -1://All
 					case -2:
-						clinicAbbr=Lan.G(this,"All");//clinics not enabled, which is not quite the same as All because this method is just for one clinic
+						clinicAbbr="All";//clinics not enabled, which is not quite the same as All because this method is just for one clinic
 						break;
 					case 0://Unassigned
-						clinicAbbr=Lan.G(this,"Unassigned");
+						clinicAbbr="Unassigned";
 						break;
 					default:
 						clinicAbbr=Clinics.GetAbbr(clinicNum);
 						break;
 				}
-				_popUpMessage+=Lan.G(this,clinicAbbr)+" - ";
+				_popUpMessage+=clinicAbbr+" - ";
 			}
 			if(listPatAging.Count==0){
 				if(!suppressPopup) {
 					MessageBox.Show("List of created bills is empty.");
 				}
 				else {
-					_popUpMessage+=Lan.G(this,"List of created bills is empty.")+"\r\n";
+					_popUpMessage+="List of created bills is empty."+"\r\n";
 				}
 				return;
 			}
 			else {
-				_popUpMessage+=Lan.G(this,"Statements created")+": "+POut.Int(listPatAging.Count)+"\r\n";
+				_popUpMessage+="Statements created"+": "+POut.Int(listPatAging.Count)+"\r\n";
 			}
 			#endregion
 			IsHistoryStartMinDate=string.IsNullOrWhiteSpace(textDateStart.Text);
@@ -1462,7 +1462,7 @@ namespace OpenDental{
 					listShortGuidUrls=WebServiceMainHQProxy.GetShortGUIDs(listPatAging.Count,countForSms,clinicNum,eServiceCode.PatientPortalViewStatement);
 				}
 				catch(Exception ex) {
-					FriendlyException.Show(Lans.g(this,"Unable to create a unique URL for each statement. The Patient Portal URL will be used instead."),ex);
+					FriendlyException.Show("Unable to create a unique URL for each statement. The Patient Portal URL will be used instead.",ex);
 					listShortGuidUrls=listPatAging.Select(x => new WebServiceMainHQProxy.ShortGuidResult {
 						MediumURL=Prefs.GetString(PrefName.PatientPortalURL),
 						ShortURL=Prefs.GetString(PrefName.PatientPortalURL),

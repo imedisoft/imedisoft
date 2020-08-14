@@ -17,7 +17,7 @@ namespace OpenDental
     public partial class FormEhrSetup:ODForm {
 		public FormEhrSetup() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormEhrSetup_Load(object sender,EventArgs e) {

@@ -16,7 +16,7 @@ namespace OpenDental {
 
 		public FormAllergySetup() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormAllergySetup_Load(object sender,EventArgs e) {
@@ -31,9 +31,9 @@ namespace OpenDental {
 			listAllergyDefs=AllergyDefs.GetAll(checkShowHidden.Checked);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("FormAllergySetup","Desciption"),160);
+			GridColumn col=new GridColumn("Desciption",160);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormAllergySetup","Hidden"),60);
+			col=new GridColumn("Hidden",60);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

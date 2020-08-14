@@ -35,7 +35,7 @@ namespace OpenDental {
 
 		public FormSheetDefDefaults() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormSheetDefDefaults_Load(object sender,EventArgs e) {
@@ -180,7 +180,7 @@ namespace OpenDental {
 			comboBox.ValueMember="SheetDef";
 			comboBox.Tag=sheetType;
 			if(PrefC.HasClinicsEnabled && comboClinicDefault.SelectedClinicNum!=0) {
-				comboBox.Items.Add(new SheetDefWrapper(Lan.G(this,"Default")));
+				comboBox.Items.Add(new SheetDefWrapper("Default"));
 			}
 			foreach(SheetDef defCur in listSheetDefs) {
 				SheetDefWrapper defNew=new SheetDefWrapper(defCur);

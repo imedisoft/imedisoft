@@ -13,7 +13,7 @@ namespace OpenDental {
 
 		public FormWikiLists() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormWikiLists_Load(object sender,EventArgs e) {

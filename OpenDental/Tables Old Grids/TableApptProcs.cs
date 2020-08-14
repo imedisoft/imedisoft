@@ -22,12 +22,12 @@ namespace OpenDental{
 			InstantClassesPar();
 			SetRowHeight(0,19,14);
 			Heading="Procedures";
-			Fields[0]=Lan.G("TableApptProcs","Stat");
-			Fields[1]=Lan.G("TableApptProcs","Priority");
-			Fields[2]=Lan.G("TableApptProcs","Tth");
-			Fields[3]=Lan.G("TableApptProcs","Surf");
-			Fields[4]=Lan.G("TableApptProcs","Description");
-			Fields[5]=Lan.G("TableApptProcs","Fee");
+			Fields[0]="Stat";
+			Fields[1]="Priority";
+			Fields[2]="Tth";
+			Fields[3]="Surf";
+			Fields[4]="Description";
+			Fields[5]="Fee";
 			ColAlign[5]=HorizontalAlignment.Right;
 			ColWidth[0]=40;
 			ColWidth[1]=55;

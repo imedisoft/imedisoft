@@ -30,32 +30,32 @@ namespace OpenDentBusiness
 			{
 				if (!program.Enabled)
 				{
-					sbErrors.AppendLine(program.Name + Lans.g("PDMP", " must be enabled in Program Links."));
+					sbErrors.AppendLine(program.Name + " must be enabled in Program Links.");
 					result = sbErrors.ToString();
 					return;
 				}
 				if (patient == null)
 				{
-					sbErrors.AppendLine(Lans.g("PDMP", "Please select a patient."));
+					sbErrors.AppendLine("Please select a patient.");
 					result = sbErrors.ToString();
 					return;
 				}
 				Provider prov = Providers.GetProv(patient.PriProv);
 				if (prov == null)
 				{
-					sbErrors.AppendLine(Lans.g("PDMP", "Patient does not have a primary provider."));
+					sbErrors.AppendLine("Patient does not have a primary provider.");
 					result = sbErrors.ToString();
 					return;
 				}
 				string strDeaNum = ProviderClinics.GetDEANum(prov.ProvNum, Clinics.ClinicNum);//If no result found, retries using clinicNum=0.
 				if (string.IsNullOrWhiteSpace(strDeaNum))
 				{
-					sbErrors.AppendLine(Lans.g("PDMP", "Patient's provider does not have a DEA number."));
+					sbErrors.AppendLine("Patient's provider does not have a DEA number.");
 				}
 				string stateWhereLicensed = ProviderClinics.GetStateWhereLicensed(patient.PriProv, Clinics.ClinicNum);
 				if (string.IsNullOrWhiteSpace(stateWhereLicensed))
 				{
-					sbErrors.AppendLine(Lans.g("PDMP", "Patient's provider is not licensed for any state."));
+					sbErrors.AppendLine("Patient's provider is not licensed for any state.");
 				}
 				string facilityIdPropDesc = "";
 				string userNamePropDesc = "";

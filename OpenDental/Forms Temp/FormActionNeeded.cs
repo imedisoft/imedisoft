@@ -18,7 +18,7 @@ namespace OpenDental {
 		///<summary></summary>
 		public FormActionNeeded() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormActionNeeded_Load(object sender,EventArgs e) {
@@ -34,9 +34,9 @@ namespace OpenDental {
 		private void FillGrid() {
 			//gridMain.BeginUpdate();
 			//gridMain.Columns.Clear();
-			//ODGridColumn col=new ODGridColumn(Lan.g("TableActionNeeded","Type"),90);
+			//ODGridColumn col=new ODGridColumn("Type",90);
 			//gridMain.Columns.Add(col);
-			//col=new ODGridColumn(Lan.g("TableActionNeeded","Description"),0);
+			//col=new ODGridColumn("Description",0);
 			//gridMain.Columns.Add(col);
 			//gridMain.Rows.Clear();
 			//ODGridRow row;

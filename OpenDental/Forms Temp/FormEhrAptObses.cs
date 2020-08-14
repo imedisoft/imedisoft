@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormEhrAptObses(Appointment appt) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_appt=appt;
 		}
 

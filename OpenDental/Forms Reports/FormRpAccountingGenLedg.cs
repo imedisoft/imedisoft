@@ -21,7 +21,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormRpAccountingGenLedg() {
 			InitializeComponent();
- 			Lan.F(this);
+ 			
 		}
 
 		///<summary></summary>

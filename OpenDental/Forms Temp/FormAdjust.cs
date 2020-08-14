@@ -35,14 +35,14 @@ namespace OpenDental {
 			_patCur=patCur;
 			_adjustmentCur=adjustmentCur;
 			_isTsiAdj=isTsiAdj;
-			Lan.F(this);
+			
 		}
 
 		private void FormAdjust_Load(object sender, System.EventArgs e) {
 			if(IsNew){
 				if(!Security.IsAuthorized(Permissions.AdjustmentCreate,true)) {//Date not checked here.  Message will show later.
 					if(!Security.IsAuthorized(Permissions.AdjustmentEditZero,true)) {//Let user create an adjustment of zero if they have this perm.
-						MessageBox.Show(Lans.g("Security","Not authorized for")+"\r\n"+GroupPermissions.GetDesc(Permissions.AdjustmentCreate));
+						MessageBox.Show("Not authorized for"+"\r\n"+GroupPermissions.GetDesc(Permissions.AdjustmentCreate));
 						DialogResult=DialogResult.Cancel;
 						return;
 					}
@@ -71,7 +71,7 @@ namespace OpenDental {
 				}
 				//Do not let the user change the adjustment type if the current adjustment is a "discount plan" adjustment type.
 				if(Defs.GetValue(DefCat.AdjTypes,_adjustmentCur.AdjType)=="dp") {
-					labelAdditions.Text=Lan.G(this,"Discount Plan")+": "+Defs.GetName(DefCat.AdjTypes,_adjustmentCur.AdjType);
+					labelAdditions.Text="Discount Plan"+": "+Defs.GetName(DefCat.AdjTypes,_adjustmentCur.AdjType);
 					labelSubtractions.Visible=false;
 					listTypePos.Visible=false;
 					listTypeNeg.Visible=false;
@@ -280,7 +280,7 @@ namespace OpenDental {
 				return;
 			}
 			if(textAmount.Text==""){
-				MessageBox.Show(Lan.G(this,"Please enter an amount."));	
+				MessageBox.Show("Please enter an amount.");	
 				return;
 			}
 			if(!isDiscountPlanAdj && listTypeNeg.SelectedIndex==-1 && listTypePos.SelectedIndex==-1){
@@ -310,7 +310,7 @@ namespace OpenDental {
 				//prevents backdating of initial adjustment
 				if(!Security.IsAuthorized(Permissions.AdjustmentCreate,PIn.Date(textAdjDate.Text),true)){//Give message later.
 					if(!_checkZeroAmount) {//Let user create as long as Amount is zero and has edit zero permissions.  This was checked on load.
-						MessageBox.Show(Lans.g("Security","Not authorized for")+"\r\n"+GroupPermissions.GetDesc(Permissions.AdjustmentCreate));
+						MessageBox.Show("Not authorized for"+"\r\n"+GroupPermissions.GetDesc(Permissions.AdjustmentCreate));
 						return;
 					}
 				}

@@ -31,7 +31,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 			Subscriber=subscriber;
 			_patNum=patNum;
 		}
@@ -137,11 +137,11 @@ namespace OpenDental{
 				plan=InsPlans.GetPlan(SubList[i].PlanNum,planList);
 				str=InsPlans.GetCarrierName(SubList[i].PlanNum,planList);
 				if(plan.GroupNum!="") {
-					str+=Lan.G(this," group:")+plan.GroupNum;
+					str+=" group:"+plan.GroupNum;
 				}
 				int countPatPlans=PatPlans.GetCountBySubNum(SubList[i].InsSubNum);
 				if(countPatPlans==0) {
-					str+=" "+Lan.G(this,"(not in use)");
+					str+=" "+"(not in use)";
 				}
 				listPlans.Items.Add(str);
 			}

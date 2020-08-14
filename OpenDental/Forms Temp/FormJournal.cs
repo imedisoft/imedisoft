@@ -50,7 +50,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 			_acctCur=accountCur;
 		}
 
@@ -289,20 +289,20 @@ namespace OpenDental{
 		///<summary>Causes the toolbar to be laid out again.</summary>
 		public void LayoutToolBar() {
 			ToolBarMain.Buttons.Clear();
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Add Entry"),0,"","Add"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Add Entry",0,"","Add"));
 			if(_acctCur.Type==AccountType.Asset){
-				ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Reconcile"),-1,"","Reconcile"));
+				ToolBarMain.Buttons.Add(new ODToolBarButton("Reconcile",-1,"","Reconcile"));
 			}
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Print"),1,"","Print"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Print",1,"","Print"));
 			//ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			//ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"Edit"),-1,Lan.g(this,"Edit Selected Account"),"Edit"));
+			//ToolBarMain.Buttons.Add(new ODToolBarButton("Edit",-1,"Edit Selected Account","Edit"));
 			//ODToolBarButton button=new ODToolBarButton("",-1,"","PageNum");
 			//button.Style=ODToolBarButtonStyle.Label;
 			//ToolBarMain.Buttons.Add(button);
 			//ToolBarMain.Buttons.Add(new ODToolBarButton("",2,"Go Forward One Page","Fwd"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Export"),2,Lan.G(this,"Export the Account Grid"),"Export"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Export",2,"Export the Account Grid","Export"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Close"),-1,"Close This Window","Close"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Close",-1,"Close This Window","Close"));
 		}
 
 		private void ToolBarMain_ButtonClick(object sender,OpenDental.UI.ODToolBarButtonClickEventArgs e) {
@@ -337,27 +337,27 @@ namespace OpenDental{
 			}
 			ODGrid gridToFill=isPrinting?gridMainPrint:gridMain;
 			gridToFill.BeginUpdate();
-			gridToFill.Title=_acctCur.Description+" ("+Lan.G("enumAccountType",_acctCur.Type.ToString())+")";
+			gridToFill.Title=_acctCur.Description+" ("+_acctCur.Type.ToString()+")";
 			gridToFill.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableJournal","Chk #"),60,HorizontalAlignment.Center);
+			GridColumn col=new GridColumn("Chk #",60,HorizontalAlignment.Center);
 			gridToFill.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableJournal","Date"),70,HorizontalAlignment.Left);
+			col=new GridColumn("Date",70,HorizontalAlignment.Left);
 			gridToFill.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableJournal","Memo"),isPrinting?200:220,HorizontalAlignment.Left);
+			col=new GridColumn("Memo",isPrinting?200:220,HorizontalAlignment.Left);
 			gridToFill.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableJournal","Splits"),isPrinting?200:220,HorizontalAlignment.Left);
+			col=new GridColumn("Splits",isPrinting?200:220,HorizontalAlignment.Left);
 			gridToFill.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableJournal","Debit"+(Accounts.DebitIsPos(_acctCur.Type)?"(+)":"(-)")),70,HorizontalAlignment.Right);
+			col=new GridColumn("Debit"+(Accounts.DebitIsPos(_acctCur.Type)?"(+)":"(-)"),70,HorizontalAlignment.Right);
 			gridToFill.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableJournal","Credit"+(Accounts.DebitIsPos(_acctCur.Type)?"(-)":"(+)")),70,HorizontalAlignment.Right);
+			col=new GridColumn("Credit"+(Accounts.DebitIsPos(_acctCur.Type)?"(-)":"(+)"),70,HorizontalAlignment.Right);
 			gridToFill.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableJournal","Balance"),78,HorizontalAlignment.Right);
+			col=new GridColumn("Balance",78,HorizontalAlignment.Right);
 			gridToFill.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableJournal","Created By"),95,HorizontalAlignment.Left);
+			col=new GridColumn("Created By",95,HorizontalAlignment.Left);
 			gridToFill.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableJournal","Last Edited By"),95,HorizontalAlignment.Left);
+			col=new GridColumn("Last Edited By",95,HorizontalAlignment.Left);
 			gridToFill.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableJournal","Clear"),40,HorizontalAlignment.Center);
+			col=new GridColumn("Clear",40,HorizontalAlignment.Center);
 			gridToFill.ListGridColumns.Add(col);
 			DateTime dateFrom=PIn.Date(textDateFrom.Text);
 			DateTime dateTo=string.IsNullOrEmpty(textDateTo.Text)?DateTime.MaxValue:PIn.Date(textDateTo.Text);
@@ -440,7 +440,7 @@ namespace OpenDental{
 				orient=PrintoutOrientation.Landscape;
 			}
 			PrinterL.TryPrintOrDebugRpPreview(pd2_PrintPage,
-				Lan.G(this,"Accounting transaction history for")+" "+_acctCur.Description+" "+Lan.G(this,"printed"),
+				"Accounting transaction history for"+" "+_acctCur.Description+" "+"printed",
 				printoutOrientation:orient
 			);
 		}
@@ -456,7 +456,7 @@ namespace OpenDental{
 				int center=bounds.X+bounds.Width/2;
 				#region printHeading
 				if(!_headingPrinted) {
-					text=_acctCur.Description+" ("+Lan.G("enumAccountType",_acctCur.Type.ToString())+")";
+					text=_acctCur.Description+" ("+_acctCur.Type.ToString()+")";
 					g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 					yPos+=(int)g.MeasureString(text,headingFont).Height;
 					text=DateTime.Today.ToShortDateString();

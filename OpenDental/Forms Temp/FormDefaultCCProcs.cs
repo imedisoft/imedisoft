@@ -14,7 +14,7 @@ namespace OpenDental {
 
 		public FormDefaultCCProcs() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormDefaultCCProcs_Load(object sender,EventArgs e) {

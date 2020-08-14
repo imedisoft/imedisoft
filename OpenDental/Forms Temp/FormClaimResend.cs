@@ -12,7 +12,7 @@ namespace OpenDental {
 
 		public FormClaimResend() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		public bool IsClaimReplacement {

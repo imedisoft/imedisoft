@@ -16,11 +16,11 @@ namespace OpenDental {
 
 		public FormEhrPatientExport() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormEhrPatientExport_Load(object sender,EventArgs e) {
-			comboProv.Items.Add(Lan.G(this,"All"));
+			comboProv.Items.Add("All");
 			comboProv.SelectedIndex=0;
 			_listProviders=Providers.GetDeepCopy(true);
 			for(int i=0;i<_listProviders.Count;i++) {
@@ -31,7 +31,7 @@ namespace OpenDental {
 				labelClinic.Visible=false;
 			}
 			else {
-				comboClinic.Items.Add(Lan.G(this,"All"));
+				comboClinic.Items.Add("All");
 				comboClinic.SelectedIndex=0;
 				_listClinics=Clinics.GetDeepCopy(true);
 				foreach(Clinic clin in _listClinics) {
@@ -43,7 +43,7 @@ namespace OpenDental {
 				labelSite.Visible=false;
 			}
 			else {
-				comboSite.Items.Add(Lan.G(this,"All"));
+				comboSite.Items.Add("All");
 				comboSite.SelectedIndex=0;
 				_listSites=Sites.GetDeepCopy();
 				for(int i=0;i<_listSites.Count;i++) {
@@ -172,7 +172,7 @@ namespace OpenDental {
 				if(strCcdValidationErrors!="") {
 					if(gridMain.SelectedIndices.Length==1) {
 						numSkipped=-1; //Set to -1 so we know below to not show the "exported" message.
-						MessageBox.Show(Lan.G(this,"Patient not exported due to the following errors")+":\r\n"+strCcdValidationErrors);
+						MessageBox.Show("Patient not exported due to the following errors"+":\r\n"+strCcdValidationErrors);
 						continue;
 					}
 					//If one patient is missing the required information for export, then simply skip the patient. We do not want to popup a message,
@@ -216,9 +216,9 @@ namespace OpenDental {
 			catch {
 				MessageBox.Show("Error, Could not create stylesheet file");
 			}
-			string strMsg=Lan.G(this,"Exported");
+			string strMsg="Exported";
 			if(numSkipped>0) {
-				strMsg+=". "+Lan.G(this,"Patients skipped due to missing information")+": "+numSkipped+patientsSkipped;
+				strMsg+=". "+"Patients skipped due to missing information"+": "+numSkipped+patientsSkipped;
 				MsgBoxCopyPaste msgCP=new MsgBoxCopyPaste(strMsg);
 				msgCP.Show();
 			}

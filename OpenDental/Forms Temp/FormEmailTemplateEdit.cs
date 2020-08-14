@@ -51,7 +51,7 @@ namespace OpenDental {
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -420,7 +420,7 @@ namespace OpenDental {
 		}
 
 		private void menuItemRename_Click(object sender,EventArgs e) {
-			InputBox input=new InputBox(Lan.G(this,"Filename"));
+			InputBox input=new InputBox("Filename");
 			EmailAttach emailAttach=_listEmailAttachDisplayed[gridAttachments.SelectedIndices[0]];
 			input.textResult.Text=emailAttach.DisplayedFileName;
 			input.ShowDialog();

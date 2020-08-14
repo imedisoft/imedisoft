@@ -19,7 +19,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormPasswordReset(){
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -124,12 +124,12 @@ namespace OpenDental{
 			//No longer functional
 			//Debug.WriteLine(Userods.EncryptPassword(textMasterPass.Text));
 			//if(!Userods.CheckTypedPassword(textMasterPass.Text,masterHash)){
-			//	MessageBox.Show(Lan.g(this,"Master password incorrect."));
+			//	MessageBox.Show("Master password incorrect.");
 			//	return;
 			//}
 			//Security.ResetPassword();
 			//PermissionsOld.Refresh();
-			//MessageBox.Show(Lan.g(this,"Security Administration permission has been reset."));
+			//MessageBox.Show("Security Administration permission has been reset.");
 			//DialogResult=DialogResult.OK;
 		}
 

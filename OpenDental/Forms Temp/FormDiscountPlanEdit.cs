@@ -20,7 +20,7 @@ namespace OpenDental {
 
 		public FormDiscountPlanEdit() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormDiscountPlanEdit_Load(object sender,EventArgs e) {
@@ -89,8 +89,8 @@ namespace OpenDental {
 		private void checkHidden_Click(object sender,EventArgs e) {
 			if(checkHidden.Checked) {
 				if(_countPats!=0) {
-					string msgText=Lan.G(this,"Specified Discount Plan will be hidden.  "+
-						"It will no longer be available for assigning, but existing patients on plan will remain");
+					string msgText="Specified Discount Plan will be hidden.  "+
+						"It will no longer be available for assigning, but existing patients on plan will remain";
 					if(MessageBox.Show(this,msgText,"",MessageBoxButtons.OKCancel)==DialogResult.Cancel) {
 						checkHidden.Checked=false;
 					}
@@ -156,7 +156,7 @@ namespace OpenDental {
 			form.Controls.Add(butClose);
 			grid.BeginUpdate();
 			grid.ListGridColumns.Clear();
-			grid.ListGridColumns.Add(new GridColumn(Lan.G(this,"Name"),100){ IsWidthDynamic=true });
+			grid.ListGridColumns.Add(new GridColumn("Name",100){ IsWidthDynamic=true });
 			grid.ListGridRows.Clear();
 			foreach(string patName in _listPatNames) {
 				grid.ListGridRows.Add(new GridRow(patName));

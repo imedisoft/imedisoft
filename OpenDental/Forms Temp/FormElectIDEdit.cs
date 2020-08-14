@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormElectIDEdit() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormElectIDEdit_Load(object sender,EventArgs e) {

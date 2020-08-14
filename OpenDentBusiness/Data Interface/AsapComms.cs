@@ -127,8 +127,8 @@ namespace OpenDentBusiness{
 				sched.StopTime=dtSlotEnd.TimeOfDay;
 			}
 			sched.Ops=new List<long> { opNum };
-			sched.Note=textsToBeSent+" "+Lans.g("ContrAppt","text"+(textsToBeSent==1 ? "" : "s")+" to be sent")+"\r\n"
-				+emailsToBeSent+" "+Lans.g("ContrAppt","email"+(emailsToBeSent==1 ? "" : "s")+" to be sent");
+			sched.Note=textsToBeSent+" "+"text"+(textsToBeSent==1 ? "" : "s"+" to be sent")+"\r\n"
+				+emailsToBeSent+" "+"email"+(emailsToBeSent==1 ? "" : "s"+" to be sent");
 			Schedules.Insert(sched,false);
 			listAsapComms.ForEach(x => x.ScheduleNum=sched.ScheduleNum);
 			InsertMany(listAsapComms);
@@ -301,10 +301,10 @@ namespace OpenDentBusiness{
 			int textsToBeSent=listAsapComms.Count(x => x.SmsSendStatus==AutoCommStatus.SendNotAttempted);
 			int emailsSent=listAsapComms.Count(x => x.EmailSendStatus==AutoCommStatus.SendSuccessful);
 			int emailsToBeSent=listAsapComms.Count(x => x.EmailSendStatus==AutoCommStatus.SendNotAttempted);
-			sched.Note=textsSent+" "+Lans.g("ContrAppt","text"+(textsSent==1 ? "" : "s")+" sent,")+" "
-				+textsToBeSent+" "+Lans.g("ContrAppt","text"+(textsToBeSent==1 ? "" : "s")+" to be sent")+"\r\n"
-				+emailsSent+" "+Lans.g("ContrAppt","email"+(emailsSent==1 ? "" : "s")+" sent")+" "
-				+emailsToBeSent+" "+Lans.g("ContrAppt","email"+(emailsToBeSent==1 ? "" : "s")+" to be sent");
+			sched.Note=textsSent+" "+"text"+(textsSent==1 ? "" : "s"+" sent,")+" "
+				+textsToBeSent+" "+"text"+(textsToBeSent==1 ? "" : "s"+" to be sent")+"\r\n"
+				+emailsSent+" "+"email"+(emailsSent==1 ? "" : "s"+" sent")+" "
+				+emailsToBeSent+" "+"email"+(emailsToBeSent==1 ? "" : "s"+" to be sent");
 			Schedules.Update(sched);
 		}
 		
@@ -452,39 +452,39 @@ namespace OpenDentBusiness{
 							.Any(x => x.FKey==fkey && x.FKeyType==fkeyType && x.ResponseStatus==AsapRSVPStatus.DeclinedStopComm))
 						{
 							string text_type=fkeyType==AsapCommFKeyType.Recall ? "recall" : "appointment";
-							patDetail.AppendNote(Lans.g(_lanThis,"Not sending text because this patient has requested to not be texted or emailed about this "
-								+text_type+"."));
+							patDetail.AppendNote("Not sending text because this patient has requested to not be texted or emailed about this "
+								+text_type+".");
 							return false;
 						}
 						int textsSent=_dictPatAsapComms[patNum]
 							.Count(x => (x.SmsSendStatus==AutoCommStatus.SendNotAttempted && x.DateTimeSmsScheduled.Date==DtStartSendText.Date)
 							|| (x.SmsSendStatus==AutoCommStatus.SendSuccessful && x.DateTimeSmsSent.Date==DtStartSendText.Date));
 						if(textsSent>=_maxTextsPerDay) {
-							patDetail.AppendNote(Lans.g(_lanThis,"Not sending text because this patient has received")+" "+_maxTextsPerDay+" "
-								+Lans.g(_lanThis,"texts today."));
+							patDetail.AppendNote("Not sending text because this patient has received"+" "+_maxTextsPerDay+" "
+								+"texts today.");
 							return false;
 						}
 					}
 					bool isWithin30Minutes=(GetNextTextSendTime() < _dtSlotStart && (_dtSlotStart-GetNextTextSendTime()).TotalMinutes < TextMinMinutesBefore);
 					bool isAfterSlot=(GetNextTextSendTime() > _dtSlotStart);
 					if(isWithin30Minutes) {
-						patDetail.AppendNote(Lans.g(_lanThis,"Not sending text because the text would be sent less than")+" "+TextMinMinutesBefore+" "
-							+Lans.g(_lanThis,"before the time slot."));
+						patDetail.AppendNote("Not sending text because the text would be sent less than"+" "+TextMinMinutesBefore+" "
+							+"before the time slot.");
 						return false;
 					}
 					if(isAfterSlot) {
-						patDetail.AppendNote(Lans.g(_lanThis,"Not sending text because the text would be sent after the time slot."));
+						patDetail.AppendNote("Not sending text because the text would be sent after the time slot.");
 						return false;
 					}
 					if(_sendMode==SendMode.Email) {
 						return false;
 					}
 					if(_sendMode==SendMode.PreferredContact && patComm.PreferContactMethod!=ContactMethod.TextMessage) {
-						patDetail.AppendNote(Lans.g(_lanThis,"Not sending text because this patient's preferred contact method is not text message."));
+						patDetail.AppendNote("Not sending text because this patient's preferred contact method is not text message.");
 						return false;
 					}
 					if(!patComm.IsSmsAnOption) {
-						patDetail.AppendNote(Lans.g(_lanThis,patComm.GetReasonCantText()));
+						patDetail.AppendNote(patComm.GetReasonCantText());
 						return false;
 					}
 					return true;
@@ -519,30 +519,30 @@ namespace OpenDentBusiness{
 						.Any(x => x.FKey==fkey && x.FKeyType==fkeyType && x.ResponseStatus==AsapRSVPStatus.DeclinedStopComm))
 					{
 						string email_type=fkeyType==AsapCommFKeyType.Recall ? "recall" : "appointment";
-						patDetail.AppendNote(Lans.g(_lanThis,"Not sending email because this patient has requested to not be texted or emailed about this "
-							+email_type+"."));
+						patDetail.AppendNote("Not sending email because this patient has requested to not be texted or emailed about this "
+							+email_type+".");
 						return false;
 					}
 					bool isWithin30Minutes=(DtSendEmail < _dtSlotStart && (_dtSlotStart-DtSendEmail).TotalMinutes < TextMinMinutesBefore);
 					bool isAfterSlot=(DtSendEmail > _dtSlotStart);
 					if(isWithin30Minutes) {
-						patDetail.AppendNote(Lans.g(_lanThis,"Not sending email because the email would be sent less than")+" "+TextMinMinutesBefore+" "
-							+Lans.g(_lanThis,"before the time slot."));
+						patDetail.AppendNote("Not sending email because the email would be sent less than"+" "+TextMinMinutesBefore+" "
+							+"before the time slot.");
 						return false;
 					}
 					if(isAfterSlot) {
-						patDetail.AppendNote(Lans.g(_lanThis,"Not sending email because the email would be sent after the time slot."));
+						patDetail.AppendNote("Not sending email because the email would be sent after the time slot.");
 						return false;
 					}
 					if(_sendMode==SendMode.Text) {
 						return false;
 					}
 					if(_sendMode==SendMode.PreferredContact && patComm.PreferContactMethod!=ContactMethod.Email) {
-						patDetail.AppendNote(Lans.g(_lanThis,"Not sending email because this patient's preferred contact method is not email."));
+						patDetail.AppendNote("Not sending email because this patient's preferred contact method is not email.");
 						return false;
 					}
 					if(!patComm.IsEmailAnOption) {
-						patDetail.AppendNote(Lans.g(_lanThis,patComm.GetReasonCantEmail()));
+						patDetail.AppendNote(patComm.GetReasonCantEmail());
 						return false;
 					}
 					return true;

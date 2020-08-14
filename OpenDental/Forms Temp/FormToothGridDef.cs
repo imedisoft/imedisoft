@@ -39,7 +39,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -245,7 +245,7 @@ namespace OpenDental{
 			//  textCustomField.Visible=true;
 			//  labelCustomField.Visible=true;
 			//  listAvailable.Height=227;//227px for short, 412px for tall
-			//  labelAvailable.Text=Lan.g(this,"Previously Used Fields");
+			//  labelAvailable.Text="Previously Used Fields";
 			//}
 			//FillGrids();
 		}
@@ -267,11 +267,11 @@ namespace OpenDental{
 			//AvailList=DisplayFields.GetAllAvailableList(category);//This one needs to be called repeatedly.
 			//gridMain.BeginUpdate();
 			//gridMain.Columns.Clear();
-			//ODGridColumn col=new ODGridColumn(Lan.g("FormDisplayFields","FieldName"),110);
+			//ODGridColumn col=new ODGridColumn("FieldName",110);
 			//gridMain.Columns.Add(col);
-			//col=new ODGridColumn(Lan.g("FormDisplayFields","New Descript"),110);
+			//col=new ODGridColumn("New Descript",110);
 			//gridMain.Columns.Add(col);
-			//col=new ODGridColumn(Lan.g("FormDisplayFields","Width"),60);
+			//col=new ODGridColumn("Width",60);
 			//gridMain.Columns.Add(col);
 			//gridMain.Rows.Clear();
 			//ODGridRow row;

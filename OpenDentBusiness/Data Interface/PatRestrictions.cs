@@ -147,7 +147,7 @@ namespace OpenDentBusiness {
 		public static string GetPatRestrictDesc(PatRestrict patRestrictType) {
 			switch(patRestrictType) {
 				case PatRestrict.ApptSchedule:
-					return Lans.g("patRestrictEnum","Appointment Scheduling");
+					return "Appointment Scheduling";
 				case PatRestrict.None:
 				default:
 					return "";

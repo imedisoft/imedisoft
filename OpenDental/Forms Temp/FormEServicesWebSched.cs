@@ -72,7 +72,7 @@ namespace OpenDental
 		public FormEServicesWebSched(WebServiceMainHQProxy.EServiceSetup.SignupOut signupOut = null, WebSchedTab setTab = WebSchedTab.Recall)
 		{
 			InitializeComponent();
-			Lan.F(this);
+			
 			_signupOut = signupOut;
 			switch (setTab)
 			{
@@ -243,8 +243,8 @@ namespace OpenDental
 			comboWSNPADefApptType.Items.Clear();
 			gridWSNPAReasons.BeginUpdate();
 			gridWSNPAReasons.ListGridColumns.Clear();
-			gridWSNPAReasons.ListGridColumns.Add(new GridColumn(Lan.G(this, "Reason"), 120));
-			gridWSNPAReasons.ListGridColumns.Add(new GridColumn(Lan.G(this, "Pattern"), 80) { IsWidthDynamic = true });
+			gridWSNPAReasons.ListGridColumns.Add(new GridColumn("Reason", 120));
+			gridWSNPAReasons.ListGridColumns.Add(new GridColumn("Pattern", 80) { IsWidthDynamic = true });
 			gridWSNPAReasons.ListGridRows.Clear();
 			GridRow row;
 			foreach (Def def in listDefs)
@@ -262,7 +262,7 @@ namespace OpenDental
 				}
 				row = new GridRow();
 				row.Cells.Add(def.ItemName);
-				row.Cells.Add((string.IsNullOrEmpty(apptType.Pattern) ? Lan.G(this, "(use procedure time pattern)") : Appointments.ConvertPatternFrom5(apptType.Pattern)));
+				row.Cells.Add((string.IsNullOrEmpty(apptType.Pattern) ? "(use procedure time pattern)" : Appointments.ConvertPatternFrom5(apptType.Pattern)));
 				gridWSNPAReasons.ListGridRows.Add(row);
 				comboWSNPADefApptType.Items.Add(def.ItemName, def);
 			}
@@ -349,15 +349,15 @@ namespace OpenDental
 			}
 			gridWebSchedNewPatApptOps.BeginUpdate();
 			gridWebSchedNewPatApptOps.ListGridColumns.Clear();
-			gridWebSchedNewPatApptOps.ListGridColumns.Add(new GridColumn(Lan.G("FormEServicesSetup", "Op Name"), opNameWidth));
-			gridWebSchedNewPatApptOps.ListGridColumns.Add(new GridColumn(Lan.G("FormEServicesSetup", "Abbrev"), 60));
+			gridWebSchedNewPatApptOps.ListGridColumns.Add(new GridColumn("Op Name", opNameWidth));
+			gridWebSchedNewPatApptOps.ListGridColumns.Add(new GridColumn("Abbrev", 60));
 			if (PrefC.HasClinicsEnabled)
 			{
-				gridWebSchedNewPatApptOps.ListGridColumns.Add(new GridColumn(Lan.G("FormEServicesSetup", "Clinic"), clinicWidth));
+				gridWebSchedNewPatApptOps.ListGridColumns.Add(new GridColumn("Clinic", clinicWidth));
 			}
-			gridWebSchedNewPatApptOps.ListGridColumns.Add(new GridColumn(Lan.G("FormEServicesSetup", "Provider"), 60));
-			gridWebSchedNewPatApptOps.ListGridColumns.Add(new GridColumn(Lan.G("FormEServicesSetup", "Hygienist"), 60));
-			gridWebSchedNewPatApptOps.ListGridColumns.Add(new GridColumn(Lan.G("FormEServicesSetup", "ApptTypes"), 40) { IsWidthDynamic = true });
+			gridWebSchedNewPatApptOps.ListGridColumns.Add(new GridColumn("Provider", 60));
+			gridWebSchedNewPatApptOps.ListGridColumns.Add(new GridColumn("Hygienist", 60));
+			gridWebSchedNewPatApptOps.ListGridColumns.Add(new GridColumn("ApptTypes", 40) { IsWidthDynamic = true });
 			gridWebSchedNewPatApptOps.ListGridRows.Clear();
 			//A list of all operatories that are considered for web sched new pat appt.
 			List<Operatory> listWSNPAOps = Operatories.GetOpsForWebSchedNewPatAppts();
@@ -654,7 +654,7 @@ namespace OpenDental
 			textWebSchedPerBatch.Text = Prefs.GetString(PrefName.WebSchedTextsPerBatch);
 			textWebSchedDateStart.Text = DateTime.Today.AddDays(recallApptDays).ToShortDateString();
 			comboWebSchedClinic.Items.Clear();
-			comboWebSchedClinic.Items.Add(Lan.G(this, "Unassigned"));
+			comboWebSchedClinic.Items.Add("Unassigned");
 			_listWebSchedClinics = Clinics.GetDeepCopy();
 			for (int i = 0; i < _listWebSchedClinics.Count; i++)
 			{
@@ -663,7 +663,7 @@ namespace OpenDental
 			comboWebSchedClinic.SelectedIndex = 0;
 			_listWebSchedProviders = Providers.GetDeepCopy(true);
 			comboWebSchedProviders.Items.Clear();
-			comboWebSchedProviders.Items.Add(Lan.G(this, "All"));
+			comboWebSchedProviders.Items.Add("All");
 			for (int i = 0; i < _listWebSchedProviders.Count; i++)
 			{
 				comboWebSchedProviders.Items.Add(_listWebSchedProviders[i].GetLongDesc());
@@ -714,7 +714,7 @@ namespace OpenDental
 				+ "emails with a link that will allow patients to quickly schedule their recall appointments. "
 				+ "You may also publish a link to the New Patient Appt URL on your web site to allow new patients to schedule "
 				+ "their first appointment.  All appointments scheduled using Web Sched will instantly show "
-				+ "up on the schedule.", Lan.G(this, "Web Sched Information"), MessageBoxButtons.OK);
+				+ "up on the schedule.", "Web Sched Information", MessageBoxButtons.OK);
 		}
 
 		private void butWebSchedRecallBlockouts_Click(object sender, EventArgs e)
@@ -815,11 +815,11 @@ namespace OpenDental
 			}
 			gridWebSchedRecallTypes.BeginUpdate();
 			gridWebSchedRecallTypes.ListGridColumns.Clear();
-			GridColumn col = new GridColumn(Lan.G("TableRecallTypes", "Description"), 130);
+			GridColumn col = new GridColumn("Description", 130);
 			gridWebSchedRecallTypes.ListGridColumns.Add(col);
-			col = new GridColumn(Lan.G("TableRecallTypes", "Time Pattern"), 100);
+			col = new GridColumn("Time Pattern", 100);
 			gridWebSchedRecallTypes.ListGridColumns.Add(col);
-			col = new GridColumn(Lan.G("TableRecallTypes", "Time Length"), 80) { IsWidthDynamic = true };
+			col = new GridColumn("Time Length", 80) { IsWidthDynamic = true };
 			col.TextAlign = HorizontalAlignment.Center;
 			gridWebSchedRecallTypes.ListGridColumns.Add(col);
 			gridWebSchedRecallTypes.ListGridRows.Clear();
@@ -836,7 +836,7 @@ namespace OpenDental
 				}
 				else
 				{
-					row.Cells.Add(timeLength.ToString() + " " + Lan.G("TableRecallTypes", "mins"));
+					row.Cells.Add(timeLength.ToString() + " " + "mins");
 				}
 				gridWebSchedRecallTypes.ListGridRows.Add(row);
 			}
@@ -854,14 +854,14 @@ namespace OpenDental
 			}
 			gridWebSchedOperatories.BeginUpdate();
 			gridWebSchedOperatories.ListGridColumns.Clear();
-			gridWebSchedOperatories.ListGridColumns.Add(new GridColumn(Lan.G("TableOperatories", "Op Name"), opNameWidth));
-			gridWebSchedOperatories.ListGridColumns.Add(new GridColumn(Lan.G("TableOperatories", "Abbrev"), 70));
+			gridWebSchedOperatories.ListGridColumns.Add(new GridColumn("Op Name", opNameWidth));
+			gridWebSchedOperatories.ListGridColumns.Add(new GridColumn("Abbrev", 70));
 			if (PrefC.HasClinicsEnabled)
 			{
-				gridWebSchedOperatories.ListGridColumns.Add(new GridColumn(Lan.G("TableOperatories", "Clinic"), clinicWidth));
+				gridWebSchedOperatories.ListGridColumns.Add(new GridColumn("Clinic", clinicWidth));
 			}
-			gridWebSchedOperatories.ListGridColumns.Add(new GridColumn(Lan.G("TableOperatories", "Provider"), 90));
-			gridWebSchedOperatories.ListGridColumns.Add(new GridColumn(Lan.G("TableOperatories", "Hygienist"), 90));
+			gridWebSchedOperatories.ListGridColumns.Add(new GridColumn("Provider", 90));
+			gridWebSchedOperatories.ListGridColumns.Add(new GridColumn("Hygienist", 90));
 			gridWebSchedOperatories.ListGridRows.Clear();
 			GridRow row;
 			for (int i = 0; i < _listWebSchedRecallOps.Count; i++)
@@ -1149,25 +1149,25 @@ namespace OpenDental
 			bool isTextSendInvalid = false;
 			if (Prefs.GetLong(PrefName.RecallDaysPast) == -1)
 			{//Days Past field
-				listSetupErrors.Add("- " + Lan.G(this, "Days Past (e.g. 1095, blank, etc) field cannot be blank."));
+				listSetupErrors.Add("- " + "Days Past (e.g. 1095, blank, etc) field cannot be blank.");
 				isEmailSendInvalid = true;
 				isTextSendInvalid = true;
 			}
 			if (Prefs.GetLong(PrefName.RecallShowIfDaysFirstReminder) < 1)
 			{//Initial Reminder field
-				listSetupErrors.Add("- " + Lan.G(this, "Initial Reminder field has to be greater than 0."));
+				listSetupErrors.Add("- " + "Initial Reminder field has to be greater than 0.");
 				isEmailSendInvalid = true;
 				isTextSendInvalid = true;
 			}
 			if (Prefs.GetLong(PrefName.RecallShowIfDaysSecondReminder) < 1)
 			{//Second(or more) Reminder field
-				listSetupErrors.Add("- " + Lan.G(this, "Second (or more) Reminder field has to be greater than 0."));
+				listSetupErrors.Add("- " + "Second (or more) Reminder field has to be greater than 0.");
 				isEmailSendInvalid = true;
 				isTextSendInvalid = true;
 			}
 			if (radioSendText.Checked && !SmsPhones.IsIntegratedTextingEnabled())
 			{
-				listSetupErrors.Add("- " + Lan.G(this, "Integrated texting must be enabled."));
+				listSetupErrors.Add("- " + "Integrated texting must be enabled.");
 				isTextSendInvalid = true;
 			}
 			//Checking the "Do Not Send" radio button will automatically uncheck all the other radio buttons in the group box.
@@ -1181,9 +1181,9 @@ namespace OpenDental
 			}
 			if (listSetupErrors.Count > 0)
 			{
-				MessageBox.Show(Lan.G(this, "Recall Setup settings are not correctly set in order to Send Messages Automatically to patients:")
+				MessageBox.Show("Recall Setup settings are not correctly set in order to Send Messages Automatically to patients:"
 						+ "\r\n" + string.Join("\r\n", listSetupErrors)
-					, Lan.G(this, "Web Sched - Recall Setup Error"));
+					, "Web Sched - Recall Setup Error");
 			}
 		}
 

@@ -272,7 +272,7 @@ namespace OpenDentBusiness{
 				return new List<ODTuple<Appointment,bool>>();
 			}
 			if(listChildOpNums.Contains(masterOpNum)) {
-				throw new ApplicationException(Lans.g("Operatories","The operatory to keep cannot be within the selected list of operatories to combine."));
+				throw new ApplicationException("The operatory to keep cannot be within the selected list of operatories to combine.");
 			}
 			string command="SELECT * FROM appointment "
 				+"WHERE Op IN ("+string.Join(",",listChildOpNums.Concat(new[] { masterOpNum }))+") "
@@ -295,7 +295,7 @@ namespace OpenDentBusiness{
 			List<Operatory> listOps=Operatories.GetDeepCopy();
 			Operatory masterOp=listOps.FirstOrDefault(x => x.OperatoryNum==masterOpNum);
 			if(masterOp==null) {
-				throw new ApplicationException(Lans.g("Operatories","Operatory to merge into no longer exists."));
+				throw new ApplicationException("Operatory to merge into no longer exists.");
 			}
 			if(listApptsToMerge.Count>0) {
 				//All appts in listAppts are appts that we are going to move to new op.
@@ -308,8 +308,8 @@ namespace OpenDentBusiness{
 				.ForEach(x => x.IsHidden=true);
 			Operatories.Sync(listOpsToMerge,listOps);
 			SecurityLogs.MakeLogEntry(Permissions.Setup,0
-				,Lans.g("Operatories","The following operatories and all of their appointments were merged into the")
-					+" "+masterOp.Abbrev+" "+Lans.g("Operatories","operatory;")+" "
+				,"The following operatories and all of their appointments were merged into the"
+					+" "+masterOp.Abbrev+" "+"operatory;"+" "
 					+string.Join(", ",listOpsToMerge.FindAll(x => x.OperatoryNum!=masterOpNum && listOpNumsToMerge.Contains(x.OperatoryNum)).Select(x => x.Abbrev)));
 		}
 	}

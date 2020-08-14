@@ -21,7 +21,7 @@ namespace OpenDentBusiness {
 		{
 			foreach(SheetParameter param in sheet.Parameters){
 				if(param.IsRequired && param.ParamValue==null){
-					throw new ApplicationException(Lans.g("Sheet","Parameter not specified for sheet")+": "+param.ParamName);
+					throw new ApplicationException("Parameter not specified for sheet"+": "+param.ParamName);
 				}
 			}
 			Provider provider=null;
@@ -84,7 +84,7 @@ namespace OpenDentBusiness {
 				case SheetTypeEnum.RoutingSlip:
 					Appointment apt=Appointments.GetOneApt((long)GetParamByName(sheet,"AptNum").ParamValue);
 					if(apt==null) {
-						return Lans.g("SheetFiller","Appointment no longer exists.");
+						return "Appointment no longer exists.";
 					}
 					patNum=apt.PatNum;
 					pat=(pat==null || pat.PatNum!=patNum ? Patients.GetPat(patNum) : pat);
@@ -380,12 +380,12 @@ namespace OpenDentBusiness {
 				fam=fam??Patients.GetFamily(pat.PatNum);
 				StaticTextFieldDependency dependencies=StaticTextData.GetStaticTextDependencies(sheet.SheetFields);
 				data=StaticTextData.GetStaticTextData(dependencies,pat,fam,listProcCodeNums,data);
-				premedicateYN=Lans.g("All","No");
-				recallScheduledYN=Lans.g("All","No");
-				dueForBWYN=Lans.g("All","No");
-				dueForPanoYN=Lans.g("All","No");
+				premedicateYN="No";
+				recallScheduledYN="No";
+				dueForBWYN="No";
+				dueForPanoYN="No";
 				if(pat.Premed) {
-					premedicateYN=Lans.g("All","Yes");
+					premedicateYN="Yes";
 				}
 				patNote=data.PatNote;
 				medicalSummary=patNote.Medical;
@@ -394,40 +394,40 @@ namespace OpenDentBusiness {
 				#region Gender
 				switch(pat.Gender) {
 					case PatientGender.Male:
-						genderHeShe=Lans.g("PatientInfo","He");
-						genderheshe=Lans.g("PatientInfo","he");
-						genderHimHer=Lans.g("PatientInfo","Him");
-						genderhimher=Lans.g("PatientInfo","him");
-						genderHimselfHerself=Lans.g("PatientInfo","Himself");
-						genderhimselfherself=Lans.g("PatientInfo","himself");
-						genderHisHer=Lans.g("PatientInfo","His");
-						genderhisher=Lans.g("PatientInfo","his");
-						genderHisHers=Lans.g("PatientInfo","His");
-						genderhishers=Lans.g("PatientInfo","his");
+						genderHeShe="He";
+						genderheshe="he";
+						genderHimHer="Him";
+						genderhimher="him";
+						genderHimselfHerself="Himself";
+						genderhimselfherself="himself";
+						genderHisHer="His";
+						genderhisher="his";
+						genderHisHers="His";
+						genderhishers="his";
 						break;
 					case PatientGender.Female:
-						genderHeShe=Lans.g("PatientInfo","She");
-						genderheshe=Lans.g("PatientInfo","she");
-						genderHimHer=Lans.g("PatientInfo","Her");
-						genderhimher=Lans.g("PatientInfo","her");
-						genderHimselfHerself=Lans.g("PatientInfo","Herself");
-						genderhimselfherself=Lans.g("PatientInfo","herself");
-						genderHisHer=Lans.g("PatientInfo","Her");
-						genderhisher=Lans.g("PatientInfo","her");
-						genderHisHers=Lans.g("PatientInfo","Hers");
-						genderhishers=Lans.g("PatientInfo","hers");
+						genderHeShe="She";
+						genderheshe="she";
+						genderHimHer="Her";
+						genderhimher="her";
+						genderHimselfHerself="Herself";
+						genderhimselfherself="herself";
+						genderHisHer="Her";
+						genderhisher="her";
+						genderHisHers="Hers";
+						genderhishers="hers";
 						break;
 					case PatientGender.Unknown:
-						genderHeShe=Lans.g("PatientInfo","The patient");
-						genderheshe=Lans.g("PatientInfo","the patient");
-						genderHimHer=Lans.g("PatientInfo","The patient");
-						genderhimher=Lans.g("PatientInfo","the patient");
-						genderHimselfHerself=Lans.g("PatientInfo","The patient");
-						genderhimselfherself=Lans.g("PatientInfo","the patient");
-						genderHisHer=Lans.g("PatientInfo","The patient's");
-						genderhisher=Lans.g("PatientInfo","the patient's");
-						genderHisHers=Lans.g("PatientInfo","The patient's");
-						genderhishers=Lans.g("PatientInfo","the patient's");
+						genderHeShe="The patient";
+						genderheshe="the patient";
+						genderHimHer="The patient";
+						genderhimher="the patient";
+						genderHimselfHerself="The patient";
+						genderhimselfherself="the patient";
+						genderHisHer="The patient's";
+						genderhisher="the patient's";
+						genderHisHers="The patient's";
+						genderhishers="the patient's";
 						break;
 				}
 				#endregion
@@ -487,7 +487,7 @@ namespace OpenDentBusiness {
 							//Get the procedure's priority.
 							string priority=Defs.GetName(DefCat.TxPriorities,procListTP[i].Priority);
 							if(priority=="") {
-								priority=Lans.g("TreatmentPlans","No priority");
+								priority="No priority";
 							}
 							//Set the corresponding static field text.
 							treatmentPlanProcsPriority+=priority+", "+procDescript;
@@ -632,16 +632,16 @@ namespace OpenDentBusiness {
 					insFreqPanoFMX=Benefits.GetFrequencyDisplay(FrequencyType.PanoFMX,benefitList,plan.PlanNum);
 					switch(plan.PlanType) {//(ppo, etc)
 						case "p":
-							insType=Lans.g("InsurancePlans","PPO Percentage");
+							insType="PPO Percentage";
 							break;
 						case "f":
-							insType=Lans.g("InsurancePlans","Medicaid or Flat Copay");
+							insType="Medicaid or Flat Copay";
 							break;
 						case "c":
-							insType=Lans.g("InsurancePlans","Capitation");
+							insType="Capitation";
 							break;
 						case "":
-							insType=Lans.g("InsurancePlans","Category Percentage");
+							insType="Category Percentage";
 							break;
 					}
 					insEmployer=Employers.GetEmployer(plan.EmployerNum).Name; //blank if no Employer listed
@@ -801,12 +801,12 @@ namespace OpenDentBusiness {
 							||listProcCodes[j]=="D0277"//vertical bitewings - 7 to 8 films											   
 							||listProcCodes[j]=="D0273")//bitewings - three films
 						{
-							dueForBWYN=Lans.g("All","Yes");
+							dueForBWYN="Yes";
 						}
 						if(listProcCodes[j]=="D0210"//intraoral - complete series (including bitewings)				   
 							||listProcCodes[j]=="D0330")//panoramic film
 						{
-							dueForPanoYN=Lans.g("All","Yes");
+							dueForPanoYN="Yes";
 						}
 					}
 				}
@@ -817,7 +817,7 @@ namespace OpenDentBusiness {
 					}
 					recallInterval=recall.RecallInterval.ToString();
 					if(recall.DateScheduled>=DateTime.Today) {
-						recallScheduledYN=Lans.g("All","Yes");
+						recallScheduledYN="Yes";
 					}
 				}
 				for(int i=0;i<fam.ListPats.Length;i++) {
@@ -867,16 +867,16 @@ namespace OpenDentBusiness {
 					PlannedAppt plannedAppt=data.ListPlannedAppts?.OrderBy(x => x.ItemOrder).FirstOrDefault();
 					for(int i=0;i<apptList.Count;i++) {
 						if(plannedAppt!=null && apptList[i].AptNum==plannedAppt.AptNum) {
-							plannedAppointmentInfo=Lans.g("Appointments","Procedures:")+" ";
+							plannedAppointmentInfo="Procedures:"+" ";
 							plannedAppointmentInfo+=apptList[i].ProcDescript+"\r\n";
 							int minutesTotal=apptList[i].Pattern.Length*5;
 							int hours=minutesTotal/60;//automatically rounds down
 							int minutes=minutesTotal-hours*60;
-							plannedAppointmentInfo+=Lans.g("Appointments","Appt Length:")+" ";
+							plannedAppointmentInfo+="Appt Length:"+" ";
 							if(hours>0) {
-								plannedAppointmentInfo+=hours.ToString()+" "+Lans.g("Appointments","hours")+", ";
+								plannedAppointmentInfo+=hours.ToString()+" "+"hours"+", ";
 							}
-							plannedAppointmentInfo+=minutes.ToString()+" "+Lans.g("Appointments","min")+"\r\n";
+							plannedAppointmentInfo+=minutes.ToString()+" "+"min"+"\r\n";
 							if(Programs.UsingOrion) {
 								DateTime newDateSched=new DateTime();
 								for(int p=0;p<procsList.Count;p++) {
@@ -895,10 +895,10 @@ namespace OpenDentBusiness {
 									}
 								}
 								if(newDateSched.Year>1880) {
-									plannedAppointmentInfo+=Lans.g("Appointments","Schedule by")+": "+newDateSched.ToShortDateString();
+									plannedAppointmentInfo+="Schedule by"+": "+newDateSched.ToShortDateString();
 								}
 								else {
-									plannedAppointmentInfo+=Lans.g("Appointments","No schedule by date.");
+									plannedAppointmentInfo+="No schedule by date.";
 								}
 							}
 						}
@@ -1007,9 +1007,9 @@ namespace OpenDentBusiness {
 				if(Sheets.ContainsStaticField(sheet,"patientPortalCredentials")) {
 					var userWeb=UserWebs.GetNewPatientPortalCredentials(pat);
 					if(UserWebs.UpdateNewPatientPortalCredentials(userWeb)) {
-						patientPortalCredentials=Lans.g("PatientPortal","Patient Portal Login")+"\r\n"
-							+Lans.g("PatientPortal","UserName:")+" "+userWeb.Item1.UserName+"\r\n"
-							+Lans.g("PatientPortal","Password:")+" "+userWeb.Item2;
+						patientPortalCredentials="Patient Portal Login"+"\r\n"
+							+"UserName:"+" "+userWeb.Item1.UserName+"\r\n"
+							+"Password:"+" "+userWeb.Item2;
 					}
 				}
 				#endregion Patient Portal
@@ -1085,7 +1085,7 @@ namespace OpenDentBusiness {
 					fldval=fldval.Replace(StaticTextField.guarantorNameLF.ToReplacementString(),guarantorNameLF);
 					fldval=fldval.Replace(StaticTextField.guarantorWirelessPhone.ToReplacementString(),guarantorWirelessPhone);
 					fldval=fldval.Replace(StaticTextField.guarantorWkPhone.ToReplacementString(),guarantorWkPhone);
-					fldval=fldval.Replace(StaticTextField.gender.ToReplacementString(),Lans.g("enumPatientGender",pat.Gender.ToString()));
+					fldval=fldval.Replace(StaticTextField.gender.ToReplacementString(),pat.Gender.ToString());
 					fldval=fldval.Replace(StaticTextField.genderHeShe.ToReplacementString(),genderHeShe);
 					fldval=fldval.Replace(StaticTextField.genderheshe.ToReplacementString(),genderheshe);
 					fldval=fldval.Replace(StaticTextField.genderHimHer.ToReplacementString(),genderHimHer);
@@ -1569,9 +1569,9 @@ namespace OpenDentBusiness {
 			}
 			Procedure proc=Procedures.GetOneProc(rx.ProcNum,false);
 			ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
-			string retVal=Lans.g("Rx","Procedure Code:")+" "+procCode.ProcCode;
+			string retVal="Procedure Code:"+" "+procCode.ProcCode;
 			if(proc.DiagnosticCode!="") {
-				retVal+="  "+Lans.g("Rx","Diagnosis:")+" "+proc.DiagnosticCode;
+				retVal+="  "+"Diagnosis:"+" "+proc.DiagnosticCode;
 			}
 			return retVal;
 		}
@@ -1580,7 +1580,7 @@ namespace OpenDentBusiness {
 			if(rx.DaysOfSupply<=0) {
 				return "";
 			}
-			return Lans.g("Rx","Total Supply:")+" "+rx.DaysOfSupply+" "+((rx.DaysOfSupply > 1)?Lans.g("Rx","Days"):Lans.g("Rx","Day"));
+			return "Total Supply:"+" "+rx.DaysOfSupply+" "+((rx.DaysOfSupply > 1)?"Days":"Day");
 		}
 
 		private static void FillFieldsForRxInstruction(Sheet sheet) {
@@ -2299,7 +2299,7 @@ namespace OpenDentBusiness {
 						field.FieldValue=apt.AptDateTime.ToShortTimeString()+"  "+apt.AptDateTime.ToShortDateString();
 						break;
 					case "appt.length":
-						field.FieldValue=(apt.Pattern.Length*5).ToString()+" "+Lans.g("SheetRoutingSlip","minutes");
+						field.FieldValue=(apt.Pattern.Length*5).ToString()+" "+"minutes";
 						break;
 					case "appt.providers":
 						str=Providers.GetLongDesc(apt.ProvNum);
@@ -2789,8 +2789,8 @@ namespace OpenDentBusiness {
 						field.FieldValue=deposit.DateDeposit.ToShortDateString();
 						break;
 					case "depositList":
-						StringBuilder depositListB=new StringBuilder(Lans.g("Deposits","Date").PadRight(12)+Lans.g("Deposits","Name").PadRight(34)
-							+Lans.g("Deposits","Check Number").PadRight(16)+Lans.g("Deposits","Bank-Branch").PadRight(15)+Lans.g("Deposits","Amount")+Environment.NewLine);
+						StringBuilder depositListB=new StringBuilder("Date".PadRight(12)+"Name".PadRight(34)
+							+"Check Number".PadRight(16)+"Bank-Branch".PadRight(15)+"Amount"+Environment.NewLine);
 						for(int i=0;i<depositList.Count;i++){
 							if(i>0){
 								depositListB.Append(Environment.NewLine);
@@ -2928,7 +2928,7 @@ namespace OpenDentBusiness {
 				switch(field.FieldName) {
 					case "accountNumber":
 						#region Account Number
-						field.FieldValue=Lans.g("Statements","Account Number")+" ";
+						field.FieldValue="Account Number"+" ";
 						if(Prefs.GetBool(PrefName.StatementAccountsUseChartNumber)) {
 							field.FieldValue+=patGuar.ChartNumber;
 						}
@@ -2941,7 +2941,7 @@ namespace OpenDentBusiness {
 						#region Future Appointments
 						if(!Stmt.IsReceipt && !Stmt.IsInvoice) {
 							if(tableAppt.Rows.Count>0) {
-								field.FieldValue=Lans.g("Statements","Scheduled Appointments:");
+								field.FieldValue="Scheduled Appointments:";
 							}
 							for(int i=0;i<tableAppt.Rows.Count;i++) {
 								field.FieldValue+="\r\n"+tableAppt.Rows[i]["descript"].ToString();
@@ -3011,22 +3011,22 @@ namespace OpenDentBusiness {
 						#region Sta/Rec/Inv
 						if(Stmt.IsInvoice) {
 							if(CultureInfo.CurrentCulture.Name=="en-NZ" || CultureInfo.CurrentCulture.Name=="en-AU") {//New Zealand and Australia
-								field.FieldValue=Lans.g("Statements","TAX INVOICE");
+								field.FieldValue="TAX INVOICE";
 							}
 							else {
-								field.FieldValue=Lans.g("Statements","INVOICE")+" #"+Stmt.StatementNum.ToString();
+								field.FieldValue="INVOICE"+" #"+Stmt.StatementNum.ToString();
 							}
 						}
 						else if(Stmt.IsReceipt) {
-							field.FieldValue=Lans.g("Statements","RECEIPT");
+							field.FieldValue="RECEIPT";
 							if(CultureInfo.CurrentCulture.Name.EndsWith("SG")) {//SG=Singapore
 								field.FieldValue+=" #"+Stmt.StatementNum.ToString();
 							}
 						}
 						else {
-							field.FieldValue=Lans.g("Statements","STATEMENT");
+							field.FieldValue="STATEMENT";
 							if(Stmt.StatementType==StmtType.LimitedStatement) {
-								field.FieldValue+=" ("+Lans.g("Statements","Limited")+")";
+								field.FieldValue+=" ("+"Limited"+")";
 							}
 						}
 						#endregion
@@ -3144,11 +3144,11 @@ namespace OpenDentBusiness {
 						field.FieldValue=Prefs.GetString(PrefName.PracticeTitle);
 						break;
 					case "statementIsCopy":
-						field.FieldValue=(Stmt.IsInvoiceCopy?Lans.g("Statements","COPY"):"");
+						field.FieldValue=(Stmt.IsInvoiceCopy?"COPY":"");
 						break;
 					case "statementIsTaxReceipt":
 						//if(!CultureInfo.CurrentCulture.Name.EndsWith("CA")) { field.FieldValue=""; break; }
-						field.FieldValue=(Stmt.IsReceipt?Lans.g("Statements","KEEP THIS RECEIPT FOR INCOME TAX PURPOSES"):"");
+						field.FieldValue=(Stmt.IsReceipt?"KEEP THIS RECEIPT FOR INCOME TAX PURPOSES":"");
 						break;
 					case "practiceAddress":
 						field.FieldValue=Prefs.GetString(PrefName.PracticeAddress);
@@ -3533,7 +3533,7 @@ namespace OpenDentBusiness {
 						if(pat==null) {
 							continue;
 						}
-						field.FieldValue=Lans.g("enumPatientGender",pat.Gender.ToString());
+						field.FieldValue=pat.Gender.ToString();
 						break;
 					case "patient.HmPhone":
 						if(pat==null) {
@@ -3640,7 +3640,7 @@ namespace OpenDentBusiness {
 						}
 						value+="\r\n"+pat.GetNameFLFormal()+", DOB "+pat.Birthdate.ToShortDateString();
 						if(treatPlan.ResponsParty!=0) {
-							value+="\r\n"+Lans.g("ContrTreat","Responsible Party")+": "+Patients.GetLim(treatPlan.ResponsParty).GetNameFL();
+							value+="\r\n"+"Responsible Party"+": "+Patients.GetLim(treatPlan.ResponsParty).GetNameFL();
 						}
 						if(treatPlan.TPStatus==TreatPlanStatus.Saved) {
 							value+="\r\n"+treatPlan.DateTP.ToShortDateString();
@@ -3742,44 +3742,44 @@ namespace OpenDentBusiness {
 			string sLine5="";//InvoiceBalRem
 			string sLine6="";//Invoice Pay Plan Charges
 			if(Stmt.IsInvoice) {//invoices can't be superstatements
-				sLine1=Lans.g("Statements","Procedures:");
-				sLine2=Lans.g("Statements","Adjustments:");
-				sLine6=Lans.g("Statements","Pay Plan Charges:");
-				sLine3=Lans.g("Statements","Total:");
+				sLine1="Procedures:";
+				sLine2="Adjustments:";
+				sLine6="Pay Plan Charges:";
+				sLine3="Total:";
 				if(Prefs.GetBool(PrefName.InvoicePaymentsGridShowNetProd)) {
-					sLine4=Lans.g("Statements","Payments & WriteOffs");
+					sLine4="Payments & WriteOffs";
 				}
 				else {
-					sLine4=Lans.g("Statements","Payments:");
+					sLine4="Payments:";
 				}
-				sLine5=Lans.g("Statements","Balance Remaining:");
+				sLine5="Balance Remaining:";
 			}
 			else if(Prefs.GetBool(PrefName.BalancesDontSubtractIns)) {
 				if(Stmt.SuperFamily!=0) {
-					sLine1=Lans.g("Statements","Sum of Balances:");
+					sLine1="Sum of Balances:";
 				}
 				else {
-					sLine1=Lans.g("Statements","Balance:");
+					sLine1="Balance:";
 				}
-				//sLine2=Lans.g("Statements","Ins Pending:");
-				//sLine3=Lans.g("Statements","After Ins:");
+				//sLine2="Ins Pending:";
+				//sLine3="After Ins:";
 			}
 			else {//this is more common
 				if(Prefs.GetBool(PrefName.FuchsOptionsOn)) {
-					sLine1=Lans.g("Statements","Balance:");
-					sLine2=Lans.g("Statements","-Ins Estimate:");
-					sLine3=Lans.g("Statements","=Owed Now:");
+					sLine1="Balance:";
+					sLine2="-Ins Estimate:";
+					sLine3="=Owed Now:";
 				}
 				else {
 					if(Stmt.SuperFamily!=0) {
-						sLine1=Lans.g("Statements","Sum of Totals:");
-						sLine2=Lans.g("Statements","-Sum of Ins Estimates:");
-						sLine3=Lans.g("Statements","=Sum of Balances:");
+						sLine1="Sum of Totals:";
+						sLine2="-Sum of Ins Estimates:";
+						sLine3="=Sum of Balances:";
 					}
 					else {
-						sLine1=Lans.g("Statements","Total:");
-						sLine2=Lans.g("Statements","-Ins Estimate:");
-						sLine3=Lans.g("Statements","=Balance:");
+						sLine1="Total:";
+						sLine2="-Ins Estimate:";
+						sLine3="=Balance:";
 					}
 				}
 			}
@@ -4429,7 +4429,7 @@ namespace OpenDentBusiness {
 							field.FieldValue=dictRxs[1].Drug;
 						}
 						else {
-							field.FieldValue=Lans.g("RxMulti","VOID");
+							field.FieldValue="VOID";
 							field.FontSize=50;
 						}
 						break;
@@ -4438,7 +4438,7 @@ namespace OpenDentBusiness {
 							field.FieldValue=dictRxs[2].Drug;
 						}
 						else {
-							field.FieldValue=Lans.g("RxMulti","VOID");
+							field.FieldValue="VOID";
 							field.FontSize=50;
 						}
 						break;
@@ -4447,7 +4447,7 @@ namespace OpenDentBusiness {
 							field.FieldValue=dictRxs[3].Drug;
 						}
 						else {
-							field.FieldValue=Lans.g("RxMulti","VOID");
+							field.FieldValue="VOID";
 							field.FontSize=50;
 						}
 						break;
@@ -4456,7 +4456,7 @@ namespace OpenDentBusiness {
 							field.FieldValue=dictRxs[4].Drug;
 						}
 						else {
-							field.FieldValue=Lans.g("RxMulti","VOID");
+							field.FieldValue="VOID";
 							field.FontSize=50;
 						}
 						break;
@@ -4465,7 +4465,7 @@ namespace OpenDentBusiness {
 							field.FieldValue=dictRxs[5].Drug;
 						}
 						else {
-							field.FieldValue=Lans.g("RxMulti","VOID");
+							field.FieldValue="VOID";
 							field.FontSize=50;
 						}
 						break;
@@ -4474,7 +4474,7 @@ namespace OpenDentBusiness {
 							field.FieldValue=dictRxs[6].Drug;
 						}
 						else {
-							field.FieldValue=Lans.g("RxMulti","VOID");
+							field.FieldValue="VOID";
 							field.FontSize=50;
 						}
 						break;

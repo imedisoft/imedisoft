@@ -525,7 +525,7 @@ namespace OpenDentBusiness
 		{
 			if (userod.IsHidden && UserGroups.IsAdminGroup(listUserGroupNums))
 			{
-				throw new Exception(Lans.g("Userods", "Admins cannot be hidden."));
+				throw new Exception("Admins cannot be hidden.");
 			}
 			Validate(true, userod, false, listUserGroupNums);
 			long userNum = Crud.UserodCrud.Insert(userod);
@@ -567,12 +567,12 @@ namespace OpenDentBusiness
 			 //the user typed in is a duplicate of a CEMT user.  In doing this, we are able to give a better message.
 				if (!IsUserNameUnique(user.UserName, excludeUserNum, excludeHiddenUsers, true))
 				{
-					throw new ApplicationException(Lans.g("Userods", "UserName already in use by CEMT member."));
+					throw new ApplicationException("UserName already in use by CEMT member.");
 				}
 				if (!IsUserNameUnique(user.UserName, excludeUserNum, excludeHiddenUsers))
 				{
 					//IsUserNameUnique doesn't care if it's a CEMT user or not.. It just gets a count based on username.
-					throw new ApplicationException(Lans.g("Userods", "UserName already in use."));
+					throw new ApplicationException("UserName already in use.");
 				}
 			}
 			if (listUserGroupNum == null)
@@ -581,7 +581,7 @@ namespace OpenDentBusiness
 			}
 			if (listUserGroupNum.Count < 1)
 			{
-				throw new ApplicationException(Lans.g("Userods", "The current user must be in at least one user group."));
+				throw new ApplicationException("The current user must be in at least one user group.");
 			}
 			//an admin user can never be hidden
 			command = "SELECT COUNT(*) FROM grouppermission "
@@ -591,13 +591,13 @@ namespace OpenDentBusiness
 				&& Database.ExecuteString(command) == "0"//if this user would not have admin
 				&& !IsSomeoneElseSecurityAdmin(user))//make sure someone else has admin
 			{
-				throw new ApplicationException(Lans.g("Users", "At least one user must have Security Admin permission."));
+				throw new ApplicationException("At least one user must have Security Admin permission.");
 			}
 			if (user.IsHidden//hidden 
 				&& user.UserNumCEMT == 0//and non-CEMT
 				&& Database.ExecuteString(command) != "0")//if this user is admin
 			{
-				throw new ApplicationException(Lans.g("Userods", "Admins cannot be hidden."));
+				throw new ApplicationException("Admins cannot be hidden.");
 			}
 		}
 
@@ -768,11 +768,11 @@ namespace OpenDentBusiness
 			//No need to check RemotingRole; no call to db.
 			if (pass == "")
 			{
-				return Lans.g("FormUserPassword", "Password may not be blank when the strong password feature is turned on.");
+				return "Password may not be blank when the strong password feature is turned on.";
 			}
 			if (pass.Length < 8)
 			{
-				return Lans.g("FormUserPassword", "Password must be at least eight characters long when the strong password feature is turned on.");
+				return "Password must be at least eight characters long when the strong password feature is turned on.";
 			}
 			bool containsCap = false;
 			for (int i = 0; i < pass.Length; i++)
@@ -784,7 +784,7 @@ namespace OpenDentBusiness
 			}
 			if (!containsCap)
 			{
-				return Lans.g("FormUserPassword", "Password must contain at least one capital letter when the strong password feature is turned on.");
+				return "Password must contain at least one capital letter when the strong password feature is turned on.";
 			}
 			bool containsLower = false;
 			for (int i = 0; i < pass.Length; i++)
@@ -796,7 +796,7 @@ namespace OpenDentBusiness
 			}
 			if (!containsLower)
 			{
-				return Lans.g("FormUserPassword", "Password must contain at least one lower case letter when the strong password feature is turned on.");
+				return "Password must contain at least one lower case letter when the strong password feature is turned on.";
 			}
 			if (Prefs.GetBool(PrefName.PasswordsStrongIncludeSpecial))
 			{
@@ -811,7 +811,7 @@ namespace OpenDentBusiness
 				}
 				if (!hasSpecial)
 				{
-					return Lans.g("FormUserPassword", "Password must contain at least one special character when the 'strong passwords require a special character' feature is turned on.");
+					return "Password must contain at least one special character when the 'strong passwords require a special character' feature is turned on.";
 				}
 			}
 			bool containsNum = false;
@@ -824,7 +824,7 @@ namespace OpenDentBusiness
 			}
 			if (!containsNum)
 			{
-				return Lans.g("FormUserPassword", "Password must contain at least one number when the strong password feature is turned on.");
+				return "Password must contain at least one number when the strong password feature is turned on.";
 			}
 			return "";
 		}

@@ -147,7 +147,7 @@ namespace OpenDentBusiness
 				}
 				if (i > 1000)
 				{
-					throw new CodeBase.ODException(Lans.g("UserWebs", "Unable to create username for patient."));
+					throw new CodeBase.ODException("Unable to create username for patient.");
 				}
 				i++;
 			}
@@ -278,35 +278,35 @@ namespace OpenDentBusiness
 			StringBuilder strbErrors = new StringBuilder();
 			if (pat.FName.Trim() == "")
 			{
-				strbErrors.AppendLine(Lans.g("PatientPortal", "Missing patient first name."));
+				strbErrors.AppendLine("Missing patient first name.");
 			}
 			if (pat.LName.Trim() == "")
 			{
-				strbErrors.AppendLine(Lans.g("PatientPortal", "Missing patient last name."));
+				strbErrors.AppendLine("Missing patient last name.");
 			}
 			if (pat.Address.Trim() == "")
 			{
-				strbErrors.AppendLine(Lans.g("PatientPortal", "Missing patient address line 1."));
+				strbErrors.AppendLine("Missing patient address line 1.");
 			}
 			if (pat.City.Trim() == "")
 			{
-				strbErrors.AppendLine(Lans.g("PatientPortal", "Missing patient city."));
+				strbErrors.AppendLine("Missing patient city.");
 			}
 			if (CultureInfo.CurrentCulture.Name.EndsWith("US") && pat.State.Trim().Length != 2)
 			{
-				strbErrors.AppendLine(Lans.g("PatientPortal", "Invalid patient state.  Must be two letters."));
+				strbErrors.AppendLine("Invalid patient state.  Must be two letters.");
 			}
 			if (pat.Birthdate.Year < 1880)
 			{
-				strbErrors.AppendLine(Lans.g("PatientPortal", "Missing patient birth date."));
+				strbErrors.AppendLine("Missing patient birth date.");
 			}
 			if (pat.HmPhone.Trim() == "" && pat.WirelessPhone.Trim() == "" && pat.WkPhone.Trim() == "")
 			{
-				strbErrors.AppendLine(Lans.g("PatientPortal", "Missing patient phone;  Must have home, wireless, or work phone."));
+				strbErrors.AppendLine("Missing patient phone;  Must have home, wireless, or work phone.");
 			}
 			if (pat.Email.Trim() == "")
 			{
-				strbErrors.AppendLine(Lans.g("PatientPortal", "Missing patient email."));
+				strbErrors.AppendLine("Missing patient email.");
 			}
 			strErrors = strbErrors.ToString();
 			return strErrors == "";

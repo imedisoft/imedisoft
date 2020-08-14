@@ -17,7 +17,7 @@ namespace OpenDental {
 
 		public FormAlertCategoryEdit(AlertCategory category) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_categoryCur=category;
 		}
 		
@@ -37,7 +37,7 @@ namespace OpenDental {
 			listBoxAlertTypes.Items.Clear();
 			List<AlertType> listCategoryAlertTypes=listOldAlertCategoryLinks.Select(x => x.AlertType).ToList();
 			foreach(AlertType type in listShownAlertTypes) {
-				int index=listBoxAlertTypes.Items.Add(Lans.g(this,type.GetDescription()));
+				int index=listBoxAlertTypes.Items.Add(type.GetDescription());
 				listBoxAlertTypes.SetSelected(index,listCategoryAlertTypes.Contains(type));
 			}
 		}

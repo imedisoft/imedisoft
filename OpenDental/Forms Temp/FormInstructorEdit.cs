@@ -35,7 +35,7 @@ namespace OpenDental{
 			//
 			InitializeComponent();
 			//InstCur=instCur.Clone();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>

@@ -33,7 +33,7 @@ namespace OpenDental {
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -174,7 +174,7 @@ namespace OpenDental {
 
 		private void FormInsFilingCodes_Load(object sender,EventArgs e) {
 			if(IsSelectionMode) {
-				butClose.Text=Lan.G(this,"Cancel");
+				butClose.Text="Cancel";
 			} 
 			else {
 				butOK.Visible=false;
@@ -205,11 +205,11 @@ namespace OpenDental {
 			_listInsFilingCodes=InsFilingCodes.GetDeepCopy();
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableInsFilingCodes","Description"),250);
+			GridColumn col=new GridColumn("Description",250);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableInsFilingCodes","Group"),100);
+			col=new GridColumn("Group",100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableInsFilingCodes","EclaimCode"),100);
+			col=new GridColumn("EclaimCode",100);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

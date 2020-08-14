@@ -24,7 +24,7 @@ namespace OpenDental {
 
 		public FormDefEditWSNPApptTypes(Def defCur) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_defCur=defCur;
 			checkHidden.Checked=_defCur.IsHidden;
 			textName.Text=_defCur.ItemName;

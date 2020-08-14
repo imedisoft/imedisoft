@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormPhoneNumbersManage() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormPhoneNumbersManage_Load(object sender,EventArgs e) {
@@ -41,7 +41,7 @@ namespace OpenDental {
 			if(index==-1) {
 				return;
 			}
-			InputBox input=new InputBox(null,new InputBoxParam(InputBoxType.ValidPhone,Lan.G(this,"Phone Number")));
+			InputBox input=new InputBox(null,new InputBoxParam(InputBoxType.ValidPhone,"Phone Number"));
 			input.textResult.Text=otherList[index].PhoneNumberVal;
 			input.ShowDialog();
 			if(input.DialogResult!=DialogResult.OK) {
@@ -53,7 +53,7 @@ namespace OpenDental {
 		}
 
 		private void butAdd_Click(object sender,EventArgs e) {
-			InputBox input=new InputBox(null,new InputBoxParam(InputBoxType.ValidPhone,Lan.G(this,"Phone Number")));
+			InputBox input=new InputBox(null,new InputBoxParam(InputBoxType.ValidPhone,"Phone Number"));
 			input.ShowDialog();
 			if(input.DialogResult!=DialogResult.OK) {
 				return;

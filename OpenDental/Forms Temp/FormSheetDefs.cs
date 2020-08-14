@@ -50,7 +50,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary>Set sheetTypeFilter to filter grids to specific set of SheetTypeEnums.</summary>
@@ -289,7 +289,7 @@ namespace OpenDental{
 			FillGrid1();
 			FillGrid2();
 			comboLabel.Items.Clear();
-			comboLabel.Items.Add(Lan.G(this,"Default"));
+			comboLabel.Items.Add("Default");
 			comboLabel.SelectedIndex=0;
 			LabelList=new List<SheetDef>();
 			for(int i=0;i<_listSheetDefs.Count;i++){
@@ -308,8 +308,8 @@ namespace OpenDental{
 		private void FillGrid1(){
 			grid1.BeginUpdate();
 			grid1.ListGridColumns.Clear();
-			grid1.ListGridColumns.Add(new GridColumn(Lan.G("TableSheetDef","Description"),100){ IsWidthDynamic=true });
-			grid1.ListGridColumns.Add(new GridColumn(Lan.G("TableSheetDef","Type"),100));
+			grid1.ListGridColumns.Add(new GridColumn("Description",100){ IsWidthDynamic=true });
+			grid1.ListGridColumns.Add(new GridColumn("Type",100));
 			grid1.ListGridRows.Clear();
 			foreach(SheetDef internalDef in internalList){
 				if(listFilter.SelectedItems.Count>0 && !listFilter.GetListSelected<SheetTypeEnum>().Contains(internalDef.SheetType)) {
@@ -334,9 +334,9 @@ namespace OpenDental{
 			_listSheetDefs=SheetDefs.GetDeepCopy().FindAll(x => !SheetDefs.IsDashboardType(x));
 			grid2.BeginUpdate();
 			grid2.ListGridColumns.Clear();
-			grid2.ListGridColumns.Add(new GridColumn(Lan.G("TableSheetDef","Description"),100){ IsWidthDynamic=true });
-			grid2.ListGridColumns.Add(new GridColumn(Lan.G("TableSheetDef","Type"),100));
-			grid2.ListGridColumns.Add(new GridColumn(Lan.G("TableSheetDef","Use Mobile\r\nLayout"),65,HorizontalAlignment.Center));
+			grid2.ListGridColumns.Add(new GridColumn("Description",100){ IsWidthDynamic=true });
+			grid2.ListGridColumns.Add(new GridColumn("Type",100));
+			grid2.ListGridColumns.Add(new GridColumn("Use Mobile\r\nLayout",65,HorizontalAlignment.Center));
 			grid2.ListGridRows.Clear();
 			int selectedIndex=-1;
 			foreach(SheetDef sheetDef in _listSheetDefs){
@@ -453,7 +453,7 @@ namespace OpenDental{
 
 		private void comboLabel_DropDown(object sender,EventArgs e) {
 			comboLabel.Items.Clear();
-			comboLabel.Items.Add(Lan.G(this,"Default"));
+			comboLabel.Items.Add("Default");
 			comboLabel.SelectedIndex=0;
 			LabelList=new List<SheetDef>();
 			for(int i=0;i<_listSheetDefs.Count;i++){

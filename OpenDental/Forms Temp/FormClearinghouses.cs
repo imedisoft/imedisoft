@@ -48,11 +48,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.C(this, new System.Windows.Forms.Control[]
-			{
-				labelGuide
-			});
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -366,15 +362,15 @@ namespace OpenDental{
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G(this,"Description"),150);
+			GridColumn col=new GridColumn("Description",150);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Export Path"),230);
+			col=new GridColumn("Export Path",230);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Format"),110);
+			col=new GridColumn("Format",110);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Is Default"),60);
+			col=new GridColumn("Is Default",60);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Payors"),80){ IsWidthDynamic=true };//310
+			col=new GridColumn("Payors",80){ IsWidthDynamic=true };//310
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

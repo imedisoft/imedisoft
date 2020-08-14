@@ -44,7 +44,7 @@ namespace OpenDental{
 				_listNonInsertedPayPeriods=listPayPeriods.Where(x => x.PayPeriodNum==0).ToList();
 			}
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>

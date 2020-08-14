@@ -108,7 +108,7 @@ namespace OpenDental {
 			}
 			descript+=" "+paySplit.SplitAmt.ToString("c");
 			if(PIn.Double(rowBundlePayment["PayAmt"].ToString())!=paySplit.SplitAmt) {
-				descript+=Lans.g("PayPlanL","(split)");
+				descript+="(split)";
 			}
 			GridRow row=new GridRow();
 			row.Cells.Add(paySplit.DatePay.ToShortDateString());//0 Date
@@ -141,7 +141,7 @@ namespace OpenDental {
 				descript+=" "+checkAmt.ToString("c");
 				double insPayAmt=PIn.Double(rowBundleClaimProc["InsPayAmt"].ToString());
 				if(checkAmt!=insPayAmt) {
-					descript+=" "+Lans.g("PayPlanL","(split)");
+					descript+=" "+"(split)";
 				}
 			}
 			GridRow row=new GridRow();

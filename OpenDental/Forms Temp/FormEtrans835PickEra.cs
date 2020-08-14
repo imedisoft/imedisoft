@@ -13,7 +13,7 @@ namespace OpenDental {
 
 		public FormEtrans835PickEra(List<Etrans> listEtrans,long specificClaimNum) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_listEtrans=listEtrans;
 			_specificClaimNum=specificClaimNum;
 		}
@@ -25,9 +25,9 @@ namespace OpenDental {
 		private void FillGridEras() {
 			gridEras.BeginUpdate();
 			gridEras.ListGridColumns.Clear();
-			gridEras.ListGridColumns.Add(new UI.GridColumn(Lan.G(this,"Carrier"),200));
-			gridEras.ListGridColumns.Add(new UI.GridColumn(Lan.G(this,"Date Rec'd"),70,HorizontalAlignment.Center));
-			gridEras.ListGridColumns.Add(new UI.GridColumn(Lan.G(this,"Note"),70){ IsWidthDynamic=true });
+			gridEras.ListGridColumns.Add(new UI.GridColumn("Carrier",200));
+			gridEras.ListGridColumns.Add(new UI.GridColumn("Date Rec'd",70,HorizontalAlignment.Center));
+			gridEras.ListGridColumns.Add(new UI.GridColumn("Note",70){ IsWidthDynamic=true });
 			gridEras.ListGridRows.Clear();
 			for(int i=0;i<_listEtrans.Count;i++) {
 				UI.GridRow row=new UI.GridRow();

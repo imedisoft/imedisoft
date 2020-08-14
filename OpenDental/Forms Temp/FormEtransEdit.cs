@@ -56,7 +56,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -443,14 +443,14 @@ namespace OpenDental{
 		private void butPrint_Click(object sender,EventArgs e) {
 			linesPrinted=0;
 			bool isPrinted=PrinterL.TryPrintOrDebugRpPreview(pd2_PrintPage,
-				Lan.G(this,"Etrans message text from")+" "+EtransCur.DateTimeTrans.ToShortDateString()+" "+Lan.G(this,"printed"),
+				"Etrans message text from"+" "+EtransCur.DateTimeTrans.ToShortDateString()+" "+"printed",
 				auditPatNum:EtransCur.PatNum,
 				margins:new Margins(75,75,50,100)
 			);
 			if(!isPrinted){
 				return;
 			}
-			EtransCur.Note=Lan.G(this,"Printed")+textNote.Text;
+			EtransCur.Note="Printed"+textNote.Text;
 			Etranss.Update(EtransCur);
 			DialogResult=DialogResult.OK;
 		}
@@ -490,7 +490,7 @@ namespace OpenDental{
 				new FormCCDPrint(AckCur,textAckMessage.Text,false);//Show the form on screen and make the user print manually if they desire to print.
 			}
 			catch(Exception ex) {
-				MsgBoxCopyPaste msgBox=new MsgBoxCopyPaste(Lan.G(this,"Failed to preview acknowledgment.")+"\r\n"+ex.Message);
+				MsgBoxCopyPaste msgBox=new MsgBoxCopyPaste("Failed to preview acknowledgment."+"\r\n"+ex.Message);
 				msgBox.ShowDialog();
 			}
 		}

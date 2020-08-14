@@ -17,7 +17,7 @@ namespace OpenDental {
 
 		public FormReference() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormReference_Load(object sender,EventArgs e) {

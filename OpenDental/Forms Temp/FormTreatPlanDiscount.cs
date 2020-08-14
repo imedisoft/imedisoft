@@ -14,7 +14,7 @@ namespace OpenDental {
 
 		public FormTreatmentPlanDiscount(List<Procedure> listProcs) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_oldListProcs=new List<Procedure>();
 			for(int i=0;i<listProcs.Count;i++) {
 				_oldListProcs.Add(listProcs[i].Copy());
@@ -57,17 +57,17 @@ namespace OpenDental {
 					_listProcs[j].Discount=_listProcs[j].ProcFee*(percent/100);
 				}
 				if(_listProcs[j].Discount!=_oldListProcs[j].Discount) {//Discount was changed
-					string message=Lan.G(this,"Discount created or changed from Treat Plan module for procedure")
-						+": "+ProcedureCodes.GetProcCode(_listProcs[j].CodeNum).ProcCode+"  "+Lan.G(this,"Dated")
-						+": "+_listProcs[j].ProcDate.ToShortDateString()+"  "+Lan.G(this,"With a Fee of")+": "+_listProcs[j].ProcFee.ToString("c")+".  "+Lan.G(this,"Attributed a")+" "+percent
-					+" "+Lan.G(this,"percent discount, changing the discount value from")+" "+_oldListProcs[j].Discount.ToString("c")+" "+Lan.G(this,"to")+" "+_listProcs[j].Discount.ToString("c");
+					string message="Discount created or changed from Treat Plan module for procedure"
+						+": "+ProcedureCodes.GetProcCode(_listProcs[j].CodeNum).ProcCode+"  "+"Dated"
+						+": "+_listProcs[j].ProcDate.ToShortDateString()+"  "+"With a Fee of"+": "+_listProcs[j].ProcFee.ToString("c")+".  "+"Attributed a"+" "+percent
+					+" "+"percent discount, changing the discount value from"+" "+_oldListProcs[j].Discount.ToString("c")+" "+"to"+" "+_listProcs[j].Discount.ToString("c");
 					SecurityLogs.MakeLogEntry(Permissions.TreatPlanDiscountEdit,_listProcs[j].PatNum,message);
 				}
 				Procedures.Update(_listProcs[j],_oldListProcs[j]);
 			}
 			if(countProcsLinkedToOrthoCase>0) {
 				string countProcsSkipped=countProcsLinkedToOrthoCase.ToString();
-				MessageBox.Show(this,Lans.g(this,"Procedures attached to ortho cases cannot have discounts. Procedures skipped:")+" "+countProcsSkipped);
+				MessageBox.Show(this,"Procedures attached to ortho cases cannot have discounts. Procedures skipped:"+" "+countProcsSkipped);
 			}
 			DialogResult=DialogResult.OK;
 		}

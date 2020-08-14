@@ -23,7 +23,7 @@ namespace OpenDentBusiness
 			=> Database.ExecuteDateTime(
 				$"SELECT MAX(DatePay) FROM paysplit,patient " +
 				$"WHERE patient.PatNum=paysplit.PatNum " +
-				$"AND patient.Guarantor={PatNum}") ?? DateTime.MinValue;;
+				$"AND patient.Guarantor={PatNum}") ?? DateTime.MinValue;
 		
 
 		/// <summary>

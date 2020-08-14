@@ -19,7 +19,7 @@ namespace OpenDental {
 
 		public FormApptBreakRequired() {
 			InitializeComponent();
-			Lan.F(this);;
+			;
 		}
 
 		private void butMissed_Click(object sender,EventArgs e) {

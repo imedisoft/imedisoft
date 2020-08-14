@@ -23,7 +23,7 @@ namespace OpenDental {
 
 		public FormEhrLabImageEdit(long patNum,long ehrLabNum) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_patNum=patNum;
 			_ehrLabNum=ehrLabNum;
 		}
@@ -42,10 +42,10 @@ namespace OpenDental {
 			int curSelection=gridMain.GetSelectedIndex();
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableLabImage","Attached"),60,HorizontalAlignment.Center));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableLabImage","Date"),80,HorizontalAlignment.Center));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableLabImage","Category"),80,HorizontalAlignment.Center));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableLabImage","Desc"),180,HorizontalAlignment.Left));
+			gridMain.ListGridColumns.Add(new GridColumn("Attached",60,HorizontalAlignment.Center));
+			gridMain.ListGridColumns.Add(new GridColumn("Date",80,HorizontalAlignment.Center));
+			gridMain.ListGridColumns.Add(new GridColumn("Category",80,HorizontalAlignment.Center));
+			gridMain.ListGridColumns.Add(new GridColumn("Desc",180,HorizontalAlignment.Left));
 			gridMain.ListGridRows.Clear();
 			GridRow row;
 			for(int i=0;i<_listPatientDocuments.Count;i++) {
@@ -108,7 +108,7 @@ namespace OpenDental {
 					picturePreview.Image=null;
 				}
 				picturePreview.Image=new Bitmap(tmpImg,(int)(tmpImg.PhysicalDimension.Width*imgScale),(int)(tmpImg.PhysicalDimension.Height*imgScale));
-				//labelDescription.Text=Lan.g(this,"Description")+": "+doc.Description;
+				//labelDescription.Text="Description"+": "+doc.Description;
 				picturePreview.Invalidate();
 				if(tmpImg!=null) {
 					tmpImg.Dispose();

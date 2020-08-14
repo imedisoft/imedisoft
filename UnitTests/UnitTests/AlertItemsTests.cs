@@ -162,7 +162,7 @@ namespace UnitTests.AlertItems_Tests {
 			if(allClinicAlert) {
 				AlertItems.Insert(new AlertItem {
 					Actions=ActionType.MarkAsRead | ActionType.MarkAsRead,
-					Description=Lans.g("Econnector","eConnector needs to be restarted"),
+					Description="eConnector needs to be restarted",
 					Severity=SeverityType.High,
 					Type=AlertType.EConnectorDown,
 					ClinicNum=-1,//Show for all clinics

@@ -19,7 +19,7 @@ namespace OpenDental {
 
 		public FormFHIRSetup() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormFHIRSetup_Load(object sender,EventArgs e) {
@@ -46,11 +46,11 @@ namespace OpenDental {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G(this,"Developer"),200);
+			col=new GridColumn("Developer",200);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"API Key"),180);
+			col=new GridColumn("API Key",180);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Enabled"),80,HorizontalAlignment.Center);
+			col=new GridColumn("Enabled",80,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

@@ -309,12 +309,12 @@ namespace OpenDentBusiness{
 				for(int i=0;i<table.Rows.Count;i++) {
 					pats+="\r";
 					if(i==15) {
-						pats+=Lans.g("Clinics","And")+" "+(table.Rows.Count-i)+" "+Lans.g("Clinics","others");
+						pats+="And"+" "+(table.Rows.Count-i)+" "+"others";
 						break;
 					}
 					pats+=table.Rows[i]["LName"].ToString()+", "+table.Rows[i]["FName"].ToString();
 				}
-				throw new Exception(Lans.g("Clinics","Cannot delete clinic because it is in use by the following patients:")+pats);
+				throw new Exception("Cannot delete clinic because it is in use by the following patients:"+pats);
 			}
 			#endregion
 			#region Payments
@@ -327,12 +327,12 @@ namespace OpenDentBusiness{
 				for(int i=0;i<table.Rows.Count;i++) {
 					pats+="\r";
 					if(i==15) {
-						pats+=Lans.g("Clinics","And")+" "+(table.Rows.Count-i)+" "+Lans.g("Clinics","others");
+						pats+="And"+" "+(table.Rows.Count-i)+" "+"others";
 						break;
 					}
 					pats+=table.Rows[i]["LName"].ToString()+", "+table.Rows[i]["FName"].ToString();
 				}
-				throw new Exception(Lans.g("Clinics","Cannot delete clinic because the following patients have payments using it:")+pats);
+				throw new Exception("Cannot delete clinic because the following patients have payments using it:"+pats);
 			}
 			#endregion
 			#region ClaimPayments
@@ -347,12 +347,12 @@ namespace OpenDentBusiness{
 				for(int i=0;i<table.Rows.Count;i++) {
 					pats+="\r";
 					if(i==15) {
-						pats+=Lans.g("Clinics","And")+" "+(table.Rows.Count-i)+" "+Lans.g("Clinics","others");
+						pats+="And"+" "+(table.Rows.Count-i)+" "+"others";
 						break;
 					}
 					pats+=table.Rows[i]["LName"].ToString()+", "+table.Rows[i]["FName"].ToString();
 				}
-				throw new Exception(Lans.g("Clinics","Cannot delete clinic because the following patients have claim payments using it:")+pats);
+				throw new Exception("Cannot delete clinic because the following patients have claim payments using it:"+pats);
 			}
 			#endregion
 			#region Appointments
@@ -365,12 +365,12 @@ namespace OpenDentBusiness{
 				for(int i=0;i<table.Rows.Count;i++) {
 					pats+="\r";
 					if(i==15) {
-						pats+=Lans.g("Clinics","And")+" "+(table.Rows.Count-i)+" "+Lans.g("Clinics","others");
+						pats+="And"+" "+(table.Rows.Count-i)+" "+"others";
 						break;
 					}
 					pats+=table.Rows[i]["LName"].ToString()+", "+table.Rows[i]["FName"].ToString();
 				}
-				throw new Exception(Lans.g("Clinics","Cannot delete clinic because the following patients have appointments using it:")+pats);
+				throw new Exception("Cannot delete clinic because the following patients have appointments using it:"+pats);
 			}
 			#endregion
 			#region Procedures
@@ -390,12 +390,12 @@ namespace OpenDentBusiness{
 				for(int i=0;i<table.Rows.Count;i++) {
 					pats+="\r";
 					if(i==15) {
-						pats+=Lans.g("Clinics","And")+" "+(table.Rows.Count-i)+" "+Lans.g("Clinics","others");
+						pats+="And"+" "+(table.Rows.Count-i)+" "+"others";
 						break;
 					}
 					pats+=table.Rows[i]["LName"].ToString()+", "+table.Rows[i]["FName"].ToString();
 				}
-				throw new Exception(Lans.g("Clinics","Cannot delete clinic because the following patients have procedures using it:")+pats);
+				throw new Exception("Cannot delete clinic because the following patients have procedures using it:"+pats);
 			}
 			#endregion
 			#region Operatories
@@ -407,12 +407,12 @@ namespace OpenDentBusiness{
 				for(int i=0;i<table.Rows.Count;i++) {
 					ops+="\r";
 					if(i==15) {
-						ops+=Lans.g("Clinics","And")+" "+(table.Rows.Count-i)+" "+Lans.g("Clinics","others");
+						ops+="And"+" "+(table.Rows.Count-i)+" "+"others";
 						break;
 					}
 					ops+=table.Rows[i]["OpName"].ToString();
 				}
-				throw new Exception(Lans.g("Clinics","Cannot delete clinic because the following operatories are using it:")+ops);
+				throw new Exception("Cannot delete clinic because the following operatories are using it:"+ops);
 			}
 			#endregion
 			#region Userod
@@ -424,12 +424,12 @@ namespace OpenDentBusiness{
 				for(int i=0;i<table.Rows.Count;i++) {
 					userNames+="\r";
 					if(i==15) {
-						userNames+=Lans.g("Clinics","And")+" "+(table.Rows.Count-i)+" "+Lans.g("Clinics","others");
+						userNames+="And"+" "+(table.Rows.Count-i)+" "+"others";
 						break;
 					}
 					userNames+=table.Rows[i]["UserName"].ToString();
 				}
-				throw new Exception(Lans.g("Clinics","Cannot delete clinic because the following Open Dental users are using it:")+userNames);
+				throw new Exception("Cannot delete clinic because the following Open Dental users are using it:"+userNames);
 			}
 			#endregion
 			#region AlertSub
@@ -446,7 +446,7 @@ namespace OpenDentBusiness{
 					}
 					listUsers.Add(user.UserName);
 				}
-				throw new Exception(Lans.g("Clinics","Cannot delete clinic because the following Open Dental users are subscribed to it:")+"\r"+String.Join("\r",listUsers.OrderBy(x => x).ToArray()));
+				throw new Exception("Cannot delete clinic because the following Open Dental users are subscribed to it:"+"\r"+String.Join("\r",listUsers.OrderBy(x => x).ToArray()));
 			}
 			#endregion
 			#region UserClinics
@@ -462,7 +462,7 @@ namespace OpenDentBusiness{
 					users+=table.Rows[i][0].ToString();
 				}
 				throw new Exception(
-					Lans.g("Clinics","Cannot delete clinic because the following users are restricted to this clinic in security setup:")+" "+users);
+					"Cannot delete clinic because the following users are restricted to this clinic in security setup:"+" "+users);
 			}
 			#endregion
 			//End checking for dependencies.

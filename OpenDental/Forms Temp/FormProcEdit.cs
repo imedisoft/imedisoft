@@ -125,7 +125,7 @@ namespace OpenDental {
 			//HistList=null;
 			//LoopList=null;
 			InitializeComponent();
-			Lan.F(this);
+			
 			if(!Prefs.GetBool(PrefName.ShowFeatureMedicalInsurance)) {
 				tabControl.TabPages.Remove(tabPageMedical);
 				//groupMedical.Visible=false;
@@ -246,8 +246,8 @@ namespace OpenDental {
 				groupProsth.Visible=false;
 				labelClaimNote.Visible=false;
 				textClaimNote.Visible=false;
-				butBF.Text=Lan.G(this,"B/V");//vestibular instead of facial
-				butV.Text=Lan.G(this,"5");
+				butBF.Text="B/V";//vestibular instead of facial
+				butV.Text="5";
 				if(_procedureCode2.IsCanadianLab) { //Prevent lab fees from having lab fees attached.
 					labelCanadaLabFee1.Visible=false;
 					textCanadaLabFee1.Visible=false;
@@ -384,7 +384,7 @@ namespace OpenDental {
 			else if(!Userods.CanUserSignNote()) {
 				signatureBoxWrapper.Enabled=false;
 				labelPermAlert.Visible=true;
-				labelPermAlert.Text=Lans.g(this,"Notes can only be signed by providers.");
+				labelPermAlert.Text="Notes can only be signed by providers.";
 			}
 			bool hasAutoNotePrompt=Regex.IsMatch(textNotes.Text,_autoNotePromptRegex);
 			butEditAutoNote.Visible=hasAutoNotePrompt;
@@ -487,22 +487,22 @@ namespace OpenDental {
 		///<summary>ONLY run on startup. Fills the basic controls, except not the ones in the upper left panel which are handled in SetControlsUpperLeft.</summary>
 		private void FillControlsOnStartup(){
 			if(_procCur.ProcStatus==ProcStat.D && _procCur.IsLocked) {//only set this when coming in with this status. 
-				comboProcStatus.Items.Add(Lan.G("Procedures","Invalidated"),ProcStat.D);
+				comboProcStatus.Items.Add("Invalidated",ProcStat.D);
 			}
 			else{
-				comboProcStatus.Items.Add(Lan.G("Procedures","Treatment Planned"),ProcStat.TP);
+				comboProcStatus.Items.Add("Treatment Planned",ProcStat.TP);
 				//For the "Complete" option, instead of showing current value,
 				//show what the value would represent if set to complete, in case user changes to complete from another status.
 				bool isInProcess=ProcMultiVisits.IsProcInProcess(_procCur.ProcNum,true);
-				comboProcStatus.Items.Add(Lan.G("Procedures","Complete"+(isInProcess?" (In Process)":"")),ProcStat.C);
+				comboProcStatus.Items.Add("Complete"+(isInProcess?" (In Process)":""),ProcStat.C);
 				if(!Prefs.GetBool(PrefName.EasyHideClinical)) {
-					comboProcStatus.Items.Add(Lan.G("Procedures","Existing-Current Prov"),ProcStat.EC);
-					comboProcStatus.Items.Add(Lan.G("Procedures","Existing-Other Prov"),ProcStat.EO);
-					comboProcStatus.Items.Add(Lan.G("Procedures","Referred Out"),ProcStat.R);
-					comboProcStatus.Items.Add(Lan.G("Procedures","Condition"),ProcStat.Cn);
+					comboProcStatus.Items.Add("Existing-Current Prov",ProcStat.EC);
+					comboProcStatus.Items.Add("Existing-Other Prov",ProcStat.EO);
+					comboProcStatus.Items.Add("Referred Out",ProcStat.R);
+					comboProcStatus.Items.Add("Condition",ProcStat.Cn);
 				}
 				if(_procCur.ProcStatus==ProcStat.TPi) {//only set this when coming in with that status, users should not choose this status otherwise.
-					comboProcStatus.Items.Add(Lan.G("Procedures","Treatment Planned Inactive"),ProcStat.TPi);
+					comboProcStatus.Items.Add("Treatment Planned Inactive",ProcStat.TPi);
 				}
 			}
 			comboProcStatus.SetSelectedEnum(_procCur.ProcStatus);//has no effect if enum isn't in the list
@@ -533,7 +533,7 @@ namespace OpenDental {
 					comboDx.SelectedIndex=i;
 			}
 			comboPrognosis.Items.Clear();
-			comboPrognosis.Items.Add(Lan.G(this,"no prognosis"));
+			comboPrognosis.Items.Add("no prognosis");
 			comboPrognosis.SelectedIndex=0;
 			for(int i=0;i<_listPrognosisDefs.Count;i++) {
 				comboPrognosis.Items.Add(_listPrognosisDefs[i].ItemName);
@@ -547,7 +547,7 @@ namespace OpenDental {
 				FillComboProv();//Second time this is called, but only if using Orion.
 			}//ProvNum of 0 will be required to change before closing form.
 			comboPriority.Items.Clear();
-			comboPriority.Items.Add(Lan.G(this,"no priority"));
+			comboPriority.Items.Add("no priority");
 			comboPriority.SelectedIndex=0;
 			for(int i=0;i<_listTxPriorityDefs.Count;i++){
 				comboPriority.Items.Add(_listTxPriorityDefs[i].ItemName);
@@ -555,7 +555,7 @@ namespace OpenDental {
 					comboPriority.SelectedIndex=i+1;
 			}
 			comboBillingTypeOne.Items.Clear();
-			comboBillingTypeOne.Items.Add(Lan.G(this,"none"));
+			comboBillingTypeOne.Items.Add("none");
 			comboBillingTypeOne.SelectedIndex=0;
 			for(int i=0;i<_listBillingTypeDefs.Count;i++) {
 				comboBillingTypeOne.Items.Add(_listBillingTypeDefs[i].ItemName);
@@ -563,7 +563,7 @@ namespace OpenDental {
 					comboBillingTypeOne.SelectedIndex=i+1;
 			}
 			comboBillingTypeTwo.Items.Clear();
-			comboBillingTypeTwo.Items.Add(Lan.G(this,"none"));
+			comboBillingTypeTwo.Items.Add("none");
 			comboBillingTypeTwo.SelectedIndex=0;
 			for(int i=0;i<_listBillingTypeDefs.Count;i++) {
 				comboBillingTypeTwo.Items.Add(_listBillingTypeDefs[i].ItemName);
@@ -607,9 +607,9 @@ namespace OpenDental {
 			}
 			else{
 				if(_procedureCode2.IsProsth){
-					listProsth.Items.Add(Lan.G(this,"No"));
-					listProsth.Items.Add(Lan.G(this,"Initial"));
-					listProsth.Items.Add(Lan.G(this,"Replacement"));
+					listProsth.Items.Add("No");
+					listProsth.Items.Add("Initial");
+					listProsth.Items.Add("Replacement");
 					switch(_procCur.Prosthesis){
 						case "":
 							listProsth.SelectedIndex=0;
@@ -873,7 +873,7 @@ namespace OpenDental {
 						SetSurfButtons();
 					}
 					else{
-						errorProvider2.SetError(textTooth,Lan.G(this,"Invalid tooth number."));
+						errorProvider2.SetError(textTooth,"Invalid tooth number.");
 						textTooth.Text=_procCur.ToothNum;
 						//textSurfaces.Text=Tooth.SurfTidy(ProcCur.Surf,"");//only valid toothnums allowed
 					}
@@ -890,7 +890,7 @@ namespace OpenDental {
 						textTooth.Text=Tooth.ToInternat(_procCur.ToothNum);
 					}
 					else{
-						errorProvider2.SetError(textTooth,Lan.G(this,"Invalid tooth number."));
+						errorProvider2.SetError(textTooth,"Invalid tooth number.");
 						textTooth.Text=_procCur.ToothNum;
 					}
 					break;
@@ -921,7 +921,7 @@ namespace OpenDental {
 						errorProvider2.SetError(groupSextant,"");
 					}
 					else {
-						errorProvider2.SetError(groupSextant,Lan.G(this,"Please select a sextant treatment area."));
+						errorProvider2.SetError(groupSextant,"Please select a sextant treatment area.");
 					}
 					break;
 				case TreatmentArea.Arch:
@@ -934,7 +934,7 @@ namespace OpenDental {
 						errorProvider2.SetError(groupArch,"");
 					}
 					else {
-						errorProvider2.SetError(groupArch,Lan.G(this,"Please select a arch treatment area."));
+						errorProvider2.SetError(groupArch,"Please select a arch treatment area.");
 					}
 					break;
 				case TreatmentArea.ToothRange:
@@ -1104,7 +1104,7 @@ namespace OpenDental {
 					textReferral.Text+=refsList[0].RefDate.ToShortDateString();
 				}
 				else{
-					textReferral.Text+=Lan.G(this,"done:")+refsList[0].DateProcComplete.ToShortDateString();
+					textReferral.Text+="done:"+refsList[0].DateProcComplete.ToShortDateString();
 				}
 				if(refsList[0].RefToStatus!=ReferralToStatus.None){
 					textReferral.Text+=refsList[0].RefToStatus.ToString();
@@ -1132,29 +1132,29 @@ namespace OpenDental {
 			}
 			gridIns.BeginUpdate();
 			gridIns.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableProcIns","Ins Plan"),190);
+			GridColumn col=new GridColumn("Ins Plan",190);
 			gridIns.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProcIns","Pri/Sec"),50,HorizontalAlignment.Center);
+			col=new GridColumn("Pri/Sec",50,HorizontalAlignment.Center);
 			gridIns.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProcIns","Status"),50,HorizontalAlignment.Center);
+			col=new GridColumn("Status",50,HorizontalAlignment.Center);
 			gridIns.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProcIns","NoBill"),45,HorizontalAlignment.Center);
+			col=new GridColumn("NoBill",45,HorizontalAlignment.Center);
 			gridIns.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProcIns","Copay"),55,HorizontalAlignment.Right);
+			col=new GridColumn("Copay",55,HorizontalAlignment.Right);
 			gridIns.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProcIns","Deduct"),55,HorizontalAlignment.Right);
+			col=new GridColumn("Deduct",55,HorizontalAlignment.Right);
 			gridIns.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProcIns","Percent"),55,HorizontalAlignment.Center);
+			col=new GridColumn("Percent",55,HorizontalAlignment.Center);
 			gridIns.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProcIns","Ins Est"),55,HorizontalAlignment.Right);
+			col=new GridColumn("Ins Est",55,HorizontalAlignment.Right);
 			gridIns.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProcIns","Ins Pay"),55,HorizontalAlignment.Right);
+			col=new GridColumn("Ins Pay",55,HorizontalAlignment.Right);
 			gridIns.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProcIns","WriteOff"),55,HorizontalAlignment.Right);
+			col=new GridColumn("WriteOff",55,HorizontalAlignment.Right);
 			gridIns.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProcIns","Estimate Note"),100);
+			col=new GridColumn("Estimate Note",100);
 			gridIns.ListGridColumns.Add(col);		 
-			col=new GridColumn(Lan.G("TableProcIns","Remarks"),165);
+			col=new GridColumn("Remarks",165);
 			gridIns.ListGridColumns.Add(col);		 
 			gridIns.ListGridRows.Clear();
 			GridRow row;
@@ -1369,13 +1369,13 @@ namespace OpenDental {
 			_paySplitsForProc=PaySplits.GetForProc(_procCur.ProcNum,_loadData.ArrPaySplits);
 			gridPay.BeginUpdate();
 			gridPay.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableProcPay","Entry Date"),70,HorizontalAlignment.Center);
+			GridColumn col=new GridColumn("Entry Date",70,HorizontalAlignment.Center);
 			gridPay.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProcPay","Amount"),55,HorizontalAlignment.Right);
+			col=new GridColumn("Amount",55,HorizontalAlignment.Right);
 			gridPay.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProcPay","Tot Amt"),55,HorizontalAlignment.Right);
+			col=new GridColumn("Tot Amt",55,HorizontalAlignment.Right);
 			gridPay.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProcPay","Note"),250,HorizontalAlignment.Left);
+			col=new GridColumn("Note",250,HorizontalAlignment.Left);
 			gridPay.ListGridColumns.Add(col);
 			gridPay.ListGridRows.Clear();
 			GridRow row;
@@ -1406,13 +1406,13 @@ namespace OpenDental {
 			_adjustmentsForProc=Adjustments.GetForProc(_procCur.ProcNum,AdjustmentList);
 			gridAdj.BeginUpdate();
 			gridAdj.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableProcAdj","Entry Date"),70,HorizontalAlignment.Center);
+			GridColumn col=new GridColumn("Entry Date",70,HorizontalAlignment.Center);
 			gridAdj.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProcAdj","Amount"),55,HorizontalAlignment.Right);
+			col=new GridColumn("Amount",55,HorizontalAlignment.Right);
 			gridAdj.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProcAdj","Type"),100,HorizontalAlignment.Left);
+			col=new GridColumn("Type",100,HorizontalAlignment.Left);
 			gridAdj.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProcAdj","Note"),250,HorizontalAlignment.Left);
+			col=new GridColumn("Note",250,HorizontalAlignment.Left);
 			gridAdj.ListGridColumns.Add(col);
 			gridAdj.ListGridRows.Clear();
 			GridRow row;
@@ -1550,7 +1550,7 @@ namespace OpenDental {
 		private void textTooth_Validating(object sender, System.ComponentModel.CancelEventArgs e) {
 			textTooth.Text=textTooth.Text.ToUpper();
 			if(!Tooth.IsValidEntry(textTooth.Text))
-				errorProvider2.SetError(textTooth,Lan.G(this,"Invalid tooth number."));
+				errorProvider2.SetError(textTooth,"Invalid tooth number.");
 			else
 				errorProvider2.SetError(textTooth,"");
 		}
@@ -1580,7 +1580,7 @@ namespace OpenDental {
 				errorProvider2.SetError(groupSextant,"");
 			}
 			else {
-				errorProvider2.SetError(groupSextant,Lan.G(this,"Please select a sextant treatment area."));
+				errorProvider2.SetError(groupSextant,"Please select a sextant treatment area.");
 			}
 		}
 
@@ -1593,7 +1593,7 @@ namespace OpenDental {
 				errorProvider2.SetError(groupArch,"");
 			}
 			else {
-				errorProvider2.SetError(groupArch,Lan.G(this,"Please select a arch treatment area."));
+				errorProvider2.SetError(groupArch,"Please select a arch treatment area.");
 			}
 		}
 
@@ -1664,12 +1664,12 @@ namespace OpenDental {
 				double credits=sumWO+sumInsPaids+sumInsEsts-sumAdjs+sumPaySplits;
 				//Check if the new ProcCode will result in the procedure being overallocated due to a change in ProcFee.
 				if(credits>chargeNew) {//Procedure is overallocated.
-					string strMsg=Lan.G(this,"The fee will be changed from")+" "+chargeOld.ToString("c")+" "
-						+Lan.G(this,"to")+" "+chargeNew.ToString("c")
-						+Lan.G(this,", and the procedure has credits attached in the amount of")+" "+credits.ToString("c")
-						+Lan.G(this,".  This will result in an overallocated procedure")+".\r\n"+Lan.G(this,"Continue?");
+					string strMsg="The fee will be changed from"+" "+chargeOld.ToString("c")+" "
+						+"to"+" "+chargeNew.ToString("c")
+						+", and the procedure has credits attached in the amount of"+" "+credits.ToString("c")
+						+".  This will result in an overallocated procedure"+".\r\n"+"Continue?";
 					//Prompt user to accept the overallocation or revert back to old ProcCode.
-					if(MessageBox.Show(this,strMsg,Lan.G(this,"Overpaid Procedure Warning"),MessageBoxButtons.YesNo)==DialogResult.No) {
+					if(MessageBox.Show(this,strMsg,"Overpaid Procedure Warning",MessageBoxButtons.YesNo)==DialogResult.No) {
 						_procCur=procOld;
 						ClearClaimProcs(_listClaimProcsForProc);
 						Procedures.ComputeEstimates(_procCur,_patCur.PatNum,ref _listClaimProcsForProc,false,_listInsPlans,_listPatPlans,_listBenefits,
@@ -1786,7 +1786,7 @@ namespace OpenDental {
 				if(_procCur.AptNum!=0) {//if attached to an appointment
 					Appointment apt=Appointments.GetOneApt(_procCur.AptNum);
 					if(apt.AptDateTime.Date > MiscData.GetNowDateTime().Date) {//if appointment is in the future
-						MessageBox.Show(Lan.G(this,"Not allowed because procedure is attached to a future appointment with a date of ")
+						MessageBox.Show("Not allowed because procedure is attached to a future appointment with a date of "
 							+apt.AptDateTime.ToShortDateString());
 						return;
 					}
@@ -1848,7 +1848,7 @@ namespace OpenDental {
 			if(_procCur.AptNum!=0){//if attached to an appointment
 				Appointment apt=Appointments.GetOneApt(_procCur.AptNum);
 				if(apt.AptDateTime.Date > MiscData.GetNowDateTime().Date){//if appointment is in the future
-					MessageBox.Show(Lan.G(this,"Not allowed because procedure is attached to a future appointment with a date of ")
+					MessageBox.Show("Not allowed because procedure is attached to a future appointment with a date of "
 						+apt.AptDateTime.ToShortDateString());
 					return;
 				}
@@ -2006,7 +2006,7 @@ namespace OpenDental {
 		}
 
 		private void butSearch_Click(object sender,EventArgs e) {
-			InputBox input=new InputBox(Lan.G(this,"Search for"));
+			InputBox input=new InputBox("Search for");
 			input.ShowDialog();
 			if(input.DialogResult!=DialogResult.OK) {
 				return;
@@ -2015,7 +2015,7 @@ namespace OpenDental {
 			int index=textNotes.Find(input.textResult.Text);//Gets the location of the first character in the control.
 			if(index<0) {//-1 is returned when the text is not found.
 				textNotes.DeselectAll();
-				MessageBox.Show("\""+searchText+"\"\r\n"+Lan.G(this,"was not found in the notes")+".");
+				MessageBox.Show("\""+searchText+"\"\r\n"+"was not found in the notes"+".");
 				return;
 			}
 			textNotes.Select(index,searchText.Length);
@@ -2049,7 +2049,7 @@ namespace OpenDental {
 				}
 			}
 			else {
-				MessageBox.Show(Lan.G(this,"No Auto Note available to edit."));
+				MessageBox.Show("No Auto Note available to edit.");
 			}
 		}
 
@@ -2455,7 +2455,7 @@ namespace OpenDental {
 				MessageBox.Show(ex.Message);
 				return;
 			}
-			SecurityLogs.MakeLogEntry(perm,_patCur.PatNum,Lan.G(this,"Invalidated: ")+
+			SecurityLogs.MakeLogEntry(perm,_patCur.PatNum,"Invalidated: "+
 				ProcedureCodes.GetStringProcCode(_procCur.CodeNum).ToString()+" ("+_procCur.ProcStatus+"), "
 				+_procCur.ProcDate.ToShortDateString()+", "+_procCur.ProcFee.ToString("c")+", Deleted");
 			DialogResult=DialogResult.OK;
@@ -2491,10 +2491,10 @@ namespace OpenDental {
 			if(checkIcdVersion.Checked) {
 				icdVersion=10;
 			}
-			labelDiagnosisCode.Text=Lan.G(this,"ICD")+"-"+icdVersion+" "+Lan.G(this,"Diagnosis Code 1");
-			labelDiagnosisCode2.Text=Lan.G(this,"ICD")+"-"+icdVersion+" "+Lan.G(this,"Diagnosis Code 2");
-			labelDiagnosisCode3.Text=Lan.G(this,"ICD")+"-"+icdVersion+" "+Lan.G(this,"Diagnosis Code 3");
-			labelDiagnosisCode4.Text=Lan.G(this,"ICD")+"-"+icdVersion+" "+Lan.G(this,"Diagnosis Code 4");
+			labelDiagnosisCode.Text="ICD"+"-"+icdVersion+" "+"Diagnosis Code 1";
+			labelDiagnosisCode2.Text="ICD"+"-"+icdVersion+" "+"Diagnosis Code 2";
+			labelDiagnosisCode3.Text="ICD"+"-"+icdVersion+" "+"Diagnosis Code 3";
+			labelDiagnosisCode4.Text="ICD"+"-"+icdVersion+" "+"Diagnosis Code 4";
 		}
 
 		private void checkIcdVersion_Click(object sender,EventArgs e) {
@@ -2564,7 +2564,7 @@ namespace OpenDental {
 			if(!Procedures.IsProcComplEditAuthorized(_procOld,true)) {
 				return;
 			}
-			if(MessageBox.Show(Lan.G(this,"Delete Procedure?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK){
+			if(MessageBox.Show("Delete Procedure?","",MessageBoxButtons.OKCancel)!=DialogResult.OK){
 				return;
 			}
 			if(_orthoProcLink!=null) {
@@ -2581,12 +2581,12 @@ namespace OpenDental {
 				switch(_procOld.ProcStatus) {
 					case ProcStat.C:
 						perm=Permissions.ProcCompleteStatusEdit;
-						tag=", "+Lan.G(this,"Deleted");
+						tag=", "+"Deleted";
 						break;
 					case ProcStat.EO:
 					case ProcStat.EC:
 						perm=Permissions.ProcExistingEdit;
-						tag=", "+Lan.G(this,"Deleted");
+						tag=", "+"Deleted";
 						break;
 				}
 				SecurityLogs.MakeLogEntry(perm,_procOld.PatNum,
@@ -2607,11 +2607,11 @@ namespace OpenDental {
 				|| textDateOriginalProsth.errorProvider1.GetError(textDateOriginalProsth)!=""
 				|| textDiscount.errorProvider1.GetError(textDiscount)!=""
 				){
-				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
+				MessageBox.Show("Please fix data entry errors first.");
 				return false;
 			}
 			if(textDate.Text==""){
-				MessageBox.Show(Lan.G(this,"Please enter a date first."));
+				MessageBox.Show("Please enter a date first.");
 				return false;
 			}
 			#endregion
@@ -2692,7 +2692,7 @@ namespace OpenDental {
 				if(_procCur.AptNum!=0) {//if attached to an appointment
 					Appointment apt=Appointments.GetOneApt(_procCur.AptNum);
 					if(apt.AptDateTime.Date > MiscData.GetNowDateTime().Date) {//if appointment is in the future
-						MessageBox.Show(Lan.G(this,"Not allowed because procedure is attached to a future appointment with a date of ")
+						MessageBox.Show("Not allowed because procedure is attached to a future appointment with a date of "
 							+apt.AptDateTime.ToShortDateString());
 						return false;
 					}
@@ -2745,7 +2745,7 @@ namespace OpenDental {
 					}
 				}
 				if(textCanadaLabFee1.errorProvider1.GetError(textCanadaLabFee1)!="" || textCanadaLabFee2.errorProvider1.GetError(textCanadaLabFee2)!="") {
-					MessageBox.Show(Lan.G(this,"Please fix lab fees."));
+					MessageBox.Show("Please fix lab fees.");
 					return false;
 				}
 			}
@@ -3006,7 +3006,7 @@ namespace OpenDental {
 						}
 					}
 					if(listBoxTeeth.SelectedItems.Count<1 && listBoxTeeth2.SelectedItems.Count<1) {
-						MessageBox.Show(Lan.G(this,"Must pick at least 1 tooth"));
+						MessageBox.Show("Must pick at least 1 tooth");
 						return;
 					}
 					List <string> listSelectedToothNums=new List<string>();
@@ -3056,7 +3056,7 @@ namespace OpenDental {
 				SaveSignature();
 			}
 			catch(Exception ex){
-				MessageBox.Show(Lan.G(this,"Error saving signature.")+"\r\n"+ex.Message);
+				MessageBox.Show("Error saving signature."+"\r\n"+ex.Message);
 				//and continue with the rest of this method
 			}
 			#region Update paysplits
@@ -3345,7 +3345,7 @@ namespace OpenDental {
 				bool canUserSignNote=Userods.CanUserSignNote(_curUser);//only show if user can sign
 				signatureBoxWrapper.Enabled=canUserSignNote;
 				if(!labelPermAlert.Visible && !canUserSignNote) {
-					labelPermAlert.Text=Lans.g(this,"Notes can only be signed by providers.");
+					labelPermAlert.Text="Notes can only be signed by providers.";
 					labelPermAlert.Visible=true;
 				}
 				FillComboClinic();
@@ -3425,7 +3425,7 @@ namespace OpenDental {
 				Procedures.UpdateCpoeForProc(_procCur.ProcNum,true);
 				//Make a log that we edited this procedure's CPOE flag.
 				SecurityLogs.MakeLogEntry(Permissions.ProcEdit,_procCur.PatNum,ProcedureCodes.GetProcCode(_procCur.CodeNum).ProcCode
-					+", "+_procCur.ProcFee.ToString("c")+", "+Lan.G(this,"automatically flagged as CPOE."));
+					+", "+_procCur.ProcFee.ToString("c")+", "+"automatically flagged as CPOE.");
 			}
 			if(DialogResult==DialogResult.OK) {
 				//this catches date,prov,fee,status,etc for all claimProcs attached to this proc.

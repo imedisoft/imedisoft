@@ -24,7 +24,7 @@ namespace OpenDental {
 
 		public FormClaimPayList() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormClaimPayList_Load(object sender,EventArgs e) {
@@ -51,25 +51,25 @@ namespace OpenDental {
 			ListClaimPay=ClaimPaymentCrud.TableToList(tableClaimPayments);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G(this,"Date"),65);
+			GridColumn col=new GridColumn("Date",65);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Type"),70);
+			col=new GridColumn("Type",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Amount"),75,HorizontalAlignment.Right);
+			col=new GridColumn("Amount",75,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Partial"),40,HorizontalAlignment.Center);
+			col=new GridColumn("Partial",40,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Carrier"),180);
+			col=new GridColumn("Carrier",180);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"PayGroup"),80);
+			col=new GridColumn("PayGroup",80);
 			gridMain.ListGridColumns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
-				col=new GridColumn(Lan.G(this,"Clinic"),80);
+				col=new GridColumn("Clinic",80);
 				gridMain.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.G(this,"Note"),180);
+			col=new GridColumn("Note",180);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Scanned"),40,HorizontalAlignment.Center);
+			col=new GridColumn("Scanned",40,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);			
 			gridMain.ListGridRows.Clear();
 			GridRow row;

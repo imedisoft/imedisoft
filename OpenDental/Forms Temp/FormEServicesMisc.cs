@@ -18,7 +18,7 @@ namespace OpenDental
 		
 		public FormEServicesMisc(WebServiceMainHQProxy.EServiceSetup.SignupOut signupOut=null) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_signupOut=signupOut;
 		}
 

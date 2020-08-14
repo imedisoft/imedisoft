@@ -79,7 +79,7 @@ namespace OpenDental.Bridges
 			double totalLines = CalculateTotalLinesOfCode(arrayPatNums, allAptProcNums, allPatApts);
 			while (!_formProg.IsHandleCreated) { }//Wait for the form to show the first time, or else the Invoke calls will cause an exception.
 			_formProg.Invoke(new PassProgressDelegate(PassPercentProgressToDialog), new object[] { linesProcessedCount,
-				Lan.G(_formProg,"Executing the bridge to DemandForce"),
+				"Executing the bridge to DemandForce",
 				100.0,"" });
 			Thread.Sleep(1000);//Wait 1 second so the user can see the progress bar popup.
 			try
@@ -202,7 +202,7 @@ namespace OpenDental.Bridges
 									if (linesProcessedCount < totalLines)
 									{//this avoids setting progress bar to max, which would close the dialog.
 										_formProg.Invoke(new PassProgressDelegate(PassPercentProgressToDialog), new object[] { (linesProcessedCount/totalLines*100),
-											Lan.G(_formProg,"Creating export file: ?currentVal % of ?maxVal % completed"),
+											"Creating export file: ?currentVal % of ?maxVal % completed",
 											100.0,""});
 									}
 									linesProcessedCount += 2;
@@ -216,7 +216,7 @@ namespace OpenDental.Bridges
 							if (linesProcessedCount < totalLines)
 							{//this avoids setting progress bar to max, which would close the dialog.
 								_formProg.Invoke(new PassProgressDelegate(PassPercentProgressToDialog), new object[] { (linesProcessedCount/totalLines*100),
-									Lan.G(_formProg,"Creating export file: ?currentVal % of ?maxVal % completed"),
+									"Creating export file: ?currentVal % of ?maxVal % completed",
 									100.0,""});
 							}
 							linesProcessedCount += 12;
@@ -226,7 +226,7 @@ namespace OpenDental.Bridges
 					if (linesProcessedCount < totalLines)
 					{//this avoids setting progress bar to max, which would close the dialog.
 						_formProg.Invoke(new PassProgressDelegate(PassPercentProgressToDialog), new object[] { (linesProcessedCount/totalLines*100),
-							Lan.G(_formProg,"Creating export file: ?currentVal % of ?maxVal % completed"),
+							"Creating export file: ?currentVal % of ?maxVal % completed",
 							100.0,""});
 					}
 					linesProcessedCount += 20;
@@ -239,7 +239,7 @@ namespace OpenDental.Bridges
 			}
 			catch
 			{
-				MessageBox.Show(Lan.G("DemandForce", "Export file creation failed") + ". " + Lan.G("DemandForce", "User may not have sufficient permissions") + ".");
+				MessageBox.Show("Export file creation failed" + ". " + "User may not have sufficient permissions" + ".");
 			}
 			if (linesProcessedCount >= totalLines)
 			{//this avoids setting progress bar to max, which would close the dialog.

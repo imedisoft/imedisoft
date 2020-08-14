@@ -180,7 +180,7 @@ namespace OpenDentBusiness{
 				retval=ProvNum+"- "+LName+", "+FName;
 			}
 			if(IsHidden){
-				retval+=" "+Lans.g("Providers","(hidden)");
+				retval+=" "+"(hidden)";
 			}
 			return retval;
 		}
@@ -190,7 +190,7 @@ namespace OpenDentBusiness{
 		public string GetAbbr() {
 			string retval=Abbr;
 			if(IsHidden) {
-				retval+=" "+Lans.g("Providers","(hidden)");
+				retval+=" "+"(hidden)";
 			}
 			return retval;
 		}

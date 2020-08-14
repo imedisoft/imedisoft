@@ -70,7 +70,7 @@ namespace OpenDentBusiness{
 			je.SecUserNumEdit=Security.CurrentUser.Id;
 			
 			if(je.DebitAmt<0 || je.CreditAmt<0){
-				throw new ApplicationException(Lans.g("JournalEntries","Error. Credit and debit must both be positive."));
+				throw new ApplicationException("Error. Credit and debit must both be positive.");
 			}
 			return Crud.JournalEntryCrud.Insert(je);
 		}
@@ -80,7 +80,7 @@ namespace OpenDentBusiness{
 			je.SecUserNumEdit=Security.CurrentUser.Id;//Before middle tier check to catch user at workstation
 			
 			if(je.DebitAmt<0 || je.CreditAmt<0) {
-				throw new ApplicationException(Lans.g("JournalEntries","Error. Credit and debit must both be positive."));
+				throw new ApplicationException("Error. Credit and debit must both be positive.");
 			}
 			Crud.JournalEntryCrud.Update(je);
 		}
@@ -103,7 +103,7 @@ namespace OpenDentBusiness{
 			//No need to check RemotingRole; no call to db.
 			for(int i=0;i<newJournalList.Count;i++){
 				if(newJournalList[i].DebitAmt<0 || newJournalList[i].CreditAmt<0){
-					throw new ApplicationException(Lans.g("JournalEntries","Error. Credit and debit must both be positive."));
+					throw new ApplicationException("Error. Credit and debit must both be positive.");
 				}
 			}
 			JournalEntry newJournalEntry;

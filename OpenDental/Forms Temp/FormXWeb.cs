@@ -27,7 +27,7 @@ namespace OpenDental {
 
 		public FormXWeb(long patNum,CreditCard creditCard,XWebTransactionType tranType,bool createPayment) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_patNum=patNum;
 			_creditCard=creditCard;
 			_tranType=tranType;

@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormErxAccess(Patient pat) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_patCur=pat;
 		}
 

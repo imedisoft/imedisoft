@@ -82,7 +82,7 @@ namespace OpenDentBusiness{
 			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0) {
 				if(PIn.Int(table.Rows[0][0].ToString())==1) {
-					throw new ApplicationException(Lans.g("Transactions","Not allowed to delete transactions because it is attached to a reconcile that is locked."));
+					throw new ApplicationException("Not allowed to delete transactions because it is attached to a reconcile that is locked.");
 				}
 			}
 			command="DELETE FROM journalentry WHERE TransactionNum="+POut.Long(trans.TransactionNum);

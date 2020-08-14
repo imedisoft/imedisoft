@@ -214,7 +214,7 @@ namespace OpenDentalGraph {
 					}
 					pdfDoc.Save(sd.FileName);
 
-					MessageBox.Show(Lans.g(this,"Chart saved."));
+					MessageBox.Show("Chart saved.");
 				}
 				catch(Exception ex) {
 					MessageBox.Show("Chart not saved."+"\r\n"+ex.Source+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);

@@ -64,7 +64,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -472,7 +472,7 @@ namespace OpenDental{
 				return;//should never happen
 			}
 			if(PrefC.HasClinicsEnabled) {
-				groupPaySettings.Text=Lan.G(this,"Clinic Payment Settings");
+				groupPaySettings.Text="Clinic Payment Settings";
 				if(Security.CurrentUser.ClinicIsRestricted) {
 					//if program link is enabled, disable the enable check box so the restricted user cannot disable for all clinics
 					checkEnabled.Enabled=!_progCur.Enabled;
@@ -481,9 +481,9 @@ namespace OpenDental{
 				_clinicNumRevert=Clinics.ClinicNum;
 			}
 			else {//clinics not enabled
-				checkEnabled.Text=Lan.G(this,"Enabled");
+				checkEnabled.Text="Enabled";
 				labelClinicEnable.Visible=false;
-				groupPaySettings.Text=Lan.G(this,"Payment Settings");
+				groupPaySettings.Text="Payment Settings";
 			}
 			checkEnabled.Checked=_progCur.Enabled;
 			textPath.Text=_progCur.Path;

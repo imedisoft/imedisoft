@@ -41,7 +41,7 @@ namespace OpenDental{
 		public FormPayPlanChargeEdit(PayPlanCharge payPlanCharge){
 			InitializeComponent();
 			PayPlanChargeCur=payPlanCharge;
-			Lan.F(this);
+			
 			if(PayPlanChargeCur.Principal < 0) {//only adjustments are allowed to be negative. 
 				textPrincipal.MinVal=-100000000;
 				textPrincipal.MaxVal=0;
@@ -350,7 +350,7 @@ namespace OpenDental{
 				|| textPrincipal.errorProvider1.GetError(textPrincipal)!=""
 				|| textInterest.errorProvider1.GetError(textInterest)!=""
 				){
-				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			//if(comboProvNum.SelectedIndex==-1){

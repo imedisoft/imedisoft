@@ -16,7 +16,7 @@ namespace OpenDental
 		public FormSupportStatus()
 		{
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormSupportStatus_Load(object sender, EventArgs e)

@@ -32,7 +32,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 			_isCemtMode=isCemtMode;
 		}
 
@@ -139,7 +139,7 @@ namespace OpenDental{
 					listCategory.Items.Add(new ODBoxItem<DisplayFieldCategory>(OrthoChartTabs.GetFirst(true).TabName,cat));
 					continue;
 				}
-				listCategory.Items.Add(new ODBoxItem<DisplayFieldCategory>(Lan.G("enumDisplayFieldCategory",cat.GetDescription()),cat));
+				listCategory.Items.Add(new ODBoxItem<DisplayFieldCategory>(cat.GetDescription(),cat));
 			}
 			listCategory.SelectedIndex=0;
 		}

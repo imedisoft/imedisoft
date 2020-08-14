@@ -37,7 +37,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 			_mountCur=mount;
 		}
 
@@ -237,7 +237,7 @@ namespace OpenDental{
 				return;
 			}
 			if(textDate.errorProvider1.GetError(textDate)!="") {
-				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(textDate.Text=="") {

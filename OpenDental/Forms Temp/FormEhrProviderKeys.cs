@@ -10,7 +10,7 @@ namespace OpenDental {
 
 		public FormEhrProviderKeys() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormEhrProviderKeys_Load(object sender,EventArgs e) {

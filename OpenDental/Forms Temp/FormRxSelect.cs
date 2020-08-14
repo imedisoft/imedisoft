@@ -35,7 +35,7 @@ namespace OpenDental{
 		public FormRxSelect(Patient patCur){
 			InitializeComponent();// Required for Windows Form Designer support
 			PatCur=patCur;
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -217,7 +217,7 @@ namespace OpenDental{
 				//We cannot allow blank prescription when using EHR, because each prescription created in this window must have an RxCui.
 				//If we allowed blank, we would not know where to pull the RxCui from.
 				butBlank.Visible=false;
-				labelInstructions.Text=Lan.G(this,"Please select a Prescription from the list.");
+				labelInstructions.Text="Please select a Prescription from the list.";
 			}
 		}
 
@@ -240,17 +240,17 @@ namespace OpenDental{
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableRxSetup","Drug"),140);
+			GridColumn col=new GridColumn("Drug",140);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRxSetup","Controlled"),70,HorizontalAlignment.Center);
+			col=new GridColumn("Controlled",70,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRxSetup","Sig"),250);
+			col=new GridColumn("Sig",250);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRxSetup","Disp"),70);
+			col=new GridColumn("Disp",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRxSetup","Refills"),70);
+			col=new GridColumn("Refills",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRxSetup","Notes"),300);
+			col=new GridColumn("Notes",300);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -307,13 +307,13 @@ namespace OpenDental{
 			}
 			RxDef RxDefCur=(RxDef)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
 			if(Prefs.GetBool(PrefName.ShowFeatureEhr) && RxDefCur.RxCui==0) {
-				string strMsgText=Lan.G(this,"The selected prescription is missing an RxNorm")+".\r\n"
-					+Lan.G(this,"Prescriptions without RxNorms cannot be exported in EHR documents")+".\r\n";
+				string strMsgText="The selected prescription is missing an RxNorm"+".\r\n"
+					+"Prescriptions without RxNorms cannot be exported in EHR documents"+".\r\n";
 				if(!Security.IsAuthorized(Permissions.RxEdit,true)) {
 					//Show the message but don't allow to edit. Continue creating rx
 					MessageBox.Show(strMsgText);
 				}
-				else if(MessageBox.Show(strMsgText+Lan.G(this,"Edit RxNorm in Rx Template?"),"",MessageBoxButtons.YesNo)==DialogResult.Yes) {
+				else if(MessageBox.Show(strMsgText+"Edit RxNorm in Rx Template?","",MessageBoxButtons.YesNo)==DialogResult.Yes) {
 					FormRxDefEdit form=new FormRxDefEdit(RxDefCur);
 					form.ShowDialog();
 					RxDefCur=RxDefs.GetOne(RxDefCur.RxDefNum);//FormRxDefEdit does not modify the RxDefCur object, so we must get the updated RxCui from the db.

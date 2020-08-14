@@ -13,7 +13,7 @@ namespace OpenDental {
 
 		public FormInsPlanConvert_7_5_17() {
 			InitializeComponent();
-			Lan.F(this);
+			
 
 		}
 

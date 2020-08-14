@@ -17,13 +17,13 @@ namespace OpenDental {
 
 		public FormPatientForms() {
 			InitializeComponent();
-			Lan.F(this);
+			
 			DocNum=0;
 		}
 
 		private void FormPatientForms_Load(object sender,EventArgs e) {
 			Patient pat=Patients.GetLim(PatNum);
-			Text=Lan.G(this,"Patient Forms for")+" "+pat.GetNameFL();
+			Text="Patient Forms for"+" "+pat.GetNameFL();
 			FillGrid();
 		}
 
@@ -35,15 +35,15 @@ namespace OpenDental {
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G(this,"Date"),70);
+			GridColumn col=new GridColumn("Date",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Time"),42);
+			col=new GridColumn("Time",42);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Kiosk"),55,HorizontalAlignment.Center);
+			col=new GridColumn("Kiosk",55,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Description"),210);
+			col=new GridColumn("Description",210);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Image Category"),120);
+			col=new GridColumn("Image Category",120);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

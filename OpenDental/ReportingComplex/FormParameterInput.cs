@@ -26,10 +26,6 @@ namespace OpenDental.ReportingComplex{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.C("All", new System.Windows.Forms.Control[] {
-				butOK,
-				butCancel,
-			});
 			//MultInput2.MultInputItems=new MultInputItemCollection();
 		}
 
@@ -141,7 +137,7 @@ namespace OpenDental.ReportingComplex{
 		private void butOK_Click(object sender, System.EventArgs e) {
 			//MessageBox.Show(MultInput2.MultInputItems[0].CurrentValue.ToString());
 			if(!MultInput2.AllFieldsAreValid()){
-				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			DialogResult=DialogResult.OK;

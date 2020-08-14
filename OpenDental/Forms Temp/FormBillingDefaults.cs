@@ -25,7 +25,7 @@ namespace OpenDental {
 
 		public FormBillingDefaults() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormBillingDefaults_Load(object sender,EventArgs e) {
@@ -106,7 +106,7 @@ namespace OpenDental {
 			}
 			if(PrefC.HasClinicsEnabled) {
 				//Bold clinic specific fields.
-				groupBoxBilling.Text=Lan.G(this,"Electronic Billing - Bolded fields are clinic specific");
+				groupBoxBilling.Text="Electronic Billing - Bolded fields are clinic specific";
 				labelAcctNum.Font=new Font(labelAcctNum.Font,FontStyle.Bold);
 				labelUserName.Font=new Font(labelUserName.Font,FontStyle.Bold);
 				labelPassword.Font=new Font(labelPassword.Font,FontStyle.Bold);
@@ -125,7 +125,7 @@ namespace OpenDental {
 			}
 			listModesToText.Items.Clear();
 			foreach(StatementMode stateMode in Enum.GetValues(typeof(StatementMode))) {
-				listModesToText.Items.Add(new ODBoxItem<StatementMode>(Lan.G("enumStatementMode",stateMode.GetDescription()),stateMode));
+				listModesToText.Items.Add(new ODBoxItem<StatementMode>(stateMode.GetDescription(),stateMode));
 			}
 			foreach(string modeIdx in Prefs.GetString(PrefName.BillingDefaultsModesToText)
 				.Split(new string[] { "," },StringSplitOptions.RemoveEmptyEntries)) 
@@ -198,7 +198,7 @@ namespace OpenDental {
 				groupBoxBilling.Enabled=true;
 				butOK.Enabled=true;
 				butCancel.Enabled=true;
-				this.Text=Lan.G(this,"Billing Defaults")+" - {"+Lan.G(this,"Limited")+"}";
+				this.Text="Billing Defaults"+" - {"+"Limited"+"}";
 			}
 		}
 
@@ -247,7 +247,7 @@ namespace OpenDental {
 				textVendorId.ReadOnly=false;
 				textVendorPMScode.ReadOnly=false;
 				labelBlankForDefault.Visible=true;
-				labelStatementURL.Text=Lan.G(this,"URL Override");
+				labelStatementURL.Text="URL Override";
 			}
 			else {
 				//If Dental X Change is not selected, disable changing information for fields the selected format won't use.
@@ -258,7 +258,7 @@ namespace OpenDental {
 				textVendorId.ReadOnly=true;
 				textVendorPMScode.ReadOnly=true;
 				labelBlankForDefault.Visible=false;
-				labelStatementURL.Text=Lan.G(this,"Output Path");
+				labelStatementURL.Text="Output Path";
 			}
 			textStatementURL.Text=arrayOutputPaths[listElectBilling.SelectedIndex];
 			if(listElectBilling.SelectedIndex==1 || listElectBilling.SelectedIndex==3) {

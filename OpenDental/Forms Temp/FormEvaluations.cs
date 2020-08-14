@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormEvaluations() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormEvaluations_Load(object sender,EventArgs e) {
@@ -52,23 +52,23 @@ namespace OpenDental {
 			DataTable table=Evaluations.GetFilteredList(DateTime.Parse(textDateStart.Text),DateTime.Parse(textDateEnd.Text),textLastName.Text,textFirstName.Text,PIn.Long(textProvNum.Text),course,instructor);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableEvaluations","Date"),70,HorizontalAlignment.Center);
+			GridColumn col=new GridColumn("Date",70,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableEvaluations","Title"),90);
+			col=new GridColumn("Title",90);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableEvaluations","Instructor"),90);
+			col=new GridColumn("Instructor",90);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableEvaluations","ProvNum"),60);
+			col=new GridColumn("ProvNum",60);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableEvaluations","Last Name"),90);
+			col=new GridColumn("Last Name",90);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableEvaluations","First Name"),80);
+			col=new GridColumn("First Name",80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableEvaluations","Course"),90);
+			col=new GridColumn("Course",90);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableEvaluations","Grade"),60);
+			col=new GridColumn("Grade",60);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableEvaluations","Grading Scale"),90);
+			col=new GridColumn("Grading Scale",90);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

@@ -453,7 +453,7 @@ namespace OpenDentBusiness{
 				command="SELECT COUNT(*) FROM paysplit WHERE PayPlanNum="+POut.Long(plan.PayPlanNum);
 				if(Database.ExecuteString(command)!="0") {
 					throw new ApplicationException
-						(Lans.g("PayPlans","You cannot delete a payment plan with patient payments attached.  Unattach the payments first."));
+						("You cannot delete a payment plan with patient payments attached.  Unattach the payments first.");
 				}
 			}
 			else {  //Insurance payment plan
@@ -461,7 +461,7 @@ namespace OpenDentBusiness{
 					+POut.Int((int)ClaimProcStatus.Received)+","+POut.Int((int)ClaimProcStatus.Supplemental)+")";
 				if(Database.ExecuteString(command)!="0") {
 					throw new ApplicationException
-						(Lans.g("PayPlans","You cannot delete a payment plan with insurance payments attached.  Unattach the payments first."));
+						("You cannot delete a payment plan with insurance payments attached.  Unattach the payments first.");
 				}
 				//if there are any unreceived items, detach them here, then proceed deleting
 				List<ClaimProc> listClaimProcs=ClaimProcs.GetForPayPlans(new List<long> {plan.PayPlanNum});

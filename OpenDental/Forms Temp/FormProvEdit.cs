@@ -144,10 +144,10 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormProvEdit(){
 			InitializeComponent();// Required for Windows Form Designer support
-			Lan.F(this);
+			
 			//ProvCur=provCur;
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
-				labelNPI.Text=Lan.G(this,"CDA Number");
+				labelNPI.Text="CDA Number";
 			}
 			else{
 				labelCanadianOfficeNum.Visible=false;
@@ -1541,7 +1541,7 @@ namespace OpenDental{
 			listSpecialty.Items.Clear();
 			Def[] specDefs=Defs.GetDefsForCategory(DefCat.ProviderSpecialties,true).ToArray();
 			for(int i=0;i<specDefs.Length;i++) {
-				listSpecialty.Items.Add(Lan.G("enumDentalSpecialty",specDefs[i].ItemName));
+				listSpecialty.Items.Add(specDefs[i].ItemName);
 				if(i==0 || ProvCur.Specialty==specDefs[i].DefNum) {//default to the first item in the list
 					listSpecialty.SelectedIndex=i;
 				}
@@ -1604,7 +1604,7 @@ namespace OpenDental{
 				pictureWebSched.Image= Storage.GetImage(fullImagePath);
 			}
 			catch(Exception ex) {
-				Shown+=new EventHandler((o,e) => FriendlyException.Show(Lans.g(this,"Unable to display image."),ex));
+				Shown+=new EventHandler((o,e) => FriendlyException.Show("Unable to display image.",ex));
 			}
 		}
 
@@ -1647,10 +1647,10 @@ namespace OpenDental{
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
 			if(tbProvIdent.SelectedRow==-1){
-				MessageBox.Show(Lan.G(this,"Please select an item first."));
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
-			if(MessageBox.Show(Lan.G(this,"Delete the selected Provider Identifier?"),"",
+			if(MessageBox.Show("Delete the selected Provider Identifier?","",
 				MessageBoxButtons.OKCancel)!=DialogResult.OK)
 			{
 				return;
@@ -1691,7 +1691,7 @@ namespace OpenDental{
 				Storage.Upload(localFileName,atoZFileName);
 			}
 			catch(Exception ex) {
-				FriendlyException.Show(Lans.g(this,"Unable to upload image."),ex);
+				FriendlyException.Show("Unable to upload image.",ex);
 				return;
 			}
 			ProvCur.WebSchedImageLocation=Path.GetFileName(atoZFileName);
@@ -1700,7 +1700,7 @@ namespace OpenDental{
 			}
 			catch(Exception ex) {
 				pictureWebSched.Image=null;
-				FriendlyException.Show(Lans.g(this,"Unable to display image."),ex);
+				FriendlyException.Show("Unable to display image.",ex);
 			}
 		}
 
@@ -1749,7 +1749,7 @@ namespace OpenDental{
 				return;
 			}
 			if(textAbbr.Text=="") {
-				MessageBox.Show(Lan.G(this,"Abbreviation not allowed to be blank."));
+				MessageBox.Show("Abbreviation not allowed to be blank.");
 				return;
 			}
 			if(textSSN.Text.Contains("-")) {
@@ -1782,8 +1782,8 @@ namespace OpenDental{
 					List<ApptView> listApptView=listApptViewItems.Select(x => ApptViews.GetApptView(x.ApptViewNum)).ToList();
 					//This list must be distincted before being shown to the user. A single Provider can be associated to the same "view" multiple times.
 					string listProviderAssociatedViews=string.Join("\r\n",listApptView.Select(x => x.Description).Distinct().OrderBy(x => x));
-					string msg=Lans.g(this,"Not allowed to hide a Provider associated to an Appointment View.");
-					msg+=("\r\n"+Lans.g(this,"To continue remove them from the following Appointment View(s):"));
+					string msg="Not allowed to hide a Provider associated to an Appointment View.";
+					msg+=("\r\n"+"To continue remove them from the following Appointment View(s):");
 					msg+=("\r\n"+listProviderAssociatedViews);
 					MsgBox.Show(msg);
 					return;
@@ -1953,7 +1953,7 @@ namespace OpenDental{
 				#region Date Term Check
 				if(ProvCur.DateTerm.Year > 1880 && ProvCur.DateTerm < DateTime.Now) {
 					List<ClaimPaySplit> listClaimPaySplits=Claims.GetOutstandingClaimsByProvider(ProvCur.ProvNum,ProvCur.DateTerm);
-					StringBuilder claimMessage=new StringBuilder(Lan.G(this,"Clinic\tPatNum\tPatient Name\tDate of Service\tClaim Status\tFee\tCarrier")+"\r\n");
+					StringBuilder claimMessage=new StringBuilder("Clinic\tPatNum\tPatient Name\tDate of Service\tClaim Status\tFee\tCarrier"+"\r\n");
 					foreach(ClaimPaySplit claimPaySplit in listClaimPaySplits) {
 						claimMessage.Append(claimPaySplit.ClinicDesc+"\t"
 							+POut.Long(claimPaySplit.PatNum)+"\t"
@@ -1978,7 +1978,7 @@ namespace OpenDental{
 						claimMessage.AppendLine(claimPaySplit.FeeBilled+"\t"+claimPaySplit.Carrier);
 					}
 					MsgBoxCopyPaste msg=new MsgBoxCopyPaste(claimMessage.ToString());
-					msg.Text=Lan.G(this,"Outstanding Claims for the Provider Whose Term Has Expired");
+					msg.Text="Outstanding Claims for the Provider Whose Term Has Expired";
 					if(listClaimPaySplits.Count > 0) {
 						msg.ShowDialog();
 					}

@@ -206,20 +206,20 @@ namespace OpenDentBusiness{
 					listDel.Add(listUpdDB[i]);
 				}
 				#region security log entry
-				string logText=Lans.g("OrthoCharts","Ortho chart field edited.  Field date")+": "+listUpdNew[i].DateService.ToShortDateString()+"  "
-					+Lans.g("OrthoCharts","Field name")+": "+listUpdNew[i].FieldName+"\r\n";
+				string logText="Ortho chart field edited.  Field date"+": "+listUpdNew[i].DateService.ToShortDateString()+"  "
+					+"Field name"+": "+listUpdNew[i].FieldName+"\r\n";
 				//Do not log the Base64 information into the audit trail if this is a signature column, log some short descriptive text instead.
 				if(displayFieldSignature!=null && listUpdNew[i].FieldName==displayFieldSignature.Description) {//This is the signature box
 					if(listUpdDB[i].FieldValue != "" && listUpdNew[i].FieldValue != "") {
-						logText+=Lans.g("OrthoCharts","Signature modified.")+" ";
+						logText+="Signature modified."+" ";
 					}
 					else if(listUpdDB[i].FieldValue != "" && listUpdNew[i].FieldValue=="") {
-						logText+=Lans.g("OrthoCharts","Signature deleted.")+" ";
+						logText+="Signature deleted."+" ";
 					}
 				}
 				else {//Not a signature
-					logText+=Lans.g("OrthoCharts","Old value")+": \""+listUpdDB[i].FieldValue+"\"  "
-						+Lans.g("OrthoCharts","New value")+": \""+listUpdNew[i].FieldValue+"\" ";
+					logText+="Old value"+": \""+listUpdDB[i].FieldValue+"\"  "
+						+"New value"+": \""+listUpdNew[i].FieldValue+"\" ";
 				}
 				logText+=listUpdDB[i].DateService.ToString("yyyyMMdd");//This date stamp must be the last 8 characters for new OrthoEdit audit trail entries.
 				SecurityLogs.MakeLogEntry(Permissions.OrthoChartEditFull,patCur.PatNum,logText);
@@ -263,9 +263,9 @@ namespace OpenDentBusiness{
 			#endregion
 			#region Depricated, log written in current culture
 			try {
-				if(securityLog.LogText.StartsWith(Lans.g("FormOrthoChart","Ortho chart field edited.  Field date"))) {
+				if(securityLog.LogText.StartsWith("Ortho chart field edited.  Field date")) {
 					string[] tokens=securityLog.LogText.Split(new string[] { ": " },StringSplitOptions.None);
-					retVal=DateTime.Parse(tokens[1].Replace(Lans.g("FormOrthoChart","Field name"),""));
+					retVal=DateTime.Parse(tokens[1].Replace("Field name",""));
 					if(retVal!=DateTime.MinValue) {
 						return retVal;
 					}

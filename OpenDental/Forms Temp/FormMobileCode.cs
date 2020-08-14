@@ -23,7 +23,7 @@ namespace OpenDental {
 		///<summary>Set unlockGeneratedFunc to a fuction that inserts and returns the MobileDataBye row once we have a valid unlock code.</summary>
 		public FormMobileCode(Func<string,MobileDataByte> unlockGeneratedFunc) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_unlockGeneratedFunc=unlockGeneratedFunc;
 		}
 

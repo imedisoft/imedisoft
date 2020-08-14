@@ -52,7 +52,7 @@ namespace OpenDentBusiness {
 						//The only thing div is used for right now is to designate bookmarks within the page.
 						//Therefore we require that there be one and only one attribute and that attribute can only be "id".
 						if(node.Attributes.Count!=1 || node.Attributes[0].Name!="id") {
-							throw new ApplicationException(Lans.g(_lanThis,"All <div> tags MUST be identified by the 'id' attribute."));
+							throw new ApplicationException("All <div> tags MUST be identified by the 'id' attribute.");
 						}
 						break;
 					case "a":
@@ -382,7 +382,7 @@ namespace OpenDentBusiness {
 			while(true) {//loop to either construct a paragraph, or to immediately add the next tag to strbSnew.
 				iScanInParagraph=s.IndexOf("<",iScanInParagraph);//Advance the scanner to the start of the next tag
 				if(iScanInParagraph==-1) {//there aren't any more tags, so current paragraph goes to end of string.  This won't happen
-					throw new ApplicationException(Lans.g("WikiPages","No tags found."));
+					throw new ApplicationException("No tags found.");
 					//strbSnew.Append(ProcessParagraph(s));
 				}
 				if(s.Substring(iScanInParagraph).StartsWith("</body>")) {
@@ -397,12 +397,12 @@ namespace OpenDentBusiness {
 				tagCurMatch=Regex.Match(s.Substring(iScanInParagraph),"^<.*?>");//regMatch);//.*? means any char, zero or more, as few as possible
 				if(tagCurMatch==null) {
 					//shouldn't happen unless closing bracket is missing
-					throw new ApplicationException(Lans.g("WikiPages","Unexpected tag:")+" "+s.Substring(iScanInParagraph));
+					throw new ApplicationException("Unexpected tag:"+" "+s.Substring(iScanInParagraph));
 				}
 				if(tagCurMatch.Value.Trim('<','>').EndsWith("/")) {
 					//self terminating tags NOT are allowed
 					//this should catch all non-allowed self-terminating tags i.e. <br />, <inherits />, etc...
-					throw new ApplicationException(Lans.g("WikiPages","All elements must have a beginning and ending tag. Unexpected tag:")+" "+s.Substring(iScanInParagraph));
+					throw new ApplicationException("All elements must have a beginning and ending tag. Unexpected tag:"+" "+s.Substring(iScanInParagraph));
 				}
 				//Nesting of identical tags causes problems: 
 				//<h1><h1>some text</h1></h1>
@@ -416,7 +416,7 @@ namespace OpenDentBusiness {
 				//Another possible strategy might be to use regular expressions.
 				tagName=tagCurMatch.Value.Split(new string[] { "<"," ",">" },StringSplitOptions.RemoveEmptyEntries)[0];//works with tags like <i>, <span ...>, and <img .../>
 				if(s.IndexOf("</"+tagName+">")==-1) {//this will happen if no ending tag.
-					throw new ApplicationException(Lans.g("WikiPages","No ending tag:")+" "+s.Substring(iScanInParagraph));
+					throw new ApplicationException("No ending tag:"+" "+s.Substring(iScanInParagraph));
 				}
 				switch(tagName){
 					case "a":
@@ -455,7 +455,7 @@ namespace OpenDentBusiness {
 							iScanInParagraph=s.IndexOf("</"+tagName+">",iScanInParagraph)+3+tagName.Length;
 							continue;//continues scanning this paragraph
 						}
-						throw new ApplicationException(Lans.g("WikiPages","Unexpected tag:")+" "+s.Substring(iScanInParagraph));
+						throw new ApplicationException("Unexpected tag:"+" "+s.Substring(iScanInParagraph));
 				}
 			}
 			strbSnew.Append("</body>");

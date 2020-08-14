@@ -498,7 +498,7 @@ namespace OpenDental.UI {
 				break;
 				case ComboMultiDelimiter.None:
 					if(ArraySelectedIndices.Length>1) {
-						textMain.Text=Lan.G(this,"Multiple Selected");
+						textMain.Text="Multiple Selected";
 						return;
 					}//Otherwise prints either a blank or a single selection.
 				break;

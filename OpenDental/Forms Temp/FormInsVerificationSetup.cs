@@ -8,7 +8,7 @@ namespace OpenDental {
 
 		public FormInsVerificationSetup() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormInsVerificationSetup_Load(object sender,EventArgs e) {

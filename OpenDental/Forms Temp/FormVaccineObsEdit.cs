@@ -12,7 +12,7 @@ namespace OpenDental {
 
 		public FormVaccineObsEdit(VaccineObs vaccineObs) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_vaccineObsCur=vaccineObs;
 		}
 
@@ -155,7 +155,7 @@ namespace OpenDental {
 				return;
 			}
 			if(textDateObserved.errorProvider1.GetError(textDateObserved)!="") {
-				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			if(!textMethodCode.ReadOnly && textMethodCode.Text.Trim()=="") {

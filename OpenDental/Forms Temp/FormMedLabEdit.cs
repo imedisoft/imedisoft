@@ -27,7 +27,7 @@ namespace OpenDental {
 
 		public FormMedLabEdit() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormMedLabEdit_Load(object sender,EventArgs e) {
@@ -360,7 +360,7 @@ namespace OpenDental {
 					//Do nothing.  This file will likely get cleaned up later.
 				}
 			}
-			docc.Description=Lan.G(this,"MedLab Result");
+			docc.Description="MedLab Result";
 			docc.DateCreated=DateTime.Now;
 			Documents.Update(docc);
 			string filePathAndName="";
@@ -490,10 +490,10 @@ namespace OpenDental {
 			ListMedLabs.ForEach(x => x.PatNum=PatCur.PatNum);//update local list, done after moving files
 			_medLabCur=ListMedLabs[0];
 			if(fileMoveFailures>0) {//will never be > 0 if storing images in the db
-				MessageBox.Show(Lan.G(this,"Some files attached to the MedLab objects could not be moved.")+"\r\n"
-					+Lan.G(this,"This could be due to a missing file, a file being open, or a permission issue on the file which is preventing the move.")+"\r\n"
-					+Lan.G(this,"The file(s) will have to be moved manually from the Image module.")+"\r\n"
-					+Lan.G(this,"Number of files not moved")+": "+fileMoveFailures.ToString());
+				MessageBox.Show("Some files attached to the MedLab objects could not be moved."+"\r\n"
+					+"This could be due to a missing file, a file being open, or a permission issue on the file which is preventing the move."+"\r\n"
+					+"The file(s) will have to be moved manually from the Image module."+"\r\n"
+					+"Number of files not moved"+": "+fileMoveFailures.ToString());
 			}
 		}
 
@@ -508,8 +508,8 @@ namespace OpenDental {
 			}
 			int failedCount=MedLabs.DeleteLabsAndResults(_medLabCur);
 			if(failedCount>0) {
-				MessageBox.Show(this,Lans.g(this,"Some images referenced by the MedLabResults could not be deleted and will have to be removed manually.")
-					+"\r\n"+Lans.g(this,"Number failed")+": "+failedCount);
+				MessageBox.Show(this,"Some images referenced by the MedLabResults could not be deleted and will have to be removed manually."
+					+"\r\n"+"Number failed"+": "+failedCount);
 			}
 			DialogResult=DialogResult.OK;
 		}

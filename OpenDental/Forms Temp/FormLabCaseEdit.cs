@@ -72,7 +72,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -592,7 +592,7 @@ namespace OpenDental{
 			Appointment apt=Appointments.GetOneApt(CaseCur.AptNum);
 			if(apt!=null){
 				if(apt.AptStatus==ApptStatus.UnschedList){
-					textAppointment.Text=Lan.G(this,"Unscheduled");
+					textAppointment.Text="Unscheduled";
 				}
 				else{
 					textAppointment.Text=apt.AptDateTime.ToShortDateString()+" "+apt.AptDateTime.ToShortTimeString();
@@ -603,7 +603,7 @@ namespace OpenDental{
 			if(apt!=null){
 				textPlanned.Text=apt.ProcDescript;
 				if(textPlanned.Text==""){
-					textPlanned.Text=Lan.G(this,"Attached");
+					textPlanned.Text="Attached";
 				}
 			}
 			if(CaseCur.DateTimeCreated.Year>1880){
@@ -625,10 +625,10 @@ namespace OpenDental{
 			textLabFee.Text=CaseCur.LabFee.ToString("n");
 			sheet=Sheets.GetLabSlip(CaseCur.PatNum,CaseCur.LabCaseNum);
 			if(sheet==null) {
-				butSlip.Text=Lan.G(this,"New Slip");
+				butSlip.Text="New Slip";
 			}
 			else {
-				butSlip.Text=Lan.G(this,"Edit Slip");
+				butSlip.Text="Edit Slip";
 			}
 			textInvoiceNumber.Text=CaseCur.InvoiceNum;
 			Plugins.HookAddCode(this,"FormLabCaseEdit.Load_end",CaseCur,IsNew);
@@ -698,7 +698,7 @@ namespace OpenDental{
 			Patient pat=Patients.GetPat(CurPatNum);
 			message.ToAddress="";//pat.Email;
 			message.FromAddress=Prefs.GetString(PrefName.EmailSenderAddress");
-			message.Subject=Lan.g(this,"RE: ")+pat.GetNameFL();
+			message.Subject="RE: "+pat.GetNameFL();
 			FormEmailMessageEdit FormE=new FormEmailMessageEdit(message);
 			FormE.IsNew=true;
 			FormE.ShowDialog();
@@ -734,10 +734,10 @@ namespace OpenDental{
 			//refresh
 			sheet=Sheets.GetLabSlip(CaseCur.PatNum,CaseCur.LabCaseNum);
 			if(sheet==null) {
-				butSlip.Text=Lan.G(this,"New Slip");
+				butSlip.Text="New Slip";
 			}
 			else {
-				butSlip.Text=Lan.G(this,"Edit Slip");
+				butSlip.Text="Edit Slip";
 				butCancel.Enabled=false;//user can still click X to close window, but we do handle that as well.
 			}
 		}

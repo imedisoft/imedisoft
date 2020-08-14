@@ -9,7 +9,7 @@ namespace OpenDental {
 		///<summary>Pass in values that will override the title of the form or the label text next to the corresponding text boxes.</summary>
 		public FormExternalLink(string formTitle="",string labelUrlText="",string lablelDisplayText="") {
 			InitializeComponent();
-			Lan.F(this);
+			
 			if(!string.IsNullOrEmpty(formTitle)) {
 				this.Text=formTitle;
 			}

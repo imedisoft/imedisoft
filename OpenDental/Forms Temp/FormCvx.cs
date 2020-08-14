@@ -17,12 +17,12 @@ namespace OpenDental {
 
 		public FormCvxs() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormCvxs_Load(object sender,EventArgs e) {
 			if(IsSelectionMode) {
-				butClose.Text=Lan.G(this,"Cancel");
+				butClose.Text="Cancel";
 			}
 			else {
 				butOK.Visible=false;

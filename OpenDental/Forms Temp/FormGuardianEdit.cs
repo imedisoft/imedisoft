@@ -12,7 +12,7 @@ namespace OpenDental {
 
 		public FormGuardianEdit(Guardian guardianCur,Family fam){
 			InitializeComponent();
-			Lan.F(this);
+			
 			_guardianCur=guardianCur;
 			_fam=fam;
 		}
@@ -35,7 +35,7 @@ namespace OpenDental {
 			_listRelationshipNames=new List<string>(Enum.GetNames(typeof(GuardianRelationship)));
 			_listRelationshipNames.Sort();
 			for(int i=0;i<_listRelationshipNames.Count;i++){
-				comboRelationship.Items.Add(Lan.G("enumGuardianRelationship",_listRelationshipNames[i]));
+				comboRelationship.Items.Add(_listRelationshipNames[i]);
 				if(_listRelationshipNames[i]==_guardianCur.Relationship.ToString()) {
 					comboRelationship.SelectedIndex=i;
 				}

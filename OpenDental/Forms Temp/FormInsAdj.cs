@@ -29,7 +29,7 @@ namespace OpenDental{
 			ClaimProcCur=claimProcCur;
 			_claimProcOld=ClaimProcCur.Copy();
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -204,7 +204,7 @@ namespace OpenDental{
 				|| textInsUsed.errorProvider1.GetError(textInsUsed)!=""
 				|| textDedUsed.errorProvider1.GetError(textDedUsed)!=""
 				){
-				MessageBox.Show(Lan.G("All","Please fix data entry errors first."));
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			ClaimProcCur.ProcDate=PIn.Date(textDate.Text);

@@ -9,7 +9,7 @@ namespace OpenDental {
 
 		public FormChangeCloudPassword() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormChangeCloudPassword_Load(object sender,EventArgs e) {

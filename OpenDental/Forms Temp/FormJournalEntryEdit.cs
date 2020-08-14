@@ -40,7 +40,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormJournalEntryEdit(){
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -291,21 +291,21 @@ namespace OpenDental{
 		private void FillAccount(){
 			if(AccountPicked==null){
 				textAccount.Text="";
-				butChange.Text=Lan.G(this,"Pick");
-				labelDebit.Text=Lan.G(this,"Debit");
-				labelCredit.Text=Lan.G(this,"Credit");
+				butChange.Text="Pick";
+				labelDebit.Text="Debit";
+				labelCredit.Text="Credit";
 				return;
 			}
 			//AccountCur=Accounts.ListShort[comboAccount.SelectedIndex];
 			textAccount.Text=AccountPicked.Description;
-			butChange.Text=Lan.G(this,"Change");
+			butChange.Text="Change";
 			if(Accounts.DebitIsPos(AccountPicked.Type)) {
-				labelDebit.Text=Lan.G(this,"Debit")+Lan.G(this,"(+)");
-				labelCredit.Text=Lan.G(this,"Credit")+Lan.G(this,"(-)");
+				labelDebit.Text="Debit"+"(+)";
+				labelCredit.Text="Credit"+"(-)";
 			}
 			else {
-				labelDebit.Text=Lan.G(this,"Debit")+Lan.G(this,"(-)");
-				labelCredit.Text=Lan.G(this,"Credit")+Lan.G(this,"(+)");
+				labelDebit.Text="Debit"+"(-)";
+				labelCredit.Text="Credit"+"(+)";
 			}
 		}
 

@@ -210,11 +210,11 @@ namespace OpenDentBusiness
 				dateTAgingBeganPref = PrefC.GetDate(PrefName.AgingBeginDateTime);
 				if (dateTAgingBeganPref > DateTime.MinValue)
 				{//pref has been set by another process, don't run aging and notify user
-					strErrorMsg = Lans.g("Ledgers", "Aging failed to run for patients who had paysplits created outside of the current family. This is due to "
-						+ "the currently running aging calculations which began on") + " " + dateTAgingBeganPref.ToString() + ".  " + Lans.g("Ledgers", "If you "
+					strErrorMsg = "Aging failed to run for patients who had paysplits created outside of the current family. This is due to "
+						+ "the currently running aging calculations which began on" + " " + dateTAgingBeganPref.ToString() + ".  " + "If you "
 						+ "believe the current aging process has finished, a user with SecurityAdmin permission can manually clear the date and time by going "
 						+ "to Setup | Miscellaneous and pressing the 'Clear' button.  You will need to run aging manually once the current aging process has "
-						+ "finished or date and time is cleared.");
+						+ "finished or date and time is cleared.";
 				}
 				else
 				{
@@ -948,7 +948,7 @@ namespace OpenDentBusiness
 				currentForm.Cursor = Cursors.Default;
 				if (showDeadlockMessage)
 				{
-					string msg = Lans.g("Ledgers", "Deadlock error detected in aging transaction and rolled back. Try again later.");
+					string msg = "Deadlock error detected in aging transaction and rolled back. Try again later.";
 					MessageBox.Show(currentForm, msg);
 				}
 			});

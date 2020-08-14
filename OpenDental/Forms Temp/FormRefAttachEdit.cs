@@ -54,7 +54,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormRefAttachEdit(){
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -454,18 +454,18 @@ namespace OpenDental{
 				return;
 			}
 			if(IsNew){
-				Text=Lan.G(this,"Add Referral Attachment");
+				Text="Add Referral Attachment";
       }
       else{
 				_refAttachOld=RefAttachCur.Copy();
-				Text=Lan.G(this,"Edit Referral Attachment");
+				Text="Edit Referral Attachment";
       }
 			string referralDescript=DisplayFields.GetForCategory(DisplayFieldCategory.PatientInformation)
 				.FirstOrDefault(x => x.InternalName=="Referrals")?.Description;
 			if(string.IsNullOrWhiteSpace(referralDescript)) {//either not displaying the Referral field or no description entered, default to 'Referral (other)'
-				referralDescript=Lan.G(this,"Referral (other)");
+				referralDescript="Referral (other)";
 			}
-			listRefType.Items.AddRange(new[] { Lan.G(this,"To"),Lan.G(this,"From"),referralDescript });
+			listRefType.Items.AddRange(new[] { "To","From",referralDescript });
 			FillData();
 			FillSheets();
 			_provNumSelected=RefAttachCur.ProvNum;
@@ -513,7 +513,7 @@ namespace OpenDental{
 			textOrder.ReadOnly=true;//It can be reordered by the Up/Down buttons on FormReferralsPatient.
 			comboRefToStatus.Items.Clear();
 			for(int i=0;i<Enum.GetNames(typeof(ReferralToStatus)).Length;i++){
-				comboRefToStatus.Items.Add(Lan.G("enumReferralToStatus",Enum.GetNames(typeof(ReferralToStatus))[i]));
+				comboRefToStatus.Items.Add(Enum.GetNames(typeof(ReferralToStatus))[i]);
 				if((int)RefAttachCur.RefToStatus==i){
 					comboRefToStatus.SelectedIndex=i;
 				}
@@ -613,7 +613,7 @@ namespace OpenDental{
 				|| textRefDate.errorProvider1.GetError(textRefDate)!=""
 				|| textDateProcCompleted.errorProvider1.GetError(textDateProcCompleted)!="") 
 			{
-				throw new ApplicationException(Lan.G(this,"Please fix data entry errors first."));
+				throw new ApplicationException("Please fix data entry errors first.");
 			}
 			RefAttachCur.RefType=(ReferralType)listRefType.SelectedIndex;
 			RefAttachCur.ProvNum=(listRefType.SelectedIndex==0?_provNumSelected:0);//If the Referral Type is 'To', use the selected ProvNum.
@@ -643,17 +643,17 @@ namespace OpenDental{
 			if((ReferralType)listRefType.SelectedIndex==ReferralType.RefTo && Prefs.GetBool(PrefName.ShowFeatureEhr)) {
 				string warning="";
 				if(comboProvNum.SelectedIndex<0) {
-					warning+=Lans.g(this,"Selected patient referral does not have a referring provider set.");
+					warning+="Selected patient referral does not have a referring provider set.";
 				}
 				if(!checkIsTransitionOfCare.Checked) {
 					if(warning!="") {
 						warning+="\r\n";
 					}
-					warning+=Lans.g(this,"Selected patient referral is not flagged as a transition of care.");
+					warning+="Selected patient referral is not flagged as a transition of care.";
 				}
 				if(warning!="") {
-					warning+="\r\n"+Lans.g(this,"It will not meet the EHR summary of care requirements.")+"  "+Lans.g(this,"Continue anyway?");
-					if(MessageBox.Show(warning,Lans.g(this,"EHR Measure Warning"),MessageBoxButtons.OKCancel)==DialogResult.Cancel) {
+					warning+="\r\n"+"It will not meet the EHR summary of care requirements."+"  "+"Continue anyway?";
+					if(MessageBox.Show(warning,"EHR Measure Warning",MessageBoxButtons.OKCancel)==DialogResult.Cancel) {
 						return;
 					}
 				}

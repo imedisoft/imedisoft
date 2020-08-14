@@ -474,19 +474,19 @@ namespace OpenDentBusiness{
 		public static bool IsWikiPageTitleValid(string pageTitle,out string errorMsg) {
 			errorMsg="";
 			if(pageTitle.Contains("#")) {
-				errorMsg=Lans.g("WikiPages","Page title cannot contain the pound character.");
+				errorMsg="Page title cannot contain the pound character.";
 				return false;
 			}
 			if(pageTitle.StartsWith("_")) {
-				errorMsg=Lans.g("WikiPages","Page title cannot start with the underscore character.");
+				errorMsg="Page title cannot start with the underscore character.";
 				return false;
 			}
 			if(pageTitle.Contains("\"")) {
-				errorMsg=Lans.g("WikiPages","Page title cannot contain double quotes.");
+				errorMsg="Page title cannot contain double quotes.";
 				return false;
 			}
 			if(pageTitle.Contains("\r") || pageTitle.Contains("\n")) {
-				errorMsg=Lans.g("WikiPages","Page title cannot contain carriage return.");//there is also no way to enter one.
+				errorMsg="Page title cannot contain carriage return.";//there is also no way to enter one.
 				return false;
 			}
 			return true;

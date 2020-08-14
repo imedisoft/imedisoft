@@ -62,7 +62,7 @@ namespace OpenDental.Bridges
 							}
 							catch (Exception e)
 							{
-								MessageBox.Show(Lan.G("DentalTek", "Error occurred:") + " " + e.Message + "\r\n" + Lan.G("DentalTek", "Please login to your Xbeyon/DentalTek Application and try again."));
+								MessageBox.Show("Error occurred:" + " " + e.Message + "\r\n" + "Please login to your Xbeyon/DentalTek Application and try again.");
 								return false;
 							}
 							request = "https://extapi.dentaltek.com/v1/pbx/rest/ClickToCall?phoneNumber=" + phoneNumber + "&token=" + token + "&premise=true";

@@ -51,10 +51,10 @@ namespace OpenDentBusiness
 				WHERE table_schema=(SELECT DATABASE())";
 
 			DataTable results = Database.ExecuteDataTable(command);
-			string retval = Lans.g("FormInnoDb", "Number of MyISAM tables: ");
-			retval += Lans.g("FormInnoDb", results.Rows[0]["myisam"].ToString()) + "\r\n";
-			retval += Lans.g("FormInnoDb", "Number of InnoDB tables: ");
-			retval += Lans.g("FormInnoDb", results.Rows[0]["innodb"].ToString()) + "\r\n";
+			string retval = "Number of MyISAM tables: ";
+			retval += results.Rows[0]["myisam"].ToString() + "\r\n";
+			retval += "Number of InnoDB tables: ";
+			retval += results.Rows[0]["innodb"].ToString() + "\r\n";
 			return retval;
 		}
 

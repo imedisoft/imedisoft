@@ -43,7 +43,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -297,9 +297,9 @@ namespace OpenDental{
 			comboFeeSchedWithout.Items.Clear();
 			comboFeeSchedWith.Items.Clear();
 			comboFeeSchedNew.Items.Clear();
-			comboFeeSchedWithout.Items.Add(Lan.G(this,"none"));
-			comboFeeSchedWith.Items.Add(Lan.G(this,"none"));
-			comboFeeSchedNew.Items.Add(Lan.G(this,"none"));
+			comboFeeSchedWithout.Items.Add("none");
+			comboFeeSchedWith.Items.Add("none");
+			comboFeeSchedNew.Items.Add("none");
 			comboFeeSchedWithout.SelectedIndex=0;
 			comboFeeSchedWith.SelectedIndex=0;
 			comboFeeSchedNew.SelectedIndex=0;
@@ -439,7 +439,7 @@ namespace OpenDental{
 			}
 			FillGrid();
 			Cursor=Cursors.Default;
-			MessageBox.Show(Lan.G(this,"Plans changed: ")+rowsChanged.ToString());
+			MessageBox.Show("Plans changed: "+rowsChanged.ToString());
 		}
 
 		private void butCancel_Click(object sender, System.EventArgs e) {

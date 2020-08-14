@@ -10,7 +10,7 @@ namespace OpenDental {
 
  		public FormMedLabHL7MsgText() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormMedLabHL7MsgText_Load(object sender,EventArgs e) {
@@ -62,7 +62,7 @@ namespace OpenDental {
 		//			}
 		//		}
 		//		catch(Exception ex) {
-		//			throw new Exception(Lan.g(this,"Could not read the MedLab HL7 message text file located at")+" "+ListMedLabs[i].FileName+".");
+		//			throw new Exception("Could not read the MedLab HL7 message text file located at"+" "+ListMedLabs[i].FileName+".");
 		//		}
 		//	}
 		//	List<long> listMedLabNumsNew=new List<long>();
@@ -70,7 +70,7 @@ namespace OpenDental {
 		//		MessageHL7 msg=new MessageHL7(fileCur.Value);
 		//		List<long> listMedLabNumsCur=MessageParserMedLab.Process(msg,fileCur.Key,false,PatCur);//re-creates the documents from the ZEF segments
 		//		if(listMedLabNumsCur==null || listMedLabNumsCur.Count<1) {
-		//			throw new Exception(Lan.g(this,"The HL7 message processed did not produce any MedLab objects."));
+		//			throw new Exception("The HL7 message processed did not produce any MedLab objects.");
 		//		}
 		//		MedLabs.UpdateFileNames(listMedLabNumsCur,fileCur.Key);
 		//		listMedLabNumsNew.AddRange(listMedLabNumsCur);

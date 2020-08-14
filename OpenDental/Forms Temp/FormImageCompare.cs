@@ -7,7 +7,7 @@ namespace OpenDental {
 
 		public FormImageCompare(Bitmap imgOne,Bitmap imgTwo) {
 			InitializeComponent();
-			Lan.F(this);			
+						
 			Bitmap img1=imgOne;
 			Bitmap img2=imgTwo;
 			if(img1.Size.Width>panelImage1.Size.Width || img1.Size.Height>panelImage1.Size.Height) {

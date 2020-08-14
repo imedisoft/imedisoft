@@ -26,7 +26,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -116,13 +116,13 @@ namespace OpenDental{
 			ListLabs=Laboratories.Refresh();
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableLabs","Description"),100);
+			GridColumn col=new GridColumn("Description",100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableLabs","Phone"),100);
+			col=new GridColumn("Phone",100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableLabs","Hidden"),50,HorizontalAlignment.Center);
+			col=new GridColumn("Hidden",50,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableLabs","Notes"),200);
+			col=new GridColumn("Notes",200);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

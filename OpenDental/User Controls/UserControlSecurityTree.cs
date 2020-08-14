@@ -430,7 +430,7 @@ namespace OpenDental {
 		///<summary>Only called from FillTreePermissionsInitial</summary>
 		private TreeNode SetNode(string text) {
 			TreeNode retVal = new TreeNode();
-			retVal.Text=Lan.G(this,text);
+			retVal.Text=text;
 			retVal.Tag=Permissions.None;
 			retVal.ImageIndex=0;
 			retVal.SelectedImageIndex=0;
@@ -483,10 +483,10 @@ namespace OpenDental {
 				{
 					node.ImageIndex=2;
 					if(listGroupPerms[i].NewerDate.Year>1880) {
-						node.Text+=" ("+Lan.G(this,"if date newer than")+" "+listGroupPerms[i].NewerDate.ToShortDateString()+")";
+						node.Text+=" ("+"if date newer than"+" "+listGroupPerms[i].NewerDate.ToShortDateString()+")";
 					}
 					else if(listGroupPerms[i].NewerDays>0) {
-						node.Text+=" ("+Lan.G(this,"if days newer than")+" "+listGroupPerms[i].NewerDays.ToString()+")";
+						node.Text+=" ("+"if days newer than"+" "+listGroupPerms[i].NewerDays.ToString()+")";
 					}
 				}
 			}
@@ -651,8 +651,8 @@ namespace OpenDental {
 						permLimited.PermType=permission;
 						try {
 							GroupPermissions.Insert(permLimited);
-							SecurityLogs.MakeLogEntry(Permissions.SecurityAdmin,0,Lans.g(this,"Permission ")+"'"+permLimited.PermType+"' "
-								+Lans.g(this,"granted to")+" '"+UserGroups.GetGroup(perm.UserGroupNum).Description+"'");
+							SecurityLogs.MakeLogEntry(Permissions.SecurityAdmin,0,"Permission "+"'"+permLimited.PermType+"' "
+								+"granted to"+" '"+UserGroups.GetGroup(perm.UserGroupNum).Description+"'");
 						}
 						catch(Exception ex) {
 							MessageBox.Show(ex.Message);
@@ -676,8 +676,8 @@ namespace OpenDental {
 					if(GroupPermissions.HasPermission(_listUserGroupNums.First(),permEcEo,0)) {
 						try {
 							GroupPermissions.RemovePermission(_listUserGroupNums.First(),permEcEo);
-							SecurityLogs.MakeLogEntry(Permissions.SecurityAdmin,0,Lans.g(this,"Permission")+" '"+permEcEo+"' "
-								+Lans.g(this,"revoked from")+" '"+UserGroups.GetGroup(_listUserGroupNums.First()).Description+"'");
+							SecurityLogs.MakeLogEntry(Permissions.SecurityAdmin,0,"Permission"+" '"+permEcEo+"' "
+								+"revoked from"+" '"+UserGroups.GetGroup(_listUserGroupNums.First()).Description+"'");
 						}
 						catch(Exception ex) {
 							MessageBox.Show(ex.Message);

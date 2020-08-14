@@ -1093,14 +1093,14 @@ namespace OpenDentBusiness {
 			//Claims
 			string command="SELECT 1 FROM claim WHERE PlanNum="+POut.Long(plan.PlanNum)+" "+DbHelper.LimitAnd(1);
 			if(!string.IsNullOrEmpty(Database.ExecuteString(command))) {
-				throw new ApplicationException(Lans.g("FormInsPlan","Not allowed to delete a plan with existing claims."));
+				throw new ApplicationException("Not allowed to delete a plan with existing claims.");
 			}
 			//Claimprocs
 			command="SELECT 1 FROM claimproc "
 				+"WHERE PlanNum="+POut.Long(plan.PlanNum)+" AND Status!="+POut.Int((int)ClaimProcStatus.Estimate)+" "//ignore estimates
 				+DbHelper.LimitAnd(1);
 			if(!string.IsNullOrEmpty(Database.ExecuteString(command))) {
-				throw new ApplicationException(Lans.g("FormInsPlan","Not allowed to delete a plan attached to procedures."));
+				throw new ApplicationException("Not allowed to delete a plan attached to procedures.");
 			}
 			//Appointments
 			command="SELECT 1 FROM appointment "
@@ -1111,19 +1111,19 @@ namespace OpenDentBusiness {
 					+POut.Int((int)ApptStatus.PtNoteCompleted)+") "//We only care about appt statuses that are excluded in Appointments.UpdateInsPlansForPat()
 					+DbHelper.LimitAnd(1);
 			if(!string.IsNullOrEmpty(Database.ExecuteString(command))) {
-				throw new ApplicationException(Lans.g("FormInsPlan","Not allowed to delete a plan attached to appointments."));
+				throw new ApplicationException("Not allowed to delete a plan attached to appointments.");
 			}
 			//PayPlans
 			command="SELECT 1 FROM payplan WHERE PlanNum="+POut.Long(plan.PlanNum)+" "+DbHelper.LimitAnd(1);
 			if(!string.IsNullOrEmpty(Database.ExecuteString(command))) {
-				throw new ApplicationException(Lans.g("FormInsPlan","Not allowed to delete a plan attached to payment plans."));
+				throw new ApplicationException("Not allowed to delete a plan attached to payment plans.");
 			}
 			//InsSubs
 			//we want the InsSubNum if only 1, otherwise only need to know there's more than one.
 			command="SELECT InsSubNum FROM inssub WHERE PlanNum="+POut.Long(plan.PlanNum)+" "+DbHelper.LimitAnd(2);
 			List<long> listInsSubNums=Database.GetListLong(command);
 			if(listInsSubNums.Count>1) {
-				throw new ApplicationException(Lans.g("FormInsPlan","Not allowed to delete a plan with more than one subscriber."));
+				throw new ApplicationException("Not allowed to delete a plan with more than one subscriber.");
 			}
 			else if(listInsSubNums.Count==1 && canDeleteInsSub) {//if there's only one inssub, delete it.
 				InsSubs.Delete(listInsSubNums[0]);//Checks dependencies first;  If none, deletes the inssub, claimprocs, patplans, and recomputes all estimates.

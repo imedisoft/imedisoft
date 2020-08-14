@@ -19,7 +19,7 @@ namespace OpenDental
 
 		public FormFilePicker(string defaultPath) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			textPath.Text=defaultPath;
 		}
 
@@ -32,7 +32,7 @@ namespace OpenDental
 			//Get Cloud directory based on textPath.Text
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("FilePickerTable","File Name"),20){ IsWidthDynamic=true };
+			GridColumn col=new GridColumn("File Name",20){ IsWidthDynamic=true };
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			//GridRow row;

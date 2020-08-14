@@ -30,7 +30,7 @@ namespace OpenDental {
 
 		public FormWiki() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormWiki_Load(object sender,EventArgs e) {
@@ -120,7 +120,7 @@ namespace OpenDental {
 			}
 			catch(Exception ex) {
 				webBrowserWiki.DocumentText="";
-				MessageBox.Show(this,Lan.G(this,"This page is broken and cannot be viewed.  Error message:")+" "+ex.Message);
+				MessageBox.Show(this,"This page is broken and cannot be viewed.  Error message:"+" "+ex.Message);
 			}
 			Text="Wiki - "+WikiPageCur.PageTitle;
 			#region historyMaint
@@ -146,26 +146,26 @@ namespace OpenDental {
 
 		private void LayoutToolBar() {
 			ToolBarMain.Buttons.Clear();
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Back"),0,"","Back"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Fwd"),1,"","Forward"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Setup"),2,Lan.G(this,"Setup master page and styles."),"Setup"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Back",0,"","Back"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Fwd",1,"","Forward"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Setup",2,"Setup master page and styles.","Setup"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			ODToolBarButton buttonHome=new ODToolBarButton(Lan.G(this,"Home"),3,"","Home");
+			ODToolBarButton buttonHome=new ODToolBarButton("Home",3,"","Home");
 			buttonHome.Style=ODToolBarButtonStyle.DropDownButton;
 			buttonHome.DropDownMenu=menuHomeDropDown; 
 			ToolBarMain.Buttons.Add(buttonHome);
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Edit"),4,"","Edit"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Print"),5,"","Print"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Rename"),6,"","Rename"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Archive"),7,"","Archive"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Hist"),8,"","History"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Drafts"),14,"","Drafts"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"In-Links"),9,"","Inc Links"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Edit",4,"","Edit"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Print",5,"","Print"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Rename",6,"","Rename"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Archive",7,"","Archive"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Hist",8,"","History"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Drafts",14,"","Drafts"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("In-Links",9,"","Inc Links"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Add"),10,"","Add"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Lists"),13,"","Lists"));
-			//ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.g(this,"All Pages"),11,"","All Pages"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Search"),12,"","Search"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Add",10,"","Add"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Lists",13,"","Lists"));
+			//ToolBarMain.Buttons.Add(new ODToolBarButton("All Pages",11,"","All Pages"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Search",12,"","Search"));
 		}
 
 		private void ToolBarMain_ButtonClick(object sender,OpenDental.UI.ODToolBarButtonClickEventArgs e) {
@@ -525,7 +525,7 @@ namespace OpenDental {
 					//Continue to load the page.
 				}
 				else if(wikiPageDeleted!=null) {
-					if(MessageBox.Show(Lan.G(this,"WikiPage '")+wikiPageTitle+Lan.G(this,"' is currently archived. Would you like to restore it?"),
+					if(MessageBox.Show("WikiPage '"+wikiPageTitle+"' is currently archived. Would you like to restore it?",
 							"",MessageBoxButtons.OKCancel)!=DialogResult.OK) 
 					{
 						e.Cancel=true;
@@ -544,7 +544,7 @@ namespace OpenDental {
 			else if(e.Url.ToString().Contains("wikifile:")) {
 				string fileName=e.Url.ToString().Substring(e.Url.ToString().LastIndexOf("wikifile:")+9).Replace("/","\\");
 				if(!File.Exists(fileName)) {
-					MessageBox.Show(Lan.G(this,"File does not exist: ")+fileName);
+					MessageBox.Show("File does not exist: "+fileName);
 					e.Cancel=true;
 					return;
 				}
@@ -559,7 +559,7 @@ namespace OpenDental {
 			else if(e.Url.ToString().Contains("folder:")) {
 				string folderName=e.Url.ToString().Substring(e.Url.ToString().LastIndexOf("folder:")+7).Replace("/","\\");
 				if(!Directory.Exists(folderName)) {
-					MessageBox.Show(Lan.G(this,"Folder does not exist: ")+folderName);
+					MessageBox.Show("Folder does not exist: "+folderName);
 					e.Cancel=true;
 					return;
 				}
@@ -574,7 +574,7 @@ namespace OpenDental {
 			else if(e.Url.ToString().Contains("wikifilecloud:")) {
 				string fileName=e.Url.ToString().Substring(e.Url.ToString().LastIndexOf("wikifilecloud:")+14);
 				if(!Storage.FileExists(fileName)) {
-					MessageBox.Show(Lan.G(this,"File does not exist: ")+fileName);
+					MessageBox.Show("File does not exist: "+fileName);
 					e.Cancel=true;
 					return;
 				}
@@ -589,7 +589,7 @@ namespace OpenDental {
 			else if(e.Url.ToString().Contains("foldercloud:")) {
 				string folderName=e.Url.ToString().Substring(e.Url.ToString().LastIndexOf("foldercloud:")+12);
 				if(!Storage.DirectoryExists(folderName)) {
-					MessageBox.Show(Lan.G(this,"Folder does not exist: ")+folderName);
+					MessageBox.Show("Folder does not exist: "+folderName);
 					e.Cancel=true;
 					return;
 				}

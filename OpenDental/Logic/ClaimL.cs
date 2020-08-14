@@ -75,13 +75,13 @@ namespace OpenDental {
 			}
 			createClaimDataWrapper.ListCreateClaimItems=listCreateClaimItems;
 			if(!Security.IsAuthorized(Permissions.ClaimView,true)) {
-				LogClaimError(createClaimDataWrapper,Lans.g("Security","Not authorized for")+"\r\n"+GroupPermissions.GetDesc(Permissions.ClaimView),isVerbose);
+				LogClaimError(createClaimDataWrapper,"Not authorized for"+"\r\n"+GroupPermissions.GetDesc(Permissions.ClaimView),isVerbose);
 				createClaimDataWrapper.DoRefresh=false;
 				return createClaimDataWrapper;
 			}
 			if(listCreateClaimItems.Count < 1) {
 				//There is nothing to do because at least one item is required in order to create a claim...
-				LogClaimError(createClaimDataWrapper,Lan.G("ContrAccount","Please select procedures first."),isVerbose);
+				LogClaimError(createClaimDataWrapper,"Please select procedures first.",isVerbose);
 				createClaimDataWrapper.DoRefresh=false;
 				return createClaimDataWrapper;
 			}
@@ -94,7 +94,7 @@ namespace OpenDental {
 			createClaimDataWrapper.Fam=fam;
 			createClaimDataWrapper.ClaimData=AccountModules.GetCreateClaimData(pat,fam);
 			if(createClaimDataWrapper.ClaimData.ListPatPlans.Count==0) {
-				LogClaimError(createClaimDataWrapper,Lan.G("ContrAccount","Patient does not have insurance."),isVerbose);
+				LogClaimError(createClaimDataWrapper,"Patient does not have insurance.",isVerbose);
 				createClaimDataWrapper.DoRefresh=false;
 				return createClaimDataWrapper;
 			}
@@ -102,7 +102,7 @@ namespace OpenDental {
 			InsSub sub;
 			if(listCreateClaimItems.All(x => !x.IsSelected)) {
 				if(isSelectionRequired) {
-					LogClaimError(createClaimDataWrapper,Lan.G("ContrAccount","Please select procedures first."),isVerbose);
+					LogClaimError(createClaimDataWrapper,"Please select procedures first.",isVerbose);
 					createClaimDataWrapper.DoRefresh=false;
 					return createClaimDataWrapper;
 				}
@@ -137,8 +137,8 @@ namespace OpenDental {
 						|| (subSec!=null && Procedures.NeedsSent(proc.ProcNum,subSec.InsSubNum,createClaimDataWrapper.ClaimData.ListClaimProcs)))
 					{
 						if(CultureInfo.CurrentCulture.Name.EndsWith("CA") && countSelected==7) {//Canadian. en-CA or fr-CA
-							LogClaimError(createClaimDataWrapper,Lan.G("ContrAccount","Only the first 7 procedures will be automatically selected.  "
-								+"You will need to create another claim for the remaining procedures."),isVerbose);
+							LogClaimError(createClaimDataWrapper,"Only the first 7 procedures will be automatically selected.  "
+								+"You will need to create another claim for the remaining procedures.",isVerbose);
 							break;//only send 7.
 						}
 						countSelected++;
@@ -146,20 +146,20 @@ namespace OpenDental {
 					}
 				}
 				if(listCreateClaimItems.All(x => !x.IsSelected)) {//if still none selected
-					LogClaimError(createClaimDataWrapper,Lan.G("ContrAccount","Please select procedures first."),isVerbose);
+					LogClaimError(createClaimDataWrapper,"Please select procedures first.",isVerbose);
 					createClaimDataWrapper.DoRefresh=false;
 					return createClaimDataWrapper;
 				}
 			}
 			if(listCreateClaimItems.Any(x => x.IsSelected && x.ProcNum==0)) {
-				LogClaimError(createClaimDataWrapper,Lan.G("ContrAccount","You can only select procedures."),isVerbose);
+				LogClaimError(createClaimDataWrapper,"You can only select procedures.",isVerbose);
 				createClaimDataWrapper.DoRefresh=false;
 				return createClaimDataWrapper;
 			}
 			//At this point, all selected items are procedures.  In Canada, the selections may also include labs.
 			InsCanadaValidateProcs(createClaimDataWrapper,isVerbose);
 			if(createClaimDataWrapper.ListCreateClaimItems.All(x => !x.IsSelected)) {
-				LogClaimError(createClaimDataWrapper,Lan.G("ContrAccount","Please select procedures first."),isVerbose);
+				LogClaimError(createClaimDataWrapper,"Please select procedures first.",isVerbose);
 				createClaimDataWrapper.DoRefresh=false;
 				return createClaimDataWrapper;
 			}
@@ -177,7 +177,7 @@ namespace OpenDental {
 		{
 			createClaimDataWrapper.ErrorMessage="";
 			if(!Security.IsAuthorized(Permissions.ClaimView,true)) {
-				LogClaimError(createClaimDataWrapper,Lans.g("Security","Not authorized for")+"\r\n"+GroupPermissions.GetDesc(Permissions.ClaimView),isVerbose);
+				LogClaimError(createClaimDataWrapper,"Not authorized for"+"\r\n"+GroupPermissions.GetDesc(Permissions.ClaimView),isVerbose);
 				createClaimDataWrapper.DoRefresh=false;
 				return createClaimDataWrapper;
 			}
@@ -188,7 +188,7 @@ namespace OpenDental {
 				return createClaimDataWrapper;
 			}
 			if(createClaimDataWrapper.ClaimData.ListPatPlans.Count==0) {
-				LogClaimError(createClaimDataWrapper,Lan.G("ContrAccount","Patient does not have insurance."),isVerbose);
+				LogClaimError(createClaimDataWrapper,"Patient does not have insurance.",isVerbose);
 				createClaimDataWrapper.DoRefresh=false;
 				return createClaimDataWrapper;
 			}
@@ -307,8 +307,8 @@ namespace OpenDental {
 						procSelectedCount++;
 					}
 				}
-				string message=Lan.G("ContrAccount","Only the first 7 procedures will be selected.  "
-					+"You will need to create another claim for the remaining procedures.");
+				string message="Only the first 7 procedures will be selected.  "
+					+"You will need to create another claim for the remaining procedures.";
 				LogClaimError(createClaimDataWrapper,message,isVerbose);
 			}
 		}
@@ -383,8 +383,8 @@ namespace OpenDental {
 			switch(PIn.Enum<ClaimZeroDollarProcBehavior>(PrefC.GetInt(PrefName.ClaimZeroDollarProcBehavior))) {
 				case ClaimZeroDollarProcBehavior.Warn:
 					if(listBillInsProcs.Any(x => x.ProcFee.IsZero())
-						&& MessageBox.Show(Lan.G("ContrAccount","You are about to make a")+" "+(claimTypeDesc=="" ? "" : (claimTypeDesc+" "))
-							+Lan.G("ContrAccount","claim that will include a $0 procedure.  Continue?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK)
+						&& MessageBox.Show("You are about to make a"+" "+(claimTypeDesc=="" ? "" : (claimTypeDesc+" "))
+							+"claim that will include a $0 procedure.  Continue?","",MessageBoxButtons.OKCancel)!=DialogResult.OK)
 					{
 						//Nothing to log.  The user hit Cancel.
 						return new Claim();
@@ -433,16 +433,16 @@ namespace OpenDental {
 			if(listSecondaryClaims.Count==0) {
 				return;//No secondary claims for the procedures attached to the primary.
 			}
-			string msg=Lan.G("ContrAccount","There is at least one unsent secondary claim for the received procedures.");
+			string msg="There is at least one unsent secondary claim for the received procedures.";
 			msg+="\r\n";
-			msg+=Lan.G("ContrAccount","Would you like to:");
+			msg+="Would you like to:";
 			InputBox inputBox=new InputBox(new List<InputBoxParam>()
 			{
-				new InputBoxParam(InputBoxType.CheckBox,msg,Lan.G("ContrAccount","Change the claim status to 'Waiting to send'"),Size.Empty),
-				new InputBoxParam(InputBoxType.CheckBox,"",Lan.G("ContrAccount","Send secondary claim(s) now"),Size.Empty),
-				new InputBoxParam(InputBoxType.CheckBox,"",Lan.G("ContrAccount","Do nothing"),Size.Empty)
+				new InputBoxParam(InputBoxType.CheckBox,msg,"Change the claim status to 'Waiting to send'",Size.Empty),
+				new InputBoxParam(InputBoxType.CheckBox,"","Send secondary claim(s) now",Size.Empty),
+				new InputBoxParam(InputBoxType.CheckBox,"","Do nothing",Size.Empty)
 			});
-			inputBox.setTitle(Lan.G("ContrAccount","Outstanding secondary claims"));
+			inputBox.setTitle("Outstanding secondary claims");
 			inputBox.Size=new Size(450,200);
 			if(inputBox.ShowDialog()!=DialogResult.OK) {
 				return;
@@ -563,7 +563,7 @@ namespace OpenDental {
 					}
 				}
 				if(claimSendItem.HasIcd9) {
-					string msgText=Lan.G("ContrAccount","There are ICD-9 codes attached to a procedure.  Would you like to send the claim without the ICD-9 codes? ");
+					string msgText="There are ICD-9 codes attached to a procedure.  Would you like to send the claim without the ICD-9 codes? ";
 					if(MessageBox.Show(msgText,"",MessageBoxButtons.YesNo)!=DialogResult.Yes) {
 						return retVal;
 					}

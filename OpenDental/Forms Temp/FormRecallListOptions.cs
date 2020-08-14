@@ -10,7 +10,7 @@ namespace OpenDental {
 	public partial class FormRecallListOptions:ODForm {
 		public FormRecallListOptions() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {

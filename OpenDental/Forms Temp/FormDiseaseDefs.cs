@@ -64,7 +64,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 			if(listDiseaseDefNums!=null) {
 				_listDiseaseDefNumsColored=listDiseaseDefNums;
 			}
@@ -387,7 +387,7 @@ namespace OpenDental{
 			_listSecurityLogMsgs=new List<string>();
 			if(IsSelectionMode){
 				//Hide and change UI buttons
-				butClose.Text=Lan.G(this,"Cancel");
+				butClose.Text="Cancel";
 				butDown.Visible=false;
 				butUp.Visible=false;
 				labelAlphabetize.Visible=false;
@@ -432,16 +432,16 @@ namespace OpenDental{
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G(this,"ICD-9"),50);
+			col=new GridColumn("ICD-9",50);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"ICD-10"),50);
+			col=new GridColumn("ICD-10",50);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"SNOMED CT"),100);
+			col=new GridColumn("SNOMED CT",100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Description"),250);
+			col=new GridColumn("Description",250);
 			gridMain.ListGridColumns.Add(col);
 			if(!IsSelectionMode) {
-				col=new GridColumn(Lan.G(this,"Hidden"),50,HorizontalAlignment.Center);
+				col=new GridColumn("Hidden",50,HorizontalAlignment.Center);
 				gridMain.ListGridColumns.Add(col);
 			}
 			gridMain.ListGridRows.Clear();

@@ -20,7 +20,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormRpPHRawScreen(){
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>

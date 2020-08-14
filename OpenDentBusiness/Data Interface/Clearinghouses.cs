@@ -701,7 +701,7 @@ namespace OpenDentBusiness
 			{
 				if (!DentiCal.Launch(clearingHouse, 0, progress))
 				{
-					return Lans.g("FormClaimReports", "Error retrieving.") + "\r\n" + DentiCal.ErrorMessage;
+					return "Error retrieving." + "\r\n" + DentiCal.ErrorMessage;
 				}
 			}
 			else if (clearingHouse.CommBridge == EclaimsCommBridge.EDS)

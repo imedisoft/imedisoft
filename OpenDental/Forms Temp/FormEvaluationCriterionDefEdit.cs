@@ -13,7 +13,7 @@ namespace OpenDental {
 
 		public FormEvaluationCriterionDefEdit(EvaluationCriterionDef evalCritDef) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_evalCritDef=evalCritDef;
 		}
 

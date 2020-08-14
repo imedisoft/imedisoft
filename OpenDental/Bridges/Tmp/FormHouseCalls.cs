@@ -36,7 +36,7 @@ namespace OpenDental
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -220,14 +220,14 @@ namespace OpenDental
 				|| textDateTo.errorProvider1.GetError(textDateTo) != ""
 				)
 			{
-				MessageBox.Show(Lan.G(this, "Please fix data entry errors first."));
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			DateTime FromDate;
 			DateTime ToDate;
 			if (textDateFrom.Text == "")
 			{
-				MessageBox.Show(Lan.G(this, "From Date cannot be left blank."));
+				MessageBox.Show("From Date cannot be left blank.");
 				return;
 			}
 			FromDate = PIn.Date(textDateFrom.Text);

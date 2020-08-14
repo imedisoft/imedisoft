@@ -135,17 +135,17 @@ namespace OpenDentBusiness {
 								row["contactMethod"]=rawRow["Email"].ToString();
 							}
 							else {
-								row["contactMethod"]=Lans.g("FormRecallList","Hm:")+rawRow["HmPhone"].ToString();
+								row["contactMethod"]="Hm:"+rawRow["HmPhone"].ToString();
 							}
 							break;
 						case ContactMethod.HmPhone:
-							row["contactMethod"]=Lans.g("FormRecallList","Hm:")+rawRow["HmPhone"].ToString();
+							row["contactMethod"]="Hm:"+rawRow["HmPhone"].ToString();
 							break;
 						case ContactMethod.WkPhone:
-							row["contactMethod"]=Lans.g("FormRecallList","Wk:")+rawRow["WkPhone"].ToString();
+							row["contactMethod"]="Wk:"+rawRow["WkPhone"].ToString();
 							break;
 						case ContactMethod.WirelessPh:
-							row["contactMethod"]=Lans.g("FormRecallList","Cell:")+rawRow["WirelessPhone"].ToString();
+							row["contactMethod"]="Cell:"+rawRow["WirelessPhone"].ToString();
 							break;
 						case ContactMethod.Email:
 							row["contactMethod"]=rawRow["Email"].ToString();
@@ -153,7 +153,7 @@ namespace OpenDentBusiness {
 						case ContactMethod.Mail:
 						case ContactMethod.DoNotCall:
 						case ContactMethod.SeeNotes:
-							row["contactMethod"]=Lans.g("enumContactMethod",contmeth.ToString());
+							row["contactMethod"]=contmeth.ToString();
 							break;
 					}
 					row["address"]=rawRow["Address"].ToString()+(string.IsNullOrEmpty(rawRow["Address2"].ToString())?"":("\r\n"+rawRow["Address2"].ToString()));

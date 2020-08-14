@@ -23,7 +23,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -115,14 +115,14 @@ namespace OpenDental{
 
 		private void butReformat_Click(object sender, System.EventArgs e) {
 			if(CultureInfo.CurrentCulture.Name!="en-US"){
-				if(MessageBox.Show(Lan.G(this,"Are you sure?  The phone number formatting is only meant for the United States?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK){
+				if(MessageBox.Show("Are you sure?  The phone number formatting is only meant for the United States?","",MessageBoxButtons.OKCancel)!=DialogResult.OK){
 					return;
 				}
 			}
 			Patients.ReformatAllPhoneNumbers();
 			//refresh carriers:
 			DataValid.SetInvalid(InvalidType.Carriers);
-			MessageBox.Show(Lan.G(this,"Telephone numbers reformatted."));
+			MessageBox.Show("Telephone numbers reformatted.");
 			SecurityLogs.MakeLogEntry(Permissions.Setup,0,"Telephone");
 		}
 			

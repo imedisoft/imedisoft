@@ -235,7 +235,7 @@ namespace OpenDentBusiness {
 				if(hasClinicsEnabled) {//Using clinics
 					List<Clinic> listClinics=ReportsComplex.RunFuncOnReportServer(() => Clinics.GetClinicsNoCache());
 					string clinicAbbr=Clinics.GetAbbr(PIn.Long(raw.Rows[i]["ClinicNum"].ToString()),listClinics);
-					clinicAbbr=(clinicAbbr=="")?Lans.g("FormRpPayPlans","Unassigned"):clinicAbbr;
+					clinicAbbr=(clinicAbbr=="")?"Unassigned":clinicAbbr;
 					if(!String.IsNullOrEmpty(clinicAbbrOld) && clinicAbbr!=clinicAbbrOld) {//Reset all the total values
 						DataRow rowTot=tableTotals.NewRow();
 						rowTot["clinicName"]=clinicAbbrOld;

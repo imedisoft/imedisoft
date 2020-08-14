@@ -284,7 +284,7 @@ namespace OpenDentBusiness
 				row["PayNum"] = 0;
 				row["PayPlanNum"] = 0;
 				row["PayPlanChargeNum"] = rawCharge.Rows[i]["PayPlanChargeNum"].ToString();
-				row["ProcCode"] = Lans.g("AccountModule", "PPcharge");
+				row["ProcCode"] = "PPcharge";
 				row["ProcNum"] = "0";
 				row["procsOnObj"] = "";
 				row["prov"] = Providers.GetAbbr(PIn.Long(rawCharge.Rows[i]["ProvNum"].ToString()));
@@ -378,14 +378,14 @@ namespace OpenDentBusiness
 				}
 				if (payPlanPlanNum != 0 && rawPay.Rows[i]["ClaimPaymentNum"].ToString() == "0")
 				{//attached to claim but no check (claimpayment) created
-					row["description"] = Lans.g("AccountModule", "No Insurance Check Created");
+					row["description"] = "No Insurance Check Created";
 				}
 				else
 				{
 					row["description"] += " " + payamt.ToString("c");
 					if (payamt != amt)
 					{
-						row["description"] += " " + Lans.g("ContrAccount", "(split)");
+						row["description"] += " " + "(split)";
 					}
 				}
 				//we might use DatePay/DateCP here to add to description
@@ -404,11 +404,11 @@ namespace OpenDentBusiness
 				row["PayPlanChargeNum"] = "0";
 				if (payPlanPlanNum == 0)
 				{
-					row["ProcCode"] = Lans.g("AccountModule", "Pay");
+					row["ProcCode"] = "Pay";
 				}
 				else
 				{
-					row["ProcCode"] = Lans.g("AccountModule", "InsPay");
+					row["ProcCode"] = "InsPay";
 				}
 				row["ProcNum"] = "0";
 				row["procsOnObj"] = "";
@@ -520,7 +520,7 @@ namespace OpenDentBusiness
 				row["mode"] = "";
 				if (rowCur["Mode_"].ToString() != "0")
 				{//anything except none
-					row["mode"] = Lans.g("enumCommItemMode", ((CommItemMode)PIn.Long(rowCur["Mode_"].ToString())).ToString());
+					row["mode"] = ((CommItemMode)PIn.Long(rowCur["Mode_"].ToString())).ToString();
 				}
 				row["Note"] = rowCur["Note"].ToString();
 				string patName;
@@ -560,11 +560,11 @@ namespace OpenDentBusiness
 				row["CommlogNum"] = "0";
 				row["EmailMessageNum"] = rowCur["EmailMessageNum"].ToString();
 				row["FormPatNum"] = "0";
-				row["mode"] = Lans.g("enumCommItemMode", CommItemMode.Email.ToString());
+				row["mode"] = CommItemMode.Email.ToString();
 				txt = "";
 				if (rowCur["SentOrReceived"].ToString() == "0")
 				{
-					txt = "(" + Lans.g("AccountModule", "Unsent") + ") ";
+					txt = "(" + "Unsent" + ") ";
 				}
 				row["Note"] = txt + rowCur["Subject"].ToString();
 				string patName;
@@ -596,7 +596,7 @@ namespace OpenDentBusiness
 					row["commTime"] = dateT.ToString("h:mm") + dateT.ToString("%t").ToLower();
 				}
 				row["CommlogNum"] = "0";
-				row["commType"] = Lans.g("AccountModule", "Questionnaire");
+				row["commType"] = "Questionnaire";
 				row["EmailMessageNum"] = "0";
 				row["FormPatNum"] = rowCur["FormPatNum"].ToString();
 				row["mode"] = "";
@@ -628,7 +628,7 @@ namespace OpenDentBusiness
 					row["commTime"] = dateT.ToString("h:mm") + dateT.ToString("%t").ToLower();
 				}
 				row["CommlogNum"] = "0";
-				row["commType"] = Lans.g("AccountModule", "Sheet");//
+				row["commType"] = "Sheet";//
 				row["EmailMessageNum"] = "0";
 				row["FormPatNum"] = "0";
 				row["mode"] = "";
@@ -758,7 +758,7 @@ namespace OpenDentBusiness
 				{
 					bal = 0;
 					patNumPrev = row["PatNum"].ToString();
-					if (row["description"].ToString() == Lans.g("AccountModule", "Balance Forward"))
+					if (row["description"].ToString() == "Balance Forward")
 					{
 						bal = (decimal)row["balanceDouble"];
 					}
@@ -980,21 +980,21 @@ namespace OpenDentBusiness
 				row["date"] = dateT.ToString(Lans.GetShortDateTimeFormat());
 				row["dateTimeSort"] = PIn.Date(rawClaimPayRow["SecDateTEdit"].ToString());//MAX SecDateTEdit will be used for sorting if RandomKeys is enabled
 				procdate = PIn.Date(rawClaimPayRow["ProcDate"].ToString());
-				row["description"] = Lans.g("AccountModule", "Insurance Payment for Claim") + " " + procdate.ToShortDateString();
+				row["description"] = "Insurance Payment for Claim" + " " + procdate.ToShortDateString();
 				if (rawClaimPayRow["PayPlanNum"].ToString() != "0")
 				{
-					row["description"] += "\r\n(" + Lans.g("AccountModule", "Payments Tracked in Payment Plan") + ")";
+					row["description"] += "\r\n(" + "Payments Tracked in Payment Plan" + ")";
 				}
 				if (rawClaimPayRow["PayPlanNum"].ToString() != "0" || writeoff != 0)
 				{
-					row["description"] += "\r\n" + Lans.g("AccountModule", "Payment") + ": " + amt.ToString("c");
+					row["description"] += "\r\n" + "Payment" + ": " + amt.ToString("c");
 				}
 				if (writeoff != 0)
 				{
 					string writeoffDescript = Prefs.GetString(PrefName.InsWriteoffDescript);
 					if (writeoffDescript == "")
 					{
-						writeoffDescript = Lans.g("AccountModule", "Writeoff");
+						writeoffDescript = "Writeoff";
 					}
 					row["description"] += "\r\n" + writeoffDescript + ": " + writeoff.ToString("c");
 				}
@@ -1002,7 +1002,7 @@ namespace OpenDentBusiness
 				{
 					//Not all claim payments have been finalized and are not yet attached to claim payments (checks).
 					//Indicate to the user that they need to finalize this payment before reports will be accurate.
-					row["description"] += "\r\n" + Lans.g("AccountModule", "PAYMENT NEEDS TO BE FINALIZED");
+					row["description"] += "\r\n" + "PAYMENT NEEDS TO BE FINALIZED";
 				}
 				row["IsTransfer"] = PIn.Bool(rawClaimPayRow["IsTransfer"].ToString());
 				long patNumCur = PIn.Long(rawClaimPayRow["PatNum"].ToString());
@@ -1011,7 +1011,7 @@ namespace OpenDentBusiness
 				row["PayNum"] = 0;
 				row["PayPlanNum"] = 0;
 				row["PayPlanChargeNum"] = "0";
-				row["ProcCode"] = Lans.g("AccountModule", "InsPay");
+				row["ProcCode"] = "InsPay";
 				row["ProcNum"] = "0";
 				row["ProcNumLab"] = "";
 				row["procsOnObj"] = "";
@@ -1140,7 +1140,7 @@ namespace OpenDentBusiness
 				row["description"] = Procedures.ConvertProcToString(codeNum, surf, toothNum, true) + " ";
 				if (rawProcRow["MedicalCode"].ToString() != "")
 				{
-					row["description"] += Lans.g("ContrAccount", "(medical)") + " ";
+					row["description"] += "(medical)" + " ";
 				}
 				string toothRange = rawProcRow["ToothRange"].ToString();
 				if (toothRange != "")
@@ -1150,7 +1150,7 @@ namespace OpenDentBusiness
 				isNoBill = (rawProcRow["noBillIns_"].ToString() != "" && rawProcRow["noBillIns_"].ToString() != "0");
 				if (isNoBill)
 				{
-					row["description"] += " " + Lans.g("ContrAccount", "(No Bill Ins)");
+					row["description"] += " " + "(No Bill Ins)";
 				}
 				bool isShowUnsent = (!isNoBill && rawProcRow["unsent_"].ToString() == "0");//no claim attached and marked to bill insurance
 				string strProcNumLab = rawProcRow["ProcNumLab"].ToString();
@@ -1162,11 +1162,11 @@ namespace OpenDentBusiness
 				long procNum = PIn.Long(rawProcRow["ProcNum"].ToString());
 				if (ProcMultiVisits.IsProcInProcess(procNum))
 				{
-					row["description"] += " " + Lans.g("ContrAccount", "(In Process)");
+					row["description"] += " " + "(In Process)";
 				}
 				else if (isShowUnsent)
 				{
-					row["description"] += " " + Lans.g("ContrAccount", "(unsent)");
+					row["description"] += " " + "(unsent)";
 				}
 				insPayAmt = PIn.Decimal(rawProcRow["insPayAmt_"].ToString());
 				insPayEst = PIn.Decimal(rawProcRow["insPayEst_"].ToString());
@@ -1177,7 +1177,7 @@ namespace OpenDentBusiness
 				extraDetail = "";
 				if (patPay > 0)
 				{
-					extraDetail += Lans.g("AccountModule", "Pat Paid: ") + patPay.ToString("c");
+					extraDetail += "Pat Paid: " + patPay.ToString("c");
 				}
 				if (adjAmt != 0)
 				{
@@ -1185,7 +1185,7 @@ namespace OpenDentBusiness
 					{
 						extraDetail += ", ";
 					}
-					extraDetail += Lans.g("AccountModule", "Adj: ") + adjAmt.ToString("c");
+					extraDetail += "Adj: " + adjAmt.ToString("c");
 				}
 				if (insPayAmt > 0 || writeOff > 0)
 				{
@@ -1193,13 +1193,13 @@ namespace OpenDentBusiness
 					{
 						extraDetail += ", ";
 					}
-					extraDetail += Lans.g("AccountModule", "Ins Paid: ") + insPayAmt.ToString("c");
+					extraDetail += "Ins Paid: " + insPayAmt.ToString("c");
 					if (writeOff > 0)
 					{
 						string writeoffDescript = Prefs.GetString(PrefName.InsWriteoffDescript);
 						if (writeoffDescript == "")
 						{
-							writeoffDescript = Lans.g("AccountModule", "Writeoff");
+							writeoffDescript = "Writeoff";
 						}
 						extraDetail += ", " + writeoffDescript + ": " + writeOff.ToString("c");
 					}
@@ -1210,7 +1210,7 @@ namespace OpenDentBusiness
 					{
 						extraDetail += ", ";
 					}
-					extraDetail += Lans.g("AccountModule", "Ins Est: ") + insPayEst.ToString("c");
+					extraDetail += "Ins Est: " + insPayEst.ToString("c");
 				}
 				if (patPort > 0 && writeOffCap == 0)
 				{//if there is a cap writeoff, showing a patient portion would calculate wrong.
@@ -1218,7 +1218,7 @@ namespace OpenDentBusiness
 					{
 						extraDetail += ", ";
 					}
-					extraDetail += Lans.g("AccountModule", "Pat Port: ") + patPort.ToString("c");
+					extraDetail += "Pat Port: " + patPort.ToString("c");
 				}
 				if (showProcBreakdown)
 				{
@@ -1339,7 +1339,7 @@ namespace OpenDentBusiness
 				row["PayNum"] = 0;
 				row["PayPlanNum"] = 0;
 				row["PayPlanChargeNum"] = "0";
-				row["ProcCode"] = Lans.g("AccountModule", "Adjust");
+				row["ProcCode"] = "Adjust";
 				row["ProcNum"] = "0";
 				row["ProcNumLab"] = "";
 				row["procsOnObj"] = rawAdj.Rows[i]["ProcNum"].ToString();
@@ -1530,7 +1530,7 @@ namespace OpenDentBusiness
 					}
 					else
 					{
-						strDescript = " " + Lans.g("ContrAccount", "(Attached to payment plan)"); //in v2, add the rows and show that they are attached to a payplan.
+						strDescript = " " + "(Attached to payment plan)"; //in v2, add the rows and show that they are attached to a payplan.
 					}
 				}
 				double hiddenPaySplitAmountTotal = listPaySplits.Where(x =>
@@ -1565,7 +1565,7 @@ namespace OpenDentBusiness
 				row["description"] += " " + payamt.ToString("c");
 				if (rawPay.Rows[i]["PatNum"].ToString() != rawPay.Rows[i]["patNumPayment_"].ToString())
 				{
-					row["description"] += " (" + Lans.g("ContrAccount", "Paid by ")
+					row["description"] += " (" + "Paid by "
 						+ fam.GetNameInFamFirstOrPreferredOrLast(PIn.Long(rawPay.Rows[i]["patNumPayment_"].ToString())) + ")";
 				}
 				if (payamt != amt)
@@ -1576,11 +1576,11 @@ namespace OpenDentBusiness
 					//Payment query 2 rows represent payments that were split to another family.
 					if (payNum.In(listPaySplits.Select(x => x.PayNum)))
 					{
-						row["description"] += " " + Lans.g("ContrAccount", "(split)");
+						row["description"] += " " + "(split)";
 					}
 					else
 					{//That is not in the list of paysplits to this family.
-						row["description"] += " " + Lans.g("ContrAccount", "(split to another family)");
+						row["description"] += " " + "(split to another family)";
 					}
 				}
 				if (rawPay.Rows[i]["UnearnedType"].ToString() != "0")
@@ -1602,7 +1602,7 @@ namespace OpenDentBusiness
 				}
 				if (Prefs.GetBool(PrefName.AccountShowPaymentNums))
 				{
-					row["description"] += "\r\n" + Lans.g("AccountModule", "Payment Number: ") + rawPay.Rows[i]["PayNum"].ToString();
+					row["description"] += "\r\n" + "Payment Number: " + rawPay.Rows[i]["PayNum"].ToString();
 				}
 				row["description"] += strDescript;
 				long patNumCur = PIn.Long(rawPay.Rows[i]["PatNum"].ToString());
@@ -1625,11 +1625,11 @@ namespace OpenDentBusiness
 				row["PayPlanChargeNum"] = "0";
 				if (rawPay.Rows[i]["PayType"].ToString() == "0")
 				{//if a txfr
-					row["ProcCode"] = Lans.g("AccountModule", "Txfr");
+					row["ProcCode"] = "Txfr";
 				}
 				else
 				{
-					row["ProcCode"] = Lans.g("AccountModule", "Pay");
+					row["ProcCode"] = "Pay";
 				}
 				row["ProcNum"] = "0";
 				row["ProcNumLab"] = "";
@@ -1730,14 +1730,14 @@ namespace OpenDentBusiness
 				row["dateTimeSort"] = PIn.Date(rawClaim.Rows[i]["SecDateTEdit"].ToString());//MAX SecDateTEdit will be used for sorting if RandomKeys is enabled
 				if (rawClaim.Rows[i]["ClaimType"].ToString() == "P")
 				{
-					row["description"] = Lans.g("ContrAccount", "Pri") + " ";
+					row["description"] = "Pri" + " ";
 				}
 				else if (rawClaim.Rows[i]["ClaimType"].ToString() == "S")
 				{
-					row["description"] = Lans.g("ContrAccount", "Sec") + " ";
+					row["description"] = "Sec" + " ";
 				}
 				//else if(rawClaim.Rows[i]["ClaimType"].ToString()=="PreAuth"){
-				//	row["description"]=Lans.g("ContrAccount","PreAuth")+" ";
+				//	row["description"]="PreAuth"+" ";
 				//}
 				else if (rawClaim.Rows[i]["ClaimType"].ToString() == "Other")
 				{
@@ -1745,19 +1745,19 @@ namespace OpenDentBusiness
 				}
 				else if (rawClaim.Rows[i]["ClaimType"].ToString() == "Cap")
 				{
-					row["description"] = Lans.g("ContrAccount", "Cap") + " ";
+					row["description"] = "Cap" + " ";
 				}
 				amt = PIn.Decimal(rawClaim.Rows[i]["ClaimFee"].ToString());
-				row["description"] += Lans.g("ContrAccount", "Claim") + " " + amt.ToString("c") + " "
+				row["description"] += "Claim" + " " + amt.ToString("c") + " "
 					+ rawClaim.Rows[i]["CarrierName"].ToString();
 				daterec = PIn.Date(rawClaim.Rows[i]["DateReceived"].ToString());
 				claimStatus = rawClaim.Rows[i]["ClaimStatus"].ToString();
 				if (claimStatus == "R")
 				{
-					row["description"] += "\r\n" + Lans.g("ContrAccount", "Received") + " ";
+					row["description"] += "\r\n" + "Received" + " ";
 					if (daterec.Year < 1880)
 					{
-						row["description"] += Lans.g("ContrAccount", "(no date)");//although I don't think UI allows this
+						row["description"] += "(no date)";//although I don't think UI allows this
 					}
 					else
 					{
@@ -1767,19 +1767,19 @@ namespace OpenDentBusiness
 				}
 				else if (claimStatus == "U")
 				{
-					row["description"] += "\r\n" + Lans.g("ContrAccount", "Unsent");
+					row["description"] += "\r\n" + "Unsent";
 				}
 				else if (claimStatus == "H")
 				{
-					row["description"] += "\r\n" + Lans.g("ContrAccount", "Hold until Pri received");
+					row["description"] += "\r\n" + "Hold until Pri received";
 				}
 				else if (claimStatus == "W")
 				{
-					row["description"] += "\r\n" + Lans.g("ContrAccount", "Waiting to Send");
+					row["description"] += "\r\n" + "Waiting to Send";
 				}
 				else if (claimStatus == "S")
 				{
-					row["description"] += "\r\n" + Lans.g("ContrAccount", "Sent");
+					row["description"] += "\r\n" + "Sent";
 				}
 				decimal claimLabFeeTotalAmt = 0;
 				//For Canada, add lab fee amounts into total claim amount.
@@ -1805,7 +1805,7 @@ namespace OpenDentBusiness
 				}
 				if (claimLabFeeTotalAmt > 0)
 				{
-					row["description"] += "\r\n" + Lans.g("ContrAccount", "Lab Fees") + " " + claimLabFeeTotalAmt.ToString("c");
+					row["description"] += "\r\n" + "Lab Fees" + " " + claimLabFeeTotalAmt.ToString("c");
 				}
 				procAmt = PIn.Decimal(rawClaim.Rows[i]["procAmt_"].ToString());
 				insest = PIn.Decimal(rawClaim.Rows[i]["InsPayEst"].ToString());
@@ -1818,22 +1818,22 @@ namespace OpenDentBusiness
 				{
 					if (amtpaid != 0 && ((insest - amtpaid) >= 0))
 					{//show additional info on resubmits
-						row["description"] += "\r\n" + Lans.g("ContrAccount", "Remaining Est. Payment Pending:") + " " + (insest - amtpaid).ToString("c");
+						row["description"] += "\r\n" + "Remaining Est. Payment Pending:" + " " + (insest - amtpaid).ToString("c");
 					}
 					else
 					{
-						row["description"] += "\r\n" + Lans.g("ContrAccount", "Estimated Payment Pending:") + " " + insest.ToString("c");
+						row["description"] += "\r\n" + "Estimated Payment Pending:" + " " + insest.ToString("c");
 					}
 				}
 				if (rawClaim.Rows[i]["ClaimType"].ToString() != "Cap")
 				{
 					if (amtpaid != 0)
 					{
-						row["description"] += "\r\n" + Lans.g("ContrAccount", "Payment:") + " " + amtpaid.ToString("c");
+						row["description"] += "\r\n" + "Payment:" + " " + amtpaid.ToString("c");
 					}
 					else if (amtpaid == 0 && (claimStatus == "R"))
 					{
-						row["description"] += "\r\n" + Lans.g("ContrAccount", "NO PAYMENT");
+						row["description"] += "\r\n" + "NO PAYMENT";
 					}
 				}
 				if (writeoff != 0)
@@ -1841,13 +1841,13 @@ namespace OpenDentBusiness
 					string writeoffDesctipt = Prefs.GetString(PrefName.InsWriteoffDescript);
 					if (writeoffDesctipt == "")
 					{
-						writeoffDesctipt = Lans.g("ContrAccount", "Writeoff");
+						writeoffDesctipt = "Writeoff";
 					}
 					row["description"] += "\r\n" + writeoffDesctipt + ": " + writeoff.ToString("c");
 				}
 				if (deductible != 0)
 				{
-					row["description"] += "\r\n" + Lans.g("ContrAccount", "Deductible Applied:") + " " + deductible.ToString("c");
+					row["description"] += "\r\n" + "Deductible Applied:" + " " + deductible.ToString("c");
 				}
 				if (!Prefs.GetBool(PrefName.BalancesDontSubtractIns)
 					&& (claimStatus == "W" || claimStatus == "S")
@@ -1858,7 +1858,7 @@ namespace OpenDentBusiness
 					{
 						patport = 0;
 					}
-					row["description"] += "\r\n" + Lans.g("ContrAccount", "Est. Patient Portion:") + " " + patport.ToString("c");
+					row["description"] += "\r\n" + "Est. Patient Portion:" + " " + patport.ToString("c");
 				}
 				if (rawClaim.Rows[i]["ReasonUnderPaid"].ToString() != "")
 				{
@@ -1871,7 +1871,7 @@ namespace OpenDentBusiness
 				row["PayNum"] = 0;
 				row["PayPlanNum"] = 0;
 				row["PayPlanChargeNum"] = "0";
-				row["ProcCode"] = Lans.g("AccountModule", "Claim");
+				row["ProcCode"] = "Claim";
 				row["ProcNum"] = "0";
 				row["ProcNumLab"] = "";
 				row["procsOnObj"] = rawClaim.Rows[i]["ProcNums_"];
@@ -1937,24 +1937,24 @@ namespace OpenDentBusiness
 				row["dateTimeSort"] = PIn.Date(rowCur["DateTStamp"].ToString());//DateTStamp will be used for sorting if RandomKeys is enabled
 				if (rowCur["IsInvoice"].ToString() == "0")
 				{//not an invoice
-					row["description"] += Lans.g("ContrAccount", "Statement");
+					row["description"] += "Statement";
 				}
 				else
 				{//Must be invoice
-					row["description"] += Lans.g("ContrAccount", "Invoice") + " #" + rowCur["StatementNum"].ToString();
+					row["description"] += "Invoice" + " #" + rowCur["StatementNum"].ToString();
 				}
 				_mode = (StatementMode)PIn.Long(rowCur["Mode_"].ToString());
-				row["description"] += "-" + Lans.g("enumStatementMode", _mode.ToString());
+				row["description"] += "-" + _mode.ToString();
 				if (rowCur["IsSent"].ToString() == "0")
 				{
-					row["description"] += " " + Lans.g("ContrAccount", "(unsent)");
+					row["description"] += " " + "(unsent)";
 				}
 				row["patient"] = GetPatName(patNumCur, fam, false);
 				row["PatNum"] = patNumCur;
 				row["PayNum"] = 0;
 				row["PayPlanNum"] = 0;
 				row["PayPlanChargeNum"] = "0";
-				row["ProcCode"] = Lans.g("AccountModule", "Stmt");
+				row["ProcCode"] = "Stmt";
 				row["ProcNum"] = "0";
 				row["ProcNumLab"] = "";
 				row["procsOnObj"] = "";
@@ -2024,11 +2024,11 @@ namespace OpenDentBusiness
 					row["dateTimeSort"] = PIn.Date(rawPayPlan.Rows[i]["SecDateTEntry"].ToString());//MAX SecDateTEntry will be used for sorting if RandomKeys is enabled
 					if (rawPayPlan.Rows[i]["PlanNum"].ToString() == "0")
 					{
-						row["description"] = Lans.g("ContrAccount", "Payment Plan");
+						row["description"] = "Payment Plan";
 					}
 					else
 					{
-						row["description"] = Lans.g("ContrAccount", "Expected payments from ")
+						row["description"] = "Expected payments from "
 							+ rawPayPlan.Rows[i]["CarrierName"].ToString();
 					}
 					//row["extraDetail"]="";
@@ -2038,7 +2038,7 @@ namespace OpenDentBusiness
 					row["PayNum"] = 0;
 					row["PayPlanNum"] = PIn.Long(rawPayPlan.Rows[i]["PayPlanNum"].ToString());
 					row["PayPlanChargeNum"] = "0";
-					row["ProcCode"] = Lans.g("AccountModule", "PayPln");
+					row["ProcCode"] = "PayPln";
 					row["ProcNum"] = "0";
 					row["ProcNumLab"] = "";
 					row["procsOnObj"] = "";
@@ -2146,7 +2146,7 @@ namespace OpenDentBusiness
 					}
 					else
 					{//an insurance payplan
-						row["description"] = Lans.g("ContrAccount", "Expected payments from ")
+						row["description"] = "Expected payments from "
 							+ rawPayPlan2.Rows[i]["CarrierName"].ToString();
 					}
 					//row["extraDetail"]="";
@@ -2165,7 +2165,7 @@ namespace OpenDentBusiness
 					row["PayNum"] = 0;
 					row["PayPlanNum"] = PIn.Long(rawPayPlan2.Rows[i]["PayPlanNum"].ToString());
 					row["PayPlanChargeNum"] = rawPayPlan2.Rows[i]["PayPlanChargeNum"].ToString();
-					row["ProcCode"] = Lans.g("AccountModule", "PayPln:") + " " + chargetype;
+					row["ProcCode"] = "PayPln:" + " " + chargetype;
 					row["ProcNum"] = "0";
 					row["ProcNumLab"] = "";
 					row["procsOnObj"] = rawPayPlan2.Rows[i]["ProcNum"].ToString();
@@ -2228,7 +2228,7 @@ namespace OpenDentBusiness
 					}
 					else
 					{//an insurance payplan
-						row["description"] = Lans.g("ContrAccount", "Expected payments from ")
+						row["description"] = "Expected payments from "
 							+ rawPayPlan3.Rows[i]["CarrierName"].ToString();
 					}
 					//row["extraDetail"]="";
@@ -2247,7 +2247,7 @@ namespace OpenDentBusiness
 					row["PayNum"] = 0;
 					row["PayPlanNum"] = PIn.Long(rawPayPlan3.Rows[i]["PayPlanNum"].ToString());
 					row["PayPlanChargeNum"] = rawPayPlan3.Rows[i]["PayPlanChargeNum"].ToString();
-					row["ProcCode"] = Lans.g("AccountModule", "PayPln:") + " " + PIn.Enum<PayPlanChargeType>(rawPayPlan3.Rows[i]["ChargeType"].ToString());
+					row["ProcCode"] = "PayPln:" + " " + PIn.Enum<PayPlanChargeType>(rawPayPlan3.Rows[i]["ChargeType"].ToString());
 					row["ProcNum"] = "0";
 					row["ProcNumLab"] = "";
 					row["procsOnObj"] = rawPayPlan3.Rows[i]["ProcNum"].ToString();
@@ -2384,7 +2384,7 @@ namespace OpenDentBusiness
 					row["PayNum"] = 0;
 					row["PayPlanNum"] = PIn.Long(payplanLinks.Rows[i]["PayPlanNum"].ToString());
 					row["PayPlanChargeNum"] = 0;//may need to make a new functional column here?
-					row["ProcCode"] = Lans.g("AccountModule", "PayPln:") + " Credit";
+					row["ProcCode"] = "PayPln:" + " Credit";
 					row["ProcNum"] = "0";
 					row["ProcNumLab"] = "";
 					row["procsOnObj"] = procNum;
@@ -2670,7 +2670,7 @@ namespace OpenDentBusiness
 			row["DateTime"] = DateTime.MinValue;
 			row["date"] = "";
 			row["dateTimeSort"] = DateTime.MinValue;
-			row["description"] = Lans.g("AccountModule", "Balance Forward");
+			row["description"] = "Balance Forward";
 			row["patient"] = "";
 			row["PatNum"] = patNum;
 			row["PayNum"] = 0;
@@ -2923,13 +2923,14 @@ namespace OpenDentBusiness
 				row["DateTime"] = DateTime.MinValue;
 				row["date"] = "";
 				row["dateTimeSort"] = PIn.Date(rawPayPlan.Rows[i]["SecDateTEntry"].ToString());//SecDateTEntry will be used for sorting if RandomKeys is enabled
-				string description = Lans.g("AccountModule", descriptionPayPlanType) + "\r\n"
-					+ Lans.g("AccountModule", descriptionPrincipal) + " " + princ.ToString("c") + "\r\n";
+				string description = 
+					descriptionPayPlanType + "\r\n" + 
+					descriptionPrincipal + " " + princ.ToString("c") + "\r\n";
 				if (interest != 0)
 				{
-					description += Lans.g("AccountModule", descriptionInterest) + " " + interest.ToString("c") + "\r\n";
+					description += descriptionInterest + " " + interest.ToString("c") + "\r\n";
 				}
-				description += Lans.g("AccountModule", "Amount Remaining:") + " " + bal.ToString("c");
+				description += "Amount Remaining:" + " " + bal.ToString("c");
 				row["description"] = description;
 				if (rawPayPlan.Rows[i]["PlanNum"].ToString() != "0")
 				{
@@ -3075,7 +3076,7 @@ namespace OpenDentBusiness
 			row = table.NewRow();
 			row["balanceDouble"] = balfam;
 			row["balance"] = balfam.ToString("f");
-			row["name"] = Lans.g("AccountModule", "Entire Family");
+			row["name"] = "Entire Family";
 			row["PatNum"] = fam.ListPats[0].PatNum.ToString();
 			rowspat.Add(row);
 			for (int i = 0; i < rowspat.Count; i++)
@@ -3500,17 +3501,17 @@ namespace OpenDentBusiness
 			List<Procedure> listProcs = Procedures.SortListByTreatPlanPriority(listSelectedProcs).ToList();
 			if (listProcs.Count == 0)
 			{
-				claimError = claimError.AppendLine(Lans.g("ContrAccount", "Not allowed to create a claim with no procedures."));
+				claimError = claimError.AppendLine("Not allowed to create a claim with no procedures.");
 				return new ODTuple<bool, Claim, string>(false, new Claim(), claimError);
 			}
 			if ((claimType == "P" || claimType == "S") && Procedures.GetUniqueDiagnosticCodes(listProcs, false).Count > 4)
 			{
-				claimError = claimError.AppendLine(Lans.g("ContrAccount", "Claim has more than 4 unique diagnosis codes.  Create multiple claims instead."));
+				claimError = claimError.AppendLine("Claim has more than 4 unique diagnosis codes.  Create multiple claims instead.");
 				return new ODTuple<bool, Claim, string>(false, new Claim(), claimError);
 			}
 			if (Procedures.GetUniqueDiagnosticCodes(listProcs, true).Count > 12)
 			{
-				claimError = claimError.AppendLine(Lans.g("ContrAccount", "Claim has more than 12 unique diagnosis codes.  Create multiple claims instead."));
+				claimError = claimError.AppendLine("Claim has more than 12 unique diagnosis codes.  Create multiple claims instead.");
 				return new ODTuple<bool, Claim, string>(false, new Claim(), claimError);
 			}
 			for (int i = 0; i < listProcs.Count; i++)
@@ -3518,7 +3519,7 @@ namespace OpenDentBusiness
 				proc = listProcs[i];
 				if (Procedures.NoBillIns(proc, ClaimProcList, PlanCur.PlanNum))
 				{
-					claimError = claimError.AppendLine(Lans.g("ContrAccount", "Not allowed to send procedures to insurance that are marked 'Do not bill to ins'."));
+					claimError = claimError.AppendLine("Not allowed to send procedures to insurance that are marked 'Do not bill to ins'.");
 					return new ODTuple<bool, Claim, string>(false, new Claim(), claimError);
 				}
 			}
@@ -3527,7 +3528,7 @@ namespace OpenDentBusiness
 				proc = listProcs[i];
 				if (Procedures.IsAlreadyAttachedToClaim(proc, ClaimProcList, SubCur.InsSubNum))
 				{
-					claimError = claimError.AppendLine(Lans.g("ContrAccount", "Not allowed to send a procedure to the same insurance company twice."));
+					claimError = claimError.AppendLine("Not allowed to send a procedure to the same insurance company twice.");
 					return new ODTuple<bool, Claim, string>(false, new Claim(), claimError);
 				}
 			}
@@ -3539,12 +3540,12 @@ namespace OpenDentBusiness
 				proc = listProcs[i];
 				if (PrefC.HasClinicsEnabled && clinicNum != proc.ClinicNum)
 				{
-					claimError = claimError.AppendLine(Lans.g("ContrAccount", "All procedures do not have the same clinic."));
+					claimError = claimError.AppendLine("All procedures do not have the same clinic.");
 					return new ODTuple<bool, Claim, string>(false, new Claim(), claimError);
 				}
 				if (!Prefs.GetBool(PrefName.EasyHidePublicHealth) && proc.PlaceService != placeService)
 				{
-					claimError = claimError.AppendLine(Lans.g("ContrAccount", "All procedures do not have the same place of service."));
+					claimError = claimError.AppendLine("All procedures do not have the same place of service.");
 					return new ODTuple<bool, Claim, string>(false, new Claim(), claimError);
 				}
 			}
@@ -3559,7 +3560,7 @@ namespace OpenDentBusiness
 			}
 			if (listInProcessProcs.Count > 0)
 			{
-				claimError = claimError.AppendLine(Lans.g("ContrAccount", "Not allowed to send procedures which are currently in process.\r\nProcs: ")
+				claimError = claimError.AppendLine("Not allowed to send procedures which are currently in process.\r\nProcs: "
 					+ String.Join(",", ProcedureCodes.GetCodesForCodeNums(listInProcessProcs.Select(x => x.CodeNum).ToList()).Select(x => x.ProcCode)));
 				return new ODTuple<bool, Claim, string>(false, new Claim(), claimError);
 			}
@@ -3579,7 +3580,7 @@ namespace OpenDentBusiness
 					ClaimProcs.CreateEst(claimProcs[i], proc, PlanCur, SubCur);
 					if (claimProcs[i].NoBillIns)
 					{
-						claimError = claimError.AppendLine(Lans.g("ContrAccount", "Not allowed to send procedures to insurance that are marked 'Do not bill to ins'."));
+						claimError = claimError.AppendLine("Not allowed to send procedures to insurance that are marked 'Do not bill to ins'.");
 						return new ODTuple<bool, Claim, string>(false, new Claim(), claimError);
 					}
 				}

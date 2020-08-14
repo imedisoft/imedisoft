@@ -17,7 +17,7 @@ namespace OpenDental {
 
 		public FormEhrProvKeyEditCust() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormEhrProvKeyEditCust_Load(object sender,EventArgs e) {

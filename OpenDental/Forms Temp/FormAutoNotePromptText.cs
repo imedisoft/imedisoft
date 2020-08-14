@@ -18,7 +18,7 @@ namespace OpenDental {
 		public FormAutoNotePromptText(string noteDescription) {
 			InitializeComponent();
 			_noteDescript=noteDescription;
-			Lan.F(this);
+			
 		}
 
 		private void FormAutoNotePromptText_Load(object sender,EventArgs e) {

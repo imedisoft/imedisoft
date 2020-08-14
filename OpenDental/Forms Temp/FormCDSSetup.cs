@@ -12,7 +12,7 @@ namespace OpenDental
 
 		public FormCDSSetup() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormCDSSetup_Load(object sender,EventArgs e) {

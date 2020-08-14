@@ -58,7 +58,7 @@ namespace OpenDentBusiness{
 		[XmlIgnore,JsonIgnore]
 		public bool IsCreditAdjustment {
 			get {
-				if((ChargeType==PayPlanChargeType.Credit && Note==Lans.g("FormPayPlan","Adjustment") && Principal.IsLessThan(0))
+				if((ChargeType==PayPlanChargeType.Credit && Note=="Adjustment" && Principal.IsLessThan(0))
 					|| (ChargeType==PayPlanChargeType.Credit && LinkType==PayPlanLinkType.Adjustment))
 				{
 					return true;

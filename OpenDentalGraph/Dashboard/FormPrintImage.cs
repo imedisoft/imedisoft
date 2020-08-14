@@ -183,7 +183,7 @@ namespace OpenDentalGraph {
 					}
 					pdfDoc.Save(sd.FileName);
 
-					MessageBox.Show(Lans.g(this,"File saved."));
+					MessageBox.Show("File saved.");
 				}
 				catch(Exception ex) {
 					MessageBox.Show("File not saved."+"\r\n"+ex.Source+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);

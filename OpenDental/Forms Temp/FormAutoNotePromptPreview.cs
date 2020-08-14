@@ -12,7 +12,7 @@ namespace OpenDental {
 
 		public FormAutoNotePromptPreview() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormAutoNotePromptPreview_Load(object sender,EventArgs e) {

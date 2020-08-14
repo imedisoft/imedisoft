@@ -11,7 +11,7 @@ namespace OpenDental {
 	public partial class FormRecallListUndo:ODForm {
 		public FormRecallListUndo() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormRecallListUndo_Load(object sender,EventArgs e) {

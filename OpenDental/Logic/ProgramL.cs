@@ -591,7 +591,7 @@ namespace OpenDental
 				ContextMenu contextMenuOryx = new ContextMenu();
 				MenuItem menuItemUserSettings = new MenuItem();
 				menuItemUserSettings.Index = 0;
-				menuItemUserSettings.Text = Lans.g("Oryx", "User Settings");
+				menuItemUserSettings.Text = "User Settings";
 				menuItemUserSettings.Click += Oryx.menuItemUserSettingsClick;
 				contextMenuOryx.MenuItems.AddRange(new MenuItem[] {
 						menuItemUserSettings,

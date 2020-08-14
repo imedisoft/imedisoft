@@ -36,7 +36,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -148,7 +148,7 @@ namespace OpenDental{
 
 		private void FormRecallTypes_Load(object sender, System.EventArgs e) {
 			/*if(IsSelectionMode){
-				butClose.Text=Lan.g(this,"Cancel");
+				butClose.Text="Cancel";
 			}
 			else{
 				butOK.Visible=false;
@@ -170,17 +170,17 @@ namespace OpenDental{
 			_listRecallTypes=RecallTypes.GetDeepCopy();
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableRecallTypes","Description"),110);
+			GridColumn col=new GridColumn("Description",110);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRecallTypes","Special Type"),110);
+			col=new GridColumn("Special Type",110);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRecallTypes","Triggers"),190);
+			col=new GridColumn("Triggers",190);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRecallTypes","Interval"),60);
+			col=new GridColumn("Interval",60);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRecallTypes","Time Pattern"),90);
+			col=new GridColumn("Time Pattern",90);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableRecallTypes","Procedures"),190);
+			col=new GridColumn("Procedures",190);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -241,7 +241,7 @@ namespace OpenDental{
 			Cursor=Cursors.WaitCursor;
 			GC.Collect();//free up resources since this could take a lot of memory
 			DataValid.SetInvalid(InvalidType.RecallTypes);
-			Action actionCloseRecallSyncProgress=ODProgress.Show(EventCategory.RecallSync,typeof(RecallSyncEvent),Lan.G(this,"Running Prep Queries")+"...",false,true);
+			Action actionCloseRecallSyncProgress=ODProgress.Show(EventCategory.RecallSync,typeof(RecallSyncEvent),"Running Prep Queries"+"...",false,true);
 			bool isSyncCompleted=Recalls.SynchAllPatients();
 			actionCloseRecallSyncProgress?.Invoke();
 			GC.Collect();//clean up resources, force the garbage collector to collect since resources may remain tied-up
@@ -262,12 +262,12 @@ namespace OpenDental{
 		private void FormRecallTypes_FormClosing(object sender,FormClosingEventArgs e) {
 			if(changed){
 				DataValid.SetInvalid(InvalidType.RecallTypes);
-				if(MessageBox.Show(Lan.G(this,"Recalls for all patients should be synchronized.  Synchronize now?"),"",MessageBoxButtons.YesNo)
+				if(MessageBox.Show("Recalls for all patients should be synchronized.  Synchronize now?","",MessageBoxButtons.YesNo)
 					==DialogResult.Yes)
 				{
 					Cursor=Cursors.WaitCursor;
 					GC.Collect();//free up resources since this could take a lot of memory
-					Action actionCloseRecallSyncProgress=ODProgress.Show(EventCategory.RecallSync,typeof(RecallSyncEvent),Lan.G(this,"Running Prep Queries")+"...");
+					Action actionCloseRecallSyncProgress=ODProgress.Show(EventCategory.RecallSync,typeof(RecallSyncEvent),"Running Prep Queries"+"...");
 					bool isSyncSuccessful=Recalls.SynchAllPatients();
 					actionCloseRecallSyncProgress?.Invoke();
 					GC.Collect();//clean up resources, force the garbage collector to collect since resources may remain tied-up

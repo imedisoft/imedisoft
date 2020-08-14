@@ -45,7 +45,7 @@ namespace OpenDental
 		#region Constructor
 		public FormEServicesEClipboard() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 		#endregion Constructor
 

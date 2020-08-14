@@ -376,7 +376,7 @@ namespace OpenDental {
 			}
 			_listHideInFlags=Enum.GetValues(typeof(HideInFlags)).Cast<HideInFlags>().Where(x => x!=HideInFlags.None).ToList();
 			foreach(HideInFlags flag in _listHideInFlags) {
-				listShowIn.Items.Add(Lan.G("enumHideInFlags",flag.GetDescription()));
+				listShowIn.Items.Add(flag.GetDescription());
 			}
 		}
 		
@@ -457,7 +457,7 @@ namespace OpenDental {
 		}
 
 		private void menuItemRename_Click(object sender,EventArgs e) {
-			InputBox input=new InputBox(Lan.G(this,"Filename"));
+			InputBox input=new InputBox("Filename");
 			EmailAttach emailAttach=_listEmailAttachDisplayed[gridAttachments.SelectedIndices[0]];
 			input.textResult.Text=emailAttach.DisplayedFileName;
 			input.ShowDialog();
@@ -819,7 +819,7 @@ namespace OpenDental {
 						listFilteredContacts=_listHistoricContacts.FindAll(x => x.ToLower().Contains(emailFilter.ToLower()));
 					}
 					else {//The thread is still filling historic contacts.
-						listFilteredContacts=new List<string> { Lans.g(this,"Loading contacts...") };
+						listFilteredContacts=new List<string> { "Loading contacts..." };
 					}
 					if(listFilteredContacts.Count==0) {
 						gridContacts.Hide();//No options to show so make sure and hide the list box

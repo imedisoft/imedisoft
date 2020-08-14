@@ -435,7 +435,7 @@ namespace OpenDentBusiness{
 					);//Can be null
 					if(errorStatus.IsNullOrEmpty()) {//No error yet.
 						if(etransRequest==null) {//Can happen when an AAA segment is returned.
-							errorStatus=Lans.g("InsVerifyService","Unexpected carrier response.");
+							errorStatus="Unexpected carrier response.";
 						}
 						else {//Success, no errors so far and etrans returned
 							bool isCoinsuranceInverted=dictTrustedCarriers[insVerifyObj.PatInsVerify.CarrierNum].IsCoinsuranceInverted;
@@ -532,7 +532,7 @@ namespace OpenDentBusiness{
 		///or if no group number was found in the 271.</summary>
 		public static string ValidateGroupNumber(string insPlanGroupNum,string x271GroupNum) {
 			if(String.IsNullOrWhiteSpace(insPlanGroupNum) || insPlanGroupNum.Length<3) {
-				return Lans.g("InsVerifyService",$"Group number on insurance plan is invalid, current:{insPlanGroupNum}, received:{x271GroupNum}. ");
+				return $"Group number on insurance plan is invalid, current:{insPlanGroupNum}, received:{x271GroupNum}. ";
 			}
 			else if(String.IsNullOrWhiteSpace(x271GroupNum) || x271GroupNum.Length<3) {//If we receive an invalid or empty group number, assume what is in OD is correct.
 				return "";
@@ -540,7 +540,7 @@ namespace OpenDentBusiness{
 			else if(x271GroupNum.StartsWith(insPlanGroupNum) || x271GroupNum.EndsWith(insPlanGroupNum)) {
 				return "";
 			}
-			return Lans.g("InsVerifyService",$"Group number mismatch, current:{insPlanGroupNum}, received:{x271GroupNum}. ");
+			return $"Group number mismatch, current:{insPlanGroupNum}, received:{x271GroupNum}. ";
 		}
 
 		///<summary>Checks to see if a policy start and policy end date was specified in the given x271 object. 
@@ -560,14 +560,14 @@ namespace OpenDentBusiness{
 			InsSubs.Update(insSub);
 			DateTime aptDate=Appointments.GetOneApt(aptNum).AptDateTime.Date;
 			if(datePolicyEnd.Year<=1880 && datePolicyStart>aptDate) {//No end date, but we have a start date, and plan starts in the future
-				return Lans.g("InsVerifyService",$"Policy does not start until {datePolicyStart.ToShortDateString()} ");
+				return $"Policy does not start until {datePolicyStart.ToShortDateString()} ";
 			}
 			else if(datePolicyStart.Year<=1880 && datePolicyEnd<aptDate) {//No start date, but we have an end date, and plan ended in the past
-				return Lans.g("InsVerifyService",$"Inactive coverage.  Policy ended {datePolicyEnd.ToShortDateString()} ");
+				return $"Inactive coverage.  Policy ended {datePolicyEnd.ToShortDateString()} ";
 			}
 			//Carriers will sometimes send a valid start date, but a plan end date of Datetime.MinValue. This is considered a valid scenario and must be excluded from our validation.
 			else if(datePolicyEnd.Year>1880 && !DateTime.Today.Between(datePolicyStart,datePolicyEnd)) {
-				return Lans.g("InsVerifyService",$"Invalid policy dates: {datePolicyStart.ToShortDateString()} - {datePolicyEnd.ToShortDateString()} ");
+				return $"Invalid policy dates: {datePolicyStart.ToShortDateString()} - {datePolicyEnd.ToShortDateString()} ";
 			}
 			return "";
 		}
@@ -624,22 +624,22 @@ namespace OpenDentBusiness{
 			StringBuilder strBuildErrorStatus=new StringBuilder();
 			if(listAnnualMaxInd271.Count>0) {
 				if(annualMaxInd==null || annualMaxInd.MonetaryAmt.In(0,-1) || !listAnnualMaxInd271.Any(x=>x.MonetaryAmt==annualMaxInd.MonetaryAmt)) {
-					strBuildErrorStatus.AppendLine(Lans.g("InsVerifyService","Individual annual max mismatch. "));
+					strBuildErrorStatus.AppendLine("Individual annual max mismatch. ");
 				}
 			}
 			if(listAnnualMaxFam271.Count>0) {
 				if(annualMaxFam==null || annualMaxFam.MonetaryAmt.In(0,-1) || !listAnnualMaxFam271.Any(x=>x.MonetaryAmt==annualMaxFam.MonetaryAmt)) {
-					strBuildErrorStatus.AppendLine(Lans.g("InsVerifyService","Family annual max mismatch. "));
+					strBuildErrorStatus.AppendLine("Family annual max mismatch. ");
 				}
 			}
 			if(listGeneralDeductInd271.Count>0) {
 				if(generalDeductInd==null || generalDeductInd.MonetaryAmt.In(0,-1) || !listGeneralDeductInd271.Any(x=>x.MonetaryAmt==generalDeductInd.MonetaryAmt)) {
-					strBuildErrorStatus.AppendLine(Lans.g("InsVerifyService","Individual general deductible mismatch. "));
+					strBuildErrorStatus.AppendLine("Individual general deductible mismatch. ");
 				}
 			}
 			if(listGeneralDeductFam271.Count>0) {
 				if(generalDeductFam==null || generalDeductFam.MonetaryAmt.In(0,-1) || !listGeneralDeductFam271.Any(x=>x.MonetaryAmt==generalDeductFam.MonetaryAmt)) {
-					strBuildErrorStatus.AppendLine(Lans.g("InsVerifyService","Family general deductible mismatch. "));
+					strBuildErrorStatus.AppendLine("Family general deductible mismatch. ");
 				}
 			}
 			return strBuildErrorStatus.ToString();

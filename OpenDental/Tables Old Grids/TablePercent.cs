@@ -21,7 +21,7 @@ namespace OpenDental{
 			HeadingIsPresent=false;
 			InstantClassesPar();
 			SetRowHeight(0,5,14);
-			Heading=Lan.G("TablePercent","Coverage Spans");
+			Heading="Coverage Spans";
 			ColWidth[0]=120;
 			ColWidth[1]=132;
 			LayoutTables();

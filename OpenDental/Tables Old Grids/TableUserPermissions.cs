@@ -19,9 +19,9 @@ namespace OpenDental{
 			HeadingIsPresent=false;
 			InstantClassesPar();
 			SetRowHeight(0,19,14);
-			Fields[0]=Lan.G("TableUserPermissions","Name");
-			Fields[1]=Lan.G("TableUserPermissions","Has Permission");
-			Fields[2]=Lan.G("TableUserPermissions","IsLogged");
+			Fields[0]="Name";
+			Fields[1]="Has Permission";
+			Fields[2]="IsLogged";
 			ColAlign[1]=HorizontalAlignment.Center;
 			ColAlign[2]=HorizontalAlignment.Center;
 			ColWidth[0]=150;

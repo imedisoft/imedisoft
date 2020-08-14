@@ -14,7 +14,7 @@ namespace OpenDental
 		public FormCloneManager()
 		{
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormCloneFix_Load(object sender, EventArgs e)
@@ -66,8 +66,8 @@ namespace OpenDental
 			//create new ODEvent Class - no idea what's currently happening here. 
 			//_actionCloseCloneFixProgress=ODProgress.ShowProgressStatus("CloneFixEvent"
 			//	,typeof(CloneFixEvent)
-			//	,tag: new ProgressBarHelper(Lan.g(this,"Running Clone Fix")+"...",null,0,100,ProgBarStyle.Marquee,"Header")); //tag is what consumer needs. What is needed here? 
-			//ODEvent.Fire(new ODEventArgs("CloneFixEvent",Lan.g("Prefs","Removing old update files...")));
+			//	,tag: new ProgressBarHelper("Running Clone Fix"+"...",null,0,100,ProgBarStyle.Marquee,"Header")); //tag is what consumer needs. What is needed here? 
+			//ODEvent.Fire(new ODEventArgs("CloneFixEvent","Removing old update files..."));
 			//_actionCloseCloneFixProgress?.Invoke();
 		}
 
@@ -89,8 +89,8 @@ namespace OpenDental
 			//create new ODEvent Class
 			//_actionCloseCloneFixProgress=ODProgress.ShowProgressStatus("CloneFixEvent"
 			//	,typeof(CloneFixEvent)
-			//	,tag: new ProgressBarHelper(Lan.g(this,"Running Clone Fix")+"...",null,0,100,ProgBarStyle.Marquee,"Header"));
-			//ODEvent.Fire(new ODEventArgs("CloneFixEvent",Lan.g("Prefs","Removing old update files...")));
+			//	,tag: new ProgressBarHelper("Running Clone Fix"+"...",null,0,100,ProgBarStyle.Marquee,"Header"));
+			//ODEvent.Fire(new ODEventArgs("CloneFixEvent","Removing old update files..."));
 			//_actionCloseCloneFixProgress?.Invoke();			
 		}
 

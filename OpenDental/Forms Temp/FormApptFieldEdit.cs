@@ -13,7 +13,7 @@ namespace OpenDental {
 		///<summary></summary>
 		public FormApptFieldEdit(ApptField field) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_field=field;
 		}
 

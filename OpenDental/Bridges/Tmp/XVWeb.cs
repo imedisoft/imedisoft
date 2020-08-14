@@ -50,8 +50,8 @@ namespace OpenDental.Bridges
 				}
 				catch
 				{
-					MessageBox.Show(Lan.G("XVWeb", "Could not find") + urlPath + "\r\n"
-						+ Lan.G("XVWeb", "Please set up a default web browser") + ".");
+					MessageBox.Show("Could not find" + urlPath + "\r\n"
+						+ "Please set up a default web browser" + ".");
 				}
 				return;
 			}
@@ -162,11 +162,11 @@ namespace OpenDental.Bridges
 			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 			if (response.StatusCode == HttpStatusCode.NoContent)
 			{
-				throw new ApplicationException(Lan.G("XVWeb", "Invalid XVWeb credentials. Please check your username and password in the XVWeb bridge setup."));
+				throw new ApplicationException("Invalid XVWeb credentials. Please check your username and password in the XVWeb bridge setup.");
 			}
 			if (response.StatusCode != HttpStatusCode.OK)
 			{
-				throw new ApplicationException(Lan.G("XVWeb", "Unable to connect to XVWeb. Response from XVWeb:") + " " + response.StatusDescription);
+				throw new ApplicationException("Unable to connect to XVWeb. Response from XVWeb:" + " " + response.StatusDescription);
 			}
 			dataStream = response.GetResponseStream();
 			StreamReader reader = new StreamReader(dataStream);

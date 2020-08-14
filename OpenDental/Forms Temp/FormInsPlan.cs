@@ -295,14 +295,14 @@ namespace OpenDental{
 			listCars.BringToFront();
 			//tbPercentPlan.CellClicked += new OpenDental.ContrTable.CellEventHandler(tbPercentPlan_CellClicked);
 			//tbPercentPat.CellClicked += new OpenDental.ContrTable.CellEventHandler(tbPercentPat_CellClicked);
-			Lan.F(this);
+			
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
-				labelPatID.Text=Lan.G(this,"Dependant Code");
-				labelCitySTZip.Text=Lan.G(this,"City,Prov,Post");   //Postal Code";
+				labelPatID.Text="Dependant Code";
+				labelCitySTZip.Text="City,Prov,Post";   //Postal Code";
 				butSearch.Visible=false;
 				labelElectronicID.Text="EDI Code";
 				comboElectIDdescript.Visible=false;
-				labelGroupNum.Text=Lan.G(this,"Plan Number");
+				labelGroupNum.Text="Plan Number";
 				checkIsPMP.Checked=(planCur.CanadianPlanFlag!=null && planCur.CanadianPlanFlag!="");
 			}
 			else{
@@ -312,7 +312,7 @@ namespace OpenDental{
 				tabControlInsPlan.TabPages.Remove(tabPageCanadian);
 			}
 			if(CultureInfo.CurrentCulture.Name.Length>=4 && CultureInfo.CurrentCulture.Name.Substring(3)=="GB"){//en-GB
-				labelCitySTZip.Text=Lan.G(this,"City,Postcode");
+				labelCitySTZip.Text="City,Postcode";
 			}
 			panelPat.BackColor=Defs.GetFirstForCategory(DefCat.MiscColors).ItemColor;
 			//labelViewRequestDocument.Text="         ";
@@ -2257,7 +2257,7 @@ namespace OpenDental{
 			long patPlanNum=0;
 			if(!Security.IsAuthorized(Permissions.InsPlanEdit,true)) {
 				Label labelNoPermission=new Label();
-				labelNoPermission.Text=Lan.G(this,"No Insurance Plan Edit permission.  Patient and Subscriber Information can still be saved.");
+				labelNoPermission.Text="No Insurance Plan Edit permission.  Patient and Subscriber Information can still be saved.";
 				labelNoPermission.Location=new Point(groupChanges.Location.X,groupChanges.Location.Y+10);
 				labelNoPermission.Size=new Size(groupChanges.Size.Width+0,groupChanges.Size.Height);
 				labelNoPermission.Visible=true;
@@ -2415,7 +2415,7 @@ namespace OpenDental{
 			else {
 				comboRelationship.Items.Clear();
 				for(int i=0;i<Enum.GetNames(typeof(Relat)).Length;i++) {
-					comboRelationship.Items.Add(Lan.G("enumRelat",Enum.GetNames(typeof(Relat))[i]));
+					comboRelationship.Items.Add(Enum.GetNames(typeof(Relat))[i]);
 					if((int)PatPlanCur.Relationship==i) {
 						comboRelationship.SelectedIndex=i;
 					}
@@ -2500,14 +2500,14 @@ namespace OpenDental{
 			}
 			comboOrthoClaimType.Items.Clear();
 			foreach(OrthoClaimType type in Enum.GetValues(typeof(OrthoClaimType))) {
-				comboOrthoClaimType.Items.Add(Lan.G("enumOrthoClaimType",type.GetDescription()));
+				comboOrthoClaimType.Items.Add(type.GetDescription());
 				if(_planCur.OrthoType==type) {
 					comboOrthoClaimType.SelectedIndex = (int)type;
 				}
 			}
 			comboOrthoAutoProcPeriod.Items.Clear();
 			foreach(OrthoAutoProcFrequency type in Enum.GetValues(typeof(OrthoAutoProcFrequency))) {
-				comboOrthoAutoProcPeriod.Items.Add(Lan.G("enumOrthoAutoProcFrequency",type.GetDescription()));
+				comboOrthoAutoProcPeriod.Items.Add(type.GetDescription());
 				if(_planCur.OrthoAutoProcFreq==type) {
 					comboOrthoAutoProcPeriod.SelectedIndex = (int)type;
 				}
@@ -2518,7 +2518,7 @@ namespace OpenDental{
 				textOrthoAutoProc.Text=_orthoAutoProc.ProcCode;
 			}
 			else {
-				textOrthoAutoProc.Text=ProcedureCodes.GetProcCode(Prefs.GetLong(PrefName.OrthoAutoProcCodeNum)).ProcCode +" ("+ Lan.G(this,"Default")+")";
+				textOrthoAutoProc.Text=ProcedureCodes.GetProcCode(Prefs.GetLong(PrefName.OrthoAutoProcCodeNum)).ProcCode +" ("+ "Default"+")";
 			}
 			SetEnabledOrtho();
 		}
@@ -2576,13 +2576,13 @@ namespace OpenDental{
 			textTrojanID.Text=_planCur.TrojanID;
 			comboPlanType.Items.Clear();
 			//Items must be added in the same order in which they are listed in InsPlanTypeComboItem.
-			comboPlanType.Items.Add(Lan.G(this,"Category Percentage"));
-			comboPlanType.Items.Add(Lan.G(this,"PPO Percentage"));
-			comboPlanType.Items.Add(Lan.G(this,"PPO Fixed Benefit"));
-			comboPlanType.Items.Add(Lan.G(this,"Medicaid or Flat Co-pay"));
+			comboPlanType.Items.Add("Category Percentage");
+			comboPlanType.Items.Add("PPO Percentage");
+			comboPlanType.Items.Add("PPO Fixed Benefit");
+			comboPlanType.Items.Add("Medicaid or Flat Co-pay");
 			//Capitation must always be last, since it is sometimes hidden.
 			if(!Prefs.GetBool(PrefName.EasyHideCapitation)) {
-				comboPlanType.Items.Add(Lan.G(this,"Capitation"));
+				comboPlanType.Items.Add("Capitation");
 				if(_planCur.PlanType=="c") {
 					comboPlanType.SelectedIndex=(int)InsPlanTypeComboItem.Capitation;
 				}
@@ -2652,7 +2652,7 @@ namespace OpenDental{
 			comboAllowedFeeSched.SetSelectedKey<FeeSched>(_planCur.AllowedFeeSched,x=>x.FeeSchedNum);
 			comboCobRule.Items.Clear();
 			for(int i=0;i<Enum.GetNames(typeof(EnumCobRule)).Length;i++) {
-				comboCobRule.Items.Add(Lan.G("enumEnumCobRule",Enum.GetNames(typeof(EnumCobRule))[i]));
+				comboCobRule.Items.Add(Enum.GetNames(typeof(EnumCobRule))[i]);
 			}
 			comboCobRule.SelectedIndex=(int)_planCur.CobRule;			
 			long selectedFilingCodeNum=_planCur.FilingCode;
@@ -2714,10 +2714,10 @@ namespace OpenDental{
 
 		private List<FeeSched> GetFilteredCopayFeeSched(List<FeeSched> listFeeSchedCopays,bool isFixedBenefitPlan) {
 			if(isFixedBenefitPlan) {
-				labelCopayFeeSched.Text=Lan.G(this,"Fixed Benefit Amounts");
+				labelCopayFeeSched.Text="Fixed Benefit Amounts";
 			}
 			else {
-				labelCopayFeeSched.Text=Lan.G(this,"Patient Co-pay Amounts");
+				labelCopayFeeSched.Text="Patient Co-pay Amounts";
 			}
 			List<FeeSched> listFeeSchedFiltered=new List<FeeSched>();
 			foreach(FeeSched feeSchedCur in listFeeSchedCopays) {
@@ -2776,7 +2776,7 @@ namespace OpenDental{
 			form.Controls.Add(butClose);
 			grid.BeginUpdate();
 			grid.ListGridColumns.Clear();
-			grid.ListGridColumns.Add(new GridColumn(Lan.G(this,"Name"),20){ IsWidthDynamic=true });
+			grid.ListGridColumns.Add(new GridColumn("Name",20){ IsWidthDynamic=true });
 			grid.ListGridRows.Clear();
 			long excludeSub=-1;
 			if(_subCur!=null){
@@ -3293,13 +3293,13 @@ namespace OpenDental{
 			}
 			catch(Exception ex){
 				if(Prefs.GetBool(PrefName.SubscriberAllowChangeAlways)) {
-					DialogResult dres=MessageBox.Show(Lan.G(this,"Warning!  Do not change unless fixing database corruption.  ")+"\r\n"+ex.Message);
+					DialogResult dres=MessageBox.Show("Warning!  Do not change unless fixing database corruption.  "+"\r\n"+ex.Message);
 					if(dres!=DialogResult.OK) {
 						return;
 					}
 				}
 				else {
-					MessageBox.Show(Lan.G(this,"Not allowed to change.")+"\r\n"+ex.Message);
+					MessageBox.Show("Not allowed to change."+"\r\n"+ex.Message);
 					return;
 				}
 			}
@@ -3470,7 +3470,7 @@ namespace OpenDental{
 				FeeSchedsAllowed=FeeScheds.GetListForType(FeeScheduleType.Allowed,false);
 				//if managed care, then do it a bit differently
 				comboFeeSched.Items.Clear();
-				comboFeeSched.Items.Add(Lan.g(this,"none"));
+				comboFeeSched.Items.Add("none");
 				comboFeeSched.SelectedIndex=0;
 				for(int i=0;i<FeeSchedsStandard.Count;i++) {
 					comboFeeSched.Items.Add(FeeSchedsStandard[i].Description);
@@ -3478,7 +3478,7 @@ namespace OpenDental{
 						comboFeeSched.SelectedIndex=i+1;
 				}
 				comboCopay.Items.Clear();
-				comboCopay.Items.Add(Lan.g(this,"none"));
+				comboCopay.Items.Add("none");
 				comboCopay.SelectedIndex=0;
 				for(int i=0;i<FeeSchedsCopay.Count;i++) {
 					comboCopay.Items.Add(FeeSchedsCopay[i].Description);
@@ -3487,7 +3487,7 @@ namespace OpenDental{
 					//	comboCopay.SelectedIndex=i+1;
 				}
 				comboAllowedFeeSched.Items.Clear();
-				comboAllowedFeeSched.Items.Add(Lan.g(this,"none"));
+				comboAllowedFeeSched.Items.Add("none");
 				comboAllowedFeeSched.SelectedIndex=0;
 				for(int i=0;i<FeeSchedsAllowed.Count;i++) {
 					comboAllowedFeeSched.Items.Add(FeeSchedsAllowed[i].Description);
@@ -4036,8 +4036,8 @@ namespace OpenDental{
 						MessageBox.Show(ex.Message);
 						return;
 					}
-					logText=Lan.G(this,"The subscriber")+" "+Patients.GetPat(_subCur.Subscriber).GetNameFLnoPref()+" "
-						+Lan.G(this,"with the Subscriber ID")+" "+_subCur.SubscriberID+" "+Lan.G(this,"was deleted.");
+					logText="The subscriber"+" "+Patients.GetPat(_subCur.Subscriber).GetNameFLnoPref()+" "
+						+"with the Subscriber ID"+" "+_subCur.SubscriberID+" "+"was deleted.";
 					_hasDeleted=true;
 					//PatPlanCur will be null if editing insurance plans from Lists > Insurance Plans.
 					SecurityLogs.MakeLogEntry(Permissions.InsPlanEdit,(PatPlanCur==null)?0:PatPlanCur.PatNum,logText,(_planCur==null)?0:_planCur.PlanNum,
@@ -4061,7 +4061,7 @@ namespace OpenDental{
 				MessageBox.Show(ex.Message);
 				return;
 			}
-			logText=Lan.G(this,"The insurance plan for the carrier")+" "+Carriers.GetCarrier(_planCur.CarrierNum).CarrierName+" "+Lan.G(this,"was deleted.");
+			logText="The insurance plan for the carrier"+" "+Carriers.GetCarrier(_planCur.CarrierNum).CarrierName+" "+"was deleted.";
 			_hasDeleted=true;
 			//PatPlanCur will be null if editing insurance plans from Lists > Insurance Plans.
 			SecurityLogs.MakeLogEntry(Permissions.InsPlanEdit,(PatPlanCur==null)?0:PatPlanCur.PatNum,logText,(_planCur==null)?0:_planCur.PlanNum,
@@ -4105,7 +4105,7 @@ namespace OpenDental{
 			PatPlans.Delete(PatPlanCur.PatPlanNum);//Estimates recomputed within Delete()
 			//PlanCur.ComputeEstimatesForCur();
 			_hasDropped=true;
-			string logText=Lan.G(this,"The insurance plan for the carrier")+" "+Carriers.GetCarrier(_planCur.CarrierNum).CarrierName+" "+Lan.G(this,"was dropped.");
+			string logText="The insurance plan for the carrier"+" "+Carriers.GetCarrier(_planCur.CarrierNum).CarrierName+" "+"was dropped.";
 			SecurityLogs.MakeLogEntry(Permissions.InsPlanEdit,(PatPlanCur==null)?0:PatPlanCur.PatNum,logText,(_planCur==null)?0:_planCur.PlanNum,
 				_planCur.SecDateTEdit);
 			InsEditPatLogs.MakeLogEntry(null,PatPlanCur,InsEditPatLogType.PatPlan);
@@ -4175,16 +4175,16 @@ namespace OpenDental{
 					row.Cells.Add("");
 				}
 				else {
-					row.Cells.Add(Lan.G("enumBenefitCoverageLevel",benefitList[i].CoverageLevel.ToString()));
+					row.Cells.Add(benefitList[i].CoverageLevel.ToString());
 				}
 				if(benefitList[i].BenefitType==InsBenefitType.CoInsurance && benefitList[i].Percent != -1) {
 					row.Cells.Add("%");
 				}
 				else if(benefitList[i].BenefitType==InsBenefitType.WaitingPeriod) {
-					row.Cells.Add(Lan.G(this,"Waiting Period"));
+					row.Cells.Add("Waiting Period");
 				}
 				else {
-					row.Cells.Add(Lan.G("enumInsBenefitType",benefitList[i].BenefitType.ToString()));
+					row.Cells.Add(benefitList[i].BenefitType.ToString());
 				}
 				row.Cells.Add(Benefits.GetCategoryString(benefitList[i])); //already translated
 				if(benefitList[i].Percent==-1 ) {
@@ -4208,23 +4208,23 @@ namespace OpenDental{
 					row.Cells.Add("");
 				}
 				else {
-					row.Cells.Add(Lan.G("enumBenefitTimePeriod",benefitList[i].TimePeriod.ToString()));
+					row.Cells.Add(benefitList[i].TimePeriod.ToString());
 				}
 				if(benefitList[i].Quantity>0) {
 					if(benefitList[i].QuantityQualifier==BenefitQuantity.NumberOfServices
 						&&(benefitList[i].TimePeriod==BenefitTimePeriod.ServiceYear
 						|| benefitList[i].TimePeriod==BenefitTimePeriod.CalendarYear))
 					{
-						row.Cells.Add(benefitList[i].Quantity.ToString()+" "+Lan.G(this,"times per year")+" ");
+						row.Cells.Add(benefitList[i].Quantity.ToString()+" "+"times per year"+" ");
 					}
 					else if(benefitList[i].QuantityQualifier==BenefitQuantity.NumberOfServices 
 						&& benefitList[i].TimePeriod==BenefitTimePeriod.NumberInLast12Months) 
 					{
-						row.Cells.Add(benefitList[i].Quantity.ToString()+" "+Lan.G(this,"times in the last 12 months")+" ");
+						row.Cells.Add(benefitList[i].Quantity.ToString()+" "+"times in the last 12 months"+" ");
 					}
 					else {
 						row.Cells.Add(benefitList[i].Quantity.ToString()+" "
-							+Lan.G("enumBenefitQuantity",benefitList[i].QuantityQualifier.ToString()));
+							+benefitList[i].QuantityQualifier.ToString());
 					}
 				}
 				else {
@@ -4248,8 +4248,8 @@ namespace OpenDental{
 			if(IsNewPlan && _planCur.PlanNum != _planOld.PlanNum) {  //If adding a new plan and picked existing plan from list
 				//==Travis 05/06/2015:  Allowing users to edit insurance benefits for new plans that were picked from the list was causing problems with 
 				//	duplicating benefits.  This was the fix we decided to go with, as the issue didn't seem to be affecting existing plans for a patient.
-				MessageBox.Show(Lan.G(this,"You have picked an existing insurance plan and changes cannot be made to benefits until you have saved the plan for this new subscriber.")
-					+"\r\n"+Lan.G(this,"To edit, click OK and then open the edit insurance plan window again."));
+				MessageBox.Show("You have picked an existing insurance plan and changes cannot be made to benefits until you have saved the plan for this new subscriber."
+					+"\r\n"+"To edit, click OK and then open the edit insurance plan window again.");
 				return;
 			}
 			long patPlanNum=0;
@@ -4375,7 +4375,7 @@ namespace OpenDental{
 							}
 							if(isDependentRequest || date.Segment.Get(1)!="347"){
 								string dtpDescript=DTP271.GetQualifierDescription(date.Segment.Get(1));
-								string note="As of "+DateTime.Today.ToShortDateString()+" - "+patName+": "+Lan.G(this,dtpDescript)+", "+dtpDateStr+"\n";
+								string note="As of "+DateTime.Today.ToShortDateString()+" - "+patName+": "+dtpDescript+", "+dtpDateStr+"\n";
 								textSubscNote.Text=textSubscNote.Text.Insert(0,note);
 							}
 						}
@@ -4392,7 +4392,7 @@ namespace OpenDental{
 								popup.PatNum=PatPlanCur.PatNum;
 								popup.PopupLevel=EnumPopupLevel.Patient;
 								popup.IsNew=true;
-								popup.Description=Lan.G(this,"Insurance expired.  Collect new insurance information.");
+								popup.Description="Insurance expired.  Collect new insurance information.";
 								FormPopupEdit FormPE=new FormPopupEdit();
 								FormPE.PopupCur=popup;
 								FormPE.ShowDialog();
@@ -5171,12 +5171,12 @@ namespace OpenDental{
 				bool isFixedBenefitSched=(curFeeSched.FeeSchedType==FeeScheduleType.FixedBenefit);
 				bool isFixedBenefitPlanType=(_selectedPlanType==InsPlanTypeComboItem.PPOFixedBenefit);
 				if(isFixedBenefitSched!=isFixedBenefitPlanType) {//fixed benefits plans need fixed benefit fee scheds
-					MessageBox.Show(Lans.g(this,"PPO Fixed Benefits Fee Schedules can only be assigned to PPO Fixed Benefits plan types. "
-						+"Please make a valid selection from ")+labelCopayFeeSched.Text);
+					MessageBox.Show("PPO Fixed Benefits Fee Schedules can only be assigned to PPO Fixed Benefits plan types. "
+						+"Please make a valid selection from "+labelCopayFeeSched.Text);
 					return false;	
 				}
-				if(MessageBox.Show(this,Lans.g(this,"The selected ")+labelCopayFeeSched.Text
-					+Lan.G(this," fee schedule has been hidden. Are you sure you want to continue?"),"",MessageBoxButtons.YesNo)==DialogResult.No) 
+				if(MessageBox.Show(this,"The selected "+labelCopayFeeSched.Text
+					+" fee schedule has been hidden. Are you sure you want to continue?","",MessageBoxButtons.YesNo)==DialogResult.No) 
 				{
 					return false;
 				}
@@ -5251,7 +5251,7 @@ namespace OpenDental{
 				//Check all claims for plan
 				claimCount=Claims.GetCountReceived(_planCurOriginal.PlanNum);
 				if(claimCount!=0) {
-					if(MessageBox.Show(Lan.G(this,"There are")+" "+claimCount+" "+Lan.G(this,"received claims for this insurance plan that will have the carrier changed")+".  "+Lan.G(this,"You should NOT do this if the patient is changing insurance")+".  "+Lan.G(this,"Use the Drop button instead")+".  "+Lan.G(this,"Continue")+"?","",MessageBoxButtons.OKCancel)==DialogResult.Cancel) {
+					if(MessageBox.Show("There are"+" "+claimCount+" "+"received claims for this insurance plan that will have the carrier changed"+".  "+"You should NOT do this if the patient is changing insurance"+".  "+"Use the Drop button instead"+".  "+"Continue"+"?","",MessageBoxButtons.OKCancel)==DialogResult.Cancel) {
 						return false; //abort
 					}
 				}
@@ -5260,7 +5260,7 @@ namespace OpenDental{
 				if(radioChangeAll.Checked==true) {//Check radio button
 					claimCount=Claims.GetCountReceived(_planCurOriginal.PlanNum);
 					if(claimCount!=0) {//Check all claims for plan
-						if(MessageBox.Show(Lan.G(this,"There are")+" "+claimCount+" "+Lan.G(this,"received claims for this insurance plan that will have the carrier changed")+".  "+Lan.G(this,"You should NOT do this if the patient is changing insurance")+".  "+Lan.G(this,"Use the Drop button instead")+".  "+Lan.G(this,"Continue")+"?","",MessageBoxButtons.OKCancel)==DialogResult.Cancel) {
+						if(MessageBox.Show("There are"+" "+claimCount+" "+"received claims for this insurance plan that will have the carrier changed"+".  "+"You should NOT do this if the patient is changing insurance"+".  "+"Use the Drop button instead"+".  "+"Continue"+"?","",MessageBoxButtons.OKCancel)==DialogResult.Cancel) {
 							return false; //abort
 						}
 					}
@@ -5268,7 +5268,7 @@ namespace OpenDental{
 				else {//Check claims for plan and patient only
 					claimCount=Claims.GetCountReceived(_planCurOriginal.PlanNum,PatPlanCur.InsSubNum);
 					if(claimCount!=0) {
-						if(MessageBox.Show(Lan.G(this,"There are")+" "+claimCount+" "+Lan.G(this,"received claims for this insurance plan that will have the carrier changed")+".  "+Lan.G(this,"You should NOT do this if the patient is changing insurance")+".  "+Lan.G(this,"Use the Drop button instead")+".  "+Lan.G(this,"Continue")+"?","",MessageBoxButtons.OKCancel)==DialogResult.Cancel) {
+						if(MessageBox.Show("There are"+" "+claimCount+" "+"received claims for this insurance plan that will have the carrier changed"+".  "+"You should NOT do this if the patient is changing insurance"+".  "+"Use the Drop button instead"+".  "+"Continue"+"?","",MessageBoxButtons.OKCancel)==DialogResult.Cancel) {
 							return false; //abort
 						}
 					}
@@ -5343,7 +5343,7 @@ namespace OpenDental{
 
 		private void butDefaultAutoOrthoProc_Click(object sender,EventArgs e) {
 			_orthoAutoProc=null;
-			textOrthoAutoProc.Text=ProcedureCodes.GetProcCode(Prefs.GetLong(PrefName.OrthoAutoProcCodeNum)).ProcCode+" ("+Lan.G(this,"Default")+")";
+			textOrthoAutoProc.Text=ProcedureCodes.GetProcCode(Prefs.GetLong(PrefName.OrthoAutoProcCodeNum)).ProcCode+" ("+"Default"+")";
 		}
 
 		private void butOK_Click(object sender,System.EventArgs e) {
@@ -5395,7 +5395,7 @@ namespace OpenDental{
 			}
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.G(this,"Error Code 1")+".  "+Lan.G(this,"Please contact support")+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
+				MessageBox.Show("Error Code 1"+".  "+"Please contact support"+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
 				return;
 			}
 			#endregion 1 - Validate Carrier Received Claims
@@ -5410,16 +5410,16 @@ namespace OpenDental{
 					}
 					//It is very possible that the user changed the patient associated to the ins sub.
 					//We need to make a security log for the most recent patient (_subCur.Subscriber) instead of the original patient (_subOld.Subscriber) that was passed in.
-					SecurityLogs.MakeLogEntry(Permissions.InsPlanChangeAssign,_subCur.Subscriber,Lan.G(this,"Assignment of Benefits (pay dentist) changed from")
-						+" "+(_subOld.AssignBen?Lan.G(this,"checked"):Lan.G(this,"unchecked"))+" "
-						+Lan.G(this,"to")
-						+" "+(checkAssign.Checked?Lan.G(this,"checked"):Lan.G(this,"unchecked"))+" for plan "
+					SecurityLogs.MakeLogEntry(Permissions.InsPlanChangeAssign,_subCur.Subscriber,"Assignment of Benefits (pay dentist) changed from"
+						+" "+(_subOld.AssignBen?"checked":"unchecked")+" "
+						+"to"
+						+" "+(checkAssign.Checked?"checked":"unchecked")+" for plan "
 						+Carriers.GetCarrier(_planCur.CarrierNum).CarrierName);
 				}
 			}
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.G(this,"Error Code 2")+".  "+Lan.G(this,"Please contact support")+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
+				MessageBox.Show("Error Code 2"+".  "+"Please contact support"+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
 				return;
 			}
 			#endregion 2 - InsPlanChangeAssign Permission Check
@@ -5456,7 +5456,7 @@ namespace OpenDental{
 				}
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.G(this,"Error Code 3")+".  "+Lan.G(this,"Please contact support")+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
+				MessageBox.Show("Error Code 3"+".  "+"Please contact support"+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
 				return;
 			}
 			//It is okay to set the plan num on the subscriber object at this point.
@@ -5482,7 +5482,7 @@ namespace OpenDental{
 						}
 					}
 					catch(Exception ex) {
-						MessageBox.Show(Lan.G(this,"Error Code 4")+".  "+Lan.G(this,"Please contact support")+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
+						MessageBox.Show("Error Code 4"+".  "+"Please contact support"+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
 						return;
 					}
 					#endregion 4 - InsPlan Null Subscriber
@@ -5511,7 +5511,7 @@ namespace OpenDental{
 										MessageBox.Show(ex.Message);
 										//do not need to update PlanCur because no changes were made.
 										SecurityLogs.MakeLogEntry(Permissions.InsPlanEdit,(PatPlanCur==null) ? 0 : PatPlanCur.PatNum
-											,Lan.G(this,"FormInsPlan region 5 delete validation failed.  Plan was not deleted."),_planOld.PlanNum,
+											,"FormInsPlan region 5 delete validation failed.  Plan was not deleted.",_planOld.PlanNum,
 											DateTime.MinValue); //new plan, no date needed.
 										Close();
 										return;
@@ -5523,7 +5523,7 @@ namespace OpenDental{
 								}
 							}
 							catch(Exception ex) { //catch any other exceptions and display
-								MessageBox.Show(Lan.G(this,"Error Code 5")+".  "+Lan.G(this,"Please contact support")+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
+								MessageBox.Show("Error Code 5"+".  "+"Please contact support"+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
 								return;
 							}
 							#endregion 5 - InsPlan Non-Null Subscriber, New Plan, No Changes Made
@@ -5548,7 +5548,7 @@ namespace OpenDental{
 										catch(ApplicationException ex) {
 											MessageBox.Show(ex.Message);
 											SecurityLogs.MakeLogEntry(Permissions.InsPlanEdit,(PatPlanCur==null) ? 0 : PatPlanCur.PatNum
-												,Lan.G(this,"FormInsPlan region 6 delete validation failed.  Plan was not deleted."),_planOld.PlanNum,
+												,"FormInsPlan region 6 delete validation failed.  Plan was not deleted.",_planOld.PlanNum,
 												DateTime.MinValue); //new plan, no date needed.
 											Close();
 											return;
@@ -5571,7 +5571,7 @@ namespace OpenDental{
 									}
 								}
 								catch(Exception ex) {
-									MessageBox.Show(Lan.G(this,"Error Code 6")+".  "+Lan.G(this,"Please contact support")+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
+									MessageBox.Show("Error Code 6"+".  "+"Please contact support"+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
 									return;
 								}
 							}
@@ -5600,7 +5600,7 @@ namespace OpenDental{
 								}
 							}
 							catch(Exception ex) {
-								MessageBox.Show(Lan.G(this,"Error Code 7")+".  "+Lan.G(this,"Please contact support")+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
+								MessageBox.Show("Error Code 7"+".  "+"Please contact support"+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
 								return;
 							}
 							#endregion 7 - InsPlan Non-Null Subscriber, Not a New Plan, No Changes Made
@@ -5621,7 +5621,7 @@ namespace OpenDental{
 										//So if any benefits were changed, the synch further down will trigger updates for the benefits on the picked plan.
 									}
 									catch(Exception ex) {
-										MessageBox.Show(Lan.G(this,"Error Code 8")+".  "+Lan.G(this,"Please contact support")+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
+										MessageBox.Show("Error Code 8"+".  "+"Please contact support"+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
 										return;
 									}
 									#endregion 8 - InsPlan Non-Null Subscriber, Not a New Plan, Pick From List, Changes Made, Change All Checked
@@ -5653,7 +5653,7 @@ namespace OpenDental{
 										}
 									}
 									catch(Exception ex) {
-										MessageBox.Show(Lan.G(this,"Error Code 9")+".  "+Lan.G(this,"Please contact support")+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
+										MessageBox.Show("Error Code 9"+".  "+"Please contact support"+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
 										return;
 									}
 									#endregion 9 - InsPlan Non-Null Subscriber, Not a New Plan, Pick From List, Changes Made, Create New Plan Checked
@@ -5688,7 +5688,7 @@ namespace OpenDental{
 									}
 								}
 								catch(Exception ex) {
-									MessageBox.Show(Lan.G(this,"Error Code 10")+".  "+Lan.G(this,"Please contact support")+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
+									MessageBox.Show("Error Code 10"+".  "+"Please contact support"+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
 									return;
 								}
 								#endregion 10 - InsPlan Non-Null Subscriber, Not a New Plan, Not Picked From List, Changes Made
@@ -5722,7 +5722,7 @@ namespace OpenDental{
 								catch(ApplicationException ex) {
 									MessageBox.Show(ex.Message);
 									SecurityLogs.MakeLogEntry(Permissions.InsPlanEdit,(PatPlanCur==null) ? 0 : PatPlanCur.PatNum
-										,Lan.G(this,"FormInsPlan region 5a delete validation failed.  Plan was not deleted."),
+										,"FormInsPlan region 5a delete validation failed.  Plan was not deleted.",
 										_planOld.PlanNum,DateTime.MinValue); //new plan, no date needed.
 									Close();
 									return;
@@ -5730,7 +5730,7 @@ namespace OpenDental{
 							}
 						}
 						catch(Exception ex) {
-							MessageBox.Show(Lan.G(this,"Error Code 5a")+".  "+Lan.G(this,"Please contact support")+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
+							MessageBox.Show("Error Code 5a"+".  "+"Please contact support"+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
 							return;
 						}
 						#endregion 5a - User Without Permissions, InsPlan Non-Null Subscriber, New Plan
@@ -5759,8 +5759,8 @@ namespace OpenDental{
 						//PatPlanCur will be null if editing insurance plans from Lists > Insurance Plans.
 						//However, the Change button is invisible from List > Insurance Plans, so we can count on PatPlanCur not null.
 						SecurityLogs.MakeLogEntry(Permissions.InsPlanChangeSubsc,PatPlanCur.PatNum,
-							Lan.G(this,"Subscriber Changed from")+" "+dictPatNames[_subOld.Subscriber]+" #"+_subOld.Subscriber+" "
-							+Lan.G(this,"to")+" "+dictPatNames[_subCur.Subscriber]+" #"+_subCur.Subscriber);
+							"Subscriber Changed from"+" "+dictPatNames[_subOld.Subscriber]+" #"+_subOld.Subscriber+" "
+							+"to"+" "+dictPatNames[_subCur.Subscriber]+" #"+_subCur.Subscriber);
 					}
 					//Udate all claims, claimprocs, payplans, and etrans that are pointing at the inssub.InsSubNum since it may now be pointing at a new insplan.PlanNum.
 					InsSubs.SynchPlanNumsForNewPlan(_subCur);
@@ -5769,7 +5769,7 @@ namespace OpenDental{
 				}
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.G(this,"Error Code 11")+".  "+Lan.G(this,"Please contact support")+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
+				MessageBox.Show("Error Code 11"+".  "+"Please contact support"+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
 				return;
 			}
 			#endregion InsSub and Benefit Sync
@@ -5785,13 +5785,13 @@ namespace OpenDental{
 					string carrierNameOrig=Carriers.GetCarrier(_planCurOriginal.CarrierNum).CarrierName;
 					string carrierNameNew=Carriers.GetCarrier(_planCur.CarrierNum).CarrierName;
 					if(carrierNameOrig!=carrierNameNew) {//The CarrierNum could have changed but the CarrierName might not have changed.  Only make an audit entry if the name changed.
-						SecurityLogs.MakeLogEntry(Permissions.InsPlanChangeCarrierName,patNum,Lan.G(this,"Carrier name changed in Edit Insurance Plan window from")+" "
-						+carrierNameOrig+" "+Lan.G(this,"to")+" "+carrierNameNew,_planCur.PlanNum,_planCurOriginal.SecDateTEdit);
+						SecurityLogs.MakeLogEntry(Permissions.InsPlanChangeCarrierName,patNum,"Carrier name changed in Edit Insurance Plan window from"+" "
+						+carrierNameOrig+" "+"to"+" "+carrierNameNew,_planCur.PlanNum,_planCurOriginal.SecDateTEdit);
 					}
 				}
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.G(this,"Error Code 12")+".  "+Lan.G(this,"Please contact support")+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
+				MessageBox.Show("Error Code 12"+".  "+"Please contact support"+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
 				return;
 			}
 			#endregion Carrier
@@ -5801,18 +5801,18 @@ namespace OpenDental{
 				if(_planCurOriginal.FeeSched!=0 && _planCurOriginal.FeeSched!=_planCur.FeeSched) {
 					string feeSchedOld=FeeScheds.GetDescription(_planCurOriginal.FeeSched);
 					string feeSchedNew=FeeScheds.GetDescription(_planCur.FeeSched);
-					string logText=Lan.G(this,"The fee schedule associated with insurance plan number")+" "+_planCur.PlanNum.ToString()+" "+Lan.G(this,"for the carrier")+" "+carrierCur.CarrierName+" "+Lan.G(this,"was changed from")+" "+feeSchedOld+" "+Lan.G(this,"to")+" "+feeSchedNew;
+					string logText="The fee schedule associated with insurance plan number"+" "+_planCur.PlanNum.ToString()+" "+"for the carrier"+" "+carrierCur.CarrierName+" "+"was changed from"+" "+feeSchedOld+" "+"to"+" "+feeSchedNew;
 					SecurityLogs.MakeLogEntry(Permissions.InsPlanEdit,PatPlanCur==null?0:PatPlanCur.PatNum,logText,(_planCur==null)?0:_planCur.PlanNum,
 						_planCurOriginal.SecDateTEdit);
 				}
 				if(InsPlanCrud.UpdateComparison(_planCurOriginal,_planCur)) {
-					string logText=Lan.G(this,"Insurance plan")+" "+_planCur.PlanNum.ToString()+" "+Lan.G(this,"for the carrier")+" "+carrierCur.CarrierName+" "+Lan.G(this,"has changed.");
+					string logText="Insurance plan"+" "+_planCur.PlanNum.ToString()+" "+"for the carrier"+" "+carrierCur.CarrierName+" "+"has changed.";
 					SecurityLogs.MakeLogEntry(Permissions.InsPlanEdit,PatPlanCur==null?0:PatPlanCur.PatNum,logText,(_planCur==null)?0:_planCur.PlanNum,
 						_planCurOriginal.SecDateTEdit);
 				}
 			}
 			catch(Exception ex) {
-				MessageBox.Show(Lan.G(this,"Error Code 13")+".  "+Lan.G(this,"Please contact support")+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
+				MessageBox.Show("Error Code 13"+".  "+"Please contact support"+"\r\n"+"\r\n"+ex.Message+"\r\n"+ex.StackTrace);
 				return;
 			}
 			#endregion Carrier FeeSched
@@ -5869,7 +5869,7 @@ namespace OpenDental{
 				catch(ApplicationException ex) {
 					MessageBox.Show(ex.Message);
 					SecurityLogs.MakeLogEntry(Permissions.InsPlanEdit,(PatPlanCur==null)?0:PatPlanCur.PatNum
-						,Lan.G(this,"FormInsPlan_Closing delete validation failed.  Plan was not deleted."),_planOld.PlanNum,DateTime.MinValue);//new plan, no date needed.
+						,"FormInsPlan_Closing delete validation failed.  Plan was not deleted.",_planOld.PlanNum,DateTime.MinValue);//new plan, no date needed.
 					return;
 				}
 			}

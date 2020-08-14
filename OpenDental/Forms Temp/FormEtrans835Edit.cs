@@ -33,7 +33,7 @@ namespace OpenDental {
 		///If the claimNum is not found on this ERA then all claims will preview.</summary>
 		public FormEtrans835Edit(long printPreviewClaimNum=0) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_preLoadedPrintPreviewClaimNum=printPreviewClaimNum;
 		}
 
@@ -54,8 +54,8 @@ namespace OpenDental {
 			FillAll();
 			Menu.MenuItemCollection menuItemCollection=new Menu.MenuItemCollection(gridClaimDetailsMenu);
 			List<MenuItem> listMenuItems=new List<MenuItem>();
-			listMenuItems.Add(new MenuItem(Lan.G(this,"Go to Account"),new EventHandler(gridClaimDetails_RightClickHelper)));
-			listMenuItems.Add(new MenuItem(Lan.G(this,"Add Tracking Status"),new EventHandler(gridClaimDetails_RightClickHelper)));//Enabled by default
+			listMenuItems.Add(new MenuItem("Go to Account",new EventHandler(gridClaimDetails_RightClickHelper)));
+			listMenuItems.Add(new MenuItem("Add Tracking Status",new EventHandler(gridClaimDetails_RightClickHelper)));//Enabled by default
 			menuItemCollection.AddRange(listMenuItems.ToArray());
 			gridClaimDetails.ContextMenu=gridClaimDetailsMenu;
 			gridClaimDetails.AllowSortingByColumn=true;
@@ -121,7 +121,7 @@ namespace OpenDental {
 			textPayerContactInfo.Text=_x835.PayerContactInfo;
 			//Payee information
 			textPayeeName.Text=_x835.PayeeName;
-			labelPayeeIdType.Text=Lan.G(this,"Payee")+" "+_x835.PayeeIdType;
+			labelPayeeIdType.Text="Payee"+" "+_x835.PayeeIdType;
 			textPayeeID.Text=_x835.PayeeId;
 			//Payment information
 			textTransHandlingDesc.Text=_x835.TransactionHandlingDescript;
@@ -144,17 +144,17 @@ namespace OpenDental {
 		private void FillClaimDetails() {
 			gridClaimDetails.BeginUpdate();
 			gridClaimDetails.ListGridColumns.Clear();
-			gridClaimDetails.ListGridColumns.Add(new GridColumn(Lan.G(this,"Recd"),32,HorizontalAlignment.Center));
-			gridClaimDetails.ListGridColumns.Add(new GridColumn(Lan.G(this,"Patient"),70,HorizontalAlignment.Left){ IsWidthDynamic=true });
-			gridClaimDetails.ListGridColumns.Add(new GridColumn(Lan.G(this,"DateService"),80,HorizontalAlignment.Center));
-			gridClaimDetails.ListGridColumns.Add(new GridColumn(Lan.G(this,"Claim\r\nIdentifier"),50,HorizontalAlignment.Left));
-			gridClaimDetails.ListGridColumns.Add(new GridColumn(Lan.G(this,"Payor\r\nControl#"),56,HorizontalAlignment.Center));//Payer Claim Control Number (CLP07)
-			gridClaimDetails.ListGridColumns.Add(new GridColumn(Lan.G(this,"Status"),70,HorizontalAlignment.Left){ IsWidthDynamic=true });//Claim Status Code Description (CLP02)
-			gridClaimDetails.ListGridColumns.Add(new GridColumn(Lan.G(this,"ClaimFee"),70,HorizontalAlignment.Right));//Total Claim Charge Amount (CLP03)
-			gridClaimDetails.ListGridColumns.Add(new GridColumn(Lan.G(this,"InsPaid"),70,HorizontalAlignment.Right));//Claim Payment Amount (CLP04)
-			gridClaimDetails.ListGridColumns.Add(new GridColumn(Lan.G(this,"PatPort"),70,HorizontalAlignment.Right));//Patient Portion
-			gridClaimDetails.ListGridColumns.Add(new GridColumn(Lan.G(this,"Deduct"),70,HorizontalAlignment.Right));//Deductible
-			gridClaimDetails.ListGridColumns.Add(new GridColumn(Lan.G(this,"Writeoff"),70,HorizontalAlignment.Right));//Writeoff
+			gridClaimDetails.ListGridColumns.Add(new GridColumn("Recd",32,HorizontalAlignment.Center));
+			gridClaimDetails.ListGridColumns.Add(new GridColumn("Patient",70,HorizontalAlignment.Left){ IsWidthDynamic=true });
+			gridClaimDetails.ListGridColumns.Add(new GridColumn("DateService",80,HorizontalAlignment.Center));
+			gridClaimDetails.ListGridColumns.Add(new GridColumn("Claim\r\nIdentifier",50,HorizontalAlignment.Left));
+			gridClaimDetails.ListGridColumns.Add(new GridColumn("Payor\r\nControl#",56,HorizontalAlignment.Center));//Payer Claim Control Number (CLP07)
+			gridClaimDetails.ListGridColumns.Add(new GridColumn("Status",70,HorizontalAlignment.Left){ IsWidthDynamic=true });//Claim Status Code Description (CLP02)
+			gridClaimDetails.ListGridColumns.Add(new GridColumn("ClaimFee",70,HorizontalAlignment.Right));//Total Claim Charge Amount (CLP03)
+			gridClaimDetails.ListGridColumns.Add(new GridColumn("InsPaid",70,HorizontalAlignment.Right));//Claim Payment Amount (CLP04)
+			gridClaimDetails.ListGridColumns.Add(new GridColumn("PatPort",70,HorizontalAlignment.Right));//Patient Portion
+			gridClaimDetails.ListGridColumns.Add(new GridColumn("Deduct",70,HorizontalAlignment.Right));//Deductible
+			gridClaimDetails.ListGridColumns.Add(new GridColumn("Writeoff",70,HorizontalAlignment.Right));//Writeoff
 			gridClaimDetails.ListGridRows.Clear();
 			_claimInsPaidSum=0;
 			List<int> listMatchedRows=new List<int>();
@@ -449,14 +449,14 @@ namespace OpenDental {
 			List<Hx835_Claim> listRecievedEraClaims=listSelectedEraClaims.FindAll(x => listAttachedClaims.Any(y => y.ClaimNum==x.ClaimNum && y.ClaimStatus=="R"));
 			StringBuilder sbWarnings=new StringBuilder();
 			if(listRecievedEraClaims.Count>0) {
-				sbWarnings.AppendLine(Lan.G(this,"You have selected some claims which are already recieved."));
-				sbWarnings.AppendLine(Lan.G(this,"Detaching these will not reverse any payment information."));
+				sbWarnings.AppendLine("You have selected some claims which are already recieved.");
+				sbWarnings.AppendLine("Detaching these will not reverse any payment information.");
 			}
 			if(gridClaimDetails.SelectedIndices.Length>1) {
-				sbWarnings.AppendLine(Lan.G(this,"All selected claims will be immediately detached from this ERA even if you click Cancel when you leave the ERA window."));
+				sbWarnings.AppendLine("All selected claims will be immediately detached from this ERA even if you click Cancel when you leave the ERA window.");
 			}
 			if(sbWarnings.Length>0) {
-				sbWarnings.AppendLine(Lan.G(this,"Click OK to continue, or click Cancel to leave claims attached."));
+				sbWarnings.AppendLine("Click OK to continue, or click Cancel to leave claims attached.");
 				if(MessageBox.Show(this,sbWarnings.ToString(),"",MessageBoxButtons.OKCancel)!=DialogResult.OK) {
 					return;
 				}

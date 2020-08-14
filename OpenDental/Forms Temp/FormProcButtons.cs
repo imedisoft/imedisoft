@@ -37,7 +37,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormProcButtons(){
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -459,7 +459,7 @@ namespace OpenDental{
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
 			if(listViewButtons.SelectedIndices.Count==0){
-				MessageBox.Show(Lan.G(this,"Please select an item first."));
+				MessageBox.Show("Please select an item first.");
 				return;
 			}
 			ProcButtons.Delete(ButtonList[listViewButtons.SelectedIndices[0]]);

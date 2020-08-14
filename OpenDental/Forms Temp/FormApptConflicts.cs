@@ -23,7 +23,7 @@ namespace OpenDental {
 
 		public FormApptConflicts(List<Appointment> listAppts) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_listAppts=listAppts.Select(x => x.Copy()).ToList();
 		}
 
@@ -37,17 +37,17 @@ namespace OpenDental {
 			_listPatients=Patients.GetLimForPats(_listAppts.Select(x => x.PatNum).Distinct().ToList());
 			gridConflicts.BeginUpdate();
 			gridConflicts.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableApptConflicts","Patient"),140);
+			GridColumn col=new GridColumn("Patient",140);
 			gridConflicts.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableApptConflicts","Date"),120);
+			col=new GridColumn("Date",120);
 			gridConflicts.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableApptConflicts","Op"),110);
+			col=new GridColumn("Op",110);
 			gridConflicts.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableApptConflicts","Prov"),50);
+			col=new GridColumn("Prov",50);
 			gridConflicts.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableApptConflicts","Procedures"),150);
+			col=new GridColumn("Procedures",150);
 			gridConflicts.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableApptConflicts","Notes"),200);
+			col=new GridColumn("Notes",200);
 			gridConflicts.ListGridColumns.Add(col);
 			gridConflicts.ListGridRows.Clear();
 			GridRow row;
@@ -134,7 +134,7 @@ namespace OpenDental {
 		private void butPrint_Click(object sender,EventArgs e) {
 			_pagesPrinted=0;
 			_hasHeadingPrinted=false;
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"Operatory Merge - conflict appointment List printed."));
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,"Operatory Merge - conflict appointment List printed.");
 		}
 
 		private void pd_PrintPage(object sender,System.Drawing.Printing.PrintPageEventArgs e) {
@@ -148,7 +148,7 @@ namespace OpenDental {
 			#region printHeading
 			int headingPrintH=0;
 			if(!_hasHeadingPrinted) {
-				text=Lan.G(this,"Operatory Merge - Conflict Appointment List");
+				text="Operatory Merge - Conflict Appointment List";
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,y);
 				y+=25;
 				_hasHeadingPrinted=true;

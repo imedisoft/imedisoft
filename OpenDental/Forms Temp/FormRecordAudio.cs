@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormRecordAudio() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>mciSendString uses command strings to control MCI devices.  This link gives an example of using mciSendString():
@@ -33,12 +33,12 @@ namespace OpenDental {
 		}
 
 		private void butStart_Click(object sender,EventArgs e) {
-			if(butStart.Text==Lan.G(this,"Record")) {
+			if(butStart.Text=="Record") {
 				timerRecord.Start();
 				_recordStart=DateTime.Now;
 				mciSendString("open new Type waveaudio Alias recsound","",0,0);
 				mciSendString("record recsound","",0,0);
-				butStart.Text=Lan.G(this,"Stop");
+				butStart.Text="Stop";
 				butStart.Image=imageListMain.Images[1];
 				butPlay.Enabled=false;
 				butSave.Enabled=false;
@@ -48,7 +48,7 @@ namespace OpenDental {
 				_tempPath=Storage.CombinePaths(Storage.GetTempPath(),"recsound"+".wav");
 				mciSendString("save recsound "+_tempPath,"",0,0);
 				mciSendString("close recsound ","",0,0);
-				butStart.Text=Lan.G(this,"Record");
+				butStart.Text="Record";
 				butStart.Image=imageListMain.Images[0];
 				butPlay.Enabled=true;
 				butSave.Enabled=true;

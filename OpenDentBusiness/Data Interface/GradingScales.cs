@@ -96,7 +96,7 @@ namespace OpenDentBusiness{
 				error+=" EvaluationCriterion,";
 			}
 			if(error!="") {
-				throw new ApplicationException(Lans.g("GradingScaleEdit","Grading scale is in use by")+":"+error.TrimEnd(','));
+				throw new ApplicationException("Grading scale is in use by"+":"+error.TrimEnd(','));
 			}
 			GradingScaleItems.DeleteAllByGradingScale(gradingScaleNum);
 			command= "DELETE FROM gradingscale WHERE GradingScaleNum = "+POut.Long(gradingScaleNum);

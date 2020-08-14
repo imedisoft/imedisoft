@@ -17,7 +17,7 @@ namespace OpenDental {
 		///<Summary>This form is only used to edit existing supplyOrders, not to add new ones.</Summary>
 		public FormSupplyOrderEdit() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormSupplyOrderEdit_Load(object sender,EventArgs e) {

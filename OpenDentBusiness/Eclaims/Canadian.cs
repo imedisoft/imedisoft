@@ -106,11 +106,11 @@ namespace OpenDentBusiness.Eclaims {
 						}
 					}
 					if(!matchingPrimaryProc) {
-						throw new ApplicationException(Lans.g("Canadian","The procedures attached to this COB claim must be the same as the procedures attached to the primary claim."));
+						throw new ApplicationException("The procedures attached to this COB claim must be the same as the procedures attached to the primary claim.");
 					}
 				}
 				if(ClaimProcs.GetForSendClaim(claimProcList,claimNumPrimary).Count!=claimProcsClaim.Count) {
-					throw new ApplicationException(Lans.g("Canadian","The procedures attached to this COB claim must be the same as the procedures attached to the primary claim."));
+					throw new ApplicationException("The procedures attached to this COB claim must be the same as the procedures attached to the primary claim.");
 				}
 				//Now ensure that the primary claim received an EOB response, or else we cannot send a COB.
 				List <Etrans> etransPrimary=Etranss.GetHistoryOneClaim(claimNumPrimary);
@@ -127,19 +127,19 @@ namespace OpenDentBusiness.Eclaims {
 					break;
 				}
 				if(primaryEOBResponse=="") {
-					throw new ApplicationException(Lans.g("Canadian","Cannot send secondary claim electronically until primary EOB has been received electronically."));
+					throw new ApplicationException("Cannot send secondary claim electronically until primary EOB has been received electronically.");
 				}
 				else if(primaryEOBResponse.Length<22) {
-					throw new ApplicationException(Lans.g("Canadian","Cannot send secondary claim electronically, because primary claim electronic response is malformed. Try sending the primary claim again."));
+					throw new ApplicationException("Cannot send secondary claim electronically, because primary claim electronic response is malformed. Try sending the primary claim again.");
 				}
 				else {//primaryEOBResponse.Length>=22
 					string messageVersion=primaryEOBResponse.Substring(18,2);//Field A03 always exists on all messages and is always in the same location.
 					string messageType=primaryEOBResponse.Substring(20,2);//Field A04 always exists on all messages and is always in the same location.
 					if(messageVersion!="04") {
-						throw new ApplicationException(Lans.g("Canadian","Cannot send secondary claim electronically, because primary claim electronic response is in an older format. The secondary claim must be printed instead."));
+						throw new ApplicationException("Cannot send secondary claim electronically, because primary claim electronic response is in an older format. The secondary claim must be printed instead.");
 					}
 					if(messageType!="21") {//message type 21 is EOB
-						throw new ApplicationException(Lans.g("Canadian","Cannot send secondary claim electronically until primary EOB has been received electronically. The existing primary claim electronic response is not an EOB."));
+						throw new ApplicationException("Cannot send secondary claim electronically until primary EOB has been received electronically. The existing primary claim electronic response is not an EOB.");
 					}
 				}
 				Claim claimPrimary=Claims.GetClaim(claimNumPrimary);
@@ -173,7 +173,7 @@ namespace OpenDentBusiness.Eclaims {
 			}
 			if(claim.ClaimType=="S") {//cob
 				if(!carrier.CanadianSupportedTypes.HasFlag(CanSupTransTypes.CobClaimTransaction_07)) {
-					throw new ApplicationException(Lans.g("Canadian","This carrier does not accept electronic secondary claims (COB transactions).  Try printing and mailing the claim instead."));
+					throw new ApplicationException("This carrier does not accept electronic secondary claims (COB transactions).  Try printing and mailing the claim instead.");
 				}
 				carrierReceiver=carrier2;
 				if(carrierReceiver==null) {
@@ -185,7 +185,7 @@ namespace OpenDentBusiness.Eclaims {
 					!carrier.CanadianSupportedTypes.HasFlag(CanSupTransTypes.PredeterminationMultiPage_03)
 					&& carrier.ElectID!="610099")//ClaimSecure says to iTrans that they support PreAuths, iTrans has not reflected this in their carrier json.
 				{//We will consider removing carrier specific cases here in the future.
-					throw new ApplicationException(Lans.g("Canadian","This carrier does not accept electronic Pre Authorizations (predeterminations)."));
+					throw new ApplicationException("This carrier does not accept electronic Pre Authorizations (predeterminations).");
 				}
 			}
 			CanadianNetwork network=CanadianNetworks.GetNetwork(carrierReceiver.CanadianNetworkNum,clearinghouseClin);
@@ -379,9 +379,9 @@ namespace OpenDentBusiness.Eclaims {
 			if(claim.ClaimType=="S") {
 				primaryClaimData=new CCDFieldInputter(primaryClaimRequestMessage);
 				if(primaryClaimData.GetFieldById("E04")==null) {
-					throw new ApplicationException(Lans.g("Canadian",
-						"Cannot send secondary claim because primary claim was sent without specifying secondary insurance information.  "
-						+"Reverse and resend primary claim with secondary insurance information before sending secondary claim."));
+					throw new ApplicationException(
+						"Cannot send secondary claim because primary claim was sent without specifying secondary insurance information. " +
+						"Reverse and resend primary claim with secondary insurance information before sending secondary claim.");
 				}
 			}
 			//D01 subscriber birthday 8 N
@@ -1225,7 +1225,7 @@ namespace OpenDentBusiness.Eclaims {
 					#endregion
 				}
 				if(claimProcCur.IsNew) {//When we identify a missing proc from the EOB we must insert a new claimProc.
-					claimProcCur.Remarks=Lans.g("Canadian","Revived from EOB");
+					claimProcCur.Remarks="Revived from EOB";
 					ClaimProcs.Insert(claimProcCur);
 				}
 				else {
@@ -1240,7 +1240,7 @@ namespace OpenDentBusiness.Eclaims {
 				foreach(List<CCDField> listFieldsCur in listCarrierProcs) {//Keys are G18 line numbers.
 					ClaimProc cpByTotal=ByTotClaimProcHelper(claim,listPayPlans.Count==1?listPayPlans[0].PayPlanNum:0,isPreEob,eobBehavior);
 					List<string> listClaimProcNotes=new List<string>();
-					listClaimProcNotes.Add(Lans.g("Canadian","Related to claim lines")+": "+string.Join(",",listFieldsCur[0].valuestr.TrimStart('0').ToCharArray().ToList()));
+					listClaimProcNotes.Add("Related to claim lines"+": "+string.Join(",",listFieldsCur[0].valuestr.TrimStart('0').ToCharArray().ToList()));
 					foreach(CCDField field in listFieldsCur) {
 						#region claimProcCur update
 						switch(field.fieldId) {
@@ -1248,12 +1248,12 @@ namespace OpenDentBusiness.Eclaims {
 								//this is the lineNumber variable, handled above.
 								break;
 							case "G19"://Additional Procedure Code
-								listClaimProcNotes.Add(Lans.g("Canadian","Additional Procedure Code")+": "+field.valuestr);
+								listClaimProcNotes.Add("Additional Procedure Code"+": "+field.valuestr);
 								break;
 							case "G20"://Eligible Amount
 								break;
 							case "G44"://Eligible Amount for additional Lab procedure
-								listClaimProcNotes.Add(Lans.g("Canadian","Lab Procedure Eligible Amount")+": "+PIn.Double(field.valuestr));
+								listClaimProcNotes.Add("Lab Procedure Eligible Amount"+": "+PIn.Double(field.valuestr));
 								break;
 							case "G21"://Deductible
 								if(isPreEob) {
@@ -1380,7 +1380,7 @@ namespace OpenDentBusiness.Eclaims {
 		public static string PassToIca(string msgText,Clearinghouse clearinghouseClin,CanadianNetwork network,bool isAutomatic,out string errorMsg) {
 			errorMsg="";
 			if(clearinghouseClin==null){
-				errorMsg=Lans.g("Canadian","A CDAnet compatible clearinghouse could not be found.");
+				errorMsg="A CDAnet compatible clearinghouse could not be found.";
 				return "";//Return empty response, since we never received one.
 			}
 			bool isItrans=(clearinghouseClin.CommBridge==EclaimsCommBridge.ITRANS);
@@ -1404,13 +1404,13 @@ namespace OpenDentBusiness.Eclaims {
 					subDir="telusb";
 				}
 				else {
-					errorMsg=Lans.g("Canadian","ClaimStream does not support this transaction for network")+" "+network.Descript;
+					errorMsg="ClaimStream does not support this transaction for network"+" "+network.Descript;
 					return "";//Return empty response, since we never received one.
 				}
 				saveFolder=ODFileUtils.CombinePaths(saveFolder,subDir);
 			}
 			if(!Directory.Exists(saveFolder)) {
-				errorMsg=saveFolder+" "+Lans.g("Canadian","not found.");
+				errorMsg=saveFolder+" "+"not found.";
 				return "";//Return empty response, since we never received one.
 			}
 			if(isClaimstream) {
@@ -1473,14 +1473,14 @@ namespace OpenDentBusiness.Eclaims {
 //						arrayCertFileBytes=Convert.FromBase64String(node.InnerText);
 //					}
 //					catch(Exception ex) {
-//						errorMsg=Lans.g("Canadian","Failed to download certificate file")+"\r\n  "+ex.Message;
+//						errorMsg="Failed to download certificate file"+"\r\n  "+ex.Message;
 //						return "";//Return empty response, since we never received one.
 //					}
 //					try {
 //						File.WriteAllBytes(certFilePath,arrayCertFileBytes);
 //					}
 //					catch(Exception ex) {
-//						errorMsg=Lans.g("Canadian","Failed to export certificate file to path")+" '"+certFilePath+"'\r\n  "+ex.Message;
+//						errorMsg="Failed to export certificate file to path"+" '"+certFilePath+"'\r\n  "+ex.Message;
 //						return "";//Return empty response, since we never received one.
 //					}
 				}
@@ -1495,7 +1495,7 @@ namespace OpenDentBusiness.Eclaims {
 					File.Delete(outputFile);//no exception thrown if file does not exist.
 				}
 				catch(Exception ex) {//Will throw if the file does exist but cannot be deleted.
-					errorMsg=Lans.g("Canadian","Failed to remove old output file to make room for new output file.  Please try again.  File: ")+" '"+outputFile+"'\r\n"+ex.Message;
+					errorMsg="Failed to remove old output file to make room for new output file.  Please try again.  File: "+" '"+outputFile+"'\r\n"+ex.Message;
 					return "";//Return empty response, since we never received one.
 				}
 			}
@@ -1509,7 +1509,7 @@ namespace OpenDentBusiness.Eclaims {
 				File.Move(tempInputFile,inputFile);//The input file should not exist, because the clearinghouse software should process input files promptly, unless the clearinghouse service is off for 1000 transactions in a row. We want an exception to be thrown if this file already exists.
 			}
 			catch(Exception ex) {
-				errorMsg=Lans.g("Canadian","Failed to save outgoing claim to file.")+"  "+ex.Message;
+				errorMsg="Failed to save outgoing claim to file."+"  "+ex.Message;
 				return "";//Return empty response, since we never received one.
 			}
 			DateTime start=DateTime.Now;
@@ -1530,13 +1530,13 @@ namespace OpenDentBusiness.Eclaims {
 			}
 			if(!File.Exists(outputFile)) {
 				if(isItrans) {
-					errorMsg=Lans.g("Canadian","No response from iCAService (ITRANS) or ICDService (ITRANS 2.0). Ensure that the correct service for your version of ITRANS is started and the corresponding folder has the necessary permissions.");
+					errorMsg="No response from iCAService (ITRANS) or ICDService (ITRANS 2.0). Ensure that the correct service for your version of ITRANS is started and the corresponding folder has the necessary permissions.";
 				}
 				else if(isClaimstream) {
-					errorMsg=Lans.g("Canadian","No response from the CCDWS service. Ensure that the CCDWS service is started and the ccd folder has the necessary permissions.");
+					errorMsg="No response from the CCDWS service. Ensure that the CCDWS service is started and the ccd folder has the necessary permissions.";
 				}
 				else {//Other clearinghouses, if we ever support them.
-					errorMsg=Lans.g("Canadian","No response from clearinghouse service. Ensure that the clearinghouse service is started and the export folder has the necessary permissions.");
+					errorMsg="No response from clearinghouse service. Ensure that the clearinghouse service is started and the export folder has the necessary permissions.";
 				}
 				return "";//Return empty response, since we never received one.
 			}
@@ -1545,7 +1545,7 @@ namespace OpenDentBusiness.Eclaims {
 				resultBytes=File.ReadAllBytes(outputFile);
 			}
 			catch(Exception ex) {
-				errorMsg=Lans.g("Canadian","Failed to read response from file.")+"  "+ex.Message;
+				errorMsg="Failed to read response from file."+"  "+ex.Message;
 				return "";//Return empty response, since we never received one.
 			}
 			string result=Encoding.GetEncoding(850).GetString(resultBytes);
@@ -1574,34 +1574,34 @@ namespace OpenDentBusiness.Eclaims {
 			if(result.Length<42) {//The shortest message is a version 02 Request for Pended Claims with length 42. Any message shorter is considered to be an error message.
 				//The only valid message less than 42 characters in length is an Outstanding Transactions Acknowledgement indicating that the mailbox is empty. 
 				string[] responses=resultPrefix.Split(',');
-				string errorCode=Lans.g("Canadian","UNKNOWN");
+				string errorCode="UNKNOWN";
 				if(responses.Length >= 2) {
 					errorCode=responses[1];
 				}
-				errorMsg=Lans.g("Canadian","Error")+" "+errorCode+"\r\n\r\n"+Lans.g("Canadian","Raw Response")+":\r\n"+resultPrefix+result+"\r\n\r\n";
+				errorMsg="Error"+" "+errorCode+"\r\n\r\n"+"Raw Response"+":\r\n"+resultPrefix+result+"\r\n\r\n";
 				if(isItrans) {
 					if(errorCode=="1013") {
-						errorMsg+=Lans.g("Canadian","The CDA digital certificate for the provider is either missing, not exportable, expired, or invalid.")+"\r\n";
+						errorMsg+="The CDA digital certificate for the provider is either missing, not exportable, expired, or invalid."+"\r\n";
 					}
-					errorMsg+="\r\n"+Lans.g("Canadian","Please see http://www.goitrans.com/itrans-support-error-codes/ for more details.")+"\r\n";
+					errorMsg+="\r\n"+"Please see http://www.goitrans.com/itrans-support-error-codes/ for more details."+"\r\n";
 					string errorFile=ODFileUtils.CombinePaths(Path.GetDirectoryName(clearinghouseClin.ClientProgram),"ica.log");
 					string errorlog="";
 					if(File.Exists(errorFile)) {
 						try { 
 							errorlog=File.ReadAllText(errorFile);
-							errorMsg+=Lans.g("Canadian","Error log")+":\r\n"+errorlog;
+							errorMsg+="Error log"+":\r\n"+errorlog;
 						}
 						catch(Exception ex) {
-							errorMsg=Lans.g("Canadian","Failed to read error log file.")+"  "+ex.Message;
+							errorMsg="Failed to read error log file."+"  "+ex.Message;
 						}
 					}
 				}
 				else if(isClaimstream) {					
 					string errorDescription="";
 					string errorMessage=GetErrorMessageForCodeClaimstream(errorCode,ref errorDescription);
-					errorMsg+=Lans.g("Canadian","Error Message")+": "+Lans.g("Canadian",errorMessage)+"\r\n";
-					errorMsg+=Lans.g("Canadian","Error Description")+": "+Lans.g("Canadian",errorDescription)+"\r\n\r\n";
-					errorMsg+=Lans.g("Canadian","For further error details, read the log file ccdws.log.");
+					errorMsg+="Error Message"+": "+errorMessage+"\r\n";
+					errorMsg+="Error Description"+": "+errorDescription+"\r\n\r\n";
+					errorMsg+="For further error details, read the log file ccdws.log.";
 				}
 				return result;
 			}
@@ -1614,13 +1614,15 @@ namespace OpenDentBusiness.Eclaims {
 					if(mailboxIndicator!=null) { //Field A11 should exist in all response types, but just in case.
 						if(mailboxIndicator.valuestr.ToUpper()=="Y" || mailboxIndicator.valuestr.ToUpper()=="O"
 							&& !isAutomatic) {
-							MessageBox.Show(Lans.g("Canadian","NOTIFICATION: Items are waiting in the mailbox. Retrieve these items by going to the Manage module, click the Send Claims button, "
-								+"then click the Outstanding button. This box will continue to show each time a claim is sent until the mailbox is cleared."));
+							MessageBox.Show(
+								"NOTIFICATION: Items are waiting in the mailbox. " +
+								"Retrieve these items by going to the Manage module, click the Send Claims button, then click the Outstanding button. " +
+								"This box will continue to show each time a claim is sent until the mailbox is cleared.");
 						}
 					}
 				}
 				catch {
-					errorMsg+=Lans.g("Canadian","Response is not formatted according to message standards.");
+					errorMsg+="Response is not formatted according to message standards.";
 				}
 			}
 			return result;

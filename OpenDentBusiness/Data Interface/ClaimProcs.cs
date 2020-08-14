@@ -272,7 +272,7 @@ namespace OpenDentBusiness
 							unearnedPayment.ClinicNum = payAsTotal.ClinicNum;
 							unearnedPayment.PayDate = DateTime.Today;
 							unearnedPayment.PayAmt = payAsTotal.SummedInsPayAmt + payAsTotal.SummedWriteOff;
-							unearnedPayment.PayNote = Lans.g("FormIncomeTransferManager", "Transfer from claim with no claim procedures");
+							unearnedPayment.PayNote = "Transfer from claim with no claim procedures";
 							Payments.Insert(unearnedPayment);
 							PaySplit unearnedSplit = new PaySplit();
 							unearnedSplit.ClinicNum = Clinics.ClinicNum;
@@ -535,7 +535,7 @@ namespace OpenDentBusiness
 					fixCode.ProcCat = Defs.GetDefsForCategory(DefCat.ProcCodeCats, true).First().DefNum;
 				}
 				ProcedureCodes.Insert(fixCode);
-				SecurityLogs.MakeLogEntry(Permissions.Setup, 0, Lans.g("Procedures", "Income Transfer Manager automatically added Procedure Code:")
+				SecurityLogs.MakeLogEntry(Permissions.Setup, 0, "Income Transfer Manager automatically added Procedure Code:"
 					+ " " + fixCode.ProcCode);
 				Signalods.SetInvalid(InvalidType.ProcCodes);
 				Cache.Refresh(InvalidType.ProcCodes);
@@ -543,8 +543,8 @@ namespace OpenDentBusiness
 			#endregion
 			//Group all of the as totals into Pat/Prov/Clinic specific buckets (most accurate transfer ATM).
 			var groupClaimProcs = listAsTotals.GroupBy(x => new { x.PatNum, x.ProvNum, x.ClinicNum });
-			string logText = Lans.g("Procedures", "Income Transfer Manager automatically added") +
-				$" {fixCode.ProcCode}, {Lans.g("Procedures", "Fee")}: {0.ToString("F")}, {fixCode.Descript}";
+			string logText = "Income Transfer Manager automatically added" +
+				$" {fixCode.ProcCode}, {"Fee"}: {0.ToString("F")}, {fixCode.Descript}";
 			//Make a unique dummy procedure and claimproc for each Pat/Prov/Clinic combination to accurately transfer the money. 
 			foreach (var group in groupClaimProcs)
 			{
@@ -835,14 +835,15 @@ namespace OpenDentBusiness
 				long supplementalCP = PIn.Long(Database.ExecuteString(command));
 				if (supplementalCP != 0)
 				{
-					throw new ApplicationException(Lans.g("ClaimProcs", "Not allowed to delete this procedure until all supplementals for this procedure are deleted first."));
+					throw new ApplicationException("Not allowed to delete this procedure until all supplementals for this procedure are deleted first.");
 				}
 			}
 			//Can't delete claimprocs for procedures attached to ortho cases.
 			if (OrthoProcLinks.IsProcLinked(cp.ProcNum))
 			{
-				throw new ApplicationException(Lans.g("ClaimProcs", "Not allowed to delete claim procedures attached to ortho cases." +
-					" The procedure would need to be detached from the ortho case first."));
+				throw new ApplicationException(
+					"Not allowed to delete claim procedures attached to ortho cases. " +
+					"The procedure would need to be detached from the ortho case first.");
 			}
 			//Validate: make sure this is not the last claimproc on the claim.  If cp is not attached to a claim no need to validate.
 			if (cp.ClaimNum != 0)
@@ -864,7 +865,7 @@ namespace OpenDentBusiness
 				}
 				if (remainingCP == 0)
 				{
-					throw new ApplicationException(Lans.g("ClaimProcs", "Not allowed to delete the last procedure from a claim.  The entire claim would have to be deleted."));
+					throw new ApplicationException("Not allowed to delete the last procedure from a claim.  The entire claim would have to be deleted.");
 				}
 			}
 			//end of validation
@@ -1942,7 +1943,7 @@ namespace OpenDentBusiness
 				{
 					cp.NoBillIns = true;
 				}
-				cp.EstimateNote += Lans.g("ClaimProcs", "Exclusion");
+				cp.EstimateNote += "Exclusion";
 			}
 			//base estimate is now done and will not be altered further.  From here out, we are only altering insEstTotal
 			//annual max and other limitations--------------------------------------------------------------------------------

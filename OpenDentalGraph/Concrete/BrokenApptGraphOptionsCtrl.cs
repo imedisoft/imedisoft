@@ -143,7 +143,7 @@ namespace OpenDentalGraph {
 				}
 			} catch{ }			
 			if(comboAdjType.Items.Count<=0) {
-				comboAdjType.Items.Add(Lans.g(this,"Adj types not setup"));
+				comboAdjType.Items.Add("Adj types not setup");
 				radioRunAdjs.Enabled=false;
 			}
 		}
@@ -155,15 +155,15 @@ namespace OpenDentalGraph {
 			switch(brokenApptCodeDB) {
 				case BrokenApptProcedure.None:
 				case BrokenApptProcedure.Missed:
-					index=comboBrokenProcType.Items.Add(Lans.g(this,brokenApptCodeDB.ToString())+": (D9986)");
+					index=comboBrokenProcType.Items.Add(brokenApptCodeDB.ToString()+": (D9986)");
 					break;
 				case BrokenApptProcedure.Cancelled:
-					index=comboBrokenProcType.Items.Add(Lans.g(this,brokenApptCodeDB.ToString())+": (D9987)");
+					index=comboBrokenProcType.Items.Add(brokenApptCodeDB.ToString()+": (D9987)");
 					break;
 				case BrokenApptProcedure.Both:
-					comboBrokenProcType.Items.Add(Lans.g(this,BrokenApptProcedure.Missed.ToString())+": (D9986)");
-					comboBrokenProcType.Items.Add(Lans.g(this,BrokenApptProcedure.Cancelled.ToString())+": (D9987)");
-					index=comboBrokenProcType.Items.Add(Lans.g(this,brokenApptCodeDB.ToString()));
+					comboBrokenProcType.Items.Add(BrokenApptProcedure.Missed.ToString()+": (D9986)");
+					comboBrokenProcType.Items.Add(BrokenApptProcedure.Cancelled.ToString()+": (D9987)");
+					index=comboBrokenProcType.Items.Add(brokenApptCodeDB.ToString());
 					break;
 			}
 			comboBrokenProcType.SelectedIndex=index;

@@ -31,7 +31,7 @@ namespace OpenDental{
 			//
 			QuickNote=quickNote.Copy();
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -183,7 +183,7 @@ namespace OpenDental{
 		}
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
-			if(MessageBox.Show(Lan.G(this,"Delete note?"),"",MessageBoxButtons.OKCancel)!=DialogResult.OK){
+			if(MessageBox.Show("Delete note?","",MessageBoxButtons.OKCancel)!=DialogResult.OK){
 				return;
 			}
 			QuickNote=null;//triggers an action in the calling form
@@ -202,7 +202,7 @@ namespace OpenDental{
 			QuickNote.Abbreviation=textAbbreviation.Text;
 			if(QuickNote.Abbreviation!=""){
 				string msgText=QuickPasteNotes.AbbrAlreadyInUse(QuickNote);
-				if(!String.IsNullOrEmpty(msgText) && MessageBox.Show(msgText,Lan.G(this,"Warning"),MessageBoxButtons.YesNo)==DialogResult.No) {
+				if(!String.IsNullOrEmpty(msgText) && MessageBox.Show(msgText,"Warning",MessageBoxButtons.YesNo)==DialogResult.No) {
 					return;
 				}
 			}

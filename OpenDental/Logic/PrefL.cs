@@ -109,18 +109,18 @@ namespace OpenDental
 			//Whether or not build is current, we want to inform user about the next minor version
 			if (strNewVersion != null)
 			{//we don't really care what it is.
-				updateInfoMinor += Lan.G("FormUpdate", "A newer version is also available.  ");
+				updateInfoMinor += "A newer version is also available.  ";
 				if (versionIsAlpha)
 				{
-					updateInfoMinor += Lan.G("FormUpdate", "It is alpha (experimental), so it has bugs and " +
-						"you will need to update it frequently.  ");
+					updateInfoMinor += "It is alpha (experimental), so it has bugs and " +
+						"you will need to update it frequently.  ";
 				}
 				if (versionIsBeta)
 				{
-					updateInfoMinor += Lan.G("FormUpdate", "It is beta (test), so it has some bugs and " +
-						"you will need to update it frequently.  ");
+					updateInfoMinor += "It is beta (test), so it has some bugs and " +
+						"you will need to update it frequently.  ";
 				}
-				updateInfoMinor += Lan.G("FormUpdate", "Contact us for a new Registration number if you wish to use it.  ");
+				updateInfoMinor += "Contact us for a new Registration number if you wish to use it.  ";
 			}
 			return shouldDownload;
 		}
@@ -475,7 +475,7 @@ namespace OpenDental
 				//	string updateInfoMajor="";
 				//	string updateInfoMinor="";
 				//	if(ShouldDownloadUpdate(updateUri,updateCode,out updateInfoMajor,out updateInfoMinor)) {
-				//		if(MessageBox.Show(updateInfoMajor+Lan.G("Prefs","Perform program update now?"),"",
+				//		if(MessageBox.Show(updateInfoMajor+"Perform program update now?","",
 				//			MessageBoxButtons.YesNo)==DialogResult.Yes) {
 				//			string tempFile=ODFileUtils.CombinePaths(PrefC.GetTempFolderPath(),patchName);//Resort to a more common temp file name.
 				//			DownloadInstallPatchFromURI(updateUri+updateCode+"/"+patchName,//Source URI

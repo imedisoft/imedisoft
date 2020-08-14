@@ -40,7 +40,7 @@ namespace OpenDental{
 			InitializeComponent();
 			PatNum=patNum;
 			//tbPlans.CellDoubleClicked += new OpenDental.ContrTable.CellEventHandler(tbPlans_CellDoubleClicked);
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -172,15 +172,15 @@ namespace OpenDental{
 		private void FillPlanData(){
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableInsPlans","Plan"),50);
+			GridColumn col=new GridColumn("Plan",50);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableInsPlans","Subscriber"),140);
+			col=new GridColumn("Subscriber",140);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableInsPlans","Ins Carrier"),100);
+			col=new GridColumn("Ins Carrier",100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableInsPlans","Date Effect."),90);
+			col=new GridColumn("Date Effect.",90);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableInsPlans","Date Term."),90);
+			col=new GridColumn("Date Term.",90);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -238,7 +238,7 @@ namespace OpenDental{
 			gridMain.EndUpdate();
 			listRelat.Items.Clear();
 			for(int i=0;i<Enum.GetNames(typeof(Relat)).Length;i++){
-				listRelat.Items.Add(Lan.G("enumRelat",Enum.GetNames(typeof(Relat))[i]));
+				listRelat.Items.Add(Enum.GetNames(typeof(Relat))[i]);
 			}
 		}
 
@@ -248,7 +248,7 @@ namespace OpenDental{
 
 		private void gridMain_CellDoubleClick(object sender,OpenDental.UI.ODGridClickEventArgs e) {
 			if(listRelat.SelectedIndex==-1) {
-				MessageBox.Show(Lan.G(this,"Please select a relationship first."));
+				MessageBox.Show("Please select a relationship first.");
 				return;
 			}
 			PatRelat=(Relat)listRelat.SelectedIndex;
@@ -259,15 +259,15 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(gridMain.GetSelectedIndex()==-1){
-				MessageBox.Show(Lan.G(this,"Please select a plan first."));
+				MessageBox.Show("Please select a plan first.");
 				return;
 			}
 			if(listRelat.SelectedIndex==-1){
-				MessageBox.Show(Lan.G(this,"Please select a relationship first."));
+				MessageBox.Show("Please select a relationship first.");
 				return;
 			}
 			//if(comboClaimForm.SelectedIndex==-1) {
-			//	MessageBox.Show(Lan.g(this,"Please select a claimform first."));
+			//	MessageBox.Show("Please select a claimform first.");
 			//	return;
 			//}
 			PatRelat=(Relat)listRelat.SelectedIndex;

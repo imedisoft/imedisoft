@@ -36,17 +36,17 @@ namespace OpenDental {
 		///claim details do not match.</summary>
 		public FormEtrans835ClaimSelect(long patNum,Hx835_Claim x835Claim) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_x835Claim=x835Claim;
 			_patNum=patNum;
 			if(_patNum==0) {
-				_errorProvider.SetError(butPatFind,Lans.g(this,"Patient not found"));
+				_errorProvider.SetError(butPatFind,"Patient not found");
 			}
 			if(_x835Claim.IsReversal) {
-				this.Text+=" - "+Lans.g(this,"Pick Original Claim for this Claim Reversal");
+				this.Text+=" - "+"Pick Original Claim for this Claim Reversal";
 			}
 			else if(_x835Claim.IsSplitClaim) {
-				this.Text+=" - "+Lans.g(this,"Pick Original Claim for this Split Claim");
+				this.Text+=" - "+"Pick Original Claim for this Split Claim";
 				labelSplitClaims.Visible=true;
 			}
 			if(_patNum!=0) {//Otherwise a comma and period would show.
@@ -378,7 +378,7 @@ namespace OpenDental {
 				isValidClaimFee=claimSelected.ClaimFee.IsEqual(claimFee835);
 			}
 			if(!isValidClaimFee) {
-				MessageBox.Show(Lan.G(this,"Claim fee on claim does not match ERA.")+"  "+Lan.G(this,"Expected")+" "+claimFee835.ToString("f"));
+				MessageBox.Show("Claim fee on claim does not match ERA."+"  "+"Expected"+" "+claimFee835.ToString("f"));
 				return;
 			}
 			if(claimSelected.ClaimType=="PreAuth" && _x835Claim.DateServiceStart.Date.Year<=1900) {
@@ -387,7 +387,7 @@ namespace OpenDental {
 			else if((claimSelected.DateService.Date.CompareTo(_x835Claim.DateServiceStart.Date) < 0)
 				|| (claimSelected.DateService.Date.CompareTo(_x835Claim.DateServiceEnd.Date) > 0))
 			{
-				MessageBox.Show(Lan.G(this,"Date of service on claim does not match service date range on ERA.")+"\r\n"+Lan.G(this,"Expected")+" "
+				MessageBox.Show("Date of service on claim does not match service date range on ERA."+"\r\n"+"Expected"+" "
 					+_x835Claim.DateServiceStart.ToShortDateString()+" - "+_x835Claim.DateServiceEnd.ToShortDateString());
 				return;
 			}

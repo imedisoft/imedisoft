@@ -65,7 +65,7 @@ namespace OpenDental {
 
 		public FormPatientAddAll() {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_referredFromToolTip=new ToolTip();
 			_referredFromToolTip.InitialDelay=500;
 			_referredFromToolTip.ReshowDelay=100;
@@ -166,21 +166,21 @@ namespace OpenDental {
 			listPosition2.SelectedIndex = 1;
 			if (Prefs.GetBool(PrefName.PriProvDefaultToSelectProv))
 			{
-				comboPriProv1.Items.Add(Lan.G(this, "Select Provider"));
-				comboPriProv2.Items.Add(Lan.G(this, "Select Provider"));
-				comboPriProv3.Items.Add(Lan.G(this, "Select Provider"));
-				comboPriProv4.Items.Add(Lan.G(this, "Select Provider"));
-				comboPriProv5.Items.Add(Lan.G(this, "Select Provider"));
+				comboPriProv1.Items.Add("Select Provider");
+				comboPriProv2.Items.Add("Select Provider");
+				comboPriProv3.Items.Add("Select Provider");
+				comboPriProv4.Items.Add("Select Provider");
+				comboPriProv5.Items.Add("Select Provider");
 			}
-			comboSecProv1.Items.Add(Lan.G(this, "none"));
+			comboSecProv1.Items.Add("none");
 			comboSecProv1.SelectedIndex = 0;
-			comboSecProv2.Items.Add(Lan.G(this, "none"));
+			comboSecProv2.Items.Add("none");
 			comboSecProv2.SelectedIndex = 0;
-			comboSecProv3.Items.Add(Lan.G(this, "none"));
+			comboSecProv3.Items.Add("none");
 			comboSecProv3.SelectedIndex = 0;
-			comboSecProv4.Items.Add(Lan.G(this, "none"));
+			comboSecProv4.Items.Add("none");
 			comboSecProv4.SelectedIndex = 0;
-			comboSecProv5.Items.Add(Lan.G(this, "none"));
+			comboSecProv5.Items.Add("none");
 			comboSecProv5.SelectedIndex = 0;
 			_listProviders = Providers.GetDeepCopy(true);
 			for (int i = 0; i < _listProviders.Count; i++)
@@ -250,13 +250,13 @@ namespace OpenDental {
 
 			if (CultureInfo.CurrentCulture.Name.EndsWith("CA"))
 			{//Canadian. en-CA or fr-CA
-				labelSSN.Text = Lan.G(this, "SIN");
-				labelZip.Text = Lan.G(this, "Postal Code");
-				labelST.Text = Lan.G(this, "Province");
+				labelSSN.Text = "SIN";
+				labelZip.Text = "Postal Code";
+				labelST.Text = "Province";
 			}
 			if (CultureInfo.CurrentCulture.Name.EndsWith("GB"))
 			{//en-GB
-				labelZip.Text = Lan.G(this, "Postcode");
+				labelZip.Text = "Postcode";
 				labelST.Text = "";//no such thing as state in GB
 			}
 			_listZipCodes = ZipCodes.GetDeepCopy(true);
@@ -343,7 +343,7 @@ namespace OpenDental {
 							if(textAddrNotes.Text=="") {
 								_isMissingRequiredFields=true;
 								if(_isValidating) {
-									_errorProv.SetError(textAddrNotes,Lan.G(this,"Text box cannot be blank"));
+									_errorProv.SetError(textAddrNotes,"Text box cannot be blank");
 								}
 							}
 							else {
@@ -422,7 +422,7 @@ namespace OpenDental {
 						}
 						break;
 					case RequiredFieldName.Gender:
-						string strErrorMsg=Lan.G(this,"Gender cannot be 'Unknown'.");
+						string strErrorMsg="Gender cannot be 'Unknown'.";
 						SetRequiredListControl(labelGenPos,listGender1,areConditionsMet,2,strErrorMsg,ErrorIconAlignment.BottomLeft);
 						SetRequiredListControlNonGuarantor(labelGenPos,textFName2,textLName2,listGender2,areConditionsMet,2,strErrorMsg,ErrorIconAlignment.BottomLeft);
 						SetRequiredListControlNonGuarantor(labelGenPos,textFName3,textLName3,listGender3,areConditionsMet,2,strErrorMsg,ErrorIconAlignment.BottomLeft);
@@ -505,7 +505,7 @@ namespace OpenDental {
 						if(textState.Text!=""	&& !StateAbbrs.IsValidAbbr(textState.Text)) {
 							_isMissingRequiredFields=true;
 							if(_isValidating) {
-								_errorProv.SetError(textState,Lan.G(this,"Invalid state abbreviation"));
+								_errorProv.SetError(textState,"Invalid state abbreviation");
 							}
 						}
 						break;
@@ -1270,7 +1270,7 @@ namespace OpenDental {
 			//fired as soon as control loses focus.
 			//it's here to validate if zip is typed in to text box instead of picked from list.
 			//if(textZip.Text=="" && (textCity.Text!="" || textState.Text!="")){
-			//	if(MessageBox.Show(Lan.g(this,"Delete the City and State?"),"",MessageBoxButtons.OKCancel)
+			//	if(MessageBox.Show("Delete the City and State?","",MessageBoxButtons.OKCancel)
 			//		==DialogResult.OK){
 			//		textCity.Text="";
 			//		textState.Text="";
@@ -1514,8 +1514,8 @@ namespace OpenDental {
 			int selectedIndex2=comboSubscriber2.SelectedIndex;
 			comboSubscriber1.Items.Clear();
 			comboSubscriber2.Items.Clear();
-			comboSubscriber1.Items.Add(Lan.G(this,"none"));
-			comboSubscriber2.Items.Add(Lan.G(this,"none"));
+			comboSubscriber1.Items.Add("none");
+			comboSubscriber2.Items.Add("none");
 			string str;
 			for(int i=0;i<5;i++){
 				str=(i+1).ToString()+" - ";
@@ -2259,8 +2259,8 @@ namespace OpenDental {
 						|| patList[j].Birthdate.Year<1880
 						|| listPatsAdding[i].Birthdate.Year<1880) 
 					{
-						string msgText=Lan.G(this,"Patient")+" '"+listPatsAdding[i].LName+", "+listPatsAdding[i].FName+"' "
-							+Lan.G(this,"may already exist. Continue anyway?");
+						string msgText="Patient"+" '"+listPatsAdding[i].LName+", "+listPatsAdding[i].FName+"' "
+							+"may already exist. Continue anyway?";
 						if(MessageBox.Show(msgText,"Potential Duplicate Patient",MessageBoxButtons.OKCancel) != DialogResult.OK) {
 							return;
 						}

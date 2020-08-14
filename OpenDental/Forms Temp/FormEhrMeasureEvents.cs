@@ -14,15 +14,15 @@ namespace OpenDental {
 
 		public FormEhrMeasureEvents() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormEhrMeasureEvents_Load(object sender,System.EventArgs e) {
-			comboType.Items.Add(Lan.G(this,"All"));
+			comboType.Items.Add("All");
 			comboType.SelectedIndex=0;
 			_typeNames=new List<string>(Enum.GetNames(typeof(EhrMeasureEventType)));
 			for(int i=0;i<_typeNames.Count;i++) {
-				comboType.Items.Add(Lan.G(this,_typeNames[i]));
+				comboType.Items.Add(_typeNames[i]);
 			}
 			textDateStart.Text=new DateTime(DateTime.Today.Year,1,1).ToShortDateString();
 			textDateEnd.Text=new DateTime(DateTime.Today.Year,12,31).ToShortDateString();
@@ -38,13 +38,13 @@ namespace OpenDental {
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableProviders","Event Type"),140);
+			GridColumn col=new GridColumn("Event Type",140);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProviders","Date"),80);
+			col=new GridColumn("Date",80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProviders","PatNum"),60);
+			col=new GridColumn("PatNum",60);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableProviders","More Info"),160);
+			col=new GridColumn("More Info",160);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -70,7 +70,7 @@ namespace OpenDental {
 		private void butAuditTrail_Click(object sender,EventArgs e) {
 			List<Permissions> listPermissions=new List<Permissions>();
 			listPermissions.Add(Permissions.EhrMeasureEventEdit);
-			FormAuditOneType FormAOT=new FormAuditOneType(0,listPermissions,Lan.G(this,"EHR Measure Event Edits"),0);
+			FormAuditOneType FormAOT=new FormAuditOneType(0,listPermissions,"EHR Measure Event Edits",0);
 			FormAOT.ShowDialog();
 		}
 

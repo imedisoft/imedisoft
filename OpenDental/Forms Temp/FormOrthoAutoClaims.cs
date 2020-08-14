@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormOrthoAutoClaims() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormAutoOrtho_Load(object sender,EventArgs e) {
@@ -46,24 +46,24 @@ namespace OpenDental {
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableAutoOrthoClaims","Patient"),patientWidth);
+			GridColumn col=new GridColumn("Patient",patientWidth);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableAutoOrthoClaims","Carrier"),carrierWidth);
+			col=new GridColumn("Carrier",carrierWidth);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableAutoOrthoClaims","TxMonths"),70);
+			col=new GridColumn("TxMonths",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableAutoOrthoClaims","Banding"),80,HorizontalAlignment.Center);
+			col=new GridColumn("Banding",80,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableAutoOrthoClaims","MonthsRem"),100);
+			col=new GridColumn("MonthsRem",100);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableAutoOrthoClaims","#Sent"),60);
+			col=new GridColumn("#Sent",60);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableAutoOrthoClaims","LastSent"),80,HorizontalAlignment.Center);
+			col=new GridColumn("LastSent",80,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableAutoOrthoClaims","NextClaim"),80,HorizontalAlignment.Center);
+			col=new GridColumn("NextClaim",80,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
 			if(PrefC.HasClinicsEnabled) { //clinics is turned on
-				col=new GridColumn(Lan.G("TableAutoOrthoClaims","Clinic"),clinicWidth,HorizontalAlignment.Center);
+				col=new GridColumn("Clinic",clinicWidth,HorizontalAlignment.Center);
 				gridMain.ListGridColumns.Add(col);
 			}
 			gridMain.ListGridRows.Clear();
@@ -89,8 +89,8 @@ namespace OpenDental {
 					row.Cells.Add("");
 				}
 				else {
-					row.Cells.Add(((dateSpanMonthsRem.YearsDiff * 12) + dateSpanMonthsRem.MonthsDiff)+" "+Lan.G(this,"months")
-					+", "+dateSpanMonthsRem.DaysDiff +" "+Lan.G(this,"days"));
+					row.Cells.Add(((dateSpanMonthsRem.YearsDiff * 12) + dateSpanMonthsRem.MonthsDiff)+" "+"months"
+					+", "+dateSpanMonthsRem.DaysDiff +" "+"days");
 				}
 				row.Cells.Add(PIn.String(rowCur["NumSent"].ToString()));
 				row.Cells.Add(dateLastSeen.Year < 1880 ? "" : dateLastSeen.ToShortDateString());
@@ -174,14 +174,14 @@ namespace OpenDental {
 					PatPlans.IncrementOrthoNextClaimDates(patPlanCur,insPlanCur,monthsTreat,patNoteCur);
 					rowsSucceeded.Add(rowCur);
 					SecurityLogs.MakeLogEntry(Permissions.ProcComplCreate,patCur.PatNum
-						,Lan.G(this,"Automatic ortho procedure and claim generated for")+" "+dateDue.ToShortDateString());
+						,"Automatic ortho procedure and claim generated for"+" "+dateDue.ToShortDateString());
 				}
 				catch(Exception) {
 					rowsFailed++;
 				}
 			}
-			string message=Lan.G(this,"Done.")+" "+Lan.G(this,"There were")+" "+rowsSucceeded.Count+" "
-					+Lan.G(this,"claim(s) generated and")+" "+rowsFailed+" "+Lan.G(this,"failures")+".";
+			string message="Done."+" "+"There were"+" "+rowsSucceeded.Count+" "
+					+"claim(s) generated and"+" "+rowsFailed+" "+"failures"+".";
 				MessageBox.Show(message);
 				foreach(DataRow row in rowsSucceeded) {
 					_tableOutstandingAutoClaims.Rows.Remove(row);

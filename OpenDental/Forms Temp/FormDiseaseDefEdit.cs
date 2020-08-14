@@ -39,7 +39,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 			DiseaseDefCur=diseaseDefCur;
 			_hasDelete=hasDelete;
 		}
@@ -350,7 +350,7 @@ namespace OpenDental{
 				MessageBox.Show("This problem def is currently in use and cannot be deleted.");
 				return;
 			}
-			SecurityLogMsgText=DiseaseDefCur.DiseaseName+" "+Lan.G(this,"deleted.");
+			SecurityLogMsgText=DiseaseDefCur.DiseaseName+" "+"deleted.";
 			DiseaseDefCur=null;//Flags this disease for removal in outside forms.
 			DialogResult=DialogResult.OK;
 		}

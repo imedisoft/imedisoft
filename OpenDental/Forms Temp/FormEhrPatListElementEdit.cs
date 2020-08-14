@@ -75,7 +75,7 @@ namespace OpenDental {
 		private bool IsValid() {
 			int index=listRestriction.SelectedIndex;
 			if(textCompareString.Text.Trim()=="" && index!=4) {//4-Gender
-				MessageBox.Show(Lans.g(this,"Please enter a value."));
+				MessageBox.Show("Please enter a value.");
 				return false;
 			}
 			if(index==0) {//Birthdate

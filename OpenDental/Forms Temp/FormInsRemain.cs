@@ -14,7 +14,7 @@ namespace OpenDental {
 
 		public FormInsRemain(long selectedPatNum) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_famCur=Patients.GetFamily(selectedPatNum);
 			_patCur=_famCur.GetPatient(selectedPatNum);
 		}
@@ -30,17 +30,17 @@ namespace OpenDental {
 			GridColumn col;
 			gridRemainTimeUnits.BeginUpdate();
 			gridRemainTimeUnits.ListGridColumns.Clear();
-			col=new GridColumn(Lan.G(gridRemainTimeUnits.TranslationName,"Carrier"),60){ IsWidthDynamic=true };
+			col=new GridColumn("Carrier",60){ IsWidthDynamic=true };
 			gridRemainTimeUnits.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(gridRemainTimeUnits.TranslationName,"Subscriber"),60){ IsWidthDynamic=true };
+			col=new GridColumn("Subscriber",60){ IsWidthDynamic=true };
 			gridRemainTimeUnits.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(gridRemainTimeUnits.TranslationName,"Category"),60){ IsWidthDynamic=true };
+			col=new GridColumn("Category",60){ IsWidthDynamic=true };
 			gridRemainTimeUnits.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(gridRemainTimeUnits.TranslationName,"Qty"),60,HorizontalAlignment.Center);
+			col=new GridColumn("Qty",60,HorizontalAlignment.Center);
 			gridRemainTimeUnits.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(gridRemainTimeUnits.TranslationName,"Used"),60,HorizontalAlignment.Center);
+			col=new GridColumn("Used",60,HorizontalAlignment.Center);
 			gridRemainTimeUnits.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(gridRemainTimeUnits.TranslationName,"Remaining"),60,HorizontalAlignment.Center);
+			col=new GridColumn("Remaining",60,HorizontalAlignment.Center);
 			gridRemainTimeUnits.ListGridColumns.Add(col);
 			gridRemainTimeUnits.EndUpdate();
 		}

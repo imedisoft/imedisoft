@@ -22,7 +22,7 @@ namespace OpenDental {
 
 		public FormSheetDef() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormSheetDef_Load(object sender,EventArgs e) {
@@ -35,7 +35,7 @@ namespace OpenDental {
 				checkHasMobileLayout.Enabled=SheetDefs.IsMobileAllowed(SheetDefCur.SheetType);
 			}
 			textDescription.Text=SheetDefCur.Description;
-			Func<SheetTypeEnum,string> fItemToString=new Func<SheetTypeEnum,string>((sheetType) => { return Lan.G("enumSheetTypeEnum",sheetType.GetDescription()); });
+			Func<SheetTypeEnum,string> fItemToString=new Func<SheetTypeEnum,string>((sheetType) => { return sheetType.GetDescription(); });
 			//not allowed to change sheettype once created.
 			listSheetType.SetItems(
 				Enum.GetValues(typeof(SheetTypeEnum)).Cast<SheetTypeEnum>()

@@ -22,7 +22,7 @@ namespace OpenDental {
 
 		public FormChartViewDateFilter() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormChartViewDateFilter_Load(object sender,EventArgs e) {

@@ -33,7 +33,7 @@ namespace OpenDentBusiness {
 		public static ApiResponse AddCreditCard(long customerId,string ccNum,DateTime ccExpDate,string billingZipCode="",long clinicNum=-1) {
 			ValidateProgram(clinicNum);
 			if(customerId==0) {
-				throw new ODException(Lans.g("PaySimple","Invalid PaySimple Customer ID provided: ")+customerId.ToString());
+				throw new ODException("Invalid PaySimple Customer ID provided: "+customerId.ToString());
 			}
 			return PaySimpleApi.PostAccountCreditCard(GetAuthHeader(clinicNum),PaySimpleApi.MakeNewAccountCreditCardData(customerId,ccNum,ccExpDate,PaySimpleApi.GetCardType(ccNum),billingZipCode));
 		}
@@ -44,7 +44,7 @@ namespace OpenDentBusiness {
 		{
 			ValidateProgram(clinicNum);
 			if(pat==null || pat.PatNum==0) {
-				throw new ODException(Lans.g("PaySimple","Error adding account. Patient required."));
+				throw new ODException("Error adding account. Patient required.");
 			}
 			long psCustomerId=GetCustomerIdForPat(pat.PatNum,pat.FName,pat.LName,clinicNum);
 			try {
@@ -62,7 +62,7 @@ namespace OpenDentBusiness {
 		{
 			ValidateProgram(clinicNum);
 			if(customerId==0) {
-				throw new ODException(Lans.g("PaySimple","Invalid PaySimple Customer ID provided: ")+customerId.ToString());
+				throw new ODException("Invalid PaySimple Customer ID provided: "+customerId.ToString());
 			}
 			return PaySimpleApi.PostAccountACH(GetAuthHeader(clinicNum),
 				PaySimpleApi.MakeNewAccountACHData(customerId,routingNumber,acctNumber,bankName,isCheckings));
@@ -95,7 +95,7 @@ namespace OpenDentBusiness {
 				return MakePaymentNoPat(payAmt,ccNum,ccExpDate,billingZipCode,cvv,clinicNum,lname);
 			}
 			if((cc==null || string.IsNullOrWhiteSpace(cc.PaySimpleToken)) && (string.IsNullOrWhiteSpace(ccNum) || ccExpDate.Year<DateTime.Today.Year)) {
-				throw new ODException(Lans.g("PaySimple","Error making payment"));
+				throw new ODException("Error making payment");
 			}
 			if(cc==null) {
 				cc=new CreditCard() {
@@ -135,7 +135,7 @@ namespace OpenDentBusiness {
 		public static ApiResponse MakePaymentByToken(Patient pat,CreditCard cc,decimal payAmt,long clinicNum=-1) {
 			ValidateProgram(clinicNum);
 			if(cc==null || string.IsNullOrWhiteSpace(cc.PaySimpleToken)) {
-				throw new ODException(Lans.g("PaySimple","Error making payment by token"));
+				throw new ODException("Error making payment by token");
 			}
 			if(cc.CCSource==CreditCardSource.PaySimple) {
 				return MakePayment(cc.PatNum,cc,payAmt,"",DateTime.MinValue,false,"","",clinicNum);
@@ -147,7 +147,7 @@ namespace OpenDentBusiness {
 		public static ApiResponse VoidPayment(string paySimplePaymentId,long clinicNum=-1) {
 			ValidateProgram(clinicNum);
 			if(string.IsNullOrWhiteSpace(paySimplePaymentId)) {
-				throw new Exception(Lans.g("PaySimple","Invalid PaySimple Payment ID to void."));
+				throw new Exception("Invalid PaySimple Payment ID to void.");
 			}
 			return PaySimpleApi.PutPaymentVoided(GetAuthHeader(clinicNum),paySimplePaymentId);
 		}
@@ -156,7 +156,7 @@ namespace OpenDentBusiness {
 		public static ApiResponse ReversePayment(string paySimplePaymentId,long clinicNum=-1) {
 			ValidateProgram(clinicNum);
 			if(string.IsNullOrWhiteSpace(paySimplePaymentId)) {
-				throw new Exception(Lans.g("PaySimple","Invalid PaySimple Payment ID to reverse."));
+				throw new Exception("Invalid PaySimple Payment ID to reverse.");
 			}
 			return PaySimpleApi.PutPaymentReversed(GetAuthHeader(clinicNum),paySimplePaymentId);
 		}
@@ -168,7 +168,7 @@ namespace OpenDentBusiness {
 		{
 			ValidateProgram(clinicNum);
 			if(string.IsNullOrWhiteSpace(ccNum) || ccExpDate.Year<DateTime.Today.Year) {
-				throw new ODException(Lans.g("PaySimple","Error making payment"));
+				throw new ODException("Error making payment");
 			}
 			long psCustomerId=AddCustomer("UNKNOWN",lname,"",clinicNum);
 			ApiResponse apiResponse=AddCreditCard(psCustomerId,ccNum,ccExpDate,billingZipCode);
@@ -185,12 +185,12 @@ namespace OpenDentBusiness {
 		{
 			ValidateProgram(clinicNum);
 			if(pat==null || pat.PatNum==0) {
-				throw new ODException(Lans.g("PaySimple","Error making payment. Patient required."));//No patient is allowed only for prepaid credit cards
+				throw new ODException("Error making payment. Patient required.");//No patient is allowed only for prepaid credit cards
 			}
 			if((cc==null || string.IsNullOrWhiteSpace(cc.PaySimpleToken)) 
 				&& (string.IsNullOrWhiteSpace(routingNumber) || string.IsNullOrWhiteSpace(acctNumber) || string.IsNullOrWhiteSpace(bankName)))
 			{
-				throw new ODException(Lans.g("PaySimple","Error making payment."));
+				throw new ODException("Error making payment.");
 			}
 			if(cc==null) {
 				cc=new CreditCard() {
@@ -217,7 +217,7 @@ namespace OpenDentBusiness {
 		public static ApiResponse DeleteCreditCard(CreditCard creditCardCur) {
 			ValidateProgram(creditCardCur.ClinicNum);
 			if(string.IsNullOrWhiteSpace(creditCardCur.PaySimpleToken)) {
-				throw new Exception(Lans.g("PaySimple","Invalid PaySimple Credit Card ID to void."));
+				throw new Exception("Invalid PaySimple Credit Card ID to void.");
 			}
 			return PaySimpleApi.DeleteAccountCreditCard(GetAuthHeader(creditCardCur.ClinicNum),creditCardCur.PaySimpleToken);
 		}
@@ -226,7 +226,7 @@ namespace OpenDentBusiness {
 		public static ApiResponse DeleteACHAccount(CreditCard creditCardCur) {
 			ValidateProgram(creditCardCur.ClinicNum);
 			if(string.IsNullOrWhiteSpace(creditCardCur.PaySimpleToken)) {
-				throw new Exception(Lans.g("PaySimple","Invalid PaySimple ACN Account ID to void."));
+				throw new Exception("Invalid PaySimple ACN Account ID to void.");
 			}
 			return PaySimpleApi.DeleteAccountACH(GetAuthHeader(creditCardCur.ClinicNum),creditCardCur.PaySimpleToken);
 		}
@@ -260,16 +260,16 @@ namespace OpenDentBusiness {
 			}
 			Program progPaySimple=Programs.GetCur(ProgramName.PaySimple);
 			if(progPaySimple==null) {
-				throw new ODException(Lans.g("PaySimple","PaySimple program does not exist in the database.  Please call support."));
+				throw new ODException("PaySimple program does not exist in the database.  Please call support.");
 			}
 			if(!progPaySimple.Enabled) {
-				throw new ODException(Lans.g("PaySimple","PaySimple is not enabled."));
+				throw new ODException("PaySimple is not enabled.");
 			}
 			string apiUserName=ProgramProperties.GetPropValForClinicOrDefault(progPaySimple.Id,PropertyDescs.PaySimpleApiUserName,clinicNum);
 			string apiKey=ProgramProperties.GetPropValForClinicOrDefault(progPaySimple.Id,PropertyDescs.PaySimpleApiKey,clinicNum);
 			string payType=ProgramProperties.GetPropValForClinicOrDefault(progPaySimple.Id,PropertyDescs.PaySimplePayTypeCC,clinicNum);
 			if(string.IsNullOrWhiteSpace(apiUserName) || string.IsNullOrWhiteSpace(apiKey) || string.IsNullOrWhiteSpace(payType)) {
-				throw new ODException(Lans.g("PaySimple","PaySimple Username, Key, or PayType is empty."));
+				throw new ODException("PaySimple Username, Key, or PayType is empty.");
 			}
 		}
 		
@@ -380,25 +380,25 @@ namespace OpenDentBusiness {
 			public string ToNoteString(string clinicDesc="",string entry="",string curUserName="",string expDateStr="",string cardType="") {
 				string retVal="";
 				if(!string.IsNullOrWhiteSpace(clinicDesc)) {
-					retVal+=Lans.g("PaySimple","Clinic")+": "+clinicDesc+Environment.NewLine;
+					retVal+="Clinic"+": "+clinicDesc+Environment.NewLine;
 				}
-				retVal+=Lans.g("PaySimple","Transaction Type")+": "+Enum.GetName(typeof(TransType),this.TransType)+Environment.NewLine+
-					Lans.g("PaySimple","Status")+": "+this.Status+Environment.NewLine+
-					Lans.g("PaySimple","Auth Code")+": "+this.AuthCode+Environment.NewLine+
-					Lans.g("PaySimple","Amount")+": "+this.Amount+Environment.NewLine+
-					Lans.g("PaySimple","PaySimple Account ID")+": "+this.PaySimpleToken+Environment.NewLine+
-					Lans.g("PaySimple","PaySimple Transaction Number")+": "+this.RefNumber+Environment.NewLine;
+				retVal+="Transaction Type"+": "+Enum.GetName(typeof(TransType),this.TransType)+Environment.NewLine+
+					"Status"+": "+this.Status+Environment.NewLine+
+					"Auth Code"+": "+this.AuthCode+Environment.NewLine+
+					"Amount"+": "+this.Amount+Environment.NewLine+
+					"PaySimple Account ID"+": "+this.PaySimpleToken+Environment.NewLine+
+					"PaySimple Transaction Number"+": "+this.RefNumber+Environment.NewLine;
 				if(!string.IsNullOrWhiteSpace(entry)) {
-					retVal+=Lans.g("PaySimple","Entry")+": "+entry+Environment.NewLine;
+					retVal+="Entry"+": "+entry+Environment.NewLine;
 				}
 				if(!string.IsNullOrWhiteSpace(curUserName)) {
-					retVal+=Lans.g("PaySimple","Clerk")+": "+curUserName+Environment.NewLine;
+					retVal+="Clerk"+": "+curUserName+Environment.NewLine;
 				}
 				if(!string.IsNullOrWhiteSpace(expDateStr)) {
-					retVal+=Lans.g("PaySimple","Expiration")+": "+expDateStr+Environment.NewLine;
+					retVal+="Expiration"+": "+expDateStr+Environment.NewLine;
 				}
 				if(!string.IsNullOrWhiteSpace(cardType)) {
-					retVal+=Lans.g("PaySimple","Card Type")+": "+cardType+Environment.NewLine;
+					retVal+="Card Type"+": "+cardType+Environment.NewLine;
 				}
 				return retVal;
 			}
@@ -912,7 +912,7 @@ namespace OpenDentBusiness {
 					throw new Exception("Unexpected response from PaySimple"+(response!=null ? ": "+response.RawResponse : ""));
 				}
 				if(response.FullResponse.Response.Status!="Voided") {
-					throw new ODException(Lans.g("PaySimple","Payment could not be voided.  Please try again."));
+					throw new ODException("Payment could not be voided.  Please try again.");
 				}
 				return new ApiResponse() {
 					Status=response.FullResponse.Response.Status,
@@ -988,7 +988,7 @@ namespace OpenDentBusiness {
 					throw new Exception("Unexpected response from PaySimple"+(response!=null ? ": "+response.RawResponse : ""));
 				}
 				if(response.FullResponse.Response.Status!="ReversePosted") {
-					throw new ODException(Lans.g("PaySimple","Payment could not be reversed.  Please try again."));
+					throw new ODException("Payment could not be reversed.  Please try again.");
 				}
 				return new ApiResponse() {
 					Status=response.FullResponse.Response.Status,
@@ -1119,7 +1119,7 @@ namespace OpenDentBusiness {
 							if(wex.Response.GetType()==typeof(HttpWebResponse)) {
 								HttpStatusCode statusCode=((HttpWebResponse)wex.Response).StatusCode;
 								if(statusCode==HttpStatusCode.Unauthorized) {
-									throw new ODException(Lans.g("PaySimple","Invalid PaySimple credentials.  Check your Username and Key and try again."));
+									throw new ODException("Invalid PaySimple credentials.  Check your Username and Key and try again.");
 								}
 							}
 						}

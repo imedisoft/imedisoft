@@ -24,7 +24,7 @@ namespace OpenDental {
 		///currently selected def and any direct-line descendants from being selected as the category's parent.</summary>
 		public FormDefinitionPicker(DefCat cat,List<Def> listDefs=null,long defNumCur=0) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			if(listDefs!=null) {
 				ListSelectedDefs=listDefs; //initially, selected defs and list defs are the same. However, ListSelectedDefs changes while _listDefInitial doesn't.
 				_listDefInitial=new List<Def>(listDefs);
@@ -64,10 +64,10 @@ namespace OpenDental {
 		private void FillGrid() {
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(gridMain.TranslationName,"Definition"),200));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G(gridMain.TranslationName,"ItemValue"),70));
+			gridMain.ListGridColumns.Add(new GridColumn("Definition",200));
+			gridMain.ListGridColumns.Add(new GridColumn("ItemValue",70));
 			if(HasShowHiddenOption) {
-				gridMain.ListGridColumns.Add(new GridColumn(Lan.G(gridMain.TranslationName,"Hidden"),20){ IsWidthDynamic=true });
+				gridMain.ListGridColumns.Add(new GridColumn("Hidden",20){ IsWidthDynamic=true });
 			}
 			gridMain.ListGridRows.Clear();
 			GridRow row;

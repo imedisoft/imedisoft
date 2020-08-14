@@ -30,7 +30,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -134,15 +134,15 @@ namespace OpenDental{
 		}
 
 		private void checkRunAging_CheckedChanged(object sender,EventArgs e) {
-			labelDescription.Text=Lan.G(this,"This will add completed procedures to each account that has a repeating charge set up.   The date of the "
-				+"procedure will be based on the settings in the repeating charge.")+"\r\n\r\n"
-				+Lan.G(this,"This tool must be run at least every month for the repeating charges to be added.  The procedure will be backdated up "
-				+"to one month and 20 days.")+"\r\n\r\n"
-				+Lan.G(this,"If the repeating charge 'Creates Claim' check box is selected, and the patient has insurance, and the procedure added "
+			labelDescription.Text="This will add completed procedures to each account that has a repeating charge set up.   The date of the "
+				+"procedure will be based on the settings in the repeating charge."+"\r\n\r\n"
+				+"This tool must be run at least every month for the repeating charges to be added.  The procedure will be backdated up "
+				+"to one month and 20 days."+"\r\n\r\n"
+				+"If the repeating charge 'Creates Claim' check box is selected, and the patient has insurance, and the procedure added "
 				+"is not marked as 'Do not usually bill to Ins', then a claim will be created for the procedure. If the patient has a secondary "
-				+"insurance plan, a secondary claim will be created with a hold status.");
+				+"insurance plan, a secondary claim will be created with a hold status.";
 			if(!checkRunAging.Checked) {
-				labelDescription.Text=labelDescription.Text+"\r\n\r\n"+Lan.G(this,"You should run aging when you are done.");
+				labelDescription.Text=labelDescription.Text+"\r\n\r\n"+"You should run aging when you are done.";
 			}
 		}
 
@@ -161,8 +161,8 @@ namespace OpenDental{
 			}
 			//It's been more than 24 hours since repeat charges started.
 			if(Security.IsAuthorized(Permissions.SecurityAdmin,true)) {
-				string message=Lans.g(this,"Repeating Charges last started on")+" "+repeatingChargesBeginDateTime.ToString()
-					+Lans.g(this,".  Restart repeating charges?");
+				string message="Repeating Charges last started on"+" "+repeatingChargesBeginDateTime.ToString()
+					+".  Restart repeating charges?";
 				if(MsgBox.Show(MsgBoxButtons.OKCancel,message)) {
 					SecurityLogs.MakeLogEntry(Permissions.SecurityAdmin,0,"Restarted repeating charges. Previous Repeating Charges Begin DateTime was "
 						+repeatingChargesBeginDateTime.ToString()+".");
@@ -171,8 +171,8 @@ namespace OpenDental{
 				return false;//Security admin doesn't want to restart repeat charges.
 			}
 			//User isn't a security admin.
-			MsgBox.Show(Lans.g(this,"Repeating Charges last started on")+" "+repeatingChargesBeginDateTime.ToString()
-				+Lans.g(this,".  Contact a user with SecurityAdmin permission to restart repeating charges."));
+			MsgBox.Show("Repeating Charges last started on"+" "+repeatingChargesBeginDateTime.ToString()
+				+".  Contact a user with SecurityAdmin permission to restart repeating charges.");
 			return false;
 		}
 
@@ -182,8 +182,8 @@ namespace OpenDental{
 			}
 			Cursor=Cursors.WaitCursor;
 			RepeatChargeResult result=RepeatCharges.RunRepeatingCharges(MiscData.GetNowDateTime(),checkRunAging.Checked);
-			string metrics=result.ProceduresAddedCount+" "+Lan.G(this,"procedures added.")+"\r\n"+result.ClaimsAddedCount+" "
-				+Lan.G(this,"claims added.");
+			string metrics=result.ProceduresAddedCount+" "+"procedures added."+"\r\n"+result.ClaimsAddedCount+" "
+				+"claims added.";
 			SecurityLogs.MakeLogEntry(Permissions.RepeatChargeTool,0,"Repeat Charge Tool ran.\r\n"+metrics);
 			Cursor=Cursors.Default;
 			MessageBox.Show(metrics);

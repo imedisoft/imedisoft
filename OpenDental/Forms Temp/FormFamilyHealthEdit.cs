@@ -14,13 +14,13 @@ namespace OpenDental {
 
 		public FormFamilyHealthEdit() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormFamilyHealthEdit_Load(object sender,EventArgs e) {
 			string[] familyRelationships=Enum.GetNames(typeof(FamilyRelationship));
 			for(int i=0;i<familyRelationships.Length;i++) {
-				listRelationship.Items.Add(Lan.G("enumFamilyRelationship",familyRelationships[i]));
+				listRelationship.Items.Add(familyRelationships[i]);
 			}
 			listRelationship.SelectedIndex=(int)FamilyHealthCur.Relationship;
 			if(FamilyHealthCur.IsNew) {

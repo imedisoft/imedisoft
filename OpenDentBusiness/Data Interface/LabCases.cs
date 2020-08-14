@@ -79,20 +79,20 @@ namespace OpenDentBusiness{
 				row["Instructions"]=raw.Rows[i]["Instructions"].ToString();
 				date=PIn.Date(raw.Rows[i]["DateTimeChecked"].ToString());
 				if(date.Year>1880) {
-					row["status"]=Lans.g("FormLabCases","Quality Checked");
+					row["status"]="Quality Checked";
 				}
 				else {
 					date=PIn.Date(raw.Rows[i]["DateTimeRecd"].ToString());
 					if(date.Year>1880) {
-						row["status"]=Lans.g("FormLabCases","Received");
+						row["status"]="Received";
 					}
 					else {
 						date=PIn.Date(raw.Rows[i]["DateTimeSent"].ToString());
 						if(date.Year>1880) {
-							row["status"]=Lans.g("FormLabCases","Sent");//sent but not received
+							row["status"]="Sent";//sent but not received
 						}
 						else {
-							row["status"]=Lans.g("FormLabCases","Not Sent");
+							row["status"]="Not Sent";
 						}
 					}
 				}
@@ -122,20 +122,20 @@ namespace OpenDentBusiness{
 					row["Instructions"]=raw.Rows[i]["Instructions"].ToString();
 					date=PIn.Date(raw.Rows[i]["DateTimeChecked"].ToString());
 					if(date.Year>1880) {
-						row["status"]=Lans.g("FormLabCases","Quality Checked");
+						row["status"]="Quality Checked";
 					}
 					else {
 						date=PIn.Date(raw.Rows[i]["DateTimeRecd"].ToString());
 						if(date.Year>1880) {
-							row["status"]=Lans.g("FormLabCases","Received");
+							row["status"]="Received";
 						}
 						else {
 							date=PIn.Date(raw.Rows[i]["DateTimeSent"].ToString());
 							if(date.Year>1880) {
-								row["status"]=Lans.g("FormLabCases","Sent");//sent but not received
+								row["status"]="Sent";//sent but not received
 							}
 							else {
-								row["status"]=Lans.g("FormLabCases","Not Sent");
+								row["status"]="Not Sent";
 							}
 						}
 					}
@@ -220,7 +220,7 @@ namespace OpenDentBusiness{
 				+" AND sheetfield.FieldName='LabCaseNum' "
 				+"AND sheetfield.FieldValue='"+POut.Long(labCaseNum)+"'";
 			if(PIn.Int(Database.ExecuteString(command))!=0) {
-				throw new Exception(Lans.g("LabCases","Cannot delete LabCase because lab slip is still attached."));
+				throw new Exception("Cannot delete LabCase because lab slip is still attached.");
 			}
 			//delete
 			command= "DELETE FROM labcase WHERE LabCaseNum = "+POut.Long(labCaseNum);

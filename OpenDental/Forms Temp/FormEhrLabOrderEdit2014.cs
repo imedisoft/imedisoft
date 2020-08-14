@@ -414,7 +414,7 @@ namespace OpenDental {
 			FormEhrLabOrderEdit2014 FormELOE=new FormEhrLabOrderEdit2014();
 			FormELOE.EhrLabCur=ehrLabParent;
 			FormELOE.IsViewOnly=true;
-			FormELOE.Text=Lan.G(this,"Parent Lab Order - READ ONLY");
+			FormELOE.Text="Parent Lab Order - READ ONLY";
 			FormELOE.ShowDialog();
 		}
 

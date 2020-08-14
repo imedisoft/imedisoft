@@ -55,7 +55,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -442,7 +442,7 @@ namespace OpenDental{
 				textGenericName.Text=Medications.GetGeneric(MedicationPatCur.MedicationNum).MedName;
 				textMedNote.Text=Medications.GetGeneric(MedicationPatCur.MedicationNum).Notes;
 			}
-			comboProv.Items.Add(Lan.G(this,"none"));
+			comboProv.Items.Add("none");
 			_listProviders=Providers.GetDeepCopy(true);
 			for(int i=0;i<_listProviders.Count;i++) {
 				comboProv.Items.Add(_listProviders[i].GetLongDesc());

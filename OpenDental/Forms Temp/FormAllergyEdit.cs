@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormAllergyEdit() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormAllergyEdit_Load(object sender,EventArgs e) {

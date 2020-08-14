@@ -22,7 +22,7 @@ namespace OpenDental {
 
 		public FormEvaluationReport() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormEvaluationReport_Load(object sender,EventArgs e) {
@@ -35,9 +35,9 @@ namespace OpenDental {
 			_schoolCourses=SchoolCourses.GetDeepCopy();
 			gridCourses.BeginUpdate();
 			gridCourses.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("FormEvaluationReport - Courses","CourseID"),60);
+			GridColumn col=new GridColumn("CourseID",60);
 			gridCourses.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormEvaluationReport - Courses","Description"),90);
+			col=new GridColumn("Description",90);
 			gridCourses.ListGridColumns.Add(col);
 			gridCourses.ListGridRows.Clear();
 			GridRow row;
@@ -55,11 +55,11 @@ namespace OpenDental {
 			_provInstructors=Providers.GetInstructors();
 			gridInstructors.BeginUpdate();
 			gridInstructors.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("FormEvaluationReport - Instructors","ProvNum"),50);
+			GridColumn col=new GridColumn("ProvNum",50);
 			gridInstructors.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormEvaluationReport - Instructors","Last Name"),80);
+			col=new GridColumn("Last Name",80);
 			gridInstructors.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormEvaluationReport - Instructors","First Name"),80);
+			col=new GridColumn("First Name",80);
 			gridInstructors.ListGridColumns.Add(col);
 			gridInstructors.ListGridRows.Clear();
 			GridRow row;
@@ -88,11 +88,11 @@ namespace OpenDental {
 			DataTable table=Evaluations.GetFilteredList(schoolCourseNums,instructorProvNums);
 			gridStudents.BeginUpdate();
 			gridStudents.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("FormEvaluationReport - Students","ProvNum"),60);
+			GridColumn col=new GridColumn("ProvNum",60);
 			gridStudents.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormEvaluationReport - Students","Last Name"),90);
+			col=new GridColumn("Last Name",90);
 			gridStudents.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormEvaluationReport - Students","First Name"),90);
+			col=new GridColumn("First Name",90);
 			gridStudents.ListGridColumns.Add(col);
 			gridStudents.ListGridRows.Clear();
 			GridRow row;
@@ -266,13 +266,13 @@ namespace OpenDental {
 				report.TableQ.Rows.Add(row);
 			}
 			FormQuery2.ResetGrid();
-			report.Title=Lan.G(this,"Course Average");
+			report.Title="Course Average";
 			report.SubTitle.Add(dateStart.ToShortDateString()+" - "+dateEnd.ToShortDateString());
 			if(checkAllInstructors.Checked) {
-				report.SubTitle.Add(Lan.G(this,"All Instructors"));
+				report.SubTitle.Add("All Instructors");
 			}
 			if(checkAllCourses.Checked) {
-				report.SubTitle.Add(Lan.G(this,"All Courses"));
+				report.SubTitle.Add("All Courses");
 			}
 			report.SetColumn(this,0,"Student",120);
 			report.SetColumn(this,1,"Date",80);

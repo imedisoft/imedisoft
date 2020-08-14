@@ -1576,12 +1576,12 @@ namespace OpenDentBusiness {
 			Dictionary<long,Patient> dictPatients=family.ListPats.GroupBy(x => x.PatNum).ToDictionary(x => x.Key,x => x.First());
 			//Warn the user about all of the providers that have negative unearned and tell them to go manually fix them.
 			StringBuilder strBuildWarning=new StringBuilder();
-			string strUnallocated=Lans.g("PaymentEdit","Unallocated");
+			string strUnallocated="Unallocated";
 			foreach(long provNum in dictProvSplits.Keys) {
 				if(dictProvSplits[provNum].Sum(y => y.AmountEnd).IsLessThanOrEqualToZero()) {
 					continue;
 				}
-				strBuildWarning.AppendLine(provNum==0 ? Lans.g("PaymentEdit","'None' Provider") : Providers.GetLongDesc(provNum));
+				strBuildWarning.AppendLine(provNum==0 ? "'None' Provider" : Providers.GetLongDesc(provNum));
 				List<AccountEntry> listPosSplitEntries=dictProvSplits[provNum].FindAll(x => x.AmountEnd.IsGreaterThanZero())
 					.OrderBy(x => x.PatNum)
 					.ThenBy(x => x.Date)
@@ -1598,9 +1598,8 @@ namespace OpenDentBusiness {
 						+$"  {paySplit.SplitAmt:C}");
 				}
 			}
-			strBuildWarning.AppendLine(Lans.g("PaymentEdit",
-				"To correct the balance for the family, the above payment splits need to be manually reallocated."));
-			strBuildWarning.Append(Lans.g("PaymentEdit","See the manual for additional information."));
+			strBuildWarning.AppendLine("To correct the balance for the family, the above payment splits need to be manually reallocated.");
+			strBuildWarning.Append("See the manual for additional information.");
 			warningMessage=strBuildWarning.ToString();
 			return true;
 		}
@@ -1823,8 +1822,8 @@ namespace OpenDentBusiness {
 				//PayPlanCharge Credits are not made when the PaymentPlanVersion is set to NoCharges.
 				//For now, do not allow income transfers to be made when the version is set to NoCharges because we don't know what has value to transfer.
 				if(PrefC.GetEnum<PayPlanVersions>(PrefName.PayPlansVersion)==PayPlanVersions.NoCharges) {
-					incomeTransferData.AppendLine(Lans.g("PaymentEdit","Transfers cannot be made while 'Pay Plan charge logic' is set to "+
-						$"'{PayPlanVersions.NoCharges.GetDescription()}'."));
+					incomeTransferData.AppendLine("Transfers cannot be made while 'Pay Plan charge logic' is set to "+
+						$"'{PayPlanVersions.NoCharges.GetDescription()}'.");
 					return false;
 				}
 				List<long> listInvalidPayPlanNums=new List<long>();
@@ -1846,8 +1845,8 @@ namespace OpenDentBusiness {
 					Dictionary<long,Patient> dictPatients=Patients.GetLimForPats(listInvalidPatNums.Distinct().ToList()).ToDictionary(x => x.PatNum);
 					//Notify the user that they cannot perform income transfers until they correct/delete payment plans that do not use Tx Credits correctly.
 					StringBuilder stringBuilder=new StringBuilder();
-					stringBuilder.AppendLine(Lans.g("PaymentEdit","Transfers cannot be made for this family at this time."));
-					stringBuilder.AppendLine(Lans.g("PaymentEdit","The following payment plans have a 'Total Tx Amt' that does not match the 'Total Amount':"));
+					stringBuilder.AppendLine("Transfers cannot be made for this family at this time.");
+					stringBuilder.AppendLine("The following payment plans have a 'Total Tx Amt' that does not match the 'Total Amount':");
 					foreach(PayPlan payPlan in listInvalidPayPlans) {
 						string ppType;
 						if(payPlan.IsDynamic) {
@@ -1859,7 +1858,7 @@ namespace OpenDentBusiness {
 						else {
 							ppType="Ins";
 						}
-						string planCategory=Lans.g("ContrAccount","None");
+						string planCategory="None";
 						if(payPlan.PlanCategory > 0) {
 							planCategory=Defs.GetDef(DefCat.PayPlanCategories,payPlan.PlanCategory).ItemName;
 						}

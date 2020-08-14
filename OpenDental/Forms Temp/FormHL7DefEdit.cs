@@ -18,7 +18,7 @@ namespace OpenDental {
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormHL7DefEdit_Load(object sender,EventArgs e) {
@@ -45,7 +45,7 @@ namespace OpenDental {
 			textSftpUsername.Text=HL7DefCur.SftpUsername;
 			textSftpPassword.Text=HL7DefCur.SftpPassword;
 			for(int i=0;i<Enum.GetNames(typeof(ModeTxHL7)).Length;i++) {
-				comboModeTx.Items.Add(Lan.G("enumModeTxHL7",Enum.GetName(typeof(ModeTxHL7),i).ToString()));
+				comboModeTx.Items.Add(Enum.GetName(typeof(ModeTxHL7),i).ToString());
 				if((int)HL7DefCur.ModeTx==i){
 					comboModeTx.SelectedIndex=i;
 				}
@@ -213,11 +213,11 @@ namespace OpenDental {
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G(this,"Message"),150);
+			GridColumn col=new GridColumn("Message",150);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Seg"),35);
+			col=new GridColumn("Seg",35);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Note"),100);
+			col=new GridColumn("Note",100);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			if(HL7DefCur!=null && HL7DefCur.hl7DefMessages!=null) {

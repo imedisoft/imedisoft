@@ -45,7 +45,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -360,7 +360,7 @@ namespace OpenDental{
 			for(int i=0;i<listSorted.Count;i++) {
 				row=new GridRow();
 				if(listSorted[i].EmployeeNum==0) {
-					row.Cells.Add(Lan.G(this,"All Employees"));
+					row.Cells.Add("All Employees");
 				}
 				else {
 					Employee emp=Employees.GetEmp(listSorted[i].EmployeeNum);

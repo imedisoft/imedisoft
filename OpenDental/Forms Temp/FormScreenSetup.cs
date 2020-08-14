@@ -14,7 +14,7 @@ namespace OpenDental {
 
 		public FormScreenSetup() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormScreenSetup_Load(object sender,EventArgs e) {

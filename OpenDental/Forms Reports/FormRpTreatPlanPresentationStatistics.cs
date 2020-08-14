@@ -15,7 +15,7 @@ namespace OpenDental {
 		private List<Clinic> _listClinics;
 		public FormRpTreatPlanPresentationStatistics() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormRpTreatPlanPresenter_Load(object sender,EventArgs e) {
@@ -26,7 +26,7 @@ namespace OpenDental {
 			checkAllUsers.Checked=true;
 			if(PrefC.HasClinicsEnabled) {
 				if(!Security.CurrentUser.ClinicIsRestricted) {
-					listClin.Items.Add(Lan.G(this,"Unassigned"));
+					listClin.Items.Add("Unassigned");
 				}
 				_listClinics=Clinics.GetForUserod(Security.CurrentUser);
 				listClin.Items.AddRange(_listClinics.Select(x => x.Abbr).ToArray());
@@ -45,12 +45,12 @@ namespace OpenDental {
 
 		private void RunReport(List<long> listUserNums,List<long> listClinicsNums) {
 			ReportComplex report = new ReportComplex(true,false);
-			report.AddTitle("Title",Lan.G(this,"Presented Procedure Totals"));
+			report.AddTitle("Title","Presented Procedure Totals");
 			report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle));
 			report.AddSubTitle("Date",date1.SelectionStart.ToShortDateString()+" - "+date2.SelectionStart.ToShortDateString());
 			List<Userod> listSelectedUsers = new List<Userod>();
 			if(checkAllUsers.Checked) {
-				report.AddSubTitle("Users",Lan.G(this,"All Users"));
+				report.AddSubTitle("Users","All Users");
 				listSelectedUsers.AddRange(_listUsers); //add all users
 			}
 			else {
@@ -62,7 +62,7 @@ namespace OpenDental {
 			List<Clinic> listSelectedClinics = new List<Clinic>();
 			if(PrefC.HasClinicsEnabled) {
 				if(checkAllClinics.Checked) {
-					report.AddSubTitle("Clinics",Lan.G(this,"All Clinics"));
+					report.AddSubTitle("Clinics","All Clinics");
 					listSelectedClinics.Add(new Clinic() {
 						ClinicNum = 0,
 						Description = "Unassigned"
@@ -94,20 +94,20 @@ namespace OpenDental {
 			DataTable table=RpTreatPlanPresentationStatistics.GetTreatPlanPresentationStatistics(date1.SelectionStart,date2.SelectionStart,radioFirstPresented.Checked
 				,checkAllClinics.Checked,PrefC.HasClinicsEnabled,radioPresenter.Checked,radioGross.Checked,checkAllUsers.Checked,userNums,clinicNums);			
 			QueryObject query=report.AddQuery(table,"","",SplitByKind.None,1,true);
-			query.AddColumn(Lan.G(this,"Presenter"),100,FieldValueType.String);
-			query.AddColumn(Lan.G(this,"# of Plans"),85,FieldValueType.Integer);
-			query.AddColumn(Lan.G(this,"# of Procs"),85,FieldValueType.Integer);
-			query.AddColumn(Lan.G(this,"# of ProcsSched"),100,FieldValueType.Integer);
-			query.AddColumn(Lan.G(this,"# of ProcsComp"),100,FieldValueType.Integer);
+			query.AddColumn("Presenter",100,FieldValueType.String);
+			query.AddColumn("# of Plans",85,FieldValueType.Integer);
+			query.AddColumn("# of Procs",85,FieldValueType.Integer);
+			query.AddColumn("# of ProcsSched",100,FieldValueType.Integer);
+			query.AddColumn("# of ProcsComp",100,FieldValueType.Integer);
 			if(radioGross.Checked) {
-				query.AddColumn(Lan.G(this,"GrossTPAmt"),95,FieldValueType.Number);
-				query.AddColumn(Lan.G(this,"GrossSchedAmt"),95,FieldValueType.Number);
-				query.AddColumn(Lan.G(this,"GrossCompAmt"),95,FieldValueType.Number);
+				query.AddColumn("GrossTPAmt",95,FieldValueType.Number);
+				query.AddColumn("GrossSchedAmt",95,FieldValueType.Number);
+				query.AddColumn("GrossCompAmt",95,FieldValueType.Number);
 			}
 			else {
-				query.AddColumn(Lan.G(this,"NetTPAmt"),95,FieldValueType.Number);
-				query.AddColumn(Lan.G(this,"NetSchedAmt"),95,FieldValueType.Number);
-				query.AddColumn(Lan.G(this,"NetCompAmt"),95,FieldValueType.Number);
+				query.AddColumn("NetTPAmt",95,FieldValueType.Number);
+				query.AddColumn("NetSchedAmt",95,FieldValueType.Number);
+				query.AddColumn("NetCompAmt",95,FieldValueType.Number);
 			}
 			if(!report.SubmitQueries()) {
 				DialogResult=DialogResult.Cancel;

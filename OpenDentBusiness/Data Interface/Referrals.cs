@@ -106,13 +106,13 @@ namespace OpenDentBusiness{
 		public static void Delete(Referral refer) {
 			
 			if(RefAttaches.IsReferralAttached(refer.ReferralNum)) {
-				throw new ApplicationException(Lans.g("FormReferralEdit","Cannot delete Referral because it is attached to patients"));
+				throw new ApplicationException("Cannot delete Referral because it is attached to patients");
 			}
 			if(Claims.IsReferralAttached(refer.ReferralNum)) {
-				throw new ApplicationException(Lans.g("FormReferralEdit","Cannot delete Referral because it is attached to claims"));
+				throw new ApplicationException("Cannot delete Referral because it is attached to claims");
 			}
 			if(Procedures.IsReferralAttached(refer.ReferralNum)) {
-				throw new ApplicationException(Lans.g("FormReferralEdit","Cannot delete Referral because it is attached to procedures"));
+				throw new ApplicationException("Cannot delete Referral because it is attached to procedures");
 			}
 			string command="DELETE FROM referral "
 				+"WHERE ReferralNum = '"+POut.Long(refer.ReferralNum)+"'";

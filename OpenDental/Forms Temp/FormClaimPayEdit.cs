@@ -85,7 +85,7 @@ namespace OpenDental{
 			ClaimPaymentCur=claimPaymentCur;
 			_depositOld=Deposits.GetOne(claimPaymentCur.DepositNum);
 			_claimPaymentOld=claimPaymentCur.Copy();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -663,9 +663,9 @@ namespace OpenDental{
 				return;
 			}
 			//Alter the text on the group box if the deposit associated to this claim payment was an auto deposit.
-			groupBoxDeposit.Text=Lan.G(this,"Auto Deposit Details");
+			groupBoxDeposit.Text="Auto Deposit Details";
 			if(_depositOld!=null && _depositOld.DepositAccountNum==0) {
-				groupBoxDeposit.Text=Lan.G(this,"Deposit Details");
+				groupBoxDeposit.Text="Deposit Details";
 			}
 			//Fill deposit account num drop down
 			comboDepositAccountNum.Items.Clear();
@@ -898,7 +898,7 @@ namespace OpenDental{
 				}
 			}
 			catch(Exception ex) {
-				FriendlyException.Show(Lan.G(this,"Error processing transaction.\r\n\r\nPlease contact support with the details of this error:")
+				FriendlyException.Show("Error processing transaction.\r\n\r\nPlease contact support with the details of this error:"
 					//The rest of the message is not translated on purpose because we here at HQ need to always be able to quickly read this part.
 					+"\r\nLast valid milestone reached: "+form.XchargeMilestone,ex);
 			}
@@ -1079,7 +1079,7 @@ namespace OpenDental{
 				if(comboCur.SelectedIndex==disallowedIdx) {
 					_isMissingRequiredFields=true;
 					if(_isValidating) {
-						_errorProv.SetError(comboCur,Lan.G(this,errorMsg));
+						_errorProv.SetError(comboCur,errorMsg);
 					}
 				}
 				else {
@@ -1193,8 +1193,8 @@ namespace OpenDental{
 				}
 				ClaimPaymentCur.DepositNum=Deposits.Insert(depositCur);
 				SecurityLogs.MakeLogEntry(Permissions.DepositSlips,0
-					,Lan.G(this,"Auto Deposit created via the Edit Insurance Payment window:")+" "+depositCur.DateDeposit.ToShortDateString()
-					+" "+Lan.G(this,"New")+" "+depositCur.Amount.ToString("c"));
+					,"Auto Deposit created via the Edit Insurance Payment window:"+" "+depositCur.DateDeposit.ToShortDateString()
+					+" "+"New"+" "+depositCur.Amount.ToString("c"));
 			}
 			#endregion
 			double amt=PIn.Double(textAmount.Text);
@@ -1254,9 +1254,9 @@ namespace OpenDental{
 				if(IsNew) {
 					ClaimPayments.Insert(ClaimPaymentCur);//error thrown if trying to change amount and already attached to a deposit.
 					SecurityLogs.MakeLogEntry(Permissions.InsPayCreate,0,
-						Lan.G(this,"Carrier Name: ")+ClaimPaymentCur.CarrierName+", "
-						+Lan.G(this,"Total Amount: ")+ClaimPaymentCur.CheckAmt.ToString("c")+", "
-						+Lan.G(this,"Check Date: ")+ClaimPaymentCur.CheckDate.ToShortDateString()+", "//Date the check is entered in the system (i.e. today)
+						"Carrier Name: "+ClaimPaymentCur.CarrierName+", "
+						+"Total Amount: "+ClaimPaymentCur.CheckAmt.ToString("c")+", "
+						+"Check Date: "+ClaimPaymentCur.CheckDate.ToShortDateString()+", "//Date the check is entered in the system (i.e. today)
 						+"ClaimPaymentNum: "+ClaimPaymentCur.ClaimPaymentNum);//Column name, not translated.
 				}
 				else {
@@ -1269,17 +1269,17 @@ namespace OpenDental{
 					}
 					if(IsCreateLogEntry) { //need a InsPayCreate Log entry because it just was pre-inserted.
 						SecurityLogs.MakeLogEntry(Permissions.InsPayCreate,0,
-							Lan.G(this,"Carrier Name: ")+ClaimPaymentCur.CarrierName+", "
-							+Lan.G(this,"Total Amount: ")+ClaimPaymentCur.CheckAmt.ToString("c")+", "
-							+Lan.G(this,"Check Date: ")+ClaimPaymentCur.CheckDate.ToShortDateString()+", "//Date the check is entered in the system (i.e. today)
+							"Carrier Name: "+ClaimPaymentCur.CarrierName+", "
+							+"Total Amount: "+ClaimPaymentCur.CheckAmt.ToString("c")+", "
+							+"Check Date: "+ClaimPaymentCur.CheckDate.ToShortDateString()+", "//Date the check is entered in the system (i.e. today)
 							+"ClaimPaymentNum: "+ClaimPaymentCur.ClaimPaymentNum);//Column name, not translated.
 					}
 					else {
 						SecurityLogs.MakeLogEntry(Permissions.InsPayEdit,0,
-							Lan.G(this,"Carrier Name: ")+ClaimPaymentCur.CarrierName+", "
-							+Lan.G(this,"Previous Amount: ")+_claimPaymentOld.CheckAmt.ToString("c")+", "
-							+Lan.G(this,"New Amount: ")+ClaimPaymentCur.CheckAmt.ToString("c")+", "
-							+Lan.G(this,"Check Date: ")+ClaimPaymentCur.CheckDate.ToShortDateString()+", "//Date the check is entered in the system
+							"Carrier Name: "+ClaimPaymentCur.CarrierName+", "
+							+"Previous Amount: "+_claimPaymentOld.CheckAmt.ToString("c")+", "
+							+"New Amount: "+ClaimPaymentCur.CheckAmt.ToString("c")+", "
+							+"Check Date: "+ClaimPaymentCur.CheckDate.ToShortDateString()+", "//Date the check is entered in the system
 							+"ClaimPaymentNum: "+ClaimPaymentCur.ClaimPaymentNum);//Column name, not translated.
 					}
 				}

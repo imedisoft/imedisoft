@@ -71,7 +71,7 @@ namespace OpenDentBusiness
 			+ "procedurelog.ProcFee ProcFee ";
 			if (hasClinicsEnabled)
 			{
-				queryBrokenApts += ",COALESCE(clinic.Description,'" + POut.String(Lans.g("FormRpBrokenAppointments", "Unassigned")) + "') ClinicDesc ";
+				queryBrokenApts += ",COALESCE(clinic.Description,'" + POut.String("Unassigned") + "') ClinicDesc ";
 			}
 			queryBrokenApts +=
 				"FROM procedurelog ";
@@ -115,7 +115,7 @@ namespace OpenDentBusiness
 					+ "adjustment.AdjAmt AdjAmt,adjustment.AdjNote AdjNote ";
 			if (hasClinicsEnabled)
 			{
-				queryBrokenApts += ",COALESCE(clinic.Description,'" + POut.String(Lans.g("FormRpBrokenAppointments", "Unassigned")) + "') ClinicDesc ";
+				queryBrokenApts += ",COALESCE(clinic.Description,'" + POut.String("Unassigned") + "') ClinicDesc ";
 			}
 			queryBrokenApts +=
 				"FROM adjustment "
@@ -150,7 +150,7 @@ namespace OpenDentBusiness
 					+ "appointment.IsHygiene IsHygieneApt ";
 			if (hasClinicsEnabled)
 			{
-				queryBrokenApts += ",COALESCE(clinic.Description,'" + POut.String(Lans.g("FormRpBrokenAppointments", "Unassigned")) + "') ClinicDesc ";//Coalesce is Oracle compatible
+				queryBrokenApts += ",COALESCE(clinic.Description,'" + POut.String("Unassigned") + "') ClinicDesc ";//Coalesce is Oracle compatible
 			}
 			queryBrokenApts +=
 				"FROM appointment "

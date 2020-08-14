@@ -39,7 +39,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormEmployeeEdit(){
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>

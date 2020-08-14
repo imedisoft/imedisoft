@@ -53,7 +53,7 @@ namespace OpenDental{
 			//BenCur=benCur.Clone();
 			PatPlanNum=patPlanNum;
 			PlanNum=planNum;
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -345,7 +345,7 @@ namespace OpenDental{
 				checkPat.Checked=true;
 			}
 			listCategory.Items.Clear();
-			listCategory.Items.Add(Lan.G(this,"None"));
+			listCategory.Items.Add("None");
 			listCategory.SelectedIndex=0;
 			_listCovCats=CovCats.GetDeepCopy(true);
 			for(int i=0;i<_listCovCats.Count;i++) {
@@ -357,7 +357,7 @@ namespace OpenDental{
 			textProcCode.Text=ProcedureCodes.GetStringProcCode(BenCur.CodeNum);
 			listType.Items.Clear();
 			for(int i=0;i<Enum.GetNames(typeof(InsBenefitType)).Length;i++){
-				listType.Items.Add(Lan.G("enumInsBenefitType",Enum.GetNames(typeof(InsBenefitType))[i]));
+				listType.Items.Add(Enum.GetNames(typeof(InsBenefitType))[i]);
 				if((int)BenCur.BenefitType==i){
 					listType.SelectedIndex=i;
 				}
@@ -371,7 +371,7 @@ namespace OpenDental{
 			textAmount.Text=BenCur.GetDisplayMonetaryAmt();
 			listTimePeriod.Items.Clear();
 			for(int i=0;i<Enum.GetNames(typeof(BenefitTimePeriod)).Length;i++) {
-				listTimePeriod.Items.Add(Lan.G("enumBenefitTimePeriod",Enum.GetNames(typeof(BenefitTimePeriod))[i]));
+				listTimePeriod.Items.Add(Enum.GetNames(typeof(BenefitTimePeriod))[i]);
 				if((int)BenCur.TimePeriod==i) {
 					listTimePeriod.SelectedIndex=i;
 				}
@@ -379,13 +379,13 @@ namespace OpenDental{
 			textQuantity.Text=BenCur.Quantity.ToString();
 			listQuantityQualifier.Items.Clear();
 			for(int i=0;i<Enum.GetNames(typeof(BenefitQuantity)).Length;i++) {
-				listQuantityQualifier.Items.Add(Lan.G("enumBenefitQuantity",Enum.GetNames(typeof(BenefitQuantity))[i]));
+				listQuantityQualifier.Items.Add(Enum.GetNames(typeof(BenefitQuantity))[i]);
 				if((int)BenCur.QuantityQualifier==i) {
 					listQuantityQualifier.SelectedIndex=i;
 				}
 			}
 			for(int i=0;i<Enum.GetNames(typeof(BenefitCoverageLevel)).Length;i++){
-				listCoverageLevel.Items.Add(Lan.G("enumBenefitCoverageLevel",Enum.GetNames(typeof(BenefitCoverageLevel))[i]));
+				listCoverageLevel.Items.Add(Enum.GetNames(typeof(BenefitCoverageLevel))[i]);
 				if((int)BenCur.CoverageLevel==i) {
 					listCoverageLevel.SelectedIndex=i;
 				}
@@ -408,8 +408,8 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(BenCur.QuantityQualifier==BenefitQuantity.AgeLimit && PIn.Int(textQuantity.Text,false)==0)  {
-				string messageText=Lan.G(this," field is invalid.\r\n"
-					+"Enter an age greater than 0 to denote coverage through that year, or click delete to remove this benefit.");
+				string messageText=" field is invalid.\r\n"
+					+"Enter an age greater than 0 to denote coverage through that year, or click delete to remove this benefit.";
 				MessageBox.Show(this,groupQuantity.Text+messageText);
 				return;
 			}

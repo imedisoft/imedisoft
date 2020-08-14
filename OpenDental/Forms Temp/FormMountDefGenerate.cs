@@ -12,7 +12,7 @@ namespace OpenDental {
 
 		public FormMountDefGenerate() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormMountDefGenerate_Load(object sender, EventArgs e){

@@ -41,7 +41,7 @@ namespace OpenDental {
 		
 		public FormPatientRaceEthnicity(Patient pat,List<PatientRace> listPatientRaces) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_patCur=pat;
 			_listAllPatientRaces=listPatientRaces;
 		}
@@ -63,13 +63,13 @@ namespace OpenDental {
 			_listAllEthnicities=listCdcrecs.FindAll(x => x.HeirarchicalCode.StartsWith("E") && x.HeirarchicalCode!="E")//Ethnicity codes start with E.
 				.OrderBy(x => x.HeirarchicalCode).ToList();
 			Cdcrec declinedSpecify=new Cdcrec {
-				Description=Lan.G(this,"DECLINED TO SPECIFY"),
+				Description="DECLINED TO SPECIFY",
 				CdcrecCode=PatientRace.DECLINE_SPECIFY_RACE_CODE,
 				HeirarchicalCode=""
 			};
 			_listAllRaces.Add(declinedSpecify);
 			declinedSpecify=new Cdcrec {
-				Description=Lan.G(this,"DECLINED TO SPECIFY"),
+				Description="DECLINED TO SPECIFY",
 				CdcrecCode=PatientRace.DECLINE_SPECIFY_ETHNICITY_CODE,
 				HeirarchicalCode=""
 			};
@@ -87,7 +87,7 @@ namespace OpenDental {
 				}
 				if(patRace.CdcrecCode==PatientRace.MULTI_RACE_CODE) {
 					cdcrec=new Cdcrec {
-						Description=Lan.G(this,"MULTIRACIAL"),
+						Description="MULTIRACIAL",
 						CdcrecCode=PatientRace.MULTI_RACE_CODE,
 						HeirarchicalCode=""
 					};
@@ -104,9 +104,9 @@ namespace OpenDental {
 			grid.BeginUpdate();
 			grid.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G(this,"CDCREC Code"),100);
+			col=new GridColumn("CDCREC Code",100);
 			grid.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Description"),150);
+			col=new GridColumn("Description",150);
 			grid.ListGridColumns.Add(col);
 			grid.ListGridRows.Clear();
 			GridRow row;

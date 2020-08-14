@@ -19,7 +19,7 @@ namespace OpenDental {
 
 		public FormWikiEdit(Action<string> onWikiSaved=null) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			WikiSaveEvent.Fired+=WikiSaveEvent_Fired;
 			_onWikiSaved=onWikiSaved;
 		}
@@ -30,7 +30,7 @@ namespace OpenDental {
 				textContent);
 			ResizeControls();
 			//LayoutToolBar();
-			Text = Lan.G(this,"Wiki Edit")+" - "+WikiPageCur.PageTitle;
+			Text = "Wiki Edit"+" - "+WikiPageCur.PageTitle;
 			if(WikiPageCur.IsNew) {
 				textContent.Text=WikiPageCur.PageContent;
 			}
@@ -181,42 +181,42 @@ namespace OpenDental {
 		private void LayoutToolBars() {
 			ToolBarMain.Buttons.Clear();
 			//Refresh no longer needed.
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Save"),1,"","Save"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Save as Draft"),18,"","SaveDraft"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Cancel"),2,"","Cancel"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Save",1,"","Save"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Save as Draft",18,"","SaveDraft"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Cancel",2,"","Cancel"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Int Link"),7,"","Int Link"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Bookmark"),7,"","Bookmark"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"File"),7,"","File Link"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Folder"),7,"","Folder Link"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Ext Link"),8,"","Ext Link"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Int Link",7,"","Int Link"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Bookmark",7,"","Bookmark"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("File",7,"","File Link"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Folder",7,"","Folder Link"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Ext Link",8,"","Ext Link"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Heading1"),9,"","H1"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Heading2"),10,"","H2"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Heading3"),11,"","H3"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Heading1",9,"","H1"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Heading2",10,"","H2"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Heading3",11,"","H3"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Table"),15,"","Table"));
-			ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Image"),16,"","Image"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Table",15,"","Table"));
+			ToolBarMain.Buttons.Add(new ODToolBarButton("Image",16,"","Image"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
 			if(Security.IsAuthorized(Permissions.WikiAdmin,true)) {
 				if(WikiPageCur.IsLocked) {
-					ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Unlock"),19,"","Lock"));
+					ToolBarMain.Buttons.Add(new ODToolBarButton("Unlock",19,"","Lock"));
 				}
 				else {
-					ToolBarMain.Buttons.Add(new ODToolBarButton(Lan.G(this,"Lock"),20,"","Lock"));
+					ToolBarMain.Buttons.Add(new ODToolBarButton("Lock",20,"","Lock"));
 				}
 			}
 			toolBar2.Buttons.Clear();
-			toolBar2.Buttons.Add(new ODToolBarButton(Lan.G(this,"Cut"),3,"","Cut"));
-			toolBar2.Buttons.Add(new ODToolBarButton(Lan.G(this,"Copy"),4,"","Copy"));
-			toolBar2.Buttons.Add(new ODToolBarButton(Lan.G(this,"Paste"),5,"","Paste"));
+			toolBar2.Buttons.Add(new ODToolBarButton("Cut",3,"","Cut"));
+			toolBar2.Buttons.Add(new ODToolBarButton("Copy",4,"","Copy"));
+			toolBar2.Buttons.Add(new ODToolBarButton("Paste",5,"","Paste"));
 			toolBar2.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			toolBar2.Buttons.Add(new ODToolBarButton(Lan.G(this,"Undo"),6,"","Undo"));
+			toolBar2.Buttons.Add(new ODToolBarButton("Undo",6,"","Undo"));
 			toolBar2.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
-			toolBar2.Buttons.Add(new ODToolBarButton(Lan.G(this,"Bold"),12,"","Bold"));
-			toolBar2.Buttons.Add(new ODToolBarButton(Lan.G(this,"Italic"),13,"","Italic"));
-			toolBar2.Buttons.Add(new ODToolBarButton(Lan.G(this,"Color"),14,"","Color"));
-			toolBar2.Buttons.Add(new ODToolBarButton(Lan.G(this,"Font"),17,"","Font"));
+			toolBar2.Buttons.Add(new ODToolBarButton("Bold",12,"","Bold"));
+			toolBar2.Buttons.Add(new ODToolBarButton("Italic",13,"","Italic"));
+			toolBar2.Buttons.Add(new ODToolBarButton("Color",14,"","Color"));
+			toolBar2.Buttons.Add(new ODToolBarButton("Font",17,"","Font"));
 		}
 
 		private void ToolBarMain_ButtonClick(object sender,OpenDental.UI.ODToolBarButtonClickEventArgs e) {
@@ -267,12 +267,12 @@ namespace OpenDental {
 					WikiPageCur.IsLocked=!WikiPageCur.IsLocked;
 					if(WikiPageCur.IsLocked) {
 						//The wiki page is was locked, switch the icon to the unlock symbol because they locked it.
-						e.Button.Text=Lan.G(this,"Unlock");
+						e.Button.Text="Unlock";
 						e.Button.ImageIndex=19;
 					}
 					else {
 						//The wiki page is was unlocked, switch the icon to the lock symbol because they unlocked it.
-						e.Button.Text=Lan.G(this,"Lock");
+						e.Button.Text="Lock";
 						e.Button.ImageIndex=20;
 					}
 					ToolBarMain.Invalidate();
@@ -351,9 +351,9 @@ namespace OpenDental {
 				}
 			}
 			List<string> listInvalidWikiPages=WikiPages.GetMissingPageTitles(textContent.Text);
-			string message=Lan.G(this,"This page has the following invalid wiki page link(s):")+"\r\n"+string.Join("\r\n",listInvalidWikiPages.Take(10))+"\r\n"
+			string message="This page has the following invalid wiki page link(s):"+"\r\n"+string.Join("\r\n",listInvalidWikiPages.Take(10))+"\r\n"
 				+(listInvalidWikiPages.Count>10 ? "...\r\n\r\n" : "\r\n")
-				+Lan.G(this,"Create the wikipage(s) automatically?");
+				+"Create the wikipage(s) automatically?";
 			if(listInvalidWikiPages.Count!=0 && MsgBox.Show(MsgBoxButtons.YesNo,message)) {
 				foreach(string title in listInvalidWikiPages) {
 					WikiPage wp=new WikiPage();
@@ -464,7 +464,7 @@ namespace OpenDental {
 		}
 
 		private void Bookmark_Click() {
-			FormExternalLink FormWEL=new FormExternalLink(Lan.G(this,"Insert Internal Bookmark"),Lan.G(this,"ID"));
+			FormExternalLink FormWEL=new FormExternalLink("Insert Internal Bookmark","ID");
 			FormWEL.ShowDialog();
 			int tempStart=textContent.SelectionStart;
 			if(FormWEL.DialogResult!=DialogResult.OK) {

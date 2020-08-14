@@ -20,7 +20,7 @@ namespace OpenDental {
 
 		public FormXchargeTokenTool() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormXchargeTokenTool_Load(object sender,EventArgs e) {
@@ -69,17 +69,17 @@ namespace OpenDental {
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("FormXChargeTest","PatNum"),80);
+			GridColumn col=new GridColumn("PatNum",80);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormXChargeTest","First"),120);
+			col=new GridColumn("First",120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormXChargeTest","Last"),120);
+			col=new GridColumn("Last",120);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormXChargeTest","CCNumberMasked"),150);
+			col=new GridColumn("CCNumberMasked",150);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormXChargeTest","Exp"),50);
+			col=new GridColumn("Exp",50);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormXChargeTest","Token"),100);
+			col=new GridColumn("Token",100);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

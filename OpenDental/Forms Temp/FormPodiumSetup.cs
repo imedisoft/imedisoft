@@ -31,7 +31,7 @@ namespace OpenDental {
 
 		public FormPodiumSetup() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormPodiumSetup_Load(object sender,EventArgs e) {

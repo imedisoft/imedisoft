@@ -239,7 +239,7 @@ namespace OpenDentBusiness
 				}
 				else if (PIn.Double(tble.Rows[0]["depAmtOthers"].ToString()) + cp.CheckAmt != PIn.Double(tble.Rows[0]["Amount"].ToString()))
 				{
-					throw new ApplicationException(Lans.g("ClaimPayments", "Not allowed to change the amount on checks attached to deposits."));
+					throw new ApplicationException("Not allowed to change the amount on checks attached to deposits.");
 				}
 			}
 			else
@@ -254,7 +254,7 @@ namespace OpenDentBusiness
 				if (table.Rows[0][0].ToString() != "0"//if claimpayment is already attached to a deposit
 					&& PIn.Double(table.Rows[0][1].ToString()) != cp.CheckAmt)//and checkAmt changes
 				{
-					throw new ApplicationException(Lans.g("ClaimPayments", "Not allowed to change the amount on checks attached to deposits."));
+					throw new ApplicationException("Not allowed to change the amount on checks attached to deposits.");
 				}
 			}
 
@@ -278,7 +278,7 @@ namespace OpenDentBusiness
 			if (table.Rows[0][0].ToString() != "0" && !HasAutoDeposit(cp))
 			{//if claimpayment is already attached to a deposit and was not created automatically
 #if !DEBUG
-				throw new ApplicationException(Lans.g("ClaimPayments","Not allowed to delete a payment attached to a deposit."));
+				throw new ApplicationException("Not allowed to delete a payment attached to a deposit.");
 #endif
 			}
 			//validate eobs

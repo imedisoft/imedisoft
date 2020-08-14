@@ -44,15 +44,15 @@ namespace OpenDentBusiness{
 			for(int i=0;i<table.Rows.Count;i++) {
 				switch(listPatientRaces[i].CdcrecCode) {
 					case PatientRace.DECLINE_SPECIFY_RACE_CODE:
-						listPatientRaces[i].Description=Lans.g("PatientRaces","DECLINED TO SPECIFY");
+						listPatientRaces[i].Description="DECLINED TO SPECIFY";
 						listPatientRaces[i].IsEthnicity=false;
 						break;
 					case PatientRace.DECLINE_SPECIFY_ETHNICITY_CODE:
-						listPatientRaces[i].Description=Lans.g("PatientRaces","DECLINED TO SPECIFY");
+						listPatientRaces[i].Description="DECLINED TO SPECIFY";
 						listPatientRaces[i].IsEthnicity=true;
 						break;
 					case PatientRace.MULTI_RACE_CODE:
-						listPatientRaces[i].Description=Lans.g("PatientRaces","MULTIRACIAL");
+						listPatientRaces[i].Description="MULTIRACIAL";
 						listPatientRaces[i].IsEthnicity=false;
 						break;
 					default:

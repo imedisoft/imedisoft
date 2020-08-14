@@ -14,7 +14,7 @@ namespace OpenDental {
 
 		public FormEhrQuarterlyKeyEditCust() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormEhrQuarterlyKeyEditCust_Load(object sender,EventArgs e) {

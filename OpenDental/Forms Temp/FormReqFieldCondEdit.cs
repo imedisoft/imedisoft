@@ -22,14 +22,14 @@ namespace OpenDental {
 
 		public FormReqFieldCondEdit(RequiredField reqField) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_reqField=reqField;
 			_listReqFieldConds=new List<RequiredFieldCondition>();
 		}
 
 		public FormReqFieldCondEdit(RequiredField reqField,RequiredFieldName condType) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_reqField=reqField;
 			_originalFieldName=condType;
 			_listReqFieldConds=reqField.ListRequiredFieldConditions.FindAll(x => x.ConditionType==_originalFieldName);
@@ -90,10 +90,10 @@ namespace OpenDental {
 				return;//Do not add to list if the required field already has a condition of that type
 			}
 			if(fieldName==RequiredFieldName.Birthdate) {
-				listConditionType.Items.Add(Lan.G("enumRequiredFieldName","Age"));
+				listConditionType.Items.Add("Age");
 			}
 			else {
-				listConditionType.Items.Add(Lan.G("enumRequiredFieldName",fieldName.ToString()));
+				listConditionType.Items.Add(fieldName.ToString());
 			}
 			_listIndexFieldNames.Add(fieldName);
 			if(fieldName==_originalFieldName) {
@@ -165,7 +165,7 @@ namespace OpenDental {
 					SetFieldVisibleHelper(true);
 					PatientGender[] arrayPatientGenders=(PatientGender[])Enum.GetValues(typeof(PatientGender));
 					for(int i=0;i<arrayPatientGenders.Length;i++) {
-						listConditionValues.Items.Add(Lan.G("enumPatientGender",arrayPatientGenders[i].ToString()));
+						listConditionValues.Items.Add(arrayPatientGenders[i].ToString());
 					}
 					ListValuesSetIndices();
 					break;
@@ -173,7 +173,7 @@ namespace OpenDental {
 					SetFieldVisibleHelper(true);
 					PatientPosition[] arrayPatientPositions=(PatientPosition[])Enum.GetValues(typeof(PatientPosition));
 					for(int i=0;i<arrayPatientPositions.Length;i++) {
-						listConditionValues.Items.Add(Lan.G("enumPatientPosition",arrayPatientPositions[i].ToString()));
+						listConditionValues.Items.Add(arrayPatientPositions[i].ToString());
 					}
 					ListValuesSetIndices();
 					break;
@@ -181,21 +181,21 @@ namespace OpenDental {
 					SetFieldVisibleHelper(true);
 					PatientStatus[] arrayPatientStatuses=(PatientStatus[])Enum.GetValues(typeof(PatientStatus));
 					for(int i=0;i<arrayPatientStatuses.Length;i++) {
-						listConditionValues.Items.Add(Lan.G("enumPatientStatus",arrayPatientStatuses[i].ToString()));
+						listConditionValues.Items.Add(arrayPatientStatuses[i].ToString());
 					}
 					ListValuesSetIndices();
 					break;
 				case RequiredFieldName.StudentStatus:
 					SetFieldVisibleHelper(true);
-					listConditionValues.Items.Add(Lan.G(this,"Nonstudent"));
-					listConditionValues.Items.Add(Lan.G(this,"Parttime"));
-					listConditionValues.Items.Add(Lan.G(this,"Fulltime"));
+					listConditionValues.Items.Add("Nonstudent");
+					listConditionValues.Items.Add("Parttime");
+					listConditionValues.Items.Add("Fulltime");
 					ListValuesSetIndices();
 					break;
 
 				case RequiredFieldName.Language:
 					SetFieldVisibleHelper(true);
-					listConditionValues.Items.Add(Lan.G(this,"none"));//regardless of how many languages are listed, the first item is "none"
+					listConditionValues.Items.Add("none");//regardless of how many languages are listed, the first item is "none"
 					for(int i=0;i<_listLanguages.Count;i++) {
 						if(_listLanguages[i]=="") {
 							continue;
@@ -212,7 +212,7 @@ namespace OpenDental {
 					break;
 				case RequiredFieldName.Clinic:
 					SetFieldVisibleHelper(true);
-					listConditionValues.Items.Add(Lan.G(this,"Unassigned"));
+					listConditionValues.Items.Add("Unassigned");
 					for(int i=0;i<_listClinics.Count;i++) {
 						listConditionValues.Items.Add(_listClinics[i].Abbr);
 					}
@@ -235,12 +235,12 @@ namespace OpenDental {
 					break;
 				case RequiredFieldName.MedicaidID:
 					SetFieldVisibleHelper(true);
-					listConditionValues.Items.Add(Lan.G(this,"Blank"));
+					listConditionValues.Items.Add("Blank");
 					ListValuesSetIndices();
 					break;
 				case RequiredFieldName.MedicaidState:
 					SetFieldVisibleHelper(true);
-					listConditionValues.Items.Add(Lan.G(this,"Blank"));
+					listConditionValues.Items.Add("Blank");
 					ListValuesSetIndices();
 					break;
 			}

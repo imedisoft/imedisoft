@@ -15,7 +15,7 @@ namespace OpenDental {
 
 		public FormSheetFieldImage(SheetDef sheetDef,SheetFieldDef sheetFieldDef,bool isReadOnly):base(sheetDef,sheetFieldDef,isReadOnly) {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormSheetFieldImage_Load(object sender,EventArgs e) {

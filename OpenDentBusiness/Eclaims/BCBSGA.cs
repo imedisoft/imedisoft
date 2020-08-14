@@ -96,10 +96,10 @@ namespace OpenDentBusiness.Eclaims
 			bool retVal = true;
 			try
 			{
-				progress.UpdateProgress(Lans.g(progress.LanThis, "Contacting web server and downloading reports"), "reports", "17%", 17);
+				progress.UpdateProgress("Contacting web server and downloading reports", "reports", "17%", 17);
 				if (progress.IsPauseOrCancel())
 				{
-					progress.UpdateProgress(Lans.g(progress.LanThis, "Canceled by user."));
+					progress.UpdateProgress("Canceled by user.");
 					return false;
 				}
 				terminalConnector.ShowForm();
@@ -124,8 +124,8 @@ namespace OpenDentBusiness.Eclaims
 					+ "00";//61,2 Software version not important
 				byte response = (byte)'Y';
 				string retrieveFile = "";
-				progress.UpdateProgress(Lans.g(progress.LanThis, "Web server contact successful."));
-				progress.UpdateProgress(Lans.g(progress.LanThis, "Downloading files"), "reports", "33%", 33);
+				progress.UpdateProgress("Web server contact successful.");
+				progress.UpdateProgress("Downloading files", "reports", "33%", 33);
 				if (progress.IsPauseOrCancel())
 				{
 					return false;
@@ -151,7 +151,7 @@ namespace OpenDentBusiness.Eclaims
 					//4. If login accepted, but no records, Z is returned. Hang up.
 					if (response == (byte)'Z')
 					{
-						progress.UpdateProgress(Lans.g(progress.LanThis, "No reports to retrieve."));
+						progress.UpdateProgress("No reports to retrieve.");
 						break;
 					}
 					//5. If record(s) available, Y is returned, followed by dos filename and 32 char subj.
@@ -167,7 +167,7 @@ namespace OpenDentBusiness.Eclaims
 					terminalConnector.Pause(5000);
 					//9. Repeat all steps including login until a Z is returned.
 				}
-				progress.UpdateProgress(Lans.g(progress.LanThis, "Closing connection to web server"), "reports", "50%", 50);
+				progress.UpdateProgress("Closing connection to web server", "reports", "50%", 50);
 				if (progress.IsPauseOrCancel())
 				{
 					return false;

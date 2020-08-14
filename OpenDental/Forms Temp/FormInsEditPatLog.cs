@@ -14,7 +14,7 @@ namespace OpenDental {
 		///<summary>Opens the window with the passed-in parameters set as the default.</summary>
 		public FormInsEditPatLog(PatPlan patPlan) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_patPlan=patPlan;
 		}
 
@@ -66,7 +66,7 @@ namespace OpenDental {
 					row.Cells.Add(user.UserName);
 				}
 				else {
-					row.Cells.Add(Lan.G(this,"Unknown")+"("+POut.Long(logCur.UserNum)+")");//Unable to find the corresponding user.
+					row.Cells.Add("Unknown"+"("+POut.Long(logCur.UserNum)+")");//Unable to find the corresponding user.
 				}
 				row.Cells.Add(logCur.LogType.ToString());
 				row.Cells.Add(logCur.FKey.ToString());

@@ -61,7 +61,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormEmailAddressEdit(EmailAddress emailAddress,bool isOpenedFromEmailSetup=false) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_emailAddressCur=emailAddress;
 			List<long> listDefaultAddressNums=new List<long>() {
 				Prefs.GetLong(PrefName.EmailNotifyAddressNum),
@@ -625,7 +625,7 @@ namespace OpenDental{
 			}
 			Clinic clinic=Clinics.GetFirstOrDefault(x => x.EmailAddressNum==_emailAddressCur.EmailAddressNum);
 			if(clinic!=null) {
-				MessageBox.Show(Lan.G(this,"Cannot delete the email address because it is used by clinic")+" "+clinic.Description);
+				MessageBox.Show("Cannot delete the email address because it is used by clinic"+" "+clinic.Description);
 				return;
 			}
 			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete this email address?")) {
@@ -674,7 +674,7 @@ namespace OpenDental{
 					return;
 				}
 				if(string.IsNullOrWhiteSpace(inputbox.textResult.Text)) {
-					throw new ODException(Lan.G(this,"There was no authorization code entered."));
+					throw new ODException("There was no authorization code entered.");
 				}
 				string authCode=inputbox.textResult.Text;
 				GoogleToken tokens=OpenDentBusiness.Google.MakeAccessTokenRequest(authCode);

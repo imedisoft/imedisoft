@@ -94,7 +94,7 @@ namespace OpenDental{
 			ClaimPaymentCur=claimPaymentCur;
 			gridAttached.ContextMenu=menuRightAttached;
 			gridOut.ContextMenu=menuRightOut;
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -733,7 +733,7 @@ namespace OpenDental{
 			}
 			else {
 				butOK.Visible=false;
-				butClose.Text=Lan.G(this,"Close");
+				butClose.Text="Close";
 			}
 			if(IsFromClaim) {
 				//Remove context menus from the grids.  This preserves old functionality.
@@ -763,11 +763,11 @@ namespace OpenDental{
 				butAttach.Visible=false;
 			}
 			if(EobAttaches.Exists(ClaimPaymentCur.ClaimPaymentNum)) {
-				textEobIsScanned.Text=Lan.G(this,"Yes");
+				textEobIsScanned.Text="Yes";
 				butView.Text="View EOB";
 			}
 			else {
-				textEobIsScanned.Text=Lan.G(this,"No");
+				textEobIsScanned.Text="No";
 				butView.Text="Scan EOB";
 			}
 		}
@@ -806,21 +806,21 @@ namespace OpenDental{
 			gridAttached.BeginUpdate();
 			gridAttached.ListGridColumns.Clear();
 			GridColumn col;
-			col=new GridColumn(Lan.G(this,"#"),25);
+			col=new GridColumn("#",25);
 			gridAttached.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Service Date"),80);
+			col=new GridColumn("Service Date",80);
 			gridAttached.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Clinic"),70);
+			col=new GridColumn("Clinic",70);
 			gridAttached.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Claim Status"),80);
+			col=new GridColumn("Claim Status",80);
 			gridAttached.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Carrier"),186);
+			col=new GridColumn("Carrier",186);
 			gridAttached.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Patient"),130);
+			col=new GridColumn("Patient",130);
 			gridAttached.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Fee"),70,HorizontalAlignment.Right);
+			col=new GridColumn("Fee",70,HorizontalAlignment.Right);
 			gridAttached.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Payment"),70,HorizontalAlignment.Right);
+			col=new GridColumn("Payment",70,HorizontalAlignment.Right);
 			gridAttached.ListGridColumns.Add(col); 
 			gridAttached.ListGridRows.Clear();
 			GridRow row;
@@ -879,19 +879,19 @@ namespace OpenDental{
 			gridOut.ListGridColumns.Clear();
 			col=new GridColumn("",25);//so that it lines up with the grid above
 			gridOut.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Service Date"),80);
+			col=new GridColumn("Service Date",80);
 			gridOut.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Clinic"),70);
+			col=new GridColumn("Clinic",70);
 			gridOut.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Claim Status"),80);
+			col=new GridColumn("Claim Status",80);
 			gridOut.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Carrier"),186);
+			col=new GridColumn("Carrier",186);
 			gridOut.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Patient"),130);
+			col=new GridColumn("Patient",130);
 			gridOut.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Fee"),70,HorizontalAlignment.Right);
+			col=new GridColumn("Fee",70,HorizontalAlignment.Right);
 			gridOut.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Payment"),70,HorizontalAlignment.Right);
+			col=new GridColumn("Payment",70,HorizontalAlignment.Right);
 			gridOut.ListGridColumns.Add(col);
 			gridOut.ListGridRows.Clear();
 			foreach(ClaimPaySplit claimPS in _listClaimsOutstanding) {
@@ -1196,11 +1196,11 @@ namespace OpenDental{
 			formI.ClaimPaymentNum=ClaimPaymentCur.ClaimPaymentNum;
 			formI.ShowDialog();
 			if(EobAttaches.Exists(ClaimPaymentCur.ClaimPaymentNum)) {
-				textEobIsScanned.Text=Lan.G(this,"Yes");
+				textEobIsScanned.Text="Yes";
 				butView.Text="View EOB";
 			}
 			else {
-				textEobIsScanned.Text=Lan.G(this,"No");
+				textEobIsScanned.Text="No";
 				butView.Text="Scan EOB";
 			}
 			FillClaimPayment();//For customer 5769, who was getting ocassional Chinese chars in the Amount boxes.

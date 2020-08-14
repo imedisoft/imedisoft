@@ -243,7 +243,7 @@ namespace Imedisoft.Forms
 
 							case XVWeb.ProgramProps.ImageQuality:
 								List<string> listOptions = Enum.GetValues(typeof(XVWebImageQuality)).Cast<XVWebImageQuality>().Select(x => x.ToString()).ToList();
-								List<string> listDisplay = listOptions.Select(x => Lans.g(this, x)).ToList();
+								List<string> listDisplay = listOptions;
 								ShowComboBoxForProgramProperty(programProperty, listOptions, listDisplay, "Choose an Image Quality");
 								return;
 						}

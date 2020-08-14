@@ -12,7 +12,7 @@ namespace OpenDental {
 
 		public FormPaymentPlanOptions(PaymentSchedule paySchedule) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			if(paySchedule==PaymentSchedule.Weekly) {
 				radioWeekly.Checked=true;
 			}

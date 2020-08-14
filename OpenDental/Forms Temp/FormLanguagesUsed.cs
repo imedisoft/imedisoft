@@ -42,7 +42,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary>Clean up any resources being used.</summary>

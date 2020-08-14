@@ -45,11 +45,11 @@ namespace OpenDental.ReportingComplex
 		{
 			if (tableQuery == null)
 			{
-				ReportComplexEvent.Fire(EventCategory.ReportComplex, Lan.G("ReportComplex", "Adding Query To Report..."));
+				ReportComplexEvent.Fire(EventCategory.ReportComplex, "Adding Query To Report...");
 			}
 			else
 			{
-				ReportComplexEvent.Fire(EventCategory.ReportComplex, Lan.G("ReportComplex", "Adding Table To Report..."));
+				ReportComplexEvent.Fire(EventCategory.ReportComplex, "Adding Table To Report...");
 			}
 			Graphics grfx = Graphics.FromImage(new Bitmap(1, 1));
 			if (font == null)
@@ -262,7 +262,7 @@ namespace OpenDental.ReportingComplex
 		///<summary>Adds a datafield column with the specified type, width and font.  If the column is type Double, then the alignment is set right and a total field is added. Also, default formatstrings are set for dates and doubles.  Does not add lines or shading.</summary>
 		public void AddColumn(string dataField, int width, FieldValueType fieldValueType = FieldValueType.String, Font font = null, string formatString = "")
 		{
-			ReportComplexEvent.Fire(EventCategory.ReportComplex, Lan.G("ReportComplex", "Adding Column To Table..."));
+			ReportComplexEvent.Fire(EventCategory.ReportComplex, "Adding Column To Table...");
 			Graphics grfx = Graphics.FromImage(new Bitmap(1, 1));
 			_arrDataFields.Add(dataField);
 			if (font == null)
@@ -333,7 +333,7 @@ namespace OpenDental.ReportingComplex
 		///<summary>Adds a summary object, of the specified color, for the specified group of queries, giving it a label with the given text and font.  The summary is placed under the specified column and summarizes the specified datafield.  Choosing a summaryOperation will change the displayed value calculation.  The summary will be offset of its position in pixels according to the given X/Y values.</summary>
 		public void AddGroupSummaryField(string staticText, string columnName, string dataFieldName, SummaryOperation summaryOperation, List<int> queryGroupValues = null, Color color = default(Color), Font font = null, int offSetX = 0, int offSetY = 0, string formatString = "")
 		{
-			ReportComplexEvent.Fire(EventCategory.ReportComplex, Lan.G("ReportComplex", "Adding Group Summary To Tables..."));
+			ReportComplexEvent.Fire(EventCategory.ReportComplex, "Adding Group Summary To Tables...");
 			Graphics grfx = Graphics.FromImage(new Bitmap(1, 1));
 			if (queryGroupValues == null)
 			{
@@ -362,7 +362,7 @@ namespace OpenDental.ReportingComplex
 		///<summary>Do not use. Only used when splitting a table on a column.</summary>
 		public void AddInitialHeader(string title, Font font)
 		{
-			ReportComplexEvent.Fire(EventCategory.ReportComplex, Lan.G("ReportComplex", "Adding Initial Header To Table..."));
+			ReportComplexEvent.Fire(EventCategory.ReportComplex, "Adding Initial Header To Table...");
 			Graphics grfx = Graphics.FromImage(new Bitmap(1, 1));
 			Font newFont = new Font(font.FontFamily, font.Size + 2, font.Style);
 			_reportObjects.Insert(0, new ReportObject("Initial Group Title", AreaSectionType.GroupTitle, new Point(0, 0), new Size((int)(grfx.MeasureString(title, newFont).Width / grfx.DpiX * 100 + 2), (int)(grfx.MeasureString(title, newFont).Height / grfx.DpiY * 100 + 2)), title, newFont, ContentAlignment.MiddleLeft));
@@ -373,14 +373,14 @@ namespace OpenDental.ReportingComplex
 		///<summary>Adds a line to the specified section with the specified orientation and position.  The line will be offset of its position in pixels according to the given X/Y values.</summary>
 		public void AddLine(string name, AreaSectionType sectionType, LineOrientation lineOrientation, LinePosition linePosition, Color color, float floatLineThickness, int linePercentValue, int offSetX, int offSetY)
 		{
-			ReportComplexEvent.Fire(EventCategory.ReportComplex, Lan.G("ReportComplex", "Adding Line To Table..."));
+			ReportComplexEvent.Fire(EventCategory.ReportComplex, "Adding Line To Table...");
 			_reportObjects.Add(new ReportObject(name, sectionType, color, floatLineThickness, lineOrientation, linePosition, linePercentValue, offSetX, offSetY));
 		}
 
 		///<summary>Add a label with the given text and font to the summary value of a column, based on the orientation given.  True will cause the label to wrap within the bounds of the column.</summary>
 		public void AddSummaryLabel(string dataFieldName, string summaryText, SummaryOrientation summaryOrientation, bool hasWordWrap, Font font)
 		{
-			ReportComplexEvent.Fire(EventCategory.ReportComplex, Lan.G("ReportComplex", "Adding Summary To Table..."));
+			ReportComplexEvent.Fire(EventCategory.ReportComplex, "Adding Summary To Table...");
 			Graphics grfx = Graphics.FromImage(new Bitmap(1, 1));
 			ReportObject summaryField = GetObjectByName(dataFieldName + "Footer");
 			Size size;
@@ -445,7 +445,7 @@ namespace OpenDental.ReportingComplex
 
 		public void CalculateRowHeights(bool isWrapping)
 		{
-			ReportComplexEvent.Fire(EventCategory.ReportComplex, Lan.G("ReportComplex", "Creating Query In Report..."));
+			ReportComplexEvent.Fire(EventCategory.ReportComplex, "Creating Query In Report...");
 			Graphics g = Graphics.FromImage(new Bitmap(1, 1));
 			_rowHeightValues = new List<int>();
 			for (int i = 0; i < _reportTable.Rows.Count; i++)
@@ -661,7 +661,7 @@ namespace OpenDental.ReportingComplex
 		///<summary>Submits the Query to the database and fills ReportTable with the results.  Returns false if the query fails.</summary>
 		public bool SubmitQuery()
 		{
-			ReportComplexEvent.Fire(EventCategory.ReportComplex, Lan.G("ReportComplex", "Creating Query In Report..."));
+			ReportComplexEvent.Fire(EventCategory.ReportComplex, "Creating Query In Report...");
 			if (String.IsNullOrWhiteSpace(_stringQuery))
 			{
 				//The programmer must have prefilled the data table already, so no reason to try and run a query.
@@ -680,7 +680,7 @@ namespace OpenDental.ReportingComplex
 			}
 			_rowHeightValues = new List<int>();
 			DataRow row;
-			ReportComplexEvent.Fire(EventCategory.ReportComplex, Lan.G("ReportComplex", "Creating Table Rows..."));
+			ReportComplexEvent.Fire(EventCategory.ReportComplex, "Creating Table Rows...");
 			for (int i = 0; i < _reportTable.Rows.Count; i++)
 			{
 				row = _exportTable.NewRow();

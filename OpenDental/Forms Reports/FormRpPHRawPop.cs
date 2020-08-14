@@ -24,7 +24,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormRpPHRawPop(){
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>

@@ -50,7 +50,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 			PlanCur=planCur.Copy();
 		}
 
@@ -420,13 +420,13 @@ namespace OpenDental{
 			if(PlanCur.DocNum>0) {//Was set at some point in the past.
 				Document doc=Documents.GetByNum(PlanCur.DocNum);
 				if(doc.DocNum==0) {
-					textDocument.Text="("+Lan.G(this,"Missing Document")+")";//Invalid Fkey to document.DocNum
+					textDocument.Text="("+"Missing Document"+")";//Invalid Fkey to document.DocNum
 					butDocumentView.Enabled=false;
 				}
 				else {
 					textDocument.Text=doc.Description;
 					if(!Documents.DocExists(doc.DocNum)) {
-						textDocument.Text+=" ("+Lan.G(this,"Unreachable File")+")";//Document points to unreachable file
+						textDocument.Text+=" ("+"Unreachable File"+")";//Document points to unreachable file
 						butDocumentView.Enabled=false;
 					}
 				}

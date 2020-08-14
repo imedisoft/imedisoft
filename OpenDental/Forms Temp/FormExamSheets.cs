@@ -14,12 +14,12 @@ namespace OpenDental {
 
 		public FormExamSheets() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormExamSheets_Load(object sender,EventArgs e) {
 			Patient pat=Patients.GetLim(PatNum);
-			Text=Lan.G(this,"Exam Sheets for")+" "+pat.GetNameFL();
+			Text="Exam Sheets for"+" "+pat.GetNameFL();
 			FillListExamTypes();
 			FillGrid();
 		}
@@ -27,7 +27,7 @@ namespace OpenDental {
 		private void FillListExamTypes(){
 			listExamTypes.Items.Clear();
 			List<SheetDef> sheetDefs=SheetDefs.GetCustomForType(SheetTypeEnum.ExamSheet);
-			listExamTypes.Items.Add(new ODBoxItem<SheetDef>(Lan.G(this,"All"),new SheetDef() { SheetDefNum=-1 }));//Option to filter for all exam types.
+			listExamTypes.Items.Add(new ODBoxItem<SheetDef>("All",new SheetDef() { SheetDefNum=-1 }));//Option to filter for all exam types.
 			for(int i=0;i<sheetDefs.Count;i++) {
 				listExamTypes.Items.Add(new ODBoxItem<SheetDef>(sheetDefs[i].Description,sheetDefs[i]));
 			}
@@ -46,13 +46,13 @@ namespace OpenDental {
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G(this,"Date"),70);
+			GridColumn col=new GridColumn("Date",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Time"),50);
+			col=new GridColumn("Time",50);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Description"),210);
+			col=new GridColumn("Description",210);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G(this,"Type"),50){ IsWidthDynamic=true };
+			col=new GridColumn("Type",50){ IsWidthDynamic=true };
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

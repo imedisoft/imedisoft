@@ -672,39 +672,7 @@ namespace OpenDental
 			//	return;
 			//}
 			//InitializedOnStartup=true;
-			//can't use Lan.F
-			Lan.C(this,new Control[]
-				{
-				groupBox2,
-				label1,
-				butSend,
-				groupBox1,
-				butTimeCard,
-				labelCurrentTime,
-				butClaimPay,
-				butClockIn,
-				butClockOut,
-				butEmailInbox,
-				butSendClaims,
-				butBilling,
-				butDeposit,
-				butSupply,
-				butTasks,
-				butBackup,
-				butAccounting,
-				butBreaks,
-				label3,
-				label4,
-				label5,
-				label7,
-				labelSending,
-				checkIncludeAck,
-				labelDays,
-				butAck,
-				label6,
-				gridEmp,
-				gridMessages,
-				});
+
 			RefreshFullMessages();//after this, messages just get added to the list.
 			//But if checkIncludeAck is clicked,then it does RefreshMessages again.
 		}
@@ -803,9 +771,9 @@ namespace OpenDental
 		private void butClaimPay_Click(object sender,EventArgs e) {
 			if(!Security.IsAuthorized(Permissions.InsPayCreate,true) && !Security.IsAuthorized(Permissions.InsPayEdit,true)) {
 				//Custom message for multiple permissions.
-				MessageBox.Show(Lan.G(this,"Not authorized")+".\r\n"
-					+Lan.G(this,"A user with the SecurityAdmin permission must grant you access for")+":\r\n"
-					+Lan.G(this,"Insurance Payment Create or Insurance Payment Edit"));
+				MessageBox.Show("Not authorized"+".\r\n"
+					+"A user with the SecurityAdmin permission must grant you access for"+":\r\n"
+					+"Insurance Payment Create or Insurance Payment Edit");
 				return;
 			}
 			FormClaimPayList FormCPL=new FormClaimPayList();
@@ -1065,9 +1033,9 @@ namespace OpenDental
 		private void FillEmps(){
 			gridEmp.BeginUpdate();
 			gridEmp.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableEmpClock","Employee"),180);
+			GridColumn col=new GridColumn("Employee",180);
 			gridEmp.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableEmpClock","Status"),104);
+			col=new GridColumn("Status",104);
 			gridEmp.ListGridColumns.Add(col);
 			gridEmp.ListGridRows.Clear();
 			UI.GridRow row;
@@ -1098,7 +1066,7 @@ namespace OpenDental
 					}
 				}
 				_listShownTimeClockStatuses.Add(timeClockStatus);
-				listStatus.Items.Add(Lan.G("enumTimeClockStatus",statusDescript));
+				listStatus.Items.Add(statusDescript);
 			}
 			for(int i=0;i<_listEmployees.Count;i++) {
 				if(_listEmployees[i].EmployeeNum==Security.CurrentUser.EmployeeId) {
@@ -1115,7 +1083,7 @@ namespace OpenDental
 			if(!Prefs.GetBool(PrefName.ClockEventAllowBreak) && status==TimeClockStatus.Lunch.GetDescription()) {
 				status=TimeClockStatus.Break.GetDescription();
 			}
-			return Lans.g("enumTimeClockStatus",status);
+			return status;
 		}
 
 		///<summary>-1 is also valid.</summary>
@@ -1208,7 +1176,7 @@ namespace OpenDental
 				bool[] authorized=new bool[1] { false };
 				if(Plugins.HookMethod(this,"ContrStaff.butClockIn_Click_ClockIn",authorized,EmployeeCur)) {
 					if(!authorized[0]) {
-						throw new Exception(Lans.g(this,"You need to authenticate to clock-in"));
+						throw new Exception("You need to authenticate to clock-in");
 					}
 				}
 				ClockEvents.ClockIn(EmployeeCur.EmployeeNum);
@@ -1217,7 +1185,7 @@ namespace OpenDental
 				MessageBox.Show(ex.Message);
 				return;
 			}
-			EmployeeCur.ClockStatus=Lan.G(this,"Working");
+			EmployeeCur.ClockStatus="Working";
 			Employees.Update(EmployeeCur);
 			ModuleSelected(PatCurNum);
 			if(!PayPeriods.HasPayPeriodForDate(DateTime.Today)) {
@@ -1240,7 +1208,7 @@ namespace OpenDental
 					_listShownTimeClockStatuses[listStatus.SelectedIndex])) 
 				{
 					if(!authorized[0]) {
-						throw new Exception(Lans.g(this,"You need to authenticate to clock-out"));
+						throw new Exception("You need to authenticate to clock-out");
 					}
 				}
 				ClockEvents.ClockOut(EmployeeCur.EmployeeNum,_listShownTimeClockStatuses[listStatus.SelectedIndex]);
@@ -1249,7 +1217,7 @@ namespace OpenDental
 				MessageBox.Show(ex.Message);
 				return;
 			}
-			EmployeeCur.ClockStatus=Lan.G("enumTimeClockStatus",(_listShownTimeClockStatuses[listStatus.SelectedIndex]).GetDescription());
+			EmployeeCur.ClockStatus=(_listShownTimeClockStatuses[listStatus.SelectedIndex]).GetDescription();
 			Employees.Update(EmployeeCur);
 			ModuleSelected(PatCurNum);
 		}
@@ -1347,7 +1315,7 @@ namespace OpenDental
 				listMessages.Items.Add(sigElementDefMessages[i].SigText);
 			}
 			comboViewUser.Items.Clear();
-			comboViewUser.Items.Add(Lan.G(this,"all"));
+			comboViewUser.Items.Add("all");
 			for(int i=0;i<sigElementDefUser.Length;i++) {
 				comboViewUser.Items.Add(sigElementDefUser[i].SigText);
 			}
@@ -1368,16 +1336,16 @@ namespace OpenDental
 			List<long> listSelectedSigMessageNums=gridMessages.SelectedTags<SigMessage>().Select(x => x.SigMessageNum).ToList();
 			gridMessages.BeginUpdate();
 			gridMessages.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableTextMessages","To"),60);
+			GridColumn col=new GridColumn("To",60);
 			gridMessages.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableTextMessages","From"),60);
+			col=new GridColumn("From",60);
 			gridMessages.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableTextMessages","Sent"),63);
+			col=new GridColumn("Sent",63);
 			gridMessages.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableTextMessages","Ack'd"),63);
+			col=new GridColumn("Ack'd",63);
 			col.TextAlign=HorizontalAlignment.Center;
 			gridMessages.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableTextMessages","Text"),274);
+			col=new GridColumn("Text",274);
 			gridMessages.ListGridColumns.Add(col);
 			gridMessages.ListGridRows.Clear();
 			GridRow row;
@@ -1585,7 +1553,7 @@ namespace OpenDental
 				FillMessages();
 			}
 			catch{
-				errorProvider1.SetError(textDays,Lan.G(this,"Invalid number.  Usually 1 or 2."));
+				errorProvider1.SetError(textDays,"Invalid number.  Usually 1 or 2.");
 			}
 		}
 

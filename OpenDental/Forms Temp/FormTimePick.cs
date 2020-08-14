@@ -20,7 +20,7 @@ namespace OpenDental {
 		///Pass in true to enable the Date picker as well.</summary>
 		public FormTimePick(bool enableDatePicker) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_pickDate=enableDatePicker;
 			SelectedDTime=DateTime.Now;
 		}

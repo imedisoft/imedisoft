@@ -22,7 +22,7 @@ namespace OpenDental {
 
 		public FormEtrans835ProcEdit(Hx835_Proc proc) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_proc=proc;
 		}
 
@@ -183,7 +183,7 @@ namespace OpenDental {
 		private void butPrint_Click(object sender,EventArgs e) {
 			_gridPageCur=0;
 			_gridPrintProgress=EraProcPrintingProgress.DocumentHeader;
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"Printed 835 Procedure")+((_proc.ProcNum==0)?"":(" "+_proc.ProcNum)),
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,"Printed 835 Procedure"+((_proc.ProcNum==0)?"":(" "+_proc.ProcNum)),
 				printoutOrientation:PrintoutOrientation.Landscape);
 		}
 
@@ -197,18 +197,18 @@ namespace OpenDental {
 				string text;
 				using(Font font=new Font("Arial",13,FontStyle.Bold)) {
 					_yPosCur=0;
-					text=Lan.G(this,"835 Procedure:")+((_proc.ProcNum==0) ? "" : " "+_proc.ProcNum);
+					text="835 Procedure:"+((_proc.ProcNum==0) ? "" : " "+_proc.ProcNum);
 					g.DrawString(text,font,Brushes.Black,midX-g.MeasureString(text,font).Width/2,y);
 					y+=25;
-					text=Lan.G(this,"Patient:")+" "+_proc.ClaimPaid.PatientName;
+					text="Patient:"+" "+_proc.ClaimPaid.PatientName;
 					g.DrawString(text,font,Brushes.Black,midX-g.MeasureString(text,font).Width/2,y);
 					y+=25;
 				}
 				using(Font font=new Font("Arial",9,FontStyle.Bold)) {
-					text=Lan.G(this,"Proc Adjudicated:")+" "+textProcAdjudicated.Text+"\t\t"+Lan.G(this,"Date Service:")+" "+textDateService.Text;
+					text="Proc Adjudicated:"+" "+textProcAdjudicated.Text+"\t\t"+"Date Service:"+" "+textDateService.Text;
 					g.DrawString(text,font,Brushes.Black,midX-g.MeasureString(text,font).Width/2,y);
 					y+=20;
-					text=Lan.G(this,"Proc Submitted:")+" "+textProcSubmitted.Text+"\t\t"+Lan.G(this,"Ins Paid:")+" "+textInsPaid.Text;
+					text="Proc Submitted:"+" "+textProcSubmitted.Text+"\t\t"+"Ins Paid:"+" "+textInsPaid.Text;
 					g.DrawString(text,font,Brushes.Black,midX-g.MeasureString(text,font).Width/2,y);
 					y+=25;//Extra 5 pixels to visually group grid header with grid.
 					text=groupBalancing.Text;//Translated
@@ -220,12 +220,12 @@ namespace OpenDental {
 				ODGrid grid=new ODGrid();
 				grid.Width=gridProcedureAdjustments.Width;
 				grid.BeginUpdate();
-				grid.ListGridColumns.Add(new GridColumn(Lan.G(this,"Proc Fee")+" -",40){ IsWidthDynamic=true });
-				grid.ListGridColumns.Add(new GridColumn(Lan.G(this,"Patient Resp Sum")+" -",40){ IsWidthDynamic=true });
-				grid.ListGridColumns.Add(new GridColumn(Lan.G(this,"Contractual Oblig. Sum")+" -",40){ IsWidthDynamic=true });
-				grid.ListGridColumns.Add(new GridColumn(Lan.G(this,"Payor Reduction Sum")+" -",40){ IsWidthDynamic=true });
-				grid.ListGridColumns.Add(new GridColumn(Lan.G(this,"Other Adjustment Sum")+" =",40){ IsWidthDynamic=true });
-				grid.ListGridColumns.Add(new GridColumn(Lan.G(this,"Ins Paid Calc"),40){ IsWidthDynamic=true });
+				grid.ListGridColumns.Add(new GridColumn("Proc Fee"+" -",40){ IsWidthDynamic=true });
+				grid.ListGridColumns.Add(new GridColumn("Patient Resp Sum"+" -",40){ IsWidthDynamic=true });
+				grid.ListGridColumns.Add(new GridColumn("Contractual Oblig. Sum"+" -",40){ IsWidthDynamic=true });
+				grid.ListGridColumns.Add(new GridColumn("Payor Reduction Sum"+" -",40){ IsWidthDynamic=true });
+				grid.ListGridColumns.Add(new GridColumn("Other Adjustment Sum"+" =",40){ IsWidthDynamic=true });
+				grid.ListGridColumns.Add(new GridColumn("Ins Paid Calc",40){ IsWidthDynamic=true });
 				//grid.ComputeColumns();
 				grid.ListGridRows.Add(new GridRow(textProcFee.Text,
 					textPatRespSum.Text,

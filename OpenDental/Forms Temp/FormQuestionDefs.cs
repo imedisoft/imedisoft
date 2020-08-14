@@ -27,7 +27,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -160,15 +160,15 @@ namespace OpenDental{
 			QuestionList=QuestionDefs.Refresh();
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("TableQuestionDefs","Type"),110);
+			GridColumn col=new GridColumn("Type",110);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableQuestionDefs","Question"),570);
+			col=new GridColumn("Question",570);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
 			for(int i=0;i<QuestionList.Length;i++){
 				row=new GridRow();
-				row.Cells.Add(Lan.G("enumQuestionType",QuestionList[i].QuestType.ToString()));
+				row.Cells.Add(QuestionList[i].QuestType.ToString());
 				row.Cells.Add(QuestionList[i].Description);
 				gridMain.ListGridRows.Add(row);
 			}

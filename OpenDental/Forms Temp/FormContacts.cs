@@ -31,7 +31,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -157,11 +157,11 @@ namespace OpenDental{
 			ContactList=Contacts.Refresh(_listContactCategoryDefs[listCategory.SelectedIndex].DefNum);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableContacts","Last Name"),100));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableContacts","First Name"),100));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableContacts","Wk Phone"),90));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableContacts","Fax"),90));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableContacts","Note"),250));
+			gridMain.ListGridColumns.Add(new GridColumn("Last Name",100));
+			gridMain.ListGridColumns.Add(new GridColumn("First Name",100));
+			gridMain.ListGridColumns.Add(new GridColumn("Wk Phone",90));
+			gridMain.ListGridColumns.Add(new GridColumn("Fax",90));
+			gridMain.ListGridColumns.Add(new GridColumn("Note",250));
 			gridMain.ListGridRows.Clear();
 			GridRow row;
 			foreach(Contact contactCur in ContactList) {

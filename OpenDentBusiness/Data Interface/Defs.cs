@@ -202,7 +202,7 @@ namespace OpenDentBusiness {
 					continue;
 				}
 				if(def.IsHidden){
-					return def.ItemName+" "+Lans.g("Defs","(hidden)");
+					return def.ItemName+" "+"(hidden)";
 				}
 				return def.ItemName;
 			}
@@ -293,7 +293,7 @@ namespace OpenDentBusiness {
 			}
 			for(int i=0;i<listCommands.Count;i++) {
 				if(Database.ExecuteString(listCommands[i])!="0") {
-					throw new ApplicationException(Lans.g("Defs","Def is in use.  Not allowed to delete."));
+					throw new ApplicationException("Def is in use.  Not allowed to delete.");
 				}
 			}
 			command="DELETE FROM definition WHERE DefNum="+POut.Long(def.DefNum);

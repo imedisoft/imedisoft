@@ -66,7 +66,7 @@ namespace OpenDental
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -413,15 +413,15 @@ namespace OpenDental
 			}
 			checkEnabled.Checked=_progCur.Enabled;
 			if(!PrefC.HasClinicsEnabled) {//clinics are not enabled, use ClinicNum 0 to indicate 'Headquarters' or practice level program properties
-				checkEnabled.Text=Lan.G(this,"Enabled");
-				groupPaySettings.Text=Lan.G(this,"Payment Settings");
+				checkEnabled.Text="Enabled";
+				groupPaySettings.Text="Payment Settings";
 				comboClinic.Visible=false;
 				labelClinic.Visible=false;
 				labelClinicEnable.Visible=false;
 				_listUserClinicNums=new List<long>() { 0 };//if clinics are disabled, programproperty.ClinicNum will be set to 0
 			}
 			else {//Using clinics
-				groupPaySettings.Text=Lan.G(this,"Clinic Payment Settings");
+				groupPaySettings.Text="Clinic Payment Settings";
 				_listUserClinicNums=new List<long>();
 				comboClinic.Items.Clear();
 				//if PayConnect is enabled and the user is restricted to a clinic, don't allow the user to disable for all clinics
@@ -431,7 +431,7 @@ namespace OpenDental
 					}
 				}
 				else {
-					comboClinic.Items.Add(Lan.G(this,"Headquarters"));
+					comboClinic.Items.Add("Headquarters");
 					//this way both lists have the same number of items in it and if 'Headquarters' is selected the programproperty.ClinicNum will be set to 0
 					_listUserClinicNums.Add(0);
 					comboClinic.SelectedIndex=0;
@@ -479,8 +479,8 @@ namespace OpenDental
 				}
 			}
 			comboDefaultProcessing.Items.Clear();
-			comboDefaultProcessing.Items.Add(Lan.G(this,PayConnectProcessingMethod.WebService.GetDescription()));
-			comboDefaultProcessing.Items.Add(Lan.G(this,PayConnectProcessingMethod.Terminal.GetDescription()));
+			comboDefaultProcessing.Items.Add(PayConnectProcessingMethod.WebService.GetDescription());
+			comboDefaultProcessing.Items.Add(PayConnectProcessingMethod.Terminal.GetDescription());
 			if(processingMethod=="0" || processingMethod=="1") {
 				comboDefaultProcessing.SelectedIndex=PIn.Int(processingMethod);
 			}
@@ -639,7 +639,7 @@ namespace OpenDental
 			}
 			catch(Exception ex) {
 				Cursor=Cursors.Default;
-				MessageBox.Show(Lan.G(this,"Unable to download driver. Error message")+": "+ex.Message);
+				MessageBox.Show("Unable to download driver. Error message"+": "+ex.Message);
 				return;
 			}
 
@@ -667,8 +667,8 @@ namespace OpenDental
 			}
 			//Run the setup.exe file
 			Process.Start(ODFileUtils.CombinePaths(Storage.GetTempPath(),setupFileName));
-			MessageBox.Show(Lans.g(this,"Download complete. Run the Setup.exe file in")+" "+ Storage.GetTempPath() + " "
-				+Lans.g(this,"if it does not start automatically."));
+			MessageBox.Show("Download complete. Run the Setup.exe file in"+" "+ Storage.GetTempPath() + " "
+				+"if it does not start automatically.");
 		}
 
 		private void butOK_Click(object sender, System.EventArgs e) {

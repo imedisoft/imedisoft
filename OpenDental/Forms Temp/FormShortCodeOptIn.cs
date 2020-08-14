@@ -12,7 +12,7 @@ namespace OpenDental {
 
 		public FormShortCodeOptIn(Patient pat) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_pat=pat;
 		}
 
@@ -89,7 +89,7 @@ namespace OpenDental {
 			if(node is null) {
 				node=doc.SelectSingleNode("//Error");
 				if(!(node is null)) {
-					MessageBox.Show(Lan.G("ShortCodes","An error occurred: ")+node.InnerText);
+					MessageBox.Show("An error occurred: "+node.InnerText);
 				}
 				return false;
 			}
@@ -99,7 +99,7 @@ namespace OpenDental {
 				listSmsToMobiles=(List<SmsToMobile>)xmlListSmsToMobileSerializer.Deserialize(reader);
 			}
 			if(listSmsToMobiles==null) { //List should always be there even if it's empty.
-				MessageBox.Show(Lan.G("ShortCodes","An error occurred: ")+node.InnerText);
+				MessageBox.Show("An error occurred: "+node.InnerText);
 				return false;
 			}
 			//Should only be 0 or 1.
@@ -124,12 +124,12 @@ namespace OpenDental {
 			if(_pat.ShortCodeOptIn==YN.Unknown) {
 				//Dentist is only allowed to explicitly opt in the patient the first time.  After that, the patient must text START.
 				if(checkOptIn.Checked) {//opting in will result in an OptInReply being sent.
-					msg=Lan.G(this,"An SMS confirming this selection will be sent to ")+_pat.WirelessPhone;
+					msg="An SMS confirming this selection will be sent to "+_pat.WirelessPhone;
 				}
 				else {
-					msg=Lan.G(this,"Are you sure ")+_pat.GetNameFirstOrPreferred()+Lan.G(this," does NOT want to receive appointment reminders?");
+					msg="Are you sure "+_pat.GetNameFirstOrPreferred()+" does NOT want to receive appointment reminders?";
 				}
-				if(MessageBox.Show(this,msg,Lan.G(this,"Continue?"),MessageBoxButtons.YesNo)!=DialogResult.Yes) {
+				if(MessageBox.Show(this,msg,"Continue?",MessageBoxButtons.YesNo)!=DialogResult.Yes) {
 					return;
 				}
 				if(TrySendToHq(_pat.WirelessPhone,checkOptIn.Checked ? YN.Yes : YN.No,_pat.PatNum,Clinics.ClinicNum)) {
@@ -140,8 +140,8 @@ namespace OpenDental {
 				}
 			}
 			else if(_pat.ShortCodeOptIn==YN.Yes && !checkOptIn.Checked) {
-				msg=Lan.G(this,"Are you sure ")+_pat.GetNameFirstOrPreferred()+Lan.G(this," does NOT want to receive appointment reminders?");
-				if(MessageBox.Show(this,msg,Lan.G(this,"Continue?"),MessageBoxButtons.YesNo)!=DialogResult.Yes) {
+				msg="Are you sure "+_pat.GetNameFirstOrPreferred()+" does NOT want to receive appointment reminders?";
+				if(MessageBox.Show(this,msg,"Continue?",MessageBoxButtons.YesNo)!=DialogResult.Yes) {
 					return;
 				}
 				//Dentist is only allowed to opt-out a patient who was previously set to opted-in.

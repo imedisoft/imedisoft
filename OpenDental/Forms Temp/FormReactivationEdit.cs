@@ -23,7 +23,7 @@ namespace OpenDental {
 		///<summary></summary>
 		public FormReactivationEdit(Reactivation reactivationCur) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_reactivationCur=reactivationCur;
 		}
 

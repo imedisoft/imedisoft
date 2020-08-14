@@ -52,7 +52,6 @@ namespace OpenDental {
 			_listClaimProcs=listClaimProcs;
 			_teethText=teethText;
 			InitializeComponent();
-			Lan.F(this,new Control[] {labelMain});
 			//labelMain is translated from calling Form (FormProcEdit)
 		}
 
@@ -146,9 +145,9 @@ namespace OpenDental {
 			//Moved from FormProcEdit.SaveAndClose() in version 16.3+
 			labelMain.Text=ProcedureCodes.GetProcCode(_verifyCode).ProcCode
 				+" ("+ProcedureCodes.GetProcCode(_verifyCode).Descript+") "
-				+Lan.G("FormProcEdit","is the recommended procedure code for this procedure.  Change procedure code and fee?");
+				+"is the recommended procedure code for this procedure.  Change procedure code and fee?";
 			if(Prefs.GetBool(PrefName.ProcEditRequireAutoCodes)) {
-				butNo.Text=Lan.G(this,"Edit Proc");//Button will otherwise say 'No'.
+				butNo.Text="Edit Proc";//Button will otherwise say 'No'.
 			}
 		}
 
@@ -204,9 +203,9 @@ namespace OpenDental {
 			if(_procCur.ProcStatus.In(ProcStat.C,ProcStat.EO,ProcStat.EC)) {
 				string logText=_procCodeCur.ProcCode+" ("+_procCur.ProcStatus+"), ";
 				if(_teethText!=null && _teethText.Trim()!="") {
-					logText+=Lan.G(this,"Teeth")+": "+_teethText+", ";
+					logText+="Teeth"+": "+_teethText+", ";
 				}
-				logText+=Lan.G(this,"Fee")+": "+_procCur.ProcFee.ToString("F")+", "+_procCodeCur.Descript;
+				logText+="Fee"+": "+_procCur.ProcFee.ToString("F")+", "+_procCodeCur.Descript;
 				Permissions perm=Permissions.ProcCompleteEdit;
 				if(_procCur.ProcStatus.In(ProcStat.EO,ProcStat.EC)) {
 					perm=Permissions.ProcExistingEdit;

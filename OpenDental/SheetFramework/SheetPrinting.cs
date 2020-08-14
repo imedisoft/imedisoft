@@ -91,7 +91,7 @@ namespace OpenDental
 				{
 					sb.Append(", ");
 				}
-				sb.Append(Lans.g("Sheets", "Procedure"));
+				sb.Append("Procedure");
 			}
 			if (rx.DaysOfSupply <= 0)
 			{
@@ -99,7 +99,7 @@ namespace OpenDental
 				{
 					sb.Append(", ");
 				}
-				sb.Append(Lans.g("Sheets", "Days of Supply"));
+				sb.Append("Days of Supply");
 			}
 			return sb.ToString();
 		}

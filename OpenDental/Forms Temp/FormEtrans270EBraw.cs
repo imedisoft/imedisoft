@@ -16,7 +16,7 @@ namespace OpenDental {
 
 		public FormEtrans270EBraw() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormEtrans270EBraw_Load(object sender,EventArgs e) {
@@ -34,11 +34,11 @@ namespace OpenDental {
 		private void FillGrid(){
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.G("FormEtrans270EBraw","#"),50);
+			GridColumn col=new GridColumn("#",50);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormEtrans270EBraw","Raw"),150);
+			col=new GridColumn("Raw",150);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("FormEtrans270EBraw","Description"),150);
+			col=new GridColumn("Description",150);
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;

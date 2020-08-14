@@ -45,32 +45,32 @@ namespace OpenDental {
 			try {
 				if(PIn.Double(textBoxXPos.Text)<0) {
 					textBoxXPos.Focus();
-					MessageBox.Show(Lan.G(this,"Invalid XPos"));
+					MessageBox.Show("Invalid XPos");
 					return;
 				}
 				if(PIn.Double(textBoxYPos.Text)<0) {
 					textBoxYPos.Focus();
-					MessageBox.Show(Lan.G(this,"Invalid YPos"));
+					MessageBox.Show("Invalid YPos");
 					return;
 				}
 				if(PIn.Double(textBoxWidthFeet.Text)<=0) {
 					textBoxWidthFeet.Focus();
-					MessageBox.Show(Lan.G(this,"Invalid Width"));
+					MessageBox.Show("Invalid Width");
 					return;
 				} 
 				if(PIn.Double(textBoxHeightFeet.Text)<=0) {
 					textBoxHeightFeet.Focus();
-					MessageBox.Show(Lan.G(this,"Invalid Height"));
+					MessageBox.Show("Invalid Height");
 					return;
 				}
 				if(PIn.Int(textBoxExtension.Text)<0) {
 					textBoxExtension.Focus();
-					MessageBox.Show(Lan.G(this,"Invalid Extension"));
+					MessageBox.Show("Invalid Extension");
 					return;
 				}
 				if(MapItem.ItemType==MapItemType.DisplayLabel && PIn.String(textBoxDescription.Text)=="") {
 					textBoxDescription.Focus();
-					MessageBox.Show(Lan.G(this,"Invalid Text"));
+					MessageBox.Show("Invalid Text");
 					return;
 				}
 				MapItem.Extension=PIn.Int(textBoxExtension.Text);

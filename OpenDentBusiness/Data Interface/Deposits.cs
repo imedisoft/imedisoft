@@ -118,7 +118,7 @@ namespace OpenDentBusiness{
 			//check dependencies
 			string command="SELECT COUNT(*) FROM transaction WHERE DepositNum ="+POut.Long(dep.DepositNum);
 			if(PIn.Long(Database.ExecuteString(command))>0) {
-				throw new ApplicationException(Lans.g("Deposits","Cannot delete deposit because it is attached to a transaction."));
+				throw new ApplicationException("Cannot delete deposit because it is attached to a transaction.");
 			}
 			//ready to delete
 			command="UPDATE payment SET DepositNum=0 WHERE DepositNum="+POut.Long(dep.DepositNum);

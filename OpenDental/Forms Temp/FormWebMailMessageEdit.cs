@@ -66,7 +66,7 @@ namespace OpenDental {
 		///<summary>Use this constructor when viewing or replying to an existing message.</summary>
 		public FormWebMailMessageEdit(long patNum,EmailMessage emailMessage) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_emailMessage=emailMessage;
 			_patCur=Patients.GetPat(patNum);
 		}
@@ -156,12 +156,12 @@ namespace OpenDental {
 						textSubject.Text="RE: "+textSubject.Text;
 					}
 					//Preserve the "conversation" by making a pseudo copy of the "original" message within the body of the "new".
-					textBody.Text="\r\n\r\n-----"+Lan.G(this,"Original Message")+"-----\r\n"
-						+(_patRegarding==null ? "" : (Lan.G(this,"Regarding Patient")+": "+_patRegarding.GetNameFL()+"\r\n"))
-						+Lan.G(this,"From")+": "+_emailMessage.FromAddress+"\r\n"
-						+Lan.G(this,"Sent")+": "+_emailMessage.MsgDateTime.ToShortDateString()+" "+_emailMessage.MsgDateTime.ToShortTimeString()+"\r\n"
-						+Lan.G(this,"To")+": "+_emailMessage.ToAddress+"\r\n"
-						+Lan.G(this,"Subject")+": "+_emailMessage.Subject
+					textBody.Text="\r\n\r\n-----"+"Original Message"+"-----\r\n"
+						+(_patRegarding==null ? "" : ("Regarding Patient"+": "+_patRegarding.GetNameFL()+"\r\n"))
+						+"From"+": "+_emailMessage.FromAddress+"\r\n"
+						+"Sent"+": "+_emailMessage.MsgDateTime.ToShortDateString()+" "+_emailMessage.MsgDateTime.ToShortTimeString()+"\r\n"
+						+"To"+": "+_emailMessage.ToAddress+"\r\n"
+						+"Subject"+": "+_emailMessage.Subject
 						+"\r\n\r\n"+_emailMessage.BodyText;
 					//Since this email message was originally from the patient to the provider, we now need to swap the to and from address around.
 					//This way, the "new" web mail looks like an actual reply to the patient instead of the patient talking back to themselves.
@@ -188,7 +188,7 @@ namespace OpenDental {
 				textBody.BackColor=SystemColors.Control;
 				butAttach.Enabled=false;
 				butPreview.Enabled=false;
-				butSend.Text=Lan.G(this,"&Reply");
+				butSend.Text="&Reply";
 				listAttachments.ContextMenu=new ContextMenu(new[] { menuItemAttachmentPreview });
 				labelNotification.Text="";
 				butProvPick.Enabled=false;
@@ -200,7 +200,7 @@ namespace OpenDental {
 				textBody.BackColor=SystemColors.Window;
 				butAttach.Enabled=true;
 				butPreview.Enabled=true;
-				butSend.Text=Lan.G(this,"&Send");
+				butSend.Text="&Send";
 				listAttachments.ContextMenu=contextMenuAttachments;//contains a remove and open
 				//labelNotification.Text will be set in VerifyInputs based on input values
 				butProvPick.Enabled=true;
@@ -222,7 +222,7 @@ namespace OpenDental {
 			_allowSendNotificationMessage=false;
 			butSend.Enabled=false;
 			butPreview.Enabled=false;
-			labelNotification.Text=Lan.G(this,"Warning")+": "+Lan.G(this,"Notification email send prevented")+" - "+Lan.G(this,reason);
+			labelNotification.Text="Warning"+": "+"Notification email send prevented"+" - "+reason;
 			labelNotification.ForeColor=Color.Red;
 		}
 
@@ -257,7 +257,7 @@ namespace OpenDental {
 				BlockSendNotificationMessage("Missing notification email body. Create a body in Setup.");
 			}
 			if(_allowSendNotificationMessage && _webMailMode!=WebMailMode.View) {//If in view mode, do not include notification email information.
-				labelNotification.Text=Lan.G(this,"Notification email will be sent to patient")+": "+_patCur.Email;
+				labelNotification.Text="Notification email will be sent to patient"+": "+_patCur.Email;
 			}
 		}
 
@@ -294,7 +294,7 @@ namespace OpenDental {
 				return true;
 			}
 			List<Userod> listUsers=Userods.GetUsersByProvNum(_provCur.ProvNum);//Get all potential users for this provider.
-			InputBox FormIB=new InputBox(Lan.G(this,"Input a password for a User that is associated to provider:")+"\r\n"+_provCur.GetFormalName());
+			InputBox FormIB=new InputBox("Input a password for a User that is associated to provider:"+"\r\n"+_provCur.GetFormalName());
 			FormIB.textResult.PasswordChar='*';
 			while(true) {
 				//Get the password for a user that is associated to the provider chosen.
@@ -385,19 +385,19 @@ namespace OpenDental {
 				return;
 			}
 			StringBuilder sb=new StringBuilder();
-			sb.AppendLine("------ "+Lan.G(this,"Notification email that will be sent to the patient's email address:"));
+			sb.AppendLine("------ "+"Notification email that will be sent to the patient's email address:");
 			if(_allowSendNotificationMessage) {
-				sb.AppendLine(Lan.G(this,"Subject")+": "+SubjectInsecure);
-				sb.AppendLine(Lan.G(this,"Body")+": "+BodyTextInsecure);
+				sb.AppendLine("Subject"+": "+SubjectInsecure);
+				sb.AppendLine("Body"+": "+BodyTextInsecure);
 			}
 			else {
-				sb.AppendLine(Lan.G(this,"------ "+Lan.G(this,"Notification email settings are not set up.  Click Setup from the web mail message edit window"
-					+" to set up notification emails")+" ------"));
+				sb.AppendLine("------ "+"Notification email settings are not set up.  Click Setup from the web mail message edit window"
+					+" to set up notification emails"+" ------");
 			}
 			sb.AppendLine();
-			sb.AppendLine("------ "+Lan.G(this,"Secure web mail message that will be sent to the patient's portal:"));
-			sb.AppendLine(Lan.G(this,"Subject")+": "+textSubject.Text);
-			sb.AppendLine(Lan.G(this,"Body")+": "+textBody.Text.Replace("\n","\r\n"));
+			sb.AppendLine("------ "+"Secure web mail message that will be sent to the patient's portal:");
+			sb.AppendLine("Subject"+": "+textSubject.Text);
+			sb.AppendLine("Body"+": "+textBody.Text.Replace("\n","\r\n"));
 			MsgBoxCopyPaste msgBox=new MsgBoxCopyPaste(sb.ToString());
 			msgBox.ShowDialog();
 		}
@@ -417,23 +417,23 @@ namespace OpenDental {
 			}
 			EmailMessages.Delete(_emailMessage);
 			string logText="";
-			logText+="\r\n"+Lan.G(this,"From")+": "+_emailMessage.FromAddress+". ";
-			logText+="\r\n"+Lan.G(this,"To")+": "+_emailMessage.ToAddress+". ";
+			logText+="\r\n"+"From"+": "+_emailMessage.FromAddress+". ";
+			logText+="\r\n"+"To"+": "+_emailMessage.ToAddress+". ";
 			if(!String.IsNullOrEmpty(_emailMessage.Subject)) {
-				logText+="\r\n"+Lan.G(this,"Subject")+": "+_emailMessage.Subject+". ";
+				logText+="\r\n"+"Subject"+": "+_emailMessage.Subject+". ";
 			}
 			if(!String.IsNullOrEmpty(_emailMessage.BodyText)) {
 				if(_emailMessage.BodyText.Length > 50) {
-					logText+="\r\n"+Lan.G(this,"Body Text")+": "+_emailMessage.BodyText.Substring(0,49)+"... ";
+					logText+="\r\n"+"Body Text"+": "+_emailMessage.BodyText.Substring(0,49)+"... ";
 				}
 				else {
-					logText+="\r\n"+Lan.G(this,"Body Text")+": "+_emailMessage.BodyText;
+					logText+="\r\n"+"Body Text"+": "+_emailMessage.BodyText;
 				}
 			}
 			if(_emailMessage.MsgDateTime != DateTime.MinValue) {
-				logText+="\r\n"+Lan.G(this,"Date")+": "+_emailMessage.MsgDateTime.ToShortDateString()+". ";
+				logText+="\r\n"+"Date"+": "+_emailMessage.MsgDateTime.ToShortDateString()+". ";
 			}
-			SecurityLogs.MakeLogEntry(Permissions.WebMailDelete,_emailMessage.PatNum,Lan.G(this,"Web Mail deleted.")+" "+logText);
+			SecurityLogs.MakeLogEntry(Permissions.WebMailDelete,_emailMessage.PatNum,"Web Mail deleted."+" "+logText);
 			DialogResult=DialogResult.Abort;//We want to abort here to avoid using the email in parent windows when it's been deleted.
 		}
 
@@ -500,7 +500,7 @@ namespace OpenDental {
 			}
 			_secureMessage.Attachments=_listAttachments;
 			EmailMessages.Insert(_secureMessage);
-			SecurityLogs.MakeLogEntry(Permissions.WebMailSend,0,Lan.G(this,"Web Mail sent"));
+			SecurityLogs.MakeLogEntry(Permissions.WebMailSend,0,"Web Mail sent");
 			MessageBox.Show("Message Sent");
 			DialogResult=DialogResult.OK;
 		}

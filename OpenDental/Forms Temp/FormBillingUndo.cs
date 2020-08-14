@@ -27,7 +27,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -138,7 +138,7 @@ namespace OpenDental{
 			//	return;
 			//}
 			//int rowsAffected=Commlogs.UndoStatements(PIn.PDate(textDate.Text));
-			//MessageBox.Show(rowsAffected.ToString()+" "+Lan.g(this,"statement entries deleted."));
+			//MessageBox.Show(rowsAffected.ToString()+" "+"statement entries deleted.");
 			//DialogResult=DialogResult.OK;
 		}
 

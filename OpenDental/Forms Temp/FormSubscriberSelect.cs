@@ -34,7 +34,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 			FamCur=famCur;
 		}
 
@@ -147,8 +147,8 @@ namespace OpenDental{
 				if(PatientLinks.WasPatientMerged(FamCur.ListPats[i].PatNum,_listMergeLinks)) {
 					continue;//Don't show merged patients
 				}
-				listPats.Items.Add(new ODBoxItem<Patient>(FamCur.ListPats[i].GetNameFL()+" ("+Lan.G("enumPatientStatus",
-					FamCur.ListPats[i].PatStatus.GetDescription())+")",FamCur.ListPats[i]));
+				listPats.Items.Add(new ODBoxItem<Patient>(FamCur.ListPats[i].GetNameFL()+" ("+
+					FamCur.ListPats[i].PatStatus.GetDescription()+")",FamCur.ListPats[i]));
 			}
 		}
 		

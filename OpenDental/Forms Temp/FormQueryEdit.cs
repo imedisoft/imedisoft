@@ -26,7 +26,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormQueryEdit(){
 			InitializeComponent();// Required for Windows Form Designer support
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -189,7 +189,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(textTitle.Text==""){
-				MessageBox.Show(Lan.G(this,"Please enter a title first."));
+				MessageBox.Show("Please enter a title first.");
 				return;
 			}
 			UserQueryCur.Description=textTitle.Text;

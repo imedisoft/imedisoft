@@ -67,7 +67,7 @@ namespace OpenDental {
 		///<summary></summary>
 		public FormRpProdInc(){
 			InitializeComponent();
- 			Lan.F(this);
+ 			
 		}
 
 		///<summary></summary>
@@ -518,7 +518,7 @@ namespace OpenDental {
 				checkClinicBreakdown.Checked=Prefs.GetBool(PrefName.ReportPandIhasClinicBreakdown);
 				_listClinics=Clinics.GetForUserod(Security.CurrentUser);
 				if(!Security.CurrentUser.ClinicIsRestricted) {
-					listClin.Items.Add(Lan.G(this,"Unassigned"));
+					listClin.Items.Add("Unassigned");
 					listClin.SetSelected(0,true);
 				}
 				for(int i=0;i<_listClinics.Count;i++) {
@@ -567,7 +567,7 @@ namespace OpenDental {
 				}
 				Close();
 			}
-			Text+=PrefC.ReportingServer.DisplayStr=="" ? "" : " - "+Lan.G(this,"Reporting Server:") +" "+ PrefC.ReportingServer.DisplayStr;
+			Text+=PrefC.ReportingServer.DisplayStr=="" ? "" : " - "+"Reporting Server:" +" "+ PrefC.ReportingServer.DisplayStr;
 			Plugins.HookAddCode(this,"FormProduction_Load_end");
 		}
 
@@ -635,7 +635,7 @@ namespace OpenDental {
 				}
 				textDateFrom.Text=DateTime.Today.ToShortDateString();
 				textDateTo.Text=DateTime.Today.ToShortDateString();
-				butThis.Text=Lan.G(this,"Today");
+				butThis.Text="Today";
 			}
 			else if(radioProvider.Checked) {
 				if(PrefC.HasClinicsEnabled) {
@@ -644,7 +644,7 @@ namespace OpenDental {
 				}
 				textDateFrom.Text=DateTime.Today.ToShortDateString();
 				textDateTo.Text=DateTime.Today.ToShortDateString();
-				butThis.Text=Lan.G(this,"Today");
+				butThis.Text="Today";
 			}
 			else if(radioMonthly.Checked) {
 				if(PrefC.HasClinicsEnabled) {
@@ -654,7 +654,7 @@ namespace OpenDental {
 				textDateFrom.Text=new DateTime(DateTime.Today.Year,DateTime.Today.Month,1).ToShortDateString();
 				textDateTo.Text=new DateTime(DateTime.Today.Year,DateTime.Today.Month
 					,DateTime.DaysInMonth(DateTime.Today.Year,DateTime.Today.Month)).ToShortDateString();
-				butThis.Text=Lan.G(this,"This Month");
+				butThis.Text="This Month";
 			}
 			else{//annual
 				if(PrefC.HasClinicsEnabled) {
@@ -663,7 +663,7 @@ namespace OpenDental {
 				}
 				textDateFrom.Text=new DateTime(DateTime.Today.Year,1,1).ToShortDateString();
 				textDateTo.Text=new DateTime(DateTime.Today.Year,12,31).ToShortDateString();
-				butThis.Text=Lan.G(this,"This Year");
+				butThis.Text="This Year";
 			}
 		}
 
@@ -675,7 +675,7 @@ namespace OpenDental {
 			if(  textDateFrom.errorProvider1.GetError(textDateFrom)!=""
 				|| textDateTo.errorProvider1.GetError(textDateTo)!=""
 				){
-				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			dateFrom=PIn.Date(textDateFrom.Text);
@@ -708,7 +708,7 @@ namespace OpenDental {
 			if(  textDateFrom.errorProvider1.GetError(textDateFrom)!=""
 				|| textDateTo.errorProvider1.GetError(textDateTo)!=""
 				){
-				MessageBox.Show(Lan.G(this,"Please fix data entry errors first."));
+				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
 			dateFrom=PIn.Date(textDateFrom.Text);
@@ -790,7 +790,7 @@ namespace OpenDental {
 						if(listClin.SelectedIndices[i]==0) {
 							Clinic unassigned=new Clinic();
 							unassigned.ClinicNum=0;
-							unassigned.Abbr=Lan.G(this,"Unassigned");
+							unassigned.Abbr="Unassigned";
 							listClinics.Add(unassigned);
 						}
 						else {
@@ -839,7 +839,7 @@ namespace OpenDental {
 				}
 			}
 			report.ReportName="DailyP&I";
-			report.AddTitle("Title",Lan.G(this,"Daily Production and Income"));
+			report.AddTitle("Title","Daily Production and Income");
 			report.AddSubTitle("PracName",Prefs.GetString(PrefName.PracticeTitle));
 			string dateRangeStr=dateFrom.ToShortDateString()+" - "+dateTo.ToShortDateString();
 			if(dateFrom.Date==dateTo.Date) {
@@ -847,7 +847,7 @@ namespace OpenDental {
 			}
 			report.AddSubTitle("Date",dateRangeStr);
 			if(checkAllProv.Checked) {
-				report.AddSubTitle("Providers",Lan.G(this,"All Providers"));
+				report.AddSubTitle("Providers","All Providers");
 			}
 			else {
 				string str="";
@@ -861,7 +861,7 @@ namespace OpenDental {
 			}
 			if(PrefC.HasClinicsEnabled) {
 				if(checkAllClin.Checked) {
-					report.AddSubTitle("Clinics",Lan.G(this,"All Clinics"));
+					report.AddSubTitle("Clinics","All Clinics");
 				}
 				else {
 					string clinNames="";
@@ -874,7 +874,7 @@ namespace OpenDental {
 						}
 						else {
 							if(listClin.SelectedIndices[i]==0) {
-								clinNames+=Lan.G(this,"Unassigned");
+								clinNames+="Unassigned";
 							}
 							else {
 								clinNames+=_listClinics[listClin.SelectedIndices[i]-1].Abbr;//Minus 1 from the selected index
@@ -923,7 +923,7 @@ namespace OpenDental {
 				insIncWidth=75;
       }
       Font font=new Font("Tahoma",8);
-			query=report.AddQuery(tableDailyProd,Lan.G(this,"Date")+": "+DateTime.Today.ToShortDateString(),"ClinicSplit",SplitByKind.Value,1,true);
+			query=report.AddQuery(tableDailyProd,"Date"+": "+DateTime.Today.ToShortDateString(),"ClinicSplit",SplitByKind.Value,1,true);
 			query.AddColumn("Date",dateWidth,FieldValueType.String,font);
 			query.AddColumn("Patient Name",patientNameWidth,FieldValueType.String,font);
 			query.AddColumn("Description",descriptionWidth,FieldValueType.String,font);
@@ -991,8 +991,8 @@ namespace OpenDental {
 				else {
 					prodLabel="Total Production (Production + Adjustments - Writeoffs)";
 				}
-				tableTotals.Rows.Add(Lan.G(this,prodLabel)+" "+totalProduction.ToString("c"));
-				tableTotals.Rows.Add(Lan.G(this,"Total Income (Pt Income + Ins Income):")+" "+totalIncome.ToString("c"));
+				tableTotals.Rows.Add(prodLabel+" "+totalProduction.ToString("c"));
+				tableTotals.Rows.Add("Total Income (Pt Income + Ins Income):"+" "+totalIncome.ToString("c"));
 				//Add tableTotals to the report.
 				//No column name and no header because we want to display this table to NOT look like a table.
 				query=report.AddQuery(tableTotals,"","",SplitByKind.None,2,false);
@@ -1040,7 +1040,7 @@ namespace OpenDental {
 				if(dataSetDailyProdSplitByClinic.Tables[i].Rows.Count > 0) {
 					clinicDesc=dataSetDailyProdSplitByClinic.Tables[i].Rows[0]["Clinic"].ToString();//Take description of first row.
 				}
-				clinicDesc=clinicDesc=="" ? Lan.G(this,"Unassigned") : clinicDesc;
+				clinicDesc=clinicDesc=="" ? "Unassigned" : clinicDesc;
 				//Calculate the total production and total income for this clinic.
 				double production=0;
 				double adjust=0;
@@ -1110,7 +1110,7 @@ namespace OpenDental {
 						if(listClin.SelectedIndices[i]==0) {
 							Clinic unassigned=new Clinic();
 							unassigned.ClinicNum=0;
-							unassigned.Abbr=Lan.G(this,"Unassigned");
+							unassigned.Abbr="Unassigned";
 							listClinics.Add(unassigned);//Will have ClinicNum of 0 for our "Unassigned" needs.
 						}
 						else {
@@ -1132,11 +1132,11 @@ namespace OpenDental {
 				dtClinic=ds.Tables["Clinic"];
 			}
 			report.ReportName="MonthlyP&I";
-			report.AddTitle("Title",Lan.G(this,"Monthly Production and Income"));
+			report.AddTitle("Title","Monthly Production and Income");
 			report.AddSubTitle("PracName",Prefs.GetString(PrefName.PracticeTitle));
 			report.AddSubTitle("Date",dateFrom.ToShortDateString()+" - "+dateTo.ToShortDateString());
 			if(checkAllProv.Checked) {
-				report.AddSubTitle("Providers",Lan.G(this,"All Providers"));
+				report.AddSubTitle("Providers","All Providers");
 			}
 			else {
 				string str="";
@@ -1150,7 +1150,7 @@ namespace OpenDental {
 			}
 			if(PrefC.HasClinicsEnabled) {
 				if(checkAllClin.Checked) {
-					report.AddSubTitle("Clinics",Lan.G(this,"All Clinics"));
+					report.AddSubTitle("Clinics","All Clinics");
 				}
 				else {
 					string clinNames="";
@@ -1163,7 +1163,7 @@ namespace OpenDental {
 						}
 						else {
 							if(listClin.SelectedIndices[i]==0) {
-								clinNames+=Lan.G(this,"Unassigned");
+								clinNames+="Unassigned";
 							}
 							else {
 								clinNames+=_listClinics[listClin.SelectedIndices[i]-1].Abbr;//Minus 1 from the selected index
@@ -1321,7 +1321,7 @@ namespace OpenDental {
 						if(listClin.SelectedIndices[i]==0) {
 							Clinic unassigned=new Clinic();
 							unassigned.ClinicNum=0;
-							unassigned.Abbr=Lan.G(this,"Unassigned");
+							unassigned.Abbr="Unassigned";
 							listClinics.Add(unassigned);//Will have ClinicNum of 0 for our "Unassigned" needs.
 						}
 						else {
@@ -1343,11 +1343,11 @@ namespace OpenDental {
 				dtClinic=ds.Tables["Clinic"];
 			}
 			report.ReportName="AnnualP&I";
-			report.AddTitle("Title",Lan.G(this,"Annual Production and Income"));
+			report.AddTitle("Title","Annual Production and Income");
 			report.AddSubTitle("PracName",Prefs.GetString(PrefName.PracticeTitle));
 			report.AddSubTitle("Date",dateFrom.ToShortDateString()+" - "+dateTo.ToShortDateString());
 			if(checkAllProv.Checked) {
-				report.AddSubTitle("Providers",Lan.G(this,"All Providers"));
+				report.AddSubTitle("Providers","All Providers");
 			}
 			else {
 				string str="";
@@ -1361,7 +1361,7 @@ namespace OpenDental {
 			}
 			if(PrefC.HasClinicsEnabled) {
 				if(checkAllClin.Checked) {
-					report.AddSubTitle("Clinics",Lan.G(this,"All Clinics"));
+					report.AddSubTitle("Clinics","All Clinics");
 				}
 				else {
 					string clinNames="";
@@ -1374,7 +1374,7 @@ namespace OpenDental {
 						}
 						else {
 							if(listClin.SelectedIndices[i]==0) {
-								clinNames+=Lan.G(this,"Unassigned");
+								clinNames+="Unassigned";
 							}
 							else {
 								clinNames+=_listClinics[listClin.SelectedIndices[i]-1].Abbr;//Minus 1 from the selected index
@@ -1519,7 +1519,7 @@ namespace OpenDental {
 						if(listClin.SelectedIndices[i]==0) {
 							Clinic unassigned=new Clinic();
 							unassigned.ClinicNum=0;
-							unassigned.Abbr=Lan.G(this,"Unassigned");
+							unassigned.Abbr="Unassigned";
 							listClinics.Add(unassigned);
 						}
 						else {
@@ -1532,11 +1532,11 @@ namespace OpenDental {
 			DataSet ds=RpProdInc.GetProviderDataForClinics(dateFrom,dateTo,listProvs,listClinics,checkAllProv.Checked,hasAllClinics
 				,checkUnearned.Checked,GetWriteoffType());
 			report.ReportName="Provider P&I";
-			report.AddTitle("Title",Lan.G(this,"Provider Production and Income"));
+			report.AddTitle("Title","Provider Production and Income");
 			report.AddSubTitle("PracName",Prefs.GetString(PrefName.PracticeTitle));
 			report.AddSubTitle("Date",dateFrom.ToShortDateString()+" - "+dateTo.ToShortDateString());
 			if(checkAllProv.Checked) {
-				report.AddSubTitle("Providers",Lan.G(this,"All Providers"));
+				report.AddSubTitle("Providers","All Providers");
 			}
 			else {
 				string str="";
@@ -1550,7 +1550,7 @@ namespace OpenDental {
 			}
 			if(PrefC.HasClinicsEnabled) {
 				if(checkAllClin.Checked) {
-					report.AddSubTitle("Clinics",Lan.G(this,"All Clinics"));
+					report.AddSubTitle("Clinics","All Clinics");
 				}
 				else {
 					string clinNames="";
@@ -1563,7 +1563,7 @@ namespace OpenDental {
 						}
 						else {
 							if(listClin.SelectedIndices[i]==0) {
-								clinNames+=Lan.G(this,"Unassigned");
+								clinNames+="Unassigned";
 							}
 							else {
 								clinNames+=_listClinics[listClin.SelectedIndices[i]-1].Abbr;//Minus 1 from the selected index

@@ -12,7 +12,7 @@ namespace OpenDental {
 
 		public FormMountItemDefEdit() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormMountItemDefEdit_Load(object sender, EventArgs e){

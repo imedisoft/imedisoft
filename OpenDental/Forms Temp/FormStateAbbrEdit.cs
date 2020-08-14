@@ -9,7 +9,7 @@ namespace OpenDental {
 		public FormStateAbbrEdit(StateAbbr stateAbbr) {
 			_stateAbbrCur=stateAbbr;
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormStateAbbrEdit_Load(object sender,EventArgs e) {

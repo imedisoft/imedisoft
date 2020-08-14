@@ -45,7 +45,7 @@ namespace OpenDental {
 
 		public FormFeeSchedPickRemote() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormFeeSchedPickRemote_Load(object sender,EventArgs e) {			

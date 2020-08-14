@@ -16,7 +16,7 @@ namespace OpenDental {
 		///It passes around the patPlan you passed in by reference, so you can call update on the same patplan you passed in to update.</summary>
 		public FormOrthoPat(PatPlan patPlanCur,InsPlan insPlanCur, string carrierName, string subID, double defaultFee) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_patPlanCur=patPlanCur;
 			_insPlanCur=insPlanCur;
 			Patient patCur=Patients.GetLim(patPlanCur.PatNum);

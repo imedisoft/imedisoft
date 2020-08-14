@@ -108,8 +108,8 @@ namespace OpenDentBusiness {
 				+"AND FieldName='"+POut.String(patFieldDef.FieldName)+"'";
 			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0){
-				string s=Lans.g("PatFieldDef","Not allowed to delete. Already in use by ")+table.Rows.Count.ToString()
-					+" "+Lans.g("PatFieldDef","patients, including")+" \r\n";
+				string s="Not allowed to delete. Already in use by "+table.Rows.Count.ToString()
+					+" "+"patients, including"+" \r\n";
 				for(int i=0;i<table.Rows.Count;i++){
 					if(i>5){
 						break;

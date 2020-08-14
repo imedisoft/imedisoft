@@ -43,8 +43,7 @@ namespace OpenDentBusiness{
 			//check to see if any journal entries are attached to this Reconcile
 			string command="SELECT COUNT(*) FROM journalentry WHERE ReconcileNum="+POut.Long(reconcile.ReconcileNum);
 			if(Database.ExecuteString(command)!="0"){
-				throw new ApplicationException(Lans.g("FormReconcileEdit",
-					"Not allowed to delete a Reconcile with existing journal entries."));
+				throw new ApplicationException("Not allowed to delete a Reconcile with existing journal entries.");
 			}
 			command="DELETE FROM reconcile WHERE ReconcileNum = "+POut.Long(reconcile.ReconcileNum);
 			Database.ExecuteNonQuery(command);

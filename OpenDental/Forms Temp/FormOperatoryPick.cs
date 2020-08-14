@@ -20,7 +20,7 @@ namespace OpenDental {
 
 		public FormOperatoryPick(List<Operatory> listOps) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_listOps=listOps.Select(x=>x.Copy()).ToList();
 		}
 		
@@ -44,25 +44,25 @@ namespace OpenDental {
 				//Clinics are hidden so add the width of the clinic column to the Op Name column because the clinic column will not show.
 				opNameWidth+=clinicWidth;
 			}
-			GridColumn col=new GridColumn(Lan.G("TableOperatories","Op Name"),opNameWidth);
+			GridColumn col=new GridColumn("Op Name",opNameWidth);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableOperatories","Abbrev"),70);
+			col=new GridColumn("Abbrev",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableOperatories","IsHidden"),64,HorizontalAlignment.Center);
+			col=new GridColumn("IsHidden",64,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
-				col=new GridColumn(Lan.G("TableOperatories","Clinic"),clinicWidth);
+				col=new GridColumn("Clinic",clinicWidth);
 				gridMain.ListGridColumns.Add(col);
 			}
-			col=new GridColumn(Lan.G("TableOperatories","Provider"),70);
+			col=new GridColumn("Provider",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableOperatories","Hygienist"),70);
+			col=new GridColumn("Hygienist",70);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableOperatories","IsHygiene"),64,HorizontalAlignment.Center);
+			col=new GridColumn("IsHygiene",64,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableOperatories","IsWebSched"),74,HorizontalAlignment.Center);
+			col=new GridColumn("IsWebSched",74,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.G("TableOperatories","IsNewPat"),50,HorizontalAlignment.Center){ IsWidthDynamic=true };
+			col=new GridColumn("IsNewPat",50,HorizontalAlignment.Center){ IsWidthDynamic=true };
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
@@ -99,7 +99,7 @@ namespace OpenDental {
 		///<summary>Returns true if there was an operatory selected.</summary>
 		private bool SelectOperatory() {
 			if(gridMain.GetSelectedIndex()==-1){
-				MessageBox.Show(Lan.G(this,"Please select an item first."));
+				MessageBox.Show("Please select an item first.");
 				return false;
 			}
 			SelectedOperatoryNum=((Operatory)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag).OperatoryNum;

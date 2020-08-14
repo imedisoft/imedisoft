@@ -45,7 +45,7 @@ namespace OpenDental {
 		///<summary></summary>
 		public FormReferralSelect() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		///<summary></summary>
@@ -296,13 +296,13 @@ namespace OpenDental {
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableSelectRefferal","LastName"),150));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableSelectRefferal","FirstName"),80));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableSelectRefferal","MI"),30));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableSelectRefferal","Title"),70));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableSelectRefferal","Specialty"),60));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableSelectRefferal","Patient"),45));
-			gridMain.ListGridColumns.Add(new GridColumn(Lan.G("TableSelectRefferal","Note"),250));
+			gridMain.ListGridColumns.Add(new GridColumn("LastName",150));
+			gridMain.ListGridColumns.Add(new GridColumn("FirstName",80));
+			gridMain.ListGridColumns.Add(new GridColumn("MI",30));
+			gridMain.ListGridColumns.Add(new GridColumn("Title",70));
+			gridMain.ListGridColumns.Add(new GridColumn("Specialty",60));
+			gridMain.ListGridColumns.Add(new GridColumn("Patient",45));
+			gridMain.ListGridColumns.Add(new GridColumn("Note",250));
 			gridMain.ListGridRows.Clear();
 			GridRow row;
 			int indexSelectedRef=-1;
@@ -312,7 +312,7 @@ namespace OpenDental {
 				row.Cells.Add(refCur.FName);
 				row.Cells.Add(refCur.MName.Left(1).ToUpper());//Left(1) will return empty string if MName is null or empty string, so ToUpper is null safe
 				row.Cells.Add(refCur.Title);
-				row.Cells.Add(refCur.IsDoctor?Lan.G("enumDentalSpecialty",Defs.GetName(DefCat.ProviderSpecialties,refCur.Specialty)):"");
+				row.Cells.Add(refCur.IsDoctor?Defs.GetName(DefCat.ProviderSpecialties,refCur.Specialty):"");
 				row.Cells.Add(refCur.PatNum>0?"X":"");
 				row.Cells.Add(refCur.Note);
 				if(refCur.IsHidden) {
@@ -329,7 +329,7 @@ namespace OpenDental {
 				gridMain.SetSelected(indexSelectedRef,true);
 			}
 			gridMain.ScrollValue=scrollValue;
-			labelResultCount.Text=gridMain.ListGridRows.Count.ToString()+Lan.G(this," results found");
+			labelResultCount.Text=gridMain.ListGridRows.Count.ToString()+" results found";
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {

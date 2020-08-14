@@ -26,7 +26,7 @@ namespace OpenDental {
 			_listAptNums=listAptNums;
 			_dateSelected=dateSelected;
 			_isWeeklyView=isWeeklyView;
-			Lan.F(this);
+			
 		}
 
 		private void FormApptPrintSetup_Load(object sender,EventArgs e) {

@@ -19,7 +19,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormRpPrintPreview() {
 			InitializeComponent();
- 			Lan.F(this);
+ 			
 		}
 		///<summary></summary>
 		public FormRpPrintPreview(PrintDocument printDoc) : this() {

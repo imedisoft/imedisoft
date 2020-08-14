@@ -13,10 +13,7 @@ namespace OpenDental.UI {
 		///<summary></summary>
 		public ContrYN() {
 			InitializeComponent();
-			Lan.C(this,new Control[] {
-				checkY,
-				checkN
-			});
+
 			checkN.Location=new Point(checkY.Right+10,checkN.Top);
 		}
 

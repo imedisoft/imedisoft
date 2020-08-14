@@ -23,7 +23,7 @@ namespace OpenDental {
 
 		public FormRpInsPayPlansPastDue() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormRpInsPayPlansPastDue_Load(object sender,EventArgs e) {
@@ -85,17 +85,17 @@ namespace OpenDental {
 			gridMain.BeginUpdate();
 			//columns
 			gridMain.ListGridColumns.Clear();
-			GridColumn col = new GridColumn(Lan.G("TableInsPayPlanPastDue","Patient"),180);
+			GridColumn col = new GridColumn("Patient",180);
 			gridMain.ListGridColumns.Add(col);
-			col = new GridColumn(Lan.G("TableInsPayPlanPastDue","DateLastPmt"),90);
+			col = new GridColumn("DateLastPmt",90);
 			gridMain.ListGridColumns.Add(col);
-			col = new GridColumn(Lan.G("TableInsPayPlanPastDue","#Overdue"),75);
+			col = new GridColumn("#Overdue",75);
 			gridMain.ListGridColumns.Add(col);
-			col = new GridColumn(Lan.G("TableInsPayPlanPastDue","AmtOverdue"),90);
+			col = new GridColumn("AmtOverdue",90);
 			gridMain.ListGridColumns.Add(col);
-			col = new GridColumn(Lan.G("TableInsPayPlanPastDue","DaysOverdue"),90);
+			col = new GridColumn("DaysOverdue",90);
 			gridMain.ListGridColumns.Add(col);
-			col = new GridColumn(Lan.G("TableInsPayPlanPastDue","CarrierName/Phone"),180){ IsWidthDynamic=true };
+			col = new GridColumn("CarrierName/Phone",180){ IsWidthDynamic=true };
 			gridMain.ListGridColumns.Add(col);
 			//rows
 			gridMain.ListGridRows.Clear();
@@ -113,7 +113,7 @@ namespace OpenDental {
 				}
 				row = new GridRow();
 				string patName =payPlanCur.PatientCur.LName + ", " + payPlanCur.PatientCur.FName;
-				string carrierNamePhone = payPlanCur.CarrierCur.CarrierName+"\r\n"+Lan.G("TableInsPayPlanPastDue","Ph:")+" "+payPlanCur.CarrierCur.Phone;
+				string carrierNamePhone = payPlanCur.CarrierCur.CarrierName+"\r\n"+"Ph:"+" "+payPlanCur.CarrierCur.Phone;
 				row.Cells.Add(patName);
 				row.Cells.Add(payPlanCur.DateLastPayment.ToShortDateString());
 				row.Cells.Add(payPlanCur.NumChargesOverdue.ToString());
@@ -137,7 +137,7 @@ namespace OpenDental {
 		private void butPrint_Click(object sender,EventArgs e) {
 			_pagesPrinted=0;
 			_headingPrinted=false;
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,Lan.G(this,"Outstanding insurance report printed"));
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,"Outstanding insurance report printed");
 		}
 
 		//Copied from FormRpOutstandingIns.cs
@@ -152,7 +152,7 @@ namespace OpenDental {
 			int center=bounds.X+bounds.Width/2;
 			#region printHeading
 			if(!_headingPrinted) {
-				text=Lan.G(this,"Outstanding Insurance Payment Plans");
+				text="Outstanding Insurance Payment Plans";
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
 				if(comboProvs.SelectedIndices[0].ToString()=="0") {
@@ -191,7 +191,7 @@ namespace OpenDental {
 
 		//Copied from FormRpOutstandingIns.cs
 		private void butExport_Click(object sender,System.EventArgs e) {			
-			string fileName=Lan.G(this,"Outstanding Insurance Payment Plans");
+			string fileName="Outstanding Insurance Payment Plans";
 			string filePath=ODFileUtils.CombinePaths(Path.GetTempPath(),fileName);
 
 				SaveFileDialog saveFileDialog=new SaveFileDialog();
@@ -238,11 +238,11 @@ namespace OpenDental {
 				}
 			}
 			catch {
-				MessageBox.Show(Lan.G(this,"File in use by another program.  Close and try again."));
+				MessageBox.Show("File in use by another program.  Close and try again.");
 				return;
 			}
 
-				MessageBox.Show(Lan.G(this,"File created successfully"));
+				MessageBox.Show("File created successfully");
 			
 		}
 

@@ -26,7 +26,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormShowFeatures_Load(object sender, System.EventArgs e) {
@@ -88,7 +88,7 @@ namespace OpenDental{
 				//Create an alert for the user to know they may need to restart the eConnector if they are subscribed to eServices
 				AlertItems.Insert(new AlertItem()
 				{
-					Description=Lan.G(this,"Clinic Feature Changed, you may need to restart the eConnector if you are subscribed to eServices"),
+					Description="Clinic Feature Changed, you may need to restart the eConnector if you are subscribed to eServices",
 					Type=AlertType.ClinicsChanged,
 					Severity=SeverityType.Low,
 					Actions=ActionType.OpenForm | ActionType.MarkAsRead | ActionType.Delete,

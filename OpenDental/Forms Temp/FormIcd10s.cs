@@ -17,12 +17,12 @@ namespace OpenDental {
 
 		public FormIcd10s() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormIcd10s_Load(object sender,EventArgs e) {
 			if(IsSelectionMode) {
-				butClose.Text=Lan.G(this,"Cancel");
+				butClose.Text="Cancel";
 			}
 			else {
 				butOK.Visible=false;

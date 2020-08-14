@@ -14,7 +14,7 @@ namespace OpenDental {
 		public FormSheetFieldSigBox(SheetDef sheetDef,SheetFieldDef sheetFieldDef, bool isReadOnly,bool isEditMobile=false):
 			base(sheetDef,sheetFieldDef,isReadOnly,isEditMobile) {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormSheetFieldSigBox_Load(object sender,EventArgs e) {

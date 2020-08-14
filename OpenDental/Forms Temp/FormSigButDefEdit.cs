@@ -51,7 +51,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 			_sigButDefCur=sigButDef;
 		}
 
@@ -325,7 +325,7 @@ namespace OpenDental{
 			_arraySigElementDefExtras=SigElementDefs.GetSubList(SignalElementType.Extra);
 			_arraySigElementDefMessages=SigElementDefs.GetSubList(SignalElementType.Message);
 			comboTo.Items.Clear();
-			comboTo.Items.Add(Lan.G(this,"none"));
+			comboTo.Items.Add("none");
 			comboTo.SelectedIndex=0;
 			for(int i=0;i<_arraySigElementDefUser.Length;i++) {
 				comboTo.Items.Add(_arraySigElementDefUser[i].SigText);
@@ -334,7 +334,7 @@ namespace OpenDental{
 				}
 			}
 			comboExtras.Items.Clear();
-			comboExtras.Items.Add(Lan.G(this,"none"));
+			comboExtras.Items.Add("none");
 			comboExtras.SelectedIndex=0;
 			for(int i=0;i<_arraySigElementDefExtras.Length;i++) {
 				comboExtras.Items.Add(_arraySigElementDefExtras[i].SigText);
@@ -343,7 +343,7 @@ namespace OpenDental{
 				}
 			}
 			comboMessage.Items.Clear();
-			comboMessage.Items.Add(Lan.G(this,"none"));
+			comboMessage.Items.Add("none");
 			comboMessage.SelectedIndex=0;
 			for(int i=0;i<_arraySigElementDefMessages.Length;i++) {
 				comboMessage.Items.Add(_arraySigElementDefMessages[i].SigText);

@@ -30,12 +30,6 @@ namespace OpenDental{
 		///<summary></summary>
 		public FormEmailSetup(){
 			InitializeComponent();
-			Lan.F(this);
-			Lan.C(this, new System.Windows.Forms.Control[]
-			{
-				textBox6,
-				textBox1
-			});
 		}
 
 		///<summary></summary>

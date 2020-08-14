@@ -16,7 +16,7 @@ namespace OpenDental {
 
 		public FormPatientMerge() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormPatientMerge_Load(object sender,EventArgs e) {
@@ -60,17 +60,17 @@ namespace OpenDental {
 				|| _patFrom.LName.Trim().ToLower()!=_patTo.LName.Trim().ToLower()
 				|| _patFrom.Birthdate!=_patTo.Birthdate) 
 			{//mismatch
-				msgText=Lan.G(this,"The two patients do not have the same first name, last name, and birthdate.");
+				msgText="The two patients do not have the same first name, last name, and birthdate.";
 				if(Programs.UsingEcwTightOrFullMode()) {
-					msgText+="\r\n"+Lan.G(this,"The patients must first be merged from within eCW, then immediately merged in the same order in Open Dental.  "
-						+"If the patients are not merged in this manner, some information may not properly bridge between eCW and Open Dental.");
+					msgText+="\r\n"+"The patients must first be merged from within eCW, then immediately merged in the same order in Open Dental.  "
+						+"If the patients are not merged in this manner, some information may not properly bridge between eCW and Open Dental.";
 				}
 				msgText+="\r\n\r\n"
-					+Lan.G(this,"Into patient name")+": "+Patients.GetNameFLnoPref(_patTo.LName,_patTo.FName,"")+", "//using Patients.GetNameFLnoPref to omit MiddleI
-					+Lan.G(this,"Into patient birthdate")+": "+_patTo.Birthdate.ToShortDateString()+"\r\n"
-					+Lan.G(this,"From patient name")+": "+Patients.GetNameFLnoPref(_patFrom.LName,_patFrom.FName,"")+", "//using Patients.GetNameFLnoPref to omit MiddleI
-					+Lan.G(this,"From patient birthdate")+": "+_patFrom.Birthdate.ToShortDateString()+"\r\n\r\n"
-					+Lan.G(this,"Merge the patient on the bottom into the patient shown on the top?");
+					+"Into patient name"+": "+Patients.GetNameFLnoPref(_patTo.LName,_patTo.FName,"")+", "//using Patients.GetNameFLnoPref to omit MiddleI
+					+"Into patient birthdate"+": "+_patTo.Birthdate.ToShortDateString()+"\r\n"
+					+"From patient name"+": "+Patients.GetNameFLnoPref(_patFrom.LName,_patFrom.FName,"")+", "//using Patients.GetNameFLnoPref to omit MiddleI
+					+"From patient birthdate"+": "+_patFrom.Birthdate.ToShortDateString()+"\r\n\r\n"
+					+"Merge the patient on the bottom into the patient shown on the top?";
 				if(MessageBox.Show(msgText,"",MessageBoxButtons.YesNo)!=DialogResult.Yes) {
 					return;//The user chose not to merge
 				}
@@ -83,9 +83,9 @@ namespace OpenDental {
 			if(_patFrom.PatNum==_patFrom.Guarantor) {
 				Family fam=Patients.GetFamily(_patFrom.PatNum);
 				if(fam.ListPats.Length>1) {
-					msgText=Lan.G(this,"The patient you have chosen to merge from is a guarantor.  Merging this patient into another account will cause all "
-						+"family members of the patient being merged from to be moved into the same family as the patient account being merged into.")+"\r\n"
-						+Lan.G(this,"Do you wish to continue with the merge?");
+					msgText="The patient you have chosen to merge from is a guarantor.  Merging this patient into another account will cause all "
+						+"family members of the patient being merged from to be moved into the same family as the patient account being merged into."+"\r\n"
+						+"Do you wish to continue with the merge?";
 					if(MessageBox.Show(msgText,"",MessageBoxButtons.YesNo)!=DialogResult.Yes) {
 						return;//The user chose not to merge.
 					}
@@ -101,7 +101,7 @@ namespace OpenDental {
 				SecurityLogs.MakeLogEntry(Permissions.PatientMerge,_patTo.PatNum,
 					"Error occurred while merging Patient: "+_patFrom.GetNameFL()+"\r\nPatNum From: "+_patFrom.PatNum+"\r\nPatNum To: "+_patTo.PatNum);
 				Cursor=Cursors.Default;
-				FriendlyException.Show(Lan.G(this,"Unable to fully merge patients.  Contact support."),ex);
+				FriendlyException.Show("Unable to fully merge patients.  Contact support.",ex);
 			}
 			if(isSuccessfulMerge) {
 				//The patient has been successfully merged.
@@ -176,8 +176,8 @@ namespace OpenDental {
 
 				Cursor=Cursors.Default;
 				if(fileCopyFailures>0) {
-					MessageBox.Show(Lan.G(this,"Some files belonging to the from patient were not copied.")+"\r\n"
-						+Lan.G(this,"Number of files not copied")+": "+fileCopyFailures);
+					MessageBox.Show("Some files belonging to the from patient were not copied."+"\r\n"
+						+"Number of files not copied"+": "+fileCopyFailures);
 				}
 				//Make log entry here not in parent form because we can merge multiple patients at a time.
 				SecurityLogs.MakeLogEntry(Permissions.PatientMerge,_patTo.PatNum,

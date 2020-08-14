@@ -24,13 +24,13 @@ namespace OpenDentBusiness.Eclaims {
 			string arguments="";
 			try {
 				if(!Directory.Exists(clearinghouseClin.ExportPath)) {
-					throw new Exception(Lans.g(progress.LanThis,"Clearinghouse export path is invalid."));
+					throw new Exception("Clearinghouse export path is invalid.");
 				}
 				if(!Directory.Exists(clearinghouseClin.ResponsePath)) {
-					throw new Exception(Lans.g(progress.LanThis,"Clearinghouse response path is invalid."));
+					throw new Exception("Clearinghouse response path is invalid.");
 				}
 				if(!File.Exists(clearinghouseClin.ClientProgram)) {
-					throw new Exception(Lans.g(progress.LanThis,"Client program not installed properly."));
+					throw new Exception("Client program not installed properly.");
 				}
 				arguments="\""+ODFileUtils.RemoveTrailingSeparators(clearinghouseClin.ExportPath)+"\\"+"*.*\" "//upload claims path
 					+"\""+ODFileUtils.RemoveTrailingSeparators(clearinghouseClin.ResponsePath)+"\" "//Mail path
@@ -50,9 +50,9 @@ namespace OpenDentBusiness.Eclaims {
 				}
 				process.StartInfo.FileName=clearinghouseClin.ClientProgram;
 				process.StartInfo.Arguments=arguments;
-				progress.UpdateProgress(Lans.g(progress.LanThis,"Contacting web server and downloading reports"),"reports","17%",17);
+				progress.UpdateProgress("Contacting web server and downloading reports","reports","17%",17);
 				if(progress.IsPauseOrCancel()) {
-					progress.UpdateProgress(Lans.g(progress.LanThis,"Canceled by user."));
+					progress.UpdateProgress("Canceled by user.");
 					return false;
 				}
 				process.Start();
@@ -69,46 +69,46 @@ namespace OpenDentBusiness.Eclaims {
 				}
 				process.WaitForExit();
 				//delete the uploaded claims
-				progress.UpdateProgress(Lans.g(progress.LanThis,"Contacting web server sucessful."));
-				progress.UpdateProgress(Lans.g(progress.LanThis,"Deleting uploaded claims"),"reports","33%",33);
+				progress.UpdateProgress("Contacting web server sucessful.");
+				progress.UpdateProgress("Deleting uploaded claims","reports","33%",33);
 				if(progress.IsPauseOrCancel()) {
-					progress.UpdateProgress(Lans.g(progress.LanThis,"Canceled by user."));
+					progress.UpdateProgress("Canceled by user.");
 					return false;
 				}
 				string[] files=Directory.GetFiles(clearinghouseClin.ExportPath);
 				for(int i=0;i<files.Length;i++) {
 					float overallpercent=33+(i/files.Length)*11;//33 is starting point. 11 is the amount of bar space we have before our next major spot (44%)
-					progress.UpdateProgress(Lans.g(progress.LanThis,"Getting files"),"reports",overallpercent+"%",(int)overallpercent);
+					progress.UpdateProgress("Getting files","reports",overallpercent+"%",(int)overallpercent);
 					//string t=files[i];
 					File.Delete(files[i]);
 				}
 				//rename the downloaded mail files to end with txt
-				progress.UpdateProgress(Lans.g(progress.LanThis,"Deleteing uploaded claims successful."));
+				progress.UpdateProgress("Deleteing uploaded claims successful.");
 				progress.UpdateProgress("Renaming downloaded files","reports","44%",44);
 				if(progress.IsPauseOrCancel()) {
-					progress.UpdateProgress(Lans.g(progress.LanThis,"Canceled by user."));
+					progress.UpdateProgress("Canceled by user.");
 					return false;
 				}
 				files=Directory.GetFiles(clearinghouseClin.ResponsePath);
 				for(int i=0;i<files.Length;i++) {
 					float overallpercent=44+(i/files.Length)*11;//44 is starting point. 11 is the amount of bar space we have before our next major spot (55%)
-					progress.UpdateProgress(Lans.g(progress.LanThis,"Getting files"),"reports",overallpercent+"%",(int)overallpercent);
+					progress.UpdateProgress("Getting files","reports",overallpercent+"%",(int)overallpercent);
 					//string t=files[i];
 					if(Path.GetExtension(files[i])!=".txt") {
 						File.Move(files[i],files[i]+".txt");
 					}
 				}
-				progress.UpdateProgress(Lans.g(progress.LanThis,"File rename successful."));
+				progress.UpdateProgress("File rename successful.");
 			}
 			catch(Exception e) {
 				ErrorMessage=e.Message;
-				progress.UpdateProgress(Lans.g(progress.LanThis,"Error encountered:")+"\r\n"+ErrorMessage);
+				progress.UpdateProgress("Error encountered:"+"\r\n"+ErrorMessage);
 				if(batchNum!=0) {
-					progress.UpdateProgress(Lans.g(progress.LanThis,"Rolling back batch."));
-					progress.UpdateProgressDetailed(Lans.g(progress.LanThis,"Rolling back batch"),tagString:"reports",marqSpeed:20,progStyle:ProgBarStyle.Marquee);
+					progress.UpdateProgress("Rolling back batch.");
+					progress.UpdateProgressDetailed("Rolling back batch",tagString:"reports",marqSpeed:20,progStyle:ProgBarStyle.Marquee);
 					x837Controller.Rollback(clearinghouseClin,batchNum);
-					progress.UpdateProgressDetailed(Lans.g(progress.LanThis,"Done rolling back"),tagString:"reports",marqSpeed:20,progStyle:ProgBarStyle.Marquee);
-					progress.UpdateProgress(Lans.g(progress.LanThis,"Rolling back batch complete."));		
+					progress.UpdateProgressDetailed("Done rolling back",tagString:"reports",marqSpeed:20,progStyle:ProgBarStyle.Marquee);
+					progress.UpdateProgress("Rolling back batch complete.");		
 				}
 				return false;
 			}

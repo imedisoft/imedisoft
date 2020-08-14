@@ -27,7 +27,7 @@ namespace OpenDental {
 
 		public FormReportSetup(long userGroupNum,bool isPermissionMode) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			_userGroupNum=userGroupNum;
 			_isPermissionMode=isPermissionMode;
 		}

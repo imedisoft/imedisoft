@@ -33,7 +33,7 @@ namespace OpenDental {
 
 		public FormMassEmail() {
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		private void FormMassEmail_Load(object sender,EventArgs e) {
@@ -77,21 +77,19 @@ namespace OpenDental {
 		private void FillGridAvailable() {
 			gridAvailablePatients.BeginUpdate();
 			gridAvailablePatients.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lans.g(gridAvailablePatients.TranslationName,"Name"),140,GridSortingStrategy.StringCompare);
+			GridColumn col=new GridColumn("Name",140,GridSortingStrategy.StringCompare);
 			gridAvailablePatients.ListGridColumns.Add(col);
-			col=new GridColumn(Lans.g(gridAvailablePatients.TranslationName,"Birthdate"),80,HorizontalAlignment.Center,GridSortingStrategy.DateParse);
+			col=new GridColumn("Birthdate",80,HorizontalAlignment.Center,GridSortingStrategy.DateParse);
 			gridAvailablePatients.ListGridColumns.Add(col);
-			col=new GridColumn(Lans.g(gridAvailablePatients.TranslationName,"Email"),140,GridSortingStrategy.StringCompare);
+			col=new GridColumn("Email",140,GridSortingStrategy.StringCompare);
 			gridAvailablePatients.ListGridColumns.Add(col);
-			col=new GridColumn(Lans.g(gridAvailablePatients.TranslationName,"Contact Method"),60,GridSortingStrategy.StringCompare);
+			col=new GridColumn("Contact Method",60,GridSortingStrategy.StringCompare);
 			gridAvailablePatients.ListGridColumns.Add(col);
-			col=new GridColumn(Lans.g(gridAvailablePatients.TranslationName,"Status"),70,GridSortingStrategy.StringCompare);
+			col=new GridColumn("Status",70,GridSortingStrategy.StringCompare);
 			gridAvailablePatients.ListGridColumns.Add(col);
-			col=new GridColumn(Lans.g(gridAvailablePatients.TranslationName,"Last Appointment"),85,HorizontalAlignment.Center,
-				GridSortingStrategy.DateParse);
+			col=new GridColumn("Last Appointment",85,HorizontalAlignment.Center,GridSortingStrategy.DateParse);
 			gridAvailablePatients.ListGridColumns.Add(col);
-			col=new GridColumn(Lans.g(gridAvailablePatients.TranslationName,"Next Appointment"),80,HorizontalAlignment.Center,
-				GridSortingStrategy.DateParse);
+			col=new GridColumn("Next Appointment",80,HorizontalAlignment.Center,GridSortingStrategy.DateParse);
 			gridAvailablePatients.ListGridColumns.Add(col);
 			gridAvailablePatients.ListGridRows.Clear();
 			GridRow row;
@@ -123,11 +121,11 @@ namespace OpenDental {
 		private void FillGridSelected() {
 			gridSelectedPatients.BeginUpdate();
 			gridSelectedPatients.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lans.g(gridSelectedPatients.TranslationName,"Name"),150,GridSortingStrategy.StringCompare);
+			GridColumn col=new GridColumn("Name",150,GridSortingStrategy.StringCompare);
 			gridSelectedPatients.ListGridColumns.Add(col);
-			col=new GridColumn(Lans.g(gridSelectedPatients.TranslationName,"Birthdate"),80,HorizontalAlignment.Center,GridSortingStrategy.DateParse);
+			col=new GridColumn("Birthdate",80,HorizontalAlignment.Center,GridSortingStrategy.DateParse);
 			gridSelectedPatients.ListGridColumns.Add(col);
-			col=new GridColumn(Lans.g(gridSelectedPatients.TranslationName,"Email"),80,GridSortingStrategy.StringCompare);
+			col=new GridColumn("Email",80,GridSortingStrategy.StringCompare);
 			gridSelectedPatients.ListGridColumns.Add(col);
 			gridSelectedPatients.ListGridRows.Clear();
 			GridRow row;
@@ -156,16 +154,16 @@ namespace OpenDental {
 			listBoxPatStatus.SelectedIndex=0;
 			//preferred contact method list box
 			listBoxContactMethod.Items.Clear();
-			listBoxContactMethod.Items.Add(new ODBoxItem<int>(Lans.g(this,"Any"),-1));
-			listBoxContactMethod.Items.Add(new ODBoxItem<int>(Lans.g(this,ContactMethod.Email.GetDescription()),(int)ContactMethod.Email));
-			listBoxContactMethod.Items.Add(new ODBoxItem<int>(Lans.g(this,ContactMethod.None.GetDescription()),(int)ContactMethod.None));
+			listBoxContactMethod.Items.Add(new ODBoxItem<int>("Any",-1));
+			listBoxContactMethod.Items.Add(new ODBoxItem<int>(ContactMethod.Email.GetDescription(),(int)ContactMethod.Email));
+			listBoxContactMethod.Items.Add(new ODBoxItem<int>(ContactMethod.None.GetDescription(),(int)ContactMethod.None));
 			listBoxContactMethod.SelectedIndex=0;
 			//Age Range
 			textAgeFrom.Text="1";
 			textAgeTo.Text="110";
 			//patient billing type list box
 			listBoxPatBillingType.Items.Clear();
-			listBoxPatBillingType.Items.Add(new ODBoxItem<Def>(Lan.G(this,"All"),new Def()));
+			listBoxPatBillingType.Items.Add(new ODBoxItem<Def>("All",new Def()));
 			foreach(Def billingType in Defs.GetDefsForCategory(DefCat.BillingTypes)) {
 				listBoxPatBillingType.Items.Add(new ODBoxItem<Def>(billingType.ItemName,billingType));
 			}
@@ -309,16 +307,16 @@ namespace OpenDental {
 			gridTemplates.BeginUpdate();
 			gridTemplates.ListGridColumns.Clear();
 			_listTemplates=EmailHostingTemplates.Refresh();
-			GridColumn col=new GridColumn(Lans.g(gridTemplates.TranslationName,"Saved Templates"),240);
+			GridColumn col=new GridColumn("Saved Templates",240);
 			gridTemplates.ListGridColumns.Add(col);
-			col=new GridColumn(Lans.g(gridTemplates.TranslationName,"Email Type"),35);
+			col=new GridColumn("Email Type",35);
 			gridTemplates.ListGridColumns.Add(col);
 			gridTemplates.ListGridRows.Clear();
 			GridRow row;
 			foreach(EmailHostingTemplate template in _listTemplates) {
 				row=new GridRow();
 				row.Cells.Add(template.TemplateName);
-				row.Cells.Add(Lans.g(this,template.EmailTemplateType.GetDescription()));
+				row.Cells.Add(template.EmailTemplateType.GetDescription());
 				row.Tag=template;
 				gridTemplates.ListGridRows.Add(row);
 			}
@@ -513,31 +511,31 @@ namespace OpenDental {
 		private void FillGridAnalytics() {
 			gridAnalytics.BeginUpdate();
 			if(gridAnalytics.ListGridColumns.Count==0) {		
-				GridColumn col=new GridColumn(Lans.g(gridAnalytics.TranslationName,"Name"),100,GridSortingStrategy.StringCompare);
+				GridColumn col=new GridColumn("Name",100,GridSortingStrategy.StringCompare);
 				gridAnalytics.ListGridColumns.Add(col);
-				col=new GridColumn(Lans.g(gridAnalytics.TranslationName,"Type"),100,GridSortingStrategy.StringCompare);
+				col=new GridColumn("Type",100,GridSortingStrategy.StringCompare);
 				gridAnalytics.ListGridColumns.Add(col);
 				if(PrefC.HasClinicsEnabled) {
-					col=new GridColumn(Lans.g(gridAnalytics.TranslationName,"Clinic"),100,GridSortingStrategy.StringCompare);
+					col=new GridColumn("Clinic",100,GridSortingStrategy.StringCompare);
 					gridAnalytics.ListGridColumns.Add(col);
 				}
-				col=new GridColumn(Lans.g(gridAnalytics.TranslationName,"Date Created"),100,GridSortingStrategy.DateParse);
+				col=new GridColumn("Date Created",100,GridSortingStrategy.DateParse);
 				gridAnalytics.ListGridColumns.Add(col);
-				col=new GridColumn(Lans.g(gridAnalytics.TranslationName,"Total"),85,HorizontalAlignment.Center);
+				col=new GridColumn("Total",85,HorizontalAlignment.Center);
 				gridAnalytics.ListGridColumns.Add(col);
-				col=new GridColumn(Lans.g(gridAnalytics.TranslationName,"Pending"),85,HorizontalAlignment.Center);
+				col=new GridColumn("Pending",85,HorizontalAlignment.Center);
 				gridAnalytics.ListGridColumns.Add(col);
-				col=new GridColumn(Lans.g(gridAnalytics.TranslationName,"Unopened"),85,HorizontalAlignment.Center);
+				col=new GridColumn("Unopened",85,HorizontalAlignment.Center);
 				gridAnalytics.ListGridColumns.Add(col);
-				col=new GridColumn(Lans.g(gridAnalytics.TranslationName,"Opened"),85,HorizontalAlignment.Center);
+				col=new GridColumn("Opened",85,HorizontalAlignment.Center);
 				gridAnalytics.ListGridColumns.Add(col);
-				col=new GridColumn(Lans.g(gridAnalytics.TranslationName,"Bounced"),85,HorizontalAlignment.Center);
+				col=new GridColumn("Bounced",85,HorizontalAlignment.Center);
 				gridAnalytics.ListGridColumns.Add(col);
-				col=new GridColumn(Lans.g(gridAnalytics.TranslationName,"Complaint"),85,HorizontalAlignment.Center);
+				col=new GridColumn("Complaint",85,HorizontalAlignment.Center);
 				gridAnalytics.ListGridColumns.Add(col);
-				col=new GridColumn(Lans.g(gridAnalytics.TranslationName,"Failed"),85,HorizontalAlignment.Center);
+				col=new GridColumn("Failed",85,HorizontalAlignment.Center);
 				gridAnalytics.ListGridColumns.Add(col);
-				col=new GridColumn(Lans.g(gridAnalytics.TranslationName,"Unsubscribed"),85,HorizontalAlignment.Center);
+				col=new GridColumn("Unsubscribed",85,HorizontalAlignment.Center);
 				gridAnalytics.ListGridColumns.Add(col);
 			}
 			gridAnalytics.ListGridRows.Clear();

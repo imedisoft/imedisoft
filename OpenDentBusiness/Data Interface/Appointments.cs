@@ -89,24 +89,24 @@ namespace OpenDentBusiness
 				row["labDescript"]=raw.Rows[0]["Description"].ToString();
 				date=PIn.Date(raw.Rows[0]["DateTimeChecked"].ToString());
 				if(date.Year>1880){
-					row["labDescript"]+=", "+Lans.g("FormApptEdit","Quality Checked");
+					row["labDescript"]+=", "+"Quality Checked";
 				}
 				else{
 					date=PIn.Date(raw.Rows[0]["DateTimeRecd"].ToString());
 					if(date.Year>1880){
-						row["labDescript"]+=", "+Lans.g("FormApptEdit","Received");
+						row["labDescript"]+=", "+"Received";
 					}
 					else{
 						date=PIn.Date(raw.Rows[0]["DateTimeSent"].ToString());
 						if(date.Year>1880){
-							row["labDescript"]+=", "+Lans.g("FormApptEdit","Sent");//sent but not received
+							row["labDescript"]+=", "+"Sent";//sent but not received
 						}
 						else{
-							row["labDescript"]+=", "+Lans.g("FormApptEdit","Not Sent");
+							row["labDescript"]+=", "+"Not Sent";
 						}
 						dateDue=PIn.Date(raw.Rows[0]["DateTimeDue"].ToString());
 						if(dateDue.Year>1880) {
-							row["labDescript"]+=", "+Lans.g("FormAppEdit","Due: ")+dateDue.ToString("ddd")+" "
+							row["labDescript"]+=", "+"Due: "+dateDue.ToString("ddd")+" "
 								+dateDue.ToShortDateString()+" "+dateDue.ToShortTimeString();
 						}
 					}
@@ -782,13 +782,13 @@ namespace OpenDentBusiness
 				}
 				if(listRefAttaches[j].RefType==ReferralType.RefFrom) {
 					if(!dictRefFromPatNums.ContainsKey(listRefAttaches[j].PatNum)) {//New entry
-						dictRefFromPatNums.Add(listRefAttaches[j].PatNum,Lans.g("Appointments","Referred From")+":");
+						dictRefFromPatNums.Add(listRefAttaches[j].PatNum,"Referred From"+":");
 					}
 					dictRefFromPatNums[listRefAttaches[j].PatNum]+=("\r\n"+nameLF);//Concatenate all refFrom nameLF's to the refFrom dict
 				}
 				else {
 					if(!dictRefToPatNums.ContainsKey(listRefAttaches[j].PatNum)) {
-						dictRefToPatNums.Add(listRefAttaches[j].PatNum,Lans.g("Appointments","Referred To")+":");//New entry
+						dictRefToPatNums.Add(listRefAttaches[j].PatNum,"Referred To"+":");//New entry
 					}
 					dictRefToPatNums[listRefAttaches[j].PatNum]+=("\r\n"+nameLF);//Concatenate all refTo nameLF's to the refTo dict
 				}
@@ -832,7 +832,7 @@ namespace OpenDentBusiness
 					rowRaw["patCity"].ToString(),rowRaw["patState"].ToString(),rowRaw["patZip"].ToString());
 					row["addrNote"]="";
 					if(rowRaw["patAddrNote"].ToString()!="") {
-						row["addrNote"]=Lans.g("Appointments","AddrNote: ")+rowRaw["patAddrNote"].ToString();
+						row["addrNote"]="AddrNote: "+rowRaw["patAddrNote"].ToString();
 					}
 					aptDate=PIn.Date(rowRaw["apptAptDateTime"].ToString());
 					aptDateArrived=PIn.Date(rowRaw["apptAptDateTimeArrived"].ToString());
@@ -855,7 +855,7 @@ namespace OpenDentBusiness
 					}
 					row["age"]="";
 					if(birthdate.AddYears(18)<dateTimeTo) {
-						row["age"]=Lans.g("Appointments","Age: ");//only show if older than 18
+						row["age"]="Age: ";//only show if older than 18
 					}
 					if(birthdate.Year>1880) {
 						row["age"]+=PatientLogic.DateToAgeString(birthdate,dateTimeTo);
@@ -865,7 +865,7 @@ namespace OpenDentBusiness
 					}
 					row["apptModNote"]="";
 					if(rowRaw["patApptModNote"].ToString()!="") {
-						row["apptModNote"]=Lans.g("Appointments","ApptModNote: ")+rowRaw["patApptModNote"].ToString();
+						row["apptModNote"]="ApptModNote: "+rowRaw["patApptModNote"].ToString();
 					}
 					row["aptDate"]=aptDate.ToShortDateString();
 					row["aptDay"]=aptDate.ToString("dddd");
@@ -873,15 +873,15 @@ namespace OpenDentBusiness
 					hours=span.Hours;
 					minutes=span.Minutes;
 					if(hours==0) {
-						row["aptLength"]=minutes.ToString()+Lans.g("Appointments"," Min");
+						row["aptLength"]=minutes.ToString()+" Min";
 					}
 					else if(hours==1) {
-						row["aptLength"]=hours.ToString()+Lans.g("Appointments"," Hr, ")
-							+minutes.ToString()+Lans.g("Appointments"," Min");
+						row["aptLength"]=hours.ToString()+" Hr, "
+							+minutes.ToString()+" Min";
 					}
 					else {
-						row["aptLength"]=hours.ToString()+Lans.g("Appointments"," Hrs, ")
-							+minutes.ToString()+Lans.g("Appointments"," Min");
+						row["aptLength"]=hours.ToString()+" Hrs, "
+							+minutes.ToString()+" Min";
 					}
 					row["aptTime"]=aptDate.ToShortTimeString();
 					row["AptNum"]=rowRaw["apptAptNum"].ToString();
@@ -908,21 +908,21 @@ namespace OpenDentBusiness
 					row["Confirmed"]=rowRaw["apptConfirmed"].ToString();
 					row["contactMethods"]="";
 					if(rowRaw["patPreferConfirmMethod"].ToString()!="0") {
-						row["contactMethods"]+=Lans.g("Appointments","Confirm Method: ")
+						row["contactMethods"]+="Confirm Method: "
 							+((ContactMethod)PIn.Long(rowRaw["patPreferConfirmMethod"].ToString())).ToString();
 					}
 					if(rowRaw["patPreferContactMethod"].ToString()!="0") {
 						if(row["contactMethods"].ToString()!="") {
 							row["contactMethods"]+="\r\n";
 						}
-						row["contactMethods"]+=Lans.g("Appointments","Contact Method: ")
+						row["contactMethods"]+="Contact Method: "
 							+((ContactMethod)PIn.Long(rowRaw["patPreferContactMethod"].ToString())).ToString();
 					}
 					if(rowRaw["patPreferRecallMethod"].ToString()!="0") {
 						if(row["contactMethods"].ToString()!="") {
 							row["contactMethods"]+="\r\n";
 						}
-						row["contactMethods"]+=Lans.g("Appointments","Recall Method: ")
+						row["contactMethods"]+="Recall Method: "
 							+((ContactMethod)PIn.Long(rowRaw["patPreferRecallMethod"].ToString())).ToString();
 					}
 					bool InsToSend=false;
@@ -942,12 +942,12 @@ namespace OpenDentBusiness
 					long discountPlanNum=PIn.Long(rowRaw["DiscountPlan"].ToString());
 					DiscountPlan discountPlan=null;
 					if(discountPlanNum>0 && dictDiscountPlans.TryGetValue(discountPlanNum,out discountPlan)) {
-						row["discountPlan"]+=Lans.g("Appointments","DiscountPlan")+": "+dictDiscountPlans[discountPlanNum].Description;
+						row["discountPlan"]+="DiscountPlan"+": "+dictDiscountPlans[discountPlanNum].Description;
 					}
 					row["Email"]=rowRaw["patEmail"].ToString();
 					row["famFinUrgNote"]="";
 					if(rowRaw["guarFamFinUrgNote"].ToString()!="") {
-						row["famFinUrgNote"]=Lans.g("Appointments","FamFinUrgNote: ")+rowRaw["guarFamFinUrgNote"].ToString();
+						row["famFinUrgNote"]="FamFinUrgNote: "+rowRaw["guarFamFinUrgNote"].ToString();
 					}
 					row["guardians"]="";
 					GuardianRelationship guardRelat;
@@ -969,24 +969,24 @@ namespace OpenDentBusiness
 					if(rowRaw["hasIns"].ToString()!="0") {
 						row["hasIns[I]"]+="I";
 					}
-					row["hmPhone"]=Lans.g("Appointments","Hm: ")+rowRaw["patHmPhone"].ToString();
+					row["hmPhone"]="Hm: "+rowRaw["patHmPhone"].ToString();
 					row["ImageFolder"]=rowRaw["patImageFolder"].ToString();
 					row["insurance"]="";
 					long planNum1=PIn.Long(rowRaw["InsPlan1"].ToString());
 					long planNum2=PIn.Long(rowRaw["InsPlan2"].ToString());
 					if(planNum1>0&&dictCarriers.ContainsKey(planNum1)) {
-						row["insurance"]+=Lans.g("Appointments","Ins1")+": "+dictCarriers[planNum1];
+						row["insurance"]+="Ins1"+": "+dictCarriers[planNum1];
 						row["insColor1"]=dictCarrierColors[planNum1];
 					}
 					if(planNum2>0&&dictCarriers.ContainsKey(planNum2)) {
 						if(row["insurance"].ToString()!="") {
 							row["insurance"]+="\r\n";
 						}
-						row["insurance"]+=Lans.g("Appointments","Ins2")+": "+dictCarriers[planNum2];
+						row["insurance"]+="Ins2"+": "+dictCarriers[planNum2];
 						row["insColor2"]=dictCarrierColors[planNum2];
 					}
 					if(rowRaw["hasIns"].ToString()!="0"&&row["insurance"].ToString()=="") {
-						row["insurance"]=Lans.g("Appointments","Insured");
+						row["insurance"]="Insured";
 					}
 					row["insToSend[!]"]="";
 					if(InsToSend) {
@@ -998,24 +998,24 @@ namespace OpenDentBusiness
 					if(rowRaw["labcaseLabCaseNum"].ToString()!="") {
 						labDate=PIn.Date(rowRaw["labcaseDateTimeChecked"].ToString());
 						if(labDate.Year>1880) {
-							row["lab"]=Lans.g("Appointments","Lab Quality Checked");
+							row["lab"]="Lab Quality Checked";
 						}
 						else {
 							labDate=PIn.Date(rowRaw["labcaseDateTimeRecd"].ToString());
 							if(labDate.Year>1880) {
-								row["lab"]=Lans.g("Appointments","Lab Received");
+								row["lab"]="Lab Received";
 							}
 							else {
 								labDate=PIn.Date(rowRaw["labcaseDateTimeSent"].ToString());
 								if(labDate.Year>1880) {
-									row["lab"]=Lans.g("Appointments","Lab Sent");//sent but not received
+									row["lab"]="Lab Sent";//sent but not received
 								}
 								else {
-									row["lab"]=Lans.g("Appointments","Lab Not Sent");
+									row["lab"]="Lab Not Sent";
 								}
 								labDueDate=PIn.Date(rowRaw["labcaseDateTimeDue"].ToString());
 								if(labDueDate.Year>1880) {
-									row["lab"]+=", "+Lans.g("Appointments","Due: ")//+dateDue.ToString("ddd")+" "
+									row["lab"]+=", "+"Due: "//+dateDue.ToString("ddd")+" "
 										+labDueDate.ToShortDateString();//+" "+dateDue.ToShortTimeString();
 								}
 							}
@@ -1061,7 +1061,7 @@ namespace OpenDentBusiness
 					row["PatternSecondary"]=rowRaw["apptPatternSecondary"].ToString();
 					row["preMedFlag"]="";
 					if(rowRaw["patPremed"].ToString()=="1") {
-						row["preMedFlag"]=Lans.g("Appointments","Premedicate");
+						row["preMedFlag"]="Premedicate";
 					}
 					row["procs"]=rowRaw["apptProcDescript"].ToString();
 					row["procsColored"]+=rowRaw["apptProcsColored"].ToString();
@@ -1148,8 +1148,8 @@ namespace OpenDentBusiness
 					if(timeAskedToArrive.Year>1880) {
 						row["timeAskedToArrive"]=timeAskedToArrive.ToString("H:mm");
 					}
-					row["wirelessPhone"]=Lans.g("Appointments","Cell: ")+rowRaw["patWirelessPhone"].ToString();
-					row["wkPhone"]=Lans.g("Appointments","Wk: ")+rowRaw["patWkPhone"].ToString();
+					row["wirelessPhone"]="Cell: "+rowRaw["patWirelessPhone"].ToString();
+					row["wkPhone"]="Wk: "+rowRaw["patWkPhone"].ToString();
 					row["writeoffPPO"]=writeoffPPO.ToString();
 					#endregion Make Row
 					lock (locker) {
@@ -1334,71 +1334,71 @@ namespace OpenDentBusiness
 			DataRow row;
 			//Patient Name--------------------------------------------------------------------------
 			row=table.NewRow();
-			row["field"]=Lans.g("FormApptEdit","Name");
+			row["field"]="Name";
 			row["value"]=PatientLogic.GetNameLF(rawPat.Rows[0]["LName"].ToString(),rawPat.Rows[0]["FName"].ToString(),
 				rawPat.Rows[0]["Preferred"].ToString(),rawPat.Rows[0]["MiddleI"].ToString());
 			table.Rows.Add(row);
 			//Patient First Name--------------------------------------------------------------------
 			row=table.NewRow();
-			row["field"]=Lans.g("FormApptEdit","First Name");
+			row["field"]="First Name";
 			row["value"]=rawPat.Rows[0]["FName"];
 			table.Rows.Add(row);
 			//Patient Last name---------------------------------------------------------------------
 			row=table.NewRow();
-			row["field"]=Lans.g("FormApptEdit","Last Name");
+			row["field"]="Last Name";
 			row["value"]=rawPat.Rows[0]["LName"];
 			table.Rows.Add(row);
 			//Patient middle initial----------------------------------------------------------------
 			row=table.NewRow();
-			row["field"]=Lans.g("FormApptEdit","Middle Initial");
+			row["field"]="Middle Initial";
 			row["value"]=rawPat.Rows[0]["MiddleI"];
 			table.Rows.Add(row);
 			//Patient birthdate----------------------------------------------------------------
 			row=table.NewRow();
-			row["field"]=Lans.g("FormApptEdit","Birthdate");
+			row["field"]="Birthdate";
 			row["value"]=PIn.Date(rawPat.Rows[0]["Birthdate"].ToString()).ToShortDateString();
 			table.Rows.Add(row);
 			//Patient home phone--------------------------------------------------------------------
 			row=table.NewRow();
-			row["field"]=Lans.g("FormApptEdit","Home Phone");
+			row["field"]="Home Phone";
 			row["value"]=rawPat.Rows[0]["HmPhone"];
 			table.Rows.Add(row);
 			//Patient work phone--------------------------------------------------------------------
 			row=table.NewRow();
-			row["field"]=Lans.g("FormApptEdit","Work Phone");
+			row["field"]="Work Phone";
 			row["value"]=rawPat.Rows[0]["WkPhone"];
 			table.Rows.Add(row);
 			//Patient wireless phone----------------------------------------------------------------
 			row=table.NewRow();
-			row["field"]=Lans.g("FormApptEdit","Wireless Phone");
+			row["field"]="Wireless Phone";
 			row["value"]=rawPat.Rows[0]["WirelessPhone"];
 			table.Rows.Add(row);
 			//Patient credit type-------------------------------------------------------------------
 			row=table.NewRow();
-			row["field"]=Lans.g("FormApptEdit","Credit Type");
+			row["field"]="Credit Type";
 			row["value"]=rawPat.Rows[0]["CreditType"];
 			table.Rows.Add(row);
 			//Patient billing type------------------------------------------------------------------
 			row=table.NewRow();
-			row["field"]=Lans.g("FormApptEdit","Billing Type");
+			row["field"]="Billing Type";
 			row["value"]=Defs.GetName(DefCat.BillingTypes,PIn.Long(rawPat.Rows[0]["BillingType"].ToString()));
 			table.Rows.Add(row);
 			//Patient total balance-----------------------------------------------------------------
 			row=table.NewRow();
-			row["field"]=Lans.g("FormApptEdit","Total Balance");
+			row["field"]="Total Balance";
 			double totalBalance=PIn.Double(rawPat.Rows[0]["EstBalance"].ToString());
 			row["value"]=totalBalance.ToString("F");
 			table.Rows.Add(row);
 			//Patient address and phone notes-------------------------------------------------------
 			row=table.NewRow();
-			row["field"]=Lans.g("FormApptEdit","Address and Phone Notes");
+			row["field"]="Address and Phone Notes";
 			row["value"]=rawPat.Rows[0]["AddrNote"];
 			table.Rows.Add(row);
 			//Patient family balance----------------------------------------------------------------
 			command="SELECT BalTotal,InsEst FROM patient WHERE PatNum="+POut.String(rawPat.Rows[0]["Guarantor"].ToString())+"";
 			DataTable familyBalance=Database.ExecuteDataTable(command);
 			row=table.NewRow();
-			row["field"]=Lans.g("FormApptEdit","Family Balance");
+			row["field"]="Family Balance";
 			double balance=PIn.Double(familyBalance.Rows[0]["BalTotal"].ToString())
 				-PIn.Double(familyBalance.Rows[0]["InsEst"].ToString());
 			row["value"]=balance.ToString("F");
@@ -1406,13 +1406,13 @@ namespace OpenDentBusiness
 			//Site----------------------------------------------------------------------------------
 			if(!Prefs.GetBool(PrefName.EasyHidePublicHealth)){
 				row=table.NewRow();
-				row["field"]=Lans.g("FormApptEdit","Site");
+				row["field"]="Site";
 				row["value"]=Sites.GetDescription(PIn.Long(rawPat.Rows[0]["SiteNum"].ToString()));
 				table.Rows.Add(row);
 			}
 			//Estimated Patient Portion-------------------------------------------------------------
 			row=table.NewRow();
-			row["field"]=Lans.g("FormApptEdit","Est. Patient Portion");
+			row["field"]="Est. Patient Portion";
 			row["value"]=GetEstPatientPortion(appt).ToString("F");
 			table.Rows.Add(row);
 			return table;
@@ -1496,18 +1496,18 @@ namespace OpenDentBusiness
 				row["descript"]="";
 				if(apptStatus=="6") {//planned
 					if(rawProc.Rows[i]["PlannedAptNum"].ToString()!="0" && rawProc.Rows[i]["PlannedAptNum"].ToString()!=aptNum) {
-						row["descript"]=Lans.g("FormApptEdit","(other appt)");
+						row["descript"]="(other appt)";
 					}
 					else if(rawProc.Rows[i]["AptNum"].ToString()!="0" && rawProc.Rows[i]["AptNum"].ToString()!=aptNum) {
-						row["descript"]=Lans.g("FormApptEdit","(scheduled appt)");
+						row["descript"]="(scheduled appt)";
 					}
 				}
 				else {
 					if(rawProc.Rows[i]["AptNum"].ToString()!="0" && rawProc.Rows[i]["AptNum"].ToString()!=aptNum) {
-						row["descript"]=Lans.g("FormApptEdit","(other appt)");
+						row["descript"]="(other appt)";
 					}
 					else if(rawProc.Rows[i]["PlannedAptNum"].ToString()!="0" && rawProc.Rows[i]["PlannedAptNum"].ToString()!=aptNum) {
-						row["descript"]=Lans.g("FormApptEdit","(planned appt)");
+						row["descript"]="(planned appt)";
 					}
 				}
 				if(rawProc.Rows[i]["LaymanTerm"].ToString()==""){
@@ -1647,25 +1647,25 @@ namespace OpenDentBusiness
 				row["confirmed"]=Defs.GetName(DefCat.ApptConfirmed,PIn.Long(rawtable.Rows[i]["Confirmed"].ToString()));
 				contmeth=(ContactMethod)PIn.Int(rawtable.Rows[i]["PreferConfirmMethod"].ToString());
 				if(contmeth==ContactMethod.None || contmeth==ContactMethod.HmPhone) {
-					row["contactMethod"]=Lans.g("FormConfirmList","Hm:")+rawtable.Rows[i]["HmPhone"].ToString();
+					row["contactMethod"]="Hm:"+rawtable.Rows[i]["HmPhone"].ToString();
 				}
 				if(contmeth==ContactMethod.WkPhone) {
-					row["contactMethod"]=Lans.g("FormConfirmList","Wk:")+rawtable.Rows[i]["WkPhone"].ToString();
+					row["contactMethod"]="Wk:"+rawtable.Rows[i]["WkPhone"].ToString();
 				}
 				if(contmeth==ContactMethod.WirelessPh) {
-					row["contactMethod"]=Lans.g("FormConfirmList","Cell:")+rawtable.Rows[i]["WirelessPhone"].ToString();
+					row["contactMethod"]="Cell:"+rawtable.Rows[i]["WirelessPhone"].ToString();
 				}
 				if(contmeth==ContactMethod.TextMessage) {
-					row["contactMethod"]=Lans.g("FormConfirmList","Text:")+rawtable.Rows[i]["WirelessPhone"].ToString();
+					row["contactMethod"]="Text:"+rawtable.Rows[i]["WirelessPhone"].ToString();
 				}
 				if(contmeth==ContactMethod.Email) {
 					row["contactMethod"]=rawtable.Rows[i]["Email"].ToString();
 				}
 				if(contmeth==ContactMethod.DoNotCall || contmeth==ContactMethod.SeeNotes) {
-					row["contactMethod"]=Lans.g("enumContactMethod",contmeth.ToString());
+					row["contactMethod"]=contmeth.ToString();
 				}
 				if(contmeth==ContactMethod.Mail) {
-					row["contactMethod"]=Lans.g("FormConfirmList","Mail");
+					row["contactMethod"]="Mail";
 				}
 				row["dateSched"]="Unknown";
 				if(rawtable.Rows[i]["LogDateTime"].ToString().Length>0) {
@@ -1680,7 +1680,7 @@ namespace OpenDentBusiness
 				row["Guarantor"]=rawtable.Rows[i]["Guarantor"].ToString();
 				row["medNotes"]="";
 				if(rawtable.Rows[i]["Premed"].ToString()=="1"){
-					row["medNotes"]=Lans.g("FormConfirmList","Premedicate");
+					row["medNotes"]="Premedicate";
 				}
 				if(rawtable.Rows[i]["MedUrgNote"].ToString()!=""){
 					if(row["medNotes"].ToString()!="") {
@@ -3378,7 +3378,7 @@ namespace OpenDentBusiness
 				//JS Overlap is no longer prevented when moving from ContrAppt, and this code won't be hit because doValidation is false.
 				//It is still prevented with TryMoveApptWebHelper, but only because I'm not overhauling that part of the code right now.
 				if(!isOpUpdate && !TryAdjustAppointmentOp(apt,listOps)) {
-					throw new ODException(Lans.g("MoveAppointment","Appointment overlaps existing appointment or blockout."));
+					throw new ODException("Appointment overlaps existing appointment or blockout.");
 				}
 				#endregion Prevent overlap
 				#region Detect Frequency Conflicts
@@ -3390,8 +3390,8 @@ namespace OpenDentBusiness
 						frequencyConflicts=Procedures.CheckFrequency(procsForSingleApt,apt.PatNum,apt.AptDateTime);
 					}
 					catch(Exception e) {
-						throw new Exception(Lans.g("MoveAppointment","There was an error checking frequencies."
-								+"  Disable the Insurance Frequency Checking feature or try to fix the following error:")
+						throw new Exception("There was an error checking frequencies."
+								+"  Disable the Insurance Frequency Checking feature or try to fix the following error:"
 								+"\r\n"+e.Message);
 					}
 					if(frequencyConflicts!="" && !doAllowFreqConflicts) {
@@ -3450,9 +3450,9 @@ namespace OpenDentBusiness
 			if(apt.Confirmed!=aptOld.Confirmed) {
 				//Log confirmation status changes.
 				SecurityLogs.MakeLogEntry(Permissions.ApptConfirmStatusEdit,apt.PatNum,
-					Lans.g("MoveAppointment","Appointment confirmation status changed from")+" "
-					+Defs.GetName(DefCat.ApptConfirmed,aptOld.Confirmed)+" "+Lans.g("MoveAppointment","to")+" "+Defs.GetName(DefCat.ApptConfirmed,apt.Confirmed)
-					+Lans.g("MoveAppointment","from the appointment module")+".",apt.AptNum,secLogSource,aptOld.DateTStamp);
+					"Appointment confirmation status changed from"+" "
+					+Defs.GetName(DefCat.ApptConfirmed,aptOld.Confirmed)+" "+"to"+" "+Defs.GetName(DefCat.ApptConfirmed,apt.Confirmed)
+					+"from the appointment module"+".",apt.AptNum,secLogSource,aptOld.DateTStamp);
 			}
 			#endregion
 			#region Set prov in apt
@@ -3479,28 +3479,28 @@ namespace OpenDentBusiness
 			if(isOpUpdate) {
 				string logtext="";
 				if(provChanged) {
-					logtext=" "+Lans.g("MoveAppointment","provider changed");
+					logtext=" "+"provider changed";
 				}
 				if(hygChanged) {
 					if(logtext!="") {
-						logtext+=" "+Lans.g("MoveAppointment","and");
+						logtext+=" "+"and";
 					}
-					logtext+=" "+Lans.g("MoveAppointment","hygienist changed");
+					logtext+=" "+"hygienist changed";
 				}
 				if(logtext!="") {
 					SecurityLogs.MakeLogEntry(Permissions.AppointmentEdit,apt.PatNum,
-						Lans.g("MoveAppointment","Appointment on")+" "+apt.AptDateTime.ToString()+logtext,apt.AptNum,secLogSource,apt.DateTStamp);
+						"Appointment on"+" "+apt.AptDateTime.ToString()+logtext,apt.AptNum,secLogSource,apt.DateTStamp);
 				}
 			}
 			else { 
 				if(apt.AptStatus!=ApptStatus.Complete) { //seperate log entry for editing completed appointments
 					SecurityLogs.MakeLogEntry(Permissions.AppointmentMove,apt.PatNum,
-						apt.ProcDescript+" "+Lans.g("MoveAppointment","from")+" "+aptOld.AptDateTime.ToString()+", "+Lans.g("MoveAppointment","to")+" "+apt.AptDateTime.ToString(),
+						apt.ProcDescript+" "+"from"+" "+aptOld.AptDateTime.ToString()+", "+"to"+" "+apt.AptDateTime.ToString(),
 						apt.AptNum,secLogSource,aptOld.DateTStamp);
 				}
 				else {
 					SecurityLogs.MakeLogEntry(Permissions.AppointmentCompleteEdit,apt.PatNum,
-							Lans.g("MoveAppointment","moved")+" "+apt.ProcDescript+" "+Lans.g("MoveAppointment","from")+" "+aptOld.AptDateTime.ToString()+", "+Lans.g("MoveAppointment","to")+" "+apt.AptDateTime.ToString(),
+							"moved"+" "+apt.ProcDescript+" "+"from"+" "+aptOld.AptDateTime.ToString()+", "+"to"+" "+apt.AptDateTime.ToString(),
 							apt.AptNum,secLogSource,aptOld.DateTStamp);
 				}
 			}

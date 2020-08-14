@@ -84,9 +84,9 @@ namespace OpenDental{
 			if(refCur.PatNum>0){
 				IsPatient=true;
 			}
-			Lan.F(this);
+			
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
-				groupSSN.Text=Lan.G(this,"CDA Number");
+				groupSSN.Text="CDA Number";
 				radioSSN.Visible=false;
 				radioTIN.Visible=false;
 			}
@@ -797,11 +797,11 @@ namespace OpenDental{
 			listSpecialty.Items.Clear();
 			Def[] specDefs=Defs.GetDefsForCategory(DefCat.ProviderSpecialties,true).ToArray();
 			for(int i=0;i<specDefs.Length;i++) {
-				listSpecialty.Items.Add(Lan.G("enumDentalSpecialty",specDefs[i].ItemName));
+				listSpecialty.Items.Add(specDefs[i].ItemName);
 			}
 			if(IsPatient){
 				if(IsNew){
-					Text=Lan.G(this,"Add Referral"); 
+					Text="Add Referral"; 
 					Family FamCur=Patients.GetFamily(RefCur.PatNum);
 					Patient PatCur=FamCur.GetPatient(RefCur.PatNum);
 					RefCur.Address=PatCur.Address;
@@ -847,7 +847,7 @@ namespace OpenDental{
 			}
 			else{//non patient
 				if(IsNew){
-					this.Text=Lan.G(this,"Add Referral"); 
+					this.Text="Add Referral"; 
 					RefCur=new Referral();
 					RefCur.Specialty=Defs.GetByExactNameNeverZero(DefCat.ProviderSpecialties,"General");
 				}
@@ -929,7 +929,7 @@ namespace OpenDental{
 			if(patsFrom.Length>0){
 				comboPatientsFrom.SelectedIndex=0;
 			}
-			comboSlip.Items.Add(Lan.G(this,"Default"));
+			comboSlip.Items.Add("Default");
 			comboSlip.SelectedIndex=0;
 			SlipList=SheetDefs.GetCustomForType(SheetTypeEnum.ReferralSlip);
 			for(int i=0;i<SlipList.Count;i++){
@@ -941,7 +941,7 @@ namespace OpenDental{
 			if(!Security.IsAuthorized(Permissions.ReferralEdit,true)) {
 				butDelete.Enabled=false;
 				butOK.Enabled=false;
-				this.Text+=" - "+Lan.G(this,"Read Only");
+				this.Text+=" - "+"Read Only";
 			}
 			checkIsPreferred.Checked=RefCur.IsPreferred;
 		}
@@ -981,7 +981,7 @@ namespace OpenDental{
 		private void butOK_Click(object sender, System.EventArgs e) {
 			string phone=textPhone1.Text+textPhone2.Text+textPhone3.Text;
 			if(phone.Length > 0 && phone.Length < 10){
-				MessageBox.Show(Lan.G(this,"Invalid phone"));
+				MessageBox.Show("Invalid phone");
 				return;
 			}
 			if(textLName.Text=="") {
@@ -994,10 +994,10 @@ namespace OpenDental{
 			}
 			Cursor=Cursors.WaitCursor;
 			if(checkEmailTrustDirect.Checked && !EmailMessages.TryAddTrustDirect(textEmail.Text)) {
-				string trustEmailErrorMessage=Lan.G("Referral","You elected to trust this email address for Direct messaging.")
-					+"  "+Lan.G("Referral","Adding trust for the address failed, because we were unable to locate the public certificate for the address.")
-					+"  "+Lan.G("Referral","Check that the email address is correctly typed and is a valid Direct messaging address, then try again.")
-					+"  "+Lan.G("Referral","Otherwise, uncheck the E-mail Trust for Direct checkbox before clicking OK or press Cancel if no other changes were made.");
+				string trustEmailErrorMessage="You elected to trust this email address for Direct messaging."
+					+"  "+"Adding trust for the address failed, because we were unable to locate the public certificate for the address."
+					+"  "+"Check that the email address is correctly typed and is a valid Direct messaging address, then try again."
+					+"  "+"Otherwise, uncheck the E-mail Trust for Direct checkbox before clicking OK or press Cancel if no other changes were made.";
 				MessageBox.Show(trustEmailErrorMessage);
 				Cursor=Cursors.Default;
 				return;

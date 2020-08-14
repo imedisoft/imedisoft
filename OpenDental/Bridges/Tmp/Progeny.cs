@@ -33,7 +33,7 @@ namespace OpenDental.Bridges
 					string fname = pat.FName.Replace("\"", "").Replace(",", "");
 					if (pat.Birthdate.Year < 1880)
 					{
-						throw new ODException(Lans.g("Progeny", "Invalid birthdate for") + " " + pat.GetNameFL());
+						throw new ODException("Invalid birthdate for" + " " + pat.GetNameFL());
 					}
 					//Progeny software uses local computer's date format settings, per PIBridge.exe documentation (launch exe to view).
 					string birthdate = pat.Birthdate.ToShortDateString();

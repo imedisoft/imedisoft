@@ -691,7 +691,7 @@ namespace OpenDentBusiness {
 					//If we have an age match, then we exit the method right here.
 					if(listShort[i].QuantityQualifier==BenefitQuantity.AgeLimit && listShort[i].Quantity > 0) {
 						if(patientAge > listShort[i].Quantity) {
-							note=Lans.g("Benefits","Age limitation:")+" "+listShort[i].Quantity.ToString();
+							note="Age limitation:"+" "+listShort[i].Quantity.ToString();
 							return 0;//not covered if too old.
 						}
 						continue;//don't use an age limitation for the match if the patient has not reached the age limit
@@ -728,7 +728,7 @@ namespace OpenDentBusiness {
 				//If we have an age match, then we exit the method right here.
 				if(listShort[i].QuantityQualifier==BenefitQuantity.AgeLimit && listShort[i].Quantity > 0){
 					if(patientAge > listShort[i].Quantity){
-						note=Lans.g("Benefits","Age limitation:")+" "+listShort[i].Quantity.ToString();
+						note="Age limitation:"+" "+listShort[i].Quantity.ToString();
 						return 0;//not covered if too old.
 					}
 				}
@@ -740,14 +740,14 @@ namespace OpenDentBusiness {
 			if(ProcedureCodes.ListFlourideCodeNums.Contains(ProcedureCodes.GetCodeNum(procCodeStr))) {
 				Benefit benAgeLimit=listShort.FirstOrDefault(x => IsFlourideAgeLimit(x));
 				if(benAgeLimit!=null && benAgeLimit.Quantity > 0 && patientAge > benAgeLimit.Quantity) {
-					note=Lans.g("Benefits","Age limitation:")+" "+benAgeLimit.Quantity.ToString();
+					note="Age limitation:"+" "+benAgeLimit.Quantity.ToString();
 					return 0;//not covered if too old.
 				}
 			}
 			if(ProcedureCodes.ListSealantCodeNums.Contains(ProcedureCodes.GetCodeNum(procCodeStr))) {
 				Benefit benAgeLimit=listShort.FirstOrDefault(x => IsSealantAgeLimit(x));
 				if(benAgeLimit!=null && benAgeLimit.Quantity > 0 && patientAge > benAgeLimit.Quantity) {
-					note=Lans.g("Benefits","Age limitation:")+" "+benAgeLimit.Quantity.ToString();
+					note="Age limitation:"+" "+benAgeLimit.Quantity.ToString();
 					return 0;//not covered if too old.
 				}
 			}
@@ -946,11 +946,11 @@ namespace OpenDentBusiness {
 			if(benInd!=null) {
 				if(maxInd <= 0) {//then patient has used up all of their annual max, so no coverage.
 					if(benInd.TimePeriod==BenefitTimePeriod.Lifetime) {
-						note+=Lans.g("Benefits","Over lifetime max");
+						note+="Over lifetime max";
 					}
 					else if(benInd.TimePeriod==BenefitTimePeriod.CalendarYear
 						|| benInd.TimePeriod==BenefitTimePeriod.ServiceYear) {
-						note+=Lans.g("Benefits","Over annual max");
+						note+="Over annual max";
 					}
 					return 0;
 				}
@@ -983,22 +983,22 @@ namespace OpenDentBusiness {
 				if(insEstTotalOverride==-1 && retVal != insEstTotal){//and procedure is not fully covered by ind max
 					if(benInd!=null) {//redundant
 						if(benInd.TimePeriod==BenefitTimePeriod.Lifetime) {
-							note+=Lans.g("Benefits","Over lifetime max");
+							note+="Over lifetime max";
 						}
 						else if(benInd.TimePeriod==BenefitTimePeriod.CalendarYear
 							|| benInd.TimePeriod==BenefitTimePeriod.ServiceYear) {
-							note+=Lans.g("Benefits","Over annual max");
+							note+="Over annual max";
 						}
 					}
 				}
 				else if(insEstTotalOverride!=-1 && insRemainingOverride != insEstTotalOverride) {
 					if(benInd!=null) {//redundant
 						if(benInd.TimePeriod==BenefitTimePeriod.Lifetime) {
-							note+=Lans.g("Benefits","Over lifetime max");
+							note+="Over lifetime max";
 						}
 						else if(benInd.TimePeriod==BenefitTimePeriod.CalendarYear
 								|| benInd.TimePeriod==BenefitTimePeriod.ServiceYear) {
-							note+=Lans.g("Benefits","Over annual max");
+							note+="Over annual max";
 						}
 					}
 				}
@@ -1090,15 +1090,15 @@ namespace OpenDentBusiness {
 			//if the family max has all been used up on other procs 
 			if(maxFam<=0) {
 				if(benInd==null) {
-					note+=Lans.g("Benefits","Over family max");
+					note+="Over family max";
 				}
 				else{//and there is an individual max.
 					if(benInd.TimePeriod==BenefitTimePeriod.Lifetime) {
-						note+=Lans.g("Benefits","Over family lifetime max");
+						note+="Over family lifetime max";
 					}
 					else if(benInd.TimePeriod==BenefitTimePeriod.CalendarYear
 					|| benInd.TimePeriod==BenefitTimePeriod.ServiceYear) {
-						note+=Lans.g("Benefits","Over family annual max");
+						note+="Over family annual max";
 					}
 				}
 				return 0;//then no coverage, regardless of what we computed for individual
@@ -1107,11 +1107,11 @@ namespace OpenDentBusiness {
 			/*if(maxFam > maxInd) {//restrict by maxInd
 				//which we already calculated
 				if(benInd.TimePeriod==BenefitTimePeriod.Lifetime) {
-					note+=Lans.g("Benefits","Over lifetime max");
+					note+="Over lifetime max";
 				}
 				else if(benInd.TimePeriod==BenefitTimePeriod.CalendarYear
 					|| benInd.TimePeriod==BenefitTimePeriod.ServiceYear) {
-					note+=Lans.g("Benefits","Over annual max");
+					note+="Over annual max";
 				}
 				return retVal;
 			}*/
@@ -1120,15 +1120,15 @@ namespace OpenDentBusiness {
 					if(maxFam < retVal) {//if there's not enough left in the annual max to cover this proc.
 						//example. retVal=$70.  But 2970 of 3000 family max has been used.  maxFam=30.  We need to return 30.
 						if(benInd==null) {
-							note+=Lans.g("Benefits","Over family max");
+							note+="Over family max";
 						}
 						else {//both ind and fam
 							if(benInd.TimePeriod==BenefitTimePeriod.Lifetime) {
-								note+=Lans.g("Benefits","Over family lifetime max");
+								note+="Over family lifetime max";
 							}
 							else if(benInd.TimePeriod==BenefitTimePeriod.CalendarYear
 								|| benInd.TimePeriod==BenefitTimePeriod.ServiceYear) {
-								note+=Lans.g("Benefits","Over family annual max");
+								note+="Over family annual max";
 							}
 						}
 						return maxFam;//insurance will only cover up to the remaining annual max
@@ -1139,15 +1139,15 @@ namespace OpenDentBusiness {
 					if(maxFam < insRemainingOverride) {//if there's not enough left in the annual max to cover this proc.
 						//example. insRemainingOverride=$70.  But 2970 of 3000 family max has been used.  maxFam=30.
 						if(benInd==null) {
-							note+=Lans.g("Benefits","Over family max");
+							note+="Over family max";
 						}
 						else {//both ind and fam
 							if(benInd.TimePeriod==BenefitTimePeriod.Lifetime) {
-								note+=Lans.g("Benefits","Over family lifetime max");
+								note+="Over family lifetime max";
 							}
 							else if(benInd.TimePeriod==BenefitTimePeriod.CalendarYear
 								|| benInd.TimePeriod==BenefitTimePeriod.ServiceYear) {
-								note+=Lans.g("Benefits","Over family annual max");
+								note+="Over family annual max";
 							}
 						}
 					}
@@ -1160,15 +1160,15 @@ namespace OpenDentBusiness {
 			if(insEstTotalOverride==-1) {//No insEstTotalOverride used, use normal insEstTotal
 				if(retVal < insEstTotal) {//must have been an individual restriction
 					if(benInd==null) {//js I don't understand this situation. It will probably not happen, but this is safe.
-						note+=Lans.g("Benefits","Over annual max");
+						note+="Over annual max";
 					}
 					else {
 						if(benInd.TimePeriod==BenefitTimePeriod.Lifetime) {
-							note+=Lans.g("Benefits","Over lifetime max");
+							note+="Over lifetime max";
 						}
 						else if(benInd.TimePeriod==BenefitTimePeriod.CalendarYear
 							|| benInd.TimePeriod==BenefitTimePeriod.ServiceYear) {
-							note+=Lans.g("Benefits","Over annual max");
+							note+="Over annual max";
 						}
 					}
 				}
@@ -1176,15 +1176,15 @@ namespace OpenDentBusiness {
 			//If there is an override, calculate max note from it instead.  Must have been an individual restriction.
 			else if(insRemainingOverride < insEstTotalOverride) {
 				if(benInd==null) {//js I don't understand this situation. It will probably not happen, but this is safe.
-					note+=Lans.g("Benefits","Over annual max");
+					note+="Over annual max";
 				}
 				else {
 					if(benInd.TimePeriod==BenefitTimePeriod.Lifetime) {
-						note+=Lans.g("Benefits","Over lifetime max");
+						note+="Over lifetime max";
 					}
 					else if(benInd.TimePeriod==BenefitTimePeriod.CalendarYear
 						|| benInd.TimePeriod==BenefitTimePeriod.ServiceYear) {
-						note+=Lans.g("Benefits","Over annual max");
+						note+="Over annual max";
 					}
 				}
 			}
@@ -1624,26 +1624,26 @@ namespace OpenDentBusiness {
 			string retVal="";
 			if(ben.QuantityQualifier==BenefitQuantity.Months) {
 				if(ben.Quantity==1) {
-					retVal+=Lans.g("Benefits","Once every month.")+"\r\n";
+					retVal+="Once every month."+"\r\n";
 				}
 				else {
-					retVal+=Lans.g("Benefits","Once every")+" "+ben.Quantity+" "+Lans.g("Benefits","months.")+"\r\n";
+					retVal+="Once every"+" "+ben.Quantity+" "+"months."+"\r\n";
 				}
 			}
 			else if(ben.QuantityQualifier==BenefitQuantity.Years) {
 				if(ben.Quantity==1) {
-					retVal+=Lans.g("Benefits","Once every year.")+"\r\n";
+					retVal+="Once every year."+"\r\n";
 				}
 				else {
-					retVal+=Lans.g("Benefits","Once every")+" "+ben.Quantity+" "+Lans.g("Benefits","years.")+"\r\n";
+					retVal+="Once every"+" "+ben.Quantity+" "+"years."+"\r\n";
 				}
 			}
 			else {//number of services
 				if(ben.Quantity==1) {
-					retVal+=Lans.g("Benefits","Once per year.")+"\r\n";
+					retVal+="Once per year."+"\r\n";
 				}
 				else {
-					retVal+=ben.Quantity+" "+Lans.g("Benefits","times per year.")+"\r\n";
+					retVal+=ben.Quantity+" "+"times per year."+"\r\n";
 				}
 			}
 			return retVal;
@@ -1655,43 +1655,43 @@ namespace OpenDentBusiness {
 			//No need to check RemotingRole; no call to db.
 			string retVal = "";
 			if(IsBitewingFrequency(benefit)) {
-				retVal=Lans.g("benefitCategory","Bitewings");
+				retVal="Bitewings";
 			}
 			else if(IsPanoFrequency(benefit)) {
-				retVal=Lans.g("benefitCategory","Pano/FMX");
+				retVal="Pano/FMX";
 			}
 			else if(IsExamFrequency(benefit)) {
-				retVal=Lans.g("benefitCategory","Exams");
+				retVal="Exams";
 			}
 			else if(IsCancerScreeningFrequency(benefit)) {
-				retVal=Lans.g("benefitCategory","Cancer Screenings");
+				retVal="Cancer Screenings";
 			}
 			else if(IsProphyFrequency(benefit)) {
-				retVal=Lans.g("benefitCategory","Prophy");
+				retVal="Prophy";
 			}
 			else if(IsFlourideFrequency(benefit) || IsFlourideAgeLimit(benefit)) {
-				retVal=Lans.g("benefitCategory","Fluoride");
+				retVal="Fluoride";
 			}
 			else if(IsSealantFrequency(benefit) || IsSealantAgeLimit(benefit)) {
-				retVal=Lans.g("benefitCategory","Sealants");
+				retVal="Sealants";
 			}
 			else if(IsCrownFrequency(benefit)) {
-				retVal=Lans.g("benefitCategory","Crowns");
+				retVal="Crowns";
 			}
 			else if(IsSRPFrequency(benefit)) {
-				retVal=Lans.g("benefitCategory","SRP");
+				retVal="SRP";
 			}
 			else if(IsFullDebridementFrequency(benefit)) {
-				retVal=Lans.g("benefitCategory","Full Debridement");
+				retVal="Full Debridement";
 			}
 			else if(IsPerioMaintFrequency(benefit)) {
-				retVal=Lans.g("benefitCategory","Perio Maint");
+				retVal="Perio Maint";
 			}
 			else if(IsDenturesFrequency(benefit)) {
-				retVal=Lans.g("benefitCategory","Dentures");
+				retVal="Dentures";
 			}
 			else if(IsImplantFrequency(benefit)) {
-				retVal=Lans.g("benefitCategory","Implants");
+				retVal="Implants";
 			}
 			else if(benefit.CodeNum==0) {
 				retVal=CovCats.GetDesc(benefit.CovCatNum);

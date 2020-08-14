@@ -34,7 +34,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -167,12 +167,12 @@ namespace OpenDental{
 		private void FormMessagingButSetup_Load(object sender,EventArgs e) {
 			_listComputers=Computers.GetDeepCopy();
 			listComputers.Items.Clear();
-			listComputers.Items.Add(Lan.G(this,"All"));
+			listComputers.Items.Add("All");
 			string s;
 			for(int i=0;i<_listComputers.Count;i++) {
 				s=_listComputers[i].MachineName;
 				if(SystemInformation.ComputerName==_listComputers[i].MachineName){
-					s+=" "+Lan.G(this,"(this computer)");
+					s+=" "+"(this computer)";
 				}
 				listComputers.Items.Add(s);
 			}
@@ -202,7 +202,7 @@ namespace OpenDental{
 						buttonText+=" ("+string.Join(",",listSigElementDefs.Select(x => x.SigText))+")";
 					}
 					if(sigButDef.ComputerName=="" && listComputers.SelectedIndex!=0) {
-						buttonText+=" "+Lan.G(this,"(all)");
+						buttonText+=" "+"(all)";
 					}
 					listButtons.Items.Add(buttonText);
 				}

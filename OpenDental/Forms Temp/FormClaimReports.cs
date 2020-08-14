@@ -35,7 +35,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			Lan.F(this);
+			
 		}
 
 		/// <summary>
@@ -169,7 +169,7 @@ namespace OpenDental{
 				return;
 			}
 			ODProgressExtended progressbar=new ODProgressExtended(EventCategory.Clearinghouse,new ClearinghouseEvent(),this
-				,new ProgressBarHelper((Lans.g(this,"Clearinghouse Progress")),progressBarEventType:ProgBarEventType.Header),lanThis: this.Name);
+				,new ProgressBarHelper(("Clearinghouse Progress"),progressBarEventType:ProgBarEventType.Header),lanThis: this.Name);
 			//For Tesia, user wouldn't normally manually retrieve.
 			if(clearhouseHq.ISA08=="113504607") {
 				if((PrefC.RandomKeys && PrefC.HasClinicsEnabled)//See FormClaimsSend_Load
@@ -179,15 +179,15 @@ namespace OpenDental{
 					string errorMessage=Clearinghouses.RetrieveAndImport(clearinghouseClin,false,progressbar);
 					progressbar.UpdateProgressDetailed("",tagString:"reports",percentVal:"100%",barVal:100);
 					if(errorMessage=="") {
-						progressbar.UpdateProgress(Lan.G(this,"Retrieval and import successful"));
+						progressbar.UpdateProgress("Retrieval and import successful");
 					}
 					else {
 						progressbar.UpdateProgress(errorMessage);
 					}
-					progressbar.UpdateProgress(Lan.G(this,"Done"));
+					progressbar.UpdateProgress("Done");
 				}
 				else{
-					progressbar.UpdateProgress(Lan.G(this,"No need to retrieve. Available reports are automatically downloaded every three minutes."));
+					progressbar.UpdateProgress("No need to retrieve. Available reports are automatically downloaded every three minutes.");
 				}
 				progressbar.OnProgressDone();
 				return;
@@ -195,7 +195,7 @@ namespace OpenDental{
 			if(clearhouseHq.CommBridge==EclaimsCommBridge.None || clearhouseHq.CommBridge==EclaimsCommBridge.Renaissance 
 				|| clearhouseHq.CommBridge==EclaimsCommBridge.RECS) 
 			{
-				progressbar.UpdateProgress(Lan.G(this,"No built-in functionality for retrieving reports from this clearinghouse."));
+				progressbar.UpdateProgress("No built-in functionality for retrieving reports from this clearinghouse.");
 				progressbar.OnProgressDone();
 				return;
 			}
@@ -206,10 +206,10 @@ namespace OpenDental{
 				//Since the dentalxchange website was successfully launched in this scenario, the user does not need any further notification.
 			}
 			else if(errorMesssage=="") {
-				progressbar.UpdateProgress(Lan.G(this,"Retrieve and import successful."));
+				progressbar.UpdateProgress("Retrieve and import successful.");
 			}
 			else {
-				progressbar.UpdateProgress(Lans.g(progressbar.LanThis,"Error Log:")+"\r\n"+errorMesssage);
+				progressbar.UpdateProgress("Error Log:"+"\r\n"+errorMesssage);
 			}
 			labelRetrieving.Visible=false;
 			progressbar.OnProgressDone();

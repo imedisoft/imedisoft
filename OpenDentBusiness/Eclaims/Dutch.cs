@@ -105,7 +105,7 @@ namespace OpenDentBusiness.Eclaims {
 			}
 			string saveFolder=clearinghouseClin.ExportPath;
 			if(!Directory.Exists(saveFolder)) {
-				MessageBox.Show(saveFolder+" "+Lans.g("Dutch","not found."));
+				MessageBox.Show(saveFolder+" "+"not found.");
 				return false;
 			}
 			string saveFile=ODFileUtils.CombinePaths(saveFolder,"claims"+claim.ClaimNum.ToString()+".txt");

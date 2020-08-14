@@ -100,7 +100,7 @@ namespace OpenDental
 				{
 					if (i == 0)
 					{
-						alert += Lan.G("RxAlertL", "This patient has the following medical problems: ");
+						alert += "This patient has the following medical problems: ";
 					}
 					alert += diseaseMatches[i];
 					if ((i + 1) == diseaseMatches.Count)
@@ -120,7 +120,7 @@ namespace OpenDental
 					}
 					else if (i == 0)
 					{
-						alert = Lan.G("RxAlertL", "This patient has the following allergies: ");
+						alert = "This patient has the following allergies: ";
 					}
 					alert += allergiesMatches[i];
 					if ((i + 1) == allergiesMatches.Count)
@@ -140,7 +140,7 @@ namespace OpenDental
 					}
 					else if (i == 0)
 					{
-						alert = Lan.G("RxAlertL", "This patient is taking the following medications: ");
+						alert = "This patient is taking the following medications: ";
 					}
 					alert += medicationsMatches[i];
 					if ((i + 1) == medicationsMatches.Count)
@@ -152,7 +152,7 @@ namespace OpenDental
 						alert += ", ";
 					}
 				}
-				alert += "\r\n" + Lan.G("RxAlertL", "Continue anyway?");
+				alert += "\r\n" + "Continue anyway?";
 				if (MessageBox.Show(alert, "Alert", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) != DialogResult.OK)
 				{
 					return false;
@@ -160,7 +160,7 @@ namespace OpenDental
 			}
 			for (int i = 0; i < customMessages.Count; i++)
 			{
-				if (MessageBox.Show(customMessages[i] + "\r\n" + Lan.G("RxAlertL", "Continue anyway?"), "Alert", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) != DialogResult.OK)
+				if (MessageBox.Show(customMessages[i] + "\r\n" + "Continue anyway?", "Alert", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) != DialogResult.OK)
 				{
 					return false;
 				}

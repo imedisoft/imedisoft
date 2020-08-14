@@ -28,7 +28,7 @@ namespace OpenDental {
 		///<summary>Takes an image the user has chosen to send with their claim.</summary>
 		public FormClaimAttachmentItemEdit(Image image) {
 			InitializeComponent();
-			Lan.F(this);
+			
 			comboImageType.Items.Clear();
 			foreach(ClaimConnect.ImageTypeCode imageTypeCode in Enum.GetValues(typeof(ClaimConnect.ImageTypeCode))) {
 				comboImageType.Items.Add(imageTypeCode.GetDescription(),imageTypeCode);
