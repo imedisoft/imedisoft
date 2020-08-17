@@ -1077,6 +1077,16 @@ namespace Imedisoft.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconUpload {
+            get {
+                object obj = ResourceManager.GetObject("IconUpload", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copyright 2015-present Drifty Co.
         ///
         ///MIT License

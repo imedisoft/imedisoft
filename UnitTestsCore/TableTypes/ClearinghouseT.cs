@@ -18,7 +18,7 @@ namespace UnitTestsCore {
 				Description=description,
 				ClinicNum=clinicNum,
 				CommBridge=commBridge,
-				Eformat=eFormat,
+				TypeName="", // TODO: Fix me...
 				HqClearinghouseNum=hqClearinghouseNum,
 				IsAttachmentSendAllowed=isAttachmentSendAllowed,
 				LoginID=loginID,

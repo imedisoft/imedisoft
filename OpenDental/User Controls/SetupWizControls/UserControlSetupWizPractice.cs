@@ -126,7 +126,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 			if(changed) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
-			FormEServicesMobileSynch.UploadPreference(PrefName.PracticeTitle);
+			//FormEServicesMobileSynch.UploadPreference(PrefName.PracticeTitle);
 		}
 	}
 }

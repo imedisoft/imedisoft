@@ -108,8 +108,8 @@ namespace OpenDental {
 
 
 		private void butSetup_Click(object sender,EventArgs e) {
-			FormEServicesAutoMsging formESECR=new FormEServicesAutoMsging();
-			formESECR.ShowDialog();
+			//FormEServicesAutoMsging formESECR=new FormEServicesAutoMsging();
+			//formESECR.ShowDialog();
 		}
 
 		private void butOK_Click(object sender,System.EventArgs e) {

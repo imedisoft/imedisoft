@@ -1034,7 +1034,7 @@ namespace OpenDental{
 					foreach(GridRow row in gridMain.SelectedGridRows){
 						ClaimSendQueueItem queueItem=(ClaimSendQueueItem)row.Tag;
 						Clearinghouse clearRow=Clearinghouses.GetClearinghouse(queueItem.ClearinghouseNum);
-						if(clearDefault.Eformat!=clearRow.Eformat) {
+						if(clearDefault.TypeName!=clearRow.TypeName) {
 							MessageBox.Show("The default clearinghouse format does not match the format of the selected clearinghouse.  You may need to change the clearinghouse format.  Or, you may need to add a Payor ID into a clearinghouse.");
 							return;
 						}
@@ -1055,7 +1055,7 @@ namespace OpenDental{
 					foreach(GridRow row in gridMain.SelectedGridRows){
 						ClaimSendQueueItem queueItem=(ClaimSendQueueItem)row.Tag;
 						Clearinghouse clearRow=Clearinghouses.GetClearinghouse(queueItem.ClearinghouseNum);
-						if(clearDefault.Eformat!=clearRow.Eformat) {
+						if(clearDefault.TypeName!=clearRow.TypeName) {
 							MessageBox.Show("The default clearinghouse format does not match the format of the selected clearinghouse.  You may need to change the clearinghouse format.  Or, you may need to add a Payor ID into a clearinghouse.");
 							return;
 						}

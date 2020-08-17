@@ -2440,7 +2440,7 @@ namespace OpenDental{
 						return;
 					}
 					_formApptBreakSelection=ApptBreakSelection.Unsched;
-					_procCodeBroken=formApptForceBreak.SelectedBrokenProcCode;
+					_procCodeBroken=formApptForceBreak.SelectedProcedureCode;
 					return;
 				}
 			}
@@ -2462,7 +2462,7 @@ namespace OpenDental{
 			FormApptBreak formAB=new FormApptBreak(AptCur);
 			if(formAB.ShowDialog()!=DialogResult.OK) {
 				SetAptCurComboStatusSelection();//Sets status back to on load selection.
-				if(formAB.FormApptBreakSelection==ApptBreakSelection.Delete) {
+				if(formAB.SelectedAction==ApptBreakSelection.Delete) {
 					//User wants to delete the appointment.
 					OnDelete_Click(true);//Skip the standard "Delete Appointment?" prompt since we have already prompted in FormApptBreak.
 					return;
@@ -2471,8 +2471,8 @@ namespace OpenDental{
 				_procCodeBroken=null;
 				return;
 			}
-			_formApptBreakSelection=formAB.FormApptBreakSelection;
-			_procCodeBroken=formAB.SelectedProcCode;
+			_formApptBreakSelection=formAB.SelectedAction;
+			_procCodeBroken=formAB.SelectedProcedureCode;
 		}
 
 		///<summary>Returns true if the user is not allowed to change a completed appointment.</summary>
@@ -2585,7 +2585,7 @@ namespace OpenDental{
 					if(formApptForceBreak.DialogResult!=DialogResult.OK) {
 						return;
 					}
-					AppointmentL.BreakApptHelper(AptCur,pat,formApptForceBreak.SelectedBrokenProcCode);
+					AppointmentL.BreakApptHelper(AptCur,pat,formApptForceBreak.SelectedProcedureCode);
 				}
 				if(textNote.Text != "") {
 					if(MessageBox.Show(Commlogs.GetDeleteApptCommlogMessage(textNote.Text,AptCur.AptStatus),"Question...",MessageBoxButtons.YesNo) == DialogResult.Yes) {

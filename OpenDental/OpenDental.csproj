@@ -517,6 +517,12 @@
     <Compile Include="Forms Reports\FormRpServiceDateView.designer.cs">
       <DependentUpon>FormRpServiceDateView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FormAccountingAutoPayEdit.Designer.cs">
+      <DependentUpon>FormAccountingAutoPayEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormImageSelect.Designer.cs">
+      <DependentUpon>FormImageSelect.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FormEmployerEdit.Designer.cs">
       <DependentUpon>FormEmployerEdit.cs</DependentUpon>
     </Compile>
@@ -528,12 +534,6 @@
     </Compile>
     <Compile Include="Forms Temp\FormBase.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormChangeCloudPassword.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormChangeCloudPassword.designer.cs">
-      <DependentUpon>FormChangeCloudPassword.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormFeatureRequest.Designer.cs">
       <DependentUpon>FormFeatureRequest.cs</DependentUpon>
@@ -564,78 +564,6 @@
     </Compile>
     <Compile Include="Forms Temp\FormDocumentSize.designer.cs">
       <DependentUpon>FormDocumentSize.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms Temp\FormEServicesPatientPortal.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormEServicesPatientPortal.designer.cs">
-      <DependentUpon>FormEServicesPatientPortal.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms Temp\FormEServicesEConnector.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormEServicesEConnector.designer.cs">
-      <DependentUpon>FormEServicesEConnector.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms Temp\FormEServicesMobileWeb.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormEServicesMobileWeb.designer.cs">
-      <DependentUpon>FormEServicesMobileWeb.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms Temp\FormEServicesAutoMsging.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormEServicesAutoMsging.designer.cs">
-      <DependentUpon>FormEServicesAutoMsging.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms Temp\FormEServicesEClipboard.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormEServicesEClipboard.designer.cs">
-      <DependentUpon>FormEServicesEClipboard.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms Temp\FormEServicesMisc.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormEServicesMisc.designer.cs">
-      <DependentUpon>FormEServicesMisc.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms Temp\FormEServicesMobileSynch.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormEServicesMobileSynch.designer.cs">
-      <DependentUpon>FormEServicesMobileSynch.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms Temp\FormEServicesMassEmail.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormEServicesMassEmail.designer.cs">
-      <DependentUpon>FormEServicesMassEmail.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms Temp\FormEServicesSetup.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormEServicesSetup.designer.cs">
-      <DependentUpon>FormEServicesSetup.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms Temp\FormEServicesWebSched.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormEServicesWebSched.designer.cs">
-      <DependentUpon>FormEServicesWebSched.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms Temp\FormEServicesTexting.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormEServicesTexting.designer.cs">
-      <DependentUpon>FormEServicesTexting.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms Temp\FormEServicesSignup.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormEServicesSignup.designer.cs">
-      <DependentUpon>FormEServicesSignup.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormPath.Designer.cs">
       <DependentUpon>FormPath.cs</DependentUpon>
@@ -688,10 +616,10 @@
     <Compile Include="Forms Temp\FormMountDefGenerate.designer.cs">
       <DependentUpon>FormMountDefGenerate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormApptBreakRequired.cs">
+    <Compile Include="Forms\FormApptBreakRequired.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormApptBreakRequired.designer.cs">
+    <Compile Include="Forms\FormApptBreakRequired.designer.cs">
       <DependentUpon>FormApptBreakRequired.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormPatientEditEmail.cs">
@@ -1455,10 +1383,10 @@
     <Compile Include="Forms Temp\FormInsPlanSubstitution.designer.cs">
       <DependentUpon>FormInsPlanSubstitution.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormApptBreak.cs">
+    <Compile Include="Forms\FormApptBreak.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormApptBreak.designer.cs">
+    <Compile Include="Forms\FormApptBreak.designer.cs">
       <DependentUpon>FormApptBreak.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormConfirmationsSetup.cs">
@@ -2013,10 +1941,10 @@
     <Compile Include="Forms Temp\FormEhrMeasureEvents.designer.cs">
       <DependentUpon>FormEhrMeasureEvents.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormAmountEdit.cs">
+    <Compile Include="Forms\FormAmountEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormAmountEdit.designer.cs">
+    <Compile Include="Forms\FormAmountEdit.designer.cs">
       <DependentUpon>FormAmountEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormPayPlanRecalculate.cs">
@@ -4023,7 +3951,7 @@
     <Compile Include="Forms Temp\FormSupplyInventory.Designer.cs">
       <DependentUpon>FormSupplyInventory.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormImageSelect.cs">
+    <Compile Include="Forms\FormImageSelect.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormCustomerManagement.cs">
@@ -4249,7 +4177,7 @@
     <Compile Include="Forms Temp\FormAccounting.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormAccountingAutoPayEdit.cs">
+    <Compile Include="Forms\FormAccountingAutoPayEdit.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormAccountingSetup.cs">
@@ -5261,9 +5189,6 @@
     <EmbeddedResource Include="Forms Reports\FormRpServiceDateView.resx">
       <DependentUpon>FormRpServiceDateView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormChangeCloudPassword.resx">
-      <DependentUpon>FormChangeCloudPassword.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormMassEmailTemplate.resx">
       <DependentUpon>FormMassEmailTemplate.cs</DependentUpon>
     </EmbeddedResource>
@@ -5275,53 +5200,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormDocumentSize.resx">
       <DependentUpon>FormDocumentSize.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEServicesPatientPortal.resx">
-      <DependentUpon>FormEServicesPatientPortal.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEServicesEConnector.resx">
-      <DependentUpon>FormEServicesEConnector.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEServicesMobileWeb.resx">
-      <DependentUpon>FormEServicesMobileWeb.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEServicesAutoMsging.resx">
-      <DependentUpon>FormEServicesAutoMsging.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEServicesEClipboard.resx">
-      <DependentUpon>FormEServicesEClipboard.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEServicesMisc.resx">
-      <DependentUpon>FormEServicesMisc.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEServicesMobileSynch.resx">
-      <DependentUpon>FormEServicesMobileSynch.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEServicesMassEmail.resx">
-      <DependentUpon>FormEServicesMassEmail.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEServicesSetup.resx">
-      <DependentUpon>FormEServicesSetup.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEServicesWebSched.resx">
-      <DependentUpon>FormEServicesWebSched.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEServicesTexting.resx">
-      <DependentUpon>FormEServicesTexting.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEServicesSignup.resx">
-      <DependentUpon>FormEServicesSignup.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormRedundantIndexes.resx">
       <DependentUpon>FormRedundantIndexes.cs</DependentUpon>
@@ -5341,7 +5219,7 @@
     <EmbeddedResource Include="Forms Temp\FormMountDefGenerate.resx">
       <DependentUpon>FormMountDefGenerate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormApptBreakRequired.resx">
+    <EmbeddedResource Include="Forms\FormApptBreakRequired.resx">
       <DependentUpon>FormApptBreakRequired.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormPatientEditEmail.resx">
@@ -5665,7 +5543,7 @@
     <EmbeddedResource Include="Forms Temp\FormInsPlanSubstitution.resx">
       <DependentUpon>FormInsPlanSubstitution.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormApptBreak.resx">
+    <EmbeddedResource Include="Forms\FormApptBreak.resx">
       <DependentUpon>FormApptBreak.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormConfirmationsSetup.resx">
@@ -5960,7 +5838,7 @@
     <EmbeddedResource Include="Forms Temp\FormEhrMeasureEvents.resx">
       <DependentUpon>FormEhrMeasureEvents.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAmountEdit.resx">
+    <EmbeddedResource Include="Forms\FormAmountEdit.resx">
       <DependentUpon>FormAmountEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormPayPlanRecalculate.resx">
@@ -6862,7 +6740,7 @@
       <DependentUpon>FormSupplyInventory.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormImageSelect.resx">
+    <EmbeddedResource Include="Forms\FormImageSelect.resx">
       <DependentUpon>FormImageSelect.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7150,7 +7028,7 @@
       <DependentUpon>FormAccounting.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAccountingAutoPayEdit.resx">
+    <EmbeddedResource Include="Forms\FormAccountingAutoPayEdit.resx">
       <DependentUpon>FormAccountingAutoPayEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -8672,6 +8550,7 @@
     <None Include="Web References\NewCrop\Update1.wsdl" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\IconUpload.png" />
     <None Include="Resources\IconObjectGroup.png" />
     <None Include="Resources\IconPencil.png" />
     <None Include="Resources\LogoSmall.png" />

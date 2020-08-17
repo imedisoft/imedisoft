@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Forms;
 using OpenDental.UI;
 using OpenDentBusiness;
 using OpenDentBusiness.Eclaims;
@@ -2480,7 +2481,7 @@ namespace OpenDental
 				}
 			}
 			Cursor=Cursors.WaitCursor;			
-			if(clearinghouseHq.Eformat==ElectronicClaimFormat.Canadian) {
+			if(clearinghouseHq.TypeName == typeof(Canadian).FullName) {
 				try {
 					Canadian.SendClaim(clearinghouseClin,listQueue[0],true,false,FormCCDPrint.PrintCCD,ShowProviderTransferWindow,
 						FormClaimPrint.PrintCdaClaimForm);//Ignore the etransNum result. Physically print the form.

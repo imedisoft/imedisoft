@@ -8,6 +8,7 @@ using OpenDental.Bridges;
 using OpenDental.UI;
 using OpenDentBusiness;
 using CodeBase;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 	/// <summary>
@@ -833,10 +834,12 @@ namespace OpenDental{
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			FormAccountingAutoPayEdit FormA=new FormAccountingAutoPayEdit();
-			FormA.AutoPayCur=payList[e.Row];
+			var autoPay = payList[e.Row];
+
+			FormAccountingAutoPayEdit FormA=new FormAccountingAutoPayEdit(autoPay);
 			FormA.ShowDialog();
-			if(FormA.AutoPayCur==null){//user deleted
+			if(autoPay.Id == 0)
+			{//user deleted
 				payList.RemoveAt(e.Row);
 			}
 			FillPayGrid();
@@ -942,9 +945,7 @@ namespace OpenDental{
 
 		private void butAddPay_Click(object sender,EventArgs e) {
 			AccountingAutoPay autoPay=new AccountingAutoPay();
-			FormAccountingAutoPayEdit FormA=new FormAccountingAutoPayEdit();
-			FormA.AutoPayCur=autoPay;
-			FormA.IsNew=true;
+			FormAccountingAutoPayEdit FormA=new FormAccountingAutoPayEdit(autoPay);
 			if(FormA.ShowDialog()!=DialogResult.OK) {
 				return;
 			}

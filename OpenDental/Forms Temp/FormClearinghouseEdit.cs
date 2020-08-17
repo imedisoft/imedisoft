@@ -1066,7 +1066,7 @@ namespace OpenDental{
 			textPassword.Text=ClearinghouseCur.Password;
 			textExportPath.Text=ClearinghouseCur.ExportPath;
 			textResponsePath.Text=ClearinghouseCur.ResponsePath;
-			ODException.SwallowAnyException(() => { comboFormat.SelectedIndex=(int)ClearinghouseCur.Eformat; });
+			// TODO: ODException.SwallowAnyException(() => { comboFormat.SelectedIndex=(int)ClearinghouseCur.TypeName; });
 			ODException.SwallowAnyException(() => { comboCommBridge.SelectedIndex=(int)ClearinghouseCur.CommBridge; });
 			if(ClearinghouseCur.SenderTIN==""){
 				radioSenderOD.Checked=true;
@@ -1240,7 +1240,7 @@ namespace OpenDental{
 				ClearinghouseHq.Password=textPassword.Text;
 				ClearinghouseHq.ExportPath=textExportPath.Text;
 				ClearinghouseHq.ResponsePath=textResponsePath.Text;
-				ClearinghouseHq.Eformat=(ElectronicClaimFormat)(comboFormat.SelectedIndex);
+				// TODO: ClearinghouseHq.TypeName=(ElectronicClaimFormat)(comboFormat.SelectedIndex);
 				ClearinghouseHq.CommBridge=(EclaimsCommBridge)(comboCommBridge.SelectedIndex);
 				ClearinghouseHq.ModemPort=PIn.Byte(textModemPort.Text);
 				ClearinghouseHq.ClientProgram=textClientProgram.Text;

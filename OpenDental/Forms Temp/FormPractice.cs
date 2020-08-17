@@ -873,7 +873,7 @@ namespace OpenDental{
 			if(changed){
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
-			FormEServicesMobileSynch.UploadPreference(PrefName.PracticeTitle);
+			//FormEServicesMobileSynch.UploadPreference(PrefName.PracticeTitle);
 			DialogResult=DialogResult.OK;
 		}
 

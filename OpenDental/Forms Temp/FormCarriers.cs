@@ -11,6 +11,7 @@ using OpenDentBusiness;
 using OpenDental.Bridges;
 using System.Linq;
 using System.Text;
+using OpenDentBusiness.Eclaims;
 
 namespace OpenDental{
 	/// <summary>
@@ -335,7 +336,7 @@ namespace OpenDental{
 				butAdd.Enabled=false;
 			}
 			Clearinghouse ch=Clearinghouses.GetDefaultDental();
-			if(CultureInfo.CurrentCulture.Name.EndsWith("CA") && ch.Eformat==ElectronicClaimFormat.Canadian) {
+			if(CultureInfo.CurrentCulture.Name.EndsWith("CA") && ch.TypeName==typeof(Canadian).FullName) {
 				groupItrans.Visible=true;
 				ItransImportFields fieldsToImport=(ItransImportFields)PrefC.GetInt(PrefName.ItransImportFields);
 				checkITransPhone.Checked=(fieldsToImport.HasFlag(ItransImportFields.Phone));

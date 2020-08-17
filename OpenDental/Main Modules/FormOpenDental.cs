@@ -4489,12 +4489,6 @@ namespace OpenDental
 			SecurityLogs.MakeLogEntry(Permissions.Setup, 0, "Clearinghouses");
 		}
 
-		private void menuItemCloudManagement_Click(object sender, EventArgs e)
-		{
-			FormChangeCloudPassword formChangeCloudPassword = new FormChangeCloudPassword();
-			formChangeCloudPassword.ShowDialog();
-		}
-
 		private void menuItemDiscountPlans_Click(object sender, EventArgs e)
 		{
 			if (!Security.IsAuthorized(Permissions.Setup))
@@ -5968,17 +5962,6 @@ namespace OpenDental
 		{
 		}
 
-		private void menuItemMobileSetup_Click(object sender, EventArgs e)
-		{
-			if (!Security.IsAuthorized(Permissions.Setup))
-			{
-				return;
-			}
-			FormEServicesMobileSynch formESMobileSynch = new FormEServicesMobileSynch();
-			formESMobileSynch.ShowDialog();
-			ShowEServicesSetup();
-		}
-
 		private void menuItemNewCropBilling_Click(object sender, EventArgs e)
 		{
 			FormNewCropBilling FormN = new FormNewCropBilling();
@@ -6354,17 +6337,6 @@ namespace OpenDental
 		}
 		#endregion
 
-		#region eServices
-
-		private void ShowEServicesSetup()
-		{
-			if (_butText != null)
-			{ //User may just have signed up for texting.
-				_butText.Enabled = Programs.IsEnabled(ProgramName.CallFire) || SmsPhones.IsIntegratedTextingEnabled();
-			}
-		}
-		#endregion
-
 		#region Alerts
 		///<summary>Helper function to determin backgroud color of an AlertItem.</summary>
 		private Color AlertBackgroudColorHelper(SeverityType type)
@@ -6599,11 +6571,6 @@ namespace OpenDental
 						FormPP.Show();//Non-modal so the user can view the patient's account
 						FormPP.FormClosed += this.alertFormClosingHelper;
 						break;
-					case FormType.FormEServicesWebSchedRecall:
-						FormEServicesWebSched formESWebSched = new FormEServicesWebSched();
-						formESWebSched.ShowDialog();
-						ShowEServicesSetup();
-						break;
 					case FormType.FormRadOrderList:
 						List<FormRadOrderList> listFormROLs = Application.OpenForms.OfType<FormRadOrderList>().ToList();
 						if (listFormROLs.Count > 0)
@@ -6617,21 +6584,6 @@ namespace OpenDental
 							FormROL.Show();
 							FormROL.FormClosed += this.alertFormClosingHelper;
 						}
-						break;
-					case FormType.FormEServicesSignupPortal:
-						FormEServicesSignup formESSignup = new FormEServicesSignup();
-						formESSignup.ShowDialog();
-						ShowEServicesSetup();
-						break;
-					case FormType.FormEServicesWebSchedNewPat:
-						FormEServicesWebSched formESWebSchedNewPat = new FormEServicesWebSched(setTab: FormEServicesWebSched.WebSchedTab.NewPat);
-						formESWebSchedNewPat.ShowDialog();
-						ShowEServicesSetup();
-						break;
-					case FormType.FormEServicesEConnector:
-						FormEServicesEConnector formESEConnector = new FormEServicesEConnector();
-						formESEConnector.ShowDialog();
-						ShowEServicesSetup();
 						break;
 					case FormType.FormApptEdit:
 						Appointment appt = Appointments.GetOneApt(alertItem.FKey);
@@ -8038,12 +7990,6 @@ namespace OpenDental
 			//See http://stackoverflow.com/questions/466799/how-can-i-enumerate-all-managed-threads-in-c.  To keep track of a managed thread, use ODThread.
 			//Environment.Exit requires permission for unmanaged code, which we have explicitly specified in the solution already.
 			Environment.Exit(0);//Guaranteed to kill any threads which are still running.
-		}
-
-		private void menuItemEServices_Click(object sender, EventArgs e)
-		{
-			FormEServicesSetup formESSetup = new FormEServicesSetup();
-			formESSetup.ShowDialog();
 		}
     }
 

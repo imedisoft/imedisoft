@@ -920,11 +920,6 @@ namespace OpenDental{
 			gridMain.ListGridRows.Add(row);
 		}
 
-		private void butSetup_Click(object sender,EventArgs e) {
-			FormEServicesWebSched formESWebSched=new FormEServicesWebSched();
-			formESWebSched.ShowDialog();
-		}
-
 		///<summary>Returns -1 if string is blank.</summary>
 		private long GetLongFromString(string strInput) {
 			if(string.IsNullOrEmpty(strInput)) {

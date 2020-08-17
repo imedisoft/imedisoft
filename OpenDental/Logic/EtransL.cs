@@ -463,7 +463,7 @@ namespace OpenDental {
 			if(listClaimProcsAll.Exists(x => !x.Status.In(ClaimProcStatus.Received,ClaimProcStatus.Supplemental,ClaimProcStatus.CapClaim))) {
 				if(!isAutomatic) {
 					int patNumColumnLength=Math.Max(6,listClaimProcsAll.Max(x => x.PatNum.ToString().Length));//PatNum column length
-					SerializableDictionary<long,string> dictPatNames=Claims.GetAllUniquePatNamesForClaims(listClaims);
+					Dictionary<long,string> dictPatNames=Claims.GetAllUniquePatNamesForClaims(listClaims);
 					int maxNamesLength=dictPatNames.Values.Max(x => x.Length);
 					#region Construct msg
 					string msg="One or more claim procedures are set to the wrong status and are not ready to be finalized.\r\n"

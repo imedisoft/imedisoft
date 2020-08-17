@@ -19,6 +19,7 @@ using OpenDentBusiness;
 using CodeBase;
 using OpenDental.Thinfinity;
 using OpenDentBusiness.IO;
+using Imedisoft.Forms;
 #endregion using
 
 namespace OpenDental{
@@ -2213,15 +2214,14 @@ namespace OpenDental{
 				MessageBox.Show("Please select an empty mount item, first.");
 				return;
 			}
-			FormImageSelect formImageSelect=new FormImageSelect();
+			FormImageSelect formImageSelect=new FormImageSelect(_patCur.PatNum);
 			formImageSelect.Text="Select an image to copy into the mount";
-			formImageSelect.PatNum=_patCur.PatNum;
 			formImageSelect.OnlyShowImages=true;
 			formImageSelect.ShowDialog();
 			if(formImageSelect.DialogResult!=DialogResult.OK){
 				return;
 			}
-			Document documentOrig=Documents.GetByNum(formImageSelect.SelectedDocNum,true);
+			Document documentOrig=Documents.GetByNum(formImageSelect.SelectedDocumentId,true);
 			if(documentOrig==null){
 				return;
 			}

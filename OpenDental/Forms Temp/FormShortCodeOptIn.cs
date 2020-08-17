@@ -115,8 +115,8 @@ namespace OpenDental {
 		}
 
 		private void settingsToolStripMenuItem_Click(object sender,EventArgs e) {
-			FormEServicesTexting formESTexting=new FormEServicesTexting();
-			formESTexting.ShowDialog();
+			//FormEServicesTexting formESTexting=new FormEServicesTexting();
+			//formESTexting.ShowDialog();
 		}
 
 		private void butClose_Click(object sender,EventArgs e) {

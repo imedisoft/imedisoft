@@ -4327,12 +4327,12 @@ namespace OpenDental{
 			if((clearinghouseHq.CommBridge!=EclaimsCommBridge.ClaimConnect 
 				&& clearinghouseHq.CommBridge!=EclaimsCommBridge.EDS
 				&& clearinghouseHq.CommBridge!=EclaimsCommBridge.WebMD)
-				&& clearinghouseHq.Eformat!=ElectronicClaimFormat.Canadian)
+				&& clearinghouseHq.TypeName!= typeof(Canadian).FullName)
 			{
 				MessageBox.Show("So far, eligibility checks only work with ClaimConnect, EDS, WebMD (Emdeon Dental), and CDAnet.");
 				return;
 			}
-			if(clearinghouseHq.Eformat==ElectronicClaimFormat.Canadian) {
+			if(clearinghouseHq.TypeName==typeof(Canadian).FullName) {
 				EligibilityCheckCanada();
 				return;
 			}

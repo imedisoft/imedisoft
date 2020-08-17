@@ -114,19 +114,19 @@ namespace OpenDentBusiness
 			
 			int batchNumber = SIn.Int(table.Rows[0][0].ToString());
 
-			if (clearinghouseClin.Eformat == ElectronicClaimFormat.Canadian)
-			{
-				if (batchNumber == 999999)
-				{
-					batchNumber = 1;
-				}
-				else
-				{
-					batchNumber++;
-				}
-			}
-			else
-			{
+			//if (clearinghouseClin.TypeName == ElectronicClaimFormat.Canadian)
+			//{
+			//	if (batchNumber == 999999)
+			//	{
+			//		batchNumber = 1;
+			//	}
+			//	else
+			//	{
+			//		batchNumber++;
+			//	}
+			//}
+			//else
+			//{
 				if (batchNumber == 999)
 				{
 					batchNumber = 1;
@@ -135,7 +135,7 @@ namespace OpenDentBusiness
 				{
 					batchNumber++;
 				}
-			}
+			//}
 
 			Database.ExecuteNonQuery(
 				"UPDATE clearinghouse SET LastBatchNumber=" + batchNumber + " " +
@@ -150,64 +150,68 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static long AutomateClearinghouseHqSelection(string payorID, EnumClaimMedType medType)
 		{
-			// No need to check RemotingRole; no call to db.
-			// payorID can be blank.  For example, Renaissance does not require payorID.
-			Clearinghouse clearinghouseHq = null;
-			if (medType == EnumClaimMedType.Dental)
-			{
-				if (Prefs.GetLong(PrefName.ClearinghouseDefaultDent) == 0)
-				{
-					return 0;
-				}
-				clearinghouseHq = GetClearinghouse(Prefs.GetLong(PrefName.ClearinghouseDefaultDent));
-			}
+			// TODO: Implement me.
+			return 0;
 
-			if (medType == EnumClaimMedType.Medical || medType == EnumClaimMedType.Institutional)
-			{
-				if (Prefs.GetLong(PrefName.ClearinghouseDefaultMed) == 0)
-				{
-					//No default set, substituting emdeon medical otherwise first medical clearinghouse.
-					List<Clearinghouse> listClearingHouses = GetDeepCopy(false);
-					clearinghouseHq = listClearingHouses.FirstOrDefault(x => x.CommBridge == EclaimsCommBridge.EmdeonMedical && x.HqClearinghouseNum == x.ClearinghouseNum);
-					if (clearinghouseHq == null)
-					{
-						clearinghouseHq = listClearingHouses.FirstOrDefault(x => x.Eformat == ElectronicClaimFormat.x837_5010_med_inst && x.HqClearinghouseNum == x.ClearinghouseNum);
-					}
-					//If we can't find a clearinghouse at all, just return 0.
-					if (clearinghouseHq == null)
-					{
-						return 0;
-					}
-					return clearinghouseHq.ClearinghouseNum;
-				}
-				clearinghouseHq = GetClearinghouse(Prefs.GetLong(PrefName.ClearinghouseDefaultMed));
-			}
+			//// No need to check RemotingRole; no call to db.
+			//// payorID can be blank.  For example, Renaissance does not require payorID.
+			//Clearinghouse clearinghouseHq = null;
+			//if (medType == EnumClaimMedType.Dental)
+			//{
+			//	if (Prefs.GetLong(PrefName.ClearinghouseDefaultDent) == 0)
+			//	{
+			//		return 0;
+			//	}
+			//	clearinghouseHq = GetClearinghouse(Prefs.GetLong(PrefName.ClearinghouseDefaultDent));
+			//}
 
-			// We couldn't find a default clearinghouse for that medType.  Needs to always be a default.
-			if (clearinghouseHq == null) return 0;
+			//if (medType == EnumClaimMedType.Medical || medType == EnumClaimMedType.Institutional)
+			//{
+			//	if (Prefs.GetLong(PrefName.ClearinghouseDefaultMed) == 0)
+			//	{
+			//		//No default set, substituting emdeon medical otherwise first medical clearinghouse.
+			//		List<Clearinghouse> listClearingHouses = GetDeepCopy(false);
+			//		clearinghouseHq = listClearingHouses.FirstOrDefault(x => x.CommBridge == EclaimsCommBridge.EmdeonMedical && x.HqClearinghouseNum == x.ClearinghouseNum);
+			//		if (clearinghouseHq == null)
+			//		{
+			//			clearinghouseHq = listClearingHouses.FirstOrDefault(x => 
+			//			x.TypeName == ElectronicClaimFormat.x837_5010_med_inst && x.HqClearinghouseNum == x.ClearinghouseNum);
+			//		}
+			//		//If we can't find a clearinghouse at all, just return 0.
+			//		if (clearinghouseHq == null)
+			//		{
+			//			return 0;
+			//		}
+			//		return clearinghouseHq.ClearinghouseNum;
+			//	}
+			//	clearinghouseHq = GetClearinghouse(Prefs.GetLong(PrefName.ClearinghouseDefaultMed));
+			//}
+
+			//// We couldn't find a default clearinghouse for that medType.  Needs to always be a default.
+			//if (clearinghouseHq == null) return 0;
 			
 
-			Clearinghouse clearingHouseOverride = GetClearinghouseByPayorID(payorID);
-			if (clearingHouseOverride != null)
-			{//an override exists for this payorID
-				if (clearingHouseOverride.Eformat == ElectronicClaimFormat.x837D_4010 || clearingHouseOverride.Eformat == ElectronicClaimFormat.x837D_5010_dental
-					|| clearingHouseOverride.Eformat == ElectronicClaimFormat.Canadian || clearingHouseOverride.Eformat == ElectronicClaimFormat.Ramq)
-				{//all dental formats
-					if (medType == EnumClaimMedType.Dental)
-					{//med type matches
-						return clearingHouseOverride.ClearinghouseNum;
-					}
-				}
-				if (clearingHouseOverride.Eformat == ElectronicClaimFormat.x837_5010_med_inst)
-				{
-					if (medType == EnumClaimMedType.Medical || medType == EnumClaimMedType.Institutional)
-					{//med type matches
-						return clearingHouseOverride.ClearinghouseNum;
-					}
-				}
-			}
-			//no override, so just return the default.
-			return clearinghouseHq.ClearinghouseNum;
+			//Clearinghouse clearingHouseOverride = GetClearinghouseByPayorID(payorID);
+			//if (clearingHouseOverride != null)
+			//{//an override exists for this payorID
+			//	if (clearingHouseOverride.TypeName == ElectronicClaimFormat.x837D_4010 || clearingHouseOverride.TypeName == ElectronicClaimFormat.x837D_5010_dental
+			//		|| clearingHouseOverride.TypeName == ElectronicClaimFormat.Canadian || clearingHouseOverride.TypeName == ElectronicClaimFormat.Ramq)
+			//	{//all dental formats
+			//		if (medType == EnumClaimMedType.Dental)
+			//		{//med type matches
+			//			return clearingHouseOverride.ClearinghouseNum;
+			//		}
+			//	}
+			//	if (clearingHouseOverride.TypeName == ElectronicClaimFormat.x837_5010_med_inst)
+			//	{
+			//		if (medType == EnumClaimMedType.Medical || medType == EnumClaimMedType.Institutional)
+			//		{//med type matches
+			//			return clearingHouseOverride.ClearinghouseNum;
+			//		}
+			//	}
+			//}
+			////no override, so just return the default.
+			//return clearinghouseHq.ClearinghouseNum;
 		}
 
 		/// <summary>
@@ -533,195 +537,199 @@ namespace OpenDentBusiness
 
 		private static void RetrieveReportsAutomaticHelper(Clearinghouse clearinghouseClin, Clearinghouse clearinghouseHq, long defaultClearingHouseNum, bool isTimeToRetrieve)
 		{
-			if (!Directory.Exists(clearinghouseClin.ResponsePath))
-			{
-				return;
-			}
+			// TODO: Implement me...
 
-			if (clearinghouseHq.ClearinghouseNum == defaultClearingHouseNum)
-			{
-				// If it's the default dental clearinghouse.
-				RetrieveAndImport(clearinghouseClin, true, isTimeToRetrieve: isTimeToRetrieve);
-			}
-			else if (clearinghouseHq.Eformat == ElectronicClaimFormat.None)
-			{
-				// And the format is "None" (accessed from all regions).
-				RetrieveAndImport(clearinghouseClin, true, isTimeToRetrieve: isTimeToRetrieve);
-			}
-			else if (clearinghouseHq.CommBridge == EclaimsCommBridge.BCBSGA)
-			{
-				BCBSGA.Retrieve(clearinghouseClin, true, new TerminalConnector());
-			}
-			else if (clearinghouseHq.Eformat == ElectronicClaimFormat.Canadian && CultureInfo.CurrentCulture.Name.EndsWith("CA"))
-			{
-				//Or the Eformat is Canadian and the region is Canadian.  In Canada, the "Outstanding Reports" are received upon request.
-				//Canadian reports must be retrieved using an office num and valid provider number for the office,
-				//which will cause all reports for that office to be returned.
-				//Here we loop through all providers and find CDAnet providers with a valid provider number and office number, and we only send
-				//one report download request for one provider from each office.  For most offices, the loop will only send a single request.
-				List<Provider> listProvs = Providers.GetDeepCopy(true);
-				List<string> listOfficeNums = new List<string>();
-				for (int j = 0; j < listProvs.Count; j++)
-				{//Get all unique office numbers from the providers.
-					if (!listProvs[j].IsCDAnet || listProvs[j].NationalProvID == "" || listProvs[j].CanadianOfficeNum == "")
-					{
-						continue;
-					}
-					if (!listOfficeNums.Contains(listProvs[j].CanadianOfficeNum))
-					{//Ignore duplicate office numbers.
-						listOfficeNums.Add(listProvs[j].CanadianOfficeNum);
-						try
-						{
-							clearinghouseHq = Canadian.GetCanadianClearinghouseHq(null);
-							clearinghouseClin = Clearinghouses.OverrideFields(clearinghouseHq, Clinics.ClinicNum);
-                            //Run both version 02 and version 04 reports for all carriers and all networks.
-                            CanadianOutput.GetOutstandingForDefault(listProvs[j]);
-						}
-						catch
-						{
-							//Supress errors importing reports.
-						}
-					}
-				}
-			}
-			else if (clearinghouseHq.Eformat == ElectronicClaimFormat.Dutch && CultureInfo.CurrentCulture.Name.EndsWith("DE"))
-			{
-				//Or the Eformat is German and the region is German
-				RetrieveAndImport(clearinghouseClin, true, isTimeToRetrieve: isTimeToRetrieve);
-			}
-			else if (clearinghouseHq.Eformat != ElectronicClaimFormat.Canadian
-				&& clearinghouseHq.Eformat != ElectronicClaimFormat.Dutch
-				&& CultureInfo.CurrentCulture.Name.EndsWith("US")) //Or the Eformat is in any other format and the region is US
-			{
-				RetrieveAndImport(clearinghouseClin, true, isTimeToRetrieve: isTimeToRetrieve);
-			}
+			//if (!Directory.Exists(clearinghouseClin.ResponsePath))
+			//{
+			//	return;
+			//}
+
+			//if (clearinghouseHq.ClearinghouseNum == defaultClearingHouseNum)
+			//{
+			//	// If it's the default dental clearinghouse.
+			//	RetrieveAndImport(clearinghouseClin, true, isTimeToRetrieve: isTimeToRetrieve);
+			//}
+			//else if (clearinghouseHq.TypeName == ElectronicClaimFormat.None)
+			//{
+			//	// And the format is "None" (accessed from all regions).
+			//	RetrieveAndImport(clearinghouseClin, true, isTimeToRetrieve: isTimeToRetrieve);
+			//}
+			//else if (clearinghouseHq.CommBridge == EclaimsCommBridge.BCBSGA)
+			//{
+			//	BCBSGA.Retrieve(clearinghouseClin, true, new TerminalConnector());
+			//}
+			//else if (clearinghouseHq.TypeName == ElectronicClaimFormat.Canadian && CultureInfo.CurrentCulture.Name.EndsWith("CA"))
+			//{
+			//	//Or the Eformat is Canadian and the region is Canadian.  In Canada, the "Outstanding Reports" are received upon request.
+			//	//Canadian reports must be retrieved using an office num and valid provider number for the office,
+			//	//which will cause all reports for that office to be returned.
+			//	//Here we loop through all providers and find CDAnet providers with a valid provider number and office number, and we only send
+			//	//one report download request for one provider from each office.  For most offices, the loop will only send a single request.
+			//	List<Provider> listProvs = Providers.GetDeepCopy(true);
+			//	List<string> listOfficeNums = new List<string>();
+			//	for (int j = 0; j < listProvs.Count; j++)
+			//	{//Get all unique office numbers from the providers.
+			//		if (!listProvs[j].IsCDAnet || listProvs[j].NationalProvID == "" || listProvs[j].CanadianOfficeNum == "")
+			//		{
+			//			continue;
+			//		}
+			//		if (!listOfficeNums.Contains(listProvs[j].CanadianOfficeNum))
+			//		{//Ignore duplicate office numbers.
+			//			listOfficeNums.Add(listProvs[j].CanadianOfficeNum);
+			//			try
+			//			{
+			//				clearinghouseHq = Canadian.GetCanadianClearinghouseHq(null);
+			//				clearinghouseClin = Clearinghouses.OverrideFields(clearinghouseHq, Clinics.ClinicNum);
+   //                         //Run both version 02 and version 04 reports for all carriers and all networks.
+   //                         CanadianOutput.GetOutstandingForDefault(listProvs[j]);
+			//			}
+			//			catch
+			//			{
+			//				//Supress errors importing reports.
+			//			}
+			//		}
+			//	}
+			//}
+			//else if (clearinghouseHq.TypeName == ElectronicClaimFormat.Dutch && CultureInfo.CurrentCulture.Name.EndsWith("DE"))
+			//{
+			//	//Or the Eformat is German and the region is German
+			//	RetrieveAndImport(clearinghouseClin, true, isTimeToRetrieve: isTimeToRetrieve);
+			//}
+			//else if (clearinghouseHq.TypeName != ElectronicClaimFormat.Canadian
+			//	&& clearinghouseHq.TypeName != ElectronicClaimFormat.Dutch
+			//	&& CultureInfo.CurrentCulture.Name.EndsWith("US")) //Or the Eformat is in any other format and the region is US
+			//{
+			//	RetrieveAndImport(clearinghouseClin, true, isTimeToRetrieve: isTimeToRetrieve);
+			//}
 		}
 
 		private static string RetrieveReports(Clearinghouse clearingHouse, bool isAutomaticMode, IODProgressExtended progress = null)
 		{
+			// TODO: Implement me...
+
 			progress ??= new ODProgressExtendedNull();
 			progress.UpdateProgress("Beginning report retrieval...", "reports", "0%");
 
-			if (progress.IsPauseOrCancel())
-			{
-				return "Process canceled by user.";
-			}
+			//if (progress.IsPauseOrCancel())
+			//{
+			//	return "Process canceled by user.";
+			//}
 
-			if (clearingHouse.ISA08 == "113504607")
-			{//TesiaLink
-			 //But the import will still happen
-				return "";
-			}
+			//if (clearingHouse.ISA08 == "113504607")
+			//{//TesiaLink
+			// //But the import will still happen
+			//	return "";
+			//}
 
-			if (clearingHouse.CommBridge == EclaimsCommBridge.None || 
-				clearingHouse.CommBridge == EclaimsCommBridge.Renaissance || 
-				clearingHouse.CommBridge == EclaimsCommBridge.RECS)
-			{
-				return "";
-			}
+			//if (clearingHouse.CommBridge == EclaimsCommBridge.None || 
+			//	clearingHouse.CommBridge == EclaimsCommBridge.Renaissance || 
+			//	clearingHouse.CommBridge == EclaimsCommBridge.RECS)
+			//{
+			//	return "";
+			//}
 
-			if (clearingHouse.CommBridge == EclaimsCommBridge.WebMD)
-			{
-				if (!WebMD.Launch(clearingHouse, 0, isAutomaticMode, progress))
-				{
-					return "Error retrieving.\r\n" + WebMD.ErrorMessage;
-				}
-			}
-			else if (clearingHouse.CommBridge == EclaimsCommBridge.BCBSGA)
-			{
-				if (!BCBSGA.Retrieve(clearingHouse, true, new TerminalConnector(), progress))
-				{
-					return "Error retrieving.\r\n" + BCBSGA.ErrorMessage;
-				}
-			}
-			else if (clearingHouse.CommBridge == EclaimsCommBridge.ClaimConnect)
-			{
-				if (!Directory.Exists(clearingHouse.ResponsePath))
-				{
-					//The clearinghouse report path is not setup.  Therefore, the customer does not use ClaimConnect reports via web services.
-					if (isAutomaticMode)
-					{//The user opened FormClaimsSend, or FormOpenDental called this function automatically.
-						return "";//Suppress error message.
-					}
-					else
-					{//The user pressed the Get Reports button manually.
-					 //This cannot happen, because the user is blocked by the UI before they get to this point.
-					}
-				}
-				else if (!ClaimConnect.Retrieve(clearingHouse, progress))
-				{
-					if (ClaimConnect.ErrorMessage.Contains(": 150\r\n"))
-					{//Error message 150 "Service Not Contracted"
-						if (isAutomaticMode)
-						{//The user opened FormClaimsSend, or FormOpenDental called this function automatically.
-							return "";//Pretend that there is no error when loading FormClaimsSend for those customers who do not pay for ERA service.
-						}
-						else
-						{//The user pressed the Get Reports button manually.
-						 //The old way.  Some customers still prefer to go to the dentalxchange web portal to view reports because the ERA service costs money.
-							try
-							{
-								Process.Start(@"http://www.dentalxchange.com");
-							}
-							catch
-							{
-								return "Could not locate the site.";
-							}
-						}
-					}
-					return "Error retrieving.\r\n" + ClaimConnect.ErrorMessage;
-				}
-			}
-			else if (clearingHouse.CommBridge == EclaimsCommBridge.AOS)
-			{
-				try
-				{
-					Process.Start(@"C:\Program files\AOS\AOSCommunicator\AOSCommunicator.exe");
-				}
-				catch
-				{
-					return "Could not locate the file.";
-				}
-			}
-			else if (clearingHouse.CommBridge == EclaimsCommBridge.MercuryDE)
-			{
-				if (!MercuryDE.Launch(clearingHouse, 0, progress))
-				{
-					return "Error retrieving.\r\n" + MercuryDE.ErrorMessage;
-				}
-			}
-			else if (clearingHouse.CommBridge == EclaimsCommBridge.EmdeonMedical)
-			{
-				if (!EmdeonMedical.Retrieve(clearingHouse, progress))
-				{
-					return "Error retrieving.\r\n" + EmdeonMedical.ErrorMessage;
-				}
-			}
-			else if (clearingHouse.CommBridge == EclaimsCommBridge.DentiCal)
-			{
-				if (!DentiCal.Launch(clearingHouse, 0, progress))
-				{
-					return "Error retrieving." + "\r\n" + DentiCal.ErrorMessage;
-				}
-			}
-			else if (clearingHouse.CommBridge == EclaimsCommBridge.EDS)
-			{
-				List<string> listEdsErrors = new List<string>();
-				if (!EDS.Retrieve277s(clearingHouse, progress))
-				{
-					listEdsErrors.Add("Error retrieving.\r\n" + EDS.ErrorMessage);
-				}
+			//if (clearingHouse.CommBridge == EclaimsCommBridge.WebMD)
+			//{
+			//	if (!WebMD.Launch(clearingHouse, 0, isAutomaticMode, progress))
+			//	{
+			//		return "Error retrieving.\r\n" + WebMD.ErrorMessage;
+			//	}
+			//}
+			//else if (clearingHouse.CommBridge == EclaimsCommBridge.BCBSGA)
+			//{
+			//	if (!BCBSGA.Retrieve(clearingHouse, true, new TerminalConnector(), progress))
+			//	{
+			//		return "Error retrieving.\r\n" + BCBSGA.ErrorMessage;
+			//	}
+			//}
+			//else if (clearingHouse.CommBridge == EclaimsCommBridge.ClaimConnect)
+			//{
+			//	if (!Directory.Exists(clearingHouse.ResponsePath))
+			//	{
+			//		//The clearinghouse report path is not setup.  Therefore, the customer does not use ClaimConnect reports via web services.
+			//		if (isAutomaticMode)
+			//		{//The user opened FormClaimsSend, or FormOpenDental called this function automatically.
+			//			return "";//Suppress error message.
+			//		}
+			//		else
+			//		{//The user pressed the Get Reports button manually.
+			//		 //This cannot happen, because the user is blocked by the UI before they get to this point.
+			//		}
+			//	}
+			//	else if (!ClaimConnect.Retrieve(clearingHouse, progress))
+			//	{
+			//		if (ClaimConnect.ErrorMessage.Contains(": 150\r\n"))
+			//		{//Error message 150 "Service Not Contracted"
+			//			if (isAutomaticMode)
+			//			{//The user opened FormClaimsSend, or FormOpenDental called this function automatically.
+			//				return "";//Pretend that there is no error when loading FormClaimsSend for those customers who do not pay for ERA service.
+			//			}
+			//			else
+			//			{//The user pressed the Get Reports button manually.
+			//			 //The old way.  Some customers still prefer to go to the dentalxchange web portal to view reports because the ERA service costs money.
+			//				try
+			//				{
+			//					Process.Start(@"http://www.dentalxchange.com");
+			//				}
+			//				catch
+			//				{
+			//					return "Could not locate the site.";
+			//				}
+			//			}
+			//		}
+			//		return "Error retrieving.\r\n" + ClaimConnect.ErrorMessage;
+			//	}
+			//}
+			//else if (clearingHouse.CommBridge == EclaimsCommBridge.AOS)
+			//{
+			//	try
+			//	{
+			//		Process.Start(@"C:\Program files\AOS\AOSCommunicator\AOSCommunicator.exe");
+			//	}
+			//	catch
+			//	{
+			//		return "Could not locate the file.";
+			//	}
+			//}
+			//else if (clearingHouse.CommBridge == EclaimsCommBridge.MercuryDE)
+			//{
+			//	if (!MercuryDE.Launch(clearingHouse, 0, progress))
+			//	{
+			//		return "Error retrieving.\r\n" + MercuryDE.ErrorMessage;
+			//	}
+			//}
+			//else if (clearingHouse.CommBridge == EclaimsCommBridge.EmdeonMedical)
+			//{
+			//	if (!EmdeonMedical.Retrieve(clearingHouse, progress))
+			//	{
+			//		return "Error retrieving.\r\n" + EmdeonMedical.ErrorMessage;
+			//	}
+			//}
+			//else if (clearingHouse.CommBridge == EclaimsCommBridge.DentiCal)
+			//{
+			//	if (!DentiCal.Launch(clearingHouse, 0, progress))
+			//	{
+			//		return "Error retrieving." + "\r\n" + DentiCal.ErrorMessage;
+			//	}
+			//}
+			//else if (clearingHouse.CommBridge == EclaimsCommBridge.EDS)
+			//{
+			//	List<string> listEdsErrors = new List<string>();
+			//	if (!EDS.Retrieve277s(clearingHouse, progress))
+			//	{
+			//		listEdsErrors.Add("Error retrieving.\r\n" + EDS.ErrorMessage);
+			//	}
 
-				if (!EDS.Retrieve835s(clearingHouse, progress))
-				{
-					listEdsErrors.Add("Error retrieving.\r\n" + EDS.ErrorMessage);
-				}
+			//	if (!EDS.Retrieve835s(clearingHouse, progress))
+			//	{
+			//		listEdsErrors.Add("Error retrieving.\r\n" + EDS.ErrorMessage);
+			//	}
 
-				if (listEdsErrors.Count > 0)
-				{
-					return string.Join("\r\n", listEdsErrors);
-				}
-			}
+			//	if (listEdsErrors.Count > 0)
+			//	{
+			//		return string.Join("\r\n", listEdsErrors);
+			//	}
+			//}
 
 			return "";
 		}
@@ -732,89 +740,93 @@ namespace OpenDentBusiness
 		private static string ImportReportFiles(Clearinghouse clearinghouseClin, IODProgressExtended progress = null)
 		{ 
 			//uses clinic-level clearinghouse where necessary.
-			progress ??= new ODProgressExtendedNull();
-			if (!Directory.Exists(clearinghouseClin.ResponsePath))
-			{
-				return "Report directory does not exist: " + clearinghouseClin.ResponsePath;
-			}
-			if (clearinghouseClin.Eformat == ElectronicClaimFormat.Canadian || clearinghouseClin.Eformat == ElectronicClaimFormat.Ramq)
-			{
-				//the report path is shared with many other important files.  Do not process anything.  Comm is synchronous only.
-				return "";
-			}
-			progress.UpdateProgress("Reading download files", "reports", "55%", 55);
-			if (progress.IsPauseOrCancel())
-			{
-				return "Import canceled by user.";
-			}
+			//progress ??= new ODProgressExtendedNull();
+			//if (!Directory.Exists(clearinghouseClin.ResponsePath))
+			//{
+			//	return "Report directory does not exist: " + clearinghouseClin.ResponsePath;
+			//}
 
-            string archiveDir;
-            string[] files;
-            try
-            {
-                files = Directory.GetFiles(clearinghouseClin.ResponsePath);
-                archiveDir = ODFileUtils.CombinePaths(clearinghouseClin.ResponsePath, "Archive" + "_" + DateTime.Now.Year.ToString());
-                if (!Directory.Exists(archiveDir))
-                {
-                    Directory.CreateDirectory(archiveDir);
-                }
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return "Access to the Report Path is denied. Try running as administrator or contact your network administrator.";
-            }
+			//if (clearinghouseClin.TypeName == ElectronicClaimFormat.Canadian || clearinghouseClin.TypeName == ElectronicClaimFormat.Ramq)
+			//{
+			//	//the report path is shared with many other important files.  Do not process anything.  Comm is synchronous only.
+			//	return "";
+			//}
 
-            List<string> listFailedFiles = new List<string>();
-			progress.UpdateProgress("Files read.");
-			progress.UpdateProgress("Importing files", "reports", "83%", 83);
-			if (files.Length > 0)
-			{
-				progress.UpdateProgressDetailed("Importing", tagString: "import");//add a new progress bar for imports if there are any to import
-			}
-			else
-			{
-				progress.UpdateProgress("No files to import.");
-			}
+			//progress.UpdateProgress("Reading download files", "reports", "55%", 55);
+			//if (progress.IsPauseOrCancel())
+			//{
+			//	return "Import canceled by user.";
+			//}
 
-			for (int i = 0; i < files.Length; i++)
-			{
-				int percent = (i / files.Length) * 100;
-				progress.UpdateProgress("Importing " + i + " / " + files.Length, "import", percent + "%", percent);
-				if (progress.IsPauseOrCancel())
-				{
-					return "Import canceled by user.";
-				}
-				string fileSource = files[i];
-				string fileDestination = ODFileUtils.CombinePaths(archiveDir, Path.GetFileName(files[i]));
-				try
-				{
-					File.Move(fileSource, fileDestination);
-				}
-				catch
-				{
-					//OK to continue, since ProcessIncomingReport() above saved the raw report into the etrans table.
-					listFailedFiles.Add(fileSource);
-					continue;//Skip current report file and leave in folder to processing later.
-				}
-				try
-				{
-					Etranss.ProcessIncomingReport(
-						File.GetCreationTime(fileDestination),
-						clearinghouseClin.HqClearinghouseNum,
-						File.ReadAllText(fileDestination),
-						Security.CurrentUser.Id);
-				}
-				catch
-				{
-					listFailedFiles.Add(fileSource);
-					File.Move(fileDestination, fileSource);//Move file back so that the archived folder only contains succesfully processed reports.
-				}
-			}
+   //         string archiveDir;
+   //         string[] files;
+   //         try
+   //         {
+   //             files = Directory.GetFiles(clearinghouseClin.ResponsePath);
+   //             archiveDir = ODFileUtils.CombinePaths(clearinghouseClin.ResponsePath, "Archive" + "_" + DateTime.Now.Year.ToString());
+   //             if (!Directory.Exists(archiveDir))
+   //             {
+   //                 Directory.CreateDirectory(archiveDir);
+   //             }
+   //         }
+   //         catch (UnauthorizedAccessException)
+   //         {
+   //             return "Access to the Report Path is denied. Try running as administrator or contact your network administrator.";
+   //         }
 
-			if (listFailedFiles.Count > 0)
-			{
-				return "Failed to process the following files due to permission issues or malformed data:\r\n" + string.Join(",\r\n", listFailedFiles);
-			}
+   //         List<string> listFailedFiles = new List<string>();
+			//progress.UpdateProgress("Files read.");
+			//progress.UpdateProgress("Importing files", "reports", "83%", 83);
+			//if (files.Length > 0)
+			//{
+			//	progress.UpdateProgressDetailed("Importing", tagString: "import");//add a new progress bar for imports if there are any to import
+			//}
+			//else
+			//{
+			//	progress.UpdateProgress("No files to import.");
+			//}
+
+			//for (int i = 0; i < files.Length; i++)
+			//{
+			//	int percent = (i / files.Length) * 100;
+			//	progress.UpdateProgress("Importing " + i + " / " + files.Length, "import", percent + "%", percent);
+			//	if (progress.IsPauseOrCancel())
+			//	{
+			//		return "Import canceled by user.";
+			//	}
+			//	string fileSource = files[i];
+			//	string fileDestination = ODFileUtils.CombinePaths(archiveDir, Path.GetFileName(files[i]));
+			//	try
+			//	{
+			//		File.Move(fileSource, fileDestination);
+			//	}
+			//	catch
+			//	{
+			//		//OK to continue, since ProcessIncomingReport() above saved the raw report into the etrans table.
+			//		listFailedFiles.Add(fileSource);
+			//		continue;//Skip current report file and leave in folder to processing later.
+			//	}
+			//	try
+			//	{
+			//		Etranss.ProcessIncomingReport(
+			//			File.GetCreationTime(fileDestination),
+			//			clearinghouseClin.HqClearinghouseNum,
+			//			File.ReadAllText(fileDestination),
+			//			Security.CurrentUser.Id);
+			//	}
+			//	catch
+			//	{
+			//		listFailedFiles.Add(fileSource);
+			//		File.Move(fileDestination, fileSource);//Move file back so that the archived folder only contains succesfully processed reports.
+			//	}
+			//}
+
+			//if (listFailedFiles.Count > 0)
+			//{
+			//	return "Failed to process the following files due to permission issues or malformed data:\r\n" + string.Join(",\r\n", listFailedFiles);
+			//}
+
+			// TODO: Implement me..
 
 			return "";
 		}

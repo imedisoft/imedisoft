@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using System.IO;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormMedicationReconcile:ODForm {
@@ -134,14 +135,13 @@ namespace OpenDental {
 		}
 
 		private void butPickRxListImage_Click(object sender,EventArgs e) {	
-			FormImageSelect formIS=new FormImageSelect();
-			formIS.PatNum=PatCur.PatNum;
+			FormImageSelect formIS=new FormImageSelect(PatCur.PatNum);
 			formIS.ShowDialog();
 			if(formIS.DialogResult!=DialogResult.OK) {
 				return;
 			}		
 			string patFolder=ImageStore.GetPatientFolder(PatCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
-			Document doc=Documents.GetByNum(formIS.SelectedDocNum);
+			Document doc=Documents.GetByNum(formIS.SelectedDocumentId);
 			if(!ImageStore.HasImageExtension(doc.FileName)) {
 				MessageBox.Show("The selected file is not a supported image type.");
 				return;

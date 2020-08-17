@@ -8,6 +8,7 @@ using System.Linq;
 using OpenDentBusiness;
 using OpenDental.UI;
 using CodeBase;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormPaySplitManage:ODForm {

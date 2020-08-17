@@ -810,7 +810,6 @@
             // 
             this.menuItemCloudManagement.Index = 13;
             this.menuItemCloudManagement.Text = "Cloud Management";
-            this.menuItemCloudManagement.Click += new System.EventHandler(this.menuItemCloudManagement_Click);
             // 
             // menuItemDataPath
             // 
@@ -1456,7 +1455,6 @@
             // 
             this.menuItemMobileSetup.Index = 15;
             this.menuItemMobileSetup.Text = "Mobile Synch";
-            this.menuItemMobileSetup.Click += new System.EventHandler(this.menuItemMobileSetup_Click);
             // 
             // menuItemNewCropBilling
             // 
@@ -1550,7 +1548,6 @@
             this.menuItemEServices.Index = 8;
             this.menuItemEServices.OwnerDraw = true;
             this.menuItemEServices.Text = "eServices";
-            this.menuItemEServices.Click += new System.EventHandler(this.menuItemEServices_Click);
             this.menuItemEServices.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.menuItem_DrawItem);
             this.menuItemEServices.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.menuItem_MeasureItem);
             // 

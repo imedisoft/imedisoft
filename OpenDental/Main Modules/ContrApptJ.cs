@@ -815,14 +815,14 @@ namespace OpenDental {
 			if(hasBrokenProcs) {//If true, user cannot get here from right click 'Break Appointment' directly.
 				FormApptBreak formApptBreak=new FormApptBreak(appt);
 				if(formApptBreak.ShowDialog()!=DialogResult.OK) {
-					if(formApptBreak.FormApptBreakSelection==ApptBreakSelection.Delete) {
+					if(formApptBreak.SelectedAction==ApptBreakSelection.Delete) {
 						//User wants to delete the appointment.
 						butDelete_Click(this,new EventArgs());//using "this" skips the standard "Delete Appointment?" prompt.
 					}
 					return;
 				}
-				procCodeBroke=formApptBreak.SelectedProcCode;
-				postBreakSelection=formApptBreak.FormApptBreakSelection;
+				procCodeBroke=formApptBreak.SelectedProcedureCode;
+				postBreakSelection=formApptBreak.SelectedAction;
 			}
 			else if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Break appointment?")) {
 				return;
@@ -3590,7 +3590,7 @@ namespace OpenDental {
 				if(pat==null) {
 					pat=Patients.GetPat(appt.PatNum);
 				}
-				AppointmentL.BreakApptHelper(appt,pat,formApptForceBreak.SelectedBrokenProcCode);
+				AppointmentL.BreakApptHelper(appt,pat,formApptForceBreak.SelectedProcedureCode);
 			}
 			return true;
 		}
@@ -3798,7 +3798,7 @@ namespace OpenDental {
 					if(formApptForceBreak.DialogResult!=DialogResult.OK) {
 						return;
 					}
-					AppointmentL.BreakApptHelper(appt,patCur,formApptForceBreak.SelectedBrokenProcCode);
+					AppointmentL.BreakApptHelper(appt,patCur,formApptForceBreak.SelectedProcedureCode);
 					//The appointment status in the database has been updated, but the in memory object MUST have its status updated for
 					//logic that will run later on down the line.
 					appt.AptStatus=ApptStatus.Broken;

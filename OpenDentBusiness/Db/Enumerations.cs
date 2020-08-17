@@ -908,16 +908,22 @@ namespace OpenDentBusiness
 		None,
 		///<summary>1-The American standard through 12/31/11.</summary>
 		x837D_4010,
+
 		///<summary>2-Proprietary format for Renaissance.</summary>
 		Renaissance,
+
 		///<summary>3-CDAnet format version 4.</summary>
 		Canadian,
+
 		///<summary>4-CSV file adaptable for use in Netherlands.</summary>
 		Dutch,
+
 		///<summary>5-The American standard starting on 1/1/12.</summary>
 		x837D_5010_dental,
+
 		///<summary>6-Either professional or medical.  The distiction is stored at the claim level.</summary>
 		x837_5010_med_inst,
+
 		///<summary>7-A specific Canadian carrier located in Quebec which has their own format.</summary>
 		Ramq,
 	}

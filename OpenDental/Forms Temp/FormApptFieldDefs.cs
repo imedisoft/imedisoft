@@ -52,85 +52,85 @@ namespace OpenDental{
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormApptFieldDefs));
-			this.listMain = new System.Windows.Forms.ListBox();
-			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-			this.label1 = new System.Windows.Forms.Label();
-			this.butClose = new OpenDental.UI.Button();
-			this.butAdd = new OpenDental.UI.Button();
-			this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
-			this.menuItemSetup = new System.Windows.Forms.MenuItem();
-			this.SuspendLayout();
-			// 
-			// listMain
-			// 
-			this.listMain.Location = new System.Drawing.Point(18, 77);
-			this.listMain.Name = "listMain";
-			this.listMain.Size = new System.Drawing.Size(265, 173);
-			this.listMain.TabIndex = 2;
-			this.listMain.DoubleClick += new System.EventHandler(this.listMain_DoubleClick);
-			// 
-			// label1
-			// 
-			this.label1.Location = new System.Drawing.Point(15, 9);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(373, 65);
-			this.label1.TabIndex = 8;
-			this.label1.Text = "This is only for advanced users.  This is a list of extra fields that you can set" +
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormApptFieldDefs));
+            this.listMain = new System.Windows.Forms.ListBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.label1 = new System.Windows.Forms.Label();
+            this.butClose = new OpenDental.UI.Button();
+            this.butAdd = new OpenDental.UI.Button();
+            this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
+            this.menuItemSetup = new System.Windows.Forms.MenuItem();
+            this.SuspendLayout();
+            // 
+            // listMain
+            // 
+            this.listMain.Location = new System.Drawing.Point(18, 77);
+            this.listMain.Name = "listMain";
+            this.listMain.Size = new System.Drawing.Size(265, 173);
+            this.listMain.TabIndex = 2;
+            this.listMain.DoubleClick += new System.EventHandler(this.listMain_DoubleClick);
+            // 
+            // label1
+            // 
+            this.label1.Location = new System.Drawing.Point(15, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(373, 65);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "This is only for advanced users.  This is a list of extra fields that you can set" +
     " up for appointments.  After adding fields to this list, you can set the values " +
     "in an appointment edit window.";
-			// 
-			// butClose
-			// 
-			this.butClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butClose.Location = new System.Drawing.Point(349, 271);
-			this.butClose.Name = "butClose";
-			this.butClose.Size = new System.Drawing.Size(79, 24);
-			this.butClose.TabIndex = 1;
-			this.butClose.Text = "Close";
-			this.butClose.Click += new System.EventHandler(this.butClose_Click);
-			// 
-			// butAdd
-			// 
-			this.butAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.butAdd.Image = global::Imedisoft.Properties.Resources.Add;
-			this.butAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.butAdd.Location = new System.Drawing.Point(18, 271);
-			this.butAdd.Name = "butAdd";
-			this.butAdd.Size = new System.Drawing.Size(79, 24);
-			this.butAdd.TabIndex = 7;
-			this.butAdd.Text = "&Add";
-			this.butAdd.Click += new System.EventHandler(this.butAdd_Click);
-			// 
-			// mainMenu1
-			// 
-			this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            // 
+            // butClose
+            // 
+            this.butClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.butClose.Location = new System.Drawing.Point(349, 271);
+            this.butClose.Name = "butClose";
+            this.butClose.Size = new System.Drawing.Size(79, 24);
+            this.butClose.TabIndex = 1;
+            this.butClose.Text = "Close";
+            this.butClose.Click += new System.EventHandler(this.butClose_Click);
+            // 
+            // butAdd
+            // 
+            this.butAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.butAdd.Image = global::Imedisoft.Properties.Resources.Add;
+            this.butAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.butAdd.Location = new System.Drawing.Point(18, 271);
+            this.butAdd.Name = "butAdd";
+            this.butAdd.Size = new System.Drawing.Size(79, 24);
+            this.butAdd.TabIndex = 7;
+            this.butAdd.Text = "&Add";
+            this.butAdd.Click += new System.EventHandler(this.butAdd_Click);
+            // 
+            // mainMenu1
+            // 
+            this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItemSetup});
-			// 
-			// menuItemSetup
-			// 
-			this.menuItemSetup.Index = 0;
-			this.menuItemSetup.Text = "Setup";
-			this.menuItemSetup.Click += new System.EventHandler(this.menuItemSetup_Click);
-			// 
-			// FormApptFieldDefs
-			// 
-			this.ClientSize = new System.Drawing.Size(447, 309);
-			this.Controls.Add(this.label1);
-			this.Controls.Add(this.listMain);
-			this.Controls.Add(this.butClose);
-			this.Controls.Add(this.butAdd);
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.MaximizeBox = false;
-			this.Menu = this.mainMenu1;
-			this.MinimizeBox = false;
-			this.Name = "FormApptFieldDefs";
-			this.ShowInTaskbar = false;
-			this.Text = "Appointment Field Defs";
-			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormApptFieldDefs_FormClosing_1);
-			this.Load += new System.EventHandler(this.FormApptFieldDefs_Load);
-			this.ResumeLayout(false);
+            // 
+            // menuItemSetup
+            // 
+            this.menuItemSetup.Index = 0;
+            this.menuItemSetup.Text = "Setup";
+            this.menuItemSetup.Click += new System.EventHandler(this.menuItemSetup_Click);
+            // 
+            // FormApptFieldDefs
+            // 
+            this.ClientSize = new System.Drawing.Size(447, 309);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.listMain);
+            this.Controls.Add(this.butClose);
+            this.Controls.Add(this.butAdd);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.Menu = this.mainMenu1;
+            this.MinimizeBox = false;
+            this.Name = "FormApptFieldDefs";
+            this.ShowInTaskbar = false;
+            this.Text = "Appointment Field Defs";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormApptFieldDefs_FormClosing_1);
+            this.Load += new System.EventHandler(this.FormApptFieldDefs_Load);
+            this.ResumeLayout(false);
 
 		}
 		#endregion

@@ -390,7 +390,7 @@ namespace OpenDental{
 				row.Tag=listClearinghouseTag;
 				row.Cells.Add(clearinghouseCur.Description);
 				row.Cells.Add(clearinghouseCur.ExportPath);
-				row.Cells.Add(clearinghouseCur.Eformat.ToString());
+				row.Cells.Add(clearinghouseCur.TypeName);
 				string s="";
 				if(Prefs.GetLong(PrefName.ClearinghouseDefaultDent)==_listClearinghousesHq[i].ClearinghouseNum) {
 					s+="Dent";
@@ -474,10 +474,10 @@ namespace OpenDental{
 				return;
 			}
 			Clearinghouse ch=_listClearinghousesHq[gridMain.GetSelectedIndex()];
-			if(ch.Eformat==ElectronicClaimFormat.x837_5010_med_inst){//med/inst clearinghouse
-				MessageBox.Show("The selected clearinghouse must first be set to a dental e-claim format.");
-				return;
-			}
+			//if(ch.TypeName==ElectronicClaimFormat.x837_5010_med_inst){//med/inst clearinghouse
+			//	MessageBox.Show("The selected clearinghouse must first be set to a dental e-claim format.");
+			//	return;
+			//}
 			bool isInvalid=false;
 			if(!CultureInfo.CurrentCulture.Name.EndsWith("CA") 
 				&& Prefs.GetLong(PrefName.ClearinghouseDefaultEligibility)==0
@@ -500,10 +500,10 @@ namespace OpenDental{
 				return;
 			}
 			Clearinghouse ch=_listClearinghousesHq[gridMain.GetSelectedIndex()];
-			if(ch.Eformat!=ElectronicClaimFormat.x837_5010_med_inst){//anything except the med/inst format
-				MessageBox.Show("The selected clearinghouse must first be set to the med/inst e-claim format.");
-				return;
-			}
+			//if(ch.TypeName!=ElectronicClaimFormat.x837_5010_med_inst){//anything except the med/inst format
+			//	MessageBox.Show("The selected clearinghouse must first be set to the med/inst e-claim format.");
+			//	return;
+			//}
 			bool isInvalid=false;
 			if(!CultureInfo.CurrentCulture.Name.EndsWith("CA") 
 				&& Prefs.GetLong(PrefName.ClearinghouseDefaultEligibility)==0
@@ -628,26 +628,28 @@ namespace OpenDental{
 				//update all computers including this one:
 				DataValid.SetInvalid(InvalidType.ClearHouses);  //This needs to be done before the cache calls below.
 			}
-			//validate that the default dental clearinghouse is not type mismatched.
-			Clearinghouse chDent=Clearinghouses.GetClearinghouse(Prefs.GetLong(PrefName.ClearinghouseDefaultDent));
-			if(chDent!=null) {
-				if(chDent.Eformat==ElectronicClaimFormat.x837_5010_med_inst) {//mismatch
-					if(!MsgBox.Show(MsgBoxButtons.OKCancel,"The default dental clearinghouse should be set to a dental e-claim format.  Continue anyway?")) {
-						e.Cancel=true;
-						return;
-					}
-				}
-			}
-			//validate medical clearinghouse
-			Clearinghouse chMed=Clearinghouses.GetClearinghouse(Prefs.GetLong(PrefName.ClearinghouseDefaultMed));
-			if(chMed!=null) {
-				if(chMed.Eformat!=ElectronicClaimFormat.x837_5010_med_inst) {//mismatch
-					if(!MsgBox.Show(MsgBoxButtons.OKCancel,"The default medical clearinghouse should be set to a med/inst e-claim format.  Continue anyway?")) {
-						e.Cancel=true;
-						return;
-					}
-				}
-			}
+
+			// TODO: Fix me..
+			////validate that the default dental clearinghouse is not type mismatched.
+			//Clearinghouse chDent=Clearinghouses.GetClearinghouse(Prefs.GetLong(PrefName.ClearinghouseDefaultDent));
+			//if(chDent!=null) {
+			//	if(chDent.TypeName==ElectronicClaimFormat.x837_5010_med_inst) {//mismatch
+			//		if(!MsgBox.Show(MsgBoxButtons.OKCancel,"The default dental clearinghouse should be set to a dental e-claim format.  Continue anyway?")) {
+			//			e.Cancel=true;
+			//			return;
+			//		}
+			//	}
+			//}
+			////validate medical clearinghouse
+			//Clearinghouse chMed=Clearinghouses.GetClearinghouse(Prefs.GetLong(PrefName.ClearinghouseDefaultMed));
+			//if(chMed!=null) {
+			//	if(chMed.TypeName!=ElectronicClaimFormat.x837_5010_med_inst) {//mismatch
+			//		if(!MsgBox.Show(MsgBoxButtons.OKCancel,"The default medical clearinghouse should be set to a med/inst e-claim format.  Continue anyway?")) {
+			//			e.Cancel=true;
+			//			return;
+			//		}
+			//	}
+			//}
 		}
 
 		private void comboClinic_SelectionChangeCommitted(object sender,EventArgs e) {

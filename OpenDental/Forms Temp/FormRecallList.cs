@@ -579,15 +579,6 @@ namespace OpenDental {
 			}
 			return pinAptNums;
 		}
-		
-		///<summary>Automatically open the eService Setup window so that they can easily click the Enable button. 
-		///Calls CheckClinicsSignedUpForWebSched() before exiting.</summary>
-		private void OpenSignupPortal() {
-			FormEServicesSignup formESSignup=new FormEServicesSignup();
-			formESSignup.ShowDialog();
-			//User may have made changes to signups. Reload the valid clinics from HQ.
-			CheckClinicsSignedUpForWebSched();
-		}
 
 		private void panelWebSched_MouseClick(object sender,MouseEventArgs e) {
 			SendWebSched();
@@ -608,15 +599,13 @@ namespace OpenDental {
 				return;
 			}
 			bool needsToBeSignedUp=WebSchedRecalls.TemplatesHaveURLTags();
-			if(needsToBeSignedUp && _listClinicNumsWebSched.Count==0) {//No clinics are signed up for Web Sched
-				string message=PrefC.HasClinicsEnabled ?
-					"No clinics are signed up for Web Sched Recall. Open Sign Up Portal?" : 
-					"This practice is not signed up for Web Sched Recall. Open Sign Up Portal?";
-				message+="\r\n\r\nAlternatively, you could remove all URL tags from Web Sched text and emails templates to use this feature.";
-				if(!MsgBox.Show(MsgBoxButtons.YesNo,message)) {
-					return;
-				}
-				OpenSignupPortal();
+			if (needsToBeSignedUp && _listClinicNumsWebSched.Count == 0)
+			{//No clinics are signed up for Web Sched
+				string message = PrefC.HasClinicsEnabled ?
+					"No clinics are signed up for Web Sched Recall." :
+					"This practice is not signed up for Web Sched Recall.";
+				message += "\r\n\r\nAlternatively, you could remove all URL tags from Web Sched text and emails templates to use this feature.";
+				MessageBox.Show(message);
 				return;
 			}
 			//At least one clinic is signed up for Web Sched or the templates are not using URLs.
@@ -638,15 +627,14 @@ namespace OpenDental {
 				listGridIndicesNotSignUp.Add(i);
 			}
 			if(needsToBeSignedUp && listClinicNumsNotSignedUp.Count > 0) {
-				string message="You have selected recalls whose clinic is not signed up for Web Sched recall. "
-					+"Do you want to go to the sign up portal to sign these clinics up? "
-					+"Clicking 'No' will deselect these recalls and send the remaining.";
-				if(MessageBox.Show(message,"",MessageBoxButtons.YesNo)==DialogResult.Yes) {
-					OpenSignupPortal();
-					return;
-				}
+				string message=
+					"You have selected recalls whose clinic is not signed up for Web Sched recall.";
+
+				MessageBox.Show(message);
+				return;
+				
 				//De-select any rows that are not allowed to send WebSched.
-				gridRecalls.SetSelected(listGridIndicesNotSignUp.ToArray(),false);
+				//gridRecalls.SetSelected(listGridIndicesNotSignUp.ToArray(),false);
 			}
 			#endregion Check Web Sched Pref and Show Promo
 			#region Recall List Validation

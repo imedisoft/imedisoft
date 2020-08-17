@@ -928,9 +928,9 @@ namespace OpenDental {
 				SmsToMobiles.SendSmsSingle(_selectedPatNum,_selectedMobileNumber,textReply.Text,clinicNum,SmsMessageSource.DirectSms,user: Security.CurrentUser);
 			}
 			catch(Exception ex) {
-				if(!FormEServicesSetup.ProcessSendSmsException(ex)) {
+				//if(!FormEServicesSetup.ProcessSendSmsException(ex)) {
 					MessageBox.Show(ex.Message);
-				}
+				//}
 				return;
 			}
 			HookSkipSmsCall: { }

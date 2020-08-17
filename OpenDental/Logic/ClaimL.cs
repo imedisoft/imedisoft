@@ -549,19 +549,21 @@ namespace OpenDental {
 					MsgBox.Show("All claims must have the same MedType.");
 					return retVal;
 				}
+				// TODO: Fix me...
 				Clearinghouse clearh=Clearinghouses.GetClearinghouse(clearinghouseNumI);
-				if(clearh.Eformat==ElectronicClaimFormat.x837D_4010 || clearh.Eformat==ElectronicClaimFormat.x837D_5010_dental) {
-					if(medTypeI!=EnumClaimMedType.Dental) {
-						MsgBox.Show("On claim "+POut.Int(index)+", the MedType does not match the clearinghouse e-format.");
-						return retVal;
-					}
-				}
-				if(clearh.Eformat==ElectronicClaimFormat.x837_5010_med_inst) {
-					if(medTypeI!=EnumClaimMedType.Medical && medTypeI!=EnumClaimMedType.Institutional) {
-						MsgBox.Show("On claim "+POut.Int(index)+", the MedType does not match the clearinghouse e-format.");
-						return retVal;
-					}
-				}
+				//if(clearh.TypeName== typeof(X837_4010).FullName || clearh.TypeName==ElectronicClaimFormat.x837D_5010_dental) {
+				//	if(medTypeI!=EnumClaimMedType.Dental) {
+				//		MsgBox.Show("On claim "+POut.Int(index)+", the MedType does not match the clearinghouse e-format.");
+				//		return retVal;
+				//	}
+				//}
+				
+				//if(clearh.TypeName==ElectronicClaimFormat.x837_5010_med_inst) {
+				//	if(medTypeI!=EnumClaimMedType.Medical && medTypeI!=EnumClaimMedType.Institutional) {
+				//		MsgBox.Show("On claim "+POut.Int(index)+", the MedType does not match the clearinghouse e-format.");
+				//		return retVal;
+				//	}
+				//}
 				if(claimSendItem.HasIcd9) {
 					string msgText="There are ICD-9 codes attached to a procedure.  Would you like to send the claim without the ICD-9 codes? ";
 					if(MessageBox.Show(msgText,"",MessageBoxButtons.YesNo)!=DialogResult.Yes) {

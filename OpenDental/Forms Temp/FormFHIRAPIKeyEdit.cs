@@ -1,14 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using CodeBase;
 using OpenDentBusiness;
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
 
-namespace OpenDental {
-	public partial class FormFHIRAPIKeyEdit:ODForm {
+namespace OpenDental
+{
+    public partial class FormFHIRAPIKeyEdit:ODForm {
 		private APIKey _apiKeyCur;
 
 		public bool HasChanged {

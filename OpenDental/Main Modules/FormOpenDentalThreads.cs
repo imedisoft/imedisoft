@@ -850,36 +850,36 @@ namespace OpenDental
 		///<summary>Begins the thread that checks for mobile sync. This will sync parts of a users database to HQ if certain preferences are set.</summary>
 		private void BeginWebSyncThread()
 		{
-			if (IsThreadAlreadyRunning(FormODThreadNames.WebSync))
-			{
-				return;
-			}
-			string interval = Prefs.GetString(PrefName.MobileSyncIntervalMinutes);
-			if (interval == "" || interval == "0")
-			{//not a paid customer or chooses not to synch
-				return;
-			}
-			if (System.Environment.MachineName.ToUpper() != Prefs.GetString(PrefName.MobileSyncWorkstationName).ToUpper())
-			{
-				//Since GetStringSilent returns "" before OD is connected to db, this gracefully loops out
-				return;
-			}
-			if (PrefC.GetDate(PrefName.MobileExcludeApptsBeforeDate).Year < 1880)
-			{
-				//full synch never run
-				return;
-			}
-			ODThread odThread = new ODThread((int)TimeSpan.FromSeconds(30).TotalMilliseconds, (o) =>
-			{
-				ODException.SwallowAnyException(() =>
-				{
-					FormEServicesMobileSynch.SynchFromMain(false);
-				});
-			});
-			odThread.AddExceptionHandler((e) => { });
-			odThread.GroupName = FormODThreadNames.WebSync.GetDescription();
-			odThread.Name = FormODThreadNames.WebSync.GetDescription();
-			odThread.Start();
+			//if (IsThreadAlreadyRunning(FormODThreadNames.WebSync))
+			//{
+			//	return;
+			//}
+			//string interval = Prefs.GetString(PrefName.MobileSyncIntervalMinutes);
+			//if (interval == "" || interval == "0")
+			//{//not a paid customer or chooses not to synch
+			//	return;
+			//}
+			//if (System.Environment.MachineName.ToUpper() != Prefs.GetString(PrefName.MobileSyncWorkstationName).ToUpper())
+			//{
+			//	//Since GetStringSilent returns "" before OD is connected to db, this gracefully loops out
+			//	return;
+			//}
+			//if (PrefC.GetDate(PrefName.MobileExcludeApptsBeforeDate).Year < 1880)
+			//{
+			//	//full synch never run
+			//	return;
+			//}
+			//ODThread odThread = new ODThread((int)TimeSpan.FromSeconds(30).TotalMilliseconds, (o) =>
+			//{
+			//	ODException.SwallowAnyException(() =>
+			//	{
+			//		FormEServicesMobileSynch.SynchFromMain(false);
+			//	});
+			//});
+			//odThread.AddExceptionHandler((e) => { });
+			//odThread.GroupName = FormODThreadNames.WebSync.GetDescription();
+			//odThread.Name = FormODThreadNames.WebSync.GetDescription();
+			//odThread.Start();
 		}
 
 		#endregion
