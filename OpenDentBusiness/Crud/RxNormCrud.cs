@@ -44,7 +44,7 @@ namespace OpenDentBusiness.Crud{
 			RxNorm rxNorm;
 			foreach(DataRow row in table.Rows) {
 				rxNorm=new RxNorm();
-				rxNorm.RxNormNum  = PIn.Long  (row["RxNormNum"].ToString());
+				rxNorm.Id  = PIn.Long  (row["RxNormNum"].ToString());
 				rxNorm.RxCui      = PIn.String(row["RxCui"].ToString());
 				rxNorm.MmslCode   = PIn.String(row["MmslCode"].ToString());
 				rxNorm.Description= PIn.String(row["Description"].ToString());
@@ -65,7 +65,7 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("Description");
 			foreach(RxNorm rxNorm in listRxNorms) {
 				table.Rows.Add(new object[] {
-					POut.Long  (rxNorm.RxNormNum),
+					POut.Long  (rxNorm.Id),
 					            rxNorm.RxCui,
 					            rxNorm.MmslCode,
 					            rxNorm.Description,
@@ -82,7 +82,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one RxNorm into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(RxNorm rxNorm,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				rxNorm.RxNormNum=ReplicationServers.GetKey("rxnorm","RxNormNum");
+				rxNorm.Id=ReplicationServers.GetKey("rxnorm","RxNormNum");
 			}
 			string command="INSERT INTO rxnorm (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -90,7 +90,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="RxCui,MmslCode,Description) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(rxNorm.RxNormNum)+",";
+				command+=POut.Long(rxNorm.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(rxNorm.RxCui)+"',"
@@ -104,9 +104,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramDescription);
 			}
 			else {
-				rxNorm.RxNormNum=Database.ExecuteInsert(command,paramDescription);
+				rxNorm.Id=Database.ExecuteInsert(command,paramDescription);
 			}
-			return rxNorm.RxNormNum;
+			return rxNorm.Id;
 		}
 
 		///<summary>Inserts one RxNorm into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -119,14 +119,14 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO rxnorm (";
 			if(!useExistingPK) {
-				rxNorm.RxNormNum=ReplicationServers.GetKeyNoCache("rxnorm","RxNormNum");
+				rxNorm.Id=ReplicationServers.GetKeyNoCache("rxnorm","RxNormNum");
 			}
 			if(useExistingPK) {
 				command+="RxNormNum,";
 			}
 			command+="RxCui,MmslCode,Description) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(rxNorm.RxNormNum)+",";
+				command+=POut.Long(rxNorm.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(rxNorm.RxCui)+"',"
@@ -140,9 +140,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramDescription);
 			}
 			else {
-				rxNorm.RxNormNum=Database.ExecuteInsert(command,paramDescription);
+				rxNorm.Id=Database.ExecuteInsert(command,paramDescription);
 			}
-			return rxNorm.RxNormNum;
+			return rxNorm.Id;
 		}
 
 		///<summary>Updates one RxNorm in the database.</summary>
@@ -151,7 +151,7 @@ namespace OpenDentBusiness.Crud{
 				+"RxCui      = '"+POut.String(rxNorm.RxCui)+"', "
 				+"MmslCode   = '"+POut.String(rxNorm.MmslCode)+"', "
 				+"Description=  "+DbHelper.ParamChar+"paramDescription "
-				+"WHERE RxNormNum = "+POut.Long(rxNorm.RxNormNum);
+				+"WHERE RxNormNum = "+POut.Long(rxNorm.Id);
 			if(rxNorm.Description==null) {
 				rxNorm.Description="";
 			}
@@ -182,7 +182,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			var paramDescription = new MySqlParameter("paramDescription", POut.StringParam(rxNorm.Description));
 			command="UPDATE rxnorm SET "+command
-				+" WHERE RxNormNum = "+POut.Long(rxNorm.RxNormNum);
+				+" WHERE RxNormNum = "+POut.Long(rxNorm.Id);
 			Database.ExecuteNonQuery(command,paramDescription);
 			return true;
 		}

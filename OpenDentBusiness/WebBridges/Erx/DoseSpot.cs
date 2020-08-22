@@ -91,7 +91,7 @@ namespace OpenDentBusiness {
           Severity=SeverityType.Low,
           Type=AlertType.DoseSpotClinicRegistered,
           FKey=clinicErx.ClinicErxNum,
-          ClinicNum=clinicErx.ClinicNum,
+          ClinicId=clinicErx.ClinicNum,
         };
       }
       else {
@@ -101,7 +101,7 @@ namespace OpenDentBusiness {
           Description="Select clinic to assign ID",
           Severity=SeverityType.Low,
           Type=AlertType.DoseSpotClinicRegistered,
-          ClinicNum=-1,//Show in all clinics.  We only want 1 alert, but that alert can be processed from any clinic because we don't know which clinic to display in.
+          ClinicId=-1,//Show in all clinics.  We only want 1 alert, but that alert can be processed from any clinic because we don't know which clinic to display in.
           FKey=clinicErx.ClinicErxNum,
           FormToOpen=FormType.FormDoseSpotAssignClinicId,
         };
@@ -127,7 +127,7 @@ namespace OpenDentBusiness {
 					Severity=SeverityType.Low,
 					Type=AlertType.DoseSpotProviderRegistered,
 					FKey=providerErx.ProviderErxNum,
-					ClinicNum=-1,//Show in all clinics.  We only want 1 alert, but that alert can be processed from any clinic because providers aren't clinic specific
+					ClinicId=-1,//Show in all clinics.  We only want 1 alert, but that alert can be processed from any clinic because providers aren't clinic specific
 					ItemValue="User: "+listDoseUsers[0].Id+", "+listDoseUsers[0].UserName+" "
 					+"has been assigned a DoseSpot User ID of: "+providerErx.UserId,
 				};
@@ -145,7 +145,7 @@ namespace OpenDentBusiness {
 					Severity=SeverityType.Low,
 					Type=AlertType.DoseSpotProviderRegistered,
 					FKey=providerErx.ProviderErxNum,
-					ClinicNum=-1,//Show in all clinics.  We only want 1 alert, but that alert can be processed from any clinic because providers aren't clinic specific
+					ClinicId=-1,//Show in all clinics.  We only want 1 alert, but that alert can be processed from any clinic because providers aren't clinic specific
 					FormToOpen=FormType.FormDoseSpotAssignUserId,
 				};
 				AlertItems.Insert(alert);

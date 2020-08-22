@@ -27,7 +27,7 @@ namespace OpenDental
 				for (int j = 0; j < diseases.Count; j++)
 				{
 					//This does not look for matches with icd9s.
-					if (alertList[i].DiseaseDefNum == diseases[j].DiseaseDefNum && diseases[j].ProbStatus == 0)
+					if (alertList[i].DiseaseDefId == diseases[j].DiseaseDefNum && diseases[j].ProbStatus == 0)
 					{//ProbStatus is active.
 						if (alertList[i].NotificationMsg == "")
 						{
@@ -42,11 +42,11 @@ namespace OpenDental
 
 				for (int j = 0; j < allergies.Count; j++)
 				{
-					if (alertList[i].AllergyDefNum == allergies[j].AllergyDefId && allergies[j].StatusIsActive)
+					if (alertList[i].AllergyDefId == allergies[j].AllergyDefId && allergies[j].StatusIsActive)
 					{
 						if (alertList[i].NotificationMsg == "")
 						{
-							allergiesMatches.Add(AllergyDefs.GetOne(alertList[i].AllergyDefNum).Description);
+							allergiesMatches.Add(AllergyDefs.GetOne(alertList[i].AllergyDefId).Description);
 						}
 						else
 						{
@@ -58,12 +58,12 @@ namespace OpenDental
 				for (int j = 0; j < medicationPats.Count; j++)
 				{
 					bool isMedInteraction = false;
-					Medication medForAlert = Medications.GetMedication(alertList[i].MedicationNum);
+					Medication medForAlert = Medications.GetMedication(alertList[i].MedicationId);
 					if (medForAlert == null)
 					{
 						continue;//MedicationNum will be 0 for all other alerts that are not medication alerts.
 					}
-					if (medicationPats[j].MedicationNum != 0 && alertList[i].MedicationNum == medicationPats[j].MedicationNum)
+					if (medicationPats[j].MedicationNum != 0 && alertList[i].MedicationId == medicationPats[j].MedicationNum)
 					{//Medication from medication list.
 						isMedInteraction = true;
 					}
@@ -83,7 +83,7 @@ namespace OpenDental
 					if (alertList[i].NotificationMsg == "")
 					{
 						Medications.RefreshCache();
-						medicationsMatches.Add(Medications.GetMedication(alertList[i].MedicationNum).MedName);
+						medicationsMatches.Add(Medications.GetMedication(alertList[i].MedicationId).MedName);
 					}
 					else
 					{

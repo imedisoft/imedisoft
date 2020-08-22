@@ -3240,7 +3240,7 @@ namespace OpenDental
 				{//Never want to remove these MenuItems.
 					continue;
 				}
-				if (_listAlertItems.Any(x => x.AlertItemNum == ((AlertItem)menuItem.Tag).AlertItemNum))
+				if (_listAlertItems.Any(x => x.Id == ((AlertItem)menuItem.Tag).Id))
 				{
 					continue;//A menu item already exists for this alert. May update the description later.
 				}
@@ -3255,7 +3255,7 @@ namespace OpenDental
 				string alertItemKey = alertItemCur.Type.ToString();
 				string alertDescriptNew = AlertMenuItemHelper(alertItemCur) + alertItemCur.Description;
 				MenuItem menuItem = listMenuItem.Where(x => x != menuItemAlerts && x != menuItemNoAlerts)
-					.FirstOrDefault(x => alertItemCur.AlertItemNum == ((AlertItem)x.Tag).AlertItemNum);
+					.FirstOrDefault(x => alertItemCur.Id == ((AlertItem)x.Tag).Id);
 				if (menuItem != null)
 				{//Menu already has an item for this alert, so update text if needed.
 					if (menuItem.Text != alertDescriptNew)
@@ -6417,13 +6417,13 @@ namespace OpenDental
 			{
 				if (_listAlertItems != null && _listAlertReads != null)
 				{
-					List<long> listAlertItemNums = _listAlertItems.Select(x => x.AlertItemNum).ToList();//All alert nums for current alertItems.
+					List<long> listAlertItemNums = _listAlertItems.Select(x => x.Id).ToList();//All alert nums for current alertItems.
 					List<long> listAlertReadItemNums = _listAlertReads.Select(x => x.AlertItemId).ToList();//All alert nums for read alertItems.
 					if (!menuItemNoAlerts.Visible && //menuItemNoAlerts is only Visible when there are no AlertItems to show.
 							!listAlertItemNums.All(x => listAlertReadItemNums.Contains(x)))
 					{
 						//Max SeverityType for all unread AlertItems.
-						SeverityType maxSeverity = _listAlertItems.FindAll(x => !listAlertReadItemNums.Contains(x.AlertItemNum)).Select(x => x.Severity).Max();
+						SeverityType maxSeverity = _listAlertItems.FindAll(x => !listAlertReadItemNums.Contains(x.Id)).Select(x => x.Severity).Max();
 						backGroundColor = AlertBackgroudColorHelper(maxSeverity);
 						colorText = AlertTextColorHelper(maxSeverity);
 					}
@@ -6439,7 +6439,7 @@ namespace OpenDental
 			}
 			else
 			{//This is an alert menuItem.
-				if (!_listAlertReads.Exists(x => x.AlertItemId == alertItem.AlertItemNum))
+				if (!_listAlertReads.Exists(x => x.AlertItemId == alertItem.Id))
 				{//User has not acknowleged alert yet.
 					backGroundColor = AlertBackgroudColorHelper(alertItem.Severity);
 					colorText = AlertTextColorHelper(alertItem.Severity);

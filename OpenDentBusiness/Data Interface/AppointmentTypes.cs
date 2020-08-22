@@ -16,9 +16,9 @@ namespace OpenDentBusiness{
 		public static string GetName(long AppointmentTypeNum) {
 			//No need to check RemotingRole; no call to db.
 			string retVal="";
-			AppointmentType appointmentType=GetFirstOrDefault(x => x.AppointmentTypeNum==AppointmentTypeNum);
+			AppointmentType appointmentType=GetFirstOrDefault(x => x.Id==AppointmentTypeNum);
 			if(appointmentType!=null) {
-				retVal=appointmentType.AppointmentTypeName+(appointmentType.IsHidden ? " "+"(hidden)" : "");
+				retVal=appointmentType.Name+(appointmentType.Hidden ? " "+"(hidden)" : "");
 			}
 			return retVal;
 		}
@@ -31,7 +31,7 @@ namespace OpenDentBusiness{
 			string timePattern="";
 			if(string.IsNullOrEmpty(appointmentType.Pattern)) {
 				//Dynamically calculate the timePattern from the procedure codes associated to the appointment type passed in.
-				List<string> listProcCodeStrings=appointmentType.CodeStr.Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries).ToList();
+				List<string> listProcCodeStrings=appointmentType.ProcedureCodes.Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries).ToList();
 				List<ProcedureCode> listProcCodes=new List<ProcedureCode>();
 				listProcCodeStrings.ForEach(x => listProcCodes.Add(ProcedureCodes.GetProcCode(x)));
 				timePattern=OpenDentBusiness.Appointments.CalculatePattern(provNumDentist,provNumHyg,listProcCodes.Select(x => x.CodeNum).ToList(),true);
@@ -50,7 +50,7 @@ namespace OpenDentBusiness{
 			if(defLink==null) {
 				return null;
 			}
-			return AppointmentTypes.GetFirstOrDefault(x => x.AppointmentTypeNum==defLink.FKey,true);
+			return AppointmentTypes.GetFirstOrDefault(x => x.Id==defLink.FKey,true);
 		}
 
 		#endregion
@@ -78,7 +78,7 @@ namespace OpenDentBusiness{
 				AppointmentTypes.GetTableFromCache(false);
 			}
 			protected override bool IsInListShort(AppointmentType appointmentType) {
-				return !appointmentType.IsHidden;
+				return !appointmentType.Hidden;
 			}
 		}
 
@@ -126,7 +126,7 @@ namespace OpenDentBusiness{
 		///<summary>Gets one AppointmentType from the cache.  Returns null if no match found.</summary>
 		public static AppointmentType GetOne(long appointmentTypeNum) {
 			//No need to check RemotingRole; no call to db.
-			return GetFirstOrDefault(x => x.AppointmentTypeNum==appointmentTypeNum);
+			return GetFirstOrDefault(x => x.Id==appointmentTypeNum);
 		}
 
 		///<summary></summary>
@@ -171,14 +171,14 @@ namespace OpenDentBusiness{
 			if(a1.ItemOrder!=a2.ItemOrder){
 				return a1.ItemOrder.CompareTo(a2.ItemOrder);
 			}
-			return a1.AppointmentTypeNum.CompareTo(a2.AppointmentTypeNum);
+			return a1.Id.CompareTo(a2.Id);
 		}
 
 		///<summary>Returns true if all members are the same.</summary>
 		public static bool Compare(AppointmentType a1,AppointmentType a2) {
-			if(a1.AppointmentTypeColor==a2.AppointmentTypeColor
-				&& a1.AppointmentTypeName==a2.AppointmentTypeName
-				&& a1.IsHidden==a2.IsHidden
+			if(a1.Color==a2.Color
+				&& a1.Name==a2.Name
+				&& a1.Hidden==a2.Hidden
 				&& a1.ItemOrder==a2.ItemOrder)
 			{
 				return true;

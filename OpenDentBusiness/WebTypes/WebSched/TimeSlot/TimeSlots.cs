@@ -437,13 +437,13 @@ namespace OpenDentBusiness.WebTypes.WebSched.TimeSlot
 			//If there is an appointment type, try to determine double booking based on any rules associated with those proc codes
 			if (apptType != null)
 			{
-				System.Collections.ArrayList apptTypeProcCodes = new System.Collections.ArrayList(apptType.CodeStr.Split(','));
+				System.Collections.ArrayList apptTypeProcCodes = new System.Collections.ArrayList(apptType.ProcedureCodes.Split(','));
 				Appointment apptTemp = new Appointment()
 				{
 					ProvNum = provNum,
 					Pattern = timePattern,
 					AptDateTime = dateTimeAppointmentStart,
-					AppointmentTypeNum = apptType.AppointmentTypeNum,
+					AppointmentTypeNum = apptType.Id,
 				};
 				DataTable dtAppts = Appointments.GetPeriodApptsTableMini(dateTimeAppointmentStart, provNum);
 				List<long> listApptNums = new List<long>();

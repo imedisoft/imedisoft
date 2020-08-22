@@ -10,7 +10,7 @@ namespace OpenDentBusiness
 		[PrimaryKey]
 		public long Id;
 
-		[Column("AlertItemNum"), ForeignKey(typeof(AlertItem), nameof(AlertItem.AlertItemNum))]
+		[Column("AlertItemNum"), ForeignKey(typeof(AlertItem), nameof(AlertItem.Id))]
 		public long AlertItemId;
 
 		[Column("UserNum"), ForeignKey(typeof(Userod), nameof(Userod.Id))]

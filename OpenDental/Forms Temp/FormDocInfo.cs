@@ -13,6 +13,7 @@ using System.Text;
 using OpenDentBusiness;
 using CodeBase;
 using OpenDental.Thinfinity;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 ///<summary></summary>

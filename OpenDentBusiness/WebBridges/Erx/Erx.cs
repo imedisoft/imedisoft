@@ -55,7 +55,7 @@ namespace OpenDentBusiness
 			}
 			else
 			{//The prescription was already in our database. Update it.
-				rx.RxNum = rxOld.RxNum;
+				rx.Id = rxOld.Id;
 				//Preserve the pharmacy on the existing prescription, in case the user set the value manually.
 				//We do not pull pharmacy back from eRx yet.
 				rx.PharmacyNum = rxOld.PharmacyNum;

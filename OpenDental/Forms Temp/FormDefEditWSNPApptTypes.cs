@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormDefEditWSNPApptTypes:ODForm {
@@ -32,7 +33,7 @@ namespace OpenDental {
 			List<DefLink> listApptTypeDefLinks=DefLinks.GetDefLinksByType(DefLinkType.AppointmentType);
 			DefLink defLink=listApptTypeDefLinks.FirstOrDefault(x => x.DefNum==_defCur.DefNum);
 			if(defLink!=null) {
-				_apptTypeCur=AppointmentTypes.GetFirstOrDefault(x => x.AppointmentTypeNum==defLink.FKey);
+				_apptTypeCur=AppointmentTypes.GetFirstOrDefault(x => x.Id==defLink.FKey);
 			}
 			List<DefLink> listRestrictToDefLinks=DefLinks.GetDefLinksByType(DefLinkType.BlockoutType,_defCur.DefNum);
 			_listRestrictToBlockoutTypes=Defs.GetDefs(DefCat.BlockoutTypes,listRestrictToDefLinks.Select(x => x.FKey).ToList());
@@ -43,7 +44,7 @@ namespace OpenDental {
 		private void FillApptTypeValue() {
 			textApptType.Clear();
 			if(_apptTypeCur!=null) {
-				textApptType.Text=_apptTypeCur.AppointmentTypeName;
+				textApptType.Text=_apptTypeCur.Name;
 			}
 		}
 
@@ -96,7 +97,7 @@ namespace OpenDental {
 			else {
 				Defs.Update(_defCur);
 			}
-			DefLinks.SetFKeyForDef(_defCur.DefNum,_apptTypeCur.AppointmentTypeNum,DefLinkType.AppointmentType);
+			DefLinks.SetFKeyForDef(_defCur.DefNum,_apptTypeCur.Id,DefLinkType.AppointmentType);
 			DefLinks.DeleteAllForDef(_defCur.DefNum,DefLinkType.BlockoutType);//Remove all blockouts before inserting the new set
 			DefLinks.InsertDefLinksForFKeys(_defCur.DefNum,_listRestrictToBlockoutTypes.Select(x => x.DefNum).ToList(),DefLinkType.BlockoutType);
 			DialogResult=DialogResult.OK;

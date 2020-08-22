@@ -1979,7 +1979,7 @@ namespace OpenDentBusiness {
 					//There is no need to make security logs for anything other than the appointment.  That is how the recall list system currently does it.
 					Recalls.SynchScheduledApptFull(aptCur.PatNum);//Synch the recalls so that the appointment will disappear from the recall list.
 					AlertItem alert=new AlertItem() {
-						ClinicNum=aptCur.ClinicNum,
+						ClinicId=aptCur.ClinicNum,
 						Description=aptCur.AptDateTime.ToString(),
 						Type=AlertType.WebSchedRecallApptCreated,
 						Actions=ActionType.MarkAsRead|ActionType.OpenForm|ActionType.Delete,

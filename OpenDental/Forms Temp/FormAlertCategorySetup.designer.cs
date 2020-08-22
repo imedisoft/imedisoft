@@ -1,5 +1,7 @@
-namespace OpenDental{
-	partial class FormAlertCategorySetup {
+namespace OpenDental
+{
+	partial class FormAlertCategorySetup
+	{
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -9,8 +11,10 @@ namespace OpenDental{
 		/// Clean up any resources being used.
 		/// </summary>
 		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-		protected override void Dispose(bool disposing) {
-			if(disposing && (components != null)) {
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && (components != null))
+			{
 				components.Dispose();
 			}
 			base.Dispose(disposing);
@@ -22,103 +26,102 @@ namespace OpenDental{
 		/// Required method for Designer support - do not modify
 		/// the contents of this method with the code editor.
 		/// </summary>
-		private void InitializeComponent() {
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAlertCategorySetup));
-			this.butDuplicate = new OpenDental.UI.Button();
-			this.butCopy = new OpenDental.UI.Button();
-			this.gridInternal = new OpenDental.UI.ODGrid();
-			this.gridCustom = new OpenDental.UI.ODGrid();
-			this.butClose = new OpenDental.UI.Button();
-			this.SuspendLayout();
-			// 
-			// butDuplicate
-			// 
-			this.butDuplicate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butDuplicate.Image = global::Imedisoft.Properties.Resources.Add;
-			this.butDuplicate.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.butDuplicate.Location = new System.Drawing.Point(700, 565);
-			this.butDuplicate.Name = "butDuplicate";
-			this.butDuplicate.Size = new System.Drawing.Size(89, 24);
-			this.butDuplicate.TabIndex = 13;
-			this.butDuplicate.Text = "Duplicate";
-			this.butDuplicate.Click += new System.EventHandler(this.butDuplicate_Click);
-			// 
-			// butCopy
-			// 
-			this.butCopy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butCopy.Image = global::Imedisoft.Properties.Resources.Right;
-			this.butCopy.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.butCopy.Location = new System.Drawing.Point(403, 229);
-			this.butCopy.Name = "butCopy";
-			this.butCopy.Size = new System.Drawing.Size(75, 24);
-			this.butCopy.TabIndex = 11;
-			this.butCopy.Text = "Copy";
-			this.butCopy.Click += new System.EventHandler(this.butCopy_Click);
-			// 
-			// gridInternal
-			// 
-			this.gridInternal.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+		private void InitializeComponent()
+		{
+            this.duplicateButton = new OpenDental.UI.Button();
+            this.copyButton = new OpenDental.UI.Button();
+            this.internalGrid = new OpenDental.UI.ODGrid();
+            this.customGrid = new OpenDental.UI.ODGrid();
+            this.closeButton = new OpenDental.UI.Button();
+            this.SuspendLayout();
+            // 
+            // duplicateButton
+            // 
+            this.duplicateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.duplicateButton.Image = global::Imedisoft.Properties.Resources.IconPlus;
+            this.duplicateButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.duplicateButton.Location = new System.Drawing.Point(703, 564);
+            this.duplicateButton.Name = "duplicateButton";
+            this.duplicateButton.Size = new System.Drawing.Size(80, 25);
+            this.duplicateButton.TabIndex = 3;
+            this.duplicateButton.Text = "Duplicate";
+            this.duplicateButton.Click += new System.EventHandler(this.DuplicateButton_Click);
+            // 
+            // copyButton
+            // 
+            this.copyButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.copyButton.Image = global::Imedisoft.Properties.Resources.IconArrowRight;
+            this.copyButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.copyButton.Location = new System.Drawing.Point(400, 230);
+            this.copyButton.Name = "copyButton";
+            this.copyButton.Size = new System.Drawing.Size(80, 25);
+            this.copyButton.TabIndex = 1;
+            this.copyButton.Text = "Copy";
+            this.copyButton.Click += new System.EventHandler(this.CopyButton_Click);
+            // 
+            // internalGrid
+            // 
+            this.internalGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.gridInternal.Location = new System.Drawing.Point(12, 17);
-			this.gridInternal.Name = "gridInternal";
-			this.gridInternal.Size = new System.Drawing.Size(370, 542);
-			this.gridInternal.TabIndex = 9;
-			this.gridInternal.Title = "Internal";
-			this.gridInternal.TranslationName = "TableInternal";
-			this.gridInternal.CellDoubleClick += new OpenDental.UI.ODGridClickEventHandler(this.gridInternal_CellDoubleClick);
-			// 
-			// gridCustom
-			// 
-			this.gridCustom.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.internalGrid.Location = new System.Drawing.Point(12, 12);
+            this.internalGrid.Name = "internalGrid";
+            this.internalGrid.Size = new System.Drawing.Size(370, 546);
+            this.internalGrid.TabIndex = 0;
+            this.internalGrid.Title = "Internal";
+            this.internalGrid.TranslationName = "TableInternal";
+            this.internalGrid.CellDoubleClick += new OpenDental.UI.ODGridClickEventHandler(this.InternalGrid_CellDoubleClick);
+            // 
+            // customGrid
+            // 
+            this.customGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.gridCustom.Location = new System.Drawing.Point(493, 17);
-			this.gridCustom.Name = "gridCustom";
-			this.gridCustom.Size = new System.Drawing.Size(376, 542);
-			this.gridCustom.TabIndex = 10;
-			this.gridCustom.Title = "Custom";
-			this.gridCustom.TranslationName = "TableCustom";
-			this.gridCustom.CellDoubleClick += new OpenDental.UI.ODGridClickEventHandler(this.gridCustom_CellDoubleClick);
-			// 
-			// butClose
-			// 
-			this.butClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butClose.Location = new System.Drawing.Point(794, 565);
-			this.butClose.Name = "butClose";
-			this.butClose.Size = new System.Drawing.Size(75, 24);
-			this.butClose.TabIndex = 14;
-			this.butClose.Text = "&Close";
-			this.butClose.Click += new System.EventHandler(this.butCancel_Click);
-			// 
-			// FormAlertCategorySetup
-			// 
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-			this.ClientSize = new System.Drawing.Size(881, 601);
-			this.ControlBox = false;
-			this.Controls.Add(this.butDuplicate);
-			this.Controls.Add(this.butCopy);
-			this.Controls.Add(this.gridInternal);
-			this.Controls.Add(this.gridCustom);
-			this.Controls.Add(this.butClose);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.MaximizeBox = false;
-			this.MinimizeBox = false;
-			this.MinimumSize = new System.Drawing.Size(0, 0);
-			this.Name = "FormAlertCategorySetup";
-			this.Text = "Alert Category Setup";
-			this.Load += new System.EventHandler(this.FormAlertCategorySetup_Load);
-			this.ResumeLayout(false);
+            this.customGrid.Location = new System.Drawing.Point(499, 12);
+            this.customGrid.Name = "customGrid";
+            this.customGrid.Size = new System.Drawing.Size(370, 546);
+            this.customGrid.TabIndex = 2;
+            this.customGrid.Title = "Custom";
+            this.customGrid.TranslationName = "TableCustom";
+            this.customGrid.CellDoubleClick += new OpenDental.UI.ODGridClickEventHandler(this.CustomGrid_CellDoubleClick);
+            // 
+            // closeButton
+            // 
+            this.closeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.closeButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.closeButton.Location = new System.Drawing.Point(789, 564);
+            this.closeButton.Name = "closeButton";
+            this.closeButton.Size = new System.Drawing.Size(80, 25);
+            this.closeButton.TabIndex = 4;
+            this.closeButton.Text = "&Close";
+            // 
+            // FormAlertCategorySetup
+            // 
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.ClientSize = new System.Drawing.Size(881, 601);
+            this.Controls.Add(this.duplicateButton);
+            this.Controls.Add(this.copyButton);
+            this.Controls.Add(this.internalGrid);
+            this.Controls.Add(this.customGrid);
+            this.Controls.Add(this.closeButton);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "FormAlertCategorySetup";
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "Alert Category Setup";
+            this.Load += new System.EventHandler(this.FormAlertCategorySetup_Load);
+            this.ResumeLayout(false);
 
 		}
 
 		#endregion
 
-		private UI.Button butDuplicate;
-		private UI.Button butCopy;
-		private UI.ODGrid gridInternal;
-		private UI.ODGrid gridCustom;
-		private UI.Button butClose;
+		private OpenDental.UI.Button duplicateButton;
+		private OpenDental.UI.Button copyButton;
+		private OpenDental.UI.ODGrid internalGrid;
+		private OpenDental.UI.ODGrid customGrid;
+		private OpenDental.UI.Button closeButton;
 	}
 }

@@ -1,56 +1,89 @@
+using Imedisoft.Data.Annotations;
 using System;
 using System.Collections;
 
-namespace OpenDentBusiness {
+namespace OpenDentBusiness
+{
+	/// <summary>
+	/// Many-to-many relationship connecting Rx with DiseaseDef, AllergyDef, or Medication. 
+	/// Only one of those links may be specified in a single row; the other two will be NULL.
+	/// </summary>
+	[Table("rx_alerts")]
+	public class RxAlert : TableBase
+	{
+		[PrimaryKey]
+		public long Id;
 
-	///<summary>Many-to-many relationship connecting Rx with DiseaseDef, AllergyDef, or Medication.  Only one of those links may be specified in a single row; the other two will be 0.</summary>
-	[Serializable]
-	public class RxAlert:TableBase {
-		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
-		public long RxAlertNum;
-		///<summary>FK to rxdef.RxDefNum.  This alert is to be shown when user attempts to write an Rx for this RxDef.</summary>
+		/// <summary>
+		/// This alert is to be shown when user attempts to write an Rx for this RxDef.
+		/// </summary>
+		[ForeignKey(typeof(RxDef), nameof(RxDef.Id))]
 		public long RxDefNum;
-		///<summary>FK to diseasedef.DiseaseDefNum.  Only if DrugProblem interaction.  This is compared against disease.DiseaseDefNum using PatNum.  Drug-Problem (they call it Drug-Diagnosis) checking is also performed in NewCrop.</summary>
-		public long DiseaseDefNum;
-		///<summary>FK to allergydef.AllergyDefNum.  Only if DrugAllergy interaction.  Compared against allergy.AllergyDefNum using PatNum.  Drug-Allergy checking is also perfomed in NewCrop.</summary>
-		public long AllergyDefNum;
-		///<summary>FK to medication.MedicationNum.  Only if DrugDrug interaction.  This will be compared against medicationpat.MedicationNum using PatNum.  Drug-Drug checking is also performed in NewCrop.</summary>
-		public long MedicationNum;
-		///<summary>This is typically blank, so a default message will be displayed by OD.  But if this contains a message, then this message will be used instead.</summary>
+
+		/// <summary>
+		/// Only if DrugProblem interaction. 
+		/// This is compared against disease.DiseaseDefNum using PatNum. 
+		/// Drug-Problem (they call it Drug-Diagnosis) checking is also performed in NewCrop.
+		/// </summary>
+		[ForeignKey(typeof(DiseaseDef), nameof(DiseaseDef.DiseaseDefNum))]
+		public long DiseaseDefId;
+
+		/// <summary>
+		/// Only if DrugAllergy interaction.
+		/// Compared against allergy.AllergyDefNum using PatNum.
+		/// Drug-Allergy checking is also perfomed in NewCrop.
+		/// </summary>
+		[ForeignKey(typeof(AllergyDef), nameof(AllergyDef.AllergyDefNum))]
+		public long AllergyDefId;
+
+		/// <summary>
+		/// Only if DrugDrug interaction.
+		/// This will be compared against medicationpat.MedicationNum using PatNum.
+		/// Drug-Drug checking is also performed in NewCrop.
+		/// </summary>
+		[ForeignKey(typeof(Medication), nameof(Medication.MedicationNum))]
+		public long MedicationId;
+
+		/// <summary>
+		/// This is typically blank, so a default message will be displayed by OD.
+		/// But if this contains a message, then this message will be used instead.
+		/// </summary>
 		public string NotificationMsg;
-		///<summary>False by default.  Set to true to flag the drug-drug or drug-allergy intervention as high significance.</summary>
+
+		/// <summary>
+		/// False by default.
+		/// Set to true to flag the drug-drug or drug-allergy intervention as high significance.
+		/// </summary>
 		public bool IsHighSignificance;
 
-		///<summary></summary>
-		public RxAlert Copy() {
-			return (RxAlert)this.MemberwiseClone();
+
+        public override string ToString()
+        {
+			if (DiseaseDefId > 0)
+			{
+				return DiseaseDefs.GetName(DiseaseDefId);
+			}
+
+			if (AllergyDefId > 0)
+			{
+				var allergyDef = AllergyDefs.GetOne(AllergyDefId);
+
+				if (allergyDef != null)
+				{
+					return allergyDef.Description;
+				}
+			}
+
+			if (MedicationId > 0)
+			{
+				var medication = Medications.GetMedication(MedicationId);
+				if (medication != null)
+				{
+					return medication.MedName;
+				}
+			}
+
+			return base.ToString();
 		}
-
-		
-		
-	}
-
-		
-
-
-
-		
-	
-
-	
-
-	
-
-
+    }
 }
-
-
-
-
-
-
-
-
-
-

@@ -165,7 +165,7 @@ namespace UnitTests.AlertItems_Tests {
 					Description="eConnector needs to be restarted",
 					Severity=SeverityType.High,
 					Type=AlertType.EConnectorDown,
-					ClinicNum=-1,//Show for all clinics
+					ClinicId=-1,//Show for all clinics
 					FormToOpen=FormType.FormEServicesEConnector,
 				});
 			}
@@ -176,7 +176,7 @@ namespace UnitTests.AlertItems_Tests {
 					Description="A generic alert.",
 					Severity=SeverityType.Low,
 					ItemValue="A generic alert created for testing alert Items for all clinics. ClinicNum==" + clinicNum,
-					ClinicNum=clinicNum,
+					ClinicId=clinicNum,
 				}); ;
 			}
 			else {

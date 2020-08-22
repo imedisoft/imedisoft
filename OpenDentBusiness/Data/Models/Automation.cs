@@ -58,7 +58,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		public ApptStatus AptStatus;
 
-		[ForeignKey(typeof(AppointmentType), nameof(AppointmentType.AppointmentTypeNum))]
+		[ForeignKey(typeof(AppointmentType), nameof(AppointmentType.Id))]
 		public long AppointmentTypeId;
 
 		/// <summary>

@@ -21,5 +21,8 @@ namespace Imedisoft.Forms
 
         protected DialogResult Prompt(string question, MessageBoxButtons buttons = MessageBoxButtons.YesNo) 
             => CodeBase.ODMessageBox.Show(this, question, Text, buttons, MessageBoxIcon.Question);
+
+        protected bool Confirm(string question)
+            => Prompt(question) == DialogResult.Yes;
     }
 }

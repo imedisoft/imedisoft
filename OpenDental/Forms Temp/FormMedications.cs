@@ -10,6 +10,7 @@ using OpenDentBusiness;
 using OpenDental.UI;
 using System.IO;
 using CodeBase;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 	/// <summary>

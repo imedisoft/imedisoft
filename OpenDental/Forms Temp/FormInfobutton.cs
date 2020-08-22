@@ -13,6 +13,7 @@ using System.Xml.XPath;
 using System.IO;
 using OpenDental.UI;
 using System.Net;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormInfobutton:ODForm {

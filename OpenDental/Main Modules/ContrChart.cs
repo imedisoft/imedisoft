@@ -8969,7 +8969,7 @@ namespace OpenDental {
 				else if(row["RxNum"].ToString()!="0") {
 					RxPat rxPat=RxPats.GetRx(PIn.Long(row["RxNum"].ToString()));
 					SecurityLogs.MakeLogEntry(Permissions.RxEdit,_patCur.PatNum,"FROM("+rxPat.RxDate.ToShortDateString()+","+rxPat.Drug+","+rxPat.ProvNum+","
-						+rxPat.Disp+","+rxPat.Refills+")"+"\r\nTO('deleted')",rxPat.RxNum,rxPat.DateTStamp);
+						+rxPat.Disp+","+rxPat.Refills+")"+"\r\nTO('deleted')",rxPat.Id,rxPat.DateTStamp);
 					RxPats.Delete(PIn.Long(row["RxNum"].ToString()));
 				}
 			}

@@ -61,11 +61,38 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string Close {
+            get {
+                return ResourceManager.GetString("Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Code.
+        /// </summary>
+        public static string Code {
+            get {
+                return ResourceManager.GetString("Code", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Command.
         /// </summary>
         public static string Command {
             get {
                 return ResourceManager.GetString("Command", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Controlled.
+        /// </summary>
+        public static string Controlled {
+            get {
+                return ResourceManager.GetString("Controlled", resourceCulture);
             }
         }
         
@@ -84,6 +111,33 @@ namespace Imedisoft.Translation {
         public static string CouldNotCopyContentsToClipboard {
             get {
                 return ResourceManager.GetString("CouldNotCopyContentsToClipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Date.
+        /// </summary>
+        public static string Date {
+            get {
+                return ResourceManager.GetString("Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description.
+        /// </summary>
+        public static string Description {
+            get {
+                return ResourceManager.GetString("Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Drug.
+        /// </summary>
+        public static string Drug {
+            get {
+                return ResourceManager.GetString("Drug", resourceCulture);
             }
         }
         
@@ -142,6 +196,26 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Missing Info.
+        /// </summary>
+        public static string MissingInfo {
+            get {
+                return ResourceManager.GetString("MissingInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error: No Printers Installed.
+        ///
+        ///If you do have a printer installed, restarting the workstation may solve the problem..
+        /// </summary>
+        public static string NoPrintersInstalled {
+            get {
+                return ResourceManager.GetString("NoPrintersInstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No queries in the Query Feed to log..
         /// </summary>
         public static string NoQueriesInTheQueryFeedToLog {
@@ -151,11 +225,38 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Notes.
+        /// </summary>
+        public static string Notes {
+            get {
+                return ResourceManager.GetString("Notes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please enter password.
         /// </summary>
         public static string PleaseEnterPassword {
             get {
                 return ResourceManager.GetString("PleaseEnterPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select an item first..
+        /// </summary>
+        public static string PleaseSelectItemFirst {
+            get {
+                return ResourceManager.GetString("PleaseSelectItemFirst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Provider.
+        /// </summary>
+        public static string Provider {
+            get {
+                return ResourceManager.GetString("Provider", resourceCulture);
             }
         }
         

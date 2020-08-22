@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Windows.Forms;
 using OpenDentBusiness;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 	/// <summary></summary>

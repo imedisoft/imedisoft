@@ -61,9 +61,9 @@ namespace OpenDentBusiness{
 		///<summary>Also deletes all RxAlerts that were attached.</summary>
 		public static void Delete(RxDef def) {
 			
-			string command="DELETE FROM rxalert WHERE RxDefNum="+POut.Long(def.RxDefNum);
+			string command="DELETE FROM rxalert WHERE RxDefNum="+POut.Long(def.Id);
 			Database.ExecuteNonQuery(command);
-			command= "DELETE FROM rxdef WHERE RxDefNum = "+POut.Long(def.RxDefNum);
+			command= "DELETE FROM rxdef WHERE RxDefNum = "+POut.Long(def.Id);
 			Database.ExecuteNonQuery(command);
 		}
 	

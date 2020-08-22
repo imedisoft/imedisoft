@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Imedisoft.Data.Cache
 {
@@ -117,22 +118,40 @@ namespace Imedisoft.Data.Cache
         }
 
         /// <summary>
-        /// Refreshes all caches in the specified <paramref name="group"/>.
+        /// Refreshes all caches in the specified <paramref name="groups"/> asynchronously.
         /// </summary>
-        /// <param name="group">The name of the group to refresh.</param>
-        public static void Refresh(string group)
+        /// <param name="groups">The list of groups to refresh.</param>
+        public static async Task RefreshAsync(params string[] groups)
         {
-            if (string.IsNullOrEmpty(group)) return;
-
-            var caches = GetCachesForGroup(group.ToLower());
-
-            lock (caches)
+            await Task.Run(() =>
             {
-                foreach (var cache in caches)
-                {
-                    cache.Refresh();
-                }
-            }
+                Refresh(groups);
+            });
+        }
+
+        /// <summary>
+        /// Refreshes all caches in the specified <paramref name="groups"/> on every active workstation.
+        /// </summary>
+        /// <param name="groups">The list of groups to refresh.</param>
+        public static void RefreshGlobal(params string[] groups)
+        {
+            if (groups == null) return;
+
+            Refresh(groups);
+
+            // TODO: Insert signals for other workstations to trigger a refresh globally...
+        }
+
+        /// <summary>
+        /// Refreshes all caches in the specified <paramref name="groups"/> on every active workstation asynchronously.
+        /// </summary>
+        /// <param name="groups">The list of groups to refresh.</param>
+        public static async Task RefreshGlobalAsync(params string[] groups)
+        {
+            await Task.Run(() =>
+            {
+                RefreshGlobal(groups);
+            });
         }
 
         /// <summary>

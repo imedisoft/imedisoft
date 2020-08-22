@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormEhrMeasureEvents:ODForm {

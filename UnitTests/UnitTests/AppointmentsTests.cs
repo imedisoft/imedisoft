@@ -1212,8 +1212,8 @@ namespace UnitTests.Appointments_Tests {
 			Prefs.Set(PrefName.WebSchedNewPatApptDoubleBooking,1);
 			//Set the appttype as a webschednewpat appt type
 			AppointmentType apptType=AppointmentTypeT.CreateAppointmentType(desc,codeStr:"D0120",pattern:"//XXXX//");
-			Def wsnpApptTypeDef=DefT.CreateDefinition(DefCat.WebSchedNewPatApptTypes,desc,POut.Long(apptType.AppointmentTypeNum));
-			DefLinkT.CreateDefLink(wsnpApptTypeDef.DefNum,apptType.AppointmentTypeNum,DefLinkType.AppointmentType);
+			Def wsnpApptTypeDef=DefT.CreateDefinition(DefCat.WebSchedNewPatApptTypes,desc,POut.Long(apptType.Id));
+			DefLinkT.CreateDefLink(wsnpApptTypeDef.DefNum,apptType.Id,DefLinkType.AppointmentType);
 			//Setup create two operatories with the same provider and set these available for wsnp
 			Clinic clinic=ClinicT.CreateClinic(desc);
 			long provNum=ProviderT.CreateProvider(desc);
@@ -1242,8 +1242,8 @@ namespace UnitTests.Appointments_Tests {
 			Prefs.Set(PrefName.WebSchedNewPatApptDoubleBooking,0);
 			//Set the appttype as a webschednewpat appt type
 			AppointmentType apptType=AppointmentTypeT.CreateAppointmentType(desc,codeStr:"D0120",pattern:"//XXXX//");
-			Def wsnpApptTypeDef=DefT.CreateDefinition(DefCat.WebSchedNewPatApptTypes,desc,POut.Long(apptType.AppointmentTypeNum));
-			DefLinkT.CreateDefLink(wsnpApptTypeDef.DefNum,apptType.AppointmentTypeNum,DefLinkType.AppointmentType);
+			Def wsnpApptTypeDef=DefT.CreateDefinition(DefCat.WebSchedNewPatApptTypes,desc,POut.Long(apptType.Id));
+			DefLinkT.CreateDefLink(wsnpApptTypeDef.DefNum,apptType.Id,DefLinkType.AppointmentType);
 			//Setup create two operatories with the same provider and set these available for wsnp
 			Clinic clinic=ClinicT.CreateClinic(desc);
 			long provNum=ProviderT.CreateProvider(desc);
@@ -1272,8 +1272,8 @@ namespace UnitTests.Appointments_Tests {
 			Prefs.Set(PrefName.WebSchedNewPatApptDoubleBooking,1);
 			//Set the appttype as a webschednewpat appt type
 			AppointmentType apptType=AppointmentTypeT.CreateAppointmentType(desc,codeStr:"D0120",pattern:"//XXXX//");
-			Def wsnpApptTypeDef=DefT.CreateDefinition(DefCat.WebSchedNewPatApptTypes,desc,POut.Long(apptType.AppointmentTypeNum));
-			DefLinkT.CreateDefLink(wsnpApptTypeDef.DefNum,apptType.AppointmentTypeNum,DefLinkType.AppointmentType);
+			Def wsnpApptTypeDef=DefT.CreateDefinition(DefCat.WebSchedNewPatApptTypes,desc,POut.Long(apptType.Id));
+			DefLinkT.CreateDefLink(wsnpApptTypeDef.DefNum,apptType.Id,DefLinkType.AppointmentType);
 			//Setup create two operatories with the same provider and set these available for wsnp
 			Clinic clinic=ClinicT.CreateClinic(desc);
 			long provNum=ProviderT.CreateProvider(desc);

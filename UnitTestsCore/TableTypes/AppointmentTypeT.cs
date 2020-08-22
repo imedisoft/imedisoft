@@ -13,10 +13,10 @@ namespace UnitTestsCore {
 			,bool isHidden=false,int itemOrder=0,string pattern="")
 		{
 			AppointmentType appointmentType=new AppointmentType() {
-				AppointmentTypeName=appointmentTypeName,
-				AppointmentTypeColor=appointmentTypeColor,
-				CodeStr=codeStr,
-				IsHidden=isHidden,
+				Name=appointmentTypeName,
+				Color=appointmentTypeColor,
+				ProcedureCodes=codeStr,
+				Hidden=isHidden,
 				ItemOrder=itemOrder,
 				Pattern=pattern,
 			};

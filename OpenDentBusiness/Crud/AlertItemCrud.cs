@@ -41,8 +41,8 @@ namespace OpenDentBusiness.Crud{
 			AlertItem alertItem;
 			foreach(DataRow row in table.Rows) {
 				alertItem=new AlertItem();
-				alertItem.AlertItemNum= PIn.Long  (row["AlertItemNum"].ToString());
-				alertItem.ClinicNum   = PIn.Long  (row["ClinicNum"].ToString());
+				alertItem.Id= PIn.Long  (row["AlertItemNum"].ToString());
+				alertItem.ClinicId   = PIn.Long  (row["ClinicNum"].ToString());
 				alertItem.Description = PIn.String(row["Description"].ToString());
 				alertItem.Type        = (OpenDentBusiness.AlertType)PIn.Int(row["Type"].ToString());
 				alertItem.Severity    = (OpenDentBusiness.SeverityType)PIn.Int(row["Severity"].ToString());
@@ -50,7 +50,7 @@ namespace OpenDentBusiness.Crud{
 				alertItem.FormToOpen  = (OpenDentBusiness.FormType)PIn.Int(row["FormToOpen"].ToString());
 				alertItem.FKey        = PIn.Long  (row["FKey"].ToString());
 				alertItem.ItemValue   = PIn.String(row["ItemValue"].ToString());
-				alertItem.UserNum     = PIn.Long  (row["UserNum"].ToString());
+				alertItem.UserId     = PIn.Long  (row["UserNum"].ToString());
 				retVal.Add(alertItem);
 			}
 			return retVal;
@@ -74,8 +74,8 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("UserNum");
 			foreach(AlertItem alertItem in listAlertItems) {
 				table.Rows.Add(new object[] {
-					POut.Long  (alertItem.AlertItemNum),
-					POut.Long  (alertItem.ClinicNum),
+					POut.Long  (alertItem.Id),
+					POut.Long  (alertItem.ClinicId),
 					            alertItem.Description,
 					POut.Int   ((int)alertItem.Type),
 					POut.Int   ((int)alertItem.Severity),
@@ -83,7 +83,7 @@ namespace OpenDentBusiness.Crud{
 					POut.Int   ((int)alertItem.FormToOpen),
 					POut.Long  (alertItem.FKey),
 					            alertItem.ItemValue,
-					POut.Long  (alertItem.UserNum),
+					POut.Long  (alertItem.UserId),
 				});
 			}
 			return table;
@@ -97,7 +97,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one AlertItem into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(AlertItem alertItem,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				alertItem.AlertItemNum=ReplicationServers.GetKey("alertitem","AlertItemNum");
+				alertItem.Id=ReplicationServers.GetKey("alertitem","AlertItemNum");
 			}
 			string command="INSERT INTO alertitem (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -105,10 +105,10 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="ClinicNum,Description,Type,Severity,Actions,FormToOpen,FKey,ItemValue,UserNum) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(alertItem.AlertItemNum)+",";
+				command+=POut.Long(alertItem.Id)+",";
 			}
 			command+=
-				     POut.Long  (alertItem.ClinicNum)+","
+				     POut.Long  (alertItem.ClinicId)+","
 				+"'"+POut.String(alertItem.Description)+"',"
 				+    POut.Int   ((int)alertItem.Type)+","
 				+    POut.Int   ((int)alertItem.Severity)+","
@@ -116,14 +116,14 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Int   ((int)alertItem.FormToOpen)+","
 				+    POut.Long  (alertItem.FKey)+","
 				+"'"+POut.String(alertItem.ItemValue)+"',"
-				+    POut.Long  (alertItem.UserNum)+")";
+				+    POut.Long  (alertItem.UserId)+")";
 			if(useExistingPK || PrefC.RandomKeys) {
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				alertItem.AlertItemNum=Database.ExecuteInsert(command);
+				alertItem.Id=Database.ExecuteInsert(command);
 			}
-			return alertItem.AlertItemNum;
+			return alertItem.Id;
 		}
 
 		///<summary>Inserts one AlertItem into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -136,17 +136,17 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO alertitem (";
 			if(!useExistingPK) {
-				alertItem.AlertItemNum=ReplicationServers.GetKeyNoCache("alertitem","AlertItemNum");
+				alertItem.Id=ReplicationServers.GetKeyNoCache("alertitem","AlertItemNum");
 			}
 			if(useExistingPK) {
 				command+="AlertItemNum,";
 			}
 			command+="ClinicNum,Description,Type,Severity,Actions,FormToOpen,FKey,ItemValue,UserNum) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(alertItem.AlertItemNum)+",";
+				command+=POut.Long(alertItem.Id)+",";
 			}
 			command+=
-				     POut.Long  (alertItem.ClinicNum)+","
+				     POut.Long  (alertItem.ClinicId)+","
 				+"'"+POut.String(alertItem.Description)+"',"
 				+    POut.Int   ((int)alertItem.Type)+","
 				+    POut.Int   ((int)alertItem.Severity)+","
@@ -154,20 +154,20 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Int   ((int)alertItem.FormToOpen)+","
 				+    POut.Long  (alertItem.FKey)+","
 				+"'"+POut.String(alertItem.ItemValue)+"',"
-				+    POut.Long  (alertItem.UserNum)+")";
+				+    POut.Long  (alertItem.UserId)+")";
 			if(useExistingPK) {
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				alertItem.AlertItemNum=Database.ExecuteInsert(command);
+				alertItem.Id=Database.ExecuteInsert(command);
 			}
-			return alertItem.AlertItemNum;
+			return alertItem.Id;
 		}
 
 		///<summary>Updates one AlertItem in the database.</summary>
 		public static void Update(AlertItem alertItem) {
 			string command="UPDATE alertitem SET "
-				+"ClinicNum   =  "+POut.Long  (alertItem.ClinicNum)+", "
+				+"ClinicNum   =  "+POut.Long  (alertItem.ClinicId)+", "
 				+"Description = '"+POut.String(alertItem.Description)+"', "
 				+"Type        =  "+POut.Int   ((int)alertItem.Type)+", "
 				+"Severity    =  "+POut.Int   ((int)alertItem.Severity)+", "
@@ -175,17 +175,17 @@ namespace OpenDentBusiness.Crud{
 				+"FormToOpen  =  "+POut.Int   ((int)alertItem.FormToOpen)+", "
 				+"FKey        =  "+POut.Long  (alertItem.FKey)+", "
 				+"ItemValue   = '"+POut.String(alertItem.ItemValue)+"', "
-				+"UserNum     =  "+POut.Long  (alertItem.UserNum)+" "
-				+"WHERE AlertItemNum = "+POut.Long(alertItem.AlertItemNum);
+				+"UserNum     =  "+POut.Long  (alertItem.UserId)+" "
+				+"WHERE AlertItemNum = "+POut.Long(alertItem.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Updates one AlertItem in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
 		public static bool Update(AlertItem alertItem,AlertItem oldAlertItem) {
 			string command="";
-			if(alertItem.ClinicNum != oldAlertItem.ClinicNum) {
+			if(alertItem.ClinicId != oldAlertItem.ClinicId) {
 				if(command!="") { command+=",";}
-				command+="ClinicNum = "+POut.Long(alertItem.ClinicNum)+"";
+				command+="ClinicNum = "+POut.Long(alertItem.ClinicId)+"";
 			}
 			if(alertItem.Description != oldAlertItem.Description) {
 				if(command!="") { command+=",";}
@@ -215,15 +215,15 @@ namespace OpenDentBusiness.Crud{
 				if(command!="") { command+=",";}
 				command+="ItemValue = '"+POut.String(alertItem.ItemValue)+"'";
 			}
-			if(alertItem.UserNum != oldAlertItem.UserNum) {
+			if(alertItem.UserId != oldAlertItem.UserId) {
 				if(command!="") { command+=",";}
-				command+="UserNum = "+POut.Long(alertItem.UserNum)+"";
+				command+="UserNum = "+POut.Long(alertItem.UserId)+"";
 			}
 			if(command=="") {
 				return false;
 			}
 			command="UPDATE alertitem SET "+command
-				+" WHERE AlertItemNum = "+POut.Long(alertItem.AlertItemNum);
+				+" WHERE AlertItemNum = "+POut.Long(alertItem.Id);
 			Database.ExecuteNonQuery(command);
 			return true;
 		}
@@ -231,7 +231,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Returns true if Update(AlertItem,AlertItem) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
 		public static bool UpdateComparison(AlertItem alertItem,AlertItem oldAlertItem) {
-			if(alertItem.ClinicNum != oldAlertItem.ClinicNum) {
+			if(alertItem.ClinicId != oldAlertItem.ClinicId) {
 				return true;
 			}
 			if(alertItem.Description != oldAlertItem.Description) {
@@ -255,7 +255,7 @@ namespace OpenDentBusiness.Crud{
 			if(alertItem.ItemValue != oldAlertItem.ItemValue) {
 				return true;
 			}
-			if(alertItem.UserNum != oldAlertItem.UserNum) {
+			if(alertItem.UserId != oldAlertItem.UserId) {
 				return true;
 			}
 			return false;
@@ -275,8 +275,8 @@ namespace OpenDentBusiness.Crud{
 			List<AlertItem> listUpdNew =new List<AlertItem>();
 			List<AlertItem> listUpdDB  =new List<AlertItem>();
 			List<AlertItem> listDel    =new List<AlertItem>();
-			listNew.Sort((AlertItem x,AlertItem y) => { return x.AlertItemNum.CompareTo(y.AlertItemNum); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
-			listDB.Sort((AlertItem x,AlertItem y) => { return x.AlertItemNum.CompareTo(y.AlertItemNum); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			listNew.Sort((AlertItem x,AlertItem y) => { return x.Id.CompareTo(y.Id); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			listDB.Sort((AlertItem x,AlertItem y) => { return x.Id.CompareTo(y.Id); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
 			int idxNew=0;
 			int idxDB=0;
 			int rowsUpdatedCount=0;
@@ -304,12 +304,12 @@ namespace OpenDentBusiness.Crud{
 					idxDB++;
 					continue;
 				}
-				else if(fieldNew.AlertItemNum<fieldDB.AlertItemNum) {//newPK less than dbPK, newItem is 'next'
+				else if(fieldNew.Id<fieldDB.Id) {//newPK less than dbPK, newItem is 'next'
 					listIns.Add(fieldNew);
 					idxNew++;
 					continue;
 				}
-				else if(fieldNew.AlertItemNum>fieldDB.AlertItemNum) {//dbPK less than newPK, dbItem is 'next'
+				else if(fieldNew.Id>fieldDB.Id) {//dbPK less than newPK, dbItem is 'next'
 					listDel.Add(fieldDB);
 					idxDB++;
 					continue;
@@ -330,7 +330,7 @@ namespace OpenDentBusiness.Crud{
 				}
 			}
 			for(int i=0;i<listDel.Count;i++) {
-				Delete(listDel[i].AlertItemNum);
+				Delete(listDel[i].Id);
 			}
 			if(rowsUpdatedCount>0 || listIns.Count>0 || listDel.Count>0) {
 				return true;

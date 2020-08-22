@@ -156,9 +156,9 @@ namespace OpenDental {
 						}
 						aptOld=aptNew.Copy();
 						aptNew.AppointmentTypeNum=listAutomations[i].AppointmentTypeId;
-						AppointmentType aptTypeCur=AppointmentTypes.GetFirstOrDefault(x => x.AppointmentTypeNum==aptNew.AppointmentTypeNum);
+						AppointmentType aptTypeCur=AppointmentTypes.GetFirstOrDefault(x => x.Id==aptNew.AppointmentTypeNum);
 						if(aptTypeCur!=null) {
-							aptNew.ColorOverride=aptTypeCur.AppointmentTypeColor;
+							aptNew.ColorOverride=aptTypeCur.Color;
 							aptNew.Pattern=AppointmentTypes.GetTimePatternForAppointmentType(aptTypeCur);
 							List<Procedure> listProcs=Appointments.ApptTypeMissingProcHelper(aptNew,aptTypeCur,new List<Procedure>());
 							Procedures.UpdateAptNums(listProcs.Select(x => x.ProcNum).ToList(),aptNew.AptNum,aptNew.AptStatus==ApptStatus.Planned);
@@ -195,7 +195,7 @@ namespace OpenDental {
 							//If this is updated, that method needs to be updated as well.
 							sheetDef=SheetDefs.GetSheetDef(listAutomations[i].SheetDefinitionId);
 							sheet=SheetUtil.CreateSheet(sheetDef,patNum);
-							SheetParameter.SetParameter(sheet,"RxNum",rx.RxNum);
+							SheetParameter.SetParameter(sheet,"RxNum",rx.Id);
 							SheetFiller.FillFields(sheet);
 							SheetUtil.CalculateHeights(sheet);
 							FormSF=new FormSheetFillEdit(sheet);

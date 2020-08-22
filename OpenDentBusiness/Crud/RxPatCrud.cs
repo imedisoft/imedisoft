@@ -44,7 +44,7 @@ namespace OpenDentBusiness.Crud{
 			RxPat rxPat;
 			foreach(DataRow row in table.Rows) {
 				rxPat=new RxPat();
-				rxPat.RxNum             = PIn.Long  (row["RxNum"].ToString());
+				rxPat.Id             = PIn.Long  (row["RxNum"].ToString());
 				rxPat.PatNum            = PIn.Long  (row["PatNum"].ToString());
 				rxPat.RxDate            = PIn.Date  (row["RxDate"].ToString());
 				rxPat.Drug              = PIn.String(row["Drug"].ToString());
@@ -103,7 +103,7 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("ClinicNum");
 			foreach(RxPat rxPat in listRxPats) {
 				table.Rows.Add(new object[] {
-					POut.Long  (rxPat.RxNum),
+					POut.Long  (rxPat.Id),
 					POut.Long  (rxPat.PatNum),
 					POut.DateT (rxPat.RxDate,false),
 					            rxPat.Drug,
@@ -139,7 +139,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one RxPat into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(RxPat rxPat,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				rxPat.RxNum=ReplicationServers.GetKey("rxpat","RxNum");
+				rxPat.Id=ReplicationServers.GetKey("rxpat","RxNum");
 			}
 			string command="INSERT INTO rxpat (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -147,7 +147,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="PatNum,RxDate,Drug,Sig,Disp,Refills,ProvNum,Notes,PharmacyNum,IsControlled,SendStatus,RxCui,DosageCode,ErxGuid,IsErxOld,ErxPharmacyInfo,IsProcRequired,ProcNum,DaysOfSupply,PatientInstruction,ClinicNum) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(rxPat.RxNum)+",";
+				command+=POut.Long(rxPat.Id)+",";
 			}
 			command+=
 				     POut.Long  (rxPat.PatNum)+","
@@ -180,9 +180,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramPatientInstruction);
 			}
 			else {
-				rxPat.RxNum=Database.ExecuteInsert(command,paramPatientInstruction);
+				rxPat.Id=Database.ExecuteInsert(command,paramPatientInstruction);
 			}
-			return rxPat.RxNum;
+			return rxPat.Id;
 		}
 
 		///<summary>Inserts one RxPat into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -195,14 +195,14 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO rxpat (";
 			if(!useExistingPK) {
-				rxPat.RxNum=ReplicationServers.GetKeyNoCache("rxpat","RxNum");
+				rxPat.Id=ReplicationServers.GetKeyNoCache("rxpat","RxNum");
 			}
 			if(useExistingPK) {
 				command+="RxNum,";
 			}
 			command+="PatNum,RxDate,Drug,Sig,Disp,Refills,ProvNum,Notes,PharmacyNum,IsControlled,SendStatus,RxCui,DosageCode,ErxGuid,IsErxOld,ErxPharmacyInfo,IsProcRequired,ProcNum,DaysOfSupply,PatientInstruction,ClinicNum) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(rxPat.RxNum)+",";
+				command+=POut.Long(rxPat.Id)+",";
 			}
 			command+=
 				     POut.Long  (rxPat.PatNum)+","
@@ -235,9 +235,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramPatientInstruction);
 			}
 			else {
-				rxPat.RxNum=Database.ExecuteInsert(command,paramPatientInstruction);
+				rxPat.Id=Database.ExecuteInsert(command,paramPatientInstruction);
 			}
-			return rxPat.RxNum;
+			return rxPat.Id;
 		}
 
 		///<summary>Updates one RxPat in the database.</summary>
@@ -265,7 +265,7 @@ namespace OpenDentBusiness.Crud{
 				+"DaysOfSupply      = '"+POut.Double(rxPat.DaysOfSupply)+"', "
 				+"PatientInstruction=  "+DbHelper.ParamChar+"paramPatientInstruction, "
 				+"ClinicNum         =  "+POut.Long  (rxPat.ClinicNum)+" "
-				+"WHERE RxNum = "+POut.Long(rxPat.RxNum);
+				+"WHERE RxNum = "+POut.Long(rxPat.Id);
 			if(rxPat.PatientInstruction==null) {
 				rxPat.PatientInstruction="";
 			}
@@ -369,7 +369,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			var paramPatientInstruction = new MySqlParameter("paramPatientInstruction", POut.StringParam(rxPat.PatientInstruction));
 			command="UPDATE rxpat SET "+command
-				+" WHERE RxNum = "+POut.Long(rxPat.RxNum);
+				+" WHERE RxNum = "+POut.Long(rxPat.Id);
 			Database.ExecuteNonQuery(command,paramPatientInstruction);
 			return true;
 		}

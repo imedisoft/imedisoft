@@ -13,6 +13,7 @@ using System.Xml.XPath;
 using System.IO;
 using OpenDental.UI;
 using System.Text.RegularExpressions;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormCdsTriggerEdit:ODForm {

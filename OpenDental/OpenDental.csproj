@@ -517,6 +517,21 @@
     <Compile Include="Forms Reports\FormRpServiceDateView.designer.cs">
       <DependentUpon>FormRpServiceDateView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FormRxDefEdit.Designer.cs">
+      <DependentUpon>FormRxDefEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms Temp\FormRxEdit.Designer.cs">
+      <DependentUpon>FormRxEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormRxSelect.Designer.cs">
+      <DependentUpon>FormRxSelect.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormRxSetup.Designer.cs">
+      <DependentUpon>FormRxSetup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormAuditOneType.Designer.cs">
+      <DependentUpon>FormAuditOneType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FormAccountingAutoPayEdit.Designer.cs">
       <DependentUpon>FormAccountingAutoPayEdit.cs</DependentUpon>
     </Compile>
@@ -1563,10 +1578,10 @@
     <Compile Include="Forms Temp\FormFilePicker.designer.cs">
       <DependentUpon>FormFilePicker.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormRxManage.cs">
+    <Compile Include="Forms\FormRxManage.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormRxManage.designer.cs">
+    <Compile Include="Forms\FormRxManage.designer.cs">
       <DependentUpon>FormRxManage.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormXWeb.cs">
@@ -2013,16 +2028,16 @@
     <Compile Include="Forms Temp\FormWikiListHistory.designer.cs">
       <DependentUpon>FormWikiListHistory.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormApptTypeEdit.cs">
+    <Compile Include="Forms\FormApptTypeEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormApptTypeEdit.designer.cs">
+    <Compile Include="Forms\FormApptTypeEdit.designer.cs">
       <DependentUpon>FormApptTypeEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormApptTypes.cs">
+    <Compile Include="Forms\FormApptTypes.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormApptTypes.designer.cs">
+    <Compile Include="Forms\FormApptTypes.designer.cs">
       <DependentUpon>FormApptTypes.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormProcButtonQuickEdit.cs">
@@ -3180,10 +3195,10 @@
     <Compile Include="Forms\FormLogoffWarning.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormRxNorms.cs">
+    <Compile Include="Forms\FormRxNorms.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormRxNorms.designer.cs">
+    <Compile Include="Forms\FormRxNorms.designer.cs">
       <DependentUpon>FormRxNorms.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormEduResourceEdit.cs">
@@ -3270,10 +3285,10 @@
     <Compile Include="Forms Temp\FormAllergyDefEdit.designer.cs">
       <DependentUpon>FormAllergyDefEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormRxAlertEdit.cs">
+    <Compile Include="Forms\FormRxAlertEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormRxAlertEdit.designer.cs">
+    <Compile Include="Forms\FormRxAlertEdit.designer.cs">
       <DependentUpon>FormRxAlertEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormAllergyEdit.cs">
@@ -4213,7 +4228,7 @@
     <Compile Include="Forms Temp\FormAudit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormAuditOneType.cs">
+    <Compile Include="Forms\FormAuditOneType.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormAutoCode.cs">
@@ -4642,16 +4657,16 @@
     <Compile Include="Forms Temp\FormRepeatChargesUpdate.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormRxDefEdit.cs">
+    <Compile Include="Forms\FormRxDefEdit.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormRxEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormRxSelect.cs">
+    <Compile Include="Forms\FormRxSelect.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormRxSetup.cs">
+    <Compile Include="Forms\FormRxSetup.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormImagingSetup.cs">
@@ -5639,7 +5654,7 @@
     <EmbeddedResource Include="Forms Temp\FormFilePicker.resx">
       <DependentUpon>FormFilePicker.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormRxManage.resx">
+    <EmbeddedResource Include="Forms\FormRxManage.resx">
       <DependentUpon>FormRxManage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormXWeb.resx">
@@ -5874,10 +5889,10 @@
     <EmbeddedResource Include="Forms Temp\FormWikiListHistory.resx">
       <DependentUpon>FormWikiListHistory.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormApptTypeEdit.resx">
+    <EmbeddedResource Include="Forms\FormApptTypeEdit.resx">
       <DependentUpon>FormApptTypeEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormApptTypes.resx">
+    <EmbeddedResource Include="Forms\FormApptTypes.resx">
       <DependentUpon>FormApptTypes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormProcButtonQuickEdit.resx">
@@ -6526,7 +6541,7 @@
       <DependentUpon>FormLogoffWarning.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormRxNorms.resx">
+    <EmbeddedResource Include="Forms\FormRxNorms.resx">
       <DependentUpon>FormRxNorms.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -6585,7 +6600,7 @@
       <DependentUpon>FormAllergyDefEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormRxAlertEdit.resx">
+    <EmbeddedResource Include="Forms\FormRxAlertEdit.resx">
       <DependentUpon>FormRxAlertEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7076,7 +7091,7 @@
       <DependentUpon>FormAudit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAuditOneType.resx">
+    <EmbeddedResource Include="Forms\FormAuditOneType.resx">
       <DependentUpon>FormAuditOneType.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7648,7 +7663,7 @@
       <DependentUpon>FormRepeatChargesUpdate.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormRxDefEdit.resx">
+    <EmbeddedResource Include="Forms\FormRxDefEdit.resx">
       <DependentUpon>FormRxDefEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7656,11 +7671,11 @@
       <DependentUpon>FormRxEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormRxSelect.resx">
+    <EmbeddedResource Include="Forms\FormRxSelect.resx">
       <DependentUpon>FormRxSelect.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormRxSetup.resx">
+    <EmbeddedResource Include="Forms\FormRxSetup.resx">
       <DependentUpon>FormRxSetup.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -8550,6 +8565,13 @@
     <None Include="Web References\NewCrop\Update1.wsdl" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\IconThumbtack.png" />
+    <None Include="Resources\IconStickyNoteOpen.png" />
+    <None Include="Resources\IconStickyNote.png" />
+    <None Include="Resources\IconPrint.png" />
+    <None Include="Resources\IconCommentsOpen.png" />
+    <None Include="Resources\IconComments.png" />
+    <None Include="Resources\IconClipboard.png" />
     <None Include="Resources\IconUpload.png" />
     <None Include="Resources\IconObjectGroup.png" />
     <None Include="Resources\IconPencil.png" />

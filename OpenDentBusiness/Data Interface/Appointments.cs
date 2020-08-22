@@ -2371,8 +2371,8 @@ namespace OpenDentBusiness
 			appointment.Note=apptNote;
 			if(appointmentType!=null) {
 				//Set the appointment's AppointmentTypeNum and ColorOverride to the corresponding values of the appointment type passed in.
-				appointment.AppointmentTypeNum=appointmentType.AppointmentTypeNum;
-				appointment.ColorOverride=appointmentType.AppointmentTypeColor;
+				appointment.AppointmentTypeNum=appointmentType.Id;
+				appointment.ColorOverride=appointmentType.Color;
 			}
 			Appointments.Insert(appointment);//Handles inserting signal
 			return appointment;
@@ -3867,10 +3867,10 @@ namespace OpenDentBusiness
 			appt.IsNew=(apptOld==null);
 			long apptTypeNumOld=(apptOld==null ? 0:apptOld.AppointmentTypeNum);
 			List<Procedure> listProcsOnAppt;//Subset of listProcsForApptEdit. All procs associated to the given appt. Some aptNums may not be set yet.
-			if(apptTypeCur!=null && apptTypeCur.AppointmentTypeNum!=apptTypeNumOld) {//Appointment type set and changed.
+			if(apptTypeCur!=null && apptTypeCur.Id!=apptTypeNumOld) {//Appointment type set and changed.
 				//Dynamically added procs will exist in listProcsForApptEdit.
 				listProcsOnAppt=ApptTypeMissingProcHelper(appt,apptTypeCur,listProcsForApptEdit,pat,canUpdateApptPattern,listPatPlans,listInsSubs,listInsPlans);
-				appt.ColorOverride=apptTypeCur.AppointmentTypeColor;
+				appt.ColorOverride=apptTypeCur.Color;
 			}
 			else {
 				listProcsOnAppt=listProcsForApptEdit.FindAll(x => x.AptNum!=0 && x.AptNum==appt.AptNum).Select(x => x.Copy()).ToList();
@@ -3989,7 +3989,7 @@ namespace OpenDentBusiness
 			if(appt.AptStatus.In(ApptStatus.PtNote,ApptStatus.PtNoteCompleted)) {
 				return retList;//Patient notes can't have procedures associated to them.
 			}
-			List<ProcedureCode> listAptTypeProcs=ProcedureCodes.GetFromCommaDelimitedList(apptType.CodeStr);
+			List<ProcedureCode> listAptTypeProcs=ProcedureCodes.GetFromCommaDelimitedList(apptType.ProcedureCodes);
 			if(listAptTypeProcs.Count>0) {//AppointmentType is associated to procs.
 				if(pat==null) {
 					pat=Patients.GetPat(appt.PatNum);

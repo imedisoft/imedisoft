@@ -210,9 +210,7 @@ namespace OpenDental {
             this.tabPageAppts = new System.Windows.Forms.TabPage();
             this.comboAptStatus = new OpenDental.UI.ComboBoxMulti();
             this.labelAptStatus = new System.Windows.Forms.Label();
-            this.gridAppts = new OpenDental.UI.ODGrid();
             this.tabPageRecalls = new System.Windows.Forms.TabPage();
-            this.gridRecalls = new OpenDental.UI.ODGrid();
             this.textDateStart = new OpenDental.ValidDate();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -220,12 +218,14 @@ namespace OpenDental {
             this.textDateEnd = new OpenDental.ValidDate();
             this.label3 = new System.Windows.Forms.Label();
             this.checkGroupFamilies = new System.Windows.Forms.CheckBox();
-            this.gridWebSched = new OpenDental.UI.ODGrid();
             this.mainMenu = new System.Windows.Forms.MainMenu(this.components);
             this.menuItemSettings = new System.Windows.Forms.MenuItem();
             this.butRefresh = new OpenDental.UI.Button();
             this.codeRangeFilter = new OpenDental.UI.ODCodeRangeFilter();
             this.labelCodeRange = new System.Windows.Forms.Label();
+            this.gridAppts = new OpenDental.UI.ODGrid();
+            this.gridRecalls = new OpenDental.UI.ODGrid();
+            this.gridWebSched = new OpenDental.UI.ODGrid();
             this.menuApptsRightClick.SuspendLayout();
             this.menuRecallsRightClick.SuspendLayout();
             this.groupWebSched.SuspendLayout();
@@ -242,7 +242,7 @@ namespace OpenDental {
             // 
             this.butClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.butClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.butClose.Location = new System.Drawing.Point(967, 576);
+            this.butClose.Location = new System.Drawing.Point(967, 555);
             this.butClose.Name = "butClose";
             this.butClose.Size = new System.Drawing.Size(87, 24);
             this.butClose.TabIndex = 7;
@@ -330,7 +330,7 @@ namespace OpenDental {
             this.butPrint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.butPrint.Image = global::Imedisoft.Properties.Resources.butPrintSmall;
             this.butPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butPrint.Location = new System.Drawing.Point(967, 485);
+            this.butPrint.Location = new System.Drawing.Point(967, 464);
             this.butPrint.Name = "butPrint";
             this.butPrint.Size = new System.Drawing.Size(87, 24);
             this.butPrint.TabIndex = 21;
@@ -503,8 +503,8 @@ namespace OpenDental {
             // 
             this.splitContainer.Panel2.Controls.Add(this.gridWebSched);
             this.splitContainer.Panel2MinSize = 0;
-            this.splitContainer.Size = new System.Drawing.Size(920, 558);
-            this.splitContainer.SplitterDistance = 418;
+            this.splitContainer.Size = new System.Drawing.Size(920, 537);
+            this.splitContainer.SplitterDistance = 402;
             this.splitContainer.TabIndex = 70;
             // 
             // tabControl
@@ -517,7 +517,7 @@ namespace OpenDental {
             this.tabControl.Location = new System.Drawing.Point(0, 3);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(920, 416);
+            this.tabControl.Size = new System.Drawing.Size(920, 400);
             this.tabControl.TabIndex = 73;
             this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
             // 
@@ -530,7 +530,7 @@ namespace OpenDental {
             this.tabPageAppts.Location = new System.Drawing.Point(4, 22);
             this.tabPageAppts.Name = "tabPageAppts";
             this.tabPageAppts.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAppts.Size = new System.Drawing.Size(912, 390);
+            this.tabPageAppts.Size = new System.Drawing.Size(912, 374);
             this.tabPageAppts.TabIndex = 0;
             this.tabPageAppts.Text = "Appointments";
             // 
@@ -554,24 +554,6 @@ namespace OpenDental {
             this.labelAptStatus.Text = "Appointment Status";
             this.labelAptStatus.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // gridAppts
-            // 
-            this.gridAppts.AllowSortingByColumn = true;
-            this.gridAppts.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.gridAppts.ContextMenuStrip = this.menuApptsRightClick;
-            this.gridAppts.HScrollVisible = true;
-            this.gridAppts.Location = new System.Drawing.Point(1, 33);
-            this.gridAppts.Name = "gridAppts";
-            this.gridAppts.SelectionMode = OpenDental.UI.GridSelectionMode.MultiExtended;
-            this.gridAppts.Size = new System.Drawing.Size(905, 357);
-            this.gridAppts.TabIndex = 8;
-            this.gridAppts.Title = "Appointment ASAP List";
-            this.gridAppts.TranslationName = "TableASAP";
-            this.gridAppts.CellDoubleClick += new OpenDental.UI.ODGridClickEventHandler(this.gridAppts_CellDoubleClick);
-            this.gridAppts.MouseUp += new System.Windows.Forms.MouseEventHandler(this.gridAppts_MouseUp);
-            // 
             // tabPageRecalls
             // 
             this.tabPageRecalls.BackColor = System.Drawing.Color.Transparent;
@@ -589,23 +571,6 @@ namespace OpenDental {
             this.tabPageRecalls.Size = new System.Drawing.Size(912, 390);
             this.tabPageRecalls.TabIndex = 1;
             this.tabPageRecalls.Text = "Recalls";
-            // 
-            // gridRecalls
-            // 
-            this.gridRecalls.AllowSortingByColumn = true;
-            this.gridRecalls.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.gridRecalls.ContextMenuStrip = this.menuRecallsRightClick;
-            this.gridRecalls.HScrollVisible = true;
-            this.gridRecalls.Location = new System.Drawing.Point(1, 55);
-            this.gridRecalls.Name = "gridRecalls";
-            this.gridRecalls.SelectionMode = OpenDental.UI.GridSelectionMode.MultiExtended;
-            this.gridRecalls.Size = new System.Drawing.Size(910, 334);
-            this.gridRecalls.TabIndex = 9;
-            this.gridRecalls.Title = "Recall ASAP List";
-            this.gridRecalls.TranslationName = "TableASAP";
-            this.gridRecalls.CellDoubleClick += new OpenDental.UI.ODGridClickEventHandler(this.gridRecalls_CellDoubleClick);
             // 
             // textDateStart
             // 
@@ -668,20 +633,6 @@ namespace OpenDental {
             this.checkGroupFamilies.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.checkGroupFamilies.UseVisualStyleBackColor = true;
             // 
-            // gridWebSched
-            // 
-            this.gridWebSched.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.gridWebSched.ContextMenuStrip = this.menuApptsRightClick;
-            this.gridWebSched.Location = new System.Drawing.Point(5, 3);
-            this.gridWebSched.Name = "gridWebSched";
-            this.gridWebSched.SelectionMode = OpenDental.UI.GridSelectionMode.None;
-            this.gridWebSched.Size = new System.Drawing.Size(905, 130);
-            this.gridWebSched.TabIndex = 9;
-            this.gridWebSched.TabStop = false;
-            this.gridWebSched.Title = "Web Sched ASAP Messages";
-            // 
             // mainMenu
             // 
             this.mainMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
@@ -723,10 +674,59 @@ namespace OpenDental {
             this.labelCodeRange.Text = "Code Range";
             this.labelCodeRange.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // gridAppts
+            // 
+            this.gridAppts.AllowSortingByColumn = true;
+            this.gridAppts.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gridAppts.ContextMenuStrip = this.menuApptsRightClick;
+            this.gridAppts.HScrollVisible = true;
+            this.gridAppts.Location = new System.Drawing.Point(1, 33);
+            this.gridAppts.Name = "gridAppts";
+            this.gridAppts.SelectionMode = OpenDental.UI.GridSelectionMode.MultiExtended;
+            this.gridAppts.Size = new System.Drawing.Size(905, 341);
+            this.gridAppts.TabIndex = 8;
+            this.gridAppts.Title = "Appointment ASAP List";
+            this.gridAppts.TranslationName = "TableASAP";
+            this.gridAppts.CellDoubleClick += new OpenDental.UI.ODGridClickEventHandler(this.gridAppts_CellDoubleClick);
+            this.gridAppts.MouseUp += new System.Windows.Forms.MouseEventHandler(this.gridAppts_MouseUp);
+            // 
+            // gridRecalls
+            // 
+            this.gridRecalls.AllowSortingByColumn = true;
+            this.gridRecalls.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gridRecalls.ContextMenuStrip = this.menuRecallsRightClick;
+            this.gridRecalls.HScrollVisible = true;
+            this.gridRecalls.Location = new System.Drawing.Point(1, 55);
+            this.gridRecalls.Name = "gridRecalls";
+            this.gridRecalls.SelectionMode = OpenDental.UI.GridSelectionMode.MultiExtended;
+            this.gridRecalls.Size = new System.Drawing.Size(910, 334);
+            this.gridRecalls.TabIndex = 9;
+            this.gridRecalls.Title = "Recall ASAP List";
+            this.gridRecalls.TranslationName = "TableASAP";
+            this.gridRecalls.CellDoubleClick += new OpenDental.UI.ODGridClickEventHandler(this.gridRecalls_CellDoubleClick);
+            // 
+            // gridWebSched
+            // 
+            this.gridWebSched.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gridWebSched.ContextMenuStrip = this.menuApptsRightClick;
+            this.gridWebSched.Location = new System.Drawing.Point(5, 3);
+            this.gridWebSched.Name = "gridWebSched";
+            this.gridWebSched.SelectionMode = OpenDental.UI.GridSelectionMode.None;
+            this.gridWebSched.Size = new System.Drawing.Size(905, 125);
+            this.gridWebSched.TabIndex = 9;
+            this.gridWebSched.TabStop = false;
+            this.gridWebSched.Title = "Web Sched ASAP Messages";
+            // 
             // FormASAP
             // 
             this.CancelButton = this.butClose;
-            this.ClientSize = new System.Drawing.Size(1089, 614);
+            this.ClientSize = new System.Drawing.Size(1089, 593);
             this.Controls.Add(this.labelCodeRange);
             this.Controls.Add(this.codeRangeFilter);
             this.Controls.Add(this.butRefresh);

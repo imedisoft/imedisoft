@@ -7,164 +7,161 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 
-namespace OpenDentBusiness{
-	///<summary></summary>
-	public class Pharmacies{
-		#region Get Methods
-		#endregion
-
-		#region Modification Methods
-		
-		#region Insert
-		#endregion
-
-		#region Update
-		#endregion
-
-		#region Delete
-		#endregion
-
-		#endregion
-
-		#region Misc Methods
-		#endregion
-
-
+namespace OpenDentBusiness
+{
+    public class Pharmacies
+	{
 		#region CachePattern
-		private class PharmacyCache : CacheListAbs<Pharmacy> {
-			protected override List<Pharmacy> GetCacheFromDb() {
-				string command="SELECT * FROM pharmacy ORDER BY StoreName";
+		private class PharmacyCache : CacheListAbs<Pharmacy>
+		{
+			protected override List<Pharmacy> GetCacheFromDb()
+			{
+				string command = "SELECT * FROM pharmacy ORDER BY StoreName";
 				return Crud.PharmacyCrud.SelectMany(command);
 			}
-			protected override List<Pharmacy> TableToList(DataTable table) {
+			protected override List<Pharmacy> TableToList(DataTable table)
+			{
 				return Crud.PharmacyCrud.TableToList(table);
 			}
-			protected override Pharmacy Copy(Pharmacy pharmacy) {
+			protected override Pharmacy Copy(Pharmacy pharmacy)
+			{
 				return pharmacy.Copy();
 			}
-			protected override DataTable ListToTable(List<Pharmacy> listPharmacies) {
-				return Crud.PharmacyCrud.ListToTable(listPharmacies,"Pharmacy");
+			protected override DataTable ListToTable(List<Pharmacy> listPharmacies)
+			{
+				return Crud.PharmacyCrud.ListToTable(listPharmacies, "Pharmacy");
 			}
-			protected override void FillCacheIfNeeded() {
+			protected override void FillCacheIfNeeded()
+			{
 				Pharmacies.GetTableFromCache(false);
 			}
 		}
 
 		///<summary>The object that accesses the cache in a thread-safe manner.</summary>
-		private static PharmacyCache _pharmacyCache=new PharmacyCache();
+		private static PharmacyCache _pharmacyCache = new PharmacyCache();
 
-		public static List<Pharmacy> GetDeepCopy(bool isShort=false) {
+		public static List<Pharmacy> GetDeepCopy(bool isShort = false)
+		{
 			return _pharmacyCache.GetDeepCopy(isShort);
 		}
 
-		public static Pharmacy GetFirstOrDefault(Func<Pharmacy,bool> match,bool isShort=false) {
-			return _pharmacyCache.GetFirstOrDefault(match,isShort);
+		public static Pharmacy GetFirstOrDefault(Func<Pharmacy, bool> match, bool isShort = false)
+		{
+			return _pharmacyCache.GetFirstOrDefault(match, isShort);
 		}
 
-		public static List<Pharmacy> GetWhere(Predicate<Pharmacy> match,bool isShort = false) {
-			return _pharmacyCache.GetWhere(match,isShort);
+		public static List<Pharmacy> GetWhere(Predicate<Pharmacy> match, bool isShort = false)
+		{
+			return _pharmacyCache.GetWhere(match, isShort);
 		}
 
 		///<summary>Refreshes the cache and returns it as a DataTable. This will refresh the ClientWeb's cache and the ServerWeb's cache.</summary>
-		public static DataTable RefreshCache() {
+		public static DataTable RefreshCache()
+		{
 			return GetTableFromCache(true);
 		}
 
 		///<summary>Fills the local cache with the passed in DataTable.</summary>
-		public static void FillCacheFromTable(DataTable table) {
+		public static void FillCacheFromTable(DataTable table)
+		{
 			//No need to check RemotingRole; no call to db.
 			_pharmacyCache.FillCacheFromTable(table);
 		}
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
-		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			
+		public static DataTable GetTableFromCache(bool doRefreshCache)
+		{
+
 			return _pharmacyCache.GetTableFromCache(doRefreshCache);
-		}		
+		}
 
 		#endregion
-		
-		///<Summary>Gets one Pharmacy from the database.</Summary>
-		public static Pharmacy GetOne(long pharmacyNum) {
-			
+
+		public static Pharmacy GetOne(long pharmacyNum)
+		{
 			return Crud.PharmacyCrud.SelectOne(pharmacyNum);
 		}
 
-		///<summary>Gets all pharmacies ordered by StoreName from the database.</summary>
-		public static List<Pharmacy> GetAllNoCache() {
-			
+		public static List<Pharmacy> GetAllNoCache()
+		{
 			return Crud.PharmacyCrud.SelectMany("SELECT * FROM pharmacy ORDER BY StoreName");
 		}
 
-		///<summary></summary>
-		public static long Insert(Pharmacy pharmacy){
-			
+		public static long Insert(Pharmacy pharmacy)
+		{
 			return Crud.PharmacyCrud.Insert(pharmacy);
 		}
 
-		///<summary></summary>
-		public static void Update(Pharmacy pharmacy){
-			
+		public static void Update(Pharmacy pharmacy)
+		{
 			Crud.PharmacyCrud.Update(pharmacy);
 		}
 
-		///<summary></summary>
-		public static void DeleteObject(long pharmacyNum) {
-			
+		public static void DeleteObject(long pharmacyNum)
+		{
 			Crud.PharmacyCrud.Delete(pharmacyNum);
 		}
 
-		public static string GetDescription(long PharmacyNum) {
-			//No need to check RemotingRole; no call to db.
-			Pharmacy pharmacy=GetFirstOrDefault(x => x.PharmacyNum==PharmacyNum);
-			return (pharmacy==null ? "" : pharmacy.StoreName);
+		public static string GetDescription(long PharmacyNum)
+		{
+			Pharmacy pharmacy = GetFirstOrDefault(x => x.PharmacyNum == PharmacyNum);
+			return pharmacy == null ? "" : pharmacy.StoreName;
 		}
 
-		public static List<long> GetChangedSincePharmacyNums(DateTime changedSince) {
-			
-			string command="SELECT PharmacyNum FROM pharmacy WHERE DateTStamp > "+POut.DateT(changedSince);
-			DataTable dt=Database.ExecuteDataTable(command);
+		public static List<long> GetChangedSincePharmacyNums(DateTime changedSince)
+		{
+			DataTable dt = Database.ExecuteDataTable("SELECT PharmacyNum FROM pharmacy WHERE DateTStamp > " + POut.DateT(changedSince));
 			List<long> provnums = new List<long>(dt.Rows.Count);
-			for(int i=0;i<dt.Rows.Count;i++) {
+			for (int i = 0; i < dt.Rows.Count; i++)
+			{
 				provnums.Add(PIn.Long(dt.Rows[i]["PharmacyNum"].ToString()));
 			}
 			return provnums;
 		}
 
-		///<summary>Used along with GetChangedSincePharmacyNums</summary>
-		public static List<Pharmacy> GetMultPharmacies(List<long> pharmacyNums) {
-			
-			string strPharmacyNums="";
+		/// <summary>Used along with GetChangedSincePharmacyNums</summary>
+		public static List<Pharmacy> GetMultPharmacies(List<long> pharmacyNums)
+		{
+			string strPharmacyNums = "";
 			DataTable table;
-			if(pharmacyNums.Count>0) {
-				for(int i=0;i<pharmacyNums.Count;i++) {
-					if(i>0) {
-						strPharmacyNums+="OR ";
+
+			if (pharmacyNums.Count > 0)
+			{
+				for (int i = 0; i < pharmacyNums.Count; i++)
+				{
+					if (i > 0)
+					{
+						strPharmacyNums += "OR ";
 					}
-					strPharmacyNums+="PharmacyNum='"+pharmacyNums[i].ToString()+"' ";
+					strPharmacyNums += "PharmacyNum='" + pharmacyNums[i].ToString() + "' ";
 				}
-				string command="SELECT * FROM pharmacy WHERE "+strPharmacyNums;
-				table=Database.ExecuteDataTable(command);
+
+				table = Database.ExecuteDataTable("SELECT * FROM pharmacy WHERE " + strPharmacyNums);
 			}
-			else {
-				table=new DataTable();
+			else
+			{
+				table = new DataTable();
 			}
-			Pharmacy[] multPharmacys=Crud.PharmacyCrud.TableToList(table).ToArray();
-			List<Pharmacy> pharmacyList=new List<Pharmacy>(multPharmacys);
+
+			Pharmacy[] multPharmacys = Crud.PharmacyCrud.TableToList(table).ToArray();
+			List<Pharmacy> pharmacyList = new List<Pharmacy>(multPharmacys);
 			return pharmacyList;
 		}
-		
-		///<summary>Gets a list of Pharmacies for a given clinic based on PharmClinic links.</summary>
-		///<param name="clinicNum">The primary key of the clinic.</param>
-		public static List<Pharmacy> GetPharmaciesForClinic(long clinicNum) {
-			
-			string command="SELECT * "
-				+"FROM pharmacy "
-				+"WHERE PharmacyNum IN ("
-					+"SELECT PharmacyNum "
-					+"FROM pharmclinic "
-					+"WHERE clinicNum = "+POut.Long(clinicNum)
-				+") ORDER BY StoreName";
+
+		/// <summary>Gets a list of Pharmacies for a given clinic based on PharmClinic links.</summary>
+		/// <param name="clinicNum">
+		/// The primary key of the clinic.
+		/// </param>
+		public static List<Pharmacy> GetPharmaciesForClinic(long clinicNum)
+		{
+
+			string command = "SELECT * "
+				+ "FROM pharmacy "
+				+ "WHERE PharmacyNum IN ("
+					+ "SELECT PharmacyNum "
+					+ "FROM pharmclinic "
+					+ "WHERE clinicNum = " + POut.Long(clinicNum)
+				+ ") ORDER BY StoreName";
 			return Crud.PharmacyCrud.SelectMany(command);
 		}
 	}

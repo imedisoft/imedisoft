@@ -54,7 +54,7 @@ namespace UnitTests.TimeSlots_Tests {
 			//Create a new patient appointment type that has a pattern that will fit within an hour block (40 mins).
 			AppointmentType appointmentType=AppointmentTypeT.CreateAppointmentType(suffix,pattern:"/XXXXXX/");
 			Def defApptType=DefT.CreateDefinition(DefCat.WebSchedNewPatApptTypes,suffix);
-			DefLinkT.CreateDefLink(defApptType.DefNum,appointmentType.AppointmentTypeNum,DefLinkType.AppointmentType);
+			DefLinkT.CreateDefLink(defApptType.DefNum,appointmentType.Id,DefLinkType.AppointmentType);
 			//Associate the new patient appointment type to the operatories above so that they are valid "new pat appt" ops.
 			DefLinkT.CreateDefLink(defApptType.DefNum,opDocA.OperatoryNum,DefLinkType.Operatory);
 			DefLinkT.CreateDefLink(defApptType.DefNum,opDocB.OperatoryNum,DefLinkType.Operatory);
@@ -120,7 +120,7 @@ namespace UnitTests.TimeSlots_Tests {
 			//Create a new patient appointment type that has a pattern that will fit within an hour block (40 mins).
 			AppointmentType appointmentType=AppointmentTypeT.CreateAppointmentType(suffix,codeStr:procCode.ProcCode,pattern:"/XXXXXX/");
 			Def defApptType=DefT.CreateDefinition(DefCat.WebSchedNewPatApptTypes,suffix);
-			DefLinkT.CreateDefLink(defApptType.DefNum,appointmentType.AppointmentTypeNum,DefLinkType.AppointmentType);
+			DefLinkT.CreateDefLink(defApptType.DefNum,appointmentType.Id,DefLinkType.AppointmentType);
 			//Associate the new patient appointment type to the operatories above so that they are valid "new pat appt" ops.
 			DefLinkT.CreateDefLink(defApptType.DefNum,opDoc.OperatoryNum,DefLinkType.Operatory);
 			//Create an appointment rule for the appointment type procedure code which will cause double booking to be considered.
@@ -181,7 +181,7 @@ namespace UnitTests.TimeSlots_Tests {
 			//Create a new patient appointment type that has a pattern that will fit within an hour block (40 mins).
 			AppointmentType appointmentType=AppointmentTypeT.CreateAppointmentType(suffix,codeStr:procCode.ProcCode,pattern:"XXXXXXXX");
 			Def defApptType=DefT.CreateDefinition(DefCat.WebSchedNewPatApptTypes,suffix);
-			DefLinkT.CreateDefLink(defApptType.DefNum,appointmentType.AppointmentTypeNum,DefLinkType.AppointmentType);
+			DefLinkT.CreateDefLink(defApptType.DefNum,appointmentType.Id,DefLinkType.AppointmentType);
 			//Associate the new patient appointment type to the hygiene operatories above so that they are valid "new pat appt" ops.
 			DefLinkT.CreateDefLink(defApptType.DefNum,opHyg1.OperatoryNum,DefLinkType.Operatory);
 			DefLinkT.CreateDefLink(defApptType.DefNum,opHyg2.OperatoryNum,DefLinkType.Operatory);
@@ -242,7 +242,7 @@ namespace UnitTests.TimeSlots_Tests {
 			//Create a new patient appointment type that has a pattern that will fit within an hour block (40 mins).
 			AppointmentType appointmentType=AppointmentTypeT.CreateAppointmentType(suffix,codeStr:procCode.ProcCode,pattern:"XXXXXXXX");
 			Def defApptType=DefT.CreateDefinition(DefCat.WebSchedNewPatApptTypes,suffix);
-			DefLinkT.CreateDefLink(defApptType.DefNum,appointmentType.AppointmentTypeNum,DefLinkType.AppointmentType);
+			DefLinkT.CreateDefLink(defApptType.DefNum,appointmentType.Id,DefLinkType.AppointmentType);
 			//Associate the new patient appointment type to the hygiene operatories above so that they are valid "new pat appt" ops.
 			DefLinkT.CreateDefLink(defApptType.DefNum,opHyg1.OperatoryNum,DefLinkType.Operatory);
 			DefLinkT.CreateDefLink(defApptType.DefNum,opHyg2.OperatoryNum,DefLinkType.Operatory);
@@ -923,11 +923,11 @@ namespace UnitTests.TimeSlots_Tests {
 			//Create a WSNPA Definition and make its ApptType and Blockout associations (blockout restrictions)
 			Def wsnpaDefA=DefT.CreateDefinition(DefCat.WebSchedNewPatApptTypes,suffix+"a"); //RESTRICTED-TO BLOCKOUTS
 			DefLinkT.CreateDefLink(wsnpaDefA.DefNum,restrictedBlockout.DefNum,DefLinkType.BlockoutType);//This def link causes it to be restricted.
-			DefLinkT.CreateDefLink(wsnpaDefA.DefNum,apptTypeA.AppointmentTypeNum,DefLinkType.AppointmentType);
+			DefLinkT.CreateDefLink(wsnpaDefA.DefNum,apptTypeA.Id,DefLinkType.AppointmentType);
 
 			//Create a second WSNPA Definition and make its ApptType (no blockout restrictions)
 			Def wsnpaDefB=DefT.CreateDefinition(DefCat.WebSchedNewPatApptTypes,suffix+"b"); //GENERALLY ALLOWED BLOCKOUTS
-			DefLinkT.CreateDefLink(wsnpaDefB.DefNum,apptTypeB.AppointmentTypeNum,DefLinkType.AppointmentType);
+			DefLinkT.CreateDefLink(wsnpaDefB.DefNum,apptTypeB.Id,DefLinkType.AppointmentType);
 			PrefT.UpdateString(PrefName.WebSchedNewPatApptIgnoreBlockoutTypes,$"{allowedBlockout.DefNum}");//This pref causes it to be generally allowed
 
 			//Associate the new patient appointment types to the operatory so that it is a valid "new pat appt" op.

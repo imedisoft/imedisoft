@@ -44,7 +44,7 @@ namespace OpenDentBusiness.Crud{
 			RxDef rxDef;
 			foreach(DataRow row in table.Rows) {
 				rxDef=new RxDef();
-				rxDef.RxDefNum          = PIn.Long  (row["RxDefNum"].ToString());
+				rxDef.Id          = PIn.Long  (row["RxDefNum"].ToString());
 				rxDef.Drug              = PIn.String(row["Drug"].ToString());
 				rxDef.Sig               = PIn.String(row["Sig"].ToString());
 				rxDef.Disp              = PIn.String(row["Disp"].ToString());
@@ -77,7 +77,7 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("PatientInstruction");
 			foreach(RxDef rxDef in listRxDefs) {
 				table.Rows.Add(new object[] {
-					POut.Long  (rxDef.RxDefNum),
+					POut.Long  (rxDef.Id),
 					            rxDef.Drug,
 					            rxDef.Sig,
 					            rxDef.Disp,
@@ -100,7 +100,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one RxDef into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(RxDef rxDef,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				rxDef.RxDefNum=ReplicationServers.GetKey("rxdef","RxDefNum");
+				rxDef.Id=ReplicationServers.GetKey("rxdef","RxDefNum");
 			}
 			string command="INSERT INTO rxdef (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -108,7 +108,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="Drug,Sig,Disp,Refills,Notes,IsControlled,RxCui,IsProcRequired,PatientInstruction) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(rxDef.RxDefNum)+",";
+				command+=POut.Long(rxDef.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(rxDef.Drug)+"',"
@@ -128,9 +128,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramPatientInstruction);
 			}
 			else {
-				rxDef.RxDefNum=Database.ExecuteInsert(command,paramPatientInstruction);
+				rxDef.Id=Database.ExecuteInsert(command,paramPatientInstruction);
 			}
-			return rxDef.RxDefNum;
+			return rxDef.Id;
 		}
 
 		///<summary>Inserts one RxDef into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -143,14 +143,14 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO rxdef (";
 			if(!useExistingPK) {
-				rxDef.RxDefNum=ReplicationServers.GetKeyNoCache("rxdef","RxDefNum");
+				rxDef.Id=ReplicationServers.GetKeyNoCache("rxdef","RxDefNum");
 			}
 			if(useExistingPK) {
 				command+="RxDefNum,";
 			}
 			command+="Drug,Sig,Disp,Refills,Notes,IsControlled,RxCui,IsProcRequired,PatientInstruction) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(rxDef.RxDefNum)+",";
+				command+=POut.Long(rxDef.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(rxDef.Drug)+"',"
@@ -170,9 +170,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramPatientInstruction);
 			}
 			else {
-				rxDef.RxDefNum=Database.ExecuteInsert(command,paramPatientInstruction);
+				rxDef.Id=Database.ExecuteInsert(command,paramPatientInstruction);
 			}
-			return rxDef.RxDefNum;
+			return rxDef.Id;
 		}
 
 		///<summary>Updates one RxDef in the database.</summary>
@@ -187,7 +187,7 @@ namespace OpenDentBusiness.Crud{
 				+"RxCui             =  "+POut.Long  (rxDef.RxCui)+", "
 				+"IsProcRequired    =  "+POut.Bool  (rxDef.IsProcRequired)+", "
 				+"PatientInstruction=  "+DbHelper.ParamChar+"paramPatientInstruction "
-				+"WHERE RxDefNum = "+POut.Long(rxDef.RxDefNum);
+				+"WHERE RxDefNum = "+POut.Long(rxDef.Id);
 			if(rxDef.PatientInstruction==null) {
 				rxDef.PatientInstruction="";
 			}
@@ -242,7 +242,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			var paramPatientInstruction = new MySqlParameter("paramPatientInstruction", POut.StringParam(rxDef.PatientInstruction));
 			command="UPDATE rxdef SET "+command
-				+" WHERE RxDefNum = "+POut.Long(rxDef.RxDefNum);
+				+" WHERE RxDefNum = "+POut.Long(rxDef.Id);
 			Database.ExecuteNonQuery(command,paramPatientInstruction);
 			return true;
 		}

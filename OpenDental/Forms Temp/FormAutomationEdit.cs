@@ -306,10 +306,10 @@ namespace OpenDental{
 		private void FormAutomationEdit_Load(object sender, System.EventArgs e) {
 			_listCommLogTypeDefs=Defs.GetDefsForCategory(DefCat.CommLogTypes,true);
 			textDescription.Text=AutoCur.Description;
-			_listAptTypes=new List<AppointmentType>() { new AppointmentType() { AppointmentTypeName="none" } };
-			AppointmentTypes.GetWhere(x => !x.IsHidden || x.AppointmentTypeNum==AutoCur.AppointmentTypeId)
+			_listAptTypes=new List<AppointmentType>() { new AppointmentType() { Name="none" } };
+			AppointmentTypes.GetWhere(x => !x.Hidden || x.Id==AutoCur.AppointmentTypeId)
 				.ForEach(x => _listAptTypes.Add(x));
-			_listAptTypes=_listAptTypes.OrderBy(x => x.AppointmentTypeNum>0).ThenBy(x => x.ItemOrder).ToList();
+			_listAptTypes=_listAptTypes.OrderBy(x => x.Id>0).ThenBy(x => x.ItemOrder).ToList();
 			Enum.GetNames(typeof(AutomationTrigger)).ToList().ForEach(x => comboTrigger.Items.Add(x));
 			comboTrigger.SelectedIndex=(int)AutoCur.Trigger;
 			textProcCodes.Text=AutoCur.ProcedureCodes;//although might not be visible.
@@ -395,8 +395,8 @@ namespace OpenDental{
 					labelActionObject.Text="Appointment Type";
 					comboActionObject.Visible=true;
 					//_listAppointmentType contains 'none' with AppointmentTypeNum of 0 at index 0, just add list to combo and FindIndex will always be valid
-					_listAptTypes.ForEach(x => comboActionObject.Items.Add(x.AppointmentTypeName));
-					comboActionObject.SelectedIndex=_listAptTypes.FindIndex(x => AutoCur.AppointmentTypeId==x.AppointmentTypeNum);//should always be >=0
+					_listAptTypes.ForEach(x => comboActionObject.Items.Add(x.Name));
+					comboActionObject.SelectedIndex=_listAptTypes.FindIndex(x => AutoCur.AppointmentTypeId==x.Id);//should always be >=0
 					return;
 				case AutomationAction.PrintPatientLetter:
 				case AutomationAction.PrintReferralLetter:
@@ -554,7 +554,7 @@ namespace OpenDental{
 						MessageBox.Show("An appointment type must be selected.");
 						return;
 					}
-					AutoCur.AppointmentTypeId=_listAptTypes[comboActionObject.SelectedIndex].AppointmentTypeNum;
+					AutoCur.AppointmentTypeId=_listAptTypes[comboActionObject.SelectedIndex].Id;
 					break;
 				case AutomationAction.ChangePatStatus:
 					if(comboAction.SelectedIndex==-1) {

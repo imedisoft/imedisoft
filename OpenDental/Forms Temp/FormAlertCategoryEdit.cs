@@ -1,85 +1,112 @@
+using CodeBase;
+using Imedisoft.Forms;
+using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using OpenDentBusiness;
 using System.Linq;
-using CodeBase;
+using System.Windows.Forms;
 
-namespace OpenDental {
-	public partial class FormAlertCategoryEdit:ODForm {
+namespace OpenDental
+{
+    public partial class FormAlertCategoryEdit : FormBase
+	{
+		private readonly AlertCategory alertCategory;
+
 
 		private List<AlertType> listShownAlertTypes;
 		private List<AlertCategoryLink> listOldAlertCategoryLinks;//New list generated on OK click.
-		private AlertCategory _categoryCur;
 
-		public FormAlertCategoryEdit(AlertCategory category) {
+
+		public FormAlertCategoryEdit(AlertCategory category)
+		{
 			InitializeComponent();
-			
-			_categoryCur=category;
+
+			alertCategory = category;
 		}
-		
-		private void FormAlertCategoryEdit_Load(object sender,EventArgs e) {
-			textDesc.Text=_categoryCur.Description;
-			listShownAlertTypes=Enum.GetValues(typeof(AlertType)).OfType<AlertType>().ToList();
-			if(_categoryCur.IsHqCategory) {
-				textDesc.Enabled=false;
-				butDelete.Enabled=false;
-				butOK.Enabled=false;
+
+		private void FormAlertCategoryEdit_Load(object sender, EventArgs e)
+		{
+			descriptionTextBox.Text = alertCategory.Description;
+
+			listShownAlertTypes = Enum.GetValues(typeof(AlertType)).OfType<AlertType>().ToList();
+
+			if (alertCategory.IsHqCategory)
+			{
+				descriptionTextBox.Enabled = false;
+				deleteButton.Enabled = false;
+				acceptButton.Enabled = false;
 			}
-			listOldAlertCategoryLinks=AlertCategoryLinks.GetForCategory(_categoryCur.Id);
+
+			listOldAlertCategoryLinks = AlertCategoryLinks.GetForCategory(alertCategory.Id);
 			InitAlertTypeSelections();
 		}
 
-		private void InitAlertTypeSelections() {
-			listBoxAlertTypes.Items.Clear();
-			List<AlertType> listCategoryAlertTypes=listOldAlertCategoryLinks.Select(x => x.AlertType).ToList();
-			foreach(AlertType type in listShownAlertTypes) {
-				int index=listBoxAlertTypes.Items.Add(type.GetDescription());
-				listBoxAlertTypes.SetSelected(index,listCategoryAlertTypes.Contains(type));
+		private void InitAlertTypeSelections()
+		{
+			alertTypesListBox.Items.Clear();
+
+			List<AlertType> listCategoryAlertTypes = listOldAlertCategoryLinks.Select(x => x.AlertType).ToList();
+
+			foreach (AlertType type in listShownAlertTypes)
+			{
+				int index = alertTypesListBox.Items.Add(type.GetDescription());
+
+				alertTypesListBox.SetSelected(index, listCategoryAlertTypes.Contains(type));
 			}
 		}
 
-		private void listBoxAlertTypes_MouseClick(object sender,MouseEventArgs e) {
-			if(_categoryCur.IsHqCategory) {
+		private void AlertTypesListBox_MouseClick(object sender, MouseEventArgs e)
+		{
+			if (alertCategory.IsHqCategory)
+			{
 				InitAlertTypeSelections();
-				MessageBox.Show("You can only edit custom alert categories.");
+
+				ShowError("You can only edit custom alert categories.");
 			}
 		}
 
-		private void butOK_Click(object sender,EventArgs e) {
-			_categoryCur.Description=textDesc.Text;
-			List<AlertType> listSelectedTypes=listBoxAlertTypes.SelectedIndices
+		private void AcceptButton_Click(object sender, EventArgs e)
+		{
+			alertCategory.Description = descriptionTextBox.Text;
+
+			List<AlertType> listSelectedTypes = alertTypesListBox.SelectedIndices
 				.OfType<int>()
 				.Select(x => (AlertType)listShownAlertTypes[x])
 				.ToList();
-			List<AlertCategoryLink> listNewAlertCategoryType=listOldAlertCategoryLinks.Select(x => x.Copy()).ToList();
+
+			List<AlertCategoryLink> listNewAlertCategoryType = listOldAlertCategoryLinks.Select(x => x.Copy()).ToList();
+
 			listNewAlertCategoryType.RemoveAll(x => !listSelectedTypes.Contains(x.AlertType));//Remove unselected AlertTypes
-			foreach(AlertType type in listSelectedTypes) {
-				if(!listOldAlertCategoryLinks.Exists(x => x.AlertType==type)) {//Add newly selected AlertTypes.
-					listNewAlertCategoryType.Add(new AlertCategoryLink(_categoryCur.Id,type));
+			foreach (AlertType type in listSelectedTypes)
+			{
+				if (!listOldAlertCategoryLinks.Exists(x => x.AlertType == type))
+				{//Add newly selected AlertTypes.
+					listNewAlertCategoryType.Add(new AlertCategoryLink(alertCategory.Id, type));
 				}
 			}
-			AlertCategoryLinks.Sync(listNewAlertCategoryType,listOldAlertCategoryLinks);
-			AlertCategories.Update(_categoryCur);
-			DataValid.SetInvalid(InvalidType.AlertCategoryLinks,InvalidType.AlertCategories);
-			DialogResult=DialogResult.OK;
+
+			AlertCategoryLinks.Sync(listNewAlertCategoryType, listOldAlertCategoryLinks);
+			AlertCategories.Update(alertCategory);
+
+			DataValid.SetInvalid(InvalidType.AlertCategoryLinks, InvalidType.AlertCategories);
+
+			DialogResult = DialogResult.OK;
 		}
 
-		private void butCancel_Click(object sender,EventArgs e) {
-			DialogResult=DialogResult.Cancel;
-		}
-
-		private void butDelete_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Are you sure you would like to delete this?")) {
+		private void DeleteButton_Click(object sender, EventArgs e)
+		{
+			if (Prompt("Are you sure you would like to delete this?") == DialogResult.Yes)
+			{
 				return;
 			}
-			AlertCategoryLinks.DeleteForCategory(_categoryCur.Id);
-			AlertCategories.Delete(_categoryCur.Id);
-			DataValid.SetInvalid(InvalidType.AlertCategories,InvalidType.AlertCategories);
-			DialogResult=DialogResult.OK;
+
+			AlertCategoryLinks.DeleteForCategory(alertCategory.Id);
+			AlertCategories.Delete(alertCategory.Id);
+
+			DataValid.SetInvalid(InvalidType.AlertCategories, InvalidType.AlertCategories);
+
+			DialogResult = DialogResult.OK;
 		}
 	}
 }

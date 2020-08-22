@@ -176,12 +176,12 @@ namespace OpenDental
 				// TODO: Logger.LogToPath("",LogPath.Signals,LogPhase.Start);
 				List<List<AlertItem>> listUniqueAlerts = AlertItems.GetUniqueAlerts(userNumCur, clinicNumCur);
 				//We will set the alert's tag to all the items in its list so that all can be marked read/deleted later.
-				listUniqueAlerts.ForEach(x => x.First().TagOD = x.Select(y => y.AlertItemNum).ToList());
+				listUniqueAlerts.ForEach(x => x.First().TagOD = x.Select(y => y.Id).ToList());
 				List<AlertItem> listAlertItems = listUniqueAlerts.Select(x => x.First())
 					.Where(x => x.Type != AlertType.ClinicsChangedInternal).ToList();//These alerts are not supposed to be displayed to the end user.
 																					 //Update listUserAlertTypes to only those with active AlertItems.
 				List<AlertType> listUserAlertLinks = listAlertItems.Select(x => x.Type).ToList();
-				List<AlertRead> listAlertItemReads = AlertReads.RefreshForAlertNums(userNumCur, listAlertItems.Select(x => x.AlertItemNum).ToList());
+				List<AlertRead> listAlertItemReads = AlertReads.RefreshForAlertNums(userNumCur, listAlertItems.Select(x => x.Id).ToList());
 				this.InvokeIfRequired(() =>
 				{
 					//Assigning this inside Invoke so that we don't have to lock _listAlertItems and _listAlertReads.
@@ -472,7 +472,7 @@ namespace OpenDental
 				Severity = SeverityType.High,
 				Type = AlertType.EConnectorDown,
 				//Show for all clinics.
-				ClinicNum = -1,
+				ClinicId = -1,
 				FormToOpen = FormType.FormEServicesEConnector,
 			});
 			//We just inserted an alert so update the alert menu.

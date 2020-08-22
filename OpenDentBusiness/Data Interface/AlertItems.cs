@@ -50,7 +50,7 @@ namespace OpenDentBusiness{
 				if(listOldAlerts.Count==0) {//an alert does not already exist
 					AlertItem alert=new AlertItem();
 					alert.Actions=ActionType.MarkAsRead;
-					alert.ClinicNum=-1;//all clinics
+					alert.ClinicId=-1;//all clinics
 					alert.Description="No instance of Open Dental Service is running.";
 					alert.Type=AlertType.OpenDentalServiceDown;
 					alert.Severity=SeverityType.Medium;
@@ -86,7 +86,7 @@ namespace OpenDentBusiness{
 				+String.Join(", ",dictRecievedCount.Select( x=> POut.Long(x.Key)+":"+POut.Long(x.Value))));
 			//This list contains every single WebMailRecieved alert and is synced with listAlerts later.
 			List<AlertItem> listOldAlerts=AlertItems.RefreshForType(AlertType.WebMailRecieved);
-			Logger.LogVerbose("Fetched current alerts for users: "+String.Join(", ",listOldAlerts.Select(x => POut.Long(x.UserNum))));
+			Logger.LogVerbose("Fetched current alerts for users: "+String.Join(", ",listOldAlerts.Select(x => POut.Long(x.UserId))));
 			//If a user doesn't have any unread webmail, they won't be placed on this list, and any alert they have in listOldAlerts will be deleted.
 			List<AlertItem> listAlerts=new List<AlertItem>();
 			List<long> listChangedAlertItemNums=new List<long>();
@@ -96,7 +96,7 @@ namespace OpenDentBusiness{
 				List<Userod> listUsers=Providers.GetAttachedUsers(kvp.Key);
 				//Go through each usernum and create/update their alert item.
 				foreach(long usernum in listUsers.Select(x => x.Id)) {
-					AlertItem alertForUser=listOldAlerts.FirstOrDefault(x => x.UserNum==usernum);
+					AlertItem alertForUser=listOldAlerts.FirstOrDefault(x => x.UserId==usernum);
 					//If an alert doesn't exist for the user, we'll create it.
 					if(alertForUser==null) {
 						alertForUser=new AlertItem();
@@ -104,8 +104,8 @@ namespace OpenDentBusiness{
 						alertForUser.FormToOpen=FormType.FormEmailInbox;
 						alertForUser.Actions=ActionType.MarkAsRead|ActionType.OpenForm;	//Removed delete because the alert will just be re-added next time it checks.
 						alertForUser.Severity=SeverityType.Normal;
-						alertForUser.ClinicNum=-1;	//The alert is user dependent, not clinic dependent.
-						alertForUser.UserNum=usernum;
+						alertForUser.ClinicId=-1;	//The alert is user dependent, not clinic dependent.
+						alertForUser.UserId=usernum;
 						alertForUser.Description=POut.Long(kvp.Value);
 						listAlerts.Add(alertForUser);
 						Logger.LogVerbose("Created webmail alert for user "+POut.Long(usernum));
@@ -119,7 +119,7 @@ namespace OpenDentBusiness{
 							selectedAlert.Description=POut.Long(kvp.Value);
 							//If the new value is greater, the user has recieved more webmails so we want to mark the alert as "Unread".
 							if(previousValue<kvp.Value) {
-								listChangedAlertItemNums.Add(selectedAlert.AlertItemNum);
+								listChangedAlertItemNums.Add(selectedAlert.Id);
 							}
 						}
 						listAlerts.Add(selectedAlert);
@@ -129,10 +129,10 @@ namespace OpenDentBusiness{
 			}
 			//Push our changes to the database.
 			AlertItems.Sync(listAlerts,listOldAlerts);
-			List<AlertItem> listDeletedAlerts=listOldAlerts.Where(x => !listAlerts.Any(y => y.AlertItemNum==x.AlertItemNum)).ToList();
-			Logger.LogVerbose("Deleted webmail alerts for users: "+String.Join(", ",listDeletedAlerts.Select(x => POut.Long(x.UserNum))));
+			List<AlertItem> listDeletedAlerts=listOldAlerts.Where(x => !listAlerts.Any(y => y.Id==x.Id)).ToList();
+			Logger.LogVerbose("Deleted webmail alerts for users: "+String.Join(", ",listDeletedAlerts.Select(x => POut.Long(x.UserId))));
 			//Make sure to mark alerts that were deleted, modified (not created) and increased as unread.
-			listChangedAlertItemNums.AddRange(listDeletedAlerts.Select(x => x.AlertItemNum));
+			listChangedAlertItemNums.AddRange(listDeletedAlerts.Select(x => x.Id));
 			AlertReads.DeleteForAlertItems(listChangedAlertItemNums);
 		}
 
@@ -160,7 +160,7 @@ namespace OpenDentBusiness{
 			List<List<AlertItem>> listUniqueAlerts=new List<List<AlertItem>>();
 			RefreshForClinicAndTypes(clinicNumCur,listUserAlertLinks)//Get alert items for the current clinic
 				.Union(RefreshForClinicAndTypes(-1,listAllUserAlertLinks))//Get alert items that are for all clinics
-				.DistinctBy(x => x.AlertItemNum)
+				.DistinctBy(x => x.Id)
 				.ForEach(x => {
 					foreach(List<AlertItem> listDuplicates in listUniqueAlerts) {
 						if(AreDuplicates(listDuplicates.First(),x)) {
@@ -180,14 +180,14 @@ namespace OpenDentBusiness{
 				return false;
 			}
 			return alert1.Actions==alert2.Actions
-				&& alert1.ClinicNum==alert2.ClinicNum
+				&& alert1.ClinicId==alert2.ClinicId
 				&& alert1.Description==alert2.Description
 				&& alert1.FKey==alert2.FKey
 				&& alert1.FormToOpen==alert2.FormToOpen
 				&& alert1.ItemValue==alert2.ItemValue
 				&& alert1.Severity==alert2.Severity
 				&& alert1.Type==alert2.Type
-				&& alert1.UserNum==alert2.UserNum;
+				&& alert1.UserId==alert2.UserId;
 		}
 
 		#endregion
@@ -250,13 +250,13 @@ namespace OpenDentBusiness{
 		///<summary>Inserts if it doesn't exist, otherwise updates.</summary>
 		public static long Upsert(AlertItem alertItem) {
 			
-			if(alertItem.AlertItemNum==0) {
+			if(alertItem.Id==0) {
 				Insert(alertItem);
 			}
 			else {
 				Update(alertItem);
 			}
-			return alertItem.AlertItemNum;
+			return alertItem.Id;
 		}
 
 		///<summary>If null listFKeys is provided then all rows of the given alertType will be deleted. Otherwise only rows which match listFKeys entries.</summary>
@@ -267,7 +267,7 @@ namespace OpenDentBusiness{
 				listAlerts=listAlerts.FindAll(x => listFKeys.Contains(x.FKey));
 			}
 			foreach(AlertItem alert in listAlerts) {
-				Delete(alert.AlertItemNum);
+				Delete(alert.Id);
 			}
 		}
 
