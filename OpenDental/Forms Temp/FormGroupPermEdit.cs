@@ -185,12 +185,12 @@ namespace OpenDental{
 		#endregion
 
 		private void FormGroupPermEdit_Load(object sender, System.EventArgs e) {
-			textName.Text=GroupPermissions.GetDesc(Cur.PermType);
-			if(Cur.NewerDate.Year<1880){
+			textName.Text=GroupPermissions.GetDesc(Cur.Permission);
+			if(!Cur.NewerDate.HasValue){
 				textDate.Text="";
 			}
 			else{
-				textDate.Text=Cur.NewerDate.ToShortDateString();
+				textDate.Text=Cur.NewerDate.Value.ToShortDateString();
 			}
 			if(Cur.NewerDays==0){
 				textDays.Text="";
@@ -247,8 +247,8 @@ namespace OpenDental{
 				else {
 					GroupPermissions.Update(Cur);
 				}
-				SecurityLogs.MakeLogEntry(Permissions.SecurityAdmin,0,$"Permission '{Cur.PermType}' granted to " +
-					$"'{UserGroups.GetGroup(Cur.UserGroupNum).Description}'");
+				SecurityLogs.MakeLogEntry(Permissions.SecurityAdmin,0,$"Permission '{Cur.Permission}' granted to " +
+					$"'{UserGroups.GetGroup(Cur.UserGroupId).Description}'");
 			}
 			catch(Exception ex){
 				MessageBox.Show(ex.Message);

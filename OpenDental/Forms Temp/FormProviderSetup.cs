@@ -632,7 +632,7 @@ namespace OpenDental{
 				butDown.Visible=false;
 			}
 			checkShowHidden.Checked=Prefs.GetBool(PrefName.EasyHideDentalSchools);
-			if(!Security.IsAuthorized(Permissions.PatPriProvEdit,DateTime.MinValue,true,true)) {
+			if(!Security.IsAuthorized(Permissions.PatPriProvEdit,true)) {
 				string strToolTip="Not authorized for"+" "+GroupPermissions.GetDesc(Permissions.PatPriProvEdit);
 				_priProvEditToolTip.SetToolTip(butReassign,strToolTip);
 				_priProvEditToolTip.SetToolTip(butMovePri,strToolTip);

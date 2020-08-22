@@ -402,7 +402,7 @@ namespace OpenDental{
 			FillCombosProv();
 			comboPriProv.SetSelectedProvNum(PatCur.PriProv);
 			comboSecProv.SetSelectedProvNum(PatCur.SecProv);
-			if(!Security.IsAuthorized(Permissions.PatPriProvEdit,DateTime.MinValue,true,true) && PatCur.PriProv>0) {
+			if(!Security.IsAuthorized(Permissions.PatPriProvEdit,DateTime.MinValue,true) && PatCur.PriProv>0) {
 				//user not allowed to change existing prov.  Warning messages are suppressed here.
 				string strToolTip="Not authorized for"+" "+GroupPermissions.GetDesc(Permissions.PatPriProvEdit);
 				_priProvEditToolTip.SetToolTip(butPickPrimary,strToolTip);
@@ -3075,7 +3075,7 @@ namespace OpenDental{
 					listPatsForPriProvEdit.RemoveAll(x => x.PatStatus==PatientStatus.Archived);
 				}
 				//true if any family member has a different PriProv and the user is authorized for PriProvEdit
-				bool isChangePriProvs=(listPatsForPriProvEdit.Count>0 && Security.IsAuthorized(Permissions.PatPriProvEdit,DateTime.MinValue,true,true));
+				bool isChangePriProvs=(listPatsForPriProvEdit.Count>0 && Security.IsAuthorized(Permissions.PatPriProvEdit));
 				Patients.UpdateBillingProviderForFam(PatCur,isChangePriProvs,isAuthArchivedEdit);//if user is not authorized this will not update PriProvs for fam
 			}
 			if(checkNotesSame.Checked){

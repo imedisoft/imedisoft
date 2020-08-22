@@ -126,9 +126,9 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static bool IsAdminGroup(List<long> userGroupIds)
 		{
-			var securityAdminPermissions = GroupPermissions.GetWhere(x => x.PermType == Permissions.SecurityAdmin);
+			var securityAdminPermissions = GroupPermissions.GetWhere(x => x.Permission == Permissions.SecurityAdmin);
 
-			return userGroupIds.Any(x => securityAdminPermissions.Any(y => y.UserGroupNum == x));
+			return userGroupIds.Any(x => securityAdminPermissions.Any(y => y.UserGroupId == x));
 		}
 	}
 }

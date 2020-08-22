@@ -89,7 +89,7 @@ namespace OpenDental {
 
 		///<summary>Determines if there is a GroupPermission for any of the arrayUserGroups that matches the sheetDashboard.</summary>
 		private bool IsUserGroupAllowed(SheetDef sheetDefWidget,UserGroup userGroup) {
-			if(_listGroupPermissions.Any(x => x.UserGroupNum==userGroup.Id && x.FKey==sheetDefWidget.SheetDefNum)) {
+			if(_listGroupPermissions.Any(x => x.UserGroupId==userGroup.Id && x.ObjectId==sheetDefWidget.SheetDefNum)) {
 				return true;
 			}
 			return false;
@@ -103,14 +103,14 @@ namespace OpenDental {
 
 		private bool ToggleDashboardPermission(UserGroup userGroup,SheetDef sheetDefWidget) {
 			GroupPermission selectedGroupPermission=_listGroupPermissions
-				.FirstOrDefault(x => x.UserGroupNum==userGroup.Id && x.FKey==sheetDefWidget.SheetDefNum);
+				.FirstOrDefault(x => x.UserGroupId==userGroup.Id && x.ObjectId==sheetDefWidget.SheetDefNum);
 			if(selectedGroupPermission==null) {
 				GroupPermission groupPermission=new GroupPermission() {
 					NewerDate=DateTime.MinValue,
 					NewerDays=0,
-					PermType=Permissions.DashboardWidget,
-					UserGroupNum=userGroup.Id,
-					FKey=sheetDefWidget.SheetDefNum,
+					Permission=Permissions.DashboardWidget,
+					UserGroupId=userGroup.Id,
+					ObjectId=sheetDefWidget.SheetDefNum,
 				};
 				_listGroupPermissions.Add(groupPermission);
 				return true;
@@ -124,14 +124,14 @@ namespace OpenDental {
 		private void SetDashboardPermission(UserGroup userGroup,params SheetDef[] arraySheetDefWidgets) {
 			foreach(SheetDef sheetDefWidget in arraySheetDefWidgets) {
 				GroupPermission selectedGroupPermission=_listGroupPermissions
-					.FirstOrDefault(x => x.UserGroupNum==userGroup.Id && x.FKey==sheetDefWidget.SheetDefNum);
+					.FirstOrDefault(x => x.UserGroupId==userGroup.Id && x.ObjectId==sheetDefWidget.SheetDefNum);
 				if(selectedGroupPermission==null) {
 					GroupPermission groupPermission=new GroupPermission() {
 						NewerDate=DateTime.MinValue,
 						NewerDays=0,
-						PermType=Permissions.DashboardWidget,
-						UserGroupNum=userGroup.Id,
-						FKey=sheetDefWidget.SheetDefNum,
+						Permission=Permissions.DashboardWidget,
+						UserGroupId=userGroup.Id,
+						ObjectId=sheetDefWidget.SheetDefNum,
 					};
 					_listGroupPermissions.Add(groupPermission);
 				}

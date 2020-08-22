@@ -110,7 +110,7 @@ namespace OpenDentBusiness{
 		}
 
 		///<summary>Finds the passed-in displayreport from the list and returns its internal name. Returns blank if not found.</summary>
-		public static string GetInternalName(long displayReportNum,List<DisplayReport> listDisplayReports) {
+		public static string GetInternalName(long? displayReportNum,List<DisplayReport> listDisplayReports) {
 			//No need to check RemotingRole; no call to db.
 			return listDisplayReports.FirstOrDefault(x => x.DisplayReportNum == displayReportNum)?.InternalName??"";
 		}
@@ -120,7 +120,7 @@ namespace OpenDentBusiness{
 			//No remotin grole check; no call to db
 			List<DisplayReport> listDisplayReports=GetAll(false);
 			listGroupPerms.RemoveAll(x => {
-				string reportInternalName = DisplayReports.GetInternalName(x.FKey, listDisplayReports);
+				string reportInternalName = DisplayReports.GetInternalName(x.ObjectId, listDisplayReports);
 				if(reportInternalName == "ODDentalSealantMeasure" || reportInternalName =="ODEligibilityFile" || reportInternalName =="ODEncounterFile") {
 					return true;
 				}
@@ -133,7 +133,7 @@ namespace OpenDentBusiness{
 				if(report.InternalName=="ODDentalSealantMeasure" || report.InternalName=="ODEligibilityFile" || report.InternalName=="ODEncounterFile") {
 					continue;//We don't care about UDS reports or Arizona Primary Care reports.
 				} 
-				if(!listGroupPerms.Exists(x => x.FKey==report.DisplayReportNum)) {
+				if(!listGroupPerms.Exists(x => x.ObjectId==report.DisplayReportNum)) {
 					return 0;//Has incomplete permissions
 				}
 			}

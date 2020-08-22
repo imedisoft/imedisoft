@@ -196,7 +196,7 @@ namespace Imedisoft.CEMT.Forms
 		{
 			var groupPermission = e.Perm;
 
-			using (var formCentralReportSetup = new FormCentralReportSetup(groupPermission.UserGroupNum, true))
+			using (var formCentralReportSetup = new FormCentralReportSetup(groupPermission.UserGroupId, true))
 			{
 				if (formCentralReportSetup.ShowDialog(this) == DialogResult.Cancel)
 				{

@@ -2,33 +2,54 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using CodeBase;
+using Imedisoft.Data.Annotations;
 
 namespace OpenDentBusiness{
 
-	///<summary>Every user group has certain permissions.  This defines a permission for a group.  The absense of permission would cause that row to be deleted from this table.</summary>
-	[Serializable]
-	[CrudTable(IsSynchable=true)]
+	/// <summary>
+	/// Every user group has certain permissions. This defines a permission for a group. 
+	/// The absense of permission would cause that row to be deleted from this table.
+	/// </summary>
+	[Table]
+	public class GroupPermission : TableBase
+	{
+		[PrimaryKey]
+		public long Id;
 
-	public class GroupPermission:TableBase {
-		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
-		public long GroupPermNum;
-		///<summary>Only granted permission if newer than this date.  Can be Minimum (01-01-0001) to always grant permission.</summary>
-		public DateTime NewerDate;
-		///<summary>Can be 0 to always grant permission.  Otherwise, only granted permission if item is newer than the given number of days.  1 would mean only if entered today.</summary>
+		/// <summary>
+		///		<para>
+		///			Indicates the date from which this permission takes effect. If null the permission is always granted.
+		///		</para>
+		/// </summary>
+		public DateTime? NewerDate;
+
+		/// <summary>
+		///		<para>
+		///			The number of days for which the permission is active. Only used when <see cref="NewerDate"/> is also set.
+		///		</para>
+		///		<para>
+		///			Set to 0 to always grant the permission.
+		///		</para>
+		/// </summary>
 		public int NewerDays;
-		///<summary>FK to usergroup.UserGroupNum.  The user group for which this permission is granted.  If not authorized, then this groupPermission will have been deleted.</summary>
-		public long UserGroupNum;
-		///<summary>Enum:Permissions</summary>
-		public Permissions PermType;
-		///<summary>Generic foreign key to any other table.  Typically used in combination with PermType to give permission to specific things.</summary>
-		public long FKey;
 
-		///<summary></summary>
-		public GroupPermission Copy(){
-			return (GroupPermission)this.MemberwiseClone();
-		}
+		/// <summary>
+		/// The user group for which this permission is granted. If not authorized, then this groupPermission will have been deleted.
+		/// </summary>
+		[ForeignKey(typeof(UserGroup), nameof(UserGroup.Id))]
+		public long UserGroupId;
 
+		/// <summary>
+		/// The permission.
+		/// </summary>
+		public Permissions Permission;
+
+		/// <summary>
+		/// The ID of the object this permission grants authorization for.
+		/// </summary>
+		public long? ObjectId;
+
+		public GroupPermission Copy() => (GroupPermission)MemberwiseClone();
 	}
 
 	///<summary>A hard-coded list of permissions which may be granted to usergroups.</summary>
@@ -541,15 +562,6 @@ namespace OpenDentBusiness{
 		///<summary>165 - Allows users to edit patient information for archived patients.</summary>
 		[Description("Archived Patient Edit")]
 		ArchivedPatientEdit,
-		///<summary>166 - HQ only. Allows users to use the persistent option in the Commlog drop down.</summary>
-		[Description("Commlog Persistent")]
-		CommlogPersistent,
-		///<summary>167 - Logs when a phone number has had its ownership verified. For OD HQ only.</summary>
-		[Description("Phone Ownership Verified")]
-		VerifyPhoneOwnership,
-		///<summary>168 - HQ only. Allows users to make changes to Sales Tax type adjustments.</summary>
-		[Description("Edit Sales Tax Adjustments")]
-		SalesTaxAdjEdit,
 		///<summary>169 - Allows user to set last verified dates for insurance benefits. Also allows access to FormInsVerificationList.</summary>
 		[Description("Insurance Verification")]
 		InsuranceVerification,
@@ -559,9 +571,6 @@ namespace OpenDentBusiness{
 		///<summary>171 - Logs when aging is being ran and from where.</summary>
 		[Description("Aging Ran")]
 		AgingRan,
-		///<summary>172 - HQ only. Allows user to add, edit, and delete Headmaster services and devices.</summary>
-		[Description("Headmaster Setup")]
-		HeadmasterSetup,
 		///<summary>173 - Allows user to view a specific Dashboard Widget. Uses FKey for SheetDef.SheetDefNum.</summary>
 		[Description("Dashboard Widget")]
 		DashboardWidget,

@@ -21,7 +21,7 @@ namespace OpenDentBusiness {
 		///<summary>Enum:HistAppointmentAction .</summary>
 		public HistAppointmentAction HistApptAction;
 		///<summary>Enum:EServiceTypes .</summary>
-		public EServiceTypes ApptSource;
+		public int ApptSource;
 		//Note that the columns ProcsColored and Note are VARCHAR(255) in this table while they are TEXT in the appointment table. This is intentional
 		//because it is less important to store the entire note and color when the appointment is not current.
 

@@ -150,7 +150,7 @@ namespace OpenDental.User_Controls {
 				GridRow row= new GridRow();
 				if(_isPermissionMode) {
 					row.Cells.Add(reportCur.Description+(reportCur.IsHidden ? " (hidden)" : ""));
-					row.Cells.Add(ListGroupPermissionsForReports.Exists(x => x.FKey==reportCur.DisplayReportNum && x.UserGroupNum==_listUserGroups[comboUserGroup.SelectedIndex].Id) ? "X" : "");
+					row.Cells.Add(ListGroupPermissionsForReports.Exists(x => x.ObjectId==reportCur.DisplayReportNum && x.UserGroupId==_listUserGroups[comboUserGroup.SelectedIndex].Id) ? "X" : "");
 				}
 				else {
 					row.Cells.Add(reportCur.Description);
@@ -217,14 +217,14 @@ namespace OpenDental.User_Controls {
 			DisplayReport clicked=ListDisplayReportAll.Find(x => x.Category == selectedCat && x.ItemOrder == _selectedCell.Y);
 			if(_isPermissionMode) {
 				if(_selectedCell.X==1) {
-					GroupPermission groupPerm=ListGroupPermissionsForReports.Find(x => x.FKey==clicked.DisplayReportNum && x.UserGroupNum==_listUserGroups[comboUserGroup.SelectedIndex].Id);
+					GroupPermission groupPerm=ListGroupPermissionsForReports.Find(x => x.ObjectId==clicked.DisplayReportNum && x.UserGroupId==_listUserGroups[comboUserGroup.SelectedIndex].Id);
 					if(groupPerm==null) {//They don't have perm
 						groupPerm=new GroupPermission();
 						groupPerm.NewerDate=DateTime.MinValue;
 						groupPerm.NewerDays=0;
-						groupPerm.PermType=Permissions.Reports;
-						groupPerm.UserGroupNum=_listUserGroups[comboUserGroup.SelectedIndex].Id;
-						groupPerm.FKey=clicked.DisplayReportNum;
+						groupPerm.Permission=Permissions.Reports;
+						groupPerm.UserGroupId=_listUserGroups[comboUserGroup.SelectedIndex].Id;
+						groupPerm.ObjectId=clicked.DisplayReportNum;
 						ListGroupPermissionsForReports.Add(groupPerm);
 					}
 					else {
@@ -409,7 +409,7 @@ namespace OpenDental.User_Controls {
 		}
 
 		private void butSetAll_Click(object sender,EventArgs e) {
-			ListGroupPermissionsForReports.RemoveAll(x => x.UserGroupNum==_listUserGroups[comboUserGroup.SelectedIndex].Id);
+			ListGroupPermissionsForReports.RemoveAll(x => x.UserGroupId==_listUserGroups[comboUserGroup.SelectedIndex].Id);
 			foreach(DisplayReport report in ListDisplayReportAll) {
 				if(report.IsHidden) {
 					continue;
@@ -417,9 +417,9 @@ namespace OpenDental.User_Controls {
 				GroupPermission groupPerm=new GroupPermission();
 				groupPerm.NewerDate=DateTime.MinValue;
 				groupPerm.NewerDays=0;
-				groupPerm.PermType=Permissions.Reports;
-				groupPerm.UserGroupNum=_listUserGroups[comboUserGroup.SelectedIndex].Id;
-				groupPerm.FKey=report.DisplayReportNum;
+				groupPerm.Permission=Permissions.Reports;
+				groupPerm.UserGroupId=_listUserGroups[comboUserGroup.SelectedIndex].Id;
+				groupPerm.ObjectId=report.DisplayReportNum;
 				ListGroupPermissionsForReports.Add(groupPerm);
 			}
 			FillGrids();

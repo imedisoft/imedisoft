@@ -138,6 +138,9 @@
   <data name="Date" xml:space="preserve">
     <value>Date</value>
   </data>
+  <data name="DateLimitation" xml:space="preserve">
+    <value>Date limitation</value>
+  </data>
   <data name="Description" xml:space="preserve">
     <value>Description</value>
   </data>
@@ -156,8 +159,20 @@
   <data name="ErrorOpeningLogFile" xml:space="preserve">
     <value>Could not open log file. {0}</value>
   </data>
+  <data name="InsufficientPrivileges" xml:space="preserve">
+    <value>You do not have sufficient privileges to perform this operation.</value>
+  </data>
   <data name="InvalidPassword" xml:space="preserve">
     <value>Wrong password</value>
+  </data>
+  <data name="LockedByAdministrator" xml:space="preserve">
+    <value>Locked by Administrator.</value>
+  </data>
+  <data name="LockedByAdministratorForDate" xml:space="preserve">
+    <value>Locked by Administrator before {0}.</value>
+  </data>
+  <data name="LockedByAdministratorForDays" xml:space="preserve">
+    <value>Locked by Administrator before {0} days.</value>
   </data>
   <data name="LogFileCreatedWouldYouLikeToOpenFile" xml:space="preserve">
     <value>Log file created. Would you like to open the file?</value>
@@ -175,6 +190,9 @@ If you do have a printer installed, restarting the workstation may solve the pro
   </data>
   <data name="Notes" xml:space="preserve">
     <value>Notes</value>
+  </data>
+  <data name="OperationNowAllowedForReason" xml:space="preserve">
+    <value>You are not allowed to perform the requested operation. Reason: {0}.</value>
   </data>
   <data name="PleaseEnterPassword" xml:space="preserve">
     <value>Please enter password</value>

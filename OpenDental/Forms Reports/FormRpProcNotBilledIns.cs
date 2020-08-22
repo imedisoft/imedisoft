@@ -195,7 +195,7 @@ namespace OpenDental{
 			List<ClaimProc> listPatClaimProcs=new List<ClaimProc>();
 			List<ClaimProc> listCurClaimProcs=new List<ClaimProc>();
 			//find the date user is restricted by for this permission so it doesn't get called in a loop. General permission was already checked.
-			DateTime dateRestricted=GroupPermissions.GetDateRestrictedForPermission(Permissions.NewClaimsProcNotBilled,
+			DateTime? dateRestricted=GroupPermissions.GetDateRestrictedForPermission(Permissions.NewClaimsProcNotBilled,
 				Security.CurrentUser.GetGroups(true).Select(x => x.Id).ToList());
 			//Table rows need to be 1:1 with gridMain rows due to logic in ContrAccount.toolBarButIns_Click(...).
 			DataTable table=new DataTable();
@@ -209,7 +209,7 @@ namespace OpenDental{
 				DataRow rowCur=(DataRow)gridMain.ListGridRows[i].Tag;
 				long procNumCur=PIn.Long(rowCur["ProcNum"].ToString());
 				Procedure procCur=Procedures.GetOneProc(procNumCur,false);
-				if(procCur.ProcDate <= dateRestricted) {//current procedure is past or on the lock date. 
+				if(dateRestricted.HasValue && procCur.ProcDate <= dateRestricted) {//current procedure is past or on the lock date. 
 					listProcNumsPastLockDate.Add(procNumCur);
 				}
 				long patNumCur=procCur.PatNum;

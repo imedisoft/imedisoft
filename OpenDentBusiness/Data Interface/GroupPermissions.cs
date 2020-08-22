@@ -10,74 +10,77 @@ using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
-	///<summary></summary>
 	public class GroupPermissions
 	{
-
-		///<summary>The maximum number of days allowed for the NewerDays column.
-		///Setting a NewerDays to a value higher than this will cause an exception to be thrown in the program.
-		///There is a DBM that will correct invalid NewerDays in the database.</summary>
+		/// <summary>
+		/// The maximum number of days allowed for the NewerDays column.
+		/// Setting a NewerDays to a value higher than this will cause an exception to be thrown in the program.
+		/// There is a DBM that will correct invalid NewerDays in the database.
+		/// </summary>
 		public const double NewerDaysMax = 3000;
 
-		#region Misc Methods
-		///<summary>Returns the Date that the user is restricted to for the passed-in permission. 
-		///Returns MinVal if the user is not restricted or does not have the permission.</summary>
-		public static DateTime GetDateRestrictedForPermission(Permissions permission, List<long> listUserGroupNums)
+		/// <summary>
+		/// Returns the Date that the user is restricted to for the passed-in permission. 
+		/// Returns MinVal if the user is not restricted or does not have the permission.
+		/// </summary>
+		public static DateTime? GetDateRestrictedForPermission(Permissions permission, List<long> userGroupIds)
 		{
-			//No need to check RemotingRole; no call to db.
-			DateTime nowDate = DateTime.MinValue;
-			Func<DateTime> getNowDate = new Func<DateTime>(() =>
-			{
-				if (nowDate.Year < 1880)
+			var currentDate = DateTime.UtcNow.Date;
+
+			var groupPermissions = GetForUserGroups(userGroupIds, permission);
+
+			var groupPermission = groupPermissions
+				.OrderBy(y =>
 				{
-					nowDate = MiscData.GetNowDateTime().Date;
-				}
-				return nowDate;
-			});
-			DateTime retVal = DateTime.MinValue;
-			List<GroupPermission> listGroupPerms = GetForUserGroups(listUserGroupNums, permission);
-			//get the permission that applies
-			GroupPermission perm = listGroupPerms.OrderBy((GroupPermission y) =>
+					if (y.NewerDays == 0 && y.NewerDate == DateTime.MinValue)
+					{
+						return DateTime.MinValue;
+					}
+
+					if (y.NewerDays == 0)
+					{
+						return y.NewerDate;
+					}
+
+					return currentDate.AddDays(-y.NewerDays);
+
+
+				})
+				.FirstOrDefault();
+
+			if (groupPermission == null)
+				return null;
+
+			if (!groupPermission.NewerDate.HasValue && groupPermission.NewerDays == 0)
+				return null;
+
+			if (groupPermission.NewerDate.HasValue)
+				return groupPermission.NewerDate;
+
+			try
 			{
-				if (y.NewerDays == 0 && y.NewerDate == DateTime.MinValue)
-				{
-					return DateTime.MinValue;
-				}
-				if (y.NewerDays == 0)
-				{
-					return y.NewerDate;
-				}
-				return getNowDate().AddDays(-y.NewerDays);
-			}).FirstOrDefault();
-			if (perm == null)
-			{
-				//do not change retVal. The user does not have the permission.
+				return currentDate.AddDays(-groupPermission.NewerDays);
 			}
-			else if (perm.NewerDate.Year < 1880 && perm.NewerDays == 0)
-			{
-				//do not change retVal. The user is not restricted by date.
-			}
-			else if (perm.NewerDate.Year > 1880)
-			{
-				retVal = perm.NewerDate;
-			}
-			else if (getNowDate().AddDays(-perm.NewerDays) > retVal)
-			{
-				retVal = getNowDate().AddDays(-perm.NewerDays);
-			}
-			return retVal;
+			catch (ArgumentOutOfRangeException)
+            {
+            }
+
+			return null;
 		}
 
-		///<summary>Used for procedures with status EO, EC, or C. Returns Permissions.ProcExistingEdit for EO/EC</summary>
-		public static Permissions SwitchExistingPermissionIfNeeded(Permissions perm, Procedure proc)
+		/// <summary>
+		/// Used for procedures with status EO, EC, or C. 
+		/// Returns Permissions.ProcExistingEdit for EO/EC
+		/// </summary>
+		public static Permissions SwitchExistingPermissionIfNeeded(Permissions permission, Procedure procedure)
 		{
-			if (proc.ProcStatus.In(ProcStat.EO, ProcStat.EC))
+			if (procedure.ProcStatus.In(ProcStat.EO, ProcStat.EC))
 			{
 				return Permissions.ProcExistingEdit;
 			}
-			return perm;
+
+			return permission;
 		}
-		#endregion
 
 		#region CachePattern
 
@@ -140,414 +143,299 @@ namespace OpenDentBusiness
 
 		#endregion
 
-		///<summary></summary>
 		public static void Update(GroupPermission gp)
 		{
-
-			if (gp.NewerDate.Year > 1880 && gp.NewerDays > 0)
+			if (gp.NewerDate.HasValue && gp.NewerDays > 0)
 			{
 				throw new Exception("Date or days can be set, but not both.");
 			}
-			if (!GroupPermissions.PermTakesDates(gp.PermType))
+
+			if (!PermissionTakesDates(gp.Permission))
 			{
-				if (gp.NewerDate.Year > 1880 || gp.NewerDays > 0)
+				if (gp.NewerDate.HasValue || gp.NewerDays > 0)
 				{
 					throw new Exception("This type of permission may not have a date or days set.");
 				}
 			}
+
 			Crud.GroupPermissionCrud.Update(gp);
 		}
 
-		///<summary>Update that doesnt use the local cache.  Useful for multithreaded connections.</summary>
+		/// <summary>
+		/// Update that doesnt use the local cache. Useful for multithreaded connections.
+		/// </summary>
 		public static void UpdateNoCache(GroupPermission gp)
 		{
-
 			string command = "UPDATE grouppermission SET "
-				+ "NewerDate   =  " + POut.Date(gp.NewerDate) + ", "
+				+ "NewerDate   =  " + POut.Date(gp.NewerDate ?? DateTime.MinValue) + ", "
 				+ "NewerDays   =  " + POut.Int(gp.NewerDays) + ", "
-				+ "UserGroupNum=  " + POut.Long(gp.UserGroupNum) + ", "
-				+ "PermType    =  " + POut.Int((int)gp.PermType) + " "
-				+ "WHERE GroupPermNum = " + POut.Long(gp.GroupPermNum);
+				+ "UserGroupNum=  " + gp.UserGroupId + ", "
+				+ "PermType    =  " + (int)gp.Permission + " "
+				+ "WHERE GroupPermNum = " + gp.Id;
+
 			Database.ExecuteNonQuery(command);
 		}
+		/// <summary>
+		/// Deletes GroupPermissions based on primary key. 
+		/// Do not call this method unless you have checked specific dependencies first. 
+		/// E.g. after deleting this permission, there will still be a security admin user. 
+		/// This method is only called from the CEMT sync. 
+		/// RemovePermission should probably be used instead.
+		/// </summary>
+		public static void Delete(GroupPermission groupPermission) 
+			=> Database.ExecuteNonQuery(
+				"DELETE FROM grouppermission WHERE GroupPermNum = " + groupPermission.Id);
 
-		///<summary>Deletes GroupPermissions based on primary key.  Do not call this method unless you have checked specific dependencies first.  E.g. after deleting this permission, there will still be a security admin user.  This method is only called from the CEMT sync.  RemovePermission should probably be used instead.</summary>
-		public static void Delete(GroupPermission gp)
+		/// <summary>
+		/// Deletes without using the cache. 
+		/// Useful for multithreaded connections.
+		/// </summary>
+		public static void DeleteNoCache(GroupPermission groupPermission) 
+			=> Database.ExecuteNonQuery(
+				"DELETE FROM grouppermission WHERE GroupPermNum=" + groupPermission.Id);
+
+		public static long Insert(GroupPermission groupPermission)
 		{
-
-			string command = "DELETE FROM grouppermission WHERE GroupPermNum = " + POut.Long(gp.GroupPermNum);
-			Database.ExecuteNonQuery(command);
-		}
-
-		///<summary>Deletes without using the cache.  Useful for multithreaded connections.</summary>
-		public static void DeleteNoCache(GroupPermission gp)
-		{
-
-			string command = "DELETE FROM grouppermission WHERE GroupPermNum=" + POut.Long(gp.GroupPermNum);
-			Database.ExecuteNonQuery(command);
-		}
-
-		///<summary></summary>
-		public static long Insert(GroupPermission gp)
-		{
-
-			if (gp.NewerDate.Year > 1880 && gp.NewerDays > 0)
+			if (groupPermission.NewerDate.HasValue && groupPermission.NewerDays > 0)
 			{
 				throw new Exception("Date or days can be set, but not both.");
 			}
-			if (!GroupPermissions.PermTakesDates(gp.PermType))
+
+			if (!PermissionTakesDates(groupPermission.Permission))
 			{
-				if (gp.NewerDate.Year > 1880 || gp.NewerDays > 0)
+				if (groupPermission.NewerDate.HasValue || groupPermission.NewerDays > 0)
 				{
 					throw new Exception("This type of permission may not have a date or days set.");
 				}
+
 			}
-			if (gp.PermType == Permissions.SecurityAdmin)
+
+			if (groupPermission.Permission == Permissions.SecurityAdmin)
 			{
-				//Make sure there are no hidden users in the group that is about to get the Security Admin permission.
-				string command = "SELECT COUNT(*) FROM userod "
-					+ "INNER JOIN usergroupattach ON usergroupattach.UserNum=userod.UserNum "
-					+ "WHERE userod.IsHidden=1 "
-					+ "AND usergroupattach.UserGroupNum=" + gp.UserGroupNum;
-				int count = PIn.Int(Database.ExecuteString(command));
-				if (count != 0)
-				{//there are hidden users in this group
+				// Make sure there are no hidden users in the group that is about to get the Security Admin permission.
+				string command =
+					"SELECT COUNT(*) FROM userod " +
+					"INNER JOIN usergroupattach ON usergroupattach.UserNum=userod.UserNum " +
+					"WHERE userod.IsHidden=1 " +
+					"AND usergroupattach.UserGroupNum=" + groupPermission.UserGroupId;
+
+
+				if (Database.ExecuteLong(command) != 0)
+				{
+					// There are hidden users in this group
 					throw new Exception("The Security Admin permission cannot be given to a user group with hidden users.");
 				}
 			}
-			return Crud.GroupPermissionCrud.Insert(gp);
+
+			return Crud.GroupPermissionCrud.Insert(groupPermission);
 		}
 
-		///<summary>Insertion logic that doesn't use the cache. Has special cases for generating random PK's and handling Oracle insertions.</summary>
+		/// <summary>
+		/// Insertion logic that doesn't use the cache. Has special cases for generating random PK's and handling Oracle insertions.
+		/// </summary>
 		public static long InsertNoCache(GroupPermission gp)
 		{
-
 			return Crud.GroupPermissionCrud.InsertNoCache(gp);
 		}
 
-		///<summary></summary>
-		public static void RemovePermission(long groupNum, Permissions permType)
+		public static void RemovePermission(long userGroupId, Permissions permission)
 		{
-
 			string command;
-			if (permType == Permissions.SecurityAdmin)
+			if (permission == Permissions.SecurityAdmin)
 			{
 				//need to make sure that at least one other user has this permission
 				command = "SELECT COUNT(*) FROM (SELECT DISTINCT grouppermission.UserGroupNum "
 					+ "FROM grouppermission "
 					+ "INNER JOIN usergroupattach ON usergroupattach.UserGroupNum=grouppermission.UserGroupNum "
 					+ "INNER JOIN userod ON userod.UserNum=usergroupattach.UserNum AND userod.IsHidden=0 "
-					+ "WHERE grouppermission.PermType='" + POut.Long((int)permType) + "' "
-					+ "AND grouppermission.UserGroupNum!=" + POut.Long(groupNum) + ") t";//This query is Oracle compatable
+					+ "WHERE grouppermission.PermType='" + (int)permission + "' "
+					+ "AND grouppermission.UserGroupNum!=" + userGroupId + ") t";
+
 				if (Database.ExecuteLong(command) == 0)
 				{//no other users outside of this group have SecurityAdmin
 					throw new Exception("There must always be at least one user in a user group that has the Security Admin permission.");
 				}
 			}
-			if (permType == Permissions.Reports)
+
+			if (permission == Permissions.Reports)
 			{
 				//Special case.  For Reports permission type we want to delete the "base" Reports permission but not any Reports permissions with FKey
 				//When they re-enable the Reports permission we want to remember all individual reports permissions for that UserGroup
-				command = "DELETE from grouppermission WHERE UserGroupNum='" + POut.Long(groupNum) + "' "
-					+ "AND PermType='" + POut.Long((int)permType) + "' AND FKey=0";
+				command =
+					"DELETE from grouppermission WHERE UserGroupNum='" + userGroupId + "' AND PermType='" + (int)permission + "' AND FKey=0";
 			}
 			else
 			{
-				command = "DELETE from grouppermission WHERE UserGroupNum='" + POut.Long(groupNum) + "' "
-					+ "AND PermType='" + POut.Long((int)permType) + "'";
+				command =
+					"DELETE from grouppermission WHERE UserGroupNum='" + userGroupId + "' AND PermType='" + (int)permission + "'";
 			}
+
 			Database.ExecuteNonQuery(command);
 		}
 
 		public static bool Sync(List<GroupPermission> listNew, List<GroupPermission> listOld)
 		{
-
 			return Crud.GroupPermissionCrud.Sync(listNew, listOld);
 		}
 
-		///<summary>Gets a GroupPermission based on the supplied userGroupNum and permType.  If not found, then it returns null.  Used in FormSecurity when double clicking on a dated permission or when clicking the all button.</summary>
+		/// <summary>
+		/// Gets a GroupPermission based on the supplied userGroupNum and permType.
+		/// If not found, then it returns null. 
+		/// Used in FormSecurity when double clicking on a dated permission or when clicking the all button.
+		/// </summary>
 		public static GroupPermission GetPerm(long userGroupNum, Permissions permType)
 		{
-			//No need to check RemotingRole; no call to db.
-			return GetFirstOrDefault(x => x.UserGroupNum == userGroupNum && x.PermType == permType);
+			return GetFirstOrDefault(x => x.UserGroupId == userGroupNum && x.Permission == permType);
 		}
 
-		///<summary>Gets a list of GroupPermissions for the supplied UserGroupNum.</summary>
+		/// <summary>
+		/// Gets a list of GroupPermissions for the supplied UserGroupNum.
+		/// </summary>
 		public static List<GroupPermission> GetPerms(long userGroupNum)
 		{
-			//No need to check RemotingRole; no call to db.
-			return GetWhere(x => x.UserGroupNum == userGroupNum);
+			return GetWhere(x => x.UserGroupId == userGroupNum);
 		}
 
-		///<summary>Gets a list of GroupPermissions for the supplied UserGroupNum without using the local cache.  Useful for multithreaded connections.</summary>
-		public static List<GroupPermission> GetPermsNoCache(long userGroupNum)
+		/// <summary>
+		/// Gets a list of GroupPermissions for the supplied UserGroupNum without using the local cache. 
+		/// Useful for multithreaded connections.
+		/// </summary>
+		public static List<GroupPermission> GetPermsNoCache(long userGroupId)
 		{
-			string command = "SELECT * FROM grouppermission WHERE UserGroupNum=" + POut.Long(userGroupNum);
-			DataTable tableGroupPerms = Database.ExecuteDataTable(command);
-			List<GroupPermission> retVal = Crud.GroupPermissionCrud.TableToList(tableGroupPerms);
-			return retVal;
+			DataTable tableGroupPerms = Database.ExecuteDataTable("SELECT * FROM grouppermission WHERE UserGroupNum=" + userGroupId);
+
+			return Crud.GroupPermissionCrud.TableToList(tableGroupPerms);
 		}
 
-		///<summary>Gets a list of GroupPermissions that are associated with reports.  Uses Reports (22) permission.</summary>
+		/// <summary>
+		/// Gets a list of GroupPermissions that are associated with reports.  Uses Reports (22) permission.
+		/// </summary>
 		public static List<GroupPermission> GetPermsForReports()
 		{
-			//No need to check RemotingRole; no call to db.
-			return GetWhere(x => x.PermType == Permissions.Reports && x.FKey != 0);
+			return GetWhere(x => x.Permission == Permissions.Reports && x.ObjectId != 0);
 		}
 
-		///<summary>Used to check if user has permission to access the report. Pass in a list of DisplayReports to avoid a call to the db.</summary>
-		public static bool HasReportPermission(string reportName, Userod user, List<DisplayReport> listReports = null)
+		/// <summary>
+		/// Used to check if user has permission to access the report. 
+		/// Pass in a list of DisplayReports to avoid a call to the db.
+		/// </summary>
+		public static bool HasReportPermission(string reportName, Userod user, List<DisplayReport> reports = null)
 		{
-			//No need to check RemotingRole; no call to db.
 			if (!Security.IsAuthorized(Permissions.Reports, true))
 			{
 				return false;
 			}
-			DisplayReport report = (listReports ?? DisplayReports.GetAll(false)).FirstOrDefault(x => x.InternalName == reportName);
-			if (report == null)
-			{//Report is probably hidden.
+
+			var report = (reports ?? DisplayReports.GetAll(false)).FirstOrDefault(x => x.InternalName == reportName);
+			if (report == null) // Report is probably hidden.
+			{
 				return false;
 			}
-			List<GroupPermission> listReportPermissions = GroupPermissions.GetPermsForReports();
-			if (listReportPermissions.Exists(x => x.FKey == report.DisplayReportNum && Userods.IsInUserGroup(user.Id, x.UserGroupNum)))
+
+			var reportPermissions = GetPermsForReports();
+			if (reportPermissions.Exists(x => x.ObjectId == report.DisplayReportNum && Userods.IsInUserGroup(user.Id, x.UserGroupId)))
 			{
 				return true;
 			}
+
 			return false;
 		}
 
-		///<summary>Determines whether a single userGroup contains a specific permission.</summary>
-		public static bool HasPermission(long userGroupNum, Permissions permType, long fKey)
+		/// <summary>
+		/// Determines whether a single userGroup contains a specific permission.
+		/// </summary>
+		public static bool HasPermission(long userGroupId, Permissions permission, long? objectId)
 		{
-			//No need to check RemotingRole; no call to db.
-			GroupPermission groupPermission = GetFirstOrDefault(x => x.UserGroupNum == userGroupNum && x.PermType == permType && x.FKey == fKey);
-			return (groupPermission != null);
+			var groupPermission = GetFirstOrDefault(x => x.UserGroupId == userGroupId && x.Permission == permission && x.ObjectId == objectId);
+
+			return groupPermission != null;
 		}
 
-		///<summary>Determines whether an individual user has a specific permission.</summary>
-		public static bool HasPermission(Userod user, Permissions permType, long fKey)
+		/// <summary>
+		/// Determines whether an individual user has a specific permission.
+		/// </summary>
+		public static bool HasPermission(Userod user, Permissions permission, long? objectId)
 		{
-			//No need to check RemotingRole; no call to db.
-			GroupPermission groupPermission = GetFirstOrDefault(x => x.PermType == permType && x.FKey == fKey && user.IsInUserGroup(x.UserGroupNum));
-			return (groupPermission != null);
+			var groupPermission = GetFirstOrDefault(x => x.Permission == permission && x.ObjectId == objectId && user.IsInUserGroup(x.UserGroupId));
+
+			return groupPermission != null;
 		}
 
-		///<summary>Returns permissions associated to the passed-in usergroups. 
-		///Pass in a specific permType to only return GroupPermissions of that type.
-		///Otherwise, will return all GroupPermissions for the UserGroups.</summary>
-		public static List<GroupPermission> GetForUserGroups(List<long> listUserGroupNums, Permissions permType = Permissions.None)
+		/// <summary>
+		/// Returns permissions associated to the passed-in usergroups. 
+		/// Pass in a specific permType to only return GroupPermissions of that type.
+		/// Otherwise, will return all GroupPermissions for the UserGroups.
+		/// </summary>
+		public static List<GroupPermission> GetForUserGroups(List<long> userGroupIds, Permissions permission = Permissions.None)
 		{
-			//No need to check RemotingRole; no call to db.
-			if (permType == Permissions.None)
+			if (permission == Permissions.None)
 			{
-				return GetWhere(x => listUserGroupNums.Contains(x.UserGroupNum));
+				return GetWhere(x => userGroupIds.Contains(x.UserGroupId));
 			}
-			return GetWhere(x => x.PermType == permType && listUserGroupNums.Contains(x.UserGroupNum));
+
+			return GetWhere(x => x.Permission == permission && userGroupIds.Contains(x.UserGroupId));
 		}
 
-		///<summary>Gets permissions that actually generate audit trail entries.</summary>
-		public static bool HasAuditTrail(Permissions permType)
+		/// <summary>
+		/// Gets a value indicating whether the specified permission actually generates audit trail entries.
+		/// </summary>
+		public static bool HasAuditTrail(Permissions permission)
 		{
-			//No need to check RemotingRole; no call to db.
-			switch (permType)
-			{//If commented, has an audit trail. In the order they appear in Permissions enumeration
-			 //Normal pattern is to comment out the FALSE cases. 
-			 //This is the opposite so that the default behavior for new security permissions to be to show in the audit trail. In case it wasn't added to this function.
+			switch (permission)
+			{
 				case Permissions.None:
 				case Permissions.AppointmentsModule:
-				//case Permissions.FamilyModule:
-				//case Permissions.AccountModule:
-				//case Permissions.TPModule:
-				//case Permissions.ChartModule:
-				//case Permissions.ImagesModule:
 				case Permissions.ManageModule:
-				//case Permissions.Setup:
-				//case Permissions.RxCreate:
-				//case Permissions.ChooseDatabase:
-				//case Permissions.Schedules:
-				//case Permissions.Blockouts:
-				//case Permissions.ClaimSentEdit:
-				//case Permissions.PaymentCreate:
-				//case Permissions.PaymentEdit:
-				//case Permissions.AdjustmentCreate:
-				//case Permissions.AdjustmentEdit:
-				//case Permissions.UserQuery:
 				case Permissions.StartupSingleUserOld:
 				case Permissions.StartupMultiUserOld:
-				//case Permissions.Reports:
-				//case Permissions.ProcComplCreate:
-				//case Permissions.SecurityAdmin:
-				//case Permissions.AppointmentCreate:
-				//case Permissions.AppointmentMove:
-				//case Permissions.AppointmentEdit:
-				//case Permissions.AppointmentCompleteEdit:
-				//case Permissions.Backup:
 				case Permissions.TimecardsEditAll:
-				//case Permissions.DepositSlips:
-				//case Permissions.AccountingEdit:
-				//case Permissions.AccountingCreate:
-				//case Permissions.Accounting:
 				case Permissions.AnesthesiaIntakeMeds:
 				case Permissions.AnesthesiaControlMeds:
-				//case Permissions.InsPayCreate:
-				//case Permissions.InsPayEdit:
-				//case Permissions.TreatPlanEdit:
-				//case Permissions.ReportProdInc:
-				//case Permissions.TimecardDeleteEntry:
 				case Permissions.EquipmentDelete:
-				//case Permissions.SheetEdit:
-				//case Permissions.CommlogEdit:
-				//case Permissions.ImageDelete:
-				//case Permissions.PerioEdit:
 				case Permissions.ProcEditShowFee:
 				case Permissions.AdjustmentEditZero:
 				case Permissions.EhrEmergencyAccess:
-				//case Permissions.ProcDelete:
 				case Permissions.EhrKeyAdd:
 				case Permissions.Providers:
 				case Permissions.EcwAppointmentRevise:
 				case Permissions.ProcedureNoteFull:
 				case Permissions.ProcedureNoteUser:
-				//case Permissions.ReferralAdd:
-				//case Permissions.InsPlanChangeSubsc:
-				//case Permissions.RefAttachAdd:
-				//case Permissions.RefAttachDelete:
-				//case Permissions.CarrierCreate:
 				case Permissions.GraphicalReports:
-				//case Permissions.AutoNoteQuickNoteEdit:
 				case Permissions.EquipmentSetup:
-				//case Permissions.Billing:
-				//case Permissions.ProblemEdit:
-				//case Permissions.ProcFeeEdit:
-				//case Permissions.InsPlanChangeCarrierName:
-				//case Permissions.TaskNoteEdit:
 				case Permissions.WikiListSetup:
 				case Permissions.Copy:
-				//case Permissions.Printing:
-				//case Permissions.MedicalInfoViewed:
-				//case Permissions.PatProblemListEdit:
-				//case Permissions.PatMedicationListEdit:
-				//case Permissions.PatAllergyListEdit:
 				case Permissions.PatFamilyHealthEdit:
 				case Permissions.PatientPortal:
-				//case Permissions.RxEdit:
 				case Permissions.AdminDentalStudents:
 				case Permissions.AdminDentalInstructors:
-				//case Permissions.OrthoChartEditFull:
-				case Permissions.OrthoChartEditUser://We only ever use OrthoChartEditFull when audit trailing.
-													//case Permissions.PatientFieldEdit:
+				case Permissions.OrthoChartEditUser:
 				case Permissions.AdminDentalEvaluations:
-				//case Permissions.TreatPlanDiscountEdit:
-				//case Permissions.UserLogOnOff:
-				//case Permissions.TaskEdit:
-				//case Permissions.EmailSend:
-				//case Permissions.WebmailSend:
 				case Permissions.UserQueryAdmin:
-				//case Permissions.InsPlanChangeAssign:
-				//case Permissions.ImageEdit:
-				//case Permissions.EhrMeasureEventEdit:
-				//case Permissions.EServicesSetup:
-				//case Permissions.FeeSchedEdit:
-				//case Permissions.PatientBillingEdit:
 				case Permissions.ProviderFeeEdit:
 				case Permissions.ClaimHistoryEdit:
-				//case Permissions.FeatureRequestEdit:
-				//case Permissions.QueryRequestEdit:
-				//case Permissions.JobApproval:
-				//case Permissions.JobDocumentation:
-				//case Permissions.JobEdit:
-				//case Permissions.JobManager:
-				//case Permissions.JobReview:
-				//case Permissions.WebmailDelete:
-				//case Permissions.MissingRequiredField:
-				//case Permissions.ReferralMerge:
-				//case Permissions.ProcEdit:
-				//case Permissions.ProviderMerge:
-				//case Permissions.MedicationMerge:
-				//case Permissions.AccountQuickCharge:
-				//case Permissions.ClaimSend:
-				//case Permissions.TaskListCreate:
-				//case Permissions.PatientCreate:
-				//case Permissions.GraphicalReportSetup:
 				case Permissions.PreAuthSentEdit:
-				//case Permissions.PatientEdit:
-				//case Permissions.InsPlanCreate:
-				//case Permissions.InsPlanEdit:
-				//case Permissions.InsPlanCreateSub:
-				//case Permissions.InsPlanEditSub:
-				//case Permissions.InsPlanAddPat:
-				//case Permissions.InsPlanDropPat:
 				case Permissions.InsPlanVerifyList:
-				//case Permissions.SheetEdit:
-				//case Permissions.SplitCreatePastLockDate:
-				//case Permissions.ClaimDelete:
-				//case Permissions.InsWriteOffEdit:
 				case Permissions.ProviderAlphabetize:
-				//case Permissions.ApptConfirmStatusEdit:
-				//case Permissions.GraphicsRemoteEdit:
-				//case Permissions.AuditTrail:
-				//case Permissions.TreatPlanPresenterEdit:
 				case Permissions.ClaimProcReceivedEdit:
-				//case Permissions.MobileWeb:
-				//case Permissions.StatementPatNumMismatch:
-				//case Permissions.PatPriProvEdit:
-				//case Permissions.ReferralEdit:
-				//case Permissions.ReplicationSetup:
 				case Permissions.ReportProdIncAllProviders:
-				//case Permissions.ReportDaily:
 				case Permissions.ReportDailyAllProviders:
 				case Permissions.SheetDelete:
 				case Permissions.UpdateCustomTracking:
-				//case Permissions.GraphicsEdit:
 				case Permissions.InsPlanOrthoEdit:
-				//case Permissions.ClaimProcClaimAttachedProvEdit:
-				//case Permissions.InsPlanMerge:
-				//case Permissions.InsuranceCarrierCombine:
-				case Permissions.PopupEdit://Popups are archived, so they don't need to show in the audit trail.
+				case Permissions.PopupEdit:
 				case Permissions.InsPlanPickListExisting:
-				//case Permissions.GroupNoteEditSigned:
 				case Permissions.WikiAdmin:
-				//case Permissions.PayPlanEdit:
-				//case Permissions.ClaimEdit:
-				//case Permissions.LogFeeEdit:
-				//case Permissions.LogSubscriberEdit:
-				//case Permissions.RecallEdit:
-				//case Permissions.ProcCodeEdit:
-				//case Permissions.AddNewUser:
 				case Permissions.ClaimView:
-				//case Permissions.RepeatChargeTool:
-				//case Permissions.DiscountPlanEdit
 				case Permissions.TreatPlanSign:
 				case Permissions.UnrestrictedSearch:
 				case Permissions.ArchivedPatientEdit:
-				case Permissions.CommlogPersistent:
-				//case Permissions.VerifyPhoneOwnership
-				//case Permissions.SalesTaxAdjEdit://All other adjustment operations are already audited.
-				//case Permissions.AgingRan:
 				case Permissions.InsuranceVerification:
-				//case Permissions.CreditCardMove:
-				//case Permissions.HeadmasterSetup
 				case Permissions.NewClaimsProcNotBilled:
-					//case Permissions.PatientPortalLogin:
-					//case Permissions.FAQEdit:
-					//case Permissions.SupplementalBackup:
-					//case Permissions.WebSchedRecallManualSend:
-					//case Permissions.PatientSSNView:
-					//case Permissions.PatientDOBView:
-					//case Permissions.FamAgingTruncate:
-					//case Permissions.DiscountPlanMerge:
-					//case Permissions.ProcCompleteEditMisc:
-					//case Permissions.ProcCompleteAddAdj:
-					//case Permissions.ProcCompletetStatusEdit:
-					//case Permissions.ProcCompleteNote:
-					//case Permissions.ProcCompleteEdit:
-					return false;//Does not have audit Trail if uncommented.
+					return false;
 			}
 
-			if (permType.In(
+			if (permission.In(
 					//These permissions are only used at OD HQ
-					Permissions.VerifyPhoneOwnership,
-					Permissions.HeadmasterSetup,
 					Permissions.FAQEdit
 				))
 			{
@@ -557,120 +445,43 @@ namespace OpenDentBusiness
 			return true;
 		}
 
-		///<summary>Gets the description for the specified permisssion.  Already translated.</summary>
-		public static string GetDesc(Permissions perm)
-		{
-			return perm.GetDescription();//If Description attribute is not defined, will default to perm.ToString()
-		}
+		/// <summary>
+		/// Gets the description for the specified permisssion.
+		/// </summary>
+		public static string GetDesc(Permissions permission) 
+			=> permission.GetDescription();
 
-		public static bool PermTakesDates(Permissions permType)
-		{
-			if (permType == Permissions.AccountingCreate//prevents backdating
-				|| permType == Permissions.AccountingEdit
-				|| permType == Permissions.AdjustmentEdit
-				|| permType == Permissions.ClaimDelete
-				|| permType == Permissions.ClaimHistoryEdit
-				|| permType == Permissions.ClaimProcReceivedEdit
-				|| permType == Permissions.ClaimSentEdit
-				|| permType == Permissions.CommlogEdit
-				|| permType == Permissions.DepositSlips//prevents backdating
-				|| permType == Permissions.EquipmentDelete
-				|| permType == Permissions.ImageDelete
-				|| permType == Permissions.InsPayEdit
-				|| permType == Permissions.InsWriteOffEdit
-				|| permType == Permissions.NewClaimsProcNotBilled
-				|| permType == Permissions.OrthoChartEditFull
-				|| permType == Permissions.OrthoChartEditUser
-				|| permType == Permissions.PaymentEdit
-				|| permType == Permissions.PerioEdit
-				|| permType == Permissions.PreAuthSentEdit
-				|| permType == Permissions.ProcCompleteEdit
-				|| permType == Permissions.ProcCompleteNote
-				|| permType == Permissions.ProcCompleteEditMisc
-				|| permType == Permissions.ProcCompleteStatusEdit
-				|| permType == Permissions.ProcCompleteAddAdj
-				|| permType == Permissions.ProcExistingEdit
-				|| permType == Permissions.ProcDelete
-				|| permType == Permissions.SheetEdit
-				|| permType == Permissions.TimecardDeleteEntry
-				|| permType == Permissions.TreatPlanEdit
-				|| permType == Permissions.TreatPlanSign
-				|| permType == Permissions.PaymentCreate//to prevent backdating of newly created payments
-				)
-			{
-				return true;
-			}
-			return false;
-		}
-
-		///<summary>Returns a list of permissions that are included in the bitwise enum crudSLFKeyPerms passed in.
-		///Used in DBM and the crud generator.  Needs to be updated every time a new CrudAuditPerm is added.</summary>
-		public static List<Permissions> GetPermsFromCrudAuditPerm(CrudAuditPerm crudSLFKeyPerms)
-		{
-			List<Permissions> listPerms = new List<Permissions>();
-			//No check for none.
-			if (crudSLFKeyPerms.HasFlag(CrudAuditPerm.AppointmentCompleteEdit))
-			{ //b01
-				listPerms.Add(Permissions.AppointmentCompleteEdit);
-			}
-			if (crudSLFKeyPerms.HasFlag(CrudAuditPerm.AppointmentCreate))
-			{ //b010
-				listPerms.Add(Permissions.AppointmentCreate);
-			}
-			if (crudSLFKeyPerms.HasFlag(CrudAuditPerm.AppointmentEdit))
-			{ //b0100
-				listPerms.Add(Permissions.AppointmentEdit);
-			}
-			if (crudSLFKeyPerms.HasFlag(CrudAuditPerm.AppointmentMove))
-			{ //b01000
-				listPerms.Add(Permissions.AppointmentMove);
-			}
-			if (crudSLFKeyPerms.HasFlag(CrudAuditPerm.ClaimHistoryEdit))
-			{ //b010000
-				listPerms.Add(Permissions.ClaimHistoryEdit);
-			}
-			if (crudSLFKeyPerms.HasFlag(CrudAuditPerm.ImageDelete))
-			{ //b0100000
-				listPerms.Add(Permissions.ImageDelete);
-			}
-			if (crudSLFKeyPerms.HasFlag(CrudAuditPerm.ImageEdit))
-			{ //b01000000
-				listPerms.Add(Permissions.ImageEdit);
-			}
-			if (crudSLFKeyPerms.HasFlag(CrudAuditPerm.InsPlanChangeCarrierName))
-			{ //b010000000
-				listPerms.Add(Permissions.InsPlanChangeCarrierName);
-			}
-			if (crudSLFKeyPerms.HasFlag(CrudAuditPerm.RxCreate))
-			{ //b0100000000
-				listPerms.Add(Permissions.RxCreate);
-			}
-			if (crudSLFKeyPerms.HasFlag(CrudAuditPerm.RxEdit))
-			{ //b01000000000
-				listPerms.Add(Permissions.RxEdit);
-			}
-			if (crudSLFKeyPerms.HasFlag(CrudAuditPerm.TaskNoteEdit))
-			{ //b010000000000
-				listPerms.Add(Permissions.TaskNoteEdit);
-			}
-			if (crudSLFKeyPerms.HasFlag(CrudAuditPerm.PatientPortal))
-			{ //b0100000000000
-				listPerms.Add(Permissions.PatientPortal);
-			}
-			if (crudSLFKeyPerms.HasFlag(CrudAuditPerm.ProcFeeEdit))
-			{ //b01000000000000
-				listPerms.Add(Permissions.ProcFeeEdit);
-			}
-			if (crudSLFKeyPerms.HasFlag(CrudAuditPerm.LogFeeEdit))
-			{ //b010000000000000
-				listPerms.Add(Permissions.LogFeeEdit);
-			}
-			if (crudSLFKeyPerms.HasFlag(CrudAuditPerm.LogSubscriberEdit))
-			{ //b0100000000000000
-				listPerms.Add(Permissions.LogSubscriberEdit);
-			}
-			return listPerms;
-		}
-
+		public static bool PermissionTakesDates(Permissions permission) => 
+			permission == Permissions.AccountingCreate || 
+			permission == Permissions.AccountingEdit || 
+			permission == Permissions.AdjustmentEdit || 
+			permission == Permissions.ClaimDelete || 
+			permission == Permissions.ClaimHistoryEdit || 
+			permission == Permissions.ClaimProcReceivedEdit || 
+			permission == Permissions.ClaimSentEdit || 
+			permission == Permissions.CommlogEdit || 
+			permission == Permissions.DepositSlips || 
+			permission == Permissions.EquipmentDelete || 
+			permission == Permissions.ImageDelete || 
+			permission == Permissions.InsPayEdit || 
+			permission == Permissions.InsWriteOffEdit || 
+			permission == Permissions.NewClaimsProcNotBilled || 
+			permission == Permissions.OrthoChartEditFull || 
+			permission == Permissions.OrthoChartEditUser || 
+			permission == Permissions.PaymentEdit || 
+			permission == Permissions.PerioEdit || 
+			permission == Permissions.PreAuthSentEdit || 
+			permission == Permissions.ProcCompleteEdit || 
+			permission == Permissions.ProcCompleteNote || 
+			permission == Permissions.ProcCompleteEditMisc || 
+			permission == Permissions.ProcCompleteStatusEdit || 
+			permission == Permissions.ProcCompleteAddAdj || 
+			permission == Permissions.ProcExistingEdit || 
+			permission == Permissions.ProcDelete || 
+			permission == Permissions.SheetEdit ||
+			permission == Permissions.TimecardDeleteEntry || 
+			permission == Permissions.TreatPlanEdit || 
+			permission == Permissions.TreatPlanSign ||
+			permission == Permissions.PaymentCreate;
 	}
 }

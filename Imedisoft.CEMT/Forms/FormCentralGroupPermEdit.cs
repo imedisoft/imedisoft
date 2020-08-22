@@ -18,9 +18,9 @@ namespace Imedisoft.CEMT.Forms
 
 		private void FormCentralGroupPermEdit_Load(object sender, EventArgs e)
 		{
-			nameTextBox.Text = GroupPermissions.GetDesc(groupPermission.PermType);
+			nameTextBox.Text = GroupPermissions.GetDesc(groupPermission.Permission);
 
-			dateTextBox.Text = groupPermission.NewerDate.Year < 1880 ? "" : groupPermission.NewerDate.ToShortDateString();
+			dateTextBox.Text = groupPermission.NewerDate?.ToShortDateString() ?? "";
 			daysTextBox.Text = groupPermission.NewerDays == 0 ? "" : groupPermission.NewerDays.ToString();
 		}
 

@@ -1059,7 +1059,7 @@ namespace OpenDental {
 			List<Control> listDisabled=new List<Control>();
 			bool isGlobalDateLocked=Security.IsGlobalDateLock(perm,_procCur.ProcDate,isSilent);//only used to silence other security messages.
 			if(!isProcStatComplete) {//either Eo or Ec
-				if(!Security.IsAuthorized(perm,_procCur.ProcDate,isSilent,isGlobalDateLocked)) {//should cover global lock date
+				if(!Security.IsAuthorized(perm,_procCur.ProcDate,isSilent)) {//should cover global lock date
 					listDisabled.AddRange(dictPermControls.Values.SelectMany(x => x));
 					listDisabled.Add(butOK);
 				}
@@ -1067,7 +1067,7 @@ namespace OpenDental {
 			else {
 				bool isSuppressed=(!isProcStatComplete||isSilent||isGlobalDateLocked);//don't want a bunch of popups in a row so suppressing the message in checking permissions
 				foreach(Permissions permission in dictPermControls.Keys) {
-					bool isAuthorized=Security.IsAuthorized(permission,_procCur.ProcDate,isSuppressed,isGlobalDateLocked);
+					bool isAuthorized=Security.IsAuthorized(permission,_procCur.ProcDate,isSuppressed);
 					if(!isAuthorized) {
 						listDisabled.AddRange(dictPermControls[permission]);
 					}
@@ -1079,8 +1079,8 @@ namespace OpenDental {
 				}
 			}
 			SetControlsDisabled(listDisabled);
-			if(!Security.IsAuthorized(perm,_procCur.ProcDate,true,true)
-				&& Security.IsAuthorized(perm,_procCur.ProcDate,true,true,_procCur.CodeNum,_procCur.ProcFee,0,0)) 
+			if(!Security.IsAuthorized(perm,_procCur.ProcDate,true)
+				&& Security.IsAuthorized(perm,_procCur.ProcDate,true,_procCur.CodeNum,_procCur.ProcFee,0,0)) 
 			{
 				//This is a $0 procedure for a proc code marked as bypassed.
 				butDelete.Enabled=true;

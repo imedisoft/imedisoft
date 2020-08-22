@@ -124,6 +124,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Date limitation.
+        /// </summary>
+        public static string DateLimitation {
+            get {
+                return ResourceManager.GetString("DateLimitation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Description.
         /// </summary>
         public static string Description {
@@ -178,11 +187,47 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You do not have sufficient privileges to perform this operation..
+        /// </summary>
+        public static string InsufficientPrivileges {
+            get {
+                return ResourceManager.GetString("InsufficientPrivileges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Wrong password.
         /// </summary>
         public static string InvalidPassword {
             get {
                 return ResourceManager.GetString("InvalidPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Locked by Administrator..
+        /// </summary>
+        public static string LockedByAdministrator {
+            get {
+                return ResourceManager.GetString("LockedByAdministrator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Locked by Administrator before {0}..
+        /// </summary>
+        public static string LockedByAdministratorForDate {
+            get {
+                return ResourceManager.GetString("LockedByAdministratorForDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Locked by Administrator before {0} days..
+        /// </summary>
+        public static string LockedByAdministratorForDays {
+            get {
+                return ResourceManager.GetString("LockedByAdministratorForDays", resourceCulture);
             }
         }
         
@@ -230,6 +275,15 @@ namespace Imedisoft.Translation {
         public static string Notes {
             get {
                 return ResourceManager.GetString("Notes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are not allowed to perform the requested operation. Reason: {0}..
+        /// </summary>
+        public static string OperationNowAllowedForReason {
+            get {
+                return ResourceManager.GetString("OperationNowAllowedForReason", resourceCulture);
             }
         }
         

@@ -230,8 +230,7 @@ namespace OpenDentBusiness
 
 		///<summary></summary>
 		OpenForm = 2,
-		///<summary></summ
-		///ary>
+		///<summary></summary>
 		Delete = 4,
 
 		///<summary></summary>

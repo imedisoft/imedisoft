@@ -1726,21 +1726,21 @@ namespace OpenDental
 
 		private void menuItemCommlogPersistent_Click(object sender, EventArgs e)
 		{
-			if (!Security.IsAuthorized(Permissions.CommlogPersistent))
-			{
-				return;
-			}
-			FormCommItem FormCI = Application.OpenForms.OfType<FormCommItem>().FirstOrDefault(x => !x.IsDisposed);
-			if (FormCI == null)
-			{
-				FormCI = new FormCommItem(GetNewCommlog(), isPersistent: true);
-			}
-			if (FormCI.WindowState == FormWindowState.Minimized)
-			{
-				FormCI.WindowState = FormWindowState.Normal;
-			}
-			FormCI.Show();
-			FormCI.BringToFront();
+			//if (!Security.IsAuthorized(Permissions.CommlogPersistent))
+			//{
+			//	return;
+			//}
+			//FormCommItem FormCI = Application.OpenForms.OfType<FormCommItem>().FirstOrDefault(x => !x.IsDisposed);
+			//if (FormCI == null)
+			//{
+			//	FormCI = new FormCommItem(GetNewCommlog(), isPersistent: true);
+			//}
+			//if (FormCI.WindowState == FormWindowState.Minimized)
+			//{
+			//	FormCI.WindowState = FormWindowState.Normal;
+			//}
+			//FormCI.Show();
+			//FormCI.BringToFront();
 		}
 
 		///<summary>This is a helper method to get a new commlog object for the commlog tool bar buttons.</summary>
@@ -6672,8 +6672,8 @@ namespace OpenDental
 			if (listDisplayReports.Count > 0)
 			{
 				List<long> listReportPermissionFkeys = GroupPermissions.GetPermsForReports()
-					.Where(x => Security.CurrentUser.IsInUserGroup(x.UserGroupNum))
-					.Select(x => x.FKey)
+					.Where(x => x.ObjectId.HasValue && Security.CurrentUser.IsInUserGroup(x.UserGroupId))
+					.Select(x => x.ObjectId.Value)
 					.ToList();
 				listDisplayReports.RemoveAll(x => !listReportPermissionFkeys.Contains(x.DisplayReportNum));//Remove reports user does not have permission for
 				menuItemReportsStandard.MenuItems.Add("Standard Reports", menuItemReportsStandard_Click);

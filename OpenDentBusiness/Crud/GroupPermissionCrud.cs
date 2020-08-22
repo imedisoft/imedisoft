@@ -43,12 +43,12 @@ namespace OpenDentBusiness.Crud{
 			GroupPermission groupPermission;
 			foreach(DataRow row in table.Rows) {
 				groupPermission=new GroupPermission();
-				groupPermission.GroupPermNum= PIn.Long  (row["GroupPermNum"].ToString());
+				groupPermission.Id= PIn.Long  (row["GroupPermNum"].ToString());
 				groupPermission.NewerDate   = PIn.Date  (row["NewerDate"].ToString());
 				groupPermission.NewerDays   = PIn.Int   (row["NewerDays"].ToString());
-				groupPermission.UserGroupNum= PIn.Long  (row["UserGroupNum"].ToString());
-				groupPermission.PermType    = (OpenDentBusiness.Permissions)PIn.Int(row["PermType"].ToString());
-				groupPermission.FKey        = PIn.Long  (row["FKey"].ToString());
+				groupPermission.UserGroupId= PIn.Long  (row["UserGroupNum"].ToString());
+				groupPermission.Permission    = (OpenDentBusiness.Permissions)PIn.Int(row["PermType"].ToString());
+				groupPermission.ObjectId        = PIn.Long  (row["FKey"].ToString());
 				retVal.Add(groupPermission);
 			}
 			return retVal;
@@ -68,12 +68,12 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("FKey");
 			foreach(GroupPermission groupPermission in listGroupPermissions) {
 				table.Rows.Add(new object[] {
-					POut.Long  (groupPermission.GroupPermNum),
-					POut.DateT (groupPermission.NewerDate,false),
+					POut.Long  (groupPermission.Id),
+					POut.DateT (groupPermission.NewerDate ?? DateTime.MinValue,false),
 					POut.Int   (groupPermission.NewerDays),
-					POut.Long  (groupPermission.UserGroupNum),
-					POut.Int   ((int)groupPermission.PermType),
-					POut.Long  (groupPermission.FKey),
+					POut.Long  (groupPermission.UserGroupId),
+					POut.Int   ((int)groupPermission.Permission),
+					POut.Long  (groupPermission.ObjectId?? 0),
 				});
 			}
 			return table;
@@ -87,7 +87,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one GroupPermission into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(GroupPermission groupPermission,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				groupPermission.GroupPermNum=ReplicationServers.GetKey("grouppermission","GroupPermNum");
+				groupPermission.Id=ReplicationServers.GetKey("grouppermission","GroupPermNum");
 			}
 			string command="INSERT INTO grouppermission (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -95,21 +95,21 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="NewerDate,NewerDays,UserGroupNum,PermType,FKey) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(groupPermission.GroupPermNum)+",";
+				command+=POut.Long(groupPermission.Id)+",";
 			}
 			command+=
-				     POut.Date  (groupPermission.NewerDate)+","
+				     POut.Date  (groupPermission.NewerDate??DateTime.MinValue)+","
 				+    POut.Int   (groupPermission.NewerDays)+","
-				+    POut.Long  (groupPermission.UserGroupNum)+","
-				+    POut.Int   ((int)groupPermission.PermType)+","
-				+    POut.Long  (groupPermission.FKey)+")";
+				+    POut.Long  (groupPermission.UserGroupId)+","
+				+    POut.Int   ((int)groupPermission.Permission)+","
+				+    POut.Long  (groupPermission.ObjectId??0)+")";
 			if(useExistingPK || PrefC.RandomKeys) {
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				groupPermission.GroupPermNum=Database.ExecuteInsert(command);
+				groupPermission.Id=Database.ExecuteInsert(command);
 			}
-			return groupPermission.GroupPermNum;
+			return groupPermission.Id;
 		}
 
 		///<summary>Inserts one GroupPermission into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -122,70 +122,70 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO grouppermission (";
 			if(!useExistingPK) {
-				groupPermission.GroupPermNum=ReplicationServers.GetKeyNoCache("grouppermission","GroupPermNum");
+				groupPermission.Id=ReplicationServers.GetKeyNoCache("grouppermission","GroupPermNum");
 			}
 			if(useExistingPK) {
 				command+="GroupPermNum,";
 			}
 			command+="NewerDate,NewerDays,UserGroupNum,PermType,FKey) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(groupPermission.GroupPermNum)+",";
+				command+=POut.Long(groupPermission.Id)+",";
 			}
 			command+=
-				     POut.Date  (groupPermission.NewerDate)+","
+				     POut.Date  (groupPermission.NewerDate ?? DateTime.MinValue) +","
 				+    POut.Int   (groupPermission.NewerDays)+","
-				+    POut.Long  (groupPermission.UserGroupNum)+","
-				+    POut.Int   ((int)groupPermission.PermType)+","
-				+    POut.Long  (groupPermission.FKey)+")";
+				+    POut.Long  (groupPermission.UserGroupId)+","
+				+    POut.Int   ((int)groupPermission.Permission)+","
+				+    POut.Long  (groupPermission.ObjectId??0)+")";
 			if(useExistingPK) {
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				groupPermission.GroupPermNum=Database.ExecuteInsert(command);
+				groupPermission.Id=Database.ExecuteInsert(command);
 			}
-			return groupPermission.GroupPermNum;
+			return groupPermission.Id;
 		}
 
 		///<summary>Updates one GroupPermission in the database.</summary>
 		public static void Update(GroupPermission groupPermission) {
 			string command="UPDATE grouppermission SET "
-				+"NewerDate   =  "+POut.Date  (groupPermission.NewerDate)+", "
+				+"NewerDate   =  "+POut.Date  (groupPermission.NewerDate ?? DateTime.MinValue) +", "
 				+"NewerDays   =  "+POut.Int   (groupPermission.NewerDays)+", "
-				+"UserGroupNum=  "+POut.Long  (groupPermission.UserGroupNum)+", "
-				+"PermType    =  "+POut.Int   ((int)groupPermission.PermType)+", "
-				+"FKey        =  "+POut.Long  (groupPermission.FKey)+" "
-				+"WHERE GroupPermNum = "+POut.Long(groupPermission.GroupPermNum);
+				+"UserGroupNum=  "+POut.Long  (groupPermission.UserGroupId)+", "
+				+"PermType    =  "+POut.Int   ((int)groupPermission.Permission)+", "
+				+"FKey        =  "+POut.Long  (groupPermission.ObjectId??0)+" "
+				+"WHERE GroupPermNum = "+POut.Long(groupPermission.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Updates one GroupPermission in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
 		public static bool Update(GroupPermission groupPermission,GroupPermission oldGroupPermission) {
 			string command="";
-			if(groupPermission.NewerDate.Date != oldGroupPermission.NewerDate.Date) {
+			if(groupPermission.NewerDate != oldGroupPermission.NewerDate) {
 				if(command!="") { command+=",";}
-				command+="NewerDate = "+POut.Date(groupPermission.NewerDate)+"";
+				command+="NewerDate = "+POut.Date(groupPermission.NewerDate ?? DateTime.MinValue) +"";
 			}
 			if(groupPermission.NewerDays != oldGroupPermission.NewerDays) {
 				if(command!="") { command+=",";}
 				command+="NewerDays = "+POut.Int(groupPermission.NewerDays)+"";
 			}
-			if(groupPermission.UserGroupNum != oldGroupPermission.UserGroupNum) {
+			if(groupPermission.UserGroupId != oldGroupPermission.UserGroupId) {
 				if(command!="") { command+=",";}
-				command+="UserGroupNum = "+POut.Long(groupPermission.UserGroupNum)+"";
+				command+="UserGroupNum = "+POut.Long(groupPermission.UserGroupId)+"";
 			}
-			if(groupPermission.PermType != oldGroupPermission.PermType) {
+			if(groupPermission.Permission != oldGroupPermission.Permission) {
 				if(command!="") { command+=",";}
-				command+="PermType = "+POut.Int   ((int)groupPermission.PermType)+"";
+				command+="PermType = "+POut.Int   ((int)groupPermission.Permission)+"";
 			}
-			if(groupPermission.FKey != oldGroupPermission.FKey) {
+			if(groupPermission.ObjectId != oldGroupPermission.ObjectId) {
 				if(command!="") { command+=",";}
-				command+="FKey = "+POut.Long(groupPermission.FKey)+"";
+				command+="FKey = "+POut.Long(groupPermission.ObjectId??0)+"";
 			}
 			if(command=="") {
 				return false;
 			}
 			command="UPDATE grouppermission SET "+command
-				+" WHERE GroupPermNum = "+POut.Long(groupPermission.GroupPermNum);
+				+" WHERE GroupPermNum = "+POut.Long(groupPermission.Id);
 			Database.ExecuteNonQuery(command);
 			return true;
 		}
@@ -193,19 +193,19 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Returns true if Update(GroupPermission,GroupPermission) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
 		public static bool UpdateComparison(GroupPermission groupPermission,GroupPermission oldGroupPermission) {
-			if(groupPermission.NewerDate.Date != oldGroupPermission.NewerDate.Date) {
+			if(groupPermission.NewerDate != oldGroupPermission.NewerDate) {
 				return true;
 			}
 			if(groupPermission.NewerDays != oldGroupPermission.NewerDays) {
 				return true;
 			}
-			if(groupPermission.UserGroupNum != oldGroupPermission.UserGroupNum) {
+			if(groupPermission.UserGroupId != oldGroupPermission.UserGroupId) {
 				return true;
 			}
-			if(groupPermission.PermType != oldGroupPermission.PermType) {
+			if(groupPermission.Permission != oldGroupPermission.Permission) {
 				return true;
 			}
-			if(groupPermission.FKey != oldGroupPermission.FKey) {
+			if(groupPermission.ObjectId != oldGroupPermission.ObjectId) {
 				return true;
 			}
 			return false;
@@ -225,8 +225,8 @@ namespace OpenDentBusiness.Crud{
 			List<GroupPermission> listUpdNew =new List<GroupPermission>();
 			List<GroupPermission> listUpdDB  =new List<GroupPermission>();
 			List<GroupPermission> listDel    =new List<GroupPermission>();
-			listNew.Sort((GroupPermission x,GroupPermission y) => { return x.GroupPermNum.CompareTo(y.GroupPermNum); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
-			listDB.Sort((GroupPermission x,GroupPermission y) => { return x.GroupPermNum.CompareTo(y.GroupPermNum); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			listNew.Sort((GroupPermission x,GroupPermission y) => { return x.Id.CompareTo(y.Id); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			listDB.Sort((GroupPermission x,GroupPermission y) => { return x.Id.CompareTo(y.Id); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
 			int idxNew=0;
 			int idxDB=0;
 			int rowsUpdatedCount=0;
@@ -254,12 +254,12 @@ namespace OpenDentBusiness.Crud{
 					idxDB++;
 					continue;
 				}
-				else if(fieldNew.GroupPermNum<fieldDB.GroupPermNum) {//newPK less than dbPK, newItem is 'next'
+				else if(fieldNew.Id<fieldDB.Id) {//newPK less than dbPK, newItem is 'next'
 					listIns.Add(fieldNew);
 					idxNew++;
 					continue;
 				}
-				else if(fieldNew.GroupPermNum>fieldDB.GroupPermNum) {//dbPK less than newPK, dbItem is 'next'
+				else if(fieldNew.Id>fieldDB.Id) {//dbPK less than newPK, dbItem is 'next'
 					listDel.Add(fieldDB);
 					idxDB++;
 					continue;
@@ -280,7 +280,7 @@ namespace OpenDentBusiness.Crud{
 				}
 			}
 			for(int i=0;i<listDel.Count;i++) {
-				Delete(listDel[i].GroupPermNum);
+				Delete(listDel[i].Id);
 			}
 			if(rowsUpdatedCount>0 || listIns.Count>0 || listDel.Count>0) {
 				return true;

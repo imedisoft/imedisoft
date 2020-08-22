@@ -468,7 +468,7 @@ namespace OpenDental {
 			_listList=DisplayReports.GetForCategory(DisplayReportCategory.Lists,false);
 			_listPublicHealth=DisplayReports.GetForCategory(DisplayReportCategory.PublicHealth,false);
 			_listArizonaPrimary=DisplayReports.GetForCategory(DisplayReportCategory.ArizonaPrimaryCare,false);
-			_listReportPermissions=GroupPermissions.GetPermsForReports().Where(x => Security.CurrentUser.IsInUserGroup(x.UserGroupNum)).ToList();
+			_listReportPermissions=GroupPermissions.GetPermsForReports().Where(x => Security.CurrentUser.IsInUserGroup(x.UserGroupId)).ToList();
 			//add the items to the list boxes and set the list box heights. (positions too?)
 			listProdInc.Items.Clear();
 			listDaily.Items.Clear();
@@ -478,7 +478,7 @@ namespace OpenDental {
 			listArizonaPrimaryCare.Items.Clear();
 			//listUDSReports.Items.Clear();
 			foreach(DisplayReport report in _listProdInc) {
-				if(!_listReportPermissions.Exists(x => x.FKey==report.DisplayReportNum)) {
+				if(!_listReportPermissions.Exists(x => x.ObjectId==report.DisplayReportNum)) {
 					listProdInc.Items.Add(report.Description+" [Locked]");
 				}
 				else {
@@ -495,7 +495,7 @@ namespace OpenDental {
 				listProdInc.Height=Math.Min((_listProdInc.Count+1) * listProdInc.ItemHeight,listProdInc.Height);
 			}
 			foreach(DisplayReport report in _listDaily) {
-				if(!_listReportPermissions.Exists(x => x.FKey==report.DisplayReportNum)) {
+				if(!_listReportPermissions.Exists(x => x.ObjectId==report.DisplayReportNum)) {
 					listDaily.Items.Add(report.Description+" [Locked]");
 				}
 				else {
@@ -512,7 +512,7 @@ namespace OpenDental {
 				listDaily.Height=Math.Min((_listDaily.Count+1) * listDaily.ItemHeight,listDaily.Height);
 			}
 			foreach(DisplayReport report in _listMonthly) {
-				if(!_listReportPermissions.Exists(x => x.FKey==report.DisplayReportNum)) {
+				if(!_listReportPermissions.Exists(x => x.ObjectId==report.DisplayReportNum)) {
 					listMonthly.Items.Add(report.Description+" [Locked]");
 				}
 				else {
@@ -529,7 +529,7 @@ namespace OpenDental {
 				listMonthly.Height=Math.Min((_listMonthly.Count+1) * listMonthly.ItemHeight,listMonthly.Height);
 			}
 			foreach(DisplayReport report in _listList) {
-				if(!_listReportPermissions.Exists(x => x.FKey==report.DisplayReportNum)) {
+				if(!_listReportPermissions.Exists(x => x.ObjectId==report.DisplayReportNum)) {
 					listLists.Items.Add(report.Description+" [Locked]");
 				}
 				else {
@@ -546,7 +546,7 @@ namespace OpenDental {
 				listLists.Height=Math.Min((_listList.Count+1) * listLists.ItemHeight,listLists.Height);
 			}
 			foreach(DisplayReport report in _listPublicHealth) {
-				if(!_listReportPermissions.Exists(x => x.FKey==report.DisplayReportNum)) {
+				if(!_listReportPermissions.Exists(x => x.ObjectId==report.DisplayReportNum)) {
 					listPublicHealth.Items.Add(report.Description+" [Locked]");
 				}
 				else {
@@ -565,7 +565,7 @@ namespace OpenDental {
 			//Arizona primary care list and label must only be visible when the Arizona primary
 			//care option is checked in the miscellaneous options.
 			foreach(DisplayReport report in _listArizonaPrimary) {
-				if(!_listReportPermissions.Exists(x => x.FKey==report.DisplayReportNum)) {
+				if(!_listReportPermissions.Exists(x => x.ObjectId==report.DisplayReportNum)) {
 					listArizonaPrimaryCare.Items.Add(report.Description+" [Locked]");
 				}
 				else {
@@ -650,7 +650,7 @@ namespace OpenDental {
 			if(selected==-1) {
 				return;
 			}
-			if(!_listReportPermissions.Exists(x => x.FKey==_listProdInc[selected].DisplayReportNum)) {
+			if(!_listReportPermissions.Exists(x => x.ObjectId==_listProdInc[selected].DisplayReportNum)) {
 				MessageBox.Show("You do not have permission to run this report.");
 				return;
 			}
@@ -731,9 +731,9 @@ namespace OpenDental {
 		{
 			if(doValidatePerm) {
 				if(listReportPermissions==null) {
-					listReportPermissions=GroupPermissions.GetPermsForReports().Where(x => Security.CurrentUser.IsInUserGroup(x.UserGroupNum)).ToList();
+					listReportPermissions=GroupPermissions.GetPermsForReports().Where(x => Security.CurrentUser.IsInUserGroup(x.UserGroupId)).ToList();
 				}
-				if(!listReportPermissions.Exists(x => x.FKey==displayReport.DisplayReportNum)) {
+				if(!listReportPermissions.Exists(x => x.ObjectId==displayReport.DisplayReportNum)) {
 					MsgBox.Show("You do not have permission to run this report.");
 					return ReportNonModalSelection.None;
 				}

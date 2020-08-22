@@ -218,7 +218,7 @@ namespace OpenDental {
 				butChangePat.Enabled=false;
 				return;
 			}
-			if(SheetCur.PatNum!=0 && !Security.IsAuthorized(Permissions.SheetDelete,SheetCur.DateTimeSheet,true,true,0,-1,SheetCur.SheetDefNum,0)) {
+			if(SheetCur.PatNum!=0 && !Security.IsAuthorized(Permissions.SheetDelete,SheetCur.DateTimeSheet,true,0,-1,SheetCur.SheetDefNum,0)) {
 				butDelete.Enabled=false;
 			}
 			if(SheetCur.IsDeleted && !IsStatement && !IsInTerminal) {
@@ -226,7 +226,7 @@ namespace OpenDental {
 				butRestore.Visible=true;
 			}
 			//from here on, only applies to existing sheets.
-			if(!Security.IsAuthorized(Permissions.SheetEdit,SheetCur.DateTimeSheet,false,false,0,-1,SheetCur.SheetDefNum,0)) {
+			if(!Security.IsAuthorized(Permissions.SheetEdit,SheetCur.DateTimeSheet,false,0,-1,SheetCur.SheetDefNum,0)) {
 				butSave.Visible=false;
 				panelMain.Enabled=false;
 				butOK.Enabled=false;

@@ -68,9 +68,6 @@ namespace OpenDentBusiness
         /// </summary>
         public bool IsHidden;
 
-
-
-
         /// <summary>
         ///     <para>
         ///         The ID of the task list that serves as the inbox for the user. Can be NULL if no inbox has been setup for the user.
@@ -92,8 +89,6 @@ namespace OpenDentBusiness
         /// </summary>
         [ForeignKey(typeof(TaskList), nameof(TaskList.Id))]
         public long? RootTaskListId;
-
-
 
         /// <summary> Defaults to 3 (regular user) unless specified. Helps populates the Anesthetist, Surgeon, Assistant and Circulator dropdowns properly on FormAnestheticRecord/// </summary>
         public int AnesthProvType;
@@ -141,12 +136,6 @@ namespace OpenDentBusiness
         ///Otherwise contians the last date and time this user successfully logged in.</summary>
         public DateTime DateTLastLogin;
 
-        ///<summary>All valid users should NOT set this value to anything other than None otherwise permission checking will act unexpectedly.
-        ///Programmatically set this value from the init method of the corresponding eService.  Helps prevent unhandled exceptions.
-        ///Custom property only meant to be used via eServices.  Not a column in db.  Not to be used in middle tier environment.</summary>
-        [XmlIgnore]
-        public EServiceTypes EServiceType { get; set; }
-
         public Userod Copy() 
             => (Userod)MemberwiseClone();
 
@@ -160,19 +149,5 @@ namespace OpenDentBusiness
         /// Gets all of the usergroups attached to this user.
         /// </summary>
         public List<UserGroup> GetGroups(bool includeCEMT = false) => UserGroups.GetForUser(Id, includeCEMT).ToList();
-    }
-
-    public enum EServiceTypes
-    {
-        /// <summmary>
-        /// Not an eService user. 
-        /// All valid users should be this type otherwise permission checking will act differently.
-        /// </summmary>
-        None,
-
-        EConnector,
-        Broadcaster,
-        BroadcastMonitor,
-        ServiceMainHQ,
     }
 }

@@ -36,7 +36,7 @@ namespace Imedisoft.CEMT.Forms
 		{
 			GroupPermissions.Sync(reportSetupUserControl.ListGroupPermissionsForReports, reportSetupUserControl.ListGroupPermissionsOld);
 
-			if (reportSetupUserControl.ListGroupPermissionsForReports.Exists(x => x.UserGroupNum == userGroupId))
+			if (reportSetupUserControl.ListGroupPermissionsForReports.Exists(x => x.UserGroupId == userGroupId))
 			{
 				HasReportPermissions = true;
 			}

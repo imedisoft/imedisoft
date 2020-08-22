@@ -148,7 +148,7 @@ namespace OpenDental
 				{
 					return true;
 				}
-				if (!Security.IsAuthorized(perm, proc.ProcDate, true, true))
+				if (!Security.IsAuthorized(perm, proc.ProcDate))
 				{
 					MessageBox.Show("The appointment provider does not match the provider on at least one completed procedure." + "\r\n"
 						+ "Not authorized for" + ": " + GroupPermissions.GetDesc(perm) + "\r\n"

@@ -285,7 +285,7 @@ namespace CentralManager
 			FillComboGroups(Prefs.GetLong(PrefName.ConnGroupCEMT));
 			FillConnectionsGrid();
 
-			reportPermissions = GroupPermissions.GetPermsForReports().Where(x => Security.CurrentUser.IsInUserGroup(x.UserGroupNum)).ToList();
+			reportPermissions = GroupPermissions.GetPermsForReports().Where(x => Security.CurrentUser.IsInUserGroup(x.UserGroupId)).ToList();
 			_listDisplayReports_ProdInc = DisplayReports.GetForCategory(DisplayReportCategory.ProdInc, false);
 		}
 
@@ -433,7 +433,7 @@ namespace CentralManager
 		{
 			if (!Security.IsAuthorized(Permissions.Reports)) return;
 
-			if (!reportPermissions.Exists(x => x.FKey == _listDisplayReports_ProdInc.FirstOrDefault(y => y.InternalName == DisplayReports.ReportNames.ODMoreOptions)?.DisplayReportNum))
+			if (!reportPermissions.Exists(x => x.ObjectId == _listDisplayReports_ProdInc.FirstOrDefault(y => y.InternalName == DisplayReports.ReportNames.ODMoreOptions)?.DisplayReportNum))
 			{
 				ShowInfo("You do not have the 'More Options' report permission.");
 				return;

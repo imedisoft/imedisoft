@@ -90,7 +90,7 @@ namespace OpenDental {
 
 		private DialogResult userControlSecurityTabs_ReportPermissionChecked(object sender,SecurityEventArgs e) {
 			GroupPermission perm = e.Perm;
-			FormReportSetup FormRS = new FormReportSetup(perm.UserGroupNum,true);
+			FormReportSetup FormRS = new FormReportSetup(perm.UserGroupId,true);
 			FormRS.ShowDialog();
 			if(FormRS.DialogResult==DialogResult.Cancel) {
 				return FormRS.DialogResult;

@@ -293,7 +293,7 @@ namespace OpenDental {
 				if(GroupPermissions.Sync(userControlReportSetup.ListGroupPermissionsForReports,userControlReportSetup.ListGroupPermissionsOld)) {
 					SecurityLogs.MakeLogEntry(Permissions.SecurityAdmin,0,"Report permissions have been changed.");
 				}
-				if(userControlReportSetup.ListGroupPermissionsForReports.Exists(x => x.UserGroupNum==_userGroupNum)) {
+				if(userControlReportSetup.ListGroupPermissionsForReports.Exists(x => x.UserGroupId==_userGroupNum)) {
 					HasReportPerms=true;
 				}
 				DataValid.SetInvalid(InvalidType.Security);

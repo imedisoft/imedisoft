@@ -217,7 +217,7 @@ namespace CentralManager
 					{
 						for (int k = 0; k < listCentralUserData[i].ListGroupPermissions.Count; k++)
 						{
-							listCentralUserData[i].ListGroupPermissions[k].UserGroupNum = listRemoteCEMTUserGroups[j].Id;//fixing primary keys to be what's in remote db
+							listCentralUserData[i].ListGroupPermissions[k].UserGroupId = listRemoteCEMTUserGroups[j].Id;//fixing primary keys to be what's in remote db
 						}
 						listGroupPerms = GroupPermissions.GetPermsNoCache(listRemoteCEMTUserGroups[j].Id);
 					}
@@ -334,7 +334,7 @@ namespace CentralManager
 					{
 						for (int k = 0; k < listCentralUserData[i].ListGroupPermissions.Count; k++)
 						{
-							listCentralUserData[i].ListGroupPermissions[k].UserGroupNum = listRemoteCEMTUserGroups[j].Id;//fixing primary keys to be what's in remote db
+							listCentralUserData[i].ListGroupPermissions[k].UserGroupId = listRemoteCEMTUserGroups[j].Id;//fixing primary keys to be what's in remote db
 						}
 						listGroupPerms = GroupPermissions.GetPermsNoCache(listRemoteCEMTUserGroups[j].Id);
 					}

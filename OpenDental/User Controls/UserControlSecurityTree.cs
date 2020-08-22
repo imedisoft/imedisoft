@@ -461,10 +461,10 @@ namespace OpenDental {
 			node.Text=GroupPermissions.GetDesc((Permissions)node.Tag);
 			//get all grouppermissions for the passed-in usergroups
 			List<GroupPermission> listGroupPerms = GroupPermissions.GetForUserGroups(listUserGroupNums);
-			List<GroupPermission> listBaseReportingPerms = listGroupPerms.Where(x => x.PermType == Permissions.Reports && x.FKey == 0).ToList();
-			List<GroupPermission> listDisplayReportingPerms = listGroupPerms.Where(x => x.PermType == Permissions.Reports && x.FKey != 0).ToList();
+			List<GroupPermission> listBaseReportingPerms = listGroupPerms.Where(x => x.Permission == Permissions.Reports && x.ObjectId == 0).ToList();
+			List<GroupPermission> listDisplayReportingPerms = listGroupPerms.Where(x => x.Permission == Permissions.Reports && x.ObjectId != 0).ToList();
 			//group by permtype, preferring newerdays/newerdate that are further back in the past.
-			listGroupPerms=listGroupPerms.GroupBy(x => x.PermType)
+			listGroupPerms=listGroupPerms.GroupBy(x => x.Permission)
 				.Select(x => x
 					.OrderBy((GroupPermission y) => {
 						if(y.NewerDays==0 && y.NewerDate == DateTime.MinValue) {
@@ -478,12 +478,12 @@ namespace OpenDental {
 				.ToList();
 			//display the correct newerdays/newerdate that was found for each permission.
 			for(int i = 0;i<listGroupPerms.Count;i++) {
-				if(listUserGroupNums.Contains(listGroupPerms[i].UserGroupNum)
-					&& listGroupPerms[i].PermType==(Permissions)node.Tag) 
+				if(listUserGroupNums.Contains(listGroupPerms[i].UserGroupId)
+					&& listGroupPerms[i].Permission==(Permissions)node.Tag) 
 				{
 					node.ImageIndex=2;
-					if(listGroupPerms[i].NewerDate.Year>1880) {
-						node.Text+=" ("+"if date newer than"+" "+listGroupPerms[i].NewerDate.ToShortDateString()+")";
+					if(listGroupPerms[i].NewerDate.HasValue) {
+						node.Text+=" ("+"if date newer than"+" "+listGroupPerms[i].NewerDate.Value.ToShortDateString()+")";
 					}
 					else if(listGroupPerms[i].NewerDays>0) {
 						node.Text+=" ("+"if days newer than"+" "+listGroupPerms[i].NewerDays.ToString()+")";
@@ -493,8 +493,8 @@ namespace OpenDental {
 			//Special case for Reports permission.  
 			//Get a list of all report permissions from usergroups that this user is associated to IF the usergroup has the "base" (FKey = 0) report permission.
 			if((Permissions)node.Tag == Permissions.Reports) {
-				List<GroupPermission> listReportPermsForUser = listDisplayReportingPerms.FindAll(x => listUserGroupNums.Contains(x.UserGroupNum)).ToList();
-				listReportPermsForUser.RemoveAll(x => !listBaseReportingPerms.Select(y => y.UserGroupNum).Contains(x.UserGroupNum));
+				List<GroupPermission> listReportPermsForUser = listDisplayReportingPerms.FindAll(x => listUserGroupNums.Contains(x.UserGroupId)).ToList();
+				listReportPermsForUser.RemoveAll(x => !listBaseReportingPerms.Select(y => y.UserGroupId).Contains(x.UserGroupId));
 				int state = DisplayReports.GetReportState(listReportPermsForUser);
 				if(state==1) {
 					node.ImageIndex=2;//Checked
@@ -525,8 +525,8 @@ namespace OpenDental {
 				perm=GroupPermissions.GetPerm(_listUserGroupNums.First(),(Permissions)i);
 				if(perm==null) {
 					perm=new GroupPermission();
-					perm.PermType=(Permissions)i;
-					perm.UserGroupNum=_listUserGroupNums.First();
+					perm.Permission=(Permissions)i;
+					perm.UserGroupId=_listUserGroupNums.First();
 					try {
 						GroupPermissions.Insert(perm);
 					}
@@ -544,9 +544,9 @@ namespace OpenDental {
 				perm=new GroupPermission();
 				perm.NewerDate=DateTime.MinValue;
 				perm.NewerDays=0;
-				perm.PermType=Permissions.Reports;
-				perm.UserGroupNum=_listUserGroupNums.First();
-				perm.FKey=report.DisplayReportNum;
+				perm.Permission=Permissions.Reports;
+				perm.UserGroupId=_listUserGroupNums.First();
+				perm.ObjectId=report.DisplayReportNum;
 				try {
 					GroupPermissions.Insert(perm);
 				}
@@ -602,9 +602,9 @@ namespace OpenDental {
 			//User clicked on a check box.  Do stuff.
 			if(_clickedPermNode.ImageIndex==1) {//unchecked, so need to add a permission
 				GroupPermission perm = new GroupPermission();
-				perm.PermType=(Permissions)_clickedPermNode.Tag;
-				perm.UserGroupNum=_listUserGroupNums.First();
-				if(GroupPermissions.PermTakesDates(perm.PermType)) {
+				perm.Permission=(Permissions)_clickedPermNode.Tag;
+				perm.UserGroupId=_listUserGroupNums.First();
+				if(GroupPermissions.PermissionTakesDates(perm.Permission)) {
 					perm.IsNew=true;
 					//Call an event that bubbles back up to the calling Form. The event returns a dialog result so we know how to continue here.
 					DialogResult result = GroupPermissionChecked?.Invoke(sender,new SecurityEventArgs(perm))??DialogResult.Cancel;
@@ -613,7 +613,7 @@ namespace OpenDental {
 						return;
 					}
 				}
-				else if(perm.PermType==Permissions.Reports) {//Reports permission is being checked.  
+				else if(perm.Permission==Permissions.Reports) {//Reports permission is being checked.  
 					//Call an event that bubbles back up to the calling Form. The event returns a dialog result so we know how to continue here.
 					DialogResult result = ReportPermissionChecked?.Invoke(sender,new SecurityEventArgs(perm))??DialogResult.Cancel;
 					if(result==DialogResult.Cancel) {
@@ -624,15 +624,15 @@ namespace OpenDental {
 				else {
 					try {
 						GroupPermissions.Insert(perm);
-						SecurityLogs.MakeLogEntry(Permissions.SecurityAdmin,0,"Permission '"+perm.PermType+"' granted to '"
-							+UserGroups.GetGroup(perm.UserGroupNum).Description+"'");
+						SecurityLogs.MakeLogEntry(Permissions.SecurityAdmin,0,"Permission '"+perm.Permission+"' granted to '"
+							+UserGroups.GetGroup(perm.UserGroupId).Description+"'");
 					}
 					catch(Exception ex) {
 						MessageBox.Show(ex.Message);
 						return;
 					}
 				}
-				if(perm.PermType==permEcEo) {
+				if(perm.Permission==permEcEo) {
 					//Adding ProcExistingEdit, so add ProcComplNote, ProcComplAddAdj, and ProcComplEditMisc.
 					foreach(Permissions permission in listLimitedPermissions) {
 						//We used to have one "limited edit" permission, but this was split into three distinct permissions.  Previously, if a usergroup was granted
@@ -643,16 +643,16 @@ namespace OpenDental {
 							continue;
 						}
 						GroupPermissions.RefreshCache();//refresh NewerDays/Date to add the same for limited permissions on a completed procedure
-						perm=GroupPermissions.GetPerm(_listUserGroupNums.First(),perm.PermType);
+						perm=GroupPermissions.GetPerm(_listUserGroupNums.First(),perm.Permission);
 						permLimited=new GroupPermission();
 						permLimited.NewerDate=perm.NewerDate;
 						permLimited.NewerDays=perm.NewerDays;
-						permLimited.UserGroupNum=perm.UserGroupNum;
-						permLimited.PermType=permission;
+						permLimited.UserGroupId=perm.UserGroupId;
+						permLimited.Permission=permission;
 						try {
 							GroupPermissions.Insert(permLimited);
-							SecurityLogs.MakeLogEntry(Permissions.SecurityAdmin,0,"Permission "+"'"+permLimited.PermType+"' "
-								+"granted to"+" '"+UserGroups.GetGroup(perm.UserGroupNum).Description+"'");
+							SecurityLogs.MakeLogEntry(Permissions.SecurityAdmin,0,"Permission "+"'"+permLimited.Permission+"' "
+								+"granted to"+" '"+UserGroups.GetGroup(perm.UserGroupId).Description+"'");
 						}
 						catch(Exception ex) {
 							MessageBox.Show(ex.Message);
@@ -718,7 +718,7 @@ namespace OpenDental {
 				return;
 			}
 			Permissions permType = (Permissions)_clickedPermNode.Tag;
-			if(!GroupPermissions.PermTakesDates(permType)) {
+			if(!GroupPermissions.PermissionTakesDates(permType)) {
 				return;
 			}
 			GroupPermission perm = GroupPermissions.GetPerm(_listUserGroupNums.First(),(Permissions)_clickedPermNode.Tag);

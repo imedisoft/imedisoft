@@ -15,8 +15,8 @@ namespace CentralManager
 			List<GroupPermission> listUpdNew = new List<GroupPermission>();
 			List<GroupPermission> listUpdDB = new List<GroupPermission>();
 			List<GroupPermission> listDel = new List<GroupPermission>();
-			listNew.Sort((GroupPermission x, GroupPermission y) => { return x.GroupPermNum.CompareTo(y.GroupPermNum); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
-			listDB.Sort((GroupPermission x, GroupPermission y) => { return x.GroupPermNum.CompareTo(y.GroupPermNum); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			listNew.Sort((GroupPermission x, GroupPermission y) => { return x.Id.CompareTo(y.Id); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			listDB.Sort((GroupPermission x, GroupPermission y) => { return x.Id.CompareTo(y.Id); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
 			int idxNew = 0;
 			int idxDB = 0;
 			GroupPermission fieldNew;
@@ -48,13 +48,13 @@ namespace CentralManager
 					idxDB++;
 					continue;
 				}
-				else if (fieldNew.GroupPermNum < fieldDB.GroupPermNum)
+				else if (fieldNew.Id < fieldDB.Id)
 				{//newPK less than dbPK, newItem is 'next'
 					listIns.Add(fieldNew);
 					idxNew++;
 					continue;
 				}
-				else if (fieldNew.GroupPermNum > fieldDB.GroupPermNum)
+				else if (fieldNew.Id > fieldDB.Id)
 				{//dbPK less than newPK, dbItem is 'next'
 					listDel.Add(fieldDB);
 					idxDB++;
