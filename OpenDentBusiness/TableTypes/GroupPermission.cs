@@ -10,11 +10,17 @@ namespace OpenDentBusiness{
 	/// Every user group has certain permissions. This defines a permission for a group. 
 	/// The absense of permission would cause that row to be deleted from this table.
 	/// </summary>
-	[Table]
+	[Table("group_permissions")]
 	public class GroupPermission : TableBase
 	{
 		[PrimaryKey]
 		public long Id;
+
+		/// <summary>
+		/// The user group for which this permission is granted. If not authorized, then this groupPermission will have been deleted.
+		/// </summary>
+		[ForeignKey(typeof(UserGroup), nameof(UserGroup.Id))]
+		public long UserGroupId;
 
 		/// <summary>
 		///		<para>
@@ -25,19 +31,10 @@ namespace OpenDentBusiness{
 
 		/// <summary>
 		///		<para>
-		///			The number of days for which the permission is active. Only used when <see cref="NewerDate"/> is also set.
-		///		</para>
-		///		<para>
-		///			Set to 0 to always grant the permission.
+		///			The number of days for which the permission is active.
 		///		</para>
 		/// </summary>
 		public int NewerDays;
-
-		/// <summary>
-		/// The user group for which this permission is granted. If not authorized, then this groupPermission will have been deleted.
-		/// </summary>
-		[ForeignKey(typeof(UserGroup), nameof(UserGroup.Id))]
-		public long UserGroupId;
 
 		/// <summary>
 		/// The permission.

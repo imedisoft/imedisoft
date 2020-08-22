@@ -369,7 +369,6 @@ namespace OpenDental {
             this.butInnoDB.Size = new System.Drawing.Size(114, 26);
             this.butInnoDB.TabIndex = 4;
             this.butInnoDB.Text = "InnoDb";
-            this.butInnoDB.Click += new System.EventHandler(this.butInnoDB_Click);
             // 
             // label5
             // 
@@ -1230,11 +1229,6 @@ namespace OpenDental {
 			DatabaseMaintenances.FixSpecialCharacters();
 			MessageBox.Show("Done.");
 			_isCacheInvalid=true;//Definitions are cached and could have been changed from above DBM.
-		}
-
-		private void butInnoDB_Click(object sender,EventArgs e) {
-			FormInnoDb form=new FormInnoDb();
-			form.ShowDialog();
 		}
 
 		private void butTokens_Click(object sender,EventArgs e) {

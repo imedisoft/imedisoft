@@ -522,7 +522,7 @@ namespace OpenDental {
 				{
 					continue;
 				}
-				perm=GroupPermissions.GetPerm(_listUserGroupNums.First(),(Permissions)i);
+				perm=GroupPermissions.GetPermission(_listUserGroupNums.First(),(Permissions)i);
 				if(perm==null) {
 					perm=new GroupPermission();
 					perm.Permission=(Permissions)i;
@@ -638,12 +638,12 @@ namespace OpenDental {
 						//We used to have one "limited edit" permission, but this was split into three distinct permissions.  Previously, if a usergroup was granted
 						//"full edit"(deprecated) or ProcExistingEdit, the group automatically inherited "limited edit".  Maintain this behavior for the three new
 						//distinct permissions.
-						GroupPermission permLimited=GroupPermissions.GetPerm(_listUserGroupNums.First(),permission);
+						GroupPermission permLimited=GroupPermissions.GetPermission(_listUserGroupNums.First(),permission);
 						if(permLimited!=null) {
 							continue;
 						}
 						GroupPermissions.RefreshCache();//refresh NewerDays/Date to add the same for limited permissions on a completed procedure
-						perm=GroupPermissions.GetPerm(_listUserGroupNums.First(),perm.Permission);
+						perm=GroupPermissions.GetPermission(_listUserGroupNums.First(),perm.Permission);
 						permLimited=new GroupPermission();
 						permLimited.NewerDate=perm.NewerDate;
 						permLimited.NewerDays=perm.NewerDays;
@@ -721,7 +721,7 @@ namespace OpenDental {
 			if(!GroupPermissions.PermissionTakesDates(permType)) {
 				return;
 			}
-			GroupPermission perm = GroupPermissions.GetPerm(_listUserGroupNums.First(),(Permissions)_clickedPermNode.Tag);
+			GroupPermission perm = GroupPermissions.GetPermission(_listUserGroupNums.First(),(Permissions)_clickedPermNode.Tag);
 			if(perm==null) {
 				return;
 			}

@@ -71,7 +71,7 @@ namespace CentralManager
 			 //get all usergroupattaches, userods, and grouppermissions.
 				List<UserGroupAttach> listUserGroupAttaches = UserGroupAttaches.GetForUserGroup(userGroup.Id);
 				List<Userod> listUserOds = Userods.GetForGroup(userGroup.Id);
-				List<GroupPermission> listGroupPermissions = GroupPermissions.GetPerms(userGroup.Id);
+				List<GroupPermission> listGroupPermissions = GroupPermissions.GetByUserGroup(userGroup.Id);
 				//then create a new CentralUserData and add it to the list.
 				listCentralUserData.Add(new CentralUserData(userGroup, listUserOds, listGroupPermissions, listUserGroupAttaches));
 			}
@@ -219,7 +219,7 @@ namespace CentralManager
 						{
 							listCentralUserData[i].ListGroupPermissions[k].UserGroupId = listRemoteCEMTUserGroups[j].Id;//fixing primary keys to be what's in remote db
 						}
-						listGroupPerms = GroupPermissions.GetPermsNoCache(listRemoteCEMTUserGroups[j].Id);
+						listGroupPerms = GroupPermissions.GetPermsNoCache(listRemoteCEMTUserGroups[j].Id).ToList();
 					}
 				}
 				CentralUserods.Sync(listCentralUserData[i].ListUsers, ref listRemoteUsers);
@@ -336,7 +336,7 @@ namespace CentralManager
 						{
 							listCentralUserData[i].ListGroupPermissions[k].UserGroupId = listRemoteCEMTUserGroups[j].Id;//fixing primary keys to be what's in remote db
 						}
-						listGroupPerms = GroupPermissions.GetPermsNoCache(listRemoteCEMTUserGroups[j].Id);
+						listGroupPerms = GroupPermissions.GetPermsNoCache(listRemoteCEMTUserGroups[j].Id).ToList();
 					}
 				}
 				CentralUserods.Sync(listCentralUserData[i].ListUsers, ref listRemoteUsers);

@@ -80,7 +80,7 @@ namespace CentralManager
 
 			for (int i = 0; i < listDel.Count; i++)
 			{
-				GroupPermissions.DeleteNoCache(listDel[i]);
+				GroupPermissions.Delete(listDel[i]);
 			}
 		}
 	}

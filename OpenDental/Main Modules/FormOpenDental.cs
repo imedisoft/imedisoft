@@ -447,7 +447,7 @@ namespace OpenDental
 
 			if (!PrefsStartup())
 			{
-				//In Release, refreshes the Pref cache if conversion successful.
+				// In Release, refreshes the Pref cache if conversion successful.
 				Cursor = Cursors.Default;
 				formSplash.Close();
 
@@ -6671,7 +6671,7 @@ namespace OpenDental
 			List<DisplayReport> listDisplayReports = DisplayReports.GetSubMenuReports();
 			if (listDisplayReports.Count > 0)
 			{
-				List<long> listReportPermissionFkeys = GroupPermissions.GetPermsForReports()
+				List<long> listReportPermissionFkeys = GroupPermissions.GetPermissionsForReports()
 					.Where(x => x.ObjectId.HasValue && Security.CurrentUser.IsInUserGroup(x.UserGroupId))
 					.Select(x => x.ObjectId.Value)
 					.ToList();

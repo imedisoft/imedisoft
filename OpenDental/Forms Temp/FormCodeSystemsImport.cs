@@ -8,6 +8,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
@@ -82,6 +83,12 @@ namespace OpenDental
 		private void butCheckUpdates_Click(object sender,EventArgs e) {
 			CheckUpdates();
 		}
+
+		class CodeSystemDto
+        {
+			[JsonPropertyName("")]
+			public string Name { get; set; }
+        }
 
 		private void CheckUpdates() {
 			Cursor=Cursors.WaitCursor;

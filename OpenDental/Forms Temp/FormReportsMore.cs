@@ -468,7 +468,7 @@ namespace OpenDental {
 			_listList=DisplayReports.GetForCategory(DisplayReportCategory.Lists,false);
 			_listPublicHealth=DisplayReports.GetForCategory(DisplayReportCategory.PublicHealth,false);
 			_listArizonaPrimary=DisplayReports.GetForCategory(DisplayReportCategory.ArizonaPrimaryCare,false);
-			_listReportPermissions=GroupPermissions.GetPermsForReports().Where(x => Security.CurrentUser.IsInUserGroup(x.UserGroupId)).ToList();
+			_listReportPermissions=GroupPermissions.GetPermissionsForReports().Where(x => Security.CurrentUser.IsInUserGroup(x.UserGroupId)).ToList();
 			//add the items to the list boxes and set the list box heights. (positions too?)
 			listProdInc.Items.Clear();
 			listDaily.Items.Clear();
@@ -731,7 +731,7 @@ namespace OpenDental {
 		{
 			if(doValidatePerm) {
 				if(listReportPermissions==null) {
-					listReportPermissions=GroupPermissions.GetPermsForReports().Where(x => Security.CurrentUser.IsInUserGroup(x.UserGroupId)).ToList();
+					listReportPermissions=GroupPermissions.GetPermissionsForReports().Where(x => Security.CurrentUser.IsInUserGroup(x.UserGroupId)).ToList();
 				}
 				if(!listReportPermissions.Exists(x => x.ObjectId==displayReport.DisplayReportNum)) {
 					MsgBox.Show("You do not have permission to run this report.");

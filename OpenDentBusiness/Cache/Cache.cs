@@ -333,7 +333,7 @@ namespace OpenDentBusiness
                 Userods.RefreshCache();
 				UserGroups.RefreshCache();
 
-				GroupPermissions.GetTableFromCache(true);
+				GroupPermissions.RefreshCache();
 				UserGroupAttaches.GetTableFromCache(true);
 			}
 			if (invalidTypes.Contains(InvalidType.Sheets) || refreshAll)

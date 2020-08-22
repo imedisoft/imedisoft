@@ -285,7 +285,7 @@ namespace CentralManager
 			FillComboGroups(Prefs.GetLong(PrefName.ConnGroupCEMT));
 			FillConnectionsGrid();
 
-			reportPermissions = GroupPermissions.GetPermsForReports().Where(x => Security.CurrentUser.IsInUserGroup(x.UserGroupId)).ToList();
+			reportPermissions = GroupPermissions.GetPermissionsForReports().Where(x => Security.CurrentUser.IsInUserGroup(x.UserGroupId)).ToList();
 			_listDisplayReports_ProdInc = DisplayReports.GetForCategory(DisplayReportCategory.ProdInc, false);
 		}
 

@@ -36,9 +36,9 @@ namespace OpenDentBusiness
 			string command = @"SELECT userod.UserNum,CASE WHEN COALESCE(userod.Password,'')='' THEN 0 ELSE 1 END HasPassword 
 				FROM userod
 				INNER JOIN usergroupattach ON userod.UserNum=usergroupattach.UserNum
-				INNER JOIN grouppermission ON usergroupattach.UserGroupNum=grouppermission.UserGroupNum 
+				INNER JOIN `group_permissions` ON usergroupattach.UserGroupNum = `group_permissions`.`user_group_id` 
 				WHERE userod.IsHidden=0
-				AND grouppermission.PermType=" + POut.Int((int)Permissions.SecurityAdmin) + @"
+				AND `group_permissions`.`permission` = " + (int)Permissions.SecurityAdmin + @"
 				GROUP BY userod.UserNum
 				ORDER BY userod.UserName
 				LIMIT 1";
@@ -99,10 +99,11 @@ namespace OpenDentBusiness
 		{
 			string command = @"SELECT COUNT(*) FROM userod
 				INNER JOIN usergroupattach ON userod.UserNum=usergroupattach.UserNum
-				INNER JOIN grouppermission ON usergroupattach.UserGroupNum=grouppermission.UserGroupNum 
+				INNER JOIN `group_permissions` ON usergroupattach.UserGroupNum= `group_permissions`.`user_group_id` 
 				WHERE userod.IsHidden=0
-				AND grouppermission.PermType=" + POut.Int((int)Permissions.SecurityAdmin);
-			return (Database.ExecuteString(command) != "0");
+				AND `group_permissions`.`permission` = " + (int)Permissions.SecurityAdmin;
+
+			return Database.ExecuteLong(command) != 0;
 		}
 
 		///<summary>Returns true if there are any users (including hidden) with a UserNumCEMT set.  Otherwise; false.</summary>

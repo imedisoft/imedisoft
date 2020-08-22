@@ -55,7 +55,7 @@ namespace OpenDental.User_Controls {
 			}
 			if(refreshData) {
 				ListDisplayReportAll=DisplayReports.GetAll(true);
-				ListGroupPermissionsForReports=GroupPermissions.GetPermsForReports();
+				ListGroupPermissionsForReports=GroupPermissions.GetPermissionsForReports();
 				ListGroupPermissionsOld=new List<GroupPermission>();
 				foreach(GroupPermission perm in ListGroupPermissionsForReports) {
 					ListGroupPermissionsOld.Add(perm.Copy());

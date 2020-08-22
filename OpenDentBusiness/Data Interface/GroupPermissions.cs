@@ -1,16 +1,17 @@
+using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Cache;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using System.Linq;
-using CodeBase;
-using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
-	public class GroupPermissions
+    public partial class GroupPermissions
 	{
 		/// <summary>
 		/// The maximum number of days allowed for the NewerDays column.
@@ -82,118 +83,45 @@ namespace OpenDentBusiness
 			return permission;
 		}
 
-		#region CachePattern
-
-		private class GroupPermissionCache : CacheListAbs<GroupPermission>
+		[CacheGroup(nameof(InvalidType.Security))]
+		private class GroupPermissionCache : ListCache<GroupPermission>
 		{
-			protected override List<GroupPermission> GetCacheFromDb()
-			{
-				string command = "SELECT * FROM grouppermission";
-				return Crud.GroupPermissionCrud.SelectMany(command);
-			}
-			protected override List<GroupPermission> TableToList(DataTable table)
-			{
-				return Crud.GroupPermissionCrud.TableToList(table);
-			}
-			protected override GroupPermission Copy(GroupPermission GroupPermission)
-			{
-				return GroupPermission.Copy();
-			}
-			protected override DataTable ListToTable(List<GroupPermission> listGroupPermissions)
-			{
-				return Crud.GroupPermissionCrud.ListToTable(listGroupPermissions, "GroupPermission");
-			}
-			protected override void FillCacheIfNeeded()
-			{
-				GroupPermissions.GetTableFromCache(false);
-			}
-		}
+			protected override IEnumerable<GroupPermission> Load() 
+				=> SelectMany("SELECT * FROM `group_permissions`");
+        }
 
-		///<summary>The object that accesses the cache in a thread-safe manner.</summary>
-		private static GroupPermissionCache _GroupPermissionCache = new GroupPermissionCache();
+		private static readonly GroupPermissionCache cache = new GroupPermissionCache();
 
-		public static GroupPermission GetFirstOrDefault(Func<GroupPermission, bool> match, bool isShort = false)
+		public static GroupPermission GetFirstOrDefault(Predicate<GroupPermission> predicate) 
+			=> cache.FirstOrDefault(predicate);
+
+		public static List<GroupPermission> GetWhere(Predicate<GroupPermission> predicate)
+			=> cache.Find(predicate);
+
+		public static void RefreshCache() 
+			=> cache.Refresh();
+
+		public static void Update(GroupPermission groupPermission)
 		{
-			return _GroupPermissionCache.GetFirstOrDefault(match, isShort);
-		}
-
-		public static List<GroupPermission> GetWhere(Predicate<GroupPermission> match, bool isShort = false)
-		{
-			return _GroupPermissionCache.GetWhere(match, isShort);
-		}
-
-		///<summary>Refreshes the cache and returns it as a DataTable. This will refresh the ClientWeb's cache and the ServerWeb's cache.</summary>
-		public static DataTable RefreshCache()
-		{
-			return GetTableFromCache(true);
-		}
-
-		///<summary>Fills the local cache with the passed in DataTable.</summary>
-		public static void FillCacheFromTable(DataTable table)
-		{
-			_GroupPermissionCache.FillCacheFromTable(table);
-		}
-
-		///<summary>Always refreshes the ClientWeb's cache.</summary>
-		public static DataTable GetTableFromCache(bool doRefreshCache)
-		{
-
-			return _GroupPermissionCache.GetTableFromCache(doRefreshCache);
-		}
-
-		#endregion
-
-		public static void Update(GroupPermission gp)
-		{
-			if (gp.NewerDate.HasValue && gp.NewerDays > 0)
+			if (groupPermission.NewerDate.HasValue && groupPermission.NewerDays > 0)
 			{
 				throw new Exception("Date or days can be set, but not both.");
 			}
 
-			if (!PermissionTakesDates(gp.Permission))
+			if (!PermissionTakesDates(groupPermission.Permission))
 			{
-				if (gp.NewerDate.HasValue || gp.NewerDays > 0)
+				if (groupPermission.NewerDate.HasValue || groupPermission.NewerDays > 0)
 				{
 					throw new Exception("This type of permission may not have a date or days set.");
 				}
 			}
 
-			Crud.GroupPermissionCrud.Update(gp);
+			UpdateInternal(groupPermission);
 		}
 
-		/// <summary>
-		/// Update that doesnt use the local cache. Useful for multithreaded connections.
-		/// </summary>
-		public static void UpdateNoCache(GroupPermission gp)
-		{
-			string command = "UPDATE grouppermission SET "
-				+ "NewerDate   =  " + POut.Date(gp.NewerDate ?? DateTime.MinValue) + ", "
-				+ "NewerDays   =  " + POut.Int(gp.NewerDays) + ", "
-				+ "UserGroupNum=  " + gp.UserGroupId + ", "
-				+ "PermType    =  " + (int)gp.Permission + " "
-				+ "WHERE GroupPermNum = " + gp.Id;
-
-			Database.ExecuteNonQuery(command);
-		}
-		/// <summary>
-		/// Deletes GroupPermissions based on primary key. 
-		/// Do not call this method unless you have checked specific dependencies first. 
-		/// E.g. after deleting this permission, there will still be a security admin user. 
-		/// This method is only called from the CEMT sync. 
-		/// RemovePermission should probably be used instead.
-		/// </summary>
-		public static void Delete(GroupPermission groupPermission) 
-			=> Database.ExecuteNonQuery(
-				"DELETE FROM grouppermission WHERE GroupPermNum = " + groupPermission.Id);
-
-		/// <summary>
-		/// Deletes without using the cache. 
-		/// Useful for multithreaded connections.
-		/// </summary>
-		public static void DeleteNoCache(GroupPermission groupPermission) 
-			=> Database.ExecuteNonQuery(
-				"DELETE FROM grouppermission WHERE GroupPermNum=" + groupPermission.Id);
-
+		public static void UpdateNoCache(GroupPermission groupPermission) 
+			=> UpdateInternal(groupPermission);
+	
 		public static long Insert(GroupPermission groupPermission)
 		{
 			if (groupPermission.NewerDate.HasValue && groupPermission.NewerDays > 0)
@@ -215,59 +143,62 @@ namespace OpenDentBusiness
 				// Make sure there are no hidden users in the group that is about to get the Security Admin permission.
 				string command =
 					"SELECT COUNT(*) FROM userod " +
-					"INNER JOIN usergroupattach ON usergroupattach.UserNum=userod.UserNum " +
-					"WHERE userod.IsHidden=1 " +
+					"INNER JOIN usergroupattach ON usergroupattach.UserNum = userod.UserNum " +
+					"WHERE userod.IsHidden = 1 " +
 					"AND usergroupattach.UserGroupNum=" + groupPermission.UserGroupId;
 
 
 				if (Database.ExecuteLong(command) != 0)
 				{
-					// There are hidden users in this group
+					// There are hidden users in this group.
 					throw new Exception("The Security Admin permission cannot be given to a user group with hidden users.");
 				}
 			}
 
-			return Crud.GroupPermissionCrud.Insert(groupPermission);
+			return InsertInternal(groupPermission);
 		}
 
-		/// <summary>
-		/// Insertion logic that doesn't use the cache. Has special cases for generating random PK's and handling Oracle insertions.
-		/// </summary>
-		public static long InsertNoCache(GroupPermission gp)
-		{
-			return Crud.GroupPermissionCrud.InsertNoCache(gp);
-		}
+		public static long InsertNoCache(GroupPermission groupPermission) 
+			=> InsertInternal(groupPermission);
 
 		public static void RemovePermission(long userGroupId, Permissions permission)
 		{
 			string command;
+
 			if (permission == Permissions.SecurityAdmin)
 			{
-				//need to make sure that at least one other user has this permission
-				command = "SELECT COUNT(*) FROM (SELECT DISTINCT grouppermission.UserGroupNum "
-					+ "FROM grouppermission "
-					+ "INNER JOIN usergroupattach ON usergroupattach.UserGroupNum=grouppermission.UserGroupNum "
-					+ "INNER JOIN userod ON userod.UserNum=usergroupattach.UserNum AND userod.IsHidden=0 "
-					+ "WHERE grouppermission.PermType='" + (int)permission + "' "
-					+ "AND grouppermission.UserGroupNum!=" + userGroupId + ") t";
+				// Need to make sure that at least one other user has this permission
+				command = 
+					"SELECT COUNT(*) FROM (SELECT DISTINCT grouppermission.UserGroupNum " +
+					"FROM grouppermission " +
+					"INNER JOIN usergroupattach ON usergroupattach.UserGroupNum=grouppermission.UserGroupNum " +
+					"INNER JOIN userod ON userod.UserNum=usergroupattach.UserNum AND userod.IsHidden=0 " +
+					"WHERE grouppermission.PermType='" + (int)permission + "' " +
+					"AND grouppermission.UserGroupNum!=" + userGroupId + ") t";
 
 				if (Database.ExecuteLong(command) == 0)
-				{//no other users outside of this group have SecurityAdmin
+				{
+					// No other users outside of this group have SecurityAdmin
 					throw new Exception("There must always be at least one user in a user group that has the Security Admin permission.");
 				}
 			}
 
 			if (permission == Permissions.Reports)
 			{
-				//Special case.  For Reports permission type we want to delete the "base" Reports permission but not any Reports permissions with FKey
-				//When they re-enable the Reports permission we want to remember all individual reports permissions for that UserGroup
+				// Special case. For Reports permission type we want to delete the "base" Reports permission but not any Reports permissions with FKey
+				// When they re-enable the Reports permission we want to remember all individual reports permissions for that UserGroup
 				command =
-					"DELETE from grouppermission WHERE UserGroupNum='" + userGroupId + "' AND PermType='" + (int)permission + "' AND FKey=0";
+					"DELETE FROM `group_permissions` " +
+					"WHERE `user_group_id` = " + userGroupId + " " +
+					"AND `permission` = " + (int)permission + " " +
+					"AND `object_id` IS NULL";
 			}
 			else
 			{
 				command =
-					"DELETE from grouppermission WHERE UserGroupNum='" + userGroupId + "' AND PermType='" + (int)permission + "'";
+					"DELETE FROM `group_permissions` " +
+					"WHERE `user_group_id` = " + userGroupId + " " +
+					"AND `permission` = " + (int)permission;
 			}
 
 			Database.ExecuteNonQuery(command);
@@ -275,45 +206,21 @@ namespace OpenDentBusiness
 
 		public static bool Sync(List<GroupPermission> listNew, List<GroupPermission> listOld)
 		{
-			return Crud.GroupPermissionCrud.Sync(listNew, listOld);
+			return false; //  return Crud.GroupPermissionCrud.Sync(listNew, listOld);
 		}
 
-		/// <summary>
-		/// Gets a GroupPermission based on the supplied userGroupNum and permType.
-		/// If not found, then it returns null. 
-		/// Used in FormSecurity when double clicking on a dated permission or when clicking the all button.
-		/// </summary>
-		public static GroupPermission GetPerm(long userGroupNum, Permissions permType)
-		{
-			return GetFirstOrDefault(x => x.UserGroupId == userGroupNum && x.Permission == permType);
-		}
+		public static GroupPermission GetPermission(long userGroupId, Permissions permission) 
+			=> GetFirstOrDefault(x => x.UserGroupId == userGroupId && x.Permission == permission);
 
-		/// <summary>
-		/// Gets a list of GroupPermissions for the supplied UserGroupNum.
-		/// </summary>
-		public static List<GroupPermission> GetPerms(long userGroupNum)
-		{
-			return GetWhere(x => x.UserGroupId == userGroupNum);
-		}
+		public static List<GroupPermission> GetByUserGroup(long userGroupId) 
+			=> GetWhere(x => x.UserGroupId == userGroupId);
 
-		/// <summary>
-		/// Gets a list of GroupPermissions for the supplied UserGroupNum without using the local cache. 
-		/// Useful for multithreaded connections.
-		/// </summary>
-		public static List<GroupPermission> GetPermsNoCache(long userGroupId)
-		{
-			DataTable tableGroupPerms = Database.ExecuteDataTable("SELECT * FROM grouppermission WHERE UserGroupNum=" + userGroupId);
-
-			return Crud.GroupPermissionCrud.TableToList(tableGroupPerms);
-		}
-
-		/// <summary>
-		/// Gets a list of GroupPermissions that are associated with reports.  Uses Reports (22) permission.
-		/// </summary>
-		public static List<GroupPermission> GetPermsForReports()
-		{
-			return GetWhere(x => x.Permission == Permissions.Reports && x.ObjectId != 0);
-		}
+		public static IEnumerable<GroupPermission> GetPermsNoCache(long userGroupId) 
+			=> SelectMany("SELECT * FROM `group_permissions` WHERE `user_group_id` = " + userGroupId);
+		
+		public static List<GroupPermission> GetPermissionsForReports() 
+			=> GetWhere(x => x.Permission == Permissions.Reports && x.ObjectId != 0);
+		
 
 		/// <summary>
 		/// Used to check if user has permission to access the report. 
@@ -332,7 +239,7 @@ namespace OpenDentBusiness
 				return false;
 			}
 
-			var reportPermissions = GetPermsForReports();
+			var reportPermissions = GetPermissionsForReports();
 			if (reportPermissions.Exists(x => x.ObjectId == report.DisplayReportNum && Userods.IsInUserGroup(user.Id, x.UserGroupId)))
 			{
 				return true;

@@ -1138,7 +1138,6 @@
     <Compile Include="TableTypes\PhoneNumber.cs" />
     <Compile Include="Misc\EhrCCD.cs" />
     <Compile Include="Misc\FileAtoZ.cs" />
-    <Compile Include="Misc\InnoDb.cs" />
     <Compile Include="Misc\Mime.cs" />
     <Compile Include="Misc\NTPv4.cs" />
     <Compile Include="Misc\TsiMsgConstructor.cs" />
