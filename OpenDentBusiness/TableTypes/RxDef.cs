@@ -1,6 +1,4 @@
 using Imedisoft.Data.Annotations;
-using System;
-using System.Collections;
 
 namespace OpenDentBusiness
 {
@@ -8,7 +6,7 @@ namespace OpenDentBusiness
     /// Rx definitions.
     /// Can safely delete or alter, because they get copied to the rxPat table, not referenced.
     /// </summary>
-    [Table]
+    [Table("rx_defs")]
 	public class RxDef : TableBase
 	{
 		[PrimaryKey]

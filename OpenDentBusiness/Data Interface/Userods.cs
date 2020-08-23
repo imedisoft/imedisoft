@@ -841,7 +841,7 @@ namespace OpenDentBusiness
 		public static bool IsInUserGroup(long userNum, long userGroupNum)
 		{
 			List<UserGroupAttach> listAttaches = UserGroupAttaches.GetForUser(userNum);
-			return listAttaches.Select(x => x.UserGroupNum).Contains(userGroupNum);
+			return listAttaches.Select(x => x.UserGroupId).Contains(userGroupNum);
 		}
 	}
 }

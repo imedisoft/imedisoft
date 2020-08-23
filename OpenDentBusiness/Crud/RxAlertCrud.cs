@@ -44,7 +44,7 @@ namespace OpenDentBusiness.Crud{
 			foreach(DataRow row in table.Rows) {
 				rxAlert=new RxAlert();
 				rxAlert.Id        = PIn.Long  (row["RxAlertNum"].ToString());
-				rxAlert.RxDefNum          = PIn.Long  (row["RxDefNum"].ToString());
+				rxAlert.RxDefId          = PIn.Long  (row["RxDefNum"].ToString());
 				rxAlert.DiseaseDefId     = PIn.Long  (row["DiseaseDefNum"].ToString());
 				rxAlert.AllergyDefId     = PIn.Long  (row["AllergyDefNum"].ToString());
 				rxAlert.MedicationId     = PIn.Long  (row["MedicationNum"].ToString());
@@ -71,7 +71,7 @@ namespace OpenDentBusiness.Crud{
 			foreach(RxAlert rxAlert in listRxAlerts) {
 				table.Rows.Add(new object[] {
 					POut.Long  (rxAlert.Id),
-					POut.Long  (rxAlert.RxDefNum),
+					POut.Long  (rxAlert.RxDefId),
 					POut.Long  (rxAlert.DiseaseDefId),
 					POut.Long  (rxAlert.AllergyDefId),
 					POut.Long  (rxAlert.MedicationId),
@@ -101,7 +101,7 @@ namespace OpenDentBusiness.Crud{
 				command+=POut.Long(rxAlert.Id)+",";
 			}
 			command+=
-				     POut.Long  (rxAlert.RxDefNum)+","
+				     POut.Long  (rxAlert.RxDefId)+","
 				+    POut.Long  (rxAlert.DiseaseDefId)+","
 				+    POut.Long  (rxAlert.AllergyDefId)+","
 				+    POut.Long  (rxAlert.MedicationId)+","
@@ -136,7 +136,7 @@ namespace OpenDentBusiness.Crud{
 				command+=POut.Long(rxAlert.Id)+",";
 			}
 			command+=
-				     POut.Long  (rxAlert.RxDefNum)+","
+				     POut.Long  (rxAlert.RxDefId)+","
 				+    POut.Long  (rxAlert.DiseaseDefId)+","
 				+    POut.Long  (rxAlert.AllergyDefId)+","
 				+    POut.Long  (rxAlert.MedicationId)+","
@@ -154,7 +154,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Updates one RxAlert in the database.</summary>
 		public static void Update(RxAlert rxAlert) {
 			string command="UPDATE rxalert SET "
-				+"RxDefNum          =  "+POut.Long  (rxAlert.RxDefNum)+", "
+				+"RxDefNum          =  "+POut.Long  (rxAlert.RxDefId)+", "
 				+"DiseaseDefNum     =  "+POut.Long  (rxAlert.DiseaseDefId)+", "
 				+"AllergyDefNum     =  "+POut.Long  (rxAlert.AllergyDefId)+", "
 				+"MedicationNum     =  "+POut.Long  (rxAlert.MedicationId)+", "
@@ -167,9 +167,9 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Updates one RxAlert in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
 		public static bool Update(RxAlert rxAlert,RxAlert oldRxAlert) {
 			string command="";
-			if(rxAlert.RxDefNum != oldRxAlert.RxDefNum) {
+			if(rxAlert.RxDefId != oldRxAlert.RxDefId) {
 				if(command!="") { command+=",";}
-				command+="RxDefNum = "+POut.Long(rxAlert.RxDefNum)+"";
+				command+="RxDefNum = "+POut.Long(rxAlert.RxDefId)+"";
 			}
 			if(rxAlert.DiseaseDefId != oldRxAlert.DiseaseDefId) {
 				if(command!="") { command+=",";}
@@ -203,7 +203,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Returns true if Update(RxAlert,RxAlert) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
 		public static bool UpdateComparison(RxAlert rxAlert,RxAlert oldRxAlert) {
-			if(rxAlert.RxDefNum != oldRxAlert.RxDefNum) {
+			if(rxAlert.RxDefId != oldRxAlert.RxDefId) {
 				return true;
 			}
 			if(rxAlert.DiseaseDefId != oldRxAlert.DiseaseDefId) {

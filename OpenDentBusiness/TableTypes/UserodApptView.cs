@@ -1,23 +1,27 @@
-using System;
+using Imedisoft.Data.Annotations;
 
-namespace OpenDentBusiness {
-	///<summary>Keeps track of the last appointment view used on a per user basis.  Users can have multiple rows in this table when using clinics.</summary>
-	[Serializable()]
-	public class UserodApptView:TableBase {
-		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
+namespace OpenDentBusiness
+{
+    /// <summary>
+    /// Keeps track of the last appointment view used on a per user basis. 
+    /// Users can have multiple rows in this table when using clinics.
+    /// </summary>
+    [Table]
+	public class UserodApptView
+	{
+		[PrimaryKey]
 		public long UserodApptViewNum;
-		///<summary>FK to userod.UserNum.</summary>
+
+		[ForeignKey(typeof(Userod), nameof(Userod.Id))]
 		public long UserNum;
-		///<summary>FK to clinic.ClinicNum.  0 if clinics is not being used or if the user has not been assigned a clinic.</summary>
+
+		/// <summary>
+		/// 0 if clinics is not being used or if the user has not been assigned a clinic.
+		/// </summary>
+		[ForeignKey(typeof(Clinic), nameof(Clinic.ClinicNum))]
 		public long ClinicNum;
-		///<summary>FK to apptview.ApptViewNum.</summary>
+
+		[ForeignKey(typeof(ApptView), nameof(ApptView.ApptViewNum))]
 		public long ApptViewNum;
-
-		///<summary>Returns a copy of this UserodApptView.</summary>
-		public UserodApptView Copy() {
-			return (UserodApptView)this.MemberwiseClone();
-		}
-
 	}
 }

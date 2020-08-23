@@ -119,7 +119,7 @@ namespace OpenDentBusiness
 		/// Returns an empty list if the user is not associated to any user groups. (should never happen)
 		/// </summary>
 		public static IEnumerable<UserGroup> GetForUser(long userId, bool includeCemt) 
-			=> GetList(UserGroupAttaches.GetForUser(userId).Select(x => x.UserGroupNum).ToList(), includeCemt);
+			=> GetList(UserGroupAttaches.GetForUser(userId).Select(x => x.UserGroupId).ToList(), includeCemt);
 
 		/// <summary>
 		/// Returns true if at least one of the usergroups passed in has the SecurityAdmin permission.

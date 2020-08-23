@@ -1,56 +1,103 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Imedisoft.Data.Annotations;
+using System;
 
-namespace OpenDentBusiness {
-	///<summary>Vaccine observation.  There may be multiple vaccine observations for each vaccine.</summary>
-	[Serializable]
-	public class VaccineObs:TableBase {
-		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
+namespace OpenDentBusiness
+{
+	/// <summary>
+	/// Vaccine observation. 
+	/// There may be multiple vaccine observations for each vaccine.
+	/// </summary>
+	[Table]
+	public class VaccineObs : TableBase
+	{
+		[PrimaryKey]
 		public long VaccineObsNum;
-		///<summary>FK to vaccinepat.VaccinePatNum. </summary>
-		public long VaccinePatNum;
-		///<summary>Enum:VaccineObsType Coded, Dated, Numeric, Text, DateAndTime.  Used in HL7 OBX-2.</summary>
-		public VaccineObsType ValType;
-		///<summary>Enum:VaccineObsIdentifier  Identifies the observation question.  Used in HL7 OBX-3.</summary>
-		public VaccineObsIdentifier IdentifyingCode;
-		///<summary>The observation value.  The type of the value depends on the ValType.  Used in HL7 OBX-5.</summary>
-		public string ValReported;
-		///<summary>Enum:VaccineObsValCodeSystem  CVX, HL70064.  The observation value code system when ValType is Coded.  Used in HL7 OBX-5.</summary>
-		public VaccineObsValCodeSystem ValCodeSystem;
-		///<summary>FK to vaccineobs.VaccineObsNum.  All vaccineobs records with matching GroupId are in the same group.  Set to 0 if this vaccine observation is not part of a group.  Used in HL7 OBX-4.</summary>
-		public long VaccineObsNumGroup;
-		///<summary>Used in HL7 OBX-6.</summary>
-		public string UcumCode;
-		///<summary>Date of observation.  Used in HL7 OBX-14.</summary>
-		public DateTime DateObs;
-		///<summary>Code from code set CDCPHINVS (this code system is not yet fully defined, so user has to enter manually).  Used in HL7 OBX-17.  Only required when IdentifyingCode is FundPgmEligCat.</summary>
-		public string MethodCode;
 
-		public VaccineObs Clone() {
-			return (VaccineObs)this.MemberwiseClone();
-		}
+		[ForeignKey(typeof(VaccinePat), nameof(VaccinePat.VaccinePatNum))]
+		public long VaccinePatNum;
+
+		/// <summary>
+		/// Enum:VaccineObsType Coded, Dated, Numeric, Text, DateAndTime. 
+		/// Used in HL7 OBX-2.
+		/// </summary>
+		public VaccineObsType ValType;
+
+		/// <summary>
+		/// Enum:VaccineObsIdentifier Identifies the observation question. 
+		/// Used in HL7 OBX-3.
+		/// </summary>
+		public VaccineObsIdentifier IdentifyingCode;
+
+		/// <summary>
+		/// The observation value. 
+		/// The type of the value depends on the ValType. 
+		/// Used in HL7 OBX-5.
+		/// </summary>
+		public string ValReported;
+
+		/// <summary>
+		/// Enum:VaccineObsValCodeSystem  CVX, HL70064. 
+		/// The observation value code system when ValType is Coded. 
+		/// Used in HL7 OBX-5.
+		/// </summary>
+		public VaccineObsValCodeSystem ValCodeSystem;
+
+		/// <summary>
+		/// All vaccineobs records with matching GroupId are in the same group. 
+		/// Set to 0 if this vaccine observation is not part of a group. 
+		/// Used in HL7 OBX-4.
+		/// </summary>
+		[ForeignKey(typeof(VaccineObs), nameof(VaccineObs.VaccineObsNum))]
+		public long VaccineObsNumGroup;
+
+		/// <summary>
+		/// Used in HL7 OBX-6.
+		/// </summary>
+		public string UcumCode;
+
+		/// <summary>
+		/// Date of observation. 
+		/// Used in HL7 OBX-14.
+		/// </summary>
+		public DateTime DateObs;
+
+		/// <summary>
+		/// Code from code set CDCPHINVS (this code system is not yet fully defined, so user has to enter manually). 
+		/// Used in HL7 OBX-17. 
+		/// Only required when IdentifyingCode is FundPgmEligCat.
+		/// </summary>
+		public string MethodCode;
 	}
 
-	///<summary>Corresponds to HL7 table 0125.</summary>
-	public enum VaccineObsType {
-		///<summary>0 - Code CE.  Coded entry. (default)</summary>
+	/// <summary>
+	/// Corresponds to HL7 table 0125.
+	/// </summary>
+	public enum VaccineObsType
+	{
+		/// <summary>Code CE.  Coded entry. (default)</summary>
 		Coded,
-		///<summary>1 - Code DT.  Date (no time).</summary>
+
+		/// <summary>Code DT.  Date (no time).</summary>
 		Dated,
-		///<summary>2 - Code NM.  Numeric.</summary>
+
+		/// <summary>Code NM.  Numeric.</summary>
 		Numeric,
-		///<summary>3 - Code ST.  String.</summary>
+
+		/// <summary>Code ST.  String.</summary>
 		Text,
-		///<summary>4 - Code TS.  Date and time.</summary>
+
+		/// <summary>Code TS.  Date and time.</summary>
 		DateAndTime
 	}
 
-	///<summary>Corresponds to HL7 value set NIP003 (http://hl7v2-iz-testing.nist.gov/mu-immunization/).
-	///This code set is a subset of LOINC codes.  Used in HL7 OBX-3.</summary>
-	public enum VaccineObsIdentifier {
+	/// <summary>
+	/// Corresponds to HL7 value set NIP003 (http://hl7v2-iz-testing.nist.gov/mu-immunization/).
+	/// 
+	/// This code set is a subset of LOINC codes.  
+	/// Used in HL7 OBX-3.
+	/// </summary>
+	public enum VaccineObsIdentifier
+	{
 		///<summary>0 - LOINC code 29768-9.  Date vaccine information statement published:TmStp:Pt:Patient:Qn: (default)</summary>
 		DatePublished,
 		///<summary>1 - LOINC code 29769-7.  Date vaccine information statement presented:TmStp:Pt:Patient:Qn:</summary>
@@ -103,14 +150,11 @@ namespace OpenDentBusiness {
 		DocumentType,
 	}
 
-	///<summary>Used in HL7 OBX-5.</summary>
-	public enum VaccineObsValCodeSystem {
-		///<summary>0 (default)</summary>
+	/// <summary>Used in HL7 OBX-5.</summary>
+	public enum VaccineObsValCodeSystem
+	{
 		CVX,
-		///<summary>1</summary>
 		HL70064,
-		///<summary>2</summary>
 		SCT,
 	}
-
 }

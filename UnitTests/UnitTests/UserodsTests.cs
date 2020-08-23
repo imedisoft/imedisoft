@@ -105,7 +105,7 @@ namespace UnitTests.Userods_Tests
 			Assert.AreEqual(listAttachesExpected.Count, listAttaches.Count);
 			foreach (UserGroupAttach expected in listAttachesExpected)
 			{
-				Assert.IsTrue(listAttaches.Exists(x => x.UserGroupNum == expected.UserGroupNum));
+				Assert.IsTrue(listAttaches.Exists(x => x.UserGroupId == expected.UserGroupId));
 			}
 			List<UserClinic> listUserClinics = UserClinics.GetForUser(copy.Id);
 			Assert.AreEqual(listUserClinicsExpected.Count, listUserClinics.Count);

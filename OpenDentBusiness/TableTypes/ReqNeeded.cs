@@ -1,32 +1,34 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Imedisoft.Data.Annotations;
 
-namespace OpenDentBusiness{
-	///<summary>For Dental Schools.  Requirements needed in order to complete a course.</summary>
-	[Serializable]
-	[CrudTable(IsSynchable=true)]
-	public class ReqNeeded:TableBase {
-		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
+namespace OpenDentBusiness
+{
+	/// <summary>
+	/// For Dental Schools. 
+	/// Requirements needed in order to complete a course.
+	/// </summary>
+	[Table]
+	public class ReqNeeded : TableBase
+	{
+		[PrimaryKey]
 		public long ReqNeededNum;
-		///<summary>.</summary>
+
 		public string Descript;
-		///<summary>FK to schoolcourse.SchoolCourseNum.  Never 0.</summary>
+
+		[ForeignKey(typeof(SchoolCourse), nameof(SchoolCourse.SchoolCourseNum))]
 		public long SchoolCourseNum;
-		///<summary>FK to schoolclass.SchoolClassNum.  Never 0.</summary>
+
+		[ForeignKey(typeof(SchoolClass), nameof(SchoolClass.SchoolClassNum))]
 		public long SchoolClassNum;
 
-		///<summary></summary>
-		public ReqNeeded Copy(){
-			ReqNeeded r=new ReqNeeded();
-			r.ReqNeededNum=ReqNeededNum;
-			r.Descript=Descript;
-			r.SchoolCourseNum=SchoolCourseNum;
-			r.SchoolClassNum=SchoolClassNum;
-			return r;
+		public ReqNeeded Copy()
+		{
+            return new ReqNeeded
+            {
+                ReqNeededNum = ReqNeededNum,
+                Descript = Descript,
+                SchoolCourseNum = SchoolCourseNum,
+                SchoolClassNum = SchoolClassNum
+            };
 		}
 	}
-
-
 }

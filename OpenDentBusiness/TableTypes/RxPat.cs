@@ -6,7 +6,7 @@ namespace OpenDentBusiness
 	/// <summary>
 	/// One Rx for one patient. Copied from rxdef rather than linked to it.
 	/// </summary>
-	[Table]
+	[Table("rx_pats")]
 	public class RxPat : TableBase
 	{
 		[PrimaryKey]

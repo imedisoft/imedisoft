@@ -224,7 +224,7 @@ namespace Imedisoft.Forms
 
 			foreach (var rxAlert in alertsListBox.Items.OfType<RxAlert>())
             {
-				rxAlert.RxDefNum = rxDef.Id;
+				rxAlert.RxDefId = rxDef.Id;
 
 				if (rxAlert.Id == 0) RxAlerts.Insert(rxAlert);
                 else

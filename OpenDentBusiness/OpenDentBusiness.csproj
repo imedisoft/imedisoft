@@ -1693,7 +1693,6 @@
     <Compile Include="TableTypes\Site.cs" />
     <Compile Include="TableTypes\Statement.cs" />
     <Compile Include="TableTypes\TaskAncestor.cs" />
-    <Compile Include="TableTypes\TaskSubscription.cs" />
     <Compile Include="TableTypes\SupplyOrderItem.cs" />
     <Compile Include="TableTypes\SupplyOrder.cs" />
     <Compile Include="TableTypes\Supply.cs" />

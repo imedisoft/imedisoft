@@ -18,7 +18,7 @@ namespace OpenDentBusiness
 		/// This alert is to be shown when user attempts to write an Rx for this RxDef.
 		/// </summary>
 		[ForeignKey(typeof(RxDef), nameof(RxDef.Id))]
-		public long RxDefNum;
+		public long RxDefId;
 
 		/// <summary>
 		/// Only if DrugProblem interaction. 
@@ -55,7 +55,6 @@ namespace OpenDentBusiness
 		/// Set to true to flag the drug-drug or drug-allergy intervention as high significance.
 		/// </summary>
 		public bool IsHighSignificance;
-
 
         public override string ToString()
         {

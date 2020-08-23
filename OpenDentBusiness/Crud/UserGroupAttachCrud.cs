@@ -44,8 +44,8 @@ namespace OpenDentBusiness.Crud{
 			foreach(DataRow row in table.Rows) {
 				userGroupAttach=new UserGroupAttach();
 				userGroupAttach.UserGroupAttachNum= PIn.Long  (row["UserGroupAttachNum"].ToString());
-				userGroupAttach.UserNum           = PIn.Long  (row["UserNum"].ToString());
-				userGroupAttach.UserGroupNum      = PIn.Long  (row["UserGroupNum"].ToString());
+				userGroupAttach.UserId           = PIn.Long  (row["UserNum"].ToString());
+				userGroupAttach.UserGroupId      = PIn.Long  (row["UserGroupNum"].ToString());
 				retVal.Add(userGroupAttach);
 			}
 			return retVal;
@@ -63,8 +63,8 @@ namespace OpenDentBusiness.Crud{
 			foreach(UserGroupAttach userGroupAttach in listUserGroupAttachs) {
 				table.Rows.Add(new object[] {
 					POut.Long  (userGroupAttach.UserGroupAttachNum),
-					POut.Long  (userGroupAttach.UserNum),
-					POut.Long  (userGroupAttach.UserGroupNum),
+					POut.Long  (userGroupAttach.UserId),
+					POut.Long  (userGroupAttach.UserGroupId),
 				});
 			}
 			return table;
@@ -89,8 +89,8 @@ namespace OpenDentBusiness.Crud{
 				command+=POut.Long(userGroupAttach.UserGroupAttachNum)+",";
 			}
 			command+=
-				     POut.Long  (userGroupAttach.UserNum)+","
-				+    POut.Long  (userGroupAttach.UserGroupNum)+")";
+				     POut.Long  (userGroupAttach.UserId)+","
+				+    POut.Long  (userGroupAttach.UserGroupId)+")";
 			if(useExistingPK || PrefC.RandomKeys) {
 				Database.ExecuteNonQuery(command);
 			}
@@ -120,8 +120,8 @@ namespace OpenDentBusiness.Crud{
 				command+=POut.Long(userGroupAttach.UserGroupAttachNum)+",";
 			}
 			command+=
-				     POut.Long  (userGroupAttach.UserNum)+","
-				+    POut.Long  (userGroupAttach.UserGroupNum)+")";
+				     POut.Long  (userGroupAttach.UserId)+","
+				+    POut.Long  (userGroupAttach.UserGroupId)+")";
 			if(useExistingPK) {
 				Database.ExecuteNonQuery(command);
 			}
@@ -134,8 +134,8 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Updates one UserGroupAttach in the database.</summary>
 		public static void Update(UserGroupAttach userGroupAttach) {
 			string command="UPDATE usergroupattach SET "
-				+"UserNum           =  "+POut.Long  (userGroupAttach.UserNum)+", "
-				+"UserGroupNum      =  "+POut.Long  (userGroupAttach.UserGroupNum)+" "
+				+"UserNum           =  "+POut.Long  (userGroupAttach.UserId)+", "
+				+"UserGroupNum      =  "+POut.Long  (userGroupAttach.UserGroupId)+" "
 				+"WHERE UserGroupAttachNum = "+POut.Long(userGroupAttach.UserGroupAttachNum);
 			Database.ExecuteNonQuery(command);
 		}
@@ -143,13 +143,13 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Updates one UserGroupAttach in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
 		public static bool Update(UserGroupAttach userGroupAttach,UserGroupAttach oldUserGroupAttach) {
 			string command="";
-			if(userGroupAttach.UserNum != oldUserGroupAttach.UserNum) {
+			if(userGroupAttach.UserId != oldUserGroupAttach.UserId) {
 				if(command!="") { command+=",";}
-				command+="UserNum = "+POut.Long(userGroupAttach.UserNum)+"";
+				command+="UserNum = "+POut.Long(userGroupAttach.UserId)+"";
 			}
-			if(userGroupAttach.UserGroupNum != oldUserGroupAttach.UserGroupNum) {
+			if(userGroupAttach.UserGroupId != oldUserGroupAttach.UserGroupId) {
 				if(command!="") { command+=",";}
-				command+="UserGroupNum = "+POut.Long(userGroupAttach.UserGroupNum)+"";
+				command+="UserGroupNum = "+POut.Long(userGroupAttach.UserGroupId)+"";
 			}
 			if(command=="") {
 				return false;
@@ -163,10 +163,10 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Returns true if Update(UserGroupAttach,UserGroupAttach) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
 		public static bool UpdateComparison(UserGroupAttach userGroupAttach,UserGroupAttach oldUserGroupAttach) {
-			if(userGroupAttach.UserNum != oldUserGroupAttach.UserNum) {
+			if(userGroupAttach.UserId != oldUserGroupAttach.UserId) {
 				return true;
 			}
-			if(userGroupAttach.UserGroupNum != oldUserGroupAttach.UserGroupNum) {
+			if(userGroupAttach.UserGroupId != oldUserGroupAttach.UserGroupId) {
 				return true;
 			}
 			return false;

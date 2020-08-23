@@ -1,39 +1,24 @@
-using System;
+using Imedisoft.Data.Annotations;
 
-namespace OpenDentBusiness{
-
-	///<summary>Allows multiple groups to be attached to a user.  Security permissions are determined by the usergroups of a user.</summary>
-	[Serializable]
-	public class UserGroupAttach:TableBase {
-		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
+namespace OpenDentBusiness
+{
+	/// <summary>
+	/// Allows multiple groups to be attached to a user. 
+	/// Security permissions are determined by the usergroups of a user.
+	/// </summary>
+	[Table]
+	public class UserGroupAttach : TableBase
+	{
+		[PrimaryKey]
 		public long UserGroupAttachNum;
-		///<summary>FK to userod.UserNum.</summary>
-		public long UserNum;
-		///<summary>FK to usergroup.UserGroupNum. </summary>
-		public long UserGroupNum;
 
-		public UserGroupAttach Copy() {
-			return (UserGroupAttach)this.MemberwiseClone();
-		}
-		
+		[ForeignKey(typeof(Userod), nameof(Userod.Id))]
+		public long UserId;
 
+		[ForeignKey(typeof(UserGroup), nameof(UserGroup.Id))]
+		public long UserGroupId;
+
+		public UserGroupAttach Copy() 
+			=> (UserGroupAttach)MemberwiseClone();
 	}
- 
-	
-
-	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
