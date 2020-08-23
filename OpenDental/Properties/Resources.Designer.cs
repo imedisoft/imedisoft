@@ -839,6 +839,16 @@ namespace Imedisoft.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap Icon32Save {
+            get {
+                object obj = ResourceManager.GetObject("Icon32Save", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap Icon32Tooth {
             get {
                 object obj = ResourceManager.GetObject("Icon32Tooth", resourceCulture);
@@ -932,6 +942,16 @@ namespace Imedisoft.Properties {
         public static System.Drawing.Bitmap IconCopy {
             get {
                 object obj = ResourceManager.GetObject("IconCopy", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconDownload {
+            get {
+                object obj = ResourceManager.GetObject("IconDownload", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1062,6 +1082,16 @@ namespace Imedisoft.Properties {
         public static System.Drawing.Bitmap IconReply {
             get {
                 object obj = ResourceManager.GetObject("IconReply", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconSave {
+            get {
+                object obj = ResourceManager.GetObject("IconSave", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -8574,6 +8574,9 @@
     <None Include="Web References\NewCrop\Update1.wsdl" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\IconSave.png" />
+    <None Include="Resources\IconDownload.png" />
+    <None Include="Resources\Icon32Save.png" />
     <None Include="Resources\IconThumbtack.png" />
     <None Include="Resources\IconStickyNoteOpen.png" />
     <None Include="Resources\IconStickyNote.png" />

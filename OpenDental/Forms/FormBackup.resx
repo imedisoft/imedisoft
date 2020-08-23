@@ -117,12 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="archiveInfoLabel.Text" xml:space="preserve">
-    <value>This process will remove old non-clinical and non-financial data entries in the SecurityLog and SecurityLogHash tables.  
-
-Using the displayed server settings, a backup will be made to that server. Then all rows with log date on or before the date selected will be deleted.
-
-DO NOT TURN OFF OR RESTART THIS COMPUTER UNTIL THE PROCESS HAS FINISHED!</value>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="backupButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAG5JREFUOE9j
+        wAncev6jYJLBqAFkGODS7YChCRcGqcUK3HtWYdWAjEFq8AJ8hhDUDAPYDCFaMwwgG4JXM7It6BpANDIb
+        m1qsghC8CYiNwRiXZhDGKogbn0GjSTLgDNQrK6E0xFVoiojE3WsgdM9/AGb29QoZVOl9AAAAAElFTkSu
+        QmCC
+</value>
   </data>
   <metadata name="folderBrowserSupplementalCopyNetworkPath.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>

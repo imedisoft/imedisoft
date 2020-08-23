@@ -1,4 +1,3 @@
-using CodeBase;
 using Imedisoft.Data;
 using Imedisoft.Data.Cache;
 using MySql.Data.MySqlClient;
@@ -16,41 +15,17 @@ namespace Imedisoft.Forms
 
 		private void FormBackup_Load(object sender, EventArgs e)
 		{
-			archiveMakeBackupCheckBox.Checked = Prefs.GetBool(PrefName.ArchiveDoBackupFirst);
 			backupDestTextBox.Text = Prefs.GetString(PrefName.BackupToPath);
 			backupSourceTextBox.Text = Prefs.GetString(PrefName.BackupRestoreFromPath);
 			restoreTargetTextBox.Text = Prefs.GetString(PrefName.BackupRestoreToPath);
-			archiveDateTime.Value = Prefs.GetDateTime(PrefName.ArchiveDate, DateTime.Today.AddYears(-3));
-		}
 
-		private bool IsBackupTabValid()
-		{
-			if (backupDestTextBox.Text != "" && !backupDestTextBox.Text.EndsWith("" + Path.DirectorySeparatorChar))
-			{
-				ShowError("Paths must end with " + Path.DirectorySeparatorChar + ".");
-				return false;
-			}
-
-			if (backupSourceTextBox.Text != "" && !backupSourceTextBox.Text.EndsWith("" + Path.DirectorySeparatorChar))
-			{
-				ShowError("Paths must end with " + Path.DirectorySeparatorChar + ".");
-				return false;
-			}
-			if (restoreTargetTextBox.Text != "" && !restoreTargetTextBox.Text.EndsWith("" + Path.DirectorySeparatorChar))
-			{
-				ShowError("Paths must end with " + Path.DirectorySeparatorChar + ".");
-				return false;
-			}
-
-			return true;
+			saveButton.Enabled = false;
 		}
 
 		private bool SaveTabPrefs() =>
-			Prefs.Set(PrefName.ArchiveDoBackupFirst, archiveMakeBackupCheckBox.Checked) | 
 			Prefs.Set(PrefName.BackupToPath, backupDestTextBox.Text) | 
 			Prefs.Set(PrefName.BackupRestoreFromPath, backupSourceTextBox.Text) |
-			Prefs.Set(PrefName.BackupRestoreToPath, restoreTargetTextBox.Text) |
-			Prefs.Set(PrefName.ArchiveDate, archiveDateTime.Value);
+			Prefs.Set(PrefName.BackupRestoreToPath, restoreTargetTextBox.Text);
 
 		private void BackupDestButton_Click(object sender, EventArgs e)
 		{
@@ -81,11 +56,6 @@ namespace Imedisoft.Forms
 
 		private void BackupButton_Click(object sender, EventArgs e)
 		{
-			if (!IsBackupTabValid())
-			{
-				return;
-			}
-
 			var backupDest = backupDestTextBox.Text.Trim();
 			if (string.IsNullOrEmpty(backupDest))
             {
@@ -113,9 +83,7 @@ namespace Imedisoft.Forms
                 }
             }
 
-			string databaseName = MiscData.GetCurrentDatabase();
-
-			var backupFileName = string.Concat(databaseName, "_" + DateTime.UtcNow.ToString("yyyyMMdd_HHmm"));
+			var backupFileName = string.Concat(Database.CurrentDatabase, "_" + DateTime.Now.ToString("yyyyMMdd_HHmm"));
 			var backupFile = Path.Combine(backupDest, backupFileName + ".backup");
 			if (File.Exists(backupFile))
             {
@@ -218,62 +186,17 @@ namespace Imedisoft.Forms
 
 		private void SaveButton_Click(object sender, EventArgs e)
 		{
-			if (!IsBackupTabValid())
-			{
-				return;
-			}
-
 			if (SaveTabPrefs())
 			{
-				DataValid.SetInvalid(InvalidType.Prefs);
-
-				ShowInfo("Saved");
+				CacheManager.RefreshGlobal(nameof(InvalidType.Prefs));
 			}
 
-			Prefs.Set(PrefName.ArchiveDate, archiveDateTime.Value);
+			saveButton.Enabled = false;
 		}
 
-		private void ArchiveButton_Click(object sender, EventArgs e)
-		{
-			if (archiveMakeBackupCheckBox.Checked)
-			{ 
-				if (!Confirm("To make a backup of the database, ensure no other machines are currently using OpenDental. Proceed?"))
-				{
-					return;
-				}
-			}
-
-			ODProgress.ShowAction(() =>
-				{
-					if (archiveMakeBackupCheckBox.Checked)
-					{
-						try
-						{
-							MiscData.MakeABackup();
-						}
-						catch (Exception exception)
-						{
-							FriendlyException.Show(
-								"An error occurred backing up the old database. " +
-								"Old data was not removed from the database. " +
-								"Ensure no other machines are currently using OpenDental and try again.", 
-								exception);
-
-							return;
-						}
-					}
-
-					SecurityLogs.DeleteBeforeDateInclusive(archiveDateTime.Value);
-					SecurityLogs.MakeLogEntry(Permissions.Backup, 0, $"SecurityLog and SecurityLogHashes on/before {archiveDateTime.Value} deleted.");
-				},
-				eventType: typeof(MiscDataEvent),
-				odEventType: EventCategory.MiscData);
-		}
-	}
-
-	/// <summary>
-	/// Backing up can fail at two points, when backing up the database or the A to Z images. 
-	/// This delegate lets the backup thread manipulate a local variable so that we can let the user know at what point the backup failed.
-	/// </summary>
-	public delegate void ErrorMessageDelegate(string errorMessage);
+        private void InputTextChanged_TextChanged(object sender, EventArgs e)
+        {
+			saveButton.Enabled = true;
+        }
+    }
 }
