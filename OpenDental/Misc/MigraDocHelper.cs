@@ -390,7 +390,7 @@ namespace OpenDental
 			col = table.AddColumn(Unit.FromInch(dummyColW / 100));
 			for (int i = 0; i < grid.ListGridColumns.Count; i++)
 			{
-				col = table.AddColumn(Unit.FromInch((double)grid.ListGridColumns[i].ColWidth / 96));
+				col = table.AddColumn(Unit.FromInch((double)grid.ListGridColumns[i].ColumnWidth / 96));
 				col.LeftPadding = Unit.FromInch(.01);
 				col.RightPadding = Unit.FromInch(.01);
 			}
@@ -414,7 +414,7 @@ namespace OpenDental
 			{
 				cell = row.Cells[i + 1];
 				par = cell.AddParagraph();
-				par.AddFormattedText(grid.ListGridColumns[i].Heading, fontHead);
+				par.AddFormattedText(grid.ListGridColumns[i].HeaderText, fontHead);
 				par.Format.Alignment = ParagraphAlignment.Center;
 				cell.Format.Alignment = ParagraphAlignment.Center;
 				cell.Borders.Width = Unit.FromPoint(1);
@@ -434,26 +434,9 @@ namespace OpenDental
 				{
 					cell = row.Cells[j + 1];
 					par = cell.AddParagraph();
-					if (grid.ListGridRows[i].Cells[j].Bold == YN.Unknown)
-					{
-						isBold = grid.ListGridRows[i].Bold;
-					}
-					else if (grid.ListGridRows[i].Cells[j].Bold == YN.Yes)
-					{
-						isBold = true;
-					}
-					else
-					{// if(grid.Rows[i].Cells[j].Bold==YN.No){
-						isBold = false;
-					}
-					if (grid.ListGridRows[i].Cells[j].ColorText == System.Drawing.Color.Empty)
-					{
-						color = grid.ListGridRows[i].ColorText;
-					}
-					else
-					{
-						color = grid.ListGridRows[i].Cells[j].ColorText;
-					}
+					isBold = grid.ListGridRows[i].Cells[j].Bold ?? grid.ListGridRows[i].Bold;
+					color = grid.ListGridRows[i].Cells[j].ForeColor ?? grid.ListGridRows[i].ForeColor;
+					
 					fontBody = CreateFont(8.5f, isBold, color);
 					XFont xFont;
 					if (isBold)
@@ -465,7 +448,7 @@ namespace OpenDental
 					{
 						xFont = new XFont("Arial", 11.65);//Yep, a guess-and-check value here too.
 					}
-					int colWidth = grid.ListGridColumns[j].ColWidth;
+					int colWidth = grid.ListGridColumns[j].ColumnWidth;
 					string cellText = grid.ListGridRows[i].Cells[j].Text;
 					List<string> listWords = cellText.Split(new[] { " ", "\t", "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
 						 .Where(x => !string.IsNullOrWhiteSpace(x)).ToList();//PdfSharp.MeasureString sometimes throws an exception when measuring whitespace
@@ -493,9 +476,9 @@ namespace OpenDental
 						cell.Format.Alignment = ParagraphAlignment.Right;
 					}
 					cell.Borders.Color = new MigraDoc.DocumentObjectModel.Color(180, 180, 180);
-					if (grid.ListGridRows[i].ColorLborder != System.Drawing.Color.Empty)
+					if (grid.ListGridRows[i].LowerBorderColor.HasValue)
 					{
-						cell.Borders.Bottom.Color = ConvertColor(grid.ListGridRows[i].ColorLborder);
+						cell.Borders.Bottom.Color = ConvertColor(grid.ListGridRows[i].LowerBorderColor.Value);
 					}
 				}
 				if (grid.ListGridRows[i].Note != null && grid.ListGridRows[i].Note != "" && grid.NoteSpanStop > 0 && grid.NoteSpanStart < grid.ListGridColumns.Count)

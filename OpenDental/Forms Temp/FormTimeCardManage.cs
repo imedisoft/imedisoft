@@ -295,7 +295,7 @@ namespace OpenDental {
 					//in------------------------------------------
 					row.Cells.Add(clock.TimeDisplayed1.ToShortTimeString());
 					if(clock.TimeEntered1!=clock.TimeDisplayed1){
-						row.Cells[row.Cells.Count-1].ColorText = Color.Red;
+						row.Cells[row.Cells.Count-1].ForeColor = Color.Red;
 					}
 					//out-----------------------------
 					if(clock.TimeDisplayed2.Year<1880){
@@ -305,7 +305,7 @@ namespace OpenDental {
 						row.Cells.Add(clock.TimeDisplayed2.ToShortTimeString());
 						if (clock.TimeEntered2!=clock.TimeDisplayed2)
 						{
-							row.Cells[row.Cells.Count-1].ColorText = Color.Red;
+							row.Cells[row.Cells.Count-1].ForeColor = Color.Red;
 						}
 					}
 					//total-------------------------------
@@ -332,13 +332,13 @@ namespace OpenDental {
 					periodSpan+=oneAdj;
 					row.Cells.Add(ClockEvents.Format(oneAdj));
 					if(clock.AdjustIsOverridden) {
-						row.Cells[row.Cells.Count-1].ColorText = Color.Red;
+						row.Cells[row.Cells.Count-1].ForeColor = Color.Red;
 					}
 					//Rate2---------------------------------
 					if(clock.Rate2Hours!=TimeSpan.FromHours(-1)) {
 						rate2span+=clock.Rate2Hours;
 						row.Cells.Add(ClockEvents.Format(clock.Rate2Hours));
-						row.Cells[row.Cells.Count-1].ColorText = Color.Red;
+						row.Cells[row.Cells.Count-1].ForeColor = Color.Red;
 					}
 					else {
 						rate2span+=clock.Rate2Auto;
@@ -360,7 +360,7 @@ namespace OpenDental {
 					periodSpan-=oneOT;
 					row.Cells.Add(ClockEvents.Format(oneOT));
 					if(clock.OTimeHours!=TimeSpan.FromHours(-1)) {//overridden
-						row.Cells[row.Cells.Count-1].ColorText = Color.Red;
+						row.Cells[row.Cells.Count-1].ForeColor = Color.Red;
 					}
 					//Daily-----------------------------------
 					//if this is the last entry for a given date
@@ -419,7 +419,7 @@ namespace OpenDental {
 					else { 
 						row.Cells.Add(Defs.GetDef(DefCat.TimeCardAdjTypes,adjust.PtoDefNum).ItemName);//5
 					}
-					row.Cells[row.Cells.Count-1].ColorText=Color.Red;
+					row.Cells[row.Cells.Count-1].ForeColor=Color.Red;
 					//total-------------------------------
 					row.Cells.Add("");//5
 					//Adjust------------------------------
@@ -459,7 +459,7 @@ namespace OpenDental {
 						!= cal.GetWeekOfYear(adjust.TimeEntry.Date,rule,(DayOfWeek)PrefC.GetInt(PrefName.TimeCardOvertimeFirstDayOfWeek)))//different week of year
 					{
 						GridCell cell=new GridCell(ClockEvents.Format(weekSpan));
-						cell.ColorText=Color.Black;
+						cell.ForeColor=Color.Black;
 						row.Cells.Add(cell);
 						weekSpan=new TimeSpan(0);
 					}
@@ -472,7 +472,7 @@ namespace OpenDental {
 					}
 					//Note-----------------------------------------
 					row.Cells.Add(adjust.Note);
-					row.Cells[row.Cells.Count-1].ColorText=Color.Red;
+					row.Cells[row.Cells.Count-1].ForeColor=Color.Red;
 				}
 				gridTimeCard.ListGridRows.Add(row);
 			}
@@ -627,7 +627,7 @@ namespace OpenDental {
 			yPos+=18;
 			while(yPos < e.PageBounds.Height-75-50-32-16 && linesPrinted < timeCardGrid.ListGridRows.Count) {
 				for(int i=0;i<colPos.Length-1;i++) {
-					if(timeCardGrid.ListGridRows[linesPrinted].Cells[i].ColorText==Color.Empty || timeCardGrid.ListGridRows[linesPrinted].Cells[i].ColorText==Color.Black) {
+					if(timeCardGrid.ListGridRows[linesPrinted].Cells[i].ForeColor==Color.Empty || timeCardGrid.ListGridRows[linesPrinted].Cells[i].ForeColor==Color.Black) {
 						e.Graphics.DrawString(timeCardGrid.ListGridRows[linesPrinted].Cells[i].Text,font,brush
 							,new RectangleF(colPos[i]+2,yPos,colPos[i+1]-colPos[i]-5,font.GetHeight(e.Graphics)));
 					}

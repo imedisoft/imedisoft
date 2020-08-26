@@ -732,10 +732,10 @@ namespace OpenDental{
 					|| displayedElementsMain[i].ElementDesc=="Prophy/PerioPastDue[P]"
 					|| displayedElementsMain[i].ElementDesc=="LateColor")
 				{
-					row.ColorBackG=displayedElementsMain[i].ElementColor;
+					row.BackColor=displayedElementsMain[i].ElementColor;
 				}
 				else{
-					row.ColorText=displayedElementsMain[i].ElementColor;
+					row.ForeColor=displayedElementsMain[i].ElementColor;
 				}
 				gridMain.ListGridRows.Add(row);
 			}
@@ -764,10 +764,10 @@ namespace OpenDental{
 					|| displayedElementsUR[i].ElementDesc=="Prophy/PerioPastDue[P]"
 					|| displayedElementsUR[i].ElementDesc=="LateColor")
 				{
-					row.ColorBackG=displayedElementsUR[i].ElementColor;
+					row.BackColor=displayedElementsUR[i].ElementColor;
 				}
 				else{
-					row.ColorText=displayedElementsUR[i].ElementColor;
+					row.ForeColor=displayedElementsUR[i].ElementColor;
 				}
 				gridUR.ListGridRows.Add(row);
 			}
@@ -796,10 +796,10 @@ namespace OpenDental{
 					|| displayedElementsLR[i].ElementDesc=="Prophy/PerioPastDue[P]"
 					|| displayedElementsLR[i].ElementDesc=="LateColor")
 				{
-					row.ColorBackG=displayedElementsLR[i].ElementColor;
+					row.BackColor=displayedElementsLR[i].ElementColor;
 				}
 				else{
-					row.ColorText=displayedElementsLR[i].ElementColor;
+					row.ForeColor=displayedElementsLR[i].ElementColor;
 				}
 				gridLR.ListGridRows.Add(row);
 			}

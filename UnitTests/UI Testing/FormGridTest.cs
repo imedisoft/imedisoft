@@ -49,7 +49,7 @@ namespace UnitTests{
 			for(int i=0;i<_listPatients.Count;i++){
 				row=new GridRow();
 				if(i==2){
-					row.Cells.Add(new GridCell("click"){ColorBackG=Color.LightGray,ClickEvent=DeleteClick });
+					row.Cells.Add(new GridCell("click"){BackColor=Color.LightGray,Clicked=DeleteClick });
 				}
 				else{
 					row.Cells.Add(_listPatients[i].LName+" "+_listPatients[i].FName+" "+_listPatients[i].FName);

@@ -495,7 +495,7 @@ namespace OpenDentBusiness {
 				if(table.Columns.Contains("paramTextColor") && !string.IsNullOrEmpty(rowCur["paramTextColor"].ToString())) {
 					Color cRowText=Color.FromArgb(PIn.Int(rowCur["paramTextColor"].ToString()));
 					if(!cRowText.IsEmpty) {
-						row.ColorText=cRowText;
+						row.ForeColor=cRowText;
 					}
 				}
 				//Bold Text
@@ -504,7 +504,7 @@ namespace OpenDentBusiness {
 				}
 				if(table.Columns.Contains("paramIsBorderBoldBottom")) {
 					if((bool)rowCur["paramIsBorderBoldBottom"]) {
-						row.ColorLborder=Color.Black;
+						row.LowerBorderColor=Color.Black;
 					}
 				}
 				odGrid.ListGridRows.Add(row);

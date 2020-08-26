@@ -655,7 +655,7 @@ namespace OpenDental{
 						row.Cells.Add(dataRow["confirmed"].ToString());
 						row.Cells.Add(dataRow["ProcDescript"].ToString());
 						cell=new GridCell(dataRow["medNotes"].ToString());
-						cell.ColorText=Color.Red;
+						cell.ForeColor=Color.Red;
 						row.Cells.Add(cell);
 						row.Cells.Add(dataRow["Note"].ToString());
 						gridMain.ListGridRows.Add(row);
@@ -678,7 +678,7 @@ namespace OpenDental{
 		private void SetFamilyColors(){
 			if(gridMain.SelectedIndices.Length!=1){
 				for(int i=0;i<gridMain.ListGridRows.Count;i++){
-					gridMain.ListGridRows[i].ColorText=Color.Black;
+					gridMain.ListGridRows[i].ForeColor=Color.Black;
 				}
 				gridMain.Invalidate();
 				return;
@@ -688,14 +688,14 @@ namespace OpenDental{
 			for(int i=0;i<gridMain.ListGridRows.Count;i++){
 				if(PIn.Long(Table.Rows[i]["Guarantor"].ToString())==guar){
 					famCount++;
-					gridMain.ListGridRows[i].ColorText=Color.Red;
+					gridMain.ListGridRows[i].ForeColor=Color.Red;
 				}
 				else{
-					gridMain.ListGridRows[i].ColorText=Color.Black;
+					gridMain.ListGridRows[i].ForeColor=Color.Black;
 				}
 			}
 			if(famCount==1){//only the highlighted patient is red at this point
-				gridMain.ListGridRows[gridMain.SelectedIndices[0]].ColorText=Color.Black;
+				gridMain.ListGridRows[gridMain.SelectedIndices[0]].ForeColor=Color.Black;
 			}
 			gridMain.Invalidate();
 		}

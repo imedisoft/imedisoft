@@ -1211,7 +1211,7 @@ namespace OpenDental
 				case ClaimProcStatus.Estimate:
 				case ClaimProcStatus.CapEstimate:
 				case ClaimProcStatus.CapComplete:
-					row.ColorBackG=Color.Salmon;
+					row.BackColor=Color.Salmon;
 					row.Cells.Add("");
 					break;
 				default:

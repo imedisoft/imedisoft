@@ -65,12 +65,12 @@ namespace UnitTests{
 				row=new GridRow();
 				if(_listScenarios[i].ResultExpected==_listScenarios[i].ResultObtained){
 					cell=new GridCell("PASSED");
-					cell.ColorBackG=Color.LimeGreen;
+					cell.BackColor=Color.LimeGreen;
 					row.Cells.Add(cell);
 				}
 				else{
 					cell=new GridCell("FAILED");
-					cell.ColorBackG=Color.Red;
+					cell.BackColor=Color.Red;
 					row.Cells.Add(cell);
 				}
 				row.Cells.Add(_listScenarios[i].DescriptionShort);

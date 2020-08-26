@@ -660,7 +660,7 @@ namespace OpenDental{
 			GridCell gridCellCur=gridPat.ListGridRows[e.Row].Cells[e.Col];
 			//Only grid cells with phone numbers are blue and underlined. 
 			//If we support color and underline in the future, this might be changed to a regex of the cell text.
-			if(gridCellCur.ColorText==System.Drawing.Color.Blue && gridCellCur.Underline==YN.Yes && Programs.GetCur(ProgramName.DentalTekSmartOfficePhone).Enabled) {
+			if(gridCellCur.ForeColor==System.Drawing.Color.Blue && gridCellCur.Underline== true && Programs.GetCur(ProgramName.DentalTekSmartOfficePhone).Enabled) {
 				DentalTek.PlaceCall(gridCellCur.Text);
 			}
 		}
@@ -899,7 +899,7 @@ namespace OpenDental{
 					case "Addr/Ph Note":
 						row.Cells.Add(PatCur.AddrNote);
 						if(PatCur.AddrNote!=""){
-							row.ColorText=Color.Red;
+							row.ForeColor=Color.Red;
 							row.Bold=true;
 						}
 						break;
@@ -1024,21 +1024,21 @@ namespace OpenDental{
 							row.Bold=true;
 						}
 						if(Programs.GetCur(ProgramName.DentalTekSmartOfficePhone).Enabled) {
-							row.Cells[row.Cells.Count-1].ColorText=Color.Blue;
-							row.Cells[row.Cells.Count-1].Underline=YN.Yes;
+							row.Cells[row.Cells.Count-1].ForeColor=Color.Blue;
+							row.Cells[row.Cells.Count-1].Underline= true;
 						}
 						break;
 					#endregion Hm Phone
 					#region ICE Name
 					case "ICE Name":
 						row.Cells.Add(PatNoteCur.ICEName);
-						row.ColorBackG=listMiscColorDefs[(int)DefCatMiscColors.FamilyModuleICE].ItemColor;
+						row.BackColor=listMiscColorDefs[(int)DefCatMiscColors.FamilyModuleICE].ItemColor;
 						break;
 					#endregion ICE Name
 					#region ICE Phone
 					case "ICE Phone":
 						row.Cells.Add(PatNoteCur.ICEPhone);
-						row.ColorBackG=listMiscColorDefs[(int)DefCatMiscColors.FamilyModuleICE].ItemColor;
+						row.BackColor=listMiscColorDefs[(int)DefCatMiscColors.FamilyModuleICE].ItemColor;
 						break;
 					#endregion ICE Phone
 					#region Language
@@ -1087,7 +1087,7 @@ namespace OpenDental{
 								row.Cells.Add(fieldCur.Description);
 							}
 							row.Cells.Add(PatRestrictions.GetPatRestrictDesc(listPatRestricts[i].PatRestrictType));
-							row.ColorBackG=listMiscColorDefs[10].ItemColor;//index 10 is Patient Restrictions (hard coded in convertdatabase4)
+							row.BackColor=listMiscColorDefs[10].ItemColor;//index 10 is Patient Restrictions (hard coded in convertdatabase4)
 							if(i==listPatRestricts.Count-1) {//last row added outside of switch statement
 								break;
 							}
@@ -1127,12 +1127,12 @@ namespace OpenDental{
 						if(custREList.Count==0) {
 							row.Cells.Add("None");
 							row.Tag="References";
-							row.ColorBackG=listMiscColorDefs[8].ItemColor;
+							row.BackColor=listMiscColorDefs[8].ItemColor;
 						}
 						else {
 							row.Cells.Add("");
 							row.Tag="References";
-							row.ColorBackG=listMiscColorDefs[8].ItemColor;
+							row.BackColor=listMiscColorDefs[8].ItemColor;
 							gridPat.ListGridRows.Add(row);
 						}
 						for(int i=0;i<custREList.Count;i++) {
@@ -1146,7 +1146,7 @@ namespace OpenDental{
 								row.Cells.Add(CustReferences.GetCustNameFL(custREList[i].PatNumRef));
 							}
 							row.Tag=custREList[i];
-							row.ColorBackG=listMiscColorDefs[8].ItemColor;
+							row.BackColor=listMiscColorDefs[8].ItemColor;
 							if(i<custREList.Count-1) {
 								gridPat.ListGridRows.Add(row);
 							}
@@ -1164,7 +1164,7 @@ namespace OpenDental{
 						if(listRefs.Count==0){
 							row.Cells.Add("None");
 							row.Tag="Referral";
-							row.ColorBackG=listMiscColorDefs[8].ItemColor;
+							row.BackColor=listMiscColorDefs[8].ItemColor;
 						}
 						//else{
 						//	row.Cells.Add("");
@@ -1199,7 +1199,7 @@ namespace OpenDental{
 								row.Cells.Add("");//if referral is null because using random keys and had bug.
 							}
 							row.Tag="Referral";
-							row.ColorBackG=listMiscColorDefs[8].ItemColor;
+							row.BackColor=listMiscColorDefs[8].ItemColor;
 							if(i<listRefs.Count-1){
 								gridPat.ListGridRows.Add(row);
 							}
@@ -1214,7 +1214,7 @@ namespace OpenDental{
 						else{
 							row.Cells.Add((_loadData.ResponsibleParty??Patients.GetLim(PatCur.ResponsParty)).GetNameLF());
 						}
-						row.ColorBackG=listMiscColorDefs[8].ItemColor;
+						row.BackColor=listMiscColorDefs[8].ItemColor;
 						break;
 					#endregion ResponsParty
 					#region Salutation
@@ -1252,7 +1252,7 @@ namespace OpenDental{
 					case "Status":
 						row.Cells.Add(PatCur.PatStatus.ToString());
 						if(PatCur.PatStatus==PatientStatus.Deceased) {
-							row.ColorText=Color.Red;
+							row.ForeColor=Color.Red;
 						}
 						break;
 					#endregion Status
@@ -1283,8 +1283,8 @@ namespace OpenDental{
 							row.Bold=true;
 						}
 						if(Programs.GetCur(ProgramName.DentalTekSmartOfficePhone).Enabled) {
-							row.Cells[row.Cells.Count-1].ColorText=Color.Blue;
-							row.Cells[row.Cells.Count-1].Underline=YN.Yes;
+							row.Cells[row.Cells.Count-1].ForeColor=Color.Blue;
+							row.Cells[row.Cells.Count-1].Underline= true;
 						}
 						break;
 					#endregion Wireless Ph
@@ -1295,8 +1295,8 @@ namespace OpenDental{
 							row.Bold=true;
 						}
 						if(Programs.GetCur(ProgramName.DentalTekSmartOfficePhone).Enabled) {
-							row.Cells[row.Cells.Count-1].ColorText=Color.Blue;
-							row.Cells[row.Cells.Count-1].Underline=YN.Yes;
+							row.Cells[row.Cells.Count-1].ForeColor=Color.Blue;
+							row.Cells[row.Cells.Count-1].Underline= true;
 						}
 						break;
 					#endregion Wk Phone
@@ -1370,8 +1370,8 @@ namespace OpenDental{
 				if(recallDate.Year>1880){
 					cell.Text=recallDate.ToShortDateString();
 					if(recallDate<DateTime.Today){
-						cell.Bold=YN.Yes;
-						cell.ColorText=Color.Firebrick;
+						cell.Bold= true;
+						cell.ForeColor=Color.Firebrick;
 					}
 				}
 				row.Cells.Add(cell);
@@ -1811,8 +1811,8 @@ namespace OpenDental{
 							else {
 								cell=new GridCell(recallListPat[i].DateDue.ToShortDateString());
 								if(recallListPat[i].DateDue<DateTime.Today) {
-									cell.Bold=YN.Yes;
-									cell.ColorText=Color.Firebrick;
+									cell.Bold= true;
+									cell.ForeColor=Color.Firebrick;
 								}
 								row.Cells.Add(cell);
 							}
@@ -1929,8 +1929,8 @@ namespace OpenDental{
 				row.Cells.Add(superfam);
 				row.Tag=SuperFamilyGuarantors[i].PatNum;
 				if(i==0) {
-					row.Cells[0].Bold=YN.Yes;
-					row.Cells[0].ColorText=Color.OrangeRed;
+					row.Cells[0].Bold= true;
+					row.Cells[0].ForeColor=Color.OrangeRed;
 				}
 				if(SuperFamilyGuarantors[i].HasSuperBilling) {
 					row.Cells.Add("X");
@@ -2204,8 +2204,8 @@ namespace OpenDental{
 			}
 			//The first entry will always be the original or master patient which we want to stand out a little bit much like the Super Family grid.
 			if(gridPatientClones.ListGridRows.Count > 0) {
-				gridPatientClones.ListGridRows[0].Cells[0].Bold=YN.Yes;
-				gridPatientClones.ListGridRows[0].Cells[0].ColorText=Color.OrangeRed;
+				gridPatientClones.ListGridRows[0].Cells[0].Bold=true;
+				gridPatientClones.ListGridRows[0].Cells[0].ForeColor=Color.OrangeRed;
 			}
 			gridPatientClones.EndUpdate();
 			//The grid has finished refreshing and can now have it's selected index changed.
@@ -2489,7 +2489,7 @@ namespace OpenDental{
 				GridRow discountRow=new GridRow();
 				discountRow.Cells.Add("Description");
 				discountRow.Cells.Add(discountPlan.Description);
-				discountRow.ColorBackG=Defs.GetFirstForCategory(DefCat.MiscColors).ItemColor;
+				discountRow.BackColor=Defs.GetFirstForCategory(DefCat.MiscColors).ItemColor;
 				gridIns.ListGridRows.Add(discountRow);
 				discountRow=new GridRow();
 				discountRow.Cells.Add("Adjustment Type");
@@ -2555,7 +2555,7 @@ namespace OpenDental{
 			for(int i=0;i<PatPlanList.Count;i++){
 				row.Cells.Add(FamCur.GetNameInFamFL(subArray[i].Subscriber));
 			}
-			row.ColorBackG=listDefs[0].ItemColor;
+			row.BackColor=listDefs[0].ItemColor;
 			gridIns.ListGridRows.Add(row);
 			//subscriber ID
 			row=new GridRow();
@@ -2563,7 +2563,7 @@ namespace OpenDental{
 			for(int i=0;i<PatPlanList.Count;i++) {
 				row.Cells.Add(subArray[i].SubscriberID);
 			}
-			row.ColorBackG=listDefs[0].ItemColor;
+			row.BackColor=listDefs[0].ItemColor;
 			gridIns.ListGridRows.Add(row);
 			//relationship
 			row=new GridRow();
@@ -2571,7 +2571,7 @@ namespace OpenDental{
 			for(int i=0;i<PatPlanList.Count;i++){
 				row.Cells.Add(PatPlanList[i].Relationship.ToString());
 			}
-			row.ColorBackG=listDefs[0].ItemColor;
+			row.BackColor=listDefs[0].ItemColor;
 			gridIns.ListGridRows.Add(row);
 			//patient ID
 			row=new GridRow();
@@ -2579,7 +2579,7 @@ namespace OpenDental{
 			for(int i=0;i<PatPlanList.Count;i++){
 				row.Cells.Add(PatPlanList[i].PatID);
 			}
-			row.ColorBackG=listDefs[0].ItemColor;
+			row.BackColor=listDefs[0].ItemColor;
 			gridIns.ListGridRows.Add(row);
 			//pending
 			row=new GridRow();
@@ -2592,8 +2592,8 @@ namespace OpenDental{
 					row.Cells.Add("");
 				}
 			}
-			row.ColorBackG=listDefs[0].ItemColor;
-			row.ColorLborder=Color.Black;
+			row.BackColor=listDefs[0].ItemColor;
+			row.LowerBorderColor=Color.Black;
 			gridIns.ListGridRows.Add(row);
 			//employer
 			row=new GridRow();
@@ -2663,7 +2663,7 @@ namespace OpenDental{
 			for(int i=0;i<planArray.Count;i++) {
 				row.Cells.Add(FeeScheds.GetDescription(planArray[i].FeeSched));
 			}
-			row.ColorLborder=Color.Black;
+			row.LowerBorderColor=Color.Black;
 			gridIns.ListGridRows.Add(row);
 			//Calendar vs service year------------------------------------------------------------------------------------
 			row=new GridRow();
@@ -2900,8 +2900,8 @@ namespace OpenDental{
 			for(int i=0;i<PatPlanList.Count;i++){
 				cell=new GridCell();
 				cell.Text=planArray[i].PlanNote;
-				cell.ColorText=Color.Red;
-				cell.Bold=YN.Yes;
+				cell.ForeColor=Color.Red;
+				cell.Bold= true;
 				row.Cells.Add(cell);
 			}
 			gridIns.ListGridRows.Add(row);
@@ -2911,11 +2911,11 @@ namespace OpenDental{
 			for(int i=0;i<PatPlanList.Count;i++) {
 				cell=new GridCell();
 				cell.Text=subArray[i].SubscNote;
-				cell.ColorText=Color.Red;
-				cell.Bold=YN.Yes;
+				cell.ForeColor=Color.Red;
+				cell.Bold= true;
 				row.Cells.Add(cell);
 			}
-			row.ColorLborder=Color.Black;
+			row.LowerBorderColor=Color.Black;
 			gridIns.ListGridRows.Add(row);
 			//InsHist
 			Dictionary<long,InsProcHist> dictInsProcHist=PatPlanList.Select(x => x.InsSubNum).Distinct()

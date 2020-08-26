@@ -687,16 +687,16 @@ namespace Imedisoft.Forms
 							row.Cells.Add(_DataTablePats.Rows[i]["HmPhone"].ToString());
 							if (Programs.GetCur(ProgramName.DentalTekSmartOfficePhone).Enabled)
 							{
-								row.Cells[row.Cells.Count - 1].ColorText = Color.Blue;
-								row.Cells[row.Cells.Count - 1].Underline = YN.Yes;
+								row.Cells[row.Cells.Count - 1].ForeColor = Color.Blue;
+								row.Cells[row.Cells.Count - 1].Underline = true;
 							}
 							break;
 						case "Wk Phone":
 							row.Cells.Add(_DataTablePats.Rows[i]["WkPhone"].ToString());
 							if (Programs.GetCur(ProgramName.DentalTekSmartOfficePhone).Enabled)
 							{
-								row.Cells[row.Cells.Count - 1].ColorText = Color.Blue;
-								row.Cells[row.Cells.Count - 1].Underline = YN.Yes;
+								row.Cells[row.Cells.Count - 1].ForeColor = Color.Blue;
+								row.Cells[row.Cells.Count - 1].Underline = true;
 							}
 							break;
 						case "PatNum":
@@ -748,8 +748,8 @@ namespace Imedisoft.Forms
 							row.Cells.Add(_DataTablePats.Rows[i]["WirelessPhone"].ToString());
 							if (Programs.GetCur(ProgramName.DentalTekSmartOfficePhone).Enabled)
 							{
-								row.Cells[row.Cells.Count - 1].ColorText = Color.Blue;
-								row.Cells[row.Cells.Count - 1].Underline = YN.Yes;
+								row.Cells[row.Cells.Count - 1].ForeColor = Color.Blue;
+								row.Cells[row.Cells.Count - 1].Underline = true;
 							}
 							break;
 						case "Sec Prov":
@@ -804,8 +804,8 @@ namespace Imedisoft.Forms
 			var gridCell = patientsGrid.ListGridRows[e.Row].Cells[e.Col];
 
 			// Only grid cells with phone numbers are blue and underlined.
-			if (gridCell.ColorText == Color.Blue && 
-				gridCell.Underline == YN.Yes && 
+			if (gridCell.ForeColor == Color.Blue && 
+				gridCell.Underline == true && 
 				Programs.GetCur(ProgramName.DentalTekSmartOfficePhone).Enabled)
 			{
 				DentalTek.PlaceCall(gridCell.Text);

@@ -55,12 +55,12 @@ namespace OpenDental.User_Controls.SetupWizard {
 				row = new GridRow();
 				row.Cells.Add(emp.LName);
 				if(string.IsNullOrEmpty(emp.LName) || emp.LName.ToLower() == "default") {
-					row.Cells[row.Cells.Count-1].ColorBackG=colorNeedsAttn;
+					row.Cells[row.Cells.Count-1].BackColor=colorNeedsAttn;
 					isAllComplete=false;
 				}
 				row.Cells.Add(emp.FName);
 				if(string.IsNullOrEmpty(emp.FName) || emp.FName.ToLower() == "default") {
-					row.Cells[row.Cells.Count-1].ColorBackG=colorNeedsAttn;
+					row.Cells[row.Cells.Count-1].BackColor=colorNeedsAttn;
 					isAllComplete=false;
 				}
 				row.Cells.Add(emp.MiddleI);
@@ -83,7 +83,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 			if(_blink > 5) {
 				pictureAdd.Visible=true;
 				foreach(GridRow rowCur in gridMain.ListGridRows) {
-					rowCur.ColorBackG=OpenDental.SetupWizard.GetColor(ODSetupStatus.NeedsAttention);
+					rowCur.BackColor=OpenDental.SetupWizard.GetColor(ODSetupStatus.NeedsAttention);
 				}
 				gridMain.Invalidate();
 				timerBlink.Stop();
@@ -91,7 +91,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 			}
 			pictureAdd.Visible=!pictureAdd.Visible;
 			foreach(GridRow rowCur in gridMain.ListGridRows) {
-				rowCur.ColorBackG=rowCur.ColorBackG==Color.White?OpenDental.SetupWizard.GetColor(ODSetupStatus.NeedsAttention):Color.White;
+				rowCur.BackColor=rowCur.BackColor==Color.White?OpenDental.SetupWizard.GetColor(ODSetupStatus.NeedsAttention):Color.White;
 			}
 			gridMain.Invalidate();
 			_blink++;

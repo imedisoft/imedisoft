@@ -412,7 +412,7 @@ namespace OpenDental {
 			}
 			if(_gridCur.SelectedIndices.Length!=1) { //If we don't have a single row selected, reset colors to black
 				for(int i=0;i<_gridCur.ListGridRows.Count;i++) {
-					_gridCur.ListGridRows[i].ColorText=Color.Black;
+					_gridCur.ListGridRows[i].ForeColor=Color.Black;
 				}
 				_gridCur.Invalidate();
 				return;
@@ -423,14 +423,14 @@ namespace OpenDental {
 			for(int i=0;i<_gridCur.ListGridRows.Count;i++) {
 				if(((PatRowTag)_gridCur.ListGridRows[i].Tag).GuarantorNum==guar){ //family member
 					famCount++;
-					_gridCur.ListGridRows[i].ColorText=Color.Red;
+					_gridCur.ListGridRows[i].ForeColor=Color.Red;
 				}
 				else {
-					_gridCur.ListGridRows[i].ColorText=Color.Black;
+					_gridCur.ListGridRows[i].ForeColor=Color.Black;
 				}
 			}
 			if(famCount==1) {//only the highlighted patient is red at this point
-				_gridCur.ListGridRows[_gridCur.SelectedIndices[0]].ColorText=Color.Black;
+				_gridCur.ListGridRows[_gridCur.SelectedIndices[0]].ForeColor=Color.Black;
 			}
 			_gridCur.Invalidate();
 		}
@@ -1645,7 +1645,7 @@ namespace OpenDental {
 			foreach(DataRow row in tableReacts.Rows) {
 				GridRow rowNew=new GridRow();
 				if(PIn.Bool(row["DoNotContact"].ToString())) {
-					rowNew.ColorBackG=Color.Orange;
+					rowNew.BackColor=Color.Orange;
 				}
 				rowNew.Cells.Add(PIn.Date(row["DateLastProc"].ToString()).ToShortDateString());
 				rowNew.Cells.Add(Patients.GetNameLF(row["LName"].ToString(),row["FName"].ToString(),row["Preferred"].ToString(),row["MiddleI"].ToString()));

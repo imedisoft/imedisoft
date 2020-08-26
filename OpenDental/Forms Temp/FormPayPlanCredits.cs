@@ -129,40 +129,40 @@ namespace OpenDental {
 				//In the future, we will probably make these customizable definitions.
 				GridCell cell=new GridCell(entryCur.DateStr);
 				//for procedure rows, cell color should be LightYellow for all relevant fields.
-				cell.ColorBackG=entryCur.IsChargeOrd ? Color.White : Color.LightYellow;
+				cell.BackColor=entryCur.IsChargeOrd ? Color.White : Color.LightYellow;
 				row.Cells.Add(cell);
 				cell=new GridCell(entryCur.ProvAbbr);
-				cell.ColorBackG=entryCur.IsChargeOrd ? Color.White : Color.LightYellow;
+				cell.BackColor=entryCur.IsChargeOrd ? Color.White : Color.LightYellow;
 				row.Cells.Add(cell);
 				cell=new GridCell(entryCur.StatStr);
-				cell.ColorBackG=entryCur.IsChargeOrd ? Color.White : Color.LightYellow;
+				cell.BackColor=entryCur.IsChargeOrd ? Color.White : Color.LightYellow;
 				row.Cells.Add(cell);
 				cell=new GridCell(entryCur.ProcStr);
-				cell.ColorBackG=entryCur.IsChargeOrd ? Color.White : Color.LightYellow;
+				cell.BackColor=entryCur.IsChargeOrd ? Color.White : Color.LightYellow;
 				row.Cells.Add(cell);
 				cell=new GridCell(entryCur.FeeStr);
-				cell.ColorBackG=entryCur.IsChargeOrd ? Color.White : Color.LightYellow;
+				cell.BackColor=entryCur.IsChargeOrd ? Color.White : Color.LightYellow;
 				row.Cells.Add(cell);
 				cell=new GridCell(entryCur.RemBefStr);
-				cell.ColorBackG=entryCur.IsChargeOrd ? Color.White : Color.LightYellow;
+				cell.BackColor=entryCur.IsChargeOrd ? Color.White : Color.LightYellow;
 				row.Cells.Add(cell);
 				cell=new GridCell(entryCur.CredDateStr);
 				//for charge rows, cell color should be LightCyan for all relevant fields.
-				cell.ColorBackG=entryCur.IsChargeOrd ? Color.LightCyan : Color.White;
+				cell.BackColor=entryCur.IsChargeOrd ? Color.LightCyan : Color.White;
 				row.Cells.Add(cell);
 				cell=new GridCell(entryCur.AmtStr);
-				cell.ColorBackG=entryCur.IsChargeOrd ? Color.LightCyan : Color.White;
+				cell.BackColor=entryCur.IsChargeOrd ? Color.LightCyan : Color.White;
 				row.Cells.Add(cell);
 				totalAttached+=PIn.Double(entryCur.AmtStr);
 				cell=new GridCell(entryCur.RemAftStr);
-				cell.ColorBackG=entryCur.IsChargeOrd ? Color.LightCyan : Color.White;
+				cell.BackColor=entryCur.IsChargeOrd ? Color.LightCyan : Color.White;
 				row.Cells.Add(cell);
 				cell=new GridCell(entryCur.NoteStr);
-				cell.ColorBackG=entryCur.IsChargeOrd ? Color.LightCyan : Color.White;
+				cell.BackColor=entryCur.IsChargeOrd ? Color.LightCyan : Color.White;
 				row.Cells.Add(cell);
 				row.Tag=entryCur;
 				if(!entryCur.IsChargeOrd) {
-					row.ColorLborder=Color.Black;
+					row.LowerBorderColor=Color.Black;
 				}
 				gridMain.ListGridRows.Add(row);
 			}

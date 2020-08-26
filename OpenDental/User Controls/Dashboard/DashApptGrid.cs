@@ -141,7 +141,7 @@ namespace OpenDental {
 				gridMain.HScrollVisible=true;
 			}
 			FillGrid();
-			if(Parent.Width<gridMain.Width || Width<gridMain.ListGridColumns.Sum(x => x.ColWidth)) {
+			if(Parent.Width<gridMain.Width || Width<gridMain.ListGridColumns.Sum(x => x.ColumnWidth)) {
 				gridMain.HScrollVisible=true;
 			}
 			else {
@@ -240,22 +240,22 @@ namespace OpenDental {
 						row.Cells[dateIndex].Text=_listApptOthers[i].AptDateTime.ToString("d");
 						row.Cells[dateIndex+1].Text=_listApptOthers[i].AptDateTime.ToString("t");
 						if(_listApptOthers[i].AptDateTime < DateTime.Today) { //Past
-							row.ColorBackG=_listProgNoteColorDefs[11].ItemColor;
-							row.ColorText=_listProgNoteColorDefs[10].ItemColor;
+							row.BackColor=_listProgNoteColorDefs[11].ItemColor;
+							row.ForeColor=_listProgNoteColorDefs[10].ItemColor;
 						}
 						else if(_listApptOthers[i].AptDateTime.Date==DateTime.Today.Date) { //Today
-							row.ColorBackG=_listProgNoteColorDefs[9].ItemColor;
-							row.ColorText=_listProgNoteColorDefs[8].ItemColor;
+							row.BackColor=_listProgNoteColorDefs[9].ItemColor;
+							row.ForeColor=_listProgNoteColorDefs[8].ItemColor;
 							row.Cells[0].Text="Today";
 						}
 						else if(_listApptOthers[i].AptDateTime > DateTime.Today) { //Future
-							row.ColorBackG=_listProgNoteColorDefs[13].ItemColor;
-							row.ColorText=_listProgNoteColorDefs[12].ItemColor;
+							row.BackColor=_listProgNoteColorDefs[13].ItemColor;
+							row.ForeColor=_listProgNoteColorDefs[12].ItemColor;
 						}
 					}
 					else if(_listApptOthers[i].AptStatus==ApptStatus.Planned) { //show line for planned appt
-						row.ColorBackG=_listProgNoteColorDefs[17].ItemColor;
-						row.ColorText=_listProgNoteColorDefs[16].ItemColor;
+						row.BackColor=_listProgNoteColorDefs[17].ItemColor;
+						row.ForeColor=_listProgNoteColorDefs[16].ItemColor;
 						string txt="Planned"+" ";
 						int plannedAptIdx=_listPlannedIncompletes.FindIndex(x => x.AptNum==_listApptOthers[i].AptNum);
 						if(IsShowCompletePlanned) {
@@ -284,26 +284,26 @@ namespace OpenDental {
 						row.Cells[0].Text=txt;
 					}
 					else if(_listApptOthers[i].AptStatus==ApptStatus.PtNote) {
-						row.ColorBackG=_listProgNoteColorDefs[19].ItemColor;
-						row.ColorText=_listProgNoteColorDefs[18].ItemColor;
+						row.BackColor=_listProgNoteColorDefs[19].ItemColor;
+						row.ForeColor=_listProgNoteColorDefs[18].ItemColor;
 						row.Cells[0].Text="PtNote";
 					}
 					else if(_listApptOthers[i].AptStatus==ApptStatus.PtNoteCompleted) {
-						row.ColorBackG=_listProgNoteColorDefs[21].ItemColor;
-						row.ColorText=_listProgNoteColorDefs[20].ItemColor;
+						row.BackColor=_listProgNoteColorDefs[21].ItemColor;
+						row.ForeColor=_listProgNoteColorDefs[20].ItemColor;
 						row.Cells[0].Text="PtNoteCompleted";
 					}
 					else if(_listApptOthers[i].AptStatus==ApptStatus.Broken) {
 						row.Cells[0].Text="Broken";
 						row.Cells[dateIndex].Text=_listApptOthers[i].AptDateTime.ToString("d");
 						row.Cells[dateIndex+1].Text=_listApptOthers[i].AptDateTime.ToString("t");
-						row.ColorBackG=_listProgNoteColorDefs[15].ItemColor;
-						row.ColorText=_listProgNoteColorDefs[14].ItemColor;
+						row.BackColor=_listProgNoteColorDefs[15].ItemColor;
+						row.ForeColor=_listProgNoteColorDefs[14].ItemColor;
 					}
 					else if(_listApptOthers[i].AptStatus==ApptStatus.UnschedList) {
 						row.Cells[0].Text="UnschedList";
-						row.ColorBackG=_listProgNoteColorDefs[15].ItemColor;
-						row.ColorText=_listProgNoteColorDefs[14].ItemColor;
+						row.BackColor=_listProgNoteColorDefs[15].ItemColor;
+						row.ForeColor=_listProgNoteColorDefs[14].ItemColor;
 					}
 				}
 				row.Cells.Add((_listApptOthers[i].Pattern.Length * 5).ToString());

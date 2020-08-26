@@ -488,7 +488,7 @@ namespace OpenDental.UI {
 		//[DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
 		//[Editor(typeof(System.ComponentModel.Design.CollectionEditor),typeof(System.Drawing.Design.UITypeEditor))]
 		//[Browsable(false)]//buggy.
-		public ListGridColumns ListGridColumns { get; } = new ListGridColumns();
+		public GridColumnCollection ListGridColumns { get; } = new GridColumnCollection();
 
 		[Category("OD")]
 		[Description("The maximum number of rows to show in the grid before going to another page.")]
@@ -920,15 +920,15 @@ namespace OpenDental.UI {
 			//selected row color
 			if(_selectedIndices.Contains(rowI)) {
 //todo: brushes aren't disposed
-				g.FillRectangle(new SolidBrush(GetSelectedColor(gridRow.ColorBackG,ColorSelectedRow)),
+				g.FillRectangle(new SolidBrush(GetSelectedColor(gridRow.BackColor,ColorSelectedRow)),
 					1,
 					top+1,
 					_widthTotal,
 					hTot);
 			}
 			//colored row background
-			else if(gridRow.ColorBackG!=Color.White) {
-				g.FillRectangle(new SolidBrush(gridRow.ColorBackG),
+			else if(gridRow.BackColor!=Color.White) {
+				g.FillRectangle(new SolidBrush(gridRow.BackColor),
 					1,
 					top+1,
 					_widthTotal,
@@ -936,7 +936,7 @@ namespace OpenDental.UI {
 			}
 			//normal row color
 			else {//need to draw over the gray background
-				g.FillRectangle(new SolidBrush(gridRow.ColorBackG),
+				g.FillRectangle(new SolidBrush(gridRow.BackColor),
 					1,
 					top+1,
 					_widthTotal,
@@ -947,28 +947,26 @@ namespace OpenDental.UI {
 				if(i>ListGridColumns.Count) {
 					break;
 				}
-				if(gridRow.Cells[i].ColorBackG==Color.Empty && !gridRow.Cells[i].IsButton) {
+				if(!gridRow.Cells[i].BackColor.HasValue && !gridRow.Cells[i].IsButton) {
 					continue;
 				}
 				//Blend with row background colors. Cell color= Avg(CellColor+BackGColor)
-				Color colorCell;
-				if(_selectedIndices.Contains(rowI)) {
-					colorCell=Color.FromArgb(
-						(ColorSelectedRow.R+gridRow.Cells[i].ColorBackG.R)/2,
-						(ColorSelectedRow.G+gridRow.Cells[i].ColorBackG.G)/2,
-						(ColorSelectedRow.B+gridRow.Cells[i].ColorBackG.B)/2);
-				}
-				//colored row background
-				else if(gridRow.ColorBackG!=Color.White) {
-					colorCell=Color.FromArgb(
-						(gridRow.ColorBackG.R+gridRow.Cells[i].ColorBackG.R)/2,
-						(gridRow.ColorBackG.G+gridRow.Cells[i].ColorBackG.G)/2,
-						(gridRow.ColorBackG.B+gridRow.Cells[i].ColorBackG.B)/2);
+				Color colorCell = _selectedIndices.Contains(rowI) ? ColorSelectedRow : gridRow.BackColor;
+				if (gridRow.Cells[i].BackColor.HasValue)
+				{
+					var cellColor = gridRow.Cells[i].BackColor.Value;
+
+					colorCell = Color.FromArgb(
+						(colorCell.R + cellColor.R) / 2,
+						(colorCell.G + cellColor.G) / 2,
+						(colorCell.B + cellColor.B) / 2);
 				}
 				//normal row color
-				else {
-					colorCell=gridRow.Cells[i].ColorBackG;
+				else
+				{
+					colorCell = gridRow.Cells[i].BackColor.Value;
 				}
+
 				if(gridRow.Cells[i].IsButton) { 
 					Rectangle rectangleButton=new Rectangle(-hScroll.Value+ListGridColumns[i].State.XPos+2,top+2,ListGridColumns[i].State.Width-4,hTot-4);
 					Color colorTop=Color.White;
@@ -1028,8 +1026,8 @@ namespace OpenDental.UI {
 				penLower=new Pen(_penColumnSeparator.Color);
 			}
 			else {
-				if(gridRow.ColorLborder!=Color.Empty) {
-					penLower=new Pen(gridRow.ColorLborder);
+				if(gridRow.LowerBorderColor.HasValue) {
+					penLower=new Pen(gridRow.LowerBorderColor.Value);
 				}
 			}
 			if(WrapText){
@@ -1085,22 +1083,25 @@ namespace OpenDental.UI {
 						}
 					}
 				}
+
 				Color colorText;
-				if(gridRow.Cells[i].ColorText== Color.Empty) {
+				if(!gridRow.Cells[i].ForeColor.HasValue) {
 					if(gridRow.Cells[i].IsButton && !Enabled) { //set the "button" text to gray if this is grid is disabled
 						colorText=_colorTextDisabled;
 					}
 					else { 
-						colorText=gridRow.ColorText;
+						colorText=gridRow.ForeColor;
 					}
 				}
 				else {
-					colorText=gridRow.Cells[i].ColorText;
+					colorText=gridRow.Cells[i].ForeColor.Value;
 				}
-				if(gridRow.Cells[i].Bold== YN.Yes) {
+
+
+				if(gridRow.Cells[i].Bold == true) {
 					font= _fontCellBold;
 				}
-				else if(gridRow.Cells[i].Bold== YN.No) {
+				else if(gridRow.Cells[i].Bold==false) {
 					font= _fontCell;
 				}
 				else {//unknown.  Use row bold
@@ -1111,7 +1112,8 @@ namespace OpenDental.UI {
 						font= _fontCell;
 					}
 				}
-				if(gridRow.Cells[i].Underline== YN.Yes) {//Underline the current cell.  If it is already bold, make the cell bold and underlined.
+
+				if(gridRow.Cells[i].Underline) {//Underline the current cell.  If it is already bold, make the cell bold and underlined.
 					if(font == _fontCellBold){
 						font= _fontUnderlineBold;
 					}
@@ -1177,7 +1179,7 @@ namespace OpenDental.UI {
 					ListGridColumns[NoteSpanStop].State.Right-ListGridColumns[NoteSpanStart].State.XPos,
 					hNote);
 				_stringFormat.Alignment = StringAlignment.Near;
-				using(SolidBrush brush=new SolidBrush(gridRow.ColorText)){
+				using(SolidBrush brush=new SolidBrush(gridRow.ForeColor)){
 					if(gridRow.Note.Length<= TEXT_LENGTH_LIMIT) {
 						g.DrawString(gridRow.Note,font,brush,rectangleNote,_stringFormat);
 					}
@@ -1248,7 +1250,7 @@ namespace OpenDental.UI {
 				}
 				RectangleF rect=new RectangleF(ListGridColumns[i].State.XPos-hScroll.Value,DpiScale(_heightTitle)+2,
 					ListGridColumns[i].State.Width,DpiScale(_heightHeader));
-				g.DrawString(ListGridColumns[i].Heading,_fontHeader,_brushHeaderText,rect,stringFormat);
+				g.DrawString(ListGridColumns[i].HeaderText,_fontHeader,_brushHeaderText,rect,stringFormat);
 			}
 			GraphicsState graphicsState=g.Save();
 			g.SmoothingMode=SmoothingMode.HighQuality;
@@ -1691,7 +1693,7 @@ namespace OpenDental.UI {
 					if(cell.IsButton) {
 						cell.ButtonIsPressed=true;
 						Refresh(); //Force the "button" styling to repaint in the "clicked" style
-						cell.ClickEvent.Invoke(this,new EventArgs());
+						cell.Clicked.Invoke(this,new EventArgs());
 						cell.ButtonIsPressed=false;
 					}
 					break;
@@ -1841,7 +1843,7 @@ namespace OpenDental.UI {
 				textBoxEdit=editTextBox;
 			}
 			//If the cell's color is set manually, that color will also show up for this EditBox.
-			textBoxEdit.BackColor=ListGridRows[_selectedCell.Y].ColorBackG;
+			textBoxEdit.BackColor=ListGridRows[_selectedCell.Y].BackColor;
 			textBoxEdit.Font=_fontCell;
 			//As far as I can tell, MS RichTextBox seems to not fully support dpi scaling. 
 			//Specifically, if this textbox content is right aligned, the scale is off at high dpi.
@@ -2053,8 +2055,8 @@ namespace OpenDental.UI {
 					ListGridRows[rowI].State.HeightMain+ListGridRows[rowI].State.HeightNote-1);
 			}
 			//colored row background
-			else if(ListGridRows[rowI].ColorBackG!=Color.White) {
-				g.FillRectangle(new SolidBrush(ListGridRows[rowI].ColorBackG),
+			else if(ListGridRows[rowI].BackColor!=Color.White) {
+				g.FillRectangle(new SolidBrush(ListGridRows[rowI].BackColor),
 					x+1,
 					y-vScroll.Value+1,
 					_widthTotal,
@@ -2062,7 +2064,7 @@ namespace OpenDental.UI {
 			}
 			//normal row color
 			else {//need to draw over the gray background
-				g.FillRectangle(new SolidBrush(ListGridRows[rowI].ColorBackG),
+				g.FillRectangle(new SolidBrush(ListGridRows[rowI].BackColor),
 					x+1,
 					y-vScroll.Value+1,
 					_widthTotal,//this is a really simple width value that always works well
@@ -2099,8 +2101,8 @@ namespace OpenDental.UI {
 				penLower=new Pen(_penColumnSeparator.Color);
 			}
 			else {
-				if(ListGridRows[rowI].ColorLborder!=Color.Empty) {
-					penLower=new Pen(ListGridRows[rowI].ColorLborder);
+				if(ListGridRows[rowI].LowerBorderColor.HasValue) {
+					penLower=new Pen(ListGridRows[rowI].LowerBorderColor.Value);
 				}
 			}
 			for(int i=0;i<ListGridColumns.Count;i++) {
@@ -2168,16 +2170,12 @@ namespace OpenDental.UI {
 					}
 				}
 				textRect=new RectangleF(horizontal, vertical, cellW, cellH);
-				if(ListGridRows[rowI].Cells[i].ColorText== Color.Empty) {
-					textBrush=new SolidBrush(ListGridRows[rowI].ColorText);
-				}
-				else {
-					textBrush=new SolidBrush(ListGridRows[rowI].Cells[i].ColorText);
-				}
-				if(ListGridRows[rowI].Cells[i].Bold== YN.Yes) {
+				textBrush=new SolidBrush(ListGridRows[rowI].Cells[i].ForeColor ?? ListGridRows[rowI].ForeColor);
+				
+				if(ListGridRows[rowI].Cells[i].Bold== true) {
 					fontLocal=new Font(fontLocal, FontStyle.Bold);
 				}
-				else if(ListGridRows[rowI].Cells[i].Bold== YN.No) {
+				else if(ListGridRows[rowI].Cells[i].Bold== false) {
 					fontLocal=new Font(fontLocal, FontStyle.Regular);
 				}
 				else {//unknown.  Use row bold
@@ -2188,7 +2186,7 @@ namespace OpenDental.UI {
 						fontLocal=new Font(fontLocal, FontStyle.Regular);
 					}
 				}
-				if(ListGridRows[rowI].Cells[i].Underline== YN.Yes) {//Underline the current cell.  If it is already bold, make the cell bold and underlined.
+				if(ListGridRows[rowI].Cells[i].Underline== true) {//Underline the current cell.  If it is already bold, make the cell bold and underlined.
 					fontLocal=new Font(fontLocal, (fontLocal.Bold)?(FontStyle.Bold | FontStyle.Underline): FontStyle.Underline);
 				}
 				if(ListGridColumns[i].ImageList==null) {
@@ -2226,7 +2224,7 @@ namespace OpenDental.UI {
 				else {
 					fontLocal=new Font(fontLocal, FontStyle.Regular);
 				}
-				textBrush=new SolidBrush(ListGridRows[rowI].ColorText);
+				textBrush=new SolidBrush(ListGridRows[rowI].ForeColor);
 				textRect=new RectangleF(
 					x- hScroll.Value+1+ ListGridColumns[NoteSpanStart].State.XPos +1,
 					y- vScroll.Value+1+ ListGridRows[rowI].State.HeightMain+1,
@@ -2271,8 +2269,8 @@ namespace OpenDental.UI {
 					ToPoints(ListGridRows[rowI].State.HeightMain+ListGridRows[rowI].State.HeightNote-1));
 			}
 			//colored row background
-			else if(ListGridRows[rowI].ColorBackG!=Color.White) {
-				g.DrawRectangle(new XSolidBrush(ListGridRows[rowI].ColorBackG),
+			else if(ListGridRows[rowI].BackColor!=Color.White) {
+				g.DrawRectangle(new XSolidBrush(ListGridRows[rowI].BackColor),
 					ToPoints(x+1),
 					ToPoints(y-vScroll.Value+1),
 					ToPoints(_widthTotal),
@@ -2280,7 +2278,7 @@ namespace OpenDental.UI {
 			}
 			//normal row color
 			else {//need to draw over the gray background
-				g.DrawRectangle(new XSolidBrush(ListGridRows[rowI].ColorBackG),
+				g.DrawRectangle(new XSolidBrush(ListGridRows[rowI].BackColor),
 					ToPoints(x+1),
 					ToPoints(y-vScroll.Value+1),
 					ToPoints(_widthTotal),
@@ -2317,8 +2315,8 @@ namespace OpenDental.UI {
 				xPenLower=new XPen(XColor.FromArgb(_penColumnSeparator.Color.ToArgb()));
 			}
 			else {
-				if(ListGridRows[rowI].ColorLborder!=Color.Empty) {
-					xPenLower=new XPen(ListGridRows[rowI].ColorLborder);
+				if(ListGridRows[rowI].LowerBorderColor.HasValue) {
+					xPenLower=new XPen(ListGridRows[rowI].LowerBorderColor.Value);
 				}
 			}
 			for(int i=0;i<ListGridColumns.Count;i++) {
@@ -2390,16 +2388,12 @@ namespace OpenDental.UI {
 					}
 				}
 				textRect=new XRect(p(horizontal + adjH),ToPoints(vertical),ToPoints(cellW),ToPoints(cellH));
-				if(ListGridRows[rowI].Cells[i].ColorText==Color.Empty) {
-					textBrush=new XSolidBrush(ListGridRows[rowI].ColorText);
-				}
-				else {
-					textBrush=new XSolidBrush(ListGridRows[rowI].Cells[i].ColorText);
-				}
-				if(ListGridRows[rowI].Cells[i].Bold== YN.Yes) {
+				textBrush=new XSolidBrush(ListGridRows[rowI].Cells[i].ForeColor ?? ListGridRows[rowI].ForeColor);
+				
+				if(ListGridRows[rowI].Cells[i].Bold== true) {
 					font= fontBold;
 				}
-				else if(ListGridRows[rowI].Cells[i].Bold== YN.No) {
+				else if(ListGridRows[rowI].Cells[i].Bold== false) {
 					font= fontNormal;
 				}
 				else {//unknown.  Use row bold
@@ -2440,7 +2434,7 @@ namespace OpenDental.UI {
 				else {
 					font=fontNormal;
 				}
-				textBrush=new XSolidBrush(ListGridRows[rowI].ColorText);
+				textBrush=new XSolidBrush(ListGridRows[rowI].ForeColor);
 				textRect=new XRect(
 					ToPoints(x-hScroll.Value+1+ListGridColumns[NoteSpanStart].State.XPos+1),
 					ToPoints(y-vScroll.Value+1+ListGridRows[rowI].State.HeightMain+1),
@@ -2521,8 +2515,8 @@ namespace OpenDental.UI {
 					g.DrawLine(new Pen(cOutline), x + (-hScroll.Value + ListGridColumns[i].State.XPos), y,
 						x+(-hScroll.Value + ListGridColumns[i].State.XPos), y + _heightHeader);
 				}
-				g.DrawString(ListGridColumns[i].Heading, _fontHeader, Brushes.Black,
-					(float)x + (-hScroll.Value + ListGridColumns[i].State.XPos + ListGridColumns[i].State.Width /2- g.MeasureString(ListGridColumns[i].Heading, _fontHeader).Width/2),
+				g.DrawString(ListGridColumns[i].HeaderText, _fontHeader, Brushes.Black,
+					(float)x + (-hScroll.Value + ListGridColumns[i].State.XPos + ListGridColumns[i].State.Width /2- g.MeasureString(ListGridColumns[i].HeaderText, _fontHeader).Width/2),
 					(float)y + 1);
 				if(SortedByColumnIdx == i) {
 					PointF p = new PointF(x + (-hScroll.Value+1+ ListGridColumns[i].State.XPos +6), y + (float)_heightHeader / 2f);
@@ -2578,7 +2572,7 @@ namespace OpenDental.UI {
 						ToPoints(x + (-hScroll.Value + ListGridColumns[i].State.XPos)), ToPoints(y + _heightHeader));
 				}
 				float xFloat=(float)x + (float)(-hScroll.Value + ListGridColumns[i].State.XPos + ListGridColumns[i].State.Width /2);//for some reason visual studio would not allow this statement within the DrawString Below.
-				DrawStringX(g, ListGridColumns[i].Heading, xHeaderFont, XBrushes.Black,new XRect(p(xFloat), ToPoints(y - 3),100,100), XStringAlignment.Center);
+				DrawStringX(g, ListGridColumns[i].HeaderText, xHeaderFont, XBrushes.Black,new XRect(p(xFloat), ToPoints(y - 3),100,100), XStringAlignment.Center);
 			}//end for columns.Count
 			//Outline the Title
 			XPen pen=new XPen(cOutline);
@@ -2768,7 +2762,7 @@ namespace OpenDental.UI {
 					textFormatFlags=TextFormatFlags.WordBreak;
 				}
 				for(int i=0;i<ListGridColumns.Count;i++){
-					Size sizeText=TextRenderer.MeasureText(ListGridColumns[i].Heading,_fontHeader,new Size(ListGridColumns[i].State.Width,int.MaxValue),textFormatFlags);
+					Size sizeText=TextRenderer.MeasureText(ListGridColumns[i].HeaderText,_fontHeader,new Size(ListGridColumns[i].State.Width,int.MaxValue),textFormatFlags);
 					int heightThisHeader=sizeText.Height-3;
 					if(heightThisHeader>_heightHeader){//96dpi
 						_heightHeader=heightThisHeader;
@@ -3347,7 +3341,7 @@ namespace OpenDental.UI {
 					String line = "";
 					for (int i = 0; i < ListGridColumns.Count; i++)
 					{
-						line += "\"" + ListGridColumns[i].Heading + "\"";
+						line += "\"" + ListGridColumns[i].HeaderText + "\"";
 						if (i < ListGridColumns.Count - 1)
 						{
 							line += "\t";
@@ -3387,7 +3381,7 @@ namespace OpenDental.UI {
 		public int GetIdealWidth(){
 			int width=0;
 			for(int i=0;i<ListGridColumns.Count;i++){
-				width+=ListGridColumns[i].ColWidth;
+				width+=ListGridColumns[i].ColumnWidth;
 			}
 			width=DpiScale(width);
 			width+=vScroll.Width+2;
@@ -3469,8 +3463,8 @@ namespace OpenDental.UI {
 				g.DrawLine(Pens.Black,xPos+ListGridColumns[i].State.XPos,yPos,xPos+ListGridColumns[i].State.XPos,yPos+_heightHeader);
 			}
 			for(int i=0;i<ListGridColumns.Count;i++){
-				g.DrawString(ListGridColumns[i].Heading,_fontHeader,Brushes.Black,
-					xPos+ListGridColumns[i].State.XPos + ListGridColumns[i].State.Width /2- g.MeasureString(ListGridColumns[i].Heading, _fontHeader).Width/2,
+				g.DrawString(ListGridColumns[i].HeaderText,_fontHeader,Brushes.Black,
+					xPos+ListGridColumns[i].State.XPos + ListGridColumns[i].State.Width /2- g.MeasureString(ListGridColumns[i].HeaderText, _fontHeader).Width/2,
 					yPos);
 			}
 			yPos+=_heightHeader;
@@ -3481,8 +3475,8 @@ namespace OpenDental.UI {
 				lowerPen=new Pen(_penColumnSeparator.Color);
 			}
 			else {
-				if(ListGridRows.Count>0 && ListGridRows[_printedRows].ColorLborder!=Color.Empty) {
-					lowerPen=new Pen(ListGridRows[_printedRows].ColorLborder);
+				if(ListGridRows.Count>0 && ListGridRows[_printedRows].LowerBorderColor.HasValue) {
+					lowerPen=new Pen(ListGridRows[_printedRows].LowerBorderColor.Value);
 				}
 			}
 			#region Rows
@@ -3543,16 +3537,12 @@ namespace OpenDental.UI {
 								_stringFormat.Alignment = StringAlignment.Far;
 								break;
 						}
-						if(ListGridRows[_printedRows].Cells[i].ColorText== Color.Empty) {
-							textBrush=new SolidBrush(ListGridRows[_printedRows].ColorText);
-						}
-						else {
-							textBrush=new SolidBrush(ListGridRows[_printedRows].Cells[i].ColorText);
-						}
-						if(ListGridRows[_printedRows].Cells[i].Bold== YN.Yes) {
+						textBrush=new SolidBrush(ListGridRows[_printedRows].Cells[i].ForeColor ?? ListGridRows[_printedRows].ForeColor);
+
+						if(ListGridRows[_printedRows].Cells[i].Bold== true) {
 							font= _fontCellBold;
 						}
-						else if(ListGridRows[_printedRows].Cells[i].Bold== YN.No) {
+						else if(ListGridRows[_printedRows].Cells[i].Bold== false) {
 							font= _fontCell;
 						}
 						else {//unknown.  Use row bold
@@ -3660,7 +3650,7 @@ namespace OpenDental.UI {
 						else {
 							font= _fontCell;
 						}
-						textBrush=new SolidBrush(ListGridRows[_printedRows].ColorText);
+						textBrush=new SolidBrush(ListGridRows[_printedRows].ForeColor);
 						textRect=new RectangleF(
 							xPos+ListGridColumns[NoteSpanStart].State.XPos +1,
 							yPos,
@@ -3725,7 +3715,7 @@ namespace OpenDental.UI {
 						else {
 							font= _fontCell;
 						}
-						textBrush=new SolidBrush(ListGridRows[_printedRows].ColorText);
+						textBrush=new SolidBrush(ListGridRows[_printedRows].ForeColor);
 						textRect=new RectangleF(
 							xPos+(float)ListGridColumns[NoteSpanStart].State.XPos +1,
 							yPos,
@@ -3916,7 +3906,7 @@ namespace OpenDental.UI {
 						sumDynamic+=ListGridColumns[i].DynamicWeight;
 					}
 					else{
-						ListGridColumns[i].State.Width=DpiScale(ListGridColumns[i].ColWidth);
+						ListGridColumns[i].State.Width=DpiScale(ListGridColumns[i].ColumnWidth);
 						widthFixedSum+=ListGridColumns[i].State.Width;
 					}
 				}
@@ -3935,7 +3925,7 @@ namespace OpenDental.UI {
 					}
 				}
 				else if(ListGridColumns.Count>0 && !IsForSheets) {//resize the last column automatically
-					int widthExtra=Width-2-widthFixedSum+DpiScale(ListGridColumns[ListGridColumns.Count-1].ColWidth);
+					int widthExtra=Width-2-widthFixedSum+DpiScale(ListGridColumns[ListGridColumns.Count-1].ColumnWidth);
 					if(vScroll.Visible){
 						widthExtra-=vScroll.Width;
 					}
@@ -3946,7 +3936,7 @@ namespace OpenDental.UI {
 			}
 			else{
 				for(int i=0;i<ListGridColumns.Count;i++){
-					ListGridColumns[i].State.Width=DpiScale(ListGridColumns[i].ColWidth);
+					ListGridColumns[i].State.Width=DpiScale(ListGridColumns[i].ColumnWidth);
 				}
 			}
 			//widths are all set
@@ -4015,7 +4005,7 @@ namespace OpenDental.UI {
 					//Determine if any cells in this row are bold.  If at least one cell is bold, then we need to calculate the row height using bold font.
 					//Bold only affects width, but if there is wrap, then width can affect height.
 					for(int j=0;j<ListGridRows[i].Cells.Count;j++) {
-						if(ListGridRows[i].Cells[j].Bold==YN.Yes) {//We don't care if a cell is underlined because it does not affect the size of the row
+						if(ListGridRows[i].Cells[j].Bold==true) {//We don't care if a cell is underlined because it does not affect the size of the row
 							font=fontBold;
 							break;
 						}
@@ -4364,20 +4354,6 @@ namespace OpenDental.UI {
 	}
 	#endregion Other Classes
 
-	#region enum GridSelectionMode
-	///<summary>Specifies the selection behavior of an ODGrid.</summary>
-	public enum GridSelectionMode {
-		///<summary>0-Nothing can be selected.</summary>
-		None,
-		///<summary>1-Only one row can be selected.</summary>
-		One,
-		///<summary>2-Only one cell can be selected.</summary>
-		OneCell,
-		///<summary>3-Multiple rows can be selected, and the user can use the SHIFT, CTRL, and arrow keys to make selections</summary>
-		MultiExtended,
-	}
-	#endregion enum GridSelectionMode
-
 	#region Delegates - Public
 	///<summary>Used for Cell specific events.</summary>
 	public delegate void ODGridClickEventHandler(object sender,ODGridClickEventArgs e);
@@ -4387,48 +4363,3 @@ namespace OpenDental.UI {
 	public delegate void ODGridPageChangeEventHandler(object sender, ODGridPageEventArgs e);
 	#endregion Delegates - Public
 }
-
-#region Grid Code Template
-/*This is a template of typical grid code which can be quickly pasted into any form.
- 
-		using OpenDental.UI;
-
-		private void FillGrid(){
-			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			GridColumn col=new GridColumn(Lan.g("Table...","colname"),100);
-			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("Table...","colname"),100,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn(Lan.g("Table...","colname"),100){Tag=.., etc};
-			col.Tag=...//an alternative to above line
-			gridMain.ListGridColumns.Add(col);
-			 
-			gridMain.ListGridRows.Clear();
-			GridRow row;
-			for(int i=0;i<_list.Count;i++){
-				row=new GridRow();
-				row.Cells.Add(_list[i].);
-				row.Cells.Add("");
-				row.Cells.Add(new GridCell(""){ColorText=.., etc});
-			  
-				row.ColorText=;
-				row.Tag=;
-				gridMain.ListGridRows.Add(row);
-			}
-			gridMain.EndUpdate();
-		}
-*/
-#endregion Grid Code Template
-
-//Some of the regular expressions used for find/replace:
-//[\t ]+this.\w+.HasAddButton ?= ?false;\r\n
-//[\t ]+this.\w+.TitleHeight ?= ?18;\r\n
-//[\t ]+this.\w+.HeaderHeight ?= ?15;\r\n
-//[\t ]+this.\w+.HasMultilineHeaders ?= ?false;\r\n
-//[\t ]+[\w\.]*\.HeaderFont ?= ?.*8\.5.*;\r\n
-//[\t ]+[\w\.]*\.TitleFont ?= ?.*10.*Bold.*;\r\n
-//[\t ]+this.\w+.ScrollValue ?= ?0;\r\n
-//[\t ]+[\w\.]*\.HasDropdowns ?= ?false;\r\n
-
-	//this.gridMain.HasDropDowns = false;

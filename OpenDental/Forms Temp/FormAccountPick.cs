@@ -186,10 +186,10 @@ namespace OpenDental{
 				}
 				if(i<listAccounts.Count-1//if not the last row
 					&& listAccounts[i].Type != listAccounts[i+1].Type){
-					row.ColorLborder=Color.Black;
+					row.LowerBorderColor=Color.Black;
 				}
 				row.Tag=listAccounts[i].Clone();
-				row.ColorBackG=listAccounts[i].Color;
+				row.BackColor=listAccounts[i].Color;
 				gridMain.ListGridRows.Add(row);
 			}
 			gridMain.EndUpdate();

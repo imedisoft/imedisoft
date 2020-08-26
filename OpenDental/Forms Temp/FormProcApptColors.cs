@@ -152,7 +152,7 @@ namespace OpenDental{
 			for(int i=0;i<_listProcApptColors.Count;i++) {
 				row=new GridRow();
 				row.Cells.Add(_listProcApptColors[i].CodeRange);
-				row.ColorText=_listProcApptColors[i].ColorText;
+				row.ForeColor=_listProcApptColors[i].ColorText;
 				gridMain.ListGridRows.Add(row);
 			}
 			gridMain.EndUpdate();

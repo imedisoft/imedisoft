@@ -616,8 +616,8 @@ namespace OpenDental{
 				row.Cells.Add(table.Rows[i]["field"].ToString());
 				row.Cells.Add(table.Rows[i]["value"].ToString());
 				if(table.Rows[i]["field"].ToString().EndsWith("Phone")  && Programs.GetCur(ProgramName.DentalTekSmartOfficePhone).Enabled) {
-					row.Cells[row.Cells.Count-1].ColorText=System.Drawing.Color.Blue;
-					row.Cells[row.Cells.Count-1].Underline=YN.Yes;
+					row.Cells[row.Cells.Count-1].ForeColor=System.Drawing.Color.Blue;
+					row.Cells[row.Cells.Count-1].Underline= true;
 				}
 				gridPatient.ListGridRows.Add(row);
 			}
@@ -696,7 +696,7 @@ namespace OpenDental{
 					row.Cells.Add(PIn.Date(_tableComms.Rows[i]["commDateTime"].ToString()).ToShortDateString());
 					row.Cells.Add(_tableComms.Rows[i]["Note"].ToString());
 					if(_tableComms.Rows[i]["CommType"].ToString()==Commlogs.GetTypeAuto(CommItemTypeAuto.APPT).ToString()){
-						row.ColorBackG=listMiscColorDefs[7].ItemColor;
+						row.BackColor=listMiscColorDefs[7].ItemColor;
 					}
 				}
 				else if(PIn.Long(_tableComms.Rows[i]["EmailMessageNum"].ToString())>0) {
@@ -1341,7 +1341,7 @@ namespace OpenDental{
 		private void gridPatient_CellClick(object sender,ODGridClickEventArgs e) {
 			GridCell gridCellCur=gridPatient.ListGridRows[e.Row].Cells[e.Col];
 			//Only grid cells with phone numbers are blue and underlined.
-			if(gridCellCur.ColorText==System.Drawing.Color.Blue && gridCellCur.Underline==YN.Yes && Programs.GetCur(ProgramName.DentalTekSmartOfficePhone).Enabled) {
+			if(gridCellCur.ForeColor==System.Drawing.Color.Blue && gridCellCur.Underline== true && Programs.GetCur(ProgramName.DentalTekSmartOfficePhone).Enabled) {
 				DentalTek.PlaceCall(gridCellCur.Text);
 			}
 		}
@@ -2088,7 +2088,7 @@ namespace OpenDental{
 				Provider prov=Providers.GetDeepCopy().First(x => x.ProvNum==proc.ProvNum);
 				Userod usr=Userods.GetUser(proc.UserNum);
 				GridRow row=new GridRow();
-				row.ColorLborder=System.Drawing.Color.Black;
+				row.LowerBorderColor=System.Drawing.Color.Black;
 				for(int f=0;f<fields.Count;f++) {
 					switch(fields[f].InternalName){
 						case "Date":
@@ -2140,30 +2140,30 @@ namespace OpenDental{
 				//Row text color.
 				switch(proc.ProcStatus) {
 					case ProcStat.TP:
-						row.ColorText=listProgNoteColorDefs[0].ItemColor;
+						row.ForeColor=listProgNoteColorDefs[0].ItemColor;
 						break;
 					case ProcStat.C:
-						row.ColorText=listProgNoteColorDefs[1].ItemColor;
+						row.ForeColor=listProgNoteColorDefs[1].ItemColor;
 						break;
 					case ProcStat.EC:
-						row.ColorText=listProgNoteColorDefs[2].ItemColor;
+						row.ForeColor=listProgNoteColorDefs[2].ItemColor;
 						break;
 					case ProcStat.EO:
-						row.ColorText=listProgNoteColorDefs[3].ItemColor;
+						row.ForeColor=listProgNoteColorDefs[3].ItemColor;
 						break;
 					case ProcStat.R:
-						row.ColorText=listProgNoteColorDefs[4].ItemColor;
+						row.ForeColor=listProgNoteColorDefs[4].ItemColor;
 						break;
 					case ProcStat.D:
-						row.ColorText=System.Drawing.Color.Black;
+						row.ForeColor=System.Drawing.Color.Black;
 						break;
 					case ProcStat.Cn:
-						row.ColorText=listProgNoteColorDefs[22].ItemColor;
+						row.ForeColor=listProgNoteColorDefs[22].ItemColor;
 						break;
 				}
-				row.ColorBackG=System.Drawing.Color.White;
+				row.BackColor=System.Drawing.Color.White;
 				if(proc.ProcDate.Date==DateTime.Today) {
-					row.ColorBackG=listMiscColorDefs[6].ItemColor;
+					row.BackColor=listMiscColorDefs[6].ItemColor;
 				}				
 				gridProg.ListGridRows.Add(row);
 			}

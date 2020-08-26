@@ -403,7 +403,7 @@ namespace OpenDental{
 						if((famt==0 && famt==JournalList[i].CreditAmt && famt==JournalList[i].DebitAmt)
 							|| (famt!=0 && (famt==JournalList[i].CreditAmt || famt==JournalList[i].DebitAmt))) 
 						{
-							row.ColorBackG=System.Drawing.Color.Yellow;
+							row.BackColor=System.Drawing.Color.Yellow;
 						}
 					}
 					catch {

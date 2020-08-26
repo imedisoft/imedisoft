@@ -81,13 +81,13 @@ namespace OpenDental {
 			GridColumn col;
 			col=new GridColumn("Date",70,HorizontalAlignment.Center);
 			gridMain.ListGridColumns.Add(col);
-			col=new GridColumn() { Heading="Provider", IsWidthDynamic=true };
+			col=new GridColumn() { HeaderText="Provider", IsWidthDynamic=true };
 			gridMain.ListGridColumns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
-				col=new GridColumn() { Heading="Clinic", IsWidthDynamic=true };
+				col=new GridColumn() { HeaderText="Clinic", IsWidthDynamic=true };
 				gridMain.ListGridColumns.Add(col);
 			}		 	 
-			col=new GridColumn() { Heading="Type", IsWidthDynamic=true };
+			col=new GridColumn() { HeaderText="Type", IsWidthDynamic=true };
 			gridMain.ListGridColumns.Add(col);
 			col=new GridColumn("Fee",70,HorizontalAlignment.Right);
 			gridMain.ListGridColumns.Add(col);
@@ -646,23 +646,23 @@ namespace OpenDental {
 					row.Cells.Add(cell);
 					//Fee;
 					cell=new GridCell(Proc.ProcFeeTotal.ToString("c"));
-					cell.ColorBackG=Color.LightYellow;
+					cell.BackColor=Color.LightYellow;
 					row.Cells.Add(cell);
 					//Rem Before
 					cell=new GridCell(RemBefore.ToString("c"));
-					cell.ColorBackG=Color.LightYellow;
+					cell.BackColor=Color.LightYellow;
 					row.Cells.Add(cell);
 					//Adj Amt
 					cell=new GridCell("");
-					cell.ColorBackG=Color.White;
+					cell.BackColor=Color.White;
 					row.Cells.Add(cell);
 					//Rem After
 					cell=new GridCell("");
-					cell.ColorBackG=Color.White;
+					cell.BackColor=Color.White;
 					row.Cells.Add(cell);
 				}
 				else if(IsUnattachedRowHeader()) {//The row header for unattached adjustments
-					row.ColorBackG=Color.LightYellow;
+					row.BackColor=Color.LightYellow;
 					//Date
 					cell=new GridCell("Unassigned");
 					row.Cells.Add(cell);
@@ -713,14 +713,14 @@ namespace OpenDental {
 					row.Cells.Add(cell);
 					//Adj Amt
 					cell=new GridCell(Math.Round(Adj.AdjAmt,2).ToString("c"));
-					cell.ColorBackG=Color.LightCyan;
+					cell.BackColor=Color.LightCyan;
 					row.Cells.Add(cell);
 					//Rem After
 					cell=new GridCell(Math.Round(RemAfter,2).ToString("c"));
 					if(Proc==null) {//Unassigned adj
 						cell=new GridCell();
 					}
-					cell.ColorBackG=Color.LightCyan;
+					cell.BackColor=Color.LightCyan;
 					row.Cells.Add(cell);
 				}
 				return row;

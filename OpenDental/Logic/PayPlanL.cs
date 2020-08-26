@@ -79,7 +79,7 @@ namespace OpenDental {
 				row.Cells.Add("");//due
 				row.Cells.Add("");//payment
 				if(!isDynamic) {
-					row.ColorText=Defs.GetDefByExactName(DefCat.AccountColors,"Adjustment").ItemColor;
+					row.ForeColor=Defs.GetDefByExactName(DefCat.AccountColors,"Adjustment").ItemColor;
 					row.Cells.Add((payPlanCharge.Principal).ToString("n")); //adjustment
 				}
 			}
@@ -95,7 +95,7 @@ namespace OpenDental {
 			}
 			row.Cells.Add("");//8 Balance (filled later)
 			if(isDynamic && payPlanCharge.PayPlanChargeNum==0) {
-				row.ColorText=System.Drawing.Color.Gray;//it isn't an actual charge yet, it hasn't come due and been inserted into the database. 
+				row.ForeColor=System.Drawing.Color.Gray;//it isn't an actual charge yet, it hasn't come due and been inserted into the database. 
 			}
 			row.Tag=payPlanCharge;
 			return row;
@@ -123,7 +123,7 @@ namespace OpenDental {
 			}
 			row.Cells.Add("");//8 Balance (filled later)
 			row.Tag=paySplit;
-			row.ColorText=Defs.GetDefByExactName(DefCat.AccountColors,"Payment").ItemColor;
+			row.ForeColor=Defs.GetDefByExactName(DefCat.AccountColors,"Payment").ItemColor;
 			return row;
 		}
 
@@ -157,7 +157,7 @@ namespace OpenDental {
 			}
 			row.Cells.Add("");//8 Balance (filled later)
 			row.Tag=rowBundleClaimProc;
-			row.ColorText=Defs.GetDefByExactName(DefCat.AccountColors,"Insurance Payment").ItemColor;
+			row.ForeColor=Defs.GetDefByExactName(DefCat.AccountColors,"Insurance Payment").ItemColor;
 			return row;
 		}
 

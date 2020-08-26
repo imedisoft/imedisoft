@@ -2820,7 +2820,7 @@ namespace OpenDental {
 			}
 			row.Cells.Add(dateStr+objDesc+reminderTask.Description);
 			//No need to do any text detection for triage priorities, we'll just use the task priority colors.
-			row.ColorBackG=Defs.GetColor(DefCat.TaskPriorities,reminderTask.PriorityId);
+			row.BackColor=Defs.GetColor(DefCat.TaskPriorities,reminderTask.PriorityId);
 		}
 		#endregion Methods - Public Other
 
@@ -3131,7 +3131,7 @@ namespace OpenDental {
 				row.Cells.Add(waitTime.ToString("H:mm:ss"));
 				row.Bold=false;
 				if(waitingRoomAlertTime>0 && waitingRoomAlertTime<=waitTime.Minute+(waitTime.Hour*60)) {
-					row.ColorText=waitingRoomAlertColor;
+					row.ForeColor=waitingRoomAlertColor;
 					row.Bold=true;
 				}
 				gridWaiting.ListGridRows.Add(row);

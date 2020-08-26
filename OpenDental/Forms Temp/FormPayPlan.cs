@@ -1460,8 +1460,8 @@ namespace OpenDental{
 			}
 			gridCharges.EndUpdate();
 			if(gridCharges.ListGridRows.Count>0 && totalsRowIndex != -1) {
-				gridCharges.ListGridRows[totalsRowIndex].ColorLborder=Color.Black;
-				gridCharges.ListGridRows[totalsRowIndex].Cells[6].Bold=YN.Yes;
+				gridCharges.ListGridRows[totalsRowIndex].LowerBorderColor=Color.Black;
+				gridCharges.ListGridRows[totalsRowIndex].Cells[6].Bold= true;
 			}
 			textAccumulatedDue.Text=PayPlans.GetAccumDue(_payPlanCur.PayPlanNum,_listPayPlanCharges).ToString("f");
 			textPrincPaid.Text=PayPlans.GetPrincPaid(AmtPaid,_payPlanCur.PayPlanNum,_listPayPlanCharges).ToString("f");

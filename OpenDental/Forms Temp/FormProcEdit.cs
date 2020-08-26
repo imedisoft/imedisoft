@@ -1384,7 +1384,7 @@ namespace OpenDental {
 				row=new GridRow();
 				row.Cells.Add(((PaySplit)_paySplitsForProc[i]).DatePay.ToShortDateString());
 				row.Cells.Add(((PaySplit)_paySplitsForProc[i]).SplitAmt.ToString("F"));
-				row.Cells[row.Cells.Count-1].Bold=YN.Yes;
+				row.Cells[row.Cells.Count-1].Bold= true;
 				PaymentCur=Payments.GetFromList(((PaySplit)_paySplitsForProc[i]).PayNum,_listPaymentsForProc);
 				row.Cells.Add(PaymentCur.PayAmt.ToString("F"));
 				row.Cells.Add(PaymentCur.PayNote);
@@ -1422,7 +1422,7 @@ namespace OpenDental {
 				Adjustment adjustment=(Adjustment)_adjustmentsForProc[i];
 				row.Cells.Add(adjustment.AdjDate.ToShortDateString());
 				row.Cells.Add(adjustment.AdjAmt.ToString("F"));
-				row.Cells[row.Cells.Count-1].Bold=YN.Yes;
+				row.Cells[row.Cells.Count-1].Bold= true;
 				row.Cells.Add(Defs.GetName(DefCat.AdjTypes,adjustment.AdjType));
 				row.Cells.Add(adjustment.AdjNote);
 				gridAdj.ListGridRows.Add(row);

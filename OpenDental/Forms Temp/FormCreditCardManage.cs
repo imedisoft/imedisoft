@@ -57,7 +57,7 @@ namespace OpenDental {
 					gridMain.ListGridColumns.Add(new GridColumn("PayConnect\r\nPortal",85,HorizontalAlignment.Center));
 				}
 			}
-			if(gridMain.ListGridColumns.Sum(x => x.ColWidth) > gridMain.Width) {
+			if(gridMain.ListGridColumns.Sum(x => x.ColumnWidth) > gridMain.Width) {
 				gridMain.HScrollVisible=true;
 			}
 			gridMain.ListGridRows.Clear();

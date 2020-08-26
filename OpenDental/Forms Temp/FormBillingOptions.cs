@@ -1008,7 +1008,7 @@ namespace OpenDental{
 					row.Cells.Add("any");
 				}
 				row.Cells.Add(dunnCur.DunMessage);
-				row.Cells.Add(new GridCell(dunnCur.MessageBold) { Bold=YN.Yes,ColorText=Color.DarkRed });
+				row.Cells.Add(new GridCell(dunnCur.MessageBold) { Bold= true, ForeColor=Color.DarkRed });
 				if(dunnCur.EmailBody!="" || dunnCur.EmailSubject!="") {
 					row.Cells.Add("X");
 				}

@@ -776,8 +776,8 @@ namespace OpenDental
 			Dictionary<string,Tuple<int,int>> retval=new Dictionary<string,Tuple<int,int>>();
 			int xPos=grid.Location.X-hScrollValue;
 			foreach(GridColumn column in grid.ListGridColumns) {
-				retval[column.Heading]=Tuple.Create(xPos+1,column.ColWidth+1);//+1 because the textbox lines seem to be slightly thinner than the grid column lines
-				xPos+=column.ColWidth;
+				retval[column.HeaderText]=Tuple.Create(xPos+1,column.ColumnWidth+1);//+1 because the textbox lines seem to be slightly thinner than the grid column lines
+				xPos+=column.ColumnWidth;
 			}
 			return retval;
 		}
@@ -817,13 +817,13 @@ namespace OpenDental
 			}
 			//this form initially set to the max allowed (by OD) form size 1246, which is also the minimum size for this form.  If the user resizes the form
 			//to be larger, increase each column width by the same ratio to spread out the additional real estate
-			int widthColsAndScroll=gridUnsent.ListGridColumns.Sum(x => x.ColWidth)+20;//+20 for vertical scroll bar
+			int widthColsAndScroll=gridUnsent.ListGridColumns.Sum(x => x.ColumnWidth)+20;//+20 for vertical scroll bar
 			//widthColsAndScroll is width of columns as set in the display fields, i.e. haven't grown or shrunk due to form resizing so won't be shrunk to
 			//less than the sizes set in display fields, only grown from there.  Thus the display field sizes are basically a minimum size.
 			if(widthColsAndScroll<gridUnsent.Width) {
-				gridUnsent.ListGridColumns.ToList().ForEach(x => x.ColWidth=(int)Math.Round((float)x.ColWidth*gridUnsent.Width/widthColsAndScroll,MidpointRounding.AwayFromZero));
+				gridUnsent.ListGridColumns.ToList().ForEach(x => x.ColumnWidth=(int)Math.Round((float)x.ColumnWidth*gridUnsent.Width/widthColsAndScroll,MidpointRounding.AwayFromZero));
 				//adjust the last col width to take any remaining pixels so that the cols take the full width of the grid (to account for rounding above)
-				gridUnsent.ListGridColumns[gridUnsent.ListGridColumns.Count-1].ColWidth-=gridUnsent.ListGridColumns.Sum(x => x.ColWidth)+20-gridUnsent.Width;
+				gridUnsent.ListGridColumns[gridUnsent.ListGridColumns.Count-1].ColumnWidth-=gridUnsent.ListGridColumns.Sum(x => x.ColumnWidth)+20-gridUnsent.Width;
 			}
 			#endregion Set Grid Title and Columns
 			#region Fill Grid Rows
@@ -929,7 +929,7 @@ namespace OpenDental
 					|| new[] { patAgeCur.Address,patAgeCur.City,patAgeCur.State,patAgeCur.Zip }.Any(x => string.IsNullOrWhiteSpace(x)))//missing address information
 				{
 					//color row light red/pink, using cell color so selecting row still shows color
-					row.Cells.OfType<GridCell>().ToList().ForEach(x => x.ColorBackG=Color.FromArgb(255,255,230,234));
+					row.Cells.OfType<GridCell>().ToList().ForEach(x => x.BackColor=Color.FromArgb(255,255,230,234));
 				}
 				row.Tag=i;//tag the row with the index in the class-wide list of all unsent PatAgings
 				gridUnsent.ListGridRows.Add(row);
@@ -1626,12 +1626,12 @@ namespace OpenDental
 			}
 			//this form initially set to the max allowed (by OD) form size 1246, which is also the minimum size for this form.  If the user resizes the form
 			//to be larger, increase each column width by the same ratio to spread out the additional real estate
-			int widthColsAndScroll=gridSent.ListGridColumns.Sum(x => x.ColWidth)+20;//+20 for vertical scroll bar
+			int widthColsAndScroll=gridSent.ListGridColumns.Sum(x => x.ColumnWidth)+20;//+20 for vertical scroll bar
 			if(widthColsAndScroll<gridSent.Width) {
 				//don't grow/shrink column widths until all columns are visible, i.e no horizontal scroll bar active, all columns fully visible
-				gridSent.ListGridColumns.ToList().ForEach(x => x.ColWidth=(int)Math.Round((float)x.ColWidth*gridSent.Width/widthColsAndScroll,MidpointRounding.AwayFromZero));
+				gridSent.ListGridColumns.ToList().ForEach(x => x.ColumnWidth=(int)Math.Round((float)x.ColumnWidth*gridSent.Width/widthColsAndScroll,MidpointRounding.AwayFromZero));
 				//increase the last col width to be the full width of the grid (to account for rounding away from zero above)
-				gridSent.ListGridColumns[gridSent.ListGridColumns.Count-1].ColWidth-=gridSent.ListGridColumns.Sum(x => x.ColWidth)+20-gridSent.Width;
+				gridSent.ListGridColumns[gridSent.ListGridColumns.Count-1].ColumnWidth-=gridSent.ListGridColumns.Sum(x => x.ColumnWidth)+20-gridSent.Width;
 			}
 			#endregion Set Grid Title and Columns
 			#region Fill Grid Rows
@@ -2120,13 +2120,13 @@ namespace OpenDental
 			}
 			//this form initially set to the max allowed (by OD) form size 1246, which is also the minimum size for this form.  If the user resizes the form
 			//to be larger, increase each column width by the same ratio to spread out the additional real estate
-			int widthColsAndScroll=gridExcluded.ListGridColumns.Sum(x => x.ColWidth)+20;//+20 for vertical scroll bar
+			int widthColsAndScroll=gridExcluded.ListGridColumns.Sum(x => x.ColumnWidth)+20;//+20 for vertical scroll bar
 			//widthColsAndScroll is width of columns as set in the display fields, i.e. haven't grown or shrunk due to form resizing so won't be shrunk to
 			//less than the sizes set in display fields, only grown from there.  Thus the display field sizes are basically a minimum size.
 			if(widthColsAndScroll<gridExcluded.Width) {
-				gridExcluded.ListGridColumns.ToList().ForEach(x => x.ColWidth=(int)Math.Round((float)x.ColWidth*gridExcluded.Width/widthColsAndScroll,MidpointRounding.AwayFromZero));
+				gridExcluded.ListGridColumns.ToList().ForEach(x => x.ColumnWidth=(int)Math.Round((float)x.ColumnWidth*gridExcluded.Width/widthColsAndScroll,MidpointRounding.AwayFromZero));
 				//adjust the last col width to take any remaining pixels so that the cols take the full width of the grid (to account for rounding above)
-				gridExcluded.ListGridColumns[gridExcluded.ListGridColumns.Count-1].ColWidth-=gridExcluded.ListGridColumns.Sum(x => x.ColWidth)+20-gridExcluded.Width;
+				gridExcluded.ListGridColumns[gridExcluded.ListGridColumns.Count-1].ColumnWidth-=gridExcluded.ListGridColumns.Sum(x => x.ColumnWidth)+20-gridExcluded.Width;
 			}
 			#endregion Set Grid Title and Columns
 			#region Fill Grid Rows
@@ -2232,7 +2232,7 @@ namespace OpenDental
 					|| new[] { patAgeCur.Address,patAgeCur.City,patAgeCur.State,patAgeCur.Zip }.Any(x => string.IsNullOrWhiteSpace(x)))//missing address information
 				{
 					//color row light red/pink, using cell color so selecting row still shows color
-					row.Cells.OfType<GridCell>().ToList().ForEach(x => x.ColorBackG=Color.FromArgb(255,255,230,234));
+					row.Cells.OfType<GridCell>().ToList().ForEach(x => x.BackColor=Color.FromArgb(255,255,230,234));
 				}
 				row.Tag=i;//tag the row with the index in the class-wide list of all excluded PatAgings
 				gridExcluded.ListGridRows.Add(row);

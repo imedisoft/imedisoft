@@ -154,7 +154,7 @@ namespace OpenDental {
 			GC.Collect();
 			gridInsPlanFiles.BeginUpdate();
 			if(selectedIndex >= 0) {
-				gridInsPlanFiles.ListGridRows[selectedIndex].ColorBackG=Color.LightYellow;
+				gridInsPlanFiles.ListGridRows[selectedIndex].BackColor=Color.LightYellow;
 			}
 			gridInsPlanFiles.EndUpdate();//Also invalidates grid.  Update required in case there was large error text.
 			ShowStatus("");

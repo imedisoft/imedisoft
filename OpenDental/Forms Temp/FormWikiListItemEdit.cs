@@ -60,10 +60,10 @@ namespace OpenDental {
 				+15//gridMain.HeaderHeight
 				+18//gridMain.TitleHeight
 				+1;
-			drawLoc.X=gridMain.ListGridColumns[0].ColWidth+gridMain.Location.X+1;
+			drawLoc.X=gridMain.ListGridColumns[0].ColumnWidth+gridMain.Location.X+1;
 			comboEntry.Location=drawLoc;
 			//Get the size to set the combo box to cover the item
-			comboEntry.Width=gridMain.ListGridColumns[1].ColWidth+1;
+			comboEntry.Width=gridMain.ListGridColumns[1].ColumnWidth+1;
 			comboEntry.Height=(gridMain.ListGridRows[e.Row].State.HeightMain-1);
 			comboEntry.Visible=true;
 			comboEntry.Focus();

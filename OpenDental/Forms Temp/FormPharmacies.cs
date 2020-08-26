@@ -199,8 +199,8 @@ namespace OpenDental{
 				row.Cells.Add(pharm.StoreName);
 				row.Cells.Add(pharm.Phone);
 				if(Programs.GetCur(ProgramName.DentalTekSmartOfficePhone).Enabled) {
-					row.Cells[row.Cells.Count-1].ColorText=Color.Blue;
-					row.Cells[row.Cells.Count-1].Underline=YN.Yes;
+					row.Cells[row.Cells.Count-1].ForeColor=Color.Blue;
+					row.Cells[row.Cells.Count-1].Underline= true;
 				}
 				row.Cells.Add(pharm.Fax);
 				txt=pharm.Address;
@@ -249,7 +249,7 @@ namespace OpenDental{
 		private void gridMain_CellClick(object sender,ODGridClickEventArgs e) {
 			GridCell gridCellCur=gridMain.ListGridRows[e.Row].Cells[e.Col];
 			//Only grid cells with phone numbers are blue and underlined.
-			if(gridCellCur.ColorText==System.Drawing.Color.Blue && gridCellCur.Underline==YN.Yes && Programs.GetCur(ProgramName.DentalTekSmartOfficePhone).Enabled) {
+			if(gridCellCur.ForeColor==System.Drawing.Color.Blue && gridCellCur.Underline== true && Programs.GetCur(ProgramName.DentalTekSmartOfficePhone).Enabled) {
 				DentalTek.PlaceCall(gridCellCur.Text);
 			}
 		}

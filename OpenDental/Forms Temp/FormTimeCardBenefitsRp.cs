@@ -182,7 +182,7 @@ namespace OpenDental{
 						&& x.TimeEntry.Year==_monthT2.Year
 						&& x.TimeEntry.Month==_monthT2.Month)
 						.Sum(x => x.RegHours.Ticks)));
-				row.Cells.Add(new GridCell(string.Format("{0:0.00}",Math.Round(ts2.TotalHours,2,MidpointRounding.AwayFromZero))) { ColorBackG=(ts2.TotalHours<125 ? lightRed : Color.Empty) });
+				row.Cells.Add(new GridCell(string.Format("{0:0.00}",Math.Round(ts2.TotalHours,2,MidpointRounding.AwayFromZero))) { BackColor=(ts2.TotalHours<125 ? lightRed : Color.Empty) });
 				//Month T-1
 				TimeSpan ts1 = TimeSpan.FromTicks(listClockEventsAll
 					.FindAll(x => x.EmployeeNum==empCur.EmployeeNum
@@ -195,7 +195,7 @@ namespace OpenDental{
 						&& x.TimeEntry.Month==_monthT1.Month)
 						.Select(x => x.RegHours)
 						.Sum(x => x.Ticks)));
-				row.Cells.Add(new GridCell(string.Format("{0:0.00}",Math.Round(ts1.TotalHours,2,MidpointRounding.AwayFromZero))) { ColorBackG=(ts1.TotalHours<125 ? lightRed : Color.Empty) });
+				row.Cells.Add(new GridCell(string.Format("{0:0.00}",Math.Round(ts1.TotalHours,2,MidpointRounding.AwayFromZero))) { BackColor=(ts1.TotalHours<125 ? lightRed : Color.Empty) });
 				//Month T-0
 				TimeSpan ts0 = TimeSpan.FromTicks(listClockEventsAll
 					.FindAll(x => x.EmployeeNum==empCur.EmployeeNum
@@ -209,7 +209,7 @@ namespace OpenDental{
 						.Select(x => x.RegHours)
 						.Sum(x => x.Ticks)));
 				if(!checkIgnore.Checked) {
-					row.Cells.Add(new GridCell(string.Format("{0:0.00}",Math.Round(ts0.TotalHours,2,MidpointRounding.AwayFromZero))) { ColorBackG=(ts0.TotalHours<125 ? lightRed : Color.Empty) });
+					row.Cells.Add(new GridCell(string.Format("{0:0.00}",Math.Round(ts0.TotalHours,2,MidpointRounding.AwayFromZero))) { BackColor=(ts0.TotalHours<125 ? lightRed : Color.Empty) });
 				}
 				//filter out rows that should not be displaying. Rows should not display only when the most recent month was less than 125 hours, regardless of status of previous months
 				if(!checkShowAll.Checked) {
@@ -290,7 +290,7 @@ namespace OpenDental{
 
 		private void butExportGrid_Click(object sender,EventArgs e) {
 			StringBuilder sb=new StringBuilder();
-			sb.AppendLine(string.Join(",",gridMain.ListGridColumns.OfType<GridColumn>().Select(x => x.Heading)));
+			sb.AppendLine(string.Join(",",gridMain.ListGridColumns.OfType<GridColumn>().Select(x => x.HeaderText)));
 			gridMain.ListGridRows.OfType<GridRow>().ToList()
 				.ForEach(row => sb.AppendLine(string.Join(",",row.Cells.Select(cell => cell.Text.Replace(',','-').Replace('\t',',')))));
 

@@ -471,7 +471,7 @@ namespace OpenDental {
 		private void butOK_Click(object sender,EventArgs e) {
 			//PumpGridIntoTable();
 			for(int h=0;h<gridMain.ListGridColumns.Count;h++) {//loops through every header in the main grid
-				string s=gridMain.ListGridColumns[h].Heading.ToString();
+				string s=gridMain.ListGridColumns[h].HeaderText.ToString();
 				s=s.Replace("&","&amp;");
 				s=s.Replace("&amp;<","&lt;");//because "&" was changed to "&amp;" in the line above.
 				s=s.Replace("&amp;>","&gt;");//because "&" was changed to "&amp;" in the line above.

@@ -41,7 +41,7 @@ namespace Imedisoft.Forms
 			{
 				var gridRow = new GridRow();
 
-				gridRow.ColorBackG = program.Enabled ? Color.FromArgb(230, 255, 238) : gridRow.ColorBackG;
+				gridRow.BackColor = program.Enabled ? Color.FromArgb(230, 255, 238) : gridRow.BackColor;
 				gridRow.Cells.Add(program.Enabled ? "X" : "");
 				gridRow.Cells.Add(program.Description);
 				gridRow.Tag = program;

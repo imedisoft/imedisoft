@@ -340,9 +340,9 @@ namespace OpenDental{
 				if(i<table.Rows.Count-1//if not the last row
 					&& table.Rows[i]["type"].ToString() != table.Rows[i+1]["type"].ToString())
 				{
-					row.ColorLborder=Color.Black;
+					row.LowerBorderColor=Color.Black;
 				}
-				row.ColorBackG=Color.FromArgb(PIn.Int(table.Rows[i]["color"].ToString()));
+				row.BackColor=Color.FromArgb(PIn.Int(table.Rows[i]["color"].ToString()));
 				gridMain.ListGridRows.Add(row);
 			}
 			/*for(int i=0;i<Accounts.ListLong.Length;i++){

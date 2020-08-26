@@ -63,37 +63,37 @@ namespace OpenDental.User_Controls.SetupWizard {
 				row = new GridRow();
 				row.Cells.Add(clinCur.Description);
 				if(!clinCur.IsHidden && string.IsNullOrEmpty(clinCur.Description)) {
-					row.Cells[row.Cells.Count-1].ColorBackG=needsAttnCol;
+					row.Cells[row.Cells.Count-1].BackColor=needsAttnCol;
 					IsAllComplete=false;
 				}
 				row.Cells.Add(clinCur.Abbr);
 				if(!clinCur.IsHidden && string.IsNullOrEmpty(clinCur.Abbr)) {
-					row.Cells[row.Cells.Count-1].ColorBackG=needsAttnCol;
+					row.Cells[row.Cells.Count-1].BackColor=needsAttnCol;
 					IsAllComplete=false;
 				}
 				row.Cells.Add(TelephoneNumbers.FormatNumbersExactTen(clinCur.Phone));
 				if(!clinCur.IsHidden && string.IsNullOrEmpty(clinCur.Phone)) {
-					row.Cells[row.Cells.Count-1].ColorBackG=needsAttnCol;
+					row.Cells[row.Cells.Count-1].BackColor=needsAttnCol;
 					IsAllComplete=false;
 				}
 				row.Cells.Add(clinCur.Address);
 				if(!clinCur.IsHidden && string.IsNullOrEmpty(clinCur.Address)) {
-					row.Cells[row.Cells.Count-1].ColorBackG=needsAttnCol;
+					row.Cells[row.Cells.Count-1].BackColor=needsAttnCol;
 					IsAllComplete=false;
 				}
 				row.Cells.Add(clinCur.City);
 				if(!clinCur.IsHidden && string.IsNullOrEmpty(clinCur.City)) {
-					row.Cells[row.Cells.Count-1].ColorBackG=needsAttnCol;
+					row.Cells[row.Cells.Count-1].BackColor=needsAttnCol;
 					IsAllComplete=false;
 				}
 				row.Cells.Add(clinCur.State);
 				if(!clinCur.IsHidden && string.IsNullOrEmpty(clinCur.State)) {
-					row.Cells[row.Cells.Count-1].ColorBackG=needsAttnCol;
+					row.Cells[row.Cells.Count-1].BackColor=needsAttnCol;
 					IsAllComplete=false;
 				}
 				row.Cells.Add(clinCur.Zip);
 				if(!clinCur.IsHidden && string.IsNullOrEmpty(clinCur.Zip)) {
-					row.Cells[row.Cells.Count-1].ColorBackG=needsAttnCol;
+					row.Cells[row.Cells.Count-1].BackColor=needsAttnCol;
 					IsAllComplete=false;
 				}
 				row.Cells.Add(Providers.GetAbbr(clinCur.DefaultProv));

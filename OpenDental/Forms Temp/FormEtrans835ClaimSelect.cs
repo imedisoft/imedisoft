@@ -117,7 +117,7 @@ namespace OpenDental {
 			int lastHighlightIndex=0;
 			gridClaims.BeginUpdate();
 			for(int i=0;i<gridClaims.ListGridRows.Count;i++) {
-				gridClaims.ListGridRows[i].ColorText=Color.Black;  //reset row highlighting
+				gridClaims.ListGridRows[i].ForeColor=Color.Black;  //reset row highlighting
 				gridClaims.ListGridRows[i].Bold=false;  //reset row highlighting
 				Claim claim=(Claim)gridClaims.ListGridRows[i].Tag;
 				YN isFeeMatch=YN.No;  //If fee matches then yes, if fee doesnt match then no, if no fee entered then unknown
@@ -156,7 +156,7 @@ namespace OpenDental {
 				}
 				if(isBasicMatch && isPlanMatch) {
 					//Highlight row
-					gridClaims.ListGridRows[i].ColorText=Color.Red;
+					gridClaims.ListGridRows[i].ForeColor=Color.Red;
 					gridClaims.ListGridRows[i].Bold=true;
 					rowsHighlightCount++;
 					lastHighlightIndex=i;
@@ -234,7 +234,7 @@ namespace OpenDental {
 				row.Cells.Add("N");
 				row.Cells.Add(proc.ProcCodeBilled);
 				row.Cells.Add(POut.Decimal(proc.ProcFee));
-				row.ColorText=Color.Red;
+				row.ForeColor=Color.Red;
 				row.Bold=true;
 				gridClaimDetails.ListGridRows.Add(row);
 			}
@@ -259,7 +259,7 @@ namespace OpenDental {
 				row.Cells.Add("Y");
 				row.Cells.Add(proc.ProcCodeBilled);
 				row.Cells.Add(POut.Decimal(proc.ProcFee));
-				row.ColorText=Color.Green;
+				row.ForeColor=Color.Green;
 				row.Bold=true;
 				gridClaimDetails.ListGridRows.Add(row);
 			}

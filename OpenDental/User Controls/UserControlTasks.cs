@@ -561,7 +561,7 @@ namespace OpenDental
 					}
 				}
 
-				gridRow.ColorBackG = Defs.GetColor(DefCat.TaskPriorities, task.PriorityId);
+				gridRow.BackColor = Defs.GetColor(DefCat.TaskPriorities, task.PriorityId);
 				gridRow.Tag = task;
 
 				tasksGrid.ListGridRows.Add(gridRow);

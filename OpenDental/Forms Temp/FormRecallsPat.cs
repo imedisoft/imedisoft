@@ -88,8 +88,8 @@ namespace OpenDental {
 				else{
 					cell=new GridCell(RecallList[i].DateDue.ToShortDateString());
 					if(RecallList[i].DateDue<DateTime.Today){
-						cell.Bold=YN.Yes;
-						cell.ColorText=Color.Firebrick;
+						cell.Bold= true;
+						cell.ForeColor=Color.Firebrick;
 					}
 					row.Cells.Add(cell);
 				}

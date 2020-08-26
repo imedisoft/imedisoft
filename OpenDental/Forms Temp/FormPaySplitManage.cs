@@ -139,7 +139,7 @@ namespace OpenDental {
 				}
 				row.Cells.Add(type);
 				if(row.Cells[row.Cells.Count-1].Text=="Unallocated") {
-					row.Cells[row.Cells.Count-1].ColorText=Color.Red;
+					row.Cells[row.Cells.Count-1].ForeColor=Color.Red;
 				}
 				row.Cells.Add(ListSplitsCur[i].SplitAmt.ToString("f"));//Amount
 				gridSplits.ListGridRows.Add(row);

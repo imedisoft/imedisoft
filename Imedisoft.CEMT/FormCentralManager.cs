@@ -531,24 +531,24 @@ namespace CentralManager
 				{
 					case "":
 						gridStatusCell.Text = "Not Checked";
-						gridStatusCell.ColorText = Color.DarkGoldenrod;
+						gridStatusCell.ForeColor = Color.DarkGoldenrod;
 						break;
 
 					case "OK":
 						gridStatusCell.Text = connection.ConnectionStatus;
-						gridStatusCell.ColorText = Color.Green;
-						gridStatusCell.Bold = YN.Yes;
+						gridStatusCell.ForeColor = Color.Green;
+						gridStatusCell.Bold = true;
 						break;
 
 					case "OFFLINE":
 						gridStatusCell.Text = connection.ConnectionStatus;
 						gridRow.Bold = true;
-						gridRow.ColorText = Color.Red;
+						gridRow.ForeColor = Color.Red;
 						break;
 
 					default:
 						gridStatusCell.Text = connection.ConnectionStatus;
-						gridStatusCell.ColorText = Color.Red;
+						gridStatusCell.ForeColor = Color.Red;
 						break;
 				}
 

@@ -316,7 +316,7 @@ namespace OpenDental {
 				row.Cells.Add(refCur.PatNum>0?"X":"");
 				row.Cells.Add(refCur.Note);
 				if(refCur.IsHidden) {
-					row.ColorText=Color.Gray;
+					row.ForeColor=Color.Gray;
 				}
 				row.Tag=refCur;
 				gridMain.ListGridRows.Add(row);

@@ -52,7 +52,7 @@ namespace OpenDental {
 				row.Cells.Add(patField.FieldName);
 				row.Cells.Add(patField.FieldValue);
 				row.Tag=patField;
-				row.ColorText=Color.DarkSlateGray;
+				row.ForeColor=Color.DarkSlateGray;
 				grid.ListGridRows.Add(row);
 			}
 		}

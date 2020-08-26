@@ -82,7 +82,7 @@ namespace OpenDental {
 			bool isScrollSet=false;
 			for(int i=0;i<_table.Rows.Count;i++) {
 				if(radioButHighlight.Checked) {
-					gridMain.ListGridRows[i].ColorBackG=Color.White;
+					gridMain.ListGridRows[i].BackColor=Color.White;
 				}
 				string[] listCellVals=_table.Rows[i].ItemArray.Select(x => x.ToString()).ToArray();
 				if((_arraySearchColIdxs.IsNullOrEmpty()//not advanced search, so compare to all cell values
@@ -97,7 +97,7 @@ namespace OpenDental {
 					gridMain.ListGridRows.Add(new GridRow(listCellVals) { Tag=i });
 				}
 				else {
-					gridMain.ListGridRows[i].ColorBackG=Color.Yellow;
+					gridMain.ListGridRows[i].BackColor=Color.Yellow;
 					if(!isScrollSet) {
 						gridMain.ScrollToIndex(i);
 						isScrollSet=true;
@@ -209,7 +209,7 @@ namespace OpenDental {
 			FillGrid();
 			for(int i = 0;i<gridMain.ListGridRows.Count;i++) {
 				if(gridMain.ListGridRows[i].Cells[0].Text==itemNum.ToString()) {
-					gridMain.ListGridRows[i].ColorBackG=Color.FromArgb(255,255,128);
+					gridMain.ListGridRows[i].BackColor=Color.FromArgb(255,255,128);
 					gridMain.ScrollToIndex(i);
 				}
 			}

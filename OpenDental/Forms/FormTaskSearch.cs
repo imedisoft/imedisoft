@@ -87,8 +87,8 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(searchResult.DateAdded);
 				gridRow.Cells.Add(searchResult.DateCompleted);
 				gridRow.Cells.Add(searchResult.Description);
-				gridRow.ColorLborder = Color.Black;
-				gridRow.ColorText = Color.FromArgb(searchResult.Color);
+				gridRow.LowerBorderColor = Color.Black;
+				gridRow.ForeColor = Color.FromArgb(searchResult.Color);
 				gridRow.Tag = searchResult;
 
 				tasksGrid.ListGridRows.Add(gridRow);

@@ -494,7 +494,7 @@ namespace OpenDental{
 				}
 				//Get the hash for the audit log entry from the database and rehash to compare
 				if(logCur.LogHash!=SecurityLogHashes.GetHashString(logCur)) {
-					row.ColorText=Color.Red; //Bad hash or no hash entry at all.  This prevents users from deleting the entire hash table to make the audit trail look valid and encrypted.
+					row.ForeColor=Color.Red; //Bad hash or no hash entry at all.  This prevents users from deleting the entire hash table to make the audit trail look valid and encrypted.
 					//historical entries will show as red.
 				}
 				grid.ListGridRows.Add(row);

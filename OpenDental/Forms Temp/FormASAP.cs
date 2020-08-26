@@ -913,7 +913,7 @@ namespace OpenDental {
 					gridAppts.ListGridColumns.Add(col);
 					int widths=0;
 					for(int i=0;i<gridAppts.ListGridColumns.Count;i++) {
-						widths+=gridAppts.ListGridColumns[i].ColWidth;
+						widths+=gridAppts.ListGridColumns[i].ColumnWidth;
 					}
 					if(widths > Width) {
 						gridAppts.HScrollVisible=true;

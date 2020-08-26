@@ -384,7 +384,7 @@ namespace OpenDental
 				row.Cells.Add("");
 				if (selectedDefCatOpt.EnableColor)
 				{
-					row.Cells[row.Cells.Count - 1].ColorBackG = def.ItemColor;
+					row.Cells[row.Cells.Count - 1].BackColor = def.ItemColor;
 				}
 
 				row.Cells.Add(def.IsHidden ? "X" : "");

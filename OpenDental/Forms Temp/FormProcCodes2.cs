@@ -1577,21 +1577,21 @@ namespace OpenDental{
 				}
 				else {
 					row.Cells.Add(fee1.Amount.ToString("n"));
-					row.Cells[row.Cells.Count-1].ColorText=GetColorForFee(fee1);
+					row.Cells[row.Cells.Count-1].ForeColor=GetColorForFee(fee1);
 				}
 				if(fee2==null || fee2.Amount==-1) {
 					row.Cells.Add("");
 				}
 				else {
 					row.Cells.Add(fee2.Amount.ToString("n"));
-					row.Cells[row.Cells.Count-1].ColorText=GetColorForFee(fee2);
+					row.Cells[row.Cells.Count-1].ForeColor=GetColorForFee(fee2);
 				}
 				if(fee3==null || fee3.Amount==-1) {
 					row.Cells.Add("");
 				}
 				else {
 					row.Cells.Add(fee3.Amount.ToString("n"));
-					row.Cells[row.Cells.Count-1].ColorText=GetColorForFee(fee3);
+					row.Cells[row.Cells.Count-1].ForeColor=GetColorForFee(fee3);
 				}
 				gridMain.ListGridRows.Add(row);
 			}

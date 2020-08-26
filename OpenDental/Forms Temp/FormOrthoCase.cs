@@ -272,7 +272,7 @@ namespace OpenDental {
 				row.Cells.Add(textBandingAmount.Text);
 				if(_bandingProc!=null && _bandingProc.ProcStatus==ProcStat.C) {
 					dateCompleted=_bandingProc.ProcDate.ToShortDateString();
-					row.ColorText=Color.Green;
+					row.ForeColor=Color.Green;
 					row.Tag=_bandingProc;
 				}
 				row.Cells.Add(dateCompleted);
@@ -300,7 +300,7 @@ namespace OpenDental {
 				dateCompleted=notCompleteText;
 				if(i<_listVisitProcs.Count) {
 					dateCompleted=_listVisitProcs[i].ProcDate.ToShortDateString();
-					row.ColorText=Color.Green;
+					row.ForeColor=Color.Green;
 					row.Tag=_listVisitProcs[i];
 				}
 				row.Cells.Add(dateCompleted);
@@ -314,7 +314,7 @@ namespace OpenDental {
 			dateCompleted=notCompleteText;
 			if(_debondProc!=null && _debondProc.ProcStatus==ProcStat.C) {
 				dateCompleted=_debondProc.ProcDate.ToShortDateString();
-				row.ColorText=Color.Green;
+				row.ForeColor=Color.Green;
 				row.Tag=_debondProc;
 			}
 			row.Cells.Add(dateCompleted);

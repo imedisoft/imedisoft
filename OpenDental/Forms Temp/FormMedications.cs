@@ -369,7 +369,7 @@ namespace OpenDental{
 				if(CultureInfo.CurrentCulture.Name.EndsWith("US")) {//United States
 					if(med.RxCui==0) {
 						row.Cells.Add("(select)");
-						row.Cells[row.Cells.Count-1].Bold=YN.Yes;
+						row.Cells[row.Cells.Count-1].Bold= true;
 					}
 					else {
 						row.Cells.Add(med.RxCui.ToString());

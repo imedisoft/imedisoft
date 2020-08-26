@@ -2474,9 +2474,9 @@ namespace OpenDental {
 						SubID=subIDCur
 					};
 					if(i==listPatPlans.Count-1) { //last row in the insurance info section
-						row.ColorLborder=Color.Black;
+						row.LowerBorderColor=Color.Black;
 					}
-					row.ColorBackG=listDefs[0].ItemColor; //same logic as family module insurance colors.
+					row.BackColor=listDefs[0].ItemColor; //same logic as family module insurance colors.
 					switch(i) {
 						case 0: //primary
 							row.Cells.Add("Primary Ins");
@@ -2545,9 +2545,9 @@ namespace OpenDental {
 			row= new GridRow();
 			row.Cells.Add("Pat Ortho Info");
 			row.Cells.Add("");
-			row.ColorBackG=Color.LightCyan;
+			row.BackColor=Color.LightCyan;
 			row.Bold=true;
-			row.ColorLborder=Color.Black;
+			row.LowerBorderColor=Color.Black;
 			gridAutoOrtho.ListGridRows.Add(row);
 			//OrthoAutoProc Freq
 			if(doCalculateFirstDate) {
@@ -2652,7 +2652,7 @@ namespace OpenDental {
 				row=new GridRow();
 				int argbColor=PIn.Int(table.Rows[i]["colorText"].ToString());//Convert to int. If blank or 0, will use default color.
 				if(argbColor!=Color.Empty.ToArgb()) {//A color was set for this commlog type
-					row.ColorText=Color.FromArgb(argbColor);
+					row.ForeColor=Color.FromArgb(argbColor);
 				}
 				row.Cells.Add(table.Rows[i]["commDate"].ToString());
 				row.Cells.Add(table.Rows[i]["commTime"].ToString());
@@ -2707,7 +2707,7 @@ namespace OpenDental {
 				}
 				gridAccount.ListGridColumns.Add(col);
 			}
-			if(gridAccount.ListGridColumns.Sum(x => x.ColWidth)>gridAccount.Width) {
+			if(gridAccount.ListGridColumns.Sum(x => x.ColumnWidth)>gridAccount.Width) {
 				gridAccount.HScrollVisible=true;
 			}
 			else {
@@ -2774,11 +2774,11 @@ namespace OpenDental {
 							break;
 					}
 				}
-				row.ColorText=Color.FromArgb(PIn.Int(table.Rows[i]["colorText"].ToString()));
+				row.ForeColor=Color.FromArgb(PIn.Int(table.Rows[i]["colorText"].ToString()));
 				if(i==table.Rows.Count-1//last row
 					|| (DateTime)table.Rows[i]["DateTime"]!=(DateTime)table.Rows[i+1]["DateTime"])
 				{
-					row.ColorLborder=Color.Black;
+					row.LowerBorderColor=Color.Black;
 				}
 				gridAccount.ListGridRows.Add(row);
 			}
@@ -3022,8 +3022,8 @@ namespace OpenDental {
 				row.Cells.Add(table.Rows[i]["date"].ToString());
 				if(table.Rows[i]["InstallmentPlanNum"].ToString()!="0" && table.Rows[i]["PatNum"].ToString()!=_patCur.Guarantor.ToString()) {//Installment plan and not on guar
 					cell=new GridCell(((string)"Invalid Guarantor"));
-					cell.Bold=YN.Yes;
-					cell.ColorText=Color.Red;
+					cell.Bold= true;
+					cell.ForeColor=Color.Red;
 				}
 				else {
 					cell=new GridCell(table.Rows[i]["guarantor"].ToString());
@@ -3045,7 +3045,7 @@ namespace OpenDental {
 				row.Cells.Add(table.Rows[i]["balance"].ToString());
 				if(table.Rows[i]["IsClosed"].ToString()=="1" && PrefC.GetInt(PrefName.PayPlansVersion)==2) {
 					cell=new GridCell("Closed");
-					row.ColorText=Color.Gray;
+					row.ForeColor=Color.Gray;
 				}
 				else if(Prefs.GetBool(PrefName.PayPlanHideDueNow)) {//pref can only be enabled when PayPlansVersion == 2.
 					cell=new GridCell("");
@@ -3056,8 +3056,8 @@ namespace OpenDental {
 					if(PrefC.GetInt(PrefName.PayPlansVersion).In((int)PayPlanVersions.DoNotAge,(int)PayPlanVersions.AgeCreditsOnly,(int)PayPlanVersions.NoCharges)) 
 					{
 						if(table.Rows[i]["type"].ToString()!="Ins") {
-							cell.Bold=YN.Yes;
-							cell.ColorText=Color.Red;
+							cell.Bold= true;
+							cell.ForeColor=Color.Red;
 						}
 					}
 				}
@@ -3065,7 +3065,7 @@ namespace OpenDental {
 				row.Tag=table.Rows[i];
 				foreach(PayPlan payPlan in listOverchargedPayPlans){
 					if(listOverchargedPayPlans.Select(x => x.PayPlanNum).ToList().Contains(PIn.Long(table.Rows[i]["PayPlanNum"].ToString()))) {
-						row.ColorBackG=Color.FromArgb(255,255,128);
+						row.BackColor=Color.FromArgb(255,255,128);
 					}
 				}
 				gridPayPlan.ListGridRows.Add(row);
@@ -3335,8 +3335,8 @@ namespace OpenDental {
 				row.Cells.Add(tpSplit.SplitAmt.ToString("F"));//Amount
 				row.Tag=tpSplit;
 				Color defColor=Defs.GetDefsForCategory(DefCat.AccountColors)[3].ItemColor;
-				row.ColorLborder=defColor;
-				row.ColorText=defColor;
+				row.LowerBorderColor=defColor;
+				row.ForeColor=defColor;
 				gridTpSplits.ListGridRows.Add(row);
 			}
 			gridTpSplits.EndUpdate();

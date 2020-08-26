@@ -933,14 +933,14 @@ namespace OpenDental{
 				}
 				gridIns.ListGridRows[i].Bold=isBold;
 				if(isBold) {
-					gridIns.ListGridRows[i].ColorText=Color.Red;					
+					gridIns.ListGridRows[i].ForeColor=Color.Red;					
 					if(!isScrollSet) {//scroll to the first match in the list.
 						gridIns.ScrollToIndex(i);
 						isScrollSet=true;
 					}
 				}
 				else {//Standard row.
-					gridIns.ListGridRows[i].ColorText=Color.Black;
+					gridIns.ListGridRows[i].ForeColor=Color.Black;
 				}
 			}//end i
 			gridIns.Invalidate();
@@ -955,14 +955,14 @@ namespace OpenDental{
 				}
 				gridPat.ListGridRows[i].Bold=isBold;
 				if(isBold) {
-					gridPat.ListGridRows[i].ColorText=Color.Red;
+					gridPat.ListGridRows[i].ForeColor=Color.Red;
 					if(!isScrollSetPat) {//scroll to the first match in the list.
 						gridPat.ScrollToIndex(i);
 						isScrollSetPat=true;
 					}
 				}
 				else {//Standard row.
-					gridPat.ListGridRows[i].ColorText=Color.Black;
+					gridPat.ListGridRows[i].ForeColor=Color.Black;
 				}
 			}//end i
 			gridPat.Invalidate();

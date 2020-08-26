@@ -163,8 +163,8 @@ namespace OpenDental {
 				}
 				#endregion Load/Clear click handler
 				GridCell cell=new GridCell(device.PatNum==0?"Load":"Clear");
-				cell.ColorBackG=Color.LightGray;
-				cell.ClickEvent=CellClick;
+				cell.BackColor=Color.LightGray;
+				cell.Clicked=CellClick;
 				row.Cells.Add(cell);
 				if(_isSetupMode) {
 					#region Delete click handler
@@ -179,8 +179,8 @@ namespace OpenDental {
 					}
 					#endregion Delete click handler
 					cell=new GridCell("Delete");
-					cell.ColorBackG=Color.LightGray;
-					cell.ClickEvent=DeleteClick;
+					cell.BackColor=Color.LightGray;
+					cell.Clicked=DeleteClick;
 					row.Cells.Add(cell);
 				}
 				gridMain.ListGridRows.Add(row);

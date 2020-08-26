@@ -1657,7 +1657,7 @@ namespace OpenDental {
 				}
 				row.Cells.Add(string.Join("\r\n",listTypeStrs));
 				if(isUnallocated) {
-					row.Cells.Last().ColorText=System.Drawing.Color.Red;
+					row.Cells.Last().ForeColor=System.Drawing.Color.Red;
 				}
 				if(!splitCur.PatNum.In(_famCur.GetPatNums())) {
 					listTypeStrs.Add("(split to another family)");

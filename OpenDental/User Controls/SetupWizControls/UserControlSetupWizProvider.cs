@@ -63,39 +63,39 @@ namespace OpenDental.User_Controls.SetupWizard {
 				bool isHyg = prov.IsSecondary;
 				row.Cells.Add(prov.FName);
 				if((isDentist || isHyg) && (string.IsNullOrEmpty(prov.FName) || prov.FName.ToLower() == "default")) {
-					row.Cells[row.Cells.Count-1].ColorBackG=needsAttnCol;
+					row.Cells[row.Cells.Count-1].BackColor=needsAttnCol;
 					isAllComplete=false;
 				}
 				row.Cells.Add(prov.LName);
 				if((isDentist || isHyg) && string.IsNullOrEmpty(prov.LName)) {
-					row.Cells[row.Cells.Count-1].ColorBackG=needsAttnCol;
+					row.Cells[row.Cells.Count-1].BackColor=needsAttnCol;
 					isAllComplete=false;
 				}
 				row.Cells.Add(prov.Abbr);
 				if((isDentist || isHyg) && string.IsNullOrEmpty(prov.Abbr)) {
-					row.Cells[row.Cells.Count-1].ColorBackG=needsAttnCol;
+					row.Cells[row.Cells.Count-1].BackColor=needsAttnCol;
 					isAllComplete=false;
 				}
 				row.Cells.Add(prov.Suffix);
 				if((isDentist) && string.IsNullOrEmpty(prov.Suffix)) {
-					row.Cells[row.Cells.Count-1].ColorBackG=needsAttnCol;
+					row.Cells[row.Cells.Count-1].BackColor=needsAttnCol;
 					isAllComplete=false;
 				}
 				row.Cells.Add(prov.SSN);
 				if((isDentist) && string.IsNullOrEmpty(prov.SSN)) {
-					row.Cells[row.Cells.Count-1].ColorBackG=needsAttnCol;
+					row.Cells[row.Cells.Count-1].BackColor=needsAttnCol;
 					isAllComplete=false;
 				}
 				row.Cells.Add(prov.NationalProvID);
 				if((isDentist) && string.IsNullOrEmpty(prov.NationalProvID)) {
-					row.Cells[row.Cells.Count-1].ColorBackG=needsAttnCol;
+					row.Cells[row.Cells.Count-1].BackColor=needsAttnCol;
 					isAllComplete=false;
 				}
 				row.Cells.Add("");
-				row.Cells[row.Cells.Count-1].ColorBackG = prov.ProvColor;
+				row.Cells[row.Cells.Count-1].BackColor = prov.ProvColor;
 				//not required
 				row.Cells.Add("");
-				row.Cells[row.Cells.Count-1].ColorBackG = prov.OutlineColor;
+				row.Cells[row.Cells.Count-1].BackColor = prov.OutlineColor;
 				//not required
 				row.Cells.Add(prov.IsSecondary?"X":"");
 				//not required
@@ -115,7 +115,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 			if(_blink > 5) {
 				pictureAdd.Visible=true;
 				foreach(GridRow rowCur in gridMain.ListGridRows) {
-					rowCur.ColorBackG=OpenDental.SetupWizard.GetColor(ODSetupStatus.NeedsAttention);
+					rowCur.BackColor=OpenDental.SetupWizard.GetColor(ODSetupStatus.NeedsAttention);
 				}
 				gridMain.Invalidate();
 				timer1.Stop();
@@ -123,7 +123,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 			}
 			pictureAdd.Visible=!pictureAdd.Visible;
 			foreach(GridRow rowCur in gridMain.ListGridRows) {
-				rowCur.ColorBackG=rowCur.ColorBackG==Color.White?OpenDental.SetupWizard.GetColor(ODSetupStatus.NeedsAttention):Color.White;
+				rowCur.BackColor=rowCur.BackColor==Color.White?OpenDental.SetupWizard.GetColor(ODSetupStatus.NeedsAttention):Color.White;
 			}
 			gridMain.Invalidate();
 			_blink++;

@@ -3658,9 +3658,9 @@ namespace OpenDental {
 						else {
 							cell.Text=fieldCur.Description;
 						}
-						cell.Bold=YN.Yes;
+						cell.Bold= true;
 						row.Cells.Add(cell);
-						row.ColorBackG=listMiscColorDefs[3].ItemColor;
+						row.BackColor=listMiscColorDefs[3].ItemColor;
 						row.Tag="tabAllergies";
 						if(listAllergies.Count>0) {
 							row.Cells.Add("");
@@ -3682,11 +3682,11 @@ namespace OpenDental {
 								};
 							}
 							cell=new GridCell(allergyDef.Description);
-							cell.Bold=YN.Yes;
-							cell.ColorText=Color.Red;
+							cell.Bold= true;
+							cell.ForeColor=Color.Red;
 							row.Cells.Add(cell);
 							row.Cells.Add(listAllergies[i].Reaction);
-							row.ColorBackG=listMiscColorDefs[3].ItemColor;
+							row.BackColor=listMiscColorDefs[3].ItemColor;
 							row.Tag="tabAllergies";
 							if(i!=listAllergies.Count-1) {
 								gridPtInfo.ListGridRows.Add(row);
@@ -3770,7 +3770,7 @@ namespace OpenDental {
 								+listEhrProvKeys[i].YearValue+", "+listEhrProvKeys[i].ProvKey;
 						}
 						row.Cells.Add(desc);
-						row.ColorBackG=Color.PowderBlue;
+						row.BackColor=Color.PowderBlue;
 						row.Tag="EhrProvKeys";
 						break;
 					#endregion Ehr Provider Keys
@@ -3778,17 +3778,17 @@ namespace OpenDental {
 					case "Med Urgent":
 						cell=new GridCell();
 						cell.Text=_patCur.MedUrgNote;
-						cell.ColorText=Color.Red;
-						cell.Bold=YN.Yes;
+						cell.ForeColor=Color.Red;
+						cell.Bold= true;
 						row.Cells.Add(cell);
-						row.ColorBackG=listMiscColorDefs[3].ItemColor;
+						row.BackColor=listMiscColorDefs[3].ItemColor;
 						row.Tag="tabMedical";
 						break;
 					#endregion Med Urgent
 					#region Medical Summary
 					case "Medical Summary":
 						row.Cells.Add(_patientNoteCur.Medical);
-						row.ColorBackG=listMiscColorDefs[3].ItemColor;
+						row.BackColor=listMiscColorDefs[3].ItemColor;
 						row.Tag="tabMedical";
 						break;
 					#endregion Medical Summary
@@ -3812,9 +3812,9 @@ namespace OpenDental {
 						else {
 							cell.Text=fieldCur.Description;
 						}
-						cell.Bold=YN.Yes;
+						cell.Bold= true;
 						row.Cells.Add(cell);
-						row.ColorBackG=listMiscColorDefs[3].ItemColor;
+						row.BackColor=listMiscColorDefs[3].ItemColor;
 						row.Tag="tabMedications";
 						if(listMeds.Count>0) {
 							row.Cells.Add("");
@@ -3847,7 +3847,7 @@ namespace OpenDental {
 								text+="("+noteMedGeneric+")";
 							}
 							row.Cells.Add(text);
-							row.ColorBackG=listMiscColorDefs[3].ItemColor;
+							row.BackColor=listMiscColorDefs[3].ItemColor;
 							row.Tag="tabMedications";
 							if(i!=listMeds.Count-1) {
 								gridPtInfo.ListGridRows.Add(row);
@@ -3878,7 +3878,7 @@ namespace OpenDental {
 								row.Cells.Add(fieldCur.Description);
 							}
 							row.Cells.Add(PatRestrictions.GetPatRestrictDesc(listPatRestricts[i].PatRestrictType));
-							row.ColorBackG=listMiscColorShortDefs[10].ItemColor;//index 10 is Patient Restrictions (hard coded in convertdatabase4)
+							row.BackColor=listMiscColorShortDefs[10].ItemColor;//index 10 is Patient Restrictions (hard coded in convertdatabase4)
 							if(i==listPatRestricts.Count-1) {//last row added outside of switch statement
 								break;
 							}
@@ -3925,10 +3925,10 @@ namespace OpenDental {
 							else {
 								cell.Text=fieldCur.Description;
 							}
-							cell.ColorText=Color.Red;
-							cell.Bold=YN.Yes;
+							cell.ForeColor=Color.Red;
+							cell.Bold= true;
 							row.Cells.Add(cell);
-							row.ColorBackG=listMiscColorDefs[3].ItemColor;
+							row.BackColor=listMiscColorDefs[3].ItemColor;
 							row.Tag="tabMedical";
 							gridPtInfo.ListGridRows.Add(row);
 						}
@@ -3966,9 +3966,9 @@ namespace OpenDental {
 						else {
 							cell.Text=fieldCur.Description;
 						}
-						cell.Bold=YN.Yes;
+						cell.Bold= true;
 						row.Cells.Add(cell);
-						row.ColorBackG=listMiscColorDefs[3].ItemColor;
+						row.BackColor=listMiscColorDefs[3].ItemColor;
 						row.Tag="tabProblems";
 						if(listDiseases.Count>0) {
 							row.Cells.Add("");
@@ -3982,20 +3982,20 @@ namespace OpenDental {
 							row=new GridRow(); 
 							if(listDiseases[i].DiseaseDefNum!=0) {
 								cell=new GridCell(DiseaseDefs.GetName(listDiseases[i].DiseaseDefNum));
-								cell.ColorText=Color.Red;
-								cell.Bold=YN.Yes;
+								cell.ForeColor=Color.Red;
+								cell.Bold= true;
 								row.Cells.Add(cell);
 								row.Cells.Add(listDiseases[i].PatNote);
 							}
 							else {
 								row.Cells.Add("");
 								cell=new GridCell(DiseaseDefs.GetItem(listDiseases[i].DiseaseDefNum)?.DiseaseName??"INVALID PROBLEM");
-								cell.ColorText=Color.Red;
-								cell.Bold=YN.Yes;
+								cell.ForeColor=Color.Red;
+								cell.Bold= true;
 								row.Cells.Add(cell);
 								//row.Cells.Add(DiseaseList[i].PatNote);//no place to show a pat note
 							}
-							row.ColorBackG=listMiscColorDefs[3].ItemColor;
+							row.BackColor=listMiscColorDefs[3].ItemColor;
 							row.Tag="tabProblems";
 							if(i!=listDiseases.Count-1) {
 								gridPtInfo.ListGridRows.Add(row);
@@ -4028,12 +4028,12 @@ namespace OpenDental {
 						if(listCustRefEntries.Count==0) {
 							row.Cells.Add("None");
 							row.Tag="References";
-							row.ColorBackG=listMiscColorShortDefs[8].ItemColor;
+							row.BackColor=listMiscColorShortDefs[8].ItemColor;
 						}
 						else {
 							row.Cells.Add("");
 							row.Tag="References";
-							row.ColorBackG=listMiscColorShortDefs[8].ItemColor;
+							row.BackColor=listMiscColorShortDefs[8].ItemColor;
 							gridPtInfo.ListGridRows.Add(row);
 						}
 						for(int i=0;i<listCustRefEntries.Count;i++) {
@@ -4041,7 +4041,7 @@ namespace OpenDental {
 							row.Cells.Add(listCustRefEntries[i].DateEntry.ToShortDateString());
 							row.Cells.Add(CustReferences.GetCustNameFL(listCustRefEntries[i].PatNumRef));
 							row.Tag=listCustRefEntries[i];
-							row.ColorBackG=listMiscColorShortDefs[8].ItemColor;
+							row.BackColor=listMiscColorShortDefs[8].ItemColor;
 							if(i<listCustRefEntries.Count-1) {
 								gridPtInfo.ListGridRows.Add(row);
 							}
@@ -4128,7 +4128,7 @@ namespace OpenDental {
 					#region Service Notes
 					case "Service Notes":
 						row.Cells.Add(_patientNoteCur.Service);
-						row.ColorBackG=listMiscColorDefs[3].ItemColor;
+						row.BackColor=listMiscColorDefs[3].ItemColor;
 						row.Tag="tabMedical";
 						break;
 					#endregion Service Notes
@@ -4163,8 +4163,8 @@ namespace OpenDental {
 						}
 						List<EhrMeasureEvent> listTobaccoStatuses=LoadData.ListTobaccoStatuses
 							.OrderByDescending(x => x.DateTEvent).Take(3).ToList();//only display the last three assessments at most
-						row=new GridRow() { ColorBackG=listMiscColorDefs[3].ItemColor,Tag="tabTobaccoUse" };
-						row.Cells.Add(new GridCell(Text=fieldCur.Description==""?fieldCur.InternalName:fieldCur.Description) { Bold=YN.Yes });
+						row=new GridRow() { BackColor=listMiscColorDefs[3].ItemColor,Tag="tabTobaccoUse" };
+						row.Cells.Add(new GridCell(Text=fieldCur.Description==""?fieldCur.InternalName:fieldCur.Description) { Bold= true });
 						row.Cells.Add(listTobaccoStatuses.Count>0?"":"none");
 						if(listTobaccoStatuses.Count>0) {
 							gridPtInfo.ListGridRows.Add(row);
@@ -4172,7 +4172,7 @@ namespace OpenDental {
 						Snomed snmCur;
 						for(int i=0;i<listTobaccoStatuses.Count;i++) {//show the last three tobacco use assessments at most
 							EhrMeasureEvent ehrCur=listTobaccoStatuses[i];
-							row=new GridRow() { ColorBackG=listMiscColorDefs[3].ItemColor,Tag="tabTobaccoUse" };
+							row=new GridRow() { BackColor=listMiscColorDefs[3].ItemColor,Tag="tabTobaccoUse" };
 							snmCur=Snomeds.GetByCode(ehrCur.CodeValueResult);
 							row.Cells.Add(snmCur!=null?snmCur.Description:"");
 							row.Cells.Add(ehrCur.DateTEvent.ToShortDateString()+(ehrCur.MoreInfo==""?"":(" - "+ehrCur.MoreInfo)));
@@ -6483,8 +6483,8 @@ namespace OpenDental {
 					row.Cells.Add("");
 					row.Cells.Add(_listTreatPlans.FindAll(x => x.TreatPlanNum==kvPair.Key).DefaultIfEmpty(new TreatPlan() { Heading="" }).FirstOrDefault().Heading);
 					row.Bold=true;
-					row.ColorLborder=Color.FromArgb(102,102,122);//from odGrid painting logic
-					row.ColorBackG=Color.FromArgb(224,223,227);//from odGrid painting logic
+					row.LowerBorderColor=Color.FromArgb(102,102,122);//from odGrid painting logic
+					row.BackColor=Color.FromArgb(224,223,227);//from odGrid painting logic
 					gridTpProcs.ListGridRows.Add(row);
 					row=new GridRow();
 				}
@@ -6498,8 +6498,8 @@ namespace OpenDental {
 					row.Cells.Add(tpRow.Surf??"");
 					row.Cells.Add(tpRow.Code??"");
 					row.Cells.Add(tpRow.Description??"");
-					row.ColorText=tpRow.ColorText;
-					row.ColorLborder=tpRow.ColorLborder;
+					row.ForeColor=tpRow.ColorText;
+					row.LowerBorderColor=tpRow.ColorLborder;
 					row.Tag=tpRow.Tag;//Tag is a ProcTP
 					row.Bold=tpRow.Bold;
 					gridTpProcs.ListGridRows.Add(row);
@@ -6687,7 +6687,7 @@ namespace OpenDental {
 		private GridRow GridProgRowConstruction(DataRow rowCur,List<DisplayField> fields) {
 			long procNumCur=PIn.Long(rowCur["ProcNum"].ToString());//increase code efficiency
 			GridRow row=new GridRow();
-			row.ColorLborder=Color.Black;
+			row.LowerBorderColor=Color.Black;
 			//remember that columns that start with lowercase are already altered for display rather than being raw data.
 			for(int f=0;f<fields.Count;f++) {
 				switch(fields[f].InternalName) {
@@ -6799,17 +6799,17 @@ namespace OpenDental {
 			if(checkNotes.Checked) {
 				row.Note=rowCur["note"].ToString();
 			}
-			row.ColorText=Color.FromArgb(PIn.Int(rowCur["colorText"].ToString()));
+			row.ForeColor=Color.FromArgb(PIn.Int(rowCur["colorText"].ToString()));
 			long provNum=PIn.Long(rowCur["ProvNum"].ToString());
 			if(Prefs.GetBool(PrefName.UseProviderColorsInChart)
 					&& procNumCur>0
 					&& provNum>0
 					&& new[] { ProcStat.C,ProcStat.EC }.Contains((ProcStat)PIn.Int(rowCur["ProcStatus"].ToString())))
 			{
-				row.ColorBackG=Providers.GetColor(provNum);
+				row.BackColor=Providers.GetColor(provNum);
 			}
 			else {
-				row.ColorBackG=Color.FromArgb(PIn.Int(rowCur["colorBackG"].ToString()));
+				row.BackColor=Color.FromArgb(PIn.Int(rowCur["colorBackG"].ToString()));
 			}
 			row.Tag=rowCur;
 			return row;
@@ -9731,8 +9731,8 @@ namespace OpenDental {
 						row.Cells.Add(_tablePlannedAll.Rows[i]["dateSched"].ToString());
 					}
 				}
-				row.ColorText=Color.FromArgb(PIn.Int(_tablePlannedAll.Rows[i]["colorText"].ToString()));
-				row.ColorBackG=Color.FromArgb(PIn.Int(_tablePlannedAll.Rows[i]["colorBackG"].ToString()));
+				row.ForeColor=Color.FromArgb(PIn.Int(_tablePlannedAll.Rows[i]["colorText"].ToString()));
+				row.BackColor=Color.FromArgb(PIn.Int(_tablePlannedAll.Rows[i]["colorBackG"].ToString()));
 				row.Tag=PIn.Long(_tablePlannedAll.Rows[i]["AptNum"].ToString());
 				gridPlanned.ListGridRows.Add(row);
 			}

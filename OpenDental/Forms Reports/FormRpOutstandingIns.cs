@@ -1624,7 +1624,7 @@ namespace OpenDental
 					String line = "";
 					for (int i = 0; i < gridMain.ListGridColumns.Count; i++)
 					{
-						line += gridMain.ListGridColumns[i].Heading + "\t";
+						line += gridMain.ListGridColumns[i].HeaderText + "\t";
 					}
 					sw.WriteLine(line);
 					for (int i = 0; i < gridMain.ListGridRows.Count; i++)

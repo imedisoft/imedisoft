@@ -289,10 +289,10 @@ namespace OpenDental {
 		private void gridMain_CellClick(object sender,ODGridClickEventArgs e) {
 			for(int i=0;i<gridMain.ListGridRows.Count;i++) {
 				if(gridMain.ListGridRows[i].Tag==gridMain.ListGridRows[e.Row].Tag) {
-					gridMain.ListGridRows[i].ColorText=Color.Red;
+					gridMain.ListGridRows[i].ForeColor=Color.Red;
 				}
 				else {
-					gridMain.ListGridRows[i].ColorText=Color.Black;
+					gridMain.ListGridRows[i].ForeColor=Color.Black;
 				}
 			}
 			gridMain.Invalidate();

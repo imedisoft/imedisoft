@@ -127,7 +127,7 @@ namespace Imedisoft.Forms
 				var gridRow = new GridRow();
 				gridRow.Cells.Add(appointmentType.Name);
 				gridRow.Cells.Add("");
-				gridRow.Cells[1].ColorBackG = appointmentType.Color;
+				gridRow.Cells[1].BackColor = appointmentType.Color;
 				gridRow.Cells.Add(appointmentType.Hidden ? "X" : "");
 				gridRow.Tag = appointmentType;
 

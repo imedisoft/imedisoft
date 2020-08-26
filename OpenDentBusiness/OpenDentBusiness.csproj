@@ -543,6 +543,8 @@
     <Compile Include="TableTypes\ProviderClinicLink.cs" />
     <Compile Include="TableTypes\ScheduledProcess.cs" />
     <Compile Include="Data\UserPreferenceName.cs" />
+    <Compile Include="UI\GridCellCollection.cs" />
+    <Compile Include="UI\GridSelectionMode.cs" />
     <Compile Include="UI\ODGridPageNav.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1538,10 +1540,10 @@
     <Compile Include="UI\ODGrid.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UI\ODGridCell.cs" />
-    <Compile Include="UI\ODGridColumn.cs" />
-    <Compile Include="UI\ODGridColumnCollection.cs" />
-    <Compile Include="UI\ODGridRow.cs" />
+    <Compile Include="UI\GridCell.cs" />
+    <Compile Include="UI\GridColumn.cs" />
+    <Compile Include="UI\GridColumnCollection.cs" />
+    <Compile Include="UI\GridRow.cs" />
     <Compile Include="Web References\com.dentalxchange.webservices\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1827,18 +1829,9 @@
     <EmbeddedResource Include="UI\ODGrid.resx">
       <DependentUpon>ODGrid.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\ODGridCell.resx">
-      <DependentUpon>ODGridCell.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\ODGridColumn.resx">
-      <DependentUpon>ODGridColumn.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="UI\ODGridPageNav.resx">
       <DependentUpon>ODGridPageNav.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\ODGridRow.resx">
-      <DependentUpon>ODGridRow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\SignatureBoxWrapper.resx">
       <DependentUpon>SignatureBoxWrapper.cs</DependentUpon>

@@ -189,10 +189,10 @@ namespace OpenDental {
 			row.Cells.Add(tag.FieldName);
 			row.Cells.Add(tag.Descript);
 			if(tag.IsPHI) {
-				row.ColorText=Color.DarkSlateGray;
+				row.ForeColor=Color.DarkSlateGray;
 			}
 			if(!tag.IsSupported) {
-				row.ColorText=Color.Red;
+				row.ForeColor=Color.Red;
 			}
 			row.Tag=tag;
 			gridMain.ListGridRows.Add(row);

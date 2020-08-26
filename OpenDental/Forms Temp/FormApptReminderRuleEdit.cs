@@ -209,7 +209,7 @@ namespace OpenDental {
 				if(typeCur==CommType.Text && !SmsPhones.IsIntegratedTextingEnabled()) {
 					gridRow=new GridRow();
 					gridRow.Cells.Add(typeCur.ToString()+" ("+"Not Configured"+")");
-					gridRow.ColorBackG=Color.LightGray;
+					gridRow.BackColor=Color.LightGray;
 					gridPriorities.ListGridRows.Add(gridRow);
 				}
 				else {

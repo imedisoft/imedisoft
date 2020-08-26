@@ -79,13 +79,13 @@ namespace UnitTests{
 			for(int i=0;i<_listPatients.Count;i++){
 				row=new GridRow();
 				if(i==2){
-					row.Cells.Add(new GridCell("click a really long button"){ColorBackG=Color.LightGray,ClickEvent=DeleteClick });
+					row.Cells.Add(new GridCell("click a really long button"){BackColor=Color.LightGray,Clicked=DeleteClick });
 				}
 				else{
 					row.Cells.Add(_listPatients[i].LName+" "+_listPatients[i].FName+" "+_listPatients[i].FName);
 				}
 				if(i==15){
-					row.Cells.Add(new GridCell(_listPatients[i].FName){ ColorBackG=Color.Yellow });
+					row.Cells.Add(new GridCell(_listPatients[i].FName){ BackColor=Color.Yellow });
 				}
 				else{
 					row.Cells.Add(_listPatients[i].FName);

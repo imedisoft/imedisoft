@@ -720,7 +720,7 @@ namespace OpenDental{
 					if(!checkShowDeleted.Checked) {
 						continue;
 					}
-					row.ColorText=Color.Red;
+					row.ForeColor=Color.Red;
 				}
 				if(!Prefs.GetBool(PrefName.EasyHideDentalSchools)) {
 					row.Cells.Add(rowCur["ProvNum"].ToString());

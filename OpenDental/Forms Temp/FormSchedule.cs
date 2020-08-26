@@ -746,7 +746,7 @@ namespace OpenDental{
 			if(!checkWeekend.Checked){
 				colI--;
 			}
-			gridMain.ListGridRows[Schedules.GetRowCal(_fromDateCur,DateTime.Today)].Cells[colI].ColorText=Color.Red;
+			gridMain.ListGridRows[Schedules.GetRowCal(_fromDateCur,DateTime.Today)].Cells[colI].ForeColor=Color.Red;
 			if(_clickedCell!=null //when first opening form
 				&& _clickedCell.Y>-1 
 				&& _clickedCell.Y< gridMain.ListGridRows.Count

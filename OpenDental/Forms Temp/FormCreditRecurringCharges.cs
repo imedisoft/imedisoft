@@ -221,12 +221,12 @@ namespace OpenDental {
 						//don't bold anything
 					}
 					else if(diff>0) {
-						row.Cells[6].Bold=YN.Yes;//"Repeating Amt"
-						row.Cells[7].Bold=YN.Yes;//"Charge Amt"
+						row.Cells[6].Bold=true;//"Repeating Amt"
+						row.Cells[7].Bold=true;//"Charge Amt"
 					}
 					else if(diff<0) {
-						row.Cells[5].Bold=YN.Yes;//"Total Due"
-						row.Cells[7].Bold=YN.Yes;//"Charge Amt"
+						row.Cells[5].Bold=true;//"Total Due"
+						row.Cells[7].Bold=true;//"Charge Amt"
 					}
 				}
 				if(Programs.HasMultipleCreditCardProgramsEnabled()) {

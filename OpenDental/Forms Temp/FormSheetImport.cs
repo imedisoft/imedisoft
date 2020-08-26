@@ -1491,8 +1491,8 @@ namespace OpenDental {
 					row.Cells.Add("");
 					row.Cells.Add("");
 					row.Cells.Add("");
-					row.ColorBackG=Color.DarkSlateGray;
-					row.ColorText=Color.White;
+					row.BackColor=Color.DarkSlateGray;
+					row.ForeColor=Color.White;
 				}
 				else {
 					if(Rows[i].FieldDisplay!=null) {
@@ -1504,19 +1504,19 @@ namespace OpenDental {
 					row.Cells.Add(Rows[i].OldValDisplay);
 					cell=new GridCell(Rows[i].NewValDisplay);
 					if(Rows[i].IsFlagged) {
-						cell.ColorText=Color.Firebrick;
-						cell.Bold=YN.Yes;
+						cell.ForeColor=Color.Firebrick;
+						cell.Bold= true;
 					}
 					row.Cells.Add(cell);
 					cell=new GridCell(Rows[i].ImpValDisplay);
 					if(Rows[i].IsFlaggedImp) {
-						cell.ColorText=Color.Firebrick;
-						cell.Bold=YN.Yes;
+						cell.ForeColor=Color.Firebrick;
+						cell.Bold= true;
 					}
 					row.Cells.Add(cell);
 					if(Rows[i].DoImport) {
 						row.Cells.Add("X");
-						row.ColorBackG=Color.FromArgb(225,225,225);
+						row.BackColor=Color.FromArgb(225,225,225);
 					}
 					else {
 						row.Cells.Add("");

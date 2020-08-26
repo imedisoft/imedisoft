@@ -452,7 +452,7 @@ namespace OpenDental {
 				OrthoSignature sig=new OrthoSignature(listOrthoCharts.Find(x => x.FieldName==sigColumnName).FieldValue);
 				if(sig.SigString=="") {
 					Logger.LogAction("DisplaySignature",() => { signatureBoxWrapper.ClearSignature(false); });
-					gridMain.ListGridRows[gridRow].ColorBackG=SystemColors.Window;
+					gridMain.ListGridRows[gridRow].BackColor=SystemColors.Window;
 					//Empty out the signature column displaying to the user.
 					if(_sigColIdx > 0) {//User might be vieweing a tab that does not have the signature column.  Greater than 0 because index 0 is a Date column.
 						gridMain.ListGridRows[gridRow].Cells[_sigColIdx].Text="";
@@ -476,7 +476,7 @@ namespace OpenDental {
 					});
 				}
 				if(signatureBoxWrapper.IsValid) {
-					gridMain.ListGridRows[gridRow].ColorBackG=Color.FromArgb(0,245,165);//A lighter version of Color.MediumSpringGreen
+					gridMain.ListGridRows[gridRow].BackColor=Color.FromArgb(0,245,165);//A lighter version of Color.MediumSpringGreen
 					if(_sigColIdx > 0) {//User might be vieweing a tab that does not have the signature column.  Greater than 0 because index 0 is a Date column.
 						gridMain.ListGridRows[gridRow].Cells[_sigColIdx].Text="Valid";
 						//Only display user if the signature is valid.
@@ -485,7 +485,7 @@ namespace OpenDental {
 					}
 				}
 				else {
-					gridMain.ListGridRows[gridRow].ColorBackG=Color.FromArgb(255,140,143);//A darker version of Color.LightPink
+					gridMain.ListGridRows[gridRow].BackColor=Color.FromArgb(255,140,143);//A darker version of Color.LightPink
 					if(_sigColIdx > 0) {//User might be vieweing a tab that does not have the signature column.  Greater than 0 because index 0 is a Date column.
 						gridMain.ListGridRows[gridRow].Cells[_sigColIdx].Text="Invalid";
 					}
@@ -673,7 +673,7 @@ namespace OpenDental {
 				MessageBox.Show("Please select an editable Ortho Chart cell first.");
 				return;
 			}
-			if(HasPickList(gridMain.ListGridColumns[gridMain.SelectedCell.X].Heading)) {
+			if(HasPickList(gridMain.ListGridColumns[gridMain.SelectedCell.X].HeaderText)) {
 				MessageBox.Show("Cannot add auto notes to a field with a pick list.");
 				return;
 			}

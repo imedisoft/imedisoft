@@ -69,12 +69,12 @@ namespace OpenDental.User_Controls.SetupWizard {
 				row = new GridRow();
 				row.Cells.Add(opCur.OpName);
 				if(string.IsNullOrEmpty(opCur.OpName)) {
-					row.Cells[row.Cells.Count-1].ColorBackG=needsAttnCol;
+					row.Cells[row.Cells.Count-1].BackColor=needsAttnCol;
 					IsAllComplete=false;
 				}
 				row.Cells.Add(opCur.Abbrev);
 				if(string.IsNullOrEmpty(opCur.Abbrev)) {
-					row.Cells[row.Cells.Count-1].ColorBackG=needsAttnCol;
+					row.Cells[row.Cells.Count-1].BackColor=needsAttnCol;
 					IsAllComplete=false;
 				}
 				if(PrefC.HasClinicsEnabled) {

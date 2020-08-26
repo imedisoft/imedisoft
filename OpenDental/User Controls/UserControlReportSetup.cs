@@ -186,7 +186,7 @@ namespace OpenDental.User_Controls {
 			gridLists.EndUpdate();
 			gridPublicHealth.EndUpdate();
 			if(_selectedGrid != null && _selectedCell.Y != -1) {
-				_selectedGrid.ListGridRows[_selectedCell.Y].ColorBackG=Color.LightCyan;
+				_selectedGrid.ListGridRows[_selectedCell.Y].BackColor=Color.LightCyan;
 				if(_selectedCell.X < _selectedGrid.ListGridColumns.Count) {
 					_selectedGrid.SetSelected(_selectedCell);
 				}

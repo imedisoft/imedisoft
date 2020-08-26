@@ -150,7 +150,7 @@ namespace OpenDental {
 				gridMain.ListGridColumns.Add(new GridColumn(fieldsForGrid[i].Description==""?fieldsForGrid[i].InternalName:fieldsForGrid[i].Description,
 					fieldsForGrid[i].ColumnWidth,align,sort));
 			}
-			if(gridMain.ListGridColumns.Sum(x => x.ColWidth) > gridMain.Width) {
+			if(gridMain.ListGridColumns.Sum(x => x.ColumnWidth) > gridMain.Width) {
 				gridMain.HScrollVisible=true;
 			}
 			gridMain.ListGridRows.Clear();
@@ -202,9 +202,9 @@ namespace OpenDental {
 							break;
 					}
 				}
-				row.ColorText=limitedRow.ColorText;
+				row.ForeColor=limitedRow.ColorText;
 				if(i==_listLimitedRows.Count-1 || limitedRow.DateTime.Date!=_listLimitedRows[i+1].DateTime.Date) {
-					row.ColorLborder=Color.Black;
+					row.LowerBorderColor=Color.Black;
 				}
 				row.Tag=limitedRow;
 				gridMain.ListGridRows.Add(row);

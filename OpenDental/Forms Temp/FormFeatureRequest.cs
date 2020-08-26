@@ -82,7 +82,7 @@ namespace Imedisoft.Forms
 				if (featureRequest.IsMine && !featureRequest.IsCritical && featureRequest.Pledge == 0 &&
 					featureRequest.Status != FeatureRequestStatus.Complete)
 				{
-					gridRow.ColorBackG = Color.FromArgb(255, 255, 230); // Light yellow.
+					gridRow.BackColor = Color.FromArgb(255, 255, 230); // Light yellow.
 				}
 
 				requestsGrid.ListGridRows.Add(gridRow);

@@ -327,7 +327,7 @@ namespace OpenDental{
 				}
 				row.Tag=payPeriodCur;
 				if(payPeriodCur.DateStart<=DateTimeOD.Today && payPeriodCur.DateStop >=DateTimeOD.Today) {
-					row.ColorBackG=Color.LightCyan;
+					row.BackColor=Color.LightCyan;
 				}
 				gridMain.ListGridRows.Add(row);
 			}

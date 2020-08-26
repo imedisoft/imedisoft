@@ -75,7 +75,7 @@ namespace OpenDental
 				row.Cells.Add("     " + setupItem.Name);
 				row.Cells.Add(setupItem.Status.GetDescription());
 				statusCellNum = row.Cells.Count - 1;
-				row.Cells[statusCellNum].ColorBackG = SetupWizard.GetColor(setupItem.Status);
+				row.Cells[statusCellNum].BackColor = SetupWizard.GetColor(setupItem.Status);
 				row.Cells.Add("0");
 				//row.ColorBackG=SetupWizard.GetColor(setupItem.GetStatus);
 				row.Tag = setupItem;
@@ -125,20 +125,20 @@ namespace OpenDental
 				{
 					//rowCur.ColorBackG = SetupWizard.GetColor(ODSetupStatus.Complete);
 					rowCur.Cells[statusCellNum].Text = "\r\n" + ODSetupStatus.Complete.GetDescription();
-					rowCur.Cells[statusCellNum].ColorBackG = SetupWizard.GetColor(ODSetupStatus.Complete);
+					rowCur.Cells[statusCellNum].BackColor = SetupWizard.GetColor(ODSetupStatus.Complete);
 
 				}
 				else
 				{
 					//rowCur.ColorBackG = SetupWizard.GetColor(ODSetupStatus.NeedsAttention);
 					rowCur.Cells[statusCellNum].Text = "\r\n" + ODSetupStatus.NeedsAttention.GetDescription();
-					rowCur.Cells[statusCellNum].ColorBackG = SetupWizard.GetColor(ODSetupStatus.NeedsAttention);
+					rowCur.Cells[statusCellNum].BackColor = SetupWizard.GetColor(ODSetupStatus.NeedsAttention);
 				}
 			}
 			foreach (GridRow rowCur in listCategoryRows)
 			{
 				listRowsAll.Add(rowCur);
-				listSetupRows.Where(x => ((SetupWizard.SetupWizClass)x.Tag).Category == ((ODSetupCategory)rowCur.Tag)).DefaultIfEmpty(new GridRow()).LastOrDefault().ColorLborder = Color.Black;
+				listSetupRows.Where(x => ((SetupWizard.SetupWizClass)x.Tag).Category == ((ODSetupCategory)rowCur.Tag)).DefaultIfEmpty(new GridRow()).LastOrDefault().LowerBorderColor = Color.Black;
 				listRowsAll.AddRange(listSetupRows.Where(x => ((SetupWizard.SetupWizClass)x.Tag).Category == ((ODSetupCategory)rowCur.Tag)));
 			}
 			return listRowsAll;

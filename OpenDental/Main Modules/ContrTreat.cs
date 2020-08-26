@@ -1325,10 +1325,10 @@ namespace OpenDental
 					}
 				}
 				if(RowsMain[i].ColorText!=null) {
-					row.ColorText=RowsMain[i].ColorText;
+					row.ForeColor=RowsMain[i].ColorText;
 				}
 				if(RowsMain[i].ColorLborder!=null) {
-					row.ColorLborder=RowsMain[i].ColorLborder;
+					row.LowerBorderColor=RowsMain[i].ColorLborder;
 				}
 				if(RowsMain[i].Tag!=null) {
 					row.Tag=RowsMain[i].Tag;
@@ -1588,10 +1588,10 @@ namespace OpenDental
 					}
 				}
 				if(RowsMain[i].ColorText!=null) {
-					row.ColorText=RowsMain[i].ColorText;
+					row.ForeColor=RowsMain[i].ColorText;
 				}
 				if(RowsMain[i].ColorLborder!=null) {
-					row.ColorLborder=RowsMain[i].ColorLborder;
+					row.LowerBorderColor=RowsMain[i].ColorLborder;
 				}
 				if(RowsMain[i].Tag!=null) {
 					row.Tag=RowsMain[i].Tag;

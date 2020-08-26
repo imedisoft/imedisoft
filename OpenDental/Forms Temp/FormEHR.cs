@@ -169,11 +169,11 @@ namespace OpenDental {
 				}
 				if(listMu[i].Met==MuMet.True) {
 					row.Cells.Add("X");
-					row.ColorBackG=Color.FromArgb(178,255,178);
+					row.BackColor=Color.FromArgb(178,255,178);
 				}
 				else if(listMu[i].Met==MuMet.NA) {
 					row.Cells.Add("N/A");
-					row.ColorBackG=Color.FromArgb(178,255,178);
+					row.BackColor=Color.FromArgb(178,255,178);
 				}
 				else {
 					row.Cells.Add("");

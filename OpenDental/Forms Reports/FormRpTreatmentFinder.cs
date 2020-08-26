@@ -849,7 +849,7 @@ namespace OpenDental
 			{
 				using (StreamWriter sw = new StreamWriter(filePath, false))
 				{
-					sw.WriteLine(string.Join("\t", gridMain.ListGridColumns.Select(x => x.Heading)));
+					sw.WriteLine(string.Join("\t", gridMain.ListGridColumns.Select(x => x.HeaderText)));
 					gridMain.ListGridRows.ForEach(x => sw.WriteLine(
 						string.Join("\t", x.Cells.Select(y => string.Concat(y.Text.Where(z => !z.In('\r', '\n', '\t', '\"')))))));
 				}

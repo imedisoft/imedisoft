@@ -217,9 +217,9 @@ namespace OpenDental {
 			for(int i=0;i<_listCovCats.Count;i++) {
 				row=new GridRow();
 				row.Tag=_listCovCats[i].Copy();
-				row.ColorBackG=Color.FromArgb(225,225,225);
+				row.BackColor=Color.FromArgb(225,225,225);
 				if(i!=0) {
-					gridMain.ListGridRows[gridMain.ListGridRows.Count-1].ColorLborder=Color.Black;
+					gridMain.ListGridRows[gridMain.ListGridRows.Count-1].LowerBorderColor=Color.Black;
 				}
 				row.Cells.Add(_listCovCats[i].Description);
 				row.Cells.Add("");

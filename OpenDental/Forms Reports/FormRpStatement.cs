@@ -1135,11 +1135,11 @@ namespace OpenDental
 					gcell = new GridCell(tablePP.Rows[p]["balance"].ToString());
 					if (p == tablePP.Rows.Count - 1)
 					{
-						gcell.Bold = YN.Yes;
+						gcell.Bold = true;
 					}
 					else if (tablePP.Rows[p + 1]["balance"].ToString() == "")
 					{//if next row balance is blank.
-						gcell.Bold = YN.Yes;
+						gcell.Bold = true;
 					}
 					grow.Cells.Add(gcell);
 					gridPP.ListGridRows.Add(grow);
