@@ -338,6 +338,7 @@ namespace OpenDental
 		public static bool CheckMySqlVersion(bool isSilent = false)
 		{
 			bool hasBackup = false;
+
 			string thisVersion = MiscData.GetMySqlVersion();
 			Version versionMySQL = new Version(thisVersion);
 			if (versionMySQL < new Version(5, 0))
@@ -386,20 +387,20 @@ namespace OpenDental
 			}
 
 			// ClassConvertDatabase CCD=new ClassConvertDatabase();
-			if (!hasBackup)
-			{
-				// A backup could have been made if the tables were optimized and repaired above.
-				if (!Shared.MakeABackup(isSilent, BackupLocation.ConvertScript, false))
-				{
-					FormOpenDental.ExitCode = 101; // Database Backup failed
-					return false; // but this should never happen
-				}
-			}
+			//if (!hasBackup)
+			//{
+			//	// A backup could have been made if the tables were optimized and repaired above.
+			//	if (!Shared.MakeABackup(isSilent, BackupLocation.ConvertScript, false))
+			//	{
+			//		FormOpenDental.ExitCode = 101; // Database Backup failed
+			//		return false; // but this should never happen
+			//	}
+			//}
 
-			if (!isSilent)
-			{
-				MsgBox.Show("Backup performed");
-			}
+			//if (!isSilent)
+			//{
+			//	MsgBox.Show("Backup performed");
+			//}
 
 			return true;
 		}
