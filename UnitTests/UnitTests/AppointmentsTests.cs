@@ -1174,11 +1174,11 @@ namespace UnitTests.Appointments_Tests {
 			//Setup create two operatories with the same provider
 			Clinic clinic=ClinicT.CreateClinic(desc);
 			long provNum=ProviderT.CreateProvider(desc);
-			Operatory opA=OperatoryT.CreateOperatory(desc+"A",desc+"A",provNum,clinicNum:clinic.ClinicNum);
-			Operatory opB=OperatoryT.CreateOperatory(desc+"B",desc+"B",provNum,clinicNum:clinic.ClinicNum);
+			Operatory opA=OperatoryT.CreateOperatory(desc+"A",desc+"A",provNum,clinicNum:clinic.Id);
+			Operatory opB=OperatoryT.CreateOperatory(desc+"B",desc+"B",provNum,clinicNum:clinic.Id);
 			//Create two patients
-			Patient patA=PatientT.CreatePatient(desc+"A",provNum,clinic.ClinicNum);
-			Patient patB=PatientT.CreatePatient(desc+"B",provNum,clinic.ClinicNum);
+			Patient patA=PatientT.CreatePatient(desc+"A",provNum,clinic.Id);
+			Patient patB=PatientT.CreatePatient(desc+"B",provNum,clinic.Id);
 			//Create two overlapping appointments with a procedure code from that appointment rule in the different ops
 			Appointment apptA=AppointmentT.CreateAppointment(patA.PatNum,DateTime.Today.AddHours(8),opA.OperatoryNum,provNum);
 			ProcedureT.CreateProcedure(patA,"D0120",ProcStat.TP,"",50,provNum:provNum,aptNum:apptA.AptNum);
@@ -1187,7 +1187,7 @@ namespace UnitTests.Appointments_Tests {
 			{
 				AptDateTime=DateTime.Today.AddHours(8),
 				ProvNum=provNum,
-				ClinicNum=clinic.ClinicNum,
+				ClinicNum=clinic.Id,
 				PatNum=patB.PatNum,
 				Op=opB.OperatoryNum,
 				Pattern=apptA.Pattern,
@@ -1217,20 +1217,20 @@ namespace UnitTests.Appointments_Tests {
 			//Setup create two operatories with the same provider and set these available for wsnp
 			Clinic clinic=ClinicT.CreateClinic(desc);
 			long provNum=ProviderT.CreateProvider(desc);
-			Operatory opA=OperatoryT.CreateOperatory(desc+"A",desc+"A",provNum,clinicNum:clinic.ClinicNum,isWebSched:true);
-			Operatory opB=OperatoryT.CreateOperatory(desc+"B",desc+"B",provNum,clinicNum:clinic.ClinicNum,isWebSched:true);
+			Operatory opA=OperatoryT.CreateOperatory(desc+"A",desc+"A",provNum,clinicNum:clinic.Id,isWebSched:true);
+			Operatory opB=OperatoryT.CreateOperatory(desc+"B",desc+"B",provNum,clinicNum:clinic.Id,isWebSched:true);
 			DefLinkT.CreateDefLink(wsnpApptTypeDef.DefNum,opA.OperatoryNum,DefLinkType.Operatory);
 			DefLinkT.CreateDefLink(wsnpApptTypeDef.DefNum,opB.OperatoryNum,DefLinkType.Operatory);
 			//Set schedules, and confirm we can get all the timeslots we expect
-			Schedule provSched=ScheduleT.CreateSchedule(tomorrow,TimeSpan.FromHours(8),TimeSpan.FromHours(16),schedType:ScheduleType.Provider,clinicNum:clinic.ClinicNum,provNum:provNum,listOpNums:new List<long>() { opA.OperatoryNum,opB.OperatoryNum });
-			List<TimeSlot> listTimeSlots=TimeSlots.GetAvailableNewPatApptTimeSlots(tomorrow.Date,tomorrow.AddHours(23),clinic.ClinicNum,wsnpApptTypeDef.DefNum);
+			Schedule provSched=ScheduleT.CreateSchedule(tomorrow,TimeSpan.FromHours(8),TimeSpan.FromHours(16),schedType:ScheduleType.Provider,clinicNum:clinic.Id,provNum:provNum,listOpNums:new List<long>() { opA.OperatoryNum,opB.OperatoryNum });
+			List<TimeSlot> listTimeSlots=TimeSlots.GetAvailableNewPatApptTimeSlots(tomorrow.Date,tomorrow.AddHours(23),clinic.Id,wsnpApptTypeDef.DefNum);
 			Assert.IsTrue(listTimeSlots.Any(x => x.DateTimeStart==tomorrow.AddHours(12)));
 			//Create an appointment that would use the appointment rule we created
-			Patient patA=PatientT.CreatePatient(desc+"A",provNum,clinic.ClinicNum);
+			Patient patA=PatientT.CreatePatient(desc+"A",provNum,clinic.Id);
 			Appointment apptA=AppointmentT.CreateAppointment(patA.PatNum,tomorrow.AddHours(12),opA.OperatoryNum,provNum);
 			ProcedureT.CreateProcedure(patA,"D0120",ProcStat.TP,"",50,provNum:provNum,aptNum:apptA.AptNum);
 			//Refetch timeslots and make sure that the list does not contain the double booked slot
-			List<TimeSlot> listTimeSlotsAfter=TimeSlots.GetAvailableNewPatApptTimeSlots(tomorrow.Date,tomorrow.AddHours(23),clinic.ClinicNum,wsnpApptTypeDef.DefNum);
+			List<TimeSlot> listTimeSlotsAfter=TimeSlots.GetAvailableNewPatApptTimeSlots(tomorrow.Date,tomorrow.AddHours(23),clinic.Id,wsnpApptTypeDef.DefNum);
 			Assert.IsFalse(listTimeSlotsAfter.Any(x => x.DateTimeStart==tomorrow.AddHours(12)));
 		}
 
@@ -1247,20 +1247,20 @@ namespace UnitTests.Appointments_Tests {
 			//Setup create two operatories with the same provider and set these available for wsnp
 			Clinic clinic=ClinicT.CreateClinic(desc);
 			long provNum=ProviderT.CreateProvider(desc);
-			Operatory opA=OperatoryT.CreateOperatory(desc+"A",desc+"A",provNum,clinicNum:clinic.ClinicNum,isWebSched:true);
-			Operatory opB=OperatoryT.CreateOperatory(desc+"B",desc+"B",provNum,clinicNum:clinic.ClinicNum,isWebSched:true);
+			Operatory opA=OperatoryT.CreateOperatory(desc+"A",desc+"A",provNum,clinicNum:clinic.Id,isWebSched:true);
+			Operatory opB=OperatoryT.CreateOperatory(desc+"B",desc+"B",provNum,clinicNum:clinic.Id,isWebSched:true);
 			DefLinkT.CreateDefLink(wsnpApptTypeDef.DefNum,opA.OperatoryNum,DefLinkType.Operatory);
 			DefLinkT.CreateDefLink(wsnpApptTypeDef.DefNum,opB.OperatoryNum,DefLinkType.Operatory);
 			//Set schedules, and confirm we can get all the timeslots we expect
-			Schedule provSched=ScheduleT.CreateSchedule(tomorrow,TimeSpan.FromHours(8),TimeSpan.FromHours(16),schedType:ScheduleType.Provider,clinicNum:clinic.ClinicNum,provNum:provNum,listOpNums:new List<long>() { opA.OperatoryNum,opB.OperatoryNum });
-			List<TimeSlot> listTimeSlots=TimeSlots.GetAvailableNewPatApptTimeSlots(tomorrow.Date,tomorrow.AddHours(23),clinic.ClinicNum,wsnpApptTypeDef.DefNum);
+			Schedule provSched=ScheduleT.CreateSchedule(tomorrow,TimeSpan.FromHours(8),TimeSpan.FromHours(16),schedType:ScheduleType.Provider,clinicNum:clinic.Id,provNum:provNum,listOpNums:new List<long>() { opA.OperatoryNum,opB.OperatoryNum });
+			List<TimeSlot> listTimeSlots=TimeSlots.GetAvailableNewPatApptTimeSlots(tomorrow.Date,tomorrow.AddHours(23),clinic.Id,wsnpApptTypeDef.DefNum);
 			Assert.IsTrue(listTimeSlots.Any(x => x.DateTimeStart==tomorrow.AddHours(12)));
 			//Create an appointment that would use the appointment rule we created
-			Patient patA=PatientT.CreatePatient(desc+"A",provNum,clinic.ClinicNum);
+			Patient patA=PatientT.CreatePatient(desc+"A",provNum,clinic.Id);
 			Appointment apptA=AppointmentT.CreateAppointment(patA.PatNum,tomorrow.AddHours(12),opA.OperatoryNum,provNum);
 			ProcedureT.CreateProcedure(patA,"D0120",ProcStat.TP,"",50,provNum:provNum,aptNum:apptA.AptNum);
 			//Refetch timeslots and make sure that the list does contain the double booked slot
-			List<TimeSlot> listTimeSlotsAfter=TimeSlots.GetAvailableNewPatApptTimeSlots(tomorrow.Date,tomorrow.AddHours(23),clinic.ClinicNum,wsnpApptTypeDef.DefNum);
+			List<TimeSlot> listTimeSlotsAfter=TimeSlots.GetAvailableNewPatApptTimeSlots(tomorrow.Date,tomorrow.AddHours(23),clinic.Id,wsnpApptTypeDef.DefNum);
 			Assert.IsTrue(listTimeSlotsAfter.Any(x => x.DateTimeStart==tomorrow.AddHours(12)));
 		}
 
@@ -1277,20 +1277,20 @@ namespace UnitTests.Appointments_Tests {
 			//Setup create two operatories with the same provider and set these available for wsnp
 			Clinic clinic=ClinicT.CreateClinic(desc);
 			long provNum=ProviderT.CreateProvider(desc);
-			Operatory opA=OperatoryT.CreateOperatory(desc+"A",desc+"A",provNum,clinicNum:clinic.ClinicNum,isWebSched:true);
-			Operatory opB=OperatoryT.CreateOperatory(desc+"B",desc+"B",provNum,clinicNum:clinic.ClinicNum,isWebSched:true);
+			Operatory opA=OperatoryT.CreateOperatory(desc+"A",desc+"A",provNum,clinicNum:clinic.Id,isWebSched:true);
+			Operatory opB=OperatoryT.CreateOperatory(desc+"B",desc+"B",provNum,clinicNum:clinic.Id,isWebSched:true);
 			DefLinkT.CreateDefLink(wsnpApptTypeDef.DefNum,opA.OperatoryNum,DefLinkType.Operatory);
 			DefLinkT.CreateDefLink(wsnpApptTypeDef.DefNum,opB.OperatoryNum,DefLinkType.Operatory);
 			//Set schedules, and confirm we can get all the timeslots we expect
-			Schedule provSched=ScheduleT.CreateSchedule(tomorrow,TimeSpan.FromHours(8),TimeSpan.FromHours(16),schedType:ScheduleType.Provider,clinicNum:clinic.ClinicNum,provNum:provNum,listOpNums:new List<long>() { opA.OperatoryNum,opB.OperatoryNum });
-			List<TimeSlot> listTimeSlots=TimeSlots.GetAvailableNewPatApptTimeSlots(tomorrow.Date,tomorrow.AddHours(23),clinic.ClinicNum,wsnpApptTypeDef.DefNum);
+			Schedule provSched=ScheduleT.CreateSchedule(tomorrow,TimeSpan.FromHours(8),TimeSpan.FromHours(16),schedType:ScheduleType.Provider,clinicNum:clinic.Id,provNum:provNum,listOpNums:new List<long>() { opA.OperatoryNum,opB.OperatoryNum });
+			List<TimeSlot> listTimeSlots=TimeSlots.GetAvailableNewPatApptTimeSlots(tomorrow.Date,tomorrow.AddHours(23),clinic.Id,wsnpApptTypeDef.DefNum);
 			Assert.IsTrue(listTimeSlots.Any(x => x.DateTimeStart==tomorrow.AddHours(12)));
 			//Create an appointment that would use the appointment rule we created
-			Patient patA=PatientT.CreatePatient(desc+"A",provNum,clinic.ClinicNum);
+			Patient patA=PatientT.CreatePatient(desc+"A",provNum,clinic.Id);
 			Appointment apptA=AppointmentT.CreateAppointment(patA.PatNum,tomorrow.AddHours(12),opA.OperatoryNum,provNum);
 			ProcedureT.CreateProcedure(patA,"D0120",ProcStat.TP,"",50,provNum:provNum,aptNum:apptA.AptNum);
 			//Refetch timeslots and make sure that the list does not contain the double booked slot
-			List<TimeSlot> listTimeSlotsAfter=TimeSlots.GetAvailableNewPatApptTimeSlots(tomorrow.Date,tomorrow.AddHours(23),clinic.ClinicNum,wsnpApptTypeDef.DefNum);
+			List<TimeSlot> listTimeSlotsAfter=TimeSlots.GetAvailableNewPatApptTimeSlots(tomorrow.Date,tomorrow.AddHours(23),clinic.Id,wsnpApptTypeDef.DefNum);
 			Assert.IsFalse(listTimeSlotsAfter.Any(x => x.DateTimeStart==tomorrow.AddHours(12)));
 		}
 
@@ -1306,11 +1306,11 @@ namespace UnitTests.Appointments_Tests {
 			//Setup create two operatories with the same provider and set these available for web sched
 			Clinic clinic=ClinicT.CreateClinic(desc);
 			long provNum=ProviderT.CreateProvider(desc);
-			Operatory opA=OperatoryT.CreateOperatory(desc+"A",desc+"A",provNum,clinicNum:clinic.ClinicNum,isWebSched:true);
-			Operatory opB=OperatoryT.CreateOperatory(desc+"B",desc+"B",provNum,clinicNum:clinic.ClinicNum,isWebSched:true);
-			Schedule provSched=ScheduleT.CreateSchedule(tomorrow,TimeSpan.FromHours(8),TimeSpan.FromHours(16),schedType:ScheduleType.Provider,clinicNum:clinic.ClinicNum,provNum:provNum,listOpNums:new List<long>() { opA.OperatoryNum,opB.OperatoryNum });
+			Operatory opA=OperatoryT.CreateOperatory(desc+"A",desc+"A",provNum,clinicNum:clinic.Id,isWebSched:true);
+			Operatory opB=OperatoryT.CreateOperatory(desc+"B",desc+"B",provNum,clinicNum:clinic.Id,isWebSched:true);
+			Schedule provSched=ScheduleT.CreateSchedule(tomorrow,TimeSpan.FromHours(8),TimeSpan.FromHours(16),schedType:ScheduleType.Provider,clinicNum:clinic.Id,provNum:provNum,listOpNums:new List<long>() { opA.OperatoryNum,opB.OperatoryNum });
 			//Create a patient with a recall
-			Patient patA=PatientT.CreatePatient(desc+"A",provNum,clinic.ClinicNum);
+			Patient patA=PatientT.CreatePatient(desc+"A",provNum,clinic.Id);
 			Recall recallA=RecallT.CreateRecall(patA.PatNum,recallType.RecallTypeNum,tomorrow,new Interval());
 			//Check we get the correct time slots
 			List<TimeSlot> listTimeSlots=TimeSlots.GetAvailableWebSchedTimeSlots(recallA.RecallNum,tomorrow,tomorrow,provNum,false);
@@ -1318,7 +1318,7 @@ namespace UnitTests.Appointments_Tests {
 			//Create the recall appointment for this patient
 			Appointment apptA=AppointmentT.CreateAppointmentFromRecall(recallA,patA,tomorrow.AddHours(8),opA.OperatoryNum,provNum);
 			//Create next patient
-			Patient patB=PatientT.CreatePatient(desc+"B",provNum,clinic.ClinicNum);
+			Patient patB=PatientT.CreatePatient(desc+"B",provNum,clinic.Id);
 			Recall recallB=RecallT.CreateRecall(patA.PatNum,recallType.RecallTypeNum,tomorrow,new Interval());
 			//Check we get the correct time slots
 			List<TimeSlot> listTimeSlotsAfter=TimeSlots.GetAvailableWebSchedTimeSlots(recallB.RecallNum,tomorrow,tomorrow,provNum,false);
@@ -1337,11 +1337,11 @@ namespace UnitTests.Appointments_Tests {
 			//Setup create two operatories with the same provider and set these available for web sched
 			Clinic clinic=ClinicT.CreateClinic(desc);
 			long provNum=ProviderT.CreateProvider(desc);
-			Operatory opA=OperatoryT.CreateOperatory(desc+"A",desc+"A",provNum,clinicNum:clinic.ClinicNum,isWebSched:true);
-			Operatory opB=OperatoryT.CreateOperatory(desc+"B",desc+"B",provNum,clinicNum:clinic.ClinicNum,isWebSched:true);
-			Schedule provSched=ScheduleT.CreateSchedule(tomorrow,TimeSpan.FromHours(8),TimeSpan.FromHours(16),schedType:ScheduleType.Provider,clinicNum:clinic.ClinicNum,provNum:provNum,listOpNums:new List<long>() { opA.OperatoryNum,opB.OperatoryNum });
+			Operatory opA=OperatoryT.CreateOperatory(desc+"A",desc+"A",provNum,clinicNum:clinic.Id,isWebSched:true);
+			Operatory opB=OperatoryT.CreateOperatory(desc+"B",desc+"B",provNum,clinicNum:clinic.Id,isWebSched:true);
+			Schedule provSched=ScheduleT.CreateSchedule(tomorrow,TimeSpan.FromHours(8),TimeSpan.FromHours(16),schedType:ScheduleType.Provider,clinicNum:clinic.Id,provNum:provNum,listOpNums:new List<long>() { opA.OperatoryNum,opB.OperatoryNum });
 			//Create a patient with a recall
-			Patient patA=PatientT.CreatePatient(desc+"A",provNum,clinic.ClinicNum);
+			Patient patA=PatientT.CreatePatient(desc+"A",provNum,clinic.Id);
 			Recall recallA=RecallT.CreateRecall(patA.PatNum,recallType.RecallTypeNum,tomorrow,new Interval());
 			//Check we get the correct time slots
 			List<TimeSlot> listTimeSlots=TimeSlots.GetAvailableWebSchedTimeSlots(recallA.RecallNum,tomorrow,tomorrow,provNum,false);
@@ -1349,7 +1349,7 @@ namespace UnitTests.Appointments_Tests {
 			//Create the recall appointment for this patient
 			Appointment apptA=AppointmentT.CreateAppointmentFromRecall(recallA,patA,tomorrow.AddHours(8),opA.OperatoryNum,provNum);
 			//Create next patient
-			Patient patB=PatientT.CreatePatient(desc+"B",provNum,clinic.ClinicNum);
+			Patient patB=PatientT.CreatePatient(desc+"B",provNum,clinic.Id);
 			Recall recallB=RecallT.CreateRecall(patA.PatNum,recallType.RecallTypeNum,tomorrow,new Interval());
 			//Check we get the correct time slots
 			List<TimeSlot> listTimeSlotsAfter=TimeSlots.GetAvailableWebSchedTimeSlots(recallB.RecallNum,tomorrow,tomorrow,provNum,false);

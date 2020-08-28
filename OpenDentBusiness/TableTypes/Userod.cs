@@ -53,7 +53,7 @@ namespace OpenDentBusiness
         ///         May be null for users that have no default clinic or when clinics are disabled.
         ///     </para>
         /// </summary> 	
-        [Column("ClinicNum"), ForeignKey(typeof(Clinic), nameof(Clinic.ClinicNum))]
+        [Column("ClinicNum"), ForeignKey(typeof(Clinic), nameof(Clinic.Id))]
         public long ClinicId;
 
         /// <summary>

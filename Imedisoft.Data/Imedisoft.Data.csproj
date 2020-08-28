@@ -95,6 +95,7 @@
     <Compile Include="Annotations\IgnoreAttribute.cs" />
     <Compile Include="Annotations\PrimaryKeyAttribute.cs" />
     <Compile Include="Annotations\TableAttribute.cs" />
+    <Compile Include="Annotations\TableOperations.cs" />
     <Compile Include="Cache\ListCache.cs" />
     <Compile Include="Cache\CacheGroupAttribute.cs" />
     <Compile Include="Cache\CacheManager.cs" />

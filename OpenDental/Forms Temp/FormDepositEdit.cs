@@ -1,21 +1,20 @@
-using System;
-using System.Data;
-using System.Drawing;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Windows.Forms;
+using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.Bridges;
 using OpenDental.UI;
 using OpenDentBusiness;
-using System.Diagnostics;
-using System.Linq;
-using CodeBase;
-using System.IO;
-using OpenDental.Thinfinity;
 using OpenDentBusiness.IO;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
 
-namespace OpenDental{
+namespace OpenDental
+{
 	/// <summary>
 	/// Summary description for FormBasicTemplate.
 	/// </summary>
@@ -678,7 +677,7 @@ namespace OpenDental{
 				List<Def> listAutoDepositDefsAll=Defs.GetDefsForCategory(DefCat.AutoDeposit);
 				//Fill deposit account num drop down
 				comboDepositAccountNum.Items.AddDefs(Defs.GetDefsForCategory(DefCat.AutoDeposit,true));
-				comboDepositAccountNum.SetSelectedDefNum(_depositCur.DepositAccountNum);
+				comboDepositAccountNum.SetSelectedDefNum(_depositCur.DepositAccountId);
 			}
 			if(IsNew) {
 				textDateStart.Text=PIn.Date(Prefs.GetString(PrefName.DateDepositsStarted)).ToShortDateString();
@@ -686,11 +685,11 @@ namespace OpenDental{
 					comboClinic.Visible=false;
 					labelClinic.Visible=false;
 				}
-				if(Clinics.ClinicNum==0) {
+				if(Clinics.ClinicId==0) {
 					comboClinic.IsAllSelected=true;
 				}
 				else {
-					comboClinic.SelectedClinicNum=Clinics.ClinicNum;
+					comboClinic.SelectedClinicNum=Clinics.ClinicId;
 				}
 				
 				List<Def> listPaymentTypeDefs=Defs.GetDefsForCategory(DefCat.PaymentTypes,true);
@@ -717,7 +716,7 @@ namespace OpenDental{
 				if(Accounts.DepositsLinked() && !IsQuickBooks) {
 					DepositAccounts=Accounts.GetDepositAccounts();
 					for(int i=0;i<DepositAccounts.Length;i++) {
-						comboDepositAccount.Items.Add(Accounts.GetDescript(DepositAccounts[i]));
+						comboDepositAccount.Items.Add(Accounts.GetDescription(DepositAccounts[i]));
 					}
 					comboDepositAccount.SelectedIndex=0;
 				}
@@ -733,7 +732,7 @@ namespace OpenDental{
 				//we never again let user change the deposit linking again from here.
 				//They need to detach it from within the transaction
 				//Might be enhanced later to allow, but that's very complex.
-				Transaction trans=Transactions.GetAttachedToDeposit(_depositCur.DepositNum);
+				Transaction trans=Transactions.GetAttachedToDeposit(_depositCur.Id);
 				if(trans==null) {
 					labelDepositAccount.Visible=false;
 					comboDepositAccount.Visible=false;
@@ -742,10 +741,10 @@ namespace OpenDental{
 				else {
 					comboDepositAccount.Enabled=false;
 					labelDepositAccount.Text="Deposited into Account";
-					List<JournalEntry> jeL=JournalEntries.GetForTrans(trans.TransactionNum);
+					List<JournalEntry> jeL=JournalEntries.GetForTrans(trans.Id);
 					for(int i=0;i<jeL.Count;i++) {
 						if(Accounts.GetAccount(jeL[i].AccountNum).Type==AccountType.Asset) {
-							comboDepositAccount.Items.Add(Accounts.GetDescript(jeL[i].AccountNum));
+							comboDepositAccount.Items.Add(Accounts.GetDescription(jeL[i].AccountNum));
 							comboDepositAccount.SelectedIndex=0;
 							textDepositAccount.Text=jeL[i].DateDisplayed.ToShortDateString()
 								+" "+jeL[i].DebitAmt.ToString("c");
@@ -827,16 +826,16 @@ namespace OpenDental{
 					ClaimPayList=ClaimPayments.GetForDeposit(dateStart,clinicNum,insPayTypes);
 				}
 				//new deposit, but has been saved to db (pressed print/PDF/email buttons), get trans already attached to deposit in db as well as unattached
-				if(_hasBeenSavedToDB && _depositCur.DepositNum>0) {
-					PatPayList=PatPayList.Concat(Payments.GetForDeposit(_depositCur.DepositNum))
+				if(_hasBeenSavedToDB && _depositCur.Id>0) {
+					PatPayList=PatPayList.Concat(Payments.GetForDeposit(_depositCur.Id))
 						.OrderBy(x => x.PayDate).ThenBy(x => x.PayNum).ToList();
-					ClaimPayList=ClaimPayList.Concat(ClaimPayments.GetForDeposit(_depositCur.DepositNum))
+					ClaimPayList=ClaimPayList.Concat(ClaimPayments.GetForDeposit(_depositCur.Id))
 						.OrderBy(x => x.CheckDate).ThenBy(x => x.ClaimPaymentNum).ToArray();
 				}
 			}
 			else{
-				PatPayList=Payments.GetForDeposit(_depositCur.DepositNum);
-				ClaimPayList=ClaimPayments.GetForDeposit(_depositCur.DepositNum);
+				PatPayList=Payments.GetForDeposit(_depositCur.Id);
+				ClaimPayList=ClaimPayments.GetForDeposit(_depositCur.Id);
 			}
 			//Fill Patient Payment Grid---------------------------------------
 			List<long> patNums=new List<long>();
@@ -1034,7 +1033,7 @@ namespace OpenDental{
 			_depositCur.Memo=PIn.String(textMemo.Text);
 			_depositCur.Batch=PIn.String(textBatch.Text);
 			if(comboDepositAccountNum.SelectedIndex > -1) {
-				_depositCur.DepositAccountNum=comboDepositAccountNum.GetSelectedDefNum();
+				_depositCur.DepositAccountId=comboDepositAccountNum.GetSelectedDefNum();
 			}
 			if(IsNew){
 				if(gridPat.SelectedIndices.Length+gridIns.SelectedIndices.Length>18 && IsQuickBooks) {
@@ -1051,7 +1050,7 @@ namespace OpenDental{
 			//Check DB to see if payments have been linked to another deposit already.  Build list of currently selected PayNums
 			List<long> listSelectedPayNums=gridPat.SelectedIndices.OfType<int>().Select(x => PatPayList[x].PayNum).ToList();
 			if(listSelectedPayNums.Count>0) {
-				int alreadyAttached=Payments.GetCountAttachedToDeposit(listSelectedPayNums,_depositCur.DepositNum);//Depositnum might be 0
+				int alreadyAttached=Payments.GetCountAttachedToDeposit(listSelectedPayNums,_depositCur.Id);//Depositnum might be 0
 				if(alreadyAttached>0) {
 					MessageBox.Show(this,alreadyAttached+" "+"patient payments are already attached to another deposit"+".");
 					//refresh
@@ -1061,7 +1060,7 @@ namespace OpenDental{
 			//Check DB to see if payments have been linked to another deposit already.  Build list of currently selected ClaimPaymentNums.
 			List<long> listSelectedClaimPaymentNums=gridIns.SelectedIndices.OfType<int>().Select(x => ClaimPayList[x].ClaimPaymentNum).ToList();
 			if(listSelectedClaimPaymentNums.Count>0) {
-				int alreadyAttached=ClaimPayments.GetCountAttachedToDeposit(listSelectedClaimPaymentNums,_depositCur.DepositNum);//Depositnum might be 0
+				int alreadyAttached=ClaimPayments.GetCountAttachedToDeposit(listSelectedClaimPaymentNums,_depositCur.Id);//Depositnum might be 0
 				if(alreadyAttached>0) {
 					MessageBox.Show(this,alreadyAttached+" "+"insurance payments are already attached to another deposit"+".");
 					//refresh
@@ -1084,7 +1083,7 @@ namespace OpenDental{
 			if(IsNew){//never allowed to change or attach more checks after initial creation of deposit slip
 				for(int i=0;i<gridPat.SelectedIndices.Length;i++){
 					Payment selectedPayment=PatPayList[gridPat.SelectedIndices[i]];
-					selectedPayment.DepositNum=_depositCur.DepositNum;
+					selectedPayment.DepositNum=_depositCur.Id;
 					Payments.Update(selectedPayment,false);//This could be enhanced with a multi row update.
 					if(!_isOnOKClick) {//Print/Create PDF
 						if(!_listPayNumsAttached.Contains(selectedPayment.PayNum)) {
@@ -1097,7 +1096,7 @@ namespace OpenDental{
 				}
 				for(int i=0;i<gridIns.SelectedIndices.Length;i++){
 					ClaimPayment selectedClaimPayment=ClaimPayList[gridIns.SelectedIndices[i]];
-					selectedClaimPayment.DepositNum=_depositCur.DepositNum;
+					selectedClaimPayment.DepositNum=_depositCur.Id;
 					try {
 						ClaimPayments.Update(selectedClaimPayment,IsNew);//This could be enhanced with a multi row update.
 					}
@@ -1116,14 +1115,14 @@ namespace OpenDental{
 				}
 				if(_isOnOKClick && (_listPayNumsAttached.Count!=0 || _listClaimPaymentNumAttached.Count!=0)) {
 					//Detach any payments or claimpayments that were attached in the DB but no longer selected.
-					Deposits.DetachFromDeposit(_depositCur.DepositNum,_listPayNumsAttached,_listClaimPaymentNumAttached);
+					Deposits.DetachFromDeposit(_depositCur.Id,_listPayNumsAttached,_listClaimPaymentNumAttached);
 				}
 				if(!_isOnOKClick) {
 					//The user has not saved the deposit. Check for payments that are no longer selected.
 					List<long> listDeselectedPayNums=_listPayNumsAttached.Except(listSelectedPayNums).ToList();
 					List<long> listDelectedClaimPaymentNums=_listClaimPaymentNumAttached.Except(listSelectedClaimPaymentNums).ToList();
 					if(!listDeselectedPayNums.IsNullOrEmpty() || !listDelectedClaimPaymentNums.IsNullOrEmpty()) {
-						Deposits.DetachFromDeposit(_depositCur.DepositNum,listDeselectedPayNums,listDelectedClaimPaymentNums);
+						Deposits.DetachFromDeposit(_depositCur.Id,listDeselectedPayNums,listDelectedClaimPaymentNums);
 						//The deselected payments are no longer attached. Remove from class wide list.
 						listDeselectedPayNums.ForEach(x => _listPayNumsAttached.Remove(x));
 						listDelectedClaimPaymentNums.ForEach(x => _listClaimPaymentNumAttached.Remove(x));
@@ -1207,7 +1206,7 @@ namespace OpenDental{
 				sheetDef=SheetsInternal.GetSheetDef(SheetInternalType.DepositSlip);
 			}
 			Sheet sheet=SheetUtil.CreateSheet(sheetDef,0);
-			SheetParameter.SetParameter(sheet,"DepositNum",_depositCur.DepositNum);
+			SheetParameter.SetParameter(sheet,"DepositNum",_depositCur.Id);
 			SheetFiller.FillFields(sheet);
 			SheetUtil.CalculateHeights(sheet);
 			SheetPrinting.Print(sheet);
@@ -1246,7 +1245,7 @@ namespace OpenDental{
 			}
 			//The below mimics FormSheetFillEdit.butPDF_Click() and the above butPrint_Click().
 			Sheet sheet=SheetUtil.CreateSheet(sheetDef,0);//Does not insert.
-			SheetParameter.SetParameter(sheet,"DepositNum",_depositCur.DepositNum);
+			SheetParameter.SetParameter(sheet,"DepositNum",_depositCur.Id);
 			SheetFiller.FillFields(sheet);
 			SheetUtil.CalculateHeights(sheet);
 			string filePathAndName= Storage.GetTempFileName(".pdf");
@@ -1289,7 +1288,7 @@ namespace OpenDental{
 			}
 			//The below mimics FormSheetFillEdit.butPDF_Click() and the above butPrint_Click().
 			Sheet sheet=SheetUtil.CreateSheet(sheetDef,0);//Does not insert.
-			SheetParameter.SetParameter(sheet,"DepositNum",_depositCur.DepositNum);
+			SheetParameter.SetParameter(sheet,"DepositNum",_depositCur.Id);
 			SheetFiller.FillFields(sheet);
 			SheetUtil.CalculateHeights(sheet);
 			string sheetName=sheet.Description+"_"+DateTime.Now.ToString("yyyyMMdd_hhmmssfff")+".pdf";
@@ -1298,7 +1297,7 @@ namespace OpenDental{
 			SheetPrinting.CreatePdf(sheet,tempFile,null);
 			Storage.Copy(tempFile,filePathAndName);
 			EmailMessage message=new EmailMessage();
-			EmailAddress address=EmailAddresses.GetByClinic(Clinics.ClinicNum);
+			EmailAddress address=EmailAddresses.GetByClinic(Clinics.ClinicId);
 			message.FromAddress=address.GetFrom();
 			message.Subject=sheet.Description;
 			EmailAttach attach=new EmailAttach();
@@ -1332,7 +1331,7 @@ namespace OpenDental{
 				textBankAccountInfo.Text=Prefs.GetString(PrefName.PracticeBankNumber);
 			}
 			else{
-				textBankAccountInfo.Text=Clinics.GetClinic(comboClinic.SelectedClinicNum).BankNumber;
+				textBankAccountInfo.Text=Clinics.GetById(comboClinic.SelectedClinicNum).BankNumber;
 			}
 			if(Prefs.Set(PrefName.DateDepositsStarted,POut.Date(PIn.Date(textDateStart.Text),false))){
 				changed=true;
@@ -1349,9 +1348,9 @@ namespace OpenDental{
 			}
 			//If deposit is attached to a transaction which is more than 48 hours old, then not allowed to delete.
 			//This is hard coded.  User would have to delete or detach from within transaction rather than here.
-			Transaction trans=Transactions.GetAttachedToDeposit(_depositCur.DepositNum);
+			Transaction trans=Transactions.GetAttachedToDeposit(_depositCur.Id);
 			if(trans != null){
-				if(trans.DateTimeEntry < MiscData.GetNowDateTime().AddDays(-2) ){
+				if(trans.DateAdded < MiscData.GetNowDateTime().AddDays(-2) ){
 					MessageBox.Show("Not allowed to delete.  This deposit is already attached to an accounting transaction.  You will need to detach it from within the accounting section of the program.");
 					return;
 				}
@@ -1387,29 +1386,35 @@ namespace OpenDental{
 				if(Accounts.DepositsLinked() && _depositCur.Amount>0 && !IsQuickBooks) {
 					//create a transaction here
 					Transaction trans=new Transaction();
-					trans.DepositNum=_depositCur.DepositNum;
-					trans.UserNum=Security.CurrentUser.Id;
+					trans.DepositId=_depositCur.Id;
+					trans.UserId=Security.CurrentUser.Id;
 					Transactions.Insert(trans);
-					//first the deposit entry
-					JournalEntry je=new JournalEntry();
-					je.AccountNum=DepositAccounts[comboDepositAccount.SelectedIndex];
-					je.CheckNumber="DEP";
-					je.DateDisplayed=_depositCur.DateDeposit;//it would be nice to add security here.
-					je.DebitAmt=_depositCur.Amount;
-					je.Memo="Deposit";
-					je.Splits=Accounts.GetDescript(Prefs.GetLong(PrefName.AccountingIncomeAccount));
-					je.TransactionNum=trans.TransactionNum;
-					JournalEntries.Insert(je);
-					//then, the income entry
-					je=new JournalEntry();
-					je.AccountNum=Prefs.GetLong(PrefName.AccountingIncomeAccount);
-					//je.CheckNumber=;
-					je.DateDisplayed=_depositCur.DateDeposit;//it would be nice to add security here.
-					je.CreditAmt=_depositCur.Amount;
-					je.Memo="Deposit";
-					je.Splits=Accounts.GetDescript(DepositAccounts[comboDepositAccount.SelectedIndex]);
-					je.TransactionNum=trans.TransactionNum;
-					JournalEntries.Insert(je);
+                    //first the deposit entry
+
+                    JournalEntry je = new JournalEntry
+                    {
+                        AccountNum = DepositAccounts[comboDepositAccount.SelectedIndex],
+                        CheckNumber = "DEP",
+                        DateDisplayed = _depositCur.DateDeposit,//it would be nice to add security here.
+                        DebitAmt = _depositCur.Amount,
+                        Memo = "Deposit",
+                        Splits = Accounts.GetDescription(Prefs.GetLong(PrefName.AccountingIncomeAccount)),
+                        TransactionNum = trans.Id
+                    };
+                    JournalEntries.Insert(je);
+
+                    //then, the income entry
+                    je = new JournalEntry
+                    {
+                        AccountNum = Prefs.GetLong(PrefName.AccountingIncomeAccount),
+                        //je.CheckNumber=;
+                        DateDisplayed = _depositCur.DateDeposit,//it would be nice to add security here.
+                        CreditAmt = _depositCur.Amount,
+                        Memo = "Deposit",
+                        Splits = Accounts.GetDescription(DepositAccounts[comboDepositAccount.SelectedIndex]),
+                        TransactionNum = trans.Id
+                    };
+                    JournalEntries.Insert(je);
 				}
 				SecurityLogs.MakeLogEntry(Permissions.DepositSlips,0,_depositCur.DateDeposit.ToShortDateString()+" New "+_depositCur.Amount.ToString("c"));
 			}

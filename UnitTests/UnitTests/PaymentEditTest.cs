@@ -3558,7 +3558,7 @@ namespace UnitTests.PaymentEdit_Tests {
 			Clinic clinic1=ClinicT.CreateClinic("Clinic1");
 			Family fam=Patients.GetFamily(pat.PatNum);
 			//create original prepayment.
-			PaySplit prePay=PaySplitT.CreatePrepayment(pat.PatNum,100,DateTime.Today.AddDays(-1),provNum,clinic1.ClinicNum);
+			PaySplit prePay=PaySplitT.CreatePrepayment(pat.PatNum,100,DateTime.Today.AddDays(-1),provNum,clinic1.Id);
 			//complete a procedure
 			Procedure proc1=ProcedureT.CreateProcedure(pat,"D1110",ProcStat.C,"",50,provNum:provNum);
 			//Setup to run the PaymentEdit.AllocateUnearned
@@ -3597,7 +3597,7 @@ namespace UnitTests.PaymentEdit_Tests {
 			long provNum=ProviderT.CreateProvider("SG");
 			Clinic clinic1=ClinicT.CreateClinic("Clinic1");
 			//create original prepayment.
-			PaySplit prePay=PaySplitT.CreatePrepayment(pat.PatNum,100,DateTime.Today.AddDays(-1),provNum,clinic1.ClinicNum);
+			PaySplit prePay=PaySplitT.CreatePrepayment(pat.PatNum,100,DateTime.Today.AddDays(-1),provNum,clinic1.Id);
 			//complete a procedure
 			Procedure proc1=ProcedureT.CreateProcedure(pat,"D1110",ProcStat.C,"",50,provNum:provNum);
 			//Manually allocate prepayment without linking to the original prepayment.
@@ -3628,9 +3628,9 @@ namespace UnitTests.PaymentEdit_Tests {
 			Clinic clinic1=ClinicT.CreateClinic("Clinic1");
 			//create tp prepayment of $100
 			Procedure tpProc=ProcedureT.CreateProcedure(pat,"D0220",ProcStat.TP,"",100,provNum:provNum);
-			PaySplit prePay=PaySplitT.CreateTpPrepayment(pat.PatNum,100,DateTime.Today.AddDays(-1),provNum,clinic1.ClinicNum,tpProc.ProcNum);
+			PaySplit prePay=PaySplitT.CreateTpPrepayment(pat.PatNum,100,DateTime.Today.AddDays(-1),provNum,clinic1.Id,tpProc.ProcNum);
 			//make a hidden payment split that is attached to nothing
-			PaySplit hiddenSplit=PaySplitT.CreateTpPrepayment(pat.PatNum,100,DateTime.Today.AddDays(-1),provNum,clinic1.ClinicNum,isHidden:true);
+			PaySplit hiddenSplit=PaySplitT.CreateTpPrepayment(pat.PatNum,100,DateTime.Today.AddDays(-1),provNum,clinic1.Id,isHidden:true);
 			//complete a different procedure
 			Procedure proc1=ProcedureT.CreateProcedure(pat,"D1110",ProcStat.C,"",200,provNum:provNum);
 			//Allocate the unearned
@@ -3660,7 +3660,7 @@ namespace UnitTests.PaymentEdit_Tests {
 			long provNum=ProviderT.CreateProvider("SG");
 			Clinic clinic1=ClinicT.CreateClinic("Clinic1");
 			//create original prepayment.
-			PaySplit prePay=PaySplitT.CreatePrepayment(pat.PatNum,100,DateTime.Today.AddDays(-1),provNum,clinic1.ClinicNum);
+			PaySplit prePay=PaySplitT.CreatePrepayment(pat.PatNum,100,DateTime.Today.AddDays(-1),provNum,clinic1.Id);
 			//complete a procedure
 			Procedure proc1=ProcedureT.CreateProcedure(pat,"D1110",ProcStat.C,"",50,provNum:provNum);
 			//Manually allocate prepayment without linking to the original prepayment.
@@ -3689,7 +3689,7 @@ namespace UnitTests.PaymentEdit_Tests {
 			Assert.AreEqual(50,retVal);
 			//Logic check PatNum - match, ProvNum - zero, ClinicNum - match
 			ResetPrepayments(pat);
-			_listFamPrePaySplits.ForEach(x => UpdatePaySplitHelper(x,pat.PatNum,0,clinic1.ClinicNum,_listNegPrePay.First().PayNum));
+			_listFamPrePaySplits.ForEach(x => UpdatePaySplitHelper(x,pat.PatNum,0,clinic1.Id,_listNegPrePay.First().PayNum));
 			retVal=PaymentEdit.ImplicitlyLinkPrepaymentsHelper(_listPosPrePay,_listNegPrePay,unearnedAmt,isPatMatch: true,isProvNumZero:true,isClinicNumMatch:true);
 			Assert.AreEqual(50,retVal);
 			//Logic check PatNum - match, ProvNum - zero, ClinicNum - zero
@@ -3704,7 +3704,7 @@ namespace UnitTests.PaymentEdit_Tests {
 			Assert.AreEqual(50,retVal);
 			//Logic check PatNum - match, ProvNum - non zero & non match, ClinicNum - match 
 			ResetPrepayments(pat);
-			_listFamPrePaySplits.ForEach(x => UpdatePaySplitHelper(x,pat.PatNum,nonMatch,clinic1.ClinicNum,_listNegPrePay.First().PayNum));
+			_listFamPrePaySplits.ForEach(x => UpdatePaySplitHelper(x,pat.PatNum,nonMatch,clinic1.Id,_listNegPrePay.First().PayNum));
 			retVal=PaymentEdit.ImplicitlyLinkPrepaymentsHelper(_listPosPrePay,_listNegPrePay,unearnedAmt,isPatMatch:true,isProvNonZeroNonMatch:true,isClinicNumMatch:true);
 			Assert.AreEqual(50,retVal);
 			//Logic check PatNum - match, ProvNum - non zero & non match, ClinicNum - zero
@@ -3719,7 +3719,7 @@ namespace UnitTests.PaymentEdit_Tests {
 			Assert.AreEqual(50,retVal);
 			//Logic check PatNum - other family members, ProvNum - match, ClinicNum - match
 			ResetPrepayments(pat);
-			_listFamPrePaySplits.ForEach(x => UpdatePaySplitHelper(x,patFam.PatNum,provNum,clinic1.ClinicNum,_listNegPrePay.First().PayNum));
+			_listFamPrePaySplits.ForEach(x => UpdatePaySplitHelper(x,patFam.PatNum,provNum,clinic1.Id,_listNegPrePay.First().PayNum));
 			retVal=PaymentEdit.ImplicitlyLinkPrepaymentsHelper(_listPosPrePay,_listNegPrePay,unearnedAmt,isFamMatch:true,isProvNumMatch:true,isClinicNumMatch:true);
 			Assert.AreEqual(50,retVal);
 			//Logic check PatNum - other family members, ProvNum - match, ClinicNum - zero
@@ -3734,7 +3734,7 @@ namespace UnitTests.PaymentEdit_Tests {
 			Assert.AreEqual(50,retVal);
 			//Logic check PatNum - other family members, ProvNum - zero, ClinicNum - match
 			ResetPrepayments(pat);
-			_listFamPrePaySplits.ForEach(x => UpdatePaySplitHelper(x,patFam.PatNum,0,clinic1.ClinicNum,_listNegPrePay.First().PayNum));
+			_listFamPrePaySplits.ForEach(x => UpdatePaySplitHelper(x,patFam.PatNum,0,clinic1.Id,_listNegPrePay.First().PayNum));
 			retVal=PaymentEdit.ImplicitlyLinkPrepaymentsHelper(_listPosPrePay,_listNegPrePay,unearnedAmt,isFamMatch:true,isProvNumZero:true,isClinicNumMatch:true);
 			Assert.AreEqual(50,retVal);
 			//Logic check PatNum - other family members, ProvNum - zero, ClinicNum - zero
@@ -3753,7 +3753,7 @@ namespace UnitTests.PaymentEdit_Tests {
 			Assert.AreEqual(100,retVal);
 			//Logic checkPatNum - other family members, ProvNum - non zero & non match, ClinicNum - match
 			ResetPrepayments(pat);
-			_listFamPrePaySplits.ForEach(x => UpdatePaySplitHelper(x,patFam.PatNum,nonMatch,clinic1.ClinicNum,_listNegPrePay.First().PayNum));
+			_listFamPrePaySplits.ForEach(x => UpdatePaySplitHelper(x,patFam.PatNum,nonMatch,clinic1.Id,_listNegPrePay.First().PayNum));
 			retVal=PaymentEdit.ImplicitlyLinkPrepaymentsHelper(_listPosPrePay,_listNegPrePay,unearnedAmt,isFamMatch:true,isProvNonZeroNonMatch:true,isClinicNumMatch:true);
 			Assert.AreEqual(50,retVal);
 			//Logic check PatNum - other family members, ProvNum - non zero & non match, ClinicNum - zero
@@ -5623,7 +5623,7 @@ namespace UnitTests.PaymentEdit_Tests {
 			PayPlanCharge payPlanCharge1=PayPlanChargeT.CreateOne(paymentPlan1.PayPlanNum,pat1.PatNum,pat1.PatNum,new DateTime(2019,1,1),100,
 				provNum:provNum1,chargeType:PayPlanChargeType.Credit);
 			Payment payment1=PaymentT.MakePayment(pat1.PatNum,25,payDate:new DateTime(2019,1,2),provNum:provNum1,payPlanNum:paymentPlan1.PayPlanNum,
-				clinicNum:clinic1.ClinicNum);
+				clinicNum:clinic1.Id);
 			PaymentEdit.IncomeTransferData transferResults=PaymentT.BalanceAndIncomeTransfer(pat1.PatNum);
 			/*****************************************************
 			Paysplit1:  Today  prov1  pat1  clinic1  -$25
@@ -5640,19 +5640,19 @@ namespace UnitTests.PaymentEdit_Tests {
 				&& x.PatNum==pat1.PatNum
 				&& x.SplitAmt==-25
 				&& x.PayPlanNum==paymentPlan1.PayPlanNum
-				&& x.ClinicNum==clinic1.ClinicNum
+				&& x.ClinicNum==clinic1.Id
 				&& x.UnearnedType==0));
 			Assert.AreEqual(1,transferResults.ListSplitsCur.Count(x => x.ProvNum==provNum1
 				&& x.PatNum==pat1.PatNum
 				&& x.SplitAmt==25
 				&& x.PayPlanNum==0
-				&& x.ClinicNum==clinic1.ClinicNum
+				&& x.ClinicNum==clinic1.Id
 				&& x.UnearnedType==unearnedType));
 			Assert.AreEqual(1,transferResults.ListSplitsCur.Count(x => x.ProvNum==provNum1
 				&& x.PatNum==pat1.PatNum
 				&& x.SplitAmt==-25
 				&& x.PayPlanNum==0
-				&& x.ClinicNum==clinic1.ClinicNum
+				&& x.ClinicNum==clinic1.Id
 				&& x.UnearnedType==unearnedType));
 			Assert.AreEqual(1,transferResults.ListSplitsCur.Count(x => x.ProvNum==provNum1
 				&& x.PatNum==pat1.PatNum
@@ -7912,12 +7912,12 @@ namespace UnitTests.PaymentEdit_Tests {
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			PrefT.UpdateBool(PrefName.EasyNoClinics,false);//Not-no clinics
 			Clinic clinic=ClinicT.CreateClinic(suffix);
-			Patient pat=PatientT.CreatePatient(suffix,clinicNum:clinic.ClinicNum);
+			Patient pat=PatientT.CreatePatient(suffix,clinicNum:clinic.Id);
 			long provNum=ProviderT.CreateProvider(suffix);
 			Procedure procedure=ProcedureT.CreateProcedure(pat,"I0817",ProcStat.C,"",45,provNum:provNum);//ClinicNum gets set to pat.ClinicNum
 			Def defAdjType=DefT.CreateDefinition(DefCat.AdjTypes,suffix,itemValue:"+",isHidden:true);
-			Adjustment adjustment=AdjustmentT.MakeAdjustment(pat.PatNum,15,provNum:provNum,adjType:defAdjType.DefNum,clinicNum:clinic.ClinicNum);
-			Payment payment1=PaymentT.MakePaymentNoSplits(pat.PatNum,0,clinicNum:clinic.ClinicNum);
+			Adjustment adjustment=AdjustmentT.MakeAdjustment(pat.PatNum,15,provNum:provNum,adjType:defAdjType.DefNum,clinicNum:clinic.Id);
+			Payment payment1=PaymentT.MakePaymentNoSplits(pat.PatNum,0,clinicNum:clinic.Id);
 			PaySplit paySplit1=PaySplitT.CreateSplit(0,pat.PatNum,payment1.PayNum,0,DateTime.Today,0,provNum,15,0,adjustment.AdjNum);
 			PaySplit paySplit2=PaySplitT.CreateSplit(0,pat.PatNum,payment1.PayNum,0,DateTime.Today,procedure.ProcNum,provNum,-15,0,0);
 			PrefT.UpdateBool(PrefName.EasyNoClinics,true);//No clinics

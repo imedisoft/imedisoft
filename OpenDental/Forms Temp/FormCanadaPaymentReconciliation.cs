@@ -75,9 +75,9 @@ namespace OpenDental {
 			try {
 				Carrier carrier=carriers[listCarriers.SelectedIndex];
 				Clearinghouse clearinghouseHq=Canadian.GetCanadianClearinghouseHq(carrier);
-				Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.ClinicNum); 
+				Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.ClinicId); 
 				CanadianOutput.GetPaymentReconciliations(clearinghouseClin,carrier,_listProviders[listTreatingProvider.SelectedIndex],
-					_listProviders[listBillingProvider.SelectedIndex],reconciliationDate,Clinics.ClinicNum,false,FormCCDPrint.PrintCCD);
+					_listProviders[listBillingProvider.SelectedIndex],reconciliationDate,Clinics.ClinicId,false,FormCCDPrint.PrintCCD);
 				Cursor=Cursors.Default;
 				MessageBox.Show("Done.");
 			}

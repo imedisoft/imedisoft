@@ -699,7 +699,7 @@ namespace OpenDentBusiness{
 			}
 			else {
 				command+="CASE ";
-				if(!feeSched.IsGlobal && Clinics.ClinicNum!=0) {//Use local clinic fee if there's one present
+				if(!feeSched.IsGlobal && Clinics.ClinicId!=0) {//Use local clinic fee if there's one present
 					command+="WHEN (feeclinic1.Amount IS NOT NULL) THEN feeclinic1.Amount ";
 				}
 				command+="WHEN (feehq1.Amount IS NOT NULL) THEN feehq1.Amount ELSE -1 END FeeAmt1,";
@@ -709,7 +709,7 @@ namespace OpenDentBusiness{
 			}
 			else {
 				command+="CASE ";
-				if(!feeSched2.IsGlobal && Clinics.ClinicNum!=0) {//Use local clinic fee if there's one present
+				if(!feeSched2.IsGlobal && Clinics.ClinicId!=0) {//Use local clinic fee if there's one present
 					command+="WHEN (feeclinic2.Amount IS NOT NULL) THEN feeclinic2.Amount ";
 				}
 				command+="WHEN (feehq2.Amount IS NOT NULL) THEN feehq2.Amount ELSE -1 END FeeAmt2,";
@@ -719,44 +719,44 @@ namespace OpenDentBusiness{
 			}
 			else {
 				command+="CASE ";
-				if(!feeSched3.IsGlobal && Clinics.ClinicNum!=0) {//Use local clinic fee if there's one present
+				if(!feeSched3.IsGlobal && Clinics.ClinicId!=0) {//Use local clinic fee if there's one present
 					command+="WHEN (feeclinic3.Amount IS NOT NULL) THEN feeclinic3.Amount ";
 				}
 				command+="WHEN (feehq3.Amount IS NOT NULL) THEN feehq3.Amount ELSE -1 END FeeAmt3,";				
 			}
 			command+="procedurecode.CodeNum ";
-			if(feeSched!=null && !feeSched.IsGlobal && Clinics.ClinicNum!=0) {
+			if(feeSched!=null && !feeSched.IsGlobal && Clinics.ClinicId!=0) {
 				command+=",CASE WHEN (feeclinic1.Amount IS NOT NULL) THEN 1 ELSE 0 END IsClinic1 ";
 			}
-			if(feeSched2!=null && !feeSched2.IsGlobal && Clinics.ClinicNum!=0) {
+			if(feeSched2!=null && !feeSched2.IsGlobal && Clinics.ClinicId!=0) {
 				command+=",CASE WHEN (feeclinic2.Amount IS NOT NULL) THEN 1 ELSE 0 END IsClinic2 ";
 			}
-			if(feeSched3!=null && !feeSched3.IsGlobal && Clinics.ClinicNum!=0) {
+			if(feeSched3!=null && !feeSched3.IsGlobal && Clinics.ClinicId!=0) {
 				command+=",CASE WHEN (feeclinic3.Amount IS NOT NULL) THEN 1 ELSE 0 END IsClinic3 ";
 			}
 			command+="FROM procedurecode ";
 			if(feeSched!=null) {
-				if(!feeSched.IsGlobal && Clinics.ClinicNum!=0) {//Get local clinic fee if there's one present
+				if(!feeSched.IsGlobal && Clinics.ClinicId!=0) {//Get local clinic fee if there's one present
 					command+="LEFT JOIN fee feeclinic1 ON feeclinic1.CodeNum=procedurecode.CodeNum AND feeclinic1.FeeSched="+POut.Long(feeSched.FeeSchedNum)
-						+" AND feeclinic1.ClinicNum="+POut.Long(Clinics.ClinicNum)+" ";
+						+" AND feeclinic1.ClinicNum="+POut.Long(Clinics.ClinicId)+" ";
 				}
 				//Get the hq clinic fee if there's one present
 				command+="LEFT JOIN fee feehq1 ON feehq1.CodeNum=procedurecode.CodeNum AND feehq1.FeeSched="+POut.Long(feeSched.FeeSchedNum)
 					+" AND feehq1.ClinicNum=0 ";
 			}
 			if(feeSched2!=null) {
-				if(!feeSched2.IsGlobal && Clinics.ClinicNum!=0) {//Get local clinic fee if there's one present
+				if(!feeSched2.IsGlobal && Clinics.ClinicId!=0) {//Get local clinic fee if there's one present
 					command+="LEFT JOIN fee feeclinic2 ON feeclinic2.CodeNum=procedurecode.CodeNum AND feeclinic2.FeeSched="+POut.Long(feeSched2.FeeSchedNum)
-						+" AND feeclinic2.ClinicNum="+POut.Long(Clinics.ClinicNum)+" ";
+						+" AND feeclinic2.ClinicNum="+POut.Long(Clinics.ClinicId)+" ";
 				}
 				//Get the hq clinic fee if there's one present
 				command+="LEFT JOIN fee feehq2 ON feehq2.CodeNum=procedurecode.CodeNum AND feehq2.FeeSched="+POut.Long(feeSched2.FeeSchedNum)
 					+" AND feehq2.ClinicNum=0 ";
 			}
 			if(feeSched3!=null) {
-				if(!feeSched3.IsGlobal && Clinics.ClinicNum!=0) {//Get local clinic fee if there's one present
+				if(!feeSched3.IsGlobal && Clinics.ClinicId!=0) {//Get local clinic fee if there's one present
 					command+="LEFT JOIN fee feeclinic3 ON feeclinic3.CodeNum=procedurecode.CodeNum AND feeclinic3.FeeSched="+POut.Long(feeSched3.FeeSchedNum)
-						+" AND feeClinic3.ClinicNum="+POut.Long(Clinics.ClinicNum)+" ";
+						+" AND feeClinic3.ClinicNum="+POut.Long(Clinics.ClinicId)+" ";
 				}
 				//Get the hq clinic fee if there's one present
 				command+="LEFT JOIN fee feehq3 ON feehq3.CodeNum=procedurecode.CodeNum AND feehq3.FeeSched="+POut.Long(feeSched3.FeeSchedNum)

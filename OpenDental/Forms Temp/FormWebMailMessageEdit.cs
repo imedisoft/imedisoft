@@ -479,7 +479,7 @@ namespace OpenDental {
 				_insecureMessage.ToAddress=_patCur.Email;
 				_insecureMessage.PatNum=_patCur.PatNum;
 				_insecureMessage.Subject=SubjectInsecure;
-				Clinic clinic=Clinics.GetClinic(_patCur.ClinicNum)??Clinics.GetPracticeAsClinicZero();
+				Clinic clinic=Clinics.GetById(_patCur.ClinicNum)??Clinics.GetPracticeAsClinicZero();
 				_insecureMessage.BodyText=Clinics.ReplaceOffice(BodyTextInsecure,clinic,isHtmlEmail:true,doReplaceDisclaimer:true);
 				_insecureMessage.SentOrReceived=EmailSentOrReceived.Sent; //this is not secure so just mark as regular sent
 				//Send an insecure notification email to the patient.

@@ -1769,7 +1769,7 @@ namespace OpenDentBusiness {
 			}
 			Procedure proc=new Procedure();
 			proc.PatNum=pat.PatNum;
-			proc.ClinicNum=Clinics.ClinicNum;
+			proc.ClinicNum=Clinics.ClinicId;
 			proc.ProcStatus=procStatus;
 			proc.ProvNum=provNum;
 			proc.AptNum=aptNum;

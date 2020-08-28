@@ -46,7 +46,7 @@ namespace OpenDentBusiness.AutoComm
 			ReplaceOneTag(stringBuilder, "[PracticePhone]", TelephoneNumbers.ReFormat(Prefs.GetString(PrefName.PracticePhone)), isEmailBody);
 			ReplaceOneTag(stringBuilder, "[ProvName]", Providers.GetFormalName(autoCommObj.ProvNum), isEmailBody);
 			ReplaceOneTag(stringBuilder, "[ProvAbbr]", Providers.GetAbbr(autoCommObj.ProvNum), isEmailBody);
-			ReplaceOneTag(stringBuilder, "[EmailDisclaimer]", EmailMessages.GetEmailDisclaimer(clinic.ClinicNum), isEmailBody);
+			ReplaceOneTag(stringBuilder, "[EmailDisclaimer]", EmailMessages.GetEmailDisclaimer(clinic.Id), isEmailBody);
 			ReplaceTagsChild(stringBuilder, autoCommObj, isEmailBody);
 
 			return stringBuilder.ToString();

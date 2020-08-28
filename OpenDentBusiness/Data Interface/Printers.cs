@@ -118,7 +118,7 @@ namespace OpenDentBusiness{
 		///<summary>Gets the set printer whether or not it is valid.  Returns null if the current computer OR printer cannot be found.</summary>
 		public static Printer GetForSit(PrintSituation sit) {
 			//No need to check RemotingRole; no call to db.
-			Computer compCur=Computers.GetCur();
+			Computer compCur=Computers.GetCurrent();
 			if(compCur==null) {
 				return null;
 			}
@@ -163,19 +163,20 @@ namespace OpenDentBusiness{
 		public static void ClearAll(){
 			
 			//first, delete all entries
-			string command="DELETE FROM printer";
- 			Database.ExecuteNonQuery(command);
+ 			Database.ExecuteNonQuery("DELETE FROM printer");
+
 			//then, add one printer for each computer. Default and show prompt
 			Computers.RefreshCache();
-			Printer cur;
-			List<Computer> listComputers=Computers.GetDeepCopy();
-			for(int i=0;i<listComputers.Count;i++) {
-				cur=new Printer();
-				cur.ComputerNum=listComputers[i].Id;
-				cur.PrintSit=PrintSituation.Default;
-				cur.PrinterName="";
-				cur.DisplayPrompt=true;
-				Insert(cur);
+
+			foreach (var computer in Computers.All)
+            {
+                Insert(new Printer
+				{
+					ComputerNum = computer.Id,
+					PrintSit = PrintSituation.Default,
+					PrinterName = "",
+					DisplayPrompt = true
+				});
 			}
 		}
 	}

@@ -144,7 +144,7 @@ namespace OpenDentBusiness{
 						ProcedureCode procCode=ProcedureCodes.GetProcCode(fee.CodeNum);
 						string securityLogText="Fee Schedule \""+fromFeeSched.Description+"\" copied to Fee Schedule \""+toFeeSched.Description+"\", ";
 						if(clinicNumTo!=0){
-							securityLogText+="To Clinic \""+Clinics.GetDesc(clinicNumTo)+"\", ";
+							securityLogText+="To Clinic \""+Clinics.GetDescription(clinicNumTo)+"\", ";
 						}
 						securityLogText+="Proc Code \""+procCode.ProcCode+"\", Fee \""+fee.Amount+"\", ";
 						if(isReplacementFee) { 

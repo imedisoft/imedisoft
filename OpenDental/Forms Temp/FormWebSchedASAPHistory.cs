@@ -105,7 +105,7 @@ namespace OpenDental {
 				}
 				row.Cells.Add(emailSent);
 				if(PrefC.HasClinicsEnabled) {
-					row.Cells.Add(ODMethodsT.Coalesce(Clinics.GetClinic(asapHist.AsapComm.ClinicNum)).Abbr);
+					row.Cells.Add(ODMethodsT.Coalesce(Clinics.GetById(asapHist.AsapComm.ClinicNum)).Abbr);
 				}
 				row.Cells.Add(asapHist.AsapComm.DateTimeOrig.Year > 1880 ? asapHist.AsapComm.DateTimeOrig.ToString() : "");
 				row.Cells.Add(asapHist.DateTimeSlotStart.ToString());

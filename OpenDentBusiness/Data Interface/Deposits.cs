@@ -112,20 +112,20 @@ namespace OpenDentBusiness{
 		///I would never expect the program to throw this exception unless there was a bug.</summary>
 		public static void Delete(Deposit dep){
 			
-			if(dep.DepositNum==0) {
+			if(dep.Id==0) {
 				return;
 			}
 			//check dependencies
-			string command="SELECT COUNT(*) FROM transaction WHERE DepositNum ="+POut.Long(dep.DepositNum);
+			string command="SELECT COUNT(*) FROM transaction WHERE DepositNum ="+POut.Long(dep.Id);
 			if(PIn.Long(Database.ExecuteString(command))>0) {
 				throw new ApplicationException("Cannot delete deposit because it is attached to a transaction.");
 			}
 			//ready to delete
-			command="UPDATE payment SET DepositNum=0 WHERE DepositNum="+POut.Long(dep.DepositNum);
+			command="UPDATE payment SET DepositNum=0 WHERE DepositNum="+POut.Long(dep.Id);
 			Database.ExecuteNonQuery(command);
-			command="UPDATE claimpayment SET DepositNum=0 WHERE DepositNum="+POut.Long(dep.DepositNum);
+			command="UPDATE claimpayment SET DepositNum=0 WHERE DepositNum="+POut.Long(dep.Id);
 			Database.ExecuteNonQuery(command);
-			Crud.DepositCrud.Delete(dep.DepositNum);
+			Crud.DepositCrud.Delete(dep.Id);
 		}
 
 		///<summary>Detach specific payments and claimpayments from passed in deposit.</summary>

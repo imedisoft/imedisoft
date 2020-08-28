@@ -275,11 +275,11 @@ namespace OpenDentBusiness
 			{
 				return TsiTransLogs.ValidateClinicSftpDetails(dictAllProps[0], false);
 			}
-			List<Clinic> listAllClinics = Clinics.GetDeepCopy();
+			List<Clinic> listAllClinics = Clinics.GetAll(true);
 			listDisabledClinicNums.AddRange(dictAllProps.Where(x => !TsiTransLogs.ValidateClinicSftpDetails(x.Value, false)).Select(x => x.Key));
 			listDisabledClinicNums.AddRange(listAllClinics
-				.FindAll(x => x.IsHidden || (listDisabledClinicNums.Contains(0) && !dictAllProps.ContainsKey(x.ClinicNum)))//if no props for HQ, skip other clinics without props
-				.Select(x => x.ClinicNum)
+				.FindAll(x => x.IsHidden || (listDisabledClinicNums.Contains(0) && !dictAllProps.ContainsKey(x.Id)))//if no props for HQ, skip other clinics without props
+				.Select(x => x.Id)
 			);
 			return !listDisabledClinicNums.Contains(clinicNum);
 		}
@@ -310,7 +310,7 @@ namespace OpenDentBusiness
 			{
 				clinicNum = 0;
 			}
-			string clinicDesc = clinicNum == 0 ? "Headquarters" : Clinics.GetDesc(clinicNum);
+			string clinicDesc = clinicNum == 0 ? "Headquarters" : Clinics.GetDescription(clinicNum);
 			if (!dictAllProps.ContainsKey(clinicNum)
 				|| !ValidateClinicSftpDetails(dictAllProps[clinicNum], true)) //the props should be valid, but this will test the connection using the props
 			{

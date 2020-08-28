@@ -41,7 +41,7 @@ namespace OpenDental {
 						checkEnabled.Enabled=false;
 					}
 				}
-				comboClinic.SelectedClinicNum=Clinics.ClinicNum;
+				comboClinic.SelectedClinicNum=Clinics.ClinicId;
 				_clinicNumCur=comboClinic.SelectedClinicNum;
 			}
 			else {//clinics are not enabled, use ClinicNum 0 to indicate 'Headquarters' or practice level program properties
@@ -55,12 +55,8 @@ namespace OpenDental {
 			}
 			try {
 				List<long> listUserClinicNums;
-				if(Security.CurrentUser.ClinicIsRestricted) {//user is clinic restricted and shouldn't have access to HQ
-					listUserClinicNums=Clinics.GetForUserod(Security.CurrentUser).Select(x => x.ClinicNum).ToList();
-				}
-				else {
-					listUserClinicNums=Clinics.GetForUserod(Security.CurrentUser,true).Select(x => x.ClinicNum).ToList();
-				}
+				listUserClinicNums=Clinics.GetByCurrentUser().Select(x => x.Id).ToList();
+				
 				long clinicNum=0;
 				if(!comboClinic.IsUnassignedSelected) {
 					clinicNum=comboClinic.SelectedClinicNum;

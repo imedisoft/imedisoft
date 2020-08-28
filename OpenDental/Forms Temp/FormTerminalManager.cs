@@ -330,7 +330,7 @@ namespace OpenDental {
 
 			public string ClinicDesc {
 				get {
-					return IsKiosk?"Unassigned":Clinics.GetDesc(_mobileDevice.ClinicNum);
+					return IsKiosk?"Unassigned":Clinics.GetDescription(_mobileDevice.ClinicNum);
 				}
 			}
 

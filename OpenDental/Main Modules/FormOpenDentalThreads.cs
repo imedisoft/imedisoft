@@ -171,7 +171,7 @@ namespace OpenDental
 				{
 					return;//user has been inactive for a while, so stop checking alerts.
 				}
-				long clinicNumCur = Clinics.ClinicNum;
+				long clinicNumCur = Clinics.ClinicId;
 				long userNumCur = Security.CurrentUser.Id;
 				// TODO: Logger.LogToPath("",LogPath.Signals,LogPhase.Start);
 				List<List<AlertItem>> listUniqueAlerts = AlertItems.GetUniqueAlerts(userNumCur, clinicNumCur);
@@ -181,12 +181,12 @@ namespace OpenDental
 					.Where(x => x.Type != AlertType.ClinicsChangedInternal).ToList();//These alerts are not supposed to be displayed to the end user.
 																					 //Update listUserAlertTypes to only those with active AlertItems.
 				List<AlertType> listUserAlertLinks = listAlertItems.Select(x => x.Type).ToList();
-				List<AlertRead> listAlertItemReads = AlertReads.RefreshForAlertNums(userNumCur, listAlertItems.Select(x => x.Id).ToList());
+				var listAlertItemReads = AlertReads.RefreshForAlertNums(userNumCur, listAlertItems.Select(x => x.Id).ToList());
 				this.InvokeIfRequired(() =>
 				{
 					//Assigning this inside Invoke so that we don't have to lock _listAlertItems and _listAlertReads.
 					_listAlertItems = listAlertItems;
-					_listAlertReads = listAlertItemReads;
+					_listAlertReads = listAlertItemReads.ToList();
 					AddAlertsToMenu();
 				});
 			});
@@ -253,7 +253,7 @@ namespace OpenDental
 			{//Every three minutes
 				ODException.SwallowAnyException(() =>
 				{
-					Computers.UpdateHeartBeat(Environment.MachineName, false);
+					Computers.UpdateHeartBeat(Environment.MachineName);
 				});
 			});
 			threadCompHeartbeat.AddExceptionHandler((e) => { });
@@ -459,7 +459,7 @@ namespace OpenDental
 			{ //Not a critical event so no need to continue.
 				return;
 			}
-			if (AlertItems.RefreshForType(AlertType.EConnectorDown).Count > 0)
+			if (AlertItems.RefreshForType(AlertType.EConnectorDown).Count() > 0)
 			{ //Alert already exists to no need to continue.
 				return;
 			}

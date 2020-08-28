@@ -109,7 +109,7 @@ namespace OpenDentBusiness
 			}
 			if (ageOptions.ListClins != null && ageOptions.ListClins.Count > 0)
 			{
-				command += @" AND patient.ClinicNum IN (" + String.Join(",", ageOptions.ListClins.Select(x => x.ClinicNum)) + ") ";
+				command += @" AND patient.ClinicNum IN (" + String.Join(",", ageOptions.ListClins.Select(x => x.Id)) + ") ";
 			}
 			if (ageOptions.FamGroup == AgingOptions.FamilyGrouping.Individual)
 			{

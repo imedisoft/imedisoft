@@ -97,12 +97,12 @@ namespace OpenDental {
 				//disabled clinics because we use the ClinicNum to determine which PayConnect or XCharge/XWeb credentials to use for payments.
 				paymentCur.ClinicNum=0;
 				if(PrefC.HasClinicsEnabled) {
-					paymentCur.ClinicNum=Clinics.ClinicNum;
+					paymentCur.ClinicNum=Clinics.ClinicId;
 					if((PayClinicSetting)PrefC.GetInt(PrefName.PaymentClinicSetting)==PayClinicSetting.PatientDefaultClinic) {
 						paymentCur.ClinicNum=patCur.ClinicNum;
 					}
 					else if((PayClinicSetting)PrefC.GetInt(PrefName.PaymentClinicSetting)==PayClinicSetting.SelectedExceptHQ) {
-						paymentCur.ClinicNum=(Clinics.ClinicNum==0 ? patCur.ClinicNum : Clinics.ClinicNum);
+						paymentCur.ClinicNum=(Clinics.ClinicId==0 ? patCur.ClinicNum : Clinics.ClinicId);
 					}
 				}
 				paymentCur.DateEntry=DateTimeOD.Today;

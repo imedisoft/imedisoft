@@ -8,6 +8,9 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 	///<summary></summary>

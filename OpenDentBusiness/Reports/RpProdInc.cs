@@ -58,7 +58,7 @@ namespace OpenDentBusiness {
 			tableDailyProd.Columns.Add(new DataColumn("Ins Income"));
 			tableDailyProd.Columns.Add(new DataColumn("ClinicSplit"));
 			for(int i=0;i<tableProduction.Rows.Count;i++) {
-				if(_hasClinics && !listClinics.Exists(x => x.ClinicNum==PIn.Long(tableProduction.Rows[i]["Clinic"].ToString()))) {
+				if(_hasClinics && !listClinics.Exists(x => x.Id==PIn.Long(tableProduction.Rows[i]["Clinic"].ToString()))) {
 					continue;//Using clinics and the current row is for a clinic that is NOT in the list of clinics we care about.
 				}
 				DataRow row=tableDailyProd.NewRow();
@@ -84,7 +84,7 @@ namespace OpenDentBusiness {
 				tableDailyProd.Rows.Add(row);
 			}
 			for(int i=0;i<tableAdj.Rows.Count;i++) {
-				if(_hasClinics && !listClinics.Exists(x => x.ClinicNum==PIn.Long(tableAdj.Rows[i]["Clinic"].ToString()))) {
+				if(_hasClinics && !listClinics.Exists(x => x.Id==PIn.Long(tableAdj.Rows[i]["Clinic"].ToString()))) {
 					continue;//Using clinics and the current row is for a clinic that is NOT in the list of clinics we care about.
 				}
 				DataRow row=tableDailyProd.NewRow();
@@ -110,7 +110,7 @@ namespace OpenDentBusiness {
 				tableDailyProd.Rows.Add(row);
 			}
 			for(int i=0;i<tableInsWriteoff.Rows.Count;i++) {
-				if(_hasClinics && !listClinics.Exists(x => x.ClinicNum==PIn.Long(tableInsWriteoff.Rows[i]["Clinic"].ToString()))) {
+				if(_hasClinics && !listClinics.Exists(x => x.Id==PIn.Long(tableInsWriteoff.Rows[i]["Clinic"].ToString()))) {
 					continue;//Using clinics and the current row is for a clinic that is NOT in the list of clinics we care about.
 				}
 				DataRow row=tableDailyProd.NewRow();
@@ -136,7 +136,7 @@ namespace OpenDentBusiness {
 				tableDailyProd.Rows.Add(row);
 			}
 			for(int i = 0;i<tableWriteOffAdjustments.Rows.Count;i++) {
-				if(_hasClinics && !listClinics.Exists(x => x.ClinicNum==PIn.Long(tableWriteOffAdjustments.Rows[i]["Clinic"].ToString()))) {
+				if(_hasClinics && !listClinics.Exists(x => x.Id==PIn.Long(tableWriteOffAdjustments.Rows[i]["Clinic"].ToString()))) {
 					continue;//Using clinics and the current row is for a clinic that is NOT in the list of clinics we care about.
 				}
 				DataRow row=tableDailyProd.NewRow();
@@ -160,7 +160,7 @@ namespace OpenDentBusiness {
 				}
 			}
 			for(int i=0;i<tablePay.Rows.Count;i++) {
-				if(_hasClinics && !listClinics.Exists(x => x.ClinicNum==PIn.Long(tablePay.Rows[i]["Clinic"].ToString()))) {
+				if(_hasClinics && !listClinics.Exists(x => x.Id==PIn.Long(tablePay.Rows[i]["Clinic"].ToString()))) {
 					continue;//Using clinics and the current row is for a clinic that is NOT in the list of clinics we care about.
 				}
 				DataRow row=tableDailyProd.NewRow();
@@ -187,7 +187,7 @@ namespace OpenDentBusiness {
 				tableDailyProd.Rows.Add(row);
 			}
 			for(int i=0;i<tableIns.Rows.Count;i++) {
-				if(_hasClinics && !listClinics.Exists(x => x.ClinicNum==PIn.Long(tableIns.Rows[i]["Clinic"].ToString()))) {
+				if(_hasClinics && !listClinics.Exists(x => x.Id==PIn.Long(tableIns.Rows[i]["Clinic"].ToString()))) {
 					continue;//Using clinics and the current row is for a clinic that is NOT in the list of clinics we care about.
 				}
 				DataRow row=tableDailyProd.NewRow();
@@ -223,7 +223,7 @@ namespace OpenDentBusiness {
 				tableDailyProdSorted.Rows.Add(listTableDailyProdRows[i].ItemArray);
 				//Replace the ClinicNum with the actual description of the clinic.
 				if(_hasClinics) {
-					string clinicDesc=listClinics.Find(x => x.ClinicNum==PIn.Long(tableDailyProdSorted.Rows[i]["Clinic"].ToString())).Description;
+					string clinicDesc=listClinics.Find(x => x.Id==PIn.Long(tableDailyProdSorted.Rows[i]["Clinic"].ToString())).Description;
 					tableDailyProdSorted.Rows[i]["Clinic"]=clinicDesc=="" ? "Unassigned":clinicDesc;
 					if(hasBreakdown) {
 						tableDailyProdSorted.Rows[i]["ClinicSplit"]=clinicDesc=="" ? "Unassigned":clinicDesc;
@@ -321,10 +321,10 @@ namespace OpenDentBusiness {
 					insincome=0;
 					totalincome=0;
 					for(int j=0;j<tableProduction.Rows.Count;j++) {
-						if(listClinics[it].ClinicNum==0 && tableProduction.Rows[j]["Clinic"].ToString()!="0") {
+						if(listClinics[it].Id==0 && tableProduction.Rows[j]["Clinic"].ToString()!="0") {
 							continue;//Only counting unassigned this time around.
 						}
-						else if(listClinics[it].ClinicNum!=0 && tableProduction.Rows[j]["Clinic"].ToString()!=POut.Long(listClinics[it].ClinicNum)) {
+						else if(listClinics[it].Id!=0 && tableProduction.Rows[j]["Clinic"].ToString()!=POut.Long(listClinics[it].Id)) {
 							continue;
 						}
 						if(provCur.ProvNum==PIn.Long(tableProduction.Rows[j]["ProvNum"].ToString())) {
@@ -333,10 +333,10 @@ namespace OpenDentBusiness {
 						}
 					}
 					for(int j=0;j<tableAdj.Rows.Count;j++) {
-						if(listClinics[it].ClinicNum==0 && tableAdj.Rows[j]["Clinic"].ToString()!="0") {
+						if(listClinics[it].Id==0 && tableAdj.Rows[j]["Clinic"].ToString()!="0") {
 							continue;
 						}
-						else if(listClinics[it].ClinicNum!=0 && tableAdj.Rows[j]["Clinic"].ToString()!=POut.Long(listClinics[it].ClinicNum)) {
+						else if(listClinics[it].Id!=0 && tableAdj.Rows[j]["Clinic"].ToString()!=POut.Long(listClinics[it].Id)) {
 							continue;
 						}
 						if(provCur.ProvNum==PIn.Long(tableAdj.Rows[j]["ProvNum"].ToString())) {
@@ -345,10 +345,10 @@ namespace OpenDentBusiness {
 						}
 					}
 					for(int j=0;j<tableInsWriteoff.Rows.Count;j++) {
-						if(listClinics[it].ClinicNum==0 && tableInsWriteoff.Rows[j]["Clinic"].ToString()!="0") {
+						if(listClinics[it].Id==0 && tableInsWriteoff.Rows[j]["Clinic"].ToString()!="0") {
 							continue;
 						}
-						else if(listClinics[it].ClinicNum!=0 && tableInsWriteoff.Rows[j]["Clinic"].ToString()!=POut.Long(listClinics[it].ClinicNum)) {
+						else if(listClinics[it].Id!=0 && tableInsWriteoff.Rows[j]["Clinic"].ToString()!=POut.Long(listClinics[it].Id)) {
 							continue;
 						}
 						if(provCur.ProvNum==PIn.Long(tableInsWriteoff.Rows[j]["ProvNum"].ToString())) {
@@ -362,10 +362,10 @@ namespace OpenDentBusiness {
 						}
 					}
 					for(int j=0;j<tableWriteOffAdjustments.Rows.Count;j++) {
-						if(listClinics[it].ClinicNum==0 && tableWriteOffAdjustments.Rows[j]["Clinic"].ToString()!="0") {
+						if(listClinics[it].Id==0 && tableWriteOffAdjustments.Rows[j]["Clinic"].ToString()!="0") {
 							continue;
 						}
-						else if(listClinics[it].ClinicNum!=0 && tableWriteOffAdjustments.Rows[j]["Clinic"].ToString()!=POut.Long(listClinics[it].ClinicNum)) {
+						else if(listClinics[it].Id!=0 && tableWriteOffAdjustments.Rows[j]["Clinic"].ToString()!=POut.Long(listClinics[it].Id)) {
 							continue;
 						}
 						if(provCur.ProvNum==PIn.Long(tableWriteOffAdjustments.Rows[j]["ProvNum"].ToString())) {
@@ -374,10 +374,10 @@ namespace OpenDentBusiness {
 						}
 					}
 					for(int j=0;j<tablePay.Rows.Count;j++) {
-						if(listClinics[it].ClinicNum==0 && tablePay.Rows[j]["Clinic"].ToString()!="0") {
+						if(listClinics[it].Id==0 && tablePay.Rows[j]["Clinic"].ToString()!="0") {
 							continue;
 						}
-						else if(listClinics[it].ClinicNum!=0 && tablePay.Rows[j]["Clinic"].ToString()!=POut.Long(listClinics[it].ClinicNum)) {
+						else if(listClinics[it].Id!=0 && tablePay.Rows[j]["Clinic"].ToString()!=POut.Long(listClinics[it].Id)) {
 							continue;
 						}
 						if(provCur.ProvNum==PIn.Long(tablePay.Rows[j]["ProvNum"].ToString())) {
@@ -387,10 +387,10 @@ namespace OpenDentBusiness {
 						}
 					}
 					for(int j=0;j<tableIns.Rows.Count;j++) {
-						if(listClinics[it].ClinicNum==0 && tableIns.Rows[j]["Clinic"].ToString()!="0") {
+						if(listClinics[it].Id==0 && tableIns.Rows[j]["Clinic"].ToString()!="0") {
 							continue;
 						}
-						else if(listClinics[it].ClinicNum!=0 && tableIns.Rows[j]["Clinic"].ToString()!=POut.Long(listClinics[it].ClinicNum)) {
+						else if(listClinics[it].Id!=0 && tableIns.Rows[j]["Clinic"].ToString()!=POut.Long(listClinics[it].Id)) {
 							continue;
 						}
 						if(provCur.ProvNum==PIn.Long(tableIns.Rows[j]["ProvNum"].ToString())) {
@@ -769,7 +769,7 @@ namespace OpenDentBusiness {
 			,bool hasAllProvs,bool hasAllClinics,bool isUnearnedIncluded,PPOWriteoffDateCalc writeoffType,bool isCEMT=false) 
 		{
 			List<long> listProvNums=listProvs.Select(x => x.ProvNum).ToList();
-			List<long> listClinicNums=listClinics.Select(x => x.ClinicNum).ToList();
+			List<long> listClinicNums=listClinics.Select(x => x.Id).ToList();
 			List<long> listHiddenUnearnedDefNums=GetHiddenUnearnedDefNums(isCEMT);
 			#region Procedures
 			string whereProv="";
@@ -1110,7 +1110,7 @@ namespace OpenDentBusiness {
 			}
 			List<long> listClinicNums=new List<long>();
 			for(int i=0;i<listClinics.Count;i++) {
-				listClinicNums.Add(listClinics[i].ClinicNum);
+				listClinicNums.Add(listClinics[i].Id);
 			}
 			List<int> listClaimProcStatuses=new List<int>();
 			listClaimProcStatuses.Add((int)ClaimProcStatus.Received);
@@ -1293,7 +1293,7 @@ namespace OpenDentBusiness {
 			}
 			List<long> listClinicNums=new List<long>();
 			for(int i=0;i<listClinics.Count;i++) {
-				listClinicNums.Add(listClinics[i].ClinicNum);
+				listClinicNums.Add(listClinics[i].Id);
 			}
 			string whereProv="";
 			string whereClin="";
@@ -1547,10 +1547,10 @@ namespace OpenDentBusiness {
 					insincome=0;
 					totalincome=0;
 					for(int j=0;j<tableProduction.Rows.Count;j++) {
-						if(listClinics[it].ClinicNum==0 && tableProduction.Rows[j]["ClinicNum"].ToString()!="0") {
+						if(listClinics[it].Id==0 && tableProduction.Rows[j]["ClinicNum"].ToString()!="0") {
 							continue;//Only counting unassigned this time around.
 						}
-						else if(listClinics[it].ClinicNum!=0 && tableProduction.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].ClinicNum)) {
+						else if(listClinics[it].Id!=0 && tableProduction.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].Id)) {
 							continue;
 						}
 						if(dates[i].Year==PIn.Date(tableProduction.Rows[j]["ProcDate"].ToString()).Year
@@ -1562,10 +1562,10 @@ namespace OpenDentBusiness {
 						}
 					}
 					for(int j=0;j<tableAdj.Rows.Count;j++) {
-						if(listClinics[it].ClinicNum==0 && tableAdj.Rows[j]["ClinicNum"].ToString()!="0") {
+						if(listClinics[it].Id==0 && tableAdj.Rows[j]["ClinicNum"].ToString()!="0") {
 							continue;
 						}
-						else if(listClinics[it].ClinicNum!=0 && tableAdj.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].ClinicNum)) {
+						else if(listClinics[it].Id!=0 && tableAdj.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].Id)) {
 							continue;
 						}
 						if(dates[i].Year==PIn.Date(tableAdj.Rows[j]["AdjDate"].ToString()).Year
@@ -1577,10 +1577,10 @@ namespace OpenDentBusiness {
 						}
 					}
 					for(int j=0;j<tableInsWriteoff.Rows.Count;j++) {
-						if(listClinics[it].ClinicNum==0 && tableInsWriteoff.Rows[j]["ClinicNum"].ToString()!="0") {
+						if(listClinics[it].Id==0 && tableInsWriteoff.Rows[j]["ClinicNum"].ToString()!="0") {
 							continue;
 						}
-						else if(listClinics[it].ClinicNum!=0 && tableInsWriteoff.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].ClinicNum)) {
+						else if(listClinics[it].Id!=0 && tableInsWriteoff.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].Id)) {
 							continue;
 						}
 						if(dates[i].Year==PIn.Date(tableInsWriteoff.Rows[j]["Date"].ToString()).Year
@@ -1596,7 +1596,7 @@ namespace OpenDentBusiness {
 						}			
 					}
 					for(int j=0;j<tableWriteoffAdjustments.Rows.Count;j++) {
-						if(tableWriteoffAdjustments.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].ClinicNum)) {
+						if(tableWriteoffAdjustments.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].Id)) {
 							continue;
 						}
 						if(dates[i].Year==PIn.Date(tableWriteoffAdjustments.Rows[j]["Date"].ToString()).Year
@@ -1607,10 +1607,10 @@ namespace OpenDentBusiness {
 						}
 					}
 					for(int j=0;j<tableSched.Rows.Count;j++) {
-						if(listClinics[it].ClinicNum==0 && tableSched.Rows[j]["ClinicNum"].ToString()!="0") {
+						if(listClinics[it].Id==0 && tableSched.Rows[j]["ClinicNum"].ToString()!="0") {
 							continue;
 						}
-						else if(listClinics[it].ClinicNum!=0 && tableSched.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].ClinicNum)) {
+						else if(listClinics[it].Id!=0 && tableSched.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].Id)) {
 							continue;
 						}
 						if(dates[i]==(PIn.Date(tableSched.Rows[j]["SchedDate"].ToString()))) {
@@ -1618,10 +1618,10 @@ namespace OpenDentBusiness {
 						}
 					}
 					for(int j=0;j<tablePay.Rows.Count;j++) {
-						if(listClinics[it].ClinicNum==0 && tablePay.Rows[j]["ClinicNum"].ToString()!="0") {
+						if(listClinics[it].Id==0 && tablePay.Rows[j]["ClinicNum"].ToString()!="0") {
 							continue;
 						}
-						else if(listClinics[it].ClinicNum!=0 && tablePay.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].ClinicNum)) {
+						else if(listClinics[it].Id!=0 && tablePay.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].Id)) {
 							continue;
 						}
 						if(dates[i].Year==PIn.Date(tablePay.Rows[j]["DatePay"].ToString()).Year
@@ -1634,10 +1634,10 @@ namespace OpenDentBusiness {
 						}
 					}
 					for(int j=0;j<tableIns.Rows.Count;j++) {
-						if(listClinics[it].ClinicNum==0 && tableIns.Rows[j]["ClinicNum"].ToString()!="0") {
+						if(listClinics[it].Id==0 && tableIns.Rows[j]["ClinicNum"].ToString()!="0") {
 							continue;
 						}
-						else if(listClinics[it].ClinicNum!=0 && tableIns.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].ClinicNum)) {
+						else if(listClinics[it].Id!=0 && tableIns.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].Id)) {
 							continue;
 						}
 						if(dates[i].Year==PIn.Date(tableIns.Rows[j]["CheckDate"].ToString()).Year
@@ -1797,7 +1797,7 @@ namespace OpenDentBusiness {
 		public static DataSet GetMonthlyProdIncDataSet(DateTime dateFrom,DateTime dateTo,List<Provider> listProvs,List<Clinic> listClinics,bool writeOffPay,
 			bool hasAllProvs,bool hasAllClinics,bool hasChangeInWriteoff,bool isUnearnedIncluded,bool isCEMT=false) 
 		{
-			List<long> listClinicNums=listClinics.Select(x => x.ClinicNum).ToList();
+			List<long> listClinicNums=listClinics.Select(x => x.Id).ToList();
 			List<long> listProvNums=listProvs.Select(x => x.ProvNum).ToList();
 			List<long> listHiddenUnearnedDefNums=GetHiddenUnearnedDefNums(isCEMT);
 			#region Procedures
@@ -2153,10 +2153,10 @@ namespace OpenDentBusiness {
 					insincome=0;
 					totalincome=0;
 					for(int j=0;j<tableProduction.Rows.Count;j++) {
-						if(listClinics[it].ClinicNum==0 && tableProduction.Rows[j]["ClinicNum"].ToString()!="0") {
+						if(listClinics[it].Id==0 && tableProduction.Rows[j]["ClinicNum"].ToString()!="0") {
 							continue;//Only counting unassigned this time around.
 						}
-						else if(listClinics[it].ClinicNum!=0 && tableProduction.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].ClinicNum)) {
+						else if(listClinics[it].Id!=0 && tableProduction.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].Id)) {
 							continue;
 						}
 						if(dates[i].Year==PIn.Date(tableProduction.Rows[j]["ProcDate"].ToString()).Year
@@ -2166,10 +2166,10 @@ namespace OpenDentBusiness {
 						}
 					}
 					for(int j=0;j<tableAdj.Rows.Count;j++) {
-						if(listClinics[it].ClinicNum==0 && tableAdj.Rows[j]["ClinicNum"].ToString()!="0") {
+						if(listClinics[it].Id==0 && tableAdj.Rows[j]["ClinicNum"].ToString()!="0") {
 							continue;
 						}
-						else if(listClinics[it].ClinicNum!=0 && tableAdj.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].ClinicNum)) {
+						else if(listClinics[it].Id!=0 && tableAdj.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].Id)) {
 							continue;
 						}
 						if(dates[i].Year==PIn.Date(tableAdj.Rows[j]["AdjDate"].ToString()).Year
@@ -2179,10 +2179,10 @@ namespace OpenDentBusiness {
 						}
 					}
 					for(int j=0;j<tableInsWriteoff.Rows.Count;j++) {
-						if(listClinics[it].ClinicNum==0 && tableInsWriteoff.Rows[j]["ClinicNum"].ToString()!="0") {
+						if(listClinics[it].Id==0 && tableInsWriteoff.Rows[j]["ClinicNum"].ToString()!="0") {
 							continue;
 						}
-						else if(listClinics[it].ClinicNum!=0 && tableInsWriteoff.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].ClinicNum)) {
+						else if(listClinics[it].Id!=0 && tableInsWriteoff.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].Id)) {
 							continue;
 						}
 						if(dates[i].Year==PIn.Date(tableInsWriteoff.Rows[j]["Date"].ToString()).Year
@@ -2198,7 +2198,7 @@ namespace OpenDentBusiness {
 						}
 					}
 					for(int j=0;j<tableWriteOffAdjustments.Rows.Count;j++) {
-						if(tableWriteOffAdjustments.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].ClinicNum)) {
+						if(tableWriteOffAdjustments.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].Id)) {
 							continue;
 						}
 						if(dates[i].Year==PIn.Date(tableWriteOffAdjustments.Rows[j]["Date"].ToString()).Year
@@ -2208,10 +2208,10 @@ namespace OpenDentBusiness {
 						}
 					}
 					for(int j=0;j<tablePay.Rows.Count;j++) {
-						if(listClinics[it].ClinicNum==0 && tablePay.Rows[j]["ClinicNum"].ToString()!="0") {
+						if(listClinics[it].Id==0 && tablePay.Rows[j]["ClinicNum"].ToString()!="0") {
 							continue;
 						}
-						else if(listClinics[it].ClinicNum!=0 && tablePay.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].ClinicNum)) {
+						else if(listClinics[it].Id!=0 && tablePay.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].Id)) {
 							continue;
 						}
 						if(dates[i].Year==PIn.Date(tablePay.Rows[j]["DatePay"].ToString()).Year
@@ -2222,10 +2222,10 @@ namespace OpenDentBusiness {
 						}
 					}
 					for(int j=0;j<tableIns.Rows.Count;j++) {
-						if(listClinics[it].ClinicNum==0 && tableIns.Rows[j]["ClinicNum"].ToString()!="0") {
+						if(listClinics[it].Id==0 && tableIns.Rows[j]["ClinicNum"].ToString()!="0") {
 							continue;
 						}
-						else if(listClinics[it].ClinicNum!=0 && tableIns.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].ClinicNum)) {
+						else if(listClinics[it].Id!=0 && tableIns.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].Id)) {
 							continue;
 						}
 						if(dates[i].Year==PIn.Date(tableIns.Rows[j]["CheckDate"].ToString()).Year
@@ -2366,7 +2366,7 @@ namespace OpenDentBusiness {
 		public static DataSet GetAnnualProdIncDataSet(DateTime dateFrom,DateTime dateTo,List<Provider> listProvs,List<Clinic> listClinics,bool writeOffPay,
 			bool hasAllProvs,bool hasAllClinics,bool hasChangeInWriteoff,bool isUnearnedIncluded,bool isCEMT=false) 
 		{
-			List<long> listClinicNums=listClinics.Select(x => x.ClinicNum).ToList();
+			List<long> listClinicNums=listClinics.Select(x => x.Id).ToList();
 			List<long> listProvNums=listProvs.Select(x => x.ProvNum).ToList();
 			List<long> listHiddenUnearnedDefNums=GetHiddenUnearnedDefNums(isCEMT);
 			#region Procedures

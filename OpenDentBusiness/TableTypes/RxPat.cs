@@ -77,7 +77,7 @@ namespace OpenDentBusiness
 		///<summary>Directions intended for the patient.</summary>
 		public string PatientInstruction;
 
-		[ForeignKey(typeof(Clinic), nameof(Clinic.ClinicNum))]
+		[ForeignKey(typeof(Clinic), nameof(Clinic.Id))]
 		public long ClinicNum;
 
 		public RxPat Copy()

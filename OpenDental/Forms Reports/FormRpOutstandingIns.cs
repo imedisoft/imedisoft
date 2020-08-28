@@ -878,7 +878,7 @@ namespace OpenDental
 				{
 					long clinicNum = gridMain.SelectedTags<RpOutstandingIns.OutstandingInsClaim>()[0].ClinicNum;
 					//If the user is clinic restricted, only enable 'Got to Account' when the clinicNum matches
-					rightClickMenu.MenuItems[0].Enabled = clinicNum.In(Clinics.GetForUserod(Security.CurrentUser, true, comboClinics.HqDescription).Select(x => x.ClinicNum));
+					rightClickMenu.MenuItems[0].Enabled = clinicNum.In(Clinics.GetByCurrentUser().Select(x => x.Id));
 				}
 			});
 			FillCustomTrack();

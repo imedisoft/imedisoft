@@ -96,21 +96,21 @@ namespace OpenDental{
 					listProv.SelectedIndex=i+1;
 				}
 			}
-			_listClinics=Clinics.GetDeepCopy(true);
+			_listClinics=Clinics.GetAll(false);
 			_listUserAlertTypesOld=AlertSubs.GetAllForUser(UserCur.Id);
 			List<long> listSubscribedClinics;
 			bool isAllClinicsSubscribed=false;
-			if(_listUserAlertTypesOld.Select(x => x.ClinicNum).Contains(-1)) {//User subscribed to all clinics
+			if(_listUserAlertTypesOld.Select(x => x.ClinicId).Contains(-1)) {//User subscribed to all clinics
 				isAllClinicsSubscribed=true;
-				listSubscribedClinics=_listClinics.Select(x => x.ClinicNum).Distinct().ToList();
+				listSubscribedClinics=_listClinics.Select(x => x.Id).Distinct().ToList();
 			}
 			else {
-				listSubscribedClinics=_listUserAlertTypesOld.Select(x => x.ClinicNum).Distinct().ToList();
+				listSubscribedClinics=_listUserAlertTypesOld.Select(x => x.ClinicId.Value).Distinct().ToList();
 			}
-			List<long> listAlertCatNums=_listUserAlertTypesOld.Select(x => x.AlertCategoryNum).Distinct().ToList();
+			List<long> listAlertCatNums=_listUserAlertTypesOld.Select(x => x.AlertCategoryId).Distinct().ToList();
 			listAlertSubMulti.Items.Clear();
 			_listAlertCategories=AlertCategories.GetAll();
-			List<long> listUserAlertCatNums=_listUserAlertTypesOld.Select(x => x.AlertCategoryNum).ToList();
+			List<long> listUserAlertCatNums=_listUserAlertTypesOld.Select(x => x.AlertCategoryId).ToList();
 			foreach(AlertCategory cat in _listAlertCategories) {
 				int index=listAlertSubMulti.Items.Add(cat.Description);
 				listAlertSubMulti.SetSelected(index,listUserAlertCatNums.Contains(cat.Id));
@@ -140,13 +140,13 @@ namespace OpenDental{
 					listClinic.Items.Add(_listClinics[i].Abbr);
 					listClinicMulti.Items.Add(_listClinics[i].Abbr);
 					listAlertSubsClinicsMulti.Items.Add(_listClinics[i].Abbr);
-					if(UserCur.ClinicId==_listClinics[i].ClinicNum) {
+					if(UserCur.ClinicId==_listClinics[i].Id) {
 						listClinic.SetSelected(i+1,true);
 					}
-					if(UserCur.ClinicId!=0 && listUserClinics.Exists(x => x.ClinicId==_listClinics[i].ClinicNum)) {
+					if(UserCur.ClinicId!=0 && listUserClinics.Exists(x => x.ClinicId==_listClinics[i].Id)) {
 						listClinicMulti.SetSelected(i,true);//No "All" option, don't select i+1
 					}
-					if(!isAllClinicsSubscribed && _listUserAlertTypesOld.Exists(x => x.ClinicNum==_listClinics[i].ClinicNum)) {
+					if(!isAllClinicsSubscribed && _listUserAlertTypesOld.Exists(x => x.ClinicId==_listClinics[i].Id)) {
 						listAlertSubsClinicsMulti.SetSelected(i+2,true);//All+HQ
 					}
 				}
@@ -342,10 +342,10 @@ namespace OpenDental{
 			List<UserClinic> listUserClinics=new List<UserClinic>();
 			if(PrefC.HasClinicsEnabled && checkClinicIsRestricted.Checked) {//They want to restrict the user to certain clinics or clinics are enabled.  
 				for(int i=0;i<listClinicMulti.SelectedIndices.Count;i++) {
-					listUserClinics.Add(new UserClinic(_listClinics[listClinicMulti.SelectedIndices[i]].ClinicNum,UserCur.Id));
+					listUserClinics.Add(new UserClinic(_listClinics[listClinicMulti.SelectedIndices[i]].Id,UserCur.Id));
 				}
 				//If they set the user up with a default clinic and it's not in the restricted list, return.
-				if(!listUserClinics.Exists(x => x.ClinicId==_listClinics[listClinic.SelectedIndex-1].ClinicNum)) {
+				if(!listUserClinics.Exists(x => x.ClinicId==_listClinics[listClinic.SelectedIndex-1].Id)) {
 					MessageBox.Show("User cannot have a default clinic that they are not restricted to.");
 					return;
 				}
@@ -354,7 +354,7 @@ namespace OpenDental{
 				UserCur.ClinicId=0;
 			}
 			else {
-				UserCur.ClinicId=_listClinics[listClinic.SelectedIndex-1].ClinicNum;
+				UserCur.ClinicId=_listClinics[listClinic.SelectedIndex-1].Id;
 			}
 			UserCur.ClinicIsRestricted=checkClinicIsRestricted.Checked;//This is kept in sync with their choice of "All".
 			UserCur.IsHidden=checkIsHidden.Checked;
@@ -457,23 +457,23 @@ namespace OpenDental{
 					continue;
 				}
 				Clinic clinic=_listClinics[index-2];//Subtract 2 for 'All' and 'HQ'
-				listClinics.Add(clinic.ClinicNum);
+				listClinics.Add(clinic.Id);
 			}
 			List<AlertSub> _listUserAlertTypesNew=_listUserAlertTypesOld.Select(x => x.Copy()).ToList();
 			//Remove AlertTypes that have been deselected through either deslecting the type or clinic.
-			_listUserAlertTypesNew.RemoveAll(x => !listUserAlertCats.Contains(x.AlertCategoryNum));
+			_listUserAlertTypesNew.RemoveAll(x => !listUserAlertCats.Contains(x.AlertCategoryId));
 			if(PrefC.HasClinicsEnabled) {
-				_listUserAlertTypesNew.RemoveAll(x => !listClinics.Contains(x.ClinicNum));
+				_listUserAlertTypesNew.RemoveAll(x => !listClinics.Contains(x.ClinicId.Value));
 			}
 			foreach(long alertCatNum in listUserAlertCats) {
 				if(!PrefC.HasClinicsEnabled) {
-					if(!_listUserAlertTypesOld.Exists(x => x.AlertCategoryNum==alertCatNum)) {//Was not subscribed to type.
+					if(!_listUserAlertTypesOld.Exists(x => x.AlertCategoryId==alertCatNum)) {//Was not subscribed to type.
 						_listUserAlertTypesNew.Add(new AlertSub(UserCur.Id,0,alertCatNum));
 					}
 				}
 				else {//Clinics enabled.
 					foreach(long clinicNumCur in listClinics) {
-						if(!_listUserAlertTypesOld.Exists(x => x.ClinicNum==clinicNumCur && x.AlertCategoryNum==alertCatNum)) {//Was not subscribed to type.
+						if(!_listUserAlertTypesOld.Exists(x => x.ClinicId==clinicNumCur && x.AlertCategoryId==alertCatNum)) {//Was not subscribed to type.
 							_listUserAlertTypesNew.Add(new AlertSub(UserCur.Id,clinicNumCur,alertCatNum));
 							continue;
 						}
@@ -481,7 +481,7 @@ namespace OpenDental{
 				}
 			}
 			SaveLogOffPreferences();
-			AlertSubs.Sync(_listUserAlertTypesNew,_listUserAlertTypesOld);
+			// TODO: AlertSubs.Sync(_listUserAlertTypesNew,_listUserAlertTypesOld);
 			// TODO: UserOdPrefs.Sync(_listDoseSpotUserPrefNew,_listDoseSpotUserPrefOld);
 			DialogResult=DialogResult.OK;
 		}

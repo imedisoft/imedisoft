@@ -61,7 +61,7 @@ namespace OpenDentBusiness
 		public static EServiceSetup.SignupOut GetEServiceSetupFull(SignupPortalPermission permission, bool isSwitchClinicPref = false, EServiceSetup.SignupOut oldSignupOut = null)
 		{
 			//Clinics will be stored in this order at HQ to allow signup portal to display them in proper order.
-			List<Clinic> clinics = Clinics.GetDeepCopy().OrderBy(x => x.ItemOrder).ToList();
+			List<Clinic> clinics = Clinics.GetAll(true).OrderBy(x => x.ItemOrder).ToList();
 			if (Prefs.GetBool(PrefName.ClinicListIsAlphabetical))
 			{
 				clinics = clinics.OrderBy(x => x.Abbr).ToList();
@@ -97,11 +97,11 @@ namespace OpenDentBusiness
 									Clinics = clinics
 										.Select(x => new EServiceSetup.SignupIn.ClinicLiteIn()
 										{
-											ClinicNum = x.ClinicNum,
+											ClinicNum = x.Id,
 											ClinicTitle = x.Abbr,
 											IsHidden = x.IsHidden,
 											//Use the ClinicPref as an override, otherwise, Clinic.Abbr is used, if blank, finally use practice title.
-											ShortCodeOptInYourDentist = ClinicPrefs.GetString(x.ClinicNum, PrefName.ShortCodeOptInClinicTitle)
+											ShortCodeOptInYourDentist = ClinicPrefs.GetString(x.Id, PrefName.ShortCodeOptInClinicTitle)
 												?? (string.IsNullOrWhiteSpace(x.Description) ? shortCodePracticeTitle : x.Description),
 										}).ToList(),
 									IsSwitchClinicPref = isSwitchClinicPref,
@@ -129,11 +129,11 @@ namespace OpenDentBusiness
 			bool isSmsEnabled = false;
 			if (PrefC.HasClinicsEnabled)
 			{ //Clinics are ON so loop through all clinics and reconcile with HQ.
-				List<Clinic> listClinicsAll = Clinics.GetDeepCopy();
+				List<Clinic> listClinicsAll = Clinics.GetAll(true);
 				foreach (Clinic clinicDb in listClinicsAll)
 				{
 					WebServiceMainHQProxy.EServiceSetup.SignupOut.SignupOutSms clinicSignup =
-						smsSignups.FirstOrDefault(x => x.ClinicNum == clinicDb.ClinicNum) ?? new WebServiceMainHQProxy.EServiceSetup.SignupOut.SignupOutSms()
+						smsSignups.FirstOrDefault(x => x.ClinicNum == clinicDb.Id) ?? new WebServiceMainHQProxy.EServiceSetup.SignupOut.SignupOutSms()
 						{
 							//Not found so turn it off.
 							SmsContractDate = DateTime.MinValue,
@@ -141,9 +141,9 @@ namespace OpenDentBusiness
 							IsEnabled = false,
 						};
 					Clinic clinicNew = clinicDb.Copy();
-					clinicNew.SmsContractDate = clinicSignup.SmsContractDate;
-					clinicNew.SmsMonthlyLimit = clinicSignup.MonthlySmsLimit;
-					isCacheInvalid |= Clinics.Update(clinicNew, clinicDb);
+					//clinicNew.SmsContractDate = clinicSignup.SmsContractDate;
+					//clinicNew.SmsMonthlyLimit = clinicSignup.MonthlySmsLimit;
+					//isCacheInvalid |= Clinics.Update(clinicNew, clinicDb);
 					isSmsEnabled |= clinicSignup.IsEnabled;
 					isCacheInvalid |= ImportHQShortCodeSettings(clinicSignup);
 				}

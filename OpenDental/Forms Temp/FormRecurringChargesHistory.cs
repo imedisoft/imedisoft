@@ -107,7 +107,7 @@ namespace OpenDental {
 				}
 				row.Cells.Add(patName);
 				if(PrefC.HasClinicsEnabled) {
-					row.Cells.Add(Clinics.GetFirstOrDefault(x => x.ClinicNum==charge.ClinicNum)?.Description??"");
+					row.Cells.Add(Clinics.FirstOrDefault(x => x.Id==charge.ClinicNum,true)?.Description??"");
 				}
 				row.Cells.Add(charge.DateTimeCharge.ToString());
 				row.Cells.Add(charge.ChargeStatus.GetDescription());

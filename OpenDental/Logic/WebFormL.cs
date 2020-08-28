@@ -221,7 +221,7 @@ namespace OpenDental {
 				do {
 					if(WebForms_Sheets.TryGetSheets(out listWebFormSheets)) {
 						//if we are not in HQ, filter out non-HQ sheets that don't match our current clinic
-						listWebFormSheets=listWebFormSheets.FindAll(x => x.ClinicNum==0 || Clinics.ClinicNum==0 || x.ClinicNum==Clinics.ClinicNum);
+						listWebFormSheets=listWebFormSheets.FindAll(x => x.ClinicNum==0 || Clinics.ClinicId==0 || x.ClinicNum==Clinics.ClinicId);
 					}
 					iterations++;
 					List<long> listSheetIdsForDeletion=new List<long>();
@@ -393,7 +393,7 @@ namespace OpenDental {
 			}
 			else {//Using clinics.
 						//Set the patients primary provider to the clinic default provider.
-				newPat.PriProv=Providers.GetDefaultProvider(Clinics.ClinicNum).ProvNum;
+				newPat.PriProv=Providers.GetDefaultProvider(Clinics.ClinicId).ProvNum;
 			}
 			Type t=newPat.GetType();
 			FieldInfo[] fi=t.GetFields();

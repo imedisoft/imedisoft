@@ -270,10 +270,10 @@ namespace OpenDental {
 					paymentCur.ClinicNum=patcur.ClinicNum;
 				}
 				else if((PayClinicSetting)PrefC.GetInt(PrefName.PaymentClinicSetting)==PayClinicSetting.SelectedExceptHQ) {
-					paymentCur.ClinicNum=(Clinics.ClinicNum==0)?patcur.ClinicNum:Clinics.ClinicNum;
+					paymentCur.ClinicNum=(Clinics.ClinicId==0)?patcur.ClinicNum:Clinics.ClinicId;
 				}
 				else {
-					paymentCur.ClinicNum=Clinics.ClinicNum;
+					paymentCur.ClinicNum=Clinics.ClinicId;
 				}
 			}
 			paymentCur.DateEntry=DateTimeOD.Today;//So that it will show properly in the new window.

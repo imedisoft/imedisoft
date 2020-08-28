@@ -7,15 +7,14 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using MySql.Data.MySqlClient;
-using OpenDentBusiness;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace OpenDentBusiness
+namespace Imedisoft.Data
 {
 	public partial class Accounts
 	{
@@ -25,7 +24,7 @@ namespace OpenDentBusiness
 			{
 				Id = (long)dataReader["id"],
 				Description = (string)dataReader["description"],
-				Type = (AccountType)Convert.ToInt32(dataReader["type"]),
+				Type = (char)dataReader["type"],
 				BankNumber = (string)dataReader["bank_number"],
 				Inactive = (Convert.ToInt32(dataReader["inactive"]) == 1),
 				Color = Color.FromArgb((int)dataReader["color"])
@@ -35,25 +34,31 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// Selects a single Account object from the database using the specified SQL command.
 		/// </summary>
+		/// <param name="command">The SELECT command to execute.</param>
+		/// <param name="parameters">The (optional) command parameters.</param>
 		public static Account SelectOne(string command, params MySqlParameter[] parameters)
 			=> Database.SelectOne(command, FromReader, parameters);
 
 		/// <summary>
 		/// Selects the <see cref="Account"/> object with the specified key from the database.
 		/// </summary>
-		public static Account SelectOne(Int64 id)
+		/// <param name="id">The primary key of the <see cref="Account"/> to select.</param>
+		public static Account SelectOne(long id)
 			=> SelectOne("SELECT * FROM `accounts` WHERE `id` = " + id);
 
 		/// <summary>
 		/// Selects multiple <see cref="Account"/> objects from the database using the specified SQL command.
 		/// </summary>
+		/// <param name="command">The SELECT command to execute.</param>
+		/// <param name="parameters">The (optional) command parameters.</param>
 		public static IEnumerable<Account> SelectMany(string command, params MySqlParameter[] parameters)
 			=> Database.SelectMany(command, FromReader, parameters);
 
 		/// <summary>
 		/// Inserts the specified <see cref="Account"/> into the database.
 		/// </summary>
-		public static long Insert(Account account)
+		/// <param name="account">The <see cref="Account"/> to insert into the database.</param>
+		private static long ExecuteInsert(Account account)
 			=> account.Id = Database.ExecuteInsert(
 				"INSERT INTO `accounts` " +
 				"(`description`, `type`, `bank_number`, `inactive`, `color`) " +
@@ -64,7 +69,8 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// Updates the specified <see cref="Account"/> in the database.
 		/// </summary>
-		public static void Update(Account account)
+		/// <param name="account">The <see cref="Account"/> to update.</param>
+		private static void ExecuteUpdate(Account account)
 			=> Database.ExecuteNonQuery(
 				"UPDATE `accounts` SET " +
 					"`description` = @description, " +
@@ -75,71 +81,23 @@ namespace OpenDentBusiness
 				"WHERE `id` = @id",
 					new MySqlParameter("id", account.Id),
 					new MySqlParameter("description", account.Description ?? ""),
-					new MySqlParameter("type", (int)account.Type),
+					new MySqlParameter("type", account.Type),
 					new MySqlParameter("bank_number", account.BankNumber ?? ""),
 					new MySqlParameter("inactive", (account.Inactive ? 1 : 0)),
 					new MySqlParameter("color", account.Color.ToArgb()));
 
 		/// <summary>
-		/// Updates the specified <see cref="Account"/> in the database.
-		/// </summary>
-		public static bool Update(Account accountsNew, Account accountsOld)
-		{
-			var updates = new List<string>();
-			var parameters = new List<MySqlParameter>();
-
-			if (accountsNew.Description != accountsOld.Description)
-			{
-				updates.Add("`description` = @description");
-				parameters.Add(new MySqlParameter("description", accountsNew.Description ?? ""));
-			}
-
-			if (accountsNew.Type != accountsOld.Type)
-			{
-				updates.Add("`type` = @type");
-				parameters.Add(new MySqlParameter("type", (int)accountsNew.Type));
-			}
-
-			if (accountsNew.BankNumber != accountsOld.BankNumber)
-			{
-				updates.Add("`bank_number` = @bank_number");
-				parameters.Add(new MySqlParameter("bank_number", accountsNew.BankNumber ?? ""));
-			}
-
-			if (accountsNew.Inactive != accountsOld.Inactive)
-			{
-				updates.Add("`inactive` = @inactive");
-				parameters.Add(new MySqlParameter("inactive", (accountsNew.Inactive ? 1 : 0)));
-			}
-
-			if (accountsNew.Color != accountsOld.Color)
-			{
-				updates.Add("`color` = @color");
-				parameters.Add(new MySqlParameter("color", accountsNew.Color.ToArgb()));
-			}
-
-			if (updates.Count == 0) return false;
-
-			parameters.Add(new MySqlParameter("id", accountsNew.Id));
-
-			Database.ExecuteNonQuery("UPDATE `accounts` " +
-				"SET " + string.Join(", ", updates) + " " +
-				"WHERE `id` = @id",
-					parameters.ToArray());
-
-			return true;
-		}
-
-		/// <summary>
 		/// Deletes a single <see cref="Account"/> object from the database.
 		/// </summary>
-		public static void Delete(Int64 id)
+		/// <param name="id">The primary key of the <see cref="Account"/> to delete.</param>
+		private static void ExecuteDelete(long id)
 			 => Database.ExecuteNonQuery("DELETE FROM `accounts` WHERE `id` = " + id);
 
 		/// <summary>
 		/// Deletes the specified <see cref="Account"/> object from the database.
 		/// </summary>
-		public static void Delete(Account account)
-			=> Delete(account.Id);
+		/// <param name="account">The <see cref="Account"/> to delete.</param>
+		private static void ExecuteDelete(Account account)
+			=> ExecuteDelete(account.Id);
 	}
 }

@@ -26,6 +26,8 @@ using OpenDentBusiness.WebTypes.Shared.XWeb;
 using PdfSharp.Pdf;
 using OpenDentBusiness.IO;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	///<summary></summary>
@@ -145,7 +147,7 @@ namespace OpenDental {
 		private List<long> _listFilteredClinics {
 			get {
 				//Get filtered clinics and if all is selected, this list will also contain all
-				return comboClinicFilter.GetListSelected<Clinic>().Select(x => x.ClinicNum).ToList();
+				return comboClinicFilter.GetListSelected<Clinic>().Select(x => x.Id).ToList();
 
 			}
 		}
@@ -344,7 +346,7 @@ namespace OpenDental {
 				}
 				else {
 					//add only the description based on PaymentCur attached to transaction
-					foreach(JournalEntry journalEntry in JournalEntries.GetForTrans(trans.TransactionNum)) {
+					foreach(JournalEntry journalEntry in JournalEntries.GetForTrans(trans.Id)) {
 						Account account=Accounts.GetAccount(journalEntry.AccountNum);
 						//The account could be null if the AccountNum was never set correctly due to the automatic payment entry setup missing an income account from older versions.
 						if(account!=null && account.Type==AccountType.Asset) {
@@ -1318,11 +1320,11 @@ namespace OpenDental {
 			comboProviderFilter.IsAllSelected=true;
 			//Fill Clinics Combo
 			if(PrefC.HasClinicsEnabled) {
-				List<Clinic> listClinicsTemp=Clinics.GetDeepCopy();
+				List<Clinic> listClinicsTemp=Clinics.GetAll(true);
 				listClinicsTemp.Add(new Clinic() {Abbr="Unassigned"});
 				comboClinicFilter.Items.Clear();
-				foreach(Clinic clinic in _listAccountCharges.Select(x => listClinicsTemp.FirstOrDefault(y => y.ClinicNum==x.ClinicNum))
-					.DistinctBy(x => x.ClinicNum))
+				foreach(Clinic clinic in _listAccountCharges.Select(x => listClinicsTemp.FirstOrDefault(y => y.Id==x.ClinicNum))
+					.DistinctBy(x => x.Id))
 				{
 					comboClinicFilter.Items.Add(clinic.Abbr,clinic);
 				}
@@ -2453,7 +2455,7 @@ namespace OpenDental {
 				comboDepositAccount.Visible=true;
 				_arrayDepositAcctNums=AccountingAutoPays.GetPickListAccounts(autoPay).ToArray();
 				comboDepositAccount.Items.Clear();
-				comboDepositAccount.Items.AddRange(_arrayDepositAcctNums.Select(x => Accounts.GetDescript(x)).ToArray());
+				comboDepositAccount.Items.AddRange(_arrayDepositAcctNums.Select(x => Accounts.GetDescription(x)).ToArray());
 				if(comboDepositAccount.Items.Count>0) {
 					comboDepositAccount.SelectedIndex=0;
 				}
@@ -3599,7 +3601,7 @@ namespace OpenDental {
 			//This is hard coded.  User would have to delete or detach from within transaction rather than here.
 			Transaction trans=Transactions.GetAttachedToPayment(_paymentCur.PayNum);
 			if(trans != null) {
-				if(trans.DateTimeEntry < MiscData.GetNowDateTime().AddDays(-2)) {
+				if(trans.DateAdded < MiscData.GetNowDateTime().AddDays(-2)) {
 					MessageBox.Show("Not allowed to delete.  This payment is already attached to an accounting transaction.  You will need to detach it from "
 						+"within the accounting section of the program.");
 					return;

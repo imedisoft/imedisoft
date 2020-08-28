@@ -337,7 +337,7 @@ namespace OpenDental{
 			_listClearinghousesHq=Clearinghouses.GetDeepCopy(true);
 			_listClearinghousesClinicAll=Clearinghouses.GetAllNonHq();
 			_listClearinghousesClinicCur=new List<Clearinghouse>();
-			comboClinic.SelectedClinicNum=Clinics.ClinicNum;
+			comboClinic.SelectedClinicNum=Clinics.ClinicId;
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {
 				butEligibility.Visible=false;
 			}

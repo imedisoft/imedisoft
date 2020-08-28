@@ -147,10 +147,10 @@ namespace OpenDentBusiness {
 					insWriteoffAdjsForDay=0;
 					prodGoalForDay=0;
 					for(int j=0;j<tableProduction.Rows.Count;j++) {
-						if(listClinics[it].ClinicNum==0 && tableProduction.Rows[j]["ClinicNum"].ToString()!="0") {
+						if(listClinics[it].Id==0 && tableProduction.Rows[j]["ClinicNum"].ToString()!="0") {
 							continue;//Only counting unassigned this time around.
 						}
-						else if(listClinics[it].ClinicNum!=0 && tableProduction.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].ClinicNum)) {
+						else if(listClinics[it].Id!=0 && tableProduction.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].Id)) {
 							continue;
 						}
 						if(dates[i].Date==PIn.Date(tableProduction.Rows[j]["ProcDate"].ToString()).Date) {
@@ -158,10 +158,10 @@ namespace OpenDentBusiness {
 						}
 					}
 					for(int j=0;j<tableAdj.Rows.Count;j++) {
-						if(listClinics[it].ClinicNum==0 && tableAdj.Rows[j]["ClinicNum"].ToString()!="0") {
+						if(listClinics[it].Id==0 && tableAdj.Rows[j]["ClinicNum"].ToString()!="0") {
 							continue;
 						}
-						else if(listClinics[it].ClinicNum!=0 && tableAdj.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].ClinicNum)) {
+						else if(listClinics[it].Id!=0 && tableAdj.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].Id)) {
 							continue;
 						}
 						if(dates[i].Date==PIn.Date(tableAdj.Rows[j]["AdjDate"].ToString()).Date) {
@@ -169,10 +169,10 @@ namespace OpenDentBusiness {
 						}
 					}
 					for(int j=0;j<tableInsWriteoff.Rows.Count;j++) {
-						if(listClinics[it].ClinicNum==0 && tableInsWriteoff.Rows[j]["ClinicNum"].ToString()!="0") {
+						if(listClinics[it].Id==0 && tableInsWriteoff.Rows[j]["ClinicNum"].ToString()!="0") {
 							continue;
 						}
-						else if(listClinics[it].ClinicNum!=0 && tableInsWriteoff.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].ClinicNum)) {
+						else if(listClinics[it].Id!=0 && tableInsWriteoff.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].Id)) {
 							continue;
 						}
 						if(dates[i].Date==PIn.Date(tableInsWriteoff.Rows[j]["Date"].ToString()).Date) {
@@ -180,16 +180,16 @@ namespace OpenDentBusiness {
 						}			
 					}
 					foreach(DataRow rowCur in tableWriteoffAdj.Rows) {
-						if(rowCur["ClinicNum"].ToString()!=POut.Long(listClinics[it].ClinicNum) || dates[i].Date!=PIn.Date(rowCur["Date"].ToString()).Date) {
+						if(rowCur["ClinicNum"].ToString()!=POut.Long(listClinics[it].Id) || dates[i].Date!=PIn.Date(rowCur["Date"].ToString()).Date) {
 							continue;
 						}
 						insWriteoffAdjsForDay-=PIn.Decimal(rowCur["WriteOffEst"].ToString())+PIn.Decimal(rowCur["WriteOff"].ToString());
 					}
 					for(int j=0;j<tableSched.Rows.Count;j++) {
-						if(listClinics[it].ClinicNum==0 && tableSched.Rows[j]["ClinicNum"].ToString()!="0") {
+						if(listClinics[it].Id==0 && tableSched.Rows[j]["ClinicNum"].ToString()!="0") {
 							continue;
 						}
-						else if(listClinics[it].ClinicNum!=0 && tableSched.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].ClinicNum)) {
+						else if(listClinics[it].Id!=0 && tableSched.Rows[j]["ClinicNum"].ToString()!=POut.Long(listClinics[it].Id)) {
 							continue;
 						}
 						if(dates[i].Date==PIn.Date(tableSched.Rows[j]["SchedDate"].ToString()).Date) {
@@ -197,10 +197,10 @@ namespace OpenDentBusiness {
 						}
 					}
 					for(int j = 0;j<listProdGoal.Count;j++) {
-						if(listClinics[it].ClinicNum==0 && listProdGoal[j].ClinicNum!=0) {
+						if(listClinics[it].Id==0 && listProdGoal[j].ClinicNum!=0) {
 							continue;
 						}
-						else if(listClinics[it].ClinicNum!=0 && listProdGoal[j].ClinicNum!=listClinics[it].ClinicNum) {
+						else if(listClinics[it].Id!=0 && listProdGoal[j].ClinicNum!=listClinics[it].Id) {
 							continue;
 						}
 						if(dates[i].Date==listProdGoal[j].Date) {
@@ -293,7 +293,7 @@ namespace OpenDentBusiness {
 		public static DataSet GetMonthlyGoalDataSet(DateTime dateFrom,DateTime dateTo,List<Provider> listProvs,List<Clinic> listClinics,bool hasAllProvs
 			,bool hasAllClinics,PPOWriteoffDateCalc writeoffPayType,bool isCEMT=false) 
 		{
-			List<long> listClinicNums=listClinics.Select(x => x.ClinicNum).ToList();
+			List<long> listClinicNums=listClinics.Select(x => x.Id).ToList();
 			List<long> listProvNums=listProvs.Select(x => x.ProvNum).ToList();
 			#region Procedures
 			string whereProv="";

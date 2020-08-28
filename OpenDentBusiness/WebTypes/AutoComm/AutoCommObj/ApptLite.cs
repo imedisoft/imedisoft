@@ -55,10 +55,10 @@ namespace OpenDentBusiness.AutoComm
 			ClinicNum = appt.ClinicNum;
 			PatNum = appt.PatNum;
 			ProvNum = appt.ProvNum;
-			Clinic clinic = (appt.ClinicNum == 0) ? Clinics.GetPracticeAsClinicZero() : Clinics.GetClinic(appt.ClinicNum);
+			Clinic clinic = (appt.ClinicNum == 0) ? Clinics.GetPracticeAsClinicZero() : Clinics.GetById(appt.ClinicNum);
 			OfficeName = Clinics.GetOfficeName(clinic);
 			OfficePhone = Clinics.GetOfficePhone(clinic);
-			OfficeEmail = EmailAddresses.GetByClinic(clinic?.ClinicNum ?? 0).EmailUsername;
+			OfficeEmail = EmailAddresses.GetByClinic(clinic?.Id ?? 0).EmailUsername;
 			Length = appt.Length;
 			SetPatientContact(patComm);
 		}

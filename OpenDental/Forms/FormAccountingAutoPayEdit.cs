@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using OpenDental;
 using OpenDentBusiness;
 using System;
@@ -52,7 +53,7 @@ namespace Imedisoft.Forms
 
 			foreach (var accountId in accountIds)
 			{
-				accountsListBox.Items.Add(Accounts.GetDescript(accountId));
+				accountsListBox.Items.Add(Accounts.GetDescription(accountId));
 			}
 		}
 

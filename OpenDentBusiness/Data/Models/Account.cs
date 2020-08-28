@@ -1,13 +1,10 @@
 using Imedisoft.Data.Annotations;
-using System;
-using System.Collections;
 using System.Drawing;
-using System.Xml.Serialization;
 
-namespace OpenDentBusiness
+namespace Imedisoft.Data.Models
 {
 	[Table("accounts")]
-	public class Account : TableBase
+	public class Account
 	{
 		[PrimaryKey]
 		public long Id;
@@ -18,9 +15,9 @@ namespace OpenDentBusiness
 		public string Description;
 
 		/// <summary>
-		/// The account type (Asset, Liability, Equity, Revenue, Expense).
+		/// The account type.
 		/// </summary>
-		public AccountType Type;
+		public char Type;
 
 		/// <summary>
 		/// For asset accounts, this would be the bank account number for deposit slips.
@@ -32,8 +29,9 @@ namespace OpenDentBusiness
 		/// </summary>
 		public bool Inactive;
 
+		/// <summary>
+		/// The color used when displaying the account or related journal entries.
+		/// </summary>
 		public Color Color;
-
-		public Account Clone() => (Account)MemberwiseClone();
 	}
 }

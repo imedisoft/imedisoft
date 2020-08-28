@@ -572,7 +572,7 @@ namespace OpenDental{
 			checkSimple.Checked=Prefs.GetBool(PrefName.EasyHidePrinters);
 			SetSimple();
 			SetControls(this,installedPrinters);
-			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				labelTPandPerio.Text="Treatment Plans";
 			}
 		}

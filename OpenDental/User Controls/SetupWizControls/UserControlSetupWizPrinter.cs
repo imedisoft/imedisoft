@@ -22,7 +22,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 			IsDone=true;
 			SetSimple();
 			SetControls(groupPrinter);
-			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				labelTPandPerio.Text="Treatment Plans";
 			}
 			checkScanDocSelectSource.Checked=ComputerPrefs.LocalComputer.ScanDocSelectSource;

@@ -90,7 +90,7 @@ namespace OpenDental {
 					VaccinePatCur.FilledST=Prefs.GetString(PrefName.PracticeST);
 				}
 				else {
-					Clinic clinic=Clinics.GetClinic(pat.ClinicNum);
+					Clinic clinic=Clinics.GetById(pat.ClinicNum);
 					VaccinePatCur.FilledCity=clinic.City;
 					VaccinePatCur.FilledST=clinic.State;
 				}

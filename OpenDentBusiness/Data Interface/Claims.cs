@@ -97,7 +97,7 @@ namespace OpenDentBusiness
 			//Per Nathan, it is OK to return the DateService in the query result to display in the batch insurance window,
 			//because that is the date which will be displayed in the Account module when you use the GoTo feature from batch insurance window.
 			string command = "SELECT outstanding.*,CONCAT(patient.LName,', ',patient.FName) AS patName_,";
-			if (PrefC.HasClinicsEnabled && Clinics.GetCount() > 0)
+			if (PrefC.HasClinicsEnabled && Clinics.Count(false) > 0)
 			{
 				command += "IFNULL(clinic.Description,'') ";
 			}
@@ -140,7 +140,7 @@ namespace OpenDentBusiness
 				+ "OR (AttachedCount=0" + ((claimPayDate.Year > 1880) ? "" : " AND ClaimStatus='S'") + ")"
 				+ ") outstanding "//End outstanding
 				+ "INNER JOIN patient ON patient.PatNum = outstanding.PatNum ";
-			if (PrefC.HasClinicsEnabled && Clinics.GetCount() > 0)
+			if (PrefC.HasClinicsEnabled && Clinics.Count(false) > 0)
 			{
 				command += "LEFT JOIN clinic ON clinic.ClinicNum = outstanding.ClinicNum ";
 			}

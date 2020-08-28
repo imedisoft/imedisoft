@@ -85,7 +85,7 @@ namespace UnitTests {
 						foreach(long provNum in retVal.ListProvNums) {
 							listFees.Add(new Fee() {
 								FeeSched=feeSchedNum,
-								ClinicNum=clinic.ClinicNum,
+								ClinicNum=clinic.Id,
 								ProvNum=provNum,
 								CodeNum=codeNum,
 								Amount=_defaultFeeAmt*_rand.NextDouble()
@@ -96,7 +96,7 @@ namespace UnitTests {
 			}
 			Fees.InsertMany(listFees);
 			if(retVal.ListFeeSchedNums.Count > 0 && retVal.ListClinics.Count > 0) {
-				retVal.ListFees=Fees.GetByFeeSchedNumsClinicNums(retVal.ListFeeSchedNums,retVal.ListClinics.Select(x => x.ClinicNum).ToList())
+				retVal.ListFees=Fees.GetByFeeSchedNumsClinicNums(retVal.ListFeeSchedNums,retVal.ListClinics.Select(x => x.Id).ToList())
 					.Select(x => (Fee)x).ToList();
 			}
 			//Always include the standard fee schedule for HQ.
@@ -116,7 +116,7 @@ namespace UnitTests {
 			long clinicNum=0,long provNum=0,bool isGlobalFeeSched=false) 
 		{
 			feeSchedNum=feeSchedNum==0 ? FeeSchedT.CreateFeeSched(FeeScheduleType.Normal,suffix,isGlobalFeeSched) : feeSchedNum;
-			clinicNum=hasClinic && clinicNum==0 ? ClinicT.CreateClinic(suffix).ClinicNum : clinicNum;
+			clinicNum=hasClinic && clinicNum==0 ? ClinicT.CreateClinic(suffix).Id : clinicNum;
 			provNum=hasProv && provNum==0 ? ProviderT.CreateProvider(suffix) : provNum;
 			codeNum=codeNum==0 ? _listProcCodes[_rand.Next(_listProcCodes.Count-2)].CodeNum : codeNum;
 			return FeeT.GetNewFee(feeSchedNum,codeNum,amt,clinicNum,provNum);

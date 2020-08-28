@@ -512,11 +512,11 @@ namespace OpenDental{
 			//ListClinics can be called even when Clinics is not turned on, therefore it needs to be set to something to avoid a null reference.
 			ListClinics=new List<Clinic>();
 			_listStatementNumsToSkip=new List<long>();
-			if(Clinics.ClinicNum==0) {
+			if(Clinics.ClinicId==0) {
 				comboClinic.IsAllSelected=true;
 			}
 			else {
-				comboClinic.SelectedClinicNum=Clinics.ClinicNum;
+				comboClinic.SelectedClinicNum=Clinics.ClinicId;
 			}
 			FillComboEmail();
 			_isActivateFillDisabled=false;
@@ -630,9 +630,9 @@ namespace OpenDental{
 
 		private void FillComboEmail() {
 			_listEmailAddresses=EmailAddresses.GetDeepCopy();//Does not include user specific email addresses.
-			List<Clinic> listClinicsAll=Clinics.GetDeepCopy();
+			List<Clinic> listClinicsAll=Clinics.GetAll(true);
 			for(int i=0;i<listClinicsAll.Count;i++) {//Exclude any email addresses that are associated to a clinic.
-				_listEmailAddresses.RemoveAll(x => x.EmailAddressNum==listClinicsAll[i].EmailAddressNum);
+				_listEmailAddresses.RemoveAll(x => x.EmailAddressNum==listClinicsAll[i].EmailAddressId);
 			}
 			//Exclude default practice email address.
 			_listEmailAddresses.RemoveAll(x => x.EmailAddressNum==Prefs.GetLong(PrefName.EmailDefaultAddressNum));
@@ -1536,7 +1536,7 @@ namespace OpenDental{
 				clinicAbbr="Unassigned";
 			}
 			else {
-				clinicAbbr=Clinics.GetClinic(clinicNum).Abbr;//Abbr is required by our interface, so no need to check if blank.
+				clinicAbbr=Clinics.GetById(clinicNum).Abbr;//Abbr is required by our interface, so no need to check if blank.
 			}
 			string fileName=Path.GetFileNameWithoutExtension(filePath)+'-'+clinicAbbr+Path.GetExtension(filePath);
 			return ODFileUtils.CombinePaths(Path.GetDirectoryName(filePath),fileName);

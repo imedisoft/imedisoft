@@ -241,9 +241,8 @@ namespace CentralManager
 				foreach (Clinic clinic in listRemoteClinics)
 				{
 					AlertSub alert = new AlertSub();
-					alert.ClinicNum = clinic.ClinicNum;
-					alert.Type = alertSub.Type;
-					alert.UserNum = listRemoteUsers.Find(x => x.UserName == _listCEMTUsers.Find(y => y.Id == alertSub.UserNum).UserName).Id;
+					alert.ClinicId = clinic.Id;
+					alert.UserId = listRemoteUsers.Find(x => x.UserName == _listCEMTUsers.Find(y => y.Id == alertSub.UserId).UserName).Id;
 					listAlertSubsToInsert.Add(alert);
 				}
 			}
@@ -361,9 +360,8 @@ namespace CentralManager
 				{
                     AlertSub alert = new AlertSub
                     {
-                        ClinicNum = clinic.ClinicNum,
-                        Type = alertSub.Type,
-                        UserNum = listRemoteUsers.Find(x => x.UserName == _listCEMTUsers.Find(y => y.Id == alertSub.UserNum).UserName).Id
+                        ClinicId = clinic.Id,
+                        UserId = listRemoteUsers.Find(x => x.UserName == _listCEMTUsers.Find(y => y.Id == alertSub.UserId).UserName).Id
                     };
                     listAlertSubsToInsert.Add(alert);
 				}

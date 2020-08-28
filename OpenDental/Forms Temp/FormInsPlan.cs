@@ -2482,7 +2482,7 @@ namespace OpenDental{
 			else {
 				textElectBenLastDate.Text=dateLast270.ToShortDateString();
 			}
-			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				checkCodeSubst.Visible=false;
 			}
 			_datePatPlanLastVerified=PIn.Date(textDateLastVerifiedPatPlan.Text);
@@ -3939,7 +3939,7 @@ namespace OpenDental{
 				return;
 			}
 			Clearinghouse clearinghouseHq=Canadian.GetCanadianClearinghouseHq(carrier);
-			Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.ClinicNum);
+			Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.ClinicId);
 			Cursor=Cursors.WaitCursor;
 			//string result="";
 			DateTime date=DateTime.Today;
@@ -4348,7 +4348,7 @@ namespace OpenDental{
 			}
 			Cursor=Cursors.WaitCursor;
 			try {
-				Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.ClinicNum);
+				Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.ClinicId);
 				string error;
 				Etrans etrans=x270Controller.RequestBenefits(clearinghouseClin,_planCur,PatPlanCur.PatNum,_carrierCur,_subCur,out error);
 				if(etrans != null) {
@@ -4457,7 +4457,7 @@ namespace OpenDental{
 			string passWord;
 			// Get Login / Password
 			Clearinghouse clearinghouseHq=Clearinghouses.GetDefaultDental();
-			Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.ClinicNum);
+			Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.ClinicId);
 			if(clearinghouseClin!=null) {
 				loginID=clearinghouseClin.LoginID;
 				passWord=clearinghouseClin.Password;

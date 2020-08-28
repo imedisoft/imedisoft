@@ -115,7 +115,7 @@ namespace OpenDentBusiness
 			if (invalidTypes.Contains(InvalidType.Computers) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Computers.ToString());
-				Computers.GetTableFromCache(true);
+				Computers.RefreshCache();
 				Printers.GetTableFromCache(true);
 			}
 			if (invalidTypes.Contains(InvalidType.Defs) || refreshAll)
@@ -294,7 +294,7 @@ namespace OpenDentBusiness
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Providers.ToString());
 				Providers.GetTableFromCache(true);
 				//Refresh the clinics as well because InvalidType.Providers has a comment that says "also includes clinics".  Also, there currently isn't an itype for Clinics.
-				Clinics.GetTableFromCache(true);
+				Clinics.RefreshCache();
 			}
 			if (invalidTypes.Contains(InvalidType.QuickPaste) || refreshAll)
 			{

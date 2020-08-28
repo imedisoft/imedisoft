@@ -915,7 +915,7 @@ namespace OpenDentBusiness {
 					};
 				}
 				//Pat Clinic-------------------------------------------------------------------------------------------------------------
-				Clinic clinic=Clinics.GetClinic(pat.ClinicNum);
+				Clinic clinic=Clinics.GetById(pat.ClinicNum);
 				if(clinic==null) {
 					clinicPatDescription=Prefs.GetString(PrefName.PracticeTitle);
 					clinicPatAddress=Prefs.GetString(PrefName.PracticeAddress);
@@ -927,16 +927,16 @@ namespace OpenDentBusiness {
 				}
 				else {
 					clinicPatDescription=clinic.Description;
-					clinicPatAddress=clinic.Address;
-					if(clinic.Address2!="") {
-						clinicPatAddress+=", "+clinic.Address2;
+					clinicPatAddress=clinic.AddressLine1;
+					if(clinic.AddressLine2!="") {
+						clinicPatAddress+=", "+clinic.AddressLine2;
 					}
 					clinicPatCityStZip=clinic.City+", "+clinic.State+"  "+clinic.Zip;
 					phone=clinic.Phone;
 				}
 				clinicPatPhone=TelephoneNumbers.ReFormat(phone);
 				//Current selected Clinic-------------------------------------------------------------------------------------------------------
-				Clinic clinicCur=Clinics.GetClinic(Clinics.ClinicNum);
+				Clinic clinicCur=Clinics.GetById(Clinics.ClinicId);
 				if(clinicCur==null) {
 					clinicCurDescription=Prefs.GetString(PrefName.PracticeTitle);
 					clinicCurAddress=Prefs.GetString(PrefName.PracticeAddress);
@@ -948,9 +948,9 @@ namespace OpenDentBusiness {
 				}
 				else {
 					clinicCurDescription=clinicCur.Description;
-					clinicCurAddress=clinicCur.Address;
-					if(clinicCur.Address2!="") {
-						clinicCurAddress+=", "+clinicCur.Address2;
+					clinicCurAddress=clinicCur.AddressLine1;
+					if(clinicCur.AddressLine2!="") {
+						clinicCurAddress+=", "+clinicCur.AddressLine2;
 					}
 					clinicCurCityStZip=clinicCur.City+", "+clinicCur.State+"  "+clinicCur.Zip;
 					phone=clinicCur.Phone;
@@ -1474,12 +1474,12 @@ namespace OpenDentBusiness {
 		private static void FillFieldsForRx(Sheet sheet,RxPat rx,Patient pat,Provider prov) {
 			Clinic clinic=null;
 			if(Prefs.GetBool(PrefName.ElectronicRxClinicUseSelected)) {
-				clinic=Clinics.GetClinic(Clinics.ClinicNum);
+				clinic=Clinics.GetById(Clinics.ClinicId);
 			}
 			else if(pat.ClinicNum!=0) {
-				clinic=Clinics.GetClinic(pat.ClinicNum);
+				clinic=Clinics.GetById(pat.ClinicNum);
 			}
-			ProviderClinic provClinic=ProviderClinics.GetOneOrDefault(prov.ProvNum,(clinic==null ? 0 : clinic.ClinicNum));
+			ProviderClinic provClinic=ProviderClinics.GetOneOrDefault(prov.ProvNum,(clinic==null ? 0 : clinic.Id));
 			foreach(SheetField field in sheet.SheetFields) {
 				switch(field.FieldName) {
 					case "prov.nameFL":
@@ -1502,7 +1502,7 @@ namespace OpenDentBusiness {
 						break;
 					case "prov.dEANum":
 						if(rx.IsControlled){
-							field.FieldValue=ProviderClinics.GetDEANum(prov.ProvNum,(clinic==null ? 0 : clinic.ClinicNum));
+							field.FieldValue=ProviderClinics.GetDEANum(prov.ProvNum,(clinic==null ? 0 : clinic.Id));
 						}
 						else{
 							field.FieldValue="";
@@ -1588,8 +1588,8 @@ namespace OpenDentBusiness {
 			RxPat rx=RxPats.GetRx(rxNum);
 			Provider prov=Providers.GetProv(rx.ProvNum);
 			Patient pat=Patients.GetPat(rx.PatNum);
-			Clinic clinic=Clinics.GetClinic(pat.ClinicNum);
-			ProviderClinic provClinic=ProviderClinics.GetOneOrDefault(prov.ProvNum,(clinic==null ? 0 : clinic.ClinicNum));
+			Clinic clinic=Clinics.GetById(pat.ClinicNum);
+			ProviderClinic provClinic=ProviderClinics.GetOneOrDefault(prov.ProvNum,(clinic==null ? 0 : clinic.Id));
 			foreach(SheetField field in sheet.SheetFields) {
 				switch(field.FieldName) {
 					case SheetFieldsAvailable.RxPat.Drug:
@@ -1916,7 +1916,7 @@ namespace OpenDentBusiness {
 					case "sendClinicCEMT":
 						string strClinic=Prefs.GetStringNoCache(PrefName.PracticeTitle);
 						if(Prefs.HasClinicsEnabledNoCache){
-							Clinic clinic=Clinics.GetClinicNoCache(pat.ClinicNum);
+							Clinic clinic=Clinics.GetByIdNoCache(pat.ClinicNum);
 							if(clinic!=null) {
 								strClinic=clinic.Abbr;
 							}
@@ -2607,8 +2607,8 @@ namespace OpenDentBusiness {
 		}
 
 		private static void FillFieldsForDepositSlip(Sheet sheet,Deposit deposit) {
-			List <Payment> PatPayList=Payments.GetForDeposit(deposit.DepositNum);
-			ClaimPayment[] ClaimPayList=ClaimPayments.GetForDeposit(deposit.DepositNum);
+			List <Payment> PatPayList=Payments.GetForDeposit(deposit.Id);
+			ClaimPayment[] ClaimPayList=ClaimPayments.GetForDeposit(deposit.Id);
 			//Stores all deposit list items. Used for depositList sheetfield item.
 			List<string[]> depositList=new List<string[]> ();
 			//Stores the list of deposit items used to display itemized deposit items, not summary. It will not include deposit items that have the 
@@ -3038,10 +3038,10 @@ namespace OpenDentBusiness {
 							break;
 						}
 						#region Practice Address
-						if(PrefC.HasClinicsEnabled && Clinics.GetCount() > 0 //if using clinics
-							&& Clinics.GetClinic(patGuar.ClinicNum)!=null)//and this patient assigned to a clinic
+						if(PrefC.HasClinicsEnabled && Clinics.Count(false) > 0 //if using clinics
+							&& Clinics.GetById(patGuar.ClinicNum)!=null)//and this patient assigned to a clinic
 						{
-							Clinic clinic=Clinics.GetClinic(patGuar.ClinicNum);
+							Clinic clinic=Clinics.GetById(patGuar.ClinicNum);
 							field.FieldValue=clinic.Description+"\r\n";
 							if(CultureInfo.CurrentCulture.Name=="en-AU") {//Australia
 								Provider defaultProv=Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv));
@@ -3051,9 +3051,9 @@ namespace OpenDentBusiness {
 								Provider defaultProv=Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv));
 								field.FieldValue+="GST: "+defaultProv.SSN+"\r\n";
 							}
-							field.FieldValue+=clinic.Address+"\r\n";
-							if(clinic.Address2!="") {
-								field.FieldValue+=clinic.Address2+"\r\n";
+							field.FieldValue+=clinic.AddressLine1+"\r\n";
+							if(clinic.AddressLine2!="") {
+								field.FieldValue+=clinic.AddressLine2+"\r\n";
 							}
 							if(CultureInfo.CurrentCulture.Name.EndsWith("CH")) {//CH is for switzerland. eg de-CH
 								field.FieldValue+=clinic.Zip+" "+clinic.City+"\r\n";
@@ -3629,7 +3629,7 @@ namespace OpenDentBusiness {
 							clinic=Clinics.GetPracticeAsClinicZero();
 						}
 						else {
-							clinic=Clinics.GetClinic(pat.ClinicNum);
+							clinic=Clinics.GetById(pat.ClinicNum);
 						}
 						value=clinic.Description;
 						if(clinic.Phone.Length==10 && CultureInfo.CurrentCulture.Name=="en-US") {
@@ -3974,7 +3974,7 @@ namespace OpenDentBusiness {
 			}
 			Clinic clinic=null;
 			if(pat.ClinicNum!=0) {
-				clinic=Clinics.GetClinic(pat.ClinicNum);
+				clinic=Clinics.GetById(pat.ClinicNum);
 			}
 			List<ProviderClinic> listProvClinics=ProviderClinics.GetByProvNums(dictProvs.Select(x => x.Value).Select(y=>y.ProvNum).Distinct().ToList());
 			foreach(SheetField field in sheet.SheetFields) {
@@ -4838,9 +4838,9 @@ namespace OpenDentBusiness {
 		private static string AddressHelper(Clinic clinic) {
 			string text;
 			if(PrefC.HasClinicsEnabled && clinic!=null) {
-				text=clinic.Address;
-				if(clinic.Address2!="") {
-					text+="\r\n"+clinic.Address2;
+				text=clinic.AddressLine1;
+				if(clinic.AddressLine2!="") {
+					text+="\r\n"+clinic.AddressLine2;
 				}
 			}
 			else {

@@ -18,7 +18,7 @@ namespace OpenDentBusiness
 		[ForeignKey(typeof(Userod), nameof(Userod.Id))]
 		public long UserId;
 
-		[ForeignKey(typeof(Clinic), nameof(Clinic.ClinicNum))]
+		[ForeignKey(typeof(Clinic), nameof(Clinic.Id))]
 		public long ClinicId;
 
 		public UserClinic()

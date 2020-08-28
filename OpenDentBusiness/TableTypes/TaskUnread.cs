@@ -1,28 +1,22 @@
-using System;
-using System.Collections;
-using System.Drawing;
+using Imedisoft.Data.Annotations;
 
-namespace OpenDentBusiness{
-	///<summary>When a task is created or a comment made, a series of these taskunread objects are created, one for each user who is subscribed to the tasklist.  Duplicates are intelligently avoided.  Rows are deleted once user reads the task.</summary>
-	[Serializable()]
-	[CrudTableAttribute(HasBatchWriteMethods=true)]
-	public class TaskUnread:TableBase{
-		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
-		public long TaskUnreadNum;
-		///<summary>FK to task.TaskNum.</summary>
-		public long TaskNum;
-		///<summary>FK to userod.UserNum.</summary>
-		public long UserNum;
+namespace OpenDentBusiness
+{
+	/// <summary>
+	/// When a task is created or a comment made, a series of these taskunread objects are created, one for each user who is subscribed to the tasklist.
+	/// Duplicates are intelligently avoided.
+	/// Rows are deleted once user reads the task.
+	/// </summary>
+	[Table]
+	public class TaskUnread : TableBase
+	{
+		[PrimaryKey]
+		public long Id;
 
-		///<summary></summary>
-		public Account Clone() {
-			return (Account)this.MemberwiseClone();
-		}
+		[ForeignKey(typeof(Task), nameof(Task.Id))]
+		public long TaskId;
 
+		[ForeignKey(typeof(Userod), nameof(Userod.Id))]
+		public long UserId;
 	}
 }
-
-
-
-

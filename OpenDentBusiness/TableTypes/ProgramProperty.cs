@@ -39,7 +39,7 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// The ID of the clinic the property applies to.
 		/// </summary>
-		[Column("ClinicNum"), ForeignKey(typeof(Clinic), nameof(Clinic.ClinicNum))]
+		[Column("ClinicNum"), ForeignKey(typeof(Clinic), nameof(Clinic.Id))]
 		public long ClinicId;
 
 		public ProgramProperty Copy()

@@ -288,10 +288,10 @@ namespace OpenDentBusiness {
 				string custodianState=Prefs.GetString(PrefName.PracticeST);//Validated
 				string custodianPhone=strPracticePhone;
 				if(PrefC.HasClinicsEnabled && _patOutCcd.ClinicNum!=0) {
-					Clinic clinicCustodian=Clinics.GetClinic(_patOutCcd.ClinicNum);
+					Clinic clinicCustodian=Clinics.GetById(_patOutCcd.ClinicNum);
 					custodianTitle=clinicCustodian.Description;
-					custodianAddress=clinicCustodian.Address;//Validated
-					custodianAddress2=clinicCustodian.Address2;//Validated
+					custodianAddress=clinicCustodian.AddressLine1;//Validated
+					custodianAddress2=clinicCustodian.AddressLine2;//Validated
 					custodianCity=clinicCustodian.City;//Validated
 					custodianState=clinicCustodian.State;//Validated
 					custodianPhone=clinicCustodian.Phone;//Validated
@@ -321,9 +321,9 @@ namespace OpenDentBusiness {
 					string legalAuthState=Prefs.GetString(PrefName.PracticeST);//Validated
 					string legalAuthPhone=strPracticePhone;
 					if(PrefC.HasClinicsEnabled && _patOutCcd.ClinicNum!=0) {
-						Clinic clinicAuth=Clinics.GetClinic(_patOutCcd.ClinicNum);
-						legalAuthAddress=clinicAuth.Address;//Validated
-						legalAuthAddress2=clinicAuth.Address2;//Validated
+						Clinic clinicAuth=Clinics.GetById(_patOutCcd.ClinicNum);
+						legalAuthAddress=clinicAuth.AddressLine1;//Validated
+						legalAuthAddress2=clinicAuth.AddressLine2;//Validated
 						legalAuthCity=clinicAuth.City;//Validated
 						legalAuthState=clinicAuth.State;//Validated
 						legalAuthPhone=clinicAuth.Phone;//Validated
@@ -476,7 +476,7 @@ Allergies
 					//}
 					//else {//Medication allergy
 					Medication med;
-					if(allergyDef.MedicationNum==0) {
+					if(allergyDef.MedicationId==0) {
 						if(allergyDef.UniiCode=="") {
 							_w.WriteElementString("td","");
 						}
@@ -485,7 +485,7 @@ Allergies
 						}
 					}
 					else {
-						med=Medications.GetMedication(allergyDef.MedicationNum);
+						med=Medications.GetMedication(allergyDef.MedicationId);
 						_w.WriteElementString("td",med.RxCui.ToString()+" - "+med.MedName);
 					}
 					//}
@@ -608,7 +608,7 @@ Allergies
 				//Or the ValueSet 2.16.840.1.113883.3.88.12.80.17 Medication Clinical Drug (code system: RxNorm 2.16.840.1.113883.6.88). Example: 313850	RxNorm	Amoxicillin 40 MG/ML Oral Suspensionv 
 				//In an allergy to a class of medications the code SHALL be selected from the ValueSet 2.16.840.1.113883.3.88.12.80.18 Medication Drug Class (code system: NDF-RT 2.16.840.1.113883.3.26.1.5). Example: 2-Propanol, Inhibitors
 				//In an allergy to a food or other substance the code SHALL be selected from the ValueSet 2.16.840.1.113883.3.88.12.80.20 Ingredient Name (code system: Unique Ingredient Identifier (UNII) 2.16.840.1.113883.4.9). Example: Peanut, Red 40
-				if(allergyDef.MedicationNum==0) {//Unique Ingredient Identifier (UNII codes)
+				if(allergyDef.MedicationId==0) {//Unique Ingredient Identifier (UNII codes)
 					if(allergyDef.UniiCode=="") {
 						StartAndEnd("code","nullFlavor","UNK");
 					}
@@ -626,7 +626,7 @@ Allergies
 				//For example, you might enter an allergy for Vicoprofen.
 				//}
 				else {//Medication Brand Name or Medication Clinical Drug (RxNorm codes)
-					Medication med=Medications.GetMedication(allergyDef.MedicationNum);
+					Medication med=Medications.GetMedication(allergyDef.MedicationId);
 					StartAndEnd("code","code",med.RxCui.ToString(),"displayName",med.MedName,"codeSystem",strCodeSystemRxNorm,"codeSystemName",strCodeSystemNameRxNorm);
 				}
 				End("playingEntity");
@@ -2542,7 +2542,7 @@ Vital Signs
 				strErrors+="Missing patient phone. Must have home, wireless, or work phone.";
 			}
 			if(PrefC.HasClinicsEnabled && pat.ClinicNum!=0) {
-				Clinic clinic=Clinics.GetClinic(pat.ClinicNum);
+				Clinic clinic=Clinics.GetById(pat.ClinicNum);
 				if(clinic.Description.Trim()=="") {
 					if(strErrors!="") {
 						strErrors+="\r\n";
@@ -2555,7 +2555,7 @@ Vital Signs
 					}
 					strErrors+="Missing clinic '"+clinic.Description+"' phone.";
 				}
-				if(clinic.Address.Trim()=="") {
+				if(clinic.AddressLine1.Trim()=="") {
 					if(strErrors!="") {
 						strErrors+="\r\n";
 					}
@@ -2633,8 +2633,8 @@ Vital Signs
 			for(int i=0;i<listAllergiesAll.Count;i++) {
 				allergyDef=AllergyDefs.GetOne(listAllergiesAll[i].AllergyDefId);
 				bool isMedAllergy=false;
-				if(allergyDef.MedicationNum!=0) {
-					Medication med=Medications.GetMedication(allergyDef.MedicationNum);
+				if(allergyDef.MedicationId!=0) {
+					Medication med=Medications.GetMedication(allergyDef.MedicationId);
 					if(med.RxCui!=0) {
 						isMedAllergy=true;
 					}
@@ -3267,14 +3267,14 @@ Vital Signs
 					AllergyDef allergyDef=new AllergyDef();
 					allergyDef.IsNew=true;//Needed for reconcile window to know this record is not in the db yet.
 					if(med.MedicationNum!=0) {
-						allergyDef.MedicationNum=med.MedicationNum;
+						allergyDef.MedicationId=med.MedicationNum;
 					}
 					//else {TODO: Change to Unii
 					//	allergyDef.SnomedAllergyTo=PIn.String(strCode);
 					//}
 					allergyDef.Description=allergyDefName;
 					allergyDef.IsHidden=false;
-					allergyDef.MedicationNum=allergyMeds[j].MedicationNum;
+					allergyDef.MedicationId=allergyMeds[j].MedicationNum;
 					#region Snomed type determination
 					if(strCode=="419511003") {
 						allergyDef.SnomedType=SnomedAllergy.AdverseReactionsToDrug;

@@ -238,7 +238,7 @@ namespace OpenDental {
 			//This clinic name could be more accurate here in the future if we make perio exams clinic specific.
 			//Perhaps if there were a perioexam.ClinicNum column.
 			if(pat.ClinicNum!=0) {
-				Clinic clinic=Clinics.GetClinic(pat.ClinicNum);
+				Clinic clinic=Clinics.GetById(pat.ClinicNum);
 				clinicName=clinic.Description;
 			} 
 			else {

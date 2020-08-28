@@ -40,13 +40,9 @@
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabUser = new System.Windows.Forms.TabPage();
             this.securityTreeUser = new OpenDental.UserControlSecurityTree();
-            this.alertSubscriptionsTabPage = new System.Windows.Forms.TabPage();
-            this.alertSubscriptionsListBox = new System.Windows.Forms.ListBox();
-            this.alertSubscriptionsLabel = new System.Windows.Forms.Label();
             this.unlockButton = new OpenDental.UI.Button();
             this.tabControl.SuspendLayout();
             this.tabUser.SuspendLayout();
-            this.alertSubscriptionsTabPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // checkIsHidden
@@ -132,7 +128,6 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl.Controls.Add(this.tabUser);
-            this.tabControl.Controls.Add(this.alertSubscriptionsTabPage);
             this.tabControl.Location = new System.Drawing.Point(13, 13);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
@@ -163,36 +158,6 @@
             this.securityTreeUser.ReadOnly = true;
             this.securityTreeUser.Size = new System.Drawing.Size(372, 363);
             this.securityTreeUser.TabIndex = 2;
-            // 
-            // alertSubscriptionsTabPage
-            // 
-            this.alertSubscriptionsTabPage.Controls.Add(this.alertSubscriptionsListBox);
-            this.alertSubscriptionsTabPage.Controls.Add(this.alertSubscriptionsLabel);
-            this.alertSubscriptionsTabPage.Location = new System.Drawing.Point(4, 22);
-            this.alertSubscriptionsTabPage.Name = "alertSubscriptionsTabPage";
-            this.alertSubscriptionsTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.alertSubscriptionsTabPage.Size = new System.Drawing.Size(590, 404);
-            this.alertSubscriptionsTabPage.TabIndex = 1;
-            this.alertSubscriptionsTabPage.Text = "Alert Subscriptions";
-            this.alertSubscriptionsTabPage.UseVisualStyleBackColor = true;
-            // 
-            // alertSubscriptionsListBox
-            // 
-            this.alertSubscriptionsListBox.IntegralHeight = false;
-            this.alertSubscriptionsListBox.Location = new System.Drawing.Point(162, 24);
-            this.alertSubscriptionsListBox.Name = "alertSubscriptionsListBox";
-            this.alertSubscriptionsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.alertSubscriptionsListBox.Size = new System.Drawing.Size(250, 340);
-            this.alertSubscriptionsListBox.TabIndex = 170;
-            // 
-            // alertSubscriptionsLabel
-            // 
-            this.alertSubscriptionsLabel.AutoSize = true;
-            this.alertSubscriptionsLabel.Location = new System.Drawing.Point(159, 8);
-            this.alertSubscriptionsLabel.Name = "alertSubscriptionsLabel";
-            this.alertSubscriptionsLabel.Size = new System.Drawing.Size(121, 13);
-            this.alertSubscriptionsLabel.TabIndex = 169;
-            this.alertSubscriptionsLabel.Text = "User Alert Subscriptions";
             // 
             // unlockButton
             // 
@@ -228,8 +193,6 @@
             this.tabControl.ResumeLayout(false);
             this.tabUser.ResumeLayout(false);
             this.tabUser.PerformLayout();
-            this.alertSubscriptionsTabPage.ResumeLayout(false);
-            this.alertSubscriptionsTabPage.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -247,9 +210,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage tabUser;
-        private System.Windows.Forms.TabPage alertSubscriptionsTabPage;
-        private System.Windows.Forms.ListBox alertSubscriptionsListBox;
-        private System.Windows.Forms.Label alertSubscriptionsLabel;
         private OpenDental.UI.Button unlockButton;
         private OpenDental.UserControlSecurityTree securityTreeUser;
     }

@@ -42,7 +42,7 @@ namespace OpenDentBusiness {
 		///<summary>The list of Clinic.ClinicNums filled from the ClinicNums comma delimited string that exist in the given list of clinics.</summary>
 		public List<long> GetListClinicNumsFiltered(List<Clinic> listClinicsFiltered) {
 			return new List<long>(this.ClinicNums.Split(',').Select(long.Parse).Distinct().ToList())
-				.FindAll(x => listClinicsFiltered.Select(y => y.ClinicNum).Contains(x));
+				.FindAll(x => listClinicsFiltered.Select(y => y.Id).Contains(x));
 		}
 	}
 }

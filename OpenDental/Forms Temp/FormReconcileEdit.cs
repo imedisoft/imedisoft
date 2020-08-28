@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using MigraDoc.DocumentObjectModel;
 using System.Drawing.Printing;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>

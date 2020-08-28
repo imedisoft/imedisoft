@@ -185,7 +185,7 @@ namespace OpenDental {
 					//	isValid=false;
 					//	break;
 					//}
-					if(_listAllergyDefCur[j].MedicationNum==ListAllergyDefNew[i].MedicationNum) {//Check Medications to determine if the Reconcile list already has that MedicationNum
+					if(_listAllergyDefCur[j].MedicationId==ListAllergyDefNew[i].MedicationId) {//Check Medications to determine if the Reconcile list already has that MedicationNum
 						isValid=false;
 						break;
 					}
@@ -312,7 +312,7 @@ namespace OpenDental {
 					ald=ListAllergyDefNew[ListAllergyNew.IndexOf(_listAllergyReconcile[i])];
 				}
 				for(int j=0;j<_listAllergyDefCur.Count;j++) {
-					if(_listAllergyReconcile[i].AllergyDefId > 0 && _listAllergyReconcile[i].AllergyDefId==_listAllergyDefCur[j].AllergyDefNum) {
+					if(_listAllergyReconcile[i].AllergyDefId > 0 && _listAllergyReconcile[i].AllergyDefId==_listAllergyDefCur[j].Id) {
 						ald=_listAllergyDefCur[j];//Gets the allergydef matching the allergy so we can use it to populate the grid
 						break;
 					}
@@ -372,7 +372,7 @@ namespace OpenDental {
 					//	skipCount++;
 					//	break;
 					//}
-					if(alDR.MedicationNum!=0 && alDR.MedicationNum==alD.MedicationNum) {
+					if(alDR.MedicationId!=0 && alDR.MedicationId==alD.MedicationId) {
 						isValid=false;
 						skipCount++;
 						break;
@@ -420,7 +420,7 @@ namespace OpenDental {
 							continue;//This should not happen
 						}
 						alDN=ListAllergyDefNew[index];//Incoming allergy and allergy def lists are 1 to 1 so we can use the same index.
-						if(alDN!=null && alDN.MedicationNum==alD.MedicationNum) {
+						if(alDN!=null && alDN.MedicationId==alD.MedicationId) {
 							isValid=false;
 							skipCount++;
 							break;
@@ -485,7 +485,7 @@ namespace OpenDental {
 					//	isActive=true;
 					//	break;
 					//}
-					if(alDR.MedicationNum!=0 && alDR.MedicationNum==alD.MedicationNum) {//Has a Snomed code and they are equal
+					if(alDR.MedicationId!=0 && alDR.MedicationId==alD.MedicationId) {//Has a Snomed code and they are equal
 						isActive=true;
 						break;
 					}
@@ -510,8 +510,8 @@ namespace OpenDental {
 					continue;
 				}
 				//Insert the AllergyDef and Allergy if needed.
-				if(ListAllergyDefNew[index].MedicationNum!=0) {
-					alDU=AllergyDefs.GetAllergyDefFromMedication(ListAllergyDefNew[index].MedicationNum);
+				if(ListAllergyDefNew[index].MedicationId!=0) {
+					alDU=AllergyDefs.GetAllergyDefFromMedication(ListAllergyDefNew[index].MedicationId);
 				}
 				else {
 					alDU=null;//remove once UNII is implemented
@@ -521,7 +521,7 @@ namespace OpenDental {
 					ListAllergyNew[index].AllergyDefId=AllergyDefs.Insert(ListAllergyDefNew[index]);
 				}
 				else {
-					ListAllergyNew[index].AllergyDefId=alDU.AllergyDefNum;//Set the allergydefnum on the allergy.
+					ListAllergyNew[index].AllergyDefId=alDU.Id;//Set the allergydefnum on the allergy.
 				}
 				Allergies.Insert(ListAllergyNew[index]);
 			}

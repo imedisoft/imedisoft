@@ -47,8 +47,8 @@ namespace OpenDental {
 						checkEnabled.Enabled=false;
 					}
 				}
-				comboClinic.SelectedClinicNum=Clinics.ClinicNum;
-				_selectedClinicNum=Clinics.ClinicNum;
+				comboClinic.SelectedClinicNum=Clinics.ClinicId;
+				_selectedClinicNum=Clinics.ClinicId;
 			}
 			_dictClinicListProgProps=ProgramProperties.GetForProgram(_progCur.Id)//get list of all props for the program
 				.GroupBy(x => x.ClinicId)//group each clinic
@@ -325,8 +325,8 @@ namespace OpenDental {
 			}
 
 			ProgramProperties.Sync(
-				_dictClinicListProgProps.Where(x => comboClinic.ListClinics.Select(x => x.ClinicNum).Contains(x.Key)).SelectMany(x => x.Value).ToList(),
-				_progCur.Id,comboClinic.ListClinics.Select(x => x.ClinicNum).ToList());
+				_dictClinicListProgProps.Where(x => comboClinic.ListClinics.Select(x => x.Id).Contains(x.Key)).SelectMany(x => x.Value).ToList(),
+				_progCur.Id,comboClinic.ListClinics.Select(x => x.Id).ToList());
 
 			DataValid.SetInvalid(InvalidType.Programs);
 			string updateFreq=numericSendFrequency.Value+" "+(FrequencyUnit)comboSendFrequencyUnits.SelectedIndex;

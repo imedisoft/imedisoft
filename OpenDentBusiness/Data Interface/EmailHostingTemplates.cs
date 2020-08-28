@@ -20,8 +20,8 @@ namespace OpenDentBusiness{
 			if (string.IsNullOrWhiteSpace(guid) || string.IsNullOrWhiteSpace(secret))
 			{
 				//Huge assumption that we have already checked that the current clinic is signed up.
-				guid = ClinicPrefs.GetString(Clinics.ClinicNum, PrefName.MassEmailGuid);
-				secret = ClinicPrefs.GetString(Clinics.ClinicNum, PrefName.MassEmailSecret);
+				guid = ClinicPrefs.GetString(Clinics.ClinicId, PrefName.MassEmailGuid);
+				secret = ClinicPrefs.GetString(Clinics.ClinicId, PrefName.MassEmailSecret);
 			}
 			return new AccountApi(guid, secret);
 		}

@@ -623,7 +623,7 @@ namespace OpenDental{
 				MessageBox.Show("Cannot delete the notify email address.");
 				return;
 			}
-			Clinic clinic=Clinics.GetFirstOrDefault(x => x.EmailAddressNum==_emailAddressCur.EmailAddressNum);
+			Clinic clinic=Clinics.FirstOrDefault(x => x.EmailAddressId==_emailAddressCur.EmailAddressNum, true);
 			if(clinic!=null) {
 				MessageBox.Show("Cannot delete the email address because it is used by clinic"+" "+clinic.Description);
 				return;

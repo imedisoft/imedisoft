@@ -245,7 +245,7 @@ namespace OpenDental {
 				List<long> emptyProvNumList=new List<long>();
 				List<long> listClinicNums=new List<long>();
 				if(PrefC.HasClinicsEnabled) {
-					listClinicNums.Add(Clinics.ClinicNum);
+					listClinicNums.Add(Clinics.ClinicId);
 				}
 				//Run for all providers and the currently selected day
 				List<long> aptNums=RpRouting.GetRouting(DateSelected,emptyProvNumList,listClinicNums);
@@ -278,12 +278,12 @@ namespace OpenDental {
 				labelClin.Visible=false;
 			}
 			else {
-				_listClinics=Clinics.GetForUserod(Security.CurrentUser,true,"Unassigned");
+				_listClinics=Clinics.GetByCurrentUser();
 				foreach(Clinic clinic in _listClinics) {
 					listClin.Items.Add(clinic.Abbr);
-					listClin.SetSelected(listClin.Items.Count-1,(Clinics.ClinicNum!=0 && Clinics.ClinicNum==clinic.ClinicNum));
+					listClin.SetSelected(listClin.Items.Count-1,(Clinics.ClinicId!=0 && Clinics.ClinicId==clinic.Id));
 				}
-				if(Clinics.ClinicNum==0) {
+				if(Clinics.ClinicId==0) {
 					checkClinAll.Checked=true;
 				}
 			}
@@ -385,10 +385,10 @@ namespace OpenDental {
 			List<long> listClinicNums=new List<long>();
 			if(PrefC.HasClinicsEnabled) {
 				if(checkClinAll.Checked) {
-					listClinicNums=_listClinics.Select(x => x.ClinicNum).Distinct().ToList();
+					listClinicNums=_listClinics.Select(x => x.Id).Distinct().ToList();
 				}
 				else {
-					listClinicNums=listClin.SelectedIndices.OfType<int>().Select(x => _listClinics[x].ClinicNum).ToList();
+					listClinicNums=listClin.SelectedIndices.OfType<int>().Select(x => _listClinics[x].Id).ToList();
 				}
 			}
 			List<long> aptNums=RpRouting.GetRouting(date,listProvNums,listClinicNums);

@@ -31,7 +31,7 @@ namespace OpenDental {
 		}
 
 		private void FormWebSchedASAPSend_Load(object sender,EventArgs e) {
-			Clinic curClinic=Clinics.GetClinic(_clinicNum)??Clinics.GetDefaultForTexting()??Clinics.GetPracticeAsClinicZero();
+			Clinic curClinic=Clinics.GetById(_clinicNum)??Clinics.GetDefaultForTexting()??Clinics.GetPracticeAsClinicZero();
 			List<long> listPatNums=(_listAppts.Select(x => x.PatNum).Union(_listRecalls.Select(x => x.PatNum))).Distinct().ToList();
 			_listPatComms=Patients.GetPatComms(listPatNums,curClinic,isGetFamily: false);
 			string textTemplate=ClinicPrefs.GetString(_clinicNum, PrefName.WebSchedAsapTextTemplate);

@@ -84,7 +84,7 @@ namespace OpenDental {
 			gridMain.ListGridColumns.Add(col);
 			col=new GridColumn("Prov",50);
 			gridMain.ListGridColumns.Add(col);
-			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				col=new GridColumn("Code",75);
 				gridMain.ListGridColumns.Add(col);
 			}
@@ -137,7 +137,7 @@ namespace OpenDental {
 				string procFee="";
 				if(ClaimProcsToEdit[i].ProcNum==0) {
 					row.Cells.Add("");
-					if(!Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+					if(!Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 						row.Cells.Add("");
 					}
 					row.Cells.Add("Total Payment");
@@ -147,7 +147,7 @@ namespace OpenDental {
 					procFee=ProcCur.ProcFeeTotal.ToString("F");
 					ProcedureCode procCode=ProcedureCodes.GetProcCode(ProcCur.CodeNum);
 					row.Cells.Add(procCode.ProcCode);
-					if(!Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+					if(!Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 						row.Cells.Add(ProcCur.ToothNum=="" ? Tooth.SurfTidyFromDbToDisplay(ProcCur.Surf,ProcCur.ToothNum) : Tooth.ToInternat(ProcCur.ToothNum));
 					}
 					string descript=procCode.Descript;

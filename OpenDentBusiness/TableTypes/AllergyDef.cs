@@ -10,11 +10,11 @@ namespace OpenDentBusiness
     /// Gets linked to an allergy and patient.
     /// Allergies will not show in CCD messages unless they have a valid Medication (that has an RxNorm) or UniiCode.
     /// </summary>
-    [Table]
+    [Table("allergy_defs")]
 	public class AllergyDef : TableBase
 	{
 		[PrimaryKey]
-		public long AllergyDefNum;
+		public long Id;
 
 		/// <summary>
 		/// Name of the drug. User can change this.
@@ -22,19 +22,29 @@ namespace OpenDentBusiness
 		/// </summary>
 		public string Description;
 
-		/// <summary>Because user can't delete.</summary>
+		/// <summary>
+		/// A value indicating whether the row has been hidden.
+		/// </summary>
 		public bool IsHidden;
 
-		/// <summary>The last date and time this row was altered.  Not user editable.</summary>
-		public DateTime DateTStamp;
+		/// <summary>
+		/// The date on which the row was last modified. Not user editable.
+		/// </summary>
+		public DateTime LastModified;
 
 		/// <summary>Enum:SnomedAllergy SNOMED Allergy Type Code.  Only used to create CCD in FormSummaryOfCare.</summary>
 		public SnomedAllergy SnomedType;
 
-		/// <summary>FK to medication.MedicationNum.  Optional, only used with CCD messages.</summary>
-		public long MedicationNum;
+		/// <summary>
+		/// Optional, only used with CCD messages.
+		/// </summary>
+		[ForeignKey(typeof(Medication), nameof(Medication.MedicationNum))]
+		public long MedicationId;
 
-		/// <summary>The Unii code for the Allergen.  Optional, but there must be either a MedicationNum or a UniiCode.  Used to create CCD in FormSummaryOfCare, or set during CCD allergy reconcile.</summary>
+		/// <summary>
+		/// The Unii code for the Allergen. Optional, but there must be either a <see cref="MedicationId"/> or a UniiCode.  
+		/// Used to create CCD in FormSummaryOfCare, or set during CCD allergy reconcile.
+		/// </summary>
 		public string UniiCode;
 	}
 

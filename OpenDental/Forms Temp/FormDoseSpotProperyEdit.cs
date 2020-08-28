@@ -29,12 +29,12 @@ namespace OpenDental {
 			if(ClinicIdVal.Trim()!="" && ClinicKeyVal.Trim()!="") {//The clinic has values for the clinicId/clinicKey, so they are effectively registered.
 				butRegisterClinic.Enabled=false;
 			}
-			if(_clinicCur.ClinicNum==0) {//Clinics disabled or is HQ.
+			if(_clinicCur.Id==0) {//Clinics disabled or is HQ.
 				menuItemSetup.Enabled=false;//There is no clinic record to edit.
 			}
 			Program programErx=Programs.GetCur(ProgramName.eRx);
 			ProgramProperty ppClinicID=ListProperties
-					.FirstOrDefault(x => x.ClinicId!=_clinicCur.ClinicNum && x.Name==Erx.PropertyDescs.ClinicID && x.Value!="");
+					.FirstOrDefault(x => x.ClinicId!=_clinicCur.Id && x.Name==Erx.PropertyDescs.ClinicID && x.Value!="");
 			ProgramProperty ppClinicKey=null;
 			if(ppClinicID!=null) {
 				ppClinicKey=ListProperties
@@ -53,7 +53,7 @@ namespace OpenDental {
 			FormClinicEdit form=new FormClinicEdit(_clinicCur.Copy());
 			form.ShowDialog();
 			if(form.DialogResult==DialogResult.OK) {
-				Clinics.Update(form.ClinicCur,_clinicCur);
+				Clinics.Update(form.ClinicCur);
 				DataValid.SetInvalid(InvalidType.Providers);
 				_clinicCur=form.ClinicCur.Copy();
 			}
@@ -69,7 +69,7 @@ namespace OpenDental {
 			try {
 				Program programErx=Programs.GetCur(ProgramName.eRx);
 				ProgramProperty ppClinicID=ListProperties
-					.FirstOrDefault(x => x.ClinicId!=_clinicCur.ClinicNum && x.Name==Erx.PropertyDescs.ClinicID && x.Value!="");
+					.FirstOrDefault(x => x.ClinicId!=_clinicCur.Id && x.Name==Erx.PropertyDescs.ClinicID && x.Value!="");
 				ProgramProperty ppClinicKey=null;
 				if(ppClinicID!=null) {
 					ppClinicKey=ListProperties
@@ -84,8 +84,8 @@ namespace OpenDental {
 				}
 				string clinicID="";
 				string clinicKey="";
-				DoseSpot.RegisterClinic(_clinicCur.ClinicNum,ppClinicID.Value,ppClinicKey.Value
-					,DoseSpot.GetUserID(Security.CurrentUser,_clinicCur.ClinicNum),out clinicID,out clinicKey);
+				DoseSpot.RegisterClinic(_clinicCur.Id,ppClinicID.Value,ppClinicKey.Value
+					,DoseSpot.GetUserID(Security.CurrentUser,_clinicCur.Id),out clinicID,out clinicKey);
 				textClinicID.Text=clinicID;
 				textClinicKey.Text=clinicKey;
 			}

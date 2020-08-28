@@ -59,7 +59,7 @@ namespace OpenDental
 					case DefCat.ApptProcsQuickAdd:
 						options.EnableValue = true;
 						options.ValueText = "ADA Code(s)";
-						if (Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum))
+						if (Clinics.IsMedicalClinic(Clinics.ClinicId))
 						{
 							options.HelpText = "These are the procedures that you can quickly add to the treatment plan from within the appointment editing window.  Multiple procedures may be separated by commas with no spaces. These definitions may be freely edited without affecting any patient records.";
 						}
@@ -100,7 +100,7 @@ namespace OpenDental
 					case DefCat.ChartGraphicColors:
 						options.CanEditName = false;
 						options.EnableColor = true;
-						if (Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum))
+						if (Clinics.IsMedicalClinic(Clinics.ClinicId))
 						{
 							options.HelpText = "These colors will be used to graphically display treatments.";
 						}

@@ -686,9 +686,9 @@ namespace OpenDentBusiness{
 				Prefs.GetString(PrefName.PracticeST),
 				Prefs.GetString(PrefName.PracticeZip));
 			if(PrefC.HasClinicsEnabled) {
-				Clinic clinic=Clinics.GetClinic(clinicNum);
+				Clinic clinic=Clinics.GetById(clinicNum);
 				if(clinic!=null) {
-					string clinicPostalAddress=Patients.GetAddressFull(clinic.Address,clinic.Address2,clinic.City,clinic.State,clinic.Zip);
+					string clinicPostalAddress=Patients.GetAddressFull(clinic.AddressLine1,clinic.AddressLine2,clinic.City,clinic.State,clinic.Zip);
 					if(!string.IsNullOrWhiteSpace(clinicPostalAddress.Replace(" ","").Replace("\r\n","").Replace(",",""))) {
 						postalAddress=clinic.Description+"\r\n"+clinicPostalAddress;
 					}

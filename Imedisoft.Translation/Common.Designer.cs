@@ -61,6 +61,105 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to And {0} others....
+        /// </summary>
+        public static string AndXOthers {
+            get {
+                return ResourceManager.GetString("AndXOthers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Balance.
+        /// </summary>
+        public static string Balance {
+            get {
+                return ResourceManager.GetString("Balance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bank Number.
+        /// </summary>
+        public static string BankNumber {
+            get {
+                return ResourceManager.GetString("BankNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot delete clinic because the following patients have appointments using it:.
+        /// </summary>
+        public static string CannotDeleteClinicInUseByAppointments {
+            get {
+                return ResourceManager.GetString("CannotDeleteClinicInUseByAppointments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot delete clinic because the following patients have claim payments using it:.
+        /// </summary>
+        public static string CannotDeleteClinicInUseByClaimPayments {
+            get {
+                return ResourceManager.GetString("CannotDeleteClinicInUseByClaimPayments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot delete clinic because the following users are restricted to this clinic in security setup:.
+        /// </summary>
+        public static string CannotDeleteClinicInUseByClinicRestrictedUsers {
+            get {
+                return ResourceManager.GetString("CannotDeleteClinicInUseByClinicRestrictedUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot delete clinic because the following operatories are using it:.
+        /// </summary>
+        public static string CannotDeleteClinicInUseByOperatories {
+            get {
+                return ResourceManager.GetString("CannotDeleteClinicInUseByOperatories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot delete clinic because it is in use by the following patients:.
+        /// </summary>
+        public static string CannotDeleteClinicInUseByPatients {
+            get {
+                return ResourceManager.GetString("CannotDeleteClinicInUseByPatients", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot delete clinic because the following patients have payments using it:.
+        /// </summary>
+        public static string CannotDeleteClinicInUseByPayments {
+            get {
+                return ResourceManager.GetString("CannotDeleteClinicInUseByPayments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot delete clinic because the following patients have procedures using it:.
+        /// </summary>
+        public static string CannotDeleteClinicInUseByProcedures {
+            get {
+                return ResourceManager.GetString("CannotDeleteClinicInUseByProcedures", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot delete clinic because the following users are using it:.
+        /// </summary>
+        public static string CannotDeleteClinicInUseByUsers {
+            get {
+                return ResourceManager.GetString("CannotDeleteClinicInUseByUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close.
         /// </summary>
         public static string Close {
@@ -187,6 +286,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Inactive.
+        /// </summary>
+        public static string Inactive {
+            get {
+                return ResourceManager.GetString("Inactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You do not have sufficient privileges to perform this operation..
         /// </summary>
         public static string InsufficientPrivileges {
@@ -288,6 +396,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please enter a description..
+        /// </summary>
+        public static string PleaseEnterDescription {
+            get {
+                return ResourceManager.GetString("PleaseEnterDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please enter password.
         /// </summary>
         public static string PleaseEnterPassword {
@@ -297,11 +414,38 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please enter a valid date..
+        /// </summary>
+        public static string PleaseEnterValidDate {
+            get {
+                return ResourceManager.GetString("PleaseEnterValidDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select an account first..
+        /// </summary>
+        public static string PleaseSelectAccountFirst {
+            get {
+                return ResourceManager.GetString("PleaseSelectAccountFirst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please select an item first..
         /// </summary>
         public static string PleaseSelectItemFirst {
             get {
                 return ResourceManager.GetString("PleaseSelectItemFirst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select a type..
+        /// </summary>
+        public static string PleaseSelectType {
+            get {
+                return ResourceManager.GetString("PleaseSelectType", resourceCulture);
             }
         }
         
@@ -347,6 +491,24 @@ namespace Imedisoft.Translation {
         public static string StopMonitoringQueriesBeforeCreatingLog {
             get {
                 return ResourceManager.GetString("StopMonitoringQueriesBeforeCreatingLog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type.
+        /// </summary>
+        public static string Type {
+            get {
+                return ResourceManager.GetString("Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string Unknown {
+            get {
+                return ResourceManager.GetString("Unknown", resourceCulture);
             }
         }
     }

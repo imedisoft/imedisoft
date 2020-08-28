@@ -1293,7 +1293,7 @@ namespace OpenDental {
 		}
 
 		private void butText_Click(object sender,EventArgs e) {
-			Clinic curClinic=Clinics.GetClinic(Clinics.ClinicNum)??Clinics.GetDefaultForTexting()??Clinics.GetPracticeAsClinicZero();
+			Clinic curClinic=Clinics.GetById(Clinics.ClinicId)??Clinics.GetDefaultForTexting()??Clinics.GetPracticeAsClinicZero();
 			List<PatComm> listPatCommsToSend;
 			if(tabControl.SelectedIndex==0) {//Appt Tab selected
 				Func<int,long> getPatNumFromGridRow=new Func<int,long>((rowIdx) =>	{
@@ -1315,7 +1315,7 @@ namespace OpenDental {
 				return;
 			}
 			string textTemplate=GetTextMessageText(curClinic);
-			FormTxtMsgMany FormTMM=new FormTxtMsgMany(listPatCommsToSend,textTemplate,curClinic.ClinicNum,SmsMessageSource.AsapManual);
+			FormTxtMsgMany FormTMM=new FormTxtMsgMany(listPatCommsToSend,textTemplate,curClinic.Id,SmsMessageSource.AsapManual);
 			FormTMM.ShowDialog();
 		}
 
@@ -1363,7 +1363,7 @@ namespace OpenDental {
 		///<summary>Gets the template for this clinic and fills in the tags.</summary>
 		private string GetTextMessageText(Clinic curClinic) {
 			string textTemplate;
-			string clinicPref=ClinicPrefs.GetString(Clinics.ClinicNum, PrefName.ASAPTextTemplate);
+			string clinicPref=ClinicPrefs.GetString(Clinics.ClinicId, PrefName.ASAPTextTemplate);
 			if(string.IsNullOrEmpty(clinicPref)) {
 				textTemplate=Prefs.GetString(PrefName.ASAPTextTemplate);
 			}
@@ -1582,7 +1582,7 @@ namespace OpenDental {
 			}
 			_threadWebSchedSignups=new ODThread(new ODThread.WorkerDelegate((ODThread o) => {
 				_listClinicNumsWebSched=WebServiceMainHQProxy.GetEServiceClinicsAllowed(
-					Clinics.GetDeepCopy().Select(x => x.ClinicNum).ToList(),
+					Clinics.GetAll(true).Select(x => x.Id).ToList(),
 					eServiceCode.WebSchedASAP);
 				bool isAllowedByHq=(_listClinicNumsWebSched.Count > 0);
 				if(isAllowedByHq!=Prefs.GetBool(PrefName.WebSchedAsapEnabled)) {

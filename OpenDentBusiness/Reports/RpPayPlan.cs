@@ -233,7 +233,7 @@ namespace OpenDentBusiness {
 					row["famBal"]=(famBal - (decimal)famCur.ListPats[0].InsEst).ToString("F");
 				}
 				if(hasClinicsEnabled) {//Using clinics
-					List<Clinic> listClinics=ReportsComplex.RunFuncOnReportServer(() => Clinics.GetClinicsNoCache());
+					List<Clinic> listClinics=Clinics.GetClinicsNoCache().ToList();
 					string clinicAbbr=Clinics.GetAbbr(PIn.Long(raw.Rows[i]["ClinicNum"].ToString()),listClinics);
 					clinicAbbr=(clinicAbbr=="")?"Unassigned":clinicAbbr;
 					if(!String.IsNullOrEmpty(clinicAbbrOld) && clinicAbbr!=clinicAbbrOld) {//Reset all the total values

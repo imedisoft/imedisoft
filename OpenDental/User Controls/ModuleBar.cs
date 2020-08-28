@@ -174,7 +174,7 @@ namespace OpenDental
 		/// <summary>Fixes theme image and text translation for any existing buttons.</summary>
 		public void RefreshButtons()
 		{
-			bool isMedical = Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum);
+			bool isMedical = Clinics.IsMedicalClinic(Clinics.ClinicId);
 			for (int i = 0; i < _listButtons.Count; i++)
 			{
 				_listButtons[i].Image = GetImage(_listButtons[i].ModuleType, isMedical);

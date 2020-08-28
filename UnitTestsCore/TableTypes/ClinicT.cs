@@ -14,10 +14,10 @@ namespace UnitTestsCore {
 			clinic.Abbr=description;
 			//Texting is off by default. Use OpenDentalWebTests.TableTypes.EServiceAccountT.SetupEServiceAccount() to turn on texting for this clinic.
 			clinic.SmsContractDate=DateTime.MinValue;
-			clinic.EmailAddressNum=emailAddressNum;
-			clinic.Address=address;
+			clinic.EmailAddressId=emailAddressNum;
+			clinic.AddressLine1=address;
 			if(address=="") {
-				clinic.Address="3995 Fairview Ind Dr SE Ste 110";
+				clinic.AddressLine1="3995 Fairview Ind Dr SE Ste 110";
 			}
 			clinic.City="Salem";
 			clinic.State="OR";
@@ -26,8 +26,8 @@ namespace UnitTestsCore {
 			clinic.Region=regionDef?.DefNum??0;
 			Clinics.Insert(clinic);
 			if(description=="") {
-				clinic.Description="Clinic "+clinic.ClinicNum.ToString();
-				clinic.Abbr="Clinic "+clinic.ClinicNum.ToString();
+				clinic.Description="Clinic "+clinic.Id.ToString();
+				clinic.Abbr="Clinic "+clinic.Id.ToString();
 				Clinics.Update(clinic);
 			}
 			Clinics.RefreshCache();

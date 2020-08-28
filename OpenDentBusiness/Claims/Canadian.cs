@@ -154,7 +154,7 @@ namespace OpenDentBusiness.Eclaims {
 				etrans=CreateEtransForSendClaim(queueItem.ClaimNum,queueItem.PatNum,clearinghouseClin.HqClearinghouseNum,EtransType.Claim_CA);//Can throw exception
 			}
 			claim=Claims.GetClaim(claim.ClaimNum);
-			clinic=Clinics.GetClinic(claim.ClinicNum);
+			clinic=Clinics.GetById(claim.ClinicNum);
 			Provider providerFirst=Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
 			billProv=Providers.GetFirstOrDefault(x => x.ProvNum==claim.ProvBill)??providerFirst;
 			treatProv=Providers.GetFirstOrDefault(x => x.ProvNum==claim.ProvTreat)??providerFirst;

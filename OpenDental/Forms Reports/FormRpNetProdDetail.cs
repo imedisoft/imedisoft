@@ -361,18 +361,18 @@ namespace OpenDental{
 				listProv.Items.Add(_listProviders[i].GetLongDesc());
 			}
 			if(PrefC.HasClinicsEnabled){
-				_listClinics=Clinics.GetForUserod(Security.CurrentUser);
+				_listClinics=Clinics.GetByUser(Security.CurrentUser);
 				if(!Security.CurrentUser.ClinicIsRestricted) {
 					listClin.Items.Add("Unassigned");
 					listClin.SetSelected(0,true);
 				}
 				for(int i=0;i<_listClinics.Count;i++) {
 					int curIndex=listClin.Items.Add(_listClinics[i].Abbr);
-					if(Clinics.ClinicNum==0) {
+					if(Clinics.ClinicId==0) {
 						listClin.SetSelected(curIndex,true);
 						checkAllClin.Checked=true;
 					}
-					if(_listClinics[i].ClinicNum==Clinics.ClinicNum) {
+					if(_listClinics[i].Id==Clinics.ClinicId) {
 						listClin.SelectedIndices.Clear();
 						listClin.SetSelected(curIndex,true);
 					}
@@ -512,7 +512,7 @@ namespace OpenDental{
 					else {
 						if(listClin.SelectedIndices[i]==0) {
 							Clinic unassigned=new Clinic();
-							unassigned.ClinicNum=0;
+							unassigned.Id=0;
 							unassigned.Abbr="Unassigned";
 							listClinics.Add(unassigned);
 						}

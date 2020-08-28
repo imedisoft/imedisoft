@@ -50,10 +50,10 @@ namespace OpenDentBusiness.HL7 {
 			_sendingFacilityState=Prefs.GetString(PrefName.PracticeST);
 			_sendingFacilityZip=Prefs.GetString(PrefName.PracticeZip);
 			if(PrefC.HasClinicsEnabled && _appt.ClinicNum!=0) {//Using clinics and a clinic is assigned.
-				Clinic clinic=Clinics.GetClinic(_appt.ClinicNum);
+				Clinic clinic=Clinics.GetById(_appt.ClinicNum);
 				_sendingFacilityName=clinic.Description;
-				_sendingFacilityAddress1=clinic.Address;
-				_sendingFacilityAddress2=clinic.Address2;
+				_sendingFacilityAddress1=clinic.AddressLine1;
+				_sendingFacilityAddress2=clinic.AddressLine2;
 				_sendingFacilityCity=clinic.City;
 				_sendingFacilityState=clinic.State;
 				_sendingFacilityZip=clinic.Zip;
@@ -546,7 +546,7 @@ namespace OpenDentBusiness.HL7 {
 				WriteError(sb,"Invalid NPI for provider '"+provFacility.Abbr+"'");
 			}
 			if(PrefC.HasClinicsEnabled && appt.ClinicNum!=0) {//Using clinics and a clinic is assigned.
-				Clinic clinic=Clinics.GetClinic(appt.ClinicNum);
+				Clinic clinic=Clinics.GetById(appt.ClinicNum);
 				if(clinic.Description=="") {
 					WriteError(sb,"Missing clinic description for clinic attached to appointment.");
 				}

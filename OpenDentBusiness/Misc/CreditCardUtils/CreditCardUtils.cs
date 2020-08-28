@@ -122,7 +122,7 @@ namespace OpenDentBusiness
 			}
 			else
 			{
-				clinicCur = Clinics.GetClinic(clinicNum);
+				clinicCur = Clinics.GetById(clinicNum);
 			}
 
 			if (clinicCur != null)
@@ -132,14 +132,14 @@ namespace OpenDentBusiness
 					result += clinicCur.Description + Environment.NewLine;
 				}
 
-				if (clinicCur.Address.Length > 0)
+				if (clinicCur.AddressLine1.Length > 0)
 				{
-					result += clinicCur.Address + Environment.NewLine;
+					result += clinicCur.AddressLine1 + Environment.NewLine;
 				}
 
-				if (clinicCur.Address2.Length > 0)
+				if (clinicCur.AddressLine2.Length > 0)
 				{
-					result += clinicCur.Address2 + Environment.NewLine;
+					result += clinicCur.AddressLine2 + Environment.NewLine;
 				}
 
 				if (clinicCur.City.Length > 0 || clinicCur.State.Length > 0 || clinicCur.Zip.Length > 0)

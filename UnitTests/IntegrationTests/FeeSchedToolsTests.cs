@@ -105,7 +105,7 @@ namespace UnitTests.FeeSchedTools_Tests {
 			}
 			Fees.InsertMany(listFees);
 			//Copy the "from" fee schedule into the "to" fee schedule and do it for at least seven clinics.
-			FeeScheds.CopyFeeSchedule(feeSchedNumFrom,0,0,feeSchedNumTo,Clinics.GetDeepCopy(true).Select(x => x.ClinicNum).ToList(),0);
+			FeeScheds.CopyFeeSchedule(feeSchedNumFrom,0,0,feeSchedNumTo,Clinics.GetDeepCopy(true).Select(x => x.Id).ToList(),0);
 			//Make sure that there was NOT a duplicate fee inserted into the database.
 			dbmResult=DatabaseMaintenances.FeeDeleteDuplicates(true,DbmMode.Check);
 			Assert.AreEqual(dbmResult.Trim(),_feeDeleteDuplicatesExpectedResult,"Duplicate fees detected due to concurrent copying.");
@@ -119,7 +119,7 @@ namespace UnitTests.FeeSchedTools_Tests {
 			FeeTestArgs feeArgs=CreateManyFees(1,1,1,MethodBase.GetCurrentMethod().Name);
 			long exportedSched=feeArgs.ListFeeSchedNums[0];
 			long importedSched=feeArgs.EmptyFeeSchedNum;
-			long clinicNum=feeArgs.ListClinics[0].ClinicNum;
+			long clinicNum=feeArgs.ListClinics[0].Id;
 			string filename=MethodBase.GetCurrentMethod().Name;
 			FeeScheds.ExportFeeSchedule(exportedSched,clinicNum,feeArgs.ListProvNums[0],filename);
 			OpenDental.FeeL.ImportFees(filename,importedSched,clinicNum,feeArgs.ListProvNums[0]);
@@ -165,7 +165,7 @@ namespace UnitTests.FeeSchedTools_Tests {
 			FeeTestArgs feeArgs=CreateManyFees(1,1,1,MethodBase.GetCurrentMethod().Name);
 			long feeSchedNum=feeArgs.ListFeeSchedNums[0];
 			Assert.IsTrue(Fees.GetCountByFeeSchedNum(feeSchedNum) > 0);
-			Fees.DeleteFees(feeSchedNum,feeArgs.ListClinics[0].ClinicNum,feeArgs.ListProvNums[0]);
+			Fees.DeleteFees(feeSchedNum,feeArgs.ListClinics[0].Id,feeArgs.ListProvNums[0]);
 			Assert.AreEqual(0,Fees.GetCountByFeeSchedNum(feeSchedNum));
 		}
 
@@ -204,9 +204,9 @@ namespace UnitTests.FeeSchedTools_Tests {
 			Clinic clinic=ClinicT.CreateClinic(suffix);
 			long feeSchedNum=FeeSchedT.CreateFeeSched(FeeScheduleType.Normal,suffix,false);
 			long provNum=ProviderT.CreateProvider(suffix,feeSchedNum:feeSchedNum);
-			Fee fee=FeeT.GetNewFee(feeSchedNum,procCode.CodeNum,procFee,clinic.ClinicNum,provNum);
-			Fee fee2=FeeT.GetNewFee(feeSchedNum,procCode2.CodeNum,procFee,clinic.ClinicNum,provNum);
-			Patient pat=PatientT.CreatePatient(suffix,provNum,clinic.ClinicNum);
+			Fee fee=FeeT.GetNewFee(feeSchedNum,procCode.CodeNum,procFee,clinic.Id,provNum);
+			Fee fee2=FeeT.GetNewFee(feeSchedNum,procCode2.CodeNum,procFee,clinic.Id,provNum);
+			Patient pat=PatientT.CreatePatient(suffix,provNum,clinic.Id);
 			//Chart a procedure for this proccode/pat as well as a different proccode
 			Procedure proc=ProcedureT.CreateProcedure(pat,procStr,ProcStat.TP,"",fee.Amount);
 			Procedure proc2=ProcedureT.CreateProcedure(pat,procStr2,ProcStat.TP,"",fee2.Amount);
@@ -214,7 +214,7 @@ namespace UnitTests.FeeSchedTools_Tests {
 			fee.Amount=50;
 			Fees.Update(fee);
 			//Now run global update fees
-			Procedures.GlobalUpdateFees(Fees.GetByClinicNum(clinic.ClinicNum),clinic.ClinicNum,clinic.Abbr);
+			Procedures.GlobalUpdateFees(Fees.GetByClinicNum(clinic.Id),clinic.Id,clinic.Abbr);
 			//Make sure we have the same number of updated fees, and fee amounts for both procs
 			proc=Procedures.GetOneProc(proc.ProcNum,false);
 			proc2=Procedures.GetOneProc(proc2.ProcNum,false);
@@ -233,8 +233,8 @@ namespace UnitTests.FeeSchedTools_Tests {
 			Clinic clinic=ClinicT.CreateClinic(suffix);
 			long feeSchedNum=FeeSchedT.CreateFeeSched(FeeScheduleType.FixedBenefit,suffix);
 			long provNum=ProviderT.CreateProvider(suffix,feeSchedNum:feeSchedNum);
-			Fee fee=FeeT.GetNewFee(feeSchedNum,procCode.CodeNum,procFee,clinic.ClinicNum,provNum);
-			Patient pat=PatientT.CreatePatient(suffix,provNum,clinic.ClinicNum);
+			Fee fee=FeeT.GetNewFee(feeSchedNum,procCode.CodeNum,procFee,clinic.Id,provNum);
+			Patient pat=PatientT.CreatePatient(suffix,provNum,clinic.Id);
 			//Set up insurance
 			InsuranceInfo info=InsuranceT.AddInsurance(pat,suffix,"c",feeSchedNum);
 			List<InsSub> listSubs=info.ListInsSubs;
@@ -255,7 +255,7 @@ namespace UnitTests.FeeSchedTools_Tests {
 			procNew.ProcFee=procFee;
 			Procedures.Update(procNew,proc);
 			//GlobalUpdate
-			long updated=GlobalUpdateWriteoffs(clinic.ClinicNum);
+			long updated=GlobalUpdateWriteoffs(clinic.Id);
 			Assert.AreEqual(1,updated);
 			ClaimProc priClaimProcDb=ClaimProcs.Refresh(pat.PatNum).FirstOrDefault(x => x.ClaimProcNum==priClaimProc.ClaimProcNum);
 			Assert.AreEqual(procFee,priClaimProcDb.WriteOff);
@@ -273,9 +273,9 @@ namespace UnitTests.FeeSchedTools_Tests {
 			Clinic clinic=ClinicT.CreateClinic(suffix);
 			long feeSchedNum=FeeSchedT.CreateFeeSched(FeeScheduleType.Normal,suffix);
 			long provNum=ProviderT.CreateProvider(suffix,feeSchedNum:feeSchedNum);
-			Fee fee=FeeT.GetNewFee(feeSchedNum,procCode.CodeNum,procFee,clinic.ClinicNum,provNum);
-			Patient pat=PatientT.CreatePatient(suffix,provNum,clinic.ClinicNum);
-			Patient patSubscriber=PatientT.CreatePatient(suffix+"_Subscriber",provNum,clinic.ClinicNum);
+			Fee fee=FeeT.GetNewFee(feeSchedNum,procCode.CodeNum,procFee,clinic.Id,provNum);
+			Patient pat=PatientT.CreatePatient(suffix,provNum,clinic.Id);
+			Patient patSubscriber=PatientT.CreatePatient(suffix+"_Subscriber",provNum,clinic.Id);
 			//Set up insurance
 			InsuranceInfo info=InsuranceT.AddInsurance(pat,suffix,"p",feeSchedNum);
 			info.PriInsSub.Subscriber=patSubscriber.PatNum;
@@ -289,7 +289,7 @@ namespace UnitTests.FeeSchedTools_Tests {
 				info.ListInsSubs);
 			priClaimProc=ClaimProcs.Refresh(pat.PatNum).FirstOrDefault(x => x.ProcNum==proc.ProcNum);
 			Assert.AreEqual(procFee,priClaimProc.InsPayEst);
-			GlobalUpdateWriteoffs(clinic.ClinicNum);
+			GlobalUpdateWriteoffs(clinic.Id);
 			priClaimProc=ClaimProcs.Refresh(pat.PatNum).FirstOrDefault(x => x.ClaimProcNum==priClaimProc.ClaimProcNum);
 			Assert.AreEqual(procFee,priClaimProc.InsPayEst);
 		}

@@ -190,7 +190,7 @@ namespace OpenDental{
 				return;
 			}
 			ReportComplex report=new ReportComplex(true,true);
-			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				isMedOrClinic=true;
 			}
 			else {
@@ -212,7 +212,7 @@ namespace OpenDental{
 			query.GetColumnDetail("Subsc SSN").SuppressIfDuplicate=true;
 			query.AddColumn("Patient",120,FieldValueType.String,font);
 			query.AddColumn("Pat DOB",80,FieldValueType.Date,font);
-			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				query.AddColumn("Code",140,FieldValueType.String,font);
 				query.AddColumn("Proc Description",120,FieldValueType.String,font);
 				query.AddColumn("Date",80,FieldValueType.Date,font);

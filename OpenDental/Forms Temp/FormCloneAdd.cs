@@ -87,7 +87,7 @@ namespace OpenDental {
 		private void FillClinicComboBoxes() {
 			_dictSpecialtyClinics=new Dictionary<long,List<Clinic>>();
 			//Fill the list of clinics for this user.
-			List<Clinic> listClinicsForUser=Clinics.GetForUserod(Security.CurrentUser);
+			List<Clinic> listClinicsForUser=Clinics.GetByUser(Security.CurrentUser);
 			//Make a deep copy of the list of clinics so that we can filter down to the clinics that have no specialty specified if all are hidden.
 			List<Clinic> listClinicsNoSpecialty=listClinicsForUser.Select(x => x.Copy()).ToList();
 			//Fill the list of defLinks used by clones of this patient.
@@ -103,10 +103,10 @@ namespace OpenDental {
 			List<Def> listSpecialtyDefs=Defs.GetDefsForCategory(DefCat.ClinicSpecialty,true);
 			//If there are specialties present, we need to know which clinics have no specialty set so that the user can always make clones for that specialty.
 			if(listSpecialtyDefs.Count > 0) {
-				listClinicsNoSpecialty.RemoveAll(x => x.ClinicNum.In(listClinicDefLinks.Select(y => y.FKey).ToList()));
+				listClinicsNoSpecialty.RemoveAll(x => x.Id.In(listClinicDefLinks.Select(y => y.FKey).ToList()));
 			}
 			//Remove all clinics that do not have any specialties from the original list of clinics for the user.
-			listClinicsForUser.RemoveAll(x => !x.ClinicNum.In(listClinicDefLinks.Select(y => y.FKey).ToList()));
+			listClinicsForUser.RemoveAll(x => !x.Id.In(listClinicDefLinks.Select(y => y.FKey).ToList()));
 			//Filter out any specialties that are not associated to any available clinics for this user.
 			listSpecialtyDefs.RemoveAll(x => !x.DefNum.In(listClinicDefLinks.Select(y => y.DefNum).ToList()));
 			//Lump all of the left over specialties into a dictionary and slap the associated clinics to them.
@@ -120,7 +120,7 @@ namespace OpenDental {
 				comboSpecialty.Items.Add(new ODBoxItem<Def>(specialty.ItemName,specialty));
 				//Get a list of all deflinks for the def
 				List<DefLink> listLinkForDef=listClinicDefLinks.FindAll(x => x.DefNum==specialty.DefNum).ToList();
-				_dictSpecialtyClinics[specialty.DefNum]=listClinicsForUser.FindAll(x => x.ClinicNum.In(listLinkForDef.Select(y => y.FKey).ToList()));
+				_dictSpecialtyClinics[specialty.DefNum]=listClinicsForUser.FindAll(x => x.Id.In(listLinkForDef.Select(y => y.FKey).ToList()));
 			}
 			//If there are no specialties to show, we need to let the user know that they need to associate at least one clinic to a specialty.
 			if(_dictSpecialtyClinics.Count < 1) {
@@ -228,7 +228,7 @@ namespace OpenDental {
 			long clinicNum=0;
 			long defNum=0;
 			if(PrefC.HasClinicsEnabled) {
-				clinicNum=comboClinic.GetSelected<Clinic>().ClinicNum;
+				clinicNum=comboClinic.GetSelected<Clinic>().Id;
 			}
 			defNum=((ODBoxItem<Def>)comboSpecialty.SelectedItem).Tag.DefNum;
 			Patient clone=Patients.CreateCloneAndSynch(_patientMaster,_familyCur,_listInsPlans,_listInsSubs,_listBenefits,_provNumSelected,clinicNum);

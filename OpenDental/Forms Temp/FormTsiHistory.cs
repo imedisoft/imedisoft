@@ -34,7 +34,7 @@ namespace OpenDental {
 			_listClinics=new List<Clinic>();
 			if(PrefC.HasClinicsEnabled) {
 				_listClinics.AddRange(
-					Clinics.GetForUserod(Security.CurrentUser,true).OrderBy(x => x.ClinicNum!=0).ThenBy(x => x.ItemOrder)
+					Clinics.GetByCurrentUser().OrderBy(x => x.Id!=0).ThenBy(x => x.ItemOrder)
 				);
 			}
 			else {//clinics disabled
@@ -114,7 +114,7 @@ namespace OpenDental {
 			List<Patient> listFilteredPatLims=listLogIndexesFiltered.Where(x => _dictPatLims.ContainsKey(_listTsiTransLogsAll[x].PatNum))//Just in case.
 				.Select(x => _dictPatLims[_listTsiTransLogsAll[x].PatNum]).DistinctBy(x => x.PatNum).ToList();
 			Dictionary<long,string> dictPatNames=listFilteredPatLims.ToDictionary(x => x.PatNum,x => x.GetNameLF());
-			Dictionary<long,string> dictClinicAbbrs=_listClinics.Where(x => x.ClinicNum>0).ToDictionary(x => x.ClinicNum,x => x.Abbr);
+			Dictionary<long,string> dictClinicAbbrs=_listClinics.Where(x => x.Id>0).ToDictionary(x => x.Id,x => x.Abbr);
 			Dictionary<long,string> dictPatClinicAbbrs=listFilteredPatLims.ToDictionary(x => x.PatNum,x => Clinics.GetAbbr(x.ClinicNum));
 			Dictionary<long,string> dictUserNames=Userods.GetUsers(listLogIndexesFiltered.Select(x => _listTsiTransLogsAll[x].UserNum).Distinct().ToList())
 				.ToDictionary(x => x.Id,x => x.UserName);

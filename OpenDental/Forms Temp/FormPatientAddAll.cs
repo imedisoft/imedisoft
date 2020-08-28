@@ -199,9 +199,9 @@ namespace OpenDental {
 			int defaultindex = 0;
 			if (!Prefs.GetBool(PrefName.PriProvDefaultToSelectProv))
 			{
-				if (PrefC.HasClinicsEnabled && Clinics.ClinicNum != 0)
+				if (PrefC.HasClinicsEnabled && Clinics.ClinicId != 0)
 				{
-					defaultindex = Providers.GetIndex((Clinics.GetFirstOrDefault(x => x.ClinicNum == Clinics.ClinicNum).DefaultProv));
+					defaultindex = Providers.GetIndex(Clinics.FirstOrDefault(x => x.Id == Clinics.ClinicId, true).DefaultProviderId);
 				}
 				else
 				{
@@ -2282,7 +2282,7 @@ namespace OpenDental {
 			pat.Country=textCountry.Text;
 			pat.Zip=textZip.Text.Trim();
 			pat.AddrNote=textAddrNotes.Text;
-			pat.ClinicNum=Clinics.ClinicNum;
+			pat.ClinicNum=Clinics.ClinicId;
 			RefAttach refAttachCur=new RefAttach();
 			if(_refCur!=null) {
 				refAttachCur.ReferralNum=_refCur.ReferralNum;

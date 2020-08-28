@@ -377,8 +377,8 @@ namespace Imedisoft.Forms
 
 		private void ClinicsButton_Click(object sender, EventArgs e)
 		{
-			var clinics = Clinics.GetForUserod(Security.CurrentUser, doIncludeHQ: true, hqClinicName: "HQ");
-			var clinicIds = clinics.Select(c => c.ClinicNum).ToList();
+			var clinics = Clinics.GetByCurrentUser();
+			var clinicIds = clinics.Select(c => c.Id).ToList();
 
 			var properties = 
 				ProgramProperties.GetForProgram(ProgramCur.Id)

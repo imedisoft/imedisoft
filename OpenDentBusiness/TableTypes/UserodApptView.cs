@@ -18,7 +18,7 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// 0 if clinics is not being used or if the user has not been assigned a clinic.
 		/// </summary>
-		[ForeignKey(typeof(Clinic), nameof(Clinic.ClinicNum))]
+		[ForeignKey(typeof(Clinic), nameof(Clinic.Id))]
 		public long ClinicNum;
 
 		[ForeignKey(typeof(ApptView), nameof(ApptView.ApptViewNum))]

@@ -1457,9 +1457,9 @@ namespace OpenDental {
 				adjustment.AdjDate=DateTime.Today;
 				adjustment.ProcDate=proc.ProcDate;
 				adjustment.ProvNum=Prefs.GetLong(PrefName.PracticeDefaultProv);
-				Clinic procClinic=Clinics.GetClinic(proc.ClinicNum);
-				if(proc.ClinicNum!=0 && procClinic.DefaultProv!=0) {
-					adjustment.ProvNum=procClinic.DefaultProv;
+				Clinic procClinic=Clinics.GetById(proc.ClinicNum);
+				if(proc.ClinicNum!=0 && procClinic.DefaultProviderId!=0) {
+					adjustment.ProvNum=procClinic.DefaultProviderId;
 				}
 				adjustment.PatNum=_patCur.PatNum;
 				adjustment.ClinicNum=proc.ClinicNum;
@@ -1958,10 +1958,10 @@ namespace OpenDental {
 					paymentCur.ClinicNum=_patCur.ClinicNum;
 				}
 				else if((PayClinicSetting)PrefC.GetInt(PrefName.PaymentClinicSetting)==PayClinicSetting.SelectedExceptHQ) {
-					paymentCur.ClinicNum=(Clinics.ClinicNum==0)?_patCur.ClinicNum:Clinics.ClinicNum;
+					paymentCur.ClinicNum=(Clinics.ClinicId==0)?_patCur.ClinicNum:Clinics.ClinicId;
 				}
 				else {
-					paymentCur.ClinicNum=Clinics.ClinicNum;
+					paymentCur.ClinicNum=Clinics.ClinicId;
 				}
 			}
 			paymentCur.DateEntry=DateTimeOD.Today;//So that it will show properly in the new window.
@@ -2738,7 +2738,7 @@ namespace OpenDental {
 							row.Cells.Add(Clinics.GetAbbr(PIn.Long(table.Rows[i]["ClinicNum"].ToString())));
 							break;
 						case "ClinicDesc":
-							row.Cells.Add(Clinics.GetDesc(PIn.Long(table.Rows[i]["ClinicNum"].ToString())));
+							row.Cells.Add(Clinics.GetDescription(PIn.Long(table.Rows[i]["ClinicNum"].ToString())));
 							break;
 						case "Code":
 							row.Cells.Add(table.Rows[i]["ProcCode"].ToString());

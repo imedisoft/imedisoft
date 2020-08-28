@@ -229,11 +229,11 @@ namespace OpenDental{
 		#endregion
 
 		private void FormLabCases_Load(object sender,EventArgs e) {
-			if(Clinics.ClinicNum==0) {
+			if(Clinics.ClinicId==0) {
 				comboClinic.IsAllSelected=true;
 			}
 			else {
-				comboClinic.SelectedClinicNum=Clinics.ClinicNum;
+				comboClinic.SelectedClinicNum=Clinics.ClinicId;
 			}
 			gridMain.ContextMenu=contextMenu1;
 			textDateFrom.Text="";//DateViewing.ToShortDateString();

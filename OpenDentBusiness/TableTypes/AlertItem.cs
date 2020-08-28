@@ -11,23 +11,27 @@ namespace OpenDentBusiness
 	/// The user will be able to click on the alert and take an action. 
 	/// The actions available to the user are also determined in this row.
 	/// </summary>
-	[Serializable()]
-	[CrudTable(IsSynchable = true)]
+	[Table("alert_items")]
 	public class AlertItem : TableBase
 	{
 		[PrimaryKey]
 		public long Id;
 
-		/// <summary>
-		/// Can be 0 or -1. -1 indicates show the alert in all clinics.
-		/// </summary>
-		[ForeignKey(typeof(Clinic), nameof(Clinic.ClinicNum))]
-		public long ClinicId;
+		[ForeignKey(typeof(Clinic), nameof(Clinic.Id))]
+		public long? ClinicId;
+
+		[ForeignKey(typeof(Userod), nameof(Userod.Id))]
+		public long? UserId;
 
 		/// <summary>
-		/// What is displayed in the menu item.
+		/// A description of the alert item. Displayed in the alerts menu.
 		/// </summary>
 		public string Description;
+
+		/// <summary>
+		/// Like description, but more specific. When set use ActionType.ShowItemValue to show this variable within a MsgBoxCopyPaste window.
+		/// </summary>
+		public string Details;
 
 		/// <summary>
 		/// Enum:AlertType Identifies what type of alert this row is.
@@ -53,18 +57,11 @@ namespace OpenDentBusiness
 		/// A FK to a table associated with the AlertType. 
 		/// 0 indicates not in use.
 		/// </summary>
-		public long FKey;
+		public long? ObjectId;
 
-		/// <summary>
-		/// Like description, but more specific. When set use ActionType.ShowItemValue to show this variable within a MsgBoxCopyPaste window.
-		/// </summary>
-		public string ItemValue;
 
-		/// <summary>
-		/// Will only be shown to that specific user.  0 is all users.
-		/// </summary>
-		[ForeignKey(typeof(Userod), nameof(Userod.Id))]
-		public long UserId;
+
+
 
 		///<summary>Helper dictionary for sorting the ActionType enum in a particular way for display purposes.</summary>
 		private static Dictionary<ActionType, int> _dictActionTypeOrder = new Dictionary<ActionType, int>
@@ -82,7 +79,7 @@ namespace OpenDentBusiness
 
 		public AlertItem Copy()
 		{
-			return (AlertItem)this.MemberwiseClone();
+			return (AlertItem)MemberwiseClone();
 		}
 
 		public override bool Equals(object obj)
@@ -190,16 +187,16 @@ namespace OpenDentBusiness
 		///<summary>20 - OpenDentalService is down.</summary>
 		[Description("OpenDentalService Down")]
 		OpenDentalServiceDown,
-		
+
 		///<summary>21 - Triggered when a new WebMail is recieved from the patient portal.</summary>
 		[Description("New WebMail")]
 		WebMailRecieved,
-		
+
 		///<summary>22 - Triggered when the consecutive count of failed emails for clinic reaches greater than the value set in 
 		///EmailAlertMaxConsecutiveFails preference.</summary>
 		[Description("eConnector Email Send Failures")]
 		EconnectorEmailTooManySendFails,
-		
+
 		///<summary>23 - Alert the user for things like not making a local supplemental backup within the last month.</summary>
 		[Description("Supplemental Backups")]
 		SupplementalBackups,

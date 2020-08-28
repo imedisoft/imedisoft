@@ -770,7 +770,7 @@ namespace OpenDental{
 			else {//Filling the grid later on.
 				listNumsSelected.AddRange(gridProc.SelectedIndices.OfType<int>().Select(x => ((Procedure)gridProc.ListGridRows[x].Tag).ProcNum));
 			}
-			bool isMedical=Clinics.IsMedicalPracticeOrClinic(comboClinic.SelectedClinicNum);
+			bool isMedical=Clinics.IsMedicalClinic(comboClinic.SelectedClinicNum);
 			gridProc.BeginUpdate();
 			gridProc.ListGridRows.Clear();
 			gridProc.ListGridColumns.Clear();

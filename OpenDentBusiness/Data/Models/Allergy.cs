@@ -14,7 +14,7 @@ namespace OpenDentBusiness
 		[PrimaryKey]
 		public long Id;
 
-		[ForeignKey(typeof(AllergyDef), nameof(AllergyDef.AllergyDefNum))]
+		[ForeignKey(typeof(AllergyDef), nameof(AllergyDef.Id))]
 		public long AllergyDefId;
 
 		[ForeignKey(typeof(Patient), nameof(Patient.PatNum))]

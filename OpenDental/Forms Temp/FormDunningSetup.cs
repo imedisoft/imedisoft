@@ -23,13 +23,13 @@ namespace OpenDental {
 			listBill.Items.Add("("+"all"+")");
 			listBill.SetSelected(0,true);
 			listBill.Items.AddRange(_listBillingTypeDefs.Select(x => x.ItemName).ToArray());
-			comboClinics.SelectedClinicNum=Clinics.ClinicNum;
+			comboClinics.SelectedClinicNum=Clinics.ClinicId;
 			FillGrids(true);
 		}
 
 		private void FillGrids(bool doRefreshList=false) {
 			if(doRefreshList) {
-				_listAllDunnings=Dunnings.Refresh(Clinics.GetForUserod(Security.CurrentUser,true).Select(x => x.ClinicNum).ToList());
+				_listAllDunnings=Dunnings.Refresh(Clinics.GetByCurrentUser().Select(x => x.Id).ToList());
 			}
 			List<Dunning> listSubDunnings=_listAllDunnings.FindAll(x => ValidateDunningFilters(x));
 			if(!Prefs.GetBool(PrefName.ShowFeatureSuperfamilies)) {

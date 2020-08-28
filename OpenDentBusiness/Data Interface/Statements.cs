@@ -542,7 +542,7 @@ namespace OpenDentBusiness
 			retVal.RegReplace("\\[namePref]", pat.Preferred);
 			retVal.RegReplace("\\[PatNum]", pat.PatNum.ToString());
 			retVal.RegReplace("\\[currentMonth]", DateTime.Now.ToString("MMMM"));
-			Clinic clinic = Clinics.GetClinic(pat.ClinicNum) ?? Clinics.GetPracticeAsClinicZero();
+			Clinic clinic = Clinics.GetById(pat.ClinicNum) ?? Clinics.GetPracticeAsClinicZero();
 			string officePhone = clinic.Phone;
 			if (string.IsNullOrEmpty(officePhone))
 			{

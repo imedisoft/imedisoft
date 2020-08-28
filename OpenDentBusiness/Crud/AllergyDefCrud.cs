@@ -22,12 +22,12 @@ namespace OpenDentBusiness.Crud
 		{
 			return new AllergyDef
 			{
-				AllergyDefNum = (long)dataReader["AllergyDefNum"],
+				Id = (long)dataReader["AllergyDefNum"],
 				Description = (string)dataReader["Description"],
 				IsHidden = (Convert.ToInt32(dataReader["IsHidden"]) == 1),
-				DateTStamp = (DateTime)dataReader["DateTStamp"],
+				LastModified = (DateTime)dataReader["DateTStamp"],
 				SnomedType = (SnomedAllergy)Convert.ToInt32(dataReader["SnomedType"]),
-				MedicationNum = (long)dataReader["MedicationNum"],
+				MedicationId = (long)dataReader["MedicationNum"],
 				UniiCode = (string)dataReader["UniiCode"]
 			};
 		}
@@ -54,7 +54,7 @@ namespace OpenDentBusiness.Crud
 		/// Inserts the specified <see cref="AllergyDef"/> into the database.
 		/// </summary>
 		public static long Insert(AllergyDef allergyDef)
-			=> allergyDef.AllergyDefNum = Database.ExecuteInsert(
+			=> allergyDef.Id = Database.ExecuteInsert(
 				"INSERT INTO `AllergyDef` " + 
 				"(`Description`, `IsHidden`, `DateTStamp`, `SnomedType`, `MedicationNum`, `UniiCode`) " + 
 				"VALUES (" + 
@@ -74,12 +74,12 @@ namespace OpenDentBusiness.Crud
 					"`MedicationNum` = @MedicationNum, " + 
 					"`UniiCode` = @UniiCode " + 
 				"WHERE `AllergyDefNum` = @AllergyDefNum",
-					new MySqlParameter("AllergyDefNum", allergyDef.AllergyDefNum),
+					new MySqlParameter("AllergyDefNum", allergyDef.Id),
 					new MySqlParameter("Description", allergyDef.Description ?? ""),
 					new MySqlParameter("IsHidden", (allergyDef.IsHidden ? 1 : 0)),
-					new MySqlParameter("DateTStamp", allergyDef.DateTStamp),
+					new MySqlParameter("DateTStamp", allergyDef.LastModified),
 					new MySqlParameter("SnomedType", (int)allergyDef.SnomedType),
-					new MySqlParameter("MedicationNum", allergyDef.MedicationNum),
+					new MySqlParameter("MedicationNum", allergyDef.MedicationId),
 					new MySqlParameter("UniiCode", allergyDef.UniiCode ?? ""));
 
 		/// <summary>
@@ -102,10 +102,10 @@ namespace OpenDentBusiness.Crud
 				parameters.Add(new MySqlParameter("IsHidden", (allergyDefNew.IsHidden ? 1 : 0)));
 			}
 
-			if (allergyDefNew.DateTStamp != allergyDefOld.DateTStamp)
+			if (allergyDefNew.LastModified != allergyDefOld.LastModified)
 			{
 				updates.Add("`DateTStamp` = @DateTStamp");
-				parameters.Add(new MySqlParameter("DateTStamp", allergyDefNew.DateTStamp));
+				parameters.Add(new MySqlParameter("DateTStamp", allergyDefNew.LastModified));
 			}
 
 			if (allergyDefNew.SnomedType != allergyDefOld.SnomedType)
@@ -114,10 +114,10 @@ namespace OpenDentBusiness.Crud
 				parameters.Add(new MySqlParameter("SnomedType", (int)allergyDefNew.SnomedType));
 			}
 
-			if (allergyDefNew.MedicationNum != allergyDefOld.MedicationNum)
+			if (allergyDefNew.MedicationId != allergyDefOld.MedicationId)
 			{
 				updates.Add("`MedicationNum` = @MedicationNum");
-				parameters.Add(new MySqlParameter("MedicationNum", allergyDefNew.MedicationNum));
+				parameters.Add(new MySqlParameter("MedicationNum", allergyDefNew.MedicationId));
 			}
 
 			if (allergyDefNew.UniiCode != allergyDefOld.UniiCode)
@@ -128,7 +128,7 @@ namespace OpenDentBusiness.Crud
 
 			if (updates.Count == 0) return;
 
-			parameters.Add(new MySqlParameter("AllergyDefNum", allergyDefNew.AllergyDefNum));
+			parameters.Add(new MySqlParameter("AllergyDefNum", allergyDefNew.Id));
 
 			Database.ExecuteNonQuery("UPDATE `AllergyDef` " + 
 				"SET " + string.Join(", ", updates) + " " + 
@@ -146,6 +146,6 @@ namespace OpenDentBusiness.Crud
 		/// Deletes the specified <see cref="AllergyDef"/> object from the database.
 		/// </summary>
 		public static void Delete(AllergyDef allergyDef)
-			=> Delete(allergyDef.AllergyDefNum);
+			=> Delete(allergyDef.Id);
 	}
 }

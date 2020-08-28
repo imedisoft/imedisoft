@@ -10,6 +10,7 @@ using System.Text;
 using System.Windows.Forms;
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -974,7 +975,7 @@ namespace OpenDental {
 		#endregion
 
 		private void FormDatabaseMaintenance_Load(object sender,System.EventArgs e) {
-			_listDbmMethods=DatabaseMaintenances.GetMethodsForDisplay(Clinics.ClinicNum);
+			_listDbmMethods=DatabaseMaintenances.GetMethodsForDisplay(Clinics.ClinicId);
 			DatabaseMaintenances.InsertMissingDBMs(_listDbmMethods.Select(x => x.Name).ToList());
 			_listDatabaseMaintenances=DatabaseMaintenances.GetAll();
 			//Users get stopped from launching FormDatabaseMaintenance when they do not have the Setup permission.
@@ -982,7 +983,7 @@ namespace OpenDental {
 			if(Security.IsAuthorized(Permissions.SecurityAdmin,true)){
 				butEtrans.Enabled=true;
 			}
-			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				butApptProcs.Visible=false;
 				labelApptProcs.Visible=false;
 			}
@@ -1681,8 +1682,7 @@ namespace OpenDental {
 		}
 
 		private void Fix(bool isOld=false) {
-			List<Computer> runningComps=Computers.GetRunningComputers();
-			if(runningComps.Count>50) {
+			if(Computers.GetRunningComputers().Count() > 50) {
 				if(!MsgBox.Show(MsgBoxButtons.YesNo,"WARNING!\r\nMore than 50 workstations are connected to this database. "
 					+"Running DBM may cause severe network slowness. "
 					+"We recommend running this tool when fewer users are connected (possibly after working hours). \r\n\r\n"

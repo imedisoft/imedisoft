@@ -42,13 +42,13 @@ namespace OpenDentBusiness.Crud{
 			Deposit deposit;
 			foreach(DataRow row in table.Rows) {
 				deposit=new Deposit();
-				deposit.DepositNum       = PIn.Long  (row["DepositNum"].ToString());
+				deposit.Id       = PIn.Long  (row["DepositNum"].ToString());
 				deposit.DateDeposit      = PIn.Date  (row["DateDeposit"].ToString());
 				deposit.BankAccountInfo  = PIn.String(row["BankAccountInfo"].ToString());
 				deposit.Amount           = PIn.Double(row["Amount"].ToString());
 				deposit.Memo             = PIn.String(row["Memo"].ToString());
 				deposit.Batch            = PIn.String(row["Batch"].ToString());
-				deposit.DepositAccountNum= PIn.Long  (row["DepositAccountNum"].ToString());
+				deposit.DepositAccountId= PIn.Long  (row["DepositAccountNum"].ToString());
 				retVal.Add(deposit);
 			}
 			return retVal;
@@ -69,13 +69,13 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("DepositAccountNum");
 			foreach(Deposit deposit in listDeposits) {
 				table.Rows.Add(new object[] {
-					POut.Long  (deposit.DepositNum),
+					POut.Long  (deposit.Id),
 					POut.DateT (deposit.DateDeposit,false),
 					            deposit.BankAccountInfo,
 					POut.Double(deposit.Amount),
 					            deposit.Memo,
 					            deposit.Batch,
-					POut.Long  (deposit.DepositAccountNum),
+					POut.Long  (deposit.DepositAccountId),
 				});
 			}
 			return table;
@@ -89,7 +89,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one Deposit into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(Deposit deposit,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				deposit.DepositNum=ReplicationServers.GetKey("deposit","DepositNum");
+				deposit.Id=ReplicationServers.GetKey("deposit","DepositNum");
 			}
 			string command="INSERT INTO deposit (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -97,7 +97,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="DateDeposit,BankAccountInfo,Amount,Memo,Batch,DepositAccountNum) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(deposit.DepositNum)+",";
+				command+=POut.Long(deposit.Id)+",";
 			}
 			command+=
 				     POut.Date  (deposit.DateDeposit)+","
@@ -105,7 +105,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.Double(deposit.Amount)+"',"
 				+"'"+POut.String(deposit.Memo)+"',"
 				+"'"+POut.String(deposit.Batch)+"',"
-				+    POut.Long  (deposit.DepositAccountNum)+")";
+				+    POut.Long  (deposit.DepositAccountId)+")";
 			if(deposit.BankAccountInfo==null) {
 				deposit.BankAccountInfo="";
 			}
@@ -114,9 +114,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramBankAccountInfo);
 			}
 			else {
-				deposit.DepositNum=Database.ExecuteInsert(command,paramBankAccountInfo);
+				deposit.Id=Database.ExecuteInsert(command,paramBankAccountInfo);
 			}
-			return deposit.DepositNum;
+			return deposit.Id;
 		}
 
 		///<summary>Inserts one Deposit into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -129,14 +129,14 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO deposit (";
 			if(!useExistingPK) {
-				deposit.DepositNum=ReplicationServers.GetKeyNoCache("deposit","DepositNum");
+				deposit.Id=ReplicationServers.GetKeyNoCache("deposit","DepositNum");
 			}
 			if(useExistingPK) {
 				command+="DepositNum,";
 			}
 			command+="DateDeposit,BankAccountInfo,Amount,Memo,Batch,DepositAccountNum) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(deposit.DepositNum)+",";
+				command+=POut.Long(deposit.Id)+",";
 			}
 			command+=
 				     POut.Date  (deposit.DateDeposit)+","
@@ -144,7 +144,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.Double(deposit.Amount)+"',"
 				+"'"+POut.String(deposit.Memo)+"',"
 				+"'"+POut.String(deposit.Batch)+"',"
-				+    POut.Long  (deposit.DepositAccountNum)+")";
+				+    POut.Long  (deposit.DepositAccountId)+")";
 			if(deposit.BankAccountInfo==null) {
 				deposit.BankAccountInfo="";
 			}
@@ -153,9 +153,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramBankAccountInfo);
 			}
 			else {
-				deposit.DepositNum=Database.ExecuteInsert(command,paramBankAccountInfo);
+				deposit.Id=Database.ExecuteInsert(command,paramBankAccountInfo);
 			}
-			return deposit.DepositNum;
+			return deposit.Id;
 		}
 
 		///<summary>Updates one Deposit in the database.</summary>
@@ -166,8 +166,8 @@ namespace OpenDentBusiness.Crud{
 				+"Amount           = '"+POut.Double(deposit.Amount)+"', "
 				+"Memo             = '"+POut.String(deposit.Memo)+"', "
 				+"Batch            = '"+POut.String(deposit.Batch)+"', "
-				+"DepositAccountNum=  "+POut.Long  (deposit.DepositAccountNum)+" "
-				+"WHERE DepositNum = "+POut.Long(deposit.DepositNum);
+				+"DepositAccountNum=  "+POut.Long  (deposit.DepositAccountId)+" "
+				+"WHERE DepositNum = "+POut.Long(deposit.Id);
 			if(deposit.BankAccountInfo==null) {
 				deposit.BankAccountInfo="";
 			}
@@ -198,9 +198,9 @@ namespace OpenDentBusiness.Crud{
 				if(command!="") { command+=",";}
 				command+="Batch = '"+POut.String(deposit.Batch)+"'";
 			}
-			if(deposit.DepositAccountNum != oldDeposit.DepositAccountNum) {
+			if(deposit.DepositAccountId != oldDeposit.DepositAccountId) {
 				if(command!="") { command+=",";}
-				command+="DepositAccountNum = "+POut.Long(deposit.DepositAccountNum)+"";
+				command+="DepositAccountNum = "+POut.Long(deposit.DepositAccountId)+"";
 			}
 			if(command=="") {
 				return false;
@@ -210,7 +210,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			var paramBankAccountInfo = new MySqlParameter("paramBankAccountInfo", POut.StringParam(deposit.BankAccountInfo));
 			command="UPDATE deposit SET "+command
-				+" WHERE DepositNum = "+POut.Long(deposit.DepositNum);
+				+" WHERE DepositNum = "+POut.Long(deposit.Id);
 			Database.ExecuteNonQuery(command,paramBankAccountInfo);
 			return true;
 		}
@@ -233,7 +233,7 @@ namespace OpenDentBusiness.Crud{
 			if(deposit.Batch != oldDeposit.Batch) {
 				return true;
 			}
-			if(deposit.DepositAccountNum != oldDeposit.DepositAccountNum) {
+			if(deposit.DepositAccountId != oldDeposit.DepositAccountId) {
 				return true;
 			}
 			return false;

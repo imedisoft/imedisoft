@@ -150,7 +150,7 @@ namespace OpenDental {
 				comboClinic.Items.Clear();
 				comboClinic.Items.Add(new ODBoxItem<Clinic>("All Clinics"));
 				comboClinic.SelectedIndex=0;
-				foreach(Clinic clinicCur in Clinics.GetDeepCopy(true)) {
+				foreach(Clinic clinicCur in Clinics.GetAll(false)) {
 					comboClinic.Items.Add(new ODBoxItem<Clinic>(clinicCur.Abbr,clinicCur));
 				}
 			}
@@ -207,7 +207,7 @@ namespace OpenDental {
 					break;
 			}
 			if(comboClinic.SelectedIndex>0) {
-				retVal.RemoveAll(x => x.ClinicId!=((ODBoxItem<Clinic>)comboClinic.SelectedItem).Tag.ClinicNum);
+				retVal.RemoveAll(x => x.ClinicId!=((ODBoxItem<Clinic>)comboClinic.SelectedItem).Tag.Id);
 			}
 			if(comboGroups.SelectedIndex>0) {
 				retVal.RemoveAll(x => !x.IsInUserGroup(((ODBoxItem<UserGroup>)comboGroups.SelectedItem).Tag.Id));
@@ -302,7 +302,6 @@ namespace OpenDental {
 			Userod selectedUser=SelectedUser;//preserve user selection.
 			gridUsers.BeginUpdate();
 			gridUsers.ListGridColumns.Clear();
-			string tableName="TableSecurity";
 			gridUsers.ListGridColumns.Add(new GridColumn("Username",90));
 			gridUsers.ListGridColumns.Add(new GridColumn("Employee",90));
 			gridUsers.ListGridColumns.Add(new GridColumn("Provider",90));

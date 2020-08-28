@@ -664,7 +664,7 @@ namespace OpenDental{
 			}
 			//Alter the text on the group box if the deposit associated to this claim payment was an auto deposit.
 			groupBoxDeposit.Text="Auto Deposit Details";
-			if(_depositOld!=null && _depositOld.DepositAccountNum==0) {
+			if(_depositOld!=null && _depositOld.DepositAccountId==0) {
 				groupBoxDeposit.Text="Deposit Details";
 			}
 			//Fill deposit account num drop down
@@ -696,7 +696,7 @@ namespace OpenDental{
 				validDepositDate.Text=_depositOld.DateDeposit.ToShortDateString();
 				validDoubleDepositAmt.Text=_depositOld.Amount.ToString();
 				textBoxBatchNum.Text=_depositOld.Batch;
-				comboDepositAccountNum.SetSelectedDefNum(_depositOld.DepositAccountNum);
+				comboDepositAccountNum.SetSelectedDefNum(_depositOld.DepositAccountId);
 			}
 		}
 
@@ -711,7 +711,7 @@ namespace OpenDental{
 			depositCur.Amount=PIn.Double(validDoubleDepositAmt.Text);
 			depositCur.DateDeposit=PIn.Date(validDepositDate.Text);
 			depositCur.Batch=PIn.String(textBoxBatchNum.Text);
-			depositCur.DepositAccountNum=comboDepositAccountNum.GetSelectedDefNum();
+			depositCur.DepositAccountId=comboDepositAccountNum.GetSelectedDefNum();
 			return depositCur;
 		}
 

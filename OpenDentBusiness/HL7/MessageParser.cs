@@ -697,9 +697,9 @@ namespace OpenDentBusiness.HL7 {
 						continue;
 					case "apt.location":
 						//Example: ClinicDescript^OpName^^PracticeTitle^^c  (c for clinic)
-						long clinicNum=Clinics.GetByDesc(seg.GetFieldComponent(intItemOrder,0));//0 if field is blank or description doesn't match clinic description in the db
-						if(clinicNum>0) {
-							apt.ClinicNum=clinicNum;//the pat.ClinicNum may be set based on a different segment, like the PV1 segment
+						var clinic = Clinics.GetByDescription(seg.GetFieldComponent(intItemOrder,0));//0 if field is blank or description doesn't match clinic description in the db
+						if(clinic != null) {
+							apt.ClinicNum= clinic.Id;//the pat.ClinicNum may be set based on a different segment, like the PV1 segment
 						}
 						continue;
 					default:
@@ -768,12 +768,12 @@ namespace OpenDentBusiness.HL7 {
 			//see if there is already an active allergy with this AllergyDefNum for this patient
 			List<Allergy> listAllergForPat=Allergies.GetByPatient(pat.PatNum,false);
 			for(int i=0;i<listAllergForPat.Count;i++) {
-				if(listAllergForPat[i].AllergyDefId==allergyDefCur.AllergyDefNum) {
+				if(listAllergForPat[i].AllergyDefId==allergyDefCur.Id) {
 					return;//already an active allergy with this AllergyDefNum
 				}
 			}
 			Allergy allergyCur=new Allergy();
-			allergyCur.AllergyDefId=allergyDefCur.AllergyDefNum;
+			allergyCur.AllergyDefId=allergyDefCur.Id;
 			allergyCur.PatientId=pat.PatNum;
 			allergyCur.StatusIsActive=true;
 			Allergies.Insert(allergyCur);
@@ -2040,13 +2040,13 @@ namespace OpenDentBusiness.HL7 {
 						continue;
 					case "pat.location":
 						//Example: ClinicDescript^OpName^^PracticeTitle^^c  (c for clinic)
-						long clinicNum=Clinics.GetByDesc(seg.GetFieldComponent(itemOrder,0));//0 if field is blank or description doesn't match clinic description in the db
-						if(clinicNum==0) {
+						var clinic = Clinics.GetByDescription(seg.GetFieldComponent(itemOrder,0));//0 if field is blank or description doesn't match clinic description in the db
+						if(clinic == null) {
 							continue;//do nothing, either no clinic description in the message or no matching clinic found
 						}
-						pat.ClinicNum=clinicNum;
+						pat.ClinicNum = clinic.Id;
 						if(apt!=null) {
-							apt.ClinicNum=clinicNum;//the apt.ClinicNum may be set based on a different segment, like the AIL segment
+							apt.ClinicNum = clinic.Id;//the apt.ClinicNum may be set based on a different segment, like the AIL segment
 						}
 						continue;
 					case "prov.provIdName":

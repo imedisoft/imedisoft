@@ -44,18 +44,18 @@ namespace OpenDental {
 				checkAllClinics.Visible=false;
 			}
 			else {
-				_listClinics=Clinics.GetForUserod(Security.CurrentUser);
+				_listClinics=Clinics.GetByUser(Security.CurrentUser);
 				if(!Security.CurrentUser.ClinicIsRestricted) {
 					listClinics.Items.Add("Unassigned");
 					listClinics.SetSelected(0,true);
 				}
 				for(int i=0;i<_listClinics.Count;i++) {
 					int curIndex=listClinics.Items.Add(_listClinics[i].Abbr);
-					if(Clinics.ClinicNum==0) {
+					if(Clinics.ClinicId==0) {
 						listClinics.SetSelected(curIndex,true);
 						checkAllClinics.Checked=true;
 					}
-					if(_listClinics[i].ClinicNum==Clinics.ClinicNum) {
+					if(_listClinics[i].Id==Clinics.ClinicId) {
 						listClinics.SelectedIndices.Clear();
 						listClinics.SetSelected(curIndex,true);
 					}
@@ -188,14 +188,14 @@ namespace OpenDental {
 			List<long> listClinicNums=new List<long>();
 			for(int i=0;i<listClinics.SelectedIndices.Count;i++) {
 				if(Security.CurrentUser.ClinicIsRestricted) {
-						listClinicNums.Add(_listClinics[listClinics.SelectedIndices[i]].ClinicNum);//we know that the list is a 1:1 to _listClinics
+						listClinicNums.Add(_listClinics[listClinics.SelectedIndices[i]].Id);//we know that the list is a 1:1 to _listClinics
 					}
 				else {
 					if(listClinics.SelectedIndices[i]==0) {
 						listClinicNums.Add(0);
 					}
 					else {
-						listClinicNums.Add(_listClinics[listClinics.SelectedIndices[i]-1].ClinicNum);//Minus 1 from the selected index
+						listClinicNums.Add(_listClinics[listClinics.SelectedIndices[i]-1].Id);//Minus 1 from the selected index
 					}
 				}
 			}

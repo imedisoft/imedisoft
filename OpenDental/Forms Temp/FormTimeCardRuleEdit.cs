@@ -30,7 +30,7 @@ namespace OpenDental {
 				_listEmployees=Employees.GetForTimeCard();
 			}
 			else {
-				_listEmployees=Employees.GetEmpsForClinic(Clinics.ClinicNum);
+				_listEmployees=Employees.GetEmpsForClinic(Clinics.ClinicId);
 			}
 			listEmp.Items.Add("All Employees");
 			listEmp.SelectedIndex=0;

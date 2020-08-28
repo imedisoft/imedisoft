@@ -96,9 +96,9 @@ namespace OpenDental {
 
 		private List<Clinic> GetAvailableClinics() {
 			List<Clinic> listAvailableClinics=new List<Clinic>();
-			listAvailableClinics=Clinics.GetForUserod(Security.CurrentUser);
+			listAvailableClinics=Clinics.GetByUser(Security.CurrentUser);
 			//Get list of Clinics in the current group.  Use in memory list to account for uncommitted changes.
-			List<long> listClinicNumsInUse=_listClinicsInGroup.Select(x => x.ClinicNum).ToList();
+			List<long> listClinicNumsInUse=_listClinicsInGroup.Select(x => x.Id).ToList();
 			if(_listOtherGroupsWithFeeSched.Count>0) {
 				foreach(FeeSchedGroup feeGroup in _listOtherGroupsWithFeeSched) {
 					if(feeGroup.FeeSchedGroupNum==_feeSchedGroupCur.FeeSchedGroupNum) {
@@ -108,7 +108,7 @@ namespace OpenDental {
 				}
 			}
 			//Remove clinics currently in this group or in another group for the same schedule from the list of available clinics.
-			listAvailableClinics.RemoveAll(x => listClinicNumsInUse.Contains(x.ClinicNum));
+			listAvailableClinics.RemoveAll(x => listClinicNumsInUse.Contains(x.Id));
 			return listAvailableClinics;
 		}
 
@@ -132,7 +132,7 @@ namespace OpenDental {
 			foreach(Clinic clinicCur in _listClinicsInGroup) {
 				//See if the current clinic is in another FeeSchedGroup's clinic list.
 				//Ignore any matches for the FeeSchedGroup we are currently editing.
-				if(_listOtherGroupsWithFeeSched.Any(x => x.ListClinicNumsAll.Contains(clinicCur.ClinicNum))) { 
+				if(_listOtherGroupsWithFeeSched.Any(x => x.ListClinicNumsAll.Contains(clinicCur.Id))) { 
 					//Insert a comma only if there are already clinics in the list.
 					invalidClinics+="\r\n "+clinicCur.Abbr;
 				}
@@ -213,7 +213,7 @@ namespace OpenDental {
 				return;
 			}
 			FeeSched feeSchedCur=((ODBoxItem<FeeSched>)comboFeeSched.SelectedItem).Tag;
-			List<long> listClinicNumsNew=_listClinicsInGroup.Select(x => x.ClinicNum).ToList();
+			List<long> listClinicNumsNew=_listClinicsInGroup.Select(x => x.Id).ToList();
 			//Initial fee sync for new groups or groups that were created without any clinics in the group, or if we just changed the Fee Schedule for the group.
 			//If editing an existing fee schedule group that contains no clinic associations, treat it like a new group and set the initial fees.
 			if(_feeSchedGroupCur.IsNew || _feeSchedGroupCur.ListClinicNumsAll.Count()<1 || _feeSchedGroupCur.FeeSchedNum!=feeSchedCur.FeeSchedNum) {
@@ -237,7 +237,7 @@ namespace OpenDental {
 						MessageBox.Show("A default clinic was not selected.");
 						return;
 					}
-					long clinicNumMaster=((Clinic)form.ListSelectedTags[0]).ClinicNum;//DialogResult.OK means a selection was made.
+					long clinicNumMaster=((Clinic)form.ListSelectedTags[0]).Id;//DialogResult.OK means a selection was made.
 					//This list came from _listClinicsInGroup which was used to fill the grid picker that we get clinicNumMaster from.  We need to pop the master
 					//clinic off the list while copying fee schedules or else it will be deleted before copying.
 					//Give the user an out before potentially changing a lot of data in the db.

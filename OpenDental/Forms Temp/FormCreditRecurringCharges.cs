@@ -58,7 +58,7 @@ namespace OpenDental {
 				labelUpdated.Visible = false;
 				checkForceDuplicates.Visible = true;
 				checkForceDuplicates.Checked = PIn.Bool(ProgramProperties.GetPropValForClinicOrDefault(progCur.Id,
-					PayConnect.ProgramProperties.PayConnectForceRecurringCharge, Clinics.ClinicNum));
+					PayConnect.ProgramProperties.PayConnectForceRecurringCharge, Clinics.ClinicId));
 			}
 			if (Programs.IsEnabled(ProgramName.Xcharge))
 			{
@@ -67,7 +67,7 @@ namespace OpenDental {
 				checkForceDuplicates.Visible = true;
 				string xPath = Programs.GetProgramPath(progCur);
 				checkForceDuplicates.Checked = PIn.Bool(ProgramProperties.GetPropValForClinicOrDefault(progCur.Id,
-					ProgramProperties.PropertyDescs.XCharge.XChargeForceRecurringCharge, Clinics.ClinicNum));
+					ProgramProperties.PropertyDescs.XCharge.XChargeForceRecurringCharge, Clinics.ClinicId));
 				if (!File.Exists(xPath))
 				{//program path is invalid
 				 //if user has setup permission and they want to edit the program path, show the X-Charge setup window
@@ -106,7 +106,7 @@ namespace OpenDental {
 				{
 					_listUserClinics.Add(new Clinic() { Description = "Unassigned" });
 				}
-				Clinics.GetForUserod(Security.CurrentUser).ForEach(x => _listUserClinics.Add(x));
+				Clinics.GetByUser(Security.CurrentUser).ForEach(x => _listUserClinics.Add(x));
 				for (int i = 0; i < _listUserClinics.Count; i++)
 				{
 					listClinics.Items.Add(_listUserClinics[i].Description);
@@ -143,7 +143,7 @@ namespace OpenDental {
 			if(isFromDb) {
 				_charger.FillCharges(_listUserClinics);
 			}
-			List<long> listSelectedClinicNums=listClinics.SelectedIndices.OfType<int>().Select(x => _listUserClinics[x].ClinicNum).ToList();
+			List<long> listSelectedClinicNums=listClinics.SelectedIndices.OfType<int>().Select(x => _listUserClinics[x].Id).ToList();
 			List<RecurringChargeData> listChargesCur;
 			if(PrefC.HasClinicsEnabled) {
 				listChargesCur=_charger.ListRecurringChargeData.Where(x => listSelectedClinicNums.Contains(x.RecurringCharge.ClinicNum)).ToList();
@@ -186,7 +186,7 @@ namespace OpenDental {
 				row.Cells.Add(chargeCur.RecurringCharge.PatNum.ToString());
 				row.Cells.Add(chargeCur.PatName);
 				if(PrefC.HasClinicsEnabled) {
-					Clinic clinicCur=_listUserClinics.FirstOrDefault(x => x.ClinicNum==chargeCur.RecurringCharge.ClinicNum);
+					Clinic clinicCur=_listUserClinics.FirstOrDefault(x => x.Id==chargeCur.RecurringCharge.ClinicNum);
 					row.Cells.Add(clinicCur!=null?clinicCur.Description:"");//get description from cache if clinics are enabled
 				}
 				int billingDay=0;

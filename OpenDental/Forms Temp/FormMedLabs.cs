@@ -53,20 +53,20 @@ namespace OpenDental {
 			_dictLabAcctClinic=new Dictionary<string,string>();
 			_listUserClinics=new List<Clinic>();
 			if(PrefC.HasClinicsEnabled) {
-				_listUserClinics.Add(new Clinic() { ClinicNum=-1,Description="All" });//ClinicNum will be -1 at index 0, "All" means all the user has access to
+				_listUserClinics.Add(new Clinic() { Id=-1,Description="All" });//ClinicNum will be -1 at index 0, "All" means all the user has access to
 				if(!Security.CurrentUser.ClinicIsRestricted) {
 					//ClinicNum 0 at index==1, "Headquarters" means any where MedLab.PatAccountNum does not match any clinic.MedLabAccountNum
-					_listUserClinics.Add(new Clinic() { ClinicNum=0,Description="Unassigned" });
+					_listUserClinics.Add(new Clinic() { Id=0,Description="Unassigned" });
 				}
-				_listUserClinics.AddRange(Clinics.GetForUserod(Security.CurrentUser));
+				_listUserClinics.AddRange(Clinics.GetByUser(Security.CurrentUser));
 				_listUserClinics.ForEach(x => comboClinic.Items.Add(x.Description));
-				_dictLabAcctClinic=_listUserClinics.Where(x => !string.IsNullOrEmpty(x.MedLabAccountNum))
-					.ToDictionary(x => x.MedLabAccountNum,x => x.Description);
-				if(!Security.CurrentUser.ClinicIsRestricted && Clinics.ClinicNum==0) {//if unrestricted and the currently selected clinic is HQ
+				_dictLabAcctClinic=_listUserClinics.Where(x => !string.IsNullOrEmpty(x.MedlabAccountId))
+					.ToDictionary(x => x.MedlabAccountId,x => x.Description);
+				if(!Security.CurrentUser.ClinicIsRestricted && Clinics.ClinicId==0) {//if unrestricted and the currently selected clinic is HQ
 					comboClinic.SelectedIndex=1;//all users will have the "All" clinic, unrestricted users will also have the "Unassigned" clinic, so index==1
 				}
 				else {
-					comboClinic.SelectedIndex=_listUserClinics.FindIndex(x => x.ClinicNum==Clinics.ClinicNum);
+					comboClinic.SelectedIndex=_listUserClinics.FindIndex(x => x.Id==Clinics.ClinicId);
 				}
 				if(comboClinic.SelectedIndex<0) {
 					comboClinic.SelectedIndex=0;
@@ -118,8 +118,8 @@ namespace OpenDental {
 				clinCur=_listUserClinics[comboClinic.SelectedIndex];
 			}
 			List<Clinic> listClinicsSelected=new List<Clinic>();
-			if(clinCur.ClinicNum==-1) {//"All" clinic
-				listClinicsSelected=_listUserClinics.FindAll(x => x.ClinicNum>-1);//will include ClinicNum 0 ("Unassigned" clinic) if user is unrestricted
+			if(clinCur.Id==-1) {//"All" clinic
+				listClinicsSelected=_listUserClinics.FindAll(x => x.Id>-1);//will include ClinicNum 0 ("Unassigned" clinic) if user is unrestricted
 			}
 			else {//a single clinic was selected, either the "Unassigned" clinic or a regular clinic
 				listClinicsSelected.Add(clinCur);

@@ -38,8 +38,8 @@ namespace UnitTests.TimeSlots_Tests {
 			//Make sure that clinics are enabled for this test.
 			//Create two clinics.  Clinic B will have an invalid appointment scheduled (spans past midnight) and Clinic A should still return time slots.
 			PrefT.UpdateBool(PrefName.EasyNoClinics,false);//Not no clinics.
-			long clinicNumA=ClinicT.CreateClinic("Clinic A-"+suffix).ClinicNum;
-			long clinicNumB=ClinicT.CreateClinic("Clinic B-"+suffix).ClinicNum;
+			long clinicNumA=ClinicT.CreateClinic("Clinic A-"+suffix).Id;
+			long clinicNumB=ClinicT.CreateClinic("Clinic B-"+suffix).Id;
 			//Make sure the that Appointment View time increment is set to 10 min.
 			Prefs.Set(PrefName.AppointmentTimeIncrement,10);
 			//Create a date that will always be in the future.  This date will be used for schedules and recalls.
@@ -281,8 +281,8 @@ namespace UnitTests.TimeSlots_Tests {
 			string suffix=MethodBase.GetCurrentMethod().Name;
 			//Turn clinics ON!
 			Prefs.Set(PrefName.EasyNoClinics,false);//Not no clinics.
-			long clinicNum1=ClinicT.CreateClinic("1 - "+suffix).ClinicNum;
-			long clinicNum2=ClinicT.CreateClinic("2 - "+suffix).ClinicNum;
+			long clinicNum1=ClinicT.CreateClinic("1 - "+suffix).Id;
+			long clinicNum2=ClinicT.CreateClinic("2 - "+suffix).Id;
 			//Create a date that will always be in the future.  This date will be used for schedules and recalls.
 			DateTime dateTimeSchedule=DateTime.Now.AddYears(1);
 			long provNumDoc=ProviderT.CreateProvider("Doc-"+suffix);

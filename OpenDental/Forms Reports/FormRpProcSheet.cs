@@ -278,18 +278,18 @@ namespace OpenDental{
 				checkAllClin.Visible=false;
 			}
 			else {
-				_listClinics=Clinics.GetForUserod(Security.CurrentUser);
+				_listClinics=Clinics.GetByUser(Security.CurrentUser);
 				if(!Security.CurrentUser.ClinicIsRestricted) {
 					listClin.Items.Add("Unassigned");
 					listClin.SetSelected(0,true);
 				}
 				for(int i=0;i<_listClinics.Count;i++) {
 					int curIndex=listClin.Items.Add(_listClinics[i].Abbr);
-					if(Clinics.ClinicNum==0) {
+					if(Clinics.ClinicId==0) {
 						listClin.SetSelected(curIndex,true);
 						checkAllClin.Checked=true;
 					}
-					if(_listClinics[i].ClinicNum==Clinics.ClinicNum) {
+					if(_listClinics[i].Id==Clinics.ClinicId) {
 						listClin.SelectedIndices.Clear();
 						listClin.SetSelected(curIndex,true);
 					}
@@ -349,14 +349,14 @@ namespace OpenDental{
 			if(PrefC.HasClinicsEnabled) {
 				for(int i=0;i<listClin.SelectedIndices.Count;i++) {
 					if(Security.CurrentUser.ClinicIsRestricted) {
-						_listClinicNums.Add(_listClinics[listClin.SelectedIndices[i]].ClinicNum);//we know that the list is a 1:1 to _listClinics
+						_listClinicNums.Add(_listClinics[listClin.SelectedIndices[i]].Id);//we know that the list is a 1:1 to _listClinics
 					}
 					else {
 						if(listClin.SelectedIndices[i]==0) {
 							_listClinicNums.Add(0);
 						}
 						else {
-							_listClinicNums.Add(_listClinics[listClin.SelectedIndices[i]-1].ClinicNum);//Minus 1 from the selected index
+							_listClinicNums.Add(_listClinics[listClin.SelectedIndices[i]-1].Id);//Minus 1 from the selected index
 						}
 					}
 				}
@@ -512,19 +512,19 @@ namespace OpenDental{
 
 		private bool AnyClinicSelectedIsMedical() {
 			if(!PrefC.HasClinicsEnabled) {
-				return Clinics.IsMedicalPracticeOrClinic(0);//Check if the practice is medical
+				return Clinics.IsMedicalClinic(0);//Check if the practice is medical
 			}
 			if(Security.CurrentUser.ClinicIsRestricted) {//User can only view one clinic
-				return Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum);
+				return Clinics.IsMedicalClinic(Clinics.ClinicId);
 			}
 			for(int i=0;i<listClin.SelectedIndices.Count;i++) {
 				if(listClin.SelectedIndices[i]==0 //The user selected 'Unassigned' 
-					&& Clinics.IsMedicalPracticeOrClinic(0)) //And the practice is medical
+					&& Clinics.IsMedicalClinic(0)) //And the practice is medical
 				{
 					return true;
 				}
 				//if(Clinics.IsMedicalPracticeOrClinic(_listClinics[listClin.SelectedIndices[i]-1].ClinicNum)) {//Minus 1 from the selected index
-				if(listClin.SelectedIndices[i]!=0 && Clinics.IsMedicalPracticeOrClinic(_listClinics[listClin.SelectedIndices[i]-1].ClinicNum)) {//Minus 1 from the selected index
+				if(listClin.SelectedIndices[i]!=0 && Clinics.IsMedicalClinic(_listClinics[listClin.SelectedIndices[i]-1].Id)) {//Minus 1 from the selected index
 					return true;
 				}
 			}

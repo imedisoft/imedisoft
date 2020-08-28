@@ -12,8 +12,8 @@ namespace OpenDentalGraph.Cache
 
 		protected override List<Clinic> GetCache(DashboardFilter filter)
 		{
-			List<Clinic> list = Clinics.GetDeepCopy();
-			clinicNames = list.ToDictionary(x => x.ClinicNum, x => string.IsNullOrEmpty(x.Description) ? x.ClinicNum.ToString() : x.Description);
+			List<Clinic> list = Clinics.GetAll(false);
+			clinicNames = list.ToDictionary(x => x.Id, x => string.IsNullOrEmpty(x.Description) ? x.Id.ToString() : x.Description);
 			return list;
 		}
 

@@ -23,7 +23,7 @@ namespace OpenDentBusiness
 			//No need to check RemotingRole; no call to db.
 			for (int i = 0; i < listAllergyDef.Count; i++)
 			{
-				if (allergyDefNum == listAllergyDef[i].AllergyDefNum)
+				if (allergyDefNum == listAllergyDef[i].Id)
 				{
 					return listAllergyDef[i];//Gets the allergydef matching the allergy so we can use it to populate the grid
 				}

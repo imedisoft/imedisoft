@@ -109,7 +109,7 @@ namespace OpenDental{
 			gridMain.ListGridColumns.Add(col);
 			col=new GridColumn("Code",55);
 			gridMain.ListGridColumns.Add(col);
-			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				col=new GridColumn("Description",290);
 				gridMain.ListGridColumns.Add(col);
 			}
@@ -143,7 +143,7 @@ namespace OpenDental{
 				row.Cells.Add(procCur.ProcDate.ToShortDateString());
 				row.Cells.Add(Providers.GetAbbr(entry.ProvNum));
 				row.Cells.Add(procCodeCur.ProcCode);
-				if(!Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+				if(!Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 					row.Cells.Add(procCur.ToothNum=="" ? Tooth.SurfTidyFromDbToDisplay(procCur.Surf,procCur.ToothNum) : Tooth.ToInternat(procCur.ToothNum));
 				}
 				string descriptionText="";

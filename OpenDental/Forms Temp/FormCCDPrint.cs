@@ -165,11 +165,11 @@ namespace OpenDental
 					}
 					if (clinicNum != 0)
 					{
-						clinic = Clinics.GetClinic(clinicNum);
+						clinic = Clinics.GetById(clinicNum);
 					}
-					else if (PrefC.HasClinicsEnabled && Clinics.GetCount() > 0)
+					else if (PrefC.HasClinicsEnabled && Clinics.Count(true) > 0)
 					{
-						clinic = Clinics.GetFirst();
+						clinic = Clinics.First(true);
 					}
 				}
 				if (provTreat == null)
@@ -3158,7 +3158,7 @@ namespace OpenDental
 			}
 			else
 			{
-				text = Patients.GetAddressFull(clinic.Address, clinic.Address2, clinic.City, clinic.State, clinic.Zip);
+				text = Patients.GetAddressFull(clinic.AddressLine1, clinic.AddressLine2, clinic.City, clinic.State, clinic.Zip);
 			}
 			doc.DrawString(g, text, xPos, 0);
 		}

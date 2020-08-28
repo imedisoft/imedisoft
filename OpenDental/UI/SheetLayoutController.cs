@@ -83,7 +83,7 @@ namespace OpenDental
 			//If the user logs off/exits for the day the next time they log in they will get the new practice default layout.
 			if (!_hasUserLoggedOff
 				&& _userNumCur == Security.CurrentUser.Id
-				&& _clinicNumCur == Clinics.ClinicNum
+				&& _clinicNumCur == Clinics.ClinicId
 				&& _sheetDefDynamicLayoutCur != null
 				&& ListSheetDefsLayout.Any(x => x.SheetDefNum == _sheetDefDynamicLayoutCur.SheetDefNum))
 			{
@@ -101,9 +101,9 @@ namespace OpenDental
 			{//Try to use the practice default.
 			 //If there is a Clinic default, get it.
 
-				if (PrefC.HasClinicsEnabled && Clinics.ClinicNum > 0)
+				if (PrefC.HasClinicsEnabled && Clinics.ClinicId > 0)
                 {
-					sheetDefNum = ClinicPrefs.GetLong(Clinics.ClinicNum, PrefName.SheetsDefaultChartModule);
+					sheetDefNum = ClinicPrefs.GetLong(Clinics.ClinicId, PrefName.SheetsDefaultChartModule);
                 }
 
 				if (sheetDefNum == 0)
@@ -137,7 +137,7 @@ namespace OpenDental
 		{
 			_hasUserLoggedOff = false;//At this point we are showing the chart module to a user, reset.
 			_userNumCur = Security.CurrentUser.Id;
-			_clinicNumCur = Clinics.ClinicNum;
+			_clinicNumCur = Clinics.ClinicId;
 			if (!isForcedRefresh && _sheetDefDynamicLayoutCur != null && sheetDef.SheetDefNum == _sheetDefDynamicLayoutCur.SheetDefNum)
 			{
 				//Not forcing a refresh and _dynamicLayoutCur and sheetDef are the same sheet. No point in re-running logic.  Prevents flicker.
@@ -197,9 +197,9 @@ namespace OpenDental
 
 			long defaultSheetDefNum = 0;
 
-			if (PrefC.HasClinicsEnabled && Clinics.ClinicNum > 0)
+			if (PrefC.HasClinicsEnabled && Clinics.ClinicId > 0)
             {
-				defaultSheetDefNum = ClinicPrefs.GetLong(Clinics.ClinicNum, PrefName.SheetsDefaultChartModule);
+				defaultSheetDefNum = ClinicPrefs.GetLong(Clinics.ClinicId, PrefName.SheetsDefaultChartModule);
 			}
 
 			if (defaultSheetDefNum == 0)

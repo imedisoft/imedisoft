@@ -2488,12 +2488,12 @@ namespace OpenDentBusiness {
 			unallocatedTransferPayment.PayDate=DateTime.Today;
 			unallocatedTransferPayment.ClinicNum=0;
 			if(PrefC.HasClinicsEnabled) {//if clinics aren't enabled default to 0
-				unallocatedTransferPayment.ClinicNum=Clinics.ClinicNum;
+				unallocatedTransferPayment.ClinicNum=Clinics.ClinicId;
 				if((PayClinicSetting)PrefC.GetInt(PrefName.PaymentClinicSetting)==PayClinicSetting.PatientDefaultClinic) {
 					unallocatedTransferPayment.ClinicNum=patCur.ClinicNum;
 				}
 				else if((PayClinicSetting)PrefC.GetInt(PrefName.PaymentClinicSetting)==PayClinicSetting.SelectedExceptHQ) {
-					unallocatedTransferPayment.ClinicNum=(Clinics.ClinicNum==0 ? patCur.ClinicNum : Clinics.ClinicNum);
+					unallocatedTransferPayment.ClinicNum=(Clinics.ClinicId==0 ? patCur.ClinicNum : Clinics.ClinicId);
 				}
 			}
 			unallocatedTransferPayment.DateEntry=DateTime.Today;

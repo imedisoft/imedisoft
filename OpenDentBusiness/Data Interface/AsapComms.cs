@@ -173,7 +173,7 @@ namespace OpenDentBusiness{
 				newTemplate.RegReplace("\\[Time]",dateTime.ToShortTimeString());
 			}
 			if(clinicNum > -1) {
-				Clinic clinic=Clinics.GetClinic(clinicNum)??Clinics.GetPracticeAsClinicZero();
+				Clinic clinic=Clinics.GetById(clinicNum)??Clinics.GetPracticeAsClinicZero();
 				Clinics.ReplaceOffice(newTemplate,clinic,isHtmlEmail,doReplaceDisclaimer:isHtmlEmail);
 			}
 			if(nameF!=null) {

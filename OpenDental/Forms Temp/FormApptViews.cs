@@ -236,7 +236,7 @@ namespace OpenDental{
 		#endregion
 
 		private void FormApptViews_Load(object sender, System.EventArgs e) {
-			comboClinic.SelectedClinicNum=Clinics.ClinicNum;
+			comboClinic.SelectedClinicNum=Clinics.ClinicId;
 			FillViewList();
 			if(PrefC.GetInt(PrefName.AppointmentTimeIncrement)==5){
 				radioFive.Checked=true;

@@ -46,7 +46,7 @@ namespace OpenDentBusiness
 			{
 				if (long.TryParse(item, out var accountId))
 				{
-					stringBuilder.AppendLine(Accounts.GetDescript(accountId));
+					stringBuilder.AppendLine(Accounts.GetDescription(accountId));
 				}
 			}
 

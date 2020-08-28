@@ -98,7 +98,7 @@ namespace OpenDental {
 				else {
 					//no filter.
 				}
-				if(PrefC.HasClinicsEnabled && (!listClinicNums.Contains(unfinalCur.ClinicCur.ClinicNum))) {
+				if(PrefC.HasClinicsEnabled && (!listClinicNums.Contains(unfinalCur.ClinicCur.Id))) {
 					continue;
 				}
 				row=new GridRow();
@@ -112,7 +112,7 @@ namespace OpenDental {
 				row.Cells.Add(carrierName);
 				if(PrefC.HasClinicsEnabled) {
 					string clinicAbbr=unfinalCur.ClinicCur.Abbr;
-					if(unfinalCur.ClinicCur.ClinicNum==0) {//Unassigned, see RpUnfinalizedInsPay.UnfinalizedInsPay(...)
+					if(unfinalCur.ClinicCur.Id==0) {//Unassigned, see RpUnfinalizedInsPay.UnfinalizedInsPay(...)
 						clinicAbbr=clinicAbbr;
 					}
 					row.Cells.Add(clinicAbbr);
@@ -190,7 +190,7 @@ namespace OpenDental {
 			ClaimPayment claimPayment=new ClaimPayment();
 			claimPayment.CheckDate=MiscData.GetNowDateTime().Date;//Today's date for easier tracking by the office and to avoid backdating before accounting lock dates.
 			claimPayment.IsPartial=true;
-			claimPayment.ClinicNum=unfinalPay.ClinicCur.ClinicNum;
+			claimPayment.ClinicNum=unfinalPay.ClinicCur.Id;
 			Family famCur=Patients.GetFamily(unfinalPay.PatientCur.PatNum);
 			List<InsSub> listInsSub=InsSubs.RefreshForFam(famCur);
 			List<InsPlan> listInsPlan=InsPlans.RefreshForSubList(listInsSub);

@@ -788,11 +788,11 @@ namespace OpenDental
 			bool unsentStatementsExist=Statements.UnsentStatementsExist();
 			if(unsentStatementsExist) {
 				if(PrefC.HasClinicsEnabled) {//Using clinics.
-					if(Statements.UnsentClinicStatementsExist(Clinics.ClinicNum)) {//Check if clinic has unsent bills.
-						ShowBilling(Clinics.ClinicNum);//Clinic has unsent bills.  Simply show billing window.
+					if(Statements.UnsentClinicStatementsExist(Clinics.ClinicId)) {//Check if clinic has unsent bills.
+						ShowBilling(Clinics.ClinicId);//Clinic has unsent bills.  Simply show billing window.
 					}
 					else {//No unsent bills for clinic.  Show billing options to generate a billing list.
-						ShowBillingOptions(Clinics.ClinicNum);
+						ShowBillingOptions(Clinics.ClinicId);
 					}
 				}
 				else {//Not using clinics and has unsent bills.  Simply show billing window.
@@ -801,7 +801,7 @@ namespace OpenDental
 			}
 			else {//No unsent statements exist.  Have user create a billing list.
 				if(PrefC.HasClinicsEnabled) {
-					ShowBillingOptions(Clinics.ClinicNum);
+					ShowBillingOptions(Clinics.ClinicId);
 				}
 				else {
 					ShowBillingOptions(0);
@@ -821,7 +821,7 @@ namespace OpenDental
 				//Any statements that were showing in the old billing list window that we are about to close could potentially be stale and are now invalid and should not be sent.
 				//Another good reason to close the window is when using clinics.  It was possible to show a different clinic billing list than the one chosen.
 				for(int i=0;i<FormB.ListClinics.Count;i++) {
-					if(FormB.ListClinics[i].ClinicNum!=clinicNum) {//For most users clinic nums will always be 0.
+					if(FormB.ListClinics[i].Id!=clinicNum) {//For most users clinic nums will always be 0.
 						//The old billing list was showing a different clinic.  No need to show the warning message in this scenario.
 						hadListShowing=false;
 					}
@@ -890,7 +890,7 @@ namespace OpenDental
 			Program progCur=Programs.GetCur(ProgramName.Transworld);
 			List<long> listClinicNums=new List<long>();
 			if(PrefC.HasClinicsEnabled) {
-				listClinicNums=Clinics.GetAllForUserod(Security.CurrentUser).Select(x => x.ClinicNum).ToList();
+				listClinicNums=Clinics.GetByUser(Security.CurrentUser).Select(x => x.Id).ToList();
 				if(!Security.CurrentUser.ClinicIsRestricted) {
 					listClinicNums.Add(0);
 				}
@@ -1041,7 +1041,7 @@ namespace OpenDental
 			gridEmp.ListGridRows.Clear();
 			UI.GridRow row;
 			if(PrefC.HasClinicsEnabled) {
-				_listEmployees=Employees.GetEmpsForClinic(Clinics.ClinicNum,false,true);
+				_listEmployees=Employees.GetEmpsForClinic(Clinics.ClinicId,false,true);
 			}
 			else {
 				_listEmployees=Employees.GetDeepCopy(true);

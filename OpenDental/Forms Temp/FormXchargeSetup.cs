@@ -477,8 +477,8 @@ namespace OpenDental{
 					//if program link is enabled, disable the enable check box so the restricted user cannot disable for all clinics
 					checkEnabled.Enabled=!_progCur.Enabled;
 				}
-				comboClinic.SelectedClinicNum=Clinics.ClinicNum;
-				_clinicNumRevert=Clinics.ClinicNum;
+				comboClinic.SelectedClinicNum=Clinics.ClinicId;
+				_clinicNumRevert=Clinics.ClinicId;
 			}
 			else {//clinics not enabled
 				checkEnabled.Text="Enabled";
@@ -714,7 +714,7 @@ namespace OpenDental{
 			}
 			//only validate payment types for all clinics if isAllClinics==true and clinics are enabled and the current user is not restricted to a clinic
 			string payTypeCur="";
-			List<long> listUserClinicNums=comboClinic.ListClinics.Select(x => x.ClinicNum).ToList();
+			List<long> listUserClinicNums=comboClinic.ListClinics.Select(x => x.Id).ToList();
 			//make sure all clinics with X-Charge enabled also have a payment type selected
 			for(int i=0;i<listUserClinicNums.Count;i++) {
 				payTypeCur=ProgramProperties.GetPropValFromList(_listProgProps,"PaymentType",listUserClinicNums[i]);

@@ -43,13 +43,13 @@ namespace OpenDentBusiness.Crud{
 			Transaction transaction;
 			foreach(DataRow row in table.Rows) {
 				transaction=new Transaction();
-				transaction.TransactionNum= PIn.Long  (row["TransactionNum"].ToString());
-				transaction.DateTimeEntry = PIn.Date (row["DateTimeEntry"].ToString());
-				transaction.UserNum       = PIn.Long  (row["UserNum"].ToString());
-				transaction.DepositNum    = PIn.Long  (row["DepositNum"].ToString());
-				transaction.PayNum        = PIn.Long  (row["PayNum"].ToString());
-				transaction.SecUserNumEdit= PIn.Long  (row["SecUserNumEdit"].ToString());
-				transaction.SecDateTEdit  = PIn.Date (row["SecDateTEdit"].ToString());
+				transaction.Id= PIn.Long  (row["TransactionNum"].ToString());
+				transaction.DateAdded = PIn.Date (row["DateTimeEntry"].ToString());
+				transaction.UserId       = PIn.Long  (row["UserNum"].ToString());
+				transaction.DepositId    = PIn.Long  (row["DepositNum"].ToString());
+				transaction.PaymentId        = PIn.Long  (row["PayNum"].ToString());
+				transaction.ModifiedBy= PIn.Long  (row["SecUserNumEdit"].ToString());
+				transaction.ModifiedDate  = PIn.Date (row["SecDateTEdit"].ToString());
 				retVal.Add(transaction);
 			}
 			return retVal;
@@ -70,13 +70,13 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("SecDateTEdit");
 			foreach(Transaction transaction in listTransactions) {
 				table.Rows.Add(new object[] {
-					POut.Long  (transaction.TransactionNum),
-					POut.DateT (transaction.DateTimeEntry,false),
-					POut.Long  (transaction.UserNum),
-					POut.Long  (transaction.DepositNum),
-					POut.Long  (transaction.PayNum),
-					POut.Long  (transaction.SecUserNumEdit),
-					POut.DateT (transaction.SecDateTEdit,false),
+					POut.Long  (transaction.Id),
+					POut.DateT (transaction.DateAdded,false),
+					POut.Long  (transaction.UserId),
+					POut.Long  (transaction.DepositId),
+					POut.Long  (transaction.PaymentId),
+					POut.Long  (transaction.ModifiedBy),
+					POut.DateT (transaction.ModifiedDate,false),
 				});
 			}
 			return table;
@@ -90,7 +90,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one Transaction into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(Transaction transaction,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				transaction.TransactionNum=ReplicationServers.GetKey("transaction","TransactionNum");
+				transaction.Id=ReplicationServers.GetKey("transaction","TransactionNum");
 			}
 			string command="INSERT INTO transaction (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -98,22 +98,22 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="DateTimeEntry,UserNum,DepositNum,PayNum,SecUserNumEdit) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(transaction.TransactionNum)+",";
+				command+=POut.Long(transaction.Id)+",";
 			}
 			command+=
 				     DbHelper.Now()+","
-				+    POut.Long  (transaction.UserNum)+","
-				+    POut.Long  (transaction.DepositNum)+","
-				+    POut.Long  (transaction.PayNum)+","
-				+    POut.Long  (transaction.SecUserNumEdit)+")";
+				+    POut.Long  (transaction.UserId)+","
+				+    POut.Long  (transaction.DepositId)+","
+				+    POut.Long  (transaction.PaymentId)+","
+				+    POut.Long  (transaction.ModifiedBy)+")";
 				//SecDateTEdit can only be set by MySQL
 			if(useExistingPK || PrefC.RandomKeys) {
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				transaction.TransactionNum=Database.ExecuteInsert(command);
+				transaction.Id=Database.ExecuteInsert(command);
 			}
-			return transaction.TransactionNum;
+			return transaction.Id;
 		}
 
 		///<summary>Inserts one Transaction into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -126,29 +126,29 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO transaction (";
 			if(!useExistingPK) {
-				transaction.TransactionNum=ReplicationServers.GetKeyNoCache("transaction","TransactionNum");
+				transaction.Id=ReplicationServers.GetKeyNoCache("transaction","TransactionNum");
 			}
 			if(useExistingPK) {
 				command+="TransactionNum,";
 			}
 			command+="DateTimeEntry,UserNum,DepositNum,PayNum,SecUserNumEdit) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(transaction.TransactionNum)+",";
+				command+=POut.Long(transaction.Id)+",";
 			}
 			command+=
 				     DbHelper.Now()+","
-				+    POut.Long  (transaction.UserNum)+","
-				+    POut.Long  (transaction.DepositNum)+","
-				+    POut.Long  (transaction.PayNum)+","
-				+    POut.Long  (transaction.SecUserNumEdit)+")";
+				+    POut.Long  (transaction.UserId)+","
+				+    POut.Long  (transaction.DepositId)+","
+				+    POut.Long  (transaction.PaymentId)+","
+				+    POut.Long  (transaction.ModifiedBy)+")";
 				//SecDateTEdit can only be set by MySQL
 			if(useExistingPK) {
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				transaction.TransactionNum=Database.ExecuteInsert(command);
+				transaction.Id=Database.ExecuteInsert(command);
 			}
-			return transaction.TransactionNum;
+			return transaction.Id;
 		}
 
 		///<summary>Updates one Transaction in the database.</summary>
@@ -156,11 +156,11 @@ namespace OpenDentBusiness.Crud{
 			string command="UPDATE transaction SET "
 				//DateTimeEntry not allowed to change
 				//UserNum excluded from update
-				+"DepositNum    =  "+POut.Long  (transaction.DepositNum)+", "
-				+"PayNum        =  "+POut.Long  (transaction.PayNum)+", "
-				+"SecUserNumEdit=  "+POut.Long  (transaction.SecUserNumEdit)+" "
+				+"DepositNum    =  "+POut.Long  (transaction.DepositId)+", "
+				+"PayNum        =  "+POut.Long  (transaction.PaymentId)+", "
+				+"SecUserNumEdit=  "+POut.Long  (transaction.ModifiedBy)+" "
 				//SecDateTEdit can only be set by MySQL
-				+"WHERE TransactionNum = "+POut.Long(transaction.TransactionNum);
+				+"WHERE TransactionNum = "+POut.Long(transaction.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
@@ -169,24 +169,24 @@ namespace OpenDentBusiness.Crud{
 			string command="";
 			//DateTimeEntry not allowed to change
 			//UserNum excluded from update
-			if(transaction.DepositNum != oldTransaction.DepositNum) {
+			if(transaction.DepositId != oldTransaction.DepositId) {
 				if(command!="") { command+=",";}
-				command+="DepositNum = "+POut.Long(transaction.DepositNum)+"";
+				command+="DepositNum = "+POut.Long(transaction.DepositId)+"";
 			}
-			if(transaction.PayNum != oldTransaction.PayNum) {
+			if(transaction.PaymentId != oldTransaction.PaymentId) {
 				if(command!="") { command+=",";}
-				command+="PayNum = "+POut.Long(transaction.PayNum)+"";
+				command+="PayNum = "+POut.Long(transaction.PaymentId)+"";
 			}
-			if(transaction.SecUserNumEdit != oldTransaction.SecUserNumEdit) {
+			if(transaction.ModifiedBy != oldTransaction.ModifiedBy) {
 				if(command!="") { command+=",";}
-				command+="SecUserNumEdit = "+POut.Long(transaction.SecUserNumEdit)+"";
+				command+="SecUserNumEdit = "+POut.Long(transaction.ModifiedBy)+"";
 			}
 			//SecDateTEdit can only be set by MySQL
 			if(command=="") {
 				return false;
 			}
 			command="UPDATE transaction SET "+command
-				+" WHERE TransactionNum = "+POut.Long(transaction.TransactionNum);
+				+" WHERE TransactionNum = "+POut.Long(transaction.Id);
 			Database.ExecuteNonQuery(command);
 			return true;
 		}
@@ -196,13 +196,13 @@ namespace OpenDentBusiness.Crud{
 		public static bool UpdateComparison(Transaction transaction,Transaction oldTransaction) {
 			//DateTimeEntry not allowed to change
 			//UserNum excluded from update
-			if(transaction.DepositNum != oldTransaction.DepositNum) {
+			if(transaction.DepositId != oldTransaction.DepositId) {
 				return true;
 			}
-			if(transaction.PayNum != oldTransaction.PayNum) {
+			if(transaction.PaymentId != oldTransaction.PaymentId) {
 				return true;
 			}
-			if(transaction.SecUserNumEdit != oldTransaction.SecUserNumEdit) {
+			if(transaction.ModifiedBy != oldTransaction.ModifiedBy) {
 				return true;
 			}
 			//SecDateTEdit can only be set by MySQL

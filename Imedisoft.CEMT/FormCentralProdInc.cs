@@ -840,7 +840,7 @@ namespace CentralManager {
 			List<Provider> listProvs=GetProvidersForReports(checkShowUnearned.Checked);
 			List<Clinic> listClinics=Clinics.GetClinicsNoCache();
 			Clinic unassigned=new Clinic();
-			unassigned.ClinicNum=0;
+			unassigned.Id=0;
 			unassigned.Description="Unassigned";//Is this how we should do this?  Will there always be different clinics? (I assume so, otherwise CEMT is kinda worthless)
 			listClinics.Add(unassigned);
 			listProdData=RpProdInc.GetAnnualData(_dateFrom,_dateTo,listProvs,listClinics,radioWriteoffPay.Checked,true,true,false,checkShowUnearned.Checked,true);
@@ -858,7 +858,7 @@ namespace CentralManager {
 			List<Provider> listProvs=GetProvidersForReports(checkShowUnearned.Checked);
 			List<Clinic> listClinics=Clinics.GetClinicsNoCache();
 			Clinic unassigned=new Clinic();
-			unassigned.ClinicNum=0;
+			unassigned.Id=0;
 			unassigned.Description="Unassigned";//Same issue here as above.
 			listClinics.Add(unassigned);
 			listProdData=RpProdInc.GetMonthlyData(_dateFrom,_dateTo,listProvs,listClinics,radioWriteoffPay.Checked,true,true,false,checkShowUnearned.Checked,true);
@@ -876,7 +876,7 @@ namespace CentralManager {
 			List<Provider> listProvs=GetProvidersForReports(checkShowUnearned.Checked);
 			List<Clinic> listClinics=Clinics.GetClinicsNoCache();
 			Clinic unassigned=new Clinic();
-			unassigned.ClinicNum=0;
+			unassigned.Id=0;
 			unassigned.Description="Unassigned";//Same issue here as above.
 			listClinics.Add(unassigned);
 			PPOWriteoffDateCalc writeoffCalcType;
@@ -901,7 +901,7 @@ namespace CentralManager {
 			List<Provider> listProvs=GetProvidersForReports(checkShowUnearned.Checked);
 			List<Clinic> listClinics=Clinics.GetClinicsNoCache();
 			Clinic unassigned=new Clinic();
-			unassigned.ClinicNum=0;
+			unassigned.Id=0;
 			unassigned.Description="Unassigned";//Same issue here as above.
 			listClinics.Add(unassigned);
 			PPOWriteoffDateCalc writeoffCalcType;

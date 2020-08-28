@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using System.Collections.Generic;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -316,7 +317,7 @@ namespace OpenDental{
 
 		private void FillList(){
 			Computers.RefreshCache();
-			_listComputers=Computers.GetDeepCopy();
+			_listComputers=Computers.All;
 			listComputer.Items.Clear();
 			//Database Server----------------------------------------------------------		
 			var serviceList=Computers.GetServiceInfo();

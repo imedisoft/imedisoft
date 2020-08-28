@@ -436,11 +436,11 @@ namespace OpenDental
 					_listUserClinicNums.Add(0);
 					comboClinic.SelectedIndex=0;
 				}
-				List<Clinic> listClinics=Clinics.GetForUserod(Security.CurrentUser);
+				List<Clinic> listClinics=Clinics.GetByUser(Security.CurrentUser);
 				for(int i=0;i<listClinics.Count;i++) {
 					comboClinic.Items.Add(listClinics[i].Abbr);
-					_listUserClinicNums.Add(listClinics[i].ClinicNum);
-					if(Clinics.ClinicNum==listClinics[i].ClinicNum) {
+					_listUserClinicNums.Add(listClinics[i].Id);
+					if(Clinics.ClinicId==listClinics[i].Id) {
 						comboClinic.SelectedIndex=i;
 						if(!Security.CurrentUser.ClinicIsRestricted) {
 							comboClinic.SelectedIndex++;//increment the SelectedIndex to account for 'Headquarters' in the list at position 0 if the user is not restricted.

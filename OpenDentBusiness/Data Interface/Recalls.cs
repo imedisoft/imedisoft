@@ -1757,7 +1757,6 @@ namespace OpenDentBusiness {
 		///without a row in the webschedrecall table, some fields will be blank.</summary>
 		public static List<RecallRecent> GetRecentRecalls(DateTime dateTimeFrom,DateTime dateTimeTo,List<long> listClinicNums) {
 			
-			const string lanThis="FormRecallList";
 			string command=@"
 				SELECT "+DbHelper.Concat("patient.LName","', '","patient.FName")+@" PatientName,patient.PatNum,recallreminder.DateSent,
 				recallreminder.CommMode,patient.BirthDate,COALESCE(recalltype.Description,'') RecallType,COALESCE(definition.ItemName,'') RecallStatus,
@@ -1985,7 +1984,7 @@ namespace OpenDentBusiness {
 						Actions=ActionType.MarkAsRead|ActionType.OpenForm|ActionType.Delete,
 						FormToOpen=FormType.FormWebSchedAppts,
 						Severity=SeverityType.Low,
-						FKey=aptCur.AptNum
+						ObjectId=aptCur.AptNum
 					};
 					AlertItems.Insert(alert);
 				});

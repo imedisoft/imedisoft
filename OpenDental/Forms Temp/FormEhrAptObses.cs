@@ -62,9 +62,9 @@ namespace OpenDental {
 					string sendingFacilityState=Prefs.GetString(PrefName.PracticeST);
 					string sendingFacilityZip=Prefs.GetString(PrefName.PracticeZip);
 					if(PrefC.HasClinicsEnabled && _appt.ClinicNum!=0) {//Using clinics and a clinic is assigned.
-						Clinic clinic=Clinics.GetClinic(_appt.ClinicNum);
-						sendingFacilityAddress1=clinic.Address;
-						sendingFacilityAddress2=clinic.Address2;
+						Clinic clinic=Clinics.GetById(_appt.ClinicNum);
+						sendingFacilityAddress1=clinic.AddressLine1;
+						sendingFacilityAddress2=clinic.AddressLine2;
 						sendingFacilityCity=clinic.City;
 						sendingFacilityState=clinic.State;
 						sendingFacilityZip=clinic.Zip;

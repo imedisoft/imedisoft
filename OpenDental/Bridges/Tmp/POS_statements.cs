@@ -13,7 +13,7 @@ namespace OpenDental.Bridges
 		/// </summary>
 		public static void GeneratePracticeInfo(XmlWriter writer, long clinicNum)
 		{
-			Clinic clinic = Clinics.GetClinic(clinicNum);
+			Clinic clinic = Clinics.GetById(clinicNum);
 			Ebill eBillClinic = Ebills.GetForClinic(clinicNum);
 			if (eBillClinic == null)
 			{//Clinic specific Ebill doesn't exist, use the defaults.
@@ -68,8 +68,8 @@ namespace OpenDental.Bridges
 			}
 			else if (eBillAddress == EbillAddress.ClinicPhysical)
 			{
-				writer.WriteElementString("Address1", clinic.Address);
-				writer.WriteElementString("Address2", clinic.Address2);
+				writer.WriteElementString("Address1", clinic.AddressLine1);
+				writer.WriteElementString("Address2", clinic.AddressLine2);
 				writer.WriteElementString("City", clinic.City);
 				writer.WriteElementString("State", clinic.State);
 				writer.WriteElementString("Zip", clinic.Zip);
@@ -77,8 +77,8 @@ namespace OpenDental.Bridges
 			}
 			else if (eBillAddress == EbillAddress.ClinicPayTo)
 			{
-				writer.WriteElementString("Address1", clinic.PayToAddress);
-				writer.WriteElementString("Address2", clinic.PayToAddress2);
+				writer.WriteElementString("Address1", clinic.PayToAddressLine1);
+				writer.WriteElementString("Address2", clinic.PayToAddressLine2);
 				writer.WriteElementString("City", clinic.PayToCity);
 				writer.WriteElementString("State", clinic.PayToState);
 				writer.WriteElementString("Zip", clinic.PayToZip);
@@ -86,8 +86,8 @@ namespace OpenDental.Bridges
 			}
 			else if (eBillAddress == EbillAddress.ClinicBilling)
 			{
-				writer.WriteElementString("Address1", clinic.BillingAddress);
-				writer.WriteElementString("Address2", clinic.BillingAddress2);
+				writer.WriteElementString("Address1", clinic.BillingAddressLine1);
+				writer.WriteElementString("Address2", clinic.BillingAddressLine2);
 				writer.WriteElementString("City", clinic.BillingCity);
 				writer.WriteElementString("State", clinic.BillingState);
 				writer.WriteElementString("Zip", clinic.BillingZip);

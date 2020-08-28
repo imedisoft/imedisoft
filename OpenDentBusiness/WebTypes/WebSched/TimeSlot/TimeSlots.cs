@@ -26,7 +26,7 @@ namespace OpenDentBusiness.WebTypes.WebSched.TimeSlot
 				throw new ODException("The recall appointment you are trying to schedule is no longer available." + "\r\n"
 					+ "Please call us to schedule your appointment.");
 			}
-			List<Provider> listProviders = Providers.GetProvidersForWebSched(recall.PatNum, clinic?.ClinicNum ?? 0);
+			List<Provider> listProviders = Providers.GetProvidersForWebSched(recall.PatNum, clinic?.Id ?? 0);
 			if (provNum > 0 && !allowOtherProv)
 			{
 				listProviders = listProviders.FindAll(x => x.ProvNum == provNum);
@@ -63,7 +63,7 @@ namespace OpenDentBusiness.WebTypes.WebSched.TimeSlot
 			Logger.LogVerbose("listOperatories:\r\n\t" + string.Join(",\r\n\t", listOperatories.Select(x => x.OperatoryNum + " - " + x.Abbrev)));
 			List<long> listProvNums = listProviders.Select(x => x.ProvNum).Distinct().ToList();
 			List<Schedule> listSchedules = Schedules.GetSchedulesAndBlockoutsForWebSched(listProvNums, dateStart, dateEnd, true
-				, (clinic == null) ? 0 : clinic.ClinicNum);
+				, (clinic == null) ? 0 : clinic.Id);
 			Logger.LogVerbose("listSchedules:\r\n\t" + string.Join(",\r\n\t", listSchedules.Select(x => x.ScheduleNum + " - " + x.SchedDate + " " + x.StartTime)));
 			string timePatternRecall = recallType.TimePattern;
 			//Apparently scheduling this one recall can potentially schedule a bunch of other recalls at the same time.
@@ -107,7 +107,7 @@ namespace OpenDentBusiness.WebTypes.WebSched.TimeSlot
 			//Set the timePattern from the appointment type passed in.
 			string timePattern = AppointmentTypes.GetTimePatternForAppointmentType(appointmentType);
 			List<Provider> listProviders = Providers.GetProvidersForWebSchedNewPatAppt();
-			Clinic clinic = Clinics.GetClinic(clinicNum);
+			Clinic clinic = Clinics.GetById(clinicNum);
 			List<long> listProvNums = listProviders.Select(x => x.ProvNum).Distinct().ToList();
 			List<Schedule> listRestrictedToBlockouts = null;
 			List<DefLink> listRestrictedToBlockoutDefLinks = DefLinks.GetDefLinksByType(DefLinkType.BlockoutType, defNumApptType);
@@ -143,7 +143,7 @@ namespace OpenDentBusiness.WebTypes.WebSched.TimeSlot
 			List<Schedule> listBlockoutSchedules = listSchedules.FindAll(x => x.BlockoutType > 0);
 			//Get every single appointment for all operatories within our start and end dates for double booking and overlapping consideration.
 			List<Appointment> listApptsForOps = Appointments.GetAppointmentsForOpsByPeriod(Operatories.GetDeepCopy(true)
-				.Where(x => (clinic == null) || (x.ClinicNum == clinic.ClinicNum)).Select(x => x.OperatoryNum).ToList(), dateStart, dateEnd);
+				.Where(x => (clinic == null) || (x.ClinicNum == clinic.Id)).Select(x => x.OperatoryNum).ToList(), dateStart, dateEnd);
 			Logger.LogVerbose("listProviderSchedules:\r\n\t" + string.Join(",\r\n\t",
 				listProviderSchedules.Select(x => x.ScheduleNum + " - " + x.SchedDate.ToShortDateString() + " " + x.StartTime)));
 			Logger.LogVerbose("listBlockoutSchedules:\r\n\t" + string.Join(",\r\n\t",
@@ -214,7 +214,7 @@ namespace OpenDentBusiness.WebTypes.WebSched.TimeSlot
 					else
 					{
 						//If a valid clinic was passed in, make sure the operatory has a matching clinic.
-						listOpsForSchedule = listOpsForSchedule.FindAll(x => x.ClinicNum == clinic.ClinicNum);
+						listOpsForSchedule = listOpsForSchedule.FindAll(x => x.ClinicNum == clinic.Id);
 					}
 				}
 				if (listOpsForSchedule.Count == 0)

@@ -212,7 +212,7 @@ namespace OpenDentBusiness
 					{//if using clinics
 						Claim clm = Claims.GetClaim(claimItems[i].ClaimNum4);
 						long clinicNum = clm.ClinicNum;
-						clinic = Clinics.GetClinic(clinicNum);
+						clinic = Clinics.GetById(clinicNum);
 					}
 					//2000A HL: Billing/Pay-to provider HL loop
 					seg++;
@@ -222,7 +222,7 @@ namespace OpenDentBusiness
 						+ "1~");//HL04: Heirarchical child code. 1=child HL present
 								//Used in order to preserve old behavior...  If this fails, then old code would have failed.
 					billProv = Providers.GetFirstOrDefault(x => x.ProvNum == claimItems[i].ProvBill1) ?? providerFirst;
-					provClinicBill = ProviderClinics.GetFromList(billProv.ProvNum, (clinic == null ? 0 : clinic.ClinicNum), listProvClinics, true);
+					provClinicBill = ProviderClinics.GetFromList(billProv.ProvNum, (clinic == null ? 0 : clinic.Id), listProvClinics, true);
 					if (isMedical)
 					{
 						//2000A PRV: Provider Specialty Information
@@ -265,9 +265,9 @@ namespace OpenDentBusiness
 					sw.WriteLine(Sout(billProv.NationalProvID, 80) + "~");//NM109: ID code. NPI validated
 																		  //2010AA N3: Billing provider address
 					seg++;
-					if (clinic != null && clinic.UseBillAddrOnClaims)
+					if (clinic != null && clinic.BillingAddressOnClaims)
 					{
-						sw.Write("N3*" + Sout(clinic.BillingAddress, 55));//N301: Address
+						sw.Write("N3*" + Sout(clinic.BillingAddressLine1, 55));//N301: Address
 					}
 					else if (Prefs.GetBool(PrefName.UseBillingAddressOnClaims))
 					{
@@ -279,13 +279,13 @@ namespace OpenDentBusiness
 					}
 					else
 					{
-						sw.Write("N3*" + Sout(clinic.Address, 55));//N301: Address
+						sw.Write("N3*" + Sout(clinic.AddressLine1, 55));//N301: Address
 					}
-					if (clinic != null && clinic.UseBillAddrOnClaims)
+					if (clinic != null && clinic.BillingAddressOnClaims)
 					{
-						if (clinic.BillingAddress2 != "")
+						if (clinic.BillingAddressLine2 != "")
 						{
-							sw.WriteLine("*" + Sout(clinic.BillingAddress2, 55) + "~");
+							sw.WriteLine("*" + Sout(clinic.BillingAddressLine2, 55) + "~");
 						}
 						else
 						{
@@ -318,19 +318,19 @@ namespace OpenDentBusiness
 					}
 					else
 					{
-						if (clinic.Address2 == "")
+						if (clinic.AddressLine2 == "")
 						{
 							sw.WriteLine("~");
 						}
 						else
 						{
 							//N302: Address2. Optional.
-							sw.WriteLine("*" + Sout(clinic.Address2, 55) + "~");
+							sw.WriteLine("*" + Sout(clinic.AddressLine2, 55) + "~");
 						}
 					}
 					//2010AA N4: Billing prov City,State,Zip
 					seg++;
-					if (clinic != null && clinic.UseBillAddrOnClaims)
+					if (clinic != null && clinic.BillingAddressOnClaims)
 					{
 						sw.WriteLine("N4*" + Sout(clinic.BillingCity, 30) + "*"//N401: City
 								+ Sout(clinic.BillingState, 2) + "*"//N402: State
@@ -1057,7 +1057,7 @@ namespace OpenDentBusiness
 				//But required by WebClaim, so we will always include it
 				//Used in order to preserve old behavior...  If this fails, then old code would have failed.
 				provTreat = Providers.GetFirstOrDefault(x => x.ProvNum == claim.ProvTreat) ?? providerFirst;
-				provClinicTreat = ProviderClinics.GetFromList(provTreat.ProvNum, (clinic == null ? 0 : clinic.ClinicNum), listProvClinics, true);
+				provClinicTreat = ProviderClinics.GetFromList(provTreat.ProvNum, (clinic == null ? 0 : clinic.Id), listProvClinics, true);
 				//if(claim.ProvTreat!=claim.ProvBill){
 				//2310B NM1: name
 				seg++;
@@ -1901,7 +1901,7 @@ namespace OpenDentBusiness
 			Clinic clinic = null;
 			if (PrefC.HasClinicsEnabled)
 			{
-				clinic = Clinics.GetClinic(claim.ClinicNum);
+				clinic = Clinics.GetById(claim.ClinicNum);
 			}
 			if (clearinghouseClin == null)
 			{
@@ -1921,7 +1921,7 @@ namespace OpenDentBusiness
 			Provider providerFirst = Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
 			Provider billProv = Providers.GetFirstOrDefault(x => x.ProvNum == claimItems[0].ProvBill1) ?? providerFirst;
 			Provider treatProv = Providers.GetFirstOrDefault(x => x.ProvNum == claim.ProvTreat) ?? providerFirst;
-			ProviderClinic provClinicTreat = ProviderClinics.GetOneOrDefault(treatProv.ProvNum, (clinic == null ? 0 : clinic.ClinicNum));
+			ProviderClinic provClinicTreat = ProviderClinics.GetOneOrDefault(treatProv.ProvNum, (clinic == null ? 0 : clinic.Id));
 			InsPlan insPlan = InsPlans.GetPlan(claim.PlanNum, null);
 			InsSub sub = InsSubs.GetSub(claim.InsSubNum, null);
 			//if(insPlan.IsMedical) {
@@ -1979,7 +1979,7 @@ namespace OpenDentBusiness
 				}
 				strb.Append("Practice Title");
 			}
-			if (clinic != null && clinic.UseBillAddrOnClaims)
+			if (clinic != null && clinic.BillingAddressOnClaims)
 			{
 				X12Validate.Clinic(clinic, strb);
 			}

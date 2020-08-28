@@ -414,18 +414,18 @@ namespace OpenDental {
 			}
 			else {
 				checkClinicBreakdown.Checked=Prefs.GetBool(PrefName.ReportPandIhasClinicBreakdown);
-				_listClinics=Clinics.GetForUserod(Security.CurrentUser);
+				_listClinics=Clinics.GetByUser(Security.CurrentUser);
 				if(!Security.CurrentUser.ClinicIsRestricted) {
 					listClin.Items.Add("Unassigned");
 					listClin.SetSelected(0,true);
 				}
 				for(int i=0;i<_listClinics.Count;i++) {
 					int curIndex=listClin.Items.Add(_listClinics[i].Abbr);
-					if(Clinics.ClinicNum==0) {
+					if(Clinics.ClinicId==0) {
 						listClin.SetSelected(curIndex,true);
 						checkAllClin.Checked=true;
 					}
-					if(_listClinics[i].ClinicNum==Clinics.ClinicNum) {
+					if(_listClinics[i].Id==Clinics.ClinicId) {
 						listClin.SelectedIndices.Clear();
 						listClin.SetSelected(curIndex,true);
 					}
@@ -554,10 +554,10 @@ namespace OpenDental {
 				if(listClin.SelectedIndices.Count>0) {
 					int offset=Security.CurrentUser.ClinicIsRestricted?0:1;
 					listClinics.AddRange(listClin.SelectedIndices.OfType<int>()
-						.Select(x => offset==1 && x==0?new Clinic { ClinicNum=0,Abbr="Unassigned" }:_listClinics[x-offset]));
+						.Select(x => offset==1 && x==0?new Clinic { Id=0,Abbr="Unassigned" }:_listClinics[x-offset]));
 				}
 				//Check here for multi clinic schedule overlap and give notification.
-				listSelectedClinicNums=listClinics.Select(x => x.ClinicNum).ToList();
+				listSelectedClinicNums=listClinics.Select(x => x.Id).ToList();
 				var listConflicts=listProvs
 					.Select(x => new { x.Abbr,listScheds=Schedules.GetClinicOverlapsForProv(_dateFrom,_dateTo,x.ProvNum,listSelectedClinicNums) })
 					.Where(x => x.listScheds.Count>0).ToList();
@@ -577,7 +577,7 @@ namespace OpenDental {
 			}
 			ReportComplex report=new ReportComplex(true,false);
 			bool hasAllClinics=checkAllClin.Checked && listSelectedClinicNums.Contains(0)
-				&& Clinics.GetDeepCopy().Select(x => x.ClinicNum).All(x => x.In(listSelectedClinicNums));
+				&& Clinics.GetAll(true).Select(x => x.Id).All(x => x.In(listSelectedClinicNums));
 			using(DataSet ds=RpProdGoal.GetData(_dateFrom,_dateTo,listProvs,listClinics,checkAllProv.Checked,hasAllClinics,GetWriteoffType()))
 			using(DataTable dt=ds.Tables["Total"])
 			using(DataTable dtClinic=PrefC.HasClinicsEnabled?ds.Tables["Clinic"]:new DataTable())

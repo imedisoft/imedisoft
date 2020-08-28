@@ -108,7 +108,6 @@ namespace Imedisoft.Data
 			return Execute(dataConnection => dataConnection.ExecuteDataTable(commandText, true, parameters));
 		}
 
-
 		public static List<long> GetListLong(string commandText) 
             => SelectMany(commandText, dataReader => Convert.ToInt64(dataReader[0])).ToList();
 
@@ -230,6 +229,28 @@ namespace Imedisoft.Data
 				using (var dataConnection = new DataConnection())
 				{
 					return func(dataConnection);
+				}
+			}
+			catch (Exception exception)
+			{
+				if (exception.Message.ToLower().Contains("fatal error"))
+				{
+					throw new ODException("Query Execution Error", LastCommand, exception);
+				}
+
+				throw;
+			}
+		}
+
+		public static void ExecuteReader(string commandText, Action<MySqlDataReader> action, params MySqlParameter[] parameters)
+        {
+			if (action == null) return;
+
+			try
+			{
+				using (var dataConnection = new DataConnection())
+				{
+					dataConnection.ExecuteReader(commandText, action, true, parameters);
 				}
 			}
 			catch (Exception exception)

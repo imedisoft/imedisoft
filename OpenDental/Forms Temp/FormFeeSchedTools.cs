@@ -879,11 +879,11 @@ namespace OpenDental {
 				Fees.DeleteFees(feeSchedNum,clinicNum,provNum);
 				logText+="Procedures for Fee Schedule"+" "+FeeScheds.GetDescription(feeSchedNum);
 				if(PrefC.HasClinicsEnabled) {
-					if(Clinics.GetAbbr(Clinics.ClinicNum)=="") {
+					if(Clinics.GetAbbr(Clinics.ClinicId)=="") {
 						logText+=" at Headquarters";
 					}
 					else {
-						logText+=" at clinic"+" "+Clinics.GetAbbr(Clinics.ClinicNum);
+						logText+=" at clinic"+" "+Clinics.GetAbbr(Clinics.ClinicId);
 					}
 				}
 				logText+=" "+"were all cleared."+"\r\n";
@@ -941,7 +941,7 @@ namespace OpenDental {
 				foreach(long clinicNumTo in listClinicNumsTo) {
 					FeeSchedGroup groupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(toFeeSched.FeeSchedNum,clinicNumTo);
 					if(groupCur!=null) {
-						Clinic clinicCur=Clinics.GetClinic(clinicNumTo);
+						Clinic clinicCur=Clinics.GetById(clinicNumTo);
 						MessageBox.Show("Clinic: "+clinicCur.Abbr+" is a member of Fee Schedule Group: "+groupCur.Description
 							+" for the selected Fee Schedule and must be copied at the Fee Schedule Group level.");
 						return;

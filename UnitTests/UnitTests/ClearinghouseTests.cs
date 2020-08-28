@@ -46,9 +46,9 @@ namespace UnitTests.Clearinghouse_Tests {
 			//Insert a default clearinghouse that is not associated to any clinics.  This will be used as the "HqClearinghouseNum" for creating duplicate overrides later.
 			Clearinghouse clearinghouseHQ=ClearinghouseT.CreateClearinghouse(methodName);
 			//Insert two blank Clearinghouse override rows associated to the same clinic into the DB to mimic the real life duplicate row issue.
-			Clearinghouse clearinghouseOverride1=ClearinghouseT.CreateClearinghouse(methodName,clinic.ClinicNum,EclaimsCommBridge.ClaimConnect,
+			Clearinghouse clearinghouseOverride1=ClearinghouseT.CreateClearinghouse(methodName,clinic.Id,EclaimsCommBridge.ClaimConnect,
 				ElectronicClaimFormat.x837D_5010_dental,clearinghouseHQ.HqClearinghouseNum,false,"test","pass");
-			Clearinghouse clearinghouseOverride2=ClearinghouseT.CreateClearinghouse(methodName,clinic.ClinicNum,EclaimsCommBridge.ClaimConnect,
+			Clearinghouse clearinghouseOverride2=ClearinghouseT.CreateClearinghouse(methodName,clinic.Id,EclaimsCommBridge.ClaimConnect,
 				ElectronicClaimFormat.x837D_5010_dental,clearinghouseHQ.HqClearinghouseNum,false,"test","pass");
 			//Get all override rows from the DB
 			List<Clearinghouse> listClearinghouseOverrides=Clearinghouses.GetAllNonHq();
@@ -73,14 +73,14 @@ namespace UnitTests.Clearinghouse_Tests {
 			//Insert a default clearinghouse that is not associated to any clinics.  This will be used as the "HqClearinghouseNum" for creating duplicate overrides later.
 			Clearinghouse clearinghouseHQClaimConnect=ClearinghouseT.CreateClearinghouse(methodName,commBridge:EclaimsCommBridge.ClaimConnect);
 			//Insert two blank Clearinghouse override rows associated to the same clinic into the DB to mimic the real life duplicate row issue.
-			Clearinghouse clearinghouseOverrideClaimConnect1=ClearinghouseT.CreateClearinghouse(methodName,clinic.ClinicNum,EclaimsCommBridge.ClaimConnect,
+			Clearinghouse clearinghouseOverrideClaimConnect1=ClearinghouseT.CreateClearinghouse(methodName,clinic.Id,EclaimsCommBridge.ClaimConnect,
 				ElectronicClaimFormat.x837D_5010_dental,clearinghouseHQClaimConnect.HqClearinghouseNum,false,"test","pass");
-			Clearinghouse clearinghouseOverrideClaimConnect2=ClearinghouseT.CreateClearinghouse(methodName,clinic.ClinicNum,EclaimsCommBridge.ClaimConnect,
+			Clearinghouse clearinghouseOverrideClaimConnect2=ClearinghouseT.CreateClearinghouse(methodName,clinic.Id,EclaimsCommBridge.ClaimConnect,
 				ElectronicClaimFormat.x837D_5010_dental,clearinghouseHQClaimConnect.HqClearinghouseNum,false,"test","pass");
 			//Make another HQ clearinghouse that is meant for a different eClaims comm bridge to make sure that all overrides associated to this clearinghouse do not change.
 			Clearinghouse clearinghouseHQAOS=ClearinghouseT.CreateClearinghouse(methodName,commBridge:EclaimsCommBridge.AOS);
 			//Insert two blank Clearinghouse override rows associated to the same clinic into the DB to mimic the real life duplicate row issue.
-			Clearinghouse clearinghouseOverrideAOS=ClearinghouseT.CreateClearinghouse(methodName,clinic.ClinicNum,EclaimsCommBridge.AOS,
+			Clearinghouse clearinghouseOverrideAOS=ClearinghouseT.CreateClearinghouse(methodName,clinic.Id,EclaimsCommBridge.AOS,
 				ElectronicClaimFormat.x837D_5010_dental,clearinghouseHQAOS.HqClearinghouseNum,false,"test","pass");
 			//Get all override rows from the DB
 			List<Clearinghouse> listClearinghouseOverrides=Clearinghouses.GetAllNonHq();

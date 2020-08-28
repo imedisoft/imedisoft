@@ -69,7 +69,7 @@ namespace OpenDental {
 			else{
 				checkPayPlan.Checked=true;
 			}
-			if(Clinics.IsMedicalPracticeOrClinic(PaySplitCur.ClinicNum)) {
+			if(Clinics.IsMedicalClinic(PaySplitCur.ClinicNum)) {
 				textProcTooth.Visible=false;
 				labelProcTooth.Visible=false;
 			}

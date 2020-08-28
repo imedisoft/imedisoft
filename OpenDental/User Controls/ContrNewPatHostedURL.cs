@@ -80,7 +80,7 @@ namespace OpenDental.User_Controls {
 		}
 
 		private void FillControl() {
-			labelClinicName.Text=Signup.ClinicNum!=0 ? Clinics.GetDesc(Signup.ClinicNum) : "Headquarters";
+			labelClinicName.Text=Signup.ClinicNum!=0 ? Clinics.GetDescription(Signup.ClinicNum) : "Headquarters";
 			labelEnabled.Text=Signup.IsEnabled ? "Enabled" : "Disabled";
 			FillGrid();
 		}

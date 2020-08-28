@@ -60,7 +60,7 @@ namespace OpenDentBusiness.AutoComm
 			// Make sure a rule is included for clinics using defaults.
 			foreach (long clinicNum in clinicIds)
 			{
-				Clinic clinic = Clinics.GetClinic(clinicNum);
+				Clinic clinic = Clinics.GetById(clinicNum);
 
 				if (clinic?.IsConfirmDefault ?? false)
 				{
@@ -134,7 +134,7 @@ namespace OpenDentBusiness.AutoComm
 
 			List<Appointment> listApptsAutomationEnabled = appointmentsToday
 				//Check if (given clinic exists and has automation enabled) or (HQ "clinic" and Arrivals are enabled)
-				.Where(x => Clinics.GetClinic(x.ClinicNum)?.IsConfirmEnabled ?? (x.ClinicNum == 0 && Prefs.GetBool(PrefName.ApptArrivalAutoEnabled)))
+				.Where(x => Clinics.GetById(x.ClinicNum)?.IsConfirmEnabled ?? (x.ClinicNum == 0 && Prefs.GetBool(PrefName.ApptArrivalAutoEnabled)))
 				.ToList();
 
 			if (listApptsAutomationEnabled.Count == 0)
@@ -190,7 +190,7 @@ namespace OpenDentBusiness.AutoComm
 				if (wirelessPhone is null)
 				{
 					//try to find a usable phone number for the patient.
-					foreach (PatComm pat in Patients.GetPatComms(patNum.SingleItemToList(), Clinics.GetClinic(clinicNum))
+					foreach (PatComm pat in Patients.GetPatComms(patNum.SingleItemToList(), Clinics.GetById(clinicNum))
 						.OrderByDescending(x => x.PatNum == patNum))
 					{
 						if (pat.IsSmsAnOption)
@@ -291,7 +291,7 @@ namespace OpenDentBusiness.AutoComm
 				}
 				else
 				{
-					Clinic clinic = (appt.ClinicNum == 0) ? Clinics.GetPracticeAsClinicZero() : Clinics.GetClinic(appt.ClinicNum);
+					Clinic clinic = (appt.ClinicNum == 0) ? Clinics.GetPracticeAsClinicZero() : Clinics.GetById(appt.ClinicNum);
 
 					// PatComm is only used in this context for FName, so matching exactly to appt.PatNum (rather than Guarantor) is appropriate.
 					PatComm patComm = Patients.GetPatComms(appt.PatNum.SingleItemToList(), clinic).FirstOrDefault(x => x.PatNum == appt.PatNum);

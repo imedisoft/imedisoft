@@ -892,14 +892,14 @@ namespace OpenDental.UI{
 								+providerScheduled.GetFormalName()+schedProcDef;
 							txt+=string.IsNullOrWhiteSpace(providerScheduled.SchedNote) ? "": "\r\n\t("+providerScheduled.SchedNote+")";
 						}
-						if(PrefC.HasClinicsEnabled && Clinics.ClinicNum!=0) {//HQ cannot have clinic specialties.
-							Clinic clinic=Clinics.GetClinic(Clinics.ClinicNum);
-							string clinicSchedNote=clinic.SchedNote;
+						if(PrefC.HasClinicsEnabled && Clinics.ClinicId!=0) {//HQ cannot have clinic specialties.
+							Clinic clinic=Clinics.GetById(Clinics.ClinicId);
+							string clinicSchedNote=clinic.SchedulingNote;
 							if(!string.IsNullOrEmpty(clinicSchedNote)) {
 								if(txt!="") {
 									txt+="\r\n------";
 								}
-								List<DefLink> listSpecialties=DefLinks.GetListByFKey(clinic.ClinicNum,DefLinkType.Clinic);
+								List<DefLink> listSpecialties=DefLinks.GetListByFKey(clinic.Id,DefLinkType.Clinic);
 								txt+="\r\n"+string.Join(", ",listSpecialties.Select(x => Defs.GetName(DefCat.ClinicSpecialty,x.DefNum)))
 									+"\r\n"+clinicSchedNote;
 							}
@@ -1736,8 +1736,8 @@ namespace OpenDental.UI{
 				{
 					//When the program is restricted to a specific clinic, only count up production for the corresponding clinic.
 					if(PrefC.HasClinicsEnabled 
-						&& Clinics.ClinicNum!=0
-						&& Clinics.ClinicNum!=clinicNum) {
+						&& Clinics.ClinicId!=0
+						&& Clinics.ClinicId!=clinicNum) {
 						continue;//This appointment is for a different clinic.  Do not include this production in the daily prod.
 					}
 					//In order to get production numbers split by provider, it would require generating total production numbers
@@ -1748,7 +1748,7 @@ namespace OpenDental.UI{
 				}
 			}
 			if(Prefs.GetBool(PrefName.ApptModuleAdjustmentsInProd) && TableAppointments.Rows.Count>0) {
-				netproduction+=Adjustments.GetAdjustAmtForAptView(start,end,Clinics.ClinicNum,listOpNums,listProvNums);
+				netproduction+=Adjustments.GetAdjustAmtForAptView(start,end,Clinics.ClinicId,listOpNums,listProvNums);
 			}
 			string production=grossproduction.ToString("c0");
 			if(grossproduction!=netproduction) {
@@ -2541,7 +2541,7 @@ namespace OpenDental.UI{
 					//or the holiday applies to all ops for the clinic), color all of the op columns in the view for this day with the holiday brush
 					if(ListSchedules.FindAll(x => x.SchedType==ScheduleType.Practice && x.Status==SchedStatus.Holiday) //find all holidays
 						.Any(x => (int)x.SchedDate.DayOfWeek==d+1 //for this day of the week
-							&& (x.ClinicNum==0 || (PrefC.HasClinicsEnabled && x.ClinicNum==Clinics.ClinicNum)))) //and either practice or for this clinic
+							&& (x.ClinicNum==0 || (PrefC.HasClinicsEnabled && x.ClinicNum==Clinics.ClinicId)))) //and either practice or for this clinic
 					{
 						g.FillRectangle(_brushHoliday,d*_widthWeekDay,0,_widthWeekDay,_heightMain);
 					}
@@ -2565,7 +2565,7 @@ namespace OpenDental.UI{
 				//are enabled and the schedule.ClinicNum is the currently selected clinic
 				//SchedListPeriod contains scheds for only one day, not for a week
 				if(ListSchedules.FindAll(x => x.SchedType==ScheduleType.Practice && x.Status==SchedStatus.Holiday) //find all holidays
-					.Any(x => x.ClinicNum==0 || (PrefC.HasClinicsEnabled && x.ClinicNum==Clinics.ClinicNum)))//for the practice or clinic
+					.Any(x => x.ClinicNum==0 || (PrefC.HasClinicsEnabled && x.ClinicNum==Clinics.ClinicId)))//for the practice or clinic
 				{
 					g.FillRectangle(_brushHoliday,0,0,_widthOpCol*ListOpsVisible.Count,_heightMain);
 				}

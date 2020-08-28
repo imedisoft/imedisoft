@@ -53,7 +53,7 @@ namespace OpenDental {
 				if(!Security.CurrentUser.ClinicIsRestricted) {
 					comboClinic.IncludeAll=true;
 				}
-				comboClinic.SelectedClinicNum=Clinics.ClinicNum;
+				comboClinic.SelectedClinicNum=Clinics.ClinicId;
 			}
 			_listPayPeriods=PayPeriods.GetDeepCopy();
 			FillPayPeriod();

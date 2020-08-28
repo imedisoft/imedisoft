@@ -72,9 +72,9 @@ namespace UnitTests.Userods_Tests
 		{
 			Userod user = UserodT.CreateUser();
 			Clinic clinic = ClinicT.CreateClinic();
-			UserClinics.Insert(new UserClinic(clinic.ClinicNum, user.Id));
-			AlertSubs.Insert(new AlertSub(user.Id, clinic.ClinicNum, 1));
-			UserPreference.Set(user.Id, UserPreferenceName.ClinicLast, clinic.ClinicNum);
+			UserClinics.Insert(new UserClinic(clinic.Id, user.Id));
+			AlertSubs.Insert(new AlertSub(user.Id, clinic.Id, 1));
+			UserPreference.Set(user.Id, UserPreferenceName.ClinicLast, clinic.Id);
 			//Setup user
 			//Fields given by method caller
 			string passwordHashNotExpected = user.PasswordHash;
@@ -117,8 +117,7 @@ namespace UnitTests.Userods_Tests
 			Assert.AreEqual(listAlertSubsExpected.Count, listAlertSubs.Count);
 			foreach (AlertSub expected in listAlertSubsExpected)
 			{
-				Assert.IsTrue(listAlertSubs.Exists(x => x.ClinicNum == expected.ClinicNum && x.Type == expected.Type
-					&& x.AlertCategoryNum == expected.AlertCategoryNum));
+				Assert.IsTrue(listAlertSubs.Exists(x => x.ClinicId == expected.ClinicId && x.AlertCategoryId == expected.AlertCategoryId));
 			}
 			//Fields not copied (set to default)
 			Assert.AreEqual(0, copy.EmployeeId);

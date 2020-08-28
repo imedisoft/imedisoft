@@ -47,12 +47,12 @@ namespace OpenDentBusiness
 					result = sbErrors.ToString();
 					return;
 				}
-				string strDeaNum = ProviderClinics.GetDEANum(prov.ProvNum, Clinics.ClinicNum);//If no result found, retries using clinicNum=0.
+				string strDeaNum = ProviderClinics.GetDEANum(prov.ProvNum, Clinics.ClinicId);//If no result found, retries using clinicNum=0.
 				if (string.IsNullOrWhiteSpace(strDeaNum))
 				{
 					sbErrors.AppendLine("Patient's provider does not have a DEA number.");
 				}
-				string stateWhereLicensed = ProviderClinics.GetStateWhereLicensed(patient.PriProv, Clinics.ClinicNum);
+				string stateWhereLicensed = ProviderClinics.GetStateWhereLicensed(patient.PriProv, Clinics.ClinicId);
 				if (string.IsNullOrWhiteSpace(stateWhereLicensed))
 				{
 					sbErrors.AppendLine("Patient's provider is not licensed for any state.");

@@ -159,7 +159,7 @@ namespace OpenDental
 				}
 				else
 				{
-					result += Clinics.GetDesc(clinicNum);
+					result += Clinics.GetDescription(clinicNum);
 				}
 			}
 

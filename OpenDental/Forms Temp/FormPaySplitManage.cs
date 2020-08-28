@@ -111,7 +111,7 @@ namespace OpenDental {
 				row.Cells.Add(Providers.GetAbbr(ListSplitsCur[i].ProvNum));//Prov
 				if(PrefC.HasClinicsEnabled) {//Clinics
 					if(ListSplitsCur[i].ClinicNum!=0) {
-						row.Cells.Add(Clinics.GetClinic(ListSplitsCur[i].ClinicNum).Description);//Clinic
+						row.Cells.Add(Clinics.GetById(ListSplitsCur[i].ClinicNum).Description);//Clinic
 					}
 					else {
 						row.Cells.Add("");//Clinic

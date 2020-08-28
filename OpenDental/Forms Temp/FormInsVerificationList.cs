@@ -183,7 +183,7 @@ namespace OpenDental {
 			listBoxVerifyRegions.Items.Clear();
 			if(PrefC.HasClinicsEnabled) {
 				_listRegionDefs=Defs.GetDefsForCategory(DefCat.Regions,true);
-				List<Clinic> listClinicsForUser=Clinics.GetForUserod(Security.CurrentUser);
+				List<Clinic> listClinicsForUser=Clinics.GetByUser(Security.CurrentUser);
 				if(_listRegionDefs.Count!=0) {
 					_listRegionDefs.RemoveAll(x => !listClinicsForUser.Any(y => y.Region==x.DefNum));
 					listBoxVerifyRegions.Items.Add("All");
@@ -214,22 +214,22 @@ namespace OpenDental {
 			if(_isAllClinicsEnabled) {
 				//"All" will only show if the user isn't restricted to a clinic and if the enterprise preference is off
 				//Even so, "All" will be restricted down to whatever region(s) are selected when getting the verification list.
-				listBoxVerifyClinics.Items.Add(new ODBoxItem<Clinic>("All",new Clinic { ClinicNum=-1 }));
+				listBoxVerifyClinics.Items.Add(new ODBoxItem<Clinic>("All",new Clinic { Id=-1 }));
 				indexCur++;
 			}
 			foreach(Clinic clinic in listClinicsForUser) {
-				if(_isRegionSelected && !_listDefNumsVerifyRegionsFilter.Contains(clinic.Region)) {
+				if(_isRegionSelected && clinic.Region.HasValue && !_listDefNumsVerifyRegionsFilter.Contains(clinic.Region.Value)) {
 					continue;//If a region is selected and it is not part of the region, skip it
 				}
 				listBoxVerifyClinics.Items.Add(new ODBoxItem<Clinic>(clinic.Abbr,clinic));
-				if(_listClinicNumsVerifyClinicsFilter.Contains(clinic.ClinicNum)) {
+				if(_listClinicNumsVerifyClinicsFilter.Contains(clinic.Id)) {
 					listBoxVerifyClinics.SelectedIndex=indexCur;
 				}
 				indexCur++;
 			}
 			if(!Security.CurrentUser.ClinicIsRestricted && !_isRegionSelected) {//Show "Unassigned" if user is not restricted and no region is selected.
 				//Add Unassigned at the bottom. ClinicNum of 0.
-				listBoxVerifyClinics.Items.Add(new ODBoxItem<Clinic>("Unassigned",new Clinic { ClinicNum=0 }));
+				listBoxVerifyClinics.Items.Add(new ODBoxItem<Clinic>("Unassigned",new Clinic { Id=0 }));
 				if(_listClinicNumsVerifyClinicsFilter.Contains(0)) {
 					listBoxVerifyClinics.SelectedIndex=indexCur;
 				}
@@ -827,7 +827,7 @@ namespace OpenDental {
 
 		///<summary>Updates the global list of selected clinicNums from listBoxVerifyClinics.</summary>
 		private void UpdateSelectedClinicNums() {
-			_listClinicNumsVerifyClinicsFilter=listBoxVerifyClinics.GetListSelected<Clinic>().Select(x => x.ClinicNum).ToList();
+			_listClinicNumsVerifyClinicsFilter=listBoxVerifyClinics.GetListSelected<Clinic>().Select(x => x.Id).ToList();
 			//If they have all and something else selected, remove all.
 			if(_listClinicNumsVerifyClinicsFilter.Contains(-1) && _listClinicNumsVerifyClinicsFilter.Count > 1) {
 				_listClinicNumsVerifyClinicsFilter.Remove(-1);

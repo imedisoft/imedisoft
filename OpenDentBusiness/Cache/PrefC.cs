@@ -47,7 +47,7 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// This property returns true if the preference for clinics is on and there is at least one non-hidden clinic.
 		/// </summary>
-		public static bool HasClinicsEnabled => !Prefs.GetBool(PrefName.EasyNoClinics) && Clinics.GetCount(true) > 0;
+		public static bool HasClinicsEnabled => true;
 
 		/// <summary>
 		/// Returns a list of DefNums that represent WSNPA Generally Allowed blockout types.

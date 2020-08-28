@@ -101,7 +101,7 @@ namespace OpenDentBusiness{
 		public static bool TryInsertTreatPlanPDF(PdfDocument doc,TreatPlan treatPlan,bool hasPracticeSig,string unlockCode
 			,out string errorMsg,out MobileDataByte mobileDataByte){
 			mobileDataByte=null;
-			if(!MobileAppDevices.IsClinicSignedUpForEClipboard(Clinics.ClinicNum)) {
+			if(!MobileAppDevices.IsClinicSignedUpForEClipboard(Clinics.ClinicId)) {
 				throw new Exception($"This practice or clinic is not signed up for eClipboard.\r\nGo to eServices | Signup Portal to sign up.");
 			}
 			try{

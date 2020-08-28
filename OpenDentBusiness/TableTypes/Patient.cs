@@ -261,7 +261,7 @@ namespace OpenDentBusiness
 		/// FK to clinic.ClinicNum. 
 		/// Can be zero if not attached to a clinic or no clinics set up.
 		/// </summary>
-		[ForeignKey(typeof(Clinic), nameof(Clinic.ClinicNum))]
+		[ForeignKey(typeof(Clinic), nameof(Clinic.Id))]
 		public long ClinicNum;
 
 		/// <summary>

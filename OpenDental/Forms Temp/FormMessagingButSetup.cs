@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using System.Collections.Generic;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -165,7 +166,7 @@ namespace OpenDental{
 		#endregion
 
 		private void FormMessagingButSetup_Load(object sender,EventArgs e) {
-			_listComputers=Computers.GetDeepCopy();
+			_listComputers=Computers.All;
 			listComputers.Items.Clear();
 			listComputers.Items.Add("All");
 			string s;

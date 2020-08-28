@@ -44,9 +44,9 @@ namespace OpenDentBusiness.Crud{
 			TaskUnread taskUnread;
 			foreach(DataRow row in table.Rows) {
 				taskUnread=new TaskUnread();
-				taskUnread.TaskUnreadNum= PIn.Long  (row["TaskUnreadNum"].ToString());
-				taskUnread.TaskNum      = PIn.Long  (row["TaskNum"].ToString());
-				taskUnread.UserNum      = PIn.Long  (row["UserNum"].ToString());
+				taskUnread.Id= PIn.Long  (row["TaskUnreadNum"].ToString());
+				taskUnread.TaskId      = PIn.Long  (row["TaskNum"].ToString());
+				taskUnread.UserId      = PIn.Long  (row["UserNum"].ToString());
 				retVal.Add(taskUnread);
 			}
 			return retVal;
@@ -63,9 +63,9 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("UserNum");
 			foreach(TaskUnread taskUnread in listTaskUnreads) {
 				table.Rows.Add(new object[] {
-					POut.Long  (taskUnread.TaskUnreadNum),
-					POut.Long  (taskUnread.TaskNum),
-					POut.Long  (taskUnread.UserNum),
+					POut.Long  (taskUnread.Id),
+					POut.Long  (taskUnread.TaskId),
+					POut.Long  (taskUnread.UserId),
 				});
 			}
 			return table;
@@ -79,7 +79,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one TaskUnread into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(TaskUnread taskUnread,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				taskUnread.TaskUnreadNum=ReplicationServers.GetKey("taskunread","TaskUnreadNum");
+				taskUnread.Id=ReplicationServers.GetKey("taskunread","TaskUnreadNum");
 			}
 			string command="INSERT INTO taskunread (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -87,18 +87,18 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="TaskNum,UserNum) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(taskUnread.TaskUnreadNum)+",";
+				command+=POut.Long(taskUnread.Id)+",";
 			}
 			command+=
-				     POut.Long  (taskUnread.TaskNum)+","
-				+    POut.Long  (taskUnread.UserNum)+")";
+				     POut.Long  (taskUnread.TaskId)+","
+				+    POut.Long  (taskUnread.UserId)+")";
 			if(useExistingPK || PrefC.RandomKeys) {
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				taskUnread.TaskUnreadNum=Database.ExecuteInsert(command);
+				taskUnread.Id=Database.ExecuteInsert(command);
 			}
-			return taskUnread.TaskUnreadNum;
+			return taskUnread.Id;
 		}
 
 		///<summary>Inserts many TaskUnreads into the database.</summary>
@@ -134,10 +134,10 @@ namespace OpenDentBusiness.Crud{
 						hasComma=true;
 					}
 					if(useExistingPK) {
-						sbRow.Append(POut.Long(taskUnread.TaskUnreadNum)); sbRow.Append(",");
+						sbRow.Append(POut.Long(taskUnread.Id)); sbRow.Append(",");
 					}
-					sbRow.Append(POut.Long(taskUnread.TaskNum)); sbRow.Append(",");
-					sbRow.Append(POut.Long(taskUnread.UserNum)); sbRow.Append(")");
+					sbRow.Append(POut.Long(taskUnread.TaskId)); sbRow.Append(",");
+					sbRow.Append(POut.Long(taskUnread.UserId)); sbRow.Append(")");
 					if(sbCommands.Length+sbRow.Length+1 > TableBase.MaxAllowedPacketCount && countRows > 0) {
 						Database.ExecuteNonQuery(sbCommands.ToString());
 						sbCommands=null;
@@ -167,52 +167,52 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO taskunread (";
 			if(!useExistingPK) {
-				taskUnread.TaskUnreadNum=ReplicationServers.GetKeyNoCache("taskunread","TaskUnreadNum");
+				taskUnread.Id=ReplicationServers.GetKeyNoCache("taskunread","TaskUnreadNum");
 			}
 			if(useExistingPK) {
 				command+="TaskUnreadNum,";
 			}
 			command+="TaskNum,UserNum) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(taskUnread.TaskUnreadNum)+",";
+				command+=POut.Long(taskUnread.Id)+",";
 			}
 			command+=
-				     POut.Long  (taskUnread.TaskNum)+","
-				+    POut.Long  (taskUnread.UserNum)+")";
+				     POut.Long  (taskUnread.TaskId)+","
+				+    POut.Long  (taskUnread.UserId)+")";
 			if(useExistingPK) {
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				taskUnread.TaskUnreadNum=Database.ExecuteInsert(command);
+				taskUnread.Id=Database.ExecuteInsert(command);
 			}
-			return taskUnread.TaskUnreadNum;
+			return taskUnread.Id;
 		}
 
 		///<summary>Updates one TaskUnread in the database.</summary>
 		public static void Update(TaskUnread taskUnread) {
 			string command="UPDATE taskunread SET "
-				+"TaskNum      =  "+POut.Long  (taskUnread.TaskNum)+", "
-				+"UserNum      =  "+POut.Long  (taskUnread.UserNum)+" "
-				+"WHERE TaskUnreadNum = "+POut.Long(taskUnread.TaskUnreadNum);
+				+"TaskNum      =  "+POut.Long  (taskUnread.TaskId)+", "
+				+"UserNum      =  "+POut.Long  (taskUnread.UserId)+" "
+				+"WHERE TaskUnreadNum = "+POut.Long(taskUnread.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Updates one TaskUnread in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
 		public static bool Update(TaskUnread taskUnread,TaskUnread oldTaskUnread) {
 			string command="";
-			if(taskUnread.TaskNum != oldTaskUnread.TaskNum) {
+			if(taskUnread.TaskId != oldTaskUnread.TaskId) {
 				if(command!="") { command+=",";}
-				command+="TaskNum = "+POut.Long(taskUnread.TaskNum)+"";
+				command+="TaskNum = "+POut.Long(taskUnread.TaskId)+"";
 			}
-			if(taskUnread.UserNum != oldTaskUnread.UserNum) {
+			if(taskUnread.UserId != oldTaskUnread.UserId) {
 				if(command!="") { command+=",";}
-				command+="UserNum = "+POut.Long(taskUnread.UserNum)+"";
+				command+="UserNum = "+POut.Long(taskUnread.UserId)+"";
 			}
 			if(command=="") {
 				return false;
 			}
 			command="UPDATE taskunread SET "+command
-				+" WHERE TaskUnreadNum = "+POut.Long(taskUnread.TaskUnreadNum);
+				+" WHERE TaskUnreadNum = "+POut.Long(taskUnread.Id);
 			Database.ExecuteNonQuery(command);
 			return true;
 		}
@@ -220,10 +220,10 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Returns true if Update(TaskUnread,TaskUnread) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
 		public static bool UpdateComparison(TaskUnread taskUnread,TaskUnread oldTaskUnread) {
-			if(taskUnread.TaskNum != oldTaskUnread.TaskNum) {
+			if(taskUnread.TaskId != oldTaskUnread.TaskId) {
 				return true;
 			}
-			if(taskUnread.UserNum != oldTaskUnread.UserNum) {
+			if(taskUnread.UserId != oldTaskUnread.UserId) {
 				return true;
 			}
 			return false;

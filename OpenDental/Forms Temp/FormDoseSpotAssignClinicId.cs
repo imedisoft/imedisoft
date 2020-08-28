@@ -20,13 +20,13 @@ namespace OpenDental {
 		}
 
 		private void FormDoseSpotAssignUserId_Load(object sender,EventArgs e) {
-      _listClinicsInComboBox=Clinics.GetForUserod(Security.CurrentUser,true,"Headquarters");
+      _listClinicsInComboBox=Clinics.GetByCurrentUser();
       List<ProgramProperty> listProgramProperties=ProgramProperties.GetForProgram(Programs.GetCur(ProgramName.eRx).Id);
       _listClinicIDs=listProgramProperties.FindAll(x => x.Name==Erx.PropertyDescs.ClinicID);
       _listClinicKeys=listProgramProperties.FindAll(x => x.Name==Erx.PropertyDescs.ClinicKey);
       _listClinicsInComboBox.RemoveAll(x =>//Remove all clinics that already have a DoseSpot Clinic ID OR Clinic Key entered
-        _listClinicIDs.FindAll(y => !string.IsNullOrWhiteSpace(y.Value)).Select(y => y.ClinicId).Contains(x.ClinicNum) 
-        || _listClinicKeys.FindAll(y => !string.IsNullOrWhiteSpace(y.Value)).Select(y => y.ClinicId).Contains(x.ClinicNum)
+        _listClinicIDs.FindAll(y => !string.IsNullOrWhiteSpace(y.Value)).Select(y => y.ClinicId).Contains(x.Id) 
+        || _listClinicKeys.FindAll(y => !string.IsNullOrWhiteSpace(y.Value)).Select(y => y.ClinicId).Contains(x.Id)
       );
       FillComboBox();
 			textClinicId.Text=_clinicErxCur.ClinicId;//ClinicID passed from Alert
@@ -38,7 +38,7 @@ namespace OpenDental {
 			comboClinics.Items.Clear();//this is not a comboBoxClinicPicker because the list of clinics is filtered. Combo is still full of Clinics.
 			foreach(Clinic clinicCur in _listClinicsInComboBox) {
 				comboClinics.Items.Add(clinicCur.Description,clinicCur);
-				if(clinicCur.ClinicNum==selectedClinicNum) {
+				if(clinicCur.Id==selectedClinicNum) {
 					comboClinics.SelectedIndex=comboClinics.Items.Count-1;//Select The item that was just added if it is the selected num.
 				}
 			}
@@ -49,7 +49,7 @@ namespace OpenDental {
 				MessageBox.Show("Please select a clinic.");
 				return;
 			}
-      _clinicErxCur.ClinicNum=comboClinics.GetSelected<Clinic>().ClinicNum;
+      _clinicErxCur.ClinicNum=comboClinics.GetSelected<Clinic>().Id;
       Program progErx=Programs.GetCur(ProgramName.eRx);
       ProgramProperty ppClinicID=_listClinicIDs.FirstOrDefault(x => x.ClinicId==_clinicErxCur.ClinicNum);
       if(ppClinicID==null) {

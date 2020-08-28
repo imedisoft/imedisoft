@@ -246,15 +246,15 @@ namespace OpenDentBusiness
 			}
 			else
 			{
-				if (clinicNum == 0 && Clinics.GetCount(true) > 0)
+				if (clinicNum == 0 && Clinics.Count(false) > 0)
 				{//Sending text for "Unassigned" patient.  Use the first non-hidden clinic. (for now)
-					clinicNum = Clinics.GetFirst(true).ClinicNum;
+					clinicNum = Clinics.First(false).Id;
 				}
-				Clinic clinicCur = Clinics.GetClinic(clinicNum);
-				if (clinicCur != null && clinicCur.SmsContractDate.Year > 1880)
-				{
-					limit = clinicCur.SmsMonthlyLimit;
-				}
+				Clinic clinicCur = Clinics.GetById(clinicNum);
+				//if (clinicCur != null && clinicCur.SmsContractDate.Year > 1880)
+				//{
+				//	limit = clinicCur.SmsMonthlyLimit;
+				//}
 			}
 			DateTime dtStart = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
 			DateTime dtEnd = dtStart.AddMonths(1);
@@ -279,7 +279,7 @@ namespace OpenDentBusiness
 				return PrefC.GetDate(PrefName.SmsContractDate).Year > 1880;
 			}
 
-			return (Clinics.GetFirstOrDefault(x => x.SmsContractDate.Year > 1880) != null);
+			return false;
 		}
 
 		/// <summary>
@@ -287,15 +287,15 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static long GetClinicNumForTexting(long patNum)
 		{
-			if (!PrefC.HasClinicsEnabled || Clinics.GetCount() == 0)
+			if (!PrefC.HasClinicsEnabled || Clinics.Count(true) == 0)
 			{
 				return 0;
 			}
 
-			Clinic clinic = Clinics.GetClinic(Patients.GetPat(patNum).ClinicNum);//if patnum invalid will throw unhandled exception.
+			Clinic clinic = Clinics.GetById(Patients.GetPat(patNum).ClinicNum);//if patnum invalid will throw unhandled exception.
 			if (clinic != null)
 			{
-				return clinic.ClinicNum;
+				return clinic.Id;
 			}
 
 			return Prefs.GetLong(PrefName.TextingDefaultClinicNum);

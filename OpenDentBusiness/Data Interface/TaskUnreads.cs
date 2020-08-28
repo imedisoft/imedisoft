@@ -48,8 +48,8 @@ namespace OpenDentBusiness{
 			List<TaskUnread> listUnreads=new List<TaskUnread>();
 			foreach(Task task in listTasks) {
 				listUnreads.Add(new TaskUnread(){ 
-					TaskNum=task.Id,
-					UserNum=currUserNum
+					TaskId=task.Id,
+					UserId=currUserNum
 				});
 				task.IsUnread=true;
 			}
@@ -143,8 +143,8 @@ namespace OpenDentBusiness{
 				return;//Already set to unread, so nothing else to do
 			}
 			TaskUnread taskUnread=new TaskUnread();
-			taskUnread.TaskNum=task.Id;
-			taskUnread.UserNum=userNum;
+			taskUnread.TaskId=task.Id;
+			taskUnread.UserId=userNum;
 			task.IsUnread=true;
 			Insert(taskUnread);
 		}
@@ -155,8 +155,8 @@ namespace OpenDentBusiness{
 			List<TaskUnread> listUnreadsToInsert=new List<TaskUnread>();
 			foreach(long userNum in listUserNums) {
 				TaskUnread taskUnread=new TaskUnread();
-				taskUnread.TaskNum=task.Id;
-				taskUnread.UserNum=userNum;
+				taskUnread.TaskId=task.Id;
+				taskUnread.UserId=userNum;
 				listUnreadsToInsert.Add(taskUnread);
 			}
 			Crud.TaskUnreadCrud.InsertMany(listUnreadsToInsert);

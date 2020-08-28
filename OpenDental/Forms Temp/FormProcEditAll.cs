@@ -117,7 +117,7 @@ namespace OpenDental {
 			comboClinic.SelectedIndex=0;//Selection is not changed if isAllProcsForSameClinic is false.
 			bool isAllProcsForSameClinic=ProcList.Select(x => x.ClinicNum).Distinct().ToList().Count==1;
 			bool isListAlpha = Prefs.GetBool(PrefName.ClinicListIsAlphabetical);
-			_listClinics=Clinics.GetForUserod(Security.CurrentUser);
+			_listClinics=Clinics.GetByUser(Security.CurrentUser);
 			if(isListAlpha) {
 				_listClinics=_listClinics.OrderBy(x => x.Abbr).ToList();
 			}
@@ -127,14 +127,14 @@ namespace OpenDental {
 			_listClinics.Insert(0,Clinics.GetPracticeAsClinicZero("None"));
 			for(int i=0;i<_listClinics.Count;i++) {//None mimics FormProcEdit
 				comboClinic.Items.Add(_listClinics[i].Abbr,_listClinics[i]);
-				if(isAllProcsForSameClinic && _listClinics[i].ClinicNum==ProcList[0].ClinicNum) {
+				if(isAllProcsForSameClinic && _listClinics[i].Id==ProcList[0].ClinicNum) {
 					comboClinic.SetSelected(i+1);
 				}
 			}
-			if(isAllProcsForSameClinic && !_listClinics.Any(x => x.ClinicNum==ProcList[0].ClinicNum)) {
+			if(isAllProcsForSameClinic && !_listClinics.Any(x => x.Id==ProcList[0].ClinicNum)) {
 				//All procedure clinics are the same but value is missing from our list.
 				//We might eventaully check to see how many clincs from proc list do not exists in listClinics.
-				comboClinic.SetSelectedKey<Clinic>(ProcList[0].ClinicNum,x=>x.ClinicNum,x=>Clinics.GetAbbr(x));//selectedIndex -1
+				comboClinic.SetSelectedKey<Clinic>(ProcList[0].ClinicNum,x=>x.Id,x=>Clinics.GetAbbr(x));//selectedIndex -1
 			}
 		}
 
@@ -150,7 +150,7 @@ namespace OpenDental {
 				_listProvsForClinic=Providers.GetDeepCopy(true);
 			}
 			else {
-				_listProvsForClinic=Providers.GetProvsForClinic(comboClinic.GetSelected<Clinic>().ClinicNum);
+				_listProvsForClinic=Providers.GetProvsForClinic(comboClinic.GetSelected<Clinic>().Id);
 			}
 			_listProvsForClinic=_listProvsForClinic.Where(x => !x.IsHidden).OrderBy(x => x.ItemOrder).ToList();
 			Provider provOldSelection=null;
@@ -338,8 +338,8 @@ namespace OpenDental {
 					ClaimProcs.TrySetProvFromProc(proc,listClaimProcsForProc);
 					hasChanged=true;
 				}
-				if(comboClinic.GetSelected<Clinic>()!=null && comboClinic.GetSelected<Clinic>().ClinicNum!=proc.ClinicNum) {//Using selection
-					proc.ClinicNum=comboClinic.GetSelected<Clinic>().ClinicNum;
+				if(comboClinic.GetSelected<Clinic>()!=null && comboClinic.GetSelected<Clinic>().Id!=proc.ClinicNum) {//Using selection
+					proc.ClinicNum=comboClinic.GetSelected<Clinic>().Id;
 					listClaimProcsForProc.ForEach(x => x.ClinicNum=proc.ClinicNum);
 					hasChanged=true;
 				}

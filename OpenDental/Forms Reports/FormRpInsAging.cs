@@ -446,13 +446,13 @@ namespace OpenDental{
 				labelClin.Visible=false;
 			}
 			else {
-				List<Clinic> listClinics=Clinics.GetForUserod(Security.CurrentUser,true,"Unassigned").ToList();
-				if(!listClinics.Exists(x => x.ClinicNum==Clinics.ClinicNum)) {//Could have a hidden clinic selected
-					listClinics.Add(Clinics.GetClinic(Clinics.ClinicNum));
+				List<Clinic> listClinics=Clinics.GetByCurrentUser().ToList();
+				if(!listClinics.Exists(x => x.Id==Clinics.ClinicId)) {//Could have a hidden clinic selected
+					listClinics.Add(Clinics.GetById(Clinics.ClinicId));
 				}
 				listClin.Items.AddRange(listClinics.Select(x => new ODBoxItem<Clinic>(x.Abbr+(x.IsHidden?(" "+"(hidden)"):""),x)).ToArray());
-				listClin.SelectedIndex=listClinics.FindIndex(x => x.ClinicNum==Clinics.ClinicNum);//FindIndex could return -1, which is fine
-				checkAllClin.Checked=(Clinics.ClinicNum==0);//event handler will set visibility
+				listClin.SelectedIndex=listClinics.FindIndex(x => x.Id==Clinics.ClinicId);//FindIndex could return -1, which is fine
+				checkAllClin.Checked=(Clinics.ClinicId==0);//event handler will set visibility
 			}
 			if(Prefs.GetBool(PrefName.FutureTransDatesAllowed) || Prefs.GetBool(PrefName.AccountAllowFutureDebits) 
 				|| Prefs.GetBool(PrefName.AllowFutureInsPayments)) 
@@ -501,10 +501,10 @@ namespace OpenDental{
 				if(checkAllClin.Checked && !Security.CurrentUser.ClinicIsRestricted){
 					rpo.ListClinicNums.Clear();
 					rpo.ListClinicNums.Add(0);
-					rpo.ListClinicNums.AddRange(Clinics.GetDeepCopy().Select(x => x.ClinicNum));
+					rpo.ListClinicNums.AddRange(Clinics.GetAll(true).Select(x => x.Id));
 				}
 				else {
-					rpo.ListClinicNums=listClin.GetListSelected<Clinic>().Select(x => x.ClinicNum).ToList();
+					rpo.ListClinicNums=listClin.GetListSelected<Clinic>().Select(x => x.Id).ToList();
 				}
 			}
 			rpo.AccountAge=AgeOfAccount.Any;

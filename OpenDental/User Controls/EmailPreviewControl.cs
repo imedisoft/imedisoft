@@ -593,7 +593,7 @@ namespace OpenDental {
 			if(listApts.Count > 0){
 				aptNext=listApts[0]; //next sched appt. If none, null.
 			}
-			Clinic clinic=Clinics.GetClinic(ClinicNum);
+			Clinic clinic=Clinics.GetById(ClinicNum);
 			Subject=ReplaceTemplateFields(subject,_patCur,aptNext,clinic);;
 			BodyText=ReplaceTemplateFields(bodyText,_patCur,aptNext,clinic);
 			_emailMessage.Attachments.AddRange(attachments);

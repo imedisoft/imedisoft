@@ -78,7 +78,7 @@ namespace OpenDental {
 			}
 			if(PrefC.HasClinicsEnabled && !Clinics.IsTextingEnabled(_clinicNum)) { //Checking for specific clinic.
 				if(_clinicNum!=0) {
-					MessageBox.Show("Integrated Texting has not been enabled for the following clinic"+":\r\n"+Clinics.GetClinic(_clinicNum).Description+".");
+					MessageBox.Show("Integrated Texting has not been enabled for the following clinic"+":\r\n"+Clinics.GetById(_clinicNum).Description+".");
 				}
 				else {
 					//Should never happen. This message is precautionary.

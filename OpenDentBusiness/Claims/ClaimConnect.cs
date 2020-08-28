@@ -403,7 +403,7 @@ namespace OpenDentBusiness.Eclaims {
 		private static DentalxchangePartnerService.Attachment BuildAttachmentRequest(Claim claim,string narrative) {
 			DentalxchangePartnerService.Attachment attachment=new DentalxchangePartnerService.Attachment();
 			//Clinic on claim
-			Clinic clinic=Clinics.GetClinic(claim.ClinicNum);
+			Clinic clinic=Clinics.GetById(claim.ClinicNum);
 			if(!PrefC.HasClinicsEnabled) {
 				clinic=null;//If the practice isn't using clinics, but the claim is associated to a real clinic, pretend it isn't.
 			}
@@ -473,16 +473,16 @@ namespace OpenDentBusiness.Eclaims {
 				}
 			}
 			else {
-				if(clinic.UseBillAddrOnClaims) {
-					billingAddress1=clinic.BillingAddress;
-					billingAddress2=clinic.BillingAddress2;
+				if(clinic.BillingAddressOnClaims) {
+					billingAddress1=clinic.BillingAddressLine1;
+					billingAddress2=clinic.BillingAddressLine2;
 					billingCity=clinic.BillingCity;
 					billingState=clinic.BillingState;
 					billingZip=clinic.BillingZip;
 				}
 				else {
-					billingAddress1=clinic.Address;
-					billingAddress2=clinic.Address2;
+					billingAddress1=clinic.AddressLine1;
+					billingAddress2=clinic.AddressLine2;
 					billingCity=clinic.City;
 					billingState=clinic.State;
 					billingZip=clinic.Zip;
@@ -514,8 +514,8 @@ namespace OpenDentBusiness.Eclaims {
 				attachment.RenderingProviderZip=Prefs.GetString(PrefName.PracticeZip);
 			}
 			else {//Clinic enabled
-				attachment.RenderingProviderAdd1=clinic.Address;
-				attachment.RenderingProviderAdd2=clinic.Address2;
+				attachment.RenderingProviderAdd1=clinic.AddressLine1;
+				attachment.RenderingProviderAdd2=clinic.AddressLine2;
 				attachment.RenderingProviderCity=clinic.City;
 				attachment.RenderingProviderState=clinic.State;
 				attachment.RenderingProviderZip=clinic.Zip;

@@ -4057,7 +4057,7 @@ namespace OpenDentBusiness
 		{
 			try {
 				Patient pat=Patients.GetPat(appt.PatNum);
-				Clinic clinic=Clinics.GetClinic(appt.ClinicNum);
+				Clinic clinic=Clinics.GetById(appt.ClinicNum);
 				WebSchedVerifyType verificationType=(WebSchedVerifyType)PIn.Int(ClinicPrefs.GetString(appt.ClinicNum, typePref));
 				if(verificationType==WebSchedVerifyType.None) {
 					return;

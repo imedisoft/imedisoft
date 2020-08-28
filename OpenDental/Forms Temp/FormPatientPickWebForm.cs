@@ -86,7 +86,7 @@ namespace OpenDental {
 				row.Cells.Add(listPats[i].FName);
 				row.Cells.Add(listPats[i].Birthdate.ToShortDateString());
 				if(PrefC.HasClinicsEnabled) {
-					string clinicName=Clinics.GetDesc(listPats[i].ClinicNum);
+					string clinicName=Clinics.GetDescription(listPats[i].ClinicNum);
 					row.Cells.Add(!string.IsNullOrWhiteSpace(clinicName) ? clinicName : "N/A");
 				}
 				gridMain.ListGridRows.Add(row);

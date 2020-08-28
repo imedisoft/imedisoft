@@ -12,7 +12,7 @@ namespace OpenDental {
 		}
 
 		private void FormAsapSetup_Load(object sender,EventArgs e) {
-			comboClinic.SelectedClinicNum=Clinics.ClinicNum;
+			comboClinic.SelectedClinicNum=Clinics.ClinicId;
 			FillPrefs();
 		}
 

@@ -22,7 +22,7 @@ namespace OpenDental {
 			textProcedureCode.Text=pbqCur.CodeValue;
 			textSurfaces.Text=pbqCur.Surf;
 			checkIsLabel.Checked=pbqCur.IsLabel;
-			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				labelSurfaces.Visible=false;
 				textSurfaces.Visible=false;
 			}

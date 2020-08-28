@@ -512,7 +512,7 @@ namespace OpenDentBusiness{
 				}
 			}
 			else{//Using clinics, and a clinic was pased in
-				long clinicInsBillingProv=Clinics.GetClinic(clinicNum).InsBillingProv;
+				long clinicInsBillingProv=Clinics.GetById(clinicNum).InsBillingProviderId ?? 0;
 				if(clinicInsBillingProv==0) {//default=0
 					return Prefs.GetLong(PrefName.PracticeDefaultProv);
 				}
@@ -577,10 +577,10 @@ namespace OpenDentBusiness{
 		///Pass 0 to get practice default.  Can return null if no clinic or practice default provider found.</summary>
 		public static Provider GetDefaultProvider(long clinicNum) {
 			//No need to check RemotingRole; no call to db.
-			Clinic clinic=Clinics.GetClinic(clinicNum);
+			Clinic clinic=Clinics.GetById(clinicNum);
 			Provider provider=null;
-			if(clinic!=null && clinic.DefaultProv!=0) {//the clinic exists
-				provider=Providers.GetProv(clinic.DefaultProv);
+			if(clinic!=null && clinic.DefaultProviderId!=0) {//the clinic exists
+				provider=Providers.GetProv(clinic.DefaultProviderId);
 			}
 			if(provider==null) {//If not using clinics or if the specified clinic does not have a valid default provider set.
 				provider=Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv));//Try to get the practice default.

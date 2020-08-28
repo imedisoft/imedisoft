@@ -112,9 +112,9 @@ namespace OpenDental {
 				labelPassword.Font=new Font(labelPassword.Font,FontStyle.Bold);
 				labelPracticeAddr.Font=new Font(labelPracticeAddr.Font,FontStyle.Bold);
 				labelRemitAddr.Font=new Font(labelRemitAddr.Font,FontStyle.Bold);
-				comboClinic.SelectedClinicNum=Clinics.ClinicNum;
+				comboClinic.SelectedClinicNum=Clinics.ClinicId;
 				Ebill eBill=null;
-				if(Clinics.ClinicNum==0) {//Use the default Ebill if OD has Headquarters selected or if clinics are disabled.
+				if(Clinics.ClinicId==0) {//Use the default Ebill if OD has Headquarters selected or if clinics are disabled.
 					eBill=_eBillDefault;
 				}
 				else {
@@ -272,7 +272,7 @@ namespace OpenDental {
 		private void comboClinic_SelectionChangeCommitted(object sender,EventArgs e) {
 			SaveEbill(_eBillCur);
 			Ebill eBill=null;
-			if((!Security.CurrentUser.ClinicIsRestricted || Clinics.ClinicNum==0) && comboClinic.IsUnassignedSelected) {
+			if((!Security.CurrentUser.ClinicIsRestricted || Clinics.ClinicId==0) && comboClinic.IsUnassignedSelected) {
 				eBill=_eBillDefault;
 			}
 			else {//Otherwise locate the Ebill from the cache.

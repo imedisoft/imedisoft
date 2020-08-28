@@ -6,6 +6,9 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDental.UI;
 using OpenDentBusiness;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 	/// <summary>
@@ -581,7 +584,7 @@ namespace OpenDental{
 		#endregion
 
 		private void FormTransactionEdit_Load(object sender,EventArgs e) {
-			JournalList=JournalEntries.GetForTrans(TransCur.TransactionNum);//Count might be 0
+			JournalList=JournalEntries.GetForTrans(TransCur.Id);//Count might be 0
 			if(IsNew) {
 				if(!Security.IsAuthorized(Permissions.AccountingCreate,DateTime.Today)) {
 					//we will check the date again when saving
@@ -601,10 +604,10 @@ namespace OpenDental{
 			for(int i=0;i<JournalList.Count;i++) {
 				JournalListOld.Add(JournalList[i].Copy());
 			}
-			textDateTimeEntered.Text=TransCur.DateTimeEntry.ToString();
-			textDateTimeEdited.Text=TransCur.SecDateTEdit.ToString();
-			textUserEntered.Text=Userods.GetName(TransCur.UserNum);
-			textUserEdited.Text=Userods.GetName(TransCur.SecUserNumEdit);
+			textDateTimeEntered.Text=TransCur.DateAdded.ToString();
+			textDateTimeEdited.Text=TransCur.ModifiedDate.ToString();
+			textUserEntered.Text=Userods.GetName(TransCur.UserId);
+			textUserEdited.Text=Userods.GetName(TransCur.ModifiedBy);
 			if(JournalList.Count>0) {
 				textDate.Text=JournalList[0].DateDisplayed.ToShortDateString();
 			}
@@ -638,21 +641,21 @@ namespace OpenDental{
 				checkSimple.Checked=true;
 				FillSimple();
 			}
-			if(TransCur.DepositNum==0){
+			if(TransCur.DepositId==0){
 				butAttachDep.Text="Attach";
 			}
 			else{
-				Deposit dep=Deposits.GetOne(TransCur.DepositNum);
+				Deposit dep=Deposits.GetOne(TransCur.DepositId);
 				textSourceDeposit.Text=dep.DateDeposit.ToShortDateString()
 					+"  "+dep.Amount.ToString("c");
 				butAttachDep.Text="Detach";
 			}
-			if(TransCur.PayNum==0) {
+			if(TransCur.PaymentId==0) {
 				//no way to attach yet.  This can be added later.
 				butAttachPay.Visible=false;
 			}
 			else {
-				Payment pay=Payments.GetPayment(TransCur.PayNum);
+				Payment pay=Payments.GetPayment(TransCur.PaymentId);
 				textSourcePay.Text=Patients.GetPat(pay.PatNum).GetNameFL()+" "
 					+pay.PayDate.ToShortDateString()+" "+pay.PayAmt.ToString("c");
 				butAttachPay.Text="Detach";
@@ -699,7 +702,7 @@ namespace OpenDental{
 			GridRow row;
 			for(int i=0;i<JournalList.Count;i++){
 				row=new GridRow();
-				row.Cells.Add(Accounts.GetDescript(((JournalEntry)JournalList[i]).AccountNum));
+				row.Cells.Add(Accounts.GetDescription(((JournalEntry)JournalList[i]).AccountNum));
 				if(((JournalEntry)JournalList[i]).DebitAmt==0){
 					row.Cells.Add("");
 				}
@@ -839,7 +842,7 @@ namespace OpenDental{
 			if(FormA.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			AccountPicked=FormA.SelectedAccount.Clone();
+			AccountPicked=FormA.SelectedAccount;
 			textAccount.Text=AccountPicked.Description;
 			butChange.Text="Change";
 		}
@@ -868,7 +871,7 @@ namespace OpenDental{
 
 		private void butAdd_Click(object sender,EventArgs e) {
 			JournalEntry entry=new JournalEntry();
-			entry.TransactionNum=TransCur.TransactionNum;
+			entry.TransactionNum=TransCur.Id;
 			if(checkMemoSame.Checked && JournalList.Count>0){
 				entry.Memo=((JournalEntry)JournalList[0]).Memo;
 			}
@@ -924,31 +927,31 @@ namespace OpenDental{
 		}
 
 		private void butAttachDep_Click(object sender,EventArgs e) {
-			if(TransCur.DepositNum==0){//trying to attach
+			if(TransCur.DepositId==0){//trying to attach
 				FormDeposits FormD=new FormDeposits();
 				FormD.IsSelectionMode=true;
 				FormD.ShowDialog();
 				if(FormD.DialogResult==DialogResult.Cancel){
 					return;
 				}
-				TransCur.DepositNum=FormD.SelectedDeposit.DepositNum;
+				TransCur.DepositId=FormD.SelectedDeposit.Id;
 				textSourceDeposit.Text=FormD.SelectedDeposit.DateDeposit.ToShortDateString()
 					+"  "+FormD.SelectedDeposit.Amount.ToString("c");
 				butAttachDep.Text="Detach";
 			}
 			else{//trying to detach
-				TransCur.DepositNum=0;
+				TransCur.DepositId=0;
 				textSourceDeposit.Text="";
 				butAttachDep.Text="Attach";
 			}
 		}
 
 		private void butAttachPay_Click(object sender,EventArgs e) {
-			if(TransCur.PayNum==0) {//trying to attach
+			if(TransCur.PaymentId==0) {//trying to attach
 				//no way to do this yet.
 			}
 			else {//trying to detach
-				TransCur.PayNum=0;
+				TransCur.PaymentId=0;
 				textSourcePay.Text="";
 				butAttachPay.Visible=false;
 			}
@@ -1006,7 +1009,7 @@ namespace OpenDental{
 			JournalEntry entry;
 			//first, for account of origin
 			entry=new JournalEntry();
-			entry.TransactionNum=TransCur.TransactionNum;
+			entry.TransactionNum=TransCur.Id;
 			if(textDate.Text=="" || textDate.errorProvider1.GetError(textDate)!="") {
 				entry.DateDisplayed=DateTime.Today;
 			}
@@ -1040,7 +1043,7 @@ namespace OpenDental{
 			JournalList.Add(entry);
 			//then, for the other
 			entry=new JournalEntry();
-			entry.TransactionNum=TransCur.TransactionNum;
+			entry.TransactionNum=TransCur.Id;
 			entry.DateDisplayed=((JournalEntry)JournalList[0]).DateDisplayed;
 			entry.DebitAmt=((JournalEntry)JournalList[0]).CreditAmt;
 			entry.CreditAmt=((JournalEntry)JournalList[0]).DebitAmt;
@@ -1062,7 +1065,7 @@ namespace OpenDental{
 			string securityentry="";
 			if(!IsNew){
 				//we need this data before it's gone
-				JournalList=JournalEntries.GetForTrans(TransCur.TransactionNum);//because they were cleared when laying out
+				JournalList=JournalEntries.GetForTrans(TransCur.Id);//because they were cleared when laying out
 				securityentry="Deleted: "
 					+((JournalEntry)JournalList[0]).DateDisplayed.ToShortDateString()+" ";
 				double tot=0;
@@ -1071,7 +1074,7 @@ namespace OpenDental{
 					if(i>0){
 						securityentry+=", ";
 					}
-					securityentry+=Accounts.GetDescript(((JournalEntry)JournalList[i]).AccountNum);
+					securityentry+=Accounts.GetDescription(((JournalEntry)JournalList[i]).AccountNum);
 				}
 				securityentry+=". "+tot.ToString("c");
 				JournalList=new List<JournalEntry>();//in case it fails, we don't want to leave this list around.
@@ -1080,7 +1083,7 @@ namespace OpenDental{
 				Transactions.Delete(TransCur);
 			}
 			catch(ApplicationException ex) {
-				JournalList=JournalEntries.GetForTrans(TransCur.TransactionNum);//Refreshes list so that the journal entries are not deleted by the update later.
+				JournalList=JournalEntries.GetForTrans(TransCur.Id);//Refreshes list so that the journal entries are not deleted by the update later.
 				MessageBox.Show(ex.Message);
 				return;
 			}
@@ -1144,7 +1147,7 @@ namespace OpenDental{
 					if(splits !="") {
 						splits+="\r\n";
 					}
-					splits+=Accounts.GetDescript(((JournalEntry)JournalList[j]).AccountNum);
+					splits+=Accounts.GetDescription(((JournalEntry)JournalList[j]).AccountNum);
 					if(JournalList.Count<3){
 						continue;//don't show the amount if there is only two splits, because the amount is the same.
 					}
@@ -1163,7 +1166,7 @@ namespace OpenDental{
 			//catch{
 
 			//}
-			DateTime datePrevious=TransCur.SecDateTEdit;
+			DateTime datePrevious=TransCur.ModifiedDate;
 			Transactions.Update(TransCur);//this catches DepositNum, the only user-editable field.
 			double tot=0;
 			for(int i=0;i<JournalList.Count;i++){
@@ -1171,7 +1174,7 @@ namespace OpenDental{
 			}
 			if(IsNew) {
 				SecurityLogs.MakeLogEntry(Permissions.AccountingCreate,0,
-					date.ToShortDateString()+" "+AccountOfOrigin.Description+" "+tot.ToString("c"),TransCur.TransactionNum,DateTime.MinValue);
+					date.ToShortDateString()+" "+AccountOfOrigin.Description+" "+tot.ToString("c"),TransCur.Id,DateTime.MinValue);
 			}
 			else {
 				string txt=date.ToShortDateString();
@@ -1179,7 +1182,7 @@ namespace OpenDental{
 					txt+=" "+AccountOfOrigin.Description;
 				}
 				txt+=" "+tot.ToString("c");
-				SecurityLogs.MakeLogEntry(Permissions.AccountingEdit,0,txt,TransCur.TransactionNum,datePrevious);
+				SecurityLogs.MakeLogEntry(Permissions.AccountingEdit,0,txt,TransCur.Id,datePrevious);
 			}
 			DialogResult=DialogResult.OK;
 		}

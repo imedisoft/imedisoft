@@ -710,8 +710,12 @@ namespace OpenDentBusiness
 			#endregion
 			#region Alerts
 			List<AlertSub> listUserAlert = AlertSubs.GetAllForUser(user.Id);
-			listUserAlert.ForEach(x => x.UserNum = copy.Id);
-			AlertSubs.Sync(listUserAlert, new List<AlertSub>());
+			listUserAlert.ForEach(x =>
+			{
+				x.UserId = copy.Id;
+
+				AlertSubs.Insert(x);
+			});
 			#endregion
 			return copy;
 		}

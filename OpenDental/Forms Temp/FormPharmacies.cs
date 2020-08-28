@@ -169,7 +169,7 @@ namespace OpenDental{
 			Pharmacies.RefreshCache();
 			_listPharmacies=Pharmacies.GetDeepCopy();
 			//Key=>PharmacyNum & Value=>List of clinics
-			SerializableDictionary<long,List<Clinic>> dictPharmClinics=null;
+			Dictionary<long,List<Clinic>> dictPharmClinics=null;
 			if(PrefC.HasClinicsEnabled) {
 				dictPharmClinics=Clinics.GetDictClinicsForPharmacy(_listPharmacies.Select(x => x.PharmacyNum).ToArray());
 			}

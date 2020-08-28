@@ -431,10 +431,10 @@ namespace OpenDental
 				frame.Top = TopPosition.Parse("0.5 in");
 				frame.Left = LeftPosition.Parse("0.3 in");
 				frame.Width = Unit.FromInch(3);
-				if (PrefC.HasClinicsEnabled && Clinics.GetCount() > 0 //if using clinics
-						&& Clinics.GetClinic(PatGuar.ClinicNum) != null)//and this patient assigned to a clinic
+				if (PrefC.HasClinicsEnabled && Clinics.Count(true) > 0 //if using clinics
+						&& Clinics.GetById(PatGuar.ClinicNum) != null)//and this patient assigned to a clinic
 				{
-					Clinic clinic = Clinics.GetClinic(PatGuar.ClinicNum);
+					Clinic clinic = Clinics.GetById(PatGuar.ClinicNum);
 					par = frame.AddParagraph();
 					par.Format.Font = font;
 					par.AddText(clinic.Description);
@@ -451,11 +451,11 @@ namespace OpenDental
 						par.AddText("GST: " + defaultProv.SSN);
 						par.AddLineBreak();
 					}
-					par.AddText(clinic.Address);
+					par.AddText(clinic.AddressLine1);
 					par.AddLineBreak();
-					if (clinic.Address2 != "")
+					if (clinic.AddressLine2 != "")
 					{
-						par.AddText(clinic.Address2);
+						par.AddText(clinic.AddressLine2);
 						par.AddLineBreak();
 					}
 					if (CultureInfo.CurrentCulture.Name.EndsWith("CH"))
@@ -1175,7 +1175,7 @@ namespace OpenDental
 			gcol = new GridColumn("Patient", 100);
 			gridPat.ListGridColumns.Add(gcol);
 			//prov
-			if (Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum))
+			if (Clinics.IsMedicalClinic(Clinics.ClinicId))
 			{
 				gcol = new GridColumn("Code", 87);
 				gridPat.ListGridColumns.Add(gcol);
@@ -1280,7 +1280,7 @@ namespace OpenDental
 						else
 						{
 							grow.Cells.Add(rowCur["ProcCode"].ToString());
-							if (!Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum))
+							if (!Clinics.IsMedicalClinic(Clinics.ClinicId))
 							{
 								grow.Cells.Add(rowCur["tth"].ToString());
 							}
@@ -1289,7 +1289,7 @@ namespace OpenDental
 					else
 					{
 						grow.Cells.Add(rowCur["ProcCode"].ToString());
-						if (!Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum))
+						if (!Clinics.IsMedicalClinic(Clinics.ClinicId))
 						{
 							grow.Cells.Add(rowCur["tth"].ToString());
 						}

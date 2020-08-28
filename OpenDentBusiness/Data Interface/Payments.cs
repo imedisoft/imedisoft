@@ -1,5 +1,6 @@
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -505,13 +506,13 @@ namespace OpenDentBusiness{
 			}
 			//at this point, we have established that there is a previous transaction.
 			//If payment is attached to a transaction which is more than 48 hours old, then not allowed to change.
-			if(amtChanged && trans.DateTimeEntry < MiscData.GetNowDateTime().AddDays(-2)) {
+			if(amtChanged && trans.DateAdded < MiscData.GetNowDateTime().AddDays(-2)) {
 				throw new ApplicationException("Not allowed to change amount that is more than 48 hours old.  This payment is already attached to an accounting transaction.  You will need to detach it from within the accounting section of the program.");
 			}
 			if(amtChanged && Transactions.IsReconciled(trans)) {
 				throw new ApplicationException("Not allowed to change amount.  This payment is attached to an accounting transaction that has been reconciled.  You will need to detach it from within the accounting section of the program.");
 			}
-			List<JournalEntry> jeL=JournalEntries.GetForTrans(trans.TransactionNum);
+			List<JournalEntry> jeL=JournalEntries.GetForTrans(trans.Id);
 			long oldAcct=0;
 			JournalEntry jeDebit=null;
 			JournalEntry jeCredit=null;
@@ -576,8 +577,8 @@ namespace OpenDentBusiness{
 			if(trans==null) {//no previous link, but user is trying to create one.
 				//this is the only case where a new trans is required.
 				trans=new Transaction();
-				trans.PayNum=payNum;
-				trans.UserNum=Security.CurrentUser.Id;
+				trans.PaymentId=payNum;
+				trans.UserId=Security.CurrentUser.Id;
 				Transactions.Insert(trans);//sets entry date
 				//first the deposit entry
 				JournalEntry je=new JournalEntry();
@@ -591,8 +592,8 @@ namespace OpenDentBusiness{
 					je.CreditAmt=absNew;
 				}
 				je.Memo="Payment -"+" "+patName;
-				je.Splits=Accounts.GetDescript(Prefs.GetLong(PrefName.AccountingCashIncomeAccount));
-				je.TransactionNum=trans.TransactionNum;
+				je.Splits=Accounts.GetDescription(Prefs.GetLong(PrefName.AccountingCashIncomeAccount));
+				je.TransactionNum=trans.Id;
 				JournalEntries.Insert(je);
 				//then, the income entry
 				je=new JournalEntry();
@@ -606,13 +607,13 @@ namespace OpenDentBusiness{
 					je.DebitAmt=absNew;
 				}
 				je.Memo="Payment -"+" "+patName;
-				je.Splits=Accounts.GetDescript(newAcct);
-				je.TransactionNum=trans.TransactionNum;
+				je.Splits=Accounts.GetDescription(newAcct);
+				je.TransactionNum=trans.Id;
 				JournalEntries.Insert(je);
 				return;
 			}
 			//at this point, we have established that there is a previous transaction.
-			List<JournalEntry> jeL=JournalEntries.GetForTrans(trans.TransactionNum);
+			List<JournalEntry> jeL=JournalEntries.GetForTrans(trans.Id);
 			long oldAcct=0;
 			JournalEntry jeDebit=null;
 			JournalEntry jeCredit=null;

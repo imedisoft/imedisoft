@@ -85,7 +85,7 @@ namespace UnitTests {
 		public void ShortCode_Attribute_IsServiceEnabledClinicsOn() {
 			PrefT.UpdateBool(PrefName.EasyNoClinics,false);			
 			List<long> listClinicNums=new List<long>() { 0 };
-			listClinicNums.AddRange(Clinics.GetDeepCopy().Select(x => x.ClinicNum));
+			listClinicNums.AddRange(Clinics.GetAll(true).Select(x => x.Id));
 			foreach(long clinicNum in listClinicNums) {
 				ToggleTexting(false);
 				foreach(ShortCodeAttribute sc in GetAllShortCodeAttributes()) {
@@ -121,9 +121,8 @@ namespace UnitTests {
 		private void ToggleTexting(bool isOn) {
 			DateTime contractDate=isOn ? DateTime.Today.AddDays(-1) : DateTime.MinValue;
 			PrefT.UpdateDateT(PrefName.SmsContractDate,contractDate);
-			PrefT.UpdateLong(PrefName.TextingDefaultClinicNum,Clinics.GetFirst().ClinicNum);
-			foreach(Clinic clinic in Clinics.GetDeepCopy()) {
-				clinic.SmsContractDate=contractDate;
+			PrefT.UpdateLong(PrefName.TextingDefaultClinicNum,Clinics.First(true).Id);
+			foreach(Clinic clinic in Clinics.GetAll(true)) {
 				Clinics.Update(clinic);
 			}
 			Prefs.RefreshCache();
@@ -132,7 +131,7 @@ namespace UnitTests {
 
 		private void TurnOffAllPrefs() {			
 			List<long> listClinicNums=new List<long>() { 0 };
-			listClinicNums.AddRange(Clinics.GetDeepCopy().Select(x => x.ClinicNum));
+			listClinicNums.AddRange(Clinics.GetAll(true).Select(x => x.Id));
 			foreach(long clinicNum in listClinicNums) {
 				foreach(ShortCodeAttribute sc in GetAllShortCodeAttributes()) {
 					foreach(string pref in sc.EServicePrefNames) {

@@ -1032,55 +1032,54 @@ namespace OpenDental {
 			if(Programs.UsingEcwTightOrFullMode()) {
 				checkIsMedicalOnly.Visible=false;
 			}
-			if(ClinicCur.ClinicNum!=0) {
-				textClinicNum.Text=ClinicCur.ClinicNum.ToString();
+			if(ClinicCur.Id!=0) {
+				textClinicNum.Text=ClinicCur.Id.ToString();
 			}
-			textExternalID.Text=ClinicCur.ExternalID.ToString();
 			textDescription.Text=ClinicCur.Description;
 			textClinicAbbr.Text=ClinicCur.Abbr;
 			textPhone.Text=TelephoneNumbers.ReFormat(ClinicCur.Phone);
 			textFax.Text=TelephoneNumbers.ReFormat(ClinicCur.Fax);
-			checkUseBillingAddressOnClaims.Checked=ClinicCur.UseBillAddrOnClaims;
-			checkExcludeFromInsVerifyList.Checked=ClinicCur.IsInsVerifyExcluded;
+			checkUseBillingAddressOnClaims.Checked=ClinicCur.BillingAddressOnClaims;
+			checkExcludeFromInsVerifyList.Checked=ClinicCur.InsVerifyExcluded;
 			if(Prefs.GetBool(PrefName.RxHasProc)) {
 				checkProcCodeRequired.Enabled=true;
-				checkProcCodeRequired.Checked=(ClinicCur.IsNew || ClinicCur.HasProcOnRx);
+				checkProcCodeRequired.Checked=(ClinicCur.IsNew || ClinicCur.HasProcedureOnRx);
 			}
 			checkHidden.Checked=ClinicCur.IsHidden;
-			textAddress.Text=ClinicCur.Address;
-			textAddress2.Text=ClinicCur.Address2;
+			textAddress.Text=ClinicCur.AddressLine1;
+			textAddress2.Text=ClinicCur.AddressLine2;
 			textCity.Text=ClinicCur.City;
 			textState.Text=ClinicCur.State;
 			textZip.Text=ClinicCur.Zip;
-			textBillingAddress.Text=ClinicCur.BillingAddress;
-			textBillingAddress2.Text=ClinicCur.BillingAddress2;
+			textBillingAddress.Text=ClinicCur.BillingAddressLine1;
+			textBillingAddress2.Text=ClinicCur.BillingAddressLine2;
 			textBillingCity.Text=ClinicCur.BillingCity;
 			textBillingST.Text=ClinicCur.BillingState;
 			textBillingZip.Text=ClinicCur.BillingZip;
-			textPayToAddress.Text=ClinicCur.PayToAddress;
-			textPayToAddress2.Text=ClinicCur.PayToAddress2;
+			textPayToAddress.Text=ClinicCur.PayToAddressLine1;
+			textPayToAddress2.Text=ClinicCur.PayToAddressLine2;
 			textPayToCity.Text=ClinicCur.PayToCity;
 			textPayToST.Text=ClinicCur.PayToState;
 			textPayToZip.Text=ClinicCur.PayToZip;
 			textBankNumber.Text=ClinicCur.BankNumber;
-			textSchedRules.Text=ClinicCur.SchedNote;
+			textSchedRules.Text=ClinicCur.SchedulingNote;
 			comboPlaceService.Items.Clear();
 			comboPlaceService.Items.AddRange(Enum.GetNames(typeof(PlaceOfService)));
 			comboPlaceService.SelectedIndex=(int)ClinicCur.DefaultPlaceService;
-			comboInsBillingProv.Items.AddProvsAbbr(Providers.GetProvsForClinic(ClinicCur.ClinicNum));
-			if(ClinicCur.InsBillingProv==0){
+			comboInsBillingProv.Items.AddProvsAbbr(Providers.GetProvsForClinic(ClinicCur.Id));
+			if(ClinicCur.InsBillingProviderId==0){
 				radioInsBillingProvDefault.Checked=true;//default=0
 			}
-			else if(ClinicCur.InsBillingProv==-1){
+			else if(ClinicCur.InsBillingProviderId==-1){
 				radioInsBillingProvTreat.Checked=true;//treat=-1
 			}
 			else{
 				radioInsBillingProvSpecific.Checked=true;//specific=any number >0. Foreign key to ProvNum
-				comboInsBillingProv.SetSelectedProvNum(ClinicCur.InsBillingProv);
+				comboInsBillingProv.SetSelectedProvNum(ClinicCur.InsBillingProviderId ?? 0);
 			}
-			comboDefaultProvider.Items.AddProvsAbbr(Providers.GetProvsForClinic(ClinicCur.ClinicNum));
-			if(ClinicCur.DefaultProv>0){
-				comboDefaultProvider.SetSelectedProvNum(ClinicCur.DefaultProv);
+			comboDefaultProvider.Items.AddProvsAbbr(Providers.GetProvsForClinic(ClinicCur.Id));
+			if(ClinicCur.DefaultProviderId>0){
+				comboDefaultProvider.SetSelectedProvNum(ClinicCur.DefaultProviderId);
 			}
 			FillSpecialty();
 			comboRegion.Items.Clear();
@@ -1094,16 +1093,17 @@ namespace OpenDental {
 				}
 			}
 			
-			EmailAddress emailAddress=EmailAddresses.GetOne(ClinicCur.EmailAddressNum);
+			EmailAddress emailAddress=EmailAddresses.GetOne(ClinicCur.EmailAddressId ?? 0);
 			if(emailAddress!=null) {
 				textEmail.Text=emailAddress.GetFrom();
 				butEmailNone.Enabled=true;
 			}
+
 			_isMedLabHL7DefEnabled=HL7Defs.IsExistingHL7Enabled(0,true);
 			if(_isMedLabHL7DefEnabled) {
 				textMedLabAcctNum.Visible=true;
 				labelMedLabAcctNum.Visible=true;
-				textMedLabAcctNum.Text=ClinicCur.MedLabAccountNum;
+				textMedLabAcctNum.Text=ClinicCur.MedlabAccountId;
 			}
 		}
 
@@ -1167,7 +1167,7 @@ namespace OpenDental {
 					}
 					DefLink defLink=new DefLink();
 					defLink.DefNum=defCur.DefNum;
-					defLink.FKey=ClinicCur.ClinicNum;//could be 0 if IsNew
+					defLink.FKey=ClinicCur.Id;//could be 0 if IsNew
 					defLink.LinkType=DefLinkType.Clinic;
 					ClinicCur.ListClinicSpecialtyDefLinks.Add(defLink);
 				}
@@ -1193,13 +1193,13 @@ namespace OpenDental {
 			if(FormEA.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			ClinicCur.EmailAddressNum=FormEA.EmailAddressNum;
+			ClinicCur.EmailAddressId=FormEA.EmailAddressNum;
 			textEmail.Text=EmailAddresses.GetOne(FormEA.EmailAddressNum).GetFrom();
 			butEmailNone.Enabled=true;
 		}
 
 		private void buttDetachEmail_Click(object sender,EventArgs e) {
-			ClinicCur.EmailAddressNum=0;
+			ClinicCur.EmailAddressId=0;
 			textEmail.Text="";
 			butEmailNone.Enabled=false;
 		}
@@ -1242,15 +1242,15 @@ namespace OpenDental {
 			}
 			if(_isMedLabHL7DefEnabled //MedLab HL7 def is enabled, so textMedLabAcctNum is visible
 				&& !string.IsNullOrWhiteSpace(textMedLabAcctNum.Text) //MedLabAcctNum has been entered
-				&& Clinics.GetWhere(x => x.ClinicNum!=ClinicCur.ClinicNum)
-						.Any(x => x.MedLabAccountNum==textMedLabAcctNum.Text.Trim())) //this account num is already in use by another Clinic
+				&& Clinics.Where(x => x.Id!=ClinicCur.Id)
+						.Any(x => x.MedlabAccountId==textMedLabAcctNum.Text.Trim())) //this account num is already in use by another Clinic
 			{
 				MessageBox.Show("The MedLab Account Number entered is already in use by another clinic.");
 				return;
 			}
 			if(checkHidden.Checked) {
 				//ensure that there are no users who have only this clinic assigned to them.
-				List<Userod> listUsersRestricted = Userods.GetUsersOnlyThisClinic(ClinicCur.ClinicNum);
+				List<Userod> listUsersRestricted = Userods.GetUsersOnlyThisClinic(ClinicCur.Id);
 				if(listUsersRestricted.Count > 0) {
 					MessageBox.Show("You may not hide this clinic as the following users are restricted to only this clinic" + ": "
 						+ string.Join(", ",listUsersRestricted.Select(x => x.UserName)));
@@ -1270,51 +1270,50 @@ namespace OpenDental {
 			#endregion Validation
 			#region Set Values
 			ClinicCur.IsMedicalOnly=checkIsMedicalOnly.Checked;
-			ClinicCur.IsInsVerifyExcluded=checkExcludeFromInsVerifyList.Checked;
-			ClinicCur.HasProcOnRx=checkProcCodeRequired.Checked;
+			ClinicCur.InsVerifyExcluded=checkExcludeFromInsVerifyList.Checked;
+			ClinicCur.HasProcedureOnRx=checkProcCodeRequired.Checked;
 			ClinicCur.Abbr=textClinicAbbr.Text;
 			ClinicCur.Description=textDescription.Text;
 			ClinicCur.Phone=phone;
 			ClinicCur.Fax=fax;
-			ClinicCur.Address=textAddress.Text;
-			ClinicCur.Address2=textAddress2.Text;
+			ClinicCur.AddressLine1=textAddress.Text;
+			ClinicCur.AddressLine2=textAddress2.Text;
 			ClinicCur.City=textCity.Text;
 			ClinicCur.State=textState.Text;
 			ClinicCur.Zip=textZip.Text;
-			ClinicCur.BillingAddress=textBillingAddress.Text;
-			ClinicCur.BillingAddress2=textBillingAddress2.Text;
+			ClinicCur.BillingAddressLine1=textBillingAddress.Text;
+			ClinicCur.BillingAddressLine2=textBillingAddress2.Text;
 			ClinicCur.BillingCity=textBillingCity.Text;
 			ClinicCur.BillingState=textBillingST.Text;
 			ClinicCur.BillingZip=textBillingZip.Text;
-			ClinicCur.PayToAddress=textPayToAddress.Text;
-			ClinicCur.PayToAddress2=textPayToAddress2.Text;
+			ClinicCur.PayToAddressLine1=textPayToAddress.Text;
+			ClinicCur.PayToAddressLine2=textPayToAddress2.Text;
 			ClinicCur.PayToCity=textPayToCity.Text;
 			ClinicCur.PayToState=textPayToST.Text;
 			ClinicCur.PayToZip=textPayToZip.Text;
 			ClinicCur.BankNumber=textBankNumber.Text;
 			ClinicCur.DefaultPlaceService=(PlaceOfService)comboPlaceService.SelectedIndex;
-			ClinicCur.UseBillAddrOnClaims=checkUseBillingAddressOnClaims.Checked;
+			ClinicCur.BillingAddressOnClaims=checkUseBillingAddressOnClaims.Checked;
 			ClinicCur.IsHidden=checkHidden.Checked;
-			ClinicCur.ExternalID=externalID;
 			long defNumRegion=0;
 			if(comboRegion.SelectedIndex>0){
 				defNumRegion=_listRegionDefs[comboRegion.SelectedIndex-1].DefNum;
 			}
 			ClinicCur.Region=defNumRegion;
 			if(radioInsBillingProvDefault.Checked){//default=0
-				ClinicCur.InsBillingProv=0;
+				ClinicCur.InsBillingProviderId=0;
 			}
 			else if(radioInsBillingProvTreat.Checked){//treat=-1
-				ClinicCur.InsBillingProv=-1;
+				ClinicCur.InsBillingProviderId=-1;
 			}
 			else{
-				ClinicCur.InsBillingProv=comboInsBillingProv.GetSelectedProvNum();
+				ClinicCur.InsBillingProviderId=comboInsBillingProv.GetSelectedProvNum();
 			}
-			ClinicCur.DefaultProv=comboDefaultProvider.GetSelectedProvNum();//0 for selectedIndex -1
+			ClinicCur.DefaultProviderId=comboDefaultProvider.GetSelectedProvNum();//0 for selectedIndex -1
 			if(_isMedLabHL7DefEnabled) {
-				ClinicCur.MedLabAccountNum=textMedLabAcctNum.Text.Trim();
+				ClinicCur.MedlabAccountId=textMedLabAcctNum.Text.Trim();
 			}
-			ClinicCur.SchedNote=textSchedRules.Text;
+			ClinicCur.SchedulingNote=textSchedRules.Text;
 			#endregion Set Values
 			DialogResult=DialogResult.OK;
 		}

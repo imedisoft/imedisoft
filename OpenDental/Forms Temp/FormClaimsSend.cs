@@ -430,7 +430,7 @@ namespace OpenDental{
 				butNextUnsent.Visible=false;
 			}
 			else {
-				_listClinics=Clinics.GetForUserod(Security.CurrentUser);
+				_listClinics=Clinics.GetByUser(Security.CurrentUser);
 			}
 			comboCustomTracking.Items.Add("all");
 			comboCustomTracking.SelectedIndex=0;
@@ -511,7 +511,7 @@ namespace OpenDental{
 			for(int i=0;i<_listClinics.Count;i++) {
 				_listNumberOfClaims.Add(0);
 				for(int j=0;j<_arrayQueueAll.Length;j++) {
-					if(_arrayQueueAll[j].ClinicNum==_listClinics[i].ClinicNum) {
+					if(_arrayQueueAll[j].ClinicNum==_listClinics[i].Id) {
 						if(claimCustomTracking==0 || _arrayQueueAll[j].CustomTracking==claimCustomTracking) {
 							_listNumberOfClaims[i]=_listNumberOfClaims[i]+1;
 						}
@@ -519,7 +519,7 @@ namespace OpenDental{
 				}
 				comboClinic.Items.Add(_listClinics[i].Abbr+"  ("+_listNumberOfClaims[i]+")");
 				int curIndex=i;
-				if(_listClinics[i].ClinicNum==Clinics.ClinicNum) {
+				if(_listClinics[i].Id==Clinics.ClinicId) {
 					comboClinic.SelectedIndex=curIndex;
 				}
 			}
@@ -718,10 +718,10 @@ namespace OpenDental{
 			long customTracking=0;
 			if(PrefC.HasClinicsEnabled) {
 				if(Security.CurrentUser.ClinicIsRestricted) {//If the user is restricted to specific clinics (has no Unassigned/Default option)
-					clinicNum=_listClinics[comboClinic.SelectedIndex].ClinicNum;
+					clinicNum=_listClinics[comboClinic.SelectedIndex].Id;
 				}
 				else if(comboClinic.SelectedIndex!=0) {//If not restricted to specific clinics and not selecting Unassigned/Default
-					clinicNum=_listClinics[comboClinic.SelectedIndex-1].ClinicNum;
+					clinicNum=_listClinics[comboClinic.SelectedIndex-1].Id;
 				}
 			}
 			if(comboCustomTracking.SelectedIndex!=0) {
@@ -1131,7 +1131,7 @@ namespace OpenDental{
 			Cursor.Current=Cursors.WaitCursor;
 			//Loop through and validate all claims.
 			Clearinghouse clearinghouseHq=ClearinghouseL.GetClearinghouseHq(listClaimsToValidate[0].ClearinghouseNum);
-			Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.ClinicNum);
+			Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.ClinicId);
 			//Grabs list of claims here to prevent multiple database calls. Needed to extract provnums
 			List<Claim> listClaims=Claims.GetClaimsFromClaimNums(listClaimsToValidate.Select(x => x.ClaimNum).ToList());
 			for(int i=0;i<listClaimsToValidate.Count;i++) {

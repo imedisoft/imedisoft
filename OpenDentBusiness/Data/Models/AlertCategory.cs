@@ -3,8 +3,8 @@ using System;
 
 namespace OpenDentBusiness
 {
-    [Table]
-	public class AlertCategory : TableBase
+    [Table("alert_categories")]
+	public class AlertCategory
 	{
 		[PrimaryKey]
 		public long Id;

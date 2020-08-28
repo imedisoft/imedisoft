@@ -276,7 +276,7 @@ namespace OpenDentBusiness{
 					allergyDef=(AllergyDef)triggerObject;
 					//TODO: TriggerObjectMessage
 					command="SELECT * FROM ehrtrigger"
-					+" WHERE AllergyDefNumList LIKE '% "+POut.String(allergyDef.AllergyDefNum.ToString())+" %'";// '% <code> %' so that we can get exact matches.
+					+" WHERE AllergyDefNumList LIKE '% "+POut.String(allergyDef.Id.ToString())+" %'";// '% <code> %' so that we can get exact matches.
 					break;
 				case "EhrLabResult"://match loinc only, no longer 
 					ehrLabResult=(EhrLabResult)triggerObject;
@@ -939,7 +939,7 @@ namespace OpenDentBusiness{
 			string[] arrayAllergyDefNums=ehrTrig.AllergyDefNumList.Split(new string[] { " " },StringSplitOptions.RemoveEmptyEntries);
 			for(int c=0;c<arrayAllergyDefNums.Length;c++) {
 				if(listObjectMatches.FindAll(x => x is AllergyDef)
-					.Exists(x => ((AllergyDef)x).AllergyDefNum.ToString()==arrayAllergyDefNums[c])) 
+					.Exists(x => ((AllergyDef)x).Id.ToString()==arrayAllergyDefNums[c])) 
 				{
 					continue;//found required code
 				}
@@ -1182,9 +1182,9 @@ namespace OpenDentBusiness{
 					cdsTrig=new KnowledgeRequest();
 					AllergyDef allergyObj=(AllergyDef)objectMatch;
 					cdsTrig.Type="Allergy";
-					cdsTrig.Code=POut.Long(allergyObj.AllergyDefNum);
+					cdsTrig.Code=POut.Long(allergyObj.Id);
 					cdsTrig.CodeSystem=CodeSyst.AllergyDef;
-					cdsTrig.Description=AllergyDefs.GetOne(allergyObj.AllergyDefNum).Description;
+					cdsTrig.Description=AllergyDefs.GetOne(allergyObj.Id).Description;
 					listCDSTrigs.Add(cdsTrig);
 					break;
 				default:

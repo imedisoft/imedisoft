@@ -13,16 +13,14 @@ namespace OpenDentBusiness
 		[PrimaryKey]
 		public long ApptFieldNum;
 
-		/// <summary>
-		/// FK to appointment.AptNum
-		/// </summary>
+		[ForeignKey(typeof(Appointment), nameof(Appointment.AptNum))]
 		public long AptNum;
 
 		/// <summary>
-		/// FK to apptfielddef.FieldName. 
 		/// The full name is shown here for ease of use when running queries. 
 		/// But the user is only allowed to change fieldNames in the patFieldDef setup window.
 		/// </summary>
+		[ForeignKey(typeof(ApptFieldDef), nameof(ApptFieldDef.FieldName))]
 		public string FieldName;
 
 		/// <summary>

@@ -30,7 +30,7 @@ namespace OpenDental.Bridges
 		public static List<string> Validate(long clinicNum)
 		{
 			List<string> listErrors = new List<string>();
-			Clinic clinic = Clinics.GetClinic(clinicNum);
+			Clinic clinic = Clinics.GetById(clinicNum);
 			Ebill eBillClinic = Ebills.GetForClinic(clinicNum);
 			Ebill eBillDefault = Ebills.GetForClinic(0);
 			EHG_Address addressRemit = null;
@@ -55,7 +55,7 @@ namespace OpenDental.Bridges
 		/// </summary>
 		public static void GeneratePracticeInfo(XmlWriter writer, long clinicNum)
 		{
-			Clinic clinic = Clinics.GetClinic(clinicNum);
+			Clinic clinic = Clinics.GetById(clinicNum);
 			Ebill eBillClinic = Ebills.GetForClinic(clinicNum);
 			Ebill eBillDefault = Ebills.GetForClinic(0);
 			writer.WriteProcessingInstruction("xml", "version = \"1.0\" standalone=\"yes\"");
@@ -171,8 +171,8 @@ namespace OpenDental.Bridges
 			}
 			else if (eBillAddress == EbillAddress.ClinicPhysical)
 			{
-				address.Address1 = clinic.Address;
-				address.Address2 = clinic.Address2;
+				address.Address1 = clinic.AddressLine1;
+				address.Address2 = clinic.AddressLine2;
 				address.City = clinic.City;
 				address.State = clinic.State;
 				address.Zip = clinic.Zip;
@@ -181,8 +181,8 @@ namespace OpenDental.Bridges
 			}
 			else if (eBillAddress == EbillAddress.ClinicPayTo)
 			{
-				address.Address1 = clinic.PayToAddress;
-				address.Address2 = clinic.PayToAddress2;
+				address.Address1 = clinic.PayToAddressLine1;
+				address.Address2 = clinic.PayToAddressLine2;
 				address.City = clinic.PayToCity;
 				address.State = clinic.PayToState;
 				address.Zip = clinic.PayToZip;
@@ -191,8 +191,8 @@ namespace OpenDental.Bridges
 			}
 			else if (eBillAddress == EbillAddress.ClinicBilling)
 			{
-				address.Address1 = clinic.BillingAddress;
-				address.Address2 = clinic.BillingAddress2;
+				address.Address1 = clinic.BillingAddressLine1;
+				address.Address2 = clinic.BillingAddressLine2;
 				address.City = clinic.BillingCity;
 				address.State = clinic.BillingState;
 				address.Zip = clinic.BillingZip;

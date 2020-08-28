@@ -55,9 +55,9 @@ namespace OpenDentBusiness
 			if (PrefC.HasClinicsEnabled)
 			{
 				var services = new List<WebServiceMainHQProxy.EServiceSetup.SignupOut.SignupOutEService>();
-				foreach (var clinic in Clinics.GetDeepCopy(true))
+				foreach (var clinic in Clinics.GetAll(false))
 				{
-					services.AddRange(GetEServicesForClinic(clinic.ClinicNum));
+					services.AddRange(GetEServicesForClinic(clinic.Id));
 				}
 
 				return services;

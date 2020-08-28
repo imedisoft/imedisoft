@@ -383,12 +383,63 @@ namespace Imedisoft.Data
 			return dataTable;
 		}
 
-        /// <summary>
-        /// Executes the specified command query.
-        /// </summary>
-        /// <param name="commandText">The command to execute.</param>
-        /// <param name="parameters">Optional command parameters.</param>
-        /// <returns>The number of rows affected.</returns>
+		/// <summary>
+		/// Executes the specified command as a reader and executes the specified <paramref name="action"/>.
+		/// </summary>
+		/// <param name="commandText">The command to execute.</param>
+		/// <param name="action">The action to execute.</param>
+		/// <param name="autoRetry">A value indicating whether to auto retry when the command fails.</param>
+		/// <param name="parameters">Optional command parameters.</param>
+		/// <returns>The results.</returns>
+		public void ExecuteReader(string commandText, Action<MySqlDataReader> action, bool autoRetry = true, params MySqlParameter[] parameters)
+		{
+			if (action == null) return;
+
+#if DEBUG
+			Debug.WriteLine(commandText);
+#endif
+
+			var dataTable = new DataTable();
+
+			command.CommandText = commandText;
+			command.Parameters.Clear();
+			command.Parameters.AddRange(parameters);
+
+			try
+			{
+				connection.Open();
+
+				RunAction(() =>
+				{
+					using (var dataReader = command.ExecuteReader())
+					{
+						action(dataReader);
+					}
+				});
+			}
+			catch (MySqlException exception)
+			{
+				if (autoRetry && IsErrorHandled(exception))
+				{
+					connection.Close();
+
+					ExecuteReader(commandText, action, true);
+				}
+
+				throw;
+			}
+			finally
+			{
+				connection.Close();
+			}
+		}
+
+		/// <summary>
+		/// Executes the specified command query.
+		/// </summary>
+		/// <param name="commandText">The command to execute.</param>
+		/// <param name="parameters">Optional command parameters.</param>
+		/// <returns>The number of rows affected.</returns>
 		public long ExecuteNonQuery(string commandText, bool autoRetry = false, params MySqlParameter[] parameters)
 		{
 #if DEBUG

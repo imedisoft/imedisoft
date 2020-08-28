@@ -25,7 +25,7 @@ namespace OpenDental {
 				comboSnomedAllergyType.Items.Add(Enum.GetNames(typeof(SnomedAllergy))[i]);
 			}
 			comboSnomedAllergyType.SelectedIndex=(int)AllergyDefCur.SnomedType;
-			textMedication.Text=Medications.GetDescription(AllergyDefCur.MedicationNum);
+			textMedication.Text=Medications.GetDescription(AllergyDefCur.MedicationId);
 			textUnii.Text=AllergyDefCur.UniiCode;
 		}
 
@@ -46,8 +46,8 @@ namespace OpenDental {
 			if(FormM.DialogResult!=DialogResult.OK){
 				return;
 			}
-			AllergyDefCur.MedicationNum=FormM.SelectedMedicationNum;
-			textMedication.Text=Medications.GetDescription(AllergyDefCur.MedicationNum);
+			AllergyDefCur.MedicationId=FormM.SelectedMedicationNum;
+			textMedication.Text=Medications.GetDescription(AllergyDefCur.MedicationId);
 		}
 
 		private void butNoneUniiTo_Click(object sender,EventArgs e) {
@@ -55,7 +55,7 @@ namespace OpenDental {
 		}
 
 		private void butNone_Click(object sender,EventArgs e) {
-			AllergyDefCur.MedicationNum=0;
+			AllergyDefCur.MedicationId=0;
 			textMedication.Text="";
 		}
 
@@ -101,8 +101,8 @@ namespace OpenDental {
 
 		private void butDelete_Click(object sender,EventArgs e) {
 			if(!AllergyDefCur.IsNew) {
-				if(!AllergyDefs.DefIsInUse(AllergyDefCur.AllergyDefNum)) {
-					AllergyDefs.Delete(AllergyDefCur.AllergyDefNum);
+				if(!AllergyDefs.DefIsInUse(AllergyDefCur.Id)) {
+					AllergyDefs.Delete(AllergyDefCur.Id);
 				}
 				else {
 					MessageBox.Show("Cannot delete allergies in use.");

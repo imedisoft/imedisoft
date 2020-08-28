@@ -1163,7 +1163,7 @@ namespace OpenDental{
 			TimeAdjust adjust=new TimeAdjust();
 			adjust.EmployeeNum=EmployeeCur.EmployeeNum;
 			if(PrefC.HasClinicsEnabled) {
-				adjust.ClinicNum=Clinics.ClinicNum;
+				adjust.ClinicNum=Clinics.ClinicId;
 			}
 			DateTime dateStop=PIn.Date(textDateStop.Text);
 			if(DateTime.Today<=dateStop && DateTime.Today>=PIn.Date(textDateStart.Text)) {

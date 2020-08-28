@@ -70,7 +70,7 @@ namespace UnitTestsCore {
 			Payment paymentCur=new Payment();
 			paymentCur.PayDate=DateTime.Today;
 			paymentCur.PatNum=pat.PatNum;
-			paymentCur.ClinicNum=clinic.ClinicNum;
+			paymentCur.ClinicNum=clinic.Id;
 			paymentCur.DateEntry=DateTime.Today;
 			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.PaymentTypes,true);
 			if(listDefs.Count>0) {

@@ -964,7 +964,7 @@ namespace OpenDentBusiness
 				row["ClaimPaymentNum"] = "1";//this is now just a boolean flag indicating that it is a payment.
 											 //this is because it will frequently not be attached to an actual claim payment.
 				long clinicNumCur = PIn.Long(rawClaimPayRow["ClinicNum"].ToString());
-				row["clinic"] = Clinics.GetDesc(clinicNumCur);
+				row["clinic"] = Clinics.GetDescription(clinicNumCur);
 				row["ClinicNum"] = clinicNumCur;
 				row["colorText"] = listDefs[7].ItemColor.ToArgb().ToString();
 				amt = PIn.Decimal(rawClaimPayRow["InsPayAmt_"].ToString());//payments tracked in payment plans will show in the payment plan grid
@@ -1113,7 +1113,7 @@ namespace OpenDentBusiness
 				row["ClaimNum"] = 0;
 				row["ClaimPaymentNum"] = "0";
 				long clinicNumCur = PIn.Long(rawProcRow["ClinicNum"].ToString());
-				row["clinic"] = Clinics.GetDesc(clinicNumCur);
+				row["clinic"] = Clinics.GetDescription(clinicNumCur);
 				row["ClinicNum"] = clinicNumCur;
 				string procCode = rawProcRow["ProcCode"].ToString();
 				if (procCode == "D9986")
@@ -1321,7 +1321,7 @@ namespace OpenDentBusiness
 				row["ClaimNum"] = 0;
 				row["ClaimPaymentNum"] = "0";
 				long clinicNumCur = PIn.Long(rawAdj.Rows[i]["ClinicNum"].ToString());
-				row["clinic"] = Clinics.GetDesc(clinicNumCur);
+				row["clinic"] = Clinics.GetDescription(clinicNumCur);
 				row["ClinicNum"] = clinicNumCur;
 				row["colorText"] = listDefs[1].ItemColor.ToArgb().ToString();
 				dateT = PIn.Date(rawAdj.Rows[i]["AdjDate"].ToString());
@@ -1546,7 +1546,7 @@ namespace OpenDentBusiness
 				row["ClaimNum"] = 0;
 				row["ClaimPaymentNum"] = "0";
 				long clinicNumCur = PIn.Long(rawPay.Rows[i]["ClinicNum"].ToString());
-				row["clinic"] = Clinics.GetDesc(clinicNumCur);
+				row["clinic"] = Clinics.GetDescription(clinicNumCur);
 				row["ClinicNum"] = clinicNumCur;
 				row["colorText"] = listDefs[3].ItemColor.ToArgb().ToString();
 				amt = PIn.Decimal(rawPay.Rows[i]["splitAmt_"].ToString());
@@ -1718,7 +1718,7 @@ namespace OpenDentBusiness
 				row["ClaimNum"] = PIn.Long(rawClaim.Rows[i]["ClaimNum"].ToString());
 				row["ClaimPaymentNum"] = "0";
 				long clinicNumCur = PIn.Long(rawClaim.Rows[i]["ClinicNum"].ToString());
-				row["clinic"] = Clinics.GetDesc(clinicNumCur);
+				row["clinic"] = Clinics.GetDescription(clinicNumCur);
 				row["ClinicNum"] = clinicNumCur;
 				row["colorText"] = listDefs[4].ItemColor.ToArgb().ToString();
 				//might be changed lower down based on claim status
@@ -2012,7 +2012,7 @@ namespace OpenDentBusiness
 					row["ClaimNum"] = 0;
 					row["ClaimPaymentNum"] = "0";
 					long clinicNumCur = PIn.Long(rawPayPlan.Rows[i]["ClinicNum"].ToString());
-					row["clinic"] = Clinics.GetDesc(clinicNumCur);
+					row["clinic"] = Clinics.GetDescription(clinicNumCur);
 					row["ClinicNum"] = clinicNumCur;
 					row["colorText"] = listDefs[6].ItemColor.ToArgb().ToString();
 					amt = PIn.Decimal(rawPayPlan.Rows[i]["CompletedAmt"].ToString());
@@ -2133,7 +2133,7 @@ namespace OpenDentBusiness
 					row["ClaimNum"] = 0;
 					row["ClaimPaymentNum"] = "0";
 					long clinicNumCur = PIn.Long(rawPayPlan2.Rows[i]["ClinicNum"].ToString());
-					row["clinic"] = Clinics.GetDesc(clinicNumCur);
+					row["clinic"] = Clinics.GetDescription(clinicNumCur);
 					row["ClinicNum"] = clinicNumCur;
 					row["colorText"] = listDefs[6].ItemColor.ToArgb().ToString();
 					dateT = PIn.Date(rawPayPlan2.Rows[i]["ChargeDate"].ToString());
@@ -2215,7 +2215,7 @@ namespace OpenDentBusiness
 					row["ClaimNum"] = 0;
 					row["ClaimPaymentNum"] = "0";
 					long clinicNumCur = PIn.Long(rawPayPlan3.Rows[i]["ClinicNum"].ToString());
-					row["clinic"] = Clinics.GetDesc(clinicNumCur);
+					row["clinic"] = Clinics.GetDescription(clinicNumCur);
 					row["ClinicNum"] = clinicNumCur;
 					row["colorText"] = listDefs[6].ItemColor.ToArgb().ToString();
 					dateT = PIn.Date(rawPayPlan3.Rows[i]["ChargeDate"].ToString());
@@ -2369,7 +2369,7 @@ namespace OpenDentBusiness
 					row["ClaimNum"] = 0;
 					row["ClaimPaymentNum"] = "0";
 					long clinicNumCur = PIn.Long(payplanLinks.Rows[i]["ClinicNum"].ToString());
-					row["clinic"] = Clinics.GetDesc(clinicNumCur);
+					row["clinic"] = Clinics.GetDescription(clinicNumCur);
 					row["ClinicNum"] = clinicNumCur;
 					row["colorText"] = listDefs[6].ItemColor.ToArgb().ToString();
 					dateT = PIn.Date(payplanLinks.Rows[i]["SecDateTEntry"].ToString());

@@ -340,9 +340,9 @@ namespace OpenDental {
 		private void FormClinics_Load(object sender, System.EventArgs e) {
 			checkOrderAlphabetical.Checked=Prefs.GetBool(PrefName.ClinicListIsAlphabetical);
 			if(ListClinics==null) {
-				ListClinics=Clinics.GetAllForUserod(Security.CurrentUser);
+				ListClinics=Clinics.GetByUser(Security.CurrentUser);
 				if(IncludeHQInList) {
-					ListClinics.Insert(0,new Clinic() { ClinicNum=0,Description="Headquarters",Abbr="HQ" });
+					ListClinics.Insert(0,new Clinic() { Id=0,Description="Headquarters",Abbr="HQ" });
 				}
 				//if alphabetical checkbox is checked/unchecked it triggers a pref cache refresh, but does not refill the clinic cache, so we need to sort here
 				//in case the pref was changed since last time this was opened.
@@ -380,7 +380,7 @@ namespace OpenDental {
 			FillGrid(false);
 			if(!ListSelectedClinicNums.IsNullOrEmpty()) {
 				for(int i=0;i<gridMain.ListGridRows.Count;i++) {
-					if(ListSelectedClinicNums.Contains(((Clinic)gridMain.ListGridRows[i].Tag).ClinicNum)) {
+					if(ListSelectedClinicNums.Contains(((Clinic)gridMain.ListGridRows[i].Tag).Id)) {
 						gridMain.SetSelected(i,true);
 					}
 				}
@@ -390,7 +390,7 @@ namespace OpenDental {
 		private void FillGrid(bool doReselctRows=true) {
 			List<long> listSelectedClinicNums=new List<long>();
 			if(doReselctRows) {
-				listSelectedClinicNums=gridMain.SelectedTags<Clinic>().Select(x => x.ClinicNum).ToList();
+				listSelectedClinicNums=gridMain.SelectedTags<Clinic>().Select(x => x.Id).ToList();
 			}
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
@@ -410,7 +410,7 @@ namespace OpenDental {
 					continue;
 				}
 				row=new GridRow();
-				row.Cells.Add((clinCur.ClinicNum==0?"":clinCur.Abbr));
+				row.Cells.Add((clinCur.Id==0?"":clinCur.Abbr));
 				row.Cells.Add(clinCur.Description);
 				string specialty="";
 				string specialties=string.Join(",",clinCur.ListClinicSpecialtyDefLinks
@@ -419,13 +419,13 @@ namespace OpenDental {
 				row.Cells.Add(specialties);
 				if(!IsSelectionMode) {//selection mode means no IsHidden or Pat Count columns
 					int patCount=0;
-					_dictClinicalCounts.TryGetValue(clinCur.ClinicNum,out patCount);
+					_dictClinicalCounts.TryGetValue(clinCur.Id,out patCount);
 					row.Cells.Add(POut.Int(patCount));
 					row.Cells.Add(clinCur.IsHidden?"X":"");
 				}
 				row.Tag=clinCur;
 				gridMain.ListGridRows.Add(row);
-				if(listSelectedClinicNums.Contains(clinCur.ClinicNum)) {
+				if(listSelectedClinicNums.Contains(clinCur.Id)) {
 					listIndicesToReselect.Add(gridMain.ListGridRows.Count-1);
 				}
 			}
@@ -444,11 +444,11 @@ namespace OpenDental {
 			clinicCur.ItemOrder=gridMain.ListGridRows.Count-(IncludeHQInList?1:0);//Set it last in the last position (minus 1 for HQ)
 			FormClinicEdit FormCE=new FormClinicEdit(clinicCur);
 			if(FormCE.ShowDialog()==DialogResult.OK) {
-				clinicCur.ClinicNum=Clinics.Insert(clinicCur);//inserting this here so we have a ClinicNum; the user cannot cancel and undo this anyway
+				clinicCur.Id=Clinics.Insert(clinicCur);//inserting this here so we have a ClinicNum; the user cannot cancel and undo this anyway
 				//ClinicCur.ListClinicSpecialtyDefLinks FKeys are set in FormClosing to ClinicCur.ClinicNum
 				ListClinics.Add(clinicCur);
 				_listClinicsOld.Add(clinicCur.Copy());//add to both lists so the sync doesn't try to insert it again or delete it.
-				_dictClinicalCounts[clinicCur.ClinicNum]=0;
+				_dictClinicalCounts[clinicCur.Id]=0;
 				ListClinics.Sort(ClinicSort);
 			}
 			FillGrid();
@@ -459,7 +459,7 @@ namespace OpenDental {
 				return;
 			}
 			if(IsSelectionMode) {
-				SelectedClinicNum=((Clinic)gridMain.ListGridRows[e.Row].Tag).ClinicNum;
+				SelectedClinicNum=((Clinic)gridMain.ListGridRows[e.Row].Tag).Id;
 				DialogResult=DialogResult.OK;
 				return;
 			}
@@ -492,7 +492,7 @@ namespace OpenDental {
 				return;
 			}
 			_clinicNumTo=formC.SelectedClinicNum;
-			textMoveTo.Text=(listClinics.FirstOrDefault(x => x.ClinicNum==_clinicNumTo)?.Abbr??"");
+			textMoveTo.Text=(listClinics.FirstOrDefault(x => x.Id==_clinicNumTo)?.Abbr??"");
 		}
 
 		private void butMovePats_Click(object sender,EventArgs e) {
@@ -504,13 +504,13 @@ namespace OpenDental {
 				MessageBox.Show("You must pick a 'To' clinic in the box above to move patients to.");
 				return;
 			}
-			Dictionary<long,Clinic> dictClinicsFrom=gridMain.SelectedTags<Clinic>().ToDictionary(x => x.ClinicNum);
-			Clinic clinicTo=gridMain.GetTags<Clinic>().FirstOrDefault(x => x.ClinicNum==_clinicNumTo);
+			Dictionary<long,Clinic> dictClinicsFrom=gridMain.SelectedTags<Clinic>().ToDictionary(x => x.Id);
+			Clinic clinicTo=gridMain.GetTags<Clinic>().FirstOrDefault(x => x.Id==_clinicNumTo);
 			if(clinicTo==null) {
 				MessageBox.Show("The clinic could not be found.");
 				return;
 			}
-			if(dictClinicsFrom.ContainsKey(clinicTo.ClinicNum)) {
+			if(dictClinicsFrom.ContainsKey(clinicTo.Id)) {
 				MessageBox.Show("The 'To' clinic should not also be one of the 'From' clinics.");
 				return;
 			}
@@ -528,7 +528,7 @@ namespace OpenDental {
 			ODProgress.ShowAction(() => {
 					int patsMoved=0;
 					List<Action> listActions=dictClinFromCounts.Select(x => new Action(() => {
-						Patients.ChangeClinicsForAll(x.Key,clinicTo.ClinicNum);//update all clinicNums to new clinic
+						Patients.ChangeClinicsForAll(x.Key,clinicTo.Id);//update all clinicNums to new clinic
 						Clinic clinicCur;
 						SecurityLogs.MakeLogEntry(Permissions.PatientEdit,0,"Clinic changed for "+x.Value+" patients from "
 							+(dictClinicsFrom.TryGetValue(x.Key,out clinicCur)?clinicCur.Abbr:"")+" to "+clinicTo.Abbr+".");
@@ -613,10 +613,10 @@ namespace OpenDental {
 
 		private int ClinicSort(Clinic x,Clinic y) {
 			if(IncludeHQInList) {//always keep the HQ clinic at the top if it's in the list
-				if(x.ClinicNum==0) {
+				if(x.Id==0) {
 					return -1;
 				}
-				if(y.ClinicNum==0) {
+				if(y.Id==0) {
 					return 1;
 				}
 			}
@@ -631,7 +631,7 @@ namespace OpenDental {
 				retval=x.Description.CompareTo(y.Description);
 			}
 			if(retval==0) {//if Abbrs/ItemOrders are the same and Descriptions are alphabetically the same, order by ClinicNum (guaranteed deterministic)
-				retval=x.ClinicNum.CompareTo(y.ClinicNum);
+				retval=x.Id.CompareTo(y.Id);
 			}
 			return retval;
 		}
@@ -645,7 +645,7 @@ namespace OpenDental {
 			if(checkOrderAlphabetical.Checked) {
 				return false;
 			}
-			List<Clinic> listAllClinicsDb=Clinics.GetClinicsNoCache();//get all clinics, even hidden ones, in order to set the ItemOrders correctly
+			List<Clinic> listAllClinicsDb=Clinics.GetClinicsNoCache().ToList();//get all clinics, even hidden ones, in order to set the ItemOrders correctly
 			List<Clinic> listAllClinicsNew=listAllClinicsDb.Select(x => x.Copy()).ToList();
 			bool isHqInList=IncludeHQInList;
 			IncludeHQInList=false;
@@ -654,7 +654,8 @@ namespace OpenDental {
 			for(int i=0;i<listAllClinicsNew.Count;i++) {
 				listAllClinicsNew[i].ItemOrder=i+1;//1 based ItemOrder because the HQ 'clinic' has ItemOrder 0
 			}
-			return Clinics.Sync(listAllClinicsNew,listAllClinicsDb);
+			//return Clinics.Sync(listAllClinicsNew,listAllClinicsDb);
+			return false;
 		}
 
 		private void checkShowHidden_CheckedChanged(object sender,EventArgs e) {
@@ -673,8 +674,8 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(IsSelectionMode && gridMain.SelectedIndices.Length>0) {
-				SelectedClinicNum=gridMain.SelectedTag<Clinic>()?.ClinicNum??0;
-				ListSelectedClinicNums=gridMain.SelectedTags<Clinic>().Select(x => x.ClinicNum).ToList();
+				SelectedClinicNum=gridMain.SelectedTag<Clinic>()?.Id??0;
+				ListSelectedClinicNums=gridMain.SelectedTags<Clinic>().Select(x => x.Id).ToList();
 				DialogResult=DialogResult.OK;
 			}
 			Close();
@@ -693,11 +694,11 @@ namespace OpenDental {
 			if(Prefs.Set(PrefName.ClinicListIsAlphabetical,checkOrderAlphabetical.Checked)) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
-			bool hasClinicChanges=Clinics.Sync(ListClinics,_listClinicsOld);//returns true if clinics were updated/inserted/deleted
+			//bool hasClinicChanges=Clinics.Sync(ListClinics,_listClinicsOld);//returns true if clinics were updated/inserted/deleted
 			//Update the ClinicNum on all specialties associated to each clinic.
-			ListClinics.ForEach(x => x.ListClinicSpecialtyDefLinks.ForEach(y => y.FKey=x.ClinicNum));
+			ListClinics.ForEach(x => x.ListClinicSpecialtyDefLinks.ForEach(y => y.FKey=x.Id));
 			List<DefLink> listAllClinicSpecialtyDefLinks=ListClinics.SelectMany(x => x.ListClinicSpecialtyDefLinks).ToList();
-			hasClinicChanges|=DefLinks.Sync(listAllClinicSpecialtyDefLinks,_listClinicDefLinksAllOld);
+			bool hasClinicChanges=DefLinks.Sync(listAllClinicSpecialtyDefLinks,_listClinicDefLinksAllOld);
 			hasClinicChanges|=CorrectItemOrders();
 			//Joe - Now that we have called sync on ListClinics we want to make sure that each clinic has program properties for PayConnect and XCharge
 			//We are doing this because of a previous bug that caused some customers to have over 3.4 million duplicate rows in their programproperty table
@@ -705,9 +706,9 @@ namespace OpenDental {
 			long xChargeProgNum=Programs.GetProgramNum(ProgramName.Xcharge);
 			//Don't need to do this for PaySimple, because these will get generated as needed in FormPaySimpleSetup
 			bool hasChanges=ProgramProperties.InsertForClinic(payConnectProgNum,
-				ListClinics.Select(x => x.ClinicNum).Where(x => ProgramProperties.GetListForProgramAndClinic(payConnectProgNum,x).Count==0).ToList());
+				ListClinics.Select(x => x.Id).Where(x => ProgramProperties.GetListForProgramAndClinic(payConnectProgNum,x).Count==0).ToList());
 			hasChanges|=ProgramProperties.InsertForClinic(xChargeProgNum,
-				ListClinics.Select(x => x.ClinicNum).Where(x => ProgramProperties.GetListForProgramAndClinic(xChargeProgNum,x).Count==0).ToList());
+				ListClinics.Select(x => x.Id).Where(x => ProgramProperties.GetListForProgramAndClinic(xChargeProgNum,x).Count==0).ToList());
 			if(hasChanges) {
 				DataValid.SetInvalid(InvalidType.Programs);
 			}

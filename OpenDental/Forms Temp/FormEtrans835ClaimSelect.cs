@@ -93,7 +93,7 @@ namespace OpenDental {
 				row.Cells.Add(Carriers.GetName(InsPlans.RefreshOne(listClaims[i].PlanNum).CarrierNum));//Carrier
 				row.Cells.Add(Claims.GetClaimStatusString(listClaims[i].ClaimStatus));//Status
 				if(PrefC.HasClinicsEnabled) {//Using clinics
-					Clinic clinic=Clinics.GetClinic(listClaims[i].ClinicNum);
+					Clinic clinic=Clinics.GetById(listClaims[i].ClinicNum);
 					if(clinic==null) {
 						row.Cells.Add("");//Clinic
 					}
@@ -320,7 +320,7 @@ namespace OpenDental {
 				row.Cells.Add(Carriers.GetName(InsPlans.RefreshOne(claim.PlanNum).CarrierNum));//Carrier
 				row.Cells.Add(Claims.GetClaimStatusString(claim.ClaimStatus));//Status
 				if(PrefC.HasClinicsEnabled) {//Using clinics
-					Clinic clinic=Clinics.GetClinic(claim.ClinicNum);
+					Clinic clinic=Clinics.GetById(claim.ClinicNum);
 					if(clinic==null) {
 						row.Cells.Add("");//Clinic
 					}

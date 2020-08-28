@@ -128,7 +128,6 @@ namespace UnitTests.AlertItems_Tests {
 				AlertSub alSub=new AlertSub(userAdmin.Id,-1,alertCat.Id);
 				listAlertSubNew.Add(alSub);
 			}
-			AlertSubs.Sync(listAlertSubNew,listAlertSubOld);
 			//Check number of alerts which will display in headquarters clinic.
 			//Call CheckUniqueAlerts for user subscribed to all alert categories
 			List<List<AlertItem>> listUniqueAlertsAll=AlertItems.GetUniqueAlerts(userAdmin.Id,0);
@@ -141,18 +140,18 @@ namespace UnitTests.AlertItems_Tests {
 			//Add clinic
 			listClinics.Add(ClinicT.CreateClinic());
 			//Check that alert for all clinics is included for userAdmin(subscribed to all clinics)
-			listUniqueAlertsAll=AlertItems.GetUniqueAlerts(userAdmin.Id,listClinics.LastOrDefault().ClinicNum);
+			listUniqueAlertsAll=AlertItems.GetUniqueAlerts(userAdmin.Id,listClinics.LastOrDefault().Id);
 			Assert.AreEqual(1,listUniqueAlertsAll.Count());
 			//Check new clinic for user who is not subscribed to all alerts. 
-			listUniqueAlertsOne=AlertItems.GetUniqueAlerts(userNormal.Id,listClinics.LastOrDefault().ClinicNum);
+			listUniqueAlertsOne=AlertItems.GetUniqueAlerts(userNormal.Id,listClinics.LastOrDefault().Id);
 			Assert.AreEqual(0,listUniqueAlertsOne.Count());
 			//Add new alert for new clinic only.
-			CreateAlertItem(false,listClinics.LastOrDefault().ClinicNum);
+			CreateAlertItem(false,listClinics.LastOrDefault().Id);
 			//Check that userAdmin sees new alert item in new clinic. Should have 2, one all clinic econnector alert and the new clinic specific alert.
-			listUniqueAlertsAll=AlertItems.GetUniqueAlerts(userAdmin.Id,listClinics.LastOrDefault().ClinicNum);
+			listUniqueAlertsAll=AlertItems.GetUniqueAlerts(userAdmin.Id,listClinics.LastOrDefault().Id);
 			Assert.AreEqual(2,listUniqueAlertsAll.Count());
 			//Check that userNormal sees no alerts in new clinic, as they are not subscribed to any alert categories, nor clinics.
-			listUniqueAlertsOne=AlertItems.GetUniqueAlerts(userNormal.Id,listClinics.LastOrDefault().ClinicNum);
+			listUniqueAlertsOne=AlertItems.GetUniqueAlerts(userNormal.Id,listClinics.LastOrDefault().Id);
 			Assert.AreEqual(0,listUniqueAlertsOne.Count());
 		}
 
@@ -175,7 +174,7 @@ namespace UnitTests.AlertItems_Tests {
 					Actions=ActionType.MarkAsRead | ActionType.Delete | ActionType.ShowItemValue,
 					Description="A generic alert.",
 					Severity=SeverityType.Low,
-					ItemValue="A generic alert created for testing alert Items for all clinics. ClinicNum==" + clinicNum,
+					Details="A generic alert created for testing alert Items for all clinics. ClinicNum==" + clinicNum,
 					ClinicId=clinicNum,
 				}); ;
 			}

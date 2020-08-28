@@ -268,16 +268,15 @@ namespace OpenDentBusiness {
 					list.Add(new DisplayField("Pri Ins",0,category));
 					list.Add(new DisplayField("Sec Ins",0,category));
 					list.Add(new DisplayField("Payor Types",0,category));
-					if(!Programs.UsingEcwTightOrFullMode()) {//different default list for eCW:
-						list.Add(new DisplayField("Premedicate",0,category));
-						list.Add(new DisplayField("Problems",0,category));
-						list.Add(new DisplayField("Med Urgent",0,category));
-						list.Add(new DisplayField("Medical Summary",0,category));
-						list.Add(new DisplayField("Service Notes",0,category));
-						list.Add(new DisplayField("Medications",0,category));
-						list.Add(new DisplayField("Allergies",0,category));
-						list.Add(new DisplayField("Pat Restrictions",0,category));
-					}
+					list.Add(new DisplayField("Premedicate",0,category));
+					list.Add(new DisplayField("Problems",0,category));
+					list.Add(new DisplayField("Med Urgent",0,category));
+					list.Add(new DisplayField("Medical Summary",0,category));
+					list.Add(new DisplayField("Service Notes",0,category));
+					list.Add(new DisplayField("Medications",0,category));
+					list.Add(new DisplayField("Allergies",0,category));
+					list.Add(new DisplayField("Pat Restrictions",0,category));
+					
 					//list.Add(new DisplayField("PatFields",0,category));
 					//list.Add(new DisplayField("Birthdate",0,category));
 					//list.Add(new DisplayField("City",0,category));
@@ -415,7 +414,7 @@ namespace OpenDentBusiness {
 				case DisplayFieldCategory.AppointmentEdit:
 					list.Add(new DisplayField("Stat",35,category));
 					list.Add(new DisplayField("Priority",45,category));
-					if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+					if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 						list.Add(new DisplayField("Code",125,category));
 					}
 					else {
@@ -433,7 +432,7 @@ namespace OpenDentBusiness {
 				case DisplayFieldCategory.PlannedAppointmentEdit:
 					list.Add(new DisplayField("Stat",35,category));
 					list.Add(new DisplayField("Priority",45,category));
-					if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+					if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 						list.Add(new DisplayField("Code",125,category));
 					}
 					else {
@@ -879,7 +878,7 @@ namespace OpenDentBusiness {
 				case DisplayFieldCategory.AppointmentEdit:
 					list.Add(new DisplayField("Stat",35,category));
 					list.Add(new DisplayField("Priority",45,category));
-					if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+					if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 						list.Add(new DisplayField("Code",125,category));
 					}
 					else {
@@ -897,7 +896,7 @@ namespace OpenDentBusiness {
 				case DisplayFieldCategory.PlannedAppointmentEdit:
 					list.Add(new DisplayField("Stat",35,category));
 					list.Add(new DisplayField("Priority",45,category));
-					if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+					if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 						list.Add(new DisplayField("Code",125,category));
 					}
 					else {

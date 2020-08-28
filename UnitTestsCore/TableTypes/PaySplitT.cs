@@ -76,10 +76,10 @@ namespace UnitTestsCore {
 
 		public static List<PaySplit> CreatePaySplitsForPrepayment(Procedure proc,double amtToUse,PaySplit prePaySplit=null,Clinic clinic=null,long prov=0) {
 			List<PaySplit> retVal=new List<PaySplit>();
-			long clinicNum=prePaySplit?.ClinicNum??clinic?.ClinicNum??proc.ClinicNum;
+			long clinicNum=prePaySplit?.ClinicNum??clinic?.Id??proc.ClinicNum;
 			long provNum=prePaySplit?.ProvNum??prov;
 			if(clinic!=null) {
-				clinicNum=clinic.ClinicNum;
+				clinicNum=clinic.Id;
 			}
 			if(prov!=0) {
 				provNum=prov;

@@ -102,7 +102,7 @@ namespace OpenDental
 		///<summary>HQ only. Keep track of the last time the office down was checked. Too taxing on the server to perform every 1.6 seconds with the rest of the HQ thread metrics. Will be refreshed on ProcessSigsIntervalInSecs interval.</summary>
 		private DateTime _hqOfficeDownLastRefreshed = DateTime.MinValue;
 		///<summary>List of AlerReads for the current User.</summary>
-		List<AlertRead> _listAlertReads = new List<AlertRead>();
+		List<long> _listAlertReads = new List<long>();
 		///<summary>List of AlertItems for the current user and clinic.</summary>
 		List<AlertItem> _listAlertItems = new List<AlertItem>();
 		private FormXWebTransactions FormXWT;
@@ -549,7 +549,7 @@ namespace OpenDental
 			//The ClinicNum will determine which view is loaded, either from the computerpref table or from the userodapptview table
 			if (PrefC.HasClinicsEnabled && Security.CurrentUser != null)
 			{//If block must be run before StartCacheFillForFees() so correct clinic filtration occurs.
-				Clinics.LoadClinicNumForUser();
+				Clinics.LoadActiveClinicForUser();
 				RefreshMenuClinics();
 			}
 			BeginODDashboardStarterThread();
@@ -625,9 +625,9 @@ namespace OpenDental
 			ProcessCommandLine(CommandLineArgs);
 			ODException.SwallowAnyException(() =>
 			{
-				Computers.UpdateHeartBeat(Environment.MachineName, true);
+				Computers.UpdateHeartBeat(Environment.MachineName);
 			});
-			Text = PatientL.GetMainTitle(Patients.GetPat(CurPatNum), Clinics.ClinicNum);
+			Text = PatientL.GetMainTitle(Patients.GetPat(CurPatNum), Clinics.ClinicId);
 			Security.DateTimeLastActivity = DateTime.Now;
 			//Certificate stores for emails need to be created on all computers since any of the computers are able to potentially send encrypted email.
 			//If this fails, prrobably a permission issue creating the stores. Nothing we can do except explain in the manual.
@@ -1325,7 +1325,7 @@ namespace OpenDental
 					this.Invoke(() =>
 					{
 						CurPatNum = pat.PatNum;
-						Text = PatientL.GetMainTitle(pat, Clinics.ClinicNum);
+						Text = PatientL.GetMainTitle(pat, Clinics.ClinicId);
 					});
 					for (int i = 0; i <= 6; i++)
 					{
@@ -1478,7 +1478,7 @@ namespace OpenDental
 			{
 				pat = new Patient();
 			}
-			Text = PatientL.GetMainTitle(pat, Clinics.ClinicNum);
+			Text = PatientL.GetMainTitle(pat, Clinics.ClinicId);
 			bool patChanged = PatientL.AddPatientToMenu(pat.GetNameLF(), pat.PatNum);
 			if (patChanged)
 			{
@@ -2346,7 +2346,7 @@ namespace OpenDental
 		private void RefreshMenuClinics()
 		{
 			menuClinics.MenuItems.Clear();
-			List<Clinic> listClinics = Clinics.GetForUserod(Security.CurrentUser);
+			List<Clinic> listClinics = Clinics.GetByUser(Security.CurrentUser);
 			if (listClinics.Count < 30)
 			{ //This number of clinics will fit in a 990x735 form.
 				MenuItem menuItem;
@@ -2354,7 +2354,7 @@ namespace OpenDental
 				{
 					menuItem = new MenuItem("Headquarters", menuClinic_Click);
 					menuItem.Tag = new Clinic();//Having a ClinicNum of 0 will make OD act like 'Headquarters'.  This allows the user to see unassigned appt views, all operatories, etc.
-					if (Clinics.ClinicNum == 0)
+					if (Clinics.ClinicId == 0)
 					{
 						menuItem.Checked = true;
 					}
@@ -2365,7 +2365,7 @@ namespace OpenDental
 				{
 					menuItem = new MenuItem(listClinics[i].Abbr, menuClinic_Click);
 					menuItem.Tag = listClinics[i];
-					if (Clinics.ClinicNum == listClinics[i].ClinicNum)
+					if (Clinics.ClinicId == listClinics[i].Id)
 					{
 						menuItem.Checked = true;
 					}
@@ -2403,7 +2403,7 @@ namespace OpenDental
 				RefreshCurrentClinic(new Clinic());
 				return;
 			}
-			Clinic clinicCur = Clinics.GetFirstOrDefault(x => x.ClinicNum == FormC.SelectedClinicNum);
+			Clinic clinicCur = Clinics.GetById(FormC.SelectedClinicNum);
 			if (clinicCur != null)
 			{ //Should never be null because the clinic should always be in the list
 				RefreshCurrentClinic(clinicCur);
@@ -2425,9 +2425,9 @@ namespace OpenDental
 		///<summary>This is used to set Clinics.ClinicNum and refreshes the current module.</summary>
 		private void RefreshCurrentClinic(Clinic clinicCur)
 		{
-			bool isChangingClinic = (Clinics.ClinicNum != clinicCur.ClinicNum);
-			Clinics.ClinicNum = clinicCur.ClinicNum;
-			Text = PatientL.GetMainTitle(Patients.GetPat(CurPatNum), Clinics.ClinicNum);
+			bool isChangingClinic = (Clinics.ClinicId != clinicCur.Id);
+			Clinics.ClinicId = clinicCur.Id;
+			Text = PatientL.GetMainTitle(Patients.GetPat(CurPatNum), Clinics.ClinicId);
 			SetSmsNotificationText(doUseSignalInterval: !isChangingClinic);
 			if (Prefs.GetBool(PrefName.AppointmentClinicTimeReset))
 			{
@@ -5135,13 +5135,13 @@ namespace OpenDental
 				return;
 			}
 			//clinics is enabled
-			long clinicNumOld = Clinics.ClinicNum;
+			long clinicNumOld = Clinics.ClinicId;
 			if (Security.CurrentUser.ClinicIsRestricted)
 			{
-				Clinics.ClinicNum = Security.CurrentUser.ClinicId;
+				Clinics.ClinicId = Security.CurrentUser.ClinicId;
 			}
-			Text = PatientL.GetMainTitle(Patients.GetPat(CurPatNum), Clinics.ClinicNum);
-			SetSmsNotificationText(doUseSignalInterval: (clinicNumOld == Clinics.ClinicNum));//Clinic selection changed, update sms notifications.
+			Text = PatientL.GetMainTitle(Patients.GetPat(CurPatNum), Clinics.ClinicId);
+			SetSmsNotificationText(doUseSignalInterval: (clinicNumOld == Clinics.ClinicId));//Clinic selection changed, update sms notifications.
 			RefreshMenuClinics();//this calls ModuleSelected, so no need to call RefreshCurrentModule
 			RefreshMenuDashboards();
 		}
@@ -5300,16 +5300,16 @@ namespace OpenDental
 			FormC.ShowDialog();
 			SecurityLogs.MakeLogEntry(Permissions.Setup, 0, "Clinics");
 			//this menu item is only visible if the clinics show feature is enabled (!EasyNoClinics)
-			if (Clinics.GetDesc(Clinics.ClinicNum) == "")
+			if (Clinics.GetDescription(Clinics.ClinicId) == "")
 			{//will be empty string if ClinicNum is not valid, in case they deleted the clinic
-				Clinics.ClinicNum = Security.CurrentUser.ClinicId;
+				Clinics.ClinicId = Security.CurrentUser.ClinicId;
 				SetSmsNotificationText(doUseSignalInterval: true);//Update sms notification text.
-				Text = PatientL.GetMainTitle(Patients.GetPat(CurPatNum), Clinics.ClinicNum);
+				Text = PatientL.GetMainTitle(Patients.GetPat(CurPatNum), Clinics.ClinicId);
 			}
 			RefreshMenuClinics();
 			//reset the main title bar in case the user changes the clinic description for the selected clinic
 			Patient pat = Patients.GetPat(CurPatNum);
-			Text = PatientL.GetMainTitle(pat, Clinics.ClinicNum);
+			Text = PatientL.GetMainTitle(pat, Clinics.ClinicId);
 			//reset the tip text in case the user changes the clinic description
 		}
 
@@ -6418,7 +6418,7 @@ namespace OpenDental
 				if (_listAlertItems != null && _listAlertReads != null)
 				{
 					List<long> listAlertItemNums = _listAlertItems.Select(x => x.Id).ToList();//All alert nums for current alertItems.
-					List<long> listAlertReadItemNums = _listAlertReads.Select(x => x.AlertItemId).ToList();//All alert nums for read alertItems.
+					List<long> listAlertReadItemNums = _listAlertReads.ToList();//All alert nums for read alertItems.
 					if (!menuItemNoAlerts.Visible && //menuItemNoAlerts is only Visible when there are no AlertItems to show.
 							!listAlertItemNums.All(x => listAlertReadItemNums.Contains(x)))
 					{
@@ -6439,7 +6439,7 @@ namespace OpenDental
 			}
 			else
 			{//This is an alert menuItem.
-				if (!_listAlertReads.Exists(x => x.AlertItemId == alertItem.Id))
+				if (!_listAlertReads.Contains(alertItem.Id))
 				{//User has not acknowleged alert yet.
 					backGroundColor = AlertBackgroudColorHelper(alertItem.Severity);
 					colorText = AlertTextColorHelper(alertItem.Severity);
@@ -6586,11 +6586,14 @@ namespace OpenDental
 						}
 						break;
 					case FormType.FormApptEdit:
-						Appointment appt = Appointments.GetOneApt(alertItem.FKey);
-						Patient pat = Patients.GetPat(appt.PatNum);
-						S_Contr_PatientSelected(pat, false);
-						FormApptEdit FormAE = new FormApptEdit(appt.AptNum);
-						FormAE.ShowDialog();
+						if (alertItem.ObjectId.HasValue)
+						{
+							Appointment appt = Appointments.GetOneApt(alertItem.ObjectId.Value);
+							Patient pat = Patients.GetPat(appt.PatNum);
+							S_Contr_PatientSelected(pat, false);
+							FormApptEdit FormAE = new FormApptEdit(appt.AptNum);
+							FormAE.ShowDialog();
+						}
 						break;
 					case FormType.FormWebSchedAppts:
 						FormWebSchedAppts FormWebSchedAppts = new FormWebSchedAppts(alertItem.Type == AlertType.WebSchedNewPatApptCreated,
@@ -6598,27 +6601,36 @@ namespace OpenDental
 						FormWebSchedAppts.Show();
 						break;
 					case FormType.FormPatientEdit:
-						pat = Patients.GetPat(alertItem.FKey);
-						Family fam = Patients.GetFamily(pat.PatNum);
-						S_Contr_PatientSelected(pat, false);
-						FormPatientEdit FormPE = new FormPatientEdit(pat, fam);
-						FormPE.ShowDialog();
+						if (alertItem.ObjectId.HasValue)
+						{
+							var pat = Patients.GetPat(alertItem.ObjectId.Value);
+							Family fam = Patients.GetFamily(pat.PatNum);
+							S_Contr_PatientSelected(pat, false);
+							FormPatientEdit FormPE = new FormPatientEdit(pat, fam);
+							FormPE.ShowDialog();
+						}
 						break;
 					case FormType.FormDoseSpotAssignUserId:
-						if (!Security.IsAuthorized(Permissions.SecurityAdmin))
+						if (alertItem.ObjectId.HasValue)
 						{
-							break;
+							if (!Security.IsAuthorized(Permissions.SecurityAdmin))
+							{
+								break;
+							}
+							FormDoseSpotAssignUserId FormAU = new FormDoseSpotAssignUserId(alertItem.ObjectId.Value);
+							FormAU.ShowDialog();
 						}
-						FormDoseSpotAssignUserId FormAU = new FormDoseSpotAssignUserId(alertItem.FKey);
-						FormAU.ShowDialog();
 						break;
 					case FormType.FormDoseSpotAssignClinicId:
-						if (!Security.IsAuthorized(Permissions.SecurityAdmin))
+						if (alertItem.ObjectId.HasValue)
 						{
-							break;
+							if (!Security.IsAuthorized(Permissions.SecurityAdmin))
+							{
+								break;
+							}
+							FormDoseSpotAssignClinicId FormACI = new FormDoseSpotAssignClinicId(alertItem.ObjectId.Value);
+							FormACI.ShowDialog();
 						}
-						FormDoseSpotAssignClinicId FormACI = new FormDoseSpotAssignClinicId(alertItem.FKey);
-						FormACI.ShowDialog();
 						break;
 					case FormType.FormEmailInbox:
 						//Will open the email inbox form and set the current inbox to "WebMail".
@@ -6637,7 +6649,7 @@ namespace OpenDental
 			if (menuItem.Name == ActionType.ShowItemValue.ToString())
 			{
 				AlertReadsHelper(listAlertItemNums);
-				MsgBoxCopyPaste msgBCP = new MsgBoxCopyPaste($"{alertItem.Description}\r\n\r\n{alertItem.ItemValue}");
+				MsgBoxCopyPaste msgBCP = new MsgBoxCopyPaste($"{alertItem.Description}\r\n\r\n{alertItem.Details}");
 				msgBCP.Show();
 			}
 		}
@@ -6650,12 +6662,19 @@ namespace OpenDental
 			DataValid.SetInvalid(InvalidType.AlertItems);//THIS IS NOT CACHED. But is used to make server run the alert logic in OpenDentalService.
 		}
 
-		///<summary>Refreshes AlertReads for current user and creates a new one if one does not exist for given alertItem.</summary>
-		private void AlertReadsHelper(List<long> listAlertItemNums)
+
+		/// <summary>
+		/// Refreshes AlertReads for current user and creates a new one if one does not exist for given alertItem.
+		/// </summary>
+		private void AlertReadsHelper(List<long> alertItemIds)
 		{
-			listAlertItemNums.RemoveAll(x => _listAlertReads.Exists(y => y.AlertItemId == x));//Remove all the ones the user has already read.
-			listAlertItemNums.ForEach(x => AlertReads.Insert(new AlertRead(x, Security.CurrentUser.Id)));
+			alertItemIds.RemoveAll(x => _listAlertReads.Contains(x)); // Remove all the ones the user has already read.
+
+
+			alertItemIds.ForEach(x => AlertReads.Insert(Security.CurrentUser.Id, x));
 		}
+
+
 		#endregion Alerts
 
 		#region Standard and Query reports
@@ -7125,7 +7144,7 @@ namespace OpenDental
 				moduleBar.Invalidate();
 				SetModuleSelected();
 				Patient pat = Patients.GetPat(CurPatNum);//pat could be null
-				Text = PatientL.GetMainTitle(pat, Clinics.ClinicNum);//handles pat==null by not displaying pat name in title bar
+				Text = PatientL.GetMainTitle(pat, Clinics.ClinicId);//handles pat==null by not displaying pat name in title bar
 				if (userControlTasks1.Visible)
 				{
 					userControlTasks1.InitializeOnStartup();
@@ -7684,11 +7703,11 @@ namespace OpenDental
 			else
 			{
 				//Preserve data if new user is allowed to access the same clinics
-				List<Clinic> listClinicsForUser = Clinics.GetAllForUserod(Security.CurrentUser);
+				List<Clinic> listClinicsForUser = Clinics.GetByUser(Security.CurrentUser);
 				List<Patient> listMenuPatsLim = PatientL.GetPatientsLimFromMenu();
 				foreach (Patient patLim in listMenuPatsLim)
 				{
-					if (!patLim.ClinicNum.In(listClinicsForUser.Select(x => x.ClinicNum)))
+					if (!patLim.ClinicNum.In(listClinicsForUser.Select(x => x.Id)))
 					{
 						//user is not allowed to access the clinic this patient is located in, remove.
 						PatientL.RemoveFromMenu(patLim.PatNum);
@@ -7703,12 +7722,12 @@ namespace OpenDental
 			moduleBar.Invalidate();
 			if (PrefC.HasClinicsEnabled)
 			{
-				Clinics.LoadClinicNumForUser();
+				Clinics.LoadActiveClinicForUser();
 				RefreshMenuClinics();
 			}
 			SetModuleSelected();
 			Patient pat = Patients.GetPat(CurPatNum);//pat could be null
-			Text = PatientL.GetMainTitle(pat, Clinics.ClinicNum);//handles pat==null by not displaying pat name in title bar
+			Text = PatientL.GetMainTitle(pat, Clinics.ClinicId);//handles pat==null by not displaying pat name in title bar
 			FillPatientButton(pat);
 			if (userControlTasks1.Visible)
 			{

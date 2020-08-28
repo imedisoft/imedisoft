@@ -74,11 +74,11 @@ namespace OpenDentBusiness {
 
 		public static void MakeClinicErxAlert(ClinicErx clinicErx,bool clinicAutomaticallyAttached) {
 			AlertItem alert=AlertItems.RefreshForType(AlertType.DoseSpotClinicRegistered)
-				.FirstOrDefault(x => x.FKey==clinicErx.ClinicErxNum);
+				.FirstOrDefault(x => x.ObjectId==clinicErx.ClinicErxNum);
 			if(alert!=null) {
 				return;//alert already exists
 			}
-      Clinic clinic=Clinics.GetClinic(clinicErx.ClinicNum);
+      Clinic clinic=Clinics.GetById(clinicErx.ClinicNum);
       List<ProgramProperty> listDoseSpotClinicProperties=ProgramProperties.GetForProgram(Programs.GetProgramNum(ProgramName.eRx))
           .FindAll(x => x.ClinicId==0
             && (x.Name==Erx.PropertyDescs.ClinicID || x.Name==Erx.PropertyDescs.ClinicKey)
@@ -90,7 +90,7 @@ namespace OpenDentBusiness {
           Description=(clinicErx.ClinicDesc=="" ? "Headquarters" : clinicErx.ClinicDesc)+" "+"has been registered",
           Severity=SeverityType.Low,
           Type=AlertType.DoseSpotClinicRegistered,
-          FKey=clinicErx.ClinicErxNum,
+          ObjectId=clinicErx.ClinicErxNum,
           ClinicId=clinicErx.ClinicNum,
         };
       }
@@ -102,7 +102,7 @@ namespace OpenDentBusiness {
           Severity=SeverityType.Low,
           Type=AlertType.DoseSpotClinicRegistered,
           ClinicId=-1,//Show in all clinics.  We only want 1 alert, but that alert can be processed from any clinic because we don't know which clinic to display in.
-          FKey=clinicErx.ClinicErxNum,
+          ObjectId=clinicErx.ClinicErxNum,
           FormToOpen=FormType.FormDoseSpotAssignClinicId,
         };
       }
@@ -113,7 +113,7 @@ namespace OpenDentBusiness {
 		///If multiple or no matches, creates form for manual selection of user.</summary>
 		public static void MakeProviderErxAlert(ProviderErx providerErx) {
 			AlertItem alert=AlertItems.RefreshForType(AlertType.DoseSpotProviderRegistered)
-				.FirstOrDefault(x => x.FKey==providerErx.ProviderErxNum);
+				.FirstOrDefault(x => x.ObjectId==providerErx.ProviderErxNum);
 			if(alert!=null) {
 				return;//alert already exists
 			}
@@ -126,9 +126,9 @@ namespace OpenDentBusiness {
 					Description="User automatically assigned.",
 					Severity=SeverityType.Low,
 					Type=AlertType.DoseSpotProviderRegistered,
-					FKey=providerErx.ProviderErxNum,
+					ObjectId=providerErx.ProviderErxNum,
 					ClinicId=-1,//Show in all clinics.  We only want 1 alert, but that alert can be processed from any clinic because providers aren't clinic specific
-					ItemValue="User: "+listDoseUsers[0].Id+", "+listDoseUsers[0].UserName+" "
+					Details="User: "+listDoseUsers[0].Id+", "+listDoseUsers[0].UserName+" "
 					+"has been assigned a DoseSpot User ID of: "+providerErx.UserId,
 				};
 				AlertItems.Insert(alert);
@@ -144,7 +144,7 @@ namespace OpenDentBusiness {
 					Description="Select user to assign ID",
 					Severity=SeverityType.Low,
 					Type=AlertType.DoseSpotProviderRegistered,
-					FKey=providerErx.ProviderErxNum,
+					ObjectId=providerErx.ProviderErxNum,
 					ClinicId=-1,//Show in all clinics.  We only want 1 alert, but that alert can be processed from any clinic because providers aren't clinic specific
 					FormToOpen=FormType.FormDoseSpotAssignUserId,
 				};
@@ -832,7 +832,7 @@ namespace OpenDentBusiness {
 					clinicErxCur.ClinicNum=ppClinicId.ClinicId;
 					clinicErxCur.ClinicId=ppClinicId.Value;
 					clinicErxCur.ClinicKey=ppClinicKey.Value;
-					clinicErxCur.ClinicDesc=Clinics.GetDesc(ppClinicId.ClinicId);
+					clinicErxCur.ClinicDesc=Clinics.GetDescription(ppClinicId.ClinicId);
 					clinicErxCur.EnabledStatus=ErxStatus.PendingAccountId;
 					ClinicErxs.Insert(clinicErxCur);
 				}
@@ -852,13 +852,13 @@ namespace OpenDentBusiness {
 		///Ensures that the Clinic that is returned is a valid clinic that can turned 
 		/// into a DoseSpot Clinic to be used for DoseSpot API calls that require a Clinic (like registering a new clinic). </summary>
 		private static Clinic GetClinicOrPracticeInfo(long clinicNum) {
-			Clinic clinicCur=Clinics.GetClinic(clinicNum);
+			Clinic clinicCur=Clinics.GetById(clinicNum);
 			bool isPractice=false;
 			if(clinicCur==null) {//Make a fake ClinicNum 0 clinic containing practice info for validation/registering a new clinician if needed.
 				clinicCur=new Clinic();
 				clinicCur.Abbr=Prefs.GetString(PrefName.PracticeTitle);
-				clinicCur.Address=Prefs.GetString(PrefName.PracticeAddress);
-				clinicCur.Address2=Prefs.GetString(PrefName.PracticeAddress2);
+				clinicCur.AddressLine1=Prefs.GetString(PrefName.PracticeAddress);
+				clinicCur.AddressLine2=Prefs.GetString(PrefName.PracticeAddress2);
 				clinicCur.City=Prefs.GetString(PrefName.PracticeCity);
 				clinicCur.State=Prefs.GetString(PrefName.PracticeST);
 				clinicCur.Zip=Prefs.GetString(PrefName.PracticeZip);
@@ -892,8 +892,8 @@ namespace OpenDentBusiness {
 		///The returned DoseSpot clinic does not have the ClinicID set.</summary>
 		private static DoseSpotService.Clinic MakeDoseSpotClinic(Clinic clinic) {
 			DoseSpotService.Clinic retVal=new DoseSpotService.Clinic();
-			retVal.Address1=clinic.Address;
-			retVal.Address2=clinic.Address2;
+			retVal.Address1=clinic.AddressLine1;
+			retVal.Address2=clinic.AddressLine2;
 			retVal.City=clinic.City;
 			retVal.ClinicName=clinic.Abbr;
 			retVal.ClinicNameLongForm=clinic.Description;
@@ -913,11 +913,11 @@ namespace OpenDentBusiness {
 		///If isProxyClinician is incorrectly set, the employee will have access to send prescriptions in DoseSpot.</summary>
 		private static DoseSpotService.Clinician MakeDoseSpotClinician(Provider prov,Clinic clinic,string emailAddress,bool isProxyClinician) {
 			DoseSpotService.Clinician retVal=new DoseSpotService.Clinician();
-			retVal.Address1=clinic.Address;
-			retVal.Address2=clinic.Address2;
+			retVal.Address1=clinic.AddressLine1;
+			retVal.Address2=clinic.AddressLine2;
 			retVal.City=clinic.City;
 			retVal.DateOfBirth=prov.Birthdate;
-			retVal.DEANumber=ProviderClinics.GetDEANum(prov.ProvNum,clinic.ClinicNum);//
+			retVal.DEANumber=ProviderClinics.GetDEANum(prov.ProvNum,clinic.Id);//
 			retVal.Email=emailAddress;//Email should have been validated by now.
 			retVal.FirstName=prov.FName;
 			retVal.Gender="Unknown";//This is a required field but we do not store this information.
@@ -1061,10 +1061,10 @@ namespace OpenDentBusiness {
 			else if(!IsPhoneNumberValid(clinic.Fax)) {//If the fax number isn't valid, DoseSpot will break.
 				sbErrors.AppendLine("Fax number invalid: "+clinic.Fax);
 			}
-			if(clinic.Address=="") {
+			if(clinic.AddressLine1=="") {
 				sbErrors.AppendLine("Address is blank");
 			}
-			if(IsAddressPOBox(clinic.Address)) {
+			if(IsAddressPOBox(clinic.AddressLine1)) {
 				sbErrors.AppendLine("Address cannot be a PO BOX");
 			}
 			if(clinic.City=="") {
@@ -1449,7 +1449,7 @@ namespace OpenDentBusiness {
 			string body=$@"
 					{{
 						""ClinicName"": ""{clinic.Abbr}"",
-						""Address1"": ""{clinic.Address}"",
+						""Address1"": ""{clinic.AddressLine1}"",
 						""City"": ""{clinic.City}"",
 						""State"": ""{clinic.State}"",
 						""ZipCode"": ""{clinic.Zip}"",

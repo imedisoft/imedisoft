@@ -7,42 +7,30 @@ namespace OpenDentBusiness
 	/// Subscribes a user and optional clinic to specifc alert types.
 	/// Users will not get alerts unless they have an entry in this table.
 	/// </summary>
-	[Table]
-	[CrudTable(IsSynchable = true)]
+	[Table("alert_subs")]
 	public class AlertSub : TableBase
 	{
 		[PrimaryKey]
-		public long AlertSubNum;
+		public long Id;
 
-		/// <summary>
-		/// FK to userod.UserNum.
-		/// </summary>
-		public long UserNum;
+		[ForeignKey(typeof(Userod), nameof(Userod.Id))]
+		public long UserId;
 
-		/// <summary>
-		/// FK to clinic.ClinicNum. Can be 0.
-		/// </summary>
-		public long ClinicNum;
+		[ForeignKey(typeof(Clinic), nameof(Clinic.Id))]
+		public long? ClinicId;
 
-		/// <summary>
-		/// Deprecated.
-		/// </summary>
-		public AlertType Type;
-
-		/// <summary>
-		/// FK to alertcategory.AlertCategoryNum.
-		/// </summary>
-		public long AlertCategoryNum;
+		[ForeignKey(typeof(AlertCategory), nameof(AlertCategory.Id))]
+		public long AlertCategoryId;
 
 		public AlertSub()
 		{
 		}
 
-		public AlertSub(long userNum, long clinicNum, long alertCatNum)
+		public AlertSub(long userId, long? clinicId, long alertCategoryId)
 		{
-			UserNum = userNum;
-			ClinicNum = clinicNum;
-			AlertCategoryNum = alertCatNum;
+			UserId = userId;
+			ClinicId = clinicId;
+			AlertCategoryId = alertCategoryId;
 		}
 
 		public AlertSub Copy() => (AlertSub)MemberwiseClone();

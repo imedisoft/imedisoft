@@ -30,7 +30,7 @@ namespace UnitTests.Email_Tests
 			PrefT.UpdateString(PrefName.PracticeZip, "97317");
 			//Setup clinic address.
 			Clinic clinic = ClinicT.CreateClinic();
-			clinic.Address = "Clinic Address1 Here";
+			clinic.AddressLine1 = "Clinic Address1 Here";
 			Clinics.Update(clinic);
 			Clinics.RefreshCache();
 			//Turn feature off.
@@ -51,7 +51,7 @@ namespace UnitTests.Email_Tests
 			Assert.IsFalse(emailBodyWithDisclaimer.Contains("Clinic Address"));
 			//Turn clinics on.
 			PrefT.UpdateBool(PrefName.EasyNoClinics, false);
-			emailBodyWithDisclaimer = EmailMessages.FindAndReplacePostalAddressTag(emailBody, clinic.ClinicNum);
+			emailBodyWithDisclaimer = EmailMessages.FindAndReplacePostalAddressTag(emailBody, clinic.Id);
 			//Feature is on so disclaimer added (with clinic).
 			Assert.AreNotEqual(emailBody, emailBodyWithDisclaimer);
 			Assert.IsTrue(emailBodyWithDisclaimer.EndsWith("subject line."));
@@ -75,7 +75,7 @@ namespace UnitTests.Email_Tests
 					subject += field.FieldName;
 				}
 			}
-			subject = EmailPreviewControl.ReplaceTemplateFields(subject, pat, null, Clinics.GetClinic(pat.ClinicNum));
+			subject = EmailPreviewControl.ReplaceTemplateFields(subject, pat, null, Clinics.GetById(pat.ClinicNum));
 			Assert.IsFalse(subject.Any(x => x == ']' || x == '['));
 		}
 

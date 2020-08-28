@@ -33,11 +33,11 @@ namespace OpenDentBusiness{
 			
 			string command=$"SELECT * FROM mobileappdevice ";
 			if(PrefC.HasClinicsEnabled) {
-				List<Clinic> listClinicsForUser=Clinics.GetForUserod(user);
+				List<Clinic> listClinicsForUser=Clinics.GetByUser(user);
 				if(listClinicsForUser.Count==0) {
 					return new List<MobileAppDevice>();
 				}
-				command+=$"WHERE ClinicNum in ({ string.Join(",",listClinicsForUser.Select(x => x.ClinicNum))})";
+				command+=$"WHERE ClinicNum in ({ string.Join(",",listClinicsForUser.Select(x => x.Id))})";
 			}
 			return Crud.MobileAppDeviceCrud.SelectMany(command);
 		}

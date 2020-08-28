@@ -300,7 +300,7 @@ namespace OpenDentBusiness{
 					else {
 						logText+="for clinic"+" ";
 					}
-					logText+=(clinicNum==0? "Headquarters" : Clinics.GetDesc(clinicNum));
+					logText+=(clinicNum==0? "Headquarters" : Clinics.GetDescription(clinicNum));
 				}
 			}
 			else {
@@ -1014,7 +1014,7 @@ namespace OpenDentBusiness{
 			
 			string command="SELECT COUNT(*) FROM schedule "
 				//only count holiday schedules for the entire practice or for the currently selected clinic
-				+"WHERE (ClinicNum=0 OR ClinicNum="+POut.Long(Clinics.ClinicNum)+") "
+				+"WHERE (ClinicNum=0 OR ClinicNum="+POut.Long(Clinics.ClinicId)+") "
 				+"AND Status="+POut.Int((int)SchedStatus.Holiday)+" "
 				+"AND SchedType="+POut.Int((int)ScheduleType.Practice)+" "
 				+"AND SchedDate="+POut.Date(date);

@@ -70,10 +70,10 @@ namespace OpenDental
 			{
 				return "";//The global preference allows the user to completely disable Rx ProcCode validation, even if some Rx are flagged as required.
 			}
-			if (Clinics.ClinicNum != 0)
+			if (Clinics.ClinicId != 0)
 			{//Not HQ
-				Clinic clinic = Clinics.GetClinic(Clinics.ClinicNum);
-				if (!clinic.HasProcOnRx)
+				Clinic clinic = Clinics.GetById(Clinics.ClinicId);
+				if (!clinic.HasProcedureOnRx)
 				{
 					//The clinic option allows the user to completely disable Rx ProcCode validation for one clinic.
 					//A customer who needs this feature has some clinics in states which require ProCode and some clinics in states which do not.

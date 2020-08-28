@@ -259,7 +259,7 @@ namespace OpenDentBusiness{
 				clockEvent=new ClockEvent();
 				clockEvent.EmployeeNum=employeeNum;
 				clockEvent.ClockStatus=TimeClockStatus.Home;
-				clockEvent.ClinicNum=Clinics.ClinicNum;
+				clockEvent.ClinicNum=Clinics.ClinicId;
 				ClockEvents.Insert(clockEvent);//times handled
 			}
 			else if(clockEvent.ClockStatus==TimeClockStatus.Break) {//only incomplete breaks will have been returned.
@@ -282,7 +282,7 @@ namespace OpenDentBusiness{
 					clockEvent=new ClockEvent();
 					clockEvent.EmployeeNum=employeeNum;
 					clockEvent.ClockStatus=tcs;
-					clockEvent.ClinicNum=Clinics.ClinicNum;
+					clockEvent.ClinicNum=Clinics.ClinicId;
 					ClockEvents.Insert(clockEvent);//times handled
 				}
 			}

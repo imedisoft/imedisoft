@@ -171,7 +171,7 @@ namespace OpenDental{
 			else {
 				//GetForClinics uses an empty list to indicate "all", which is a loophole if user doesn't select an item.  So:
 				if(comboClinics.ListSelectedClinicNums.Count==0){
-					DList=Deposits.GetForClinics(new List<long>(){Clinics.ClinicNum },IsSelectionMode);//restrict to current clinic
+					DList=Deposits.GetForClinics(new List<long>(){Clinics.ClinicId },IsSelectionMode);//restrict to current clinic
 				}
 				else{
 					DList=Deposits.GetForClinics(comboClinics.ListSelectedClinicNums,IsSelectionMode);

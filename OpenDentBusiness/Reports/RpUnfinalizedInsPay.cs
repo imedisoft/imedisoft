@@ -106,10 +106,10 @@ namespace OpenDentBusiness
 					PatientCur = patCur;
 				}
 
-				ClinicCur = Clinics.GetClinic(clinicNumCur) ??
+				ClinicCur = Clinics.GetById(clinicNumCur) ??
 					new Clinic
 					{//creating new clinic with Unassigned as description. The clinic will not get inserted into the db.
-						ClinicNum = 0,
+						Id = 0,
 						Description = "Unassigned",
 						Abbr = "Unassigned"
 					};

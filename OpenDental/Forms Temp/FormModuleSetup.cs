@@ -979,7 +979,7 @@ namespace OpenDental{
 		private void FillTreatPlan(){
 			textTreatNote.Text=Prefs.GetString(PrefName.TreatmentPlanNote);
 			checkTreatPlanShowCompleted.Checked=Prefs.GetBool(PrefName.TreatPlanShowCompleted);
-			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				checkTreatPlanShowCompleted.Visible=false;
 			}
 			else {
@@ -1100,7 +1100,7 @@ namespace OpenDental{
 			comboToothNomenclature.Items.Add("Haderup (Danish)");
 			comboToothNomenclature.Items.Add("Palmer (Ortho)");
 			comboToothNomenclature.SelectedIndex = PrefC.GetInt(PrefName.UseInternationalToothNumbers);
-			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				labelToothNomenclature.Visible=false;
 				comboToothNomenclature.Visible=false;
 			}

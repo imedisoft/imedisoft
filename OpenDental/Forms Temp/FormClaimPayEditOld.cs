@@ -334,10 +334,10 @@ namespace OpenDental{
 			comboClinic.Items.Clear();
 			comboClinic.Items.Add("None");
 			comboClinic.SelectedIndex=0;
-			_listClinics=Clinics.GetDeepCopy(true);
+			_listClinics=Clinics.GetAll(false);
 			for(int i=0;i<_listClinics.Count;i++){
 				comboClinic.Items.Add(_listClinics[i].Abbr);
-				if(_listClinics[i].ClinicNum==ClaimPaymentCur.ClinicNum){
+				if(_listClinics[i].Id==ClaimPaymentCur.ClinicNum){
 					comboClinic.SelectedIndex=i+1;
 				}
 			}
@@ -484,7 +484,7 @@ namespace OpenDental{
 				ClaimPaymentCur.ClinicNum=0;
 			}
 			else{
-				ClaimPaymentCur.ClinicNum=_listClinics[comboClinic.SelectedIndex-1].ClinicNum;
+				ClaimPaymentCur.ClinicNum=_listClinics[comboClinic.SelectedIndex-1].Id;
 			}
 			ClaimPaymentCur.CheckAmt=PIn.Double(textAmount.Text);
 			ClaimPaymentCur.CheckDate=PIn.Date(textDate.Text);

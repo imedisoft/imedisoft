@@ -46,8 +46,8 @@ namespace OpenDental
 				//make visible ops exactly the same as the short ops list (all except hidden)
 				visOps.AddRange(
 					Operatories.GetWhere(x => !PrefC.HasClinicsEnabled //if clinics disabled
-							|| Clinics.ClinicNum == 0 //or if program level ClinicNum set to Headquarters
-							|| x.ClinicNum == Clinics.ClinicNum //or this is the program level ClinicNum
+							|| Clinics.ClinicId == 0 //or if program level ClinicNum set to Headquarters
+							|| x.ClinicNum == Clinics.ClinicId //or this is the program level ClinicNum
 						, true)
 				);
 				if (isFillVisProvs)

@@ -8,6 +8,7 @@ namespace Imedisoft.Data.Cache
     {
 		private readonly List<TValue> items = new List<TValue>();
 		private bool requiresRefresh = true;
+		private bool isInitialized;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ListCache{TValue}"/> class.
@@ -80,6 +81,13 @@ namespace Imedisoft.Data.Cache
 		/// <returns>A list containing the refreshed entries.</returns>
 		public void Refresh()
         {
+			if (!isInitialized)
+            {
+				Initialize();
+
+				isInitialized = true;
+			}
+
 			var entries = Load().ToList();
 
 			lock (items)
@@ -93,7 +101,6 @@ namespace Imedisoft.Data.Cache
 			}
 
 			requiresRefresh = false;
-
 		}
 
 		/// <summary>
@@ -135,6 +142,13 @@ namespace Imedisoft.Data.Cache
             }
 
 			return default;
+        }
+
+		/// <summary>
+		/// Called the first time the cache is refreshed (i.o. on the first load).
+		/// </summary>
+		protected virtual void Initialize()
+        {
         }
     }
 }

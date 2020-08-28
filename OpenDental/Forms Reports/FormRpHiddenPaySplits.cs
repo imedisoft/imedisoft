@@ -31,7 +31,7 @@ namespace OpenDental{
 				checkAllClinics.Checked=true;
 				listBoxClinic.Visible=true;
 				listBoxClinic.SelectedIndices.Clear();
-				_listClinics=Clinics.GetForUserod(Security.CurrentUser,(!Security.CurrentUser.ClinicIsRestricted),"Unassigned");
+				_listClinics=Clinics.GetByCurrentUser();
 				foreach(Clinic clinic in _listClinics) {
 					ODBoxItem<Clinic> boxClinic=new ODBoxItem<Clinic>(clinic.Abbr,clinic);
 					listBoxClinic.Items.Add(boxClinic);
@@ -130,11 +130,11 @@ namespace OpenDental{
 			}
 			if(PrefC.HasClinicsEnabled && checkAllClinics.Checked) {
 				subtitleClinics="All Clinics";
-				listClinicNums=listBoxClinic.AllTags<Clinic>().Select(x => x.ClinicNum).ToList();
+				listClinicNums=listBoxClinic.AllTags<Clinic>().Select(x => x.Id).ToList();
 			}
 			else if(PrefC.HasClinicsEnabled && !checkAllClinics.Checked) {
 				subtitleClinics=string.Join(", ",listBoxClinic.GetListSelected<Clinic>().Select(x => x.Abbr).ToList());
-				listClinicNums=listBoxClinic.GetListSelected<Clinic>().Select(x => x.ClinicNum).ToList();
+				listClinicNums=listBoxClinic.GetListSelected<Clinic>().Select(x => x.Id).ToList();
 			}
 			DataTable table=new DataTable();
 			table=RpHiddenPaySplits.GetReportData(listProvNums,listUnearnedTypeDefNums,listClinicNums,PrefC.HasClinicsEnabled

@@ -13,7 +13,7 @@ namespace OpenDentBusiness {
 			bool hasClinicsEnabled=ReportsComplex.RunFuncOnReportServer(() => Prefs.HasClinicsEnabledNoCache);
 			List<Provider> listProvs=ReportsComplex.RunFuncOnReportServer(() => Providers.GetAll());
 			List<Def> listDefs=ReportsComplex.RunFuncOnReportServer(() => Defs.GetDefsNoCache(DefCat.BillingTypes));
-			List<Clinic> listClinics=ReportsComplex.RunFuncOnReportServer(() => Clinics.GetClinicsNoCache());
+			List<Clinic> listClinics=Clinics.GetClinicsNoCache().ToList();
 			DataTable table=new DataTable();
 			table.Columns.Add("name");
 			table.Columns.Add("priProv");
@@ -80,7 +80,7 @@ namespace OpenDentBusiness {
 				row["billingType"]=(billingType==null) ? "" : billingType.ItemValue;
 				row["secProv"]=Providers.GetLName(PIn.Long(raw.Rows[i]["SecProv"].ToString()),listProvs);
 				if(hasClinicsEnabled) {//Using clinics
-					string clinicDesc=Clinics.GetDesc(PIn.Long(raw.Rows[i]["ClinicNum"].ToString()),listClinics);
+					string clinicDesc=Clinics.GetDescription(PIn.Long(raw.Rows[i]["ClinicNum"].ToString()),listClinics);
 					row["clinic"]=(clinicDesc=="")?"Unassigned":clinicDesc;
 				}
 				table.Rows.Add(row);

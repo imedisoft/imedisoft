@@ -752,7 +752,7 @@ namespace OpenDental
 			FillSummary();
       FillPreAuth();
 			//FillMisc();
-			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				checkShowCompleted.Visible=false;
 			}
 			else {
@@ -2138,7 +2138,7 @@ namespace OpenDental
 		}
 
 		private void PrepImageForPrinting(){
-			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)){
+			if(Clinics.IsMedicalClinic(Clinics.ClinicId)){
 				return;
 			}
 			toothChartWrapper=new SparksToothChart.ToothChartWrapper();
@@ -2731,7 +2731,7 @@ namespace OpenDental
 				text=Prefs.GetString(PrefName.PracticePhone);
 			}
 			else {
-				Clinic clinic=Clinics.GetClinic(PatCur.ClinicNum);
+				Clinic clinic=Clinics.GetById(PatCur.ClinicNum);
 				text=clinic.Description;
 				par.AddText(text);
 				par.AddLineBreak();
@@ -2765,7 +2765,7 @@ namespace OpenDental
 			#region PrintGraphics
 			TextFrame frame;
 			int widthDoc=MigraDocHelper.GetDocWidth();
-			if(!Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum))
+			if(!Clinics.IsMedicalClinic(Clinics.ClinicId))
 			{	
 				frame=MigraDocHelper.CreateContainer(section);
 				MigraDocHelper.DrawString(frame,"Your"+"\r\n"+"Right",bodyFontx,

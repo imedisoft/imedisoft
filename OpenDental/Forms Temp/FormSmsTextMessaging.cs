@@ -131,7 +131,7 @@ namespace OpenDental {
 			}
 			//we don't want an empty list
 			if(comboClinics.ListSelectedClinicNums.Count==0){
-				return new List<long>(){Clinics.ClinicNum };//current clinic
+				return new List<long>(){Clinics.ClinicId };//current clinic
 			}
 			return comboClinics.ListSelectedClinicNums;
 		}
@@ -195,7 +195,7 @@ namespace OpenDental {
 			if(PrefC.HasClinicsEnabled) {
 				//comboClinics.HqDescription="Practice";
 				//hqClinic.Abbr=(Prefs.GetString(PrefName.PracticeTitle)+" ("+"Practice"+")");
-				comboClinics.SelectedClinicNum=Clinics.ClinicNum;
+				comboClinics.SelectedClinicNum=Clinics.ClinicId;
 				if(Prefs.GetBool(PrefName.EnterpriseApptList)) {//This form behaves differently when compared to the other 6 forms
 					comboClinics.IncludeAll=false;
 				}
@@ -314,7 +314,7 @@ namespace OpenDental {
 						row.Cells.Add(Prefs.GetString(PrefName.PracticeTitle)+" ("+"Practice"+")");
 					}
 					else { 
-						Clinic clinic=Clinics.GetClinic(smsFromMobile.ClinicNum);
+						Clinic clinic=Clinics.GetById(smsFromMobile.ClinicNum);
 						row.Cells.Add(clinic.Abbr);//Clinic
 					}
 				}
@@ -358,7 +358,7 @@ namespace OpenDental {
 							row.Cells.Add(Prefs.GetString(PrefName.PracticeTitle)+" ("+"Practice"+")");
 						}
 						else { 
-							Clinic clinic=Clinics.GetClinic(smsToMobile.ClinicNum);
+							Clinic clinic=Clinics.GetById(smsToMobile.ClinicNum);
 							row.Cells.Add(clinic.Abbr);//Clinic
 						}
 					}
@@ -468,7 +468,7 @@ namespace OpenDental {
 					PatNum=x.First().PatNum,
 					ClinicNum=x.First().ClinicNum,
 					ClinicAbbr=PrefC.HasClinicsEnabled ? (x.First().ClinicNum==0 ? Prefs.GetString(PrefName.PracticeTitle)+
-						" ("+"Practice"+")" : Clinics.GetClinic(x.First().ClinicNum).Abbr) : "",
+						" ("+"Practice"+")" : Clinics.GetById(x.First().ClinicNum).Abbr) : "",
 					PatName=x.First().PatNum==0 ? "Unassigned" : GetPatientName(x.First().PatNum),
 					TextMsg=x.First().MsgText,
 					HasUnread=x.Any(y => y.SmsStatus==SmsFromStatus.ReceivedUnread),
@@ -488,7 +488,7 @@ namespace OpenDental {
 						PatNum=x.First().PatNum,
 						ClinicNum=x.First().ClinicNum,
 						ClinicAbbr=PrefC.HasClinicsEnabled ? (x.First().ClinicNum==0 ? Prefs.GetString(PrefName.PracticeTitle)+" ("+"Practice"+")"
-							: Clinics.GetClinic(x.First().ClinicNum).Abbr) : "",
+							: Clinics.GetById(x.First().ClinicNum).Abbr) : "",
 						PatName=x.First().PatNum==0 ? "Unassigned" : GetPatientName(x.First().PatNum),
 						TextMsg=x.First().MsgText,
 						HasUnread=false,
@@ -729,7 +729,7 @@ namespace OpenDental {
 				_selectedSmsFromMobile.MobilePhoneNumber,
 				//Country code of current environment.
 				CultureInfo.CurrentCulture.Name.Substring(CultureInfo.CurrentCulture.Name.Length-2),
-				Clinics.ClinicNum==0?null : GetListSelectedClinicNums().Union(new List<long>() { _selectedSmsFromMobile.ClinicNum }).ToList())
+				Clinics.ClinicId==0?null : GetListSelectedClinicNums().Union(new List<long>() { _selectedSmsFromMobile.ClinicNum }).ToList())
 				//Convert to a list of patnums.
 				.Select(x=>x[0]).ToList();
 			if(form.ShowDialog()!=DialogResult.OK) {
@@ -967,7 +967,7 @@ namespace OpenDental {
 				return;
 			}
 			Random rand=new Random();
-			var clinics=Clinics.GetDeepCopy();
+			var clinics=Clinics.GetAll(true);
 			clinics.Add(Clinics.GetPracticeAsClinicZero());
 			var vlns=SmsPhones.GetAll();
 			var patients=Patients.GetAllPatients()

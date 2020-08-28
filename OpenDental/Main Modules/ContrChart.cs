@@ -1749,7 +1749,7 @@ namespace OpenDental {
 						clinicNum=Procedures.GetClinicNum(procNum);
 						if(clinicNum!=0) {//The first clinicNum that's encountered
 							//Description is used here because it can be printed and shown to the patient.
-							text=Clinics.GetDesc(clinicNum);
+							text=Clinics.GetDescription(clinicNum);
 							break;
 						}
 					}
@@ -3422,7 +3422,7 @@ namespace OpenDental {
 				}
 			}
 			bool showSelectedTeeth=checkShowTeeth.Checked;
-			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				checkShowTeeth.Checked=false;
 			}
 			if(_patCur!=null && doRefreshData) {
@@ -3677,7 +3677,7 @@ namespace OpenDental {
 							AllergyDef allergyDef=AllergyDefs.GetOne(listAllergies[i].AllergyDefId);
 							if(allergyDef==null) {
 								allergyDef=new AllergyDef() {
-									AllergyDefNum=listAllergies[i].AllergyDefId,
+									Id=listAllergies[i].AllergyDefId,
 									Description="MISSING ALLERGY"
 								};
 							}
@@ -4427,7 +4427,7 @@ namespace OpenDental {
 				}
 			}
 			ToolBarMain.Buttons.Add(new ODToolBarButton("LabCase",-1,"","LabCase"));
-			if(!Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+			if(!Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				ToolBarMain.Buttons.Add(new ODToolBarButton("Perio Chart",2,"","Perio"));
 			}
 			button=new ODToolBarButton(OrthoChartTabs.GetFirst(true).TabName,-1,"","Ortho");
@@ -4445,7 +4445,7 @@ namespace OpenDental {
 			//if(Prefs.GetBool(PrefName.ToothChartMoveMenuToRight)) {
 			//	ToolBarMain.Buttons.Add(new ODToolBarButton(".",-1,"",""));
 			//}
-			if(!Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+			if(!Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				button=new ODToolBarButton("Tooth Chart",-1,"","ToothChart");
 				button.Style=ODToolBarButtonStyle.DropDownButton;
 				button.DropDownMenu=menuToothChart;
@@ -4806,7 +4806,7 @@ namespace OpenDental {
 			}
 			if (!UsingEcwTightOrFull() && isClinicRefresh)
 			{
-				if (Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum))
+				if (Clinics.IsMedicalClinic(Clinics.ClinicId))
 				{
 					tabProc.TabPages.Remove(tabMissing);
 					tabProc.TabPages.Remove(tabMovements);
@@ -6622,7 +6622,7 @@ namespace OpenDental {
 				}
 				tabProc.TabPages.Remove(tabPatInfo);
 			}
-			else if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+			else if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				if(checkTreatPlans.Checked) {
 					sheetLayoutModeCur=SheetFieldLayoutMode.MedicalPracticeTreatPlan;
 				}
@@ -6788,7 +6788,7 @@ namespace OpenDental {
 						row.Cells.Add(Clinics.GetAbbr(PIn.Long(rowCur["ClinicNum"].ToString())));
 						break;
 					case "ClinicDesc":
-						row.Cells.Add(Clinics.GetDesc(PIn.Long(rowCur["ClinicNum"].ToString())));
+						row.Cells.Add(Clinics.GetDescription(PIn.Long(rowCur["ClinicNum"].ToString())));
 						break;
 					//If you add something here, you should also add it to SearchProgNotesMethod.
 					default:
@@ -7418,7 +7418,7 @@ namespace OpenDental {
 			menuItemDoseSpotRefillReqs.Visible=true;
 			menuItemDoseSpotTransactionErrors.Visible=true;
 			ODThread thread=new ODThread((odThread) => {
-				long clinicNum=Clinics.ClinicNum;
+				long clinicNum=Clinics.ClinicId;
 				if(PrefC.HasClinicsEnabled && !Prefs.GetBool(PrefName.ElectronicRxClinicUseSelected)) {
 					clinicNum=_patCur.ClinicNum;
 				}
@@ -7985,7 +7985,7 @@ namespace OpenDental {
 				//This will work properly when retreiving the clinicKey and clinicID
 				long clinicNum=0;
 				if(PrefC.HasClinicsEnabled) {
-					clinicNum=Clinics.ClinicNum;
+					clinicNum=Clinics.ClinicId;
 					if(!Prefs.GetBool(PrefName.ElectronicRxClinicUseSelected)) {
 						clinicNum=_patCur.ClinicNum;
 					}
@@ -8143,10 +8143,10 @@ namespace OpenDental {
 				//Clinic Validation
 				if(PrefC.HasClinicsEnabled) {
 					if(Prefs.GetBool(PrefName.ElectronicRxClinicUseSelected)) {
-						clinic=Clinics.GetClinic(Clinics.ClinicNum);
+						clinic=Clinics.GetById(Clinics.ClinicId);
 					}
 					else if(_patCur.ClinicNum!=0) {//Use patient default clinic if the patient has one.
-						clinic=Clinics.GetClinic(_patCur.ClinicNum);
+						clinic=Clinics.GetById(_patCur.ClinicNum);
 					}
 					if(clinic!=null) {
 						Erx.ValidateClinic(clinic);
@@ -9755,7 +9755,7 @@ namespace OpenDental {
 					}
 				}
 				else if(isClinicDesc) {
-					if(Clinics.GetDesc(PIn.Long((rowCur["ClinicNum"].ToString().ToLower()))).Contains(searchInput[i])) {
+					if(Clinics.GetDescription(PIn.Long((rowCur["ClinicNum"].ToString().ToLower()))).Contains(searchInput[i])) {
 						searchInput.RemoveAt(i);
 					}
 				}

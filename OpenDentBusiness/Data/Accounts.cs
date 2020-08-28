@@ -1,16 +1,15 @@
-using Imedisoft.Data;
 using Imedisoft.Data.Cache;
+using Imedisoft.Data.Models;
+using MySql.Data.MySqlClient;
+using OpenDentBusiness;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Reflection;
-using System.Windows.Forms;
+using System.Runtime.InteropServices.ComTypes;
 
-namespace OpenDentBusiness
+namespace Imedisoft.Data
 {
     public partial class Accounts
 	{
@@ -31,16 +30,20 @@ namespace OpenDentBusiness
 		public static Account GetFirstOrDefault(Predicate<Account> predicate) 
 			=> cache.FirstOrDefault(predicate);
 
+		public static long Insert(Account account) 
+			=> ExecuteInsert(account);
+
 		/// <summary>
 		/// Also updates existing journal entry splits linked to this account that have not been locked.
 		/// </summary>
-		public static void Update2(Account acct, Account acctOld)
+		public static void Update2(Account account)
 		{
-			Update(acct, acctOld);
+			ExecuteUpdate(account);
 
-			if (acct.Description == acctOld.Description)
+			var oldDescription = SelectOne(account.Id)?.Description;
+			if (oldDescription == account.Description)
 			{
-				return; //No need to update splits on attached journal entries.
+				return;
 			}
 
 			// The account was renamed, so update journalentry.Splits.
@@ -48,7 +51,7 @@ namespace OpenDentBusiness
 					FROM journalentry 
 					INNER JOIN journalentry je2 ON je2.TransactionNum=journalentry.TransactionNum
 					INNER JOIN account ON account.AccountNum=je2.AccountNum
-					WHERE journalentry.AccountNum=" + acct.Id + @"
+					WHERE journalentry.AccountNum=" + account.Id + @"
 					AND journalentry.DateDisplayed > " + POut.Date(PrefC.GetDate(PrefName.AccountingLockDate)) + @"
 					ORDER BY je2.TransactionNum";
 
@@ -58,7 +61,7 @@ namespace OpenDentBusiness
 				return;
 			}
 
-			List<JournalEntry> listJournalEntries = Crud.JournalEntryCrud.TableToList(table);
+			List<JournalEntry> listJournalEntries = OpenDentBusiness.Crud.JournalEntryCrud.TableToList(table);
 			//Construct a dictionary that has the description for each JournalEntryNum.
 			Dictionary<long, string> dictJournalEntryDescriptions = table.Rows.Cast<DataRow>()
 				.GroupBy(x => PIn.Long(x["JournalEntryNum"].ToString()))
@@ -75,13 +78,13 @@ namespace OpenDentBusiness
 					listIndexesForTrans.Add(i);
 					continue;
 				}
-				UpdateJournalEntrySplits(listJournalEntries, listIndexesForTrans, dictJournalEntryDescriptions, acct);
+				UpdateJournalEntrySplits(listJournalEntries, listIndexesForTrans, dictJournalEntryDescriptions, account);
 				curTransactionNum = listJournalEntries[i].TransactionNum;
 				listIndexesForTrans.Clear();
 				listIndexesForTrans.Add(i);
 			}
 
-			UpdateJournalEntrySplits(listJournalEntries, listIndexesForTrans, dictJournalEntryDescriptions, acct);
+			UpdateJournalEntrySplits(listJournalEntries, listIndexesForTrans, dictJournalEntryDescriptions, account);
 		}
 
 		/// <summary>
@@ -109,8 +112,8 @@ namespace OpenDentBusiness
 					//Patient Fee Income 85.00
 					//Supplies 110.00
 					journalEntry.Splits = string.Join("\r\n", listIndexesForTrans
-						.Where(x => journalEntries[x].JournalEntryNum != journalEntry.JournalEntryNum)
-						.Select(x => journalEntryDescriptions[journalEntries[x].JournalEntryNum] + " " +
+						.Where(x => journalEntries[x].Id != journalEntry.Id)
+						.Select(x => journalEntryDescriptions[journalEntries[x].Id] + " " +
 						(journalEntries[x].DebitAmt > 0 ?
 							journalEntries[x].DebitAmt.ToString("n") :
 							journalEntries[x].CreditAmt.ToString("n"))));
@@ -120,81 +123,83 @@ namespace OpenDentBusiness
 		}
 
 		/// <summary>
-		/// Loops through listLong to find a description for the specified account. 0 returns an empty string.
+		///		<para>
+		///			Gets the description of the account with the specified ID.
+		///		</para>
 		/// </summary>
-		public static string GetDescript(long accountNum)
-		{
-			Account account = GetFirstOrDefault(x => x.Id == accountNum);
-			return (account == null ? "" : account.Description);
-		}
+		/// <param name="accountId">The ID of the account.</param>
+		/// <returns>A description of the account; or a empty string if the account doesn't exist.</returns>
+		public static string GetDescription(long accountId) => GetAccount(accountId)?.Description ?? "";
 
 		/// <summary>
-		/// Loops through listLong to find an account.  Will return null if accountNum is 0.
+		///		<para>
+		///			Gets the account with the specified ID.
+		///		</para>
 		/// </summary>
-		public static Account GetAccount(long accountNum)
-		{
-			//No need to check RemotingRole; no call to db.
-			return GetFirstOrDefault(x => x.Id == accountNum);
-		}
+		/// <param name="accountId">The ID of the account.</param>
+		public static Account GetAccount(long accountId) 
+			=> cache.FirstOrDefault(account => account.Id == accountId);
 
-		/// <summary>Throws exception if account is in use.</summary>
+		/// <summary>
+		///		<para>
+		///			Attempts to delete the specified <paramref name="account"/>. Throws an 
+		///			exception if the account is in use and cannot be deleted.
+		///		</para>
+		/// </summary>
+		/// <param name="account">The account to delete.</param>
+		/// <exception cref="Exception">If the account is in use.</exception>
 		public static void Delete2(Account account)
 		{
-			// TODO: Fix me...
-
 			// Check to see if account has any journal entries
-			if (Database.ExecuteLong("SELECT COUNT(*) FROM journalentry WHERE AccountNum=" + account.Id) != 0)
+			if (Database.ExecuteLong("SELECT COUNT(*) FROM `journal_entries` WHERE `account_id` = " + account.Id) != 0)
 			{
-				throw new ApplicationException(
-					"Not allowed to delete an account with existing journal entries.");
+				throw new Exception(
+					Translation.Accounting.NotAllowedToDeleteAccountWithJournalEntries);
 			}
 
-			// TODO: Use Prefs class to access preferences...
-
-			var result = Prefs.GetString(PrefName.AccountingDepositAccounts);
-			string[] strArray = result.Split(new char[] { ',' });
-			for (int i = 0; i < strArray.Length; i++)
+			string[] depositAccountIds = Prefs.GetString(PrefName.AccountingDepositAccounts, "").Split(new char[] { ',' });
+			for (int i = 0; i < depositAccountIds.Length; i++)
 			{
-				if (strArray[i] == account.Id.ToString())
+				if (depositAccountIds[i] == account.Id.ToString())
 				{
-					throw new ApplicationException("Account is in use in the setup section.");
+					throw new Exception(Translation.Accounting.AccountInUseInSetup);
 				}
 			}
 
-			result = Prefs.GetString(PrefName.AccountingIncomeAccount);
-			if (result == account.Id.ToString())
+			var incomingAccount = Prefs.GetString(PrefName.AccountingIncomeAccount);
+			if (incomingAccount == account.Id.ToString())
 			{
-				throw new ApplicationException("Account is in use in the setup section.");
+				throw new Exception(Translation.Accounting.AccountInUseInSetup);
 			}
 
-			result = Prefs.GetString(PrefName.AccountingCashIncomeAccount);
-			if (result == account.Id.ToString())
+			var cashIncomeAccount = Prefs.GetString(PrefName.AccountingCashIncomeAccount);
+			if (cashIncomeAccount == account.Id.ToString())
 			{
-				throw new ApplicationException("Account is in use in the setup section.");
+				throw new Exception(Translation.Accounting.AccountInUseInSetup);
 			}
 
 			var autoPays = AccountingAutoPays.GetDeepCopy();
 			for (int i = 0; i < autoPays.Count; i++)
 			{
-				strArray = autoPays[i].PickList.Split(new char[] { ',' });
-				for (int s = 0; s < strArray.Length; s++)
+				depositAccountIds = autoPays[i].PickList.Split(new char[] { ',' });
+				for (int s = 0; s < depositAccountIds.Length; s++)
 				{
-					if (strArray[s] == account.Id.ToString())
+					if (depositAccountIds[s] == account.Id.ToString())
 					{
-						throw new ApplicationException("Account is in use in the setup section.");
+						throw new Exception(Translation.Accounting.AccountInUseInSetup);
 					}
 				}
 			}
 
-			Database.ExecuteNonQuery("DELETE FROM account WHERE AccountNum = " + account.Id);
+			ExecuteDelete(account);
 		}
 
 		/// <summary>
 		/// Used to test the sign on debits and credits for the five different account types
 		/// </summary>
-		public static bool DebitIsPos(AccountType type)
+		public static bool DebitIsPos(char accountType)
 		{
-			switch (type)
+			switch (accountType)
 			{
 				case AccountType.Asset:
 				case AccountType.Expense:
@@ -212,9 +217,9 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// Gets the balance of an account directly from the database.
 		/// </summary>
-		public static double GetBalance(long accountId, AccountType accountType)
+		public static double GetBalance(long accountId, char accountType)
 		{
-			string command = "SELECT SUM(DebitAmt), SUM(CreditAmt) FROM journalentry WHERE AccountNum=" + accountId + " GROUP BY AccountNum";
+			string command = "SELECT SUM(DebitAmt), SUM(CreditAmt) FROM `journal_entries` WHERE `account_id` = " + accountId + " GROUP BY `account_id`";
 			DataTable table = Database.ExecuteDataTable(command);
 			
 			double debit = 0;
@@ -269,6 +274,7 @@ namespace OpenDentBusiness
 			{
 				return false;
 			}
+
 			if (Prefs.GetLong(PrefName.AccountingCashIncomeAccount) == 0)
 			{
 				return false;
@@ -277,24 +283,21 @@ namespace OpenDentBusiness
 			return true;
 		}
 
-		///<summary></summary>
 		public static long[] GetDepositAccounts()
 		{
-			//No need to check RemotingRole; no call to db.
-			string depStr = Prefs.GetString(PrefName.AccountingDepositAccounts);
-			string[] depStrArray = depStr.Split(new char[] { ',' });
-			ArrayList depAL = new ArrayList();
-			for (int i = 0; i < depStrArray.Length; i++)
-			{
-				if (depStrArray[i] == "")
-				{
-					continue;
+			var depositAccountIds = new List<long>();
+			var depositAccounts = Prefs.GetString(PrefName.AccountingDepositAccounts, "").Split(',');
+
+			foreach (var depositAccount in depositAccounts)
+            {
+				if (long.TryParse(depositAccount.Trim(), out var depositAccountId))
+                {
+					depositAccountIds.Add(depositAccountId);
+
 				}
-				depAL.Add(PIn.Long(depStrArray[i]));
-			}
-			long[] retVal = new long[depAL.Count];
-			depAL.CopyTo(retVal);
-			return retVal;
+            }
+
+			return depositAccountIds.ToArray();
 		}
 
 		///<summary></summary>
@@ -336,140 +339,103 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// Gets the full list to display in the Chart of Accounts, including balances.
 		/// </summary>
-		public static DataTable GetFullList(DateTime asOfDate, bool showInactive)
+		public static List<AccountSummary> GetSummaries(DateTime asOfDate, bool showInactive)
 		{
-			DataTable table = new DataTable("Accounts");
-			DataRow row;
-			//columns that start with lowercase are altered for display rather than being raw data.
-			table.Columns.Add("type");
-			table.Columns.Add("Description");
-			table.Columns.Add("balance");
-			table.Columns.Add("BankNumber");
-			table.Columns.Add("inactive");
-			table.Columns.Add("color");
-			table.Columns.Add("AccountNum");
-			//but we won't actually fill this table with rows until the very end.  It's more useful to use a List<> for now.
-			List<DataRow> rows = new List<DataRow>();
-			//first, the entire history for the asset, liability, and equity accounts (except Retained Earnings)-----------
-			string command = "SELECT account.AcctType, account.Description, account.AccountNum, "
-				+ "SUM(DebitAmt) AS SumDebit, SUM(CreditAmt) AS SumCredit, account.BankNumber, account.Inactive, account.AccountColor "
-				+ "FROM account "
-				+ "LEFT JOIN journalentry ON journalentry.AccountNum=account.AccountNum AND "
-				+ "DateDisplayed <= " + POut.Date(asOfDate) + " WHERE AcctType<=2 ";
-			if (!showInactive)
+			var accountSummaries = new List<AccountSummary>();
+
+			static AccountSummary FromReader(MySqlDataReader dataReader)
 			{
-				command += "AND Inactive=0 ";
+				var accountSummary = new AccountSummary
+				{
+					AccountId = (long)dataReader["account_id"],
+					Description = (string)dataReader["description"],
+					BankNumber = (string)dataReader["bank_number"],
+					Inactive = (bool)dataReader["inactive"],
+					Color = Color.FromArgb((int)dataReader["color"]),
+					Type = (char)dataReader["type"]
+				};
+
+				var amtDebit = (double)dataReader["debit_amt"];
+				var amtCredit = (double)dataReader["credit_amt"];
+
+				accountSummary.Balance =
+					DebitIsPos(accountSummary.Type) ?
+						amtDebit - amtCredit :
+						amtCredit - amtDebit;
+
+				return accountSummary;
 			}
-			command += "GROUP BY account.AccountNum, account.AcctType, account.Description, account.BankNumber,"
-				+ "account.Inactive, account.AccountColor ORDER BY AcctType, Description";
-			DataTable rawTable = Database.ExecuteDataTable(command);
-			AccountType aType;
-			decimal debit = 0;
-			decimal credit = 0;
-			for (int i = 0; i < rawTable.Rows.Count; i++)
+
+			//
+			// Asset and Liability accounts...
+			//
+
+			var command =
+				"SELECT a.`id`, a.`description`, a.`type`, a.`bank_number`, a.`color`, SUM(je.`debit`) AS `debit`, SUM(je.`credit`) AS `credit` " +
+				"FROM `accounts` a " +
+				"LEFT JOIN `journal_entries` je ON je.`account_id` = a.`id` " +
+				"WHERE je.`date_displayed` <= @date AND (a.`type` = 'A' OR a.type = 'L') ";
+
+			if (!showInactive) command += "AND a.`inactive` = 0 ";
+
+			command += 
+				"GROUP BY a.`account_id`, a.`type`, a.`description`, a.`bank_number`, a.`inactive`, a.`color` " +
+				"ORDER BY a.`type`, a.`description`";
+
+			accountSummaries.AddRange(
+				Database.SelectMany(
+					command, FromReader,
+						new MySqlParameter("date", asOfDate)));
+
+			//
+			// Retained earnings (auto) account...
+			//
+
+			command =
+				"SELECT SUM(je.`credit`) - SUM(je.`debit`) " +
+				"FROM `accounts` a " +
+				"LEFT JOIN `journal_entries` je ON je.`account_id` = a.`id` " +
+				"WHERE je.`date_displayed` <= @date AND (a.`type` = 'I' OR a.`type` = 'E')";
+
+			var balance = 
+				Database.SelectOne(command, Database.ToScalar<double>,
+					new MySqlParameter("date", asOfDate));
+
+			accountSummaries.Add(new AccountSummary
 			{
-				row = table.NewRow();
-				aType = (AccountType)PIn.Long(rawTable.Rows[i]["AcctType"].ToString());
-				row["type"] = aType.ToString();
-				row["Description"] = rawTable.Rows[i]["Description"].ToString();
-				debit = PIn.Decimal(rawTable.Rows[i]["SumDebit"].ToString());
-				credit = PIn.Decimal(rawTable.Rows[i]["SumCredit"].ToString());
-				if (DebitIsPos(aType))
-				{
-					row["balance"] = (debit - credit).ToString("N");
-				}
-				else
-				{
-					row["balance"] = (credit - debit).ToString("N");
-				}
-				row["BankNumber"] = rawTable.Rows[i]["BankNumber"].ToString();
-				if (rawTable.Rows[i]["Inactive"].ToString() == "0")
-				{
-					row["inactive"] = "";
-				}
-				else
-				{
-					row["inactive"] = "X";
-				}
-				row["color"] = rawTable.Rows[i]["AccountColor"].ToString();//it will be an unsigned int at this point.
-				row["AccountNum"] = rawTable.Rows[i]["AccountNum"].ToString();
-				rows.Add(row);
-			}
-			//now, the Retained Earnings (auto) account-----------------------------------------------------------------
-			DateTime firstofYear = new DateTime(asOfDate.Year, 1, 1);
-			command = "SELECT AcctType, SUM(DebitAmt) AS SumDebit, SUM(CreditAmt) AS SumCredit "
-				+ "FROM account,journalentry "
-				+ "WHERE journalentry.AccountNum=account.AccountNum "
-				+ "AND DateDisplayed < " + POut.Date(firstofYear)//all from previous years
-				+ " AND (AcctType=3 OR AcctType=4) "//income or expenses
-				+ "GROUP BY AcctType ORDER BY AcctType";//income first, but could return zero rows.
-			rawTable = Database.ExecuteDataTable(command);
-			decimal balance = 0;
-			for (int i = 0; i < rawTable.Rows.Count; i++)
-			{
-				aType = (AccountType)PIn.Long(rawTable.Rows[i]["AcctType"].ToString());
-				debit = PIn.Decimal(rawTable.Rows[i]["SumDebit"].ToString());
-				credit = PIn.Decimal(rawTable.Rows[i]["SumCredit"].ToString());
-				//this works for both income and expenses, because we are subracting expenses, so signs cancel
-				balance += credit - debit;
-			}
-			row = table.NewRow();
-			row["type"] = AccountType.Equity.ToString();
-			row["Description"] = "Retained Earnings (auto)";
-			row["balance"] = balance.ToString("N");
-			row["BankNumber"] = "";
-			row["color"] = Color.White.ToArgb();
-			row["AccountNum"] = "0";
-			rows.Add(row);
-			//finally, income and expenses------------------------------------------------------------------------------
-			command = "SELECT account.AcctType, account.Description, account.AccountNum, "
-				+ "SUM(DebitAmt) AS SumDebit, SUM(CreditAmt) AS SumCredit, account.BankNumber, account.Inactive, account.AccountColor "
-				+ "FROM account "
-				+ "LEFT JOIN journalentry ON journalentry.AccountNum=account.AccountNum "
-				+ "AND DateDisplayed <= " + POut.Date(asOfDate)
-				+ " AND DateDisplayed >= " + POut.Date(firstofYear)//only for this year
-				+ " WHERE (AcctType=3 OR AcctType=4) ";
-			if (!showInactive)
-			{
-				command += "AND Inactive=0 ";
-			}
-			command += "GROUP BY account.AccountNum, account.AcctType, account.Description, account.BankNumber,"
-				+ "account.Inactive, account.AccountColor ORDER BY AcctType, Description";
-			rawTable = Database.ExecuteDataTable(command);
-			for (int i = 0; i < rawTable.Rows.Count; i++)
-			{
-				row = table.NewRow();
-				aType = (AccountType)PIn.Long(rawTable.Rows[i]["AcctType"].ToString());
-				row["type"] = aType.ToString();
-				row["Description"] = rawTable.Rows[i]["Description"].ToString();
-				debit = PIn.Decimal(rawTable.Rows[i]["SumDebit"].ToString());
-				credit = PIn.Decimal(rawTable.Rows[i]["SumCredit"].ToString());
-				if (DebitIsPos(aType))
-				{
-					row["balance"] = (debit - credit).ToString("N");
-				}
-				else
-				{
-					row["balance"] = (credit - debit).ToString("N");
-				}
-				row["BankNumber"] = rawTable.Rows[i]["BankNumber"].ToString();
-				if (rawTable.Rows[i]["Inactive"].ToString() == "0")
-				{
-					row["inactive"] = "";
-				}
-				else
-				{
-					row["inactive"] = "X";
-				}
-				row["color"] = rawTable.Rows[i]["AccountColor"].ToString();//it will be an unsigned int at this point.
-				row["AccountNum"] = rawTable.Rows[i]["AccountNum"].ToString();
-				rows.Add(row);
-			}
-			for (int i = 0; i < rows.Count; i++)
-			{
-				table.Rows.Add(rows[i]);
-			}
-			return table;
+				AccountId = 0,
+				Description = Translation.Accounting.RetainedEarningsAuto,
+				BankNumber = "",
+				Balance = balance,
+				Inactive = false,
+				Color = Color.White,
+				Type = AccountType.Equity
+			});
+
+			//
+			// Income and Expense accounts...
+			//
+
+			command =
+				"SELECT a.`id`, a.`description`, a.`type`, a.`bank_number`, a.`color`, SUM(je.`debit`) AS `debit`, SUM(je.`credit`) AS `credit` " +
+				"FROM `accounts` a " +
+				"LEFT JOIN `journal_entries` je ON je.`account_id` = a.`id` " +
+				"WHERE je.`date_displayed` <= @date AND je.`date_displayed` >= @first_of_year " +
+				"AND (a.`type` = 'I' OR a.type = 'E') ";
+
+			if (!showInactive) command += "AND a.`inactive` = 0 ";
+
+			command += 
+				"GROUP BY a.`account_id`, a.`type`, a.`description`, a.`bank_number`, a.`inactive`, a.`color` " +
+				"ORDER BY a.`type`, a.`description`";
+
+			accountSummaries.AddRange(
+				Database.SelectMany(
+					command, FromReader,
+						new MySqlParameter("date", asOfDate),
+						new MySqlParameter("first_of_year", new DateTime(asOfDate.Year, 1, 1))));
+
+			return accountSummaries;
 		}
 
 		/// <summary>
@@ -557,10 +523,10 @@ namespace OpenDentBusiness
 		public static DataTable GetEquityTable(DateTime asOfDate) 
 			=> GetAccountTotalByType(asOfDate, AccountType.Equity);
 
-		public static DataTable GetAccountTotalByType(DateTime asOfDate, AccountType acctType)
+		public static DataTable GetAccountTotalByType(DateTime asOfDate, char accountType)
 		{
             string sumTotalStr;
-            if (acctType == AccountType.Asset)
+            if (accountType == AccountType.Asset)
 			{
 				sumTotalStr = "SUM(ROUND(DebitAmt,3)-ROUND(CreditAmt,3))";
 			}
@@ -571,17 +537,17 @@ namespace OpenDentBusiness
 
 			string command = "SELECT Description, " + sumTotalStr + " SumTotal, AcctType "
 				+ "FROM account, journalentry "
-				+ "WHERE account.AccountNum=journalentry.AccountNum AND DateDisplayed <= " + POut.Date(asOfDate) + " AND AcctType=" + POut.Int((int)acctType) + " "
+				+ "WHERE account.AccountNum=journalentry.AccountNum AND DateDisplayed <= " + POut.Date(asOfDate) + " AND AcctType=" + POut.Int((int)accountType) + " "
 				+ "GROUP BY account.AccountNum "
 				+ "ORDER BY Description, DateDisplayed ";
 
 			return Database.ExecuteDataTable(command);
 		}
 
-		public static DataTable GetAccountTotalByType(DateTime dateStart, DateTime dateEnd, AccountType acctType)
+		public static DataTable GetAccountTotalByType(DateTime dateStart, DateTime dateEnd, char accountType)
 		{
 			string sumTotalStr = "";
-			if (acctType == AccountType.Expense)
+			if (accountType == AccountType.Expense)
 			{
 				sumTotalStr = "SUM(ROUND(DebitAmt,3)-ROUND(CreditAmt,3))";
 			}
@@ -593,7 +559,7 @@ namespace OpenDentBusiness
 				+ "FROM account, journalentry "
 				+ "WHERE account.AccountNum=journalentry.AccountNum AND DateDisplayed >= " + POut.Date(dateStart) + " "
 				+ "AND DateDisplayed <= " + POut.Date(dateEnd) + " "
-				+ "AND AcctType=" + POut.Int((int)acctType) + " "
+				+ "AND AcctType=" + accountType + " "
 				+ "GROUP BY account.AccountNum "
 				+ "ORDER BY Description, DateDisplayed ";
 			return Database.ExecuteDataTable(command);

@@ -2465,7 +2465,7 @@ namespace OpenDental {
 						for(int j=0;j<allergyList.Count;j++) {
 							if(allergyList[j].Description==allergySheet.FieldName.Remove(0,8)) {
 								Allergy newAllergy=new Allergy();
-								newAllergy.AllergyDefId=allergyList[j].AllergyDefNum;
+								newAllergy.AllergyDefId=allergyList[j].Id;
 								newAllergy.PatientId=PatCur.PatNum;
 								newAllergy.StatusIsActive=true;
 								Allergies.Insert(newAllergy);

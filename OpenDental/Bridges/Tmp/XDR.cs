@@ -16,10 +16,10 @@ namespace OpenDental.Bridges
 		public static void SendData(Program ProgramCur, Patient pat)
 		{
 			string path = Programs.GetProgramPath(ProgramCur);
-			List<ProgramProperty> listXDRProperties = ProgramProperties.GetListForProgramAndClinicWithDefault(ProgramCur.Id, Clinics.ClinicNum);
+			List<ProgramProperty> listXDRProperties = ProgramProperties.GetListForProgramAndClinicWithDefault(ProgramCur.Id, Clinics.ClinicId);
 			
 			// Look for a locationID for the current clinic, use that locationID if present else just leave blank
-			string locationID = listXDRProperties.FirstOrDefault(x => x.ClinicId == Clinics.ClinicNum && x.Name == XDR.PropertyDescs.LocationID)?.Value;
+			string locationID = listXDRProperties.FirstOrDefault(x => x.ClinicId == Clinics.ClinicId && x.Name == XDR.PropertyDescs.LocationID)?.Value;
 			string infoFile = listXDRProperties.FirstOrDefault(x => x.Name == XDR.PropertyDescs.InfoFilePath)?.Value;
 			if (infoFile.Trim() == "")
 			{

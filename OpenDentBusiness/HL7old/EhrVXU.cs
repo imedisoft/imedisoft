@@ -42,7 +42,7 @@ namespace OpenDentBusiness.HL7 {
 			cityWhereEntered=Prefs.GetString(PrefName.PracticeCity);
 			stateWhereEntered=Prefs.GetString(PrefName.PracticeST);
 			if(PrefC.HasClinicsEnabled && _pat.ClinicNum!=0) {//Using clinics and a clinic is assigned.
-				Clinic clinic=Clinics.GetClinic(_pat.ClinicNum);
+				Clinic clinic=Clinics.GetById(_pat.ClinicNum);
 				_sendingFacilityName=clinic.Description;
 				cityWhereEntered=clinic.City;
 				stateWhereEntered=clinic.State;
@@ -1234,7 +1234,7 @@ namespace OpenDentBusiness.HL7 {
 					WriteError(sb,"Since a refusal reason was specified, completion status must be Refused.");
 				}
 				if(PrefC.HasClinicsEnabled && pat.ClinicNum!=0) {//Using clinics and a clinic is assigned.
-					Clinic clinic=Clinics.GetClinic(pat.ClinicNum);
+					Clinic clinic=Clinics.GetById(pat.ClinicNum);
 					if(stateCodes.IndexOf(clinic.State.ToUpper())==-1) {
 						WriteError(sb,"Clinic '"+clinic.Description+"' state must be 2 letter state or territory code for the United States.");
 					}

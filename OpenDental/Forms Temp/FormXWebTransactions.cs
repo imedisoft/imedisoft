@@ -37,7 +37,7 @@ namespace OpenDental {
 
 		///<summary>Fills the clinics combo box with the clincs available to this user.</summary>
 		private void FillClinics() {
-			_listClinics=Clinics.GetForUserod(Security.CurrentUser);
+			_listClinics=Clinics.GetByUser(Security.CurrentUser);
 			comboClinic.Items.Add("All");
 			comboClinic.SelectedIndex=0;
 			int offset=1;
@@ -46,7 +46,7 @@ namespace OpenDental {
 				offset++;
 			}
 			_listClinics.ForEach(x => comboClinic.Items.Add(x.Abbr));
-			comboClinic.SelectedIndex=_listClinics.FindIndex(x => x.ClinicNum==Clinics.ClinicNum)+offset;
+			comboClinic.SelectedIndex=_listClinics.FindIndex(x => x.Id==Clinics.ClinicId)+offset;
 			if(comboClinic.SelectedIndex-offset<0) {
 				comboClinic.SelectedIndex=0;
 			}
@@ -56,14 +56,14 @@ namespace OpenDental {
 			List<long> listClinicNums=new List<long>();
 			if(PrefC.HasClinicsEnabled && comboClinic.SelectedIndex!=0) {//Not 'All' selected
 				if(Security.CurrentUser.ClinicIsRestricted) {
-					listClinicNums.Add(_listClinics[comboClinic.SelectedIndex-1].ClinicNum);//Minus 1 for 'All'
+					listClinicNums.Add(_listClinics[comboClinic.SelectedIndex-1].Id);//Minus 1 for 'All'
 				}
 				else {
 					if(comboClinic.SelectedIndex==1) {//'Unassigned' selected
 						listClinicNums.Add(0);
 					}
 					else if(comboClinic.SelectedIndex>1) {
-						listClinicNums.Add(_listClinics[comboClinic.SelectedIndex-2].ClinicNum);//Minus 2 for 'All' and 'Unassigned'
+						listClinicNums.Add(_listClinics[comboClinic.SelectedIndex-2].Id);//Minus 2 for 'All' and 'Unassigned'
 					}
 				}
 			}

@@ -151,9 +151,9 @@ namespace OpenDental {
 			List<EmailAddress> listAddresses=EmailAddresses.GetDeepCopy();//Does not include user specific email addresses.
 																								 //Exclude any email addresses which are associated to clinics.
 			if(PrefC.HasClinicsEnabled) {
-				List<Clinic> listClinicsAll=Clinics.GetDeepCopy();
+				List<Clinic> listClinicsAll=Clinics.GetAll(true);
 				for(int i=0;i<listClinicsAll.Count;i++) {
-					listAddresses.RemoveAll(x => x.EmailAddressNum==listClinicsAll[i].EmailAddressNum);
+					listAddresses.RemoveAll(x => x.EmailAddressNum==listClinicsAll[i].EmailAddressId);
 				}
 			}
 			//Exclude default practice email address, since it is added on another line below.
@@ -162,9 +162,9 @@ namespace OpenDental {
 			listAddresses.RemoveAll(x => x.EmailAddressNum==Prefs.GetLong(PrefName.EmailNotifyAddressNum));
 			//Add clinic defaults that the user has access to.  Do not add duplicates.
 			if(PrefC.HasClinicsEnabled) {
-				List<Clinic> listClinicForUser=Clinics.GetForUserod(Security.CurrentUser);
+				List<Clinic> listClinicForUser=Clinics.GetByUser(Security.CurrentUser);
 				for(int i=0;i<listClinicForUser.Count;i++) {
-					EmailAddress emailClinic=EmailAddresses.GetByClinic(listClinicForUser[i].ClinicNum);
+					EmailAddress emailClinic=EmailAddresses.GetByClinic(listClinicForUser[i].Id);
 					if(listAddresses.Any(x => x.EmailAddressNum == emailClinic.EmailAddressNum)) {
 						continue;
 					}

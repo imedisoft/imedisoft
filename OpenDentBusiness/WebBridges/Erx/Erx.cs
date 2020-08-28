@@ -187,11 +187,11 @@ namespace OpenDentBusiness
 			{
 				throw new ODException("Clinic fax cannot contain 555 in the middle 3 digits" + ": " + clinic.Description);
 			}
-			if (clinic.Address == "")
+			if (clinic.AddressLine1 == "")
 			{
 				throw new ODException("Clinic address blank" + ": " + clinic.Description);
 			}
-			if (Regex.IsMatch(clinic.Address, ".*P\\.?O\\.? .*", RegexOptions.IgnoreCase))
+			if (Regex.IsMatch(clinic.AddressLine1, ".*P\\.?O\\.? .*", RegexOptions.IgnoreCase))
 			{
 				throw new ODException("Clinic address cannot be a PO BOX" + ": " + clinic.Description);
 			}
@@ -218,7 +218,7 @@ namespace OpenDentBusiness
 			{
 				throw new ODException("Provider not found");
 			}
-			ProviderClinic provClinic = ProviderClinics.GetOneOrDefault(prov.ProvNum, (clinic == null ? 0 : clinic.ClinicNum));
+			ProviderClinic provClinic = ProviderClinics.GetOneOrDefault(prov.ProvNum, (clinic == null ? 0 : clinic.Id));
 			if (prov.IsErxEnabled == ErxEnabledStatus.Disabled)
 			{
 				throw new ODException("Erx is disabled for provider" + ": " + prov.Abbr + ".  " + "To enable, edit provider in Lists | Providers and acknowledge Electronic Prescription fees.");

@@ -13,7 +13,6 @@ using OpenDentBusiness.FileIO;
 namespace OpenDentBusiness {
 	public class MarkupEdit {
 		///<summary>Used for editing wiki and HTML emails</summary>
-		private static string _lanThis="MarkupEdit";
 		private const string _odWikiImage=@"\[\[(img:).+?\]\]";
 		private const string _odWikiKeyword=@"\[\[(keywords:).*?\]\]";
 		private const string _odWikiFile=@"\[\[(file:).*?\]\]";

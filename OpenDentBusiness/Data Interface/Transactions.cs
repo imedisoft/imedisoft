@@ -62,14 +62,14 @@ namespace OpenDentBusiness{
 
 		///<summary></summary>
 		public static long Insert(Transaction trans) {
-			trans.SecUserNumEdit=Security.CurrentUser.Id;//Before middle tier check to catch user at workstation
+			trans.ModifiedBy=Security.CurrentUser.Id;//Before middle tier check to catch user at workstation
 			
 			return Crud.TransactionCrud.Insert(trans);
 		}
 
 		///<summary></summary>
 		public static void Update(Transaction trans) {
-			trans.SecUserNumEdit=Security.CurrentUser.Id;//Before middle tier check to catch user at workstation
+			trans.ModifiedBy=Security.CurrentUser.Id;//Before middle tier check to catch user at workstation
 			
 			Crud.TransactionCrud.Update(trans);
 		}
@@ -77,7 +77,7 @@ namespace OpenDentBusiness{
 		///<summary>Also deletes all journal entries for the transaction.  Will later throw an error if journal entries attached to any reconciles.  Be sure to surround with try-catch.</summary>
 		public static void Delete(Transaction trans) {
 			
-			string command="SELECT IsLocked FROM journalentry j, reconcile r WHERE j.TransactionNum="+POut.Long(trans.TransactionNum)
+			string command="SELECT IsLocked FROM journalentry j, reconcile r WHERE j.TransactionNum="+POut.Long(trans.Id)
 				+" AND j.ReconcileNum = r.ReconcileNum";
 			DataTable table=Database.ExecuteDataTable(command);
 			if(table.Rows.Count>0) {
@@ -85,9 +85,9 @@ namespace OpenDentBusiness{
 					throw new ApplicationException("Not allowed to delete transactions because it is attached to a reconcile that is locked.");
 				}
 			}
-			command="DELETE FROM journalentry WHERE TransactionNum="+POut.Long(trans.TransactionNum);
+			command="DELETE FROM journalentry WHERE TransactionNum="+POut.Long(trans.Id);
 			Database.ExecuteNonQuery(command);
-			command= "DELETE FROM transaction WHERE TransactionNum="+POut.Long(trans.TransactionNum);
+			command= "DELETE FROM transaction WHERE TransactionNum="+POut.Long(trans.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
@@ -97,7 +97,7 @@ namespace OpenDentBusiness{
 		public static bool IsReconciled(Transaction trans){
 			
 			string command="SELECT COUNT(*) FROM journalentry WHERE ReconcileNum !=0"
-				+" AND TransactionNum="+POut.Long(trans.TransactionNum);
+				+" AND TransactionNum="+POut.Long(trans.Id);
 			if(Database.ExecuteString(command)=="0") {
 				return false;
 			}

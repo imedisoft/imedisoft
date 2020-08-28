@@ -485,7 +485,7 @@ namespace OpenDental{
 			textDx.Text=ProcCur.Dx;
 			textProcAbbr.Text=ProcCur.ProcAbbr;
 			textFeeAllowed.Text=ProcCur.FeeAllowed.ToString("F");
-			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				labelToothNum.Visible=false;
 				textToothNumTP.Visible=false;
 				labelSurface.Visible=false;

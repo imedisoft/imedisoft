@@ -425,7 +425,7 @@ namespace OpenDental.UI {
 				}
 				List<long> listSelectedClinicNums=new List<long>();
 				if(_selectedClinicNoPermission!=null){
-					listSelectedClinicNums.Add(_selectedClinicNoPermission.ClinicNum);
+					listSelectedClinicNums.Add(_selectedClinicNoPermission.Id);
 					return listSelectedClinicNums;
 				}
 				if(_listSelectedIndices.Count==0) {
@@ -434,16 +434,16 @@ namespace OpenDental.UI {
 				if(_includeAll && _listSelectedIndices.Contains(0)){
 					//The "All" item was selected
 					foreach(Clinic clinic in _listClinics){
-						if(clinic.ClinicNum==CLINIC_NUM_ALL){
+						if(clinic.Id==CLINIC_NUM_ALL){
 							continue;
 						}
 						//seems to include the "unassigned/default/hq/none/all" clinicNum=0, if present
-						listSelectedClinicNums.Add(clinic.ClinicNum);
+						listSelectedClinicNums.Add(clinic.Id);
 					}
 					return listSelectedClinicNums;
 				}
 				foreach(int idx in _listSelectedIndices){
-					listSelectedClinicNums.Add(_listClinics[idx].ClinicNum);
+					listSelectedClinicNums.Add(_listClinics[idx].Id);
 				}
 				return listSelectedClinicNums;
 			}
@@ -451,7 +451,7 @@ namespace OpenDental.UI {
 				_selectedClinicNoPermission=null;
 				_listSelectedIndices=new List<int>();
 				for(int i=0;i<_listClinics.Count;i++) {
-					if(value.Contains(_listClinics[i].ClinicNum)) {
+					if(value.Contains(_listClinics[i].Id)) {
 						_selectedIndex=i;//this only works when there is one, but it's still important to try to stay synched
 						_listSelectedIndices.Add(i);
 					}
@@ -472,12 +472,12 @@ namespace OpenDental.UI {
 					}
 				}
 				if(_selectedClinicNoPermission!=null){
-					return _selectedClinicNoPermission.ClinicNum;
+					return _selectedClinicNoPermission.Id;
 				}
 				if(_selectedIndex==-1) {
 					return -1;
 				}
-				return _listClinics[_selectedIndex].ClinicNum;
+				return _listClinics[_selectedIndex].Id;
 			}
 			set {
 				if(value==CLINIC_NUM_ALL){
@@ -571,7 +571,7 @@ namespace OpenDental.UI {
 		///<summary>Gets a string of all selected clinic Abbr's, separated by commas.  If "All" is selected, then it simply returns "All Clinics", which might not be techinically true.  If ListSelectedClinicNums was used instead of testing IsAllSelected, then it could only include clinics that user has permission for.</summary>
 		public string GetStringSelectedClinics() {
 			List<Clinic> listSelectedClinics=_listSelectedIndices.Select(x => _listClinics[x]).ToList();
-			if(listSelectedClinics.Any(x => x.ClinicNum==CLINIC_NUM_ALL)) {
+			if(listSelectedClinics.Any(x => x.Id==CLINIC_NUM_ALL)) {
 				return "All Clinics";
 			}
 			return string.Join(",",listSelectedClinics.Select(clinic => clinic.Abbr));
@@ -653,7 +653,7 @@ namespace OpenDental.UI {
 					if(!PrefC.HasClinicsEnabled) {//Clinics are turned off, but
 						if(Visible && !Enabled) {//this combobox was set visible after the Load (FormProcCodes)
 							if(ForceShowUnassigned) {
-								_listClinics.Add(new Clinic{Abbr=HqDescription,Description=HqDescription,ClinicNum=0 });//box shows HQ
+								_listClinics.Add(new Clinic{Abbr=HqDescription,Description=HqDescription,Id=0 });//box shows HQ
 							}
 						}
 						return;
@@ -664,7 +664,7 @@ namespace OpenDental.UI {
 					_listClinics.Add(new Clinic {
 						Abbr="All",
 						Description="All",
-						ClinicNum=CLINIC_NUM_ALL
+						Id=CLINIC_NUM_ALL
 					});
 				}
 				//Does not  guarantee that HQ clinic will be included. Only if user has permission to view it.
@@ -672,30 +672,30 @@ namespace OpenDental.UI {
 				if(IsTestModeNoDb){
 					listClinicsForUser=new List<Clinic>();
 					for(int i=0;i<40;i++){
-						listClinicsForUser.Add(new Clinic{Abbr="Clinic"+i.ToString(),Description="Clinic"+i.ToString(),ClinicNum=i });
+						listClinicsForUser.Add(new Clinic{Abbr="Clinic"+i.ToString(),Description="Clinic"+i.ToString(),Id=i });
 					}
 					if(IncludeAll){
-						listClinicsForUser.Add(new Clinic{Abbr=HqDescription,Description=HqDescription,ClinicNum=0 });
+						listClinicsForUser.Add(new Clinic{Abbr=HqDescription,Description=HqDescription,Id=0 });
 					}
 				}
 				else{
-					listClinicsForUser=Clinics.GetForUserod(_userod,true,HqDescription);
+					listClinicsForUser=Clinics.GetByUser(_userod);
 				}
 				//Add HQ clinic when necessary.
-				Clinic clinicUnassigned=listClinicsForUser.Find(x => x.ClinicNum==CLINIC_NUM_UNASSIGNED);
+				Clinic clinicUnassigned=listClinicsForUser.Find(x => x.Id==CLINIC_NUM_UNASSIGNED);
 				//unassigned is next
 				if(_forceShowUnassigned){
-					_listClinics.Add(new Clinic{Abbr=HqDescription,Description=HqDescription,ClinicNum=0 });
+					_listClinics.Add(new Clinic{Abbr=HqDescription,Description=HqDescription,Id=0 });
 				}
 				else if(IncludeUnassigned  && clinicUnassigned!=null) {
 					_listClinics.Add(clinicUnassigned);
 				}
 				//then, the other items, except unassigned
-				listClinicsForUser.RemoveAll(x => x.ClinicNum==CLINIC_NUM_UNASSIGNED);
+				listClinicsForUser.RemoveAll(x => x.Id==CLINIC_NUM_UNASSIGNED);
 				_listClinics.AddRange(listClinicsForUser);
 				//Will already be ordered alphabetically if that pref was set.  Unfortunately, a restart is required for that pref.
 				//Setting selected---------------------------------------------------------------------------------------------------------------
-				if(Clinics.ClinicNum==0) {
+				if(Clinics.ClinicId==0) {
 					if(IncludeUnassigned) {
 						SelectedClinicNum=CLINIC_NUM_UNASSIGNED;
 					}
@@ -705,7 +705,7 @@ namespace OpenDental.UI {
 				}
 				else {
 					//if Security.CurUser.ClinicIsRestricted, there will be only one clinic in the list, and it will not include default (0).
-					SelectedClinicNum=Clinics.ClinicNum;
+					SelectedClinicNum=Clinics.ClinicId;
 				}
 			}
 			catch{
@@ -725,7 +725,7 @@ namespace OpenDental.UI {
 			if(_listSelectedIndices.Count==0){
 				return "";
 			}
-			if(_listSelectedIndices.Contains(0) && _listClinics[0].ClinicNum==CLINIC_NUM_ALL){
+			if(_listSelectedIndices.Contains(0) && _listClinics[0].Id==CLINIC_NUM_ALL){
 				return "All";
 			}
 			string str="";
@@ -760,7 +760,7 @@ namespace OpenDental.UI {
 
 		///<summary>This is used separately from the SelectedClinicNum setter in order to internally set to -2 without an exception.  But this doesn't work for -1.</summary>
 		private void SetSelectedClinicNum(long value){
-			int idx=_listClinics.FindIndex(x=>x.ClinicNum==value);
+			int idx=_listClinics.FindIndex(x=>x.Id==value);
 			if(idx==-1){
 				if(value==-2){
 					//user tried to set All, but that option is not available.  
@@ -771,13 +771,13 @@ namespace OpenDental.UI {
 					_selectedIndex=-1;
 					_listSelectedIndices=new List<int>();
 					if(IsTestModeNoDb){
-						_selectedClinicNoPermission=new Clinic{Abbr=value.ToString(), Description=value.ToString(),ClinicNum=value };
+						_selectedClinicNoPermission=new Clinic{Abbr=value.ToString(), Description=value.ToString(),Id=value };
 					}
 					else{
-						_selectedClinicNoPermission=Clinics.GetClinic(value);
+						_selectedClinicNoPermission=Clinics.GetById(value);
 						//could still possibly be null in a corrupted db.  In that case, we still need to be able to return what was set.
 						if(_selectedClinicNoPermission==null){
-							_selectedClinicNoPermission=new Clinic{Abbr=value.ToString(), Description=value.ToString(),ClinicNum=value };
+							_selectedClinicNoPermission=new Clinic{Abbr=value.ToString(), Description=value.ToString(),Id=value };
 						}
 					}
 				}

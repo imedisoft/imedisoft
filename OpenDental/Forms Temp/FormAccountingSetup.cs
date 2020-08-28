@@ -9,6 +9,7 @@ using OpenDental.UI;
 using OpenDentBusiness;
 using CodeBase;
 using Imedisoft.Forms;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -646,7 +647,7 @@ namespace OpenDental{
 		private void FillDepList(){
 			listAccountsDep.Items.Clear();
 			for(int i=0;i<depAL.Count;i++){
-				listAccountsDep.Items.Add(Accounts.GetDescript((long)depAL[i]));
+				listAccountsDep.Items.Add(Accounts.GetDescription((long)depAL[i]));
 			}
 		}
 
@@ -709,7 +710,7 @@ namespace OpenDental{
 				return;
 			}
 			PickedDepAccountNum=FormA.SelectedAccount.Id;
-			textAccountInc.Text=Accounts.GetDescript(PickedDepAccountNum);
+			textAccountInc.Text=Accounts.GetDescription(PickedDepAccountNum);
 		}
 
 		private void butBrowseQB_Click(object sender,EventArgs e) {
@@ -827,8 +828,8 @@ namespace OpenDental{
 			if(FormA.DialogResult!=DialogResult.OK) {
 			  return null;
 			}
-			if(FormA.SelectedAccountsQB!=null) {
-				return FormA.SelectedAccountsQB;
+			if(FormA.SelectedQuickBookAccounts!=null) {
+				return FormA.SelectedQuickBookAccounts;
 			}
 			return null;
 		}
@@ -880,12 +881,12 @@ namespace OpenDental{
 			}
 			FillDepList();
 			PickedDepAccountNum=Prefs.GetLong(PrefName.AccountingIncomeAccount);
-			textAccountInc.Text=Accounts.GetDescript(PickedDepAccountNum);
+			textAccountInc.Text=Accounts.GetDescription(PickedDepAccountNum);
 			//pay----------------------------------------------------------
 			payList=AccountingAutoPays.GetDeepCopy();
 			FillPayGrid();
 			PickedPayAccountNum=Prefs.GetLong(PrefName.AccountingCashIncomeAccount);
-			textAccountCashInc.Text=Accounts.GetDescript(PickedPayAccountNum);
+			textAccountCashInc.Text=Accounts.GetDescription(PickedPayAccountNum);
 		}
 
 		///<summary>Changes the window visually for QuickBooks users.</summary>
@@ -960,7 +961,7 @@ namespace OpenDental{
 				return;
 			}
 			PickedPayAccountNum=FormA.SelectedAccount.Id;
-			textAccountCashInc.Text=Accounts.GetDescript(PickedPayAccountNum);
+			textAccountCashInc.Text=Accounts.GetDescription(PickedPayAccountNum);
 		}
 
 		private void butOK_Click(object sender, System.EventArgs e) {

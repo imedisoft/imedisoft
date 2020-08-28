@@ -516,18 +516,18 @@ namespace OpenDental {
 			else {
 				checkClinicInfo.Checked=Prefs.GetBool(PrefName.ReportPandIhasClinicInfo);
 				checkClinicBreakdown.Checked=Prefs.GetBool(PrefName.ReportPandIhasClinicBreakdown);
-				_listClinics=Clinics.GetForUserod(Security.CurrentUser);
+				_listClinics=Clinics.GetByUser(Security.CurrentUser);
 				if(!Security.CurrentUser.ClinicIsRestricted) {
 					listClin.Items.Add("Unassigned");
 					listClin.SetSelected(0,true);
 				}
 				for(int i=0;i<_listClinics.Count;i++) {
 					int curIndex=listClin.Items.Add(_listClinics[i].Abbr);
-					if(Clinics.ClinicNum==0) {
+					if(Clinics.ClinicId==0) {
 						listClin.SetSelected(curIndex,true);
 						checkAllClin.Checked=true;
 					}
-					if(_listClinics[i].ClinicNum==Clinics.ClinicNum) {
+					if(_listClinics[i].Id==Clinics.ClinicId) {
 						listClin.SelectedIndices.Clear();
 						listClin.SetSelected(curIndex,true);
 					}
@@ -789,7 +789,7 @@ namespace OpenDental {
 					else {
 						if(listClin.SelectedIndices[i]==0) {
 							Clinic unassigned=new Clinic();
-							unassigned.ClinicNum=0;
+							unassigned.Id=0;
 							unassigned.Abbr="Unassigned";
 							listClinics.Add(unassigned);
 						}
@@ -801,9 +801,9 @@ namespace OpenDental {
 			}
 			//true if the all clinics checkbox is checked and the selected clinics contains every ClinicNum, including the 'Unassigned' ClinicNum of 0,
 			//all hidden clinics, and the user cannot be restricted.  'All' clinics means all in the list, which may not be all clinics.
-			List<long> listSelectedClinicNums=listClinics.Select(x => x.ClinicNum).ToList();
+			List<long> listSelectedClinicNums=listClinics.Select(x => x.Id).ToList();
 			bool hasAllClinics=checkAllClin.Checked && listSelectedClinicNums.Contains(0)
-				&& Clinics.GetDeepCopy().Select(x => x.ClinicNum).All(x => x.In(listSelectedClinicNums));
+				&& Clinics.GetAll(true).Select(x => x.Id).All(x => x.In(listSelectedClinicNums));
 			DataSet dataSetDailyProd=RpProdInc.GetDailyData(dateFrom,dateTo,listProvs,listClinics,checkAllProv.Checked,hasAllClinics
 				,checkClinicBreakdown.Checked,checkClinicInfo.Checked,checkUnearned.Checked,GetWriteoffType());
 			DataTable tableDailyProd=dataSetDailyProd.Tables["DailyProd"];//Includes multiple clinics that will get separated out later.
@@ -1109,7 +1109,7 @@ namespace OpenDental {
 					else {
 						if(listClin.SelectedIndices[i]==0) {
 							Clinic unassigned=new Clinic();
-							unassigned.ClinicNum=0;
+							unassigned.Id=0;
 							unassigned.Abbr="Unassigned";
 							listClinics.Add(unassigned);//Will have ClinicNum of 0 for our "Unassigned" needs.
 						}
@@ -1121,9 +1121,9 @@ namespace OpenDental {
 			}
 			//true if the all clinics checkbox is checked and the selected clinics contains every ClinicNum, including the 'Unassigned' ClinicNum of 0,
 			//all hidden clinics, and the user cannot be restricted.  'All' clinics means all in the list, which may not be all clinics.
-			List<long> listSelectedClinicNums=listClinics.Select(x => x.ClinicNum).ToList();
+			List<long> listSelectedClinicNums=listClinics.Select(x => x.Id).ToList();
 			bool hasAllClinics=checkAllClin.Checked && listSelectedClinicNums.Contains(0)
-				&& Clinics.GetDeepCopy().Select(x => x.ClinicNum).All(x => x.In(listSelectedClinicNums));
+				&& Clinics.GetAll(true).Select(x => x.Id).All(x => x.In(listSelectedClinicNums));
 			DataSet ds=RpProdInc.GetMonthlyData(dateFrom,dateTo,listProvs,listClinics,radioWriteoffPay.Checked,checkAllProv.Checked,hasAllClinics
 				,radioWriteoffBoth.Checked,checkUnearned.Checked);
 			DataTable dt=ds.Tables["Total"];
@@ -1320,7 +1320,7 @@ namespace OpenDental {
 					else {
 						if(listClin.SelectedIndices[i]==0) {
 							Clinic unassigned=new Clinic();
-							unassigned.ClinicNum=0;
+							unassigned.Id=0;
 							unassigned.Abbr="Unassigned";
 							listClinics.Add(unassigned);//Will have ClinicNum of 0 for our "Unassigned" needs.
 						}
@@ -1332,9 +1332,9 @@ namespace OpenDental {
 			}
 			//true if the all clinics checkbox is checked and the selected clinics contains every ClinicNum, including the 'Unassigned' ClinicNum of 0,
 			//all hidden clinics, and the user cannot be restricted.  'All' clinics means all in the list, which may not be all clinics.
-			List<long> listSelectedClinicNums=listClinics.Select(x => x.ClinicNum).ToList();
+			List<long> listSelectedClinicNums=listClinics.Select(x => x.Id).ToList();
 			bool hasAllClinics=checkAllClin.Checked && listSelectedClinicNums.Contains(0)
-				&& Clinics.GetDeepCopy().Select(x => x.ClinicNum).All(x => x.In(listSelectedClinicNums));
+				&& Clinics.GetAll(true).Select(x => x.Id).All(x => x.In(listSelectedClinicNums));
 			DataSet ds=RpProdInc.GetAnnualData(dateFrom,dateTo,listProvs,listClinics,radioWriteoffPay.Checked,checkAllProv.Checked,hasAllClinics
 				,radioWriteoffBoth.Checked,checkUnearned.Checked);
 			DataTable dt=ds.Tables["Total"];
@@ -1518,7 +1518,7 @@ namespace OpenDental {
 					else {
 						if(listClin.SelectedIndices[i]==0) {
 							Clinic unassigned=new Clinic();
-							unassigned.ClinicNum=0;
+							unassigned.Id=0;
 							unassigned.Abbr="Unassigned";
 							listClinics.Add(unassigned);
 						}

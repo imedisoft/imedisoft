@@ -138,7 +138,7 @@ namespace OpenDentBusiness
 				strb.Append("N3*"+Sout(Prefs.GetString(PrefName.PracticeAddress),55));//N301: Address
 			}
 			else {
-				strb.Append("N3*"+Sout(clinic.Address,55));//N301: Address
+				strb.Append("N3*"+Sout(clinic.AddressLine1,55));//N301: Address
 			}
 			if(Prefs.GetBool(PrefName.UseBillingAddressOnClaims)) {
 				if(Prefs.GetString(PrefName.PracticeBillingAddress2)=="") {
@@ -159,12 +159,12 @@ namespace OpenDentBusiness
 				}
 			}
 			else {
-				if(clinic.Address2=="") {
+				if(clinic.AddressLine2=="") {
 					strb.AppendLine("~");
 				}
 				else {
 					//N302: Address2. Optional.
-					strb.AppendLine("*"+Sout(clinic.Address2,55)+"~");
+					strb.AppendLine("*"+Sout(clinic.AddressLine2,55)+"~");
 				}
 			}
 			//2100B N4: Information Receiver City/State/Zip

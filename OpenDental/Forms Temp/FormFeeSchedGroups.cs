@@ -26,7 +26,7 @@ namespace OpenDental {
 		private void FormFeeSchedGroups_Load(object sender,EventArgs e) {
 			SetFilterControlsAndAction(() => FilterFeeSchedGroups(),textFeeSched);
 			//No restricting clinics because this window assumes that the user is an admin without restricted clinics
-			_listAllClinics=Clinics.GetWhere(x => x.ClinicNum > -1 && x.IsHidden==false).OrderBy(x => x.Abbr).ToList(); //Get all Clinics from cache that are not hidden
+			_listAllClinics=Clinics.Where(x => x.Id > -1 && x.IsHidden==false).OrderBy(x => x.Abbr).ToList(); //Get all Clinics from cache that are not hidden
 			_listFeeSchedGroups=FeeSchedGroups.GetAll().OrderBy(x => x.Description).ToList();
 			_listFeeSchedGroupsFiltered=_listFeeSchedGroups.DeepCopyList<FeeSchedGroup,FeeSchedGroup>();
 			FillClinicCombo();
@@ -54,7 +54,7 @@ namespace OpenDental {
 			//This filter should return everything if both filters are empty.
 			_listFeeSchedGroupsFiltered=_listFeeSchedGroups
 				.Where(x => x.FeeSchedNum.In(listFilteredFeeScheds.Select(y => y.FeeSchedNum)))
-				.Where(x => x.ListClinicNumsAll.Any(y => y.In(listFilteredClinics.Select(z => z.ClinicNum))))
+				.Where(x => x.ListClinicNumsAll.Any(y => y.In(listFilteredClinics.Select(z => z.Id))))
 				.ToList();
 			FillGridGroups();
 			FillGridClinics();

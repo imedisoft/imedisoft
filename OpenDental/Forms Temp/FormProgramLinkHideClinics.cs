@@ -22,7 +22,7 @@ namespace Imedisoft.Forms
 				{
 					ProgramId = programId,
 					Name = ProgramProperties.PropertyDescs.ClinicHideButton,//Give it description we can use to delimit on later.
-					ClinicId = x.ClinicNum,
+					ClinicId = x.Id,
 				}).ToList();
 			}
 		}
@@ -41,7 +41,7 @@ namespace Imedisoft.Forms
 				//If a ProgramProperty exists within listProgProp (hide for these clinics) then we move the correpsonding clinic to listHideButtonsForClinics
 				for (int i = listVisibleButtonsForClinics.Count - 1; i >= 0; i--)
 				{//Count backwards to allow for clean removal from lists.
-					if (listProgProp.Any(x => x.ClinicId == listVisibleButtonsForClinics[i].ClinicNum))
+					if (listProgProp.Any(x => x.ClinicId == listVisibleButtonsForClinics[i].Id))
 					{//Means the buttons are hidden for this clinic.
 						listHiddenButtonsForClinics.Add(listVisibleButtonsForClinics[i]);//If removing from the "Visible" list then it goes into the "Hidden".
 						listVisibleButtonsForClinics.Remove(listVisibleButtonsForClinics[i]);//Then remove from "Visible". (add/remove order matters).
@@ -70,11 +70,11 @@ namespace Imedisoft.Forms
 		{
 			//Get the users total list of unrestricted clinics, then acquire their list of ProgramProperties so we can tell which PL buttons 
 			//should be hidden based upon the ProgramProperty PropertyDesc indicator. 
-			List<Clinic> listUserClinics = Clinics.GetForUserod(Security.CurrentUser, doIncludeHQ: true, hqClinicName: "HQ");
+			List<Clinic> listUserClinics = Clinics.GetByCurrentUser();
 			//Get the cached list of button hiding ProgramProperties for clinics this user has access to, i.e. the "Old" list.
 			List<ProgramProperty> listHiddenForUserOld = ProgramProperties.GetForProgram(programId)
 				.Where(x => x.Name == ProgramProperties.PropertyDescs.ClinicHideButton
-					&& x.ClinicId.In(listUserClinics.Select(y => y.ClinicNum))).ToList();
+					&& x.ClinicId.In(listUserClinics.Select(y => y.Id))).ToList();
 			//Compares the old list of ProgramProperties to the new one, if a clinic exists in the old list but not the new list then it was deleted by the 
 			//user and we remove it from the db.
 			foreach (ProgramProperty propOld in listHiddenForUserOld)
@@ -98,11 +98,11 @@ namespace Imedisoft.Forms
 		///<summary>A sort to switch list sorting between ASCIIbetical and Alphabetical. This method is ClinicSort(...) from FormClinics.cs.</summary>
 		private int NaturalSort(Clinic x, Clinic y)
 		{
-			if (x.ClinicNum == 0)
+			if (x.Id == 0)
 			{
 				return -1;
 			}
-			if (y.ClinicNum == 0)
+			if (y.Id == 0)
 			{
 				return 1;
 			}
@@ -121,7 +121,7 @@ namespace Imedisoft.Forms
 			}
 			if (retval == 0)
 			{//if Abbrs are the same and Descriptions are alphabetically the same, order by ClinicNum (guaranteed deterministic)
-				retval = x.ClinicNum.CompareTo(y.ClinicNum);
+				retval = x.Id.CompareTo(y.Id);
 			}
 			return retval;
 		}
@@ -183,14 +183,14 @@ namespace Imedisoft.Forms
 			List<Clinic> listHiddenSelected = hiddenListBox.GetListSelected<Clinic>();
 			listVisible.Sort(NaturalSort);//Sorts based on the status of the checkbox.
 			listHidden.Sort(NaturalSort);
-			visibleListBox.SetItems(listVisible, x => x.Abbr, x => x.ClinicNum.In(listVisibleSelected.Select(y => y.ClinicNum)));
-			hiddenListBox.SetItems(listHidden, x => x.Abbr, x => x.ClinicNum.In(listHiddenSelected.Select(y => y.ClinicNum)));
+			visibleListBox.SetItems(listVisible, x => x.Abbr, x => x.Id.In(listVisibleSelected.Select(y => y.Id)));
+			hiddenListBox.SetItems(listHidden, x => x.Abbr, x => x.Id.In(listHiddenSelected.Select(y => y.Id)));
 		}
 
 		///<summary>Maintain the selection of the user when either moving items between sides or changing sort typyes.</summary>
 		private void ReselectClinics(ListBox listBox, List<Clinic> listSelected)
 		{
-			listBox.SetSelectedItem<Clinic>(x => x.ClinicNum.In(listSelected.Select(y => y.ClinicNum)));
+			listBox.SetSelectedItem<Clinic>(x => x.Id.In(listSelected.Select(y => y.Id)));
 		}
 
 		private void butOK_Click(object sender, EventArgs e)

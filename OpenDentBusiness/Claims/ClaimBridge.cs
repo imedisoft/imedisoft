@@ -21,7 +21,6 @@ namespace Imedisoft.Claims
         /// Initializes a new instance of the <see cref="ClaimBridge"/> class.
         /// </summary>
         /// <param name="name">The name of the bridge.</param>
-        /// <param name="canSend">A value indicating whether e-Claims can be sent directly to the clearinghouse.</param>
         public ClaimBridge(string name)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));

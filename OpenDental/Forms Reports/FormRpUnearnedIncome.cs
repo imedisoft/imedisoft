@@ -28,21 +28,21 @@ namespace OpenDental {
 		#region Fill Methods
 		private void FillClinics() {
 			if(PrefC.HasClinicsEnabled) {//fill clinic list
-				List<Clinic> listClinics=Clinics.GetForUserod(Security.CurrentUser,true,"Unassigned");
+				List<Clinic> listClinics=Clinics.GetByCurrentUser();
 				foreach(Clinic clinCur in listClinics) {
 					ODBoxItem<Clinic> boxItemCur = new ODBoxItem<Clinic>(clinCur.Abbr,clinCur);
 					listUnearnedAllocationClins.Items.Add(boxItemCur);
 					listNetUnearnedClins.Items.Add(boxItemCur);
 					listLineItemClins.Items.Add(boxItemCur);
 					listUnearnedAcctClins.Items.Add(boxItemCur);
-					if(clinCur.ClinicNum == Clinics.ClinicNum) {
+					if(clinCur.Id == Clinics.ClinicId) {
 						listUnearnedAllocationClins.SelectedItem = boxItemCur;
 						listNetUnearnedClins.SelectedItem = boxItemCur;
 						listLineItemClins.SelectedItem = boxItemCur;
 						listUnearnedAcctClins.SelectedItem = boxItemCur;
 					}
 				}
-				if(Clinics.ClinicNum==0) {
+				if(Clinics.ClinicId==0) {
 					checkUnearnedAllocationAllClins.Checked=true;
 					checkNetUnearnedAllClins.Checked=true;
 					checkLineItemAllClins.Checked=true;
@@ -147,7 +147,7 @@ namespace OpenDental {
 				MessageBox.Show("At least one unearned type must be selected.");
 				return;
 			}
-			List<long> listClinicNums = listUnearnedAllocationClins.SelectedItems.OfType<ODBoxItem<Clinic>>().Select(x => x.Tag.ClinicNum).ToList();
+			List<long> listClinicNums = listUnearnedAllocationClins.SelectedItems.OfType<ODBoxItem<Clinic>>().Select(x => x.Tag.Id).ToList();
 			List<long> listProvNums = listUnearnedAllocationProvs.SelectedItems.OfType<ODBoxItem<Provider>>().Select(x => x.Tag.ProvNum).ToList();
 			List<long> listUnearnedTypeNums = listUnearnedAllocationTypes.SelectedItems.OfType<ODBoxItem<Def>>().Select(x => x.Tag.DefNum).ToList();
 			ReportComplex report = new ReportComplex(true,true);
@@ -262,7 +262,7 @@ namespace OpenDental {
 				MessageBox.Show("At least one unearned type must be selected.");
 				return;
 			}
-			List<long> listClinicNums = listNetUnearnedClins.SelectedItems.OfType<ODBoxItem<Clinic>>().Select(x => x.Tag.ClinicNum).ToList();
+			List<long> listClinicNums = listNetUnearnedClins.SelectedItems.OfType<ODBoxItem<Clinic>>().Select(x => x.Tag.Id).ToList();
 			List<long> listProvNums = listNetUnearnedProvs.SelectedItems.OfType<ODBoxItem<Provider>>().Select(x => x.Tag.ProvNum).ToList();
 			List<long> listUnearnedTypeNums = listNetUnearnedTypes.SelectedItems.OfType<ODBoxItem<Def>>().Select(x => x.Tag.DefNum).ToList();
 			ReportComplex report = new ReportComplex(true,false);
@@ -335,7 +335,7 @@ namespace OpenDental {
 				}
 			}
 			List<long> listClinicNums = new List<long>(); //stores clinicNums of the selected indices
-			listClinicNums.AddRange(listLineItemClins.SelectedItems.OfType<ODBoxItem<Clinic>>().Select(x => x.Tag.ClinicNum));//empty if "All" is checked.
+			listClinicNums.AddRange(listLineItemClins.SelectedItems.OfType<ODBoxItem<Clinic>>().Select(x => x.Tag.Id));//empty if "All" is checked.
 			ReportComplex report = new ReportComplex(true,false);
 			DataTable table = RpUnearnedIncome.GetLineItemUnearnedData(listClinicNums,dateLineItemFrom.SelectionStart,dateLineItemTo.SelectionStart,
 				checkLineItemShowProv.Checked);
@@ -408,7 +408,7 @@ namespace OpenDental {
 				}
 			}
 			List<long> listClinicNums = new List<long>(); //stores clinicNums of the selected indices
-			listClinicNums.AddRange(listUnearnedAcctClins.SelectedItems.OfType<ODBoxItem<Clinic>>().Select(x => x.Tag.ClinicNum));//empty if "All" is checked.
+			listClinicNums.AddRange(listUnearnedAcctClins.SelectedItems.OfType<ODBoxItem<Clinic>>().Select(x => x.Tag.Id));//empty if "All" is checked.
 			ReportComplex report = new ReportComplex(true,false);
 			DataTable table = RpUnearnedIncome.GetUnearnedAccountData(listClinicNums);
 			report.ReportName="Unearned Accounts Report";

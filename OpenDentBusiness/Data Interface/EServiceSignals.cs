@@ -2,6 +2,7 @@ using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -104,7 +105,7 @@ namespace OpenDentBusiness{
 		public static long Insert(EServiceSignal eServiceSignal) {
 			
 			//If this is an error and the EConnectorError alert is not already present, create it now.
-			if(eServiceSignal.Severity==eServiceSignalSeverity.Error && AlertItems.RefreshForType(AlertType.EConnectorError).Count==0) {
+			if(eServiceSignal.Severity==eServiceSignalSeverity.Error && AlertItems.RefreshForType(AlertType.EConnectorError).Count()==0) {
 				//Create an alert.
 				AlertItems.Insert(new AlertItem {
 					//Do not allow delete. The only way for this alert to be deleted is to open the eConnector form and ACK the error(s).

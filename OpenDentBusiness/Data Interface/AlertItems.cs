@@ -8,162 +8,173 @@ using DataConnectionBase;
 using CodeBase;
 using Imedisoft.Data;
 
-namespace OpenDentBusiness{
-	///<summary></summary>
-	public class AlertItems{
-		#region Get Methods
-		#endregion
-
-		#region Modification Methods
-		
-		#region Insert
-		///<summary>Inserts a generic alert where description will show in the menu item and itemValue will be shown within a MsgBoxCopyPaste.
-		///Set itemValue to more specific reason for the alert.  E.g. exception text details as to help the techs give better support.</summary>
-		public static void CreateGenericAlert(string description,string itemValue) {
-			AlertItem alert=new AlertItem();
-			alert.Type=AlertType.Generic;
-			alert.Actions=ActionType.MarkAsRead | ActionType.Delete | ActionType.ShowItemValue;
-			alert.Description=description;
-			alert.Severity=SeverityType.Low;
-			alert.ItemValue=itemValue;
-			AlertItems.Insert(alert);
+namespace OpenDentBusiness
+{
+	public partial class AlertItems
+	{
+		/// <summary>
+		/// Inserts a generic alert where description will show in the menu item and itemValue will be shown within a MsgBoxCopyPaste.
+		/// Set itemValue to more specific reason for the alert.  E.g. exception text details as to help the techs give better support.
+		/// </summary>
+		public static void CreateGenericAlert(string description, string details)
+		{
+            Insert(new AlertItem
+			{
+				Type = AlertType.Generic,
+				Actions = ActionType.MarkAsRead | ActionType.Delete | ActionType.ShowItemValue,
+				Description = description,
+				Severity = SeverityType.Low,
+				Details = details
+			});
 		}
-		#endregion
 
-		#region Update
-		#endregion
+		/// <summary>
+		/// Checks whether the heartbeat of the OpenDental service occurred within the last 6 
+		/// minutes. If not, an alert indicating the service is down will be generated.
+		/// </summary>
+		public static void CheckODServiceHeartbeat()
+		{
+			if (!IsODServiceRunning())
+			{
+				// If the service is not running, create an alert (only if there isn't already a alert).
+				var alerts = RefreshForType(AlertType.OpenDentalServiceDown);
 
-		#region Delete
-		#endregion
-
-		#endregion
-
-		#region Misc Methods
-
-		///<summary>Checks to see if the heartbeat for Open Dental Service was within the last six minutes. If not, an alert will be sent telling 
-		///users OpenDental Service is down.</summary>
-		public static void CheckODServiceHeartbeat() {
-			if(!IsODServiceRunning()) {//If the heartbeat is over 6 minutes old, send the alert if it does not already exist
-				//Check if there are any previous alert items
-				//Get previous alerts of this type
-				List<AlertItem> listOldAlerts=RefreshForType(AlertType.OpenDentalServiceDown);
-				if(listOldAlerts.Count==0) {//an alert does not already exist
-					AlertItem alert=new AlertItem();
-					alert.Actions=ActionType.MarkAsRead;
-					alert.ClinicId=-1;//all clinics
-					alert.Description="No instance of Open Dental Service is running.";
-					alert.Type=AlertType.OpenDentalServiceDown;
-					alert.Severity=SeverityType.Medium;
-					Insert(alert);
+				if (!alerts.Any())
+				{
+                    Insert(new AlertItem
+					{
+						Actions = ActionType.MarkAsRead,
+						ClinicId = null,
+						Description = "No instance of Open Dental Service is running.",
+						Type = AlertType.OpenDentalServiceDown,
+						Severity = SeverityType.Medium
+					});
 				}
 			}
 		}
 
-		///<summary>Returns true if the heartbeat is less than 6 minutes old.</summary>
+		/// <summary>
+		/// Checks whether the OpenDental Service is running by checking the 
+		/// <b>OpenDentalServiceHeartbeat</b> preference. If the preference was updated less then 
+		/// 6 minutes ago the service is most likely running.
+		/// </summary>
+		/// <returns>True if the service is running; otherwise, false.</returns>
 		public static bool IsODServiceRunning()
 		{
 			var dateTime = Prefs.GetDateTimeOrNull(PrefName.OpenDentalServiceHeartbeat);
 
 			if (!dateTime.HasValue || dateTime.Value.AddMinutes(6) < DateTime.UtcNow)
-            {
+			{
 				return false;
-            }
+			}
 
 			return true;
 		}
 
-		/// <summary>This method grabs all unread webmails, and creates/modifies/deletes alerts for the providers and linked users the webmails are addressed to.</summary>
-		public static void CreateAlertsForNewWebmail() {
-			//This method first collect all unread webmails, and counts how many each provider has.
-			//It then fetches all WebMailRecieved alerts, and will create/modify alerts for each provider who was counted before.
-			//Finally, it will sync the alerts in the database with the ones we created.
-			//If the user has unread webmail and an existing alert, it is modified.
-			//If the user has unread webmail and no existing alert, an alert is created.
-			//If the user has no unread webmail and an existing alert, it will be deleted.
-			//Key: ProvNum, Value: Number of unread webmails
-			Dictionary<long,long> dictRecievedCount=EmailMessages.GetProvUnreadWebMailCount();
-			Logger.LogVerbose("Collected Webmails for the following providers (ProvNum: # Webmails): "
-				+String.Join(", ",dictRecievedCount.Select( x=> POut.Long(x.Key)+":"+POut.Long(x.Value))));
+		/// <summary>
+		/// This method grabs all unread webmails, and creates/modifies/deletes alerts for the providers and linked users the webmails are addressed to.
+		/// </summary>
+		public static void CreateAlertsForNewWebmail()
+		{
+			var unreadMessageCounts = EmailMessages.GetProvUnreadWebMailCount();
+
+			Logger.LogVerbose(
+				"Collected Webmails for the following providers (ProvNum: # Webmails): " + 
+				string.Join(", ", unreadMessageCounts.Select(x => x.Key + ":" + x.Value)));
+
 			//This list contains every single WebMailRecieved alert and is synced with listAlerts later.
-			List<AlertItem> listOldAlerts=AlertItems.RefreshForType(AlertType.WebMailRecieved);
-			Logger.LogVerbose("Fetched current alerts for users: "+String.Join(", ",listOldAlerts.Select(x => POut.Long(x.UserId))));
-			//If a user doesn't have any unread webmail, they won't be placed on this list, and any alert they have in listOldAlerts will be deleted.
-			List<AlertItem> listAlerts=new List<AlertItem>();
-			List<long> listChangedAlertItemNums=new List<long>();
-			//Go through each provider value, and create/update alerts for each patnum under that provider.
-			//There will only be a value if they have atleast 1 unread webmail.
-			foreach(KeyValuePair<long,long> kvp in dictRecievedCount) {
-				List<Userod> listUsers=Providers.GetAttachedUsers(kvp.Key);
-				//Go through each usernum and create/update their alert item.
-				foreach(long usernum in listUsers.Select(x => x.Id)) {
-					AlertItem alertForUser=listOldAlerts.FirstOrDefault(x => x.UserId==usernum);
-					//If an alert doesn't exist for the user, we'll create it.
-					if(alertForUser==null) {
-						alertForUser=new AlertItem();
-						alertForUser.Type=AlertType.WebMailRecieved;
-						alertForUser.FormToOpen=FormType.FormEmailInbox;
-						alertForUser.Actions=ActionType.MarkAsRead|ActionType.OpenForm;	//Removed delete because the alert will just be re-added next time it checks.
-						alertForUser.Severity=SeverityType.Normal;
-						alertForUser.ClinicId=-1;	//The alert is user dependent, not clinic dependent.
-						alertForUser.UserId=usernum;
-						alertForUser.Description=POut.Long(kvp.Value);
-						listAlerts.Add(alertForUser);
-						Logger.LogVerbose("Created webmail alert for user "+POut.Long(usernum));
+			var oldAlerts = RefreshForType(AlertType.WebMailRecieved).ToList();
+
+			Logger.LogVerbose(
+				"Fetched current alerts for users: " + 
+				string.Join(", ", oldAlerts.Where(x => x.UserId.HasValue).Select(x => x.UserId.Value)));
+
+			var changedAlertItemIds = new List<long>();
+
+			// Go through each provider value, and create/update alerts for each patnum under that provider.
+			// There will only be a value if they have atleast 1 unread webmail.
+			foreach (KeyValuePair<long, long> kvp in unreadMessageCounts)
+			{
+				var users = Providers.GetAttachedUsers(kvp.Key);
+
+				// Go through each usernum and create/update their alert item.
+				foreach (long userId in users.Select(x => x.Id))
+				{
+					var alertItem = oldAlerts.FirstOrDefault(x => x.UserId == userId);
+
+					// If an alert doesn't exist for the user, we'll create it.
+					if (alertItem == null)
+					{
+                        Insert(new AlertItem
+						{
+							Type = AlertType.WebMailRecieved,
+							FormToOpen = FormType.FormEmailInbox,
+							Actions = ActionType.MarkAsRead | ActionType.OpenForm,
+							Severity = SeverityType.Normal,
+							ClinicId = null,
+							UserId = userId,
+							Description = kvp.Value.ToString()
+						});
+
+						Logger.LogVerbose("Created webmail alert for user " + userId);
 					}
-					else {
-						//If the alert already exists, we'll be updating it and usually mark it as unread.
-						AlertItem selectedAlert=alertForUser.Copy();
-						long previousValue=PIn.Long(selectedAlert.Description);
-						//We only need to modify the alert if the amount of unread webmails changed.
-						if(previousValue!=kvp.Value){
-							selectedAlert.Description=POut.Long(kvp.Value);
-							//If the new value is greater, the user has recieved more webmails so we want to mark the alert as "Unread".
-							if(previousValue<kvp.Value) {
-								listChangedAlertItemNums.Add(selectedAlert.Id);
-							}
+					else
+					{
+						var newDescription = kvp.Value.ToString();
+						if (alertItem.Description != newDescription)
+                        {
+							alertItem.Description = newDescription;
+
+							Update(alertItem);
+
+							changedAlertItemIds.Add(alertItem.Id);
 						}
-						listAlerts.Add(selectedAlert);
-						Logger.LogVerbose("Modified webmail alert for user "+POut.Long(usernum));
+
+						Logger.LogVerbose("Modified webmail alert for user " + userId);
 					}
 				}
 			}
-			//Push our changes to the database.
-			AlertItems.Sync(listAlerts,listOldAlerts);
-			List<AlertItem> listDeletedAlerts=listOldAlerts.Where(x => !listAlerts.Any(y => y.Id==x.Id)).ToList();
-			Logger.LogVerbose("Deleted webmail alerts for users: "+String.Join(", ",listDeletedAlerts.Select(x => POut.Long(x.UserId))));
-			//Make sure to mark alerts that were deleted, modified (not created) and increased as unread.
-			listChangedAlertItemNums.AddRange(listDeletedAlerts.Select(x => x.Id));
-			AlertReads.DeleteForAlertItems(listChangedAlertItemNums);
+
+			AlertReads.DeleteForAlertItems(changedAlertItemIds);
 		}
 
-		///<summary>Returns a list of lists which contains unique alert items. Each inner list is a group of alerts that are duplicates of each other.</summary>
-		public static List<List<AlertItem>> GetUniqueAlerts(long userNumCur, long clinicNumCur){
-			List<AlertSub> listUserAlertSubsAll=AlertSubs.GetAllForUser(userNumCur);
-			bool isAllClinics=listUserAlertSubsAll.Any(x => x.ClinicNum==-1);
-			List<long> listAlertCatNums=new List<long>();
-			if(isAllClinics) {//User subscribed to all clinics.
-				listAlertCatNums=listUserAlertSubsAll.Select(x => x.AlertCategoryNum).Distinct().ToList();
+		/// <summary>
+		/// Returns a list of lists which contains unique alert items. 
+		/// Each inner list is a group of alerts that are duplicates of each other.
+		/// </summary>
+		public static List<List<AlertItem>> GetUniqueAlerts(long userNumCur, long clinicNumCur)
+		{
+			List<AlertSub> listUserAlertSubsAll = AlertSubs.GetAllForUser(userNumCur);
+			bool isAllClinics = listUserAlertSubsAll.Any(x => x.ClinicId == -1);
+			List<long> listAlertCatNums = new List<long>();
+			if (isAllClinics)
+			{//User subscribed to all clinics.
+				listAlertCatNums = listUserAlertSubsAll.Select(x => x.AlertCategoryId).Distinct().ToList();
 			}
-			else {
+			else
+			{
 				//List of AlertSubs for current clinic and user combo.
-				List<AlertSub> listUserAlertSubs=listUserAlertSubsAll.FindAll(x => x.ClinicNum==clinicNumCur);
-				listAlertCatNums=listUserAlertSubs.Select(y => y.AlertCategoryNum).ToList();
+				List<AlertSub> listUserAlertSubs = listUserAlertSubsAll.FindAll(x => x.ClinicId == clinicNumCur);
+				listAlertCatNums = listUserAlertSubs.Select(y => y.AlertCategoryId).ToList();
 			}
 			//AlertTypes current user is subscribed to.
-			List<AlertType> listUserAlertLinks=AlertCategoryLinks.GetWhere(x => listAlertCatNums.Contains(x.AlertCategoryId))
+			List<AlertType> listUserAlertLinks = AlertCategoryLinks.GetWhere(x => listAlertCatNums.Contains(x.AlertCategoryId))
 				.Select(x => x.AlertType).ToList();
-			List<long> listAllAlertCatNums=listUserAlertSubsAll.Select(y => y.AlertCategoryNum).ToList();
+			List<long> listAllAlertCatNums = listUserAlertSubsAll.Select(y => y.AlertCategoryId).ToList();
 			//AlertTypes current user is subscribed to for AlertItems which are not clinic specific.
-			List<AlertType> listAllUserAlertLinks=AlertCategoryLinks.GetWhere(x => listAllAlertCatNums.Contains(x.AlertCategoryId))
+			List<AlertType> listAllUserAlertLinks = AlertCategoryLinks.GetWhere(x => listAllAlertCatNums.Contains(x.AlertCategoryId))
 				.Select(x => x.AlertType).ToList();
 			//Each inner list is a group of alerts that are duplicates of each other.
-			List<List<AlertItem>> listUniqueAlerts=new List<List<AlertItem>>();
-			RefreshForClinicAndTypes(clinicNumCur,listUserAlertLinks)//Get alert items for the current clinic
-				.Union(RefreshForClinicAndTypes(-1,listAllUserAlertLinks))//Get alert items that are for all clinics
+			List<List<AlertItem>> listUniqueAlerts = new List<List<AlertItem>>();
+			RefreshForClinicAndTypes(clinicNumCur, listUserAlertLinks)//Get alert items for the current clinic
+				.Union(RefreshForClinicAndTypes(-1, listAllUserAlertLinks))//Get alert items that are for all clinics
 				.DistinctBy(x => x.Id)
-				.ForEach(x => {
-					foreach(List<AlertItem> listDuplicates in listUniqueAlerts) {
-						if(AreDuplicates(listDuplicates.First(),x)) {
+				.ForEach(x =>
+				{
+					foreach (List<AlertItem> listDuplicates in listUniqueAlerts)
+					{
+						if (AreDuplicates(listDuplicates.First(), x))
+						{
 							listDuplicates.Add(x);
 							return;
 						}
@@ -174,125 +185,97 @@ namespace OpenDentBusiness{
 			return listUniqueAlerts;
 		}
 
-		///<summary>Returns true if the two alerts match all fields other than AlertItemNum.</summary>
-		public static bool AreDuplicates(AlertItem alert1,AlertItem alert2) {
-			if(alert1==null || alert2==null) {
+		/// <summary>
+		/// Returns true if the two alerts match all fields other than AlertItemNum.
+		/// </summary>
+		public static bool AreDuplicates(AlertItem alert1, AlertItem alert2)
+		{
+			if (alert1 == null || alert2 == null)
+			{
 				return false;
 			}
-			return alert1.Actions==alert2.Actions
-				&& alert1.ClinicId==alert2.ClinicId
-				&& alert1.Description==alert2.Description
-				&& alert1.FKey==alert2.FKey
-				&& alert1.FormToOpen==alert2.FormToOpen
-				&& alert1.ItemValue==alert2.ItemValue
-				&& alert1.Severity==alert2.Severity
-				&& alert1.Type==alert2.Type
-				&& alert1.UserId==alert2.UserId;
+
+			return alert1.Actions == alert2.Actions
+				&& alert1.ClinicId == alert2.ClinicId
+				&& alert1.Description == alert2.Description
+				&& alert1.ObjectId == alert2.ObjectId
+				&& alert1.FormToOpen == alert2.FormToOpen
+				&& alert1.Details == alert2.Details
+				&& alert1.Severity == alert2.Severity
+				&& alert1.Type == alert2.Type
+				&& alert1.UserId == alert2.UserId;
 		}
 
-		#endregion
-
-		///<summary>Returns a list of AlertItems for the given clinicNum.  Doesn't include alerts that are assigned to other users.</summary>
-		public static List<AlertItem> RefreshForClinicAndTypes(long clinicNum, List<AlertType> listAlertTypes = null)
+		/// <summary>
+		/// Returns a list of AlertItems for the given clinicNum. 
+		/// Doesn't include alerts that are assigned to other users.
+		/// </summary>
+		public static IEnumerable<AlertItem> RefreshForClinicAndTypes(long clinicId, List<AlertType> alertTypes = null)
 		{
-
-			if (listAlertTypes == null || listAlertTypes.Count == 0)
+			if (alertTypes == null || alertTypes.Count == 0)
 			{
 				return new List<AlertItem>();
 			}
-			long provNum = 0;
+
+			long providerId = 0;
 			if (Security.CurrentUser != null && Userods.IsUserCpoe(Security.CurrentUser))
 			{
-				provNum = Security.CurrentUser.ProviderId;
+				providerId = Security.CurrentUser.ProviderId;
 			}
-			long curUserNum = 0;
+
+			long userId = 0;
 			if (Security.CurrentUser != null)
 			{
-				curUserNum = Security.CurrentUser.Id;
+				userId = Security.CurrentUser.Id;
 			}
-			string command = "";
-			command = "SELECT * FROM alertitem "
-				+ "WHERE Type IN (" + String.Join(",", listAlertTypes.Cast<int>().ToList()) + ") "
-				+ "AND (UserNum=0 OR UserNum=" + POut.Long(curUserNum) + ") "
-				//For AlertType.RadiologyProcedures we only care if the alert is associated to the current logged in provider.
-				//When provNum is 0 the initial WHEN check below will not bring any rows by definition of the FKey column.
-				+ "AND (CASE TYPE WHEN " + POut.Int((int)AlertType.RadiologyProcedures) + " THEN FKey=" + POut.Long(provNum) + " "
-				+ "ELSE ClinicNum = " + POut.Long(clinicNum) + " OR ClinicNum=-1 END)";
 
-			return Crud.AlertItemCrud.SelectMany(command);
+			return SelectMany(
+				"SELECT * FROM `alert_items` " +
+				"WHERE `type` IN (" + string.Join(",", alertTypes.Cast<int>()) + ") " +
+				"AND (`user_id` IS NULL OR `user_id` = " + userId + ") " +
+				"AND (CASE `type` WHEN " + (int)AlertType.RadiologyProcedures + " THEN `object_id` = " + providerId + " " +
+				"ELSE `clinic_id` = " + clinicId + " OR `clinic_id` IS NULL END)");
 		}
 
-		///<summary>Returns a list of AlertItems for the given alertType.</summary>
-		public static List<AlertItem> RefreshForType(AlertType alertType){
-			
-			string command="SELECT * FROM alertitem WHERE Type="+POut.Int((int)alertType)+";";
-			return Crud.AlertItemCrud.SelectMany(command);
+		/// <summary>
+		/// Returns a list of AlertItems for the given alertType.
+		/// </summary>
+		public static IEnumerable<AlertItem> RefreshForType(AlertType alertType)
+		{
+			return SelectMany("SELECT * FROM `alert_items` WHERE `type` = " + (int)alertType);
 		}
 
-		///<summary>Gets one AlertItem from the db.</summary>
-		public static AlertItem GetOne(long alertItemNum){
-			
-			return Crud.AlertItemCrud.SelectOne(alertItemNum);
-		}
-
-		///<summary></summary>
-		public static long Insert(AlertItem alertItem){
-			
-			return Crud.AlertItemCrud.Insert(alertItem);
-		}
-
-		///<summary></summary>
-		public static void Update(AlertItem alertItem){
-			
-			Crud.AlertItemCrud.Update(alertItem);
-		}
-
-		///<summary>Inserts if it doesn't exist, otherwise updates.</summary>
-		public static long Upsert(AlertItem alertItem) {
-			
-			if(alertItem.Id==0) {
-				Insert(alertItem);
+		/// <summary>
+		/// If null listFKeys is provided then all rows of the given alertType will be deleted. 
+		/// Otherwise only rows which match listFKeys entries.
+		/// </summary>
+		public static void DeleteFor(AlertType alertType, List<long> objectIds = null)
+		{
+			var alerts = RefreshForType(alertType);
+			if (objectIds != null)
+			{
+				alerts = alerts.Where(x => x.ObjectId.HasValue && objectIds.Contains(x.ObjectId.Value));
 			}
-			else {
-				Update(alertItem);
-			}
-			return alertItem.Id;
-		}
 
-		///<summary>If null listFKeys is provided then all rows of the given alertType will be deleted. Otherwise only rows which match listFKeys entries.</summary>
-		public static void DeleteFor(AlertType alertType,List<long> listFKeys=null) {
-			//No need to check RemotingRole; no call to db.
-			List<AlertItem> listAlerts=RefreshForType(alertType);
-			if(listFKeys!=null) { //Narrow down to just the FKeys provided.
-				listAlerts=listAlerts.FindAll(x => listFKeys.Contains(x.FKey));
-			}
-			foreach(AlertItem alert in listAlerts) {
+			foreach (var alert in alerts)
+			{
 				Delete(alert.Id);
 			}
 		}
 
-		///<summary>Also deletes any AlertRead objects for this AlertItem.</summary>
-		public static void Delete(long alertItemNum) {
-			Delete(new List<long> { alertItemNum });
-		}
-
-		///<summary>Also deletes any AlertRead objects for these AlertItems.</summary>
-		public static void Delete(List<long> listAlertItemNums) {
-			if(listAlertItemNums.IsNullOrEmpty()) {
+		/// <summary>
+		/// Also deletes any AlertRead objects for these AlertItems.
+		/// </summary>
+		public static void Delete(List<long> alertItemIds)
+		{
+			if (alertItemIds == null || alertItemIds.Count == 0)
+			{
 				return;
 			}
-			
-			AlertReads.DeleteForAlertItems(listAlertItemNums);
-			string command="DELETE FROM alertitem WHERE AlertItemNum IN("+string.Join(",",listAlertItemNums.Select(POut.Long))+")";
-			Database.ExecuteNonQuery(command);
-		}
 
-		///<summary>Inserts, updates, or deletes db rows to match listNew.  No need to pass in userNum, it's set before remoting role check and passed to
-		///the server if necessary.  Doesn't create ApptComm items, but will delete them.  If you use Sync, you must create new Apptcomm items.</summary>
-		public static void Sync(List<AlertItem> listNew,List<AlertItem> listOld) {
-			
-			Crud.AlertItemCrud.Sync(listNew,listOld);
+			Database.ExecuteNonQuery(
+				"DELETE FROM `alert_items` " +
+				"WHERE `id` IN (" + string.Join(", ", alertItemIds) + ")");
 		}
-
 	}
 }

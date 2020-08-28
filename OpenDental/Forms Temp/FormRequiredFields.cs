@@ -205,7 +205,7 @@ namespace OpenDental {
 							condVal="Unassigned";
 						}
 						else {
-							condVal=Clinics.GetDesc(PIn.Long(condVal));
+							condVal=Clinics.GetDescription(PIn.Long(condVal));
 						}
 						break;
 					case RequiredFieldName.BillingType:

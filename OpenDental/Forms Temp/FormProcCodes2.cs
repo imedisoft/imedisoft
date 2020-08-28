@@ -1060,7 +1060,7 @@ namespace OpenDental{
 			for(int i=0;i<listCategories.Items.Count;i++) {
 				listCategories.SetSelected(i,true);
 			}
-			_listClinics=Clinics.GetForUserod(Security.CurrentUser);
+			_listClinics=Clinics.GetByUser(Security.CurrentUser);
 			_listProviders=Providers.GetDeepCopy(true);
 			_colorProv=Defs.GetColor(DefCat.FeeColors,Defs.GetByExactName(DefCat.FeeColors,"Provider"));
 			_colorProvClinic=Defs.GetColor(DefCat.FeeColors,Defs.GetByExactName(DefCat.FeeColors,"Provider and Clinic"));
@@ -1251,7 +1251,7 @@ namespace OpenDental{
 				if(PrefC.HasClinicsEnabled) {
 					if(feeSchedNum1Selected==0 || comboClinic1.Enabled==false) {
 						//Previously selected FeeSched WAS global or there was none selected previously, select OD's selected Clinic
-						comboClinic1.SelectedClinicNum=Clinics.ClinicNum;
+						comboClinic1.SelectedClinicNum=Clinics.ClinicId;
 					}
 					comboClinic1.Enabled=true;
 					butPickClinic1.Enabled=true;
@@ -1273,7 +1273,7 @@ namespace OpenDental{
 				if(PrefC.HasClinicsEnabled) {
 					if(comboClinic2.Enabled==false) {
 						//Previously selected FeeSched WAS global, select OD's selected Clinic
-						comboClinic2.SelectedClinicNum=Clinics.ClinicNum;
+						comboClinic2.SelectedClinicNum=Clinics.ClinicId;
 					}
 					comboClinic2.Enabled=true;
 					butPickClinic2.Enabled=true;
@@ -1295,7 +1295,7 @@ namespace OpenDental{
 				if(PrefC.HasClinicsEnabled) {
 					if(comboClinic3.Enabled==false) {//Previously selected FeeSched WAS global
 						//Select OD's selected Clinic
-						comboClinic3.SelectedClinicNum=Clinics.ClinicNum;
+						comboClinic3.SelectedClinicNum=Clinics.ClinicId;
 					}
 					comboClinic3.Enabled=true;
 					butPickClinic3.Enabled=true;
@@ -1310,11 +1310,11 @@ namespace OpenDental{
 			,long feeSchedNumSelected,long feeSchedGroupNum,List<long> listComboGroupNums,ODBoxItem<Clinic> boxItemClinic)
 		{
 			//Returning null means we didn't find a FeeSchedGroup.
-			FeeSchedGroup feeSchedGroupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSchedNumSelected,boxItemClinic.Tag.ClinicNum);
+			FeeSchedGroup feeSchedGroupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSchedNumSelected,boxItemClinic.Tag.Id);
 			if(feeSchedGroupCur!=null) {
 				//If there is a clinic in the group that the user does not have access to do not add the group to the combobox.
 				//_listClinics already filters for clinic restrictions.
-				if(!feeSchedGroupCur.ListClinicNumsAll.Exists(x => !_listClinics.Any(y => y.ClinicNum==x))) {
+				if(!feeSchedGroupCur.ListClinicNumsAll.Exists(x => !_listClinics.Any(y => y.Id==x))) {
 					if(!listComboGroupNums.Contains(feeSchedGroupCur.FeeSchedGroupNum) && feeSchedGroupCur.ListClinicNumsAll.Count>0) {//Skip duplicate/empty groups.
 						ODBoxItem<FeeSchedGroup> boxItemFeeSchedGroup=new ODBoxItem<FeeSchedGroup>(feeSchedGroupCur.Description,feeSchedGroupCur);
 						comboFeeSchedGroup.Items.Add(boxItemFeeSchedGroup);
@@ -1750,7 +1750,7 @@ namespace OpenDental{
 			if(Prefs.GetBool(PrefName.ShowFeeSchedGroups) && provNum==0 && !isEditingGroup) {//Ignore provider fees and don't block from editing a group.
 				FeeSchedGroup groupForClinic=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSched.FeeSchedNum,clinicNum);
 				if(groupForClinic!=null) {
-					MsgBox.Show("Fee Schedule: "+feeSched.Description+" for Clinic: "+(_listClinics.FirstOrDefault(x => x.ClinicNum==clinicNum)).Abbr+
+					MsgBox.Show("Fee Schedule: "+feeSched.Description+" for Clinic: "+(_listClinics.FirstOrDefault(x => x.Id==clinicNum)).Abbr+
 						" is part of Fee Schedule Group: "+groupForClinic.Description+". The fees must be edited at the group level.");
 					//Duplicating if check from above to prevent us from accidentally hitting users with infinite popups. We want the same end result for both of the checks
 					//but we need to do the group check 2nd.

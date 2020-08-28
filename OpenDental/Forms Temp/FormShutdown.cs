@@ -1,8 +1,5 @@
-using OpenDentBusiness;
+using Imedisoft.Data;
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace OpenDental
@@ -19,11 +16,10 @@ namespace OpenDental
 
 		private void FormShutdown_Load(object sender, EventArgs e)
 		{
-			List<string> runningComps = Computers.GetRunningComputers().Select(x => x.MachineName).ToList();
-			for (int i = 0; i < runningComps.Count; i++)
-			{
-				listMain.Items.Add(runningComps[i]);
-			}
+			foreach (var machineName in Computers.GetRunningComputers())
+            {
+				listMain.Items.Add(machineName);
+            }
 
 			if (IsUpdate)
 			{

@@ -93,7 +93,7 @@ namespace OpenDental{
 					Severity=SeverityType.Low,
 					Actions=ActionType.OpenForm | ActionType.MarkAsRead | ActionType.Delete,
 					FormToOpen=FormType.FormEServicesEConnector,
-					ItemValue="Clinics turned "+(checkEnableClinics.Checked ? "On":"Off")
+					Details="Clinics turned "+(checkEnableClinics.Checked ? "On":"Off")
 				});
 				//Create an alert for the eConnector to perform the clinic conversion as needed.
 				AlertItems.Insert(new AlertItem()
@@ -102,7 +102,7 @@ namespace OpenDental{
 					Type=AlertType.ClinicsChangedInternal,
 					Severity=SeverityType.Normal,
 					Actions=ActionType.None,
-					ItemValue=checkEnableClinics.Checked ? "On":"Off"
+					Details=checkEnableClinics.Checked ? "On":"Off"
 				});
 				return true;
 			}

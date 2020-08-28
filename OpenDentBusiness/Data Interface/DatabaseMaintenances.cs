@@ -1,6 +1,7 @@
 ﻿using CodeBase;
 using DataConnectionBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness.FileIO;
 using System;
 using System.Collections.Generic;
@@ -3400,65 +3401,6 @@ namespace OpenDentBusiness
 			return log;
 		}
 		#endregion
-		#region Clinic
-
-		///<summary>Inserts missing/invalid clinics.</summary>
-		[DbmMethodAttr]
-		public static string ClinicNumMissingInvalid(bool verbose, DbmMode modeCur)
-		{
-			//look at the procedurelog and patient table because they will most likely have all possible clinics.
-			string command = @"
-				SELECT procedurelog.ClinicNum 
-				FROM procedurelog 
-				WHERE procedurelog.ClinicNum > 0 
-				AND procedurelog.ClinicNum NOT IN (SELECT ClinicNum FROM clinic) 
-				UNION 
-				SELECT patient.ClinicNum 
-				FROM patient
-				WHERE patient.ClinicNum > 0 
-				AND patient.ClinicNum NOT IN (SELECT ClinicNum FROM clinic) ";
-			List<long> listInvalidClinicNums = Database.GetListLong(command);
-			string log = "";
-			switch (modeCur)
-			{
-				case DbmMode.Check:
-					if (listInvalidClinicNums.Count > 0 || verbose)
-					{
-						log += "Clinics missing" + ": " + listInvalidClinicNums.Count + "\r\n";
-					}
-					break;
-				case DbmMode.Fix:
-					if (listInvalidClinicNums.Count > 0)
-					{
-						List<DbmLog> listDbmLogs = new List<DbmLog>();
-						string methodName = MethodBase.GetCurrentMethod().Name;
-						foreach (long clinicNumInvalid in listInvalidClinicNums)
-						{
-							command = "SELECT MAX(ItemOrder) FROM clinic";
-							int itemOrd = Database.ExecuteInt(command) + 1;
-							Clinic missingClinic = new Clinic()
-							{
-								ClinicNum = clinicNumInvalid,
-								Description = "INVALID CLINIC #" + clinicNumInvalid,
-								Abbr = "INVALID #" + clinicNumInvalid,
-								ItemOrder = itemOrd
-							};
-							Clinics.Insert(missingClinic, true);
-							listDbmLogs.Add(new DbmLog(Security.CurrentUser.Id, missingClinic.ClinicNum, DbmLogFKeyType.Clinic,
-								DbmLogActionType.Insert, methodName, "Inserted clinic from ClinicNumMissingInvalid."));
-						}
-						if (listInvalidClinicNums.Count > 0 || verbose)
-						{
-							log += "Missing clinics added" + ": " + listInvalidClinicNums.Count + "\r\n";
-							Crud.DbmLogCrud.InsertMany(listDbmLogs);
-						}
-					}
-					break;
-			}
-			return log;
-		}
-
-		#endregion
 		#region ClockEvent, ComputerPref, Deposit, Disease, Document--------------------------------------------------------------------------------------------------
 
 		[DbmMethodAttr]
@@ -5241,94 +5183,6 @@ namespace OpenDentBusiness
 
 		#endregion InsPayPlan, InsPlan, InsSub----------------------------------------------------------------------------------------------------------
 		#region JournalEntry, LabCase, Laboratory-------------------------------------------------------------------------------------------------------
-
-		[DbmMethodAttr]
-		public static string JournalEntryInvalidAccountNum(bool verbose, DbmMode modeCur)
-		{
-			string command = "SELECT COUNT(*) FROM journalentry WHERE AccountNum NOT IN(SELECT AccountNum FROM account)";
-			int numFound = PIn.Int(Database.ExecuteString(command));
-			string log = "";
-			switch (modeCur)
-			{
-				case DbmMode.Check:
-					if (numFound > 0 || verbose)
-					{
-						log += "Transactions found attached to an invalid account: " + numFound + "\r\n";
-					}
-					break;
-				case DbmMode.Fix:
-					if (numFound > 0 || verbose)
-					{
-						log += "Transactions found attached to an invalid account: " + numFound + "\r\n";
-					}
-					if (numFound > 0)
-					{
-						//Check to see if there is already an active account called UNKNOWN.
-						command = "SELECT AccountNum FROM account WHERE Description='UNKNOWN' AND Inactive=0";
-						long accountNum = Database.ExecuteLong(command);
-						if (accountNum == 0)
-						{
-                            //Create a new Account called UNKNOWN.
-                            Account account = new Account
-                            {
-                                Description = "UNKNOWN",
-                                Inactive = false,//Just in case.
-                                Type = AccountType.Asset//Default account type.  This DBM check was added to fix orphaned automatic payment journal entries, which should have been associated to an income account.
-                            };
-                            accountNum = Accounts.Insert(account);
-						}
-						//Update the journalentry table.
-						command = "UPDATE journalentry SET AccountNum=" + POut.Long(accountNum) + " WHERE AccountNum NOT IN(SELECT AccountNum FROM account)";
-						Database.ExecuteNonQuery(command);
-						log += "   All invalid transactions have been attached to the account called UNKNOWN.\r\n";
-						log += "   They need to be fixed manually.\r\n";
-					}
-					break;
-			}
-			return log;
-		}
-
-		[DbmMethodAttr]
-		public static string LabCaseWithInvalidLaboratory(bool verbose, DbmMode modeCur)
-		{
-			string log = "";
-			string command;
-			switch (modeCur)
-			{
-				case DbmMode.Check:
-					command = "SELECT COUNT(*) FROM labcase WHERE laboratoryNum NOT IN(SELECT laboratoryNum FROM laboratory)";
-					int numFound = PIn.Int(Database.ExecuteString(command));
-					if (numFound > 0 || verbose)
-					{
-						log += "Lab cases found with invalid laboratories: " + numFound + "\r\n";
-					}
-					break;
-				case DbmMode.Fix:
-					command = "SELECT COUNT(*) FROM labcase WHERE laboratoryNum NOT IN(SELECT laboratoryNum FROM laboratory)";
-					long numberFixed = long.Parse(Database.ExecuteString(command));
-					command = "SELECT * FROM labcase WHERE laboratoryNum NOT IN(SELECT laboratoryNum FROM laboratory) GROUP BY LaboratoryNum";
-					DataTable table = Database.ExecuteDataTable(command);
-					long labnum;
-					for (int i = 0; i < table.Rows.Count; i++)
-					{
-                        Laboratory lab = new Laboratory
-                        {
-                            LaboratoryNum = PIn.Long(table.Rows[i]["LaboratoryNum"].ToString()),
-                            Description = "Laboratory " + table.Rows[i]["LaboratoryNum"].ToString()
-                        };
-                        //laboratoryNum is not allowed to be zero
-                        labnum = Crud.LaboratoryCrud.Insert(lab);
-						command = "UPDATE labcase SET LaboratoryNum=" + POut.Long(labnum) + " WHERE LaboratoryNum=" + table.Rows[i]["LaboratoryNum"].ToString();
-						Database.ExecuteNonQuery(command);
-					}
-					if (numberFixed > 0 || verbose)
-					{
-						log += "Lab cases fixed with invalid laboratories: " + numberFixed.ToString() + "\r\n";
-					}
-					break;
-			}
-			return log;
-		}
 
 		[DbmMethodAttr]
 		public static string LaboratoryWithInvalidSlip(bool verbose, DbmMode modeCur)
@@ -10195,7 +10049,7 @@ HAVING cnt>1";
 			MethodInfo[] arrayDbmMethodsAll = (typeof(DatabaseMaintenances)).GetMethods();
 			//Sort the methods by name so that they are easier for users to find desired methods to run.
 			Array.Sort(arrayDbmMethodsAll, new MethodInfoComparer());
-			bool isMedicalClinic = Clinics.IsMedicalPracticeOrClinic(clinicNum);
+			bool isMedicalClinic = Clinics.IsMedicalClinic(clinicNum);
 			foreach (MethodInfo meth in arrayDbmMethodsAll)
 			{
 				DbmMethodAttr dbmAttribute = (DbmMethodAttr)Attribute.GetCustomAttribute(meth, typeof(DbmMethodAttr));

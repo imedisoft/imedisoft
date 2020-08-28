@@ -9,127 +9,88 @@
 //------------------------------------------------------------------------------
 using Imedisoft.Data;
 using MySql.Data.MySqlClient;
-using OpenDentBusiness;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace OpenDentBusiness.Crud
+namespace OpenDentBusiness
 {
-	public class AlertSubCrud
+	public partial class AlertSubs
 	{
 		public static AlertSub FromReader(MySqlDataReader dataReader)
 		{
 			return new AlertSub
 			{
-				AlertSubNum = (long)dataReader["AlertSubNum"],
-				UserNum = (long)dataReader["UserNum"],
-				ClinicNum = (long)dataReader["ClinicNum"],
-				Type = (AlertType)Convert.ToInt32(dataReader["Type"]),
-				AlertCategoryNum = (long)dataReader["AlertCategoryNum"]
+				Id = (long)dataReader["id"],
+				UserId = (long)dataReader["user_id"],
+				ClinicId = dataReader["clinic_id"] as long?,
+				AlertCategoryId = (long)dataReader["alert_category_id"]
 			};
 		}
 
 		/// <summary>
 		/// Selects a single AlertSub object from the database using the specified SQL command.
 		/// </summary>
-		public static AlertSub SelectOne(string command)
-			=> Database.SelectOne(command, FromReader);
+		/// <param name="command">The SELECT command to execute.</param>
+		/// <param name="parameters">The (optional) command parameters.</param>
+		public static AlertSub SelectOne(string command, params MySqlParameter[] parameters)
+			=> Database.SelectOne(command, FromReader, parameters);
 
 		/// <summary>
-		/// Selects a single <see cref="AlertSub"/> object from the database using the specified SQL command.
+		/// Selects the <see cref="AlertSub"/> object with the specified key from the database.
 		/// </summary>
-		public static AlertSub SelectOne(Int64 alertSubNum)
-			=> SelectOne("SELECT * FROM `AlertSub` WHERE `AlertSubNum` = " + alertSubNum);
+		/// <param name="id">The primary key of the <see cref="AlertSub"/> to select.</param>
+		public static AlertSub SelectOne(long id)
+			=> SelectOne("SELECT * FROM `alert_subs` WHERE `id` = " + id);
 
 		/// <summary>
 		/// Selects multiple <see cref="AlertSub"/> objects from the database using the specified SQL command.
 		/// </summary>
-		public static IEnumerable<AlertSub> SelectMany(string command)
-			=> Database.SelectMany(command, FromReader);
+		/// <param name="command">The SELECT command to execute.</param>
+		/// <param name="parameters">The (optional) command parameters.</param>
+		public static IEnumerable<AlertSub> SelectMany(string command, params MySqlParameter[] parameters)
+			=> Database.SelectMany(command, FromReader, parameters);
 
 		/// <summary>
 		/// Inserts the specified <see cref="AlertSub"/> into the database.
 		/// </summary>
-		public static long Insert(AlertSub alertSub)
-			=> alertSub.AlertSubNum = Database.ExecuteInsert(
-				"INSERT INTO `AlertSub` " + 
-				"(`UserNum`, `ClinicNum`, `Type`, `AlertCategoryNum`) " + 
-				"VALUES (" + 
-					"@UserNum, @ClinicNum, @Type, @AlertCategoryNum" + 
+		/// <param name="alertSub">The <see cref="AlertSub"/> to insert into the database.</param>
+		private static long ExecuteInsert(AlertSub alertSub)
+			=> alertSub.Id = Database.ExecuteInsert(
+				"INSERT INTO `alert_subs` " +
+				"(`user_id`, `clinic_id`, `alert_category_id`) " +
+				"VALUES (" +
+					"@user_id, @clinic_id, @alert_category_id" +
 				")");
 
 		/// <summary>
 		/// Updates the specified <see cref="AlertSub"/> in the database.
 		/// </summary>
-		public static void Update(AlertSub alertSub)
+		/// <param name="alertSub">The <see cref="AlertSub"/> to update.</param>
+		private static void ExecuteUpdate(AlertSub alertSub)
 			=> Database.ExecuteNonQuery(
-				"UPDATE `AlertSub` SET " + 
-					"`UserNum` = @UserNum, " + 
-					"`ClinicNum` = @ClinicNum, " + 
-					"`Type` = @Type, " + 
-					"`AlertCategoryNum` = @AlertCategoryNum " + 
-				"WHERE `AlertSubNum` = @AlertSubNum",
-					new MySqlParameter("AlertSubNum", alertSub.AlertSubNum),
-					new MySqlParameter("UserNum", alertSub.UserNum),
-					new MySqlParameter("ClinicNum", alertSub.ClinicNum),
-					new MySqlParameter("Type", (int)alertSub.Type),
-					new MySqlParameter("AlertCategoryNum", alertSub.AlertCategoryNum));
-
-		/// <summary>
-		/// Updates the specified <see cref="AlertSub"/> in the database.
-		/// </summary>
-		public static bool Update(AlertSub alertSubNew, AlertSub alertSubOld)
-		{
-			var updates = new List<string>();
-			var parameters = new List<MySqlParameter>();
-
-			if (alertSubNew.UserNum != alertSubOld.UserNum)
-			{
-				updates.Add("`UserNum` = @UserNum");
-				parameters.Add(new MySqlParameter("UserNum", alertSubNew.UserNum));
-			}
-
-			if (alertSubNew.ClinicNum != alertSubOld.ClinicNum)
-			{
-				updates.Add("`ClinicNum` = @ClinicNum");
-				parameters.Add(new MySqlParameter("ClinicNum", alertSubNew.ClinicNum));
-			}
-
-			if (alertSubNew.Type != alertSubOld.Type)
-			{
-				updates.Add("`Type` = @Type");
-				parameters.Add(new MySqlParameter("Type", (int)alertSubNew.Type));
-			}
-
-			if (alertSubNew.AlertCategoryNum != alertSubOld.AlertCategoryNum)
-			{
-				updates.Add("`AlertCategoryNum` = @AlertCategoryNum");
-				parameters.Add(new MySqlParameter("AlertCategoryNum", alertSubNew.AlertCategoryNum));
-			}
-
-			if (updates.Count == 0) return false;
-
-			parameters.Add(new MySqlParameter("AlertSubNum", alertSubNew.AlertSubNum));
-
-			Database.ExecuteNonQuery("UPDATE `AlertSub` " + 
-				"SET " + string.Join(", ", updates) + " " + 
-				"WHERE `AlertSubNum` = @AlertSubNum",
-					parameters.ToArray());
-
-			return true;
-		}
+				"UPDATE `alert_subs` SET " +
+					"`user_id` = @user_id, " +
+					"`clinic_id` = @clinic_id, " +
+					"`alert_category_id` = @alert_category_id " +
+				"WHERE `id` = @id",
+					new MySqlParameter("id", alertSub.Id),
+					new MySqlParameter("user_id", alertSub.UserId),
+					new MySqlParameter("clinic_id", (alertSub.ClinicId.HasValue ? (object)alertSub.ClinicId.Value : DBNull.Value)),
+					new MySqlParameter("alert_category_id", alertSub.AlertCategoryId));
 
 		/// <summary>
 		/// Deletes a single <see cref="AlertSub"/> object from the database.
 		/// </summary>
-		public static void Delete(Int64 alertSubNum)
-			 => Database.ExecuteNonQuery("DELETE FROM `AlertSub` WHERE `AlertSubNum` = " + alertSubNum);
+		/// <param name="id">The primary key of the <see cref="AlertSub"/> to delete.</param>
+		private static void ExecuteDelete(long id)
+			 => Database.ExecuteNonQuery("DELETE FROM `alert_subs` WHERE `id` = " + id);
 
 		/// <summary>
 		/// Deletes the specified <see cref="AlertSub"/> object from the database.
 		/// </summary>
-		public static void Delete(AlertSub alertSub)
-			=> Delete(alertSub.AlertSubNum);
+		/// <param name="alertSub">The <see cref="AlertSub"/> to delete.</param>
+		private static void ExecuteDelete(AlertSub alertSub)
+			=> ExecuteDelete(alertSub.Id);
 	}
 }

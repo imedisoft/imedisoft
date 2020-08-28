@@ -33,7 +33,7 @@ namespace OpenDentBusiness
 		/// Compared against allergy.AllergyDefNum using PatNum.
 		/// Drug-Allergy checking is also perfomed in NewCrop.
 		/// </summary>
-		[ForeignKey(typeof(AllergyDef), nameof(AllergyDef.AllergyDefNum))]
+		[ForeignKey(typeof(AllergyDef), nameof(AllergyDef.Id))]
 		public long AllergyDefId;
 
 		/// <summary>

@@ -393,7 +393,7 @@ namespace OpenDental{
 				}
 
 			textToothNumbers.Text=Tooth.FormatRangeForDisplay(_documentCur.ToothNumbers);
-			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				labelToothNums.Visible=false;
 				textToothNumbers.Visible=false;
 			}

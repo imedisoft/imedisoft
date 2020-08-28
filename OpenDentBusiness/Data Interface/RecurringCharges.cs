@@ -190,7 +190,7 @@ namespace OpenDentBusiness {
 			DeleteNotYetCharged();
 			List<long> listClinicNums=new List<long>();
 			if(PrefC.HasClinicsEnabled && Security.CurrentUser.ClinicIsRestricted) {
-				listClinicNums=listUserClinics.Select(x => x.ClinicNum).ToList();
+				listClinicNums=listUserClinics.Select(x => x.Id).ToList();
 			}
 			//if no clinics are selected but clinics are enabled and the user is restricted, the results will be empty so no need to run the report
 			//if clinics are enabled and the user is not restricted and selects no clinics, there will not be a clinic filter in the query, so all clinics
@@ -612,7 +612,7 @@ namespace OpenDentBusiness {
 		public void SendPayConnect(RecurringChargeData chargeData,bool forceDuplicates,StringBuilder strBuilderResultFile) {
 			Dictionary<long,string> dictClinicNumDesc=new Dictionary<long,string>();
 			if(PrefC.HasClinicsEnabled) {
-				dictClinicNumDesc=Clinics.GetClinicsNoCache().ToDictionary(x => x.ClinicNum,x => x.Description);
+				dictClinicNumDesc=Clinics.GetClinicsNoCache().ToDictionary(x => x.Id,x => x.Description);
 			}
 			dictClinicNumDesc[0]=Prefs.GetString(PrefName.PracticeTitle);
 			strBuilderResultFile.AppendLine("Recurring charge results for "+DateTime.Now.ToShortDateString()+" ran at "+DateTime.Now.ToShortTimeString());
@@ -710,7 +710,7 @@ namespace OpenDentBusiness {
 		public void SendPaySimple(RecurringChargeData chargeData,StringBuilder strBuilderResultFile) {
 			Dictionary<long,string> dictClinicNumDesc=new Dictionary<long,string>();
 			if(PrefC.HasClinicsEnabled) {
-				dictClinicNumDesc=Clinics.GetClinicsNoCache().ToDictionary(x => x.ClinicNum,x => x.Description);
+				dictClinicNumDesc=Clinics.GetClinicsNoCache().ToDictionary(x => x.Id,x => x.Description);
 			}
 			dictClinicNumDesc[0]=Prefs.GetString(PrefName.PracticeTitle);
 			strBuilderResultFile.AppendLine("Recurring charge results for "+DateTime.Now.ToShortDateString()+" ran at "+DateTime.Now.ToShortTimeString());

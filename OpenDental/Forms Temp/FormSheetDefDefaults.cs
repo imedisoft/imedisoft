@@ -41,7 +41,7 @@ namespace OpenDental {
 		private void FormSheetDefDefaults_Load(object sender,EventArgs e) {
 			List<long> listClinicNums=new List<long>();
 			if(PrefC.HasClinicsEnabled) {
-				listClinicNums=Clinics.GetForUserod(Security.CurrentUser).Select(x => x.ClinicNum).ToList();
+				listClinicNums=Clinics.GetByUser(Security.CurrentUser).Select(x => x.Id).ToList();
 				_clinicNumCur=0;
 			}
 			comboClinicDefault.SelectedClinicNum=0;

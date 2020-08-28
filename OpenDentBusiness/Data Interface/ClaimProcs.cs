@@ -275,7 +275,7 @@ namespace OpenDentBusiness
 							unearnedPayment.PayNote = "Transfer from claim with no claim procedures";
 							Payments.Insert(unearnedPayment);
 							PaySplit unearnedSplit = new PaySplit();
-							unearnedSplit.ClinicNum = Clinics.ClinicNum;
+							unearnedSplit.ClinicNum = Clinics.ClinicId;
 							unearnedSplit.DateEntry = DateTime.Today;
 							unearnedSplit.DatePay = DateTime.Today;
 							unearnedSplit.PatNum = payAsTotal.PatNum;

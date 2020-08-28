@@ -80,7 +80,7 @@ namespace OpenDental {
 					comboClinic.SelectedClinicNum=_defaultClinicNum;
 				}
 				else{
-					comboClinic.SelectedClinicNum=Clinics.ClinicNum;
+					comboClinic.SelectedClinicNum=Clinics.ClinicId;
 				}
 				ConstructURLs();
 			}

@@ -108,7 +108,7 @@ namespace OpenDentBusiness{
 				Patient pat=dictPatients[dest.PatNum];
 				Patient guarantor=dictGuarantors[pat.Guarantor];
 				dictAppointments.TryGetValue(dest.AptNum,out Appointment apt);
-				Clinic clinicPat=Clinics.GetClinic(pat.ClinicNum);
+				Clinic clinicPat=Clinics.GetById(pat.ClinicNum);
 				string GetReplacementValue(string replacementKey) {
 					string bracketReplacement="["+replacementKey+"]";
 					string result=Patients.ReplacePatient(bracketReplacement,pat);
@@ -157,7 +157,7 @@ namespace OpenDentBusiness{
 				dictReplaced[dest.PatNum]=(PerformAllReplacements(templateCur.Subject)
 					,PerformAllReplacements(string.IsNullOrWhiteSpace(templateCur.BodyHTML) ? templateCur.BodyPlainText : templateCur.BodyHTML));
 			}
-			IAccountApi api=EmailHostingTemplates.GetAccountApi(Clinics.ClinicNum);
+			IAccountApi api=EmailHostingTemplates.GetAccountApi(Clinics.ClinicId);
 			SendMassEmailResponse response;
 			try {
 				response=api.SendMassEmail(new SendMassEmailRequest {
@@ -173,7 +173,7 @@ namespace OpenDentBusiness{
 				return e.Message;
 			}
 			Promotion promotion=new Promotion {
-				ClinicNum=Clinics.ClinicNum,
+				ClinicNum=Clinics.ClinicId,
 				DateTimeCreated=DateTime.Now,
 				PromotionName=promotionName,
 				TypePromotion=type,

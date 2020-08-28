@@ -455,7 +455,7 @@ namespace Imedisoft.Forms
 			}
 			else
 			{
-				sheetDef = SheetDefs.GetSheetsDefault(SheetTypeEnum.Rx, Clinics.ClinicNum);
+				sheetDef = SheetDefs.GetSheetsDefault(SheetTypeEnum.Rx, Clinics.ClinicId);
 			}
 
 			sheet = SheetUtil.CreateSheet(sheetDef, patient.PatNum);

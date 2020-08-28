@@ -213,7 +213,7 @@ namespace OpenDental {
 			}
 			_threadWebSchedSignups=new ODThread(new ODThread.WorkerDelegate((ODThread o) => {
 				_listClinicNumsWebSched=WebServiceMainHQProxy.GetEServiceClinicsAllowed(
-					Clinics.GetDeepCopy().Select(x => x.ClinicNum).ToList(),
+					Clinics.GetAll(true).Select(x => x.Id).ToList(),
 					eServiceCode.WebSched);
 				_isOnSupport=YN.Yes;
 			}));
@@ -249,7 +249,7 @@ namespace OpenDental {
 
 		private void FillComboEmail() {
 			//Exclude any email addresses that are associated to a clinic or are the default practice and web mail notification email addresses.
-			List<long> listExcludeEmailAddressNums=Clinics.GetDeepCopy().Select(x => x.EmailAddressNum)
+			List<long> listExcludeEmailAddressNums=Clinics.GetAll(true).Where(x => x.EmailAddressId.HasValue).Select(x => x.EmailAddressId.Value)
 				.Concat(new[] { Prefs.GetLong(PrefName.EmailDefaultAddressNum),Prefs.GetLong(PrefName.EmailNotifyAddressNum) }).ToList();
 			_listEmailAddresses=EmailAddresses.GetWhere(x => !listExcludeEmailAddressNums.Contains(x.EmailAddressNum));
 			comboEmailFromRecalls.Items.Add("Practice/Clinic");//default
@@ -1017,13 +1017,13 @@ namespace OpenDental {
 			}
 			DivvyConnect.Practice practice=new DivvyConnect.Practice();
 			clinicNum=PIn.Long(addrTable.Rows[patientsPrinted]["ClinicNum"].ToString());
-			if(PrefC.HasClinicsEnabled && Clinics.GetCount() > 0 //if using clinics
-				&& Clinics.GetClinic(clinicNum)!=null)//and this patient assigned to a clinic
+			if(PrefC.HasClinicsEnabled && Clinics.Count(true) > 0 //if using clinics
+				&& Clinics.GetById(clinicNum)!=null)//and this patient assigned to a clinic
 			{
-				clinic=Clinics.GetClinic(clinicNum);
+				clinic=Clinics.GetById(clinicNum);
 				practice.Company=clinic.Description;
-				practice.Address1=clinic.Address;
-				practice.Address2=clinic.Address2;
+				practice.Address1=clinic.AddressLine1;
+				practice.Address2=clinic.AddressLine2;
 				practice.City=clinic.City;
 				practice.State=clinic.State;
 				practice.Zip=clinic.Zip;
@@ -1127,9 +1127,9 @@ namespace OpenDental {
 					clinicCur=Clinics.GetClinicForRecall(PIn.Long(addrTable.Rows[i]["recallNums"].ToString().Split(',').FirstOrDefault()));
 				}
 				else {
-					clinicCur=Clinics.GetClinic(PIn.Long(addrTable.Rows[i]["ClinicNum"].ToString()));
+					clinicCur=Clinics.GetById(PIn.Long(addrTable.Rows[i]["ClinicNum"].ToString()));
 				}
-				long clinicNumEmail=clinicCur?.ClinicNum??Clinics.ClinicNum;
+				long clinicNumEmail=clinicCur?.Id??Clinics.ClinicId;
 				ComboBox cbEmail=isRecallGridSelected?comboEmailFromRecalls:comboEmailFromReact;
 				if(cbEmail.SelectedIndex==0) { //clinic/practice default
 					clinicNumEmail=PIn.Long(addrTable.Rows[i]["ClinicNum"].ToString());
@@ -1328,15 +1328,15 @@ namespace OpenDental {
 				clinicNum=PIn.Long(addrTable.Rows[patientsPrinted]["ClinicNum"].ToString());
 				string practicePhone=TelephoneNumbers.ReFormat(Prefs.GetString(PrefName.PracticePhone));
 				if(Prefs.GetBool(PrefName.RecallCardsShowReturnAdd)){
-					if(PrefC.HasClinicsEnabled && Clinics.GetCount() > 0 //if using clinics
-						&& Clinics.GetClinic(clinicNum)!=null)//and this patient assigned to a clinic
+					if(PrefC.HasClinicsEnabled && Clinics.Count(true) > 0 //if using clinics
+						&& Clinics.GetById(clinicNum)!=null)//and this patient assigned to a clinic
 					{
-						clinic=Clinics.GetClinic(clinicNum);
+						clinic=Clinics.GetById(clinicNum);
 						str=clinic.Description+"\r\n";
 						g.DrawString(str,new Font(FontFamily.GenericSansSerif,9,FontStyle.Bold),Brushes.Black,xPos+45,yPos+60);
-						str=clinic.Address+"\r\n";
-						if(clinic.Address2!="") {
-							str+=clinic.Address2+"\r\n";
+						str=clinic.AddressLine1+"\r\n";
+						if(clinic.AddressLine2!="") {
+							str+=clinic.AddressLine2+"\r\n";
 						}
 						str+=clinic.City+",  "+clinic.State+"  "+clinic.Zip+"\r\n";
 						str+=TelephoneNumbers.ReFormat(clinic.Phone);
@@ -1365,8 +1365,8 @@ namespace OpenDental {
 					str=str.Replace("[NameF]",addrTable.Rows[patientsPrinted]["patientNameF"].ToString());
 					str=str.Replace("[NameFL]",addrTable.Rows[patientsPrinted]["patientNameFL"].ToString());
 				}
-				if(PrefC.HasClinicsEnabled && Clinics.GetClinic(clinicNum)!=null) {//has clinics and patient is assigned to a clinic.  
-					Clinic clinicCur=Clinics.GetClinic(clinicNum);
+				if(PrefC.HasClinicsEnabled && Clinics.GetById(clinicNum)!=null) {//has clinics and patient is assigned to a clinic.  
+					Clinic clinicCur=Clinics.GetById(clinicNum);
 					str=str.Replace("[ClinicName]",clinicCur.Abbr);
 					str=str.Replace("[ClinicPhone]",TelephoneNumbers.ReFormat(clinicCur.Phone));
 					string officePhone=clinicCur.Phone;
@@ -1652,7 +1652,7 @@ namespace OpenDental {
 				rowNew.Cells.Add(Patients.DateToAge(PIn.Date(row["Birthdate"].ToString())).ToString());
 				rowNew.Cells.Add(Providers.GetLongDesc(PIn.Long(row["PriProv"].ToString())));
 				if(PrefC.HasClinicsEnabled) {
-					rowNew.Cells.Add(Clinics.GetDesc(PIn.Long(row["ClinicNum"].ToString())));
+					rowNew.Cells.Add(Clinics.GetDescription(PIn.Long(row["ClinicNum"].ToString())));
 				}
 				if(!Prefs.GetBool(PrefName.EasyHidePublicHealth)) {
 					rowNew.Cells.Add(Sites.GetDescription(PIn.Long(row["SiteNum"].ToString())));

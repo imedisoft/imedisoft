@@ -141,13 +141,13 @@ namespace Imedisoft.Forms
 
 			if (PrefC.HasClinicsEnabled)
 			{
-				if (Clinics.ClinicNum == 0)
+				if (Clinics.ClinicId == 0)
 				{
 					clinicComboBox.IsAllSelected = true;
 				}
 				else
 				{
-					clinicComboBox.SelectedClinicNum = Clinics.ClinicNum;
+					clinicComboBox.SelectedClinicNum = Clinics.ClinicId;
 				}
 			}
 
@@ -575,7 +575,7 @@ namespace Imedisoft.Forms
 						//only set clinicNums if user is unrestricted and showing hidden clinics, otherwise the search will show patients from all clinics
 						clinicNums = string.Join(",", clinicComboBox.ListClinics
 							//.Where(x => !x.IsHidden || checkShowArchived.Checked)//Only show hidden clinics if "Show Archived" is checked
-							.Select(x => x.ClinicNum));
+							.Select(x => x.Id));
 					}
 				}
 				else
@@ -587,7 +587,7 @@ namespace Imedisoft.Forms
 						{
 							if (clinic.IsHidden)
 							{
-								clinicNums += "," + clinic.ClinicNum.ToString();
+								clinicNums += "," + clinic.Id.ToString();
 							}
 						}
 					}
@@ -847,7 +847,7 @@ namespace Imedisoft.Forms
 					textFName.Text, 
 					PIn.Date(textBirthdate.Text), 
 					primaryProviderId, 
-					Clinics.ClinicNum, 
+					Clinics.ClinicId, 
 					"Created from Select Patient window.");
 
 			var family = Patients.GetFamily(patient.PatNum);
@@ -917,7 +917,7 @@ namespace Imedisoft.Forms
 			{
 				long patientClinicId = PIn.Long(_DataTablePats.Rows[patientsGrid.GetSelectedIndex()]["ClinicNum"].ToString());
 
-				var clinicIds = clinicComboBox.ListClinics.Select(x => x.ClinicNum).ToList();
+				var clinicIds = clinicComboBox.ListClinics.Select(x => x.Id).ToList();
 				if (!Security.CurrentUser.ClinicIsRestricted)
 				{
 					clinicIds.Add(0);

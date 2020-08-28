@@ -1107,20 +1107,7 @@ namespace OpenDentBusiness
 		Adjunctive
 	}
 
-	///<summary>Used in accounting for chart of accounts.</summary>
-	public enum AccountType
-	{
-		///<summary>0</summary>
-		Asset,
-		///<summary>1</summary>
-		Liability,
-		///<summary>2</summary>
-		Equity,
-		///<summary>3</summary>
-		Income,
-		///<summary>4</summary>
-		Expense
-	}
+
 
 	public enum ToothPaintingType
 	{

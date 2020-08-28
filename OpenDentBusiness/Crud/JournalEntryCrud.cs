@@ -44,7 +44,7 @@ namespace OpenDentBusiness.Crud{
 			JournalEntry journalEntry;
 			foreach(DataRow row in table.Rows) {
 				journalEntry=new JournalEntry();
-				journalEntry.JournalEntryNum= PIn.Long  (row["JournalEntryNum"].ToString());
+				journalEntry.Id= PIn.Long  (row["JournalEntryNum"].ToString());
 				journalEntry.TransactionNum = PIn.Long  (row["TransactionNum"].ToString());
 				journalEntry.AccountNum     = PIn.Long  (row["AccountNum"].ToString());
 				journalEntry.DateDisplayed  = PIn.Date  (row["DateDisplayed"].ToString());
@@ -85,7 +85,7 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("SecDateTEdit");
 			foreach(JournalEntry journalEntry in listJournalEntrys) {
 				table.Rows.Add(new object[] {
-					POut.Long  (journalEntry.JournalEntryNum),
+					POut.Long  (journalEntry.Id),
 					POut.Long  (journalEntry.TransactionNum),
 					POut.Long  (journalEntry.AccountNum),
 					POut.DateT (journalEntry.DateDisplayed,false),
@@ -112,7 +112,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one JournalEntry into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(JournalEntry journalEntry,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				journalEntry.JournalEntryNum=ReplicationServers.GetKey("journalentry","JournalEntryNum");
+				journalEntry.Id=ReplicationServers.GetKey("journalentry","JournalEntryNum");
 			}
 			string command="INSERT INTO journalentry (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -120,7 +120,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="TransactionNum,AccountNum,DateDisplayed,DebitAmt,CreditAmt,Memo,Splits,CheckNumber,ReconcileNum,SecUserNumEntry,SecDateTEntry,SecUserNumEdit) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(journalEntry.JournalEntryNum)+",";
+				command+=POut.Long(journalEntry.Id)+",";
 			}
 			command+=
 				     POut.Long  (journalEntry.TransactionNum)+","
@@ -148,9 +148,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramMemo,paramSplits);
 			}
 			else {
-				journalEntry.JournalEntryNum=Database.ExecuteInsert(command,paramMemo,paramSplits);
+				journalEntry.Id=Database.ExecuteInsert(command,paramMemo,paramSplits);
 			}
-			return journalEntry.JournalEntryNum;
+			return journalEntry.Id;
 		}
 
 		///<summary>Inserts one JournalEntry into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -163,14 +163,14 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO journalentry (";
 			if(!useExistingPK) {
-				journalEntry.JournalEntryNum=ReplicationServers.GetKeyNoCache("journalentry","JournalEntryNum");
+				journalEntry.Id=ReplicationServers.GetKeyNoCache("journalentry","JournalEntryNum");
 			}
 			if(useExistingPK) {
 				command+="JournalEntryNum,";
 			}
 			command+="TransactionNum,AccountNum,DateDisplayed,DebitAmt,CreditAmt,Memo,Splits,CheckNumber,ReconcileNum,SecUserNumEntry,SecDateTEntry,SecUserNumEdit) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(journalEntry.JournalEntryNum)+",";
+				command+=POut.Long(journalEntry.Id)+",";
 			}
 			command+=
 				     POut.Long  (journalEntry.TransactionNum)+","
@@ -198,9 +198,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramMemo,paramSplits);
 			}
 			else {
-				journalEntry.JournalEntryNum=Database.ExecuteInsert(command,paramMemo,paramSplits);
+				journalEntry.Id=Database.ExecuteInsert(command,paramMemo,paramSplits);
 			}
-			return journalEntry.JournalEntryNum;
+			return journalEntry.Id;
 		}
 
 		///<summary>Updates one JournalEntry in the database.</summary>
@@ -219,7 +219,7 @@ namespace OpenDentBusiness.Crud{
 				//SecDateTEntry not allowed to change
 				+"SecUserNumEdit =  "+POut.Long  (journalEntry.SecUserNumEdit)+" "
 				//SecDateTEdit can only be set by MySQL
-				+"WHERE JournalEntryNum = "+POut.Long(journalEntry.JournalEntryNum);
+				+"WHERE JournalEntryNum = "+POut.Long(journalEntry.Id);
 			if(journalEntry.Memo==null) {
 				journalEntry.Memo="";
 			}
@@ -289,7 +289,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			var paramSplits = new MySqlParameter("paramSplits", POut.StringParam(journalEntry.Splits));
 			command="UPDATE journalentry SET "+command
-				+" WHERE JournalEntryNum = "+POut.Long(journalEntry.JournalEntryNum);
+				+" WHERE JournalEntryNum = "+POut.Long(journalEntry.Id);
 			Database.ExecuteNonQuery(command,paramMemo,paramSplits);
 			return true;
 		}

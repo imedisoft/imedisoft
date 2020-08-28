@@ -208,7 +208,7 @@ namespace OpenDental{
 		private void FormRpProcCodes_Load(object sender, System.EventArgs e) {
 			_listFeeScheds=FeeScheds.GetDeepCopy(true);
 			_listProviders=Providers.GetListReports();
-			_listClinics=Clinics.GetDeepCopy(true);
+			_listClinics=Clinics.GetAll(false);
 			for(int i=0;i<_listFeeScheds.Count;i++){
 				listBoxFeeSched.Items.Add(_listFeeScheds[i].Description);
 			}		
@@ -232,7 +232,7 @@ namespace OpenDental{
 			FeeSched feeSched=_listFeeScheds[listBoxFeeSched.SelectedIndex];
 			long clinicNum=0;
 			if(listBoxClinics.SelectedIndex>0){
-				clinicNum=_listClinics[listBoxClinics.SelectedIndex-1].ClinicNum;
+				clinicNum=_listClinics[listBoxClinics.SelectedIndex-1].Id;
 			}
 			long provNum=0;
 			if(listBoxProviders.SelectedIndex>0){

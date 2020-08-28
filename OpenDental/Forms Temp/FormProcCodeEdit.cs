@@ -1153,7 +1153,7 @@ namespace OpenDental{
 			comboProvNumDefault.Items.AddProvNone();
 			comboProvNumDefault.Items.AddProvsAbbr(Providers.GetDeepCopy(true));
 			comboProvNumDefault.SetSelectedProvNum(ProcCode.ProvNumDefault);
-			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				labelTreatArea.Visible=false;
 				listTreatArea.Visible=false;
 			}

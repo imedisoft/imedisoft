@@ -44,7 +44,7 @@ namespace OpenDental
 			_listBillTypesNoColl=billTypeDefs.Where(x => x.ItemValue.ToLower()!="c" && x.ItemValue.ToLower()!="ce").Select(x => x.Copy()).ToList();//This probably needs to change
 			_listClinics=new List<Clinic>();
 			if(PrefC.HasClinicsEnabled) {
-				_listClinics.AddRange(Clinics.GetForUserod(Security.CurrentUser,true,"Unassigned").OrderBy(x => x.ClinicNum!=0).ThenBy(x => x.ItemOrder));
+				_listClinics.AddRange(Clinics.GetByCurrentUser().OrderBy(x => x.Id!=0).ThenBy(x => x.ItemOrder));
 			}
 			else {//clinics disabled
 				_listClinics.Add(Clinics.GetPracticeAsClinicZero("Unassigned"));
@@ -54,11 +54,11 @@ namespace OpenDental
 			_dictClinicProgProps=new Dictionary<long,List<ProgramProperty>>();
 			if(_tsiProg!=null && _tsiProg.Enabled) {
 				_dictClinicProgProps=ProgramProperties.GetForProgram(_tsiProg.Id)
-					.FindAll(x => _listClinics.Any(y => y.ClinicNum==x.ClinicId))//will contain the HQ "clinic" if clinics are disabled or user unrestricted
+					.FindAll(x => _listClinics.Any(y => y.Id==x.ClinicId))//will contain the HQ "clinic" if clinics are disabled or user unrestricted
 					.GroupBy(x => x.ClinicId).ToDictionary(x => x.Key,x => x.ToList());
 				if(PrefC.HasClinicsEnabled && !Security.CurrentUser.ClinicIsRestricted && _dictClinicProgProps.ContainsKey(0)) {
 					//if clinics are enabled and the user is not restricted, any clinic without prog props will use the HQ prog props for the sftp connection
-					_listClinics.FindAll(x => !_dictClinicProgProps.ContainsKey(x.ClinicNum)).ForEach(x => _dictClinicProgProps[x.ClinicNum]=_dictClinicProgProps[0]);
+					_listClinics.FindAll(x => !_dictClinicProgProps.ContainsKey(x.Id)).ForEach(x => _dictClinicProgProps[x.Id]=_dictClinicProgProps[0]);
 				}
 			}
 			_toolTipUnsentErrors=new ToolTip() { InitialDelay=1000,ReshowDelay=1000,ShowAlways=true };
@@ -667,7 +667,7 @@ namespace OpenDental
 				}
 			}
 			if(PrefC.HasClinicsEnabled && listClinicsSkipped.Contains(0)) {
-				listClinicsSkipped.AddRange(_listClinics.FindAll(x => !_dictClinicProgProps.ContainsKey(x.ClinicNum)).Select(x => x.ClinicNum));
+				listClinicsSkipped.AddRange(_listClinics.FindAll(x => !_dictClinicProgProps.ContainsKey(x.Id)).Select(x => x.Id));
 			}
 			Cursor=Cursors.Default;
 			return true;
@@ -828,7 +828,7 @@ namespace OpenDental
 			#endregion Set Grid Title and Columns
 			#region Fill Grid Rows
 			gridUnsent.ListGridRows.Clear();
-			Dictionary<long,string> dictClinicAbbrs=_listClinics.ToDictionary(x => x.ClinicNum,x => x.Abbr);
+			Dictionary<long,string> dictClinicAbbrs=_listClinics.ToDictionary(x => x.Id,x => x.Abbr);
 			Dictionary<long,string> dictProvAbbrs=_listProviders.ToDictionary(x => x.ProvNum,x => x.Abbr);
 			Dictionary<long,string> dictBillTypeNames=Defs.GetDefsForCategory(DefCat.BillingTypes).ToDictionary(x => x.DefNum,x => x.ItemName);
 			Dictionary<long,DateTime> dictSuspendDateTimes=new Dictionary<long,DateTime>();
@@ -1636,7 +1636,7 @@ namespace OpenDental
 			#endregion Set Grid Title and Columns
 			#region Fill Grid Rows
 			gridSent.ListGridRows.Clear();
-			Dictionary<long,string> dictClinicAbbrs=_listClinics.ToDictionary(x => x.ClinicNum,x => x.Abbr);
+			Dictionary<long,string> dictClinicAbbrs=_listClinics.ToDictionary(x => x.Id,x => x.Abbr);
 			Dictionary<long,string> dictProvAbbrs=_listProviders.ToDictionary(x => x.ProvNum,x => x.Abbr);
 			double bal0_30=0;
 			double bal31_60=0;
@@ -2131,7 +2131,7 @@ namespace OpenDental
 			#endregion Set Grid Title and Columns
 			#region Fill Grid Rows
 			gridExcluded.ListGridRows.Clear();
-			Dictionary<long,string> dictClinicAbbrs=_listClinics.ToDictionary(x => x.ClinicNum,x => x.Abbr);
+			Dictionary<long,string> dictClinicAbbrs=_listClinics.ToDictionary(x => x.Id,x => x.Abbr);
 			Dictionary<long,string> dictProvAbbrs=_listProviders.ToDictionary(x => x.ProvNum,x => x.Abbr);
 			Dictionary<long,string> dictBillTypeNames=Defs.GetDefsForCategory(DefCat.BillingTypes).ToDictionary(x => x.DefNum,x => x.ItemName);
 			Dictionary<long,DateTime> dictSuspendDateTimes=new Dictionary<long,DateTime>();

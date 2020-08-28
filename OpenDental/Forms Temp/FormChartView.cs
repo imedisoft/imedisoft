@@ -706,7 +706,7 @@ namespace OpenDental{
 			checkTPChart.Checked=ChartViewCur.IsTpCharting;
 			DisplayFields.RefreshCache();
 			ListShowing=DisplayFields.GetForChartView(ChartViewCur.ChartViewNum);//This will be zero for a new ChartView
-			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				checkShowTeeth.Visible=false;
 			}
 			FillGrids();

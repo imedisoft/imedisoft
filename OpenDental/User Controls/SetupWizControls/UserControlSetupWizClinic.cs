@@ -23,7 +23,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 
 		private void UserControlSetupWizClinic_Load(object sender,EventArgs e) {
 			FillGrid();
-			if(Clinics.GetCount(true)==0) {
+			if(Clinics.Count(false)==0) {
 				MsgBox.Show("You have no valid clinics. Please click the Add button to add a clinic.");
 				timer1.Start();
 			}
@@ -55,7 +55,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 			gridMain.ListGridRows.Clear();
 			GridRow row;
 			bool IsAllComplete = true;
-			List<Clinic> listClins = Clinics.GetDeepCopy();
+			List<Clinic> listClins = Clinics.GetAll(true);
 			if(listClins.Count == 0) {
 				IsAllComplete=false;
 			}
@@ -76,8 +76,8 @@ namespace OpenDental.User_Controls.SetupWizard {
 					row.Cells[row.Cells.Count-1].BackColor=needsAttnCol;
 					IsAllComplete=false;
 				}
-				row.Cells.Add(clinCur.Address);
-				if(!clinCur.IsHidden && string.IsNullOrEmpty(clinCur.Address)) {
+				row.Cells.Add(clinCur.AddressLine1);
+				if(!clinCur.IsHidden && string.IsNullOrEmpty(clinCur.AddressLine1)) {
 					row.Cells[row.Cells.Count-1].BackColor=needsAttnCol;
 					IsAllComplete=false;
 				}
@@ -96,7 +96,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 					row.Cells[row.Cells.Count-1].BackColor=needsAttnCol;
 					IsAllComplete=false;
 				}
-				row.Cells.Add(Providers.GetAbbr(clinCur.DefaultProv));
+				row.Cells.Add(Providers.GetAbbr(clinCur.DefaultProviderId));
 				row.Cells.Add(clinCur.IsHidden?"X":"");
 				row.Tag=clinCur;
 				gridMain.ListGridRows.Add(row);
@@ -136,7 +136,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 			FormClinicEdit FormCE = new FormClinicEdit(clinCur);
 			FormCE.ShowDialog();
 			if(FormCE.DialogResult==DialogResult.OK) {
-				Clinics.Update(FormCE.ClinicCur,clinOld);
+				Clinics.Update(FormCE.ClinicCur);
 				DataValid.SetInvalid(InvalidType.Providers);
 				FillGrid();
 			}

@@ -28,7 +28,7 @@ namespace OpenDental {
 				if(!Security.CurrentUser.ClinicIsRestricted) {
 					listClin.Items.Add("Unassigned");
 				}
-				_listClinics=Clinics.GetForUserod(Security.CurrentUser);
+				_listClinics=Clinics.GetByUser(Security.CurrentUser);
 				listClin.Items.AddRange(_listClinics.Select(x => x.Abbr).ToArray());
 				checkAllClinics.Checked=true;
 			}
@@ -64,7 +64,7 @@ namespace OpenDental {
 				if(checkAllClinics.Checked) {
 					report.AddSubTitle("Clinics","All Clinics");
 					listSelectedClinics.Add(new Clinic() {
-						ClinicNum = 0,
+						Id = 0,
 						Description = "Unassigned"
 					});
 					listSelectedClinics.AddRange(_listClinics); //add all clinics and the unassigned clinic.
@@ -77,7 +77,7 @@ namespace OpenDental {
 						else {
 							if(listClin.SelectedIndices[i]==0) {
 								listSelectedClinics.Add(new Clinic() {
-									ClinicNum = 0,
+									Id = 0,
 									Description = "Unassigned"
 								});
 							}
@@ -89,7 +89,7 @@ namespace OpenDental {
 					report.AddSubTitle("Clinics",string.Join(",",listSelectedClinics.Select(x => x.Description)));
 				}
 			}
-			List<long> clinicNums = listSelectedClinics.Select(y => y.ClinicNum).ToList();
+			List<long> clinicNums = listSelectedClinics.Select(y => y.Id).ToList();
 			List<long> userNums = listSelectedUsers.Select(y => y.Id).ToList();
 			DataTable table=RpTreatPlanPresentationStatistics.GetTreatPlanPresentationStatistics(date1.SelectionStart,date2.SelectionStart,radioFirstPresented.Checked
 				,checkAllClinics.Checked,PrefC.HasClinicsEnabled,radioPresenter.Checked,radioGross.Checked,checkAllUsers.Checked,userNums,clinicNums);			
@@ -165,15 +165,15 @@ namespace OpenDental {
 			}
 			if(PrefC.HasClinicsEnabled) {
 				if(checkAllClinics.Checked) {
-					listClinicNums=_listClinics.Select(x => x.ClinicNum).ToList();
+					listClinicNums=_listClinics.Select(x => x.Id).ToList();
 				}
 				else {
 					for(int i = 0;i<listClin.SelectedIndices.Count;i++) {
 						if(Security.CurrentUser.ClinicIsRestricted) {
-							listClinicNums.Add(_listClinics[listClin.SelectedIndices[i]].ClinicNum);
+							listClinicNums.Add(_listClinics[listClin.SelectedIndices[i]].Id);
 						}
 						else if(listClin.SelectedIndices[i]!=0) {
-							listClinicNums.Add(_listClinics[listClin.SelectedIndices[i]-1].ClinicNum);
+							listClinicNums.Add(_listClinics[listClin.SelectedIndices[i]-1].Id);
 						}
 					}
 				}

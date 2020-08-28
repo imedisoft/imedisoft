@@ -222,7 +222,7 @@ namespace OpenDental{
 				//if clinics are enabled and this is a holiday or practice note, set visible and fill the clinic combobox and private list of clinics
 				if(_isHolidayOrNote && SchedCur.SchedType==ScheduleType.Practice) {
 					comboClinic.Visible=true;//only visible for holidays and practice notes and only if clinics are enabled
-					comboClinic.SelectedClinicNum=Clinics.ClinicNum;
+					comboClinic.SelectedClinicNum=Clinics.ClinicId;
 				}
 				else {
 					comboClinic.Visible=false;

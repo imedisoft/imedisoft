@@ -505,7 +505,7 @@ namespace OpenDental{
 			else
 				textBirthdate.Text=ScreenCur.Birthdate.ToShortDateString();
 			textComments.Text=ScreenCur.Comments;
-			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				checkCariesExperience.Visible=false;
 				checkEarlyChildCaries.Visible=false;
 				checkExistingSealants.Visible=false;

@@ -336,7 +336,7 @@ namespace OpenDental{
 			gridMain.ListGridColumns.Add(col);
 			col=new GridColumn("Patient Name",120);
 			gridMain.ListGridColumns.Add(col);
-			if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				col=new GridColumn("Code",150);
 				gridMain.ListGridColumns.Add(col);
 				col=new GridColumn("Description",220);
@@ -370,7 +370,7 @@ namespace OpenDental{
 				GridRow newRow=new GridRow();
 				newRow.Cells.Add(PIn.Date(row["ProcDate"].ToString()).ToString("d"));
 				newRow.Cells.Add(row["PatName"].ToString());
-				if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+				if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 					newRow.Cells.Add(row["ProcCode"].ToString());
 					newRow.Cells.Add(row["Descript"].ToString());
 				}

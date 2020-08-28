@@ -36,7 +36,7 @@ namespace OpenDental {
 
 		private void RefreshPayments() {			
 			if(PrefC.HasClinicsEnabled && Security.CurrentUser.ClinicIsRestricted) {				
-				_listPayments=Payments.GetNeedingProcessed(_listClinics.Select(x => x.ClinicNum).ToList());
+				_listPayments=Payments.GetNeedingProcessed(_listClinics.Select(x => x.Id).ToList());
 			}
 			else {
 				_listPayments=Payments.GetNeedingProcessed(new List<long>());
@@ -49,7 +49,7 @@ namespace OpenDental {
 			List<Payment> listPaymentsClinic=new List<Payment>();
 			if(PrefC.HasClinicsEnabled && comboClinic.SelectedIndex!=0) {//Not 'All' selected
 				if(Security.CurrentUser.ClinicIsRestricted) {
-					long clinicNum=_listClinics[comboClinic.SelectedIndex-1].ClinicNum;//Minus 1 for 'All'
+					long clinicNum=_listClinics[comboClinic.SelectedIndex-1].Id;//Minus 1 for 'All'
 					listPaymentsClinic=_listPayments.FindAll(x => x.ClinicNum==clinicNum);
 				}
 				else {
@@ -57,7 +57,7 @@ namespace OpenDental {
 						listPaymentsClinic=_listPayments.FindAll(x => x.ClinicNum==0);
 					}
 					else if(comboClinic.SelectedIndex>1) {
-						long clinicNum=_listClinics[comboClinic.SelectedIndex-2].ClinicNum;//Minus 2 for 'All' and 'Unassigned'
+						long clinicNum=_listClinics[comboClinic.SelectedIndex-2].Id;//Minus 2 for 'All' and 'Unassigned'
 						listPaymentsClinic=_listPayments.FindAll(x => x.ClinicNum==clinicNum);
 					}
 				}
@@ -102,7 +102,7 @@ namespace OpenDental {
 		}
 
 		public void FillClinics() {
-			_listClinics=Clinics.GetForUserod(Security.CurrentUser);
+			_listClinics=Clinics.GetByUser(Security.CurrentUser);
 			comboClinic.Items.Add("All");
 			comboClinic.SelectedIndex=0;
 			int offset=1;
@@ -111,7 +111,7 @@ namespace OpenDental {
 				offset++;
 			}
 			_listClinics.ForEach(x => comboClinic.Items.Add(x.Abbr));
-			comboClinic.SelectedIndex=_listClinics.FindIndex(x => x.ClinicNum==Clinics.ClinicNum)+offset;
+			comboClinic.SelectedIndex=_listClinics.FindIndex(x => x.Id==Clinics.ClinicId)+offset;
 			if(comboClinic.SelectedIndex-offset==-1) {
 				comboClinic.SelectedIndex=0;
 			}

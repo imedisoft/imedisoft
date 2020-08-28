@@ -333,7 +333,7 @@ namespace OpenDental {
 					if(Programs.UsingEcwTightOrFullMode()) {
 						_sheetLayoutModeCur=SheetFieldLayoutMode.Ecw;
 					}
-					else if(Clinics.IsMedicalPracticeOrClinic(Clinics.ClinicNum)) {
+					else if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 						_sheetLayoutModeCur=SheetFieldLayoutMode.MedicalPractice;
 					}
 					else if(Programs.UsingOrion) {

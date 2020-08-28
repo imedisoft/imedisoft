@@ -259,7 +259,7 @@ namespace UnitTests.Claims_Tests {
 			long provNum=ProviderT.CreateProvider("DOC");
 			Clinic clinic=ClinicT.CreateClinic("NCC1701D");
 			Carrier carrier=CarrierT.CreateCarrier("Federation");
-			Patient pat=PatientT.CreatePatient(fName:"Jean Luc", lName:"Picard",clinicNum:clinic.ClinicNum,priProvNum:provNum);
+			Patient pat=PatientT.CreatePatient(fName:"Jean Luc", lName:"Picard",clinicNum:clinic.Id,priProvNum:provNum);
 			InsPlan insPlan=InsPlanT.CreateInsPlan(carrier.CarrierNum);
 			InsSubT.CreateInsSub(pat.PatNum,insPlan.PlanNum);
 			InsuranceInfo insInfo=InsuranceT.AddInsurance(pat,carrier.CarrierName);
@@ -276,7 +276,7 @@ namespace UnitTests.Claims_Tests {
 			Procedures.ComputeEstimatesForAll(pat.PatNum,insInfo.ListAllClaimProcs,insInfo.ListAllProcs,insInfo.ListInsPlans,insInfo.ListPatPlans,insInfo.ListBenefits,pat.Age,
 				insInfo.ListInsSubs);
 			//Create Income Transfer [Referenced from PaymentsTests]
-			Payment txfrPayment=PaymentT.MakePaymentNoSplits(pat.PatNum,50,clinicNum:clinic.ClinicNum);
+			Payment txfrPayment=PaymentT.MakePaymentNoSplits(pat.PatNum,50,clinicNum:clinic.Id);
 			PaymentT.BalanceAndIncomeTransfer(pat.PatNum,Patients.GetFamily(pat.PatNum),txfrPayment);
 			Assert.AreEqual(4,ClaimProcs.RefreshForClaim(claim.ClaimNum).Count);//Two Supplementals [Income Transfer], 1 Received, 1 Not Received [Insurance]
 			//It is important to be aware that all Income Transfers create two supplemental Claimprocs. This is because the first will be a positive 

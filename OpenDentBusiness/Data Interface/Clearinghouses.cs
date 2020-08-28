@@ -462,12 +462,12 @@ namespace OpenDentBusiness
 			List<long> listClinicNums = new List<long>();
 			if (isAllClinics)
 			{
-				listClinicNums = Clinics.GetDeepCopy(true).Select(x => x.ClinicNum).ToList();
+				listClinicNums = Clinics.GetAll(false).Select(x => x.Id).ToList();
 				listClinicNums.Add(0); // Include HQ. Especially important for organizations not using Clinics.
 			}
 			else
 			{
-				listClinicNums = new List<long> { Clinics.ClinicNum };
+				listClinicNums = new List<long> { Clinics.ClinicId };
 			}
 
             bool isTimeToRetrieve = IsTimeToRetrieveReports(true, out string errMsg);

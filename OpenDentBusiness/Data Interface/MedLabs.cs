@@ -73,13 +73,13 @@ namespace OpenDentBusiness{
 			}
 			List<string> listWhereClauseStrs=new List<string>();
 			if(PrefC.HasClinicsEnabled) {
-				List<string> listAllClinicAcctNums=Clinics.GetWhere(x => !string.IsNullOrWhiteSpace(x.MedLabAccountNum)).Select(x => x.MedLabAccountNum).ToList();
-				if(listSelectedClinics.Any(x => x.ClinicNum==0) && listAllClinicAcctNums.Count>0) {//include "Unassigned" medlabs
+				List<string> listAllClinicAcctNums=Clinics.Where(x => !string.IsNullOrWhiteSpace(x.MedlabAccountId)).Select(x => x.MedlabAccountId).ToList();
+				if(listSelectedClinics.Any(x => x.Id==0) && listAllClinicAcctNums.Count>0) {//include "Unassigned" medlabs
 					listWhereClauseStrs.Add("medlab.PatAccountNum NOT IN ("+string.Join(",",listAllClinicAcctNums)+")");
 				}
-				listSelectedClinics.RemoveAll(x => x.ClinicNum<=0 || string.IsNullOrWhiteSpace(x.MedLabAccountNum));
+				listSelectedClinics.RemoveAll(x => x.Id<=0 || string.IsNullOrWhiteSpace(x.MedlabAccountId));
 				if(listSelectedClinics.Count>0) {
-					listWhereClauseStrs.Add("medlab.PatAccountNum IN ("+string.Join(",",listSelectedClinics.Select(x => x.MedLabAccountNum))+")");
+					listWhereClauseStrs.Add("medlab.PatAccountNum IN ("+string.Join(",",listSelectedClinics.Select(x => x.MedlabAccountId))+")");
 				}
 			}
 			string command="SELECT MAX(CASE WHEN medlab.DateTimeReported=maxDate.DateTimeReported THEN MedLabNum ELSE 0 END) AS MedLabNum,"

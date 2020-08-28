@@ -10,7 +10,6 @@ namespace Imedisoft.CEMT.Forms
     public partial class FormCentralUserEdit : FormBase
 	{
 		private readonly Userod user;
-		private List<AlertSub> alertSubscriptions;
 
 		public FormCentralUserEdit(Userod user)
 		{
@@ -45,16 +44,6 @@ namespace Imedisoft.CEMT.Forms
 			if (user.PasswordHash == "")
 			{
 				passwordButton.Text = "Create Password";
-			}
-
-			alertSubscriptions = AlertSubs.GetAllForUser(Security.CurrentUser.Id);
-			alertSubscriptionsListBox.Items.Clear();
-
-			var alertTypes = Enum.GetNames(typeof(AlertType));
-			for (int i = 0; i < alertTypes.Length; i++)
-			{
-				alertSubscriptionsListBox.Items.Add(alertTypes[i]);
-				alertSubscriptionsListBox.SetSelected(i, alertSubscriptions.Exists(x => x.Type == (AlertType)i));
 			}
 
 			if (user.IsNew) unlockButton.Visible = false;
@@ -135,21 +124,6 @@ namespace Imedisoft.CEMT.Forms
 				ShowError("Every user must be associated to at least one User Group.");
 				return;
 			}
-
-			var alertSubscriptions = new List<AlertSub>();
-
-			foreach (int index in alertSubscriptionsListBox.SelectedIndices)
-			{
-                var alertSubscription = new AlertSub
-                {
-                    ClinicNum = 0,
-                    UserNum = Security.CurrentUser.Id,
-                    Type = (AlertType)index
-                };
-                alertSubscriptions.Add(alertSubscription);
-			}
-
-            AlertSubs.Sync(alertSubscriptions, this.alertSubscriptions);
 
 			user.IsHidden = checkIsHidden.Checked;
 			user.UserName = username;

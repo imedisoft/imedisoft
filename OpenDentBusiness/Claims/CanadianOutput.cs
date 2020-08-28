@@ -965,7 +965,7 @@ namespace OpenDentBusiness.Eclaims {
 			List<Etrans> listEtrans=new List<Etrans>();
 			//If carrier is Alberta Blue Cross (ABC), then ClaimStream will be selected as the clearinghouseHq if the user has the recommended setup.
 			Clearinghouse clearinghouseHq=Canadian.GetCanadianClearinghouseHq(carrier);
-			Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.ClinicNum);
+			Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.ClinicId);
 			CanadianNetwork netTelusA=CanadianNetworks.GetFirstOrDefault(x => x.Abbrev=="TELUS A");
 			CanadianNetwork netTelusB=CanadianNetworks.GetFirstOrDefault(x => x.Abbrev=="TELUS B");
 			//Check version 04 reports first, in case there is an error.  Most carrier use version 04.

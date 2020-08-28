@@ -38,8 +38,8 @@ namespace OpenDental {
 
 		private void FormMassEmail_Load(object sender,EventArgs e) {
 			_isLoading=true;
-			MassEmailStatus massEmailStatus=PIn.Enum<MassEmailStatus>(ClinicPrefs.GetInt(Clinics.ClinicNum, PrefName.MassEmailStatus));
-			bool onHQClinic=PrefC.HasClinicsEnabled && Clinics.ClinicNum==0;
+			MassEmailStatus massEmailStatus=PIn.Enum<MassEmailStatus>(ClinicPrefs.GetInt(Clinics.ClinicId, PrefName.MassEmailStatus));
+			bool onHQClinic=PrefC.HasClinicsEnabled && Clinics.ClinicId==0;
 			if(
 				//Pref has never been set.
 				massEmailStatus==MassEmailStatus.NotActivated ||
@@ -366,7 +366,7 @@ namespace OpenDental {
 			copyTemplate.TemplateName.Append('1');
 			_templateCur=copyTemplate;
 			_templateCur.IsNew=true;
-			_templateCur.ClinicNum=Clinics.ClinicNum;
+			_templateCur.ClinicNum=Clinics.ClinicId;
 			FormMassEmailTemplate formMassEmailTemplate=new FormMassEmailTemplate(_templateCur);
 			if(formMassEmailTemplate.ShowDialog()!=DialogResult.OK) {
 				SelectAndLoadFirstTemplate();
@@ -386,7 +386,7 @@ namespace OpenDental {
 		private void butNewTemplate_Click(object sender,EventArgs e) {
 			_templateCur=new EmailHostingTemplate();
 			_templateCur.IsNew=true;
-			_templateCur.ClinicNum=Clinics.ClinicNum;
+			_templateCur.ClinicNum=Clinics.ClinicId;
 			FormMassEmailTemplate formMassEmailTemplate=new FormMassEmailTemplate(_templateCur);
 			if(formMassEmailTemplate.ShowDialog()!=DialogResult.OK) {
 				SelectAndLoadFirstTemplate();
@@ -558,7 +558,7 @@ namespace OpenDental {
 				row.Cells.Add(analytic.Promotion.PromotionName);
 				row.Cells.Add(analytic.Promotion.TypePromotion.GetDescription());
 				if(PrefC.HasClinicsEnabled) {
-					row.Cells.Add(Clinics.GetDesc(analytic.Promotion.ClinicNum));
+					row.Cells.Add(Clinics.GetDescription(analytic.Promotion.ClinicNum));
 				}
 				row.Cells.Add(analytic.Promotion.DateTimeCreated.ToShortDateString());
 				//Combine all statuses together to get the total.

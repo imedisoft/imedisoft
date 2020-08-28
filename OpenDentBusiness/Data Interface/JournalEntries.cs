@@ -94,7 +94,7 @@ namespace OpenDentBusiness{
 			//2. When editing a transaction attached to reconcile, simple view is blocked.
 			//3. Double clicking on grid lets you change JEs not attached to reconcile.
 			//4. Double clicking on grid lets you change notes even if attached to reconcile.
-			string command= "DELETE FROM journalentry WHERE JournalEntryNum = "+POut.Long(je.JournalEntryNum);
+			string command= "DELETE FROM journalentry WHERE JournalEntryNum = "+POut.Long(je.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
@@ -110,10 +110,10 @@ namespace OpenDentBusiness{
 			for(int i=0;i<oldJournalList.Count;i++) {//loop through the old list
 				newJournalEntry=null;
 				for(int j=0;j<newJournalList.Count;j++) {
-					if(newJournalList[j]==null || newJournalList[j].JournalEntryNum==0) {
+					if(newJournalList[j]==null || newJournalList[j].Id==0) {
 						continue;
 					}
-					if(oldJournalList[i].JournalEntryNum==newJournalList[j].JournalEntryNum) {
+					if(oldJournalList[i].Id==newJournalList[j].Id) {
 						newJournalEntry=newJournalList[j];
 						break;
 					}
@@ -139,7 +139,7 @@ namespace OpenDentBusiness{
 				if(newJournalList[i]==null) {
 					continue;
 				}
-				if(newJournalList[i].JournalEntryNum!=0) {
+				if(newJournalList[i].Id!=0) {
 					continue;
 				}
 				//entry with journalEntryNum=0, so it's new
@@ -179,7 +179,7 @@ namespace OpenDentBusiness{
 					if(str!=""){
 						str+=" OR";
 					}
-					str+=" JournalEntryNum="+POut.Long(journalList[i].JournalEntryNum);
+					str+=" JournalEntryNum="+POut.Long(journalList[i].Id);
 				}
 			}
 			if(str!=""){
@@ -193,7 +193,7 @@ namespace OpenDentBusiness{
 					if(str!="") {
 						str+=" OR";
 					}
-					str+=" JournalEntryNum="+POut.Long(journalList[i].JournalEntryNum);
+					str+=" JournalEntryNum="+POut.Long(journalList[i].Id);
 				}
 			}
 			if(str!=""){

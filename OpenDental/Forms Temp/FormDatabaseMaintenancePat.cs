@@ -40,7 +40,7 @@ namespace OpenDental {
 
 		private void FormDatabaseMaintenancePat_Load(object sender,EventArgs e) {
 			//Get all patient specific DBM methods via reflection.
-			_listDbmMethodInfos=DatabaseMaintenances.GetMethodsForDisplay(Clinics.ClinicNum,true);
+			_listDbmMethodInfos=DatabaseMaintenances.GetMethodsForDisplay(Clinics.ClinicId,true);
 			List<string> listPatDbmMethodNames=_listDbmMethodInfos.Select(x => x.Name).ToList();
 			//Add any missing patient specific DBM methods to the database that are not currently present.
 			DatabaseMaintenances.InsertMissingDBMs(listPatDbmMethodNames);

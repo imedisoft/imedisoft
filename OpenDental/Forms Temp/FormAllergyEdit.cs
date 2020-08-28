@@ -28,7 +28,7 @@ namespace OpenDental {
 			}
 			for(int i=0;i<allergyDefList.Count;i++) {
 				comboAllergies.Items.Add(allergyDefList[i].Description);
-				if(!AllergyCur.IsNew && allergyDefList[i].AllergyDefNum==AllergyCur.AllergyDefId) {
+				if(!AllergyCur.IsNew && allergyDefList[i].Id==AllergyCur.AllergyDefId) {
 					allergyIndex=i;
 				}
 			}
@@ -97,7 +97,7 @@ namespace OpenDental {
 			else {
 				AllergyCur.DateAdverseReaction=DateTime.MinValue;
 			}
-			AllergyCur.AllergyDefId=allergyDefList[comboAllergies.SelectedIndex].AllergyDefNum;
+			AllergyCur.AllergyDefId=allergyDefList[comboAllergies.SelectedIndex].Id;
 			AllergyCur.Reaction=textReaction.Text;
 			AllergyCur.SnomedReaction="";
 			if(snomedReaction!=null) {

@@ -41,9 +41,9 @@ namespace UnitTests.Fees_Tests {
 			Patient pat=PatientT.CreatePatient("58");
 			long feeSchedNum=FeeSchedT.CreateFeeSched(FeeScheduleType.Normal,"Standard UCR",false);
 			long codeNum=ProcedureCodes.GetCodeNum("D2750");
-			long clinicNum2=ClinicT.CreateClinic("2-58").ClinicNum;
-			long clinicNum3=ClinicT.CreateClinic("3-58").ClinicNum;
-			long clinicNum1=ClinicT.CreateClinic("1-58").ClinicNum;
+			long clinicNum2=ClinicT.CreateClinic("2-58").Id;
+			long clinicNum3=ClinicT.CreateClinic("3-58").Id;
+			long clinicNum1=ClinicT.CreateClinic("1-58").Id;
 			FeeT.CreateFee(feeSchedNum,codeNum,65,clinicNum1,0);
 			FeeT.CreateFee(feeSchedNum,codeNum,70,clinicNum2,0);
 			FeeT.CreateFee(feeSchedNum,codeNum,75,clinicNum3,0);
@@ -64,8 +64,8 @@ namespace UnitTests.Fees_Tests {
 			long codeNum=ProcedureCodes.GetCodeNum("D2750");
 			long provNum1=ProviderT.CreateProvider("1-59");
 			long provNum2=ProviderT.CreateProvider("2-59");
-			long clinicNum1=ClinicT.CreateClinic("1-59").ClinicNum;
-			long clinicNum2=ClinicT.CreateClinic("2-59").ClinicNum;
+			long clinicNum1=ClinicT.CreateClinic("1-59").Id;
+			long clinicNum2=ClinicT.CreateClinic("2-59").Id;
 			FeeT.CreateFee(feeSchedNum,codeNum,80,clinicNum1,provNum1);
 			FeeT.CreateFee(feeSchedNum,codeNum,85,clinicNum1,provNum2);
 			FeeT.CreateFee(feeSchedNum,codeNum,90,clinicNum2,provNum2);
@@ -97,7 +97,7 @@ namespace UnitTests.Fees_Tests {
 		public void Fees_GetFee_PartialProvDefaultClinic() {
 			Fee expectedFee=CreateSingleFee(MethodBase.GetCurrentMethod().Name,_defaultFeeAmt*_rand.NextDouble(),false,true);
 			Clinic clinic=ClinicT.CreateClinic(MethodBase.GetCurrentMethod().Name);
-			Fee actualFee=Fees.GetFee(expectedFee.CodeNum,expectedFee.FeeSched,clinic.ClinicNum,expectedFee.ProvNum);
+			Fee actualFee=Fees.GetFee(expectedFee.CodeNum,expectedFee.FeeSched,clinic.Id,expectedFee.ProvNum);
 			Assert.IsTrue(AreSimilar(expectedFee,actualFee));
 		}
 
@@ -115,7 +115,7 @@ namespace UnitTests.Fees_Tests {
 			Fee expectedFee=CreateSingleFee(name,_defaultFeeAmt*_rand.NextDouble());
 			Clinic clinic=ClinicT.CreateClinic(name);
 			long provNum=ProviderT.CreateProvider(name);
-			Fee actualFee=Fees.GetFee(expectedFee.CodeNum,expectedFee.FeeSched,clinic.ClinicNum,provNum);
+			Fee actualFee=Fees.GetFee(expectedFee.CodeNum,expectedFee.FeeSched,clinic.Id,provNum);
 			Assert.IsTrue(AreSimilar(expectedFee,actualFee));
 		}
 
@@ -125,7 +125,7 @@ namespace UnitTests.Fees_Tests {
 			Fee createdFee=CreateSingleFee(name,_defaultFeeAmt*_rand.NextDouble());
 			Clinic clinic=ClinicT.CreateClinic(name);
 			long provNum=ProviderT.CreateProvider(name);
-			Assert.IsNull(Fees.GetFee(_listProcCodes.Last().CodeNum,createdFee.FeeSched,clinic.ClinicNum,provNum));
+			Assert.IsNull(Fees.GetFee(_listProcCodes.Last().CodeNum,createdFee.FeeSched,clinic.Id,provNum));
 		}
 
 		///<summary>Fees logic: #1: For PPOInsPlan1, Dr. Jones, Dr. Smith, and Dr. Wilson have different fees.</summary>

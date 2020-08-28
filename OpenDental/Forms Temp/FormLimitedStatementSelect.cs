@@ -180,7 +180,7 @@ namespace OpenDental {
 							row.Cells.Add(Clinics.GetAbbr(limitedRow.ClinicNum));
 							break;
 						case "ClinicDesc":
-							row.Cells.Add(Clinics.GetDesc(limitedRow.ClinicNum));
+							row.Cells.Add(Clinics.GetDescription(limitedRow.ClinicNum));
 							break;
 						case "Code":
 							row.Cells.Add(limitedRow.ProcCode);

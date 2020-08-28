@@ -43,7 +43,7 @@ namespace OpenDental {
 				FormMassEmail.PatientInfo pat=_listPatientsSelected.First(x => x.PatNum==_patSelected.PatNum);
 				Patient guarantor=Patients.GetPat(_patSelected.Guarantor);
 				Appointment apt=Appointments.GetOneApt(pat.NextAptNum);
-				Clinic clinicPat=Clinics.GetClinic(pat.ClinicNum);
+				Clinic clinicPat=Clinics.GetById(pat.ClinicNum);
 				//Refresh view with the newly replaced data
 				string replacedSubject;
 				string replacedPlainText;
@@ -140,7 +140,7 @@ namespace OpenDental {
 			}
 			EmailAddress emailAddress=null;
 			long emailAddressNum=PrefC.HasClinicsEnabled
-				? Clinics.GetClinic(Clinics.ClinicNum)?.EmailAddressNum??0
+				? Clinics.GetById(Clinics.ClinicId)?.EmailAddressId??0
 				: Prefs.GetLong(PrefName.EmailDefaultAddressNum);
 			if(emailAddressNum > 0) {
 				emailAddress=EmailAddresses.GetOne(emailAddressNum);

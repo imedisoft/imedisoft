@@ -57,7 +57,7 @@ namespace OpenDental {
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			if(IsSelectionMode) {
-				SelectedAllergyDefNum=listAllergyDefs[e.Row].AllergyDefNum;
+				SelectedAllergyDefNum=listAllergyDefs[e.Row].Id;
 				DialogResult=DialogResult.OK;
 			}
 			else {
@@ -82,7 +82,7 @@ namespace OpenDental {
 				MessageBox.Show("Select at least one allergy.");
 				return;
 			}
-			SelectedAllergyDefNum=listAllergyDefs[gridMain.GetSelectedIndex()].AllergyDefNum;
+			SelectedAllergyDefNum=listAllergyDefs[gridMain.GetSelectedIndex()].Id;
 			DialogResult=DialogResult.OK;
 		}
 

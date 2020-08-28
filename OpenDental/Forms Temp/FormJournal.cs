@@ -6,6 +6,8 @@ using System.Drawing.Printing;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -365,7 +367,7 @@ namespace OpenDental{
 			if(doRefresh || _listJEntries==null || _dictTransUsers==null) {
 				_listJEntries=JournalEntries.GetForAccount(_acctCur.Id);
 				_dictTransUsers=Transactions.GetManyTrans(_listJEntries.Select(x => x.TransactionNum).ToList())
-					.ToDictionary(x => x.TransactionNum,x => x.UserNum);
+					.ToDictionary(x => x.Id,x => x.UserId);
 			}
 			gridToFill.ListGridRows.Clear();
 			GridRow row;
@@ -408,9 +410,9 @@ namespace OpenDental{
 
 		private void Add_Click(){
 			Transaction trans=new Transaction();
-			trans.UserNum=Security.CurrentUser.Id;
+			trans.UserId=Security.CurrentUser.Id;
 			Transactions.Insert(trans);//we now have a TransactionNum, and datetimeEntry has been set
-			FormTransactionEdit FormT=new FormTransactionEdit(trans.TransactionNum,_acctCur.Id);
+			FormTransactionEdit FormT=new FormTransactionEdit(trans.Id,_acctCur.Id);
 			FormT.IsNew=true;
 			FormT.ShowDialog();
 			if(FormT.DialogResult==DialogResult.Cancel){

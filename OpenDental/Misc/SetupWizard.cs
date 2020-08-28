@@ -140,7 +140,7 @@ namespace OpenDental
 			{
 				get
 				{
-					var clinics = Clinics.GetDeepCopy(true);
+					var clinics = Clinics.GetAll(false);
 					if (clinics.Count == 0)
 					{
 						return ODSetupStatus.NotStarted;
@@ -151,7 +151,7 @@ namespace OpenDental
 						if (string.IsNullOrEmpty(clinic.Abbr) ||
 							string.IsNullOrEmpty(clinic.Description) ||
 							string.IsNullOrEmpty(clinic.Phone) ||
-							string.IsNullOrEmpty(clinic.Address))
+							string.IsNullOrEmpty(clinic.AddressLine1))
 						{
 							return ODSetupStatus.NeedsAttention;
 						}
