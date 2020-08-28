@@ -47,6 +47,7 @@
             this.editButton = new OpenDental.UI.Button();
             this.exportButton = new OpenDental.UI.Button();
             this.cancelButton = new OpenDental.UI.Button();
+            this.deleteButton = new OpenDental.UI.Button();
             this.SuspendLayout();
             // 
             // imageListMain
@@ -64,7 +65,7 @@
             this.inactiveCheckBox.Margin = new System.Windows.Forms.Padding(10, 3, 3, 3);
             this.inactiveCheckBox.Name = "inactiveCheckBox";
             this.inactiveCheckBox.Size = new System.Drawing.Size(150, 17);
-            this.inactiveCheckBox.TabIndex = 2;
+            this.inactiveCheckBox.TabIndex = 10;
             this.inactiveCheckBox.Text = "Include Inactive Accounts";
             this.inactiveCheckBox.UseVisualStyleBackColor = true;
             this.inactiveCheckBox.Click += new System.EventHandler(this.InactiveCheckBox_Click);
@@ -121,7 +122,7 @@
             this.dateLabel.Location = new System.Drawing.Point(17, 15);
             this.dateLabel.Name = "dateLabel";
             this.dateLabel.Size = new System.Drawing.Size(57, 13);
-            this.dateLabel.TabIndex = 7;
+            this.dateLabel.TabIndex = 6;
             this.dateLabel.Text = "As of date";
             // 
             // todayButton
@@ -129,7 +130,7 @@
             this.todayButton.Location = new System.Drawing.Point(232, 12);
             this.todayButton.Name = "todayButton";
             this.todayButton.Size = new System.Drawing.Size(60, 20);
-            this.todayButton.TabIndex = 10;
+            this.todayButton.TabIndex = 9;
             this.todayButton.Text = "Today";
             this.todayButton.UseVisualStyleBackColor = true;
             this.todayButton.Click += new System.EventHandler(this.TodayButton_Click);
@@ -139,7 +140,7 @@
             this.refreshButton.Location = new System.Drawing.Point(166, 12);
             this.refreshButton.Name = "refreshButton";
             this.refreshButton.Size = new System.Drawing.Size(60, 20);
-            this.refreshButton.TabIndex = 9;
+            this.refreshButton.TabIndex = 8;
             this.refreshButton.Text = "Refresh";
             this.refreshButton.UseVisualStyleBackColor = true;
             this.refreshButton.Click += new System.EventHandler(this.RefreshButton_Click);
@@ -149,7 +150,7 @@
             this.dateTextBox.Location = new System.Drawing.Point(80, 12);
             this.dateTextBox.Name = "dateTextBox";
             this.dateTextBox.Size = new System.Drawing.Size(80, 20);
-            this.dateTextBox.TabIndex = 8;
+            this.dateTextBox.TabIndex = 7;
             // 
             // accountsGrid
             // 
@@ -159,30 +160,32 @@
             this.accountsGrid.Location = new System.Drawing.Point(12, 38);
             this.accountsGrid.Name = "accountsGrid";
             this.accountsGrid.Size = new System.Drawing.Size(500, 479);
-            this.accountsGrid.TabIndex = 1;
+            this.accountsGrid.TabIndex = 0;
             this.accountsGrid.Title = "Chart of Accounts";
             this.accountsGrid.TranslationName = "TableChartOfAccounts";
             this.accountsGrid.CellDoubleClick += new OpenDental.UI.ODGridClickEventHandler(this.AccountsGrid_CellDoubleClick);
+            this.accountsGrid.SelectionCommitted += new System.EventHandler(this.AccountsGrid_SelectionCommitted);
             // 
             // addButton
             // 
             this.addButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.addButton.Image = global::Imedisoft.Properties.Resources.IconPlus;
+            this.addButton.Image = global::Imedisoft.Properties.Resources.IconPlusGreen;
             this.addButton.Location = new System.Drawing.Point(12, 523);
             this.addButton.Name = "addButton";
             this.addButton.Size = new System.Drawing.Size(30, 25);
-            this.addButton.TabIndex = 9;
+            this.addButton.TabIndex = 1;
             this.addButton.UseVisualStyleBackColor = true;
             this.addButton.Click += new System.EventHandler(this.AddButton_Click);
             // 
             // editButton
             // 
             this.editButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.editButton.Enabled = false;
             this.editButton.Image = global::Imedisoft.Properties.Resources.IconPencil;
             this.editButton.Location = new System.Drawing.Point(48, 523);
             this.editButton.Name = "editButton";
             this.editButton.Size = new System.Drawing.Size(30, 25);
-            this.editButton.TabIndex = 9;
+            this.editButton.TabIndex = 2;
             this.editButton.UseVisualStyleBackColor = true;
             this.editButton.Click += new System.EventHandler(this.EditButton_Click);
             // 
@@ -191,11 +194,11 @@
             this.exportButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.exportButton.Image = global::Imedisoft.Properties.Resources.IconFileExcel;
             this.exportButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.exportButton.Location = new System.Drawing.Point(91, 523);
+            this.exportButton.Location = new System.Drawing.Point(127, 523);
             this.exportButton.Margin = new System.Windows.Forms.Padding(10, 3, 3, 3);
             this.exportButton.Name = "exportButton";
             this.exportButton.Size = new System.Drawing.Size(80, 25);
-            this.exportButton.TabIndex = 9;
+            this.exportButton.TabIndex = 4;
             this.exportButton.Text = "Export";
             this.exportButton.UseVisualStyleBackColor = true;
             this.exportButton.Click += new System.EventHandler(this.ExportButton_Click);
@@ -207,10 +210,22 @@
             this.cancelButton.Location = new System.Drawing.Point(432, 523);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(80, 25);
-            this.cancelButton.TabIndex = 9;
+            this.cancelButton.TabIndex = 5;
             this.cancelButton.Text = "Close";
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.CancelButton_Click);
+            // 
+            // deleteButton
+            // 
+            this.deleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.deleteButton.Enabled = false;
+            this.deleteButton.Image = global::Imedisoft.Properties.Resources.IconTimesRed;
+            this.deleteButton.Location = new System.Drawing.Point(84, 523);
+            this.deleteButton.Name = "deleteButton";
+            this.deleteButton.Size = new System.Drawing.Size(30, 25);
+            this.deleteButton.TabIndex = 3;
+            this.deleteButton.UseVisualStyleBackColor = true;
+            this.deleteButton.Click += new System.EventHandler(this.DeleteButton_Click);
             // 
             // FormAccounting
             // 
@@ -226,6 +241,7 @@
             this.Controls.Add(this.dateLabel);
             this.Controls.Add(this.inactiveCheckBox);
             this.Controls.Add(this.accountsGrid);
+            this.Controls.Add(this.deleteButton);
             this.MaximizeBox = false;
             this.Menu = this.mainMenu1;
             this.MinimizeBox = false;
@@ -258,5 +274,6 @@
         private OpenDental.UI.Button editButton;
         private OpenDental.UI.Button exportButton;
         private OpenDental.UI.Button cancelButton;
+        private OpenDental.UI.Button deleteButton;
     }
 }

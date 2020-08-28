@@ -148,7 +148,7 @@ namespace Imedisoft.Data
 		/// </summary>
 		/// <param name="account">The account to delete.</param>
 		/// <exception cref="Exception">If the account is in use.</exception>
-		public static void Delete2(Account account)
+		public static void Delete(Account account)
 		{
 			// Check to see if account has any journal entries
 			if (Database.ExecuteLong("SELECT COUNT(*) FROM `journal_entries` WHERE `account_id` = " + account.Id) != 0)

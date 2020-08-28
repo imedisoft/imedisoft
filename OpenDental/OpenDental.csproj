@@ -535,13 +535,13 @@
     <Compile Include="Forms Reports\FormRpServiceDateView.designer.cs">
       <DependentUpon>FormRpServiceDateView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormAccountEdit.Designer.cs">
+    <Compile Include="Forms\FormAccountEdit.Designer.cs">
       <DependentUpon>FormAccountEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormAccounting.Designer.cs">
+    <Compile Include="Forms\FormAccounting.Designer.cs">
       <DependentUpon>FormAccounting.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormAccountingLock.Designer.cs">
+    <Compile Include="Forms\FormAccountingLock.Designer.cs">
       <DependentUpon>FormAccountingLock.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormAccountPick.Designer.cs">
@@ -3926,7 +3926,7 @@
     <Compile Include="Forms Temp\FormPatientAddAll.designer.cs">
       <DependentUpon>FormPatientAddAll.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormAccountingLock.cs">
+    <Compile Include="Forms\FormAccountingLock.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormBillingDefaults.cs">
@@ -4212,10 +4212,10 @@
     <Compile Include="Forms\FormAbout.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormAccountEdit.cs">
+    <Compile Include="Forms\FormAccountEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormAccounting.cs">
+    <Compile Include="Forms\FormAccounting.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FormAccountingAutoPayEdit.cs">
@@ -6726,7 +6726,7 @@
       <DependentUpon>FormWebFormSetup.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAccountingLock.resx">
+    <EmbeddedResource Include="Forms\FormAccountingLock.resx">
       <DependentUpon>FormAccountingLock.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7058,11 +7058,11 @@
       <DependentUpon>FormAbout.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAccountEdit.resx">
+    <EmbeddedResource Include="Forms\FormAccountEdit.resx">
       <DependentUpon>FormAccountEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAccounting.resx">
+    <EmbeddedResource Include="Forms\FormAccounting.resx">
       <DependentUpon>FormAccounting.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -8588,6 +8588,9 @@
     <None Include="Web References\NewCrop\Update1.wsdl" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\IconPlusGreen.png" />
+    <None Include="Resources\IconTimesRed.png" />
+    <None Include="Resources\IconTrashRed.png" />
     <None Include="Resources\IconFilePdf.png" />
     <None Include="Resources\IconFileExcelSolid.png" />
     <None Include="Resources\IconFileExcel.png" />

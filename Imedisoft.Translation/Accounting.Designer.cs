@@ -79,6 +79,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This account is generated automatically, and cannot be deleted..
+        /// </summary>
+        public static string AccountIsGeneratedAutomaticallyAndCannotDelete {
+            get {
+                return ResourceManager.GetString("AccountIsGeneratedAutomaticallyAndCannotDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This account is generated automatically, and cannot be edited..
         /// </summary>
         public static string AccountIsGeneratedAutomaticallyAndCannotEdit {
@@ -93,6 +102,15 @@ namespace Imedisoft.Translation {
         public static string Asset {
             get {
                 return ResourceManager.GetString("Asset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete the selected account?.
+        /// </summary>
+        public static string ConfirmDeleteAccount {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteAccount", resourceCulture);
             }
         }
         

@@ -33,7 +33,6 @@
             this.descriptionTextBox = new System.Windows.Forms.TextBox();
             this.bankNumberTextBox = new System.Windows.Forms.TextBox();
             this.typeListBox = new System.Windows.Forms.ListBox();
-            this.deleteButton = new OpenDental.UI.Button();
             this.acceptButton = new OpenDental.UI.Button();
             this.cancelButton = new OpenDental.UI.Button();
             this.inactiveCheckBox = new System.Windows.Forms.CheckBox();
@@ -93,25 +92,13 @@
             this.typeListBox.Size = new System.Drawing.Size(150, 80);
             this.typeListBox.TabIndex = 3;
             // 
-            // deleteButton
-            // 
-            this.deleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.deleteButton.Image = global::Imedisoft.Properties.Resources.IconTrash;
-            this.deleteButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.deleteButton.Location = new System.Drawing.Point(12, 234);
-            this.deleteButton.Name = "deleteButton";
-            this.deleteButton.Size = new System.Drawing.Size(80, 25);
-            this.deleteButton.TabIndex = 9;
-            this.deleteButton.Text = "Delete";
-            this.deleteButton.Click += new System.EventHandler(this.DeleteButton_Click);
-            // 
             // acceptButton
             // 
             this.acceptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.acceptButton.Location = new System.Drawing.Point(386, 234);
             this.acceptButton.Name = "acceptButton";
             this.acceptButton.Size = new System.Drawing.Size(80, 25);
-            this.acceptButton.TabIndex = 10;
+            this.acceptButton.TabIndex = 9;
             this.acceptButton.Text = "&OK";
             this.acceptButton.Click += new System.EventHandler(this.AcceptButton_Click);
             // 
@@ -122,7 +109,7 @@
             this.cancelButton.Location = new System.Drawing.Point(472, 234);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(80, 25);
-            this.cancelButton.TabIndex = 11;
+            this.cancelButton.TabIndex = 10;
             this.cancelButton.Text = "&Cancel";
             // 
             // inactiveCheckBox
@@ -165,7 +152,6 @@
             this.Controls.Add(this.typeListBox);
             this.Controls.Add(this.bankNumberTextBox);
             this.Controls.Add(this.descriptionTextBox);
-            this.Controls.Add(this.deleteButton);
             this.Controls.Add(this.bankNumberLabel);
             this.Controls.Add(this.typeLabel);
             this.Controls.Add(this.descriptionLabel);
@@ -190,7 +176,6 @@
 		private System.Windows.Forms.Label descriptionLabel;
 		private System.Windows.Forms.Label typeLabel;
 		private System.Windows.Forms.Label bankNumberLabel;
-		private OpenDental.UI.Button deleteButton;
 		private System.Windows.Forms.TextBox descriptionTextBox;
 		private System.Windows.Forms.TextBox bankNumberTextBox;
 		private System.Windows.Forms.ListBox typeListBox;

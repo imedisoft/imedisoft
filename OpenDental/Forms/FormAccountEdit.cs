@@ -51,29 +51,6 @@ namespace Imedisoft.Forms
 			}
 		}
 
-		private void DeleteButton_Click(object sender, EventArgs e)
-		{
-			if (account.Id == 0)
-			{
-				DialogResult = DialogResult.Cancel;
-
-				return;
-			}
-
-			try
-			{
-				Accounts.Delete2(account);
-			}
-			catch (ApplicationException exception)
-			{
-				ShowError(exception.Message);
-
-				return;
-			}
-
-			DialogResult = DialogResult.OK;
-		}
-
 		private void AcceptButton_Click(object sender, EventArgs e)
 		{
 			var description = descriptionTextBox.Text.Trim();

@@ -123,11 +123,17 @@
   <data name="AccountIsGeneratedAutomatically" xml:space="preserve">
     <value>This account is generated automatically, and there is currently no way to view the detail. It is the sum of all income minus all expenses for all previous years.</value>
   </data>
+  <data name="AccountIsGeneratedAutomaticallyAndCannotDelete" xml:space="preserve">
+    <value>This account is generated automatically, and cannot be deleted.</value>
+  </data>
   <data name="AccountIsGeneratedAutomaticallyAndCannotEdit" xml:space="preserve">
     <value>This account is generated automatically, and cannot be edited.</value>
   </data>
   <data name="Asset" xml:space="preserve">
     <value>Asset</value>
+  </data>
+  <data name="ConfirmDeleteAccount" xml:space="preserve">
+    <value>Are you sure you want to delete the selected account?</value>
   </data>
   <data name="ConfirmUpdateSplitsForAllTransactionsAttachedToAccount" xml:space="preserve">
     <value>This will update the Splits column for all transactions attached to this account that have a date after the Accounting Lock Date. Are you sure you want to continue?</value>

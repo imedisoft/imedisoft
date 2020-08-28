@@ -24,7 +24,7 @@ namespace Imedisoft.Data
 			{
 				Id = (long)dataReader["id"],
 				Description = (string)dataReader["description"],
-				Type = (char)dataReader["type"],
+				Type = ((string)dataReader["type"])[0],
 				BankNumber = (string)dataReader["bank_number"],
 				Inactive = (Convert.ToInt32(dataReader["inactive"]) == 1),
 				Color = Color.FromArgb((int)dataReader["color"])

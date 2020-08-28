@@ -173,7 +173,13 @@ namespace Imedisoft.Forms
 			FillGrid(accountSummary.AccountId);
 		}
 
-        private void AddButton_Click(object sender, EventArgs e)
+		private void AccountsGrid_SelectionCommitted(object sender, EventArgs e)
+		{
+			editButton.Enabled = deleteButton.Enabled = 
+				accountsGrid.SelectedGridRows.Count > 0;
+		}
+
+		private void AddButton_Click(object sender, EventArgs e)
         {
 			using var formAccountEdit = new FormAccountEdit(
 				new Account
@@ -215,7 +221,45 @@ namespace Imedisoft.Forms
 			FillGrid(accountSummary.AccountId);
 		}
 
-        private void ExportButton_Click(object sender, EventArgs e)
+		private void DeleteButton_Click(object sender, EventArgs e)
+		{
+			var accountSummary = accountsGrid.SelectedTag<AccountSummary>();
+			if (accountSummary == null)
+			{
+				ShowError(Translation.Common.PleaseSelectAccountFirst);
+
+				return;
+			}
+
+			if (accountSummary.AccountId == 0)
+			{
+				ShowError(Translation.Accounting.AccountIsGeneratedAutomaticallyAndCannotDelete);
+
+				return;
+			}
+
+			var account = Accounts.GetAccount(accountSummary.AccountId);
+
+			if (!Confirm(Translation.Accounting.ConfirmDeleteAccount))
+            {
+				return;
+            }
+
+			try
+			{
+				Accounts.Delete(account);
+			}
+			catch (ApplicationException exception)
+			{
+				ShowError(exception.Message);
+
+				return;
+			}
+
+			FillGrid();
+		}
+
+		private void ExportButton_Click(object sender, EventArgs e)
         {
 			accountsGrid.Export(accountsGrid.Title);
 		}
