@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.UI;
 using OpenDental.UI;
 using OpenDentBusiness;
 

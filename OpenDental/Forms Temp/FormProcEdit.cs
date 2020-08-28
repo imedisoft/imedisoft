@@ -12,6 +12,7 @@ using System.Threading;
 using System.Windows.Forms;
 using CodeBase;
 using Imedisoft.Forms;
+using Imedisoft.UI;
 using OpenDental.UI;
 using OpenDentBusiness;
 

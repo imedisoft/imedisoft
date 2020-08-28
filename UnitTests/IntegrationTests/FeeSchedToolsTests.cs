@@ -105,7 +105,7 @@ namespace UnitTests.FeeSchedTools_Tests {
 			}
 			Fees.InsertMany(listFees);
 			//Copy the "from" fee schedule into the "to" fee schedule and do it for at least seven clinics.
-			FeeScheds.CopyFeeSchedule(feeSchedNumFrom,0,0,feeSchedNumTo,Clinics.GetDeepCopy(true).Select(x => x.Id).ToList(),0);
+			FeeScheds.CopyFeeSchedule(feeSchedNumFrom,0,0,feeSchedNumTo,Clinics.GetAll(false).Select(x => x.Id).ToList(),0);
 			//Make sure that there was NOT a duplicate fee inserted into the database.
 			dbmResult=DatabaseMaintenances.FeeDeleteDuplicates(true,DbmMode.Check);
 			Assert.AreEqual(dbmResult.Trim(),_feeDeleteDuplicatesExpectedResult,"Duplicate fees detected due to concurrent copying.");

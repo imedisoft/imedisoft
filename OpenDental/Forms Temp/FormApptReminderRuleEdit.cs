@@ -10,6 +10,7 @@ using OpenDental.UI;
 using OpenDentBusiness;
 using CodeBase;
 using System.Globalization;
+using Imedisoft.UI;
 
 namespace OpenDental {
 	///<summary>In-memory form. Changes are not saved to the DB from this form.</summary>

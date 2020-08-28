@@ -13,7 +13,6 @@ namespace UnitTestsCore {
 			clinic.Description=description;
 			clinic.Abbr=description;
 			//Texting is off by default. Use OpenDentalWebTests.TableTypes.EServiceAccountT.SetupEServiceAccount() to turn on texting for this clinic.
-			clinic.SmsContractDate=DateTime.MinValue;
 			clinic.EmailAddressId=emailAddressNum;
 			clinic.AddressLine1=address;
 			if(address=="") {

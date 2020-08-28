@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
+using Imedisoft.UI;
 
 namespace OpenDental{
 	public partial class FormModuleSetup:ODForm {

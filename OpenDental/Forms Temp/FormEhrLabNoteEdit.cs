@@ -10,6 +10,7 @@ using OpenDentBusiness;
 using OpenDental;
 using OpenDental.UI;
 using CodeBase;
+using Imedisoft.UI;
 
 namespace OpenDental {
 	public partial class FormEhrLabNoteEdit:ODForm {

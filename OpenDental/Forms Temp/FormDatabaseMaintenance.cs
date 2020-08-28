@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using CodeBase;
 using DataConnectionBase;
 using Imedisoft.Data;
+using Imedisoft.UI;
 using OpenDental.UI;
 using OpenDentBusiness;
 

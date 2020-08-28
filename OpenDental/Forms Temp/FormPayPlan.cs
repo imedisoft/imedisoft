@@ -15,6 +15,7 @@ using System.Linq;
 using CodeBase;
 using System.Text;
 using Imedisoft.Forms;
+using Imedisoft.UI;
 
 namespace OpenDental{
 	/// <summary></summary>

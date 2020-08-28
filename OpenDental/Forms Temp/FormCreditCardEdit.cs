@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.UI;
 using OpenDentBusiness;
 using OpenDentBusiness.IO;
 

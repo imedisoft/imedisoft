@@ -28,6 +28,7 @@ using System.Threading;
 using SharpDX;
 using OpenDentBusiness.IO;
 using Imedisoft.Forms;
+using Imedisoft.UI;
 #if EHRTEST
 using EHR;
 #endif

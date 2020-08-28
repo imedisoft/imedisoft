@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
+using Imedisoft.UI;
 
 namespace OpenDental {
 	///<summary></summary>

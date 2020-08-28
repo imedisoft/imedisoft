@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using OpenDental;
+using Imedisoft.UI;
 
 namespace OpenDental {
 	public partial class FormEhrNotPerformed:ODForm {

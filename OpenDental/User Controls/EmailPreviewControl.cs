@@ -12,6 +12,7 @@ using System.Linq;
 using OpenDental.UI;
 using Health.Direct.Common.Mime;
 using OpenDentBusiness.IO;
+using Imedisoft.UI;
 
 namespace OpenDental {
 	public partial class EmailPreviewControl:UserControl {

@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using CodeBase;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
+using Imedisoft.UI;
 
 namespace OpenDental {
 	public partial class SheetEditMobileCtrl:UserControl {

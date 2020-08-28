@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.UI;
 using OpenDental.UI;
 using OpenDentBusiness;
 using OpenDentBusiness.WebTypes.WebForms;

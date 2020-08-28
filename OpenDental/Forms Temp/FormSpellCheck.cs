@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using System.Text.RegularExpressions;
+using Imedisoft.UI;
 
 namespace OpenDental {
 	public partial class FormSpellCheck:ODForm {

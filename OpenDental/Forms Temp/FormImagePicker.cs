@@ -7,6 +7,7 @@ using OpenDental.UI;
 using System.IO;
 using OpenDentBusiness.IO;
 using System.Linq;
+using Imedisoft.UI;
 
 namespace OpenDental {
 	public partial class FormImagePicker:ODForm {

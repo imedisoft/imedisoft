@@ -5,6 +5,7 @@ using OpenDentBusiness;
 using OpenDental.UI;
 using CodeBase;
 using System.Collections.Generic;
+using Imedisoft.UI;
 
 namespace OpenDental {
 	/// <summary></summary>

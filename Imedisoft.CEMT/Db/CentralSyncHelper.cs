@@ -199,7 +199,7 @@ namespace CentralManager
 			List<UserGroup> listRemoteCEMTUserGroups = UserGroups.GetCEMTGroupsNoCache().ToList();
 			List<UserGroup> listCEMTUserGroups = new List<UserGroup>();
 			List<AlertSub> listRemoteAlertSubs = AlertSubs.GetAll();
-			List<Clinic> listRemoteClinics = Clinics.GetClinicsNoCache();
+			List<Clinic> listRemoteClinics = Clinics.GetClinicsNoCache().ToList();
 			List<AlertSub> listAlertSubsToInsert = new List<AlertSub>();
 			for (int i = 0; i < listCentralUserData.Count; i++)
 			{
@@ -314,7 +314,7 @@ namespace CentralManager
 			List<UserGroup> listRemoteCEMTUserGroups = UserGroups.GetCEMTGroupsNoCache().ToList();
 			List<UserGroup> listCEMTUserGroups = new List<UserGroup>();
 			List<AlertSub> listRemoteAlertSubs = AlertSubs.GetAll();
-			List<Clinic> listRemoteClinics = Clinics.GetClinicsNoCache();
+			List<Clinic> listRemoteClinics = Clinics.GetClinicsNoCache().ToList();
 			List<AlertSub> listAlertSubsToInsert = new List<AlertSub>();
 			for (int i = 0; i < listCentralUserData.Count; i++)
 			{

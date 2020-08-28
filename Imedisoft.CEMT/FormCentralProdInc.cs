@@ -838,7 +838,7 @@ namespace CentralManager {
 				return;
 			}
 			List<Provider> listProvs=GetProvidersForReports(checkShowUnearned.Checked);
-			List<Clinic> listClinics=Clinics.GetClinicsNoCache();
+			List<Clinic> listClinics=Clinics.GetClinicsNoCache().ToList();
 			Clinic unassigned=new Clinic();
 			unassigned.Id=0;
 			unassigned.Description="Unassigned";//Is this how we should do this?  Will there always be different clinics? (I assume so, otherwise CEMT is kinda worthless)
@@ -856,7 +856,7 @@ namespace CentralManager {
 				return;
 			}
 			List<Provider> listProvs=GetProvidersForReports(checkShowUnearned.Checked);
-			List<Clinic> listClinics=Clinics.GetClinicsNoCache();
+			List<Clinic> listClinics=Clinics.GetClinicsNoCache().ToList();
 			Clinic unassigned=new Clinic();
 			unassigned.Id=0;
 			unassigned.Description="Unassigned";//Same issue here as above.
@@ -874,7 +874,7 @@ namespace CentralManager {
 				return;
 			}
 			List<Provider> listProvs=GetProvidersForReports(checkShowUnearned.Checked);
-			List<Clinic> listClinics=Clinics.GetClinicsNoCache();
+			List<Clinic> listClinics=Clinics.GetClinicsNoCache().ToList();
 			Clinic unassigned=new Clinic();
 			unassigned.Id=0;
 			unassigned.Description="Unassigned";//Same issue here as above.
@@ -899,7 +899,7 @@ namespace CentralManager {
 				return;
 			}
 			List<Provider> listProvs=GetProvidersForReports(checkShowUnearned.Checked);
-			List<Clinic> listClinics=Clinics.GetClinicsNoCache();
+			List<Clinic> listClinics=Clinics.GetClinicsNoCache().ToList();
 			Clinic unassigned=new Clinic();
 			unassigned.Id=0;
 			unassigned.Description="Unassigned";//Same issue here as above.

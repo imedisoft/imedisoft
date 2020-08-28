@@ -6,6 +6,7 @@ using System.Linq;
 using OpenDental.UI;
 using System.Text.RegularExpressions;
 using System.Drawing;
+using Imedisoft.UI;
 
 namespace OpenDental {
 	public partial class FormQueryParser:ODForm {

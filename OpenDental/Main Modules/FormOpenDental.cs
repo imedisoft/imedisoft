@@ -15,6 +15,7 @@ redistributed.
 using CodeBase;
 using Imedisoft.Data;
 using Imedisoft.Forms;
+using Imedisoft.UI;
 using Microsoft.Win32;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -4239,7 +4240,7 @@ namespace OpenDental
 		private void menuItemLogOff_Click(object sender, System.EventArgs e)
 		{
 			NullUserCheck("menuItemLogOff_Click");
-			if (!AreYouSurePrompt(Security.CurrentUser.Id, "Are you sure you would like to log off?"))
+			if (!AreYouSurePrompt("Are you sure you would like to log off?"))
 			{
 				return;
 			}
@@ -4251,7 +4252,7 @@ namespace OpenDental
 		/// corresponds with intent (ie logging off vs closing the program)	/// </summary>
 		/// <param name="userNum">Used to check if user has "Close/Log off" message preference turned off under File->User Settings</param>
 		/// <param name="message">Used for passing in message that lets User know what is being done</param>
-		private bool AreYouSurePrompt(long userNum, string message)
+		private bool AreYouSurePrompt(string message)
 		{
 			if (UserPreference.GetBool(UserPreferenceName.SuppressLogOffMessage) == false)
 			{
@@ -7811,7 +7812,7 @@ namespace OpenDental
 		{
 			if (e.CloseReason == CloseReason.UserClosing && Security.CurrentUser != null && Security.IsUserLoggedIn)
 			{
-				if (!AreYouSurePrompt(Security.CurrentUser.Id, "Are you sure you would like to close?"))
+				if (!AreYouSurePrompt("Are you sure you would like to close?"))
 				{
 					e.Cancel = true;
 					return;

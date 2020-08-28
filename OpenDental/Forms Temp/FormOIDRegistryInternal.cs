@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using System.Xml;
+using Imedisoft.UI;
 
 namespace OpenDental {
 	public partial class FormOIDRegistryInternal:ODForm {

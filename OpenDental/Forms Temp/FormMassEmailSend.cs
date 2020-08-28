@@ -8,6 +8,7 @@ using OpenDentBusiness;
 using CodeBase;
 using System.Net.Mail;
 using System.Linq;
+using Imedisoft.UI;
 
 namespace OpenDental {
 	public partial class FormMassEmailSend:ODForm {

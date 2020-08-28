@@ -11,6 +11,7 @@ using static OpenDentBusiness.Eclaims.Canadian;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Text;
+using Imedisoft.UI;
 
 namespace OpenDental {
 	public class ClaimL {

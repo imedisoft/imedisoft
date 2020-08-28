@@ -18,6 +18,7 @@ using OpenDentBusiness;
 using CodeBase;
 using OpenDentBusiness.IO;
 using Imedisoft.Forms;
+using Imedisoft.UI;
 
 namespace OpenDental {
 

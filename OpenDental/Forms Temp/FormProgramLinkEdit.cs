@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.UI;
 using OpenDental;
 using OpenDental.Bridges;
 using OpenDental.UI;

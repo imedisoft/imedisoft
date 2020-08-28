@@ -8,6 +8,7 @@ using CodeBase;
 using OpenDentBusiness;
 using System.Linq;
 using OpenDentBusiness.IO;
+using Imedisoft.UI;
 
 namespace OpenDental {
 	///<summary>DialogResult will be Abort if message was unable to be read. 

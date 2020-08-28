@@ -15,7 +15,7 @@ namespace UnitTests {
 		///<summary>This method will execute only once, just before any tests in this class run.</summary>
 		[ClassInitialize]
 		public static void SetupClass(TestContext testContext) {
-			if(Clinics.GetCount()==0) {
+			if(Clinics.Count(true)==0) {
 				for(int i=1;i<5;i++) {
 					Clinics.Insert(new Clinic());
 				}

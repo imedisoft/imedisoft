@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.UI;
 using OpenDental.UI;
 using OpenDentBusiness;
 using OpenDentBusiness.IO;
