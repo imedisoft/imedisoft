@@ -2,7 +2,6 @@
 using Imedisoft.Data.CrudGenerator.Schema;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Drawing;
 using System.Reflection;
 using System.Text;
@@ -328,6 +327,11 @@ namespace Imedisoft.Data.CrudGenerator.Generator
                     return value;
                 }
 
+				if (column.MaxLength > 0)
+                {
+					return $"({value}?.Length > {column.MaxLength}) ? {value}.Substring(0, {column.MaxLength}) : ({value} ?? \"\")";
+                }
+
                 return $"{value} ?? \"\"";
             }
 
@@ -392,16 +396,22 @@ namespace Imedisoft.Data.CrudGenerator.Generator
             {
                 stringBuilder.AppendLine($"		private static long ExecuteInsert({table.Type.Name} {param})");
                 stringBuilder.AppendLine($"			=> {param}.{table.PrimaryKey.FieldName} = Database.ExecuteInsert(");
-                stringBuilder.AppendLine($"				{queryBuilder});");
-                stringBuilder.AppendLine();
+                stringBuilder.AppendLine($"				{queryBuilder},");
+
+				GenerateParameters(stringBuilder, table, param, false);
+				stringBuilder.AppendLine(");");
             }
             else
             {
                 stringBuilder.AppendLine($"		private static void ExecuteInsert({table.Type.Name} {param})");
                 stringBuilder.AppendLine( "			=> Database.ExecuteNonQuery(");
-                stringBuilder.AppendLine($"				{queryBuilder})");
-                stringBuilder.AppendLine();
-            }
+                stringBuilder.AppendLine($"				{queryBuilder},");
+
+				GenerateParameters(stringBuilder, table, param, false);
+				stringBuilder.AppendLine(");");
+			}
+
+			stringBuilder.AppendLine();
         }
 
 		private static void GenerateUpdate(StringBuilder stringBuilder, Table table)
