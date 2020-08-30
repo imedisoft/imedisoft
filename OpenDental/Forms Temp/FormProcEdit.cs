@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using CodeBase;
 using Imedisoft.Forms;
 using Imedisoft.UI;
+using Imedisoft.X12.Codes;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -418,22 +419,22 @@ namespace OpenDental {
 
 		private void butPickProv_Click(object sender,EventArgs e) {
 			FormProviderPick formp = new FormProviderPick(comboProv.Items.GetAll<Provider>());
-			formp.SelectedProvNum=comboProv.GetSelectedProvNum();
+			formp.SelectedProviderId=comboProv.GetSelectedProvNum();
 			formp.ShowDialog();
 			if(formp.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			comboProv.SetSelectedProvNum(formp.SelectedProvNum);
+			comboProv.SetSelectedProvNum(formp.SelectedProviderId);
 		}
 
 		private void butPickOrderProvInternal_Click(object sender,EventArgs e) {
 			FormProviderPick formP = new FormProviderPick(comboProv.Items.GetAll<Provider>());
-			formP.SelectedProvNum=_selectedProvOrderNum;
+			formP.SelectedProviderId=_selectedProvOrderNum;
 			formP.ShowDialog();
 			if(formP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			SetOrderingProvider(Providers.GetProv(formP.SelectedProvNum));
+			SetOrderingProvider(Providers.GetProv(formP.SelectedProviderId));
 		}
 
 		private void butPickOrderProvReferral_Click(object sender,EventArgs e) {
@@ -484,6 +485,8 @@ namespace OpenDental {
 			comboProv.Items.AddProvsAbbr(Providers.GetProvsForClinic(comboClinic.SelectedClinicNum));
 			comboProv.SetSelectedProvNum(provNum);
 		}
+
+		private List<(string code, string description)> placesOfService;
 
 		///<summary>ONLY run on startup. Fills the basic controls, except not the ones in the upper left panel which are handled in SetControlsUpperLeft.</summary>
 		private void FillControlsOnStartup(){
@@ -573,9 +576,20 @@ namespace OpenDental {
 			}
 			textBillingNote.Text=_procCur.BillingNote;
 			textNotes.Text=_procCur.Note;
+
+
 			comboPlaceService.Items.Clear();
-			comboPlaceService.Items.AddRange(Enum.GetNames(typeof(PlaceOfService)));
-			comboPlaceService.SelectedIndex=(int)_procCur.PlaceService;
+
+			placesOfService = PlaceOfService.Codes.ToList();
+			foreach (var placeOfService in placesOfService)
+            {
+				comboPlaceService.Items.Add(placeOfService.description);
+				if (placeOfService.code == _procCur.PlaceService)
+                {
+					comboPlaceService.SelectedItem = _procCur.PlaceService;
+                }
+            }
+
 			//checkHideGraphical.Checked=ProcCur.HideGraphical;
 			textSite.Text=Sites.GetDescription(_procCur.SiteNum);
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
@@ -3087,7 +3101,7 @@ namespace OpenDental {
 			else {
 				_procCur.Priority=_listTxPriorityDefs[comboPriority.SelectedIndex-1].DefNum;
 			}
-			_procCur.PlaceService=(PlaceOfService)comboPlaceService.SelectedIndex;
+			_procCur.PlaceService=placesOfService[comboPlaceService.SelectedIndex].code;
 			//site set when user picks from list.
 			if(comboBillingTypeOne.SelectedIndex==0){
 				_procCur.BillingTypeOne=0;
@@ -3153,7 +3167,7 @@ namespace OpenDental {
 						labFee1.ProcNumLab=_procCur.ProcNum;
 						labFee1.CodeNum=ProcedureCodes.GetCodeNum("99111");
 						//Not sure if Place of Service is required for canadian labs. (I don't see any reason why this would/could/should break anything.)
-						labFee1.PlaceService=(PlaceOfService)PrefC.GetInt(PrefName.DefaultProcedurePlaceService);//Default proc place of service for the Practice is used.
+						labFee1.PlaceService=Prefs.GetString(PrefName.DefaultProcedurePlaceService, PlaceOfService.Office);//Default proc place of service for the Practice is used.
 						if(labFee1.CodeNum==0) { //Code does not exist.
 							ProcedureCode code99111=new ProcedureCode();
 							code99111.IsCanadianLab=true;
@@ -3195,7 +3209,7 @@ namespace OpenDental {
 						labFee2.ProcNumLab=_procCur.ProcNum;
 						labFee2.CodeNum=ProcedureCodes.GetCodeNum("99111");
 						//Not sure if Place of Service is required for canadian labs. (I don't see any reason why this would/could/should break anything.)
-						labFee2.PlaceService=(PlaceOfService)PrefC.GetInt(PrefName.DefaultProcedurePlaceService);//Default proc place of service for the Practice is used.
+						labFee2.PlaceService=Prefs.GetString(PrefName.DefaultProcedurePlaceService, PlaceOfService.Office);//Default proc place of service for the Practice is used.
 						if(labFee2.CodeNum==0) { //Code does not exist.
 							ProcedureCode code99111=new ProcedureCode();
 							code99111.IsCanadianLab=true;

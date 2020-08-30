@@ -34,7 +34,7 @@ namespace OpenDental {
 			_listClinics=new List<Clinic>();
 			if(PrefC.HasClinicsEnabled) {
 				_listClinics.AddRange(
-					Clinics.GetByCurrentUser().OrderBy(x => x.Id!=0).ThenBy(x => x.ItemOrder)
+					Clinics.GetByCurrentUser().OrderBy(x => x.Id!=0)
 				);
 			}
 			else {//clinics disabled

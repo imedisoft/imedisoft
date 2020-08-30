@@ -1,5 +1,6 @@
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.X12.Codes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -363,7 +364,7 @@ namespace OpenDentBusiness {
 			procedure.BaseUnits=ProcedureCodes.GetProcCode(procedure.CodeNum).BaseUnits;
 			procedure.DiagnosticCode=Prefs.GetString(PrefName.ICD9DefaultForNewProcs);
 			procedure.RepeatChargeNum=repeatCharge.RepeatChargeNum;
-			procedure.PlaceService=(PlaceOfService)PrefC.GetInt(PrefName.DefaultProcedurePlaceService);//Default Proc Place of Service for the Practice is used.  
+			procedure.PlaceService=Prefs.GetString(PrefName.DefaultProcedurePlaceService, PlaceOfService.Office);//Default Proc Place of Service for the Practice is used.  
 			//Check if the repeating charge has been flagged to copy it's note into the billing note of the procedure.
 			if(repeatCharge.CopyNoteToProc) {
 				procedure.BillingNote=repeatCharge.Note;

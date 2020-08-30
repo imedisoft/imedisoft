@@ -177,7 +177,7 @@ namespace OpenDental {
 			}
 			long classNum = 0;
 			if(comboSchoolClass.Visible && comboSchoolClass.SelectedIndex>0) {
-				classNum=((ODBoxItem<SchoolClass>)comboSchoolClass.SelectedItem).Tag.SchoolClassNum;
+				classNum=((ODBoxItem<SchoolClass>)comboSchoolClass.SelectedItem).Tag.Id;
 			}
 			switch(((ODBoxItem<UserFilters>)comboShowOnly.SelectedItem).Tag) {
 				case UserFilters.Employees:

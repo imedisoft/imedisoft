@@ -11,7 +11,7 @@ using System.Reflection;
 using OpenDental.UI;
 using OpenDental;
 using OpenDentBusiness;
-
+using Imedisoft.Forms;
 
 namespace OpenDental.User_Controls.SetupWizard {
 	public partial class UserControlSetupWizClinic:SetupWizControl {
@@ -96,7 +96,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 					row.Cells[row.Cells.Count-1].BackColor=needsAttnCol;
 					IsAllComplete=false;
 				}
-				row.Cells.Add(Providers.GetAbbr(clinCur.DefaultProviderId));
+				row.Cells.Add(clinCur.DefaultProviderId.HasValue ? Providers.GetAbbr(clinCur.DefaultProviderId.Value) : "");
 				row.Cells.Add(clinCur.IsHidden?"X":"");
 				row.Tag=clinCur;
 				gridMain.ListGridRows.Add(row);
@@ -121,10 +121,12 @@ namespace OpenDental.User_Controls.SetupWizard {
 		}
 
 		private void butAdd_Click(object sender,EventArgs e) {
-			FormClinicEdit FormCE = new FormClinicEdit(new Clinic() { IsNew=true });
+			var clinic = new Clinic();
+
+			FormClinicEdit FormCE = new FormClinicEdit(clinic);
 			FormCE.ShowDialog();
 			if(FormCE.DialogResult==DialogResult.OK) {
-				Clinics.Insert(FormCE.ClinicCur);
+				Clinics.Insert(clinic);
 				DataValid.SetInvalid(InvalidType.Providers);
 				FillGrid();
 			}
@@ -132,11 +134,10 @@ namespace OpenDental.User_Controls.SetupWizard {
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			Clinic clinCur = (Clinic)gridMain.ListGridRows[e.Row].Tag;
-			Clinic clinOld = clinCur.Copy();
 			FormClinicEdit FormCE = new FormClinicEdit(clinCur);
 			FormCE.ShowDialog();
 			if(FormCE.DialogResult==DialogResult.OK) {
-				Clinics.Update(FormCE.ClinicCur);
+				Clinics.Update(clinCur);
 				DataValid.SetInvalid(InvalidType.Providers);
 				FillGrid();
 			}

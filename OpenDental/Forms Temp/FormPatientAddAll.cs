@@ -199,14 +199,8 @@ namespace OpenDental {
 			int defaultindex = 0;
 			if (!Prefs.GetBool(PrefName.PriProvDefaultToSelectProv))
 			{
-				if (PrefC.HasClinicsEnabled && Clinics.ClinicId != 0)
-				{
-					defaultindex = Providers.GetIndex(Clinics.FirstOrDefault(x => x.Id == Clinics.ClinicId, true).DefaultProviderId);
-				}
-				else
-				{
-					defaultindex = Providers.GetIndex(Prefs.GetLong(PrefName.PracticeDefaultProv));
-				}
+				defaultindex = Providers.GetIndex(Clinics.FirstOrDefault(x => x.Id == Clinics.ClinicId, true).DefaultProviderId ?? 0);
+
 				if (defaultindex == -1)
 				{//default provider hidden
 					defaultindex = 0;

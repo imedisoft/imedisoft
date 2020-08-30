@@ -288,7 +288,7 @@ namespace OpenDental{
 			if(comboClass.SelectedIndex==-1) {
 				return;
 			}
-			long schoolClass=_listSchoolClasses[comboClass.SelectedIndex].SchoolClassNum;
+			long schoolClass=_listSchoolClasses[comboClass.SelectedIndex].Id;
 			//int schoolCourse=SchoolCourses.List[comboCourse.SelectedIndex].SchoolCourseNum;
 			StudentList=ReqStudents.GetStudents(schoolClass);
 			gridStudents.BeginUpdate();
@@ -312,7 +312,7 @@ namespace OpenDental{
 			}
 			long schoolClass=0;
 			if(comboClass.SelectedIndex!=-1) {
-				schoolClass=_listSchoolClasses[comboClass.SelectedIndex].SchoolClassNum;
+				schoolClass=_listSchoolClasses[comboClass.SelectedIndex].Id;
 			}
 			gridReqs.BeginUpdate();
 			gridReqs.ListGridColumns.Clear();

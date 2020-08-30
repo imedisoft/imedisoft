@@ -1,5 +1,6 @@
 using CodeBase;
 using Imedisoft.UI;
+using Imedisoft.X12.Codes;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.DocumentObjectModel.Shapes;
 using MigraDoc.Rendering;
@@ -3688,7 +3689,7 @@ namespace OpenDental
 			}
 			//Make sure that all procedures share the same place of service and clinic.
 			long procClinicNum=-1;
-			PlaceOfService placeService=PlaceOfService.Office;//Old behavior was to always use Office.
+			var placeService=PlaceOfService.Office;//Old behavior was to always use Office.
 			for(int i=0;i<listProcsSelected.Count;i++) {
 				if(i==0) {
 					procClinicNum=listProcsSelected[i].ClinicNum;
@@ -3729,7 +3730,7 @@ namespace OpenDental
 				ClaimCur.ProvTreat=PatCur.PriProv;
 				//OK if 0, because auto select first in list when open claim
 			}
-			ClaimCur.ProvBill=Providers.GetBillingProvNum(ClaimCur.ProvTreat,ClaimCur.ClinicNum);
+			ClaimCur.ProvBill=Providers.GetBillingProviderId(ClaimCur.ProvTreat,ClaimCur.ClinicNum);
 			Provider prov=Providers.GetProv(ClaimCur.ProvBill);
 			if(prov.ProvNumBillingOverride!=0) {
 				ClaimCur.ProvBill=prov.ProvNumBillingOverride;

@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Forms;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -215,14 +216,14 @@ namespace OpenDental {
 		private void butPickProvOrdering_Click(object sender,EventArgs e) {
 			FormProviderPick formP=new FormProviderPick();
 			if(comboProvNumOrdering.SelectedIndex > -1) {//Initial formP selection if selected prov is not hidden.
-				formP.SelectedProvNum=_provNumSelectedOrdering;
+				formP.SelectedProviderId=_provNumSelectedOrdering;
 			}
 			formP.ShowDialog();
 			if(formP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			comboProvNumOrdering.SelectedIndex=Providers.GetIndex(formP.SelectedProvNum);
-			_provNumSelectedOrdering=formP.SelectedProvNum;
+			comboProvNumOrdering.SelectedIndex=Providers.GetIndex(formP.SelectedProviderId);
+			_provNumSelectedOrdering=formP.SelectedProviderId;
 		}
 
 		private void butNoneProvOrdering_Click(object sender,EventArgs e) {
@@ -237,14 +238,14 @@ namespace OpenDental {
 		private void butPickProvAdministering_Click(object sender,EventArgs e) {
 			FormProviderPick formP=new FormProviderPick();
 			if(comboProvNumAdministering.SelectedIndex > -1) {//Initial formP selection if selected prov is not hidden.
-				formP.SelectedProvNum=_provNumSelectedAdministering;
+				formP.SelectedProviderId=_provNumSelectedAdministering;
 			}
 			formP.ShowDialog();
 			if(formP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			comboProvNumAdministering.SelectedIndex=Providers.GetIndex(formP.SelectedProvNum);
-			_provNumSelectedAdministering=formP.SelectedProvNum;
+			comboProvNumAdministering.SelectedIndex=Providers.GetIndex(formP.SelectedProviderId);
+			_provNumSelectedAdministering=formP.SelectedProviderId;
 		}
 
 		private void butNoneProvAdministering_Click(object sender,EventArgs e) {

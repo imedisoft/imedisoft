@@ -4,6 +4,7 @@ using OpenDentBusiness;
 using CodeBase;
 using System.Linq;
 using System.Collections.Generic;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormDoseSpotPropertyEdit:ODForm {
@@ -50,12 +51,11 @@ namespace OpenDental {
 		}
 
 		private void menuItemSetup_Click(object sender,EventArgs e) {
-			FormClinicEdit form=new FormClinicEdit(_clinicCur.Copy());
+			FormClinicEdit form=new FormClinicEdit(_clinicCur);
 			form.ShowDialog();
 			if(form.DialogResult==DialogResult.OK) {
-				Clinics.Update(form.ClinicCur);
+				Clinics.Update(_clinicCur);
 				DataValid.SetInvalid(InvalidType.Providers);
-				_clinicCur=form.ClinicCur.Copy();
 			}
 		}
 

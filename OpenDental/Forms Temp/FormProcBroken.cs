@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Forms;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -50,12 +51,12 @@ namespace OpenDental {
 
 		private void butPickProv_Click(object sender,EventArgs e) {
 			FormProviderPick FormP = new FormProviderPick(comboProv.Items.GetAll<Provider>());
-			FormP.SelectedProvNum=comboProv.GetSelectedProvNum();
+			FormP.SelectedProviderId=comboProv.GetSelectedProvNum();
 			FormP.ShowDialog();
 			if(FormP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			comboProv.SetSelectedProvNum(FormP.SelectedProvNum);
+			comboProv.SetSelectedProvNum(FormP.SelectedProviderId);
 		}
 
 		///<summary>Fills combo provider based on which clinic is selected and attempts to preserve provider selection if any.</summary>

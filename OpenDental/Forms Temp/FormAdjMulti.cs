@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Forms;
 using OpenDental.UI;
 using OpenDentBusiness;
 using System;
@@ -375,7 +376,7 @@ namespace OpenDental {
 			if(FormProvPick.ShowDialog()==DialogResult.OK) {
 				comboProv.SelectedIndex=-1;
 				foreach(ODBoxItem<Provider> boxItemProvCur in comboProv.Items.OfType<ODBoxItem<Provider>>()) {
-					if(boxItemProvCur.Tag.ProvNum==FormProvPick.SelectedProvNum) {
+					if(boxItemProvCur.Tag.ProvNum==FormProvPick.SelectedProviderId) {
 						comboProv.SelectedItem=boxItemProvCur;
 						break;
 					}

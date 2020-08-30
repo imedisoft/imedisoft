@@ -545,23 +545,23 @@ namespace OpenDental{
 
 		private void butPickDentist_Click(object sender,EventArgs e) {
 			FormProviderPick formp=new FormProviderPick(comboProv.Items.GetAll<Provider>());
-			formp.SelectedProvNum=comboProv.GetSelectedProvNum();
+			formp.SelectedProviderId=comboProv.GetSelectedProvNum();
 			formp.ShowDialog();
 			if(formp.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			comboProv.SetSelectedProvNum(formp.SelectedProvNum);
+			comboProv.SetSelectedProvNum(formp.SelectedProviderId);
 			SetTimeSliderColors();
 		}
 
 		private void butPickHyg_Click(object sender,EventArgs e) {
 			FormProviderPick formp=new FormProviderPick(comboProvHyg.Items.GetAll<Provider>());//none option will show.
-			formp.SelectedProvNum=comboProvHyg.GetSelectedProvNum();
+			formp.SelectedProviderId=comboProvHyg.GetSelectedProvNum();
 			formp.ShowDialog();
 			if(formp.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			comboProvHyg.SetSelectedProvNum(formp.SelectedProvNum);
+			comboProvHyg.SetSelectedProvNum(formp.SelectedProviderId);
 			SetTimeSliderColors();
 		}
 

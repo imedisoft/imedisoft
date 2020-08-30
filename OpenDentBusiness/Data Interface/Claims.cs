@@ -1278,7 +1278,7 @@ namespace OpenDentBusiness
 				//OK if zero, because auto select first in list when open claim
 			}
 			claimCur.IsProsthesis = "N";
-			claimCur.ProvBill = Providers.GetBillingProvNum(claimCur.ProvTreat, claimCur.ClinicNum);//OK if zero, because it will get fixed in claim
+			claimCur.ProvBill = Providers.GetBillingProviderId(claimCur.ProvTreat, claimCur.ClinicNum);//OK if zero, because it will get fixed in claim
 			claimCur.EmployRelated = YN.No;
 			claimCur.ClaimForm = planCur.ClaimFormNum;
 			claimCur.AttachedFlags = "Mail";
@@ -1416,7 +1416,7 @@ namespace OpenDentBusiness
 				//OK if zero, because auto select first in list when open claim
 			}
 			claimCur.IsProsthesis = "N";
-			claimCur.ProvBill = Providers.GetBillingProvNum(claimCur.ProvTreat, claimCur.ClinicNum);//OK if zero, because it will get fixed in claim
+			claimCur.ProvBill = Providers.GetBillingProviderId(claimCur.ProvTreat, claimCur.ClinicNum);//OK if zero, because it will get fixed in claim
 			claimCur.EmployRelated = YN.No;
 			claimCur.ClaimForm = insPlanCur.ClaimFormNum;
 			claimCur.AttachedFlags = "Mail";

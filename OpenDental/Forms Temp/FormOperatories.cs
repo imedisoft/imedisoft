@@ -8,6 +8,7 @@ using OpenDentBusiness;
 using OpenDental.UI;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 	///<summary></summary>
@@ -293,7 +294,7 @@ namespace OpenDental{
 			if(FormC.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			comboClinic.SelectedClinicNum=FormC.SelectedClinicNum;
+			comboClinic.SelectedClinicNum=FormC.SelectedClinic?.Id??0;
 			FillGrid();
 		}
 

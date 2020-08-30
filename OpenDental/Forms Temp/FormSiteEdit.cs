@@ -1,4 +1,6 @@
 using CodeBase;
+using Imedisoft.Forms;
+using Imedisoft.X12.Codes;
 using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
@@ -45,6 +47,8 @@ namespace OpenDental{
 		private UI.Button butSiteLink;
 		private UI.Button butPickProvider;
 		private List<ZipCode> _listZipCodes;
+
+		private List<(string code, string description)> placesOfServices;
 
 		///<summary></summary>
 		public FormSiteEdit()
@@ -376,10 +380,17 @@ namespace OpenDental{
 		private void FormSiteEdit_Load(object sender,EventArgs e) {
 			textDescription.Text=SiteCur.Description;
 			comboPlaceService.Items.Clear();
-			foreach(string name in Enum.GetNames(typeof(PlaceOfService))) {
-				comboPlaceService.Items.Add(name);
+
+			placesOfServices = PlaceOfService.Codes.ToList();
+			foreach (var placeOfService in placesOfServices)
+            {
+				comboPlaceService.Items.Add(placeOfService.description);
+				if (SiteCur.PlaceService == placeOfService.code)
+                {
+					comboPlaceService.SelectedItem = placeOfService.description;
+                }
 			}
-			comboPlaceService.SelectedIndex=(int)SiteCur.PlaceService;
+
 			comboProv.Items.AddProvNone();
 			comboProv.Items.AddProvsAbbr(Providers.GetDeepCopy(true));
 			comboProv.SetSelectedProvNum(SiteCur.ProvNum);
@@ -397,12 +408,12 @@ namespace OpenDental{
 		private void butPickProvider_Click(object sender,EventArgs e) {
 			//for dental schools
 			FormProviderPick FormPP=new FormProviderPick(comboProv.Items.GetAll<Provider>());
-			FormPP.SelectedProvNum=comboProv.GetSelectedProvNum();
+			FormPP.SelectedProviderId=comboProv.GetSelectedProvNum();
 			FormPP.ShowDialog();
 			if(FormPP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			comboProv.SetSelectedProvNum(FormPP.SelectedProvNum);
+			comboProv.SetSelectedProvNum(FormPP.SelectedProviderId);
 		}
 
 		private void FillComboZip() {
@@ -537,7 +548,7 @@ namespace OpenDental{
 				return;
 			}
 			SiteCur.Description=textDescription.Text;
-			SiteCur.PlaceService=(PlaceOfService)comboPlaceService.SelectedIndex;
+			SiteCur.PlaceService= placesOfServices[comboPlaceService.SelectedIndex].code;
 			SiteCur.ProvNum=comboProv.GetSelectedProvNum();
 			SiteCur.Address=textAddress.Text;
 			SiteCur.Address2=textAddress2.Text;

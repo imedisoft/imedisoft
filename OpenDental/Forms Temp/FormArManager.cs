@@ -44,7 +44,7 @@ namespace OpenDental
 			_listBillTypesNoColl=billTypeDefs.Where(x => x.ItemValue.ToLower()!="c" && x.ItemValue.ToLower()!="ce").Select(x => x.Copy()).ToList();//This probably needs to change
 			_listClinics=new List<Clinic>();
 			if(PrefC.HasClinicsEnabled) {
-				_listClinics.AddRange(Clinics.GetByCurrentUser().OrderBy(x => x.Id!=0).ThenBy(x => x.ItemOrder));
+				_listClinics.AddRange(Clinics.GetByCurrentUser().OrderBy(x => x.Id!=0));
 			}
 			else {//clinics disabled
 				_listClinics.Add(Clinics.GetPracticeAsClinicZero("Unassigned"));

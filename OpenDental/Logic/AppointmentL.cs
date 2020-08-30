@@ -1,4 +1,5 @@
 ﻿using CodeBase;
+using Imedisoft.X12.Codes;
 using OpenDentBusiness;
 using OpenDentBusiness.HL7;
 using System;
@@ -192,7 +193,7 @@ namespace OpenDental
 				brokenProcedure.ClinicNum = appt.ClinicNum;
 				brokenProcedure.UserNum = Security.CurrentUser.Id;
 				brokenProcedure.Note = "Appt BROKEN for" + " " + appt.ProcDescript + "  " + appt.AptDateTime.ToString();
-				brokenProcedure.PlaceService = (PlaceOfService)PrefC.GetInt(PrefName.DefaultProcedurePlaceService);//Default proc place of service for the Practice is used. 
+				brokenProcedure.PlaceService = Prefs.GetString(PrefName.DefaultProcedurePlaceService, PlaceOfService.Office);//Default proc place of service for the Practice is used. 
 				List<InsSub> listInsSubs = InsSubs.RefreshForFam(Patients.GetFamily(pat.PatNum));
 				List<InsPlan> listInsPlans = InsPlans.RefreshForSubList(listInsSubs);
 				List<PatPlan> listPatPlans = PatPlans.Refresh(pat.PatNum);

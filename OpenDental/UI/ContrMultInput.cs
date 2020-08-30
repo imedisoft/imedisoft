@@ -325,7 +325,7 @@ namespace OpenDental.UI
 			long[] retVal=new long[0];
 			switch(fKType){
 				case ReportFKType.SchoolClass:
-					return SchoolClasses.GetDeepCopy().Select(x => x.SchoolClassNum).ToArray();
+					return SchoolClasses.GetDeepCopy().Select(x => x.Id).ToArray();
 			}
 			return retVal;
 		}

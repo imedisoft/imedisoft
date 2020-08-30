@@ -13,6 +13,7 @@ using OpenDentBusiness;
 using CodeBase;
 using System.Linq;
 using OpenDentBusiness.IO;
+using Imedisoft.X12.Codes;
 
 namespace OpenDental{
 	///<summary></summary>
@@ -1499,30 +1500,30 @@ namespace OpenDental{
 						}
 						break;
 					case "PlaceIsHospADA2002":
-						if(ClaimCur.PlaceService==PlaceOfService.InpatHospital
-							|| ClaimCur.PlaceService==PlaceOfService.OutpatHospital) {
+						if(ClaimCur.PlaceService==PlaceOfService.InpatientHospital
+							|| ClaimCur.PlaceService==PlaceOfService.OnCampusOutpatientHospital) {
 							displayStrings[i]="X";
 						}
 						break;
 					case "PlaceIsExtCareFacilityADA2002":
 						if(ClaimCur.PlaceService==PlaceOfService.CustodialCareFacility
-							|| ClaimCur.PlaceService==PlaceOfService.SkilledNursFac) {
+							|| ClaimCur.PlaceService==PlaceOfService.SkilledNursingFacility) {
 							displayStrings[i]="X";
 						}
 						break;
 					case "PlaceIsOtherADA2002":
-						if(ClaimCur.PlaceService==PlaceOfService.PatientsHome
-							|| ClaimCur.PlaceService==PlaceOfService.OtherLocation) {
+						if(ClaimCur.PlaceService==PlaceOfService.Home
+							|| ClaimCur.PlaceService==PlaceOfService.OtherPlaceOfService) {
 							displayStrings[i]="X";
 						}
 						break;
 					case "PlaceIsInpatHosp":
-						if(ClaimCur.PlaceService==PlaceOfService.InpatHospital) {
+						if(ClaimCur.PlaceService==PlaceOfService.InpatientHospital) {
 							displayStrings[i]="X";
 						}
 						break;
 					case "PlaceIsOutpatHosp":
-						if(ClaimCur.PlaceService==PlaceOfService.OutpatHospital) {
+						if(ClaimCur.PlaceService==PlaceOfService.OnCampusOutpatientHospital) {
 							displayStrings[i]="X";
 						}
 						break;
@@ -1532,22 +1533,22 @@ namespace OpenDental{
 						}
 						break;
 					case "PlaceIsSkilledNursFac":
-						if(ClaimCur.PlaceService==PlaceOfService.SkilledNursFac) {
+						if(ClaimCur.PlaceService==PlaceOfService.SkilledNursingFacility) {
 							displayStrings[i]="X";
 						}
 						break;
 					case "PlaceIsPatientsHome":
-						if(ClaimCur.PlaceService==PlaceOfService.PatientsHome) {
+						if(ClaimCur.PlaceService==PlaceOfService.Home) {
 							displayStrings[i]="X";
 						}
 						break;
 					case "PlaceIsOtherLocation":
-						if(ClaimCur.PlaceService==PlaceOfService.OtherLocation) {
+						if(ClaimCur.PlaceService==PlaceOfService.OtherPlaceOfService) {
 							displayStrings[i]="X";
 						}
 						break;
 					case "PlaceNumericCode":
-						displayStrings[i]=X12object.GetPlaceService(ClaimCur.PlaceService);
+						displayStrings[i]=ClaimCur.PlaceService;
 						break;
 					case "IsRadiographsAttached":
 						if(ClaimCur.Radiographs>0) {
@@ -4506,7 +4507,7 @@ namespace OpenDental{
 						return providerClaimProc.NationalProvID;
 					}
 				case "PlaceNumericCode":
-					return X12object.GetPlaceService(ClaimCur.PlaceService);
+					return ClaimCur.PlaceService;
 				case "Diagnosis":
 					if(ProcCur.DiagnosticCode==""){
 						return "";

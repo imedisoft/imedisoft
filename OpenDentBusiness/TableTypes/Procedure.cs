@@ -40,7 +40,7 @@ namespace OpenDentBusiness {
 		///<summary>FK to appointment.AptNum.  Was called NextAptNum in older versions.  Allows this procedure to be attached to a Planned appointment as well as a standard appointment.</summary>
 		public long PlannedAptNum;
 		///<summary>Enum:PlaceOfService  Only used in Public Health. Zero(Office) until procedure set complete. Then it's set to the value of the DefaultProcedurePlaceService preference.</summary>
-		public PlaceOfService PlaceService;
+		public string PlaceService;
 		///<summary>Single char. Blank=no, I=Initial, R=Replacement.</summary>
 		public string Prosthesis;
 		///<summary>For a prosthesis Replacement, this is the original date.</summary>

@@ -1,3 +1,4 @@
+using Imedisoft.Forms;
 using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
@@ -261,19 +262,19 @@ namespace OpenDental.UI {
 				provNum=apt.ProvHyg;
 			}
 			FormProviderPick formPick=new FormProviderPick();
-			formPick.SelectedProvNum=provNum;
+			formPick.SelectedProviderId=provNum;
 			formPick.ShowDialog();
 			if(formPick.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			if(formPick.SelectedProvNum==provNum) {
+			if(formPick.SelectedProviderId==provNum) {
 				return;//provider not changed.
 			}
 			if(apt.IsHygiene) {
-				apt.ProvHyg=formPick.SelectedProvNum;
+				apt.ProvHyg=formPick.SelectedProviderId;
 			}
 			else {
-				apt.ProvNum=formPick.SelectedProvNum;
+				apt.ProvNum=formPick.SelectedProviderId;
 			}
 			#region Provider Term Date Check
 			//Prevents appointments with providers that are past their term end date from being scheduled

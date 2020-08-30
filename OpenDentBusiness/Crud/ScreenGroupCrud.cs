@@ -48,7 +48,7 @@ namespace OpenDentBusiness.Crud{
 				screenGroup.SGDate        = PIn.Date  (row["SGDate"].ToString());
 				screenGroup.ProvName      = PIn.String(row["ProvName"].ToString());
 				screenGroup.ProvNum       = PIn.Long  (row["ProvNum"].ToString());
-				screenGroup.PlaceService  = (OpenDentBusiness.PlaceOfService)PIn.Int(row["PlaceService"].ToString());
+				screenGroup.PlaceService  = PIn.String(row["PlaceService"].ToString());
 				screenGroup.County        = PIn.String(row["County"].ToString());
 				screenGroup.GradeSchool   = PIn.String(row["GradeSchool"].ToString());
 				screenGroup.SheetDefNum   = PIn.Long  (row["SheetDefNum"].ToString());
@@ -79,7 +79,7 @@ namespace OpenDentBusiness.Crud{
 					POut.DateT (screenGroup.SGDate,false),
 					            screenGroup.ProvName,
 					POut.Long  (screenGroup.ProvNum),
-					POut.Int   ((int)screenGroup.PlaceService),
+					POut.String(screenGroup.PlaceService),
 					            screenGroup.County,
 					            screenGroup.GradeSchool,
 					POut.Long  (screenGroup.SheetDefNum),
@@ -111,7 +111,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Date  (screenGroup.SGDate)+","
 				+"'"+POut.String(screenGroup.ProvName)+"',"
 				+    POut.Long  (screenGroup.ProvNum)+","
-				+    POut.Int   ((int)screenGroup.PlaceService)+","
+				+    POut.String(screenGroup.PlaceService)+","
 				+"'"+POut.String(screenGroup.County)+"',"
 				+"'"+POut.String(screenGroup.GradeSchool)+"',"
 				+    POut.Long  (screenGroup.SheetDefNum)+")";
@@ -148,7 +148,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Date  (screenGroup.SGDate)+","
 				+"'"+POut.String(screenGroup.ProvName)+"',"
 				+    POut.Long  (screenGroup.ProvNum)+","
-				+    POut.Int   ((int)screenGroup.PlaceService)+","
+				+    POut.String(screenGroup.PlaceService)+","
 				+"'"+POut.String(screenGroup.County)+"',"
 				+"'"+POut.String(screenGroup.GradeSchool)+"',"
 				+    POut.Long  (screenGroup.SheetDefNum)+")";
@@ -168,7 +168,7 @@ namespace OpenDentBusiness.Crud{
 				+"SGDate        =  "+POut.Date  (screenGroup.SGDate)+", "
 				+"ProvName      = '"+POut.String(screenGroup.ProvName)+"', "
 				+"ProvNum       =  "+POut.Long  (screenGroup.ProvNum)+", "
-				+"PlaceService  =  "+POut.Int   ((int)screenGroup.PlaceService)+", "
+				+"PlaceService  =  "+POut.String(screenGroup.PlaceService)+", "
 				+"County        = '"+POut.String(screenGroup.County)+"', "
 				+"GradeSchool   = '"+POut.String(screenGroup.GradeSchool)+"', "
 				+"SheetDefNum   =  "+POut.Long  (screenGroup.SheetDefNum)+" "
@@ -197,7 +197,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			if(screenGroup.PlaceService != oldScreenGroup.PlaceService) {
 				if(command!="") { command+=",";}
-				command+="PlaceService = "+POut.Int   ((int)screenGroup.PlaceService)+"";
+				command+="PlaceService = "+POut.String(screenGroup.PlaceService)+"";
 			}
 			if(screenGroup.County != oldScreenGroup.County) {
 				if(command!="") { command+=",";}

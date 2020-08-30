@@ -29,6 +29,7 @@ using SharpDX;
 using OpenDentBusiness.IO;
 using Imedisoft.Forms;
 using Imedisoft.UI;
+using Imedisoft.X12.Codes;
 #if EHRTEST
 using EHR;
 #endif
@@ -855,7 +856,7 @@ namespace OpenDental {
 			proc.ProvNum=Prefs.GetLong(PrefName.PracticeDefaultProv);
 			proc.MedicalCode=ProcedureCodes.GetProcCode(proc.CodeNum).MedicalCode;
 			proc.BaseUnits=ProcedureCodes.GetProcCode(proc.CodeNum).BaseUnits;
-			proc.PlaceService=(PlaceOfService)PrefC.GetInt(PrefName.DefaultProcedurePlaceService);//Default Proc Place of Service for the Practice is used. 
+			proc.PlaceService=Prefs.GetString(PrefName.DefaultProcedurePlaceService, PlaceOfService.Office);//Default Proc Place of Service for the Practice is used. 
 			Procedures.Insert(proc);//no recall synch needed because dental offices don't use this feature
 			listCommonProcs.SelectedIndex=-1;
 			FillProgNotes();
@@ -6903,7 +6904,7 @@ namespace OpenDental {
 				}
 				else {
 					procNew.ProcDate=PIn.Date(textDate.Text);
-					procNew.PlaceService=(PlaceOfService)Prefs.GetLong(PrefName.DefaultProcedurePlaceService);
+					procNew.PlaceService=Prefs.GetString(PrefName.DefaultProcedurePlaceService, PlaceOfService.Office);
 				}
 				if(procNew.ProcDate.Year<1880) {
 					procNew.ProcDate=MiscData.GetNowDateTime();
@@ -8018,14 +8019,14 @@ namespace OpenDental {
 								listProviders.Add(prov);
 							}
 							FormProviderPick formProviderPick=new FormProviderPick(listProviders);
-							formProviderPick.SelectedProvNum=prov.ProvNum;
+							formProviderPick.SelectedProviderId=prov.ProvNum;
 							formProviderPick.IsNoneAvailable=false;
 							formProviderPick.IsShowAllAvailable=true;
 							formProviderPick.ShowDialog();
 							if(formProviderPick.DialogResult==DialogResult.Cancel) {
 								return;
 							}
-							List<Userod> listDoseUsers=Userods.GetWhere(x => !x.IsHidden && x.ProviderId==formProviderPick.SelectedProvNum);//Only consider non-hidden users.
+							List<Userod> listDoseUsers=Userods.GetWhere(x => !x.IsHidden && x.ProviderId==formProviderPick.SelectedProviderId);//Only consider non-hidden users.
 							listDoseUsers=listDoseUsers.FindAll(x => {//Finds users that have a DoseSpot ID
 								try {
 									return !string.IsNullOrWhiteSpace(DoseSpot.GetUserID(x,clinicNum));
@@ -8044,7 +8045,7 @@ namespace OpenDental {
 							else {
 								throw new ODException("There are too many Open Dental users associated to the selected provider.");
 							}
-							prov=Providers.GetProv(formProviderPick.SelectedProvNum);
+							prov=Providers.GetProv(formProviderPick.SelectedProviderId);
 							#region Provider Term Date Check
 							//Prevents prescriptions from being added that have a provider selected that is past their term date
 							listInvalidProvs=Providers.GetInvalidProvsByTermDate(new List<long> { prov.ProvNum },DateTime.Now);
@@ -8804,7 +8805,7 @@ namespace OpenDental {
 			ProcCur.SiteNum=_patCur.SiteNum;
 			ProcCur.RevCode=procCodeCur.RevenueCodeDefault;
 			ProcCur.DiagnosticCode=Prefs.GetString(PrefName.ICD9DefaultForNewProcs);
-			ProcCur.PlaceService=(PlaceOfService)PrefC.GetInt(PrefName.DefaultProcedurePlaceService);//Default Proc Place of Service for the Practice is used. 
+			ProcCur.PlaceService=Prefs.GetString(PrefName.DefaultProcedurePlaceService, PlaceOfService.Office);//Default Proc Place of Service for the Practice is used. 
 			if(Userods.IsUserCpoe(Security.CurrentUser)) {
 				//This procedure is considered CPOE because the provider is the one that has added it.
 				ProcCur.IsCpoe=true;

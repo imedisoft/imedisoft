@@ -1,3 +1,4 @@
+using Imedisoft.Forms;
 using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
@@ -320,13 +321,13 @@ namespace OpenDental {
 		private void butPickProv_Click(object sender,EventArgs e) {
 			FormProviderPick FormP=new FormProviderPick(_listProvs);
 			if(listConditionValues.SelectedIndices.Count>0) {//Initial FormP selection
-				FormP.SelectedProvNum=_listProvs[listConditionValues.SelectedIndices[0]].ProvNum;
+				FormP.SelectedProviderId=_listProvs[listConditionValues.SelectedIndices[0]].ProvNum;
 			}
 			FormP.ShowDialog();
 			if(FormP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			listConditionValues.SelectedIndices.Add(_listProvs.FindIndex(x => x.ProvNum==FormP.SelectedProvNum));
+			listConditionValues.SelectedIndices.Add(_listProvs.FindIndex(x => x.ProvNum==FormP.SelectedProviderId));
 		}
 
 		private void butDelete_Click(object sender,EventArgs e) {

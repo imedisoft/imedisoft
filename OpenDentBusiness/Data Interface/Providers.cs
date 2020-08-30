@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Reflection;
 using CodeBase;
@@ -495,48 +496,35 @@ namespace OpenDentBusiness{
                 "AND provider.provNum=" + provNum).ToList();
         }
 
-        ///<summary>Returns the billing provnum to use based on practice/clinic settings.  Takes the treating provider provnum and clinicnum.
-		///If clinics are enabled and clinicnum is passed in, the clinic's billing provider will be used.  Otherwise will use pactice defaults.
-		///It will return a valid provNum unless the supplied treatProv was invalid.</summary>
-		public static long GetBillingProvNum(long treatProv,long clinicNum) {
-			//No need to check RemotingRole; no call to db.
-			if(clinicNum==0 || !PrefC.HasClinicsEnabled) {//If clinics are disabled don't use the clinic defaults, even if a clinicnum was passed in.
-				if(Prefs.GetLong(PrefName.InsBillingProv)==0) {//default=0
-					return Prefs.GetLong(PrefName.PracticeDefaultProv);
-				}
-				else if(Prefs.GetLong(PrefName.InsBillingProv)==-1) {//treat=-1
-					return treatProv;
-				}
-				else {
-					return Prefs.GetLong(PrefName.InsBillingProv);
-				}
-			}
-			else{//Using clinics, and a clinic was pased in
-				long clinicInsBillingProv=Clinics.GetById(clinicNum).InsBillingProviderId ?? 0;
-				if(clinicInsBillingProv==0) {//default=0
-					return Prefs.GetLong(PrefName.PracticeDefaultProv);
-				}
-				else if(clinicInsBillingProv==-1) {//treat=-1
-					return treatProv;
-				}
-				else {
-					return clinicInsBillingProv;
-				}
-			}
-		}
-
-		/*
-		///<summary>Used when adding a provider to get the next available itemOrder.</summary>
-		public static int GetNextItemOrder(){
-			
-			//Is this valid in Oracle??
-			string command="SELECT MAX(ItemOrder) FROM provider";
-			DataTable table=Db.GetTable(command);
-			if(table.Rows.Count==0){
+		/// <summary>
+		/// Returns the billing provnum to use based on practice/clinic settings.
+		/// Takes the treating provider provnum and clinicnum.
+		/// If clinics are enabled and clinicnum is passed in, the clinic's billing provider will be used.
+		/// Otherwise will use pactice defaults.
+		/// It will return a valid provNum unless the supplied treatProv was invalid.
+		/// </summary>
+		public static long GetBillingProviderId(long treatmentProviderId, long clinicId)
+		{
+			var clinic = Clinics.GetById(clinicId);
+			if (null == clinic)
+            {
 				return 0;
-			}
-			return PIn.Int(table.Rows[0][0].ToString())+1;
-		}*/
+            }
+
+			switch (clinic.InsBillingProviderType)
+            {
+				case 'D':
+					return Prefs.GetLong(PrefName.InsBillingProv);
+
+				case 'T':
+					return treatmentProviderId;
+
+				case 'S':
+					return clinic.InsBillingProviderId ?? 0;
+            }
+
+			return 0;
+		}
 
 			///<summary>Returns list of providers that are either not restricted to a clinic, or are restricted to the ClinicNum provided. Excludes hidden provs.  Passing ClinicNum=0 returns all unrestricted providers. Ordered by provider.ItemOrder.</summary>
 		public static List<Provider> GetProvsForClinic(long clinicNum) {
@@ -567,25 +555,33 @@ namespace OpenDentBusiness{
 			return string.Join(",",listDuplicates);//returns empty string when listDuplicates is empty
 		}
 
-		///<summary>Returns the default practice provider. Returns null if there is no default practice provider set.</summary>
-		public static Provider GetDefaultProvider() {
-			//No need to check RemotingRole; no call to db.
-			return GetDefaultProvider(0);
-		}
+		/// <summary>
+		/// Returns the default practice provider.
+		/// Returns null if there is no default practice provider set.
+		/// </summary>
+		public static Provider GetDefaultProvider() 
+			=> GetDefaultProvider(Clinics.ClinicId);
 
-		///<summary>Returns the default provider for the clinic if it exists, else returns the default practice provider.  
-		///Pass 0 to get practice default.  Can return null if no clinic or practice default provider found.</summary>
-		public static Provider GetDefaultProvider(long clinicNum) {
-			//No need to check RemotingRole; no call to db.
-			Clinic clinic=Clinics.GetById(clinicNum);
-			Provider provider=null;
-			if(clinic!=null && clinic.DefaultProviderId!=0) {//the clinic exists
-				provider=Providers.GetProv(clinic.DefaultProviderId);
+		/// <summary>
+		/// Returns the default provider for the clinic if it exists, else returns the default practice provider.
+		/// Pass 0 to get practice default.
+		/// Can return null if no clinic or practice default provider found.
+		/// </summary>
+		public static Provider GetDefaultProvider(long clinicId)
+		{
+			var clinic = Clinics.GetById(clinicId);
+
+			if (clinic != null && clinic.DefaultProviderId.HasValue)
+			{
+				var provider = GetProv(clinic.DefaultProviderId.Value);
+
+				if (provider != null)
+                {
+					return provider;
+                }
 			}
-			if(provider==null) {//If not using clinics or if the specified clinic does not have a valid default provider set.
-				provider=Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv));//Try to get the practice default.
-			}
-			return provider;
+
+			return GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv));
 		}
 
 		public static DataTable GetDefaultPracticeProvider(){

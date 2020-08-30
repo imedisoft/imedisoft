@@ -106,28 +106,6 @@ namespace OpenDentBusiness{
 		///marked complete, prescriptions from being prescribed, and claims from being sent.</summary>
 		public DateTime DateTerm;
 
-		///<summary>Used only for serialization purposes</summary>
-		[XmlElement("ProvColor",typeof(int))]
-		public int ProvColorXml {
-			get {
-				return ProvColor.ToArgb();
-			}
-			set {
-				ProvColor = Color.FromArgb(value);
-			}
-		}
-
-		///<summary>Used only for serialization purposes</summary>
-		[XmlElement("OutlineColor",typeof(int))]
-		public int OutlineColorXml {
-			get {
-				return OutlineColor.ToArgb();
-			}
-			set {
-				OutlineColor = Color.FromArgb(value);
-			}
-		}
-
 		///<summary>Returns a copy of this Provider.</summary>
 		public Provider Copy(){
 			return (Provider)MemberwiseClone();
@@ -169,9 +147,11 @@ namespace OpenDentBusiness{
 			AnesthProvType = anesthProvType;
 		}
 
+		public override string ToString() => $"[{Abbr}] {LName}, {FName}";
 
-		///<Summary>For use in areas of the program where we have more room than just simple abbr.  Such as pick boxes in reports.  This will give Abbr - LName, FName (hidden).  If dental schools is turned on then the Abbr will be replaced with the ProvNum.</Summary>
-		public string GetLongDesc(){
+
+        ///<Summary>For use in areas of the program where we have more room than just simple abbr.  Such as pick boxes in reports.  This will give Abbr - LName, FName (hidden).  If dental schools is turned on then the Abbr will be replaced with the ProvNum.</Summary>
+        public string GetLongDesc(){
 			if(ProvNum==0) {
 				return Abbr;//this is only useful for spoofed providers in a list. I.e. "none" or "Select Provider" items.
 			}

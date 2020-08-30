@@ -11,6 +11,7 @@ using System.Threading;
 using CodeBase;
 using DataConnectionBase;
 using Imedisoft.Data;
+using Imedisoft.X12.Codes;
 
 namespace OpenDentBusiness {
 	public class Procedures {
@@ -1820,7 +1821,7 @@ namespace OpenDentBusiness {
 			proc.SiteNum=pat.SiteNum;
 			proc.RevCode=procCodeCur.RevenueCodeDefault;
 			proc.DateEntryC=DateTime.Now;
-			proc.PlaceService=(PlaceOfService)PrefC.GetInt(PrefName.DefaultProcedurePlaceService);//Default Proc Place of Service for the Practice is used.
+			proc.PlaceService=Prefs.GetString(PrefName.DefaultProcedurePlaceService, PlaceOfService.Office);//Default Proc Place of Service for the Practice is used.
 			proc.ProcNum=Procedures.Insert(proc);
 			Procedures.ComputeEstimates(proc,pat.PatNum,new List<ClaimProc>(),true,insPlanList,patPlanList,benefitList,pat.Age,subList);
 			return proc;
@@ -1863,7 +1864,7 @@ namespace OpenDentBusiness {
 				DateEntryC=DateTime.Today,
 				SecDateEntry=DateTime.Today,
 				ProcFee=0,
-				PlaceService=(PlaceOfService)PrefC.GetInt(PrefName.DefaultProcedurePlaceService)//Default Proc Place of Service for the Practice is used. 
+				PlaceService=Prefs.GetString(PrefName.DefaultProcedurePlaceService, PlaceOfService.Office)//Default Proc Place of Service for the Practice is used. 
 			};
 			proc.ProcNum = Procedures.Insert(proc);
 			return proc;
@@ -3437,7 +3438,7 @@ namespace OpenDentBusiness {
 						procCur.IcdVersion=Prefs.GetByte(PrefName.DxIcdVersion);
 					}
 				}
-				procCur.PlaceService=(PlaceOfService)Prefs.GetLong(PrefName.DefaultProcedurePlaceService);
+				procCur.PlaceService = Prefs.GetString(PrefName.DefaultProcedurePlaceService, PlaceOfService.Office);
 				procCur.ClinicNum=apt.ClinicNum;
 				procCur.SiteNum=patient.SiteNum;
 				procCur.PlaceService=Clinics.GetPlaceService(apt.ClinicNum);
@@ -3765,7 +3766,7 @@ namespace OpenDentBusiness {
 			proc.SiteNum=pat.SiteNum;
 			proc.RevCode=procCodeCur.RevenueCodeDefault;
 			proc.DiagnosticCode=Prefs.GetString(PrefName.ICD9DefaultForNewProcs);
-			proc.PlaceService=(PlaceOfService)PrefC.GetInt(PrefName.DefaultProcedurePlaceService);//Default proc place of service for the Practice is used. 
+			proc.PlaceService=Prefs.GetString(PrefName.DefaultProcedurePlaceService, PlaceOfService.Office);//Default proc place of service for the Practice is used. 
 			if(Userods.IsUserCpoe(Security.CurrentUser)) {
 				//This procedure is considered CPOE because the provider is the one that has added it.
 				proc.IsCpoe=true;
@@ -3844,7 +3845,7 @@ namespace OpenDentBusiness {
 			retVal.ClinicNum=patCur.ClinicNum;
 			retVal.SiteNum=patCur.SiteNum;
 			retVal.DiagnosticCode=Prefs.GetString(PrefName.ICD9DefaultForNewProcs);
-			retVal.PlaceService=(PlaceOfService)PrefC.GetInt(PrefName.DefaultProcedurePlaceService);//Default Proc Place of Service for the Practice is used.
+			retVal.PlaceService=Prefs.GetString(PrefName.DefaultProcedurePlaceService, PlaceOfService.Office);//Default Proc Place of Service for the Practice is used.
 			retVal.Surf="";
 			if(prefName==PrefName.InsHistPerioLLCodes) {
 				retVal.Surf="LL";

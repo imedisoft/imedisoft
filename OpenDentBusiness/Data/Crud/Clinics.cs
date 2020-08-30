@@ -9,7 +9,6 @@
 //------------------------------------------------------------------------------
 using Imedisoft.Data;
 using MySql.Data.MySqlClient;
-using OpenDentBusiness;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -43,15 +42,15 @@ namespace OpenDentBusiness
 				PayToZip = (string)dataReader["pay_to_zip"],
 				Phone = (string)dataReader["phone"],
 				BankNumber = (string)dataReader["bank_number"],
-				DefaultPlaceService = (PlaceOfService)Convert.ToInt32(dataReader["default_place_service"]),
+				DefaultPlaceOfService = (string)dataReader["default_place_of_service"],
+				InsBillingProviderType = Convert.ToChar(dataReader["ins_billing_provider_type"]),
 				InsBillingProviderId = dataReader["ins_billing_provider_id"] as long?,
 				InsVerifyExcluded = (Convert.ToInt32(dataReader["ins_verify_excluded"]) == 1),
 				Fax = (string)dataReader["fax"],
 				EmailAddressId = dataReader["email_address_id"] as long?,
-				DefaultProviderId = (long)dataReader["default_provider_id"],
+				DefaultProviderId = dataReader["default_provider_id"] as long?,
 				IsMedicalOnly = (Convert.ToInt32(dataReader["is_medical_only"]) == 1),
 				Region = dataReader["region"] as long?,
-				ItemOrder = (int)dataReader["item_order"],
 				MedlabAccountId = (string)dataReader["medlab_account_id"],
 				IsConfirmEnabled = (Convert.ToInt32(dataReader["is_confirm_enabled"]) == 1),
 				IsConfirmDefault = (Convert.ToInt32(dataReader["is_confirm_default"]) == 1),
@@ -91,10 +90,45 @@ namespace OpenDentBusiness
 		private static long ExecuteInsert(Clinic clinic)
 			=> clinic.Id = Database.ExecuteInsert(
 				"INSERT INTO `clinics` " +
-				"(`abbr`, `description`, `address_line1`, `address_line2`, `city`, `state`, `zip`, `billing_address_line1`, `billing_address_line2`, `billing_city`, `billing_state`, `billing_zip`, `billing_address_on_claims`, `pay_to_address_line1`, `pay_to_address_line2`, `pay_to_city`, `pay_to_state`, `pay_to_zip`, `phone`, `bank_number`, `default_place_service`, `ins_billing_provider_id`, `ins_verify_excluded`, `fax`, `email_address_id`, `default_provider_id`, `is_medical_only`, `region`, `item_order`, `medlab_account_id`, `is_confirm_enabled`, `is_confirm_default`, `is_hidden`, `scheduling_note`, `has_procedure_on_rx`) " +
+				"(`abbr`, `description`, `address_line1`, `address_line2`, `city`, `state`, `zip`, `billing_address_line1`, `billing_address_line2`, `billing_city`, `billing_state`, `billing_zip`, `billing_address_on_claims`, `pay_to_address_line1`, `pay_to_address_line2`, `pay_to_city`, `pay_to_state`, `pay_to_zip`, `phone`, `bank_number`, `default_place_of_service`, `ins_billing_provider_type`, `ins_billing_provider_id`, `ins_verify_excluded`, `fax`, `email_address_id`, `default_provider_id`, `is_medical_only`, `region`, `medlab_account_id`, `is_confirm_enabled`, `is_confirm_default`, `is_hidden`, `scheduling_note`, `has_procedure_on_rx`) " +
 				"VALUES (" +
-					"@abbr, @description, @address_line1, @address_line2, @city, @state, @zip, @billing_address_line1, @billing_address_line2, @billing_city, @billing_state, @billing_zip, @billing_address_on_claims, @pay_to_address_line1, @pay_to_address_line2, @pay_to_city, @pay_to_state, @pay_to_zip, @phone, @bank_number, @default_place_service, @ins_billing_provider_id, @ins_verify_excluded, @fax, @email_address_id, @default_provider_id, @is_medical_only, @region, @item_order, @medlab_account_id, @is_confirm_enabled, @is_confirm_default, @is_hidden, @scheduling_note, @has_procedure_on_rx" +
-				")");
+					"@abbr, @description, @address_line1, @address_line2, @city, @state, @zip, @billing_address_line1, @billing_address_line2, @billing_city, @billing_state, @billing_zip, @billing_address_on_claims, @pay_to_address_line1, @pay_to_address_line2, @pay_to_city, @pay_to_state, @pay_to_zip, @phone, @bank_number, @default_place_of_service, @ins_billing_provider_type, @ins_billing_provider_id, @ins_verify_excluded, @fax, @email_address_id, @default_provider_id, @is_medical_only, @region, @medlab_account_id, @is_confirm_enabled, @is_confirm_default, @is_hidden, @scheduling_note, @has_procedure_on_rx" +
+				")",
+					new MySqlParameter("abbr", clinic.Abbr ?? ""),
+					new MySqlParameter("description", clinic.Description ?? ""),
+					new MySqlParameter("address_line1", clinic.AddressLine1 ?? ""),
+					new MySqlParameter("address_line2", clinic.AddressLine2 ?? ""),
+					new MySqlParameter("city", clinic.City ?? ""),
+					new MySqlParameter("state", clinic.State ?? ""),
+					new MySqlParameter("zip", clinic.Zip ?? ""),
+					new MySqlParameter("billing_address_line1", clinic.BillingAddressLine1 ?? ""),
+					new MySqlParameter("billing_address_line2", clinic.BillingAddressLine2 ?? ""),
+					new MySqlParameter("billing_city", clinic.BillingCity ?? ""),
+					new MySqlParameter("billing_state", clinic.BillingState ?? ""),
+					new MySqlParameter("billing_zip", clinic.BillingZip ?? ""),
+					new MySqlParameter("billing_address_on_claims", (clinic.BillingAddressOnClaims ? 1 : 0)),
+					new MySqlParameter("pay_to_address_line1", clinic.PayToAddressLine1 ?? ""),
+					new MySqlParameter("pay_to_address_line2", clinic.PayToAddressLine2 ?? ""),
+					new MySqlParameter("pay_to_city", clinic.PayToCity ?? ""),
+					new MySqlParameter("pay_to_state", clinic.PayToState ?? ""),
+					new MySqlParameter("pay_to_zip", clinic.PayToZip ?? ""),
+					new MySqlParameter("phone", clinic.Phone ?? ""),
+					new MySqlParameter("bank_number", clinic.BankNumber ?? ""),
+					new MySqlParameter("default_place_of_service", (clinic.DefaultPlaceOfService?.Length > 2) ? clinic.DefaultPlaceOfService.Substring(0, 2) : (clinic.DefaultPlaceOfService ?? "")),
+					new MySqlParameter("ins_billing_provider_type", clinic.InsBillingProviderType),
+					new MySqlParameter("ins_billing_provider_id", (clinic.InsBillingProviderId.HasValue ? (object)clinic.InsBillingProviderId.Value : DBNull.Value)),
+					new MySqlParameter("ins_verify_excluded", (clinic.InsVerifyExcluded ? 1 : 0)),
+					new MySqlParameter("fax", clinic.Fax ?? ""),
+					new MySqlParameter("email_address_id", (clinic.EmailAddressId.HasValue ? (object)clinic.EmailAddressId.Value : DBNull.Value)),
+					new MySqlParameter("default_provider_id", (clinic.DefaultProviderId.HasValue ? (object)clinic.DefaultProviderId.Value : DBNull.Value)),
+					new MySqlParameter("is_medical_only", (clinic.IsMedicalOnly ? 1 : 0)),
+					new MySqlParameter("region", (clinic.Region.HasValue ? (object)clinic.Region.Value : DBNull.Value)),
+					new MySqlParameter("medlab_account_id", clinic.MedlabAccountId ?? ""),
+					new MySqlParameter("is_confirm_enabled", (clinic.IsConfirmEnabled ? 1 : 0)),
+					new MySqlParameter("is_confirm_default", (clinic.IsConfirmDefault ? 1 : 0)),
+					new MySqlParameter("is_hidden", (clinic.IsHidden ? 1 : 0)),
+					new MySqlParameter("scheduling_note", clinic.SchedulingNote ?? ""),
+					new MySqlParameter("has_procedure_on_rx", (clinic.HasProcedureOnRx ? 1 : 0)));
 
 		/// <summary>
 		/// Updates the specified <see cref="Clinic"/> in the database.
@@ -123,7 +157,8 @@ namespace OpenDentBusiness
 					"`pay_to_zip` = @pay_to_zip, " +
 					"`phone` = @phone, " +
 					"`bank_number` = @bank_number, " +
-					"`default_place_service` = @default_place_service, " +
+					"`default_place_of_service` = @default_place_of_service, " +
+					"`ins_billing_provider_type` = @ins_billing_provider_type, " +
 					"`ins_billing_provider_id` = @ins_billing_provider_id, " +
 					"`ins_verify_excluded` = @ins_verify_excluded, " +
 					"`fax` = @fax, " +
@@ -131,7 +166,6 @@ namespace OpenDentBusiness
 					"`default_provider_id` = @default_provider_id, " +
 					"`is_medical_only` = @is_medical_only, " +
 					"`region` = @region, " +
-					"`item_order` = @item_order, " +
 					"`medlab_account_id` = @medlab_account_id, " +
 					"`is_confirm_enabled` = @is_confirm_enabled, " +
 					"`is_confirm_default` = @is_confirm_default, " +
@@ -160,15 +194,15 @@ namespace OpenDentBusiness
 					new MySqlParameter("pay_to_zip", clinic.PayToZip ?? ""),
 					new MySqlParameter("phone", clinic.Phone ?? ""),
 					new MySqlParameter("bank_number", clinic.BankNumber ?? ""),
-					new MySqlParameter("default_place_service", (int)clinic.DefaultPlaceService),
+					new MySqlParameter("default_place_of_service", (clinic.DefaultPlaceOfService?.Length > 2) ? clinic.DefaultPlaceOfService.Substring(0, 2) : (clinic.DefaultPlaceOfService ?? "")),
+					new MySqlParameter("ins_billing_provider_type", clinic.InsBillingProviderType),
 					new MySqlParameter("ins_billing_provider_id", (clinic.InsBillingProviderId.HasValue ? (object)clinic.InsBillingProviderId.Value : DBNull.Value)),
 					new MySqlParameter("ins_verify_excluded", (clinic.InsVerifyExcluded ? 1 : 0)),
 					new MySqlParameter("fax", clinic.Fax ?? ""),
 					new MySqlParameter("email_address_id", (clinic.EmailAddressId.HasValue ? (object)clinic.EmailAddressId.Value : DBNull.Value)),
-					new MySqlParameter("default_provider_id", clinic.DefaultProviderId),
+					new MySqlParameter("default_provider_id", (clinic.DefaultProviderId.HasValue ? (object)clinic.DefaultProviderId.Value : DBNull.Value)),
 					new MySqlParameter("is_medical_only", (clinic.IsMedicalOnly ? 1 : 0)),
 					new MySqlParameter("region", (clinic.Region.HasValue ? (object)clinic.Region.Value : DBNull.Value)),
-					new MySqlParameter("item_order", clinic.ItemOrder),
 					new MySqlParameter("medlab_account_id", clinic.MedlabAccountId ?? ""),
 					new MySqlParameter("is_confirm_enabled", (clinic.IsConfirmEnabled ? 1 : 0)),
 					new MySqlParameter("is_confirm_default", (clinic.IsConfirmDefault ? 1 : 0)),

@@ -1,10 +1,12 @@
 using CodeBase;
 using Imedisoft.Forms;
 using Imedisoft.UI;
+using Imedisoft.X12.Codes;
 using OpenDental.UI;
 using OpenDentBusiness;
 using OpenDentBusiness.Eclaims;
 using OpenDentBusiness.IO;
+using Org.BouncyCastle.Operators;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -97,6 +99,8 @@ namespace OpenDental
 			listAttachments.ContextMenu=contextMenuAttachments;
 			gridProc.ContextMenu=contextAdjust;
     }
+
+		private List<(string code, string description)> placesOfService;
 
 		private void FormClaimEdit_Shown(object sender,EventArgs e) {
 			if(!_isForOrthoAutoPay) {
@@ -229,11 +233,17 @@ namespace OpenDental
 			}
 			//this section used to be "supplemental"---------------------------------------------------------------------------------
 			textRefNum.Text=ClaimCur.RefNumString;
-			string[] enumPlaceOfService=Enum.GetNames(typeof(PlaceOfService));
-			for(int i=0;i<enumPlaceOfService.Length;i++) {
-				comboPlaceService.Items.Add(enumPlaceOfService[i]);
+
+			placesOfService = PlaceOfService.Codes.ToList();
+			foreach (var placeOfService in placesOfService)
+            {
+				comboPlaceService.Items.Add(placeOfService.description);
+				if (placeOfService.code == ClaimCur.PlaceService)
+                {
+					comboPlaceService.SelectedItem = placeOfService.description;
+                }
 			}
-			comboPlaceService.SelectedIndex=(int)ClaimCur.PlaceService;
+
 			string[] enumYN=Enum.GetNames(typeof(YN));
 			for(int i=0;i<enumYN.Length;i++) {
 				comboEmployRelated.Items.Add(enumYN[i]);
@@ -312,7 +322,15 @@ namespace OpenDental
 				if(listSiteProcs.Count > 0) {
 					Site site=Sites.GetFirstOrDefault(x => x.SiteNum==listSiteProcs[0].SiteNum);
 					if(site!=null) {
-						comboPlaceService.SelectedIndex=(int)site.PlaceService;
+						foreach (var placeOfService in placesOfService)
+                        {
+							if (placeOfService.code == site.PlaceService)
+                            {
+								comboPlaceService.SelectedItem = placeOfService.description;
+
+								break;
+                            }
+                        }
 					}
 				}
 			}
@@ -382,12 +400,12 @@ namespace OpenDental
 
 		private void butPickOrderProvInternal_Click(object sender,EventArgs e) {
 			FormProviderPick formP = new FormProviderPick(comboProvBill.Items.GetAll<Provider>());
-			formP.SelectedProvNum=_provNumOrdering;
+			formP.SelectedProviderId=_provNumOrdering;
 			formP.ShowDialog();
 			if(formP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			SetOrderingProvider(Providers.GetProv(formP.SelectedProvNum));
+			SetOrderingProvider(Providers.GetProv(formP.SelectedProviderId));
 		}
 
 		private void butPickOrderProvReferral_Click(object sender,EventArgs e) {
@@ -433,22 +451,22 @@ namespace OpenDental
 
 		private void butPickProvBill_Click(object sender,EventArgs e) {
 			FormProviderPick formP = new FormProviderPick(comboProvBill.Items.GetAll<Provider>());
-			formP.SelectedProvNum=comboProvBill.GetSelectedProvNum();
+			formP.SelectedProviderId=comboProvBill.GetSelectedProvNum();
 			formP.ShowDialog();
 			if(formP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			comboProvBill.SetSelectedProvNum(formP.SelectedProvNum);
+			comboProvBill.SetSelectedProvNum(formP.SelectedProviderId);
 		}
 
 		private void butPickProvTreat_Click(object sender,EventArgs e) {
 			FormProviderPick formP = new FormProviderPick(comboProvTreat.Items.GetAll<Provider>());
-			formP.SelectedProvNum=comboProvTreat.GetSelectedProvNum();
+			formP.SelectedProviderId=comboProvTreat.GetSelectedProvNum();
 			formP.ShowDialog();
 			if(formP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			comboProvTreat.SetSelectedProvNum(formP.SelectedProvNum);
+			comboProvTreat.SetSelectedProvNum(formP.SelectedProviderId);
 		}
 
 		///<summary>Fills combo provider based on which clinic is selected and attempts to preserve provider selection if any.</summary>
@@ -2954,7 +2972,7 @@ namespace OpenDental
 			ClaimCur.OrthoRemainM=PIn.Byte(textOrthoRemainM.Text);
 			ClaimCur.OrthoDate=PIn.Date(textOrthoDate.Text);
 			ClaimCur.RefNumString=textRefNum.Text;
-			ClaimCur.PlaceService=(PlaceOfService)comboPlaceService.SelectedIndex;
+			ClaimCur.PlaceService= placesOfService[comboPlaceService.SelectedIndex].code;
 			ClaimCur.EmployRelated=(YN)comboEmployRelated.SelectedIndex;
 			switch(comboAccident.SelectedIndex){
 				case 0:

@@ -106,13 +106,13 @@ namespace OpenDental{
 		private void FillList(){
 			long previousSelected=-1;
 			if(listMain.SelectedIndex!=-1){
-				previousSelected=_listSchoolCasses[listMain.SelectedIndex].SchoolClassNum;
+				previousSelected=_listSchoolCasses[listMain.SelectedIndex].Id;
 			}
 			SchoolClasses.RefreshCache();
 			listMain.Items.Clear();
 			for(int i=0;i<_listSchoolCasses.Count;i++){
-				listMain.Items.Add(_listSchoolCasses[i].GradYear.ToString()+" - "+_listSchoolCasses[i].Descript);
-				if(_listSchoolCasses[i].SchoolClassNum==previousSelected){
+				listMain.Items.Add(_listSchoolCasses[i].GradYear.ToString()+" - "+_listSchoolCasses[i].Description);
+				if(_listSchoolCasses[i].Id==previousSelected){
 					listMain.SelectedIndex=i;
 				}
 			}

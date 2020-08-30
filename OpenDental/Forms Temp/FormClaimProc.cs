@@ -9,6 +9,7 @@ using System.Globalization;
 using CodeBase;
 using OpenDentBusiness.Crud;
 using OpenDentBusiness.Eclaims;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	///<summary>Summary description for FormClaimProcEdit.</summary>
@@ -779,7 +780,7 @@ namespace OpenDental {
 		private void butPickProv_Click(object sender,EventArgs e) {
 			FormProviderPick formp=new FormProviderPick(_listProviders);
 			if(comboProvider.SelectedIndex > -1) {
-				formp.SelectedProvNum=_listProviders[comboProvider.SelectedIndex].ProvNum;
+				formp.SelectedProviderId=_listProviders[comboProvider.SelectedIndex].ProvNum;
 			}
 			formp.ShowDialog();
 			if(formp.DialogResult!=DialogResult.OK) {
@@ -788,7 +789,7 @@ namespace OpenDental {
 			//Set the combo box to the ODBoxItem that contains the provider that was just selected.
 			//If we can't find it, reselect the same item that was already selected.
 			comboProvider.SelectedItem=comboProvider.Items.OfType<ODBoxItem<Provider>>()
-				.FirstOrDefault(x => x.Tag.ProvNum==formp.SelectedProvNum) 
+				.FirstOrDefault(x => x.Tag.ProvNum==formp.SelectedProviderId) 
 				?? comboProvider.SelectedItem;
 		}
 

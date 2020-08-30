@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
 using System.Collections.Generic;
+using Imedisoft.X12.Codes;
+using System.Linq;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -720,6 +722,8 @@ namespace OpenDental{
 		}
 		#endregion
 
+		private List<(string code, string description)> placesOfService;
+
 		private void FormPractice_Load(object sender, System.EventArgs e) {
 			checkIsMedicalOnly.Checked=Prefs.GetBool(PrefName.PracticeIsMedicalOnly);
 			if(Programs.UsingEcwTightOrFullMode()) {
@@ -765,11 +769,19 @@ namespace OpenDental{
 				labelPlaceService.Visible=false;
 				listPlaceService.Visible=false;
 			}
-			listPlaceService.Items.Clear();
-			for(int i=0;i<Enum.GetNames(typeof(PlaceOfService)).Length;i++){
-				listPlaceService.Items.Add(Enum.GetNames(typeof(PlaceOfService))[i]);
+
+			var defaultPLaceOfService = Prefs.GetString(PrefName.DefaultProcedurePlaceService, PlaceOfService.Office);
+
+			placesOfService = PlaceOfService.Codes.ToList();
+			foreach (var placeOfService in placesOfService)
+            {
+				listPlaceService.Items.Add(placeOfService);
+				if (placeOfService.code == defaultPLaceOfService)
+                {
+					listPlaceService.SelectedItem = placeOfService.description;
+                }
 			}
-			listPlaceService.SelectedIndex=PrefC.GetInt(PrefName.DefaultProcedurePlaceService);
+
 			long selectedBillingProvNum=Prefs.GetLong(PrefName.InsBillingProv);
 			comboInsBillingProv.Items.AddProvsFull(Providers.GetDeepCopy(true));//selectedIndex could remain -1
 			if(selectedBillingProvNum==0) {

@@ -12,6 +12,7 @@ using System.Xml;
 using System.Xml.XPath;
 using CodeBase;
 using System.IO;
+using Imedisoft.Forms;
 #if EHRTEST
 using EHR;
 #endif
@@ -159,11 +160,11 @@ namespace OpenDental {
 				if(FormPP.ShowDialog()!=DialogResult.OK) {
 					return;
 				}
-				if(Providers.GetProv(FormPP.SelectedProvNum).IsNotPerson) {
+				if(Providers.GetProv(FormPP.SelectedProviderId).IsNotPerson) {
 					MessageBox.Show("The selected provider was marked 'Not a person'.");
 					return;
 				}
-				provNumLegal=FormPP.SelectedProvNum;
+				provNumLegal=FormPP.SelectedProviderId;
 			}
 			FolderBrowserDialog fbd = new FolderBrowserDialog();
 			if(fbd.ShowDialog()!=DialogResult.OK) {

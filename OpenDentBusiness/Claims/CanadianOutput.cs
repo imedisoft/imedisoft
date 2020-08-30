@@ -160,7 +160,7 @@ namespace OpenDentBusiness.Eclaims {
 			strb.Append(Canadian.TidyAN(provDefaultTreat.CanadianOfficeNum,4));//already validated
 			if(carrier.CDAnetVersion=="04") {
 				//B03 billing provider number 9 AN
-				Provider provBilling=Providers.GetProv(Providers.GetBillingProvNum(provDefaultTreat.ProvNum,patient.ClinicNum));
+				Provider provBilling=Providers.GetProv(Providers.GetBillingProviderId(provDefaultTreat.ProvNum,patient.ClinicNum));
 				strb.Append(Canadian.TidyAN(provBilling.NationalProvID,9));//already validated
 			}
 			if(carrier.CDAnetVersion=="02") {

@@ -1319,12 +1319,12 @@ namespace OpenDental{
 
 		private void butPickProv_Click(object sender,EventArgs e) {
 			FormProviderPick formp = new FormProviderPick(comboProv.Items.GetAll<Provider>());
-			formp.SelectedProvNum=comboProv.GetSelectedProvNum();
+			formp.SelectedProviderId=comboProv.GetSelectedProvNum();
 			formp.ShowDialog();
 			if(formp.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			comboProv.SetSelectedProvNum(formp.SelectedProvNum);
+			comboProv.SetSelectedProvNum(formp.SelectedProviderId);
 		}
 
 		///<summary>Fills combo provider based on which clinic is selected and attempts to preserve provider selection if any.</summary>

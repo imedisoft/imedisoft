@@ -171,7 +171,7 @@ namespace OpenDental{
 			if(comboClass.SelectedIndex==-1 || comboCourse.SelectedIndex==-1) {
 				return;
 			}
-			long schoolClass=_listSchoolClasses[comboClass.SelectedIndex].SchoolClassNum;
+			long schoolClass=_listSchoolClasses[comboClass.SelectedIndex].Id;
 			long schoolCourse=_listSchoolCourses[comboCourse.SelectedIndex].SchoolCourseNum;
 			table=ReqStudents.RefreshManyStudents(schoolClass,schoolCourse);
 			gridMain.BeginUpdate();

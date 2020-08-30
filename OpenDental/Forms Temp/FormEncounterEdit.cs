@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormEncounterEdit:ODForm {
@@ -82,14 +83,14 @@ namespace OpenDental {
 		private void butPickProv_Click(object sender,EventArgs e) {
 			FormProviderPick FormP=new FormProviderPick();
 			if(comboProv.SelectedIndex>-1) {
-				FormP.SelectedProvNum=_listProviders[comboProv.SelectedIndex].ProvNum;
+				FormP.SelectedProviderId=_listProviders[comboProv.SelectedIndex].ProvNum;
 			}
 			FormP.ShowDialog();
 			if(FormP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			comboProv.SelectedIndex=Providers.GetIndex(FormP.SelectedProvNum);
-			_provNumSelected=FormP.SelectedProvNum;
+			comboProv.SelectedIndex=Providers.GetIndex(FormP.SelectedProviderId);
+			_provNumSelected=FormP.SelectedProviderId;
 		}
 
 		private void butSnomed_Click(object sender,EventArgs e) {

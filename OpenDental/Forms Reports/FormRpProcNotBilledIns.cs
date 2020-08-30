@@ -435,7 +435,7 @@ namespace OpenDental{
 		public bool HasPriClaim;
 		public bool HasSecClaim;
 		public long ClinicNum;
-		public PlaceOfService PlaceService;
+		public string PlaceService;
 
 		public ProcNotBilled() {
 			HasPriClaim=false;
@@ -443,7 +443,7 @@ namespace OpenDental{
 		}
 
 		public ProcNotBilled(Patient pat,long procNum,int rowIndex,bool isRowSelected,
-			bool hasPriClaim,bool hasSecClaim,long clinicNum,PlaceOfService placeService)
+			bool hasPriClaim,bool hasSecClaim,long clinicNum,string placeService)
 		{
 			Patient=pat;
 			ProcNum=procNum;

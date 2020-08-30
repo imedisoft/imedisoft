@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using CodeBase;
+using Imedisoft.X12.Codes;
 using OpenDentBusiness.Eclaims;
 
 namespace OpenDentBusiness
@@ -752,7 +753,7 @@ namespace OpenDentBusiness
 					+ Sout(claim.ClaimIdentifier, 20) + "*"//CLM01: A unique id. Can support 20 char.  By using both PatNum and ClaimNum, it is possible to search for a patient as well as to ensure uniqueness. We might need to allow user to override for claims based on preauths.
 					+ claimFeeBilled.ToString("f2") + "*"//CLM02: Claim Fee
 					+ "**"//CLM03 & 04 not used
-					+ GetPlaceService(claim.PlaceService) + "::1*"//CLM05: place+1. 1=Original claim
+					+ claim.PlaceService + "::1*"//CLM05: place+1. 1=Original claim
 					+ "Y*"//CLM06: prov sig on file (always yes)
 					+ "A*");//CLM07: prov accepts medicaid assignment. OD has no field for this, so no choice
 				if (sub.AssignBen)
@@ -1103,8 +1104,8 @@ namespace OpenDentBusiness
 				//2310C (medical)Purchased Service provider secondary ID. We don't support this for medical
 				//2310C (not medical)NM1: Service facility location.  Only required if PlaceService is 21,22,31, or 35. 35 does not exist in CPT, so we assume 33
 				//if(!isMedical && 
-				if (claim.PlaceService == PlaceOfService.InpatHospital || claim.PlaceService == PlaceOfService.OutpatHospital
-					|| claim.PlaceService == PlaceOfService.SkilledNursFac || claim.PlaceService == PlaceOfService.CustodialCareFacility)
+				if (claim.PlaceService == PlaceOfService.InpatientHospital || claim.PlaceService == PlaceOfService.OnCampusOutpatientHospital
+					|| claim.PlaceService == PlaceOfService.SkilledNursingFacility || claim.PlaceService == PlaceOfService.CustodialCareFacility)
 				{//AdultLivCareFac
 					seg++;
 					sw.WriteLine("NM1*FA*"//FA=Facility
@@ -1310,7 +1311,7 @@ namespace OpenDentBusiness
 						}
 						else
 						{
-							sw.Write(GetPlaceService(proc.PlaceService) + "*");
+							sw.Write(proc.PlaceService + "*");
 						}
 						sw.Write("*");//SV106: not used
 									  //SV107: Composite Diagnosis Code Pointer. Required when 2300HI(Health Care Diagnosis Code) is used (always).
@@ -1361,7 +1362,7 @@ namespace OpenDentBusiness
 						}
 						else
 						{
-							sw.Write(GetPlaceService(proc.PlaceService) + "*");
+							sw.Write(proc.PlaceService + "*");
 						}
 						sw.WriteLine(GetArea(proc, procCode) + "*"//SV304: Area
 							+ proc.Prosthesis + "*"//SV305: Initial or Replacement

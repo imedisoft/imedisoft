@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using CodeBase;
+using Imedisoft.X12.Codes;
 using OpenDentBusiness.Eclaims;
 
 namespace OpenDentBusiness
@@ -692,7 +693,7 @@ namespace OpenDentBusiness
 					+s);//CLM04 1/2 Non-Institutional Claim Type Code: Not used.
 				//CLM05 (medical,institutional,dental) Health Care Services Location Information.
 				if(medType==EnumClaimMedType.Medical) {
-					sw.Write(GetPlaceService(claim.PlaceService)+isa16//CLM05-1 1/2  Facility Code Value: Place of Service.
+					sw.Write(claim.PlaceService+isa16//CLM05-1 1/2  Facility Code Value: Place of Service.
 						+"B"+isa16//CLM05-2 1/2 Facility Code Qualifier, B=Place of Service Codes.
 						+claimFrequencyTypeCode+s);//CLM05-3 1/1 Claim Frequency Type Code: 1=original, 7=replacement, 8=void(in limited jurisdictions).
 				}
@@ -704,7 +705,7 @@ namespace OpenDentBusiness
 						+claim.UniformBillType.Substring(2,1)+s);//CLM05-3 1/1 Claim Frequency Type Code: Third position of UniformBillType.
 				}
 				else{//dental.
-					sw.Write(GetPlaceService(claim.PlaceService)+isa16//CLM05-1 1/2  Facility Code Value: Place of Service.
+					sw.Write(claim.PlaceService+isa16//CLM05-1 1/2  Facility Code Value: Place of Service.
 						+"B"+isa16//CLM05-2 1/2 Facility Code Qualifier, B=Place of Service Codes.
 						+claimFrequencyTypeCode+s);//CLM05-3 1/1 Claim Frequency Type Code: 1=original, 7=replacement, 8=void(in limited jurisdictions).
 				}
@@ -1612,7 +1613,7 @@ namespace OpenDentBusiness
 						}
 						sw.Write(proc.UnitQty+s);//SV104 1/15 Quantity: Service Unit Count or Anesthesia Minutes.
 						if(proc.PlaceService!=claim.PlaceService) {
-							sw.Write(GetPlaceService(proc.PlaceService));
+							sw.Write(proc.PlaceService);
 						}
 						sw.Write(s//SV105 1/2 Facility Code Value: Place of Service Code if different from claim.
 							+s);//SV106 1/2 Service Type Code: Not used.
@@ -1703,7 +1704,7 @@ namespace OpenDentBusiness
 							+claimProcs[j].FeeBilled.ToString());//SV302 1/18 Monetary Amount: Charge Amount.
 						string placeService="";
 						if(proc.PlaceService!=claim.PlaceService) {
-							placeService=GetPlaceService(proc.PlaceService);
+							placeService=proc.PlaceService;
 						}
 						string area=GetArea(proc,procCode);
 						int unitQty=Math.Max(proc.UnitQty,1);//Minimum of 1

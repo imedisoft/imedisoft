@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
+using Imedisoft.X12.Codes;
 
 namespace OpenDental {
 	public partial class FormApptProcs:ODForm {
@@ -156,7 +157,7 @@ namespace OpenDental {
 			ProcCur.SiteNum=pat.SiteNum;
 			ProcCur.RevCode=procCodeCur.RevenueCodeDefault;
 			ProcCur.DiagnosticCode=Prefs.GetString(PrefName.ICD9DefaultForNewProcs);
-			ProcCur.PlaceService=(PlaceOfService)PrefC.GetInt(PrefName.DefaultProcedurePlaceService);//Default proc place of service for the Practice is used. 
+			ProcCur.PlaceService=Prefs.GetString(PrefName.DefaultProcedurePlaceService, PlaceOfService.Office);//Default proc place of service for the Practice is used. 
 			if(Userods.IsUserCpoe(Security.CurrentUser)) {
 				//This procedure is considered CPOE because the provider is the one that has added it.
 				ProcCur.IsCpoe=true;

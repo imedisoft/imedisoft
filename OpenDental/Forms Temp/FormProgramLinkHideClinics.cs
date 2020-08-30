@@ -32,7 +32,6 @@ namespace Imedisoft.Forms
 			InitializeComponent();
 
 			showClinicStateWarning(Security.CurrentUser.ClinicIsRestricted);
-			alphabeticalCheckBox.Checked = Prefs.GetBool(PrefName.ClinicListIsAlphabetical);
 			programId = programCur.Id;
 			List<Clinic> listVisibleButtonsForClinics = listUserClinics.Select(x => x.Copy()).ToList();//Copy so we don't affect the source list.
 			List<Clinic> listHiddenButtonsForClinics = new List<Clinic>();
@@ -106,19 +105,9 @@ namespace Imedisoft.Forms
 			{
 				return 1;
 			}
-			int retval = 0;
-			if (alphabeticalCheckBox.Checked)
-			{//order alphabetical by Abbr
-				retval = x.Abbr.CompareTo(y.Abbr);
-			}
-			else
-			{//not alphabetical, order by ItemOrder
-				retval = x.ItemOrder.CompareTo(y.ItemOrder);
-			}
-			if (retval == 0)
-			{//if Abbr's are alphabetically the same, order alphabetical by Description
-				retval = x.Description.CompareTo(y.Description);
-			}
+
+			int retval = x.Description.CompareTo(y.Description);
+			
 			if (retval == 0)
 			{//if Abbrs are the same and Descriptions are alphabetically the same, order by ClinicNum (guaranteed deterministic)
 				retval = x.Id.CompareTo(y.Id);

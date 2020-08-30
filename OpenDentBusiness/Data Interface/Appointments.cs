@@ -1,6 +1,7 @@
 using CodeBase;
 using DataConnectionBase;
 using Imedisoft.Data;
+using Imedisoft.X12.Codes;
 using OpenDentBusiness.HL7;
 using System;
 using System.Collections;
@@ -2440,7 +2441,7 @@ namespace OpenDentBusiness
 				//nextaptnum
 				procCur.BaseUnits=procCodeCur.BaseUnits;
 				procCur.DiagnosticCode=Prefs.GetString(PrefName.ICD9DefaultForNewProcs);
-				procCur.PlaceService=(PlaceOfService)PrefC.GetInt(PrefName.DefaultProcedurePlaceService);//Default Proc Place of Service for the Practice is used.
+				procCur.PlaceService=Prefs.GetString(PrefName.DefaultProcedurePlaceService, PlaceOfService.Office);//Default Proc Place of Service for the Practice is used.
 				if(Userods.IsUserCpoe(Security.CurrentUser)) {
 					//This procedure is considered CPOE because the provider is the one that has added it.
 					procCur.IsCpoe=true;

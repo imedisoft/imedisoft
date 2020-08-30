@@ -9,6 +9,7 @@ using OpenDentBusiness;
 using System.Linq;
 using OpenDentBusiness.IO;
 using Imedisoft.UI;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	///<summary>DialogResult will be Abort if message was unable to be read. 
@@ -376,7 +377,7 @@ namespace OpenDental {
 			FormProviderPick FormPP=new FormProviderPick(_listProviders);
 			FormPP.ShowDialog();
 			if(FormPP.DialogResult==DialogResult.OK) {
-				_provCur=_listProviders.First(x => x.ProvNum==FormPP.SelectedProvNum);
+				_provCur=_listProviders.First(x => x.ProvNum==FormPP.SelectedProviderId);
 				textFrom.Text=Providers.GetFormalName(_provCur.ProvNum);
 			}
 		}

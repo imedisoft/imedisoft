@@ -1,54 +1,40 @@
-using System;
-using System.Collections;
+using Imedisoft.Data.Annotations;
 
-namespace OpenDentBusiness{
+namespace OpenDentBusiness
+{
+	/// <summary>
+	/// Used in dental schools. e.g. "Dental 2009" or "Hygiene 2007".
+	/// </summary>
+	[Table("school_classes")]
+	public class SchoolClass : TableBase
+	{
+		[PrimaryKey]
+		public long Id;
 
-	///<summary>Used in dental schools.  eg. Dental 2009 or Hygiene 2007.</summary>
-	[Serializable]
-	public class SchoolClass:TableBase {
-		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
-		public long SchoolClassNum;
-		///<summary>The year this class will graduate</summary>
+		/// <summary>
+		/// The year the class will graduate.
+		/// </summary>
 		public int GradYear;
-		///<summary>Description of this class. eg Dental or Hygiene</summary>
-		public string Descript;
 
-		///<summary></summary>
-		public SchoolClass Copy(){
-			SchoolClass sc=new SchoolClass();
-			sc.SchoolClassNum=SchoolClassNum;
-			sc.GradYear=GradYear;
-			sc.Descript=Descript;
+		/// <summary>
+		/// A description of the class. e.g. "Dental" or "Hygiene".
+		/// </summary>
+		public string Description;
+
+		/// <summary>
+		/// Returns a string representation of the class.
+		/// </summary>
+		public override string ToString() 
+			=> $"{GradYear} {Description}";
+
+
+        public SchoolClass Copy()
+		{
+			SchoolClass sc = new SchoolClass();
+			sc.Id = Id;
+			sc.GradYear = GradYear;
+			sc.Description = Description;
 			return sc;
 		}
-
-	
 	}
-
-	
-
-	
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Abbr" xml:space="preserve">
+    <value>Abbr</value>
+  </data>
   <data name="AndXOthers" xml:space="preserve">
     <value>And {0} others...</value>
   </data>
@@ -192,6 +195,12 @@
   <data name="ErrorOpeningLogFile" xml:space="preserve">
     <value>Could not open log file. {0}</value>
   </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>FirstName</value>
+  </data>
+  <data name="ID" xml:space="preserve">
+    <value>ID</value>
+  </data>
   <data name="Inactive" xml:space="preserve">
     <value>Inactive</value>
   </data>
@@ -200,6 +209,9 @@
   </data>
   <data name="InvalidPassword" xml:space="preserve">
     <value>Wrong password</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>LastName</value>
   </data>
   <data name="LockedByAdministrator" xml:space="preserve">
     <value>Locked by Administrator.</value>
@@ -213,8 +225,14 @@
   <data name="LogFileCreatedWouldYouLikeToOpenFile" xml:space="preserve">
     <value>Log file created. Would you like to open the file?</value>
   </data>
+  <data name="MedLabAccountInUseByAnotherClinic" xml:space="preserve">
+    <value>The MedLab Account Number entered is already in use by another clinic.</value>
+  </data>
   <data name="MissingInfo" xml:space="preserve">
     <value>Missing Info</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>None</value>
   </data>
   <data name="NoPrintersInstalled" xml:space="preserve">
     <value>Error: No Printers Installed.
@@ -229,6 +247,9 @@ If you do have a printer installed, restarting the workstation may solve the pro
   </data>
   <data name="OperationNowAllowedForReason" xml:space="preserve">
     <value>You are not allowed to perform the requested operation. Reason: {0}.</value>
+  </data>
+  <data name="PleaseEnterAbbreviation" xml:space="preserve">
+    <value>Please enter an abbreviation.</value>
   </data>
   <data name="PleaseEnterDescription" xml:space="preserve">
     <value>Please enter a description.</value>
@@ -245,6 +266,12 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="PleaseSelectItemFirst" xml:space="preserve">
     <value>Please select an item first.</value>
   </data>
+  <data name="PleaseSelectProvider" xml:space="preserve">
+    <value>Please select a provider.</value>
+  </data>
+  <data name="PleaseSelectProviderForInsuranceBilling" xml:space="preserve">
+    <value>Please select a provider for insurance billing.</value>
+  </data>
   <data name="PleaseSelectType" xml:space="preserve">
     <value>Please select a type.</value>
   </data>
@@ -253,6 +280,9 @@ If you do have a printer installed, restarting the workstation may solve the pro
   </data>
   <data name="SelectRowFromQueryFeed" xml:space="preserve">
     <value>Select a row from the Query Feed.</value>
+  </data>
+  <data name="Specialty" xml:space="preserve">
+    <value>Specialty</value>
   </data>
   <data name="Start" xml:space="preserve">
     <value>Start</value>
@@ -263,8 +293,20 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="StopMonitoringQueriesBeforeCreatingLog" xml:space="preserve">
     <value>Stop monitoring queries before creating a log.</value>
   </data>
+  <data name="StudentPicker" xml:space="preserve">
+    <value>Student Picker</value>
+  </data>
+  <data name="Students" xml:space="preserve">
+    <value>Students</value>
+  </data>
+  <data name="TagHidden" xml:space="preserve">
+    <value>hidden</value>
+  </data>
   <data name="Type" xml:space="preserve">
     <value>Type</value>
+  </data>
+  <data name="UnableToHideClinicWithClinicRestrictedUsers" xml:space="preserve">
+    <value>You may not hide this clinic as the following users are restricted to only this clinic:</value>
   </data>
   <data name="Unknown" xml:space="preserve">
     <value>Unknown</value>

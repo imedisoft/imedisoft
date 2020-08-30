@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormEvaluationEdit:ODForm {
@@ -311,7 +312,7 @@ namespace OpenDental {
 			FormPP.IsStudentPicker=true;
 			FormPP.ShowDialog();
 			if(FormPP.DialogResult==DialogResult.OK) {
-				_provStudent=Providers.GetProv(FormPP.SelectedProvNum);
+				_provStudent=Providers.GetProv(FormPP.SelectedProviderId);
 				_evalCur.StudentNum=_provStudent.ProvNum;
 				textStudent.Text=_provStudent.GetLongDesc();
 			}

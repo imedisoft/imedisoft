@@ -61,11 +61,8 @@ namespace OpenDentBusiness
 		public static EServiceSetup.SignupOut GetEServiceSetupFull(SignupPortalPermission permission, bool isSwitchClinicPref = false, EServiceSetup.SignupOut oldSignupOut = null)
 		{
 			//Clinics will be stored in this order at HQ to allow signup portal to display them in proper order.
-			List<Clinic> clinics = Clinics.GetAll(true).OrderBy(x => x.ItemOrder).ToList();
-			if (Prefs.GetBool(PrefName.ClinicListIsAlphabetical))
-			{
-				clinics = clinics.OrderBy(x => x.Abbr).ToList();
-			}
+			List<Clinic> clinics = Clinics.GetAll(true).OrderBy(x => x.Abbr).ToList();
+
 			string shortCodePracticeTitle = string.IsNullOrWhiteSpace(Prefs.GetString(PrefName.ShortCodeOptInClinicTitle))
 				? Prefs.GetString(PrefName.PracticeTitle) : Prefs.GetString(PrefName.ShortCodeOptInClinicTitle);
 			bool isMockChanged = false;

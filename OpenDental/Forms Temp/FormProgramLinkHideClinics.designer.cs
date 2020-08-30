@@ -38,7 +38,6 @@ namespace Imedisoft.Forms
             this.cancelButton = new OpenDental.UI.Button();
             this.restrictionLabel = new System.Windows.Forms.Label();
             this.clinicsLabel = new System.Windows.Forms.Label();
-            this.alphabeticalCheckBox = new System.Windows.Forms.CheckBox();
             this.acceptButton = new OpenDental.UI.Button();
             this.SuspendLayout();
             // 
@@ -139,18 +138,6 @@ namespace Imedisoft.Forms
             this.clinicsLabel.Text = "Program Link button will be hidden for clinics on the left, and visible for clini" +
     "cs on the right.";
             // 
-            // alphabeticalCheckBox
-            // 
-            this.alphabeticalCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.alphabeticalCheckBox.AutoSize = true;
-            this.alphabeticalCheckBox.Location = new System.Drawing.Point(12, 469);
-            this.alphabeticalCheckBox.Name = "alphabeticalCheckBox";
-            this.alphabeticalCheckBox.Size = new System.Drawing.Size(115, 17);
-            this.alphabeticalCheckBox.TabIndex = 8;
-            this.alphabeticalCheckBox.Text = "Order Alphabetical";
-            this.alphabeticalCheckBox.UseVisualStyleBackColor = true;
-            this.alphabeticalCheckBox.CheckedChanged += new System.EventHandler(this.CheckOrderAlphabetical_CheckedChanged);
-            // 
             // acceptButton
             // 
             this.acceptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -167,7 +154,6 @@ namespace Imedisoft.Forms
             this.CancelButton = this.cancelButton;
             this.ClientSize = new System.Drawing.Size(444, 501);
             this.Controls.Add(this.acceptButton);
-            this.Controls.Add(this.alphabeticalCheckBox);
             this.Controls.Add(this.clinicsLabel);
             this.Controls.Add(this.restrictionLabel);
             this.Controls.Add(this.visibleListBox);
@@ -201,7 +187,6 @@ namespace Imedisoft.Forms
         private System.Windows.Forms.Label visibleLabel;
         private System.Windows.Forms.Label restrictionLabel;
         private System.Windows.Forms.Label clinicsLabel;
-        private System.Windows.Forms.CheckBox alphabeticalCheckBox;
         private OpenDental.UI.Button acceptButton;
     }
 }

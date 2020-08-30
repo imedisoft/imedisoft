@@ -1434,7 +1434,7 @@ namespace OpenDental{
 				for(int i=0;i<_listSchoolClasses.Count;i++) {
 					comboSchoolClass.Items.Add(SchoolClasses.GetDescript(_listSchoolClasses[i]));
 					comboSchoolClass.SelectedIndex=0;
-					if(_listSchoolClasses[i].SchoolClassNum==ProvCur.SchoolClassNum) {
+					if(_listSchoolClasses[i].Id==ProvCur.SchoolClassNum) {
 						comboSchoolClass.SelectedIndex=i;
 					}
 				}
@@ -1898,7 +1898,7 @@ namespace OpenDental{
 			ProvCur.DateTerm=dateTerm.GetDateTime();
 			if(!Prefs.GetBool(PrefName.EasyHideDentalSchools)) {
 				if(ProvCur.SchoolClassNum!=0) {
-					ProvCur.SchoolClassNum=_listSchoolClasses[comboSchoolClass.SelectedIndex].SchoolClassNum;
+					ProvCur.SchoolClassNum=_listSchoolClasses[comboSchoolClass.SelectedIndex].Id;
 				}
 			}
 			if(listFeeSched.SelectedIndex!=-1) {

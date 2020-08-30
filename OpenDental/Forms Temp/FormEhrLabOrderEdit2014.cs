@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using EhrLaboratories;
 using System.Text;
 using System.Text.RegularExpressions;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormEhrLabOrderEdit2014:ODForm {
@@ -485,7 +486,7 @@ namespace OpenDental {
 			if(FormPP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			Provider prov=Providers.GetProv(FormPP.SelectedProvNum);
+			Provider prov=Providers.GetProv(FormPP.SelectedProviderId);
 			if(prov.NationalProvID!="") {
 				textOrderingProvIdentifier.Text=prov.NationalProvID;
 				comboOrderingProvIdType.SelectedIndex=(int)HL70203.NPI+1;

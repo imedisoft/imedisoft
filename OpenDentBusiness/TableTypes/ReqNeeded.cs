@@ -17,7 +17,7 @@ namespace OpenDentBusiness
 		[ForeignKey(typeof(SchoolCourse), nameof(SchoolCourse.SchoolCourseNum))]
 		public long SchoolCourseNum;
 
-		[ForeignKey(typeof(SchoolClass), nameof(SchoolClass.SchoolClassNum))]
+		[ForeignKey(typeof(SchoolClass), nameof(SchoolClass.Id))]
 		public long SchoolClassNum;
 
 		public ReqNeeded Copy()

@@ -55,7 +55,7 @@ namespace OpenDentBusiness{
 		///<summary>Referral number for this claim.</summary>
 		public string RefNumString;
 		///<summary>Enum:PlaceOfService .</summary>
-		public PlaceOfService PlaceService;
+		public string PlaceService;
 		///<summary>blank or A=Auto, E=Employment, O=Other.</summary>
 		public string AccidentRelated;
 		///<summary>Date of accident, if applicable.</summary>

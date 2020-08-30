@@ -61,6 +61,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Abbr.
+        /// </summary>
+        public static string Abbr {
+            get {
+                return ResourceManager.GetString("Abbr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to And {0} others....
         /// </summary>
         public static string AndXOthers {
@@ -286,6 +295,24 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to FirstName.
+        /// </summary>
+        public static string FirstName {
+            get {
+                return ResourceManager.GetString("FirstName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ID.
+        /// </summary>
+        public static string ID {
+            get {
+                return ResourceManager.GetString("ID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Inactive.
         /// </summary>
         public static string Inactive {
@@ -309,6 +336,15 @@ namespace Imedisoft.Translation {
         public static string InvalidPassword {
             get {
                 return ResourceManager.GetString("InvalidPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LastName.
+        /// </summary>
+        public static string LastName {
+            get {
+                return ResourceManager.GetString("LastName", resourceCulture);
             }
         }
         
@@ -349,11 +385,29 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The MedLab Account Number entered is already in use by another clinic..
+        /// </summary>
+        public static string MedLabAccountInUseByAnotherClinic {
+            get {
+                return ResourceManager.GetString("MedLabAccountInUseByAnotherClinic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Missing Info.
         /// </summary>
         public static string MissingInfo {
             get {
                 return ResourceManager.GetString("MissingInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None.
+        /// </summary>
+        public static string None {
+            get {
+                return ResourceManager.GetString("None", resourceCulture);
             }
         }
         
@@ -392,6 +446,15 @@ namespace Imedisoft.Translation {
         public static string OperationNowAllowedForReason {
             get {
                 return ResourceManager.GetString("OperationNowAllowedForReason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter an abbreviation..
+        /// </summary>
+        public static string PleaseEnterAbbreviation {
+            get {
+                return ResourceManager.GetString("PleaseEnterAbbreviation", resourceCulture);
             }
         }
         
@@ -441,6 +504,24 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please select a provider..
+        /// </summary>
+        public static string PleaseSelectProvider {
+            get {
+                return ResourceManager.GetString("PleaseSelectProvider", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select a provider for insurance billing..
+        /// </summary>
+        public static string PleaseSelectProviderForInsuranceBilling {
+            get {
+                return ResourceManager.GetString("PleaseSelectProviderForInsuranceBilling", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please select a type..
         /// </summary>
         public static string PleaseSelectType {
@@ -464,6 +545,15 @@ namespace Imedisoft.Translation {
         public static string SelectRowFromQueryFeed {
             get {
                 return ResourceManager.GetString("SelectRowFromQueryFeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Specialty.
+        /// </summary>
+        public static string Specialty {
+            get {
+                return ResourceManager.GetString("Specialty", resourceCulture);
             }
         }
         
@@ -495,11 +585,47 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Student Picker.
+        /// </summary>
+        public static string StudentPicker {
+            get {
+                return ResourceManager.GetString("StudentPicker", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Students.
+        /// </summary>
+        public static string Students {
+            get {
+                return ResourceManager.GetString("Students", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to hidden.
+        /// </summary>
+        public static string TagHidden {
+            get {
+                return ResourceManager.GetString("TagHidden", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Type.
         /// </summary>
         public static string Type {
             get {
                 return ResourceManager.GetString("Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You may not hide this clinic as the following users are restricted to only this clinic:.
+        /// </summary>
+        public static string UnableToHideClinicWithClinicRestrictedUsers {
+            get {
+                return ResourceManager.GetString("UnableToHideClinicWithClinicRestrictedUsers", resourceCulture);
             }
         }
         

@@ -2390,21 +2390,17 @@ namespace OpenDental
 		{
 			FormClinics FormC = new FormClinics();
 			FormC.IsSelectionMode = true;
-			if (!Security.CurrentUser.ClinicIsRestricted)
-			{
-				FormC.IncludeHQInList = true;
-			}
 			FormC.ShowDialog();
 			if (FormC.DialogResult != DialogResult.OK)
 			{
 				return;
 			}
-			if (FormC.SelectedClinicNum == 0)
+			if (FormC.SelectedClinic == null)
 			{//'Headquarters' was selected.
 				RefreshCurrentClinic(new Clinic());
 				return;
 			}
-			Clinic clinicCur = Clinics.GetById(FormC.SelectedClinicNum);
+			Clinic clinicCur = FormC.SelectedClinic;
 			if (clinicCur != null)
 			{ //Should never be null because the clinic should always be in the list
 				RefreshCurrentClinic(clinicCur);
@@ -5296,7 +5292,6 @@ namespace OpenDental
 				return;
 			}
 			FormClinics FormC = new FormClinics();
-			FormC.IncludeHQInList = true;
 			FormC.IsMultiSelect = true;
 			FormC.ShowDialog();
 			SecurityLogs.MakeLogEntry(Permissions.Setup, 0, "Clinics");

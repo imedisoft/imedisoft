@@ -55,7 +55,7 @@ namespace OpenDental
 				textUserName.Text = POut.Long(_autoUserName);//User-names are suggested to be the ProvNum of the provider.  This can be changed at will.
 				for (int i = 0; i < _listSchoolClasses.Count - 1; i++)
 				{
-					if (_listSchoolClasses[i].SchoolClassNum != ProvStudent.SchoolClassNum)
+					if (_listSchoolClasses[i].Id != ProvStudent.SchoolClassNum)
 					{
 						continue;
 					}
@@ -71,7 +71,7 @@ namespace OpenDental
 				_isGeneratingAbbr = false;
 				for (int i = 0; i < _listSchoolClasses.Count - 1; i++)
 				{
-					if (_listSchoolClasses[i].SchoolClassNum != ProvStudent.SchoolClassNum)
+					if (_listSchoolClasses[i].Id != ProvStudent.SchoolClassNum)
 					{
 						continue;
 					}
@@ -143,7 +143,7 @@ namespace OpenDental
 			ProvStudent.FName = textFirstName.Text;
 			ProvStudent.LName = textLastName.Text;
 			ProvStudent.Abbr = textAbbr.Text;
-			ProvStudent.SchoolClassNum = _listSchoolClasses[comboClass.SelectedIndex].SchoolClassNum;
+			ProvStudent.SchoolClassNum = _listSchoolClasses[comboClass.SelectedIndex].Id;
 			Userod newUser = new Userod();
 			bool isAutoUserName = true;
 			if (!ProvStudent.IsNew || _autoUserName.ToString() != textUserName.Text)

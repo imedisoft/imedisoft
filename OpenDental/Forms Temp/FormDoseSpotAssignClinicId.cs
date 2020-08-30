@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using CodeBase;
 using OpenDentBusiness;
 using System.Linq;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormDoseSpotAssignClinicId:ODForm {
@@ -86,14 +87,13 @@ namespace OpenDental {
 		}
 
 		private void butClinicPick_Click(object sender,EventArgs e) {
-      FormClinics FormC=new FormClinics();
+      FormClinics FormC=new FormClinics(_listClinicsInComboBox);
       FormC.IsSelectionMode=true;
-      FormC.ListClinics=_listClinicsInComboBox;
       FormC.ShowDialog();
       if(FormC.DialogResult!=DialogResult.OK) {
         return;
       }
-			FillComboBox(FormC.SelectedClinicNum);
+			FillComboBox(FormC.SelectedClinic?.Id ?? 0);
 		}
 	}
 }

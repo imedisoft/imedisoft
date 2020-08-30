@@ -171,12 +171,12 @@ namespace OpenDental {
 
 		private void butPickProv_Click(object sender,EventArgs e) {
 			FormProviderPick formp = new FormProviderPick(comboProvider.Items.GetAll<Provider>());
-			formp.SelectedProvNum=PaySplitCur.ProvNum;
+			formp.SelectedProviderId=PaySplitCur.ProvNum;
 			formp.ShowDialog();
 			if(formp.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			PaySplitCur.ProvNum=formp.SelectedProvNum;
+			PaySplitCur.ProvNum=formp.SelectedProviderId;
 			comboProvider.SetSelectedProvNum(PaySplitCur.ProvNum);
 		}
 

@@ -1617,6 +1617,7 @@
     <Compile Include="WebTypes\WebSched\TimeSlot\TimeSlot.cs" />
     <Compile Include="WebTypes\WebSched\TimeSlot\TimeSlots.cs" />
     <Compile Include="WebTypes\WebBase.cs" />
+    <Compile Include="X12\Codes\PlaceOfService.cs" />
     <Compile Include="X12\X834.cs" />
     <Compile Include="X12\X835.cs" />
     <Compile Include="X12\X277.cs" />

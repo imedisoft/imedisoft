@@ -8,6 +8,7 @@ using System.Linq;
 using OpenDentBusiness;
 using OpenDental.UI;
 using Imedisoft.Forms;
+using Imedisoft.X12.Codes;
 
 namespace OpenDental{
 	/// <summary>
@@ -479,6 +480,8 @@ namespace OpenDental{
 		}
 		#endregion
 
+		private List<(string code, string description)> placesOfService;
+
 		private void FormScreenGroup_Load(object sender, System.EventArgs e) {
 			if(_screenGroup.IsNew) {
 				ScreenGroups.Insert(_screenGroup);
@@ -510,8 +513,17 @@ namespace OpenDental{
 				_screenGroup.GradeSchool="";//prevents the next line from crashing
 			}
 			comboGradeSchool.SelectedIndex=comboGradeSchool.Items.IndexOf(_screenGroup.GradeSchool);//"" etc OK
-			comboPlaceService.Items.AddRange(Enum.GetNames(typeof(PlaceOfService)));
-			comboPlaceService.SelectedIndex=(int)_screenGroup.PlaceService;
+
+			placesOfService = PlaceOfService.Codes.ToList();
+			foreach (var placeOfService in placesOfService)
+            {
+				comboPlaceService.Items.Add(placeOfService.description);
+				if (placeOfService.code == _screenGroup.PlaceService)
+                {
+					comboPlaceService.SelectedItem = placeOfService.description;
+                }
+			}
+
 			_listScreeningSheetDefs=SheetDefs.GetCustomForType(SheetTypeEnum.Screening);
 			if(Prefs.GetBool(PrefName.ScreeningsUseSheets)) {
 				comboSheetDefs.Items.Add("Default");
@@ -1083,7 +1095,7 @@ namespace OpenDental{
 			else {
 				_screenGroup.GradeSchool=comboGradeSchool.SelectedItem.ToString();
 			}
-			_screenGroup.PlaceService=(PlaceOfService)comboPlaceService.SelectedIndex;
+			_screenGroup.PlaceService= placesOfService[comboPlaceService.SelectedIndex].code;
 			if(comboSheetDefs.SelectedIndex<1) {
 				_screenGroup.SheetDefNum=0;
 			}

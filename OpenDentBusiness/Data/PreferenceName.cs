@@ -666,8 +666,7 @@ namespace OpenDentBusiness
 		public const string ClearinghouseDefaultMed = "ClearinghouseDefaultMed";
 		///<summary>Boolean.  0 by default.  If enabled, new patients can be added with an usassigned clinic.</summary>
 		public const string ClinicAllowPatientsAtHeadquarters = "ClinicAllowPatientsAtHeadquarters";
-		///<summary>Boolean.  0 by default.  If enabled, lists clinics in alphabetical order.</summary>
-		public const string ClinicListIsAlphabetical = "ClinicListIsAlphabetical";
+
 		///<summary>String, "Workstation"(default), "User", "None". See FormMisc. Determines how recently viewed clinics should be tracked.</summary>
 		public const string ClinicTrackLast = "ClinicTrackLast";
 		///<summary>Boolean.  1 by default.  If enabled, displays 'Break' and 'Lunch' buttons in Manage Module, if disabled, changes 'Lunch' button text to

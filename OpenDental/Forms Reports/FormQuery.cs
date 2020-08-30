@@ -17,6 +17,7 @@ using OpenDentBusiness;
 using OpenDental.Thinfinity;
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.X12.Codes;
 
 namespace OpenDental{
 	public partial class FormQuery : ODForm {
@@ -758,8 +759,8 @@ namespace OpenDental{
 								=Defs.GetName(DefCat.ProviderSpecialties,PIn.Long(tableOut.Rows[i][j].ToString()));
 							break;
 						case "placeservice":
-							tableOut.Rows[i][j]
-								=((PlaceOfService)PIn.Long(tableOut.Rows[i][j].ToString())).ToString();
+									tableOut.Rows[i][j]
+										= PlaceOfService.GetDescription(tableOut.Rows[i][j].ToString());
 							break;
             case "employrelated": 
 							tableOut.Rows[i][j]

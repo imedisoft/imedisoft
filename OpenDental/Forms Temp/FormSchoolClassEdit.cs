@@ -163,7 +163,7 @@ namespace OpenDental{
 			if(ClassCur.GradYear!=0){
 				textGradYear.Text=ClassCur.GradYear.ToString();
 			}
-			textDescript.Text=ClassCur.Descript;
+			textDescript.Text=ClassCur.Description;
 		}
 
 		private void butDelete_Click(object sender, System.EventArgs e) {
@@ -175,7 +175,7 @@ namespace OpenDental{
 					return;
 				}
 				try{
-					SchoolClasses.Delete(ClassCur.SchoolClassNum);
+					SchoolClasses.Delete(ClassCur.Id);
 				}
 				catch(Exception ex){
 					MessageBox.Show(ex.Message);
@@ -196,7 +196,7 @@ namespace OpenDental{
 				return;
 			}
 			ClassCur.GradYear=PIn.Int(textGradYear.Text);
-			ClassCur.Descript=textDescript.Text;
+			ClassCur.Description=textDescript.Text;
 			SchoolClasses.InsertOrUpdate(ClassCur,IsNew);
 			DialogResult=DialogResult.OK;
 		}

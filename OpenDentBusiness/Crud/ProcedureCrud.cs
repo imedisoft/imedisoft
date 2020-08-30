@@ -58,7 +58,7 @@ namespace OpenDentBusiness.Crud{
 				procedure.ProvNum            = PIn.Long  (row["ProvNum"].ToString());
 				procedure.Dx                 = PIn.Long  (row["Dx"].ToString());
 				procedure.PlannedAptNum      = PIn.Long  (row["PlannedAptNum"].ToString());
-				procedure.PlaceService       = (OpenDentBusiness.PlaceOfService)PIn.Int(row["PlaceService"].ToString());
+				procedure.PlaceService       = PIn.String(row["PlaceService"].ToString());
 				procedure.Prosthesis         = PIn.String(row["Prosthesis"].ToString());
 				procedure.DateOriginalProsth = PIn.Date  (row["DateOriginalProsth"].ToString());
 				procedure.ClaimNote          = PIn.String(row["ClaimNote"].ToString());
@@ -132,7 +132,7 @@ namespace OpenDentBusiness.Crud{
 				ProvNum            = PIn.Long  (row["ProvNum"].ToString()),
 				Dx                 = PIn.Long  (row["Dx"].ToString()),
 				PlannedAptNum      = PIn.Long  (row["PlannedAptNum"].ToString()),
-				PlaceService       = (OpenDentBusiness.PlaceOfService)PIn.Int(row["PlaceService"].ToString()),
+				PlaceService       = PIn.String(row["PlaceService"].ToString()),
 				Prosthesis         = PIn.String(row["Prosthesis"].ToString()),
 				DateOriginalProsth = PIn.Date  (row["DateOriginalProsth"].ToString()),
 				ClaimNote          = PIn.String(row["ClaimNote"].ToString()),
@@ -275,7 +275,7 @@ namespace OpenDentBusiness.Crud{
 					POut.Long  (procedure.ProvNum),
 					POut.Long  (procedure.Dx),
 					POut.Long  (procedure.PlannedAptNum),
-					POut.Int   ((int)procedure.PlaceService),
+					POut.String(procedure.PlaceService),
 					            procedure.Prosthesis,
 					POut.DateT (procedure.DateOriginalProsth,false),
 					            procedure.ClaimNote,
@@ -364,7 +364,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (procedure.ProvNum)+","
 				+    POut.Long  (procedure.Dx)+","
 				+    POut.Long  (procedure.PlannedAptNum)+","
-				+    POut.Int   ((int)procedure.PlaceService)+","
+				+    POut.String(procedure.PlaceService)+","
 				+"'"+POut.String(procedure.Prosthesis)+"',"
 				+    POut.Date  (procedure.DateOriginalProsth)+","
 				+"'"+POut.String(procedure.ClaimNote)+"',"
@@ -473,7 +473,7 @@ namespace OpenDentBusiness.Crud{
 					sbRow.Append(POut.Long(procedure.ProvNum)); sbRow.Append(",");
 					sbRow.Append(POut.Long(procedure.Dx)); sbRow.Append(",");
 					sbRow.Append(POut.Long(procedure.PlannedAptNum)); sbRow.Append(",");
-					sbRow.Append(POut.Int((int)procedure.PlaceService)); sbRow.Append(",");
+					sbRow.Append(POut.String(procedure.PlaceService)); sbRow.Append(",");
 					sbRow.Append("'"+POut.String(procedure.Prosthesis)+"'"); sbRow.Append(",");
 					sbRow.Append(POut.Date(procedure.DateOriginalProsth)); sbRow.Append(",");
 					sbRow.Append("'"+POut.String(procedure.ClaimNote)+"'"); sbRow.Append(",");
@@ -577,7 +577,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (procedure.ProvNum)+","
 				+    POut.Long  (procedure.Dx)+","
 				+    POut.Long  (procedure.PlannedAptNum)+","
-				+    POut.Int   ((int)procedure.PlaceService)+","
+				+    POut.String(procedure.PlaceService)+","
 				+"'"+POut.String(procedure.Prosthesis)+"',"
 				+    POut.Date  (procedure.DateOriginalProsth)+","
 				+"'"+POut.String(procedure.ClaimNote)+"',"
@@ -654,7 +654,7 @@ namespace OpenDentBusiness.Crud{
 				+"ProvNum            =  "+POut.Long  (procedure.ProvNum)+", "
 				+"Dx                 =  "+POut.Long  (procedure.Dx)+", "
 				+"PlannedAptNum      =  "+POut.Long  (procedure.PlannedAptNum)+", "
-				+"PlaceService       =  "+POut.Int   ((int)procedure.PlaceService)+", "
+				+"PlaceService       =  "+POut.String(procedure.PlaceService)+", "
 				+"Prosthesis         = '"+POut.String(procedure.Prosthesis)+"', "
 				+"DateOriginalProsth =  "+POut.Date  (procedure.DateOriginalProsth)+", "
 				+"ClaimNote          = '"+POut.String(procedure.ClaimNote)+"', "
@@ -767,7 +767,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			if(procedure.PlaceService != oldProcedure.PlaceService) {
 				if(command!="") { command+=",";}
-				command+="PlaceService = "+POut.Int   ((int)procedure.PlaceService)+"";
+				command+="PlaceService = "+POut.String(procedure.PlaceService)+"";
 			}
 			if(procedure.Prosthesis != oldProcedure.Prosthesis) {
 				if(command!="") { command+=",";}

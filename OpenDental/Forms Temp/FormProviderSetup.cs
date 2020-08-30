@@ -9,6 +9,7 @@ using OpenDental.UI;
 using OpenDentBusiness;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -650,7 +651,7 @@ namespace OpenDental{
 			if(groupDentalSchools.Visible) {
 				long schoolClass=0;
 				if(comboClassSelectedIndex>0) {
-					schoolClass=_listSchoolClasses[comboClassSelectedIndex-1].SchoolClassNum;
+					schoolClass=_listSchoolClasses[comboClassSelectedIndex-1].Id;
 				}
 				_tableProvs=Providers.RefreshForDentalSchool(schoolClass,textLastName.Text,textFirstName.Text,textProvNum.Text,radioInstructors.Checked,radioAll.Checked);
 			}
@@ -804,7 +805,7 @@ namespace OpenDental{
 						MessageBox.Show("A class must be selected from the drop down box before a new student can be created");
 						return;
 					}
-					FormPSE.ProvStudent.SchoolClassNum=_listSchoolClasses[comboClass.SelectedIndex-1].SchoolClassNum;
+					FormPSE.ProvStudent.SchoolClassNum=_listSchoolClasses[comboClass.SelectedIndex-1].Id;
 					FormPSE.ProvStudent.FName=textFirstName.Text;
 					FormPSE.ProvStudent.LName=textLastName.Text;
 				}
@@ -983,7 +984,7 @@ namespace OpenDental{
 			if(formPick.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			_provNumMoveTo=formPick.SelectedProvNum;
+			_provNumMoveTo=formPick.SelectedProviderId;
 			if(_provNumMoveTo>0) {
 				Provider provTo=_listProvs.Find(x => x.ProvNum==_provNumMoveTo);
 				textMoveTo.Text=provTo.GetLongDesc();

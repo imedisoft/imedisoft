@@ -129,13 +129,13 @@ namespace OpenDentBusiness{
 
 		public static string GetDescript(long SchoolClassNum) {
 			//No need to check RemotingRole; no call to db.
-			SchoolClass schoolClass=GetFirstOrDefault(x => x.SchoolClassNum==SchoolClassNum);
+			SchoolClass schoolClass=GetFirstOrDefault(x => x.Id==SchoolClassNum);
 			return (schoolClass==null ? "" : GetDescript(schoolClass));
 		}
 
 		public static string GetDescript(SchoolClass schoolClass) {
 			//No need to check RemotingRole; no call to db.
-			return schoolClass.GradYear+"-"+schoolClass.Descript;
+			return schoolClass.GradYear+"-"+schoolClass.Description;
 		}
 	}
 

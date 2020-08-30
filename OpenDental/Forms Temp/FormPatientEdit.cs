@@ -662,22 +662,22 @@ namespace OpenDental{
 				return;
 			}
 			FormProviderPick formp = new FormProviderPick(comboPriProv.Items.GetAll<Provider>());
-			formp.SelectedProvNum=comboPriProv.GetSelectedProvNum();
+			formp.SelectedProviderId=comboPriProv.GetSelectedProvNum();
 			formp.ShowDialog();
 			if(formp.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			comboPriProv.SetSelectedProvNum(formp.SelectedProvNum);
+			comboPriProv.SetSelectedProvNum(formp.SelectedProviderId);
 		}
 
 		private void butPickSecondary_Click(object sender,EventArgs e) {
 			FormProviderPick formp = new FormProviderPick(comboSecProv.Items.GetAll<Provider>());
-			formp.SelectedProvNum=comboSecProv.GetSelectedProvNum();
+			formp.SelectedProviderId=comboSecProv.GetSelectedProvNum();
 			formp.ShowDialog();
 			if(formp.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			comboSecProv.SetSelectedProvNum(formp.SelectedProvNum);
+			comboSecProv.SetSelectedProvNum(formp.SelectedProviderId);
 		}
 
 		///<summary>Fills combo provider based on which clinic is selected and attempts to preserve provider selection if any.</summary>

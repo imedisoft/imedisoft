@@ -33,7 +33,7 @@ namespace OpenDental {
 			long selectedProvNum=0;
 			long schoolClass=0;
 			if(comboClass.SelectedIndex>0) {
-				schoolClass=_listSchoolClasses[comboClass.SelectedIndex-1].SchoolClassNum;
+				schoolClass=_listSchoolClasses[comboClass.SelectedIndex-1].Id;
 			}
 			DataTable table=Providers.RefreshForDentalSchool(schoolClass,"","",textProvNum.Text,false,false);
 			gridStudents.BeginUpdate();

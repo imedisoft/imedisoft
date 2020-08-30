@@ -48,7 +48,7 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// Enum:PlaceOfService Describes where the site is located.
 		/// </summary>
-		public PlaceOfService PlaceService;
+		public string PlaceService;
 
 		public Site Copy() => (Site)MemberwiseClone();
 

@@ -16,6 +16,7 @@ using OpenDental.UI;
 using OpenDentBusiness;
 using CodeBase;
 using OpenDental.Thinfinity;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -2246,17 +2247,16 @@ namespace OpenDental{
 			if(FormP.DialogResult!=DialogResult.OK) {
 				return -1;
 			}
-			return Providers.GetIndex(FormP.SelectedProvNum);
+			return Providers.GetIndex(FormP.SelectedProviderId);
 		}
 
 		///<summary>Launches the Clinics window and lets the user pick a specific clinic.
 		///Returns the index of the selected clinic within _arrayClinics.  Returns -1 if the user cancels out of the window.</summary>
 		private long GetClinicNumFromPicker(List<Clinic> listClinics) {
-			FormClinics FormC=new FormClinics();
+			FormClinics FormC=new FormClinics(listClinics);
 			FormC.IsSelectionMode=true;
-			FormC.ListClinics=listClinics.ToList();
 			FormC.ShowDialog();
-			return FormC.SelectedClinicNum;
+			return FormC.SelectedClinic?.Id ?? 0;
 		}
 
 		private int GetFeeSchedGroupIndexFromPicker(List<FeeSchedGroup> listFeeSchedGroup) {

@@ -4,6 +4,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Forms;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -20,7 +21,7 @@ namespace OpenDental {
 			FormProviderPick FormPP=new FormProviderPick(_listActiveProvs);
 			FormPP.ShowDialog();
 			if(FormPP.DialogResult==DialogResult.OK) {
-				Provider selectedProv=Providers.GetProv(FormPP.SelectedProvNum);
+				Provider selectedProv=Providers.GetProv(FormPP.SelectedProviderId);
 				textAbbrInto.Text=selectedProv.Abbr;
 				textProvNumInto.Text=POut.Long(selectedProv.ProvNum);
 				textNpiInto.Text=selectedProv.NationalProvID;
@@ -33,7 +34,7 @@ namespace OpenDental {
 			FormProviderPick FormPP=new FormProviderPick(checkDeletedProvs.Checked ? Providers.GetDeepCopy() : _listActiveProvs);
 			FormPP.ShowDialog();
 			if(FormPP.DialogResult==DialogResult.OK) {
-				Provider selectedProv=Providers.GetProv(FormPP.SelectedProvNum);
+				Provider selectedProv=Providers.GetProv(FormPP.SelectedProviderId);
 				textAbbrFrom.Text=selectedProv.Abbr;
 				textProvNumFrom.Text=POut.Long(selectedProv.ProvNum);
 				textNpiFrom.Text=selectedProv.NationalProvID;

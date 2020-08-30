@@ -43,9 +43,9 @@ namespace OpenDentBusiness.Crud{
 			SchoolClass schoolClass;
 			foreach(DataRow row in table.Rows) {
 				schoolClass=new SchoolClass();
-				schoolClass.SchoolClassNum= PIn.Long  (row["SchoolClassNum"].ToString());
+				schoolClass.Id= PIn.Long  (row["SchoolClassNum"].ToString());
 				schoolClass.GradYear      = PIn.Int   (row["GradYear"].ToString());
-				schoolClass.Descript      = PIn.String(row["Descript"].ToString());
+				schoolClass.Description      = PIn.String(row["Descript"].ToString());
 				retVal.Add(schoolClass);
 			}
 			return retVal;
@@ -62,9 +62,9 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("Descript");
 			foreach(SchoolClass schoolClass in listSchoolClasss) {
 				table.Rows.Add(new object[] {
-					POut.Long  (schoolClass.SchoolClassNum),
+					POut.Long  (schoolClass.Id),
 					POut.Int   (schoolClass.GradYear),
-					            schoolClass.Descript,
+					            schoolClass.Description,
 				});
 			}
 			return table;
@@ -78,7 +78,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one SchoolClass into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(SchoolClass schoolClass,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				schoolClass.SchoolClassNum=ReplicationServers.GetKey("schoolclass","SchoolClassNum");
+				schoolClass.Id=ReplicationServers.GetKey("schoolclass","SchoolClassNum");
 			}
 			string command="INSERT INTO schoolclass (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -86,18 +86,18 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="GradYear,Descript) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(schoolClass.SchoolClassNum)+",";
+				command+=POut.Long(schoolClass.Id)+",";
 			}
 			command+=
 				     POut.Int   (schoolClass.GradYear)+","
-				+"'"+POut.String(schoolClass.Descript)+"')";
+				+"'"+POut.String(schoolClass.Description)+"')";
 			if(useExistingPK || PrefC.RandomKeys) {
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				schoolClass.SchoolClassNum=Database.ExecuteInsert(command);
+				schoolClass.Id=Database.ExecuteInsert(command);
 			}
-			return schoolClass.SchoolClassNum;
+			return schoolClass.Id;
 		}
 
 		///<summary>Inserts one SchoolClass into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -110,33 +110,33 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO schoolclass (";
 			if(!useExistingPK) {
-				schoolClass.SchoolClassNum=ReplicationServers.GetKeyNoCache("schoolclass","SchoolClassNum");
+				schoolClass.Id=ReplicationServers.GetKeyNoCache("schoolclass","SchoolClassNum");
 			}
 			if(useExistingPK) {
 				command+="SchoolClassNum,";
 			}
 			command+="GradYear,Descript) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(schoolClass.SchoolClassNum)+",";
+				command+=POut.Long(schoolClass.Id)+",";
 			}
 			command+=
 				     POut.Int   (schoolClass.GradYear)+","
-				+"'"+POut.String(schoolClass.Descript)+"')";
+				+"'"+POut.String(schoolClass.Description)+"')";
 			if(useExistingPK) {
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				schoolClass.SchoolClassNum=Database.ExecuteInsert(command);
+				schoolClass.Id=Database.ExecuteInsert(command);
 			}
-			return schoolClass.SchoolClassNum;
+			return schoolClass.Id;
 		}
 
 		///<summary>Updates one SchoolClass in the database.</summary>
 		public static void Update(SchoolClass schoolClass) {
 			string command="UPDATE schoolclass SET "
 				+"GradYear      =  "+POut.Int   (schoolClass.GradYear)+", "
-				+"Descript      = '"+POut.String(schoolClass.Descript)+"' "
-				+"WHERE SchoolClassNum = "+POut.Long(schoolClass.SchoolClassNum);
+				+"Descript      = '"+POut.String(schoolClass.Description)+"' "
+				+"WHERE SchoolClassNum = "+POut.Long(schoolClass.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
@@ -147,15 +147,15 @@ namespace OpenDentBusiness.Crud{
 				if(command!="") { command+=",";}
 				command+="GradYear = "+POut.Int(schoolClass.GradYear)+"";
 			}
-			if(schoolClass.Descript != oldSchoolClass.Descript) {
+			if(schoolClass.Description != oldSchoolClass.Description) {
 				if(command!="") { command+=",";}
-				command+="Descript = '"+POut.String(schoolClass.Descript)+"'";
+				command+="Descript = '"+POut.String(schoolClass.Description)+"'";
 			}
 			if(command=="") {
 				return false;
 			}
 			command="UPDATE schoolclass SET "+command
-				+" WHERE SchoolClassNum = "+POut.Long(schoolClass.SchoolClassNum);
+				+" WHERE SchoolClassNum = "+POut.Long(schoolClass.Id);
 			Database.ExecuteNonQuery(command);
 			return true;
 		}
@@ -166,7 +166,7 @@ namespace OpenDentBusiness.Crud{
 			if(schoolClass.GradYear != oldSchoolClass.GradYear) {
 				return true;
 			}
-			if(schoolClass.Descript != oldSchoolClass.Descript) {
+			if(schoolClass.Description != oldSchoolClass.Description) {
 				return true;
 			}
 			return false;

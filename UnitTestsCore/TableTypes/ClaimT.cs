@@ -120,7 +120,7 @@ namespace UnitTestsCore {
 			}
 			claim.ProvTreat=procsForClaim[0].ProvNum;
 			claim.IsProsthesis="I";
-			claim.ProvBill=Providers.GetBillingProvNum(claim.ProvTreat,claim.ClinicNum);
+			claim.ProvBill=Providers.GetBillingProviderId(claim.ProvTreat,claim.ClinicNum);
 			claim.EmployRelated=YN.No;
 			//attach procedures
 			Procedure ProcCur;

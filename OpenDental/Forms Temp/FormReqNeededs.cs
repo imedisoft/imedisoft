@@ -275,8 +275,8 @@ namespace OpenDental{
 			_listSchoolClasses=SchoolClasses.GetDeepCopy();
 			_listSchoolCourses=SchoolCourses.GetDeepCopy();
 			for(int i=0;i<_listSchoolClasses.Count;i++) {
-				comboClassFrom.Items.Add(_listSchoolClasses[i].Descript);
-				comboClassTo.Items.Add(_listSchoolClasses[i].Descript);
+				comboClassFrom.Items.Add(_listSchoolClasses[i].Description);
+				comboClassTo.Items.Add(_listSchoolClasses[i].Description);
 			}
 			for(int i=0;i<_listSchoolCourses.Count;i++) {
 				comboCourseFrom.Items.Add(_listSchoolCourses[i].Descript);
@@ -317,7 +317,7 @@ namespace OpenDental{
 			if(gridMain.GetSelectedIndex()!=-1) {
 				selectedReqNum=_listReqsInGrid[gridMain.GetSelectedIndex()].ReqNeededNum;
 			}
-			long schoolClass=_listSchoolClasses[comboClassFrom.SelectedIndex].SchoolClassNum;
+			long schoolClass=_listSchoolClasses[comboClassFrom.SelectedIndex].Id;
 			long schoolCourse=_listSchoolCourses[comboCourseFrom.SelectedIndex].SchoolCourseNum;
 			int scroll=gridMain.ScrollValue;
 			gridMain.BeginUpdate();
@@ -362,7 +362,7 @@ namespace OpenDental{
 			}
 			FormReqNeededEdit FormR=new FormReqNeededEdit();
 			FormR.ReqCur=new ReqNeeded();
-			FormR.ReqCur.SchoolClassNum=_listSchoolClasses[comboClassFrom.SelectedIndex].SchoolClassNum;
+			FormR.ReqCur.SchoolClassNum=_listSchoolClasses[comboClassFrom.SelectedIndex].Id;
 			FormR.ReqCur.SchoolCourseNum=_listSchoolCourses[comboCourseFrom.SelectedIndex].SchoolCourseNum;
 			FormR.IsNew=true;
 			FormR.ShowDialog();
@@ -403,8 +403,8 @@ namespace OpenDental{
 				return;
 			}
 			if(MsgBox.Show(MsgBoxButtons.OKCancel,"Are you sure you would like to copy over the requirements? Doing so will not replace any previous requirements.")) {
-				long schoolClassFrom=_listSchoolClasses[comboClassFrom.SelectedIndex].SchoolClassNum;
-				long schoolClassTo=_listSchoolClasses[comboClassTo.SelectedIndex].SchoolClassNum;
+				long schoolClassFrom=_listSchoolClasses[comboClassFrom.SelectedIndex].Id;
+				long schoolClassTo=_listSchoolClasses[comboClassTo.SelectedIndex].Id;
 				long schoolCourseFrom=_listSchoolCourses[comboCourseFrom.SelectedIndex].SchoolCourseNum;
 				long schoolCourseTo=_listSchoolCourses[comboCourseTo.SelectedIndex].SchoolCourseNum;
 				if(schoolClassFrom==schoolClassTo && schoolCourseFrom==schoolCourseTo) {

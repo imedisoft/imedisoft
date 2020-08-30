@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using CodeBase;
+using Imedisoft.X12.Codes;
 
 namespace OpenDentBusiness.HL7 {
 	///<summary>This is the engine that will parse our incoming HL7 messages.</summary>
@@ -1835,7 +1836,7 @@ namespace OpenDentBusiness.HL7 {
 			procCur.SiteNum=pat.SiteNum;
 			procCur.RevCode=procCode.RevenueCodeDefault;
 			procCur.DiagnosticCode=Prefs.GetString(PrefName.ICD9DefaultForNewProcs);
-			procCur.PlaceService=(PlaceOfService)PrefC.GetInt(PrefName.DefaultProcedurePlaceService);//Default Proc Place of Service for the Practice is used.
+			procCur.PlaceService=Prefs.GetString(PrefName.DefaultProcedurePlaceService, PlaceOfService.Office);//Default Proc Place of Service for the Practice is used.
 			List<PatPlan> listPatPlan=PatPlans.Refresh(pat.PatNum);
 			List<InsSub> listSubs=InsSubs.RefreshForFam(Patients.GetFamily(pat.PatNum));
 			List<InsPlan> insPlanList=InsPlans.RefreshForSubList(listSubs);

@@ -1,6 +1,7 @@
 using DataConnectionBase;
 using Imedisoft.Data;
 using Imedisoft.Data.Cache;
+using Imedisoft.X12.Codes;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -39,7 +40,7 @@ namespace OpenDentBusiness
 		/// Returns a dictionary such that the key is a clinicNum and the value is a count of patients whith a matching patient.ClinicNum.
 		/// Excludes all patients with PatStatus of Deleted, Archived, Deceased, or NonPatient unless IsAllStatuses is set to true.
 		/// </summary>
-		public static SerializableDictionary<long, int> GetClinicalPatientCount(bool IsAllStatuses = false)
+		public static Dictionary<long, int> GetClinicalPatientCount(bool IsAllStatuses = false)
 		{
 			string command = "SELECT ClinicNum, COUNT(*) AS Count FROM patient ";
 
@@ -55,7 +56,9 @@ namespace OpenDentBusiness
 
 			command += "GROUP BY ClinicNum";
 
-			return Database.ExecuteDataTable(command).Select().ToSerializableDictionary(x => PIn.Long(x["ClinicNum"].ToString()), x => PIn.Int(x["Count"].ToString()));
+			return Database.ExecuteDataTable(command).Select().ToDictionary(
+				x => PIn.Long(x["ClinicNum"].ToString()), 
+				x => PIn.Int(x["Count"].ToString()));
 		}
 
 		/// <summary>
@@ -117,13 +120,8 @@ namespace OpenDentBusiness
 		[CacheGroup(nameof(InvalidType.Providers))]
 		private class ClinicCache : ListCache<Clinic>
 		{
-			protected override IEnumerable<Clinic> Load()
-			{
-				var orderByColumn = Prefs.GetBool(PrefName.ClinicListIsAlphabetical) ? 
-					"item_order" : "abbr";
-
-				return SelectMany("SELECT * FROM `clinics` ORDER BY `" + orderByColumn + "`");
-			}
+			protected override IEnumerable<Clinic> Load() 
+				=> SelectMany("SELECT * FROM `clinics` ORDER BY `abbr`");
         }
 
 		private static readonly ClinicCache cache = new ClinicCache();
@@ -482,12 +480,12 @@ namespace OpenDentBusiness
 		/// </summary>
 		/// <param name="clinicId">The ID of the clinic.</param>
 		/// <returns>The place of the service for the specified clinic.</returns>
-		public static PlaceOfService GetPlaceService(long clinicId)
+		public static string GetPlaceService(long clinicId)
 		{
 			var clinic = FirstOrDefault(x => x.Id == clinicId, true);
 
-			return clinic?.DefaultPlaceService ?? 
-				Prefs.GetEnum(PrefName.DefaultProcedurePlaceService, PlaceOfService.Office);
+			return clinic?.DefaultPlaceOfService ?? 
+				Prefs.GetString(PrefName.DefaultProcedurePlaceService, PlaceOfService.Office);
 		}
 
 		/// <summary>
@@ -605,7 +603,7 @@ namespace OpenDentBusiness
 				PayToZip = Prefs.GetString(PrefName.PracticePayToZip),
 				Phone = Prefs.GetString(PrefName.PracticePhone),
 				BankNumber = Prefs.GetString(PrefName.PracticeBankNumber),
-				DefaultPlaceService = (PlaceOfService)PrefC.GetInt(PrefName.DefaultProcedurePlaceService),
+				DefaultPlaceOfService = Prefs.GetString(PrefName.DefaultProcedurePlaceService, PlaceOfService.Office),
 				InsBillingProviderId = Prefs.GetLong(PrefName.InsBillingProv),
 				Fax = Prefs.GetString(PrefName.PracticeFax),
 				EmailAddressId = Prefs.GetLong(PrefName.EmailDefaultAddressNum),

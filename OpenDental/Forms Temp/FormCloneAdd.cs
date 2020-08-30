@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormCloneAdd:ODForm {
@@ -177,14 +178,14 @@ namespace OpenDental {
 		private void butPickPrimary_Click(object sender,EventArgs e) {
 			FormProviderPick FormPP=new FormProviderPick(_listProviders);
 			if(comboPriProv.SelectedIndex > -1) {//Initial FormP selection if selected prov is not hidden.
-				FormPP.SelectedProvNum=_provNumSelected;
+				FormPP.SelectedProviderId=_provNumSelected;
 			}
 			FormPP.ShowDialog();
 			if(FormPP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			comboPriProv.SelectedIndex=_listProviders.FindIndex(x => x.ProvNum==FormPP.SelectedProvNum);
-			_provNumSelected=FormPP.SelectedProvNum;
+			comboPriProv.SelectedIndex=_listProviders.FindIndex(x => x.ProvNum==FormPP.SelectedProviderId);
+			_provNumSelected=FormPP.SelectedProviderId;
 		}
 
 		private void comboPriProv_SelectionChangeCommitted(object sender,EventArgs e) {

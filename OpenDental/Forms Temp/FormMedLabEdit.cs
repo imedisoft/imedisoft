@@ -10,6 +10,7 @@ using OpenDental.UI;
 using OpenDentBusiness;
 using OpenDental.Thinfinity;
 using OpenDentBusiness.IO;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormMedLabEdit:ODForm {
@@ -295,12 +296,12 @@ namespace OpenDental {
 			if(FormPP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			if(FormPP.SelectedProvNum!=_medLabCur.ProvNum) {
+			if(FormPP.SelectedProviderId!=_medLabCur.ProvNum) {
 				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Update all lab tests and results for this specimen with the selected ordering provider?")) {
 					return;
 				}
 			}
-			Provider prov=Providers.GetProv(FormPP.SelectedProvNum);
+			Provider prov=Providers.GetProv(FormPP.SelectedProviderId);
 			for(int i=0;i<ListMedLabs.Count;i++) {
 				ListMedLabs[i].OrderingProvLName=prov.LName;
 				ListMedLabs[i].OrderingProvFName=prov.FName;

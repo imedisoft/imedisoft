@@ -16,6 +16,7 @@ using OpenDentBusiness;
 using OpenDental.Thinfinity;
 using OpenDental.UI;
 using OpenDentBusiness.IO;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	///<summary></summary>
@@ -1633,7 +1634,7 @@ namespace OpenDental {
 			if(FormP.DialogResult!=DialogResult.OK) {
 				return;// -1;
 			}
-			int selectedIndex= Providers.GetIndex(FormP.SelectedProvNum)+1;//All provider combo boxes have a none option, so always add 1.
+			int selectedIndex= Providers.GetIndex(FormP.SelectedProviderId)+1;//All provider combo boxes have a none option, so always add 1.
 			//If the selectedIndex is 0, simply return and do not do anything.  There is no such thing as picking 'None' from the picker window.
 			if(selectedIndex==0) {
 				return;

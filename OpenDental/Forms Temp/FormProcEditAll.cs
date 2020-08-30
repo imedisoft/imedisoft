@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormProcEditAll:ODForm {
@@ -116,14 +117,8 @@ namespace OpenDental {
 			comboClinic.Items.Add("",null);
 			comboClinic.SelectedIndex=0;//Selection is not changed if isAllProcsForSameClinic is false.
 			bool isAllProcsForSameClinic=ProcList.Select(x => x.ClinicNum).Distinct().ToList().Count==1;
-			bool isListAlpha = Prefs.GetBool(PrefName.ClinicListIsAlphabetical);
-			_listClinics=Clinics.GetByUser(Security.CurrentUser);
-			if(isListAlpha) {
-				_listClinics=_listClinics.OrderBy(x => x.Abbr).ToList();
-			}
-			else {
-				_listClinics=_listClinics.OrderBy(x => x.ItemOrder).ToList();
-			}
+			bool isListAlpha = true;
+			_listClinics=Clinics.GetByUser(Security.CurrentUser).OrderBy(x => x.Abbr).ToList();
 			_listClinics.Insert(0,Clinics.GetPracticeAsClinicZero("None"));
 			for(int i=0;i<_listClinics.Count;i++) {//None mimics FormProcEdit
 				comboClinic.Items.Add(_listClinics[i].Abbr,_listClinics[i]);
@@ -180,7 +175,7 @@ namespace OpenDental {
 			if(FormPP.ShowDialog(this)!=DialogResult.OK) {
 				return;
 			}
-			comboProv.SetSelectedProvNum(FormPP.SelectedProvNum);
+			comboProv.SetSelectedProvNum(FormPP.SelectedProviderId);
 		}
 
 		private void butEditAnyway_Click(object sender,EventArgs e) {

@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 using System.Reflection;
 using CodeBase;
 using System.Linq;
+using Imedisoft.X12.Codes;
 
 namespace OpenDentBusiness{
 	public class SheetsInternal {
@@ -1863,7 +1864,7 @@ Fam Urgent Fin Note: [famFinUrgNote]"
 			sheetDef.SheetFieldDefs.Add(SheetFieldDef.NewOutput("DateScreenGroup",sheetDef.FontSize,sheetDef.FontName,false,235,y,500,rowH));
 			y+=rowH+2;
 			sheetDef.SheetFieldDefs.Add(SheetFieldDef.NewStaticText("Place of Service:",sheetDef.FontSize,sheetDef.FontName,false,76,y,150,rowH));
-			fieldValue=";"+String.Join("|",Enum.GetNames(typeof(PlaceOfService)));
+			fieldValue=";"+String.Join("|", PlaceOfService.Codes.Select(x => $"{x.description} ({x.code})")); 
 			sheetDef.SheetFieldDefs.Add(SheetFieldDef.NewComboBox("PlaceOfService",fieldValue,235,y));
 			y+=rowH+2;
 			sheetDef.SheetFieldDefs.Add(SheetFieldDef.NewStaticText("Urgency:",sheetDef.FontSize,sheetDef.FontName,false,76,y,150,rowH));

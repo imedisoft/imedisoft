@@ -53,7 +53,7 @@ namespace OpenDentBusiness.Crud{
 				site.State       = PIn.String(row["State"].ToString());
 				site.Zip         = PIn.String(row["Zip"].ToString());
 				site.ProvNum     = PIn.Long  (row["ProvNum"].ToString());
-				site.PlaceService= (OpenDentBusiness.PlaceOfService)PIn.Int(row["PlaceService"].ToString());
+				site.PlaceService= PIn.String(row["PlaceService"].ToString());
 				retVal.Add(site);
 			}
 			return retVal;
@@ -86,7 +86,7 @@ namespace OpenDentBusiness.Crud{
 					            site.State,
 					            site.Zip,
 					POut.Long  (site.ProvNum),
-					POut.Int   ((int)site.PlaceService),
+					POut.String(site.PlaceService),
 				});
 			}
 			return table;
@@ -119,7 +119,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(site.State)+"',"
 				+"'"+POut.String(site.Zip)+"',"
 				+    POut.Long  (site.ProvNum)+","
-				+    POut.Int   ((int)site.PlaceService)+")";
+				+    POut.String(site.PlaceService)+")";
 			if(site.Note==null) {
 				site.Note="";
 			}
@@ -161,7 +161,7 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.String(site.State)+"',"
 				+"'"+POut.String(site.Zip)+"',"
 				+    POut.Long  (site.ProvNum)+","
-				+    POut.Int   ((int)site.PlaceService)+")";
+				+    POut.String(site.PlaceService)+")";
 			if(site.Note==null) {
 				site.Note="";
 			}
@@ -186,7 +186,7 @@ namespace OpenDentBusiness.Crud{
 				+"State       = '"+POut.String(site.State)+"', "
 				+"Zip         = '"+POut.String(site.Zip)+"', "
 				+"ProvNum     =  "+POut.Long  (site.ProvNum)+", "
-				+"PlaceService=  "+POut.Int   ((int)site.PlaceService)+" "
+				+"PlaceService=  "+POut.String(site.PlaceService)+" "
 				+"WHERE SiteNum = "+POut.Long(site.SiteNum);
 			if(site.Note==null) {
 				site.Note="";
@@ -232,7 +232,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			if(site.PlaceService != oldSite.PlaceService) {
 				if(command!="") { command+=",";}
-				command+="PlaceService = "+POut.Int   ((int)site.PlaceService)+"";
+				command+="PlaceService = "+POut.String(site.PlaceService)+"";
 			}
 			if(command=="") {
 				return false;

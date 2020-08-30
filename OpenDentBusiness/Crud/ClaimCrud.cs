@@ -62,7 +62,7 @@ namespace OpenDentBusiness.Crud{
 				claim.ProvBill                      = PIn.Long  (row["ProvBill"].ToString());
 				claim.ReferringProv                 = PIn.Long  (row["ReferringProv"].ToString());
 				claim.RefNumString                  = PIn.String(row["RefNumString"].ToString());
-				claim.PlaceService                  = (OpenDentBusiness.PlaceOfService)PIn.Int(row["PlaceService"].ToString());
+				claim.PlaceService                  = PIn.String(row["PlaceService"].ToString());
 				claim.AccidentRelated               = PIn.String(row["AccidentRelated"].ToString());
 				claim.AccidentDate                  = PIn.Date  (row["AccidentDate"].ToString());
 				claim.AccidentST                    = PIn.String(row["AccidentST"].ToString());
@@ -241,7 +241,7 @@ namespace OpenDentBusiness.Crud{
 					POut.Long  (claim.ProvBill),
 					POut.Long  (claim.ReferringProv),
 					            claim.RefNumString,
-					POut.Int   ((int)claim.PlaceService),
+					POut.String(claim.PlaceService),
 					            claim.AccidentRelated,
 					POut.DateT (claim.AccidentDate,false),
 					            claim.AccidentST,
@@ -347,7 +347,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (claim.ProvBill)+","
 				+    POut.Long  (claim.ReferringProv)+","
 				+"'"+POut.String(claim.RefNumString)+"',"
-				+    POut.Int   ((int)claim.PlaceService)+","
+				+    POut.String(claim.PlaceService)+","
 				+"'"+POut.String(claim.AccidentRelated)+"',"
 				+    POut.Date  (claim.AccidentDate)+","
 				+"'"+POut.String(claim.AccidentST)+"',"
@@ -458,7 +458,7 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (claim.ProvBill)+","
 				+    POut.Long  (claim.ReferringProv)+","
 				+"'"+POut.String(claim.RefNumString)+"',"
-				+    POut.Int   ((int)claim.PlaceService)+","
+				+    POut.String(claim.PlaceService)+","
 				+"'"+POut.String(claim.AccidentRelated)+"',"
 				+    POut.Date  (claim.AccidentDate)+","
 				+"'"+POut.String(claim.AccidentST)+"',"
@@ -552,7 +552,7 @@ namespace OpenDentBusiness.Crud{
 				+"ProvBill                      =  "+POut.Long  (claim.ProvBill)+", "
 				+"ReferringProv                 =  "+POut.Long  (claim.ReferringProv)+", "
 				+"RefNumString                  = '"+POut.String(claim.RefNumString)+"', "
-				+"PlaceService                  =  "+POut.Int   ((int)claim.PlaceService)+", "
+				+"PlaceService                  =  "+POut.String(claim.PlaceService)+", "
 				+"AccidentRelated               = '"+POut.String(claim.AccidentRelated)+"', "
 				+"AccidentDate                  =  "+POut.Date  (claim.AccidentDate)+", "
 				+"AccidentST                    = '"+POut.String(claim.AccidentST)+"', "
@@ -703,7 +703,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			if(claim.PlaceService != oldClaim.PlaceService) {
 				if(command!="") { command+=",";}
-				command+="PlaceService = "+POut.Int   ((int)claim.PlaceService)+"";
+				command+="PlaceService = "+POut.String(claim.PlaceService)+"";
 			}
 			if(claim.AccidentRelated != oldClaim.AccidentRelated) {
 				if(command!="") { command+=",";}

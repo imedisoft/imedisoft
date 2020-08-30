@@ -224,7 +224,7 @@ namespace Imedisoft.Forms
 		{
             using var formProviderPick = new FormProviderPick(providerComboBox.Items.GetAll<Provider>())
             {
-                SelectedProvNum = providerComboBox.GetSelectedProvNum()
+                SelectedProviderId = providerComboBox.GetSelectedProvNum()
             };
 
             if (formProviderPick.ShowDialog(this) != DialogResult.OK)
@@ -232,7 +232,7 @@ namespace Imedisoft.Forms
 				return;
 			}
 
-			providerComboBox.SetSelectedProvNum(formProviderPick.SelectedProvNum);
+			providerComboBox.SetSelectedProvNum(formProviderPick.SelectedProviderId);
 		}
 
 		private void PharmacyButton_Click(object sender, EventArgs e)

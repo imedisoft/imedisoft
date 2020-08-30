@@ -19,6 +19,7 @@ using CodeBase;
 using OpenDentBusiness.IO;
 using Imedisoft.Forms;
 using Imedisoft.UI;
+using Imedisoft.X12.Codes;
 
 namespace OpenDental {
 
@@ -1459,8 +1460,8 @@ namespace OpenDental {
 				adjustment.ProcDate=proc.ProcDate;
 				adjustment.ProvNum=Prefs.GetLong(PrefName.PracticeDefaultProv);
 				Clinic procClinic=Clinics.GetById(proc.ClinicNum);
-				if(proc.ClinicNum!=0 && procClinic.DefaultProviderId!=0) {
-					adjustment.ProvNum=procClinic.DefaultProviderId;
+				if(proc.ClinicNum!=0 && procClinic.DefaultProviderId.HasValue) {
+					adjustment.ProvNum=procClinic.DefaultProviderId.Value;
 				}
 				adjustment.PatNum=_patCur.PatNum;
 				adjustment.ClinicNum=proc.ClinicNum;
@@ -3361,7 +3362,7 @@ namespace OpenDental {
 			proc.PatNum=_patCur.PatNum;
 			proc.ProcDate=DateTime.Now;
 			proc.ToothRange="";
-			proc.PlaceService=(PlaceOfService)PrefC.GetInt(PrefName.DefaultProcedurePlaceService);//Default Proc Place of Service for the Practice is used. 
+			proc.PlaceService=Prefs.GetString(PrefName.DefaultProcedurePlaceService, PlaceOfService.Office);//Default Proc Place of Service for the Practice is used. 
 			if(!Prefs.GetBool(PrefName.EasyHidePublicHealth)) {
 				proc.SiteNum=_patCur.SiteNum;
 			}

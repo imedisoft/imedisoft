@@ -348,50 +348,6 @@ namespace OpenDentBusiness
 			}
 			return sb.ToString();
 		}
-
-		///<summary>"CODE SOURCE 237: Place of Service Codes for Professional Claims" is published by CMS (Centers for Medicare and Medicaid Services),
-		///according to https://www.cms.gov/Medicare/Coding/place-of-service-codes/.
-		///See code list here: https://www.cms.gov/Medicare/Medicare-Fee-for-Service-Payment/PhysicianFeeSched/Downloads/Website-POS-database.pdf
-		///Copy of PDF saved to "Place-of-Service-Codes.pdf" in internal documents.</summary>
-		public static string GetPlaceService(PlaceOfService place)
-		{
-			switch (place)
-			{
-				case PlaceOfService.AmbulatorySurgicalCenter:
-					return "24";
-				case PlaceOfService.CustodialCareFacility:
-					return "33";
-				case PlaceOfService.EmergencyRoomHospital:
-					return "23";
-				case PlaceOfService.FederalHealthCenter:
-					return "50";
-				case PlaceOfService.InpatHospital:
-					return "21";
-				case PlaceOfService.MilitaryTreatFac:
-					return "26";
-				case PlaceOfService.MobileUnit:
-					return "15";
-				case PlaceOfService.Office:
-				case PlaceOfService.OtherLocation:
-					return "11";
-				case PlaceOfService.OutpatHospital:
-					return "22";
-				case PlaceOfService.PatientsHome:
-					return "12";
-				case PlaceOfService.PublicHealthClinic:
-					return "71";
-				case PlaceOfService.RuralHealthClinic:
-					return "72";
-				case PlaceOfService.School:
-					return "03";
-				case PlaceOfService.SkilledNursFac:
-					return "31";
-				case PlaceOfService.Telehealth:
-					return "02";
-			}
-			return "11";
-		}
-
 	}
 
 
@@ -1174,42 +1130,5 @@ namespace OpenDentBusiness
 		public List<Hx835_Proc> List835Procs = new List<Hx835_Proc>();
 		///<summary>Indicates Primary, Secondary, or Preauth.  Claim type from CLP segment element 02.</summary>
 		public string CodeClp02 = "";
-	}
-
-	///<summary></summary>
-	public enum PlaceOfService
-	{
-		///<summary>0. Code 11</summary>
-		Office,
-		///<summary>1. Code 12</summary>
-		PatientsHome,
-		///<summary>2. Code 21</summary>
-		InpatHospital,
-		///<summary>3. Code 22</summary>
-		OutpatHospital,
-		///<summary>4. Code 31</summary>
-		SkilledNursFac,
-		///<summary>5. Code 33.  In X12, a similar code AdultLivCareFac 35 is mentioned.</summary>
-		CustodialCareFacility,
-		///<summary>6. Code 99.  We use 11 for office.</summary>
-		OtherLocation,
-		///<summary>7. Code 15</summary>
-		MobileUnit,
-		///<summary>8. Code 03</summary>
-		School,
-		///<summary>9. Code 26</summary>
-		MilitaryTreatFac,
-		///<summary>10. Code 50</summary>
-		FederalHealthCenter,
-		///<summary>11. Code 71</summary>
-		PublicHealthClinic,
-		///<summary>12. Code 72</summary>
-		RuralHealthClinic,
-		///<summary>13. Code 23</summary>
-		EmergencyRoomHospital,
-		///<summary>14. Code 24</summary>
-		AmbulatorySurgicalCenter,
-		///<summary>15. Code 02.</summary>
-		Telehealth,
 	}
 }

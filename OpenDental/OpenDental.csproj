@@ -923,6 +923,15 @@
     <Compile Include="Forms\FormTaskListSelect.Designer.cs">
       <DependentUpon>FormTaskListSelect.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\WIP\FormClinicEdit.Designer.cs">
+      <DependentUpon>FormClinicEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\WIP\FormClinics.Designer.cs">
+      <DependentUpon>FormClinics.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\WIP\FormProviderPick.Designer.cs">
+      <DependentUpon>FormProviderPick.cs</DependentUpon>
+    </Compile>
     <Compile Include="Logic\AutoNoteL.cs" />
     <Compile Include="Logic\PayConnectL.cs" />
     <Compile Include="Logic\PayPlanL.cs" />
@@ -3653,7 +3662,7 @@
     <Compile Include="Forms Temp\FormPerioGraphical.designer.cs">
       <DependentUpon>FormPerioGraphical.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormProviderPick.cs">
+    <Compile Include="Forms\WIP\FormProviderPick.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormMountainside.cs">
@@ -4329,10 +4338,10 @@
     <Compile Include="Forms Temp\FormClearinghouses.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormClinicEdit.cs">
+    <Compile Include="Forms\WIP\FormClinicEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormClinics.cs">
+    <Compile Include="Forms\WIP\FormClinics.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormClockEventEdit.cs">
@@ -7214,11 +7223,11 @@
       <DependentUpon>FormClearinghouses.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormClinicEdit.resx">
+    <EmbeddedResource Include="Forms\WIP\FormClinicEdit.resx">
       <DependentUpon>FormClinicEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormClinics.resx">
+    <EmbeddedResource Include="Forms\WIP\FormClinics.resx">
       <DependentUpon>FormClinics.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -8906,7 +8915,7 @@
       <DependentUpon>FormPerioGraphical.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormProviderPick.resx">
+    <EmbeddedResource Include="Forms\WIP\FormProviderPick.resx">
       <DependentUpon>FormProviderPick.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>

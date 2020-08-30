@@ -7,6 +7,7 @@ using OpenDentBusiness;
 using System.Collections.Generic;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 	/// <summary></summary>
@@ -455,22 +456,22 @@ namespace OpenDental{
 
 		private void butPickProv_Click(object sender,EventArgs e) {
 			FormProviderPick FormPP=new FormProviderPick(comboProv.Items.GetAll<Provider>());
-			FormPP.SelectedProvNum=comboProv.GetSelectedProvNum();
+			FormPP.SelectedProviderId=comboProv.GetSelectedProvNum();
 			FormPP.ShowDialog();
 			if(FormPP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			comboProv.SetSelectedProvNum(FormPP.SelectedProvNum);
+			comboProv.SetSelectedProvNum(FormPP.SelectedProviderId);
 		}
 
 		private void butPickHyg_Click(object sender,EventArgs e) {
 			FormProviderPick FormPP=new FormProviderPick(comboHyg.Items.GetAll<Provider>());
-			FormPP.SelectedProvNum=comboHyg.GetSelectedProvNum();
+			FormPP.SelectedProviderId=comboHyg.GetSelectedProvNum();
 			FormPP.ShowDialog();
 			if(FormPP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			comboHyg.SetSelectedProvNum(FormPP.SelectedProvNum);
+			comboHyg.SetSelectedProvNum(FormPP.SelectedProviderId);
 		}
 
 		private void ComboClinic_SelectionChangeCommitted(object sender, EventArgs e){

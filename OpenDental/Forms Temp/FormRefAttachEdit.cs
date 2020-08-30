@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using Imedisoft.Forms;
 using OpenDentBusiness;
 
 namespace OpenDental{
@@ -584,14 +585,14 @@ namespace OpenDental{
 		private void butPickProv_Click(object sender,EventArgs e) {
 			FormProviderPick formP=new FormProviderPick();
 			if(comboProvNum.SelectedIndex > -1) {//Initial formP selection if selected prov is not hidden.
-				formP.SelectedProvNum=_provNumSelected;
+				formP.SelectedProviderId=_provNumSelected;
 			}
 			formP.ShowDialog();
 			if(formP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			comboProvNum.SelectedIndex=Providers.GetIndex(formP.SelectedProvNum);
-			_provNumSelected=formP.SelectedProvNum;
+			comboProvNum.SelectedIndex=Providers.GetIndex(formP.SelectedProviderId);
+			_provNumSelected=formP.SelectedProviderId;
 		}
 
 		private void butNoneProv_Click(object sender,EventArgs e) {

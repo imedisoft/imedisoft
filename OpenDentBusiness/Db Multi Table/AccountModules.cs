@@ -3534,7 +3534,7 @@ namespace OpenDentBusiness
 			}
 			proc = listProcs[0];
 			long clinicNum = proc.ClinicNum;
-			PlaceOfService placeService = proc.PlaceService;
+			string placeService = proc.PlaceService;
 			for (int i = 1; i < listProcs.Count; i++)
 			{//skips 0
 				proc = listProcs[i];
@@ -3755,7 +3755,7 @@ namespace OpenDentBusiness
 			//	useClinic=true;
 			//	clinicInsBillingProv=Clinics.GetClinic(ClaimCur.ClinicNum).InsBillingProv;
 			//}
-			ClaimCur.ProvBill = Providers.GetBillingProvNum(ClaimCur.ProvTreat, ClaimCur.ClinicNum);//,useClinic,clinicInsBillingProv);//OK if zero, because it will get fixed in claim
+			ClaimCur.ProvBill = Providers.GetBillingProviderId(ClaimCur.ProvTreat, ClaimCur.ClinicNum);//,useClinic,clinicInsBillingProv);//OK if zero, because it will get fixed in claim
 			Provider prov = Providers.GetProv(ClaimCur.ProvTreat);
 			if (prov.ProvNumBillingOverride != 0)
 			{
