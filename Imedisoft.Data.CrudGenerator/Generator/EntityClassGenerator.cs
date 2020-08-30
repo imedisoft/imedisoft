@@ -253,7 +253,7 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 				if (underlyingType == typeof(bool)) return $"({value} == DBNull.Value ? null : (Convert.ToInt32({value}) == 1))";
 				if (underlyingType == typeof(byte)) return $"{value} as byte?";
 				if (underlyingType == typeof(sbyte)) return $"{value} as sybte?";
-				if (underlyingType == typeof(char)) return $"{value} as char?";
+				if (underlyingType == typeof(char)) return $"({value} == DBNull.Value ? null : Convert.ToChar({value}))";
 				if (underlyingType == typeof(double)) return $"{value} as double?";
 				if (underlyingType == typeof(float)) return $"{value} as float?";
 				if (underlyingType == typeof(int)) return $"{value} as int?";
@@ -273,7 +273,7 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 			if (column.Type == typeof(bool)) return $"(Convert.ToInt32({value}) == 1)";
 			if (column.Type == typeof(byte)) return $"(byte){value}";
 			if (column.Type == typeof(sbyte)) return $"(sbyte){value}";
-			if (column.Type == typeof(char)) return $"(char){value}";
+			if (column.Type == typeof(char)) return $"Convert.ToChar({value})";
 			if (column.Type == typeof(double)) return $"(double){value}";
 			if (column.Type == typeof(float)) return $"(float){value}";
 			if (column.Type == typeof(int)) return $"(int){value}";
@@ -324,7 +324,7 @@ namespace Imedisoft.Data.CrudGenerator.Generator
             {
                 if (column.Nullable)
                 {
-                    return value;
+                    return $"(object){value} ?? DBNull.Value";
                 }
 
 				if (column.MaxLength > 0)
