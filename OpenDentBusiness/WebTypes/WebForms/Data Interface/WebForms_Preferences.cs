@@ -1,9 +1,9 @@
-﻿using System;
+﻿using CodeBase;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CodeBase;
 using WebServiceSerializer;
 
 namespace OpenDentBusiness.WebTypes.WebForms

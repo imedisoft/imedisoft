@@ -32,7 +32,7 @@ namespace OpenDentBusiness
 				};
 
 				//Write the response out as a plain string. We will deserialize it on the other side.
-				return WebSerializer.SerializePrimitive<string>(WebSerializer.WriteXml(signupOut));
+				return WebSerializer.SerializePrimitive(WebSerializer.WriteXml(signupOut));
 			}
 			catch (Exception ex)
 			{

@@ -2,9 +2,6 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="OpenDentBusiness.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="OpenDentBusiness_OpenDentalServer_ServiceMain" Type="(Web Service URL)" Scope="Application">
-      <Value Profile="(Default)">http://localhost/OpenDentalServer/ServiceMain.asmx</Value>
-    </Setting>
     <Setting Name="OpenDentBusiness_WebServiceMainHQ_WebServiceMainHQ" Type="(Web Service URL)" Scope="Application">
       <Value Profile="(Default)">http://localhost/OpenDentalWebServiceHQ/webservicemainhq.asmx</Value>
     </Setting>

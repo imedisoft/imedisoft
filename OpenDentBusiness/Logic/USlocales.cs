@@ -69,7 +69,7 @@ namespace OpenDentBusiness
 			("West Virginia", "WV"),
 			("Wyoming", "WY"),
 
-			//US Districts
+			// US Districts
 			("District of Columbia", "DC"),
 
 			// US territories. (see https://simple.wikipedia.org/wiki/U.S._postal_abbreviations)

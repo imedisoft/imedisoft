@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace OpenDentBusiness.WebTypes.WebSched.TimeSlot
 {
 	[Serializable]
-	public class TimeSlot : WebBase
+	public class TimeSlot
 	{
 		public DateTime DateTimeStart;
 		public DateTime DateTimeStop;

@@ -13,7 +13,7 @@ using System.Xml;
 using WebServiceSerializer;
 
 namespace OpenDentBusiness {
-	public class PaySimple:WebBase {
+	public class PaySimple {
 
 		public class PropertyDescs {
 			public const string PaySimpleApiUserName="PaySimple API User Name";

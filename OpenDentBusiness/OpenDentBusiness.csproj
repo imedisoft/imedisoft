@@ -1581,11 +1581,8 @@
     <Compile Include="WebBridges\PayConnect.cs" />
     <Compile Include="WebBridges\PaySimple.cs" />
     <Compile Include="WebBridges\Podium.cs" />
-    <Compile Include="WebServices\IOpenDentalServer.cs" />
     <Compile Include="WebServices\ISheetsSynch.cs" />
     <Compile Include="WebServices\IWebServiceMainHQ.cs" />
-    <Compile Include="WebServices\OpenDentalServerMockIIS.cs" />
-    <Compile Include="WebServices\OpenDentalServerReal.cs" />
     <Compile Include="WebServices\PayloadHelper.cs" />
     <Compile Include="WebServices\SheetsSynchProxy.cs" />
     <Compile Include="WebServices\WebServiceMainHQMockDemo.cs" />
@@ -1796,11 +1793,6 @@
     <Compile Include="Data\Models\UserGroup.cs" />
     <Compile Include="TableTypes\UserQuery.cs" />
     <Compile Include="TableTypes\ZipCode.cs" />
-    <Compile Include="Web References\OpenDentalServer\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.map</DependentUpon>
-    </Compile>
     <Compile Include="X12\X12object.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -2071,17 +2063,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="http://localhost/OpenDentalServer/ServiceMain.asmx">
-      <UrlBehavior>Dynamic</UrlBehavior>
-      <RelPath>Web References\OpenDentalServer\</RelPath>
-      <UpdateFromURL>http://localhost/OpenDentalServer/ServiceMain.asmx</UpdateFromURL>
-      <ServiceLocationURL>
-      </ServiceLocationURL>
-      <CachedDynamicPropName>
-      </CachedDynamicPropName>
-      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
-      <CachedSettingsPropName>OpenDentBusiness_OpenDentalServer_ServiceMain</CachedSettingsPropName>
-    </WebReferenceUrl>
     <WebReferenceUrl Include="http://localhost/OpenDentalWebServiceHQ/webservicemainhq.asmx">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\WebServiceMainHQ\</RelPath>
@@ -2199,12 +2180,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="Resources\rxnorm.zip" />
-    <None Include="Web References\OpenDentalServer\Reference.map">
-      <Generator>MSDiscoCodeGenerator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Web References\OpenDentalServer\ServiceMain.disco" />
-    <None Include="Web References\OpenDentalServer\ServiceMain.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\icd9.txt" />
