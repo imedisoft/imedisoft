@@ -331,10 +331,7 @@ namespace OpenDental {
 			//For now it is only implemented in the Chart Module.
 			switch(_sheetDefCur.SheetType) {
 				case SheetTypeEnum.ChartModule:
-					if(Programs.UsingEcwTightOrFullMode()) {
-						_sheetLayoutModeCur=SheetFieldLayoutMode.Ecw;
-					}
-					else if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
+					if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 						_sheetLayoutModeCur=SheetFieldLayoutMode.MedicalPractice;
 					}
 					else if(Programs.UsingOrion) {

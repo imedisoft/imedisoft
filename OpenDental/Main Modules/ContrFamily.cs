@@ -433,21 +433,6 @@ namespace OpenDental{
 					}
 				}
 			}
-			else {
-				if(Programs.UsingEcwFullMode()) {
-					ToolBarMain.Buttons["Add"].Enabled=false;
-					ToolBarMain.Buttons["Delete"].Enabled=false;
-					if(Prefs.GetBool(PrefName.ShowFeaturePatientClone)
-						&& ToolBarMain.Buttons["AddClone"]!=null
-						&& ToolBarMain.Buttons["SynchClone"]!=null
-						&& ToolBarMain.Buttons["BreakClone"]!=null)
-					{
-						ToolBarMain.Buttons["AddClone"].Enabled=false;
-						ToolBarMain.Buttons["SynchClone"].Enabled=false;
-						ToolBarMain.Buttons["BreakClone"].Enabled=false;
-					}
-				}
-			}
 			FillPatientPicture();
 			FillPatientData();
 			FillFamilyData();

@@ -305,7 +305,7 @@ namespace OpenDental {
 							errors++;
 							validMessage=false;
 						}
-						if(segmentFields[4]!="{CONTNO}" && !Programs.UsingEcwTightOrFullMode()) {
+						if(segmentFields[4]!="{CONTNO}") {
 							retVal+="SIU HL7 message is not sending eCW's account number in field PID.04\r\n";
 							errors++;
 							validMessage=false;
@@ -353,9 +353,7 @@ namespace OpenDental {
 			}
 			if(!segmentsContained.Contains("PID")) {
 				retVal+="No PID segment found in SIU HL7 message.\r\n";
-				if(!Programs.UsingEcwTightOrFullMode()) {
-					errors++;//to account for not sending eCW's account number
-				}
+				errors++;//to account for not sending eCW's account number
 				errors+=5;//no segment plus 4 sub errors.
 				validMessage=false;
 			}

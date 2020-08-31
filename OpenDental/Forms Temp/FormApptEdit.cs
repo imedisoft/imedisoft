@@ -334,10 +334,7 @@ namespace OpenDental{
 			contrApptProvSlider.ProvBarText=AptCur.ProvBarText;			
 			checkASAP.Checked=AptCur.Priority==ApptPriority.ASAP;
 			if(AptCur.AptStatus==ApptStatus.UnschedList) {
-				if(Programs.UsingEcwTightOrFullMode()) {
-					comboStatus.Enabled=true;
-				}
-				else if(HL7Defs.GetOneDeepEnabled()!=null && !HL7Defs.GetOneDeepEnabled().ShowAppts) {
+				if(HL7Defs.GetOneDeepEnabled()!=null && !HL7Defs.GetOneDeepEnabled().ShowAppts) {
 					comboStatus.Enabled=true;
 				}
 				else {
@@ -433,43 +430,9 @@ namespace OpenDental{
 			checkIsNewPatient.Checked=AptCur.IsNewPatient;
 			butColor.BackColor=AptCur.ColorOverride;
 			contrApptProvSlider.MinPerIncr=PrefC.GetInt(PrefName.AppointmentTimeIncrement);
-			if(Programs.UsingEcwTightOrFullMode() && !_isInsertRequired) {
-				//These buttons are ONLY for eCW, not any other HL7 interface.
-				butComplete.Visible=true;
-				butPDF.Visible=true;
-				//for eCW, we need to hide some things--------------------
-				if(Bridges.ECW.AptNum==AptCur.AptNum) {
-					butDelete.Visible=false;
-				}
-				butPin.Visible=false;
-				butTask.Visible=false;
-				butAddComm.Visible=false;
-				if(HL7Msgs.MessageWasSent(AptCur.AptNum)) {
-					_isEcwHL7Sent=true;
-					butComplete.Text="Revise";
-					//if(!Security.IsAuthorized(Permissions.Setup,true)) {
-					//	butComplete.Enabled=false;
-					//	butPDF.Enabled=false;
-					//}
-					butOK.Enabled=false;
-					gridProc.Enabled=false;
-					listQuickAdd.Enabled=false;
-					butAdd.Enabled=false;
-					butDeleteProc.Enabled=false;
-				}
-				else {//hl7 was not sent for this appt
-					_isEcwHL7Sent=false;
-					butComplete.Text="Finish && Send";
-					if(Bridges.ECW.AptNum != AptCur.AptNum) {
-						butComplete.Enabled=false;
-					}
-					butPDF.Enabled=false;
-				}
-			}
-			else {
-				butComplete.Visible=false;
-				butPDF.Visible=false;
-			}
+			butComplete.Visible = false;
+			butPDF.Visible = false;
+			
 			//Hide text message button sometimes
 			if(pat.WirelessPhone=="" || (!Programs.IsEnabled(ProgramName.CallFire) && !SmsPhones.IsIntegratedTextingEnabled())) {
 				butText.Enabled=false;
@@ -762,10 +725,6 @@ namespace OpenDental{
 					_listProcNumsAttachedStart=listProcs.FindAll(x => x.AptNum==AptCur.AptNum).Select(x => x.ProcNum).ToList();
 				}
 				listNumsSelected.AddRange(_listProcNumsAttachedStart);
-				if(Programs.UsingEcwTightOrFullMode() && !_isEcwHL7Sent) {//for eCW only and only if not in 'Revise' mode, select completed procs from _listProcsForAppt with ProcDate==AptDateTime
-					//Attach procs to this appointment in memory only so that Cancel button still works.
-					listNumsSelected.AddRange(listProcs.Where(x => x.ProcStatus==ProcStat.C && x.ProcDate.Date==AptCur.AptDateTime.Date).Select(x=>x.ProcNum));
-				}
 			}
 			else {//Filling the grid later on.
 				listNumsSelected.AddRange(gridProc.SelectedIndices.OfType<int>().Select(x => ((Procedure)gridProc.ListGridRows[x].Tag).ProcNum));
@@ -1823,7 +1782,6 @@ namespace OpenDental{
 				isAuxiliaryRole=hl7DefEnabled.hl7DefMessages.Any(x => x.MessageType==MessageTypeHL7.SIU && x.InOrOut==InOutHL7.Incoming);
 			}
 			if((IsInChartModule || IsInViewPatAppts)
-				&& !Programs.UsingEcwTightOrFullMode()//if eCW Tight or Full mode, appts created from inbound SIU messages and appt module always hidden
 				&& AptCur.AptStatus!=ApptStatus.UnschedList
 				&& !isAuxiliaryRole)//generic HL7 def enabled, appt module hidden and an inbound SIU msg defined, appts created from msgs so no overlap check
 			{
@@ -2010,10 +1968,10 @@ namespace OpenDental{
 				MessageBox.Show(this,messageHL7.ToString());
 #endif
 			}
-			else {
-				//Note: AptCur.ProvNum may not reflect the selected provider in comboProv. This is still the Provider that the appointment was last saved with.
-				Bridges.ECW.SendHL7(AptCur.AptNum,AptCur.ProvNum,pat,pdfDataStr,"progressnotes",true,null);//just pdf, passing null proc list
-			}
+			//else {
+			//	//Note: AptCur.ProvNum may not reflect the selected provider in comboProv. This is still the Provider that the appointment was last saved with.
+			//	Bridges.ECW.SendHL7(AptCur.AptNum,AptCur.ProvNum,pat,pdfDataStr,"progressnotes",true,null);//just pdf, passing null proc list
+			//}
 			MessageBox.Show("Notes PDF sent.");
 		}
 
@@ -2254,9 +2212,9 @@ namespace OpenDental{
 					HL7ProcAttaches.Insert(hl7ProcAttach);
 				}
 			}
-			else {
-				Bridges.ECW.SendHL7(AptCur.AptNum,AptCur.ProvNum,pat,pdfDataStr,"progressnotes",false,listProcsForAppt);
-			}
+			//else {
+			//	Bridges.ECW.SendHL7(AptCur.AptNum,AptCur.ProvNum,pat,pdfDataStr,"progressnotes",false,listProcsForAppt);
+			//}
 			CloseOD=true;
 			if(IsNew) {
 				SecurityLogs.MakeLogEntry(Permissions.AppointmentCreate,pat.PatNum,

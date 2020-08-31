@@ -465,10 +465,6 @@ namespace OpenDental
 			}
 
 			Logger.MinLogLevel = PrefC.IsVerboseLoggingSession() ? LogLevel.Verbose : Logger.MinLogLevel;
-			if (Programs.UsingEcwTightOrFullMode())
-			{
-				formSplash.Close();
-			}
 
 			//Setting the time that we want to wait when the database connection has been lost.
 			//We don't want a LostConnection event to fire when updating because of Silent Updating which would fail due to window pop-ups from this event.
@@ -488,14 +484,8 @@ namespace OpenDental
 			invalidTypes.Add(InvalidType.Providers);//obviously heavily used
 			invalidTypes.Add(InvalidType.Programs);//already done above, but needs to be done explicitly to trigger the PostCleanup 
 			invalidTypes.Add(InvalidType.ToolButsAndMounts);//so program buttons will show in all the toolbars
-			if (Programs.UsingEcwTightMode())
-			{
-				lightSignalGrid1.Visible = false;
-			}
-			else
-			{
-				invalidTypes.Add(InvalidType.SigMessages);//so when mouse moves over light buttons, it won't crash
-			}
+			invalidTypes.Add(InvalidType.SigMessages);//so when mouse moves over light buttons, it won't crash
+			
 			RefreshLocalData(invalidTypes.ToArray());
 			FillSignalButtons();
 			ContrManage2.InitializeOnStartup();//so that when a signal is received, it can handle it.
@@ -575,12 +565,12 @@ namespace OpenDental
 				userControlTasks1.InitializeOnStartup();
 			}
 			moduleBar.SelectedIndex = Security.GetModule(0);//for eCW, this fails silently.
-			if (Programs.UsingEcwTightOrFullMode()
-				|| (HL7Defs.IsExistingHL7Enabled() && !HL7Defs.GetOneDeepEnabled().ShowAppts))
+			if (HL7Defs.IsExistingHL7Enabled() && !HL7Defs.GetOneDeepEnabled().ShowAppts)
 			{
 				moduleBar.SelectedModule = EnumModuleType.Chart;
 				LayoutControls();
 			}
+
 			if (Programs.UsingOrion)
 			{
 				moduleBar.SelectedModule = EnumModuleType.Family;
@@ -1036,35 +1026,7 @@ namespace OpenDental
 					moduleBar.SetVisible(EnumModuleType.Images, true);
 					moduleBar.SetVisible(EnumModuleType.Manage, true);
 				}
-				if (Programs.UsingEcwTightOrFullMode())
-				{//has nothing to do with HL7
-					if (ProgramProperties.GetPropVal(ProgramName.eClinicalWorks, "ShowImagesModule") == "1")
-					{
-						moduleBar.SetVisible(EnumModuleType.Images, true);
-					}
-					else
-					{
-						moduleBar.SetVisible(EnumModuleType.Images, false);
-					}
-				}
-				if (Programs.UsingEcwTightMode())
-				{//has nothing to do with HL7
-					moduleBar.SetVisible(EnumModuleType.Manage, false);
-				}
-				if (Programs.UsingEcwTightOrFullMode())
-				{//old eCW interfaces
-					if (Programs.UsingEcwTightMode())
-					{
-						moduleBar.SetVisible(EnumModuleType.Appointments, false);
-						moduleBar.SetVisible(EnumModuleType.Account, false);
-					}
-					else if (Programs.UsingEcwFullMode())
-					{
-						//We might create a special Appt module for eCW full users so they can access Recall.
-						moduleBar.SetVisible(EnumModuleType.Appointments, false);
-					}
-				}
-				else if (HL7Defs.IsExistingHL7Enabled())
+				if (HL7Defs.IsExistingHL7Enabled())
 				{//There may be a def enabled as well as the old program link enabled. In this case, do not look at the def for whether or not to show the appt and account modules, instead go by the eCW interface enabled.
 					HL7Def hl7Def = HL7Defs.GetOneDeepEnabled();
 					moduleBar.SetVisible(EnumModuleType.Appointments, hl7Def.ShowAppts);
@@ -1253,52 +1215,50 @@ namespace OpenDental
 			button.Style = ODToolBarButtonStyle.DropDownButton;
 			button.DropDownMenu = menuPatient;
 			ToolBarMain.Buttons.Add(button);
-			if (!Programs.UsingEcwTightMode())
-			{//eCW tight only gets Patient Select and Popups toolbar buttons
-				button = new ODToolBarButton("Commlog", 1, "New Commlog Entry", "Commlog");
-				ToolBarMain.Buttons.Add(button);
-				button = new ODToolBarButton("E-mail", 2, "Send E-mail", "Email");
-				button.Style = ODToolBarButtonStyle.DropDownButton;
-				button.DropDownMenu = menuEmail;
-				ToolBarMain.Buttons.Add(button);
-				button = new ODToolBarButton("WebMail", 2, "Secure WebMail", "WebMail");
-				button.Enabled = true;//Always enabled.  If the patient does not have an email address, then the user will be blocked from the FormWebMailMessageEdit window.
-				ToolBarMain.Buttons.Add(button);
-				if (_butText == null)
-				{//If laying out again (after modifying setup), we keep the button to preserve the current notification text.
-					_butText = new ODToolBarButton("Text", 5, "Send Text Message", "Text");
-					_butText.Style = ODToolBarButtonStyle.DropDownButton;
-					_butText.DropDownMenu = menuText;
-					_butText.Enabled = Programs.IsEnabled(ProgramName.CallFire) || SmsPhones.IsIntegratedTextingEnabled();
-					//The Notification text has not been set since startup.  We need an accurate starting count.
-					if (SmsPhones.IsIntegratedTextingEnabled())
-					{
-						//Init.  Will query for sms notification signal, or insert one if not found (eConnector hasn't updated this signal since we last cleared
-						//old signals).
-						SetSmsNotificationText();
-					}
-				}
-				ToolBarMain.Buttons.Add(_butText);
-				button = new ODToolBarButton("Letter", -1, "Quick Letter", "Letter");
-				button.Style = ODToolBarButtonStyle.DropDownButton;
-				button.DropDownMenu = menuLetter;
-				ToolBarMain.Buttons.Add(button);
-				button = new ODToolBarButton("Forms", -1, "", "Form");
-				//button.Style=ODToolBarButtonStyle.DropDownButton;
-				//button.DropDownMenu=menuForm;
-				ToolBarMain.Buttons.Add(button);
-				if (_butTask == null)
+			button = new ODToolBarButton("Commlog", 1, "New Commlog Entry", "Commlog");
+			ToolBarMain.Buttons.Add(button);
+			button = new ODToolBarButton("E-mail", 2, "Send E-mail", "Email");
+			button.Style = ODToolBarButtonStyle.DropDownButton;
+			button.DropDownMenu = menuEmail;
+			ToolBarMain.Buttons.Add(button);
+			button = new ODToolBarButton("WebMail", 2, "Secure WebMail", "WebMail");
+			button.Enabled = true;//Always enabled.  If the patient does not have an email address, then the user will be blocked from the FormWebMailMessageEdit window.
+			ToolBarMain.Buttons.Add(button);
+			if (_butText == null)
+			{//If laying out again (after modifying setup), we keep the button to preserve the current notification text.
+				_butText = new ODToolBarButton("Text", 5, "Send Text Message", "Text");
+				_butText.Style = ODToolBarButtonStyle.DropDownButton;
+				_butText.DropDownMenu = menuText;
+				_butText.Enabled = Programs.IsEnabled(ProgramName.CallFire) || SmsPhones.IsIntegratedTextingEnabled();
+				//The Notification text has not been set since startup.  We need an accurate starting count.
+				if (SmsPhones.IsIntegratedTextingEnabled())
 				{
-					_butTask = new ODToolBarButton("Tasks", 3, "Open Tasks", "Tasklist");
-					_butTask.Style = ODToolBarButtonStyle.DropDownButton;
-					_butTask.DropDownMenu = menuTask;
+					//Init.  Will query for sms notification signal, or insert one if not found (eConnector hasn't updated this signal since we last cleared
+					//old signals).
+					SetSmsNotificationText();
 				}
-				ToolBarMain.Buttons.Add(_butTask);
-				button = new ODToolBarButton("Label", 4, "Print Label", "Label");
-				button.Style = ODToolBarButtonStyle.DropDownButton;
-				button.DropDownMenu = menuLabel;
-				ToolBarMain.Buttons.Add(button);
 			}
+			ToolBarMain.Buttons.Add(_butText);
+			button = new ODToolBarButton("Letter", -1, "Quick Letter", "Letter");
+			button.Style = ODToolBarButtonStyle.DropDownButton;
+			button.DropDownMenu = menuLetter;
+			ToolBarMain.Buttons.Add(button);
+			button = new ODToolBarButton("Forms", -1, "", "Form");
+			//button.Style=ODToolBarButtonStyle.DropDownButton;
+			//button.DropDownMenu=menuForm;
+			ToolBarMain.Buttons.Add(button);
+			if (_butTask == null)
+			{
+				_butTask = new ODToolBarButton("Tasks", 3, "Open Tasks", "Tasklist");
+				_butTask.Style = ODToolBarButtonStyle.DropDownButton;
+				_butTask.DropDownMenu = menuTask;
+			}
+			ToolBarMain.Buttons.Add(_butTask);
+			button = new ODToolBarButton("Label", 4, "Print Label", "Label");
+			button.Style = ODToolBarButtonStyle.DropDownButton;
+			button.DropDownMenu = menuLabel;
+			ToolBarMain.Buttons.Add(button);
+
 			ToolBarMain.Buttons.Add(new ODToolBarButton("Popups", -1, "Edit popups for this patient", "Popups"));
 			ProgramL.LoadToolbar(ToolBarMain, ToolBarsAvail.MainToolbar);
 			Plugins.HookAddCode(this, "FormOpenDental.LayoutToolBar_end");
@@ -1497,35 +1457,29 @@ namespace OpenDental
 			}
 			if (CurPatNum == 0)
 			{//Only on startup, I think.
-				if (!Programs.UsingEcwTightMode())
-				{//eCW tight only gets Patient Select and Popups toolbar buttons
-				 //We need a drafts folder the user can view saved emails in before we allow the user to save email without a patient selected.
-					ToolBarMain.Buttons["Email"].Enabled = false;
-					ToolBarMain.Buttons["WebMail"].Enabled = false;
-					ToolBarMain.Buttons["Commlog"].Enabled = false;
-					ToolBarMain.Buttons["Letter"].Enabled = false;
-					ToolBarMain.Buttons["Form"].Enabled = false;
-					ToolBarMain.Buttons["Tasklist"].Enabled = true;
-					ToolBarMain.Buttons["Label"].Enabled = false;
-				}
+
+				ToolBarMain.Buttons["Email"].Enabled = false;
+				ToolBarMain.Buttons["WebMail"].Enabled = false;
+				ToolBarMain.Buttons["Commlog"].Enabled = false;
+				ToolBarMain.Buttons["Letter"].Enabled = false;
+				ToolBarMain.Buttons["Form"].Enabled = false;
+				ToolBarMain.Buttons["Tasklist"].Enabled = true;
+				ToolBarMain.Buttons["Label"].Enabled = false;
 				ToolBarMain.Buttons["Popups"].Enabled = false;
 			}
 			else
 			{
-				if (!Programs.UsingEcwTightMode())
-				{//eCW tight only gets Patient Select and Popups toolbar buttons
-					ToolBarMain.Buttons["Commlog"].Enabled = true;
-					ToolBarMain.Buttons["Email"].Enabled = true;
-					if (_butText != null)
-					{
-						_butText.Enabled = Programs.IsEnabled(ProgramName.CallFire) || SmsPhones.IsIntegratedTextingEnabled();
-					}
-					ToolBarMain.Buttons["WebMail"].Enabled = true;
-					ToolBarMain.Buttons["Letter"].Enabled = true;
-					ToolBarMain.Buttons["Form"].Enabled = true;
-					ToolBarMain.Buttons["Tasklist"].Enabled = true;
-					ToolBarMain.Buttons["Label"].Enabled = true;
+				ToolBarMain.Buttons["Commlog"].Enabled = true;
+				ToolBarMain.Buttons["Email"].Enabled = true;
+				if (_butText != null)
+				{
+					_butText.Enabled = Programs.IsEnabled(ProgramName.CallFire) || SmsPhones.IsIntegratedTextingEnabled();
 				}
+				ToolBarMain.Buttons["WebMail"].Enabled = true;
+				ToolBarMain.Buttons["Letter"].Enabled = true;
+				ToolBarMain.Buttons["Form"].Enabled = true;
+				ToolBarMain.Buttons["Tasklist"].Enabled = true;
+				ToolBarMain.Buttons["Label"].Enabled = true;
 				ToolBarMain.Buttons["Popups"].Enabled = true;
 			}
 			ToolBarMain.Invalidate();
@@ -2884,10 +2838,6 @@ namespace OpenDental
 			{
 				return false;
 			}
-			if (!lightSignalGrid1.Visible && Programs.UsingEcwTightOrFullMode())
-			{//for faster eCW loading
-				return false;
-			}
 			return true;
 		}
 
@@ -3898,19 +3848,10 @@ namespace OpenDental
 					}
 					else
 					{
-						if (Programs.UsingEcwTightMode())
-						{
-							ContrFamily2Ecw.Visible = true;
-							this.ActiveControl = this.ContrFamily2Ecw;
-							ContrFamily2Ecw.ModuleSelected(CurPatNum);
-						}
-						else
-						{
-							ContrFamily2.InitializeOnStartup();
-							ContrFamily2.Visible = true;
-							this.ActiveControl = this.ContrFamily2;
-							ContrFamily2.ModuleSelected(CurPatNum);
-						}
+						ContrFamily2.InitializeOnStartup();
+						ContrFamily2.Visible = true;
+						this.ActiveControl = this.ContrFamily2;
+						ContrFamily2.ModuleSelected(CurPatNum);
 					}
 					break;
 				case EnumModuleType.Account:
@@ -6973,7 +6914,7 @@ namespace OpenDental
 		private void ProcessCommandLine(string[] args)
 		{
 			//if(!Programs.UsingEcwTight() && args.Length==0){
-			if (!Programs.UsingEcwTightOrFullMode() && args.Length == 0)
+			if (args.Length == 0)
 			{//May have to modify to accept from other sw.
 				SetModuleSelected();
 				return;
@@ -7093,23 +7034,12 @@ namespace OpenDental
 				//jsalmon - This is very much a hack but the customer is very large and needs this change ASAP.  Nathan has suggested that we create a ticket with eCW to complain about this and make them fix it.
 				lbSessionId = args[args.Length - 1].Trim('"');
 			}
-			#region eCW bridge
-			Bridges.ECW.AptNum = PIn.Long(aptNum);
-			Bridges.ECW.EcwConfigPath = ecwConfigPath;
-			Bridges.ECW.UserId = userId;
-			Bridges.ECW.JSessionId = jSessionId;
-			Bridges.ECW.JSessionIdSSO = jSessionIdSSO;
-			Bridges.ECW.LBSessionId = lbSessionId;
-			#endregion
 			#region UserName and PassHash
 			//Only consider username and password here when not in Middle Tier mode.
 			//If credentials were passed in the command line arguments for Middle Tier, they were already considered in the Choose Database window.
 
-			//Users are allowed to use eCW tight integration without command line.  They can manually launch Open Dental.
-			//We always want to trigger login window for eCW tight, even if no username was passed in.
-			if ((Programs.UsingEcwTightOrFullMode() && Security.CurrentUser == null)
-				//Or if a username was passed in and it's different from the current user
-				|| (userName != "" && (Security.CurrentUser == null || Security.CurrentUser.UserName != userName)))
+
+			if (userName != "" && (Security.CurrentUser == null || Security.CurrentUser.UserName != userName))
 			{
 				//Use the username and passhash that was passed in to determine which user to log in
 				//log out------------------------------------
@@ -7125,7 +7055,7 @@ namespace OpenDental
 					user = Security.CurrentUser.Copy();
 				}
 				//Can't use Userods.CheckPassword, because we only have the hashed password.
-				if (passHash != user.PasswordHash || !Programs.UsingEcwTightOrFullMode())
+				if (passHash != user.PasswordHash)
 				{//password not accepted or not using eCW
 				 //So present logon screen
 					ShowLogOn();
@@ -7265,8 +7195,7 @@ namespace OpenDental
 			{
 				try
 				{
-					bool isEcwTightOrFullMode = Programs.UsingEcwTightOrFullMode();
-					Security.CurrentUser = Userods.CheckUserAndPassword(odUser, odPassword, isEcwTightOrFullMode);
+					Security.CurrentUser = Userods.CheckUserAndPassword(odUser, odPassword);
 				}
 				catch (Exception ex)
 				{

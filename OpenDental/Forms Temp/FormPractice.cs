@@ -726,9 +726,6 @@ namespace OpenDental{
 
 		private void FormPractice_Load(object sender, System.EventArgs e) {
 			checkIsMedicalOnly.Checked=Prefs.GetBool(PrefName.PracticeIsMedicalOnly);
-			if(Programs.UsingEcwTightOrFullMode()) {
-				checkIsMedicalOnly.Visible=false;
-			}
 			textPracticeTitle.Text=Prefs.GetString(PrefName.PracticeTitle);
 			textAddress.Text=Prefs.GetString(PrefName.PracticeAddress);
 			textAddress2.Text=Prefs.GetString(PrefName.PracticeAddress2);

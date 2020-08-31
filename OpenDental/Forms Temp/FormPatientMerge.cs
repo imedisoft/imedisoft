@@ -61,10 +61,6 @@ namespace OpenDental {
 				|| _patFrom.Birthdate!=_patTo.Birthdate) 
 			{//mismatch
 				msgText="The two patients do not have the same first name, last name, and birthdate.";
-				if(Programs.UsingEcwTightOrFullMode()) {
-					msgText+="\r\n"+"The patients must first be merged from within eCW, then immediately merged in the same order in Open Dental.  "
-						+"If the patients are not merged in this manner, some information may not properly bridge between eCW and Open Dental.";
-				}
 				msgText+="\r\n\r\n"
 					+"Into patient name"+": "+Patients.GetNameFLnoPref(_patTo.LName,_patTo.FName,"")+", "//using Patients.GetNameFLnoPref to omit MiddleI
 					+"Into patient birthdate"+": "+_patTo.Birthdate.ToShortDateString()+"\r\n"

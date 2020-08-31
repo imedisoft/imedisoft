@@ -66,28 +66,6 @@ namespace OpenDentBusiness
 		public static long GetProgramNum(ProgramName progName) 
 			=> GetCur(progName)?.Id ?? 0;
 
-		/// <summary>
-		/// Using eClinicalWorks tight integration.
-		/// </summary>
-		[Obsolete]
-		public static bool UsingEcwTightMode()
-			=> IsEnabled(ProgramName.eClinicalWorks) && ProgramProperties.GetPropVal(ProgramName.eClinicalWorks, "eClinicalWorksMode") == "0";
-
-		/// <summary>
-		/// Using eClinicalWorks full mode.
-		/// </summary>
-		[Obsolete]
-		public static bool UsingEcwFullMode()
-			=> IsEnabled(ProgramName.eClinicalWorks) && ProgramProperties.GetPropVal(ProgramName.eClinicalWorks, "eClinicalWorksMode") == "2";
-
-		/// <summary>
-		/// Returns true if using eCW in tight or full mode.
-		/// In these modes, appointments ARE allowed to overlap because we block users from seeing them.
-		/// </summary>
-		[Obsolete] 
-		public static bool UsingEcwTightOrFullMode() 
-			=> UsingEcwTightMode() || UsingEcwFullMode();
-
 		public static bool UsingOrion 
 			=> IsEnabled(ProgramName.Orion);
 

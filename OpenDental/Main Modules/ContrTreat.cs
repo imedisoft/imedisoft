@@ -624,9 +624,6 @@ namespace OpenDental
 			tabShowSort.TabPages.Remove(tabPagePrint);//We may add this back in gridPlans_CellClick.
 			//Configure a CheckBoxState variable to save/load the state of all the checkboxes in the "Show" tab.
 			_checkboxesShowState=new CheckBoxState(tabPageShow.Controls.OfType<CheckBox>().ToArray());
-			if(Programs.UsingEcwTightOrFullMode()) {
-				butPlannedAppt.Visible=false;
-			}
 		}
 
 		///<summary>Called every time local data is changed from any workstation.  Refreshes priority lists and lays out the toolbar.</summary>
@@ -3286,15 +3283,6 @@ namespace OpenDental
 				MessageBox.Show("An Active or Inactive TP must be selected before saving a TP.  You can highlight some procedures in the TP to save a TP with only those procedures in it.");
 				return;
 			}
-			//Check for duplicate procedures on the appointment before sending the DFT to eCW.
-			if(Programs.UsingEcwTightOrFullMode() && Bridges.ECW.AptNum!=0) {
-				List<Procedure> procs=Procedures.GetProcsForSingle(Bridges.ECW.AptNum,false);
-				string duplicateProcs=ProcedureL.ProcsContainDuplicates(procs);
-				if(duplicateProcs!="") {
-					MessageBox.Show(duplicateProcs);
-					return;
-				}
-			}
 			if(gridMain.SelectedIndices.Length==0){
 				gridMain.SetSelected(true);//Select all if none selected.
 			}
@@ -3413,39 +3401,6 @@ namespace OpenDental
 				if(_listTreatPlans[i].TreatPlanNum==tp.TreatPlanNum){
 					gridPlans.SetSelected(i,true);
 					FillMain();
-				}
-			}
-			//Send TP DFT HL7 message to ECW with embedded PDF when using tight or full integration only.
-			if(Programs.UsingEcwTightOrFullMode() && Bridges.ECW.AptNum!=0){
-				PrepImageForPrinting();
-				MigraDoc.Rendering.PdfDocumentRenderer pdfRenderer=new MigraDoc.Rendering.PdfDocumentRenderer(true,PdfFontEmbedding.Always);
-				pdfRenderer.Document=CreateDocument();
-				pdfRenderer.RenderDocument();
-				MemoryStream ms=new MemoryStream();
-				pdfRenderer.PdfDocument.Save(ms);
-				byte[] pdfBytes=ms.GetBuffer();
-				//#region Remove when testing is complete.
-				//string tempFilePath=Path.GetTempFileName();
-				//File.WriteAllBytes(tempFilePath,pdfBytes);
-				//#endregion
-				string pdfDataStr=Convert.ToBase64String(pdfBytes);
-				if(HL7Defs.IsExistingHL7Enabled()) {
-					//DFT messages that are PDF's only and do not include FT1 segments, so proc list can be empty
-					//MessageConstructor.GenerateDFT(procList,EventTypeHL7.P03,PatCur,Patients.GetPat(PatCur.Guarantor),Bridges.ECW.AptNum,"treatment",pdfDataStr);
-					MessageHL7 messageHL7=MessageConstructor.GenerateDFT(new List<Procedure>(),EventTypeHL7.P03,PatCur,Patients.GetPat(PatCur.Guarantor),Bridges.ECW.AptNum,"treatment",pdfDataStr);
-					if(messageHL7==null) {
-						MessageBox.Show("There is no DFT message type defined for the enabled HL7 definition.");
-						return;
-					}
-					HL7Msg hl7Msg=new HL7Msg();
-					hl7Msg.AptNum=0;//Prevents the appt complete button from changing to the "Revise" button prematurely.
-					hl7Msg.HL7Status=HL7MessageStatus.OutPending;//it will be marked outSent by the HL7 service.
-					hl7Msg.MsgText=messageHL7.ToString();
-					hl7Msg.PatNum=PatCur.PatNum;
-					HL7Msgs.Insert(hl7Msg);
-				}
-				else {
-					Bridges.ECW.SendHL7(Bridges.ECW.AptNum,PatCur.PriProv,PatCur,pdfDataStr,"treatment",true,null);//just pdf, passing null proc list
 				}
 			}
 		}

@@ -1851,11 +1851,6 @@ namespace OpenDental {
 			if(!Security.IsAuthorized(Permissions.ProcComplCreate,PIn.Date(textDate.Text),_procCur.CodeNum,PIn.Double(textProcFee.Text))) {
 				return;
 			}
-			//If user is trying to change status to complete and using eCW.
-			if((IsNew || _procOld.ProcStatus!=ProcStat.C) && Programs.UsingEcwTightOrFullMode()) {
-				MessageBox.Show("Procedures cannot be set complete in this window.  Set the procedure complete by setting the appointment complete.");
-				return;
-			}
 			//broken appointment procedure codes shouldn't trigger DateFirstVisit update.
 			if(ProcedureCodes.GetStringProcCode(_procCur.CodeNum)!="D9986" && ProcedureCodes.GetStringProcCode(_procCur.CodeNum)!="D9987") {
 				Procedures.SetDateFirstVisit(DateTimeOD.Today,2,_patCur);
@@ -2694,11 +2689,6 @@ namespace OpenDental {
 			}
 			#endregion
 			#region Procedure Status
-			//If user is trying to change status to complete and using eCW.
-			if(_procCur.ProcStatus==ProcStat.C && (IsNew || _procOld.ProcStatus!=ProcStat.C) && Programs.UsingEcwTightOrFullMode()) {
-				MessageBox.Show("Procedures cannot be set complete in this window.  Set the procedure complete by setting the appointment complete.");
-				return false;
-			}
 			if(_procCur.ProcStatus==ProcStat.C && PIn.Date(textDate.Text).Date > DateTime.Today.Date && !Prefs.GetBool(PrefName.FutureTransDatesAllowed)) {
 				MessageBox.Show("Completed procedures cannot have future dates.");
 				return false;
