@@ -99,7 +99,7 @@ namespace Imedisoft.Data.CrudGenerator
             this.namespaceTextBox.Name = "namespaceTextBox";
             this.namespaceTextBox.Size = new System.Drawing.Size(300, 21);
             this.namespaceTextBox.TabIndex = 5;
-            this.namespaceTextBox.Text = "OpenDentBusiness";
+            this.namespaceTextBox.Text = "Imedisoft.Data";
             // 
             // namespaceLabel
             // 

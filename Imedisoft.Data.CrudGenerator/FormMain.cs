@@ -1,7 +1,7 @@
 ﻿using Imedisoft.Data.Annotations;
 using Imedisoft.Data.CrudGenerator.Generator;
 using Imedisoft.Data.CrudGenerator.Schema;
-using OpenDentBusiness;
+using Imedisoft.Data.Models;
 using System;
 using System.Drawing;
 using System.IO;
@@ -51,7 +51,7 @@ namespace Imedisoft.Data.CrudGenerator
 		{
 			snippetTextBox.SetTabStopWidth(4);
 
-			Type typeTableBase = typeof(TableBase);
+			Type typeTableBase = typeof(Account);
 
 			assembly = Assembly.GetAssembly(typeTableBase);
 

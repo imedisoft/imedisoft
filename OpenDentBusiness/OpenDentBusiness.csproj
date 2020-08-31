@@ -1653,7 +1653,6 @@
     <Compile Include="SheetFramework\SheetFieldsAvailable.cs" />
     <Compile Include="SheetFramework\SheetParameter.cs" />
     <Compile Include="SheetFramework\SheetsInternal.cs" />
-    <Compile Include="Data\Models\Account.cs" />
     <Compile Include="Data\Models\AccountingAutoPay.cs" />
     <Compile Include="TableTypes\Adjustment.cs" />
     <Compile Include="TableTypes\Appointment.cs" />
@@ -1799,6 +1798,10 @@
     <ProjectReference Include="..\CodeBase\xCodeBase.csproj">
       <Project>{18F7BC78-4B99-48D3-A1F1-0D13A63E3CF9}</Project>
       <Name>xCodeBase</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Imedisoft.Data.Models\Imedisoft.Data.Models.csproj">
+      <Project>{bec94dd0-96ff-48a9-b47e-2209960915b5}</Project>
+      <Name>Imedisoft.Data.Models</Name>
     </ProjectReference>
     <ProjectReference Include="..\Imedisoft.Data\Imedisoft.Data.csproj">
       <Project>{063eccee-21c7-4300-b616-2f256ff12fce}</Project>

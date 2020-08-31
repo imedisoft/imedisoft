@@ -45,7 +45,7 @@
             this.namespaceTextBox.Name = "namespaceTextBox";
             this.namespaceTextBox.Size = new System.Drawing.Size(235, 21);
             this.namespaceTextBox.TabIndex = 3;
-            this.namespaceTextBox.Text = "OpenDentBusiness.Crud";
+            this.namespaceTextBox.Text = "Imedisoft.Data";
             // 
             // namespaceLabel
             // 

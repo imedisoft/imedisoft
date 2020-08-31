@@ -143,13 +143,13 @@
       <Project>{18f7bc78-4b99-48d3-a1f1-0d13a63e3cf9}</Project>
       <Name>xCodeBase</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Imedisoft.Data.Models\Imedisoft.Data.Models.csproj">
+      <Project>{bec94dd0-96ff-48a9-b47e-2209960915b5}</Project>
+      <Name>Imedisoft.Data.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Imedisoft.Data\Imedisoft.Data.csproj">
       <Project>{063eccee-21c7-4300-b616-2f256ff12fce}</Project>
       <Name>Imedisoft.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OpenDentBusiness\OpenDentBusiness.csproj">
-      <Project>{3D0FC76E-803C-4DE2-BDB1-47D63A4E2357}</Project>
-      <Name>OpenDentBusiness</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
