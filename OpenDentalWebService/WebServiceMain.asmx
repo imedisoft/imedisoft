@@ -1,1 +1,0 @@
-﻿<%@ WebService Language="C#" CodeBehind="WebServiceMain.asmx.cs" Class="OpenDentalWebService.WebServiceMain" %>
