@@ -44,12 +44,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Account.cs" />
+    <Compile Include="AppointmentFieldDefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Imedisoft.Data\Imedisoft.Data.csproj">
       <Project>{063eccee-21c7-4300-b616-2f256ff12fce}</Project>
       <Name>Imedisoft.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Imedisoft.Translation\Imedisoft.Translation.csproj">
+      <Project>{3218c76d-d512-43ce-a588-5e136df5888a}</Project>
+      <Name>Imedisoft.Translation</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

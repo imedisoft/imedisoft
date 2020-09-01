@@ -235,11 +235,11 @@ namespace OpenDentBusiness
 				OrthoChartTabs.GetTableFromCache(true);
 				OrthoChartTabLinks.GetTableFromCache(true);
 			}
-			if (invalidTypes.Contains(InvalidType.PatFields) || refreshAll)
+			if (invalidTypes.Contains(InvalidType.CustomFields) || refreshAll)
 			{
-				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.PatFields.ToString());
+				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.CustomFields.ToString());
 				PatFieldDefs.GetTableFromCache(true);
-				ApptFieldDefs.GetTableFromCache(true);
+				AppointmentFieldDefinitions.RefreshCache();
 			}
 			if (invalidTypes.Contains(InvalidType.Pharmacies) || refreshAll)
 			{
@@ -460,7 +460,7 @@ namespace OpenDentBusiness
                 InvalidType.RecallTypes,
                 InvalidType.FeeScheds,
                 InvalidType.DisplayFields,
-                InvalidType.PatFields,
+                InvalidType.CustomFields,
                 InvalidType.AccountingAutoPays,
                 InvalidType.ProcButtons,
                 InvalidType.Diseases,

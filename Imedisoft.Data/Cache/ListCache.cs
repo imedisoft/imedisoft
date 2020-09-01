@@ -145,6 +145,28 @@ namespace Imedisoft.Data.Cache
         }
 
 		/// <summary>
+		/// Determines whether the cache contains any element that satisfies the given condition.
+		/// </summary>
+		/// <param name="predicate">A function to test each cache entry for a condition.</param>
+		/// <returns>True if any element matches the givencondition; otherwise, false.</returns>
+		public bool Any(Predicate<TValue> predicate)
+        {
+			if (predicate == null) return false;
+
+			if (requiresRefresh) Refresh();
+
+			lock (items)
+			{
+				foreach (var item in items)
+				{
+					if (predicate(item)) return true;
+				}
+			}
+
+			return false;
+		}
+
+		/// <summary>
 		/// Called the first time the cache is refreshed (i.o. on the first load).
 		/// </summary>
 		protected virtual void Initialize()

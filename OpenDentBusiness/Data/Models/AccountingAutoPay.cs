@@ -11,7 +11,7 @@ namespace OpenDentBusiness
     /// For example, a cash payment would create a picklist of cashboxes for user to put the cash into.
     /// </summary>
 	[Table("accounting_auto_pays")]
-	public class AccountingAutoPay : TableBase
+	public class AccountingAutoPay
 	{
 		[PrimaryKey]
 		public long Id;

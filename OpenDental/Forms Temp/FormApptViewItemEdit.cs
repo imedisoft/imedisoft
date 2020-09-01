@@ -1,14 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
+using Imedisoft.Data;
 using OpenDentBusiness;
+using System;
+using System.Windows.Forms;
 
-namespace OpenDental {
-	public partial class FormApptViewItemEdit:ODForm {
+namespace OpenDental
+{
+    public partial class FormApptViewItemEdit:ODForm {
 		public ApptViewItem ApptVItem;
 		private bool _hasChangedColor;
 
@@ -19,7 +16,7 @@ namespace OpenDental {
 
 		private void FormApptViewItemEdit_Load(object sender,EventArgs e) {
 			if(ApptVItem.ApptFieldDefNum>0) {
-				textDesc.Text=ApptFieldDefs.GetFieldName(ApptVItem.ApptFieldDefNum);
+				textDesc.Text=AppointmentFieldDefinitions.GetFieldName(ApptVItem.ApptFieldDefNum);
 			}
 			else {
 				textDesc.Text=ApptVItem.ElementDesc;

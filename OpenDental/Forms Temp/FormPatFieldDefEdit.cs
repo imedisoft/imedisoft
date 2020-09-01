@@ -246,7 +246,7 @@ namespace OpenDental{
 			}
 			try{
 				PatFieldDefs.Delete(FieldDef);//Throws if in use.
-				FieldDefLinks.DeleteForFieldDefNum(FieldDef.PatFieldDefNum,FieldDefTypes.Patient);//Delete any FieldDefLinks to this PatFieldDef
+				FieldDefLinks.DeleteForFieldDefNum(FieldDef.Id,FieldDefTypes.Patient);//Delete any FieldDefLinks to this PatFieldDef
 				FieldDef=null;
 				DialogResult=DialogResult.OK;
 			}

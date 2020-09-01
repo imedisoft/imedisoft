@@ -162,6 +162,9 @@
   <data name="Command" xml:space="preserve">
     <value>Command</value>
   </data>
+  <data name="ConfirmDeleteSelectedItem" xml:space="preserve">
+    <value>Are you sure you want to delete the selected item?</value>
+  </data>
   <data name="Controlled" xml:space="preserve">
     <value>Controlled</value>
   </data>
@@ -195,6 +198,9 @@
   <data name="ErrorOpeningLogFile" xml:space="preserve">
     <value>Could not open log file. {0}</value>
   </data>
+  <data name="FieldNameAlreadyInUse" xml:space="preserve">
+    <value>Field name already in use.</value>
+  </data>
   <data name="FirstName" xml:space="preserve">
     <value>FirstName</value>
   </data>
@@ -212,6 +218,9 @@
   </data>
   <data name="LastName" xml:space="preserve">
     <value>LastName</value>
+  </data>
+  <data name="ListCannotBeBlank" xml:space="preserve">
+    <value>List cannot be blank.</value>
   </data>
   <data name="LockedByAdministrator" xml:space="preserve">
     <value>Locked by Administrator.</value>
@@ -247,6 +256,9 @@ If you do have a printer installed, restarting the workstation may solve the pro
   </data>
   <data name="OperationNowAllowedForReason" xml:space="preserve">
     <value>You are not allowed to perform the requested operation. Reason: {0}.</value>
+  </data>
+  <data name="PickList" xml:space="preserve">
+    <value>Pick List</value>
   </data>
   <data name="PleaseEnterAbbreviation" xml:space="preserve">
     <value>Please enter an abbreviation.</value>
@@ -301,6 +313,9 @@ If you do have a printer installed, restarting the workstation may solve the pro
   </data>
   <data name="TagHidden" xml:space="preserve">
     <value>hidden</value>
+  </data>
+  <data name="Text" xml:space="preserve">
+    <value>Text</value>
   </data>
   <data name="Type" xml:space="preserve">
     <value>Type</value>

@@ -106,6 +106,7 @@
     <Compile Include="DataConnectionEventArgs.cs" />
     <Compile Include="DataConnectionEventType.cs" />
     <Compile Include="DataExtensions.cs" />
+    <Compile Include="DataItem.cs" />
     <Compile Include="DataRecordBuilder.cs" />
     <Compile Include="DataRecord.cs" />
     <Compile Include="DataRecordBase.cs" />

@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -19,7 +20,7 @@ namespace OpenDental {
 
 		private void FormApptFieldPickEdit_Load(object sender,EventArgs e) {
 			labelName.Text=_field.FieldName;
-			string value=ApptFieldDefs.GetPickListByFieldName(_field.FieldName);
+			string value=AppointmentFieldDefinitions.GetPickListByFieldName(_field.FieldName);
 			string[] valueArray=value.Split(new string[] { "\r\n" },StringSplitOptions.None);
 			foreach(string s in valueArray) {
 				listBoxPick.Items.Add(s);

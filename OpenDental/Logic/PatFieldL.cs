@@ -16,7 +16,7 @@ namespace OpenDental {
 				.FindAll(x => x.FieldDefType==FieldDefTypes.Patient);
 			//Add a row for each existing PatFieldDef 
 			foreach(PatFieldDef patFieldDef in listPatFieldDefs) {
-				if(listFieldDefLinks.Exists(x => x.FieldDefNum==patFieldDef.PatFieldDefNum)) {
+				if(listFieldDefLinks.Exists(x => x.FieldDefNum==patFieldDef.Id)) {
 					continue;
 				}
 				GridRow row=new GridRow();
@@ -92,9 +92,6 @@ namespace OpenDental {
 						FormPF.IsNew=true;
 						FormPF.ShowDialog();
 					}
-					if(patFieldDef.FieldType==PatFieldType.InCaseOfEmergency) {
-						//Deprecated
-					}
 				}
 				else {//edit existing patfield
 					if(patFieldDef.FieldType==PatFieldType.Text) {
@@ -117,9 +114,6 @@ namespace OpenDental {
 					if(patFieldDef.FieldType==PatFieldType.Currency) {
 						FormPatFieldCurrencyEdit FormPF=new FormPatFieldCurrencyEdit(patField);
 						FormPF.ShowDialog();
-					}
-					if(patFieldDef.FieldType==PatFieldType.InCaseOfEmergency) {
-						//Deprecated
 					}
 				}
 			}

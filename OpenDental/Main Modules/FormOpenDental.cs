@@ -4322,7 +4322,7 @@ namespace OpenDental
 			{
 				return;
 			}
-			FormApptFieldDefs FormA = new FormApptFieldDefs();
+			FormAppointmentFieldDefinitions FormA = new FormAppointmentFieldDefinitions();
 			FormA.ShowDialog();
 			SecurityLogs.MakeLogEntry(Permissions.Setup, 0, "Appointment Field Defs");
 		}

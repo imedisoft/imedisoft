@@ -196,6 +196,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete the selected item?.
+        /// </summary>
+        public static string ConfirmDeleteSelectedItem {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteSelectedItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Controlled.
         /// </summary>
         public static string Controlled {
@@ -295,6 +304,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Field name already in use..
+        /// </summary>
+        public static string FieldNameAlreadyInUse {
+            get {
+                return ResourceManager.GetString("FieldNameAlreadyInUse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FirstName.
         /// </summary>
         public static string FirstName {
@@ -345,6 +363,15 @@ namespace Imedisoft.Translation {
         public static string LastName {
             get {
                 return ResourceManager.GetString("LastName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to List cannot be blank..
+        /// </summary>
+        public static string ListCannotBeBlank {
+            get {
+                return ResourceManager.GetString("ListCannotBeBlank", resourceCulture);
             }
         }
         
@@ -446,6 +473,15 @@ namespace Imedisoft.Translation {
         public static string OperationNowAllowedForReason {
             get {
                 return ResourceManager.GetString("OperationNowAllowedForReason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pick List.
+        /// </summary>
+        public static string PickList {
+            get {
+                return ResourceManager.GetString("PickList", resourceCulture);
             }
         }
         
@@ -608,6 +644,15 @@ namespace Imedisoft.Translation {
         public static string TagHidden {
             get {
                 return ResourceManager.GetString("TagHidden", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text.
+        /// </summary>
+        public static string Text {
+            get {
+                return ResourceManager.GetString("Text", resourceCulture);
             }
         }
         

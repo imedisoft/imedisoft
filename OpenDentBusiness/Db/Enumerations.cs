@@ -137,247 +137,258 @@ namespace OpenDentBusiness
 		ToothRange
 	}
 
-
-	///<summary>When the autorefresh message is sent to the other computers, this is the type.</summary>
+	/// <summary>
+	/// When the autorefresh message is sent to the other computers, this is the type.
+	/// </summary>
 	public enum InvalidType
 	{
-		///<summary>0</summary>
 		None,
-		///<summary>1 Deprecated. Not used with any other flags</summary>
-		Date,
-		///<summary>2 Deprecated.  Inefficient.  All flags combined except Date and Tasks.</summary>
+
+		/// <summary>
+		/// 2 Deprecated.  Inefficient.
+		/// All flags combined except Date and Tasks.
+		/// </summary>
 		AllLocal,
-		///<summary>3 Not used with any other flags.  Used to just indicate added tasks, but now it indicates any change at all except those where a popup is needed.  If we also want a popup, then use TaskPopup.</summary>
+
+		/// <summary>
+		/// 3 Not used with any other flags.
+		/// Used to just indicate added tasks, but now it indicates any change at all except those where a popup is needed.
+		/// If we also want a popup, then use TaskPopup.
+		/// </summary>
 		Task,
-		///<summary>4</summary>
+
 		ProcCodes,
-		///<summary>5</summary>
 		Prefs,
-		///<summary>6 ApptViews, ApptViewItems, AppointmentRules, ProcApptColors.</summary>
+
+		/// <summary>
+		/// 6 ApptViews, ApptViewItems, AppointmentRules, ProcApptColors.
+		/// </summary>
 		Views,
-		///<summary>7</summary>
+
 		AutoCodes,
-		///<summary>8</summary>
 		Carriers,
-		///<summary>9</summary>
 		ClearHouses,
-		///<summary>10</summary>
 		Computers,
-		///<summary>11</summary>
 		InsCats,
-		///<summary>12- Also includes payperiods.</summary>
+
+		/// <summary>
+		/// 12- Also includes payperiods.
+		/// </summary>
 		Employees,
-		///<summary>13- Deprecated.</summary>
-		StartupOld,
-		///<summary>14</summary>
+
 		Defs,
-		///<summary>15. Templates and addresses, but not messages.</summary>
+
+		/// <summary>
+		/// 15. Templates and addresses, but not messages.
+		/// </summary>
 		Email,
-		///<summary>16. Obsolete</summary>
-		Fees,
-		///<summary>17</summary>
+
+
 		Letters,
-		///<summary>18- Invalidates quick paste notes and cats.</summary>
+
+		/// <summary>
+		/// 18- Invalidates quick paste notes and cats.
+		/// </summary>
 		QuickPaste,
-		///<summary>19- Userods, UserGroups, UserGroupAttaches, and GroupPermissions</summary>
+
+		/// <summary>
+		/// 19- Userods, UserGroups, UserGroupAttaches, and GroupPermissions
+		/// </summary>
 		Security,
-		///<summary>20 - Also includes program properties.</summary>
+
+		/// <summary>
+		/// 20 - Also includes program properties.
+		/// </summary>
 		Programs,
-		///<summary>21- Also includes MountDefs</summary>
+
+		/// <summary>
+		/// 21- Also includes MountDefs
+		/// </summary>
 		ToolButsAndMounts,
-		///<summary>22- Also includes clinics.</summary>
+
+		/// <summary>
+		/// 22- Also includes clinics.
+		/// </summary>
 		Providers,
-		///<summary>23- Also includes ClaimFormItems.</summary>
+
+		/// <summary>
+		/// 23- Also includes ClaimFormItems.
+		/// </summary>
 		ClaimForms,
-		///<summary>24</summary>
+
 		ZipCodes,
-		///<summary>25</summary>
 		LetterMerge,
-		///<summary>26</summary>
 		DentalSchools,
-		///<summary>27</summary>
 		Operatories,
-		///<summary>28</summary>
 		TaskPopup,
-		///<summary>29</summary>
 		Sites,
-		///<summary>30</summary>
 		Pharmacies,
-		///<summary>31</summary>
 		Sheets,
-		///<summary>32</summary>
 		RecallTypes,
-		///<summary>33</summary>
 		FeeScheds,
-		///<summary>34. This is used internally by OD, Inc with the phonenumber table and the phone server.</summary>
-		PhoneNumbers,
-		///<summary>35. Deprecated, use SigMessages instead.  Old summary: Signal/message defs</summary>
-		Signals,
-		///<summary>36</summary>
 		DisplayFields,
-		///<summary>37. And ApptFields.</summary>
-		PatFields,
-		///<summary>38</summary>
+		CustomFields,
 		AccountingAutoPays,
-		///<summary>39</summary>
 		ProcButtons,
-		///<summary>40.  Includes ICD9s.</summary>
+
+		/// <summary>
+		/// 40.  Includes ICD9s.
+		/// </summary>
 		Diseases,
-		///<summary>41</summary>
+
 		Languages,
-		///<summary>42</summary>
 		AutoNotes,
-		///<summary>43</summary>
 		ElectIDs,
-		///<summary>44</summary>
 		Employers,
-		///<summary>45</summary>
 		ProviderIdents,
-		///<summary>46</summary>
 		ShutDownNow,
-		///<summary>47</summary>
 		InsFilingCodes,
-		///<summary>48</summary>
 		ReplicationServers,
-		///<summary>49</summary>
 		Automation,
-		///<summary>50. This is used internally by OD, Inc with the phone server to trigger the phone system to reload after changing which call groups users are in.
-		///Also used when sending a signal to the phone tracking server to kick users in conference rooms.</summary>
-		PhoneAsteriskReload,
-		///<summary>51</summary>
 		TimeCardRules,
-		///<summary>52. Includes DrugManufacturers and DrugUnits.</summary>
+
+		/// <summary>
+		/// 52. Includes DrugManufacturers and DrugUnits.
+		/// </summary>
 		Vaccines,
-		///<summary>53. Includes all 4 HL7Def tables.</summary>
+
+		/// <summary>
+		/// 53. Includes all 4 HL7Def tables.
+		/// </summary>
 		HL7Defs,
-		///<summary>54</summary>
+
 		DictCustoms,
-		///<summary>55. Caches the wiki master page and the wikiListHeaderWidths</summary>
+
+		/// <summary>
+		/// 55. Caches the wiki master page and the wikiListHeaderWidths
+		/// </summary>
 		Wiki,
-		///<summary>56. SourceOfPayment</summary>
+
+		/// <summary>
+		/// 56. SourceOfPayment
+		/// </summary>
 		Sops,
-		///<summary>57. In-Memory table used for hard-coded codes and CQMs</summary>
+
+		/// <summary>
+		/// 57. In-Memory table used for hard-coded codes and CQMs
+		/// </summary>
 		EhrCodes,
-		///<summary>58. Used to override appointment color.  Might be used for other appointment attributes in the future.</summary>
+
+		/// <summary>
+		/// 58. Used to override appointment color.  Might be used for other appointment attributes in the future.
+		/// </summary>
 		AppointmentTypes,
-		///<summary>59. Caches the medication list to stop from over-refreshing and causing slowness.</summary>
+
+		/// <summary>
+		/// 59. Caches the medication list to stop from over-refreshing and causing slowness.
+		/// </summary>
 		Medications,
-		///<summary>60. This is a special InvalidType which indicates a refresh, but also includes the data to be refreshed inside of the signalod.FKey field.</summary>
-		SmsTextMsgReceivedUnreadCount,
-		///<summary>61</summary>
+
 		ProviderErxs,
-		///<summary>62. This is used internally by OD, refreshes the jobs windows in the Job Manager.</summary>
-		Jobs,
-		///<summary>63. This is used internally by OD, refreshes the jobRoles</summary>
-		JobPermission,
-		///<summary>64. Caches the StateAbbrs used for helping prefill state fields and for state validations.</summary>
+
+		/// <summary>
+		/// 64. Caches the StateAbbrs used for helping prefill state fields and for state validations.
+		/// </summary>
 		StateAbbrs,
-		///<summary>65</summary>
+
 		RequiredFields,
-		///<summary>66</summary>
 		Ebills,
-		///<summary>67</summary>
 		UserClinics,
-		///<summary>68. Replaces the deprecated "Date" invalid type for more granularity on invalid signals.</summary>
+
+		/// <summary>
+		/// 68. Replaces the deprecated "Date" invalid type for more granularity on invalid signals.
+		/// </summary>
 		Appointment,
-		///<summary>69</summary>
+
 		OrthoChartTabs,
-		///<summary>70. A user either acknowledged or added to the messaging buttons system.</summary>
+
+		/// <summary>
+		/// 70. A user either acknowledged or added to the messaging buttons system.
+		/// </summary>
 		SigMessages,
-		///<summary>71. Deprecated.</summary>
-		AlertSubs,
-		///<summary>72. THIS IS NOT CACHED. But is used to make server run the alert logic in OpenDentalService.</summary>
+
+		/// <summary>
+		/// 72. THIS IS NOT CACHED. But is used to make server run the alert logic in OpenDentalService.
+		/// </summary>
 		AlertItems,
-		///<summary>73. This is used internally by OD, refreshes the voice mails.</summary>
-		VoiceMails,
-		///<summary>74. Used to refresh the active kiosk grid in FormTerminalManager and loaded patient with list of forms in FormTerminal.</summary>
+
+		/// <summary>
+		/// 74. Used to refresh the active kiosk grid in FormTerminalManager and loaded patient with list of forms in FormTerminal.
+		/// </summary>
 		Kiosk,
-		///<summary>75</summary>
+
 		ClinicPrefs,
-		///<summary>76. Not addresses or templates, but inbox and sent messages.</summary>
+
+		/// <summary>
+		/// 76. Not addresses or templates, but inbox and sent messages.
+		/// </summary>
 		EmailMessages,
-		///<summary>77. The eConnector has finished sending web sched recall reminders.</summary>
-		WebSchedRecallReminders,
-		///<summary>78.</summary>
+
 		SmsBlockPhones,
-		///<summary>79.</summary>
 		AlertCategories,
-		///<summary>80.</summary>
 		AlertCategoryLinks,
-		///<summary>81. Used in updating menu item in report menu.</summary>
+
+		/// <summary>
+		/// 81. Used in updating menu item in report menu.
+		/// </summary>
 		UnfinalizedPayMenuUpdate,
-		///<summary>82. Used for validating clinics for eRx.</summary>
+
+		/// <summary>
+		/// 82. Used for validating clinics for eRx.
+		/// </summary>
 		ClinicErxs,
-		///<summary>83.</summary>
+
 		DisplayReports,
-		///<summary>84.</summary>
 		UserQueries,
-		///<summary>85. Schedules are not cached, but alerts other workstations if the schedules were changed</summary>
+
+		/// <summary>
+		/// 85. Schedules are not cached, but alerts other workstations if the schedules were changed
+		/// </summary>
 		Schedules,
-		///<summary>86. This is used internally by OD, refreshes the computer / extension linker table.</summary>
-		PhoneComps,
-		///<summary>87. This is used internally by OD, refreshes the call center map.</summary>
-		PhoneMap,
-		///<summary>88.</summary>
+
 		SmsPhones,
-		///<summary>89.  Chat support through our website at http://opendental.com/contact.html.
-		///Used to indicate a new session has been created, an existing session has been destroyed, or messages inside the session have changed.</summary>
-		WebChatSessions,
-		///<summary>90. Used for tracking refreshes on tabs 'for [User]', 'New for [User]', 'Main', 'Reminders'.</summary>
+
+		/// <summary>
+		/// 90. Used for tracking refreshes on tabs 'for [User]', 'New for [User]', 'Main', 'Reminders'.
+		/// </summary>
 		TaskList,
-		///<summary>91. Used for tracking refreshes on tab 'Open Tasks'.</summary>
+
+		/// <summary>
+		/// 91. Used for tracking refreshes on tab 'Open Tasks'.
+		/// </summary>
 		TaskAuthor,
-		///<summary>92. Used for tracking refreshes on tab 'Patient Tasks'.</summary>
+
+		/// <summary>
+		/// 92. Used for tracking refreshes on tab 'Patient Tasks'.
+		/// </summary>
 		TaskPatient,
-		///<summary>93. Used for refreshing the Referral cache.</summary>
+
+		/// <summary>
+		/// 93. Used for refreshing the Referral cache.
+		/// </summary>
 		Referral,
-		///<summary>94. Used for refreshing "In Process" pseudo procedure statuses.</summary>
+
+		/// <summary>
+		/// 94. Used for refreshing "In Process" pseudo procedure statuses.
+		/// </summary>
 		ProcMultiVisits,
-		///<summary>95. Used for refreshing the ProviderClinicLink cache.</summary>
+
+		/// <summary>
+		/// 95. Used for refreshing the ProviderClinicLink cache.
+		/// </summary>
 		ProviderClinicLink,
-		///<summary>96. Used for refreshing the KioskManager with eClipboard information.</summary>
+
+		/// <summary>
+		/// 96. Used for refreshing the KioskManager with eClipboard information.
+		/// </summary>
 		EClipboard,
-		///<summary>97. Used for refreshing the TP module for a specific patient.</summary>
+
+		/// <summary>
+		/// 97. Used for refreshing the TP module for a specific patient.
+		/// </summary>
 		TPModule,
 	}
-	//<summary></summary>
-	/*public enum ButtonType{
-		///<summary></summary>
-		ButPush,
-		///<summary></summary>
-		Text}*/
-	//DentalSpecialties are now a definition, user editable.
-	/////<summary></summary>
-	//public enum DentalSpecialty{
-	//	///<summary>0</summary>
-	//	General,
-	//	///<summary>1</summary>
-	//	Hygienist,
-	//	///<summary>2</summary>
-	//	Endodontics,
-	//	///<summary>3</summary>
-	//	Pediatric,
-	//	///<summary>4</summary>
-	//	Perio,
-	//	///<summary>5</summary>
-	//	Prosth,
-	//	///<summary>6</summary>
-	//	Ortho,
-	//	///<summary>7</summary>
-	//	Denturist,
-	//	///<summary>8</summary>
-	//	Surgery,
-	//	///<summary>9</summary>
-	//	Assistant,
-	//	///<summary>10</summary>
-	//	LabTech,
-	//	///<summary>11</summary>
-	//	Pathology,
-	//	///<summary>12</summary>
-	//	PublicHealth,
-	//	///<summary>13</summary>
-	//	Radiology
-	//}
+
 	///<summary>Appointment status.</summary>
 	public enum ApptStatus
 	{
@@ -401,25 +412,24 @@ namespace OpenDentBusiness
 		PtNoteCompleted
 	}
 
-	///<summary></summary>
 	public enum PatientStatus
 	{
-		///<summary>0</summary>
 		Patient,
-		///<summary>1</summary>
+
 		[Description("Non-patient")]
 		NonPatient,
-		///<summary>2</summary>
+
 		Inactive,
-		///<summary>3</summary>
 		Archived,
-		///<summary>4</summary>
 		Deleted,
-		///<summary>5</summary>
 		Deceased,
-		///<summary>6- Not an actual patient yet.</summary>
+
+		/// <summary>
+		/// Not an actual patient yet.
+		/// </summary>
 		Prospective
 	}
+
 	///<summary>Known as administrativeGender (HL7 OID of 2.16.840.1.113883.5.1) Male=M, Female=F, Unknown=Undifferentiated=UN.</summary>
 	public enum PatientGender
 	{//known as administrativeGender HL7 OID of 2.16.840.1.113883.5.1
@@ -430,195 +440,136 @@ namespace OpenDentBusiness
 		///<summary>2- Required by HIPAA for privacy.  Required by ehr to track missing entries. EHR/HL7 known as undifferentiated (UN).</summary>
 		Unknown
 	}
-	///<summary></summary>
+
 	public enum PatientPosition
 	{
-		///<summary>0</summary>
 		Single,
-		///<summary>1</summary>
 		Married,
-		///<summary>2</summary>
 		Child,
-		///<summary>3</summary>
 		Widowed,
-		///<summary>4</summary>
 		Divorced
 	}
-	///<summary>For schedule timeblocks.</summary>
+
+	/// <summary>
+	/// For schedule timeblocks.
+	/// </summary>
 	public enum ScheduleType
 	{
-		///<summary>0</summary>
 		Practice,
-		///<summary>1</summary>
 		Provider,
-		///<summary>2</summary>
 		Blockout,
-		///<summary>3</summary>
 		Employee,
-		///<summary>4 - A slot of time that an ASAP appointment can be moved up to.</summary>
+
+		/// <summary>
+		/// A slot of time that an ASAP appointment can be moved up to.
+		/// </summary>
 		WebSchedASAP,
 	}
-	///<summary>For actions taken on blockouts (cut,copy,paste, etc.)</summary>
+
+	/// <summary>
+	/// For actions taken on blockouts (cut,copy,paste, etc.)
+	/// </summary>
 	public enum BlockoutAction
 	{
-		///<summary>0</summary>
 		Cut,
-		///<summary>1</summary>
 		Copy,
-		///<summary>2</summary>
 		Paste,
-		///<summary>3</summary>
 		Delete,
-		///<summary>4</summary>
 		Create,
-		///<summary>5</summary>
 		Edit,
-		///<summary>6</summary>
 		Clear
 	}
-	//<summary>Used in the appointment edit window.</summary>
-	/*public enum LabCaseOld{
-		///<summary>0</summary>
-		None,
-		///<summary>1</summary>
-		Sent,
-		///<summary>2</summary>
-		Received,
-		///<summary>3</summary>
-		QualityChecked};*/
-	///<summary>Default sort method of the Procedure Code list.  0=Category, 1=ProcCode</summary>
+
+	/// <summary>
+	/// Default sort method of the Procedure Code list.
+	/// </summary>
 	public enum ProcCodeListSort
 	{
-		///<summary>0</summary>
 		Category,
-		///<summary>1</summary>
 		ProcCode
 	}
-	///<summary>Used in the other appointments window to keep track of the result when closing.</summary>
+
+	/// <summary>
+	/// Used in the other appointments window to keep track of the result when closing.
+	/// </summary>
 	public enum OtherResult
 	{
-		///<summary></summary>
 		Cancel,
-		///<summary></summary>
 		CreateNew,
-		///<summary></summary>
 		GoTo,
-		///<summary></summary>
 		CopyToPinBoard,
-		///<summary></summary>
 		NewToPinBoard,
-		///<summary>Currently only used when scheduling a recall.  Puts it on the pinboard, and then launches a search, jumping to a new date in the process.</summary>
+
+		/// <summary>
+		/// Currently only used when scheduling a recall.
+		/// Puts it on the pinboard, and then launches a search, jumping to a new date in the process.
+		/// </summary>
 		PinboardAndSearch
 	}
-	//public enum SearchPatType{Lname,Fname,HmPhone,Address}
-	///<summary></summary>
+
 	public enum PaintType
 	{
-		///<summary>0</summary>
 		Extraction,
-		///<summary>1</summary>
 		FillingSolid,
-		///<summary>2</summary>
 		FillingOutline,
-		///<summary>3</summary>
 		RCT,
-		///<summary>4</summary>
 		Post,
-		///<summary>5</summary>
 		CrownSolid,
-		///<summary>6</summary>
 		CrownOutline,
-		///<summary>7</summary>
 		CrownHatch,
-		///<summary>8</summary>
 		Implant,
-		///<summary>9</summary>
 		Sealant,
-		///<summary>10</summary>
 		PonticSolid,
-		///<summary>11</summary>
 		PonticOutline,
-		///<summary>12</summary>
 		PonticHatch,
-		///<summary>13</summary>
 		RetainerSolid,
-		///<summary>14</summary>
 		RetainerOutline,
-		///<summary>15</summary>
 		RetainerHatch
 	}
-	///<summary>Schedule status.  Open=0,Closed=1,Holiday=2.</summary>
+
+	/// <summary>Schedule status.</summary>
 	public enum SchedStatus
 	{
-		///<summary>0</summary>
 		Open,
-		///<summary>1</summary>
 		Closed,
-		///<summary>2</summary>
 		Holiday
 	}
-	//<summary></summary>
-	/*public enum BackupType{
-		  ///<summary></summary>
-		  CopyFiles,
-		  ///<summary></summary>
-		  CopyToServer,
-		  ///<summary></summary>
-		  DataDump}*/
-	///<summary></summary>
+
 	public enum AutoCondition
 	{
-		///<summary>0</summary>
 		Anterior,
-		///<summary>1</summary>
 		Posterior,
-		///<summary>2</summary>
 		Premolar,
-		///<summary>3</summary>
 		Molar,
-		///<summary>4</summary>
 		One_Surf,
-		///<summary>5</summary>
 		Two_Surf,
-		///<summary>6</summary>
 		Three_Surf,
-		///<summary>7</summary>
 		Four_Surf,
-		///<summary>8</summary>
 		Five_Surf,
-		///<summary>9</summary>
 		First,
-		///<summary>10</summary>
 		EachAdditional,
-		///<summary>11</summary>
 		Maxillary,
-		///<summary>12</summary>
 		Mandibular,
-		///<summary>13</summary>
 		Primary,
-		///<summary>14</summary>
 		Permanent,
-		///<summary>15</summary>
 		Pontic,
-		///<summary>16</summary>
 		Retainer,
-		///<summary>17</summary>
 		AgeOver18
 	}
-	///<Summary>Used for insurance substitutions conditions of procedurecodes.  Mostly for posterior composites.</Summary>
+
+	/// <Summary>
+	/// Used for insurance substitutions conditions of procedurecodes. 
+	/// Mostly for posterior composites.
+	/// </Summary>
 	public enum SubstitutionCondition
 	{
-		///<Summary>0</Summary>
 		Always,
-		///<Summary>1</Summary>
 		Molar,
-		///<Summary>2</Summary>
 		SecondMolar,
-		///<Summary>3</Summary>
 		Never,
-		///<Summary>4</Summary>
 		Posterior
 	}
+
 	///<summary>Claimproc Status.  The status must generally be the same as the claim, although it is sometimes not strictly enforced.</summary>
 	public enum ClaimProcStatus
 	{
@@ -643,366 +594,355 @@ namespace OpenDentBusiness
 		///<summary>9: For InsHist procedures.</summary>
 		InsHist
 	}
-	//<summary>CommItemType of 0 is reserved for later use with user defined types.</summary>
-	/*public enum CommItemType{
-		///<Summary>Used temporarily while we get rid of StatementSent.</Summary>
-		None=0,
-		///<summary>1- auto. </summary>
-		StatementSentOld=1,
-		///<summary>2- Any activity related to appointment scheduling.</summary>
-		ApptRelated,
-		///<summary>3- </summary>
-		Insurance,
-		///<summary>4- </summary>
-		Financial,
-		///<summary>5- </summary>
-		Recall,
-		///<summary>6- </summary>
-		Misc//LetterSent used to be 6
-		//clinical not implemented yet.
-	}*/
 
-	///<summary></summary>
 	public enum ToolBarsAvail
 	{
-		///<summary>0</summary>
 		AccountModule,
-		///<summary>1</summary>
 		ApptModule,
-		///<summary>2</summary>
 		ChartModule,
-		///<summary>3</summary>
 		ImagesModule,
-		///<summary>4</summary>
 		FamilyModule,
-		///<summary>5</summary>
 		TreatmentPlanModule,
-		///<summary>6</summary>
 		ClaimsSend,
-		///<summary>7 Shows in the toolbar at the top that is common to all modules.</summary>
+
+		/// <summary>
+		/// Shows in the toolbar at the top that is common to all modules.
+		/// </summary>
 		MainToolbar,
-		///<summary>8 Shows in the main menu Reports submenu.</summary>
+
+		/// <summary>
+		/// Shows in the main menu Reports submenu.
+		/// </summary>
 		ReportsMenu,
 	}
 
-	///<summary></summary>
 	public enum TimeClockStatus
 	{
-		///<summary>0</summary>
 		[Description("Home")]
 		Home,
-		///<summary>1</summary>
+
 		[Description("Lunch")]
 		Lunch,
-		///<summary>2</summary>
+
 		[Description("Break")]
 		Break
 	}
 
-	///<summary>In perio, the type of measurements for a given row.</summary>
+	/// <summary>
+	/// In perio, the type of measurements for a given row.
+	/// </summary>
 	public enum PerioSequenceType
 	{
-		///<summary>0</summary>
 		Mobility,
-		///<summary>1</summary>
 		Furcation,
-		///<summary>2-AKA recession.</summary>
+
+		/// <summary>
+		/// AKA recession.
+		/// </summary>
 		GingMargin,
-		///<summary>3-MucoGingivalJunction- the division between attached and unattached mucosa.</summary>
+
+		/// <summary>
+		/// MucoGingivalJunction- the division between attached and unattached mucosa.
+		/// </summary>
 		MGJ,
-		///<summary>4</summary>
+
 		Probing,
-		///<summary>5-For the skiptooth type, set surf to none, and ToothValue to 1.</summary>
+
+		///<summary>
+		///For the skiptooth type, set surf to none, and ToothValue to 1.
+		///</summary>
 		SkipTooth,
-		///<summary>6. Sum of flags for bleeding(1), suppuration(2), plaque(4), and calculus(8).</summary>
+
+		/// <summary>
+		/// Sum of flags for bleeding(1), suppuration(2), plaque(4), and calculus(8).
+		/// </summary>
 		Bleeding,
-		///<summary>7. But this type is never saved to the db. It is always calculated on the fly.</summary>
+
+		/// <summary>
+		/// But this type is never saved to the db. It is always calculated on the fly.
+		/// </summary>
 		CAL
 	}
 
-	///<summary>Deprecated, use patientrace table instead.  Temporarily used for converting old patient races to patientrace entries and screening.  Race and ethnicity for patient. Used by public health.  The problem is that everyone seems to want different choices.  If we give these choices their own table, then we also need to include mapping functions.  These are currently used in ArizonaReports, HL7 w ECW, and EHR.  Foreign users would like their own mappings.</summary>
+	/// <summary>
+	/// Deprecated, use patientrace table instead. 
+	/// Temporarily used for converting old patient races to patientrace entries and screening. 
+	/// Race and ethnicity for patient. Used by public health. 
+	/// The problem is that everyone seems to want different choices. 
+	/// If we give these choices their own table, then we also need to include mapping functions. 
+	/// These are currently used in ArizonaReports, HL7 w ECW, and EHR. 
+	/// Foreign users would like their own mappings.
+	/// </summary>
 	public enum PatientRaceOld
 	{
-		///<summary>0</summary>
 		Unknown,
-		///<summary>1</summary>
 		Multiracial,
-		///<summary>2</summary>
 		HispanicLatino,
-		///<summary>3</summary>
 		AfricanAmerican,
-		///<summary>4</summary>
 		White,
-		///<summary>5</summary>
 		HawaiiOrPacIsland,
-		///<summary>6</summary>
 		AmericanIndian,
-		///<summary>7</summary>
 		Asian,
-		///<summary>8</summary>
 		Other,
-		///<summary>9</summary>
 		Aboriginal,
-		///<summary>10 - Required by EHR.</summary>
+
+		/// <summary>Required by EHR.</summary>
 		BlackHispanic
 	}
 
-	///<summary>Grade level used in public health.</summary>
+	/// <summary>
+	/// Grade level used in public health.
+	/// </summary>
 	public enum PatientGrade
 	{
-		///<summary>0</summary>
 		Unknown,
-		///<summary>1</summary>
 		First,
-		///<summary>2</summary>
 		Second,
-		///<summary>3</summary>
 		Third,
-		///<summary>4</summary>
 		Fourth,
-		///<summary>5</summary>
 		Fifth,
-		///<summary>6</summary>
 		Sixth,
-		///<summary>7</summary>
 		Seventh,
-		///<summary>8</summary>
 		Eighth,
-		///<summary>9</summary>
 		Ninth,
-		///<summary>10</summary>
 		Tenth,
-		///<summary>11</summary>
 		Eleventh,
-		///<summary>12</summary>
 		Twelfth,
-		///<summary>13</summary>
 		PrenatalWIC,
-		///<summary>14</summary>
 		PreK,
-		///<summary>15</summary>
 		Kindergarten,
-		///<summary>16</summary>
 		Other
 	}
 
-	///<summary>For public health.  Unknown, NoProblems, NeedsCarE, or Urgent.</summary>
+	/// <summary>
+	/// For public health.  Unknown, NoProblems, NeedsCarE, or Urgent.
+	/// </summary>
 	public enum TreatmentUrgency
 	{
-		///<summary></summary>
+
 		Unknown,
-		///<summary></summary>
 		NoProblems,
-		///<summary></summary>
 		NeedsCare,
-		///<summary></summary>
 		Urgent
 	}
 
-	///<summary>The type of image for images module.</summary>
+	/// <summary>
+	/// The type of image for images module.
+	/// </summary>
 	public enum ImageType
 	{
-		///<summary>0- Includes scanned documents and screenshots.</summary>
+		/// <summary>
+		/// Includes scanned documents and screenshots.
+		/// </summary>
 		Document,
-		///<summary>1</summary>
+
 		Radiograph,
-		///<summary>2</summary>
 		Photo,
-		///<summary>3- For instance a Word document or a spreadsheet. Not an image.</summary>
+
+		/// <summary>
+		/// For instance a Word document or a spreadsheet. Not an image.
+		/// </summary>
 		File
 	}
 
-	///<summary>Used by QuickPasteCat to determine which category to default to when opening.</summary>
+	/// <summary>
+	/// Used by QuickPasteCat to determine which category to default to when opening.
+	/// </summary>
 	public enum QuickPasteType
 	{
-		///<summary>0 - None should never be used.  It is simply used as a "default" when adding a new control.  Searching for usage of "None" is an easy way to find spots where our pattern was not followed correctly.</summary>
+		/// <summary>
+		/// None should never be used. 
+		/// It is simply used as a "default" when adding a new control. 
+		/// Searching for usage of "None" is an easy way to find spots where our pattern was not followed correctly.
+		/// </summary>
 		None,
-		///<summary>1</summary>
+
 		Procedure,
-		///<summary>2</summary>
 		Appointment,
-		///<summary>3</summary>
 		CommLog,
-		///<summary>4</summary>
 		Adjustment,
-		///<summary>5</summary>
 		Claim,
-		///<summary>6</summary>
 		Email,
-		///<summary>7</summary>
 		InsPlan,
-		///<summary>8</summary>
 		Letter,
-		///<summary>9</summary>
 		MedicalSummary,
-		///<summary>10</summary>
 		ServiceNotes,
-		///<summary>11</summary>
 		MedicalHistory,
-		///<summary>12</summary>
 		MedicationEdit,
-		///<summary>13</summary>
 		MedicationPat,
-		///<summary>14</summary>
 		PatAddressNote,
-		///<summary>15</summary>
 		Payment,
-		///<summary>16</summary>
 		PayPlan,
-		///<summary>17</summary>
 		Query,
-		///<summary>18</summary>
 		Referral,
-		///<summary>19</summary>
 		Rx,
-		///<summary>20</summary>
 		FinancialNotes,
-		///<summary>21</summary>
 		ChartTreatment,
-		///<summary>22</summary>
 		MedicalUrgent,
-		///<summary>23</summary>
 		Statement,
-		///<summary>24</summary>
 		Recall,
-		///<summary>25</summary>
 		Popup,
-		///<summary>26</summary>
 		TxtMsg,
-		///<summary>27</summary>
 		Task,
-		///<summary>28</summary>
 		Schedule,
-		///<summary>29</summary>
 		TreatPlan,
-		///<summary>30</summary>
 		ClaimCustomTrack,
-		///<summary>31</summary>
 		AutoNote,
-		///<summary>32</summary>
 		JobManager,
-		///<summary>33 - Only to be used if the ReadOnly property is set to true.</summary>
+
+		/// <summary>
+		/// Only to be used if the ReadOnly property is set to true.
+		/// </summary>
 		ReadOnly,
-		///<summary>34</summary>
+
 		Lab,
-		///<summary>35</summary>
 		Equipment,
-		///<summary>36</summary>
 		FilePath,
-		///<summary>37</summary>
 		ContactInfo,
-		///<summary>38</summary>
 		Office,
-		///<summary>39</summary>
 		ProgramLink,
-		///<summary>40</summary>
 		EmployeeStatus,
-		///<summary>41</summary>
 		WebChat,
 	}
 
-	///<summary>For every type of electronic claim format that Open Dental can create, there will be an item in this enumeration.  All e-claim formats are hard coded due to complexity.</summary>
+	/// <summary>
+	/// For every type of electronic claim format that Open Dental can create, there will be an item in this enumeration. 
+	/// All e-claim formats are hard coded due to complexity.
+	/// </summary>
 	public enum ElectronicClaimFormat
 	{
-		///<summary>0-Not in database, but used in various places in program.</summary>
+		/// <summary>
+		/// Not in database, but used in various places in program.
+		/// </summary>
 		None,
-		///<summary>1-The American standard through 12/31/11.</summary>
+
+		/// <summary>
+		/// The American standard through 12/31/11.
+		/// </summary>
 		x837D_4010,
 
-		///<summary>2-Proprietary format for Renaissance.</summary>
+		/// <summary>
+		/// Proprietary format for Renaissance.
+		/// </summary>
 		Renaissance,
 
-		///<summary>3-CDAnet format version 4.</summary>
+		/// <summary>
+		/// CDAnet format version 4.
+		/// </summary>
 		Canadian,
 
-		///<summary>4-CSV file adaptable for use in Netherlands.</summary>
+		/// <summary>
+		/// CSV file adaptable for use in Netherlands.
+		/// </summary>
 		Dutch,
 
-		///<summary>5-The American standard starting on 1/1/12.</summary>
+		/// <summary>
+		/// The American standard starting on 1/1/12.
+		/// </summary>
 		x837D_5010_dental,
 
-		///<summary>6-Either professional or medical.  The distiction is stored at the claim level.</summary>
+		/// <summary>
+		/// Either professional or medical.  The distiction is stored at the claim level.
+		/// </summary>
 		x837_5010_med_inst,
 
-		///<summary>7-A specific Canadian carrier located in Quebec which has their own format.</summary>
+		/// <summary>
+		/// A specific Canadian carrier located in Quebec which has their own format.
+		/// </summary>
 		Ramq,
 	}
 
-	///<summary>Used when submitting e-claims to some carriers who require extra provider identifiers.  Usage varies by company.  Only used as needed.  SiteNumber is the only one that is still used on 5010s.  The other 3 have been deprecated and replaced by NPI.</summary>
+	/// <summary>
+	/// Used when submitting e-claims to some carriers who require extra provider identifiers. 
+	/// Usage varies by company. Only used as needed. 
+	/// SiteNumber is the only one that is still used on 5010s. 
+	/// The other 3 have been deprecated and replaced by NPI.
+	/// </summary>
 	public enum ProviderSupplementalID
 	{
-		///<summary>0</summary>
 		BlueCross,
-		///<summary>1</summary>
 		BlueShield,
-		///<summary>2</summary>
 		SiteNumber,
-		///<summary>3</summary>
 		CommercialNumber
 	}
 
-	///<summary>Each clearinghouse can have a hard-coded comm bridge which handles all the communications of transfering the claim files to the clearinghouse/carrier.  Does not just include X12, but can include any format at all.</summary>
+	/// <summary>
+	/// Each clearinghouse can have a hard-coded comm bridge which handles all the communications of transfering the claim files to the clearinghouse/carrier. 
+	/// Does not just include X12, but can include any format at all.
+	/// </summary>
 	public enum EclaimsCommBridge
 	{
-		///<summary>0-No comm bridge will be activated. The claim files will be created to the specified path, but they will not be uploaded.</summary>
+		/// <summary>
+		/// No comm bridge will be activated. The claim files will be created to the specified path, but they will not be uploaded.
+		/// </summary>
 		None,
-		///<summary>1</summary>
+
 		WebMD,
-		///<summary>2</summary>
 		BCBSGA,
-		///<summary>3</summary>
 		Renaissance,
-		///<summary>4</summary>
 		ClaimConnect,
-		///<summary>5</summary>
 		RECS,
-		///<summary>6</summary>
 		Inmediata,
-		///<summary>7</summary>
 		AOS,
-		///<summary>8</summary>
 		PostnTrack,
-		///<summary>9 Canadian clearinghouse.</summary>
+
+		/// <summary>
+		/// Canadian clearinghouse.
+		/// </summary>
 		ITRANS,
-		///<summary>10</summary>
+
 		Tesia,
-		///<summary>11</summary>
 		MercuryDE,
-		///<summary>12</summary>
 		ClaimX,
-		///<summary>13</summary>
 		DentiCal,
-		///<summary>14</summary>
 		EmdeonMedical,
-		///<summary>15 Canadian clearinghouse.</summary>
+
+		/// <summary>
+		/// Canadian clearinghouse.
+		/// </summary>
 		Claimstream,
-		///<summary>16 UK clearinghouse.</summary>
+
+		/// <summary>
+		/// UK clearinghouse.
+		/// </summary>
 		NHS,
-		///<summary>17</summary>
+
 		EDS,
-		///<summary>18</summary>
 		Ramq,
-		///<summary>19</summary>
 		EdsMedical,
 	}
 
-	///<summary>Used as the enumeration of FieldValueType.ForeignKey.  Basically, this allows lists to be included in the parameter list.  The lists are those common short lists that are used so frequently.  The user can only select one from the list, and the primary key of that item will be used as the parameter.</summary>
+	/// <summary>
+	/// Used as the enumeration of FieldValueType.ForeignKey.
+	/// Basically, this allows lists to be included in the parameter list.
+	/// The lists are those common short lists that are used so frequently.
+	/// The user can only select one from the list, and the primary key of that item will be used as the parameter.
+	/// </summary>
 	public enum ReportFKType
 	{
-		///<summary>0</summary>
 		None,
-		///<summary>The schoolclass table in the database. Used for dental schools.</summary>
+
+		/// <summary>
+		/// The schoolclass table in the database. Used for dental schools.
+		/// </summary>
 		SchoolClass,
-		///<summary>The schoolcourse table in the database. Used for dental schools.</summary>
+
+		/// <summary>
+		/// The schoolcourse table in the database. Used for dental schools.
+		/// </summary>
 		SchoolCourse
 	}
 
-	///<summary>The type of signal being sent.</summary>
+	/// <summary>
+	/// The type of signal being sent.
+	/// </summary>
 	public enum SignalType
 	{
-		///<summary>0- Includes text messages.</summary>
+		/// <summary>
+		/// Includes text messages.
+		/// </summary>
 		Button,
-		///<summary>1</summary>
+
 		Invalid
 	}
 
@@ -1107,91 +1047,79 @@ namespace OpenDentBusiness
 		Adjunctive
 	}
 
-
-
 	public enum ToothPaintingType
 	{
-		///<summary>0</summary>
 		None,
-		///<summary>1</summary>
 		Extraction,
-		///<summary>2</summary>
 		Implant,
-		///<summary>3</summary>
 		RCT,
-		///<summary>4</summary>
 		PostBU,
-		///<summary>5</summary>
 		FillingDark,
-		///<summary>6</summary>
 		FillingLight,
-		///<summary>7</summary>
 		CrownDark,
-		///<summary>8</summary>
 		CrownLight,
-		///<summary>9</summary>
 		BridgeDark,
-		///<summary>10</summary>
 		BridgeLight,
-		///<summary>11</summary>
 		DentureDark,
-		///<summary>12</summary>
 		DentureLight,
-		///<summary>13</summary>
 		Sealant,
-		///<summary>14</summary>
 		Veneer,
-		///<summary>15</summary>
 		Watch
 	}
 
 	public enum ToothInitialType
 	{
-		///<summary>0</summary>
 		Missing,
-		///<summary>1 - Also hides the number.  This is now also allowed for primary teeth.</summary>
+
+		/// <summary>
+		/// Also hides the number. 
+		/// This is now also allowed for primary teeth.
+		/// </summary>
 		Hidden,
-		///<summary>2 - Only used with 1-32.  "sets" this tooth as a primary tooth.  The result is that the primary tooth shows in addition to the perm, and that the letter shows in addition to the number.  It also does a Shift0 -12 and some other handy movements.  Even if this is set to true, there can be a separate entry for a missing primary tooth; this would be almost equivalent to not even setting the tooth as primary, but would also allow user to select the letter.</summary>
+
+		/// <summary>
+		/// Only used with 1-32. "sets" this tooth as a primary tooth. 
+		/// The result is that the primary tooth shows in addition to the perm, and that the letter shows in addition to the number.
+		/// It also does a Shift0 -12 and some other handy movements.
+		/// Even if this is set to true, there can be a separate entry for a missing primary tooth; this would be almost equivalent to not even setting the tooth as primary, but would also allow user to select the letter.
+		/// </summary>
 		Primary,
-		///<summary>3</summary>
+
 		ShiftM,
-		///<summary>4</summary>
 		ShiftO,
-		///<summary>5</summary>
 		ShiftB,
-		///<summary>6</summary>
 		Rotate,
-		///<summary>7</summary>
 		TipM,
-		///<summary>8</summary>
 		TipB,
-		///<summary>9 One segment of a drawing.</summary>
+
+		/// <summary>
+		/// One segment of a drawing.
+		/// </summary>
 		Drawing
 	}
 
-	///<summary>Indicates at what point the patient is in the sequence. 0=standby, 1=PatientInfo, 2=Medical, 3=UpdateOnly.</summary>
+	/// <summary>
+	/// Indicates at what point the patient is in the sequence.
+	/// </summary>
 	public enum TerminalStatusEnum
 	{
-		///<summary>0</summary>
 		Standby,
-		///<summary>1</summary>
 		PatientInfo,
-		///<summary>2</summary>
 		Medical,
-		///<summary>3. Only the patient info tab will be visible.  This is just to let patient up date their address and phone number.</summary>
+
+		/// <summary>
+		/// Only the patient info tab will be visible. 
+		/// This is just to let patient up date their address and phone number.
+		/// </summary>
 		UpdateOnly
 	}
 
-	/// <summary>
-	/// 0=FreeformText, 1=YesNoUnknown. Allows for later adding other types, 3=picklist, 4, etc
-	/// </summary>
 	public enum QuestionType
 	{
 		FreeformText,
 		YesNoUnknown
 	}
 
-	///<summary>0=User,1=Extra,2=Message.</summary>
 	public enum SignalElementType
 	{
 		///<summary>0-To and From lists.  Not tied in any way to the users that are part of security.</summary>
@@ -1202,110 +1130,64 @@ namespace OpenDentBusiness
 		Message
 	}
 
-	///<summary></summary>
 	public enum InsFilingCodeOldOld
 	{
-		///<summary>0</summary>
 		Commercial_Insurance,
-		///<summary>1</summary>
 		SelfPay,
-		///<summary>2</summary>
 		OtherNonFed,
-		///<summary>3</summary>
 		PPO,
-		///<summary>4</summary>
 		POS,
-		///<summary>5</summary>
 		EPO,
-		///<summary>6</summary>
 		Indemnity,
-		///<summary>7</summary>
 		HMO_MedicareRisk,
-		///<summary>8</summary>
 		DMO,
-		///<summary>9</summary>
 		BCBS,
-		///<summary>10</summary>
 		Champus,
-		///<summary>11</summary>
 		Disability,
-		///<summary>12</summary>
 		FEP,
-		///<summary>13</summary>
 		HMO,
-		///<summary>14</summary>
 		LiabilityMedical,
-		///<summary>15</summary>
 		MedicarePartB,
-		///<summary>16</summary>
 		Medicaid,
-		///<summary>17</summary>
 		ManagedCare_NonHMO,
-		///<summary>18</summary>
 		OtherFederalProgram,
-		///<summary>19</summary>
 		SelfAdministered,
-		///<summary>20</summary>
 		Veterans,
-		///<summary>21</summary>
 		WorkersComp,
-		///<summary>22</summary>
 		MutuallyDefined
 	}
 
 	public enum ContactMethod
 	{
-		///<summary>0</summary>
 		None,
-		///<summary>1</summary>
 		DoNotCall,
-		///<summary>2</summary>
 		HmPhone,
-		///<summary>3</summary>
 		WkPhone,
-		///<summary>4</summary>
 		WirelessPh,
-		///<summary>5</summary>
 		Email,
-		///<summary>6</summary>
 		SeeNotes,
-		///<summary>7</summary>
 		Mail,
-		///<summary>8</summary>
 		TextMessage
 	}
 
-	///<summary>0=None,1=Declined,2=Scheduled,3=Consulted,4=InTreatment,5=Complete</summary>
 	public enum ReferralToStatus
 	{
-		///<summary>0</summary>
 		None,
-		///<summary>1</summary>
 		Declined,
-		///<summary>2</summary>
 		Scheduled,
-		///<summary>3</summary>
 		Consulted,
-		///<summary>4</summary>
 		InTreatment,
-		///<summary>5</summary>
 		Complete
 	}
 
-	///<summary></summary>
 	public enum StatementMode
 	{
-		///<summary>0</summary>
 		Mail,
-		///<summary>1</summary>
 		InPerson,
-		///<summary>2</summary>
 		Email,
-		///<summary>3</summary>
 		Electronic
 	}
 
-	///<summary></summary>
 	public enum DeletedObjectType
 	{
 		///<summary>0</summary>
@@ -1348,27 +1230,6 @@ namespace OpenDentBusiness
 		Recall
 	}
 
-	/////<summary>0=UnknownIfEver,1=SmokerUnkownCurrent,2=NeverSmoked,3=FormerSmoker,4=CurrentSomeDay,5=CurrentEveryDay</summary>
-	//public enum SmokingStatus {
-	//  ///<summary>0</summary>
-	//  UnknownIfEver_Recode9,
-	//  ///<summary>1</summary>
-	//  SmokerUnknownCurrent_Recode5,
-	//  ///<summary>2</summary>
-	//  NeverSmoked_Recode4,
-	//  ///<summary>3</summary>
-	//  FormerSmoker_Recode3,
-	//  ///<summary>4</summary>
-	//  CurrentSomeDay_Recode2,
-	//  ///<summary>5</summary>
-	//  CurrentEveryDay_Recode1//,//implement when we get answer from proctor
-	//  /////<summary>6</summary>
-	//  //LightSmoker,
-	//  /////<summary>7</summary>
-	//  //HeavySmoker
-	//}
-
-	///<summary></summary>
 	public enum SmokingSnoMed
 	{
 		///<summary>0 - UnknownIfEver</summary>
@@ -1389,14 +1250,10 @@ namespace OpenDentBusiness
 		_428071000124103
 	}
 
-	///<summary>0=Active, 1=Resolved, 2=Inactive</summary>
 	public enum ProblemStatus
 	{
-		/// <summary>0</summary>
 		Active,
-		/// <summary>1</summary>
 		Resolved,
-		/// <summary>2</summary>
 		Inactive
 	}
 
@@ -1582,19 +1439,22 @@ namespace OpenDentBusiness
 		NoListener
 	}
 
-	///<summary>Defines a user-friendly way of describing sorting strategies.  Intended for user selection for sorting grids.  Can easily be added to.</summary>
+	/// <summary>
+	/// Defines a user-friendly way of describing sorting strategies. 
+	/// Intended for user selection for sorting grids. 
+	/// Can easily be added to.
+	/// </summary>
 	public enum SortStrategy
 	{
-		///<summary>0.</summary>
 		[Description("Name Asc")]
 		NameAsc,
-		///<summary>1.</summary>
+
 		[Description("Name Desc")]
 		NameDesc,
-		///<summary>2.</summary>
+
 		[Description("PatNum Asc")]
 		PatNumAsc,
-		///<summary>3.</summary>
+
 		[Description("PatNum Desc")]
 		PatNumDesc
 	}
@@ -1671,10 +1531,16 @@ namespace OpenDentBusiness
 
 	public enum FHIRKeyStatus
 	{
-		///<summary>Nobody knows!</summary>
+		/// <summary>
+		/// Nobody knows!
+		/// </summary>
 		Unknown,
-		///<summary>This key can be used for queries.</summary>
+
+		/// <summary>
+		/// This key can be used for queries.
+		/// </summary>
 		Enabled,
+
 		///<summary>The OD customer has disabled this key.</summary>
 		[Description("Disabled by Customer")]
 		DisabledByCustomer,
@@ -1689,40 +1555,10 @@ namespace OpenDentBusiness
 		EnabledReadOnly,
 	}
 
-	///<summary></summary>
 	public enum OAuthApplicationNames
 	{
-		///<summary>0</summary>
 		Dropbox,
-		///<summary>1</summary>
 		Google
-	}
-
-	///<summary>List of typically available database names. Used in conjunction with ConnectionStore.GetConnection().</summary>
-	public enum ConnectionNames
-	{
-		///<summary>No database connection.</summary>
-		None,
-		///<summary>Only used when running in DEBUG demo mode. The OD proper database which holds demo data.</summary>
-		DentalOffice,
-		///<summary>The OD proper database connection that is comprised of preferences via the currently connected database.</summary>
-		DentalOfficeReportServer,
-		///<summary></summary>
-		MobileWebOld,
-		///<summary></summary>
-		WebForms,
-		///<summary>Database containing information about the devices monitored by the Headmaster app.</summary>
-		Headmaster,
-		///<summary>Database used by the Documentation department and ODHelp.</summary>
-		ManualPublisher,
-		///<summary>The database behind the chat system at HQ.</summary>
-		WebChat,
-		///<summary>Database containing information regarding offices hosted by OD.</summary>
-		Hosting,
-		///<summary>Database containing archives of HQ serviceshq</summary>
-		ServicesHqArchive,
-		///<summary>Only used when running tests. The OD proper database which holds test data for 19.1.</summary>
-		DentalOffice_19_1,
 	}
 
 	/// <summary>
@@ -1771,13 +1607,20 @@ namespace OpenDentBusiness
 		Block,
 	}
 
-	///<summary>String values that are stored for blockout defintions.</summary>
+	/// <summary>
+	/// String values that are stored for blockout defintions.
+	/// </summary>
 	public enum BlockoutType
 	{
-		///<summary>Do not schedule an appointment over this blockout.</summary>
+		/// <summary>
+		/// Do not schedule an appointment over this blockout.
+		/// </summary>
 		[Description("NS")]
 		NoSchedule,
-		///<summary>Do not allow this blockout to be cut or copied and do not allow another blockout to be pasted on this blockout.</summary>
+
+		/// <summary>
+		/// Do not allow this blockout to be cut or copied and do not allow another blockout to be pasted on this blockout.
+		/// </summary>
 		[Description("DC")]
 		DontCopy,
 	}
@@ -1871,13 +1714,6 @@ namespace OpenDentBusiness
 		Claim
 	}
 
-	public enum SupplementalBackupStatuses
-	{
-		Disabled,
-		Enabled,
-		DisabledByHQ,
-	}
-
 	[Flags]
 	public enum MassEmailStatus
 	{
@@ -1895,17 +1731,5 @@ namespace OpenDentBusiness
 		/// </summary>
 		[Description("Enabled")]
 		Enabled = 2,
-	}
-
-	/// <summary>
-	/// Contains exit codes used for FormOpenDental. Not all codes used are listed here.
-	/// If using a new exit code, you should add it to this enum.
-	/// </summary>
-	public enum FormOpenDentalExitCodes
-	{
-		/// <summary>
-		/// The database version is higher than the version of the current program.
-		/// </summary>
-		DbVersionHigherThanCurrent = 309,
 	}
 }

@@ -118,14 +118,14 @@ namespace OpenDentBusiness {
 				}
 				throw new ApplicationException(s);
 			}
-			command="DELETE FROM patfielddef WHERE PatFieldDefNum ="+POut.Long(patFieldDef.PatFieldDefNum);
+			command="DELETE FROM patfielddef WHERE PatFieldDefNum ="+POut.Long(patFieldDef.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
 		/// <summary>GetFieldName returns the field name identified by the field definition number passed as a parameter.</summary>
 		public static string GetFieldName(long patFieldDefNum) {
 			//No need to check RemotingRole; no call to db.
-			PatFieldDef patFieldDef=GetFirstOrDefault(x => x.PatFieldDefNum==patFieldDefNum,true);
+			PatFieldDef patFieldDef=GetFirstOrDefault(x => x.Id==patFieldDefNum,true);
 			return (patFieldDef==null ? "" : patFieldDef.FieldName);
 		}
 

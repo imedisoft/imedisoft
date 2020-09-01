@@ -7,6 +7,7 @@ using OpenDentBusiness;
 using System.Collections.Generic;
 using OpenDental.UI;
 using System.Linq;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 	/// <summary>
@@ -333,7 +334,7 @@ namespace OpenDental{
 			}
 			if(_hasChanged) {
 				PatFieldDefs.Sync(_listPatFieldDefs,_listPatFieldDefsOld);//Update if anything has changed
-				DataValid.SetInvalid(InvalidType.PatFields);
+				DataValid.SetInvalid(InvalidType.CustomFields);
 			}
 		}
 	}

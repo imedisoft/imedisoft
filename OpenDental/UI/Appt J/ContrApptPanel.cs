@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDental.UI{
 	/// <summary>This class has replaced ApptDrawing, ApptSingleDrawing, ContrApptSheet, ContrApptSingle, and ApptOverlapOrdering.  Encapsulates both Data and Drawing for the main area of Appt module and the operatories header.  The Appt module gathers the data and stores it here.  This class does its drawing based mostly on the information passed in, although it does use the standard cache sometimes. It has defaults so that we will always be able to draw something reasonable, even if we're missing data. This class contains extra data that it doesn't actually need.  Appt module uses this data for other things besides drawing appointments.  This class intentionally supports a single thread only.</summary>
@@ -3165,7 +3166,7 @@ namespace OpenDental.UI{
 				isGraphic=true;
 			}
 			if(listApptViewItems[idxItem].ApptFieldDefNum>0) {
-				string fieldName=ApptFieldDefs.GetFieldName(listApptViewItems[idxItem].ApptFieldDefNum);
+				string fieldName=AppointmentFieldDefinitions.GetFieldName(listApptViewItems[idxItem].ApptFieldDefNum);
 				for(int i=0;i<TableApptFields.Rows.Count;i++) {
 					if(TableApptFields.Rows[i]["AptNum"].ToString()!=dataRoww["AptNum"].ToString()) {
 						continue;

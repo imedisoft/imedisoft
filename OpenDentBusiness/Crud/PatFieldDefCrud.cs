@@ -44,7 +44,7 @@ namespace OpenDentBusiness.Crud{
 			PatFieldDef patFieldDef;
 			foreach(DataRow row in table.Rows) {
 				patFieldDef=new PatFieldDef();
-				patFieldDef.PatFieldDefNum= PIn.Long  (row["PatFieldDefNum"].ToString());
+				patFieldDef.Id= PIn.Long  (row["PatFieldDefNum"].ToString());
 				patFieldDef.FieldName     = PIn.String(row["FieldName"].ToString());
 				patFieldDef.FieldType     = (OpenDentBusiness.PatFieldType)PIn.Int(row["FieldType"].ToString());
 				patFieldDef.PickList      = PIn.String(row["PickList"].ToString());
@@ -69,7 +69,7 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("IsHidden");
 			foreach(PatFieldDef patFieldDef in listPatFieldDefs) {
 				table.Rows.Add(new object[] {
-					POut.Long  (patFieldDef.PatFieldDefNum),
+					POut.Long  (patFieldDef.Id),
 					            patFieldDef.FieldName,
 					POut.Int   ((int)patFieldDef.FieldType),
 					            patFieldDef.PickList,
@@ -88,7 +88,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one PatFieldDef into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(PatFieldDef patFieldDef,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				patFieldDef.PatFieldDefNum=ReplicationServers.GetKey("patfielddef","PatFieldDefNum");
+				patFieldDef.Id=ReplicationServers.GetKey("patfielddef","PatFieldDefNum");
 			}
 			string command="INSERT INTO patfielddef (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -96,7 +96,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="FieldName,FieldType,PickList,ItemOrder,IsHidden) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(patFieldDef.PatFieldDefNum)+",";
+				command+=POut.Long(patFieldDef.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(patFieldDef.FieldName)+"',"
@@ -112,9 +112,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramPickList);
 			}
 			else {
-				patFieldDef.PatFieldDefNum=Database.ExecuteInsert(command,paramPickList);
+				patFieldDef.Id=Database.ExecuteInsert(command,paramPickList);
 			}
-			return patFieldDef.PatFieldDefNum;
+			return patFieldDef.Id;
 		}
 
 		///<summary>Inserts one PatFieldDef into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -127,14 +127,14 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO patfielddef (";
 			if(!useExistingPK) {
-				patFieldDef.PatFieldDefNum=ReplicationServers.GetKeyNoCache("patfielddef","PatFieldDefNum");
+				patFieldDef.Id=ReplicationServers.GetKeyNoCache("patfielddef","PatFieldDefNum");
 			}
 			if(useExistingPK) {
 				command+="PatFieldDefNum,";
 			}
 			command+="FieldName,FieldType,PickList,ItemOrder,IsHidden) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(patFieldDef.PatFieldDefNum)+",";
+				command+=POut.Long(patFieldDef.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(patFieldDef.FieldName)+"',"
@@ -150,9 +150,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command,paramPickList);
 			}
 			else {
-				patFieldDef.PatFieldDefNum=Database.ExecuteInsert(command,paramPickList);
+				patFieldDef.Id=Database.ExecuteInsert(command,paramPickList);
 			}
-			return patFieldDef.PatFieldDefNum;
+			return patFieldDef.Id;
 		}
 
 		///<summary>Updates one PatFieldDef in the database.</summary>
@@ -163,7 +163,7 @@ namespace OpenDentBusiness.Crud{
 				+"PickList      =  "+DbHelper.ParamChar+"paramPickList, "
 				+"ItemOrder     =  "+POut.Int   (patFieldDef.ItemOrder)+", "
 				+"IsHidden      =  "+POut.Bool  (patFieldDef.IsHidden)+" "
-				+"WHERE PatFieldDefNum = "+POut.Long(patFieldDef.PatFieldDefNum);
+				+"WHERE PatFieldDefNum = "+POut.Long(patFieldDef.Id);
 			if(patFieldDef.PickList==null) {
 				patFieldDef.PickList="";
 			}
@@ -202,7 +202,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			var paramPickList = new MySqlParameter("paramPickList", POut.StringParam(patFieldDef.PickList));
 			command="UPDATE patfielddef SET "+command
-				+" WHERE PatFieldDefNum = "+POut.Long(patFieldDef.PatFieldDefNum);
+				+" WHERE PatFieldDefNum = "+POut.Long(patFieldDef.Id);
 			Database.ExecuteNonQuery(command,paramPickList);
 			return true;
 		}
@@ -242,8 +242,8 @@ namespace OpenDentBusiness.Crud{
 			List<PatFieldDef> listUpdNew =new List<PatFieldDef>();
 			List<PatFieldDef> listUpdDB  =new List<PatFieldDef>();
 			List<PatFieldDef> listDel    =new List<PatFieldDef>();
-			listNew.Sort((PatFieldDef x,PatFieldDef y) => { return x.PatFieldDefNum.CompareTo(y.PatFieldDefNum); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
-			listDB.Sort((PatFieldDef x,PatFieldDef y) => { return x.PatFieldDefNum.CompareTo(y.PatFieldDefNum); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			listNew.Sort((PatFieldDef x,PatFieldDef y) => { return x.Id.CompareTo(y.Id); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			listDB.Sort((PatFieldDef x,PatFieldDef y) => { return x.Id.CompareTo(y.Id); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
 			int idxNew=0;
 			int idxDB=0;
 			int rowsUpdatedCount=0;
@@ -271,12 +271,12 @@ namespace OpenDentBusiness.Crud{
 					idxDB++;
 					continue;
 				}
-				else if(fieldNew.PatFieldDefNum<fieldDB.PatFieldDefNum) {//newPK less than dbPK, newItem is 'next'
+				else if(fieldNew.Id<fieldDB.Id) {//newPK less than dbPK, newItem is 'next'
 					listIns.Add(fieldNew);
 					idxNew++;
 					continue;
 				}
-				else if(fieldNew.PatFieldDefNum>fieldDB.PatFieldDefNum) {//dbPK less than newPK, dbItem is 'next'
+				else if(fieldNew.Id>fieldDB.Id) {//dbPK less than newPK, dbItem is 'next'
 					listDel.Add(fieldDB);
 					idxDB++;
 					continue;
@@ -297,7 +297,7 @@ namespace OpenDentBusiness.Crud{
 				}
 			}
 			for(int i=0;i<listDel.Count;i++) {
-				Delete(listDel[i].PatFieldDefNum);
+				Delete(listDel[i].Id);
 			}
 			if(rowsUpdatedCount>0 || listIns.Count>0 || listDel.Count>0) {
 				return true;

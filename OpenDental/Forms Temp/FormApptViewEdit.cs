@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental{
 	/// <summary>
@@ -717,7 +719,7 @@ namespace OpenDental{
 			for(int i=0;i<displayedElementsMain.Count;i++){
 				row=new GridRow();
 				if(displayedElementsMain[i].ApptFieldDefNum>0){
-					row.Cells.Add(ApptFieldDefs.GetFieldName(displayedElementsMain[i].ApptFieldDefNum));
+					row.Cells.Add(AppointmentFieldDefinitions.GetFieldName(displayedElementsMain[i].ApptFieldDefNum));
 				}
 				else if(displayedElementsMain[i].PatFieldDefNum>0){
 					row.Cells.Add(PatFieldDefs.GetFieldName(displayedElementsMain[i].PatFieldDefNum));
@@ -749,7 +751,7 @@ namespace OpenDental{
 			for(int i=0;i<displayedElementsUR.Count;i++) {
 				row=new GridRow();
 				if(displayedElementsUR[i].ApptFieldDefNum>0) {
-					row.Cells.Add(ApptFieldDefs.GetFieldName(displayedElementsUR[i].ApptFieldDefNum));
+					row.Cells.Add(AppointmentFieldDefinitions.GetFieldName(displayedElementsUR[i].ApptFieldDefNum));
 				}
 				else if(displayedElementsUR[i].PatFieldDefNum>0) {
 					row.Cells.Add(PatFieldDefs.GetFieldName(displayedElementsUR[i].PatFieldDefNum));
@@ -781,7 +783,7 @@ namespace OpenDental{
 			for(int i=0;i<displayedElementsLR.Count;i++) {
 				row=new GridRow();
 				if(displayedElementsLR[i].ApptFieldDefNum>0) {
-					row.Cells.Add(ApptFieldDefs.GetFieldName(displayedElementsLR[i].ApptFieldDefNum));
+					row.Cells.Add(AppointmentFieldDefinitions.GetFieldName(displayedElementsLR[i].ApptFieldDefNum));
 				}
 				else if(displayedElementsLR[i].PatFieldDefNum>0) {
 					row.Cells.Add(PatFieldDefs.GetFieldName(displayedElementsLR[i].PatFieldDefNum));
@@ -827,12 +829,12 @@ namespace OpenDental{
 			gridApptFieldDefs.ListGridColumns.Add(col);
 			gridApptFieldDefs.ListGridRows.Clear();
 			displayedAvailableApptFieldDefs=new List<long>();
-			List<ApptFieldDef> listApptFieldDefs=ApptFieldDefs.GetDeepCopy();
+			List<AppointmentFieldDefinition> listApptFieldDefs=AppointmentFieldDefinitions.All;
 			for(int i=0;i<listApptFieldDefs.Count;i++) {
-				if(!ApptFieldIsDisplayed(listApptFieldDefs[i].ApptFieldDefNum)) {
-					displayedAvailableApptFieldDefs.Add(listApptFieldDefs[i].ApptFieldDefNum);
+				if(!ApptFieldIsDisplayed(listApptFieldDefs[i].Id)) {
+					displayedAvailableApptFieldDefs.Add(listApptFieldDefs[i].Id);
 					row=new GridRow();
-					row.Cells.Add(listApptFieldDefs[i].FieldName);
+					row.Cells.Add(listApptFieldDefs[i].Name);
 					gridApptFieldDefs.ListGridRows.Add(row);
 				}
 			}
@@ -846,8 +848,8 @@ namespace OpenDental{
 			_listPatFieldDefNums=new List<long>();
 			List<PatFieldDef> listPatFieldDefs=PatFieldDefs.GetDeepCopy(true);
 			for(int i=0;i<listPatFieldDefs.Count;i++) {
-				if(!PatFieldIsDisplayed(listPatFieldDefs[i].PatFieldDefNum)) {
-					_listPatFieldDefNums.Add(listPatFieldDefs[i].PatFieldDefNum);
+				if(!PatFieldIsDisplayed(listPatFieldDefs[i].Id)) {
+					_listPatFieldDefNums.Add(listPatFieldDefs[i].Id);
 					row=new GridRow();
 					row.Cells.Add(listPatFieldDefs[i].FieldName);
 					gridPatFieldDefs.ListGridRows.Add(row);

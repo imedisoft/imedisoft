@@ -1,6 +1,5 @@
 using Imedisoft.Data.Annotations;
-using System;
-using System.Collections;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness
 {
@@ -20,7 +19,7 @@ namespace OpenDentBusiness
 		/// The full name is shown here for ease of use when running queries. 
 		/// But the user is only allowed to change fieldNames in the patFieldDef setup window.
 		/// </summary>
-		[ForeignKey(typeof(ApptFieldDef), nameof(ApptFieldDef.FieldName))]
+		[ForeignKey(typeof(AppointmentFieldDefinition), nameof(AppointmentFieldDefinition.Name))]
 		public string FieldName;
 
 		/// <summary>

@@ -352,6 +352,7 @@
     <Compile Include="Cache\CacheDictNonPkAbs.cs" />
     <Compile Include="Cache\CacheListAbs.cs" />
     <Compile Include="Cache\FeeCache.cs" />
+    <Compile Include="Data\Models\AccountingAutoPay.cs" />
     <Compile Include="Data\Crud\AlertCategories.Crud.cs" />
     <Compile Include="Data\Crud\AlertCategoryLinks.Crud.cs" />
     <Compile Include="Crud\ApptThankYouSentCrud.cs" />
@@ -624,7 +625,7 @@
     <Compile Include="Claims\x837Controller.cs" />
     <Compile Include="CrudFramework\CrudTableAttribute.cs" />
     <Compile Include="CrudFramework\CrudColumnAttribute.cs" />
-    <Compile Include="Data\Crud\Accounts.Crud.cs" />
+    <Compile Include="Data\Crud\Accounts.cs" />
     <Compile Include="Data\Crud\AccountingAutoPays.Crud.cs" />
     <Compile Include="Crud\AdjustmentCrud.cs" />
     <Compile Include="Crud\AlertItemCrud.cs" />
@@ -635,7 +636,7 @@
     <Compile Include="Crud\AppointmentRuleCrud.cs" />
     <Compile Include="Crud\AppointmentTypeCrud.cs" />
     <Compile Include="Crud\ApptFieldCrud.cs" />
-    <Compile Include="Crud\ApptFieldDefCrud.cs" />
+    <Compile Include="Data\Crud\AppointmentFieldDefinitions.cs" />
     <Compile Include="Crud\ApptReminderRuleCrud.cs" />
     <Compile Include="Crud\ApptReminderSentCrud.cs" />
     <Compile Include="Crud\ApptViewCrud.cs" />
@@ -963,7 +964,7 @@
     <Compile Include="Data\Allergies.cs" />
     <Compile Include="Data Interface\AllergyDefs.cs" />
     <Compile Include="Data Interface\AppointmentTypes.cs" />
-    <Compile Include="Data Interface\ApptFieldDefs.cs" />
+    <Compile Include="Data\AppointmentFieldDefinitions.cs" />
     <Compile Include="Data Interface\ApptFields.cs" />
     <Compile Include="Data Interface\AutomationConditions.cs" />
     <Compile Include="Data\Automations.cs" />
@@ -1442,7 +1443,6 @@
     <Compile Include="TableTypes\MapArea.cs" />
     <Compile Include="TableTypes\EhrAmendment.cs" />
     <Compile Include="Data\Models\Automation.cs" />
-    <Compile Include="TableTypes\ApptFieldDef.cs" />
     <Compile Include="TableTypes\ApptField.cs" />
     <Compile Include="TableTypes\AutomationCondition.cs" />
     <Compile Include="TableTypes\ChartView.cs" />
@@ -1653,7 +1653,6 @@
     <Compile Include="SheetFramework\SheetFieldsAvailable.cs" />
     <Compile Include="SheetFramework\SheetParameter.cs" />
     <Compile Include="SheetFramework\SheetsInternal.cs" />
-    <Compile Include="Data\Models\AccountingAutoPay.cs" />
     <Compile Include="TableTypes\Adjustment.cs" />
     <Compile Include="TableTypes\Appointment.cs" />
     <Compile Include="TableTypes\AppointmentRule.cs" />
