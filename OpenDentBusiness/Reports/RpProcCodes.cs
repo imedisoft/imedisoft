@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Linq;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness
 {
@@ -25,16 +26,16 @@ namespace OpenDentBusiness
 			List<ProcedureCode> listProcCodes = new List<ProcedureCode>();
 			if (isCategories)
 			{
-				Def[][] arrayDefs = ReportsComplex.RunFuncOnReportServer(() => Defs.GetArrayShortNoCache());
-				listProcCodes = ReportsComplex.RunFuncOnReportServer(() => ProcedureCodes.GetProcList(arrayDefs))
+				var arrayDefs = Definitions.GetDictionaryNoCache();
+				listProcCodes = ProcedureCodes.GetProcList(arrayDefs)
 					.OrderBy(x => x.ProcCat).ThenBy(x => x.ProcCode).ToList(); //Ordered by category
 			}
 			else
 			{
-				listProcCodes = ReportsComplex.RunFuncOnReportServer(() => ProcedureCodes.GetAllCodes()); //Ordered by ProcCode, used for the non-category version of the report if they want blanks.
+				listProcCodes = ProcedureCodes.GetAllCodes(); //Ordered by ProcCode, used for the non-category version of the report if they want blanks.
 			}
 			bool isFound;
-			List<Def> listDefs = Defs.GetDefsNoCache(DefCat.ProcCodeCats);
+			List<Definition> listDefs = Definitions.GetDefsNoCache(DefinitionCategory.ProcCodeCats);
 			for (int i = 0; i < listProcCodes.Count; i++)
 			{
 				isFound = false;
@@ -42,8 +43,8 @@ namespace OpenDentBusiness
 				if (isCategories)
 				{
 					//reports should no longer use the cache.
-					Def def = listDefs.FirstOrDefault(x => x.DefNum == listProcCodes[i].ProcCat);
-					row[0] = def == null ? "" : def.ItemName;
+					Definition def = listDefs.FirstOrDefault(x => x.Id == listProcCodes[i].ProcCat);
+					row[0] = def == null ? "" : def.Name;
 					row[1] = listProcCodes[i].ProcCode;
 					row[2] = listProcCodes[i].Descript;
 					row[3] = listProcCodes[i].AbbrDesc;
@@ -110,7 +111,7 @@ namespace OpenDentBusiness
 				+ "AND fee.ClinicNum='" + POut.Long(clinicNum) + "' "
 				+ "AND fee.ProvNum='" + POut.Long(provNum) + "' "
 				+ "ORDER BY procedurecode.ProcCode";
-			return ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
+			return Database.ExecuteDataTable(command);
 		}
 	}
 }

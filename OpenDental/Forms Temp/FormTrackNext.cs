@@ -9,6 +9,8 @@ using OpenDentBusiness;
 using OpenDental.UI;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>The Next appoinment tracking tool.</summary>
@@ -422,7 +424,7 @@ namespace OpenDental{
 						else{
 							row.Cells.Add(apt.AptDateTime.ToShortDateString());
 						}
-						row.Cells.Add(Defs.GetName(DefCat.RecallUnschedStatus,apt.UnschedStatus));
+						row.Cells.Add(Definitions.GetName(DefinitionCategory.RecallUnschedStatus,apt.UnschedStatus));
 						if(apt.IsHygiene) {
 							Provider provHyg=Providers.GetFirstOrDefault(x => x.ProvNum==apt.ProvHyg);
 							row.Cells.Add(provHyg==null?"INVALID":provHyg.Abbr);

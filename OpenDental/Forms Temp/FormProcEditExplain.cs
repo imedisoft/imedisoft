@@ -5,6 +5,8 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -113,13 +115,13 @@ namespace OpenDental {
 		  }
 		  if(procOld.Dx != procCur.Dx) {
 		    if(Changes!=""){ Changes+="\r\n";}
-		    Changes+="Diagnosis changed from "+Defs.GetDef(DefCat.Diagnosis,procOld.Dx).ItemName
-					+" to "+Defs.GetDef(DefCat.Diagnosis,procCur.Dx).ItemName+".";
+		    Changes+="Diagnosis changed from "+Definitions.GetDef(DefinitionCategory.Diagnosis,procOld.Dx).Name
+					+" to "+Definitions.GetDef(DefinitionCategory.Diagnosis,procCur.Dx).Name+".";
 		  }
 		  if(procOld.Priority != procCur.Priority) {
 		    if(Changes!=""){ Changes+="\r\n";}
-		    Changes+="Priority changed from "+((procOld.Priority!=0)?Defs.GetDef(DefCat.TxPriorities,procOld.Priority).ItemName:"no priority")
-					+" to "+((procCur.Priority!=0)?Defs.GetDef(DefCat.TxPriorities,procCur.Priority).ItemName:"no priority")+".";
+		    Changes+="Priority changed from "+((procOld.Priority!=0)?Definitions.GetDef(DefinitionCategory.TxPriorities,procOld.Priority).Name:"no priority")
+					+" to "+((procCur.Priority!=0)?Definitions.GetDef(DefinitionCategory.TxPriorities,procCur.Priority).Name:"no priority")+".";
 		  }
 		  if(procOld.PlaceService != procCur.PlaceService) {
 		    if(Changes!=""){ Changes+="\r\n";}
@@ -258,13 +260,13 @@ namespace OpenDental {
 		  }
 		  //if(procOld.BillingTypeOne != procCur.BillingTypeOne) {
 		  //  if(Changes!=""){ Changes+="\r\n";}
-		  //  Changes+="Billing Type One changed from "+(procOld.BillingTypeOne!=0?Defs.GetDef(DefCat.BillingTypes,procOld.BillingTypeOne).ItemName:"none")
-			//		+" to "+(procCur.BillingTypeOne!=0?Defs.GetDef(DefCat.BillingTypes,procCur.BillingTypeOne).ItemName:"none")+".";
+		  //  Changes+="Billing Type One changed from "+(procOld.BillingTypeOne!=0?Defs.GetDef(DefinitionCategory.BillingTypes,procOld.BillingTypeOne).ItemName:"none")
+			//		+" to "+(procCur.BillingTypeOne!=0?Defs.GetDef(DefinitionCategory.BillingTypes,procCur.BillingTypeOne).ItemName:"none")+".";
 		  //}
 		  //if(procOld.BillingTypeTwo != procCur.BillingTypeTwo) {
 		  //  if(Changes!=""){ Changes+="\r\n";}
-		  //  Changes+="Billing Type Two changed from "+(procOld.BillingTypeTwo!=0?Defs.GetDef(DefCat.BillingTypes,procOld.BillingTypeTwo).ItemName:"none")
-			//		+" to "+(procCur.BillingTypeTwo!=0?Defs.GetDef(DefCat.BillingTypes,procCur.BillingTypeTwo).ItemName:"none")+".";
+		  //  Changes+="Billing Type Two changed from "+(procOld.BillingTypeTwo!=0?Defs.GetDef(DefinitionCategory.BillingTypes,procOld.BillingTypeTwo).ItemName:"none")
+			//		+" to "+(procCur.BillingTypeTwo!=0?Defs.GetDef(DefinitionCategory.BillingTypes,procCur.BillingTypeTwo).ItemName:"none")+".";
 		  //}
 		  if(procOld.ProcNumLab != procCur.ProcNumLab) {
 		    if(Changes!=""){ Changes+="\r\n";}

@@ -5,6 +5,8 @@ using System.IO;
 using System.Net;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 using OpenDentBusiness.IO;
 
@@ -382,7 +384,7 @@ namespace OpenDental{
 			#region Proc Buttons
 			if(checkProcButtons.Checked) {
 				//checking for any custom proc button categories and prompting the user if they exist
-				if(Defs.HasCustomCategories()) {
+				if(Definitions.HasCustomCategories()) {
 					if(MsgBox.Show(MsgBoxButtons.YesNo,"This tool will delete all current ProcButtons from the Chart Module and add in the defaults. Continue?")) {
 						ProcButtons.SetToDefault();
 						Changed=true;
@@ -403,7 +405,7 @@ namespace OpenDental{
 			#region Appt Procs Quick Add
 			if(checkApptProcsQuickAdd.Checked) {
 				//checking for any ApptProcsQuickAdd and prompting the user if they exist
-				if(Defs.GetDefsForCategory(DefCat.ApptProcsQuickAdd).Count>0) {
+				if(Definitions.GetDefsForCategory(DefinitionCategory.ApptProcsQuickAdd).Count>0) {
 					if(MsgBox.Show(MsgBoxButtons.YesNo,"This tool will reset the list of procedures in the appointment edit window to the defaults. Continue?")) {
 						ProcedureCodes.ResetApptProcsQuickAdd();
 						Changed=true;

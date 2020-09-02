@@ -20,7 +20,7 @@ namespace OpenDentBusiness{
 		public ApptStatus AptStatus;
 		///<summary>Time pattern, X for Dr time, / for assist time. Stored in 5 minute increments.  Converted as needed to 10 or 15 minute representations for display.</summary>
 		public string Pattern;
-		///<summary>FK to definition.DefNum.  This field can also be used to show patient arrived, in chair, etc.  The Category column in the definition table is DefCat.ApptConfirmed.</summary>
+		///<summary>FK to definition.DefNum.  This field can also be used to show patient arrived, in chair, etc.  The Category column in the definition table is DefinitionCategory.ApptConfirmed.</summary>
 		public long Confirmed;
 		///<summary>If true, then the program will not attempt to reset the user's time pattern and length when adding or removing procedures.</summary>
 		public bool TimeLocked;
@@ -38,7 +38,7 @@ namespace OpenDentBusiness{
 		public DateTime AptDateTime;
 		///<summary>FK to appointment.AptNum.  A better description of this field would be PlannedAptNum.  Only used to show that this apt is derived from specified planned apt. Otherwise, 0.</summary>
 		public long NextAptNum;
-		///<summary>FK to definition.DefNum.  The definition.Category in the definition table is DefCat.RecallUnschedStatus.  Only used if this is an Unsched or Planned appt.</summary>
+		///<summary>FK to definition.DefNum.  The definition.Category in the definition table is DefinitionCategory.RecallUnschedStatus.  Only used if this is an Unsched or Planned appt.</summary>
 		public long UnschedStatus;
 		///<summary>This is the first appoinment this patient has had at this office.  Somewhat automated.</summary>
 		public bool IsNewPatient;

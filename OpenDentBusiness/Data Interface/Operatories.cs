@@ -70,7 +70,7 @@ namespace OpenDentBusiness{
 		public static List<Operatory> GetOpsForWebSchedNewPatApptDef(long defNum,bool isShort=true) {
 			//No need to check RemotingRole; no call to db.
 			List<long> listOperatoryNums=DefLinks.GetDefLinksForWebSchedNewPatApptOperatories()
-				.Where(x => x.DefNum==defNum)
+				.Where(x => x.DefinitionId==defNum)
 				.Select(x => x.FKey)
 				.Distinct()
 				.ToList();
@@ -123,7 +123,7 @@ namespace OpenDentBusiness{
 				//Create a dictionary comprised of Key: OperatoryNum and value: List of definition DefNums.
 				Dictionary<long,List<long>> dictWSNPAOperatoryDefNums=DefLinks.GetDefLinksByType(DefLinkType.Operatory)
 					.GroupBy(x => x.FKey)//FKey for DefLinkType.Operatory is OperatoryNum
-					.ToDictionary(x => x.Key,x => x.Select(y => y.DefNum).ToList());
+					.ToDictionary(x => x.Key,x => x.Select(y => y.DefinitionId).ToList());
 				foreach(long operatoryNum in dictWSNPAOperatoryDefNums.Keys) {
 					Operatory op=listOps.FirstOrDefault(x => x.OperatoryNum==operatoryNum);
 					if(op!=null) {

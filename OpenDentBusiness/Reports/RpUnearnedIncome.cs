@@ -1,4 +1,5 @@
 ﻿using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,10 +15,9 @@ namespace OpenDentBusiness {
 		/// <param name="listClinics">The list of clinics to filter by. Pass in an empty list if this should not be filtered by clinic.</param>
 		/// <returns></returns>
 		public static DataTable GetLineItemUnearnedData(List<long> listClinics,DateTime date1Start,DateTime date2Start,bool showProvider) {
-			bool hasClinicsEnabled = ReportsComplex.RunFuncOnReportServer(() => Prefs.HasClinicsEnabledNoCache);
-			List<long> listHiddenUnearnedDefNums=ReportsComplex.RunFuncOnReportServer(() => 
-				Defs.GetDefsNoCache(DefCat.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.ItemValue)).Select(x => x.DefNum).ToList()
-			);
+			bool hasClinicsEnabled = Prefs.HasClinicsEnabledNoCache;
+			List<long> listHiddenUnearnedDefNums=
+				Definitions.GetDefsNoCache(DefinitionCategory.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.Value)).Select(x => x.Id).ToList();
 			string command = "";
 			string whereClin = "";
 			//This query is kind-of a mess, but we're trying to account for bugs in previous versions.
@@ -54,16 +54,15 @@ namespace OpenDentBusiness {
 				command+="LEFT JOIN clinic ON clinic.ClinicNum=results.ClinicNum ";
 			}
 			command+="ORDER BY results.DatePay,Patient,results.SplitNum";
-			DataTable raw=ReportsComplex.RunFuncOnReportServer(() => ReportsComplex.GetTable(command));
+			DataTable raw= Database.ExecuteDataTable(command);
 			return raw;
 		}
 
 		public static DataTable GetUnearnedAllocationData(List<long> listClinicNums,List<long> listProvNums,
 			List<long> listUnearnedTypeNums,bool isExcludeNetZeroUnearned,bool showProvider) 
 		{
-			List<long> listHiddenUnearnedDefNums=ReportsComplex.RunFuncOnReportServer(() => 
-				Defs.GetDefsNoCache(DefCat.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.ItemValue)).Select(x => x.DefNum).ToList()
-			);
+			List<long> listHiddenUnearnedDefNums=
+				Definitions.GetDefsNoCache(DefinitionCategory.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.Value)).Select(x => x.Id).ToList();
 			//get all families that have an unallocated unearned balance.
 			//from those, remove families that have not had procedures charted/completed after the unearned amount.
 
@@ -98,17 +97,17 @@ namespace OpenDentBusiness {
 				command+="HAVING ABS(UnallocAmt) > 0.005 ";
 			}
 			//one row per family
-			DataTable tableUnallocatedUnearned = ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
+			DataTable tableUnallocatedUnearned = Database.ExecuteDataTable(command);
 			List<long> listGuarantors = tableUnallocatedUnearned.Rows.OfType<DataRow>().Select(x => PIn.Long(x["Guarantor"].ToString())).ToList();
 			//all procedures for the families that have not been explicitly paid off.
 			//Key: GuarantorNum | Val:ListRemainingProcsForFam
-			List<UnearnedProc> listRemProcs = ReportsComplex.RunFuncOnReportServer(() => Procedures.GetRemainingProcsForFamilies(listGuarantors));
+			List<UnearnedProc> listRemProcs = Procedures.GetRemainingProcsForFamilies(listGuarantors);
 			Dictionary<long,List<UnearnedProc>> dictFamRemainingProcs = listRemProcs.GroupBy(x => x.GuarNum)
 				.ToDictionary(x => x.Key,y => y.ToList());
-			Dictionary<long,double> dictFamilyBalances = ReportsComplex.RunFuncOnReportServer(() => Ledgers.GetBalancesForFamilies(listGuarantors));
-			Dictionary<long,string> dictPatNames = ReportsComplex.RunFuncOnReportServer(() => 
-				Patients.GetPatientNames(Patients.GetAllFamilyPatNums(listGuarantors)));
-			List<ProcedureCode> listProcCodes = ReportsComplex.RunFuncOnReportServer(() => ProcedureCodes.GetAllCodes());
+			Dictionary<long,double> dictFamilyBalances = Ledgers.GetBalancesForFamilies(listGuarantors);
+			Dictionary<long,string> dictPatNames =
+				Patients.GetPatientNames(Patients.GetAllFamilyPatNums(listGuarantors));
+			List<ProcedureCode> listProcCodes = ProcedureCodes.GetAllCodes();
 			DataTable retVal = new DataTable();
 			retVal.Columns.Add("Guar");
 			retVal.Columns.Add("FamBal");
@@ -178,9 +177,8 @@ namespace OpenDentBusiness {
 		public static DataTable GetNetUnearnedData(List<long> listClinicNums,List<long> listProvNums,
 			List<long> listUnearnedTypeNums,bool isExcludeNetZero) 
 		{
-			List<long> listHiddenUnearnedDefNums=ReportsComplex.RunFuncOnReportServer(() => 
-				Defs.GetDefsNoCache(DefCat.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.ItemValue)).Select(x => x.DefNum).ToList()
-			);
+			List<long> listHiddenUnearnedDefNums=
+				Definitions.GetDefsNoCache(DefinitionCategory.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.Value)).Select(x => x.Id).ToList();
 			//show all families where unearned income was collected and no unallocated procedures exist.
 			/*All families with unallocated paysplits*/
 			DataTable retVal = new DataTable();
@@ -214,16 +212,16 @@ namespace OpenDentBusiness {
 			if(isExcludeNetZero) {
 				command+="HAVING ABS(UnallocatedAmt) > 0.005 ";
 			}
-			DataTable tableUnallocatedPrepayments = ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
+			DataTable tableUnallocatedPrepayments = Database.ExecuteDataTable(command);
 			//get remaining amount for all procedures of the returned families.
 			List<long> listGuarantorNums = tableUnallocatedPrepayments.Rows.OfType<DataRow>().Select(x => PIn.Long(x["Guarantor"].ToString())).ToList();
 			if(listGuarantorNums.Count == 0) {
 				return retVal;//No families have paysplits with unallocated prepayments. Return empty table.
 			}
 			/*As long as any patient in the family has AT LEAST ONE procedure that is not fully, explicitly paid off, they will not show in this report.*/
-			List<UnearnedProc> listGuarantorRemainingProcs = ReportsComplex.RunFuncOnReportServer(() => 
-				Procedures.GetRemainingProcsForFamilies(listGuarantorNums));
-			Dictionary<long,double> dictFamilyBalances = ReportsComplex.RunFuncOnReportServer(() => Ledgers.GetBalancesForFamilies(listGuarantorNums));
+			List<UnearnedProc> listGuarantorRemainingProcs = 
+				Procedures.GetRemainingProcsForFamilies(listGuarantorNums);
+			Dictionary<long,double> dictFamilyBalances = Ledgers.GetBalancesForFamilies(listGuarantorNums);
 			foreach(DataRow rowCur in tableUnallocatedPrepayments.Rows) {
 				long unallocatedGuarantor = PIn.Long(rowCur["Guarantor"].ToString());
 				if(listGuarantorRemainingProcs.Select(x => x.GuarNum).Contains(unallocatedGuarantor)) {
@@ -247,10 +245,9 @@ namespace OpenDentBusiness {
 		/// <param name="listClinics">The list of clinics to filter by. Pass in an empty list if this should not be filtered by clinic.</param>
 		/// <returns></returns>
 		public static DataTable GetUnearnedAccountData(List<long> listClinics) {
-			bool hasClinicsEnabled = ReportsComplex.RunFuncOnReportServer(() => Prefs.HasClinicsEnabledNoCache);
-			List<long> listHiddenUnearnedDefNums=ReportsComplex.RunFuncOnReportServer(() => 
-				Defs.GetDefsNoCache(DefCat.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.ItemValue)).Select(x => x.DefNum).ToList()
-			);
+			bool hasClinicsEnabled = Prefs.HasClinicsEnabledNoCache;
+			List<long> listHiddenUnearnedDefNums=
+				Definitions.GetDefsNoCache(DefinitionCategory.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.Value)).Select(x => x.Id).ToList();
 			string command = "";
 			string whereClin = "";
 			//We used to get original paysplits based on FSplitNum being 0 and having an unearned type and then get the offsetting splits from the
@@ -285,7 +282,7 @@ namespace OpenDentBusiness {
 			command+=whereClin;
 			command+="GROUP BY guar.PatNum HAVING ABS(Amount) > 0.005 ";//still won't work for oracle
 			command+="ORDER BY guar.LName, guar.FName, guar.MiddleI, Amount";
-			DataTable raw = ReportsComplex.RunFuncOnReportServer(() => ReportsComplex.GetTable(command));
+			DataTable raw = Database.ExecuteDataTable(command);
 			return raw;
 		}
 

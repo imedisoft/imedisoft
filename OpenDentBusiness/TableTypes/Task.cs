@@ -1,4 +1,5 @@
 using Imedisoft.Data.Annotations;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections;
 using System.Data;
@@ -69,7 +70,7 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// The ID of the task priority definition.
 		/// </summary>
-		[ForeignKey(typeof(Def), nameof(Def.DefNum))]
+		[ForeignKey(typeof(Definition), nameof(Definition.Id))]
 		public long PriorityId;
 
 		public string ReminderGroupId;

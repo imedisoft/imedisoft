@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using CodeBase;
 using DataConnectionBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness.WebTypes.WebForms;
 
 namespace OpenDentBusiness{
@@ -566,7 +567,7 @@ namespace OpenDentBusiness{
 				row["description"]=rawDoc.Rows[i]["Description"].ToString();
 				row["DocNum"]=rawDoc.Rows[i]["DocNum"].ToString();
 				docCat=PIn.Long(rawDoc.Rows[i]["DocCategory"].ToString());
-				row["imageCat"]=Defs.GetName(DefCat.ImageCats,docCat);
+				row["imageCat"]=Definitions.GetName(DefinitionCategory.ImageCats,docCat);
 				row["SheetNum"]="0";
 				row["showInTerminal"]="";
 				if(dateT.TimeOfDay!=TimeSpan.Zero) {

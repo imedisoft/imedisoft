@@ -1,4 +1,6 @@
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -14,7 +16,7 @@ namespace Imedisoft.Forms
 {
     public partial class FormTaskEdit : FormBase
 	{
-		private List<Def> priorities;
+		private List<Definition> priorities;
 		private List<TaskNote> taskNotes;
 		private long taskListId;
 		private Task task;
@@ -23,7 +25,7 @@ namespace Imedisoft.Forms
 		private long? patientId;
 		private long? appointmentId;
 		private long? replyToUserId;
-		private Def defaultPriority;
+		private Definition defaultPriority;
 
 		/// <summary>
 		///		<para>
@@ -86,7 +88,7 @@ namespace Imedisoft.Forms
 			}
 
 			// Check whether there are priorities defined.
-			priorities = Defs.GetDefsForCategory(DefCat.TaskPriorities, true);
+			priorities = Definitions.GetDefsForCategory(DefinitionCategory.TaskPriorities, true);
 			if (priorities.Count < 1)
 			{
 				ShowError("There are no task priorities in Setup | Definitions. There must be at least one in order to use the task system.");
@@ -100,7 +102,7 @@ namespace Imedisoft.Forms
 
 			foreach (var priority in priorities)
 			{
-				if (!priority.IsHidden && priority.ItemValue == "D")
+				if (!priority.IsHidden && priority.Value == "D")
 				{
 					defaultPriority = priority;
 
@@ -111,10 +113,10 @@ namespace Imedisoft.Forms
 			priorityComboBox.Items.Clear();
 			foreach (var priority in priorities)
             {
-				if (priority.IsHidden && priority.DefNum != task.PriorityId) continue;
+				if (priority.IsHidden && priority.Id != task.PriorityId) continue;
 
 				priorityComboBox.Items.Add(priority);
-				if (priority.DefNum == task.PriorityId)
+				if (priority.Id == task.PriorityId)
                 {
 					priorityComboBox.SelectedItem = priority;
                 }
@@ -159,7 +161,7 @@ namespace Imedisoft.Forms
 			}
 
 			// Get all the available task priorities
-			priorities = Defs.GetDefsForCategory(DefCat.TaskPriorities, true);
+			priorities = Definitions.GetDefsForCategory(DefinitionCategory.TaskPriorities, true);
 			if (priorities.Count < 1)
 			{
 				ShowError("There are no task priorities in Setup | Definitions.  There must be at least one in order to use the task system.");
@@ -430,9 +432,9 @@ namespace Imedisoft.Forms
 
 		private void PriorityComboBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			if (priorityComboBox.SelectedItem is Def priority)
+			if (priorityComboBox.SelectedItem is Definition priority)
             {
-				colorButton.BackColor = Defs.GetColor(DefCat.TaskPriorities, priority.DefNum);
+				colorButton.BackColor = Definitions.GetColor(DefinitionCategory.TaskPriorities, priority.Id);
 			}
 		}
 
@@ -611,13 +613,13 @@ namespace Imedisoft.Forms
 
 			// Determine whether a priority has been selected.
 			long newPriorityId;
-			if (!(priorityComboBox.SelectedItem is Def priority))
+			if (!(priorityComboBox.SelectedItem is Definition priority))
             {
 				ShowError("Please select a priority for this task.");
 
 				return false;
 			}
-			newPriorityId = priority.DefNum;
+			newPriorityId = priority.Id;
 
 			// If a start date was entered, check whether a valid date and time was entered...
 			DateTime? newDateStart = null;

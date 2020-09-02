@@ -11,6 +11,7 @@ using System.Threading;
 using CodeBase;
 using DataConnectionBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using Imedisoft.X12.Codes;
 
 namespace OpenDentBusiness {
@@ -2569,7 +2570,7 @@ namespace OpenDentBusiness {
 			//saved treatment plan and thus would have a different priority in the database.
 			if(listTreatPlanAttaches!=null) {
 				hasTreatPlanAttaches=true;
-				dictPriorities=Defs.GetDefsForCategory(DefCat.TxPriorities).ToDictionary(x=>x.DefNum,x=>x.ItemOrder);
+				dictPriorities=Definitions.GetByCategory(DefinitionCategory.TxPriorities, true).ToDictionary(x=>x.Id,x=>x.SortOrder);
 				listTreatPlanAttaches.ForEach(x => dictProcNumPriority[x.ProcNum]=(x.Priority==0 ? -1 : dictPriorities[x.Priority]));
 			}
 			List<Procedure> listLabProcs=listProcs.Where(x => x.ProcNumLab!=0).Select(x => x.Copy()).ToList();//Canadian Lab Procs
@@ -3975,7 +3976,7 @@ namespace OpenDentBusiness {
 				if(y.Priority==0) {
 					return -1;//x is less than y. Priorities always come first.
 				}
-				return Defs.GetOrder(DefCat.TxPriorities,x.Priority).CompareTo(Defs.GetOrder(DefCat.TxPriorities,y.Priority));
+				return Definitions.GetOrder(DefinitionCategory.TxPriorities,x.Priority).CompareTo(Definitions.GetOrder(DefinitionCategory.TxPriorities,y.Priority));
 			}
 			//priorities are the same, so sort by toothrange
 			if(x.ToothRange!=y.ToothRange) {

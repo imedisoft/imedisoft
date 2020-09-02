@@ -8,6 +8,8 @@ using OpenDental.UI;
 using OpenDentBusiness;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -44,7 +46,7 @@ namespace OpenDental{
 		private List<AutomationAction> _listAutoActions;
 		///<summary>Matches list of appointments in comboAppointmentType. Does not include hidden types unless current automation already has that type set.</summary>
 		private List<AppointmentType> _listAptTypes;
-		private List<Def> _listCommLogTypeDefs;
+		private List<Definition> _listCommLogTypeDefs;
 
 		///<summary></summary>
 		public FormAutomationEdit(Automation autoCur)
@@ -304,7 +306,7 @@ namespace OpenDental{
 		#endregion
 
 		private void FormAutomationEdit_Load(object sender, System.EventArgs e) {
-			_listCommLogTypeDefs=Defs.GetDefsForCategory(DefCat.CommLogTypes,true);
+			_listCommLogTypeDefs=Definitions.GetDefsForCategory(DefinitionCategory.CommLogTypes,true);
 			textDescription.Text=AutoCur.Description;
 			_listAptTypes=new List<AppointmentType>() { new AppointmentType() { Name="none" } };
 			AppointmentTypes.GetWhere(x => !x.Hidden || x.Id==AutoCur.AppointmentTypeId)
@@ -378,8 +380,8 @@ namespace OpenDental{
 					labelActionObject.Visible=true;
 					labelActionObject.Text="Commlog Type";
 					comboActionObject.Visible=true;
-					_listCommLogTypeDefs.ForEach(x => comboActionObject.Items.Add(x.ItemName));
-					comboActionObject.SelectedIndex=_listCommLogTypeDefs.FindIndex(x => x.DefNum==AutoCur.CommType);
+					_listCommLogTypeDefs.ForEach(x => comboActionObject.Items.Add(x.Name));
+					comboActionObject.SelectedIndex=_listCommLogTypeDefs.FindIndex(x => x.Id==AutoCur.CommType);
 					labelMessage.Visible=true;
 					textMessage.Visible=true;
 					return;
@@ -520,7 +522,7 @@ namespace OpenDental{
 						MessageBox.Show("A commlog type must be selected.");
 						return;
 					}
-					AutoCur.CommType=_listCommLogTypeDefs[comboActionObject.SelectedIndex].DefNum;
+					AutoCur.CommType=_listCommLogTypeDefs[comboActionObject.SelectedIndex].Id;
 					AutoCur.MessageContent=textMessage.Text;
 					break;
 				case AutomationAction.PopUp:

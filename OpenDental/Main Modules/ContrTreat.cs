@@ -1,4 +1,6 @@
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using Imedisoft.UI;
 using Imedisoft.X12.Codes;
 using MigraDoc.DocumentObjectModel;
@@ -628,11 +630,11 @@ namespace OpenDental
 
 		///<summary>Called every time local data is changed from any workstation.  Refreshes priority lists and lays out the toolbar.</summary>
 		public void InitializeLocalData() {
-			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.TxPriorities,true);
-			listDefs.Insert(0,new Def { DefNum=0,ItemName="no priority" });
+			List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.TxPriorities,true);
+			listDefs.Insert(0,new Definition { Id=0,Name="no priority" });
 			listSetPr.Items.Clear();
-			foreach(Def def in listDefs) {
-				listSetPr.Items.Add(new ODBoxItem<Def>(def.ItemName,def));
+			foreach(Definition def in listDefs) {
+				listSetPr.Items.Add(new ODBoxItem<Definition>(def.Name,def));
 			}
 			LayoutToolBar();
 			if(Prefs.GetBool(PrefName.EasyHideInsurance)){
@@ -993,7 +995,7 @@ namespace OpenDental
 					row.Done="X";
 				}
 				row.ProcAbbr=ProcTPSelectList[i].ProcAbbr;
-				row.Priority=Defs.GetName(DefCat.TxPriorities,ProcTPSelectList[i].Priority);
+				row.Priority=Definitions.GetName(DefinitionCategory.TxPriorities,ProcTPSelectList[i].Priority);
 				row.Tth=ProcTPSelectList[i].ToothNumTP;
 				row.Surf=ProcTPSelectList[i].Surf;
 				row.Code=ProcTPSelectList[i].ProcCode;
@@ -1036,7 +1038,7 @@ namespace OpenDental
 				totCatPercUCR+=(decimal)ProcTPSelectList[i].CatPercUCR;
 				row.Prognosis=ProcTPSelectList[i].Prognosis; //Prognosis
 				row.Dx=ProcTPSelectList[i].Dx;
-				row.ColorText=Defs.GetColor(DefCat.TxPriorities,ProcTPSelectList[i].Priority);
+				row.ColorText=Definitions.GetColor(DefinitionCategory.TxPriorities,ProcTPSelectList[i].Priority);
 				if(row.ColorText==System.Drawing.Color.White) {
 					row.ColorText=System.Drawing.Color.Black;
 				}
@@ -1057,7 +1059,7 @@ namespace OpenDental
 					row.FeeAllowed=suballowed;
 					row.TaxEst=subTaxEst;
 					row.CatPercUCR=subCatPercUCR;
-					row.ColorText=Defs.GetColor(DefCat.TxPriorities,ProcTPSelectList[i].Priority);
+					row.ColorText=Definitions.GetColor(DefinitionCategory.TxPriorities,ProcTPSelectList[i].Priority);
 					if(row.ColorText==System.Drawing.Color.White) {
 						row.ColorText=System.Drawing.Color.Black;
 					}
@@ -1900,7 +1902,7 @@ namespace OpenDental
 			if(!clickedRow.Between(0,listSetPr.Items.Count-1)) {
 				return;
 			}
-			Def selectedPriority=((ODBoxItem<Def>)listSetPr.Items[clickedRow]).Tag;
+			Definition selectedPriority=((ODBoxItem<Definition>)listSetPr.Items[clickedRow]).Tag;
 			if(selectedPriority==null) {
 				return;
 			}
@@ -1913,7 +1915,7 @@ namespace OpenDental
 		}
 
 		///<summary>Sets the priorities for the selected ProcTP.</summary>
-		private void SetPriority(Def selectedPriority,TreatPlan selectedTp,List<ProcTP> listSelectedProcTps) {
+		private void SetPriority(Definition selectedPriority,TreatPlan selectedTp,List<ProcTP> listSelectedProcTps) {
 			List<long> listSelectedProcNums=listSelectedProcTps
 				.Where(x => x!=null)
 				.Select(x => x.ProcNumOrig)
@@ -1921,13 +1923,13 @@ namespace OpenDental
 			if(_listTreatPlans.Count>0
 				 && (selectedTp.TPStatus==TreatPlanStatus.Active || selectedTp.TPStatus==TreatPlanStatus.Inactive)) 
 			{
-				TreatPlanAttaches.SetPriorityForTreatPlanProcs(selectedPriority.DefNum,selectedTp.TreatPlanNum,listSelectedProcNums);
+				TreatPlanAttaches.SetPriorityForTreatPlanProcs(selectedPriority.Id,selectedTp.TreatPlanNum,listSelectedProcNums);
 			}
 			else { //any Saved TP
 				if(!Security.IsAuthorized(Permissions.TreatPlanEdit,selectedTp.DateTP)) {
 					return;
 				}
-				ProcTPs.SetPriorityForTreatPlanProcs(selectedPriority.DefNum,selectedTp.TreatPlanNum,listSelectedProcNums);
+				ProcTPs.SetPriorityForTreatPlanProcs(selectedPriority.Id,selectedTp.TreatPlanNum,listSelectedProcNums);
 			}
 			ModuleSelected(PatCur.PatNum);//Refresh the entire module in order to get the new priorities from the database.
 			//Reselect the treatment plan that the user was just looking at.
@@ -2157,9 +2159,9 @@ namespace OpenDental
 				toothChartWrapper.BringToFront();
 			
 			_toothChartRelay.SetToothNumberingNomenclature((ToothNumberingNomenclature)PrefC.GetInt(PrefName.UseInternationalToothNumbers));
-			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.ChartGraphicColors);
-			_toothChartRelay.ColorBackgroundMain=listDefs[14].ItemColor;
-			_toothChartRelay.ColorText=listDefs[15].ItemColor;
+			List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.ChartGraphicColors);
+			_toothChartRelay.ColorBackgroundMain=listDefs[14].Color;
+			_toothChartRelay.ColorText=listDefs[15].Color;
 			_toothChartRelay.ResetTeeth();
 			ToothInitialList=ToothInitials.Refresh(PatCur.PatNum);
 			//first, primary.  That way, you can still set a primary tooth missing afterwards.
@@ -2444,7 +2446,7 @@ namespace OpenDental
 				subpat+=pat;
 				totPat+=pat;
 				//Fill TpRow object with information.
-				row.Priority=Defs.GetName(DefCat.TxPriorities,listTreatPlanAttaches.FirstOrDefault(x => x.ProcNum==listProcForTP[i].ProcNum).Priority);//(Defs.GetName(DefCat.TxPriorities,listProcForTP[i].Priority));
+				row.Priority=Definitions.GetName(DefinitionCategory.TxPriorities,listTreatPlanAttaches.FirstOrDefault(x => x.ProcNum==listProcForTP[i].ProcNum).Priority);//(Defs.GetName(DefinitionCategory.TxPriorities,listProcForTP[i].Priority));
 				row.Tth=(Tooth.ToInternat(listProcForTP[i].ToothNum));
 				if(ProcedureCodes.GetProcCode(listProcForTP[i].CodeNum).TreatArea==TreatmentArea.Surf) {
 					row.Surf=(Tooth.SurfTidyFromDbToDisplay(listProcForTP[i].Surf,listProcForTP[i].ToothNum));
@@ -2473,8 +2475,8 @@ namespace OpenDental
 				if(showSecDeduct!="") {
 					row.Description+=showSecDeduct;
 				}
-				row.Prognosis=Defs.GetName(DefCat.Prognosis,PIn.Long(listProcForTP[i].Prognosis.ToString()));
-				row.Dx=Defs.GetValue(DefCat.Diagnosis,PIn.Long(listProcForTP[i].Dx.ToString()));
+				row.Prognosis=Definitions.GetName(DefinitionCategory.Prognosis,PIn.Long(listProcForTP[i].Prognosis.ToString()));
+				row.Dx=Definitions.GetValue(DefinitionCategory.Diagnosis,PIn.Long(listProcForTP[i].Dx.ToString()));
 				row.Fee=fee;
 				row.PriIns=priIns;
 				row.SecIns=secIns;
@@ -2482,7 +2484,7 @@ namespace OpenDental
 				row.Pat=pat;
 				row.FeeAllowed=allowed;
 				row.TaxEst=taxAmt;
-				row.ColorText=Defs.GetColor(DefCat.TxPriorities,listTreatPlanAttaches.FirstOrDefault(y => y.ProcNum==listProcForTP[i].ProcNum).Priority);
+				row.ColorText=Definitions.GetColor(DefinitionCategory.TxPriorities,listTreatPlanAttaches.FirstOrDefault(y => y.ProcNum==listProcForTP[i].ProcNum).Priority);
 				if(row.ColorText==System.Drawing.Color.White) {
 					row.ColorText=System.Drawing.Color.Black;
 				}
@@ -2535,7 +2537,7 @@ namespace OpenDental
 					row.FeeAllowed=suballowed;
 					row.TaxEst=subTaxAmt;
 					row.CatPercUCR=subCatPercUCR;
-					row.ColorText=Defs.GetColor(DefCat.TxPriorities,listTreatPlanAttaches.FirstOrDefault(y => y.ProcNum==listProcForTP[i].ProcNum).Priority);
+					row.ColorText=Definitions.GetColor(DefinitionCategory.TxPriorities,listTreatPlanAttaches.FirstOrDefault(y => y.ProcNum==listProcForTP[i].ProcNum).Priority);
 					if(row.ColorText==System.Drawing.Color.White) {
 						row.ColorText=System.Drawing.Color.Black;
 					}
@@ -2773,27 +2775,27 @@ namespace OpenDental
 				MigraDocHelper.DrawString(frame,"Your"+"\r\n"+"Left",bodyFontx,
 					new RectangleF(widthDoc/2+_toothChartRelay.Width/2+17,_toothChartRelay.Height/2-10,50,100));
 				if(checkShowCompleted.Checked) {
-					List<Def> listDefs=Defs.GetDefsForCategory(DefCat.ChartGraphicColors,true);
+					List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.ChartGraphicColors,true);
 					float yPos=_toothChartRelay.Height+15;
 					float xPos=225;
-					MigraDocHelper.FillRectangle(frame,listDefs[3].ItemColor,xPos,yPos,14,14);
+					MigraDocHelper.FillRectangle(frame,listDefs[3].Color,xPos,yPos,14,14);
 					xPos+=16;
 					MigraDocHelper.DrawString(frame,"Existing",bodyFontx,xPos,yPos);
 					Graphics g=this.CreateGraphics();//for measuring strings.
 					xPos+=(int)g.MeasureString("Existing",bodyFont).Width+23;
 					//The Complete work is actually a combination of EC and C. Usually same color.
 					//But just in case they are different, this will show it.
-					MigraDocHelper.FillRectangle(frame,listDefs[2].ItemColor,xPos,yPos,7,14);
+					MigraDocHelper.FillRectangle(frame,listDefs[2].Color,xPos,yPos,7,14);
 					xPos+=7;
-					MigraDocHelper.FillRectangle(frame,listDefs[1].ItemColor,xPos,yPos,7,14);
+					MigraDocHelper.FillRectangle(frame,listDefs[1].Color,xPos,yPos,7,14);
 					xPos+=9;
 					MigraDocHelper.DrawString(frame,"Complete",bodyFontx,xPos,yPos);
 					xPos+=(int)g.MeasureString("Complete",bodyFont).Width+23;
-					MigraDocHelper.FillRectangle(frame,listDefs[4].ItemColor,xPos,yPos,14,14);
+					MigraDocHelper.FillRectangle(frame,listDefs[4].Color,xPos,yPos,14,14);
 					xPos+=16;
 					MigraDocHelper.DrawString(frame,"Referred Out",bodyFontx,xPos,yPos);
 					xPos+=(int)g.MeasureString("Referred Out",bodyFont).Width+23;
-					MigraDocHelper.FillRectangle(frame,listDefs[0].ItemColor,xPos,yPos,14,14);
+					MigraDocHelper.FillRectangle(frame,listDefs[0].Color,xPos,yPos,14,14);
 					xPos+=16;
 					MigraDocHelper.DrawString(frame,"Treatment Planned",bodyFontx,xPos,yPos);
 					g.Dispose();
@@ -3062,7 +3064,7 @@ namespace OpenDental
 			string[] teeth;
 			System.Drawing.Color cLight=System.Drawing.Color.White;
 			System.Drawing.Color cDark=System.Drawing.Color.White;
-			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.ChartGraphicColors,true);
+			List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.ChartGraphicColors,true);
 			for(int i=0;i<ProcListFiltered.Count;i++) {
 				proc=ProcListFiltered[i];
 				//if(proc.ProcStatus!=procStat) {
@@ -3081,28 +3083,28 @@ namespace OpenDental
 				if(ProcedureCodes.GetProcCode(proc.CodeNum).GraphicColor==System.Drawing.Color.FromArgb(0)) {
 					switch(proc.ProcStatus) {
 						case ProcStat.C:
-							cDark=listDefs[1].ItemColor;
-							cLight=listDefs[6].ItemColor;
+							cDark=listDefs[1].Color;
+							cLight=listDefs[6].Color;
 							break;
 						case ProcStat.TP:
-							cDark=listDefs[0].ItemColor;
-							cLight=listDefs[5].ItemColor;
+							cDark=listDefs[0].Color;
+							cLight=listDefs[5].Color;
 							break;
 						case ProcStat.EC:
-							cDark=listDefs[2].ItemColor;
-							cLight=listDefs[7].ItemColor;
+							cDark=listDefs[2].Color;
+							cLight=listDefs[7].Color;
 							break;
 						case ProcStat.EO:
-							cDark=listDefs[3].ItemColor;
-							cLight=listDefs[8].ItemColor;
+							cDark=listDefs[3].Color;
+							cLight=listDefs[8].Color;
 							break;
 						case ProcStat.R:
-							cDark=listDefs[4].ItemColor;
-							cLight=listDefs[9].ItemColor;
+							cDark=listDefs[4].Color;
+							cLight=listDefs[9].Color;
 							break;
 						case ProcStat.Cn:
-							cDark=listDefs[16].ItemColor;
-							cLight=listDefs[17].ItemColor;
+							cDark=listDefs[16].Color;
+							cLight=listDefs[17].Color;
 							break;
 						case ProcStat.D:  //Don't think this can ever happen, but skip anyway.
 						default:
@@ -3475,16 +3477,16 @@ namespace OpenDental
 			List<Document> retVal=new List<Document>();
 			//Determine each of the document categories that this TP should be saved to.
 			//"R"==TreatmentPlan; see FormDefEditImages.cs
-			List<Def> listImageCatDefs=Defs.GetDefsForCategory(DefCat.ImageCats,true);
-			List<long> categories= listImageCatDefs.Where(x => x.ItemValue.Contains("R")).Select(x=>x.DefNum).ToList();
+			List<Definition> listImageCatDefs=Definitions.GetDefsForCategory(DefinitionCategory.ImageCats,true);
+			List<long> categories= listImageCatDefs.Where(x => x.Value.Contains("R")).Select(x=>x.Id).ToList();
 			if(isSigSave && categories.Count==0 && Prefs.GetBool(PrefName.TreatPlanSaveSignedToPdf)) {
 				//we must save at least one document, pick first non-hidden image category.
-				Def imgCat=listImageCatDefs.FirstOrDefault(x => !x.IsHidden);
+				Definition imgCat=listImageCatDefs.FirstOrDefault(x => !x.IsHidden);
 				if(imgCat==null) {
 					MessageBox.Show("Unable to save treatment plan because all image categories are hidden.");
 					return new List<Document>();
 				}
-				categories.Add(imgCat.DefNum);
+				categories.Add(imgCat.Id);
 			}
 			//Gauranteed to have at least one image category at this point.
 			//Saving pdf to tempfile first simplifies this code, but can use extra bandwidth copying the file to and from the temp directory/Open Dent imgs.

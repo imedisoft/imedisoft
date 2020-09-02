@@ -1,4 +1,6 @@
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental;
 using OpenDental.Bridges;
 using OpenDental.UI;
@@ -105,8 +107,7 @@ namespace Imedisoft.Forms
 				groupAddPt.Visible = false;
 			}
 
-
-			//Cannot add new patients from OD select patient interface.  Patient must be added from HL7 message.
+			// Cannot add new patients from OD select patient interface.  Patient must be added from HL7 message.
 			if (HL7Defs.IsExistingHL7Enabled())
 			{
 				HL7Def def = HL7Defs.GetOneDeepEnabled();
@@ -118,9 +119,9 @@ namespace Imedisoft.Forms
 
 			billingTypeComboBox.Items.Add("All");
 			billingTypeComboBox.SelectedIndex = 0;
-			foreach (var billingType in Defs.GetDefsForCategory(DefCat.BillingTypes, true))
+			foreach (var billingType in Definitions.GetByCategory(DefinitionCategory.BillingTypes))
 			{
-				billingTypeComboBox.Items.Add(billingType.ItemName);
+				billingTypeComboBox.Items.Add(billingType.Name);
 			}
 
 			if (Prefs.GetBool(PrefName.EasyHidePublicHealth))
@@ -558,7 +559,7 @@ namespace Imedisoft.Forms
 			}
 			_dateTimeLastSearch = _dateTimeLastRequest;
 
-			var billingType = billingTypeComboBox.SelectedItem as Def;
+			var billingType = billingTypeComboBox.SelectedItem as Definition;
 			var site = siteComboBox.SelectedItem as Site;
 
 
@@ -605,7 +606,7 @@ namespace Imedisoft.Forms
 				doShowMerged = checkShowMerged.Checked;
 			}
 			PtTableSearchParams ptTableSearchParamsCur = new PtTableSearchParams(doLimitOnePage, textLName.Text, textFName.Text, textPhone.Text, textAddress.Text,
-				!checkShowInactive.Checked, textCity.Text, textState.Text, textSSN.Text, textPatNum.Text, textChartNumber.Text, billingType?.DefNum ?? 0, checkGuarantors.Checked,
+				!checkShowInactive.Checked, textCity.Text, textState.Text, textSSN.Text, textPatNum.Text, textChartNumber.Text, billingType?.Id ?? 0, checkGuarantors.Checked,
 				checkShowArchived.Checked, birthdate, site?.SiteNum ?? 0, textSubscriberID.Text, textEmail.Text, "", "", clinicNums, "",
 				textInvoiceNumber.Text, listtExplicitPatNums, InitialPatientId, doShowMerged, hasSpecialty, hasNextLastVisit);
 			if (_ptTableSearchParams != null && _ptTableSearchParams.Equals(ptTableSearchParamsCur))

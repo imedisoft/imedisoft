@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using System.Collections.Generic;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -33,7 +35,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public bool IsNew;
 		public Contact ContactCur;
-		private List<Def> _listContactCategoryDefs;
+		private List<Definition> _listContactCategoryDefs;
 
 		///<summary></summary>
 		public FormContactEdit()
@@ -249,10 +251,10 @@ namespace OpenDental{
 		#endregion
 
 		private void FormContactEdit_Load(object sender, System.EventArgs e) {
-			_listContactCategoryDefs=Defs.GetDefsForCategory(DefCat.ContactCategories,true);
+			_listContactCategoryDefs=Definitions.GetDefsForCategory(DefinitionCategory.ContactCategories,true);
 			for(int i=0;i<_listContactCategoryDefs.Count;i++){
-				listCategory.Items.Add(_listContactCategoryDefs[i].ItemName);
-				if(ContactCur.Category==_listContactCategoryDefs[i].DefNum){
+				listCategory.Items.Add(_listContactCategoryDefs[i].Name);
+				if(ContactCur.Category==_listContactCategoryDefs[i].Id){
 					listCategory.SelectedIndex=i;
 				}
 			}
@@ -296,7 +298,7 @@ namespace OpenDental{
 				return;
 			}
 			//a category will always be selected because of the manner in which Contact is accessed
-			ContactCur.Category=_listContactCategoryDefs[listCategory.SelectedIndex].DefNum;
+			ContactCur.Category=_listContactCategoryDefs[listCategory.SelectedIndex].Id;
 			ContactCur.LName=textLName.Text;
 			ContactCur.FName=textFName.Text;
 			ContactCur.WkPhone=textWkPhone.Text;

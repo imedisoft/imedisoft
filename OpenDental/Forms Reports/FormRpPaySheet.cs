@@ -4,6 +4,8 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.ReportingComplex;
 using OpenDentBusiness;
 
@@ -34,10 +36,10 @@ namespace OpenDental{
 		private CheckBox checkUnearned;
 		private CheckBox checkShowProvSeparate;
 		private List<Provider> _listProviders;
-		private List<Def> _listInsDefs;
-		private List<Def> _listPayDefs;
+		private List<Definition> _listInsDefs;
+		private List<Definition> _listPayDefs;
 		private CheckBox checkReportDisplayUnearnedTP;
-		private List<Def> _listClaimPayGroupDefs;
+		private List<Definition> _listClaimPayGroupDefs;
 
 		///<summary></summary>
 		public FormRpPaySheet(){
@@ -391,19 +393,19 @@ namespace OpenDental{
 				}
 			}
 			checkReportDisplayUnearnedTP.Checked=Prefs.GetBool(PrefName.ReportsDoShowHiddenTPPrepayments);
-			_listPayDefs=Defs.GetDefsForCategory(DefCat.PaymentTypes,true);
-			_listInsDefs=Defs.GetDefsForCategory(DefCat.InsurancePaymentType,true);
-			_listClaimPayGroupDefs=Defs.GetDefsForCategory(DefCat.ClaimPaymentGroups,true);
+			_listPayDefs=Definitions.GetDefsForCategory(DefinitionCategory.PaymentTypes,true);
+			_listInsDefs=Definitions.GetDefsForCategory(DefinitionCategory.InsurancePaymentType,true);
+			_listClaimPayGroupDefs=Definitions.GetDefsForCategory(DefinitionCategory.ClaimPaymentGroups,true);
 			for(int i=0;i<_listPayDefs.Count;i++) {
-				listPatientTypes.Items.Add(_listPayDefs[i].ItemName);
+				listPatientTypes.Items.Add(_listPayDefs[i].Name);
 			}
 			listPatientTypes.Visible=false;
 			for(int i=0;i<_listInsDefs.Count;i++) {
-				listInsuranceTypes.Items.Add(_listInsDefs[i].ItemName);
+				listInsuranceTypes.Items.Add(_listInsDefs[i].Name);
 			}
 			listInsuranceTypes.Visible=false;
 			for(int i=0;i<_listClaimPayGroupDefs.Count;i++) {
-				listClaimPayGroups.Items.Add(_listClaimPayGroupDefs[i].ItemName);
+				listClaimPayGroups.Items.Add(_listClaimPayGroupDefs[i].Name);
 			}
 			listClaimPayGroups.Visible=false;
 			Plugins.HookAddCode(this,"FormPaymentSheet_Load_end");
@@ -512,22 +514,22 @@ namespace OpenDental{
 				}
 			}
 			if(checkInsuranceTypes.Checked) {
-				listInsTypes=_listInsDefs.Select(x => x.DefNum).ToList();
+				listInsTypes=_listInsDefs.Select(x => x.Id).ToList();
 			}
 			else {
-				listInsTypes=listInsuranceTypes.SelectedIndices.OfType<int>().Select(x => _listInsDefs[x].DefNum).ToList();
+				listInsTypes=listInsuranceTypes.SelectedIndices.OfType<int>().Select(x => _listInsDefs[x].Id).ToList();
 			}
 			if(checkPatientTypes.Checked) {
-				listPatTypes=_listPayDefs.Select(x => x.DefNum).ToList();
+				listPatTypes=_listPayDefs.Select(x => x.Id).ToList();
 			}
 			else {
-				listPatTypes=listPatientTypes.SelectedIndices.OfType<int>().Select(x => _listPayDefs[x].DefNum).ToList();
+				listPatTypes=listPatientTypes.SelectedIndices.OfType<int>().Select(x => _listPayDefs[x].Id).ToList();
 			}
 			if(checkAllClaimPayGroups.Checked) {
-				listSelectedClaimPayGroupNums=_listClaimPayGroupDefs.Select(x => x.DefNum).ToList();
+				listSelectedClaimPayGroupNums=_listClaimPayGroupDefs.Select(x => x.Id).ToList();
 			}
 			else {
-				listSelectedClaimPayGroupNums=listClaimPayGroups.SelectedIndices.OfType<int>().Select(x => _listClaimPayGroupDefs[x].DefNum).ToList();
+				listSelectedClaimPayGroupNums=listClaimPayGroups.SelectedIndices.OfType<int>().Select(x => _listClaimPayGroupDefs[x].Id).ToList();
 			}
 			DataTable tableIns=new DataTable();
 			if(listProvNums.Count!=0) {
@@ -582,13 +584,13 @@ namespace OpenDental{
 			}
 			Dictionary<long,string> dictInsDefNames=new Dictionary<long,string>();
 			Dictionary<long,string> dictPatDefNames=new Dictionary<long,string>();
-			List<Def> insDefs=Defs.GetDefsForCategory(DefCat.InsurancePaymentType,true);
-			List<Def> patDefs=Defs.GetDefsForCategory(DefCat.PaymentTypes,true);
+			List<Definition> insDefs=Definitions.GetDefsForCategory(DefinitionCategory.InsurancePaymentType,true);
+			List<Definition> patDefs=Definitions.GetDefsForCategory(DefinitionCategory.PaymentTypes,true);
 			for(int i=0;i<insDefs.Count;i++) {
-				dictInsDefNames.Add(insDefs[i].DefNum,insDefs[i].ItemName);
+				dictInsDefNames.Add(insDefs[i].Id,insDefs[i].Name);
 			}
 			for(int i=0;i<patDefs.Count;i++) {
-				dictPatDefNames.Add(patDefs[i].DefNum,patDefs[i].ItemName);
+				dictPatDefNames.Add(patDefs[i].Id,patDefs[i].Name);
 			}
 			dictPatDefNames.Add(0,"Income Transfer");//Otherwise income transfers show up with a payment type of "Undefined"
 			int[] summaryGroups1= { 1 };

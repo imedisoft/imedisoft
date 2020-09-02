@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using System.Collections.Generic;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -36,7 +38,7 @@ namespace OpenDental{
 		///<summary>Deep copy of all AutoCode items in the cache that are not hidden (short).</summary>
 		private List<AutoCode> _listShortDeep;
 		private CheckBox checkMultiVisit;
-		private List<Def> _listProcButtonCatDefs;
+		private List<Definition> _listProcButtonCatDefs;
 
 		///<summary></summary>
 		public FormProcButtonEdit(ProcButton procButtonCur){
@@ -340,10 +342,10 @@ namespace OpenDental{
         this.Text="Edit Procedure Button";
       }
 			textDescript.Text=ProcButtonCur.Description;
-			_listProcButtonCatDefs=Defs.GetDefsForCategory(DefCat.ProcButtonCats,true);
+			_listProcButtonCatDefs=Definitions.GetDefsForCategory(DefinitionCategory.ProcButtonCats,true);
 			for(int i=0;i<_listProcButtonCatDefs.Count;i++){
-				comboCategory.Items.Add(_listProcButtonCatDefs[i].ItemName);
-				if(ProcButtonCur.Category==_listProcButtonCatDefs[i].DefNum){
+				comboCategory.Items.Add(_listProcButtonCatDefs[i].Name);
+				if(ProcButtonCur.Category==_listProcButtonCatDefs[i].Id){
 					comboCategory.SelectedIndex=i;
 				}
 			}
@@ -442,12 +444,12 @@ namespace OpenDental{
 			}
 			//Point of no return.
       ProcButtonCur.Description=textDescript.Text;
-			if(ProcButtonCur.Category != _listProcButtonCatDefs[comboCategory.SelectedIndex].DefNum){
+			if(ProcButtonCur.Category != _listProcButtonCatDefs[comboCategory.SelectedIndex].Id){
 				//This will put it at the end of the order in the new category
 				ProcButtonCur.ItemOrder
-					=ProcButtons.GetForCat(_listProcButtonCatDefs[comboCategory.SelectedIndex].DefNum).Length;
+					=ProcButtons.GetForCat(_listProcButtonCatDefs[comboCategory.SelectedIndex].Id).Length;
 			}
-			ProcButtonCur.Category=_listProcButtonCatDefs[comboCategory.SelectedIndex].DefNum;
+			ProcButtonCur.Category=_listProcButtonCatDefs[comboCategory.SelectedIndex].Id;
 			ProcButtonCur.ButtonImage=POut.Bitmap((Bitmap)pictureBox.Image,System.Drawing.Imaging.ImageFormat.Png);
 			ProcButtonCur.IsMultiVisit=checkMultiVisit.Checked;
       if(IsNew){

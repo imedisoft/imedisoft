@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -12,9 +14,8 @@ namespace OpenDentBusiness {
 		{
 			//-------------------------------------------------------------------------------------//
 			// Create temperary tables for sorting data
-			List<long> listHiddenUnearnedDefNums=ReportsComplex.RunFuncOnReportServer(() => 
-				Defs.GetDefsNoCache(DefCat.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.ItemValue)).Select(x => x.DefNum).ToList()
-			);
+			List<long> listHiddenUnearnedDefNums=
+				Definitions.GetDefsNoCache(DefinitionCategory.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.Value)).Select(x => x.Id).ToList();
 			string query="";
 			string whereProv="";//used as the provider portion of the where clauses.
 											//each whereProv needs to be set up separately for each query
@@ -196,7 +197,7 @@ namespace OpenDentBusiness {
 						+"ORDER BY payplancharge.ChargeDate ";
 					break;
 				}
-				return ReportsComplex.RunFuncOnReportServer(() => ReportsComplex.GetTable(query));
+				return Database.ExecuteDataTable(query);
 		}	
 	}	
 }

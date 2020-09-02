@@ -11,6 +11,8 @@ using OpenDentBusiness;
 using OpenDental.Thinfinity;
 using OpenDentBusiness.IO;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormMedLabEdit:ODForm {
@@ -340,7 +342,7 @@ namespace OpenDental {
 			HL7Def defCur=HL7Defs.GetOneDeepEnabled(true);
 			long category=defCur.LabResultImageCat;
 			if(category==0) {
-				category=Defs.GetFirstForCategory(DefCat.ImageCats,true).DefNum;//put it in the first category.
+				category=Definitions.GetFirstForCategory(DefinitionCategory.ImageCats,true).Id;//put it in the first category.
 			}
 			//create doc--------------------------------------------------------------------------------------
 			OpenDentBusiness.Document docc=null;

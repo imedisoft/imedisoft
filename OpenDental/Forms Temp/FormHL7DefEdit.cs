@@ -6,12 +6,14 @@ using OpenDental.UI;
 using CodeBase;
 using System.Collections.Generic;
 using Imedisoft.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	/// <summary></summary>
 	public partial class FormHL7DefEdit:ODForm {
 		public HL7Def HL7DefCur;
-		private List<Def> _listImageCatDefs;
+		private List<Definition> _listImageCatDefs;
 
 		///<summary></summary>
 		public FormHL7DefEdit() {
@@ -54,10 +56,10 @@ namespace OpenDental {
 			if(HL7DefCur.InternalType==HL7InternalType.MedLabv2_3) {
 				comboModeTx.SelectedIndex=(int)ModeTxHL7.Sftp;//just in case, for MedLabv2_3 types this should always be Sftp and isn't editable for now
 			}
-			_listImageCatDefs=Defs.GetDefsForCategory(DefCat.ImageCats,true);
+			_listImageCatDefs=Definitions.GetDefsForCategory(DefinitionCategory.ImageCats,true);
 			for(int i=0;i<_listImageCatDefs.Count;i++) {
-				comboLabImageCat.Items.Add(_listImageCatDefs[i].ItemName);
-				if(_listImageCatDefs[i].DefNum==HL7DefCur.LabResultImageCat) {
+				comboLabImageCat.Items.Add(_listImageCatDefs[i].Name);
+				if(_listImageCatDefs[i].Id==HL7DefCur.LabResultImageCat) {
 					comboLabImageCat.SelectedIndex=i;
 				}
 			}
@@ -552,7 +554,7 @@ namespace OpenDental {
 				HL7DefCur.SftpPassword=textSftpPassword.Text.Trim();
 			}
 			if(comboLabImageCat.SelectedIndex>=0) {
-				HL7DefCur.LabResultImageCat=_listImageCatDefs[comboLabImageCat.SelectedIndex].DefNum;
+				HL7DefCur.LabResultImageCat=_listImageCatDefs[comboLabImageCat.SelectedIndex].Id;
 			}
 			#endregion Set Values
 			#region Save

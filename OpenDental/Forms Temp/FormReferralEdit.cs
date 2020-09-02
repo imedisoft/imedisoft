@@ -6,6 +6,8 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Windows.Forms;
 using OpenDentBusiness;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -795,9 +797,9 @@ namespace OpenDental{
 				return;
 			}
 			listSpecialty.Items.Clear();
-			Def[] specDefs=Defs.GetDefsForCategory(DefCat.ProviderSpecialties,true).ToArray();
+			Definition[] specDefs=Definitions.GetDefsForCategory(DefinitionCategory.ProviderSpecialties,true).ToArray();
 			for(int i=0;i<specDefs.Length;i++) {
-				listSpecialty.Items.Add(specDefs[i].ItemName);
+				listSpecialty.Items.Add(specDefs[i].Name);
 			}
 			if(IsPatient){
 				if(IsNew){
@@ -849,12 +851,12 @@ namespace OpenDental{
 				if(IsNew){
 					this.Text="Add Referral"; 
 					RefCur=new Referral();
-					RefCur.Specialty=Defs.GetByExactNameNeverZero(DefCat.ProviderSpecialties,"General");
+					RefCur.Specialty=Definitions.GetByExactNameNeverZero(DefinitionCategory.ProviderSpecialties,"General");
 				}
-				Def specDefCur=Defs.GetDef(DefCat.ProviderSpecialties,RefCur.Specialty);
+				Definition specDefCur=Definitions.GetDef(DefinitionCategory.ProviderSpecialties,RefCur.Specialty);
 				if(specDefCur!=null) {
 					for(int i=0;i<specDefs.Length;i++) {
-						if(i==0 || specDefs[i].ItemName==specDefCur.ItemName) {//default to the first specialty in the list
+						if(i==0 || specDefs[i].Name==specDefCur.Name) {//default to the first specialty in the list
 							listSpecialty.SelectedIndex=i;
 						}
 					}
@@ -1029,7 +1031,7 @@ namespace OpenDental{
 			//RefCur.UsingTIN already taken care of
       if(!IsPatient){
 				RefCur.IsDoctor=checkIsDoctor.Checked;
-				RefCur.Specialty=Defs.GetByExactNameNeverZero(DefCat.ProviderSpecialties,listSpecialty.SelectedItem.ToString());
+				RefCur.Specialty=Definitions.GetByExactNameNeverZero(DefinitionCategory.ProviderSpecialties,listSpecialty.SelectedItem.ToString());
       }
 			if(IsNew){
 				if(Referrals.GetExists(x => x.LName+x.FName==RefCur.LName+RefCur.FName)) {

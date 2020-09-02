@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDental{
@@ -293,15 +295,15 @@ namespace OpenDental{
 			comboPTO.Items.Clear();
 			comboPTO.Items.Add("None");
 			comboPTO.SelectedIndex=0;
-			List<Def> listPtoTypes=Defs.GetDefsForCategory(DefCat.TimeCardAdjTypes).OrderBy(x => x.ItemName).ToList();
-			foreach(Def def in listPtoTypes) {
-				if(def.IsHidden && def.DefNum==TimeAdjustCur.PtoDefNum) {
-					comboPTO.Items.Add(new ODBoxItem<Def>(def.ItemName+" "+"(hidden)",def));
+			List<Definition> listPtoTypes=Definitions.GetDefsForCategory(DefinitionCategory.TimeCardAdjTypes).OrderBy(x => x.Name).ToList();
+			foreach(Definition def in listPtoTypes) {
+				if(def.IsHidden && def.Id==TimeAdjustCur.PtoDefNum) {
+					comboPTO.Items.Add(new ODBoxItem<Definition>(def.Name+" "+"(hidden)",def));
 				}
 				else if(!def.IsHidden) {
-					comboPTO.Items.Add(new ODBoxItem<Def>(def.ItemName,def));
+					comboPTO.Items.Add(new ODBoxItem<Definition>(def.Name,def));
 				}
-				if(def.DefNum==TimeAdjustCur.PtoDefNum) {
+				if(def.Id==TimeAdjustCur.PtoDefNum) {
 					comboPTO.SelectedIndex=comboPTO.Items.Count-1;
 				}
 			}
@@ -361,11 +363,11 @@ namespace OpenDental{
 				TimeAdjustCur.PtoDefNum=0;
 			}
 			else {//Is PTO
-				ODBoxItem<Def> item=(ODBoxItem<Def>)comboPTO.Items[comboPTO.SelectedIndex];
+				ODBoxItem<Definition> item=(ODBoxItem<Definition>)comboPTO.Items[comboPTO.SelectedIndex];
 				TimeAdjustCur.RegHours=TimeSpan.FromHours(0);
 				TimeAdjustCur.OTimeHours=TimeSpan.FromHours(0);
 				TimeAdjustCur.PtoHours=hoursEntered;
-				TimeAdjustCur.PtoDefNum=((Def)item.Tag).DefNum;
+				TimeAdjustCur.PtoDefNum=((Definition)item.Tag).Id;
 			}
 			TimeAdjustCur.Note=textNote.Text;
 			if(IsNew){

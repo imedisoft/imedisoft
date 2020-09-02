@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormInvoiceItemSelect:ODForm {
@@ -55,7 +57,7 @@ namespace OpenDental {
 				if(!string.IsNullOrWhiteSpace(tableRow["AdjType"].ToString())){	//It's an adjustment
 					row.Cells.Add("Adjust");//Adjustment
 					row.Cells.Add(Tooth.ToInternat(tableRow["Tooth"].ToString()));
-					row.Cells.Add(Defs.GetName(DefCat.AdjTypes,PIn.Long(tableRow["AdjType"].ToString())));//Adjustment type
+					row.Cells.Add(Definitions.GetName(DefinitionCategory.AdjTypes,PIn.Long(tableRow["AdjType"].ToString())));//Adjustment type
 				}
 				else if(!string.IsNullOrWhiteSpace(tableRow["ChargeType"].ToString())) {	//It's a payplan charge
 					if(PrefC.GetInt(PrefName.PayPlansVersion)!=(int)PayPlanVersions.AgeCreditsAndDebits) {

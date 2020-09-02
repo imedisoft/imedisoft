@@ -1,3 +1,5 @@
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using Imedisoft.X12.Codes;
 using OpenDental;
 using OpenDental.UI;
@@ -16,7 +18,7 @@ namespace Imedisoft.Forms
 		private readonly List<DefLink> deletedSpecialtyLinks = new List<DefLink>();
 		private readonly List<(string code, string description)> placesOfService;
 		private readonly List<Provider> providers;
-		private List<Def> regions;
+		private List<Definition> regions;
 		private bool isMedLabHL7DefEnabled;
 		private long? emailAddressId;
 
@@ -81,7 +83,7 @@ namespace Imedisoft.Forms
 
 		private void FillRegion()
         {
-			regions = Defs.GetDefsForCategory(DefCat.Regions, true);
+			regions = Definitions.GetByCategory(DefinitionCategory.Regions);
 
 			regionComboBox.Items.Clear();
 			regionComboBox.Items.Add(Translation.Common.None);
@@ -91,7 +93,7 @@ namespace Imedisoft.Forms
 			{
 				regionComboBox.Items.Add(region);
 
-				if (region.DefNum == clinic.Region)
+				if (region.Id == clinic.Region)
 				{
 					regionComboBox.SelectedItem = region;
 				}
@@ -194,7 +196,7 @@ namespace Imedisoft.Forms
 
 		private void FillSpecialty()
 		{
-			var clinicSpecialtyDefs = Defs.GetDefsForCategory(DefCat.ClinicSpecialty).ToDictionary(x => x.DefNum);
+			var clinicSpecialtyDefs = Definitions.GetDefsForCategory(DefinitionCategory.ClinicSpecialty).ToDictionary(x => x.Id);
 
 			specialtiesGrid.BeginUpdate();
 			specialtiesGrid.ListGridColumns.Clear();
@@ -204,9 +206,9 @@ namespace Imedisoft.Forms
 			foreach (var specialtyLink in specialtyLinks)
 			{
 				var specialtyDescript = "";
-				if (clinicSpecialtyDefs.TryGetValue(specialtyLink.DefNum, out var def))
+				if (clinicSpecialtyDefs.TryGetValue(specialtyLink.DefinitionId, out var def))
 				{
-					specialtyDescript = def.ItemName + (def.IsHidden ? " (" + Translation.Common.TagHidden + ")" : "");
+					specialtyDescript = def.Name + (def.IsHidden ? " (" + Translation.Common.TagHidden + ")" : "");
 				}
 
 				var row = new GridRow();
@@ -307,7 +309,7 @@ namespace Imedisoft.Forms
 
 		private void AddSpecialtyButton_Click(object sender, EventArgs e)
 		{
-			using var formDefinitionPicker = new FormDefinitionPicker(DefCat.ClinicSpecialty)
+			using var formDefinitionPicker = new FormDefinitionPicker(DefinitionCategory.ClinicSpecialty)
 			{
 				HasShowHiddenOption = false,
 				IsMultiSelectionMode = true
@@ -320,14 +322,14 @@ namespace Imedisoft.Forms
 
 			foreach (var definition in formDefinitionPicker.ListSelectedDefs)
 			{
-				if (specialtyLinks.Any(x => x.DefNum == definition.DefNum))
+				if (specialtyLinks.Any(x => x.DefinitionId == definition.Id))
 				{
 					continue;
 				}
 
 				specialtyLinks.Add(new DefLink
 				{
-					DefNum = definition.DefNum,
+					DefinitionId = definition.Id,
 					FKey = clinic.Id,
 					LinkType = DefLinkType.Clinic
 				});
@@ -348,7 +350,7 @@ namespace Imedisoft.Forms
 
 			if (specialtyLinks.Remove(definitionLink))
 			{
-				if (definitionLink.DefLinkNum > 0)
+				if (definitionLink.Id > 0)
 				{
 					deletedSpecialtyLinks.Add(definitionLink);
 				}
@@ -416,8 +418,8 @@ namespace Imedisoft.Forms
 				}
 			}
 
-			var region = regionComboBox.SelectedItem as Def;
-			var regionId = region?.DefNum;
+			var region = regionComboBox.SelectedItem as Definition;
+			var regionId = region?.Id;
 
 			char insBillingProviderType =
 				insBillingProviderSpecificRadioButton.Checked ? 'S' :

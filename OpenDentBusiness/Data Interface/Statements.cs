@@ -1,5 +1,6 @@
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness.FileIO;
 using System;
 using System.Collections;
@@ -143,7 +144,7 @@ namespace OpenDentBusiness
 				}
 				row["amountDue"] = (balTotal - insEst).ToString("F");
 				row["balTotal"] = balTotal.ToString("F"); ;
-				row["billingType"] = Defs.GetName(DefCat.BillingTypes, PIn.Long(rawRow["BillingType"].ToString()));
+				row["billingType"] = Definitions.GetName(DefinitionCategory.BillingTypes, PIn.Long(rawRow["BillingType"].ToString()));
 				if (insEst == 0)
 				{
 					row["insEst"] = "";

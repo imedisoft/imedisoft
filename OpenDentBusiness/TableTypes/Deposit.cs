@@ -1,4 +1,5 @@
 using Imedisoft.Data.Annotations;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections;
 
@@ -44,7 +45,7 @@ namespace OpenDentBusiness
 		/// Links this deposit to a definition of type AutoDeposit.
 		/// When set to a valid value, it indicates that this deposit is an "auto deposit".
 		/// </summary>
-		[ForeignKey(typeof(Def), nameof(Def.DefNum))]
+		[ForeignKey(typeof(Definition), nameof(Definition.Id))]
 		public long DepositAccountId;
 
 		/// <summary>

@@ -1,4 +1,6 @@
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
@@ -19,19 +21,19 @@ namespace OpenDental {
 		}
 
 		private void buttonChangeInto_Click(object sender,EventArgs e) {
-			FormDefinitionPicker FormDefinitionPicker=new FormDefinitionPicker(DefCat.ImageCats);
+			FormDefinitionPicker FormDefinitionPicker=new FormDefinitionPicker(DefinitionCategory.ImageCats);
 			if(FormDefinitionPicker.ShowDialog()==DialogResult.OK && FormDefinitionPicker.ListSelectedDefs.Count>0) {
-				textBoxInto.Text=FormDefinitionPicker.ListSelectedDefs.FirstOrDefault().ItemName;
-				_defNumInto=FormDefinitionPicker.ListSelectedDefs.FirstOrDefault().DefNum;
+				textBoxInto.Text=FormDefinitionPicker.ListSelectedDefs.FirstOrDefault().Name;
+				_defNumInto=FormDefinitionPicker.ListSelectedDefs.FirstOrDefault().Id;
 				CheckUIState();
 			}
 		}
 
 		private void buttonChangeFrom_Click(object sender,EventArgs e) {
-			FormDefinitionPicker FormDefinitionPicker=new FormDefinitionPicker(DefCat.ImageCats);
+			FormDefinitionPicker FormDefinitionPicker=new FormDefinitionPicker(DefinitionCategory.ImageCats);
 			if(FormDefinitionPicker.ShowDialog()==DialogResult.OK && FormDefinitionPicker.ListSelectedDefs.Count>0) {
-				textBoxFrom.Text=FormDefinitionPicker.ListSelectedDefs.FirstOrDefault().ItemName;
-				_defNumFrom=FormDefinitionPicker.ListSelectedDefs.FirstOrDefault().DefNum;
+				textBoxFrom.Text=FormDefinitionPicker.ListSelectedDefs.FirstOrDefault().Name;
+				_defNumFrom=FormDefinitionPicker.ListSelectedDefs.FirstOrDefault().Id;
 				CheckUIState();
 			}
 		}
@@ -50,17 +52,17 @@ namespace OpenDental {
 				return;
 			}
 			try {
-				Defs.MergeImageCatDefNums(_defNumFrom,_defNumInto);
+				Definitions.MergeImageCatDefNums(_defNumFrom,_defNumInto);
 			}
 			catch(Exception ex) {
 				FriendlyException.Show("Image Categories failed to merge.",ex);
 				return;
 			}
-			Defs.HideDef(Defs.GetDef(DefCat.ImageCats,_defNumFrom));
+			Definitions.HideDef(Definitions.GetDef(DefinitionCategory.ImageCats,_defNumFrom));
 			DataValid.SetInvalid(InvalidType.Defs);
 			MessageBox.Show("Image Categories merged successfully.");
 			string logText="Image Category Merge from"
-				+" "+Defs.GetName(DefCat.ImageCats,_defNumFrom)+" "+"to"+" "+Defs.GetName(DefCat.ImageCats,_defNumInto);
+				+" "+Definitions.GetName(DefinitionCategory.ImageCats,_defNumFrom)+" "+"to"+" "+Definitions.GetName(DefinitionCategory.ImageCats,_defNumInto);
 			//Make log entry here.
 			SecurityLogs.MakeLogEntry(Permissions.Setup,0,logText);
 			textBoxFrom.Clear();

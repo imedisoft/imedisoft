@@ -6,6 +6,8 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
 using SparksToothChart;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormPerioGraphical:ODForm {
@@ -34,10 +36,10 @@ namespace OpenDental {
 			_toothChartRelay.SetToothNumberingNomenclature((ToothNumberingNomenclature)PrefC.GetInt(PrefName.UseInternationalToothNumbers));
 			_toothChartRelay.ColorBackgroundMain=Color.White;
 			_toothChartRelay.ColorText=Color.Black;
-			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.MiscColors,true);
+			List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.MiscColors,true);
 			_toothChartRelay.SetPerioColors(
-				listDefs[1].ItemColor,//bleeding
-				listDefs[2].ItemColor,//suppuration
+				listDefs[1].Color,//bleeding
+				listDefs[2].Color,//suppuration
 				PrefC.GetColor(PrefName.PerioColorProbing),
 				PrefC.GetColor(PrefName.PerioColorProbingRed),
 				PrefC.GetColor(PrefName.PerioColorGM),
@@ -286,7 +288,7 @@ namespace OpenDental {
 		}
 
 		private void butSave_Click(object sender,EventArgs e) {
-			long defNumToothCharts=Defs.GetImageCat(ImageCategorySpecial.T);
+			long defNumToothCharts=Definitions.GetImageCat(ImageCategorySpecial.T);
 			if(defNumToothCharts==0) {
 				MessageBox.Show("In Setup, Definitions, Image Categories, a category needs to be set for graphical tooth charts.");
 				return;

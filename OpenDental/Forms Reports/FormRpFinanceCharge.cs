@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using OpenDental.ReportingComplex;
 using OpenDentBusiness;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	///<summary></summary>
@@ -27,7 +29,7 @@ namespace OpenDental {
 		private Label label4;
 		//private FormQuery FormQuery2;
 		private List<Provider> _listProviders=new List<Provider>();
-		private List<Def> _listBillingTypeDefs=new List<Def>();
+		private List<Definition> _listBillingTypeDefs=new List<Definition>();
 
 		///<summary></summary>
 		public FormRpFinanceCharge(){
@@ -221,9 +223,9 @@ namespace OpenDental {
 			textDateFrom.Text=PrefC.GetDate(PrefName.FinanceChargeLastRun).ToShortDateString();
 			textDateTo.Text=PrefC.GetDate(PrefName.FinanceChargeLastRun).ToShortDateString();
 			_listProviders=Providers.GetListReports();
-			_listBillingTypeDefs=Defs.GetDefsForCategory(DefCat.BillingTypes,true);
-			foreach(Def billingType in _listBillingTypeDefs) {
-				listBillingType.Items.Add(billingType.ItemName);
+			_listBillingTypeDefs=Definitions.GetByCategory(DefinitionCategory.BillingTypes);
+			foreach(Definition billingType in _listBillingTypeDefs) {
+				listBillingType.Items.Add(billingType.Name);
 			}
 			if(listBillingType.Items.Count>0) {
 				listBillingType.SelectedIndex=0;
@@ -268,7 +270,7 @@ namespace OpenDental {
 			}
 			List<long> listBillingDefNums= new List<long>();
 			if(!checkAllBilling.Checked) {
-				listBillingDefNums.AddRange(listBillingType.SelectedIndices.OfType<int>().Select(x => _listBillingTypeDefs[x].DefNum).ToList());
+				listBillingDefNums.AddRange(listBillingType.SelectedIndices.OfType<int>().Select(x => _listBillingTypeDefs[x].Id).ToList());
 			}
 			DataTable table=RpFinanceCharge.GetFinanceChargeTable(dateFrom,dateTo,Prefs.GetLong(PrefName.FinanceChargeAdjustmentType),listProvNums,listBillingDefNums);
 			Font font=new Font("Tahoma",9);
@@ -288,7 +290,7 @@ namespace OpenDental {
 			report.AddSubTitle("Provider Subtitle",subtitleProvs);
 			string subtBillingTypes="";
 			if(listBillingDefNums.Count>0) {
-				subtBillingTypes+=string.Join(", ",listBillingType.SelectedIndices.OfType<int>().Select(x => _listBillingTypeDefs[x].ItemName));
+				subtBillingTypes+=string.Join(", ",listBillingType.SelectedIndices.OfType<int>().Select(x => _listBillingTypeDefs[x].Name));
 			}
 			else {
 				subtBillingTypes="All Billing Types";

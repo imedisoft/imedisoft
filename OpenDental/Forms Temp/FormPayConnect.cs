@@ -8,6 +8,8 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using CodeBase;
 using DentalXChange.Dps.Pos;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using MigraDoc.DocumentObjectModel;
 using OpenDental.Bridges;
 using OpenDentBusiness;
@@ -372,7 +374,7 @@ namespace OpenDental {
 				return false;
 			}
 			string paytype=ProgramProperties.GetPropVal(_progCur.Id,"PaymentType",_clinicNum);
-			if(!Defs.GetDefsForCategory(DefCat.PaymentTypes,true).Any(x => x.DefNum.ToString()==paytype)) { //paytype is not a valid DefNum
+			if(!Definitions.GetDefsForCategory(DefinitionCategory.PaymentTypes,true).Any(x => x.Id.ToString()==paytype)) { //paytype is not a valid DefNum
 				MessageBox.Show("The PayConnect payment type has not been set.");
 				return false;
 			}

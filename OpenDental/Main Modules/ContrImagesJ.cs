@@ -20,6 +20,8 @@ using CodeBase;
 using OpenDental.Thinfinity;
 using OpenDentBusiness.IO;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 #endregion using
 
 namespace OpenDental{
@@ -225,13 +227,13 @@ namespace OpenDental{
 			NodeObjTag nodeObjTag;
 			TreeNode treeNode;
 			//Category Nodes--------------------------------------------------------------------
-			List<Def> listDefsImageCats=Defs.GetDefsForCategory(DefCat.ImageCats,true);
+			List<Definition> listDefsImageCats=Definitions.GetByCategory(DefinitionCategory.ImageCats);
 			for(int i=0;i<listDefsImageCats.Count;i++) {
 				nodeObjTag=new NodeObjTag(listDefsImageCats[i]);
 				treeNode=new TreeNode();
 				treeNode.Text=nodeObjTag.Text;
 				treeNode.Tag=nodeObjTag;
-				if(listDefsImageCats[i].ItemValue.Contains("L")) { 
+				if(listDefsImageCats[i].Value.Contains("L")) { 
 					//Patient Portal Folder. This image is the only alteration in this entire module for "L" defs.
 					treeNode.SelectedImageIndex=7;
 					treeNode.ImageIndex=7;
@@ -271,7 +273,7 @@ namespace OpenDental{
 				if(_patNumPrev==_patCur.PatNum) {//Maintain previously expanded nodes when patient not changed.
 					for(int i=0;i<_listExpandedCats.Count;i++) {
 						for(int j=0;j<treeMain.Nodes.Count;j++) {//Enumerate the image categories.
-							if(_listExpandedCats[i]==((NodeObjTag)treeMain.Nodes[j].Tag).Def.DefNum) {
+							if(_listExpandedCats[i]==((NodeObjTag)treeMain.Nodes[j].Tag).Def.Id) {
 								treeMain.Nodes[j].Expand();
 								break;
 							}
@@ -292,7 +294,7 @@ namespace OpenDental{
 					for(int i=0;i<_listExpandedCats.Count;i++) {
 						for(int j=0;j<treeMain.Nodes.Count;j++) {//Enumerate the image categories.
 							NodeObjTag nodeIdTagCategory=(NodeObjTag)treeMain.Nodes[j].Tag;//Get current tree document node.
-							if(nodeIdTagCategory.Def.DefNum==_listExpandedCats[i]){
+							if(nodeIdTagCategory.Def.Id==_listExpandedCats[i]){
 								treeMain.Nodes[j].Expand();
 								break;
 							}
@@ -1118,16 +1120,16 @@ namespace OpenDental{
 
 		private void TreeMain_AfterCollapse(object sender,TreeViewEventArgs e) {
 			NodeObjTag nodeObjTag=(NodeObjTag)e.Node.Tag;
-			_listExpandedCats.RemoveAll(x => x==nodeObjTag.Def.DefNum);
-			UpdateUserOdPrefForImageCat(nodeObjTag.Def.DefNum,false);
+			_listExpandedCats.RemoveAll(x => x==nodeObjTag.Def.Id);
+			UpdateUserOdPrefForImageCat(nodeObjTag.Def.Id,false);
 		}
 
 		private void TreeMain_AfterExpand(object sender,TreeViewEventArgs e) {
 			NodeObjTag nodeObjTag=(NodeObjTag)e.Node.Tag;
-			if(!_listExpandedCats.Contains(nodeObjTag.Def.DefNum)) {
-				_listExpandedCats.Add(nodeObjTag.Def.DefNum);
+			if(!_listExpandedCats.Contains(nodeObjTag.Def.Id)) {
+				_listExpandedCats.Add(nodeObjTag.Def.Id);
 			}
-			UpdateUserOdPrefForImageCat(nodeObjTag.Def.DefNum,true);
+			UpdateUserOdPrefForImageCat(nodeObjTag.Def.Id,true);
 		}
 
 		private void treeMain_DragDrop(object sender,DragEventArgs e) {
@@ -1138,10 +1140,10 @@ namespace OpenDental{
 			NodeObjTag nodeObjTagOver=(NodeObjTag)treeNodeOver.Tag;
 			long nodeOverCatDefNum=0;
 			if(nodeObjTagOver.NodeType==EnumNodeType.Category) {
-				nodeOverCatDefNum=nodeObjTagOver.Def.DefNum;
+				nodeOverCatDefNum=nodeObjTagOver.Def.Id;
 			}
 			else {
-				nodeOverCatDefNum=Defs.GetDefsForCategory(DefCat.ImageCats,true)[treeNodeOver.Parent.Index].DefNum;
+				nodeOverCatDefNum=Definitions.GetDefsForCategory(DefinitionCategory.ImageCats,true)[treeNodeOver.Parent.Index].Id;
 			}
 			Document documentNew=new Document();
 			NodeObjTag nodeObjTagNew=nodeObjTagOver.Copy();//In case we cancel
@@ -1349,22 +1351,22 @@ namespace OpenDental{
 			NodeObjTag nodeObjTagNewCat=(NodeObjTag)treeNodeNewCat.Tag;
 			long nodeNewCatDefNum=0;
 			long nodeOldCatDefNum=0;
-			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.ImageCats,true);
+			List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.ImageCats,true);
 			if(nodeObjTagNewCat.NodeType==EnumNodeType.Category) {
-				nodeNewCatDefNum=listDefs[treeNodeNewCat.Index].DefNum;
+				nodeNewCatDefNum=listDefs[treeNodeNewCat.Index].Id;
 			}
 			else {
-				nodeNewCatDefNum=listDefs[treeNodeNewCat.Parent.Index].DefNum;
+				nodeNewCatDefNum=listDefs[treeNodeNewCat.Parent.Index].Id;
 			}
-			nodeOldCatDefNum=listDefs[treeNodeOldCat.Parent.Index].DefNum;
+			nodeOldCatDefNum=listDefs[treeNodeOldCat.Parent.Index].Id;
 			//If we try to move a category or if the node has not moved categories then return
 			if(_nodeObjTagDragging.NodeType==EnumNodeType.Category || nodeOldCatDefNum==nodeNewCatDefNum) {
 				return;
 			}
 			if(_nodeObjTagDragging.NodeType==EnumNodeType.Mount) {
 				Mount mount=Mounts.GetByNum(_nodeObjTagDragging.MountNum);
-				string mountOriginalCat=Defs.GetDef(DefCat.ImageCats,mount.DocCategory).ItemName;
-				string mountNewCat=Defs.GetDef(DefCat.ImageCats,nodeNewCatDefNum).ItemName;
+				string mountOriginalCat=Definitions.GetDef(DefinitionCategory.ImageCats,mount.DocCategory).Name;
+				string mountNewCat=Definitions.GetDef(DefinitionCategory.ImageCats,nodeNewCatDefNum).Name;
 				mount.DocCategory=nodeNewCatDefNum;
 				SecurityLogs.MakeLogEntry(Permissions.ImageEdit,mount.PatNum,"Mount moved from"+" "+mountOriginalCat+" "
 					+"to"+" "+mountNewCat);
@@ -1372,8 +1374,8 @@ namespace OpenDental{
 			}
 			else {
 				Document document=Documents.GetByNum(_nodeObjTagDragging.DocNum);
-				string docOldCat=Defs.GetDef(DefCat.ImageCats,document.DocCategory).ItemName;
-				string docNewCat=Defs.GetDef(DefCat.ImageCats,nodeNewCatDefNum).ItemName;
+				string docOldCat=Definitions.GetDef(DefinitionCategory.ImageCats,document.DocCategory).Name;
+				string docNewCat=Definitions.GetDef(DefinitionCategory.ImageCats,nodeNewCatDefNum).Name;
 				document.DocCategory=nodeNewCatDefNum;
 				string logText="Document moved"+": "+document.FileName;
 				if(document.Description!="") {
@@ -1787,7 +1789,7 @@ namespace OpenDental{
 		///<summary>Gets the DefNum category of the current selection. The current selection can be a folder itself, or a document within a folder. If nothing selected, then it returns the DefNum of first in the list.</summary>
 		private long GetCurrentCategory() {
 			if(treeMain.SelectedNode==null){
-				return Defs.GetDefsForCategory(DefCat.ImageCats,true)[0].DefNum;
+				return Definitions.GetDefsForCategory(DefinitionCategory.ImageCats,true)[0].Id;
 			}
 			if(((NodeObjTag)treeMain.SelectedNode.Tag).NodeType==EnumNodeType.Document 
 				|| ((NodeObjTag)treeMain.SelectedNode.Tag).NodeType==EnumNodeType.Mount) 
@@ -1796,10 +1798,10 @@ namespace OpenDental{
 				while(treeNode.Parent!=null) {
 					treeNode=treeNode.Parent;
 				}
-				return ((NodeObjTag)treeNode.Tag).Def.DefNum;
+				return ((NodeObjTag)treeNode.Tag).Def.Id;
 			}
 			if(((NodeObjTag)treeMain.SelectedNode.Tag).NodeType==EnumNodeType.Category) {
-				return ((NodeObjTag)treeMain.SelectedNode.Tag).Def.DefNum;
+				return ((NodeObjTag)treeMain.SelectedNode.Tag).Def.Id;
 			}
 			throw new Exception();
 		}
@@ -3208,11 +3210,11 @@ namespace OpenDental{
 			if(_isFillingTreeWithPref) {
 				return;
 			}
-			Def defImageCatCur=Defs.GetDefsForCategory(DefCat.ImageCats,true).FirstOrDefault(x => x.DefNum==defNum);
+			Definition defImageCatCur=Definitions.GetDefsForCategory(DefinitionCategory.ImageCats,true).FirstOrDefault(x => x.Id==defNum);
 			if(defImageCatCur==null) {
 				return;//Should never happen, but if it does, there was something wrong with the treeDocument list, and thus nothing should be changed.
 			}
-			string defaultValue=defImageCatCur.ItemValue;//Stores the default ItemValue of the definition from the catList.
+			string defaultValue=defImageCatCur.Value;//Stores the default ItemValue of the definition from the catList.
 			string curValue=defaultValue;//Stores the current edited ImageCats to compare to the default.
 			if(isExpand && !curValue.Contains("E")) {//Since we are expanding we would like to see if the expand flag is present.
 				curValue+="E";//If it is not, add expanded flag.
@@ -3240,7 +3242,7 @@ namespace OpenDental{
 			///<summary>Straight from the initial module query at GetTreeListTableForPatient. There are not very many columns, so we just go ahead and expose most of the columns as fields here.</summary>
 			public DataRow DataRow=null;
 			///<summary>If this is a category folder, this contains the Def.</summary>
-			public Def Def=null;
+			public Definition Def=null;
 			///<summary>Set with initial refresh from DataRow.DocNum</summary>
 			public long DocNum=0;
 			///<summary>Index of the folder that this doc or mount belongs in.</summary>
@@ -3256,10 +3258,10 @@ namespace OpenDental{
 			private NodeObjTag() {
 			}
 			
-			public NodeObjTag(Def def){
+			public NodeObjTag(Definition def){
 				NodeType=EnumNodeType.Category;
 				Def=def;
-				Text=Def.ItemName;
+				Text=Def.Name;
 			}
 
 			public NodeObjTag(DataRow dataRow){
@@ -3290,7 +3292,7 @@ namespace OpenDental{
 						MountNum=priKey;
 						break;
 					case EnumNodeType.Category:
-						Def=Defs.GetDef(DefCat.ImageCats,priKey);
+						Def=Definitions.GetDef(DefinitionCategory.ImageCats,priKey);
 						break;
 				}
 			}
@@ -3321,7 +3323,7 @@ namespace OpenDental{
 						}
 						return false;
 					case EnumNodeType.Category:
-						if(Def.DefNum==nodeObjTag2.Def.DefNum){
+						if(Def.Id==nodeObjTag2.Def.Id){
 							return true;
 						}
 						return false;

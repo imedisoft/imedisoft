@@ -94,7 +94,7 @@ namespace OpenDentBusiness{
 		public bool DoDelete;
 		///<summary>FK to payplan.PayPlanNum.  0 if not attached to a payplan.</summary>
 		public long PayPlanNum;
-		///<summary>FK to definition.DefNum.  Connected to the ClaimPaymentTracking DefCat.</summary>
+		///<summary>FK to definition.DefNum.  Connected to the ClaimPaymentTracking DefinitionCategory.</summary>
 		public long ClaimPaymentTracking;
 		///<summary>FK to userod.UserNum.  Set to the user logged in when the row was inserted at SecDateEntry date and time.</summary>
 		[CrudColumn(SpecialType=CrudSpecialColType.ExcludeFromUpdate)]

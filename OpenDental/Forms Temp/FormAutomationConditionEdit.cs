@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	public partial class FormAutomationConditionEdit:ODForm {
@@ -122,12 +123,12 @@ namespace OpenDental {
 		}
 
 		private void butBillingType_Click(object sender,EventArgs e) {
-			FormDefinitionPicker FormDP = new FormDefinitionPicker(DefCat.BillingTypes);
+			FormDefinitionPicker FormDP = new FormDefinitionPicker(DefinitionCategory.BillingTypes);
 			FormDP.HasShowHiddenOption=false;
 			FormDP.IsMultiSelectionMode=false;
 			FormDP.ShowDialog();
 			if(FormDP.DialogResult==DialogResult.OK) {
-				textCompareString.Text=FormDP.ListSelectedDefs?[0]?.ItemName??"";
+				textCompareString.Text=FormDP.ListSelectedDefs?[0]?.Name??"";
 			}
 		}
 

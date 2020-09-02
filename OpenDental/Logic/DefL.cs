@@ -1,4 +1,6 @@
 ﻿using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 using System;
@@ -11,52 +13,47 @@ namespace OpenDental
     public class DefL
 	{
 		#region GetMethods
-		public static List<DefCatOptions> GetOptionsForDefCats(Array defCats)
+		public static List<DefCatOptions> GetOptionsForDefCats(IEnumerable<string> definitionCategories)
 		{
 			var defCatOptions = new List<DefCatOptions>();
-			foreach (DefCat defCatCur in defCats)
+			foreach (string defCatCur in definitionCategories)
 			{
-				if (defCatCur.GetDescription() == "NotUsed")
-				{
-					continue;
-				}
-
 				var options = new DefCatOptions(defCatCur);
 				switch (defCatCur)
 				{
-					case DefCat.AccountColors:
+					case DefinitionCategory.AccountColors:
 						options.CanEditName = false;
 						options.EnableColor = true;
 						options.HelpText = "Changes the color of text for different types of entries in Account Module";
 						break;
 
-					case DefCat.AccountQuickCharge:
+					case DefinitionCategory.AccountQuickCharge:
 						options.CanDelete = true;
 						options.EnableValue = true;
 						options.ValueText = "Procedure Codes";
 						options.HelpText = "Account Proc Quick Add items.  Each entry can be a series of procedure codes separated by commas (e.g. D0180,D1101,D8220).  Used in the account module to quickly charge patients for items.";
 						break;
 
-					case DefCat.AdjTypes:
+					case DefinitionCategory.AdjTypes:
 						options.EnableValue = true;
 						options.ValueText =  "+, -, or dp";
 						options.HelpText =  "Plus increases the patient balance.  Minus decreases it.  Dp means discount plan.  Not allowed to change value after creating new type since changes affect all patient accounts.";
 						break;
 
-					case DefCat.AppointmentColors:
+					case DefinitionCategory.AppointmentColors:
 						options.CanEditName = false;
 						options.EnableColor = true;
 						options.HelpText = "Changes colors of background in Appointments Module, and colors for completed appointments.";
 						break;
 
-					case DefCat.ApptConfirmed:
+					case DefinitionCategory.ApptConfirmed:
 						options.EnableColor = true;
 						options.EnableValue = true;
 						options.ValueText = "Abbrev";
 						options.HelpText = "Color shows on each appointment if Appointment View is set to show ConfirmedColor.";
 						break;
 
-					case DefCat.ApptProcsQuickAdd:
+					case DefinitionCategory.ApptProcsQuickAdd:
 						options.EnableValue = true;
 						options.ValueText = "ADA Code(s)";
 						if (Clinics.IsMedicalClinic(Clinics.ClinicId))
@@ -68,14 +65,15 @@ namespace OpenDental
 							options.HelpText = "These are the procedures that you can quickly add to the treatment plan from within the appointment editing window.  They must not require a tooth number. Multiple procedures may be separated by commas with no spaces. These definitions may be freely edited without affecting any patient records.";
 						}
 						break;
-					case DefCat.AutoDeposit:
+
+					case DefinitionCategory.AutoDeposit:
 						options.CanDelete = true;
 						options.CanHide = true;
 						options.EnableValue = true;
 						options.ValueText = "Account Number";
 						break;
 
-					case DefCat.AutoNoteCats:
+					case DefinitionCategory.AutoNoteCats:
 						options.CanDelete = true;
 						options.CanHide = false;
 						options.EnableValue = true;
@@ -84,20 +82,20 @@ namespace OpenDental
 						options.HelpText =  "Leave the Parent Category blank for categories at the root level. Assign a Parent Category to move a category within another. The order set here will only affect the order within the assigned Parent Category in the Auto Note list. For example, a category may be moved above its parent in this list, but it will still be within its Parent Category in the Auto Note list.";
 						break;
 
-					case DefCat.BillingTypes:
+					case DefinitionCategory.BillingTypes:
 						options.EnableValue = true;
 						options.ValueText = "E, C, or CE";
 						options.HelpText = "E=Email bill, C=Collection, CE=Collection Excluded.  It is recommended to use as few billing types as possible.  They can be useful when running reports to separate delinquent accounts, but can cause 'forgotten accounts' if used without good office procedures. Changes affect all patients.";
 						break;
 
-					case DefCat.BlockoutTypes:
+					case DefinitionCategory.BlockoutTypes:
 						options.EnableColor = true;
 						options.HelpText = "Blockout types are used in the appointments module.";
 						options.EnableValue = true;
 						options.ValueText = "Flags";
 						break;
 
-					case DefCat.ChartGraphicColors:
+					case DefinitionCategory.ChartGraphicColors:
 						options.CanEditName = false;
 						options.EnableColor = true;
 						if (Clinics.IsMedicalClinic(Clinics.ClinicId))
@@ -110,7 +108,7 @@ namespace OpenDental
 						}
 						break;
 
-					case DefCat.ClaimCustomTracking:
+					case DefinitionCategory.ClaimCustomTracking:
 						options.CanDelete = true;
 						options.CanHide = false;
 						options.EnableValue = true;
@@ -120,7 +118,7 @@ namespace OpenDental
 							"when the status is changed to the selected status.";
 						break;
 
-					case DefCat.ClaimErrorCode:
+					case DefinitionCategory.ClaimErrorCode:
 						options.CanDelete = true;
 						options.CanHide = false;
 						options.EnableValue = true;
@@ -128,23 +126,23 @@ namespace OpenDental
 						options.HelpText =  "Used to track error codes when entering claim custom statuses.";
 						break;
 
-					case DefCat.ClaimPaymentTracking:
+					case DefinitionCategory.ClaimPaymentTracking:
 						options.ValueText = "Value";
 						options.HelpText =  "EOB adjudication method codes to be used for insurance payments.  Last entry cannot be hidden.";
 						break;
 
-					case DefCat.ClaimPaymentGroups:
+					case DefinitionCategory.ClaimPaymentGroups:
 						options.ValueText =  "Value";
 						options.HelpText =  "Used to group claim payments in the daily payments report.";
 						break;
 
-					case DefCat.ClinicSpecialty:
+					case DefinitionCategory.ClinicSpecialty:
 						options.CanHide = true;
 						options.CanDelete = false;
 						options.HelpText = "You can add as many specialties as you want.  Changes affect all current records.";
 						break;
 
-					case DefCat.CommLogTypes:
+					case DefinitionCategory.CommLogTypes:
 						options.EnableValue = true;
 						options.EnableColor = true;
 						options.DoShowNoColor = true;
@@ -154,29 +152,29 @@ namespace OpenDental
 							". Only one of each. This helps automate new entries.";
 						break;
 
-					case DefCat.ContactCategories:
+					case DefinitionCategory.ContactCategories:
 						options.HelpText = "You can add as many categories as you want.  Changes affect all current contact records.";
 						break;
 
-					case DefCat.Diagnosis:
+					case DefinitionCategory.Diagnosis:
 						options.EnableValue = true;
 						options.ValueText = "1 or 2 letter abbreviation";
 						options.HelpText = "The diagnosis list is shown when entering a procedure.  Ones that are less used should go lower on the list.  The abbreviation is shown in the progress notes.  BE VERY CAREFUL.  Changes affect all patients.";
 						break;
 
-					case DefCat.FeeColors:
+					case DefinitionCategory.FeeColors:
 						options.CanEditName = false;
 						options.CanHide = false;
 						options.EnableColor = true;
 						options.HelpText = "These are the colors associated to fee types.";
 						break;
 
-					case DefCat.ImageCats:
+					case DefinitionCategory.ImageCats:
 						options.ValueText = "Usage";
 						options.HelpText = "These are the categories that will be available in the image and chart modules.  If you hide a category, images in that category will be hidden, so only hide a category if you are certain it has never been used.  Multiple categories can be set to show in the Chart module, but only one category should be set for patient pictures, statements, and tooth charts. Selecting multiple categories for treatment plans will save the treatment plan in each category. Affects all patient records.";
 						break;
 
-					case DefCat.InsurancePaymentType:
+					case DefinitionCategory.InsurancePaymentType:
 						options.CanDelete = true;
 						options.CanHide = false;
 						options.EnableValue = true;
@@ -184,92 +182,83 @@ namespace OpenDental
 						options.HelpText = "These are claim payment types for insurance payments attached to claims.";
 						break;
 
-					case DefCat.InsuranceVerificationStatus:
+					case DefinitionCategory.InsuranceVerificationStatus:
 						options.ValueText = "Usage";
 						options.HelpText = "These are statuses for the insurance verification list.";
 						break;
 
-					case DefCat.JobPriorities:
-						options.CanDelete = false;
-						options.CanHide = true;
-						options.EnableValue = true;
-						options.EnableColor = true;
-						options.ValueText = "Comma-delimited keywords";
-						options.HelpText = "These are job priorities that determine how jobs are sorted in the Job Manager System.  Required values are: OnHold, Low, Normal, MediumHigh, High, Urgent, BugDefault, JobDefault, DocumentationDefault.";
-						break;
-
-					case DefCat.LetterMergeCats:
+					case DefinitionCategory.LetterMergeCats:
 						options.HelpText = "Categories for Letter Merge.  You can safely make any changes you want.";
 						break;
 
-					case DefCat.MiscColors:
+					case DefinitionCategory.MiscColors:
 						options.CanEditName = false;
 						options.EnableColor = true;
 						options.HelpText = "";
 						break;
 
-					case DefCat.PaymentTypes:
+					case DefinitionCategory.PaymentTypes:
 						options.EnableValue = true;
 						options.ValueText = "N=Not selected for deposit";
 						options.HelpText = "Types of payments that patients might make. Any changes will affect all patients.";
 						break;
 
-					case DefCat.PayPlanCategories:
+					case DefinitionCategory.PayPlanCategories:
 						options.HelpText = "Assign payment plans to different categories";
 						break;
 
-					case DefCat.PaySplitUnearnedType:
+					case DefinitionCategory.PaySplitUnearnedType:
 						options.ValueText = "Do Not Show on Account";
 						options.HelpText = "Usually only used by offices that use accrual basis accounting instead of cash basis accounting. Any changes will affect all patients.";
 						options.EnableValue = true;
 						break;
 
-					case DefCat.ProcButtonCats:
+					case DefinitionCategory.ProcButtonCats:
 						options.HelpText = "These are similar to the procedure code categories, but are only used for organizing and grouping the procedure buttons in the Chart module.";
 						break;
 
-					case DefCat.ProcCodeCats:
+					case DefinitionCategory.ProcCodeCats:
 						options.HelpText = "These are the categories for organizing procedure codes. They do not have to follow ADA categories.  There is no relationship to insurance categories which are setup in the Ins Categories section.  Does not affect any patient records.";
 						break;
 
-					case DefCat.ProgNoteColors:
+					case DefinitionCategory.ProgNoteColors:
 						options.CanEditName = false;
 						options.EnableColor = true;
 						options.HelpText = "Changes color of text for different types of entries in the Chart Module Progress Notes.";
 						break;
 
-					case DefCat.Prognosis:
+					case DefinitionCategory.Prognosis:
 						break;
 
-					case DefCat.ProviderSpecialties:
+					case DefinitionCategory.ProviderSpecialties:
 						options.HelpText = "Provider specialties cannot be deleted.  Changes to provider specialties could affect e-claims.";
 						break;
 
-					case DefCat.RecallUnschedStatus:
+					case DefinitionCategory.RecallUnschedStatus:
 						options.EnableValue = true;
 						options.ValueText = "Abbreviation";
 						options.HelpText = "Recall/Unsched Status.  Abbreviation must be 7 characters or less.  Changes affect all patients.";
 						break;
 
-					case DefCat.Regions:
+					case DefinitionCategory.Regions:
 						options.CanHide = false;
 						options.HelpText = "The region identifying the clinic it is assigned to.";
 						break;
 
-					case DefCat.SupplyCats:
+					case DefinitionCategory.SupplyCats:
 						options.CanDelete = true;
 						options.CanHide = false;
 						options.HelpText = "The categories for inventory supplies.";
 						break;
 
-					case DefCat.TaskPriorities:
+					case DefinitionCategory.TaskPriorities:
 						options.EnableColor = true;
 						options.EnableValue = true;
 						options.ValueText = "D = Default, R = Reminder";
 						options.HelpText = "Priorities available for selection within the task edit window.  Task lists are sorted using the order of these priorities.  They can have any description and color.  At least one priority should be Default (D).  If more than one priority is flagged as the default, the last default in the list will be used.  If no default is set, the last priority will be used.  Use (R) to indicate the initial reminder task priority to use when creating reminder tasks.  Changes affect all tasks where the definition is used.";
 						break;
 
-					case DefCat.TxPriorities:
+					case DefinitionCategory.TxPriorities:
 						options.EnableColor = true;
 						options.EnableValue = true;
 						options.DoShowItemOrderInValue = true;
@@ -281,19 +270,19 @@ namespace OpenDental
 							"are next in a planned appointment.";
 						break;
 
-					case DefCat.WebSchedNewPatApptTypes:
+					case DefinitionCategory.WebSchedNewPatApptTypes:
 						options.CanDelete = true;
 						options.CanHide = false;
 						options.ValueText = "Appointment Type";
 						options.HelpText = "Appointment types to be displayed in the Web Sched New Pat Appt web application.  These are selectable for the new patients and will be saved to the appointment note.";
 						break;
 
-					case DefCat.CarrierGroupNames:
+					case DefinitionCategory.CarrierGroupNames:
 						options.CanHide = true;
 						options.HelpText = "These are group names for Carriers.";
 						break;
 
-					case DefCat.TimeCardAdjTypes:
+					case DefinitionCategory.TimeCardAdjTypes:
 						options.CanEditName = true;
 						options.CanHide = true;
 						options.HelpText = "These are PTO Adjustments Types used for tracking on employee time cards and ADP export.";
@@ -329,12 +318,12 @@ namespace OpenDental
 		/// <summary>
 		/// Fills the passed in grid with the definitions in the passed in list.
 		/// </summary>
-		public static void FillGridDefs(ODGrid definitionsGrid, DefCatOptions selectedDefCatOpt, List<Def> definitions)
+		public static void FillGridDefs(ODGrid definitionsGrid, DefCatOptions selectedDefCatOpt, List<Definition> definitions)
 		{
-			Def definition = null;
+			Definition definition = null;
 			if (definitionsGrid.GetSelectedIndex() > -1)
 			{
-				definition = (Def)definitionsGrid.ListGridRows[definitionsGrid.GetSelectedIndex()].Tag;
+				definition = (Definition)definitionsGrid.ListGridRows[definitionsGrid.GetSelectedIndex()].Tag;
 			}
 
 			int scroll = definitionsGrid.ScrollValue;
@@ -349,42 +338,42 @@ namespace OpenDental
 
 			foreach (var def in definitions)
 			{
-				if (Defs.IsDefDeprecated(def))
+				if (Definitions.IsDefDeprecated(def))
 				{
 					def.IsHidden = true;
 				}
 
 				var row = new GridRow();
-				row.Cells.Add(def.ItemName);
+				row.Cells.Add(def.Name);
 
-				if (selectedDefCatOpt.DefCat == DefCat.ImageCats)
+				if (selectedDefCatOpt.DefCat == DefinitionCategory.ImageCats)
 				{
-					row.Cells.Add(GetItemDescForImages(def.ItemValue));
+					row.Cells.Add(GetItemDescForImages(def.Value));
 				}
-				else if (selectedDefCatOpt.DefCat == DefCat.AutoNoteCats)
+				else if (selectedDefCatOpt.DefCat == DefinitionCategory.AutoNoteCats)
 				{
 					Dictionary<string, string> dictAutoNoteDefs = new Dictionary<string, string>();
-					dictAutoNoteDefs = definitions.ToDictionary(x => x.DefNum.ToString(), x => x.ItemName);
-                    row.Cells.Add(dictAutoNoteDefs.TryGetValue(def.ItemValue, out string nameCur) ? nameCur : def.ItemValue);
+					dictAutoNoteDefs = definitions.ToDictionary(x => x.Id.ToString(), x => x.Name);
+                    row.Cells.Add(dictAutoNoteDefs.TryGetValue(def.Value, out string nameCur) ? nameCur : def.Value);
                 }
-				else if (selectedDefCatOpt.DefCat == DefCat.WebSchedNewPatApptTypes)
+				else if (selectedDefCatOpt.DefCat == DefinitionCategory.WebSchedNewPatApptTypes)
 				{
-					AppointmentType appointmentType = AppointmentTypes.GetWebSchedNewPatApptTypeByDef(def.DefNum);
+					AppointmentType appointmentType = AppointmentTypes.GetWebSchedNewPatApptTypeByDef(def.Id);
 					row.Cells.Add(appointmentType == null ? "" : appointmentType.Name);
 				}
 				else if (selectedDefCatOpt.DoShowItemOrderInValue)
 				{
-					row.Cells.Add(def.ItemOrder.ToString());
+					row.Cells.Add(def.SortOrder.ToString());
 				}
 				else
 				{
-					row.Cells.Add(def.ItemValue);
+					row.Cells.Add(def.Value);
 				}
 
 				row.Cells.Add("");
 				if (selectedDefCatOpt.EnableColor)
 				{
-					row.Cells[row.Cells.Count - 1].BackColor = def.ItemColor;
+					row.Cells[row.Cells.Count - 1].BackColor = def.Color;
 				}
 
 				row.Cells.Add(def.IsHidden ? "X" : "");
@@ -398,7 +387,7 @@ namespace OpenDental
 			{
 				for (int i = 0; i < definitionsGrid.ListGridRows.Count; i++)
 				{
-					if (((Def)definitionsGrid.ListGridRows[i].Tag).DefNum == definition.DefNum)
+					if (((Definition)definitionsGrid.ListGridRows[i].Tag).Id == definition.Id)
 					{
 						definitionsGrid.SetSelected(i, true);
 						break;
@@ -409,11 +398,11 @@ namespace OpenDental
 			definitionsGrid.ScrollValue = scroll;
 		}
 
-		public static bool GridDefsDoubleClick(Def selectedDef, DefCatOptions selectedDefCatOpt, List<Def> listDefsCur, List<Def> listDefsAll, bool isDefChanged)
+		public static bool GridDefsDoubleClick(Definition selectedDef, DefCatOptions selectedDefCatOpt, List<Definition> listDefsCur, List<Definition> listDefsAll, bool isDefChanged)
 		{
 			switch (selectedDefCatOpt.DefCat)
 			{
-				case DefCat.BlockoutTypes:
+				case DefinitionCategory.BlockoutTypes:
 					using (var formDefEditBlockout = new FormDefEditBlockout(selectedDef))
 					{
 						if (formDefEditBlockout.ShowDialog() == DialogResult.OK)
@@ -423,7 +412,7 @@ namespace OpenDental
 					}
 					break;
 
-				case DefCat.ImageCats:
+				case DefinitionCategory.ImageCats:
 					using (var formDefEditImages = new FormDefEditImages(selectedDef))
 					{
 						formDefEditImages.IsNew = false;
@@ -435,7 +424,7 @@ namespace OpenDental
 					}
 					break;
 
-				case DefCat.WebSchedNewPatApptTypes:
+				case DefinitionCategory.WebSchedNewPatApptTypes:
 					using (var formDefEditWSNPApptTypes = new FormDefEditWSNPApptTypes(selectedDef))
 					{
 						if (formDefEditWSNPApptTypes.ShowDialog() == DialogResult.OK)
@@ -471,30 +460,28 @@ namespace OpenDental
 
 		public static bool AddDef(ODGrid gridDefs, DefCatOptions selectedDefCatOpt)
 		{
-            Def newDef = new Def
-            {
-                IsNew = true
-            };
-
-            int itemOrder = 0;
-			if (Defs.GetDefsForCategory(selectedDefCatOpt.DefCat).Count > 0)
+			int itemOrder = 0;
+			if (Definitions.GetDefsForCategory(selectedDefCatOpt.DefCat).Count > 0)
 			{
-				itemOrder = Defs.GetDefsForCategory(selectedDefCatOpt.DefCat).Max(x => x.ItemOrder) + 1;
+				itemOrder = Definitions.GetDefsForCategory(selectedDefCatOpt.DefCat).Max(x => x.SortOrder) + 1;
 			}
 
-			newDef.ItemOrder = itemOrder;
-			newDef.Category = selectedDefCatOpt.DefCat;
-			newDef.ItemName = "";
-			newDef.ItemValue = "";
+            var newDef = new Definition
+            {
+                SortOrder = itemOrder,
+                Category = selectedDefCatOpt.DefCat,
+                Name = "",
+                Value = ""
+            };
 
-			if (selectedDefCatOpt.DefCat == DefCat.InsurancePaymentType)
+            if (selectedDefCatOpt.DefCat == DefinitionCategory.InsurancePaymentType)
 			{
-				newDef.ItemValue = "N";
+				newDef.Value = "N";
 			}
 
 			switch (selectedDefCatOpt.DefCat)
 			{
-				case DefCat.BlockoutTypes:
+				case DefinitionCategory.BlockoutTypes:
 					using (var formDefEditBlockout = new FormDefEditBlockout(newDef))
 					{
 						formDefEditBlockout.IsNew = true;
@@ -505,7 +492,7 @@ namespace OpenDental
 					}
 					break;
 
-				case DefCat.ImageCats:
+				case DefinitionCategory.ImageCats:
 					using (var formDefEditImages = new FormDefEditImages(newDef))
 					{
 						formDefEditImages.IsNew = true;
@@ -516,7 +503,7 @@ namespace OpenDental
 					}
 					break;
 
-				case DefCat.WebSchedNewPatApptTypes:
+				case DefinitionCategory.WebSchedNewPatApptTypes:
 					using (var formDefEditWSNPAppt = new FormDefEditWSNPApptTypes(newDef))
 					{
 						if (formDefEditWSNPAppt.ShowDialog() != DialogResult.OK)
@@ -527,10 +514,10 @@ namespace OpenDental
 					break;
 
 				default:
-					var currentDefs = new List<Def>();
+					var currentDefs = new List<Definition>();
 					foreach (var gridRow in gridDefs.ListGridRows)
 					{
-						currentDefs.Add((Def)gridRow.Tag);
+						currentDefs.Add((Definition)gridRow.Tag);
 					}
 
 					using (var formDefEdit = new FormDefEdit(newDef, currentDefs, selectedDefCatOpt))
@@ -558,18 +545,18 @@ namespace OpenDental
 				return false;
 			}
 
-			Def defSelected = (Def)gridDefs.ListGridRows[gridDefs.GetSelectedIndex()].Tag;
+			Definition defSelected = (Definition)gridDefs.ListGridRows[gridDefs.GetSelectedIndex()].Tag;
 			if (!CanHideDef(defSelected, selectedDefCatOpt))
 			{
 				return false;
 			}
 
-			Defs.HideDef(defSelected);
+			Definitions.HideDef(defSelected);
 			return true;
 		}
 
 		///<summary>Returns true if definition can be hidden or is already hidden. Displays error message and returns false if not.</summary>
-		public static bool CanHideDef(Def def, DefCatOptions defCatOpt)
+		public static bool CanHideDef(Definition def, DefCatOptions defCatOpt)
 		{
 			if (def.IsHidden)
 			{
@@ -584,23 +571,23 @@ namespace OpenDental
 			}
 
 			// Stop users from hiding the last definition in categories that must have at least one def in them.
-			List<Def> listDefsCurNotHidden = Defs.GetDefsForCategory(defCatOpt.DefCat, true);
-			if (Defs.NeedOneUnhidden(def.Category) && listDefsCurNotHidden.Count == 1)
+			List<Definition> listDefsCurNotHidden = Definitions.GetDefsForCategory(defCatOpt.DefCat, true);
+			if (Definitions.NeedOneUnhidden(def.Category) && listDefsCurNotHidden.Count == 1)
 			{
 				ODMessageBox.Show("You cannot hide the last definition in this category.");
 				return false;
 			}
 
-			if (def.Category == DefCat.ProviderSpecialties && (Providers.IsSpecialtyInUse(def.DefNum) || Referrals.IsSpecialtyInUse(def.DefNum)))
+			if (def.Category == DefinitionCategory.ProviderSpecialties && (Providers.IsSpecialtyInUse(def.Id) || Referrals.IsSpecialtyInUse(def.Id)))
 			{
 				ODMessageBox.Show("You cannot hide a specialty if it is in use by a provider or a referral source.");
 				return false;
 			}
 
-			if (Defs.IsDefinitionInUse(def))
+			if (Definitions.IsDefinitionInUse(def))
 			{
 				// DefNum will be zero if it is being created but hasn't been saved to DB yet, thus it can't be in use.
-				if (def.DefNum.In(
+				if (def.Id.In(
 					Prefs.GetLong(PrefName.BrokenAppointmentAdjustmentType),
 					Prefs.GetLong(PrefName.AppointmentTimeArrivedTrigger),
 					Prefs.GetLong(PrefName.AppointmentTimeSeatedTrigger),
@@ -616,7 +603,7 @@ namespace OpenDental
 					ODMessageBox.Show("You cannot hide a definition if it is in use within Module Preferences.");
 					return false;
 				}
-				else if (def.DefNum.In(
+				else if (def.Id.In(
 					Prefs.GetLong(PrefName.RecallStatusMailed),
 					Prefs.GetLong(PrefName.RecallStatusTexted),
 					Prefs.GetLong(PrefName.RecallStatusEmailed),
@@ -625,17 +612,17 @@ namespace OpenDental
 					ODMessageBox.Show("You cannot hide a definition that is used as a status in the Setup Recall window.");
 					return false;
 				}
-				else if (def.DefNum == Prefs.GetLong(PrefName.WebSchedNewPatConfirmStatus))
+				else if (def.Id == Prefs.GetLong(PrefName.WebSchedNewPatConfirmStatus))
 				{
 					ODMessageBox.Show("You cannot hide a definition that is used as an appointment confirmation status in Web Sched New Pat Appt.");
 					return false;
 				}
-				else if (def.DefNum == Prefs.GetLong(PrefName.WebSchedRecallConfirmStatus))
+				else if (def.Id == Prefs.GetLong(PrefName.WebSchedRecallConfirmStatus))
 				{
 					ODMessageBox.Show("You cannot hide a definition that is used as an appointment confirmation status in Web Sched Recall Appt.");
 					return false;
 				}
-				else if (def.DefNum == Prefs.GetLong(PrefName.PracticeDefaultBillType))
+				else if (def.Id == Prefs.GetLong(PrefName.PracticeDefaultBillType))
 				{
 					ODMessageBox.Show("You cannot hide a billing type when it is selected as the practice default billing type.");
 					return false;
@@ -649,14 +636,14 @@ namespace OpenDental
 				}
 			}
 
-			if (def.Category == DefCat.PaySplitUnearnedType)
+			if (def.Category == DefinitionCategory.PaySplitUnearnedType)
 			{
-				if (listDefsCurNotHidden.FindAll(x => string.IsNullOrEmpty(x.ItemValue)).Count == 1 && def.ItemValue == "")
+				if (listDefsCurNotHidden.FindAll(x => string.IsNullOrEmpty(x.Value)).Count == 1 && def.Value == "")
 				{
 					ODMessageBox.Show("Must have at least one definition that shows in Account");
 					return false;
 				}
-				if (listDefsCurNotHidden.FindAll(x => !string.IsNullOrEmpty(x.ItemValue)).Count == 1 && def.ItemValue != "")
+				if (listDefsCurNotHidden.FindAll(x => !string.IsNullOrEmpty(x.Value)).Count == 1 && def.Value != "")
 				{
 					ODMessageBox.Show("Must have at least one definition that does not show in Account");
 					return false;
@@ -664,7 +651,7 @@ namespace OpenDental
 			}
 
 			// Warn the user if they are about to hide a billing type currently in use.
-			if (defCatOpt.DefCat == DefCat.BillingTypes && Patients.IsBillingTypeInUse(def.DefNum))
+			if (defCatOpt.DefCat == DefinitionCategory.BillingTypes && Patients.IsBillingTypeInUse(def.Id))
 			{
 				if (!MsgBox.Show(MsgBoxButtons.OKCancel, "Warning: Billing type is currently in use by patients, insurance plans, or preferences."))
 				{
@@ -687,13 +674,13 @@ namespace OpenDental
 				return false;
 			}
 
-			Def defSelected = (Def)gridDefs.ListGridRows[gridDefs.GetSelectedIndex()].Tag;
-			Def defAbove = (Def)gridDefs.ListGridRows[gridDefs.GetSelectedIndex() - 1].Tag;
-			int indexDefSelectedItemOrder = defSelected.ItemOrder;
-			defSelected.ItemOrder = defAbove.ItemOrder;
-			defAbove.ItemOrder = indexDefSelectedItemOrder;
-			Defs.Update(defSelected);
-			Defs.Update(defAbove);
+			Definition defSelected = (Definition)gridDefs.ListGridRows[gridDefs.GetSelectedIndex()].Tag;
+			Definition defAbove = (Definition)gridDefs.ListGridRows[gridDefs.GetSelectedIndex() - 1].Tag;
+			int indexDefSelectedItemOrder = defSelected.SortOrder;
+			defSelected.SortOrder = defAbove.SortOrder;
+			defAbove.SortOrder = indexDefSelectedItemOrder;
+			Definitions.Update(defSelected);
+			Definitions.Update(defAbove);
 			return true;
 		}
 
@@ -710,13 +697,13 @@ namespace OpenDental
 				return false;
 			}
 
-			Def defSelected = (Def)gridDefs.ListGridRows[gridDefs.GetSelectedIndex()].Tag;
-			Def defBelow = (Def)gridDefs.ListGridRows[gridDefs.GetSelectedIndex() + 1].Tag;
-			int indexDefSelectedItemOrder = defSelected.ItemOrder;
-			defSelected.ItemOrder = defBelow.ItemOrder;
-			defBelow.ItemOrder = indexDefSelectedItemOrder;
-			Defs.Update(defSelected);
-			Defs.Update(defBelow);
+			Definition defSelected = (Definition)gridDefs.ListGridRows[gridDefs.GetSelectedIndex()].Tag;
+			Definition defBelow = (Definition)gridDefs.ListGridRows[gridDefs.GetSelectedIndex() + 1].Tag;
+			int indexDefSelectedItemOrder = defSelected.SortOrder;
+			defSelected.SortOrder = defBelow.SortOrder;
+			defBelow.SortOrder = indexDefSelectedItemOrder;
+			Definitions.Update(defSelected);
+			Definitions.Update(defBelow);
 			return true;
 		}
 	}

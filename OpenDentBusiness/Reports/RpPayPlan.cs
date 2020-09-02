@@ -4,6 +4,8 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using DataConnectionBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness {
 	public class RpPayPlan {
@@ -23,7 +25,7 @@ namespace OpenDentBusiness {
 				whereProv+=") ";
 			}
 			string whereClin="";
-			bool hasClinicsEnabled=ReportsComplex.RunFuncOnReportServer(() => Prefs.HasClinicsEnabledNoCache);
+			bool hasClinicsEnabled=Prefs.HasClinicsEnabledNoCache;
 			if(hasClinicsEnabled) {//Using clinics
 				whereClin+=" AND payplancharge.ClinicNum IN(";
 				for(int i=0;i<listClinicNums.Count;i++) {
@@ -62,9 +64,8 @@ namespace OpenDentBusiness {
 			tableTotals.Columns.Add("famBal");
 			DataRow row;
 			string datesql="CURDATE()";//This is used to find out how much people owe currently and has nothing to do with the selected range
-			List<long> listHiddenUnearnedDefNums=ReportsComplex.RunFuncOnReportServer(() => 
-				Defs.GetDefsNoCache(DefCat.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.ItemValue)).Select(x => x.DefNum).ToList()
-			);
+			List<long> listHiddenUnearnedDefNums=
+				Definitions.GetDefsNoCache(DefinitionCategory.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.Value)).Select(x => x.Id).ToList();
 			string command="SELECT FName,LName,MiddleI,PlanNum,Preferred,PlanNum, "
 				+"COALESCE((SELECT SUM(Principal+Interest) FROM payplancharge WHERE payplancharge.PayPlanNum=payplan.PayPlanNum "
 				+"AND payplancharge.ChargeType="+POut.Int((int)PayPlanChargeType.Debit)+" "//for v1, debits are the only ChargeType.
@@ -174,8 +175,8 @@ namespace OpenDentBusiness {
 			else {
 				command+="ORDER BY LName,FName";
 			}
-			DataTable raw=ReportsComplex.RunFuncOnReportServer(() => ReportsComplex.GetTable(command));
-			List<Provider> listProvs=ReportsComplex.RunFuncOnReportServer(() => Providers.GetAll());
+            DataTable raw = Database.ExecuteDataTable(command);
+			List<Provider> listProvs=Providers.GetAll();
 			//DateTime payplanDate;
 			Patient pat;
 			double princ;
@@ -228,7 +229,7 @@ namespace OpenDentBusiness {
 					row["notDue"]=((princ+interest-paid)-(accumDue-paid)).ToString("f");
 				}
 				if(showFamilyBalance) {
-					Family famCur=ReportsComplex.RunFuncOnReportServer(() => Patients.GetFamily(PIn.Long(raw.Rows[i]["PatNum"].ToString())));
+					Family famCur=Patients.GetFamily(PIn.Long(raw.Rows[i]["PatNum"].ToString()));
 					famBal=(decimal)famCur.ListPats[0].BalTotal;
 					row["famBal"]=(famBal - (decimal)famCur.ListPats[0].InsEst).ToString("F");
 				}

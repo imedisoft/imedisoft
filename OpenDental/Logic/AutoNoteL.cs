@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -25,15 +27,15 @@ namespace OpenDental {
 			else {//either not fill on load or no user pref, store the expanded node state to restore after filling tree
 						//only defs (category folders) can be expanded or have children nodes
 				listExpandedDefNums=treeNotes.Nodes.OfType<TreeNode>().SelectMany(x => GetNodeAndChildren(x))
-					.Where(x => x.IsExpanded && x.Tag is Def).Select(x => ((Def)x.Tag).DefNum).ToList();
+					.Where(x => x.IsExpanded && x.Tag is Definition).Select(x => ((Definition)x.Tag).Id).ToList();
 			}
 			TreeNode selectedNode=treeNotes.SelectedNode;
 			TreeNode topNode=null;
 			string topNodePath=treeNotes.TopNode?.FullPath;
 			treeNotes.BeginUpdate();
 			treeNotes.Nodes.Clear();//clear current tree contents
-			_dictChildNodesForDefNum=Defs.GetDefsForCategory(DefCat.AutoNoteCats,true).GroupBy(x => x.ItemValue??"0")
-				.ToDictionary(x => PIn.Long(x.Key),x => new NodeChildren() { ListChildDefNodes=x.Select(y => new TreeNode(y.ItemName,0,0) { Tag=y }).ToList() });
+			_dictChildNodesForDefNum=Definitions.GetDefsForCategory(DefinitionCategory.AutoNoteCats,true).GroupBy(x => x.Value??"0")
+				.ToDictionary(x => PIn.Long(x.Key),x => new NodeChildren() { ListChildDefNodes=x.Select(y => new TreeNode(y.Name,0,0) { Tag=y }).ToList() });
 			Dictionary<long,List<TreeNode>> dictDefNumAutoNotes=AutoNotes.GetDeepCopy().GroupBy(x => x.Category)
 				.ToDictionary(x => x.Key,x => x.Select(y => new TreeNode(y.AutoNoteName,1,1) { Tag=y }).ToList());
 			foreach(KeyValuePair<long,List<TreeNode>> kvp in dictDefNumAutoNotes) {
@@ -57,7 +59,7 @@ namespace OpenDental {
 				if(!string.IsNullOrEmpty(topNodePath) && nodeCur.FullPath==topNodePath) {
 					topNode=nodeCur;
 				}
-				if(nodeCur.Tag is Def && listExpandedDefNums.Contains(((Def)nodeCur.Tag).DefNum)) {
+				if(nodeCur.Tag is Definition && listExpandedDefNums.Contains(((Definition)nodeCur.Tag).Id)) {
 					nodeCur.Expand();
 				}
 				if(selectedNode==null) {
@@ -82,7 +84,7 @@ namespace OpenDental {
 				return false;
 			}
 			if((nodeA.Tag is AutoNote && nodeB.Tag is AutoNote && ((AutoNote)nodeA.Tag).AutoNoteNum==((AutoNote)nodeB.Tag).AutoNoteNum)
-				|| (nodeA.Tag is Def && nodeB.Tag is Def && ((Def)nodeA.Tag).DefNum==((Def)nodeB.Tag).DefNum)) {
+				|| (nodeA.Tag is Definition && nodeB.Tag is Definition && ((Definition)nodeA.Tag).Id==((Definition)nodeB.Tag).Id)) {
 				return true;
 			}
 			return false;
@@ -97,7 +99,7 @@ namespace OpenDental {
 			}
 			List<TreeNode> listChildNodes=new List<TreeNode>();
 			NodeChildren nodeChildrenCur;
-			if(_dictChildNodesForDefNum.TryGetValue(((Def)defNodeCur.Tag).DefNum,out nodeChildrenCur)) {
+			if(_dictChildNodesForDefNum.TryGetValue(((Definition)defNodeCur.Tag).Id,out nodeChildrenCur)) {
 				nodeChildrenCur.ListChildDefNodes.ForEach(x => SetAllDescendantsForNode(x));
 				listChildNodes.AddRange(nodeChildrenCur.ListChildDefNodes);
 				listChildNodes.AddRange(nodeChildrenCur.ListAutoNoteNodes);
@@ -114,7 +116,7 @@ namespace OpenDental {
 			}
 			listRetval.Add(treeNode);
 			for(int i=0;i<listRetval.Count;i++) {
-				listRetval.AddRange(listRetval[i].Nodes.OfType<TreeNode>().Where(x => !isCatsOnly || x.Tag is Def));
+				listRetval.AddRange(listRetval[i].Nodes.OfType<TreeNode>().Where(x => !isCatsOnly || x.Tag is Definition));
 			}
 			return listRetval;
 		}

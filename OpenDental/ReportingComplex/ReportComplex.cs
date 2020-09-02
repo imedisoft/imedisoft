@@ -434,13 +434,13 @@ namespace OpenDental.ReportingComplex {
 			_parameterFields.Add(new ParameterField(myName,myValueType,myDefaultValues,myPromptingText,mySnippet,myEnumerationType));
 		}
 
-		/// <summary>Overload for ValueKind defCat.</summary>
+		/// <summary>Overload for ValueKind DefinitionCategory.</summary>
 		public void AddParameter(string myName,FieldValueType myValueType
-			,ArrayList myDefaultValues,string myPromptingText,string mySnippet,DefCat myDefCategory){
+			,ArrayList myDefaultValues,string myPromptingText,string mySnippet,string myDefCategory){
 			_parameterFields.Add(new ParameterField(myName,myValueType,myDefaultValues,myPromptingText,mySnippet,myDefCategory));
 		}
 
-		/// <summary>Overload for ValueKind defCat.</summary>
+		/// <summary>Overload for ValueKind DefinitionCategory.</summary>
 		public void AddParameter(string myName,FieldValueType myValueType
 			,ArrayList myDefaultValues,string myPromptingText,string mySnippet,ReportFKType myReportFKType){
 			_parameterFields.Add(new ParameterField(myName,myValueType,myDefaultValues,myPromptingText,mySnippet,myReportFKType));

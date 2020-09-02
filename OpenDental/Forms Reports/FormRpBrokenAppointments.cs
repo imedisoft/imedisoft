@@ -8,13 +8,15 @@ using System.Windows.Forms;
 using OpenDental.ReportingComplex;
 using OpenDentBusiness;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	///<summary></summary>
 	public partial class FormRpBrokenAppointments:ODForm {
 
 		private List<Clinic> _listClinics;
-		private List<Def> _listPosAdjTypes=new List<Def>();
+		private List<Definition> _listPosAdjTypes=new List<Definition>();
 		private List<BrokenApptProcedure> _listBrokenProcOptions=new List<BrokenApptProcedure>();
 		private List<Provider> _listProviders;
 		private bool _hasClinicsEnabled;
@@ -145,11 +147,11 @@ namespace OpenDental {
 				listOptions.Items.Clear();
 				_listPosAdjTypes.Clear();
 				listOptions.SelectionMode=SelectionMode.MultiSimple;
-				_listPosAdjTypes=Defs.GetPositiveAdjTypes();
+				_listPosAdjTypes=Definitions.GetPositiveAdjTypes();
 				long brokenApptAdjDefNum=Prefs.GetLong(PrefName.BrokenAppointmentAdjustmentType);
 				for(int i=0; i<_listPosAdjTypes.Count;i++) {
-					listOptions.Items.Add(_listPosAdjTypes[i].ItemName);
-					if(_listPosAdjTypes[i].DefNum==brokenApptAdjDefNum) {
+					listOptions.Items.Add(_listPosAdjTypes[i].Name);
+					if(_listPosAdjTypes[i].Id==brokenApptAdjDefNum) {
 						listOptions.SelectedIndices.Add(i);
 					}
 				}
@@ -213,7 +215,7 @@ namespace OpenDental {
 			List<long> listAdjDefNums=new List<long>();
 			if(radioAdj.Checked) {
 				for(int i=0;i<listOptions.SelectedIndices.Count;i++) {
-					listAdjDefNums.Add(_listPosAdjTypes[listOptions.SelectedIndices[i]].DefNum);
+					listAdjDefNums.Add(_listPosAdjTypes[listOptions.SelectedIndices[i]].Id);
 				}
 			}
 			BrokenApptProcedure brokenApptSelection=BrokenApptProcedure.None;

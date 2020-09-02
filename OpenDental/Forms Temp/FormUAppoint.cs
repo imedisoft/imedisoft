@@ -12,6 +12,8 @@ using System.Xml;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary> </summary>
@@ -899,7 +901,7 @@ namespace OpenDental{
 					}
 					code=codesToSynch[i];
 					writer.WriteStartElement("procedure-code");
-					if(Defs.GetHidden(DefCat.ProcCodeCats,code.ProcCat)){
+					if(Definitions.GetHidden(DefinitionCategory.ProcCodeCats,code.ProcCat)){
 						writer.WriteAttributeString("action","delete");
 					}
 					else{

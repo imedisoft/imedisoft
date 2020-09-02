@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using OpenDental.ReportingComplex;
 using CodeBase;
 using System.Linq;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -32,7 +34,7 @@ namespace OpenDental{
 		private bool _hasClinicsEnabled;
 		private CheckBox checkAllAdjs;
 		///<summary>Holds all adjustment types, does NOT include hidden.</summary>
-		private List<Def> _listAdjTypeDefs;
+		private List<Definition> _listAdjTypeDefs;
 
 		///<summary></summary>
 		public FormRpAdjSheet(){
@@ -267,10 +269,10 @@ namespace OpenDental{
 					}
 				}
 			}
-			_listAdjTypeDefs=Defs.GetDefsForCategory(DefCat.AdjTypes,true);//Exclude hidden.
+			_listAdjTypeDefs=Definitions.GetDefsForCategory(DefinitionCategory.AdjTypes,true);//Exclude hidden.
 			checkAllAdjs.Checked=true;
 			for(int i=0;i<_listAdjTypeDefs.Count;i++) {
-				listType.Items.Add(_listAdjTypeDefs[i].ItemName);
+				listType.Items.Add(_listAdjTypeDefs[i].Name);
 			}
 		}
 
@@ -362,11 +364,11 @@ namespace OpenDental{
 			List<string> listAdjType=new List<string>();
 			if(checkAllAdjs.Checked) {
 				//add all adjustment types, including hidden
-				listAdjType=Defs.GetDefsForCategory(DefCat.AdjTypes).Select(x => POut.Long(x.DefNum)).ToList();
+				listAdjType=Definitions.GetDefsForCategory(DefinitionCategory.AdjTypes).Select(x => POut.Long(x.Id)).ToList();
 			}
 			else {
 				for(int i=0;i<listType.SelectedIndices.Count;i++) {//1:1
-					listAdjType.Add(POut.Long(_listAdjTypeDefs[listType.SelectedIndices[i]].DefNum));
+					listAdjType.Add(POut.Long(_listAdjTypeDefs[listType.SelectedIndices[i]].Id));
 				}
 			}
 			ReportComplex report=new ReportComplex(true,false);	 

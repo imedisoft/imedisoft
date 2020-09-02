@@ -1,4 +1,6 @@
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using Imedisoft.Forms;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -110,8 +112,8 @@ namespace OpenDental {
 		}
 
 		private void FillListBoxAdjTypes() {
-			listTypePos.SetItems(Defs.GetPositiveAdjTypes(),x => x.ItemName);
-			listTypeNeg.SetItems(Defs.GetNegativeAdjTypes(),x => x.ItemName);
+			listTypePos.SetItems(Definitions.GetPositiveAdjTypes(),x => x.Name);
+			listTypeNeg.SetItems(Definitions.GetNegativeAdjTypes(),x => x.Name);
 		}
 
 		///<summary>This method converts the AccountEntry objects we get back from AccountModules.GetListUnpaidAccountCharges() to MultiAdjEntry objects. These are used to fill the grid and do all relevant logic in this form. This method will return a fresh list of procedures and will not show any existing adjustments that may have been made in this form already. When called from checkShowImplicit any existing adjustments made will not be shown.(Ask Andrew about this functionality)</summary>
@@ -148,7 +150,7 @@ namespace OpenDental {
 			}
 			//Create new adjustment
 			Adjustment adjCur=new Adjustment();
-			adjCur.AdjType=GetSelectedAdjDef().DefNum;
+			adjCur.AdjType=GetSelectedAdjDef().Id;
 			adjCur.AdjDate=PIn.Date(dateAdjustment.Text);
 			adjCur.AdjNote=PIn.String(textNote.Text);
 			adjCur.PatNum=_patCur.PatNum;
@@ -200,11 +202,11 @@ namespace OpenDental {
 			}
 		}
 
-		private Def GetSelectedAdjDef() {
-			Def selectedAdjType=listTypePos.GetSelected<Def>();
+		private Definition GetSelectedAdjDef() {
+			Definition selectedAdjType=listTypePos.GetSelected<Definition>();
 			if(selectedAdjType==null) {
 				//Nothing was selected in listTypePos so there has to be a selection for negative.
-				selectedAdjType=listTypeNeg.GetSelected<Def>();
+				selectedAdjType=listTypeNeg.GetSelected<Definition>();
 			}
 			return selectedAdjType;
 		}
@@ -328,7 +330,7 @@ namespace OpenDental {
 					selectedClinicNum=comboClinic.SelectedClinicNum;
 				}
 			}
-			row.Adj.AdjType=GetSelectedAdjDef().DefNum;
+			row.Adj.AdjType=GetSelectedAdjDef().Id;
 			row.Adj.ClinicNum=selectedClinicNum;
 			row.Adj.AdjDate=PIn.Date(dateAdjustment.Text);
 			row.Adj.AdjNote=PIn.String(textNote.Text);
@@ -622,7 +624,7 @@ namespace OpenDental {
 				else if(AdjAmtType==AdjAmtType.PercentOfFee) {
 					Adj.AdjAmt=Math.Round((AdjAmtOrPerc/100)*Proc.ProcFee,2);
 				}
-				if(Defs.GetValue(DefCat.AdjTypes,Adj.AdjType)=="-") {
+				if(Definitions.GetValue(DefinitionCategory.AdjTypes,Adj.AdjType)=="-") {
 					Adj.AdjAmt*=-1;
 				}
 			}
@@ -704,7 +706,7 @@ namespace OpenDental {
 						row.Cells.Add(cell);
 					}
 					//Adj Type
-					cell=new GridCell(Defs.GetName(DefCat.AdjTypes,Adj.AdjType));
+					cell=new GridCell(Definitions.GetName(DefinitionCategory.AdjTypes,Adj.AdjType));
 					row.Cells.Add(cell);
 					//Fee
 					cell=new GridCell();

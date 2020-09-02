@@ -6,10 +6,14 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
 using OpenDental.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
-namespace OpenDental{
-///<summary></summary>
-	public class FormDefinitions : ODForm {
+namespace OpenDental
+{
+	///<summary></summary>
+	public class FormDefinitions : ODForm
+	{
 		private OpenDental.UI.Button butClose;
 		private System.Windows.Forms.Label label14;
 		private System.Windows.Forms.TextBox textGuide;
@@ -22,36 +26,46 @@ namespace OpenDental{
 		private OpenDental.UI.Button butDown;
 		private OpenDental.UI.Button butHide;
 		private UI.ODGrid gridDefs;
-		private DefCat _initialCat;
+		private string _initialCat;
 		private bool _isDefChanged;
 		private UI.Button butAlphabetize;
-		private List<Def> _listDefsAll;
+		private List<Definition> _listDefsAll;
 
 		///<summary>Gets the currently selected DefCat along with its options.</summary>
-		private DefCatOptions _selectedDefCatOpt {
+		private DefCatOptions _selectedDefCatOpt
+		{
 			get { return ((ODBoxItem<DefCatOptions>)listCategory.SelectedItem).Tag; }
 		}
 
 		///<summary>All definitions for the current category, hidden and non-hidden.</summary>
-		private List<Def> _listDefsCur {
-			get { return _listDefsAll.Where(x => x.Category == _selectedDefCatOpt.DefCat).OrderBy(x => x.ItemOrder).ToList(); }
+		private List<Definition> _listDefsCur
+		{
+			get { return _listDefsAll.Where(x => x.Category == _selectedDefCatOpt.DefCat).OrderBy(x => x.SortOrder).ToList(); }
 		}
 
+		public FormDefinitions() : this(DefinitionCategory.AccountColors)
+        {
+        }
+
 		///<summary>Must check security before allowing this window to open.</summary>
-		public FormDefinitions(DefCat initialCat){
+		public FormDefinitions(string initialCat)
+		{
 			InitializeComponent();// Required for Windows Form Designer support
-			_initialCat=initialCat;
-			
+			_initialCat = initialCat;
+
 		}
 
 		///<summary></summary>
-		protected override void Dispose( bool disposing ){
-			if( disposing ){
-				if(components != null){
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (components != null)
+				{
 					components.Dispose();
 				}
 			}
-			base.Dispose( disposing );
+			base.Dispose(disposing);
 		}
 
 		#region Windows Form Designer generated code
@@ -152,7 +166,7 @@ namespace OpenDental{
 			// 
 			// butUp
 			// 
-			
+
 			this.butUp.Image = global::Imedisoft.Properties.Resources.up;
 			this.butUp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butUp.Location = new System.Drawing.Point(203, 20);
@@ -226,131 +240,162 @@ namespace OpenDental{
 		}
 		#endregion
 
-		private void FormDefinitions_Load(object sender, System.EventArgs e) {
+		private void FormDefinitions_Load(object sender, System.EventArgs e)
+		{
 			LoadListDefCats();
 		}
 
-		private void LoadListDefCats() {
+		private void LoadListDefCats()
+		{
 			List<DefCatOptions> listDefCatsOrdered = new List<DefCatOptions>();
-			listDefCatsOrdered=DefL.GetOptionsForDefCats(Enum.GetValues(typeof(DefCat)));
-			listDefCatsOrdered = listDefCatsOrdered.OrderBy(x => x.DefCat.GetDescription()).ToList(); //orders alphabetically.
+			listDefCatsOrdered = DefL.GetOptionsForDefCats(DefinitionCategory.All);
+			listDefCatsOrdered = listDefCatsOrdered.OrderBy(x => x.Description).ToList(); //orders alphabetically.
 			ODBoxItem<DefCatOptions> defCatItem;
-			foreach(DefCatOptions defCOpt in listDefCatsOrdered) {
-				defCatItem=new ODBoxItem<DefCatOptions>(defCOpt.DefCat.GetDescription(),defCOpt);
+			foreach (DefCatOptions defCOpt in listDefCatsOrdered)
+			{
+				defCatItem = new ODBoxItem<DefCatOptions>(defCOpt.Description, defCOpt);
 				listCategory.Items.Add(defCatItem);
-				if(_initialCat == defCOpt.DefCat) {
-					listCategory.SelectedItem=defCatItem;
+				if (_initialCat == defCOpt.DefCat)
+				{
+					listCategory.SelectedItem = defCatItem;
 				}
 			}
 		}
 
-		private void listCategory_SelectedIndexChanged(object sender,System.EventArgs e) {
+		private void listCategory_SelectedIndexChanged(object sender, EventArgs e)
+		{
 			FillGridDefs();
 		}
 
-		private void RefreshDefs() {
-			Defs.RefreshCache();
-			_listDefsAll=Defs.GetDeepCopy().SelectMany(x => x.Value).ToList();
+		private void RefreshDefs()
+		{
+			Definitions.RefreshCache();
+			_listDefsAll = Definitions.GetAll();
 		}
 
-		private void FillGridDefs(){
-			if(_listDefsAll == null || _listDefsAll.Count == 0) {
+		private void FillGridDefs()
+		{
+			if (_listDefsAll == null || _listDefsAll.Count == 0)
+			{
 				RefreshDefs();
 			}
-			DefL.FillGridDefs(gridDefs,_selectedDefCatOpt,_listDefsCur);
+			DefL.FillGridDefs(gridDefs, _selectedDefCatOpt, _listDefsCur);
 			//the following do not require a refresh of the table:
-			if(_selectedDefCatOpt.CanHide) {
-				butHide.Visible=true;
+			if (_selectedDefCatOpt.CanHide)
+			{
+				butHide.Visible = true;
 			}
-			else {
-				butHide.Visible=false;
+			else
+			{
+				butHide.Visible = false;
 			}
-			if(_selectedDefCatOpt.CanEditName) {
-				groupEdit.Enabled=true;
-				groupEdit.Text="Edit Items";
+			if (_selectedDefCatOpt.CanEditName)
+			{
+				groupEdit.Enabled = true;
+				groupEdit.Text = "Edit Items";
 			}
-			else {
-				groupEdit.Enabled=false;
-				groupEdit.Text="Not allowed";
+			else
+			{
+				groupEdit.Enabled = false;
+				groupEdit.Text = "Not allowed";
 			}
-			textGuide.Text=_selectedDefCatOpt.HelpText;
+			textGuide.Text = _selectedDefCatOpt.HelpText;
 		}
 
-		private void gridDefs_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			Def selectedDef = (Def)gridDefs.ListGridRows[e.Row].Tag;
-			_isDefChanged=DefL.GridDefsDoubleClick(selectedDef,_selectedDefCatOpt,_listDefsCur,_listDefsAll,_isDefChanged);
-			if(_isDefChanged) {
+		private void gridDefs_CellDoubleClick(object sender, ODGridClickEventArgs e)
+		{
+			Definition selectedDef = (Definition)gridDefs.ListGridRows[e.Row].Tag;
+			_isDefChanged = DefL.GridDefsDoubleClick(selectedDef, _selectedDefCatOpt, _listDefsCur, _listDefsAll, _isDefChanged);
+			if (_isDefChanged)
+			{
 				RefreshDefs();
 				FillGridDefs();
 			}
 		}
 
-		private void butAdd_Click(object sender, System.EventArgs e) {
-			if(DefL.AddDef(gridDefs,_selectedDefCatOpt)) {
+		private void butAdd_Click(object sender, System.EventArgs e)
+		{
+			if (DefL.AddDef(gridDefs, _selectedDefCatOpt))
+			{
 				RefreshDefs();
 				FillGridDefs();
-				_isDefChanged=true;
+				_isDefChanged = true;
 			}
 		}
 
-		private void butHide_Click(object sender, System.EventArgs e) {
-			if(DefL.TryHideDefSelectedInGrid(gridDefs,_selectedDefCatOpt)) {
+		private void butHide_Click(object sender, System.EventArgs e)
+		{
+			if (DefL.TryHideDefSelectedInGrid(gridDefs, _selectedDefCatOpt))
+			{
 				RefreshDefs();
 				FillGridDefs();
-				_isDefChanged=true;
+				_isDefChanged = true;
 			}
 		}
 
-		private void butUp_Click(object sender, System.EventArgs e) {
-			if(DefL.UpClick(gridDefs)) {
-				_isDefChanged=true;
+		private void butUp_Click(object sender, System.EventArgs e)
+		{
+			if (DefL.UpClick(gridDefs))
+			{
+				_isDefChanged = true;
 				FillGridDefs();
 			}
 		}
 
-		private void butDown_Click(object sender, System.EventArgs e) {
-			if(DefL.DownClick(gridDefs)){
-				_isDefChanged=true;
+		private void butDown_Click(object sender, System.EventArgs e)
+		{
+			if (DefL.DownClick(gridDefs))
+			{
+				_isDefChanged = true;
 				FillGridDefs();
 			}
 		}
 
-		private void butAlphabetize_Click(object sender,EventArgs e) {
-			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Alphabetizing does not have an 'undo' button.  Continue?")) {
+		private void butAlphabetize_Click(object sender, EventArgs e)
+		{
+			if (!MsgBox.Show(MsgBoxButtons.OKCancel, "Alphabetizing does not have an 'undo' button.  Continue?"))
+			{
 				return;
 			}
-			List<Def> listDefsSorting=_listDefsCur.OrderBy(x => x.ItemName).ToList(); 
-			for(int i=0;i < listDefsSorting.Count;i++) {
-				listDefsSorting[i].ItemOrder=i;
-				Defs.Update(listDefsSorting[i]);
+			List<Definition> listDefsSorting = _listDefsCur.OrderBy(x => x.Name).ToList();
+			for (int i = 0; i < listDefsSorting.Count; i++)
+			{
+				listDefsSorting[i].SortOrder = i;
+				Definitions.Update(listDefsSorting[i]);
 			}
-			_isDefChanged=true;
+			_isDefChanged = true;
 			RefreshDefs();
 			FillGridDefs();
 		}
 
-		private void butClose_Click(object sender, System.EventArgs e) {
+		private void butClose_Click(object sender, System.EventArgs e)
+		{
 			Close();
 		}
 
-		private void FormDefinitions_Closing(object sender,System.ComponentModel.CancelEventArgs e) {
+		private void FormDefinitions_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
 			//Correct the item orders of all definition categories.
-			List<Def> listDefUpdates=new List<Def>();
-			foreach(KeyValuePair<DefCat,List<Def>> kvp in Defs.GetDeepCopy()) {
-				for(int i=0;i<kvp.Value.Count;i++) {
-					if(kvp.Value[i].ItemOrder!=i) {
-						kvp.Value[i].ItemOrder=i;
+			List<Definition> listDefUpdates = new List<Definition>();
+			foreach (KeyValuePair<string, List<Definition>> kvp in Definitions.GetDictionaryNoCache())
+			{
+				for (int i = 0; i < kvp.Value.Count; i++)
+				{
+					if (kvp.Value[i].SortOrder != i)
+					{
+						kvp.Value[i].SortOrder = i;
 						listDefUpdates.Add(kvp.Value[i]);
 					}
 				}
 			}
-			listDefUpdates.ForEach(x => Defs.Update(x));
-			if(_isDefChanged || listDefUpdates.Count>0) {
+
+			listDefUpdates.ForEach(x => Definitions.Update(x));
+			if (_isDefChanged || listDefUpdates.Count > 0)
+			{
 				//A specialty could have been renamed, invalidate the specialty associated to the currently selected patient just in case.
 				PatientL.InvalidateSelectedPatSpecialty();
 				DataValid.SetInvalid(InvalidType.Defs);
 			}
 		}
-
 	}
 }

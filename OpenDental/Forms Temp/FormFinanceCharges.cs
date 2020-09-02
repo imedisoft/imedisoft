@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDental{
@@ -57,7 +59,7 @@ namespace OpenDental{
 		private RadioButton radioSpecificProv;
 		private RadioButton radioPatPriProv;
 		private UI.ComboBoxPlus comboSpecificProv;
-		private List<Def> _listBillingTypeDefs;
+		private List<Definition> _listBillingTypeDefs;
 		///<summary>Filtered list of providers based on the current clinic--used to populate the Combo Box Providers.</summary>
 		//private List<Provider> _listCurClinicProviders;
 
@@ -669,7 +671,7 @@ namespace OpenDental{
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			_listBillingTypeDefs=Defs.GetDefsForCategory(DefCat.BillingTypes,true);
+			_listBillingTypeDefs=Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes,true);
 			if(_listBillingTypeDefs.Count==0){//highly unlikely that this would happen
 				MessageBox.Show("No billing types have been set up or are visible.");
 				DialogResult=DialogResult.Cancel;
@@ -711,7 +713,7 @@ namespace OpenDental{
 			textAPR.Text=Prefs.GetString(PrefName.FinanceChargeAPR);
 			textBillingCharge.Text=Prefs.GetString(PrefName.BillingChargeAmount);
 			for(int i=0;i<_listBillingTypeDefs.Count;i++) {
-				listBillType.Items.Add(_listBillingTypeDefs[i].ItemName);
+				listBillType.Items.Add(_listBillingTypeDefs[i].Name);
 				listBillType.SetSelected(i,true);
 			}
 			string defaultChargeMethod = Prefs.GetString(PrefName.BillingChargeOrFinanceIsDefault);
@@ -779,7 +781,7 @@ namespace OpenDental{
 
 		/// <summary>Gets an Aging List from the Finance/Billing Charges with the filter settings from the UI.</summary>
 		private List<PatAging> GetFinanceBillingAgingList() {
-			List<long> listSelectedBillTypes=listBillType.SelectedIndices.OfType<int>().Select(x => _listBillingTypeDefs[x].DefNum).ToList();
+			List<long> listSelectedBillTypes=listBillType.SelectedIndices.OfType<int>().Select(x => _listBillingTypeDefs[x].Id).ToList();
 			SerializableDictionary<long,PatAgingData> dictPatAgingData=AgingData.GetAgingData(false,true,checkExcludeInsPending.Checked,false,false,new List<long>());
 			List<long> listPendingInsPatNums=new List<long>();
 			if(checkExcludeInsPending.Checked) { //Only fill list if excluding pending ins

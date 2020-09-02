@@ -18,7 +18,7 @@ namespace OpenDentBusiness {
 		public string MainText;
 		// <summary></summary>
 		//public string AutoNoteOutput;
-		///<summary>FK to definition.DefNum.  This is the AutoNoteCat definition category (DefCat=41), for categorizing autonotes.
+		///<summary>FK to definition.DefNum.  This is the AutoNoteCat definition category (DefinitionCategory.41), for categorizing autonotes.
 		///Uncategorized autonotes will be set to 0.</summary>
 		public long Category;
 

@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental.UI{
 	/// <summary>This class has replaced ApptDrawing, ApptSingleDrawing, ContrApptSheet, ContrApptSingle, and ApptOverlapOrdering.  Encapsulates both Data and Drawing for the main area of Appt module and the operatories header.  The Appt module gathers the data and stores it here.  This class does its drawing based mostly on the information passed in, although it does use the standard cache sometimes. It has defaults so that we will always be able to draw something reasonable, even if we're missing data. This class contains extra data that it doesn't actually need.  Appt module uses this data for other things besides drawing appointments.  This class intentionally supports a single thread only.</summary>
@@ -870,9 +871,9 @@ namespace OpenDental.UI{
 							txt+="\r\n"+"There is no provider associated with this operatory.";
 						}
 						else{
-							Def defProvSpecialty=Defs.GetDef(DefCat.ProviderSpecialties,prov.Specialty);
+							Definition defProvSpecialty=Definitions.GetDef(DefinitionCategory.ProviderSpecialties,prov.Specialty);
 							if(defProvSpecialty!=null) {
-								txt+="\r\n"+"Default: "+prov.FName+" "+prov.LName+", "+defProvSpecialty.ItemName;
+								txt+="\r\n"+"Default: "+prov.FName+" "+prov.LName+", "+defProvSpecialty.Name;
 							}
 						}
 						//Get the subset of schedules from ListSchedules that is linked to this op
@@ -884,10 +885,10 @@ namespace OpenDental.UI{
 							if(providerScheduled==null) {
 								return;
 							}
-							Def defScheduledProv=Defs.GetDef(DefCat.ProviderSpecialties,providerScheduled.Specialty);
+							Definition defScheduledProv=Definitions.GetDef(DefinitionCategory.ProviderSpecialties,providerScheduled.Specialty);
 							string schedProcDef="";
 							if(defScheduledProv!=null) {
-								schedProcDef=", "+defScheduledProv.ItemName;
+								schedProcDef=", "+defScheduledProv.Name;
 							}
 							txt+="\r\n"+"Scheduled "+schedule.StartTime.ToShortTimeString()+"-"+schedule.StopTime.ToShortTimeString()+": "
 								+providerScheduled.GetFormalName()+schedProcDef;
@@ -901,7 +902,7 @@ namespace OpenDental.UI{
 									txt+="\r\n------";
 								}
 								List<DefLink> listSpecialties=DefLinks.GetListByFKey(clinic.Id,DefLinkType.Clinic);
-								txt+="\r\n"+string.Join(", ",listSpecialties.Select(x => Defs.GetName(DefCat.ClinicSpecialty,x.DefNum)))
+								txt+="\r\n"+string.Join(", ",listSpecialties.Select(x => Definitions.GetName(DefinitionCategory.ClinicSpecialty,x.DefinitionId)))
 									+"\r\n"+clinicSchedNote;
 							}
 						}
@@ -1789,11 +1790,11 @@ namespace OpenDental.UI{
 		///<summary>Called on startup and if color prefs change.</summary>
 		public void SetColors(Color colorOpen,Color colorClosed,Color colorHoliday,Color colorBlockText,Color colorTimeLine){
 			//Example pseudocode hints used before calling this method:
-			//List<Def> listDefs=Defs.GetDefsForCategory(DefCat.AppointmentColors);
+			//List<Def> listDefs=Defs.GetDefsForCategory(DefinitionCategory.AppointmentColors);
 			//colorOpen=(listDefs[0].ItemColor);
 			//colorClosed=(listDefs[1].ItemColor);
 			//colorHoliday=(listDefs[3].ItemColor);
-			//colorBlockText=Defs.GetDefsForCategory(DefCat.AppointmentColors,true)[4].ItemColor;
+			//colorBlockText=Defs.GetDefsForCategory(DefinitionCategory.AppointmentColors,true)[4].ItemColor;
 			//colorTimeLine=PrefC.GetColor(PrefName.AppointmentTimeLineColor)
 			DisposeObjects(_brushOpen,_brushClosed,_brushHoliday,_brushBlockText,_penTimeLine);
 			_brushOpen=new SolidBrush(colorOpen);
@@ -2446,9 +2447,9 @@ namespace OpenDental.UI{
 			string blockText;
 			RectangleF rect;
 			for(int i=0;i<schedForType.Length;i++) {
-				brushBlockBackg=new SolidBrush(Defs.GetColor(DefCat.BlockoutTypes,schedForType[i].BlockoutType));
-				penOutline=new Pen(Defs.GetColor(DefCat.BlockoutTypes,schedForType[i].BlockoutType),2);
-				blockText=Defs.GetName(DefCat.BlockoutTypes,schedForType[i].BlockoutType)+"\r\n"+schedForType[i].Note;
+				brushBlockBackg=new SolidBrush(Definitions.GetColor(DefinitionCategory.BlockoutTypes,schedForType[i].BlockoutType));
+				penOutline=new Pen(Definitions.GetColor(DefinitionCategory.BlockoutTypes,schedForType[i].BlockoutType),2);
+				blockText=Definitions.GetName(DefinitionCategory.BlockoutTypes,schedForType[i].BlockoutType)+"\r\n"+schedForType[i].Note;
 				for(int o=0;o<schedForType[i].Ops.Count;o++) {
 					if(IsWeeklyView) {
 						if(GetIndexOp(schedForType[i].Ops[o])==-1) {
@@ -2969,7 +2970,7 @@ namespace OpenDental.UI{
 			Color backColor;
 			Color provColor;
 			Color provColor2;
-			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.AppointmentColors);
+			List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.AppointmentColors);
 			if(dataRoww["ProvNum"].ToString()!="0" && dataRoww["IsHygiene"].ToString()=="0") {//dentist
 				provColor=Providers.GetColor(PIn.Long(dataRoww["ProvNum"].ToString()));
 				provColor2=Providers.GetColor(PIn.Long(dataRoww["ProvHyg"].ToString()));
@@ -2986,16 +2987,16 @@ namespace OpenDental.UI{
 			brushProvBackground2=new SolidBrush(provColor2);
 			backColor=provColor;//Default the appointment to the primary provider's color.
 			if(PIn.Long(dataRoww["AptStatus"].ToString())==(int)ApptStatus.Complete) {
-				backColor=listDefs[2].ItemColor;
+				backColor=listDefs[2].Color;
 			}
 			else if(PIn.Long(dataRoww["AptStatus"].ToString())==(int)ApptStatus.PtNote) {
-				backColor=listDefs[5].ItemColor;
+				backColor=listDefs[5].Color;
 				if(PIn.Int(dataRoww["ColorOverride"].ToString()) != 0) {//Patient note has an override.
 					backColor=Color.FromArgb(PIn.Int(dataRoww["ColorOverride"].ToString()));
 				}
 			}
 			else if(PIn.Long(dataRoww["AptStatus"].ToString())==(int)ApptStatus.PtNoteCompleted) {
-				backColor=listDefs[6].ItemColor;
+				backColor=listDefs[6].Color;
 			}
 			else if(PIn.Int(dataRoww["ColorOverride"].ToString()) != 0) {
 				backColor=Color.FromArgb(PIn.Int(dataRoww["ColorOverride"].ToString()));
@@ -3498,7 +3499,7 @@ namespace OpenDental.UI{
 				return pointDraw;//next element will draw at the same position as this one would have.
 			}
 			SolidBrush brush=new SolidBrush(listApptViewItems[idxItem].ElementColor);
-			//SolidBrush noteTitlebrush = new SolidBrush(Defs.Long[(int)DefCat.AppointmentColors][8].ItemColor);
+			//SolidBrush noteTitlebrush = new SolidBrush(Defs.Long[(int)DefinitionCategory.AppointmentColors][8].ItemColor);
 			StringFormat stringFormatLeft=new StringFormat();
 			stringFormatLeft.Alignment=StringAlignment.Near;
 			int charactersFitted;//not used, but required as 'out' param for measureString.
@@ -3511,7 +3512,7 @@ namespace OpenDental.UI{
 			if(align==ApptViewAlignment.Main) {//always stacks vertical
 				if(isGraphic) {
 					sizeNote=new SizeF(12,12);
-					Color colorConfirm=Defs.GetColor(DefCat.ApptConfirmed,PIn.Long(dataRoww["Confirmed"].ToString()));
+					Color colorConfirm=Definitions.GetColor(DefinitionCategory.ApptConfirmed,PIn.Long(dataRoww["Confirmed"].ToString()));
 					SolidBrush brushConfirm=new SolidBrush(colorConfirm);
 					g.FillEllipse(brushConfirm,pointDraw.X,pointDraw.Y,11,11);
 					g.DrawEllipse(_penBlack,pointDraw.X,pointDraw.Y,11,11);
@@ -3568,7 +3569,7 @@ namespace OpenDental.UI{
 					if(isGraphic) {
 						sizeNote=new SizeF(12,12);
 						PointF drawLocThis=new PointF(pointDraw.X-(int)sizeNote.Width,pointDraw.Y+1);//upper left corner of this element
-						Color confirmColor=Defs.GetColor(DefCat.ApptConfirmed,PIn.Long(dataRoww["Confirmed"].ToString()));
+						Color confirmColor=Definitions.GetColor(DefinitionCategory.ApptConfirmed,PIn.Long(dataRoww["Confirmed"].ToString()));
 						SolidBrush confirmBrush=new SolidBrush(confirmColor);
 						g.FillEllipse(confirmBrush,drawLocThis.X,drawLocThis.Y,11,11);
 						g.DrawEllipse(_penBlack,drawLocThis.X,drawLocThis.Y,11,11);
@@ -3617,7 +3618,7 @@ namespace OpenDental.UI{
 							return new PointF(pointDraw.X-sizeNote.Width,pointDraw.Y);
 						}
 						PointF drawLocThis=new PointF(pointDraw.X-(int)sizeNote.Width,pointDraw.Y+1);//upper left corner of this element
-						Color confirmColor=Defs.GetColor(DefCat.ApptConfirmed,PIn.Long(dataRoww["Confirmed"].ToString()));
+						Color confirmColor=Definitions.GetColor(DefinitionCategory.ApptConfirmed,PIn.Long(dataRoww["Confirmed"].ToString()));
 						SolidBrush confirmBrush=new SolidBrush(confirmColor);
 						g.FillEllipse(confirmBrush,drawLocThis.X,drawLocThis.Y,11,11);
 						g.DrawEllipse(_penBlack,drawLocThis.X,drawLocThis.Y,11,11);
@@ -3669,7 +3670,7 @@ namespace OpenDental.UI{
 					if(isGraphic) {
 						sizeNote=new SizeF(12,12);
 						PointF drawLocThis=new PointF(pointDraw.X-(int)sizeNote.Width,pointDraw.Y+1-_heightLine);//upper left corner of this element
-						Color confirmColor=Defs.GetColor(DefCat.ApptConfirmed,PIn.Long(dataRoww["Confirmed"].ToString()));
+						Color confirmColor=Definitions.GetColor(DefinitionCategory.ApptConfirmed,PIn.Long(dataRoww["Confirmed"].ToString()));
 						SolidBrush confirmBrush=new SolidBrush(confirmColor);
 						g.FillEllipse(confirmBrush,drawLocThis.X,drawLocThis.Y,11,11);
 						g.DrawEllipse(_penBlack,drawLocThis.X,drawLocThis.Y,11,11);
@@ -3716,7 +3717,7 @@ namespace OpenDental.UI{
 							return new PointF(pointDraw.X-sizeNote.Width,pointDraw.Y);
 						}
 						PointF drawLocThis=new PointF(pointDraw.X-(int)sizeNote.Width+1,pointDraw.Y+1-_heightLine);//upper left corner of this element
-						Color confirmColor=Defs.GetColor(DefCat.ApptConfirmed,PIn.Long(dataRoww["Confirmed"].ToString()));
+						Color confirmColor=Definitions.GetColor(DefinitionCategory.ApptConfirmed,PIn.Long(dataRoww["Confirmed"].ToString()));
 						SolidBrush confirmBrush=new SolidBrush(confirmColor);
 						g.FillEllipse(confirmBrush,drawLocThis.X,drawLocThis.Y,11,11);
 						g.DrawEllipse(_penBlack,drawLocThis.X,drawLocThis.Y,11,11);
@@ -4051,7 +4052,7 @@ namespace OpenDental.UI{
 						y+=h;
 						continue;
 					case "Confirmed":
-						s=Defs.GetName(DefCat.ApptConfirmed,PIn.Long(dataRow["Confirmed"].ToString()));
+						s=Definitions.GetName(DefinitionCategory.ApptConfirmed,PIn.Long(dataRow["Confirmed"].ToString()));
 						h=g.MeasureString(s,font,widthBubble-(int)x).Height;
 						g.DrawString(s,font,brush,new RectangleF(x,y,widthBubble-(int)x,h));
 						y+=h;

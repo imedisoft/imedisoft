@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using Imedisoft.X12.Codes;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormApptProcs:ODForm {
@@ -94,7 +96,7 @@ namespace OpenDental {
 					row.Cells.Add("");
 				}
 				row.Cells.Add(ProcedureCodes.GetStringProcCode(ProcList[i].CodeNum));
-				row.Cells.Add(Defs.GetName(DefCat.TxPriorities,ProcList[i].Priority));
+				row.Cells.Add(Definitions.GetName(DefinitionCategory.TxPriorities,ProcList[i].Priority));
 				row.Cells.Add(Tooth.ToInternat(ProcList[i].ToothNum));
 				row.Cells.Add(ProcedureCodes.GetLaymanTerm(ProcList[i].CodeNum));
 				row.Cells.Add(ProcList[i].ProcFee.ToString("F"));

@@ -1,4 +1,6 @@
 ﻿using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OpenDentBusiness;
@@ -302,7 +304,7 @@ namespace OpenDental.Bridges
 
 			//store the image in the database
 			string imageCat = ProgramProperties.GetPropVal(Programs.GetProgramNum(ProgramName.XVWeb), ProgramProps.ImageCategory);
-			Document doc = ImageStore.Import(saveImage, Defs.GetDef(DefCat.ImageCats, PIn.Long(imageCat)).DefNum, ImageType.Photo,
+			Document doc = ImageStore.Import(saveImage, Definitions.GetDef(DefinitionCategory.ImageCats, PIn.Long(imageCat)).Id, ImageType.Photo,
 				patCur, GetMimeTypeForImageQuality());
 			doc.ToothNumbers = img.FormattedTeeth;
 			doc.DateCreated = img.AcquisitionDate;

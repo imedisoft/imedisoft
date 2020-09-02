@@ -7,6 +7,7 @@ using System.Text;
 using CodeBase;
 using System.ComponentModel;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness
 {
@@ -101,7 +102,7 @@ namespace OpenDentBusiness
 			WHERE TRUE ";
 			if (ageOptions.ListBillTypes != null && ageOptions.ListBillTypes.Count > 0)
 			{
-				command += " AND patient.BillingType IN (" + String.Join(",", ageOptions.ListBillTypes.Select(x => x.DefNum)) + ") ";
+				command += " AND patient.BillingType IN (" + String.Join(",", ageOptions.ListBillTypes.Select(x => x.Id)) + ") ";
 			}
 			if (ageOptions.ListProvs != null && ageOptions.ListProvs.Count > 0)
 			{
@@ -248,9 +249,8 @@ namespace OpenDentBusiness
 				command += @"
 					AND ps.PayPlanNum = 0 ";
 			}
-			List<long> listHiddenUnearnedDefNums = ReportsComplex.RunFuncOnReportServer(() =>
-				  Defs.GetDefsNoCache(DefCat.PaySplitUnearnedType).Where(x => !string.IsNullOrEmpty(x.ItemValue)).Select(x => x.DefNum).ToList()
-			);
+			List<long> listHiddenUnearnedDefNums = 
+				  Definitions.GetDefsNoCache(DefinitionCategory.PaySplitUnearnedType).Where(x => !string.IsNullOrEmpty(x.Value)).Select(x => x.Id).ToList();
 			if (listHiddenUnearnedDefNums.Count > 0)
 			{
 				command += "AND ps.UnearnedType NOT IN (" + string.Join(",", listHiddenUnearnedDefNums) + ") ";
@@ -365,7 +365,7 @@ namespace OpenDentBusiness
 		public NegativeBalAgingOptions NegativeBalOptions;
 		public List<Provider> ListProvs;
 		public List<Clinic> ListClins;
-		public List<Def> ListBillTypes;
+		public List<Definition> ListBillTypes;
 		public bool ExcludeInactive;
 		public bool ExcludeArchive;
 		public bool ExcludeBadAddress;

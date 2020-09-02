@@ -57,7 +57,7 @@ namespace OpenDentBusiness
 				+ "AND procedurelog.ProcDate <= " + POut.Date(dateTo) + " "
 				+ "GROUP BY procedurelog.ProcNum "
 				+ "ORDER BY procedurelog.ProcDate,plfname,procedurecode.ProcCode,ToothNum";
-			return ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(query));
+			return Database.ExecuteDataTable(query);
 		}
 
 		public static DataTable GetGroupedTable(DateTime dateFrom, DateTime dateTo, List<long> listProvNums, List<long> listClinicNums, string procCode, bool hasAllProvs)
@@ -75,7 +75,7 @@ namespace OpenDentBusiness
 			{
 				query += "AND procedurelog.ProvNum IN (" + String.Join(",", listProvNums) + ") ";
 			}
-			if (ReportsComplex.RunFuncOnReportServer(() => Prefs.HasClinicsEnabledNoCache))
+			if (Prefs.HasClinicsEnabledNoCache)
 			{
 				query += "AND procedurelog.ClinicNum IN (" + String.Join(",", listClinicNums) + ") ";
 			}
@@ -88,7 +88,7 @@ namespace OpenDentBusiness
 				+ "GROUP BY procedurelog.ProcNum ) procs "
 				+ "GROUP BY procs.ProcCode "
 				+ "ORDER BY procs.ItemOrder,procs.ProcCode";
-			return ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(query));
+			return Database.ExecuteDataTable(query);
 		}
 	}
 }

@@ -15,6 +15,8 @@ using System.Windows.Forms;
 using OpenDental.UI;
 using OpenDentBusiness;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -60,7 +62,7 @@ namespace OpenDental{
 		private ComboBox comboViewStatus;
 		private Label label1;
 		private UI.Button butRefresh;
-		private List<Def> _listApptConfirmedDefs;
+		private List<Definition> _listApptConfirmedDefs;
 
 		///<summary></summary>
 		public FormConfirmList(){
@@ -472,12 +474,12 @@ namespace OpenDental{
 			//textPostcardMessage.Text=Prefs.GetString(PrefName.ConfirmPostcardMessage");
 			comboStatus.Items.Clear();
 			comboViewStatus.Items.Clear();
-			comboViewStatus.Items.Add(new ODBoxItem<Def>("None",new Def()));
+			comboViewStatus.Items.Add(new ODBoxItem<Definition>("None",new Definition()));
 			comboViewStatus.SelectedIndex=0;
-			_listApptConfirmedDefs=Defs.GetDefsForCategory(DefCat.ApptConfirmed,true);
+			_listApptConfirmedDefs=Definitions.GetDefsForCategory(DefinitionCategory.ApptConfirmed,true);
 			for(int i=0;i<_listApptConfirmedDefs.Count;i++){
-				comboStatus.Items.Add(_listApptConfirmedDefs[i].ItemName);
-				comboViewStatus.Items.Add(new ODBoxItem<Def>(_listApptConfirmedDefs[i].ItemName,_listApptConfirmedDefs[i]));
+				comboStatus.Items.Add(_listApptConfirmedDefs[i].Name);
+				comboViewStatus.Items.Add(new ODBoxItem<Definition>(_listApptConfirmedDefs[i].Name,_listApptConfirmedDefs[i]));
 			}
 			if(!Security.IsAuthorized(Permissions.ApptConfirmStatusEdit,true)) {//Suppress message because it would be very annoying to users.
 				comboStatus.Enabled=false;
@@ -613,10 +615,10 @@ namespace OpenDental{
 					if(comboShowRecall.SelectedIndex==0 || comboShowRecall.SelectedIndex==3) {//All or Hygiene Prescheduled
 						showHygienePrescheduled=true;
 					}
-					Def apptConfirmedType=((ODBoxItem<Def>)comboViewStatus.SelectedItem).Tag;
+					Definition apptConfirmedType=((ODBoxItem<Definition>)comboViewStatus.SelectedItem).Tag;
 					long clinicNum=PrefC.HasClinicsEnabled ? comboClinic.SelectedClinicNum : -1;
 					Table=Appointments.GetConfirmList(dateFrom,dateTo,provNum,clinicNum,showRecalls,showNonRecalls,
-						showHygienePrescheduled,apptConfirmedType.DefNum);
+						showHygienePrescheduled,apptConfirmedType.Id);
 					ConfirmationListEvent.Fire(EventCategory.ConfirmationList,"Filling the Confirmation List grid...");
 					int scrollVal=gridMain.ScrollValue;
 					gridMain.BeginUpdate();
@@ -742,7 +744,7 @@ namespace OpenDental{
 				apt=Appointments.GetOneApt(PIn.Long(Table.Rows[gridMain.SelectedIndices[i]]["AptNum"].ToString()));
 				Appointment aptOld=apt.Copy();
 				int selectedI=comboStatus.SelectedIndex;
-				apt.Confirmed=_listApptConfirmedDefs[selectedI].DefNum;
+				apt.Confirmed=_listApptConfirmedDefs[selectedI].Id;
 				try{
 					Appointments.Update(apt,aptOld);
 				}
@@ -754,7 +756,7 @@ namespace OpenDental{
 				if(apt.Confirmed!=aptOld.Confirmed) {
 					//Log confirmation status changes.
 					SecurityLogs.MakeLogEntry(Permissions.ApptConfirmStatusEdit,apt.PatNum,"Appointment confirmation status changed from"+" "
-						+Defs.GetName(DefCat.ApptConfirmed,aptOld.Confirmed)+" "+"to"+" "+Defs.GetName(DefCat.ApptConfirmed,apt.Confirmed)
+						+Definitions.GetName(DefinitionCategory.ApptConfirmed,aptOld.Confirmed)+" "+"to"+" "+Definitions.GetName(DefinitionCategory.ApptConfirmed,apt.Confirmed)
 						+" "+"from the confirmation list"+".",apt.AptNum,aptOld.DateTStamp);
 				}
 			}
@@ -1050,7 +1052,7 @@ namespace OpenDental{
 				originalRecalls[i]=((RecallItem)MainAL[tbMain.SelectedIndices[i]]).RecallNum;
 				Recalls.UpdateStatus(
 					((RecallItem)MainAL[tbMain.SelectedIndices[i]]).RecallNum,
-					Defs.Short[(int)DefCat.RecallUnschedStatus][comboStatus.SelectedIndex].DefNum);
+					Defs.Short[(int)DefinitionCategory.RecallUnschedStatus][comboStatus.SelectedIndex].DefNum);
 				//((RecallItem)MainAL[tbMain.SelectedIndices[i]]).up
 			}
 			FillMain();
@@ -1086,7 +1088,7 @@ namespace OpenDental{
 					if(cmeth!=ContactMethod.Email) {
 						continue;
 					}
-					if(Table.Rows[i]["confirmed"].ToString()==Defs.GetName(DefCat.ApptConfirmed,Prefs.GetLong(PrefName.ConfirmStatusEmailed))) {//Already confirmed by email
+					if(Table.Rows[i]["confirmed"].ToString()==Definitions.GetName(DefinitionCategory.ApptConfirmed,Prefs.GetLong(PrefName.ConfirmStatusEmailed))) {//Already confirmed by email
 						continue;
 					}
 					if(Table.Rows[i]["email"].ToString()=="") {
@@ -1220,7 +1222,7 @@ namespace OpenDental{
 					if(cmeth!=ContactMethod.TextMessage) {
 						continue;
 					}
-					if(Table.Rows[i]["confirmed"].ToString()==Defs.GetName(DefCat.ApptConfirmed,Prefs.GetLong(PrefName.ConfirmStatusTextMessaged))) {//Already confirmed by text
+					if(Table.Rows[i]["confirmed"].ToString()==Definitions.GetName(DefinitionCategory.ApptConfirmed,Prefs.GetLong(PrefName.ConfirmStatusTextMessaged))) {//Already confirmed by text
 						continue;
 					}
 					if(!Table.Rows[i]["contactMethod"].ToString().StartsWith("Text:")) {//Check contact method
@@ -1299,7 +1301,7 @@ namespace OpenDental{
 						//Log confirmation status changes.
 						SecurityLogs.MakeLogEntry(Permissions.ApptConfirmStatusEdit,patNum,
 							"Appointment confirmation status automatically changed from"+" "
-							+Defs.GetName(DefCat.ApptConfirmed,oldStatus)+" "+"to"+" "+Defs.GetName(DefCat.ApptConfirmed,newStatus)
+							+Definitions.GetName(DefinitionCategory.ApptConfirmed,oldStatus)+" "+"to"+" "+Definitions.GetName(DefinitionCategory.ApptConfirmed,newStatus)
 							+" "+"from the confirmation list"+".",aptNum,aptOld.DateTStamp);
 					}
 				}

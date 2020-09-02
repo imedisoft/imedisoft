@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using OpenDental.UI;
 using OpenDentBusiness;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -1031,7 +1033,7 @@ namespace OpenDental{
 						row.Cells.Add("(Adjust)");//5 Out column
 					}
 					else { 
-						row.Cells.Add(Defs.GetDef(DefCat.TimeCardAdjTypes,adjust.PtoDefNum).ItemName);//5
+						row.Cells.Add(Definitions.GetDef(DefinitionCategory.TimeCardAdjTypes,adjust.PtoDefNum).Name);//5
 					}
 					row.Cells[row.Cells.Count-1].ForeColor=Color.Red;
 					//total-------------------------------

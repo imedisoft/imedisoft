@@ -9,6 +9,8 @@ using OpenDental.UI;
 using OpenDentBusiness;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormWebSchedAppts:ODForm {
@@ -36,11 +38,11 @@ namespace OpenDental {
 			if(!checkWebSchedNewPat.Checked && checkWebSchedRecall.Checked) {
 				defaultStatus=Prefs.GetLong(PrefName.WebSchedRecallConfirmStatus);
 			}
-			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.ApptConfirmed,true);
-			foreach(Def defCur in listDefs) {
-				ODBoxItem<long> defItem=new ODBoxItem<long>(defCur.ItemName,defCur.DefNum);
+			List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.ApptConfirmed,true);
+			foreach(Definition defCur in listDefs) {
+				ODBoxItem<long> defItem=new ODBoxItem<long>(defCur.Name,defCur.Id);
 				int idx=comboBoxMultiConfStatus.Items.Add(defItem);
-				if((checkWebSchedNewPat.Checked || checkWebSchedRecall.Checked) && defCur.DefNum==defaultStatus) {
+				if((checkWebSchedNewPat.Checked || checkWebSchedRecall.Checked) && defCur.Id==defaultStatus) {
 					comboBoxMultiConfStatus.SetSelected(idx,true);
 				}
 			}
@@ -89,7 +91,7 @@ namespace OpenDental {
 				newRow.Cells.Add(row["AptDateTime"].ToString());
 				newRow.Cells.Add(row["PatName"].ToString());
 				newRow.Cells.Add(PIn.Date(row["Birthdate"].ToString()).ToString("d"));
-				newRow.Cells.Add(Defs.GetDef(DefCat.ApptConfirmed,PIn.Long(row["Confirmed"].ToString())).ItemName);
+				newRow.Cells.Add(Definitions.GetDef(DefinitionCategory.ApptConfirmed,PIn.Long(row["Confirmed"].ToString())).Name);
 				newRow.Cells.Add(row["Note"].ToString());
 				newRow.Tag=row["AptNum"].ToString();
 				gridMain.ListGridRows.Add(newRow);

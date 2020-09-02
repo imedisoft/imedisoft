@@ -6,6 +6,8 @@ using System.Windows.Forms;
 using System.IO;
 using OpenDentBusiness;
 using System.Collections.Generic;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -71,8 +73,8 @@ namespace OpenDental{
     private bool RefFromSel;  
 		private List<FeeSched> _listFeeScheds;
 		private List<Provider> _listProviders;
-		private List<Def> _listBillingTypeDefs;
-		private List<Def> _listRecallUnschedStatusDefs;
+		private List<Definition> _listBillingTypeDefs;
+		private List<Definition> _listRecallUnschedStatusDefs;
 
 		///<summary></summary>
 		public FormRpPatients(){
@@ -101,8 +103,8 @@ namespace OpenDental{
 			TextValidAge.MaxVal=125;
 			_listProviders=Providers.GetDeepCopy();
 			_listFeeScheds=FeeScheds.GetDeepCopy();
-			_listBillingTypeDefs=Defs.GetDefsForCategory(DefCat.BillingTypes);
-			_listRecallUnschedStatusDefs=Defs.GetDefsForCategory(DefCat.RecallUnschedStatus);
+			_listBillingTypeDefs=Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes);
+			_listRecallUnschedStatusDefs=Definitions.GetDefsForCategory(DefinitionCategory.RecallUnschedStatus);
 			
 		}
 
@@ -1034,7 +1036,7 @@ namespace OpenDental{
           SetListBoxConditions();
 					ComboBox.Items.Clear();
           for(int i=0;i<_listBillingTypeDefs.Count;i++){
-						sItem=_listBillingTypeDefs[i].ItemName.ToString();
+						sItem=_listBillingTypeDefs[i].Name.ToString();
 						if(_listBillingTypeDefs[i].IsHidden)
 							sItem+="(hidden)";
             ComboBox.Items.Add(sItem);
@@ -1044,7 +1046,7 @@ namespace OpenDental{
           SetListBoxConditions();
 					ComboBox.Items.Clear();
           for(int i=0;i<_listRecallUnschedStatusDefs.Count;i++){
-						sItem=_listRecallUnschedStatusDefs[i].ItemName.ToString();
+						sItem=_listRecallUnschedStatusDefs[i].Name.ToString();
 						if(_listRecallUnschedStatusDefs[i].IsHidden)
 							sItem+="(hidden)";
             ComboBox.Items.Add(sItem);
@@ -1310,7 +1312,7 @@ namespace OpenDental{
               sItem="OR ";
             }
 						sItem+="patient.BillingType "+ListConditions.SelectedItem.ToString()+" '"
-							+_listBillingTypeDefs[ComboBox.SelectedIndices[i]].DefNum.ToString()+"'"; 
+							+_listBillingTypeDefs[ComboBox.SelectedIndices[i]].Id.ToString()+"'"; 
 						if(i==ComboBox.SelectedIndices.Count-1){
 							sItem+=")";
             }
@@ -1337,7 +1339,7 @@ namespace OpenDental{
             }
 						sItem+="recall.RecallStatus "+ListConditions.SelectedItem.ToString()+" '"
 							+_listRecallUnschedStatusDefs[ComboBox.SelectedIndices[i]]
-							.DefNum.ToString()+"'"; 
+							.Id.ToString()+"'"; 
 						if(i==ComboBox.SelectedIndices.Count-1){
 							sItem+=")";
             } 

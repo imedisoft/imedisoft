@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -86,7 +87,7 @@ namespace OpenDentBusiness {
 			public PatField[] ArrPatFields;
 			public List<Patient> SuperFamilyMembers;
 			public List<Patient> SuperFamilyGuarantors;
-			public SerializableDictionary<Patient,Def> DictCloneSpecialities;
+			public SerializableDictionary<Patient,Definition> DictCloneSpecialities;
 			public Document PatPict;
 			///<summary>Is yes if we have retrieved the PatPict from the db. No if we have tried but PatPict is null. Unknown if we have not attempted
 			///to retrieve the PatPict.</summary>

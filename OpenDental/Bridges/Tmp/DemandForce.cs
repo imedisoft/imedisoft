@@ -1,4 +1,6 @@
 ﻿using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
@@ -178,7 +180,7 @@ namespace OpenDental.Bridges
 							{
 								writer.WriteAttributeString("status", "3");
 							}
-							if (Defs.GetDef(DefCat.ApptConfirmed, apt.Confirmed).ItemName.ToLower() == "unconfirmed")
+							if (Definitions.GetDef(DefinitionCategory.ApptConfirmed, apt.Confirmed).Name.ToLower() == "unconfirmed")
 							{
 								writer.WriteAttributeString("confirmed", "0");
 							}

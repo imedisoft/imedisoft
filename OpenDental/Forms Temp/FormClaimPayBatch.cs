@@ -10,6 +10,8 @@ using OpenDentBusiness;
 using OpenDental.UI;
 using System.Linq;
 using System.Globalization;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -785,8 +787,8 @@ namespace OpenDental{
 			textBankBranch.Text=ClaimPaymentCur.BankBranch;
 			textCarrierName.Text=ClaimPaymentCur.CarrierName;
 			textNote.Text=ClaimPaymentCur.Note;
-			textPayType.Text=Defs.GetName(DefCat.InsurancePaymentType,ClaimPaymentCur.PayType);
-			textPayGroup.Text=Defs.GetName(DefCat.ClaimPaymentGroups,ClaimPaymentCur.PayGroup);
+			textPayType.Text=Definitions.GetName(DefinitionCategory.InsurancePaymentType,ClaimPaymentCur.PayType);
+			textPayGroup.Text=Definitions.GetName(DefinitionCategory.ClaimPaymentGroups,ClaimPaymentCur.PayGroup);
 		}
 
 		private void FillGrids(bool doRefreshOutstandingClaims=true){

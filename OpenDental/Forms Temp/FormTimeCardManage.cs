@@ -12,6 +12,8 @@ using OpenDental.UI;
 using OpenDentBusiness;
 using System.Linq;
 using OpenDental.Thinfinity;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormTimeCardManage:ODForm {
@@ -417,7 +419,7 @@ namespace OpenDental {
 						row.Cells.Add("(Adjust)");//5 Out column
 					}
 					else { 
-						row.Cells.Add(Defs.GetDef(DefCat.TimeCardAdjTypes,adjust.PtoDefNum).ItemName);//5
+						row.Cells.Add(Definitions.GetName(DefinitionCategory.TimeCardAdjTypes,adjust.PtoDefNum));//5
 					}
 					row.Cells[row.Cells.Count-1].ForeColor=Color.Red;
 					//total-------------------------------
@@ -954,8 +956,8 @@ namespace OpenDental {
 		private void butExportADP_Click(object sender,EventArgs e) {
 			bool hasVisiblePtoDef=false;
 			//Check to confirm if any PTO definitions are hidden, if not show these defs on the timecard
-			List<Def> listPtoTypes=Defs.GetDefsForCategory(DefCat.TimeCardAdjTypes);
-			foreach(Def def in listPtoTypes) {
+			List<Definition> listPtoTypes=Definitions.GetDefsForCategory(DefinitionCategory.TimeCardAdjTypes);
+			foreach(Definition def in listPtoTypes) {
 				if(!def.IsHidden) { 
 					hasVisiblePtoDef=true;
 					break;

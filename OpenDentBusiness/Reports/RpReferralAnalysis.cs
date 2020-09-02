@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
@@ -62,7 +63,7 @@ namespace OpenDentBusiness
 			}
 			query += " GROUP BY referral.ReferralNum"
 				+ " ORDER BY HowMany Desc";
-			return ReportsComplex.RunFuncOnReportServer(() => ReportsComplex.GetTable(query));
+			return Database.ExecuteDataTable(query);
 		}
 	}
 }

@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using CodeBase;
 using DataConnectionBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using MySql.Data.MySqlClient;
 
 namespace OpenDentBusiness
@@ -43,9 +44,9 @@ namespace OpenDentBusiness
 		/// Returns a Def representing the patient specialty associated through DefLinks to the passed in Patient.
 		/// Returns null if no specialty found.
 		/// </summary>
-		public static Def GetPatientSpecialtyDef(long patNum)
+		public static Definition GetPatientSpecialtyDef(long patNum)
 		{
-			Dictionary<Patient, Def> dictSpecialties = GetClonesAndSpecialtiesForPatients(new List<long> { patNum });
+			Dictionary<Patient, Definition> dictSpecialties = GetClonesAndSpecialtiesForPatients(new List<long> { patNum });
 			if (dictSpecialties.Keys.Any(x => x.PatNum == patNum))
 			{
 				return dictSpecialties.FirstOrDefault(x => x.Key.PatNum == patNum).Value;
@@ -65,7 +66,7 @@ namespace OpenDentBusiness
 		/// Specialties are only important if clinics are enabled. 
 		/// If clinics are disabled then the corresponding Def will be null.
 		/// </summary>
-		public static SerializableDictionary<Patient, Def> GetClonesAndSpecialties(long patNum)
+		public static SerializableDictionary<Patient, Definition> GetClonesAndSpecialties(long patNum)
 		{
 			return GetClonesAndSpecialtiesForPatients(GetClonePatNumsAll(patNum));
 		}
@@ -76,11 +77,11 @@ namespace OpenDentBusiness
 		/// Specialties are only important if clinics are enabled. 
 		/// If clinics are disabled then the corresponding Def will be null.
 		/// </summary>
-		public static SerializableDictionary<Patient, Def> GetClonesAndSpecialtiesForPatients(List<long> listPatNums)
+		public static SerializableDictionary<Patient, Definition> GetClonesAndSpecialtiesForPatients(List<long> listPatNums)
 		{
 			//No need to check RemotingRole; no call to db.
 			//Get every single patientlink possible whether the patNum passed in was the master patient or the clone patient.
-			SerializableDictionary<Patient, Def> dictCloneSpecialty = new SerializableDictionary<Patient, Def>();
+			SerializableDictionary<Patient, Definition> dictCloneSpecialty = new SerializableDictionary<Patient, Definition>();
 			if (listPatNums == null || listPatNums.Count == 0)
 			{
 				return dictCloneSpecialty;//No clones found.
@@ -92,14 +93,14 @@ namespace OpenDentBusiness
 				return dictCloneSpecialty;//No patients for clone links found.
 			}
 			List<DefLink> listPatDefLink = DefLinks.GetDefLinksByType(DefLinkType.Patient);
-			List<Def> listDefs = Defs.GetDefsForCategory(DefCat.ClinicSpecialty);
+			List<Definition> listDefs = Definitions.GetByCategory(DefinitionCategory.ClinicSpecialty, true);
 			foreach (Patient clone in arrayPatientClones)
 			{
 				DefLink defLink = listPatDefLink.FirstOrDefault(x => x.FKey == clone.PatNum);
-				Def specialty = null;
+				Definition specialty = null;
 				if (defLink != null)
 				{
-					specialty = Defs.GetDef(DefCat.ClinicSpecialty, defLink.DefNum, listDefs);//Can return null which is fine.
+					specialty = Definitions.GetDef(DefinitionCategory.ClinicSpecialty, defLink.DefinitionId, listDefs);//Can return null which is fine.
 				}
 				dictCloneSpecialty[clone] = specialty;
 			}
@@ -142,7 +143,7 @@ namespace OpenDentBusiness
 		///there are any unsent procs for each pataging.  Only used for the A/R Manager</summary>
 		public static List<PatAging> GetAgingList()
 		{
-			long collectionBillType = Defs.GetDefsForCategory(DefCat.BillingTypes, true).FirstOrDefault(x => x.ItemValue.ToLower() == "c")?.DefNum ?? 0;
+			long collectionBillType = Definitions.GetByCategory(DefinitionCategory.BillingTypes).FirstOrDefault(x => x.Value.ToLower() == "c")?.Id ?? 0;
 			string whereCollBillType = (collectionBillType > 0 ? (@"
 					OR guar.BillingType = " + POut.Long(collectionBillType)) : "");
 			string command = @"SELECT guar.PatNum,guar.Bal_0_30,guar.Bal_31_60,guar.Bal_61_90,guar.BalOver90,guar.BalTotal,guar.InsEst,
@@ -291,7 +292,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static List<long> GetListCollectionGuarNums(bool doIncludeSuspended = true)
 		{
-			var billingTypes = Defs.GetDefsForCategory(DefCat.BillingTypes, true).FindAll(x => x.ItemValue.ToLower() == "c");
+			var billingTypes = Definitions.GetByCategory(DefinitionCategory.BillingTypes).FindAll(x => x.Value.ToLower() == "c");
 
 			var suspendedGuardianIds = new List<long>();
 			if (doIncludeSuspended)
@@ -307,7 +308,7 @@ namespace OpenDentBusiness
 			return Database.GetListLong(
 				"SELECT patient.Guarantor FROM patient " +
 				"WHERE patient.PatNum=patient.Guarantor " +
-				"AND patient.BillingType IN (" + string.Join(",", billingTypes.Select(x => x.DefNum)) + ")")
+				"AND patient.BillingType IN (" + string.Join(",", billingTypes.Select(x => x.Id)) + ")")
 				.Union(suspendedGuardianIds)
 				.ToList();
 		}
@@ -323,7 +324,7 @@ namespace OpenDentBusiness
 				return true;
 			}
 
-			Def collectionBillingType = Defs.GetDefsForCategory(DefCat.BillingTypes, true).FirstOrDefault(x => x.ItemValue.ToLower() == "c");
+			Definition collectionBillingType = Definitions.GetByCategory(DefinitionCategory.BillingTypes).FirstOrDefault(x => x.Value.ToLower() == "c");
 			if (collectionBillingType == null)
 			{
 				return false; // if not suspended and no billing type marked as collection billing type, return false, guar not a collection guar
@@ -333,7 +334,7 @@ namespace OpenDentBusiness
 				"SELECT 1 isGuarCollection FROM patient " +
 				"WHERE PatNum = " + guarantorId + " " +
 				"AND PatNum = Guarantor " +
-				"AND BillingType = " + collectionBillingType.DefNum + " " +
+				"AND BillingType = " + collectionBillingType.Id + " " +
 				"LIMIT 1") == 1;
 		}
 
@@ -403,7 +404,7 @@ namespace OpenDentBusiness
 		}
 
 		public static DataTable GetPatientsWithFirstLastAppointments(List<PatientStatus> listPatStatus, bool doExcludePatsWithFutureAppts, long clinicNum,
-			 int ageFrom, int ageTo, DateTime dateSeenSince, DateTime dateNotSeenSince, List<Def> listBillingType, int contactMethod = -1, int numDays = -1)
+			 int ageFrom, int ageTo, DateTime dateSeenSince, DateTime dateNotSeenSince, List<Definition> listBillingType, int contactMethod = -1, int numDays = -1)
 		{
 			DateTime dateExcluding = DateTime.Today.AddDays(numDays * -1);
 			string command = @$"SELECT patient.PatNum,patient.FName,patient.LName,patient.Email,patient.PatStatus,patient.PreferContactMethod,patient.ClinicNum,
@@ -447,7 +448,7 @@ namespace OpenDentBusiness
 			}
 			if (!listBillingType.IsNullOrEmpty())
 			{
-				command += $"AND patient.BillingType IN({string.Join(",", listBillingType.Select(x => POut.Long(x.DefNum)))}) ";
+				command += $"AND patient.BillingType IN({string.Join(",", listBillingType.Select(x => POut.Long(x.Id)))}) ";
 			}
 			if (dateSeenSince != DateTime.MinValue && dateNotSeenSince == DateTime.MinValue)
 			{
@@ -921,10 +922,10 @@ namespace OpenDentBusiness
 			}
 			if (patientSynch.BillingType != patient.BillingType)
 			{
-				Def defCloneBillingType = Defs.GetDef(DefCat.BillingTypes, patientSynch.BillingType);
-				Def defNonCloneBillingType = Defs.GetDef(DefCat.BillingTypes, patient.BillingType);
-				string cloneBillType = (defCloneBillingType == null ? "" : defCloneBillingType.ItemName);
-				string nonCloneBillType = (defNonCloneBillingType == null ? "" : defNonCloneBillingType.ItemName);
+				Definition defCloneBillingType = Definitions.GetDef(DefinitionCategory.BillingTypes, patientSynch.BillingType);
+				Definition defNonCloneBillingType = Definitions.GetDef(DefinitionCategory.BillingTypes, patient.BillingType);
+				string cloneBillType = (defCloneBillingType == null ? "" : defCloneBillingType.Name);
+				string nonCloneBillType = (defNonCloneBillingType == null ? "" : defNonCloneBillingType.Name);
 				patientCloneDemoChanges.ListFieldsUpdated.Add(new PatientCloneField("Billing Type", cloneBillType, nonCloneBillType));
 				patientSynch.BillingType = patient.BillingType;
 			}
@@ -1662,11 +1663,11 @@ namespace OpenDentBusiness
 			//Example: large db with joins single clinic 19.8 sec, all clinics 32.484 sec; with sub-select single clinic 0.054 sec, all clinics 0.007 sec
 			+ (!ptSearchArgs.HasSpecialty ? "''" : $@"
 				(
-					SELECT definition.ItemName FROM definition
-					INNER JOIN deflink ON definition.DefNum=deflink.DefNum
-					WHERE deflink.LinkType={SOut.Int((int)DefLinkType.Patient)}
-					AND deflink.FKey=patient.PatNum
-					AND definition.Category={SOut.Int((int)DefCat.ClinicSpecialty)}
+					SELECT `definitions`.`name` FROM `definitions`
+					INNER JOIN deflink ON `definitions`.`id` = deflink.DefNum
+					WHERE deflink.LinkType = {SOut.Int((int)DefLinkType.Patient)}
+					AND deflink.FKey = patient.PatNum
+					AND `definitions`.`category` = '{DefinitionCategory.ClinicSpecialty}'
 				)") + $@" Specialty,"//always include Specialty column, only populate if displaying specialty field
 
 
@@ -1827,7 +1828,7 @@ namespace OpenDentBusiness
 				r["WkPhone"] = dRow["WkPhone"].ToString();
 				r["Address"] = dRow["Address"].ToString();
 				r["PatStatus"] = ((PatientStatus)SIn.Long(dRow["PatStatus"].ToString())).ToString();
-				r["BillingType"] = Defs.GetName(DefCat.BillingTypes, SIn.Long(dRow["BillingType"].ToString()));
+				r["BillingType"] = Definitions.GetName(DefinitionCategory.BillingTypes, SIn.Long(dRow["BillingType"].ToString()));
 				r["ChartNumber"] = dRow["ChartNumber"].ToString();
 				r["City"] = dRow["City"].ToString();
 				r["State"] = dRow["State"].ToString();
@@ -2325,7 +2326,10 @@ namespace OpenDentBusiness
 		public static void InsertBillTypeChangeSecurityLogEntry(Patient patOld, Patient patCur)
 		{
 			string strLog = 
-				SecurityLogEntryHelper(Defs.GetName(DefCat.BillingTypes, patOld.BillingType), Defs.GetName(DefCat.BillingTypes, patCur.BillingType), "billing type");
+				SecurityLogEntryHelper(
+					Definitions.GetName(DefinitionCategory.BillingTypes, patOld.BillingType),
+					Definitions.GetName(DefinitionCategory.BillingTypes, patCur.BillingType), 
+					"billing type");
 
 			if (string.IsNullOrEmpty(strLog))
 			{

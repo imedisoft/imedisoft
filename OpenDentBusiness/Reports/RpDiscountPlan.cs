@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 using System.Reflection;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
@@ -21,7 +22,7 @@ namespace OpenDentBusiness
 				" INNER JOIN patient ON patient.DiscountPlanNum=discountplan.DiscountPlanNum" +
 				" WHERE discountplan.Description LIKE '%" + POut.String(description) + "%'" +
 				" ORDER BY discountplan.Description,patient.LName,patient.FName,patient.MiddleI";
-			return ReportsComplex.RunFuncOnReportServer(() => ReportsComplex.GetTable(query));
+			return Database.ExecuteDataTable(query);
 		}
 	}
 }

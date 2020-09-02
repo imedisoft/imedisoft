@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDental{
@@ -45,7 +47,7 @@ namespace OpenDental{
 		private UI.ComboBoxClinicPicker comboClinics;
 		private Dunning _dunningCur;
 		private CheckBox checkSuperFamily;
-		private List<Def> _listBillingTypeDefs;
+		private List<Definition> _listBillingTypeDefs;
 
 		///<summary></summary>
 		public FormDunningEdit(Dunning dunningCur)
@@ -465,10 +467,10 @@ namespace OpenDental{
 			}
 			listBillType.Items.Add("all");
 			listBillType.SetSelected(0,true);
-			_listBillingTypeDefs=Defs.GetDefsForCategory(DefCat.BillingTypes,true);
+			_listBillingTypeDefs=Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes,true);
 			for(int i=0;i<_listBillingTypeDefs.Count;i++){
-				listBillType.Items.Add(_listBillingTypeDefs[i].ItemName);
-				if(_dunningCur.BillingType==_listBillingTypeDefs[i].DefNum){
+				listBillType.Items.Add(_listBillingTypeDefs[i].Name);
+				if(_dunningCur.BillingType==_listBillingTypeDefs[i].Id){
 					listBillType.SetSelected(i+1,true);
 				}
 			}
@@ -532,7 +534,7 @@ namespace OpenDental{
 			}
 			_dunningCur.BillingType=0;
 			if(listBillType.SelectedIndex>0) {
-				_dunningCur.BillingType=_listBillingTypeDefs[listBillType.SelectedIndex-1].DefNum;
+				_dunningCur.BillingType=_listBillingTypeDefs[listBillType.SelectedIndex-1].Id;
 			}
 			_dunningCur.AgeAccount=(byte)(30*new List<RadioButton> { radioAny,radio30,radio60,radio90 }.FindIndex(x => x.Checked));//0, 30, 60, or 90
 			_dunningCur.InsIsPending=(YN)new List<RadioButton> { radioU,radioY,radioN }.FindIndex(x => x.Checked);//0=Unknown, 1=Yes, 2=No

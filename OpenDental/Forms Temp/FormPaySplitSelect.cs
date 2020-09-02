@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using System.Linq;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormPaySplitSelect:ODForm {
@@ -113,7 +115,7 @@ namespace OpenDental {
 				row.Cells.Add(paySplit.DatePay.ToShortDateString());
 				row.Cells.Add(Patients.GetNameLF(paySplit.PatNum));
 				row.Cells.Add(Providers.GetAbbr(paySplit.ProvNum));
-				row.Cells.Add(Defs.GetName(DefCat.PaySplitUnearnedType,paySplit.UnearnedType));
+				row.Cells.Add(Definitions.GetName(DefinitionCategory.PaySplitUnearnedType,paySplit.UnearnedType));
 				if(isShowAll || !_dictLeftOverAmounts.ContainsKey(paySplit.SplitNum)) {
 					row.Cells.Add(paySplit.SplitAmt.ToString("F"));//show the original amount
 				}

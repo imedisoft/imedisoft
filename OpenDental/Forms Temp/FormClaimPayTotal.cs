@@ -9,6 +9,8 @@ using OpenDentBusiness;
 using OpenDental.UI;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	///<summary>Summary description for FormClaimPayTotal.</summary>
@@ -21,7 +23,7 @@ namespace OpenDental {
 		private List<InsPlan> PlanList;
 		private List<PatPlan> PatPlanList;
 		private List<InsSub> SubList;
-		private List<Def> _listClaimPaymentTrackingDefs;
+		private List<Definition> _listClaimPaymentTrackingDefs;
 		private List<ClaimProc> _listClaimProcsOld;
 		///<summary>True if the user has permission to edit WriteOffs based on the minimum proc.DateEntryC of the procedures to which the claimprocs
 		///in the ClaimProcsToEdit array are attached.</summary>
@@ -54,7 +56,7 @@ namespace OpenDental {
 				textInsPayAmt.Location=new Point(textInsPayAllowed.Right-1,textInsPayAllowed.Location.Y);
 				textWriteOff.Location=new Point(textInsPayAmt.Right-1,textInsPayAllowed.Location.Y);
 			}
-			_listClaimPaymentTrackingDefs=Defs.GetDefsForCategory(DefCat.ClaimPaymentTracking,true);
+			_listClaimPaymentTrackingDefs=Definitions.GetByCategory(DefinitionCategory.ClaimPaymentTracking);
 			FillGrid();
 		}
 
@@ -78,7 +80,7 @@ namespace OpenDental {
 			List<string> listDefDescripts=new List<string>();
 			listDefDescripts.Add("None");
 			for(int i=0;i<_listClaimPaymentTrackingDefs.Count;i++){
-				listDefDescripts.Add(_listClaimPaymentTrackingDefs[i].ItemName);
+				listDefDescripts.Add(_listClaimPaymentTrackingDefs[i].Name);
 			}
 			GridColumn col=new GridColumn("Date",66);
 			gridMain.ListGridColumns.Add(col);
@@ -203,8 +205,8 @@ namespace OpenDental {
 				}
 				bool isDefPresent=false;
 				for(int j=0;j<_listClaimPaymentTrackingDefs.Count;j++) {
-					if(ClaimProcsToEdit[i].ClaimPaymentTracking==_listClaimPaymentTrackingDefs[j].DefNum) {
-						row.Cells.Add(_listClaimPaymentTrackingDefs[j].ItemName);
+					if(ClaimProcsToEdit[i].ClaimPaymentTracking==_listClaimPaymentTrackingDefs[j].Id) {
+						row.Cells.Add(_listClaimPaymentTrackingDefs[j].Name);
 						row.Cells[row.Cells.Count-1].ComboSelectedIndex=j+1;
 						isDefPresent=true;
 						break;
@@ -324,7 +326,7 @@ namespace OpenDental {
 				ClaimProcsToEdit[i].InsPayAmt=PIn.Double(gridMain.ListGridRows[i].Cells[insPayIdx].Text);
 				ClaimProcsToEdit[i].WriteOff=PIn.Double(gridMain.ListGridRows[i].Cells[writeoffIdx].Text);
 				int idx=gridMain.ListGridRows[i].Cells[gridMain.ListGridColumns.GetIndex("Pay Tracking")].ComboSelectedIndex;
-				ClaimProcsToEdit[i].ClaimPaymentTracking=idx==0 ? 0 : _listClaimPaymentTrackingDefs[idx-1].DefNum;
+				ClaimProcsToEdit[i].ClaimPaymentTracking=idx==0 ? 0 : _listClaimPaymentTrackingDefs[idx-1].Id;
 				ClaimProcsToEdit[i].Remarks=gridMain.ListGridRows[i].Cells[gridMain.ListGridColumns.GetIndex("Remarks")].Text;
 			}
 			return true;

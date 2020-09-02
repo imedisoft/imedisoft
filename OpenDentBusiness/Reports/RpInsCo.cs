@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
@@ -22,7 +23,7 @@ namespace OpenDentBusiness
 				+ "AND carrier.CarrierNum=insplan.CarrierNum "
 				+ "AND carrier.CarrierName LIKE '" + POut.String(carrier) + "%' "
 				+ "ORDER BY carrier.CarrierName,patient.LName";
-			return ReportsComplex.RunFuncOnReportServer(() => ReportsComplex.GetTable(query));
+			return Database.ExecuteDataTable(query);
 		}
 	}
 }

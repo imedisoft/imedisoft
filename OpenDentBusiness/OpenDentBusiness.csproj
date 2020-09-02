@@ -702,7 +702,7 @@
     <Compile Include="Crud\CustReferenceCrud.cs" />
     <Compile Include="Crud\CvxCrud.cs" />
     <Compile Include="Crud\DashboardARCrud.cs" />
-    <Compile Include="Crud\DefCrud.cs" />
+    <Compile Include="Data\Crud\Definitions.cs" />
     <Compile Include="Crud\DeletedObjectCrud.cs" />
     <Compile Include="Crud\DepositCrud.cs" />
     <Compile Include="Crud\DictCustomCrud.cs" />
@@ -1252,7 +1252,7 @@
     <Compile Include="Data Interface\Pharmacies.cs" />
     <Compile Include="Data Interface\CovCats.cs" />
     <Compile Include="Data Interface\CovSpans.cs" />
-    <Compile Include="Data Interface\Defs.cs" />
+    <Compile Include="Data\Definitions.cs" />
     <Compile Include="Db Multi Table\FamilyModules.cs" />
     <Compile Include="Data Interface\GroupPermissions.cs" />
     <Compile Include="Data Interface\Operatories.cs" />
@@ -1348,7 +1348,6 @@
     <Compile Include="Reports\RpNewPatients.cs" />
     <Compile Include="Reports\RpOutstandingIns.cs" />
     <Compile Include="Reports\RpPayPlan.cs" />
-    <Compile Include="Reports\ReportsComplex.cs" />
     <Compile Include="Reports\RpPaySheet.cs" />
     <Compile Include="Reports\RpProcNote.cs" />
     <Compile Include="Reports\RpProcCodes.cs" />
@@ -1637,7 +1636,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Reports\Reports.cs" />
     <Compile Include="SheetFramework\SheetEnums.cs">
       <SubType>Code</SubType>
     </Compile>

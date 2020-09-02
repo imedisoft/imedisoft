@@ -7,6 +7,7 @@ using System.Linq;
 using CodeBase;
 using OpenDentBusiness.Eclaims;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -405,7 +406,7 @@ namespace OpenDentBusiness{
 			Dictionary<long,Carrier> dictTrustedCarriers=null;//Key: CarrierNum, Value: Carrier
 			Dictionary<long,InsSub> dictInsSubs=null;//Key: InsSubNum, Value: InsSub
 			Dictionary<long,InsPlan> dictInsPlans=null;//Key: PlanNum, Value: InsPlan
-			long errorStatusDefNum=-1;//FK to defNum associated to DefCat.InsuranceVerificationStatus 'ServiceError' def.
+			long errorStatusDefNum=-1;//FK to defNum associated to DefinitionCategory.InsuranceVerificationStatus 'ServiceError' def.
 			if(listInsVerify.Count>0){//Avoid queries/logic if not necessary, but still update PrefName.InsVerifyServiceBatchLastRunDate below.
 				dictTrustedCarriers=Carriers.GetWhere(x => x.TrustedEtransFlags.HasFlag(TrustedEtransTypes.RealTimeEligibility))
 					.ToDictionary(x => x.CarrierNum,x => x);
@@ -414,7 +415,7 @@ namespace OpenDentBusiness{
 				//listInsSubNums.AddRange(listInsVerify.Where(x => x.PlanInsVerify!=null).Select(x => x.PlanInsVerify.InsSubNum).ToList());
 				dictInsSubs=InsSubs.GetMany(listInsSubNums).ToDictionary(x => x.InsSubNum, x => x);
 				dictInsPlans=InsPlans.GetByInsSubs(listInsSubNums).ToDictionary(x => x.PlanNum, x => x);
-				errorStatusDefNum=Defs.GetByExactName(DefCat.InsuranceVerificationStatus,"ServiceError");//0 if not found
+				errorStatusDefNum=Definitions.GetByExactName(DefinitionCategory.InsuranceVerificationStatus,"ServiceError");//0 if not found
 			}
 			List<InsVerify> listInsVerifies=new List<InsVerify>();
 			foreach(InsVerifyGridObject insVerifyObj in listInsVerify) {

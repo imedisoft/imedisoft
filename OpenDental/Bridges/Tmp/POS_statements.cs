@@ -1,4 +1,6 @@
-﻿using OpenDentBusiness;
+﻿using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -118,8 +120,8 @@ namespace OpenDental.Bridges
 			writer.WriteElementString("State", guar.State);
 			writer.WriteElementString("Zip", guar.Zip);
 			string email = "";
-			Def billingDef = Defs.GetDef(DefCat.BillingTypes, guar.BillingType);
-			if (billingDef.ItemValue == "E")
+			Definition billingDef = Definitions.GetDef(DefinitionCategory.BillingTypes, guar.BillingType);
+			if (billingDef.Value == "E")
 			{
 				email = guar.Email;
 			}

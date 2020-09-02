@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -43,30 +45,13 @@ namespace OpenDentBusiness
 				return provider.TaxonomyCodeOverride;
 			}
 
-			var providerSpecialization = Defs.GetDef(DefCat.ProviderSpecialties, provider.Specialty);
-			if (providerSpecialization == null)
+			var providerSpecialization = Definitions.GetDef(DefinitionCategory.ProviderSpecialties, provider.Specialty);
+			if (providerSpecialization == null || string.IsNullOrEmpty(providerSpecialization.Taxonomy))
             {
 				return "1223G0001X"; // General
 			}
 
-			return providerSpecialization.ItemName switch
-			{
-				"General" => "1223G0001X",
-				"Hygienist" => "124Q00000X",
-				"PublicHealth" => "1223D0001X",
-				"Endodontics" => "1223E0200X",
-				"Pathology" => "1223P0106X",
-				"Radiology" => "1223X0008X",
-				"Surgery" => "1223S0112X",
-				"Ortho" => "1223X0400X",
-				"Pediatric" => "1223P0221X",
-				"Perio" => "1223P0300X",
-				"Prosth" => "1223P0700X",
-				"Denturist" => "122400000X",
-				"Assistant" => "126800000X",
-				"LabTech" => "126900000X",
-				_ => "1223G0001X" // General
-			};
+			return providerSpecialization.Taxonomy;
 		}
 
 		/// <summary>

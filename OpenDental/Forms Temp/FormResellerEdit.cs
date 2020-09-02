@@ -9,6 +9,8 @@ using OpenDentBusiness;
 using OpenDental.UI;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormResellerEdit:ODForm {
@@ -38,7 +40,7 @@ namespace OpenDental {
 			textPassword.Text=password;
 			FillGridMain();
 			FillGridServices();
-			comboBillingType.Items.AddDefs(Defs.GetDefsForCategory(DefCat.BillingTypes,true));
+			comboBillingType.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes,true));
 			ODException.SwallowAnyException(() => comboBillingType.SetSelectedDefNum(_resellerCur.BillingType));
 			textNote.Text=_resellerCur.Note;
 			textVotesAllotted.Text=_resellerCur.VotesAllotted.ToString();

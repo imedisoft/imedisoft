@@ -9,6 +9,8 @@ using OpenDentBusiness;
 using System.IO;
 using System.Text.RegularExpressions;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormRpArizonaPrimaryCareEligibility:ODForm {
@@ -57,8 +59,8 @@ namespace OpenDental {
 			string statusStr="Eligibility Status";
 			string command="";
 			//Locate the payment definition number for copayments of patients using the Arizona Primary Care program.
-			command="SELECT DefNum FROM definition WHERE Category="+POut.Long((int)DefCat.PaymentTypes)+" AND IsHidden=0 AND LOWER(TRIM(ItemName))='noah'";
-			DataTable copayDefNumTab=Reports.GetTable(command);
+			command="SELECT DefNum FROM definition WHERE Category='"+DefinitionCategory.PaymentTypes+"' AND IsHidden=0 AND LOWER(TRIM(ItemName))='noah'";
+			DataTable copayDefNumTab= Database.ExecuteDataTable(command);
 			if(copayDefNumTab.Rows.Count!=1){
 				MessageBox.Show("You must define exactly one payment type with the name 'NOAH' before running this report. "+
 					"This payment type must be used on payments made by Arizona Primary Care patients.");
@@ -71,7 +73,7 @@ namespace OpenDental {
 				"AND LOWER(TRIM(c.CarrierName))='noah' AND "+
 				"(SELECT MAX(a.AptDateTime) FROM appointment a WHERE a.PatNum=p.PatNum AND a.AptStatus="+((int)ApptStatus.Complete)+") BETWEEN "+
 					POut.Date(dateTimeFrom.Value)+" AND "+POut.Date(dateTimeTo.Value);
-			DataTable primaryCarePatients=Reports.GetTable(command);
+			DataTable primaryCarePatients= Database.ExecuteDataTable(command);
 			for(int i=0;i<primaryCarePatients.Rows.Count;i++) {
 				string patNum=POut.Long(PIn.Long(primaryCarePatients.Rows[i][0].ToString()));
 				command="SELECT "+
@@ -100,7 +102,7 @@ namespace OpenDental {
 						"LOWER(f.FieldName)=LOWER('"+statusStr+"') "+DbHelper.LimitAnd(1)+")) CareStatus "+//Status
 					"FROM patient p WHERE "+
 					"p.PatNum="+patNum;
-				DataTable primaryCareReportRow=Reports.GetTable(command);
+				DataTable primaryCareReportRow= Database.ExecuteDataTable(command);
 				if(primaryCareReportRow.Rows.Count!=1) {
 					//Either the results are ambiguous or for some reason, the patient number listed in the patfield table
 					//does not actually exist. In either of these cases, it makes the most sense to just skip this patient

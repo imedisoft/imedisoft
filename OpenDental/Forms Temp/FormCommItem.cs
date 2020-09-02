@@ -6,6 +6,8 @@ using CodeBase;
 using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormCommItem : ODForm {
@@ -16,7 +18,7 @@ namespace OpenDental {
 		private const string _autoNotePromptRegex=@"\[Prompt:""[a-zA-Z_0-9 ]+""\]";
 		private bool _sigChanged;
 		private bool _isStartingUp;
-		private List<Def> _listCommlogTypeDefs;
+		private List<Definition> _listCommlogTypeDefs;
 		private bool _isUserClosing=true;
 
 		public FormCommItem(Commlog commlog,bool isPersistent=false) {
@@ -29,12 +31,12 @@ namespace OpenDental {
 
 		private void FormCommItem_Load(object sender,EventArgs e) {
 			_isStartingUp=true;
-			_listCommlogTypeDefs=Defs.GetDefsForCategory(DefCat.CommLogTypes,true);
+			_listCommlogTypeDefs=Definitions.GetDefsForCategory(DefinitionCategory.CommLogTypes,true);
 
 			//there will usually be a commtype set before this dialog is opened
 			for(int i=0;i<_listCommlogTypeDefs.Count;i++){
-				listType.Items.Add(_listCommlogTypeDefs[i].ItemName);
-				if(_listCommlogTypeDefs[i].DefNum==_commlogCur.CommType) {
+				listType.Items.Add(_listCommlogTypeDefs[i].Name);
+				if(_listCommlogTypeDefs[i].Id==_commlogCur.CommType) {
 					listType.SelectedIndex=i;
 				}
 			}
@@ -111,7 +113,7 @@ namespace OpenDental {
 				_commlogCur.CommType=0;
 			}
 			else {
-				_commlogCur.CommType=_listCommlogTypeDefs[listType.SelectedIndex].DefNum;
+				_commlogCur.CommType=_listCommlogTypeDefs[listType.SelectedIndex].Id;
 			}
 			_commlogCur.Mode_=(CommItemMode)listMode.SelectedIndex;
 			_commlogCur.SentOrReceived=(CommSentOrReceived)listSentOrReceived.SelectedIndex;

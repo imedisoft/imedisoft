@@ -1,4 +1,6 @@
 ﻿using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness.FileIO;
 using PdfSharp.Drawing;
 using System;
@@ -23,7 +25,7 @@ namespace OpenDentBusiness{
 					DrawScaledImage(field.XPos,field.YPos,field.Width,field.Height,g,gx,toothChart);
 					break;
 				case "toothChartLegend":
-					List<Def> listDefs=Defs.GetDefsForCategory(DefCat.ChartGraphicColors,true);
+					List<Definition> listDefs=Definitions.GetByCategory(DefinitionCategory.ChartGraphicColors);
 					DrawToothChartLegend(field.XPos,field.YPos,sheet.Width,yPosPrint,listDefs,g,gx);
 					break;
 				default:
@@ -46,12 +48,12 @@ namespace OpenDentBusiness{
 		}
 
 		///<summary>Draws the legend for the toothchart using the supplied dimesions, definitions, and graphics.</summary>
-		public static void DrawToothChartLegend(int x,int y,int width,int yPosPrint,List<Def> listDefs,Graphics g,XGraphics gx,bool isInDashboard=false) {
-			using(Brush brushEx=new SolidBrush(listDefs[3].ItemColor))
-			using(Brush brushEc=new SolidBrush(listDefs[2].ItemColor))
-			using(Brush brushCo=new SolidBrush(listDefs[1].ItemColor))
-			using(Brush brushRo=new SolidBrush(listDefs[4].ItemColor))
-			using(Brush brushTp=new SolidBrush(listDefs[0].ItemColor))
+		public static void DrawToothChartLegend(int x,int y,int width,int yPosPrint,List<Definition> listDefs,Graphics g,XGraphics gx,bool isInDashboard=false) {
+			using(Brush brushEx=new SolidBrush(listDefs[3].Color))
+			using(Brush brushEc=new SolidBrush(listDefs[2].Color))
+			using(Brush brushCo=new SolidBrush(listDefs[1].Color))
+			using(Brush brushRo=new SolidBrush(listDefs[4].Color))
+			using(Brush brushTp=new SolidBrush(listDefs[0].Color))
 			using(Font bodyFont=new Font("Arial",9f,FontStyle.Regular,GraphicsUnit.Point))
 			if(gx==null) {
 				float yPos=y-yPosPrint;

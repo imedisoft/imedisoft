@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -148,8 +149,8 @@ namespace OpenDentBusiness{
 			,long provNum,long clinicNum,long siteNum,long billingType,ReactivationListSort sortBy,RecallListShowNumberReminders showReactivations) 
 		{
 			//Get information we will need to do the query
-			List<long> listReactCommLogTypeDefNums=Defs.GetDefsForCategory(DefCat.CommLogTypes,isShort:true)
-				.FindAll(x => CommItemTypeAuto.REACT.GetDescription(useShortVersionIfAvailable:true).Equals(x.ItemValue)).Select(x => x.DefNum).ToList();
+			List<long> listReactCommLogTypeDefNums=Definitions.GetByCategory(DefinitionCategory.CommLogTypes)
+				.FindAll(x => CommItemTypeAuto.REACT.GetDescription(useShortVersionIfAvailable:true).Equals(x.Value)).Select(x => x.Id).ToList();
 			int contactInterval=PrefC.GetInt(PrefName.ReactivationContactInterval);
 			List<PatientStatus> listPatStatuses=new List<PatientStatus>() {PatientStatus.Patient,PatientStatus.Prospective};
 			if(isInactiveIncluded) {

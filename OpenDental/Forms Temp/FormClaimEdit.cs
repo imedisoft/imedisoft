@@ -1,4 +1,6 @@
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using Imedisoft.Forms;
 using Imedisoft.UI;
 using Imedisoft.X12.Codes;
@@ -568,7 +570,7 @@ namespace OpenDental
 				}
 			}
 			comboClinic.SelectedClinicNum=ClaimCur.ClinicNum;
-			if(Defs.GetDefsForCategory(DefCat.ClaimCustomTracking).Count==0) {
+			if(Definitions.GetDefsForCategory(DefinitionCategory.ClaimCustomTracking).Count==0) {
 				butAdd.Visible=false;
 			}
 			else{
@@ -1244,7 +1246,7 @@ namespace OpenDental
 				row.Cells.Add("");
 			}
 			if(claimProcCur.ClaimPaymentTracking!=0) {
-				row.Cells.Add(Defs.GetDef(DefCat.ClaimPaymentTracking,claimProcCur.ClaimPaymentTracking).ItemName);//EOB Code
+				row.Cells.Add(Definitions.GetDef(DefinitionCategory.ClaimPaymentTracking,claimProcCur.ClaimPaymentTracking).Name);//EOB Code
 			}
 			else {
 				row.Cells.Add("");
@@ -1278,10 +1280,10 @@ namespace OpenDental
 			foreach(ClaimTracking claimTrackingEntry in listCustomStatusEntries.OrderByDescending(x => x.DateTimeEntry)) {
 				row=new GridRow();
 				row.Cells.Add(claimTrackingEntry.DateTimeEntry.ToShortDateString()+" "+claimTrackingEntry.DateTimeEntry.ToShortTimeString());
-				String defValue=Defs.GetName(DefCat.ClaimCustomTracking,claimTrackingEntry.TrackingDefNum);//get definition Name
+				String defValue=Definitions.GetName(DefinitionCategory.ClaimCustomTracking,claimTrackingEntry.TrackingDefNum);//get definition Name
 				row.Cells.Add(defValue);
 				row.Cells.Add(claimTrackingEntry.Note);
-				row.Cells.Add(Defs.GetName(DefCat.ClaimErrorCode,claimTrackingEntry.TrackingErrorDefNum));
+				row.Cells.Add(Definitions.GetName(DefinitionCategory.ClaimErrorCode,claimTrackingEntry.TrackingErrorDefNum));
 				row.Cells.Add(Userods.GetName(claimTrackingEntry.UserNum));
 				gridStatusHistory.ListGridRows.Add(row);
 				row.Tag=claimTrackingEntry;

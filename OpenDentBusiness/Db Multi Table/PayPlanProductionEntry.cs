@@ -1,4 +1,6 @@
 ﻿using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,7 +70,7 @@ namespace OpenDentBusiness {
 			AmountOverride=(decimal)credit.AmountOverride;
 			AmountRemaining=(AmountOverride==0)?AmountOriginal:AmountOverride;//Gets set when calculating
 			CreditDate=credit.SecDateTEntry;
-			Description=$"Adjustment - {Defs.GetName(DefCat.AdjTypes,adj.AdjType)}";
+			Description=$"Adjustment - {Definitions.GetName(DefinitionCategory.AdjTypes,adj.AdjType)}";
 			LinkType=PayPlanLinkType.Adjustment;
 		}
 

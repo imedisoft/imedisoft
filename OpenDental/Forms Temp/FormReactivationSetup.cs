@@ -13,6 +13,8 @@ using System.Net;
 using System.Xml;
 using System.Text.RegularExpressions;
 using System.IO;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 ///<summary></summary>
@@ -28,7 +30,7 @@ namespace OpenDental {
 			checkGroupFamilies.Checked = Prefs.GetBool(PrefName.ReactivationGroupByFamily);
 			textPostcardsPerSheet.Text=Prefs.GetLong(PrefName.ReactivationPostcardsPerSheet).ToString();
 			textDaysPast.Text=Prefs.GetLongHideNegOne(PrefName.ReactivationDaysPast);
-			List<Def> listRecallUnschedStatusDefs=Defs.GetDefsForCategory(DefCat.RecallUnschedStatus,true);
+			List<Definition> listRecallUnschedStatusDefs=Definitions.GetDefsForCategory(DefinitionCategory.RecallUnschedStatus,true);
 			comboStatusMailedReactivation.Items.AddDefs(listRecallUnschedStatusDefs);
 			comboStatusMailedReactivation.SetSelectedDefNum(Prefs.GetLong(PrefName.ReactivationStatusMailed));
 			comboStatusEmailedReactivation.Items.AddDefs(listRecallUnschedStatusDefs);
@@ -142,10 +144,10 @@ namespace OpenDental {
 			didChange |= Prefs.Set(PrefName.ReactivationContactInterval,textDaysContactInterval.Text);
 			didChange |= Prefs.Set(PrefName.ReactivationCountContactMax,textMaxReminders.Text);
 			//combo boxes These have already been checked for -1
-			didChange |= Prefs.Set(PrefName.ReactivationStatusEmailed,comboStatusEmailedReactivation.GetSelected<Def>().DefNum);
-			didChange |= Prefs.Set(PrefName.ReactivationStatusMailed,comboStatusMailedReactivation.GetSelected<Def>().DefNum);
-			didChange |= Prefs.Set(PrefName.ReactivationStatusTexted,comboStatusTextedReactivation.GetSelected<Def>().DefNum);
-			didChange |= Prefs.Set(PrefName.ReactivationStatusEmailedTexted,comboStatusEmailTextReactivation.GetSelected<Def>().DefNum);
+			didChange |= Prefs.Set(PrefName.ReactivationStatusEmailed,comboStatusEmailedReactivation.GetSelected<Definition>().Id);
+			didChange |= Prefs.Set(PrefName.ReactivationStatusMailed,comboStatusMailedReactivation.GetSelected<Definition>().Id);
+			didChange |= Prefs.Set(PrefName.ReactivationStatusTexted,comboStatusTextedReactivation.GetSelected<Definition>().Id);
+			didChange |= Prefs.Set(PrefName.ReactivationStatusEmailedTexted,comboStatusEmailTextReactivation.GetSelected<Definition>().Id);
 			if(didChange) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}

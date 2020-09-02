@@ -1,6 +1,7 @@
 using CodeBase;
 using DataConnectionBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -253,8 +254,8 @@ namespace OpenDentBusiness
 			DateTime dateT;
 			string txt;
 			List<DataRow> labRows = new List<DataRow>();//Canadian lab procs, which must be added in a loop at the very end.
-			List<Def> listMiscColorDefs = Defs.GetDefsForCategory(DefCat.MiscColors);
-			List<Def> listProgNoteColorDefs = Defs.GetDefsForCategory(DefCat.ProgNoteColors);
+			List<Definition> listMiscColorDefs = Definitions.GetDefsForCategory(DefinitionCategory.MiscColors);
+			List<Definition> listProgNoteColorDefs = Definitions.GetDefsForCategory(DefinitionCategory.ProgNoteColors);
 			Family family = Patients.GetFamily(patNum);
 			Dictionary<string, string> dictUserNames = Userods.GetUsers().ToDictionary(x => x.Id.ToString(), x => x.UserName);
 			if (componentsToLoad.ShowTreatPlan
@@ -313,31 +314,31 @@ namespace OpenDentBusiness
 					row["colorBackG"] = Color.White.ToArgb();
 					if (((DateTime)row["aptDateTime"]).Date == DateTime.Today)
 					{
-						row["colorBackG"] = listMiscColorDefs[6].ItemColor.ToArgb().ToString();
+						row["colorBackG"] = listMiscColorDefs[6].Color.ToArgb().ToString();
 					}
 					switch ((ProcStat)PIn.Long(rowProc["ProcStatus"].ToString()))
 					{
 						case ProcStat.TP:
 						case ProcStat.TPi:
-							row["colorText"] = listProgNoteColorDefs[0].ItemColor.ToArgb().ToString();
+							row["colorText"] = listProgNoteColorDefs[0].Color.ToArgb().ToString();
 							break;
 						case ProcStat.C:
-							row["colorText"] = listProgNoteColorDefs[1].ItemColor.ToArgb().ToString();
+							row["colorText"] = listProgNoteColorDefs[1].Color.ToArgb().ToString();
 							break;
 						case ProcStat.EC:
-							row["colorText"] = listProgNoteColorDefs[2].ItemColor.ToArgb().ToString();
+							row["colorText"] = listProgNoteColorDefs[2].Color.ToArgb().ToString();
 							break;
 						case ProcStat.EO:
-							row["colorText"] = listProgNoteColorDefs[3].ItemColor.ToArgb().ToString();
+							row["colorText"] = listProgNoteColorDefs[3].Color.ToArgb().ToString();
 							break;
 						case ProcStat.R:
-							row["colorText"] = listProgNoteColorDefs[4].ItemColor.ToArgb().ToString();
+							row["colorText"] = listProgNoteColorDefs[4].Color.ToArgb().ToString();
 							break;
 						case ProcStat.D:
 							row["colorText"] = Color.Black.ToArgb().ToString();
 							break;
 						case ProcStat.Cn:
-							row["colorText"] = listProgNoteColorDefs[22].ItemColor.ToArgb().ToString();
+							row["colorText"] = listProgNoteColorDefs[22].Color.ToArgb().ToString();
 							break;
 					}
 					row["CommlogNum"] = 0;
@@ -374,7 +375,7 @@ namespace OpenDentBusiness
 						row["description"] += " #" + Tooth.FormatRangeForDisplay(rowProc["ToothRange"].ToString());
 					}
 					row["DocNum"] = 0;
-					row["dx"] = Defs.GetValue(DefCat.Diagnosis, PIn.Long(rowProc["Dx"].ToString()));
+					row["dx"] = Definitions.GetValue(DefinitionCategory.Diagnosis, PIn.Long(rowProc["Dx"].ToString()));
 					row["Dx"] = rowProc["Dx"].ToString();
 					row["EmailMessageNum"] = 0;
 					row["FormPatNum"] = 0;
@@ -496,7 +497,7 @@ namespace OpenDentBusiness
 					}
 					row["PatNum"] = "";
 					row["Priority"] = rowProc["Priority"].ToString();
-					row["priority"] = Defs.GetName(DefCat.TxPriorities, PIn.Long(rowProc["Priority"].ToString()));
+					row["priority"] = Definitions.GetName(DefinitionCategory.TxPriorities, PIn.Long(rowProc["Priority"].ToString()));
 					row["ProcCode"] = rowProc["ProcCode"].ToString();
 					dateT = PIn.Date(rowProc["ProcDate"].ToString());
 					if (dateT.Year < 1880)
@@ -539,7 +540,7 @@ namespace OpenDentBusiness
 					{
 						row["procTimeEnd"] = dateT.ToString("h:mm") + dateT.ToString("%t").ToLower();
 					}
-					row["prognosis"] = Defs.GetName(DefCat.Prognosis, PIn.Long(rowProc["Prognosis"].ToString()));
+					row["prognosis"] = Definitions.GetName(DefinitionCategory.Prognosis, PIn.Long(rowProc["Prognosis"].ToString()));
 					row["prov"] = rowProc["Abbr"].ToString();
 					row["ProvNum"] = rowProc["ProvNum"].ToString();
 					row["quadrant"] = "";
@@ -615,7 +616,7 @@ namespace OpenDentBusiness
 			if (componentsToLoad.ShowCommLog)
 			{//TODO: refine to use show Family
 				#region Commlog
-				List<Def> listCommLogTypeDefs = Defs.GetDefsForCategory(DefCat.CommLogTypes);
+				List<Definition> listCommLogTypeDefs = Definitions.GetDefsForCategory(DefinitionCategory.CommLogTypes);
 				long podiumProgramNum = Programs.GetCur(ProgramName.Podium).Id;
 				bool showPodiumCommlogs = PIn.Bool(ProgramProperties.GetPropVal(podiumProgramNum, Podium.PropertyDescs.ShowCommlogsInChartAndAccount));
 				string wherePodiumCommlog = "";
@@ -644,14 +645,14 @@ namespace OpenDentBusiness
 					row["CodeNum"] = "";
 					row["colorBackG"] = Color.White.ToArgb();
 					long commTypeDefNum = PIn.Long(rawComm.Rows[i]["CommType"].ToString());
-					Def commlogType = listCommLogTypeDefs.FirstOrDefault(x => x.DefNum == commTypeDefNum);
-					if (commlogType != null && commlogType.ItemColor.ToArgb() != Color.Empty.ToArgb())
+					Definition commlogType = listCommLogTypeDefs.FirstOrDefault(x => x.Id == commTypeDefNum);
+					if (commlogType != null && commlogType.Color.ToArgb() != Color.Empty.ToArgb())
 					{//Def exists and not an empty color.
-						row["colorText"] = commlogType.ItemColor.ToArgb().ToString();
+						row["colorText"] = commlogType.Color.ToArgb().ToString();
 					}
 					else
 					{//Otherwise use default color for prog notes
-						row["colorText"] = listProgNoteColorDefs[6].ItemColor.ToArgb().ToString();
+						row["colorText"] = listProgNoteColorDefs[6].Color.ToArgb().ToString();
 					}
 					row["CommlogNum"] = rawComm.Rows[i]["CommlogNum"].ToString();
 					row["dateEntryC"] = "";
@@ -664,7 +665,7 @@ namespace OpenDentBusiness
 					{
 						txt = "(" + rawComm.Rows[i]["FName"].ToString() + ") ";
 					}
-					row["description"] = txt + "Comm - " + Defs.GetName(DefCat.CommLogTypes, commTypeDefNum, listCommLogTypeDefs);
+					row["description"] = txt + "Comm - " + Definitions.GetName(DefinitionCategory.CommLogTypes, commTypeDefNum, listCommLogTypeDefs);
 					row["DocNum"] = 0;
 					row["dx"] = "";
 					row["Dx"] = "";
@@ -752,7 +753,7 @@ namespace OpenDentBusiness
 					row["ClinicNum"] = 0;
 					row["CodeNum"] = "";
 					row["colorBackG"] = Color.White.ToArgb();
-					row["colorText"] = listProgNoteColorDefs[6].ItemColor.ToArgb().ToString();
+					row["colorText"] = listProgNoteColorDefs[6].Color.ToArgb().ToString();
 					row["CommlogNum"] = 0;
 					row["dateEntryC"] = "";
 					row["dateTP"] = "";
@@ -837,7 +838,7 @@ namespace OpenDentBusiness
 					row["ClinicNum"] = 0;
 					row["CodeNum"] = "";
 					row["colorBackG"] = Color.White.ToArgb();
-					row["colorText"] = listProgNoteColorDefs[5].ItemColor.ToArgb().ToString();
+					row["colorText"] = listProgNoteColorDefs[5].Color.ToArgb().ToString();
 					row["CommlogNum"] = 0;
 					row["dateEntryC"] = "";
 					row["dateTP"] = "";
@@ -922,7 +923,7 @@ namespace OpenDentBusiness
 					row["ClinicNum"] = 0;
 					row["CodeNum"] = "";
 					row["colorBackG"] = Color.White.ToArgb();
-					row["colorText"] = listProgNoteColorDefs[7].ItemColor.ToArgb().ToString();
+					row["colorText"] = listProgNoteColorDefs[7].Color.ToArgb().ToString();
 					row["CommlogNum"] = 0;
 					row["dateEntryC"] = "";
 					row["dateTP"] = "";
@@ -1039,9 +1040,9 @@ namespace OpenDentBusiness
 					row["ClinicNum"] = 0;
 					row["CodeNum"] = "";
 					//colors the same as notes
-					row["colorText"] = listProgNoteColorDefs[18].ItemColor.ToArgb().ToString();
-					row["colorBackG"] = listProgNoteColorDefs[19].ItemColor.ToArgb().ToString();
-					//row["colorText"] = Defs.Long[(int)DefCat.ProgNoteColors][6].ItemColor.ToArgb().ToString();//same as commlog
+					row["colorText"] = listProgNoteColorDefs[18].Color.ToArgb().ToString();
+					row["colorBackG"] = listProgNoteColorDefs[19].Color.ToArgb().ToString();
+					//row["colorText"] = Defs.Long[(int)DefinitionCategory.ProgNoteColors][6].ItemColor.ToArgb().ToString();//same as commlog
 					row["CommlogNum"] = 0;
 					row["dateEntryC"] = "";
 					row["dateTP"] = "";
@@ -1053,8 +1054,8 @@ namespace OpenDentBusiness
 						txt += "Completed ";
 						row["colorBackG"] = Color.White.ToArgb();
 						//use same as note colors for completed tasks
-						row["colorText"] = listProgNoteColorDefs[20].ItemColor.ToArgb().ToString();
-						row["colorBackG"] = listProgNoteColorDefs[21].ItemColor.ToArgb().ToString();
+						row["colorText"] = listProgNoteColorDefs[20].Color.ToArgb().ToString();
+						row["colorBackG"] = listProgNoteColorDefs[21].Color.ToArgb().ToString();
 					}
 					long taskListNum = PIn.Long(rawTaskRow["TaskListNum"].ToString());
 					row["description"] = txt + "Task - In List: " + TaskLists.GetFullPath(taskListNum);
@@ -1188,7 +1189,7 @@ namespace OpenDentBusiness
 				dateT = PIn.Date(rawApt.Rows[i]["AptDateTime"].ToString());
 				apptStatus = PIn.Long(rawApt.Rows[i]["AptStatus"].ToString());
 				row["colorBackG"] = "";
-				row["colorText"] = listProgNoteColorDefs[8].ItemColor.ToArgb().ToString();
+				row["colorText"] = listProgNoteColorDefs[8].Color.ToArgb().ToString();
 				row["CommlogNum"] = 0;
 				row["dateEntryC"] = "";
 				row["dateTP"] = "";
@@ -1196,50 +1197,50 @@ namespace OpenDentBusiness
 				+ rawApt.Rows[i]["ProcDescript"].ToString();
 				if (dateT.Date.Date == DateTime.Today.Date)
 				{
-					row["colorBackG"] = listProgNoteColorDefs[9].ItemColor.ToArgb().ToString(); //deliniates nicely between old appts
-					row["colorText"] = listProgNoteColorDefs[8].ItemColor.ToArgb().ToString();
+					row["colorBackG"] = listProgNoteColorDefs[9].Color.ToArgb().ToString(); //deliniates nicely between old appts
+					row["colorText"] = listProgNoteColorDefs[8].Color.ToArgb().ToString();
 				}
 				else if (dateT.Date < DateTime.Today)
 				{
-					row["colorBackG"] = listProgNoteColorDefs[11].ItemColor.ToArgb().ToString();
-					row["colorText"] = listProgNoteColorDefs[10].ItemColor.ToArgb().ToString();
+					row["colorBackG"] = listProgNoteColorDefs[11].Color.ToArgb().ToString();
+					row["colorText"] = listProgNoteColorDefs[10].Color.ToArgb().ToString();
 				}
 				else if (dateT.Date > DateTime.Today)
 				{
-					row["colorBackG"] = listProgNoteColorDefs[13].ItemColor.ToArgb().ToString(); //at a glace, you see green...the pt is good to go as they have a future appt scheduled
-					row["colorText"] = listProgNoteColorDefs[12].ItemColor.ToArgb().ToString();
+					row["colorBackG"] = listProgNoteColorDefs[13].Color.ToArgb().ToString(); //at a glace, you see green...the pt is good to go as they have a future appt scheduled
+					row["colorText"] = listProgNoteColorDefs[12].Color.ToArgb().ToString();
 				}
 				if (apptStatus == (int)ApptStatus.Broken)
 				{
-					row["colorText"] = listProgNoteColorDefs[14].ItemColor.ToArgb().ToString();
-					row["colorBackG"] = listProgNoteColorDefs[15].ItemColor.ToArgb().ToString();
+					row["colorText"] = listProgNoteColorDefs[14].Color.ToArgb().ToString();
+					row["colorBackG"] = listProgNoteColorDefs[15].Color.ToArgb().ToString();
 					row["description"] = "BROKEN Appointment - " + dateT.ToShortTimeString() + "\r\n"
 					+ rawApt.Rows[i]["ProcDescript"].ToString();
 				}
 				else if (apptStatus == (int)ApptStatus.UnschedList)
 				{
-					row["colorText"] = listProgNoteColorDefs[14].ItemColor.ToArgb().ToString();
-					row["colorBackG"] = listProgNoteColorDefs[15].ItemColor.ToArgb().ToString();
+					row["colorText"] = listProgNoteColorDefs[14].Color.ToArgb().ToString();
+					row["colorBackG"] = listProgNoteColorDefs[15].Color.ToArgb().ToString();
 					row["description"] = "UNSCHEDULED Appointment - " + dateT.ToShortTimeString() + "\r\n"
 					+ rawApt.Rows[i]["ProcDescript"].ToString();
 				}
 				else if (apptStatus == (int)ApptStatus.Planned)
 				{
-					row["colorText"] = listProgNoteColorDefs[16].ItemColor.ToArgb().ToString();
-					row["colorBackG"] = listProgNoteColorDefs[17].ItemColor.ToArgb().ToString();
+					row["colorText"] = listProgNoteColorDefs[16].Color.ToArgb().ToString();
+					row["colorBackG"] = listProgNoteColorDefs[17].Color.ToArgb().ToString();
 					row["description"] = "PLANNED Appointment" + "\r\n"
 					+ rawApt.Rows[i]["ProcDescript"].ToString();
 				}
 				else if (apptStatus == (int)ApptStatus.PtNote)
 				{
-					row["colorText"] = listProgNoteColorDefs[18].ItemColor.ToArgb().ToString();
-					row["colorBackG"] = listProgNoteColorDefs[19].ItemColor.ToArgb().ToString();
+					row["colorText"] = listProgNoteColorDefs[18].Color.ToArgb().ToString();
+					row["colorBackG"] = listProgNoteColorDefs[19].Color.ToArgb().ToString();
 					row["description"] = "*** Patient NOTE  *** - " + dateT.ToShortTimeString();
 				}
 				else if (apptStatus == (int)ApptStatus.PtNoteCompleted)
 				{
-					row["colorText"] = listProgNoteColorDefs[20].ItemColor.ToArgb().ToString();
-					row["colorBackG"] = listProgNoteColorDefs[21].ItemColor.ToArgb().ToString();
+					row["colorText"] = listProgNoteColorDefs[20].Color.ToArgb().ToString();
+					row["colorBackG"] = listProgNoteColorDefs[21].Color.ToArgb().ToString();
 					row["description"] = "** Complete Patient NOTE ** - " + dateT.ToShortTimeString();
 				}
 				row["DocNum"] = 0;
@@ -1326,7 +1327,7 @@ namespace OpenDentBusiness
 					row["ClinicNum"] = 0;
 					row["CodeNum"] = "";
 					row["colorBackG"] = Color.White.ToArgb();
-					row["colorText"] = listProgNoteColorDefs[6].ItemColor.ToArgb().ToString();//needs to change
+					row["colorText"] = listProgNoteColorDefs[6].Color.ToArgb().ToString();//needs to change
 					row["CommlogNum"] = 0;
 					row["dateEntryC"] = "";
 					row["dateTP"] = "";
@@ -1437,7 +1438,7 @@ namespace OpenDentBusiness
 					row["ClinicNum"] = 0;
 					row["CodeNum"] = "";
 					row["colorBackG"] = Color.White.ToArgb();
-					row["colorText"] = Color.Black.ToArgb();//Defs.Long[(int)DefCat.ProgNoteColors][6].ItemColor.ToArgb().ToString();//needs to change
+					row["colorText"] = Color.Black.ToArgb();//Defs.Long[(int)DefinitionCategory.ProgNoteColors][6].ItemColor.ToArgb().ToString();//needs to change
 					row["CommlogNum"] = 0;
 					dateT = PIn.Date(rawSheet.Rows[i]["DateTimeSheet"].ToString());
 					if (dateT.Year < 1880)
@@ -1591,7 +1592,7 @@ namespace OpenDentBusiness
 			int itemOrder = 1;
 			DateTime dateSched;
 			ApptStatus aptStatus;
-			List<Def> listDefs = Defs.GetDefsForCategory(DefCat.ProgNoteColors);
+			List<Definition> listDefs = Definitions.GetDefsForCategory(DefinitionCategory.ProgNoteColors);
 			for (int i = 0; i < rawPlannedAppts.Rows.Count; i++)
 			{
 				aptRow = null;
@@ -1625,33 +1626,33 @@ namespace OpenDentBusiness
 				//change color if completed, broken, or unscheduled no matter the date
 				if (aptStatus == ApptStatus.Broken || aptStatus == ApptStatus.UnschedList)
 				{
-					row["colorBackG"] = listDefs[15].ItemColor.ToArgb().ToString();
-					row["colorText"] = listDefs[14].ItemColor.ToArgb().ToString();
+					row["colorBackG"] = listDefs[15].Color.ToArgb().ToString();
+					row["colorText"] = listDefs[14].Color.ToArgb().ToString();
 				}
 				else if (aptStatus == ApptStatus.Complete)
 				{
-					row["colorBackG"] = listDefs[11].ItemColor.ToArgb().ToString();
-					row["colorText"] = listDefs[10].ItemColor.ToArgb().ToString();
+					row["colorBackG"] = listDefs[11].Color.ToArgb().ToString();
+					row["colorText"] = listDefs[10].Color.ToArgb().ToString();
 				}
 				else if (aptStatus == ApptStatus.Scheduled && dateSched.Date != DateTime.Today.Date)
 				{
-					row["colorBackG"] = listDefs[13].ItemColor.ToArgb().ToString();
-					row["colorText"] = listDefs[12].ItemColor.ToArgb().ToString();
+					row["colorBackG"] = listDefs[13].Color.ToArgb().ToString();
+					row["colorText"] = listDefs[12].Color.ToArgb().ToString();
 				}
 				else if (dateSched.Date < DateTime.Today && dateSched != DateTime.MinValue)
 				{//Past
-					row["colorBackG"] = listDefs[11].ItemColor.ToArgb().ToString();
-					row["colorText"] = listDefs[10].ItemColor.ToArgb().ToString();
+					row["colorBackG"] = listDefs[11].Color.ToArgb().ToString();
+					row["colorText"] = listDefs[10].Color.ToArgb().ToString();
 				}
 				else if (dateSched.Date == DateTime.Today.Date)
 				{ //Today
-					row["colorBackG"] = listDefs[9].ItemColor.ToArgb().ToString();
-					row["colorText"] = listDefs[8].ItemColor.ToArgb().ToString();
+					row["colorBackG"] = listDefs[9].Color.ToArgb().ToString();
+					row["colorText"] = listDefs[8].Color.ToArgb().ToString();
 				}
 				else if (dateSched.Date > DateTime.Today)
 				{ //Future
-					row["colorBackG"] = listDefs[13].ItemColor.ToArgb().ToString();
-					row["colorText"] = listDefs[12].ItemColor.ToArgb().ToString();
+					row["colorBackG"] = listDefs[13].Color.ToArgb().ToString();
+					row["colorText"] = listDefs[12].Color.ToArgb().ToString();
 				}
 				else
 				{

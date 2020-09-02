@@ -10,6 +10,8 @@ using System.Drawing.Printing;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 using OpenDentBusiness.WebTypes.WebSched.TimeSlot;
@@ -161,7 +163,7 @@ namespace OpenDental {
 			}
 			#endregion Sites
 			#region Unscheduled Statuses
-			List<Def> listRecallUnschedStatusDefs=Defs.GetDefsForCategory(DefCat.RecallUnschedStatus,true);
+			List<Definition> listRecallUnschedStatusDefs=Definitions.GetDefsForCategory(DefinitionCategory.RecallUnschedStatus,true);
 			comboSetStatusRecalls.Items.AddDefNone();
 			comboSetStatusRecalls.Items.AddDefs(listRecallUnschedStatusDefs);
 			comboSetStatusReact.Items.AddDefNone();
@@ -169,7 +171,7 @@ namespace OpenDental {
 			#endregion Unscheduled Statuses
 			#region Billing Types
 			comboBillingTypes.IncludeAll=true;
-			comboBillingTypes.Items.AddDefs(Defs.GetDefsForCategory(DefCat.BillingTypes));
+			comboBillingTypes.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes));
 			comboBillingTypes.IsAllSelected=true;
 			#endregion Billing Types
 			#region Recall Types
@@ -483,7 +485,7 @@ namespace OpenDental {
 								commlogCur.Note+="Status None";
 							}
 							else {
-								commlogCur.Note+=Defs.GetName(DefCat.RecallUnschedStatus,FormR.RecallCur.RecallStatus);
+								commlogCur.Note+=Definitions.GetName(DefinitionCategory.RecallUnschedStatus,FormR.RecallCur.RecallStatus);
 							}
 						}
 						if(recall.DisableUntilDate!=FormR.RecallCur.DisableUntilDate && FormR.RecallCur.DisableUntilDate.Year>1880) {
@@ -1433,7 +1435,7 @@ namespace OpenDental {
 			if(IsAnyRowSelected()) {
 				long newStatus=0;
 				if(comboSetStatusRecalls.SelectedIndex>0){//not None or no selection
-					newStatus=comboSetStatusRecalls.GetSelected<Def>().DefNum;
+					newStatus=comboSetStatusRecalls.GetSelected<Definition>().Id;
 				}
 				gridRecalls.SelectedTags<PatRowTag>().ForEach(tag => Recalls.UpdateStatus(tag.PriKeyNum,newStatus));
 				CommCreate(CommItemTypeAuto.RECALL,doIncludeNote:true);
@@ -1484,10 +1486,10 @@ namespace OpenDental {
 				if(doIncludeNote) {
 					commlogCur.Note=(commType==CommItemTypeAuto.RECALL?"Recall ":"Reactivation ")+" reminder.";
 					if(commType==CommItemTypeAuto.RECALL && comboSetStatusRecalls.SelectedIndex>0) {//comboStatus not None
-						commlogCur.Note+="  "+comboSetStatusRecalls.GetSelected<Def>().ItemName;
+						commlogCur.Note+="  "+comboSetStatusRecalls.GetSelected<Definition>().Name;
 					}
 					else if(commType==CommItemTypeAuto.REACT && comboSetStatusReact.SelectedIndex>0) {//comboReactStatus not None
-						commlogCur.Note+="  "+comboSetStatusReact.GetSelected<Def>().ItemName;
+						commlogCur.Note+="  "+comboSetStatusReact.GetSelected<Definition>().Name;
 					}
 					else{
 						commlogCur.Note+="  "+"Status None";
@@ -1604,7 +1606,7 @@ namespace OpenDental {
 		}
 
 		private void FillReactivationGrid() {
-			if(!Defs.GetDefsForCategory(DefCat.CommLogTypes).Any(x => x.ItemValue==CommItemTypeAuto.REACT.GetDescription(true))) {
+			if(!Definitions.GetDefsForCategory(DefinitionCategory.CommLogTypes).Any(x => x.Value==CommItemTypeAuto.REACT.GetDescription(true))) {
 				MessageBox.Show("First you must set up a Reactivation commlog type in definitions");
 				return;
 			}
@@ -1662,7 +1664,7 @@ namespace OpenDental {
 				rowNew.Cells.Add(row["DateLastContacted"].ToString());
 				rowNew.Cells.Add(row["ContactMethod"].ToString()); 
 				long status=PIn.Long(row["ReactivationStatus"].ToString());
-				rowNew.Cells.Add(status>0?Defs.GetDef(DefCat.RecallUnschedStatus,status).ItemName:"");
+				rowNew.Cells.Add(status>0?Definitions.GetDef(DefinitionCategory.RecallUnschedStatus,status).Name:"");
 				rowNew.Cells.Add(row["ReactivationNote"].ToString());
 				rowNew.Tag=new PatRowTag(
 					PIn.Long(row["PatNum"].ToString()),
@@ -1706,7 +1708,7 @@ namespace OpenDental {
 		private void butSetStatusReact_Click(object sender,EventArgs e) {
 			long status=0;
 			if(comboSetStatusReact.SelectedIndex>0){//not None or no selection
-				status=comboSetStatusReact.GetSelected<Def>().DefNum;
+				status=comboSetStatusReact.GetSelected<Definition>().Id;
 			}
 			if(IsAnyRowSelected()) {
 				foreach(PatRowTag tag in gridReactivations.SelectedTags<PatRowTag>()) {

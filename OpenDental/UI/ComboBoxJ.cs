@@ -1,4 +1,6 @@
-﻿using OpenDentBusiness;
+﻿using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -480,7 +482,7 @@ namespace OpenDental.UI
 		///<summary>Only for comboBoxes with a list of Defs. This is a specific use of GetSelectedKey. If selected index is -1, it will try to grab the key that was passed in earlier with SetSelectedDefNum.  If there is none, then it will return 0.</summary>
 		public long GetSelectedDefNum()
 		{
-			return GetSelectedKey<Def>(x => x.DefNum);
+			return GetSelectedKey<Definition>(x => x.Id);
 		}
 
 		///<summary>Gets the key like PatNum from the selected index. ProvNum and DefNum have their own selectors.  funcSelectKey example x=>x.PatNum.  If selected index is -1, it will try to grab the key that was passed in earlier with SetSelectedKey.  If there is none, then it will return 0.  Completely ignores IsAllSelected, so if you are interested in that, test it first.</summary>
@@ -629,7 +631,7 @@ namespace OpenDental.UI
 					{
 						continue;
 					}
-					if (((Def)Items.GetObjectAt(i)).DefNum == 0)
+					if (((Definition)Items.GetObjectAt(i)).Id == 0)
 					{
 						_listSelectedIndices.Add(i);//found a 0, so select it
 						OnSelectedIndexChanged(this, new EventArgs());
@@ -644,8 +646,8 @@ namespace OpenDental.UI
 				Invalidate();
 				return;
 			}
-			Func<long, string> funcOverrideText = x => Defs.GetNameWithHidden(x);//won't use this unless it has to
-			SetSelectedKey<Def>(defNum, x => x.DefNum, funcOverrideText);
+			Func<long, string> funcOverrideText = x => Definitions.GetNameWithHidden(x);//won't use this unless it has to
+			SetSelectedKey<Definition>(defNum, x => x.Id, funcOverrideText);
 		}
 
 		///<summary>Really only needed if enum is not 0,1,2,... or if enums were manually added to the combo, ignoring their normal idx order.  Otherwise, you could also use SetSelected((int)enumVal);  If the enum val is not present in the comboBox, it will do nothing.</summary>
@@ -843,9 +845,9 @@ namespace OpenDental.UI
 			{//loop through all of the items and only add the item if it is found
 				if (Items.GetTextShowingAt(i).ToUpper().StartsWith(keyCode))
 				{//keyCode is already uppercased
-					if (Items.GetObjectAt(i) is Def)
+					if (Items.GetObjectAt(i) is Definition)
 					{
-						SetSelectedDefNum(((Def)Items.GetObjectAt(i)).DefNum);
+						SetSelectedDefNum(((Definition)Items.GetObjectAt(i)).Id);
 					}
 					else if (Items.GetObjectAt(i) is Provider)
 					{
@@ -887,24 +889,24 @@ namespace OpenDental.UI
 			{
 				if (textShowing == null)
 				{
-					Add("None", new Def());
+					Add("None", new Definition());
 				}
 				else
 				{
-					Add(textShowing, new Def());
+					Add(textShowing, new Definition());
 				}
 			}
 
 			///<summary>Adds a list of Defs to the items. Does not Clear first.  Defs will show as ItemName, and (hidden) if applicable.</summary>
-			public void AddDefs(List<Def> listDefs)
+			public void AddDefs(List<Definition> listDefs)
 			{
-				Func<Def, string> funcItemToString = x =>
+				Func<Definition, string> funcItemToString = x =>
 				{
 					if (x.IsHidden)
 					{
-						return x.ItemName + " " + "(hidden)";
+						return x.Name + " " + "(hidden)";
 					}
-					return x.ItemName;
+					return x.Name;
 				};
 				AddList(listDefs, funcItemToString);
 			}

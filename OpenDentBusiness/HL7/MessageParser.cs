@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using Imedisoft.X12.Codes;
 
 namespace OpenDentBusiness.HL7 {
@@ -598,7 +600,7 @@ namespace OpenDentBusiness.HL7 {
 			Appointment aptOld=apt.Copy();
 			long provNum=0;
 			string strProvType="";
-			Def[] listConfirmStats=Defs.GetDefsForCategory(DefCat.ApptConfirmed,true).ToArray();
+			Definition[] listConfirmStats=Definitions.GetDefsForCategory(DefinitionCategory.ApptConfirmed,true).ToArray();
 			for(int i=0;i<segDef.hl7DefFields.Count;i++) {
 				int itemOrder=segDef.hl7DefFields[i].OrdinalPos;
 				if(itemOrder<1) {
@@ -626,10 +628,10 @@ namespace OpenDentBusiness.HL7 {
 					case "apt.confirmStatus":
 						long aptConfirmDefNum=0;
 						for(int j=0;j<listConfirmStats.Length;j++) {
-							if(seg.GetFieldComponent(itemOrder,1).ToLower()==listConfirmStats[j].ItemName.ToLower()//ItemName is the confirmation name
-								|| (listConfirmStats[j].ItemValue!="" && seg.GetFieldComponent(itemOrder,1).ToLower()==listConfirmStats[j].ItemValue.ToLower()))//ItemValue is the confirmation abbreviation, which may be blank
+							if(seg.GetFieldComponent(itemOrder,1).ToLower()==listConfirmStats[j].Name.ToLower()//ItemName is the confirmation name
+								|| (listConfirmStats[j].Value!="" && seg.GetFieldComponent(itemOrder,1).ToLower()==listConfirmStats[j].Value.ToLower()))//ItemValue is the confirmation abbreviation, which may be blank
 							{
-								aptConfirmDefNum=listConfirmStats[j].DefNum;
+								aptConfirmDefNum=listConfirmStats[j].Id;
 								break;
 							}
 						}
@@ -662,7 +664,7 @@ namespace OpenDentBusiness.HL7 {
 				//Log confirmation status changes.
 				SecurityLogs.MakeLogEntry(Permissions.ApptConfirmStatusEdit,apt.PatNum,
 					"Appointment confirmation status automatically changed from"+" "
-					+Defs.GetName(DefCat.ApptConfirmed,aptOld.Confirmed)+" "+"to"+" "+Defs.GetName(DefCat.ApptConfirmed,apt.Confirmed)
+					+Definitions.GetName(DefinitionCategory.ApptConfirmed,aptOld.Confirmed)+" "+"to"+" "+Definitions.GetName(DefinitionCategory.ApptConfirmed,apt.Confirmed)
 					+" "+"due to an indound HL7 message"+".",apt.AptNum,LogSources.HL7,aptOld.DateTStamp);
 			}
 			_aptProcessed=apt;
@@ -677,7 +679,7 @@ namespace OpenDentBusiness.HL7 {
 			if(apt==null) {//We have to have an appt to process the AIL segment
 				return;
 			}
-			Def[] listConfirmStats=Defs.GetDefsForCategory(DefCat.ApptConfirmed,true).ToArray();
+			Definition[] listConfirmStats=Definitions.GetDefsForCategory(DefinitionCategory.ApptConfirmed,true).ToArray();
 			Appointment aptOld=apt.Copy();	
 			for(int i=0;i<segDef.hl7DefFields.Count;i++) {
 				int intItemOrder=segDef.hl7DefFields[i].OrdinalPos;
@@ -685,10 +687,10 @@ namespace OpenDentBusiness.HL7 {
 					case "apt.confirmStatus":
 						long aptConfirmDefNum=0;
 						for(int j=0;j<listConfirmStats.Length;j++) {
-							if(seg.GetFieldComponent(intItemOrder,1).ToLower()==listConfirmStats[j].ItemName.ToLower()//ItemName is the confirmation name
-								|| (listConfirmStats[j].ItemValue!="" && seg.GetFieldComponent(intItemOrder,1).ToLower()==listConfirmStats[j].ItemValue.ToLower()))//ItemValue is the confirmation abbreviation, which may be blank
+							if(seg.GetFieldComponent(intItemOrder,1).ToLower()==listConfirmStats[j].Name.ToLower()//ItemName is the confirmation name
+								|| (listConfirmStats[j].Value!="" && seg.GetFieldComponent(intItemOrder,1).ToLower()==listConfirmStats[j].Value.ToLower()))//ItemValue is the confirmation abbreviation, which may be blank
 							{
-								aptConfirmDefNum=listConfirmStats[j].DefNum;
+								aptConfirmDefNum=listConfirmStats[j].Id;
 								break;
 							}
 						}
@@ -712,7 +714,7 @@ namespace OpenDentBusiness.HL7 {
 				//Log confirmation status changes.
 				SecurityLogs.MakeLogEntry(Permissions.ApptConfirmStatusEdit,apt.PatNum,
 					"Appointment confirmation status automatically changed from"+" "
-					+Defs.GetName(DefCat.ApptConfirmed,aptOld.Confirmed)+" "+"to"+" "+Defs.GetName(DefCat.ApptConfirmed,apt.Confirmed)
+					+Definitions.GetName(DefinitionCategory.ApptConfirmed,aptOld.Confirmed)+" "+"to"+" "+Definitions.GetName(DefinitionCategory.ApptConfirmed,apt.Confirmed)
 					+" "+"due to an indound HL7 message"+".",apt.AptNum,LogSources.HL7,aptOld.DateTStamp);
 			}
 			_aptProcessed=apt;

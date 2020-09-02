@@ -11,6 +11,7 @@ using CodeBase;
 using Imedisoft.Forms;
 using Imedisoft.Data;
 using Imedisoft.UI;
+using Imedisoft.Data.Models;
 
 namespace OpenDental{
 	/// <summary>
@@ -663,7 +664,7 @@ namespace OpenDental{
 			GridRow row;
 			for(int i=0;i<payList.Count;i++){
 				row=new GridRow();
-				row.Cells.Add(Defs.GetName(DefCat.PaymentTypes,payList[i].PayType));
+				row.Cells.Add(Definitions.GetName(DefinitionCategory.PaymentTypes,payList[i].PayType));
 				row.Cells.Add(AccountingAutoPays.GetPickListDesc(payList[i]));
 				gridMain.ListGridRows.Add(row);
 			}

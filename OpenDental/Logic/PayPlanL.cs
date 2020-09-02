@@ -7,6 +7,8 @@ using CodeBase;
 using OpenDental.UI;
 using System.Data;
 using System.Text;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	/// <summary>Provides a central location for both PayPlan and PayPlanDynamic to use the same, or similar methods.</summary>
@@ -79,8 +81,8 @@ namespace OpenDental {
 				row.Cells.Add("");//due
 				row.Cells.Add("");//payment
 				if(!isDynamic) {
-					row.ForeColor=Defs.GetDefByExactName(DefCat.AccountColors,"Adjustment").ItemColor;
-					row.Cells.Add((payPlanCharge.Principal).ToString("n")); //adjustment
+					row.ForeColor=Definitions.GetDefByExactName(DefinitionCategory.AccountColors,"Adjustment").Color;
+					row.Cells.Add(payPlanCharge.Principal.ToString("n")); //adjustment
 				}
 			}
 			else {//regular charge
@@ -102,7 +104,7 @@ namespace OpenDental {
 		}
 
 		public static GridRow CreateRowForPaySplit(DataRow rowBundlePayment,PaySplit paySplit,bool isDynamic=false) {
-			string descript=Defs.GetName(DefCat.PaymentTypes,PIn.Long(rowBundlePayment["PayType"].ToString()));
+			string descript=Definitions.GetName(DefinitionCategory.PaymentTypes,PIn.Long(rowBundlePayment["PayType"].ToString()));
 			if(rowBundlePayment["CheckNum"].ToString()!="") {
 				descript+=" #"+rowBundlePayment["CheckNum"].ToString();
 			}
@@ -123,13 +125,13 @@ namespace OpenDental {
 			}
 			row.Cells.Add("");//8 Balance (filled later)
 			row.Tag=paySplit;
-			row.ForeColor=Defs.GetDefByExactName(DefCat.AccountColors,"Payment").ItemColor;
+			row.ForeColor=Definitions.GetDefByExactName(DefinitionCategory.AccountColors,"Payment").Color;
 			return row;
 		}
 
 		public static GridRow CreateRowForClaimProcs(DataRow rowBundleClaimProc,bool isDynamic=false) {
 			//Either a claimpayment or a bundle of claimprocs with no claimpayment that were on the same date.
-			string descript=Defs.GetName(DefCat.InsurancePaymentType,PIn.Long(rowBundleClaimProc["PayType"].ToString()));
+			string descript=Definitions.GetName(DefinitionCategory.InsurancePaymentType,PIn.Long(rowBundleClaimProc["PayType"].ToString()));
 			if(rowBundleClaimProc["CheckNum"].ToString()!="") {
 				descript+=" #"+rowBundleClaimProc["CheckNum"];
 			}
@@ -157,7 +159,7 @@ namespace OpenDental {
 			}
 			row.Cells.Add("");//8 Balance (filled later)
 			row.Tag=rowBundleClaimProc;
-			row.ForeColor=Defs.GetDefByExactName(DefCat.AccountColors,"Insurance Payment").ItemColor;
+			row.ForeColor=Definitions.GetDefByExactName(DefinitionCategory.AccountColors,"Insurance Payment").Color;
 			return row;
 		}
 

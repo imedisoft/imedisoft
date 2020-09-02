@@ -13,6 +13,8 @@ using System.Collections;
 using OpenDental.UI;
 using CodeBase;
 using OpenDental.Thinfinity;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental
 {
@@ -923,7 +925,7 @@ namespace OpenDental
 		{
 			comboLastClaimTrack.IncludeAll = true;
 			comboLastClaimTrack.SelectionModeMulti = false;//just a reminder
-			comboLastClaimTrack.Items.AddDefs(Defs.GetDefsForCategory(DefCat.ClaimCustomTracking, true));
+			comboLastClaimTrack.Items.AddDefs(Definitions.GetByCategory(DefinitionCategory.ClaimCustomTracking));
 			comboLastClaimTrack.IsAllSelected = true;
 		}
 
@@ -931,7 +933,7 @@ namespace OpenDental
 		{
 			comboErrorDef.Items.AddDefNone();
 			comboErrorDef.SelectedIndex = 0;
-			comboErrorDef.Items.AddDefs(Defs.GetDefsForCategory(DefCat.ClaimErrorCode, true));
+			comboErrorDef.Items.AddDefs(Definitions.GetByCategory(DefinitionCategory.ClaimErrorCode));
 		}
 
 		private void FillDateFilterBy()
@@ -1024,7 +1026,7 @@ namespace OpenDental
 			GridRow row;
 			string type;
 			total = 0;
-			List<Def> listErrorDefs = Defs.GetDefsForCategory(DefCat.ClaimErrorCode, true);
+			List<Definition> listErrorDefs = Definitions.GetDefsForCategory(DefinitionCategory.ClaimErrorCode, true);
 			foreach (RpOutstandingIns.OutstandingInsClaim claimCur in listOustandingInsClaims)
 			{
 				if (!checkIgnoreCustomChecked)
@@ -1116,14 +1118,14 @@ namespace OpenDental
 							row.Cells.Add(claimCur.DateOrigSent.ToShortDateString());
 							break;
 						case "TrackStat":
-							row.Cells.Add(Defs.GetDefsForCategory(DefCat.ClaimCustomTracking, true)
-								.FirstOrDefault(x => x.DefNum == claimCur.CustomTrackingDefNum)?.ItemName ?? "-");
+							row.Cells.Add(Definitions.GetDefsForCategory(DefinitionCategory.ClaimCustomTracking, true)
+								.FirstOrDefault(x => x.Id == claimCur.CustomTrackingDefNum)?.Name ?? "-");
 							break;
 						case "DateStat":
 							row.Cells.Add(claimCur.DateLog.ToShortDateString());
 							break;
 						case "Error":
-							row.Cells.Add(listErrorDefs.FirstOrDefault(x => x.DefNum == claimCur.ErrorCodeDefNum)?.ItemName ?? "-");
+							row.Cells.Add(listErrorDefs.FirstOrDefault(x => x.Id == claimCur.ErrorCodeDefNum)?.Name ?? "-");
 							break;
 						case "Amount":
 							row.Cells.Add(claimCur.ClaimFee.ToString("f"));

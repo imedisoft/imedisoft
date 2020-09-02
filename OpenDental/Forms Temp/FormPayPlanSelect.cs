@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using System.Linq;
 using OpenDental.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>Lets the user choose which payment plan to attach a payment to if there are more than one available.</summary>
@@ -188,7 +190,7 @@ namespace OpenDental{
 					row.Cells.Add("None");
 				}
 				else {
-					row.Cells.Add(Defs.GetDef(DefCat.PayPlanCategories,planCur.PlanCategory).ItemName);
+					row.Cells.Add(Definitions.GetDef(DefinitionCategory.PayPlanCategories,planCur.PlanCategory).Name);
 				}
 				row.Cells.Add(PayPlans.GetTotalCost(planCur.PayPlanNum,_listPayPlanCharges).ToString("F"));//total cost
 				row.Cells.Add(PayPlans.GetBalance(planCur.PayPlanNum,_listPayPlanCharges,listPaySplits).ToString("F"));//balance

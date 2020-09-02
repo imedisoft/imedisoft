@@ -9,6 +9,8 @@ using CodeBase;
 using System.Collections.Generic;
 using Imedisoft.X12.Codes;
 using System.Linq;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -71,7 +73,7 @@ namespace OpenDental{
 		private Label label9;
 		private System.Windows.Forms.GroupBox groupBox4;// Required designer variable.
 		private UI.ComboBoxPlus comboProv;
-		private List<Def> _listBillingTypeDefs;
+		private List<Definition> _listBillingTypeDefs;
 
 		///<summary></summary>
 		public FormPractice(){
@@ -756,10 +758,10 @@ namespace OpenDental{
 			comboProv.Items.AddProvsFull(Providers.GetDeepCopy(true));
 			comboProv.SetSelectedProvNum(Prefs.GetLong(PrefName.PracticeDefaultProv));
 			listBillType.Items.Clear();
-			_listBillingTypeDefs=Defs.GetDefsForCategory(DefCat.BillingTypes,true);
+			_listBillingTypeDefs=Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes,true);
 			for(int i=0;i<_listBillingTypeDefs.Count;i++){
-				listBillType.Items.Add(_listBillingTypeDefs[i].ItemName);
-				if(_listBillingTypeDefs[i].DefNum==Prefs.GetLong(PrefName.PracticeDefaultBillType))
+				listBillType.Items.Add(_listBillingTypeDefs[i].Name);
+				if(_listBillingTypeDefs[i].Id==Prefs.GetLong(PrefName.PracticeDefaultBillType))
 					listBillType.SelectedIndex=i;
 			}
 			if(Prefs.GetBool(PrefName.EasyHidePublicHealth)){
@@ -856,7 +858,7 @@ namespace OpenDental{
 			}
 			if(listBillType.SelectedIndex!=-1){
 				if(Prefs.Set(PrefName.PracticeDefaultBillType
-					,_listBillingTypeDefs[listBillType.SelectedIndex].DefNum))
+					,_listBillingTypeDefs[listBillType.SelectedIndex].Id))
 				{
 					changed=true;
 				}

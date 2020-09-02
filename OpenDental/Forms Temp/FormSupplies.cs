@@ -11,6 +11,8 @@ using OpenDentBusiness;
 using System.Drawing.Printing;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormSupplies:ODForm {
@@ -59,7 +61,7 @@ namespace OpenDental {
 				butCancel.Text="Close";
 			}
 			comboCategories.IncludeAll=true;
-			comboCategories.Items.AddDefs(Defs.GetDefsForCategory(DefCat.SupplyCats,true));//not showing hidden categories
+			comboCategories.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.SupplyCats,true));//not showing hidden categories
 			comboCategories.IsAllSelected=true;
 			FillGrid();
 		}
@@ -78,7 +80,7 @@ namespace OpenDental {
 			}
 			List<long> listCategories=null;
 			if(!comboCategories.IsAllSelected){
-				listCategories=comboCategories.GetListSelected<Def>().Select(x=>x.DefNum).ToList();
+				listCategories=comboCategories.GetListSelected<Definition>().Select(x=>x.Id).ToList();
 			}
 			if(refresh){
 				_listSupplies=Supplies.GetList(listSupplierNums,checkShowHidden.Checked,textFind.Text,listCategories);
@@ -133,7 +135,7 @@ namespace OpenDental {
 			for(int i=0;i<_listSupplies.Count;i++) {
 				row=new GridRow();
 				if(gridMain.ListGridRows.Count==0 || _listSupplies[i].Category != _listSupplies[i-1].Category) {
-					row.Cells.Add(Defs.GetName(DefCat.SupplyCats,_listSupplies[i].Category));//Add the new category header in this row if it doesn't match the previous row's category.
+					row.Cells.Add(Definitions.GetName(DefinitionCategory.SupplyCats,_listSupplies[i].Category));//Add the new category header in this row if it doesn't match the previous row's category.
 				}
 				else {
 					row.Cells.Add("");
@@ -198,7 +200,7 @@ namespace OpenDental {
 		}
 
 		private void butAdd_Click(object sender,EventArgs e) {
-			if(Defs.GetDefsForCategory(DefCat.SupplyCats,true).Count==0) {
+			if(Definitions.GetDefsForCategory(DefinitionCategory.SupplyCats,true).Count==0) {
 				MessageBox.Show("No supply categories have been created.  Go to the supply inventory window, select categories, and enter at least one supply category first.");
 				return;
 			}
@@ -219,10 +221,10 @@ namespace OpenDental {
 				supply.Category=_listSupplies[gridMain.SelectedIndices[0]].Category;
 			}
 			else if(comboCategories.IsAllSelected || comboCategories.SelectedIndices.Count==0){
-				supply.Category=((Def)comboCategories.Items.GetObjectAt(0)).DefNum;
+				supply.Category=((Definition)comboCategories.Items.GetObjectAt(0)).Id;
 			}
 			else{
-				supply.Category=((Def)comboCategories.Items.GetObjectAt(comboCategories.SelectedIndices[0])).DefNum;
+				supply.Category=((Definition)comboCategories.Items.GetObjectAt(comboCategories.SelectedIndices[0])).Id;
 			}
 			//supplier:
 			supply.SupplierNum=_listSuppliers[comboSuppliers.SelectedIndices[0]].SupplierNum;

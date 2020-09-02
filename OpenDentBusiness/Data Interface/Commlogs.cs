@@ -8,6 +8,7 @@ using System.Reflection;
 using CodeBase;
 using DataConnectionBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -170,7 +171,7 @@ namespace OpenDentBusiness{
 			}
 			else
 			{
-				com.Note += "  " + Defs.GetName(DefCat.RecallUnschedStatus, defNumNewStatus);
+				com.Note += "  " + Definitions.GetName(DefinitionCategory.RecallUnschedStatus, defNumNewStatus);
 			}
 			com.UserNum = userNum;
 			com.CommSource = commSource;
@@ -208,15 +209,15 @@ namespace OpenDentBusiness{
 		public static long GetTypeAuto(CommItemTypeAuto typeauto)
 		{
 			//No need to check RemotingRole; no call to db.
-			List<Def> listDefs = Defs.GetDefsForCategory(DefCat.CommLogTypes);
-			Def def = listDefs.FirstOrDefault(x => x.ItemValue == typeauto.ToString());
+			List<Definition> listDefs = Definitions.GetDefsForCategory(DefinitionCategory.CommLogTypes);
+			Definition def = listDefs.FirstOrDefault(x => x.Value == typeauto.ToString());
 			if (def != null)
 			{
-				return def.DefNum;
+				return def.Id;
 			}
 			if (listDefs.Count > 0)
 			{
-				return listDefs[0].DefNum;
+				return listDefs[0].Id;
 			}
 			return 0;
 		}

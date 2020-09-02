@@ -1,4 +1,5 @@
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -89,8 +90,8 @@ namespace OpenDentBusiness
 			{
 				stringBuilder.AppendLine(
 					"Task priority changed from " + 
-					Defs.GetDef(DefCat.TaskPriorities, taskCur.PriorityId).ItemName + " to " + 
-					Defs.GetDef(DefCat.TaskPriorities, taskNext.PriorityId).ItemName + ".");
+					Definitions.GetDef(DefinitionCategory.TaskPriorities, taskCur.PriorityId).Name + " to " + 
+					Definitions.GetDef(DefinitionCategory.TaskPriorities, taskNext.PriorityId).Name + ".");
 			}
 
 

@@ -7,6 +7,8 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormEhrProvKeysCustomer:ODForm {
@@ -165,8 +167,8 @@ namespace OpenDental {
 		}
 
 		private void butSave_Click(object sender,EventArgs e) {
-			long defNum=Defs.GetFirstForCategory(DefCat.ImageCats,true).DefNum;
-			Bitmap bitmap=new Bitmap(this.Width,this.Height);
+			long defNum=Definitions.GetFirstForCategory(DefinitionCategory.ImageCats,true).Id;
+			Bitmap bitmap=new Bitmap(Width,this.Height);
 			this.DrawToBitmap(bitmap,new Rectangle(0,0,this.Width,this.Height));
 			Patient guar=Patients.GetPat(Guarantor);
 			try {

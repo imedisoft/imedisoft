@@ -1,5 +1,6 @@
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -350,7 +351,7 @@ namespace OpenDentBusiness{
 		/// <summary>Gets a list of all unearned types that are marked as hidden on account.</summary>
 		public static List<long> GetHiddenUnearnedDefNums() {
 			//No need to check RemotingRole; no call to db.
-			return Defs.GetDefsForCategory(DefCat.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.ItemValue)).Select(x => x.DefNum).ToList();
+			return Definitions.GetDefsForCategory(DefinitionCategory.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.Value)).Select(x => x.Id).ToList();
 		}
 
 		///<summary>Returns the total amount of prepayments for the entire family.  To ignore a specific payment provide the payNumExcluded param.</summary>

@@ -319,12 +319,8 @@ namespace OpenDentBusiness {
 				+"GROUP BY ClinicNum,YEAR(procedurelog.ProcDate),MONTH(procedurelog.ProcDate),DAY(procedurelog.ProcDate)";//Does not work for Oracle. Consider enhancing with DbHelper.Year(),DbHelper.Month()
 			command+=" ORDER BY ClinicNum,ProcDate";
 			DataTable tableProduction=new DataTable();
-			if(isCEMT) {
 				tableProduction=Database.ExecuteDataTable(command);
-			}
-			else {
-				tableProduction=ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
-			}
+
 			tableProduction.TableName="tableProduction";
 			#endregion
 			#region Adjustments
@@ -346,12 +342,9 @@ namespace OpenDentBusiness {
 				+"GROUP BY ClinicNum,YEAR(adjustment.AdjDate),MONTH(adjustment.AdjDate),DAY(adjustment.AdjDate)";
 			command+=" ORDER BY ClinicNum,AdjDate";
 			DataTable tableAdj=new DataTable();
-			if(isCEMT) {
-				tableAdj=Database.ExecuteDataTable(command);
-			}
-			else { 
-				tableAdj=ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
-			}
+
+			tableAdj = Database.ExecuteDataTable(command);
+
 			tableAdj.TableName="tableAdj";
 			#endregion
 			#region TableInsWriteoff
@@ -408,7 +401,7 @@ namespace OpenDentBusiness {
 				tableInsWriteoff=Database.ExecuteDataTable(command);
 			}
 			else { 
-				tableInsWriteoff=ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
+				tableInsWriteoff=Database.ExecuteDataTable(command);
 			}
 			tableInsWriteoff.TableName="tableInsWriteoff";
 			#endregion
@@ -423,7 +416,7 @@ namespace OpenDentBusiness {
 			}
 			command= "SELECT "+DbHelper.DtimeToDate("t.AptDateTime")+" SchedDate,SUM(t.Fee-t.WriteoffEstimate) Amount,ClinicNum "
 				+"FROM (SELECT appointment.AptDateTime,IFNULL(procedurelog.ProcFee*(procedurelog.UnitQty+procedurelog.BaseUnits),0) Fee,appointment.ClinicNum,";
-			if(ReportsComplex.RunFuncOnReportServer(() => Prefs.GetBoolNoCache(PrefName.ReportPandIschedProdSubtractsWO))) {
+			if(Prefs.GetBoolNoCache(PrefName.ReportPandIschedProdSubtractsWO)) {
 				//Subtract both PPO and capitation writeoffs
 				command+="SUM(IFNULL(CASE WHEN WriteOffEstOverride != -1 THEN WriteOffEstOverride ELSE WriteOffEst END,0)) WriteoffEstimate ";
 			}
@@ -446,12 +439,9 @@ namespace OpenDentBusiness {
 				+" GROUP BY procedurelog.ProcNum) t "//without this, there can be duplicate proc rows due to the claimproc join with dual insurance.
 				+"GROUP BY SchedDate,ClinicNum "
 				+"ORDER BY SchedDate";
-			if(isCEMT) {
+
 				tableSched=Database.ExecuteDataTable(command);
-			}
-			else { 
-				tableSched=ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
-			}
+
 			tableSched.TableName="tableSched";
 			#endregion
 			#region TableProdGoal
@@ -479,12 +469,8 @@ namespace OpenDentBusiness {
 				+"AND schedule."+DbHelper.BetweenDates("SchedDate",dateFrom,dateTo)+" "
 				+whereProv
 				+whereClin;
-			if(isCEMT) {
-				tableProdGoal=Database.ExecuteDataTable(command);
-			}
-			else {
-				tableProdGoal=ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
-			}
+
+			tableProdGoal=Database.ExecuteDataTable(command);
 			tableProdGoal.TableName="tableProdGoal";	
 			#endregion
 			#region WriteOffAdjustments
@@ -512,7 +498,7 @@ namespace OpenDentBusiness {
 					tableWriteOffAdjustments=Database.ExecuteDataTable(command);
 				}
 				else { 
-					tableWriteOffAdjustments=ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
+					tableWriteOffAdjustments=Database.ExecuteDataTable(command);
 				}
 			}
 			tableWriteOffAdjustments.TableName="tableWriteOffAdjustments";

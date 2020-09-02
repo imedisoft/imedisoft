@@ -6,12 +6,14 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.ReportingComplex;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormRpActivePatients:ODForm {
 		private List<Clinic> _listClinics;
 		private List<Provider> _listProviders;
-		private List<Def> _listBillingTypeDefs;
+		private List<Definition> _listBillingTypeDefs;
 
 		public FormRpActivePatients() {
 			InitializeComponent();
@@ -21,9 +23,9 @@ namespace OpenDental {
 		private void FormRpActivePatients_Load(object sender,EventArgs e) {
 			dateStart.SelectionStart=DateTime.Today;
 			dateEnd.SelectionStart=DateTime.Today;
-			_listBillingTypeDefs=Defs.GetDefsForCategory(DefCat.BillingTypes,true);
+			_listBillingTypeDefs=Definitions.GetByCategory(DefinitionCategory.BillingTypes);
 			for(int i=0;i<_listBillingTypeDefs.Count;i++) {
-				listBillingTypes.Items.Add(_listBillingTypeDefs[i].ItemName);
+				listBillingTypes.Items.Add(_listBillingTypeDefs[i].Name);
 			}
 			_listProviders=Providers.GetListReports();
 			for(int i=0;i<_listProviders.Count;i++) {
@@ -145,12 +147,12 @@ namespace OpenDental {
 			}
 			if(checkAllBilling.Checked) {
 				for(int i=0;i<_listBillingTypeDefs.Count;i++) {
-					listBillingTypeDefNums.Add(_listBillingTypeDefs[i].DefNum);
+					listBillingTypeDefNums.Add(_listBillingTypeDefs[i].Id);
 				}
 			}
 			else {
 				for(int i=0;i<listBillingTypes.SelectedIndices.Count;i++) {
-					listBillingTypeDefNums.Add(_listBillingTypeDefs[listBillingTypes.SelectedIndices[i]].DefNum);
+					listBillingTypeDefNums.Add(_listBillingTypeDefs[listBillingTypes.SelectedIndices[i]].Id);
 				}
 			}
 			DataTable tablePats=RpActivePatients.GetActivePatientTable(dateStart.SelectionStart,dateEnd.SelectionStart,listProvNums,listClinicNums
@@ -200,7 +202,7 @@ namespace OpenDental {
 					if(i>0) {
 						subtitleBilling+=", ";
 					}
-					subtitleBilling+=Defs.GetValue(DefCat.BillingTypes,_listBillingTypeDefs[listBillingTypes.SelectedIndices[i]].DefNum);
+					subtitleBilling+=Definitions.GetValue(DefinitionCategory.BillingTypes,_listBillingTypeDefs[listBillingTypes.SelectedIndices[i]].Id);
 				}
 			}
 			report.ReportName="Active Patients";

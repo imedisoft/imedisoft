@@ -1,5 +1,6 @@
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -319,7 +320,7 @@ namespace OpenDentBusiness
 					+ "or is not setup properly.";
 			}
 			List<ProgramProperty> listProps = dictAllProps[clinicNum];
-			Def newBillType = Defs.GetDef(DefCat.BillingTypes, Prefs.GetLong(PrefName.TransworldPaidInFullBillingType));
+			Definition newBillType = Definitions.GetDef(DefinitionCategory.BillingTypes, Prefs.GetLong(PrefName.TransworldPaidInFullBillingType));
 			if (newBillType == null)
 			{
 				return "The default paid in full billing type is not set.  An automated suspend message cannot be sent until the "
@@ -394,14 +395,14 @@ namespace OpenDentBusiness
 			TsiTransLogs.Insert(log);
 			//update family billing type to the paid in full billing type pref
 			List<Patient> listAllPats = Patients.GetFamily(patAging.Guarantor).ListPats.ToList();
-			Patients.UpdateFamilyBillingType(newBillType.DefNum, patAging.PatNum);
+			Patients.UpdateFamilyBillingType(newBillType.Id, patAging.PatNum);
 			foreach (Patient pat in listAllPats)
 			{
-				if (pat.BillingType == newBillType.DefNum)
+				if (pat.BillingType == newBillType.Id)
 				{
 					continue;
 				}
-				string logTxt = "Patient billing type changed from '" + Defs.GetName(DefCat.BillingTypes, pat.BillingType) + "' to '" + newBillType.ItemName
+				string logTxt = "Patient billing type changed from '" + Definitions.GetName(DefinitionCategory.BillingTypes, pat.BillingType) + "' to '" + newBillType.Name
 					+ "' due to a status update message being sent to Transworld from the account module.";
 				SecurityLogs.MakeLogEntry(Permissions.PatientBillingEdit, pat.PatNum, logTxt);
 			}

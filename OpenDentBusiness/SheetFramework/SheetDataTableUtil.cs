@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Data;
 using System.Globalization;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness.SheetFramework {
 	public class SheetDataTableUtil {
@@ -654,7 +656,7 @@ namespace OpenDentBusiness.SheetFramework {
 					row.Done="X";
 				}
 				ProcedureCode procCode=ProcedureCodes.GetProcCode(treatPlan.ListProcTPs[i].ProcCode);
-				row.Priority=Defs.GetName(DefCat.TxPriorities,treatPlan.ListProcTPs[i].Priority);
+				row.Priority=Definitions.GetName(DefinitionCategory.TxPriorities,treatPlan.ListProcTPs[i].Priority);
 				row.Tth=treatPlan.ListProcTPs[i].ToothNumTP;
 				row.Surf=treatPlan.ListProcTPs[i].Surf;
 				row.Code=treatPlan.ListProcTPs[i].ProcCode;
@@ -691,7 +693,7 @@ namespace OpenDentBusiness.SheetFramework {
 				subCatPercUCR+=(decimal)treatPlan.ListProcTPs[i].CatPercUCR;
 				totCatPercUCR+=(decimal)treatPlan.ListProcTPs[i].CatPercUCR;
 				row.Dx=treatPlan.ListProcTPs[i].Dx;
-				row.ColorText=Defs.GetColor(DefCat.TxPriorities,treatPlan.ListProcTPs[i].Priority);
+				row.ColorText=Definitions.GetColor(DefinitionCategory.TxPriorities,treatPlan.ListProcTPs[i].Priority);
 				if(row.ColorText==System.Drawing.Color.White) {
 					row.ColorText=System.Drawing.Color.Black;
 				}
@@ -713,7 +715,7 @@ namespace OpenDentBusiness.SheetFramework {
 					row.FeeAllowed=subfeeallowed;
 					row.TaxEst=subTaxEst;
 					row.CatPercUCR=subCatPercUCR;
-					row.ColorText=Defs.GetColor(DefCat.TxPriorities,treatPlan.ListProcTPs[i].Priority);
+					row.ColorText=Definitions.GetColor(DefinitionCategory.TxPriorities,treatPlan.ListProcTPs[i].Priority);
 					if(row.ColorText==System.Drawing.Color.White) {
 						row.ColorText=System.Drawing.Color.Black;
 					}

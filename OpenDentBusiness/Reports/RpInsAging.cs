@@ -18,7 +18,7 @@ namespace OpenDentBusiness {
 			string ninetyDaysAgo=POut.Date(rpo.AsOfDate.AddDays(-90));
 			string patOrGuar=(rpo.IsGroupByFam?"guar":"patient");
 			string command="SELECT guarAging.PatNum,";
-			if(ReportsComplex.RunFuncOnReportServer(() => Prefs.GetBoolNoCache(PrefName.ReportsShowPatNum))) {
+			if(Prefs.GetBoolNoCache(PrefName.ReportsShowPatNum)) {
 				command+=DbHelper.Concat("guarAging.PatNum","' - '","guarAging.LName","', '","guarAging.FName","' '","guarAging.MiddleI");
 			}
 			else {
@@ -74,13 +74,13 @@ namespace OpenDentBusiness {
 					OR guarAging.InsPayEst_Total > 0.005)
 				ORDER BY guarAging.LName,guarAging.FName";
 			ReportComplexEvent.Fire(EventCategory.ReportComplex,"Running Insurance Estimate Query...");
-			DataTable insTable = ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
+			DataTable insTable = Database.ExecuteDataTable(command);
 			#endregion Insurance Aging
 			#region Regular Aging
 			DataTable regAging=new DataTable();
 			//Don't run regular aging if detailed breakdown as it can take a long time to run for large customers.
 			if(!rpo.IsDetailedBreakdown) {
-				regAging=ReportsComplex.RunFuncOnReportServer(() => RpAging.GetAgingTable(rpo));
+				regAging=RpAging.GetAgingTable(rpo);
 			}
 			#endregion Regular Aging
 			#region Merge Insurance and Regular Aging

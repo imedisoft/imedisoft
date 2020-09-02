@@ -82,9 +82,9 @@ namespace OpenDental{
 		///<summary>If no aptNum was passed into this form, this boolean will be set to true to indicate that AptCur.AptNum cannot be trusted until after the insert occurs.
 		///Someday we should consider using the IsNew flag instead after we remove all of the appointment pre-insert logic.</summary>
 		private bool _isInsertRequired=false;
-		private List<Def> _listRecallUnschedStatusDefs;
-		private List<Def> _listApptConfirmedDefs;
-		private List<Def> _listApptProcsQuickAddDefs;
+		private List<Definition> _listRecallUnschedStatusDefs;
+		private List<Definition> _listApptConfirmedDefs;
+		private List<Definition> _listApptProcsQuickAddDefs;
 		///<summary>A list of all ClaimProcs that are related to the patient's current procedures</summary>
 		private List<ClaimProc> _listClaimProcs;
 		///<summary>A list of all Adjustments that are related to the patient's current procedures</summary>
@@ -249,7 +249,7 @@ namespace OpenDental{
 			}
 			else if(IsSchedulingUnscheduledAppt) {//User is authorized for Permissions.ApptConfirmStatusEdit.
 				//Causes the confirmation status to be reset in the UI, mimics ContrAppt.pinBoard_MouseUp(...)
-				AptCur.Confirmed=Defs.GetFirstForCategory(DefCat.ApptConfirmed,true).DefNum;
+				AptCur.Confirmed=Definitions.GetFirstForCategory(DefinitionCategory.ApptConfirmed,true).Id;
 			}
 			//The objects below are needed when adding procs to this appt.
 			fam=_loadData.Family;
@@ -345,24 +345,24 @@ namespace OpenDental{
 			}
 			comboUnschedStatus.Items.Add("none");
 			comboUnschedStatus.SelectedIndex=0;
-			_listRecallUnschedStatusDefs=Defs.GetDefsForCategory(DefCat.RecallUnschedStatus,true);
-			_listApptConfirmedDefs=Defs.GetDefsForCategory(DefCat.ApptConfirmed,true);
-			_listApptProcsQuickAddDefs=Defs.GetDefsForCategory(DefCat.ApptProcsQuickAdd,true);
+			_listRecallUnschedStatusDefs=Definitions.GetDefsForCategory(DefinitionCategory.RecallUnschedStatus,true);
+			_listApptConfirmedDefs=Definitions.GetDefsForCategory(DefinitionCategory.ApptConfirmed,true);
+			_listApptProcsQuickAddDefs=Definitions.GetDefsForCategory(DefinitionCategory.ApptProcsQuickAdd,true);
 			for(int i=0;i<_listRecallUnschedStatusDefs.Count;i++) {
-				comboUnschedStatus.Items.Add(_listRecallUnschedStatusDefs[i].ItemName);
-				if(_listRecallUnschedStatusDefs[i].DefNum==AptCur.UnschedStatus)
+				comboUnschedStatus.Items.Add(_listRecallUnschedStatusDefs[i].Name);
+				if(_listRecallUnschedStatusDefs[i].Id==AptCur.UnschedStatus)
 					comboUnschedStatus.SelectedIndex=i+1;
 			}
 			for(int i=0;i<_listApptConfirmedDefs.Count;i++) {
-				comboConfirmed.Items.Add(_listApptConfirmedDefs[i].ItemName);
-				if(_listApptConfirmedDefs[i].DefNum==AptCur.Confirmed) {
+				comboConfirmed.Items.Add(_listApptConfirmedDefs[i].Name);
+				if(_listApptConfirmedDefs[i].Id==AptCur.Confirmed) {
 					comboConfirmed.SelectedIndex=i;
 				}
 			}
 			checkTimeLocked.Checked=AptCur.TimeLocked;
 			textNote.Text=AptCur.Note;
 			for(int i=0;i<_listApptProcsQuickAddDefs.Count;i++) {
-				listQuickAdd.Items.Add(_listApptProcsQuickAddDefs[i].ItemName);
+				listQuickAdd.Items.Add(_listApptProcsQuickAddDefs[i].Name);
 			}
 			comboClinic.SelectedClinicNum=AptCur.ClinicNum;
 			if(IsNew) {
@@ -654,14 +654,14 @@ namespace OpenDental{
 			gridComm.ListGridColumns.Add(col);
 			gridComm.ListGridRows.Clear();
 			GridRow row;
-			List<Def> listMiscColorDefs=Defs.GetDefsForCategory(DefCat.MiscColors);
+			List<Definition> listMiscColorDefs=Definitions.GetDefsForCategory(DefinitionCategory.MiscColors);
 			for(int i=0;i<_tableComms.Rows.Count;i++) {
 				row=new GridRow();
 				if(PIn.Long(_tableComms.Rows[i]["CommlogNum"].ToString())>0) {
 					row.Cells.Add(PIn.Date(_tableComms.Rows[i]["commDateTime"].ToString()).ToShortDateString());
 					row.Cells.Add(_tableComms.Rows[i]["Note"].ToString());
 					if(_tableComms.Rows[i]["CommType"].ToString()==Commlogs.GetTypeAuto(CommItemTypeAuto.APPT).ToString()){
-						row.BackColor=listMiscColorDefs[7].ItemColor;
+						row.BackColor=listMiscColorDefs[7].Color;
 					}
 				}
 				else if(PIn.Long(_tableComms.Rows[i]["EmailMessageNum"].ToString())>0) {
@@ -766,7 +766,7 @@ namespace OpenDental{
 							}
 							break;
 						case "Priority":
-							row.Cells.Add(Defs.GetName(DefCat.TxPriorities,proc.Priority));
+							row.Cells.Add(Definitions.GetName(DefinitionCategory.TxPriorities,proc.Priority));
 							break;
 						case "Code":
 								row.Cells.Add(procCode.ProcCode);
@@ -1324,7 +1324,7 @@ namespace OpenDental{
 					return;
 				}
 			}
-			string[] codes=_listApptProcsQuickAddDefs[listQuickAdd.IndexFromPoint(e.X,e.Y)].ItemValue.Split(',');
+			string[] codes=_listApptProcsQuickAddDefs[listQuickAdd.IndexFromPoint(e.X,e.Y)].Value.Split(',');
 			for(int i=0;i<codes.Length;i++) {
 				if(!ProcedureCodes.GetContainsKey(codes[i])) {//these are D codes, not codeNums.
 					MessageBox.Show("Definition contains invalid code.");
@@ -1799,10 +1799,10 @@ namespace OpenDental{
 				AptCur.UnschedStatus=0;
 			}
 			else{
-				AptCur.UnschedStatus=_listRecallUnschedStatusDefs[comboUnschedStatus.SelectedIndex-1].DefNum;
+				AptCur.UnschedStatus=_listRecallUnschedStatusDefs[comboUnschedStatus.SelectedIndex-1].Id;
 			}
 			if(comboConfirmed.SelectedIndex!=-1){
-				AptCur.Confirmed=_listApptConfirmedDefs[comboConfirmed.SelectedIndex].DefNum;
+				AptCur.Confirmed=_listApptConfirmedDefs[comboConfirmed.SelectedIndex].Id;
 			}
 			AptCur.TimeLocked=checkTimeLocked.Checked;
 			AptCur.ColorOverride=butColor.BackColor;
@@ -2036,8 +2036,8 @@ namespace OpenDental{
 			gridProg.NoteSpanStop=7;
 			gridProg.ListGridRows.Clear();
 			List<Procedure> procsForDay=Procedures.GetProcsForPatByDate(AptCur.PatNum,AptCur.AptDateTime);
-			List<Def> listProgNoteColorDefs=Defs.GetDefsForCategory(DefCat.ProgNoteColors);
-			List<Def> listMiscColorDefs=Defs.GetDefsForCategory(DefCat.MiscColors);
+			List<Definition> listProgNoteColorDefs=Definitions.GetDefsForCategory(DefinitionCategory.ProgNoteColors);
+			List<Definition> listMiscColorDefs=Definitions.GetDefsForCategory(DefinitionCategory.MiscColors);
 			for(int i=0;i<procsForDay.Count;i++){
 				Procedure proc=procsForDay[i];
 				ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
@@ -2096,30 +2096,30 @@ namespace OpenDental{
 				//Row text color.
 				switch(proc.ProcStatus) {
 					case ProcStat.TP:
-						row.ForeColor=listProgNoteColorDefs[0].ItemColor;
+						row.ForeColor=listProgNoteColorDefs[0].Color;
 						break;
 					case ProcStat.C:
-						row.ForeColor=listProgNoteColorDefs[1].ItemColor;
+						row.ForeColor=listProgNoteColorDefs[1].Color;
 						break;
 					case ProcStat.EC:
-						row.ForeColor=listProgNoteColorDefs[2].ItemColor;
+						row.ForeColor=listProgNoteColorDefs[2].Color;
 						break;
 					case ProcStat.EO:
-						row.ForeColor=listProgNoteColorDefs[3].ItemColor;
+						row.ForeColor=listProgNoteColorDefs[3].Color;
 						break;
 					case ProcStat.R:
-						row.ForeColor=listProgNoteColorDefs[4].ItemColor;
+						row.ForeColor=listProgNoteColorDefs[4].Color;
 						break;
 					case ProcStat.D:
 						row.ForeColor=System.Drawing.Color.Black;
 						break;
 					case ProcStat.Cn:
-						row.ForeColor=listProgNoteColorDefs[22].ItemColor;
+						row.ForeColor=listProgNoteColorDefs[22].Color;
 						break;
 				}
 				row.BackColor=System.Drawing.Color.White;
 				if(proc.ProcDate.Date==DateTime.Today) {
-					row.BackColor=listMiscColorDefs[6].ItemColor;
+					row.BackColor=listMiscColorDefs[6].Color;
 				}				
 				gridProg.ListGridRows.Add(row);
 			}
@@ -2367,19 +2367,19 @@ namespace OpenDental{
 
 		private void comboConfirmed_SelectionChangeCommitted(object sender,EventArgs e) {
 			if(Prefs.GetLong(PrefName.AppointmentTimeArrivedTrigger)!=0 //Using appointmentTimeArrivedTrigger preference
-				&& _listApptConfirmedDefs[comboConfirmed.SelectedIndex].DefNum==Prefs.GetLong(PrefName.AppointmentTimeArrivedTrigger) //selected index matches pref
+				&& _listApptConfirmedDefs[comboConfirmed.SelectedIndex].Id==Prefs.GetLong(PrefName.AppointmentTimeArrivedTrigger) //selected index matches pref
 				&& String.IsNullOrWhiteSpace(textTimeArrived.Text))//time not already set 
 			{
 				textTimeArrived.Text=DateTime.Now.ToShortTimeString();
 			}
 			if(Prefs.GetLong(PrefName.AppointmentTimeSeatedTrigger)!=0 //Using AppointmentTimeSeatedTrigger preference
-				&& _listApptConfirmedDefs[comboConfirmed.SelectedIndex].DefNum==Prefs.GetLong(PrefName.AppointmentTimeSeatedTrigger) //selected index matches pref
+				&& _listApptConfirmedDefs[comboConfirmed.SelectedIndex].Id==Prefs.GetLong(PrefName.AppointmentTimeSeatedTrigger) //selected index matches pref
 				&& String.IsNullOrWhiteSpace(textTimeSeated.Text))//time not already set 
 			{
 				textTimeSeated.Text=DateTime.Now.ToShortTimeString();
 			}
 			if(Prefs.GetLong(PrefName.AppointmentTimeDismissedTrigger)!=0 //Using AppointmentTimeDismissedTrigger preference
-				&& _listApptConfirmedDefs[comboConfirmed.SelectedIndex].DefNum==Prefs.GetLong(PrefName.AppointmentTimeDismissedTrigger) //selected index matches pref
+				&& _listApptConfirmedDefs[comboConfirmed.SelectedIndex].Id==Prefs.GetLong(PrefName.AppointmentTimeDismissedTrigger) //selected index matches pref
 				&& String.IsNullOrWhiteSpace(textTimeDismissed.Text))//time not already set 
 			{
 				textTimeDismissed.Text=DateTime.Now.ToShortTimeString();

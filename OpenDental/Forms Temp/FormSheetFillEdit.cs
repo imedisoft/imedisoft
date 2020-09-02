@@ -16,6 +16,8 @@ using OpenDentBusiness;
 using OpenDental.Thinfinity;
 using OpenDentBusiness.IO;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public delegate void SaveStatementToDocDelegate(Statement stmt,Sheet sheet,string pdfFileName="");
@@ -99,7 +101,7 @@ namespace OpenDental {
 			if(Height>SystemInformation.WorkingArea.Height){
 				Height=SystemInformation.WorkingArea.Height;
 			}
-			_isAutoSave=Defs.GetDefsForCategory(DefCat.ImageCats).Any(x => x.ItemValue.Contains("U"));
+			_isAutoSave=Definitions.GetDefsForCategory(DefinitionCategory.ImageCats).Any(x => x.Value.Contains("U"));
 			if(_isAutoSave && !IsInTerminal) {//only visible if the Auto-Save Form usage has been set and is not in kiosk mode
 				//The user must manually uncheck this is they do not want to auto-save the form
 				checkSaveToImages.Checked=true;
@@ -1404,13 +1406,13 @@ namespace OpenDental {
 				_tempPdfFile=Storage.GetTempFileName(".pdf");
 				SheetPrinting.CreatePdf(SheetCur,_tempPdfFile,Stmt,MedLabCur);
 				//Import pdf, this will move the pdf into the correct location for the patient.
-				long defNum=Defs.GetByExactName(DefCat.ImageCats,"Letters");
+				long defNum=Definitions.GetByExactName(DefinitionCategory.ImageCats,"Letters");
 				if(defNum==0) {
 					//This will throw an exception if all ImageCats defs are hidden.  However, many other places in this program make the same assumption that
 					//at least one of these definitions is not hidden.
-					Def def=Defs.GetCatList((int)DefCat.ImageCats).FirstOrDefault(x => !x.IsHidden);
-					defNum=def.DefNum;
-					MessageBox.Show(this,"The Image Category Definition \"Letters\" could not be found.  Referral letter saved to:\r\n"+def.ItemName);
+					Definition def=Definitions.GetCatList(DefinitionCategory.ImageCats).FirstOrDefault(x => !x.IsHidden);
+					defNum=def.Id;
+					MessageBox.Show(this,"The Image Category Definition \"Letters\" could not be found.  Referral letter saved to:\r\n"+def.Name);
 				}
 				Document doc=ImageStore.Import(_tempPdfFile,defNum,patCur);
 				//Update sheetCur with the docnum
@@ -1662,21 +1664,21 @@ namespace OpenDental {
 				//Determine the first category that this PP should be saved to.
 				//"A"==payplan; see FormDefEditImages.cs
 				//look at ContrTreat.cs to change it to handle more than one
-				List<Def> listDefs=Defs.GetDefsForCategory(DefCat.ImageCats,true);
+				List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.ImageCats,true);
 				for(int i = 0;i<listDefs.Count;i++) {
-					if(Regex.IsMatch(listDefs[i].ItemValue,@"A")) {
-						category=listDefs[i].DefNum;
+					if(Regex.IsMatch(listDefs[i].Value,@"A")) {
+						category=listDefs[i].Id;
 						break;
 					}
 				}
 				if(category==0) {
-					List<Def> listImageCatDefsShort=Defs.GetDefsForCategory(DefCat.ImageCats,true);
-					List<Def> listImageCatDefsLong=Defs.GetDefsForCategory(DefCat.ImageCats);
+					List<Definition> listImageCatDefsShort=Definitions.GetDefsForCategory(DefinitionCategory.ImageCats,true);
+					List<Definition> listImageCatDefsLong=Definitions.GetDefsForCategory(DefinitionCategory.ImageCats);
 					if(listImageCatDefsShort.Count!=0) {
-						category=listImageCatDefsShort[0].DefNum;//put it in the first category.
+						category=listImageCatDefsShort[0].Id;//put it in the first category.
 					}
 					else if(listImageCatDefsLong.Count!=0) {//All categories are hidden
-						category=listImageCatDefsLong[0].DefNum;//put it in the first category.
+						category=listImageCatDefsLong[0].Id;//put it in the first category.
 					}
 					else {
 						MessageBox.Show("Error saving document. Unable to find image category.");
@@ -1710,7 +1712,7 @@ namespace OpenDental {
 		private bool SaveAsDocument(char charUsage, string genericFileName = "")
 		{
 			//Get all ImageCat defs for our usage that are not hidden.
-			List<Def> listImageCatDefs = Defs.GetDefsForCategory(DefCat.ImageCats, true).Where(x => x.ItemValue.Contains(charUsage.ToString())).ToList();
+			List<Definition> listImageCatDefs = Definitions.GetByCategory(DefinitionCategory.ImageCats).Where(x => x.Value.Contains(charUsage.ToString())).ToList();
 			if (listImageCatDefs.IsNullOrEmpty())
 			{
 				return true;
@@ -1720,7 +1722,7 @@ namespace OpenDental {
 
 			SheetPrinting.CreatePdf(SheetCur, tempFile, null);
 
-			foreach (Def docCategory in listImageCatDefs)
+			foreach (Definition docCategory in listImageCatDefs)
 			{//usually only one, but do allow them to be saved once per image category.
 				OpenDentBusiness.Document docSave = new Document();
 				docSave.DocNum = Documents.Insert(docSave);
@@ -1728,7 +1730,7 @@ namespace OpenDental {
 				docSave.ImgType = ImageType.Document;
 				docSave.DateCreated = DateTime.Now;
 				docSave.PatNum = patCur.PatNum;
-				docSave.DocCategory = docCategory.DefNum;
+				docSave.DocCategory = docCategory.Id;
 				docSave.Description = fileName;//no extension.
 
 				string filePath = ImageStore.GetPatientFolder(patCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());

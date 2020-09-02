@@ -23,6 +23,8 @@ using MigraDoc.DocumentObjectModel.Tables;
 using System.Linq;
 using CodeBase;
 using OpenDentBusiness.IO;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental
 {
@@ -198,19 +200,19 @@ namespace OpenDental
 			SheetUtil.CalculateHeights(sheet, dataSet, StmtCur, pat: pat, patGuar: fam.Guarantor);
 			string tempPath = Storage.CombinePaths(Storage.GetTempPath(), StmtCur.PatNum.ToString() + ".pdf");
 			SheetPrinting.CreatePdf(sheet, tempPath, StmtCur, dataSet, null, pat: pat, patGuar: fam.Guarantor);
-			List<Def> listImageCatDefs = Defs.GetDefsForCategory(DefCat.ImageCats, true);
+			List<Definition> listImageCatDefs = Definitions.GetDefsForCategory(DefinitionCategory.ImageCats, true);
 			long category = 0;
 			for (int i = 0; i < listImageCatDefs.Count; i++)
 			{
-				if (Regex.IsMatch(listImageCatDefs[i].ItemValue, @"S"))
+				if (Regex.IsMatch(listImageCatDefs[i].Value, @"S"))
 				{
-					category = listImageCatDefs[i].DefNum;
+					category = listImageCatDefs[i].Id;
 					break;
 				}
 			}
 			if (category == 0)
 			{
-				category = listImageCatDefs[0].DefNum;//put it in the first category.
+				category = listImageCatDefs[0].Id;//put it in the first category.
 			}
 			//create doc--------------------------------------------------------------------------------------
 			OpenDentBusiness.Document docc = null;

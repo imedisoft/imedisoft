@@ -505,7 +505,7 @@ namespace OpenDentBusiness
 			{
 				if (_specialty == null)
 				{
-					_specialty = Patients.GetPatientSpecialtyDef(PatNum)?.ItemName ?? "";
+					_specialty = Patients.GetPatientSpecialtyDef(PatNum)?.Name ?? "";
 				}
 
 				return _specialty;

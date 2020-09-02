@@ -13,6 +13,8 @@ using OpenDentBusiness;
 using System.Collections.Generic;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -25,7 +27,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public bool IsNew;
 		private System.Windows.Forms.CheckBox checkHidden;
-		private Def DefCur;
+		private Definition DefCur;
 		private CheckBox checkCutCopyPaste;
 		private CheckBox checkOverlap;
 		private Button butColor;
@@ -34,10 +36,10 @@ namespace OpenDental{
 		private GroupBox groupBoxUsage;
 		
 		///<summary></summary>
-		public FormDefEditBlockout(Def defCur) {
+		public FormDefEditBlockout(Definition defCur) {
 			InitializeComponent();// Required for Windows Form Designer support
-			
-			DefCur=defCur.Copy();
+
+			DefCur = defCur;
 		}
 
 		///<summary></summary>
@@ -200,15 +202,15 @@ namespace OpenDental{
 		#endregion
 
 		private void FormDefEdit_Load(object sender,System.EventArgs e) {
-			textName.Text=DefCur.ItemName;
-			if(DefCur.ItemValue.Contains(BlockoutType.DontCopy.GetDescription())) {
+			textName.Text=DefCur.Name;
+			if(DefCur.Value.Contains(BlockoutType.DontCopy.GetDescription())) {
 				checkCutCopyPaste.Checked=true;
 			}
-			if(DefCur.ItemValue.Contains(BlockoutType.NoSchedule.GetDescription())) {
+			if(DefCur.Value.Contains(BlockoutType.NoSchedule.GetDescription())) {
 				checkOverlap.Checked=true;
 			}
 			checkHidden.Checked=DefCur.IsHidden;
-			butColor.BackColor=DefCur.ItemColor;
+			butColor.BackColor=DefCur.Color;
 		}
 
 		private void butColor_Click(object sender,EventArgs e) {
@@ -222,7 +224,7 @@ namespace OpenDental{
 				MessageBox.Show("Name required.");
 				return;
 			}
-			DefCur.ItemName=textName.Text;
+			DefCur.Name=textName.Text;
 			List<string> itemVal=new List<string>();
 			if(checkCutCopyPaste.Checked) {
 				itemVal.Add(BlockoutType.DontCopy.GetDescription());
@@ -230,15 +232,12 @@ namespace OpenDental{
 			if(checkOverlap.Checked) {
 				itemVal.Add(BlockoutType.NoSchedule.GetDescription());
 			}
-			DefCur.ItemValue=string.Join(",", itemVal);
+			DefCur.Value=string.Join(",", itemVal);
 			DefCur.IsHidden=checkHidden.Checked;
-			DefCur.ItemColor=butColor.BackColor;
-			if(IsNew){
-				Defs.Insert(DefCur);
-			}
-			else{
-				Defs.Update(DefCur);
-			}
+			DefCur.Color=butColor.BackColor;
+			
+			Definitions.Save(DefCur);
+			
 			DialogResult=DialogResult.OK;
 		}
 

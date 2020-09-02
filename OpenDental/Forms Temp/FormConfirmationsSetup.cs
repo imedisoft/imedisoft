@@ -4,12 +4,14 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 
 namespace OpenDental {
 	public partial class FormConfirmationSetup:ODForm {
-		private List<Def> _listApptConfirmedDefs;
+		private List<Definition> _listApptConfirmedDefs;
 
 		public FormConfirmationSetup() {
 			InitializeComponent();
@@ -27,16 +29,16 @@ namespace OpenDental {
 
 		///<summary>Called on load to initially load confirmation with values from the database.  Calls FillGrid at the end.</summary>
 		private void FillTabManualConfirmation() {
-			_listApptConfirmedDefs=Defs.GetDefsForCategory(DefCat.ApptConfirmed,true);
+			_listApptConfirmedDefs=Definitions.GetByCategory(DefinitionCategory.ApptConfirmed);
 			for(int i=0;i<_listApptConfirmedDefs.Count;i++) {
-				comboStatusEmailedConfirm.Items.Add(_listApptConfirmedDefs[i].ItemName);
-				if(_listApptConfirmedDefs[i].DefNum==Prefs.GetLong(PrefName.ConfirmStatusEmailed)) {
+				comboStatusEmailedConfirm.Items.Add(_listApptConfirmedDefs[i].Name);
+				if(_listApptConfirmedDefs[i].Id==Prefs.GetLong(PrefName.ConfirmStatusEmailed)) {
 					comboStatusEmailedConfirm.SelectedIndex=i;
 				}
 			}
 			for(int i=0;i<_listApptConfirmedDefs.Count;i++) {
-				comboStatusTextMessagedConfirm.Items.Add(_listApptConfirmedDefs[i].ItemName);
-				if(_listApptConfirmedDefs[i].DefNum==Prefs.GetLong(PrefName.ConfirmStatusTextMessaged)) {
+				comboStatusTextMessagedConfirm.Items.Add(_listApptConfirmedDefs[i].Name);
+				if(_listApptConfirmedDefs[i].Id==Prefs.GetLong(PrefName.ConfirmStatusTextMessaged)) {
 					comboStatusTextMessagedConfirm.SelectedIndex=i;
 				}
 			}
@@ -117,13 +119,13 @@ namespace OpenDental {
 				Prefs.Set(PrefName.ConfirmStatusEmailed,0);
 			}
 			else {
-				Prefs.Set(PrefName.ConfirmStatusEmailed,_listApptConfirmedDefs[comboStatusEmailedConfirm.SelectedIndex].DefNum);
+				Prefs.Set(PrefName.ConfirmStatusEmailed,_listApptConfirmedDefs[comboStatusEmailedConfirm.SelectedIndex].Id);
 			}
 			if(comboStatusTextMessagedConfirm.SelectedIndex==-1) {
 				Prefs.Set(PrefName.ConfirmStatusTextMessaged,0);
 			}
 			else {
-				Prefs.Set(PrefName.ConfirmStatusTextMessaged,_listApptConfirmedDefs[comboStatusTextMessagedConfirm.SelectedIndex].DefNum);
+				Prefs.Set(PrefName.ConfirmStatusTextMessaged,_listApptConfirmedDefs[comboStatusTextMessagedConfirm.SelectedIndex].Id);
 			}
 			//If we want to take the time to check every Update and see if something changed 
 			//then we could move this to a FormClosing event later.

@@ -5,13 +5,15 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 
 namespace OpenDental {
 	public partial class FormDunningSetup:ODForm {
 		private List<Dunning> _listAllDunnings;
-		private List<Def> _listBillingTypeDefs;
+		private List<Definition> _listBillingTypeDefs;
 
 		public FormDunningSetup() {
 			InitializeComponent();
@@ -19,10 +21,10 @@ namespace OpenDental {
 		}
 
 		private void FormDunningSetup_Load(object sender,EventArgs e) {
-			_listBillingTypeDefs=Defs.GetDefsForCategory(DefCat.BillingTypes,true);
+			_listBillingTypeDefs=Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes,true);
 			listBill.Items.Add("("+"all"+")");
 			listBill.SetSelected(0,true);
-			listBill.Items.AddRange(_listBillingTypeDefs.Select(x => x.ItemName).ToArray());
+			listBill.Items.AddRange(_listBillingTypeDefs.Select(x => x.Name).ToArray());
 			comboClinics.SelectedClinicNum=Clinics.ClinicId;
 			FillGrids(true);
 		}
@@ -57,7 +59,7 @@ namespace OpenDental {
 					row.Cells.Add("all");
 				}
 				else{
-					row.Cells.Add(Defs.GetName(DefCat.BillingTypes,dunnCur.BillingType));
+					row.Cells.Add(Definitions.GetName(DefinitionCategory.BillingTypes,dunnCur.BillingType));
 				}
 				if(dunnCur.AgeAccount==0){
 					row.Cells.Add("any");
@@ -91,7 +93,7 @@ namespace OpenDental {
 
 		private bool ValidateDunningFilters(Dunning dunning) {
 			if((!comboClinics.IsAllSelected && comboClinics.SelectedClinicNum!=dunning.ClinicNum)
-				||(!listBill.SelectedIndices.Contains(0) && !listBill.SelectedIndices.OfType<int>().Select(x => _listBillingTypeDefs[x-1].DefNum).Contains(dunning.BillingType))
+				||(!listBill.SelectedIndices.Contains(0) && !listBill.SelectedIndices.OfType<int>().Select(x => _listBillingTypeDefs[x-1].Id).Contains(dunning.BillingType))
 				||(!radioAny.Checked && dunning.AgeAccount!=(byte)(30*new List<RadioButton> { radioAny,radio30,radio60,radio90 }.FindIndex(x => x.Checked)))//0, 30, 60, or 90
 				||(!string.IsNullOrWhiteSpace(textAdv.Text) && dunning.DaysInAdvance!=PIn.Int(textAdv.Text,false))//blank=0
 				||(!radioU.Checked && dunning.InsIsPending!=(YN)new List<RadioButton> { radioU,radioY,radioN }.FindIndex(x => x.Checked)))//0=Unknown, 1=Yes, 2=No+

@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Linq;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness
 {
@@ -32,7 +33,7 @@ namespace OpenDentBusiness
 			}
 			string whereClin = "";
 			//reports should no longer use the cache
-			bool hasClinicsEnabled = ReportsComplex.RunFuncOnReportServer(() => Prefs.HasClinicsEnabledNoCache);
+			bool hasClinicsEnabled =Prefs.HasClinicsEnabledNoCache;
 			if (hasClinicsEnabled)
 			{
 				whereClin += " AND claimproc.ClinicNum IN(";
@@ -107,7 +108,7 @@ namespace OpenDentBusiness
 			{
 				queryIns = DbHelper.LimitOrderBy(queryIns, 0);
 			}
-			DataTable table = ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(queryIns));
+			DataTable table = Database.ExecuteDataTable(queryIns);
 			foreach (DataRow row in table.Rows)
 			{
 				//If there is more than one patient attached to a check, we will append an asterisk to the end.
@@ -129,13 +130,12 @@ namespace OpenDentBusiness
 		public static DataTable GetPatTable(DateTime dateFrom, DateTime dateTo, List<long> listProvNums, List<long> listClinicNums, List<long> listPatientTypes, bool hasAllProvs, bool hasAllClinics, bool hasPatientTypes, bool isGroupedByPatient, bool isUnearnedIncluded, bool doShowProvSeparate, bool doShowHiddenTPUnearned)
 		{
 			//reports should no longer use the cache
-			bool hasClinicsEnabled = ReportsComplex.RunFuncOnReportServer(() => Prefs.HasClinicsEnabledNoCache);
+			bool hasClinicsEnabled = Prefs.HasClinicsEnabledNoCache;
 			List<long> listHiddenUnearnedDefNums = new List<long>();
 			if (!doShowHiddenTPUnearned)
 			{
-				listHiddenUnearnedDefNums = ReportsComplex.RunFuncOnReportServer(() =>
-					  Defs.GetDefsNoCache(DefCat.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.ItemValue)).Select(x => x.DefNum).ToList()
-				);
+				listHiddenUnearnedDefNums = 
+					  Definitions.GetDefsNoCache(DefinitionCategory.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.Value)).Select(x => x.Id).ToList();
 			}
 
 			//patient payments-----------------------------------------------------------------------------------------
@@ -206,7 +206,7 @@ namespace OpenDentBusiness
 				queryPat = DbHelper.LimitOrderBy(queryPat, 0);
 			}
 
-			return ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(queryPat));
+			return Database.ExecuteDataTable(queryPat);
 		}
 	}
 }

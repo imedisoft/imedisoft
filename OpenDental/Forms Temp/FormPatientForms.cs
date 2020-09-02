@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -96,7 +97,7 @@ namespace OpenDental {
 			if(!Security.IsAuthorized(Permissions.Setup)) {
 				return;
 			}
-			FormDefinitions formD=new FormDefinitions(DefCat.ImageCats);
+			FormDefinitions formD=new FormDefinitions(DefinitionCategory.ImageCats);
 			formD.ShowDialog();
 			SecurityLogs.MakeLogEntry(Permissions.Setup,0,"Defs");
 			FillGrid();

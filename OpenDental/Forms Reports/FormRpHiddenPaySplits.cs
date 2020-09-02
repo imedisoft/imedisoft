@@ -5,6 +5,8 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.ReportingComplex;
 using OpenDentBusiness;
 
@@ -14,7 +16,7 @@ namespace OpenDental{
 		private List<Provider> _listProviders;
 		///<summary>List of all clinics the current user has access to, can include Unassigned/0 clinic.</summary>
 		private List<Clinic> _listClinics;
-		private List<Def> _listUnearnedTypes;
+		private List<Definition> _listUnearnedTypes;
 
 		///<summary></summary>
 		public FormRpHiddenPaySplits(){
@@ -44,9 +46,9 @@ namespace OpenDental{
 			_listProviders.Insert(0,Providers.GetUnearnedProv());
 			checkAllProv.Checked=true;
 			listBoxProv.SetItems(_listProviders,x => x.Abbr);
-			_listUnearnedTypes=Defs.GetDefsForCategory(DefCat.PaySplitUnearnedType).Where(x => !string.IsNullOrEmpty(x.ItemValue)).ToList();
+			_listUnearnedTypes=Definitions.GetDefsForCategory(DefinitionCategory.PaySplitUnearnedType).Where(x => !string.IsNullOrEmpty(x.Value)).ToList();
 			checkAllUnearnedTypes.Checked=true;
-			listBoxUnearnedTypes.SetItems(_listUnearnedTypes,x => x.ItemName);
+			listBoxUnearnedTypes.SetItems(_listUnearnedTypes,x => x.Name);
 		}
 
 		private void CheckAllProv_Click(object sender,EventArgs e) {
@@ -122,11 +124,11 @@ namespace OpenDental{
 			}
 			if(checkAllUnearnedTypes.Checked) {
 				subtitleUnearned="All Hidden Unearned";
-				listUnearnedTypeDefNums=_listUnearnedTypes.Select(x => x.DefNum).ToList();
+				listUnearnedTypeDefNums=_listUnearnedTypes.Select(x => x.Id).ToList();
 			}
 			else {
-				subtitleUnearned=string.Join(", ",listBoxUnearnedTypes.GetListSelected<Def>().Select(x => x.ItemName));
-				listUnearnedTypeDefNums=listBoxUnearnedTypes.GetListSelected<Def>().Select(x => x.DefNum).ToList();
+				subtitleUnearned=string.Join(", ",listBoxUnearnedTypes.GetListSelected<Definition>().Select(x => x.Name));
+				listUnearnedTypeDefNums=listBoxUnearnedTypes.GetListSelected<Definition>().Select(x => x.Id).ToList();
 			}
 			if(PrefC.HasClinicsEnabled && checkAllClinics.Checked) {
 				subtitleClinics="All Clinics";

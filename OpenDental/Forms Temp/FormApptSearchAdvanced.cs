@@ -8,6 +8,8 @@ using CodeBase;
 using OpenDental.UI;
 using OpenDentBusiness;
 using System.Linq;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormApptSearchAdvanced:ODForm {
@@ -133,12 +135,12 @@ namespace OpenDental {
 		private void FillBlockouts() {
 			comboBlockout.Items.Clear();
 			comboBlockout.Items.AddDefNone();//if they select 'None' then only search for the provider(s).
-			List<Def> listBlockoutDefs=Defs.GetDefsForCategory(DefCat.BlockoutTypes,true);
+			List<Definition> listBlockoutDefs=Definitions.GetByCategory(DefinitionCategory.BlockoutTypes);
 			for(int i=0;i<listBlockoutDefs.Count;i++){
-				if(listBlockoutDefs[i].ItemValue.Contains(BlockoutType.NoSchedule.GetDescription())) {
+				if(listBlockoutDefs[i].Value.Contains(BlockoutType.NoSchedule.GetDescription())) {
 					continue;//The search will already not show results for Do Not Schedule Blockout types, so users shouldn't be able to select them.
 				}
-				comboBlockout.Items.Add(listBlockoutDefs[i].ItemName,listBlockoutDefs[i]);
+				comboBlockout.Items.Add(listBlockoutDefs[i].Name,listBlockoutDefs[i]);
 			}
 			comboBlockout.SelectedIndex=0;//default to none
 		}

@@ -12,6 +12,8 @@ using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Text;
 using Imedisoft.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public class ClaimL {
@@ -278,9 +280,9 @@ namespace OpenDental {
 				}
 			}
 			paymentCur.DateEntry=DateTimeOD.Today;//So that it will show properly in the new window.
-			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.PaymentTypes,true);
+			List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.PaymentTypes,true);
 			if(listDefs.Count>0) {
-				paymentCur.PayType=listDefs[0].DefNum;
+				paymentCur.PayType=listDefs[0].Id;
 			}
 			paymentCur.PaymentSource=CreditCardSource.None;
 			paymentCur.ProcessStatus=ProcessStat.OfficeProcessed;

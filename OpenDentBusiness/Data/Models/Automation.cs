@@ -1,4 +1,5 @@
 using Imedisoft.Data.Annotations;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -44,7 +45,7 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// Only used if action is CreateCommlog.
 		/// </summary>
-		[ForeignKey(typeof(Def), nameof(Def.DefNum))]
+		[ForeignKey(typeof(Definition), nameof(Definition.Id))]
 		public long CommType;
 
 		/// <summary>

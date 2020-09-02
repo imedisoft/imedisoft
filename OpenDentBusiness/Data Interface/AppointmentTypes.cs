@@ -46,7 +46,7 @@ namespace OpenDentBusiness{
 		public static AppointmentType GetWebSchedNewPatApptTypeByDef(long defNum) {
 			//No need to check RemotingRole; no call to db.
 			List<DefLink> listDefLinks=DefLinks.GetDefLinksByType(DefLinkType.AppointmentType);
-			DefLink defLink=listDefLinks.FirstOrDefault(x => x.DefNum==defNum);
+			DefLink defLink=listDefLinks.FirstOrDefault(x => x.DefinitionId==defNum);
 			if(defLink==null) {
 				return null;
 			}

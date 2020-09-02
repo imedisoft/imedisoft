@@ -1,4 +1,6 @@
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -102,7 +104,7 @@ namespace Imedisoft.Forms
 
 			clinicsGrid.ListGridRows.Clear();
 
-			var clinicSpecialityDescriptions = Defs.GetDefsForCategory(DefCat.ClinicSpecialty).ToDictionary(x => x.DefNum, x => x.ItemName);
+			var clinicSpecialityDescriptions = Definitions.GetByCategory(DefinitionCategory.ClinicSpecialty, true).ToDictionary(x => x.Id, x => x.Name);
 			var clinicSpecialityLinks = DefLinks.GetListByFKeys(clinics.Select(x => x.Id).ToList(), DefLinkType.Clinic);
 
 			foreach (var clinic in clinics)
@@ -115,7 +117,7 @@ namespace Imedisoft.Forms
 				var specialities = 
 					clinicSpecialityLinks
 						.Where(defLink => defLink.FKey == clinic.Id)
-						.Select(defLink => clinicSpecialityDescriptions.TryGetValue(defLink.DefNum, out var speciality) ? speciality : "")
+						.Select(defLink => clinicSpecialityDescriptions.TryGetValue(defLink.DefinitionId, out var speciality) ? speciality : "")
 						.Where(speciality => !string.IsNullOrWhiteSpace(speciality));
 
 				var gridRow = new GridRow();

@@ -1,20 +1,22 @@
-using System;
-using System.Collections;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.ReportingComplex;
 using OpenDentBusiness;
-using System.Linq;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace OpenDental.UI
 {
-	///<summary>This control can be used anywhere that the user can enter a series of values.</summary>
-	///<remarks>Typically used in reports to let the user specify the parameters.  Also used in the new patient medical questionnaire.  Each item in the list can be of a different input type, and this control will dynamically arrange them from the top down.  It adapts to many different widths.  If the input fields extend beyond the lower edge of the control, then a scrollbar is added.  This control can also be used for a series of values that are not to be displayed, but not altered.</remarks>
-	public class ContrMultInput : System.Windows.Forms.UserControl{
+    ///<summary>This control can be used anywhere that the user can enter a series of values.</summary>
+    ///<remarks>Typically used in reports to let the user specify the parameters.  Also used in the new patient medical questionnaire.  Each item in the list can be of a different input type, and this control will dynamically arrange them from the top down.  It adapts to many different widths.  If the input fields extend beyond the lower edge of the control, then a scrollbar is added.  This control can also be used for a series of values that are not to be displayed, but not altered.</remarks>
+    public class ContrMultInput : UserControl
+	{
 		///<summary>Required designer variable.</summary>
 		private System.ComponentModel.Container components = null;
 		private MultInputItemCollection multInputItems;
@@ -28,23 +30,25 @@ namespace OpenDental.UI
 		public bool IsQuestionnaire;
 
 		///<summary></summary>
-		public ContrMultInput(){
+		public ContrMultInput()
+		{
 			InitializeComponent();// This call is required by the Windows.Forms Form Designer.
-			multInputItems=new MultInputItemCollection();
+			multInputItems = new MultInputItemCollection();
 			panelSlide.MouseWheel += new System.Windows.Forms.MouseEventHandler(panelSlide_MouseWheel);
 			vScrollBar2.MouseWheel += new System.Windows.Forms.MouseEventHandler(panelSlide_MouseWheel);
 		}
 
 		///<summary> Clean up any resources being used.</summary>
-		protected override void Dispose( bool disposing ){
-			if( disposing )
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
 			{
-				if(components != null)
+				if (components != null)
 				{
 					components.Dispose();
 				}
 			}
-			base.Dispose( disposing );
+			base.Dispose(disposing);
 		}
 
 		#region Component Designer generated code
@@ -112,27 +116,30 @@ namespace OpenDental.UI
 			}
 		}*/
 
-		private void ContrMultInput_Layout(object sender, System.Windows.Forms.LayoutEventArgs e) {
+		private void ContrMultInput_Layout(object sender, System.Windows.Forms.LayoutEventArgs e)
+		{
 			//MessageBox.Show("layout");
-			if(multInputItems==null)
+			if (multInputItems == null)
 				return;
-			Graphics g=this.CreateGraphics();
+			Graphics g = this.CreateGraphics();
 			this.SuspendLayout();
-			panelMain.Width=Width-2;
-			panelMain.Height=Height-2;
-			vScrollBar2.Visible=false;
-			panelSlide.Width=Width-2;
-			int maxH=200;//600
-			int requiredH=ArrangeControls(g);
-			if(requiredH>Height-2 && requiredH<maxH){//resize, but no scrollbar
-				//this should be skipped on second pass because height adequate
-				Height=requiredH+2;
+			panelMain.Width = Width - 2;
+			panelMain.Height = Height - 2;
+			vScrollBar2.Visible = false;
+			panelSlide.Width = Width - 2;
+			int maxH = 200;//600
+			int requiredH = ArrangeControls(g);
+			if (requiredH > Height - 2 && requiredH < maxH)
+			{//resize, but no scrollbar
+			 //this should be skipped on second pass because height adequate
+				Height = requiredH + 2;
 				ResumeLayout();
 				return;//Layout will be triggered again
 			}
-			if(requiredH>Height-2){//if the controls were too big to fit even with H at max
-				vScrollBar2.Visible=true;
-				panelSlide.Width-=vScrollBar2.Width;
+			if (requiredH > Height - 2)
+			{//if the controls were too big to fit even with H at max
+				vScrollBar2.Visible = true;
+				panelSlide.Width -= vScrollBar2.Width;
 				ArrangeControls(g);//then layout again, but we don't care about the H
 			}
 			g.Dispose();
@@ -140,343 +147,412 @@ namespace OpenDental.UI
 		}
 
 		/// <summary>Returns the required height.</summary>
-		private int ArrangeControls(Graphics g){
+		private int ArrangeControls(Graphics g)
+		{
 			//calculate width of input section
-			int inputW=300;//the widest allowed for the input section on the right.
-			if(IsQuestionnaire){
-				inputW=450;
+			int inputW = 300;//the widest allowed for the input section on the right.
+			if (IsQuestionnaire)
+			{
+				inputW = 450;
 			}
-			if(panelSlide.Width<600){
-				inputW=panelSlide.Width/2;
+			if (panelSlide.Width < 600)
+			{
+				inputW = panelSlide.Width / 2;
 			}
-			int promptW=panelSlide.Width-inputW;
+			int promptW = panelSlide.Width - inputW;
 			panelSlide.Controls.Clear();
-			int yPos=5;
-			int itemH=0;//item height
-			labels=new Label[multInputItems.Count];
-			inputs=new Control[multInputItems.Count];
-			for(int i=0;i<multInputItems.Count;i++){
+			int yPos = 5;
+			int itemH = 0;//item height
+			labels = new Label[multInputItems.Count];
+			inputs = new Control[multInputItems.Count];
+			for (int i = 0; i < multInputItems.Count; i++)
+			{
 				//Calculate height
-				itemH=(int)g.MeasureString(((MultInputItem)multInputItems[i]).PromptingText,Font,promptW).Height;
-				if(itemH<20)
-					itemH=20;
+				itemH = (int)g.MeasureString(multInputItems[i].PromptingText, Font, promptW).Height;
+				if (itemH < 20)
+					itemH = 20;
 				//promptingText
-				labels[i]=new Label();
-				labels[i].Location=new Point(2,yPos);
+				labels[i] = new Label();
+				labels[i].Location = new Point(2, yPos);
 				//labels[i].Name="Label"+i.ToString();
-				labels[i].Size=new Size(promptW-5,itemH);
-				labels[i].Text=multInputItems[i].PromptingText;
-				labels[i].TextAlign=ContentAlignment.MiddleRight;
+				labels[i].Size = new Size(promptW - 5, itemH);
+				labels[i].Text = multInputItems[i].PromptingText;
+				labels[i].TextAlign = ContentAlignment.MiddleRight;
 				//labels[i].BorderStyle=BorderStyle.FixedSingle;//just used in debugging layout
 				panelSlide.Controls.Add(labels[i]);
-				if(multInputItems[i].ValueType==FieldValueType.Boolean){
+				if (multInputItems[i].ValueType == FieldValueType.Boolean)
+				{
 					//add a checkbox
-					inputs[i]=new CheckBox();
-					inputs[i].Location=new Point(promptW,yPos+(itemH-20)/2);
-					inputs[i].Size=new Size(inputW-5,20);
-					if(multInputItems[i].CurrentValues.Count==0)
-						((CheckBox)inputs[i]).Checked=false;
+					inputs[i] = new CheckBox();
+					inputs[i].Location = new Point(promptW, yPos + (itemH - 20) / 2);
+					inputs[i].Size = new Size(inputW - 5, 20);
+					if (multInputItems[i].CurrentValues.Count == 0)
+						((CheckBox)inputs[i]).Checked = false;
 					else
-						((CheckBox)inputs[i]).Checked=true;
-					((CheckBox)inputs[i]).FlatStyle=FlatStyle.System;
+						((CheckBox)inputs[i]).Checked = true;
+					((CheckBox)inputs[i]).FlatStyle = FlatStyle.System;
 					panelSlide.Controls.Add(inputs[i]);
 				}
-				else if(multInputItems[i].ValueType==FieldValueType.Date){
+				else if (multInputItems[i].ValueType == FieldValueType.Date)
+				{
 					//add a validDate box
-					inputs[i]=new ValidDate();
-					inputs[i].Location=new Point(promptW,yPos+(itemH-20)/2);
-					if(inputW<100){//not enough room for a fullsize box
-						inputs[i].Size=new Size(inputW-20,20);
+					inputs[i] = new ValidDate();
+					inputs[i].Location = new Point(promptW, yPos + (itemH - 20) / 2);
+					if (inputW < 100)
+					{//not enough room for a fullsize box
+						inputs[i].Size = new Size(inputW - 20, 20);
 					}
-					else{
-						inputs[i].Size=new Size(75,20);
+					else
+					{
+						inputs[i].Size = new Size(75, 20);
 					}
 					;
-					if(multInputItems[i].CurrentValues.Count>0){
-						DateTime myDate=(DateTime)multInputItems[i].CurrentValues[0];
-						inputs[i].Text=myDate.ToShortDateString();
+					if (multInputItems[i].CurrentValues.Count > 0)
+					{
+						DateTime myDate = (DateTime)multInputItems[i].CurrentValues[0];
+						inputs[i].Text = myDate.ToShortDateString();
 					}
 					panelSlide.Controls.Add(inputs[i]);
 				}
-				else if(multInputItems[i].ValueType==FieldValueType.Def){
+				else if (multInputItems[i].ValueType == FieldValueType.Def)
+				{
 					//add a psuedo combobox filled with visible defs for one category
-					inputs[i]=new ComboBoxMulti();
-					List<Def> listDefs=Defs.GetDefsForCategory(multInputItems[i].DefCategory,true);
-					for(int j=0;j<listDefs.Count;j++){
-						((ComboBoxMulti)inputs[i]).Items.Add(listDefs[j].ItemName);
-						if(multInputItems[i].CurrentValues.Count > 0
+					inputs[i] = new ComboBoxMulti();
+					List<Definition> listDefs = Definitions.GetDefsForCategory(multInputItems[i].DefCategory, true);
+					for (int j = 0; j < listDefs.Count; j++)
+					{
+						((ComboBoxMulti)inputs[i]).Items.Add(listDefs[j].Name);
+						if (multInputItems[i].CurrentValues.Count > 0
 							&& multInputItems[i].CurrentValues
-							.Contains(listDefs[j].DefNum))
+							.Contains(listDefs[j].Id))
 						{
-							((ComboBoxMulti)inputs[i]).SetSelected(j,true);
+							((ComboBoxMulti)inputs[i]).SetSelected(j, true);
 						}
 					}
-					inputs[i].Location=new Point(promptW,yPos+(itemH-20)/2);
-					inputs[i].Size=new Size(inputW-5,20);
+					inputs[i].Location = new Point(promptW, yPos + (itemH - 20) / 2);
+					inputs[i].Size = new Size(inputW - 5, 20);
 					panelSlide.Controls.Add(inputs[i]);
 				}
-				else if(multInputItems[i].ValueType==FieldValueType.Enum){
+				else if (multInputItems[i].ValueType == FieldValueType.Enum)
+				{
 					//add a psuedo combobox filled with values for one enumeration
-					inputs[i]=new ComboBoxMulti();
-					Type eType=Type.GetType("OpenDental."+multInputItems[i].EnumerationType.ToString());
-					for(int j=0;j<Enum.GetNames(eType).Length;j++){
+					inputs[i] = new ComboBoxMulti();
+					Type eType = Type.GetType("OpenDental." + multInputItems[i].EnumerationType.ToString());
+					for (int j = 0; j < Enum.GetNames(eType).Length; j++)
+					{
 						((ComboBoxMulti)inputs[i]).Items.Add(Enum.GetNames(eType)[j]);
-						if(multInputItems[i].CurrentValues.Count > 0
-							&& multInputItems[i].CurrentValues.Contains((int)(Enum.Parse(eType,Enum.GetNames(eType)[j])))  )
+						if (multInputItems[i].CurrentValues.Count > 0
+							&& multInputItems[i].CurrentValues.Contains((int)(Enum.Parse(eType, Enum.GetNames(eType)[j]))))
 						{
-							((ComboBoxMulti)inputs[i]).SetSelected(j,true);
+							((ComboBoxMulti)inputs[i]).SetSelected(j, true);
 						}
 					}
-					inputs[i].Location=new Point(promptW,yPos+(itemH-20)/2);
-					inputs[i].Size=new Size(inputW-5,20);
+					inputs[i].Location = new Point(promptW, yPos + (itemH - 20) / 2);
+					inputs[i].Size = new Size(inputW - 5, 20);
 					panelSlide.Controls.Add(inputs[i]);
 				}
-				else if(multInputItems[i].ValueType==FieldValueType.ForeignKey){
+				else if (multInputItems[i].ValueType == FieldValueType.ForeignKey)
+				{
 					//add a psuedo combobox filled with values from one table
-					inputs[i]=new ComboBoxMulti();
+					inputs[i] = new ComboBoxMulti();
 					//these two arrays are matched item for item
-					string[] foreignRows=GetFRows(multInputItems[i].FKType);
-					long[] foreignKeys=GetFKeys(multInputItems[i].FKType);
-					for(int j=0;j<foreignRows.Length;j++){
+					string[] foreignRows = GetFRows(multInputItems[i].FKType);
+					long[] foreignKeys = GetFKeys(multInputItems[i].FKType);
+					for (int j = 0; j < foreignRows.Length; j++)
+					{
 						((ComboBoxMulti)inputs[i]).Items.Add(foreignRows[j]);
-						if(multInputItems[i].CurrentValues.Count > 0
-							&& multInputItems[i].CurrentValues.Contains(foreignKeys[j])  )
+						if (multInputItems[i].CurrentValues.Count > 0
+							&& multInputItems[i].CurrentValues.Contains(foreignKeys[j]))
 						{
-							((ComboBoxMulti)inputs[i]).SetSelected(j,true);
+							((ComboBoxMulti)inputs[i]).SetSelected(j, true);
 						}
 					}
-					inputs[i].Location=new Point(promptW,yPos+(itemH-20)/2);
-					inputs[i].Size=new Size(inputW-5,20);
+					inputs[i].Location = new Point(promptW, yPos + (itemH - 20) / 2);
+					inputs[i].Size = new Size(inputW - 5, 20);
 					panelSlide.Controls.Add(inputs[i]);
 				}
-				else if(multInputItems[i].ValueType==FieldValueType.Integer){
+				else if (multInputItems[i].ValueType == FieldValueType.Integer)
+				{
 					//add a validNumber box
-					inputs[i]=new ValidNumber();
-					inputs[i].Location=new Point(promptW,yPos+(itemH-20)/2);
-					if(inputW<100){//not enough room for a fullsize box
-						inputs[i].Size=new Size(inputW-20,20);
+					inputs[i] = new ValidNumber();
+					inputs[i].Location = new Point(promptW, yPos + (itemH - 20) / 2);
+					if (inputW < 100)
+					{//not enough room for a fullsize box
+						inputs[i].Size = new Size(inputW - 20, 20);
 					}
-					else{
-						inputs[i].Size=new Size(75,20);
+					else
+					{
+						inputs[i].Size = new Size(75, 20);
 					}
-					if(multInputItems[i].CurrentValues.Count>0){
-						inputs[i].Text=((int)multInputItems[i].CurrentValues[0]).ToString();
+					if (multInputItems[i].CurrentValues.Count > 0)
+					{
+						inputs[i].Text = ((int)multInputItems[i].CurrentValues[0]).ToString();
 					}
 					panelSlide.Controls.Add(inputs[i]);
 				}
-				else if(multInputItems[i].ValueType==FieldValueType.Number){
+				else if (multInputItems[i].ValueType == FieldValueType.Number)
+				{
 					//add a validDouble box
-					inputs[i]=new ValidDouble();
-					inputs[i].Location=new Point(promptW,yPos+(itemH-20)/2);
-					if(inputW<100){//not enough room for a fullsize box
-						inputs[i].Size=new Size(inputW-20,20);
+					inputs[i] = new ValidDouble();
+					inputs[i].Location = new Point(promptW, yPos + (itemH - 20) / 2);
+					if (inputW < 100)
+					{//not enough room for a fullsize box
+						inputs[i].Size = new Size(inputW - 20, 20);
 					}
-					else{
-						inputs[i].Size=new Size(75,20);
+					else
+					{
+						inputs[i].Size = new Size(75, 20);
 					}
-					if(multInputItems[i].CurrentValues.Count>0){
-						inputs[i].Text=((double)multInputItems[i].CurrentValues[0]).ToString("n");
+					if (multInputItems[i].CurrentValues.Count > 0)
+					{
+						inputs[i].Text = ((double)multInputItems[i].CurrentValues[0]).ToString("n");
 					}
 					panelSlide.Controls.Add(inputs[i]);
 				}
-				else if(multInputItems[i].ValueType==FieldValueType.String){
+				else if (multInputItems[i].ValueType == FieldValueType.String)
+				{
 					//add a textbox
-					inputs[i]=new TextBox();
-					inputs[i].Location=new Point(promptW,yPos+(itemH-20)/2);
+					inputs[i] = new TextBox();
+					inputs[i].Location = new Point(promptW, yPos + (itemH - 20) / 2);
 					//inputs[i].Name=
-					inputs[i].Size=new Size(inputW-5,20);
-					if(multInputItems[i].CurrentValues.Count>0){
-						inputs[i].Text=multInputItems[i].CurrentValues[0].ToString();
+					inputs[i].Size = new Size(inputW - 5, 20);
+					if (multInputItems[i].CurrentValues.Count > 0)
+					{
+						inputs[i].Text = multInputItems[i].CurrentValues[0].ToString();
 					}
 					panelSlide.Controls.Add(inputs[i]);
 				}
-				else if(multInputItems[i].ValueType==FieldValueType.YesNoUnknown) {
+				else if (multInputItems[i].ValueType == FieldValueType.YesNoUnknown)
+				{
 					//add two checkboxes: Yes(1) and No(2).
-					inputs[i]=new ContrYN();
-					if(multInputItems[i].CurrentValues.Count>0){
-						((ContrYN)inputs[i]).CurrentValue=(YN)multInputItems[i].CurrentValues[0];
+					inputs[i] = new ContrYN();
+					if (multInputItems[i].CurrentValues.Count > 0)
+					{
+						((ContrYN)inputs[i]).CurrentValue = (YN)multInputItems[i].CurrentValues[0];
 					}
-					inputs[i].Location=new Point(promptW,yPos+(itemH-20)/2);
-					inputs[i].Size=new Size(inputW-5,20);
+					inputs[i].Location = new Point(promptW, yPos + (itemH - 20) / 2);
+					inputs[i].Size = new Size(inputW - 5, 20);
 					panelSlide.Controls.Add(inputs[i]);
 				}
-				yPos+=itemH+5;
-				if(yPos>panelMain.Height && !vScrollBar2.Visible)
+				yPos += itemH + 5;
+				if (yPos > panelMain.Height && !vScrollBar2.Visible)
 					return yPos;//There's not enough room, so stop and make the scrollbar visible.
 			}
-			panelSlide.Height=yPos;
-			vScrollBar2.Maximum=panelSlide.Height;
-			vScrollBar2.Minimum=0;
-			vScrollBar2.LargeChange=panelMain.Height;
-			vScrollBar2.SmallChange=5;
+			panelSlide.Height = yPos;
+			vScrollBar2.Maximum = panelSlide.Height;
+			vScrollBar2.Minimum = 0;
+			vScrollBar2.LargeChange = panelMain.Height;
+			vScrollBar2.SmallChange = 5;
 			return -1;
 		}
 
-		private string[] GetFRows(ReportFKType fKType){
-			string[] retVal=new string[0];
-			switch(fKType){
+		private string[] GetFRows(ReportFKType fKType)
+		{
+			string[] retVal = new string[0];
+			switch (fKType)
+			{
 				case ReportFKType.SchoolClass:
 					return SchoolClasses.GetDeepCopy().Select(x => SchoolClasses.GetDescript(x)).ToArray();
 			}
 			return retVal;
 		}
 
-		private long[] GetFKeys(ReportFKType fKType) {
-			long[] retVal=new long[0];
-			switch(fKType){
+		private long[] GetFKeys(ReportFKType fKType)
+		{
+			long[] retVal = new long[0];
+			switch (fKType)
+			{
 				case ReportFKType.SchoolClass:
 					return SchoolClasses.GetDeepCopy().Select(x => x.Id).ToArray();
 			}
 			return retVal;
 		}
 
-		private void vScrollBar2_Scroll(object sender, System.Windows.Forms.ScrollEventArgs e) {
-			panelSlide.Location=new Point(0,-vScrollBar2.Value);
-			if(ActiveControl==null){//only activate scroll if no control within this control is active
+		private void vScrollBar2_Scroll(object sender, ScrollEventArgs e)
+		{
+			panelSlide.Location = new Point(0, -vScrollBar2.Value);
+			if (ActiveControl == null)
+			{//only activate scroll if no control within this control is active
 				vScrollBar2.Select();
 			}
 		}
 
-		private void panelSlide_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e){
-			if(!vScrollBar2.Visible){
+		private void panelSlide_MouseWheel(object sender, MouseEventArgs e)
+		{
+			if (!vScrollBar2.Visible)
+			{
 				return;
 			}
-			int max=vScrollBar2.Maximum-vScrollBar2.LargeChange;
-			int newScrollVal=vScrollBar2.Value-e.Delta/8;
-			if(newScrollVal > max){
-				vScrollBar2.Value=max;
-			}
-			else if(newScrollVal < vScrollBar2.Minimum){
-				vScrollBar2.Value=vScrollBar2.Minimum;
-			}
-			else{
-				vScrollBar2.Value=newScrollVal;
-			}
-			panelSlide.Location=new Point(0,-vScrollBar2.Value);
-    }
 
-		/// <summary></summary>
-		public void AddInputItem(string promptingText,FieldValueType valueType,ArrayList currentValues,EnumType enumerationType,DefCat defCategory,ReportFKType fKType){
-			multInputItems.Add(new MultInputItem(promptingText,valueType,currentValues,enumerationType,defCategory,fKType));
+			int max = vScrollBar2.Maximum - vScrollBar2.LargeChange;
+			int newScrollVal = vScrollBar2.Value - e.Delta / 8;
+			if (newScrollVal > max)
+			{
+				vScrollBar2.Value = max;
+			}
+			else if (newScrollVal < vScrollBar2.Minimum)
+			{
+				vScrollBar2.Value = vScrollBar2.Minimum;
+			}
+			else
+			{
+				vScrollBar2.Value = newScrollVal;
+			}
+
+			panelSlide.Location = new Point(0, -vScrollBar2.Value);
 		}
 
-		/// <summary>Overload for just one simple value.</summary>
-		public void AddInputItem(string promptingText,FieldValueType valueType,object currentValue){
-			ArrayList currentValues=new ArrayList();
+		public void AddInputItem(string promptingText, FieldValueType valueType, ArrayList currentValues, EnumType enumerationType, string defCategory, ReportFKType fKType)
+		{
+			multInputItems.Add(new MultInputItem(promptingText, valueType, currentValues, enumerationType, defCategory, fKType));
+		}
+
+		/// <summary>
+		/// Overload for just one simple value.
+		/// </summary>
+		public void AddInputItem(string promptingText, FieldValueType valueType, object currentValue)
+		{
+			ArrayList currentValues = new ArrayList();
 			currentValues.Add(currentValue);
 			//the enumtype and defcat are completely arbitrary.
-			multInputItems.Add(new MultInputItem(promptingText,valueType,currentValues,EnumType.ApptStatus,DefCat.AccountColors,ReportFKType.None));
+			multInputItems.Add(new MultInputItem(promptingText, valueType, currentValues, EnumType.ApptStatus, DefinitionCategory.AccountColors, ReportFKType.None));
 		}
 
-		/// <summary>Overload for using DefCat.</summary>
-		public void AddInputItem(string promptingText,FieldValueType valueType,ArrayList currentValues,DefCat defCategory){
-			if(currentValues==null)
-				currentValues=new ArrayList();
-			multInputItems.Add(new MultInputItem(promptingText,valueType,currentValues,EnumType.ApptStatus,defCategory,ReportFKType.None));
+		/// <summary>
+		/// Overload for using DefinitionCategory.
+		/// </summary>
+		public void AddInputItem(string promptingText, FieldValueType valueType, ArrayList currentValues, string defCategory)
+		{
+			if (currentValues == null)
+				currentValues = new ArrayList();
+			multInputItems.Add(new MultInputItem(promptingText, valueType, currentValues, EnumType.ApptStatus, defCategory, ReportFKType.None));
 		}
 
 		/// <summary>Overload for using Enum.</summary>
-		public void AddInputItem(string promptingText,FieldValueType valueType,ArrayList currentValues,EnumType enumerationType){
-			if(currentValues==null)
-				currentValues=new ArrayList();
-			multInputItems.Add(new MultInputItem(promptingText,valueType,currentValues,enumerationType,DefCat.AccountColors,ReportFKType.None));
+		public void AddInputItem(string promptingText, FieldValueType valueType, ArrayList currentValues, EnumType enumerationType)
+		{
+			if (currentValues == null)
+				currentValues = new ArrayList();
+			multInputItems.Add(new MultInputItem(promptingText, valueType, currentValues, enumerationType, DefinitionCategory.AccountColors, ReportFKType.None));
 		}
 
-		private void ContrMultInput_Paint(object sender, System.Windows.Forms.PaintEventArgs e) {
-			e.Graphics.DrawRectangle(new Pen(Color.FromArgb(127,157,185))//blue
-				,0,0,Width-1,Height-1);
+		private void ContrMultInput_Paint(object sender, PaintEventArgs e)
+		{
+			e.Graphics.DrawRectangle(new Pen(Color.FromArgb(127, 157, 185))//blue
+				, 0, 0, Width - 1, Height - 1);
 		}
 
-		private void panelSlide_Click(object sender, System.EventArgs e) {
+		private void panelSlide_Click(object sender, EventArgs e)
+		{
 			panelSlide.Select();
 		}
 
 		///<summary>Should run AllFieldsAreValid() first. This is called from the parent form to retrieve the data that the user entered.  Returns an arraylist.  For most fields, the length of the arraylist will be 0 or 1.</summary>
-		public ArrayList GetCurrentValues(int item){
-			ArrayList retVal=new ArrayList();
-			if(multInputItems[item].ValueType==FieldValueType.Boolean){
-				if(((CheckBox)inputs[item]).Checked){
+		public ArrayList GetCurrentValues(int item)
+		{
+			ArrayList retVal = new ArrayList();
+			if (multInputItems[item].ValueType == FieldValueType.Boolean)
+			{
+				if (((CheckBox)inputs[item]).Checked)
+				{
 					retVal.Add(true);
 				}
 			}
-			else if(multInputItems[item].ValueType==FieldValueType.Date){
+			else if (multInputItems[item].ValueType == FieldValueType.Date)
+			{
 				retVal.Add(PIn.Date(inputs[item].Text));
 			}
-			else if(multInputItems[item].ValueType==FieldValueType.Def){
-				ComboBoxMulti comboBox=(ComboBoxMulti)inputs[item];
-				List<Def> listDefs=Defs.GetDefsForCategory(multInputItems[item].DefCategory,true);
-				for(int j=0;j<comboBox.SelectedIndices.Count;j++){
+			else if (multInputItems[item].ValueType == FieldValueType.Def)
+			{
+				ComboBoxMulti comboBox = (ComboBoxMulti)inputs[item];
+				List<Definition> listDefs = Definitions.GetDefsForCategory(multInputItems[item].DefCategory, true);
+				for (int j = 0; j < comboBox.SelectedIndices.Count; j++)
+				{
 					retVal.Add(
-						listDefs[(int)comboBox.SelectedIndices[j]].DefNum);
+						listDefs[(int)comboBox.SelectedIndices[j]].Id);
 				}
 			}
-			else if(multInputItems[item].ValueType==FieldValueType.Enum){
-				ComboBoxMulti comboBox=(ComboBoxMulti)inputs[item];
-				Type eType=Type.GetType("OpenDental."+multInputItems[item].EnumerationType.ToString());
-				for(int j=0;j<comboBox.SelectedIndices.Count;j++){
+			else if (multInputItems[item].ValueType == FieldValueType.Enum)
+			{
+				ComboBoxMulti comboBox = (ComboBoxMulti)inputs[item];
+				Type eType = Type.GetType("OpenDental." + multInputItems[item].EnumerationType.ToString());
+				for (int j = 0; j < comboBox.SelectedIndices.Count; j++)
+				{
 					retVal.Add(
-						(int)(Enum.Parse(eType,Enum.GetNames(eType)[(int)comboBox.SelectedIndices[j]])));
+						(int)(Enum.Parse(eType, Enum.GetNames(eType)[(int)comboBox.SelectedIndices[j]])));
 				}
 			}
-			else if(multInputItems[item].ValueType==FieldValueType.Integer){
+			else if (multInputItems[item].ValueType == FieldValueType.Integer)
+			{
 				retVal.Add(PIn.Long(inputs[item].Text));
 			}
-			else if(multInputItems[item].ValueType==FieldValueType.Number){
+			else if (multInputItems[item].ValueType == FieldValueType.Number)
+			{
 				retVal.Add(PIn.Double(inputs[item].Text));
 			}
-			else if(multInputItems[item].ValueType==FieldValueType.String){
-				if(inputs[item].Text!=""){
+			else if (multInputItems[item].ValueType == FieldValueType.String)
+			{
+				if (inputs[item].Text != "")
+				{
 					//the text is first stripped of any ?'s
-					retVal.Add(Regex.Replace(inputs[item].Text,@"\?",""));
+					retVal.Add(Regex.Replace(inputs[item].Text, @"\?", ""));
 				}
 			}
-			else if(multInputItems[item].ValueType==FieldValueType.YesNoUnknown) {
-				retVal.Add(  ((ContrYN)inputs[item]).CurrentValue   );
+			else if (multInputItems[item].ValueType == FieldValueType.YesNoUnknown)
+			{
+				retVal.Add(((ContrYN)inputs[item]).CurrentValue);
 			}
 			//MessageBox.Show(multInputItems[1].CurrentValues.Count.ToString());
 			return retVal;
 		}
 
 		///<summary>Called externally to determine whether any of the fields are displaying errors.  Typically used in the OK_Click of the parent form to prevent closing if any field entries are invalid.</summary>
-		public bool AllFieldsAreValid(){
-			for(int i=0;i<multInputItems.Count;i++){
-				if(multInputItems[i].ValueType==FieldValueType.Date){
-					 if(((ValidDate)inputs[i]).errorProvider1.GetError(inputs[i])!=""){
-							return false;
-					 }
+		public bool AllFieldsAreValid()
+		{
+			for (int i = 0; i < multInputItems.Count; i++)
+			{
+				if (multInputItems[i].ValueType == FieldValueType.Date)
+				{
+					if (((ValidDate)inputs[i]).errorProvider1.GetError(inputs[i]) != "")
+					{
+						return false;
+					}
 				}
-				if(multInputItems[i].ValueType==FieldValueType.Integer){
-					 if(((ValidNumber)inputs[i]).errorProvider1.GetError(inputs[i])!=""){
-							return false;
-					 }
+				if (multInputItems[i].ValueType == FieldValueType.Integer)
+				{
+					if (((ValidNumber)inputs[i]).errorProvider1.GetError(inputs[i]) != "")
+					{
+						return false;
+					}
 				}
-				if(multInputItems[i].ValueType==FieldValueType.Number){
-					 if(((ValidDouble)inputs[i]).errorProvider1.GetError(inputs[i])!=""){
-							return false;
-					 }
+				if (multInputItems[i].ValueType == FieldValueType.Number)
+				{
+					if (((ValidDouble)inputs[i]).errorProvider1.GetError(inputs[i]) != "")
+					{
+						return false;
+					}
 				}
 			}
 			return true;
 		}
 
-		public void ClearInputItems(){
+		public void ClearInputItems()
+		{
 			multInputItems.Clear();
 		}
-
-
-
 	}
 
 	///<summary>A single input item in the ContrMultInput control.</summary>
-	public struct MultInputItem{
-		/// <summary></summary>
-		public MultInputItem(string promptingText,FieldValueType valueType,ArrayList currentValues,EnumType enumerationType,DefCat defCategory,ReportFKType fKType){
-			PromptingText=promptingText;
-			ValueType=valueType;
-			CurrentValues=currentValues;
-			EnumerationType=enumerationType;
-			DefCategory=defCategory;
-			FKType=fKType;
+	public struct MultInputItem
+	{
+		public MultInputItem(string promptingText, FieldValueType valueType, ArrayList currentValues, EnumType enumerationType, string defCategory, ReportFKType fKType)
+		{
+			PromptingText = promptingText;
+			ValueType = valueType;
+			CurrentValues = currentValues;
+			EnumerationType = enumerationType;
+			DefCategory = defCategory;
+			FKType = fKType;
 		}
 
 		///<summary>The text that prompts the user what information to enter.</summary>
@@ -487,73 +563,45 @@ namespace OpenDental.UI
 		public ArrayList CurrentValues;
 		///<summary>If the ValueKind is EnumField, then this specifies which type of enum.</summary>
 		public EnumType EnumerationType;
-		///<summary>If ValueKind is DefParameter, then this specifies which DefCat.</summary>
-		public DefCat DefCategory;
+		///<summary>If ValueKind is DefParameter, then this specifies which DefinitionCategory.</summary>
+		public string DefCategory;
 		///<summary>If ValueKind is Foreign key, then this specifies which table.</summary>
 		public ReportFKType FKType;
 	}
 
-	///<summary>Strongly typed collection of type MultInputItems.</summary>
-	public class MultInputItemCollection:CollectionBase{
-			///<summary>Returns the MenuInputItem with the given index.</summary>
-		public MultInputItem this[int index]{
-      get{
-				return((MultInputItem)List[index]);
-      }
-      set{
-				List[index]=value;
-      }
+	/// <summary>
+	/// Strongly typed collection of type MultInputItems.
+	/// </summary>
+	public class MultInputItemCollection : CollectionBase
+	{
+		/// <summary>
+		/// Returns the MenuInputItem with the given index.
+		/// </summary>
+		public MultInputItem this[int index]
+		{
+			get
+			{
+				return (MultInputItem)List[index];
+			}
+			set
+			{
+				List[index] = value;
+			}
 		}
 
-		///<summary></summary>
-		public int Add(MultInputItem value){
-			return(List.Add(value));
+		public int Add(MultInputItem value)
+		{
+			return List.Add(value);
 		}
 
-		///<summary></summary>
-		public int IndexOf(MultInputItem value){
-			return(List.IndexOf(value));
+		public int IndexOf(MultInputItem value)
+		{
+			return List.IndexOf(value);
 		}
 
-		///<summary></summary>
-		public void Insert(int index,MultInputItem value){
-			List.Insert(index,value);
+		public void Insert(int index, MultInputItem value)
+		{
+			List.Insert(index, value);
 		}
-
 	}
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

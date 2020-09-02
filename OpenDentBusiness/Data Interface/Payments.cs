@@ -171,7 +171,7 @@ namespace OpenDentBusiness{
 		public static string GetInfo(int payNum){
 			string retStr;
 			Payment Cur=GetPayment(payNum);
-			retStr=DefB.GetName(DefCat.PaymentTypes,Cur.PayType);
+			retStr=DefB.GetName(DefinitionCategory.PaymentTypes,Cur.PayType);
 			if(Cur.IsSplit) retStr=retStr
 				+"  "+Cur.PayAmt.ToString("c")
 				+"  "+Cur.PayDate.ToString("d")
@@ -690,10 +690,10 @@ namespace OpenDentBusiness{
 		}
 
 		///<summary>Returns a string that can be used for securitylog entries.</summary>
-		public static string GetSecuritylogEntryText(Payment paymentNew,Payment paymentOld,bool isNew,List<Def> listPayTypes=null) {
+		public static string GetSecuritylogEntryText(Payment paymentNew,Payment paymentOld,bool isNew,List<Definition> listPayTypes=null) {
 			string secLogText;
 			if(listPayTypes==null) {
-				listPayTypes=Defs.GetDefsForCategory(DefCat.PaymentTypes);
+				listPayTypes=Definitions.GetDefsForCategory(DefinitionCategory.PaymentTypes);
 			}
 			string clinicAbbrNew=Clinics.GetAbbr(paymentNew.ClinicNum);
 			if(isNew) {
@@ -715,11 +715,11 @@ namespace OpenDentBusiness{
 		}
 
 		///<summary>Returns the payment type string for the payment.</summary>
-		public static string GetPaymentTypeDesc(Payment payment,List<Def> listPayTypes=null) {
+		public static string GetPaymentTypeDesc(Payment payment,List<Definition> listPayTypes=null) {
 			if(listPayTypes==null) {
-				listPayTypes=Defs.GetDefsForCategory(DefCat.PaymentTypes);
+				listPayTypes=Definitions.GetDefsForCategory(DefinitionCategory.PaymentTypes);
 			}
-			return payment.PayType==0 ? "Income Transfer" : Defs.GetName(DefCat.PaymentTypes,payment.PayType,listPayTypes);
+			return payment.PayType==0 ? "Income Transfer" : Definitions.GetName(DefinitionCategory.PaymentTypes,payment.PayType,listPayTypes);
 		}
 
 		///<summary>Securitylog text helper that returns a string of value changes passed in. Returns empty string if no changes.</summary>

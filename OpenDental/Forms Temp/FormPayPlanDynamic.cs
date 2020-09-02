@@ -1,4 +1,6 @@
  using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using Imedisoft.Forms;
 using OpenDental.ReportingComplex;
 using OpenDental.UI;
@@ -84,7 +86,7 @@ namespace OpenDental {
 			#endregion
 			#region Fill and Set UI Fields
 			comboCategory.Items.AddDefNone();
-			comboCategory.Items.AddDefs(Defs.GetDefsForCategory(DefCat.PayPlanCategories,true));
+			comboCategory.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.PayPlanCategories,true));
 			comboCategory.SetSelectedDefNum(_payPlanCur.PlanCategory); 
 			textPatient.Text=Patients.GetLim(_payPlanCur.PatNum).GetNameLF();
 			textGuarantor.Text=Patients.GetLim(_payPlanCur.Guarantor).GetNameLF();

@@ -5,6 +5,8 @@ using System.Text;
 using System.Globalization;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	public class ProcedureLogic{
@@ -84,8 +86,8 @@ namespace OpenDentBusiness {
 					if(y["Priority"].ToString()=="0") {
 						return -1;//x is less than y. Priorities always come first.
 					}
-					return Defs.GetOrder(DefCat.TxPriorities,PIn.Long(x["Priority"].ToString())).CompareTo
-						(Defs.GetOrder(DefCat.TxPriorities,PIn.Long(y["Priority"].ToString())));
+					return Definitions.GetOrder(DefinitionCategory.TxPriorities,PIn.Long(x["Priority"].ToString())).CompareTo
+						(Definitions.GetOrder(DefinitionCategory.TxPriorities,PIn.Long(y["Priority"].ToString())));
 				}
 			}
 			//priorities are the same, so sort by toothrange
@@ -151,7 +153,7 @@ namespace OpenDentBusiness {
 					if(y.Priority==0) {
 						return -1;//x is less than y. Priorities always come first.
 					}
-					return Defs.GetOrder(DefCat.TxPriorities,x.Priority).CompareTo(Defs.GetOrder(DefCat.TxPriorities,y.Priority));
+					return Definitions.GetOrder(DefinitionCategory.TxPriorities,x.Priority).CompareTo(Definitions.GetOrder(DefinitionCategory.TxPriorities,y.Priority));
 			}
 			//priorities are the same, so sort by toothrange
 			if(x.ToothRange!=y.ToothRange) {

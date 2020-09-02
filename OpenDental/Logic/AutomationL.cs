@@ -6,6 +6,8 @@ using System.Text;
 using OpenDentBusiness;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public class AutomationL {
@@ -475,15 +477,15 @@ namespace OpenDental {
 		///<summary>Returns true if the patient's billing type matches the autocondition billing type.</summary>
 		private static bool BillingTypeComparison(AutomationCondition autoCond,long patNum) {			
 			Patient pat=Patients.GetPat(patNum);
-			Def patBillType=Defs.GetDef(DefCat.BillingTypes,pat.BillingType);
+			Definition patBillType=Definitions.GetDef(DefinitionCategory.BillingTypes,pat.BillingType);
 			if(patBillType==null) {
 				return false;
 			}
 			switch(autoCond.Comparison) {
 				case AutoCondComparison.Equals:
-					return patBillType.ItemName.ToLower()==autoCond.CompareString.ToLower();
+					return patBillType.Name.ToLower()==autoCond.CompareString.ToLower();
 				case AutoCondComparison.Contains:
-					return patBillType.ItemName.ToLower().Contains(autoCond.CompareString.ToLower());
+					return patBillType.Name.ToLower().Contains(autoCond.CompareString.ToLower());
 				default:
 					return false;
 			}

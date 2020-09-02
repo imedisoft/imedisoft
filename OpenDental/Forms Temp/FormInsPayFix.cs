@@ -1,3 +1,5 @@
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
@@ -44,7 +46,7 @@ namespace OpenDental
 				cp.CheckAmt = splits[i].InsPayAmt;
 				cp.ClinicNum = claim.ClinicNum;
 				cp.CarrierName = splits[i].Carrier;
-				cp.PayType = Defs.GetFirstForCategory(DefCat.InsurancePaymentType, true).DefNum;
+				cp.PayType = Definitions.GetFirstForCategory(DefinitionCategory.InsurancePaymentType, true).Id;
 				ClaimPayments.Insert(cp);
 				List<ClaimProc> claimP = ClaimProcs.RefreshForClaim(splits[i].ClaimNum);
 				for (int j = 0; j < claimP.Count; j++)

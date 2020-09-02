@@ -1,4 +1,6 @@
-﻿using OpenDentBusiness;
+﻿using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using OpenDentBusiness;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using System.Collections.Generic;
@@ -121,7 +123,7 @@ namespace OpenDental
 			string[] teeth;
 			System.Drawing.Color cLight = System.Drawing.Color.White;
 			System.Drawing.Color cDark = System.Drawing.Color.White;
-			List<Def> listDefs = Defs.GetDefsForCategory(DefCat.ChartGraphicColors, true);
+			List<Definition> listDefs = Definitions.GetDefsForCategory(DefinitionCategory.ChartGraphicColors, true);
 			for (int i = 0; i < procList.Count; i++)
 			{
 				proc = procList[i];
@@ -145,28 +147,28 @@ namespace OpenDental
 					switch (proc.ProcStatus)
 					{
 						case ProcStat.C:
-							cDark = listDefs[1].ItemColor;
-							cLight = listDefs[6].ItemColor;
+							cDark = listDefs[1].Color;
+							cLight = listDefs[6].Color;
 							break;
 						case ProcStat.TP:
-							cDark = listDefs[0].ItemColor;
-							cLight = listDefs[5].ItemColor;
+							cDark = listDefs[0].Color;
+							cLight = listDefs[5].Color;
 							break;
 						case ProcStat.EC:
-							cDark = listDefs[2].ItemColor;
-							cLight = listDefs[7].ItemColor;
+							cDark = listDefs[2].Color;
+							cLight = listDefs[7].Color;
 							break;
 						case ProcStat.EO:
-							cDark = listDefs[3].ItemColor;
-							cLight = listDefs[8].ItemColor;
+							cDark = listDefs[3].Color;
+							cLight = listDefs[8].Color;
 							break;
 						case ProcStat.R:
-							cDark = listDefs[4].ItemColor;
-							cLight = listDefs[9].ItemColor;
+							cDark = listDefs[4].Color;
+							cLight = listDefs[9].Color;
 							break;
 						case ProcStat.Cn:
-							cDark = listDefs[16].ItemColor;
-							cLight = listDefs[17].ItemColor;
+							cDark = listDefs[16].Color;
+							cLight = listDefs[17].Color;
 							break;
 						case ProcStat.D://Can happen with invalidated locked procs.
 						default:
@@ -339,9 +341,9 @@ namespace OpenDental
 				//formOldBitmap.Show();
 			
 			toothChartRelay.SetToothNumberingNomenclature((ToothNumberingNomenclature)PrefC.GetInt(PrefName.UseInternationalToothNumbers));
-			List<Def> listDefs = Defs.GetDefsForCategory(DefCat.ChartGraphicColors);
-			toothChartRelay.ColorBackgroundMain = listDefs[colorBackgroundIndex].ItemColor;
-			toothChartRelay.ColorText = listDefs[colorTextIndex].ItemColor;
+			List<Definition> listDefs = Definitions.GetDefsForCategory(DefinitionCategory.ChartGraphicColors);
+			toothChartRelay.ColorBackgroundMain = listDefs[colorBackgroundIndex].Color;
+			toothChartRelay.ColorText = listDefs[colorTextIndex].Color;
 			toothChartRelay.ResetTeeth();
 			List<ToothInitial> toothInitialList = patNum == 0 ? new List<ToothInitial>() : ToothInitials.Refresh(patNum);
 			//first, primary.  That way, you can still set a primary tooth missing afterwards.

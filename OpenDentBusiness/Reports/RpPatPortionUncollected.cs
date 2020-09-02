@@ -9,6 +9,7 @@ using System.Text;
 using System.Diagnostics;
 using DataConnectionBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness {
 	public class RpPatPortionUncollected {
@@ -18,10 +19,9 @@ namespace OpenDentBusiness {
 			Stopwatch s=new Stopwatch();
 			s.Start();
 			#endif
-			bool hasClinicsEnabled=ReportsComplex.RunFuncOnReportServer(() => Prefs.HasClinicsEnabledNoCache);
-			List<long> listHiddenUnearnedDefNums=ReportsComplex.RunFuncOnReportServer(() => 
-				Defs.GetDefsNoCache(DefCat.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.ItemValue)).Select(x => x.DefNum).ToList()
-			);
+			bool hasClinicsEnabled=Prefs.HasClinicsEnabledNoCache;
+			List<long> listHiddenUnearnedDefNums=
+				Definitions.GetDefsNoCache(DefinitionCategory.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.Value)).Select(x => x.Id).ToList();
 			string query=$@"SELECT proc.ProcDate,CONCAT(patient.LName,', ',patient.FName) Patient,procedurecode.AbbrDesc,proc.Fee,
 				proc.Fee-proc.InsEst PatPortion,
 				COALESCE(adj.adjAmt,0) Adjustment,
@@ -71,7 +71,7 @@ namespace OpenDentBusiness {
 				) pay ON pay.ProcNum=proc.ProcNum
 				WHERE proc.Fee-proc.InsEst+COALESCE(adj.adjAmt,0)-COALESCE(pay.splitAmt,0)>0.005
 				ORDER BY proc.ProcDate,patient.LName,patient.FName,procedurecode.ProcCode";
-			DataTable table=ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(query));
+			DataTable table=Database.ExecuteDataTable(query);
 			#if DEBUG
 			s.Stop();
 			Console.WriteLine("Total time to generate report with "+string.Format("{0:#,##0.##}",table.Rows.Count)+" rows: "

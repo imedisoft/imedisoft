@@ -1,6 +1,7 @@
 using CodeBase;
 using DataConnectionBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using Imedisoft.X12.Codes;
 using OpenDentBusiness.HL7;
 using System;
@@ -338,11 +339,11 @@ namespace OpenDentBusiness
 		{
 			//No need to check RemotingRole; no call to db.
 			List<ApptSearchProviderSchedule> retVal=new List<ApptSearchProviderSchedule>();
-			List<Def> listBlockoutDefsAll=Defs.GetDefsForCategory(DefCat.BlockoutTypes,true);
+			List<Definition> listBlockoutDefsAll=Definitions.GetDefsForCategory(DefinitionCategory.BlockoutTypes,true);
 			List<long> listBlockoutTypesDoNotSchedule=new List<long>();
-			foreach(Def blockout in listBlockoutDefsAll) {
-				if(blockout.ItemValue.Contains(BlockoutType.NoSchedule.GetDescription())) {
-					listBlockoutTypesDoNotSchedule.Add(blockout.DefNum);//do not return results for blockouts set to 'Do Not Schedule'
+			foreach(Definition blockout in listBlockoutDefsAll) {
+				if(blockout.Value.Contains(BlockoutType.NoSchedule.GetDescription())) {
+					listBlockoutTypesDoNotSchedule.Add(blockout.Id);//do not return results for blockouts set to 'Do Not Schedule'
 					continue;
 				}
 			}
@@ -893,7 +894,7 @@ namespace OpenDentBusiness
 						row["assistantAbbr"]=Employees.GetAbbr(PIn.Long(rowRaw["apptAssistant"].ToString()));
 					}
 					row["AppointmentTypeNum"]=rowRaw["AppointmentTypeNum"].ToString();
-					row["billingType"]=Defs.GetName(DefCat.BillingTypes,PIn.Long(rowRaw["patBillingType"].ToString()));
+					row["billingType"]=Definitions.GetName(DefinitionCategory.BillingTypes,PIn.Long(rowRaw["patBillingType"].ToString()));
 					row["Birthdate"]=birthdate.ToShortDateString();
 					row["chartNumber"]=rowRaw["patChartNumber"].ToString();
 					row["chartNumAndName"]="";
@@ -905,7 +906,7 @@ namespace OpenDentBusiness
 						rowRaw["patPreferred"].ToString(),rowRaw["patMiddleI"].ToString());
 					row["ClinicNum"]=rowRaw["ClinicNum"].ToString();
 					row["ColorOverride"]=rowRaw["apptColorOverride"].ToString();
-					row["confirmed"]=Defs.GetName(DefCat.ApptConfirmed,PIn.Long(rowRaw["apptConfirmed"].ToString()));
+					row["confirmed"]=Definitions.GetName(DefinitionCategory.ApptConfirmed,PIn.Long(rowRaw["apptConfirmed"].ToString()));
 					row["Confirmed"]=rowRaw["apptConfirmed"].ToString();
 					row["contactMethods"]="";
 					if(rowRaw["patPreferConfirmMethod"].ToString()!="0") {
@@ -1382,7 +1383,7 @@ namespace OpenDentBusiness
 			//Patient billing type------------------------------------------------------------------
 			row=table.NewRow();
 			row["field"]="Billing Type";
-			row["value"]=Defs.GetName(DefCat.BillingTypes,PIn.Long(rawPat.Rows[0]["BillingType"].ToString()));
+			row["value"]=Definitions.GetName(DefinitionCategory.BillingTypes,PIn.Long(rawPat.Rows[0]["BillingType"].ToString()));
 			table.Rows.Add(row);
 			//Patient total balance-----------------------------------------------------------------
 			row=table.NewRow();
@@ -1521,7 +1522,7 @@ namespace OpenDentBusiness
 					row["descript"]+=" #"+Tooth.FormatRangeForDisplay(rawProc.Rows[i]["ToothRange"].ToString());
 				}
 				row["fee"]=PIn.Double(rawProc.Rows[i]["ProcFee"].ToString()).ToString("F");
-				row["priority"]=Defs.GetName(DefCat.TxPriorities,PIn.Long(rawProc.Rows[i]["Priority"].ToString()));
+				row["priority"]=Definitions.GetName(DefinitionCategory.TxPriorities,PIn.Long(rawProc.Rows[i]["Priority"].ToString()));
 				row["Priority"]=rawProc.Rows[i]["Priority"].ToString();
 				row["ProcCode"]=rawProc.Rows[i]["ProcCode"].ToString();
 				row["ProcDate"]=rawProc.Rows[i]["ProcDate"].ToString();//eg 2012-02-19
@@ -1645,7 +1646,7 @@ namespace OpenDentBusiness
 				row["AptDateTime"]=dateT;
 				row["aptDateTime"]=dateT.ToShortDateString()+"\r\n"+dateT.ToShortTimeString();
 				row["ClinicNum"]=rawtable.Rows[i]["ClinicNum"].ToString();
-				row["confirmed"]=Defs.GetName(DefCat.ApptConfirmed,PIn.Long(rawtable.Rows[i]["Confirmed"].ToString()));
+				row["confirmed"]=Definitions.GetName(DefinitionCategory.ApptConfirmed,PIn.Long(rawtable.Rows[i]["Confirmed"].ToString()));
 				contmeth=(ContactMethod)PIn.Int(rawtable.Rows[i]["PreferConfirmMethod"].ToString());
 				if(contmeth==ContactMethod.None || contmeth==ContactMethod.HmPhone) {
 					row["contactMethod"]="Hm:"+rawtable.Rows[i]["HmPhone"].ToString();
@@ -2171,10 +2172,10 @@ namespace OpenDentBusiness
 			return Crud.AppointmentCrud.SelectMany(command);
 		}
 
-		///<summary>Returns the first DefNum of type DefCat.ApptConfirmed.</summary>
+		///<summary>Returns the first DefNum of type DefinitionCategory.ApptConfirmed.</summary>
 		public static long GetUnconfirmedStatus() {
 			//No need to check RemotingRole; no call to db.
-			return Defs.GetFirstForCategory(DefCat.ApptConfirmed,true).DefNum;
+			return Definitions.GetFirstForCategory(DefinitionCategory.ApptConfirmed,true).Id;
 		}
 
 		///<summary>Returns all DefNums of confirmation statuses that can be considered "confirmed".</summary>
@@ -2346,7 +2347,7 @@ namespace OpenDentBusiness
 			appointment.DateTimeAskedToArrive=dateTimeAskedToArrive;
 			appointment.Op=operatory.OperatoryNum;
 			if(apptConfirmed==0) {
-				appointment.Confirmed=Defs.GetFirstForCategory(DefCat.ApptConfirmed,true).DefNum;
+				appointment.Confirmed=Definitions.GetFirstForCategory(DefinitionCategory.ApptConfirmed,true).Id;
 			}
 			else {
 				appointment.Confirmed=apptConfirmed;
@@ -2475,7 +2476,7 @@ namespace OpenDentBusiness
 			}
 			//make sure all fields are properly filled:
 			if(appt.Confirmed==0){
-				appt.Confirmed=Defs.GetFirstForCategory(DefCat.ApptConfirmed,true).DefNum;
+				appt.Confirmed=Definitions.GetFirstForCategory(DefinitionCategory.ApptConfirmed,true).Id;
 			}
 			if(appt.ProvNum==0){
 				appt.ProvNum=Providers.GetFirst(true).ProvNum;
@@ -2701,7 +2702,7 @@ namespace OpenDentBusiness
 			if(!isNew && aptCur.Confirmed!=aptOld.Confirmed) {
 				//Log confirmation status changes.
 				SecurityLogs.MakeLogEntry(Permissions.ApptConfirmStatusEdit,pat.PatNum,"Appointment confirmation status changed from"+" "
-					+Defs.GetName(DefCat.ApptConfirmed,aptOld.Confirmed)+" to "+Defs.GetName(DefCat.ApptConfirmed,aptCur.Confirmed)
+					+Definitions.GetName(DefinitionCategory.ApptConfirmed,aptOld.Confirmed)+" to "+Definitions.GetName(DefinitionCategory.ApptConfirmed,aptCur.Confirmed)
 					+" from the appointment edit window.",aptCur.AptNum,datePrevious);
 			}
 			bool isCreateAppt=false;
@@ -3256,11 +3257,11 @@ namespace OpenDentBusiness
 		///<summary>Returns overlapping blockout with the the flag "NS".</summary>
 		public static List<Schedule> GetOverlappingBlockouts(Appointment apt,List<Schedule> listBlockouts=null) {
 			//No need to check RemotingRole; no call to db.
-			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.BlockoutTypes);
+			List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.BlockoutTypes);
 			return (listBlockouts??Schedules.GetAllForDateAndType(apt.AptDateTime,ScheduleType.Blockout,listOpNums:new List<long> { apt.Op }))
 				.Where(x => MiscUtils.DoSlotsOverlap(x.SchedDate.Add(x.StartTime),x.SchedDate.Add(x.StopTime),
 					apt.AptDateTime,apt.AptDateTime.AddMinutes(apt.Length)))
-				.Where(x => Defs.GetDef(DefCat.BlockoutTypes,x.BlockoutType,listDefs).ItemValue.Contains(BlockoutType.NoSchedule.GetDescription()))
+				.Where(x => Definitions.GetDef(DefinitionCategory.BlockoutTypes,x.BlockoutType,listDefs).Value.Contains(BlockoutType.NoSchedule.GetDescription()))
 				.ToList();
 		}
 
@@ -3429,11 +3430,11 @@ namespace OpenDentBusiness
 					apt.ClinicNum=curOp.ClinicNum;
 				}
 				if(apt.AptDateTime!=aptOld.AptDateTime
-					&& apt.Confirmed!=Defs.GetFirstForCategory(DefCat.ApptConfirmed,true).DefNum
+					&& apt.Confirmed!=Definitions.GetFirstForCategory(DefinitionCategory.ApptConfirmed,true).Id
 					&& apt.AptDateTime.Date!=DateTime.Today
 					&& doResetConfirmationStatus)
 				{
-					apt.Confirmed=Defs.GetFirstForCategory(DefCat.ApptConfirmed,true).DefNum;//Causes the confirmation status to be reset.
+					apt.Confirmed=Definitions.GetFirstForCategory(DefinitionCategory.ApptConfirmed,true).Id;//Causes the confirmation status to be reset.
 				}
 				#endregion Update Appt's AptStatus, ClinicNum, Confirmed
 				#endregion
@@ -3452,7 +3453,7 @@ namespace OpenDentBusiness
 				//Log confirmation status changes.
 				SecurityLogs.MakeLogEntry(Permissions.ApptConfirmStatusEdit,apt.PatNum,
 					"Appointment confirmation status changed from"+" "
-					+Defs.GetName(DefCat.ApptConfirmed,aptOld.Confirmed)+" "+"to"+" "+Defs.GetName(DefCat.ApptConfirmed,apt.Confirmed)
+					+Definitions.GetName(DefinitionCategory.ApptConfirmed,aptOld.Confirmed)+" "+"to"+" "+Definitions.GetName(DefinitionCategory.ApptConfirmed,apt.Confirmed)
 					+"from the appointment module"+".",apt.AptNum,secLogSource,aptOld.DateTStamp);
 			}
 			#endregion
@@ -3781,11 +3782,11 @@ namespace OpenDentBusiness
 		}
 
 		/// <summary>Checks if the specialty exists in the list of specialties for the clinic.</summary>
-		public static bool ClinicHasSpecialty(Def defPatSpecialty,long clinicNum) {
+		public static bool ClinicHasSpecialty(Definition defPatSpecialty,long clinicNum) {
 			if(defPatSpecialty==null) {
 				return true;//Patient does not have a specialty, so any clinic is fair game.
 			}
-			return DefLinks.GetDefLinksByType(DefLinkType.Clinic,defPatSpecialty.DefNum).Any(x => x.FKey==clinicNum);
+			return DefLinks.GetDefLinksByType(DefLinkType.Clinic,defPatSpecialty.Id).Any(x => x.FKey==clinicNum);
 		}
 
 		/// <summary>Throws Exception. Determines if the patient for this appointment has a specialty which is included in the list of specialties 
@@ -3796,7 +3797,7 @@ namespace OpenDentBusiness
 			{
 				return;//Clinics off OR enforce preference off
 			}
-			Def def=Patients.GetPatientSpecialtyDef(patNum);
+			Definition def=Patients.GetPatientSpecialtyDef(patNum);
 			if(!Appointments.ClinicHasSpecialty(def,clinicNum)) {
 				string msgText="";
 				switch((ApptSchedEnforceSpecialty)PrefC.GetInt(PrefName.ApptSchedEnforceSpecialty)) {

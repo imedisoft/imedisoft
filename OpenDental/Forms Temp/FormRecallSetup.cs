@@ -13,6 +13,8 @@ using System.Net;
 using System.Xml;
 using System.Text.RegularExpressions;
 using System.IO;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -597,7 +599,7 @@ namespace OpenDental{
 			}
 			textRight.Text=Prefs.GetDouble(PrefName.RecallAdjustRight).ToString();
 			textDown.Text=Prefs.GetDouble(PrefName.RecallAdjustDown).ToString();
-			List<Def> listUnschedStatusDefs=Defs.GetDefsForCategory(DefCat.RecallUnschedStatus,true);
+			List<Definition> listUnschedStatusDefs=Definitions.GetDefsForCategory(DefinitionCategory.RecallUnschedStatus,true);
 			comboStatusMailedRecall.Items.Clear();
 			comboStatusMailedRecall.Items.AddDefs(listUnschedStatusDefs);
 			comboStatusMailedRecall.SetSelectedDefNum(Prefs.GetLong(PrefName.RecallStatusMailed));
@@ -973,10 +975,10 @@ namespace OpenDental{
 			Prefs.Set(PrefName.RecallAdjustRight,PIn.Double(textRight.Text));
 			Prefs.Set(PrefName.RecallAdjustDown,PIn.Double(textDown.Text));
 			//combo boxes These have already been checked for -1
-			Prefs.Set(PrefName.RecallStatusEmailed,comboStatusEmailedRecall.GetSelected<Def>().DefNum);
-			Prefs.Set(PrefName.RecallStatusMailed,comboStatusMailedRecall.GetSelected<Def>().DefNum);
-			Prefs.Set(PrefName.RecallStatusTexted,comboStatusTextedRecall.GetSelected<Def>().DefNum);
-			Prefs.Set(PrefName.RecallStatusEmailedTexted,comboStatusEmailTextRecall.GetSelected<Def>().DefNum);
+			Prefs.Set(PrefName.RecallStatusEmailed,comboStatusEmailedRecall.GetSelected<Definition>().Id);
+			Prefs.Set(PrefName.RecallStatusMailed,comboStatusMailedRecall.GetSelected<Definition>().Id);
+			Prefs.Set(PrefName.RecallStatusTexted,comboStatusTextedRecall.GetSelected<Definition>().Id);
+			Prefs.Set(PrefName.RecallStatusEmailedTexted,comboStatusEmailTextRecall.GetSelected<Definition>().Id);
 			string recalltypes = string.Join(",",listTypes.SelectedIndices.OfType<int>().Select(x => listRecallCache[x].RecallTypeNum));
 			Prefs.Set(PrefName.RecallTypesShowingInList,recalltypes);
 			Prefs.Set(PrefName.RecallShowIfDaysFirstReminder,GetLongFromString(textDaysFirstReminder.Text));

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -28,7 +30,7 @@ namespace OpenDental{
 		private Label label5;
 		private Label label6;
 		private Mount _mountCur=null;
-		List<Def> _listDefNumsImageCats;
+		List<Definition> _listDefNumsImageCats;
 
 		///<summary></summary>
 		public FormMountEdit(Mount mount)
@@ -218,10 +220,10 @@ namespace OpenDental{
 		#endregion
 
 		private void FormMountEdit_Load(object sender,EventArgs e) {
-			_listDefNumsImageCats=Defs.GetDefsForCategory(DefCat.ImageCats,true);
+			_listDefNumsImageCats=Definitions.GetDefsForCategory(DefinitionCategory.ImageCats,true);
 			for(int i=0;i<_listDefNumsImageCats.Count;i++){
-				listCategory.Items.Add(_listDefNumsImageCats[i].ItemName);
-				if(_listDefNumsImageCats[i].DefNum==_mountCur.DocCategory){
+				listCategory.Items.Add(_listDefNumsImageCats[i].Name);
+				if(_listDefNumsImageCats[i].Id==_mountCur.DocCategory){
 					listCategory.SelectedIndex=i;
 				}
 			}
@@ -253,7 +255,7 @@ namespace OpenDental{
 				MessageBox.Show("Please enter a valid time.");
 				return;
 			}
-			_mountCur.DocCategory=_listDefNumsImageCats[listCategory.SelectedIndex].DefNum;
+			_mountCur.DocCategory=_listDefNumsImageCats[listCategory.SelectedIndex].Id;
 			_mountCur.Description=textDescription.Text;
 			DateTime dateTimeEntered=PIn.Date(textDate.Text+" "+textTime.Text);
 			_mountCur.DateCreated=dateTimeEntered;	

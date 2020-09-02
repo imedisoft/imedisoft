@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	public class RpAppointments {
@@ -99,7 +100,7 @@ namespace OpenDentBusiness {
 				command+=" securitylog.LogDateTime BETWEEN "+POut.Date(dateStart)+" AND "+POut.Date(dateEnd.AddDays(1))
 					+" ORDER BY securitylog.LogDateTime,appointment.AptDateTime,PatName";
 			}
-			DataTable table=ReportsComplex.RunFuncOnReportServer(() => ReportsComplex.GetTable(command));
+			DataTable table= Database.ExecuteDataTable(command);
 			return table;
 		}
 

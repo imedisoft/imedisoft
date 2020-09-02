@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -77,14 +79,14 @@ namespace OpenDental {
 
 		/// <summary>Fill the combo boxes with items. Some will have their indicies set later in FillFields() </summary>
 		private void FillComboBoxes() {
-			comboPaidInFullBillType.Items.AddDefs(Defs.GetDefsForCategory(DefCat.BillingTypes,true).Where(x => x.ItemValue.ToLower()!="c").ToList());
+			comboPaidInFullBillType.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes,true).Where(x => x.Value.ToLower()!="c").ToList());
 			comboPaidInFullBillType.SetSelectedDefNum(Prefs.GetLong(PrefName.TransworldPaidInFullBillingType));
 			comboPosAdjType.Items.AddDefNone();
 			comboPosAdjType.SetSelected(0);
-			comboPosAdjType.Items.AddDefs(Defs.GetDefsForCategory(DefCat.AdjTypes,true).Where(x => x.ItemValue.Contains("+")).ToList());
+			comboPosAdjType.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.AdjTypes,true).Where(x => x.Value.Contains("+")).ToList());
 			comboNegAdjType.Items.AddDefNone();
 			comboNegAdjType.SetSelected(0);
-			comboNegAdjType.Items.AddDefs(Defs.GetDefsForCategory(DefCat.AdjTypes,true).Where(x => x.ItemValue.Contains("-")).ToList());
+			comboNegAdjType.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.AdjTypes,true).Where(x => x.Value.Contains("-")).ToList());
 		}
 
 		///<summary>Details displayed in form may be for HQ clinic and not the currently selected clinic if the current clinic is synced with HQ.  If the

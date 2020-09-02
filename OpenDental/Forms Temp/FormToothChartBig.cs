@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using Tao.Platform.Windows;
 using SparksToothChart;
 using OpenDentBusiness;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -139,11 +141,11 @@ namespace OpenDental{
 			Cursor=Cursors.WaitCursor;
 			_toothChartRelay.BeginUpdate();
 			_toothChartRelay.SetToothNumberingNomenclature((ToothNumberingNomenclature)PrefC.GetInt(PrefName.UseInternationalToothNumbers));
-			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.ChartGraphicColors);
-			_toothChartRelay.ColorBackgroundMain=listDefs[10].ItemColor;
-			_toothChartRelay.ColorText=listDefs[11].ItemColor;
-			_toothChartRelay.ColorTextHighlightFore=listDefs[12].ItemColor;
-			_toothChartRelay.ColorTextHighlightBack=listDefs[13].ItemColor;
+			List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.ChartGraphicColors);
+			_toothChartRelay.ColorBackgroundMain=listDefs[10].Color;
+			_toothChartRelay.ColorText=listDefs[11].Color;
+			_toothChartRelay.ColorTextHighlightFore=listDefs[12].Color;
+			_toothChartRelay.ColorTextHighlightBack=listDefs[13].Color;
 			//remember which teeth were selected
 			List<string> selectedTeeth=new List<string>(toothChartWrapper.SelectedTeeth);
 			//ArrayList selectedTeeth=new ArrayList();//integers 1-32
@@ -212,7 +214,7 @@ namespace OpenDental{
 			string[] teeth;
 			Color cLight=Color.White;
 			Color cDark=Color.White;
-			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.ChartGraphicColors,true);
+			List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.ChartGraphicColors,true);
 			for(int i=0;i<ProcList.Count;i++) {
 				if(ProcList[i]["HideGraphics"].ToString()=="1") {
 					continue;
@@ -227,28 +229,28 @@ namespace OpenDental{
 				if(ProcedureCodes.GetProcCode(ProcList[i]["ProcCode"].ToString()).GraphicColor.ToArgb()==Color.FromArgb(0).ToArgb()) {
 					switch((ProcStat)PIn.Long(ProcList[i]["ProcStatus"].ToString())) {
 						case ProcStat.C:
-							cDark=listDefs[1].ItemColor;
-							cLight=listDefs[6].ItemColor;
+							cDark=listDefs[1].Color;
+							cLight=listDefs[6].Color;
 							break;
 						case ProcStat.TP:
-							cDark=listDefs[0].ItemColor;
-							cLight=listDefs[5].ItemColor;
+							cDark=listDefs[0].Color;
+							cLight=listDefs[5].Color;
 							break;
 						case ProcStat.EC:
-							cDark=listDefs[2].ItemColor;
-							cLight=listDefs[7].ItemColor;
+							cDark=listDefs[2].Color;
+							cLight=listDefs[7].Color;
 							break;
 						case ProcStat.EO:
-							cDark=listDefs[3].ItemColor;
-							cLight=listDefs[8].ItemColor;
+							cDark=listDefs[3].Color;
+							cLight=listDefs[8].Color;
 							break;
 						case ProcStat.R:
-							cDark=listDefs[4].ItemColor;
-							cLight=listDefs[9].ItemColor;
+							cDark=listDefs[4].Color;
+							cLight=listDefs[9].Color;
 							break;
 						case ProcStat.Cn:
-							cDark=listDefs[16].ItemColor;
-							cLight=listDefs[17].ItemColor;
+							cDark=listDefs[16].Color;
+							cLight=listDefs[17].Color;
 							break;
 						case ProcStat.D://Can happen with invalidated locked procs.
 						default:

@@ -7,6 +7,8 @@ using OpenDental.UI;
 using OpenDentBusiness;
 using CodeBase;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	///<summary></summary>
@@ -312,7 +314,7 @@ namespace OpenDental {
 				row.Cells.Add(refCur.FName);
 				row.Cells.Add(refCur.MName.Left(1).ToUpper());//Left(1) will return empty string if MName is null or empty string, so ToUpper is null safe
 				row.Cells.Add(refCur.Title);
-				row.Cells.Add(refCur.IsDoctor?Defs.GetName(DefCat.ProviderSpecialties,refCur.Specialty):"");
+				row.Cells.Add(refCur.IsDoctor?Definitions.GetName(DefinitionCategory.ProviderSpecialties,refCur.Specialty):"");
 				row.Cells.Add(refCur.PatNum>0?"X":"");
 				row.Cells.Add(refCur.Note);
 				if(refCur.IsHidden) {

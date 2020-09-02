@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness.Crud;
 using OpenDentBusiness.Eclaims;
 
@@ -529,10 +530,10 @@ namespace OpenDentBusiness
 				fixCode.ProcCode = code;
 				fixCode.AbbrDesc = code;
 				fixCode.Descript = "ClaimPayAsTotalFix";
-				fixCode.ProcCat = Defs.GetByExactName(DefCat.ProcCodeCats, "Obsolete");
+				fixCode.ProcCat = Definitions.GetByExactName(DefinitionCategory.ProcCodeCats, "Obsolete");
 				if (fixCode.ProcCat == 0)
 				{//There is no Obsolete category so just get the first non-hidden one in the cache.
-					fixCode.ProcCat = Defs.GetDefsForCategory(DefCat.ProcCodeCats, true).First().DefNum;
+					fixCode.ProcCat = Definitions.GetDefsForCategory(DefinitionCategory.ProcCodeCats, true).First().Id;
 				}
 				ProcedureCodes.Insert(fixCode);
 				SecurityLogs.MakeLogEntry(Permissions.Setup, 0, "Income Transfer Manager automatically added Procedure Code:"

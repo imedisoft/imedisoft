@@ -9,6 +9,8 @@ using OpenDental.UI;
 using CodeBase;
 using System.IO;
 using OpenDentBusiness.IO;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormEhrLabImageEdit:ODForm {
@@ -63,7 +65,7 @@ namespace OpenDental {
 				row=new GridRow();
 				row.Cells.Add(isAttached?"X":"");
 				row.Cells.Add(_listPatientDocuments[i].DateCreated.ToString());
-				row.Cells.Add(Defs.GetName(DefCat.ImageCats,_listPatientDocuments[i].DocCategory));			  
+				row.Cells.Add(Definitions.GetName(DefinitionCategory.ImageCats,_listPatientDocuments[i].DocCategory));			  
 				row.Cells.Add(_listPatientDocuments[i].Description);
 				row.Tag=_listPatientDocuments[i];
 				gridMain.ListGridRows.Add(row);

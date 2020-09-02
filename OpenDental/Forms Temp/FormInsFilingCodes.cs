@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -218,7 +220,7 @@ namespace OpenDental {
 				row.Cells.Add(_listInsFilingCodes[i].Descript);
 				string group="";
 				if(_listInsFilingCodes[i].GroupType > 0) {
-					group=Defs.GetDef(DefCat.InsuranceFilingCodeGroup,_listInsFilingCodes[i].GroupType)?.ItemName??"";
+					group=Definitions.GetDef(DefinitionCategory.InsuranceFilingCodeGroup,_listInsFilingCodes[i].GroupType)?.Name??"";
 				}
 				row.Cells.Add(group);
 				row.Cells.Add(_listInsFilingCodes[i].EclaimCode);

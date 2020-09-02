@@ -20,6 +20,8 @@ using OpenDentBusiness.IO;
 using Imedisoft.Forms;
 using Imedisoft.UI;
 using Imedisoft.X12.Codes;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 
@@ -38,7 +40,7 @@ namespace OpenDental {
 		private int _scrollValueWhenDoubleClick=-1;
 		///<summary>This holds some of the data needed for display.  It is retrieved in one call to the database.</summary>
 		private DataSet _dataSetMain;
-		private Def[] _arrayDefsAcctProcQuickAdd;
+		private Definition[] _arrayDefsAcctProcQuickAdd;
 		private Family _famCur;
 		private FormRpServiceDateView _formRpServiceDateView=null;
 		private bool _initializedOnStartup;
@@ -267,10 +269,10 @@ namespace OpenDental {
 		///<summary>This gets run just prior to the contextMenuQuickCharge menu displaying to the user.</summary>
 		private void contextMenuQuickProcs_Popup(object sender,EventArgs e) {
 			//Dynamically fill contextMenuQuickCharge's menu items because the definitions may have changed since last time it was filled.
-			_arrayDefsAcctProcQuickAdd=Defs.GetDefsForCategory(DefCat.AccountQuickCharge,true).ToArray();
+			_arrayDefsAcctProcQuickAdd=Definitions.GetDefsForCategory(DefinitionCategory.AccountQuickCharge,true).ToArray();
 			contextMenuQuickProcs.MenuItems.Clear();
 			for(int i=0;i<_arrayDefsAcctProcQuickAdd.Length;i++) {
-				contextMenuQuickProcs.MenuItems.Add(new MenuItem(_arrayDefsAcctProcQuickAdd[i].ItemName,menuItemQuickProcs_Click));
+				contextMenuQuickProcs.MenuItems.Add(new MenuItem(_arrayDefsAcctProcQuickAdd[i].Name,menuItemQuickProcs_Click));
 			}
 			if(_arrayDefsAcctProcQuickAdd.Length==0) {
 				contextMenuQuickProcs.MenuItems.Add(new MenuItem("No quick charge procedures defined. Go to Setup | Definitions to add.",(x,y) => { }));//"null" event handler.
@@ -1262,8 +1264,8 @@ namespace OpenDental {
 			if(sender.GetType()!=typeof(MenuItem)) {
 				return;
 			}
-			Def defQuickCharge=_arrayDefsAcctProcQuickAdd[contextMenuQuickProcs.MenuItems.IndexOf((MenuItem)sender)];
-			string[] arrayProcCodes=defQuickCharge.ItemValue.Split(',');
+			Definition defQuickCharge=_arrayDefsAcctProcQuickAdd[contextMenuQuickProcs.MenuItems.IndexOf((MenuItem)sender)];
+			string[] arrayProcCodes=defQuickCharge.Value.Split(',');
 			if(arrayProcCodes.Length==0) {
 				//No items entered into the definition category.  Notify the user.
 				MessageBox.Show("There are no Quick Charge items in Setup | Definitions.  There must be at least one in order to use the Quick Charge drop down menu.");
@@ -1967,9 +1969,9 @@ namespace OpenDental {
 				}
 			}
 			paymentCur.DateEntry=DateTimeOD.Today;//So that it will show properly in the new window.
-			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.PaymentTypes,true);
+			List<Definition> listDefs=Definitions.GetByCategory(DefinitionCategory.PaymentTypes);
 			if(listDefs.Count>0) {
-				paymentCur.PayType=listDefs[0].DefNum;
+				paymentCur.PayType=listDefs[0].Id;
 			}
 			paymentCur.PaymentSource=CreditCardSource.None;
 			paymentCur.ProcessStatus=ProcessStat.OfficeProcessed;
@@ -2192,9 +2194,9 @@ namespace OpenDental {
 			_patCur = _famCur.GetPatient(patNum);
 			_patientNoteCur = _loadData.PatNote;
 			_listPatField = _loadData.ArrPatFields;
-			List<long> listDefNumsAcctHidden = Defs.GetDefsForCategory(DefCat.PaySplitUnearnedType)
-					.FindAll(x => x.ItemValue != "")
-					.Select(x => x.DefNum)
+			List<long> listDefNumsAcctHidden = Definitions.GetDefsForCategory(DefinitionCategory.PaySplitUnearnedType)
+					.FindAll(x => x.Value != "")
+					.Select(x => x.Id)
 					.ToList();
 			_listSplitsHidden = _loadData.ListPrePayments.FindAll(x => x.UnearnedType.In(listDefNumsAcctHidden));
 			FillSummary();
@@ -2360,9 +2362,9 @@ namespace OpenDental {
 				text31_60.Text=_famCur.ListPats[0].Bal_31_60.ToString("F");
 				text0_30.Text=_famCur.ListPats[0].Bal_0_30.ToString("F");
 				decimal total=(decimal)_famCur.ListPats[0].BalTotal;
-				List<long> listDefNumsTpUnearned=Defs.GetDefsForCategory(DefCat.PaySplitUnearnedType)
-					.FindAll(x => x.ItemValue!="")
-					.Select(x => x.DefNum)
+				List<long> listDefNumsTpUnearned=Definitions.GetDefsForCategory(DefinitionCategory.PaySplitUnearnedType)
+					.FindAll(x => x.Value!="")
+					.Select(x => x.Id)
 					.ToList();
 				labelTotalAmt.Text=total.ToString("F");
 				labelInsEstAmt.Text=_famCur.ListPats[0].InsEst.ToString("F");
@@ -2460,7 +2462,7 @@ namespace OpenDental {
 				gridAutoOrtho.ListGridRows.Add(row);
 			}
 			else {
-				List<Def> listDefs=Defs.GetDefsForCategory(DefCat.MiscColors);
+				List<Definition> listDefs=Definitions.GetByCategory(DefinitionCategory.MiscColors, true);
 				for(int i = 0;i < listPatPlans.Count;i++) {
 					PatPlan patPlanCur = listPatPlans[i];
 					InsSub insSub = InsSubs.GetSub(patPlanCur.InsSubNum,_loadData.ListInsSubs);
@@ -2478,7 +2480,7 @@ namespace OpenDental {
 					if(i==listPatPlans.Count-1) { //last row in the insurance info section
 						row.LowerBorderColor=Color.Black;
 					}
-					row.BackColor=listDefs[0].ItemColor; //same logic as family module insurance colors.
+					row.BackColor=listDefs[0].Color; //same logic as family module insurance colors.
 					switch(i) {
 						case 0: //primary
 							row.Cells.Add("Primary Ins");
@@ -2878,7 +2880,7 @@ namespace OpenDental {
 				}
 				switch(_listPatInfoDisplayFields[f].InternalName) {
 					case "Billing Type":
-						row.Cells.Add(Defs.GetName(DefCat.BillingTypes,_patCur.BillingType));
+						row.Cells.Add(Definitions.GetName(DefinitionCategory.BillingTypes,_patCur.BillingType));
 						break;
 					case "PatFields":
 						PatFieldL.AddPatFieldsToGrid(gridPatInfo,_listPatField.ToList(),FieldLocations.Account,_loadData.ListFieldDefLinksAcct);
@@ -3038,7 +3040,7 @@ namespace OpenDental {
 					row.Cells.Add("None");
 				}
 				else {
-					row.Cells.Add(Defs.GetDef(DefCat.PayPlanCategories,planCat).ItemName);
+					row.Cells.Add(Definitions.GetDef(DefinitionCategory.PayPlanCategories,planCat).Name);
 				}
 				row.Cells.Add(table.Rows[i]["principal"].ToString());
 				row.Cells.Add(table.Rows[i]["totalCost"].ToString());
@@ -3336,7 +3338,7 @@ namespace OpenDental {
 				}
 				row.Cells.Add(tpSplit.SplitAmt.ToString("F"));//Amount
 				row.Tag=tpSplit;
-				Color defColor=Defs.GetDefsForCategory(DefCat.AccountColors)[3].ItemColor;
+				Color defColor=Definitions.GetByCategory(DefinitionCategory.AccountColors, true)[3].Color;
 				row.LowerBorderColor=defColor;
 				row.ForeColor=defColor;
 				gridTpSplits.ListGridRows.Add(row);
@@ -3524,7 +3526,7 @@ namespace OpenDental {
 			string name=table.Rows[index]["name"].ToString();
 			if(Prefs.GetBool(PrefName.TitleBarShowSpecialty) && string.Compare(name,"Entire Family",true)!=0) {
 				long patNum=PIn.Long(table.Rows[index]["PatNum"].ToString());
-				string specialty=Patients.GetPatientSpecialtyDef(patNum)?.ItemName??"";
+				string specialty=Patients.GetPatientSpecialtyDef(patNum)?.Name??"";
 				name+=string.IsNullOrWhiteSpace(specialty)?"":"\r\n"+specialty;
 			}
 			return name;
@@ -3556,15 +3558,15 @@ namespace OpenDental {
 			string tempPath=CodeBase.ODFileUtils.CombinePaths(Storage.GetTempPath(),stmt.PatNum.ToString()+".pdf");
 			SheetPrinting.CreatePdf(sheet,tempPath,stmt,dataSet,null);
 			long category=0;
-			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.ImageCats,true);
+			List<Definition> listDefs=Definitions.GetByCategory(DefinitionCategory.ImageCats);
 			for(int i=0;i<listDefs.Count;i++) {
-				if(Regex.IsMatch(listDefs[i].ItemValue,@"S")) {
-					category=listDefs[i].DefNum;
+				if(Regex.IsMatch(listDefs[i].Value,@"S")) {
+					category=listDefs[i].Id;
 					break;
 				}
 			}
 			if(category==0) {
-				category=listDefs[0].DefNum;//put it in the first category.
+				category=listDefs[0].Id;//put it in the first category.
 			}
 			//create doc--------------------------------------------------------------------------------------
 			Document docc=null;
@@ -3749,7 +3751,7 @@ namespace OpenDental {
 					MessageBox.Show(this,msg);
 					return;
 				}
-				string billingType=Defs.GetName(DefCat.BillingTypes,Prefs.GetLong(PrefName.TransworldPaidInFullBillingType));
+				string billingType=Definitions.GetName(DefinitionCategory.BillingTypes,Prefs.GetLong(PrefName.TransworldPaidInFullBillingType));
 				msg="The guarantor of this family has been sent to TSI for a past due balance."+"\r\n"
 					+"Creating this payment plan will suspend the TSI account for a maximum of 50 days if the account is in the Accelerator or "
 						+"Profit Recovery stage."+"\r\n"

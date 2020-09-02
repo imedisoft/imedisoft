@@ -3616,10 +3616,10 @@ namespace OpenDentBusiness
 					}
 					break;
 				case DbmMode.Fix:
-					List<Def> listDefs = Defs.GetDefsForCategory(DefCat.ImageCats, true);
+					List<Definition> listDefs = Definitions.GetDefsForCategory(DefinitionCategory.ImageCats, true);
 					for (int i = 0; i < table.Rows.Count; i++)
 					{
-						command = "UPDATE document SET DocCategory=" + POut.Long(listDefs[0].DefNum)
+						command = "UPDATE document SET DocCategory=" + POut.Long(listDefs[0].Id)
 							+ " WHERE DocNum=" + table.Rows[i][0].ToString();
 						Database.ExecuteNonQuery(command);
 					}
@@ -5631,54 +5631,6 @@ namespace OpenDentBusiness
 			return log;
 		}
 
-		///<summary>Finds any patients that have an invalid BillingType (Billing Type that does not exist as a definition) and sets them to the first
-		///billing type in definitions table.</summary>
-		[DbmMethodAttr]
-		public static string PatientInvalidBillingType(bool verbose, DbmMode modeCur)
-		{
-			string log = "";
-			string command;
-			switch (modeCur)
-			{
-				case DbmMode.Check:
-					command = "SELECT COUNT(*) FROM patient "
-						+ "LEFT JOIN definition ON BillingType=definition.DefNum "
-							+ "AND Category=" + (int)DefCat.BillingTypes + " "
-						+ "WHERE DefNum IS NULL ";
-					int numFound = PIn.Int(Database.ExecuteString(command));
-					if (numFound > 0 || verbose)
-					{
-						log += "Patients found with invalid billing type: " + numFound + "\r\n";
-					}
-					break;
-				case DbmMode.Fix:
-					List<DbmLog> listDbmLogs = new List<DbmLog>();
-					string methodName = MethodBase.GetCurrentMethod().Name;
-					command = "SELECT PatNum FROM patient "
-						+ "LEFT JOIN definition ON BillingType=definition.DefNum "
-							+ "AND Category=" + (int)DefCat.BillingTypes + " "
-						+ "WHERE DefNum IS NULL";
-					List<long> listPatNums = Database.GetListLong(command);
-					long numberFixed = 0;
-					if (listPatNums.Count > 0)
-					{
-						command = "UPDATE patient SET BillingType="
-							+ "(" + DbHelper.LimitOrderBy("SELECT DefNum FROM definition WHERE Category=" + (int)DefCat.BillingTypes + " ORDER BY ItemOrder", 1) + ") "
-							+ "WHERE PatNum IN (" + string.Join(",", listPatNums) + ")";
-						numberFixed = Database.ExecuteNonQuery(command);
-						listPatNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurrentUser.Id, x, DbmLogFKeyType.Patient, DbmLogActionType.Update,
-							methodName, "Updated the BillingType from PatientInvalidBillingType.")));
-					}
-					if (numberFixed > 0 || verbose)
-					{
-						log += "Patients fixed with invalid billing type: " + numberFixed + "\r\n";
-						Crud.DbmLogCrud.InsertMany(listDbmLogs);
-					}
-					break;
-			}
-			return log;
-		}
-
 		[DbmMethodAttr]
 		public static string PatientInvalidGradeLevel(bool verbose, DbmMode modeCur)
 		{
@@ -6631,13 +6583,13 @@ namespace OpenDentBusiness
 					int rowsFixed = 0;
 					if (table.Rows.Count > 0)
 					{
-						List<Def> listDefs = Defs.GetDefsForCategory(DefCat.PaymentTypes, true);
+						List<Definition> listDefs = Definitions.GetDefsForCategory(DefinitionCategory.PaymentTypes, true);
 						for (int i = 0; i < table.Rows.Count; i++)
 						{
                             //There's only one place in the program where this is called from.  Date is today, so no need to validate the date.
                             Payment payment = new Payment
                             {
-                                PayType = listDefs[0].DefNum,
+                                PayType = listDefs[0].Id,
                                 DateEntry = PIn.Date(table.Rows[i]["DateEntry"].ToString()),
                                 PatNum = PIn.Long(table.Rows[i]["PatNum"].ToString()),
                                 PayDate = PIn.Date(table.Rows[i]["DatePay"].ToString()),
@@ -6666,12 +6618,12 @@ namespace OpenDentBusiness
 					string where = "";
 					if (table.Rows.Count > 0)
 					{
-						List<Def> listDefs = Defs.GetDefsForCategory(DefCat.PaymentTypes, true);
+						List<Definition> listDefs = Definitions.GetDefsForCategory(DefinitionCategory.PaymentTypes, true);
 						for (int i = 0; i < table.Rows.Count; i++)
 						{
                             Payment payment = new Payment
                             {
-                                PayType = listDefs[0].DefNum,
+                                PayType = listDefs[0].Id,
                                 DateEntry = PIn.Date(table.Rows[i]["DateEntry"].ToString()),
                                 PatNum = PIn.Long(table.Rows[i]["PatNum"].ToString()),
                                 PayDate = PIn.Date(table.Rows[i]["DatePay"].ToString()),
@@ -7117,7 +7069,7 @@ namespace OpenDentBusiness
 		[DbmMethodAttr]
 		public static string ProcedurecodeCategoryNotSet(bool verbose, DbmMode modeCur)
 		{
-			List<Def> listProcCodeCats = Defs.GetDefsForCategory(DefCat.ProcCodeCats, true);
+			List<Definition> listProcCodeCats = Definitions.GetDefsForCategory(DefinitionCategory.ProcCodeCats, true);
 			string log = "";
 			string command;
 			switch (modeCur)
@@ -7141,7 +7093,7 @@ namespace OpenDentBusiness
 						log += "Procedure codes with no categories cannot be fixed because there are no visible proc code categories.\r\n";
 						return log;
 					}
-					command = "UPDATE procedurecode SET procedurecode.ProcCat=" + POut.Long(listProcCodeCats[0].DefNum) + " WHERE procedurecode.ProcCat=0";
+					command = "UPDATE procedurecode SET procedurecode.ProcCat=" + POut.Long(listProcCodeCats[0].Id) + " WHERE procedurecode.ProcCat=0";
 					long numberfixed = Database.ExecuteNonQuery(command);
 					if (numberfixed > 0)
 					{
@@ -7448,7 +7400,7 @@ namespace OpenDentBusiness
                             ProcCode = "~BAD~",
                             Descript = "Invalid procedure",
                             AbbrDesc = "Invalid procedure",
-                            ProcCat = Defs.GetByExactNameNeverZero(DefCat.ProcCodeCats, "Never Used")
+                            ProcCat = Definitions.GetByExactNameNeverZero(DefinitionCategory.ProcCodeCats, "Never Used")
                         };
                         ProcedureCodes.Insert(badCode);
 						badCodeNum = badCode.CodeNum;

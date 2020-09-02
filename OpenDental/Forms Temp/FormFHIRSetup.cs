@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 using WebServiceSerializer;
@@ -26,7 +28,7 @@ namespace OpenDental {
 			Program prog=Programs.GetCur(ProgramName.FHIR);
 			checkEnabled.Checked=prog.Enabled;
 			textSubInterval.Text=ProgramProperties.GetPropVal(prog.Id,"SubscriptionProcessingFrequency");
-			comboPayType.Items.AddDefs(Defs.GetDefsForCategory(DefCat.PaymentTypes,true));
+			comboPayType.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.PaymentTypes,true));
 			comboPayType.SetSelectedDefNum(Prefs.GetLong(PrefName.ApiPaymentType));
 			//Let the load finish before we call HQ
 			this.BeginInvoke(() => {

@@ -1,6 +1,7 @@
 using CodeBase;
 using DataConnectionBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.Thinfinity;
 using OpenDentBusiness.FileIO;
 using System;
@@ -220,63 +221,61 @@ namespace OpenDentBusiness
 			return retVal;
 		}
 
-		///<summary>Will return null if no picture for this patient.</summary>
-		public static Document GetPatPictFromDb(long patNum)
+		/// <summary>
+		/// Will return null if no picture for this patient.
+		/// </summary>
+		public static Document GetPatPictFromDb(long patientId)
 		{
+			var definition = Definitions.GetByCategory(DefinitionCategory.ImageCats)
+				.FirstOrDefault(def => def.Value.Contains('P'));
 
-			//first establish which category pat pics are in
-			long defNumPicts = 0;
-			Def[] defs = Defs.GetDefsForCategory(DefCat.ImageCats, true).ToArray();
-			for (int i = 0; i < defs.Length; i++)
-			{
-				if (Regex.IsMatch(defs[i].ItemValue, @"P"))
-				{
-					defNumPicts = defs[i].DefNum;
-					break;
-				}
-			}
-			if (defNumPicts == 0)
-			{//no category set for picts
+			if (definition == null)
+            {
 				return null;
-			}
-			//then find, limit 1 to get the most recent
-			string command = "SELECT * FROM document "
-				+ "WHERE document.PatNum=" + POut.Long(patNum)
-				+ " AND document.DocCategory=" + POut.Long(defNumPicts)
-				+ " ORDER BY DateCreated DESC";
-			command = DbHelper.LimitOrderBy(command, 1);
-			DataTable table = Database.ExecuteDataTable(command);
-			Document[] pictureDocs = Fill(table);
+            }
+
+			var dataTable = Database.ExecuteDataTable(
+				"SELECT * FROM document " +
+				"WHERE document.PatNum = " + patientId + " AND document.DocCategory = " + definition.Id + " " +
+				"ORDER BY DateCreated DESC " +
+				"LIMIT 1");
+
+			Document[] pictureDocs = Fill(dataTable);
 			if (pictureDocs == null || pictureDocs.Length < 1)
-			{//no pictures
+			{
 				return null;
 			}
+
 			return pictureDocs[0];
 		}
 
-		///<summary>Gets all documents within the doc category designated as the "S"tatements directory via definitions.
-		///Also gets dependents' statements if this patient is a guarantor (needed by the patient portal).</summary>
-		public static List<Document> GetStatementsForPat(long patNum, List<long> listDependents)
+		/// <summary>
+		/// Gets all documents within the doc category designated as the "S"tatements directory via definitions.
+		/// Also gets dependents' statements if this patient is a guarantor (needed by the patient portal).
+		/// </summary>
+		public static List<Document> GetStatementsForPat(long patientId, List<long> dependentPatientIds)
 		{
+			string command = 
+				"SELECT `id` FROM `definitions` " +
+				"WHERE `category` = '" + DefinitionCategory.ImageCats + "' " +
+				"AND `is_hidden` = 0 AND `value` LIKE '%S%' ";
 
-			string command = "SELECT def.DefNum FROM  definition def "
-					+ "WHERE def.Category=" + POut.Int((int)DefCat.ImageCats) + " "
-					+ "AND def.IsHidden=0  "
-					+ "AND def.ItemValue LIKE '%S%' ";//Statements category indicator
-			List<long> listDefNums = Database.GetListLong(command);
-			if (listDefNums.Count == 0)
-			{//There are no Statement image categories
+			var definitionIds = Database.GetListLong(command);
+			if (definitionIds.Count == 0)
+            {
 				return new List<Document>();
-			}
-			if (!listDependents.Contains(patNum))
+            }
+
+			if (!dependentPatientIds.Contains(patientId))
 			{
-				listDependents.Add(patNum);
+				dependentPatientIds.Add(patientId);
 			}
-			command = "SELECT * FROM document d "
-			+ "WHERE d.PatNum IN (" + string.Join(",", listDependents) + ") "
-				+ "AND d.DocCategory IN (" + string.Join(",", listDefNums) + ") "
-			+ "ORDER BY d.DateCreated DESC";
-			return Crud.DocumentCrud.SelectMany(command);
+
+			return Crud.DocumentCrud.SelectMany(
+				"SELECT * FROM document " +
+				"WHERE PatNum IN (" + string.Join(", ", dependentPatientIds) + ") " +
+				"AND DocCategory IN (" + string.Join(", ", definitionIds) + ") " +
+				"ORDER BY DateCreated DESC");
 		}
 
 		///<summary>Get document info for all images linked to this patient.
@@ -285,7 +284,7 @@ namespace OpenDentBusiness
 		{
 
 			string command = "SELECT def.DefNum FROM  definition def "
-					+ "WHERE def.Category=" + POut.Int((int)DefCat.ImageCats) + " "
+					+ "WHERE def.Category='" + DefinitionCategory.ImageCats + "' "
 					+ "AND def.IsHidden=0  "
 					+ "AND def.ItemValue LIKE '%L%' ";//Patient Portal category indicator
 			List<long> listDefNums = Database.GetListLong(command);
@@ -499,12 +498,12 @@ namespace OpenDentBusiness
 
 					DateTime datePrevious = doc.DateTStamp;
 					doc.Description = fileName;
-					doc.DocCategory = Defs.GetFirstForCategory(DefCat.ImageCats, true).DefNum;
+					doc.DocCategory = Definitions.GetFirstForCategory(DefinitionCategory.ImageCats, true).Id;
 					doc.FileName = fileName;
 					doc.PatNum = patient.PatNum;
 					Insert(doc, patient);
 					countAdded++;
-					string docCat = Defs.GetDef(DefCat.ImageCats, doc.DocCategory).ItemName;
+					string docCat = Definitions.GetDef(DefinitionCategory.ImageCats, doc.DocCategory).Name;
 					SecurityLogs.MakeLogEntry(Permissions.ImageEdit, patient.PatNum, "Document Created: A file" + ", " + doc.FileName + ", "
 						+ "placed into the patient's AtoZ images folder from outside of the program was detected and a record automatically inserted into the first image category" + ", " + docCat, doc.DocNum, datePrevious);
 				}
@@ -555,7 +554,7 @@ namespace OpenDentBusiness
 			raw = dcon.ExecuteDataTable(command);
 			if (raw.Rows.Count > 0)
 			{//Are there any invisible documents?
-				command = "UPDATE document SET DocCategory='" + Defs.GetFirstForCategory(DefCat.ImageCats, true).DefNum
+				command = "UPDATE document SET DocCategory='" + Definitions.GetFirstForCategory(DefinitionCategory.ImageCats, true).Id
 					+ "' WHERE PatNum='" + patNum + "' AND (";
 				for (int i = 0; i < raw.Rows.Count; i++)
 				{
@@ -574,7 +573,7 @@ namespace OpenDentBusiness
 			for (int i = 0; i < raw.Rows.Count; i++)
 			{
 				//Make sure hidden documents are never added (there is a small possibility that one is added after all are made visible).
-				if (Defs.GetOrder(DefCat.ImageCats, PIn.Long(raw.Rows[i]["DocCategory"].ToString())) < 0)
+				if (Definitions.GetOrder(DefinitionCategory.ImageCats, PIn.Long(raw.Rows[i]["DocCategory"].ToString())) < 0)
 				{
 					continue;
 				}
@@ -588,7 +587,7 @@ namespace OpenDentBusiness
 				row["MountNum"] = 0;
 				row["DocCategory"] = PIn.Long(raw.Rows[i]["DocCategory"].ToString());
 				row["DateCreated"] = PIn.Date(raw.Rows[i]["DateCreated"].ToString());
-				row["docFolder"] = Defs.GetOrder(DefCat.ImageCats, PIn.Long(raw.Rows[i]["DocCategory"].ToString()));
+				row["docFolder"] = Definitions.GetOrder(DefinitionCategory.ImageCats, PIn.Long(raw.Rows[i]["DocCategory"].ToString()));
 				row["description"] = PIn.Date(raw.Rows[i]["DateCreated"].ToString()).ToString("d") + ": "
 					+ PIn.String(raw.Rows[i]["Description"].ToString());
 				row["ImgType"] = PIn.Long(raw.Rows[i]["ImgType"].ToString());
@@ -600,7 +599,7 @@ namespace OpenDentBusiness
 			raw = dcon.ExecuteDataTable(command);
 			if (raw.Rows.Count > 0)
 			{//Are there any invisible mounts?
-				command = "UPDATE mount SET DocCategory='" + Defs.GetFirstForCategory(DefCat.ImageCats, true).DefNum
+				command = "UPDATE mount SET DocCategory='" + Definitions.GetFirstForCategory(DefinitionCategory.ImageCats, true).Id
 					+ "' WHERE PatNum='" + patNum + "' AND (";
 				for (int i = 0; i < raw.Rows.Count; i++)
 				{
@@ -619,7 +618,7 @@ namespace OpenDentBusiness
 			for (int i = 0; i < raw.Rows.Count; i++)
 			{
 				//Make sure hidden mounts are never added (there is a small possibility that one is added after all are made visible).
-				if (Defs.GetOrder(DefCat.ImageCats, PIn.Long(raw.Rows[i]["DocCategory"].ToString())) < 0)
+				if (Definitions.GetOrder(DefinitionCategory.ImageCats, PIn.Long(raw.Rows[i]["DocCategory"].ToString())) < 0)
 				{
 					continue;
 				}
@@ -628,7 +627,7 @@ namespace OpenDentBusiness
 				row["MountNum"] = PIn.Long(raw.Rows[i]["MountNum"].ToString());
 				row["DocCategory"] = PIn.Long(raw.Rows[i]["DocCategory"].ToString());
 				row["DateCreated"] = PIn.Date(raw.Rows[i]["DateCreated"].ToString());
-				row["docFolder"] = Defs.GetOrder(DefCat.ImageCats, PIn.Long(raw.Rows[i]["DocCategory"].ToString()));
+				row["docFolder"] = Definitions.GetOrder(DefinitionCategory.ImageCats, PIn.Long(raw.Rows[i]["DocCategory"].ToString()));
 				row["description"] = PIn.Date(raw.Rows[i]["DateCreated"].ToString()).ToString("d") + ": "
 					+ PIn.String(raw.Rows[i]["Description"].ToString());
 				row["ImgType"] = 0;//Not an image type at all.  It's a mount.

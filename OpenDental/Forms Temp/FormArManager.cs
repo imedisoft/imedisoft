@@ -1,4 +1,6 @@
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 using System;
@@ -14,9 +16,9 @@ namespace OpenDental
     public partial class FormArManager:ODForm {
 		private List<Provider> _listProviders;
 		private List<Clinic> _listClinics;
-		private List<Def> _listBillTypesNoColl;
-		private Def _collectionBillType;
-		private Def _excludedBilltype;
+		private List<Definition> _listBillTypesNoColl;
+		private Definition _collectionBillType;
+		private Definition _excludedBilltype;
 		private List<PatAging> _listPatAgingUnsentAll;
 		private List<PatAging> _listPatAgingSentAll;
 		private List<PatAging> _listPatAgingExcludedAll;
@@ -38,10 +40,10 @@ namespace OpenDental
 
 		private void FormArManager_Load(object sender,EventArgs e) {
 			#region Get Variables for Both Tabs
-			List<Def> billTypeDefs=Defs.GetDefsForCategory(DefCat.BillingTypes,true);
-			_collectionBillType=billTypeDefs.FirstOrDefault(x => x.ItemValue.ToLower()=="c")?.Copy();
-			_excludedBilltype=billTypeDefs.FirstOrDefault(x => x.ItemValue.ToLower()=="ce")?.Copy();
-			_listBillTypesNoColl=billTypeDefs.Where(x => x.ItemValue.ToLower()!="c" && x.ItemValue.ToLower()!="ce").Select(x => x.Copy()).ToList();//This probably needs to change
+			List<Definition> billTypeDefs=Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes,true);
+			_collectionBillType=billTypeDefs.FirstOrDefault(x => x.Value.ToLower()=="c");
+			_excludedBilltype=billTypeDefs.FirstOrDefault(x => x.Value.ToLower()=="ce");
+			_listBillTypesNoColl=billTypeDefs.Where(x => x.Value.ToLower()!="c" && x.Value.ToLower()!="ce").ToList();//This probably needs to change
 			_listClinics=new List<Clinic>();
 			if(PrefC.HasClinicsEnabled) {
 				_listClinics.AddRange(Clinics.GetByCurrentUser().OrderBy(x => x.Id!=0));
@@ -83,10 +85,10 @@ namespace OpenDental
 				.Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries)
 				.Select(x => PIn.Long(x)).ToList();
 			comboBoxMultiBillTypes.Items.Add("All");
-			comboBoxMultiBillTypes.SetSelected(0,_listBillTypesNoColl.All(x => !listDefaultBillTypes.Contains(x.DefNum)));//select All if no valid defaults are set
+			comboBoxMultiBillTypes.SetSelected(0,_listBillTypesNoColl.All(x => !listDefaultBillTypes.Contains(x.Id)));//select All if no valid defaults are set
 			for(int i=0;i<_listBillTypesNoColl.Count;i++) {
-				comboBoxMultiBillTypes.Items.Add(_listBillTypesNoColl[i].ItemName);
-				if(listDefaultBillTypes.Contains(_listBillTypesNoColl[i].DefNum)) {
+				comboBoxMultiBillTypes.Items.Add(_listBillTypesNoColl[i].Name);
+				if(listDefaultBillTypes.Contains(_listBillTypesNoColl[i].Id)) {
 					comboBoxMultiBillTypes.SetSelected(i+1,true);//+1 for All
 				}
 			}
@@ -234,7 +236,7 @@ namespace OpenDental
 			_listNewStatuses.ForEach(x => comboNewStatus.Items.Add(x.GetDescription()));
 			#endregion Sent Tab New Statuses Combo
 			#region Sent Tab New Bill Types Combo
-			_listBillTypesNoColl.ForEach(x => comboNewBillType.Items.Add(x.ItemName));
+			_listBillTypesNoColl.ForEach(x => comboNewBillType.Items.Add(x.Name));
 			errorProvider1.SetError(comboNewBillType,"");
 			#endregion Sent Tab New Bill Types Combo
 			#region Sent Tab Show PatNums
@@ -386,10 +388,10 @@ namespace OpenDental
 					Patients.SetDateBalBegan(ref listPatAgingAll);
 					GC.Collect();//to reclaim the temporary memory used by the above method
 					foreach(PatAging ptAgeCur in listPatAgingAll) {
-						if(_collectionBillType!=null && ptAgeCur.BillingType==_collectionBillType.DefNum) {
+						if(_collectionBillType!=null && ptAgeCur.BillingType==_collectionBillType.Id) {
 							_listPatAgingSentAll.Add(ptAgeCur);
 						}
-						else if(_excludedBilltype!=null && ptAgeCur.BillingType==_excludedBilltype.DefNum){
+						else if(_excludedBilltype!=null && ptAgeCur.BillingType==_excludedBilltype.Id){
 							_listPatAgingExcludedAll.Add(ptAgeCur);
 						}
 						else {
@@ -579,7 +581,7 @@ namespace OpenDental
 			#region Unsent Defaults
 			string selectedBillTypes="";//indicates all.
 			if(comboBoxMultiBillTypes.SelectedIndices.Count>0 && !comboBoxMultiBillTypes.SelectedIndices.Contains(0)) {
-				selectedBillTypes=string.Join(",",comboBoxMultiBillTypes.ListSelectedIndices.Select(x => _listBillTypesNoColl[x-1].DefNum));//-1 for All
+				selectedBillTypes=string.Join(",",comboBoxMultiBillTypes.ListSelectedIndices.Select(x => _listBillTypesNoColl[x-1].Id));//-1 for All
 			}
 			string unsentAgeOfAccount="";//indicates any age
 			if(comboUnsentAccountAge.SelectedIndex.In(1,2,3)) {
@@ -745,7 +747,7 @@ namespace OpenDental
 			string strNot="";
 			if(gridCur==gridUnsent) {
 				_listPatAgingExcludedAll.Add(aging);
-				aging.BillingType=_excludedBilltype.DefNum;
+				aging.BillingType=_excludedBilltype.Id;
 			}
 			else {
 				_listPatAgingUnsentAll.Add(aging);
@@ -758,8 +760,8 @@ namespace OpenDental
 				if(pat.BillingType==aging.BillingType) {
 					continue;
 				}
-				string logTxt="Patient billing type changed from '"+Defs.GetName(DefCat.BillingTypes,pat.BillingType)+"' to '"
-					+Defs.GetName(DefCat.BillingTypes,aging.BillingType)+"' due to the account being marked as "+strNot+"excluded from being sent to "
+				string logTxt="Patient billing type changed from '"+Definitions.GetName(DefinitionCategory.BillingTypes,pat.BillingType)+"' to '"
+					+Definitions.GetName(DefinitionCategory.BillingTypes,aging.BillingType)+"' due to the account being marked as "+strNot+"excluded from being sent to "
 					+"Transworld from the A/R Manager.";
 				SecurityLogs.MakeLogEntry(Permissions.PatientBillingEdit,pat.PatNum,logTxt);
 			}
@@ -830,7 +832,7 @@ namespace OpenDental
 			gridUnsent.ListGridRows.Clear();
 			Dictionary<long,string> dictClinicAbbrs=_listClinics.ToDictionary(x => x.Id,x => x.Abbr);
 			Dictionary<long,string> dictProvAbbrs=_listProviders.ToDictionary(x => x.ProvNum,x => x.Abbr);
-			Dictionary<long,string> dictBillTypeNames=Defs.GetDefsForCategory(DefCat.BillingTypes).ToDictionary(x => x.DefNum,x => x.ItemName);
+			Dictionary<long,string> dictBillTypeNames=Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes).ToDictionary(x => x.Id,x => x.Name);
 			Dictionary<long,DateTime> dictSuspendDateTimes=new Dictionary<long,DateTime>();
 			foreach(PatAging pAgeCur in listPatAgingIndexFiltered.Select(x => _listPatAgingUnsentAll[x])) {
 				TsiTransLog tsiLogMostRecentStatusChange=pAgeCur.ListTsiLogs
@@ -970,7 +972,7 @@ namespace OpenDental
 			AgeOfAccount accountAge=new[] { AgeOfAccount.Any,AgeOfAccount.Over30,AgeOfAccount.Over60,AgeOfAccount.Over90 }[comboUnsentAccountAge.SelectedIndex];
 			List<long> listBillTypes=new List<long>();
 			if(!comboBoxMultiBillTypes.ListSelectedIndices.Contains(0)) {
-				listBillTypes=comboBoxMultiBillTypes.ListSelectedIndices.Select(x => _listBillTypesNoColl[x-1].DefNum).ToList();
+				listBillTypes=comboBoxMultiBillTypes.ListSelectedIndices.Select(x => _listBillTypesNoColl[x-1].Id).ToList();
 			}
 			List<long> listProvNums=new List<long>();
 			if(!comboBoxMultiUnsentProvs.ListSelectedIndices.Contains(0)) {
@@ -1229,13 +1231,13 @@ namespace OpenDental
 					&& MsgBox.Show(MsgBoxButtons.YesNo,"There must be a collections billing type defined in order to send accounts to TSI.  Would you like "
 						+"to open the definitions window now to create a collections billing type?"))
 				{
-					FormDefinitions FormDefs=new FormDefinitions(DefCat.BillingTypes);
+					FormDefinitions FormDefs=new FormDefinitions(DefinitionCategory.BillingTypes);
 					FormDefs.ShowDialog();//no OK button, only Close which returns DialogResult.Cancel, just get the billing type again in case they created it
-					_collectionBillType=Defs.GetDefsForCategory(DefCat.BillingTypes,true).FirstOrDefault(x => x.ItemValue.ToLower()=="c");
+					_collectionBillType=Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes,true).FirstOrDefault(x => x.Value.ToLower()=="c");
 				}
-				FormDefinitions FormD=new FormDefinitions(DefCat.BillingTypes);
+				FormDefinitions FormD=new FormDefinitions(DefinitionCategory.BillingTypes);
 				FormD.ShowDialog();//no OK button, only Close which returns DialogResult.Cancel, just get the billing type again in case they created it
-				_collectionBillType=Defs.GetDefsForCategory(DefCat.BillingTypes,true).FirstOrDefault(x => x.ItemValue.ToLower()=="c");
+				_collectionBillType=Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes,true).FirstOrDefault(x => x.Value.ToLower()=="c");
 				if(_collectionBillType==null) {//still no collections billing type
 					MessageBox.Show("Please create a collections billing type and try again later.");
 					return;
@@ -1516,12 +1518,12 @@ namespace OpenDental
 				}
 				//update all family billing types to the collection bill type
 				List<Patient> listAllPats=Patients.GetFamilies(kvp.Value.Keys.ToList()).SelectMany(x => x.ListPats).ToList();
-				Patients.UpdateAllFamilyBillingTypes(_collectionBillType.DefNum,kvp.Value.Keys.ToList());
+				Patients.UpdateAllFamilyBillingTypes(_collectionBillType.Id,kvp.Value.Keys.ToList());
 				foreach(Patient pat in listAllPats) {
-					if(pat.BillingType==_collectionBillType.DefNum) {
+					if(pat.BillingType==_collectionBillType.Id) {
 						continue;
 					}
-					string logTxt="Patient billing type changed from '"+Defs.GetName(DefCat.BillingTypes,pat.BillingType)+"' to '"+_collectionBillType.ItemName
+					string logTxt="Patient billing type changed from '"+Definitions.GetName(DefinitionCategory.BillingTypes,pat.BillingType)+"' to '"+_collectionBillType.Name
 						+"' due to the account being sent to Transworld from the A/R Manager.";
 					SecurityLogs.MakeLogEntry(Permissions.PatientBillingEdit,pat.PatNum,logTxt);
 				}
@@ -1565,12 +1567,12 @@ namespace OpenDental
 				}
 				//update all family billing types to the collection bill type
 				List<Patient> listAllPats=Patients.GetFamilies(kvp.Value.Keys.ToList()).SelectMany(x => x.ListPats).ToList();
-				Patients.UpdateAllFamilyBillingTypes(_collectionBillType.DefNum,kvp.Value.Keys.ToList());
+				Patients.UpdateAllFamilyBillingTypes(_collectionBillType.Id,kvp.Value.Keys.ToList());
 				foreach(Patient pat in listAllPats) {
-					if(pat.BillingType==_collectionBillType.DefNum) {
+					if(pat.BillingType==_collectionBillType.Id) {
 						continue;
 					}
-					string logTxt="Patient billing type changed from '"+Defs.GetName(DefCat.BillingTypes,pat.BillingType)+"' to '"+_collectionBillType.ItemName
+					string logTxt="Patient billing type changed from '"+Definitions.GetName(DefinitionCategory.BillingTypes,pat.BillingType)+"' to '"+_collectionBillType.Name
 						+"' due to a status update message being sent to Transworld from the A/R manager.";
 					SecurityLogs.MakeLogEntry(Permissions.PatientBillingEdit,pat.PatNum,logTxt);
 				}
@@ -1944,7 +1946,7 @@ namespace OpenDental
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
-			Def newBillType=_listBillTypesNoColl[comboNewBillType.SelectedIndex];
+			Definition newBillType=_listBillTypesNoColl[comboNewBillType.SelectedIndex];
 			#endregion Get and Validate Data
 			#region Create Messages and TsiTransLogs
 			//TSI connection details validated, at least one clinic the user has access to is setup with valid connection details
@@ -2061,13 +2063,13 @@ namespace OpenDental
 				}
 				//update all family billing types to the collection bill type if transtype is reinstated, otherwise to the selected new billing type
 				List<Patient> listAllPats=Patients.GetFamilies(kvp.Value.Keys.ToList()).SelectMany(x => x.ListPats).ToList();
-				Def billTypeUpdate=transType==TsiTransType.RI?_collectionBillType:newBillType;
-				Patients.UpdateAllFamilyBillingTypes(billTypeUpdate.DefNum,kvp.Value.Keys.ToList());
+				Definition billTypeUpdate=transType==TsiTransType.RI?_collectionBillType:newBillType;
+				Patients.UpdateAllFamilyBillingTypes(billTypeUpdate.Id,kvp.Value.Keys.ToList());
 				foreach(Patient pat in listAllPats) {
-					if(pat.BillingType==billTypeUpdate.DefNum) {
+					if(pat.BillingType==billTypeUpdate.Id) {
 						continue;
 					}
-					string logTxt="Patient billing type changed from '"+Defs.GetName(DefCat.BillingTypes,pat.BillingType)+"' to '"+billTypeUpdate.ItemName
+					string logTxt="Patient billing type changed from '"+Definitions.GetName(DefinitionCategory.BillingTypes,pat.BillingType)+"' to '"+billTypeUpdate.Name
 						+"' due to a status update message being sent to Transworld from the A/R manager.";
 					SecurityLogs.MakeLogEntry(Permissions.PatientBillingEdit,pat.PatNum,logTxt);
 				}
@@ -2133,7 +2135,7 @@ namespace OpenDental
 			gridExcluded.ListGridRows.Clear();
 			Dictionary<long,string> dictClinicAbbrs=_listClinics.ToDictionary(x => x.Id,x => x.Abbr);
 			Dictionary<long,string> dictProvAbbrs=_listProviders.ToDictionary(x => x.ProvNum,x => x.Abbr);
-			Dictionary<long,string> dictBillTypeNames=Defs.GetDefsForCategory(DefCat.BillingTypes).ToDictionary(x => x.DefNum,x => x.ItemName);
+			Dictionary<long,string> dictBillTypeNames=Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes).ToDictionary(x => x.Id,x => x.Name);
 			Dictionary<long,DateTime> dictSuspendDateTimes=new Dictionary<long,DateTime>();
 			foreach(PatAging pAgeCur in listPatAgingIndexFiltered.Select(x => _listPatAgingExcludedAll[x])) {
 				TsiTransLog tsiLogMostRecentStatusChange=pAgeCur.ListTsiLogs

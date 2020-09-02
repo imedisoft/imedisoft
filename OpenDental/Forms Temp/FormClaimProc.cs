@@ -10,6 +10,8 @@ using CodeBase;
 using OpenDentBusiness.Crud;
 using OpenDentBusiness.Eclaims;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	///<summary>Summary description for FormClaimProcEdit.</summary>
@@ -49,7 +51,7 @@ namespace OpenDental {
 		private double WriteOffOtherIns;
 		private bool SaveToDb;
 		private List<InsSub> SubList;
-		private List<Def> _listPayTrackDefs;
+		private List<Definition> _listPayTrackDefs;
 		public bool IsSaved;
 		private List<Provider> _listProviders;
 
@@ -371,11 +373,11 @@ namespace OpenDental {
 			else {
 				checkPayPlan.Checked=true;
 			}
-			_listPayTrackDefs=Defs.GetDefsForCategory(DefCat.ClaimPaymentTracking,true);
+			_listPayTrackDefs=Definitions.GetByCategory(DefinitionCategory.ClaimPaymentTracking);
 			comboPayTracker.Items.Add("None");
 			for(int i=0;i<_listPayTrackDefs.Count;i++) {
-				comboPayTracker.Items.Add(_listPayTrackDefs[i].ItemName);
-				if(_listPayTrackDefs[i].DefNum==ClaimProcCur.ClaimPaymentTracking) {
+				comboPayTracker.Items.Add(_listPayTrackDefs[i].Name);
+				if(_listPayTrackDefs[i].Id==ClaimProcCur.ClaimPaymentTracking) {
 					comboPayTracker.SelectedIndex=i+1;
 				}
 			}
@@ -1296,7 +1298,7 @@ namespace OpenDental {
 					ClaimProcCur.DateEntry=DateTime.Now;
 				}
 			}
-			ClaimProcCur.ClaimPaymentTracking=comboPayTracker.SelectedIndex==0 ? 0 : _listPayTrackDefs[comboPayTracker.SelectedIndex-1].DefNum;
+			ClaimProcCur.ClaimPaymentTracking=comboPayTracker.SelectedIndex==0 ? 0 : _listPayTrackDefs[comboPayTracker.SelectedIndex-1].Id;
 			if(SaveToDb) {
 				//Fix pre-auth statuses.
 				Claim curClaim=Claims.GetClaim(ClaimProcCur.ClaimNum);

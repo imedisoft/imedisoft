@@ -6,6 +6,8 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using Imedisoft.UI;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -938,7 +940,7 @@ namespace OpenDental {
 						else{
 							row.Cells.Add(_listASAPs[i].AptDateTime.ToShortDateString());
 						}
-						row.Cells.Add(Defs.GetName(DefCat.RecallUnschedStatus,_listASAPs[i].UnschedStatus));
+						row.Cells.Add(Definitions.GetName(DefinitionCategory.RecallUnschedStatus,_listASAPs[i].UnschedStatus));
 						row.Cells.Add(_listASAPs[i].AptStatus.ToString());
 						if(_listASAPs[i].IsHygiene) {
 							row.Cells.Add(Providers.GetAbbr(_listASAPs[i].ProvHyg));

@@ -9,6 +9,8 @@ using OpenDentBusiness;
 using OpenDental.UI;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -597,7 +599,7 @@ namespace OpenDental{
 						else {
 							row.Cells.Add("Unscheduled");
 						}
-						row.Cells.Add(Defs.GetName(DefCat.RecallUnschedStatus,apt.UnschedStatus));
+						row.Cells.Add(Definitions.GetName(DefinitionCategory.RecallUnschedStatus,apt.UnschedStatus));
 						row.Cells.Add(Providers.GetAbbr(apt.ProvNum));
 						row.Cells.Add(apt.ProcDescript);
 						row.Cells.Add(apt.Note);

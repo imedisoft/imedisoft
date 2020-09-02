@@ -1,3 +1,5 @@
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.User_Controls.SetupWizard;
 using OpenDentBusiness;
 using System;
@@ -240,12 +242,12 @@ namespace OpenDental
 			{
 				if (provider.IsSecondary) return false;
 
-				if (Defs.GetName(DefCat.ProviderSpecialties, provider.Specialty).ToLower() == "hygienist" ||
-					Defs.GetName(DefCat.ProviderSpecialties, provider.Specialty).ToLower() == "assistant" ||
-					Defs.GetName(DefCat.ProviderSpecialties, provider.Specialty).ToLower() == "labtech" ||
-					Defs.GetName(DefCat.ProviderSpecialties, provider.Specialty).ToLower() == "other" ||
-					Defs.GetName(DefCat.ProviderSpecialties, provider.Specialty).ToLower() == "notes" ||
-					Defs.GetName(DefCat.ProviderSpecialties, provider.Specialty).ToLower() == "none")
+				if (Definitions.GetName(DefinitionCategory.ProviderSpecialties, provider.Specialty).ToLower() == "hygienist" ||
+					Definitions.GetName(DefinitionCategory.ProviderSpecialties, provider.Specialty).ToLower() == "assistant" ||
+					Definitions.GetName(DefinitionCategory.ProviderSpecialties, provider.Specialty).ToLower() == "labtech" ||
+					Definitions.GetName(DefinitionCategory.ProviderSpecialties, provider.Specialty).ToLower() == "other" ||
+					Definitions.GetName(DefinitionCategory.ProviderSpecialties, provider.Specialty).ToLower() == "notes" ||
+					Definitions.GetName(DefinitionCategory.ProviderSpecialties, provider.Specialty).ToLower() == "none")
 				{
 					return false;
 				}

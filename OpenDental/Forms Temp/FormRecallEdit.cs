@@ -6,6 +6,8 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	///<summary>Summary description for FormRecallEdit.</summary>
@@ -52,7 +54,7 @@ namespace OpenDental{
 		private CheckBox checkASAP;
 		private Label label10;
 		private List<RecallType> _listRecallTypes;
-		private List<Def> _listRecallUnschedStatusDefs;
+		private List<Definition> _listRecallUnschedStatusDefs;
 
 		//private Patient PatCur;
 
@@ -534,10 +536,10 @@ namespace OpenDental{
 			textDays.Text=RecallCur.RecallInterval.Days.ToString();
 			comboStatus.Items.Add("None");
 			comboStatus.SelectedIndex=0;
-			_listRecallUnschedStatusDefs=Defs.GetDefsForCategory(DefCat.RecallUnschedStatus,true);
+			_listRecallUnschedStatusDefs=Definitions.GetDefsForCategory(DefinitionCategory.RecallUnschedStatus,true);
 			for(int i=0;i<_listRecallUnschedStatusDefs.Count;i++){
-				comboStatus.Items.Add(_listRecallUnschedStatusDefs[i].ItemName);
-				if(_listRecallUnschedStatusDefs[i].DefNum==RecallCur.RecallStatus)
+				comboStatus.Items.Add(_listRecallUnschedStatusDefs[i].Name);
+				if(_listRecallUnschedStatusDefs[i].Id==RecallCur.RecallStatus)
 					comboStatus.SelectedIndex=i+1;
 			}
 			textNote.Text=RecallCur.Note;
@@ -624,7 +626,7 @@ namespace OpenDental{
 			}
 			else{
 				RecallCur.RecallStatus
-					=_listRecallUnschedStatusDefs[comboStatus.SelectedIndex-1].DefNum;
+					=_listRecallUnschedStatusDefs[comboStatus.SelectedIndex-1].Id;
 			}
 			RecallCur.Note=textNote.Text;
 			RecallCur.Priority=(checkASAP.Checked ? RecallPriority.ASAP : RecallPriority.Normal);

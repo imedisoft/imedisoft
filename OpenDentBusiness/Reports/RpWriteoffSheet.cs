@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using DataConnectionBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	public class RpWriteoffSheet {
@@ -93,7 +94,7 @@ namespace OpenDentBusiness {
 					+"GROUP BY claimproc.ProvNum,claimsnapshot.DateTEntry,claimproc.ClinicNum,claimproc.PatNum "
 					+"ORDER BY claimsnapshot.DateTEntry,claimproc.PatNum";
 			}
-			return ReportsComplex.RunFuncOnReportServer(() => ReportsComplex.GetTable(query));
+			return Database.ExecuteDataTable(query);
 		}	
 	}
 

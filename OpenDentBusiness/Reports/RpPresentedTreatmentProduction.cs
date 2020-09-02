@@ -75,14 +75,14 @@ namespace OpenDentBusiness {
 			,DateTime dateStart,DateTime dateEnd) 
 		{
 			//No need to check RemotingRole; private method.
-			List<Procedure> listProcsComplete=ReportsComplex.RunFuncOnReportServer(() => Procedures.GetCompletedForDateRangeLimited(dateStart,dateEnd,listClinicNums));
-			List<ProcTP> listProcTPs=ReportsComplex.RunFuncOnReportServer(() => ProcTPs.GetForProcs(listProcsComplete.Select(x => x.ProcNum).ToList()));
+			List<Procedure> listProcsComplete=Procedures.GetCompletedForDateRangeLimited(dateStart,dateEnd,listClinicNums);
+			List<ProcTP> listProcTPs=ProcTPs.GetForProcs(listProcsComplete.Select(x => x.ProcNum).ToList());
 			List<Procedure> listTreatPlanProcs=listProcsComplete.Where(x => listProcTPs.Select(y => y.ProcNumOrig).Contains(x.ProcNum)).ToList();
-			List<TreatPlan> listSavedTreatPlans=ReportsComplex.RunFuncOnReportServer(() => TreatPlans.GetFromProcTPs(listProcTPs)); // attached proctps to treatment plans.
-			List<ClaimProc> listClaimProcs=ReportsComplex.RunFuncOnReportServer(() => ClaimProcs.GetForProcsLimited(listTreatPlanProcs.Select(x => x.ProcNum).ToList(),
-				ClaimProcStatus.Received,ClaimProcStatus.Supplemental,ClaimProcStatus.CapComplete,ClaimProcStatus.NotReceived));
-			List<Adjustment> listAdjustments=ReportsComplex.RunFuncOnReportServer(() => Adjustments.GetForProcs(listTreatPlanProcs.Select(x => x.ProcNum).ToList()));
-			List<Userod> listUserods=ReportsComplex.RunFuncOnReportServer(() => Userods.GetAll());
+			List<TreatPlan> listSavedTreatPlans=TreatPlans.GetFromProcTPs(listProcTPs); // attached proctps to treatment plans.
+			List<ClaimProc> listClaimProcs=ClaimProcs.GetForProcsLimited(listTreatPlanProcs.Select(x => x.ProcNum).ToList(),
+				ClaimProcStatus.Received,ClaimProcStatus.Supplemental,ClaimProcStatus.CapComplete,ClaimProcStatus.NotReceived);
+			List<Adjustment> listAdjustments=Adjustments.GetForProcs(listTreatPlanProcs.Select(x => x.ProcNum).ToList());
+			List<Userod> listUserods=Userods.GetAll();
 			List<TreatPlanPresenterEntry> listTreatPlanPresenterEntries=new List<TreatPlanPresenterEntry>();
 			List<ProcedureCode> listProcCodes=ProcedureCodes.GetCodesForCodeNums(listTreatPlanProcs.Select(x => x.CodeNum).ToList());
 			foreach(Procedure procCur in listTreatPlanProcs) {

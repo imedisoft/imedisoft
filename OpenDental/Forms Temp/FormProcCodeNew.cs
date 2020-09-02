@@ -6,6 +6,8 @@ using System.Globalization;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using System.Collections.Generic;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	///<summary></summary>
@@ -39,7 +41,7 @@ namespace OpenDental{
 		private Label label9;
 		private OpenDental.UI.Button butDefault;
 		public bool Changed;
-		private List<Def> _listProcCodeCatDefs;
+		private List<Definition> _listProcCodeCatDefs;
 
 		///<summary></summary>
 		public FormProcCodeNew(){
@@ -421,9 +423,9 @@ namespace OpenDental{
 				comboTreatArea.Items.Add(Enum.GetNames(typeof(TreatmentArea))[i]);
 			}
 			comboTreatArea.SelectedIndex=(int)TreatmentArea.Mouth-1;
-			_listProcCodeCatDefs=Defs.GetDefsForCategory(DefCat.ProcCodeCats,true);
+			_listProcCodeCatDefs=Definitions.GetDefsForCategory(DefinitionCategory.ProcCodeCats,true);
 			for(int i=0;i<_listProcCodeCatDefs.Count;i++) {
-				comboCategory.Items.Add(_listProcCodeCatDefs[i].ItemName);
+				comboCategory.Items.Add(_listProcCodeCatDefs[i].Name);
 			}
 			comboCategory.SelectedIndex=0;
 			textNewCode.Focus();
@@ -656,7 +658,7 @@ namespace OpenDental{
 		///<summary>Returns the index of the category with the supplied name.  Zero if the name does not exist.</summary>
 		private int GetCategoryIndex(string name){
 			for(int i=0;i<_listProcCodeCatDefs.Count;i++) {
-				if(_listProcCodeCatDefs[i].ItemName==name){
+				if(_listProcCodeCatDefs[i].Name==name){
 					return i;
 				}
 			}
@@ -693,7 +695,7 @@ namespace OpenDental{
 			code.PaintType=(ToothPaintingType)comboPaintType.SelectedIndex;
 			code.TreatArea=(TreatmentArea)comboTreatArea.SelectedIndex+1;
 			//if(comboCategory.SelectedIndex!=-1)
-			code.ProcCat=_listProcCodeCatDefs[comboCategory.SelectedIndex].DefNum;
+			code.ProcCat=_listProcCodeCatDefs[comboCategory.SelectedIndex].Id;
 			ProcedureCodes.Insert(code);
 			Changed=true;
 			SecurityLogs.MakeLogEntry(Permissions.Setup,0,"Added Procedure Code: "+code.ProcCode);

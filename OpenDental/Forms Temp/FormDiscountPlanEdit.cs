@@ -6,13 +6,15 @@ using System.Linq;
 using CodeBase;
 using OpenDental.UI;
 using System.Drawing;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormDiscountPlanEdit:ODForm {
 		public DiscountPlan DiscountPlanCur;
 		///<summary>FeeSched for the current DiscountPlan.  May be null if the DiscountPlan is new.</summary>
 		private FeeSched _feeSchedCur;
-		private List<Def> _listAdjTypeDefs;
+		private List<Definition> _listAdjTypeDefs;
 		private List<string> _listPatNames;
 		///<summary>IsSelectionMode is true if this window is opened with the intent of selecting a plan for a user</summary>
 		public bool IsSelectionMode;
@@ -27,10 +29,10 @@ namespace OpenDental {
 			textDescript.Text=DiscountPlanCur.Description;
 			_feeSchedCur=FeeScheds.GetFirstOrDefault(x => x.FeeSchedNum==DiscountPlanCur.FeeSchedNum,true);
 			textFeeSched.Text=_feeSchedCur!=null ? _feeSchedCur.Description : "";
-			_listAdjTypeDefs=Defs.GetDiscountPlanAdjTypes().ToList();
+			_listAdjTypeDefs=Definitions.GetDiscountPlanAdjTypes().ToList();
 			for(int i=0;i<_listAdjTypeDefs.Count;i++) {
-				comboBoxAdjType.Items.Add(_listAdjTypeDefs[i].ItemName);
-				if(_listAdjTypeDefs[i].DefNum==DiscountPlanCur.DefNum) {
+				comboBoxAdjType.Items.Add(_listAdjTypeDefs[i].Name);
+				if(_listAdjTypeDefs[i].Id==DiscountPlanCur.DefNum) {
 					comboBoxAdjType.SelectedIndex=i;
 				}
 			}
@@ -113,7 +115,7 @@ namespace OpenDental {
 			}
 			DiscountPlanCur.Description=textDescript.Text;
 			DiscountPlanCur.FeeSchedNum=_feeSchedCur.FeeSchedNum;
-			DiscountPlanCur.DefNum=_listAdjTypeDefs[comboBoxAdjType.SelectedIndex].DefNum;
+			DiscountPlanCur.DefNum=_listAdjTypeDefs[comboBoxAdjType.SelectedIndex].Id;
 			DiscountPlanCur.IsHidden=checkHidden.Checked;
 			if(DiscountPlanCur.IsNew) {
 				DiscountPlans.Insert(DiscountPlanCur);

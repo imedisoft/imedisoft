@@ -30,7 +30,7 @@ namespace OpenDentBusiness
 				command += "AND ClinicNum IN (" + string.Join(",", listClinicNums) + ") ";
 			}
 			command += "ORDER BY AptDateTime";
-			return ReportsComplex.RunFuncOnReportServer(() => Database.GetListLong(command));
+			return Database.GetListLong(command);
 		}
 	}
 }

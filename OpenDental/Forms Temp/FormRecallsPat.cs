@@ -5,6 +5,8 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -100,7 +102,7 @@ namespace OpenDental {
 					row.Cells.Add(RecallList[i].DateScheduled.ToShortDateString());
 				}
 				row.Cells.Add(RecallList[i].RecallInterval.ToString());
-				row.Cells.Add(Defs.GetValue(DefCat.RecallUnschedStatus,RecallList[i].RecallStatus));
+				row.Cells.Add(Definitions.GetValue(DefinitionCategory.RecallUnschedStatus,RecallList[i].RecallStatus));
 				cellStr="";
 				if(RecallList[i].IsDisabled) {
 					cellStr+="Disabled";

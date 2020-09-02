@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using OpenDentBusiness.AutoComm;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness{
 
@@ -160,14 +161,14 @@ namespace OpenDentBusiness{
 			Appointment aptOld=aptCur.Copy();
 			void logError(string reason) {
 				string err=$"Unable to update Appointment confirmation status {reason}. AptNum: {request.ApptNum}; ConfirmationRequest: {request.ConfirmationRequestNum}"
-					+"Attempted to change from "+Defs.GetName(DefCat.ApptConfirmed,aptOld.Confirmed)+" to "+Defs.GetName(DefCat.ApptConfirmed,confirmDefNum)
+					+"Attempted to change from "+Definitions.GetName(DefinitionCategory.ApptConfirmed,aptOld.Confirmed)+" to "+Definitions.GetName(DefinitionCategory.ApptConfirmed,confirmDefNum)
 					+" due to an eConfirmation.";
 				SecurityLogs.MakeLogEntry(Permissions.ApptConfirmStatusEdit,aptCur.PatNum,err,aptCur.AptNum,LogSources.AutoConfirmations,aptOld.DateTStamp);
 				logOnError?.Invoke(err);
 			}
 			List<long> preventChangeFrom=commaListOfExcludedDefNums.Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries).Select(long.Parse).ToList();
 			if(preventChangeFrom.Contains(aptCur.Confirmed)) { //This appointment is in a confirmation state that can no longer be updated.
-				logError("from "+Defs.GetName(DefCat.ApptConfirmed,aptOld.Confirmed));
+				logError("from "+Definitions.GetName(DefinitionCategory.ApptConfirmed,aptOld.Confirmed));
 				return ConfStatusUpdate.Failure;
 			}
 			else if(aptCur.AptStatus.In(ApptStatus.Broken,ApptStatus.UnschedList)) {//Broken or Unschedule appointments should not be confirmed.
@@ -182,7 +183,7 @@ namespace OpenDentBusiness{
 			aptCur.Confirmed=confirmDefNum;
 			Appointments.Update(aptCur,aptOld);//Appointments S-Class handles Signalods
 			SecurityLogs.MakeLogEntry(Permissions.ApptConfirmStatusEdit,aptCur.PatNum,"Appointment confirmation status changed from "
-				+Defs.GetName(DefCat.ApptConfirmed,aptOld.Confirmed)+" to "+Defs.GetName(DefCat.ApptConfirmed,aptCur.Confirmed)
+				+ Definitions.GetName(DefinitionCategory.ApptConfirmed, aptOld.Confirmed) + " to " + Definitions.GetName(DefinitionCategory.ApptConfirmed, aptCur.Confirmed)
 				+" due to an eConfirmation.",aptCur.AptNum,LogSources.AutoConfirmations,aptOld.DateTStamp);
 			return ConfStatusUpdate.Success;			
 		}

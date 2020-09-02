@@ -5,6 +5,8 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -23,7 +25,7 @@ namespace OpenDental {
 
 		private void FormSupplyEdit_Load(object sender,EventArgs e) {
 			textSupplier.Text=Suppliers.GetName(ListSuppliers,SupplyCur.SupplierNum);
-			comboCategory.Items.AddDefs(Defs.GetDefsForCategory(DefCat.SupplyCats,true));
+			comboCategory.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.SupplyCats,true));
 			comboCategory.SetSelectedDefNum(SupplyCur.Category); 
 			textCatalogNumber.Text=SupplyCur.CatalogNumber;
 			textDescript.Text=SupplyCur.Descript;

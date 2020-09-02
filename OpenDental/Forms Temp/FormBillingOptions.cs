@@ -8,6 +8,8 @@ using MySql.Data.MySqlClient;
 using OpenDental.UI;
 using OpenDentBusiness;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	///<summary></summary>
@@ -69,7 +71,7 @@ namespace OpenDental{
 		private ListBox listModeToText;
 		private Label labelMultiClinicGenMsg;
 		private ComboBoxClinicPicker comboClinic;
-		private List<Def> _listBillingTypeDefs;
+		private List<Definition> _listBillingTypeDefs;
 		///<summary>Tracks if textDateStart is blank so we can display a warning in FormBilling.cs when sending electronic bills.</summary>
 		public bool IsHistoryStartMinDate { get; private set; }
 
@@ -679,9 +681,9 @@ namespace OpenDental{
 					comboClinic.IsAllSelected=true;
 				}
 			}
-			_listBillingTypeDefs=Defs.GetDefsForCategory(DefCat.BillingTypes,true);
+			_listBillingTypeDefs=Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes,true);
 			listBillType.Items.Add("(all)");
-			listBillType.Items.AddRange(_listBillingTypeDefs.Select(x => x.ItemName).ToArray());
+			listBillType.Items.AddRange(_listBillingTypeDefs.Select(x => x.Name).ToArray());
 			comboAge.Items.Add("Any Balance");
 			comboAge.Items.Add("Over 30 Days");
 			comboAge.Items.Add("Over 60 Days");
@@ -763,7 +765,7 @@ namespace OpenDental{
 			//	string[] selectedBillTypes=Prefs.GetString(PrefName.BillingSelectBillingTypes).Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries);
 			//	foreach(string billTypeDefNum in selectedBillTypes) {
 			//		try{
-			//			int order=Defs.GetOrder(DefCat.BillingTypes,Convert.ToInt64(billTypeDefNum));
+			//			int order=Defs.GetOrder(DefinitionCategory.BillingTypes,Convert.ToInt64(billTypeDefNum));
 			//			if(order==-1) {
 			//				continue;
 			//			}
@@ -814,7 +816,7 @@ namespace OpenDental{
 			//	string[] selectedBillTypes=listClinicPrefs.First(x => x.PrefName==PrefName.BillingSelectBillingTypes).ValueString.Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries);
 			//	foreach(string billTypeDefNum in selectedBillTypes) {
 			//		try {
-			//			int order=Defs.GetOrder(DefCat.BillingTypes,Convert.ToInt64(billTypeDefNum));
+			//			int order=Defs.GetOrder(DefinitionCategory.BillingTypes,Convert.ToInt64(billTypeDefNum));
 			//			if(order==-1) {
 			//				continue;
 			//			}
@@ -990,7 +992,7 @@ namespace OpenDental{
 					row.Cells.Add("all");
 				}
 				else{
-					row.Cells.Add(Defs.GetName(DefCat.BillingTypes,dunnCur.BillingType));
+					row.Cells.Add(Definitions.GetName(DefinitionCategory.BillingTypes,dunnCur.BillingType));
 				}
 				if(dunnCur.AgeAccount==0){
 					row.Cells.Add("any");
@@ -1169,8 +1171,8 @@ namespace OpenDental{
 			else {
 				mode=StatementMode.Mail;
 			}
-			Def billingType=Defs.GetDef(DefCat.BillingTypes,patAge.BillingType);
-			if(billingType != null && billingType.ItemValue=="E") {
+			Definition billingType=Definitions.GetDef(DefinitionCategory.BillingTypes,patAge.BillingType);
+			if(billingType != null && billingType.Value=="E") {
 				mode=StatementMode.Email;
 			}
 			return mode;
@@ -1304,7 +1306,7 @@ namespace OpenDental{
 					billingNums.Clear();
 					break;
 				}
-				billingNums.Add(_listBillingTypeDefs[listBillType.SelectedIndices[i]-1].DefNum);
+				billingNums.Add(_listBillingTypeDefs[listBillType.SelectedIndices[i]-1].Id);
 			}
 			List<PatAging> listPatAging=new List<PatAging>();
 			if(dictPatAgingData==null) {//If not passed in, we must generate the data here.

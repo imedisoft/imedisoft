@@ -11,7 +11,7 @@ namespace OpenDentBusiness {
 		public static DataTable GetClaimsNotSent(DateTime fromDate,DateTime toDate,List<long> listClinicNums
 			,bool hasClaimTypeExpanded,ClaimNotSentStatuses claimStatusFilter) 
 		{
-			bool hasClinicsEnabled=ReportsComplex.RunFuncOnReportServer(() => Prefs.HasClinicsEnabledNoCache);
+			bool hasClinicsEnabled=Prefs.HasClinicsEnabledNoCache;
 			string command="";
 			string whereClin="";
 			string claimFilter="";
@@ -70,7 +70,7 @@ namespace OpenDentBusiness {
 				+" GROUP BY claim.ClaimNum";
 
 			command+=" ORDER BY claim.DateService";
-			return ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
+			return Database.ExecuteDataTable(command);
 		}
 	}
 }

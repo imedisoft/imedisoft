@@ -1,3 +1,5 @@
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -208,7 +210,7 @@ namespace OpenDentBusiness {
 		public int PriorityOrder {
 			get {
 				if(_priorityOrder==int.MinValue) {
-					_priorityOrder=Defs.GetOrder(DefCat.TxPriorities,this.Priority);
+					_priorityOrder=Definitions.GetOrder(DefinitionCategory.TxPriorities,this.Priority);
 				}
 				return _priorityOrder;
 			}

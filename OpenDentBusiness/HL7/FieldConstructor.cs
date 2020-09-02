@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using System;
 using System.Collections.Generic;
 
 
@@ -100,7 +102,7 @@ namespace OpenDentBusiness.HL7 {
 						return "";
 					}
 					//Example: |^Appointment Confirmed|
-					return gConcat(def.ComponentSeparator,"",Defs.GetName(DefCat.ApptConfirmed,apt.Confirmed));//this will return an empty string if apt.Confirmed is 0 or invalid
+					return gConcat(def.ComponentSeparator,"",Definitions.GetName(DefinitionCategory.ApptConfirmed,apt.Confirmed));//this will return an empty string if apt.Confirmed is 0 or invalid
 				case "apt.endAptDateTime":
 					if(apt==null) {
 						return "";

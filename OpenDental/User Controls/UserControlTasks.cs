@@ -1,4 +1,6 @@
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using Imedisoft.Forms;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -561,7 +563,7 @@ namespace OpenDental
 					}
 				}
 
-				gridRow.BackColor = Defs.GetColor(DefCat.TaskPriorities, task.PriorityId);
+				gridRow.BackColor = Definitions.GetColor(DefinitionCategory.TaskPriorities, task.PriorityId);
 				gridRow.Tag = task;
 
 				tasksGrid.ListGridRows.Add(gridRow);
@@ -1636,17 +1638,17 @@ namespace OpenDental
 				//{
 				//	menuItemSendAndGoto.Enabled = false;
 				//}
-				if (Defs.GetDefsForCategory(DefCat.TaskPriorities, true).Count == 0)
+				if (Definitions.GetDefsForCategory(DefinitionCategory.TaskPriorities, true).Count == 0)
 				{
 					menuItemPriority.Enabled = false;
 				}
 				else
 				{
 					menuItemPriority.Enabled = true;
-					Def[] defs = Defs.GetDefsForCategory(DefCat.TaskPriorities, true).ToArray();
-					foreach (Def def in defs)
+					Definition[] defs = Definitions.GetDefsForCategory(DefinitionCategory.TaskPriorities, true).ToArray();
+					foreach (Definition def in defs)
 					{
-						MenuItem item = menuItemPriority.MenuItems.Add(def.ItemName);
+						MenuItem item = menuItemPriority.MenuItems.Add(def.Name);
 						item.Click += (sender, e) => menuTaskPriority_Click(task, def);
 					}
 				}
@@ -1808,10 +1810,10 @@ namespace OpenDental
 		{
 		}
 
-		private void menuTaskPriority_Click(Task task, Def priorityDef)
+		private void menuTaskPriority_Click(Task task, Definition priorityDef)
 		{
 			Task taskNew = task.Copy();
-			taskNew.PriorityId = priorityDef.DefNum;
+			taskNew.PriorityId = priorityDef.Id;
 
 			try
 			{

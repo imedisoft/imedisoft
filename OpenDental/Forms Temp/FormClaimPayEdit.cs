@@ -9,6 +9,8 @@ using OpenDental.UI;
 using System.Linq;
 using CodeBase;
 using OpenDental.Bridges;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -46,7 +48,7 @@ namespace OpenDental{
 		private ComboBox comboPayGroup;
 		private Label labelClaimPaymentGroup;
 		///<summary>List of defs of type ClaimPaymentGroup</summary>
-		private List<Def> _listCPGroups;
+		private List<Definition> _listCPGroups;
 		///<summary>Used to tell if a InsPayCreate log is necessary instead of a InsPayEdit log when IsNew is set to false.</summary>
 		public bool IsCreateLogEntry;
 		private Panel panelXcharge;
@@ -62,7 +64,7 @@ namespace OpenDental{
 		private TextBox textBoxBatchNum;
 		private Label labelDepositAccountNum;
 		private UI.ComboBoxPlus comboDepositAccountNum;
-		private List<Def> _listInsurancePaymentTypeDefs;
+		private List<Definition> _listInsurancePaymentTypeDefs;
 		///<summary>This is the deposit that was originally associated to the claimpayment OR is set to a deposit that came back from the Deposit Edit window via the Edit button.
 		///Can be null if no deposit was associated to the claimpayment passed in or if the user deletes the deposit via the Edit window.</summary>
 		private Deposit _depositOld;
@@ -623,10 +625,10 @@ namespace OpenDental{
 			else {
 				comboClinic.SelectedClinicNum=ClaimPaymentCur.ClinicNum;
 			}
-			_listInsurancePaymentTypeDefs=Defs.GetDefsForCategory(DefCat.InsurancePaymentType,true);
+			_listInsurancePaymentTypeDefs=Definitions.GetDefsForCategory(DefinitionCategory.InsurancePaymentType,true);
 			for(int i=0;i<_listInsurancePaymentTypeDefs.Count;i++) {
-				comboPayType.Items.Add(_listInsurancePaymentTypeDefs[i].ItemName);
-				if(_listInsurancePaymentTypeDefs[i].DefNum==ClaimPaymentCur.PayType) {
+				comboPayType.Items.Add(_listInsurancePaymentTypeDefs[i].Name);
+				if(_listInsurancePaymentTypeDefs[i].Id==ClaimPaymentCur.PayType) {
 					comboPayType.SelectedIndex=i;
 				}
 			}
@@ -647,7 +649,7 @@ namespace OpenDental{
 			textAmount.Text=ClaimPaymentCur.CheckAmt.ToString("F");
 			textCarrierName.Text=ClaimPaymentCur.CarrierName;
 			textNote.Text=ClaimPaymentCur.Note;
-			_listCPGroups=Defs.GetDefsForCategory(DefCat.ClaimPaymentGroups,true);
+			_listCPGroups=Definitions.GetDefsForCategory(DefinitionCategory.ClaimPaymentGroups,true);
 			FillComboPaymentGroup(ClaimPaymentCur.PayGroup);
 			CheckUIState();
 			_hasAutoDeposit=Prefs.GetBool(PrefName.ShowAutoDeposit);
@@ -669,7 +671,7 @@ namespace OpenDental{
 			}
 			//Fill deposit account num drop down
 			comboDepositAccountNum.Items.Clear();
-			comboDepositAccountNum.Items.AddDefs(Defs.GetDefsForCategory(DefCat.AutoDeposit,true));
+			comboDepositAccountNum.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.AutoDeposit,true));
 			//Auto deposit pref enabled and the Claim Payment IsNew or had its Auto Deposit deleted.
 			if(_hasAutoDeposit && _depositOld==null) {
 				//Prefill some fields within the auto deposit details from the insurance payment fields to be nice.
@@ -739,7 +741,7 @@ namespace OpenDental{
 				return;
 			}
 			long clinicNum=GetClinicNumSelected();
-			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.PaymentTypes,true);
+			List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.PaymentTypes,true);
 			//Show if enabled.  User could have all enabled.
 			if(progPayConnect.Enabled 
 				&& !PIn.Bool(ProgramProperties.GetPropVal(progPayConnect.Id,PayConnect.ProgramProperties.PayConnectPreventSavingNewCC,clinicNum))) 
@@ -752,7 +754,7 @@ namespace OpenDental{
 					string paymentType=ProgramProperties.GetPropVal(progPayConnect.Id,"PaymentType",clinicNum);
 					if(!string.IsNullOrEmpty(ProgramProperties.GetPropVal(progPayConnect.Id,"Username",clinicNum))
 						&& !string.IsNullOrEmpty(ProgramProperties.GetPropVal(progPayConnect.Id,"Password",clinicNum))
-						&& listDefs.Any(x => x.DefNum.ToString()==paymentType))
+						&& listDefs.Any(x => x.Id.ToString()==paymentType))
 					{
 						butPayConnect.Visible=true;
 					}
@@ -770,7 +772,7 @@ namespace OpenDental{
 					string paymentType=ProgramProperties.GetPropVal(progXcharge.Id,"PaymentType",clinicNum);
 					if(!string.IsNullOrEmpty(ProgramProperties.GetPropVal(progXcharge.Id,"Username",clinicNum))
 						&& !string.IsNullOrEmpty(ProgramProperties.GetPropVal(progXcharge.Id,"Password",clinicNum))
-						&& listDefs.Any(x => x.DefNum.ToString()==paymentType))
+						&& listDefs.Any(x => x.Id.ToString()==paymentType))
 					{
 						panelXcharge.Visible=true;
 					}
@@ -787,7 +789,7 @@ namespace OpenDental{
 					string paymentType=ProgramProperties.GetPropValForClinicOrDefault(progPaySimple.Id,PaySimple.PropertyDescs.PaySimplePayTypeCC,clinicNum);
 					if(!string.IsNullOrEmpty(ProgramProperties.GetPropValForClinicOrDefault(progPaySimple.Id,PaySimple.PropertyDescs.PaySimpleApiUserName,clinicNum))
 						&& !string.IsNullOrEmpty(ProgramProperties.GetPropValForClinicOrDefault(progPaySimple.Id,PaySimple.PropertyDescs.PaySimpleApiKey,clinicNum))
-						&& listDefs.Any(x => x.DefNum.ToString()==paymentType))
+						&& listDefs.Any(x => x.Id.ToString()==paymentType))
 					{
 						butPaySimple.Visible=true;
 					}
@@ -835,9 +837,9 @@ namespace OpenDental{
 				return;
 			}
 			for(int i = 0;i<_listCPGroups.Count;i++) {
-				Def defCur=_listCPGroups[i];
-				comboPayGroup.Items.Add(defCur.ItemName);
-				if(selectedDefNum==defCur.DefNum) {
+				Definition defCur=_listCPGroups[i];
+				comboPayGroup.Items.Add(defCur.Name);
+				if(selectedDefNum==defCur.Id) {
 					comboPayGroup.SelectedIndex=i;
 				}
 			}
@@ -868,10 +870,10 @@ namespace OpenDental{
 		}
 
 		private void butPickPaymentGroup_Click(object sender,EventArgs e) {
-			FormDefinitionPicker FormDP=new FormDefinitionPicker(DefCat.ClaimPaymentGroups);
+			FormDefinitionPicker FormDP=new FormDefinitionPicker(DefinitionCategory.ClaimPaymentGroups);
 			FormDP.ShowDialog();
 			if(FormDP.DialogResult==DialogResult.OK) {
-				FillComboPaymentGroup(FormDP.ListSelectedDefs[0].DefNum);
+				FillComboPaymentGroup(FormDP.ListSelectedDefs[0].Id);
 			}
 		}
 
@@ -1176,10 +1178,10 @@ namespace OpenDental{
 				SecurityLogs.MakeLogEntry(Permissions.RequiredFields,ClaimPaymentCur.ClaimPaymentNum,"Saved claim payment with required fields missing.");
 			}
 			#region Automatic Deposit
-			Def paymentType=Defs.GetDefsForCategory(DefCat.InsurancePaymentType,true)[comboPayType.SelectedIndex];
+			Definition paymentType=Definitions.GetDefsForCategory(DefinitionCategory.InsurancePaymentType,true)[comboPayType.SelectedIndex];
 			//Create an Auto Deposit if the claim payment is new or does not have an attached Auto Deposit. 
 			//Auto deposits will NOT be made for Payment Types marked 'N' (not selected for deposit).
-			if(_hasAutoDeposit && !_isAutoDepositDeleted && _depositOld==null && paymentType.ItemValue.ToLower()!="n") {
+			if(_hasAutoDeposit && !_isAutoDepositDeleted && _depositOld==null && paymentType.Value.ToLower()!="n") {
 				//Insert the deposit, this must happen first as the claimpayment FK's to deposit.
 				//The deposit cannot be updated in this form, that is handled by the edit button.
 				Deposit depositCur=GetDepositCur();
@@ -1239,9 +1241,9 @@ namespace OpenDental{
 			if(PrefC.HasClinicsEnabled) {
 				ClaimPaymentCur.ClinicNum=comboClinic.SelectedClinicNum;
 			}
-			ClaimPaymentCur.PayType=paymentType.DefNum;
+			ClaimPaymentCur.PayType=paymentType.Id;
 			if(comboPayGroup.SelectedIndex!=-1) {//If they didn't select anything, leave what was originally there
-				ClaimPaymentCur.PayGroup=_listCPGroups[comboPayGroup.SelectedIndex].DefNum;
+				ClaimPaymentCur.PayGroup=_listCPGroups[comboPayGroup.SelectedIndex].Id;
 			}
 			ClaimPaymentCur.CheckDate=PIn.Date(textDate.Text);
 			ClaimPaymentCur.DateIssued=PIn.Date(textDateIssued.Text);

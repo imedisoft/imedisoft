@@ -42,8 +42,8 @@ namespace OpenDentBusiness.Crud{
 			DefLink defLink;
 			foreach(DataRow row in table.Rows) {
 				defLink=new DefLink();
-				defLink.DefLinkNum= PIn.Long  (row["DefLinkNum"].ToString());
-				defLink.DefNum    = PIn.Long  (row["DefNum"].ToString());
+				defLink.Id= PIn.Long  (row["DefLinkNum"].ToString());
+				defLink.DefinitionId    = PIn.Long  (row["DefNum"].ToString());
 				defLink.FKey      = PIn.Long  (row["FKey"].ToString());
 				defLink.LinkType  = (OpenDentBusiness.DefLinkType)PIn.Int(row["LinkType"].ToString());
 				retVal.Add(defLink);
@@ -63,8 +63,8 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("LinkType");
 			foreach(DefLink defLink in listDefLinks) {
 				table.Rows.Add(new object[] {
-					POut.Long  (defLink.DefLinkNum),
-					POut.Long  (defLink.DefNum),
+					POut.Long  (defLink.Id),
+					POut.Long  (defLink.DefinitionId),
 					POut.Long  (defLink.FKey),
 					POut.Int   ((int)defLink.LinkType),
 				});
@@ -80,7 +80,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one DefLink into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(DefLink defLink,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				defLink.DefLinkNum=ReplicationServers.GetKey("deflink","DefLinkNum");
+				defLink.Id=ReplicationServers.GetKey("deflink","DefLinkNum");
 			}
 			string command="INSERT INTO deflink (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -88,19 +88,19 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="DefNum,FKey,LinkType) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(defLink.DefLinkNum)+",";
+				command+=POut.Long(defLink.Id)+",";
 			}
 			command+=
-				     POut.Long  (defLink.DefNum)+","
+				     POut.Long  (defLink.DefinitionId)+","
 				+    POut.Long  (defLink.FKey)+","
 				+    POut.Int   ((int)defLink.LinkType)+")";
 			if(useExistingPK || PrefC.RandomKeys) {
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				defLink.DefLinkNum=Database.ExecuteInsert(command);
+				defLink.Id=Database.ExecuteInsert(command);
 			}
-			return defLink.DefLinkNum;
+			return defLink.Id;
 		}
 
 		///<summary>Inserts many DefLinks into the database.</summary>
@@ -136,9 +136,9 @@ namespace OpenDentBusiness.Crud{
 						hasComma=true;
 					}
 					if(useExistingPK) {
-						sbRow.Append(POut.Long(defLink.DefLinkNum)); sbRow.Append(",");
+						sbRow.Append(POut.Long(defLink.Id)); sbRow.Append(",");
 					}
-					sbRow.Append(POut.Long(defLink.DefNum)); sbRow.Append(",");
+					sbRow.Append(POut.Long(defLink.DefinitionId)); sbRow.Append(",");
 					sbRow.Append(POut.Long(defLink.FKey)); sbRow.Append(",");
 					sbRow.Append(POut.Int((int)defLink.LinkType)); sbRow.Append(")");
 					if(sbCommands.Length+sbRow.Length+1 > TableBase.MaxAllowedPacketCount && countRows > 0) {
@@ -170,44 +170,44 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO deflink (";
 			if(!useExistingPK) {
-				defLink.DefLinkNum=ReplicationServers.GetKeyNoCache("deflink","DefLinkNum");
+				defLink.Id=ReplicationServers.GetKeyNoCache("deflink","DefLinkNum");
 			}
 			if(useExistingPK) {
 				command+="DefLinkNum,";
 			}
 			command+="DefNum,FKey,LinkType) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(defLink.DefLinkNum)+",";
+				command+=POut.Long(defLink.Id)+",";
 			}
 			command+=
-				     POut.Long  (defLink.DefNum)+","
+				     POut.Long  (defLink.DefinitionId)+","
 				+    POut.Long  (defLink.FKey)+","
 				+    POut.Int   ((int)defLink.LinkType)+")";
 			if(useExistingPK) {
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				defLink.DefLinkNum=Database.ExecuteInsert(command);
+				defLink.Id=Database.ExecuteInsert(command);
 			}
-			return defLink.DefLinkNum;
+			return defLink.Id;
 		}
 
 		///<summary>Updates one DefLink in the database.</summary>
 		public static void Update(DefLink defLink) {
 			string command="UPDATE deflink SET "
-				+"DefNum    =  "+POut.Long  (defLink.DefNum)+", "
+				+"DefNum    =  "+POut.Long  (defLink.DefinitionId)+", "
 				+"FKey      =  "+POut.Long  (defLink.FKey)+", "
 				+"LinkType  =  "+POut.Int   ((int)defLink.LinkType)+" "
-				+"WHERE DefLinkNum = "+POut.Long(defLink.DefLinkNum);
+				+"WHERE DefLinkNum = "+POut.Long(defLink.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Updates one DefLink in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
 		public static bool Update(DefLink defLink,DefLink oldDefLink) {
 			string command="";
-			if(defLink.DefNum != oldDefLink.DefNum) {
+			if(defLink.DefinitionId != oldDefLink.DefinitionId) {
 				if(command!="") { command+=",";}
-				command+="DefNum = "+POut.Long(defLink.DefNum)+"";
+				command+="DefNum = "+POut.Long(defLink.DefinitionId)+"";
 			}
 			if(defLink.FKey != oldDefLink.FKey) {
 				if(command!="") { command+=",";}
@@ -221,7 +221,7 @@ namespace OpenDentBusiness.Crud{
 				return false;
 			}
 			command="UPDATE deflink SET "+command
-				+" WHERE DefLinkNum = "+POut.Long(defLink.DefLinkNum);
+				+" WHERE DefLinkNum = "+POut.Long(defLink.Id);
 			Database.ExecuteNonQuery(command);
 			return true;
 		}
@@ -229,7 +229,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Returns true if Update(DefLink,DefLink) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
 		public static bool UpdateComparison(DefLink defLink,DefLink oldDefLink) {
-			if(defLink.DefNum != oldDefLink.DefNum) {
+			if(defLink.DefinitionId != oldDefLink.DefinitionId) {
 				return true;
 			}
 			if(defLink.FKey != oldDefLink.FKey) {
@@ -255,8 +255,8 @@ namespace OpenDentBusiness.Crud{
 			List<DefLink> listUpdNew =new List<DefLink>();
 			List<DefLink> listUpdDB  =new List<DefLink>();
 			List<DefLink> listDel    =new List<DefLink>();
-			listNew.Sort((DefLink x,DefLink y) => { return x.DefLinkNum.CompareTo(y.DefLinkNum); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
-			listDB.Sort((DefLink x,DefLink y) => { return x.DefLinkNum.CompareTo(y.DefLinkNum); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			listNew.Sort((DefLink x,DefLink y) => { return x.Id.CompareTo(y.Id); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			listDB.Sort((DefLink x,DefLink y) => { return x.Id.CompareTo(y.Id); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
 			int idxNew=0;
 			int idxDB=0;
 			int rowsUpdatedCount=0;
@@ -284,12 +284,12 @@ namespace OpenDentBusiness.Crud{
 					idxDB++;
 					continue;
 				}
-				else if(fieldNew.DefLinkNum<fieldDB.DefLinkNum) {//newPK less than dbPK, newItem is 'next'
+				else if(fieldNew.Id<fieldDB.Id) {//newPK less than dbPK, newItem is 'next'
 					listIns.Add(fieldNew);
 					idxNew++;
 					continue;
 				}
-				else if(fieldNew.DefLinkNum>fieldDB.DefLinkNum) {//dbPK less than newPK, dbItem is 'next'
+				else if(fieldNew.Id>fieldDB.Id) {//dbPK less than newPK, dbItem is 'next'
 					listDel.Add(fieldDB);
 					idxDB++;
 					continue;
@@ -310,7 +310,7 @@ namespace OpenDentBusiness.Crud{
 				}
 			}
 			for(int i=0;i<listDel.Count;i++) {
-				Delete(listDel[i].DefLinkNum);
+				Delete(listDel[i].Id);
 			}
 			if(rowsUpdatedCount>0 || listIns.Count>0 || listDel.Count>0) {
 				return true;

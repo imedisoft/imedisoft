@@ -13,10 +13,12 @@ using OpenDental;
 using OpenDentBusiness;
 using System.IO;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental.User_Controls.SetupWizard {
 	public partial class UserControlSetupWizDefinitions:SetupWizControl {
-		private List<Def> _listDefsAll;
+		private List<Definition> _listDefsAll;
 		private bool _isDefChanged;
 
 		///<summary>Gets the currently selected DefCat along with its options.</summary>
@@ -25,8 +27,8 @@ namespace OpenDental.User_Controls.SetupWizard {
 		}
 
 		///<summary>All definitions for the current category, hidden and non-hidden.</summary>
-		private List<Def> _listDefsCur {
-			get { return _listDefsAll.Where(x => x.Category == _selectedDefCatOpt.DefCat).OrderBy(x => x.ItemOrder).ToList(); }
+		private List<Definition> _listDefsCur {
+			get { return _listDefsAll.Where(x => x.Category == _selectedDefCatOpt.DefCat).OrderBy(x => x.SortOrder).ToList(); }
 		}
 
 		public UserControlSetupWizDefinitions() {
@@ -36,29 +38,29 @@ namespace OpenDental.User_Controls.SetupWizard {
 
 		private void UserControlSetupWizDefinitions_Load(object sender,EventArgs e) {
 			IsDone=true;//this is optional, so the user is done whenever they choose
-			List<DefCat> listDefCats=new List<DefCat>();
+			List<string> listDefCats=new List<string>();
 			//Only including the most important categories so the user is not intimidated with all the options.
-			listDefCats.Add(DefCat.AccountColors);
-			listDefCats.Add(DefCat.AdjTypes);
-			listDefCats.Add(DefCat.AppointmentColors);
-			listDefCats.Add(DefCat.ApptConfirmed);
-			listDefCats.Add(DefCat.ApptProcsQuickAdd);
-			listDefCats.Add(DefCat.AutoNoteCats);
-			listDefCats.Add(DefCat.BillingTypes);
-			listDefCats.Add(DefCat.BlockoutTypes);
-			listDefCats.Add(DefCat.ChartGraphicColors);
-			listDefCats.Add(DefCat.CommLogTypes);
-			listDefCats.Add(DefCat.ImageCats);
-			listDefCats.Add(DefCat.PaymentTypes);
-			listDefCats.Add(DefCat.ProcCodeCats);
-			listDefCats.Add(DefCat.RecallUnschedStatus);
-			listDefCats.Add(DefCat.TxPriorities);
+			listDefCats.Add(DefinitionCategory.AccountColors);
+			listDefCats.Add(DefinitionCategory.AdjTypes);
+			listDefCats.Add(DefinitionCategory.AppointmentColors);
+			listDefCats.Add(DefinitionCategory.ApptConfirmed);
+			listDefCats.Add(DefinitionCategory.ApptProcsQuickAdd);
+			listDefCats.Add(DefinitionCategory.AutoNoteCats);
+			listDefCats.Add(DefinitionCategory.BillingTypes);
+			listDefCats.Add(DefinitionCategory.BlockoutTypes);
+			listDefCats.Add(DefinitionCategory.ChartGraphicColors);
+			listDefCats.Add(DefinitionCategory.CommLogTypes);
+			listDefCats.Add(DefinitionCategory.ImageCats);
+			listDefCats.Add(DefinitionCategory.PaymentTypes);
+			listDefCats.Add(DefinitionCategory.ProcCodeCats);
+			listDefCats.Add(DefinitionCategory.RecallUnschedStatus);
+			listDefCats.Add(DefinitionCategory.TxPriorities);
 			List<DefCatOptions> listDefCatsOrdered = new List<DefCatOptions>();
 			listDefCatsOrdered=DefL.GetOptionsForDefCats(listDefCats.ToArray());
-			listDefCatsOrdered = listDefCatsOrdered.OrderBy(x => x.DefCat.GetDescription()).ToList(); //orders alphabetically.
+			listDefCatsOrdered = listDefCatsOrdered.OrderBy(x => x.Description).ToList(); //orders alphabetically.
 			ODBoxItem<DefCatOptions> defCatItem;
 			foreach(DefCatOptions defCOpt in listDefCatsOrdered) {
-				defCatItem=new ODBoxItem<DefCatOptions>(defCOpt.DefCat.GetDescription(),defCOpt);
+				defCatItem=new ODBoxItem<DefCatOptions>(defCOpt.Description,defCOpt);
 				listCategory.Items.Add(defCatItem);
 				if(defCOpt.DefCat==listDefCatsOrdered[0].DefCat) {
 					listCategory.SelectedItem=defCatItem;
@@ -90,7 +92,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 		}
 
 		private void gridDefs_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			Def selectedDef = (Def)gridDefs.ListGridRows[e.Row].Tag;
+			Definition selectedDef = (Definition)gridDefs.ListGridRows[e.Row].Tag;
 			_isDefChanged=DefL.GridDefsDoubleClick(selectedDef,_selectedDefCatOpt,_listDefsCur,_listDefsAll,_isDefChanged);
 			if(_isDefChanged) {
 				RefreshDefs();
@@ -112,8 +114,8 @@ namespace OpenDental.User_Controls.SetupWizard {
 		}
 
 		private void RefreshDefs() {
-			Defs.RefreshCache();
-			_listDefsAll=Defs.GetDeepCopy().SelectMany(x => x.Value).ToList();
+			Definitions.RefreshCache();
+			_listDefsAll = Definitions.GetAll();
 		}
 
 		private void butHide_Click(object sender,EventArgs e) {
@@ -140,16 +142,16 @@ namespace OpenDental.User_Controls.SetupWizard {
 		
 		private void ControlDone(object sender, EventArgs e) {
 			//Correct the item orders of all definition categories.
-			List<Def> listDefUpdates=new List<Def>();
-			foreach(KeyValuePair<DefCat,List<Def>> kvp in Defs.GetDeepCopy()) {
+			List<Definition> listDefUpdates=new List<Definition>();
+			foreach(KeyValuePair<string,List<Definition>> kvp in Definitions.GetDictionaryNoCache()) {
 				for(int i=0;i<kvp.Value.Count;i++) {
-					if(kvp.Value[i].ItemOrder!=i) {
-						kvp.Value[i].ItemOrder=i;
+					if(kvp.Value[i].SortOrder!=i) {
+						kvp.Value[i].SortOrder=i;
 						listDefUpdates.Add(kvp.Value[i]);
 					}
 				}
 			}
-			listDefUpdates.ForEach(x => Defs.Update(x));
+			listDefUpdates.ForEach(x => Definitions.Update(x));
 			if(_isDefChanged || listDefUpdates.Count>0) {
 				DataValid.SetInvalid(InvalidType.Defs);
 			}

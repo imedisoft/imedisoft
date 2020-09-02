@@ -1,4 +1,6 @@
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using Imedisoft.UI;
 using OpenDental;
 using OpenDental.Bridges;
@@ -141,18 +143,18 @@ namespace Imedisoft.Forms
 				}
 				else if (ProgramCur.Name == ProgramName.XVWeb.ToString() && property.Name == XVWeb.ProgramProps.ImageCategory)
 				{
-					Def imageCat = Defs.GetDefsForCategory(DefCat.ImageCats).FirstOrDefault(x => x.DefNum == PIn.Long(property.Value));
+					Definition imageCat = Definitions.GetDefsForCategory(DefinitionCategory.ImageCats).FirstOrDefault(x => x.Id == PIn.Long(property.Value));
 					if (imageCat == null)
 					{
 						gridRow.Cells.Add("");
 					}
 					else if (imageCat.IsHidden)
 					{
-						gridRow.Cells.Add(imageCat.ItemName + " (hidden)");
+						gridRow.Cells.Add(imageCat.Name + " (hidden)");
 					}
 					else
 					{
-						gridRow.Cells.Add(imageCat.ItemName);
+						gridRow.Cells.Add(imageCat.Name);
 					}
 				}
 				else
@@ -237,8 +239,8 @@ namespace Imedisoft.Forms
 						switch (programProperty.Name)
 						{
 							case XVWeb.ProgramProps.ImageCategory:
-								List<string> listDefNums = Defs.GetDefsForCategory(DefCat.ImageCats, true).Select(x => POut.Long(x.DefNum)).ToList();
-								List<string> listItemNames = Defs.GetDefsForCategory(DefCat.ImageCats, true).Select(x => x.ItemName).ToList();
+								List<string> listDefNums = Definitions.GetDefsForCategory(DefinitionCategory.ImageCats, true).Select(x => POut.Long(x.Id)).ToList();
+								List<string> listItemNames = Definitions.GetDefsForCategory(DefinitionCategory.ImageCats, true).Select(x => x.Name).ToList();
 								ShowComboBoxForProgramProperty(programProperty, listDefNums, listItemNames, "Choose an Image Category");
 								return;
 

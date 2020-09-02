@@ -12,6 +12,7 @@ using Word;
 using System.Globalization;
 using OpenDentBusiness.Eclaims;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -506,7 +507,7 @@ namespace OpenDentBusiness{
 		///<summary>Gets a list of ProcedureCode for a given treatment area,including codes in hidden categories if isHiddenIncluded=true.</summary>
 		public static List<ProcedureCode> GetProcCodesByTreatmentArea(bool isHiddenIncluded,params TreatmentArea[] arrayTreatmentAreas) {
 			return _procedureCodeCache.GetWhere(x => x.TreatArea.In<TreatmentArea>(arrayTreatmentAreas) 
-				&& (isHiddenIncluded || !Defs.GetHidden(DefCat.ProcCodeCats,x.ProcCat)));
+				&& (isHiddenIncluded || !Definitions.GetHidden(DefinitionCategory.ProcCodeCats,x.ProcCat)));
 		}
 
 		///<summary>If a substitute exists for the given proc code, then it will give the CodeNum of that code.
@@ -648,25 +649,36 @@ namespace OpenDentBusiness{
 			return _procedureCodeCache.GetContainsKey(myCode);
 		}
 
-		///<summary>Grouped by Category.  Used only in FormRpProcCodes.</summary>
-		public static ProcedureCode[] GetProcList(Def[][] arrayDefs=null) {
-			//No need to check RemotingRole; no call to db.
-			List<ProcedureCode> retVal=new List<ProcedureCode>();
-			Def[] array=null;
-			if(arrayDefs==null) {
-				array=Defs.GetDefsForCategory(DefCat.ProcCodeCats,true).ToArray();
+		/// <summary>
+		/// Grouped by Category.
+		/// Used only in FormRpProcCodes.
+		/// </summary>
+		public static ProcedureCode[] GetProcList(Dictionary<string, List<Definition>> definitions = null)
+		{
+			List<ProcedureCode> retVal = new List<ProcedureCode>();
+
+			List<Definition> array;
+			if (definitions == null)
+			{
+				array = Definitions.GetByCategory(DefinitionCategory.ProcCodeCats);
 			}
-			else {
-				array=arrayDefs[(int)DefCat.ProcCodeCats];
+			else
+			{
+				array = definitions[DefinitionCategory.ProcCodeCats];
 			}
-			List<ProcedureCode> listProcedureCodes=GetListDeep();
-			for(int j=0;j<arrayDefs[(int)DefCat.ProcCodeCats].Length;j++) {
-				for(int k=0;k<listProcedureCodes.Count;k++) {
-					if(arrayDefs[(int)DefCat.ProcCodeCats][j].DefNum==listProcedureCodes[k].ProcCat) {
+
+			List<ProcedureCode> listProcedureCodes = GetListDeep();
+			for (int j = 0; j < definitions[DefinitionCategory.ProcCodeCats].Count; j++)
+			{
+				for (int k = 0; k < listProcedureCodes.Count; k++)
+				{
+					if (definitions[DefinitionCategory.ProcCodeCats][j].Id == listProcedureCodes[k].ProcCat)
+					{
 						retVal.Add(listProcedureCodes[k].Copy());
 					}
 				}
 			}
+
 			return retVal.ToArray();
 		}
 
@@ -820,26 +832,26 @@ namespace OpenDentBusiness{
 				AND definition.IsHidden=0
 				AND procedurecode.ProcCat=definition.DefNum";
 			table=Database.ExecuteDataTable(command);
-			long catNum=Defs.GetByExactName(DefCat.ProcCodeCats,"Obsolete");//check to make sure an Obsolete category exists.
-			Def def;
+			long catNum=Definitions.GetByExactName(DefinitionCategory.ProcCodeCats,"Obsolete");//check to make sure an Obsolete category exists.
+			Definition def;
 			if(catNum!=0) {//if a category exists with that name
-				def=Defs.GetDef(DefCat.ProcCodeCats,catNum);
+				def=Definitions.GetDef(DefinitionCategory.ProcCodeCats,catNum);
 				if(!def.IsHidden) {
 					def.IsHidden=true;
-					Defs.Update(def);
-					Defs.RefreshCache();
+					Definitions.Update(def);
+					Definitions.RefreshCache();
 				}
 			}
 			if(catNum==0) {
-				List<Def> listDefs=Defs.GetDefsForCategory(DefCat.ProcCodeCats);
-				def=new Def();
-				def.Category=DefCat.ProcCodeCats;
-				def.ItemName="Obsolete";
-				def.ItemOrder=listDefs.Count;
+				List<Definition> listDefs=Definitions.GetByCategory(DefinitionCategory.ProcCodeCats);
+				def=new Definition();
+				def.Category= DefinitionCategory.ProcCodeCats;
+				def.Name="Obsolete";
+				def.SortOrder=listDefs.Count;
 				def.IsHidden=true;
-				Defs.Insert(def);
-				Defs.RefreshCache();
-				catNum=def.DefNum;
+				Definitions.Insert(def);
+				Definitions.RefreshCache();
+				catNum=def.Id;
 			}
 			for(int i=0;i<table.Rows.Count;i++) {
 				command="UPDATE procedurecode SET ProcCat="+POut.Long(catNum)
@@ -849,13 +861,13 @@ namespace OpenDentBusiness{
 			}
 			//finally, set Never Used category to be hidden.  This isn't really part of clearing Tcodes, but is required
 			//because many customers won't have that category hidden
-			catNum=Defs.GetByExactName(DefCat.ProcCodeCats,"Never Used");
+			catNum=Definitions.GetByExactName(DefinitionCategory.ProcCodeCats,"Never Used");
 			if(catNum!=0) {//if a category exists with that name
-				def=Defs.GetDef(DefCat.ProcCodeCats,catNum);
+				def=Definitions.GetDef(DefinitionCategory.ProcCodeCats,catNum);
 				if(!def.IsHidden) {
 					def.IsHidden=true;
-					Defs.Update(def);
-					Defs.RefreshCache();
+					Definitions.Update(def);
+					Definitions.RefreshCache();
 				}
 			}
 		}
@@ -885,7 +897,7 @@ namespace OpenDentBusiness{
 				"DentAdj","N4102",
 				"Consult","D9310"
 			};
-			Def def;
+			Definition def;
 			string[] codelist;
 			bool allvalid;
 			int itemorder=0;
@@ -901,12 +913,12 @@ namespace OpenDentBusiness{
 				if(!allvalid) {
 					continue;
 				}
-				def=new Def();
-				def.Category=DefCat.ApptProcsQuickAdd;
-				def.ItemOrder=itemorder;
-				def.ItemName=array[i];
-				def.ItemValue=array[i+1];
-				Defs.Insert(def);
+				def=new Definition();
+				def.Category= DefinitionCategory.ApptProcsQuickAdd;
+				def.SortOrder=itemorder;
+				def.Name=array[i];
+				def.Value=array[i+1];
+				Definitions.Insert(def);
 				itemorder++;
 			}
 		}

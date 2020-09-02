@@ -11,6 +11,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using Imedisoft.Forms;
 using Imedisoft.UI;
 using Imedisoft.X12.Codes;
@@ -68,10 +70,10 @@ namespace OpenDental {
 		///<summary>True only when modifications to this canadian lab proc will affect the attached parent proc ins estimate.</summary>
 		private bool _isEstimateRecompute=false;
 		private OrthoProcLink _orthoProcLink;
-		private List<Def> _listDiagnosisDefs;
-		private List<Def> _listPrognosisDefs;
-		private List<Def> _listTxPriorityDefs;
-		private List<Def> _listBillingTypeDefs;
+		private List<Definition> _listDiagnosisDefs;
+		private List<Definition> _listPrognosisDefs;
+		private List<Definition> _listTxPriorityDefs;
+		private List<Definition> _listBillingTypeDefs;
 		///<summary>Most of the data necessary to load this form.</summary>
 		private ProcEdit.LoadData _loadData;
 		///<summary>There are a number of places in this form that need fees, but none of them are heavily used.  This will help a little.  Lazy loaded, do not directly use this variable, use the property instead.</summary>
@@ -526,22 +528,22 @@ namespace OpenDental {
 				butAddAdjust.Enabled=false;
 			}
 			//if clinical is hidden, then there's a chance that no item is selected at this point.
-			_listDiagnosisDefs=Defs.GetDefsForCategory(DefCat.Diagnosis,true);
-			_listPrognosisDefs=Defs.GetDefsForCategory(DefCat.Prognosis,true);
-			_listTxPriorityDefs=Defs.GetDefsForCategory(DefCat.TxPriorities,true);
-			_listBillingTypeDefs=Defs.GetDefsForCategory(DefCat.BillingTypes,true);
+			_listDiagnosisDefs=Definitions.GetDefsForCategory(DefinitionCategory.Diagnosis,true);
+			_listPrognosisDefs=Definitions.GetDefsForCategory(DefinitionCategory.Prognosis,true);
+			_listTxPriorityDefs=Definitions.GetDefsForCategory(DefinitionCategory.TxPriorities,true);
+			_listBillingTypeDefs=Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes,true);
 			comboDx.Items.Clear();
 			for(int i=0;i<_listDiagnosisDefs.Count;i++){
-				comboDx.Items.Add(_listDiagnosisDefs[i].ItemName);
-				if(_listDiagnosisDefs[i].DefNum==_procCur.Dx)
+				comboDx.Items.Add(_listDiagnosisDefs[i].Name);
+				if(_listDiagnosisDefs[i].Id==_procCur.Dx)
 					comboDx.SelectedIndex=i;
 			}
 			comboPrognosis.Items.Clear();
 			comboPrognosis.Items.Add("no prognosis");
 			comboPrognosis.SelectedIndex=0;
 			for(int i=0;i<_listPrognosisDefs.Count;i++) {
-				comboPrognosis.Items.Add(_listPrognosisDefs[i].ItemName);
-				if(_listPrognosisDefs[i].DefNum==_procCur.Prognosis)
+				comboPrognosis.Items.Add(_listPrognosisDefs[i].Name);
+				if(_listPrognosisDefs[i].Id==_procCur.Prognosis)
 					comboPrognosis.SelectedIndex=i+1;
 			}
 			checkHideGraphics.Checked=_procCur.HideGraphics;
@@ -554,24 +556,24 @@ namespace OpenDental {
 			comboPriority.Items.Add("no priority");
 			comboPriority.SelectedIndex=0;
 			for(int i=0;i<_listTxPriorityDefs.Count;i++){
-				comboPriority.Items.Add(_listTxPriorityDefs[i].ItemName);
-				if(_listTxPriorityDefs[i].DefNum==_procCur.Priority)
+				comboPriority.Items.Add(_listTxPriorityDefs[i].Name);
+				if(_listTxPriorityDefs[i].Id==_procCur.Priority)
 					comboPriority.SelectedIndex=i+1;
 			}
 			comboBillingTypeOne.Items.Clear();
 			comboBillingTypeOne.Items.Add("none");
 			comboBillingTypeOne.SelectedIndex=0;
 			for(int i=0;i<_listBillingTypeDefs.Count;i++) {
-				comboBillingTypeOne.Items.Add(_listBillingTypeDefs[i].ItemName);
-				if(_listBillingTypeDefs[i].DefNum==_procCur.BillingTypeOne)
+				comboBillingTypeOne.Items.Add(_listBillingTypeDefs[i].Name);
+				if(_listBillingTypeDefs[i].Id==_procCur.BillingTypeOne)
 					comboBillingTypeOne.SelectedIndex=i+1;
 			}
 			comboBillingTypeTwo.Items.Clear();
 			comboBillingTypeTwo.Items.Add("none");
 			comboBillingTypeTwo.SelectedIndex=0;
 			for(int i=0;i<_listBillingTypeDefs.Count;i++) {
-				comboBillingTypeTwo.Items.Add(_listBillingTypeDefs[i].ItemName);
-				if(_listBillingTypeDefs[i].DefNum==_procCur.BillingTypeTwo)
+				comboBillingTypeTwo.Items.Add(_listBillingTypeDefs[i].Name);
+				if(_listBillingTypeDefs[i].Id==_procCur.BillingTypeTwo)
 					comboBillingTypeTwo.SelectedIndex=i+1;
 			}
 			textBillingNote.Text=_procCur.BillingNote;
@@ -1438,7 +1440,7 @@ namespace OpenDental {
 				row.Cells.Add(adjustment.AdjDate.ToShortDateString());
 				row.Cells.Add(adjustment.AdjAmt.ToString("F"));
 				row.Cells[row.Cells.Count-1].Bold= true;
-				row.Cells.Add(Defs.GetName(DefCat.AdjTypes,adjustment.AdjType));
+				row.Cells.Add(Definitions.GetName(DefinitionCategory.AdjTypes,adjustment.AdjType));
 				row.Cells.Add(adjustment.AdjNote);
 				gridAdj.ListGridRows.Add(row);
 				if(adjustment.AdjType==Prefs.GetLong(PrefName.TreatPlanDiscountAdjustmentType)) {
@@ -3077,19 +3079,19 @@ namespace OpenDental {
 			#endregion
 			_procCur.HideGraphics=checkHideGraphics.Checked;
 			if(comboDx.SelectedIndex!=-1) {
-				_procCur.Dx=_listDiagnosisDefs[comboDx.SelectedIndex].DefNum;
+				_procCur.Dx=_listDiagnosisDefs[comboDx.SelectedIndex].Id;
 			}
 			if(comboPrognosis.SelectedIndex==0) {
 				_procCur.Prognosis=0;
 			}
 			else {
-				_procCur.Prognosis=_listPrognosisDefs[comboPrognosis.SelectedIndex-1].DefNum;
+				_procCur.Prognosis=_listPrognosisDefs[comboPrognosis.SelectedIndex-1].Id;
 			}
 			if(comboPriority.SelectedIndex==0) {
 				_procCur.Priority=0;
 			}
 			else {
-				_procCur.Priority=_listTxPriorityDefs[comboPriority.SelectedIndex-1].DefNum;
+				_procCur.Priority=_listTxPriorityDefs[comboPriority.SelectedIndex-1].Id;
 			}
 			_procCur.PlaceService=placesOfService[comboPlaceService.SelectedIndex].code;
 			//site set when user picks from list.
@@ -3097,13 +3099,13 @@ namespace OpenDental {
 				_procCur.BillingTypeOne=0;
 			}
 			else{
-				_procCur.BillingTypeOne=_listBillingTypeDefs[comboBillingTypeOne.SelectedIndex-1].DefNum;
+				_procCur.BillingTypeOne=_listBillingTypeDefs[comboBillingTypeOne.SelectedIndex-1].Id;
 			}
 			if(comboBillingTypeTwo.SelectedIndex==0) {
 				_procCur.BillingTypeTwo=0;
 			}
 			else {
-				_procCur.BillingTypeTwo=_listBillingTypeDefs[comboBillingTypeTwo.SelectedIndex-1].DefNum;
+				_procCur.BillingTypeTwo=_listBillingTypeDefs[comboBillingTypeTwo.SelectedIndex-1].Id;
 			}
 			_procCur.BillingNote=textBillingNote.Text;
 			//ProcCur.HideGraphical=checkHideGraphical.Checked;
@@ -3164,7 +3166,7 @@ namespace OpenDental {
 							code99111.ProcCode="99111";
 							code99111.Descript="+L Commercial Laboratory Procedures";
 							code99111.AbbrDesc="Lab Fee";
-							code99111.ProcCat=Defs.GetByExactNameNeverZero(DefCat.ProcCodeCats,"Adjunctive General Services");
+							code99111.ProcCat=Definitions.GetByExactNameNeverZero(DefinitionCategory.ProcCodeCats,"Adjunctive General Services");
 							ProcedureCodes.Insert(code99111);
 							labFee1.CodeNum=code99111.CodeNum;
 							ProcedureCodes.RefreshCache();
@@ -3206,7 +3208,7 @@ namespace OpenDental {
 							code99111.ProcCode="99111";
 							code99111.Descript="+L Commercial Laboratory Procedures";
 							code99111.AbbrDesc="Lab Fee";
-							code99111.ProcCat=Defs.GetByExactNameNeverZero(DefCat.ProcCodeCats,"Adjunctive General Services");
+							code99111.ProcCat=Definitions.GetByExactNameNeverZero(DefinitionCategory.ProcCodeCats,"Adjunctive General Services");
 							ProcedureCodes.Insert(code99111);
 							labFee2.CodeNum=code99111.CodeNum;
 							ProcedureCodes.RefreshCache();

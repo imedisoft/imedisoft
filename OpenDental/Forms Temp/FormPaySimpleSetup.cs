@@ -8,6 +8,8 @@ using OpenDentBusiness;
 using System.Linq;
 using System.Diagnostics;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormPaySimpleSetup:ODForm {
@@ -23,7 +25,7 @@ namespace OpenDental {
 		///<summary>Used to revert the slected index in the clinic drop down box if the user tries to change clinics
 		///and the payment type has not been set.</summary>
 		private int _indexClinicRevert;
-		private List<Def> _listPaymentTypeDefs;
+		private List<Definition> _listPaymentTypeDefs;
 
 		public FormPaySimpleSetup() {
 			InitializeComponent();
@@ -137,7 +139,7 @@ namespace OpenDental {
 			string payTypeDefNumACH=ProgramProperties.GetPropValFromList(_listProgProps,PaySimple.PropertyDescs.PaySimplePayTypeACH,clinicNum);
 			checkPreventSavingNewCC.Checked=PIn.Bool(ProgramProperties.GetPropValFromList(_listProgProps,
 				PaySimple.PropertyDescs.PaySimplePreventSavingNewCC,clinicNum));
-			_listPaymentTypeDefs=Defs.GetDefsForCategory(DefCat.PaymentTypes,true);
+			_listPaymentTypeDefs=Definitions.GetDefsForCategory(DefinitionCategory.PaymentTypes,true);
 			comboPaymentTypeCC.Items.Clear();
 			comboPaymentTypeCC.Items.AddDefs(_listPaymentTypeDefs);
 			comboPaymentTypeCC.SetSelectedDefNum(PIn.Long(payTypeDefNumCC));
@@ -174,11 +176,11 @@ namespace OpenDental {
 			_listProgProps.FindAll(x => x.ClinicId==_listUserClinicNums[_indexClinicRevert] 
 					&& x.Name==PaySimple.PropertyDescs.PaySimplePayTypeCC 
 					&& comboPaymentTypeCC.SelectedIndex>-1)
-				.ForEach(x => x.Value=comboPaymentTypeCC.GetSelected<Def>().DefNum.ToString());//always 1 item selected
+				.ForEach(x => x.Value=comboPaymentTypeCC.GetSelected<Definition>().Id.ToString());//always 1 item selected
 			_listProgProps.FindAll(x => x.ClinicId==_listUserClinicNums[_indexClinicRevert]
 					&& x.Name==PaySimple.PropertyDescs.PaySimplePayTypeACH
 					&& comboPaymentTypeACH.SelectedIndex>-1)
-				.ForEach(x => x.Value=comboPaymentTypeACH.GetSelected<Def>().DefNum.ToString());//always 1 item selected
+				.ForEach(x => x.Value=comboPaymentTypeACH.GetSelected<Definition>().Id.ToString());//always 1 item selected
 			_listProgProps.FindAll(x => x.ClinicId==_listUserClinicNums[_indexClinicRevert]
 				&& x.Name==PaySimple.PropertyDescs.PaySimplePreventSavingNewCC)
 				.ForEach(x => x.Value=POut.Bool(checkPreventSavingNewCC.Checked));
@@ -211,12 +213,12 @@ namespace OpenDental {
 			string hqPayTypeCC=ProgramProperties.GetPropValFromList(_listProgProps,PaySimple.PropertyDescs.PaySimplePayTypeCC,0);//HQ PaymentType before updating to combo box selection
 			string payTypeCC="";
 			if(comboPaymentTypeCC.SelectedIndex>-1) {
-				payTypeCC=comboPaymentTypeCC.GetSelected<Def>().DefNum.ToString();
+				payTypeCC=comboPaymentTypeCC.GetSelected<Definition>().Id.ToString();
 			}
 			string hqPayTypeACH=ProgramProperties.GetPropValFromList(_listProgProps,PaySimple.PropertyDescs.PaySimplePayTypeACH,0);//HQ PaymentType before updating to combo box selection
 			string payTypeACH="";
 			if(comboPaymentTypeACH.SelectedIndex>-1) {
-				payTypeACH=comboPaymentTypeACH.GetSelected<Def>().DefNum.ToString();
+				payTypeACH=comboPaymentTypeACH.GetSelected<Definition>().Id.ToString();
 			}
 			//for each distinct ClinicNum in the prog property list for PaySimple except HQ
 			foreach(long clinicNum in _listProgProps.Select(x => x.ClinicId).Where(x => x>0).Distinct()) {
@@ -298,11 +300,11 @@ namespace OpenDental {
 			}
 			string payTypeCCSelected="";
 			if(comboPaymentTypeCC.SelectedIndex>-1) {
-				payTypeCCSelected=comboPaymentTypeCC.GetSelected<Def>().DefNum.ToString();
+				payTypeCCSelected=comboPaymentTypeCC.GetSelected<Definition>().Id.ToString();
 			}
 			string payTypeACHSelected="";
 			if(comboPaymentTypeACH.SelectedIndex>-1) {
-				payTypeACHSelected=comboPaymentTypeACH.GetSelected<Def>().DefNum.ToString();
+				payTypeACHSelected=comboPaymentTypeACH.GetSelected<Definition>().Id.ToString();
 			}
 			//set the values in the list for this clinic
 			_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Name==PaySimple.PropertyDescs.PaySimpleApiUserName)
@@ -329,8 +331,8 @@ namespace OpenDental {
 				if(ProgramProperties.GetPropValFromList(_listProgProps,PaySimple.PropertyDescs.PaySimpleApiUserName,_listUserClinicNums[i])!="" //if username set
 					&& ProgramProperties.GetPropValFromList(_listProgProps,PaySimple.PropertyDescs.PaySimpleApiKey,_listUserClinicNums[i])!=""//and key set
 					//and either paytype is not a valid DefNum
-					&& (!_listPaymentTypeDefs.Any(x => x.DefNum.ToString()==payTypeCC)
-						|| !_listPaymentTypeDefs.Any(x => x.DefNum.ToString()==payTypeACH))) 
+					&& (!_listPaymentTypeDefs.Any(x => x.Id.ToString()==payTypeCC)
+						|| !_listPaymentTypeDefs.Any(x => x.Id.ToString()==payTypeACH))) 
 				{
 					MessageBox.Show("Please select payment types for all clinics with PaySimple username and key set.");
 					return;

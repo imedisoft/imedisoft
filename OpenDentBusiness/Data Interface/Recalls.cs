@@ -13,6 +13,7 @@ using System.Xml;
 using CodeBase;
 using DataConnectionBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness.WebTypes.WebSched.TimeSlot;
 
 namespace OpenDentBusiness {
@@ -529,7 +530,7 @@ namespace OpenDentBusiness {
 					#region Create Row
 					row=table.NewRow();
 					row["age"]=Patients.DateToAge(PIn.Date(rowPat["Birthdate"].ToString())).ToString();
-					row["billingType"]=Defs.GetName(DefCat.BillingTypes,PIn.Long(rowPat["BillingType"].ToString()));
+					row["billingType"]=Definitions.GetName(DefinitionCategory.BillingTypes,PIn.Long(rowPat["BillingType"].ToString()));
 					row["ClinicNum"]=PIn.Long(rowPat["ClinicNum"].ToString());
 					row["contactMethod"]=GetContactFromMethod(PIn.Enum<ContactMethod>(rowPat["PreferRecallMethod"].ToString()),groupByFamilies
 						,rowPat["HmPhone"].ToString(),rowPat["WkPhone"].ToString(),rowPat["WirelessPhone"].ToString(),rowPat["guarEmail"].ToString()
@@ -571,7 +572,7 @@ namespace OpenDentBusiness {
 					row["recallType"]=rowCur["recalltype"].ToString();
 					row["RecallTypeNum"]=rowCur["RecallTypeNum"].ToString();
 					row["RecallStatus"]=rowCur["RecallStatus"].ToString();
-					row["status"]=Defs.GetName(DefCat.RecallUnschedStatus,PIn.Long(rowCur["RecallStatus"].ToString()));
+					row["status"]=Definitions.GetName(DefinitionCategory.RecallUnschedStatus,PIn.Long(rowCur["RecallStatus"].ToString()));
 					row["WebSchedRecallNum"]="0";
 					row["webSchedDateTimeFailed"]=DateTime.MinValue;
 					row["webSchedEmailSendStatus"]=((int)AutoCommStatus.Undefined).ToString();
@@ -1710,7 +1711,7 @@ namespace OpenDentBusiness {
 			command="DROP TABLE IF EXISTS temprecallmaxdate";
 			Database.ExecuteNonQuery(command);
 			for(int i=0;i<rawTable.Rows.Count;i++) {
-				rawTable.Rows[i]["billingType"]=Defs.GetName(DefCat.BillingTypes,PIn.Long(rawTable.Rows[i]["billingType"].ToString()));
+				rawTable.Rows[i]["billingType"]=Definitions.GetName(DefinitionCategory.BillingTypes,PIn.Long(rawTable.Rows[i]["billingType"].ToString()));
 			}
 			return rawTable;
 		}

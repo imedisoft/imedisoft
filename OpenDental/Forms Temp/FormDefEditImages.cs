@@ -9,6 +9,8 @@ using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using OpenDentBusiness;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -22,7 +24,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public bool IsNew;
 		private System.Windows.Forms.CheckBox checkHidden;
-		private Def DefCur;
+		private Definition DefCur;
 		private CheckBox checkToothCharts;
 		private CheckBox checkStatements;
 		private CheckBox checkPatientPictures;
@@ -38,10 +40,10 @@ namespace OpenDental{
 		private GroupBox groupBox1;
 		
 		///<summary></summary>
-		public FormDefEditImages(Def defCur) {
+		public FormDefEditImages(Definition defCur) {
 			InitializeComponent();// Required for Windows Form Designer support
-			
-			DefCur=defCur.Copy();
+
+			DefCur = defCur;
 		}
 
 		///<summary></summary>
@@ -305,42 +307,42 @@ namespace OpenDental{
 
 		private void FormDefEdit_Load(object sender,System.EventArgs e) {
 			//Also see Defs.GetImageCat and ImageCategorySpecial when reworking this form.
-			textName.Text=DefCur.ItemName;
+			textName.Text=DefCur.Name;
 			//textValue.Text=DefCur.ItemValue;
-			if(DefCur.ItemValue.Contains("X")) {
+			if(DefCur.Value.Contains("X")) {
 				checkChartModule.Checked=true;
 			}
-			if(DefCur.ItemValue.Contains("F")) {
+			if(DefCur.Value.Contains("F")) {
 				checkPatientForms.Checked=true;
 			}
-			if(DefCur.ItemValue.Contains("L")) {
+			if(DefCur.Value.Contains("L")) {
 				checkPatientPortal.Checked=true;
 			}
-			if(DefCur.ItemValue.Contains("P")) {
+			if(DefCur.Value.Contains("P")) {
 				checkPatientPictures.Checked=true;
 			}
-			if(DefCur.ItemValue.Contains("S")) {
+			if(DefCur.Value.Contains("S")) {
 				checkStatements.Checked=true;
 			}
-			if(DefCur.ItemValue.Contains("T")) {
+			if(DefCur.Value.Contains("T")) {
 				checkToothCharts.Checked=true;
 			}
-			if(DefCur.ItemValue.Contains("R")) {
+			if(DefCur.Value.Contains("R")) {
 				checkTreatmentPlans.Checked=true;
 			}
-			if(DefCur.ItemValue.Contains("E") || (IsNew && PrefC.GetInt(PrefName.ImagesModuleTreeIsCollapsed)!=1)) {
+			if(DefCur.Value.Contains("E") || (IsNew && PrefC.GetInt(PrefName.ImagesModuleTreeIsCollapsed)!=1)) {
 					checkExpanded.Checked=true;
 			}
-			if(DefCur.ItemValue.Contains("A")) {
+			if(DefCur.Value.Contains("A")) {
 				checkPaymentPlans.Checked=true;
 			}
-			if(DefCur.ItemValue.Contains("C")) {
+			if(DefCur.Value.Contains("C")) {
 				checkClaimAttachments.Checked=true;
 			}
-			if(DefCur.ItemValue.Contains("B")) {
+			if(DefCur.Value.Contains("B")) {
 				checkLabCases.Checked=true;
 			}
-			if(DefCur.ItemValue.Contains("U")) {
+			if(DefCur.Value.Contains("U")) {
 				checkAutoSaveForm.Checked=true;
 			}
 			checkHidden.Checked=DefCur.IsHidden;
@@ -444,7 +446,7 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			if(checkHidden.Checked) {
-				if(Defs.IsDefinitionInUse(DefCur)) {
+				if(Definitions.IsDefinitionInUse(DefCur)) {
 					if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Warning: This definition is currently in use within the program.")) {
 						return;
 					}
@@ -454,7 +456,7 @@ namespace OpenDental{
 				MessageBox.Show("Name required.");
 				return;
 			}
-			DefCur.ItemName=textName.Text;
+			DefCur.Name=textName.Text;
 			string itemVal="";
 			if(checkChartModule.Checked) {
 				itemVal+="X";
@@ -483,7 +485,7 @@ namespace OpenDental{
 			if(checkPaymentPlans.Checked) {
 				itemVal+="A";
 			}
-			if(!IsNew && checkExpanded.Checked!=DefCur.ItemValue.Contains("E")) {//If checkbox has been changed since opening form.
+			if(!IsNew && checkExpanded.Checked!=DefCur.Value.Contains("E")) {//If checkbox has been changed since opening form.
 				if(MsgBox.Show(MsgBoxButtons.YesNo,"Expanded by default option changed.  This change will affect all users.  Continue?")) {
 					//Remove all user specific preferences to enforce the new default.
 					// TODO: UserOdPrefs.DeleteForFkey(0,UserOdFkeyType.Definition,DefCur.DefNum);
@@ -498,14 +500,11 @@ namespace OpenDental{
 			if(checkAutoSaveForm.Checked) {
 				itemVal+="U";
 			}
-			DefCur.ItemValue=itemVal;
+			DefCur.Value=itemVal;
 			DefCur.IsHidden=checkHidden.Checked;
-			if(IsNew){
-				Defs.Insert(DefCur);
-			}
-			else{
-				Defs.Update(DefCur);
-			}
+
+			Definitions.Save(DefCur);
+
 			DialogResult=DialogResult.OK;
 		}
 

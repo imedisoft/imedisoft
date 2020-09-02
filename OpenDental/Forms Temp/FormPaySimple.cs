@@ -10,6 +10,8 @@ using System.Linq;
 using System.IO;
 using CodeBase;
 using MigraDoc.DocumentObjectModel;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormPaySimple:ODForm {
@@ -499,7 +501,7 @@ namespace OpenDental {
 				return false;
 			}
 			string paytype=ProgramProperties.GetPropValForClinicOrDefault(_progCur.Id,PaySimple.PropertyDescs.PaySimplePayTypeCC,_clinicNum);
-			if(!Defs.GetDefsForCategory(DefCat.PaymentTypes,true).Any(x => x.DefNum.ToString()==paytype)) { //paytype is not a valid DefNum
+			if(!Definitions.GetDefsForCategory(DefinitionCategory.PaymentTypes,true).Any(x => x.Id.ToString()==paytype)) { //paytype is not a valid DefNum
 				MessageBox.Show("The PaySimple payment type has not been set.");
 				return false;
 			}

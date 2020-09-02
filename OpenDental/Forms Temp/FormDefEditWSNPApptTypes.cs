@@ -8,35 +8,37 @@ using OpenDentBusiness;
 using System.Linq;
 using CodeBase;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormDefEditWSNPApptTypes:ODForm {
-		private Def _defCur;
+		private Definition _defCur;
 		///<summary>Every WSNPA reason is required to be associated to one (and only one) appointment type.
 		///This is where the length and procedures of the appointment are retrieved.</summary>
 		private AppointmentType _apptTypeCur;
 		///<summary>The blockout types that this WSNPA reason is restricted to.  Can be empty.</summary>
-		private List<Def> _listRestrictToBlockoutTypes;
+		private List<Definition> _listRestrictToBlockoutTypes;
 
 		public bool IsDeleted {
 			get;
 			private set;
 		}
 
-		public FormDefEditWSNPApptTypes(Def defCur) {
+		public FormDefEditWSNPApptTypes(Definition defCur) {
 			InitializeComponent();
 			
 			_defCur=defCur;
 			checkHidden.Checked=_defCur.IsHidden;
-			textName.Text=_defCur.ItemName;
+			textName.Text=_defCur.Name;
 			//Look for an associated appointment type.
 			List<DefLink> listApptTypeDefLinks=DefLinks.GetDefLinksByType(DefLinkType.AppointmentType);
-			DefLink defLink=listApptTypeDefLinks.FirstOrDefault(x => x.DefNum==_defCur.DefNum);
+			DefLink defLink=listApptTypeDefLinks.FirstOrDefault(x => x.DefinitionId==_defCur.Id);
 			if(defLink!=null) {
 				_apptTypeCur=AppointmentTypes.GetFirstOrDefault(x => x.Id==defLink.FKey);
 			}
-			List<DefLink> listRestrictToDefLinks=DefLinks.GetDefLinksByType(DefLinkType.BlockoutType,_defCur.DefNum);
-			_listRestrictToBlockoutTypes=Defs.GetDefs(DefCat.BlockoutTypes,listRestrictToDefLinks.Select(x => x.FKey).ToList());
+			List<DefLink> listRestrictToDefLinks=DefLinks.GetDefLinksByType(DefLinkType.BlockoutType,_defCur.Id);
+			_listRestrictToBlockoutTypes=Definitions.GetDefs(DefinitionCategory.BlockoutTypes,listRestrictToDefLinks.Select(x => x.FKey).ToList());
 			FillApptTypeValue();
 			FillBlockoutTypeValues();
 		}
@@ -50,7 +52,7 @@ namespace OpenDental {
 
 		private void FillBlockoutTypeValues() {
 			textRestrictToBlockouts.Clear();
-			textRestrictToBlockouts.Text=string.Join(",",_listRestrictToBlockoutTypes.Select(x => x.ItemName));
+			textRestrictToBlockouts.Text=string.Join(",",_listRestrictToBlockoutTypes.Select(x => x.Name));
 		}
 
 		private void butSelect_Click(object sender,EventArgs e) {
@@ -71,13 +73,13 @@ namespace OpenDental {
 		}
 
 		private void butSelectBlockouts_Click(object sender,EventArgs e) {
-			FormDefinitionPicker formDP=new FormDefinitionPicker(DefCat.BlockoutTypes,_listRestrictToBlockoutTypes);
+			FormDefinitionPicker formDP=new FormDefinitionPicker(DefinitionCategory.BlockoutTypes,_listRestrictToBlockoutTypes);
 			formDP.IsMultiSelectionMode=true;
 			formDP.ShowDialog();
 			if(formDP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			_listRestrictToBlockoutTypes=formDP.ListSelectedDefs.DeepCopy<List<Def>,List<Def>>();
+			_listRestrictToBlockoutTypes=formDP.ListSelectedDefs.DeepCopy<List<Definition>,List<Definition>>();
 			FillBlockoutTypeValues();
 		}
 
@@ -90,16 +92,16 @@ namespace OpenDental {
 				MessageBox.Show("Appointment Type required.");
 				return;
 			}
-			_defCur.ItemName=PIn.String(textName.Text);
-			if(_defCur.IsNew) {
-				Defs.Insert(_defCur);
+			_defCur.Name=PIn.String(textName.Text);
+			if(_defCur.Id == 0) {
+				Definitions.Insert(_defCur);
 			}
 			else {
-				Defs.Update(_defCur);
+				Definitions.Update(_defCur);
 			}
-			DefLinks.SetFKeyForDef(_defCur.DefNum,_apptTypeCur.Id,DefLinkType.AppointmentType);
-			DefLinks.DeleteAllForDef(_defCur.DefNum,DefLinkType.BlockoutType);//Remove all blockouts before inserting the new set
-			DefLinks.InsertDefLinksForFKeys(_defCur.DefNum,_listRestrictToBlockoutTypes.Select(x => x.DefNum).ToList(),DefLinkType.BlockoutType);
+			DefLinks.SetFKeyForDef(_defCur.Id,_apptTypeCur.Id,DefLinkType.AppointmentType);
+			DefLinks.DeleteAllForDef(_defCur.Id,DefLinkType.BlockoutType);//Remove all blockouts before inserting the new set
+			DefLinks.InsertDefLinksForFKeys(_defCur.Id,_listRestrictToBlockoutTypes.Select(x => x.Id).ToList(),DefLinkType.BlockoutType);
 			DialogResult=DialogResult.OK;
 		}
 
@@ -109,11 +111,11 @@ namespace OpenDental {
 
 		private void butDelete_Click(object sender,EventArgs e) {
 			try {
-				Defs.Delete(_defCur);
+				Definitions.Delete(_defCur);
 				//Web Sched New Pat Appt appointment type defs can be associated to multiple types of deflinks.  Clean them up.
-				DefLinks.DeleteAllForDef(_defCur.DefNum,DefLinkType.AppointmentType);
-				DefLinks.DeleteAllForDef(_defCur.DefNum,DefLinkType.Operatory);
-				DefLinks.DeleteAllForDef(_defCur.DefNum,DefLinkType.BlockoutType);
+				DefLinks.DeleteAllForDef(_defCur.Id,DefLinkType.AppointmentType);
+				DefLinks.DeleteAllForDef(_defCur.Id,DefLinkType.Operatory);
+				DefLinks.DeleteAllForDef(_defCur.Id,DefLinkType.BlockoutType);
 				IsDeleted=true;
 				DialogResult=DialogResult.OK;
 			}

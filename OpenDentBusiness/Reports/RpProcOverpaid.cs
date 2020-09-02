@@ -7,13 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness {
 	public class RpProcOverpaid {
 		public static DataTable GetOverPaidProcs(long patNum,List<long> listProvNums,List<long> listClinics,DateTime dateStart,DateTime dateEnd) {
-			List<long> listHiddenUnearnedDefNums=ReportsComplex.RunFuncOnReportServer(() => 
-				Defs.GetDefsNoCache(DefCat.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.ItemValue)).Select(x => x.DefNum).ToList()
-			);
+			List<long> listHiddenUnearnedDefNums=
+				Definitions.GetDefsNoCache(DefinitionCategory.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.Value)).Select(x => x.Id).ToList();
 			#region Completed Procs
 			string command="SELECT ";
 			if(Prefs.GetBool(PrefName.ReportsShowPatNum)) {

@@ -7,6 +7,8 @@ using System.Globalization;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -861,13 +863,13 @@ namespace OpenDental{
 			textState.Text=CarrierCur.State;
 			textZip.Text=CarrierCur.Zip;
 			textElectID.Text=CarrierCur.ElectID;
-			List<Def> listDefsCarrierGroupNames=Defs.GetDefsForCategory(DefCat.CarrierGroupNames,true);//Only Add non hidden definitions
+			List<Definition> listDefsCarrierGroupNames=Definitions.GetByCategory(DefinitionCategory.CarrierGroupNames);//Only Add non hidden definitions
 				//new List<Def> { new Def() { DefNum=0,ItemName="Unspecified" } };
-			//listDefsCarrierGroupNames.AddRange(Defs.GetDefsForCategory(DefCat.CarrierGroupNames,true));
+			//listDefsCarrierGroupNames.AddRange(Defs.GetDefsForCategory(DefinitionCategory.CarrierGroupNames,true));
 			if(listDefsCarrierGroupNames.Count>0) {//only show if at least one CarrierGroupName definition
 				labelCarrierGroupName.Visible=true;
 				comboCarrierGroupName.Visible=true;
-				comboCarrierGroupName.Items.Add("Unspecified",new Def());//defNum 0
+				comboCarrierGroupName.Items.Add("Unspecified",new Definition());//defNum 0
 				comboCarrierGroupName.Items.AddDefs(listDefsCarrierGroupNames);
 				comboCarrierGroupName.SetSelectedDefNum(CarrierCur.CarrierGroupName);
 			}

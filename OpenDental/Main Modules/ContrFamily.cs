@@ -10,6 +10,8 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using Imedisoft.Forms;
 using OpenDental.Bridges;
 using OpenDental.UI;
@@ -52,7 +54,7 @@ namespace OpenDental{
 		private SortStrategy _superFamSortStrat;
 		///<summary>Filled with all clones for the currently selected patient and their corresponding specialty.
 		///Specialties are only important if clinics are enabled.  If clinics are disabled then the corresponding Def will be null.</summary>
-		private Dictionary<Patient,Def> _dictCloneSpecialty;
+		private Dictionary<Patient,Definition> _dictCloneSpecialty;
 		///<summary>All the data necessary to load the module.</summary>
 		private FamilyModules.LoadData _loadData;
 		///<summary>Used for MenuItemPopup() to tell which row the user clicked on.  Currently only for gridPat</summary>
@@ -818,7 +820,7 @@ namespace OpenDental{
 			GridRow row;
 			List<DisplayField> fields=DisplayFields.GetForCategory(DisplayFieldCategory.PatientInformation);
 			DisplayField fieldCur;
-			List<Def> listMiscColorDefs=Defs.GetDefsForCategory(DefCat.MiscColors,true);
+			List<Definition> listMiscColorDefs=Definitions.GetByCategory(DefinitionCategory.MiscColors);
 			for(int f=0;f<fields.Count;f++) {
 				fieldCur=fields[f];
 				row=new GridRow();
@@ -922,8 +924,8 @@ namespace OpenDental{
 					#endregion Arrive Early
 					#region Billing Type
 					case "Billing Type":
-						string billingtype=Defs.GetName(DefCat.BillingTypes,PatCur.BillingType);
-						if(Defs.GetHidden(DefCat.BillingTypes,PatCur.BillingType)) {
+						string billingtype=Definitions.GetName(DefinitionCategory.BillingTypes,PatCur.BillingType);
+						if(Definitions.GetHidden(DefinitionCategory.BillingTypes,PatCur.BillingType)) {
 							billingtype+=" "+"(hidden)";
 						}						
 						row.Cells.Add(billingtype);
@@ -1017,13 +1019,13 @@ namespace OpenDental{
 					#region ICE Name
 					case "ICE Name":
 						row.Cells.Add(PatNoteCur.ICEName);
-						row.BackColor=listMiscColorDefs[(int)DefCatMiscColors.FamilyModuleICE].ItemColor;
+						row.BackColor=listMiscColorDefs[(int)DefCatMiscColors.FamilyModuleICE].Color;
 						break;
 					#endregion ICE Name
 					#region ICE Phone
 					case "ICE Phone":
 						row.Cells.Add(PatNoteCur.ICEPhone);
-						row.BackColor=listMiscColorDefs[(int)DefCatMiscColors.FamilyModuleICE].ItemColor;
+						row.BackColor=listMiscColorDefs[(int)DefCatMiscColors.FamilyModuleICE].Color;
 						break;
 					#endregion ICE Phone
 					#region Language
@@ -1072,7 +1074,7 @@ namespace OpenDental{
 								row.Cells.Add(fieldCur.Description);
 							}
 							row.Cells.Add(PatRestrictions.GetPatRestrictDesc(listPatRestricts[i].PatRestrictType));
-							row.BackColor=listMiscColorDefs[10].ItemColor;//index 10 is Patient Restrictions (hard coded in convertdatabase4)
+							row.BackColor=listMiscColorDefs[10].Color;//index 10 is Patient Restrictions (hard coded in convertdatabase4)
 							if(i==listPatRestricts.Count-1) {//last row added outside of switch statement
 								break;
 							}
@@ -1112,12 +1114,12 @@ namespace OpenDental{
 						if(custREList.Count==0) {
 							row.Cells.Add("None");
 							row.Tag="References";
-							row.BackColor=listMiscColorDefs[8].ItemColor;
+							row.BackColor=listMiscColorDefs[8].Color;
 						}
 						else {
 							row.Cells.Add("");
 							row.Tag="References";
-							row.BackColor=listMiscColorDefs[8].ItemColor;
+							row.BackColor=listMiscColorDefs[8].Color;
 							gridPat.ListGridRows.Add(row);
 						}
 						for(int i=0;i<custREList.Count;i++) {
@@ -1131,7 +1133,7 @@ namespace OpenDental{
 								row.Cells.Add(CustReferences.GetCustNameFL(custREList[i].PatNumRef));
 							}
 							row.Tag=custREList[i];
-							row.BackColor=listMiscColorDefs[8].ItemColor;
+							row.BackColor=listMiscColorDefs[8].Color;
 							if(i<custREList.Count-1) {
 								gridPat.ListGridRows.Add(row);
 							}
@@ -1149,7 +1151,7 @@ namespace OpenDental{
 						if(listRefs.Count==0){
 							row.Cells.Add("None");
 							row.Tag="Referral";
-							row.BackColor=listMiscColorDefs[8].ItemColor;
+							row.BackColor=listMiscColorDefs[8].Color;
 						}
 						//else{
 						//	row.Cells.Add("");
@@ -1184,7 +1186,7 @@ namespace OpenDental{
 								row.Cells.Add("");//if referral is null because using random keys and had bug.
 							}
 							row.Tag="Referral";
-							row.BackColor=listMiscColorDefs[8].ItemColor;
+							row.BackColor=listMiscColorDefs[8].Color;
 							if(i<listRefs.Count-1){
 								gridPat.ListGridRows.Add(row);
 							}
@@ -1199,7 +1201,7 @@ namespace OpenDental{
 						else{
 							row.Cells.Add((_loadData.ResponsibleParty??Patients.GetLim(PatCur.ResponsParty)).GetNameLF());
 						}
-						row.BackColor=listMiscColorDefs[8].ItemColor;
+						row.BackColor=listMiscColorDefs[8].Color;
 						break;
 					#endregion ResponsParty
 					#region Salutation
@@ -1838,7 +1840,7 @@ namespace OpenDental{
 								if(cellStr!="") {
 									cellStr+=", ";
 								}
-								cellStr+=Defs.GetName(DefCat.RecallUnschedStatus,recallListPat[i].RecallStatus);
+								cellStr+=Definitions.GetName(DefinitionCategory.RecallUnschedStatus,recallListPat[i].RecallStatus);
 							}
 							if(recallListPat[i].Note!="") {
 								if(cellStr!="") {
@@ -2168,7 +2170,7 @@ namespace OpenDental{
 			}
 			int selectedIndex=-1;
 			GridRow row;
-			foreach(KeyValuePair<Patient,Def> cloneAndSpecialty in _dictCloneSpecialty) {
+			foreach(KeyValuePair<Patient,Definition> cloneAndSpecialty in _dictCloneSpecialty) {
 				//Never add deleted patients to the grid.  Deleted patients should not be selectable.
 				if(cloneAndSpecialty.Key.PatStatus==PatientStatus.Deleted) {
 					continue;
@@ -2179,7 +2181,7 @@ namespace OpenDental{
 					row.Cells.Add(Clinics.GetAbbr(cloneAndSpecialty.Key.ClinicNum));
 				}
 				//Check for null because an office could have just turned on clinics and a specialty would not have been required prior.
-				row.Cells.Add((cloneAndSpecialty.Value==null) ? "" : cloneAndSpecialty.Value.ItemName);
+				row.Cells.Add((cloneAndSpecialty.Value==null) ? "" : cloneAndSpecialty.Value.Name);
 				row.Tag=cloneAndSpecialty.Key;
 				//If we are about to add the clone that is currently selected, save the index of said patient so that we can select them after the update.
 				if(PatCur!=null && cloneAndSpecialty.Key.PatNum==PatCur.PatNum) {
@@ -2470,15 +2472,15 @@ namespace OpenDental{
 				else {
 					discountPlan=_loadData.DiscountPlan;
 				}
-				Def adjType=Defs.GetDef(DefCat.AdjTypes,discountPlan.DefNum);
+				Definition adjType=Definitions.GetDef(DefinitionCategory.AdjTypes,discountPlan.DefNum);
 				GridRow discountRow=new GridRow();
 				discountRow.Cells.Add("Description");
 				discountRow.Cells.Add(discountPlan.Description);
-				discountRow.BackColor=Defs.GetFirstForCategory(DefCat.MiscColors).ItemColor;
+				discountRow.BackColor=Definitions.GetFirstForCategory(DefinitionCategory.MiscColors).Color;
 				gridIns.ListGridRows.Add(discountRow);
 				discountRow=new GridRow();
 				discountRow.Cells.Add("Adjustment Type");
-				discountRow.Cells.Add(adjType.ItemName);
+				discountRow.Cells.Add(adjType.Name);
 				gridIns.ListGridRows.Add(discountRow);
 				discountRow=new GridRow();
 				discountRow.Cells.Add("Fee Schedule");
@@ -2497,7 +2499,7 @@ namespace OpenDental{
 				gridIns.EndUpdate();
 				return;
 			}
-			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.MiscColors);
+			List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.MiscColors);
 			List<InsSub> subArray=new List<InsSub>();//prevents repeated calls to db.
 			List<InsPlan> planArray=new List<InsPlan>();
 			InsSub sub;
@@ -2540,7 +2542,7 @@ namespace OpenDental{
 			for(int i=0;i<PatPlanList.Count;i++){
 				row.Cells.Add(FamCur.GetNameInFamFL(subArray[i].Subscriber));
 			}
-			row.BackColor=listDefs[0].ItemColor;
+			row.BackColor=listDefs[0].Color;
 			gridIns.ListGridRows.Add(row);
 			//subscriber ID
 			row=new GridRow();
@@ -2548,7 +2550,7 @@ namespace OpenDental{
 			for(int i=0;i<PatPlanList.Count;i++) {
 				row.Cells.Add(subArray[i].SubscriberID);
 			}
-			row.BackColor=listDefs[0].ItemColor;
+			row.BackColor=listDefs[0].Color;
 			gridIns.ListGridRows.Add(row);
 			//relationship
 			row=new GridRow();
@@ -2556,7 +2558,7 @@ namespace OpenDental{
 			for(int i=0;i<PatPlanList.Count;i++){
 				row.Cells.Add(PatPlanList[i].Relationship.ToString());
 			}
-			row.BackColor=listDefs[0].ItemColor;
+			row.BackColor=listDefs[0].Color;
 			gridIns.ListGridRows.Add(row);
 			//patient ID
 			row=new GridRow();
@@ -2564,7 +2566,7 @@ namespace OpenDental{
 			for(int i=0;i<PatPlanList.Count;i++){
 				row.Cells.Add(PatPlanList[i].PatID);
 			}
-			row.BackColor=listDefs[0].ItemColor;
+			row.BackColor=listDefs[0].Color;
 			gridIns.ListGridRows.Add(row);
 			//pending
 			row=new GridRow();
@@ -2577,7 +2579,7 @@ namespace OpenDental{
 					row.Cells.Add("");
 				}
 			}
-			row.BackColor=listDefs[0].ItemColor;
+			row.BackColor=listDefs[0].Color;
 			row.LowerBorderColor=Color.Black;
 			gridIns.ListGridRows.Add(row);
 			//employer

@@ -121,7 +121,7 @@ namespace OpenDentBusiness
 			if (invalidTypes.Contains(InvalidType.Defs) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Defs.ToString());
-				Defs.GetTableFromCache(true);
+				Definitions.RefreshCache();
 			}
 			if (invalidTypes.Contains(InvalidType.DentalSchools) || refreshAll)
 			{

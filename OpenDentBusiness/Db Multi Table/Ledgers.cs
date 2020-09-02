@@ -12,6 +12,7 @@ using CodeBase;
 using DataConnectionBase;
 using MySql.Data.MySqlClient;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness
 {
@@ -536,8 +537,8 @@ namespace OpenDentBusiness
 			{
 				command += "-ps.SplitAmt ";
 			}
-			List<long> listHiddenUnearnedDefNums = Defs.GetDefsForCategory(DefCat.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.ItemValue))
-					.Select(x => x.DefNum).ToList();
+			List<long> listHiddenUnearnedDefNums = Definitions.GetDefsForCategory(DefinitionCategory.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.Value))
+					.Select(x => x.Id).ToList();
 			command += "TranAmount,"
 				//We cannot exclude payments made outside the specified family, since payment plan guarantors can be in another family.
 				+ "(CASE WHEN ps.PayPlanNum != 0 "

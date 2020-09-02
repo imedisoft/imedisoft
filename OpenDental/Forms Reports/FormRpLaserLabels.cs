@@ -34,6 +34,7 @@ using Microsoft.Win32;
 using CodeBase;
 using DataConnectionBase;
 using Imedisoft.Forms;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormRpLaserLabels:ODForm {
@@ -1001,7 +1002,7 @@ namespace OpenDental {
 							return;
 						}
 						command += " WHERE " + DbHelper.Concat("carrier.CarrierName","carrier.Address") + " = '" + textInsCoStart.Text + labInsCoStartAddr.Text + "'";
-						RptAddrTable = Reports.GetTable(command);
+						RptAddrTable = Database.ExecuteDataTable(command);
 						if(RptAddrTable.Rows.Count==0) {
 							MessageBox.Show("No matching carriers found.");
 							return;
@@ -1131,7 +1132,7 @@ namespace OpenDental {
 			return patStat;
 		}
 		private void buildLabelTable(string getData) {
-			AddrTable = Reports.GetTable(getData);
+			AddrTable = Database.ExecuteDataTable(getData);
 			buildLabels();
 		}
 

@@ -9,6 +9,8 @@ using OpenDentBusiness;
 using OpenDental.UI;
 using System.Linq;
 using OpenDentBusiness.Crud;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormClaimPayList:ODForm {
@@ -20,7 +22,7 @@ namespace OpenDental {
 		//<summary>Set to true if the batch list was accessed originally by going through a claim.  This disables the GotoAccount feature.</summary>
 		//public bool IsFromClaim;
 		///<summary>List of defs of type ClaimPaymentGroup</summary>
-		private List<Def> _listCPGroups;
+		private List<Definition> _listCPGroups;
 
 		public FormClaimPayList() {
 			InitializeComponent();
@@ -31,7 +33,7 @@ namespace OpenDental {
 			textDateFrom.Text=DateTime.Now.AddDays(-10).ToShortDateString();
 			textDateTo.Text=DateTime.Now.ToShortDateString();
 			comboClinic.IsAllSelected=true;
-			_listCPGroups=Defs.GetDefsForCategory(DefCat.ClaimPaymentGroups,true);
+			_listCPGroups=Definitions.GetDefsForCategory(DefinitionCategory.ClaimPaymentGroups,true);
 			FillComboPaymentGroup();
 			FillGrid();
 		}
@@ -45,7 +47,7 @@ namespace OpenDental {
 			}
 			long selectedGroupNum=0;
 			if(comboPayGroup.SelectedIndex!=0) {
-				selectedGroupNum=_listCPGroups[comboPayGroup.SelectedIndex-1].DefNum;
+				selectedGroupNum=_listCPGroups[comboPayGroup.SelectedIndex-1].Id;
 			}
 			DataTable tableClaimPayments=ClaimPayments.GetForDateRange(dateFrom,dateTo,clinicNum,selectedGroupNum);
 			ListClaimPay=ClaimPaymentCrud.TableToList(tableClaimPayments);
@@ -81,11 +83,11 @@ namespace OpenDental {
 				else{
 					row.Cells.Add(ListClaimPay[i].CheckDate.ToShortDateString());
 				}
-				row.Cells.Add(Defs.GetName(DefCat.InsurancePaymentType,ListClaimPay[i].PayType));
+				row.Cells.Add(Definitions.GetName(DefinitionCategory.InsurancePaymentType,ListClaimPay[i].PayType));
 				row.Cells.Add(ListClaimPay[i].CheckAmt.ToString("c"));
 				row.Cells.Add(ListClaimPay[i].IsPartial?"X":"");
 				row.Cells.Add(ListClaimPay[i].CarrierName);
-				row.Cells.Add(Defs.GetName(DefCat.ClaimPaymentGroups,ListClaimPay[i].PayGroup));
+				row.Cells.Add(Definitions.GetName(DefinitionCategory.ClaimPaymentGroups,ListClaimPay[i].PayGroup));
 				if(PrefC.HasClinicsEnabled) {
 					row.Cells.Add(Clinics.GetAbbr(ListClaimPay[i].ClinicNum));
 				}
@@ -159,23 +161,23 @@ namespace OpenDental {
 			comboPayGroup.Items.Add("All");
 			comboPayGroup.SelectedIndex=0;
 			for(int i=0; i<_listCPGroups.Count; i++) {
-				Def defCur=_listCPGroups[i];
-				comboPayGroup.Items.Add(defCur.ItemName);
-				if(selectedDefNum!=0 && selectedDefNum==defCur.DefNum) {
+				Definition defCur=_listCPGroups[i];
+				comboPayGroup.Items.Add(defCur.Name);
+				if(selectedDefNum!=0 && selectedDefNum==defCur.Id) {
 					comboPayGroup.SelectedIndex=i+1; //+1 to account for the "All" option already added to the combobox
 				}
 			}
 		}
 
 		private void butPickPaymentGroup_Click(object sender,EventArgs e) {
-			FormDefinitionPicker FormDP= new FormDefinitionPicker(DefCat.ClaimPaymentGroups);
+			FormDefinitionPicker FormDP= new FormDefinitionPicker(DefinitionCategory.ClaimPaymentGroups);
 			FormDP.ShowDialog();
 			if(FormDP.DialogResult==DialogResult.OK) {
 				if(FormDP.ListSelectedDefs.Count<1) {
 					FillComboPaymentGroup();
 				}
 				else { 
-					FillComboPaymentGroup(FormDP.ListSelectedDefs[0].DefNum);
+					FillComboPaymentGroup(FormDP.ListSelectedDefs[0].Id);
 				}
 			}
 		}

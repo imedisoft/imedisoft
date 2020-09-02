@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -212,7 +214,7 @@ namespace OpenDental {
 			textDescription.Text=InsFilingCodeCur.Descript;
 			textEclaimCode.Text=InsFilingCodeCur.EclaimCode;
 			comboGroup.Items.AddDefNone();
-			comboGroup.Items.AddDefs(Defs.GetDefsForCategory(DefCat.InsuranceFilingCodeGroup,true));
+			comboGroup.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.InsuranceFilingCodeGroup,true));
 			comboGroup.SetSelectedDefNum(InsFilingCodeCur.GroupType); 
 			FillGrid();
 		}

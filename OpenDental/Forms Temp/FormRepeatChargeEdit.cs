@@ -8,6 +8,8 @@ using OpenDentBusiness;
 using Button = OpenDental.UI.Button;
 using CodeBase;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -79,11 +81,11 @@ namespace OpenDental{
 		///<summary>Already in a comma-delimited string that can be stored in the db.</summary>
 		private string _selectedUnearnedTypes {
 			get {
-				if(comboUnearnedTypes.SelectedTags<Def>().Any(x => x.DefNum==0)) {
+				if(comboUnearnedTypes.SelectedTags<Definition>().Any(x => x.Id==0)) {
 					//'All' is selected. An empty database column indicates all unearned types are to be used.
 					return "";
 				}
-				return string.Join(",",comboUnearnedTypes.SelectedTags<Def>().Select(x => x.DefNum));
+				return string.Join(",",comboUnearnedTypes.SelectedTags<Definition>().Select(x => x.Id));
 			}
 		}
 
@@ -685,14 +687,14 @@ namespace OpenDental{
 			checkUseUnearned.Checked=RepeatCur.UsePrepay;
 			List<long> listDefNumsUnearnedTypeCur=(RepeatCur.UnearnedTypes??"").Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries)
 				.Select(x => PIn.Long(x,false)).ToList();
-			List<Def> listUnearned=new List<Def> {
-				new Def { DefNum=0,ItemName="All" },
+			List<Definition> listUnearned=new List<Definition> {
+				new Definition { Id=0,Name="All" },
 			};
-			listUnearned.AddRange(Defs.GetDefsForCategory(DefCat.PaySplitUnearnedType,true));
-			comboUnearnedTypes.SetItems(listUnearned,x => x.ItemName,x => x.DefNum.In(listDefNumsUnearnedTypeCur));
+			listUnearned.AddRange(Definitions.GetDefsForCategory(DefinitionCategory.PaySplitUnearnedType,true));
+			comboUnearnedTypes.SetItems(listUnearned,x => x.Name,x => x.Id.In(listDefNumsUnearnedTypeCur));
 			if(string.IsNullOrEmpty(RepeatCur.UnearnedTypes)) {
 				//An empty value indicates 'All'
-				comboUnearnedTypes.SetSelectedItem<Def>(x => x.DefNum==0);
+				comboUnearnedTypes.SetSelectedItem<Definition>(x => x.Id==0);
 			}
 		}
 
@@ -759,9 +761,9 @@ namespace OpenDental{
 		}
 
 		private void comboUnearnedTypes_SelectionChangeCommitted(object sender,EventArgs e) {
-			if(comboUnearnedTypes.SelectedTags<Def>().Any(x => x.DefNum==0)) {//'All' is selected
+			if(comboUnearnedTypes.SelectedTags<Definition>().Any(x => x.Id==0)) {//'All' is selected
 				comboUnearnedTypes.SetSelected(false);
-				comboUnearnedTypes.SetSelectedItem<Def>(x => x.DefNum==0);//Select 'All'
+				comboUnearnedTypes.SetSelectedItem<Definition>(x => x.Id==0);//Select 'All'
 			}
 		}
 

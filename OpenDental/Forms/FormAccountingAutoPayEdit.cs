@@ -1,4 +1,5 @@
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental;
 using OpenDentBusiness;
 using System;
@@ -11,7 +12,7 @@ namespace Imedisoft.Forms
 	{
 		private readonly AccountingAutoPay accountingAutoPay;
 		private readonly List<long> accountIds = new List<long>();
-		private List<Def> paymentTypes;
+		private List<Definition> paymentTypes;
 
 		public FormAccountingAutoPayEdit(AccountingAutoPay accountingAutoPay)
 		{
@@ -22,11 +23,11 @@ namespace Imedisoft.Forms
 
 		private void FormAccountingAutoPayEdit_Load(object sender, EventArgs e)
 		{
-			paymentTypes = Defs.GetDefsForCategory(DefCat.PaymentTypes, true);
+			paymentTypes = Definitions.GetDefsForCategory(DefinitionCategory.PaymentTypes, true);
 			foreach (var paymentType in paymentTypes)
 			{
 				payTypeComboBox.Items.Add(paymentType);
-				if (paymentType.DefNum == accountingAutoPay.PayType)
+				if (paymentType.Id == accountingAutoPay.PayType)
 				{
 					payTypeComboBox.SelectedItem = paymentType;
 				}
@@ -108,7 +109,7 @@ namespace Imedisoft.Forms
 
 		private void AcceptButton_Click(object sender, EventArgs e)
 		{
-			if (!(payTypeComboBox.SelectedItem is Def payType))
+			if (!(payTypeComboBox.SelectedItem is Definition payType))
 			{
 				ShowError("Please select a pay type first.");
 
@@ -122,7 +123,7 @@ namespace Imedisoft.Forms
 				return;
 			}
 
-			accountingAutoPay.PayType = payType.DefNum;
+			accountingAutoPay.PayType = payType.Id;
 			accountingAutoPay.PickList = string.Join(",", accountIds);
 
 			DialogResult = DialogResult.OK;

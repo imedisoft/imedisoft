@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
@@ -34,7 +35,7 @@ namespace OpenDentBusiness
 				+ "AND procedurelog.ProcDate <= " + POut.Date(dateEnd) + " "
 				+ "AND insplan.PlanType = 'c' "
 				+ "AND procedurelog.ProcStatus = " + POut.Int((int)ProcStat.C);
-			return ReportsComplex.RunFuncOnReportServer(() => ReportsComplex.GetTable(queryString));
+			return Database.ExecuteDataTable(queryString);
 		}
 	}
 }

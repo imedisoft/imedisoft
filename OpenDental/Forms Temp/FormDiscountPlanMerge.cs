@@ -2,6 +2,8 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -25,7 +27,7 @@ namespace OpenDental {
 				_planInto=FormDPs.SelectedPlan;
 				textDescriptionInto.Text=_planInto.Description;
 				textFeeSchedInto.Text=FeeScheds.GetDescription(_planInto.FeeSchedNum);
-				textAdjTypeInto.Text=Defs.GetName(DefCat.AdjTypes,_planInto.DefNum);
+				textAdjTypeInto.Text=Definitions.GetName(DefinitionCategory.AdjTypes,_planInto.DefNum);
 			}
 			CheckUIState();
 		}
@@ -37,7 +39,7 @@ namespace OpenDental {
 				_planFrom=FormDPs.SelectedPlan;
 				textDescriptionFrom.Text=_planFrom.Description;
 				textFeeSchedFrom.Text=FeeScheds.GetDescription(_planFrom.FeeSchedNum);
-				textAdjTypeFrom.Text=Defs.GetName(DefCat.AdjTypes,_planFrom.DefNum);
+				textAdjTypeFrom.Text=Definitions.GetName(DefinitionCategory.AdjTypes,_planFrom.DefNum);
 			}
 			CheckUIState();
 		}

@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using CodeBase;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	public partial class FormSupplyInventory:ODForm {
@@ -76,7 +77,7 @@ namespace OpenDental {
 			if(!Security.IsAuthorized(Permissions.Setup)) {
 				return;
 			}
-			FormDefinitions FormD=new FormDefinitions(DefCat.SupplyCats);
+			FormDefinitions FormD=new FormDefinitions(DefinitionCategory.SupplyCats);
 			FormD.ShowDialog();
 			SecurityLogs.MakeLogEntry(Permissions.Setup,0,"Definitions.");
 		}

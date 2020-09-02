@@ -7,6 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 using OpenDentBusiness.IO;
@@ -99,7 +101,7 @@ namespace OpenDental {
 				return;
 			}
 			//Get image category to save to. First image "Statement(S)" category.
-			List<Def> listImageCatDefs=Defs.GetDefsForCategory(DefCat.ImageCats,true).Where(x => x.ItemValue.Contains("S")).ToList();
+			List<Definition> listImageCatDefs=Definitions.GetDefsForCategory(DefinitionCategory.ImageCats,true).Where(x => x.Value.Contains("S")).ToList();
 			if(listImageCatDefs.IsNullOrEmpty()) {
 				MessageBox.Show("No image category set for Statements.");
 				return;
@@ -113,7 +115,7 @@ namespace OpenDental {
 			docSave.ImgType=ImageType.Document;
 			docSave.DateCreated=DateTime.Now;
 			docSave.PatNum=PatNum;
-			docSave.DocCategory=listImageCatDefs.FirstOrDefault().DefNum;
+			docSave.DocCategory=listImageCatDefs.FirstOrDefault().Id;
 			docSave.Description=$"ServiceDateView"+docSave.DocNum+$"{docSave.DateCreated.Year}_{docSave.DateCreated.Month}_{docSave.DateCreated.Day}";
 
 			string fileName=ODFileUtils.CleanFileName(docSave.Description);

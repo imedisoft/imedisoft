@@ -84,7 +84,7 @@ namespace OpenDentBusiness {
 				command+="GROUP BY procedurelog.ProcNum ";
 			}
 			command+=@"ORDER BY ProcDate, LName";
-			DataTable table=ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
+			DataTable table=Database.ExecuteDataTable(command);
 			foreach(DataRow row in table.Rows) {
 				row["ToothNum"]=Tooth.ToInternat(row["ToothNum"].ToString(),toothNumberFormat);
 			}

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -43,7 +45,7 @@ namespace OpenDental {
 				comboCustomTracking.Items.AddDefNone();
 				comboCustomTracking.SelectedIndex=0;
 			}
-			comboCustomTracking.Items.AddDefs(Defs.GetDefsForCategory(DefCat.ClaimCustomTracking,true));
+			comboCustomTracking.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.ClaimCustomTracking,true));
 			ClaimTracking claimTrack=ListNewClaimTracks.FirstOrDefault();
 			if(claimTrack==null){//Creating a new ClaimTracking
 				comboCustomTracking.SelectedIndex=0;
@@ -60,10 +62,10 @@ namespace OpenDental {
 		}
 
 		private void FillComboErrorCode() {
-			Def[] arrayErrorCodeDefs = Defs.GetDefsForCategory(DefCat.ClaimErrorCode,true).ToArray();
+			Definition[] arrayErrorCodeDefs = Definitions.GetDefsForCategory(DefinitionCategory.ClaimErrorCode,true).ToArray();
 			comboErrorCode.Items.Clear();
 			//Add "none" option.
-			comboErrorCode.Items.Add(new ODBoxItem<Def>("None",new Def() {ItemValue="",DefNum=0}));
+			comboErrorCode.Items.Add(new ODBoxItem<Definition>("None",new Definition() {Value="",Id=0}));
 			comboErrorCode.SelectedIndex=0;
 			if(arrayErrorCodeDefs.Length==0) {
 				//if the list is empty, then disable the comboBox.
@@ -74,19 +76,19 @@ namespace OpenDental {
 			ClaimTracking claimTrack=ListNewClaimTracks.FirstOrDefault();
 			for(int i=0;i<arrayErrorCodeDefs.Length;i++) {
 				//hooray for using new ODBoxItems!
-				comboErrorCode.Items.Add(new ODBoxItem<Def>(arrayErrorCodeDefs[i].ItemName,arrayErrorCodeDefs[i]));
-				if(claimTrack?.TrackingErrorDefNum==arrayErrorCodeDefs[i].DefNum) {
+				comboErrorCode.Items.Add(new ODBoxItem<Definition>(arrayErrorCodeDefs[i].Name,arrayErrorCodeDefs[i]));
+				if(claimTrack?.TrackingErrorDefNum==arrayErrorCodeDefs[i].Id) {
 					comboErrorCode.SelectedIndex=i+1;//adding 1 to the index because we have added a 'none' option above
 				}
 			}
 		}
 
 		private void comboErrorCode_SelectionChangeCommitted(object sender,EventArgs e) {
-			if((!comboErrorCode.Enabled) || ((ODBoxItem<Def>)comboErrorCode.SelectedItem).Tag==null) {
+			if((!comboErrorCode.Enabled) || ((ODBoxItem<Definition>)comboErrorCode.SelectedItem).Tag==null) {
 				textErrorDesc.Text="";
 			}
 			else {
-				textErrorDesc.Text=((ODBoxItem<Def>)comboErrorCode.SelectedItem).Tag.ItemValue.ToString();
+				textErrorDesc.Text=((ODBoxItem<Definition>)comboErrorCode.SelectedItem).Tag.Value.ToString();
 			}	
 		}
 
@@ -97,7 +99,7 @@ namespace OpenDental {
 				return;
 			}
 			if(Prefs.GetBool(PrefName.ClaimTrackingRequiresError) 
-				&& ((ODBoxItem<Def>)comboErrorCode.SelectedItem).Tag == null 
+				&& ((ODBoxItem<Definition>)comboErrorCode.SelectedItem).Tag == null 
 				&& comboErrorCode.Enabled )
 			{
 				MessageBox.Show("You must specify an error code."); //Do they have to specify an error code even if they set the status to None?
@@ -109,7 +111,7 @@ namespace OpenDental {
 					return;
 				}
 			}
-			Def errorCodeDef=((ODBoxItem<Def>)comboErrorCode.SelectedItem).Tag;
+			Definition errorCodeDef=((ODBoxItem<Definition>)comboErrorCode.SelectedItem).Tag;
 			for(int i=0;i<_listClaims.Count;i++) { //when not called from FormRpOutstandingIns, this should only have one claim.
 				_listClaims[i].CustomTracking=comboCustomTracking.GetSelectedDefNum();
 				Claims.Update(_listClaims[i]);
@@ -120,7 +122,7 @@ namespace OpenDental {
 				}
 				trackCur.Note=textNotes.Text;
 				trackCur.TrackingDefNum=comboCustomTracking.GetSelectedDefNum();
-				trackCur.TrackingErrorDefNum=errorCodeDef.DefNum;
+				trackCur.TrackingErrorDefNum=errorCodeDef.Id;
 				trackCur.UserNum=Security.CurrentUser.Id;
 				if(trackCur.ClaimTrackingNum==0) { //new claim tracking status.
 					ClaimTrackings.Insert(trackCur);

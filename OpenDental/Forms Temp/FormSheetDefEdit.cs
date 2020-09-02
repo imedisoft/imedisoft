@@ -21,6 +21,8 @@ using System.Net;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using Imedisoft.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormSheetDefEdit:ODForm {
@@ -496,7 +498,7 @@ namespace OpenDental {
 						txt="Image:"+fieldDef.FieldName;
 						break;
 					case SheetFieldType.PatImage:
-						txt="PatImg:"+Defs.GetName(DefCat.ImageCats,PIn.Long(fieldDef.FieldName));
+						txt="PatImg:"+Definitions.GetName(DefinitionCategory.ImageCats,PIn.Long(fieldDef.FieldName));
 						break;
 					case SheetFieldType.Line:
 						txt="Line:"+fieldDef.XPos.ToString()+","+fieldDef.YPos.ToString()+","+"W:"+fieldDef.Width.ToString()+","+"H:"+fieldDef.Height.ToString();
@@ -1043,7 +1045,7 @@ namespace OpenDental {
 				_argsDF.brush=_argsDF.brushBlue;
 			}
 			g.DrawRectangle(_argsDF.pen,sheetFieldDef.XPos,sheetFieldDef.YPos,sheetFieldDef.Width,sheetFieldDef.Height);
-			g.DrawString("PatImage: "+Defs.GetName(DefCat.ImageCats,PIn.Long(sheetFieldDef.FieldName)),Font /*NOT _argsDF.font*/,_argsDF.brush,sheetFieldDef.XPos+1,sheetFieldDef.YPos+1);
+			g.DrawString("PatImage: "+Definitions.GetName(DefinitionCategory.ImageCats,PIn.Long(sheetFieldDef.FieldName)),Font /*NOT _argsDF.font*/,_argsDF.brush,sheetFieldDef.XPos+1,sheetFieldDef.YPos+1);
 		}
 
 		private void DrawRectangleHelper(SheetFieldDef sheetFieldDef,Graphics g,bool isSelected) {
@@ -1101,7 +1103,7 @@ namespace OpenDental {
 				#endregion
 				#region toothChartLegend
 				case "toothChartLegend":
-					List<Def> listDefs=Defs.GetDefsForCategory(DefCat.ChartGraphicColors,true);
+					List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.ChartGraphicColors,true);
 					int width;
 					if(SheetDefs.IsDashboardType(_sheetDefCur)) {
 						width=sheetFieldDef.Width;
@@ -1210,7 +1212,7 @@ namespace OpenDental {
 					label.Location=new Point(0,0);
 					ListBox listBox=new ListBox();
 					listBox.Items.Add("No Priority");
-					Defs.GetDefsForCategory(DefCat.TxPriorities,true).ForEach(def => listBox.Items.Add(def.ItemName));
+					Definitions.GetDefsForCategory(DefinitionCategory.TxPriorities,true).ForEach(def => listBox.Items.Add(def.Name));
 					listBox.Width=sheetFieldDef.Width;
 					listBox.Top=label.Bottom;
 					panel=new Panel();
@@ -1275,7 +1277,7 @@ namespace OpenDental {
 			SparksToothChart.ToothChartWrapper toothChartWrapper=new SparksToothChart.ToothChartWrapper();
 			ToothChartRelay toothChartRelay= new ToothChartRelay();
 			toothChartRelay.SetToothChartWrapper(toothChartWrapper);
-			Control toothChart=null;//the Sparks3D tooth chart
+			//Control toothChart=null;//the Sparks3D tooth chart
 
 				toothChartWrapper.Size=new Size(500,370);
 				toothChartWrapper.UseHardware=ComputerPrefs.LocalComputer.GraphicsUseHardware;
@@ -1296,9 +1298,9 @@ namespace OpenDental {
 				ComputerPrefs.Update(ComputerPrefs.LocalComputer);
 			
 			toothChartRelay.SetToothNumberingNomenclature((ToothNumberingNomenclature)PrefC.GetInt(PrefName.UseInternationalToothNumbers));
-			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.ChartGraphicColors);
-			toothChartRelay.ColorBackgroundMain=listDefs[14].ItemColor;
-			toothChartRelay.ColorText=listDefs[15].ItemColor;
+			List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.ChartGraphicColors);
+			toothChartRelay.ColorBackgroundMain=listDefs[14].Color;
+			toothChartRelay.ColorText=listDefs[15].Color;
 			toothChartRelay.ResetTeeth();
 			toothChartRelay.EndUpdate();
 			//toothChartRelay.AutoFinish=true;/??

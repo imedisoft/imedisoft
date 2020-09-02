@@ -10,6 +10,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 using OpenDentBusiness.IO;
 
@@ -63,7 +65,7 @@ namespace OpenDental{
 		private int electIndex;
 		private CheckBox checkShowLName;
 		private CheckBox checkSendSms;
-		private List<Def> _listImageCatDefs;
+		private List<Definition> _listImageCatDefs;
 		private bool _isFromBilling=false;
 
 		///<summary>This is true if on load the single statement IsNew.</summary>
@@ -878,7 +880,7 @@ namespace OpenDental{
 				}
 			}
 			#endregion Bulk Edit
-			_listImageCatDefs=Defs.GetDefsForCategory(DefCat.ImageCats,true);
+			_listImageCatDefs=Definitions.GetDefsForCategory(DefinitionCategory.ImageCats,true);
 			Plugins.HookAddCode(this,"FormStatementOptions_Load_end");
 		}
 
@@ -1085,13 +1087,13 @@ namespace OpenDental{
 			}
 			long category=0;
 			for(int i=0;i<_listImageCatDefs.Count;i++) {
-				if(Regex.IsMatch(_listImageCatDefs[i].ItemValue,@"S")) {
-					category=_listImageCatDefs[i].DefNum;
+				if(Regex.IsMatch(_listImageCatDefs[i].Value,@"S")) {
+					category=_listImageCatDefs[i].Id;
 					break;
 				}
 			}
 			if(category==0) {
-				category=_listImageCatDefs[0].DefNum;//put it in the first category.
+				category=_listImageCatDefs[0].Id;//put it in the first category.
 			}
 			//create doc--------------------------------------------------------------------------------------
 			Document docc=null;
@@ -1231,13 +1233,13 @@ namespace OpenDental{
 			SheetPrinting.CreatePdf(sheet,tempPath,StmtCur,dataSet,null);
 			long category=0;
 			for(int i=0;i<_listImageCatDefs.Count;i++) {
-				if(Regex.IsMatch(_listImageCatDefs[i].ItemValue,@"S")) {
-					category=_listImageCatDefs[i].DefNum;
+				if(Regex.IsMatch(_listImageCatDefs[i].Value,@"S")) {
+					category=_listImageCatDefs[i].Id;
 					break;
 				}
 			}
 			if(category==0) {
-				category=_listImageCatDefs[0].DefNum;//put it in the first category.
+				category=_listImageCatDefs[0].Id;//put it in the first category.
 			}
 			//create doc--------------------------------------------------------------------------------------
 			Document docc=null;
@@ -1393,8 +1395,8 @@ namespace OpenDental{
 		}
 
 		private void butPatPortal_Click(object sender,EventArgs e) {
-			if(!Defs.GetDefsForCategory(DefCat.ImageCats,true).Any(x => x.ItemValue.Contains(ImageCategorySpecial.L.ToString())
-				&& x.ItemValue.Contains(ImageCategorySpecial.S.ToString()))) {
+			if(!Definitions.GetDefsForCategory(DefinitionCategory.ImageCats,true).Any(x => x.Value.Contains(ImageCategorySpecial.L.ToString())
+				&& x.Value.Contains(ImageCategorySpecial.S.ToString()))) {
 				MessageBox.Show("There is no image category for Patient Portal and Statements in Setup | Definitions | Image Categories. "
 					+"There must be at least one to send portal statements.");
 				return;

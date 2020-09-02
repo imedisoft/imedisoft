@@ -1,4 +1,5 @@
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -36,7 +37,7 @@ namespace OpenDentBusiness
 			{
 				row = table.NewRow();
 				row["amount"] = PIn.Double(rawT.Rows[i]["amount"].ToString()).ToString("F");
-				row["payType"] = Defs.GetName(DefCat.InsurancePaymentType, PIn.Long(rawT.Rows[i]["PayType"].ToString()));
+				row["payType"] = Definitions.GetName(DefinitionCategory.InsurancePaymentType, PIn.Long(rawT.Rows[i]["PayType"].ToString()));
 				row["BankBranch"] = rawT.Rows[i]["BankBranch"].ToString();
 				row["ClaimPaymentNum"] = rawT.Rows[i]["ClaimPaymentNum"].ToString();
 				date = PIn.Date(rawT.Rows[i]["CheckDate"].ToString());

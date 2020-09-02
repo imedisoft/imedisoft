@@ -31,7 +31,7 @@ namespace OpenDentBusiness{
 		public static List<DashboardAR> Refresh(DateTime dateFrom){
 			
 			string command="SELECT * FROM dashboardar WHERE DateCalc >= "+POut.Date(dateFrom);
-			return ReportsComplex.RunFuncOnReportServer(() => Crud.DashboardARCrud.SelectMany(command));
+			return Crud.DashboardARCrud.SelectMany(command);
 		}
 
 		///<summary></summary>
@@ -46,7 +46,7 @@ namespace OpenDentBusiness{
 			string command = "TRUNCATE dashboardar";
 			Database.ExecuteNonQuery(command);
 			if(!string.IsNullOrEmpty(PrefC.ReportingServer.Server)) { //only attempt to insert into the reporting server if the reporting server is set up.
-				ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteNonQuery(command));
+				Database.ExecuteNonQuery(command);
 			}
 		}
 	}

@@ -8,6 +8,7 @@ using System.Reflection;
 using CodeBase;
 using DataConnectionBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -171,10 +172,10 @@ namespace OpenDentBusiness{
 			List<long> listOpNums=ApptViewItems.GetOpsForView(apptViewNum);
 			List<Schedule> listSchedulesToCopy=Schedules.RefreshPeriodBlockouts(dateCopyStart,dateCopyEnd,listOpNums);
 			//Build a list of blockouts that can't be Cut/Copy/Pasted
-			List<Def> listUserBlockoutDefs=Defs.GetDefsForCategory(DefCat.BlockoutTypes, true)
-				.FindAll(x => x.ItemValue.Contains(BlockoutType.DontCopy.GetDescription()));
+			List<Definition> listUserBlockoutDefs=Definitions.GetByCategory(DefinitionCategory.BlockoutTypes)
+				.FindAll(x => x.Value.Contains(BlockoutType.DontCopy.GetDescription()));
 			//No SchedList only contains blockouts that are NOT marked "Do not Cut/Copy/Paste"
-			listSchedulesToCopy.RemoveAll(x => listUserBlockoutDefs.Any(y => y.DefNum==x.BlockoutType));
+			listSchedulesToCopy.RemoveAll(x => listUserBlockoutDefs.Any(y => y.Id==x.BlockoutType));
 			int weekDelta=0;
 			if(isWeek) {
 				TimeSpan span=dateSelectedStart-dateCopyStart;
@@ -263,7 +264,7 @@ namespace OpenDentBusiness{
 				logText+="Blockout of type Web Schedule ASAP Blockout ";
 			}
 			else {
-				logText+="Blockout of type"+" "+Defs.GetName(DefCat.BlockoutTypes,blockout.BlockoutType)+" ";
+				logText+="Blockout of type"+" "+Definitions.GetName(DefinitionCategory.BlockoutTypes,blockout.BlockoutType)+" ";
 			}
 			switch(action) {
 				case BlockoutAction.Copy:
@@ -513,9 +514,9 @@ namespace OpenDentBusiness{
 			List<long> listBlockoutTypeDefNums=new List<long>();
 			//get a list of blockout types that are set to Do Not Schedule so we can filter them out later. 
 			//(The list of blockouts we don't want to show)
-			listBlockoutTypeDefNums=Defs.GetDefsForCategory(DefCat.BlockoutTypes,true)
-				.FindAll(x => x.ItemValue.Contains(BlockoutType.NoSchedule.GetDescription()))
-				.Select(x => x.DefNum).ToList();
+			listBlockoutTypeDefNums=Definitions.GetByCategory(DefinitionCategory.BlockoutTypes)
+				.FindAll(x => x.Value.Contains(BlockoutType.NoSchedule.GetDescription()))
+				.Select(x => x.Id).ToList();
 			//add the blockoutTypes that we specifically want to search for to the list so they will also be returned, will be 0 if not searching blockouts. 
 			//(The list of blockout scheds we want to show)
 			listBlockoutTypeDefNums.Add(blockoutType);
@@ -682,9 +683,9 @@ namespace OpenDentBusiness{
 
 		public static bool IsAppointmentBlocking(long defNum) {
 			//No need to check RemotingRole; no call to db.
-			return Defs.GetDefsForCategory(DefCat.BlockoutTypes,true)
-				.FindAll(x => x.ItemValue.Contains(BlockoutType.NoSchedule.GetDescription()))
-				.Select(x => x.DefNum).ToList().Contains(defNum);
+			return Definitions.GetByCategory(DefinitionCategory.BlockoutTypes)
+				.FindAll(x => x.Value.Contains(BlockoutType.NoSchedule.GetDescription()))
+				.Select(x => x.Id).ToList().Contains(defNum);
 		}
 
 		///<summary>Delete an invalid schedule.  Insert an invalid schedule signalod when hasSignal=true.</summary>
@@ -1260,9 +1261,9 @@ namespace OpenDentBusiness{
 				listBlockoutTypesToIgnore=listAllRestrictedToDefLinks.Select(x => x.FKey).Distinct().ToList();
 			}
 			//Get all blockout types that are not ignored in order to tell GetSchedulesHelper() which blockouts we need to know about.
-			listBlockoutTypeDefNums=Defs.GetDefsForCategory(DefCat.BlockoutTypes)
-					.FindAll(x => !x.DefNum.In(listBlockoutTypesToIgnore))//listBlockoutTypesToIgnore contains a list of blockouts that can be scheduled on.
-					.Select(x => x.DefNum).ToList();
+			listBlockoutTypeDefNums=Definitions.GetByCategory(DefinitionCategory.BlockoutTypes, true)
+					.FindAll(x => !x.Id.In(listBlockoutTypesToIgnore))//listBlockoutTypesToIgnore contains a list of blockouts that can be scheduled on.
+					.Select(x => x.Id).ToList();
 			if(!listBlockoutTypeDefNums.Contains(0)) {
 				listBlockoutTypeDefNums.Add(0);//Non-blockouts must always be considered.
 			}
@@ -1723,9 +1724,9 @@ namespace OpenDentBusiness{
 		}
 
 		///<summary>True if this blockout is not marked 'Do not schedule'.</summary>
-		public static bool CanScheduleInBlockout(long blockoutType,List<Def> listDefs=null) {
-			Def defBlockoutType=Defs.GetDef(DefCat.BlockoutTypes,blockoutType,listDefs);
-			if(defBlockoutType.ItemValue.Contains(BlockoutType.NoSchedule.GetDescription())) {
+		public static bool CanScheduleInBlockout(long blockoutType,List<Definition> listDefs=null) {
+			Definition defBlockoutType=Definitions.GetDef(DefinitionCategory.BlockoutTypes,blockoutType,listDefs);
+			if(defBlockoutType.Value.Contains(BlockoutType.NoSchedule.GetDescription())) {
 				return false;
 			}
 			return true;

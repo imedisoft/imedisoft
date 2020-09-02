@@ -12,6 +12,8 @@ using CodeBase;
 using System.Data;
 using System.Text;
 using OpenDentBusiness.IO;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -1539,10 +1541,10 @@ namespace OpenDental{
 				listFeeSched.SelectedIndex=0;
 			}
 			listSpecialty.Items.Clear();
-			Def[] specDefs=Defs.GetDefsForCategory(DefCat.ProviderSpecialties,true).ToArray();
+			Definition[] specDefs=Definitions.GetDefsForCategory(DefinitionCategory.ProviderSpecialties,true).ToArray();
 			for(int i=0;i<specDefs.Length;i++) {
-				listSpecialty.Items.Add(specDefs[i].ItemName);
-				if(i==0 || ProvCur.Specialty==specDefs[i].DefNum) {//default to the first item in the list
+				listSpecialty.Items.Add(specDefs[i].Name);
+				if(i==0 || ProvCur.Specialty==specDefs[i].Id) {//default to the first item in the list
 					listSpecialty.SelectedIndex=i;
 				}
 			}
@@ -1905,7 +1907,7 @@ namespace OpenDental{
 				ProvCur.FeeSched=_listFeeSchedShort[listFeeSched.SelectedIndex].FeeSchedNum;
 			}
 			//default to first specialty in the list if it can't find the specialty by exact name
-			ProvCur.Specialty=Defs.GetByExactNameNeverZero(DefCat.ProviderSpecialties,listSpecialty.SelectedItem.ToString());//selected index defaults to 0
+			ProvCur.Specialty=Definitions.GetByExactNameNeverZero(DefinitionCategory.ProviderSpecialties,listSpecialty.SelectedItem.ToString());//selected index defaults to 0
 			ProvCur.TaxonomyCodeOverride=textTaxonomyOverride.Text;
 			if(radAnesthSurg.Checked) {
 				ProvCur.AnesthProvType=1;

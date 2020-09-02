@@ -12,6 +12,8 @@ using OpenDentBusiness.UI;
 using CodeBase;
 using System.Linq;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -104,7 +106,7 @@ namespace OpenDental{
 		private CheckBox checkBypassLockDate;
 		private Label labelDefaultPreauthNote;
 		private List<FeeSched> _listFeeScheds;
-		private List<Def> _listProcCodeCatDefs;
+		private List<Definition> _listProcCodeCatDefs;
 		public bool ShowHiddenCategories;
 		private List<Fee> _listFees;
 
@@ -1139,11 +1141,11 @@ namespace OpenDental{
 					listPaintType.SelectedIndex=i;
 				}
 			}
-			_listProcCodeCatDefs=Defs.GetDefsForCategory(DefCat.ProcCodeCats,!ShowHiddenCategories);
+			_listProcCodeCatDefs=Definitions.GetByCategory(DefinitionCategory.ProcCodeCats,ShowHiddenCategories);
 			for(int i=0;i<_listProcCodeCatDefs.Count;i++){
 				string isHidden=(_listProcCodeCatDefs[i].IsHidden) ? " (hidden)" : "";
-				listCategory.Items.Add(_listProcCodeCatDefs[i].ItemName+isHidden);
-				if(_listProcCodeCatDefs[i].DefNum==ProcCode.ProcCat) {
+				listCategory.Items.Add(_listProcCodeCatDefs[i].Name+isHidden);
+				if(_listProcCodeCatDefs[i].Id==ProcCode.ProcCat) {
 					listCategory.SelectedIndex=i;
 				}
 			}
@@ -1453,7 +1455,7 @@ namespace OpenDental{
 			ProcCode.DrugNDC=textDrugNDC.Text;
 			ProcCode.RevenueCodeDefault=textRevenueCode.Text;
 			if(listCategory.SelectedIndex!=-1) {
-				ProcCode.ProcCat=_listProcCodeCatDefs[listCategory.SelectedIndex].DefNum;
+				ProcCode.ProcCat=_listProcCodeCatDefs[listCategory.SelectedIndex].Id;
 			}
 			ProcCode.ProvNumDefault=comboProvNumDefault.GetSelectedProvNum();			
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA, for CanadaTimeUnits

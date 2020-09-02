@@ -30,6 +30,8 @@ using OpenDentBusiness.IO;
 using Imedisoft.Forms;
 using Imedisoft.UI;
 using Imedisoft.X12.Codes;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 #if EHRTEST
 using EHR;
 #endif
@@ -886,7 +888,7 @@ namespace OpenDental {
 				}
 				treatPlanAttach.Priority=0;
 				if(clickedRow>0) {//Not 'no priority'
-					treatPlanAttach.Priority=(listPriorities.Items[clickedRow] as ODBoxItem<Def>).Tag.DefNum;
+					treatPlanAttach.Priority=(listPriorities.Items[clickedRow] as ODBoxItem<Definition>).Tag.Id;
 				}
 			}
 			listAllTpAttaches.Select(x => x.TreatPlanNum).Distinct().ToList()
@@ -1002,7 +1004,7 @@ namespace OpenDental {
 				MessageBox.Show("Please select a patient.");
 				return;
 			}
-			long defNum=Defs.GetImageCat(ImageCategorySpecial.T);
+			long defNum=Definitions.GetImageCat(ImageCategorySpecial.T);
 			if(defNum==0) {//no category set for Tooth Charts.
 				MessageBox.Show("No Def set for Tooth Charts.");
 				return;
@@ -2080,7 +2082,7 @@ namespace OpenDental {
 
 		private void ComboPrognosis_SelectionChangeCommitted(object sender,EventArgs e) {
 			if(comboPrognosis.SelectedIndex<1//0 index is 'no prognosis' and does not need to be verified.yy
-				|| Defs.GetDefsForCategory(DefCat.Prognosis,true).Any(x => x.DefNum==comboPrognosis.GetSelectedDefNum()))
+				|| Definitions.GetByCategory(DefinitionCategory.Prognosis).Any(x => x.Id==comboPrognosis.GetSelectedDefNum()))
 			{
 				return;
 			}
@@ -2090,7 +2092,7 @@ namespace OpenDental {
 
 		private void comboPriority_SelectionChangeCommitted(object sender,EventArgs e) {
 			if(comboPriority.SelectedIndex<1//0 is 'no priority'
-				|| Defs.GetDefsForCategory(DefCat.TxPriorities,true).Any(x => x.DefNum==comboPriority.GetSelectedDefNum())) {
+				|| Definitions.GetByCategory(DefinitionCategory.TxPriorities).Any(x => x.Id==comboPriority.GetSelectedDefNum())) {
 				return;
 			}
 			//this only happens if the user selects a priority that was just hidden by someone else
@@ -2252,7 +2254,7 @@ namespace OpenDental {
 
 		private void listDx_SelectedValueChanged(object sender,EventArgs e) {
 			if(listDx.SelectedIndex==-1 //Just in case
-				|| Defs.GetDefsForCategory(DefCat.Diagnosis,true).Any(x => x.DefNum==listDx.GetSelected<Def>().DefNum))//Cached def was hidden by another user.
+				|| Definitions.GetDefsForCategory(DefinitionCategory.Diagnosis,true).Any(x => x.Id==listDx.GetSelected<Definition>().Id))//Cached def was hidden by another user.
 			{
 				return;
 			}
@@ -3603,8 +3605,8 @@ namespace OpenDental {
 			gridPtInfo.ListGridRows.Clear();
 			GridCell cell;
 			GridRow row;
-			List<Def> listMiscColorDefs=Defs.GetDefsForCategory(DefCat.MiscColors);
-			List<Def> listMiscColorShortDefs=Defs.GetDefsForCategory(DefCat.MiscColors,true);//Preserving old behavior.
+			List<Definition> listMiscColorDefs=Definitions.GetDefsForCategory(DefinitionCategory.MiscColors);
+			List<Definition> listMiscColorShortDefs=Definitions.GetDefsForCategory(DefinitionCategory.MiscColors,true);//Preserving old behavior.
 			List<DisplayField> listDisplayFields=DisplayFields.GetForCategory(DisplayFieldCategory.ChartPatientInformation);
 			DisplayField fieldCur;
 			for(int f=0;f<listDisplayFields.Count;f++) {
@@ -3645,7 +3647,7 @@ namespace OpenDental {
 						}
 						cell.Bold= true;
 						row.Cells.Add(cell);
-						row.BackColor=listMiscColorDefs[3].ItemColor;
+						row.BackColor=listMiscColorDefs[3].Color;
 						row.Tag="tabAllergies";
 						if(listAllergies.Count>0) {
 							row.Cells.Add("");
@@ -3671,7 +3673,7 @@ namespace OpenDental {
 							cell.ForeColor=Color.Red;
 							row.Cells.Add(cell);
 							row.Cells.Add(listAllergies[i].Reaction);
-							row.BackColor=listMiscColorDefs[3].ItemColor;
+							row.BackColor=listMiscColorDefs[3].Color;
 							row.Tag="tabAllergies";
 							if(i!=listAllergies.Count-1) {
 								gridPtInfo.ListGridRows.Add(row);
@@ -3691,7 +3693,7 @@ namespace OpenDental {
 					#endregion AskToArriveEarly
 					#region Billing Type
 					case "Billing Type":
-						row.Cells.Add(Defs.GetName(DefCat.BillingTypes,_patCur.BillingType));
+						row.Cells.Add(Definitions.GetName(DefinitionCategory.BillingTypes,_patCur.BillingType));
 						break;
 					#endregion Billing Type
 					#region Birthdate
@@ -3766,14 +3768,14 @@ namespace OpenDental {
 						cell.ForeColor=Color.Red;
 						cell.Bold= true;
 						row.Cells.Add(cell);
-						row.BackColor=listMiscColorDefs[3].ItemColor;
+						row.BackColor=listMiscColorDefs[3].Color;
 						row.Tag="tabMedical";
 						break;
 					#endregion Med Urgent
 					#region Medical Summary
 					case "Medical Summary":
 						row.Cells.Add(_patientNoteCur.Medical);
-						row.BackColor=listMiscColorDefs[3].ItemColor;
+						row.BackColor=listMiscColorDefs[3].Color;
 						row.Tag="tabMedical";
 						break;
 					#endregion Medical Summary
@@ -3799,7 +3801,7 @@ namespace OpenDental {
 						}
 						cell.Bold= true;
 						row.Cells.Add(cell);
-						row.BackColor=listMiscColorDefs[3].ItemColor;
+						row.BackColor=listMiscColorDefs[3].Color;
 						row.Tag="tabMedications";
 						if(listMeds.Count>0) {
 							row.Cells.Add("");
@@ -3832,7 +3834,7 @@ namespace OpenDental {
 								text+="("+noteMedGeneric+")";
 							}
 							row.Cells.Add(text);
-							row.BackColor=listMiscColorDefs[3].ItemColor;
+							row.BackColor=listMiscColorDefs[3].Color;
 							row.Tag="tabMedications";
 							if(i!=listMeds.Count-1) {
 								gridPtInfo.ListGridRows.Add(row);
@@ -3863,7 +3865,7 @@ namespace OpenDental {
 								row.Cells.Add(fieldCur.Description);
 							}
 							row.Cells.Add(PatRestrictions.GetPatRestrictDesc(listPatRestricts[i].PatRestrictType));
-							row.BackColor=listMiscColorShortDefs[10].ItemColor;//index 10 is Patient Restrictions (hard coded in convertdatabase4)
+							row.BackColor=listMiscColorShortDefs[10].Color;//index 10 is Patient Restrictions (hard coded in convertdatabase4)
 							if(i==listPatRestricts.Count-1) {//last row added outside of switch statement
 								break;
 							}
@@ -3913,7 +3915,7 @@ namespace OpenDental {
 							cell.ForeColor=Color.Red;
 							cell.Bold= true;
 							row.Cells.Add(cell);
-							row.BackColor=listMiscColorDefs[3].ItemColor;
+							row.BackColor=listMiscColorDefs[3].Color;
 							row.Tag="tabMedical";
 							gridPtInfo.ListGridRows.Add(row);
 						}
@@ -3953,7 +3955,7 @@ namespace OpenDental {
 						}
 						cell.Bold= true;
 						row.Cells.Add(cell);
-						row.BackColor=listMiscColorDefs[3].ItemColor;
+						row.BackColor=listMiscColorDefs[3].Color;
 						row.Tag="tabProblems";
 						if(listDiseases.Count>0) {
 							row.Cells.Add("");
@@ -3980,7 +3982,7 @@ namespace OpenDental {
 								row.Cells.Add(cell);
 								//row.Cells.Add(DiseaseList[i].PatNote);//no place to show a pat note
 							}
-							row.BackColor=listMiscColorDefs[3].ItemColor;
+							row.BackColor=listMiscColorDefs[3].Color;
 							row.Tag="tabProblems";
 							if(i!=listDiseases.Count-1) {
 								gridPtInfo.ListGridRows.Add(row);
@@ -4013,12 +4015,12 @@ namespace OpenDental {
 						if(listCustRefEntries.Count==0) {
 							row.Cells.Add("None");
 							row.Tag="References";
-							row.BackColor=listMiscColorShortDefs[8].ItemColor;
+							row.BackColor=listMiscColorShortDefs[8].Color;
 						}
 						else {
 							row.Cells.Add("");
 							row.Tag="References";
-							row.BackColor=listMiscColorShortDefs[8].ItemColor;
+							row.BackColor=listMiscColorShortDefs[8].Color;
 							gridPtInfo.ListGridRows.Add(row);
 						}
 						for(int i=0;i<listCustRefEntries.Count;i++) {
@@ -4026,7 +4028,7 @@ namespace OpenDental {
 							row.Cells.Add(listCustRefEntries[i].DateEntry.ToShortDateString());
 							row.Cells.Add(CustReferences.GetCustNameFL(listCustRefEntries[i].PatNumRef));
 							row.Tag=listCustRefEntries[i];
-							row.BackColor=listMiscColorShortDefs[8].ItemColor;
+							row.BackColor=listMiscColorShortDefs[8].Color;
 							if(i<listCustRefEntries.Count-1) {
 								gridPtInfo.ListGridRows.Add(row);
 							}
@@ -4113,13 +4115,13 @@ namespace OpenDental {
 					#region Service Notes
 					case "Service Notes":
 						row.Cells.Add(_patientNoteCur.Service);
-						row.BackColor=listMiscColorDefs[3].ItemColor;
+						row.BackColor=listMiscColorDefs[3].Color;
 						row.Tag="tabMedical";
 						break;
 					#endregion Service Notes
 					#region Specialty
 					case "Specialty":
-						row.Cells.Add(Patients.GetPatientSpecialtyDef(_patCur.PatNum)?.ItemName??"");
+						row.Cells.Add(Patients.GetPatientSpecialtyDef(_patCur.PatNum)?.Name??"");
 						row.Tag=null;
 						break;
 					#endregion Specialty
@@ -4148,7 +4150,7 @@ namespace OpenDental {
 						}
 						List<EhrMeasureEvent> listTobaccoStatuses=LoadData.ListTobaccoStatuses
 							.OrderByDescending(x => x.DateTEvent).Take(3).ToList();//only display the last three assessments at most
-						row=new GridRow() { BackColor=listMiscColorDefs[3].ItemColor,Tag="tabTobaccoUse" };
+						row=new GridRow() { BackColor=listMiscColorDefs[3].Color,Tag="tabTobaccoUse" };
 						row.Cells.Add(new GridCell(Text=fieldCur.Description==""?fieldCur.InternalName:fieldCur.Description) { Bold= true });
 						row.Cells.Add(listTobaccoStatuses.Count>0?"":"none");
 						if(listTobaccoStatuses.Count>0) {
@@ -4157,7 +4159,7 @@ namespace OpenDental {
 						Snomed snmCur;
 						for(int i=0;i<listTobaccoStatuses.Count;i++) {//show the last three tobacco use assessments at most
 							EhrMeasureEvent ehrCur=listTobaccoStatuses[i];
-							row=new GridRow() { BackColor=listMiscColorDefs[3].ItemColor,Tag="tabTobaccoUse" };
+							row=new GridRow() { BackColor=listMiscColorDefs[3].Color,Tag="tabTobaccoUse" };
 							snmCur=Snomeds.GetByCode(ehrCur.CodeValueResult);
 							row.Cells.Add(snmCur!=null?snmCur.Description:"");
 							row.Cells.Add(ehrCur.DateTEvent.ToShortDateString()+(ehrCur.MoreInfo==""?"":(" - "+ehrCur.MoreInfo)));
@@ -5440,7 +5442,7 @@ namespace OpenDental {
 			}
 			long imageCatNum=PIn.Long(ProgramProperties.GetPropVal(Programs.GetProgramNum(ProgramName.XVWeb),XVWeb.ProgramProps.ImageCategory));
 			if(tabControlImages.SelectedIndex>0 //any category except 'all'
-				&& imageCatNum!=Defs.GetDefsForCategory(DefCat.ImageCats,true)[(int)_arrayListVisImageCats[tabControlImages.SelectedIndex-1]].DefNum) 
+				&& imageCatNum!=Definitions.GetByCategory(DefinitionCategory.ImageCats)[(int)_arrayListVisImageCats[tabControlImages.SelectedIndex-1]].Id) 
 			{
 				return;//if the currently selected tab is not for XVWeb
 			}
@@ -5569,7 +5571,7 @@ namespace OpenDental {
 			string[] arrayTeeth;
 			Color cLight=Color.White;
 			Color cDark=Color.White;
-			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.ChartGraphicColors,true);
+			List<Definition> listDefs=Definitions.GetByCategory(DefinitionCategory.ChartGraphicColors);
 			for(int i=0;i<_listRowsProcForGraphical.Count;i++) {
 				if(_listRowsProcForGraphical[i]["HideGraphics"].ToString()=="1") {
 					continue;
@@ -5588,29 +5590,29 @@ namespace OpenDental {
 				if(procCode.GraphicColor.ToArgb()==Color.FromArgb(0).ToArgb()) {
 					switch((ProcStat)PIn.Long(_listRowsProcForGraphical[i]["ProcStatus"].ToString())) {
 						case ProcStat.C:
-							cDark=listDefs[1].ItemColor;
-							cLight=listDefs[6].ItemColor;
+							cDark=listDefs[1].Color;
+							cLight=listDefs[6].Color;
 							break;
 						case ProcStat.TP:
 						case ProcStat.TPi:// TPi color should be the same as TP color.
-							cDark=listDefs[0].ItemColor;
-							cLight=listDefs[5].ItemColor;
+							cDark=listDefs[0].Color;
+							cLight=listDefs[5].Color;
 							break;
 						case ProcStat.EC:
-							cDark=listDefs[2].ItemColor;
-							cLight=listDefs[7].ItemColor;
+							cDark=listDefs[2].Color;
+							cLight=listDefs[7].Color;
 							break;
 						case ProcStat.EO:
-							cDark=listDefs[3].ItemColor;
-							cLight=listDefs[8].ItemColor;
+							cDark=listDefs[3].Color;
+							cLight=listDefs[8].Color;
 							break;
 						case ProcStat.R:
-							cDark=listDefs[4].ItemColor;
-							cLight=listDefs[9].ItemColor;
+							cDark=listDefs[4].Color;
+							cLight=listDefs[9].Color;
 							break;
 						case ProcStat.Cn:
-							cDark=listDefs[16].ItemColor;
-							cLight=listDefs[17].ItemColor;
+							cDark=listDefs[16].Color;
+							cLight=listDefs[17].Color;
 							break;
 						case ProcStat.D:  //Can happen with invalidated locked procs.
 						default:
@@ -5825,14 +5827,14 @@ namespace OpenDental {
 				textDate.Text=DateTime.Today.ToShortDateString();
 			}
 			//}
-			List<Def> listChartGraphicColorDefs=Defs.GetDefsForCategory(DefCat.ChartGraphicColors);
-			List<Def> listProcButtonCatDefs=Defs.GetDefsForCategory(DefCat.ProcButtonCats,true);
-			List<Def> listDiagnosisDefs=Defs.GetDefsForCategory(DefCat.Diagnosis,true);
-			List<Def> listPrognosisDefs=Defs.GetDefsForCategory(DefCat.Prognosis,true);
-			List<Def> listTxPrioritiesDefs=Defs.GetDefsForCategory(DefCat.TxPriorities,true);
+			List<Definition> listChartGraphicColorDefs=Definitions.GetByCategory(DefinitionCategory.ChartGraphicColors, true);
+			List<Definition> listProcButtonCatDefs=Definitions.GetDefsForCategory(DefinitionCategory.ProcButtonCats,true);
+			List<Definition> listDiagnosisDefs=Definitions.GetDefsForCategory(DefinitionCategory.Diagnosis,true);
+			List<Definition> listPrognosisDefs=Definitions.GetDefsForCategory(DefinitionCategory.Prognosis,true);
+			List<Definition> listTxPrioritiesDefs=Definitions.GetDefsForCategory(DefinitionCategory.TxPriorities,true);
 			listDx.Items.Clear();
-			foreach(Def diagnosisDef in listDiagnosisDefs) {
-				listDx.Items.Add(new ODBoxItem<Def>(diagnosisDef.ItemName,diagnosisDef));
+			foreach(Definition diagnosisDef in listDiagnosisDefs) {
+				listDx.Items.Add(new ODBoxItem<Definition>(diagnosisDef.Name,diagnosisDef));
 			}
 			int selectedPrognosis=comboPrognosis.SelectedIndex;//retain prognosis selection
 			comboPrognosis.Items.Clear();
@@ -5859,8 +5861,8 @@ namespace OpenDental {
 			int selectedButtonCat=listButtonCats.SelectedIndex;
 			listButtonCats.Items.Clear();
 			listButtonCats.Items.Add("Quick Buttons");
-			foreach(Def procButtonCatDef in listProcButtonCatDefs) {
-				listButtonCats.Items.Add(new ODBoxItem<Def>(procButtonCatDef.ItemName,procButtonCatDef));
+			foreach(Definition procButtonCatDef in listProcButtonCatDefs) {
+				listButtonCats.Items.Add(new ODBoxItem<Definition>(procButtonCatDef.Name,procButtonCatDef));
 			}
 			if(selectedButtonCat<listButtonCats.Items.Count) {
 				listButtonCats.SelectedIndex=selectedButtonCat;
@@ -5876,28 +5878,28 @@ namespace OpenDental {
 			tabPage.Text="All";
 			tabControlImages.TabPages.Add(tabPage);
 			_arrayListVisImageCats=new ArrayList();
-			List<Def> listImageCatDefs=Defs.GetDefsForCategory(DefCat.ImageCats,true);
+			List<Definition> listImageCatDefs=Definitions.GetDefsForCategory(DefinitionCategory.ImageCats,true);
 			for(int i=0;i<listImageCatDefs.Count;i++) {
-				if(listImageCatDefs[i].ItemValue.Contains("X")) {//if tagged to show in Chart
+				if(listImageCatDefs[i].Value.Contains("X")) {//if tagged to show in Chart
 					_arrayListVisImageCats.Add(i);
 					tabPage=new TabPage();
-					tabPage.Text=listImageCatDefs[i].ItemName;
+					tabPage.Text=listImageCatDefs[i].Name;
 					tabControlImages.TabPages.Add(tabPage);
 				}
 			}
 			if(selectedImageTab<tabControlImages.TabCount) {
 				tabControlImages.SelectedIndex=selectedImageTab;
 			}
-			panelTPdark.BackColor=listChartGraphicColorDefs[0].ItemColor;
-			panelCdark.BackColor=listChartGraphicColorDefs[1].ItemColor;
-			panelECdark.BackColor=listChartGraphicColorDefs[2].ItemColor;
-			panelEOdark.BackColor=listChartGraphicColorDefs[3].ItemColor;
-			panelRdark.BackColor=listChartGraphicColorDefs[4].ItemColor;
-			panelTPlight.BackColor=listChartGraphicColorDefs[5].ItemColor;
-			panelClight.BackColor=listChartGraphicColorDefs[6].ItemColor;
-			panelEClight.BackColor=listChartGraphicColorDefs[7].ItemColor;
-			panelEOlight.BackColor=listChartGraphicColorDefs[8].ItemColor;
-			panelRlight.BackColor=listChartGraphicColorDefs[9].ItemColor;
+			panelTPdark.BackColor=listChartGraphicColorDefs[0].Color;
+			panelCdark.BackColor=listChartGraphicColorDefs[1].Color;
+			panelECdark.BackColor=listChartGraphicColorDefs[2].Color;
+			panelEOdark.BackColor=listChartGraphicColorDefs[3].Color;
+			panelRdark.BackColor=listChartGraphicColorDefs[4].Color;
+			panelTPlight.BackColor=listChartGraphicColorDefs[5].Color;
+			panelClight.BackColor=listChartGraphicColorDefs[6].Color;
+			panelEClight.BackColor=listChartGraphicColorDefs[7].Color;
+			panelEOlight.BackColor=listChartGraphicColorDefs[8].Color;
+			panelRlight.BackColor=listChartGraphicColorDefs[9].Color;
     }
 
 		///<summary>Gets run on ModuleSelected and each time a different images tab is selected. It first creates any missing thumbnails, then displays them. So it will be faster after the first time.</summary>
@@ -5914,13 +5916,13 @@ namespace OpenDental {
 			if(!panelImages.Visible) {
 				return;
 			}
-			List<Def> listImageCatDefs=Defs.GetDefsForCategory(DefCat.ImageCats,true);
+			List<Definition> listImageCatDefs=Definitions.GetByCategory(DefinitionCategory.ImageCats);
 			for(int i=0;i<_arrayDocuments.Length;i++) {
-				if(!_arrayListVisImageCats.Contains(listImageCatDefs.FindIndex(x => x.DefNum==_arrayDocuments[i].DocCategory))) {
+				if(!_arrayListVisImageCats.Contains(listImageCatDefs.FindIndex(x => x.Id==_arrayDocuments[i].DocCategory))) {
 					continue;//if category not visible, continue
 				}
 				if(tabControlImages.SelectedIndex>0) {//any category except 'all'
-					if(_arrayDocuments[i].DocCategory!=listImageCatDefs[(int)_arrayListVisImageCats[tabControlImages.SelectedIndex-1]].DefNum)
+					if(_arrayDocuments[i].DocCategory!=listImageCatDefs[(int)_arrayListVisImageCats[tabControlImages.SelectedIndex-1]].Id)
 					{
 						continue;//if not in category, continue
 					}
@@ -5940,9 +5942,9 @@ namespace OpenDental {
 		private void FillListPriorities() {
 			listPriorities.Items.Clear();
 			listPriorities.Items.Add("No Priority");
-			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.TxPriorities,true);
-			foreach(Def txPriorityDef in listDefs) {
-				listPriorities.Items.Add(new ODBoxItem<Def>(txPriorityDef.ItemName,txPriorityDef));
+			List<Definition> listDefs=Definitions.GetByCategory(DefinitionCategory.TxPriorities);
+			foreach(Definition txPriorityDef in listDefs) {
+				listPriorities.Items.Add(new ODBoxItem<Definition>(txPriorityDef.Name,txPriorityDef));
 			}
 		}
 
@@ -5988,14 +5990,14 @@ namespace OpenDental {
 			if(doRefreshData) {
 				ProcButtons.RefreshCache();
 			}
-			Def selectedButtonCatDef=listButtonCats.GetSelected<Def>();//Will not be null if 'Quick Buttons' is selected due to above if statement
-			List<long> listProcButtonDefNums=Defs.GetDefsForCategory(DefCat.ProcButtonCats,true).Select(x => x.DefNum).ToList();
-			if(!listProcButtonDefNums.Contains(selectedButtonCatDef.DefNum)) {
+			Definition selectedButtonCatDef=listButtonCats.GetSelected<Definition>();//Will not be null if 'Quick Buttons' is selected due to above if statement
+			List<long> listProcButtonDefNums=Definitions.GetByCategory(DefinitionCategory.ProcButtonCats).Select(x => x.Id).ToList();
+			if(!listProcButtonDefNums.Contains(selectedButtonCatDef.Id)) {
 				MessageBox.Show("The Procedue Button Category has been hidden.");
 				ModuleSelected(_patCur.PatNum);
 				return;
 			}
-			_arrayProcButtons=ProcButtons.GetForCat(selectedButtonCatDef.DefNum);
+			_arrayProcButtons=ProcButtons.GetForCat(selectedButtonCatDef.Id);
 			ListViewItem item;
 			for(int i=0;i<_arrayProcButtons.Length;i++) {
 				if(_arrayProcButtons[i].ButtonImage!="") {
@@ -6021,11 +6023,11 @@ namespace OpenDental {
 			Cursor=Cursors.WaitCursor;
 			_toothChartRelay.BeginUpdate();
 
-			List<Def> listChartGraphicColorDefs=Defs.GetDefsForCategory(DefCat.ChartGraphicColors);
-			_toothChartRelay.ColorBackgroundMain=listChartGraphicColorDefs[10].ItemColor;
-			_toothChartRelay.ColorText=listChartGraphicColorDefs[11].ItemColor;
-			_toothChartRelay.ColorTextHighlightFore=listChartGraphicColorDefs[12].ItemColor;
-			_toothChartRelay.ColorTextHighlightBack=listChartGraphicColorDefs[13].ItemColor;
+			List<Definition> listChartGraphicColorDefs=Definitions.GetByCategory(DefinitionCategory.ChartGraphicColors, true);
+			_toothChartRelay.ColorBackgroundMain=listChartGraphicColorDefs[10].Color;
+			_toothChartRelay.ColorText=listChartGraphicColorDefs[11].Color;
+			_toothChartRelay.ColorTextHighlightFore=listChartGraphicColorDefs[12].Color;
+			_toothChartRelay.ColorTextHighlightBack=listChartGraphicColorDefs[13].Color;
 			_toothChartRelay.SetToothNumberingNomenclature((ToothNumberingNomenclature)PrefC.GetInt(PrefName.UseInternationalToothNumbers));
 			//remember which teeth were selected
 			List<string> selectedTeeth=new List<string>(_toothChartRelay.SelectedTeeth);
@@ -6227,8 +6229,8 @@ namespace OpenDental {
 				long treatPlanNumCur=_listTreatPlans[gridTreatPlans.SelectedIndices[i]].TreatPlanNum;
 				List<TreatPlanAttach> listTreatPlanAttaches=(List<TreatPlanAttach>)gridTreatPlans.ListGridRows[gridTreatPlans.SelectedIndices[i]].Tag;
 				List<Procedure> listProcsForTP=Procedures.GetManyProc(listTreatPlanAttaches.Select(x => x.ProcNum).ToList(),false)
-					.OrderBy(x => Defs.GetOrder(DefCat.TxPriorities,listTreatPlanAttaches.FirstOrDefault(y => y.ProcNum==x.ProcNum).Priority)<0)
-					.ThenBy(x => Defs.GetOrder(DefCat.TxPriorities,listTreatPlanAttaches.FirstOrDefault(y => y.ProcNum==x.ProcNum).Priority))
+					.OrderBy(x => Definitions.GetOrder(DefinitionCategory.TxPriorities,listTreatPlanAttaches.FirstOrDefault(y => y.ProcNum==x.ProcNum).Priority)<0)
+					.ThenBy(x => Definitions.GetOrder(DefinitionCategory.TxPriorities,listTreatPlanAttaches.FirstOrDefault(y => y.ProcNum==x.ProcNum).Priority))
 					.ThenBy(x => Tooth.ToInt(x.ToothNum))
 					.ThenBy(x => x.ProcDate).ToList();
 				List<ProcTP> listProcTPsCur=new List<ProcTP>();
@@ -6236,7 +6238,7 @@ namespace OpenDental {
 				for(int j=0;j<listProcsForTP.Count;j++) {
 					row=new TpRow();
 					//Fill TpRow object with information.
-					row.Priority=Defs.GetName(DefCat.TxPriorities,listTreatPlanAttaches.FirstOrDefault(x => x.ProcNum==listProcsForTP[j].ProcNum).Priority);
+					row.Priority=Definitions.GetName(DefinitionCategory.TxPriorities,listTreatPlanAttaches.FirstOrDefault(x => x.ProcNum==listProcsForTP[j].ProcNum).Priority);
 					row.Tth=Tooth.ToInternat(listProcsForTP[j].ToothNum);
 					if(ProcedureCodes.GetProcCode(listProcsForTP[j].CodeNum).TreatArea==TreatmentArea.Surf) {
 						row.Surf=Tooth.SurfTidyFromDbToDisplay(listProcsForTP[j].Surf,listProcsForTP[j].ToothNum);
@@ -6253,7 +6255,7 @@ namespace OpenDental {
 						descript+=" #"+Tooth.FormatRangeForDisplay(listProcsForTP[j].ToothRange);
 					}
 					row.Description=descript;
-					row.ColorText=Defs.GetColor(DefCat.TxPriorities,listTreatPlanAttaches.FirstOrDefault(y => y.ProcNum==listProcsForTP[j].ProcNum).Priority);
+					row.ColorText=Definitions.GetColor(DefinitionCategory.TxPriorities,listTreatPlanAttaches.FirstOrDefault(y => y.ProcNum==listProcsForTP[j].ProcNum).Priority);
 					if(row.ColorText==System.Drawing.Color.White) {
 						row.ColorText=System.Drawing.Color.Black;
 					}
@@ -6469,8 +6471,8 @@ namespace OpenDental {
 				listIdsToExclude.AddRange(_listApteryxThumbnails.Select(x => x.Image.Id.ToString()));
 			}
 			bool doDisplayXVWebInChart=XVWeb.IsDisplayingImagesInProgram
-				&& Defs.GetDefsForCategory(DefCat.ImageCats,true).Any(x => x.ItemValue.Contains("X") //if tagged to show in Chart
-				&& x.DefNum==PIn.Long(ProgramProperties.GetPropVal(Programs.GetProgramNum(ProgramName.XVWeb),XVWeb.ProgramProps.ImageCategory)));
+				&& Definitions.GetDefsForCategory(DefinitionCategory.ImageCats,true).Any(x => x.Value.Contains("X") //if tagged to show in Chart
+				&& x.Id==PIn.Long(ProgramProperties.GetPropVal(Programs.GetProgramNum(ProgramName.XVWeb),XVWeb.ProgramProps.ImageCategory)));
 			if(!doDisplayXVWebInChart) {
 				return;
 			}
@@ -7141,9 +7143,9 @@ namespace OpenDental {
 			if(!MsgBox.Show(MsgBoxButtons.YesNo,"Create Planned Appointment with highest priority planned treatment selected?")) {
 				return;
 			}
-			List<Def> listTreatPlanPriorities=Defs.GetDefsForCategory(DefCat.TxPriorities,true);
+			List<Definition> listTreatPlanPriorities=Definitions.GetDefsForCategory(DefinitionCategory.TxPriorities,true);
 			List<Procedure> listProcsHighestPriority=listEligibleProcs
-				.GroupBy(x => listTreatPlanPriorities.Find(y => y.DefNum==x.Priority)?.ItemOrder??int.MaxValue,x => x)
+				.GroupBy(x => listTreatPlanPriorities.Find(y => y.Id==x.Priority)?.SortOrder??int.MaxValue,x => x)
 				.OrderBy(x => x.Key).First()?.ToList();
 			int itemOrder=LoadData.TablePlannedAppts.Rows.Count+1;
 			List<long> listProcNums=listProcsHighestPriority.Select(x => x.ProcNum).ToList();
@@ -8566,7 +8568,7 @@ namespace OpenDental {
 			}
 			ProcCur.ProcStatus=_procStatusNew;
 			if(listDx.SelectedIndex!=-1) {
-				ProcCur.Dx=listDx.GetSelected<Def>().DefNum;
+				ProcCur.Dx=listDx.GetSelected<Definition>().Id;
 			}
 			if(comboPrognosis.SelectedIndex==0) {
 				ProcCur.Prognosis=0;
@@ -8790,7 +8792,7 @@ namespace OpenDental {
 				}
 				else { //or if it's a 4 digit code that's hidden, also add the D
 					ProcedureCode procCode=ProcedureCodes.GetProcCode(textProcCode.Text);
-					if(Defs.GetHidden(DefCat.ProcCodeCats,procCode.ProcCat)) {
+					if(Definitions.GetHidden(DefinitionCategory.ProcCodeCats,procCode.ProcCat)) {
 						textProcCode.Text="D"+textProcCode.Text;
 					}
 				}
@@ -8801,7 +8803,7 @@ namespace OpenDental {
 				textProcCode.SelectionStart=textProcCode.Text.Length;
 				return;
 			}
-			if(Defs.GetHidden(DefCat.ProcCodeCats,ProcedureCodes.GetProcCode(textProcCode.Text).ProcCat)) {//if the category is hidden
+			if(Definitions.GetHidden(DefinitionCategory.ProcCodeCats,ProcedureCodes.GetProcCode(textProcCode.Text).ProcCat)) {//if the category is hidden
 				MessageBox.Show("Code is in a hidden category and cannot be added from here.");
 				textProcCode.SelectionStart=textProcCode.Text.Length;
 				return;

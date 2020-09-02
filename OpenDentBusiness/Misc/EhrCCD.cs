@@ -13,6 +13,8 @@ using System.Xml;
 using System.Xml.XPath;
 using System.Text.RegularExpressions;
 using OpenDentBusiness.FileIO;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	public class EhrCCD {
@@ -401,32 +403,16 @@ Body
 		}
 
 		///<summary>Helper for GenerateCCD() and GenerateCcdSectionEncounters(). Exactly the same taxonomy codes used for X12 in eclaims.</summary>
-		public static string GetTaxonomy(Provider provider) {
-			if(provider.TaxonomyCodeOverride!="") {
+		public static string GetTaxonomy(Provider provider)
+		{
+			if (!string.IsNullOrEmpty(provider.TaxonomyCodeOverride))
+			{
 				return provider.TaxonomyCodeOverride;
 			}
-			string spec="1223G0001X";//general
-			Def provSpec=Defs.GetDef(DefCat.ProviderSpecialties,provider.Specialty);
-			if(provSpec==null) {
-				return spec;
-			}
-			switch(provSpec.ItemName) {
-				case "General": spec="1223G0001X"; break;
-				case "Hygienist": spec="124Q00000X"; break;
-				case "PublicHealth": spec="1223D0001X"; break;
-				case "Endodontics": spec="1223E0200X"; break;
-				case "Pathology": spec="1223P0106X"; break;
-				case "Radiology": spec="1223X0008X"; break;
-				case "Surgery": spec="1223S0112X"; break;
-				case "Ortho": spec="1223X0400X"; break;
-				case "Pediatric": spec="1223P0221X"; break;
-				case "Perio": spec="1223P0300X"; break;
-				case "Prosth": spec="1223P0700X"; break;
-				case "Denturist": spec="122400000X"; break;
-				case "Assistant": spec="126800000X"; break;
-				case "LabTech": spec="126900000X"; break;
-			}
-			return spec;
+
+			Definition specialty = Definitions.GetDef(DefinitionCategory.ProviderSpecialties, provider.Specialty);
+
+			return specialty?.Taxonomy ?? "1223G0001X";
 		}
 
 		///<summary>Helper for GenerateCCD().</summary>

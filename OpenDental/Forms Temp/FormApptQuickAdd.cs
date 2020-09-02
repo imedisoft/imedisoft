@@ -7,13 +7,15 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormApptQuickAdd:ODForm {
 		///<summary>If form closes with OK, this contains selected code nums.  All codeNums will already have been checked for validity.</summary>
 		public List<long> SelectedCodeNums;
 		public Point ParentFormLocation;
-		private List<Def> _listApptProcsQuickAddDefs;
+		private List<Definition> _listApptProcsQuickAddDefs;
 
 		///<summary>Security handled in calling form.</summary>
 		public FormApptQuickAdd() {
@@ -22,9 +24,9 @@ namespace OpenDental {
 		}
 
 		private void FormApptQuickAdd_Load(object sender,EventArgs e) {
-			_listApptProcsQuickAddDefs=Defs.GetDefsForCategory(DefCat.ApptProcsQuickAdd,true);
+			_listApptProcsQuickAddDefs=Definitions.GetByCategory(DefinitionCategory.ApptProcsQuickAdd);
 			for(int i=0;i<_listApptProcsQuickAddDefs.Count;i++) {
-				listQuickAdd.Items.Add(_listApptProcsQuickAddDefs[i].ItemName);
+				listQuickAdd.Items.Add(_listApptProcsQuickAddDefs[i].Name);
 			}
 			this.Location=new Point(this.ParentFormLocation.X+75,this.ParentFormLocation.Y+25);
 		}
@@ -38,7 +40,7 @@ namespace OpenDental {
 				return;
 			}
 			SelectedCodeNums=new List<long>();
-			string[] procCodeStrArray=_listApptProcsQuickAddDefs[listQuickAdd.SelectedIndices[0]].ItemValue.Split(',');
+			string[] procCodeStrArray=_listApptProcsQuickAddDefs[listQuickAdd.SelectedIndices[0]].Value.Split(',');
 			long codeNum;
 			for(int i=0;i<procCodeStrArray.Length;i++) {
 				codeNum=ProcedureCodes.GetCodeNum(procCodeStrArray[i]);
@@ -60,7 +62,7 @@ namespace OpenDental {
 			string[] procCodeStrArray;
 			long codeNum;
 			for(int s=0;s<listQuickAdd.SelectedIndices.Count;s++) {
-				procCodeStrArray=_listApptProcsQuickAddDefs[listQuickAdd.SelectedIndices[s]].ItemValue.Split(',');
+				procCodeStrArray=_listApptProcsQuickAddDefs[listQuickAdd.SelectedIndices[s]].Value.Split(',');
 				for(int i=0;i<procCodeStrArray.Length;i++) {
 					codeNum=ProcedureCodes.GetCodeNum(procCodeStrArray[i]);
 					if(codeNum==0) {

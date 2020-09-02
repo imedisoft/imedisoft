@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
@@ -150,7 +151,7 @@ namespace OpenDentBusiness
 						ORDER BY carrier.CarrierName";
 				}
 			}
-			return ReportsComplex.RunFuncOnReportServer(() => ReportsComplex.GetTable(queryText));
+			return Database.ExecuteDataTable(queryText);
 		}
 	}
 }

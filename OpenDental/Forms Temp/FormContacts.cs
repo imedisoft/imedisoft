@@ -6,6 +6,8 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using System.Collections.Generic;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -22,7 +24,7 @@ namespace OpenDental{
 		private System.ComponentModel.Container components = null;
 		private UI.ODGrid gridMain;
 		private Contact[] ContactList;
-		private List<Def> _listContactCategoryDefs;
+		private List<Definition> _listContactCategoryDefs;
 
 		///<summary></summary>
 		public FormContacts()
@@ -140,9 +142,9 @@ namespace OpenDental{
 		#endregion
 
 		private void FormContacts_Load(object sender, System.EventArgs e) {
-			_listContactCategoryDefs=Defs.GetDefsForCategory(DefCat.ContactCategories,true);
+			_listContactCategoryDefs=Definitions.GetByCategory(DefinitionCategory.ContactCategories);
 			for(int i=0;i<_listContactCategoryDefs.Count;i++){
-				listCategory.Items.Add(_listContactCategoryDefs[i].ItemName);
+				listCategory.Items.Add(_listContactCategoryDefs[i].Name);
 			}
 			if(listCategory.Items.Count>0) {
 				listCategory.SelectedIndex=0;
@@ -154,7 +156,7 @@ namespace OpenDental{
 		}
 
 		private void FillGrid(){
-			ContactList=Contacts.Refresh(_listContactCategoryDefs[listCategory.SelectedIndex].DefNum);
+			ContactList=Contacts.Refresh(_listContactCategoryDefs[listCategory.SelectedIndex].Id);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			gridMain.ListGridColumns.Add(new GridColumn("Last Name",100));
@@ -187,7 +189,7 @@ namespace OpenDental{
 
 		private void butAdd_Click(object sender, System.EventArgs e) {
 			Contact ContactCur=new Contact();
-			ContactCur.Category=_listContactCategoryDefs[listCategory.SelectedIndex].DefNum;
+			ContactCur.Category=_listContactCategoryDefs[listCategory.SelectedIndex].Id;
 			FormContactEdit FormCE=new FormContactEdit();
 			FormCE.ContactCur=ContactCur;
 			FormCE.IsNew=true;

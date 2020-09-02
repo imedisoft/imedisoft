@@ -1,4 +1,6 @@
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 using OpenDentBusiness.FileIO;
 using System;
@@ -761,9 +763,9 @@ namespace OpenDentBusiness
 				message += " with description " + descriptDoc;
 			}
 
-			var documentCategory = Defs.GetDef(DefCat.ImageCats, document.DocCategory);
+			var documentCategory = Definitions.GetDef(DefinitionCategory.ImageCats, document.DocCategory);
 
-			message += " with category " + documentCategory.ItemName;
+			message += " with category " + documentCategory.Name;
 
 			SecurityLogs.MakeLogEntry(perm, document.PatNum, message, document.DocNum, secDatePrevious);
 		}

@@ -14,6 +14,7 @@ redistributed.
 ===============================================================================================================*/
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using Imedisoft.Forms;
 using Imedisoft.UI;
 using Microsoft.Win32;
@@ -4476,7 +4477,7 @@ namespace OpenDental
 			{
 				return;
 			}
-			FormDefinitions FormD = new FormDefinitions(DefCat.AccountColors);//just the first cat.
+			FormDefinitions FormD = new FormDefinitions();//just the first cat.
 			FormD.ShowDialog();
 			RefreshCurrentModule(true);
 			SecurityLogs.MakeLogEntry(Permissions.Setup, 0, "Definitions");

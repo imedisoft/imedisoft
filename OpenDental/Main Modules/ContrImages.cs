@@ -29,6 +29,8 @@ using System.Linq;
 using OpenDental.Bridges;
 using OpenDental.Thinfinity;
 using OpenDentBusiness.IO;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 #endregion using
 
 namespace OpenDental {
@@ -215,10 +217,10 @@ namespace OpenDental {
 			NodeIdTag nodeIdTagOver=(NodeIdTag)treeNodeOver.Tag;
 			long defNumNodeOverCategory=0;
 			if(nodeIdTagOver.NodeType==EnumNodeType.Category) {
-				defNumNodeOverCategory=Defs.GetDefsForCategory(DefCat.ImageCats,true)[treeNodeOver.Index].DefNum;
+				defNumNodeOverCategory=Definitions.GetByCategory(DefinitionCategory.ImageCats)[treeNodeOver.Index].Id;
 			}
 			else {
-				defNumNodeOverCategory=Defs.GetDefsForCategory(DefCat.ImageCats,true)[treeNodeOver.Parent.Index].DefNum;
+				defNumNodeOverCategory=Definitions.GetByCategory(DefinitionCategory.ImageCats)[treeNodeOver.Parent.Index].Id;
 			}
 			Document docSave=new Document();
 			NodeIdTag nodeIdTag=new NodeIdTag();
@@ -396,28 +398,28 @@ namespace OpenDental {
 			}
 			NodeIdTag nodeIdTagOver=(NodeIdTag)treeNodeOver.Tag;
 			long nodeOverCategoryDefNum=0;
-			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.ImageCats,true);
+			List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.ImageCats,true);
 			if(nodeIdTagOver.NodeType==EnumNodeType.Category) {
-				nodeOverCategoryDefNum=listDefs[treeNodeOver.Index].DefNum;
+				nodeOverCategoryDefNum=listDefs[treeNodeOver.Index].Id;
 			}
 			else {
-				nodeOverCategoryDefNum=listDefs[treeNodeOver.Parent.Index].DefNum;
+				nodeOverCategoryDefNum=listDefs[treeNodeOver.Parent.Index].Id;
 			}
 			TreeNode nodeOriginal=GetTreeNode(_nodeIdTagDown);
 			long nodeOriginalCategoryDefNum=0;
 			if(_nodeIdTagDown.NodeType==EnumNodeType.Category) {
-				nodeOriginalCategoryDefNum=listDefs[nodeOriginal.Index].DefNum;
+				nodeOriginalCategoryDefNum=listDefs[nodeOriginal.Index].Id;
 			}
 			else {
-				nodeOriginalCategoryDefNum=listDefs[nodeOriginal.Parent.Index].DefNum;
+				nodeOriginalCategoryDefNum=listDefs[nodeOriginal.Parent.Index].Id;
 			}
 			if(nodeOverCategoryDefNum==nodeOriginalCategoryDefNum) {
 				return;//category hasn't changed
 			}
 			if(_nodeIdTagDown.NodeType==EnumNodeType.Mount) {
 				Mount mount=Mounts.GetByNum(_nodeIdTagDown.PriKey);
-				string mountSourceCat=Defs.GetDef(DefCat.ImageCats,mount.DocCategory).ItemName;
-				string mountDestCat=Defs.GetDef(DefCat.ImageCats,nodeOverCategoryDefNum).ItemName;
+				string mountSourceCat=Definitions.GetDef(DefinitionCategory.ImageCats,mount.DocCategory).Name;
+				string mountDestCat=Definitions.GetDef(DefinitionCategory.ImageCats,nodeOverCategoryDefNum).Name;
 				mount.DocCategory=nodeOverCategoryDefNum;
 				SecurityLogs.MakeLogEntry(Permissions.ImageEdit,mount.PatNum,"Mount moved from"+" "+mountSourceCat+" "
 					+"to"+" "+mountDestCat);
@@ -425,8 +427,8 @@ namespace OpenDental {
 			}
 			else if(_nodeIdTagDown.NodeType==EnumNodeType.Doc) {
 				Document doc=Documents.GetByNum(_nodeIdTagDown.PriKey);
-				string docSourceCat=Defs.GetDef(DefCat.ImageCats,doc.DocCategory).ItemName;
-				string docDestCat=Defs.GetDef(DefCat.ImageCats,nodeOverCategoryDefNum).ItemName;
+				string docSourceCat=Definitions.GetDef(DefinitionCategory.ImageCats,doc.DocCategory).Name;
+				string docDestCat=Definitions.GetDef(DefinitionCategory.ImageCats,nodeOverCategoryDefNum).Name;
 				doc.DocCategory=nodeOverCategoryDefNum;
 				string logText="Document moved"+": "+doc.FileName;
 				if(doc.Description!="") {
@@ -1076,12 +1078,12 @@ namespace OpenDental {
 			if(_patCur==null) {
 				return;
 			}
-			List<Def> listDefsImageCats=Defs.GetDefsForCategory(DefCat.ImageCats,true);
+			List<Definition> listDefsImageCats=Definitions.GetDefsForCategory(DefinitionCategory.ImageCats,true);
 			//Add all predefined folder names to the tree.
 			for(int i=0;i<listDefsImageCats.Count;i++) {
-				treeMain.Nodes.Add(new TreeNode(listDefsImageCats[i].ItemName));
-				treeMain.Nodes[i].Tag=MakeIdDef(listDefsImageCats[i].DefNum);
-				if(listDefsImageCats[i].ItemValue.Contains("L")) { //Patient Portal Folder
+				treeMain.Nodes.Add(new TreeNode(listDefsImageCats[i].Name));
+				treeMain.Nodes[i].Tag=MakeIdDef(listDefsImageCats[i].Id);
+				if(listDefsImageCats[i].Value.Contains("L")) { //Patient Portal Folder
 					treeMain.Nodes[i].SelectedImageIndex=7;
 					treeMain.Nodes[i].ImageIndex=7;
 				}
@@ -1775,7 +1777,7 @@ namespace OpenDental {
 			if(nodeIdTag.NodeType==EnumNodeType.ApteryxImage) {
 				string imageCat=ProgramProperties.GetPropVal(Programs.GetProgramNum(ProgramName.XVWeb),XVWeb.ProgramProps.ImageCategory);
 				//save copy to db for temp storage
-				apteryxDoc=ImageStore.Import(_bitmapShowing,(Defs.GetDef(DefCat.ImageCats,PIn.Long(imageCat)).DefNum),ImageType.Photo,_patCur); 
+				apteryxDoc=ImageStore.Import(_bitmapShowing,(Definitions.GetDef(DefinitionCategory.ImageCats,PIn.Long(imageCat)).Id),ImageType.Photo,_patCur); 
 			}
 			if(nodeIdTag.NodeType==EnumNodeType.Category || nodeIdTag.NodeType==EnumNodeType.Mount || nodeIdTag.NodeType==EnumNodeType.None) {
 				MessageBox.Show("Not allowed.");
@@ -2915,7 +2917,7 @@ namespace OpenDental {
 				return ((NodeIdTag)treeNode.Tag).PriKey;
 			}
 			else { 
-				return Defs.GetByExactName(DefCat.ImageCats,GetCurrentFolderName(treeMain.SelectedNode));
+				return Definitions.GetByExactName(DefinitionCategory.ImageCats,GetCurrentFolderName(treeMain.SelectedNode));
 			}
 		}
 
@@ -3069,12 +3071,12 @@ namespace OpenDental {
 			{
 				return;
 			}
-			Def defImageCatCur = Defs.GetDefsForCategory(DefCat.ImageCats, true).FirstOrDefault(x => x.DefNum == defNum);
+			Definition defImageCatCur = Definitions.GetDefsForCategory(DefinitionCategory.ImageCats, true).FirstOrDefault(x => x.Id == defNum);
 			if (defImageCatCur == null)
 			{
 				return;//Should never happen, but if it does, there was something wrong with the treeDocument list, and thus nothing should be changed.
 			}
-			string defaultValue = defImageCatCur.ItemValue;//Stores the default ItemValue of the definition from the catList.
+			string defaultValue = defImageCatCur.Value;//Stores the default ItemValue of the definition from the catList.
 			string curValue = defaultValue;//Stores the current edited ImageCats to compare to the default.
 			if (isExpand && !curValue.Contains("E"))
 			{//Since we are expanding we would like to see if the expand flag is present.
@@ -3085,7 +3087,7 @@ namespace OpenDental {
 				curValue = curValue.Replace("E", "");//If it is, remove expanded flag.
 			}
 
-			UserPreference.Set(UserPreferenceName.Definition, curValue, defImageCatCur.DefNum);
+			UserPreference.Set(UserPreferenceName.Definition, curValue, defImageCatCur.Id);
 		}
 
 		///<summary>Invalidates some or all of the image settings.  This will cause those settings to be recalculated, either immediately, or when the current ApplySettings thread is finished.  If supplied settings is ApplySettings.NONE, then that part will be skipped.</summary>
@@ -3286,7 +3288,7 @@ namespace OpenDental {
 			if(_listApteryxImageDownload==null || string.IsNullOrEmpty(imageCat)) {
 				return;
 			}
-			TreeNode treeNodeApteryxFolder=treeMain.Nodes[Defs.GetOrder(DefCat.ImageCats,Defs.GetDef(DefCat.ImageCats,PIn.Long(imageCat)).DefNum)];
+			TreeNode treeNodeApteryxFolder=treeMain.Nodes[Definitions.GetOrder(DefinitionCategory.ImageCats,Definitions.GetDef(DefinitionCategory.ImageCats,PIn.Long(imageCat)).Id)];
 			List<TreeNode> listTreeNodesApteryx=new List<TreeNode>();
 			foreach(TreeNode treeNode in treeNodeApteryxFolder.Nodes) {
 				NodeIdTag nodeIdTag=((NodeIdTag)treeNode.Tag);

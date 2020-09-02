@@ -16,7 +16,7 @@ namespace OpenDentBusiness
 		[PrimaryKey]
 		public long Id;
 
-		[ForeignKey(typeof(Def), nameof(Def.DefNum))]
+		[ForeignKey(typeof(Definition), nameof(Definition.Id))]
 		public long PayType;
 
 		/// <summary>

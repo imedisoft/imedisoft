@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using OpenDental.UI;
 using OpenDentBusiness;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary></summary>
@@ -131,7 +133,7 @@ namespace OpenDental{
 			for(int i=0;i<Docs.Length;i++){
 				row=new GridRow();
 				row.Cells.Add(Docs[i].DateCreated.ToString());
-				row.Cells.Add(Defs.GetName(DefCat.ImageCats,Docs[i].DocCategory));
+				row.Cells.Add(Definitions.GetName(DefinitionCategory.ImageCats,Docs[i].DocCategory));
 			  row.Cells.Add(Docs[i].Description);
 				gridMain.ListGridRows.Add(row);
 			}

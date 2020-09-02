@@ -5,6 +5,8 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.ReportingComplex;
 using OpenDentBusiness;
 
@@ -49,7 +51,7 @@ namespace OpenDental{
 		private GroupBox groupExcludePats;
 		private CheckBox checkAgePatPayPlanPayments;
 		private Label labelFutureTrans;
-		private List<Def> _listBillingTypeDefs;
+		private List<Definition> _listBillingTypeDefs;
 
 		///<summary></summary>
 		public FormRpAging(){
@@ -544,9 +546,9 @@ namespace OpenDental{
 			else{
 				textDate.Text=DateTime.Today.ToShortDateString();
 			}
-			_listBillingTypeDefs=Defs.GetDefsForCategory(DefCat.BillingTypes,true);
+			_listBillingTypeDefs=Definitions.GetByCategory(DefinitionCategory.BillingTypes);
 			for(int i=0;i<_listBillingTypeDefs.Count;i++){
-				listBillType.Items.Add(_listBillingTypeDefs[i].ItemName);
+				listBillType.Items.Add(_listBillingTypeDefs[i].Name);
 			}
 			if(listBillType.Items.Count>0){
 				listBillType.SelectedIndex=0;
@@ -685,7 +687,7 @@ namespace OpenDental{
 			rpo.DoAgePatPayPlanPayments=checkAgePatPayPlanPayments.Checked;
 			rpo.IsInsPayWoCombined=false;
 			if(!checkBillTypesAll.Checked) {
-				rpo.ListBillTypes=listBillType.SelectedIndices.OfType<int>().Select(x => _listBillingTypeDefs[x].DefNum).ToList();
+				rpo.ListBillTypes=listBillType.SelectedIndices.OfType<int>().Select(x => _listBillingTypeDefs[x].Id).ToList();
 			}
 			if(!checkProvAll.Checked) {
 				rpo.ListProvNums=listProv.SelectedIndices.OfType<int>().Select(x => _listProviders[x].ProvNum).ToList();
@@ -750,7 +752,7 @@ namespace OpenDental{
 				report.AddSubTitle("AllBillingTypes","All Billing Types");
 			}
 			else{
-				report.AddSubTitle("",string.Join(", ",listBillType.SelectedIndices.OfType<int>().Select(x => _listBillingTypeDefs[x].ItemName)));
+				report.AddSubTitle("",string.Join(", ",listBillType.SelectedIndices.OfType<int>().Select(x => _listBillingTypeDefs[x].Name)));
 			}
 			if(checkProvAll.Checked) {
 				report.AddSubTitle("Providers","All Providers");

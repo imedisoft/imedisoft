@@ -18,6 +18,8 @@ using OpenDental.Thinfinity;
 using CodeBase;
 using DataConnectionBase;
 using Imedisoft.X12.Codes;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	public partial class FormQuery : ODForm {
@@ -618,23 +620,23 @@ namespace OpenDental{
 						//definitions:
 						case "adjtype":
 							tableOut.Rows[i][j]
-								=Defs.GetName(DefCat.AdjTypes,PIn.Long(tableOut.Rows[i][j].ToString()));
+								=Definitions.GetName(DefinitionCategory.AdjTypes,PIn.Long(tableOut.Rows[i][j].ToString()));
 							break;
 						case "confirmed":
 							tableOut.Rows[i][j]
-								=Defs.GetValue(DefCat.ApptConfirmed,PIn.Long(tableOut.Rows[i][j].ToString()));
+								=Definitions.GetValue(DefinitionCategory.ApptConfirmed,PIn.Long(tableOut.Rows[i][j].ToString()));
 							break;
 						case "dx":
 							tableOut.Rows[i][j]
-								=Defs.GetName(DefCat.Diagnosis,PIn.Long(tableOut.Rows[i][j].ToString()));
+								=Definitions.GetName(DefinitionCategory.Diagnosis,PIn.Long(tableOut.Rows[i][j].ToString()));
 							break;
 						case "discounttype":
 							tableOut.Rows[i][j]
-								=Defs.GetName(DefCat.DiscountTypes,PIn.Long(tableOut.Rows[i][j].ToString()));
+								=Definitions.GetName(DefinitionCategory.DiscountTypes,PIn.Long(tableOut.Rows[i][j].ToString()));
 							break;
 						case "doccategory":
 							tableOut.Rows[i][j]
-								=Defs.GetName(DefCat.ImageCats,PIn.Long(tableOut.Rows[i][j].ToString()));
+								=Definitions.GetName(DefinitionCategory.ImageCats,PIn.Long(tableOut.Rows[i][j].ToString()));
 							break;
 						case "op":
 							tableOut.Rows[i][j]
@@ -642,20 +644,20 @@ namespace OpenDental{
 							break;
 						case "paytype":
 							tableOut.Rows[i][j]
-								=Defs.GetName(DefCat.PaymentTypes,PIn.Long(tableOut.Rows[i][j].ToString()));
+								=Definitions.GetName(DefinitionCategory.PaymentTypes,PIn.Long(tableOut.Rows[i][j].ToString()));
 							break;
 						case "proccat":
 							tableOut.Rows[i][j]
-								=Defs.GetName(DefCat.ProcCodeCats,PIn.Long(tableOut.Rows[i][j].ToString()));
+								=Definitions.GetName(DefinitionCategory.ProcCodeCats,PIn.Long(tableOut.Rows[i][j].ToString()));
 							break;
 						case "unschedstatus":
 						case "recallstatus":
 							tableOut.Rows[i][j]
-								=Defs.GetName(DefCat.RecallUnschedStatus,PIn.Long(tableOut.Rows[i][j].ToString()));
+								=Definitions.GetName(DefinitionCategory.RecallUnschedStatus,PIn.Long(tableOut.Rows[i][j].ToString()));
 							break;
 						case "billingtype":
 							tableOut.Rows[i][j]
-								=Defs.GetName(DefCat.BillingTypes,PIn.Long(tableOut.Rows[i][j].ToString()));
+								=Definitions.GetName(DefinitionCategory.BillingTypes,PIn.Long(tableOut.Rows[i][j].ToString()));
 							break;
 						//patnums:
 						case "patnum":
@@ -709,7 +711,7 @@ namespace OpenDental{
 								tableOut.Rows[i][j]=((DisplayFieldCategory)PIn.Long(tableOut.Rows[i][j].ToString())).ToString();
 							}
 							else {
-								tableOut.Rows[i][j]=((DefCat)PIn.Long(tableOut.Rows[i][j].ToString())).ToString();
+								tableOut.Rows[i][j]=tableOut.Rows[i][j].ToString();
 							}			
 							break;
 						case "renewmonth":
@@ -756,7 +758,7 @@ namespace OpenDental{
 							break;
 						case "specialty":
 							tableOut.Rows[i][j]
-								=Defs.GetName(DefCat.ProviderSpecialties,PIn.Long(tableOut.Rows[i][j].ToString()));
+								=Definitions.GetName(DefinitionCategory.ProviderSpecialties,PIn.Long(tableOut.Rows[i][j].ToString()));
 							break;
 						case "placeservice":
 									tableOut.Rows[i][j]

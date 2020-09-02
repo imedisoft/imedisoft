@@ -6,6 +6,8 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	///<summary>Summary description for FormReactivationEdit.
@@ -32,7 +34,7 @@ namespace OpenDental {
 			DateTime lastContacted=Reactivations.GetDateLastContacted(_reactivationCur.PatNum);
 			textDateLastContacted.Text=lastContacted==DateTime.MinValue?"":lastContacted.ToString();
 			comboStatus.Items.AddDefNone();
-			comboStatus.Items.AddDefs(Defs.GetDefsForCategory(DefCat.RecallUnschedStatus));
+			comboStatus.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.RecallUnschedStatus));
 			comboStatus.SetSelectedDefNum(_reactivationCur.ReactivationStatus);
 			checkBoxDNC.Checked=_reactivationCur.DoNotContact;
 		}
@@ -49,9 +51,9 @@ namespace OpenDental {
 		}
 
 		private void butOK_Click(object sender, System.EventArgs e) {
-			Def selectedStatus=comboStatus.GetSelected<Def>();//Null when 'None' is selected.
-			bool didStatusChange=(_reactivationCur.ReactivationStatus!=(selectedStatus?.DefNum??0));
-			_reactivationCur.ReactivationStatus=selectedStatus==null?0:selectedStatus.DefNum;
+			Definition selectedStatus=comboStatus.GetSelected<Definition>();//Null when 'None' is selected.
+			bool didStatusChange=(_reactivationCur.ReactivationStatus!=(selectedStatus?.Id??0));
+			_reactivationCur.ReactivationStatus=selectedStatus==null?0:selectedStatus.Id;
 			_reactivationCur.ReactivationNote=textNote.Text;
 			_reactivationCur.DoNotContact=checkBoxDNC.Checked;
 			if(_reactivationCur.IsNew) {

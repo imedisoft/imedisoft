@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -13,7 +15,7 @@ namespace OpenDental {
 		///<summary>On load, the UserOdPref that contains the comma delimited list of expanded category DefNums is retrieved from the database.  On close
 		///the UserOdPref is updated with the current expanded DefNums.</summary>
 		private string _userOdCurPref;
-		private List<Def> _listAutoNoteCatDefs;
+		private List<Definition> _listAutoNoteCatDefs;
 
 		public FormAutoNoteCompose() {
 			InitializeComponent();
@@ -21,7 +23,7 @@ namespace OpenDental {
 		}
 
 		private void FormAutoNoteCompose_Load(object sender,EventArgs e) {
-			_listAutoNoteCatDefs=Defs.GetDefsForCategory(DefCat.AutoNoteCats,true);
+			_listAutoNoteCatDefs=Definitions.GetDefsForCategory(DefinitionCategory.AutoNoteCats,true);
 			_userOdCurPref=UserPreference.GetString(UserPreferenceName.AutoNoteExpandedCats);
 			FillListTree();
 		}
@@ -42,16 +44,16 @@ namespace OpenDental {
 			treeListMain.SelectedNode=null;
 			treeListMain.Nodes.Clear();
 			//add categories with all auto notes that are assigned to that category
-			List<long> listCatDefNums=_listAutoNoteCatDefs.Select(x => x.DefNum).ToList();
+			List<long> listCatDefNums=_listAutoNoteCatDefs.Select(x => x.Id).ToList();
 			//call recursive function GetNodeAndChildren for any root cat (where def.ItemValue is blank) and any def with invalid parent def num (ItemValue)
-			_listAutoNoteCatDefs.FindAll(x => string.IsNullOrWhiteSpace(x.ItemValue) || !listCatDefNums.Contains(PIn.Long(x.ItemValue)))
+			_listAutoNoteCatDefs.FindAll(x => string.IsNullOrWhiteSpace(x.Value) || !listCatDefNums.Contains(PIn.Long(x.Value)))
 				.ForEach(x => treeListMain.Nodes.Add(CreateNodeAndChildren(x)));//child cats and categorized auto notes added in recursive function
 			//add any uncategorized auto notes after the categorized ones and only for the root nodes
 			AutoNotes.GetWhere(x => x.Category==0 || !listCatDefNums.Contains(x.Category))
 				.ForEach(x => treeListMain.Nodes.Add(new TreeNode(x.AutoNoteName,1,1) { Tag=x }));
 			if(listExpandedDefNums.Count>0) {
 				treeListMain.Nodes.OfType<TreeNode>().SelectMany(x => GetNodeAndChildren(x))
-					.Where(x => x.Tag is Def && listExpandedDefNums.Contains(((Def)x.Tag).DefNum)).ToList()
+					.Where(x => x.Tag is Definition && listExpandedDefNums.Contains(((Definition)x.Tag).Id)).ToList()
 					.ForEach(x => x.Expand());
 			}
 			treeListMain.EndUpdate();
@@ -60,13 +62,13 @@ namespace OpenDental {
 		///<summary>Recursive function, returns a tree node with all descendants, including all auto note children for this def cat and all children for
 		///any cat within this this cat.  Auto Notes that are at the 'root' level (considered uncategorized) have to be added separately after filling the
 		///rest of the tree with this function and will be at the bottom of the root node list.</summary>
-		private TreeNode CreateNodeAndChildren(Def defCur) {
+		private TreeNode CreateNodeAndChildren(Definition defCur) {
 			List<TreeNode> listChildNodes=_listAutoNoteCatDefs
-				.Where(x => !string.IsNullOrWhiteSpace(x.ItemValue) && x.ItemValue==defCur.DefNum.ToString())
+				.Where(x => !string.IsNullOrWhiteSpace(x.Value) && x.Value==defCur.Id.ToString())
 				.Select(CreateNodeAndChildren).ToList();
-			listChildNodes.AddRange(AutoNotes.GetWhere(x => x.Category==defCur.DefNum)
+			listChildNodes.AddRange(AutoNotes.GetWhere(x => x.Category==defCur.Id)
 				.Select(x => new TreeNode(x.AutoNoteName,1,1) { Tag=x }));
-			return new TreeNode(defCur.ItemName,0,0,listChildNodes.OrderBy(x => x.Tag is AutoNote).ThenBy(x => x.Name).ToArray()) { Tag=defCur };
+			return new TreeNode(defCur.Name,0,0,listChildNodes.OrderBy(x => x.Tag is AutoNote).ThenBy(x => x.Name).ToArray()) { Tag=defCur };
 		}
 
 		///<summary>Returns a flat list containing this TreeNode and all of its descendant TreeNodes.  Recursive function to walk the full depth of the
@@ -431,7 +433,7 @@ namespace OpenDental {
 		private void FormAutoNoteCompose_FormClosing(object sender,FormClosingEventArgs e) {
 			//store the current node expanded state for this user
 			List<long> listExpandedDefNums=treeListMain.Nodes.OfType<TreeNode>().SelectMany(x => GetNodeAndChildren(x))
-				.Where(x => x.Tag is Def && x.IsExpanded).Select(x => ((Def)x.Tag).DefNum).Where(x => x>0).ToList();
+				.Where(x => x.Tag is Definition && x.IsExpanded).Select(x => ((Definition)x.Tag).Id).Where(x => x>0).ToList();
 
 
 			UserPreference.Set(UserPreferenceName.AutoNoteExpandedCats, string.Join(",", listExpandedDefNums));

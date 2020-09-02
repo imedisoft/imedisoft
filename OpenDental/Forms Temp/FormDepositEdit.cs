@@ -674,9 +674,9 @@ namespace OpenDental
 			if(Prefs.GetBool(PrefName.ShowAutoDeposit)) {
 				labelDepositAccountNum.Visible=true;
 				comboDepositAccountNum.Visible=true;
-				List<Def> listAutoDepositDefsAll=Defs.GetDefsForCategory(DefCat.AutoDeposit);
+				List<Definition> listAutoDepositDefsAll=Definitions.GetDefsForCategory(DefinitionCategory.AutoDeposit);
 				//Fill deposit account num drop down
-				comboDepositAccountNum.Items.AddDefs(Defs.GetDefsForCategory(DefCat.AutoDeposit,true));
+				comboDepositAccountNum.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.AutoDeposit,true));
 				comboDepositAccountNum.SetSelectedDefNum(_depositCur.DepositAccountId);
 			}
 			if(IsNew) {
@@ -692,24 +692,24 @@ namespace OpenDental
 					comboClinic.SelectedClinicNum=Clinics.ClinicId;
 				}
 				
-				List<Def> listPaymentTypeDefs=Defs.GetDefsForCategory(DefCat.PaymentTypes,true);
-				List<Def> listInsurancePaymentTypeDefs=Defs.GetDefsForCategory(DefCat.InsurancePaymentType,true);
+				List<Definition> listPaymentTypeDefs=Definitions.GetDefsForCategory(DefinitionCategory.PaymentTypes,true);
+				List<Definition> listInsurancePaymentTypeDefs=Definitions.GetDefsForCategory(DefinitionCategory.InsurancePaymentType,true);
 				_payTypeDefNums=new List<long>();
 				for(int i=0;i<listPaymentTypeDefs.Count;i++) {
-					if(listPaymentTypeDefs[i].ItemValue!="") {
+					if(listPaymentTypeDefs[i].Value!="") {
 						continue;//skip defs not selected for deposit slip
 					}
-					listPayType.Items.Add(listPaymentTypeDefs[i].ItemName);
-					_payTypeDefNums.Add(listPaymentTypeDefs[i].DefNum);
+					listPayType.Items.Add(listPaymentTypeDefs[i].Name);
+					_payTypeDefNums.Add(listPaymentTypeDefs[i].Id);
 					listPayType.SetSelected(listPayType.Items.Count-1,true);
 				}
 				_insPayDefNums=new List<long>();
 				for(int i=0;i<listInsurancePaymentTypeDefs.Count;i++) {
-					if(listInsurancePaymentTypeDefs[i].ItemValue!="") {
+					if(listInsurancePaymentTypeDefs[i].Value!="") {
 						continue;//skip defs not selected for deposit slip
 					}
-					listInsPayType.Items.Add(listInsurancePaymentTypeDefs[i].ItemName);
-					_insPayDefNums.Add(listInsurancePaymentTypeDefs[i].DefNum);
+					listInsPayType.Items.Add(listInsurancePaymentTypeDefs[i].Name);
+					_insPayDefNums.Add(listInsurancePaymentTypeDefs[i].Id);
 					listInsPayType.SetSelected(listInsPayType.Items.Count-1,true);
 				}
 				textDepositAccount.Visible=false;//this is never visible for new. It's a description if already attached.
@@ -863,7 +863,7 @@ namespace OpenDental
 				row=new OpenDental.UI.GridRow();
 				row.Cells.Add(PatPayList[i].PayDate.ToShortDateString());
 				row.Cells.Add(Patients.GetOnePat(pats,PatPayList[i].PatNum).GetNameLF());
-				row.Cells.Add(Defs.GetName(DefCat.PaymentTypes,PatPayList[i].PayType));
+				row.Cells.Add(Definitions.GetName(DefinitionCategory.PaymentTypes,PatPayList[i].PayType));
 				row.Cells.Add(PatPayList[i].CheckNum);
 				row.Cells.Add(PatPayList[i].BankBranch);
 				row.Cells.Add(PatPayList[i].PayAmt.ToString("F"));
@@ -890,7 +890,7 @@ namespace OpenDental
 				row=new OpenDental.UI.GridRow();
 				row.Cells.Add(ClaimPayList[i].CheckDate.ToShortDateString());
 				row.Cells.Add(ClaimPayList[i].CarrierName);
-				row.Cells.Add(Defs.GetName(DefCat.InsurancePaymentType,ClaimPayList[i].PayType));
+				row.Cells.Add(Definitions.GetName(DefinitionCategory.InsurancePaymentType,ClaimPayList[i].PayType));
 				row.Cells.Add(ClaimPayList[i].CheckNum);
 				row.Cells.Add(ClaimPayList[i].BankBranch);
 				row.Cells.Add(ClaimPayList[i].CheckAmt.ToString("F"));

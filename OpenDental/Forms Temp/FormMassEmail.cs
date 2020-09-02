@@ -9,6 +9,8 @@ using OpenDental.UI;
 using OpenDentBusiness;
 using System.IO;
 using System.Net.Mail;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormMassEmail:ODForm {
@@ -163,9 +165,9 @@ namespace OpenDental {
 			textAgeTo.Text="110";
 			//patient billing type list box
 			listBoxPatBillingType.Items.Clear();
-			listBoxPatBillingType.Items.Add(new ODBoxItem<Def>("All",new Def()));
-			foreach(Def billingType in Defs.GetDefsForCategory(DefCat.BillingTypes)) {
-				listBoxPatBillingType.Items.Add(new ODBoxItem<Def>(billingType.ItemName,billingType));
+			listBoxPatBillingType.Items.Add(new ODBoxItem<Definition>("All",new Definition()));
+			foreach(Definition billingType in Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes)) {
+				listBoxPatBillingType.Items.Add(new ODBoxItem<Definition>(billingType.Name,billingType));
 			}
 			listBoxPatBillingType.SelectedIndex=0;
 			//NotSeenSince and SeenSince datePicker and checkBox 
@@ -210,17 +212,17 @@ namespace OpenDental {
 			return datePickerSeenSince.GetDateTime().Date;
 		}
 
-		public List<Def> getPatBillingType() {
+		public List<Definition> getPatBillingType() {
 			//First load of the UI/Form, nothing can be selected, null allows us to ignore it for the query
 			//In that case, treat it the same as "All" and return the full list
 			if(listBoxPatBillingType.SelectedItem==null || listBoxPatBillingType.SelectedItem.ToString()=="All"){
-				List<Def> listAllBillinTpes=new List<Def>();
-				foreach(Def def in Defs.GetDefsForCategory(DefCat.BillingTypes)) {
+				List<Definition> listAllBillinTpes=new List<Definition>();
+				foreach(Definition def in Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes)) {
 					listAllBillinTpes.Add(def);
 				}
 				return listAllBillinTpes;
 			}
-			return listBoxPatBillingType.GetListSelected<Def>();
+			return listBoxPatBillingType.GetListSelected<Definition>();
 		}
 
 

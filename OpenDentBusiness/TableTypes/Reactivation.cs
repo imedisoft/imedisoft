@@ -24,7 +24,7 @@ namespace OpenDentBusiness{
 		public long ReactivationNum;
 		///<summary>FK to patient.PatNum.</summary>
 		public long PatNum;
-		///<summary>FK to definition.DefNum. Uses the existing RecallUnschedStatus DefCat.</summary>
+		///<summary>FK to definition.DefNum. Uses the existing RecallUnschedStatus DefinitionCategory.</summary>
 		public long ReactivationStatus;
 		///<summary>An administrative note for staff use.</summary>
 		[CrudColumn(SpecialType=CrudSpecialColType.TextIsClob)]

@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI.Voice;
 using OpenDentBusiness;
 using SparksToothChart;
@@ -122,7 +124,7 @@ namespace OpenDental{
 		private VoiceController _voiceController;
 		private PerioCell _prevLocation;
 		private PerioCell _curLocation;
-		private List<Def> _listMiscColorDefs;
+		private List<Definition> _listMiscColorDefs;
 		#endregion Fields
 
 		///<summary></summary>
@@ -1135,11 +1137,11 @@ namespace OpenDental{
 
 		private void FormPerio_Load(object sender, System.EventArgs e)
 		{
-			_listMiscColorDefs = Defs.GetDefsForCategory(DefCat.MiscColors, true);
-			butColorBleed.BackColor = _listMiscColorDefs[1].ItemColor;
-			butColorPus.BackColor = _listMiscColorDefs[2].ItemColor;
-			butColorPlaque.BackColor = _listMiscColorDefs[4].ItemColor;
-			butColorCalculus.BackColor = _listMiscColorDefs[5].ItemColor;
+			_listMiscColorDefs = Definitions.GetDefsForCategory(DefinitionCategory.MiscColors, true);
+			butColorBleed.BackColor = _listMiscColorDefs[1].Color;
+			butColorPus.BackColor = _listMiscColorDefs[2].Color;
+			butColorPlaque.BackColor = _listMiscColorDefs[4].Color;
+			butColorCalculus.BackColor = _listMiscColorDefs[5].Color;
 			textRedProb.Text = Prefs.GetString(PrefName.PerioRedProb);
 			textRedMGJ.Text = Prefs.GetString(PrefName.PerioRedMGJ);
 			textRedGing.Text = Prefs.GetString(PrefName.PerioRedGing);
@@ -2033,9 +2035,9 @@ namespace OpenDental{
 				return;
 			}
 			butColorBleed.BackColor=colorDialog1.Color;
-			Def DefCur=_listMiscColorDefs[1].Copy();
-			DefCur.ItemColor=colorDialog1.Color;
-			Defs.Update(DefCur);
+			Definition DefCur=_listMiscColorDefs[1];
+			DefCur.Color=colorDialog1.Color;
+			Definitions.Update(DefCur);
 			Cache.Refresh(InvalidType.Defs);
 			localDefsChanged=true;
 			gridP.SetColors();
@@ -2049,9 +2051,9 @@ namespace OpenDental{
 				return;
 			}
 			butColorPus.BackColor=colorDialog1.Color;
-			Def DefCur=_listMiscColorDefs[2].Copy();
-			DefCur.ItemColor=colorDialog1.Color;
-			Defs.Update(DefCur);
+			Definition DefCur=_listMiscColorDefs[2];
+			DefCur.Color=colorDialog1.Color;
+			Definitions.Update(DefCur);
 			Cache.Refresh(InvalidType.Defs);
 			localDefsChanged=true;
 			gridP.SetColors();
@@ -2065,9 +2067,9 @@ namespace OpenDental{
 				return;
 			}
 			butColorPlaque.BackColor=colorDialog1.Color;
-			Def DefCur=_listMiscColorDefs[4].Copy();
-			DefCur.ItemColor=colorDialog1.Color;
-			Defs.Update(DefCur);
+			Definition DefCur=_listMiscColorDefs[4];
+			DefCur.Color=colorDialog1.Color;
+			Definitions.Update(DefCur);
 			Cache.Refresh(InvalidType.Defs);
 			localDefsChanged=true;
 			gridP.SetColors();
@@ -2081,9 +2083,9 @@ namespace OpenDental{
 				return;
 			}
 			butColorCalculus.BackColor=colorDialog1.Color;
-			Def DefCur=_listMiscColorDefs[5].Copy();
-			DefCur.ItemColor=colorDialog1.Color;
-			Defs.Update(DefCur);
+			Definition DefCur=_listMiscColorDefs[5];
+			DefCur.Color=colorDialog1.Color;
+			Definitions.Update(DefCur);
 			Cache.Refresh(InvalidType.Defs);
 			localDefsChanged=true;
 			gridP.SetColors();
@@ -2259,7 +2261,7 @@ namespace OpenDental{
 			gridImage=new Bitmap(gridP.Width,gridP.Height);
 			gridP.DrawToBitmap(gridImage,new Rectangle(0,0,gridImage.Width,gridImage.Height));
 			g.DrawImageUnscaled(gridImage,(int)((perioPrintImage.Width-gridImage.Width)/2f),(int)y);
-			long defNumCategory=Defs.GetImageCat(ImageCategorySpecial.T);
+			long defNumCategory=Definitions.GetImageCat(ImageCategorySpecial.T);
 			if(defNumCategory==0) {
 				MessageBox.Show("No image category set for tooth charts in definitions.");
 				perioPrintImage.Dispose();
@@ -2292,7 +2294,7 @@ namespace OpenDental{
 			} while(File.Exists(filePath));//if a file with this name already exists, then it will stay in this loop
 			doc.PatNum=PatCur.PatNum;
 			doc.ImgType=ImageType.Photo;
-			doc.DocCategory=Defs.GetByExactName(DefCat.ImageCats,"Tooth Charts");
+			doc.DocCategory=Defs.GetByExactName(DefinitionCategory.ImageCats,"Tooth Charts");
 			doc.Description="Perio Exam";
 			Documents.Insert(doc,PatCur);
 			docCreated=true;

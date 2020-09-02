@@ -1,4 +1,6 @@
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.ReportingComplex;
 using OpenDentBusiness;
 using System;
@@ -77,9 +79,9 @@ namespace OpenDental {
 		}
 
 		private void FillUnearnedTypes() {
-			List<Def> listDefs = Defs.GetDefsForCategory(DefCat.PaySplitUnearnedType,true);
-			foreach(Def defCur in listDefs) {
-				ODBoxItem<Def> boxItemCur = new ODBoxItem<Def>(defCur.ItemName,defCur);
+			List<Definition> listDefs = Definitions.GetDefsForCategory(DefinitionCategory.PaySplitUnearnedType,true);
+			foreach(Definition defCur in listDefs) {
+				ODBoxItem<Definition> boxItemCur = new ODBoxItem<Definition>(defCur.Name,defCur);
 				listUnearnedAllocationTypes.Items.Add(boxItemCur);
 				listNetUnearnedTypes.Items.Add(boxItemCur);
 			}
@@ -149,7 +151,7 @@ namespace OpenDental {
 			}
 			List<long> listClinicNums = listUnearnedAllocationClins.SelectedItems.OfType<ODBoxItem<Clinic>>().Select(x => x.Tag.Id).ToList();
 			List<long> listProvNums = listUnearnedAllocationProvs.SelectedItems.OfType<ODBoxItem<Provider>>().Select(x => x.Tag.ProvNum).ToList();
-			List<long> listUnearnedTypeNums = listUnearnedAllocationTypes.SelectedItems.OfType<ODBoxItem<Def>>().Select(x => x.Tag.DefNum).ToList();
+			List<long> listUnearnedTypeNums = listUnearnedAllocationTypes.SelectedItems.OfType<ODBoxItem<Definition>>().Select(x => x.Tag.Id).ToList();
 			ReportComplex report = new ReportComplex(true,true);
 			DataTable table = RpUnearnedIncome.GetUnearnedAllocationData(listClinicNums,listProvNums,listUnearnedTypeNums,
 				checkUnearnedAllocationExcludeZero.Checked,checkUnearnedAllocationShowProv.Checked);
@@ -178,7 +180,7 @@ namespace OpenDental {
 				report.AddSubTitle("UnearnedTypes","All Unearned Types");
 			}
 			else {
-				string unearnedTypes = string.Join(", ",listUnearnedAllocationTypes.SelectedItems.OfType<ODBoxItem<Def>>().Select(x => x.Tag.ItemName));
+				string unearnedTypes = string.Join(", ",listUnearnedAllocationTypes.SelectedItems.OfType<ODBoxItem<Definition>>().Select(x => x.Tag.Name));
 				report.AddSubTitle("UnearnedTypes",unearnedTypes);
 			}
 			if(checkUnearnedAllocationAllProvs.Checked) {
@@ -264,7 +266,7 @@ namespace OpenDental {
 			}
 			List<long> listClinicNums = listNetUnearnedClins.SelectedItems.OfType<ODBoxItem<Clinic>>().Select(x => x.Tag.Id).ToList();
 			List<long> listProvNums = listNetUnearnedProvs.SelectedItems.OfType<ODBoxItem<Provider>>().Select(x => x.Tag.ProvNum).ToList();
-			List<long> listUnearnedTypeNums = listNetUnearnedTypes.SelectedItems.OfType<ODBoxItem<Def>>().Select(x => x.Tag.DefNum).ToList();
+			List<long> listUnearnedTypeNums = listNetUnearnedTypes.SelectedItems.OfType<ODBoxItem<Definition>>().Select(x => x.Tag.Id).ToList();
 			ReportComplex report = new ReportComplex(true,false);
 			DataTable table = RpUnearnedIncome.GetNetUnearnedData(listClinicNums,listProvNums,listUnearnedTypeNums,checkNetUnearnedExcludeZero.Checked);
 			report.ReportName="Net Unearned Income Report";
@@ -279,7 +281,7 @@ namespace OpenDental {
 				report.AddSubTitle("UnearnedTypes","All Unearned Types");
 			}
 			else {
-				string unearnedTypes = string.Join(", ",listNetUnearnedTypes.SelectedItems.OfType<ODBoxItem<Def>>().Select(x => x.Tag.ItemName));
+				string unearnedTypes = string.Join(", ",listNetUnearnedTypes.SelectedItems.OfType<ODBoxItem<Definition>>().Select(x => x.Tag.Name));
 				report.AddSubTitle("UnearnedTypes",unearnedTypes);
 			}
 			if(checkNetUnearnedAllProvs.Checked) {

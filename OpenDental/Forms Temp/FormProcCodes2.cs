@@ -17,6 +17,8 @@ using OpenDentBusiness;
 using CodeBase;
 using OpenDental.Thinfinity;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -32,7 +34,7 @@ namespace OpenDental{
 		///<summary>Set to true externally in order to let user select one procedure code.</summary>
 		public bool IsSelectionMode;
 		///<summary>The list of definitions that is currently showing in the category list.</summary>
-		private Def[] CatList;
+		private Definition[] CatList;
 		private UI.Button butOK;
 		private UI.Button butCancel;
 		private UI.Button butEditFeeSched;
@@ -1063,10 +1065,10 @@ namespace OpenDental{
 			}
 			_listClinics=Clinics.GetByUser(Security.CurrentUser);
 			_listProviders=Providers.GetDeepCopy(true);
-			_colorProv=Defs.GetColor(DefCat.FeeColors,Defs.GetByExactName(DefCat.FeeColors,"Provider"));
-			_colorProvClinic=Defs.GetColor(DefCat.FeeColors,Defs.GetByExactName(DefCat.FeeColors,"Provider and Clinic"));
-			_colorClinic=Defs.GetColor(DefCat.FeeColors,Defs.GetByExactName(DefCat.FeeColors,"Clinic"));
-			_colorDefault=Defs.GetColor(DefCat.FeeColors,Defs.GetByExactName(DefCat.FeeColors,"Default"));
+			_colorProv=Definitions.GetColor(DefinitionCategory.FeeColors,Definitions.GetByExactName(DefinitionCategory.FeeColors,"Provider"));
+			_colorProvClinic=Definitions.GetColor(DefinitionCategory.FeeColors,Definitions.GetByExactName(DefinitionCategory.FeeColors,"Provider and Clinic"));
+			_colorClinic=Definitions.GetColor(DefinitionCategory.FeeColors,Definitions.GetByExactName(DefinitionCategory.FeeColors,"Clinic"));
+			_colorDefault=Definitions.GetColor(DefinitionCategory.FeeColors,Definitions.GetByExactName(DefinitionCategory.FeeColors,"Default"));
 			butColorProvider.BackColor=_colorProv;
 			butColorClinicProv.BackColor=_colorProvClinic;
 			butColorClinic.BackColor=_colorClinic;
@@ -1415,18 +1417,18 @@ namespace OpenDental{
 		private void FillCats() {
 			ArrayList selected=new ArrayList();
 			for(int i=0;i<listCategories.SelectedIndices.Count;i++) {
-				selected.Add(CatList[listCategories.SelectedIndices[i]].DefNum);
+				selected.Add(CatList[listCategories.SelectedIndices[i]].Id);
 			}
 			if(checkShowHidden.Checked) {
-				CatList=Defs.GetDefsForCategory(DefCat.ProcCodeCats).ToArray();
+				CatList=Definitions.GetDefsForCategory(DefinitionCategory.ProcCodeCats).ToArray();
 			}
 			else {
-				CatList=Defs.GetDefsForCategory(DefCat.ProcCodeCats,true).ToArray();
+				CatList=Definitions.GetDefsForCategory(DefinitionCategory.ProcCodeCats,true).ToArray();
 			}
 			listCategories.Items.Clear();
 			for(int i=0;i<CatList.Length;i++) {
-				listCategories.Items.Add(CatList[i].ItemName);
-				if(selected.Contains(CatList[i].DefNum)) {
+				listCategories.Items.Add(CatList[i].Name);
+				if(selected.Contains(CatList[i].Id)) {
 					listCategories.SetSelected(i,true);
 				}
 			}
@@ -1442,7 +1444,7 @@ namespace OpenDental{
 				return;
 			}
 			int scroll=gridMain.ScrollValue;
-			List<Def> listCatDefs=new List<Def>();
+			List<Definition> listCatDefs=new List<Definition>();
 			for(int i=0;i<listCategories.SelectedIndices.Count;i++) {
 				listCatDefs.Add(CatList[listCategories.SelectedIndices[i]]);
 			}
@@ -1531,13 +1533,13 @@ namespace OpenDental{
 					//Get all procedure codes that are part of the selected category.  Then order the list of procedures by ProcCodes.
 					//Append the list of ordered procedures to the master list of procedures for the selected categories.
 					//Appending the procedure codes in this fashion keeps them ordered correctly via the definitions ItemOrder.
-					listProcsForCats.AddRange(ProcedureCodes.GetWhereFromList(proc => proc.ProcCat==listCatDefs[i].DefNum)
+					listProcsForCats.AddRange(ProcedureCodes.GetWhereFromList(proc => proc.ProcCat==listCatDefs[i].Id)
 						.OrderBy(proc => proc.ProcCode).ToList());
 				}
 			}
 			else if(_procCodeSort==ProcCodeListSort.ProcCode) {
 				for(int i = 0;i<listCatDefs.Count;i++) {
-					listProcsForCats.AddRange(ProcedureCodes.GetWhereFromList(proc => proc.ProcCat==listCatDefs[i].DefNum).ToList());
+					listProcsForCats.AddRange(ProcedureCodes.GetWhereFromList(proc => proc.ProcCat==listCatDefs[i].Id).ToList());
 				}
 				listProcsForCats=listProcsForCats.OrderBy(proc => proc.ProcCode).ToList();
 			}
@@ -1553,7 +1555,7 @@ namespace OpenDental{
 				row=new GridRow();
 				row.Tag=procCode;
 				//Only show the category on the first procedure code in that category.
-				string categoryName=Defs.GetName(DefCat.ProcCodeCats,procCode.ProcCat);
+				string categoryName=Definitions.GetName(DefinitionCategory.ProcCodeCats,procCode.ProcCat);
 				if(lastCategoryName!=categoryName && _procCodeSort==ProcCodeListSort.Category) {
 					row.Cells.Add(categoryName);
 					lastCategoryName=categoryName;
@@ -1635,7 +1637,7 @@ namespace OpenDental{
 			//not on a fee: Edit code instead
 			//changed=false;//We just updated the database and synced our cache, set changed to false.
 			ProcedureCode procCode=(ProcedureCode)gridMain.ListGridRows[e.Row].Tag;
-			Def defProcCat=Defs.GetDefsForCategory(DefCat.ProcCodeCats).FirstOrDefault(x => x.DefNum==procCode.ProcCat);
+			Definition defProcCat=Definitions.GetDefsForCategory(DefinitionCategory.ProcCodeCats).FirstOrDefault(x => x.Id==procCode.ProcCat);
 			FormProcCodeEdit formProcCodeEdit=new FormProcCodeEdit(procCode);
 			formProcCodeEdit.IsNew=false;
 			formProcCodeEdit.ShowHiddenCategories=(defProcCat!=null ? defProcCat.IsHidden : false);
@@ -1853,14 +1855,14 @@ namespace OpenDental{
 			//won't even be visible if no permission
 			ArrayList selected=new ArrayList();
 			for(int i=0;i<listCategories.SelectedIndices.Count;i++) {
-				selected.Add(CatList[listCategories.SelectedIndices[i]].DefNum);
+				selected.Add(CatList[listCategories.SelectedIndices[i]].Id);
 			}
-			FormDefinitions FormD=new FormDefinitions(DefCat.ProcCodeCats);
+			FormDefinitions FormD=new FormDefinitions(DefinitionCategory.ProcCodeCats);
 			FormD.ShowDialog();
 			DataValid.SetInvalid(InvalidType.Defs);
 			FillCats();
 			for(int i=0;i<CatList.Length;i++) {
-				if(selected.Contains(CatList[i].DefNum)) {
+				if(selected.Contains(CatList[i].Id)) {
 					listCategories.SetSelected(i,true);
 				}
 			}
@@ -2060,15 +2062,15 @@ namespace OpenDental{
 				if(ProcedureCodes.GetContainsKey(listCodes[i].ProcCode)) {
 					continue;//don't import duplicates.
 				}
-				listCodes[i].ProcCat=Defs.GetByExactName(DefCat.ProcCodeCats,listCodes[i].ProcCatDescript);
+				listCodes[i].ProcCat=Definitions.GetByExactName(DefinitionCategory.ProcCodeCats,listCodes[i].ProcCatDescript);
 				if(listCodes[i].ProcCat==0) {//no category exists with that name
-					Def def=new Def();
-					def.Category=DefCat.ProcCodeCats;
-					def.ItemName=listCodes[i].ProcCatDescript;
-					def.ItemOrder=Defs.GetDefsForCategory(DefCat.ProcCodeCats).Count;
-					Defs.Insert(def);
+					Definition def=new Definition();
+					def.Category=DefinitionCategory.ProcCodeCats;
+					def.Name=listCodes[i].ProcCatDescript;
+					def.SortOrder=Definitions.GetDefsForCategory(DefinitionCategory.ProcCodeCats).Count;
+					Definitions.Insert(def);
 					Cache.Refresh(InvalidType.Defs);
-					listCodes[i].ProcCat=def.DefNum;
+					listCodes[i].ProcCat=def.Id;
 				}
 				listCodes[i].ProvNumDefault=0;//Always import procedure codes with no specific provider set.  The incoming prov might not exist.
 				ProcedureCodes.Insert(listCodes[i]);				

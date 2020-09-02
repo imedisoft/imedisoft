@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Text;
 using System.Xml.Serialization;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness {
 	public class PaymentEdit {
@@ -1050,9 +1052,9 @@ namespace OpenDentBusiness {
 			}
 			#endregion
 			#region PaySplits
-			List<long> listHiddenUnearnedDefNums=Defs.GetDefsForCategory(DefCat.PaySplitUnearnedType)
-				.FindAll(x => !string.IsNullOrEmpty(x.ItemValue))//If ItemValue is not blank, it means "do not show on account"
-				.Select(x => x.DefNum).ToList();
+			List<long> listHiddenUnearnedDefNums=Definitions.GetDefsForCategory(DefinitionCategory.PaySplitUnearnedType)
+				.FindAll(x => !string.IsNullOrEmpty(x.Value))//If ItemValue is not blank, it means "do not show on account"
+				.Select(x => x.Id).ToList();
 			List<PaySplit> listLinkableSplits=bucket.ListPaySplits.FindAll(x => !x.UnearnedType.In(listHiddenUnearnedDefNums));
 			List<PaySplit> listLinkablePosSplits=listLinkableSplits.FindAll(x => x.SplitAmt.IsGreaterThanZero());
 			List<PaySplit> listLinkableNegSplits=listLinkableSplits.FindAll(x => x.SplitAmt.IsLessThanZero());
@@ -1594,7 +1596,7 @@ namespace OpenDentBusiness {
 					}
 					strBuildWarning.AppendLine($"  {patient.GetNameLF()}"
 						+$"  {paySplit.DatePay.ToShortDateString()}"
-						+$"  {(paySplit.UnearnedType > 0 ? Defs.GetName(DefCat.PaySplitUnearnedType,paySplit.UnearnedType) : strUnallocated)}"
+						+$"  {(paySplit.UnearnedType > 0 ? Definitions.GetName(DefinitionCategory.PaySplitUnearnedType,paySplit.UnearnedType) : strUnallocated)}"
 						+$"  {paySplit.SplitAmt:C}");
 				}
 			}
@@ -1860,7 +1862,7 @@ namespace OpenDentBusiness {
 						}
 						string planCategory="None";
 						if(payPlan.PlanCategory > 0) {
-							planCategory=Defs.GetDef(DefCat.PayPlanCategories,payPlan.PlanCategory).ItemName;
+							planCategory=Definitions.GetDef(DefinitionCategory.PayPlanCategories,payPlan.PlanCategory).Name;
 						}
 						double principal=PayPlans.GetTotalPrinc(payPlan.PayPlanNum,dictPayPlanCharges[payPlan.PayPlanNum]);
 						stringBuilder.AppendLine($"Date: {payPlan.PayPlanDate.ToShortDateString()}");

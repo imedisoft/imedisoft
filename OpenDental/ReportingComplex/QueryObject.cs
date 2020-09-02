@@ -1,4 +1,5 @@
 ﻿using CodeBase;
+using Imedisoft.Data;
 using OpenDentBusiness;
 using System;
 using System.Collections;
@@ -670,7 +671,7 @@ namespace OpenDental.ReportingComplex
 			{
 				try
 				{
-					_reportTable = ReportsComplex.GetTable(_stringQuery);
+					_reportTable = Database.ExecuteDataTable(_stringQuery);
 					//_reportTable=ReportsComplex.RunFuncOnReportServer(() => ReportsComplex.GetTable(_stringQuery)); //submit query on different thread to the reporting server.
 				}
 				catch (Exception)

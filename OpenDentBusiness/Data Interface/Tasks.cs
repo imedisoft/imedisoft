@@ -1,6 +1,7 @@
 using CodeBase;
 using DataConnectionBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using MySql.Data.MySqlClient;
 using Org.BouncyCastle.Asn1.Mozilla;
 using System;
@@ -86,10 +87,10 @@ namespace OpenDentBusiness
 			var tasks = GetMany(searchTaskIds.ToList())
 				.OrderByDescending(x => x.DateAdded == DateTime.MinValue ? x.DateStart : x.DateAdded);
 
-			List<Def> definitions = Defs.GetDefsForCategory(DefCat.ProgNoteColors, true);
+			List<Definition> definitions = Definitions.GetDefsForCategory(DefinitionCategory.ProgNoteColors, true);
 
-			int colorText = Defs.GetColor(DefCat.ProgNoteColors, definitions[18].DefNum).ToArgb();//18="Patient Note Text"
-			int colorTextCompleted = Defs.GetColor(DefCat.ProgNoteColors, definitions[20].DefNum).ToArgb();//20="Completed Pt Note Text"
+			int colorText = Definitions.GetColor(DefinitionCategory.ProgNoteColors, definitions[18].Id).ToArgb();//18="Patient Note Text"
+			int colorTextCompleted = Definitions.GetColor(DefinitionCategory.ProgNoteColors, definitions[20].Id).ToArgb();//20="Completed Pt Note Text"
 
 			foreach (var task in tasks)
 			{

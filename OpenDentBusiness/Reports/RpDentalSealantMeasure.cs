@@ -131,7 +131,7 @@ namespace OpenDentBusiness {
 				)ColC ON ColC.NumeratorPat = ColA.DenominatorPat
 				INNER JOIN provider ON provider.ProvNum = ColA.ProvNum
 				GROUP BY LName";
-			return ReportsComplex.RunFuncOnReportServer(() => Database.ExecuteDataTable(command));
+			return Database.ExecuteDataTable(command);
 
 		}	
 	}

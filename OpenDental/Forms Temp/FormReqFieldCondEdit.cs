@@ -1,3 +1,5 @@
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using Imedisoft.Forms;
 using OpenDentBusiness;
 using System;
@@ -19,7 +21,7 @@ namespace OpenDental {
 		///<summary>Keeps track of which enum value is at which index.</summary>
 		private List<RequiredFieldName> _listIndexFieldNames;
 		private RequiredField _reqField;
-		private List<Def> _listBillingTypeDefs;
+		private List<Definition> _listBillingTypeDefs;
 
 		public FormReqFieldCondEdit(RequiredField reqField) {
 			InitializeComponent();
@@ -41,7 +43,7 @@ namespace OpenDental {
 			if(Prefs.GetString(PrefName.LanguagesUsedByPatients)!="") {
 				_listLanguages=Prefs.GetString(PrefName.LanguagesUsedByPatients).Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries).ToList();
 			}
-			_listBillingTypeDefs=Defs.GetDefsForCategory(DefCat.BillingTypes,true);
+			_listBillingTypeDefs=Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes,true);
 			_listClinics=Clinics.GetAll(true);
 			_listProvs=Providers.GetDeepCopy(true);
 			comboOperator1.Items.Add(">");
@@ -222,7 +224,7 @@ namespace OpenDental {
 				case RequiredFieldName.BillingType:
 					SetFieldVisibleHelper(true);
 					for(int i=0;i<_listBillingTypeDefs.Count;i++) {
-						listConditionValues.Items.Add(_listBillingTypeDefs[i].ItemName);
+						listConditionValues.Items.Add(_listBillingTypeDefs[i].Name);
 					}
 					ListValuesSetIndices();
 					break;
@@ -286,7 +288,7 @@ namespace OpenDental {
 			}
 			for(int i=0;i<listConditionValues.Items.Count;i++) {
 				if(selectedType==RequiredFieldName.BillingType
-					&& _listReqFieldConds.Exists(x => x.ConditionValue==_listBillingTypeDefs[i].DefNum.ToString()))
+					&& _listReqFieldConds.Exists(x => x.ConditionValue==_listBillingTypeDefs[i].Id.ToString()))
 				{
 					listConditionValues.SelectedIndices.Add(i);
 					continue;
@@ -437,7 +439,7 @@ namespace OpenDental {
 					}
 					else if(selectedField==RequiredFieldName.BillingType) {
 						for(int i=0;i<listConditionValues.SelectedIndices.Count;i++) {
-							listFkNums.Add(_listBillingTypeDefs[listConditionValues.SelectedIndices[i]].DefNum);
+							listFkNums.Add(_listBillingTypeDefs[listConditionValues.SelectedIndices[i]].Id);
 						}
 					}
 					else {	//selectedField==RequiredFieldName.Clinic

@@ -1,3 +1,5 @@
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections;
 using System.Drawing;
@@ -106,7 +108,7 @@ namespace OpenDentBusiness
 		public ProcedureCode()
 		{
 			ProcTime = "/X/";
-			//procCode.ProcCat=Defs.Short[(long)DefCat.ProcCodeCats][0].DefNum;
+			//procCode.ProcCat=Defs.Short[(long)DefinitionCategory.ProcCodeCats][0].DefNum;
 			GraphicColor = Color.FromArgb(0);
 		}
 
@@ -134,7 +136,7 @@ namespace OpenDentBusiness
 				{//only used in xml import. We have an incomplete object.
 					return procCatDescript;
 				}
-				return Defs.GetName(DefCat.ProcCodeCats, ProcCat);
+				return Definitions.GetName(DefinitionCategory.ProcCodeCats, ProcCat);
 			}
 			set
 			{

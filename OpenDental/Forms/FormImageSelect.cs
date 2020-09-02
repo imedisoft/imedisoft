@@ -1,3 +1,5 @@
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 using System;
@@ -70,7 +72,7 @@ namespace Imedisoft.Forms
 			{
 				var gridRow = new GridRow();
 				gridRow.Cells.Add(document.DateCreated.ToString());
-				gridRow.Cells.Add(Defs.GetName(DefCat.ImageCats, document.DocCategory));
+				gridRow.Cells.Add(Definitions.GetName(DefinitionCategory.ImageCats, document.DocCategory));
 				gridRow.Cells.Add(document.Description);
 				gridRow.Tag = document;
 

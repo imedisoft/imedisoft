@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness
 {
@@ -391,17 +393,17 @@ namespace OpenDentBusiness
 			#endregion
 			#region Remove provider availiabilty for blockouts set to Do Not Schedule
 			List<long> listBlockoutsDoNotSchedule = new List<long>();
-			List<Def> listBlockoutsAll = Defs.GetDefsForCategory(DefCat.BlockoutTypes, true);
-			foreach (Def blockout in listBlockoutsAll)
+			List<Definition> listBlockoutsAll = Definitions.GetDefsForCategory(DefinitionCategory.BlockoutTypes, true);
+			foreach (Definition blockout in listBlockoutsAll)
 			{
-				if (blockout.ItemValue.Contains(BlockoutType.NoSchedule.GetDescription()))
+				if (blockout.Value.Contains(BlockoutType.NoSchedule.GetDescription()))
 				{
-					listBlockoutsDoNotSchedule.Add(blockout.DefNum);//do not return results for blockouts set to 'Do Not Schedule'
+					listBlockoutsDoNotSchedule.Add(blockout.Id);//do not return results for blockouts set to 'Do Not Schedule'
 					continue;
 				}
-				if (blockoutType != 0 && blockoutType != blockout.DefNum)
+				if (blockoutType != 0 && blockoutType != blockout.Id)
 				{
-					listBlockoutsDoNotSchedule.Add(blockout.DefNum);//do not return results for blockouts that are not of our requested type
+					listBlockoutsDoNotSchedule.Add(blockout.Id);//do not return results for blockouts that are not of our requested type
 				}
 			}
 			if (listBlockoutsDoNotSchedule.Count > 0)

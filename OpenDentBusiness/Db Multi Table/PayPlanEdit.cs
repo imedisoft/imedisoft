@@ -1,4 +1,6 @@
 ﻿using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -277,7 +279,7 @@ namespace OpenDentBusiness {
 		///<summary>Creates pay plan split rows for display on the form from the data table input. Similar to CreateRowForPayPlanSplit but for use with sheets/datatables.</summary>
 		public static DataRow CreateRowForPayPlanSplitDT(DataTable table,PaySplit payPlanSplit,DataRow rowBundlePayment,bool isDynamic) {
 			DataRow retVal=table.NewRow();
-			string descript=Defs.GetName(DefCat.PaymentTypes,PIn.Long(rowBundlePayment["PayType"].ToString()));
+			string descript=Definitions.GetName(DefinitionCategory.PaymentTypes,PIn.Long(rowBundlePayment["PayType"].ToString()));
 			if(rowBundlePayment["CheckNum"].ToString()!="") {
 				descript+=" #"+rowBundlePayment["CheckNum"].ToString();
 			}
@@ -304,7 +306,7 @@ namespace OpenDentBusiness {
 		///<summary>Creates pay plan split rows for display on the form from the data table input. Similar to CreateRowForClaimProcs but for use with sheets/datatables.</summary>
 		public static DataRow CreateRowForClaimProcsDT(DataTable table,DataRow rowBundleClaimProc,bool isDynamic) {//Either a claimpayment or a bundle of claimprocs with no claimpayment that were on the same date.
 			DataRow retVal=table.NewRow();
-			string descript=Defs.GetName(DefCat.InsurancePaymentType,PIn.Long(rowBundleClaimProc["PayType"].ToString()));
+			string descript=Definitions.GetName(DefinitionCategory.InsurancePaymentType,PIn.Long(rowBundleClaimProc["PayType"].ToString()));
 			if(rowBundleClaimProc["CheckNum"].ToString()!="") {
 				descript+=" #"+rowBundleClaimProc["CheckNum"];
 			}

@@ -16,6 +16,8 @@ using CodeBase;
 using System.Text;
 using Imedisoft.Forms;
 using Imedisoft.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary></summary>
@@ -122,7 +124,7 @@ namespace OpenDental{
 		private FormPaymentPlanOptions FormPayPlanOpts;
 		///<summary>Cached list of PayPlanCharges.</summary>
 		private List<PayPlanCharge> _listPayPlanCharges;
-		private Def[] _arrayAccountColors;//Putting this here so we do one DB call for colors instead of many.  They'll never change.
+		private Definition[] _arrayAccountColors;//Putting this here so we do one DB call for colors instead of many.  They'll never change.
 		private FormPayPlanRecalculate _formPayPlanRecalculate;
 		private List<PaySplit> _listPaySplits;
 		private DataTable _bundledClaimProcs;
@@ -1166,7 +1168,7 @@ namespace OpenDental{
 
 		private void FormPayPlan_Load(object sender,System.EventArgs e) {
 			comboCategory.Items.AddDefNone();
-			comboCategory.Items.AddDefs(Defs.GetDefsForCategory(DefCat.PayPlanCategories,true));
+			comboCategory.Items.AddDefs(Definitions.GetByCategory(DefinitionCategory.PayPlanCategories));
 			comboCategory.SetSelectedDefNum(_payPlanCur.PlanCategory); 
 			textPatient.Text=Patients.GetLim(_payPlanCur.PatNum).GetNameLF();
 			textGuarantor.Text=Patients.GetLim(_payPlanCur.Guarantor).GetNameLF();
@@ -1238,7 +1240,7 @@ namespace OpenDental{
 				textDate.Location=new Point(textDate.Location.X+22,textDate.Location.Y);//line up with text boxes below
 				labelDateAgreement.Location=new Point(labelDateAgreement.Location.X+22,labelDateAgreement.Location.Y);
 			}
-			_arrayAccountColors=Defs.GetDefsForCategory(DefCat.AccountColors,true).ToArray();
+			_arrayAccountColors=Definitions.GetDefsForCategory(DefinitionCategory.AccountColors,true).ToArray();
 			//If the amort schedule has been created and the first payment date has passed, don't allow user to change the first payment date or downpayment
 			//until the schedule is cleared.
 			if(!IsNew && PIn.Date(textDateFirstPay.Text)<DateTime.Today) {
@@ -2150,8 +2152,8 @@ namespace OpenDental{
 				adj.SecUserNumEntry=Security.CurrentUser.Id;
 				adj.SecDateTEdit=DateTime.Now;
 				adj.ClinicNum=comboClinic.SelectedClinicNum;
-				if(Defs.GetDef(DefCat.AdjTypes,Prefs.GetLong(PrefName.PayPlanAdjType))!=null) {
-					adj.AdjType=Defs.GetDef(DefCat.AdjTypes,Prefs.GetLong(PrefName.PayPlanAdjType)).DefNum;
+				if(Definitions.GetDef(DefinitionCategory.AdjTypes,Prefs.GetLong(PrefName.PayPlanAdjType))!=null) {
+					adj.AdjType=Definitions.GetDef(DefinitionCategory.AdjTypes,Prefs.GetLong(PrefName.PayPlanAdjType)).Id;
 				}
 				_listAdjustments.Add(adj);
 			}

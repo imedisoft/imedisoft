@@ -15,6 +15,8 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
 using OpenDentBusiness.IO;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -52,7 +54,7 @@ namespace OpenDental{
 		private OpenDental.UI.Button butViewData;
 		private OpenDental.UI.Button butPreview;
 		private UI.ComboBoxPlus comboImageCategory;
-		private List<Def> _listLetterMergeCatDefs;
+		private List<Definition> _listLetterMergeCatDefs;
 		private Label labelImageCategory;
 
 		///<summary></summary>
@@ -292,15 +294,15 @@ namespace OpenDental{
 				listLetters.SelectedIndex=0;
 			}
 			comboImageCategory.Items.AddDefNone();
-			comboImageCategory.Items.AddDefs(Defs.GetDefsForCategory(DefCat.ImageCats,true));
+			comboImageCategory.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.ImageCats,true));
 			SelectImageCat();
 		}
 
 		private void FillCats() {
-			_listLetterMergeCatDefs=Defs.GetDefsForCategory(DefCat.LetterMergeCats,true);
+			_listLetterMergeCatDefs=Definitions.GetDefsForCategory(DefinitionCategory.LetterMergeCats,true);
 			listCategories.Items.Clear();
 			for(int i=0;i<_listLetterMergeCatDefs.Count;i++){
-				listCategories.Items.Add(_listLetterMergeCatDefs[i].ItemName);
+				listCategories.Items.Add(_listLetterMergeCatDefs[i].Name);
 			}
 		}
 
@@ -342,7 +344,7 @@ namespace OpenDental{
 			if(!Security.IsAuthorized(Permissions.Setup)){
 				return;
 			}
-			FormDefinitions FormD=new FormDefinitions(DefCat.LetterMergeCats);
+			FormDefinitions FormD=new FormDefinitions(DefinitionCategory.LetterMergeCats);
 			FormD.ShowDialog();
 			FillCats();
 		}
@@ -379,7 +381,7 @@ namespace OpenDental{
 				return;
 			}
 			LetterMerge letter=new LetterMerge();
-			letter.Category=_listLetterMergeCatDefs[listCategories.SelectedIndex].DefNum;
+			letter.Category=_listLetterMergeCatDefs[listCategories.SelectedIndex].Id;
 			FormLetterMergeEdit FormL=new FormLetterMergeEdit(letter);
 			FormL.IsNew=true;
 			FormL.ShowDialog();

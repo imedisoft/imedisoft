@@ -13,6 +13,8 @@ using OpenDentBusiness;
 using System.Linq;
 using SparksToothChart;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental
 {
@@ -240,19 +242,22 @@ namespace OpenDental
 		*/
 
 		///<summary>Sets the user editable colors</summary>
-		public void SetColors(){
-			if(Defs.GetDictIsNull()) {
-				cBlood=Color.FromArgb(240,20,20);
-				cSupp=Color.FromArgb(255,160,0);
-				cPlaque=Color.FromArgb(240,20,20);
-				cCalc=Color.FromArgb(255,160,0);
+		public void SetColors()
+		{
+			List<Definition> listDefs = Definitions.GetDefsForCategory(DefinitionCategory.MiscColors);
+			if (listDefs.Count == 4)
+			{
+				cBlood = listDefs[1].Color;
+				cSupp = listDefs[2].Color;
+				cPlaque = listDefs[4].Color;
+				cCalc = listDefs[5].Color;
 			}
-			else {
-				List<Def> listDefs=Defs.GetDefsForCategory(DefCat.MiscColors);
-				cBlood=listDefs[1].ItemColor;
-				cSupp=listDefs[2].ItemColor;
-				cPlaque=listDefs[4].ItemColor;
-				cCalc=listDefs[5].ItemColor;
+			else
+			{
+				cBlood = Color.FromArgb(240, 20, 20);
+				cSupp = Color.FromArgb(255, 160, 0);
+				cPlaque = Color.FromArgb(240, 20, 20);
+				cCalc = Color.FromArgb(255, 160, 0);
 			}
 		}
 

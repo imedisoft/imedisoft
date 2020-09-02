@@ -7,12 +7,14 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
 using Imedisoft.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	public partial class FormModuleSetup:ODForm {
 		#region Fields - Private
-		private List<Def> _listDefsPosAdjTypes;
-		private List<Def> _listDefsNegAdjTypes;
+		private List<Definition> _listDefsPosAdjTypes;
+		private List<Definition> _listDefsNegAdjTypes;
 		private bool _changed;
 		private ColorDialog _colorDialog;
 		///<summary>Used to determine a specific tab to have opened upon load.  Only set via the constructor and only used during load.</summary>
@@ -184,8 +186,8 @@ namespace OpenDental{
 			foreach(string strDefNum in arrayDefNums) {
 				listBadAdjDefNums.Add(PIn.Long(strDefNum));
 			}
-			List<Def> listBadAdjDefs=Defs.GetDefs(DefCat.AdjTypes,listBadAdjDefNums);
-			FormDefinitionPicker FormDP = new FormDefinitionPicker(DefCat.AdjTypes,listBadAdjDefs);
+			List<Definition> listBadAdjDefs=Definitions.GetDefs(DefinitionCategory.AdjTypes,listBadAdjDefNums);
+			FormDefinitionPicker FormDP = new FormDefinitionPicker(DefinitionCategory.AdjTypes,listBadAdjDefs);
 			FormDP.HasShowHiddenOption=true;
 			FormDP.IsMultiSelectionMode=true;
 			FormDP.ShowDialog();
@@ -408,8 +410,8 @@ namespace OpenDental{
 			//checkBrokenApptNote.Checked=Prefs.GetBool(PrefName.BrokenApptCommLogNotAdjustment);
 			checkApptBubbleDelay.Checked = Prefs.GetBool(PrefName.ApptBubbleDelay);
 			checkAppointmentBubblesDisabled.Checked=Prefs.GetBool(PrefName.AppointmentBubblesDisabled);
-			_listDefsPosAdjTypes=Defs.GetPositiveAdjTypes();
-			_listDefsNegAdjTypes=Defs.GetNegativeAdjTypes();
+			_listDefsPosAdjTypes=Definitions.GetPositiveAdjTypes();
+			_listDefsNegAdjTypes=Definitions.GetNegativeAdjTypes();
 			comboBrokenApptAdjType.Items.AddDefs(_listDefsPosAdjTypes);
 			comboBrokenApptAdjType.SetSelectedDefNum(Prefs.GetLong(PrefName.BrokenAppointmentAdjustmentType));
 			comboProcDiscountType.Items.AddDefs(_listDefsNegAdjTypes);
@@ -418,15 +420,15 @@ namespace OpenDental{
 			checkApptExclamation.Checked=Prefs.GetBool(PrefName.ApptExclamationShowForUnsentIns);
 			comboTimeArrived.Items.AddDefNone();
 			comboTimeArrived.SelectedIndex=0;
-			comboTimeArrived.Items.AddDefs(Defs.GetDefsForCategory(DefCat.ApptConfirmed,true));
+			comboTimeArrived.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.ApptConfirmed,true));
 			comboTimeArrived.SetSelectedDefNum(Prefs.GetLong(PrefName.AppointmentTimeArrivedTrigger));
 			comboTimeSeated.Items.AddDefNone();
 			comboTimeSeated.SelectedIndex=0;
-			comboTimeSeated.Items.AddDefs(Defs.GetDefsForCategory(DefCat.ApptConfirmed,true));
+			comboTimeSeated.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.ApptConfirmed,true));
 			comboTimeSeated.SetSelectedDefNum(Prefs.GetLong(PrefName.AppointmentTimeSeatedTrigger));
 			comboTimeDismissed.Items.AddDefNone();
 			comboTimeDismissed.SelectedIndex=0;
-			comboTimeDismissed.Items.AddDefs(Defs.GetDefsForCategory(DefCat.ApptConfirmed,true));
+			comboTimeDismissed.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.ApptConfirmed,true));
 			comboTimeDismissed.SetSelectedDefNum(Prefs.GetLong(PrefName.AppointmentTimeDismissedTrigger));
 			checkApptRefreshEveryMinute.Checked=Prefs.GetBool(PrefName.ApptModuleRefreshesEveryMinute);
 			foreach(SearchBehaviorCriteria searchBehavior in Enum.GetValues(typeof(SearchBehaviorCriteria))) {
@@ -743,7 +745,7 @@ namespace OpenDental{
 			}
 			comboPaymentClinicSetting.SelectedIndex=PrefC.GetInt(PrefName.PaymentClinicSetting);
 			checkPaymentsPromptForPayType.Checked=Prefs.GetBool(PrefName.PaymentsPromptForPayType);
-			comboUnallocatedSplits.Items.AddDefs(Defs.GetDefsForCategory(DefCat.PaySplitUnearnedType,true));
+			comboUnallocatedSplits.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.PaySplitUnearnedType,true));
 			comboUnallocatedSplits.SetSelectedDefNum(Prefs.GetLong(PrefName.PrepaymentUnearnedType));
 			comboPayPlanAdj.Items.AddDefs(_listDefsNegAdjTypes);
 			comboPayPlanAdj.SetSelectedDefNum(Prefs.GetLong(PrefName.PayPlanAdjType));
@@ -759,7 +761,7 @@ namespace OpenDental{
 			foreach(string strDefNum in arrayDefNums) {
 				listBadAdjDefNums.Add(PIn.Long(strDefNum));
 			}
-			FillListboxBadDebt(Defs.GetDefs(DefCat.AdjTypes,listBadAdjDefNums));
+			FillListboxBadDebt(Definitions.GetDefs(DefinitionCategory.AdjTypes,listBadAdjDefNums));
 			checkAllowFutureDebits.Checked=Prefs.GetBool(PrefName.AccountAllowFutureDebits);
 			checkAllowEmailCCReceipt.Checked=Prefs.GetBool(PrefName.AllowEmailCCReceipt);
 			List<RigorousAccounting> listEnums=Enum.GetValues(typeof(RigorousAccounting)).OfType<RigorousAccounting>().ToList();
@@ -776,13 +778,13 @@ namespace OpenDental{
 			checkPaymentsTransferPatientIncomeOnly.Checked=Prefs.GetBool(PrefName.PaymentsTransferPatientIncomeOnly);
 			checkAllowPrepayProvider.Checked=Prefs.GetBool(PrefName.AllowPrepayProvider);
 			comboRecurringChargePayType.Items.AddDefNone("("+"default"+")");
-			comboRecurringChargePayType.Items.AddDefs(Defs.GetDefsForCategory(DefCat.PaymentTypes,true));
+			comboRecurringChargePayType.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.PaymentTypes,true));
 			comboRecurringChargePayType.SetSelectedDefNum(Prefs.GetLong(PrefName.RecurringChargesPayTypeCC)); 
 			_ynPrePayAllowedForTpProcs=Prefs.GetBool(PrefName.PrePayAllowedForTpProcs);
 			checkAllowPrePayToTpProcs.Checked= Prefs.GetBool(PrefName.PrePayAllowedForTpProcs);
 			checkIsRefundable.Checked=Prefs.GetBool(PrefName.TpPrePayIsNonRefundable);
 			checkIsRefundable.Visible=checkAllowPrePayToTpProcs.Checked;//pref will be unchecked if parent gets turned off.
-			comboTpUnearnedType.Items.AddDefs(Defs.GetDefsForCategory(DefCat.PaySplitUnearnedType,true));
+			comboTpUnearnedType.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.PaySplitUnearnedType,true));
 			comboTpUnearnedType.SetSelectedDefNum(Prefs.GetLong(PrefName.TpUnearnedType));
 			#endregion Pay/Adj Tab
 			#region Insurance Tab
@@ -852,10 +854,10 @@ namespace OpenDental{
 			#endregion Misc Account Tab
 		}
 
-		private void FillListboxBadDebt(List<Def> listSelectedDefs) {
+		private void FillListboxBadDebt(List<Definition> listSelectedDefs) {
 			listboxBadDebtAdjs.Items.Clear();
-			foreach(Def defCur in listSelectedDefs) {
-				listboxBadDebtAdjs.Items.Add(new ODBoxItem<Def>(defCur.ItemName,defCur));
+			foreach(Definition defCur in listSelectedDefs) {
+				listboxBadDebtAdjs.Items.Add(new ODBoxItem<Definition>(defCur.Name,defCur));
 			}
 		}
 
@@ -886,7 +888,7 @@ namespace OpenDental{
 				MessageBox.Show("Dynamic payment plan time must be a valid time.");
 				return false;
 			}
-			string strListBadDebtAdjTypes=string.Join(",",listboxBadDebtAdjs.Items.Cast<ODBoxItem<Def>>().Select(x => x.Tag.DefNum));
+			string strListBadDebtAdjTypes=string.Join(",",listboxBadDebtAdjs.Items.Cast<ODBoxItem<Definition>>().Select(x => x.Tag.Id));
 			_changed|=Prefs.Set(PrefName.BalancesDontSubtractIns,checkBalancesDontSubtractIns.Checked);
 			_changed|=Prefs.Set(PrefName.AgingCalculatedMonthlyInsteadOfDaily,checkAgingMonthly.Checked);
 			_changed|=Prefs.Set(PrefName.StoreCCtokens,checkStoreCCTokens.Checked);

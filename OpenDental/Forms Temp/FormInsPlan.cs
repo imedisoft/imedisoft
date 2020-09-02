@@ -23,6 +23,8 @@ using CodeBase;
 using OpenDentBusiness.Crud;
 using System.Linq;
 using OpenDentBusiness.Eclaims;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -314,7 +316,7 @@ namespace OpenDental{
 			if(CultureInfo.CurrentCulture.Name.Length>=4 && CultureInfo.CurrentCulture.Name.Substring(3)=="GB"){//en-GB
 				labelCitySTZip.Text="City,Postcode";
 			}
-			panelPat.BackColor=Defs.GetFirstForCategory(DefCat.MiscColors).ItemColor;
+			panelPat.BackColor=Definitions.GetFirstForCategory(DefinitionCategory.MiscColors).Color;
 			//labelViewRequestDocument.Text="         ";
 			//if(!Prefs.GetBool(PrefName.CustomizedForPracticeWeb")) {
 			//	butEligibility.Visible=false;
@@ -2671,7 +2673,7 @@ namespace OpenDental{
 			FillComboFilingSubtype(selectedFilingCodeNum);
 			comboBillType.Items.Clear();
 			comboBillType.Items.AddDefNone();
-			comboBillType.Items.AddDefs(Defs.GetDefsForCategory(DefCat.BillingTypes,true));
+			comboBillType.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes,true));
 			comboBillType.SetSelectedDefNum(_planCur.BillingType); 
 			comboExclusionFeeRule.Items.Clear();
 			Enum.GetValues(typeof(ExclusionRule)).Cast<ExclusionRule>().ForEach(x => comboExclusionFeeRule.Items.Add(x.GetDescription()));

@@ -7,6 +7,8 @@ using OpenDental.UI;
 using OpenDentBusiness;
 using System.Collections.Generic;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -161,7 +163,7 @@ namespace OpenDental{
 				//details: 
 				detail="";
 				if(_listAutomations[i].AutoAction==AutomationAction.CreateCommlog) {
-					detail+=Defs.GetName(DefCat.CommLogTypes,_listAutomations[i].CommType)
+					detail+=Definitions.GetName(DefinitionCategory.CommLogTypes,_listAutomations[i].CommType)
 						+".  "+_listAutomations[i].MessageContent;
 				}
 				else if(_listAutomations[i].AutoAction==AutomationAction.PrintPatientLetter) {

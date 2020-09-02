@@ -14,6 +14,8 @@ using OpenDentBusiness;
 using CodeBase;
 using OpenDental.Thinfinity;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -48,7 +50,7 @@ namespace OpenDental{
 		private Label labelCrop;
 		private UI.Button butCropReset;
 		private Label labelCropInfo;
-		private List<Def> _listImageCatDefs;
+		private List<Definition> _listImageCatDefs;
 
 		public FormDocInfo(Patient patCur,Document docCur,string initialCategoryName,bool isOkDisabled=false){
 			InitializeComponent();
@@ -57,11 +59,11 @@ namespace OpenDental{
 			_documentOld=_documentCur.Copy();
 			_isOkDisabled=isOkDisabled;
 			if(_documentCur.DocNum==0){
-				List<Def> listDefNumsImageCats=Defs.GetDefsForCategory(DefCat.ImageCats,true);
-				_documentCur.DocCategory=listDefNumsImageCats[0].DefNum;
+				List<Definition> listDefNumsImageCats=Definitions.GetDefsForCategory(DefinitionCategory.ImageCats,true);
+				_documentCur.DocCategory=listDefNumsImageCats[0].Id;
 				for(int i=0;i<listDefNumsImageCats.Count;i++){
-					if(listDefNumsImageCats[0].ItemName==initialCategoryName){
-						_documentCur.DocCategory=listDefNumsImageCats[i].DefNum;
+					if(listDefNumsImageCats[0].Name==initialCategoryName){
+						_documentCur.DocCategory=listDefNumsImageCats[i].Id;
 					}
 				}
 			}
@@ -366,11 +368,11 @@ namespace OpenDental{
 				butOK.Enabled=false;
 			}
 			listCategory.Items.Clear();
-			_listImageCatDefs=Defs.GetDefsForCategory(DefCat.ImageCats,true);
+			_listImageCatDefs=Definitions.GetByCategory(DefinitionCategory.ImageCats);
 			for(int i=0;i<_listImageCatDefs.Count;i++){
-				string folderName=_listImageCatDefs[i].ItemName;
+				string folderName=_listImageCatDefs[i].Name;
 				listCategory.Items.Add(folderName);
-				if(i==0 || _listImageCatDefs[i].DefNum==_documentCur.DocCategory){
+				if(i==0 || _listImageCatDefs[i].Id==_documentCur.DocCategory){
 					listCategory.SelectedIndex=i;
 				}
 			}
@@ -488,7 +490,7 @@ namespace OpenDental{
 				MessageBox.Show(ex.Message);
 				return;
 			}
-			_documentCur.DocCategory=_listImageCatDefs[listCategory.SelectedIndex].DefNum;
+			_documentCur.DocCategory=_listImageCatDefs[listCategory.SelectedIndex].Id;
 			_documentCur.ImgType=(ImageType)listType.SelectedIndex;
 			_documentCur.Description=textDescript.Text;			
 			_documentCur.DateCreated=dateTimeEntered;	

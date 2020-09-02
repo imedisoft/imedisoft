@@ -4,6 +4,8 @@ using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -16,7 +18,7 @@ namespace OpenDental {
 		private List<ApptOther> _listApptOthers=new List<ApptOther>();
 		private List<PlannedAppt> _listPlannedAppts=new List<PlannedAppt>();
 		private List<PlannedAppt> _listPlannedIncompletes=new List<PlannedAppt>();
-		private List<Def> _listProgNoteColorDefs=new List<Def>();
+		private List<Definition> _listProgNoteColorDefs=new List<Definition>();
 		private Action _actionFillFamily;
 		public bool IsShowCompletePlanned;
 		private bool _isInDashboard;
@@ -108,7 +110,7 @@ namespace OpenDental {
 			_listPlannedIncompletes=_listPlannedAppts.FindAll(x => !_listApptOthers.ToList()
 				.Exists(y => y.NextAptNum==x.AptNum && y.AptStatus==ApptStatus.Complete))
 				.OrderBy(x => x.ItemOrder).ToList();
-			_listProgNoteColorDefs=Defs.GetDefsForCategory(DefCat.ProgNoteColors);//cached
+			_listProgNoteColorDefs=Definitions.GetByCategory(DefinitionCategory.ProgNoteColors, true);//cached
 		}
 
 		private bool IsNecessaryDataAvailable(PatientDashboardDataEventArgs data) {
@@ -131,7 +133,7 @@ namespace OpenDental {
 			_listPlannedIncompletes=_listPlannedAppts.FindAll(x => !_listApptOthers.ToList()
 				.Exists(y => y.NextAptNum==x.AptNum && y.AptStatus==ApptStatus.Complete))
 				.OrderBy(x => x.ItemOrder).ToList();
-			_listProgNoteColorDefs=Defs.GetDefsForCategory(DefCat.ProgNoteColors);
+			_listProgNoteColorDefs=Definitions.GetByCategory(DefinitionCategory.ProgNoteColors, true);
 			_isFullRefresh=true;
 		}
 
@@ -240,22 +242,22 @@ namespace OpenDental {
 						row.Cells[dateIndex].Text=_listApptOthers[i].AptDateTime.ToString("d");
 						row.Cells[dateIndex+1].Text=_listApptOthers[i].AptDateTime.ToString("t");
 						if(_listApptOthers[i].AptDateTime < DateTime.Today) { //Past
-							row.BackColor=_listProgNoteColorDefs[11].ItemColor;
-							row.ForeColor=_listProgNoteColorDefs[10].ItemColor;
+							row.BackColor=_listProgNoteColorDefs[11].Color;
+							row.ForeColor=_listProgNoteColorDefs[10].Color;
 						}
 						else if(_listApptOthers[i].AptDateTime.Date==DateTime.Today.Date) { //Today
-							row.BackColor=_listProgNoteColorDefs[9].ItemColor;
-							row.ForeColor=_listProgNoteColorDefs[8].ItemColor;
+							row.BackColor=_listProgNoteColorDefs[9].Color;
+							row.ForeColor=_listProgNoteColorDefs[8].Color;
 							row.Cells[0].Text="Today";
 						}
 						else if(_listApptOthers[i].AptDateTime > DateTime.Today) { //Future
-							row.BackColor=_listProgNoteColorDefs[13].ItemColor;
-							row.ForeColor=_listProgNoteColorDefs[12].ItemColor;
+							row.BackColor=_listProgNoteColorDefs[13].Color;
+							row.ForeColor=_listProgNoteColorDefs[12].Color;
 						}
 					}
 					else if(_listApptOthers[i].AptStatus==ApptStatus.Planned) { //show line for planned appt
-						row.BackColor=_listProgNoteColorDefs[17].ItemColor;
-						row.ForeColor=_listProgNoteColorDefs[16].ItemColor;
+						row.BackColor=_listProgNoteColorDefs[17].Color;
+						row.ForeColor=_listProgNoteColorDefs[16].Color;
 						string txt="Planned"+" ";
 						int plannedAptIdx=_listPlannedIncompletes.FindIndex(x => x.AptNum==_listApptOthers[i].AptNum);
 						if(IsShowCompletePlanned) {
@@ -284,26 +286,26 @@ namespace OpenDental {
 						row.Cells[0].Text=txt;
 					}
 					else if(_listApptOthers[i].AptStatus==ApptStatus.PtNote) {
-						row.BackColor=_listProgNoteColorDefs[19].ItemColor;
-						row.ForeColor=_listProgNoteColorDefs[18].ItemColor;
+						row.BackColor=_listProgNoteColorDefs[19].Color;
+						row.ForeColor=_listProgNoteColorDefs[18].Color;
 						row.Cells[0].Text="PtNote";
 					}
 					else if(_listApptOthers[i].AptStatus==ApptStatus.PtNoteCompleted) {
-						row.BackColor=_listProgNoteColorDefs[21].ItemColor;
-						row.ForeColor=_listProgNoteColorDefs[20].ItemColor;
+						row.BackColor=_listProgNoteColorDefs[21].Color;
+						row.ForeColor=_listProgNoteColorDefs[20].Color;
 						row.Cells[0].Text="PtNoteCompleted";
 					}
 					else if(_listApptOthers[i].AptStatus==ApptStatus.Broken) {
 						row.Cells[0].Text="Broken";
 						row.Cells[dateIndex].Text=_listApptOthers[i].AptDateTime.ToString("d");
 						row.Cells[dateIndex+1].Text=_listApptOthers[i].AptDateTime.ToString("t");
-						row.BackColor=_listProgNoteColorDefs[15].ItemColor;
-						row.ForeColor=_listProgNoteColorDefs[14].ItemColor;
+						row.BackColor=_listProgNoteColorDefs[15].Color;
+						row.ForeColor=_listProgNoteColorDefs[14].Color;
 					}
 					else if(_listApptOthers[i].AptStatus==ApptStatus.UnschedList) {
 						row.Cells[0].Text="UnschedList";
-						row.BackColor=_listProgNoteColorDefs[15].ItemColor;
-						row.ForeColor=_listProgNoteColorDefs[14].ItemColor;
+						row.BackColor=_listProgNoteColorDefs[15].Color;
+						row.ForeColor=_listProgNoteColorDefs[14].Color;
 					}
 				}
 				row.Cells.Add((_listApptOthers[i].Pattern.Length * 5).ToString());

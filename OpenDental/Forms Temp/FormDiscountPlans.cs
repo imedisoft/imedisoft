@@ -4,6 +4,8 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using System.Linq;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormDiscountPlans:ODForm {
@@ -40,11 +42,11 @@ namespace OpenDental {
 			GridRow row;
 			int selectedIdx=-1;
 			for(int i=0;i<listDiscountPlans.Count;i++) {
-				Def adjType=Defs.GetDef(DefCat.AdjTypes,listDiscountPlans[i].DefNum);
+				Definition adjType=Definitions.GetDef(DefinitionCategory.AdjTypes,listDiscountPlans[i].DefNum);
 				row=new GridRow();
 				row.Cells.Add(listDiscountPlans[i].Description);
 				row.Cells.Add(FeeScheds.GetDescription(listDiscountPlans[i].FeeSchedNum));
-				row.Cells.Add((adjType==null) ? "" : adjType.ItemName);
+				row.Cells.Add((adjType==null) ? "" : adjType.Name);
 				row.Cells.Add(dictPatientsOnPlan.ContainsKey(listDiscountPlans[i].DiscountPlanNum) 
 					? dictPatientsOnPlan[listDiscountPlans[i].DiscountPlanNum].ToString() : "0");
 				if(checkShowHidden.Checked) {

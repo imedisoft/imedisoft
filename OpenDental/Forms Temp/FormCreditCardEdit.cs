@@ -8,6 +8,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using Imedisoft.UI;
 using OpenDentBusiness;
 using OpenDentBusiness.IO;
@@ -147,7 +149,7 @@ namespace OpenDental {
 
 		private void FillPayTypeCombo() {
 			comboPaymentType.Items.AddDefNone("Use Default");
-			comboPaymentType.Items.AddDefs(Defs.GetDefsForCategory(DefCat.PaymentTypes,true));
+			comboPaymentType.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.PaymentTypes,true));
 			comboPaymentType.SetSelectedDefNum(CreditCardCur.PaymentType);
 		}
 

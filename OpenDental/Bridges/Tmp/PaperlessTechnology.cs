@@ -1,4 +1,6 @@
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
@@ -640,7 +642,7 @@ namespace OpenDental.Bridges
 					sw.Write(Tidy(referral.EMail) + ",");//PAT_REFEML Referral source email
 					if (referral.PatNum == 0 && !referral.NotPerson)
 					{//not a patient, and is a person
-						sw.Write(Defs.GetName(DefCat.ProviderSpecialties, referral.Specialty));
+						sw.Write(Definitions.GetName(DefinitionCategory.ProviderSpecialties, referral.Specialty));
 					}
 					sw.Write(",");//PAT_REFSPE Referral specialty. Customizable, so any allowed
 				}

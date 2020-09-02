@@ -1490,7 +1490,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		public const string PrePayAllowedForTpProcs = "PrePayAllowedForTpProcs";
 
-		///<summary>FK to definition.DefNum for PaySplitUnearnedType defcat (29)</summary>
+		///<summary>FK to definition.DefNum for PaySplitUnearnedType DefinitionCategory.(29)</summary>
 		public const string PrepaymentUnearnedType = "PrepaymentUnearnedType";
 
 		/// <summary>
@@ -1587,13 +1587,13 @@ namespace OpenDentBusiness
 		public const string ReactivationPostcardMessage = "ReactivationPostcardMessage";
 		///<summary>Integer.  3 by default.</summary>
 		public const string ReactivationPostcardsPerSheet = "ReactivationPostcardsPerSheet";
-		///<summary>FK to definition.DefNum. Uses the existing RecallUnschedStatus DefCat.</summary>
+		///<summary>FK to definition.DefNum. Uses the existing RecallUnschedStatus DefinitionCategory.</summary>
 		public const string ReactivationStatusEmailed = "ReactivationStatusEmailed";
-		///<summary>FK to definition.DefNum. Uses the existing RecallUnschedStatus DefCat.</summary>
+		///<summary>FK to definition.DefNum. Uses the existing RecallUnschedStatus DefinitionCategory.</summary>
 		public const string ReactivationStatusEmailedTexted = "ReactivationStatusEmailedTexted";
-		///<summary>FK to definition.DefNum. Uses the existing RecallUnschedStatus DefCat.</summary>
+		///<summary>FK to definition.DefNum. Uses the existing RecallUnschedStatus DefinitionCategory.</summary>
 		public const string ReactivationStatusMailed = "ReactivationStatusMailed";
-		///<summary>FK to definition.DefNum. Uses the existing RecallUnschedStatus DefCat.</summary>
+		///<summary>FK to definition.DefNum. Uses the existing RecallUnschedStatus DefinitionCategory.</summary>
 		public const string ReactivationStatusTexted = "ReactivationStatusTexted";
 		public const string RecallAdjustDown = "RecallAdjustDown";
 		public const string RecallAdjustRight = "RecallAdjustRight";

@@ -9,6 +9,8 @@ using System.Linq;
 using OpenDental.UI;
 using CodeBase;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormPatientAddAll:ODForm {
@@ -61,7 +63,7 @@ namespace OpenDental {
 		private Commlog _commlog;
 		private List<Provider> _listProviders;
 		private List<ZipCode> _listZipCodes;
-		private List<Def> _listBillingTypeDefs;
+		private List<Definition> _listBillingTypeDefs;
 
 		public FormPatientAddAll() {
 			InitializeComponent();
@@ -1197,11 +1199,11 @@ namespace OpenDental {
 		}
 
 		private void FillComboBillTypes(ComboBox comboBox) {
-			_listBillingTypeDefs=Defs.GetDefsForCategory(DefCat.BillingTypes,true);
+			_listBillingTypeDefs=Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes,true);
 			comboBox.Items.Clear();
 			for(int i=0;i<_listBillingTypeDefs.Count;i++){
-				comboBox.Items.Add(_listBillingTypeDefs[i].ItemName);
-				if(_listBillingTypeDefs[i].DefNum==Prefs.GetLong(PrefName.PracticeDefaultBillType)) {
+				comboBox.Items.Add(_listBillingTypeDefs[i].Name);
+				if(_listBillingTypeDefs[i].Id==Prefs.GetLong(PrefName.PracticeDefaultBillType)) {
 					comboBox.SelectedIndex=i;
 				}
 			}
@@ -2314,7 +2316,7 @@ namespace OpenDental {
 						pat.WirelessPhone=textWirelessPhone1.Text;
 						pat.TxtMsgOk=(YN)listTextOk1.SelectedIndex;
 						pat.PatStatus=(PatientStatus)listStatus1.SelectedIndex;
-						pat.BillingType=_listBillingTypeDefs[comboBillType1.SelectedIndex].DefNum;
+						pat.BillingType=_listBillingTypeDefs[comboBillType1.SelectedIndex].Id;
 						if(PrefC.HasClinicsEnabled) {
 							pat.ClinicNum=comboClinic1.SelectedClinicNum;
 						}
@@ -2345,7 +2347,7 @@ namespace OpenDental {
 						pat.WirelessPhone=textWirelessPhone2.Text;
 						pat.TxtMsgOk=(YN)listTextOk2.SelectedIndex;
 						pat.PatStatus=(PatientStatus)listStatus2.SelectedIndex;
-						pat.BillingType=_listBillingTypeDefs[comboBillType2.SelectedIndex].DefNum;
+						pat.BillingType=_listBillingTypeDefs[comboBillType2.SelectedIndex].Id;
 						if(PrefC.HasClinicsEnabled) {
 							pat.ClinicNum=comboClinic2.SelectedClinicNum;
 						}
@@ -2376,7 +2378,7 @@ namespace OpenDental {
 						pat.WirelessPhone=textWirelessPhone3.Text;
 						pat.TxtMsgOk=(YN)listTextOk3.SelectedIndex;
 						pat.PatStatus=(PatientStatus)listStatus3.SelectedIndex;
-						pat.BillingType=_listBillingTypeDefs[comboBillType3.SelectedIndex].DefNum;
+						pat.BillingType=_listBillingTypeDefs[comboBillType3.SelectedIndex].Id;
 						if(PrefC.HasClinicsEnabled) {
 							pat.ClinicNum=comboClinic3.SelectedClinicNum;
 						}
@@ -2407,7 +2409,7 @@ namespace OpenDental {
 						pat.WirelessPhone=textWirelessPhone4.Text;
 						pat.TxtMsgOk=(YN)listTextOk4.SelectedIndex;
 						pat.PatStatus=(PatientStatus)listStatus4.SelectedIndex;
-						pat.BillingType=_listBillingTypeDefs[comboBillType4.SelectedIndex].DefNum;
+						pat.BillingType=_listBillingTypeDefs[comboBillType4.SelectedIndex].Id;
 						if(PrefC.HasClinicsEnabled) {
 							pat.ClinicNum=comboClinic4.SelectedClinicNum;
 						}
@@ -2438,7 +2440,7 @@ namespace OpenDental {
 						pat.WirelessPhone=textWirelessPhone5.Text;
 						pat.TxtMsgOk=(YN)listTextOk5.SelectedIndex;
 						pat.PatStatus=(PatientStatus)listStatus5.SelectedIndex;
-						pat.BillingType=_listBillingTypeDefs[comboBillType5.SelectedIndex].DefNum;
+						pat.BillingType=_listBillingTypeDefs[comboBillType5.SelectedIndex].Id;
 						if(PrefC.HasClinicsEnabled) {
 							pat.ClinicNum=comboClinic5.SelectedClinicNum;
 						}

@@ -16,6 +16,8 @@ using System.Diagnostics;
 using System.Linq;
 using CodeBase;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -377,7 +379,7 @@ namespace OpenDental{
 					comboFeeSched.SelectedIndex=comboFeeSched.Items.Count-1;
 				}
 			}
-			comboBillType.Items.AddDefs(Defs.GetDefsForCategory(DefCat.BillingTypes,true));
+			comboBillType.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes,true));
 			comboBillType.SetSelectedDefNum(PatCur.BillingType); 
 			if(comboBillType.SelectedIndex==-1){
 				if(comboBillType.Items.Count==0) {
@@ -647,13 +649,13 @@ namespace OpenDental{
 			comboSpecialty.Items.Clear();
 			//Create a dummy specialty of 0 if there no specialties created.
 			comboSpecialty.Items.AddDefNone("Unspecified");
-			comboSpecialty.Items.AddDefs(Defs.GetDefsForCategory(DefCat.ClinicSpecialty,true));
+			comboSpecialty.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.ClinicSpecialty,true));
 			_defLinkPatCur=DefLinks.GetOneByFKey(PatCur.PatNum,DefLinkType.Patient);
 			if(_defLinkPatCur==null) {
 				comboSpecialty.SetSelectedDefNum(0);
 			}
 			else{
-				comboSpecialty.SetSelectedDefNum(_defLinkPatCur.DefNum);
+				comboSpecialty.SetSelectedDefNum(_defLinkPatCur.DefinitionId);
 			}
 		}
 
@@ -3135,16 +3137,16 @@ namespace OpenDental{
 			long defNum=comboSpecialty.GetSelectedDefNum();
 			if(_defLinkPatCur!=null) {
 				if(defNum==0) {
-					DefLinks.Delete(_defLinkPatCur.DefLinkNum);
+					DefLinks.Delete(_defLinkPatCur.Id);
 				}
 				else {
-					_defLinkPatCur.DefNum=defNum;
+					_defLinkPatCur.DefinitionId=defNum;
 					DefLinks.Update(_defLinkPatCur);
 				}
 			}
 			else if(defNum!=0){//if the patient does not have a specialty and "Unspecified" is not selected. 
 				DefLink defLinkNew=new DefLink();
-				defLinkNew.DefNum=defNum;
+				defLinkNew.DefinitionId=defNum;
 				defLinkNew.FKey=PatCur.PatNum;
 				defLinkNew.LinkType=DefLinkType.Patient;
 				DefLinks.Insert(defLinkNew);

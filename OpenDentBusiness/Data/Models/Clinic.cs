@@ -1,4 +1,5 @@
 using Imedisoft.Data.Annotations;
+using Imedisoft.Data.Models;
 using Imedisoft.X12.Codes;
 
 namespace OpenDentBusiness
@@ -134,7 +135,7 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// The ID of the definition of the region of the clinic.
 		/// </summary>
-		[ForeignKey(typeof(Def), nameof(Def.DefNum))]
+		[ForeignKey(typeof(Definition), nameof(Definition.Id))]
 		public long? Region;
 
 		/// <summary>

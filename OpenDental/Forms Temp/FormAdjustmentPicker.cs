@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using System.Linq;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormAdjustmentPicker:ODForm {
@@ -58,7 +60,7 @@ namespace OpenDental {
 				row=new GridRow();
 				row.Cells.Add(adjCur.AdjDate.ToShortDateString());
 				row.Cells.Add(adjCur.PatNum.ToString());
-				row.Cells.Add(Defs.GetName(DefCat.AdjTypes,adjCur.AdjType));
+				row.Cells.Add(Definitions.GetName(DefinitionCategory.AdjTypes,adjCur.AdjType));
 				row.Cells.Add(adjCur.AdjAmt.ToString("F"));
 				if(adjCur.ProcNum!=0){
 					row.Cells.Add("X");

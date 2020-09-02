@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
@@ -40,7 +41,7 @@ namespace OpenDentBusiness {
 			}
 			query+=whereType;
 			query+="ORDER BY adjustment.AdjDate";
-			return ReportsComplex.RunFuncOnReportServer(() => ReportsComplex.GetTable(query));
+			return Database.ExecuteDataTable(query);
 		}	
 	}
 

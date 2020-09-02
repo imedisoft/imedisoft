@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -209,7 +211,7 @@ namespace OpenDental {
 						}
 						break;
 					case RequiredFieldName.BillingType:
-						condVal=Defs.GetName(DefCat.BillingTypes,PIn.Long(condVal));
+						condVal=Definitions.GetName(DefinitionCategory.BillingTypes,PIn.Long(condVal));
 						break;
 					case RequiredFieldName.PrimaryProvider:
 						condVal=Providers.GetLongDesc(PIn.Long(condVal));

@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -26,7 +28,7 @@ namespace OpenDental {
 		private Label labelPassword;
 		private UI.Button butBrowse;
 		private CheckBox checkEnabled;
-		private List<Def> _listBillingTypeDefs;
+		private List<Definition> _listBillingTypeDefs;
 		private Program _progCur;
 
 		///<summary></summary>
@@ -202,9 +204,9 @@ namespace OpenDental {
 			_progCur=Programs.GetCur(ProgramName.TrojanExpressCollect);
 			textExportFolder.Text=ProgramProperties.GetPropVal(_progCur.Id,"FolderPath");
 			long billtype=PIn.Long(ProgramProperties.GetPropVal(_progCur.Id,"BillingType"));
-			_listBillingTypeDefs=Defs.GetDefsForCategory(DefCat.BillingTypes,true);
-			comboBillType.Items.AddRange(_listBillingTypeDefs.Select(x => x.ItemName).ToArray());
-			comboBillType.SelectedIndex=Math.Max(_listBillingTypeDefs.FindIndex(x => x.DefNum==billtype),0);
+			_listBillingTypeDefs=Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes,true);
+			comboBillType.Items.AddRange(_listBillingTypeDefs.Select(x => x.Name).ToArray());
+			comboBillType.SelectedIndex=Math.Max(_listBillingTypeDefs.FindIndex(x => x.Id==billtype),0);
 			textPassword.Text=ProgramProperties.GetPropVal(_progCur.Id,"Password");
 			checkEnabled.Checked=_progCur.Enabled;
 		}
@@ -253,7 +255,7 @@ namespace OpenDental {
 			}
 			long billtype=-1;
 			if(comboBillType.SelectedIndex>-1) {
-				billtype=_listBillingTypeDefs[comboBillType.SelectedIndex].DefNum;
+				billtype=_listBillingTypeDefs[comboBillType.SelectedIndex].Id;
 			}
 			bool hasChanges=false;
 			if(_progCur.Enabled!=checkEnabled.Checked) {

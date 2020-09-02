@@ -8,6 +8,8 @@ using System.Text.RegularExpressions;
 using System.Collections;
 using OpenDentBusiness.SheetFramework;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	public class SheetFiller {
@@ -485,7 +487,7 @@ namespace OpenDentBusiness {
 								+Procedures.GetDescription(procListTP[i])+", "
 								+procListTP[i].ProcFee.ToString("c");
 							//Get the procedure's priority.
-							string priority=Defs.GetName(DefCat.TxPriorities,procListTP[i].Priority);
+							string priority=Definitions.GetName(DefinitionCategory.TxPriorities,procListTP[i].Priority);
 							if(priority=="") {
 								priority="No priority";
 							}
@@ -503,7 +505,7 @@ namespace OpenDentBusiness {
 				if(tempReferralFrom!=null) {
 					if(tempReferralFrom.IsDoctor) {
 						referredFrom+=tempReferralFrom.FName+" "+tempReferralFrom.LName+" "+tempReferralFrom.Title+" : "
-							+Defs.GetName(DefCat.ProviderSpecialties,tempReferralFrom.Specialty);
+							+Definitions.GetName(DefinitionCategory.ProviderSpecialties,tempReferralFrom.Specialty);
 					}
 					else {
 						referredFrom+=tempReferralFrom.FName+" "+tempReferralFrom.LName;
@@ -516,7 +518,7 @@ namespace OpenDentBusiness {
 					Referral tempRef;
 					if(Referrals.TryGetReferral(RefAttachList[i].ReferralNum,out tempRef)) {
 						if(tempRef.IsDoctor) {
-							referredTo+=tempRef.FName+" "+tempRef.LName+" "+tempRef.Title+" : "+Defs.GetName(DefCat.ProviderSpecialties,tempRef.Specialty)+" "
+							referredTo+=tempRef.FName+" "+tempRef.LName+" "+tempRef.Title+" : "+Definitions.GetName(DefinitionCategory.ProviderSpecialties,tempRef.Specialty)+" "
 								+RefAttachList[i].RefDate.ToShortDateString()+"\r\n";
 						}
 						else {
@@ -1038,7 +1040,7 @@ namespace OpenDentBusiness {
 					fldval=fldval.Replace(StaticTextField.balOver90.ToReplacementString(),fam.ListPats[0].BalOver90.ToString("c"));
 					fldval=fldval.Replace(StaticTextField.balInsEst.ToReplacementString(),fam.ListPats[0].InsEst.ToString("c"));
 					fldval=fldval.Replace(StaticTextField.balTotalMinusInsEst.ToReplacementString(),(fam.ListPats[0].BalTotal-fam.ListPats[0].InsEst).ToString("c"));
-					fldval=fldval.Replace(StaticTextField.BillingType.ToReplacementString(),Defs.GetName(DefCat.BillingTypes,pat.BillingType));
+					fldval=fldval.Replace(StaticTextField.BillingType.ToReplacementString(),Definitions.GetName(DefinitionCategory.BillingTypes,pat.BillingType));
 					fldval=fldval.Replace(StaticTextField.Birthdate.ToReplacementString(),birthdate);
 					fldval=fldval.Replace(StaticTextField.carrierName.ToReplacementString(),carrierName);
 					fldval=fldval.Replace(StaticTextField.carrier2Name.ToReplacementString(),carrier2Name);

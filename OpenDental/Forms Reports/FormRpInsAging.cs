@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using OpenDental.ReportingComplex;
 using OpenDentBusiness;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	///<summary></summary>
@@ -43,7 +45,7 @@ namespace OpenDental{
 		private Label labelCarrier;
 		#endregion
 		private List<Provider> _listProviders;
-		private List<Def> _listBillingTypeDefs;
+		private List<Definition> _listBillingTypeDefs;
 
 		///<summary></summary>
 		public FormRpInsAging(){
@@ -433,8 +435,8 @@ namespace OpenDental{
 			else{
 				textDate.Text=DateTime.Today.ToShortDateString();
 			}
-			_listBillingTypeDefs=Defs.GetDefsForCategory(DefCat.BillingTypes,true);
-			listBillType.Items.AddRange(_listBillingTypeDefs.Select(x => x.ItemName).ToArray());
+			_listBillingTypeDefs=Definitions.GetByCategory(DefinitionCategory.BillingTypes);
+			listBillType.Items.AddRange(_listBillingTypeDefs.Select(x => x.Name).ToArray());
 			listBillType.SelectedIndex=(listBillType.Items.Count>0?0:-1);
 			checkBillTypesAll.Checked=true; //all billing types by default, event handler will set visibility
 			listProv.Items.AddRange(_listProviders.Select(x => x.GetLongDesc()).ToArray());
@@ -491,7 +493,7 @@ namespace OpenDental{
 			rpo.IsGroupByFam=radioGroupByFam.Checked;
 			rpo.IsInsPayWoCombined=false;
 			if(!checkBillTypesAll.Checked) {
-				rpo.ListBillTypes=listBillType.SelectedIndices.OfType<int>().Select(x => _listBillingTypeDefs[x].DefNum).ToList();
+				rpo.ListBillTypes=listBillType.SelectedIndices.OfType<int>().Select(x => _listBillingTypeDefs[x].Id).ToList();
 			}
 			if(!checkProvAll.Checked) {
 				rpo.ListProvNums=listProv.SelectedIndices.OfType<int>().Select(x => _listProviders[x].ProvNum).ToList();
@@ -572,7 +574,7 @@ namespace OpenDental{
 				report.AddSubTitle("AllBillingTypes","All Billing Types");
 			}
 			else{
-				report.AddSubTitle("",string.Join(", ",listBillType.SelectedIndices.OfType<int>().Select(x => _listBillingTypeDefs[x].ItemName)));//there must be at least one selected
+				report.AddSubTitle("",string.Join(", ",listBillType.SelectedIndices.OfType<int>().Select(x => _listBillingTypeDefs[x].Name)));//there must be at least one selected
 			}
 			if(checkProvAll.Checked) {
 				report.AddSubTitle("Providers","All Providers");

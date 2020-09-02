@@ -14,6 +14,8 @@ using OpenDental.UI;
 using OpenDentBusiness;
 using OpenDentBusiness.HL7;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	///<summary>The Appointments Module.</summary>
@@ -304,7 +306,7 @@ namespace OpenDental {
 				for(int p=0;p<ListSchedulesBlockout[i].Ops.Count;p++) {
 					if(ListSchedulesBlockout[i].Ops[p]==e.OpNum) {
 						clickedOnBlockCount++;
-						blockoutFlags=Defs.GetDef(DefCat.BlockoutTypes,ListSchedulesBlockout[i].BlockoutType).ItemValue;
+						blockoutFlags=Definitions.GetDef(DefinitionCategory.BlockoutTypes,ListSchedulesBlockout[i].BlockoutType).Value;
 						break;//out of ops loop
 					}
 				}
@@ -1080,13 +1082,13 @@ namespace OpenDental {
 				return;
 			}
 			DateTime datePrevious=aptOld.DateTStamp;
-			long newStatus=Defs.GetDefsForCategory(DefCat.ApptConfirmed,true)[listConfirmed.IndexFromPoint(e.X,e.Y)].DefNum;
+			long newStatus=Definitions.GetDefsForCategory(DefinitionCategory.ApptConfirmed,true)[listConfirmed.IndexFromPoint(e.X,e.Y)].Id;
 			long oldStatus=aptOld.Confirmed;
 			Appointments.SetConfirmed(aptOld,newStatus);//Appointments S-Class handles Signalods
 			if(newStatus!=oldStatus) {
 				//Log confirmation status changes.
 				SecurityLogs.MakeLogEntry(Permissions.ApptConfirmStatusEdit,aptOld.PatNum,"Appointment confirmation status changed from"+" "
-					+Defs.GetName(DefCat.ApptConfirmed,oldStatus)+" "+"to"+" "+Defs.GetName(DefCat.ApptConfirmed,newStatus)
+					+Definitions.GetName(DefinitionCategory.ApptConfirmed,oldStatus)+" "+"to"+" "+Definitions.GetName(DefinitionCategory.ApptConfirmed,newStatus)
 					+" "+"from the appointment module"+".",contrApptPanel.SelectedAptNum,datePrevious);
 			}
 			RefreshPeriod();
@@ -1518,7 +1520,7 @@ namespace OpenDental {
 				}
 				else {//simple drag off pinboard to a new date/time
 					#region Previously scheduled appointment (not a planned appointment)
-					apptCur.Confirmed=Defs.GetFirstForCategory(DefCat.ApptConfirmed,true).DefNum;//Causes the confirmation status to be reset.
+					apptCur.Confirmed=Definitions.GetFirstForCategory(DefinitionCategory.ApptConfirmed,true).Id;//Causes the confirmation status to be reset.
 					try {
 						Appointments.Update(apptCur,apptOld);//Appointments S-Class handles Signalods
 						if(apptOld.AptStatus==ApptStatus.UnschedList&&apptOld.AptDateTime==DateTime.MinValue) { //If new appt is being added to schedule from pinboard
@@ -1539,7 +1541,7 @@ namespace OpenDental {
 							//Log confirmation status changes.
 							SecurityLogs.MakeLogEntry(Permissions.ApptConfirmStatusEdit,apptCur.PatNum,
 								"Appointment confirmation status automatically changed from "
-								+Defs.GetName(DefCat.ApptConfirmed,apptOld.Confirmed)+" to "+Defs.GetName(DefCat.ApptConfirmed,apptCur.Confirmed)
+								+Definitions.GetName(DefinitionCategory.ApptConfirmed,apptOld.Confirmed)+" to "+Definitions.GetName(DefinitionCategory.ApptConfirmed,apptCur.Confirmed)
 								+" from the appointment module"+".",apptCur.AptNum,apptOld.DateTStamp);
 						}
 						//If there is an existing HL7 def enabled, send a SIU message if there is an outbound SIU message defined
@@ -2033,11 +2035,11 @@ namespace OpenDental {
 
 		private void menuBlockAdd_Click(object sender,EventArgs e) {
 			//Pre-calculate the list of Blockout Types to show in FormScheduleBlockEdit
-			List<Def> listDefsBlockoutTypes=Defs.GetDefsForCategory(DefCat.BlockoutTypes, true);	
+			List<Definition> listDefsBlockoutTypes=Definitions.GetDefsForCategory(DefinitionCategory.BlockoutTypes, true);	
 			if(!Security.IsAuthorized(Permissions.Blockouts,true)) {
 				//This is a special case, so we only keep blockouts that are marked as NoSchedule or DontCopy
-				listDefsBlockoutTypes.RemoveAll(x => !x.ItemValue.Contains(BlockoutType.DontCopy.GetDescription()) 
-					&& !x.ItemValue.Contains(BlockoutType.NoSchedule.GetDescription()));
+				listDefsBlockoutTypes.RemoveAll(x => !x.Value.Contains(BlockoutType.DontCopy.GetDescription()) 
+					&& !x.Value.Contains(BlockoutType.NoSchedule.GetDescription()));
 				if(listDefsBlockoutTypes.Count==0 && !Security.IsAuthorized(Permissions.Blockouts)) {//Intentional for error message
 					//Security.IsAuthorized(...) will display the "Not authorized message."
 					return;
@@ -2156,11 +2158,11 @@ namespace OpenDental {
 
 		private void menuBlockEdit_Click(object sender,EventArgs e) {
 			//Pre-calculate the list of blockouts to show.  If the user doesn't have the permission then a modified list is shown.
-			List<Def> listUserBlockoutDefs=Defs.GetDefsForCategory(DefCat.BlockoutTypes, true);	
+			List<Definition> listUserBlockoutDefs=Definitions.GetDefsForCategory(DefinitionCategory.BlockoutTypes, true);	
 			if(!Security.IsAuthorized(Permissions.Blockouts,true)) {
 				//The modified list will only show blockouts marked as "DontCopy" or "NoSchedule"
-				listUserBlockoutDefs.RemoveAll(x => !x.ItemValue.Contains(BlockoutType.DontCopy.GetDescription()) 
-					&& !x.ItemValue.Contains(BlockoutType.NoSchedule.GetDescription()));
+				listUserBlockoutDefs.RemoveAll(x => !x.Value.Contains(BlockoutType.DontCopy.GetDescription()) 
+					&& !x.Value.Contains(BlockoutType.NoSchedule.GetDescription()));
 			}
 			//not even enabled if not right click on a blockout
 			Schedule scheduleClicked=GetClickedBlockout();
@@ -2209,7 +2211,7 @@ namespace OpenDental {
 			if(!Security.IsAuthorized(Permissions.Setup)) {
 				return;
 			}
-			FormDefinitions FormD=new FormDefinitions(DefCat.BlockoutTypes);
+			FormDefinitions FormD=new FormDefinitions(DefinitionCategory.BlockoutTypes);
 			FormD.ShowDialog();
 			SecurityLogs.MakeLogEntry(Permissions.Setup,0,"Definitions.");
 			RefreshPeriodSchedules();
@@ -2602,11 +2604,11 @@ namespace OpenDental {
 			contrApptPanel.BeginUpdate();
 			//Setting these properties is low overhead, and is necessary if user changed them.
 			contrApptPanel.MinPerIncr=PrefC.GetInt(PrefName.AppointmentTimeIncrement);
-			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.AppointmentColors,true);
-			Color colorOpen=listDefs[0].ItemColor;
-			Color colorClosed=listDefs[1].ItemColor;
-			Color colorHoliday=listDefs[3].ItemColor;
-			Color colorBlockText=listDefs[4].ItemColor;
+			List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.AppointmentColors,true);
+			Color colorOpen=listDefs[0].Color;
+			Color colorClosed=listDefs[1].Color;
+			Color colorHoliday=listDefs[3].Color;
+			Color colorBlockText=listDefs[4].Color;
 			Color colorTimeLine=PrefC.GetColor(PrefName.AppointmentTimeLineColor);
 			contrApptPanel.SetColors(colorOpen,colorClosed,colorHoliday,colorBlockText,colorTimeLine);
 			contrApptPanel.SizeFont=float.Parse(Prefs.GetString(PrefName.ApptFontSize));
@@ -2820,7 +2822,7 @@ namespace OpenDental {
 			}
 			row.Cells.Add(dateStr+objDesc+reminderTask.Description);
 			//No need to do any text detection for triage priorities, we'll just use the task priority colors.
-			row.BackColor=Defs.GetColor(DefCat.TaskPriorities,reminderTask.PriorityId);
+			row.BackColor=Definitions.GetColor(DefinitionCategory.TaskPriorities,reminderTask.PriorityId);
 		}
 		#endregion Methods - Public Other
 
@@ -3149,9 +3151,9 @@ namespace OpenDental {
 			}
 			//considered only doing this once when starting program, but would then need to refresh it if we change definitions.  Might still try that.
 			listConfirmed.Items.Clear();
-			List<Def> listDefs=Defs.GetDefsForCategory(DefCat.ApptConfirmed,true);
+			List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.ApptConfirmed,true);
 			for(int i=0;i<listDefs.Count;i++) {
-				this.listConfirmed.Items.Add(listDefs[i].ItemValue);
+				this.listConfirmed.Items.Add(listDefs[i].Value);
 			}
 			DataRow dataRow=contrApptPanel.GetDataRowForSelected();
 			if(dataRow!=null) {
@@ -3160,7 +3162,7 @@ namespace OpenDental {
 				butComplete.Enabled=true;
 				butDelete.Enabled=true;
 				string confirmed=dataRow["Confirmed"].ToString();
-				listConfirmed.SelectedIndex=Defs.GetOrder(DefCat.ApptConfirmed,PIn.Long(confirmed));//could be -1
+				listConfirmed.SelectedIndex=Definitions.GetOrder(DefinitionCategory.ApptConfirmed,PIn.Long(confirmed));//could be -1
 				if(!Security.IsAuthorized(Permissions.ApptConfirmStatusEdit,true)) {//Suppress message because it would be very annoying to users.
 					listConfirmed.Enabled=false;
 				}
@@ -3176,7 +3178,7 @@ namespace OpenDental {
 				listConfirmed.Enabled=false;
 				if(pinBoard.SelectedIndex!=-1){
 					dataRow=pinBoard.ListPinBoardItems[pinBoard.SelectedIndex].DataRowAppt;
-					listConfirmed.SelectedIndex=Defs.GetOrder(DefCat.ApptConfirmed,PIn.Long(dataRow["Confirmed"].ToString()));//could be -1
+					listConfirmed.SelectedIndex=Definitions.GetOrder(DefinitionCategory.ApptConfirmed,PIn.Long(dataRow["Confirmed"].ToString()));//could be -1
 				}
 			}
 		}
@@ -3547,7 +3549,7 @@ namespace OpenDental {
 				}
 			}
 			////Next, loop through blockouts that don't allow scheduling and adjust the slot size
-			List<Def> listDefsBlockoutTypes=Defs.GetDefsForCategory(DefCat.BlockoutTypes);
+			List<Definition> listDefsBlockoutTypes=Definitions.GetDefsForCategory(DefinitionCategory.BlockoutTypes);
 			foreach(Schedule blockout in Schedules.GetForType(contrApptPanel.ListSchedules,ScheduleType.Blockout,0)
 				.Where(x => x.SchedDate==dateTimeClicked.Date && x.Ops.Contains(opNum))) 
 			{
@@ -3991,7 +3993,7 @@ namespace OpenDental {
 				appt.ClinicNum=operatoryCur.ClinicNum;
 			}
 			if(appt.AptDateTime!=apptOld.AptDateTime
-				&& appt.Confirmed!=Defs.GetFirstForCategory(DefCat.ApptConfirmed,true).DefNum
+				&& appt.Confirmed!=Definitions.GetFirstForCategory(DefinitionCategory.ApptConfirmed,true).Id
 				&& appt.AptDateTime.Date!=DateTime.Today) 
 			{
 				string prompt;
@@ -4006,7 +4008,7 @@ namespace OpenDental {
 				}
 				bool doResetConf=MsgBox.Show(MsgBoxButtons.YesNo,prompt);
 				if(doResetConf) {
-					appt.Confirmed=Defs.GetFirstForCategory(DefCat.ApptConfirmed,true).DefNum;//Causes the confirmation status to be reset.
+					appt.Confirmed=Definitions.GetFirstForCategory(DefinitionCategory.ApptConfirmed,true).Id;//Causes the confirmation status to be reset.
 				}
 				if(Prefs.GetBool(PrefName.ApptConfirmAutoEnabled)) {
 					List<ConfirmationRequest> listConfirmations=ConfirmationRequests.GetAllForAppts(new List<long> { appt.AptNum});

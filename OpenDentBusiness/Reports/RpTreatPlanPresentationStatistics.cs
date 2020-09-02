@@ -12,8 +12,8 @@ namespace OpenDentBusiness
 		///<summary>If not using clinics then supply an empty list of clinicNums.</summary>
 		public static DataTable GetTreatPlanPresentationStatistics(DateTime dateStart, DateTime dateEnd, bool isFirstPresented, bool hasAllClinics, bool hasClinicsEnabled, bool isPresenter, bool isGross, bool hasAllUsers, List<long> listUserNums, List<long> listClinicNums)
 		{
-			List<ProcTP> listProcTPsAll = ReportsComplex.RunFuncOnReportServer(() => ProcTPs.GetAllLim());
-			List<TreatPlan> listSavedTreatPlans = ReportsComplex.RunFuncOnReportServer(() => TreatPlans.GetAllSavedLim());
+			List<ProcTP> listProcTPsAll = ProcTPs.GetAllLim();
+			List<TreatPlan> listSavedTreatPlans = TreatPlans.GetAllSavedLim();
 			List<ProcTpTreatPlan> listProcTPTreatPlans = new List<ProcTpTreatPlan>();
 			listProcTPsAll.ForEach(x =>
 			{
@@ -48,20 +48,20 @@ namespace OpenDentBusiness
 			listProcTPTreatPlans = listProcTPTreatPlans.Where(x => x.TreatPlanCur.DateTP.Date >= dateStart
 				  && x.TreatPlanCur.DateTP.Date <= dateEnd).ToList();
 			//Get the associated procedures, claimprocs, adjustments, users, appointments.
-			List<Procedure> listProcsForTreatPlans = ReportsComplex.RunFuncOnReportServer(() =>
-				Procedures.GetForProcTPs(listProcTPTreatPlans.Select(x => x.ProcTPCur).ToList(), ProcStat.C, ProcStat.TP));
+			List<Procedure> listProcsForTreatPlans = 
+				Procedures.GetForProcTPs(listProcTPTreatPlans.Select(x => x.ProcTPCur).ToList(), ProcStat.C, ProcStat.TP);
 			if (hasClinicsEnabled && !hasAllClinics)
 			{
 				listProcsForTreatPlans =
 					listProcsForTreatPlans.FindAll(x => listClinicNums.Contains(x.ClinicNum));
 			}
-			List<ClaimProc> listClaimProcs = ReportsComplex.RunFuncOnReportServer(() => ClaimProcs.GetForProcsLimited(listProcsForTreatPlans.Select(x => x.ProcNum).ToList(),
-				  ClaimProcStatus.CapComplete, ClaimProcStatus.NotReceived, ClaimProcStatus.Received, ClaimProcStatus.Supplemental, ClaimProcStatus.Estimate));
-			List<Adjustment> listAdjustments = ReportsComplex.RunFuncOnReportServer(() => Adjustments.GetForProcs(listProcsForTreatPlans.Select(x => x.ProcNum).ToList()));
-			List<Userod> listUserods = ReportsComplex.RunFuncOnReportServer(() => Userods.GetAll());
+			List<ClaimProc> listClaimProcs = ClaimProcs.GetForProcsLimited(listProcsForTreatPlans.Select(x => x.ProcNum).ToList(),
+				  ClaimProcStatus.CapComplete, ClaimProcStatus.NotReceived, ClaimProcStatus.Received, ClaimProcStatus.Supplemental, ClaimProcStatus.Estimate);
+			List<Adjustment> listAdjustments = Adjustments.GetForProcs(listProcsForTreatPlans.Select(x => x.ProcNum).ToList());
+			List<Userod> listUserods = Userods.GetAll();
 			List<TreatPlanPresenterEntry> listTreatPlanPresenterEntries = new List<TreatPlanPresenterEntry>();
-			List<ProcedureCode> listProcCodes = ReportsComplex.RunFuncOnReportServer(() => ProcedureCodes.GetCodesForCodeNums(listProcsForTreatPlans.Select(x => x.CodeNum).ToList()));
-			List<Appointment> listApts = ReportsComplex.RunFuncOnReportServer(() => Appointments.GetMultApts(listProcsForTreatPlans.Select(x => x.AptNum).ToList()));
+			List<ProcedureCode> listProcCodes = ProcedureCodes.GetCodesForCodeNums(listProcsForTreatPlans.Select(x => x.CodeNum).ToList());
+			List<Appointment> listApts = Appointments.GetMultApts(listProcsForTreatPlans.Select(x => x.AptNum).ToList());
 			double amt = listProcsForTreatPlans.Sum(x => x.ProcFee);
 			foreach (Procedure procCur in listProcsForTreatPlans)
 			{

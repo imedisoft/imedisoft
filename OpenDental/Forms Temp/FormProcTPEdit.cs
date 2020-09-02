@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using System.Collections.Generic;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -50,7 +52,7 @@ namespace OpenDental{
 		private bool _isSigned;
 		private ValidDouble textFeeAllowed;
 		private Label labelFeeAllowed;
-		private List<Def> _listTxPriorityDefs;
+		private List<Definition> _listTxPriorityDefs;
 
 		///<summary></summary>
 		public FormProcTPEdit(ProcTP procCur,DateTime dateTP,bool isSigned)
@@ -465,10 +467,10 @@ namespace OpenDental{
 			}
 			comboPriority.Items.Add("none");
 			comboPriority.SelectedIndex=0;
-			_listTxPriorityDefs=Defs.GetDefsForCategory(DefCat.TxPriorities,true);
+			_listTxPriorityDefs=Definitions.GetDefsForCategory(DefinitionCategory.TxPriorities,true);
 			for(int i=0;i<_listTxPriorityDefs.Count;i++){
-				comboPriority.Items.Add(_listTxPriorityDefs[i].ItemName);
-				if(ProcCur.Priority==_listTxPriorityDefs[i].DefNum){
+				comboPriority.Items.Add(_listTxPriorityDefs[i].Name);
+				if(ProcCur.Priority==_listTxPriorityDefs[i].Id){
 					comboPriority.SelectedIndex=i+1;
 				}
 			}
@@ -515,7 +517,7 @@ namespace OpenDental{
 				ProcCur.Priority=0;
 			}
 			else{
-				ProcCur.Priority=_listTxPriorityDefs[comboPriority.SelectedIndex-1].DefNum;
+				ProcCur.Priority=_listTxPriorityDefs[comboPriority.SelectedIndex-1].Id;
 			}
 			ProcCur.ToothNumTP=textToothNumTP.Text;
 			ProcCur.Surf=textSurf.Text;

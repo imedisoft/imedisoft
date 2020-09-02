@@ -11,6 +11,8 @@ using OpenDentBusiness;
 using CodeBase;
 using System.Globalization;
 using Imedisoft.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	///<summary>In-memory form. Changes are not saved to the DB from this form.</summary>
@@ -305,7 +307,7 @@ namespace OpenDental {
 		///<summary>Removes 'Do not send eConfirmations' from the confirmed status for 'eConfirm Sent' if multiple eConfirmations are set up.</summary>
 		private void CheckMultipleEConfirms() {
 			int countEConfirm=_listRulesClinic?.Count(x => x.TypeCur==ApptReminderType.ConfirmationFutureDay && x.Language=="")??0;
-			string confStatusEConfirmSent=Defs.GetDef(DefCat.ApptConfirmed,Prefs.GetLong(PrefName.ApptEConfirmStatusSent)).ItemName;
+			string confStatusEConfirmSent=Definitions.GetDef(DefinitionCategory.ApptConfirmed,Prefs.GetLong(PrefName.ApptEConfirmStatusSent)).Name;
 			List<string> listExclude=Prefs.GetString(PrefName.ApptConfirmExcludeESend)
 				.Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries).ToList();
 			if(ApptReminderRuleCur.TypeCur==ApptReminderType.ConfirmationFutureDay

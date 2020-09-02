@@ -1,4 +1,6 @@
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 using OpenDentBusiness.IO;
@@ -493,11 +495,11 @@ namespace OpenDental
 				comboBoxMultiProv.Items.Add(new ODBoxItem<Provider>(_listProviders[i].GetLongDesc(), _listProviders[i]));
 			}
 			comboBoxMultiProv.SetSelected(0, true);
-			comboBoxMultiBilling.Items.Add(new ODBoxItem<Def>("All", new Def() { DefNum = 0 }));
-			List<Def> listBillingTypeDefs = Defs.GetDefsForCategory(DefCat.BillingTypes, true);
+			comboBoxMultiBilling.Items.Add(new ODBoxItem<Definition>("All", new Definition() { Id = 0 }));
+			List<Definition> listBillingTypeDefs = Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes, true);
 			for (int i = 0; i < listBillingTypeDefs.Count; i++)
 			{
-				comboBoxMultiBilling.Items.Add(new ODBoxItem<Def>(listBillingTypeDefs[i].ItemName, listBillingTypeDefs[i]));
+				comboBoxMultiBilling.Items.Add(new ODBoxItem<Definition>(listBillingTypeDefs[i].Name, listBillingTypeDefs[i]));
 			}
 			comboBoxMultiBilling.SetSelected(0, true);
 			comboMonthStart.SelectedIndex = 0;
@@ -544,7 +546,7 @@ namespace OpenDental
 			Cursor = Cursors.WaitCursor;
 			using (DataTable table = RpTreatmentFinder.GetTreatmentFinderList(checkIncludeNoIns.Checked, checkIncludePatsWithApts.Checked, monthStart, dateSince,
 				aboveAmount, comboBoxMultiProv.SelectedTags<Provider>().Select(x => x.ProvNum).ToList(),
-				comboBoxMultiBilling.SelectedTags<Def>().Select(x => x.DefNum).ToList(), codeRangeFilter.StartRange, codeRangeFilter.EndRange,
+				comboBoxMultiBilling.SelectedTags<Definition>().Select(x => x.Id).ToList(), codeRangeFilter.StartRange, codeRangeFilter.EndRange,
 				comboClinics.ListSelectedClinicNums, checkBenefitAssumeGeneral.Checked))
 			{
 				GridRow row;

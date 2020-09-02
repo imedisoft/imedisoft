@@ -1,3 +1,5 @@
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -13,7 +15,7 @@ namespace Imedisoft.Forms
 {
     public partial class FormTaskSearch : FormBase
 	{
-		private readonly List<Def> taskPriorities;
+		private readonly List<Definition> taskPriorities;
 		private readonly List<long> preloadedTaskIds = new List<long>();
 		private List<Userod> users;
 		private List<Tasks.TaskSearchResult> searchResults;
@@ -34,7 +36,7 @@ namespace Imedisoft.Forms
 		{
 			InitializeComponent();
 
-			taskPriorities = Defs.GetDefsForCategory(DefCat.TaskPriorities);
+			taskPriorities = Definitions.GetByCategory(DefinitionCategory.TaskPriorities, true);
 
 			if (preloadedTaskIds != null)
 			{
@@ -103,9 +105,9 @@ namespace Imedisoft.Forms
 		private void RefreshTable()
 		{
 			long? priorityId = null;
-			if (priorityComboBox.SelectedItem is Def priority)
+			if (priorityComboBox.SelectedItem is Definition priority)
             {
-				priorityId = priority.DefNum;
+				priorityId = priority.Id;
             }
 
 			long? userId = null;

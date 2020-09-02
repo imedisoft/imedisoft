@@ -8,6 +8,8 @@ using OpenDentBusiness;
 using System.Linq;
 using CodeBase;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	///<summary>Summary description for FormPaySplitEdit.</summary>
@@ -35,7 +37,7 @@ namespace OpenDental {
 		private Adjustment _adjCur;
 		private double _adjPrevPaid;
 		private Procedure _procedureOld;
-		private Def _unearnedOld;
+		private Definition _unearnedOld;
 		#endregion
 
 		public FormPaySplitEdit(Family famCur) {
@@ -54,10 +56,10 @@ namespace OpenDental {
 			textDatePay.Text=PaySplitCur.DatePay.ToShortDateString();
 			textAmount.Text=PaySplitCur.SplitAmt.ToString("F");
 			comboUnearnedTypes.Items.AddDefNone();
-			comboUnearnedTypes.Items.AddDefs(Defs.GetDefsForCategory(DefCat.PaySplitUnearnedType,true));
+			comboUnearnedTypes.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.PaySplitUnearnedType,true));
 			comboUnearnedTypes.SetSelectedDefNum(PaySplitCur.UnearnedType); 
 			if(comboUnearnedTypes.SelectedIndex!=-1){
-				_unearnedOld=comboUnearnedTypes.GetSelected<Def>();
+				_unearnedOld=comboUnearnedTypes.GetSelected<Definition>();
 			}
 			if(PrefC.HasClinicsEnabled) {
 				comboClinic.SelectedClinicNum=PaySplitCur.ClinicNum;
@@ -630,7 +632,7 @@ namespace OpenDental {
 				return false;
 			}
 			//check for TP pre-pay changes. If money has been detached from procedure it needs to be transferred to regular unearned if had been hidden.
-			if(_procedureOld!=null && _procedureOld.ProcStatus==ProcStat.TP && ProcCur==null && !string.IsNullOrEmpty(_unearnedOld?.ItemValue)) {
+			if(_procedureOld!=null && _procedureOld.ProcStatus==ProcStat.TP && ProcCur==null && !string.IsNullOrEmpty(_unearnedOld?.Value)) {
 				//user has detached the hidden paysplit 
 				if(MsgBox.Show(MsgBoxButtons.YesNo,"Hidden split is no longer attached to a procedure. Change unearned type to default?")) {
 					comboUnearnedTypes.SetSelectedDefNum(Prefs.GetLong(PrefName.PrepaymentUnearnedType));

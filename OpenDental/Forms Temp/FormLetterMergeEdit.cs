@@ -11,6 +11,8 @@ using CodeBase;
 using System.Collections.Generic;
 using OpenDental.Forms;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -49,7 +51,7 @@ namespace OpenDental{
 		private System.Windows.Forms.TextBox textBox1;
 		private Label labelImageCategory;
 		private UI.ComboBoxPlus comboImageFolder;
-		private List<Def> _listLetterMergeCatDefs;
+		private List<Definition> _listLetterMergeCatDefs;
 
 		//private ArrayList ALpatSelect;
 
@@ -387,16 +389,16 @@ namespace OpenDental{
 			textPath.Text=mergePath;
 			textTemplateName.Text=LetterMergeCur.TemplateName;
 			textDataFileName.Text=LetterMergeCur.DataFileName;
-			_listLetterMergeCatDefs=Defs.GetDefsForCategory(DefCat.LetterMergeCats,true);
+			_listLetterMergeCatDefs=Definitions.GetByCategory(DefinitionCategory.LetterMergeCats);
 			for(int i=0;i<_listLetterMergeCatDefs.Count;i++){
-				comboCategory.Items.Add(_listLetterMergeCatDefs[i].ItemName);
-				if(LetterMergeCur.Category==_listLetterMergeCatDefs[i].DefNum){
+				comboCategory.Items.Add(_listLetterMergeCatDefs[i].Name);
+				if(LetterMergeCur.Category==_listLetterMergeCatDefs[i].Id){
 					comboCategory.SelectedIndex=i;
 				}
 			}
 			comboImageFolder.Items.Clear();
 			comboImageFolder.Items.AddDefNone();
-			comboImageFolder.Items.AddDefs(Defs.GetDefsForCategory(DefCat.ImageCats,true));
+			comboImageFolder.Items.AddDefs(Definitions.GetByCategory(DefinitionCategory.ImageCats));
 			comboImageFolder.SetSelectedDefNum(LetterMergeCur.ImageFolder); 
 			FillPatSelect();
 			FillListReferral();
@@ -615,7 +617,7 @@ namespace OpenDental{
 			LetterMergeCur.Description=textDescription.Text;
 			LetterMergeCur.TemplateName=textTemplateName.Text;
 			LetterMergeCur.DataFileName=textDataFileName.Text;
-			LetterMergeCur.Category=_listLetterMergeCatDefs[comboCategory.SelectedIndex].DefNum;
+			LetterMergeCur.Category=_listLetterMergeCatDefs[comboCategory.SelectedIndex].Id;
 			LetterMergeCur.ImageFolder=comboImageFolder.GetSelectedDefNum();
 			if(IsNew){
 				LetterMerges.Insert(LetterMergeCur);

@@ -1,4 +1,5 @@
 using Imedisoft.Data.Annotations;
+using Imedisoft.Data.Models;
 using System;
 
 namespace OpenDentBusiness
@@ -24,7 +25,7 @@ namespace OpenDentBusiness
 		/// Identical to Procedure.Priority but used to allow different priorities
 		/// for the same procedure depending on which TP it is a part of.
 		/// </summary>
-		[ForeignKey(typeof(Def), nameof(Def.DefNum))]
+		[ForeignKey(typeof(Definition), nameof(Definition.Id))]
 		public long Priority;
 	}
 }

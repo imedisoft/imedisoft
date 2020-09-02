@@ -10,6 +10,8 @@ using System.Linq;
 using OpenDental.UI;
 using System.Drawing.Printing;
 using OpenDental.ReportingComplex;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormRpCustomAging:ODForm {
@@ -43,9 +45,9 @@ namespace OpenDental {
 
 		private void FillBillType() {
 			listBoxBillTypes.Items.Clear();
-			List<Def> listBillTypes = Defs.GetDefsForCategory(DefCat.BillingTypes,true);
+			List<Definition> listBillTypes = Definitions.GetByCategory(DefinitionCategory.BillingTypes);
 			for(int i = 0;i < listBillTypes.Count;i++) {
-				listBoxBillTypes.Items.Add(new ODBoxItem<Def>(listBillTypes[i].ItemName,listBillTypes[i]));
+				listBoxBillTypes.Items.Add(new ODBoxItem<Definition>(listBillTypes[i].Name,listBillTypes[i]));
 				listBoxBillTypes.SetSelected(i,true);
 			}
 		}
@@ -225,7 +227,7 @@ namespace OpenDental {
 				//pass in null for lists to not limit by them.
 				ListProvs = checkAllProv.Checked ? null : listBoxProvs.SelectedItems.OfType<ODBoxItem<Provider>>().Select(x => x.Tag).ToList(),
 				ListClins = checkAllClin.Checked ? null : listBoxClins.SelectedItems.OfType<ODBoxItem<Clinic>>().Select(x => x.Tag).ToList(),
-				ListBillTypes = checkAllBillType.Checked ? null : listBoxBillTypes.SelectedItems.OfType<ODBoxItem<Def>>().Select(x => x.Tag).ToList(),
+				ListBillTypes = checkAllBillType.Checked ? null : listBoxBillTypes.SelectedItems.OfType<ODBoxItem<Definition>>().Select(x => x.Tag).ToList(),
 				AgeCredits = checkAgeCredits.Checked,
 			};
 			if(_agingOptions.AgingInc == (AgingOptions.AgingInclude.None)) {
@@ -317,7 +319,7 @@ namespace OpenDental {
 				report.AddSubTitle("BillingTypes","All Billing Types");
 			}
 			else {
-				report.AddSubTitle("BillingTypes",string.Join(", ",_agingOptions.ListBillTypes.Select(x => x.ItemName)));
+				report.AddSubTitle("BillingTypes",string.Join(", ",_agingOptions.ListBillTypes.Select(x => x.Name)));
 			}
 			if(_agingOptions.ListProvs==null) {
 				report.AddSubTitle("Providers","All Providers");

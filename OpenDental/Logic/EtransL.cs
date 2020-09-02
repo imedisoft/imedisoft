@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -499,13 +501,13 @@ namespace OpenDental {
 			claimPay.CheckNum=x835.TransRefNum;
 			long defNum=0;
 			if(x835._paymentMethodCode=="CHK") {//Physical check
-				defNum=Defs.GetByExactName(DefCat.InsurancePaymentType,"Check");
+				defNum=Definitions.GetByExactName(DefinitionCategory.InsurancePaymentType,"Check");
 			}
 			else if(x835._paymentMethodCode=="ACH") {//Electronic check
-				defNum=Defs.GetByExactName(DefCat.InsurancePaymentType,"EFT");
+				defNum=Definitions.GetByExactName(DefinitionCategory.InsurancePaymentType,"EFT");
 			}
 			else if(x835._paymentMethodCode=="FWT") {//Wire transfer
-				defNum=Defs.GetByExactName(DefCat.InsurancePaymentType,"Wired");
+				defNum=Definitions.GetByExactName(DefinitionCategory.InsurancePaymentType,"Wired");
 			}
 			claimPay.PayType=defNum;		
 			ClaimPayments.Insert(claimPay);

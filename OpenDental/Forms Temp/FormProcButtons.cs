@@ -7,6 +7,8 @@ using OpenDentBusiness;
 using OpenDental.UI;
 using System.Collections.Generic;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -32,7 +34,7 @@ namespace OpenDental{
 		private ODButtonPanel panelQuickButtons;
 		private Label labelEdit;
 		private List<ProcButtonQuick> listProcButtonQuicks;
-		private List<Def> _listProcButtonCatDefs;
+		private List<Definition> _listProcButtonCatDefs;
 
 		///<summary></summary>
 		public FormProcButtons(){
@@ -308,15 +310,15 @@ namespace OpenDental{
 			ProcButtonQuicks.ValidateAll();
 			listCategories.Items.Clear();
 			listCategories.Items.Add("Quick Buttons");//hardcoded category.
-			_listProcButtonCatDefs=Defs.GetDefsForCategory(DefCat.ProcButtonCats,true);
+			_listProcButtonCatDefs=Definitions.GetDefsForCategory(DefinitionCategory.ProcButtonCats,true);
 			if(_listProcButtonCatDefs.Count==0){
 				selectedCat=0;
 				listCategories.SelectedIndex=0;
 				return;
 			}
 			for(int i=0;i<_listProcButtonCatDefs.Count;i++){
-				listCategories.Items.Add(_listProcButtonCatDefs[i].ItemName);
-				if(selectedCat==_listProcButtonCatDefs[i].DefNum){
+				listCategories.Items.Add(_listProcButtonCatDefs[i].Name);
+				if(selectedCat==_listProcButtonCatDefs[i].Id){
 					listCategories.SelectedIndex=i+1;
 				}
 			}
@@ -325,7 +327,7 @@ namespace OpenDental{
 				selectedCat=0;
 			}
 			if(listCategories.SelectedIndex>0) {//hardcoded category doesn't have a DefNum.
-				selectedCat=_listProcButtonCatDefs[listCategories.SelectedIndex-1].DefNum;
+				selectedCat=_listProcButtonCatDefs[listCategories.SelectedIndex-1].Id;
 			}
 		}
 
@@ -382,7 +384,7 @@ namespace OpenDental{
 				selectedCat=0;
 			}
 			else {
-				selectedCat=_listProcButtonCatDefs[listCategories.SelectedIndex-1].DefNum;
+				selectedCat=_listProcButtonCatDefs[listCategories.SelectedIndex-1].Id;
 			}
 			FillButtons();
 		}
@@ -391,7 +393,7 @@ namespace OpenDental{
 			if(!Security.IsAuthorized(Permissions.Setup)) {
 				return;
 			}
-			FormDefinitions FormD=new FormDefinitions(DefCat.ProcButtonCats);
+			FormDefinitions FormD=new FormDefinitions(DefinitionCategory.ProcButtonCats);
 			FormD.ShowDialog();
 			FillCategories();
 			FillButtons();

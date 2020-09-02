@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormCloneAdd:ODForm {
@@ -98,10 +100,10 @@ namespace OpenDental {
 			List<DefLink> listClinicDefLinks=DefLinks.GetDefLinksByType(DefLinkType.Clinic);
 			//Filter out any specialties that are currently in use by clones of this patient.
 			if(listPatCurDefLinks.Count>0) {
-				listClinicDefLinks.RemoveAll(x => x.DefNum.In(listPatCurDefLinks.Select(y => y.DefNum).ToList()));
+				listClinicDefLinks.RemoveAll(x => x.DefinitionId.In(listPatCurDefLinks.Select(y => y.DefinitionId).ToList()));
 			}
 			//Get all non-hidden specialties
-			List<Def> listSpecialtyDefs=Defs.GetDefsForCategory(DefCat.ClinicSpecialty,true);
+			List<Definition> listSpecialtyDefs=Definitions.GetDefsForCategory(DefinitionCategory.ClinicSpecialty,true);
 			//If there are specialties present, we need to know which clinics have no specialty set so that the user can always make clones for that specialty.
 			if(listSpecialtyDefs.Count > 0) {
 				listClinicsNoSpecialty.RemoveAll(x => x.Id.In(listClinicDefLinks.Select(y => y.FKey).ToList()));
@@ -109,19 +111,19 @@ namespace OpenDental {
 			//Remove all clinics that do not have any specialties from the original list of clinics for the user.
 			listClinicsForUser.RemoveAll(x => !x.Id.In(listClinicDefLinks.Select(y => y.FKey).ToList()));
 			//Filter out any specialties that are not associated to any available clinics for this user.
-			listSpecialtyDefs.RemoveAll(x => !x.DefNum.In(listClinicDefLinks.Select(y => y.DefNum).ToList()));
+			listSpecialtyDefs.RemoveAll(x => !x.Id.In(listClinicDefLinks.Select(y => y.DefinitionId).ToList()));
 			//Lump all of the left over specialties into a dictionary and slap the associated clinics to them.
 			comboSpecialty.Items.Clear();
 			//Create a dummy specialty of 0 if there are any clinics that do not have a specialty.
 			if(listClinicsNoSpecialty!=null && listClinicsNoSpecialty.Count > 0) {
-				comboSpecialty.Items.Add(new ODBoxItem<Def>("Unspecified",new Def() { DefNum=0 }));
+				comboSpecialty.Items.Add(new ODBoxItem<Definition>("Unspecified",new Definition() { Id=0 }));
 				_dictSpecialtyClinics[0]=listClinicsNoSpecialty;
 			}
-			foreach(Def specialty in listSpecialtyDefs) {
-				comboSpecialty.Items.Add(new ODBoxItem<Def>(specialty.ItemName,specialty));
+			foreach(Definition specialty in listSpecialtyDefs) {
+				comboSpecialty.Items.Add(new ODBoxItem<Definition>(specialty.Name,specialty));
 				//Get a list of all deflinks for the def
-				List<DefLink> listLinkForDef=listClinicDefLinks.FindAll(x => x.DefNum==specialty.DefNum).ToList();
-				_dictSpecialtyClinics[specialty.DefNum]=listClinicsForUser.FindAll(x => x.Id.In(listLinkForDef.Select(y => y.FKey).ToList()));
+				List<DefLink> listLinkForDef=listClinicDefLinks.FindAll(x => x.DefinitionId==specialty.Id).ToList();
+				_dictSpecialtyClinics[specialty.Id]=listClinicsForUser.FindAll(x => x.Id.In(listLinkForDef.Select(y => y.FKey).ToList()));
 			}
 			//If there are no specialties to show, we need to let the user know that they need to associate at least one clinic to a specialty.
 			if(_dictSpecialtyClinics.Count < 1) {
@@ -140,17 +142,17 @@ namespace OpenDental {
 				return;
 			}
 			comboClinic.Items.Clear();
-			if(comboSpecialty.SelectedItem==null || comboSpecialty.SelectedItem.GetType()!=typeof(ODBoxItem<Def>)) {
+			if(comboSpecialty.SelectedItem==null || comboSpecialty.SelectedItem.GetType()!=typeof(ODBoxItem<Definition>)) {
 				return;//Somehow the specialty box changed to an invalid item.  Nothing else to do.
 			}
 			//Only allow the Unassigned clinic for the Unspecified specialty.
 			if(comboSpecialty.SelectedIndex==0 
-				&& ((ODBoxItem<Def>)comboSpecialty.SelectedItem).Tag!=null
-				&& ((ODBoxItem<Def>)comboSpecialty.SelectedItem).Tag.DefNum==0)
+				&& ((ODBoxItem<Definition>)comboSpecialty.SelectedItem).Tag!=null
+				&& ((ODBoxItem<Definition>)comboSpecialty.SelectedItem).Tag.Id==0)
 			{
 				comboClinic.Items.Add("Unassigned",new Clinic());
 			}
-			foreach(Clinic clinic in _dictSpecialtyClinics[((ODBoxItem<Def>)comboSpecialty.SelectedItem).Tag.DefNum]) {
+			foreach(Clinic clinic in _dictSpecialtyClinics[((ODBoxItem<Definition>)comboSpecialty.SelectedItem).Tag.Id]) {
 				comboClinic.Items.Add(clinic.Abbr,clinic);
 			}
 		}
@@ -158,19 +160,19 @@ namespace OpenDental {
 		///<summary>Used in the case when clinics are disabled. Requires special logic that doesn't use clinics.</summary>
 		private void FillComboSpecialtyNoClinics() {
 			//Get all non-hidden specialties
-			List<Def> listSpecialtyDefs=Defs.GetDefsForCategory(DefCat.ClinicSpecialty,true);
+			List<Definition> listSpecialtyDefs=Definitions.GetDefsForCategory(DefinitionCategory.ClinicSpecialty,true);
 			//Fill the list of defLinks used by clones of this patient.
 			List<long> listClonePatNums=PatientLinks.GetPatNumsLinkedFrom(_patientMaster.PatNum,PatientLinkType.Clone);
 			List<DefLink> listPatCurDefLinks=DefLinks.GetListByFKeys(listClonePatNums,DefLinkType.Patient);
 			//Filter out any specialties that are currently in use by clones of this patient.
 			if(listPatCurDefLinks.Count>0) {
-				listSpecialtyDefs.RemoveAll(x => x.DefNum.In(listPatCurDefLinks.Select(y => y.DefNum).ToList()));
+				listSpecialtyDefs.RemoveAll(x => x.Id.In(listPatCurDefLinks.Select(y => y.DefinitionId).ToList()));
 			}
 			comboSpecialty.Items.Clear();
 			//Create a dummy specialty of 0.  Always allow the user to make Unspecified clones.
-			comboSpecialty.Items.Add(new ODBoxItem<Def>("Unspecified",new Def() { DefNum=0 }));
-			foreach(Def specialty in listSpecialtyDefs) {
-				comboSpecialty.Items.Add(new ODBoxItem<Def>(specialty.ItemName,specialty));
+			comboSpecialty.Items.Add(new ODBoxItem<Definition>("Unspecified",new Definition() { Id=0 }));
+			foreach(Definition specialty in listSpecialtyDefs) {
+				comboSpecialty.Items.Add(new ODBoxItem<Definition>(specialty.Name,specialty));
 			}
 			comboSpecialty.SelectedIndex=0;
 		}
@@ -205,7 +207,7 @@ namespace OpenDental {
 			}
 			if(PrefC.HasClinicsEnabled) {
 				#region Clinic Specific Validation
-				if(comboSpecialty.SelectedItem!=null && comboSpecialty.SelectedItem.GetType()!=typeof(ODBoxItem<Def>)) {
+				if(comboSpecialty.SelectedItem!=null && comboSpecialty.SelectedItem.GetType()!=typeof(ODBoxItem<Definition>)) {
 					MessageBox.Show("Invalid Specialty selected.");
 					return false;
 				}
@@ -231,13 +233,13 @@ namespace OpenDental {
 			if(PrefC.HasClinicsEnabled) {
 				clinicNum=comboClinic.GetSelected<Clinic>().Id;
 			}
-			defNum=((ODBoxItem<Def>)comboSpecialty.SelectedItem).Tag.DefNum;
+			defNum=((ODBoxItem<Definition>)comboSpecialty.SelectedItem).Tag.Id;
 			Patient clone=Patients.CreateCloneAndSynch(_patientMaster,_familyCur,_listInsPlans,_listInsSubs,_listBenefits,_provNumSelected,clinicNum);
 			if(clone!=null) {
 				PatNumClone=clone.PatNum;
 				if(defNum!=0) {
 					DefLinks.Insert(new DefLink() {
-						DefNum=defNum,
+						DefinitionId=defNum,
 						FKey=PatNumClone,
 						LinkType=DefLinkType.Patient,
 					});

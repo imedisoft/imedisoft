@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
@@ -57,7 +58,7 @@ namespace OpenDentBusiness
 			{
 				queryBrokenApts = ByApptStatusQuery(hasClinicsEnabled, dateStart, dateEnd, whereProv, whereClin);
 			}
-			return ReportsComplex.RunFuncOnReportServer(() => ReportsComplex.GetTable(queryBrokenApts));
+			return Database.ExecuteDataTable(queryBrokenApts);
 		}
 
 		private static string ByProceduresQuery(bool hasClinicsEnabled, DateTime dateStart, DateTime dateEnd, string whereProv, string whereClin, BrokenApptProcedure brokenApptOption)
