@@ -1,6 +1,7 @@
 ﻿using CentralManager;
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data.Models.Cemt;
 using OpenDental.UI;
 using OpenDentBusiness;
 using System;
@@ -15,7 +16,7 @@ namespace Imedisoft.CEMT.Forms
     public partial class FormCentralPatientSearch : FormBase
 	{
 		private readonly SynchronizationContext synchronizationContext;
-		private readonly List<CentralConnection> connections;
+		private readonly List<Connection> connections;
 		private List<DisplayField> displayFields;
 		private readonly DataSet patientsDataSet = new DataSet();
 		private readonly List<Thread> patientSearchThreads = new List<Thread>();
@@ -27,7 +28,7 @@ namespace Imedisoft.CEMT.Forms
 		/// </summary>
 		public DataRow SelectedPatientDataRow { get; private set; }
 
-		public FormCentralPatientSearch(List<CentralConnection> connections)
+		public FormCentralPatientSearch(List<Connection> connections)
 		{
 			InitializeComponent();
 
@@ -88,7 +89,7 @@ namespace Imedisoft.CEMT.Forms
 				"", "", "", "",
 				hasNextLastVisit: displayFields.Any(x => x.InternalName.In("NextVisit", "LastVisit")));
 		
-		private void ReportSearchResults(CentralConnection centralConnection, DataTable resultsDataTable)
+		private void ReportSearchResults(Connection centralConnection, DataTable resultsDataTable)
         {
 			Cursor = Cursors.WaitCursor;
 
@@ -201,10 +202,9 @@ namespace Imedisoft.CEMT.Forms
 
 				foreach (var connection in connections)
 				{
-					var connectionName = $"{connection.ServerName}, {connection.DatabaseName}";
 					if (!string.IsNullOrEmpty(connectionTextBox.Text))
 					{
-						if (!connectionName.Contains(connectionTextBox.Text))
+						if (!connection.Description.Contains(connectionTextBox.Text))
 						{
 							continue;
 						}

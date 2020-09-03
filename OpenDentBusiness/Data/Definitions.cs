@@ -12,11 +12,8 @@ namespace Imedisoft.Data
     public partial class Definitions
 	{
 		[CacheGroup(nameof(InvalidType.Defs))]
-		private class DefinitionCache : DictionaryCache<string, Definition>
+		private class DefinitionCache : ListCache<Definition>
 		{
-			protected override string GetKey(Definition item)
-				=> item.Category;
-
 			protected override IEnumerable<Definition> Load()
 				=> SelectMany("SELECT * FROM `definitions` ORDER BY `category`, `sort_order`");
 		}

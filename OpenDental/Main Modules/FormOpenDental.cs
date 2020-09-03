@@ -14,6 +14,7 @@ redistributed.
 ===============================================================================================================*/
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Cemt;
 using Imedisoft.Data.Models;
 using Imedisoft.Forms;
 using Imedisoft.UI;
@@ -402,14 +403,14 @@ namespace OpenDental
 			FormChooseDatabase formChooseDatabase = new FormChooseDatabase(false);
 
 
-			CentralConnections.GetChooseDatabaseConnectionSettings(out var connectionString, out var autoConnect);
+			Connections.GetChooseDatabaseConnectionSettings(out var connectionString, out var autoConnect);
 
 			bool hasDatabaseConnection = false;
 			if (autoConnect)
 			{
 				try
 				{
-					CentralConnections.TryToConnect(connectionString);
+					Connections.TryToConnect(connectionString);
 
 					hasDatabaseConnection = true;
 				}

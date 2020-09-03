@@ -1,6 +1,9 @@
-﻿using OpenDental.UI;
-using OpenDentBusiness;
+﻿using Imedisoft.Data.Cemt;
+using Imedisoft.Data.Models.Cemt;
+using OpenDental.UI;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Imedisoft.CEMT.Forms
@@ -8,6 +11,8 @@ namespace Imedisoft.CEMT.Forms
     public partial class FormCentralConnectionGroupEdit : FormBase
 	{
 		public ConnectionGroup connectionGroup;
+		private List<Connection> connections = new List<Connection>();
+		private List<Connection> connectionsAvailable = new List<Connection>();
 
 		public FormCentralConnectionGroupEdit(ConnectionGroup connectionGroup)
 		{
@@ -20,14 +25,15 @@ namespace Imedisoft.CEMT.Forms
 		{
 			descriptionTextBox.Text = connectionGroup.Description;
 
+			connections = Connections.GetAllInGroup(connectionGroup.Id).ToList();
+			connectionsAvailable = Connections.GetAllNotInGroup(connectionGroup.Id).ToList();
+
 			FillGrid();
 			FillGridAvailable();
 		}
 
 		private void FillGrid()
 		{
-			var connections = CentralConnections.GetForGroup(connectionGroup.ConnectionGroupNum);
-
 			mainGrid.BeginUpdate();
 			mainGrid.ListGridColumns.Clear();
 			mainGrid.ListGridColumns.Add(new GridColumn("Database", 320));
@@ -38,7 +44,7 @@ namespace Imedisoft.CEMT.Forms
 			{
 				var row = new GridRow();
 
-				row.Cells.Add(connection.ServerName + ", " + connection.DatabaseName);
+				row.Cells.Add(connection.Description);
 				row.Cells.Add(connection.Note);
 				row.Tag = connection;
 
@@ -50,19 +56,17 @@ namespace Imedisoft.CEMT.Forms
 
 		private void FillGridAvailable()
 		{
-			var connections = CentralConnections.GetNotForGroup(connectionGroup.ConnectionGroupNum);
-
 			availableGrid.BeginUpdate();
 			availableGrid.ListGridColumns.Clear();
 			availableGrid.ListGridColumns.Add(new GridColumn("Database", 320));
 			availableGrid.ListGridColumns.Add(new GridColumn("Note", 300));
 			availableGrid.ListGridRows.Clear();
 
-			foreach (var connection in connections)
+			foreach (var connection in connectionsAvailable)
 			{
 				var row = new GridRow();
 
-				row.Cells.Add(connection.ServerName + ", " + connection.DatabaseName);
+				row.Cells.Add(connection.Description);
 				row.Cells.Add(connection.Note);
 				row.Tag = connection;
 
@@ -82,11 +86,10 @@ namespace Imedisoft.CEMT.Forms
 
 			foreach (var gridRow in availableGrid.SelectedGridRows)
 			{
-				if (gridRow.Tag is CentralConnection centralConnection)
+				if (gridRow.Tag is Connection connection)
 				{
-					ConnGroupAttaches.Attach(
-						centralConnection.CentralConnectionNum, 
-						connectionGroup.ConnectionGroupNum);
+					connections.Add(connection);
+					connectionsAvailable.Remove(connection);
 				}
 			}
 
@@ -105,11 +108,10 @@ namespace Imedisoft.CEMT.Forms
 
 			foreach (var gridRow in mainGrid.SelectedGridRows)
 			{
-				if (gridRow.Tag is CentralConnection centralConnection)
+				if (gridRow.Tag is Connection connection)
 				{
-					ConnGroupAttaches.Detach(
-						centralConnection.CentralConnectionNum,
-						connectionGroup.ConnectionGroupNum);
+					connections.Remove(connection);
+					connectionsAvailable.Add(connection);
 				}
 			}
 
@@ -124,8 +126,7 @@ namespace Imedisoft.CEMT.Forms
 				return;
 			}
 
-			ConnGroupAttaches.DeleteForGroup(connectionGroup.ConnectionGroupNum);
-			ConnectionGroups.Delete(connectionGroup.ConnectionGroupNum);
+			ConnectionGroups.Delete(connectionGroup.Id);
 
 			DialogResult = DialogResult.OK;
 		}
@@ -142,20 +143,15 @@ namespace Imedisoft.CEMT.Forms
 
 			connectionGroup.Description = description;
 
-			ConnectionGroups.Update(connectionGroup);
+			ConnectionGroups.Save(connectionGroup);
+
+			ConnectionGroups.AddConnectionsToGroup(connectionGroup, 
+				connections.Select(connection => connection.Id));
+
+			ConnectionGroups.RemoveConnectionsFromGroup(connectionGroup, 
+				connectionsAvailable.Select(connection => connection.Id));
 
 			DialogResult = DialogResult.OK;
 		}
-
-		private void FormCentralConnectionGroupEdit_FormClosing(object sender, FormClosingEventArgs e)
-		{
-			if (DialogResult == DialogResult.OK) return;
-
-			if (connectionGroup.IsNew)
-			{
-				ConnGroupAttaches.DeleteForGroup(connectionGroup.ConnectionGroupNum);
-				ConnectionGroups.Delete(connectionGroup.ConnectionGroupNum);
-			}
-		}
-	}
+    }
 }

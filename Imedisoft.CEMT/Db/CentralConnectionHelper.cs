@@ -1,5 +1,6 @@
 ﻿using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models.Cemt;
 using OpenDentBusiness;
 using System.Diagnostics;
 
@@ -10,20 +11,20 @@ namespace CentralManager
 		/// <summary>
 		/// Returns the command line string to pass to the main program.
 		/// </summary>
-		private static string GetCommandLineArgs(CentralConnection connection, long? patientId)
+		private static string GetCommandLineArgs(Connection connection, long? patientId)
 		{
 			string args = "";
 
 			if (connection.DatabaseName != "")
 			{
 				args +=
-					"ServerName=\"" + connection.ServerName + "\" " +
+					"ServerName=\"" + connection.DatabaseServer + "\" " +
 					"DatabaseName=\"" + connection.DatabaseName + "\" " +
-					"MySqlUser=\"" + connection.MySqlUser + "\" ";
+					"MySqlUser=\"" + connection.DatabaseUser + "\" ";
 
-				if (connection.MySqlPassword != "")
+				if (connection.DatabasePassword != "")
 				{
-					args += "MySqlPassword=\"" + connection.MySqlPassword + "\" ";
+					args += "MySqlPassword=\"" + connection.DatabasePassword + "\" ";
 				}
 			}
 
@@ -37,7 +38,7 @@ namespace CentralManager
 		/// </summary>
 		/// <param name="patientId">The (optional) ID of the patient to select.</param>
 		/// <returns>The main program process.</returns>
-		public static Process LaunchProgram(CentralConnection connection, long? patientId)
+		public static Process LaunchProgram(Connection connection, long? patientId)
 		{
 			string args = GetCommandLineArgs(connection, patientId);
 
@@ -57,16 +58,16 @@ namespace CentralManager
 		/// Sets the current data connection settings of the central manager to the connection settings passed in.
 		/// Setting refreshCache to true will cause the entire local cache to get updated with the cache from the connection passed in if the new connection settings are successful.
 		/// </summary>
-		public static bool SetCentralConnection(CentralConnection centralConnection, bool refreshCache = false)
+		public static bool SetCentralConnection(Connection centralConnection, bool refreshCache = false)
 		{
 			try
 			{
 				var dataConnection = new DataConnection();
 
 				dataConnection.SetDbLocal(
-					centralConnection.ServerName,
-					centralConnection.MySqlUser,
-					centralConnection.MySqlPassword,
+					centralConnection.DatabaseServer,
+					centralConnection.DatabaseUser,
+					centralConnection.DatabasePassword,
 					centralConnection.DatabaseName);
 
 				if (refreshCache)

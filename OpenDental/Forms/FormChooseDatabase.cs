@@ -1,6 +1,7 @@
 using Imedisoft.Data;
+using Imedisoft.Data.Cemt;
+using Imedisoft.Data.Models.Cemt;
 using MySql.Data.MySqlClient;
-using OpenDentBusiness;
 using System;
 using System.Linq;
 using System.Windows.Forms;
@@ -11,12 +12,12 @@ namespace Imedisoft.Forms
 	{
 		private readonly bool fromMainMenu;
 
-		private readonly CentralConnection centralConnection = new CentralConnection
+		private readonly Connection centralConnection = new Connection
 		{
-			ServerName = DataConnection.ServerName,
+			DatabaseServer = DataConnection.ServerName,
 			DatabaseName = DataConnection.DatabaseName,
-			MySqlUser = DataConnection.User,
-			MySqlPassword = DataConnection.Password
+			DatabaseUser = DataConnection.User,
+			DatabasePassword = DataConnection.Password
         };
 
 		protected override bool HasHelpKey => false;
@@ -32,12 +33,12 @@ namespace Imedisoft.Forms
 		{
 			connectionGroupBox.Enabled = true;
 
-			CentralConnections.GetChooseDatabaseConnectionSettings(
+			Connections.GetChooseDatabaseConnectionSettings(
 				out var connectionString,
 				out var autoConnect);
 
-			userTextBox.Text = centralConnection.MySqlUser;
-			passwordTextBox.Text = centralConnection.MySqlPassword;
+			userTextBox.Text = centralConnection.DatabaseUser;
+			passwordTextBox.Text = centralConnection.DatabasePassword;
 			autoConnectComboBox.Checked = autoConnect;
 
 			if (fromMainMenu)
@@ -65,13 +66,13 @@ namespace Imedisoft.Forms
 		{
 			Cursor = Cursors.WaitCursor;
 
-			centralConnection.ServerName = serverTextBox.Text;
+			centralConnection.DatabaseServer = serverTextBox.Text;
 			centralConnection.DatabaseName = databaseComboBox.Text;
-			centralConnection.MySqlUser = userTextBox.Text;
-			centralConnection.MySqlPassword = passwordTextBox.Text;
+			centralConnection.DatabaseUser = userTextBox.Text;
+			centralConnection.DatabasePassword = passwordTextBox.Text;
 
 			databaseComboBox.Items.Clear();
-			databaseComboBox.Items.AddRange(CentralConnections.EnumerateDatabases(centralConnection).ToArray());
+			databaseComboBox.Items.AddRange(Connections.EnumerateDatabases(centralConnection).ToArray());
 
 			Cursor = Cursors.Default;
 		}
@@ -84,7 +85,7 @@ namespace Imedisoft.Forms
 		{
 			try
 			{
-				CentralConnections.TryToConnect(
+				Connections.TryToConnect(
 					serverTextBox.Text,
 					userTextBox.Text, 
 					passwordTextBox.Text, 
@@ -92,9 +93,9 @@ namespace Imedisoft.Forms
 					autoConnectComboBox.Checked, 
 					true);
 			}
-			catch (Exception ex)
+			catch (Exception exception)
 			{
-				ShowError(ex.Message);
+				ShowError(exception.Message);
 
 				return false;
 			}

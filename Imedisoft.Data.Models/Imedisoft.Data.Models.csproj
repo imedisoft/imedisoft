@@ -73,6 +73,8 @@
   <ItemGroup>
     <Compile Include="Account.cs" />
     <Compile Include="AppointmentFieldDefinition.cs" />
+    <Compile Include="Cemt\Connection.cs" />
+    <Compile Include="Cemt\ConnectionGroup.cs" />
     <Compile Include="Definition.cs" />
     <Compile Include="DefinitionCategory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

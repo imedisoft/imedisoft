@@ -1,99 +1,82 @@
-using CodeBase;
-using DataConnectionBase;
-using Imedisoft.Data;
+using Imedisoft.Data.Models.Cemt;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
 using System.IO;
-using System.Net;
-using System.Reflection;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
-using System.Windows.Forms;
-using System.Xml;
-using System.Xml.XPath;
+using System.Linq;
 
-namespace OpenDentBusiness
+namespace Imedisoft.Data.Cemt
 {
-    public class CentralConnections
+    public partial class Connections
 	{
 		// TODO: Move some methods to a more appropriate class...
 
 		/// <summary>
-		/// Gets all the central connections from the database ordered by ItemOrder.
+		/// Gets all connections.
 		/// </summary>
-		public static List<CentralConnection> GetConnections() 
-			=> Crud.CentralConnectionCrud.SelectMany(
-				"SELECT * FROM centralconnection ORDER BY ItemOrder");
+		public static IEnumerable<Connection> GetAll() 
+			=> SelectMany("SELECT * FROM `cemt_connections` ORDER BY `sort_order`");
+
+        /// <summary>
+        /// Gets all connections in the group with the specified ID.
+        /// </summary>
+        public static IEnumerable<Connection> GetAllInGroup(long connectionGroupId)
+            => SelectMany("CALL `cemt_get_connections_in_group`(" + connectionGroupId + ")");
 
 		/// <summary>
-		/// Gets all the central connections from the database for one group, ordered by ItemOrder.
+		/// Gets all connections not in the group with the specified ID.
 		/// </summary>
-		public static List<CentralConnection> GetForGroup(long connectionGroupNum) 
-			=> Crud.CentralConnectionCrud.SelectMany(
-				"SELECT centralconnection.* FROM conngroupattach " +
-				"LEFT JOIN centralconnection ON conngroupattach.CentralConnectionNum=centralconnection.CentralConnectionNum " +
-				"WHERE conngroupattach.ConnectionGroupNum=" + SOut.Long(connectionGroupNum) + " " +
-				"ORDER BY ItemOrder");
+		public static IEnumerable<Connection> GetAllNotInGroup(long connectionGroupId) 
+			=> SelectMany("CALL `cemt_get_connections_not_in_group`(" + connectionGroupId + ");");
 
-		/// <summary>
-		/// Gets all the central connections from the database that are not in the specificed group, ordered by ItemOrder.
-		/// </summary>
-		public static List<CentralConnection> GetNotForGroup(long connectionGroupNum) 
-			=> Crud.CentralConnectionCrud.SelectMany(
-				"SELECT centralconnection.* FROM centralconnection " +
-				"LEFT JOIN conngroupattach ON conngroupattach.CentralConnectionNum=centralconnection.CentralConnectionNum AND conngroupattach.ConnectionGroupNum = " + SOut.Long(connectionGroupNum) + " " +
-				"WHERE conngroupattach.ConnectionGroupNum IS NULL " +
-				"ORDER BY ItemOrder");
-
-		public static long Insert(CentralConnection centralConnection) 
-			=> Crud.CentralConnectionCrud.Insert(centralConnection);
+		public static long Insert(Connection connection) 
+			=> ExecuteInsert(connection);
 		
-		public static void Update(CentralConnection centralConnection) 
-			=> Crud.CentralConnectionCrud.Update(centralConnection);
+		public static void Update(Connection connection) 
+			=> ExecuteUpdate(connection);
+
+		public static void Delete(long connectionId)
+			=> ExecuteDelete(connectionId);
 
 		/// <summary>
-		/// Updates Status of the provided CentralConnection
+		/// Saves the status of the specified <paramref name="connection"/> to the database.
 		/// </summary>
-		public static void UpdateStatus(CentralConnection centralConnection) => Database.ExecuteNonQuery(
-			"UPDATE centralconnection " +
-			"SET ConnectionStatus='" + SOut.String(centralConnection.ConnectionStatus) + "' " +
-			"WHERE CentralConnectionNum=" + SOut.Long(centralConnection.CentralConnectionNum));
-		
-		public static void Delete(long centralConnectionNum) => Database.ExecuteNonQuery(
-			"DELETE FROM centralconnection " +
-			"WHERE CentralConnectionNum = " + SOut.Long(centralConnectionNum));
+		/// <param name="connection">The connection to update.</param>
+		public static void UpdateStatus(Connection connection) 
+			=> Database.ExecuteNonQuery(
+				"UPDATE `cemt_connections` " +
+				"SET `connection_status` = @connection_status " +
+				"WHERE `id` =" + connection.Id,
+					new MySqlParameter("connection_status", connection.ConnectionStatus ?? ""));
 
-		public static IEnumerable<string> EnumerateDatabases(CentralConnection centralConnection)
+		public static IEnumerable<string> EnumerateDatabases(Connection connection)
 		{
-			if (string.IsNullOrEmpty(centralConnection.ServerName))
+			if (string.IsNullOrEmpty(connection.DatabaseServer))
 			{
 				yield break;
 			}
 
-			DataTable dataTable;
+			List<string> results = null;
 			try
 			{
-				var dataConnection = centralConnection.MySqlUser == "" ?
-					new DataConnection(centralConnection.ServerName, "mysql", "root", centralConnection.MySqlPassword) :
-					new DataConnection(centralConnection.ServerName, "mysql", centralConnection.MySqlUser, centralConnection.MySqlPassword);
+				using var dataConnection = connection.DatabaseUser == "" ?
+					new DataConnection(connection.DatabaseServer, "mysql", connection.DatabasePassword, connection.DatabaseName) :
+					new DataConnection(connection.DatabaseServer, connection.DatabaseUser, connection.DatabasePassword, connection.DatabaseName);
 
-				dataTable = dataConnection.ExecuteDataTable("SHOW DATABASES", false);
+				results = dataConnection.SelectMany("SHOW DATABASES", Database.ToScalar<string>).ToList();
 			}
-			catch
-			{
-				yield break;
-			}
+            catch
+            {
+            }
 
-			for (int i = 0; i < dataTable.Rows.Count; i++)
-			{
-				yield return dataTable.Rows[i][0].ToString();
-			}
+			if (null != results)
+            {
+				foreach (var databaseName in results)
+                {
+					yield return databaseName;
+                }
+            }
 		}
 
 		public static void TryToConnect(string connectionString)
@@ -216,17 +199,17 @@ namespace OpenDentBusiness
             }
 		}
 
-		/// <summary>
-		/// Supply a CentralConnection and this method will go through the logic to put together the connection string.
-		/// </summary>
-		public static string GetConnectionString(CentralConnection conn)
+        /// <summary>
+        /// Supply a CentralConnection and this method will go through the logic to put together the connection string.
+        /// </summary>
+        public static string GetConnectionString(Connection connection)
 		{
 			string connString = "";
 
-			if (conn.DatabaseName != "")
+			if (connection.DatabaseName != "")
 			{
-				connString = conn.ServerName;
-				connString += ", " + conn.DatabaseName;
+				connString = connection.DatabaseServer;
+				connString += ", " + connection.DatabaseName;
 			}
 
 			return connString;

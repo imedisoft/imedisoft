@@ -171,7 +171,6 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Connection Group";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCentralConnectionGroupEdit_FormClosing);
             this.Load += new System.EventHandler(this.FormCentralConnectionGroupEdit_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

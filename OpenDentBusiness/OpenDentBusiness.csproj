@@ -352,6 +352,7 @@
     <Compile Include="Cache\CacheDictNonPkAbs.cs" />
     <Compile Include="Cache\CacheListAbs.cs" />
     <Compile Include="Cache\FeeCache.cs" />
+    <Compile Include="Data\Cemt\Crud\ConnectionGroups.cs" />
     <Compile Include="Data\Models\AccountingAutoPay.cs" />
     <Compile Include="Data\Crud\AlertCategories.Crud.cs" />
     <Compile Include="Data\Crud\AlertCategoryLinks.Crud.cs" />
@@ -504,7 +505,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Remoting\XmlConverter.cs" />
     <Compile Include="Reports\RpDPPOvercharged.cs" />
     <Compile Include="Reports\RpHiddenPaySplits.cs" />
     <Compile Include="Reports\RpProcOverpaid.cs" />
@@ -651,8 +651,6 @@
     <Compile Include="Crud\CDSPermissionCrud.cs" />
     <Compile Include="Crud\ClaimSnapshotCrud.cs" />
     <Compile Include="Crud\ConfirmationRequestCrud.cs" />
-    <Compile Include="Crud\ConnectionGroupCrud.cs" />
-    <Compile Include="Crud\ConnGroupAttachCrud.cs" />
     <Compile Include="Crud\DashboardCellCrud.cs" />
     <Compile Include="Crud\DashboardLayoutCrud.cs" />
     <Compile Include="Crud\DisplayReportCrud.cs" />
@@ -675,7 +673,7 @@
     <Compile Include="Crud\CanadianNetworkCrud.cs" />
     <Compile Include="Crud\CarrierCrud.cs" />
     <Compile Include="Crud\CdcrecCrud.cs" />
-    <Compile Include="Crud\CentralConnectionCrud.cs" />
+    <Compile Include="Data\Cemt\Crud\Connections.cs" />
     <Compile Include="Crud\ChartViewCrud.cs" />
     <Compile Include="Crud\ClaimAttachCrud.cs" />
     <Compile Include="Crud\ClaimCondCodeLogCrud.cs" />
@@ -969,8 +967,7 @@
     <Compile Include="Data Interface\AutomationConditions.cs" />
     <Compile Include="Data\Automations.cs" />
     <Compile Include="Data Interface\CDSPermissions.cs" />
-    <Compile Include="Data Interface\ConnectionGroups.cs" />
-    <Compile Include="Data Interface\ConnGroupAttaches.cs" />
+    <Compile Include="Data\Cemt\ConnectionGroups.cs" />
     <Compile Include="Data Interface\DispSupplies.cs" />
     <Compile Include="Data Interface\EhrAptObses.cs" />
     <Compile Include="Data Interface\EhrCarePlans.cs" />
@@ -988,7 +985,7 @@
     </Compile>
     <Compile Include="Data Interface\EhrTriggers.cs" />
     <Compile Include="Data Interface\Cdcrecs.cs" />
-    <Compile Include="Data Interface\CentralConnections.cs" />
+    <Compile Include="Data\Cemt\Connections.cs" />
     <Compile Include="Data Interface\ChartViews.cs" />
     <Compile Include="Data Interface\CodeSystems.cs" />
     <Compile Include="Data Interface\Cpts.cs" />
@@ -1389,8 +1386,6 @@
     <Compile Include="Data\Models\UpdateHistory.cs" />
     <Compile Include="TableTypes\CDSPermission.cs" />
     <Compile Include="TableTypes\AppointmentType.cs" />
-    <Compile Include="TableTypes\ConnectionGroup.cs" />
-    <Compile Include="TableTypes\ConnGroupAttach.cs" />
     <Compile Include="TableTypes\ClaimSnapshot.cs" />
     <Compile Include="TableTypes\DashboardCell.cs" />
     <Compile Include="TableTypes\DashboardLayout.cs" />
@@ -1447,7 +1442,6 @@
     <Compile Include="TableTypes\ChartView.cs" />
     <Compile Include="TableTypes\AllergyDef.cs" />
     <Compile Include="Data\Models\Allergy.cs" />
-    <Compile Include="TableTypes\CentralConnection.cs" />
     <Compile Include="TableTypes\CodeSystem.cs" />
     <Compile Include="TableTypes\Cdcrec.cs" />
     <Compile Include="TableTypes\Cpt.cs" />

@@ -1,6 +1,7 @@
 ﻿using CentralManager;
 using CodeBase;
 using DataConnectionBase;
+using Imedisoft.Data.Models.Cemt;
 using OpenDental;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -16,11 +17,11 @@ namespace Imedisoft.CEMT.Forms
 {
     public partial class FormCentralPatientTransfer : FormBase
 	{
-		private readonly CentralConnection sourceConnection;
+		private readonly Connection sourceConnection;
 		private readonly List<DataRow> patientDataRows = new List<DataRow>();
-		private readonly List<CentralConnection> selectedConnections = new List<CentralConnection>();
+		private readonly List<Connection> selectedConnections = new List<Connection>();
 
-		public FormCentralPatientTransfer(CentralConnection sourceConnection)
+		public FormCentralPatientTransfer(Connection sourceConnection)
 		{
 			this.sourceConnection = sourceConnection;
 
@@ -93,7 +94,7 @@ namespace Imedisoft.CEMT.Forms
 
 		private void PatientsAddButton_Click(object sender, EventArgs e)
 		{
-			using (var formCentralPatientSearch = new FormCentralPatientSearch(new List<CentralConnection> { sourceConnection }))
+			using (var formCentralPatientSearch = new FormCentralPatientSearch(new List<Connection> { sourceConnection }))
 			{
 				if (formCentralPatientSearch.ShowDialog() == DialogResult.OK)
 				{
@@ -137,8 +138,8 @@ namespace Imedisoft.CEMT.Forms
 				{
 					selectedConnections.AddRange(
 						formCentralConnections.SelectedConnections.FindAll(x => 
-							x.CentralConnectionNum != sourceConnection.CentralConnectionNum &&  
-							!selectedConnections.Any(y => y.CentralConnectionNum == x.CentralConnectionNum)));
+							x.Id != sourceConnection.Id &&  
+							!selectedConnections.Any(y => y.Id == x.Id)));
 
 					FillDatabases();
 				}
@@ -155,7 +156,7 @@ namespace Imedisoft.CEMT.Forms
 
 			foreach (GridRow gridRow in targetDatabasesGrid.SelectedGridRows)
 			{
-				selectedConnections.Remove((CentralConnection)gridRow.Tag);
+				selectedConnections.Remove((Connection)gridRow.Tag);
 			}
 
 			FillDatabases();
@@ -221,7 +222,7 @@ namespace Imedisoft.CEMT.Forms
 
 			object locker = new object();
 
-			bool InsertSheetsToConnection(CentralConnection connection, List<Sheet> sheets)
+			bool InsertSheetsToConnection(Connection connection, List<Sheet> sheets)
 			{
 				if (!CentralConnectionHelper.SetCentralConnection(connection, false))
 				{

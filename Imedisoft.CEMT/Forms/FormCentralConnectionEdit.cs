@@ -1,4 +1,5 @@
-using OpenDentBusiness;
+using Imedisoft.Data.Cemt;
+using Imedisoft.Data.Models.Cemt;
 using System;
 using System.Windows.Forms;
 
@@ -6,30 +7,30 @@ namespace Imedisoft.CEMT.Forms
 {
     public partial class FormCentralConnectionEdit : FormBase
 	{
-		private readonly CentralConnection centralConnection;
+		private readonly Connection connection;
 
 		public int LastItemOrder { get; set; }
 
-		public FormCentralConnectionEdit(CentralConnection centralConnection)
+		public FormCentralConnectionEdit(Connection connection)
         {
 			InitializeComponent();
 
-			this.centralConnection = centralConnection;
+			this.connection = connection;
 		}
 
 		private void FormCentralConnectionEdit_Load(object sender, EventArgs e)
 		{
-			databaseServerTextBox.Text = centralConnection.ServerName;
-			databaseNameTextBox.Text = centralConnection.DatabaseName;
-			databaseUserTextBox.Text = centralConnection.MySqlUser;
-			databasePasswordTextBox.Text = centralConnection.MySqlPassword;
-			noteTextBox.Text = centralConnection.Note;
-			showBreakdownCheckBox.Checked = centralConnection.IsNew || centralConnection.HasClinicBreakdownReports;
+			databaseServerTextBox.Text = connection.DatabaseServer;
+			databaseNameTextBox.Text = connection.DatabaseName;
+			databaseUserTextBox.Text = connection.DatabaseUser;
+			databasePasswordTextBox.Text = connection.DatabasePassword;
+			noteTextBox.Text = connection.Note;
+			showBreakdownCheckBox.Checked = connection.Id == 0 || connection.HasClinicBreakdownReports;
 		}
 
 		private void DeleteButton_Click(object sender, EventArgs e)
 		{
-			if (centralConnection.IsNew)
+			if (connection.Id == 0)
 			{
 				DialogResult = DialogResult.Cancel;
 
@@ -38,7 +39,7 @@ namespace Imedisoft.CEMT.Forms
 
 			if (Confirm("Are you sure you want to delete this connection?") == DialogResult.Yes)
 			{
-				CentralConnections.Delete(centralConnection.CentralConnectionNum);
+				Connections.Delete(connection.Id);
 
 				DialogResult = DialogResult.OK;
 			}
@@ -46,23 +47,22 @@ namespace Imedisoft.CEMT.Forms
 
 		private void AcceptButton_Click(object sender, EventArgs e)
 		{
-			centralConnection.ServerName = databaseServerTextBox.Text;
-			centralConnection.DatabaseName = databaseNameTextBox.Text;
-			centralConnection.MySqlUser = databaseUserTextBox.Text;
-			centralConnection.MySqlPassword = databasePasswordTextBox.Text;
-			centralConnection.Note = noteTextBox.Text;
-			centralConnection.HasClinicBreakdownReports = showBreakdownCheckBox.Checked;
+			connection.DatabaseServer = databaseServerTextBox.Text;
+			connection.DatabaseName = databaseNameTextBox.Text;
+			connection.DatabaseUser = databaseUserTextBox.Text;
+			connection.DatabasePassword = databasePasswordTextBox.Text;
+			connection.Note = noteTextBox.Text;
+			connection.HasClinicBreakdownReports = showBreakdownCheckBox.Checked;
 
-			if (centralConnection.IsNew)
+			if (connection.Id == 0)
 			{
-				centralConnection.ItemOrder = LastItemOrder + 1;
-				CentralConnections.Insert(centralConnection);
+				connection.ItemOrder = LastItemOrder + 1;
 
-				centralConnection.IsNew = false;
+				Connections.Insert(connection);
 			}
 			else
 			{
-				CentralConnections.Update(centralConnection);
+				Connections.Update(connection);
 			}
 
 			DialogResult = DialogResult.OK;

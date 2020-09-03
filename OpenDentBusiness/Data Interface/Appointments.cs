@@ -1208,25 +1208,23 @@ namespace OpenDentBusiness
 			return GetApptFieldsByApptNums(aptNums);
 		}
 
-		/// <summary>Returns a DataTable with all the ApptFields for the AptNums passed in.</summary>
-		public static DataTable GetApptFieldsByApptNums(List<long> aptNums) {
-			string command="SELECT AptNum,FieldName,FieldValue "
-				+"FROM apptfield "
-				+"WHERE AptNum IN (";
-			if(aptNums.Count==0) {
-				command+="0";
+		/// <summary>
+		/// Returns a DataTable with all the ApptFields for the AptNums passed in.
+		/// </summary>
+		public static DataTable GetApptFieldsByApptNums(List<long> appointmentIds)
+		{
+			var command = "SELECT `appt_id`, `name`, `value` FROM appt_fields WHERE appt_id IN (" + string.Join(", ", appointmentIds) + ")";
+
+			if (appointmentIds.Count == 0)
+            {
+				command = "SELECT `appt_id`, `name`, `value` FROM appt_fields WHERE appt_id IN (0)";
 			}
-			else for(int i=0;i<aptNums.Count;i++) {
-				if(i>0) {
-					command+=",";
-				}
-				command+=POut.Long(aptNums[i]);
-			}
-			command+=")";
-			DataConnection dcon=new DataConnection();
-			DataTable table= dcon.ExecuteDataTable(command);
-			table.TableName="ApptFields";
-			return table;
+
+			var dataTable = Database.ExecuteDataTable(command);
+
+			dataTable.TableName = "ApptFields";
+
+			return dataTable;
 		}
 
 		///<summary>Returns a DataTable with all the PatFields for the PatNums passed in.  Columns: PatNum, FieldName, FieldValue.

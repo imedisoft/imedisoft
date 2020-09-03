@@ -1,6 +1,9 @@
-﻿using OpenDental.UI;
+﻿using Imedisoft.Data.Cemt;
+using Imedisoft.Data.Models.Cemt;
+using OpenDental.UI;
 using OpenDentBusiness;
 using System;
+using System.Linq;
 
 namespace Imedisoft.CEMT.Forms
 {
@@ -15,8 +18,8 @@ namespace Imedisoft.CEMT.Forms
 
 		private void FillGrid()
 		{
-			var connectionGroups = ConnectionGroups.GetAll();
-			var connectionGroupAttached = ConnGroupAttaches.GetAll();
+			var connectionGroups = ConnectionGroups.GetAll().ToList();
+			var connectionGroupConnectionCounts = ConnectionGroups.GetConnectionGroupConnectionCounts();
 
 			long defaultConnectionGroupId = Prefs.GetLong(PrefName.ConnGroupCEMT);
 
@@ -27,7 +30,7 @@ namespace Imedisoft.CEMT.Forms
 			foreach (var connectionGroup in connectionGroups)
 			{
 				connectionGroupComboBox.Items.Add(connectionGroup);
-				if (connectionGroup.ConnectionGroupNum == defaultConnectionGroupId)
+				if (connectionGroup.Id == defaultConnectionGroupId)
 				{
 					connectionGroupComboBox.SelectedItem = connectionGroup;
 				}
@@ -41,10 +44,15 @@ namespace Imedisoft.CEMT.Forms
 
 			foreach (var connectionGroup in connectionGroups)
 			{
+				if (!connectionGroupConnectionCounts.TryGetValue(connectionGroup.Id, out var connections))
+                {
+					connections = 0;
+                }
+
 				var gridRow = new GridRow();
 
 				gridRow.Cells.Add(connectionGroup.Description);
-				gridRow.Cells.Add(connectionGroupAttached.FindAll(x => x.ConnectionGroupNum == connectionGroup.ConnectionGroupNum).Count.ToString());
+				gridRow.Cells.Add(connections.ToString());
 				gridRow.Tag = connectionGroup;
 
 				connectionGroupsGrid.ListGridRows.Add(gridRow);
@@ -57,7 +65,7 @@ namespace Imedisoft.CEMT.Forms
 		{
 			if (connectionGroupComboBox.SelectedItem is ConnectionGroup connectionGroup)
             {
-				Prefs.Set(PrefName.ConnGroupCEMT, connectionGroup.ConnectionGroupNum);
+				Prefs.Set(PrefName.ConnGroupCEMT, connectionGroup.Id);
 			}
             else
             {
@@ -84,9 +92,6 @@ namespace Imedisoft.CEMT.Forms
             {
                 Description = "Group"
             };
-
-            connectionGroup.ConnectionGroupNum = ConnectionGroups.Insert(connectionGroup);
-			connectionGroup.IsNew = true;
 
 			using (var formCentralConnectionGroupEdit = new FormCentralConnectionGroupEdit(connectionGroup))
 			{

@@ -2604,7 +2604,7 @@ namespace OpenDental {
 			contrApptPanel.BeginUpdate();
 			//Setting these properties is low overhead, and is necessary if user changed them.
 			contrApptPanel.MinPerIncr=PrefC.GetInt(PrefName.AppointmentTimeIncrement);
-			List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.AppointmentColors,true);
+			List<Definition> listDefs=Definitions.GetByCategory(DefinitionCategory.AppointmentColors);
 			Color colorOpen=listDefs[0].Color;
 			Color colorClosed=listDefs[1].Color;
 			Color colorHoliday=listDefs[3].Color;

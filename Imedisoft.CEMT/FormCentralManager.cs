@@ -2,6 +2,8 @@
 using DataConnectionBase;
 using Imedisoft.CEMT.Forms;
 using Imedisoft.Data;
+using Imedisoft.Data.Cemt;
+using Imedisoft.Data.Models.Cemt;
 using Newtonsoft.Json;
 using OpenDental;
 using OpenDental.UI;
@@ -23,7 +25,7 @@ namespace CentralManager
 {
     public partial class FormCentralManager : FormBase
 	{
-		private List<CentralConnection> connections;
+		private List<Connection> connections;
 		private List<GroupPermission> reportPermissions;
 		private readonly Dictionary<long, Process> processes = new Dictionary<long, Process>();
 
@@ -31,7 +33,7 @@ namespace CentralManager
 
 		private readonly DataSet _dataSetPats = new DataSet();
 		private string _invalidConnsLog = "";
-		private List<CentralConnection> _listConnsOK;
+		private List<Connection> _listConnsOK;
 		private List<DisplayReport> _listDisplayReports_ProdInc;
 		private readonly object _lockObj = new object();
 
@@ -49,7 +51,7 @@ namespace CentralManager
 
 		public FormCentralManager() => InitializeComponent();
 
-		private static bool ConnectAndFilter(CentralConnection connection, string providerFilter, string clinicFilter)
+		private static bool ConnectAndFilter(Connection connection, string providerFilter, string clinicFilter)
 		{
 			if (!CentralConnectionHelper.SetCentralConnection(connection, false))
 			{
@@ -112,7 +114,7 @@ namespace CentralManager
 
 			foreach (var gridRow in connectionsGrid.ListGridRows)
             {
-				if (gridRow.Tag is CentralConnection connection)
+				if (gridRow.Tag is Connection connection)
                 {
 					if (connection.ConnectionStatus != "OK")
                     {
@@ -124,7 +126,7 @@ namespace CentralManager
 							filterProvider, 
 							filterClinic));
 
-					if (result) filteredConnectionIds.Add(connection.CentralConnectionNum);
+					if (result) filteredConnectionIds.Add(connection.Id);
 				}
             }
 
@@ -141,7 +143,7 @@ namespace CentralManager
 
 			for (int i = 0; i < connectionsGrid.SelectedIndices.Length; i++)
 			{
-				if (connectionsGrid.ListGridRows[connectionsGrid.SelectedIndices[i]].Tag is CentralConnection connection)
+				if (connectionsGrid.ListGridRows[connectionsGrid.SelectedIndices[i]].Tag is Connection connection)
                 {
 					await Task.Run(() =>
 					{
@@ -164,27 +166,27 @@ namespace CentralManager
 
 		private void SearchPatientsButton_Click(object sender, EventArgs e)
 		{
-			_listConnsOK = new List<CentralConnection>();
+			_listConnsOK = new List<Connection>();
 			if (connectionsGrid.SelectedIndices.Length == 0)
 			{
 				for (int i = 0; i < connectionsGrid.ListGridRows.Count; i++)
 				{
-					if (((CentralConnection)connectionsGrid.ListGridRows[i].Tag).ConnectionStatus != "OK")
+					if (((Connection)connectionsGrid.ListGridRows[i].Tag).ConnectionStatus != "OK")
 					{
 						continue;
 					}
-					_listConnsOK.Add((CentralConnection)connectionsGrid.ListGridRows[i].Tag);
+					_listConnsOK.Add((Connection)connectionsGrid.ListGridRows[i].Tag);
 				}
 			}
 			else
 			{
 				for (int i = 0; i < connectionsGrid.SelectedIndices.Length; i++)
 				{
-					if (((CentralConnection)connectionsGrid.ListGridRows[connectionsGrid.SelectedIndices[i]].Tag).ConnectionStatus != "OK")
+					if (((Connection)connectionsGrid.ListGridRows[connectionsGrid.SelectedIndices[i]].Tag).ConnectionStatus != "OK")
 					{
 						continue;
 					}
-					_listConnsOK.Add((CentralConnection)connectionsGrid.ListGridRows[connectionsGrid.SelectedIndices[i]].Tag);
+					_listConnsOK.Add((Connection)connectionsGrid.ListGridRows[connectionsGrid.SelectedIndices[i]].Tag);
 				}
 			}
 			ODThread.JoinThreadsByGroupName(1, "FetchPats");//Stop fetching immediately
@@ -210,7 +212,7 @@ namespace CentralManager
 				//Filter the threads by their connection name
 				string connName = "";
 
-				connName = _listConnsOK[i].ServerName + ", " + _listConnsOK[i].DatabaseName;
+				connName = _listConnsOK[i].Description;
 
 				if (!connName.Contains(textConnPatSearch.Text))
 				{
@@ -247,7 +249,7 @@ namespace CentralManager
 			ODThread.QuitSyncThreadsByGroupName(0, "");
 			foreach (var connection in connections)
 			{
-				CentralConnections.UpdateStatus(connection);
+				Connections.UpdateStatus(connection);
 			}
 		}
 
@@ -278,7 +280,7 @@ namespace CentralManager
 
 			Text += " - " + Security.CurrentUser.UserName;
 
-			connections = CentralConnections.GetConnections();
+			connections = Connections.GetAll().ToList();
 
 			versionLabel.Text = "Version: " + Prefs.GetString(PrefName.ProgramVersion);
 
@@ -291,7 +293,7 @@ namespace CentralManager
 
 		private void ConnectionsGrid_CellDoubleClick(object sender, ODGridClickEventArgs e)
 		{
-			if (connectionsGrid.ListGridRows[e.Row].Tag is CentralConnection connection)
+			if (connectionsGrid.ListGridRows[e.Row].Tag is Connection connection)
             {
 				LaunchConnection(connection);
             }
@@ -300,7 +302,7 @@ namespace CentralManager
 		private void PatientsGrid_CellDoubleClick(object sender, ODGridClickEventArgs e)
 		{
 			DataRow dataRow = (DataRow)patientsGrid.ListGridRows[e.Row].Tag;
-			CentralConnection conn = _listConnsOK.Find(x => (x.ServerName + ", " + x.DatabaseName) == dataRow["Conn"].ToString());
+			Connection conn = _listConnsOK.Find(x => x.Description == dataRow["Conn"].ToString());
 			long patNum = PIn.Long(dataRow["PatNum"].ToString());
 			LaunchConnection(conn, patNum);
 		}
@@ -349,7 +351,7 @@ namespace CentralManager
 				return;
 			}
 
-			var connection = connectionsGrid.SelectedTag<CentralConnection>();
+			var connection = connectionsGrid.SelectedTag<Connection>();
 			if (!connection.IsConnectionValid())
 			{
 				ShowError("Server Offline. Fix connection and check status again to connect.");
@@ -371,7 +373,7 @@ namespace CentralManager
 				formCentralConnections.ShowDialog();
 			}
 
-			connections = CentralConnections.GetConnections();
+			connections = Connections.GetAll().ToList();
 
 			FillConnectionsGrid();
 		}
@@ -387,7 +389,7 @@ namespace CentralManager
 				formCentralConnectionGroups.ShowDialog();
 			}
 
-			FillComboGroups(connectionGroup?.ConnectionGroupNum ?? 0);
+			FillComboGroups(connectionGroup?.Id ?? 0);
 			FillConnectionsGrid();
 		}
 
@@ -410,7 +412,7 @@ namespace CentralManager
 				formCentralSecurity.ShowDialog(this);
 			}
 
-			connections = CentralConnections.GetConnections();
+			connections = Connections.GetAll().ToList();
 
 			FillConnectionsGrid();
 		}
@@ -445,10 +447,10 @@ namespace CentralManager
 				return;
 			}
 
-			var selectedConnections = new List<CentralConnection>();
+			var selectedConnections = new List<Connection>();
 			foreach (var gridRow in connectionsGrid.SelectedGridRows)
 			{
-				if (gridRow.Tag is CentralConnection connection)
+				if (gridRow.Tag is Connection connection)
 				{
 					if (connection.ConnectionStatus.Contains("OFFLINE"))
 					{
@@ -479,27 +481,26 @@ namespace CentralManager
 			connectionGroupComboBox.Items.Add("All");
 			connectionGroupComboBox.SelectedIndex = 0;
 
-			var connectionGroups = ConnectionGroups.GetAll();
+			var connectionGroups = Connections.GetAll().ToList();
 
 			foreach (var connectionGroup in connectionGroups)
             {
 				connectionGroupComboBox.Items.Add(connectionGroup);
-				if (connectionGroup.ConnectionGroupNum == connectionGroupId)
+				if (connectionGroup.Id == connectionGroupId)
                 {
 					connectionGroupComboBox.SelectedItem = connectionGroup;
 				}
 			}
 		}
 
-		public IEnumerable<CentralConnection> FilterConnections(IEnumerable<CentralConnection> connections, string filterText)
+		public IEnumerable<Connection> FilterConnections(IEnumerable<Connection> connections, string filterText)
 		{
             if (connectionGroupComboBox.SelectedItem is ConnectionGroup connectionGroup)
             {
-                var connectionGroupAttaches = ConnGroupAttaches.GetForGroup(connectionGroup.ConnectionGroupNum);
+				var connectionIds = Connections.GetAllInGroup(connectionGroup.Id).Select(connection => connection.Id).ToList();
 
                 connections = connections.Where(
-                    connection => connectionGroupAttaches.Exists(
-                        attach => attach.CentralConnectionNum == connection.CentralConnectionNum));
+                    connection => connectionIds.Contains(connection.Id));
             }
 
             return connections.Where(x => x.ToString().ToLower().Contains(filterText.ToLower()));
@@ -519,7 +520,7 @@ namespace CentralManager
 
 			foreach (var connection in FilterConnections(connections, filterConnectionTextBox.Text))
 			{
-				if (connectionIds != null && !connectionIds.Contains(connection.CentralConnectionNum))
+				if (connectionIds != null && !connectionIds.Contains(connection.Id))
 				{
 					continue;
 				}
@@ -764,11 +765,11 @@ namespace CentralManager
 
 		private void GetDataTablePatForConn(ODThread odThread)
 		{
-			CentralConnection connection = (CentralConnection)odThread.Parameters[0];
+			Connection connection = (Connection)odThread.Parameters[0];
 			//Filter the threads by their connection name
 			string connName = "";
 
-			connName = connection.ServerName + ", " + connection.DatabaseName;
+			connName = connection.Description;
 
 			if (!CentralConnectionHelper.SetCentralConnection(connection, false))
 			{
@@ -814,26 +815,26 @@ namespace CentralManager
 			//BeginInvoke((Action)FillGridPats);
 		}
 
-	
-
-
-		private void LaunchConnection(CentralConnection conn, long patNum = 0)
+		private void LaunchConnection(Connection connection, long patientId = 0)
 		{
-			if (conn.ConnectionStatus.StartsWith("OFFLINE"))
+			if (connection.ConnectionStatus.StartsWith("OFFLINE"))
 			{
 				ShowError("Server Offline. Fix connection and check status again to connect.");
+
 				return;
 			}
 
-			if (conn.ConnectionStatus != "OK")
+			if (connection.ConnectionStatus != "OK")
 			{
 				ShowError("Version mismatch. Either update your program or update the remote server's program and check status again to connect.");
+
 				return;
 			}
 
-			if (string.IsNullOrEmpty(conn.DatabaseName))
+			if (string.IsNullOrEmpty(connection.DatabaseName))
 			{
 				ShowError("database must be specified in the connection.");
+
 				return;
 			}
 
@@ -844,10 +845,10 @@ namespace CentralManager
 			}
 
 			// If there is no process for the connection or the existing process as exited, spawn a new process...
-			if (!processes.TryGetValue(conn.CentralConnectionNum, out var process) || process.HasExited)
+			if (!processes.TryGetValue(connection.Id, out var process) || process.HasExited)
 			{
-				process = CentralConnectionHelper.LaunchProgram(conn, patNum);
-				processes[conn.CentralConnectionNum] = process;
+				process = CentralConnectionHelper.LaunchProgram(connection, patientId);
+				processes[connection.Id] = process;
 			}
 
 			// Bring the window to the front.

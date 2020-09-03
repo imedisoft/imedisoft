@@ -1,4 +1,5 @@
 ﻿using CodeBase;
+using Imedisoft.Data.Models.Cemt;
 using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
@@ -25,19 +26,19 @@ namespace CentralManager
 		/// <summary>
 		/// Called from the interface to sync all settings.
 		/// </summary>
-		public static string PushBoth(List<CentralConnection> connections) 
+		public static string PushBoth(List<Connection> connections) 
 			=> PushSecurity(connections, false, false);
 
 		/// <summary>
 		/// Called from the interface to sync just users, usergroups and permissions.
 		/// </summary>
-		public static string PushUsers(List<CentralConnection> connections) 
+		public static string PushUsers(List<Connection> connections) 
 			=> PushSecurity(connections, true, false);
 
 		/// <summary>
 		/// Called from the interface to sync just security lock settings.
 		/// </summary>
-		public static string PushLocks(List<CentralConnection> connections) 
+		public static string PushLocks(List<Connection> connections) 
 			=> PushSecurity(connections, false, true);
 		
 
@@ -53,7 +54,7 @@ namespace CentralManager
 		}
 
 		///<summary>Generic function that launches different thread methods depending on how isSyncUsers and isSyncLocks are set.  Set only one or the other to true.</summary>
-		private static string PushSecurity(List<CentralConnection> listConns, bool isUsers, bool isLocks)
+		private static string PushSecurity(List<Connection> listConns, bool isUsers, bool isLocks)
 		{
 			//Get CEMT users, groups, and associated permissions
 			ListSyncErrors = new List<string>();
@@ -140,11 +141,11 @@ namespace CentralManager
 		///<summary>Function used by threads to connect to remote databases and sync all settings.</summary>
 		private static void ConnectAndSyncAll(ODThread odThread)
 		{
-			CentralConnection connection = (CentralConnection)odThread.Parameters[0];
+			Connection connection = (Connection)odThread.Parameters[0];
 			List<CentralUserData> listCentralUserData = (List<CentralUserData>)odThread.Parameters[1];
 			string serverName = "";
 
-			serverName = connection.ServerName + ", " + connection.DatabaseName;
+			serverName = connection.Description;
 
 			if (!CentralConnectionHelper.SetCentralConnection(connection, false))
 			{//No updating the cache since we're going to be connecting to multiple remote servers at the same time.
@@ -259,11 +260,11 @@ namespace CentralManager
 		/// </summary>
 		private static void ConnectAndSyncUsers(ODThread odThread)
 		{
-			CentralConnection connection = (CentralConnection)odThread.Parameters[0];
+			Connection connection = (Connection)odThread.Parameters[0];
 			List<CentralUserData> listCentralUserData = (List<CentralUserData>)odThread.Parameters[1];
 			string serverName = "";
 
-			serverName = connection.ServerName + ", " + connection.DatabaseName;
+			serverName = connection.Description;
 
 			if (!CentralConnectionHelper.SetCentralConnection(connection, false))
 			{//No updating the cache since we're going to be connecting to multiple remote servers at the same time.
@@ -377,8 +378,8 @@ namespace CentralManager
 		///<summary>Function used by threads to connect to remote databases and sync security lock settings.</summary>
 		private static void ConnectAndSyncLocks(ODThread odThread)
 		{
-			CentralConnection connection = (CentralConnection)odThread.Parameters[0];
-            string serverName = connection.ServerName + ", " + connection.DatabaseName;
+			Connection connection = (Connection)odThread.Parameters[0];
+            string serverName = connection.Description;
 
             if (!CentralConnectionHelper.SetCentralConnection(connection, false))
 			{//No updating the cache since we're going to be connecting to multiple remote servers at the same time.				

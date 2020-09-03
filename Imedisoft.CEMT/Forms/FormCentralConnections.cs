@@ -1,4 +1,6 @@
-﻿using OpenDental.UI;
+﻿using Imedisoft.Data.Cemt;
+using Imedisoft.Data.Models.Cemt;
+using OpenDental.UI;
 using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
@@ -9,14 +11,14 @@ namespace Imedisoft.CEMT.Forms
 {
     public partial class FormCentralConnections : FormBase
 	{
-		private List<CentralConnection> allConnections;
-		private List<CentralConnection> shownConnections;
+		private List<Connection> allConnections;
+		private List<Connection> shownConnections;
 		private List<ConnectionGroup> connectionGroups;
 
 		/// <summary>
 		/// Gets the selected connections.
 		/// </summary>
-		public List<CentralConnection> SelectedConnections { get; } = new List<CentralConnection>();
+		public List<Connection> SelectedConnections { get; } = new List<Connection>();
 
 		/// <summary>
 		/// Used when selecting a connection for patient transfer and when pushing security settings to a db.
@@ -30,7 +32,7 @@ namespace Imedisoft.CEMT.Forms
 
 		private void FormCentralConnections_Load(object sender, EventArgs e)
 		{
-			connectionGroups = ConnectionGroups.GetAll();
+			connectionGroups = ConnectionGroups.GetAll().ToList();
 			connectionGroupComboBox.Items.Add("All");
 			connectionGroupComboBox.Items.AddRange(connectionGroups.Select(x => x.Description).ToArray());
 			connectionGroupComboBox.SelectedIndex = 0;
@@ -45,7 +47,7 @@ namespace Imedisoft.CEMT.Forms
 				cancelButton.Text = "Close";
 			}
 
-			allConnections = CentralConnections.GetConnections();
+			allConnections = Connections.GetAll().ToList();
 
 			bool reordered = false;
 
@@ -57,24 +59,23 @@ namespace Imedisoft.CEMT.Forms
 
 					allConnections[i].ItemOrder = i;
 
-					CentralConnections.Update(allConnections[i]);
+					Connections.Update(allConnections[i]);
 				}
 			}
 
-			if (reordered) allConnections = CentralConnections.GetConnections();
+			if (reordered) allConnections = Connections.GetAll().ToList();
 
 			FillGrid();
 		}
 
-		public IEnumerable<CentralConnection> FilterConnections(IEnumerable<CentralConnection> connections, string filterText)
+		public IEnumerable<Connection> FilterConnections(IEnumerable<Connection> connections, string filterText)
 		{
 			if (connectionGroupComboBox.SelectedItem is ConnectionGroup connectionGroup)
 			{
-				var connectionGroupAttaches = ConnGroupAttaches.GetForGroup(connectionGroup.ConnectionGroupNum);
+				var connectionIds = Connections.GetAllInGroup(connectionGroup.Id).Select(connection => connection.Id).ToList();
 
 				connections = connections.Where(
-					connection => connectionGroupAttaches.Exists(
-						attach => attach.CentralConnectionNum == connection.CentralConnectionNum));
+					connection => connectionIds.Contains(connection.Id));
 			}
 
 			return connections.Where(x => x.ToString().ToLower().Contains(filterText.ToLower()));
@@ -97,7 +98,7 @@ namespace Imedisoft.CEMT.Forms
 				var row = new GridRow();
 
 				row.Cells.Add(shownConnections[i].ItemOrder.ToString());
-				row.Cells.Add(shownConnections[i].ServerName + ", " + shownConnections[i].DatabaseName);
+				row.Cells.Add(shownConnections[i].Description);
 				row.Cells.Add(shownConnections[i].Note);
 
 				connectionsGrid.ListGridRows.Add(row);
@@ -152,17 +153,14 @@ namespace Imedisoft.CEMT.Forms
 				formCentralConnectionEdit.ShowDialog();
 			}
 
-			allConnections = CentralConnections.GetConnections();
+			allConnections = Connections.GetAll().ToList();
 
 			FillGrid();
 		}
 
 		private void AddButton_Click(object sender, EventArgs e)
 		{
-            var connection = new CentralConnection
-            {
-                IsNew = true
-            };
+			var connection = new Connection();
 
             using (var formCentralConnectionEdit = new FormCentralConnectionEdit(connection))
 			{
@@ -175,7 +173,7 @@ namespace Imedisoft.CEMT.Forms
 				formCentralConnectionEdit.ShowDialog(this);
 			}
 
-			allConnections = CentralConnections.GetConnections();
+			allConnections = Connections.GetAll().ToList();
 
 			FillGrid();
 		}
@@ -201,12 +199,12 @@ namespace Imedisoft.CEMT.Forms
 			}
 
 			shownConnections[index].ItemOrder--;
-			CentralConnections.Update(shownConnections[index]);
+			Connections.Update(shownConnections[index]);
 
 			shownConnections[index - 1].ItemOrder++;
-			CentralConnections.Update(shownConnections[index - 1]);
+			Connections.Update(shownConnections[index - 1]);
 
-			allConnections = CentralConnections.GetConnections();
+			allConnections = Connections.GetAll().ToList();
 
 			FillGrid();
 
@@ -234,12 +232,12 @@ namespace Imedisoft.CEMT.Forms
 			}
 
 			shownConnections[index].ItemOrder++;
-			CentralConnections.Update(shownConnections[index]);
+			Connections.Update(shownConnections[index]);
 
 			shownConnections[index + 1].ItemOrder--;
-			CentralConnections.Update(shownConnections[index + 1]);
+			Connections.Update(shownConnections[index + 1]);
 
-			allConnections = CentralConnections.GetConnections();
+			allConnections = Connections.GetAll().ToList();
 
 			FillGrid();
 
@@ -248,19 +246,21 @@ namespace Imedisoft.CEMT.Forms
 
 		private void AlphabetizeButton_Click(object sender, EventArgs e)
 		{
-			shownConnections.Sort(delegate (CentralConnection x, CentralConnection y)
-			{
+			int SortByNote(Connection x, Connection y)
+            {
 				return x.Note.CompareTo(y.Note);
-			});
+			}
+
+			shownConnections.Sort(SortByNote);
 
 			for (int i = 0; i < shownConnections.Count; i++)
 			{
 				shownConnections[i].ItemOrder = i;
 
-				CentralConnections.Update(shownConnections[i]);
+				Connections.Update(shownConnections[i]);
 			}
 
-			allConnections = CentralConnections.GetConnections();
+			allConnections = Connections.GetAll().ToList();
 
 			FillGrid();
 		}
