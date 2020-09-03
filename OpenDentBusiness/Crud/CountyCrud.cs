@@ -43,9 +43,9 @@ namespace OpenDentBusiness.Crud{
 			County county;
 			foreach(DataRow row in table.Rows) {
 				county=new County();
-				county.CountyNum = PIn.Long  (row["CountyNum"].ToString());
-				county.CountyName= PIn.String(row["CountyName"].ToString());
-				county.CountyCode= PIn.String(row["CountyCode"].ToString());
+				county.Id = PIn.Long  (row["CountyNum"].ToString());
+				county.Name= PIn.String(row["CountyName"].ToString());
+				county.Code= PIn.String(row["CountyCode"].ToString());
 				retVal.Add(county);
 			}
 			return retVal;
@@ -62,9 +62,9 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("CountyCode");
 			foreach(County county in listCountys) {
 				table.Rows.Add(new object[] {
-					POut.Long  (county.CountyNum),
-					            county.CountyName,
-					            county.CountyCode,
+					POut.Long  (county.Id),
+					            county.Name,
+					            county.Code,
 				});
 			}
 			return table;
@@ -78,7 +78,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one County into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(County county,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				county.CountyNum=ReplicationServers.GetKey("county","CountyNum");
+				county.Id=ReplicationServers.GetKey("county","CountyNum");
 			}
 			string command="INSERT INTO county (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -86,18 +86,18 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="CountyName,CountyCode) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(county.CountyNum)+",";
+				command+=POut.Long(county.Id)+",";
 			}
 			command+=
-				 "'"+POut.String(county.CountyName)+"',"
-				+"'"+POut.String(county.CountyCode)+"')";
+				 "'"+POut.String(county.Name)+"',"
+				+"'"+POut.String(county.Code)+"')";
 			if(useExistingPK || PrefC.RandomKeys) {
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				county.CountyNum=Database.ExecuteInsert(command);
+				county.Id=Database.ExecuteInsert(command);
 			}
-			return county.CountyNum;
+			return county.Id;
 		}
 
 		///<summary>Inserts one County into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -110,52 +110,52 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO county (";
 			if(!useExistingPK) {
-				county.CountyNum=ReplicationServers.GetKeyNoCache("county","CountyNum");
+				county.Id=ReplicationServers.GetKeyNoCache("county","CountyNum");
 			}
 			if(useExistingPK) {
 				command+="CountyNum,";
 			}
 			command+="CountyName,CountyCode) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(county.CountyNum)+",";
+				command+=POut.Long(county.Id)+",";
 			}
 			command+=
-				 "'"+POut.String(county.CountyName)+"',"
-				+"'"+POut.String(county.CountyCode)+"')";
+				 "'"+POut.String(county.Name)+"',"
+				+"'"+POut.String(county.Code)+"')";
 			if(useExistingPK) {
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				county.CountyNum=Database.ExecuteInsert(command);
+				county.Id=Database.ExecuteInsert(command);
 			}
-			return county.CountyNum;
+			return county.Id;
 		}
 
 		///<summary>Updates one County in the database.</summary>
 		public static void Update(County county) {
 			string command="UPDATE county SET "
-				+"CountyName= '"+POut.String(county.CountyName)+"', "
-				+"CountyCode= '"+POut.String(county.CountyCode)+"' "
-				+"WHERE CountyNum = "+POut.Long(county.CountyNum);
+				+"CountyName= '"+POut.String(county.Name)+"', "
+				+"CountyCode= '"+POut.String(county.Code)+"' "
+				+"WHERE CountyNum = "+POut.Long(county.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Updates one County in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
 		public static bool Update(County county,County oldCounty) {
 			string command="";
-			if(county.CountyName != oldCounty.CountyName) {
+			if(county.Name != oldCounty.Name) {
 				if(command!="") { command+=",";}
-				command+="CountyName = '"+POut.String(county.CountyName)+"'";
+				command+="CountyName = '"+POut.String(county.Name)+"'";
 			}
-			if(county.CountyCode != oldCounty.CountyCode) {
+			if(county.Code != oldCounty.Code) {
 				if(command!="") { command+=",";}
-				command+="CountyCode = '"+POut.String(county.CountyCode)+"'";
+				command+="CountyCode = '"+POut.String(county.Code)+"'";
 			}
 			if(command=="") {
 				return false;
 			}
 			command="UPDATE county SET "+command
-				+" WHERE CountyNum = "+POut.Long(county.CountyNum);
+				+" WHERE CountyNum = "+POut.Long(county.Id);
 			Database.ExecuteNonQuery(command);
 			return true;
 		}
@@ -163,10 +163,10 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Returns true if Update(County,County) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
 		public static bool UpdateComparison(County county,County oldCounty) {
-			if(county.CountyName != oldCounty.CountyName) {
+			if(county.Name != oldCounty.Name) {
 				return true;
 			}
-			if(county.CountyCode != oldCounty.CountyCode) {
+			if(county.Code != oldCounty.Code) {
 				return true;
 			}
 			return false;

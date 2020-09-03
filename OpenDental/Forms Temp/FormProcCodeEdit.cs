@@ -1003,7 +1003,7 @@ namespace OpenDental{
 			this.gridFees.TabStop = false;
 			this.gridFees.Title = "Default Fees";
 			this.gridFees.TranslationName = "TableProcFee";
-			this.gridFees.CellDoubleClick += new OpenDental.UI.ODGridClickEventHandler(this.gridFees_CellDoubleClick);
+			this.gridFees.CellDoubleClick += new OpenDental.UI.ODGridClickEventHandler(this.FeesGrid_CellDoubleClick);
 			// 
 			// FormProcCodeEdit
 			// 
@@ -1214,21 +1214,22 @@ namespace OpenDental{
 			gridFees.EndUpdate();
 		}
 
-		private void gridFees_CellDoubleClick(object sender,OpenDental.UI.ODGridClickEventArgs e) {
-			Fee FeeCur=Fees.GetFee(ProcCode.CodeNum,_listFeeScheds[e.Row].FeeSchedNum,0,0,_listFees);
-			//tbFees.SelectedRow=e.Row;
-			//tbFees.ColorRow(e.Row,Color.LightGray);
-			FormFeeEdit FormFE=new FormFeeEdit();
-			if(FeeCur==null) {
-				FeeCur=new Fee();
-				FeeCur.FeeSched=_listFeeScheds[e.Row].FeeSchedNum;
-				FeeCur.CodeNum=ProcCode.CodeNum;
-				Fees.Insert(FeeCur);
-				//SecurityLog is updated in FormFeeEdit.
-				FormFE.IsNew=true;
+		private void FeesGrid_CellDoubleClick(object sender, ODGridClickEventArgs e)
+		{
+			var fee = Fees.GetFee(ProcCode.CodeNum, _listFeeScheds[e.Row].FeeSchedNum, 0, 0, _listFees);
+
+			fee ??= new Fee
+			{
+				FeeSched = _listFeeScheds[e.Row].FeeSchedNum,
+				CodeNum = ProcCode.CodeNum
+			};
+
+			using var formFeeEdit = new FormFeeEdit(fee);
+			if (formFeeEdit.ShowDialog(this) != DialogResult.OK)
+			{
+				return;
 			}
-			FormFE.FeeCur=FeeCur;
-			FormFE.ShowDialog();
+
 			FillFees();
 		}
 

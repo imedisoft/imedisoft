@@ -38,7 +38,6 @@ namespace OpenDental
 			setupWizardItems.Add(new SetupWizard.OperatorySetup());
 			setupWizardItems.Add(new SetupWizard.PracticeSetup());
 			setupWizardItems.Add(new SetupWizard.PrinterSetup());
-			setupWizardItems.Add(new SetupWizard.DefinitionSetup());
 		}
 
 		private void FillGrid()

@@ -437,54 +437,65 @@ namespace OpenDental{
 			textZip.Text=(_listZipCodes[comboZip.SelectedIndex]).ZipCodeDigits;
 		}
 
-		private void textZip_Validating(object sender,CancelEventArgs e) {
+		private void textZip_Validating(object sender, CancelEventArgs e)
+		{
 			//fired as soon as control loses focus.
 			//it's here to validate if zip is typed in to text box instead of picked from list.
-			if(textZip.Text.Length<5) {
+			if (textZip.Text.Length < 5)
+			{
 				return;
 			}
-			if(comboZip.SelectedIndex!=-1) {
+			if (comboZip.SelectedIndex != -1)
+			{
 				return;
 			}
 			//the autofill only works if both city and state are left blank
-			if(textCity.Text!="" || textState.Text!="") {
+			if (textCity.Text != "" || textState.Text != "")
+			{
 				return;
 			}
-			List<ZipCode> listZipCodes=ZipCodes.GetALMatches(textZip.Text);
-			if(listZipCodes.Count==0) {
-				//No match found. Must enter info for new zipcode
-				ZipCode ZipCodeCur=new ZipCode();
-				ZipCodeCur.ZipCodeDigits=textZip.Text;
-				FormZipCodeEdit FormZE=new FormZipCodeEdit();
-				FormZE.ZipCodeCur=ZipCodeCur;
-				FormZE.IsNew=true;
+			List<ZipCode> listZipCodes = ZipCodes.GetByZipCodeDigits(textZip.Text);
+			if (listZipCodes.Count == 0)
+			{
+                //No match found. Must enter info for new zipcode
+                ZipCode ZipCodeCur = new ZipCode
+                {
+                    ZipCodeDigits = textZip.Text
+                };
+
+                FormZipCodeEdit FormZE = new FormZipCodeEdit(ZipCodeCur);
+
 				FormZE.ShowDialog();
-				if(FormZE.DialogResult!=DialogResult.OK) {
+				if (FormZE.DialogResult != DialogResult.OK)
+				{
 					return;
 				}
 				DataValid.SetInvalid(InvalidType.ZipCodes);//FormZipCodeEdit does not contain internal refresh
 				FillComboZip();
-				textCity.Text=ZipCodeCur.City;
-				textState.Text=ZipCodeCur.State;
-				textZip.Text=ZipCodeCur.ZipCodeDigits;
+				textCity.Text = ZipCodeCur.City;
+				textState.Text = ZipCodeCur.State;
+				textZip.Text = ZipCodeCur.ZipCodeDigits;
 			}
-			else if(listZipCodes.Count==1) {
+			else if (listZipCodes.Count == 1)
+			{
 				//only one match found.  Use it.
-				textCity.Text=((ZipCode)listZipCodes[0]).City;
-				textState.Text=((ZipCode)listZipCodes[0]).State;
+				textCity.Text = ((ZipCode)listZipCodes[0]).City;
+				textState.Text = ((ZipCode)listZipCodes[0]).State;
 			}
-			else {
+			else
+			{
 				//multiple matches found.  Pick one
-				FormZipSelect FormZS=new FormZipSelect();
+				FormZipSelect FormZS = new FormZipSelect();
 				FormZS.ShowDialog();
 				FillComboZip();
-				if(FormZS.DialogResult!=DialogResult.OK) {
+				if (FormZS.DialogResult != DialogResult.OK)
+				{
 					return;
 				}
 				DataValid.SetInvalid(InvalidType.ZipCodes);
-				textCity.Text=FormZS.ZipSelected.City;
-				textState.Text=FormZS.ZipSelected.State;
-				textZip.Text=FormZS.ZipSelected.ZipCodeDigits;
+				textCity.Text = FormZS.SelectedZipCode.City;
+				textState.Text = FormZS.SelectedZipCode.State;
+				textZip.Text = FormZS.SelectedZipCode.ZipCodeDigits;
 			}
 		}
 
@@ -493,21 +504,23 @@ namespace OpenDental{
 				MessageBox.Show("Please enter a zipcode first.");
 				return;
 			}
-			List<ZipCode> listZipCodes=ZipCodes.GetALMatches(textZip.Text);
+			List<ZipCode> listZipCodes=ZipCodes.GetByZipCodeDigits(textZip.Text);
 			if(listZipCodes.Count==0) {
-				FormZipCodeEdit FormZE=new FormZipCodeEdit();
-				FormZE.ZipCodeCur=new ZipCode();
-				FormZE.ZipCodeCur.ZipCodeDigits=textZip.Text;
-				FormZE.IsNew=true;
+				var zipCode = new ZipCode
+				{
+					ZipCodeDigits = textZip.Text
+				};
+
+				FormZipCodeEdit FormZE=new FormZipCodeEdit(zipCode);
 				FormZE.ShowDialog();
 				FillComboZip();
 				if(FormZE.DialogResult!=DialogResult.OK) {
 					return;
 				}
 				DataValid.SetInvalid(InvalidType.ZipCodes);
-				textCity.Text=FormZE.ZipCodeCur.City;
-				textState.Text=FormZE.ZipCodeCur.State;
-				textZip.Text=FormZE.ZipCodeCur.ZipCodeDigits;
+				textCity.Text=zipCode.City;
+				textState.Text=zipCode.State;
+				textZip.Text=zipCode.ZipCodeDigits;
 			}
 			else {
 				FormZipSelect FormZS=new FormZipSelect();
@@ -516,9 +529,9 @@ namespace OpenDental{
 				if(FormZS.DialogResult!=DialogResult.OK) {
 					return;
 				}
-				textCity.Text=FormZS.ZipSelected.City;
-				textState.Text=FormZS.ZipSelected.State;
-				textZip.Text=FormZS.ZipSelected.ZipCodeDigits;
+				textCity.Text=FormZS.SelectedZipCode.City;
+				textState.Text=FormZS.SelectedZipCode.State;
+				textZip.Text=FormZS.SelectedZipCode.ZipCodeDigits;
 			}
 		}
 

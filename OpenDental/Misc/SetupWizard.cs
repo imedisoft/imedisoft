@@ -167,28 +167,6 @@ namespace OpenDental
 				=> control;
 		}
 
-		public class DefinitionSetup : SetupWizClass
-		{
-			private readonly SetupWizControl control = new UserControlSetupWizDefinitions();
-
-			public override string Name
-				=> "Definitions";
-
-			public override string Description =>
-				"Definitions are an easy way to customize your software experience. Setup the colors, categories, and other customizable areas " +
-				"within the program from this window.\r\nWe've selected some of the definitions you may be interested in customizing for this Setup Wizard. " +
-				"You may view the entire list of definitions by going to Setup -> Definitions from the main tool bar.";
-
-			public override ODSetupCategory Category
-				=> ODSetupCategory.Basic;
-
-			public override ODSetupStatus Status
-				=> ODSetupStatus.Optional;
-
-			public override SetupWizControl SetupControl
-				=> control;
-		}
-
 		public class ProvSetup : SetupWizClass
 		{
 			private readonly SetupWizControl control = new UserControlSetupWizProvider();

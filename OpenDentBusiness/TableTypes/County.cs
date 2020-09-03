@@ -1,36 +1,27 @@
-using System;
-using System.Collections;
+using Imedisoft.Data.Annotations;
 
-namespace OpenDentBusiness{
-	///<summary>Used in public health.</summary>
-	[Serializable]
-	public class County:TableBase {
-		///<summary>Primary Key.</summary>
-		[CrudColumn(IsPriKey=true)]
-		public long CountyNum;
-		///<summary>Frequently used as the primary key of this table.  But it's allowed to change.  Change is programmatically synchronized.</summary>
-		public string CountyName;
-		///<summary>Optional. Usage varies.</summary>
-		public string CountyCode;
-		///<summary>Not a database field. This is the unaltered CountyName. Used for Update.</summary>
-		[CrudColumn(IsNotDbColumn=true)]
-		public string OldCountyName;
-	}
+namespace OpenDentBusiness
+{
+	[Table("counties")]
+	public class County
+	{
+		[PrimaryKey]
+		public long Id;
 
+		/// <summary>
+		/// Frequently used as the primary key of this table. But it's allowed to change. Change is programmatically synchronized.
+		/// </summary>
+		public string Name;
 
-	
+		/// <summary>
+		/// Optional. Usage varies.
+		/// </summary>
+		public string Code;
 
+		/// <summary>
+		/// Returns a string representation of the county.
+		/// </summary>
+        public override string ToString() 
+			=> string.IsNullOrEmpty(Code) ? Name : Name + ", " + Code;
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

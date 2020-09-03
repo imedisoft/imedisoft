@@ -620,25 +620,30 @@ namespace OpenDental {
 				return;
 			}
 			Fee FeeCur=Fees.GetFee(proc.CodeNum,feeSched,proc.ClinicNum,proc.ProvNum);
-			FormFeeEdit FormFE=new FormFeeEdit();
-			if(FeeCur==null) {
-				FeeSched feeSchedObj=FeeScheds.GetFirst(x => x.FeeSchedNum==feeSched);
-				FeeCur=new Fee();
-				FeeCur.FeeSched=feeSched;
-				FeeCur.CodeNum=proc.CodeNum;
-				FeeCur.ClinicNum=(feeSchedObj.IsGlobal) ? 0 : proc.ClinicNum;
-				FeeCur.ProvNum=(feeSchedObj.IsGlobal) ? 0 : proc.ProvNum;
-				Fees.Insert(FeeCur);
+			if (FeeCur == null)
+			{
+				FeeSched feeSchedObj = FeeScheds.GetFirst(x => x.FeeSchedNum == feeSched);
+                FeeCur = new Fee
+                {
+                    FeeSched = feeSched,
+                    CodeNum = proc.CodeNum,
+                    ClinicNum = (feeSchedObj.IsGlobal) ? 0 : proc.ClinicNum,
+                    ProvNum = (feeSchedObj.IsGlobal) ? 0 : proc.ProvNum
+                };
+                Fees.Insert(FeeCur);
+
 				//SecurityLog is updated in FormFeeEdit.
-				FormFE.IsNew=true;
+				//FormFE.IsNew = true;
 			}
+
+			FormFeeEdit FormFE=new FormFeeEdit(FeeCur);
+
 			DateTime datePrevious=FeeCur.SecDateTEdit;
 			//Make an audit entry that the user manually launched the Fee Edit window from this location.
 			SecurityLogs.MakeLogEntry(Permissions.ProcFeeEdit,0,"Procedure"+": "+ProcedureCodes.GetStringProcCode(FeeCur.CodeNum)
 				+", "+"Fee"+": "+FeeCur.Amount.ToString("c")+", "+"Fee Schedule"+": "+FeeScheds.GetDescription(FeeCur.FeeSched)
 				+". "+"Manually launched Edit Fee window via Edit Claim Procedure window.",FeeCur.CodeNum,DateTime.MinValue);
 			SecurityLogs.MakeLogEntry(Permissions.LogFeeEdit,0,"Fee Inserted",FeeCur.FeeNum,datePrevious);
-			FormFE.FeeCur=FeeCur;
 			FormFE.ShowDialog();
 			//The Fees cache is updated in the closing of FormFeeEdit if there were any changes made.  Simply refresh our window.
 			if(FormFE.DialogResult==DialogResult.OK) {

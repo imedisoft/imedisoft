@@ -74,12 +74,12 @@ namespace OpenDental {
 
 		private void butSelectBlockouts_Click(object sender,EventArgs e) {
 			FormDefinitionPicker formDP=new FormDefinitionPicker(DefinitionCategory.BlockoutTypes,_listRestrictToBlockoutTypes);
-			formDP.IsMultiSelectionMode=true;
+			formDP.AllowMultiSelect=true;
 			formDP.ShowDialog();
 			if(formDP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			_listRestrictToBlockoutTypes=formDP.ListSelectedDefs.DeepCopy<List<Definition>,List<Definition>>();
+			_listRestrictToBlockoutTypes=formDP.SelectedDefinitions.DeepCopy<List<Definition>,List<Definition>>();
 			FillBlockoutTypeValues();
 		}
 

@@ -9,6 +9,7 @@ using CodeBase;
 using Imedisoft.UI;
 using Imedisoft.Data.Models;
 using Imedisoft.Data;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 	public partial class FormModuleSetup:ODForm {
@@ -180,19 +181,25 @@ namespace OpenDental{
 		#endregion Methods - Event Handlers Family
 
 		#region Methods - Event Handlers Account
-		private void butBadDebt_Click(object sender,EventArgs e) {
-			string[] arrayDefNums=Prefs.GetString(PrefName.BadDebtAdjustmentTypes).Split(new char[] {','}); //comma-delimited list.
+		private void butBadDebt_Click(object sender, EventArgs e)
+		{
+			string[] arrayDefNums = Prefs.GetString(PrefName.BadDebtAdjustmentTypes).Split(new char[] { ',' }); //comma-delimited list.
 			List<long> listBadAdjDefNums = new List<long>();
-			foreach(string strDefNum in arrayDefNums) {
+			foreach (string strDefNum in arrayDefNums)
+			{
 				listBadAdjDefNums.Add(PIn.Long(strDefNum));
 			}
-			List<Definition> listBadAdjDefs=Definitions.GetDefs(DefinitionCategory.AdjTypes,listBadAdjDefNums);
-			FormDefinitionPicker FormDP = new FormDefinitionPicker(DefinitionCategory.AdjTypes,listBadAdjDefs);
-			FormDP.HasShowHiddenOption=true;
-			FormDP.IsMultiSelectionMode=true;
-			FormDP.ShowDialog();
-			if(FormDP.DialogResult==DialogResult.OK) {
-				FillListboxBadDebt(FormDP.ListSelectedDefs);
+			List<Definition> listBadAdjDefs = Definitions.GetDefs(DefinitionCategory.AdjTypes, listBadAdjDefNums);
+
+            using var formDefinitionPicker = new FormDefinitionPicker(DefinitionCategory.AdjTypes, listBadAdjDefs)
+            {
+                AllowShowHidden = true,
+                AllowMultiSelect = true
+            };
+
+            if (formDefinitionPicker.ShowDialog(this) == DialogResult.OK)
+			{
+				FillListboxBadDebt(formDefinitionPicker.SelectedDefinitions);
 			}
 		}
 

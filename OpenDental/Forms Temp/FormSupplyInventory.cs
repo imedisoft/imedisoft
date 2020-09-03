@@ -1,19 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Drawing.Printing;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using OpenDentBusiness;
-using OpenDental.UI;
 using CodeBase;
 using Imedisoft.Data.Models;
+using Imedisoft.Forms;
+using OpenDental.UI;
+using OpenDentBusiness;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
 
-namespace OpenDental {
-	public partial class FormSupplyInventory:ODForm {
+namespace OpenDental
+{
+    public partial class FormSupplyInventory:ODForm {
 		private List<SupplyNeeded> listNeeded;
 		private int pagesPrinted;
 		private bool headingPrinted;
@@ -73,13 +70,18 @@ namespace OpenDental {
 			FormS.ShowDialog();
 		}
 
-		private void menuItemCategories_Click(object sender,EventArgs e) {
-			if(!Security.IsAuthorized(Permissions.Setup)) {
+		private void menuItemCategories_Click(object sender, EventArgs e)
+		{
+			if (!Security.IsAuthorized(Permissions.Setup))
+			{
 				return;
 			}
-			FormDefinitions FormD=new FormDefinitions(DefinitionCategory.SupplyCats);
-			FormD.ShowDialog();
-			SecurityLogs.MakeLogEntry(Permissions.Setup,0,"Definitions.");
+
+			using var formDefinitions = new FormDefinitions(DefinitionCategory.SupplyCats);
+
+			formDefinitions.ShowDialog(this);
+
+			SecurityLogs.MakeLogEntry(Permissions.Setup, 0, "Definitions.");
 		}
 
 		private void butEquipment_Click(object sender,EventArgs e) {

@@ -11,6 +11,7 @@ using CodeBase;
 using OpenDental.Bridges;
 using Imedisoft.Data.Models;
 using Imedisoft.Data;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -869,11 +870,13 @@ namespace OpenDental{
 			}
 		}
 
-		private void butPickPaymentGroup_Click(object sender,EventArgs e) {
-			FormDefinitionPicker FormDP=new FormDefinitionPicker(DefinitionCategory.ClaimPaymentGroups);
-			FormDP.ShowDialog();
-			if(FormDP.DialogResult==DialogResult.OK) {
-				FillComboPaymentGroup(FormDP.ListSelectedDefs[0].Id);
+		private void butPickPaymentGroup_Click(object sender, EventArgs e)
+		{
+			using var formDefinitionPicker = new FormDefinitionPicker(DefinitionCategory.ClaimPaymentGroups);
+
+			if (formDefinitionPicker.ShowDialog(this) == DialogResult.OK)
+			{
+				FillComboPaymentGroup(formDefinitionPicker.SelectedDefinition.Id);
 			}
 		}
 

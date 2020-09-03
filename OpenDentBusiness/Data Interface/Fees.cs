@@ -496,17 +496,31 @@ namespace OpenDentBusiness{
 
 		#region Delete
 		///<summary>Only set doCheckFeeSchedGroups to false from FeeSchedGroups.</summary>
-		public static void Delete(Fee fee,bool doCheckFeeSchedGroups=true) {
+		public static void Delete(Fee fee, bool doCheckFeeSchedGroups = true)
+		{
 			//Even though we do not run a query in this method, there is a lot of back and forth and we should get to the server early to ensure less chattiness.
-			
-			if(Prefs.GetBool(PrefName.ShowFeeSchedGroups) && doCheckFeeSchedGroups) {
+
+			if (Prefs.GetBool(PrefName.ShowFeeSchedGroups) && doCheckFeeSchedGroups)
+			{
 				//If this fee isn't in a group don't bother checking.
-				if(FeeSchedGroups.GetOneForFeeSchedAndClinic(fee.FeeSched,fee.ClinicNum)!=null) {
+				if (FeeSchedGroups.GetOneForFeeSchedAndClinic(fee.FeeSched, fee.ClinicNum) != null)
+				{
 					FeeSchedGroups.DeleteGroupFees(new List<long>() { fee.FeeNum });
 				}
 			}
 			Delete(fee.FeeNum);
 		}
+
+		public static void Save(Fee fee)
+        {
+			if (fee.FeeNum == 0) fee.FeeNum = Insert(fee);
+            else
+            {
+				Update(fee);
+            }
+		}
+
+
 
 		///<summary></summary>
 		public static void Delete(long feeNum){

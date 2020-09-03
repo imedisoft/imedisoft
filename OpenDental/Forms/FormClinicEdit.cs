@@ -311,8 +311,8 @@ namespace Imedisoft.Forms
 		{
 			using var formDefinitionPicker = new FormDefinitionPicker(DefinitionCategory.ClinicSpecialty)
 			{
-				HasShowHiddenOption = false,
-				IsMultiSelectionMode = true
+				AllowShowHidden = false,
+				AllowMultiSelect = true
 			};
 
 			if (formDefinitionPicker.ShowDialog(this) != DialogResult.OK)
@@ -320,7 +320,7 @@ namespace Imedisoft.Forms
 				return;
 			}
 
-			foreach (var definition in formDefinitionPicker.ListSelectedDefs)
+			foreach (var definition in formDefinitionPicker.SelectedDefinitions)
 			{
 				if (specialtyLinks.Any(x => x.DefinitionId == definition.Id))
 				{

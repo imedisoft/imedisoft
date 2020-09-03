@@ -1,16 +1,16 @@
+using Imedisoft.Data.Models;
+using Imedisoft.Forms;
+using OpenDental.UI;
+using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using CodeBase;
-using Imedisoft.Data.Models;
-using OpenDental.UI;
-using OpenDentBusiness;
 
-namespace OpenDental {
-	public partial class FormPatientForms:ODForm {
+namespace OpenDental
+{
+    public partial class FormPatientForms:ODForm {
 		DataTable table;
 		public long PatNum;
 		///<summary>Indicates the most recently selected Document.DocNum</summary>
@@ -93,13 +93,19 @@ namespace OpenDental {
 			FillGrid();
 		}
 
-		private void menuItemImageCats_Click(object sender,EventArgs e) {
-			if(!Security.IsAuthorized(Permissions.Setup)) {
+		private void menuItemImageCats_Click(object sender, EventArgs e)
+		{
+			if (!Security.IsAuthorized(Permissions.Setup))
+			{
 				return;
 			}
-			FormDefinitions formD=new FormDefinitions(DefinitionCategory.ImageCats);
-			formD.ShowDialog();
-			SecurityLogs.MakeLogEntry(Permissions.Setup,0,"Defs");
+
+			using var formDefinitions = new FormDefinitions(DefinitionCategory.ImageCats);
+
+			formDefinitions.ShowDialog(this);
+
+			SecurityLogs.MakeLogEntry(Permissions.Setup, 0, "Defs");
+
 			FillGrid();
 		}
 

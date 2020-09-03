@@ -174,11 +174,17 @@
   <data name="CouldNotCopyContentsToClipboard" xml:space="preserve">
     <value>Could not copy contents to clipboard. Please try again.</value>
   </data>
+  <data name="CountyNameAlreadyExists" xml:space="preserve">
+    <value>County name already exists. Duplicate not allowed.</value>
+  </data>
   <data name="Date" xml:space="preserve">
     <value>Date</value>
   </data>
   <data name="DateLimitation" xml:space="preserve">
     <value>Date limitation</value>
+  </data>
+  <data name="Definition" xml:space="preserve">
+    <value>Definition</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>Description</value>
@@ -203,6 +209,9 @@
   </data>
   <data name="FirstName" xml:space="preserve">
     <value>FirstName</value>
+  </data>
+  <data name="Hidden" xml:space="preserve">
+    <value>Hidden</value>
   </data>
   <data name="ID" xml:space="preserve">
     <value>ID</value>
@@ -266,6 +275,9 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="PleaseEnterDescription" xml:space="preserve">
     <value>Please enter a description.</value>
   </data>
+  <data name="PleaseEnterName" xml:space="preserve">
+    <value>Please enter a name.</value>
+  </data>
   <data name="PleaseEnterPassword" xml:space="preserve">
     <value>Please enter password</value>
   </data>
@@ -312,7 +324,7 @@ If you do have a printer installed, restarting the workstation may solve the pro
     <value>Students</value>
   </data>
   <data name="TagHidden" xml:space="preserve">
-    <value>hidden</value>
+    <value>(hidden)</value>
   </data>
   <data name="Text" xml:space="preserve">
     <value>Text</value>
@@ -325,5 +337,8 @@ If you do have a printer installed, restarting the workstation may solve the pro
   </data>
   <data name="Unknown" xml:space="preserve">
     <value>Unknown</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>Value</value>
   </data>
 </root>

@@ -17,6 +17,7 @@ using CodeBase;
 using OpenDentBusiness.IO;
 using Imedisoft.Data.Models;
 using Imedisoft.Data;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 	/// <summary>
@@ -340,12 +341,17 @@ namespace OpenDental{
 			SelectImageCat();
 		}
 
-		private void butEditCats_Click(object sender, System.EventArgs e) {
-			if(!Security.IsAuthorized(Permissions.Setup)){
+		private void butEditCats_Click(object sender, System.EventArgs e)
+		{
+			if (!Security.IsAuthorized(Permissions.Setup))
+			{
 				return;
 			}
-			FormDefinitions FormD=new FormDefinitions(DefinitionCategory.LetterMergeCats);
-			FormD.ShowDialog();
+
+			using var formDefinitions = new FormDefinitions(DefinitionCategory.LetterMergeCats);
+
+			formDefinitions.ShowDialog(this);
+
 			FillCats();
 		}
 

@@ -1,9 +1,9 @@
 ﻿using CodeBase;
 using Imedisoft.Data;
 using Imedisoft.Data.Models;
+using Imedisoft.Forms;
 using OpenDental.UI;
 using OpenDentBusiness;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -12,13 +12,12 @@ namespace OpenDental
 {
     public class DefL
 	{
-		#region GetMethods
-		public static List<DefCatOptions> GetOptionsForDefCats(IEnumerable<string> definitionCategories)
+		public static List<DefinitionCategoryOptions> GetOptionsForDefCats(IEnumerable<string> definitionCategories)
 		{
-			var defCatOptions = new List<DefCatOptions>();
+			var optionsList = new List<DefinitionCategoryOptions>();
 			foreach (string defCatCur in definitionCategories)
 			{
-				var options = new DefCatOptions(defCatCur);
+				var options = new DefinitionCategoryOptions(defCatCur);
 				switch (defCatCur)
 				{
 					case DefinitionCategory.AccountColors:
@@ -289,200 +288,182 @@ namespace OpenDental
 						break;
 				}
 
-				defCatOptions.Add(options);
+				optionsList.Add(options);
 			}
 
-			return defCatOptions;
+			return optionsList;
 		}
 
-		private static string GetItemDescForImages(string itemValue)
+		private static string GetDescriptionForImageCategory(string itemValue)
 		{
 			var results = new List<string>();
 
-			if (itemValue.Contains("X")) results.Add("ChartModule");
-			if (itemValue.Contains("F")) results.Add("PatientForm");
-			if (itemValue.Contains("P")) results.Add("PatientPic");
-			if (itemValue.Contains("S")) results.Add("Statement");
-			if (itemValue.Contains("T")) results.Add("ToothChart");
-			if (itemValue.Contains("R")) results.Add("TreatPlans");
-			if (itemValue.Contains("L")) results.Add("PatientPortal");
-			if (itemValue.Contains("A")) results.Add("PayPlans");
-			if (itemValue.Contains("C")) results.Add("ClaimAttachments");
-			if (itemValue.Contains("B")) results.Add("LabCases");
-			if (itemValue.Contains("U")) results.Add("AutoSaveForms");
+			if (itemValue.Contains("X")) results.Add("Chart Module");
+			if (itemValue.Contains("F")) results.Add("Patient Form");
+			if (itemValue.Contains("P")) results.Add("Patient Pictures");
+			if (itemValue.Contains("S")) results.Add("Statements");
+			if (itemValue.Contains("T")) results.Add("Tooth Chart");
+			if (itemValue.Contains("R")) results.Add("Treatment Plans");
+			if (itemValue.Contains("L")) results.Add("Patient Portal");
+			if (itemValue.Contains("A")) results.Add("Payment Plans");
+			if (itemValue.Contains("C")) results.Add("Claim Attachments");
+			if (itemValue.Contains("B")) results.Add("Lab Cases");
+			if (itemValue.Contains("U")) results.Add("AutoSave Forms");
 
 			return string.Join(", ", results);
 		}
-		#endregion
 
-		/// <summary>
-		/// Fills the passed in grid with the definitions in the passed in list.
-		/// </summary>
-		public static void FillGridDefs(ODGrid definitionsGrid, DefCatOptions selectedDefCatOpt, List<Definition> definitions)
+		public static void FillGrid(ODGrid grid, DefinitionCategoryOptions selectedCategoryOptions, List<Definition> definitions)
 		{
-			Definition definition = null;
-			if (definitionsGrid.GetSelectedIndex() > -1)
+			var selectedDefinition = grid.SelectedTag<Definition>();
+			int? selectedDefinitionIndex = null;
+
+			int scroll = grid.ScrollValue;
+
+			grid.BeginUpdate();
+			grid.ListGridColumns.Clear();
+			grid.ListGridColumns.Add(new GridColumn("Name", 190));
+			grid.ListGridColumns.Add(new GridColumn(selectedCategoryOptions.ValueText, 190));
+			grid.ListGridColumns.Add(new GridColumn(selectedCategoryOptions.EnableColor ? "Color" : "", 40));
+			grid.ListGridColumns.Add(new GridColumn(selectedCategoryOptions.CanHide ? "Hide" : "", 30, HorizontalAlignment.Center));
+			grid.ListGridRows.Clear();
+
+			foreach (var definition in definitions)
 			{
-				definition = (Definition)definitionsGrid.ListGridRows[definitionsGrid.GetSelectedIndex()].Tag;
-			}
-
-			int scroll = definitionsGrid.ScrollValue;
-
-			definitionsGrid.BeginUpdate();
-			definitionsGrid.ListGridColumns.Clear();
-			definitionsGrid.ListGridColumns.Add(new GridColumn("Name", 190));
-			definitionsGrid.ListGridColumns.Add(new GridColumn(selectedDefCatOpt.ValueText, 190));
-			definitionsGrid.ListGridColumns.Add(new GridColumn(selectedDefCatOpt.EnableColor ? "Color" : "", 40));
-			definitionsGrid.ListGridColumns.Add(new GridColumn(selectedDefCatOpt.CanHide ? "Hide" : "", 30, HorizontalAlignment.Center));
-			definitionsGrid.ListGridRows.Clear();
-
-			foreach (var def in definitions)
-			{
-				if (Definitions.IsDefDeprecated(def))
+				if (Definitions.IsDefDeprecated(definition))
 				{
-					def.IsHidden = true;
+					definition.IsHidden = true;
 				}
 
-				var row = new GridRow();
-				row.Cells.Add(def.Name);
+				var gridRow = new GridRow();
+				gridRow.Cells.Add(definition.Name);
 
-				if (selectedDefCatOpt.DefCat == DefinitionCategory.ImageCats)
+				if (selectedCategoryOptions.Category == DefinitionCategory.ImageCats)
 				{
-					row.Cells.Add(GetItemDescForImages(def.Value));
+					gridRow.Cells.Add(GetDescriptionForImageCategory(definition.Value));
 				}
-				else if (selectedDefCatOpt.DefCat == DefinitionCategory.AutoNoteCats)
+				else if (selectedCategoryOptions.Category == DefinitionCategory.AutoNoteCats)
 				{
-					Dictionary<string, string> dictAutoNoteDefs = new Dictionary<string, string>();
-					dictAutoNoteDefs = definitions.ToDictionary(x => x.Id.ToString(), x => x.Name);
-                    row.Cells.Add(dictAutoNoteDefs.TryGetValue(def.Value, out string nameCur) ? nameCur : def.Value);
+					var parentCat = definitions.FirstOrDefault(x => x.Id.ToString() == definition.Value);
+
+					gridRow.Cells.Add(parentCat?.Name ?? definition.Value);
                 }
-				else if (selectedDefCatOpt.DefCat == DefinitionCategory.WebSchedNewPatApptTypes)
+				else if (selectedCategoryOptions.Category == DefinitionCategory.WebSchedNewPatApptTypes)
 				{
-					AppointmentType appointmentType = AppointmentTypes.GetWebSchedNewPatApptTypeByDef(def.Id);
-					row.Cells.Add(appointmentType == null ? "" : appointmentType.Name);
+					AppointmentType appointmentType = AppointmentTypes.GetWebSchedNewPatApptTypeByDef(definition.Id);
+					gridRow.Cells.Add(appointmentType == null ? "" : appointmentType.Name);
 				}
-				else if (selectedDefCatOpt.DoShowItemOrderInValue)
+				else if (selectedCategoryOptions.DoShowItemOrderInValue)
 				{
-					row.Cells.Add(def.SortOrder.ToString());
+					gridRow.Cells.Add(definition.SortOrder.ToString());
 				}
 				else
 				{
-					row.Cells.Add(def.Value);
+					gridRow.Cells.Add(definition.Value);
 				}
 
-				row.Cells.Add("");
-				if (selectedDefCatOpt.EnableColor)
+				gridRow.Cells.Add("");
+				if (selectedCategoryOptions.EnableColor)
 				{
-					row.Cells[row.Cells.Count - 1].BackColor = def.Color;
+					gridRow.Cells[gridRow.Cells.Count - 1].BackColor = definition.Color;
 				}
 
-				row.Cells.Add(def.IsHidden ? "X" : "");
-				row.Tag = def;
+				gridRow.Cells.Add(definition.IsHidden ? "X" : "");
+				gridRow.Tag = definition;
 
-				definitionsGrid.ListGridRows.Add(row);
-			}
+				grid.ListGridRows.Add(gridRow);
 
-			definitionsGrid.EndUpdate();
-			if (definition != null)
-			{
-				for (int i = 0; i < definitionsGrid.ListGridRows.Count; i++)
-				{
-					if (((Definition)definitionsGrid.ListGridRows[i].Tag).Id == definition.Id)
-					{
-						definitionsGrid.SetSelected(i, true);
-						break;
-					}
+				if (definition.Id == selectedDefinition.Id)
+                {
+					selectedDefinitionIndex = grid.ListGridRows.Count - 1;
 				}
 			}
 
-			definitionsGrid.ScrollValue = scroll;
+			grid.EndUpdate();
+
+			if (selectedDefinitionIndex.HasValue)
+            {
+				grid.SetSelected(selectedDefinitionIndex.Value, true);
+            }
+
+			grid.ScrollValue = scroll;
 		}
 
-		public static bool GridDefsDoubleClick(Definition selectedDef, DefCatOptions selectedDefCatOpt, List<Definition> listDefsCur, List<Definition> listDefsAll, bool isDefChanged)
+		public static bool TryEditDefinition(Definition definition, DefinitionCategoryOptions categoryOptions, List<Definition> definitions)
 		{
-			switch (selectedDefCatOpt.DefCat)
+			switch (categoryOptions.Category)
 			{
 				case DefinitionCategory.BlockoutTypes:
-					using (var formDefEditBlockout = new FormDefEditBlockout(selectedDef))
+					using (var formDefEditBlockout = new FormDefEditBlockout(definition))
 					{
 						if (formDefEditBlockout.ShowDialog() == DialogResult.OK)
 						{
-							isDefChanged = true;
+							return true;
 						}
 					}
 					break;
 
 				case DefinitionCategory.ImageCats:
-					using (var formDefEditImages = new FormDefEditImages(selectedDef))
+					using (var formDefEditImages = new FormDefEditImages(definition))
 					{
 						formDefEditImages.IsNew = false;
 
 						if (formDefEditImages.ShowDialog() == DialogResult.OK)
 						{
-							isDefChanged = true;
+							return true;
 						}
 					}
 					break;
 
 				case DefinitionCategory.WebSchedNewPatApptTypes:
-					using (var formDefEditWSNPApptTypes = new FormDefEditWSNPApptTypes(selectedDef))
+					using (var formDefEditWSNPApptTypes = new FormDefEditWSNPApptTypes(definition))
 					{
 						if (formDefEditWSNPApptTypes.ShowDialog() == DialogResult.OK)
 						{
-							if (formDefEditWSNPApptTypes.IsDeleted)
-							{
-								listDefsAll.Remove(selectedDef);
-							}
-							isDefChanged = true;
+							return true;
 						}
 					}
 					break;
 
 				default:
-					using (var formDefEdit = new FormDefEdit(selectedDef, listDefsCur, selectedDefCatOpt))
+					using (var formDefEdit = new FormDefinitionEdit(definition, definitions, categoryOptions))
 					{
-						formDefEdit.IsNew = false;
 						if (formDefEdit.ShowDialog() == DialogResult.OK)
 						{
-							if (formDefEdit.IsDeleted)
-							{
-								listDefsAll.Remove(selectedDef);
-							}
-
-							isDefChanged = true;
+							return true;
 						}
 					}
 					break;
 			}
 
-			return isDefChanged;
+			return false;
 		}
 
-		public static bool AddDef(ODGrid gridDefs, DefCatOptions selectedDefCatOpt)
+		public static bool CreateDefinition(ODGrid grid, DefinitionCategoryOptions categoryOptions)
 		{
 			int itemOrder = 0;
-			if (Definitions.GetDefsForCategory(selectedDefCatOpt.DefCat).Count > 0)
+			if (Definitions.GetDefsForCategory(categoryOptions.Category).Count > 0)
 			{
-				itemOrder = Definitions.GetDefsForCategory(selectedDefCatOpt.DefCat).Max(x => x.SortOrder) + 1;
+				itemOrder = Definitions.GetDefsForCategory(categoryOptions.Category).Max(x => x.SortOrder) + 1;
 			}
 
-            var newDef = new Definition
+            var definition = new Definition
             {
                 SortOrder = itemOrder,
-                Category = selectedDefCatOpt.DefCat,
+                Category = categoryOptions.Category,
                 Name = "",
                 Value = ""
             };
 
-            if (selectedDefCatOpt.DefCat == DefinitionCategory.InsurancePaymentType)
+            if (categoryOptions.Category == DefinitionCategory.InsurancePaymentType)
 			{
-				newDef.Value = "N";
+				definition.Value = "N";
 			}
 
-			switch (selectedDefCatOpt.DefCat)
+			switch (categoryOptions.Category)
 			{
 				case DefinitionCategory.BlockoutTypes:
-					using (var formDefEditBlockout = new FormDefEditBlockout(newDef))
+					using (var formDefEditBlockout = new FormDefEditBlockout(definition))
 					{
 						formDefEditBlockout.IsNew = true;
 						if (formDefEditBlockout.ShowDialog() != DialogResult.OK)
@@ -493,7 +474,7 @@ namespace OpenDental
 					break;
 
 				case DefinitionCategory.ImageCats:
-					using (var formDefEditImages = new FormDefEditImages(newDef))
+					using (var formDefEditImages = new FormDefEditImages(definition))
 					{
 						formDefEditImages.IsNew = true;
 						if (formDefEditImages.ShowDialog() != DialogResult.OK)
@@ -504,7 +485,7 @@ namespace OpenDental
 					break;
 
 				case DefinitionCategory.WebSchedNewPatApptTypes:
-					using (var formDefEditWSNPAppt = new FormDefEditWSNPApptTypes(newDef))
+					using (var formDefEditWSNPAppt = new FormDefEditWSNPApptTypes(definition))
 					{
 						if (formDefEditWSNPAppt.ShowDialog() != DialogResult.OK)
 						{
@@ -515,14 +496,13 @@ namespace OpenDental
 
 				default:
 					var currentDefs = new List<Definition>();
-					foreach (var gridRow in gridDefs.ListGridRows)
+					foreach (var gridRow in grid.ListGridRows)
 					{
 						currentDefs.Add((Definition)gridRow.Tag);
 					}
 
-					using (var formDefEdit = new FormDefEdit(newDef, currentDefs, selectedDefCatOpt))
+					using (var formDefEdit = new FormDefinitionEdit(definition, currentDefs, categoryOptions))
 					{
-						formDefEdit.IsNew = true;
 						if (formDefEdit.ShowDialog() != DialogResult.OK)
 						{
 							return false;
@@ -535,59 +515,71 @@ namespace OpenDental
 		}
 
 		/// <summary>
-		/// Will attempt to hide the currently selected definition of the ODGrid that is passed in.
+		/// Attempts to hide the definition that is selected in the specified <paramref name="grid"/>.
 		/// </summary>
-		public static bool TryHideDefSelectedInGrid(ODGrid gridDefs, DefCatOptions selectedDefCatOpt)
+		/// <param name="grid">The grid.</param>
+		/// <param name="categoryOptions">The options of the category.</param>
+		public static bool TryHideSelectedDefinition(ODGrid grid, DefinitionCategoryOptions categoryOptions)
 		{
-			if (gridDefs.GetSelectedIndex() == -1)
+			var definition = grid.SelectedTag<Definition>();
+			if (definition == null)
 			{
-				ODMessageBox.Show("Please select item first,");
+				ODMessageBox.Show(Imedisoft.Translation.Common.PleaseSelectItemFirst);
+
 				return false;
 			}
 
-			Definition defSelected = (Definition)gridDefs.ListGridRows[gridDefs.GetSelectedIndex()].Tag;
-			if (!CanHideDef(defSelected, selectedDefCatOpt))
+			if (!CanHideDefinition(definition, categoryOptions))
 			{
 				return false;
 			}
 
-			Definitions.HideDef(defSelected);
+			Definitions.Hide(definition);
+
 			return true;
 		}
 
-		///<summary>Returns true if definition can be hidden or is already hidden. Displays error message and returns false if not.</summary>
-		public static bool CanHideDef(Definition def, DefCatOptions defCatOpt)
+		/// <summary>
+		///		<para>
+		///			Determines whether the specified <paramref name="definition"/> can be hidden.
+		///		</para>
+		///		<para>
+		///			Displays a alert if the definition cannot be hidden.
+		///		</para>
+		/// </summary>
+		/// <param name="definition">The definition.</param>
+		/// <param name="categoryOptions"></param>
+		/// <returns>True if the definition can be hidden; otherwise, false.</returns>
+		public static bool CanHideDefinition(Definition definition, DefinitionCategoryOptions categoryOptions)
 		{
-			if (def.IsHidden)
-			{
-				// Return true if Def is already hidden.
-				return true;
-			}
+			if (definition.IsHidden) return true;
 
-			if (!defCatOpt.CanHide || !defCatOpt.CanEditName)
+			if (!categoryOptions.CanHide || !categoryOptions.CanEditName)
 			{
 				ODMessageBox.Show("Definitions of this category cannot be hidden.");
+
 				return false; // We should never get here, but if we do, something went wrong because the definition shouldn't have been hideable
 			}
 
 			// Stop users from hiding the last definition in categories that must have at least one def in them.
-			List<Definition> listDefsCurNotHidden = Definitions.GetDefsForCategory(defCatOpt.DefCat, true);
-			if (Definitions.NeedOneUnhidden(def.Category) && listDefsCurNotHidden.Count == 1)
+			var visibleDefinitions = Definitions.GetByCategory(categoryOptions.Category);
+			if (Definitions.NeedOneUnhidden(definition.Category) && visibleDefinitions.Count == 1)
 			{
 				ODMessageBox.Show("You cannot hide the last definition in this category.");
+
 				return false;
 			}
 
-			if (def.Category == DefinitionCategory.ProviderSpecialties && (Providers.IsSpecialtyInUse(def.Id) || Referrals.IsSpecialtyInUse(def.Id)))
+			if (definition.Category == DefinitionCategory.ProviderSpecialties && (Providers.IsSpecialtyInUse(definition.Id) || Referrals.IsSpecialtyInUse(definition.Id)))
 			{
 				ODMessageBox.Show("You cannot hide a specialty if it is in use by a provider or a referral source.");
+
 				return false;
 			}
 
-			if (Definitions.IsDefinitionInUse(def))
+			if (Definitions.IsDefinitionInUse(definition))
 			{
-				// DefNum will be zero if it is being created but hasn't been saved to DB yet, thus it can't be in use.
-				if (def.Id.In(
+				if (definition.Id.In(
 					Prefs.GetLong(PrefName.BrokenAppointmentAdjustmentType),
 					Prefs.GetLong(PrefName.AppointmentTimeArrivedTrigger),
 					Prefs.GetLong(PrefName.AppointmentTimeSeatedTrigger),
@@ -603,7 +595,7 @@ namespace OpenDental
 					ODMessageBox.Show("You cannot hide a definition if it is in use within Module Preferences.");
 					return false;
 				}
-				else if (def.Id.In(
+				else if (definition.Id.In(
 					Prefs.GetLong(PrefName.RecallStatusMailed),
 					Prefs.GetLong(PrefName.RecallStatusTexted),
 					Prefs.GetLong(PrefName.RecallStatusEmailed),
@@ -612,17 +604,17 @@ namespace OpenDental
 					ODMessageBox.Show("You cannot hide a definition that is used as a status in the Setup Recall window.");
 					return false;
 				}
-				else if (def.Id == Prefs.GetLong(PrefName.WebSchedNewPatConfirmStatus))
+				else if (definition.Id == Prefs.GetLong(PrefName.WebSchedNewPatConfirmStatus))
 				{
 					ODMessageBox.Show("You cannot hide a definition that is used as an appointment confirmation status in Web Sched New Pat Appt.");
 					return false;
 				}
-				else if (def.Id == Prefs.GetLong(PrefName.WebSchedRecallConfirmStatus))
+				else if (definition.Id == Prefs.GetLong(PrefName.WebSchedRecallConfirmStatus))
 				{
 					ODMessageBox.Show("You cannot hide a definition that is used as an appointment confirmation status in Web Sched Recall Appt.");
 					return false;
 				}
-				else if (def.Id == Prefs.GetLong(PrefName.PracticeDefaultBillType))
+				else if (definition.Id == Prefs.GetLong(PrefName.PracticeDefaultBillType))
 				{
 					ODMessageBox.Show("You cannot hide a billing type when it is selected as the practice default billing type.");
 					return false;
@@ -636,74 +628,97 @@ namespace OpenDental
 				}
 			}
 
-			if (def.Category == DefinitionCategory.PaySplitUnearnedType)
+			if (definition.Category == DefinitionCategory.PaySplitUnearnedType)
 			{
-				if (listDefsCurNotHidden.FindAll(x => string.IsNullOrEmpty(x.Value)).Count == 1 && def.Value == "")
+				if (visibleDefinitions.FindAll(x => string.IsNullOrEmpty(x.Value)).Count == 1 && definition.Value == "")
 				{
 					ODMessageBox.Show("Must have at least one definition that shows in Account");
+
 					return false;
 				}
-				if (listDefsCurNotHidden.FindAll(x => !string.IsNullOrEmpty(x.Value)).Count == 1 && def.Value != "")
+
+				if (visibleDefinitions.FindAll(x => !string.IsNullOrEmpty(x.Value)).Count == 1 && definition.Value != "")
 				{
 					ODMessageBox.Show("Must have at least one definition that does not show in Account");
+
 					return false;
 				}
 			}
 
 			// Warn the user if they are about to hide a billing type currently in use.
-			if (defCatOpt.DefCat == DefinitionCategory.BillingTypes && Patients.IsBillingTypeInUse(def.Id))
+			if (categoryOptions.Category == DefinitionCategory.BillingTypes && Patients.IsBillingTypeInUse(definition.Id))
 			{
 				if (!MsgBox.Show(MsgBoxButtons.OKCancel, "Warning: Billing type is currently in use by patients, insurance plans, or preferences."))
 				{
 					return false;
 				}
 			}
+
 			return true;
 		}
 
-		public static bool UpClick(ODGrid gridDefs)
+
+
+
+		/// <summary>
+		/// Moves the selected definition up in the specified <paramref name="grid"/>.
+		/// </summary>
+		/// <param name="grid">The grid.</param>
+		/// <returns>True if the selected definition was moved; otherwise, false.</returns>
+		public static bool MoveSelectedUp(ODGrid grid)
 		{
-			if (gridDefs.GetSelectedIndex() == -1)
+			var index = grid.GetSelectedIndex();
+			if (index == -1)
 			{
-				ODMessageBox.Show("Please select an item first.");
+				ODMessageBox.Show(Imedisoft.Translation.Common.PleaseSelectItemFirst);
+
 				return false;
 			}
 
-			if (gridDefs.GetSelectedIndex() == 0)
+			if (index == 0)
 			{
 				return false;
 			}
 
-			Definition defSelected = (Definition)gridDefs.ListGridRows[gridDefs.GetSelectedIndex()].Tag;
-			Definition defAbove = (Definition)gridDefs.ListGridRows[gridDefs.GetSelectedIndex() - 1].Tag;
-			int indexDefSelectedItemOrder = defSelected.SortOrder;
-			defSelected.SortOrder = defAbove.SortOrder;
-			defAbove.SortOrder = indexDefSelectedItemOrder;
-			Definitions.Update(defSelected);
-			Definitions.Update(defAbove);
+			var item1 = (Definition)grid.ListGridRows[index].Tag;
+			var item2 = (Definition)grid.ListGridRows[index - 1].Tag;
+
+			(item1.SortOrder, item2.SortOrder) = (item2.SortOrder, item1.SortOrder);
+
+			Definitions.Update(item1);
+			Definitions.Update(item2);
+
 			return true;
 		}
 
-		public static bool DownClick(ODGrid gridDefs)
+		/// <summary>
+		/// Moves the selected definition down in the specified <paramref name="grid"/>.
+		/// </summary>
+		/// <param name="grid">The grid.</param>
+		/// <returns>True if the selected definition was moved; otherwise, false.</returns>
+		public static bool MoveSelectedDown(ODGrid grid)
 		{
-			if (gridDefs.GetSelectedIndex() == -1)
+			var index = grid.GetSelectedIndex();
+			if (index == -1)
 			{
-				ODMessageBox.Show("Please select an item first.");
+				ODMessageBox.Show(Imedisoft.Translation.Common.PleaseSelectItemFirst);
+
 				return false;
 			}
 
-			if (gridDefs.GetSelectedIndex() == gridDefs.ListGridRows.Count - 1)
+			if (index == grid.ListGridRows.Count - 1)
 			{
 				return false;
 			}
 
-			Definition defSelected = (Definition)gridDefs.ListGridRows[gridDefs.GetSelectedIndex()].Tag;
-			Definition defBelow = (Definition)gridDefs.ListGridRows[gridDefs.GetSelectedIndex() + 1].Tag;
-			int indexDefSelectedItemOrder = defSelected.SortOrder;
-			defSelected.SortOrder = defBelow.SortOrder;
-			defBelow.SortOrder = indexDefSelectedItemOrder;
-			Definitions.Update(defSelected);
-			Definitions.Update(defBelow);
+			var item1 = (Definition)grid.ListGridRows[index].Tag;
+			var item2 = (Definition)grid.ListGridRows[index + 1].Tag;
+
+			(item1.SortOrder, item2.SortOrder) = (item2.SortOrder, item1.SortOrder);
+
+			Definitions.Update(item1);
+			Definitions.Update(item2);
+
 			return true;
 		}
 	}

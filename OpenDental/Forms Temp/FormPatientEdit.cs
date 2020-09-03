@@ -18,6 +18,7 @@ using CodeBase;
 using Imedisoft.Forms;
 using Imedisoft.Data.Models;
 using Imedisoft.Data;
+using Imedisoft.Data.Cache;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -1527,7 +1528,8 @@ namespace OpenDental{
 			SetRequiredFields();
 		}
 
-		private void textZip_Validating(object sender, System.ComponentModel.CancelEventArgs e) {
+		private void textZip_Validating(object sender, CancelEventArgs e)
+		{
 			//fired as soon as control loses focus.
 			//it's here to validate if zip is typed in to text box instead of picked from list.
 			//if(textZip.Text=="" && (textCity.Text!="" || textState.Text!="")){
@@ -1538,92 +1540,111 @@ namespace OpenDental{
 			//	}	
 			//	return;
 			//}
-			if(textZip.Text.Length<5){
+			if (textZip.Text.Length < 5)
+			{
 				return;
 			}
-			if(comboZip.SelectedIndex!=-1){
+			if (comboZip.SelectedIndex != -1)
+			{
 				return;
 			}
 			//the autofill only works if both city and state are left blank
-			if(textCity.Text!="" || textState.Text!=""){
+			if (textCity.Text != "" || textState.Text != "")
+			{
 				return;
 			}
-			List<ZipCode> listZipCodes=ZipCodes.GetALMatches(textZip.Text);
-			if(listZipCodes.Count==0){
-				//No match found. Must enter info for new zipcode
-				ZipCode ZipCodeCur=new ZipCode();
-				ZipCodeCur.ZipCodeDigits=textZip.Text;
-				FormZipCodeEdit FormZE=new FormZipCodeEdit();
-				FormZE.ZipCodeCur=ZipCodeCur;
-				FormZE.IsNew=true;
-				FormZE.ShowDialog();
-				if(FormZE.DialogResult!=DialogResult.OK){
+
+			var zipCodes = ZipCodes.GetByZipCodeDigits(textZip.Text);
+			if (zipCodes.Count == 0)
+			{
+                var zipCode = new ZipCode
+                {
+                    ZipCodeDigits = textZip.Text
+                };
+
+                using var formZipCodeEdit = new FormZipCodeEdit(zipCode);
+				if (formZipCodeEdit.ShowDialog() != DialogResult.OK)
+				{
 					return;
 				}
-				DataValid.SetInvalid(InvalidType.ZipCodes);//FormZipCodeEdit does not contain internal refresh
-				textCity.Text=ZipCodeCur.City;
-				textState.Text=ZipCodeCur.State;
-				textZip.Text=ZipCodeCur.ZipCodeDigits;
+
+				CacheManager.RefreshGlobal(nameof(InvalidType.ZipCodes));
+
+				textCity.Text = zipCode.City;
+				textState.Text = zipCode.State;
+				textZip.Text = zipCode.ZipCodeDigits;
 			}
-			else if(listZipCodes.Count==1){
-				//only one match found.  Use it.
-				textCity.Text=listZipCodes[0].City;
-				textState.Text=listZipCodes[0].State;
+			else if (zipCodes.Count == 1) // Only one match found. Use it.
+			{
+				textCity.Text = zipCodes[0].City;
+				textState.Text = zipCodes[0].State;
 			}
-			else{
-				//multiple matches found.  Pick one
-				FormZipSelect FormZS=new FormZipSelect(textZip.Text);
-				FormZS.ShowDialog();
-				if(FormZS.DialogResult!=DialogResult.OK){
+			else // Multiple matches found. Pick one.
+			{
+				using var formZipSelect = new FormZipSelect(textZip.Text);
+				if (formZipSelect.ShowDialog(this) != DialogResult.OK)
+				{
 					return;
 				}
-				DataValid.SetInvalid(InvalidType.ZipCodes);
-				textCity.Text=FormZS.ZipSelected.City;
-				textState.Text=FormZS.ZipSelected.State;
-				textZip.Text=FormZS.ZipSelected.ZipCodeDigits;
+
+				textCity.Text = formZipSelect.SelectedZipCode.City;
+				textState.Text = formZipSelect.SelectedZipCode.State;
+				textZip.Text = formZipSelect.SelectedZipCode.ZipCodeDigits;
 			}
 			FillComboZip();
 			SetRequiredFields();
 		}
 
-		private void checkSuperBilling_MouseDown(object sender,MouseEventArgs e) {
-			if(!Security.IsAuthorized(Permissions.Billing)) {
+		private void checkSuperBilling_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (!Security.IsAuthorized(Permissions.Billing))
+			{
 				return;
 			}
 		}
 
-		private void butEditZip_Click(object sender, System.EventArgs e) {
-			if(textZip.Text.Length==0){
-				MessageBox.Show("Please enter a zipcode first.");
+		private void butEditZip_Click(object sender, EventArgs e)
+		{
+			if (textZip.Text.Length == 0)
+			{
+                ODMessageBox.Show("Please enter a zipcode first.");
+
 				return;
 			}
-			List<ZipCode> listZipCodes=ZipCodes.GetALMatches(textZip.Text);
-			if(listZipCodes.Count==0){
-				FormZipCodeEdit FormZE=new FormZipCodeEdit();
-				FormZE.ZipCodeCur=new ZipCode();
-				FormZE.ZipCodeCur.ZipCodeDigits=textZip.Text;
-				FormZE.IsNew=true;
-				FormZE.ShowDialog();
-				if(FormZE.DialogResult!=DialogResult.OK){
+
+			var zipCodes = ZipCodes.GetByZipCodeDigits(textZip.Text);
+			if (zipCodes.Count == 0)
+			{
+				var zipCode = new ZipCode
+				{
+					ZipCodeDigits = textZip.Text
+				};
+
+				using var formZipCodeEdit = new FormZipCodeEdit(zipCode);
+				if (formZipCodeEdit.ShowDialog(this) != DialogResult.OK)
+				{
 					return;
 				}
-				DataValid.SetInvalid(InvalidType.ZipCodes);
-				textCity.Text=FormZE.ZipCodeCur.City;
-				textState.Text=FormZE.ZipCodeCur.State;
-				textZip.Text=FormZE.ZipCodeCur.ZipCodeDigits;
+
+				CacheManager.RefreshGlobal(nameof(InvalidType.ZipCodes));
+
+				textCity.Text = zipCode.City;
+				textState.Text = zipCode.State;
+				textZip.Text = zipCode.ZipCodeDigits;
 			}
-			else{
-				FormZipSelect FormZS=new FormZipSelect(textZip.Text);
-				FormZS.ShowDialog();
-				if(FormZS.DialogResult!=DialogResult.OK){
+			else
+			{
+				using var formZipSelect = new FormZipSelect(textZip.Text);
+				if (formZipSelect.ShowDialog(this) != DialogResult.OK)
+				{
 					return;
 				}
-				//Not needed:
-				//DataValid.SetInvalid(InvalidTypes.ZipCodes);
-				textCity.Text=FormZS.ZipSelected.City;
-				textState.Text=FormZS.ZipSelected.State;
-				textZip.Text=FormZS.ZipSelected.ZipCodeDigits;
+
+				textCity.Text = formZipSelect.SelectedZipCode.City;
+				textState.Text = formZipSelect.SelectedZipCode.State;
+				textZip.Text = formZipSelect.SelectedZipCode.ZipCodeDigits;
 			}
+
 			FillComboZip();
 		}
 
@@ -1792,7 +1813,7 @@ namespace OpenDental{
 			//similarSchools=
 				//Carriers.GetSimilarNames(textCounty.Text);
 			for(int i=0;i<CountiesList.Length;i++){
-				listCounties.Items.Add(CountiesList[i].CountyName);
+				listCounties.Items.Add(CountiesList[i].Name);
 			}
 			int h=13*CountiesList.Length+5;
 			if(h > ClientSize.Height-listCounties.Top)
@@ -1807,14 +1828,14 @@ namespace OpenDental{
 			}
 			//or if user clicked on a different text box.
 			if(listCounties.SelectedIndex!=-1){
-				textCounty.Text=CountiesList[listCounties.SelectedIndex].CountyName;
+				textCounty.Text=CountiesList[listCounties.SelectedIndex].Name;
 			}
 			listCounties.Visible=false;
 			SetRequiredFields();
 		}
 
 		private void listCounties_Click(object sender, System.EventArgs e){
-			textCounty.Text=CountiesList[listCounties.SelectedIndex].CountyName;
+			textCounty.Text=CountiesList[listCounties.SelectedIndex].Name;
 			textCounty.Focus();
 			textCounty.SelectionStart=textCounty.Text.Length;
 			listCounties.Visible=false;
@@ -2688,7 +2709,7 @@ namespace OpenDental{
 				MessageBox.Show("Ask To Arrive Early invalid.");
 				return;
 			}
-			if(textCounty.Text != "" && !Counties.DoesExist(textCounty.Text)){
+			if(textCounty.Text != "" && !Counties.Exists(textCounty.Text)){
 				MessageBox.Show("County name invalid. The County entered is not present in the list of Counties. Please add the new County.");
 				return;
 			}

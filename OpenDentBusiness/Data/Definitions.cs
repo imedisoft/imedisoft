@@ -284,7 +284,11 @@ namespace Imedisoft.Data
             }
         }
 
-		public static void HideDef(Definition definition)
+		/// <summary>
+		/// Hides the specified <paramref name="definition"/> definition.
+		/// </summary>
+		/// <param name="definition">The definition to hide.</param>
+		public static void Hide(Definition definition)
 		{
 			if (false == definition.IsHidden)
 			{

@@ -1283,14 +1283,12 @@ namespace OpenDental {
 			if(textCity.Text!="" || textState.Text!=""){
 				return;
 			}
-			List<ZipCode> listZipCodes=ZipCodes.GetALMatches(textZip.Text);
+			List<ZipCode> listZipCodes=ZipCodes.GetByZipCodeDigits(textZip.Text);
 			if(listZipCodes.Count==0){
 				//No match found. Must enter info for new zipcode
 				ZipCode ZipCodeCur=new ZipCode();
 				ZipCodeCur.ZipCodeDigits=textZip.Text;
-				FormZipCodeEdit FormZE=new FormZipCodeEdit();
-				FormZE.ZipCodeCur=ZipCodeCur;
-				FormZE.IsNew=true;
+				FormZipCodeEdit FormZE=new FormZipCodeEdit(ZipCodeCur);
 				FormZE.ShowDialog();
 				if(FormZE.DialogResult!=DialogResult.OK){
 					return;
@@ -1315,9 +1313,9 @@ namespace OpenDental {
 					return;
 				}
 				DataValid.SetInvalid(InvalidType.ZipCodes);
-				textCity.Text=FormZS.ZipSelected.City;
-				textState.Text=FormZS.ZipSelected.State;
-				textZip.Text=FormZS.ZipSelected.ZipCodeDigits;
+				textCity.Text=FormZS.SelectedZipCode.City;
+				textState.Text=FormZS.SelectedZipCode.State;
+				textZip.Text=FormZS.SelectedZipCode.ZipCodeDigits;
 			}
 		}
 

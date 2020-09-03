@@ -576,7 +576,7 @@
     <Compile Include="Forms\FormAbout.Designer.cs">
       <DependentUpon>FormAbout.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormBase.cs">
+    <Compile Include="Forms\FormBase.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormFeatureRequest.Designer.cs">
@@ -936,6 +936,36 @@
     </Compile>
     <Compile Include="Forms\FormAppointmentFieldDefinitions.Designer.cs">
       <DependentUpon>FormAppointmentFieldDefinitions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormCounties.Designer.cs">
+      <DependentUpon>FormCounties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormCountyEdit.Designer.cs">
+      <DependentUpon>FormCountyEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormDefinitionEdit.Designer.cs">
+      <DependentUpon>FormDefinitionEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormDefinitionPicker.Designer.cs">
+      <DependentUpon>FormDefinitionPicker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormDefinitions.Designer.cs">
+      <DependentUpon>FormDefinitions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormFeeEdit.Designer.cs">
+      <DependentUpon>FormFeeEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormProcCodeEditMore.Designer.cs">
+      <DependentUpon>FormProcCodeEditMore.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormZipCodeEdit.Designer.cs">
+      <DependentUpon>FormZipCodeEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormZipCodes.Designer.cs">
+      <DependentUpon>FormZipCodes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormZipSelect.Designer.cs">
+      <DependentUpon>FormZipSelect.cs</DependentUpon>
     </Compile>
     <Compile Include="Logic\AutoNoteL.cs" />
     <Compile Include="Logic\PayConnectL.cs" />
@@ -1696,11 +1726,8 @@
     <Compile Include="Forms Temp\FormAdjustmentPicker.designer.cs">
       <DependentUpon>FormAdjustmentPicker.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormDefinitionPicker.cs">
+    <Compile Include="Forms\FormDefinitionPicker.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormDefinitionPicker.designer.cs">
-      <DependentUpon>FormDefinitionPicker.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormDisplayFieldsOrthoChart.cs">
       <SubType>Form</SubType>
@@ -1954,11 +1981,8 @@
     <Compile Include="Forms Temp\FormEncounterTool.designer.cs">
       <DependentUpon>FormEncounterTool.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormProcCodeEditMore.cs">
+    <Compile Include="Forms\FormProcCodeEditMore.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormProcCodeEditMore.designer.cs">
-      <DependentUpon>FormProcCodeEditMore.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormSubscriberMove .cs">
       <SubType>Form</SubType>
@@ -4295,9 +4319,6 @@
     <Compile Include="Forms Temp\FormBillingOptions.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormBillingUndo.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Forms Temp\FormCarrierCombine.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -4367,19 +4388,19 @@
     <Compile Include="Forms Temp\FormConvertLang39.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormCounties.cs">
+    <Compile Include="Forms\FormCounties.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormCountyEdit.cs">
+    <Compile Include="Forms\FormCountyEdit.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormDatabaseMaintenance.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormDefEdit.cs">
+    <Compile Include="Forms\FormDefinitionEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormDefinitions.cs">
+    <Compile Include="Forms\FormDefinitions.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormDepositEdit.cs">
@@ -4433,7 +4454,7 @@
     <Compile Include="Forms\FormEmployers.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormFeeEdit.cs">
+    <Compile Include="Forms\FormFeeEdit.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormFinanceCharges.cs">
@@ -4742,7 +4763,7 @@
     <Compile Include="Forms Temp\FormSigElementDefEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormSplash.cs">
+    <Compile Include="Forms\FormSplash.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormStatementOptions.cs">
@@ -4805,13 +4826,13 @@
     <Compile Include="Forms Temp\FormUserPassword.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormZipCodeEdit.cs">
+    <Compile Include="Forms\FormZipCodeEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormZipCodes.cs">
+    <Compile Include="Forms\FormZipCodes.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormZipSelect.cs">
+    <Compile Include="Forms\FormZipSelect.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UI\InputBox.cs">
@@ -5020,12 +5041,6 @@
     </Compile>
     <Compile Include="User Controls\ODcodeBox.cs">
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="User Controls\SetupWizControls\UserControlSetupWizDefinitions.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="User Controls\SetupWizControls\UserControlSetupWizDefinitions.Designer.cs">
-      <DependentUpon>UserControlSetupWizDefinitions.cs</DependentUpon>
     </Compile>
     <Compile Include="User Controls\SetupWizControls\UserControlSetupWizFeeSched.cs">
       <SubType>UserControl</SubType>
@@ -5728,7 +5743,7 @@
     <EmbeddedResource Include="Forms Temp\FormAdjustmentPicker.resx">
       <DependentUpon>FormAdjustmentPicker.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormDefinitionPicker.resx">
+    <EmbeddedResource Include="Forms\FormDefinitionPicker.resx">
       <DependentUpon>FormDefinitionPicker.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormDisplayFieldsOrthoChart.resx">
@@ -5869,7 +5884,7 @@
     <EmbeddedResource Include="Forms Temp\FormEncounterTool.resx">
       <DependentUpon>FormEncounterTool.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormProcCodeEditMore.resx">
+    <EmbeddedResource Include="Forms\FormProcCodeEditMore.resx">
       <DependentUpon>FormProcCodeEditMore.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormSubscriberMove .resx">
@@ -7164,10 +7179,6 @@
       <DependentUpon>FormBillingOptions.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormBillingUndo.resx">
-      <DependentUpon>FormBillingUndo.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormCarrierCombine.resx">
       <DependentUpon>FormCarrierCombine.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -7260,11 +7271,11 @@
       <DependentUpon>FormConvertLang39.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormCounties.resx">
+    <EmbeddedResource Include="Forms\FormCounties.resx">
       <DependentUpon>FormCounties.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormCountyEdit.resx">
+    <EmbeddedResource Include="Forms\FormCountyEdit.resx">
       <DependentUpon>FormCountyEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7272,11 +7283,11 @@
       <DependentUpon>FormDatabaseMaintenance.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormDefEdit.resx">
-      <DependentUpon>FormDefEdit.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\FormDefinitionEdit.resx">
+      <DependentUpon>FormDefinitionEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormDefinitions.resx">
+    <EmbeddedResource Include="Forms\FormDefinitions.resx">
       <DependentUpon>FormDefinitions.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7348,7 +7359,7 @@
       <DependentUpon>FormEmployers.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormFeeEdit.resx">
+    <EmbeddedResource Include="Forms\FormFeeEdit.resx">
       <DependentUpon>FormFeeEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7840,15 +7851,15 @@
       <DependentUpon>FormUserPassword.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormZipCodeEdit.resx">
+    <EmbeddedResource Include="Forms\FormZipCodeEdit.resx">
       <DependentUpon>FormZipCodeEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormZipCodes.resx">
+    <EmbeddedResource Include="Forms\FormZipCodes.resx">
       <DependentUpon>FormZipCodes.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormZipSelect.resx">
+    <EmbeddedResource Include="Forms\FormZipSelect.resx">
       <DependentUpon>FormZipSelect.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -8110,9 +8121,6 @@
     <EmbeddedResource Include="User Controls\ODtextBox.resx">
       <DependentUpon>ODtextBox.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="User Controls\SetupWizControls\UserControlSetupWizDefinitions.resx">
-      <DependentUpon>UserControlSetupWizDefinitions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="User Controls\SetupWizControls\UserControlSetupWizFeeSched.resx">
       <DependentUpon>UserControlSetupWizFeeSched.cs</DependentUpon>

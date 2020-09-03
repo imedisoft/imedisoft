@@ -482,9 +482,9 @@ namespace OpenDental{
 
 		private void butWSNPAPickApptTypes_Click(object sender,EventArgs e) {
 			FormDefinitionPicker FormDP=new FormDefinitionPicker(DefinitionCategory.WebSchedNewPatApptTypes,_listWSNPAOperatoryDefs);
-			FormDP.IsMultiSelectionMode=true;
+			FormDP.AllowMultiSelect=true;
 			if(FormDP.ShowDialog()==DialogResult.OK) {
-				_listWSNPAOperatoryDefs=FormDP.ListSelectedDefs.ToList();
+				_listWSNPAOperatoryDefs=FormDP.SelectedDefinitions.ToList();
 				FillWSNPAApptTypes();
 			}
 		}

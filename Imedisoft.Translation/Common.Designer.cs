@@ -232,6 +232,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to County name already exists. Duplicate not allowed..
+        /// </summary>
+        public static string CountyNameAlreadyExists {
+            get {
+                return ResourceManager.GetString("CountyNameAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Date.
         /// </summary>
         public static string Date {
@@ -246,6 +255,15 @@ namespace Imedisoft.Translation {
         public static string DateLimitation {
             get {
                 return ResourceManager.GetString("DateLimitation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Definition.
+        /// </summary>
+        public static string Definition {
+            get {
+                return ResourceManager.GetString("Definition", resourceCulture);
             }
         }
         
@@ -318,6 +336,15 @@ namespace Imedisoft.Translation {
         public static string FirstName {
             get {
                 return ResourceManager.GetString("FirstName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hidden.
+        /// </summary>
+        public static string Hidden {
+            get {
+                return ResourceManager.GetString("Hidden", resourceCulture);
             }
         }
         
@@ -504,6 +531,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please enter a name..
+        /// </summary>
+        public static string PleaseEnterName {
+            get {
+                return ResourceManager.GetString("PleaseEnterName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please enter password.
         /// </summary>
         public static string PleaseEnterPassword {
@@ -639,7 +675,7 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to hidden.
+        ///   Looks up a localized string similar to (hidden).
         /// </summary>
         public static string TagHidden {
             get {
@@ -680,6 +716,15 @@ namespace Imedisoft.Translation {
         public static string Unknown {
             get {
                 return ResourceManager.GetString("Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value.
+        /// </summary>
+        public static string Value {
+            get {
+                return ResourceManager.GetString("Value", resourceCulture);
             }
         }
     }

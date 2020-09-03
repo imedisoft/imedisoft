@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using CodeBase;
 using Imedisoft.Data.Models;
 using Imedisoft.Data;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -389,12 +390,17 @@ namespace OpenDental{
 			FillButtons();
 		}
 
-		private void butEdit_Click(object sender,EventArgs e) {
-			if(!Security.IsAuthorized(Permissions.Setup)) {
+		private void butEdit_Click(object sender, EventArgs e)
+		{
+			if (!Security.IsAuthorized(Permissions.Setup))
+			{
 				return;
 			}
-			FormDefinitions FormD=new FormDefinitions(DefinitionCategory.ProcButtonCats);
-			FormD.ShowDialog();
+
+			using var formDefinitions = new FormDefinitions(DefinitionCategory.ProcButtonCats);
+
+			formDefinitions.ShowDialog(this);
+
 			FillCategories();
 			FillButtons();
 		}

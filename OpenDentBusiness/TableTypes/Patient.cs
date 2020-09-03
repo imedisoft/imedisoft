@@ -238,7 +238,7 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// FK to county.CountyName, although it will not crash if key absent.
 		/// </summary>
-		[ForeignKey(typeof(County), nameof(OpenDentBusiness.County.CountyName))]
+		[ForeignKey(typeof(County), nameof(OpenDentBusiness.County.Name))]
 		public string County;
 
 		/// <summary>
