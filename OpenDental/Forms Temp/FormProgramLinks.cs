@@ -79,16 +79,6 @@ namespace Imedisoft.Forms
 					dialogResult = FormU.ShowDialog();
 					break;
 
-				case "eClinicalWorks":
-					if (!Security.IsAuthorized(Permissions.SecurityAdmin))
-					{
-						break;
-					}
-					FormEClinicalWorks FormECW = new FormEClinicalWorks();
-					FormECW.ProgramCur = program;
-					dialogResult = FormECW.ShowDialog();
-					break;
-
 				case "eRx":
 					FormErxSetup FormES = new FormErxSetup();
 					dialogResult = FormES.ShowDialog();

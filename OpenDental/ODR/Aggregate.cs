@@ -28,13 +28,15 @@ namespace ODR
 			{
 				return 0.ToString("N");
 			}
+
 			try
 			{
-				//Cannot read debitAmt and creditAmt as decimals because it makes the general ledger detail report fail.  Simply cast as decimals when doing mathematical operations.
+				// Cannot read debitAmt and creditAmt as decimals because it makes the general ledger detail report fail.  Simply cast as decimals when doing mathematical operations.
 				double debit = (double)debitAmt;//PIn.PDouble(debitAmt);
 				double credit = (double)creditAmt;//PIn.PDouble(creditAmt)
 				if (groupByVal == null || groupBy.ToString() != groupByVal)
-				{//if new or changed group
+				{
+					// If new or changed group
 					runningSum = 0;
 				}
 

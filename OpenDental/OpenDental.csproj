@@ -3019,18 +3019,6 @@
     <Compile Include="Forms Temp\FormXchargeTokenTool.designer.cs">
       <DependentUpon>FormXchargeTokenTool.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormEcwDiag.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormEcwDiag.designer.cs">
-      <DependentUpon>FormEcwDiag.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms Temp\FormEcwDiagAdv.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormEcwDiagAdv.designer.cs">
-      <DependentUpon>FormEcwDiagAdv.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms Temp\FormHL7DefFieldEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -3514,10 +3502,10 @@
     <Compile Include="Forms Reports\FormSearchPatNotes.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormClaimResend.cs">
+    <Compile Include="Forms\FormClaimResend.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormClaimResend.designer.cs">
+    <Compile Include="Forms\FormClaimResend.designer.cs">
       <DependentUpon>FormClaimResend.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormPayConnectSetup.cs">
@@ -3732,9 +3720,6 @@
     </Compile>
     <Compile Include="Forms Temp\FormShutdown.designer.cs">
       <DependentUpon>FormShutdown.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms Temp\FormEClinicalWorks.cs">
-      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormFamilyMemberSelect.cs">
       <SubType>Form</SubType>
@@ -6435,12 +6420,6 @@
     <EmbeddedResource Include="Forms Temp\FormXchargeTokenTool.resx">
       <DependentUpon>FormXchargeTokenTool.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEcwDiag.resx">
-      <DependentUpon>FormEcwDiag.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEcwDiagAdv.resx">
-      <DependentUpon>FormEcwDiagAdv.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormHL7DefFieldEdit.resx">
       <DependentUpon>FormHL7DefFieldEdit.cs</DependentUpon>
     </EmbeddedResource>
@@ -8796,7 +8775,7 @@
       <DependentUpon>FormSearchPatNotes.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormClaimResend.resx">
+    <EmbeddedResource Include="Forms\FormClaimResend.resx">
       <DependentUpon>FormClaimResend.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -8966,10 +8945,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormShutdown.resx">
       <DependentUpon>FormShutdown.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEClinicalWorks.resx">
-      <DependentUpon>FormEClinicalWorks.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormFamilyMemberSelect.resx">
