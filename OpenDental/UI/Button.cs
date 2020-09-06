@@ -53,62 +53,21 @@ namespace OpenDental.UI
         /// </summary>
         protected override Size DefaultSize => new Size(80, 25);
 
-		private StringFormat GetStringFormat(ContentAlignment contentAlignment)
+		private TextFormatFlags GetTextFormatFlags(ContentAlignment contentAlignment)
 		{
-			var stringFormat = new StringFormat();
-			switch (contentAlignment)
-			{
-				case ContentAlignment.MiddleCenter:
-					stringFormat.LineAlignment = StringAlignment.Center;
-					stringFormat.Alignment = StringAlignment.Center;
-					break;
-
-				case ContentAlignment.MiddleLeft:
-					stringFormat.LineAlignment = StringAlignment.Center;
-					stringFormat.Alignment = StringAlignment.Near;
-					break;
-
-				case ContentAlignment.MiddleRight:
-					stringFormat.LineAlignment = StringAlignment.Center;
-					stringFormat.Alignment = StringAlignment.Far;
-					break;
-
-				case ContentAlignment.TopCenter:
-					stringFormat.LineAlignment = StringAlignment.Near;
-					stringFormat.Alignment = StringAlignment.Center;
-					break;
-
-				case ContentAlignment.TopLeft:
-					stringFormat.LineAlignment = StringAlignment.Near;
-					stringFormat.Alignment = StringAlignment.Near;
-					break;
-
-				case ContentAlignment.TopRight:
-					stringFormat.LineAlignment = StringAlignment.Near;
-					stringFormat.Alignment = StringAlignment.Far;
-					break;
-
-				case ContentAlignment.BottomCenter:
-					stringFormat.LineAlignment = StringAlignment.Far;
-					stringFormat.Alignment = StringAlignment.Center;
-					break;
-
-				case ContentAlignment.BottomLeft:
-					stringFormat.LineAlignment = StringAlignment.Far;
-					stringFormat.Alignment = StringAlignment.Near;
-					break;
-
-				case ContentAlignment.BottomRight:
-					stringFormat.LineAlignment = StringAlignment.Far;
-					stringFormat.Alignment = StringAlignment.Far;
-					break;
-			}
-
-			stringFormat.HotkeyPrefix = HotkeyPrefix.Show;
-
-			return stringFormat;
-		}
-
+            return contentAlignment switch
+            {
+                ContentAlignment.MiddleLeft => TextFormatFlags.VerticalCenter | TextFormatFlags.Left,
+                ContentAlignment.MiddleRight => TextFormatFlags.VerticalCenter | TextFormatFlags.Right,
+                ContentAlignment.TopCenter => TextFormatFlags.Top | TextFormatFlags.HorizontalCenter,
+                ContentAlignment.TopLeft => TextFormatFlags.Top | TextFormatFlags.Left,
+                ContentAlignment.TopRight => TextFormatFlags.Top | TextFormatFlags.Right,
+                ContentAlignment.BottomCenter => TextFormatFlags.Bottom | TextFormatFlags.HorizontalCenter,
+                ContentAlignment.BottomLeft => TextFormatFlags.Bottom | TextFormatFlags.Left,
+                ContentAlignment.BottomRight => TextFormatFlags.Bottom | TextFormatFlags.Right,
+                _ => TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter,
+            };
+        }
 
 		protected override void OnClick(EventArgs ea)
 		{
@@ -298,25 +257,21 @@ namespace OpenDental.UI
 
 		private void DrawTextAndImage(Graphics g)
 		{
-			using var stringFormat = GetStringFormat(TextAlign);
+			var textFormatFlags = GetTextFormatFlags(TextAlign);
 
 			if (Image == null)
 			{
-                using var textBrush = new SolidBrush(Enabled ? colorText : colorTextDisabled);
-
                 if (Enabled)
                 {
-                    using var textGlowBrush = new SolidBrush(colorTextGlow);
-
-                    var textGlowRectangle = new RectangleF(
-						ClientRectangle.X + .5f, ClientRectangle.Y + .5f,
+                    var textGlowRectangle = new Rectangle(
+						ClientRectangle.X + 1, ClientRectangle.Y + 1,
 						ClientRectangle.Width,
 						ClientRectangle.Height);
 
-                    g.DrawString(Text, Font, textGlowBrush, textGlowRectangle, stringFormat);
-                }
+					TextRenderer.DrawText(g, Text, Font, textGlowRectangle, colorTextGlow, textFormatFlags);
+				}
 
-                g.DrawString(Text, Font, textBrush, ClientRectangle, stringFormat);
+				TextRenderer.DrawText(g, Text, Font, ClientRectangle, Enabled ? colorText : colorTextDisabled, textFormatFlags);
 
                 return;
 			}
@@ -337,21 +292,17 @@ namespace OpenDental.UI
 			{
 				var textRectangle = GetTextRectangleRelativeToImage(ClientRectangle, Image, ImageAlign);
 
-                using var textBrush = new SolidBrush(Enabled ? colorText : colorTextDisabled);
-
                 if (Enabled)
                 {
-                    using var textGlowBrush = new SolidBrush(colorTextGlow);
-
-                    var textGlowRectangle = new RectangleF(
-                        textRectangle.X + .5f, textRectangle.Y + .5f,
+                    var textGlowRectangle = new Rectangle(
+                        textRectangle.X + 1, textRectangle.Y + 1,
                         textRectangle.Width, textRectangle.Height);
 
-                    g.DrawString(Text, Font, textGlowBrush, textGlowRectangle, stringFormat);
-                }
+					TextRenderer.DrawText(g, Text, Font, textGlowRectangle, colorTextGlow, textFormatFlags);
+				}
 
-                g.DrawString(Text, Font, textBrush, textRectangle, stringFormat);
-            }
+				TextRenderer.DrawText(g, Text, Font, textRectangle, Enabled ? colorText : colorTextDisabled, textFormatFlags);
+			}
 		}
 
 		/// <summary>
