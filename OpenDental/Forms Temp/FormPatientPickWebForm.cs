@@ -10,6 +10,7 @@ using OpenDental.UI;
 using OpenDentBusiness.WebTypes.WebForms;
 using System.Linq;
 using Imedisoft.Forms;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormPatientPickWebForm:ODForm {

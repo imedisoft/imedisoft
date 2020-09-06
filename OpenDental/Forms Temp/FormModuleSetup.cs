@@ -313,14 +313,14 @@ namespace OpenDental{
 				FormIcd10s formI=new FormIcd10s();
 				formI.IsSelectionMode=true;
 				if(formI.ShowDialog()==DialogResult.OK) {
-					textICD9DefaultForNewProcs.Text=formI.SelectedIcd10.Icd10Code;
+					textICD9DefaultForNewProcs.Text=formI.SelectedIcd10.Code;
 				}
 			}
 			else {//ICD-9
 				FormIcd9s formI=new FormIcd9s();
 				formI.IsSelectionMode=true;
 				if(formI.ShowDialog()==DialogResult.OK) {
-					textICD9DefaultForNewProcs.Text=formI.SelectedIcd9.ICD9Code;
+					textICD9DefaultForNewProcs.Text=formI.SelectedIcd9.Code;
 				}
 			}
 		}
@@ -337,15 +337,15 @@ namespace OpenDental{
 		}
 
 		private void butProblemsIndicateNone_Click(object sender,EventArgs e) {
-			FormDiseaseDefs formD=new FormDiseaseDefs();
+			FormProblemDefinitions formD=new FormProblemDefinitions();
 			formD.IsSelectionMode=true;
 			formD.ShowDialog();
 			if(formD.DialogResult!=DialogResult.OK) {
 				return;
 			}
 			//the list should only ever contain one item.
-			_diseaseDefNum=formD.ListSelectedDiseaseDefs[0].DiseaseDefNum;
-			textProblemsIndicateNone.Text=formD.ListSelectedDiseaseDefs[0].DiseaseName;
+			_diseaseDefNum=formD.SelectedProblemDefinitions[0].Id;
+			textProblemsIndicateNone.Text=formD.SelectedProblemDefinitions[0].Description;
 		}
 
 		private void checkClaimProcsAllowEstimatesOnCompl_CheckedChanged(object sender,EventArgs e) {
@@ -1118,7 +1118,7 @@ namespace OpenDental{
 			checkAllowSettingProcsComplete.Checked=Prefs.GetBool(PrefName.AllowSettingProcsComplete);
 			//checkChartQuickAddHideAmalgam.Checked=Prefs.GetBool(PrefName.ChartQuickAddHideAmalgam); //Deprecated.
 			//checkToothChartMoveMenuToRight.Checked=Prefs.GetBool(PrefName.ToothChartMoveMenuToRight);
-			textProblemsIndicateNone.Text		=DiseaseDefs.GetName(Prefs.GetLong(PrefName.ProblemsIndicateNone)); //DB maint to fix corruption
+			textProblemsIndicateNone.Text		=ProblemDefinitions.GetName(Prefs.GetLong(PrefName.ProblemsIndicateNone)); //DB maint to fix corruption
 			_diseaseDefNum=Prefs.GetLong(PrefName.ProblemsIndicateNone);
 			textMedicationsIndicateNone.Text=Medications.GetDescription(Prefs.GetLong(PrefName.MedicationsIndicateNone)); //DB maint to fix corruption
 			_medicationNum=Prefs.GetLong(PrefName.MedicationsIndicateNone);

@@ -53,8 +53,8 @@ namespace OpenDentBusiness
 			#region Adjustments (optional)
 			listAdjustments = listAdjustments ?? new List<Adjustment>();
 			patPort += listAdjustments
-				.Where(x => x.ProcNum == proc.ProcNum)
-				.Sum(x => (decimal)x.AdjAmt);
+				.Where(x => x.ProcedureId == proc.ProcNum)
+				.Sum(x => (decimal)x.AdjustAmount);
 			#endregion
 			return Math.Round(patPort, 2);
 		}
@@ -601,6 +601,29 @@ namespace OpenDentBusiness
 				+ "WHERE PatNum = '" + patNum.ToString() + "' ORDER BY LineNumber";
 			return Crud.ClaimProcCrud.SelectMany(command);
 		}
+
+
+		public static void Save(ClaimProc claimProc)
+        {
+			if (claimProc.ClaimProcNum == 0)
+			{
+				claimProc.ClaimProcNum = Insert(claimProc);
+
+				InsEditPatLogs.MakeLogEntry(claimProc, null,
+					InsEditPatLogType.Adjustment);
+			}
+			else
+			{
+				var oldClaimProc = ClaimProcCrud.SelectOne(claimProc.ClaimProcNum);
+
+				Update(claimProc);
+
+				InsEditPatLogs.MakeLogEntry(claimProc, oldClaimProc, 
+					InsEditPatLogType.Adjustment);
+			}
+		}
+
+
 
 		///<summary>Gets the ClaimProcs for a list of patients.</summary>
 		public static List<ClaimProc> Refresh(List<long> listPatNums)

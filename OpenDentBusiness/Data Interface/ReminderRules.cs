@@ -1,7 +1,9 @@
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -59,7 +61,7 @@ namespace OpenDentBusiness{
 			//Problem,Medication,Allergy,Age,Gender,LabResult
 			List<ReminderRule> fullListReminders = Crud.ReminderRuleCrud.SelectMany("SELECT * FROM reminderrule");
 			List<ReminderRule> retVal = new List<ReminderRule>();
-			List<Disease> listProblems = Diseases.Refresh(PatCur.PatNum);
+			List<Problem> listProblems = Problems.GetByPatient(PatCur.PatNum).ToList();
 			List<Medication> listMedications = Medications.GetMedicationsByPat(PatCur.PatNum);
 			List<Allergy> listAllergies = Allergies.GetByPatient(PatCur.PatNum);
 			List<LabResult> listLabResults = LabResults.GetAllForPatient(PatCur.PatNum);
@@ -67,7 +69,7 @@ namespace OpenDentBusiness{
 				switch(fullListReminders[i].ReminderCriterion) {
 					case EhrCriterion.Problem:
 						for(int j=0;j<listProblems.Count;j++) {
-							if(fullListReminders[i].CriterionFK==listProblems[j].DiseaseDefNum) {
+							if(fullListReminders[i].CriterionFK==listProblems[j].ProblemDefId) {
 								retVal.Add(fullListReminders[i]);
 								break;
 							}

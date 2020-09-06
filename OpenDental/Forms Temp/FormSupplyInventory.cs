@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Data;
 using Imedisoft.Data.Models;
 using Imedisoft.Forms;
 using OpenDental.UI;
@@ -81,7 +82,7 @@ namespace OpenDental
 
 			formDefinitions.ShowDialog(this);
 
-			SecurityLogs.MakeLogEntry(Permissions.Setup, 0, "Definitions.");
+			SecurityLogs.Write(Permissions.Setup, "Definitions.");
 		}
 
 		private void butEquipment_Click(object sender,EventArgs e) {

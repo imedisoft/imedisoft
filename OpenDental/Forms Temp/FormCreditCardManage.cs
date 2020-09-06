@@ -13,6 +13,7 @@ using CodeBase;
 using OpenDentBusiness.IO;
 using Imedisoft.Forms;
 using Imedisoft.UI;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormCreditCardManage:ODForm {

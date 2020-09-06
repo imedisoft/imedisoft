@@ -96,7 +96,7 @@ namespace OpenDentBusiness {
 						|| x.Status == ClaimProcStatus.Received
 						|| x.Status == ClaimProcStatus.Supplemental)
 					.Sum(x => x.WriteOff);
-				double adjustments = listAdjustments.Where(x => x.ProcNum == procCur.ProcNum).Sum(x => x.AdjAmt);
+				double adjustments = listAdjustments.Where(x => x.ProcedureId == procCur.ProcNum).Sum(x => x.AdjustAmount);
 				double netProd = grossProd - writeOffs + adjustments;
 				TreatPlan treatPlanCur;
 				if(isFirstPresenter) {

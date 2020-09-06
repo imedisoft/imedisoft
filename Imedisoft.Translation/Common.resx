@@ -120,6 +120,12 @@
   <data name="Abbr" xml:space="preserve">
     <value>Abbr</value>
   </data>
+  <data name="AdjustmentType" xml:space="preserve">
+    <value>Adjustment Type</value>
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Amount</value>
+  </data>
   <data name="AndXOthers" xml:space="preserve">
     <value>And {0} others...</value>
   </data>
@@ -128,6 +134,12 @@
   </data>
   <data name="BankNumber" xml:space="preserve">
     <value>Bank Number</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="CancelWithMnemonic" xml:space="preserve">
+    <value>&amp;Cancel</value>
   </data>
   <data name="CannotDeleteClinicInUseByAppointments" xml:space="preserve">
     <value>Cannot delete clinic because the following patients have appointments using it:</value>
@@ -161,6 +173,9 @@
   </data>
   <data name="Command" xml:space="preserve">
     <value>Command</value>
+  </data>
+  <data name="ConfirmDelete" xml:space="preserve">
+    <value>Delete?</value>
   </data>
   <data name="ConfirmDeleteSelectedItem" xml:space="preserve">
     <value>Are you sure you want to delete the selected item?</value>
@@ -204,11 +219,18 @@
   <data name="ErrorOpeningLogFile" xml:space="preserve">
     <value>Could not open log file. {0}</value>
   </data>
+  <data name="FeeSchedule" xml:space="preserve">
+    <value>Fee Schedule</value>
+  </data>
   <data name="FieldNameAlreadyInUse" xml:space="preserve">
     <value>Field name already in use.</value>
   </data>
   <data name="FirstName" xml:space="preserve">
     <value>FirstName</value>
+  </data>
+  <data name="HasProc" xml:space="preserve">
+    <value>Has Proc.</value>
+    <comment>Abbr. of: 'Has Procedure'</comment>
   </data>
   <data name="Hidden" xml:space="preserve">
     <value>Hidden</value>
@@ -263,8 +285,20 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="Notes" xml:space="preserve">
     <value>Notes</value>
   </data>
+  <data name="OperationComplete" xml:space="preserve">
+    <value>Done.</value>
+  </data>
   <data name="OperationNowAllowedForReason" xml:space="preserve">
     <value>You are not allowed to perform the requested operation. Reason: {0}.</value>
+  </data>
+  <data name="Patient" xml:space="preserve">
+    <value>Patient</value>
+  </data>
+  <data name="PatientId" xml:space="preserve">
+    <value>Patient #</value>
+  </data>
+  <data name="Patients" xml:space="preserve">
+    <value>Patients</value>
   </data>
   <data name="PickList" xml:space="preserve">
     <value>Pick List</value>
@@ -281,11 +315,20 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="PleaseEnterPassword" xml:space="preserve">
     <value>Please enter password</value>
   </data>
+  <data name="PleaseEnterValidAmount" xml:space="preserve">
+    <value>Please enter a valid amount.</value>
+  </data>
   <data name="PleaseEnterValidDate" xml:space="preserve">
     <value>Please enter a valid date.</value>
   </data>
+  <data name="PleaseEnterValidPercentage" xml:space="preserve">
+    <value>Please enter a valid percentage.</value>
+  </data>
   <data name="PleaseSelectAccountFirst" xml:space="preserve">
     <value>Please select an account first.</value>
+  </data>
+  <data name="PleaseSelectItem" xml:space="preserve">
+    <value>Please select an item.</value>
   </data>
   <data name="PleaseSelectItemFirst" xml:space="preserve">
     <value>Please select an item first.</value>
@@ -302,8 +345,14 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="Provider" xml:space="preserve">
     <value>Provider</value>
   </data>
+  <data name="Response" xml:space="preserve">
+    <value>Response</value>
+  </data>
   <data name="SelectRowFromQueryFeed" xml:space="preserve">
     <value>Select a row from the Query Feed.</value>
+  </data>
+  <data name="SetGraphicsForComputerToSimple" xml:space="preserve">
+    <value>Set the graphics for computer '{0}' to simple.</value>
   </data>
   <data name="Specialty" xml:space="preserve">
     <value>Specialty</value>
@@ -340,5 +389,8 @@ If you do have a printer installed, restarting the workstation may solve the pro
   </data>
   <data name="Value" xml:space="preserve">
     <value>Value</value>
+  </data>
+  <data name="YouHaveSelectedProblemWithUnofficialSnomedCode" xml:space="preserve">
+    <value>You have selected a problem with an unofficial SNOMED CT code. Please correct the problem definition by going to Lists | Problems and choosing an official code from the SNOMED CT list.</value>
   </data>
 </root>

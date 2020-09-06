@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using CodeBase;
 using OpenDentBusiness;
 using System.IO;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormAutoNoteExport:ODForm {

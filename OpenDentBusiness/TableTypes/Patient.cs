@@ -1,14 +1,9 @@
-using Avalara.AvaTax.RestClient;
 using Imedisoft.Data.Annotations;
-using Newtonsoft.Json;
 using System;
-using System.Collections;
-using System.Xml.Serialization;
 
 namespace OpenDentBusiness
 {
-    [CrudTable(AuditPerms = CrudAuditPerm.PatientPortal, IsSecurityStamped = true, IsLargeTable = true, HasBatchWriteMethods = true)]
-	public class Patient : TableBase, IComparable
+    public class Patient : IComparable
 	{
 		[PrimaryKey]
 		public long PatNum;

@@ -12,6 +12,7 @@ using System.Drawing.Printing;
 using System.Globalization;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	///<summary></summary>

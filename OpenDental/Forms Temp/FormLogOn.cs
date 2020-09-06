@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using OpenDental;
 using OpenDentBusiness;
 using System;
@@ -152,7 +153,7 @@ namespace Imedisoft.Forms
 					}
 				}
 				
-				SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, "User: " + Security.CurrentUser.UserName + " has logged on.");
+				SecurityLogs.Write(Permissions.UserLogOnOff, "User '" + Security.CurrentUser.UserName + "' has logged on.");
 			}
 
 			DialogResult = DialogResult.OK;

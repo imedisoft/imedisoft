@@ -362,7 +362,7 @@ namespace OpenDental {
 				decimal writeOff=(decimal)ClaimProcs.ProcWriteoff(listClaimProcsForPat.FindAll(x => x.ClaimProcNum!=claimProcCur.ClaimProcNum),claimProcCur.ProcNum)
 					+PIn.Decimal(gridMain.ListGridRows[i].Cells[writeoffIdx].Text);
 				decimal feeAcct=PIn.Decimal(gridMain.ListGridRows[i].Cells[feeAcctIdx].Text);
-				decimal adj=listAdjForSelectedCP.Where(x=>x.ProcNum==claimProcCur.ProcNum).Select(x=>(decimal)x.AdjAmt).Sum();
+				decimal adj=listAdjForSelectedCP.Where(x=>x.ProcedureId==claimProcCur.ProcNum).Select(x=>(decimal)x.AdjustAmount).Sum();
 				decimal patPayAmt=listPaySplitForSelectedCP.Where(x=>x.ProcNum==claimProcCur.ProcNum).Select(x=>(decimal)x.SplitAmt).Sum();
 				//Any changes to this calculation should also consider FormClaimProc.IsClaimProcGreaterThanProcFee().
 				decimal creditRem=feeAcct-patPayAmt-insPayAmt-writeOff+adj;
@@ -406,13 +406,13 @@ namespace OpenDental {
 			for(int i = 0;i<ClaimProcsToEdit.Length;i++) {
 				ClaimProc claimProcCur=ClaimProcsToEdit[i];
 				//Fetch all adjustments for the given procedure.
-				List<Adjustment> listClaimProcAdjustments=listAdjustmentsForPat.Where(x => x.ProcNum==claimProcCur.ProcNum).ToList();
+				List<Adjustment> listClaimProcAdjustments=listAdjustmentsForPat.Where(x => x.ProcedureId==claimProcCur.ProcNum).ToList();
 				int writeoffIdx=gridMain.ListGridColumns.GetIndex("Writeoff");
 				int feeAcctIdx=gridMain.ListGridColumns.GetIndex("Fee");
 				decimal writeOff=(decimal)ClaimProcs.ProcWriteoff(listClaimProcsForPat.FindAll(x => x.ClaimProcNum!=claimProcCur.ClaimProcNum),claimProcCur.ProcNum)
 					+PIn.Decimal(gridMain.ListGridRows[i].Cells[writeoffIdx].Text);
 				decimal feeAcct=PIn.Decimal(gridMain.ListGridRows[i].Cells[feeAcctIdx].Text);
-				decimal adjAcct=listClaimProcAdjustments.Sum(x => (decimal)x.AdjAmt);
+				decimal adjAcct=listClaimProcAdjustments.Sum(x => (decimal)x.AdjustAmount);
 				//Any changes to this calculation should also consider FormClaimProc.IsWriteOffGreaterThanProc().
 				decimal writeoffRem=feeAcct-writeOff+adjAcct;
 				isWriteoffGreater|=(writeoffRem.IsLessThanZero() && writeOff.IsGreaterThanZero());

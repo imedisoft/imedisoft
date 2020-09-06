@@ -568,17 +568,17 @@ namespace OpenDental {
 			}
 			Adjustment adjustmentAdding=formAdjustmentPicker.SelectedAdjustment;
 			//check to see if adjustment is already on a different payment plan
-			if(PayPlanLinks.GetForFKeyAndLinkType(adjustmentAdding.AdjNum,PayPlanLinkType.Adjustment).Count > 0
-				|| _listPayPlanLinks.Exists(x => x.LinkType==PayPlanLinkType.Adjustment && x.FKey==adjustmentAdding.AdjNum)) 
+			if(PayPlanLinks.GetForFKeyAndLinkType(adjustmentAdding.Id,PayPlanLinkType.Adjustment).Count > 0
+				|| _listPayPlanLinks.Exists(x => x.LinkType==PayPlanLinkType.Adjustment && x.FKey==adjustmentAdding.Id)) 
 			{
 				MsgBox.Show("Adjustment can only be attached to one active payment plan at a time.");
 				return;
 			}
-			List<PaySplit> listSplits=PaySplits.GetForAdjustments(new List<long>{adjustmentAdding.AdjNum});
+			List<PaySplit> listSplits=PaySplits.GetForAdjustments(new List<long>{adjustmentAdding.Id});
 			PayPlanLink creditAdding=new PayPlanLink() {
 				PayPlanNum=_payPlanCur.PayPlanNum,
 				LinkType=PayPlanLinkType.Adjustment,
-				FKey=adjustmentAdding.AdjNum
+				FKey=adjustmentAdding.Id
 			};
 			_listPayPlanLinks.Add(creditAdding);
 			_listPayPlanProductionEntries.Add(new PayPlanProductionEntry(adjustmentAdding,creditAdding,listSplits));

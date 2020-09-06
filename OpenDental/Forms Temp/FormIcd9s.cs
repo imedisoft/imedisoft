@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDental {
 	public partial class FormIcd9s:ODForm {
 		public bool IsSelectionMode;
-		public ICD9 SelectedIcd9;
-		private List<ICD9> icd9List;
+		public Icd9 SelectedIcd9;
+		private List<Icd9> icd9List;
 
 		public FormIcd9s() {
 			InitializeComponent();
@@ -38,11 +41,11 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			Cursor=Cursors.WaitCursor;
-			icd9List=ICD9s.GetByCodeOrDescription(textCode.Text);
-			icd9List.RemoveAll(x => string.IsNullOrEmpty(x.ICD9Code));//We have seen some old ICD9 codes with invalid codes.
+			icd9List=Icd9s.GetByCodeOrDescription(textCode.Text).ToList();
+			icd9List.RemoveAll(x => string.IsNullOrEmpty(x.Code));//We have seen some old ICD9 codes with invalid codes.
 			listMain.Items.Clear();
 			for(int i=0;i<icd9List.Count;i++) {
-				listMain.Items.Add(icd9List[i].ICD9Code+" - "+icd9List[i].Description);
+				listMain.Items.Add(icd9List[i].Code+" - "+icd9List[i].Description);
 			}
 			Cursor=Cursors.Default;
 		}

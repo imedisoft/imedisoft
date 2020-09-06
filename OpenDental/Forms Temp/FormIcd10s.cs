@@ -8,6 +8,9 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using System.IO;
 using OpenDental.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
+using System.Linq;
 
 namespace OpenDental {
 	public partial class FormIcd10s:ODForm {
@@ -48,11 +51,11 @@ namespace OpenDental {
 			//gridMain.Columns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
-			listIcd10s=Icd10s.GetBySearchText(textCode.Text);
+			listIcd10s=Icd10s.GetByCodeOrDescription(textCode.Text).ToList();
 			//List<ODGridRow> listAll=new List<ODGridRow>();//for sorting grid after it has been filled.
 			for(int i=0;i<listIcd10s.Count;i++) {
 				row=new GridRow();
-				row.Cells.Add(listIcd10s[i].Icd10Code);
+				row.Cells.Add(listIcd10s[i].Code);
 				row.Cells.Add(listIcd10s[i].Description);
 				//row.Cells.Add(EhrCodes.GetMeasureIdsForCode(listCpts[i].SnomedCode,"SNOMEDCT"));
 				row.Tag=listIcd10s[i];;

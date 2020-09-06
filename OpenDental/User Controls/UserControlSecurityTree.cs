@@ -7,6 +7,7 @@ using OpenDentBusiness;
 using OpenDental.UI;
 using System.ComponentModel;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	///<summary>Security Tree control so that any changes to the security tree do not have to be made in multiple places.

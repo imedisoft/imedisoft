@@ -14,6 +14,7 @@ using OpenDentBusiness;
 using OpenDental.UI;
 using CodeBase;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	public delegate List<Document> SaveFileAsDocDelegate(bool isSigSave,Sheet sheetTP);

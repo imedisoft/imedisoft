@@ -6,6 +6,10 @@ using OpenDentBusiness;
 using System.Linq;
 using CodeBase;
 using OpenDental.UI;
+using Imedisoft.Forms;
+using Imedisoft.Data.Cache;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormSheetFieldCheckBox:FormSheetFieldBase {
@@ -15,7 +19,7 @@ namespace OpenDental {
 		private bool _isMedHistSheet {
 			get { return _sheetDefCur.SheetType==SheetTypeEnum.MedicalHistory; }
 		}
-		private List<DiseaseDef> _listDiseaseDefs;
+		private List<ProblemDefinition> _listDiseaseDefs;
 		private string _selectedFieldName {
 			get {
 				if(!_hasSelectedFieldName) {
@@ -35,8 +39,8 @@ namespace OpenDental {
 				if(listMedical.HasSelectedTag<AllergyDef>()) {
 					return listMedical.GetSelected<AllergyDef>().Description;
 				}
-				if(listMedical.HasSelectedTag<DiseaseDef>()) {
-					return listMedical.GetSelected<DiseaseDef>().DiseaseName;
+				if(listMedical.HasSelectedTag<ProblemDefinition>()) {
+					return listMedical.GetSelected<ProblemDefinition>().Description;
 				}
 				return "";
 			}
@@ -51,7 +55,7 @@ namespace OpenDental {
 		}
 
 		private void FormSheetFieldCheckBox_Load(object sender,EventArgs e) {
-			_listDiseaseDefs=DiseaseDefs.GetDeepCopy(true);
+			_listDiseaseDefs=ProblemDefinitions.GetAll(false);
 			if(_isEditMobile) {
 				textTabOrder.Enabled=false;
 			}
@@ -163,7 +167,7 @@ namespace OpenDental {
 					listMedical.SetItems(_listAllergies,(item) => item.Description,(item) => item.Description==medSelection);
 					break;
 				case MedicalListType.problem:
-					listMedical.SetItems(_listDiseaseDefs,(item) => item.DiseaseName,(item) => item.DiseaseName==medSelection);
+					listMedical.SetItems(_listDiseaseDefs,(item) => item.Description,(item) => item.Description==medSelection);
 					break;
 			}
 		}
@@ -312,27 +316,33 @@ namespace OpenDental {
 			AddProblem(SheetFieldDefCur);
 		}
 
-		private void AddProblem(SheetFieldDef SheetFieldDefCur) {
-			if(!Security.IsAuthorized(Permissions.ProblemEdit)) {
+		private void AddProblem(SheetFieldDef SheetFieldDefCur)
+		{
+			if (!Security.IsAuthorized(Permissions.ProblemEdit))
+			{
 				return;
 			}
-			DiseaseDef def=new DiseaseDef() {
-				ICD9Code="",
-				Icd10Code="",
-				SnomedCode="",
-				ItemOrder=DiseaseDefs.GetCount(),
-				DiseaseName=SheetFieldDefCur?.FieldName.Replace("problem:","")??""
+
+			var diseaseDef = new ProblemDefinition()
+			{
+				CodeIcd9 = "",
+				CodeIcd10 = "",
+				CodeSnomed = "",
+				Description = SheetFieldDefCur?.FieldName.Replace("problem:", "") ?? ""
 			};
-			FormDiseaseDefEdit formDDE=new FormDiseaseDefEdit(def,false);
-			formDDE.IsNew=true;
-			formDDE.ShowDialog();
-			if(formDDE.DialogResult!=DialogResult.OK) {
+
+			using var formDiseaseDefEdit = new FormProblemDefinitionEdit(diseaseDef);
+			if (formDiseaseDefEdit.ShowDialog(this) != DialogResult.OK)
+			{
 				return;
 			}
-			DiseaseDefs.Insert(formDDE.DiseaseDefCur);
-			DataValid.SetInvalid(InvalidType.Diseases);
-			_listDiseaseDefs=DiseaseDefs.GetDeepCopy(true);
-			SecurityLogs.MakeLogEntry(Permissions.ProblemEdit,0,formDDE.SecurityLogMsgText);
+
+			ProblemDefinitions.Save(diseaseDef);
+
+			CacheManager.RefreshGlobal(nameof(InvalidType.Diseases));
+
+			_listDiseaseDefs = ProblemDefinitions.GetAll(false);
+
 			FillListMedical(MedicalListType.problem);
 		}
 

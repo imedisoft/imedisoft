@@ -14,6 +14,8 @@ using System.Linq;
 using CodeBase;
 using System.Globalization;
 using Imedisoft.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormSheetImport:ODForm {
@@ -1190,7 +1192,7 @@ namespace OpenDental {
 				Rows=new List<SheetImportRow>();
 				string fieldVal="";
 				List<Allergy> allergies=null;
-				List<Disease> diseases=null;
+				List<Problem> diseases=null;
 				SheetImportRow row;
 				Rows.Add(CreateSeparator("Personal"));
 				#region ICE
@@ -1397,7 +1399,7 @@ namespace OpenDental {
 				for(int i=0;i<problemList.Count;i++) {
 					fieldVal="";
 					if(i<1) {
-						diseases=Diseases.Refresh(PatCur.PatNum,false);
+						diseases=Problems.GetByPatient(PatCur.PatNum,false).ToList();
 					}
 					row=new SheetImportRow();
 					row.FieldName=problemList[i].FieldName.Remove(0,8);
@@ -1405,8 +1407,8 @@ namespace OpenDental {
 					row.OldValDisplay="";
 					row.OldValObj=null;
 					for(int j=0;j<diseases.Count;j++) {
-						if(DiseaseDefs.GetName(diseases[j].DiseaseDefNum)==problemList[i].FieldName.Remove(0,8)) {
-							if(diseases[j].ProbStatus==ProblemStatus.Active) {
+						if(ProblemDefinitions.GetName(diseases[j].ProblemDefId)==problemList[i].FieldName.Remove(0,8)) {
+							if(diseases[j].Status==ProblemStatus.Active) {
 								row.OldValDisplay="Y";
 							}
 							else {
@@ -1424,7 +1426,7 @@ namespace OpenDental {
 							row.NewValObj=problemList[i];
 							row.ImpValDisplay="";
 							row.ImpValObj="";
-							row.ObjType=typeof(Disease);
+							row.ObjType=typeof(Problem);
 							Rows.Add(row);
 							if(oppositeBox!=null) {
 								problemList.Remove(oppositeBox);//Removes possible duplicate entry.
@@ -1455,7 +1457,7 @@ namespace OpenDental {
 					row.NewValObj=problemList[i];
 					row.ImpValDisplay=row.NewValDisplay;
 					row.ImpValObj=typeof(string);
-					row.ObjType=typeof(Disease);
+					row.ObjType=typeof(Problem);
 					if(row.OldValDisplay!=row.NewValDisplay && !(row.OldValDisplay=="" && row.NewValDisplay=="N")) {
 						row.DoImport=true;
 					}
@@ -1802,7 +1804,7 @@ namespace OpenDental {
 			#region Medication, Allergy or Disease
 			else if(Rows[e.Row].ObjType==typeof(MedicationPat)
 				|| Rows[e.Row].ObjType==typeof(Allergy)
-				|| Rows[e.Row].ObjType==typeof(Disease)) 
+				|| Rows[e.Row].ObjType==typeof(Problem)) 
 			{
 				//User entered medications will have a MedicationNum as the ImpValObj.
 				if(Rows[e.Row].ImpValObj.GetType()==typeof(long)) {
@@ -2511,17 +2513,17 @@ namespace OpenDental {
 					}
 					#endregion
 					#region Diseases
-					else if(Rows[i].ObjType==typeof(Disease)) {
+					else if(Rows[i].ObjType==typeof(Problem)) {
 						//Patient has this problem in the db so just update the value.
 						if(Rows[i].OldValObj!=null) {
-							Disease oldDisease=(Disease)Rows[i].OldValObj;
+							Problem oldDisease=(Problem)Rows[i].OldValObj;
 							if(hasValue==YN.Yes) {
-								oldDisease.ProbStatus=ProblemStatus.Active;
+								oldDisease.Status=ProblemStatus.Active;
 							}
 							else {
-								oldDisease.ProbStatus=ProblemStatus.Inactive;
+								oldDisease.Status=ProblemStatus.Inactive;
 							}
-							Diseases.Update(oldDisease);
+							Problems.Update(oldDisease);
 							continue;
 						}
 						if(hasValue==YN.No) {//Don't create new problem with inactive status.
@@ -2529,15 +2531,15 @@ namespace OpenDental {
 						}
 						//Problem does not exist for this patient yet so create one.
 						SheetField diseaseSheet=(SheetField)Rows[i].NewValObj;
-						List<DiseaseDef> listDiseaseDefs=DiseaseDefs.GetDeepCopy(true);
+						List<ProblemDefinition> listDiseaseDefs=ProblemDefinitions.GetAll(false);
 						//Find what allergy user wants to import.
 						for(int j=0;j<listDiseaseDefs.Count;j++) {
-							if(listDiseaseDefs[j].DiseaseName==diseaseSheet.FieldName.Remove(0,8)) {
-								Disease newDisease=new Disease();
-								newDisease.PatNum=PatCur.PatNum;
-								newDisease.DiseaseDefNum=listDiseaseDefs[j].DiseaseDefNum;
-								newDisease.ProbStatus=ProblemStatus.Active;
-								Diseases.Insert(newDisease);
+							if(listDiseaseDefs[j].Description==diseaseSheet.FieldName.Remove(0,8)) {
+								Problem newDisease=new Problem();
+								newDisease.PatientId=PatCur.PatNum;
+								newDisease.ProblemDefId=listDiseaseDefs[j].Id;
+								newDisease.Status=ProblemStatus.Active;
+								Problems.Insert(newDisease);
 								break;
 							}
 						}

@@ -14,6 +14,7 @@ using CodeBase;
 using System.Linq;
 using OpenDentBusiness.IO;
 using Imedisoft.X12.Codes;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	///<summary></summary>

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
+using System.Linq;
 
 namespace OpenDental {
 	public partial class FormSnomeds:ODForm {
@@ -77,10 +80,10 @@ namespace OpenDental {
 			gridMain.ListGridRows.Clear();
 			GridRow row;
 			if(textCode.Text.Contains(",")) {
-				SnomedList=Snomeds.GetByCodes(textCode.Text);
+				SnomedList=Snomeds.GetByCodes(textCode.Text).ToList();
 			}
 			else {
-				SnomedList=Snomeds.GetByCodeOrDescription(textCode.Text);
+				SnomedList=Snomeds.GetByCodeOrDescription(textCode.Text).ToList();
 			}
 			if(SnomedList.Count>=10000) {//Max number of results returned.
 				MessageBox.Show("Too many results. Only the first 10,000 results will be shown.");
@@ -91,10 +94,10 @@ namespace OpenDental {
 				if(_showingInfoButton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
 					row.Cells.Add("0");//index of infobutton
 				}
-				row.Cells.Add(SnomedList[i].SnomedCode);
+				row.Cells.Add(SnomedList[i].Code);
 				//row.Cells.Add("");//IsActive==NotDeprecated
 				row.Cells.Add(SnomedList[i].Description);
-				row.Cells.Add(EhrCodes.GetMeasureIdsForCode(SnomedList[i].SnomedCode,"SNOMEDCT"));
+				row.Cells.Add(EhrCodes.GetMeasureIdsForCode(SnomedList[i].Code,"SNOMEDCT"));
 				row.Tag=SnomedList[i];
 				//row.Cells.Add("");
 				listAll.Add(row);
@@ -154,11 +157,11 @@ namespace OpenDental {
 			}
 			int changeCount=0;
 			Dictionary<string,string> dictionaryIcd9ToSnomed = Snomeds.GetICD9toSNOMEDDictionary();
-			DiseaseDefs.RefreshCache();
-			List<DiseaseDef> listDiseaseDefs=DiseaseDefs.GetWhere(x => x.SnomedCode=="" && dictionaryIcd9ToSnomed.ContainsKey(x.ICD9Code));
-			foreach(DiseaseDef def in listDiseaseDefs) {
-				def.SnomedCode=dictionaryIcd9ToSnomed[def.ICD9Code];
-				DiseaseDefs.Update(def);
+			ProblemDefinitions.RefreshCache();
+			List<ProblemDefinition> listDiseaseDefs=ProblemDefinitions.GetWhere(x => x.CodeSnomed=="" && dictionaryIcd9ToSnomed.ContainsKey(x.CodeIcd9));
+			foreach(ProblemDefinition def in listDiseaseDefs) {
+				def.CodeSnomed=dictionaryIcd9ToSnomed[def.CodeIcd9];
+				ProblemDefinitions.Update(def);
 				changeCount++;
 			}
 			MessageBox.Show("SNOMED CT codes added: "+changeCount);

@@ -1153,7 +1153,7 @@ namespace OpenDental {
 				+PIn.Decimal(textWriteOff.Text);
 			decimal feeAcct=(decimal)proc.ProcFeeTotal;
 			decimal creditRem=0;
-			decimal adj=listAdjForSelectedCP.Select(x => (decimal)x.AdjAmt).Sum();
+			decimal adj=listAdjForSelectedCP.Select(x => (decimal)x.AdjustAmount).Sum();
 			decimal patPayAmt=listPaySplitForSelectedCP.Select(x => (decimal)x.SplitAmt).Sum();
 			//Any changes to this calculation should also consider FormClaimPayTotal.IsClaimProcGreaterThanProcFee().
 			creditRem=feeAcct-patPayAmt-insPayAmt-writeOff+adj;
@@ -1187,7 +1187,7 @@ namespace OpenDental {
 			decimal writeOff=(decimal)ClaimProcs.ProcWriteoff(listClaimProcsForPat.FindAll(x => x.ClaimProcNum!=ClaimProcCur.ClaimProcNum),proc.ProcNum)
 				+PIn.Decimal(textWriteOff.Text);
 			decimal feeAcct=(decimal)proc.ProcFeeTotal;
-			decimal adjAcct=Adjustments.GetForProcs(new List<long> { proc.ProcNum }).Sum(x => (decimal)x.AdjAmt);
+			decimal adjAcct=Adjustments.GetForProcs(new List<long> { proc.ProcNum }).Sum(x => (decimal)x.AdjustAmount);
 			decimal writeoffRem=0;
 			//Any changes to this calculation should also consider FormClaimPayTotal.IsWriteoffGreaterThanProcFee().
 			writeoffRem=feeAcct-writeOff+adjAcct;

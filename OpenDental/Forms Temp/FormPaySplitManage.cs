@@ -296,7 +296,7 @@ namespace OpenDental {
 			}
 			listPayPlanCharges=listPayPlanCharges.Except(listChargesToRemove).ToList();
 			for(int i=0;i<listAdjustments.Count;i++) {
-				if(listAdjustments[i].AdjAmt>0 && listAdjustments[i].ProcNum==0) {
+				if(listAdjustments[i].AdjustAmount>0 && listAdjustments[i].ProcedureId==0) {
 					_listAccountCharges.Add(new AccountEntry(listAdjustments[i]));
 				}
 			}
@@ -310,14 +310,14 @@ namespace OpenDental {
 				if(entry.GetType()!=typeof(Procedure)) {
 					continue;
 				}
-				entry.AmountAvailable=(decimal)ClaimProcs.GetPatPortion((Procedure)entry.Tag,listClaimProcs,listAdjustments.FindAll(x => x.ProcNum==entry.PriKey));
+				entry.AmountAvailable=(decimal)ClaimProcs.GetPatPortion((Procedure)entry.Tag,listClaimProcs,listAdjustments.FindAll(x => x.ProcedureId==entry.PriKey));
 				entry.AmountEnd=entry.AmountAvailable;
 			}
 			//Getting a date-sorted list of all credits that haven't been attributed to anything.
 			decimal creditTotal=0;
 			for(int i=0;i<listAdjustments.Count;i++) {
-				if(listAdjustments[i].AdjAmt<0 && listAdjustments[i].ProcNum==0) {
-					creditTotal-=(decimal)listAdjustments[i].AdjAmt;
+				if(listAdjustments[i].AdjustAmount<0 && listAdjustments[i].ProcedureId==0) {
+					creditTotal-=(decimal)listAdjustments[i].AdjustAmount;
 				}
 			}
 			List<long> listHiddenUnearnedTypes=PaySplits.GetHiddenUnearnedDefNums();

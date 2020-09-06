@@ -534,6 +534,36 @@
     <Compile Include="Forms Reports\FormRpServiceDateView.designer.cs">
       <DependentUpon>FormRpServiceDateView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FormProblemDefinitions.Designer.cs">
+      <DependentUpon>FormProblemDefinitions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormApptFieldEdit.Designer.cs">
+      <DependentUpon>FormApptFieldEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormApptFieldPickEdit.Designer.cs">
+      <DependentUpon>FormApptFieldPickEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormBenefitElectHistory.Designer.cs">
+      <DependentUpon>FormBenefitElectHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormComputers.Designer.cs">
+      <DependentUpon>FormComputers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormProblemDefinitionEdit.Designer.cs">
+      <DependentUpon>FormProblemDefinitionEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormAutoCode.Designer.cs">
+      <DependentUpon>FormAutoCode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormInsuranceAdjustment.Designer.cs">
+      <DependentUpon>FormInsuranceAdjustment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormInsuranceBenefitNotes.Designer.cs">
+      <DependentUpon>FormInsuranceBenefitNotes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormInsuranceCategoryEdit.Designer.cs">
+      <DependentUpon>FormInsuranceCategoryEdit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FormAccountEdit.Designer.cs">
       <DependentUpon>FormAccountEdit.cs</DependentUpon>
     </Compile>
@@ -609,7 +639,7 @@
     <Compile Include="Forms Temp\FormDocumentSize.designer.cs">
       <DependentUpon>FormDocumentSize.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormPath.Designer.cs">
+    <Compile Include="Forms\FormPath.Designer.cs">
       <DependentUpon>FormPath.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormPatientSelect.Designer.cs">
@@ -701,9 +731,6 @@
     </Compile>
     <Compile Include="Forms Temp\FormMobileCode.designer.cs">
       <DependentUpon>FormMobileCode.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms Temp\FormApptFieldEdit.designer.cs">
-      <DependentUpon>FormApptFieldEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormInsEditPatLog.cs">
       <SubType>Form</SubType>
@@ -1573,10 +1600,10 @@
     <Compile Include="Forms Temp\FormDiscountPlanEdit.designer.cs">
       <DependentUpon>FormDiscountPlanEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormDiscountPlans.cs">
+    <Compile Include="Forms\FormDiscountPlans.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormDiscountPlans.designer.cs">
+    <Compile Include="Forms\FormDiscountPlans.designer.cs">
       <DependentUpon>FormDiscountPlans.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormSheetDefDefaults.cs">
@@ -1720,10 +1747,10 @@
     <Compile Include="Forms Temp\FormOrthoChartTabEdit.designer.cs">
       <DependentUpon>FormOrthoChartTabEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormAdjustmentPicker.cs">
+    <Compile Include="Forms\FormAdjustmentPicker.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormAdjustmentPicker.designer.cs">
+    <Compile Include="Forms\FormAdjustmentPicker.designer.cs">
       <DependentUpon>FormAdjustmentPicker.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormDefinitionPicker.cs">
@@ -2425,10 +2452,10 @@
     <Compile Include="Forms Temp\FormEhrGrowthCharts.Designer.cs">
       <DependentUpon>FormEhrGrowthCharts.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrHash.cs">
+    <Compile Include="Forms\FormEhrHash.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrHash.Designer.cs">
+    <Compile Include="Forms\FormEhrHash.Designer.cs">
       <DependentUpon>FormEhrHash.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormEhrLabPanelEdit.cs">
@@ -3088,11 +3115,8 @@
     <Compile Include="Forms Temp\FormPatFieldCurrencyEdit.designer.cs">
       <DependentUpon>FormPatFieldCurrencyEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormApptFieldPickEdit.cs">
+    <Compile Include="Forms\FormApptFieldPickEdit.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormApptFieldPickEdit.designer.cs">
-      <DependentUpon>FormApptFieldPickEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormReferenceEntryEdit.cs">
       <SubType>Form</SubType>
@@ -3571,7 +3595,7 @@
     <Compile Include="Forms Temp\FormProcGroup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormApptFieldEdit.cs">
+    <Compile Include="Forms\FormApptFieldEdit.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FormAppointmentFieldDefinitionEdit.cs">
@@ -3709,11 +3733,8 @@
     <Compile Include="Forms Temp\FormEtrans270Edit.designer.cs">
       <DependentUpon>FormEtrans270Edit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormBenefitElectHistory.cs">
+    <Compile Include="Forms\FormBenefitElectHistory.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormBenefitElectHistory.designer.cs">
-      <DependentUpon>FormBenefitElectHistory.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormShutdown.cs">
       <SubType>Form</SubType>
@@ -3799,10 +3820,10 @@
     <Compile Include="Forms Temp\FormSecurityLock.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormBackupReminder.cs">
+    <Compile Include="Forms\FormBackupReminder.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormBackupReminder.designer.cs">
+    <Compile Include="Forms\FormBackupReminder.designer.cs">
       <DependentUpon>FormBackupReminder.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormMonthView.cs">
@@ -4280,7 +4301,7 @@
     <Compile Include="Forms\FormAuditOneType.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormAutoCode.cs">
+    <Compile Include="Forms\FormAutoCode.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormAutoCodeEdit.cs">
@@ -4358,7 +4379,7 @@
     <Compile Include="Forms Temp\FormClockEventEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormComputers.cs">
+    <Compile Include="Forms\FormComputers.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormConfirmList.cs">
@@ -4394,10 +4415,10 @@
     <Compile Include="Forms Temp\FormDeposits.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormDiseaseDefEdit.cs">
+    <Compile Include="Forms\FormProblemDefinitionEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormDiseaseDefs.cs">
+    <Compile Include="Forms\FormProblemDefinitions.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormDiseaseEdit.cs">
@@ -4454,16 +4475,16 @@
     <Compile Include="Forms Temp\FormImportXML.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormInsAdj.cs">
+    <Compile Include="Forms\FormInsuranceAdjustment.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormInsBenefitNotes.cs">
+    <Compile Include="Forms\FormInsuranceBenefitNotes.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormInsBenefits.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormInsCatEdit.cs">
+    <Compile Include="Forms\FormInsuranceCategoryEdit.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormInsCatsSetup.cs">
@@ -4559,7 +4580,7 @@
     <Compile Include="Forms Temp\FormPatFieldEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormPath.cs">
+    <Compile Include="Forms\FormPath.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormPatientEdit.cs">
@@ -5650,7 +5671,7 @@
     <EmbeddedResource Include="Forms Temp\FormDiscountPlanEdit.resx">
       <DependentUpon>FormDiscountPlanEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormDiscountPlans.resx">
+    <EmbeddedResource Include="Forms\FormDiscountPlans.resx">
       <DependentUpon>FormDiscountPlans.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormSheetDefDefaults.resx">
@@ -5725,7 +5746,7 @@
     <EmbeddedResource Include="Forms Temp\FormOrthoChartTabEdit.resx">
       <DependentUpon>FormOrthoChartTabEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAdjustmentPicker.resx">
+    <EmbeddedResource Include="Forms\FormAdjustmentPicker.resx">
       <DependentUpon>FormAdjustmentPicker.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormDefinitionPicker.resx">
@@ -6121,7 +6142,7 @@
     <EmbeddedResource Include="Forms Temp\FormEhrGrowthCharts.resx">
       <DependentUpon>FormEhrGrowthCharts.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEhrHash.resx">
+    <EmbeddedResource Include="Forms\FormEhrHash.resx">
       <DependentUpon>FormEhrHash.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormEhrLabPanelEdit.resx">
@@ -6460,7 +6481,7 @@
       <DependentUpon>FormPatFieldCurrencyEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormApptFieldPickEdit.resx">
+    <EmbeddedResource Include="Forms\FormApptFieldPickEdit.resx">
       <DependentUpon>FormApptFieldPickEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7126,7 +7147,7 @@
       <DependentUpon>FormAuditOneType.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAutoCode.resx">
+    <EmbeddedResource Include="Forms\FormAutoCode.resx">
       <DependentUpon>FormAutoCode.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7230,7 +7251,7 @@
       <DependentUpon>FormClockEventEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormComputers.resx">
+    <EmbeddedResource Include="Forms\FormComputers.resx">
       <DependentUpon>FormComputers.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7278,12 +7299,12 @@
       <DependentUpon>FormDeposits.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormDiseaseDefEdit.resx">
-      <DependentUpon>FormDiseaseDefEdit.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\FormProblemDefinitionEdit.resx">
+      <DependentUpon>FormProblemDefinitionEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormDiseaseDefs.resx">
-      <DependentUpon>FormDiseaseDefs.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\FormProblemDefinitions.resx">
+      <DependentUpon>FormProblemDefinitions.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormDiseaseEdit.resx">
@@ -7358,20 +7379,20 @@
       <DependentUpon>FormImportXML.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormInsAdj.resx">
-      <DependentUpon>FormInsAdj.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\FormInsuranceAdjustment.resx">
+      <DependentUpon>FormInsuranceAdjustment.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormInsBenefitNotes.resx">
-      <DependentUpon>FormInsBenefitNotes.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\FormInsuranceBenefitNotes.resx">
+      <DependentUpon>FormInsuranceBenefitNotes.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormInsBenefits.resx">
       <DependentUpon>FormInsBenefits.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormInsCatEdit.resx">
-      <DependentUpon>FormInsCatEdit.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\FormInsuranceCategoryEdit.resx">
+      <DependentUpon>FormInsuranceCategoryEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormInsCatsSetup.resx">
@@ -7498,7 +7519,7 @@
       <DependentUpon>FormPatFieldEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormPath.resx">
+    <EmbeddedResource Include="Forms\FormPath.resx">
       <DependentUpon>FormPath.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -8823,7 +8844,7 @@
       <DependentUpon>FormProcGroup.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormApptFieldEdit.resx">
+    <EmbeddedResource Include="Forms\FormApptFieldEdit.resx">
       <DependentUpon>FormApptFieldEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -8939,7 +8960,7 @@
       <DependentUpon>FormEtrans270Edit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormBenefitElectHistory.resx">
+    <EmbeddedResource Include="Forms\FormBenefitElectHistory.resx">
       <DependentUpon>FormBenefitElectHistory.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -9007,7 +9028,7 @@
       <DependentUpon>FormSecurityLock.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormBackupReminder.resx">
+    <EmbeddedResource Include="Forms\FormBackupReminder.resx">
       <DependentUpon>FormBackupReminder.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -9339,7 +9360,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Forms\WIP\" />
+    <Folder Include="Forms T\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

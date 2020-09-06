@@ -20,6 +20,7 @@ using SparksToothChart;
 using OpenDental.UI;
 using System.Text.RegularExpressions;
 using Imedisoft.Forms;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>

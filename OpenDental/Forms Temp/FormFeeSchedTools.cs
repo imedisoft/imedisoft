@@ -17,6 +17,7 @@ using OpenDental.Thinfinity;
 using OpenDental.UI;
 using OpenDentBusiness.IO;
 using Imedisoft.Forms;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	///<summary></summary>

@@ -5,6 +5,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -15,7 +17,7 @@ namespace OpenDental {
 		private string _strValCodeSystem="";
 		private Loinc _loincValue=null;
 		private Snomed _snomedValue=null;
-		private ICD9 _icd9Value=null;
+		private Icd9 _icd9Value=null;
 		private Icd10 _icd10Value=null;
 
 		public FormEhrAptObsEdit(EhrAptObs ehrAptObs) {
@@ -55,7 +57,7 @@ namespace OpenDental {
 					textValue.Text=_snomedValue.Description;
 				}
 				else if(_ehrAptObsCur.ValCodeSystem=="ICD9") {
-					_icd9Value=ICD9s.GetByCode(_ehrAptObsCur.ValReported);
+					_icd9Value=Icd9s.GetByCode(_ehrAptObsCur.ValReported);
 					textValue.Text=_icd9Value.Description;
 				}
 				else if(_ehrAptObsCur.ValCodeSystem=="ICD10") {
@@ -210,13 +212,13 @@ namespace OpenDental {
 					_ehrAptObsCur.ValReported=_loincValue.LoincCode;
 				}
 				else if(_strValCodeSystem=="SNOMEDCT") {
-					_ehrAptObsCur.ValReported=_snomedValue.SnomedCode;
+					_ehrAptObsCur.ValReported=_snomedValue.Code;
 				}
 				else if(_strValCodeSystem=="ICD9") {
-					_ehrAptObsCur.ValReported=_icd9Value.ICD9Code;
+					_ehrAptObsCur.ValReported=_icd9Value.Code;
 				}
 				else if(_strValCodeSystem=="ICD10") {
-					_ehrAptObsCur.ValReported=_icd10Value.Icd10Code;
+					_ehrAptObsCur.ValReported=_icd10Value.Code;
 				}
 			}
 			else if(_ehrAptObsCur.ValType==EhrAptObsType.Address) {

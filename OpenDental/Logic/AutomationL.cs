@@ -351,18 +351,18 @@ namespace OpenDental {
 		}
 
 		private static bool ProblemComparison(AutomationCondition autoCond,long patNum) {
-			List<Disease> problemList=Diseases.Refresh(patNum,true);
+			List<Problem> problemList=Problems.GetByPatient(patNum,true).ToList();
 			switch(autoCond.Comparison) {//Find out what operand to use.
 				case AutoCondComparison.Equals:
 					for(int i=0;i<problemList.Count;i++) {//Includes hidden
-						if(DiseaseDefs.GetName(problemList[i].DiseaseDefNum)==autoCond.CompareString) {
+						if(ProblemDefinitions.GetName(problemList[i].ProblemDefId)==autoCond.CompareString) {
 							return true;
 						}
 					}
 					break;
 				case AutoCondComparison.Contains:
 					for(int i=0;i<problemList.Count;i++) {
-						if(DiseaseDefs.GetName(problemList[i].DiseaseDefNum).ToLower().Contains(autoCond.CompareString.ToLower())) {
+						if(ProblemDefinitions.GetName(problemList[i].ProblemDefId).ToLower().Contains(autoCond.CompareString.ToLower())) {
 							return true;
 						}
 					}

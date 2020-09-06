@@ -102,7 +102,7 @@ namespace OpenDentBusiness{
 						}
 					}
 					else if(payPlanLink.LinkType==PayPlanLinkType.Adjustment) {
-						Adjustment adj=listAdjsAttachedToPayPlan.FirstOrDefault(x => x.AdjNum==payPlanLink.FKey);
+						Adjustment adj=listAdjsAttachedToPayPlan.FirstOrDefault(x => x.Id==payPlanLink.FKey);
 						if(adj!=null) {
 							productionEntry=new PayPlanProductionEntry(adj,payPlanLink,listSplitsForAdjustments);
 						}

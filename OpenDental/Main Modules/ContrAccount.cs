@@ -939,10 +939,10 @@ namespace OpenDental {
 					}
 					else {//item must be adjustment
 						Adjustment adj=Adjustments.GetOne(PIn.Long(table.Rows[i]["AdjNum"].ToString()));
-						if(adj.StatementNum!=0) {//already attached so don't autoselect
+						if(adj.StatementId!=0) {//already attached so don't autoselect
 							continue;
 						}
-						if(adj.PatNum!=_patCur.PatNum) {
+						if(adj.PatientId!=_patCur.PatNum) {
 							continue;
 						}
 					}
@@ -1006,16 +1006,16 @@ namespace OpenDental {
 				}
 				else{//the selected item must be an adjustment
 					Adjustment adj=Adjustments.GetOne(PIn.Long(row["AdjNum"].ToString()));
-					if(adj.AdjDate.Date > DateTime.Today.Date && !Prefs.GetBool(PrefName.FutureTransDatesAllowed)) {
+					if(adj.AdjustDate.Date > DateTime.Today.Date && !Prefs.GetBool(PrefName.FutureTransDatesAllowed)) {
 						MessageBox.Show("Adjustments cannot be made for future dates");
 						return;
 					}
-					if(adj.PatNum!=_patCur.PatNum) {
+					if(adj.PatientId!=_patCur.PatNum) {
 						MessageBox.Show("You can only select procedures, payment plan charges or adjustments for a single patient on an invoice.");
 						gridAccount.SetSelected(false);
 						return;
 					}
-					if(adj.StatementNum!=0) {
+					if(adj.StatementId!=0) {
 						MessageBox.Show("Selected adjustment(s) are already attached to an invoice.");
 						gridAccount.SetSelected(false);
 						return;
@@ -1066,7 +1066,7 @@ namespace OpenDental {
 				}
 				else {//selected item must be adjustment
 					Adjustment adj=Adjustments.GetOne(PIn.Long(row["AdjNum"].ToString()));
-					adj.StatementNum=stmt.StatementNum;
+					adj.StatementId=stmt.StatementNum;
 					Adjustments.Update(adj);
 				}
 			}
@@ -1093,7 +1093,7 @@ namespace OpenDental {
 				else {//Adjustment key, loop through all adjustments
 					foreach(long priKey in entry.Value) {
 						Adjustment adj=Adjustments.GetOne(priKey);
-						adj.StatementNum=stmt.StatementNum;
+						adj.StatementId=stmt.StatementNum;
 						Adjustments.Update(adj);
 					}
 				}
@@ -1458,18 +1458,18 @@ namespace OpenDental {
 					}
 				}
 				Adjustment adjustment=new Adjustment();
-				adjustment.AdjDate=DateTime.Today;
-				adjustment.ProcDate=proc.ProcDate;
-				adjustment.ProvNum=Prefs.GetLong(PrefName.PracticeDefaultProv);
+				adjustment.AdjustDate=DateTime.Today;
+				adjustment.ProcedureDate=proc.ProcDate;
+				adjustment.ProviderId=Prefs.GetLong(PrefName.PracticeDefaultProv);
 				Clinic procClinic=Clinics.GetById(proc.ClinicNum);
 				if(proc.ClinicNum!=0 && procClinic.DefaultProviderId.HasValue) {
-					adjustment.ProvNum=procClinic.DefaultProviderId.Value;
+					adjustment.ProviderId=procClinic.DefaultProviderId.Value;
 				}
-				adjustment.PatNum=_patCur.PatNum;
-				adjustment.ClinicNum=proc.ClinicNum;
-				adjustment.AdjAmt=Math.Round((proc.ProcFee-writeOff)*(taxPercent/100),2);//Round to two places
-				adjustment.AdjType=adjType;
-				adjustment.ProcNum=proc.ProcNum;
+				adjustment.PatientId=_patCur.PatNum;
+				adjustment.ClinicId=proc.ClinicNum;
+				adjustment.AdjustAmount=Math.Round((proc.ProcFee-writeOff)*(taxPercent/100),2);//Round to two places
+				adjustment.Type=adjType;
+				adjustment.ProcedureId=proc.ProcNum;
 				//adjustment.AdjNote="Sales Tax";
 				Adjustments.Insert(adjustment);
 				TsiTransLogs.CheckAndInsertLogsIfAdjTypeExcluded(adjustment);
@@ -1998,7 +1998,7 @@ namespace OpenDental {
 					if(adjNum > 0) {
 						Adjustment adjustment=Adjustments.GetOne(adjNum);
 						//Don't include negative adjustments or ones attached to procs because of the way we pay off procs.
-						if(adjustment.AdjAmt>0 && adjustment.ProcNum==0) {
+						if(adjustment.AdjustAmount>0 && adjustment.ProcedureId==0) {
 							listAcctEntries.Add(new AccountEntry(adjustment));
 						}
 					}
@@ -3705,26 +3705,26 @@ namespace OpenDental {
 			else {
 				Patient patAdj=_patCur;
 				Adjustment adjustmentCur=new Adjustment();
-				adjustmentCur.DateEntry=DateTime.Today;//cannot be changed. Handled automatically
-				adjustmentCur.AdjDate=DateTime.Today;
-				adjustmentCur.ProcDate=DateTime.Today;
-				adjustmentCur.ProvNum=_patCur.PriProv;
-				adjustmentCur.PatNum=_patCur.PatNum;
-				adjustmentCur.ClinicNum=_patCur.ClinicNum;
+				adjustmentCur.AddedDate=DateTime.Today;//cannot be changed. Handled automatically
+				adjustmentCur.AdjustDate=DateTime.Today;
+				adjustmentCur.ProcedureDate=DateTime.Today;
+				adjustmentCur.ProviderId=_patCur.PriProv;
+				adjustmentCur.PatientId=_patCur.PatNum;
+				adjustmentCur.ClinicId=_patCur.ClinicNum;
 				if(gridAccount.SelectedGridRows.Count==1) {
 					OrthoProcLink orthoProcLink=OrthoProcLinks.GetByProcNum(PIn.Long(tableAcct.Rows[gridAccount.SelectedIndices[0]]["ProcNum"].ToString()));
 					if(orthoProcLink!=null) {
 						MessageBox.Show("Procedures linked to ortho cases cannot be adjusted.");
 						return;
 					}
-					adjustmentCur.ProcNum=PIn.Long(tableAcct.Rows[gridAccount.SelectedIndices[0]]["ProcNum"].ToString());
-					Procedure proc=Procedures.GetOneProc(adjustmentCur.ProcNum,false);
+					adjustmentCur.ProcedureId=PIn.Long(tableAcct.Rows[gridAccount.SelectedIndices[0]]["ProcNum"].ToString());
+					Procedure proc=Procedures.GetOneProc(adjustmentCur.ProcedureId??0,false);
 					if(proc!=null) {
-						adjustmentCur.ProvNum=proc.ProvNum;
-						adjustmentCur.ClinicNum=proc.ClinicNum;
-						adjustmentCur.PatNum=proc.PatNum;
-						if(adjustmentCur.PatNum!=_patCur.PatNum) {
-							patAdj=_famCur.GetPatient(adjustmentCur.PatNum)??Patients.GetPat(adjustmentCur.PatNum);
+						adjustmentCur.ProviderId=proc.ProvNum;
+						adjustmentCur.ClinicId=proc.ClinicNum;
+						adjustmentCur.PatientId=proc.PatNum;
+						if(adjustmentCur.PatientId!=_patCur.PatNum) {
+							patAdj=_famCur.GetPatient(adjustmentCur.PatientId)??Patients.GetPat(adjustmentCur.PatientId);
 						}
 					}
 				}

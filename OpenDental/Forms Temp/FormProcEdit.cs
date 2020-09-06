@@ -1437,14 +1437,14 @@ namespace OpenDental {
 			for(int i=0;i<_adjustmentsForProc.Count;i++){
 				row=new GridRow();
 				Adjustment adjustment=(Adjustment)_adjustmentsForProc[i];
-				row.Cells.Add(adjustment.AdjDate.ToShortDateString());
-				row.Cells.Add(adjustment.AdjAmt.ToString("F"));
+				row.Cells.Add(adjustment.AdjustDate.ToShortDateString());
+				row.Cells.Add(adjustment.AdjustAmount.ToString("F"));
 				row.Cells[row.Cells.Count-1].Bold= true;
-				row.Cells.Add(Definitions.GetName(DefinitionCategory.AdjTypes,adjustment.AdjType));
-				row.Cells.Add(adjustment.AdjNote);
+				row.Cells.Add(Definitions.GetName(DefinitionCategory.AdjTypes,adjustment.Type));
+				row.Cells.Add(adjustment.Note);
 				gridAdj.ListGridRows.Add(row);
-				if(adjustment.AdjType==Prefs.GetLong(PrefName.TreatPlanDiscountAdjustmentType)) {
-					discountAmt-=adjustment.AdjAmt;//Discounts are stored as negatives, we want a positive discount value.
+				if(adjustment.Type==Prefs.GetLong(PrefName.TreatPlanDiscountAdjustmentType)) {
+					discountAmt-=adjustment.AdjustAmount;//Discounts are stored as negatives, we want a positive discount value.
 				}
 			}
 			gridAdj.EndUpdate();
@@ -1476,13 +1476,13 @@ namespace OpenDental {
 				&& MsgBox.Show(MsgBoxButtons.YesNo,"The guarantor of this family has been sent to Transworld for collection.\r\n"
 					+"Is this an adjustment due to a payment received from Transworld?"));
 			Adjustment adj=new Adjustment();
-			adj.PatNum=_patCur.PatNum;
-			adj.ProvNum=comboProv.GetSelectedProvNum();
-			adj.DateEntry=DateTime.Today;//but will get overwritten to server date
-			adj.AdjDate=DateTime.Today;
-			adj.ProcDate=_procCur.ProcDate;
-			adj.ProcNum=_procCur.ProcNum;
-			adj.ClinicNum=_procCur.ClinicNum;
+			adj.PatientId=_patCur.PatNum;
+			adj.ProviderId=comboProv.GetSelectedProvNum();
+			adj.AddedDate=DateTime.Today;//but will get overwritten to server date
+			adj.AdjustDate=DateTime.Today;
+			adj.ProcedureDate=_procCur.ProcDate;
+			adj.ProcedureId=_procCur.ProcNum;
+			adj.ClinicId=_procCur.ClinicNum;
 			FormAdjust FormA=new FormAdjust(_patCur,adj,isTsiAdj);
 			FormA.IsNew=true;
 			if(FormA.ShowDialog()!=DialogResult.OK) {
@@ -1504,22 +1504,22 @@ namespace OpenDental {
 			if(FormAP.ShowDialog()!=DialogResult.OK) {
 				return;
 			}
-			if(!Security.IsAuthorized(Permissions.AdjustmentEdit,FormAP.SelectedAdjustment.AdjDate)) {
+			if(!Security.IsAuthorized(Permissions.AdjustmentEdit,FormAP.SelectedAdjustment.AdjustDate)) {
 				return;
 			}
-			List<PaySplit> listPaySplitsForAdjustment=PaySplits.GetForAdjustments(new List<long>{FormAP.SelectedAdjustment.AdjNum});
+			List<PaySplit> listPaySplitsForAdjustment=PaySplits.GetForAdjustments(new List<long>{FormAP.SelectedAdjustment.Id});
 			if(listPaySplitsForAdjustment.Count>0) {
 				MessageBox.Show("Cannot attach adjustment which has associated payments");
 				return;
 			}
-			List<PayPlanLink> listPayPlanLinks=PayPlanLinks.GetForFKeyAndLinkType(FormAP.SelectedAdjustment.AdjNum,PayPlanLinkType.Adjustment);
+			List<PayPlanLink> listPayPlanLinks=PayPlanLinks.GetForFKeyAndLinkType(FormAP.SelectedAdjustment.Id,PayPlanLinkType.Adjustment);
 			if(listPayPlanLinks.Count>0) {
 				MessageBox.Show("Cannot attach adjustment which is associated to a payment plan.");
 				return;
 			}
 			decimal estPatPort=ClaimProcs.GetPatPortion(_procCur,_loadData.ListClaimProcsForProc,_loadData.ArrAdjustments.ToList());
 			decimal procPatPaid=(decimal)PaySplits.GetTotForProc(_procCur);
-			decimal adjRemAmt=estPatPort-procPatPaid+(decimal)FormAP.SelectedAdjustment.AdjAmt;
+			decimal adjRemAmt=estPatPort-procPatPaid+(decimal)FormAP.SelectedAdjustment.AdjustAmount;
 
 			if (adjRemAmt < 0)
 			{
@@ -1533,8 +1533,8 @@ namespace OpenDental {
 				}
 			}
 
-			FormAP.SelectedAdjustment.ProcNum=_procCur.ProcNum;
-			FormAP.SelectedAdjustment.ProcDate=_procCur.ProcDate;
+			FormAP.SelectedAdjustment.ProcedureId=_procCur.ProcNum;
+			FormAP.SelectedAdjustment.ProcedureDate=_procCur.ProcDate;
 			Adjustments.Update(FormAP.SelectedAdjustment);
 			_loadData.ArrAdjustments=Adjustments.GetForProcs(new List<long>() { _procCur.ProcNum }).ToArray();
 			FillAdj();
@@ -1676,7 +1676,7 @@ namespace OpenDental {
 				double sumInsPaids=ClaimProcs.ProcInsPay(_listClaimProcsForProc,_procCur.ProcNum);
 				double sumInsEsts=ClaimProcs.ProcEstNotReceived(_listClaimProcsForProc,_procCur.ProcNum);
 				//Adjustments are already negative if a discount, etc.
-				double sumAdjs=_adjustmentsForProc.Cast<Adjustment>().ToList().FindAll(x => x.ProcNum==_procCur.ProcNum).Sum(x => x.AdjAmt);
+				double sumAdjs=_adjustmentsForProc.Cast<Adjustment>().ToList().FindAll(x => x.ProcedureId==_procCur.ProcNum).Sum(x => x.AdjustAmount);
 				double sumPaySplits=_paySplitsForProc.Cast<PaySplit>().ToList().FindAll(x => x.ProcNum==_procCur.ProcNum).Sum(x => x.SplitAmt);
 				double credits=sumWO+sumInsPaids+sumInsEsts-sumAdjs+sumPaySplits;
 				//Check if the new ProcCode will result in the procedure being overallocated due to a change in ProcFee.
@@ -2518,14 +2518,14 @@ namespace OpenDental {
 				FormIcd10s formI=new FormIcd10s();
 				formI.IsSelectionMode=true;
 				if(formI.ShowDialog()==DialogResult.OK) {
-					textBoxDiagnosisCode.Text=formI.SelectedIcd10.Icd10Code;
+					textBoxDiagnosisCode.Text=formI.SelectedIcd10.Code;
 				}
 			}
 			else {//ICD-9
 				FormIcd9s formI=new FormIcd9s();
 				formI.IsSelectionMode=true;
 				if(formI.ShowDialog()==DialogResult.OK) {
-					textBoxDiagnosisCode.Text=formI.SelectedIcd9.ICD9Code;
+					textBoxDiagnosisCode.Text=formI.SelectedIcd9.Code;
 				}
 			}
 		}
@@ -2846,7 +2846,7 @@ namespace OpenDental {
 				_procCur.SnomedBodySite="";
 			}
 			else {
-				_procCur.SnomedBodySite=_snomedBodySite.SnomedCode;
+				_procCur.SnomedBodySite=_snomedBodySite.Code;
 			}
 			_procCur.IcdVersion=9;
 			if(checkIcdVersion.Checked) {
@@ -2922,10 +2922,10 @@ namespace OpenDental {
 				}
 				List<Adjustment> listAdjusts=_adjustmentsForProc.Cast<Adjustment>().ToList();
 				foreach(Adjustment adjust in listAdjusts) {
-					if(!Security.IsAuthorized(Permissions.AdjustmentEdit,adjust.AdjDate)) {
+					if(!Security.IsAuthorized(Permissions.AdjustmentEdit,adjust.AdjustDate)) {
 						return;
 					}
-					if(_procCur.ProvNum!=adjust.ProvNum && PrefC.GetInt(PrefName.RigorousAdjustments)==(int)RigorousAdjustments.EnforceFully) {
+					if(_procCur.ProvNum!=adjust.ProviderId && PrefC.GetInt(PrefName.RigorousAdjustments)==(int)RigorousAdjustments.EnforceFully) {
 						hasAdjProvChanged=true;
 					}
 				}
@@ -3072,7 +3072,7 @@ namespace OpenDental {
 			}
 			if(hasAdjProvChanged) {
 				foreach(Adjustment adjust in _adjustmentsForProc) {//update the attached adjustments
-					adjust.ProvNum=_procCur.ProvNum;
+					adjust.ProviderId=_procCur.ProvNum;
 					Adjustments.Update(adjust);
 				}
 			}

@@ -25,6 +25,7 @@ using System.Linq;
 using OpenDentBusiness.Eclaims;
 using Imedisoft.Data.Models;
 using Imedisoft.Data;
+using Imedisoft.Forms;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -2921,8 +2922,7 @@ namespace OpenDental{
 
 		private void butAdjAdd_Click(object sender,System.EventArgs e) {
 			ClaimProc ClaimProcCur=ClaimProcs.CreateInsPlanAdjustment(PatPlanCur.PatNum,_planCur.PlanNum,_subCur.InsSubNum);
-			FormInsAdj FormIA=new FormInsAdj(ClaimProcCur);
-			FormIA.IsNew=true;
+			FormInsuranceAdjustment FormIA=new FormInsuranceAdjustment(ClaimProcCur);
 			FormIA.ShowDialog();
 			FillPatientAdjustments();
 		}
@@ -2939,7 +2939,7 @@ namespace OpenDental{
 			if(listAdj.SelectedIndex==-1) {
 				return;
 			}
-			FormInsAdj FormIA=new FormInsAdj((ClaimProc)AdjAL[listAdj.SelectedIndex]);
+			FormInsuranceAdjustment FormIA=new FormInsuranceAdjustment((ClaimProc)AdjAL[listAdj.SelectedIndex]);
 			FormIA.ShowDialog();
 			FillPatientAdjustments();
 		}
@@ -3986,7 +3986,7 @@ namespace OpenDental{
 				}
 				MessageBox.Show("This plan does not have a benefit note, but a note was found for another subsriber of this plan.  You will be able to view this note, but not change it.");
 			}
-			FormInsBenefitNotes FormI=new FormInsBenefitNotes();
+			FormInsuranceBenefitNotes FormI=new FormInsuranceBenefitNotes();
 			if(_subCur.BenefitNotes!="") {
 				FormI.BenefitNotes=_subCur.BenefitNotes;
 			}
@@ -4433,7 +4433,7 @@ namespace OpenDental{
 		private void butHistoryElect_Click(object sender,EventArgs e) {
 			//button not visible if SubCur is null
 			FormBenefitElectHistory formB=new FormBenefitElectHistory(_planCur.PlanNum,PatPlanCur.PatPlanNum,_subCur.InsSubNum,_subCur.Subscriber,_planCur.CarrierNum);
-			formB.BenList=benefitList;
+			formB.Benefits=benefitList;
 			formB.ShowDialog();
 			DateTime dateLast270=Etranss.GetLastDate270(_planCur.PlanNum);
 			if(dateLast270.Year<1880) {

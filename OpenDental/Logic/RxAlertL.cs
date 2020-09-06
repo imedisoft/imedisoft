@@ -1,5 +1,8 @@
-﻿using OpenDentBusiness;
+﻿using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using OpenDentBusiness;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace OpenDental
@@ -13,7 +16,7 @@ namespace OpenDental
 		{
             List<RxAlert> alertList = RxAlerts.Refresh(rxDefNum);
             
-            List<Disease> diseases = Diseases.Refresh(patNum);
+            List<Problem> diseases = Problems.GetByPatient(patNum).ToList();
 			List<Allergy> allergies = Allergies.GetByPatient(patNum);
 			List<MedicationPat> medicationPats = MedicationPats.Refresh(patNum, false);//Exclude discontinued, only active meds.
 			List<string> diseaseMatches = new List<string>();
@@ -27,11 +30,11 @@ namespace OpenDental
 				for (int j = 0; j < diseases.Count; j++)
 				{
 					//This does not look for matches with icd9s.
-					if (alertList[i].DiseaseDefId == diseases[j].DiseaseDefNum && diseases[j].ProbStatus == 0)
+					if (alertList[i].DiseaseDefId == diseases[j].ProblemDefId && diseases[j].Status == 0)
 					{//ProbStatus is active.
 						if (alertList[i].NotificationMsg == "")
 						{
-							diseaseMatches.Add(DiseaseDefs.GetName(diseases[j].DiseaseDefNum));
+							diseaseMatches.Add(ProblemDefinitions.GetName(diseases[j].ProblemDefId));
 						}
 						else
 						{

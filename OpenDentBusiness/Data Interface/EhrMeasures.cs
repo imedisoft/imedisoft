@@ -7,6 +7,7 @@ using System.Linq;
 using CodeBase;
 using DataConnectionBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -1800,14 +1801,14 @@ namespace OpenDentBusiness{
 				switch(mu.MeasureType) {
 					#region ProblemList
 					case EhrMeasureType.ProblemList:
-						List<Disease> listDisease=Diseases.Refresh(pat.PatNum);
+						List<Problem> listDisease=Problems.GetByPatient(pat.PatNum).ToList();
 						int validDiseaseCount=0;
 						if(listDisease.Count==0){
 							mu.Details="No problems entered.";
 						}
 						else{
 							bool diseasesNone=false;
-							if(listDisease.Count==1 && listDisease[0].DiseaseDefNum==Prefs.GetLong(PrefName.ProblemsIndicateNone)){
+							if(listDisease.Count==1 && listDisease[0].ProblemDefId==Prefs.GetLong(PrefName.ProblemsIndicateNone)){
 								diseasesNone=true;
 							}
 							if(diseasesNone){
@@ -1816,8 +1817,8 @@ namespace OpenDentBusiness{
 							}
 							else{
 								for(int m=0;m<listDisease.Count;m++) {
-									DiseaseDef diseaseCur=DiseaseDefs.GetItem(listDisease[m].DiseaseDefNum);
-									if(diseaseCur.ICD9Code=="" && diseaseCur.SnomedCode=="") {
+									ProblemDefinition diseaseCur=ProblemDefinitions.GetItem(listDisease[m].ProblemDefId);
+									if(diseaseCur.CodeIcd9=="" && diseaseCur.CodeSnomed=="") {
 										continue;
 									}
 									validDiseaseCount++;
@@ -5650,14 +5651,14 @@ namespace OpenDentBusiness{
 					#endregion			
 					#region ProblemList
 					case EhrMeasureType.ProblemList:
-						List<Disease> listDisease=Diseases.Refresh(pat.PatNum);
+						List<Problem> listDisease=Problems.GetByPatient(pat.PatNum).ToList();
 						int validDiseaseCount=0;
 						if(listDisease.Count==0){
 							mu.Details="No problems entered.";
 						}
 						else{
 							bool diseasesNone=false;
-							if(listDisease.Count==1 && listDisease[0].DiseaseDefNum==Prefs.GetLong(PrefName.ProblemsIndicateNone)){
+							if(listDisease.Count==1 && listDisease[0].ProblemDefId==Prefs.GetLong(PrefName.ProblemsIndicateNone)){
 								diseasesNone=true;
 							}
 							if(diseasesNone){
@@ -5666,8 +5667,8 @@ namespace OpenDentBusiness{
 							}
 							else{
 								for(int m=0;m<listDisease.Count;m++) {
-									DiseaseDef diseaseCur=DiseaseDefs.GetItem(listDisease[m].DiseaseDefNum);
-									if(diseaseCur.ICD9Code=="" && diseaseCur.SnomedCode=="") {
+									ProblemDefinition diseaseCur=ProblemDefinitions.GetItem(listDisease[m].ProblemDefId);
+									if(diseaseCur.CodeIcd9=="" && diseaseCur.CodeSnomed=="") {
 										continue;
 									}
 									validDiseaseCount++;

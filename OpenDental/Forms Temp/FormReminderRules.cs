@@ -6,6 +6,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -36,8 +38,8 @@ namespace OpenDental {
 				row=new GridRow();
 				switch(listReminders[i].ReminderCriterion) {
 					case EhrCriterion.Problem:
-						DiseaseDef def=DiseaseDefs.GetItem(listReminders[i].CriterionFK);
-						row.Cells.Add("Problem ="+def.ICD9Code+" "+def.DiseaseName);
+						ProblemDefinition def=ProblemDefinitions.GetItem(listReminders[i].CriterionFK);
+						row.Cells.Add("Problem ="+def.CodeIcd9+" "+def.Description);
 						break;
 					case EhrCriterion.Medication:
 						Medication tempMed = Medications.GetMedication(listReminders[i].CriterionFK);

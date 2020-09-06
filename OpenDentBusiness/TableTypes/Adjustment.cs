@@ -1,4 +1,5 @@
 using Imedisoft.Data.Annotations;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections;
 
@@ -10,61 +11,73 @@ namespace OpenDentBusiness
     /// But they can also be attached to a procedure to represent a discount on that procedure.
     /// Attaching adjustments to procedures is not automated, so it is not very common.
     /// </summary>
-    [CrudTable(IsSecurityStamped = true, HasBatchWriteMethods = true)]
-	[Table]
-	public class Adjustment : TableBase
+	[Table("adjustments")]
+	public class Adjustment
 	{
 		[PrimaryKey]
-		public long AdjNum;
+		public long Id;
 
-		///<summary>The date that the adjustment shows in the patient account.</summary>
-		public DateTime AdjDate;
+		[ForeignKey(typeof(Patient), nameof(Patient.PatNum))]
+		public long PatientId;
 
-		///<summary>Amount of adjustment.  Can be pos or neg.</summary>
-		public double AdjAmt;
+		/// <summary>
+		/// The date that the adjustment shows in the patient account.
+		/// </summary>
+		public DateTime AdjustDate;
 
-		///<summary>FK to patient.PatNum.</summary>
-		public long PatNum;
+		/// <summary>
+		/// Amount of adjustment. Can be positive or negative.
+		/// </summary>
+		public double AdjustAmount;
 
-		///<summary>FK to definition.DefNum.</summary>
-		public long AdjType;
+		/// <summary>
+		/// The ID of a definition in the <see cref="DefinitionCategory.AdjTypes"/> category.
+		/// </summary>
+		[ForeignKey(typeof(Definition), nameof(Definition.Id))]
+		public long Type;
 
-		///<summary>FK to provider.ProvNum.</summary>
-		public long ProvNum;
+		[ForeignKey(typeof(Provider), nameof(Provider.ProvNum))]
+		public long ProviderId;
 
-		///<summary>Note for this adjustment.</summary>
-		[CrudColumn(SpecialType = CrudSpecialColType.TextIsClob | CrudSpecialColType.CleanText)]
-		public string AdjNote;
+		/// <summary>
+		/// Note for this adjustment.
+		/// </summary>
+		public string Note;
 
-		///<summary>Procedure date.  Not when the adjustment was entered.</summary>
-		public DateTime ProcDate;
+		/// <summary>
+		///  Only used if attached to a procedure.  Otherwise, null.
+		/// </summary>
+		public long? ProcedureId;
 
-		///<summary>FK to procedurelog.ProcNum.  Only used if attached to a procedure.  Otherwise, 0.</summary>
-		public long ProcNum;
+		/// <summary>
+		/// Procedure date. Not when the adjustment was entered.
+		/// </summary>
+		public DateTime ProcedureDate;
 
-		///<summary>Timestamp automatically generated and user not allowed to change.  The actual date of entry.</summary>
-		[CrudColumn(SpecialType = CrudSpecialColType.DateEntry)]
-		public DateTime DateEntry;
+		[ForeignKey(typeof(Clinic), nameof(Clinic.Id))]
+		public long ClinicId;
 
-		///<summary>FK to clinic.ClinicNum.</summary>
-		public long ClinicNum;
+		/// <summary>
+		/// Only used when the statement is an invoice.
+		/// </summary>
+		[ForeignKey(typeof(Statement), nameof(Statement.StatementNum))]
+		public long StatementId;
 
-		///<summary>FK to statement.StatementNum.  Only used when the statement in an invoice.</summary>
-		public long StatementNum;
+		/// <summary>
+		/// The date on which the adjustment was created.
+		/// </summary>
+		[Column(ReadOnly = true)]
+		public DateTime AddedDate;
 
-		///<summary>FK to userod.UserNum.  Set to the user logged in when the row was inserted at SecDateEntry date and time.</summary>
-		[CrudColumn(SpecialType = CrudSpecialColType.ExcludeFromUpdate)]
-		public long SecUserNumEntry;
+		///<summary>The ID of the user that created the adjustment.</summary>
+		[Column(ReadOnly = true), ForeignKey(typeof(Userod), nameof(Userod.Id))]
+		public long AddedByUserId;
 
-		//No SecDateEntry, DateEntry already exists and is set by MySQL when the row is inserted and never updated
-		///<summary>Automatically updated by MySQL every time a row is added or changed. Could be changed due to user editing, custom queries or program
-		///updates.  Not user editable with the UI.</summary>
-		[CrudColumn(SpecialType = CrudSpecialColType.TimeStamp)]
-		public DateTime SecDateTEdit;
+		/// <summary>
+		/// The date on which the adjustment was last modified.
+		/// </summary>
+		public DateTime LastModifiedDate;
 
-		public Adjustment Clone()
-		{
-			return (Adjustment)MemberwiseClone();
-		}
+		public Adjustment Clone() => (Adjustment)MemberwiseClone();
 	}
 }

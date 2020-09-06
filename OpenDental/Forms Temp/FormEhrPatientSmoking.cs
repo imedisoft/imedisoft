@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -144,7 +146,7 @@ namespace OpenDental {
 				if(sCur==null) {//don't add invalid SNOMEDCT codes
 					continue;
 				}
-				_listCustomTobaccoCodes.Add(new EhrCode { CodeValue=sCur.SnomedCode,Description=sCur.Description });
+				_listCustomTobaccoCodes.Add(new EhrCode { CodeValue=sCur.Code,Description=sCur.Description });
 			}
 			_listCustomTobaccoCodes=_listCustomTobaccoCodes.OrderBy(x => x.Description).ToList();
 			//list will contain all of the tobacco status EhrCodes currently in comboTobaccoStatus
@@ -340,8 +342,8 @@ namespace OpenDental {
 				comboTobaccoStatus.SelectedIndex=-1;
 				return;
 			}
-			if(!_listTobaccoStatuses.Any(x => x.CodeValue==FormS.SelectedSnomed.SnomedCode)) {
-				_listCustomTobaccoCodes.Add(new EhrCode() { CodeValue=FormS.SelectedSnomed.SnomedCode,Description=FormS.SelectedSnomed.Description });
+			if(!_listTobaccoStatuses.Any(x => x.CodeValue==FormS.SelectedSnomed.Code)) {
+				_listCustomTobaccoCodes.Add(new EhrCode() { CodeValue=FormS.SelectedSnomed.Code,Description=FormS.SelectedSnomed.Description });
 				_listCustomTobaccoCodes=_listCustomTobaccoCodes.OrderBy(x => x.Description).ToList();
 				radioTobaccoStatuses_CheckedChanged(GetSelectedStatusFilter(),new EventArgs());//refills drop down with newly added custom code
 			}
@@ -349,7 +351,7 @@ namespace OpenDental {
 			comboTobaccoStatus.Items.Clear();
 			comboTobaccoStatus.Items.AddRange(_listTobaccoStatuses.Select(x => x.Description).ToArray());
 			comboTobaccoStatus.Items.Add("Choose from all SNOMED CT codes"+"...");
-			comboTobaccoStatus.SelectedIndex=_listTobaccoStatuses.FindIndex(x => x.CodeValue==FormS.SelectedSnomed.SnomedCode);//add 1 for ...choose from
+			comboTobaccoStatus.SelectedIndex=_listTobaccoStatuses.FindIndex(x => x.CodeValue==FormS.SelectedSnomed.Code);//add 1 for ...choose from
 		}
 
 		///<summary>Fill comboTobaccoStatus with user and non-user tobacco status codes using _listUserCodes and/or _listNonUserCodes

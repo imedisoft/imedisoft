@@ -1,3 +1,5 @@
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -56,13 +58,13 @@ namespace Imedisoft.Forms
 
 			foreach (var securityLog in securityLogs)
 			{
-				var user = Userods.GetUser(securityLog.UserNum);
+				var user = Userods.GetUser(securityLog.UserId);
 
 				var gridRow = new GridRow();
-				gridRow.Cells.Add(securityLog.LogDateTime.ToShortDateString() + " " + securityLog.LogDateTime.ToShortTimeString());
+				gridRow.Cells.Add(securityLog.LogDate.ToShortDateString() + " " + securityLog.LogDate.ToShortTimeString());
 				gridRow.Cells.Add(user?.UserName ?? "unknown");
-				gridRow.Cells.Add(securityLog.PermType.ToString());
-				gridRow.Cells.Add(securityLog.LogText);
+				gridRow.Cells.Add(securityLog.Type.ToString());
+				gridRow.Cells.Add(securityLog.LogMessage);
 
 				grid.ListGridRows.Add(gridRow);
 			}

@@ -10,6 +10,7 @@ using OpenDentBusiness;
 using System.Linq;
 using CodeBase;
 using Imedisoft.Forms;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>

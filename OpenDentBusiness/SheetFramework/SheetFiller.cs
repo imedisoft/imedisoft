@@ -960,12 +960,12 @@ namespace OpenDentBusiness {
 				clinicCurPhone=TelephoneNumbers.ReFormat(phone);
 				#endregion
 				#region Diseases/Allergies
-				List<Disease> listDiseases=data.ListDiseases;
+				List<Problem> listDiseases=data.ListDiseases;
 				for(int i=0;i<listDiseases.Count;i++) {
 					if(activeProblems!="") {
 						activeProblems+=", ";
 					}
-					activeProblems+=DiseaseDefs.GetName(listDiseases[i].DiseaseDefNum);
+					activeProblems+=ProblemDefinitions.GetName(listDiseases[i].ProblemDefId);
 				}
 				List<Allergy> listAllergies=data.ListAllergies;
 				for(int i=0;i<listAllergies.Count;i++) {
@@ -2462,13 +2462,13 @@ namespace OpenDentBusiness {
 						}
 					}
 					else if(field.FieldName.StartsWith("problem:")) {//"problem:Hepatitis B"
-						List<Disease> diseases=Diseases.Refresh(pat.PatNum,false);
+						List<Problem> diseases=Problems.GetByPatient(pat.PatNum,false).ToList();
 						for(int i=0;i<diseases.Count;i++) {
-							if(DiseaseDefs.GetName(diseases[i].DiseaseDefNum)==field.FieldName.Remove(0,8)) {
-								if(diseases[i].ProbStatus==ProblemStatus.Active && field.RadioButtonValue=="Y") {
+							if(ProblemDefinitions.GetName(diseases[i].ProblemDefId)==field.FieldName.Remove(0,8)) {
+								if(diseases[i].Status==ProblemStatus.Active && field.RadioButtonValue=="Y") {
 									field.FieldValue="X";
 								}
-								else if(diseases[i].ProbStatus!=ProblemStatus.Active && field.RadioButtonValue=="N") {
+								else if(diseases[i].Status!=ProblemStatus.Active && field.RadioButtonValue=="N") {
 									field.FieldValue="X";
 								}
 								break;

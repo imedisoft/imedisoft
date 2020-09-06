@@ -10,6 +10,9 @@ using OpenDentBusiness;
 using OpenDental;
 using OpenDental.UI;
 using System.Diagnostics;
+using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormVitalsignEdit2014:ODForm {
@@ -132,28 +135,28 @@ namespace OpenDental {
 			pregDisDefNumCur=0;//this will be set to the correct problem def at the end of this function and will be the def of the problem we will insert/attach this exam to
 			string pregCode="";
 			string descript="";
-			Disease disCur=null;
-			DiseaseDef disdefCur=null;
+			Problem disCur=null;
+			ProblemDefinition disdefCur=null;
 			DateTime examDate=PIn.Date(textDateTaken.Text);//this may be different than the saved Vitalsign.DateTaken if user edited
 			#region Get DiseaseDefNum from attached pregnancy problem
 			if(VitalsignCur.PregDiseaseNum>0) {//already pointing to a disease, get that one
-				disCur=Diseases.GetOne(VitalsignCur.PregDiseaseNum);//get disease this vital sign is pointing to, see if it exists
+				disCur=Problems.GetOne(VitalsignCur.PregDiseaseNum);//get disease this vital sign is pointing to, see if it exists
 				if(disCur==null) {
 					VitalsignCur.PregDiseaseNum=0;
 				}
 				else {
-					if(examDate.Year<1880 || disCur.DateStart>examDate.Date || (disCur.DateStop.Year>1880 && disCur.DateStop<examDate.Date)) {
+					if(examDate.Year<1880 || disCur.DateStart>examDate.Date || (disCur.DateStop.HasValue && disCur.DateStop<examDate.Date)) {
 						VitalsignCur.PregDiseaseNum=0;
 						disCur=null;
 					}
 					else {
-						disdefCur=DiseaseDefs.GetItem(disCur.DiseaseDefNum);
+						disdefCur=ProblemDefinitions.GetItem(disCur.ProblemDefId);
 						if(disdefCur==null) {
 							VitalsignCur.PregDiseaseNum=0;
 							disCur=null;
 						}
 						else {//disease points to valid def
-							pregDisDefNumCur=disdefCur.DiseaseDefNum;
+							pregDisDefNumCur=disdefCur.Id;
 						}
 					}
 				}
@@ -162,16 +165,16 @@ namespace OpenDental {
 			if(VitalsignCur.PregDiseaseNum==0) {//not currently attached to a disease
 				#region Get DiseaseDefNum from existing pregnancy problem
 				if(examDate.Year>1880) {//only try to find existing problem if a valid exam date is entered before checking the box, otherwise we do not know what date to compare to the active dates of the pregnancy dx
-					List<DiseaseDef> listPregDisDefs=DiseaseDefs.GetAllPregDiseaseDefs();
-					List<Disease> listPatDiseases=Diseases.Refresh(VitalsignCur.PatNum,true);
+					List<ProblemDefinition> listPregDisDefs=ProblemDefinitions.GetAllPregnancyProblemDefinitions();
+					List<Problem> listPatDiseases=Problems.GetByPatient(VitalsignCur.PatNum,true).ToList();
 					for(int i=0;i<listPatDiseases.Count;i++) {//loop through all diseases for this patient, shouldn't be very many
 						if(listPatDiseases[i].DateStart>examDate.Date //startdate for current disease is after the exam date set in form
-							|| (listPatDiseases[i].DateStop.Year>1880 && listPatDiseases[i].DateStop<examDate.Date))//or current disease has a stop date and stop date before exam date
+							|| (listPatDiseases[i].DateStop.HasValue && listPatDiseases[i].DateStop<examDate.Date))//or current disease has a stop date and stop date before exam date
 						{
 							continue;
 						}
 						for(int j=0;j<listPregDisDefs.Count;j++) {//loop through preg disease defs in the db, shouldn't be very many
-							if(listPatDiseases[i].DiseaseDefNum!=listPregDisDefs[j].DiseaseDefNum) {//see if this problem is a pregnancy problem
+							if(listPatDiseases[i].ProblemDefId!=listPregDisDefs[j].Id) {//see if this problem is a pregnancy problem
 								continue;
 							}
 							if(disCur==null || listPatDiseases[i].DateStart>disCur.DateStart) {//if we haven't found a disease match yet or this match is more recent (later start date)
@@ -182,8 +185,8 @@ namespace OpenDental {
 					}
 				}
 				if(disCur!=null) {
-					pregDisDefNumCur=disCur.DiseaseDefNum;
-					VitalsignCur.PregDiseaseNum=disCur.DiseaseNum;
+					pregDisDefNumCur=disCur.ProblemDefId;
+					VitalsignCur.PregDiseaseNum=disCur.Id;
 				}
 				#endregion
 				else {//we are going to insert either the default pregnancy problem or a manually selected problem
@@ -192,31 +195,31 @@ namespace OpenDental {
 					pregCode=Prefs.GetString(PrefName.PregnancyDefaultCodeValue);//could be 'none' which disables the automatic dx insertion
 					string pregCodeSys=Prefs.GetString(PrefName.PregnancyDefaultCodeSystem);//if 'none' for code, code system will default to 'SNOMEDCT', display will be ""
 					if(pregCode!="" && pregCode!="none") {//default pregnancy code set to a code other than 'none', should never be blank, we set in ConvertDB and don't allow blank
-						pregDisDefNumCur=DiseaseDefs.GetNumFromCode(pregCode);//see if the code is attached to a valid diseasedef
+						pregDisDefNumCur=ProblemDefinitions.GetNumFromCode(pregCode)??0;//see if the code is attached to a valid diseasedef
 						if(pregDisDefNumCur==0) {//no diseasedef in db for the default code, create and insert def
-							disdefCur=new DiseaseDef();
-							disdefCur.DiseaseName="Pregnant";
+							disdefCur=new ProblemDefinition();
+							disdefCur.Description="Pregnant";
 							switch(pregCodeSys) {
 								case "ICD9CM":
-									disdefCur.ICD9Code=pregCode;
+									disdefCur.CodeIcd9=pregCode;
 									break;
 								case "ICD10CM":
-									disdefCur.Icd10Code=pregCode;
+									disdefCur.CodeIcd10=pregCode;
 									break;
 								case "SNOMEDCT":
-									disdefCur.SnomedCode=pregCode;
+									disdefCur.CodeSnomed=pregCode;
 									break;
 							}
-							pregDisDefNumCur=DiseaseDefs.Insert(disdefCur);
-							DiseaseDefs.RefreshCache();
+							pregDisDefNumCur=ProblemDefinitions.Insert(disdefCur);
+							ProblemDefinitions.RefreshCache();
 							DataValid.SetInvalid(InvalidType.Diseases);
-							SecurityLogs.MakeLogEntry(Permissions.ProblemEdit,0,disdefCur.DiseaseName+" added.");
+							SecurityLogs.MakeLogEntry(Permissions.ProblemEdit,0,disdefCur.Description+" added.");
 						}
 					}
 					#endregion
 					#region Get DiseaseDefNum from manually selected pregnancy problem
 					else if(pregCode=="none") {//if pref for default preg dx is 'none', make user choose a problem from list
-						FormDiseaseDefs FormDD=new FormDiseaseDefs();
+						FormProblemDefinitions FormDD=new FormProblemDefinitions();
 						FormDD.IsSelectionMode=true;
 						FormDD.IsMultiSelect=false;
 						FormDD.ShowDialog();
@@ -230,7 +233,7 @@ namespace OpenDental {
 						}
 						labelPregNotice.Text=pregManualText;
 						//the list should only ever contain one item.
-						pregDisDefNumCur=FormDD.ListSelectedDiseaseDefs[0].DiseaseDefNum;
+						pregDisDefNumCur=FormDD.SelectedProblemDefinitions[0].Id;
 					}
 					#endregion
 				}
@@ -242,30 +245,30 @@ namespace OpenDental {
 				labelPregNotice.Visible=false;
 				return;
 			}
-			disdefCur=DiseaseDefs.GetItem(pregDisDefNumCur);
-			if(disdefCur.ICD9Code!="") {
-				ICD9 i9Preg=ICD9s.GetByCode(disdefCur.ICD9Code);
+			disdefCur=ProblemDefinitions.GetItem(pregDisDefNumCur);
+			if(disdefCur.CodeIcd9!="") {
+				Icd9 i9Preg=Icd9s.GetByCode(disdefCur.CodeIcd9);
 				if(i9Preg!=null) {
-					pregCode=i9Preg.ICD9Code;
+					pregCode=i9Preg.Code;
 					descript=i9Preg.Description;
 				}
 			}
-			else if(disdefCur.Icd10Code!="") {
-				Icd10 i10Preg=Icd10s.GetByCode(disdefCur.Icd10Code);
+			else if(disdefCur.CodeIcd10!="") {
+				Icd10 i10Preg=Icd10s.GetByCode(disdefCur.CodeIcd10);
 				if(i10Preg!=null) {
-					pregCode=i10Preg.Icd10Code;
+					pregCode=i10Preg.Code;
 					descript=i10Preg.Description;
 				}
 			}
-			else if(disdefCur.SnomedCode!="") {
-				Snomed sPreg=Snomeds.GetByCode(disdefCur.SnomedCode);
+			else if(disdefCur.CodeSnomed!="") {
+				Snomed sPreg=Snomeds.GetByCode(disdefCur.CodeSnomed);
 				if(sPreg!=null) {
-					pregCode=sPreg.SnomedCode;
+					pregCode=sPreg.Code;
 					descript=sPreg.Description;
 				}
 			}
 			if(pregCode=="none" || pregCode=="") {
-				descript=disdefCur.DiseaseName;
+				descript=disdefCur.Description;
 			}
 			#endregion
 			textPregCode.Text=pregCode;
@@ -986,7 +989,7 @@ namespace OpenDental {
 						}
 						break;
 					case "ICD9CM":
-						ICD9 i9Cur=ICD9s.GetByCode(listIntervention[i].CodeValue);
+						Icd9 i9Cur=Icd9s.GetByCode(listIntervention[i].CodeValue);
 						if(i9Cur!=null) {
 							descript=i9Cur.Description;
 						}
@@ -1086,9 +1089,9 @@ namespace OpenDental {
 				CalcBMI();//This will use new year taken to determine age at start of that year to show over/underweight if applicable using age specific criteria
 				return;
 			}
-			Disease disCur=Diseases.GetOne(VitalsignCur.PregDiseaseNum);
+			Problem disCur=Problems.GetOne(VitalsignCur.PregDiseaseNum);
 			if(disCur!=null) {//the currently attached preg disease is valid, will be null if they checked the box on new exam but haven't hit ok to save
-				if(examDate.Date<disCur.DateStart || (disCur.DateStop.Year>1880 && disCur.DateStop<examDate.Date)) {//if this exam is not in the active date range of the problem
+				if(examDate.Date<disCur.DateStart || (disCur.DateStop.HasValue && disCur.DateStop<examDate.Date)) {//if this exam is not in the active date range of the problem
 					if(!MsgBox.Show(MsgBoxButtons.YesNo,@"The exam date is no longer within the active dates of the attached pregnancy diagnosis.
 Do you want to remove the pregnancy diagnosis?")) 
 					{
@@ -1134,7 +1137,7 @@ Do you want to remove the pregnancy diagnosis?"))
 
 		private void butChangeDefault_Click(object sender,EventArgs e) {
 			if(butChangeDefault.Text=="Go to Problem") {//text is "To Problem" only when vital sign has a valid PregDiseaseNum and the preg box is checked
-				Disease disCur=Diseases.GetOne(VitalsignCur.PregDiseaseNum);
+				Problem disCur=Problems.GetOne(VitalsignCur.PregDiseaseNum);
 				if(disCur==null) {//should never happen, the only way the button will say "To Problem" is if this exam is pointing to a valid problem
 					butChangeDefault.Text="Change Default";
 					labelPregNotice.Visible=false;
@@ -1144,7 +1147,7 @@ Do you want to remove the pregnancy diagnosis?"))
 					checkPregnant.Checked=false;
 					return;
 				}
-				if(DiseaseDefs.GetItem(disCur.DiseaseDefNum)==null) {
+				if(ProblemDefinitions.GetItem(disCur.ProblemDefId)==null) {
 					MessageBox.Show("Invalid disease.  Please run database maintenance method"+" "
 						+nameof(DatabaseMaintenances.DiseaseWithInvalidDiseaseDef));
 					return;
@@ -1406,17 +1409,17 @@ Do you want to remove the pregnancy diagnosis?"))
 					return;
 				}
 				if(VitalsignCur.PregDiseaseNum==0) {//insert new preg disease and update vitalsign to point to it
-					Disease pregDisNew=new Disease();
-					pregDisNew.PatNum=VitalsignCur.PatNum;
-					pregDisNew.DiseaseDefNum=pregDisDefNumCur;
+					Problem pregDisNew=new Problem();
+					pregDisNew.PatientId=VitalsignCur.PatNum;
+					pregDisNew.ProblemDefId=pregDisDefNumCur;
 					pregDisNew.DateStart=VitalsignCur.DateTaken;
-					pregDisNew.ProbStatus=ProblemStatus.Active;
-					VitalsignCur.PregDiseaseNum=Diseases.Insert(pregDisNew);
+					pregDisNew.Status=ProblemStatus.Active;
+					VitalsignCur.PregDiseaseNum=Problems.Insert(pregDisNew);
 				}
 				else {
-					Disease disCur=Diseases.GetOne(VitalsignCur.PregDiseaseNum);
+					Problem disCur=Problems.GetOne(VitalsignCur.PregDiseaseNum);
 					if(VitalsignCur.DateTaken<disCur.DateStart
-						|| (disCur.DateStop.Year>1880 && VitalsignCur.DateTaken>disCur.DateStop))
+						|| (disCur.DateStop.HasValue && VitalsignCur.DateTaken>disCur.DateStop))
 					{//the current exam is no longer within dates of preg problem, uncheck the pregnancy box and remove the pointer to the disease
 						MessageBox.Show("This exam is not within the active dates of the attached pregnancy problem.");
 						checkPregnant.Checked=false;

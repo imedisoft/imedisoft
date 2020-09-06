@@ -388,13 +388,13 @@ namespace OpenDental {
 				checkPayPlan.Enabled=true;
 				return;
 			}
-			textAdjDate.Text=_adjCur.AdjDate.ToShortDateString();
-			textAdjProv.Text=Providers.GetAbbr(_adjCur.ProvNum);
-			textAdjAmt.Text=_adjCur.AdjAmt.ToString("F");//Adjustment's original amount
+			textAdjDate.Text=_adjCur.AdjustDate.ToShortDateString();
+			textAdjProv.Text=Providers.GetAbbr(_adjCur.ProviderId);
+			textAdjAmt.Text=_adjCur.AdjustAmount.ToString("F");//Adjustment's original amount
 			//Don't include any splits on current payment - Since they could be modified and DB doesn't know about it yet.
-			_adjPrevPaid=Adjustments.GetAmtAllocated(_adjCur.AdjNum,PaySplitCur.PayNum);
+			_adjPrevPaid=Adjustments.GetAmtAllocated(_adjCur.Id,PaySplitCur.PayNum);
 			//ListSplitsCur contains current paysplit, we need to remove it somehow.  PaySplitCur could have SplitNum=0 though.
-			List<PaySplit> listSplits=ListSplitsCur.FindAll(x => x.AdjNum==_adjCur.AdjNum);
+			List<PaySplit> listSplits=ListSplitsCur.FindAll(x => x.AdjNum==_adjCur.Id);
 			if(listSplits.Count>0) {
 				_adjPrevPaid+=listSplits.Sum(x => x.SplitAmt);
 				//There needs to be something here so _adjPrevPaid isn't adjusted by current split amt if the split isn't in listSplits
@@ -426,12 +426,12 @@ namespace OpenDental {
 			groupPatient.Enabled=false;
 			checkPatOtherFam.Enabled=false;
 			//Find the combo option for the adjustment's clinic and provider.  If they don't exist in the list (are hidden) then it will set the text of the combo box instead.
-			comboProvider.SetSelectedProvNum(_adjCur.ProvNum);
+			comboProvider.SetSelectedProvNum(_adjCur.ProviderId);
 			if(PrefC.HasClinicsEnabled) {
-				comboClinic.SelectedClinicNum=_adjCur.ClinicNum;
+				comboClinic.SelectedClinicNum=_adjCur.ClinicId;
 			}
 			//Proc selected will always be for the pat this paysplit was made for
-			listPatient.SelectedIndex=_famCur.ListPats.ToList().FindIndex(x => x.PatNum==_adjCur.PatNum);
+			listPatient.SelectedIndex=_famCur.ListPats.ToList().FindIndex(x => x.PatNum==_adjCur.PatientId);
 			tabProcedure.Enabled=false;//paysplits cannot have both procedure and adjustment
 		}
 
@@ -459,7 +459,7 @@ namespace OpenDental {
 				labelProcRemain.Text=_remainAmt.ToString("c");
 			}
 			else if(_adjCur!=null) {
-				_remainAmt=(decimal)_adjCur.AdjAmt-(decimal)_adjPrevPaid-(decimal)adjPaidHere;
+				_remainAmt=(decimal)_adjCur.AdjustAmount-(decimal)_adjPrevPaid-(decimal)adjPaidHere;
 				labelAdjRemaining.Text=_remainAmt.ToString("c");//How much is remaining
 			}
 		}
@@ -511,14 +511,14 @@ namespace OpenDental {
 
 		private void butAttachAdjust_Click(object sender,EventArgs e) {
 			List<Adjustment> listPatAdjusts=Adjustments.GetAdjustForPats(new List<long>() { PaySplitCur.PatNum });
-			List<PaySplit> listAdjPaySplits=PaySplits.GetForAdjustments(listPatAdjusts.Select(x => x.AdjNum).ToList());
+			List<PaySplit> listAdjPaySplits=PaySplits.GetForAdjustments(listPatAdjusts.Select(x => x.Id).ToList());
 			FormAdjustSelect FormAS=new FormAdjustSelect(PIn.Double(textAmount.Text),PaySplitCur,ListSplitsCur,listPatAdjusts,listAdjPaySplits);
 			if(FormAS.ShowDialog()!=DialogResult.OK) {
 				return;
 			}
 			_adjCur=FormAS.SelectedAdj;
-			PaySplitCur.ProvNum=_adjCur.ProvNum;
-			PaySplitCur.ClinicNum=_adjCur.ClinicNum;
+			PaySplitCur.ProvNum=_adjCur.ProviderId;
+			PaySplitCur.ClinicNum=_adjCur.ClinicId;
 			PaySplitCur.UnearnedType=0;
 			SetEnabledProc();
 			FillProcedure();
@@ -527,7 +527,7 @@ namespace OpenDental {
 
 		private void butDetachAdjust_Click(object sender,EventArgs e) {
 			if(_adjCur!=null) {
-				ListSplitsCur.Where(x => x.AdjNum==_adjCur.AdjNum && x.IsSame(PaySplitCur))
+				ListSplitsCur.Where(x => x.AdjNum==_adjCur.Id && x.IsSame(PaySplitCur))
 					.ForEach(x => x.AdjNum=0);
 			}
 			_adjCur=null;
@@ -708,7 +708,7 @@ namespace OpenDental {
 			PaySplitCur.DatePay=PIn.Date(textDatePay.Text);//gets overwritten anyway
 			PaySplitCur.SplitAmt=amount;
 			PaySplitCur.ProcNum=ProcCur == null ? 0 : ProcCur.ProcNum;
-			PaySplitCur.AdjNum=_adjCur == null ? 0 : _adjCur.AdjNum;
+			PaySplitCur.AdjNum=_adjCur == null ? 0 : _adjCur.Id;
 			if(IsNew) {
 				string secLogText="Paysplit created";
 				if(_isEditAnyway) {

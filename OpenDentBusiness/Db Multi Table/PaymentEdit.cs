@@ -723,7 +723,7 @@ namespace OpenDentBusiness {
 				#region Adjustment
 				foreach(AccountEntry adjEntry in listAdjEntries) {
 					List<PaySplit> listAdjSplits=listPatProvClinicSplits.FindAll(x => !x.SplitAmt.IsZero()
-						&& (x.AdjNum==adjEntry.AdjNum || (x.ProcNum!=0 && x.ProcNum==((Adjustment)adjEntry.Tag).ProcNum))
+						&& (x.AdjNum==adjEntry.AdjNum || (x.ProcNum!=0 && x.ProcNum==((Adjustment)adjEntry.Tag).ProcedureId))
 						&& x.PayPlanNum==0);
 					foreach(PaySplit adjSplit in listAdjSplits) {
 						decimal splitAmt=(decimal)adjSplit.SplitAmt;//Overpayment on procedures is handled later
@@ -826,7 +826,7 @@ namespace OpenDentBusiness {
 					if(charge.GetType()==typeof(Procedure)) {
 						split.ProcNum=charge.PriKey;
 					}
-					else if(charge.GetType()==typeof(Adjustment) && ((Adjustment)charge.Tag).ProcNum==0) {
+					else if(charge.GetType()==typeof(Adjustment) && ((Adjustment)charge.Tag).ProcedureId==0) {
 						//should already be verified to have no procedure and positive amount
 						split.AdjNum=charge.PriKey;
 					}
@@ -2402,7 +2402,7 @@ namespace OpenDentBusiness {
 				fSplitNum=0;
 			}
 			else if(accountEntry.GetType()==typeof(Adjustment)) {
-				adjNum=((Adjustment)accountEntry.Tag).AdjNum;
+				adjNum=((Adjustment)accountEntry.Tag).Id;
 				fSplitNum=0;
 			}
 			return CreateUnearnedTransfer(accountEntry.AmountEnd,accountEntry.PatNum,accountEntry.ProvNum,accountEntry.ClinicNum,ref incomeTransferData,

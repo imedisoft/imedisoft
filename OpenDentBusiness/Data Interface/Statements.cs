@@ -263,7 +263,7 @@ namespace OpenDentBusiness
 				string logMsg = "Mismatched PatNums detected between current patient and current statement:" + "\r\n"
 					+ "Statement PatNum:" + " " + stmt.PatNum + " " + "(assumed correct)" + "\r\n"
 					+ "Patient PatNum:" + " " + pat.PatNum + " " + "(possibly incorrect)";
-				SecurityLogs.MakeLogEntry(Permissions.StatementPatNumMismatch, stmt.PatNum, logMsg, LogSources.Diagnostic);
+				SecurityLogs.MakeLogEntry(Permissions.StatementPatNumMismatch, stmt.PatNum, logMsg, SecurityLogSource.Diagnostic);
 			}
 			//No need to check RemotingRole; no call to db.
 			EmailMessage message = new EmailMessage();
@@ -300,7 +300,7 @@ namespace OpenDentBusiness
 				string logMsg = "Mismatched PatNums detected between current patient and current statement:" + "\r\n"
 					+ "Statement PatNum:" + " " + stmt.PatNum + " " + "(assumed correct)" + "\r\n"
 					+ "Patient PatNum:" + " " + pat.PatNum + " " + "(possibly incorrect)";
-				SecurityLogs.MakeLogEntry(Permissions.StatementPatNumMismatch, stmt.PatNum, logMsg, LogSources.Diagnostic);
+				SecurityLogs.MakeLogEntry(Permissions.StatementPatNumMismatch, stmt.PatNum, logMsg, SecurityLogSource.Diagnostic);
 			}
 			EmailMessage message = new EmailMessage();
 			message.PatNum = pat.PatNum;

@@ -2432,7 +2432,7 @@ namespace OpenDental{
 			}
 			FormDiscountPlans FormDP=new FormDiscountPlans();
 			if(PatCur.DiscountPlanNum!=0) {
-				FormDP.SelectedPlan=DiscountPlans.GetPlan(PatCur.DiscountPlanNum);
+				//FormDP.SelectedPlan=DiscountPlans.GetPlan(PatCur.DiscountPlanNum);
 			}
 			FormDP.IsSelectionMode=true;
 			if(FormDP.ShowDialog()==DialogResult.OK) {

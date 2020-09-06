@@ -74,7 +74,7 @@ namespace OpenDental {
 			checkAllResults.Checked=false;
 			textObsValue.Text="";
 			//Set Microbiology results
-			textSnomed.Text=FormS.SelectedSnomed.SnomedCode;
+			textSnomed.Text=FormS.SelectedSnomed.Code;
 			textSnomedDescription.Text=FormS.SelectedSnomed.Description;
 
 		}

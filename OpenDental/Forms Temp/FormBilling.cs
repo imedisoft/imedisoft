@@ -19,6 +19,7 @@ using System.Threading;
 using MySql.Data.MySqlClient;
 using OpenDental.Thinfinity;
 using OpenDentBusiness.IO;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>

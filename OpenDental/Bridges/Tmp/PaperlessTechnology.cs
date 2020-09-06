@@ -390,8 +390,8 @@ namespace OpenDental.Bridges
 					return;
 				}
 				fieldNames = lines[0].Split(',');
-				long diseaseDefNum;
-				Disease disease;
+				long? diseaseDefNum;
+				Problem disease;
 				string diseaseNote;
 				for (int i = 1; i < lines.Length; i++)
 				{
@@ -403,33 +403,36 @@ namespace OpenDental.Bridges
 						continue;
 					}
 
-					diseaseDefNum = DiseaseDefs.GetNumFromName(txt);
-					if (diseaseDefNum == 0)
+					diseaseDefNum = ProblemDefinitions.GetNumFromName(txt);
+					if (!diseaseDefNum.HasValue)
 					{
 						note += "Disease: " + txt + ", " + diseaseNote + "\r\n";
 					}
-
-					disease = Diseases.GetSpecificDiseaseForPatient(patNum, diseaseDefNum);
-					if (disease == null)
-					{
-                        disease = new Disease
-                        {
-                            DiseaseDefNum = diseaseDefNum,
-                            PatNum = patNum,
-                            PatNote = diseaseNote
-                        };
-                        Diseases.Insert(disease);
-					}
 					else
 					{
-						if (txt != "")
+
+						disease = Problems.GetSpecificDiseaseForPatient(patNum, diseaseDefNum.Value);
+						if (disease == null)
 						{
-							if (disease.PatNote != "")
+							disease = new Problem
 							{
-								disease.PatNote += "  ";
+								ProblemDefId = diseaseDefNum.Value,
+								PatientId = patNum,
+								PatientNote = diseaseNote
+							};
+							Problems.Insert(disease);
+						}
+						else
+						{
+							if (txt != "")
+							{
+								if (disease.PatientNote != "")
+								{
+									disease.PatientNote += "  ";
+								}
+								disease.PatientNote += diseaseNote;
+								Problems.Update(disease);
 							}
-							disease.PatNote += diseaseNote;
-							Diseases.Update(disease);
 						}
 					}
 				}

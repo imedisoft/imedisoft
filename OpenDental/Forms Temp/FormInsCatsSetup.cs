@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using OpenDental.UI;
 using OpenDentBusiness;
 using System.Collections.Generic;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	///<summary></summary>
@@ -258,7 +259,7 @@ namespace OpenDental {
 			if(gridMain.ListGridRows[e.Row].Tag.GetType()==typeof(CovCat)){
 				isCat=true;
 				selectedKey=((CovCat)gridMain.ListGridRows[e.Row].Tag).CovCatNum;
-				FormInsCatEdit FormE=new FormInsCatEdit((CovCat)gridMain.ListGridRows[e.Row].Tag);
+				FormInsuranceCategoryEdit FormE=new FormInsuranceCategoryEdit((CovCat)gridMain.ListGridRows[e.Row].Tag);
 				FormE.ShowDialog();
 				if(FormE.DialogResult!=DialogResult.OK) {
 					return;
@@ -353,8 +354,7 @@ namespace OpenDental {
 			CovCat covcat=new CovCat();
 			covcat.CovOrder=(byte)_listCovCats.Count;
 			covcat.DefaultPercent=-1;
-			FormInsCatEdit FormE=new FormInsCatEdit(covcat);
-			FormE.IsNew=true;
+			FormInsuranceCategoryEdit FormE=new FormInsuranceCategoryEdit(covcat);
 			FormE.ShowDialog();
 			if(FormE.DialogResult==DialogResult.OK){
 				changed=true;

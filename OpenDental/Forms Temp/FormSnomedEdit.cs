@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -23,7 +24,7 @@ namespace OpenDental {
 			//if(!IsNew) {
 			//	textCode.Enabled=false;
 			//}
-			textCode.Text=SnomedCur.SnomedCode;
+			textCode.Text=SnomedCur.Code;
 			textDescription.Text=SnomedCur.Description;
 		}
 /*

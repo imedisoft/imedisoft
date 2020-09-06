@@ -1,3 +1,5 @@
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -2162,7 +2164,7 @@ namespace OpenDentBusiness
 			if (Crud.PatientCrud.UpdateComparison(patDb, patDbOld))
 			{
 				Patients.Update(patDb, patDbOld);
-				SecurityLogs.MakeLogEntry(Permissions.PatientEdit, patDb.PatNum, "Demographics edited from Import Ins Plans 834.", LogSources.InsPlanImport834);
+				SecurityLogs.MakeLogEntry(Permissions.PatientEdit, patDb.PatNum, "Demographics edited from Import Ins Plans 834.", SecurityLogSource.InsPlanImport834);
 			}
 			return patDb;
 		}

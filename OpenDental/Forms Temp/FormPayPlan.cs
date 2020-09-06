@@ -2143,17 +2143,17 @@ namespace OpenDental{
 			if(inputBox.checkBoxResult.Checked) {//Make adjustment visible in account module.
 				//set the information here, insert to the db upon saving
 				Adjustment adj=new Adjustment();
-				adj.AdjAmt=negAdjAmt; 
-				adj.DateEntry=DateTime.Now.Date;
-				adj.AdjDate=DateTime.Now.Date;
-				adj.PatNum=PatCur.PatNum;
-				adj.ProvNum=comboProv.GetSelectedProvNum();
-				adj.AdjNote="Payment plan adjustment";
-				adj.SecUserNumEntry=Security.CurrentUser.Id;
-				adj.SecDateTEdit=DateTime.Now;
-				adj.ClinicNum=comboClinic.SelectedClinicNum;
+				adj.AdjustAmount=negAdjAmt; 
+				adj.AddedDate=DateTime.Now.Date;
+				adj.AdjustDate=DateTime.Now.Date;
+				adj.PatientId=PatCur.PatNum;
+				adj.ProviderId=comboProv.GetSelectedProvNum();
+				adj.Note="Payment plan adjustment";
+				adj.AddedByUserId=Security.CurrentUser.Id;
+				adj.LastModifiedDate=DateTime.Now;
+				adj.ClinicId=comboClinic.SelectedClinicNum;
 				if(Definitions.GetDef(DefinitionCategory.AdjTypes,Prefs.GetLong(PrefName.PayPlanAdjType))!=null) {
-					adj.AdjType=Definitions.GetDef(DefinitionCategory.AdjTypes,Prefs.GetLong(PrefName.PayPlanAdjType)).Id;
+					adj.Type=Definitions.GetDef(DefinitionCategory.AdjTypes,Prefs.GetLong(PrefName.PayPlanAdjType)).Id;
 				}
 				_listAdjustments.Add(adj);
 			}
@@ -2217,7 +2217,7 @@ namespace OpenDental{
 					Adjustments.Insert(adj);
 					TsiTransLogs.CheckAndInsertLogsIfAdjTypeExcluded(adj);
 					SecurityLogs.MakeLogEntry(Permissions.AdjustmentCreate,PatCur.PatNum,"Adjustment created from payment plan for"+" "
-						+PatCur.GetNameFL()+", "+adj.AdjAmt.ToString("c"));
+						+PatCur.GetNameFL()+", "+adj.AdjustAmount.ToString("c"));
 				}				
 			}
 			if(PayPlans.GetOne(_payPlanCur.PayPlanNum)==null) {

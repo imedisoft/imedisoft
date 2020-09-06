@@ -9,7 +9,7 @@ namespace Imedisoft.Forms
 {
     public partial class FormFeatureRequest : FormBase
 	{
-		private List<FeatureRequestDto> featureRequests;
+		private readonly List<FeatureRequestDto> featureRequests;
 		private List<FeatureRequestDto> featureRequestsFiltered;
 
 		public FormFeatureRequest() => InitializeComponent();

@@ -6,7 +6,7 @@ namespace OpenDental.UI
 	{
 		public void Add(string value)
 		{
-			Add(new GridCell(value));
+			Add(new GridCell(value ?? ""));
 		}
 	}
 }

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDentBusiness.HL7 {
@@ -208,7 +210,7 @@ namespace OpenDentBusiness.HL7 {
 						codeSystemAbbrev="SCT";
 					}
 					else if(obs.ValCodeSystem.Trim().ToUpper()=="ICD9") {
-						ICD9 icd9Val=ICD9s.GetByCode(obs.ValReported);
+						Icd9 icd9Val=Icd9s.GetByCode(obs.ValReported);
 						codeDescript=icd9Val.Description;
 						codeSystemAbbrev="I9";
 					}
@@ -576,19 +578,19 @@ namespace OpenDentBusiness.HL7 {
 					else if(obs.ValCodeSystem.Trim().ToUpper()=="SNOMEDCT") {
 						Snomed snomedVal=Snomeds.GetByCode(obs.ValReported);
 						if(snomedVal==null) {
-							WriteError(sb,"Snomed code not found '"+snomedVal.SnomedCode+"'.  Please add by going to Setup | Chart | EHR.");
+							WriteError(sb,"Snomed code not found '"+snomedVal.Code+"'.  Please add by going to Setup | Chart | EHR.");
 						}
 					}
 					else if(obs.ValCodeSystem.Trim().ToUpper()=="ICD9") {
-						ICD9 icd9Val=ICD9s.GetByCode(obs.ValReported);
+						Icd9 icd9Val=Icd9s.GetByCode(obs.ValReported);
 						if(icd9Val==null) {
-							WriteError(sb,"ICD9 code not found '"+icd9Val.ICD9Code+"'.  Please add by going to Setup | Chart | EHR.");
+							WriteError(sb,"ICD9 code not found '"+icd9Val.Code+"'.  Please add by going to Setup | Chart | EHR.");
 						}
 					}
 					else if(obs.ValCodeSystem.Trim().ToUpper()=="ICD10") {
 						Icd10 icd10Val=Icd10s.GetByCode(obs.ValReported);
 						if(icd10Val==null) {
-							WriteError(sb,"ICD10 code not found '"+icd10Val.Icd10Code+"'.  Please add by going to Setup | Chart | EHR.");
+							WriteError(sb,"ICD10 code not found '"+icd10Val.Code+"'.  Please add by going to Setup | Chart | EHR.");
 						}
 					}
 				}

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using CodeBase;
 using Imedisoft.Data;
 using Imedisoft.Data.Models;
@@ -400,11 +401,11 @@ namespace OpenDentBusiness.HL7 {
 			if(_isNewPat) {
 				if(pat.PatNum==0) {//Only eCWTight or eCWFull internal types will allow the HL7 message to dictate our PatNums.
 					pat.PatNum=Patients.Insert(pat,false);
-					SecurityLogs.MakeLogEntry(Permissions.PatientCreate,pat.PatNum,"Created from HL7.",LogSources.HL7);
+					SecurityLogs.MakeLogEntry(Permissions.PatientCreate,pat.PatNum,"Created from HL7.",SecurityLogSource.HL7);
 				}
 				else {
 					pat.PatNum=Patients.Insert(pat,true);
-					SecurityLogs.MakeLogEntry(Permissions.PatientCreate,pat.PatNum,"Created from HL7.",LogSources.HL7);
+					SecurityLogs.MakeLogEntry(Permissions.PatientCreate,pat.PatNum,"Created from HL7.",SecurityLogSource.HL7);
 				}
 				if(_isVerboseLogging) {
 					EventLog.WriteEntry("OpenDentHL7","Inserted patient with PatNum="+pat.PatNum,EventLogEntryType.Information);
@@ -665,7 +666,7 @@ namespace OpenDentBusiness.HL7 {
 				SecurityLogs.MakeLogEntry(Permissions.ApptConfirmStatusEdit,apt.PatNum,
 					"Appointment confirmation status automatically changed from"+" "
 					+Definitions.GetName(DefinitionCategory.ApptConfirmed,aptOld.Confirmed)+" "+"to"+" "+Definitions.GetName(DefinitionCategory.ApptConfirmed,apt.Confirmed)
-					+" "+"due to an indound HL7 message"+".",apt.AptNum,LogSources.HL7,aptOld.DateTStamp);
+					+" "+"due to an indound HL7 message"+".",apt.AptNum,SecurityLogSource.HL7,aptOld.DateTStamp);
 			}
 			_aptProcessed=apt;
 			if(_isVerboseLogging) {
@@ -715,7 +716,7 @@ namespace OpenDentBusiness.HL7 {
 				SecurityLogs.MakeLogEntry(Permissions.ApptConfirmStatusEdit,apt.PatNum,
 					"Appointment confirmation status automatically changed from"+" "
 					+Definitions.GetName(DefinitionCategory.ApptConfirmed,aptOld.Confirmed)+" "+"to"+" "+Definitions.GetName(DefinitionCategory.ApptConfirmed,apt.Confirmed)
-					+" "+"due to an indound HL7 message"+".",apt.AptNum,LogSources.HL7,aptOld.DateTStamp);
+					+" "+"due to an indound HL7 message"+".",apt.AptNum,SecurityLogSource.HL7,aptOld.DateTStamp);
 			}
 			_aptProcessed=apt;
 			if(_isVerboseLogging) {
@@ -1201,13 +1202,13 @@ namespace OpenDentBusiness.HL7 {
 				if(guar.PatNum==0) {
 					guarOld=guar.Copy();
 					guar.PatNum=Patients.Insert(guar,false);
-					SecurityLogs.MakeLogEntry(Permissions.PatientCreate,guar.PatNum,"Created from HL7.",LogSources.HL7);
+					SecurityLogs.MakeLogEntry(Permissions.PatientCreate,guar.PatNum,"Created from HL7.",SecurityLogSource.HL7);
 					guar.Guarantor=guar.PatNum;
 					Patients.Update(guar,guarOld);
 				}
 				else {
 					guar.PatNum=Patients.Insert(guar,true);
-					SecurityLogs.MakeLogEntry(Permissions.PatientCreate,guar.PatNum,"Created from HL7.",LogSources.HL7);
+					SecurityLogs.MakeLogEntry(Permissions.PatientCreate,guar.PatNum,"Created from HL7.",SecurityLogSource.HL7);
 				}
 				if(_isVerboseLogging) {
 					EventLog.WriteEntry("OpenDentHL7","Inserted patient "+guar.GetNameFLnoPref()+" when processing a GT1 segment.",EventLogEntryType.Information);
@@ -1860,7 +1861,7 @@ namespace OpenDentBusiness.HL7 {
 					logText+="Teeth"+": "+procCur.ToothNum+", ";
 				}
 				logText+="Fee"+": "+procCur.ProcFee.ToString("F")+", "+procCode.Descript;
-				SecurityLogs.MakeLogEntry(Permissions.ProcComplCreate,procCur.PatNum,logText,LogSources.HL7);
+				SecurityLogs.MakeLogEntry(Permissions.ProcComplCreate,procCur.PatNum,logText,SecurityLogSource.HL7);
 			}
 			if(procStatus.In(ProcStat.C,ProcStat.EC,ProcStat.EO) && procCode.PaintType==ToothPaintingType.Extraction) {
 				ToothInitials.SetValue(procCur.PatNum,procCur.ToothNum,ToothInitialType.Missing);
@@ -1920,10 +1921,10 @@ namespace OpenDentBusiness.HL7 {
 				EventLog.WriteEntry("OpenDentHL7","The PRB segment was not processed.  The action codes supported are 'AD' for add or 'UP' for update.",EventLogEntryType.Information);
 				return;
 			}
-			long probDefNum=DiseaseDefs.GetNumFromSnomed(PIn.String(seg.GetFieldComponent(probCodeOrder,0)));
+			long? probDefNum=ProblemDefinitions.GetNumFromSnomed(PIn.String(seg.GetFieldComponent(probCodeOrder,0)));
 			//The problem must be a SNOMEDCT code, identified by the coding system table 0396 value "SNM" in component 3 of the CWE problem code field
 			//There must be a disease def setup with the SNOMEDCT code in the problem list or we will ignore this problem
-			if(seg.GetFieldComponent(probCodeOrder,2).ToLower()!="snm" || probDefNum==0) {
+			if(seg.GetFieldComponent(probCodeOrder,2).ToLower()!="snm" || !probDefNum.HasValue) {
 				EventLog.WriteEntry("OpenDentHL7","The PRB segment was not processed.  "
 					+"The code is not attached to an existing problem definition or is not a SNOMEDCT code.",EventLogEntryType.Information);
 				return;
@@ -1947,13 +1948,13 @@ namespace OpenDentBusiness.HL7 {
 			if(probOidExt!=null) {//exists in oidexternal table and is of type Problem, so IDInternal is a DiseaseNum
 				diseaseNum=probOidExt.IDInternal;					
 			}
-			Disease probCur=new Disease();
-			probCur.DiseaseNum=diseaseNum;//probNum could be 0 if new
+			Problem probCur=new Problem();
+			probCur.Id=diseaseNum;//probNum could be 0 if new
 			//The problem referenced by the external root and ID is already linked in the oidexternal table, get the problem to update
 			//Also make sure the problem linked by oidexternal table is for the patient identified in the PID segment
 			if(diseaseNum!=0) {
-				probCur=Diseases.GetOne(diseaseNum);
-				if(probCur==null || probCur.PatNum!=pat.PatNum) {//should never be null if in the oidexternal table
+				probCur=Problems.GetOne(diseaseNum);
+				if(probCur==null || probCur.PatientId!=pat.PatNum) {//should never be null if in the oidexternal table
 					EventLog.WriteEntry("OpenDentHL7","The PRB segment was not processed.  "
 						+"The problem referenced and the patient in the PID segment do not match.",EventLogEntryType.Information);
 					return;
@@ -1970,45 +1971,45 @@ namespace OpenDentBusiness.HL7 {
 			//The patient may already have an active problem with this DiseaseDefNum, but it is not referenced by this problem GUID
 			//Mark the existing problem inactive and add a new one with StartDate of today
 			//Add an entry in the oidexternal table that will point the problem GUID to this new problem.
-			List<Disease> listProbsForPat=Diseases.GetDiseasesForPatient(pat.PatNum,probDefNum,true);
+			List<Problem> listProbsForPat=Problems.GetByPatient(pat.PatNum,probDefNum.Value,true).ToList();
 			int markedInactiveCount=0;
 			for(int p=0;p<listProbsForPat.Count;p++) {
-				if(listProbsForPat[p].DiseaseNum==diseaseNum) {//probNum may be 0 if there was not an existing problem referenced by the GUID in the message
+				if(listProbsForPat[p].Id==diseaseNum) {//probNum may be 0 if there was not an existing problem referenced by the GUID in the message
 					continue;
 				}
-				listProbsForPat[p].ProbStatus=ProblemStatus.Inactive;
-				Diseases.Update(listProbsForPat[p]);
+				listProbsForPat[p].Status=ProblemStatus.Inactive;
+				Problems.Update(listProbsForPat[p]);
 				markedInactiveCount++;
 			}
 			if(_isVerboseLogging && markedInactiveCount>0) {
 				EventLog.WriteEntry("OpenDentHL7","Updated "+markedInactiveCount.ToString()+" problems to a status of inactive due to an incoming PRB segment.",EventLogEntryType.Information);
 			}
-			Disease probOld=probCur.Copy();
-			probCur.PatNum=pat.PatNum;
-			probCur.DiseaseDefNum=probDefNum;
-			probCur.ProbStatus=ProblemStatus.Active;
+			Problem probOld=probCur.Copy();
+			probCur.PatientId=pat.PatNum;
+			probCur.ProblemDefId=probDefNum.Value;
+			probCur.Status=ProblemStatus.Active;
 			probCur.DateStart=dateProbStart;//could be '0001-01-01' if not present or not the correct format, handled by FieldParser.DateTimeParse
 			probCur.DateStop=dateProbStop;//could be '0001-01-01' if not present or not the correct format, handled by FieldParser.DateTimeParse
-			if(probCur.DiseaseNum==0) {//new problem
+			if(probCur.Id==0) {//new problem
 				//insert new problem
-				probCur.DiseaseNum=Diseases.Insert(probCur);
+				probCur.Id=Problems.Insert(probCur);
 				if(_isVerboseLogging) {
 					EventLog.WriteEntry("OpenDentHL7","Inserted a new problem for patient "+pat.GetNameFLnoPref()+" due to an incoming PRB segment.",EventLogEntryType.Information);
 				}
 				//using DiseaseNum from newly inserted problem, link to the external GUID and root in the oidexternals table
 				probOidExt=new OIDExternal();
 				probOidExt.IDType=IdentifierType.Problem;
-				probOidExt.IDInternal=probCur.DiseaseNum;
+				probOidExt.IDInternal=probCur.Id;
 				probOidExt.IDExternal=probIdExternal;
 				probOidExt.rootExternal=probRootExternal;
 				OIDExternals.Insert(probOidExt);
 				if(_isVerboseLogging) {
 					EventLog.WriteEntry("OpenDentHL7","Added an external problem ID to the oidexternals table due to an incoming PRB segment.\r\nDiseaesNum: "
-						+probCur.DiseaseNum.ToString()+", External problem ID: "+probOidExt.IDExternal+", External root: "+probOidExt.rootExternal+".",EventLogEntryType.Information);
+						+probCur.Id.ToString()+", External problem ID: "+probOidExt.IDExternal+", External root: "+probOidExt.rootExternal+".",EventLogEntryType.Information);
 				}
 			}
 			else {//the segment is for an existing problem, update fields if necessary
-				Diseases.Update(probCur,probOld);
+				Problems.Update(probCur);
 				if(_isVerboseLogging) {
 					EventLog.WriteEntry("OpenDentHL7","Updated an existing problem for patient "+pat.GetNameFLnoPref()+" due to an incoming PRB segment.",EventLogEntryType.Information);
 				}

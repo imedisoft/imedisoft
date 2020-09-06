@@ -10,6 +10,9 @@ using OpenDentBusiness;
 using System.Linq;
 using System.Text;
 using CodeBase;
+using Imedisoft.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -24,7 +27,7 @@ namespace OpenDental{
 		///<summary>In-memory-only ODgrid used for printing.</summary>
 		private OpenDental.UI.ODGrid gridMedsPrint;
 		private OpenDental.UI.ODGrid gridDiseases;
-		private List<Disease> DiseaseList;
+		private List<Problem> DiseaseList;
 		private CheckBox checkDiscontinued;
 		private ODGrid gridAllergies;
 		private UI.Button butAddAllergy;
@@ -1490,7 +1493,7 @@ namespace OpenDental{
 				row=new GridRow();
 				row.Cells.Add(ListFamHealth[i].Relationship.ToString());
 				row.Cells.Add(ListFamHealth[i].PersonName);
-				row.Cells.Add(DiseaseDefs.GetName(ListFamHealth[i].DiseaseDefNum));
+				row.Cells.Add(ProblemDefinitions.GetName(ListFamHealth[i].DiseaseDefNum));
 				gridFamilyHealth.ListGridRows.Add(row);
 			}
 			gridFamilyHealth.EndUpdate();
@@ -1519,7 +1522,7 @@ namespace OpenDental{
 
 		#region Problems Tab
 		private void FillProblems(){
-			DiseaseList=Diseases.Refresh(checkShowInactiveProblems.Checked,PatCur.PatNum);
+			DiseaseList=Problems.Refresh(checkShowInactiveProblems.Checked,PatCur.PatNum).ToList();
 			gridDiseases.BeginUpdate();
 			gridDiseases.ListGridColumns.Clear();
 			GridColumn col;
@@ -1541,14 +1544,14 @@ namespace OpenDental{
 				if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowInfobutton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
 					row.Cells.Add("0");//index of infobutton
 				}
-				if(DiseaseList[i].DiseaseDefNum!=0) {
-					row.Cells.Add(DiseaseDefs.GetName(DiseaseList[i].DiseaseDefNum));
+				if(DiseaseList[i].ProblemDefId!=0) {
+					row.Cells.Add(ProblemDefinitions.GetName(DiseaseList[i].ProblemDefId));
 				}
 				else {
-					row.Cells.Add(DiseaseDefs.GetName(DiseaseList[i].DiseaseDefNum));
+					row.Cells.Add(ProblemDefinitions.GetName(DiseaseList[i].ProblemDefId));
 				}
-				row.Cells.Add(DiseaseList[i].PatNote);
-				row.Cells.Add(DiseaseList[i].ProbStatus.ToString());
+				row.Cells.Add(DiseaseList[i].PatientNote);
+				row.Cells.Add(DiseaseList[i].Status.ToString());
 				gridDiseases.ListGridRows.Add(row);
 			}
 			gridDiseases.EndUpdate();
@@ -1556,31 +1559,29 @@ namespace OpenDental{
 
 		private void butAddProblem_Click(object sender,EventArgs e) {
 			//get the list of disease def nums that should be highlighted in FormDiseaseDefs.
-			List<long> listDiseaseDefNums=DiseaseList.Where(x => x.ProbStatus == ProblemStatus.Active).ToList().Select(x => x.DiseaseDefNum).ToList();
-			FormDiseaseDefs FormDD=new FormDiseaseDefs(listDiseaseDefNums);
+			List<long> listDiseaseDefNums=DiseaseList.Where(x => x.Status == ProblemStatus.Active).ToList().Select(x => x.ProblemDefId).ToList();
+			FormProblemDefinitions FormDD=new FormProblemDefinitions(listDiseaseDefNums);
 			FormDD.IsSelectionMode=true;
 			FormDD.IsMultiSelect=true;
-			FormDD.ListSelectedDiseaseDefs=new List<DiseaseDef>();
-
 			FormDD.ShowDialog();
 			if(FormDD.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			for(int i=0;i<FormDD.ListSelectedDiseaseDefs.Count;i++) {
-				Disease disease=new Disease();
-				disease.PatNum=PatCur.PatNum;
-				disease.DiseaseDefNum=FormDD.ListSelectedDiseaseDefs[i].DiseaseDefNum;
-				Diseases.Insert(disease);
+			for(int i=0;i<FormDD.SelectedProblemDefinitions.Count;i++) {
+				Problem disease=new Problem();
+				disease.PatientId=PatCur.PatNum;
+				disease.ProblemDefId=FormDD.SelectedProblemDefinitions[i].Id;
+				Problems.Insert(disease);
 				if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurrentUser.Id).ProblemCDS){
 					FormCDSIntervention FormCDSI=new FormCDSIntervention();
-					FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(FormDD.ListSelectedDiseaseDefs[i],PatCur);
+					FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(FormDD.SelectedProblemDefinitions[i],PatCur);
 					FormCDSI.ShowIfRequired();
 					if(FormCDSI.DialogResult==DialogResult.Abort) {
-						Diseases.Delete(disease);
+						Problems.Delete(disease);
 						continue;//cancel 
 					}
 				}
-				SecurityLogs.MakeLogEntry(Permissions.PatProblemListEdit,PatCur.PatNum,FormDD.ListSelectedDiseaseDefs[i].DiseaseName+" added"); //Audit log made outside form because the form is just a list of problems and is called from many places.
+				SecurityLogs.MakeLogEntry(Permissions.PatProblemListEdit,PatCur.PatNum,FormDD.SelectedProblemDefinitions[i].Description+" added"); //Audit log made outside form because the form is just a list of problems and is called from many places.
 			}
 			FillProblems();
 		}
@@ -1606,7 +1607,7 @@ namespace OpenDental{
 			if(e.Col!=0) {
 				return;
 			}
-			List<KnowledgeRequest> listKnowledgeRequests=EhrTriggers.ConvertToKnowledgeRequests(DiseaseDefs.GetItem(DiseaseList[e.Row].DiseaseDefNum));
+			List<KnowledgeRequest> listKnowledgeRequests=EhrTriggers.ConvertToKnowledgeRequests(ProblemDefinitions.GetItem(DiseaseList[e.Row].ProblemDefId));
 			FormInfobutton FormIB=new FormInfobutton(listKnowledgeRequests);
 			FormIB.PatCur=PatCur;
 			FormIB.ShowDialog();
@@ -1614,7 +1615,7 @@ namespace OpenDental{
 		}
 
 		private void gridDiseases_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			if(DiseaseDefs.GetItem(DiseaseList[e.Row].DiseaseDefNum)==null) {
+			if(ProblemDefinitions.GetItem(DiseaseList[e.Row].ProblemDefId)==null) {
 				MessageBox.Show("Invalid disease.  Please run database maintenance method"+" "
 					+nameof(DatabaseMaintenances.DiseaseWithInvalidDiseaseDef));
 				return;
@@ -1626,7 +1627,7 @@ namespace OpenDental{
 				&& CDSPermissions.GetForUser(Security.CurrentUser.Id).ProblemCDS) 
 			{
 				FormCDSIntervention FormCDSI=new FormCDSIntervention();
-				FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(DiseaseDefs.GetItem(DiseaseList[e.Row].DiseaseDefNum),PatCur);
+				FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(ProblemDefinitions.GetItem(DiseaseList[e.Row].ProblemDefId),PatCur);
 				FormCDSI.ShowIfRequired(false);
 			}
 			FillProblems();
@@ -1905,7 +1906,7 @@ namespace OpenDental{
 				if(sCur==null) {//don't add invalid SNOMEDCT codes
 					continue;
 				}
-				_listCustomTobaccoCodes.Add(new EhrCode { CodeValue=sCur.SnomedCode,Description=sCur.Description });
+				_listCustomTobaccoCodes.Add(new EhrCode { CodeValue=sCur.Code,Description=sCur.Description });
 			}
 			_listCustomTobaccoCodes=_listCustomTobaccoCodes.OrderBy(x => x.Description).ToList();
 			//list will contain all of the tobacco status EhrCodes currently in comboTobaccoStatus
@@ -2108,8 +2109,8 @@ namespace OpenDental{
 				comboTobaccoStatus.SelectedIndex=-1;
 				return;
 			}
-			if(!_listTobaccoStatuses.Any(x => x.CodeValue==FormS.SelectedSnomed.SnomedCode)) {
-				_listCustomTobaccoCodes.Add(new EhrCode() { CodeValue=FormS.SelectedSnomed.SnomedCode,Description=FormS.SelectedSnomed.Description });
+			if(!_listTobaccoStatuses.Any(x => x.CodeValue==FormS.SelectedSnomed.Code)) {
+				_listCustomTobaccoCodes.Add(new EhrCode() { CodeValue=FormS.SelectedSnomed.Code,Description=FormS.SelectedSnomed.Description });
 				_listCustomTobaccoCodes=_listCustomTobaccoCodes.OrderBy(x => x.Description).ToList();
 				radioTobaccoStatuses_CheckedChanged(new[] { radioUserStatuses,radioNonUserStatuses }.Where(x => x.Checked)
 					.DefaultIfEmpty(radioAllStatuses).FirstOrDefault()
@@ -2119,7 +2120,7 @@ namespace OpenDental{
 			comboTobaccoStatus.Items.Clear();
 			comboTobaccoStatus.Items.AddRange(_listTobaccoStatuses.Select(x => x.Description).ToArray());
 			comboTobaccoStatus.Items.Add("Choose from all SNOMED CT codes"+"...");
-			comboTobaccoStatus.SelectedIndex=_listTobaccoStatuses.FindIndex(x => x.CodeValue==FormS.SelectedSnomed.SnomedCode);//add 1 for ...choose from
+			comboTobaccoStatus.SelectedIndex=_listTobaccoStatuses.FindIndex(x => x.CodeValue==FormS.SelectedSnomed.Code);//add 1 for ...choose from
 		}
 
 		private void comboInterventionCode_SelectionChangeCommitted(object sender,EventArgs e) {

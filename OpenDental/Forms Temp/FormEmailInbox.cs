@@ -11,6 +11,7 @@ using System.Linq;
 using OpenDental.UI;
 using OpenDentBusiness.IO;
 using Imedisoft.Forms;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormEmailInbox:ODForm {

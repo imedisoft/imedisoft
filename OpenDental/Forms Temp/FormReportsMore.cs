@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DataConnectionBase;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	/// <summary>

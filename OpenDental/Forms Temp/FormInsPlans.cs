@@ -12,6 +12,7 @@ using System.Globalization;
 using System.Windows.Forms;
 using OpenDental.UI;
 using OpenDentBusiness;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>

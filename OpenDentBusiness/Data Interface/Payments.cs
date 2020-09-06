@@ -259,7 +259,7 @@ namespace OpenDentBusiness{
 				SplitAmt=amount,
 			});
 			SecurityLogs.MakeLogEntry(Permissions.PaymentCreate,patNum,"XWeb payment by"+" "
-				+OpenDentBusiness.Patients.GetLim(patNum).GetNameLF()+", "+amount.ToString("c"),LogSources.PatientPortal);
+				+OpenDentBusiness.Patients.GetLim(patNum).GetNameLF()+", "+amount.ToString("c"),SecurityLogSource.PatientPortal);
 			return ret;
 		}
 
@@ -288,7 +288,7 @@ namespace OpenDentBusiness{
 				SplitAmt=amount,
 			});
 			SecurityLogs.MakeLogEntry(Permissions.PaymentCreate,patNum,"PayConnect payment by"+" "
-				+OpenDentBusiness.Patients.GetLim(patNum).GetNameLF()+", "+amount.ToString("c"),LogSources.PatientPortal);
+				+OpenDentBusiness.Patients.GetLim(patNum).GetNameLF()+", "+amount.ToString("c"),SecurityLogSource.PatientPortal);
 			return ret;
 		}
 		#endregion

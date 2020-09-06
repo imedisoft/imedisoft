@@ -5,6 +5,8 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 using OpenDentBusiness.HL7;
 
@@ -47,7 +49,7 @@ namespace OpenDental {
 						row.Cells.Add(snomedValue.Description);//2 Value
 					}
 					else if(obs.ValCodeSystem=="ICD9") {
-						ICD9 icd9Value=ICD9s.GetByCode(obs.ValReported);
+						Icd9 icd9Value=Icd9s.GetByCode(obs.ValReported);
 						row.Cells.Add(icd9Value.Description);//2 Value
 					}
 					else if(obs.ValCodeSystem=="ICD10") {

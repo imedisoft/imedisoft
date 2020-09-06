@@ -163,7 +163,7 @@ namespace OpenDentBusiness{
 				string err=$"Unable to update Appointment confirmation status {reason}. AptNum: {request.ApptNum}; ConfirmationRequest: {request.ConfirmationRequestNum}"
 					+"Attempted to change from "+Definitions.GetName(DefinitionCategory.ApptConfirmed,aptOld.Confirmed)+" to "+Definitions.GetName(DefinitionCategory.ApptConfirmed,confirmDefNum)
 					+" due to an eConfirmation.";
-				SecurityLogs.MakeLogEntry(Permissions.ApptConfirmStatusEdit,aptCur.PatNum,err,aptCur.AptNum,LogSources.AutoConfirmations,aptOld.DateTStamp);
+				SecurityLogs.MakeLogEntry(Permissions.ApptConfirmStatusEdit,aptCur.PatNum,err,aptCur.AptNum,SecurityLogSource.AutoConfirmations,aptOld.DateTStamp);
 				logOnError?.Invoke(err);
 			}
 			List<long> preventChangeFrom=commaListOfExcludedDefNums.Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries).Select(long.Parse).ToList();
@@ -184,7 +184,7 @@ namespace OpenDentBusiness{
 			Appointments.Update(aptCur,aptOld);//Appointments S-Class handles Signalods
 			SecurityLogs.MakeLogEntry(Permissions.ApptConfirmStatusEdit,aptCur.PatNum,"Appointment confirmation status changed from "
 				+ Definitions.GetName(DefinitionCategory.ApptConfirmed, aptOld.Confirmed) + " to " + Definitions.GetName(DefinitionCategory.ApptConfirmed, aptCur.Confirmed)
-				+" due to an eConfirmation.",aptCur.AptNum,LogSources.AutoConfirmations,aptOld.DateTStamp);
+				+" due to an eConfirmation.",aptCur.AptNum,SecurityLogSource.AutoConfirmations,aptOld.DateTStamp);
 			return ConfStatusUpdate.Success;			
 		}
 

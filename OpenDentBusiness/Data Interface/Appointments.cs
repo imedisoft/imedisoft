@@ -762,7 +762,7 @@ namespace OpenDentBusiness
 			List<Fee> listDiscountPlanFees=Fees.GetByFeeSchedNumsClinicNums(listDiscountPlanFeeSchedNums,
 					listClinicNumProcs.Union(new List<long> { 0 }).ToList())
 				.Select(x => (Fee)x).ToList();
-			List<long> listPatsWithDisease=Diseases.GetPatientsWithDisease(listPatNums);
+			List<long> listPatsWithDisease=Problems.GetPatientsWithDisease(listPatNums).ToList();
 			List<long> listPatsWithAllergy=Allergies.GetPatientsWithAllergy(listPatNums);
 			Dictionary<long,string> dictRefFromPatNums=new Dictionary<long,string>();//Only contains FROM referrals 
 			Dictionary<long,string> dictRefToPatNums=new Dictionary<long,string>();//Only contains TO referrals
@@ -806,7 +806,7 @@ namespace OpenDentBusiness
 			}
 			List<Adjustment> listAdjustments=Crud.AdjustmentCrud.SelectMany(command).ToList();
 			//This will be set to all rows out of convenience. It will only be accessed from row-0.
-			decimal adjustmentAmt=listAdjustments.Sum(x => (decimal)x.AdjAmt);
+			decimal adjustmentAmt=listAdjustments.Sum(x => (decimal)x.AdjustAmount);
 			List<Action> actions=new List<Action>();
 			//DataTable is not thread-safe so protect it with a local lock.
 			object locker=new object();
@@ -1092,7 +1092,7 @@ namespace OpenDentBusiness
 							//production-=
 							writeoffPPO+=PIn.Decimal(rawProc.Rows[p]["writeoffPPO"].ToString());//frequently zero
 							insAmt+=PIn.Decimal(rawProc.Rows[p]["insAmt"].ToString());
-							adjAmtForAppt+=listAdjustments.Where(x => x.ProcNum==PIn.Long(rawProc.Rows[p]["ProcNum"].ToString())).Sum(x => (decimal)x.AdjAmt);
+							adjAmtForAppt+=listAdjustments.Where(x => x.ProcedureId==PIn.Long(rawProc.Rows[p]["ProcNum"].ToString())).Sum(x => (decimal)x.AdjustAmount);
 							if(rawProcLab!=null) { //Will be null if not Canada.
 								for(int a = 0;a<rawProcLab.Rows.Count;a++) {
 									if(rawProcLab.Rows[a]["ProcNumLab"].ToString()==rawProc.Rows[p]["ProcNum"].ToString()) {
@@ -1100,7 +1100,7 @@ namespace OpenDentBusiness
 										production-=PIn.Decimal(rawProcLab.Rows[a]["writeoffCap"].ToString());
 										writeoffPPO+=PIn.Decimal(rawProcLab.Rows[a]["writeoffPPO"].ToString());//frequently zero
 										insAmt+=PIn.Decimal(rawProc.Rows[p]["insAmt"].ToString());
-										adjAmtForAppt+=listAdjustments.Where(x => x.ProcNum==PIn.Long(rawProcLab.Rows[a]["ProcNum"].ToString())).Sum(x => (decimal)x.AdjAmt);
+										adjAmtForAppt+=listAdjustments.Where(x => x.ProcedureId==PIn.Long(rawProcLab.Rows[a]["ProcNum"].ToString())).Sum(x => (decimal)x.AdjustAmount);
 									}
 								}
 							}
@@ -3266,7 +3266,7 @@ namespace OpenDentBusiness
 		//private static FilterBlockouts(Appointment )
 		/// <summary>Called to move existing appointments from the web.
 		/// Will only attempt to move to given operatory.</summary>
-		public static void TryMoveApptWebHelper(Appointment appt,DateTime apptDateTimeNew,long opNumNew,LogSources secLogSource=LogSources.MobileWeb) {
+		public static void TryMoveApptWebHelper(Appointment appt,DateTime apptDateTimeNew,long opNumNew,SecurityLogSource secLogSource=SecurityLogSource.MobileWeb) {
 			Appointment apptOld=GetOneApt(appt.AptNum);//Will always exist since you can not move a non inserted appointment.
 			Patient pat=Patients.GetPat(appt.PatNum);
 			Operatory op=Operatories.GetOperatory(opNumNew);
@@ -3292,7 +3292,7 @@ namespace OpenDentBusiness
 		///<summary>Throws exception. When doSkipValidation is false all 'do' bools need to be set and considered.</summary>
 		public static void TryMoveAppointment(Appointment apt,Appointment aptOld,Patient patCur,Operatory curOp,List<Schedule> schedListPeriod,
 			List<Operatory> listOps,DateTime newAptDateTime,bool doValidation,bool doSetArriveEarly,bool doProvChange,bool doUpdatePattern,
-			bool doAllowFreqConflicts,bool doResetConfirmationStatus,bool doUpdatePatStatus,bool provChanged,bool hygChanged,bool timeWasMoved,bool isOpChanged,bool isOpUpdate=false,LogSources secLogSource=LogSources.None) 
+			bool doAllowFreqConflicts,bool doResetConfirmationStatus,bool doUpdatePatStatus,bool provChanged,bool hygChanged,bool timeWasMoved,bool isOpChanged,bool isOpUpdate=false,SecurityLogSource secLogSource=SecurityLogSource.None) 
 		{
 			if(newAptDateTime!=DateTime.MinValue) {
 				apt.AptDateTime=newAptDateTime;//The time we are attempting to move the appt to.
@@ -3852,7 +3852,7 @@ namespace OpenDentBusiness
 		///<summary>Used by web to insert or update a given appt.
 		///Dynamically charts procs based on appt.AppointmentTypeNum when created or changed.
 		///This logic is attempting to mimic FormApptEdit when interacting with a new or existing appointment.</summary>
-		public static void UpsertApptFromWeb(Appointment appt,bool canUpdateApptPattern=false,LogSources secLogSource=LogSources.MobileWeb){
+		public static void UpsertApptFromWeb(Appointment appt,bool canUpdateApptPattern=false,SecurityLogSource secLogSource=SecurityLogSource.MobileWeb){
 			Patient pat=Patients.GetPat(appt.PatNum);
 			List<Procedure> listProcsForApptEdit=Procedures.GetProcsForApptEdit(appt);//List of all procedures that would show in FormApptEdit.cs
 			List<PatPlan> listPatPlans=PatPlans.GetPatPlansForPat(pat.PatNum);
@@ -3898,30 +3898,30 @@ namespace OpenDentBusiness
 				Insert(appt,appt.SecUserNumEntry);//Inserts the invalid signal
 				SecurityLogs.MakeLogEntry(new SecurityLog()
 				{
-					PermType=Permissions.AppointmentCreate,
-					UserNum=appt.SecUserNumEntry,
-					LogDateTime=DateTime.Now,
-					LogText=$"New appointment created from {secLogSource.GetDescription()} by "+Userods.GetUser(appt.SecUserNumEntry)?.UserName,
-					PatNum=appt.PatNum,
-					FKey=appt.AptNum,
+					Type=Permissions.AppointmentCreate,
+					UserId=appt.SecUserNumEntry,
+					LogDate=DateTime.Now,
+					LogMessage=$"New appointment created from {secLogSource.GetDescription()} by "+Userods.GetUser(appt.SecUserNumEntry)?.UserName,
+					PatientId=appt.PatNum,
+					ObjectId=appt.AptNum,
 					LogSource=secLogSource,
-					DateTPrevious=appt.SecDateTEntry,
-					CompName= Environment.MachineName
+					ObjectDate=appt.SecDateTEntry,
+					MachineName= Environment.MachineName
 				});
 			}
 			else {
 				Update(appt,apptOld);//Inserts the invalid signal
 				SecurityLogs.MakeLogEntry(new SecurityLog()
 				{
-					PermType=Permissions.AppointmentEdit,
-					UserNum=appt.SecUserNumEntry,
-					LogDateTime=DateTime.Now,
-					LogText="Appointment updated from MobileWeb by "+Userods.GetUser(appt.SecUserNumEntry)?.UserName,
-					PatNum=appt.PatNum,
-					FKey=appt.AptNum,
-					LogSource=LogSources.MobileWeb,
-					DateTPrevious=appt.SecDateTEntry,
-					CompName= Environment.MachineName,
+					Type=Permissions.AppointmentEdit,
+					UserId=appt.SecUserNumEntry,
+					LogDate=DateTime.Now,
+					LogMessage="Appointment updated from MobileWeb by "+Userods.GetUser(appt.SecUserNumEntry)?.UserName,
+					PatientId=appt.PatNum,
+					ObjectId=appt.AptNum,
+					LogSource=SecurityLogSource.MobileWeb,
+					ObjectDate=appt.SecDateTEntry,
+					MachineName= Environment.MachineName,
 				});
 			}
 			#endregion

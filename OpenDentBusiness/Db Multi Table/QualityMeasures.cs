@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using Ionic.Zip;
 using System.Linq;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness {
 	///<summary>Used in Ehr quality measures.</summary>
@@ -3405,7 +3406,7 @@ namespace OpenDentBusiness {
 						}
 						break;
 					case "ICD9CM":
-						ICD9 i9Cur=ICD9s.GetByCode(listInterventions[i].CodeValue);
+						Icd9 i9Cur=Icd9s.GetByCode(listInterventions[i].CodeValue);
 						if(i9Cur!=null) {
 							descript=i9Cur.Description;
 						}

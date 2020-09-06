@@ -4,6 +4,7 @@ using System.Data;
 using System.Reflection;
 using System.Linq;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness {
 	public class RpAppointments {
@@ -35,15 +36,15 @@ namespace OpenDentBusiness {
 			}
 			//WebSched Appointments
 			string innerJoinWebSchedBoth = "";
-			List<LogSources> listSources = new List<LogSources>();
+			List<SecurityLogSource> listSources = new List<SecurityLogSource>();
 			if(isShowNewPat) {
-				listSources.Add(LogSources.WebSchedNewPatAppt);
+				listSources.Add(SecurityLogSource.WebSchedNewPatAppt);
 			}
 			if(isShowRecall) {
-				listSources.Add(LogSources.WebSched);
+				listSources.Add(SecurityLogSource.WebSched);
 			}
 			if(isShowASAP) {
-				listSources.Add(LogSources.WebSchedASAP);
+				listSources.Add(SecurityLogSource.WebSchedASAP);
 			}
 			if(listSources.Count>0) {
 				List<int> listPerms=new List<int>() { (int)Permissions.AppointmentCreate };

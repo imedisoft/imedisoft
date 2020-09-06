@@ -1006,7 +1006,7 @@ namespace OpenDental{
 						}
 						else {//Finance charge
 							if(dictPatAdjustments.ContainsKey(patAgingCur.PatNum)) {//Only contains key if checkCompound is not checked.
-								overallBalance-=dictPatAdjustments[patAgingCur.PatNum].Sum(x => x.AdjAmt);//Dict always contains patNum as key, but list can be empty.
+								overallBalance-=dictPatAdjustments[patAgingCur.PatNum].Sum(x => x.AdjustAmount);//Dict always contains patNum as key, but list can be empty.
 							}
 							if(!AddFinanceCharge(patAgingCur.PatNum,date,aprText,atLeastText,overText,overallBalance,
 								provNumToAssignCharges,adjType,dictFamilyInstallmentPlans))
@@ -1075,22 +1075,22 @@ namespace OpenDental{
 				}
 			}
 			Adjustment AdjustmentCur = new Adjustment();
-			AdjustmentCur.PatNum = patNum;
+			AdjustmentCur.PatientId = patNum;
 			//AdjustmentCur.DateEntry=PIn.PDate(textDate.Text);//automatically handled
-			AdjustmentCur.AdjDate = date;
-			AdjustmentCur.ProcDate = date;
-			AdjustmentCur.AdjType = adjType;
-			AdjustmentCur.AdjNote = "";//"Finance Charge";
-			AdjustmentCur.AdjAmt = Math.Round(((PIn.Double(APR) * .01d / 12d) * OverallBalance),2);
-			if(AdjustmentCur.AdjAmt.IsZero() || AdjustmentCur.AdjAmt<PIn.Double(ifOver)) {
+			AdjustmentCur.AdjustDate = date;
+			AdjustmentCur.ProcedureDate = date;
+			AdjustmentCur.Type = adjType;
+			AdjustmentCur.Note = "";//"Finance Charge";
+			AdjustmentCur.AdjustAmount = Math.Round(((PIn.Double(APR) * .01d / 12d) * OverallBalance),2);
+			if(AdjustmentCur.AdjustAmount.IsZero() || AdjustmentCur.AdjustAmount<PIn.Double(ifOver)) {
 				//Don't add the charge if it is less than FinanceChargeOnlyIfOver; if the charge is exactly equal to FinanceChargeOnlyIfOver,
 				//the charge will be added. Ex., AdjAmt=2.00 and FinanceChargeOnlyIfOver=2.00, the charge will be added.
 				//Unless AdjAmt=0.00, in which case don't add a $0.00 finance charge
 				return false;
 			}
 			//Add an amount that is at least the amount of FinanceChargeAtLeast 
-			AdjustmentCur.AdjAmt=Math.Max(AdjustmentCur.AdjAmt,PIn.Double(atLeast));
-			AdjustmentCur.ProvNum = PriProv;
+			AdjustmentCur.AdjustAmount=Math.Max(AdjustmentCur.AdjustAmount,PIn.Double(atLeast));
+			AdjustmentCur.ProviderId = PriProv;
 			Adjustments.Insert(AdjustmentCur);
 			TsiTransLogs.CheckAndInsertLogsIfAdjTypeExcluded(AdjustmentCur);
 			return true;
@@ -1102,14 +1102,14 @@ namespace OpenDental{
 				return;
 			}
 			Adjustment AdjustmentCur = new Adjustment();
-			AdjustmentCur.PatNum = patNum;
+			AdjustmentCur.PatientId = patNum;
 			//AdjustmentCur.DateEntry=PIn.PDate(textDate.Text);//automatically handled
-			AdjustmentCur.AdjDate = date;
-			AdjustmentCur.ProcDate = date;
-			AdjustmentCur.AdjType = Prefs.GetLong(PrefName.BillingChargeAdjustmentType);
-			AdjustmentCur.AdjNote = "";//"Billing Charge";
-			AdjustmentCur.AdjAmt = PIn.Double(BillingChargeAmount);
-			AdjustmentCur.ProvNum = PriProv;
+			AdjustmentCur.AdjustDate = date;
+			AdjustmentCur.ProcedureDate = date;
+			AdjustmentCur.Type = Prefs.GetLong(PrefName.BillingChargeAdjustmentType);
+			AdjustmentCur.Note = "";//"Billing Charge";
+			AdjustmentCur.AdjustAmount = PIn.Double(BillingChargeAmount);
+			AdjustmentCur.ProviderId = PriProv;
 			Adjustments.Insert(AdjustmentCur);
 			TsiTransLogs.CheckAndInsertLogsIfAdjTypeExcluded(AdjustmentCur);
 		}

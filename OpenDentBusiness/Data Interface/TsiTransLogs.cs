@@ -113,7 +113,7 @@ namespace OpenDentBusiness
 			{
 				return;
 			}
-			double offsetAmt = adj.AdjAmt - patAgingCur.ListTsiLogs.FindAll(x => x.FKeyType == TsiFKeyType.Adjustment && x.FKey == adj.AdjNum).Sum(x => x.TransAmt);
+			double offsetAmt = adj.AdjustAmount - patAgingCur.ListTsiLogs.FindAll(x => x.FKeyType == TsiFKeyType.Adjustment && x.FKey == adj.Id).Sum(x => x.TransAmt);
 			if (offsetAmt.IsZero())
 			{
 				return;
@@ -135,7 +135,7 @@ namespace OpenDentBusiness
 				TransAmt = offsetAmt,
 				AccountBalance = balFromMsgs + (transType == TsiTransType.Excluded ? 0 : offsetAmt),
 				FKeyType = TsiFKeyType.Adjustment,
-				FKey = adj.AdjNum,
+				FKey = adj.Id,
 				RawMsgText = msgText,
 				//TransJson=""//only valid for placement msgs
 				ClinicNum = (PrefC.HasClinicsEnabled ? patAgingCur.ClinicNum : 0)
@@ -150,7 +150,7 @@ namespace OpenDentBusiness
 			{
 				return;
 			}
-			Patient guar = Patients.GetGuarForPat(adj.PatNum);
+			Patient guar = Patients.GetGuarForPat(adj.PatientId);
 			if (guar == null || !IsTransworldEnabled(guar.ClinicNum) || !Patients.IsGuarCollections(guar.PatNum))
 			{
 				return;
@@ -166,7 +166,7 @@ namespace OpenDentBusiness
 				//use guar's clinic if clinics are enabled and props for that clinic exist, otherwise use ClinicNum 0
 				long clinicNum = (PrefC.HasClinicsEnabled && dictClinicProps.ContainsKey(guar.ClinicNum)) ? guar.ClinicNum : 0;
 				if (!dictClinicProps.TryGetValue(clinicNum, out List<ProgramProperty> listPropsCur)//should always be props for ClinicNum 0
-					|| listPropsCur.All(x => PIn.Long(x.Value, false) != adj.AdjType))
+					|| listPropsCur.All(x => PIn.Long(x.Value, false) != adj.Type))
 				{
 					return;//if this adjustment is not an excluded type, return
 				}

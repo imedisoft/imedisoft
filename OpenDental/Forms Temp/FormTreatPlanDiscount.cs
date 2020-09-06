@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormTreatmentPlanDiscount:ODForm {

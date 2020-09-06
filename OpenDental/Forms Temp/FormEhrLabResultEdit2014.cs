@@ -284,7 +284,7 @@ namespace OpenDental {
 			if(FormS.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			textObsElementID.Text=FormS.SelectedSnomed.SnomedCode;
+			textObsElementID.Text=FormS.SelectedSnomed.Code;
 			textObsElementText.Text=FormS.SelectedSnomed.Description;
 			textObsElementCodeSystem.Text="SCT";
 			textObsElementOrigText.Text=FormS.SelectedSnomed.Description;

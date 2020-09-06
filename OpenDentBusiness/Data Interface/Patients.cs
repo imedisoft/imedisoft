@@ -1335,7 +1335,7 @@ namespace OpenDentBusiness
 		/// Used by multiple applications so be very careful when changing this method. 
 		/// E.g. Open Dental and Web Sched.
 		/// </summary>
-		public static Patient CreateNewPatient(string lastName, string firstName, DateTime birthDate, long? primaryProviderId, long? clinicId, string securityLogMsg, LogSources logSource = LogSources.None, string email = "", string homePhone = "", string wirelessPhone = "")
+		public static Patient CreateNewPatient(string lastName, string firstName, DateTime birthDate, long? primaryProviderId, long? clinicId, string securityLogMsg, SecurityLogSource logSource = SecurityLogSource.None, string email = "", string homePhone = "", string wirelessPhone = "")
 		{
             var patient = new Patient
             {
@@ -1907,17 +1907,23 @@ namespace OpenDentBusiness
 			return false;
 		}
 
-		///<summary>Used when filling appointments for an entire day. Gets a list of Pats, multPats, of all the specified patients.  Then, use GetOnePat to pull one patient from this list.  This process requires only one call to the database.</summary>
-		public static Patient[] GetMultPats(List<long> patNums)
+		/// <summary>
+		/// Used when filling appointments for an entire day. 
+		/// Gets a list of Pats, multPats, of all the specified patients. 
+		/// Then, use GetOnePat to pull one patient from this list. 
+		/// This process requires only one call to the database.
+		/// </summary>
+		public static Patient[] GetMultPats(IEnumerable<long> patientIds)
 		{
-			DataTable table = new DataTable();
-			if (patNums.Count > 0)
+			var table = new DataTable();
+
+			var patientIdsList = patientIds.ToList();
+			if (patientIdsList.Count > 0)
 			{
-				string command = "SELECT * FROM patient WHERE PatNum IN (" + String.Join<long>(",", patNums) + ") ";
-				table = Database.ExecuteDataTable(command);
+				table = Database.ExecuteDataTable("SELECT * FROM patient WHERE PatNum IN (" + string.Join(", ", patientIdsList) + ")");
 			}
-			Patient[] multPats = Crud.PatientCrud.TableToList(table).ToArray();
-			return multPats;
+
+			return Crud.PatientCrud.TableToList(table).ToArray();
 		}
 
 		/// <summary>

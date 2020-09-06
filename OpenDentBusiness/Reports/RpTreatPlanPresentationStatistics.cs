@@ -96,7 +96,7 @@ namespace OpenDentBusiness
 					//	.Where(x => x.Status == ClaimProcStatus.Estimate)
 					//	.Sum(x => x.WriteOffEstOverride == -1 ? (x.WriteOffEst == -1 ? 0 : x.WriteOffEst) : x.WriteOffEstOverride); //Allen won't let me commit this nested ternary :(
 				}
-				double adjustments = listAdjustments.Where(x => x.ProcNum == procCur.ProcNum).Sum(x => x.AdjAmt);
+				double adjustments = listAdjustments.Where(x => x.ProcedureId == procCur.ProcNum).Sum(x => x.AdjustAmount);
 				double netProd = grossProd - writeOffs + adjustments;
 				TreatPlan treatPlanCur = listProcTPTreatPlans.Where(x => x.ProcTPCur.ProcNumOrig == procCur.ProcNum).First().TreatPlanCur;
 				Userod userPresenter;

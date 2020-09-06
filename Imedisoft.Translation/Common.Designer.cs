@@ -70,6 +70,24 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adjustment Type.
+        /// </summary>
+        public static string AdjustmentType {
+            get {
+                return ResourceManager.GetString("AdjustmentType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Amount.
+        /// </summary>
+        public static string Amount {
+            get {
+                return ResourceManager.GetString("Amount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to And {0} others....
         /// </summary>
         public static string AndXOthers {
@@ -93,6 +111,24 @@ namespace Imedisoft.Translation {
         public static string BankNumber {
             get {
                 return ResourceManager.GetString("BankNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Cancel.
+        /// </summary>
+        public static string CancelWithMnemonic {
+            get {
+                return ResourceManager.GetString("CancelWithMnemonic", resourceCulture);
             }
         }
         
@@ -192,6 +228,15 @@ namespace Imedisoft.Translation {
         public static string Command {
             get {
                 return ResourceManager.GetString("Command", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete?.
+        /// </summary>
+        public static string ConfirmDelete {
+            get {
+                return ResourceManager.GetString("ConfirmDelete", resourceCulture);
             }
         }
         
@@ -322,6 +367,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fee Schedule.
+        /// </summary>
+        public static string FeeSchedule {
+            get {
+                return ResourceManager.GetString("FeeSchedule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Field name already in use..
         /// </summary>
         public static string FieldNameAlreadyInUse {
@@ -336,6 +390,15 @@ namespace Imedisoft.Translation {
         public static string FirstName {
             get {
                 return ResourceManager.GetString("FirstName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Has Proc..
+        /// </summary>
+        public static string HasProc {
+            get {
+                return ResourceManager.GetString("HasProc", resourceCulture);
             }
         }
         
@@ -495,11 +558,47 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Done..
+        /// </summary>
+        public static string OperationComplete {
+            get {
+                return ResourceManager.GetString("OperationComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You are not allowed to perform the requested operation. Reason: {0}..
         /// </summary>
         public static string OperationNowAllowedForReason {
             get {
                 return ResourceManager.GetString("OperationNowAllowedForReason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Patient.
+        /// </summary>
+        public static string Patient {
+            get {
+                return ResourceManager.GetString("Patient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Patient #.
+        /// </summary>
+        public static string PatientId {
+            get {
+                return ResourceManager.GetString("PatientId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Patients.
+        /// </summary>
+        public static string Patients {
+            get {
+                return ResourceManager.GetString("Patients", resourceCulture);
             }
         }
         
@@ -549,6 +648,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please enter a valid amount..
+        /// </summary>
+        public static string PleaseEnterValidAmount {
+            get {
+                return ResourceManager.GetString("PleaseEnterValidAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please enter a valid date..
         /// </summary>
         public static string PleaseEnterValidDate {
@@ -558,11 +666,29 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please enter a valid percentage..
+        /// </summary>
+        public static string PleaseEnterValidPercentage {
+            get {
+                return ResourceManager.GetString("PleaseEnterValidPercentage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please select an account first..
         /// </summary>
         public static string PleaseSelectAccountFirst {
             get {
                 return ResourceManager.GetString("PleaseSelectAccountFirst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select an item..
+        /// </summary>
+        public static string PleaseSelectItem {
+            get {
+                return ResourceManager.GetString("PleaseSelectItem", resourceCulture);
             }
         }
         
@@ -612,11 +738,29 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Response.
+        /// </summary>
+        public static string Response {
+            get {
+                return ResourceManager.GetString("Response", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select a row from the Query Feed..
         /// </summary>
         public static string SelectRowFromQueryFeed {
             get {
                 return ResourceManager.GetString("SelectRowFromQueryFeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set the graphics for computer &apos;{0}&apos; to simple..
+        /// </summary>
+        public static string SetGraphicsForComputerToSimple {
+            get {
+                return ResourceManager.GetString("SetGraphicsForComputerToSimple", resourceCulture);
             }
         }
         
@@ -725,6 +869,15 @@ namespace Imedisoft.Translation {
         public static string Value {
             get {
                 return ResourceManager.GetString("Value", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have selected a problem with an unofficial SNOMED CT code. Please correct the problem definition by going to Lists | Problems and choosing an official code from the SNOMED CT list..
+        /// </summary>
+        public static string YouHaveSelectedProblemWithUnofficialSnomedCode {
+            get {
+                return ResourceManager.GetString("YouHaveSelectedProblemWithUnofficialSnomedCode", resourceCulture);
             }
         }
     }

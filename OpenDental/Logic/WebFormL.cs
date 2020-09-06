@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
 using OpenDentBusiness;
 using OpenDentBusiness.HL7;
 using OpenDentBusiness.WebTypes.WebForms;

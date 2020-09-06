@@ -4870,7 +4870,7 @@ namespace OpenDental
 			{
 				return;
 			}
-			FormDiseaseDefs FormD = new FormDiseaseDefs();
+			FormProblemDefinitions FormD = new FormProblemDefinitions();
 			FormD.ShowDialog();
 			//RefreshCurrentModule();
 			SecurityLogs.MakeLogEntry(Permissions.Setup, 0, "Disease Defs");
@@ -7224,7 +7224,7 @@ namespace OpenDental
 					Security.CurrentUser = Userods.GetUserNoCache(userNumFirstAdminNoPass);
 					CheckForPasswordReset();
 
-					SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, "User:" + " " + Security.CurrentUser.UserName + " " + "has logged on.");
+					SecurityLogs.Write(Permissions.UserLogOnOff, "User '" + Security.CurrentUser.UserName + "' has logged on.");
 				}
 				#endregion
 				#region Domain Login

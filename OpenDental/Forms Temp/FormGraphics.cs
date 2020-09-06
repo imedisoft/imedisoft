@@ -6,6 +6,7 @@ using CodeBase;
 using Tao.Platform.Windows;
 using OpenDental.UI;
 using SparksToothChart;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>

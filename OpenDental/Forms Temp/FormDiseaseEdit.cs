@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary></summary>
@@ -15,7 +17,7 @@ namespace OpenDental{
 		/// Required designer variable.
 		/// </summary>
 		private System.ComponentModel.Container components = null;
-		private Disease DiseaseCur;
+		private Problem DiseaseCur;
 		private TextBox textNote;
 		private Label label1;
 		private Label label2;
@@ -46,7 +48,7 @@ namespace OpenDental{
 		public bool IsNew;
 
 		///<summary></summary>
-		public FormDiseaseEdit(Disease diseaseCur)
+		public FormDiseaseEdit(Problem diseaseCur)
 		{
 			//
 			// Required for Windows Form Designer support
@@ -396,18 +398,18 @@ namespace OpenDental{
 		#endregion
 
 		private void FormDiseaseEdit_Load(object sender,EventArgs e) {
-			DiseaseDef diseasedef=DiseaseDefs.GetItem(DiseaseCur.DiseaseDefNum);//guaranteed to have one
-			textProblem.Text=diseasedef.DiseaseName;
-			string i9descript=ICD9s.GetCodeAndDescription(diseasedef.ICD9Code);
+			ProblemDefinition diseasedef=ProblemDefinitions.GetItem(DiseaseCur.ProblemDefId);//guaranteed to have one
+			textProblem.Text=diseasedef.Description;
+			string i9descript=Icd9s.GetCodeAndDescription(diseasedef.CodeIcd9);
 			if(i9descript=="") {
-				textIcd9.Text=diseasedef.ICD9Code;
+				textIcd9.Text=diseasedef.CodeIcd9;
 			}
 			else {
 				textIcd9.Text=i9descript;
 			}
-			string i10descript=Icd10s.GetCodeAndDescription(diseasedef.Icd10Code);
+			string i10descript=Icd10s.GetCodeAndDescription(diseasedef.CodeIcd10);
 			if(i10descript=="") {
-				textIcd10.Text=diseasedef.Icd10Code;
+				textIcd10.Text=diseasedef.CodeIcd10;
 			}
 			else {
 				textIcd10.Text=i10descript;
@@ -416,14 +418,11 @@ namespace OpenDental{
 			for(int i=0;i<Enum.GetNames(typeof(ProblemStatus)).Length;i++) {
 				comboStatus.Items.Add(Enum.GetNames(typeof(ProblemStatus))[i]);
 			}
-			comboStatus.SelectedIndex=(int)DiseaseCur.ProbStatus;
-			textNote.Text=DiseaseCur.PatNote;
-			if(DiseaseCur.DateStart.Year>1880) {
-				textDateStart.Text=DiseaseCur.DateStart.ToShortDateString();
-			}
-			if(DiseaseCur.DateStop.Year>1880) {
-				textDateStop.Text=DiseaseCur.DateStop.ToShortDateString();
-			}
+			comboStatus.SelectedIndex=(int)DiseaseCur.Status;
+			textNote.Text=DiseaseCur.PatientNote;
+			textDateStart.Text = DiseaseCur.DateStart?.ToShortDateString();
+			textDateStop.Text = DiseaseCur.DateStop?.ToShortDateString();
+			
 			comboSnomedProblemType.Items.Clear();
 			comboSnomedProblemType.Items.Add("Problem");//0 - Default value.  Problem (finding).  55607006
 			comboSnomedProblemType.Items.Add("Finding");//1 - Clinical finding (finding).  404684003
@@ -458,7 +457,7 @@ namespace OpenDental{
 			for(int i=0;i<arrayFunctionalStatusNames.Length;i++) {
 				comboEhrFunctionalStatus.Items.Add(arrayFunctionalStatusNames[i]);
 			}
-			comboEhrFunctionalStatus.SelectedIndex=(int)DiseaseCur.FunctionStatus;//The default value is 'Problem'
+			comboEhrFunctionalStatus.SelectedIndex=(int)DiseaseCur.FunctionalStatus;//The default value is 'Problem'
 		}
 
 		private void butTodayStart_Click(object sender,EventArgs e) {
@@ -477,7 +476,7 @@ namespace OpenDental{
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			List<Vitalsign> listVitals=Vitalsigns.GetListFromPregDiseaseNum(DiseaseCur.DiseaseNum);
+			List<Vitalsign> listVitals=Vitalsigns.GetListFromPregDiseaseNum(DiseaseCur.Id);
 			if(listVitals.Count>0) {//if attached to vital sign exam, block delete
 				string dates="";
 				for(int i=0;i<listVitals.Count;i++) {
@@ -494,8 +493,8 @@ namespace OpenDental{
 					return;
 				}
 			}
-			SecurityLogs.MakeLogEntry(Permissions.PatProblemListEdit,DiseaseCur.PatNum,DiseaseDefs.GetName(DiseaseCur.DiseaseDefNum)+" deleted");
-			Diseases.Delete(DiseaseCur);
+			SecurityLogs.MakeLogEntry(Permissions.PatProblemListEdit,DiseaseCur.PatientId,ProblemDefinitions.GetName(DiseaseCur.ProblemDefId)+" deleted");
+			Problems.Delete(DiseaseCur);
 			DialogResult=DialogResult.OK;
 		}
 
@@ -508,8 +507,8 @@ namespace OpenDental{
 			}
 			DiseaseCur.DateStart=PIn.Date(textDateStart.Text);
 			DiseaseCur.DateStop=PIn.Date(textDateStop.Text);
-			DiseaseCur.ProbStatus=(ProblemStatus)comboStatus.SelectedIndex;
-			DiseaseCur.PatNote=textNote.Text;
+			DiseaseCur.Status=(ProblemStatus)comboStatus.SelectedIndex;
+			DiseaseCur.PatientNote=textNote.Text;
 			if(comboSnomedProblemType.SelectedIndex==1) {//Finding
 				DiseaseCur.SnomedProblemType="404684003";
 			}
@@ -531,20 +530,20 @@ namespace OpenDental{
 			else {//Problem
 				DiseaseCur.SnomedProblemType="55607006";
 			}
-			DiseaseCur.FunctionStatus=(FunctionalStatus)comboEhrFunctionalStatus.SelectedIndex;
+			DiseaseCur.FunctionalStatus=(FunctionalStatus)comboEhrFunctionalStatus.SelectedIndex;
 			if(IsNew){
 				//This code is never hit in current implementation 09/26/2013.
-				Diseases.Insert(DiseaseCur);
-				SecurityLogs.MakeLogEntry(Permissions.PatProblemListEdit,DiseaseCur.PatNum,DiseaseDefs.GetName(DiseaseCur.DiseaseDefNum)+" added");
+				Problems.Insert(DiseaseCur);
+				SecurityLogs.MakeLogEntry(Permissions.PatProblemListEdit,DiseaseCur.PatientId,ProblemDefinitions.GetName(DiseaseCur.ProblemDefId)+" added");
 			}
 			else{
 				//See if this problem is the pregnancy linked to a vitalsign exam
-				List<Vitalsign> listVitalsAttached=Vitalsigns.GetListFromPregDiseaseNum(DiseaseCur.DiseaseNum);
+				List<Vitalsign> listVitalsAttached=Vitalsigns.GetListFromPregDiseaseNum(DiseaseCur.Id);
 				if(listVitalsAttached.Count>0) {
 					//See if the vitalsign exam date is now outside of the active dates of the disease (pregnancy)
 					string dates="";
 					for(int i=0;i<listVitalsAttached.Count;i++) {
-						if(listVitalsAttached[i].DateTaken<DiseaseCur.DateStart || (DiseaseCur.DateStop.Year>1880 && listVitalsAttached[i].DateTaken>DiseaseCur.DateStop)) {
+						if(listVitalsAttached[i].DateTaken<DiseaseCur.DateStart || (DiseaseCur.DateStop.HasValue && listVitalsAttached[i].DateTaken>DiseaseCur.DateStop)) {
 							dates+="\r\n"+listVitalsAttached[i].DateTaken.ToShortDateString();
 						}
 					}
@@ -554,8 +553,8 @@ namespace OpenDental{
 						return;
 					}
 				}
-				Diseases.Update(DiseaseCur);
-				SecurityLogs.MakeLogEntry(Permissions.PatProblemListEdit,DiseaseCur.PatNum,DiseaseDefs.GetName(DiseaseCur.DiseaseDefNum)+" edited");
+				Problems.Update(DiseaseCur);
+				SecurityLogs.MakeLogEntry(Permissions.PatProblemListEdit,DiseaseCur.PatientId,ProblemDefinitions.GetName(DiseaseCur.ProblemDefId)+" edited");
 			}
 			DialogResult=DialogResult.OK;
 		}

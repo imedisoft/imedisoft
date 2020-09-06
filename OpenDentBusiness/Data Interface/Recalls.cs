@@ -1881,7 +1881,7 @@ namespace OpenDentBusiness {
 		///<para>Returns the list of procedures that were scheduled and the appointment created.</para></summary>
 		///<param name="isASAP">If true, then the appointment created will have a priority of ASAP.</param>
 		public static Tuple<Appointment,List<Procedure>> CreateRecallApptForWebSched(long recallNum,DateTime dateStart,DateTime dateEnd
-			,List<TimeSlot> listAvailableTimeSlots,LogSources source,bool isASAP=false,bool sendVerification=false) 
+			,List<TimeSlot> listAvailableTimeSlots,SecurityLogSource source,bool isASAP=false,bool sendVerification=false) 
 		{
 			//No need to check RemotingRole; no call to db.
 			foreach(TimeSlot timeSlot in listAvailableTimeSlots) {

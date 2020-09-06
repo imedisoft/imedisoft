@@ -13,6 +13,8 @@ using OpenDentBusiness;
 using System.Linq;
 using CodeBase;
 using System.Xml;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness.Eclaims {
 	public class Canadian {
@@ -914,7 +916,7 @@ namespace OpenDentBusiness.Eclaims {
 					,planList,benefitList,subList,patient);
 				SecurityLogs.MakeLogEntry(Permissions.InsPayCreate,claim.PatNum
 					,"Claim for service date "+POut.Date(claim.DateService)+" amounts overwritten using recieved EOB amounts."
-					,LogSources.CanadaEobAutoImport);
+					,SecurityLogSource.CanadaEobAutoImport);
 			}
 			if(claim.ClaimType!="PreAuth") {
 				CCDField fieldTransRefNum=fieldInputter.GetFieldById("G01");

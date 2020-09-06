@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	public class ErxXml {
@@ -268,7 +269,7 @@ namespace OpenDentBusiness {
 			//then the customer can fix by downloading the ICD10 codeset through the import tool.
 			Icd10s.GetByCodes(listIcd10Codes).ForEach(x => {
 				listPatDiagnosis.Add(new PatientDiagnosisType() {
-					diagnosisID=x.Icd10Code,
+					diagnosisID=x.Code,
 					diagnosisType=DiagnosisType.ICD10,
 					diagnosisName=x.Description,
 				});

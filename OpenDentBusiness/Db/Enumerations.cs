@@ -1011,8 +1011,10 @@ namespace OpenDentBusiness
 
 	}
 
-
-	///<summary>The X12 benefit categories.  Used to link the user-defined CovCats to the corresponding X12 category.</summary>
+	/// <summary>
+	/// The X12 benefit categories. 
+	/// Used to link the user-defined CovCats to the corresponding X12 category.
+	/// </summary>
 	public enum EbenefitCategory
 	{
 		///<summary>0- Default.  Applies to all codes.</summary>
@@ -1248,13 +1250,6 @@ namespace OpenDentBusiness
 		_428061000124105,
 		///<summary>7 - HeavySmoker</summary>
 		_428071000124103
-	}
-
-	public enum ProblemStatus
-	{
-		Active,
-		Resolved,
-		Inactive
 	}
 
 	///<summary>EZTwain Error Codes. 43 EZTEC_NO_PDF is because of a missing DLL.</summary>

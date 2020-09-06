@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.DirectoryServices;
 using CodeBase;
 using Imedisoft.Forms;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	///<summary></summary>

@@ -6,6 +6,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using Imedisoft.Forms;
 using OpenDental;
 using OpenDentBusiness;
 
@@ -20,10 +23,10 @@ namespace OpenDental {
 
 		private void FormEduResourceEdit_Load(object sender,EventArgs e) {
 			if(EduResourceCur.DiseaseDefNum!=0) {
-				DiseaseDef def=DiseaseDefs.GetItem(EduResourceCur.DiseaseDefNum);
-				textProblem.Text=def.DiseaseName;
-				textICD9.Text=ICD9s.GetCodeAndDescription(def.ICD9Code);
-				textSnomed.Text=Snomeds.GetCodeAndDescription(def.SnomedCode);
+				ProblemDefinition def=ProblemDefinitions.GetItem(EduResourceCur.DiseaseDefNum);
+				textProblem.Text=def.Description;
+				textICD9.Text=Icd9s.GetCodeAndDescription(def.CodeIcd9);
+				textSnomed.Text=Snomeds.GetCodeAndDescription(def.CodeSnomed);
 			}
 			else if(EduResourceCur.MedicationNum!=0) {
 				textMedication.Text=Medications.GetDescription(EduResourceCur.MedicationNum);
@@ -38,26 +41,26 @@ namespace OpenDental {
 		}
 
 		private void butProblemSelect_Click(object sender,EventArgs e) {
-			FormDiseaseDefs FormDD = new FormDiseaseDefs();
+			FormProblemDefinitions FormDD = new FormProblemDefinitions();
 			FormDD.IsSelectionMode=true;
 			FormDD.ShowDialog();
 			if(FormDD.DialogResult!=DialogResult.OK) {
 				return;
 			}
 			//the list should only ever contain one item.
-			DiseaseDef disCur=FormDD.ListSelectedDiseaseDefs[0];
+			ProblemDefinition disCur=FormDD.SelectedProblemDefinitions[0];
 			if(disCur==null) {
 				return;
 			}
-			EduResourceCur.DiseaseDefNum=disCur.DiseaseDefNum;
+			EduResourceCur.DiseaseDefNum=disCur.Id;
 			EduResourceCur.MedicationNum=0;
 			EduResourceCur.SmokingSnoMed="";
 			EduResourceCur.LabResultID="";
 			EduResourceCur.LabResultName="";
 			EduResourceCur.LabResultCompare="";
-			textProblem.Text=disCur.DiseaseName;
-			textICD9.Text=ICD9s.GetCodeAndDescription(disCur.ICD9Code);
-			textSnomed.Text=Snomeds.GetCodeAndDescription(disCur.SnomedCode);
+			textProblem.Text=disCur.Description;
+			textICD9.Text=Icd9s.GetCodeAndDescription(disCur.CodeIcd9);
+			textSnomed.Text=Snomeds.GetCodeAndDescription(disCur.CodeSnomed);
 			textMedication.Text="";
 			textTobaccoAssessment.Text="";
 			textLabResultsID.Text="";
@@ -97,7 +100,7 @@ namespace OpenDental {
 			}
 			EduResourceCur.DiseaseDefNum=0;
 			EduResourceCur.MedicationNum=0;
-			EduResourceCur.SmokingSnoMed=FormS.SelectedSnomed.SnomedCode;
+			EduResourceCur.SmokingSnoMed=FormS.SelectedSnomed.Code;
 			EduResourceCur.LabResultID="";
 			EduResourceCur.LabResultName="";
 			EduResourceCur.LabResultCompare="";
@@ -105,7 +108,7 @@ namespace OpenDental {
 			textICD9.Text="";
 			textSnomed.Text="";
 			textMedication.Text="";
-			textTobaccoAssessment.Text=FormS.SelectedSnomed.SnomedCode+" - "+FormS.SelectedSnomed.Description;
+			textTobaccoAssessment.Text=FormS.SelectedSnomed.Code+" - "+FormS.SelectedSnomed.Description;
 			textLabResultsID.Text="";
 			textLabTestName.Text="";
 			textCompareValue.Text="";

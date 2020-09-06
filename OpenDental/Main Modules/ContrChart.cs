@@ -3942,9 +3942,9 @@ namespace OpenDental {
 					#region Problems
 					case "Problems":
 						if(doRefreshData || LoadData.ListDiseases==null) {
-							LoadData.ListDiseases=Diseases.Refresh(_patCur.PatNum,true);
+							LoadData.ListDiseases=Problems.GetByPatient(_patCur.PatNum,true).ToList();
 						}
-						List<Disease> listDiseases=LoadData.ListDiseases;
+						List<Problem> listDiseases=LoadData.ListDiseases;
 						row=new GridRow();
 						cell=new GridCell();
 						if(fieldCur.Description=="") {
@@ -3967,16 +3967,16 @@ namespace OpenDental {
 						//Add a new row for each med.
 						for(int i=0;i<listDiseases.Count;i++) {
 							row=new GridRow(); 
-							if(listDiseases[i].DiseaseDefNum!=0) {
-								cell=new GridCell(DiseaseDefs.GetName(listDiseases[i].DiseaseDefNum));
+							if(listDiseases[i].ProblemDefId!=0) {
+								cell=new GridCell(ProblemDefinitions.GetName(listDiseases[i].ProblemDefId));
 								cell.ForeColor=Color.Red;
 								cell.Bold= true;
 								row.Cells.Add(cell);
-								row.Cells.Add(listDiseases[i].PatNote);
+								row.Cells.Add(listDiseases[i].PatientNote);
 							}
 							else {
 								row.Cells.Add("");
-								cell=new GridCell(DiseaseDefs.GetItem(listDiseases[i].DiseaseDefNum)?.DiseaseName??"INVALID PROBLEM");
+								cell=new GridCell(ProblemDefinitions.GetItem(listDiseases[i].ProblemDefId)?.Description??"INVALID PROBLEM");
 								cell.ForeColor=Color.Red;
 								cell.Bold= true;
 								row.Cells.Add(cell);

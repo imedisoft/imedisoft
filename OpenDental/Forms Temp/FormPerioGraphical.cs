@@ -17,8 +17,6 @@ namespace OpenDental {
 		private Patient _patCur;
 		//public List<PerioMeasure> ListPerioMeasures; 
 		private ToothChartRelay _toothChartRelay;
-		///<summary>This is the Sparks3D control.</summary>
-		private Control toothChart;
 
 		public FormPerioGraphical(PerioExam perioExam,Patient patient) {
 			_perioExamCur=perioExam;

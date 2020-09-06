@@ -1,14 +1,17 @@
-﻿using System;
+﻿using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using CodeBase;
 
-namespace OpenDentBusiness {
-	public class StaticTextData
+namespace OpenDentBusiness
+{
+    public class StaticTextData
 	{
 		//Any new fields/lists added to this object must also be implemented in UserControlDashboard.PatientDashboardDataEventArgs.CreateStaticTextData()
 		public PatientNote PatNote;
@@ -22,7 +25,7 @@ namespace OpenDentBusiness {
 		public List<Recall> ListRecallsForFam;
 		public List<Appointment> ListAppts;
 		public List<Appointment> ListFutureApptsForFam;
-		public List<Disease> ListDiseases;
+		public List<Problem> ListDiseases;
 		public List<Allergy> ListAllergies;
 		public List<MedicationPat> ListMedicationPats;
 		public List<Popup> ListFamPopups;
@@ -352,7 +355,7 @@ namespace OpenDentBusiness {
 			}
 			if (IsQueryNeeded(ref ListDiseases, StaticTextFieldDependency.ListDiseases))
 			{
-				ListDiseases = Diseases.Refresh(pat.PatNum, true);
+				ListDiseases = Problems.GetByPatient(pat.PatNum, true).ToList();
 			}
 			if (IsQueryNeeded(ref ListAllergies, StaticTextFieldDependency.ListAllergies))
 			{

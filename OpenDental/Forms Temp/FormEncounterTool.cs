@@ -4,6 +4,8 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -68,7 +70,7 @@ namespace OpenDental {
 			if(FormS.DialogResult==DialogResult.OK) {
 				EncCodeSystem="SNOMEDCT";
 				for(int i=1;i<comboEncCodes.Items.Count;i++) {
-					if(FormS.SelectedSnomed.SnomedCode==comboEncCodes.Items[i].ToString()) {//if they selected one of the recommended codes, select in list
+					if(FormS.SelectedSnomed.Code==comboEncCodes.Items[i].ToString()) {//if they selected one of the recommended codes, select in list
 						comboEncCodes.SelectedIndex=i;
 						textEncCodeValue.Clear();
 						textEncCodeDescript.Text=FormS.SelectedSnomed.Description;
@@ -77,7 +79,7 @@ namespace OpenDental {
 					}
 				}
 				comboEncCodes.SelectedIndex=-1;
-				textEncCodeValue.Text=FormS.SelectedSnomed.SnomedCode;
+				textEncCodeValue.Text=FormS.SelectedSnomed.Code;
 				textEncCodeDescript.Text=FormS.SelectedSnomed.Description;
 				labelEncWarning.Visible=true;
 			}

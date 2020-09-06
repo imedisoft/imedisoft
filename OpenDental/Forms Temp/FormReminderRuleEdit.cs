@@ -6,6 +6,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using Imedisoft.Forms;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -36,9 +39,9 @@ namespace OpenDental {
 			}
 			switch((EhrCriterion)comboReminderCriterion.SelectedIndex) {
 				case EhrCriterion.Problem:
-					DiseaseDef def=DiseaseDefs.GetItem(RuleCur.CriterionFK);
-					textCriterionFK.Text=def.DiseaseName;
-					textICD9.Text=def.ICD9Code;
+					ProblemDefinition def=ProblemDefinitions.GetItem(RuleCur.CriterionFK);
+					textCriterionFK.Text=def.Description;
+					textICD9.Text=def.CodeIcd9;
 					break;
 				//case EhrCriterion.ICD9:
 				//  textCriterionFK.Text=ICD9s.GetDescription(RuleCur.CriterionFK);
@@ -102,7 +105,7 @@ namespace OpenDental {
 		private void butSelectFK_Click(object sender,EventArgs e) {
 			switch((EhrCriterion)comboReminderCriterion.SelectedIndex) {
 				case EhrCriterion.Problem:
-					FormDiseaseDefs formD=new FormDiseaseDefs();
+					FormProblemDefinitions formD=new FormProblemDefinitions();
 					formD.IsSelectionMode=true;
 					formD.ShowDialog();
 					if(formD.DialogResult!=DialogResult.OK) {
@@ -110,7 +113,7 @@ namespace OpenDental {
 						return;
 					}
 					//the list should only ever contain one item.
-					RuleCur.CriterionFK=formD.ListSelectedDiseaseDefs[0].DiseaseDefNum;
+					RuleCur.CriterionFK=formD.SelectedProblemDefinitions[0].Id;
 					break;
 				case EhrCriterion.Medication:
 					FormMedications formM=new FormMedications();

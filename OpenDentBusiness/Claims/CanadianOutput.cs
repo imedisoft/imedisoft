@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -932,7 +934,7 @@ namespace OpenDentBusiness.Eclaims {
 								Canadian.EOBImportHelper(fieldInputter,listClaimProcsForClaim,listAllProcs,listAllClaimProcs,claim,true,null,clearinghouseClin.IsEraDownloadAllowed,pat);
 								SecurityLogs.MakeLogEntry(Permissions.InsPayCreate,claim.PatNum
 									,"Claim for service date "+POut.Date(claim.DateService)+" amounts overwritten using recieved EOB amounts."
-									,LogSources.CanadaEobAutoImport);
+									,SecurityLogSource.CanadaEobAutoImport);
 							}
 						}
 					}

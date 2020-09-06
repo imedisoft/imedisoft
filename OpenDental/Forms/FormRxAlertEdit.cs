@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using OpenDentBusiness;
 using System;
 using System.Windows.Forms;
@@ -22,7 +23,7 @@ namespace Imedisoft.Forms
 			if (rxAlert.DiseaseDefId > 0)
 			{
 				nameLabel.Text = Translation.Rx.IfPatientAlreadyHasThisProblem;
-				nameTextBox.Text = DiseaseDefs.GetName(rxAlert.DiseaseDefId);
+				nameTextBox.Text = ProblemDefinitions.GetName(rxAlert.DiseaseDefId);
 			}
 
 			if (rxAlert.AllergyDefId > 0)

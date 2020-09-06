@@ -632,8 +632,8 @@ namespace OpenDentBusiness {
 			//Getting a date-sorted list of all credits that haven't been attributed to anything.
 			decimal creditTotal=0;
 			for(int i=0;i<listAdjustments.Count;i++) {
-				if(listAdjustments[i].AdjAmt<0) {
-					creditTotal-=(decimal)listAdjustments[i].AdjAmt;
+				if(listAdjustments[i].AdjustAmount<0) {
+					creditTotal-=(decimal)listAdjustments[i].AdjustAmount;
 				}
 			}
 			for(int i=0;i<listPaySplits.Count;i++) {
@@ -872,10 +872,10 @@ namespace OpenDentBusiness {
 				}
 				for(int j=0;j<listAdjustments.Count;j++) {
 					Adjustment adjustment=listAdjustments[j];
-					decimal adjustmentAmt=(decimal)adjustment.AdjAmt;
-					if(charge.GetType()==typeof(Procedure) && adjustment.ProcNum==charge.PriKey) {
+					decimal adjustmentAmt=(decimal)adjustment.AdjustAmount;
+					if(charge.GetType()==typeof(Procedure) && adjustment.ProcedureId==charge.PriKey) {
 						charge.AmountEnd+=adjustmentAmt;
-						if(adjustment.AdjAmt<0) {
+						if(adjustment.AdjustAmount<0) {
 							accountCredits+=adjustmentAmt;
 						}
 						charge.AmountAvailable+=adjustmentAmt;

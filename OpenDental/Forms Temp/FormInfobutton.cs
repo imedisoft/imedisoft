@@ -992,14 +992,14 @@ namespace OpenDental {
 		//}
 
 		private void butAddDisease_Click(object sender,EventArgs e) {
-			FormDiseaseDefs FormDD = new FormDiseaseDefs();
+			FormProblemDefinitions FormDD = new FormProblemDefinitions();
 			FormDD.IsSelectionMode=true;
 			FormDD.ShowDialog();
 			if(FormDD.DialogResult!=DialogResult.OK) {
 				return;
 			}
 			//the list should only ever contain one item.
-			EhrTriggers.ConvertToKnowledgeRequests(FormDD.ListSelectedDiseaseDefs[0]).ForEach(x=>_listKnowledgeRequests.Add(x));
+			EhrTriggers.ConvertToKnowledgeRequests(FormDD.SelectedProblemDefinitions[0]).ForEach(x=>_listKnowledgeRequests.Add(x));
 			fillKnowledgeRequestitems();
 		}
 

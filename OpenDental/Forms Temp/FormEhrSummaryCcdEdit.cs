@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using CodeBase;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -61,8 +62,8 @@ namespace OpenDental {
 				return;
 			}
 			FormReconcileProblem formRP=new FormReconcileProblem(_patCur);
-			formRP.ListProblemNew=new List<Disease>();
-			formRP.ListProblemDefNew=new List<DiseaseDef>();
+			formRP.ListProblemNew=new List<Problem>();
+			formRP.ListProblemDefNew=new List<ProblemDefinition>();
 			EhrCCD.GetListDiseases(xmlDocCcd,formRP.ListProblemNew,formRP.ListProblemDefNew);
 			formRP.ShowDialog();
 		}

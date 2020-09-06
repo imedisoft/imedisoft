@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using OpenDental;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	public partial class FormInterventions:ODForm {
@@ -62,7 +64,7 @@ namespace OpenDental {
 						}
 						break;
 					case "ICD9CM":
-						ICD9 i9Cur=ICD9s.GetByCode(listIntervention[i].CodeValue);
+						Icd9 i9Cur=Icd9s.GetByCode(listIntervention[i].CodeValue);
 						if(i9Cur!=null) {
 							descript=i9Cur.Description;
 						}

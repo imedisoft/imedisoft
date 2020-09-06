@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
+using System.Linq;
 
 namespace OpenDental {
 	public partial class FormReconcileProblem:ODForm {
-		public List<DiseaseDef> ListProblemDefNew;
-		public List<Disease> ListProblemNew;
-		private List<Disease> _listProblemReconcile;
-		private List<DiseaseDef> _listProblemDefCur;
-		private List<Disease> _listProblemCur;
+		public List<ProblemDefinition> ListProblemDefNew;
+		public List<Problem> ListProblemNew;
+		private List<Problem> _listProblemReconcile;
+		private List<ProblemDefinition> _listProblemDefCur;
+		private List<Problem> _listProblemCur;
 		private Patient _patCur;
 
 		///<summary>Patient must be valid.  Do not pass null.</summary>
@@ -22,10 +25,10 @@ namespace OpenDental {
 
 		private void FormReconcileProblem_Load(object sender,EventArgs e) {
 			for(int index=0;index<ListProblemNew.Count;index++) {
-				ListProblemNew[index].PatNum=_patCur.PatNum;
+				ListProblemNew[index].PatientId=_patCur.PatNum;
 			}
 			FillExistingGrid();//Done first so that _listReconcileCur and _listReconcileDefCur are populated.
-			_listProblemReconcile=new List<Disease>(_listProblemCur);
+			_listProblemReconcile=new List<Problem>(_listProblemCur);
 			#region Delete After Testing
 			//-------------------------------Delete after testing
 			//ListProblemNew=new List<Disease>();
@@ -172,7 +175,7 @@ namespace OpenDental {
 			for(int i=0;i<ListProblemNew.Count;i++) {
 				isValid=true;
 				for(int j=0;j<_listProblemDefCur.Count;j++) {
-					if(_listProblemDefCur[j].SnomedCode==ListProblemDefNew[i].SnomedCode) {
+					if(_listProblemDefCur[j].CodeSnomed==ListProblemDefNew[i].CodeSnomed) {
 						isValid=false;
 						break;
 					}
@@ -185,41 +188,44 @@ namespace OpenDental {
 			FillReconcileGrid();
 		}
 
-		private void FillImportGrid() {
+		private void FillImportGrid()
+		{
 			gridProbImport.BeginUpdate();
 			gridProbImport.ListGridColumns.Clear();
-			GridColumn col=new GridColumn("Last Modified",100,HorizontalAlignment.Center);
+			GridColumn col = new GridColumn("Last Modified", 100, HorizontalAlignment.Center);
 			gridProbImport.ListGridColumns.Add(col);
-			col=new GridColumn("Date Start",100,HorizontalAlignment.Center);
+			col = new GridColumn("Date Start", 100, HorizontalAlignment.Center);
 			gridProbImport.ListGridColumns.Add(col);
-			col=new GridColumn("Problem Name",200);
+			col = new GridColumn("Problem Name", 200);
 			gridProbImport.ListGridColumns.Add(col);
-			col=new GridColumn("Status",80,HorizontalAlignment.Center);
+			col = new GridColumn("Status", 80, HorizontalAlignment.Center);
 			gridProbImport.ListGridColumns.Add(col);
 			gridProbImport.ListGridRows.Clear();
 			GridRow row;
-			for(int i=0;i<ListProblemNew.Count;i++) {
-				row=new GridRow();
+			for (int i = 0; i < ListProblemNew.Count; i++)
+			{
+				row = new GridRow();
 				row.Cells.Add(DateTime.Now.ToShortDateString());
-				if(ListProblemNew[i].DateStart.Year<1880) {
+				row.Cells.Add(ListProblemNew[i].DateStart?.ToShortDateString() ?? "");
+				
+				if (ListProblemDefNew[i].Description == null)
+				{
 					row.Cells.Add("");
 				}
-				else {
-				row.Cells.Add(ListProblemNew[i].DateStart.ToShortDateString());
-					}
-				if(ListProblemDefNew[i].DiseaseName==null) {
-					row.Cells.Add("");
+				else
+				{
+					row.Cells.Add(ListProblemDefNew[i].Description);
 				}
-				else {
-					row.Cells.Add(ListProblemDefNew[i].DiseaseName);
-				}
-				if(ListProblemNew[i].ProbStatus==ProblemStatus.Active) {
+				if (ListProblemNew[i].Status == ProblemStatus.Active)
+				{
 					row.Cells.Add("Active");
 				}
-				else if(ListProblemNew[i].ProbStatus==ProblemStatus.Resolved) {
+				else if (ListProblemNew[i].Status == ProblemStatus.Resolved)
+				{
 					row.Cells.Add("Resolved");
 				}
-				else {
+				else
+				{
 					row.Cells.Add("Inactive");
 				}
 				gridProbImport.ListGridRows.Add(row);
@@ -239,37 +245,33 @@ namespace OpenDental {
 			col=new GridColumn("Status",80,HorizontalAlignment.Center);
 			gridProbExisting.ListGridColumns.Add(col);
 			gridProbExisting.ListGridRows.Clear();
-			_listProblemCur=Diseases.Refresh(_patCur.PatNum,true);
+			_listProblemCur=Problems.GetByPatient(_patCur.PatNum,true).ToList();
 			List<long> problemDefNums=new List<long>();
 			for(int h=0;h<_listProblemCur.Count;h++) {
-				if(_listProblemCur[h].DiseaseDefNum > 0) {
-					problemDefNums.Add(_listProblemCur[h].DiseaseDefNum);
+				if(_listProblemCur[h].ProblemDefId > 0) {
+					problemDefNums.Add(_listProblemCur[h].ProblemDefId);
 				}
 			}
-			_listProblemDefCur=DiseaseDefs.GetMultDiseaseDefs(problemDefNums);
+			_listProblemDefCur=ProblemDefinitions.GetMultDiseaseDefs(problemDefNums);
 			GridRow row;
-			DiseaseDef disD;
+			ProblemDefinition disD;
 			for(int i=0;i<_listProblemCur.Count;i++) {
 				row=new GridRow();
-				disD=new DiseaseDef();
-				disD=DiseaseDefs.GetItem(_listProblemCur[i].DiseaseDefNum);
-				row.Cells.Add(_listProblemCur[i].DateTStamp.ToShortDateString());
-				if(_listProblemCur[i].DateStart.Year<1880) {
+				disD=new ProblemDefinition();
+				disD=ProblemDefinitions.GetItem(_listProblemCur[i].ProblemDefId);
+				row.Cells.Add(_listProblemCur[i].LastModifiedDate.ToShortDateString());
+				row.Cells.Add(_listProblemCur[i].DateStart?.ToShortDateString() ?? "");
+				
+				if(disD.Description==null) {
 					row.Cells.Add("");
 				}
 				else {
-					row.Cells.Add(_listProblemCur[i].DateStart.ToShortDateString());
+					row.Cells.Add(disD.Description);
 				}
-				if(disD.DiseaseName==null) {
-					row.Cells.Add("");
-				}
-				else {
-					row.Cells.Add(disD.DiseaseName);
-				}
-				if(_listProblemCur[i].ProbStatus==ProblemStatus.Active) {
+				if(_listProblemCur[i].Status==ProblemStatus.Active) {
 					row.Cells.Add("Active");
 				}
-				else if(_listProblemCur[i].ProbStatus==ProblemStatus.Resolved) {
+				else if(_listProblemCur[i].Status==ProblemStatus.Resolved) {
 					row.Cells.Add("Resolved");
 				}
 				else {
@@ -297,49 +299,45 @@ namespace OpenDental {
 			gridProbReconcile.ListGridColumns.Add(col);
 			gridProbReconcile.ListGridRows.Clear();
 			GridRow row;
-			DiseaseDef disD;
+			ProblemDefinition disD;
 			for(int i=0;i<_listProblemReconcile.Count;i++) {
 				row=new GridRow();
-				disD=new DiseaseDef();
-				if(_listProblemReconcile[i].IsNew) {
+				disD=new ProblemDefinition();
+				if(_listProblemReconcile[i].Id == 0) {
 					//To find the disease def for new disease, get the index of the matching problem in ListProblemNew, and use that index in ListProblemDefNew because they are 1 to 1 lists.
 					disD=ListProblemDefNew[ListProblemNew.IndexOf(_listProblemReconcile[i])];
 				}
 				for(int j=0;j<_listProblemDefCur.Count;j++) {
-					if(_listProblemReconcile[i].DiseaseDefNum > 0 && _listProblemReconcile[i].DiseaseDefNum==_listProblemDefCur[j].DiseaseDefNum) {
+					if(_listProblemReconcile[i].ProblemDefId > 0 && _listProblemReconcile[i].ProblemDefId==_listProblemDefCur[j].Id) {
 						disD=_listProblemDefCur[j];//Gets the diseasedef matching the disease so we can use it to populate the grid
 						break;
 					}
 				}
 				row.Cells.Add(DateTime.Now.ToShortDateString());
-				if(_listProblemReconcile[i].DateStart.Year<1880) {
+				row.Cells.Add(_listProblemReconcile[i].DateStart?.ToShortDateString() ?? "");
+				
+				if(disD.Description==null) {
 					row.Cells.Add("");
 				}
 				else {
-					row.Cells.Add(_listProblemReconcile[i].DateStart.ToShortDateString());
-				}
-				if(disD.DiseaseName==null) {
-					row.Cells.Add("");
-				}
-				else {
-					row.Cells.Add(disD.DiseaseName);
+					row.Cells.Add(disD.Description);
 				}
 				if(_listProblemReconcile[i]==null) {
 					row.Cells.Add("");
 				}
 				else {
-					row.Cells.Add(_listProblemReconcile[i].PatNote);
+					row.Cells.Add(_listProblemReconcile[i].PatientNote);
 				}
-				if(_listProblemReconcile[i].ProbStatus==ProblemStatus.Active) {
+				if(_listProblemReconcile[i].Status==ProblemStatus.Active) {
 					row.Cells.Add("Active");
 				}
-				else if(_listProblemReconcile[i].ProbStatus==ProblemStatus.Resolved) {
+				else if(_listProblemReconcile[i].Status==ProblemStatus.Resolved) {
 					row.Cells.Add("Resolved");
 				}
 				else {
 					row.Cells.Add("Inactive");
 				}
-				row.Cells.Add(_listProblemReconcile[i].IsNew?"X":"");
+				row.Cells.Add(_listProblemReconcile[i].Id == 0?"X":"");
 				gridProbReconcile.ListGridRows.Add(row);
 			}
 			gridProbReconcile.EndUpdate();
@@ -350,9 +348,9 @@ namespace OpenDental {
 				MessageBox.Show("A row must be selected to add");
 				return;
 			}
-			Disease dis;
-			DiseaseDef disD;
-			DiseaseDef disDR=null;
+			Problem dis;
+			ProblemDefinition disD;
+			ProblemDefinition disDR=null;
 			int skipCount=0;
 			bool isValid;
 			for(int i=0;i<gridProbImport.SelectedIndices.Length;i++) {
@@ -361,16 +359,16 @@ namespace OpenDental {
 				dis=ListProblemNew[gridProbImport.SelectedIndices[i]];
 				disD=ListProblemDefNew[gridProbImport.SelectedIndices[i]];
 				for(int j=0;j<_listProblemReconcile.Count;j++) {
-					if(_listProblemReconcile[j].IsNew) {
+					if(_listProblemReconcile[j].Id == 0) {
 						disDR=ListProblemDefNew[ListProblemNew.IndexOf(_listProblemReconcile[j])];
 					}
 					else {
-						disDR=DiseaseDefs.GetItem(_listProblemReconcile[j].DiseaseDefNum);
+						disDR=ProblemDefinitions.GetItem(_listProblemReconcile[j].ProblemDefId);
 					}
 					if(disDR==null) {
 						continue;
 					}
-					if(disDR.SnomedCode!="" && disDR.SnomedCode==disD.SnomedCode) {
+					if(disDR.CodeSnomed!="" && disDR.CodeSnomed==disD.CodeSnomed) {
 						isValid=false;
 						skipCount++;
 						break;
@@ -391,19 +389,19 @@ namespace OpenDental {
 				MessageBox.Show("A row must be selected to add");
 				return;
 			}
-			Disease dis;
-			DiseaseDef disD;
+			Problem dis;
+			ProblemDefinition disD;
 			int skipCount=0;
 			bool isValid;
 			for(int i=0;i<gridProbExisting.SelectedIndices.Length;i++) {
 				isValid=true;
 				//Since gridProbImport and ListProblemPatNew are a 1:1 list we can use the selected index position to get our dis
 				dis=_listProblemCur[gridProbExisting.SelectedIndices[i]];
-				disD=DiseaseDefs.GetItem(dis.DiseaseDefNum);
+				disD=ProblemDefinitions.GetItem(dis.ProblemDefId);
 				for(int j=0;j<_listProblemReconcile.Count;j++) {
-					if(_listProblemCur[j].IsNew) {
+					if(_listProblemCur[j].Id == 0) {
 						for(int k=0;k<ListProblemDefNew.Count;k++) {
-							if(disD.SnomedCode!="" && disD.SnomedCode==ListProblemDefNew[k].SnomedCode) {
+							if(disD.CodeSnomed!="" && disD.CodeSnomed==ListProblemDefNew[k].CodeSnomed) {
 								isValid=false;
 								skipCount++;
 								break;
@@ -413,7 +411,7 @@ namespace OpenDental {
 					if(!isValid) {
 						break;
 					}
-					if(dis.DiseaseDefNum==_listProblemReconcile[j].DiseaseDefNum) {
+					if(dis.ProblemDefId==_listProblemReconcile[j].ProblemDefId) {
 						isValid=false;
 						skipCount++;
 						break;
@@ -434,7 +432,7 @@ namespace OpenDental {
 				MessageBox.Show("A row must be selected to remove");
 				return;
 			}
-			Disease dis;
+			Problem dis;
 			for(int i=gridProbReconcile.SelectedIndices.Length-1;i>-1;i--) {//Loop backwards so that we can remove from the list as we go
 				dis=_listProblemReconcile[gridProbReconcile.SelectedIndices[i]];
 				_listProblemReconcile.Remove(dis);
@@ -448,38 +446,38 @@ namespace OpenDental {
 					return;
 				}
 			}
-			Disease dis;
-			DiseaseDef disD;
+			Problem dis;
+			ProblemDefinition disD;
 			bool isActive;
 			//Discontinue any current medications that are not present in the reconcile list.
 			for(int i=0;i<_listProblemCur.Count;i++) {//Start looping through all current problems
 				isActive=false;
 				dis=_listProblemCur[i];
-				disD=DiseaseDefs.GetItem(dis.DiseaseDefNum);
+				disD=ProblemDefinitions.GetItem(dis.ProblemDefId);
 				for(int j=0;j<_listProblemReconcile.Count;j++) {//Compare each reconcile problem to the current problem
-					DiseaseDef disDR=DiseaseDefs.GetItem(_listProblemReconcile[j].DiseaseDefNum);
-					if(_listProblemReconcile[j].DiseaseDefNum==_listProblemCur[i].DiseaseDefNum) {//Has identical DiseaseDefNums
+					ProblemDefinition disDR=ProblemDefinitions.GetItem(_listProblemReconcile[j].ProblemDefId);
+					if(_listProblemReconcile[j].ProblemDefId==_listProblemCur[i].ProblemDefId) {//Has identical DiseaseDefNums
 						isActive=true;
 						break;
 					}
 					if(disDR==null) {
 						continue;
 					}
-					if(disDR.SnomedCode!="" && disDR.SnomedCode==disD.SnomedCode) {//Has a Snomed code and they are equal
+					if(disDR.CodeSnomed!="" && disDR.CodeSnomed==disD.CodeSnomed) {//Has a Snomed code and they are equal
 						isActive=true;
 						break;
 					}
 				}
 				if(!isActive) {//Update current problems.
-					dis.ProbStatus=ProblemStatus.Inactive;
-					Diseases.Update(_listProblemCur[i]);
+					dis.Status=ProblemStatus.Inactive;
+					Problems.Update(_listProblemCur[i]);
 				}
 			}
 			//Always update every current problem for the patient so that DateTStamp reflects the last reconcile date.
 			if(_listProblemCur.Count>0) {
-				Diseases.ResetTimeStamps(_patCur.PatNum,ProblemStatus.Active);
+				Problems.ResetTimeStamps(_patCur.PatNum,ProblemStatus.Active);
 			}
-			DiseaseDef disDU=null;
+			ProblemDefinition disDU=null;
 			int index;
 			for(int j=0;j<_listProblemReconcile.Count;j++) {
 				index=ListProblemNew.IndexOf(_listProblemReconcile[j]);
@@ -487,14 +485,16 @@ namespace OpenDental {
 					continue;
 				}
 				if(_listProblemReconcile[j]==ListProblemNew[index]) {
-					disDU=DiseaseDefs.GetItem(DiseaseDefs.GetNumFromCode(ListProblemDefNew[index].SnomedCode));
+					var problemId = ProblemDefinitions.GetNumFromCode(ListProblemDefNew[index].CodeSnomed);
+
+					disDU =ProblemDefinitions.GetItem(problemId??0);
 					if(disDU==null) {
-						ListProblemNew[index].DiseaseDefNum=DiseaseDefs.Insert(ListProblemDefNew[index]);
+						ListProblemNew[index].ProblemDefId=ProblemDefinitions.Insert(ListProblemDefNew[index]);
 					}
 					else {
-						ListProblemNew[index].DiseaseDefNum=disDU.DiseaseDefNum;
+						ListProblemNew[index].ProblemDefId=disDU.Id;
 					}
-					Diseases.Insert(ListProblemNew[index]);
+					Problems.Insert(ListProblemNew[index]);
 				}
 			}
 			DataValid.SetInvalid(InvalidType.Diseases);
@@ -506,7 +506,7 @@ namespace OpenDental {
 			//EhrMeasureEvents.Insert(newMeasureEvent);
 			for(int inter=0;inter<_listProblemReconcile.Count;inter++) {
 				if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurrentUser.Id).ProblemCDS) {
-					DiseaseDef disDInter=DiseaseDefs.GetItem(_listProblemReconcile[inter].DiseaseDefNum);
+					ProblemDefinition disDInter=ProblemDefinitions.GetItem(_listProblemReconcile[inter].ProblemDefId);
 					FormCDSIntervention FormCDSI=new FormCDSIntervention();
 					FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(disDInter,_patCur);
 					FormCDSI.ShowIfRequired(false);

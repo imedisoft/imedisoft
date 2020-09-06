@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using OpenDental;
 using OpenDentBusiness;
 using System;
@@ -377,7 +378,7 @@ namespace Imedisoft.Forms
 				return;
 			}
 
-			if (Confirm("Delete Prescription?"))
+			if (Confirm(Translation.Common.ConfirmDelete))
 			{
 				return;
 			}

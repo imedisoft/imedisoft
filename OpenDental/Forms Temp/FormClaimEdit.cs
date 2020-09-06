@@ -1787,13 +1787,13 @@ namespace OpenDental
 				return;
 			}
 			Adjustment adj=new Adjustment();
-			adj.PatNum=PatCur.PatNum;
-			adj.ProvNum=procForAdj.ProvNum;
-			adj.DateEntry=DateTime.Today;//but will get overwritten to server date
-			adj.AdjDate=DateTime.Today;
-			adj.ProcDate=procForAdj.ProcDate;
-			adj.ProcNum=procForAdj.ProcNum;
-			adj.ClinicNum=procForAdj.ClinicNum;
+			adj.PatientId=PatCur.PatNum;
+			adj.ProviderId=procForAdj.ProvNum;
+			adj.AddedDate=DateTime.Today;//but will get overwritten to server date
+			adj.AdjustDate=DateTime.Today;
+			adj.ProcedureDate=procForAdj.ProcDate;
+			adj.ProcedureId=procForAdj.ProcNum;
+			adj.ClinicId=procForAdj.ClinicNum;
 			FormAdjust FormA=new FormAdjust(PatCur,adj);
 			FormA.IsNew=true;
 			FormA.ShowDialog();
@@ -2541,7 +2541,7 @@ namespace OpenDental
 		///<summary>Returns true if the claim has ICD9 codes and the user insists on sending the claim with them attached.</summary>
 		private bool HasIcd9Codes() {
 			List<Procedure> listProcsOnClaim=ProcList.FindAll(x => _listClaimProcsForClaim.Any(y => y.ProcNum==x.ProcNum));			
-			if(ICD9s.HasICD9Codes(listProcsOnClaim)) {
+			if(Icd9s.HasIcd9Codes(listProcsOnClaim)) {
 				string msgText="There are ICD-9 codes attached to a procedure.  Would you like to send the claim without the ICD-9 codes? ";
 				if(MessageBox.Show(msgText,"",MessageBoxButtons.YesNo)==DialogResult.Yes) {
 					return false;//They have codes, but they are willing to send without them.

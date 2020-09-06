@@ -8,6 +8,8 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormEhrReminders:ODForm {
@@ -40,8 +42,8 @@ namespace OpenDental {
 				row=new GridRow();
 				switch(listReminders[i].ReminderCriterion) {
 					case EhrCriterion.Problem:
-						DiseaseDef def=DiseaseDefs.GetItem(listReminders[i].CriterionFK);
-						row.Cells.Add("Problem ="+def.ICD9Code+" "+def.DiseaseName);
+						ProblemDefinition def=ProblemDefinitions.GetItem(listReminders[i].CriterionFK);
+						row.Cells.Add("Problem ="+def.CodeIcd9+" "+def.Description);
 						break;
 					case EhrCriterion.Medication:
 						Medication tempMed = Medications.GetMedication(listReminders[i].CriterionFK);

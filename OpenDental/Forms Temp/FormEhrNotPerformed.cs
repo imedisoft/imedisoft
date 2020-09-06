@@ -9,6 +9,8 @@ using OpenDentBusiness;
 using OpenDental.UI;
 using OpenDental;
 using Imedisoft.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormEhrNotPerformed:ODForm {

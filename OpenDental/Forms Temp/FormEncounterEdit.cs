@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormEncounterEdit:ODForm {
@@ -98,9 +100,9 @@ namespace OpenDental {
 			formS.IsSelectionMode=true;
 			if(formS.ShowDialog()==DialogResult.OK) {
 				_encCur.CodeSystem="SNOMEDCT";
-				_encCur.CodeValue=formS.SelectedSnomed.SnomedCode;
+				_encCur.CodeValue=formS.SelectedSnomed.Code;
 				textCodeSystem.Text="SNOMEDCT";
-				textCodeValue.Text=formS.SelectedSnomed.SnomedCode;
+				textCodeValue.Text=formS.SelectedSnomed.Code;
 				textCodeDescript.Text=formS.SelectedSnomed.Description;
 			}
 		}

@@ -5,12 +5,15 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using Imedisoft.Forms;
 using OpenDentBusiness;
 
 namespace OpenDental {
 	public partial class FormFamilyHealthEdit:ODForm {
 		public FamilyHealth FamilyHealthCur;
-		private DiseaseDef DisDefCur;
+		private ProblemDefinition DisDefCur;
 
 		public FormFamilyHealthEdit() {
 			InitializeComponent();
@@ -26,28 +29,28 @@ namespace OpenDental {
 			if(FamilyHealthCur.IsNew) {
 				return; //Don't need to set any of the info below.  All null.
 			}
-			DisDefCur=DiseaseDefs.GetItem(FamilyHealthCur.DiseaseDefNum);
+			DisDefCur=ProblemDefinitions.GetItem(FamilyHealthCur.DiseaseDefNum);
 			//Validation is done when deleting diseaseDefs to make sure they are not in use by FamilyHealths.
-			textProblem.Text=DisDefCur.DiseaseName;
-			textSnomed.Text=DisDefCur.SnomedCode;
+			textProblem.Text=DisDefCur.Description;
+			textSnomed.Text=DisDefCur.CodeSnomed;
 			textName.Text=FamilyHealthCur.PersonName;
 		}
 
 		private void butPick_Click(object sender,EventArgs e) {
-			FormDiseaseDefs FormD=new FormDiseaseDefs();
+			FormProblemDefinitions FormD=new FormProblemDefinitions();
 			FormD.IsSelectionMode=true;
 			FormD.ShowDialog();
 			if(FormD.DialogResult!=DialogResult.OK) {
 				return;
 			}
 			//the list should only ever contain one item.
-			DiseaseDef disDef=FormD.ListSelectedDiseaseDefs[0];
-			if(disDef.SnomedCode=="") {
+			ProblemDefinition disDef=FormD.SelectedProblemDefinitions[0];
+			if(disDef.CodeSnomed=="") {
 				MessageBox.Show("Selection must have a SNOMED CT code associated");
 				return;
 			}
-			textProblem.Text=disDef.DiseaseName;
-			textSnomed.Text=disDef.SnomedCode;
+			textProblem.Text=disDef.Description;
+			textSnomed.Text=disDef.CodeSnomed;
 			DisDefCur=disDef;
 		}
 
@@ -77,7 +80,7 @@ namespace OpenDental {
 				MessageBox.Show("Problem required.");
 				return;
 			}
-			FamilyHealthCur.DiseaseDefNum=DisDefCur.DiseaseDefNum;
+			FamilyHealthCur.DiseaseDefNum=DisDefCur.Id;
 			FamilyHealthCur.Relationship=(FamilyRelationship)listRelationship.SelectedIndex;
 			FamilyHealthCur.PersonName=textName.Text;
 			if(FamilyHealthCur.IsNew) {

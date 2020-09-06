@@ -9,6 +9,7 @@ using CodeBase;
 using System.IO;
 using System.Windows.Forms;
 using OpenDentBusiness.WebTypes;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
@@ -487,7 +488,7 @@ namespace OpenDentBusiness
 			});
 			if (includeSecurityLogEntry)
 			{
-				SecurityLogs.MakeLogEntry(Permissions.Setup, patNum: 0, logText:
+				SecurityLogs.MakeLogEntry(Permissions.Setup, patientId: 0, logMessage:
 					$"Changes were made to EServiceSetup. See EServiceSignalNum {eServiceSignalNum} for more details.");
 			}
 		}

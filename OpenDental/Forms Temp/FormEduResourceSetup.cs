@@ -8,6 +8,8 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	public partial class FormEduResourceSetup:ODForm {
@@ -34,7 +36,7 @@ namespace OpenDental {
 			foreach(EduResource eduResCur in eduResourceList) {
 				row=new GridRow();
 				if(eduResCur.DiseaseDefNum!=0) {
-					row.Cells.Add("Problem: "+DiseaseDefs.GetItem(eduResCur.DiseaseDefNum).DiseaseName);
+					row.Cells.Add("Problem: "+ProblemDefinitions.GetItem(eduResCur.DiseaseDefNum).Description);
 					//row.Cells.Add("ICD9: "+DiseaseDefs.GetItem(eduResCur.DiseaseDefNum).ICD9Code);
 				}
 				else if(eduResCur.MedicationNum!=0) {

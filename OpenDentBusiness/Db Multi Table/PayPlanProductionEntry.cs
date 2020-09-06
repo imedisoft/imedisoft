@@ -59,18 +59,18 @@ namespace OpenDentBusiness {
 		public PayPlanProductionEntry(Adjustment adj,PayPlanLink credit,List<PaySplit> listPaySplits) {
 			ProductionTag=adj;
 			LinkedCredit=credit;
-			ProductionDate=adj.AdjDate;
-			PriKey=adj.AdjNum;
-			ProvNum=adj.ProvNum;
-			ClinicNum=adj.ClinicNum;
-			PatNum=adj.PatNum;
+			ProductionDate=adj.AdjustDate;
+			PriKey=adj.Id;
+			ProvNum=adj.ProviderId;
+			ClinicNum=adj.ClinicId;
+			PatNum=adj.PatientId;
 			//Get the amount that was paid to the adjustment prior to the adjustment being attached to a payment plan.
-			decimal patPaid=(decimal)listPaySplits.FindAll(x => x.AdjNum==adj.AdjNum && x.PayPlanNum==0 && x.PayPlanChargeNum==0).Sum(x => x.SplitAmt);
-			AmountOriginal=(decimal)adj.AdjAmt-patPaid;
+			decimal patPaid=(decimal)listPaySplits.FindAll(x => x.AdjNum==adj.Id && x.PayPlanNum==0 && x.PayPlanChargeNum==0).Sum(x => x.SplitAmt);
+			AmountOriginal=(decimal)adj.AdjustAmount-patPaid;
 			AmountOverride=(decimal)credit.AmountOverride;
 			AmountRemaining=(AmountOverride==0)?AmountOriginal:AmountOverride;//Gets set when calculating
 			CreditDate=credit.SecDateTEntry;
-			Description=$"Adjustment - {Definitions.GetName(DefinitionCategory.AdjTypes,adj.AdjType)}";
+			Description=$"Adjustment - {Definitions.GetName(DefinitionCategory.AdjTypes,adj.Type)}";
 			LinkType=PayPlanLinkType.Adjustment;
 		}
 
@@ -87,7 +87,7 @@ namespace OpenDentBusiness {
 				return this.PriKey;//just as safeguard in case is called with this link type
 			}
 			if(this.LinkType==PayPlanLinkType.Adjustment) {
-				return ((Adjustment)this.ProductionTag).ProcNum;
+				return ((Adjustment)this.ProductionTag).ProcedureId ?? 0;
 			}
 			return 0;
 		}
@@ -95,7 +95,7 @@ namespace OpenDentBusiness {
 		///<summary>Used as a short way to grab the AdjNum from an adjustment. Returns 0 if not an adjustment.</summary>
 		public long GetAdjNum() {
 			if(this.LinkType==PayPlanLinkType.Adjustment) {
-				return ((Adjustment)this.ProductionTag).AdjNum;
+				return ((Adjustment)this.ProductionTag).Id;
 			}
 			return 0;
 		}
@@ -139,7 +139,7 @@ namespace OpenDentBusiness {
 					}
 				}
 				else if(credit.LinkType==PayPlanLinkType.Adjustment) {
-					Adjustment adj=listCreditAdjustments.FirstOrDefault(x => x.AdjNum==credit.FKey);
+					Adjustment adj=listCreditAdjustments.FirstOrDefault(x => x.Id==credit.FKey);
 					if(adj!=null) {
 						listPayPlanProductionEntries.Add(new PayPlanProductionEntry(adj,credit,listAdjPaySplits));
 					}

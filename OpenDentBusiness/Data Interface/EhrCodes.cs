@@ -4,6 +4,8 @@ using System.Data;
 using System.Reflection;
 using System.Text;
 using System.Linq;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	///<summary>Never insert or update, use cache pattern only.  This is not referencing a real table in the database, it is a static object filled by the contents of the EHR.dll.</summary>
@@ -162,7 +164,7 @@ namespace OpenDentBusiness {
 						break;
 					case "ICD9CM":
 						if(countIcd9DB==-1) {
-							countIcd9DB=ICD9s.GetCodeCount();
+							countIcd9DB=Icd9s.GetCodeCount();
 						}
 						if(countIcd9DB>countIcd9List) {
 							listt[i].IsInDb=true;
@@ -344,7 +346,7 @@ namespace OpenDentBusiness {
 					if(sCur==null) {
 						continue;
 					}
-					codeCur=new EhrCode { CodeValue=sCur.SnomedCode,Description=sCur.Description };
+					codeCur=new EhrCode { CodeValue=sCur.Code,Description=sCur.Description };
 				}
 				retVal.Add(codeCur);
 			}

@@ -8,6 +8,7 @@ using OpenDental.UI;
 using OpenDentBusiness;
 using CodeBase;
 using System.Text;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormIncomeTransferManage:ODForm {

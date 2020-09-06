@@ -150,17 +150,17 @@ namespace OpenDental {
 			}
 			//Create new adjustment
 			Adjustment adjCur=new Adjustment();
-			adjCur.AdjType=GetSelectedAdjDef().Id;
-			adjCur.AdjDate=PIn.Date(dateAdjustment.Text);
-			adjCur.AdjNote=PIn.String(textNote.Text);
-			adjCur.PatNum=_patCur.PatNum;
+			adjCur.Type=GetSelectedAdjDef().Id;
+			adjCur.AdjustDate=PIn.Date(dateAdjustment.Text);
+			adjCur.Note=PIn.String(textNote.Text);
+			adjCur.PatientId=_patCur.PatNum;
 			if(listSelectedEntries.Count==0) {//User did not select anything and hit "add", so they must want to add an unattached adjustment.
 				AddUnattachedRow();
-				adjCur.ProvNum=_patCur.PriProv;
-				adjCur.ClinicNum=_patCur.ClinicNum;
-				adjCur.ProcDate=adjCur.AdjDate;
-				adjCur.ProcNum=0;
-				MultiAdjEntry adjRow=new MultiAdjEntry(adjCur,adjCur.AdjAmt);
+				adjCur.ProviderId=_patCur.PriProv;
+				adjCur.ClinicId=_patCur.ClinicNum;
+				adjCur.ProcedureDate=adjCur.AdjustDate;
+				adjCur.ProcedureId=0;
+				MultiAdjEntry adjRow=new MultiAdjEntry(adjCur,adjCur.AdjustAmount);
 				adjRow.AdjAmtType=AdjAmtType.FixedAmt;
 				adjRow.AdjAmtOrPerc=PIn.Double(textAmt.Text);
 				adjRow.RecalculateAdjAmt(0);
@@ -169,8 +169,8 @@ namespace OpenDental {
 			else {//One or more procedure rows selected, create adjustments
 				foreach(MultiAdjEntry procRow in listSelectedEntries.FindAll(x => x.IsProcedureRow())) {//Loop through all selected procedures
 					Adjustment adj=adjCur.Clone();
-					adj.ProcDate=procRow.Proc.ProcDate;
-					adj.ProcNum=procRow.Proc.ProcNum;
+					adj.ProcedureDate=procRow.Proc.ProcDate;
+					adj.ProcedureId=procRow.Proc.ProcNum;
 					MultiAdjEntry adjRow=new MultiAdjEntry(procRow.Proc,adj,procRow.RemAfter);
 					adjRow=UpdateAdjValues(adjRow);//This will set all of the important values from UI selections
 					adjRow.AdjAmtType=GetAdjAmtType();
@@ -266,7 +266,7 @@ namespace OpenDental {
 			//And a null procedure means we are dealing with an unattached adjustment (or an unattached adjustment header row).
 			_listGridEntries=_listGridEntries.OrderBy(x => x.Proc==null)
 				.ThenBy(x => x.Proc!=null ? x.Proc.ProcNum : 0)//If no Proc (unattached adj) then ordering is taken care of later.
-				.ThenBy(x => x.Adj!=null ? x.Adj.AdjDate : DateTime.MinValue)
+				.ThenBy(x => x.Adj!=null ? x.Adj.AdjustDate : DateTime.MinValue)
 				.ThenBy(x => x.Adj!=null ? x.AdjustmentEntryNum : 0).ToList();//Unattached adjustments will get ordered here.
 		}
 
@@ -287,7 +287,7 @@ namespace OpenDental {
 			//Make a dictionary out of all of the adjustment rows that are attached to a procedure and order them very specifically for recalculations.
 			Dictionary<long,List<MultiAdjEntry>> dictMultiAdjByProc=_listGridEntries.Where(x => x.IsAttachedRow())
 				.GroupBy(x => x.Proc.ProcNum)
-				.ToDictionary(x => x.Key,x => x.OrderBy(x => x.Adj.AdjDate).ThenBy(x => x.AdjustmentEntryNum).ToList());
+				.ToDictionary(x => x.Key,x => x.OrderBy(x => x.Adj.AdjustDate).ThenBy(x => x.AdjustmentEntryNum).ToList());
 			//Loop through each procedure row and recalculate all of the attached adjustment rows.
 			foreach(MultiAdjEntry procEntry in _listGridEntries.FindAll(x => x.IsProcedureRow())) {
 				double amountRemaining=procEntry.RemBefore;
@@ -297,7 +297,7 @@ namespace OpenDental {
 						//For instance, if we update multiple procedures at a time, we would have to re-loop through each adjustment like we do here
 						//to ensure that the percents are correct.
 						adjEntry.RecalculateAdjAmt(amountRemaining);
-						amountRemaining+=adjEntry.Adj.AdjAmt;
+						amountRemaining+=adjEntry.Adj.AdjustAmount;
 						adjEntry.RemAfter=amountRemaining;
 					}
 				}
@@ -312,11 +312,11 @@ namespace OpenDental {
 			//set prov
 			if(((ODBoxItem<Provider>)comboProv.SelectedItem).Text=="Inherit") {//Inherit was carefully approved by Nathan (and reluctantly Allen)
 				if(row.Proc!=null) {
-					row.Adj.ProvNum=row.Proc.ProvNum;
+					row.Adj.ProviderId=row.Proc.ProvNum;
 				}
 			}
 			else {
-				row.Adj.ProvNum=comboProv.GetSelected<Provider>().ProvNum;
+				row.Adj.ProviderId=comboProv.GetSelected<Provider>().ProvNum;
 			}
 			//set clinic
 			long selectedClinicNum=0;
@@ -330,11 +330,11 @@ namespace OpenDental {
 					selectedClinicNum=comboClinic.SelectedClinicNum;
 				}
 			}
-			row.Adj.AdjType=GetSelectedAdjDef().Id;
-			row.Adj.ClinicNum=selectedClinicNum;
-			row.Adj.AdjDate=PIn.Date(dateAdjustment.Text);
-			row.Adj.AdjNote=PIn.String(textNote.Text);
-			row.Adj.PatNum=_patCur.PatNum;
+			row.Adj.Type=GetSelectedAdjDef().Id;
+			row.Adj.ClinicId=selectedClinicNum;
+			row.Adj.AdjustDate=PIn.Date(dateAdjustment.Text);
+			row.Adj.Note=PIn.String(textNote.Text);
+			row.Adj.PatientId=_patCur.PatNum;
 			if(row.Proc==null) {//Unassigned adjustments have to be fixed amounts, or else they will be 0.
 				row.AdjAmtType=AdjAmtType.FixedAmt;
 			}
@@ -395,7 +395,7 @@ namespace OpenDental {
 			else if(listSelectedEntries.Count==1) {
 				if(listSelectedEntries[0].Adj!=null) {//user selected an adjustment row
 					butAdd.Text="Update";
-					textNote.Text=listSelectedEntries[0].Adj.AdjNote;
+					textNote.Text=listSelectedEntries[0].Adj.Note;
 				}
 				else {//Selected a procedure row
 					butAdd.Text="Add Adjustments";
@@ -465,7 +465,7 @@ namespace OpenDental {
 			}
 			foreach(MultiAdjEntry entryCur in _listGridEntries) {
 				//We only keep adjustments where the procedure is in the list
-				if(entryCur.Adj==null || entryCur.Adj.ProcNum==0) {
+				if(entryCur.Adj==null || entryCur.Adj.ProcedureId==0) {
 					continue;
 				}
 				if(entryCur.Proc.ProcNum.In(listProcs.Where(x => x.Proc!=null).Select(x => x.Proc.ProcNum))) {
@@ -502,7 +502,7 @@ namespace OpenDental {
 				if(!dictMultiAdjByProc.TryGetValue(procEntry.Proc.ProcNum,out List<MultiAdjEntry> listAdjs)) {
 					continue;
 				}
-				if((procEntry.RemBefore + listAdjs.Sum(x => x.Adj.AdjAmt)).IsLessThanZero()) {
+				if((procEntry.RemBefore + listAdjs.Sum(x => x.Adj.AdjustAmount)).IsLessThanZero()) {
 					hasNegAmt=true;
 					break;
 				}
@@ -522,7 +522,7 @@ namespace OpenDental {
 
 			if(!Security.IsAuthorized(Permissions.AdjustmentCreate,true)) {//User does not have full edit permission.
 				//Therefore the user only has the ability to edit $0 adjustments (see Load()).
-				if(listAdjRows.Any(x => !x.Adj.AdjAmt.IsZero())) {
+				if(listAdjRows.Any(x => !x.Adj.AdjustAmount.IsZero())) {
 					MessageBox.Show("Amount has to be 0.00 due to security permission.");
 					return;
 				}
@@ -531,7 +531,7 @@ namespace OpenDental {
 			foreach(MultiAdjEntry row in listAdjRows) {
 				Adjustments.Insert(row.Adj);
 				TsiTransLogs.CheckAndInsertLogsIfAdjTypeExcluded(row.Adj);
-				listAdjustmentAmounts.Add(row.Adj.AdjAmt.ToString("c"));
+				listAdjustmentAmounts.Add(row.Adj.AdjustAmount.ToString("c"));
 			}
 			if(listAdjustmentAmounts.Count>0) {
 				string log="Adjustment(s) created from Multiple Adjustments window:"+" ";
@@ -616,16 +616,16 @@ namespace OpenDental {
 			///<summary>Manipulates the AdjAmt on the adjustment object.</summary>
 			public void RecalculateAdjAmt(double remBefore) {
 				if(AdjAmtType==AdjAmtType.FixedAmt) {
-					Adj.AdjAmt=AdjAmtOrPerc;
+					Adj.AdjustAmount=AdjAmtOrPerc;
 				}
 				else if(AdjAmtType==AdjAmtType.PercentOfRemBal) {
-					Adj.AdjAmt=Math.Round((AdjAmtOrPerc/100)*remBefore,2);
+					Adj.AdjustAmount=Math.Round((AdjAmtOrPerc/100)*remBefore,2);
 				}
 				else if(AdjAmtType==AdjAmtType.PercentOfFee) {
-					Adj.AdjAmt=Math.Round((AdjAmtOrPerc/100)*Proc.ProcFee,2);
+					Adj.AdjustAmount=Math.Round((AdjAmtOrPerc/100)*Proc.ProcFee,2);
 				}
-				if(Definitions.GetValue(DefinitionCategory.AdjTypes,Adj.AdjType)=="-") {
-					Adj.AdjAmt*=-1;
+				if(Definitions.GetValue(DefinitionCategory.AdjTypes,Adj.Type)=="-") {
+					Adj.AdjustAmount*=-1;
 				}
 			}
 
@@ -695,18 +695,18 @@ namespace OpenDental {
 				}
 				else {//An adjustment row
 					//Adj Date
-					cell=new GridCell(Adj.AdjDate.ToShortDateString());
+					cell=new GridCell(Adj.AdjustDate.ToShortDateString());
 					row.Cells.Add(cell);
 					//Provider
-					cell=new GridCell(Providers.GetAbbr(Adj.ProvNum));
+					cell=new GridCell(Providers.GetAbbr(Adj.ProviderId));
 					row.Cells.Add(cell);
 					//Clinic
 					if(PrefC.HasClinicsEnabled) {
-						cell=new GridCell(Clinics.GetAbbr(Adj.ClinicNum));
+						cell=new GridCell(Clinics.GetAbbr(Adj.ClinicId));
 						row.Cells.Add(cell);
 					}
 					//Adj Type
-					cell=new GridCell(Definitions.GetName(DefinitionCategory.AdjTypes,Adj.AdjType));
+					cell=new GridCell(Definitions.GetName(DefinitionCategory.AdjTypes,Adj.Type));
 					row.Cells.Add(cell);
 					//Fee
 					cell=new GridCell();
@@ -715,7 +715,7 @@ namespace OpenDental {
 					cell=new GridCell();
 					row.Cells.Add(cell);
 					//Adj Amt
-					cell=new GridCell(Math.Round(Adj.AdjAmt,2).ToString("c"));
+					cell=new GridCell(Math.Round(Adj.AdjustAmount,2).ToString("c"));
 					cell.BackColor=Color.LightCyan;
 					row.Cells.Add(cell);
 					//Rem After

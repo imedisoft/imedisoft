@@ -15,6 +15,8 @@ using OpenDental.UI;
 using System.Text.RegularExpressions;
 using Imedisoft.Forms;
 using Imedisoft.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormCdsTriggerEdit:ODForm {
@@ -91,7 +93,7 @@ namespace OpenDental {
 				row.Cells.Add("Problem");
 				row.Cells.Add(arrayString[i]);
 				row.Cells.Add("Problem Def");
-				row.Cells.Add(DiseaseDefs.GetItem(PIn.Long(arrayString[i])).DiseaseName);
+				row.Cells.Add(ProblemDefinitions.GetItem(PIn.Long(arrayString[i])).Description);
 				gridMain.ListGridRows.Add(row);
 			}
 			//EhrTriggerCur.ProblemIcd9List---------------------------------------------------------------------------------------------------------------------------
@@ -101,7 +103,7 @@ namespace OpenDental {
 				row.Cells.Add("Problem");
 				row.Cells.Add(arrayString[i]);
 				row.Cells.Add("ICD9 CM");
-				row.Cells.Add(ICD9s.GetByCode(arrayString[i]).Description);
+				row.Cells.Add(Icd9s.GetByCode(arrayString[i]).Description);
 				gridMain.ListGridRows.Add(row);
 			}
 			//EhrTriggerCur.ProblemIcd10List;
@@ -267,29 +269,29 @@ namespace OpenDental {
 
 		#region Add Buttons
 		private void butAddProblem_Click(object sender,EventArgs e) {
-			FormDiseaseDefs FormDD=new FormDiseaseDefs();
+			FormProblemDefinitions FormDD=new FormProblemDefinitions();
 			FormDD.IsSelectionMode=true;
 			FormDD.ShowDialog();
 			if(FormDD.DialogResult!=DialogResult.OK) {
 				return;
 			}
 			//the list should only ever contain one item.
-			DiseaseDef diseaseDef=FormDD.ListSelectedDiseaseDefs[0];
+			ProblemDefinition diseaseDef=FormDD.SelectedProblemDefinitions[0];
 			//DiseaseDefNum
-			if(!EhrTriggerCur.ProblemDefNumList.Contains(" "+diseaseDef.DiseaseDefNum+" ")){
-				EhrTriggerCur.ProblemDefNumList+=" "+diseaseDef.DiseaseDefNum+" ";
+			if(!EhrTriggerCur.ProblemDefNumList.Contains(" "+diseaseDef.Id+" ")){
+				EhrTriggerCur.ProblemDefNumList+=" "+diseaseDef.Id+" ";
 			}
 			//Icd9Num
-			if(diseaseDef.ICD9Code!="" && !EhrTriggerCur.ProblemIcd9List.Contains(" "+diseaseDef.ICD9Code+" ")) {
-				EhrTriggerCur.ProblemIcd9List+=" "+diseaseDef.ICD9Code+" ";
+			if(diseaseDef.CodeIcd9!="" && !EhrTriggerCur.ProblemIcd9List.Contains(" "+diseaseDef.CodeIcd9+" ")) {
+				EhrTriggerCur.ProblemIcd9List+=" "+diseaseDef.CodeIcd9+" ";
 			}
 			//Icd10Num
-			if(diseaseDef.Icd10Code!="" && !EhrTriggerCur.ProblemIcd9List.Contains(" "+diseaseDef.Icd10Code+" ")) {
-				EhrTriggerCur.ProblemIcd10List+=" "+diseaseDef.Icd10Code+" ";
+			if(diseaseDef.CodeIcd10!="" && !EhrTriggerCur.ProblemIcd9List.Contains(" "+diseaseDef.CodeIcd10+" ")) {
+				EhrTriggerCur.ProblemIcd10List+=" "+diseaseDef.CodeIcd10+" ";
 			}
 			//Snomed
-			if(diseaseDef.SnomedCode!="" && !EhrTriggerCur.ProblemIcd9List.Contains(" "+diseaseDef.SnomedCode+" ")) {
-				EhrTriggerCur.ProblemSnomedList+=" "+diseaseDef.SnomedCode+" ";
+			if(diseaseDef.CodeSnomed!="" && !EhrTriggerCur.ProblemIcd9List.Contains(" "+diseaseDef.CodeSnomed+" ")) {
+				EhrTriggerCur.ProblemSnomedList+=" "+diseaseDef.CodeSnomed+" ";
 			}
 			FillGrid();
 		}
@@ -301,7 +303,7 @@ namespace OpenDental {
 			if(FormI9.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			EhrTriggerCur.ProblemIcd9List+=" "+FormI9.SelectedIcd9.ICD9Code+" ";
+			EhrTriggerCur.ProblemIcd9List+=" "+FormI9.SelectedIcd9.Code+" ";
 			FillGrid();
 		}
 
@@ -312,7 +314,7 @@ namespace OpenDental {
 			if(FormI10.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			EhrTriggerCur.ProblemIcd10List+=" "+FormI10.SelectedIcd10.Icd10Code+" ";
+			EhrTriggerCur.ProblemIcd10List+=" "+FormI10.SelectedIcd10.Code+" ";
 			FillGrid();
 		}
 
@@ -324,7 +326,7 @@ namespace OpenDental {
 				return;
 			}
 			for(int i=0;i<FormS.ListSelectedSnomeds.Count;i++) {
-				EhrTriggerCur.ProblemSnomedList+=" "+FormS.ListSelectedSnomeds[i].SnomedCode+" ";
+				EhrTriggerCur.ProblemSnomedList+=" "+FormS.ListSelectedSnomeds[i].Code+" ";
 			}
 			FillGrid();
 		}

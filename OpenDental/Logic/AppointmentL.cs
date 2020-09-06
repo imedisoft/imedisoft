@@ -1,4 +1,5 @@
 ﻿using CodeBase;
+using Imedisoft.Data;
 using Imedisoft.X12.Codes;
 using OpenDentBusiness;
 using OpenDentBusiness.HL7;
@@ -253,13 +254,13 @@ namespace OpenDental
 			{
                 Adjustment AdjustmentCur = new Adjustment
                 {
-                    DateEntry = DateTime.Today,
-                    AdjDate = DateTime.Today,
-                    ProcDate = DateTime.Today,
-                    ProvNum = appt.ProvNum,
-                    PatNum = pat.PatNum,
-                    AdjType = Prefs.GetLong(PrefName.BrokenAppointmentAdjustmentType),
-                    ClinicNum = appt.ClinicNum
+                    AddedDate = DateTime.Today,
+                    AdjustDate = DateTime.Today,
+                    ProcedureDate = DateTime.Today,
+                    ProviderId = appt.ProvNum,
+                    PatientId = pat.PatNum,
+                    Type = Prefs.GetLong(PrefName.BrokenAppointmentAdjustmentType),
+                    ClinicId = appt.ClinicNum
                 };
                 FormAdjust FormA = new FormAdjust(pat, AdjustmentCur);
 				FormA.IsNew = true;

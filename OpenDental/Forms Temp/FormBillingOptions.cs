@@ -59,10 +59,10 @@ namespace OpenDental{
 		private CheckBox checkUseClinicDefaults;
 		///<summary>Key: ClinicNum, Value: List of ClinicPrefs for clinic.
 		///List contains all existing ClinicPrefs.</summary>
-		private Dictionary<long,List<(string, string)>> _dictClinicPrefsOld;
+		//private Dictionary<long,List<(string, string)>> _dictClinicPrefsOld;
 		///<summary>Key: ClinicNum, Value: List of ClinicPrefs for clinic.
 		///Starts off as a copy of _ListClinicPrefsOld, then is modified.</summary>
-		private Dictionary<long,List<(string, string)>> _dictClinicPrefsNew;
+		//private Dictionary<long,List<(string, string)>> _dictClinicPrefsNew;
 		///<summary>When creating list for all clinics, this stores text we show after completed.</summary>
 		private string _popUpMessage;
 		private CheckBox checkBoxBillShowTransSinceZero;

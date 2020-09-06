@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	public partial class FormAuditOrtho:ODForm {
@@ -70,26 +71,26 @@ namespace OpenDental {
 				}
 				for(int i=0;i<DictDateOrthoLogs[dateRow].Count;i++) {
 					row=new GridRow();
-					row.Cells.Add(DictDateOrthoLogs[dateRow][i].LogDateTime.ToShortDateString()+" "+DictDateOrthoLogs[dateRow][i].LogDateTime.ToShortTimeString());
-					user=Userods.GetUser(DictDateOrthoLogs[dateRow][i].UserNum);
+					row.Cells.Add(DictDateOrthoLogs[dateRow][i].LogDate.ToShortDateString()+" "+DictDateOrthoLogs[dateRow][i].LogDate.ToShortTimeString());
+					user=Userods.GetUser(DictDateOrthoLogs[dateRow][i].UserId);
 					if(user==null) {//Will be null for audit trails made by outside entities that do not require users to be logged in.  E.g. Web Sched.
 						row.Cells.Add("unknown");
 					}
 					else {
 						row.Cells.Add(user.UserName);
 					}
-					row.Cells.Add(DictDateOrthoLogs[dateRow][i].PermType.ToString());
-					row.Cells.Add(DictDateOrthoLogs[dateRow][i].LogText);
+					row.Cells.Add(DictDateOrthoLogs[dateRow][i].Type.ToString());
+					row.Cells.Add(DictDateOrthoLogs[dateRow][i].LogMessage);
 					gridMain.ListGridRows.Add(row);
 				}
 			}
 			//Then any applicable patient field logs.
 			for(int i=0;i<PatientFieldLogs.Count;i++) {
 				row=new GridRow();
-				row.Cells.Add(PatientFieldLogs[i].LogDateTime.ToShortDateString()+" "+PatientFieldLogs[i].LogDateTime.ToShortTimeString());
-				row.Cells.Add(Userods.GetUser(PatientFieldLogs[i].UserNum).UserName);
-				row.Cells.Add(PatientFieldLogs[i].PermType.ToString());
-				row.Cells.Add(PatientFieldLogs[i].LogText);
+				row.Cells.Add(PatientFieldLogs[i].LogDate.ToShortDateString()+" "+PatientFieldLogs[i].LogDate.ToShortTimeString());
+				row.Cells.Add(Userods.GetUser(PatientFieldLogs[i].UserId).UserName);
+				row.Cells.Add(PatientFieldLogs[i].Type.ToString());
+				row.Cells.Add(PatientFieldLogs[i].LogMessage);
 				gridMain.ListGridRows.Add(row);
 			}
 			gridMain.EndUpdate();

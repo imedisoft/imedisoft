@@ -354,8 +354,8 @@
     <Compile Include="Cache\FeeCache.cs" />
     <Compile Include="Data\Cemt\Crud\ConnectionGroups.cs" />
     <Compile Include="Data\Models\AccountingAutoPay.cs" />
-    <Compile Include="Data\Crud\AlertCategories.Crud.cs" />
-    <Compile Include="Data\Crud\AlertCategoryLinks.Crud.cs" />
+    <Compile Include="Data\Crud\AlertCategories.cs" />
+    <Compile Include="Data\Crud\AlertCategoryLinks.cs" />
     <Compile Include="Crud\ApptThankYouSentCrud.cs" />
     <Compile Include="Crud\AsapCommCrud.cs" />
     <Compile Include="Crud\EmailHostingTemplateCrud.cs" />
@@ -527,6 +527,7 @@
     <Compile Include="TableTypes\LoginAttempt.cs" />
     <Compile Include="TableTypes\MobileAppDevice.cs" />
     <Compile Include="TableTypes\MobileDataByte.cs" />
+    <Compile Include="TableTypes\Patient.cs" />
     <Compile Include="TableTypes\Sensor.cs" />
     <Compile Include="TableTypes\OrthoCase.cs" />
     <Compile Include="TableTypes\OrthoPlanLink.cs" />
@@ -626,7 +627,7 @@
     <Compile Include="CrudFramework\CrudTableAttribute.cs" />
     <Compile Include="CrudFramework\CrudColumnAttribute.cs" />
     <Compile Include="Data\Crud\Accounts.cs" />
-    <Compile Include="Data\Crud\AccountingAutoPays.Crud.cs" />
+    <Compile Include="Data\Crud\AccountingAutoPays.cs" />
     <Compile Include="Crud\AdjustmentCrud.cs" />
     <Compile Include="Crud\AlertItemCrud.cs" />
     <Compile Include="Crud\AlertSubCrud.cs" />
@@ -641,11 +642,11 @@
     <Compile Include="Crud\ApptReminderSentCrud.cs" />
     <Compile Include="Crud\ApptViewCrud.cs" />
     <Compile Include="Crud\ApptViewItemCrud.cs" />
-    <Compile Include="Data\Crud\AutoCodeConds.Crud.cs" />
-    <Compile Include="Data\Crud\AutoCodes.Crud.cs" />
-    <Compile Include="Data\Crud\AutoCodeItems.Crud.cs" />
+    <Compile Include="Data\Crud\AutoCodeConds.cs" />
+    <Compile Include="Data\Crud\AutoCodes.cs" />
+    <Compile Include="Data\Crud\AutoCodeItems.cs" />
     <Compile Include="Crud\AutomationConditionCrud.cs" />
-    <Compile Include="Data\Crud\AutomationCrud.cs" />
+    <Compile Include="Data\Crud\Automations.cs" />
     <Compile Include="Crud\AutoNoteControlCrud.cs" />
     <Compile Include="Crud\AutoNoteCrud.cs" />
     <Compile Include="Crud\CDSPermissionCrud.cs" />
@@ -688,7 +689,7 @@
     <Compile Include="Crud\ClockEventCrud.cs" />
     <Compile Include="Crud\CodeSystemCrud.cs" />
     <Compile Include="Crud\CommlogCrud.cs" />
-    <Compile Include="Data\Crud\ComputerCrud.cs" />
+    <Compile Include="Data\Crud\Computers.cs" />
     <Compile Include="Crud\ComputerPrefCrud.cs" />
     <Compile Include="Crud\ContactCrud.cs" />
     <Compile Include="Crud\CountyCrud.cs" />
@@ -704,8 +705,8 @@
     <Compile Include="Crud\DeletedObjectCrud.cs" />
     <Compile Include="Crud\DepositCrud.cs" />
     <Compile Include="Crud\DictCustomCrud.cs" />
-    <Compile Include="Crud\DiseaseCrud.cs" />
-    <Compile Include="Crud\DiseaseDefCrud.cs" />
+    <Compile Include="Data\Crud\Problems.cs" />
+    <Compile Include="Data\Crud\ProblemDefinitions.cs" />
     <Compile Include="Crud\DisplayFieldCrud.cs" />
     <Compile Include="Crud\DocumentCrud.cs" />
     <Compile Include="Crud\DocumentMiscCrud.cs" />
@@ -762,8 +763,8 @@
     <Compile Include="Crud\HL7DefSegmentCrud.cs" />
     <Compile Include="Crud\HL7MsgCrud.cs" />
     <Compile Include="Crud\HL7ProcAttachCrud.cs" />
-    <Compile Include="Crud\Icd10Crud.cs" />
-    <Compile Include="Crud\ICD9Crud.cs" />
+    <Compile Include="Data\Crud\Icd10s.cs" />
+    <Compile Include="Data\Crud\Icd9s.cs" />
     <Compile Include="Crud\InsFilingCodeCrud.cs" />
     <Compile Include="Crud\InsFilingCodeSubtypeCrud.cs" />
     <Compile Include="Crud\InsPlanCrud.cs" />
@@ -868,8 +869,8 @@
     <Compile Include="Crud\ScreenCrud.cs" />
     <Compile Include="Crud\ScreenGroupCrud.cs" />
     <Compile Include="Crud\ScreenPatCrud.cs" />
-    <Compile Include="Crud\SecurityLogCrud.cs" />
-    <Compile Include="Crud\SecurityLogHashCrud.cs" />
+    <Compile Include="Data\Crud\SecurityLogs.cs" />
+    <Compile Include="Data\Crud\SecurityLogHashes.cs" />
     <Compile Include="Crud\SheetCrud.cs" />
     <Compile Include="Crud\SheetDefCrud.cs" />
     <Compile Include="Crud\SheetFieldCrud.cs" />
@@ -880,8 +881,8 @@
     <Compile Include="Crud\SiteCrud.cs" />
     <Compile Include="Crud\StateAbbrCrud.cs" />
     <Compile Include="Crud\TreatPlanAttachCrud.cs" />
-    <Compile Include="Data\Crud\UpdateHistories.Crud.cs" />
-    <Compile Include="Data\Crud\UserClinics.Crud.cs" />
+    <Compile Include="Data\Crud\UpdateHistories.cs" />
+    <Compile Include="Data\Crud\UserClinics.cs" />
     <Compile Include="Crud\UserWebCrud.cs" />
     <Compile Include="Crud\XWebResponseCrud.cs" />
     <Compile Include="Data Interface\AlertItems.cs" />
@@ -921,7 +922,7 @@
     <Compile Include="Crud\SmsFromMobileCrud.cs" />
     <Compile Include="Crud\SmsToMobileCrud.cs" />
     <Compile Include="Crud\SmsPhoneCrud.cs" />
-    <Compile Include="Crud\SnomedCrud.cs" />
+    <Compile Include="Data\Crud\Snomeds.cs" />
     <Compile Include="Crud\SopCrud.cs" />
     <Compile Include="Crud\StatementCrud.cs" />
     <Compile Include="Crud\SupplierCrud.cs" />
@@ -944,8 +945,8 @@
     <Compile Include="Crud\ToothInitialCrud.cs" />
     <Compile Include="Crud\TransactionCrud.cs" />
     <Compile Include="Crud\TreatPlanCrud.cs" />
-    <Compile Include="Data\Crud\Ucums.Crud.cs" />
-    <Compile Include="Data\Crud\UserGroups.Crud.cs" />
+    <Compile Include="Data\Crud\Ucums.cs" />
+    <Compile Include="Data\Crud\UserGroups.cs" />
     <Compile Include="Crud\UserodApptViewCrud.cs" />
     <Compile Include="Crud\UserodCrud.cs" />
     <Compile Include="Crud\UserQueryCrud.cs" />
@@ -967,7 +968,7 @@
     <Compile Include="Data Interface\AutomationConditions.cs" />
     <Compile Include="Data\Automations.cs" />
     <Compile Include="Data Interface\CDSPermissions.cs" />
-    <Compile Include="Data\Cemt\ConnectionGroups.cs" />
+    <Compile Include="Data\Cemt\Logic\ConnectionGroups.cs" />
     <Compile Include="Data Interface\DispSupplies.cs" />
     <Compile Include="Data Interface\EhrAptObses.cs" />
     <Compile Include="Data Interface\EhrCarePlans.cs" />
@@ -985,7 +986,7 @@
     </Compile>
     <Compile Include="Data Interface\EhrTriggers.cs" />
     <Compile Include="Data Interface\Cdcrecs.cs" />
-    <Compile Include="Data\Cemt\Connections.cs" />
+    <Compile Include="Data\Cemt\Logic\Connections.cs" />
     <Compile Include="Data Interface\ChartViews.cs" />
     <Compile Include="Data Interface\CodeSystems.cs" />
     <Compile Include="Data Interface\Cpts.cs" />
@@ -1006,7 +1007,7 @@
     <Compile Include="Data Interface\GradingScaleItems.cs" />
     <Compile Include="Data Interface\GradingScales.cs" />
     <Compile Include="Data Interface\Hcpcses.cs" />
-    <Compile Include="Data Interface\Icd10s.cs" />
+    <Compile Include="Data\Icd10s.cs" />
     <Compile Include="Data Interface\Interventions.cs" />
     <Compile Include="Data Interface\Loincs.cs" />
     <Compile Include="Data Interface\MapAreas.cs" />
@@ -1026,8 +1027,8 @@
     <Compile Include="Data Interface\ProcButtonQuicks.cs" />
     <Compile Include="Data Interface\Resellers.cs" />
     <Compile Include="Data Interface\ResellerServices.cs" />
-    <Compile Include="Data Interface\SecurityLogHashes.cs" />
-    <Compile Include="Data Interface\Snomeds.cs" />
+    <Compile Include="Data\SecurityLogHashes.cs" />
+    <Compile Include="Data\Snomeds.cs" />
     <Compile Include="Data Interface\Sops.cs" />
     <Compile Include="Data\Ucums.cs" />
     <Compile Include="Data Interface\UserodApptViews.cs" />
@@ -1061,7 +1062,7 @@
     <Compile Include="Data Interface\HL7DefMessages.cs" />
     <Compile Include="Data Interface\HL7Defs.cs" />
     <Compile Include="Data Interface\HL7DefSegments.cs" />
-    <Compile Include="Data Interface\ICD9s.cs" />
+    <Compile Include="Data\Icd9s.cs" />
     <Compile Include="Data Interface\InsSubs.cs" />
     <Compile Include="Data Interface\InstallmentPlans.cs" />
     <Compile Include="Data Interface\LabPanels.cs" />
@@ -1170,8 +1171,8 @@
     <Compile Include="Data Interface\Contacts.cs" />
     <Compile Include="Data Interface\Counties.cs" />
     <Compile Include="Data Interface\Deposits.cs" />
-    <Compile Include="Data Interface\DiseaseDefs.cs" />
-    <Compile Include="Data Interface\Diseases.cs" />
+    <Compile Include="Data\ProblemDefinitions.cs" />
+    <Compile Include="Data\Problems.cs" />
     <Compile Include="Data Interface\Dunnings.cs" />
     <Compile Include="Data Interface\ElectIDs.cs" />
     <Compile Include="Data Interface\EmailAttaches.cs" />
@@ -1241,7 +1242,7 @@
     <Compile Include="Data Interface\ScreenGroups.cs" />
     <Compile Include="Data Interface\Screens.cs" />
     <Compile Include="Db Multi Table\Security.cs" />
-    <Compile Include="Data Interface\SecurityLogs.cs" />
+    <Compile Include="Data\SecurityLogs.cs" />
     <Compile Include="Data Interface\SheetFieldDefs.cs" />
     <Compile Include="Data Interface\SheetDefs.cs" />
     <Compile Include="Data Interface\SheetFields.cs" />
@@ -1452,17 +1453,14 @@
     <Compile Include="TableTypes\Hcpcs.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="TableTypes\Icd10.cs" />
     <Compile Include="TableTypes\Intervention.cs" />
     <Compile Include="TableTypes\EhrNotPerformed.cs" />
     <Compile Include="TableTypes\EhrCode.cs" />
     <Compile Include="TableTypes\Loinc.cs" />
-    <Compile Include="TableTypes\SecurityLogHash.cs" />
     <Compile Include="TableTypes\FamilyHealth.cs" />
     <Compile Include="TableTypes\PatientRace.cs" />
     <Compile Include="TableTypes\ResellerService.cs" />
     <Compile Include="TableTypes\Reseller.cs" />
-    <Compile Include="TableTypes\Snomed.cs" />
     <Compile Include="TableTypes\VaccineObs.cs" />
     <Compile Include="TableTypes\WikiListHeaderWidth.cs" />
     <Compile Include="TableTypes\EvaluationCriterion.cs" />
@@ -1502,7 +1500,6 @@
     <Compile Include="TableTypes\LabResult.cs" />
     <Compile Include="TableTypes\MedicalOrder.cs" />
     <Compile Include="TableTypes\CreditCard.cs" />
-    <Compile Include="TableTypes\ICD9.cs" />
     <Compile Include="TableTypes\InsSub.cs" />
     <Compile Include="TableTypes\OrionProc.cs" />
     <Compile Include="TableTypes\OrthoChart.cs" />
@@ -1608,6 +1605,7 @@
     <Compile Include="WebTypes\WebSched\TimeSlot\TimeSlots.cs" />
     <Compile Include="WebTypes\WebBase.cs" />
     <Compile Include="X12\Codes\PlaceOfService.cs" />
+    <Compile Include="X12\Codes\ServiceTypeCodes.cs" />
     <Compile Include="X12\X834.cs" />
     <Compile Include="X12\X835.cs" />
     <Compile Include="X12\X277.cs" />
@@ -1668,7 +1666,6 @@
     <Compile Include="Data\Models\Clinic.cs" />
     <Compile Include="TableTypes\ClockEvent.cs" />
     <Compile Include="TableTypes\Commlog.cs" />
-    <Compile Include="Data\Models\Computer.cs" />
     <Compile Include="TableTypes\ComputerPref.cs" />
     <Compile Include="Data\Models\Contact.cs" />
     <Compile Include="TableTypes\CanadianNetwork.cs" />
@@ -1703,8 +1700,6 @@
     <Compile Include="TableTypes\CovSpan.cs" />
     <Compile Include="TableTypes\Def.cs" />
     <Compile Include="TableTypes\Deposit.cs" />
-    <Compile Include="TableTypes\Disease.cs" />
-    <Compile Include="TableTypes\DiseaseDef.cs" />
     <Compile Include="TableTypes\Document.cs" />
     <Compile Include="TableTypes\Dunning.cs" />
     <Compile Include="TableTypes\ElectID.cs" />
@@ -1728,7 +1723,6 @@
     <Compile Include="TableTypes\Operatory.cs" />
     <Compile Include="TableTypes\PatField.cs" />
     <Compile Include="TableTypes\PatFieldDef.cs" />
-    <Compile Include="TableTypes\Patient.cs" />
     <Compile Include="TableTypes\PatientNote.cs" />
     <Compile Include="TableTypes\PatPlan.cs" />
     <Compile Include="TableTypes\Payment.cs" />
@@ -1768,7 +1762,6 @@
     <Compile Include="TableTypes\SchoolCourse.cs" />
     <Compile Include="TableTypes\ScreenGroup.cs" />
     <Compile Include="TableTypes\Screen.cs" />
-    <Compile Include="TableTypes\SecurityLog.cs" />
     <Compile Include="TableTypes\SigButDef.cs" />
     <Compile Include="TableTypes\SigElementDef.cs" />
     <Compile Include="TableTypes\Task.cs" />

@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Linq;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -31,7 +32,7 @@ namespace OpenDentBusiness{
 		///<summary></summary>
 		public static List<EduResource> GenerateForPatient(long patNum){
 			
-			List<Disease> diseaseList = Diseases.Refresh(patNum);
+			List<Problem> diseaseList = Problems.GetByPatient(patNum).ToList();
 			List<MedicationPat> medicationPatList = MedicationPats.Refresh(patNum,false);
 			List<LabResult> labResultList = LabResults.GetAllForPatient(patNum);
 			List<EhrLabResult> listEhrLabResults= EhrLabResults.GetAllForPatient(patNum);
@@ -39,7 +40,7 @@ namespace OpenDentBusiness{
 			List<EhrMeasureEvent> listTobaccoEvents=EhrMeasureEvents.RefreshByType(patNum,EhrMeasureEventType.TobaccoUseAssessed)
 				.FindAll(x => x.CodeSystemResult=="SNOMEDCT");
 			List<EduResource> retVal = new List<EduResource>();
-			eduResourceListAll.FindAll(x => x.DiseaseDefNum!=0 && diseaseList.Any(y => y.DiseaseDefNum==x.DiseaseDefNum)).ForEach(x => retVal.Add(x));
+			eduResourceListAll.FindAll(x => x.DiseaseDefNum!=0 && diseaseList.Any(y => y.ProblemDefId==x.DiseaseDefNum)).ForEach(x => retVal.Add(x));
 			eduResourceListAll.FindAll(x => x.MedicationNum!=0
 					&& medicationPatList.Any(y => y.MedicationNum==x.MedicationNum 
 						|| (y.MedicationNum==0 && Medications.GetMedication(x.MedicationNum).RxCui==y.RxCui)))

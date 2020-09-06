@@ -12,6 +12,7 @@ using OpenDental.Bridges;
 using System.Linq;
 using System.Text;
 using OpenDentBusiness.Eclaims;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>

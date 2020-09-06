@@ -4,6 +4,8 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -60,7 +62,7 @@ namespace OpenDental {
 				return;
 			}
 			_ehrCarePlan.DatePlanned=date;
-			_ehrCarePlan.SnomedEducation=_snomedGoal.SnomedCode;
+			_ehrCarePlan.SnomedEducation=_snomedGoal.Code;
 			_ehrCarePlan.Instructions=textInstructions.Text;
 			if(_ehrCarePlan.IsNew) {
 				EhrCarePlans.Insert(_ehrCarePlan);

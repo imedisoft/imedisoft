@@ -41,7 +41,7 @@ namespace OpenDentBusiness
 			public List<ProcGroupItem> ListProcGroupItems;
 			public List<RefAttach> ListRefAttaches;
 			public string PayorType;
-			public List<Disease> ListDiseases;
+			public List<Problem> ListDiseases;
 			public DataTable TableMeds;
 			public List<MedicationPat> ListMedPats;
 			public List<Allergy> ListAllergies;
@@ -78,7 +78,7 @@ namespace OpenDentBusiness
 				this.ListProcGroupItems = new List<ProcGroupItem>();
 				this.ListRefAttaches = new List<RefAttach>();
 				this.PayorType = "";
-				this.ListDiseases = new List<Disease>();
+				this.ListDiseases = new List<Problem>();
 				this.TableMeds = new DataTable();
 				this.ListMedPats = new List<MedicationPat>();
 				this.ListAllergies = new List<Allergy>();
@@ -154,7 +154,7 @@ namespace OpenDentBusiness
 						data.PayorType = PayorTypes.GetCurrentDescription(patNum);
 						break;
 					case "Problems":
-						data.ListDiseases = Diseases.Refresh(patNum, true);
+						data.ListDiseases = Problems.GetByPatient(patNum, true).ToList();
 						break;
 					case "Referred From":
 						data.ListRefAttaches = RefAttaches.Refresh(patNum).DistinctBy(x => x.ReferralNum).ToList();

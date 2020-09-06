@@ -121,7 +121,7 @@ namespace Imedisoft.Forms
 
 		private void AddProblemButton_Click(object sender, EventArgs e)
 		{
-            using var formDiseaseDefs = new FormDiseaseDefs
+            using var formDiseaseDefs = new FormProblemDefinitions
             {
                 IsSelectionMode = true,
                 IsMultiSelect = true
@@ -132,11 +132,11 @@ namespace Imedisoft.Forms
 				return;
 			}
 
-			foreach (var diseaseDef in formDiseaseDefs.ListSelectedDiseaseDefs)
+			foreach (var diseaseDef in formDiseaseDefs.SelectedProblemDefinitions)
 			{
 				alertsListBox.Items.Add(new RxAlert
 				{
-					DiseaseDefId = diseaseDef.DiseaseDefNum
+					DiseaseDefId = diseaseDef.Id
 				});
 			}
 		}

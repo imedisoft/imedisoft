@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imedisoft.Data.Models;
+using System;
 using System.Collections;
 
 namespace OpenDentBusiness{
@@ -15,8 +16,8 @@ namespace OpenDentBusiness{
 		public EntryLogFKeyType FKeyType;
 		///<summary>A foreign key to a table associated with the EntryLogFKeyType.</summary>
 		public long FKey;
-		///<summary>Enum:LogSources</summary>
-		public LogSources LogSource;
+		///<summary>Enum:SecurityLogSource</summary>
+		public SecurityLogSource LogSource;
 		///<summary>The date and time of the entry.  Its value is set when inserting and can never change.  Even if a user changes the date on their computer, 
 		///this remains accurate because it uses server time.</summary>
 		[CrudColumn(SpecialType = CrudSpecialColType.DateTEntry)]
@@ -26,7 +27,7 @@ namespace OpenDentBusiness{
 
 		}
 
-		public EntryLog(long userNum,EntryLogFKeyType keyType,long Fkey,LogSources logSource) {
+		public EntryLog(long userNum,EntryLogFKeyType keyType,long Fkey, SecurityLogSource logSource) {
 			UserNum=userNum;
 			FKeyType=keyType;
 			FKey=Fkey;

@@ -14,6 +14,9 @@ namespace OpenDentBusiness
 	public class Adjustments
 	{
 		#region Get Methods
+
+
+
 		public static List<Adjustment> GetMany(List<long> listAdjNums)
 		{
 			if (listAdjNums.IsNullOrEmpty())
@@ -72,7 +75,7 @@ namespace OpenDentBusiness
 			ArrayList retVal = new ArrayList();
 			for (int i = 0; i < List.Length; i++)
 			{
-				if (List[i].ProcNum == procNum)
+				if (List[i].ProcedureId == procNum)
 				{
 					retVal.Add(List[i]);
 				}
@@ -116,7 +119,7 @@ namespace OpenDentBusiness
 			SerializableDictionary<long, List<Adjustment>> retVal = new SerializableDictionary<long, List<Adjustment>>();
 			foreach (long patNum in listPatNums)
 			{
-				retVal[patNum] = listAdjs.FindAll(x => x.PatNum == patNum);
+				retVal[patNum] = listAdjs.FindAll(x => x.PatientId == patNum);
 			}
 			return retVal;
 		}
@@ -128,13 +131,13 @@ namespace OpenDentBusiness
 			double retVal = 0;
 			for (int i = 0; i < List.Length; i++)
 			{
-				if ((List[i].AdjNum == excludedNum))
+				if ((List[i].Id == excludedNum))
 				{
 					continue;
 				}
-				if (List[i].ProcNum == procNum)
+				if (List[i].ProcedureId == procNum)
 				{
-					retVal += List[i].AdjAmt;
+					retVal += List[i].AdjustAmount;
 				}
 			}
 			return retVal;
@@ -163,9 +166,8 @@ namespace OpenDentBusiness
 		public static long Insert(Adjustment adj)
 		{
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
-			adj.SecUserNumEntry = Security.CurrentUser.Id;
+			adj.AddedByUserId = Security.CurrentUser.Id;
 			long adjNum = Crud.AdjustmentCrud.Insert(adj);
-			CreateOrUpdateSalesTaxIfNeeded(adj); //Do the update after the insert so the AvaTax API can include the new adjustment in the calculation
 			return adjNum;
 		}
 
@@ -174,15 +176,15 @@ namespace OpenDentBusiness
 		{
 			//No need to check RemotingRole; no call to db.
 			Adjustment AdjustmentCur = new Adjustment();
-			AdjustmentCur.DateEntry = DateTime.Today;
-			AdjustmentCur.AdjDate = DateTime.Today;
-			AdjustmentCur.ProcDate = procedure.ProcDate;
-			AdjustmentCur.ProvNum = procedure.ProvNum;
-			AdjustmentCur.PatNum = procedure.PatNum;
-			AdjustmentCur.AdjType = Prefs.GetLong(PrefName.TreatPlanDiscountAdjustmentType);
-			AdjustmentCur.ClinicNum = procedure.ClinicNum;
-			AdjustmentCur.AdjAmt = -procedure.Discount;//Discount must be negative here.
-			AdjustmentCur.ProcNum = procedure.ProcNum;
+			AdjustmentCur.AddedDate = DateTime.Today;
+			AdjustmentCur.AdjustDate = DateTime.Today;
+			AdjustmentCur.ProcedureDate = procedure.ProcDate;
+			AdjustmentCur.ProviderId = procedure.ProvNum;
+			AdjustmentCur.PatientId = procedure.PatNum;
+			AdjustmentCur.Type = Prefs.GetLong(PrefName.TreatPlanDiscountAdjustmentType);
+			AdjustmentCur.ClinicId = procedure.ClinicNum;
+			AdjustmentCur.AdjustAmount = -procedure.Discount;//Discount must be negative here.
+			AdjustmentCur.ProcedureId = procedure.ProcNum;
 			Insert(AdjustmentCur);
 			TsiTransLogs.CheckAndInsertLogsIfAdjTypeExcluded(AdjustmentCur);
 		}
@@ -208,18 +210,18 @@ namespace OpenDentBusiness
 				return;//We do not need to create adjustments for 0 dollars.
 			}
 			Adjustment adjustmentCur = new Adjustment();
-			adjustmentCur.DateEntry = DateTime.Today;
-			adjustmentCur.AdjDate = DateTime.Today;
-			adjustmentCur.ProcDate = procedure.ProcDate;
-			adjustmentCur.ProvNum = procedure.ProvNum;
-			adjustmentCur.PatNum = procedure.PatNum;
-			adjustmentCur.AdjType = discountPlan.DefNum;
-			adjustmentCur.ClinicNum = procedure.ClinicNum;
-			adjustmentCur.AdjAmt = (-adjAmt);
-			adjustmentCur.ProcNum = procedure.ProcNum;
+			adjustmentCur.AddedDate = DateTime.Today;
+			adjustmentCur.AdjustDate = DateTime.Today;
+			adjustmentCur.ProcedureDate = procedure.ProcDate;
+			adjustmentCur.ProviderId = procedure.ProvNum;
+			adjustmentCur.PatientId = procedure.PatNum;
+			adjustmentCur.Type = discountPlan.DefNum;
+			adjustmentCur.ClinicId = procedure.ClinicNum;
+			adjustmentCur.AdjustAmount = (-adjAmt);
+			adjustmentCur.ProcedureId = procedure.ProcNum;
 			Insert(adjustmentCur);
 			TsiTransLogs.CheckAndInsertLogsIfAdjTypeExcluded(adjustmentCur);
-			SecurityLogs.MakeLogEntry(Permissions.AdjustmentCreate, procedure.PatNum, "Adjustment made for discount plan: " + adjustmentCur.AdjAmt.ToString("f"));
+			SecurityLogs.MakeLogEntry(Permissions.AdjustmentCreate, procedure.PatNum, "Adjustment made for discount plan: " + adjustmentCur.AdjustAmount.ToString("f"));
 		}
 		#endregion
 
@@ -228,7 +230,6 @@ namespace OpenDentBusiness
 		public static void Update(Adjustment adj)
 		{
 			Crud.AdjustmentCrud.Update(adj);
-			CreateOrUpdateSalesTaxIfNeeded(adj);
 		}
 
 		public static void DetachFromInvoice(long statementNum)
@@ -252,8 +253,7 @@ namespace OpenDentBusiness
 		///<summary>This will soon be eliminated or changed to only allow deleting on same day as EntryDate.</summary>
 		public static void Delete(Adjustment adj)
 		{
-			Crud.AdjustmentCrud.Delete(adj.AdjNum);
-			CreateOrUpdateSalesTaxIfNeeded(adj);
+			Crud.AdjustmentCrud.Delete(adj.Id);
 			PaySplits.UnlinkForAdjust(adj);
 		}
 
@@ -265,10 +265,10 @@ namespace OpenDentBusiness
 			List<Adjustment> listAdjustments = Crud.AdjustmentCrud.SelectMany(command).ToList();
 			for (int i = 0; i < listAdjustments.Count; i++)
 			{ //loops through the rows
-				SecurityLogs.MakeLogEntry(Permissions.AdjustmentEdit, listAdjustments[i].PatNum, //and creates audit trail entry for every row to be deleted
+				SecurityLogs.MakeLogEntry(Permissions.AdjustmentEdit, listAdjustments[i].PatientId, //and creates audit trail entry for every row to be deleted
 				"Delete adjustment for patient: "
-				+ Patients.GetLim(listAdjustments[i].PatNum).GetNameLF() + ", "
-				+ (listAdjustments[i].AdjAmt).ToString("c"), 0, listAdjustments[i].SecDateTEdit);
+				+ Patients.GetLim(listAdjustments[i].PatientId).GetNameLF() + ", "
+				+ (listAdjustments[i].AdjustAmount).ToString("c"), 0, listAdjustments[i].LastModifiedDate);
 			}
 			//Delete each adjustment for the procedure.
 			command = "DELETE FROM adjustment WHERE ProcNum = " + POut.Long(procNum);
@@ -278,24 +278,6 @@ namespace OpenDentBusiness
 		#endregion
 
 		#region Misc Methods
-		///<summary>(HQ Only) Automatically creates or updates a sales tax adjustment for the passted in procedure. If an adjustment is passed in, we go 
-		///ahead and update that adjustment, otherwise we check if there is already a sales tax adjustment for the given procedure and if not, we create
-		///a new one. Pass in false to doCalcTax if we have already called the AvaTax API to get the tax estimate recently to avoid redundant calls
-		///(currently only pre-payments uses this flag).
-		///isRepeatCharge indicates if the adjustment is being inserted by the repeat charge tool, currently only used to supress error messages
-		///in the Avatax API.</summary>
-		public static void CreateOrUpdateSalesTaxIfNeeded(Procedure procedure, Adjustment salesTaxAdj = null, bool doCalcTax = true, bool isRepeatCharge = false)
-		{
-		}
-
-		///<summary>(HQ Only) When we create, modify, or delete a non-sales tax adjustment that is attached to a procedure, we may also need to update
-		///sales tax for that procedure. Takes a non-sales tax adjustment and checks if the procedure already has a sales tax adjustment. If one already
-		///exists, calculate the new tax after the change to the passed in adjustment, and update the sales tax accordingly. If not, calculate and 
-		///create a sales tax adjustment only if the procedure is taxable.</summary>
-		public static void CreateOrUpdateSalesTaxIfNeeded(Adjustment modifiedAdj)
-		{
-		}
-
 		///<summary>Returns the number of finance or billing charges deleted.</summary>
 		public static long UndoFinanceOrBillingCharges(DateTime dateUndo, bool isBillingCharges)
 		{

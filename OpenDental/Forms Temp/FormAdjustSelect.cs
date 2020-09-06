@@ -27,7 +27,7 @@ namespace OpenDental {
 			_listSplitsCur=listSplitsCur;
 			//Convert all unattached adjustments to account entries.
 			_listPatAdjEntries=listPatAdjusts
-				.FindAll(x => x.ProcNum==0)
+				.FindAll(x => x.ProcedureId==0)
 				.Select(x => new AccountEntry(x))
 				.ToList();
 			foreach(AccountEntry entry in _listPatAdjEntries) {
@@ -64,10 +64,10 @@ namespace OpenDental {
 			GridRow row;
 			foreach(AccountEntry entry in _listPatAdjEntries) {
 				row=new GridRow();
-				row.Cells.Add(((Adjustment)entry.Tag).AdjDate.ToShortDateString());
-				row.Cells.Add(Providers.GetAbbr(((Adjustment)entry.Tag).ProvNum));
+				row.Cells.Add(((Adjustment)entry.Tag).AdjustDate.ToShortDateString());
+				row.Cells.Add(Providers.GetAbbr(((Adjustment)entry.Tag).ProviderId));
 				if(PrefC.HasClinicsEnabled) {
-					row.Cells.Add(Clinics.GetAbbr(((Adjustment)entry.Tag).ClinicNum));
+					row.Cells.Add(Clinics.GetAbbr(((Adjustment)entry.Tag).ClinicId));
 				}
 				row.Cells.Add(entry.AmountOriginal.ToString("F"));
 				row.Cells.Add(entry.AmountAvailable.ToString("F"));

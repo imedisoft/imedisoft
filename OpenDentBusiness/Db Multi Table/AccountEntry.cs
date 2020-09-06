@@ -180,14 +180,14 @@ namespace OpenDentBusiness {
 		///<summary>Turns negative adjustments positive.</summary>
 		public AccountEntry(Adjustment adjustment) {
 			Tag=adjustment;
-			Date=adjustment.AdjDate;
-			PriKey=adjustment.AdjNum;
-			AmountOriginal=(decimal)adjustment.AdjAmt;
+			Date=adjustment.AdjustDate;
+			PriKey=adjustment.Id;
+			AmountOriginal=(decimal)adjustment.AdjustAmount;
 			AmountAvailable=AmountOriginal;
 			AmountEnd=AmountOriginal;
-			ProvNum=adjustment.ProvNum;
-			ClinicNum=adjustment.ClinicNum;
-			PatNum=adjustment.PatNum;
+			ProvNum=adjustment.ProviderId;
+			ClinicNum=adjustment.ClinicId;
+			PatNum=adjustment.PatientId;
 			ProcNum=GetProcNumFromTag();
 			AdjNum=GetAdjNumFromTag();
 		}
@@ -293,7 +293,7 @@ namespace OpenDentBusiness {
 					}
 				}
 			for(int i=0;i<listAdjustments.Count;i++) {
-				if(listAdjustments[i].AdjAmt>0 && listAdjustments[i].ProcNum==0) {
+				if(listAdjustments[i].AdjustAmount>0 && listAdjustments[i].ProcedureId==0) {
 					listCharges.Add(new AccountEntry(listAdjustments[i]));
 				}
 			}
@@ -309,7 +309,7 @@ namespace OpenDentBusiness {
 		private long GetProcNumFromTag() {
 			switch(TagTypeName) {
 				case nameof(Adjustment):
-					return (this.Tag as Adjustment).ProcNum;
+					return (this.Tag as Adjustment).ProcedureId ?? 0;
 				case nameof(ClaimProc):
 					return (this.Tag as ClaimProc).ProcNum;
 				case nameof(PayPlanCharge):
@@ -333,7 +333,7 @@ namespace OpenDentBusiness {
 		private long GetAdjNumFromTag() {
 			switch(TagTypeName) {
 				case nameof(Adjustment):
-					return (this.Tag as Adjustment).AdjNum;
+					return (this.Tag as Adjustment).Id;
 				case nameof(PaySplit):
 					return (this.Tag as PaySplit).AdjNum;
 				case nameof(ClaimProc):

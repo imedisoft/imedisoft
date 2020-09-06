@@ -5,6 +5,8 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -68,23 +70,23 @@ namespace OpenDental {
 			if(comboPregCodes.SelectedIndex==-1) {//default preg code set to code not in recommended list and not 'none'
 				switch(defaultPregCodeSystem) {
 					case "ICD9CM":
-						ICD9 i9Preg=ICD9s.GetByCode(defaultPregCode);
+						Icd9 i9Preg=Icd9s.GetByCode(defaultPregCode);
 						if(i9Preg!=null) {
-							textPregCodeValue.Text=i9Preg.ICD9Code;
+							textPregCodeValue.Text=i9Preg.Code;
 							textPregCodeDescript.Text=i9Preg.Description;
 						}
 						break;
 					case "SNOMEDCT":
 						Snomed sPreg=Snomeds.GetByCode(defaultPregCode);
 						if(sPreg!=null) {
-							textPregCodeValue.Text=sPreg.SnomedCode;
+							textPregCodeValue.Text=sPreg.Code;
 							textPregCodeDescript.Text=sPreg.Description;
 						}
 						break;
 					case "ICD10CM":
 						Icd10 i10Preg=Icd10s.GetByCode(defaultPregCode);
 						if(i10Preg!=null) {
-							textPregCodeValue.Text=i10Preg.Icd10Code;
+							textPregCodeValue.Text=i10Preg.Code;
 							textPregCodeDescript.Text=i10Preg.Description;
 						}
 						break;
@@ -178,7 +180,7 @@ namespace OpenDental {
 					case "SNOMEDCT":
 						Snomed sEnc=Snomeds.GetByCode(defaultEncCode);
 						if(sEnc!=null) {
-							textEncCodeValue.Text=sEnc.SnomedCode;
+							textEncCodeValue.Text=sEnc.Code;
 							textEncCodeDescript.Text=sEnc.Description;
 						}
 						break;
@@ -257,7 +259,7 @@ namespace OpenDental {
 			if(FormS.DialogResult==DialogResult.OK) {
 				NewEncCodeSystem="SNOMEDCT";
 				for(int i=1;i<comboEncCodes.Items.Count;i++) {
-					if(FormS.SelectedSnomed.SnomedCode==comboEncCodes.Items[i].ToString()) {//if they go to snomed list and select one of the recommended codes, select in list
+					if(FormS.SelectedSnomed.Code==comboEncCodes.Items[i].ToString()) {//if they go to snomed list and select one of the recommended codes, select in list
 						comboEncCodes.SelectedIndex=i;
 						textEncCodeValue.Clear();
 						textEncCodeDescript.Text=FormS.SelectedSnomed.Description;
@@ -266,7 +268,7 @@ namespace OpenDental {
 					}
 				}
 				comboEncCodes.SelectedIndex=-1;
-				textEncCodeValue.Text=FormS.SelectedSnomed.SnomedCode;
+				textEncCodeValue.Text=FormS.SelectedSnomed.Code;
 				textEncCodeDescript.Text=FormS.SelectedSnomed.Description;
 				labelEncWarning.Visible=true;
 			}
@@ -359,7 +361,7 @@ namespace OpenDental {
 			if(FormS.DialogResult==DialogResult.OK) {
 				NewPregCodeSystem="SNOMEDCT";
 				for(int i=1;i<comboPregCodes.Items.Count;i++) {
-					if(FormS.SelectedSnomed.SnomedCode==comboPregCodes.Items[i].ToString()) {//if they go to snomed list and select one of the recommended codes, select in list
+					if(FormS.SelectedSnomed.Code==comboPregCodes.Items[i].ToString()) {//if they go to snomed list and select one of the recommended codes, select in list
 						comboPregCodes.SelectedIndex=i;
 						textPregCodeValue.Clear();
 						textPregCodeDescript.Text=FormS.SelectedSnomed.Description;
@@ -368,7 +370,7 @@ namespace OpenDental {
 					}
 				}
 				comboPregCodes.SelectedIndex=-1;
-				textPregCodeValue.Text=FormS.SelectedSnomed.SnomedCode;
+				textPregCodeValue.Text=FormS.SelectedSnomed.Code;
 				textPregCodeDescript.Text=FormS.SelectedSnomed.Description;
 				labelPregWarning.Visible=true;
 			}
@@ -386,7 +388,7 @@ namespace OpenDental {
 			if(FormI9.DialogResult==DialogResult.OK) {
 				NewPregCodeSystem="ICD9CM";
 				comboPregCodes.SelectedIndex=-1;
-				textPregCodeValue.Text=FormI9.SelectedIcd9.ICD9Code;
+				textPregCodeValue.Text=FormI9.SelectedIcd9.Code;
 				textPregCodeDescript.Text=FormI9.SelectedIcd9.Description;
 				labelPregWarning.Visible=true;
 			}
@@ -404,7 +406,7 @@ namespace OpenDental {
 			if(FormI10.DialogResult==DialogResult.OK) {
 				NewPregCodeSystem="ICD10CM";
 				comboPregCodes.SelectedIndex=-1;
-				textPregCodeValue.Text=FormI10.SelectedIcd10.Icd10Code;
+				textPregCodeValue.Text=FormI10.SelectedIcd10.Code;
 				textPregCodeDescript.Text=FormI10.SelectedIcd10.Description;
 				labelPregWarning.Visible=true;
 			}

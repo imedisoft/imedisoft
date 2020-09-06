@@ -9,6 +9,8 @@ using OpenDental.ReportingComplex;
 using OpenDentBusiness;
 using System.Collections.Generic;
 using Imedisoft.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -81,7 +83,7 @@ namespace OpenDental{
 		private Label labelIns;
 		private CheckBox checkInsNo;
 		private QuestionDef[] QuestionDefList;
-		private List<DiseaseDef> _listDiseaseDefs;
+		private List<ProblemDefinition> _listDiseaseDefs;
 
 		///<summary></summary>
 		public FormTerminalOld()
@@ -1014,9 +1016,9 @@ namespace OpenDental{
 		private void FillDiseases(){
 			//this never gets filled with existing patient info.  Only blank list.
 			listDiseases.Items.Clear();
-			_listDiseaseDefs=DiseaseDefs.GetDeepCopy(true);
+			_listDiseaseDefs=ProblemDefinitions.GetAll(false);
 			for(int i=0;i<_listDiseaseDefs.Count;i++){
-				listDiseases.Items.Add(_listDiseaseDefs[i].DiseaseName);
+				listDiseases.Items.Add(_listDiseaseDefs[i].Description);
 			}
 		}
 
@@ -1315,12 +1317,12 @@ namespace OpenDental{
 		}
 
 		private void SaveDiseases(){
-			Disease disease;
+			Problem disease;
 			for(int i=0;i<listDiseases.CheckedIndices.Count;i++){
-				disease=new Disease();
-				disease.PatNum=PatCur.PatNum;
-				disease.DiseaseDefNum=_listDiseaseDefs[listDiseases.CheckedIndices[i]].DiseaseDefNum;
-				Diseases.Insert(disease);
+				disease=new Problem();
+				disease.PatientId=PatCur.PatNum;
+				disease.ProblemDefId=_listDiseaseDefs[listDiseases.CheckedIndices[i]].Id;
+				Problems.Insert(disease);
 			}
 		}
 

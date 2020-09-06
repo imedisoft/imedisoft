@@ -11,6 +11,8 @@ using System.Data;
 using CodeBase;
 using Imedisoft.UI;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	[HelpSubject]
@@ -450,50 +452,46 @@ namespace OpenDental{
 			GridRow row;
 			foreach(SecurityLog logCur in logList) {
 				row=new GridRow();
-				row.Cells.Add(logCur.LogDateTime.ToShortDateString());
-				row.Cells.Add(logCur.LogDateTime.ToShortTimeString());
+				row.Cells.Add(logCur.LogDate.ToShortDateString());
+				row.Cells.Add(logCur.LogDate.ToShortTimeString());
 				row.Cells.Add(logCur.PatientName);
 				//user might be null due to old bugs.
-				row.Cells.Add(Userods.GetUser(logCur.UserNum)?.UserName??("Unknown"+"("+POut.Long(logCur.UserNum)+")"));
-				if(logCur.PermType==Permissions.ChartModule) {
+				row.Cells.Add(Userods.GetUser(logCur.UserId)?.UserName??("Unknown"+"("+POut.Long(logCur.UserId)+")"));
+				if(logCur.Type==Permissions.ChartModule) {
 					row.Cells.Add("ChartModuleViewed");
 				}
-				else if(logCur.PermType==Permissions.FamilyModule) {
+				else if(logCur.Type==Permissions.FamilyModule) {
 					row.Cells.Add("FamilyModuleViewed");
 				}
-				else if(logCur.PermType==Permissions.AccountModule) {
+				else if(logCur.Type==Permissions.AccountModule) {
 					row.Cells.Add("AccountModuleViewed");
 				}
-				else if(logCur.PermType==Permissions.ImagesModule) {
+				else if(logCur.Type==Permissions.ImagesModule) {
 					row.Cells.Add("ImagesModuleViewed");
 				}
-				else if(logCur.PermType==Permissions.TPModule) {
+				else if(logCur.Type==Permissions.TPModule) {
 					row.Cells.Add("TreatmentPlanModuleViewed");
 				}
 				else {
-					row.Cells.Add(logCur.PermType.ToString());
+					row.Cells.Add(logCur.Type.ToString());
 				}
-				row.Cells.Add(logCur.CompName);
-				if(logCur.PermType!=Permissions.UserQuery) {
-					row.Cells.Add(logCur.LogText);
+				row.Cells.Add(logCur.MachineName);
+				if(logCur.Type!=Permissions.UserQuery) {
+					row.Cells.Add(logCur.LogMessage);
 				}
 				else {
 					//Only display the first snipet of very long queries. User can double click to view.
-					row.Cells.Add(logCur.LogText.Left(200,true));
+					row.Cells.Add(logCur.LogMessage.Left(200,true));
 					row.Tag=(Action)(()=> {
-						MsgBoxCopyPaste formText = new MsgBoxCopyPaste(logCur.LogText);
+						MsgBoxCopyPaste formText = new MsgBoxCopyPaste(logCur.LogMessage);
 						formText.NormalizeContent();
 						formText.Show();
 					});
 				}
-				if(logCur.DateTPrevious.Year < 1880) {
-					row.Cells.Add("");
-				}
-				else {
-					row.Cells.Add(logCur.DateTPrevious.ToString());
-				}
+				row.Cells.Add(logCur.ObjectDate?.ToString() ?? "");
+				
 				//Get the hash for the audit log entry from the database and rehash to compare
-				if(logCur.LogHash!=SecurityLogHashes.GetHashString(logCur)) {
+				if(logCur.Hash!=SecurityLogHashes.GetHashString(logCur)) {
 					row.ForeColor=Color.Red; //Bad hash or no hash entry at all.  This prevents users from deleting the entire hash table to make the audit trail look valid and encrypted.
 					//historical entries will show as red.
 				}

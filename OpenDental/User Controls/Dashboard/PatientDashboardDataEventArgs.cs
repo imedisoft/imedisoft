@@ -52,7 +52,7 @@ namespace OpenDental {
 		public List<ToothInitial> ListToothInitials;
 		public List<ProcGroupItem> ListProcGroupItems;
 		public string PayorType;
-		public List<Disease> ListDiseases;
+		public List<Problem> ListDiseases;
 		public DataTable TableMeds;
 		public List<MedicationPat> ListMedPats;
 		public List<Allergy> ListAllergies;

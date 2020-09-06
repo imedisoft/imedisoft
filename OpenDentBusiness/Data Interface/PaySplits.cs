@@ -463,7 +463,7 @@ namespace OpenDentBusiness{
 		///<summary>Unlinks all paysplits that are currently linked to the passed-in adjustment. (Sets paysplit.AdjNum to 0)</summary>
 		public static void UnlinkForAdjust(Adjustment adj) {
 			
-			Database.ExecuteNonQuery($@"UPDATE paysplit SET AdjNum = 0 WHERE AdjNum = {POut.Long(adj.AdjNum)}");
+			Database.ExecuteNonQuery($@"UPDATE paysplit SET AdjNum = 0 WHERE AdjNum = {POut.Long(adj.Id)}");
 		}
 
 		///<summary>Updates the provnum of all paysplits for a supplied adjustment.  Supply a list of splits to use that instead of querying the database.</summary>
@@ -473,10 +473,10 @@ namespace OpenDentBusiness{
 			}
 			
 			if(listSplits==null) {
-				Database.ExecuteNonQuery($@"UPDATE paysplit SET ProvNum = {POut.Long(adj.ProvNum)} WHERE AdjNum = {POut.Long(adj.AdjNum)}");
+				Database.ExecuteNonQuery($@"UPDATE paysplit SET ProvNum = {POut.Long(adj.ProviderId)} WHERE AdjNum = {POut.Long(adj.Id)}");
 			}
 			else {
-				Database.ExecuteNonQuery($@"UPDATE paysplit SET ProvNum = {POut.Long(adj.ProvNum)}
+				Database.ExecuteNonQuery($@"UPDATE paysplit SET ProvNum = {POut.Long(adj.ProviderId)}
 					WHERE SplitNum IN({string.Join(",",listSplits.Select(x => POut.Long(x.SplitNum)))})");
 			}
 		}

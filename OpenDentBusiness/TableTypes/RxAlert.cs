@@ -1,4 +1,6 @@
+using Imedisoft.Data;
 using Imedisoft.Data.Annotations;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections;
 
@@ -25,7 +27,7 @@ namespace OpenDentBusiness
 		/// This is compared against disease.DiseaseDefNum using PatNum. 
 		/// Drug-Problem (they call it Drug-Diagnosis) checking is also performed in NewCrop.
 		/// </summary>
-		[ForeignKey(typeof(DiseaseDef), nameof(DiseaseDef.DiseaseDefNum))]
+		[ForeignKey(typeof(ProblemDefinition), nameof(ProblemDefinition.Id))]
 		public long DiseaseDefId;
 
 		/// <summary>
@@ -60,7 +62,7 @@ namespace OpenDentBusiness
         {
 			if (DiseaseDefId > 0)
 			{
-				return DiseaseDefs.GetName(DiseaseDefId);
+				return ProblemDefinitions.GetName(DiseaseDefId);
 			}
 
 			if (AllergyDefId > 0)

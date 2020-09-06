@@ -1833,11 +1833,11 @@ namespace OpenDental{
 			SecurityLog secLog=SecurityLogs.MakeLogEntryNoInsert(Permissions.ProcFeeEdit,0,"Procedure: "+ProcedureCodes.GetStringProcCode(fee.CodeNum)
 				+", Fee: "+fee.Amount.ToString("c")
 				+", Fee Schedule: "+FeeScheds.GetDescription(fee.FeeSched)
-				+". Manual edit in grid from Procedure Codes list.",fee.CodeNum,LogSources.None);
+				+". Manual edit in grid from Procedure Codes list.",fee.CodeNum, SecurityLogSource.None);
 			_dictFeeLogs[fee.FeeNum]=new List<SecurityLog>();
 			_dictFeeLogs[fee.FeeNum].Add(secLog);
-			_dictFeeLogs[fee.FeeNum].Add(SecurityLogs.MakeLogEntryNoInsert(Permissions.LogFeeEdit,0,"Fee changed",fee.FeeNum,LogSources.None,
-				DateTPrevious:fee.SecDateTEdit));
+			_dictFeeLogs[fee.FeeNum].Add(SecurityLogs.MakeLogEntryNoInsert(Permissions.LogFeeEdit,0,"Fee changed",fee.FeeNum,SecurityLogSource.None,
+				objectDate:fee.SecDateTEdit));
 			_needsSynch=true;
 			FillGrid();
 		}

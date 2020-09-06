@@ -166,7 +166,7 @@ namespace OpenDental{
 		#endregion
 
 		private void FormMessagingButSetup_Load(object sender,EventArgs e) {
-			_listComputers=Computers.All;
+			_listComputers=Computers.GetAll();
 			listComputers.Items.Clear();
 			listComputers.Items.Add("All");
 			string s;

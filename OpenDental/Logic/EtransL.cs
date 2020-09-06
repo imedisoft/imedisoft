@@ -605,7 +605,7 @@ namespace OpenDental {
 						int patIdx=listPatients.BinarySearch(member.Pat);//Preserve sort order by locating the index in which to insert the newly added patient.
 						int insertIdx=~patIdx;//According to MSDN, the index returned by BinarySearch() is a "bitwise compliment", since not currently in list.
 						listPatients.Insert(insertIdx,member.Pat);
-						SecurityLogs.MakeLogEntry(Permissions.PatientCreate,member.Pat.PatNum,"Created from Import Ins Plans 834.",LogSources.InsPlanImport834);
+						SecurityLogs.MakeLogEntry(Permissions.PatientCreate,member.Pat.PatNum,"Created from Import Ins Plans 834.", SecurityLogSource.InsPlanImport834);
 						isMemberImported=true;
 						createdPatsCount++;
 					}
@@ -644,7 +644,7 @@ namespace OpenDental {
 								DataValid.SetInvalid(InvalidType.Carriers);
 								listCarriers.Add(carrier);
 								SecurityLogs.MakeLogEntry(Permissions.CarrierCreate,0,"Carrier '"+carrier.CarrierName
-									+"' created from Import Ins Plans 834.",LogSources.InsPlanImport834);
+									+"' created from Import Ins Plans 834.", SecurityLogSource.InsPlanImport834);
 								createdCarrierCount++;
 							}
 							//Update insurance plans.  Match based on carrier and SubscriberId. If the maintenance type code is 002 drop the matching
@@ -781,7 +781,7 @@ namespace OpenDental {
 			SecurityLogs.MakeLogEntry(Permissions.InsPlanDropPat,patPlan.PatNum,
 				"Insurance plan dropped from patient for carrier '"+carrier+"' and groupnum "
 				+"'"+insPlan.GroupNum+"' and subscriber ID '"+insSub.SubscriberID+"' "
-				+"from Import Ins Plans 834.",insPlan.PlanNum,LogSources.InsPlanImport834,insPlan.SecDateTEdit);
+				+"from Import Ins Plans 834.",insPlan.PlanNum, SecurityLogSource.InsPlanImport834,insPlan.SecDateTEdit);
 		}
 
 		///<summary>For the given x834, tries to move the file to the archive folder. Will return if this succeeded or not.</summary>
@@ -850,7 +850,7 @@ namespace OpenDental {
 				if(isInsertAllowed) {
 					InsPlans.Insert(insPlan);
 					SecurityLogs.MakeLogEntry(Permissions.InsPlanCreate,0,"Insurance plan for carrier '"+carrier.CarrierName+"' and groupnum "
-						+"'"+insPlan.GroupNum+"' created from Import Ins Plans 834.",insPlan.PlanNum,LogSources.InsPlanImport834,
+						+"'"+insPlan.GroupNum+"' created from Import Ins Plans 834.",insPlan.PlanNum, SecurityLogSource.InsPlanImport834,
 						DateTime.MinValue); //new insplan, no date needed
 				}
 			}
@@ -863,7 +863,7 @@ namespace OpenDental {
 				if(OpenDentBusiness.Crud.InsPlanCrud.UpdateComparison(insPlan,insPlanOld)) {
 					InsPlans.Update(insPlan,insPlanOld);
 					SecurityLogs.MakeLogEntry(Permissions.InsPlanEdit,0,"Insurance plan for carrier '"+carrier.CarrierName+"' and groupnum "
-						+"'"+insPlan.GroupNum+"' edited from Import Ins Plans 834.",insPlan.PlanNum,LogSources.InsPlanImport834,insPlanOld.SecDateTEdit);
+						+"'"+insPlan.GroupNum+"' edited from Import Ins Plans 834.",insPlan.PlanNum, SecurityLogSource.InsPlanImport834,insPlanOld.SecDateTEdit);
 				}
 			}
 			return insPlan;
@@ -889,7 +889,7 @@ namespace OpenDental {
 				SecurityLogs.MakeLogEntry(Permissions.InsPlanCreateSub,insSub.Subscriber,
 					"Insurance subscriber created for carrier '"+carrier.CarrierName+"' and groupnum "
 					+"'"+insPlan.GroupNum+"' and subscriber ID '"+insSub.SubscriberID+"' "
-					+"from Import Ins Plans 834.",insPlan.PlanNum,LogSources.InsPlanImport834,DateTime.MinValue);
+					+"from Import Ins Plans 834.",insPlan.PlanNum, SecurityLogSource.InsPlanImport834,DateTime.MinValue);
 			}
 			else {
 				InsSub insSubOld=insSub.Copy();
@@ -901,7 +901,7 @@ namespace OpenDental {
 					SecurityLogs.MakeLogEntry(Permissions.InsPlanEditSub,insSub.Subscriber,
 						"Insurance subscriber edited for carrier '"+carrier.CarrierName+"' and groupnum "
 						+"'"+insPlan.GroupNum+"' and subscriber ID '"+insSub.SubscriberID+"' "
-						+"from Import Ins Plans 834.",insPlan.PlanNum,LogSources.InsPlanImport834,insSubOld.SecDateTEdit);
+						+"from Import Ins Plans 834.",insPlan.PlanNum,SecurityLogSource.InsPlanImport834,insSubOld.SecDateTEdit);
 				}
 			}
 			return insSub;
@@ -934,7 +934,7 @@ namespace OpenDental {
 				SecurityLogs.MakeLogEntry(Permissions.InsPlanAddPat,patPlan.PatNum,
 					"Insurance plan added to patient for carrier '"+carrier.CarrierName+"' and groupnum "
 					+"'"+insPlan.GroupNum+"' and subscriber ID '"+insSub.SubscriberID+"' "
-					+"from Import Ins Plans 834.",insPlan.PlanNum,LogSources.InsPlanImport834,insPlan.SecDateTEdit);
+					+"from Import Ins Plans 834.",insPlan.PlanNum, SecurityLogSource.InsPlanImport834,insPlan.SecDateTEdit);
 			}
 			else {
 				PatPlan patPlanOld=patPlan.Copy();
@@ -942,7 +942,7 @@ namespace OpenDental {
 				if(OpenDentBusiness.Crud.PatPlanCrud.UpdateComparison(patPlan,patPlanOld)) {
 					SecurityLogs.MakeLogEntry(Permissions.InsPlanEdit,patPlan.PatNum,"Insurance plan relationship changed from "
 						+member.PlanRelat+" to "+patPlan.Relationship+" for carrier '"+carrier.CarrierName+"' and groupnum "
-						+"'"+insPlan.GroupNum+"' from Import Ins Plans 834.",insPlan.PlanNum,LogSources.InsPlanImport834,insPlan.SecDateTEdit);
+						+"'"+insPlan.GroupNum+"' from Import Ins Plans 834.",insPlan.PlanNum, SecurityLogSource.InsPlanImport834,insPlan.SecDateTEdit);
 					PatPlans.Update(patPlan);
 				}
 			}

@@ -5,6 +5,8 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -101,7 +103,7 @@ namespace OpenDental {
 			AllergyCur.Reaction=textReaction.Text;
 			AllergyCur.SnomedReaction="";
 			if(snomedReaction!=null) {
-				AllergyCur.SnomedReaction=snomedReaction.SnomedCode;
+				AllergyCur.SnomedReaction=snomedReaction.Code;
 			}
 			AllergyCur.StatusIsActive=checkActive.Checked;
 			if(AllergyCur.IsNew) {

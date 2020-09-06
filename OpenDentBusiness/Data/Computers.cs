@@ -6,7 +6,16 @@ using System.Collections.Generic;
 
 namespace Imedisoft.Data
 {
-    public partial class Computers
+	/// <summary>
+	///		<para>
+	///			Keeps track of the computers in an office.
+	///		</para>
+	///		<para>
+	///			The list will eventually become cluttered with the names of old computers that are 
+	///			no longer in service. Old rows can be safely deleted.
+	///		</para>
+	/// </summary>
+	public partial class Computers
 	{
 		[CacheGroup(nameof(InvalidType.Computers))]
 		private class ComputerCache : ListCache<Computer>
@@ -33,7 +42,7 @@ namespace Imedisoft.Data
 			=> cache.FirstOrDefault(computer 
 				=> computer.MachineName.Equals(Environment.MachineName, StringComparison.InvariantCultureIgnoreCase));
 
-		public static List<Computer> All
+		public static List<Computer> GetAll()
 			=> cache.GetAll();
 
 		/// <summary>

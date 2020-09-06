@@ -137,8 +137,8 @@ namespace OpenDentBusiness
 			if (invalidTypes.Contains(InvalidType.Diseases) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Diseases.ToString());
-				DiseaseDefs.GetTableFromCache(true);
-				ICD9s.GetTableFromCache(true);
+				ProblemDefinitions.RefreshCache();
+				Icd9s.RefreshCache();
 			}
 			if (invalidTypes.Contains(InvalidType.DisplayFields) || refreshAll)
 			{

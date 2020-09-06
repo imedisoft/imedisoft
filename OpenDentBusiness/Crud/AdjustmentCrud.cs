@@ -21,20 +21,20 @@ namespace OpenDentBusiness.Crud
 		{
 			return new Adjustment
 			{
-				AdjNum = (long)dataReader["AdjNum"],
-				AdjDate = (DateTime)dataReader["AdjDate"],
-				AdjAmt = (double)dataReader["AdjAmt"],
-				PatNum = (long)dataReader["PatNum"],
-				AdjType = (long)dataReader["AdjType"],
-				ProvNum = (long)dataReader["ProvNum"],
-				AdjNote = (string)dataReader["AdjNote"],
-				ProcDate = (DateTime)dataReader["ProcDate"],
-				ProcNum = (long)dataReader["ProcNum"],
-				DateEntry = (DateTime)dataReader["DateEntry"],
-				ClinicNum = (long)dataReader["ClinicNum"],
-				StatementNum = (long)dataReader["StatementNum"],
-				SecUserNumEntry = (long)dataReader["SecUserNumEntry"],
-				SecDateTEdit = (DateTime)dataReader["SecDateTEdit"]
+				Id = (long)dataReader["AdjNum"],
+				AdjustDate = (DateTime)dataReader["AdjDate"],
+				AdjustAmount = (double)dataReader["AdjAmt"],
+				PatientId = (long)dataReader["PatNum"],
+				Type = (long)dataReader["AdjType"],
+				ProviderId = (long)dataReader["ProvNum"],
+				Note = (string)dataReader["AdjNote"],
+				ProcedureDate = (DateTime)dataReader["ProcDate"],
+				ProcedureId = (long)dataReader["ProcNum"],
+				AddedDate = (DateTime)dataReader["DateEntry"],
+				ClinicId = (long)dataReader["ClinicNum"],
+				StatementId = (long)dataReader["StatementNum"],
+				AddedByUserId = (long)dataReader["SecUserNumEntry"],
+				LastModifiedDate = (DateTime)dataReader["SecDateTEdit"]
 			};
 		}
 
@@ -60,7 +60,7 @@ namespace OpenDentBusiness.Crud
 		/// Inserts the specified <see cref="Adjustment"/> into the database.
 		/// </summary>
 		public static long Insert(Adjustment adjustment)
-			=> adjustment.AdjNum = Database.ExecuteInsert(
+			=> adjustment.Id = Database.ExecuteInsert(
 				"INSERT INTO `Adjustment` " + 
 				"(`AdjDate`, `AdjAmt`, `PatNum`, `AdjType`, `ProvNum`, `AdjNote`, `ProcDate`, `ProcNum`, `DateEntry`, `ClinicNum`, `StatementNum`, `SecUserNumEntry`, `SecDateTEdit`) " + 
 				"VALUES (" + 
@@ -87,20 +87,20 @@ namespace OpenDentBusiness.Crud
 					"`SecUserNumEntry` = @SecUserNumEntry, " + 
 					"`SecDateTEdit` = @SecDateTEdit " + 
 				"WHERE `AdjNum` = @AdjNum",
-					new MySqlParameter("AdjNum", adjustment.AdjNum),
-					new MySqlParameter("AdjDate", adjustment.AdjDate),
-					new MySqlParameter("AdjAmt", adjustment.AdjAmt),
-					new MySqlParameter("PatNum", adjustment.PatNum),
-					new MySqlParameter("AdjType", adjustment.AdjType),
-					new MySqlParameter("ProvNum", adjustment.ProvNum),
-					new MySqlParameter("AdjNote", adjustment.AdjNote ?? ""),
-					new MySqlParameter("ProcDate", adjustment.ProcDate),
-					new MySqlParameter("ProcNum", adjustment.ProcNum),
-					new MySqlParameter("DateEntry", adjustment.DateEntry),
-					new MySqlParameter("ClinicNum", adjustment.ClinicNum),
-					new MySqlParameter("StatementNum", adjustment.StatementNum),
-					new MySqlParameter("SecUserNumEntry", adjustment.SecUserNumEntry),
-					new MySqlParameter("SecDateTEdit", adjustment.SecDateTEdit));
+					new MySqlParameter("AdjNum", adjustment.Id),
+					new MySqlParameter("AdjDate", adjustment.AdjustDate),
+					new MySqlParameter("AdjAmt", adjustment.AdjustAmount),
+					new MySqlParameter("PatNum", adjustment.PatientId),
+					new MySqlParameter("AdjType", adjustment.Type),
+					new MySqlParameter("ProvNum", adjustment.ProviderId),
+					new MySqlParameter("AdjNote", adjustment.Note ?? ""),
+					new MySqlParameter("ProcDate", adjustment.ProcedureDate),
+					new MySqlParameter("ProcNum", adjustment.ProcedureId),
+					new MySqlParameter("DateEntry", adjustment.AddedDate),
+					new MySqlParameter("ClinicNum", adjustment.ClinicId),
+					new MySqlParameter("StatementNum", adjustment.StatementId),
+					new MySqlParameter("SecUserNumEntry", adjustment.AddedByUserId),
+					new MySqlParameter("SecDateTEdit", adjustment.LastModifiedDate));
 
 		/// <summary>
 		/// Updates the specified <see cref="Adjustment"/> in the database.
@@ -110,87 +110,87 @@ namespace OpenDentBusiness.Crud
 			var updates = new List<string>();
 			var parameters = new List<MySqlParameter>();
 
-			if (adjustmentNew.AdjDate != adjustmentOld.AdjDate)
+			if (adjustmentNew.AdjustDate != adjustmentOld.AdjustDate)
 			{
 				updates.Add("`AdjDate` = @AdjDate");
-				parameters.Add(new MySqlParameter("AdjDate", adjustmentNew.AdjDate));
+				parameters.Add(new MySqlParameter("AdjDate", adjustmentNew.AdjustDate));
 			}
 
-			if (adjustmentNew.AdjAmt != adjustmentOld.AdjAmt)
+			if (adjustmentNew.AdjustAmount != adjustmentOld.AdjustAmount)
 			{
 				updates.Add("`AdjAmt` = @AdjAmt");
-				parameters.Add(new MySqlParameter("AdjAmt", adjustmentNew.AdjAmt));
+				parameters.Add(new MySqlParameter("AdjAmt", adjustmentNew.AdjustAmount));
 			}
 
-			if (adjustmentNew.PatNum != adjustmentOld.PatNum)
+			if (adjustmentNew.PatientId != adjustmentOld.PatientId)
 			{
 				updates.Add("`PatNum` = @PatNum");
-				parameters.Add(new MySqlParameter("PatNum", adjustmentNew.PatNum));
+				parameters.Add(new MySqlParameter("PatNum", adjustmentNew.PatientId));
 			}
 
-			if (adjustmentNew.AdjType != adjustmentOld.AdjType)
+			if (adjustmentNew.Type != adjustmentOld.Type)
 			{
 				updates.Add("`AdjType` = @AdjType");
-				parameters.Add(new MySqlParameter("AdjType", adjustmentNew.AdjType));
+				parameters.Add(new MySqlParameter("AdjType", adjustmentNew.Type));
 			}
 
-			if (adjustmentNew.ProvNum != adjustmentOld.ProvNum)
+			if (adjustmentNew.ProviderId != adjustmentOld.ProviderId)
 			{
 				updates.Add("`ProvNum` = @ProvNum");
-				parameters.Add(new MySqlParameter("ProvNum", adjustmentNew.ProvNum));
+				parameters.Add(new MySqlParameter("ProvNum", adjustmentNew.ProviderId));
 			}
 
-			if (adjustmentNew.AdjNote != adjustmentOld.AdjNote)
+			if (adjustmentNew.Note != adjustmentOld.Note)
 			{
 				updates.Add("`AdjNote` = @AdjNote");
-				parameters.Add(new MySqlParameter("AdjNote", adjustmentNew.AdjNote ?? ""));
+				parameters.Add(new MySqlParameter("AdjNote", adjustmentNew.Note ?? ""));
 			}
 
-			if (adjustmentNew.ProcDate != adjustmentOld.ProcDate)
+			if (adjustmentNew.ProcedureDate != adjustmentOld.ProcedureDate)
 			{
 				updates.Add("`ProcDate` = @ProcDate");
-				parameters.Add(new MySqlParameter("ProcDate", adjustmentNew.ProcDate));
+				parameters.Add(new MySqlParameter("ProcDate", adjustmentNew.ProcedureDate));
 			}
 
-			if (adjustmentNew.ProcNum != adjustmentOld.ProcNum)
+			if (adjustmentNew.ProcedureId != adjustmentOld.ProcedureId)
 			{
 				updates.Add("`ProcNum` = @ProcNum");
-				parameters.Add(new MySqlParameter("ProcNum", adjustmentNew.ProcNum));
+				parameters.Add(new MySqlParameter("ProcNum", adjustmentNew.ProcedureId));
 			}
 
-			if (adjustmentNew.DateEntry != adjustmentOld.DateEntry)
+			if (adjustmentNew.AddedDate != adjustmentOld.AddedDate)
 			{
 				updates.Add("`DateEntry` = @DateEntry");
-				parameters.Add(new MySqlParameter("DateEntry", adjustmentNew.DateEntry));
+				parameters.Add(new MySqlParameter("DateEntry", adjustmentNew.AddedDate));
 			}
 
-			if (adjustmentNew.ClinicNum != adjustmentOld.ClinicNum)
+			if (adjustmentNew.ClinicId != adjustmentOld.ClinicId)
 			{
 				updates.Add("`ClinicNum` = @ClinicNum");
-				parameters.Add(new MySqlParameter("ClinicNum", adjustmentNew.ClinicNum));
+				parameters.Add(new MySqlParameter("ClinicNum", adjustmentNew.ClinicId));
 			}
 
-			if (adjustmentNew.StatementNum != adjustmentOld.StatementNum)
+			if (adjustmentNew.StatementId != adjustmentOld.StatementId)
 			{
 				updates.Add("`StatementNum` = @StatementNum");
-				parameters.Add(new MySqlParameter("StatementNum", adjustmentNew.StatementNum));
+				parameters.Add(new MySqlParameter("StatementNum", adjustmentNew.StatementId));
 			}
 
-			if (adjustmentNew.SecUserNumEntry != adjustmentOld.SecUserNumEntry)
+			if (adjustmentNew.AddedByUserId != adjustmentOld.AddedByUserId)
 			{
 				updates.Add("`SecUserNumEntry` = @SecUserNumEntry");
-				parameters.Add(new MySqlParameter("SecUserNumEntry", adjustmentNew.SecUserNumEntry));
+				parameters.Add(new MySqlParameter("SecUserNumEntry", adjustmentNew.AddedByUserId));
 			}
 
-			if (adjustmentNew.SecDateTEdit != adjustmentOld.SecDateTEdit)
+			if (adjustmentNew.LastModifiedDate != adjustmentOld.LastModifiedDate)
 			{
 				updates.Add("`SecDateTEdit` = @SecDateTEdit");
-				parameters.Add(new MySqlParameter("SecDateTEdit", adjustmentNew.SecDateTEdit));
+				parameters.Add(new MySqlParameter("SecDateTEdit", adjustmentNew.LastModifiedDate));
 			}
 
 			if (updates.Count == 0) return;
 
-			parameters.Add(new MySqlParameter("AdjNum", adjustmentNew.AdjNum));
+			parameters.Add(new MySqlParameter("AdjNum", adjustmentNew.Id));
 
 			Database.ExecuteNonQuery("UPDATE `Adjustment` " + 
 				"SET " + string.Join(", ", updates) + " " + 
@@ -208,6 +208,6 @@ namespace OpenDentBusiness.Crud
 		/// Deletes the specified <see cref="Adjustment"/> object from the database.
 		/// </summary>
 		public static void Delete(Adjustment adjustment)
-			=> Delete(adjustment.AdjNum);
+			=> Delete(adjustment.Id);
 	}
 }

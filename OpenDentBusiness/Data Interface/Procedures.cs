@@ -1010,7 +1010,7 @@ namespace OpenDentBusiness {
 			foreach(Procedure proc in listProcs) {
 				ProcExtended procE = new ProcExtended() {
 					Proc=proc,
-					Adjustments=listAdjs.Where(x => x.ProcNum == proc.ProcNum).ToList(),
+					Adjustments=listAdjs.Where(x => x.ProcedureId == proc.ProcNum).ToList(),
 					PaySplits=listPaySplits.Where(x => x.ProcNum == proc.ProcNum).ToList(),
 					ClaimProcs=listClaimProcs.Where(x => x.ProcNum == proc.ProcNum).ToList(),
 					PayPlanCredits=listPayPlanCharges.Where(x => x.ProcNum == proc.ProcNum).ToList(),
@@ -1044,14 +1044,6 @@ namespace OpenDentBusiness {
 			//Do the sales tax adjustments first because we might be changing the proc note if an error occurs.
 			if(procedure.ProcStatus==ProcStat.C && !skipDiscountPlanAdjustment) {
 				Adjustments.CreateAdjustmentForDiscountPlan(procedure);//Inserting completed procedure.
-				try {
-					Adjustments.CreateOrUpdateSalesTaxIfNeeded(procedure,doCalcTax:doCalcTax,isRepeatCharge:isRepeatCharge);
-				}
-				catch(Exception ex) {
-					if(isRepeatCharge) {//should only throw an exception if isRepeatCharge is true.
-						throw new ODException("Failed to create sales tax adjustment.",ex);
-					}
-				}
 			}
 			if(procedure.Note!="") {
 				ProcNote note=new ProcNote();
@@ -1144,11 +1136,6 @@ namespace OpenDentBusiness {
 				|| (oldProcedure.ProcStatus==ProcStat.C && procedure.ProcStatus!=ProcStat.C))
 			{
 				PayPlanCharges.UpdateAttachedPayPlanCharges(procedure);//does nothing if there are none.
-			}
-			//If this is a complete procedure but either the date or the fee is changing, we need to try to update the transaction in AvaTax
-			if(procedure.ProcStatus==ProcStat.C && 
-				(oldProcedure.ProcFee!=procedure.ProcFee || oldProcedure.ProcDate.Date!=procedure.ProcDate.Date || oldProcedure.ProcStatus!=ProcStat.C)) {
-				Adjustments.CreateOrUpdateSalesTaxIfNeeded(procedure);
 			}
 			//Setting a completed procedure to TP.
 			if(oldProcedure.ProcStatus==ProcStat.C && procedure.ProcStatus!=ProcStat.C) {
@@ -1476,7 +1463,7 @@ namespace OpenDentBusiness {
 		///Also sets ProcDate for TP procs. Will automatically set procs in listProcs to complete and make securitylogs.</summary>
 		public static bool UpdateProcsInApptHelper(List<Procedure> listProcsForAppt,Patient pat,Appointment AptCur,Appointment AptOld,
 			List<InsPlan> PlanList,List<InsSub> SubList,List<int> listProcSelectedIndices,bool removeCompletedProcs,bool doUpdateProcFees=false,
-			LogSources logSource=LogSources.None)
+			SecurityLogSource logSource=SecurityLogSource.None)
 		{ 
 			if(AptCur.AptStatus!=ApptStatus.Complete) {//appt is not set complete, just update necessary fields like ProvNum, ProcDate, and ClinicNum
 				ProcFeeHelper procFeeHelper=null;
@@ -3605,7 +3592,7 @@ namespace OpenDentBusiness {
 		///Uses listSelectedRows and listProcNumsAttachedStart to determine if procs are attaching to or detaching from AptCur.
 		///When moving proc from another appt, other appt descriptions are updated.</summary>
 		public static void ProcsAptNumHelper(List<Procedure> listProcs,Appointment AptCur,List<Appointment> listAppointments,
-			List<int> listSelectedRows,List<long> listProcNumsAttachedStart,bool isAptPlanned=false,LogSources logSource=LogSources.None)
+			List<int> listSelectedRows,List<long> listProcNumsAttachedStart,bool isAptPlanned=false,SecurityLogSource logSource=SecurityLogSource.None)
 		{
 			//No need to check RemotingRole; no call to db.
 			if(listProcs==null || AptCur==null || listAppointments==null || listSelectedRows==null || listProcNumsAttachedStart==null) {
@@ -3697,7 +3684,7 @@ namespace OpenDentBusiness {
 				logText+=" "+"Provider was changed from"+" "+Providers.GetAbbr(procOld.ProvNum)+" "+"to"+" "+
 					Providers.GetAbbr(proc.ProvNum)+".";
 			}
-			SecurityLogs.MakeLogEntry(Permissions.ProcCompleteEdit,proc.PatNum,logText,proc.ProcNum,LogSources.None,procOld.DateTStamp);
+			SecurityLogs.MakeLogEntry(Permissions.ProcCompleteEdit,proc.PatNum,logText,proc.ProcNum,SecurityLogSource.None,procOld.DateTStamp);
 		}
 
 		///<summary>Sets all procedures for apt complete.  Flags procedures as CPOE as needed (when prov logged in).  Makes a log entry for each completed proc.</summary>
@@ -4017,11 +4004,11 @@ namespace OpenDentBusiness {
 		public List<PaySplit> SplitsCur = new List<PaySplit>();
 
 		public double NegativeAdjTotals {
-			get { return Adjustments.Where(x => x.AdjAmt < 0).Sum(x => x.AdjAmt); }
+			get { return Adjustments.Where(x => x.AdjustAmount < 0).Sum(x => x.AdjustAmount); }
 		}
 
 		public double PositiveAdjTotal {
-			get { return Adjustments.Where(x => x.AdjAmt > 0).Sum(x => x.AdjAmt); }
+			get { return Adjustments.Where(x => x.AdjustAmount > 0).Sum(x => x.AdjustAmount); }
 		}
 
 		public double InsPayTotal {

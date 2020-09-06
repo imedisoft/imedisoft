@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using System.Drawing.Printing;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormPatListResultsEHR2014:ODForm {
@@ -79,9 +80,9 @@ namespace OpenDental {
 						gridMain.ListGridColumns.Add(col);
 						break;
 					case EhrRestrictionType.Problem:
-						colWidth=System.Convert.ToInt32(g.MeasureString("Date Diagnosed: "+DiseaseDefs.GetNameByCode(elementList[i].CompareString),this.Font).Width);
+						colWidth=System.Convert.ToInt32(g.MeasureString("Date Diagnosed: "+ProblemDefinitions.GetNameByCode(elementList[i].CompareString),this.Font).Width);
 						colWidth=colWidth+(colWidth/10);//Add 10%
-						col=new GridColumn("Date Diagnosed: "+DiseaseDefs.GetNameByCode(elementList[i].CompareString),colWidth,HorizontalAlignment.Center);
+						col=new GridColumn("Date Diagnosed: "+ProblemDefinitions.GetNameByCode(elementList[i].CompareString),colWidth,HorizontalAlignment.Center);
 						col.SortingStrategy=GridSortingStrategy.DateParse;
 						gridMain.ListGridColumns.Add(col);
 						break;

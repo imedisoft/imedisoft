@@ -434,7 +434,7 @@ namespace OpenDentBusiness.HL7 {
 						if(retval!="") {
 							retval+=def.RepetitionSeparator;
 						}
-						ICD9 icd9Cur=ICD9s.GetByCode(listDiagCodes[i]);
+						Icd9 icd9Cur=Icd9s.GetByCode(listDiagCodes[i]);
 						Icd10 icd10Cur=Icd10s.GetByCode(listDiagCodes[i]);
 						if(icd9Cur!=null && icd10Cur==null) {
 							retval+=gConcat(def.ComponentSeparator,listDiagCodes[i],icd9Cur.Description,"I9C","","","","31");//See HL7 v2.6 Ch 6.5.2.3

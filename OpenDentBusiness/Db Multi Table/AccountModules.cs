@@ -3439,12 +3439,12 @@ namespace OpenDentBusiness
 			//get a list of unattached charges and add into account entry
 			if (calcType == CreditCalcType.IncludeAll)
 			{
-				listAccountEntries.AddRange(listAdjs.Where(x => x.ProcNum == 0 && x.AdjAmt > 0).Select(x => new AccountEntry(x)));
+				listAccountEntries.AddRange(listAdjs.Where(x => x.ProcedureId == 0 && x.AdjustAmount > 0).Select(x => new AccountEntry(x)));
 				listAccountEntries.AddRange(listPayPlanCharges.Where(x => x.ChargeType == PayPlanChargeType.Debit).Select(x => new AccountEntry(x)));
 				listAccountEntries = listAccountEntries.OrderBy(x => x.Date).ToList(); //order by date so credits get applied to oldest first.
 																					   //get all unattached credits
 				decimal creditTotal = 0;
-				creditTotal -= listAdjs.Where(x => x.ProcNum == 0 && x.AdjAmt < 0).Sum(x => (decimal)x.AdjAmt); //negative adjustments are credits
+				creditTotal -= listAdjs.Where(x => x.ProcedureId == 0 && x.AdjustAmount < 0).Sum(x => (decimal)x.AdjustAmount); //negative adjustments are credits
 				creditTotal += listPaySplits.Where(x => x.ProcNum == 0).Sum(x => (decimal)x.SplitAmt);
 				creditTotal += listInsPayTot.Where(x => x.ProcNum == 0).Sum(x => (decimal)x.InsPayAmt);
 				creditTotal += listPayPlanCharges.Where(x => x.ProcNum == 0 && x.ChargeType == PayPlanChargeType.Credit).Sum(x => (decimal)x.Principal);

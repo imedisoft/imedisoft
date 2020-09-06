@@ -30,5 +30,18 @@ namespace OpenDentBusiness
 		/// This makes it less intrusive, but it can still be used in procedure buttons.
 		/// </summary>
 		public bool LessIntrusive;
-	}
+
+		/// <summary>
+		/// Returns a string representation of the auto code.
+		/// </summary>
+		public override string ToString()
+		{
+			if (IsHidden)
+            {
+				return Description + " (hidden)";
+            }
+
+			return Description;
+		}
+    }
 }

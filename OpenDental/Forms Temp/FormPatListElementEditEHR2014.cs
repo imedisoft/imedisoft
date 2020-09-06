@@ -8,6 +8,9 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using EhrLaboratories;
+using Imedisoft.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	public partial class FormPatListElementEditEHR2014:ODForm {
@@ -30,7 +33,7 @@ namespace OpenDental {
 			textCompareString.Text=Element.CompareString;
 			if(Element.Restriction==EhrRestrictionType.Problem && !IsNew) {
 				textCompareString.Text="";//clear text box for simplicity
-				if(ICD9s.CodeExists(Element.CompareString)) {
+				if(Icd9s.CodeExists(Element.CompareString)) {
 					textCompareString.Text=Element.CompareString;
 				}
 				else if(Snomeds.CodeExists(Element.CompareString)) {
@@ -332,7 +335,7 @@ namespace OpenDental {
 						return false;
 					}
 					if(textCompareString.Text!="") {
-						if(!ICD9s.CodeExists(textCompareString.Text)) {
+						if(!Icd9s.CodeExists(textCompareString.Text)) {
 							MessageBox.Show("ICD9 code does not exist in database, pick from list.");
 							return false;
 						}
@@ -440,7 +443,7 @@ namespace OpenDental {
 						if(FormI9.DialogResult!=DialogResult.OK) {
 							return;
 						}
-						textCompareString.Text=FormI9.SelectedIcd9.ICD9Code;
+						textCompareString.Text=FormI9.SelectedIcd9.Code;
 						textSNOMED.Text="";
 					}
 					else if(sender.Equals(butSNOMED)) {
@@ -450,7 +453,7 @@ namespace OpenDental {
 						if(FormS.DialogResult!=DialogResult.OK) {
 							return;
 						}
-						textSNOMED.Text=FormS.SelectedSnomed.SnomedCode;
+						textSNOMED.Text=FormS.SelectedSnomed.Code;
 						textCompareString.Text="";
 					}
 					break;
@@ -518,19 +521,19 @@ namespace OpenDental {
 		}
 
 		private void butProblem_Click(object sender,EventArgs e) {
-			FormDiseaseDefs FormDD=new FormDiseaseDefs();
+			FormProblemDefinitions FormDD=new FormProblemDefinitions();
 			FormDD.IsSelectionMode=true;
 			FormDD.ShowDialog();
 			if(FormDD.DialogResult!=DialogResult.OK) {
 				return;
 			}
 			//the list should only ever contain one item.
-			DiseaseDef dis=FormDD.ListSelectedDiseaseDefs[0];
-			if(dis.SnomedCode!="") {
-				textSNOMED.Text=dis.SnomedCode;
+			ProblemDefinition dis=FormDD.SelectedProblemDefinitions[0];
+			if(dis.CodeSnomed!="") {
+				textSNOMED.Text=dis.CodeSnomed;
 			}
-			else if(dis.ICD9Code!="") {
-				textCompareString.Text=dis.ICD9Code;
+			else if(dis.CodeIcd9!="") {
+				textCompareString.Text=dis.CodeIcd9;
 				MessageBox.Show("Selected problem does not have a valid SNOMED CT code.");
 			}
 			else {

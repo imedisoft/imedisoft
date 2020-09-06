@@ -15,6 +15,7 @@ using OpenDentBusiness.HL7;
 using System.Threading;
 using CodeBase;
 using OpenDentBusiness.WebTypes.WebForms;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormWebForms:ODForm {
