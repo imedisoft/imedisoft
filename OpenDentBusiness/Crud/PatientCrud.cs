@@ -88,7 +88,6 @@ namespace OpenDentBusiness.Crud{
 				patient.InsEst                   = PIn.Double(row["InsEst"].ToString());
 				patient.BalTotal                 = PIn.Double(row["BalTotal"].ToString());
 				patient.EmployerNum              = PIn.Long  (row["EmployerNum"].ToString());
-				patient.EmploymentNote           = PIn.String(row["EmploymentNote"].ToString());
 				patient.County                   = PIn.String(row["County"].ToString());
 				patient.GradeLevel               = (OpenDentBusiness.PatientGrade)PIn.Int(row["GradeLevel"].ToString());
 				patient.Urgency                  = (OpenDentBusiness.TreatmentUrgency)PIn.Int(row["Urgency"].ToString());
@@ -124,7 +123,6 @@ namespace OpenDentBusiness.Crud{
 				patient.SecUserNumEntry          = PIn.Long  (row["SecUserNumEntry"].ToString());
 				patient.SecDateEntry             = PIn.Date  (row["SecDateEntry"].ToString());
 				patient.HasSuperBilling          = PIn.Bool  (row["HasSuperBilling"].ToString());
-				patient.PatNumCloneFrom          = PIn.Long  (row["PatNumCloneFrom"].ToString());
 				patient.DiscountPlanNum          = PIn.Long  (row["DiscountPlanNum"].ToString());
 				patient.HasSignedTil             = PIn.Bool  (row["HasSignedTil"].ToString());
 				patient.ShortCodeOptIn           = (OpenDentBusiness.YN)PIn.Int(row["ShortCodeOptIn"].ToString());
@@ -267,7 +265,6 @@ namespace OpenDentBusiness.Crud{
 					POut.Double(patient.InsEst),
 					POut.Double(patient.BalTotal),
 					POut.Long  (patient.EmployerNum),
-					            patient.EmploymentNote,
 					            patient.County,
 					POut.Int   ((int)patient.GradeLevel),
 					POut.Int   ((int)patient.Urgency),
@@ -303,7 +300,6 @@ namespace OpenDentBusiness.Crud{
 					POut.Long  (patient.SecUserNumEntry),
 					POut.DateT (patient.SecDateEntry,false),
 					POut.Bool  (patient.HasSuperBilling),
-					POut.Long  (patient.PatNumCloneFrom),
 					POut.Long  (patient.DiscountPlanNum),
 					POut.Bool  (patient.HasSignedTil),
 					POut.Int   ((int)patient.ShortCodeOptIn),
@@ -373,7 +369,6 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.Double(patient.InsEst)+"',"
 				+"'"+POut.Double(patient.BalTotal)+"',"
 				+    POut.Long  (patient.EmployerNum)+","
-				+"'"+POut.String(patient.EmploymentNote)+"',"
 				+"'"+POut.String(patient.County)+"',"
 				+    POut.Int   ((int)patient.GradeLevel)+","
 				+    POut.Int   ((int)patient.Urgency)+","
@@ -409,7 +404,6 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (patient.SecUserNumEntry)+","
 				+    DbHelper.Now()+","
 				+    POut.Bool  (patient.HasSuperBilling)+","
-				+    POut.Long  (patient.PatNumCloneFrom)+","
 				+    POut.Long  (patient.DiscountPlanNum)+","
 				+    POut.Bool  (patient.HasSignedTil)+","
 				+    POut.Int   ((int)patient.ShortCodeOptIn)+")";
@@ -507,7 +501,6 @@ namespace OpenDentBusiness.Crud{
 					sbRow.Append("'"+POut.Double(patient.InsEst)+"'"); sbRow.Append(",");
 					sbRow.Append("'"+POut.Double(patient.BalTotal)+"'"); sbRow.Append(",");
 					sbRow.Append(POut.Long(patient.EmployerNum)); sbRow.Append(",");
-					sbRow.Append("'"+POut.String(patient.EmploymentNote)+"'"); sbRow.Append(",");
 					sbRow.Append("'"+POut.String(patient.County)+"'"); sbRow.Append(",");
 					sbRow.Append(POut.Int((int)patient.GradeLevel)); sbRow.Append(",");
 					sbRow.Append(POut.Int((int)patient.Urgency)); sbRow.Append(",");
@@ -543,7 +536,6 @@ namespace OpenDentBusiness.Crud{
 					sbRow.Append(POut.Long(patient.SecUserNumEntry)); sbRow.Append(",");
 					sbRow.Append(DbHelper.Now()); sbRow.Append(",");
 					sbRow.Append(POut.Bool(patient.HasSuperBilling)); sbRow.Append(",");
-					sbRow.Append(POut.Long(patient.PatNumCloneFrom)); sbRow.Append(",");
 					sbRow.Append(POut.Long(patient.DiscountPlanNum)); sbRow.Append(",");
 					sbRow.Append(POut.Bool(patient.HasSignedTil)); sbRow.Append(",");
 					sbRow.Append(POut.Int((int)patient.ShortCodeOptIn)); sbRow.Append(")");
@@ -628,7 +620,6 @@ namespace OpenDentBusiness.Crud{
 				+"'"+POut.Double(patient.InsEst)+"',"
 				+"'"+POut.Double(patient.BalTotal)+"',"
 				+    POut.Long  (patient.EmployerNum)+","
-				+"'"+POut.String(patient.EmploymentNote)+"',"
 				+"'"+POut.String(patient.County)+"',"
 				+    POut.Int   ((int)patient.GradeLevel)+","
 				+    POut.Int   ((int)patient.Urgency)+","
@@ -664,7 +655,6 @@ namespace OpenDentBusiness.Crud{
 				+    POut.Long  (patient.SecUserNumEntry)+","
 				+    DbHelper.Now()+","
 				+    POut.Bool  (patient.HasSuperBilling)+","
-				+    POut.Long  (patient.PatNumCloneFrom)+","
 				+    POut.Long  (patient.DiscountPlanNum)+","
 				+    POut.Bool  (patient.HasSignedTil)+","
 				+    POut.Int   ((int)patient.ShortCodeOptIn)+")";
@@ -730,7 +720,6 @@ namespace OpenDentBusiness.Crud{
 				+"InsEst                   = '"+POut.Double(patient.InsEst)+"', "
 				+"BalTotal                 = '"+POut.Double(patient.BalTotal)+"', "
 				+"EmployerNum              =  "+POut.Long  (patient.EmployerNum)+", "
-				+"EmploymentNote           = '"+POut.String(patient.EmploymentNote)+"', "
 				+"County                   = '"+POut.String(patient.County)+"', "
 				+"GradeLevel               =  "+POut.Int   ((int)patient.GradeLevel)+", "
 				+"Urgency                  =  "+POut.Int   ((int)patient.Urgency)+", "
@@ -766,7 +755,6 @@ namespace OpenDentBusiness.Crud{
 				//SecUserNumEntry excluded from update
 				//SecDateEntry not allowed to change
 				+"HasSuperBilling          =  "+POut.Bool  (patient.HasSuperBilling)+", "
-				+"PatNumCloneFrom          =  "+POut.Long  (patient.PatNumCloneFrom)+", "
 				+"DiscountPlanNum          =  "+POut.Long  (patient.DiscountPlanNum)+", "
 				+"HasSignedTil             =  "+POut.Bool  (patient.HasSignedTil)+", "
 				+"ShortCodeOptIn           =  "+POut.Int   ((int)patient.ShortCodeOptIn)+" "
@@ -953,10 +941,6 @@ namespace OpenDentBusiness.Crud{
 				if(command!="") { command+=",";}
 				command+="EmployerNum = "+POut.Long(patient.EmployerNum)+"";
 			}
-			if(patient.EmploymentNote != oldPatient.EmploymentNote) {
-				if(command!="") { command+=",";}
-				command+="EmploymentNote = '"+POut.String(patient.EmploymentNote)+"'";
-			}
 			if(patient.County != oldPatient.County) {
 				if(command!="") { command+=",";}
 				command+="County = '"+POut.String(patient.County)+"'";
@@ -1087,10 +1071,6 @@ namespace OpenDentBusiness.Crud{
 			if(patient.HasSuperBilling != oldPatient.HasSuperBilling) {
 				if(command!="") { command+=",";}
 				command+="HasSuperBilling = "+POut.Bool(patient.HasSuperBilling)+"";
-			}
-			if(patient.PatNumCloneFrom != oldPatient.PatNumCloneFrom) {
-				if(command!="") { command+=",";}
-				command+="PatNumCloneFrom = "+POut.Long(patient.PatNumCloneFrom)+"";
 			}
 			if(patient.DiscountPlanNum != oldPatient.DiscountPlanNum) {
 				if(command!="") { command+=",";}
@@ -1250,9 +1230,6 @@ namespace OpenDentBusiness.Crud{
 			if(patient.EmployerNum != oldPatient.EmployerNum) {
 				return true;
 			}
-			if(patient.EmploymentNote != oldPatient.EmploymentNote) {
-				return true;
-			}
 			if(patient.County != oldPatient.County) {
 				return true;
 			}
@@ -1350,9 +1327,6 @@ namespace OpenDentBusiness.Crud{
 			//SecUserNumEntry excluded from update
 			//SecDateEntry not allowed to change
 			if(patient.HasSuperBilling != oldPatient.HasSuperBilling) {
-				return true;
-			}
-			if(patient.PatNumCloneFrom != oldPatient.PatNumCloneFrom) {
 				return true;
 			}
 			if(patient.DiscountPlanNum != oldPatient.DiscountPlanNum) {

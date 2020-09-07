@@ -14,8 +14,9 @@ using System.Windows.Forms;
 namespace OpenDental
 {
 
-    ///<summary></summary>
-    public class ContrStaff : System.Windows.Forms.UserControl{
+	///<summary></summary>
+	public class ContrStaff : System.Windows.Forms.UserControl
+	{
 		private OpenDental.UI.Button butTimeCard;
 		private System.Windows.Forms.ListBox listStatus;
 		private System.Windows.Forms.Label textTime;
@@ -26,7 +27,7 @@ namespace OpenDental
 		private System.Windows.Forms.GroupBox groupBox2;
 		private System.Windows.Forms.TextBox textMessage;
 		private System.Windows.Forms.Label labelCurrentTime;
-    private System.ComponentModel.IContainer components;
+		private System.ComponentModel.IContainer components;
 		private OpenDental.UI.Button butSendClaims;
 		private OpenDental.UI.Button butTasks;
 		private OpenDental.UI.Button butBackup;
@@ -62,7 +63,7 @@ namespace OpenDental
 		private SigElementDef[] sigElementDefUser;
 		private SigElementDef[] sigElementDefExtras;
 		private Label labelSending;
-		private ErrorProvider errorProvider1=new ErrorProvider();
+		private ErrorProvider errorProvider1 = new ErrorProvider();
 		private OpenDental.UI.Button butAck;
 		private SigElementDef[] sigElementDefMessages;
 		private OpenDental.UI.Button butSupply;
@@ -78,36 +79,41 @@ namespace OpenDental
 		public FormTasks FormT;
 		public FormAccounting FormA;
 		private UI.Button butImportInsPlans;
-		private List<Employee> _listEmployees=new List<Employee>();
+		private List<Employee> _listEmployees = new List<Employee>();
 		private UI.Button butEras;
-		private FormEtrans834Import FormE834I=null;
-    private FormEmailInbox FormEmailInbox=null;
+		private FormEtrans834Import FormE834I = null;
+		private FormEmailInbox FormEmailInbox = null;
 		private UI.Button butViewSched;
 		private UI.Button butManageAR;
 		private FormArManager _formAR;
 		/// <summary>Always 1:1 with values in listStatus.Items</summary>
-		private List<TimeClockStatus> _listShownTimeClockStatuses=new List<TimeClockStatus>();
+		private List<TimeClockStatus> _listShownTimeClockStatuses = new List<TimeClockStatus>();
 
 		///<summary></summary>
-		public ContrStaff(){
+		public ContrStaff()
+		{
 			Logger.LogInfo("Initializing management module...");
 			InitializeComponent();
 			this.listStatus.Click += new System.EventHandler(this.listStatus_Click);
 		}
 
 		///<summary></summary>
-		protected override void Dispose( bool disposing ){
-			if( disposing ){
-				if(components != null){
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (components != null)
+				{
 					components.Dispose();
 				}
 			}
-			base.Dispose( disposing );
+			base.Dispose(disposing);
 		}
 
 		#region Component Designer generated code
 
-		private void InitializeComponent(){
+		private void InitializeComponent()
+		{
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ContrStaff));
 			this.listStatus = new System.Windows.Forms.ListBox();
@@ -280,8 +286,8 @@ namespace OpenDental
 			// 
 			// groupBox2
 			// 
-			this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+			this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)));
 			this.groupBox2.Controls.Add(this.listMessages);
 			this.groupBox2.Controls.Add(this.butSend);
 			this.groupBox2.Controls.Add(this.butAck);
@@ -311,8 +317,8 @@ namespace OpenDental
 			// 
 			// listMessages
 			// 
-			this.listMessages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+			this.listMessages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)));
 			this.listMessages.FormattingEnabled = true;
 			this.listMessages.Location = new System.Drawing.Point(252, 35);
 			this.listMessages.Name = "listMessages";
@@ -392,8 +398,8 @@ namespace OpenDental
 			// 
 			// gridMessages
 			// 
-			this.gridMessages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+			this.gridMessages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)));
 			this.gridMessages.Location = new System.Drawing.Point(356, 35);
 			this.gridMessages.Name = "gridMessages";
 			this.gridMessages.SelectionMode = OpenDental.UI.GridSelectionMode.MultiExtended;
@@ -435,8 +441,8 @@ namespace OpenDental
 			// 
 			// listExtras
 			// 
-			this.listExtras.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+			this.listExtras.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)));
 			this.listExtras.FormattingEnabled = true;
 			this.listExtras.Location = new System.Drawing.Point(171, 35);
 			this.listExtras.Name = "listExtras";
@@ -455,8 +461,8 @@ namespace OpenDental
 			// 
 			// listFrom
 			// 
-			this.listFrom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+			this.listFrom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)));
 			this.listFrom.FormattingEnabled = true;
 			this.listFrom.Location = new System.Drawing.Point(90, 35);
 			this.listFrom.Name = "listFrom";
@@ -474,8 +480,8 @@ namespace OpenDental
 			// 
 			// listTo
 			// 
-			this.listTo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+			this.listTo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)));
 			this.listTo.FormattingEnabled = true;
 			this.listTo.Location = new System.Drawing.Point(9, 35);
 			this.listTo.Name = "listTo";
@@ -625,7 +631,7 @@ namespace OpenDental
 			// 
 			// butTasks
 			// 
-			
+
 			this.butTasks.Image = ((System.Drawing.Image)(resources.GetObject("butTasks.Image")));
 			this.butTasks.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butTasks.Location = new System.Drawing.Point(148, 19);
@@ -637,7 +643,7 @@ namespace OpenDental
 			// 
 			// butManageAR
 			// 
-			
+
 			this.butManageAR.Image = global::Imedisoft.Properties.Resources.TSI_Icon;
 			this.butManageAR.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.butManageAR.Location = new System.Drawing.Point(16, 149);
@@ -664,73 +670,88 @@ namespace OpenDental
 		}
 		#endregion
 
-		private void ContrStaff_Load(object sender, System.EventArgs e) {
-		
+		private void ContrStaff_Load(object sender, System.EventArgs e)
+		{
+
 		}
 
 		///<summary>Only gets run on startup.</summary>
-		public void InitializeOnStartup() {
+		public void InitializeOnStartup()
+		{
 			//if(InitializedOnStartup) {
 			//	return;
 			//}
 			//InitializedOnStartup=true;
 
 			RefreshFullMessages();//after this, messages just get added to the list.
-			//But if checkIncludeAck is clicked,then it does RefreshMessages again.
+								  //But if checkIncludeAck is clicked,then it does RefreshMessages again.
 		}
 
 		///<summary></summary>
-		public void ModuleSelected(long patNum) {
-			PatCurNum=patNum;
+		public void ModuleSelected(long patNum)
+		{
+			PatCurNum = patNum;
 			RefreshModuleData(patNum);
 			RefreshModuleScreen();
-			Plugins.HookAddCode(this,"ContrStaff.ModuleSelected_end",patNum);
+			Plugins.HookAddCode(this, "ContrStaff.ModuleSelected_end", patNum);
 		}
 
 		///<summary></summary>
-		public void ModuleUnselected(){
+		public void ModuleUnselected()
+		{
 			//this is not getting triggered yet.
-			Plugins.HookAddCode(this,"ContrStaff.ModuleUnselected_end");
+			Plugins.HookAddCode(this, "ContrStaff.ModuleUnselected_end");
 		}
 
-		private void RefreshModuleData(long patNum) {
-      if(Prefs.GetBool(PrefName.LocalTimeOverridesServerTime)) {
-        TimeDelta=new TimeSpan(0);
-      }
-      else {
-        TimeDelta=MiscData.GetNowDateTime()-DateTime.Now;
-      }
+		private void RefreshModuleData(long patNum)
+		{
+			if (Prefs.GetBool(PrefName.LocalTimeOverridesServerTime))
+			{
+				TimeDelta = new TimeSpan(0);
+			}
+			else
+			{
+				TimeDelta = MiscData.GetNowDateTime() - DateTime.Now;
+			}
 			Employees.RefreshCache();
 			//RefreshModulePatient(patNum);
 		}
 
-		private void RefreshModuleScreen(){
-      if(Prefs.GetBool(PrefName.LocalTimeOverridesServerTime)) {
-        labelCurrentTime.Text="Local Time";
-      }
-      else {
-        labelCurrentTime.Text="Server Time";
-      }
-			textTime.Text=(DateTime.Now+TimeDelta).ToLongTimeString();
+		private void RefreshModuleScreen()
+		{
+			if (Prefs.GetBool(PrefName.LocalTimeOverridesServerTime))
+			{
+				labelCurrentTime.Text = "Local Time";
+			}
+			else
+			{
+				labelCurrentTime.Text = "Server Time";
+			}
+			textTime.Text = (DateTime.Now + TimeDelta).ToLongTimeString();
 			FillEmps();
 			FillMessageDefs();
-			if(Security.IsAuthorized(Permissions.TimecardsEditAll,true)) {
-				butManage.Enabled=true;
+			if (Security.IsAuthorized(Permissions.TimecardsEditAll, true))
+			{
+				butManage.Enabled = true;
 			}
-			else {
-				butManage.Enabled=false;
+			else
+			{
+				butManage.Enabled = false;
 			}
-			if(!Prefs.GetBool(PrefName.ClockEventAllowBreak)) {//Breaks turned off, Lunch is now "Break", but maintains Lunch functionality.
-				butBreaks.Visible=false;
+			if (!Prefs.GetBool(PrefName.ClockEventAllowBreak))
+			{//Breaks turned off, Lunch is now "Break", but maintains Lunch functionality.
+				butBreaks.Visible = false;
 			}
-			else {
-				butBreaks.Visible=true;
+			else
+			{
+				butBreaks.Visible = true;
 			}
-			butImportInsPlans.Visible=true;
-			if(Prefs.GetBool(PrefName.EasyHidePublicHealth)) {
-				butImportInsPlans.Visible=false;//Import Ins Plans button is only visible when Public Health feature is enabled.
+			butImportInsPlans.Visible = true;
+			if (Prefs.GetBool(PrefName.EasyHidePublicHealth))
+			{
+				butImportInsPlans.Visible = false;//Import Ins Plans button is only visible when Public Health feature is enabled.
 			}
-			butManageAR.Visible=!ProgramProperties.IsAdvertisingDisabled(ProgramName.Transworld);
+			butManageAR.Visible = !ProgramProperties.IsAdvertisingDisabled(ProgramName.Transworld);
 		}
 		/*
 		///<summary>Here so it's parallel with other modules.</summary>
@@ -745,333 +766,410 @@ namespace OpenDental
 			}
 		}*/
 
-		private void butSendClaims_Click(object sender, System.EventArgs e) {
-			if(!Security.IsAuthorized(Permissions.ClaimSend)) {
+		private void butSendClaims_Click(object sender, System.EventArgs e)
+		{
+			if (!Security.IsAuthorized(Permissions.ClaimSend))
+			{
 				return;
 			}
-			if(FormCS!=null && !FormCS.IsDisposed) {//Form is open
+			if (FormCS != null && !FormCS.IsDisposed)
+			{//Form is open
 				FormCS.Focus();//Don't open a new form.
-				//We may need to close and reopen the form in the future if the window is not being brought to the front.
-				//It is complicated to Close() and reopen the form, because the user might be in the middle of a task.
+							   //We may need to close and reopen the form in the future if the window is not being brought to the front.
+							   //It is complicated to Close() and reopen the form, because the user might be in the middle of a task.
 				return;
 			}
-			Cursor=Cursors.WaitCursor;
-			FormCS=new FormClaimsSend();
-			FormCS.FormClosed+=(s,ea) => { ODEvent.Fired-=formClaimsSend_GoToChanged; };
-			ODEvent.Fired+=formClaimsSend_GoToChanged;
+			Cursor = Cursors.WaitCursor;
+			FormCS = new FormClaimsSend();
+			FormCS.FormClosed += (s, ea) => { ODEvent.Fired -= formClaimsSend_GoToChanged; };
+			ODEvent.Fired += formClaimsSend_GoToChanged;
 			FormCS.Show();//FormClaimsSend has a GoTo option and is shown as a non-modal window.
 			FormCS.BringToFront();
-			Cursor=Cursors.Default;
+			Cursor = Cursors.Default;
 		}
 
-		public void TryRefreshFormClaimSend() {
-			if(FormCS!=null && !ODForm.IsDisposedOrClosed(FormCS)) {
+		public void TryRefreshFormClaimSend()
+		{
+			if (FormCS != null && !ODForm.IsDisposedOrClosed(FormCS))
+			{
 				FormCS.RefreshClaimsGrid();
 			}
 		}
 
-		private void butClaimPay_Click(object sender,EventArgs e) {
-			if(!Security.IsAuthorized(Permissions.InsPayCreate,true) && !Security.IsAuthorized(Permissions.InsPayEdit,true)) {
+		private void butClaimPay_Click(object sender, EventArgs e)
+		{
+			if (!Security.IsAuthorized(Permissions.InsPayCreate, true) && !Security.IsAuthorized(Permissions.InsPayEdit, true))
+			{
 				//Custom message for multiple permissions.
-				MessageBox.Show("Not authorized"+".\r\n"
-					+"A user with the SecurityAdmin permission must grant you access for"+":\r\n"
-					+"Insurance Payment Create or Insurance Payment Edit");
+				MessageBox.Show("Not authorized" + ".\r\n"
+					+ "A user with the SecurityAdmin permission must grant you access for" + ":\r\n"
+					+ "Insurance Payment Create or Insurance Payment Edit");
 				return;
 			}
-			FormClaimPayList FormCPL=new FormClaimPayList();
+			FormClaimPayList FormCPL = new FormClaimPayList();
 			FormCPL.Show();
 		}
 
-		private void butBilling_Click(object sender,System.EventArgs e) {
-			if(!Security.IsAuthorized(Permissions.Billing)) {
+		private void butBilling_Click(object sender, System.EventArgs e)
+		{
+			if (!Security.IsAuthorized(Permissions.Billing))
+			{
 				return;
 			}
-			bool unsentStatementsExist=Statements.UnsentStatementsExist();
-			if(unsentStatementsExist) {
-				if(PrefC.HasClinicsEnabled) {//Using clinics.
-					if(Statements.UnsentClinicStatementsExist(Clinics.ClinicId)) {//Check if clinic has unsent bills.
-						ShowBilling(Clinics.ClinicId);//Clinic has unsent bills.  Simply show billing window.
+			bool unsentStatementsExist = Statements.UnsentStatementsExist();
+			if (unsentStatementsExist)
+			{
+				if (PrefC.HasClinicsEnabled)
+				{//Using clinics.
+					if (Statements.UnsentClinicStatementsExist(Clinics.Active.Id))
+					{//Check if clinic has unsent bills.
+						ShowBilling(Clinics.Active.Id);//Clinic has unsent bills.  Simply show billing window.
 					}
-					else {//No unsent bills for clinic.  Show billing options to generate a billing list.
-						ShowBillingOptions(Clinics.ClinicId);
+					else
+					{//No unsent bills for clinic.  Show billing options to generate a billing list.
+						ShowBillingOptions(Clinics.Active.Id);
 					}
 				}
-				else {//Not using clinics and has unsent bills.  Simply show billing window.
+				else
+				{//Not using clinics and has unsent bills.  Simply show billing window.
 					ShowBilling(0);
 				}
 			}
-			else {//No unsent statements exist.  Have user create a billing list.
-				if(PrefC.HasClinicsEnabled) {
-					ShowBillingOptions(Clinics.ClinicId);
+			else
+			{//No unsent statements exist.  Have user create a billing list.
+				if (PrefC.HasClinicsEnabled)
+				{
+					ShowBillingOptions(Clinics.Active.Id);
 				}
-				else {
+				else
+				{
 					ShowBillingOptions(0);
 				}
 			}
-			SecurityLogs.MakeLogEntry(Permissions.Billing,0,"");
+			SecurityLogs.MakeLogEntry(Permissions.Billing, 0, "");
 		}
 
 		///<summary>Shows FormBilling and displays warning message if needed.  Pass 0 to show all clinics.  Make sure to check for unsent bills before calling this method.</summary>
-		private void ShowBilling(long clinicNum,bool isHistStartMinDate=false) {
-			bool hadListShowing=false;
+		private void ShowBilling(long clinicNum, bool isHistStartMinDate = false)
+		{
+			bool hadListShowing = false;
 			//Check to see if there is an instance of the billing list window already open that needs to be closed.
 			//This can happen if multiple people are trying to send bills at the same time.
-			if(FormB!=null && !FormB.IsDisposed) {
-				hadListShowing=true;
+			if (FormB != null && !FormB.IsDisposed)
+			{
+				hadListShowing = true;
 				//It does not hurt to always close this window before loading a new instance, because the unsent bills are saved in the database and the entire purpose of FormBilling is the Go To feature.
 				//Any statements that were showing in the old billing list window that we are about to close could potentially be stale and are now invalid and should not be sent.
 				//Another good reason to close the window is when using clinics.  It was possible to show a different clinic billing list than the one chosen.
-				for(int i=0;i<FormB.ListClinics.Count;i++) {
-					if(FormB.ListClinics[i].Id!=clinicNum) {//For most users clinic nums will always be 0.
-						//The old billing list was showing a different clinic.  No need to show the warning message in this scenario.
-						hadListShowing=false;
+				for (int i = 0; i < FormB.ListClinics.Count; i++)
+				{
+					if (FormB.ListClinics[i].Id != clinicNum)
+					{//For most users clinic nums will always be 0.
+					 //The old billing list was showing a different clinic.  No need to show the warning message in this scenario.
+						hadListShowing = false;
 					}
 				}
 				FormB.Close();
 			}
-			FormB=new FormBilling();
-			FormB.ClinicNumInitial=clinicNum;
-			FormB.IsHistoryStartMinDate=isHistStartMinDate;
+			FormB = new FormBilling();
+			FormB.ClinicNumInitial = clinicNum;
+			FormB.IsHistoryStartMinDate = isHistStartMinDate;
 			FormB.Show();//FormBilling has a Go To option and is shown as a non-modal window so the user can view the patient account and the billing list at the same time.
 			FormB.BringToFront();
-			if(hadListShowing) {
+			if (hadListShowing)
+			{
 				MessageBox.Show("These unsent bills must either be sent or deleted before a new list can be created.");
 			}
 		}
 
 		///<summary>Shows FormBillingOptions and FormBilling if needed.  Pass 0 to show all clinics.  Make sure to check for unsent bills before calling this method.</summary>
-		private void ShowBillingOptions(long clinicNum) {
-			FormBillingOptions formBillingOptions=new FormBillingOptions();
-			formBillingOptions.ClinicNum=clinicNum;
+		private void ShowBillingOptions(long clinicNum)
+		{
+			FormBillingOptions formBillingOptions = new FormBillingOptions();
+			formBillingOptions.ClinicNum = clinicNum;
 			formBillingOptions.ShowDialog();
-			if(formBillingOptions.DialogResult==DialogResult.OK) {
-				ShowBilling(clinicNum,formBillingOptions.IsHistoryStartMinDate);
+			if (formBillingOptions.DialogResult == DialogResult.OK)
+			{
+				ShowBilling(clinicNum, formBillingOptions.IsHistoryStartMinDate);
 			}
 		}
 
-		private void butManageAR_Click(object sender,EventArgs e) {
-			if(!Security.IsAuthorized(Permissions.Billing)) {
+		private void butManageAR_Click(object sender, EventArgs e)
+		{
+			if (!Security.IsAuthorized(Permissions.Billing))
+			{
 				return;
 			}
-			if(!Programs.IsEnabled(ProgramName.Transworld)) {
-				try {
+			if (!Programs.IsEnabled(ProgramName.Transworld))
+			{
+				try
+				{
 					Process.Start("http://www.opendental.com/manual/transworldsystems.html");
 				}
-				catch {
+				catch
+				{
 
 					MessageBox.Show("Failed to open web browser.  Please make sure you have a default browser set and are connected to the internet and then try again.");
 				}
 				return;
 			}
-			if(_formAR==null || _formAR.IsDisposed) {
-				while(!ValidateConnectionDetails()) {//only validate connection details if the ArManager form does not exist yet
-					string msgText="An SFTP connection could not be made using the connection details "+(PrefC.HasClinicsEnabled ? "for any clinic " : "")
-						+"in the enabled Transworld (TSI) program link.  Would you like to edit the Transworld program link now?";
-					if(!MsgBox.Show(MsgBoxButtons.YesNo,msgText)) {//if user does not want to edit program link, return
+			if (_formAR == null || _formAR.IsDisposed)
+			{
+				while (!ValidateConnectionDetails())
+				{//only validate connection details if the ArManager form does not exist yet
+					string msgText = "An SFTP connection could not be made using the connection details " + (PrefC.HasClinicsEnabled ? "for any clinic " : "")
+						+ "in the enabled Transworld (TSI) program link.  Would you like to edit the Transworld program link now?";
+					if (!MsgBox.Show(MsgBoxButtons.YesNo, msgText))
+					{//if user does not want to edit program link, return
 						return;
 					}
-					FormTransworldSetup FormTS=new FormTransworldSetup();
-					if(FormTS.ShowDialog()!=DialogResult.OK) {//if user cancels edits in the setup window, return
+					FormTransworldSetup FormTS = new FormTransworldSetup();
+					if (FormTS.ShowDialog() != DialogResult.OK)
+					{//if user cancels edits in the setup window, return
 						return;
 					}
 				}
-				_formAR=new FormArManager();//connections settings have been validated, create a new ArManager form
-				_formAR.FormClosed+=new FormClosedEventHandler((o,ev) => { _formAR=null; });//So that the form can release its objects for garbage collection
+				_formAR = new FormArManager();//connections settings have been validated, create a new ArManager form
+				_formAR.FormClosed += new FormClosedEventHandler((o, ev) => { _formAR = null; });//So that the form can release its objects for garbage collection
 			}
 			_formAR.Restore();
 			_formAR.Show();//form has a Go To option and is shown as a non-modal window so the user can view the pat account and the collection list at the same time.
-			if(_formAR!=null) {
+			if (_formAR != null)
+			{
 				//When things go wrong running aging, user is prompted to load the existing account info.  If they say no, the form closes, and the closing 
 				//event handler sets _formAR=null.
 				_formAR.BringToFront();
 			}
 		}
 
-		private bool ValidateConnectionDetails() {
-			Program progCur=Programs.GetCur(ProgramName.Transworld);
-			List<long> listClinicNums=new List<long>();
-			if(PrefC.HasClinicsEnabled) {
-				listClinicNums=Clinics.GetByUser(Security.CurrentUser).Select(x => x.Id).ToList();
-				if(!Security.CurrentUser.ClinicIsRestricted) {
+		private bool ValidateConnectionDetails()
+		{
+			Program progCur = Programs.GetCur(ProgramName.Transworld);
+			List<long> listClinicNums = new List<long>();
+			if (PrefC.HasClinicsEnabled)
+			{
+				listClinicNums = Clinics.GetByUser(Security.CurrentUser).Select(x => x.Id).ToList();
+				if (!Security.CurrentUser.ClinicIsRestricted)
+				{
 					listClinicNums.Add(0);
 				}
 			}
-			else {
+			else
+			{
 				listClinicNums.Add(0);
 			}
-			List<ProgramProperty> listProperties=ProgramProperties.GetForProgram(progCur.Id);
-			foreach(long clinicNum in listClinicNums) {
-				List<ProgramProperty> listPropsForClinic=new List<ProgramProperty>();
-				if(listProperties.All(x => x.ClinicId!=clinicNum)) {//if no prog props exist for the clinic, continue, clinicNum 0 will be tested once as well
+			List<ProgramProperty> listProperties = ProgramProperties.GetForProgram(progCur.Id);
+			foreach (long clinicNum in listClinicNums)
+			{
+				List<ProgramProperty> listPropsForClinic = new List<ProgramProperty>();
+				if (listProperties.All(x => x.ClinicId != clinicNum))
+				{//if no prog props exist for the clinic, continue, clinicNum 0 will be tested once as well
 					continue;
 				}
-				listPropsForClinic=listProperties.FindAll(x => x.ClinicId==clinicNum);
-				string sftpAddress=listPropsForClinic.Find(x => x.Name=="SftpServerAddress")?.Value??"";
+				listPropsForClinic = listProperties.FindAll(x => x.ClinicId == clinicNum);
+				string sftpAddress = listPropsForClinic.Find(x => x.Name == "SftpServerAddress")?.Value ?? "";
 				int sftpPort;
-				if(!int.TryParse(listPropsForClinic.Find(x => x.Name=="SftpServerPort")?.Value??"",out sftpPort)) {
-					sftpPort=22;//default to port 22
+				if (!int.TryParse(listPropsForClinic.Find(x => x.Name == "SftpServerPort")?.Value ?? "", out sftpPort))
+				{
+					sftpPort = 22;//default to port 22
 				}
-				string userName=listPropsForClinic.Find(x => x.Name=="SftpUsername")?.Value??"";
-				string userPassword=listPropsForClinic.Find(x => x.Name=="SftpPassword")?.Value??"";
-				if(Sftp.TestConnection(sftpAddress,userName,userPassword,sftpPort)) {
+				string userName = listPropsForClinic.Find(x => x.Name == "SftpUsername")?.Value ?? "";
+				string userPassword = listPropsForClinic.Find(x => x.Name == "SftpPassword")?.Value ?? "";
+				if (Sftp.TestConnection(sftpAddress, userName, userPassword, sftpPort))
+				{
 					return true;
 				}
 			}
 			return false;
 		}
 
-		private void formClaimsSend_GoToChanged(ODEventArgs e) {
-			if(e.EventType!=EventCategory.FormClaimSend_GoTo) {
+		private void formClaimsSend_GoToChanged(ODEventArgs e)
+		{
+			if (e.EventType != EventCategory.FormClaimSend_GoTo)
+			{
 				return;
 			}
-			ClaimSendQueueItem claimSendQueueItem=(ClaimSendQueueItem)e.Tag;
-			Patient pat=Patients.GetPat(claimSendQueueItem.PatNum);
-			FormOpenDental.S_Contr_PatientSelected(pat,false);
+			ClaimSendQueueItem claimSendQueueItem = (ClaimSendQueueItem)e.Tag;
+			Patient pat = Patients.GetPat(claimSendQueueItem.PatNum);
+			FormOpenDental.S_Contr_PatientSelected(pat, false);
 			GotoModule.GotoClaim(claimSendQueueItem.ClaimNum);
 		}
 
-		private void butDeposit_Click(object sender, System.EventArgs e) {
-			if(!Security.IsAuthorized(Permissions.DepositSlips,DateTime.Today)){
+		private void butDeposit_Click(object sender, System.EventArgs e)
+		{
+			if (!Security.IsAuthorized(Permissions.DepositSlips, DateTime.Today))
+			{
 				return;
 			}
-			FormDeposits FormD=new FormDeposits();
+			FormDeposits FormD = new FormDeposits();
 			FormD.ShowDialog();
 		}
 
-		private void butAccounting_Click(object sender,System.EventArgs e) {
-			if(!Security.IsAuthorized(Permissions.Accounting)) {
+		private void butAccounting_Click(object sender, System.EventArgs e)
+		{
+			if (!Security.IsAuthorized(Permissions.Accounting))
+			{
 				return;
 			}
-			if(FormA==null || FormA.IsDisposed) {
-				FormA=new FormAccounting();
+			if (FormA == null || FormA.IsDisposed)
+			{
+				FormA = new FormAccounting();
 			}
 			FormA.Show();
-			if(FormA.WindowState==FormWindowState.Minimized) {
-				FormA.WindowState=FormWindowState.Normal;
+			if (FormA.WindowState == FormWindowState.Minimized)
+			{
+				FormA.WindowState = FormWindowState.Normal;
 			}
 			FormA.BringToFront();
 		}
 
-		private void butBackup_Click(object sender, System.EventArgs e) {
-			if(!Security.IsAuthorized(Permissions.Backup)){
+		private void butBackup_Click(object sender, System.EventArgs e)
+		{
+			if (!Security.IsAuthorized(Permissions.Backup))
+			{
 				return;
 			}
-			SecurityLogs.MakeLogEntry(Permissions.Backup,0,"FormBackup was accessed");
-			FormBackup FormB=new FormBackup();
+			SecurityLogs.MakeLogEntry(Permissions.Backup, 0, "FormBackup was accessed");
+			FormBackup FormB = new FormBackup();
 			FormB.ShowDialog();
-			if(FormB.DialogResult==DialogResult.Cancel){
+			if (FormB.DialogResult == DialogResult.Cancel)
+			{
 				return;
 			}
 			//ok signifies that a database was restored
-			FormOpenDental.S_Contr_PatientSelected(new Patient(),false);//unload patient after restore.
-			//ParentForm.Text=Prefs.GetString(PrefName.MainWindowTitle");
+			FormOpenDental.S_Contr_PatientSelected(new Patient(), false);//unload patient after restore.
+																		 //ParentForm.Text=Prefs.GetString(PrefName.MainWindowTitle");
 			DataValid.SetInvalid();
 			ModuleSelected(PatCurNum);
 		}
 
-		private void butTasks_Click(object sender, EventArgs e) {
+		private void butTasks_Click(object sender, EventArgs e)
+		{
 			LaunchTaskWindow();
 		}
 
 		///<summary>Used to launch the task window preloaded with a certain task list open.  isTriage is only used at OD HQ.</summary>
-		public void LaunchTaskWindow() {
-			if(FormT==null || FormT.IsDisposed) {
-				FormT=new FormTasks();
+		public void LaunchTaskWindow()
+		{
+			if (FormT == null || FormT.IsDisposed)
+			{
+				FormT = new FormTasks();
 			}
 			FormT.Show();
-			if(FormT.WindowState==FormWindowState.Minimized) {
-				FormT.WindowState=FormWindowState.Normal;
+			if (FormT.WindowState == FormWindowState.Minimized)
+			{
+				FormT.WindowState = FormWindowState.Normal;
 			}
 			FormT.BringToFront();
 		}
 
-		private void butSupply_Click(object sender,EventArgs e) {
-			FormSupplyInventory FormS=new FormSupplyInventory();
+		private void butSupply_Click(object sender, EventArgs e)
+		{
+			FormSupplyInventory FormS = new FormSupplyInventory();
 			FormS.ShowDialog();
 		}
 
-		private void butEras_Click(object sender,EventArgs e) {
-			if(!Security.IsAuthorized(Permissions.InsPayCreate)) {
+		private void butEras_Click(object sender, EventArgs e)
+		{
+			if (!Security.IsAuthorized(Permissions.InsPayCreate))
+			{
 				return;
 			}
-			Cursor=Cursors.WaitCursor;
-			FormEtrans835s FormE=new FormEtrans835s();
+			Cursor = Cursors.WaitCursor;
+			FormEtrans835s FormE = new FormEtrans835s();
 			FormE.Show();//non-modal
-			Cursor=Cursors.Default;
+			Cursor = Cursors.Default;
 		}
 
-		private void butEmailInbox_Click(object sender,EventArgs e) {
-      if(FormEmailInbox==null||FormEmailInbox.IsDisposed) {
-        FormEmailInbox=null;
-        FormEmailInbox=new FormEmailInbox();
-        FormEmailInbox.Show();
-      }
-      else {
-        if(FormEmailInbox.WindowState==FormWindowState.Minimized) {
-          FormEmailInbox.WindowState=FormWindowState.Maximized;
-        }
-        FormEmailInbox.BringToFront();
-      }
-    }
+		private void butEmailInbox_Click(object sender, EventArgs e)
+		{
+			if (FormEmailInbox == null || FormEmailInbox.IsDisposed)
+			{
+				FormEmailInbox = null;
+				FormEmailInbox = new FormEmailInbox();
+				FormEmailInbox.Show();
+			}
+			else
+			{
+				if (FormEmailInbox.WindowState == FormWindowState.Minimized)
+				{
+					FormEmailInbox.WindowState = FormWindowState.Maximized;
+				}
+				FormEmailInbox.BringToFront();
+			}
+		}
 
-		private void butImportInsPlans_Click(object sender,EventArgs e) {
-			if(FormE834I!=null && FormE834I.FormE834P!=null && !FormE834I.FormE834P.IsDisposed) {
+		private void butImportInsPlans_Click(object sender, EventArgs e)
+		{
+			if (FormE834I != null && FormE834I.FormE834P != null && !FormE834I.FormE834P.IsDisposed)
+			{
 				FormE834I.FormE834P.Show();
 				FormE834I.FormE834P.BringToFront();
 				return;
 			}
-			if(FormE834I==null || FormE834I.IsDisposed) {
-				FormE834I=new FormEtrans834Import();
+			if (FormE834I == null || FormE834I.IsDisposed)
+			{
+				FormE834I = new FormEtrans834Import();
 			}
 			FormE834I.Show();
 			FormE834I.BringToFront();
 		}
 
 		//private void butClear_Click(object sender, System.EventArgs e) {
-			//textMessage.Clear();
-			//textMessage.Select();
+		//textMessage.Clear();
+		//textMessage.Select();
 		//}
 
-		private void FillEmps(){
+		private void FillEmps()
+		{
 			gridEmp.BeginUpdate();
 			gridEmp.ListGridColumns.Clear();
-			GridColumn col=new GridColumn("Employee",180);
+			GridColumn col = new GridColumn("Employee", 180);
 			gridEmp.ListGridColumns.Add(col);
-			col=new GridColumn("Status",104);
+			col = new GridColumn("Status", 104);
 			gridEmp.ListGridColumns.Add(col);
 			gridEmp.ListGridRows.Clear();
 			UI.GridRow row;
-			if(PrefC.HasClinicsEnabled) {
-				_listEmployees=Employees.GetEmpsForClinic(Clinics.ClinicId,false,true);
+			if (PrefC.HasClinicsEnabled)
+			{
+				_listEmployees = Employees.GetEmpsForClinic(Clinics.Active.Id, false, true);
 			}
-			else {
-				_listEmployees=Employees.GetDeepCopy(true);
+			else
+			{
+				_listEmployees = Employees.GetAll(true);
 			}
-			foreach(Employee emp in _listEmployees) {
-				row=new OpenDental.UI.GridRow();
+			foreach (Employee emp in _listEmployees)
+			{
+				row = new OpenDental.UI.GridRow();
 				row.Cells.Add(Employees.GetNameFL(emp));
 				row.Cells.Add(ConvertClockStatus(emp.ClockStatus));//Translated in function.
-				row.Tag=emp;
+				row.Tag = emp;
 				gridEmp.ListGridRows.Add(row);
 			}
 			gridEmp.EndUpdate();
 			listStatus.Items.Clear();
 			_listShownTimeClockStatuses.Clear();
-			foreach(TimeClockStatus timeClockStatus in Enum.GetValues(typeof(TimeClockStatus))){
-				string statusDescript=timeClockStatus.GetDescription();
-				if(!Prefs.GetBool(PrefName.ClockEventAllowBreak)) {
-					if(timeClockStatus==TimeClockStatus.Break) {
+			foreach (TimeClockStatus timeClockStatus in Enum.GetValues(typeof(TimeClockStatus)))
+			{
+				string statusDescript = timeClockStatus.GetDescription();
+				if (!Prefs.GetBool(PrefName.ClockEventAllowBreak))
+				{
+					if (timeClockStatus == TimeClockStatus.Break)
+					{
 						continue;//Skip Break option.
 					}
-					else if(timeClockStatus==TimeClockStatus.Lunch) {
-						statusDescript=TimeClockStatus.Break.GetDescription();//Change "Lunch" to "Break", still functions as Lunch.
+					else if (timeClockStatus == TimeClockStatus.Lunch)
+					{
+						statusDescript = TimeClockStatus.Break.GetDescription();//Change "Lunch" to "Break", still functions as Lunch.
 					}
 				}
 				_listShownTimeClockStatuses.Add(timeClockStatus);
 				listStatus.Items.Add(statusDescript);
 			}
-			for(int i=0;i<_listEmployees.Count;i++) {
-				if(_listEmployees[i].EmployeeNum==Security.CurrentUser.EmployeeId) {
+			for (int i = 0; i < _listEmployees.Count; i++)
+			{
+				if (_listEmployees[i].Id == Security.CurrentUser.EmployeeId)
+				{
 					SelectEmpI(i);
 					return;
 				}
@@ -1081,83 +1179,100 @@ namespace OpenDental
 
 		/// <summary>Returns a translated TimeClockStatus enum description from the given status.
 		/// Also considers PrefName.ClockEventAllowBreak to switch 'Lunch' to 'Break' for the UI.</summary>
-		private string ConvertClockStatus(string status) {
-			if(!Prefs.GetBool(PrefName.ClockEventAllowBreak) && status==TimeClockStatus.Lunch.GetDescription()) {
-				status=TimeClockStatus.Break.GetDescription();
+		private string ConvertClockStatus(string status)
+		{
+			if (!Prefs.GetBool(PrefName.ClockEventAllowBreak) && status == TimeClockStatus.Lunch.GetDescription())
+			{
+				status = TimeClockStatus.Break.GetDescription();
 			}
 			return status;
 		}
 
 		///<summary>-1 is also valid.</summary>
-		private void SelectEmpI(int index,bool doClearGridSelection=true){
-			if(doClearGridSelection) {
+		private void SelectEmpI(int index, bool doClearGridSelection = true)
+		{
+			if (doClearGridSelection)
+			{
 				gridEmp.SetSelected(false);
 			}
-			if(index==-1){
-				butClockIn.Enabled=false;
-				butClockOut.Enabled=false;
-				butTimeCard.Enabled=false;
-				butBreaks.Enabled=false;
-				listStatus.Enabled=false;
+			if (index == -1)
+			{
+				butClockIn.Enabled = false;
+				butClockOut.Enabled = false;
+				butTimeCard.Enabled = false;
+				butBreaks.Enabled = false;
+				listStatus.Enabled = false;
 				return;
 			}
-			gridEmp.SetSelected(index,true);
-			EmployeeCur=_listEmployees[index];
-			ClockEvent clockEvent=ClockEvents.GetLastEvent(EmployeeCur.EmployeeNum);
-			if(clockEvent==null) {//new employee.  They need to clock in.
-				butClockIn.Enabled=true;
-				butClockOut.Enabled=false;
-				butTimeCard.Enabled=true;
-				butBreaks.Enabled=true;
-				listStatus.SelectedIndex=_listShownTimeClockStatuses.IndexOf(TimeClockStatus.Home);
-				listStatus.Enabled=false;
+			gridEmp.SetSelected(index, true);
+			EmployeeCur = _listEmployees[index];
+			ClockEvent clockEvent = ClockEvents.GetLastEvent(EmployeeCur.Id);
+			if (clockEvent == null)
+			{//new employee.  They need to clock in.
+				butClockIn.Enabled = true;
+				butClockOut.Enabled = false;
+				butTimeCard.Enabled = true;
+				butBreaks.Enabled = true;
+				listStatus.SelectedIndex = _listShownTimeClockStatuses.IndexOf(TimeClockStatus.Home);
+				listStatus.Enabled = false;
 			}
-			else if(clockEvent.ClockStatus==TimeClockStatus.Break) {//only incomplete breaks will have been returned.
-				//clocked out for break, but not clocked back in
-				butClockIn.Enabled=true;
-				butClockOut.Enabled=false;
-				butTimeCard.Enabled=true;
-				butBreaks.Enabled=true;
-				if(Prefs.GetBool(PrefName.ClockEventAllowBreak)) {
-					listStatus.SelectedIndex=_listShownTimeClockStatuses.IndexOf(TimeClockStatus.Break);
+			else if (clockEvent.ClockStatus == TimeClockStatus.Break)
+			{//only incomplete breaks will have been returned.
+			 //clocked out for break, but not clocked back in
+				butClockIn.Enabled = true;
+				butClockOut.Enabled = false;
+				butTimeCard.Enabled = true;
+				butBreaks.Enabled = true;
+				if (Prefs.GetBool(PrefName.ClockEventAllowBreak))
+				{
+					listStatus.SelectedIndex = _listShownTimeClockStatuses.IndexOf(TimeClockStatus.Break);
 				}
-				else {
+				else
+				{
 					//This will only happen when ClockEventAllowBreak has just changed to false, but employees are clocked out for TimeClockStatus.Break.
 					//Because listStatus only contains TimeClockStatus.Home and TimeClockStatus.Lunch(displays as "Break"), we can't choose TimeClockStatus.Break.
 					//Choose TimeClockStatus.Lunch which displays as "Break", and allow normal clocking in/out to handle transition into newly disabled 
 					//preference statuses.
-					listStatus.SelectedIndex=_listShownTimeClockStatuses.IndexOf(TimeClockStatus.Lunch);
+					listStatus.SelectedIndex = _listShownTimeClockStatuses.IndexOf(TimeClockStatus.Lunch);
 				}
-				listStatus.Enabled=false;
+				listStatus.Enabled = false;
 			}
-			else {//normal clock in/out
-				if(clockEvent.TimeDisplayed2.Year<1880) {//clocked in to work, but not clocked back out.
-					butClockIn.Enabled=false;
-					butClockOut.Enabled=true;
-					butTimeCard.Enabled=true;
-					butBreaks.Enabled=true;
-					listStatus.Enabled=true;
+			else
+			{//normal clock in/out
+				if (clockEvent.TimeDisplayed2.Year < 1880)
+				{//clocked in to work, but not clocked back out.
+					butClockIn.Enabled = false;
+					butClockOut.Enabled = true;
+					butTimeCard.Enabled = true;
+					butBreaks.Enabled = true;
+					listStatus.Enabled = true;
 				}
-				else {//clocked out for home or lunch.  Need to clock back in.
-					butClockIn.Enabled=true;
-					butClockOut.Enabled=false;
-					butTimeCard.Enabled=true;
-					butBreaks.Enabled=true;
-					listStatus.SelectedIndex=(int)clockEvent.ClockStatus;
-					listStatus.Enabled=false;
+				else
+				{//clocked out for home or lunch.  Need to clock back in.
+					butClockIn.Enabled = true;
+					butClockOut.Enabled = false;
+					butTimeCard.Enabled = true;
+					butBreaks.Enabled = true;
+					listStatus.SelectedIndex = (int)clockEvent.ClockStatus;
+					listStatus.Enabled = false;
 				}
 			}
 		}
 
-		private void gridEmp_CellClick(object sender, OpenDental.UI.ODGridClickEventArgs e) {
-			if(gridEmp.SelectedIndices.Length>=2) {
-				SelectEmpI(-1,false);//Disable various UI elements.
+		private void gridEmp_CellClick(object sender, OpenDental.UI.ODGridClickEventArgs e)
+		{
+			if (gridEmp.SelectedIndices.Length >= 2)
+			{
+				SelectEmpI(-1, false);//Disable various UI elements.
 				return;
 			}
-			if(Prefs.GetBool(PrefName.TimecardSecurityEnabled)){
-				if(Security.CurrentUser.EmployeeId!=_listEmployees[e.Row].EmployeeNum) {
-					if(!Security.IsAuthorized(Permissions.TimecardsEditAll,true)){
-						SelectEmpI(-1,false);
+			if (Prefs.GetBool(PrefName.TimecardSecurityEnabled))
+			{
+				if (Security.CurrentUser.EmployeeId != _listEmployees[e.Row].Id)
+				{
+					if (!Security.IsAuthorized(Permissions.TimecardsEditAll, true))
+					{
+						SelectEmpI(-1, false);
 						return;
 					}
 				}
@@ -1165,320 +1280,384 @@ namespace OpenDental
 			SelectEmpI(e.Row);
 		}
 
-		private void listStatus_Click(object sender, System.EventArgs e) {
+		private void listStatus_Click(object sender, System.EventArgs e)
+		{
 			//
 		}
 
-		private void butClockIn_Click(object sender,System.EventArgs e) {
-			if(gridEmp.SelectedGridRows.Count>1) {
+		private void butClockIn_Click(object sender, System.EventArgs e)
+		{
+			if (gridEmp.SelectedGridRows.Count > 1)
+			{
 				SelectEmpI(-1);
 				return;
 			}
-			try{
-				bool[] authorized=new bool[1] { false };
-				if(Plugins.HookMethod(this,"ContrStaff.butClockIn_Click_ClockIn",authorized,EmployeeCur)) {
-					if(!authorized[0]) {
+			try
+			{
+				bool[] authorized = new bool[1] { false };
+				if (Plugins.HookMethod(this, "ContrStaff.butClockIn_Click_ClockIn", authorized, EmployeeCur))
+				{
+					if (!authorized[0])
+					{
 						throw new Exception("You need to authenticate to clock-in");
 					}
 				}
-				ClockEvents.ClockIn(EmployeeCur.EmployeeNum);
+				ClockEvents.ClockIn(EmployeeCur.Id);
 			}
-			catch(Exception ex){
+			catch (Exception ex)
+			{
 				MessageBox.Show(ex.Message);
 				return;
 			}
-			EmployeeCur.ClockStatus="Working";
+			EmployeeCur.ClockStatus = "Working";
 			Employees.Update(EmployeeCur);
 			ModuleSelected(PatCurNum);
-			if(!PayPeriods.HasPayPeriodForDate(DateTime.Today)) {
+			if (!PayPeriods.HasPayPeriodForDate(DateTime.Today))
+			{
 				MessageBox.Show("No dates exist for this pay period.  Time clock events will not display until pay periods have been created for this date range");
 			}
 		}
 
-		private void butClockOut_Click(object sender,System.EventArgs e) {
-			if(gridEmp.SelectedGridRows.Count>1) {
+		private void butClockOut_Click(object sender, System.EventArgs e)
+		{
+			if (gridEmp.SelectedGridRows.Count > 1)
+			{
 				SelectEmpI(-1);
 				return;
 			}
-			if(listStatus.SelectedIndex==-1){
+			if (listStatus.SelectedIndex == -1)
+			{
 				MessageBox.Show("Please select a status first.");
 				return;
 			}
-			try{
-				bool[] authorized=new bool[1] { false };
-				if(Plugins.HookMethod(this,"ContrStaff.butClockOut_Click_ClockOut",authorized,EmployeeCur,
-					_listShownTimeClockStatuses[listStatus.SelectedIndex])) 
+			try
+			{
+				bool[] authorized = new bool[1] { false };
+				if (Plugins.HookMethod(this, "ContrStaff.butClockOut_Click_ClockOut", authorized, EmployeeCur,
+					_listShownTimeClockStatuses[listStatus.SelectedIndex]))
 				{
-					if(!authorized[0]) {
+					if (!authorized[0])
+					{
 						throw new Exception("You need to authenticate to clock-out");
 					}
 				}
-				ClockEvents.ClockOut(EmployeeCur.EmployeeNum,_listShownTimeClockStatuses[listStatus.SelectedIndex]);
+				ClockEvents.ClockOut(EmployeeCur.Id, _listShownTimeClockStatuses[listStatus.SelectedIndex]);
 			}
-			catch(Exception ex){
+			catch (Exception ex)
+			{
 				MessageBox.Show(ex.Message);
 				return;
 			}
-			EmployeeCur.ClockStatus=(_listShownTimeClockStatuses[listStatus.SelectedIndex]).GetDescription();
+			EmployeeCur.ClockStatus = (_listShownTimeClockStatuses[listStatus.SelectedIndex]).GetDescription();
 			Employees.Update(EmployeeCur);
 			ModuleSelected(PatCurNum);
 		}
 
-		private void timerUpdateTime_Tick(object sender, System.EventArgs e) {
+		private void timerUpdateTime_Tick(object sender, System.EventArgs e)
+		{
 			//this will happen once a second
-			if(this.Visible){
-				textTime.Text=(DateTime.Now+TimeDelta).ToLongTimeString();
+			if (this.Visible)
+			{
+				textTime.Text = (DateTime.Now + TimeDelta).ToLongTimeString();
 			}
 		}
 
-		private void butManage_Click(object sender,EventArgs e) {
-			FormTimeCardManage FormTCM=new FormTimeCardManage(_listEmployees);
+		private void butManage_Click(object sender, EventArgs e)
+		{
+			FormTimeCardManage FormTCM = new FormTimeCardManage(_listEmployees);
 			FormTCM.ShowDialog();
 			ModuleSelected(PatCurNum);
 		}
 
-		private void gridEmp_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			if(gridEmp.SelectedGridRows.Count>1) {//Just in case
+		private void gridEmp_CellDoubleClick(object sender, ODGridClickEventArgs e)
+		{
+			if (gridEmp.SelectedGridRows.Count > 1)
+			{//Just in case
 				return;
 			}
-			if(PayPeriods.GetCount()==0) {
+			if (PayPeriods.GetCount() == 0)
+			{
 				MessageBox.Show("The adminstrator needs to setup pay periods first.");
 				return;
 			}
-			if(!butTimeCard.Enabled) {
+			if (!butTimeCard.Enabled)
+			{
 				return;
 			}
-			FormTimeCard FormTC=new FormTimeCard(_listEmployees);
-			FormTC.EmployeeCur=_listEmployees[e.Row];
+			FormTimeCard FormTC = new FormTimeCard(_listEmployees);
+			FormTC.EmployeeCur = _listEmployees[e.Row];
 			FormTC.ShowDialog();
 			ModuleSelected(PatCurNum);
 		}
 
-		private void butTimeCard_Click(object sender, System.EventArgs e) {
-			if(gridEmp.SelectedGridRows.Count>1) {
+		private void butTimeCard_Click(object sender, System.EventArgs e)
+		{
+			if (gridEmp.SelectedGridRows.Count > 1)
+			{
 				SelectEmpI(-1);
 				return;
 			}
-			if(PayPeriods.GetCount()==0){
+			if (PayPeriods.GetCount() == 0)
+			{
 				MessageBox.Show("The adminstrator needs to setup pay periods first.");
 				return;
 			}
-			FormTimeCard FormTC=new FormTimeCard(_listEmployees);
-			FormTC.EmployeeCur=EmployeeCur;
+			FormTimeCard FormTC = new FormTimeCard(_listEmployees);
+			FormTC.EmployeeCur = EmployeeCur;
 			FormTC.ShowDialog();
 			ModuleSelected(PatCurNum);
 		}
 
-		private void butBreaks_Click(object sender,EventArgs e) {
-			if(gridEmp.SelectedGridRows.Count>1) {
+		private void butBreaks_Click(object sender, EventArgs e)
+		{
+			if (gridEmp.SelectedGridRows.Count > 1)
+			{
 				SelectEmpI(-1);
 				return;
 			}
-			if(PayPeriods.GetCount()==0) {
+			if (PayPeriods.GetCount() == 0)
+			{
 				MessageBox.Show("The adminstrator needs to setup pay periods first.");
 				return;
 			}
-			FormTimeCard FormTC=new FormTimeCard(_listEmployees);
-			FormTC.EmployeeCur=EmployeeCur;
-			FormTC.IsBreaks=true;
+			FormTimeCard FormTC = new FormTimeCard(_listEmployees);
+			FormTC.EmployeeCur = EmployeeCur;
+			FormTC.IsBreaks = true;
 			FormTC.ShowDialog();
 			ModuleSelected(PatCurNum);
 		}
 
-		private void butViewSched_Click(object sender,EventArgs e) {
-			List<long> listPreSelectedEmpNums=gridEmp.SelectedGridRows.Select(x => ((Employee)x.Tag).EmployeeNum).ToList();
-			List<long> listPreSelectedProvNums=Userods.GetWhere(x => listPreSelectedEmpNums.Contains(x.EmployeeId) && x.ProviderId!=0)
-				.Select(x => x.ProviderId)
+		private void butViewSched_Click(object sender, EventArgs e)
+		{
+			List<long> listPreSelectedEmpNums = gridEmp.SelectedGridRows.Select(x => ((Employee)x.Tag).Id).ToList();
+			List<long> listPreSelectedProvNums = Userods.GetWhere(x => listPreSelectedEmpNums.Contains(x.EmployeeId.Value) && x.ProviderId != 0)
+				.Select(x => x.ProviderId.Value)
 				.ToList();
-			FormSchedule formSched=new FormSchedule(listPreSelectedEmpNums,listPreSelectedProvNums);
+			FormSchedule formSched = new FormSchedule(listPreSelectedEmpNums, listPreSelectedProvNums);
 			formSched.ShowDialog();
 		}
 
 		#region Messaging
 		///<summary>Gets run with each module selected.  Should be very fast.</summary>
-		private void FillMessageDefs(){
-			sigElementDefUser=SigElementDefs.GetSubList(SignalElementType.User);
-			sigElementDefExtras=SigElementDefs.GetSubList(SignalElementType.Extra);
-			sigElementDefMessages=SigElementDefs.GetSubList(SignalElementType.Message);
+		private void FillMessageDefs()
+		{
+			sigElementDefUser = SigElementDefs.GetSubList(SignalElementType.User);
+			sigElementDefExtras = SigElementDefs.GetSubList(SignalElementType.Extra);
+			sigElementDefMessages = SigElementDefs.GetSubList(SignalElementType.Message);
 			listTo.Items.Clear();
-			for(int i=0;i<sigElementDefUser.Length;i++){
+			for (int i = 0; i < sigElementDefUser.Length; i++)
+			{
 				listTo.Items.Add(sigElementDefUser[i].SigText);
 			}
 			listFrom.Items.Clear();
-			for(int i=0;i<sigElementDefUser.Length;i++) {
+			for (int i = 0; i < sigElementDefUser.Length; i++)
+			{
 				listFrom.Items.Add(sigElementDefUser[i].SigText);
 			}
 			listExtras.Items.Clear();
-			for(int i=0;i<sigElementDefExtras.Length;i++) {
+			for (int i = 0; i < sigElementDefExtras.Length; i++)
+			{
 				listExtras.Items.Add(sigElementDefExtras[i].SigText);
 			}
 			listMessages.Items.Clear();
-			for(int i=0;i<sigElementDefMessages.Length;i++) {
+			for (int i = 0; i < sigElementDefMessages.Length; i++)
+			{
 				listMessages.Items.Add(sigElementDefMessages[i].SigText);
 			}
 			comboViewUser.Items.Clear();
 			comboViewUser.Items.Add("all");
-			for(int i=0;i<sigElementDefUser.Length;i++) {
+			for (int i = 0; i < sigElementDefUser.Length; i++)
+			{
 				comboViewUser.Items.Add(sigElementDefUser[i].SigText);
 			}
-			comboViewUser.SelectedIndex=0;
+			comboViewUser.SelectedIndex = 0;
 		}
 
 		///<summary>Gets all new data from the database for the text messages.  Not sure yet if this will also reset the lights along the left.</summary>
-		private void RefreshFullMessages() {
-			_listSigMessages=SigMessages.GetSigMessagesSinceDateTime(DateTimeOD.Today);//since midnight this morning.
+		private void RefreshFullMessages()
+		{
+			_listSigMessages = SigMessages.GetSigMessagesSinceDateTime(DateTimeOD.Today);//since midnight this morning.
 			FillMessages();
 		}
 
 		///<summary>This does not refresh any data, just fills the grid.</summary>
-		private void FillMessages(){
-			if(textDays.Visible && errorProvider1.GetError(textDays) !=""){
+		private void FillMessages()
+		{
+			if (textDays.Visible && errorProvider1.GetError(textDays) != "")
+			{
 				return;
 			}
-			List<long> listSelectedSigMessageNums=gridMessages.SelectedTags<SigMessage>().Select(x => x.SigMessageNum).ToList();
+			List<long> listSelectedSigMessageNums = gridMessages.SelectedTags<SigMessage>().Select(x => x.SigMessageNum).ToList();
 			gridMessages.BeginUpdate();
 			gridMessages.ListGridColumns.Clear();
-			GridColumn col=new GridColumn("To",60);
+			GridColumn col = new GridColumn("To", 60);
 			gridMessages.ListGridColumns.Add(col);
-			col=new GridColumn("From",60);
+			col = new GridColumn("From", 60);
 			gridMessages.ListGridColumns.Add(col);
-			col=new GridColumn("Sent",63);
+			col = new GridColumn("Sent", 63);
 			gridMessages.ListGridColumns.Add(col);
-			col=new GridColumn("Ack'd",63);
-			col.TextAlign=HorizontalAlignment.Center;
+			col = new GridColumn("Ack'd", 63);
+			col.TextAlign = HorizontalAlignment.Center;
 			gridMessages.ListGridColumns.Add(col);
-			col=new GridColumn("Text",274);
+			col = new GridColumn("Text", 274);
 			gridMessages.ListGridColumns.Add(col);
 			gridMessages.ListGridRows.Clear();
 			GridRow row;
 			string str;
-			foreach(SigMessage sigMessage in _listSigMessages) {
-				if(checkIncludeAck.Checked) {
-					if(sigMessage.AckDateTime.Year>1880//if this is acked
-						&& sigMessage.AckDateTime < DateTime.Today.AddDays(1-PIn.Long(textDays.Text))) {
+			foreach (SigMessage sigMessage in _listSigMessages)
+			{
+				if (checkIncludeAck.Checked)
+				{
+					if (sigMessage.AckDateTime.Year > 1880//if this is acked
+						&& sigMessage.AckDateTime < DateTime.Today.AddDays(1 - PIn.Long(textDays.Text)))
+					{
 						continue;
 					}
 				}
-				else {//user does not want to include acked
-					if(sigMessage.AckDateTime.Year > 1880) {//if this is acked
+				else
+				{//user does not want to include acked
+					if (sigMessage.AckDateTime.Year > 1880)
+					{//if this is acked
 						continue;
 					}
 				}
-				if(sigMessage.ToUser!=""//blank user always shows
-					&& comboViewUser.SelectedIndex!=0 //anything other than 'all'
-					&& sigElementDefUser!=null//for startup
-					&& sigElementDefUser[comboViewUser.SelectedIndex-1].SigText!=sigMessage.ToUser)//and users don't match
+				if (sigMessage.ToUser != ""//blank user always shows
+					&& comboViewUser.SelectedIndex != 0 //anything other than 'all'
+					&& sigElementDefUser != null//for startup
+					&& sigElementDefUser[comboViewUser.SelectedIndex - 1].SigText != sigMessage.ToUser)//and users don't match
 				{
 					continue;
 				}
-				row=new GridRow();
+				row = new GridRow();
 				row.Cells.Add(sigMessage.ToUser);
 				row.Cells.Add(sigMessage.FromUser);
-				if(sigMessage.MessageDateTime.Date==DateTime.Today) {
+				if (sigMessage.MessageDateTime.Date == DateTime.Today)
+				{
 					row.Cells.Add(sigMessage.MessageDateTime.ToShortTimeString());
 				}
-				else {
-					row.Cells.Add(sigMessage.MessageDateTime.ToShortDateString()+"\r\n"+sigMessage.MessageDateTime.ToShortTimeString());
+				else
+				{
+					row.Cells.Add(sigMessage.MessageDateTime.ToShortDateString() + "\r\n" + sigMessage.MessageDateTime.ToShortTimeString());
 				}
-				if(sigMessage.AckDateTime.Year>1880) {//ok
-					if(sigMessage.AckDateTime.Date==DateTime.Today) {
+				if (sigMessage.AckDateTime.Year > 1880)
+				{//ok
+					if (sigMessage.AckDateTime.Date == DateTime.Today)
+					{
 						row.Cells.Add(sigMessage.AckDateTime.ToShortTimeString());
 					}
-					else {
-						row.Cells.Add(sigMessage.AckDateTime.ToShortDateString()+"\r\n"+sigMessage.AckDateTime.ToShortTimeString());
+					else
+					{
+						row.Cells.Add(sigMessage.AckDateTime.ToShortDateString() + "\r\n" + sigMessage.AckDateTime.ToShortTimeString());
 					}
 				}
-				else {
+				else
+				{
 					row.Cells.Add("");
 				}
-				str=sigMessage.SigText;
-				SigElementDef sigElementDefExtra=SigElementDefs.GetElementDef(sigMessage.SigElementDefNumExtra);
-				if(sigElementDefExtra!=null && !string.IsNullOrEmpty(sigElementDefExtra.SigText)) {
-					str+=(str=="") ? "" : ".  ";
-					str+=sigElementDefExtra.SigText;
+				str = sigMessage.SigText;
+				SigElementDef sigElementDefExtra = SigElementDefs.GetElementDef(sigMessage.SigElementDefNumExtra);
+				if (sigElementDefExtra != null && !string.IsNullOrEmpty(sigElementDefExtra.SigText))
+				{
+					str += (str == "") ? "" : ".  ";
+					str += sigElementDefExtra.SigText;
 				}
-				SigElementDef sigElementDefMsg=SigElementDefs.GetElementDef(sigMessage.SigElementDefNumMsg);
-				if(sigElementDefMsg!=null && !string.IsNullOrEmpty(sigElementDefMsg.SigText)) {
-					str+=(str=="") ? "" : ".  ";
-					str+=sigElementDefMsg.SigText;
+				SigElementDef sigElementDefMsg = SigElementDefs.GetElementDef(sigMessage.SigElementDefNumMsg);
+				if (sigElementDefMsg != null && !string.IsNullOrEmpty(sigElementDefMsg.SigText))
+				{
+					str += (str == "") ? "" : ".  ";
+					str += sigElementDefMsg.SigText;
 				}
 				row.Cells.Add(str);
-				row.Tag=sigMessage.Copy();
+				row.Tag = sigMessage.Copy();
 				gridMessages.ListGridRows.Add(row);
 			}
 			gridMessages.EndUpdate();
-			for(int i=0;i<gridMessages.ListGridRows.Count;i++) {
-				SigMessage sigMessage=(SigMessage)gridMessages.ListGridRows[i].Tag;
-				if(sigMessage.SigMessageNum.In(listSelectedSigMessageNums)) {
-					gridMessages.SetSelected(i,true);
+			for (int i = 0; i < gridMessages.ListGridRows.Count; i++)
+			{
+				SigMessage sigMessage = (SigMessage)gridMessages.ListGridRows[i].Tag;
+				if (sigMessage.SigMessageNum.In(listSelectedSigMessageNums))
+				{
+					gridMessages.SetSelected(i, true);
 				}
 			}
 		}
 
-		private void butSend_Click(object sender, System.EventArgs e) {
-			if(textMessage.Text=="") {
+		private void butSend_Click(object sender, System.EventArgs e)
+		{
+			if (textMessage.Text == "")
+			{
 				MessageBox.Show("Please type in a message first.");
 				return;
 			}
-			SigMessage sigMessage=new SigMessage();
-			sigMessage.SigText=textMessage.Text;
-			if(listTo.SelectedIndex!=-1) {
-				sigMessage.ToUser=sigElementDefUser[listTo.SelectedIndex].SigText;
-				sigMessage.SigElementDefNumUser=sigElementDefUser[listTo.SelectedIndex].SigElementDefNum;
+			SigMessage sigMessage = new SigMessage();
+			sigMessage.SigText = textMessage.Text;
+			if (listTo.SelectedIndex != -1)
+			{
+				sigMessage.ToUser = sigElementDefUser[listTo.SelectedIndex].SigText;
+				sigMessage.SigElementDefNumUser = sigElementDefUser[listTo.SelectedIndex].SigElementDefNum;
 			}
-			if(listFrom.SelectedIndex!=-1) {
-				sigMessage.FromUser=sigElementDefUser[listFrom.SelectedIndex].SigText;
+			if (listFrom.SelectedIndex != -1)
+			{
+				sigMessage.FromUser = sigElementDefUser[listFrom.SelectedIndex].SigText;
 			}
-			if(listExtras.SelectedIndex!=-1) {
-				sigMessage.SigElementDefNumExtra=sigElementDefExtras[listExtras.SelectedIndex].SigElementDefNum;
+			if (listExtras.SelectedIndex != -1)
+			{
+				sigMessage.SigElementDefNumExtra = sigElementDefExtras[listExtras.SelectedIndex].SigElementDefNum;
 			}
 			SigMessages.Insert(sigMessage);
-			textMessage.Text="";
-			listFrom.SelectedIndex=-1;
-			listTo.SelectedIndex=-1;
-			listExtras.SelectedIndex=-1;
-			listMessages.SelectedIndex=-1;
+			textMessage.Text = "";
+			listFrom.SelectedIndex = -1;
+			listTo.SelectedIndex = -1;
+			listExtras.SelectedIndex = -1;
+			listMessages.SelectedIndex = -1;
 			ShowSendingLabel();
-			Signalods.SetInvalid(InvalidType.SigMessages,KeyType.SigMessage,sigMessage.SigMessageNum);
+			Signalods.SetInvalid(InvalidType.SigMessages, KeyType.SigMessage, sigMessage.SigMessageNum);
 		}
 
-		private void listMessages_Click(object sender,EventArgs e) {
-			if(listMessages.SelectedIndex==-1){
+		private void listMessages_Click(object sender, EventArgs e)
+		{
+			if (listMessages.SelectedIndex == -1)
+			{
 				return;
 			}
-			SigMessage sigMessage=new SigMessage();
-			sigMessage.SigText=textMessage.Text;
-			if(listTo.SelectedIndex!=-1) {
-				sigMessage.ToUser=sigElementDefUser[listTo.SelectedIndex].SigText;
-				sigMessage.SigElementDefNumUser=sigElementDefUser[listTo.SelectedIndex].SigElementDefNum;
+			SigMessage sigMessage = new SigMessage();
+			sigMessage.SigText = textMessage.Text;
+			if (listTo.SelectedIndex != -1)
+			{
+				sigMessage.ToUser = sigElementDefUser[listTo.SelectedIndex].SigText;
+				sigMessage.SigElementDefNumUser = sigElementDefUser[listTo.SelectedIndex].SigElementDefNum;
 			}
-			if(listFrom.SelectedIndex!=-1) {
-				sigMessage.FromUser=sigElementDefUser[listFrom.SelectedIndex].SigText;
+			if (listFrom.SelectedIndex != -1)
+			{
+				sigMessage.FromUser = sigElementDefUser[listFrom.SelectedIndex].SigText;
 				//We do not set a SigElementDefNumUser for From.
 			}
-			if(listExtras.SelectedIndex!=-1) {
-				sigMessage.SigElementDefNumExtra=sigElementDefExtras[listExtras.SelectedIndex].SigElementDefNum;
+			if (listExtras.SelectedIndex != -1)
+			{
+				sigMessage.SigElementDefNumExtra = sigElementDefExtras[listExtras.SelectedIndex].SigElementDefNum;
 			}
-			sigMessage.SigElementDefNumMsg=sigElementDefMessages[listMessages.SelectedIndex].SigElementDefNum;
+			sigMessage.SigElementDefNumMsg = sigElementDefMessages[listMessages.SelectedIndex].SigElementDefNum;
 			//need to do this all as a transaction, so need to do a writelock on the signal table first.
 			//alternatively, we could just make sure not to retrieve any signals that were less the 300ms old.
 			SigMessages.Insert(sigMessage);
 			//reset the controls
-			textMessage.Text="";
-			listFrom.SelectedIndex=-1;
-			listTo.SelectedIndex=-1;
-			listExtras.SelectedIndex=-1;
-			listMessages.SelectedIndex=-1;
+			textMessage.Text = "";
+			listFrom.SelectedIndex = -1;
+			listTo.SelectedIndex = -1;
+			listExtras.SelectedIndex = -1;
+			listMessages.SelectedIndex = -1;
 			ShowSendingLabel();
-			Signalods.SetInvalid(InvalidType.SigMessages,KeyType.SigMessage,sigMessage.SigMessageNum);
+			Signalods.SetInvalid(InvalidType.SigMessages, KeyType.SigMessage, sigMessage.SigMessageNum);
 		}
 
 		///<summary>Shows the sending label for 1 second.</summary>
-		private void ShowSendingLabel() {
-			labelSending.Visible=true;
-			ODThread odThread=new ODThread((o) => {
+		private void ShowSendingLabel()
+		{
+			labelSending.Visible = true;
+			ODThread odThread = new ODThread((o) =>
+			{
 				Thread.Sleep((int)TimeSpan.FromSeconds(1).TotalMilliseconds);
-				ODException.SwallowAnyException(() => { this.Invoke(() => { labelSending.Visible=false; }); });
+				ODException.SwallowAnyException(() => { this.Invoke(() => { labelSending.Visible = false; }); });
 			});
 			odThread.Start();
 		}
@@ -1486,138 +1665,105 @@ namespace OpenDental
 		///<summary>This processes timed messages coming in from the main form.
 		///Buttons are handled in the main form, and then sent here for further display.
 		///The list gets filtered before display.</summary>
-		public void LogMsgs(List<SigMessage> listSigMessages) {
-			foreach(SigMessage sigMessage in listSigMessages) {
-				SigMessage sigMessageUpdate=_listSigMessages.FirstOrDefault(x => x.SigMessageNum==sigMessage.SigMessageNum);
-				if(sigMessageUpdate==null) {
+		public void LogMsgs(List<SigMessage> listSigMessages)
+		{
+			foreach (SigMessage sigMessage in listSigMessages)
+			{
+				SigMessage sigMessageUpdate = _listSigMessages.FirstOrDefault(x => x.SigMessageNum == sigMessage.SigMessageNum);
+				if (sigMessageUpdate == null)
+				{
 					_listSigMessages.Add(sigMessage.Copy());
 				}
-				else {//SigMessage is already in our list and we just need to update it.
-					sigMessageUpdate.AckDateTime=sigMessage.AckDateTime;
+				else
+				{//SigMessage is already in our list and we just need to update it.
+					sigMessageUpdate.AckDateTime = sigMessage.AckDateTime;
 				}
 			}
 			_listSigMessages.Sort();
 			FillMessages();
 		}
 
-		private void butAck_Click(object sender,EventArgs e) {
-			if(gridMessages.SelectedIndices.Length==0){
+		private void butAck_Click(object sender, EventArgs e)
+		{
+			if (gridMessages.SelectedIndices.Length == 0)
+			{
 				MessageBox.Show("Please select at least one item first.");
 				return;
 			}
 			SigMessage sigMessage;
-			for(int i=gridMessages.SelectedIndices.Length-1;i>=0;i--){//go backwards so that we can remove rows without problems.
-				sigMessage=(SigMessage)gridMessages.ListGridRows[gridMessages.SelectedIndices[i]].Tag;
-				if(sigMessage.AckDateTime.Year > 1880) {
+			for (int i = gridMessages.SelectedIndices.Length - 1; i >= 0; i--)
+			{//go backwards so that we can remove rows without problems.
+				sigMessage = (SigMessage)gridMessages.ListGridRows[gridMessages.SelectedIndices[i]].Tag;
+				if (sigMessage.AckDateTime.Year > 1880)
+				{
 					continue;//totally ignore if trying to ack a previously acked signal
 				}
 				SigMessages.AckSigMessage(sigMessage);
 				//change the grid temporarily until the next timer event.  This makes it feel more responsive.
-				if(checkIncludeAck.Checked) {
-					gridMessages.ListGridRows[gridMessages.SelectedIndices[i]].Cells[3].Text=sigMessage.MessageDateTime.ToShortTimeString();
+				if (checkIncludeAck.Checked)
+				{
+					gridMessages.ListGridRows[gridMessages.SelectedIndices[i]].Cells[3].Text = sigMessage.MessageDateTime.ToShortTimeString();
 				}
-				else {
-					try {
+				else
+				{
+					try
+					{
 						gridMessages.ListGridRows.RemoveAt(gridMessages.SelectedIndices[i]);
 					}
-					catch {
+					catch
+					{
 						//do nothing
 					}
 				}
-				Signalods.SetInvalid(InvalidType.SigMessages,KeyType.SigMessage,sigMessage.SigMessageNum);
+				Signalods.SetInvalid(InvalidType.SigMessages, KeyType.SigMessage, sigMessage.SigMessageNum);
 			}
 			gridMessages.SetSelected(false);
 		}
 
-		private void checkIncludeAck_Click(object sender,EventArgs e) {
-			if(checkIncludeAck.Checked){
-				textDays.Text="1";
-				labelDays.Visible=true;
-				textDays.Visible=true;
+		private void checkIncludeAck_Click(object sender, EventArgs e)
+		{
+			if (checkIncludeAck.Checked)
+			{
+				textDays.Text = "1";
+				labelDays.Visible = true;
+				textDays.Visible = true;
 			}
-			else{
-				labelDays.Visible=false;
-				textDays.Visible=false;
-				_listSigMessages=SigMessages.GetSigMessagesSinceDateTime(DateTimeOD.Today);//since midnight this morning.
+			else
+			{
+				labelDays.Visible = false;
+				textDays.Visible = false;
+				_listSigMessages = SigMessages.GetSigMessagesSinceDateTime(DateTimeOD.Today);//since midnight this morning.
 			}
 			FillMessages();
 		}
 
-		private void textDays_TextChanged(object sender,EventArgs e) {
-			if(!textDays.Visible){
-				errorProvider1.SetError(textDays,"");
+		private void textDays_TextChanged(object sender, EventArgs e)
+		{
+			if (!textDays.Visible)
+			{
+				errorProvider1.SetError(textDays, "");
 				return;
 			}
-			try{
-				int days=int.Parse(textDays.Text);
-				errorProvider1.SetError(textDays,"");
-				_listSigMessages=SigMessages.GetSigMessagesSinceDateTime(DateTimeOD.Today.AddDays(-days));
+			try
+			{
+				int days = int.Parse(textDays.Text);
+				errorProvider1.SetError(textDays, "");
+				_listSigMessages = SigMessages.GetSigMessagesSinceDateTime(DateTimeOD.Today.AddDays(-days));
 				FillMessages();
 			}
-			catch{
-				errorProvider1.SetError(textDays,"Invalid number.  Usually 1 or 2.");
+			catch
+			{
+				errorProvider1.SetError(textDays, "Invalid number.  Usually 1 or 2.");
 			}
 		}
 
-		private void comboViewUser_SelectionChangeCommitted(object sender,EventArgs e) {
+		private void comboViewUser_SelectionChangeCommitted(object sender, EventArgs e)
+		{
 			FillMessages();
 		}
 
 		#endregion Messaging
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		
 	}
 
 	public delegate void OnPatientSelected(Patient pat);
-
 }
-
-
-
-
-
-
-
-
-
-
-
-

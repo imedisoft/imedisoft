@@ -229,11 +229,11 @@ namespace OpenDental{
 		#endregion
 
 		private void FormLabCases_Load(object sender,EventArgs e) {
-			if(Clinics.ClinicId==0) {
+			if(Clinics.ClinicId==null) {
 				comboClinic.IsAllSelected=true;
 			}
 			else {
-				comboClinic.SelectedClinicNum=Clinics.ClinicId;
+				comboClinic.SelectedClinicNum=Clinics.ClinicId.Value;
 			}
 			gridMain.ContextMenu=contextMenu1;
 			textDateFrom.Text="";//DateViewing.ToShortDateString();
@@ -279,7 +279,7 @@ namespace OpenDental{
 			}
 			else {//"All" that the user has access to or it could be just a single clinic the user has selected
 				foreach(long clinicNum in comboClinic.ListSelectedClinicNums) {
-					operatoryNums.AddRange(Operatories.GetOpsForClinic(clinicNum).Select(x => x.OperatoryNum));
+					operatoryNums.AddRange(Operatories.GetOpsForClinic(clinicNum).Select(x => x.Id));
 				}
 			}
 			for(int i=0;i<table.Rows.Count;i++){

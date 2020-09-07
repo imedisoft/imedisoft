@@ -2205,7 +2205,7 @@ namespace OpenDental {
 					}
 					ben=new Benefit();
 					ben.BenefitType=InsBenefitType.CoInsurance;
-					ben.CovCatNum=listCovCats[i].CovCatNum;
+					ben.CovCatNum=listCovCats[i].Id;
 					ben.PlanNum=plan.PlanNum;
 					ben.Percent=listCovCats[i].DefaultPercent;
 					ben.TimePeriod=BenefitTimePeriod.CalendarYear;
@@ -2217,7 +2217,7 @@ namespace OpenDental {
 					ben=new Benefit();
 					ben.CodeNum=0;
 					ben.BenefitType=InsBenefitType.Deductible;
-					ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.Diagnostic).CovCatNum;
+					ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.Diagnostic).Id;
 					ben.PlanNum=plan.PlanNum;
 					ben.TimePeriod=BenefitTimePeriod.CalendarYear;
 					ben.MonetaryAmt=0;
@@ -2230,7 +2230,7 @@ namespace OpenDental {
 					ben=new Benefit();
 					ben.CodeNum=0;
 					ben.BenefitType=InsBenefitType.Deductible;
-					ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.RoutinePreventive).CovCatNum;
+					ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.RoutinePreventive).Id;
 					ben.PlanNum=plan.PlanNum;
 					ben.TimePeriod=BenefitTimePeriod.CalendarYear;
 					ben.MonetaryAmt=0;
@@ -2502,10 +2502,10 @@ namespace OpenDental {
 					  SheetField medSheet=(SheetField)Rows[i].NewValObj;
 					  //Find what medication user wants to import.
 					  for(int j=0;j<medList.Count;j++) {
-					    if(Medications.GetDescription(medList[j].MedicationNum)==medSheet.FieldValue) {
+					    if(Medications.GetDescription(medList[j].Id)==medSheet.FieldValue) {
 					      MedicationPat medPat=new MedicationPat();
 					      medPat.PatNum=PatCur.PatNum;
-					      medPat.MedicationNum=medList[j].MedicationNum;
+					      medPat.MedicationNum=medList[j].Id;
 					      MedicationPats.Insert(medPat);
 					      break;
 					    }

@@ -20,7 +20,7 @@ namespace OpenDentBusiness.Eclaims {
 			Patient pat=Patients.GetPat(patNum);
 			Patient subsc=Patients.GetPat(insSub.Subscriber);
 			Clinic clinic=Clinics.GetById(pat.ClinicNum);
-			Provider billProv=Providers.GetProv(Providers.GetBillingProviderId(pat.PriProv,pat.ClinicNum));
+			Provider billProv=Providers.GetById(Providers.GetBillingProviderId(pat.PriProv,pat.ClinicNum));
 			//validation.  Throw exception if missing info----------------------------------------
 			string validationResult=X270.Validate(clearinghouseClin,carrier,billProv,clinic,plan,subsc,insSub,pat);
 			if(validationResult != "") {

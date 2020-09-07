@@ -509,7 +509,7 @@ namespace OpenDental{
 				return;
 			}
 			//Check against cache. Instead of saving changes, make them get out and reopen. Safer and simpler.
-			Operatory op=Operatories.GetOperatory(OpCur.OperatoryNum);
+			Operatory op=Operatories.GetOperatory(OpCur.Id);
 			if(op.OpName!=textOpName.Text
 				|| op.Abbrev!=textAbbrev.Text
 				|| op.IsHidden!=checkIsHidden.Checked
@@ -541,7 +541,7 @@ namespace OpenDental{
 				return;
 			}
 			SecurityLogs.MakeLogEntry(Permissions.Setup,0,"Update Provs on Future Appts tool run on operatory "+OpCur.Abbrev+".");
-			List<Appointment> listAppts=Appointments.GetAppointmentsForOpsByPeriod(new List<long>() {OpCur.OperatoryNum},DateTime.Now);//no end date, so all future
+			List<Appointment> listAppts=Appointments.GetAppointmentsForOpsByPeriod(new List<long>() {OpCur.Id},DateTime.Now);//no end date, so all future
 			List<Appointment> listApptsOld=new List<Appointment>();
 			foreach(Appointment appt in listAppts) {
 				listApptsOld.Add(appt.Copy());
@@ -555,7 +555,7 @@ namespace OpenDental{
 				MessageBox.Show("Operatory name cannot be blank.");
 				return;
 			}
-			if(checkIsHidden.Checked==true && Operatories.HasFutureApts(OpCur.OperatoryNum,ApptStatus.UnschedList)) {
+			if(checkIsHidden.Checked==true && Operatories.HasFutureApts(OpCur.Id,ApptStatus.UnschedList)) {
 				MessageBox.Show("Can not hide an operatory with future appointments.");
 				checkIsHidden.Checked=false;
 				return;

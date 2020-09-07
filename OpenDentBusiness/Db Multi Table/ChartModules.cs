@@ -138,7 +138,7 @@ namespace OpenDentBusiness
 						data.ListAllergies = Allergies.GetByPatient(patNum, false);
 						break;
 					case "Medications":
-						data.TableMeds = Medications.RefreshCache();
+						// TODO: data.TableMeds = Medications.RefreshCache();
 						data.ListMedPats = MedicationPats.Refresh(patNum, false);
 						break;
 					case "Pat Restrictions":

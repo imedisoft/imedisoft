@@ -24,11 +24,11 @@ namespace OpenDental {
 			if(!Security.CurrentUser.ClinicIsRestricted) {
 				comboClinics.IncludeAll=true;
 			}
-			if(comboClinics.IncludeAll && Clinics.ClinicId==0) {
+			if(comboClinics.IncludeAll && Clinics.ClinicId==null) {
 				comboClinics.IsAllSelected=true;
 			}
 			else {
-				comboClinics.SelectedClinicNum=Clinics.ClinicId;
+				comboClinics.SelectedClinicNum=Clinics.ClinicId??0;
 			}
 			FillGrid();
 		}

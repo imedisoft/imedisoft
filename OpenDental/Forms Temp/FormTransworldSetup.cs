@@ -49,8 +49,8 @@ namespace OpenDental {
 						checkEnabled.Enabled=false;
 					}
 				}
-				comboClinic.SelectedClinicNum=Clinics.ClinicId;
-				_selectedClinicNum=Clinics.ClinicId;
+				comboClinic.SelectedClinicNum=Clinics.Active.Id;
+				_selectedClinicNum=Clinics.Active.Id;
 			}
 			_dictClinicListProgProps=ProgramProperties.GetForProgram(_progCur.Id)//get list of all props for the program
 				.GroupBy(x => x.ClinicId)//group each clinic

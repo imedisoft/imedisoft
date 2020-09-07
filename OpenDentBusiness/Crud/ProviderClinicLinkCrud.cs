@@ -44,7 +44,7 @@ namespace OpenDentBusiness.Crud{
 			foreach(DataRow row in table.Rows) {
 				providerClinicLink=new ProviderClinicLink();
 				providerClinicLink.ProviderClinicLinkNum= PIn.Long  (row["ProviderClinicLinkNum"].ToString());
-				providerClinicLink.ProvNum              = PIn.Long  (row["ProvNum"].ToString());
+				providerClinicLink.ProviderId              = PIn.Long  (row["ProvNum"].ToString());
 				providerClinicLink.ClinicNum            = PIn.Long  (row["ClinicNum"].ToString());
 				retVal.Add(providerClinicLink);
 			}
@@ -63,7 +63,7 @@ namespace OpenDentBusiness.Crud{
 			foreach(ProviderClinicLink providerClinicLink in listProviderClinicLinks) {
 				table.Rows.Add(new object[] {
 					POut.Long  (providerClinicLink.ProviderClinicLinkNum),
-					POut.Long  (providerClinicLink.ProvNum),
+					POut.Long  (providerClinicLink.ProviderId),
 					POut.Long  (providerClinicLink.ClinicNum),
 				});
 			}
@@ -89,7 +89,7 @@ namespace OpenDentBusiness.Crud{
 				command+=POut.Long(providerClinicLink.ProviderClinicLinkNum)+",";
 			}
 			command+=
-				     POut.Long  (providerClinicLink.ProvNum)+","
+				     POut.Long  (providerClinicLink.ProviderId)+","
 				+    POut.Long  (providerClinicLink.ClinicNum)+")";
 			if(useExistingPK || PrefC.RandomKeys) {
 				Database.ExecuteNonQuery(command);
@@ -120,7 +120,7 @@ namespace OpenDentBusiness.Crud{
 				command+=POut.Long(providerClinicLink.ProviderClinicLinkNum)+",";
 			}
 			command+=
-				     POut.Long  (providerClinicLink.ProvNum)+","
+				     POut.Long  (providerClinicLink.ProviderId)+","
 				+    POut.Long  (providerClinicLink.ClinicNum)+")";
 			if(useExistingPK) {
 				Database.ExecuteNonQuery(command);
@@ -134,7 +134,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Updates one ProviderClinicLink in the database.</summary>
 		public static void Update(ProviderClinicLink providerClinicLink) {
 			string command="UPDATE providercliniclink SET "
-				+"ProvNum              =  "+POut.Long  (providerClinicLink.ProvNum)+", "
+				+"ProvNum              =  "+POut.Long  (providerClinicLink.ProviderId)+", "
 				+"ClinicNum            =  "+POut.Long  (providerClinicLink.ClinicNum)+" "
 				+"WHERE ProviderClinicLinkNum = "+POut.Long(providerClinicLink.ProviderClinicLinkNum);
 			Database.ExecuteNonQuery(command);
@@ -143,9 +143,9 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Updates one ProviderClinicLink in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
 		public static bool Update(ProviderClinicLink providerClinicLink,ProviderClinicLink oldProviderClinicLink) {
 			string command="";
-			if(providerClinicLink.ProvNum != oldProviderClinicLink.ProvNum) {
+			if(providerClinicLink.ProviderId != oldProviderClinicLink.ProviderId) {
 				if(command!="") { command+=",";}
-				command+="ProvNum = "+POut.Long(providerClinicLink.ProvNum)+"";
+				command+="ProvNum = "+POut.Long(providerClinicLink.ProviderId)+"";
 			}
 			if(providerClinicLink.ClinicNum != oldProviderClinicLink.ClinicNum) {
 				if(command!="") { command+=",";}
@@ -163,7 +163,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Returns true if Update(ProviderClinicLink,ProviderClinicLink) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
 		public static bool UpdateComparison(ProviderClinicLink providerClinicLink,ProviderClinicLink oldProviderClinicLink) {
-			if(providerClinicLink.ProvNum != oldProviderClinicLink.ProvNum) {
+			if(providerClinicLink.ProviderId != oldProviderClinicLink.ProviderId) {
 				return true;
 			}
 			if(providerClinicLink.ClinicNum != oldProviderClinicLink.ClinicNum) {

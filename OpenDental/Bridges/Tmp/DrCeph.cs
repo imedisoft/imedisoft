@@ -56,8 +56,8 @@ namespace OpenDental.Bridges
 			{
 				PatientRaceOld raceOld = PatientRaces.GetPatientRaceOldFromPatientRaces(pat.PatNum);
 				List<RefAttach> referalList = RefAttaches.Refresh(pat.PatNum);
-				Provider prov = Providers.GetProv(Patients.GetProvNum(pat));
-				string provName = prov.FName + " " + prov.MI + " " + prov.LName + " " + prov.Suffix;
+				Provider prov = Providers.GetById(Patients.GetProvNum(pat));
+				string provName = prov.FirstName + " " + prov.Initials + " " + prov.LastName + " " + prov.Suffix;
 				Family fam = Patients.GetFamily(pat.PatNum);
 				Patient guar = fam.ListPats[0];
 				string relat = "";

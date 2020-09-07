@@ -106,7 +106,7 @@ namespace OpenDentBusiness
 			}
 			if (ageOptions.ListProvs != null && ageOptions.ListProvs.Count > 0)
 			{
-				command += @" AND patient.PriProv IN (" + String.Join(",", ageOptions.ListProvs.Select(x => x.ProvNum)) + ") ";
+				command += @" AND patient.PriProv IN (" + String.Join(",", ageOptions.ListProvs.Select(x => x.Id)) + ") ";
 			}
 			if (ageOptions.ListClins != null && ageOptions.ListClins.Count > 0)
 			{

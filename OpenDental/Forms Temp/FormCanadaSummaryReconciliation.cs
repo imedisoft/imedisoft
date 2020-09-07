@@ -23,7 +23,7 @@ namespace OpenDental {
 		private void FormCanadaPaymentReconciliation_Load(object sender,EventArgs e) {
 			_listCanadianNetworks=CanadianNetworks.GetDeepCopy();
 			for(int i=0;i<_listCanadianNetworks.Count;i++) {
-				listNetworks.Items.Add(_listCanadianNetworks[i].Abbrev+" - "+_listCanadianNetworks[i].Descript);
+				listNetworks.Items.Add(_listCanadianNetworks[i].Abbr+" - "+_listCanadianNetworks[i].Description);
 			}
 			carriers=Carriers.GetWhere(x => x.CDAnetVersion!="02" &&//This transaction does not exist in version 02.
 				(x.CanadianSupportedTypes & CanSupTransTypes.RequestForSummaryReconciliation_05)==CanSupTransTypes.RequestForSummaryReconciliation_05);
@@ -34,7 +34,7 @@ namespace OpenDental {
 			_listProviders=Providers.GetDeepCopy(true);
 			for(int i=0;i<_listProviders.Count;i++) {
 				listTreatingProvider.Items.Add(_listProviders[i].Abbr);
-				if(_listProviders[i].ProvNum==defaultProvNum) {
+				if(_listProviders[i].Id==defaultProvNum) {
 					listTreatingProvider.SelectedIndex=i;
 				}
 			}
@@ -80,7 +80,7 @@ namespace OpenDental {
 					carrier.ElectID="999999";//The whole ITRANS network.
 					carrier.CanadianEncryptionMethod=1;//No encryption.
 					Clearinghouse clearinghouseHq=Canadian.GetCanadianClearinghouseHq(carrier);
-					Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.ClinicId);
+					Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.Active.Id);
 					CanadianOutput.GetSummaryReconciliation(clearinghouseClin,carrier,null,
 						_listProviders[listTreatingProvider.SelectedIndex],reconciliationDate,false,FormCCDPrint.PrintCCD);
 				}
@@ -88,13 +88,13 @@ namespace OpenDental {
 					if(listCarriers.SelectedIndex>=0) {
 						Carrier carrier=carriers[listCarriers.SelectedIndex];
 						Clearinghouse clearinghouseHq=Canadian.GetCanadianClearinghouseHq(carrier);
-						Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.ClinicId);
+						Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.Active.Id);
 						CanadianOutput.GetSummaryReconciliation(clearinghouseClin,carrier,null,
 							_listProviders[listTreatingProvider.SelectedIndex],reconciliationDate,false,FormCCDPrint.PrintCCD);
 					}
 					else {
 						Clearinghouse clearinghouseHq=Canadian.GetCanadianClearinghouseHq(null);
-						Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.ClinicId);
+						Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.Active.Id);
 						CanadianOutput.GetSummaryReconciliation(clearinghouseClin,null,_listCanadianNetworks[listNetworks.SelectedIndex],
 							_listProviders[listTreatingProvider.SelectedIndex],reconciliationDate,false,FormCCDPrint.PrintCCD);
 					}

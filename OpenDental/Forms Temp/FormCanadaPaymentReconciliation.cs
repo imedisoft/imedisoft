@@ -31,7 +31,7 @@ namespace OpenDental {
 				if(_listProviders[i].IsCDAnet) {
 					listBillingProvider.Items.Add(_listProviders[i].Abbr);
 					listTreatingProvider.Items.Add(_listProviders[i].Abbr);
-					if(_listProviders[i].ProvNum==defaultProvNum) {
+					if(_listProviders[i].Id==defaultProvNum) {
 						listBillingProvider.SelectedIndex=i;
 						textBillingOfficeNumber.Text=_listProviders[i].CanadianOfficeNum;
 						listTreatingProvider.SelectedIndex=i;
@@ -75,9 +75,9 @@ namespace OpenDental {
 			try {
 				Carrier carrier=carriers[listCarriers.SelectedIndex];
 				Clearinghouse clearinghouseHq=Canadian.GetCanadianClearinghouseHq(carrier);
-				Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.ClinicId); 
+				Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.Active.Id); 
 				CanadianOutput.GetPaymentReconciliations(clearinghouseClin,carrier,_listProviders[listTreatingProvider.SelectedIndex],
-					_listProviders[listBillingProvider.SelectedIndex],reconciliationDate,Clinics.ClinicId,false,FormCCDPrint.PrintCCD);
+					_listProviders[listBillingProvider.SelectedIndex],reconciliationDate,Clinics.Active.Id, false,FormCCDPrint.PrintCCD);
 				Cursor=Cursors.Default;
 				MessageBox.Show("Done.");
 			}

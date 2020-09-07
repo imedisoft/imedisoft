@@ -636,7 +636,7 @@ namespace OpenDental{
 			_listProviders=Providers.GetDeepCopy(true);
 			for(int i=0;i<_listProviders.Count;i++) {
 				listProv.Items.Add(_listProviders[i].GetLongDesc());
-				if(_listApptViewItems.Select(x => x.ProvNum).Contains(_listProviders[i].ProvNum)) {
+				if(_listApptViewItems.Select(x => x.ProvNum).Contains(_listProviders[i].Id)) {
 					listProv.SetSelected(i,true);
 				}
 			}
@@ -870,8 +870,8 @@ namespace OpenDental{
 					|| listOperatories[i].ClinicNum==comboClinic.SelectedClinicNum) //or the operatory is assigned to same clinic as this view
 				{
 					listOps.Items.Add(listOperatories[i].OpName);
-					_listOpNums.Add(listOperatories[i].OperatoryNum);
-					if(_listApptViewItems.Select(x => x.OpNum).Contains(listOperatories[i].OperatoryNum)) {
+					_listOpNums.Add(listOperatories[i].Id);
+					if(_listApptViewItems.Select(x => x.OpNum).Contains(listOperatories[i].Id)) {
 						listOps.SetSelected(listOps.Items.Count-1,true);
 					}
 				}
@@ -1289,7 +1289,7 @@ namespace OpenDental{
 				if(listProv.SelectedIndices.Contains(i)){
 					item=new ApptViewItem();
 					item.ApptViewNum=ApptViewCur.ApptViewNum;
-					item.ProvNum=_listProviders[i].ProvNum;
+					item.ProvNum=_listProviders[i].Id;
 					ApptViewItems.Insert(item);
 				}
 			}

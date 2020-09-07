@@ -257,7 +257,7 @@ namespace OpenDentBusiness
 					+"1");//HL04 1/1 Heirarchical Child Code. 1=Additional Subordinate HL Data Segment in This Hierarchical Structure.
 				EndSegment(sw);
 				//billProv=Providers.ListShallow[Providers.GetIndexLong(claimItems[i].ProvBill1)];
-				billProv=Providers.GetProv(claim.ProvBill);
+				billProv=Providers.GetById(claim.ProvBill);
 				//2000A PRV: BI (medical,institutional,dental) Billing Provider Specialty Information. Situational. Required when billing provider is treating provider.
 				bool usePrvBilling=false;
 				if(claim.ProvBill==claim.ProvTreat) {
@@ -1122,8 +1122,8 @@ namespace OpenDentBusiness
 				string facilityCity=billingCity;
 				string facilityState=billingState;
 				string facilityZip=billingZip;
-				if(site!=null && site.ProvNum > 0 && site.ProvNum!=billProv.ProvNum) {
-					facilityProv=Providers.GetProv(site.ProvNum);
+				if(site!=null && site.ProvNum > 0 && site.ProvNum!=billProv.Id) {
+					facilityProv=Providers.GetById(site.ProvNum);
 					facilityAddress1=site.Address;
 					facilityAddress2=site.Address2;
 					facilityCity=site.City;
@@ -1135,7 +1135,7 @@ namespace OpenDentBusiness
 				if(!facilityProv.IsNotPerson || claim.PlaceService==PlaceOfService.Office) {//Validated also
 					sendFacilityNameAndAddress=false;
 				}
-				provTreat=Providers.GetProv(claim.ProvTreat);
+				provTreat=Providers.GetById(claim.ProvTreat);
 				provClinicTreat=ProviderClinics.GetFromList(claim.ProvTreat,(clinic==null ? 0 : clinic.Id),listProvClinics,true);
 				#region 2310 Claim Providers (medical)
 				//Since order might be important, we have to handle medical, institutional, and dental separately.
@@ -1157,13 +1157,13 @@ namespace OpenDentBusiness
 						sw.Write("NM1"+s
 							+"77"+s//NM101 2/3 Entity Identifier Code: 77=Service Location.
 							+"2"+s//NM102 1/1 Entity Type Qualifier: 2=Non-Person Entity.
-							+Sout(facilityProv.LName,60)+s//NM103 1/60 Name Last or Organization Name: Laboratory or Facility Name.
+							+Sout(facilityProv.LastName,60)+s//NM103 1/60 Name Last or Organization Name: Laboratory or Facility Name.
 							+s//NM104 1/35 Name First: Not used.
 							+s//NM105 1/25 Name Middle: Not used.
 							+s//NM106 1/10 Name Prefix: Not used.
 							+s//NM107 1/10 Name Suffix: Not used.
 							+"XX"+s//NM108 1/2 Identification Code Qualifier: XX=NPI.
-							+Sout(facilityProv.NationalProvID,80));//NM109 2/80 Identification Code: Laboratory or Facility Identifier. Validated.
+							+Sout(facilityProv.NationalProviderID,80));//NM109 2/80 Identification Code: Laboratory or Facility Identifier. Validated.
 						EndSegment(sw);//NM110 through NM112 not used.
 						//2310C N3: (medical) Service Facility Location Address.
 						sw.Write("N3"+s+Sout(facilityAddress1,55));//N301 1/55 Address Information: Laboratory or Facility Address Line.
@@ -1193,7 +1193,7 @@ namespace OpenDentBusiness
 				#region 2310 Claim Providers (inst)
 				if(medType==EnumClaimMedType.Institutional) {
 					//2310A NM1: 71 (institutional) Attending Provider Name. Situational. Always a person according to the specification (cannot be non-person).
-					WriteNM1Provider("71",sw,provTreat.FName,provTreat.MI,provTreat.LName,provTreat.NationalProvID,false);
+					WriteNM1Provider("71",sw,provTreat.FirstName,provTreat.Initials,provTreat.LastName,provTreat.NationalProviderID,false);
 					//2310A PRV: AT (institutional) Attending Provider Specialty Information. Situational.
 					sw.Write("PRV"+s
 						+"AT"+s//PRV01 1/3 Provider Code: AT=Attending.
@@ -1207,7 +1207,7 @@ namespace OpenDentBusiness
 					if(IsEmdeonMedical(clearinghouseClin)//For now, only for EmdeonMedical as no one else has reported an issue with this loop being missing.
 						&& claimProcs.Any(x => int.TryParse(x.CodeSent,out int codeSent) && codeSent.Between(10000,69990)))
 					{
-						WriteNM1Provider("72",sw,provTreat.FName,provTreat.MI,provTreat.LName,provTreat.NationalProvID,false);
+						WriteNM1Provider("72",sw,provTreat.FirstName,provTreat.Initials,provTreat.LastName,provTreat.NationalProviderID,false);
 					}
 					//2310C REF: ZZ (institutional) Secondary Physician Secondary Identification. Situational.
 					//2310C NM1: ZZ (institutional) Other Operating Physician Name. Situational.
@@ -1220,13 +1220,13 @@ namespace OpenDentBusiness
 						sw.Write("NM1"+s
 							+"77"+s//NM101 2/3 Entity Identifier Code: 77=Service Location.
 							+"2"+s//NM102 1/1 Entity Type Qualifier: 2=Non-Person Entity.
-							+Sout(facilityProv.LName,60)+s//NM103 1/60 Name Last or Organization Name: Laboratory or Facility Name.
+							+Sout(facilityProv.LastName,60)+s//NM103 1/60 Name Last or Organization Name: Laboratory or Facility Name.
 							+s//NM104 1/35 Name First: Not used.
 							+s//NM105 1/25 Name Middle: Not used.
 							+s//NM106 1/10 Name Prefix: Not used.
 							+s//NM107 1/10 Name Suffix: Not used.
 							+"XX"+s//NM108 1/2 Identification Code Qualifier: XX=NPI.
-							+Sout(facilityProv.NationalProvID,80));//NM109 2/80 Identification Code: Laboratory or Facility Primary Identifier. Validated.
+							+Sout(facilityProv.NationalProviderID,80));//NM109 2/80 Identification Code: Laboratory or Facility Primary Identifier. Validated.
 						EndSegment(sw);//NM110 through NM112 not used.
 						//2310E N3: (institutional) Service Facility Location Address.
 						sw.Write("N3"+s+Sout(facilityAddress1,55));//N301 1/55 Address Information: Laboratory or Facility Address Line.
@@ -1289,13 +1289,13 @@ namespace OpenDentBusiness
 						sw.Write("NM1"+s
 							+"77"+s//NM101 2/3 Entity Identifier Code: 77=Service Location.
 							+"2"+s//NM102 1/1 Entity Type Qualifier: 2=Non-Person Entity.
-							+Sout(facilityProv.LName,60)+s//NM103 1/60 Name Last or Organization Name: Laboratory or Facility Name.
+							+Sout(facilityProv.LastName,60)+s//NM103 1/60 Name Last or Organization Name: Laboratory or Facility Name.
 							+s//NM104 1/35 Name First: Not used.
 							+s//NM105 1/25 Name Middle: Not used.
 							+s//NM106 1/10 Name Prefix: Not used.
 							+s//NM107 1/10 Name Suffix: Not used.
 							+"XX"+s//NM108 1/2 Identification Code Qualifier: XX=NPI.
-							+Sout(facilityProv.NationalProvID,80));//NM109 2/80 Identification Code: Laboratory or Facility Identifier. Validated.
+							+Sout(facilityProv.NationalProviderID,80));//NM109 2/80 Identification Code: Laboratory or Facility Identifier. Validated.
 						EndSegment(sw);//NM110 through NM112 not used.
 						//2310C N3: (dental) Service Facility Location Address.
 						sw.Write("N3"+s+Sout(facilityAddress1,55));//N301 1/55 Address Information: Laboratory or Facility Address Line.
@@ -1924,7 +1924,7 @@ namespace OpenDentBusiness
 						if(claim.ProvTreat!=proc.ProvNum
 							&& Prefs.GetBool(PrefName.EclaimsSeparateTreatProv)) {
 							//2420A NM1: 82 (medical) Rendering Provider Name. Only if different from the claim.
-							provTreatProc=Providers.GetProv(proc.ProvNum);
+							provTreatProc=Providers.GetById(proc.ProvNum);
 							provClinicProc=ProviderClinics.GetOneOrDefault(proc.ProvNum,(clinic==null ? 0 : clinic.Id));
 							WriteNM1Provider("82",sw,provTreatProc);
 							//2420A PRV: (medical) Rendering Provider Specialty Information.
@@ -1996,8 +1996,8 @@ namespace OpenDentBusiness
 							&& claim.ProvTreat!=proc.ProvNum
 							&& int.TryParse(claimProcs[j].CodeSent,out int codeSent) && codeSent.Between(10000,69990))//See task #2712788
 						{
-							provTreatProc=Providers.GetProv(proc.ProvNum);
-							WriteNM1Provider("72",sw,provTreatProc.FName,provTreatProc.MI,provTreatProc.LName,provTreatProc.NationalProvID,false);
+							provTreatProc=Providers.GetById(proc.ProvNum);
+							WriteNM1Provider("72",sw,provTreatProc.FirstName,provTreatProc.Initials,provTreatProc.LastName,provTreatProc.NationalProviderID,false);
 						}
 						//2420A REF: (instititional) Operating Physician Secondary Identification. Situational. Only for surgical procedures. We don't support.						
 						//2420B NM1: ZZ (institutional) Other Operating Physician Name. Situational. We don't support.
@@ -2005,10 +2005,10 @@ namespace OpenDentBusiness
 						if(claim.ProvTreat!=proc.ProvNum
 							&& Prefs.GetBool(PrefName.EclaimsSeparateTreatProv)) 
 						{
-							provTreatProc=Providers.GetProv(proc.ProvNum);
+							provTreatProc=Providers.GetById(proc.ProvNum);
 							provClinicProc=ProviderClinics.GetOneOrDefault(proc.ProvNum,(clinic==null ? 0 : clinic.Id));
 							//2420C NM1: 82 (institutional) Rendering Provider Name. Situational. Only if different than claim attending (treating) prov. Person only, non-person not allowed.
-							WriteNM1Provider("82",sw,provTreatProc.FName,provTreatProc.MI,provTreatProc.LName,provTreatProc.NationalProvID,false);
+							WriteNM1Provider("82",sw,provTreatProc.FirstName,provTreatProc.Initials,provTreatProc.LastName,provTreatProc.NationalProviderID,false);
 							//2420C REF: Rendering Provider Secondary Identification. Situational.
 							sw.Write("REF"+s
 								+"0B"+s//REF01 2/3 Reference Identification Qualifier: 0B=State License Number.
@@ -2025,7 +2025,7 @@ namespace OpenDentBusiness
 							&& Prefs.GetBool(PrefName.EclaimsSeparateTreatProv)) 
 						{
 							//2420A NM1: 82 (dental) Rendering Provider Name. Only if different from the claim.
-							provTreatProc=Providers.GetProv(proc.ProvNum);
+							provTreatProc=Providers.GetById(proc.ProvNum);
 							provClinicProc=ProviderClinics.GetOneOrDefault(proc.ProvNum,(clinic==null ? 0 : clinic.Id));
 							WriteNM1Provider("82",sw,provTreatProc);
 							//2420A PRV: (dental) Rendering Provider Specialty Information.
@@ -2283,7 +2283,7 @@ namespace OpenDentBusiness
 
 		///<summary>Generates SiteID REF G5 for Emdeon only.</summary>
 		private static void Write2010AASiteIDforEmdeon(StreamWriter sw,Provider prov,string payorID) {
-			ProviderIdent[] provIdents=ProviderIdents.GetForPayor(prov.ProvNum,payorID);
+			ProviderIdent[] provIdents=ProviderIdents.GetForPayor(prov.Id,payorID);
 			for(int i=0;i<provIdents.Length;i++) {
 				if(provIdents[i].SuppIDType==ProviderSupplementalID.SiteNumber) {
 					sw.Write("REF"+s
@@ -2303,7 +2303,7 @@ namespace OpenDentBusiness
 				provID=prov.MedicaidID;
 			}
 			else {
-				ProviderIdent[] provIdents=ProviderIdents.GetForPayor(prov.ProvNum,payorID);
+				ProviderIdent[] provIdents=ProviderIdents.GetForPayor(prov.Id,payorID);
 				//Should always return 1 or 0 values unless user set it up wrong.
 				if(provIdents.Length>0) {
 					if(provIdents[0].SuppIDType==ProviderSupplementalID.SiteNumber) {
@@ -2332,7 +2332,7 @@ namespace OpenDentBusiness
 
 		///<summary>A generic function that is reused because there are many identical provider NM1 segments within the X12 specification.</summary>
 		private static void WriteNM1Provider(string entityIdentifierCode,StreamWriter sw,Provider prov) {
-			WriteNM1Provider(entityIdentifierCode,sw,prov.FName,prov.MI,prov.LName,prov.NationalProvID,prov.IsNotPerson);
+			WriteNM1Provider(entityIdentifierCode,sw,prov.FirstName,prov.Initials,prov.LastName,prov.NationalProviderID,prov.IsNotPerson);
 		}
 
 		///<summary>A generic function that is reused because there are many identical provider NM1 segments within the X12 specification.</summary>
@@ -2607,7 +2607,7 @@ namespace OpenDentBusiness
 		private static Provider GetOrderingProviderForProc(Claim claim,Carrier carrier,Procedure proc,Provider provTreatProc) {
 			Provider provOrderProc=null;
 			if(proc.ProvOrderOverride!=0) {
-				provOrderProc=Providers.GetProv(proc.ProvOrderOverride);//Override ordering provider at procedure level.
+				provOrderProc=Providers.GetById(proc.ProvOrderOverride);//Override ordering provider at procedure level.
 			}
 			else if(proc.OrderingReferralNum!=0) {
 				Referral referralOrdering=null;
@@ -2615,14 +2615,14 @@ namespace OpenDentBusiness
 					provOrderProc=new Provider();
 					provOrderProc.IsNotPerson=referralOrdering.NotPerson;
 					provOrderProc.Abbr="Referral: "+referralOrdering.GetNameFL();//Only shows to user if validation failed.
-					provOrderProc.FName=referralOrdering.FName;
-					provOrderProc.MI=referralOrdering.MName;
-					provOrderProc.LName=referralOrdering.LName;
-					provOrderProc.NationalProvID=referralOrdering.NationalProvID;
+					provOrderProc.FirstName=referralOrdering.FName;
+					provOrderProc.Initials=referralOrdering.MName;
+					provOrderProc.LastName=referralOrdering.LName;
+					provOrderProc.NationalProviderID=referralOrdering.NationalProvID;
 				}
 			}
 			else if(claim.ProvOrderOverride!=0) {
-				provOrderProc=Providers.GetProv(claim.ProvOrderOverride);//Override ordering provider at claim level.
+				provOrderProc=Providers.GetById(claim.ProvOrderOverride);//Override ordering provider at claim level.
 			}
 			else if(claim.OrderingReferralNum!=0) {
 				Referral referralOrdering=null;
@@ -2630,10 +2630,10 @@ namespace OpenDentBusiness
 					provOrderProc=new Provider();
 					provOrderProc.IsNotPerson=referralOrdering.NotPerson;
 					provOrderProc.Abbr="Referral: "+referralOrdering.GetNameFL();//Only shows to user if validation failed.
-					provOrderProc.FName=referralOrdering.FName;
-					provOrderProc.MI=referralOrdering.MName;
-					provOrderProc.LName=referralOrdering.LName;
-					provOrderProc.NationalProvID=referralOrdering.NationalProvID;
+					provOrderProc.FirstName=referralOrdering.FName;
+					provOrderProc.Initials=referralOrdering.MName;
+					provOrderProc.LastName=referralOrdering.LName;
+					provOrderProc.NationalProviderID=referralOrdering.NationalProvID;
 				}
 			}
 			else if(Prefs.GetBool(PrefName.ClaimMedProvTreatmentAsOrdering)) {
@@ -2716,8 +2716,8 @@ namespace OpenDentBusiness
 				return;
 			}
 			Provider providerFirst=Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-			Provider billProv=Providers.GetFirstOrDefault(x => x.ProvNum==claimItems[0].ProvBill1)??providerFirst;
-			Provider treatProv=Providers.GetFirstOrDefault(x => x.ProvNum==claim.ProvTreat)??providerFirst;
+			Provider billProv=Providers.GetFirstOrDefault(x => x.Id==claimItems[0].ProvBill1)??providerFirst;
+			Provider treatProv=Providers.GetFirstOrDefault(x => x.Id==claim.ProvTreat)??providerFirst;
 			Referral referral;
 			Referrals.TryGetReferral(claim.ReferringProv,out referral);
 			InsPlan insPlan=InsPlans.GetPlan(claim.PlanNum,null);
@@ -2748,15 +2748,15 @@ namespace OpenDentBusiness
 			//billProv
 			X12Validate.BillProv(billProv,strb);
 			if(IsEmdeonMedical(clearinghouseClin)) {//The X12 standard has a basic character set, but Emdeon Medical only allows a subset of the basic character set, as seen in error messages within their interface.
-				if(!billProv.IsNotPerson && !Regex.IsMatch(billProv.FName,"^[A-Za-z ']+$")) {//If not a person, then X12 generation will leave this blank, regardless of what user entered.
+				if(!billProv.IsNotPerson && !Regex.IsMatch(billProv.FirstName,"^[A-Za-z ']+$")) {//If not a person, then X12 generation will leave this blank, regardless of what user entered.
 					Comma(strb);
 					strb.Append("Billing Prov FName may contain letters spaces and apostrophes only");
 				}
-				if(!Regex.IsMatch(billProv.LName,"^[A-Za-z ']+$")) {
+				if(!Regex.IsMatch(billProv.LastName,"^[A-Za-z ']+$")) {
 					Comma(strb);
 					strb.Append("Billing Prov LName may contain letters spaces and apostrophes only");
 				}
-				if(!billProv.IsNotPerson && !Regex.IsMatch(billProv.MI,"^[A-Za-z ']*$")) {//If not a person, then X12 generation will leave this blank, regardless of what user entered.
+				if(!billProv.IsNotPerson && !Regex.IsMatch(billProv.Initials,"^[A-Za-z ']*$")) {//If not a person, then X12 generation will leave this blank, regardless of what user entered.
 					Comma(strb);
 					strb.Append("Billing Prov Middle Name may contain letters spaces and apostrophes only");
 				}
@@ -2845,15 +2845,15 @@ namespace OpenDentBusiness
 				}
 			}
 			//treatProv
-			if(treatProv.LName=="") {
+			if(treatProv.LastName=="") {
 				Comma(strb);
 				strb.Append("Treating Prov LName");
 			}
-			if(treatProv.FName=="" && !treatProv.IsNotPerson) {
+			if(treatProv.FirstName=="" && !treatProv.IsNotPerson) {
 				Comma(strb);
 				strb.Append("Treating Prov FName");
 			}
-			if(treatProv.NationalProvID.Length<2) {
+			if(treatProv.NationalProviderID.Length<2) {
 				Comma(strb);
 				strb.Append("Treating Prov NPI");
 			}
@@ -2862,7 +2862,7 @@ namespace OpenDentBusiness
 				strb.Append("Treating Prov Taxonomy Code must be 10 characters");
 			}
 			//Treating prov SSN/TIN is not sent on paper or eclaims. Do not verify or block.
-			if(!Regex.IsMatch(treatProv.NationalProvID,"^(80840)?[0-9]{10}$")) {
+			if(!Regex.IsMatch(treatProv.NationalProviderID,"^(80840)?[0-9]{10}$")) {
 				Comma(strb);
 				strb.Append("Treating Prov NPI for claim must be a 10 digit number with an optional prefix of 80840");
 			}
@@ -3238,16 +3238,16 @@ namespace OpenDentBusiness
 				//Providers
 				Provider provTreatProc=treatProv;
 				if(claim.ProvTreat!=proc.ProvNum && Prefs.GetBool(PrefName.EclaimsSeparateTreatProv)) {
-					provTreatProc=Providers.GetFirstOrDefault(x => x.ProvNum==proc.ProvNum)??providerFirst;
-					if(provTreatProc.LName=="") {
+					provTreatProc=Providers.GetFirstOrDefault(x => x.Id==proc.ProvNum)??providerFirst;
+					if(provTreatProc.LastName=="") {
 						Comma(strb);
 						strb.Append("Treat Prov LName for proc "+procCode.ProcCode);
 					}
-					if(provTreatProc.FName=="" && !provTreatProc.IsNotPerson) {
+					if(provTreatProc.FirstName=="" && !provTreatProc.IsNotPerson) {
 						Comma(strb);
 						strb.Append("Treat Prov FName for proc "+procCode.ProcCode);
 					}
-					if(provTreatProc.NationalProvID.Length<2) {
+					if(provTreatProc.NationalProviderID.Length<2) {
 						Comma(strb);
 						strb.Append("Treat Prov NPI for proc "+procCode.ProcCode);
 					}
@@ -3258,7 +3258,7 @@ namespace OpenDentBusiness
 						}
 					}
 					//Treating prov SSN/TIN is not sent on paper or eclaims. Do not verify or block.
-					if(!Regex.IsMatch(provTreatProc.NationalProvID,"^(80840)?[0-9]{10}$")) {
+					if(!Regex.IsMatch(provTreatProc.NationalProviderID,"^(80840)?[0-9]{10}$")) {
 						Comma(strb);
 						strb.Append("Treat Prov NPI for proc "+procCode.ProcCode+" must be a 10 digit number with an optional prefix of 80840");
 					}
@@ -3267,18 +3267,18 @@ namespace OpenDentBusiness
 				if(claim.MedType==EnumClaimMedType.Medical) {
 					Provider provOrderProc=GetOrderingProviderForProc(claim,carrier,proc,provTreatProc);
 					//Do not validate ordering provider override name or NPI if will not go out on eclaim or if already validated elsewhere.
-					if(provOrderProc!=null && !provOrderProc.IsNotPerson && provOrderProc.ProvNum!=proc.ProvNum && 
-						provOrderProc.ProvNum!=claim.ProvTreat && provOrderProc.ProvNum!=claim.ProvBill)
+					if(provOrderProc!=null && !provOrderProc.IsNotPerson && provOrderProc.Id!=proc.ProvNum && 
+						provOrderProc.Id!=claim.ProvTreat && provOrderProc.Id!=claim.ProvBill)
 					{
-						if(provOrderProc.LName=="") {
+						if(provOrderProc.LastName=="") {
 							Comma(strb);
 							strb.Append("Ordering prov "+provOrderProc.Abbr+" LName for proc "+procCode.ProcCode);
 						}
-						if(provOrderProc.FName=="") {
+						if(provOrderProc.FirstName=="") {
 							Comma(strb);
 							strb.Append("Ordering prov "+provOrderProc.Abbr+" FName for proc "+procCode.ProcCode);
 						}
-						if(!Regex.IsMatch(provOrderProc.NationalProvID,"^(80840)?[0-9]{10}$")) {
+						if(!Regex.IsMatch(provOrderProc.NationalProviderID,"^(80840)?[0-9]{10}$")) {
 							Comma(strb);
 							strb.Append("Ordering Prov "+provOrderProc.Abbr+" NPI for proc "+procCode.ProcCode+" must be a 10 digit number with an optional prefix of 80840");
 						}
@@ -3289,12 +3289,12 @@ namespace OpenDentBusiness
 					Site site=Sites.GetFirstOrDefault(x => x.SiteNum==proc.SiteNum);
 					//Provider
 					if(site.ProvNum > 0) {
-						Provider provFacility=Providers.GetFirst(x => x.ProvNum==site.ProvNum);
-						if(provFacility.LName=="") {
+						Provider provFacility=Providers.GetFirst(x => x.Id==site.ProvNum);
+						if(provFacility.LastName=="") {
 							Comma(strb);
 							strb.Append("Site prov "+provFacility.Abbr+" LName for proc "+procCode.ProcCode);
 						}
-						if(!Regex.IsMatch(provFacility.NationalProvID,"^(80840)?[0-9]{10}$")) {
+						if(!Regex.IsMatch(provFacility.NationalProviderID,"^(80840)?[0-9]{10}$")) {
 							Comma(strb);
 							strb.Append("Site prov "+provFacility.Abbr+" NPI for proc "+procCode.ProcCode
 								+" must be a 10 digit number with an optional prefix of 80840");

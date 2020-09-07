@@ -61,7 +61,7 @@ namespace OpenDental
 				for (int j = 0; j < medicationPats.Count; j++)
 				{
 					bool isMedInteraction = false;
-					Medication medForAlert = Medications.GetMedication(alertList[i].MedicationId);
+					Medication medForAlert = Medications.GetById(alertList[i].MedicationId);
 					if (medForAlert == null)
 					{
 						continue;//MedicationNum will be 0 for all other alerts that are not medication alerts.
@@ -70,7 +70,7 @@ namespace OpenDental
 					{//Medication from medication list.
 						isMedInteraction = true;
 					}
-					else if (medicationPats[j].MedicationNum == 0 && medForAlert.RxCui != 0 && medicationPats[j].RxCui == medForAlert.RxCui)
+					else if (medicationPats[j].MedicationNum == 0 && medForAlert.RxCui != "" && medicationPats[j].RxCui.ToString() == medForAlert.RxCui)
 					{//Medication from NewCrop. Unfortunately, neither of these RxCuis are required.
 						isMedInteraction = true;
 					}
@@ -86,7 +86,7 @@ namespace OpenDental
 					if (alertList[i].NotificationMsg == "")
 					{
 						Medications.RefreshCache();
-						medicationsMatches.Add(Medications.GetMedication(alertList[i].MedicationId).MedName);
+						medicationsMatches.Add(Medications.GetById(alertList[i].MedicationId).Name);
 					}
 					else
 					{

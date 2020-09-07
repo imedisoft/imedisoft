@@ -110,7 +110,7 @@ namespace OpenDental{
 				//butOK.Visible=false;
 				//butCancel.Text="Close";
 			//}
-			prov=Providers.GetProv(ProvNum);
+			prov=Providers.GetById(ProvNum);
 			Text="Student Requirements - "+Providers.GetLongDesc(ProvNum);
 			FillGrid();
 		}

@@ -496,7 +496,7 @@ namespace OpenDental{
 			_listProvs=Providers.GetDeepCopy(true);
 			for(int i=0;i<_listProvs.Count;i++) {
 				comboProv.Items.Add(_listProvs[i].Abbr);
-				if(_screenGroup.ProvNum==_listProvs[i].ProvNum) {
+				if(_screenGroup.ProvNum==_listProvs[i].Id) {
 					comboProv.SelectedIndex=i;
 				}
 			}
@@ -815,7 +815,7 @@ namespace OpenDental{
 				sheet.PatNum=screenPat.PatNum;
 				long provNum=0;
 				if(comboProv.SelectedIndex!=-1) {
-					provNum=_listProvs[comboProv.SelectedIndex].ProvNum;
+					provNum=_listProvs[comboProv.SelectedIndex].Id;
 				}
 				SheetParameter.SetParameter(sheet,"ScreenGroupNum",_screenGroup.ScreenGroupNum);//I think we may need this.
 				SheetParameter.SetParameter(sheet,"PatNum",screenPat.PatNum);
@@ -910,7 +910,7 @@ namespace OpenDental{
 				}
 				long provNum=0;
 				if(comboProv.SelectedIndex!=-1) {
-					provNum=_listProvs[comboProv.SelectedIndex].ProvNum;
+					provNum=_listProvs[comboProv.SelectedIndex].Id;
 				}
 				Screens.ProcessScreenChart(sheet,ScreenChartType.TP|ScreenChartType.C,provNum,FormSFE.SheetCur.SheetNum,listChartOrigVals,listProcOrigVals);						
 			}
@@ -954,8 +954,8 @@ namespace OpenDental{
 		private void comboProv_SelectedIndexChanged(object sender, System.EventArgs e) {
 			if(comboProv.SelectedIndex!=-1) {//if a prov was selected
 				//set the provname accordingly
-				textProvName.Text=_listProvs[comboProv.SelectedIndex].LName+", "
-					+_listProvs[comboProv.SelectedIndex].FName;
+				textProvName.Text=_listProvs[comboProv.SelectedIndex].LastName+", "
+					+_listProvs[comboProv.SelectedIndex].FirstName;
 			}
 		}
 
@@ -1082,7 +1082,7 @@ namespace OpenDental{
 			_screenGroup.SGDate=PIn.Date(textScreenDate.Text);
 			_screenGroup.Description=textDescription.Text;
 			_screenGroup.ProvName=textProvName.Text;
-			_screenGroup.ProvNum=comboProv.SelectedIndex==-1 ? 0 : _listProvs[comboProv.SelectedIndex].ProvNum;//ProvNum 0 is OK for screens.
+			_screenGroup.ProvNum=comboProv.SelectedIndex==-1 ? 0 : _listProvs[comboProv.SelectedIndex].Id;//ProvNum 0 is OK for screens.
 			if(comboCounty.SelectedIndex==-1) {
 				_screenGroup.County="";
 			}

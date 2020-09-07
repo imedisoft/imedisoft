@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
@@ -30,17 +31,17 @@ namespace OpenDentBusiness
 			string userNameF = "";
 			string userNameL = "";
 
-			if (userod.ProviderId != 0)
+			if (userod.ProviderId.HasValue)
 			{
-				Provider prov = Providers.GetProv(userod.ProviderId);
-				userNameF = prov.FName;
-				userNameL = prov.LName;
+				Provider prov = Providers.GetById(userod.ProviderId.Value);
+				userNameF = prov.FirstName;
+				userNameL = prov.LastName;
 			}
-			else if (userod.EmployeeId != 0)
+			else if (userod.EmployeeId.HasValue)
 			{
-				Employee emp = Employees.GetEmp(userod.EmployeeId);
-				userNameF = emp.FName;
-				userNameL = emp.LName;
+				Employee emp = Employees.GetEmp(userod.EmployeeId.Value);
+				userNameF = emp.FirstName;
+				userNameL = emp.LastName;
 			}
 
 			retVal = retVal.Replace("[UserNameF]", userNameF);

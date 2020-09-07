@@ -6,6 +6,8 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormEvaluationReport:ODForm {
@@ -43,7 +45,7 @@ namespace OpenDental {
 			GridRow row;
 			for(int i=0;i<_schoolCourses.Count;i++) {
 				row=new GridRow();
-				row.Tag=_schoolCourses[i].SchoolCourseNum.ToString();
+				row.Tag=_schoolCourses[i].Id.ToString();
 				row.Cells.Add(_schoolCourses[i].CourseID);
 				row.Cells.Add(_schoolCourses[i].Descript);
 				gridCourses.ListGridRows.Add(row);
@@ -65,10 +67,10 @@ namespace OpenDental {
 			GridRow row;
 			for(int i=0;i<_provInstructors.Count;i++) {
 				row=new GridRow();
-				row.Tag=(_provInstructors[i].ProvNum.ToString());
-				row.Cells.Add(_provInstructors[i].ProvNum.ToString());
-				row.Cells.Add(_provInstructors[i].LName);
-				row.Cells.Add(_provInstructors[i].FName);
+				row.Tag=(_provInstructors[i].Id.ToString());
+				row.Cells.Add(_provInstructors[i].Id.ToString());
+				row.Cells.Add(_provInstructors[i].LastName);
+				row.Cells.Add(_provInstructors[i].FirstName);
 				gridInstructors.ListGridRows.Add(row);
 			}
 			gridInstructors.EndUpdate();

@@ -25,7 +25,7 @@ namespace OpenDental {
 			listBill.Items.Add("("+"all"+")");
 			listBill.SetSelected(0,true);
 			listBill.Items.AddRange(_listBillingTypeDefs.Select(x => x.Name).ToArray());
-			comboClinics.SelectedClinicNum=Clinics.ClinicId;
+			comboClinics.SelectedClinicNum=Clinics.Active.Id;
 			FillGrids(true);
 		}
 

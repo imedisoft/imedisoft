@@ -140,12 +140,11 @@ namespace OpenDental {
 				return;
 			}
 			EmailAddress emailAddress=null;
-			long emailAddressNum=PrefC.HasClinicsEnabled
-				? Clinics.GetById(Clinics.ClinicId)?.EmailAddressId??0
-				: Prefs.GetLong(PrefName.EmailDefaultAddressNum);
-			if(emailAddressNum > 0) {
-				emailAddress=EmailAddresses.GetOne(emailAddressNum);
+			long? emailAddressNum=Clinics.Active?.EmailAddressId;
+			if(emailAddressNum.HasValue) {
+				emailAddress=EmailAddresses.GetOne(emailAddressNum.Value);
 			}
+
 			if(emailAddress==null) {
 				FormEmailAddresses formEmailAddresses=new FormEmailAddresses();
 				formEmailAddresses.IsSelectionMode=true;

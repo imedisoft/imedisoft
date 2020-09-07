@@ -1057,11 +1057,11 @@ namespace OpenDental{
           SetListBoxConditions();
 					ComboBox.Items.Clear();
           for(int i=0;i<_listProviders.Count;i++){
-						sItem=_listProviders[i].LName+", "
-							+_listProviders[i].MI+" "+_listProviders[i].FName;
+						sItem=_listProviders[i].LastName+", "
+							+_listProviders[i].Initials+" "+_listProviders[i].FirstName;
 						if(_listProviders[i].IsHidden)
 							sItem+="(hidden)";
-						if(_listProviders[i].ProvStatus==ProviderStatus.Deleted)
+						if(_listProviders[i].Status==ProviderStatus.Deleted)
 							sItem+="(deleted)";
             ComboBox.Items.Add(sItem);
 					}	
@@ -1364,7 +1364,7 @@ namespace OpenDental{
               sItem="OR ";
             }
 						sItem+="patient.PriProv "+ListConditions.SelectedItem.ToString()+" '"
-							+_listProviders[ComboBox.SelectedIndices[i]].ProvNum.ToString()+"'"; 
+							+_listProviders[ComboBox.SelectedIndices[i]].Id.ToString()+"'"; 
 						if(i==ComboBox.SelectedIndices.Count-1){
 							sItem+=")";
             }
@@ -1389,7 +1389,7 @@ namespace OpenDental{
               sItem="OR ";
             } 
 						sItem+="patient.SecProv "+ListConditions.SelectedItem.ToString()+" '"
-							+_listProviders[ComboBox.SelectedIndices[i]].ProvNum.ToString()+"'"; 
+							+_listProviders[ComboBox.SelectedIndices[i]].Id.ToString()+"'"; 
 						if(i==ComboBox.SelectedIndices.Count-1){  
 							sItem+=")";
             }  

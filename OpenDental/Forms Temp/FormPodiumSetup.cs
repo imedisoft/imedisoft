@@ -41,7 +41,7 @@ namespace OpenDental {
 						checkEnabled.Enabled=false;
 					}
 				}
-				comboClinic.SelectedClinicNum=Clinics.ClinicId;
+				comboClinic.SelectedClinicNum=Clinics.Active.Id;
 				_clinicNumCur=comboClinic.SelectedClinicNum;
 			}
 			else {//clinics are not enabled, use ClinicNum 0 to indicate 'Headquarters' or practice level program properties

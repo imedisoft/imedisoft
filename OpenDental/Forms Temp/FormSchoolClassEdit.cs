@@ -4,6 +4,8 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -32,7 +34,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			ClassCur=classCur.Copy();
+			ClassCur=classCur;
 			
 		}
 
@@ -160,8 +162,8 @@ namespace OpenDental{
 		#endregion
 
 		private void FormSchoolClassEdit_Load(object sender, System.EventArgs e) {
-			if(ClassCur.GradYear!=0){
-				textGradYear.Text=ClassCur.GradYear.ToString();
+			if(ClassCur.Year!=0){
+				textGradYear.Text=ClassCur.Year.ToString();
 			}
 			textDescript.Text=ClassCur.Description;
 		}
@@ -195,9 +197,9 @@ namespace OpenDental{
 				MessageBox.Show("Please enter a graduation year.");
 				return;
 			}
-			ClassCur.GradYear=PIn.Int(textGradYear.Text);
+			ClassCur.Year=PIn.Int(textGradYear.Text);
 			ClassCur.Description=textDescript.Text;
-			SchoolClasses.InsertOrUpdate(ClassCur,IsNew);
+			SchoolClasses.InsertOrUpdate(ClassCur);
 			DialogResult=DialogResult.OK;
 		}
 

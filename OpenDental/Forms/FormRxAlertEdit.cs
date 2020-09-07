@@ -35,7 +35,7 @@ namespace Imedisoft.Forms
 			if (rxAlert.MedicationId > 0)
 			{
 				nameLabel.Text = Translation.Rx.IfPatientIsAlreadyTakingThisMedication;
-				nameTextBox.Text = Medications.GetMedicationFromDb(rxAlert.MedicationId).MedName;
+				nameTextBox.Text = Medications.GetByIdNoCache(rxAlert.MedicationId).Name;
 			}
 
 			drugTextBox.Text = rxDef.Drug;

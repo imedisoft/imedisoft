@@ -6,6 +6,8 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormEvaluations:ODForm {
@@ -19,7 +21,7 @@ namespace OpenDental {
 		}
 
 		private void FormEvaluations_Load(object sender,EventArgs e) {
-			_userProv=Providers.GetProv(Security.CurrentUser.ProviderId);
+			_userProv=Providers.GetById(Security.CurrentUser.ProviderId??0);
 			//_userProv will only be allowed to be null if the user is an admin. Checking for null in this block is not necessary.
 			if(!Security.IsAuthorized(Permissions.AdminDentalEvaluations,true)) {
 				//Admins are allowed to look at and edit all evaluations, but they cannot add new evaluations
@@ -47,8 +49,8 @@ namespace OpenDental {
 		}
 
 		private void FillGrid() {
-			long course=(comboCourse.SelectedIndex==0) ? 0:_listSchoolCourses[comboCourse.SelectedIndex-1].SchoolCourseNum;
-			long instructor=(comboInstructor.SelectedIndex==0) ? 0:_listInstructor[comboInstructor.SelectedIndex-1].ProvNum;
+			long course=(comboCourse.SelectedIndex==0) ? 0:_listSchoolCourses[comboCourse.SelectedIndex-1].Id;
+			long instructor=(comboInstructor.SelectedIndex==0) ? 0:_listInstructor[comboInstructor.SelectedIndex-1].Id;
 			DataTable table=Evaluations.GetFilteredList(DateTime.Parse(textDateStart.Text),DateTime.Parse(textDateEnd.Text),textLastName.Text,textFirstName.Text,PIn.Long(textProvNum.Text),course,instructor);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();

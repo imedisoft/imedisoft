@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.IO;
 using OpenDentBusiness;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	///<summary></summary>
@@ -326,10 +327,10 @@ namespace OpenDental{
 
 		private void FormEmployeeEdit_Load(object sender, System.EventArgs e) {
 			checkIsHidden.Checked=EmployeeCur.IsHidden;
-			textLName.Text=EmployeeCur.LName;
-			textFName.Text=EmployeeCur.FName;
-			textMI.Text=EmployeeCur.MiddleI;
-			textPayrollID.Text=EmployeeCur.PayrollID;
+			textLName.Text=EmployeeCur.LastName;
+			textFName.Text=EmployeeCur.FirstName;
+			textMI.Text=EmployeeCur.Initials;
+			textPayrollID.Text=EmployeeCur.PayrollId;
 			textPhoneExt.Text=EmployeeCur.PhoneExt.ToString();
 			textWirelessPhone.Text=EmployeeCur.WirelessPhone;
 			textEmailWork.Text=EmployeeCur.EmailWork;
@@ -345,7 +346,7 @@ namespace OpenDental{
 			}
 			//not new:
 			try{
-				Employees.Delete(EmployeeCur.EmployeeNum);
+				Employees.Delete(EmployeeCur.Id);
 				DialogResult=DialogResult.OK;
 			}
 			catch(ApplicationException ex){
@@ -356,10 +357,10 @@ namespace OpenDental{
 		private void butOK_Click(object sender, System.EventArgs e) {
 			Employee employeeOld=EmployeeCur.Copy();
 			EmployeeCur.IsHidden=checkIsHidden.Checked;
-			EmployeeCur.LName=textLName.Text;
-			EmployeeCur.FName=textFName.Text;
-			EmployeeCur.MiddleI=textMI.Text;
-			EmployeeCur.PayrollID=textPayrollID.Text;
+			EmployeeCur.LastName=textLName.Text;
+			EmployeeCur.FirstName=textFName.Text;
+			EmployeeCur.Initials=textMI.Text;
+			EmployeeCur.PayrollId=textPayrollID.Text;
 			try{
 				EmployeeCur.PhoneExt=PIn.Int(textPhoneExt.Text);
 			}
@@ -376,7 +377,7 @@ namespace OpenDental{
 					Employees.Insert(EmployeeCur);
 				}
 				else {
-					Employees.UpdateChanged(EmployeeCur,employeeOld);
+					Employees.Update(EmployeeCur);
 				}
 			}
 			catch(Exception ex) {

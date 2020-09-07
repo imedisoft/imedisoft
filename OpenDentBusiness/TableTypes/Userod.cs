@@ -13,11 +13,10 @@ namespace OpenDentBusiness
     /// A usernumber can never be changed, ensuring a permanent way to record database entries and leave an audit trail.
     /// A user can be a provider, employee, or neither.
     /// </summary>
-    [Table]
+    [Table("users")]
     public class Userod : TableBase
     {
         [PrimaryKey]
-        [Column(Name = "UserNum")]
         public long Id;
 
         /// <summary>
@@ -42,8 +41,8 @@ namespace OpenDentBusiness
         /// Cannot be used if provnum is used.
         /// Used for timecards to block access by other users.
         /// </summary>
-        [Column("EmployeeNum"), ForeignKey(typeof(Employee), nameof(Employee.EmployeeNum))]
-        public long EmployeeId;
+        [ForeignKey(typeof(Employee), nameof(Employee.Id))]
+        public long? EmployeeId;
 
         /// <summary>
         ///     <para>
@@ -53,15 +52,15 @@ namespace OpenDentBusiness
         ///         May be null for users that have no default clinic or when clinics are disabled.
         ///     </para>
         /// </summary> 	
-        [Column("ClinicNum"), ForeignKey(typeof(Clinic), nameof(Clinic.Id))]
-        public long ClinicId;
+        [ForeignKey(typeof(Clinic), nameof(Clinic.Id))]
+        public long? ClinicId;
 
         /// <summary>
         /// Cannot be used if EmployeeNum is used.
         /// It is possible to have multiple userods attached to a single provider.
         /// </summary>
-        [Column("ProvNum"), ForeignKey(typeof(Provider), nameof(Provider.ProvNum))]
-        public long ProviderId;
+        [ForeignKey(typeof(Provider), nameof(Provider.Id))]
+        public long? ProviderId;
 
         /// <summary>
         /// Set true to hide user from login list.

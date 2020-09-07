@@ -3590,7 +3590,7 @@ namespace OpenDental{
 								splitField=field.Split(new char[] { ' ' });
 								ben=new Benefit();
 								ben.BenefitType=InsBenefitType.Deductible;
-								ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.General).CovCatNum;
+								ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.General).Id;
 								ben.PlanNum=_planCur.PlanNum;
 								ben.TimePeriod=BenefitTimePeriod.CalendarYear;
 								ben.MonetaryAmt=PIn.Double(splitField[0].Remove(0,1));//removes the $
@@ -3606,7 +3606,7 @@ namespace OpenDental{
 								splitField=field.Split(new char[] { ' ' });
 								ben=new Benefit();
 								ben.BenefitType=InsBenefitType.Limitations;
-								ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.General).CovCatNum;
+								ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.General).Id;
 								ben.PlanNum=_planCur.PlanNum;
 								ben.TimePeriod=BenefitTimePeriod.CalendarYear;
 								ben.MonetaryAmt=PIn.Double(splitField[0].Remove(0,1));//removes the $
@@ -3632,7 +3632,7 @@ namespace OpenDental{
 							}
 							ben=new Benefit();
 							ben.BenefitType=InsBenefitType.CoInsurance;
-							ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.RoutinePreventive).CovCatNum;
+							ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.RoutinePreventive).Id;
 							ben.PlanNum=_planCur.PlanNum;
 							ben.TimePeriod=BenefitTimePeriod.CalendarYear;
 							ben.Percent=percent;
@@ -3651,28 +3651,28 @@ namespace OpenDental{
 							}
 							ben=new Benefit();
 							ben.BenefitType=InsBenefitType.CoInsurance;
-							ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.Restorative).CovCatNum;
+							ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.Restorative).Id;
 							ben.PlanNum=_planCur.PlanNum;
 							ben.TimePeriod=BenefitTimePeriod.CalendarYear;
 							ben.Percent=percent;
 							benefitList.Add(ben.Copy());
 							ben=new Benefit();
 							ben.BenefitType=InsBenefitType.CoInsurance;
-							ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.Endodontics).CovCatNum;
+							ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.Endodontics).Id;
 							ben.PlanNum=_planCur.PlanNum;
 							ben.TimePeriod=BenefitTimePeriod.CalendarYear;
 							ben.Percent=percent;
 							benefitList.Add(ben.Copy());
 							ben=new Benefit();
 							ben.BenefitType=InsBenefitType.CoInsurance;
-							ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.Periodontics).CovCatNum;
+							ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.Periodontics).Id;
 							ben.PlanNum=_planCur.PlanNum;
 							ben.TimePeriod=BenefitTimePeriod.CalendarYear;
 							ben.Percent=percent;
 							benefitList.Add(ben.Copy());
 							ben=new Benefit();
 							ben.BenefitType=InsBenefitType.CoInsurance;
-							ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.OralSurgery).CovCatNum;
+							ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.OralSurgery).Id;
 							ben.PlanNum=_planCur.PlanNum;
 							ben.TimePeriod=BenefitTimePeriod.CalendarYear;
 							ben.Percent=percent;
@@ -3691,7 +3691,7 @@ namespace OpenDental{
 							}
 							ben=new Benefit();
 							ben.BenefitType=InsBenefitType.CoInsurance;
-							ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.Prosthodontics).CovCatNum;//includes crowns?
+							ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.Prosthodontics).Id;//includes crowns?
 							ben.PlanNum=_planCur.PlanNum;
 							ben.TimePeriod=BenefitTimePeriod.CalendarYear;
 							ben.Percent=percent;
@@ -3722,7 +3722,7 @@ namespace OpenDental{
 							}
 							ben=new Benefit();
 							ben.BenefitType=InsBenefitType.CoInsurance;
-							ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.Orthodontics).CovCatNum;
+							ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.Orthodontics).Id;
 							ben.PlanNum=_planCur.PlanNum;
 							ben.TimePeriod=BenefitTimePeriod.CalendarYear;
 							ben.Percent=percent;
@@ -3737,7 +3737,7 @@ namespace OpenDental{
 								splitField=field.Split(new char[] { ' ' });
 								ben=new Benefit();
 								ben.BenefitType=InsBenefitType.Limitations;
-								ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.Orthodontics).CovCatNum;
+								ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.Orthodontics).Id;
 								ben.PlanNum=_planCur.PlanNum;
 								ben.TimePeriod=BenefitTimePeriod.CalendarYear;
 								ben.MonetaryAmt=PIn.Double(splitField[0].Remove(0,1));//removes the $
@@ -3941,7 +3941,7 @@ namespace OpenDental{
 				return;
 			}
 			Clearinghouse clearinghouseHq=Canadian.GetCanadianClearinghouseHq(carrier);
-			Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.ClinicId);
+			Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.Active.Id);
 			Cursor=Cursors.WaitCursor;
 			//string result="";
 			DateTime date=DateTime.Today;
@@ -4350,7 +4350,7 @@ namespace OpenDental{
 			}
 			Cursor=Cursors.WaitCursor;
 			try {
-				Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.ClinicId);
+				Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.Active.Id);
 				string error;
 				Etrans etrans=x270Controller.RequestBenefits(clearinghouseClin,_planCur,PatPlanCur.PatNum,_carrierCur,_subCur,out error);
 				if(etrans != null) {
@@ -4459,7 +4459,7 @@ namespace OpenDental{
 			string passWord;
 			// Get Login / Password
 			Clearinghouse clearinghouseHq=Clearinghouses.GetDefaultDental();
-			Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.ClinicId);
+			Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.Active.Id);
 			if(clearinghouseClin!=null) {
 				loginID=clearinghouseClin.LoginID;
 				passWord=clearinghouseClin.Password;

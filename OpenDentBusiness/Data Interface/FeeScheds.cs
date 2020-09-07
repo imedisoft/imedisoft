@@ -35,7 +35,7 @@ namespace OpenDentBusiness{
 		///Might return a 0 if the primary provider does not have a fee schedule set.</summary>
 		public static long GetFeeSched(long priPlanFeeSched,long patFeeSched,long provNum) {
 			//No need to check RemotingRole; no call to db.
-			long provFeeSched=(Providers.GetFirstOrDefault(x => x.ProvNum==provNum)??new Provider()).FeeSched;//defaults to 0
+			long provFeeSched=(Providers.GetFirstOrDefault(x => x.Id==provNum)??new Provider()).FeeScheduleId;//defaults to 0
 			return new[] { priPlanFeeSched,patFeeSched,provFeeSched }.FirstOrDefault(x => x>0);//defaults to 0 if all fee scheds are 0
 		}
 
@@ -74,12 +74,12 @@ namespace OpenDentBusiness{
 				} 
 				else {
 					if (pat.PriProv==0){
-						retVal=Providers.GetFirst(true).FeeSched;
+						retVal=Providers.GetFirst(true).FeeScheduleId;
 					} 
 					else {
 						Provider providerFirst=Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-						Provider provider=Providers.GetFirstOrDefault(x => x.ProvNum==pat.PriProv)??providerFirst;
-						retVal=provider.FeeSched;
+						Provider provider=Providers.GetFirstOrDefault(x => x.Id==pat.PriProv)??providerFirst;
+						retVal=provider.FeeScheduleId;
 					}
 				}
 			}

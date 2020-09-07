@@ -550,7 +550,7 @@ namespace OpenDental{
 					}
 					long provNum=0;
 					if(comboProv.SelectedIndex!=0) {
-						provNum=_listProviders[comboProv.SelectedIndex-1].ProvNum;
+						provNum=_listProviders[comboProv.SelectedIndex-1].Id;
 					}
 					long siteNum=0;
 					if(!Prefs.GetBool(PrefName.EasyHidePublicHealth) && comboSite.SelectedIndex!=0) {

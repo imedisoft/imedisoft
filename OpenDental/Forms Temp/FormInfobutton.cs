@@ -106,14 +106,14 @@ namespace OpenDental {
 			}
 			//Fill Provider------------------------------------------------------------------------------------------------------------------
 			if(ProvCur==null && PatCur!=null) {
-				ProvCur=Providers.GetProv(PatCur.PriProv);
+				ProvCur=Providers.GetById(PatCur.PriProv);
 			}
 			if(ProvCur==null) {
-				ProvCur=Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv));
+				ProvCur=Providers.GetById(Prefs.GetLong(PrefName.PracticeDefaultProv));
 			}
 			if(ProvCur!=null) {
 				textProvName.Text=ProvCur.GetFormalName();
-				textProvID.Text=ProvCur.NationalProvID;
+				textProvID.Text=ProvCur.NationalProviderID;
 				comboProvLang.SelectedIndex=comboPatLang.Items.IndexOf(System.Globalization.CultureInfo.CurrentCulture.DisplayName);
 			}
 			//Fill Organization--------------------------------------------------------------------------------------------------------------
@@ -637,7 +637,7 @@ namespace OpenDental {
 				return "PT"+PatCur.PatNum+DateTime.Now.ToUniversalTime().ToString("yyyyMMddhhmmss");
 			}
 			else if(ProvCur!=null) {
-				return "PV"+ProvCur.ProvNum+DateTime.Now.ToUniversalTime().ToString("yyyyMMddhhmmss");
+				return "PV"+ProvCur.Id+DateTime.Now.ToUniversalTime().ToString("yyyyMMddhhmmss");
 			}
 			else {
 				return "OD"+DateTime.Now.ToUniversalTime().ToString("yyyyMMddhhmmss");

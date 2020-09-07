@@ -43,12 +43,12 @@ namespace OpenDentBusiness.Crud{
 			ProviderClinic providerClinic;
 			foreach(DataRow row in table.Rows) {
 				providerClinic=new ProviderClinic();
-				providerClinic.ProviderClinicNum = PIn.Long  (row["ProviderClinicNum"].ToString());
-				providerClinic.ProvNum           = PIn.Long  (row["ProvNum"].ToString());
-				providerClinic.ClinicNum         = PIn.Long  (row["ClinicNum"].ToString());
-				providerClinic.DEANum            = PIn.String(row["DEANum"].ToString());
+				providerClinic.Id = PIn.Long  (row["ProviderClinicNum"].ToString());
+				providerClinic.ProviderId           = PIn.Long  (row["ProvNum"].ToString());
+				providerClinic.ClinicId         = PIn.Long  (row["ClinicNum"].ToString());
+				providerClinic.DeaNumber            = PIn.String(row["DEANum"].ToString());
 				providerClinic.StateLicense      = PIn.String(row["StateLicense"].ToString());
-				providerClinic.StateRxID         = PIn.String(row["StateRxID"].ToString());
+				providerClinic.StateRxId         = PIn.String(row["StateRxID"].ToString());
 				providerClinic.StateWhereLicensed= PIn.String(row["StateWhereLicensed"].ToString());
 				retVal.Add(providerClinic);
 			}
@@ -70,12 +70,12 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("StateWhereLicensed");
 			foreach(ProviderClinic providerClinic in listProviderClinics) {
 				table.Rows.Add(new object[] {
-					POut.Long  (providerClinic.ProviderClinicNum),
-					POut.Long  (providerClinic.ProvNum),
-					POut.Long  (providerClinic.ClinicNum),
-					            providerClinic.DEANum,
+					POut.Long  (providerClinic.Id),
+					POut.Long  (providerClinic.ProviderId),
+					POut.Long  (providerClinic.ClinicId),
+					            providerClinic.DeaNumber,
 					            providerClinic.StateLicense,
-					            providerClinic.StateRxID,
+					            providerClinic.StateRxId,
 					            providerClinic.StateWhereLicensed,
 				});
 			}
@@ -90,7 +90,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one ProviderClinic into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(ProviderClinic providerClinic,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				providerClinic.ProviderClinicNum=ReplicationServers.GetKey("providerclinic","ProviderClinicNum");
+				providerClinic.Id=ReplicationServers.GetKey("providerclinic","ProviderClinicNum");
 			}
 			string command="INSERT INTO providerclinic (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -98,22 +98,22 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="ProvNum,ClinicNum,DEANum,StateLicense,StateRxID,StateWhereLicensed) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(providerClinic.ProviderClinicNum)+",";
+				command+=POut.Long(providerClinic.Id)+",";
 			}
 			command+=
-				     POut.Long  (providerClinic.ProvNum)+","
-				+    POut.Long  (providerClinic.ClinicNum)+","
-				+"'"+POut.String(providerClinic.DEANum)+"',"
+				     POut.Long  (providerClinic.ProviderId)+","
+				+    POut.Long  (providerClinic.ClinicId)+","
+				+"'"+POut.String(providerClinic.DeaNumber)+"',"
 				+"'"+POut.String(providerClinic.StateLicense)+"',"
-				+"'"+POut.String(providerClinic.StateRxID)+"',"
+				+"'"+POut.String(providerClinic.StateRxId)+"',"
 				+"'"+POut.String(providerClinic.StateWhereLicensed)+"')";
 			if(useExistingPK || PrefC.RandomKeys) {
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				providerClinic.ProviderClinicNum=Database.ExecuteInsert(command);
+				providerClinic.Id=Database.ExecuteInsert(command);
 			}
-			return providerClinic.ProviderClinicNum;
+			return providerClinic.Id;
 		}
 
 		///<summary>Inserts one ProviderClinic into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -126,66 +126,66 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO providerclinic (";
 			if(!useExistingPK) {
-				providerClinic.ProviderClinicNum=ReplicationServers.GetKeyNoCache("providerclinic","ProviderClinicNum");
+				providerClinic.Id=ReplicationServers.GetKeyNoCache("providerclinic","ProviderClinicNum");
 			}
 			if(useExistingPK) {
 				command+="ProviderClinicNum,";
 			}
 			command+="ProvNum,ClinicNum,DEANum,StateLicense,StateRxID,StateWhereLicensed) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(providerClinic.ProviderClinicNum)+",";
+				command+=POut.Long(providerClinic.Id)+",";
 			}
 			command+=
-				     POut.Long  (providerClinic.ProvNum)+","
-				+    POut.Long  (providerClinic.ClinicNum)+","
-				+"'"+POut.String(providerClinic.DEANum)+"',"
+				     POut.Long  (providerClinic.ProviderId)+","
+				+    POut.Long  (providerClinic.ClinicId)+","
+				+"'"+POut.String(providerClinic.DeaNumber)+"',"
 				+"'"+POut.String(providerClinic.StateLicense)+"',"
-				+"'"+POut.String(providerClinic.StateRxID)+"',"
+				+"'"+POut.String(providerClinic.StateRxId)+"',"
 				+"'"+POut.String(providerClinic.StateWhereLicensed)+"')";
 			if(useExistingPK) {
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				providerClinic.ProviderClinicNum=Database.ExecuteInsert(command);
+				providerClinic.Id=Database.ExecuteInsert(command);
 			}
-			return providerClinic.ProviderClinicNum;
+			return providerClinic.Id;
 		}
 
 		///<summary>Updates one ProviderClinic in the database.</summary>
 		public static void Update(ProviderClinic providerClinic) {
 			string command="UPDATE providerclinic SET "
-				+"ProvNum           =  "+POut.Long  (providerClinic.ProvNum)+", "
-				+"ClinicNum         =  "+POut.Long  (providerClinic.ClinicNum)+", "
-				+"DEANum            = '"+POut.String(providerClinic.DEANum)+"', "
+				+"ProvNum           =  "+POut.Long  (providerClinic.ProviderId)+", "
+				+"ClinicNum         =  "+POut.Long  (providerClinic.ClinicId)+", "
+				+"DEANum            = '"+POut.String(providerClinic.DeaNumber)+"', "
 				+"StateLicense      = '"+POut.String(providerClinic.StateLicense)+"', "
-				+"StateRxID         = '"+POut.String(providerClinic.StateRxID)+"', "
+				+"StateRxID         = '"+POut.String(providerClinic.StateRxId)+"', "
 				+"StateWhereLicensed= '"+POut.String(providerClinic.StateWhereLicensed)+"' "
-				+"WHERE ProviderClinicNum = "+POut.Long(providerClinic.ProviderClinicNum);
+				+"WHERE ProviderClinicNum = "+POut.Long(providerClinic.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Updates one ProviderClinic in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
 		public static bool Update(ProviderClinic providerClinic,ProviderClinic oldProviderClinic) {
 			string command="";
-			if(providerClinic.ProvNum != oldProviderClinic.ProvNum) {
+			if(providerClinic.ProviderId != oldProviderClinic.ProviderId) {
 				if(command!="") { command+=",";}
-				command+="ProvNum = "+POut.Long(providerClinic.ProvNum)+"";
+				command+="ProvNum = "+POut.Long(providerClinic.ProviderId)+"";
 			}
-			if(providerClinic.ClinicNum != oldProviderClinic.ClinicNum) {
+			if(providerClinic.ClinicId != oldProviderClinic.ClinicId) {
 				if(command!="") { command+=",";}
-				command+="ClinicNum = "+POut.Long(providerClinic.ClinicNum)+"";
+				command+="ClinicNum = "+POut.Long(providerClinic.ClinicId)+"";
 			}
-			if(providerClinic.DEANum != oldProviderClinic.DEANum) {
+			if(providerClinic.DeaNumber != oldProviderClinic.DeaNumber) {
 				if(command!="") { command+=",";}
-				command+="DEANum = '"+POut.String(providerClinic.DEANum)+"'";
+				command+="DEANum = '"+POut.String(providerClinic.DeaNumber)+"'";
 			}
 			if(providerClinic.StateLicense != oldProviderClinic.StateLicense) {
 				if(command!="") { command+=",";}
 				command+="StateLicense = '"+POut.String(providerClinic.StateLicense)+"'";
 			}
-			if(providerClinic.StateRxID != oldProviderClinic.StateRxID) {
+			if(providerClinic.StateRxId != oldProviderClinic.StateRxId) {
 				if(command!="") { command+=",";}
-				command+="StateRxID = '"+POut.String(providerClinic.StateRxID)+"'";
+				command+="StateRxID = '"+POut.String(providerClinic.StateRxId)+"'";
 			}
 			if(providerClinic.StateWhereLicensed != oldProviderClinic.StateWhereLicensed) {
 				if(command!="") { command+=",";}
@@ -195,7 +195,7 @@ namespace OpenDentBusiness.Crud{
 				return false;
 			}
 			command="UPDATE providerclinic SET "+command
-				+" WHERE ProviderClinicNum = "+POut.Long(providerClinic.ProviderClinicNum);
+				+" WHERE ProviderClinicNum = "+POut.Long(providerClinic.Id);
 			Database.ExecuteNonQuery(command);
 			return true;
 		}
@@ -203,19 +203,19 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Returns true if Update(ProviderClinic,ProviderClinic) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
 		public static bool UpdateComparison(ProviderClinic providerClinic,ProviderClinic oldProviderClinic) {
-			if(providerClinic.ProvNum != oldProviderClinic.ProvNum) {
+			if(providerClinic.ProviderId != oldProviderClinic.ProviderId) {
 				return true;
 			}
-			if(providerClinic.ClinicNum != oldProviderClinic.ClinicNum) {
+			if(providerClinic.ClinicId != oldProviderClinic.ClinicId) {
 				return true;
 			}
-			if(providerClinic.DEANum != oldProviderClinic.DEANum) {
+			if(providerClinic.DeaNumber != oldProviderClinic.DeaNumber) {
 				return true;
 			}
 			if(providerClinic.StateLicense != oldProviderClinic.StateLicense) {
 				return true;
 			}
-			if(providerClinic.StateRxID != oldProviderClinic.StateRxID) {
+			if(providerClinic.StateRxId != oldProviderClinic.StateRxId) {
 				return true;
 			}
 			if(providerClinic.StateWhereLicensed != oldProviderClinic.StateWhereLicensed) {
@@ -238,8 +238,8 @@ namespace OpenDentBusiness.Crud{
 			List<ProviderClinic> listUpdNew =new List<ProviderClinic>();
 			List<ProviderClinic> listUpdDB  =new List<ProviderClinic>();
 			List<ProviderClinic> listDel    =new List<ProviderClinic>();
-			listNew.Sort((ProviderClinic x,ProviderClinic y) => { return x.ProviderClinicNum.CompareTo(y.ProviderClinicNum); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
-			listDB.Sort((ProviderClinic x,ProviderClinic y) => { return x.ProviderClinicNum.CompareTo(y.ProviderClinicNum); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			listNew.Sort((ProviderClinic x,ProviderClinic y) => { return x.Id.CompareTo(y.Id); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			listDB.Sort((ProviderClinic x,ProviderClinic y) => { return x.Id.CompareTo(y.Id); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
 			int idxNew=0;
 			int idxDB=0;
 			int rowsUpdatedCount=0;
@@ -267,12 +267,12 @@ namespace OpenDentBusiness.Crud{
 					idxDB++;
 					continue;
 				}
-				else if(fieldNew.ProviderClinicNum<fieldDB.ProviderClinicNum) {//newPK less than dbPK, newItem is 'next'
+				else if(fieldNew.Id<fieldDB.Id) {//newPK less than dbPK, newItem is 'next'
 					listIns.Add(fieldNew);
 					idxNew++;
 					continue;
 				}
-				else if(fieldNew.ProviderClinicNum>fieldDB.ProviderClinicNum) {//dbPK less than newPK, dbItem is 'next'
+				else if(fieldNew.Id>fieldDB.Id) {//dbPK less than newPK, dbItem is 'next'
 					listDel.Add(fieldDB);
 					idxDB++;
 					continue;
@@ -293,7 +293,7 @@ namespace OpenDentBusiness.Crud{
 				}
 			}
 			for(int i=0;i<listDel.Count;i++) {
-				Delete(listDel[i].ProviderClinicNum);
+				Delete(listDel[i].Id);
 			}
 			if(rowsUpdatedCount>0 || listIns.Count>0 || listDel.Count>0) {
 				return true;

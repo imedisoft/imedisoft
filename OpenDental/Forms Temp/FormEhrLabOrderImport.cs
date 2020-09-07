@@ -175,8 +175,8 @@ namespace OpenDental {
 					}
 				}
 				ListEhrLabs[i].PatNum=PatCur.PatNum; 
-				Provider prov=Providers.GetProv(Security.CurrentUser.ProviderId);
-				if(Security.CurrentUser.ProviderId!=0 && EhrProvKeys.GetKeysByFLName(prov.LName,prov.FName).Count>0) {//The user who is currently logged in is a provider and has a valid EHR key.
+				Provider prov=Providers.GetById(Security.CurrentUser.ProviderId);
+				if(Security.CurrentUser.ProviderId!=0 && EhrProvKeys.GetKeysByFLName(prov.LastName,prov.FirstName).Count>0) {//The user who is currently logged in is a provider and has a valid EHR key.
 					ListEhrLabs[i].IsCpoe=true;
 				}
 				ListEhrLabs[i]=EhrLabs.SaveToDB(ListEhrLabs[i]);//SAVE

@@ -40,19 +40,19 @@ namespace OpenDentBusiness
 					result = sbErrors.ToString();
 					return;
 				}
-				Provider prov = Providers.GetProv(patient.PriProv);
+				Provider prov = Providers.GetById(patient.PriProv);
 				if (prov == null)
 				{
 					sbErrors.AppendLine("Patient does not have a primary provider.");
 					result = sbErrors.ToString();
 					return;
 				}
-				string strDeaNum = ProviderClinics.GetDEANum(prov.ProvNum, Clinics.ClinicId);//If no result found, retries using clinicNum=0.
+				string strDeaNum = ProviderClinics.GetDEANum(prov.Id, Clinics.Active.Id);//If no result found, retries using clinicNum=0.
 				if (string.IsNullOrWhiteSpace(strDeaNum))
 				{
 					sbErrors.AppendLine("Patient's provider does not have a DEA number.");
 				}
-				string stateWhereLicensed = ProviderClinics.GetStateWhereLicensed(patient.PriProv, Clinics.ClinicId);
+				string stateWhereLicensed = ProviderClinics.GetStateWhereLicensed(patient.PriProv, Clinics.Active.Id);
 				if (string.IsNullOrWhiteSpace(stateWhereLicensed))
 				{
 					sbErrors.AppendLine("Patient's provider is not licensed for any state.");

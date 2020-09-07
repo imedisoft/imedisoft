@@ -136,38 +136,38 @@ namespace OpenDentBusiness.HL7 {
 				prov=new Provider();
 				prov.Abbr=eID;//They can manually change this later.
 				prov.EcwID=eID;
-				prov.FeeSched=FeeScheds.GetFirst(true).FeeSchedNum;
+				prov.FeeScheduleId=FeeScheds.GetFirst(true).FeeSchedNum;
 			}
 			if(field.Components.Count==4) {//PV1 segment in format UPIN^LastName^FirstName^MI
-				if(prov.LName!=field.GetComponentVal(1)) {
+				if(prov.LastName!=field.GetComponentVal(1)) {
 					provChanged=true;
-					prov.LName=field.GetComponentVal(1);
+					prov.LastName=field.GetComponentVal(1);
 				}
-				if(prov.FName!=field.GetComponentVal(2)) {
+				if(prov.FirstName!=field.GetComponentVal(2)) {
 					provChanged=true;
-					prov.FName=field.GetComponentVal(2);
+					prov.FirstName=field.GetComponentVal(2);
 				}
-				if(prov.MI!=field.GetComponentVal(3)) {
+				if(prov.Initials!=field.GetComponentVal(3)) {
 					provChanged=true;
-					prov.MI=field.GetComponentVal(3);
+					prov.Initials=field.GetComponentVal(3);
 				}
 			}
 			else if(field.Components.Count==2) {//AIG segment in format UPIN^LastName, FirstName MI
 				string[] components=field.GetComponentVal(1).Split(' ');
 				if(components.Length>0) {
 					components[0]=components[0].TrimEnd(',');
-					if(prov.LName!=components[0]) {
+					if(prov.LastName!=components[0]) {
 						provChanged=true;
-						prov.LName=components[0];
+						prov.LastName=components[0];
 					}
 				}
-				if(components.Length>1 && prov.FName!=components[1]) {
+				if(components.Length>1 && prov.FirstName!=components[1]) {
 					provChanged=true;
-					prov.FName=components[1];
+					prov.FirstName=components[1];
 				}
-				if(components.Length>2 && prov.MI!=components[2]) {
+				if(components.Length>2 && prov.Initials!=components[2]) {
 					provChanged=true;
-					prov.MI=components[2];
+					prov.Initials=components[2];
 				}
 			}
 			if(isNewProv) {
@@ -178,7 +178,7 @@ namespace OpenDentBusiness.HL7 {
 				Providers.Update(prov);
 				Providers.RefreshCache();
 			}
-			return prov.ProvNum;
+			return prov.Id;
 		}
 
 		///<summary>This field could be a CWE data type or a XCN data type, depending on if it came from an AIG segment, an AIP segment, or a PV1 segment.  The AIG segment would have this as a CWE data type in the format ProvID^LName, FName^^Abbr.  For the AIP and PV1 segments, the data type is XCN and the format would be ProvID^LName^FName^^^Abbr.  The ProvID is used first.  This will contain the root OID and ProvNum extension.  If it has the OD root OID for a provider, the number is assumed to be the OD ProvNum and used to find the provider.  If the root OID is not the OD root, it is used for on oidexternal table lookup.  If the provider is not found from the ID in either the provider table or the oidexternals table, then an attempt is made to find the provider by name and abbreviation.  This will return 0 if the field or segName are null or if no provider can be found.  A new provider will not be inserted with the information provided if not found by ProvID or name and abbr.  This field is repeatable, so we will check all repetitions for valid provider ID's or name/abbr combinations.</summary>
@@ -205,7 +205,7 @@ namespace OpenDentBusiness.HL7 {
 			if(strProvId!="" && strProvIdRoot!="") {
 				if(strProvIdRoot==OIDInternals.GetForType(IdentifierType.Provider).IDRoot) {//The office's root OID for a provider object, ProvId should be the OD ProvNum
 					try {
-						if(Providers.GetProv(PIn.Long(strProvId))!=null) {
+						if(Providers.GetById(PIn.Long(strProvId))!=null) {
 							provNum=PIn.Long(strProvId);//if component is empty string, provNum will be 0
 						}
 					}
@@ -244,7 +244,7 @@ namespace OpenDentBusiness.HL7 {
 				}
 				if(provNum==0 && strProvIdRoot==OIDInternals.GetForType(IdentifierType.Provider).IDRoot) {//The office's root OID for a provider object, ProvId should be the OD ProvNum
 					try {
-						if(Providers.GetProv(PIn.Long(strProvId))!=null) {
+						if(Providers.GetById(PIn.Long(strProvId))!=null) {
 							provNum=PIn.Long(strProvId);//if component is empty string, provNum will be 0
 						}
 					}
@@ -311,7 +311,7 @@ namespace OpenDentBusiness.HL7 {
 					if(listProvs[i].Abbr.ToLower()==provAbbr.ToLower()) {
 						//There should be only one provider with this Abbr, although we only warn them about the duplication and allow them to have more than one with the same Abbr.
 						//With the LName, FName, and Abbr we can be more certain we retrieve the correct provider.
-						provNum=listProvs[i].ProvNum;
+						provNum=listProvs[i].Id;
 					}
 				}
 			}
@@ -346,7 +346,7 @@ namespace OpenDentBusiness.HL7 {
 					if(listProvs[p].Abbr.ToLower()==provAbbr.ToLower()) {
 						//There should be only one provider with this Abbr, although we only warn them about the duplication and allow them to have more than one with the same Abbr.
 						//With the LName, FName, and Abbr we can be more certain we retrieve the correct provider.
-						provNum=listProvs[p].ProvNum;
+						provNum=listProvs[p].Id;
 						break;
 					}
 				}

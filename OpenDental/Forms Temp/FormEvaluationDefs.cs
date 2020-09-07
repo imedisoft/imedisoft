@@ -6,6 +6,8 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormEvaluationDefs:ODForm {
@@ -36,7 +38,7 @@ namespace OpenDental {
 		private void FillGrid() {
 			long courseNum=0;
 			if(comboCourse.SelectedIndex!=0) {
-				courseNum=_listSchoolCourses[comboCourse.SelectedIndex-1].SchoolCourseNum;
+				courseNum=_listSchoolCourses[comboCourse.SelectedIndex-1].Id;
 			}
 			DataTable table=EvaluationDefs.GetAllByCourse(courseNum);
 			gridMain.BeginUpdate();
@@ -110,7 +112,7 @@ namespace OpenDental {
 			evalNew.DateEval=DateTime.Today;
 			evalNew.EvalTitle=evalDef.EvalTitle;
 			evalNew.GradingScaleNum=evalDef.GradingScaleNum;
-			evalNew.InstructNum=Security.CurrentUser.ProviderId;
+			evalNew.InstructNum=Security.CurrentUser.ProviderId??0;
 			evalNew.SchoolCourseNum=evalDef.SchoolCourseNum;
 			evalNew.EvaluationNum=Evaluations.Insert(evalNew);
 			List<EvaluationCriterionDef> evalCritDefs=EvaluationCriterionDefs.GetAllForEvaluationDef(evalDef.EvaluationDefNum);

@@ -116,11 +116,11 @@ namespace OpenDental{
 			string subtitleUnearned="";
 			if(checkAllProv.Checked) {
 				subtitleProvs="All Providers";
-				listProvNums=_listProviders.Select(x => x.ProvNum).ToList();
+				listProvNums=_listProviders.Select(x => x.Id).ToList();
 			}
 			else {
 				subtitleProvs=string.Join(", ",listBoxProv.GetListSelected<Provider>().Select(x => x.Abbr));
-				listProvNums=listBoxProv.GetListSelected<Provider>().Select(x => x.ProvNum).ToList();
+				listProvNums=listBoxProv.GetListSelected<Provider>().Select(x => x.Id).ToList();
 			}
 			if(checkAllUnearnedTypes.Checked) {
 				subtitleUnearned="All Hidden Unearned";

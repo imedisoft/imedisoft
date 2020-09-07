@@ -481,12 +481,12 @@ namespace OpenDental
 			List<long> listProvNums=new List<long>();
 			if(checkAllProvs.Checked) {
 				for(int i = 0;i<_listProviders.Count;i++) {
-					listProvNums.Add(_listProviders[i].ProvNum);
+					listProvNums.Add(_listProviders[i].Id);
 				}
 			}
 			else {
 				for(int i=0;i<listProvs.SelectedIndices.Count;i++) {
-					listProvNums.Add(_listProviders[listProvs.SelectedIndices[i]].ProvNum);
+					listProvNums.Add(_listProviders[listProvs.SelectedIndices[i]].Id);
 				}
 			}
 			ReportComplex report=new ReportComplex(true,true);

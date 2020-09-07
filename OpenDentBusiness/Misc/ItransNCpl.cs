@@ -243,9 +243,9 @@ namespace OpenDentBusiness {
 					});
 					break;
 			}
-			CanadianNetwork network=listCanadianNetworks.FirstOrDefault(x => x.Abbrev==odAbbr);
+			CanadianNetwork network=listCanadianNetworks.FirstOrDefault(x => x.Abbr==odAbbr);
 			if(network!=null) {
-				odCarrier.CanadianNetworkNum=network.CanadianNetworkNum;
+				odCarrier.CanadianNetworkNum=network.Id;
 			}
 		}
 

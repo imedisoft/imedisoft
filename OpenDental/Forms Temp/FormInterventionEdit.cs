@@ -200,21 +200,21 @@ namespace OpenDental {
 			//Intervention grid may contain medications, have to insert a new med if necessary and load FormMedPat for user to input data
 			if(codeSys=="RXNORM" && !checkPatientDeclined.Checked) {
 				//codeVal will be RxCui of medication, see if it already exists in Medication table
-				Medication medCur=Medications.GetMedicationFromDbByRxCui(PIn.Long(codeVal));
+				Medication medCur=Medications.GetByRxCuiNoCache(codeVal);
 				if(medCur==null) {//no med with this RxCui, create one
 					medCur=new Medication();
 					Medications.Insert(medCur);//so that we will have the primary key
-					medCur.GenericNum=medCur.MedicationNum;
-					medCur.RxCui=PIn.Long(codeVal);
-					medCur.MedName=RxNorms.GetDescByRxCui(codeVal);
+					medCur.GenericId=medCur.Id;
+					medCur.RxCui=codeVal;
+					medCur.Name=RxNorms.GetDescByRxCui(codeVal);
 					Medications.Update(medCur);
 					Medications.RefreshCache();//refresh cache to include new medication
 				}
 				MedicationPat medPatCur=new MedicationPat();
 				medPatCur.PatNum=InterventionCur.PatNum;
 				medPatCur.ProvNum=InterventionCur.ProvNum;
-				medPatCur.MedicationNum=medCur.MedicationNum;
-				medPatCur.RxCui=medCur.RxCui;
+				medPatCur.MedicationNum=medCur.Id;
+				medPatCur.RxCui=int.Parse(medCur.RxCui);
 				medPatCur.DateStart=date;
 				FormMedPat FormMP=new FormMedPat();
 				FormMP.MedicationPatCur=medPatCur;

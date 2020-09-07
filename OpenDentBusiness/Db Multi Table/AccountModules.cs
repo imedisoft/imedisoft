@@ -3757,7 +3757,7 @@ namespace OpenDentBusiness
 			//	clinicInsBillingProv=Clinics.GetClinic(ClaimCur.ClinicNum).InsBillingProv;
 			//}
 			ClaimCur.ProvBill = Providers.GetBillingProviderId(ClaimCur.ProvTreat, ClaimCur.ClinicNum);//,useClinic,clinicInsBillingProv);//OK if zero, because it will get fixed in claim
-			Provider prov = Providers.GetProv(ClaimCur.ProvTreat);
+			Provider prov = Providers.GetById(ClaimCur.ProvTreat);
 			if (prov.ProvNumBillingOverride != 0)
 			{
 				ClaimCur.ProvBill = prov.ProvNumBillingOverride;
@@ -3853,7 +3853,7 @@ namespace OpenDentBusiness
 					CovCat orthoCategory = CovCats.GetFirstOrDefault(x => x.EbenefitCat == EbenefitCategory.Orthodontics, true);
 					if (orthoCategory != null)
 					{
-						if (CovSpans.IsCodeInSpans(procCodeCur.ProcCode, CovSpans.GetWhere(x => x.CovCatNum == orthoCategory.CovCatNum).ToArray()))
+						if (CovSpans.IsCodeInSpans(procCodeCur.ProcCode, CovSpans.GetWhere(x => x.CovCatNum == orthoCategory.Id).ToArray()))
 						{
 							ClaimCur.IsOrtho = true;
 							//ClaimCur.OrthoTotalM is a byte and patNote.OrthoMonthsTreatOverride is an integer so make sure it can fit.

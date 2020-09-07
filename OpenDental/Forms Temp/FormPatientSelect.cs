@@ -140,16 +140,13 @@ namespace Imedisoft.Forms
 				}
 			}
 
-			if (PrefC.HasClinicsEnabled)
+			if (Clinics.ClinicId == null)
 			{
-				if (Clinics.ClinicId == 0)
-				{
-					clinicComboBox.IsAllSelected = true;
-				}
-				else
-				{
-					clinicComboBox.SelectedClinicNum = Clinics.ClinicId;
-				}
+				clinicComboBox.IsAllSelected = true;
+			}
+			else
+			{
+				clinicComboBox.SelectedClinicNum = Clinics.ClinicId.Value;
 			}
 
 			if (Prefs.GetBool(PrefName.PatientSSNMasked, true))
@@ -833,12 +830,12 @@ namespace Imedisoft.Forms
 					// clinics enabled and all isn't selected
 					// Set the patients primary provider to the clinic default provider.
 
-					primaryProviderId = Providers.GetDefaultProvider(clinicComboBox.SelectedClinicNum)?.ProvNum;
+					primaryProviderId = Providers.GetDefaultProvider(clinicComboBox.SelectedClinicNum)?.Id;
 				}
 				else
 				{
 					// Set the patients primary provider to the practice default provider.
-					primaryProviderId = Providers.GetDefaultProvider()?.ProvNum;
+					primaryProviderId = Providers.GetDefaultProvider()?.Id;
 				}
 			}
 

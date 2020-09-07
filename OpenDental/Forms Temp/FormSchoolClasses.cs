@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using System.Collections.Generic;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -111,7 +113,7 @@ namespace OpenDental{
 			SchoolClasses.RefreshCache();
 			listMain.Items.Clear();
 			for(int i=0;i<_listSchoolCasses.Count;i++){
-				listMain.Items.Add(_listSchoolCasses[i].GradYear.ToString()+" - "+_listSchoolCasses[i].Description);
+				listMain.Items.Add(_listSchoolCasses[i].Year.ToString()+" - "+_listSchoolCasses[i].Description);
 				if(_listSchoolCasses[i].Id==previousSelected){
 					listMain.SelectedIndex=i;
 				}

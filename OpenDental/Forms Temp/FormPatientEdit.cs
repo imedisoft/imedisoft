@@ -2878,7 +2878,7 @@ namespace OpenDental{
 			//Send medication history consent to DoseSpot if checkDoseSpotConsent is checked.
 			if(!_patCurNote.Consent.HasFlag(PatConsentFlags.ShareMedicationHistoryErx) && checkDoseSpotConsent.Checked) {
 				try {
-					long clinicNum=Clinics.ClinicId;
+					long clinicNum=Clinics.Active.Id;
 					if(PrefC.HasClinicsEnabled && !Prefs.GetBool(PrefName.ElectronicRxClinicUseSelected)) {
 						clinicNum=PatCur.ClinicNum;
 					}

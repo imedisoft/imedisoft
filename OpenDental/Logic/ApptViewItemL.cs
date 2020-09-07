@@ -56,8 +56,8 @@ namespace OpenDental
 					{
 						foreach (Operatory op in visOps)
 						{
-							Provider provDent = Providers.GetProv(op.ProvDentist);
-							Provider provHyg = Providers.GetProv(op.ProvHygienist);
+							Provider provDent = Providers.GetById(op.ProvDentist);
+							Provider provHyg = Providers.GetById(op.ProvHygienist);
 							if (provDent != null)
 							{
 								visProvs.Add(provDent);
@@ -97,7 +97,7 @@ namespace OpenDental
 						{
 							continue;//handled below in AddOpsForScheduledProvs 
 						}
-						Operatory op = Operatories.GetFirstOrDefault(x => x.OperatoryNum == listApptViewItems[i].OpNum, true);
+						Operatory op = Operatories.GetFirstOrDefault(x => x.Id == listApptViewItems[i].OpNum, true);
 						if (op != null)
 						{
 							visOps.Add(op);
@@ -109,7 +109,7 @@ namespace OpenDental
 						{
 							continue;
 						}
-						Provider prov = Providers.GetFirstOrDefault(x => x.ProvNum == listApptViewItems[i].ProvNum, true);
+						Provider prov = Providers.GetFirstOrDefault(x => x.Id == listApptViewItems[i].ProvNum, true);
 						if (prov != null)
 						{
 							visProvs.Add(prov);
@@ -123,10 +123,10 @@ namespace OpenDental
 				rowsPerIncr = apptViewCur.RowsPerIncr;
 			}
 			//Remove any duplicates before return.
-			visOps = visOps.GroupBy(x => x.OperatoryNum).Select(x => x.First()).ToList();
+			visOps = visOps.GroupBy(x => x.Id).Select(x => x.First()).ToList();
 			if (isFillVisProvs)
 			{
-				visProvs = visProvs.GroupBy(x => x.ProvNum).Select(x => x.First()).ToList();
+				visProvs = visProvs.GroupBy(x => x.Id).Select(x => x.First()).ToList();
 			}
 		}
 
@@ -153,7 +153,7 @@ namespace OpenDental
 			for (int i = 0; i < listOpsShort.Count; i++)
 			{//loop through all ops for all views (except the hidden ones, of course)
 			 //If this operatory was not one of the selected Ops from the Appt View Edit window, skip it.
-				if (!listApptViewOpNums.Contains(listOpsShort[i].OperatoryNum))
+				if (!listApptViewOpNums.Contains(listOpsShort[i].Id))
 				{
 					continue;
 				}
@@ -200,7 +200,7 @@ namespace OpenDental
 						{
 							continue;
 						}
-						if (listSchedOps[p] == listOpsShort[i].OperatoryNum)
+						if (listSchedOps[p] == listOpsShort[i].Id)
 						{
 							Operatory op = listOpsShort[i];
 							indexOp = Operatories.GetOrder(listSchedOps[p]);
@@ -218,7 +218,7 @@ namespace OpenDental
 					 //Only add the op if the clinic option was not set in the appt view or if the op is assigned to that clinic.
 						if (apptViewCur.ClinicNum == 0 || apptViewCur.ClinicNum == listOpsShort[i].ClinicNum)
 						{
-							indexOp = Operatories.GetOrder(listOpsShort[i].OperatoryNum);
+							indexOp = Operatories.GetOrder(listOpsShort[i].Id);
 							if (indexOp != -1 && !visOps.Contains(listOpsShort[i]))
 							{
 								visOps.Add(listOpsShort[i]);
@@ -233,7 +233,7 @@ namespace OpenDental
 				}
 			}
 			//Remove any duplicates before return.
-			visOps = visOps.GroupBy(x => x.OperatoryNum).Select(x => x.First()).ToList();
+			visOps = visOps.GroupBy(x => x.Id).Select(x => x.First()).ToList();
 		}
 
 		/// <summary>

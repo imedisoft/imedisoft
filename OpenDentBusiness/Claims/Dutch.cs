@@ -40,7 +40,7 @@ namespace OpenDentBusiness.Eclaims
 			
 
 			Claim claim = Claims.GetClaim(queueItem.ClaimNum);
-			Provider provBill = Providers.GetProv(claim.ProvBill);
+			Provider provBill = Providers.GetById(claim.ProvBill);
 			Patient pat = Patients.GetPat(claim.PatNum);
 			InsPlan insplan = InsPlans.GetPlan(claim.PlanNum, new List<InsPlan>());
 			InsSub insSub = InsSubs.GetSub(claim.InsSubNum, new List<InsSub>());

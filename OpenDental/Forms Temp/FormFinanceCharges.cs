@@ -732,7 +732,7 @@ namespace OpenDental{
 			textAtLeast.Text=Prefs.GetString(PrefName.FinanceChargeAtLeast);
 			textOver.Text=Prefs.GetString(PrefName.FinanceChargeOnlyIfOver);
 			textExcludeNotBilledSince.Text=GetFinanceBillingLastRun().ToShortDateString();
-			comboSpecificProv.Items.AddProvsAbbr(Providers.GetProvsForClinic(Clinics.ClinicId));
+			comboSpecificProv.Items.AddProvsAbbr(Providers.GetProvsForClinic(Clinics.Active.Id));
 			comboSpecificProv.SelectedIndex=0;
 			radioPatPriProv.Checked=true;
 		}

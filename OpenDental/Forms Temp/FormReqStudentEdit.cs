@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using Imedisoft.Forms;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -320,10 +321,10 @@ namespace OpenDental{
 		private void FormReqStudentEdit_Load(object sender, System.EventArgs e) {
 			//There should only be two types of users who are allowed to get this far:
 			//Students editing their own req, and users with setup perm.  But we will double check.
-			Provider provUser=Providers.GetProv(Security.CurrentUser.ProviderId);
+			Provider provUser=Providers.GetById(Security.CurrentUser.ProviderId);
 			if(provUser!=null && !provUser.IsInstructor) {//A student is logged in
 				//the student only has permission to view/attach/detach their own requirements
-				if(provUser.ProvNum!=ReqCur.ProvNum) {
+				if(provUser.Id!=ReqCur.ProvNum) {
 					//but this should never happen
 					MessageBox.Show("Students may only edit their own requirements.");
 					butDelete.Enabled=false;
@@ -369,7 +370,7 @@ namespace OpenDental{
 			_listProviders=Providers.GetDeepCopy(true);
 			for(int i=0;i<_listProviders.Count;i++) {
 				comboInstructor.Items.Add(_listProviders[i].GetLongDesc());
-				if(_listProviders[i].ProvNum==ReqCur.InstructorNum) {
+				if(_listProviders[i].Id==ReqCur.InstructorNum) {
 					comboInstructor.SelectedIndex=i+1;
 				}
 			}
@@ -437,7 +438,7 @@ namespace OpenDental{
 				ReqCur.InstructorNum=0;
 			}
 			else{
-				ReqCur.InstructorNum=_listProviders[comboInstructor.SelectedIndex-1].ProvNum;
+				ReqCur.InstructorNum=_listProviders[comboInstructor.SelectedIndex-1].Id;
 			}
 			//DateCompleted
 			ReqCur.DateCompleted=PIn.Date(textDateCompleted.Text);

@@ -62,7 +62,7 @@ namespace OpenDentBusiness{
 			List<ReminderRule> fullListReminders = Crud.ReminderRuleCrud.SelectMany("SELECT * FROM reminderrule");
 			List<ReminderRule> retVal = new List<ReminderRule>();
 			List<Problem> listProblems = Problems.GetByPatient(PatCur.PatNum).ToList();
-			List<Medication> listMedications = Medications.GetMedicationsByPat(PatCur.PatNum);
+			List<Medication> listMedications = Medications.GetByPatientNoCache(PatCur.PatNum).ToList();
 			List<Allergy> listAllergies = Allergies.GetByPatient(PatCur.PatNum);
 			List<LabResult> listLabResults = LabResults.GetAllForPatient(PatCur.PatNum);
 			for(int i=0;i<fullListReminders.Count;i++) {
@@ -77,7 +77,7 @@ namespace OpenDentBusiness{
 						break;
 					case EhrCriterion.Medication:
 						for(int j=0;j<listMedications.Count;j++) {
-							if(fullListReminders[i].CriterionFK==listMedications[j].MedicationNum) {
+							if(fullListReminders[i].CriterionFK==listMedications[j].Id) {
 								retVal.Add(fullListReminders[i]);
 								break;
 							}

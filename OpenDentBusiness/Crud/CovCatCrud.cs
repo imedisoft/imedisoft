@@ -43,7 +43,7 @@ namespace OpenDentBusiness.Crud{
 			CovCat covCat;
 			foreach(DataRow row in table.Rows) {
 				covCat=new CovCat();
-				covCat.CovCatNum     = PIn.Long  (row["CovCatNum"].ToString());
+				covCat.Id     = PIn.Long  (row["CovCatNum"].ToString());
 				covCat.Description   = PIn.String(row["Description"].ToString());
 				covCat.DefaultPercent= PIn.Int   (row["DefaultPercent"].ToString());
 				covCat.CovOrder      = PIn.Byte  (row["CovOrder"].ToString());
@@ -68,7 +68,7 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("EbenefitCat");
 			foreach(CovCat covCat in listCovCats) {
 				table.Rows.Add(new object[] {
-					POut.Long  (covCat.CovCatNum),
+					POut.Long  (covCat.Id),
 					            covCat.Description,
 					POut.Int   (covCat.DefaultPercent),
 					POut.Byte  (covCat.CovOrder),
@@ -87,7 +87,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one CovCat into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(CovCat covCat,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				covCat.CovCatNum=ReplicationServers.GetKey("covcat","CovCatNum");
+				covCat.Id=ReplicationServers.GetKey("covcat","CovCatNum");
 			}
 			string command="INSERT INTO covcat (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -95,7 +95,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="Description,DefaultPercent,CovOrder,IsHidden,EbenefitCat) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(covCat.CovCatNum)+",";
+				command+=POut.Long(covCat.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(covCat.Description)+"',"
@@ -107,9 +107,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				covCat.CovCatNum=Database.ExecuteInsert(command);
+				covCat.Id=Database.ExecuteInsert(command);
 			}
-			return covCat.CovCatNum;
+			return covCat.Id;
 		}
 
 		///<summary>Inserts one CovCat into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -122,14 +122,14 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO covcat (";
 			if(!useExistingPK) {
-				covCat.CovCatNum=ReplicationServers.GetKeyNoCache("covcat","CovCatNum");
+				covCat.Id=ReplicationServers.GetKeyNoCache("covcat","CovCatNum");
 			}
 			if(useExistingPK) {
 				command+="CovCatNum,";
 			}
 			command+="Description,DefaultPercent,CovOrder,IsHidden,EbenefitCat) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(covCat.CovCatNum)+",";
+				command+=POut.Long(covCat.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(covCat.Description)+"',"
@@ -141,9 +141,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				covCat.CovCatNum=Database.ExecuteInsert(command);
+				covCat.Id=Database.ExecuteInsert(command);
 			}
-			return covCat.CovCatNum;
+			return covCat.Id;
 		}
 
 		///<summary>Updates one CovCat in the database.</summary>
@@ -154,7 +154,7 @@ namespace OpenDentBusiness.Crud{
 				+"CovOrder      =  "+POut.Byte  (covCat.CovOrder)+", "
 				+"IsHidden      =  "+POut.Bool  (covCat.IsHidden)+", "
 				+"EbenefitCat   =  "+POut.Int   ((int)covCat.EbenefitCat)+" "
-				+"WHERE CovCatNum = "+POut.Long(covCat.CovCatNum);
+				+"WHERE CovCatNum = "+POut.Long(covCat.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
@@ -185,7 +185,7 @@ namespace OpenDentBusiness.Crud{
 				return false;
 			}
 			command="UPDATE covcat SET "+command
-				+" WHERE CovCatNum = "+POut.Long(covCat.CovCatNum);
+				+" WHERE CovCatNum = "+POut.Long(covCat.Id);
 			Database.ExecuteNonQuery(command);
 			return true;
 		}

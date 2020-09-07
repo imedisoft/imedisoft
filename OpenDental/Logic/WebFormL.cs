@@ -390,11 +390,11 @@ namespace OpenDental {
 			}
 			if(!PrefC.HasClinicsEnabled) {
 				//Set the patients primary provider to the practice default provider.
-				newPat.PriProv=Providers.GetDefaultProvider().ProvNum;
+				newPat.PriProv=Providers.GetDefaultProvider().Id;
 			}
 			else {//Using clinics.
 						//Set the patients primary provider to the clinic default provider.
-				newPat.PriProv=Providers.GetDefaultProvider(Clinics.ClinicId).ProvNum;
+				newPat.PriProv=Providers.GetDefaultProvider(Clinics.Active.Id).Id;
 			}
 			Type t=newPat.GetType();
 			FieldInfo[] fi=t.GetFields();

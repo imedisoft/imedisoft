@@ -6,6 +6,8 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using System.Collections.Generic;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -131,7 +133,7 @@ namespace OpenDental{
 		private void FillGrid(){
 			long previousSelected=-1;
 			if(gridMain.GetSelectedIndex()!=-1){
-				previousSelected=_listSchoolCourses[gridMain.GetSelectedIndex()].SchoolCourseNum;
+				previousSelected=_listSchoolCourses[gridMain.GetSelectedIndex()].Id;
 			}
 			SchoolCourses.RefreshCache();
 			gridMain.BeginUpdate();

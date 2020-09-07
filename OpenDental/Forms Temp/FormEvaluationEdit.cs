@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using Imedisoft.Forms;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormEvaluationEdit:ODForm {
@@ -34,9 +35,9 @@ namespace OpenDental {
 			_evalGradeScale=GradingScales.GetOne(_evalCur.GradingScaleNum);
 			_listEvalGradeItems=GradingScaleItems.Refresh(_evalCur.GradingScaleNum);
 			textGradeScaleName.Text=_evalGradeScale.Description;
-			_provInstructor=Providers.GetProv(_evalCur.InstructNum);
+			_provInstructor=Providers.GetById(_evalCur.InstructNum);
 			textInstructor.Text=_provInstructor.GetLongDesc();
-			_provStudent=Providers.GetProv(_evalCur.StudentNum);
+			_provStudent=Providers.GetById(_evalCur.StudentNum);
 			if(_provStudent!=null) {
 				textStudent.Text=_provStudent.GetLongDesc();
 			}
@@ -312,8 +313,8 @@ namespace OpenDental {
 			FormPP.IsStudentPicker=true;
 			FormPP.ShowDialog();
 			if(FormPP.DialogResult==DialogResult.OK) {
-				_provStudent=Providers.GetProv(FormPP.SelectedProviderId);
-				_evalCur.StudentNum=_provStudent.ProvNum;
+				_provStudent=Providers.GetById(FormPP.SelectedProviderId);
+				_evalCur.StudentNum=_provStudent.Id;
 				textStudent.Text=_provStudent.GetLongDesc();
 			}
 		}
@@ -354,7 +355,7 @@ namespace OpenDental {
 				EvaluationCriterions.Update(_listEvalCrits[i]);
 			}
 			_evalCur.DateEval=DateTime.Parse(textDate.Text);
-			_evalCur.StudentNum=_provStudent.ProvNum;
+			_evalCur.StudentNum=_provStudent.Id;
 			_evalCur.OverallGradeShowing=textGradeShowing.Text;
 			_evalCur.OverallGradeNumber=PIn.Float(textGradeNumber.Text);
 			if(!String.IsNullOrWhiteSpace(textGradeShowingOverride.Text)) {

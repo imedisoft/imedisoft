@@ -120,7 +120,7 @@ namespace OpenDentBusiness{
 				//Simply return all visible ops.  These are the ops that the 'none' appointment view currently displays.
 				//Do not consider operatories that are not associated with the currently selected clinic.
 				return Operatories.GetWhere(x => !hasClinicsEnabled || Clinics.ClinicId==0 || x.ClinicNum==Clinics.ClinicId,true)
-					.Select(x => x.OperatoryNum).ToList();
+					.Select(x => x.Id).ToList();
 			}
 			return ApptViewItems.GetWhere(x => x.ApptViewNum==apptViewNum && x. OpNum!=0).Select(x => x.OpNum).ToList();
 		}

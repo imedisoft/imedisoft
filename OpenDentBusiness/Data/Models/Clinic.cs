@@ -95,7 +95,7 @@ namespace OpenDentBusiness
 		/// The ID of the provider for insurance billing. Only applies if the value of <see cref="InsBillingProviderType"/> is 'S'.
 		/// </summary>
 		/// <seealso cref="InsBillingProviderType"/>
-		[ForeignKey(typeof(Provider), nameof(Provider.ProvNum))]
+		[ForeignKey(typeof(Provider), nameof(Provider.Id))]
 		public long? InsBillingProviderId;
 
 		/// <summary>
@@ -119,7 +119,7 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// Used in place of the default practice provider when making new patients.
 		/// </summary>
-		[ForeignKey(typeof(Provider), nameof(Provider.ProvNum))]
+		[ForeignKey(typeof(Provider), nameof(Provider.Id))]
 		public long? DefaultProviderId;
 
 		/// <summary>

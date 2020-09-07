@@ -4,6 +4,8 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -32,7 +34,7 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			CourseCur=courseCur.Copy();
+			CourseCur=courseCur;
 			
 		}
 
@@ -171,7 +173,7 @@ namespace OpenDental{
 					return;
 				}
 				try{
-					SchoolCourses.Delete(CourseCur.SchoolCourseNum);
+					SchoolCourses.Delete(CourseCur.Id);
 				}
 				catch(Exception ex){
 					MessageBox.Show(ex.Message);
@@ -184,7 +186,7 @@ namespace OpenDental{
 		private void butOK_Click(object sender, System.EventArgs e) {
 			CourseCur.CourseID=textCourseID.Text;
 			CourseCur.Descript=textDescript.Text;
-			SchoolCourses.InsertOrUpdate(CourseCur,IsNew);
+			SchoolCourses.InsertOrUpdate(CourseCur);
 			DialogResult=DialogResult.OK;
 		}
 

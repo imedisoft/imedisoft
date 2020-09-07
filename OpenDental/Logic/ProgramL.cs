@@ -530,7 +530,7 @@ namespace OpenDental
 					//User should not have PL hidden if Clinics are not Enabled, otherwise this could create a situation where users may turn clinics off but 
 					//have hidden the PL button for HQ and then be unable to turn the button back on without re-enabling Clinics.
 					ProgramProperty programProp = ProgramProperties.GetPropForProgByDesc(programCur.Id
-						, ProgramProperties.PropertyDescs.ClinicHideButton, Clinics.ClinicId);
+						, ProgramProperties.PropertyDescs.ClinicHideButton, Clinics.Active.Id);
 					if (programProp != null)
 					{
 						continue;//If there exists a programProp for a clinic which should have its buttons hidden, carry on and do not display the button.

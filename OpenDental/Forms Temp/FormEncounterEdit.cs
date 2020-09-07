@@ -32,13 +32,13 @@ namespace OpenDental {
 			_listProviders=Providers.GetDeepCopy(true);
 			for(int i=0;i<_listProviders.Count;i++) {
 				comboProv.Items.Add(_listProviders[i].GetLongDesc());//Only visible provs added to combobox.
-				if(_listProviders[i].ProvNum==_encCur.ProvNum) {
+				if(_listProviders[i].Id==_encCur.ProvNum) {
 					comboProv.SelectedIndex=i;//Sets combo text too.
 				}
 			}
 			if(_provNumSelected==0) {//Is new
 				comboProv.SelectedIndex=0;
-				_provNumSelected=_listProviders[0].ProvNum;
+				_provNumSelected=_listProviders[0].Id;
 			}
 			if(comboProv.SelectedIndex==-1) {//The provider exists but is hidden
 				comboProv.Text=Providers.GetLongDesc(_provNumSelected);//Appends "(hidden)" to the end of the long description.
@@ -79,13 +79,13 @@ namespace OpenDental {
 		}
 
 		private void comboProv_SelectionChangeCommitted(object sender,EventArgs e) {
-			_provNumSelected=_listProviders[comboProv.SelectedIndex].ProvNum;
+			_provNumSelected=_listProviders[comboProv.SelectedIndex].Id;
 		}
 
 		private void butPickProv_Click(object sender,EventArgs e) {
 			FormProviderPick FormP=new FormProviderPick();
 			if(comboProv.SelectedIndex>-1) {
-				FormP.SelectedProviderId=_listProviders[comboProv.SelectedIndex].ProvNum;
+				FormP.SelectedProviderId=_listProviders[comboProv.SelectedIndex].Id;
 			}
 			FormP.ShowDialog();
 			if(FormP.DialogResult!=DialogResult.OK) {

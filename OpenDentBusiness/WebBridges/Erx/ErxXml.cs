@@ -15,7 +15,7 @@ namespace OpenDentBusiness {
 
 		///<summary>Only called from Chart for now.  No validation is performed here.  Validate before calling.  There are many validtion checks, including the NPI must be exactly 10 digits.</summary>
 		public static string BuildNewCropClickThroughXml(Provider prov,Employee emp,Patient pat,out NCScript ncScript) {
-			string deaNumDefault=ProviderClinics.GetDEANum(prov.ProvNum);
+			string deaNumDefault=ProviderClinics.GetDEANum(prov.Id);
 			ncScript=new NCScript();
 			ncScript.Credentials=new CredentialsType();
 			ncScript.Credentials.partnerName=NewCrop.NewCropPartnerName;
@@ -76,7 +76,7 @@ namespace OpenDentBusiness {
 			ncScript.Account.accountPrimaryPhoneNumber=practicePhone;//Validated to be 10 digits within the chart.
 			ncScript.Account.accountPrimaryFaxNumber=practiceFax;//Validated to be 10 digits within the chart.
 			ncScript.Location=new LocationType();
-			ProviderClinic provClinic=ProviderClinics.GetOne(prov.ProvNum,0);//Default providerclinic.  This is needed for offices that don't use clinics.
+			ProviderClinic provClinic=ProviderClinics.GetOne(prov.Id,0);//Default providerclinic.  This is needed for offices that don't use clinics.
 			if(!PrefC.HasClinicsEnabled
 				|| (!Prefs.GetBool(PrefName.ElectronicRxClinicUseSelected) && pat.ClinicNum==0)
 				|| (Prefs.GetBool(PrefName.ElectronicRxClinicUseSelected) && Clinics.ClinicId==0 && pat.ClinicNum==0))
@@ -97,13 +97,13 @@ namespace OpenDentBusiness {
 			}
 			else { //Using clinics.
 				Clinic clinic=null;
-				if(Prefs.GetBool(PrefName.ElectronicRxClinicUseSelected) && Clinics.ClinicId!=0) {
-					clinic=Clinics.GetById(Clinics.ClinicId);
+				if(Prefs.GetBool(PrefName.ElectronicRxClinicUseSelected) && Clinics.Active!=null) {
+					clinic=Clinics.Active;
 				}
 				else {
 					clinic=Clinics.GetById(pat.ClinicNum);
 				}
-				provClinic=ProviderClinics.GetOneOrDefault(prov.ProvNum,clinic.Id);
+				provClinic=ProviderClinics.GetOneOrDefault(prov.Id,clinic.Id);
 				ncScript.Location.ID=clinic.Id.ToString();//A positive integer.
 				ncScript.Location.locationName=clinic.Description;//May be blank.
 				ncScript.Location.LocationAddress=new AddressType();
@@ -131,7 +131,7 @@ namespace OpenDentBusiness {
 			//          Users are always identified by LicensedPrescriber ID, since their name or credentials could potentially change."
 			if(isMidlevel) {
 				ncScript.MidlevelPrescriber=new MidlevelPrescriberType();
-				ncScript.MidlevelPrescriber.ID=prov.NationalProvID;
+				ncScript.MidlevelPrescriber.ID=prov.NationalProviderID;
 				//UPIN is obsolete
 				ncScript.MidlevelPrescriber.LicensedPrescriberName=NewCrop.GetPersonNameForProvider(prov);
 				if(deaNumDefault.ToLower()=="none") {
@@ -141,18 +141,18 @@ namespace OpenDentBusiness {
 					ncScript.MidlevelPrescriber.dea=deaNumDefault;
 				}
 				if(provClinic!=null) {
-					if(provClinic.DEANum!=deaNumDefault) {
+					if(provClinic.DeaNumber!=deaNumDefault) {
 						//Only set the locationDea if it is different than the default.
-						ncScript.MidlevelPrescriber.locationDea=provClinic.DEANum;
+						ncScript.MidlevelPrescriber.locationDea=provClinic.DeaNumber;
 					}
 					ncScript.MidlevelPrescriber.licenseState=provClinic.StateWhereLicensed.ToUpper();//Validated to be a US state code in the chart.
 					ncScript.MidlevelPrescriber.licenseNumber=provClinic.StateLicense;//Validated to exist in chart.
 				}
-				ncScript.MidlevelPrescriber.npi=prov.NationalProvID;//Validated to be 10 digits in chart.
+				ncScript.MidlevelPrescriber.npi=prov.NationalProviderID;//Validated to be 10 digits in chart.
 			}
 			else {//Licensed presriber
 				ncScript.LicensedPrescriber=new LicensedPrescriberType();
-				ncScript.LicensedPrescriber.ID=prov.NationalProvID;
+				ncScript.LicensedPrescriber.ID=prov.NationalProviderID;
 				//UPIN is obsolete
 				ncScript.LicensedPrescriber.LicensedPrescriberName=NewCrop.GetPersonNameForProvider(prov);
 				if(deaNumDefault.ToLower()=="none") {
@@ -162,23 +162,23 @@ namespace OpenDentBusiness {
 					ncScript.LicensedPrescriber.dea=deaNumDefault;
 				}
 				if(provClinic!=null) {
-					if(provClinic.DEANum!=deaNumDefault) {
+					if(provClinic.DeaNumber!=deaNumDefault) {
 						//Only set the locationDea if it is different than the default.
-						ncScript.LicensedPrescriber.locationDea=provClinic.DEANum;
+						ncScript.LicensedPrescriber.locationDea=provClinic.DeaNumber;
 					}
 					ncScript.LicensedPrescriber.licenseState=provClinic.StateWhereLicensed.ToUpper();//Validated to be a US state code in the chart.
 					ncScript.LicensedPrescriber.licenseNumber=provClinic.StateLicense;//Validated to exist in chart.
 				}
-				ncScript.LicensedPrescriber.npi=prov.NationalProvID;//Validated to be 10 digits in chart.
+				ncScript.LicensedPrescriber.npi=prov.NationalProviderID;//Validated to be 10 digits in chart.
 				//ncScript.LicensedPrescriber.freeformCredentials=;//This is where DDS and DMD should go, but we don't support this yet. Probably not necessary anyway.
 			}
 			if(emp!=null) {
 				ncScript.Staff=new StaffType();
-				ncScript.Staff.ID="emp"+emp.EmployeeNum.ToString();//A positive integer. Returned in the ExternalUserID field when retreiving prescriptions from NewCrop. Also, provider ID is returned in the same field if a provider created the prescription, so that we can create a distintion between employee IDs and provider IDs.
+				ncScript.Staff.ID="emp"+emp.Id.ToString();//A positive integer. Returned in the ExternalUserID field when retreiving prescriptions from NewCrop. Also, provider ID is returned in the same field if a provider created the prescription, so that we can create a distintion between employee IDs and provider IDs.
 				ncScript.Staff.StaffName=new PersonNameType();
-				ncScript.Staff.StaffName.first=emp.FName;//First name or last name will not be blank. Validated in Chart.
-				ncScript.Staff.StaffName.last=emp.LName;//First name or last name will not be blank. Validated in Chart.
-				ncScript.Staff.StaffName.middle=emp.MiddleI;//May be blank.
+				ncScript.Staff.StaffName.first=emp.FirstName;//First name or last name will not be blank. Validated in Chart.
+				ncScript.Staff.StaffName.last=emp.LastName;//First name or last name will not be blank. Validated in Chart.
+				ncScript.Staff.StaffName.middle=emp.Initials;//May be blank.
 			}
 			ncScript.Patient=new PatientType();
 			ncScript.Patient.ID=pat.PatNum.ToString();//A positive integer.

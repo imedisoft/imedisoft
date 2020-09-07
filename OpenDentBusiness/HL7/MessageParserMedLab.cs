@@ -564,12 +564,12 @@ namespace OpenDentBusiness.HL7 {
 						List<Provider> listProvs=Providers.GetProvsByNpiOrMedicaidId(_medLabCur.OrderingProvNPI,_medicaidIdCur);
 						listProvs.Sort(SortByNpiMedicaidIdMatch);
 						if(listProvs.Count>0) {//if a provider with either a matching NPI or Medicaid ID is found, use the first matching prov
-							_medLabCur.ProvNum=listProvs[0].ProvNum;
+							_medLabCur.ProvNum=listProvs[0].Id;
 						}
 						else {//no provider match based on NPI or MedicaidID
 							listProvs=Providers.GetProvsByFLName(_medLabCur.OrderingProvLName,_medLabCur.OrderingProvFName);//must have both LName and FName
 							if(listProvs.Count>0) {//use the first provider found with matching LName and FName
-								_medLabCur.ProvNum=listProvs[0].ProvNum;
+								_medLabCur.ProvNum=listProvs[0].Id;
 							}
 						}
 						#endregion Locate Provider
@@ -737,13 +737,13 @@ namespace OpenDentBusiness.HL7 {
 						List<Provider> listProvs=Providers.GetProvsByNpiOrMedicaidId(_medLabCur.OrderingProvNPI,_medicaidIdCur);
 						listProvs.Sort(SortByNpiMedicaidIdMatch);
 						if(listProvs.Count>0) {//if a provider with either a matching NPI or Medicaid ID is found, use the first matching prov
-							_medLabCur.ProvNum=listProvs[0].ProvNum;
+							_medLabCur.ProvNum=listProvs[0].Id;
 							continue;
 						}
 						//no provider match based on NPI or MedicaidID
 						listProvs=Providers.GetProvsByFLName(_medLabCur.OrderingProvLName,_medLabCur.OrderingProvFName);//must have both LName and FName
 						if(listProvs.Count>0) {//use the first provider found with matching LName and FName
-							_medLabCur.ProvNum=listProvs[0].ProvNum;
+							_medLabCur.ProvNum=listProvs[0].Id;
 						}
 						#endregion Locate Provider
 						continue;
@@ -1082,13 +1082,13 @@ namespace OpenDentBusiness.HL7 {
 			int pXVal=0;
 			int pYVal=0;
 			//matching NPI is +2, matching MedicaidId is +1, if both match the value will be 3
-			if(provX.NationalProvID!="" && provX.NationalProvID.Trim().ToLower()==_medLabCur.OrderingProvNPI.ToLower()) {
+			if(provX.NationalProviderID!="" && provX.NationalProviderID.Trim().ToLower()==_medLabCur.OrderingProvNPI.ToLower()) {
 				pXVal+=2;
 			}
 			if(provX.MedicaidID!="" && provX.MedicaidID.Trim().ToLower()==_medicaidIdCur.ToLower()) {
 				pXVal+=1;
 			}
-			if(provY.NationalProvID!="" && provY.NationalProvID.Trim().ToLower()==_medLabCur.OrderingProvNPI.ToLower()) {
+			if(provY.NationalProviderID!="" && provY.NationalProviderID.Trim().ToLower()==_medLabCur.OrderingProvNPI.ToLower()) {
 				pYVal+=2;
 			}
 			if(provY.MedicaidID!="" && provY.MedicaidID.Trim().ToLower()==_medicaidIdCur.ToLower()) {
@@ -1103,15 +1103,15 @@ namespace OpenDentBusiness.HL7 {
 			}
 			//if values are the same based on matching NPI and Medicaid ID, compare LName and FName
 			//Matching LName and FName +2, Matching LName only +1, LName is not a match +0 (FName match only +0)
-			if(provX.LName.Trim().ToLower()==_medLabCur.OrderingProvLName.ToLower()) {
+			if(provX.LastName.Trim().ToLower()==_medLabCur.OrderingProvLName.ToLower()) {
 				pXVal+=1;
-				if(provX.FName.Trim().ToLower()==_medLabCur.OrderingProvFName.ToLower()) {
+				if(provX.FirstName.Trim().ToLower()==_medLabCur.OrderingProvFName.ToLower()) {
 					pXVal+=1;
 				}
 			}
-			if(provY.LName.Trim().ToLower()==_medLabCur.OrderingProvLName.ToLower()) {
+			if(provY.LastName.Trim().ToLower()==_medLabCur.OrderingProvLName.ToLower()) {
 				pYVal+=1;
-				if(provY.FName.Trim().ToLower()==_medLabCur.OrderingProvFName.ToLower()) {
+				if(provY.FirstName.Trim().ToLower()==_medLabCur.OrderingProvFName.ToLower()) {
 					pYVal+=1;
 				}
 			}

@@ -929,7 +929,7 @@ namespace OpenDentBusiness {
 						//But sometimes, the annual max is in the system as no category instead of general category.
 						CovCat generalCat=CovCats.GetForEbenCat(EbenefitCategory.General);
 						if(generalCat!=null) {//If there is a general category, then we only consider codes within it.  This is how we exclude ortho.
-							CovSpan[] covSpanArray=CovSpans.GetForCat(generalCat.CovCatNum);
+							CovSpan[] covSpanArray=CovSpans.GetForCat(generalCat.Id);
 							if(loopList[i].StrProcCode!="" && !CovSpans.IsCodeInSpans(loopList[i].StrProcCode,covSpanArray)) {//for example, ortho
 								continue;
 							}
@@ -1196,7 +1196,7 @@ namespace OpenDentBusiness {
 			bool retVal=true;
 			CovCat genCat=CovCats.GetForEbenCat(EbenefitCategory.General);
 			if(genCat!=null) {//Should always happen.  This would mean they are missing the General Coverage Category.
-				CovSpan[] spansForGeneral=CovSpans.GetForCat(genCat.CovCatNum);
+				CovSpan[] spansForGeneral=CovSpans.GetForCat(genCat.Id);
 				bool isMatch=false;
 				for(int i=0;i<spansForGeneral.Length;i++) {
 					if(String.Compare(procCodeStr,spansForGeneral[i].FromCode)>=0 && String.Compare(procCodeStr,spansForGeneral[i].ToCode)<=0) {
@@ -1836,7 +1836,7 @@ namespace OpenDentBusiness {
 		public static bool IsExamFrequency(Benefit ben) {
 			if(ben.BenefitType==InsBenefitType.Limitations
 				&& CovCats.GetForEbenCat(EbenefitCategory.RoutinePreventive)!=null
-				&& ben.CovCatNum==CovCats.GetForEbenCat(EbenefitCategory.RoutinePreventive).CovCatNum 
+				&& ben.CovCatNum==CovCats.GetForEbenCat(EbenefitCategory.RoutinePreventive).Id 
 				&& ben.CodeNum==0
 				&& ben.MonetaryAmt==-1
 				&& ben.PatPlanNum==0
@@ -2090,7 +2090,7 @@ namespace OpenDentBusiness {
 			if(ben.CodeNum==0
 				&& ben.BenefitType==InsBenefitType.Limitations
 				&& (ben.CovCatNum==0
-				|| ben.CovCatNum==CovCats.GetForEbenCat(EbenefitCategory.General).CovCatNum)
+				|| ben.CovCatNum==CovCats.GetForEbenCat(EbenefitCategory.General).Id)
 				&& ben.PatPlanNum==0
 				&& ben.Quantity==0
 				&& ben.QuantityQualifier==BenefitQuantity.None
@@ -2107,7 +2107,7 @@ namespace OpenDentBusiness {
 			if(ben.CodeNum==0
 				&& ben.BenefitType==InsBenefitType.Deductible
 				&& (ben.CovCatNum==0
-				|| ben.CovCatNum==CovCats.GetForEbenCat(EbenefitCategory.General).CovCatNum)
+				|| ben.CovCatNum==CovCats.GetForEbenCat(EbenefitCategory.General).Id)
 				&& ben.PatPlanNum==0
 				&& ben.Quantity==0
 				&& ben.QuantityQualifier==BenefitQuantity.None
@@ -2125,7 +2125,7 @@ namespace OpenDentBusiness {
 			return new Benefit {
 				BenefitType=InsBenefitType.Limitations,
 				CodeNum=0,
-				CovCatNum=CovCats.GetForEbenCat(benefitCategory)?.CovCatNum??0,
+				CovCatNum=CovCats.GetForEbenCat(benefitCategory)?.Id??0,
 				MonetaryAmt=-1,
 				Percent=-1,
 				PlanNum=planNum,

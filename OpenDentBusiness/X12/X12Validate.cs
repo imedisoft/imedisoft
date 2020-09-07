@@ -85,12 +85,12 @@ namespace OpenDentBusiness
 		///<summary>StringBuilder does not get altered if no invalid data.</summary>
 		public static void BillProv(Provider billProv, StringBuilder strb)
 		{
-			if (billProv.LName == "")
+			if (billProv.LastName == "")
 			{
 				Comma(strb);
 				strb.Append("Billing Prov LName");
 			}
-			if (!billProv.IsNotPerson && billProv.FName == "")
+			if (!billProv.IsNotPerson && billProv.FirstName == "")
 			{//if is a person, first name cannot be blank.
 				Comma(strb);
 				strb.Append("Billing Prov FName");
@@ -100,7 +100,7 @@ namespace OpenDentBusiness
 				Comma(strb);
 				strb.Append("Billing Prov SSN/TIN must be a 9 digit number");
 			}
-			if (!Regex.IsMatch(billProv.NationalProvID, "^(80840)?[0-9]{10}$"))
+			if (!Regex.IsMatch(billProv.NationalProviderID, "^(80840)?[0-9]{10}$"))
 			{
 				Comma(strb);
 				strb.Append("Billing Prov NPI must be a 10 digit number with an optional prefix of 80840");
@@ -113,20 +113,20 @@ namespace OpenDentBusiness
 			//Always check provider name variables regardless of IsNotPerson.
 			if (!billProv.IsNotPerson)
 			{//The first name and middle name are only required if the billing provider is a person. For an organization, these fields are never sent.
-				string fNameInvalidChars = GetNonAN(billProv.FName);
+				string fNameInvalidChars = GetNonAN(billProv.FirstName);
 				if (fNameInvalidChars != "")
 				{
 					Comma(strb);
 					strb.Append("Billing Prov First Name contains invalid characters: " + fNameInvalidChars);
 				}
-				string middleInvalidChars = GetNonAN(billProv.MI);
+				string middleInvalidChars = GetNonAN(billProv.Initials);
 				if (middleInvalidChars != "")
 				{
 					Comma(strb);
 					strb.Append("Billing Prov MI contains invalid characters: " + middleInvalidChars);
 				}
 			}
-			string lNameInvalidChars = GetNonAN(billProv.LName);
+			string lNameInvalidChars = GetNonAN(billProv.LastName);
 			if (lNameInvalidChars != "")
 			{
 				Comma(strb);

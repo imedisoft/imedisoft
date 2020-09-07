@@ -96,8 +96,8 @@ namespace OpenDental.Bridges
 			}
 
 			string info = "/P" + Cleanup(pat.FName + " " + pat.LName);
-			Provider prov = Providers.GetProv(Patients.GetProvNum(pat));
-			info += " /D" + prov.FName + " " + prov.LName + " /L1 /F";
+			Provider prov = Providers.GetById(Patients.GetProvNum(pat));
+			info += " /D" + prov.FirstName + " " + prov.LastName + " /L1 /F";
 
 			ProgramProperty PPCur = ProgramProperties.GetCur(ForProgram, ProgramProperties.PropertyDescs.ImageFolder);
 			info += PPCur.Value;

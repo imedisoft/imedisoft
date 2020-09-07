@@ -506,13 +506,13 @@ namespace OpenDental.UI
 		///<summary>Only for comboBoxes with a list of Providers. This is a specific use of GetSelectedKey. If selected index is -1, it will try to grab the key that was passed in earlier with SetSelectedProvNum.  If there is none, then it will return 0.</summary>
 		public long GetSelectedProvNum()
 		{
-			return GetSelectedKey<Provider>(x => x.ProvNum);
+			return GetSelectedKey<Provider>(x => x.Id);
 		}
 
 		///<summary>Only for multi-select comboBoxes with a list of Providers. Usually for reports.</summary>
 		public List<long> GetSelectedProvNums()
 		{
-			return GetListSelected<Provider>().Select(x => x.ProvNum).ToList();
+			return GetListSelected<Provider>().Select(x => x.Id).ToList();
 		}
 
 		///<summary>Gets a string of all selected items, separated by commas.  If "All" is selected, then the default is to simply return "All".  Or set ifAllListOut to true to list them out. useAbbr will string together abbreviations instead of the full display strings for each item.</summary>
@@ -728,7 +728,7 @@ namespace OpenDental.UI
 					{
 						continue;
 					}
-					if (((Provider)Items.GetObjectAt(i)).ProvNum == 0)
+					if (((Provider)Items.GetObjectAt(i)).Id == 0)
 					{
 						_listSelectedIndices.Add(i);//found a 0, so select it
 						OnSelectedIndexChanged(this, new EventArgs());
@@ -743,7 +743,7 @@ namespace OpenDental.UI
 				Invalidate();
 				return;
 			}
-			SetSelectedKey<Provider>(provNum, x => x.ProvNum, x => Providers.GetAbbr(x, true));//won't use GetAbbr unless it has to
+			SetSelectedKey<Provider>(provNum, x => x.Id, x => Providers.GetAbbr(x, true));//won't use GetAbbr unless it has to
 																							   //In case the provider long descriptions are being used, this method won't know about that, and will just use Abbr,
 																							   //but it will include (hidden), so that should be more than acceptable.
 		}
@@ -851,7 +851,7 @@ namespace OpenDental.UI
 					}
 					else if (Items.GetObjectAt(i) is Provider)
 					{
-						SetSelectedProvNum(((Provider)Items.GetObjectAt(i)).ProvNum);
+						SetSelectedProvNum(((Provider)Items.GetObjectAt(i)).Id);
 					}
 					else
 					{

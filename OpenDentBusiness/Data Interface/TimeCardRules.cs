@@ -125,13 +125,13 @@ namespace OpenDentBusiness{
 			//If calculating breaks before the end date of the pay period, only calculate breaks and validate clock in and out events for days
 			//before today.  Use the server time just because we are dealing with time cards.
 			DateTime dateTimeNow=MiscData.GetNowDateTime();
-			ClockEvent lastClockEvent=ClockEvents.GetLastEvent(employeeCur.EmployeeNum);
+			ClockEvent lastClockEvent=ClockEvents.GetLastEvent(employeeCur.Id);
 			bool isStillWorking=(lastClockEvent!=null && (lastClockEvent.ClockStatus==TimeClockStatus.Break || lastClockEvent.TimeDisplayed2.Year<1880));
 			if(dateTimeNow.Date < stopDate.Date && isStillWorking) {
 				stopDate=dateTimeNow.Date.AddDays(-1);
 			}
-			List<ClockEvent> breakList=ClockEvents.Refresh(employeeCur.EmployeeNum,startDate,stopDate,true);
-			List<ClockEvent> clockEventList=ClockEvents.Refresh(employeeCur.EmployeeNum,startDate,stopDate,false);
+			List<ClockEvent> breakList=ClockEvents.Refresh(employeeCur.Id,startDate,stopDate,true);
+			List<ClockEvent> clockEventList=ClockEvents.Refresh(employeeCur.Id,startDate,stopDate,false);
 			bool errorFound=false;
 			string retVal="Time card errors for employee : "+Employees.GetNameFL(employeeCur)+"\r\n";
 			//Validate clock events
@@ -235,12 +235,12 @@ namespace OpenDentBusiness{
 		public static TimeCardRule GetTimeCardRule(Employee employeeCur) {
 			
 			//Validate Rules---------------------------------------------------------------------------------------------------------------
-			string errors=TimeCardRules.ValidateOvertimeRules(new List<long> {employeeCur.EmployeeNum});
+			string errors=TimeCardRules.ValidateOvertimeRules(new List<long> {employeeCur.Id});
 			if(errors.Length>0) {
 				throw new Exception(errors);
 			}
 			//Build return value ----------------------------------------------------------------------------------------------------------
-			List<TimeCardRule> listTimeCardRulesEmp=GetWhere(x => x.EmployeeNum==0 || x.EmployeeNum==employeeCur.EmployeeNum);
+			List<TimeCardRule> listTimeCardRulesEmp=GetWhere(x => x.EmployeeNum==0 || x.EmployeeNum==employeeCur.Id);
 			TimeCardRule amRule=listTimeCardRulesEmp.Where(x => x.BeforeTimeOfDay>TimeSpan.Zero).OrderByDescending(x => x.BeforeTimeOfDay).FirstOrDefault();
 			TimeCardRule pmRule=listTimeCardRulesEmp.Where(x => x.AfterTimeOfDay>TimeSpan.Zero).OrderBy(x => x.AfterTimeOfDay).FirstOrDefault();
 			TimeCardRule hoursRule=listTimeCardRulesEmp.Where(x => x.OverHoursPerDay>TimeSpan.Zero).OrderBy(x => x.OverHoursPerDay).FirstOrDefault();
@@ -264,7 +264,7 @@ namespace OpenDentBusiness{
 		///<summary>Calculates daily overtime. Throws exceptions when encountering errors, though all errors SHOULD have been caught already by using the ValidatePayPeriod() function and generating a msgbox.</summary>
 		public static void CalculateDailyOvertime_Old(Employee EmployeeCur,DateTime StartDate,DateTime StopDate) {
 			DateTime previousDate;
-			List<ClockEvent> ClockEventList=ClockEvents.Refresh(EmployeeCur.EmployeeNum,StartDate,StopDate,false);//PIn.Date(textDateStart.Text),PIn.Date(textDateStop.Text),IsBreaks);
+			List<ClockEvent> ClockEventList=ClockEvents.Refresh(EmployeeCur.Id,StartDate,StopDate,false);//PIn.Date(textDateStart.Text),PIn.Date(textDateStop.Text),IsBreaks);
 			//Over breaks-------------------------------------------------------------------------------------------------
 			if(Prefs.GetBool(PrefName.TimeCardsMakesAdjustmentsForOverBreaks)) {
 				//set adj auto to zero for all.
@@ -272,7 +272,7 @@ namespace OpenDentBusiness{
 					ClockEventList[i].AdjustAuto=TimeSpan.Zero;
 					ClockEvents.Update(ClockEventList[i]);
 				}
-				List<ClockEvent> breakList=ClockEvents.Refresh(EmployeeCur.EmployeeNum,StartDate,StopDate,true);//PIn.Date(textDateStart.Text),PIn.Date(textDateStop.Text),true);
+				List<ClockEvent> breakList=ClockEvents.Refresh(EmployeeCur.Id,StartDate,StopDate,true);//PIn.Date(textDateStart.Text),PIn.Date(textDateStop.Text),true);
 				TimeSpan totalToday=TimeSpan.Zero;
 				TimeSpan totalOne=TimeSpan.Zero;
 				previousDate=DateTime.MinValue;
@@ -317,7 +317,7 @@ namespace OpenDentBusiness{
 			//loop through timecardrules to find one rule of each kind.
 			List<TimeCardRule> listTimeCardRules=GetDeepCopy();
 			for(int i=0;i<listTimeCardRules.Count;i++) {
-				if(listTimeCardRules[i].EmployeeNum!=0 && listTimeCardRules[i].EmployeeNum!=EmployeeCur.EmployeeNum) {
+				if(listTimeCardRules[i].EmployeeNum!=0 && listTimeCardRules[i].EmployeeNum!=EmployeeCur.Id) {
 					continue;
 				}
 				if(listTimeCardRules[i].AfterTimeOfDay > TimeSpan.Zero) {
@@ -437,20 +437,20 @@ namespace OpenDentBusiness{
 			//If calculating breaks before the end date of the pay period, only calculate breaks and validate clock in and out events for days
 			//before today.  Use the server time just because we are dealing with time cards.
 			DateTime dateTimeNow=MiscData.GetNowDateTime();
-			ClockEvent lastClockEvent=ClockEvents.GetLastEvent(employee.EmployeeNum);
+			ClockEvent lastClockEvent=ClockEvents.GetLastEvent(employee.Id);
 			bool isStillWorking=(lastClockEvent!=null && (lastClockEvent.ClockStatus==TimeClockStatus.Break || lastClockEvent.TimeDisplayed2.Year<1880));
 			if(dateTimeNow.Date < dateStop.Date && isStillWorking) {
 				dateStop=dateTimeNow.Date.AddDays(-1);
 			}
 			//Fill lists and catch validation error messages------------------------------------------------------------------------------------------------------------
 			try {
-				listClockEvent=ClockEvents.GetValidList(employee.EmployeeNum,dateStart,dateStop,false);
+				listClockEvent=ClockEvents.GetValidList(employee.Id,dateStart,dateStop,false);
 			}
 			catch(Exception ex) {
 				clockErrors+=ex.Message;
 			}
 			try {
-				listClockEventBreak=ClockEvents.GetValidList(employee.EmployeeNum,dateStart,dateStop,true);
+				listClockEventBreak=ClockEvents.GetValidList(employee.Id,dateStart,dateStop,true);
 			}
 			catch(Exception ex) {
 				breakErrors+=ex.Message;
@@ -596,7 +596,7 @@ namespace OpenDentBusiness{
 				//Apply differential to clock event-----------------------------------------------------------------------------------
 				if(tsDailyDifferentialTotal<TimeSpan.Zero) {
 					//this should never happen. If it ever does, we need to know about it, because that means some math has been miscalculated.
-					throw new Exception(" - "+listClockEvent[i].TimeDisplayed1.Date.ToShortDateString()+", "+employee.FName+" "+employee.LName+" : calculated differential hours was negative.");
+					throw new Exception(" - "+listClockEvent[i].TimeDisplayed1.Date.ToShortDateString()+", "+employee.FirstName+" "+employee.LastName+" : calculated differential hours was negative.");
 				}
 				listClockEvent[i].Rate2Auto=tsDailyDifferentialTotal;//should be zero or greater.
 				#endregion
@@ -747,7 +747,7 @@ namespace OpenDentBusiness{
 				//Only adjust breaks if preference is set.
 				return;
 			}
-			List<ClockEvent> breakList=ClockEvents.Refresh(EmployeeCur.EmployeeNum,StartDate,StopDate,true);//PIn.Date(textDateStart.Text),PIn.Date(textDateStop.Text),true);
+			List<ClockEvent> breakList=ClockEvents.Refresh(EmployeeCur.Id,StartDate,StopDate,true);//PIn.Date(textDateStart.Text),PIn.Date(textDateStop.Text),true);
 			TimeSpan totalToday=TimeSpan.Zero;
 			TimeSpan totalOne=TimeSpan.Zero;
 			DateTime previousDate=DateTime.MinValue;
@@ -778,8 +778,8 @@ namespace OpenDentBusiness{
 
 		///<summary>Calculates weekly overtime and inserts TimeAdjustments accordingly.</summary>
 		public static void CalculateWeeklyOvertime_Old(Employee EmployeeCur,DateTime StartDate,DateTime StopDate) {
-			List<TimeAdjust> TimeAdjustList=TimeAdjusts.Refresh(EmployeeCur.EmployeeNum,StartDate,StopDate);
-			List<ClockEvent> ClockEventList=ClockEvents.Refresh(EmployeeCur.EmployeeNum,StartDate,StopDate,false);
+			List<TimeAdjust> TimeAdjustList=TimeAdjusts.Refresh(EmployeeCur.Id,StartDate,StopDate);
+			List<ClockEvent> ClockEventList=ClockEvents.Refresh(EmployeeCur.Id,StartDate,StopDate,false);
 			//first, delete all existing overtime entries
 			for(int i=0;i<TimeAdjustList.Count;i++) {
 				if(TimeAdjustList[i].OTimeHours==TimeSpan.Zero) {
@@ -791,7 +791,7 @@ namespace OpenDentBusiness{
 				TimeAdjusts.Delete(TimeAdjustList[i]);
 			}
 			//refresh list after it has been cleaned up.
-			TimeAdjustList=TimeAdjusts.Refresh(EmployeeCur.EmployeeNum,StartDate,StopDate);
+			TimeAdjustList=TimeAdjusts.Refresh(EmployeeCur.Id,StartDate,StopDate);
 			ArrayList mergedAL = new ArrayList();
 			foreach(ClockEvent clockEvent in ClockEventList) {
 				mergedAL.Add(clockEvent);
@@ -820,7 +820,7 @@ namespace OpenDentBusiness{
 				//found a weekly total over 40 hours
 				TimeAdjust adjust=new TimeAdjust();
 				adjust.IsAuto=true;
-				adjust.EmployeeNum=EmployeeCur.EmployeeNum;
+				adjust.EmployeeNum=EmployeeCur.Id;
 				adjust.TimeEntry=GetDateForRowHelper(mergedAL[i]).AddHours(20);//puts it at 8pm on the same day.
 				adjust.OTimeHours=WeeklyTotals[i]-TimeSpan.FromHours(40);
 				adjust.RegHours=-adjust.OTimeHours;
@@ -841,8 +841,8 @@ namespace OpenDentBusiness{
 			string clockErrors="";
 			string timeAdjustErrors="";
 			//Fill lists and catch validation error messages------------------------------------------------------------------------------------------------------------
-			try{listClockEvent=ClockEvents.GetValidList(EmployeeCur.EmployeeNum,StartDate,StopDate,false)	;}catch(Exception ex) {clockErrors+=ex.Message;}
-			try{listTimeAdjust=TimeAdjusts.GetValidList(EmployeeCur.EmployeeNum,StartDate,StopDate)				;}catch(Exception ex) {timeAdjustErrors+=ex.Message;}
+			try{listClockEvent=ClockEvents.GetValidList(EmployeeCur.Id,StartDate,StopDate,false)	;}catch(Exception ex) {clockErrors+=ex.Message;}
+			try{listTimeAdjust=TimeAdjusts.GetValidList(EmployeeCur.Id,StartDate,StopDate)				;}catch(Exception ex) {timeAdjustErrors+=ex.Message;}
 			//Report Errors---------------------------------------------------------------------------------------------------------------------------------------------
 			errors=clockErrors+timeAdjustErrors;
 			if(errors!="") {
@@ -855,7 +855,7 @@ namespace OpenDentBusiness{
 				}
 			}
 			//refresh list after it has been cleaned up.
-			listTimeAdjust=TimeAdjusts.Refresh(EmployeeCur.EmployeeNum,StartDate,StopDate);
+			listTimeAdjust=TimeAdjusts.Refresh(EmployeeCur.Id,StartDate,StopDate);
 			ArrayList mergedAL=MergeClockEventAndTimeAdjust(listClockEvent,listTimeAdjust);
 			//then, fill grid
 			Calendar cal=CultureInfo.CurrentCulture.Calendar;
@@ -945,7 +945,7 @@ namespace OpenDentBusiness{
 					}
 					TimeAdjust adjust=new TimeAdjust();
 					adjust.IsAuto=true;
-					adjust.EmployeeNum=EmployeeCur.EmployeeNum;
+					adjust.EmployeeNum=EmployeeCur.Id;
 					adjust.TimeEntry=GetDateForRowHelper(mergedAL[i]).AddHours(20);
 					adjust.OTimeHours=kvp.Value;
 					adjust.RegHours=-adjust.OTimeHours;
@@ -1000,7 +1000,7 @@ namespace OpenDentBusiness{
 			TimeSpan daySpan=TimeSpan.Zero;//used for daily totals.
 			TimeSpan weekSpan=TimeSpan.Zero;//used for weekly totals.
 			if(mergedAL.Count>0) {
-				weekSpan=ClockEvents.GetWeekTotal(EmployeeCur.EmployeeNum,GetDateForRowHelper(mergedAL[0]));
+				weekSpan=ClockEvents.GetWeekTotal(EmployeeCur.Id,GetDateForRowHelper(mergedAL[0]));
 			}
 			bool prevHours=weekSpan!=TimeSpan.Zero;
 			TimeSpan periodSpan=TimeSpan.Zero;//used to add up totals for entire page. (Not used. Left over from when this code existed in the UI.)

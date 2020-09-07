@@ -41,23 +41,24 @@ namespace OpenDental {
 			
 		}
 
-		private void FormTimeCardManage_Load(object sender,EventArgs e) {
-			SelectedPayPeriod=PayPeriods.GetForDate(DateTimeOD.Today);
-			if(SelectedPayPeriod==-1) {
+		private void FormTimeCardManage_Load(object sender, EventArgs e)
+		{
+			SelectedPayPeriod = PayPeriods.GetForDate(DateTimeOD.Today);
+			if (SelectedPayPeriod == -1)
+			{
 				MessageBox.Show("At least one pay period needs to exist before you can manage time cards.");
-				DialogResult=DialogResult.Cancel;
+				DialogResult = DialogResult.Cancel;
 				return;
 			}
-			if(!PrefC.HasClinicsEnabled) {
-				comboClinic.Visible=false;
+
+			if (!Security.CurrentUser.ClinicIsRestricted)
+			{
+				comboClinic.IncludeAll = true;
 			}
-			else {//clinics
-				if(!Security.CurrentUser.ClinicIsRestricted) {
-					comboClinic.IncludeAll=true;
-				}
-				comboClinic.SelectedClinicNum=Clinics.ClinicId;
-			}
-			_listPayPeriods=PayPeriods.GetDeepCopy();
+
+			comboClinic.SelectedClinicNum = Clinics.Active.Id;
+
+			_listPayPeriods = PayPeriods.GetDeepCopy();
 			FillPayPeriod();
 			butTimeCardBenefits.Visible = false;
 		}
@@ -201,12 +202,12 @@ namespace OpenDental {
 		private ODGrid GetGridForPrinting(Employee emp) {
 			ODGrid gridTimeCard=new ODGrid();
 			gridTimeCard.TranslationName="";
-			List<ClockEvent> clockEventList=ClockEvents.Refresh(emp.EmployeeNum,PIn.Date(textDateStart.Text),PIn.Date(textDateStop.Text),false);
-			List<TimeAdjust> timeAdjustList=TimeAdjusts.Refresh(emp.EmployeeNum,PIn.Date(textDateStart.Text),PIn.Date(textDateStop.Text));
+			List<ClockEvent> clockEventList=ClockEvents.Refresh(emp.Id,PIn.Date(textDateStart.Text),PIn.Date(textDateStop.Text),false);
+			List<TimeAdjust> timeAdjustList=TimeAdjusts.Refresh(emp.Id,PIn.Date(textDateStart.Text),PIn.Date(textDateStop.Text));
 			#region Hide time card note (we will show it at the top of the printout above the grid)
 			DateTime date=_listPayPeriods[SelectedPayPeriod].DateStart.Date;
 			DateTime midnightFirstDay=new DateTime(date.Year,date.Month,date.Day,0,0,0);
-			_timeAdjustNote=TimeAdjusts.GetPayPeriodNote(emp.EmployeeNum,midnightFirstDay);
+			_timeAdjustNote=TimeAdjusts.GetPayPeriodNote(emp.Id,midnightFirstDay);
 			if(_timeAdjustNote!=null) { //a note row exists for this pay period.
 				timeAdjustList.RemoveAll(x => x.TimeAdjustNum==_timeAdjustNote.TimeAdjustNum);
 			}
@@ -261,7 +262,7 @@ namespace OpenDental {
 			TimeSpan weekSpan=new TimeSpan(0);//used for weekly totals.
 			TimeSpan ptoSpan=new TimeSpan(0);//used for PTO totals.
 			if(mergedAL.Count>0){
-				weekSpan=ClockEvents.GetWeekTotal(emp.EmployeeNum,GetDateForRow(0,mergedAL));
+				weekSpan=ClockEvents.GetWeekTotal(emp.Id,GetDateForRow(0,mergedAL));
 			}
 			TimeSpan periodSpan=new TimeSpan(0);//used to add up totals for entire page.
 			TimeSpan otspan=new TimeSpan(0);//overtime for the entire period
@@ -561,7 +562,7 @@ namespace OpenDental {
 			SolidBrush brush=new SolidBrush(Color.Black);
 			Pen pen=new Pen(Color.Black);
 			//Title
-			str=employeeCur.FName+" "+employeeCur.LName;
+			str=employeeCur.FirstName+" "+employeeCur.LastName;
 			str+="\r\n"+"Note"+": "+_timeAdjustNote?.Note.ToString()??"";
 			int threeLineHeight=(int)e.Graphics.MeasureString("1\r\n2\r\n3",fontTitle).Height;
 			int marginBothSides=(int)xPos*2;//110

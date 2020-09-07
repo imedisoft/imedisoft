@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormEvaluationDefEdit:ODForm {
@@ -164,7 +165,7 @@ namespace OpenDental {
 			FormSC.IsSelectionMode=true;
 			FormSC.ShowDialog();
 			if(FormSC.DialogResult==DialogResult.OK) {
-				_evalDefCur.SchoolCourseNum=FormSC.CourseSelected.SchoolCourseNum;
+				_evalDefCur.SchoolCourseNum=FormSC.CourseSelected.Id;
 				textCourse.Text=FormSC.CourseSelected.CourseID;
 			}
 		}

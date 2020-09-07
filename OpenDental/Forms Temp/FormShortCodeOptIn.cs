@@ -132,7 +132,7 @@ namespace OpenDental {
 				if(MessageBox.Show(this,msg,"Continue?",MessageBoxButtons.YesNo)!=DialogResult.Yes) {
 					return;
 				}
-				if(TrySendToHq(_pat.WirelessPhone,checkOptIn.Checked ? YN.Yes : YN.No,_pat.PatNum,Clinics.ClinicId)) {
+				if(TrySendToHq(_pat.WirelessPhone,checkOptIn.Checked ? YN.Yes : YN.No,_pat.PatNum,Clinics.Active.Id)) {
 					//This value will actually be set by a transmission from HQ, but for the sake of the UI, set it here.
 					_pat.ShortCodeOptIn=checkOptIn.Checked ? YN.Yes : YN.No;
 					DialogResult=DialogResult.OK;
@@ -145,7 +145,7 @@ namespace OpenDental {
 					return;
 				}
 				//Dentist is only allowed to opt-out a patient who was previously set to opted-in.
-				if(TrySendToHq(_pat.WirelessPhone,checkOptIn.Checked ? YN.Yes : YN.No,_pat.PatNum,Clinics.ClinicId)) {
+				if(TrySendToHq(_pat.WirelessPhone,checkOptIn.Checked ? YN.Yes : YN.No,_pat.PatNum,Clinics.Active.Id)) {
 					//This value will actually be set by a transmission from HQ, but for the sake of the UI, set it here.
 					_pat.ShortCodeOptIn=checkOptIn.Checked ? YN.Yes : YN.No;
 					DialogResult=DialogResult.OK;

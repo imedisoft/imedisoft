@@ -236,7 +236,7 @@ namespace OpenDental{
 			}
 			long provNum=0;
 			if(listBoxProviders.SelectedIndex>0){
-				provNum=_listProviders[listBoxProviders.SelectedIndex-1].ProvNum;
+				provNum=_listProviders[listBoxProviders.SelectedIndex-1].Id;
 			}
 			DataTable dataTable=RpProcCodes.GetData(feeSched.FeeSchedNum,clinicNum,provNum,radioCategories.Checked,checkShowBlankFees.Checked);
 			report.ReportName="Procedure Codes - Fee Schedules";

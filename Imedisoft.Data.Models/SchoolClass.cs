@@ -1,12 +1,12 @@
 using Imedisoft.Data.Annotations;
 
-namespace OpenDentBusiness
+namespace Imedisoft.Data.Models
 {
 	/// <summary>
 	/// Used in dental schools. e.g. "Dental 2009" or "Hygiene 2007".
 	/// </summary>
 	[Table("school_classes")]
-	public class SchoolClass : TableBase
+	public class SchoolClass
 	{
 		[PrimaryKey]
 		public long Id;
@@ -14,7 +14,7 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// The year the class will graduate.
 		/// </summary>
-		public int GradYear;
+		public int Year;
 
 		/// <summary>
 		/// A description of the class. e.g. "Dental" or "Hygiene".
@@ -25,16 +25,6 @@ namespace OpenDentBusiness
 		/// Returns a string representation of the class.
 		/// </summary>
 		public override string ToString() 
-			=> $"{GradYear} {Description}";
-
-
-        public SchoolClass Copy()
-		{
-			SchoolClass sc = new SchoolClass();
-			sc.Id = Id;
-			sc.GradYear = GradYear;
-			sc.Description = Description;
-			return sc;
-		}
+			=> $"{Year} {Description}";
 	}
 }

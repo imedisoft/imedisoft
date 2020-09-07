@@ -1101,9 +1101,9 @@ namespace OpenDentBusiness
 						provNum = Prefs.GetLong(PrefName.PracticeDefaultProv);
 					}
 					Provider providerFirst = Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-					Provider provider = Providers.GetFirstOrDefault(x => x.ProvNum == provNum) ?? providerFirst;
+					Provider provider = Providers.GetFirstOrDefault(x => x.Id == provNum) ?? providerFirst;
 					//get the fee based on code and prov fee sched
-					double ppoFee = Fees.GetAmount0(ProcCur.CodeNum, provider.FeeSched, ProcCur.ClinicNum, provNum, listFees);
+					double ppoFee = Fees.GetAmount0(ProcCur.CodeNum, provider.FeeScheduleId, ProcCur.ClinicNum, provNum, listFees);
 					double ucrFee = ProcCur.ProcFee;//Usual Customary and Regular (UCR) fee.  Also known as billed fee.
 					if (ucrFee > ppoFee)
 					{

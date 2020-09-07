@@ -1914,7 +1914,7 @@ namespace OpenDentBusiness {
 				//Take the recall appointment that was just inserted via FillAppointmentForRecall() and update the time and operatory.
 				Operatory opCur=Operatories.GetOperatory(timeSlot.OperatoryNum);
 				aptCur.AptStatus=ApptStatus.Scheduled;
-				aptCur.Op=opCur.OperatoryNum;
+				aptCur.Op=opCur.Id;
 				aptCur.Priority=isASAP ? ApptPriority.ASAP : ApptPriority.Normal;
 				aptCur.Confirmed=Prefs.GetLong(PrefName.WebSchedRecallConfirmStatus);
 				//Make sure that operatory specific settings are applied to the appointment.

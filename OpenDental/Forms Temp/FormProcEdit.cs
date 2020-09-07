@@ -349,7 +349,7 @@ namespace OpenDental {
 			}
 			SetOrderingProvider(null);//Clears both the internal ordering and referral ordering providers.
 			if(_procCur.ProvOrderOverride!=0) {
-				SetOrderingProvider(Providers.GetProv(_procCur.ProvOrderOverride));
+				SetOrderingProvider(Providers.GetById(_procCur.ProvOrderOverride));
 			}
 			else if(_procCur.OrderingReferralNum!=0) {
 				Referral referral;
@@ -436,7 +436,7 @@ namespace OpenDental {
 			if(formP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			SetOrderingProvider(Providers.GetProv(formP.SelectedProviderId));
+			SetOrderingProvider(Providers.GetById(formP.SelectedProviderId));
 		}
 
 		private void butPickOrderProvReferral_Click(object sender,EventArgs e) {
@@ -463,8 +463,8 @@ namespace OpenDental {
 				textOrderingProviderOverride.Text="";
 			}
 			else {
-				_selectedProvOrderNum=prov.ProvNum;
-				textOrderingProviderOverride.Text=prov.GetFormalName()+"  NPI: "+(prov.NationalProvID.Trim()==""?"Missing":prov.NationalProvID);
+				_selectedProvOrderNum=prov.Id;
+				textOrderingProviderOverride.Text=prov.GetFormalName()+"  NPI: "+(prov.NationalProviderID.Trim()==""?"Missing":prov.NationalProviderID);
 			}
 			_referralOrdering=null;
 		}

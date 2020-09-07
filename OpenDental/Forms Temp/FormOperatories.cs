@@ -201,7 +201,7 @@ namespace OpenDental{
 		}
 
 		private void FillGrid(){
-			List<long> listSelectedOpNums=gridMain.SelectedTags<Operatory>().Select(x => x.OperatoryNum).ToList();
+			List<long> listSelectedOpNums=gridMain.SelectedTags<Operatory>().Select(x => x.Id).ToList();
 			int scrollValueCur=gridMain.ScrollValue;
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
@@ -268,7 +268,7 @@ namespace OpenDental{
 			gridMain.EndUpdate();
 			for(int i=0;i<gridMain.ListGridRows.Count;i++) {
 				Operatory op=(Operatory)gridMain.ListGridRows[i].Tag;
-				if(op.OperatoryNum.In(listSelectedOpNums)) {
+				if(op.Id.In(listSelectedOpNums)) {
 					gridMain.SetSelected(i,true);
 				}
 			}
@@ -346,11 +346,11 @@ namespace OpenDental{
 			}
 			List<long> listSelectedOpNums=new List<long>();
 			for(int i=0;i<gridMain.SelectedIndices.Length;i++) {
-				listSelectedOpNums.Add(((Operatory)gridMain.ListGridRows[gridMain.SelectedIndices[i]].Tag).OperatoryNum);
+				listSelectedOpNums.Add(((Operatory)gridMain.ListGridRows[gridMain.SelectedIndices[i]].Tag).Id);
 			}
 			#endregion
 			#region Determine what Op to keep as the 'master'
-			FormOperatoryPick FormOP=new FormOperatoryPick(_listOps.FindAll(x => listSelectedOpNums.Contains(x.OperatoryNum)));
+			FormOperatoryPick FormOP=new FormOperatoryPick(_listOps.FindAll(x => listSelectedOpNums.Contains(x.Id)));
 			FormOP.ShowDialog();
 			if(FormOP.DialogResult!=DialogResult.OK) {
 				return;
@@ -379,7 +379,7 @@ namespace OpenDental{
 			#region Final prompt, displays number of appts to move and the 'master' ops abbr.
 			int apptCount=listApptsToMerge.FindAll(x => x.Op!=masterOpNum).Count;
 			if(apptCount > 0) {
-				string selectedOpName=_listOps.First(x => x.OperatoryNum==masterOpNum).Abbrev;//Safe
+				string selectedOpName=_listOps.First(x => x.Id==masterOpNum).Abbrev;//Safe
 				if(MessageBox.Show("Would you like to move"+" "+apptCount+" "
 					+"appointments from their current operatories to"+" "+selectedOpName+"?\r\n\r\n"
 					+"You cannot undo this!"
@@ -404,8 +404,8 @@ namespace OpenDental{
 				return;
 			}
 			MessageBox.Show("The following operatories and all of their appointments were merged into the"
-					+" "+_listOps.FirstOrDefault(x => x.OperatoryNum==masterOpNum).Abbrev+" "+"operatory:"+"\r\n"
-					+string.Join(", ",_listOps.FindAll(x => x.OperatoryNum!=masterOpNum && listSelectedOpNums.Contains(x.OperatoryNum)).Select(x => x.Abbrev)));
+					+" "+_listOps.FirstOrDefault(x => x.Id==masterOpNum).Abbrev+" "+"operatory:"+"\r\n"
+					+string.Join(", ",_listOps.FindAll(x => x.Id!=masterOpNum && listSelectedOpNums.Contains(x.Id)).Select(x => x.Abbrev)));
 			RefreshList();
 			FillGrid();
 		}
@@ -470,9 +470,6 @@ namespace OpenDental{
 		private bool CanReorderOps(Operatory op1,Operatory op2,out string strErrorMsg) {
 			strErrorMsg="";
 			if(!PrefC.HasClinicsEnabled || comboClinic.IsAllSelected) {
-				return true;
-			}
-			if(!op1.IsInHQView && !op2.IsInHQView) {
 				return true;
 			}
 			strErrorMsg="You cannot change the order of the Operatories"+" '"+op1.Abbrev+"' "+"and"+" '"+op2.Abbrev+"' "

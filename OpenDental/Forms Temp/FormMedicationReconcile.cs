@@ -9,6 +9,8 @@ using OpenDentBusiness;
 using OpenDental.UI;
 using System.IO;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormMedicationReconcile:ODForm {
@@ -47,9 +49,9 @@ namespace OpenDental {
 				}
 				else {
 					Medication generic=Medications.GetGeneric(medList[i].MedicationNum);
-					string medName=Medications.GetMedication(medList[i].MedicationNum).MedName;
-					if(generic.MedicationNum!=medList[i].MedicationNum) {//not generic
-						medName+=" ("+generic.MedName+")";
+					string medName=Medications.GetById(medList[i].MedicationNum).Name;
+					if(generic.Id!=medList[i].MedicationNum) {//not generic
+						medName+=" ("+generic.Name+")";
 					}
 					row.Cells.Add(medName);
 				}

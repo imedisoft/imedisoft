@@ -620,7 +620,7 @@ namespace OpenDental
 			{
 				Computers.UpdateHeartBeat(Environment.MachineName);
 			});
-			Text = PatientL.GetMainTitle(Patients.GetPat(CurPatNum), Clinics.ClinicId);
+			Text = PatientL.GetMainTitle(Patients.GetPat(CurPatNum), Clinics.Active.Id);
 			Security.DateTimeLastActivity = DateTime.Now;
 			//Certificate stores for emails need to be created on all computers since any of the computers are able to potentially send encrypted email.
 			//If this fails, prrobably a permission issue creating the stores. Nothing we can do except explain in the manual.
@@ -1288,7 +1288,7 @@ namespace OpenDental
 					this.Invoke(() =>
 					{
 						CurPatNum = pat.PatNum;
-						Text = PatientL.GetMainTitle(pat, Clinics.ClinicId);
+						Text = PatientL.GetMainTitle(pat, Clinics.Active.Id);
 					});
 					for (int i = 0; i <= 6; i++)
 					{
@@ -1441,7 +1441,7 @@ namespace OpenDental
 			{
 				pat = new Patient();
 			}
-			Text = PatientL.GetMainTitle(pat, Clinics.ClinicId);
+			Text = PatientL.GetMainTitle(pat, Clinics.Active.Id);
 			bool patChanged = PatientL.AddPatientToMenu(pat.GetNameLF(), pat.PatNum);
 			if (patChanged)
 			{
@@ -2380,7 +2380,7 @@ namespace OpenDental
 		{
 			bool isChangingClinic = (Clinics.ClinicId != clinicCur.Id);
 			Clinics.ClinicId = clinicCur.Id;
-			Text = PatientL.GetMainTitle(Patients.GetPat(CurPatNum), Clinics.ClinicId);
+			Text = PatientL.GetMainTitle(Patients.GetPat(CurPatNum), Clinics.Active.Id);
 			SetSmsNotificationText(doUseSignalInterval: !isChangingClinic);
 			if (Prefs.GetBool(PrefName.AppointmentClinicTimeReset))
 			{
@@ -3488,8 +3488,8 @@ namespace OpenDental
 			#region Appointment Module
 			if (ContrAppt2.Visible)
 			{
-				List<long> listOpNumsVisible = ContrAppt2.GetListOpsVisible().Select(x => x.OperatoryNum).ToList();
-				List<long> listProvNumsVisible = ContrAppt2.GetListProvsVisible().Select(x => x.ProvNum).ToList();
+				List<long> listOpNumsVisible = ContrAppt2.GetListOpsVisible().Select(x => x.Id).ToList();
+				List<long> listProvNumsVisible = ContrAppt2.GetListProvsVisible().Select(x => x.Id).ToList();
 				bool isRefreshAppts = Signalods.IsApptRefreshNeeded(ContrAppt2.GetDateSelected().Date, listSignals, listOpNumsVisible, listProvNumsVisible);
 				bool isRefreshScheds = Signalods.IsSchedRefreshNeeded(ContrAppt2.GetDateSelected().Date, listSignals, listOpNumsVisible, listProvNumsVisible);
 				bool isRefreshPanelButtons = Signalods.IsContrApptButtonRefreshNeeded(listSignals);
@@ -5075,12 +5075,12 @@ namespace OpenDental
 				return;
 			}
 			//clinics is enabled
-			long clinicNumOld = Clinics.ClinicId;
+			long clinicNumOld = Clinics.Active.Id;
 			if (Security.CurrentUser.ClinicIsRestricted)
 			{
 				Clinics.ClinicId = Security.CurrentUser.ClinicId;
 			}
-			Text = PatientL.GetMainTitle(Patients.GetPat(CurPatNum), Clinics.ClinicId);
+			Text = PatientL.GetMainTitle(Patients.GetPat(CurPatNum), Clinics.Active.Id);
 			SetSmsNotificationText(doUseSignalInterval: (clinicNumOld == Clinics.ClinicId));//Clinic selection changed, update sms notifications.
 			RefreshMenuClinics();//this calls ModuleSelected, so no need to call RefreshCurrentModule
 			RefreshMenuDashboards();
@@ -5239,16 +5239,16 @@ namespace OpenDental
 			FormC.ShowDialog();
 			SecurityLogs.MakeLogEntry(Permissions.Setup, 0, "Clinics");
 			//this menu item is only visible if the clinics show feature is enabled (!EasyNoClinics)
-			if (Clinics.GetDescription(Clinics.ClinicId) == "")
+			if (Clinics.GetDescription(Clinics.Active.Id) == "")
 			{//will be empty string if ClinicNum is not valid, in case they deleted the clinic
 				Clinics.ClinicId = Security.CurrentUser.ClinicId;
 				SetSmsNotificationText(doUseSignalInterval: true);//Update sms notification text.
-				Text = PatientL.GetMainTitle(Patients.GetPat(CurPatNum), Clinics.ClinicId);
+				Text = PatientL.GetMainTitle(Patients.GetPat(CurPatNum), Clinics.Active.Id);
 			}
 			RefreshMenuClinics();
 			//reset the main title bar in case the user changes the clinic description for the selected clinic
 			Patient pat = Patients.GetPat(CurPatNum);
-			Text = PatientL.GetMainTitle(pat, Clinics.ClinicId);
+			Text = PatientL.GetMainTitle(pat, Clinics.Active.Id);
 			//reset the tip text in case the user changes the clinic description
 		}
 
@@ -5460,7 +5460,7 @@ namespace OpenDental
 					return;
 				}
 			}
-			_formDashboardEditTab = new OpenDentalGraph.FormDashboardEditTab(Security.CurrentUser.ProviderId, !Security.IsAuthorized(Permissions.ReportProdIncAllProviders, true)) { IsEditMode = false };
+			_formDashboardEditTab = new OpenDentalGraph.FormDashboardEditTab(Security.CurrentUser.ProviderId ?? 0, !Security.IsAuthorized(Permissions.ReportProdIncAllProviders, true)) { IsEditMode = false };
 			_formDashboardEditTab.FormClosed += new FormClosedEventHandler((object senderF, FormClosedEventArgs eF) => { _formDashboardEditTab = null; });
 			Cursor = Cursors.Default;
 			_formDashboardEditTab.Show();
@@ -5866,7 +5866,7 @@ namespace OpenDental
 
 		private void menuItemEvaluations_Click(object sender, EventArgs e)
 		{
-			if (!Security.IsAuthorized(Permissions.AdminDentalEvaluations, true) && (Security.CurrentUser.ProviderId == 0 || Providers.GetProv(Security.CurrentUser.ProviderId).SchoolClassNum != 0))
+			if (!Security.IsAuthorized(Permissions.AdminDentalEvaluations, true) && (Security.CurrentUser.ProviderId == 0 || Providers.GetById(Security.CurrentUser.ProviderId ?? 0).SchoolClassId != 0))
 			{
 				MessageBox.Show("Only Instructors may view or edit evaluations.");
 				return;
@@ -5937,7 +5937,7 @@ namespace OpenDental
 
 		private void menuItemReqStudents_Click(object sender, EventArgs e)
 		{
-			Provider prov = Providers.GetProv(Security.CurrentUser.ProviderId);
+			Provider prov = Providers.GetById(Security.CurrentUser.ProviderId ?? 0);
 			if (prov == null)
 			{
 				MessageBox.Show("The current user is not attached to a provider. Attach the user to a provider to gain access to this feature.");
@@ -5947,7 +5947,7 @@ namespace OpenDental
 			{//if a student is logged in
 			 //the student always has permission to view their own requirements
 				FormReqStudentOne FormO = new FormReqStudentOne();
-				FormO.ProvNum = prov.ProvNum;
+				FormO.ProvNum = prov.Id;
 				FormO.ShowDialog();
 				return;
 			}
@@ -7072,7 +7072,7 @@ namespace OpenDental
 				moduleBar.Invalidate();
 				SetModuleSelected();
 				Patient pat = Patients.GetPat(CurPatNum);//pat could be null
-				Text = PatientL.GetMainTitle(pat, Clinics.ClinicId);//handles pat==null by not displaying pat name in title bar
+				Text = PatientL.GetMainTitle(pat, Clinics.Active.Id);//handles pat==null by not displaying pat name in title bar
 				if (userControlTasks1.Visible)
 				{
 					userControlTasks1.InitializeOnStartup();
@@ -7654,7 +7654,7 @@ namespace OpenDental
 			}
 			SetModuleSelected();
 			Patient pat = Patients.GetPat(CurPatNum);//pat could be null
-			Text = PatientL.GetMainTitle(pat, Clinics.ClinicId);//handles pat==null by not displaying pat name in title bar
+			Text = PatientL.GetMainTitle(pat, Clinics.Active.Id);//handles pat==null by not displaying pat name in title bar
 			FillPatientButton(pat);
 			if (userControlTasks1.Visible)
 			{

@@ -131,7 +131,7 @@ namespace OpenDental {
 			}
 			//we don't want an empty list
 			if(comboClinics.ListSelectedClinicNums.Count==0){
-				return new List<long>(){Clinics.ClinicId };//current clinic
+				return new List<long>(){Clinics.Active.Id };//current clinic
 			}
 			return comboClinics.ListSelectedClinicNums;
 		}
@@ -195,7 +195,7 @@ namespace OpenDental {
 			if(PrefC.HasClinicsEnabled) {
 				//comboClinics.HqDescription="Practice";
 				//hqClinic.Abbr=(Prefs.GetString(PrefName.PracticeTitle)+" ("+"Practice"+")");
-				comboClinics.SelectedClinicNum=Clinics.ClinicId;
+				comboClinics.SelectedClinicNum=Clinics.Active.Id;
 				if(Prefs.GetBool(PrefName.EnterpriseApptList)) {//This form behaves differently when compared to the other 6 forms
 					comboClinics.IncludeAll=false;
 				}

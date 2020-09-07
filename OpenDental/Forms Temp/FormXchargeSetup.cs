@@ -479,8 +479,8 @@ namespace OpenDental{
 					//if program link is enabled, disable the enable check box so the restricted user cannot disable for all clinics
 					checkEnabled.Enabled=!_progCur.Enabled;
 				}
-				comboClinic.SelectedClinicNum=Clinics.ClinicId;
-				_clinicNumRevert=Clinics.ClinicId;
+				comboClinic.SelectedClinicNum=Clinics.Active.Id;
+				_clinicNumRevert=Clinics.Active.Id;
 			}
 			else {//clinics not enabled
 				checkEnabled.Text="Enabled";

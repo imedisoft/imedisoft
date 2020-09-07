@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using Imedisoft.Forms;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental{
 	/// <summary></summary>
@@ -440,8 +441,8 @@ namespace OpenDental{
 				labelEdit.Visible=false;
 			}
 			else {
-				textMedName.Text=Medications.GetMedication(MedicationPatCur.MedicationNum).MedName;
-				textGenericName.Text=Medications.GetGeneric(MedicationPatCur.MedicationNum).MedName;
+				textMedName.Text=Medications.GetById(MedicationPatCur.MedicationNum).Name;
+				textGenericName.Text=Medications.GetGeneric(MedicationPatCur.MedicationNum).Name;
 				textMedNote.Text=Medications.GetGeneric(MedicationPatCur.MedicationNum).Notes;
 			}
 			comboProv.Items.Add("none");
@@ -454,7 +455,7 @@ namespace OpenDental{
 			}
 			else{
 				for(int i=0;i<_listProviders.Count;i++) {
-					if(MedicationPatCur.ProvNum==_listProviders[i].ProvNum) {
+					if(MedicationPatCur.ProvNum==_listProviders[i].Id) {
 						comboProv.SelectedIndex=i+1;
 					}
 				}
@@ -529,7 +530,7 @@ namespace OpenDental{
 		private void butEdit_Click(object sender, System.EventArgs e) {
 			Medications.RefreshCache();
 			FormMedicationEdit FormME=new FormMedicationEdit();
-			Medication med=Medications.GetMedication(MedicationPatCur.MedicationNum);//The edit button is not visible if MedicationNum=0.
+			Medication med=Medications.GetById(MedicationPatCur.MedicationNum);//The edit button is not visible if MedicationNum=0.
 			if(med==null) {//Possible to delete the medication from a separate WS while medication loaded in memory.
 				MessageBox.Show("An error occurred loading medication.");
 				return;
@@ -539,9 +540,9 @@ namespace OpenDental{
 			if(FormME.DialogResult!=DialogResult.OK){
 				return;
 			}
-			MedicationPatCur.RxCui=FormME.MedicationCur.RxCui;
-			textMedName.Text=Medications.GetMedication(MedicationPatCur.MedicationNum).MedName;//The edit button is not visible if MedicationNum=0.
-			textGenericName.Text=Medications.GetGeneric(MedicationPatCur.MedicationNum).MedName;//The edit button is not visible if MedicationNum=0.
+			MedicationPatCur.RxCui=int.Parse(FormME.MedicationCur.RxCui);
+			textMedName.Text=Medications.GetById(MedicationPatCur.MedicationNum).Name;//The edit button is not visible if MedicationNum=0.
+			textGenericName.Text=Medications.GetGeneric(MedicationPatCur.MedicationNum).Name;//The edit button is not visible if MedicationNum=0.
 			textMedNote.Text=Medications.GetGeneric(MedicationPatCur.MedicationNum).Notes;//The edit button is not visible if MedicationNum=0.
 			textRxNormDesc.Text=RxNorms.GetDescByRxCui(MedicationPatCur.RxCui.ToString());
 		}
@@ -559,7 +560,7 @@ namespace OpenDental{
 				SecurityLogs.MakeLogEntry(Permissions.PatMedicationListEdit,MedicationPatCur.PatNum,MedicationPatCur.MedDescript+" deleted");
 			}
 			else {
-				SecurityLogs.MakeLogEntry(Permissions.PatMedicationListEdit,MedicationPatCur.PatNum,Medications.GetMedication(MedicationPatCur.MedicationNum).MedName+" deleted");
+				SecurityLogs.MakeLogEntry(Permissions.PatMedicationListEdit,MedicationPatCur.PatNum,Medications.GetById(MedicationPatCur.MedicationNum).Name+" deleted");
 			}
 			MedicationPatCur=null;//This prevents other windows trying to use the medication pat after this window has closed.
 			DialogResult=DialogResult.OK;
@@ -586,7 +587,7 @@ namespace OpenDental{
 				MedicationPatCur.ProvNum=0;
 			}
 			else {
-				MedicationPatCur.ProvNum=_listProviders[comboProv.SelectedIndex-1].ProvNum;
+				MedicationPatCur.ProvNum=_listProviders[comboProv.SelectedIndex-1].Id;
 			}
 			MedicationPatCur.PatNote=textPatNote.Text;
 			MedicationPatCur.DateStart=PIn.Date(textDateStart.Text);
@@ -597,7 +598,7 @@ namespace OpenDental{
 					SecurityLogs.MakeLogEntry(Permissions.PatMedicationListEdit,MedicationPatCur.PatNum,MedicationPatCur.MedDescript+" added");
 				}
 				else {
-					SecurityLogs.MakeLogEntry(Permissions.PatMedicationListEdit,MedicationPatCur.PatNum,Medications.GetMedication(MedicationPatCur.MedicationNum).MedName+" added");
+					SecurityLogs.MakeLogEntry(Permissions.PatMedicationListEdit,MedicationPatCur.PatNum,Medications.GetById(MedicationPatCur.MedicationNum).Name+" added");
 				}
 			}
 			else{
@@ -606,7 +607,7 @@ namespace OpenDental{
 					SecurityLogs.MakeLogEntry(Permissions.PatMedicationListEdit,MedicationPatCur.PatNum,MedicationPatCur.MedDescript+" edited");
 				}
 				else {
-					SecurityLogs.MakeLogEntry(Permissions.PatMedicationListEdit,MedicationPatCur.PatNum,Medications.GetMedication(MedicationPatCur.MedicationNum).MedName+" edited");
+					SecurityLogs.MakeLogEntry(Permissions.PatMedicationListEdit,MedicationPatCur.PatNum,Medications.GetById(MedicationPatCur.MedicationNum).Name+" edited");
 				}
 			}
 			DialogResult=DialogResult.OK;

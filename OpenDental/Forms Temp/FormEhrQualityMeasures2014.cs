@@ -38,12 +38,12 @@ namespace OpenDental {
 			for(int i=0;i<_listProviders.Count;i++) {
 				string ehrKey="";
 				int yearValue=0;
-				List<EhrProvKey> listProvKeys=EhrProvKeys.GetKeysByFLName(_listProviders[i].LName,_listProviders[i].FName);
+				List<EhrProvKey> listProvKeys=EhrProvKeys.GetKeysByFLName(_listProviders[i].LastName,_listProviders[i].FirstName);
 				if(listProvKeys.Count!=0) {
 					ehrKey=listProvKeys[0].ProvKey;
 					yearValue=listProvKeys[0].YearValue;
 				}
-				if(FormEHR.ProvKeyIsValid(_listProviders[i].LName,_listProviders[i].FName,yearValue,ehrKey)) {
+				if(FormEHR.ProvKeyIsValid(_listProviders[i].LastName,_listProviders[i].FirstName,yearValue,ehrKey)) {
 					//EHR has been valid.
 					listProvsKeyed.Add(_listProviders[i]);
 				}
@@ -55,7 +55,7 @@ namespace OpenDental {
 			}
 			for(int i=0;i<listProvsKeyed.Count;i++) {
 				comboProv.Items.Add(listProvsKeyed[i].GetLongDesc());
-				if(Security.CurrentUser.ProviderId==listProvsKeyed[i].ProvNum) {
+				if(Security.CurrentUser.ProviderId==listProvsKeyed[i].Id) {
 					comboProv.SelectedIndex=i;
 				}
 			}
@@ -78,7 +78,7 @@ namespace OpenDental {
 			}
 			_dateStart=dateStart;
 			_dateEnd=dateEnd;
-			_provNum=listProvsKeyed[comboProv.SelectedIndex].ProvNum;
+			_provNum=listProvsKeyed[comboProv.SelectedIndex].Id;
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
 			GridColumn col=new GridColumn("Id",100);
@@ -144,13 +144,13 @@ namespace OpenDental {
 				MessageBox.Show("Click Refresh first.");
 				return;
 			}
-			long provSelected=listProvsKeyed[comboProv.SelectedIndex].ProvNum;
+			long provSelected=listProvsKeyed[comboProv.SelectedIndex].Id;
 			if(_provNum!=provSelected) {
 				MessageBox.Show("The values in the grid do not apply to the provider selected.  Click Refresh first.");
 				return;
 			}
-			Provider provDefault=Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv));
-			long provNumLegal=provDefault.ProvNum;
+			Provider provDefault=Providers.GetById(Prefs.GetLong(PrefName.PracticeDefaultProv));
+			long provNumLegal=provDefault.Id;
 			//The practice default provider may be set to a non-person, like Apple Tree Dental, in which case there is no first name allowed and an NPI number does not make sense.
 			//Prompt user to select the provider to set as the legal authenticator for the QRDA documents.
 			//The Legal Authenticator must have a valid first name, last name, and NPI number and is the "single person legally responsible for the document" and "must be a person".
@@ -160,7 +160,7 @@ namespace OpenDental {
 				if(FormPP.ShowDialog()!=DialogResult.OK) {
 					return;
 				}
-				if(Providers.GetProv(FormPP.SelectedProviderId).IsNotPerson) {
+				if(Providers.GetById(FormPP.SelectedProviderId).IsNotPerson) {
 					MessageBox.Show("The selected provider was marked 'Not a person'.");
 					return;
 				}

@@ -1271,7 +1271,7 @@ namespace OpenDental {
 				MessageBox.Show("There are no Quick Charge items in Setup | Definitions.  There must be at least one in order to use the Quick Charge drop down menu.");
 			}
 			List<string> listProcCodesAdded=new List<string>();
-			Provider patProv=Providers.GetProv(_patCur.PriProv);
+			Provider patProv=Providers.GetById(_patCur.PriProv);
 			for(int i=0;i<arrayProcCodes.Length;i++) {
 				if(AddProcAndValidate(arrayProcCodes[i],patProv)) {
 					listProcCodesAdded.Add(arrayProcCodes[i]);
@@ -1670,7 +1670,7 @@ namespace OpenDental {
 				return;
 			}
 			string quickProcText=textQuickProcs.Text;//because the text seems to disappear from textbox in menu bar when MsgBox comes up.
-			Provider patProvider=Providers.GetProv(_patCur.PriProv);
+			Provider patProvider=Providers.GetById(_patCur.PriProv);
 			if(AddProcAndValidate(quickProcText,patProvider)) {
 				SecurityLogs.MakeLogEntry(Permissions.AccountProcsQuickAdd,_patCur.PatNum
 					,"The following procedures were added via the Quick Charge button from the Account module"
@@ -1962,10 +1962,10 @@ namespace OpenDental {
 					paymentCur.ClinicNum=_patCur.ClinicNum;
 				}
 				else if((PayClinicSetting)PrefC.GetInt(PrefName.PaymentClinicSetting)==PayClinicSetting.SelectedExceptHQ) {
-					paymentCur.ClinicNum=(Clinics.ClinicId==0)?_patCur.ClinicNum:Clinics.ClinicId;
+					paymentCur.ClinicNum=(Clinics.ClinicId==null)?_patCur.ClinicNum:Clinics.ClinicId.Value;
 				}
 				else {
-					paymentCur.ClinicNum=Clinics.ClinicId;
+					paymentCur.ClinicNum=Clinics.Active.Id;
 				}
 			}
 			paymentCur.DateEntry=DateTimeOD.Today;//So that it will show properly in the new window.
@@ -3370,7 +3370,7 @@ namespace OpenDental {
 			}
 			proc.ProvNum=procCode.ProvNumDefault;//use proc default prov if set
 			if(proc.ProvNum==0) { //if none set, use primary provider.
-				proc.ProvNum=patProv.ProvNum;
+				proc.ProvNum=patProv.Id;
 			}
 			List<InsSub> listInsSubs=InsSubs.RefreshForFam(_famCur);
 			List<InsPlan> listInsPlans=InsPlans.RefreshForSubList(listInsSubs);

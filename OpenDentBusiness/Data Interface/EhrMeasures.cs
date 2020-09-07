@@ -336,14 +336,14 @@ namespace OpenDentBusiness{
 		public static DataTable GetTable(EhrMeasureType mtype,DateTime dateStart,DateTime dateEnd,long provNum) {
 			string command="";
 			DataTable tableRaw=new DataTable();
-			Provider provCur=Providers.GetProv(provNum);
+			Provider provCur=Providers.GetById(provNum);
 			command="SELECT "+DbHelper.GroupConcat("provider.ProvNum")+" FROM provider WHERE provider.ProvNum IN "
 				+"(SELECT ProvNum FROM provider pv, ehrprovkey epk WHERE pv.LName=epk.LName AND pv.FName=epk.FName "
-				+"AND epk.LName='"+POut.String(provCur.LName)+"' AND epk.FName='"+POut.String(provCur.FName)+"') ";
+				+"AND epk.LName='"+POut.String(provCur.LastName)+"' AND epk.FName='"+POut.String(provCur.FirstName)+"') ";
 			string provs=Database.ExecuteString(command);
 			command="SELECT "+DbHelper.GroupConcat("provider.NationalProvID")+" FROM provider WHERE provider.ProvNum IN "
 				+"(SELECT ProvNum FROM provider pv, ehrprovkey epk WHERE pv.LName=epk.LName AND pv.FName=epk.FName "
-				+"AND epk.LName='"+POut.String(provCur.LName)+"' AND epk.FName='"+POut.String(provCur.FName)+"') "
+				+"AND epk.LName='"+POut.String(provCur.LastName)+"' AND epk.FName='"+POut.String(provCur.FirstName)+"') "
 				+"AND provider.NationalProvID !='' AND provider.NationalProvID !=','";
 			string provNPIs=Database.ExecuteString(command);
 			provNPIs.Trim(',');
@@ -1616,10 +1616,10 @@ namespace OpenDentBusiness{
 			int retval=0;
 			string command="";
 			DataTable tableRaw=new DataTable();
-			Provider provCur=Providers.GetProv(provNum);
+			Provider provCur=Providers.GetById(provNum);
 			command="SELECT GROUP_CONCAT(provider.ProvNum) FROM provider WHERE provider.ProvNum IN "
 				+"(SELECT ProvNum FROM provider pv, ehrprovkey epk WHERE pv.LName=epk.LName AND pv.FName=epk.FName "
-				+"AND epk.LName='"+POut.String(provCur.LName)+"' AND epk.FName='"+POut.String(provCur.FName)+"')";
+				+"AND epk.LName='"+POut.String(provCur.LastName)+"' AND epk.FName='"+POut.String(provCur.FirstName)+"')";
 			string provs=Database.ExecuteString(command);
 			switch(mtype) {
 				case EhrMeasureType.ProblemList:
@@ -2827,10 +2827,10 @@ namespace OpenDentBusiness{
 			
 			string command="";
 			DataTable tableRaw=new DataTable();
-			Provider provCur=Providers.GetProv(provNum);
+			Provider provCur=Providers.GetById(provNum);
 			command="SELECT GROUP_CONCAT(provider.ProvNum) FROM provider WHERE provider.ProvNum IN "
 				+"(SELECT ProvNum FROM provider pv, ehrprovkey epk WHERE pv.LName=epk.LName AND pv.FName=epk.FName "
-				+"AND epk.LName='"+POut.String(provCur.LName)+"' AND epk.FName='"+POut.String(provCur.FName)+"')";
+				+"AND epk.LName='"+POut.String(provCur.LastName)+"' AND epk.FName='"+POut.String(provCur.FirstName)+"')";
 			string provs=Database.ExecuteString(command);
 			string[] tempProv=provs.Split(',');
 			string provOID="";
@@ -2842,7 +2842,7 @@ namespace OpenDentBusiness{
 			}
 			command="SELECT GROUP_CONCAT(provider.NationalProvID) FROM provider WHERE provider.ProvNum IN "
 				+"(SELECT ProvNum FROM provider pv, ehrprovkey epk WHERE pv.LName=epk.LName AND pv.FName=epk.FName "
-				+"AND epk.LName='"+POut.String(provCur.LName)+"' AND epk.FName='"+POut.String(provCur.FName)+"') "
+				+"AND epk.LName='"+POut.String(provCur.LastName)+"' AND epk.FName='"+POut.String(provCur.FirstName)+"') "
 				+"AND provider.NationalProvID !='' AND provider.NationalProvID !=','";
 			string provNPIs=Database.ExecuteString(command);
 			provNPIs.Trim(',');
@@ -3901,10 +3901,10 @@ namespace OpenDentBusiness{
 			int retval=0;
 			string command="";
 			DataTable tableRaw=new DataTable();
-			Provider provCur=Providers.GetProv(provNum);
+			Provider provCur=Providers.GetById(provNum);
 			command="SELECT GROUP_CONCAT(provider.ProvNum) FROM provider WHERE provider.ProvNum IN "
 				+"(SELECT ProvNum FROM provider pv, ehrprovkey epk WHERE pv.LName=epk.LName AND pv.FName=epk.FName "
-				+"AND epk.LName='"+POut.String(provCur.LName)+"' AND epk.FName='"+POut.String(provCur.FName)+"')";
+				+"AND epk.LName='"+POut.String(provCur.LastName)+"' AND epk.FName='"+POut.String(provCur.FirstName)+"')";
 			string provs=Database.ExecuteString(command);
 			switch(mtype) {
 				#region CPOE_MedOrdersOnly
@@ -4390,7 +4390,7 @@ namespace OpenDentBusiness{
 								continue;
 							}
 							else if((ehrLabList[m].OrderingProviderID==pat.PriProv.ToString()	
-								|| ehrLabList[m].OrderingProviderID==Providers.GetProv(pat.PriProv).NationalProvID)
+								|| ehrLabList[m].OrderingProviderID==Providers.GetById(pat.PriProv).NationalProviderID)
 								&& (loinc==null || !loinc.ClassType.ToUpper().Contains("RAD"))) 
 							{
 								labOrderCount++;
@@ -4423,7 +4423,7 @@ namespace OpenDentBusiness{
 								continue;
 							}
 							else if((ehrLabList[m].OrderingProviderID==pat.PriProv.ToString() 
-								|| ehrLabList[m].OrderingProviderID==Providers.GetProv(pat.PriProv).NationalProvID)
+								|| ehrLabList[m].OrderingProviderID==Providers.GetById(pat.PriProv).NationalProviderID)
 								&& (loinc!=null && loinc.ClassType.ToUpper().Contains("RAD"))) 
 							{
 								radOrderCount++;
@@ -5247,7 +5247,7 @@ namespace OpenDentBusiness{
 								continue;
 							}
 							else if((ehrLabList[m].OrderingProviderID==pat.PriProv.ToString()	
-								|| ehrLabList[m].OrderingProviderID==Providers.GetProv(pat.PriProv).NationalProvID)
+								|| ehrLabList[m].OrderingProviderID==Providers.GetById(pat.PriProv).NationalProviderID)
 								&& (loinc==null || !loinc.ClassType.ToUpper().Contains("RAD"))) 
 							{
 								labOrderCount++;
@@ -5280,7 +5280,7 @@ namespace OpenDentBusiness{
 								continue;
 							}
 							else if((ehrLabList[m].OrderingProviderID==pat.PriProv.ToString() 
-								|| ehrLabList[m].OrderingProviderID==Providers.GetProv(pat.PriProv).NationalProvID)
+								|| ehrLabList[m].OrderingProviderID==Providers.GetById(pat.PriProv).NationalProviderID)
 								&& (loinc!=null && loinc.ClassType.ToUpper().Contains("RAD"))) 
 							{
 								radOrderCount++;
@@ -5792,10 +5792,10 @@ namespace OpenDentBusiness{
 			
 			string command="";
 			DataTable tableRaw=new DataTable();
-			Provider provCur=Providers.GetProv(provNum);
+			Provider provCur=Providers.GetById(provNum);
 			command="SELECT GROUP_CONCAT(provider.ProvNum) FROM provider WHERE provider.ProvNum IN "
 				+"(SELECT ProvNum FROM provider pv, ehrprovkey epk WHERE pv.LName=epk.LName AND pv.FName=epk.FName "
-				+"AND epk.LName='"+POut.String(provCur.LName)+"' AND epk.FName='"+POut.String(provCur.FName)+"')";
+				+"AND epk.LName='"+POut.String(provCur.LastName)+"' AND epk.FName='"+POut.String(provCur.FirstName)+"')";
 			string provs=Database.ExecuteString(command);
 			string[] tempProv=provs.Split(',');
 			string provOID="";
@@ -5807,7 +5807,7 @@ namespace OpenDentBusiness{
 			}
 			command="SELECT GROUP_CONCAT(provider.NationalProvID) FROM provider WHERE provider.ProvNum IN "
 				+"(SELECT ProvNum FROM provider pv, ehrprovkey epk WHERE pv.LName=epk.LName AND pv.FName=epk.FName "
-				+"AND epk.LName='"+POut.String(provCur.LName)+"' AND epk.FName='"+POut.String(provCur.FName)+"') "
+				+"AND epk.LName='"+POut.String(provCur.LastName)+"' AND epk.FName='"+POut.String(provCur.FirstName)+"') "
 				+"AND provider.NationalProvID !='' AND provider.NationalProvID !=','";
 			string provNPIs=Database.ExecuteString(command);
 			provNPIs.Trim(',');

@@ -78,8 +78,8 @@ namespace OpenDental.Bridges
 			command += pat.FName + "|";//Firstname
 			command += pat.MiddleI + "|";//
 			command += "|";//Comments: blank
-			Provider prov = Providers.GetProv(Patients.GetProvNum(pat));
-			command += prov.LName + ", " + prov.FName + "|";//Provider
+			Provider prov = Providers.GetById(Patients.GetProvNum(pat));
+			command += prov.LastName + ", " + prov.FirstName + "|";//Provider
 			command += "|";//Provider phone
 			command += "|";//Addr
 			command += "|";//Addr2

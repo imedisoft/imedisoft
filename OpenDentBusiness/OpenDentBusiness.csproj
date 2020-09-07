@@ -785,7 +785,7 @@
     <Compile Include="Crud\LoincCrud.cs" />
     <Compile Include="Crud\MapAreaCrud.cs" />
     <Compile Include="Crud\MedicalOrderCrud.cs" />
-    <Compile Include="Crud\MedicationCrud.cs" />
+    <Compile Include="Data\Crud\Medications.cs" />
     <Compile Include="Crud\MedicationPatCrud.cs" />
     <Compile Include="Crud\MedLabFacAttachCrud.cs" />
     <Compile Include="Crud\MedLabCrud.cs" />
@@ -864,8 +864,8 @@
     <Compile Include="Crud\RxPatCrud.cs" />
     <Compile Include="Crud\ScheduleCrud.cs" />
     <Compile Include="Crud\ScheduleOpCrud.cs" />
-    <Compile Include="Crud\SchoolClassCrud.cs" />
-    <Compile Include="Crud\SchoolCourseCrud.cs" />
+    <Compile Include="Data\Crud\SchoolClasses.cs" />
+    <Compile Include="Data\Crud\SchoolCourses.cs" />
     <Compile Include="Crud\ScreenCrud.cs" />
     <Compile Include="Crud\ScreenGroupCrud.cs" />
     <Compile Include="Crud\ScreenPatCrud.cs" />
@@ -1237,8 +1237,8 @@
     <Compile Include="Data Interface\RxPats.cs" />
     <Compile Include="Data Interface\ScheduleOps.cs" />
     <Compile Include="Data Interface\Schedules.cs" />
-    <Compile Include="Data Interface\SchoolClasses.cs" />
-    <Compile Include="Data Interface\SchoolCourses.cs" />
+    <Compile Include="Data\Logic\SchoolClasses.cs" />
+    <Compile Include="Data\Logic\SchoolCourses.cs" />
     <Compile Include="Data Interface\ScreenGroups.cs" />
     <Compile Include="Data Interface\Screens.cs" />
     <Compile Include="Db Multi Table\Security.cs" />
@@ -1695,7 +1695,6 @@
     <Compile Include="TableTypes\MountDef.cs" />
     <Compile Include="TableTypes\Etrans.cs" />
     <Compile Include="TableTypes\FormPat.cs" />
-    <Compile Include="TableTypes\County.cs" />
     <Compile Include="TableTypes\CovCat.cs" />
     <Compile Include="TableTypes\CovSpan.cs" />
     <Compile Include="TableTypes\Def.cs" />
@@ -1706,7 +1705,6 @@
     <Compile Include="TableTypes\EmailAttach.cs" />
     <Compile Include="TableTypes\EmailMessage.cs" />
     <Compile Include="TableTypes\EmailTemplate.cs" />
-    <Compile Include="TableTypes\Employee.cs" />
     <Compile Include="TableTypes\Employer.cs" />
     <Compile Include="TableTypes\Fee.cs" />
     <Compile Include="TableTypes\GroupPermission.cs" />
@@ -1718,7 +1716,6 @@
     <Compile Include="TableTypes\Letter.cs" />
     <Compile Include="TableTypes\LetterMerge.cs" />
     <Compile Include="TableTypes\LetterMergeField.cs" />
-    <Compile Include="TableTypes\Medication.cs" />
     <Compile Include="TableTypes\MedicationPat.cs" />
     <Compile Include="TableTypes\Operatory.cs" />
     <Compile Include="TableTypes\PatField.cs" />
@@ -1758,8 +1755,6 @@
     <Compile Include="TableTypes\RxDef.cs" />
     <Compile Include="TableTypes\RxPat.cs" />
     <Compile Include="TableTypes\Schedule.cs" />
-    <Compile Include="TableTypes\SchoolClass.cs" />
-    <Compile Include="TableTypes\SchoolCourse.cs" />
     <Compile Include="TableTypes\ScreenGroup.cs" />
     <Compile Include="TableTypes\Screen.cs" />
     <Compile Include="TableTypes\SigButDef.cs" />

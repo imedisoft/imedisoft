@@ -222,7 +222,7 @@ namespace OpenDental{
 				//if clinics are enabled and this is a holiday or practice note, set visible and fill the clinic combobox and private list of clinics
 				if(_isHolidayOrNote && SchedCur.SchedType==ScheduleType.Practice) {
 					comboClinic.Visible=true;//only visible for holidays and practice notes and only if clinics are enabled
-					comboClinic.SelectedClinicNum=Clinics.ClinicId;
+					comboClinic.SelectedClinicNum=Clinics.Active.Id;
 				}
 				else {
 					comboClinic.Visible=false;
@@ -257,7 +257,7 @@ namespace OpenDental{
 			foreach(Operatory opCur in _listOps) {
 				int curIndex=listOps.Items.Add(opCur.OpName);
 				//Select the item that was just added if the schedule's Ops contains the current OpNum.
-				listOps.SetSelected(curIndex,SchedCur.Ops.Contains(opCur.OperatoryNum));
+				listOps.SetSelected(curIndex,SchedCur.Ops.Contains(opCur.Id));
 			}
 			listOps.SetSelected(0,listOps.SelectedIndices.Count==0);//select 'not specified' if no ops were selected in the loop
 			comboStart.Select();
@@ -289,7 +289,7 @@ namespace OpenDental{
 				List<long> listSelectedOps=new List<long>();
 				List<Schedule> listProvSchedsOnly=ListScheds.FindAll(x=>x.SchedType==ScheduleType.Provider);
 				if(!listOps.SelectedIndices.Contains(0)) {//add selected operatories into listSelectedOps
-					listSelectedOps=listOps.SelectedIndices.OfType<int>().Select(x =>_listOps[x-1].OperatoryNum).ToList();
+					listSelectedOps=listOps.SelectedIndices.OfType<int>().Select(x =>_listOps[x-1].Id).ToList();
 				}
 				SchedCur.Ops=listSelectedOps.ToList();//deep copy of list. (because it is value type.)
 				SchedCur.StartTime=startDateT.TimeOfDay;
@@ -336,7 +336,7 @@ namespace OpenDental{
       SchedCur.Note=textNote.Text;
 			SchedCur.Ops=new List<long>();
 			if(listOps.SelectedIndices.Count>0 && !listOps.SelectedIndices.Contains(0)) {
-				listOps.SelectedIndices.OfType<int>().ToList().ForEach(x => SchedCur.Ops.Add(_listOps[x-1].OperatoryNum));
+				listOps.SelectedIndices.OfType<int>().ToList().ForEach(x => SchedCur.Ops.Add(_listOps[x-1].Id));
 			}
 			SchedCur.ClinicNum=clinicNum;//0 if HQ selected or clinics not enabled or not a holiday or practice note
 			#endregion Set Schedule Fields

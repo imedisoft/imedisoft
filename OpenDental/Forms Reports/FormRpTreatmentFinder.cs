@@ -489,7 +489,7 @@ namespace OpenDental
 			//will start out 1st through 30th of previous month
 			//date1.SelectionStart=new DateTime(today.Year,today.Month,1).AddMonths(-1);
 			//date2.SelectionStart=new DateTime(today.Year,today.Month,1).AddDays(-1);
-			comboBoxMultiProv.Items.Add(new ODBoxItem<Provider>("All", new Provider() { ProvNum = 0 }));
+			comboBoxMultiProv.Items.Add(new ODBoxItem<Provider>("All", new Provider() { Id = 0 }));
 			for (int i = 0; i < _listProviders.Count; i++)
 			{
 				comboBoxMultiProv.Items.Add(new ODBoxItem<Provider>(_listProviders[i].GetLongDesc(), _listProviders[i]));
@@ -545,7 +545,7 @@ namespace OpenDental
 			gridMain.ListGridRows.Clear();
 			Cursor = Cursors.WaitCursor;
 			using (DataTable table = RpTreatmentFinder.GetTreatmentFinderList(checkIncludeNoIns.Checked, checkIncludePatsWithApts.Checked, monthStart, dateSince,
-				aboveAmount, comboBoxMultiProv.SelectedTags<Provider>().Select(x => x.ProvNum).ToList(),
+				aboveAmount, comboBoxMultiProv.SelectedTags<Provider>().Select(x => x.Id).ToList(),
 				comboBoxMultiBilling.SelectedTags<Definition>().Select(x => x.Id).ToList(), codeRangeFilter.StartRange, codeRangeFilter.EndRange,
 				comboClinics.ListSelectedClinicNums, checkBenefitAssumeGeneral.Checked))
 			{

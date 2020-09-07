@@ -157,7 +157,7 @@ namespace OpenDentBusiness{
 				dictReplaced[dest.PatNum]=(PerformAllReplacements(templateCur.Subject)
 					,PerformAllReplacements(string.IsNullOrWhiteSpace(templateCur.BodyHTML) ? templateCur.BodyPlainText : templateCur.BodyHTML));
 			}
-			IAccountApi api=EmailHostingTemplates.GetAccountApi(Clinics.ClinicId);
+			IAccountApi api=EmailHostingTemplates.GetAccountApi(Clinics.Active.Id);
 			SendMassEmailResponse response;
 			try {
 				response=api.SendMassEmail(new SendMassEmailRequest {
@@ -173,7 +173,7 @@ namespace OpenDentBusiness{
 				return e.Message;
 			}
 			Promotion promotion=new Promotion {
-				ClinicNum=Clinics.ClinicId,
+				ClinicNum=Clinics.Active.Id,
 				DateTimeCreated=DateTime.Now,
 				PromotionName=promotionName,
 				TypePromotion=type,

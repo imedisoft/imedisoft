@@ -1,4 +1,6 @@
 ﻿using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -118,8 +120,8 @@ namespace OpenDentBusiness {
 				return;//alert already exists
 			}
 			//get a list of users that correspond to a non-hidden provider
-			List<Provider> listProviders=Providers.GetWhere(x => x.NationalProvID==providerErx.NationalProviderID,true);
-			List<Userod> listDoseUsers=Userods.GetWhere(x => !x.IsHidden && listProviders.Exists(y => y.ProvNum==x.ProviderId));//Only consider non-hidden users.
+			List<Provider> listProviders=Providers.GetWhere(x => x.NationalProviderID==providerErx.NationalProviderID,true);
+			List<Userod> listDoseUsers=Userods.GetWhere(x => !x.IsHidden && listProviders.Exists(y => y.Id==x.ProviderId));//Only consider non-hidden users.
 			if(listDoseUsers.Count==1) {//One provider matched so simply notify the office and set the DoseSpot User Id.
 				alert=new AlertItem {
 					Actions=ActionType.MarkAsRead | ActionType.Delete | ActionType.ShowItemValue,
@@ -457,8 +459,8 @@ namespace OpenDentBusiness {
 				//MedicationNum will always be set for medications created inside OD.
 				//MedDescript is used when a medication was imported via sync from eRx.
 				if(String.IsNullOrEmpty(medPat.MedDescript) && medPat.MedicationNum!=0) {
-					Medication med=Medications.GetMedication(medPat.MedicationNum);
-					medCur.DisplayName=med.MedName;
+					Medication med=Medications.GetById(medPat.MedicationNum);
+					medCur.DisplayName=med.Name;
 				}
 				else {
 					medCur.DisplayName=medPat.MedDescript;
@@ -917,15 +919,15 @@ namespace OpenDentBusiness {
 			retVal.Address2=clinic.AddressLine2;
 			retVal.City=clinic.City;
 			retVal.DateOfBirth=prov.Birthdate;
-			retVal.DEANumber=ProviderClinics.GetDEANum(prov.ProvNum,clinic.Id);//
+			retVal.DEANumber=ProviderClinics.GetDEANum(prov.Id,clinic.Id);//
 			retVal.Email=emailAddress;//Email should have been validated by now.
-			retVal.FirstName=prov.FName;
+			retVal.FirstName=prov.FirstName;
 			retVal.Gender="Unknown";//This is a required field but we do not store this information.
 			retVal.IsProxyClinician=isProxyClinician;
 			//retVal.IsReportingClinician=false;//This field was not present in the API documentation and weren't required when testing.
-			retVal.LastName=prov.LName;
-			retVal.MiddleName=prov.MI;
-			retVal.NPINumber=prov.NationalProvID;
+			retVal.LastName=prov.LastName;
+			retVal.MiddleName=prov.Initials;
+			retVal.NPINumber=prov.NationalProviderID;
 			retVal.PrimaryFax=clinic.Fax;
 			retVal.PrimaryPhone=clinic.Phone;
 			//This is a required field but there is no way to set this value in Open Dental.
@@ -985,7 +987,7 @@ namespace OpenDentBusiness {
 			if(prov==null) {
 				throw new Exception("Invalid provider.");
 			}
-			ProviderClinic provClinic=ProviderClinics.GetOneOrDefault(prov.ProvNum,clinicNum);
+			ProviderClinic provClinic=ProviderClinics.GetOneOrDefault(prov.Id,clinicNum);
 			StringBuilder sbErrors=new StringBuilder();
 			if(prov.IsErxEnabled==ErxEnabledStatus.Disabled) {
 				sbErrors.AppendLine("Erx is disabled for provider.  "
@@ -997,25 +999,25 @@ namespace OpenDentBusiness {
 			if(prov.IsNotPerson) {
 				sbErrors.AppendLine("Provider must be a person");
 			}
-			string fname=prov.FName.Trim();
+			string fname=prov.FirstName.Trim();
 			if(fname=="") {
 				sbErrors.AppendLine("First name missing");
 			}
 			if(Regex.Replace(fname,"[^A-Za-z\\- ]*","")!=fname) {
 				sbErrors.AppendLine("First name can only contain letters, dashes, or spaces");
 			}
-			string lname=prov.LName.Trim();
+			string lname=prov.LastName.Trim();
 			if(lname=="") {
 				sbErrors.AppendLine("Last name missing");
 			}
 			string deaNum="";
 			if(provClinic!=null) {
-				deaNum=provClinic.DEANum;
+				deaNum=provClinic.DeaNumber;
 			}
 			if(deaNum.ToLower()!="none" && !Regex.IsMatch(deaNum,"^[A-Za-z]{2}[0-9]{7}$") ) {
 				sbErrors.AppendLine("Provider DEA Number must be 2 letters followed by 7 digits.  If no DEA Number, enter NONE.");
 			}
-			string npi=Regex.Replace(prov.NationalProvID,"[^0-9]*","");//NPI with all non-numeric characters removed.
+			string npi=Regex.Replace(prov.NationalProviderID,"[^0-9]*","");//NPI with all non-numeric characters removed.
 			if(npi.Length!=10) {
 				sbErrors.AppendLine("NPI must be exactly 10 digits");
 			}
@@ -1670,8 +1672,8 @@ namespace OpenDentBusiness {
 			}
 			//Set the DisplayName.
 			if(String.IsNullOrEmpty(medPat.MedDescript) && medPat.MedicationNum!=0) {
-				Medication med=Medications.GetMedication(medPat.MedicationNum);
-				medSelfReported.DisplayName=med.MedName;
+				Medication med=Medications.GetById(medPat.MedicationNum);
+				medSelfReported.DisplayName=med.Name;
 			}
 			else {
 				medSelfReported.DisplayName=medPat.MedDescript;

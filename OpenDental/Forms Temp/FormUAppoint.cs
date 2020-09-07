@@ -720,14 +720,14 @@ namespace OpenDental{
 					else{
 						writer.WriteAttributeString("action","");
 					}
-					writer.WriteAttributeString("id",prov.ProvNum.ToString());
+					writer.WriteAttributeString("id",prov.Id.ToString());
 					if(prov.IsSecondary){
 						writer.WriteAttributeString("type","hygienist");
 					}
 					//writer.WriteAttributeString("name-title",prov);
-					writer.WriteAttributeString("name-first",prov.FName);
-					writer.WriteAttributeString("name-middle",prov.MI);
-					writer.WriteAttributeString("name-last",prov.LName);
+					writer.WriteAttributeString("name-first",prov.FirstName);
+					writer.WriteAttributeString("name-middle",prov.Initials);
+					writer.WriteAttributeString("name-last",prov.LastName);
 					writer.WriteAttributeString("name-suffix",prov.Suffix);
 					writer.WriteEndElement();
 					objectsInThisPost++;
@@ -836,7 +836,7 @@ namespace OpenDental{
 					else{
 						writer.WriteAttributeString("action","");
 					}
-					writer.WriteAttributeString("id",op.OperatoryNum.ToString());
+					writer.WriteAttributeString("id",op.Id.ToString());
 					writer.WriteAttributeString("name",op.OpName);
 					writer.WriteEndElement();
 					objectsInThisPost++;

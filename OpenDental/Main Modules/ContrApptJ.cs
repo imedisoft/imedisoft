@@ -692,7 +692,7 @@ namespace OpenDental {
 				MessageBox.Show("Printer not installed.");
 				return;
 			}
-			List<long> listVisOpNums=contrApptPanel.ListOpsVisible.Select(x => x.OperatoryNum).ToList();
+			List<long> listVisOpNums=contrApptPanel.ListOpsVisible.Select(x => x.Id).ToList();
 			//Have to order listApptNums sent to FormApptPrintSetup so that routing slips can be printed in chronological order.
 			List<long> listApptNums=contrApptPanel.TableAppointments.Select()
 				.Where(x => PIn.Long(x["Op"].ToString()).In(listVisOpNums))
@@ -1318,7 +1318,7 @@ namespace OpenDental {
 					return;
 				}
 				Operatory opCur=contrApptPanel.ListOpsVisible[opIdx];
-				apptCur.Op=opCur.OperatoryNum;
+				apptCur.Op=opCur.Id;
 					//opCur.OperatoryNum;
 				//Set providers----------------------Similar to UpdateAppointments()
 				long assignedDent=Schedules.GetAssignedProvNumForSpot(contrApptPanel.ListSchedules,opCur,false,apptCur.AptDateTime);
@@ -1623,8 +1623,8 @@ namespace OpenDental {
 			List<long> listOpNums=null;
 			List<long> listProvNums=null;
 			if(Clinics.ClinicId!=0 || !ApptViews.IsNoneView(GetApptViewCur())) {
-				listOpNums=contrApptPanel.ListOpsVisible.Select(x => x.OperatoryNum).ToList();
-				listProvNums=contrApptPanel.ListProvsVisible.Select(x => x.ProvNum).ToList();
+				listOpNums=contrApptPanel.ListOpsVisible.Select(x => x.Id).ToList();
+				listProvNums=contrApptPanel.ListProvsVisible.Select(x => x.Id).ToList();
 			}
 			ModuleSelected(_patCur.PatNum,listOpNums:listOpNums,listProvNums:listProvNums);
 			if(pinAptNum!=0){
@@ -1664,7 +1664,7 @@ namespace OpenDental {
 			if(!Security.IsAuthorized(Permissions.Schedules)) {
 				return;
 			}
-			FormScheduleDayEdit formScheduleDayEdit=new FormScheduleDayEdit(contrApptPanel.DateSelected,Clinics.ClinicId);
+			FormScheduleDayEdit formScheduleDayEdit=new FormScheduleDayEdit(contrApptPanel.DateSelected,Clinics.Active.Id);
 			formScheduleDayEdit.ShowOkSchedule=true;
 			formScheduleDayEdit.ShowDialog();
 			SecurityLogs.MakeLogEntry(Permissions.Schedules,0,"");
@@ -2055,7 +2055,7 @@ namespace OpenDental {
 			}
 			schedule.Ops.Add(_blockoutClickedOnOp);//jordan 2019-05-20-This is new behavior to prefill op
 			schedule.SchedType=ScheduleType.Blockout;
-			FormScheduleBlockEdit formScheduleBlockEdit=new FormScheduleBlockEdit(schedule,Clinics.ClinicId, listDefsBlockoutTypes);
+			FormScheduleBlockEdit formScheduleBlockEdit=new FormScheduleBlockEdit(schedule,Clinics.Active.Id, listDefsBlockoutTypes);
 			formScheduleBlockEdit.IsNew=true;
 			formScheduleBlockEdit.ShowDialog();
 			RefreshPeriodSchedules();
@@ -2170,7 +2170,7 @@ namespace OpenDental {
 				MessageBox.Show("Blockout not found.");
 				return;//should never happen
 			}
-			FormScheduleBlockEdit FormSB=new FormScheduleBlockEdit(scheduleClicked,Clinics.ClinicId,listUserBlockoutDefs);
+			FormScheduleBlockEdit FormSB=new FormScheduleBlockEdit(scheduleClicked,Clinics.Active.Id, listUserBlockoutDefs);
 			FormSB.ShowDialog();
 			RefreshPeriodSchedules();
 		}
@@ -2246,7 +2246,7 @@ namespace OpenDental {
 
 		#region Methods - Event Handlers Menu TextAppts Click
 		private void menuTextApptsForDay_Click(object sender,EventArgs e) {
-			List<Appointment> listAppts=Appointments.GetForPeriodList(contrApptPanel.DateSelected,contrApptPanel.DateSelected,Clinics.ClinicId)
+			List<Appointment> listAppts=Appointments.GetForPeriodList(contrApptPanel.DateSelected,contrApptPanel.DateSelected,Clinics.Active.Id)
 				.Where(x => !x.AptStatus.In(ApptStatus.PtNote,ApptStatus.PtNoteCompleted)).ToList();
 			if(PrefC.HasClinicsEnabled && Clinics.ClinicId==0) {
 				//The above query would have gotten appointments for all clinics. We need to filter to just ClinicNums of 0.
@@ -2276,7 +2276,7 @@ namespace OpenDental {
 			List<long> listPatNums=new List<long>();
 			for(int i=0;i<contrApptPanel.TableAppointments.Rows.Count;i++){
 				long opNum=PIn.Long(contrApptPanel.TableAppointments.Rows[i]["Op"].ToString());
-				if(!contrApptPanel.ListOpsVisible.Any(y => y.OperatoryNum==opNum)){//Make sure the appointments are visible in the current view.
+				if(!contrApptPanel.ListOpsVisible.Any(y => y.Id==opNum)){//Make sure the appointments are visible in the current view.
 					continue;
 				}
 				if(PIn.Date(contrApptPanel.TableAppointments.Rows[i]["AptDateTime"].ToString()).Date!=dateClicked){
@@ -2324,7 +2324,7 @@ namespace OpenDental {
 			FormApptSearchAdvanced formApptSearchAdvanced=new FormApptSearchAdvanced(aptNum);
 			List<long> listProvsInBox=new List<long>();
 			foreach(ODBoxItem<Provider> prov in _listBoxProviders.Items) {
-				listProvsInBox.Add(prov.Tag.ProvNum);
+				listProvsInBox.Add(prov.Tag.Id);
 			}
 			formApptSearchAdvanced.SetSearchArgs(aptNum,listProvsInBox,textBefore.Text,textAfter.Text,PIn.Date(dateSearch.Text));
 			formApptSearchAdvanced.ShowDialog();
@@ -2357,7 +2357,7 @@ namespace OpenDental {
 			_listBoxProviders.Items.Clear();
 			List<Provider> listProvidersShort=Providers.GetDeepCopy(true);
 			for(int i=0;i<listProvidersShort.Count;i++){
-				if(contrApptPanel.ListApptViewItems.Exists(x=>x.ProvNum==listProvidersShort[i].ProvNum)) {
+				if(contrApptPanel.ListApptViewItems.Exists(x=>x.ProvNum==listProvidersShort[i].Id)) {
 					if(!listProvidersShort[i].IsSecondary) {
 						_listProvidersSearch.Add(listProvidersShort[i]);
 						_listBoxProviders.Items.Add(new ODBoxItem<Provider>(listProvidersShort[i].Abbr,listProvidersShort[i]));
@@ -2376,7 +2376,7 @@ namespace OpenDental {
 			_listBoxProviders.Items.Clear();
 			List<Provider> listProvidersShort=Providers.GetDeepCopy(true);
 			for(int i=0;i<listProvidersShort.Count;i++) {
-				if(contrApptPanel.ListApptViewItems.Exists(x=>x.ProvNum==listProvidersShort[i].ProvNum)) {
+				if(contrApptPanel.ListApptViewItems.Exists(x=>x.ProvNum==listProvidersShort[i].Id)) {
 					if(listProvidersShort[i].IsSecondary) {
 						_listProvidersSearch.Add(listProvidersShort[i]);
 						_listBoxProviders.Items.Add(new ODBoxItem<Provider>(listProvidersShort[i].Abbr,listProvidersShort[i]));
@@ -2909,8 +2909,8 @@ namespace OpenDental {
 			if(contrApptPanel.TableSchedule!=null && contrApptPanel.TableEmpSched!=null && contrApptPanel.TableProvSched!=null && !isRefreshNeeded) {
 				return;//If all data is already in memory and we are not forcing the refresh.
 			}
-			contrApptPanel.TableEmpSched=Schedules.GetPeriodEmployeeSchedTable(dateStart,dateEnd,Clinics.ClinicId);
-			contrApptPanel.TableProvSched=Schedules.GetPeriodProviderSchedTable(dateStart,dateEnd,Clinics.ClinicId);
+			contrApptPanel.TableEmpSched=Schedules.GetPeriodEmployeeSchedTable(dateStart,dateEnd,Clinics.Active.Id);
+			contrApptPanel.TableProvSched=Schedules.GetPeriodProviderSchedTable(dateStart,dateEnd,Clinics.Active.Id);
 			contrApptPanel.TableSchedule=Schedules.GetPeriodSchedule(dateStart,dateEnd,listOpNums,false);
 		}
 
@@ -3086,7 +3086,7 @@ namespace OpenDental {
 				listOpsForApptView=ApptViewItemL.GetOpsForApptView(viewCur,contrApptPanel.IsWeeklyView,listSchedulesForToday);
 			}
 			if(PrefC.HasClinicsEnabled) {//Using clinics
-				listOpsForClinic=Operatories.GetOpsForClinic(Clinics.ClinicId);
+				listOpsForClinic=Operatories.GetOpsForClinic(Clinics.Active.Id);
 			}
 			gridWaiting.BeginUpdate();
 			gridWaiting.ListGridColumns.Clear();
@@ -3104,7 +3104,7 @@ namespace OpenDental {
 				if(Prefs.GetBool(PrefName.WaitingRoomFilterByView)) {
 					bool isInView=false;
 					for(int j=0;j<listOpsForApptView.Count;j++) {
-						if(listOpsForApptView[j].OperatoryNum==PIn.Long(table.Rows[i]["OpNum"].ToString())) {
+						if(listOpsForApptView[j].Id==PIn.Long(table.Rows[i]["OpNum"].ToString())) {
 							isInView=true;
 							break;
 						}
@@ -3117,7 +3117,7 @@ namespace OpenDental {
 				if(PrefC.HasClinicsEnabled && Clinics.ClinicId!=0) {
 					bool isInView=false;
 					for(int j=0;j<listOpsForClinic.Count;j++) {
-						if(listOpsForClinic[j].OperatoryNum==PIn.Long(table.Rows[i]["OpNum"].ToString())) {
+						if(listOpsForClinic[j].Id==PIn.Long(table.Rows[i]["OpNum"].ToString())) {
 							isInView=true;
 							break;
 						}
@@ -3192,7 +3192,7 @@ namespace OpenDental {
 			RefreshPinboardImages();
 			List<long> opNums = null;
 			if(PrefC.HasClinicsEnabled && Clinics.ClinicId>0) {
-				opNums = Operatories.GetOpsForClinic(Clinics.ClinicId).Select(x => x.OperatoryNum).ToList();
+				opNums = Operatories.GetOpsForClinic(Clinics.Active.Id).Select(x => x.Id).ToList();
 			}
 			List<LabCase> labCaseList=LabCases.GetForPeriod(contrApptPanel.DateStart,contrApptPanel.DateEnd,opNums);
 			FillLab(labCaseList);
@@ -3243,8 +3243,8 @@ namespace OpenDental {
 						//Now we only query for the specific signals we care about. Instead of using Signalods.SignalLastRefreshed we now use Signalods.ApptSignalLastRefreshed.
 						//Signalods.ApptSignalLastRefreshed mimics the behavior of Signalods.SignalLastRefreshed but is guaranteed to not be stale from inactive sessions.
 						List<Signalod> listSignals=Signalods.RefreshTimed(Signalods.ApptSignalLastRefreshed,new string[] { SignalName.Appointment,SignalName.Schedules }).ToList();
-						List<long> listOpNumsVisible = contrApptPanel.ListOpsVisible.Select(x => x.OperatoryNum).ToList();
-						List<long> listProvNumsVisible = contrApptPanel.ListProvsVisible.Select(x => x.ProvNum).ToList();
+						List<long> listOpNumsVisible = contrApptPanel.ListOpsVisible.Select(x => x.Id).ToList();
+						List<long> listProvNumsVisible = contrApptPanel.ListProvsVisible.Select(x => x.Id).ToList();
 						bool isApptRefresh=Signalods.IsApptRefreshNeeded(contrApptPanel.DateStart,contrApptPanel.DateEnd,listSignals,listOpNumsVisible,listProvNumsVisible);
 						bool isSchedRefresh=Signalods.IsSchedRefreshNeeded(contrApptPanel.DateStart,contrApptPanel.DateEnd,listSignals,listOpNumsVisible,listProvNumsVisible);
 						//either we have signals from other machines telling us to refresh, or we aren't using signals, in which case we still want to refresh
@@ -3334,16 +3334,16 @@ namespace OpenDental {
 			long[] providers=new long[_listBoxProviders.Items.Count];
 			List<long> providerNums = new List<long>();
 			for(int i=0;i<providers.Length;i++) {
-				providers[i]=_listProvidersSearch[i].ProvNum;
-				providerNums.Add(_listProvidersSearch[i].ProvNum);
+				providers[i]=_listProvidersSearch[i].Id;
+				providerNums.Add(_listProvidersSearch[i].Id);
 				//providersList.Add(providers[i]);
 			}
 			List<long> listOpNums=new List<long>();
 			List<long> listClinicNums=new List<long>();
 			if(PrefC.HasClinicsEnabled) {
 				if(Clinics.ClinicId!=0) {//not HQ
-					listClinicNums.Add(Clinics.ClinicId);
-					listOpNums=Operatories.GetOpsForClinic(Clinics.ClinicId).Select(x => x.OperatoryNum).ToList();//get ops for the currently selected clinic only
+					listClinicNums.Add(Clinics.Active.Id);
+					listOpNums=Operatories.GetOpsForClinic(Clinics.Active.Id).Select(x => x.Id).ToList();//get ops for the currently selected clinic only
 				}
 				else {//HQ
 					ApptView viewCur=GetApptViewCur();
@@ -3355,11 +3355,11 @@ namespace OpenDental {
 					List<long> listOpsForView=ApptViewItems.GetOpsForView(viewCur.ApptViewNum);
 					List<Operatory> listOperatories=Operatories.GetOperatories(listOpsForView,true);
 					listClinicNums=listOperatories.Select(x => x.ClinicNum).Distinct().ToList();
-					listOpNums=listOperatories.Select(x => x.OperatoryNum).ToList();
+					listOpNums=listOperatories.Select(x => x.Id).ToList();
 				}
 			}
 			else {//all non hidden ops
-				listOpNums=Operatories.GetDeepCopy(true).Select(x => x.OperatoryNum).ToList();
+				listOpNums=Operatories.GetDeepCopy(true).Select(x => x.Id).ToList();
 			}
 			//the result might be empty
 			if(pinBoard.SelectedIndex==-1){
@@ -3402,12 +3402,12 @@ namespace OpenDental {
 			long provNum=PIn.Long(dataRow["ProvNum"].ToString());
 			long aptNum=PIn.Long(dataRow["AptNum"].ToString());
 			for(int i=0;i<listProvidersShort.Count;i++) {
-				if(isHygiene && listProvidersShort[i].ProvNum==provHyg) {
+				if(isHygiene && listProvidersShort[i].Id==provHyg) {
 					//If their appiontment is hygine, the list will start with just their hygine provider
 					_listBoxProviders.Items.Add(new ODBoxItem<Provider>(listProvidersShort[i].Abbr,listProvidersShort[i]));
 					_listProvidersSearch.Add(listProvidersShort[i]);
 				}
-				else if(!isHygiene && listProvidersShort[i].ProvNum==provNum) {
+				else if(!isHygiene && listProvidersShort[i].Id==provNum) {
 					//If their appointment is not hygine, they will start with just their primary provider
 					_listBoxProviders.Items.Add(new ODBoxItem<Provider>(listProvidersShort[i].Abbr,listProvidersShort[i]));
 					_listProvidersSearch.Add(listProvidersShort[i]);
@@ -3624,7 +3624,7 @@ namespace OpenDental {
 		private ApptView GetApptViewForUser() {
 			//load the recently used apptview from the db, either the userodapptview table if an entry exists or the computerpref table if an entry for this computer exists
 			ApptView apptView=null;
-			UserodApptView userodApptViewCur=UserodApptViews.GetOneForUserAndClinic(Security.CurrentUser.Id,Clinics.ClinicId);
+			UserodApptView userodApptViewCur=UserodApptViews.GetOneForUserAndClinic(Security.CurrentUser.Id,Clinics.Active.Id);
 			if(userodApptViewCur!=null) { //if there is an entry in the userodapptview table for this user
 				if(_hasInitializedOnStartup //if either ContrAppt has already been initialized
 					|| (Security.CurrentUser.ClinicIsRestricted //or the current user is restricted
@@ -4242,7 +4242,7 @@ namespace OpenDental {
 				MessageBox.Show("No appointments this day to send text messages to.");
 				return;
 			}
-			Clinic curClinic=Clinics.GetById(Clinics.ClinicId)??Clinics.GetDefaultForTexting()??Clinics.GetPracticeAsClinicZero();
+			Clinic curClinic=Clinics.GetById(Clinics.Active.Id) ??Clinics.GetDefaultForTexting()??Clinics.GetPracticeAsClinicZero();
 			List<PatComm> listPatComms=Patients.GetPatComms(listPatNums,curClinic,false);
 			List<string> listPatsSkipped=new List<string>();
 			for(int i=listPatComms.Count-1;i>=0;i--) {
@@ -4267,7 +4267,7 @@ namespace OpenDental {
 			if(listPatComms.Count==0) {
 				return;
 			}
-			FormTxtMsgMany formTxtMsgMany=new FormTxtMsgMany(listPatComms,"",Clinics.ClinicId,SmsMessageSource.DirectSms);
+			FormTxtMsgMany formTxtMsgMany=new FormTxtMsgMany(listPatComms,"",Clinics.Active.Id, SmsMessageSource.DirectSms);
 			formTxtMsgMany.DoCombineNumbers=true;
 			formTxtMsgMany.Show();
 		}
@@ -4371,7 +4371,7 @@ namespace OpenDental {
 					//Get the schedules that have any operatory visible
 					List<Schedule> listSchedulesVisible=new List<Schedule>();
 					foreach(Schedule sched in contrApptPanel.ListSchedules) {
-						if(sched.Ops.Any(x => contrApptPanel.ListOpsVisible.Exists(y => x==y.OperatoryNum))//The schedule is linked to a visible operatory
+						if(sched.Ops.Any(x => contrApptPanel.ListOpsVisible.Exists(y => x==y.Id))//The schedule is linked to a visible operatory
 							|| contrApptPanel.ListOpsVisible.Exists(x => x.ProvDentist==sched.ProvNum && !x.IsHygiene)//The dentist is in a visible operatory
 							|| contrApptPanel.ListOpsVisible.Exists(x => x.ProvHygienist==sched.ProvNum && x.IsHygiene))//The hygienist is in a visible operatory
 						{
@@ -4386,7 +4386,7 @@ namespace OpenDental {
 						{
 							continue;//The operatory has a provider assigned to it
 						}
-						if(contrApptPanel.ListSchedules.Any(x => x.Ops.Contains(op.OperatoryNum))) {
+						if(contrApptPanel.ListSchedules.Any(x => x.Ops.Contains(op.Id))) {
 							continue;//The operatory has a scheduled assigned to it
 						}
 						opShowsDefaultProv=true;//The operatory will have the provider for unassigned operatories
@@ -4401,7 +4401,7 @@ namespace OpenDental {
 					foreach(DataRow row in contrApptPanel.TableAppointments.Rows) {
 						long opNum=PIn.Long(row["Op"].ToString());
 //todo:
-						if(!contrApptPanel.ListOpsVisible.Exists(x => x.OperatoryNum==opNum) //The appointment is in a visible operatory
+						if(!contrApptPanel.ListOpsVisible.Exists(x => x.Id==opNum) //The appointment is in a visible operatory
 							|| !new[] { "1","2","4","5","7","8" }.Contains(row["AptStatus"].ToString())) //Scheduled,Complete,ASAP,Broken,PtNote,PtNoteComp
 						{
 							continue;
@@ -4450,9 +4450,9 @@ namespace OpenDental {
 			}
 			if(saveToDb) {
 				ComputerPrefs.LocalComputer.ApptViewNum=apptViewNum;
-				ComputerPrefs.LocalComputer.ClinicNum=Clinics.ClinicId;
+				ComputerPrefs.LocalComputer.ClinicNum=Clinics.Active.Id;
 				ComputerPrefs.Update(ComputerPrefs.LocalComputer);
-				UserodApptViews.InsertOrUpdate(Security.CurrentUser.Id,Clinics.ClinicId,apptViewNum);
+				UserodApptViews.InsertOrUpdate(Security.CurrentUser.Id,Clinics.Active.Id, apptViewNum);
 			}
 			if(_patCur==null) {
 				ModuleSelected(0,listOpNums:ApptViewItems.GetOpsForView(apptViewNum),listProvNums:ApptViewItems.GetProvsForView(apptViewNum));

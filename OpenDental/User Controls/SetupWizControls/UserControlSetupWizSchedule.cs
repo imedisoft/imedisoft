@@ -34,7 +34,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 			butNextProv.Enabled = _provIdx < _listSchedProvs.Count - 1;
 			butPrevProv.Enabled = _provIdx > 0;
 			ScheduleProv schedProvCur = _listSchedProvs[_provIdx];
-			if(_listSchedules != null && _listSchedules.Where(x => x.ProvNum == schedProvCur.Prov.ProvNum).Count() > 0) {
+			if(_listSchedules != null && _listSchedules.Where(x => x.ProvNum == schedProvCur.Prov.Id).Count() > 0) {
 				checkMonday.Enabled=false;
 				checkTuesday.Enabled=false;
 				checkWednesday.Enabled=false;
@@ -134,7 +134,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 			else {
 				List<Provider> listProviders = Providers.GetWhere(x => x.IsNotPerson == false,true).ToList();
 				foreach(Provider prov in listProviders) {
-					if(!listSchedule.Select(x => x.ProvNum).Contains(prov.ProvNum)) {
+					if(!listSchedule.Select(x => x.ProvNum).Contains(prov.Id)) {
 						IsDone=false;
 						break;
 					}

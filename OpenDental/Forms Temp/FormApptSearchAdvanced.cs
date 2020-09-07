@@ -75,7 +75,7 @@ namespace OpenDental {
 				int index=comboBoxMultiProv.Items.Count;
 				ODBoxItem<Provider> boxProvItem=new ODBoxItem<Provider>(prov.GetLongDesc(),prov);
 				comboBoxMultiProv.Items.Add(boxProvItem);
-				if(prov.ProvNum.In(listProvNumsToSelect)) {
+				if(prov.Id.In(listProvNumsToSelect)) {
 					listSelectedIndices.Add(index);
 				}
 			}
@@ -217,13 +217,13 @@ namespace OpenDental {
 			}
 			if(!comboBoxMultiProv.SelectedTags<Provider>().Contains(null)) {
 				foreach(ODBoxItem<Provider> provBoxItem in comboBoxMultiProv.ListSelectedItems) {
-					listProvNums.Add(provBoxItem.Tag.ProvNum);
+					listProvNums.Add(provBoxItem.Tag.Id);
 				}
 			}
 			if(PrefC.HasClinicsEnabled) {
 				if(comboBoxClinic.SelectedClinicNum!=0) {
 					listClinicNums.Add(comboBoxClinic.SelectedClinicNum);
-					listOpNums=Operatories.GetOpsForClinic(comboBoxClinic.SelectedClinicNum).Select(x => x.OperatoryNum).ToList();
+					listOpNums=Operatories.GetOpsForClinic(comboBoxClinic.SelectedClinicNum).Select(x => x.Id).ToList();
 				}
 				else {//HQ //and unassigned (which is clinic num 0)
 					long apptViewNum=comboApptView.GetSelected<ApptView>().ApptViewNum;
@@ -231,11 +231,11 @@ namespace OpenDental {
 					List<long> listOpsForView=ApptViewItems.GetOpsForView(apptViewNum);
 					List<Operatory> listOperatories=Operatories.GetOperatories(listOpsForView,true);
 					listClinicNums=listOperatories.Select(x => x.ClinicNum).Distinct().ToList();
-					listOpNums=listOperatories.Select(x => x.OperatoryNum).ToList();
+					listOpNums=listOperatories.Select(x => x.Id).ToList();
 				}
 			}
 			else {//no clinics
-				listOpNums=Operatories.GetDeepCopy(true).Select(x => x.OperatoryNum).ToList();
+				listOpNums=Operatories.GetDeepCopy(true).Select(x => x.Id).ToList();
 			}
 			if(blockoutType!=0 && listProvNums.Max()>0) {
 				_listOpenings.AddRange(ApptSearch.GetSearchResultsForBlockoutAndProvider(listProvNums,_appt.AptNum,startDate,endDate,listOpNums,listClinicNums
@@ -284,7 +284,7 @@ namespace OpenDental {
 			}
 			List<long> listProvNums=new List<long>();
 			foreach(Provider prov in FormPMP.SelectedProviders) {
-				listProvNums.Add(prov.ProvNum);
+				listProvNums.Add(prov.Id);
 			}
 			FillProviders(GetProvidersForSelectedClinic(),listProvNums);
 		}
@@ -307,7 +307,7 @@ namespace OpenDental {
 				comboApptView.Visible=false;
 				labelAptViews.Visible=false;
 			}
-			List<long> listCurProvNums=comboBoxMultiProv.SelectedTags<Provider>().FindAll(x => x!=null).Select(x => x.ProvNum).ToList();
+			List<long> listCurProvNums=comboBoxMultiProv.SelectedTags<Provider>().FindAll(x => x!=null).Select(x => x.Id).ToList();
 			//attempt to re-select the providers if they still exist in the newly selected clinic.
 			FillProviders(GetProvidersForSelectedClinic(),listCurProvNums);
 		}
@@ -331,13 +331,13 @@ namespace OpenDental {
 
 		private void butProvDentist_Click(object sender,EventArgs e) {
 			List<Provider> listProvDents=GetProvidersForSelectedClinic(ProvMode.Dent);
-			FillProviders(listProvDents,listProvDents.Select(x => x.ProvNum).ToList());//fill box with dentists and select them all
+			FillProviders(listProvDents,listProvDents.Select(x => x.Id).ToList());//fill box with dentists and select them all
 			DoSearch();
 		}
 
 		private void butProvHygenist_Click(object sender,EventArgs e) {
 			List<Provider> listProvHyg=GetProvidersForSelectedClinic(ProvMode.Hyg);
-			FillProviders(listProvHyg,listProvHyg.Select(x => x.ProvNum).ToList());
+			FillProviders(listProvHyg,listProvHyg.Select(x => x.Id).ToList());
 			DoSearch();
 		}
 

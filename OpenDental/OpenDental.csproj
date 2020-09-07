@@ -534,6 +534,9 @@
     <Compile Include="Forms Reports\FormRpServiceDateView.designer.cs">
       <DependentUpon>FormRpServiceDateView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FormAging.Designer.cs">
+      <DependentUpon>FormAging.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FormProblemDefinitions.Designer.cs">
       <DependentUpon>FormProblemDefinitions.cs</DependentUpon>
     </Compile>
@@ -1906,12 +1909,6 @@
     <Compile Include="Forms Temp\FormRadOrderList.designer.cs">
       <DependentUpon>FormRadOrderList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormActionNeeded.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormActionNeeded.designer.cs">
-      <DependentUpon>FormActionNeeded.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms Temp\FormProviderMerge.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -2344,10 +2341,10 @@
     <Compile Include="Forms Temp\FormVaccineObsEdit.designer.cs">
       <DependentUpon>FormVaccineObsEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormIcd10s.cs">
+    <Compile Include="Forms\FormIcd10s.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormIcd10s.designer.cs">
+    <Compile Include="Forms\FormIcd10s.designer.cs">
       <DependentUpon>FormIcd10s.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormHcpcs.cs">
@@ -3379,16 +3376,10 @@
     <Compile Include="Forms Temp\FormAllergySetup.designer.cs">
       <DependentUpon>FormAllergySetup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormIcd9Edit.cs">
+    <Compile Include="Forms\FormIcd9s.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormIcd9Edit.designer.cs">
-      <DependentUpon>FormIcd9Edit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms Temp\FormIcd9s.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormIcd9s.designer.cs">
+    <Compile Include="Forms\FormIcd9s.designer.cs">
       <DependentUpon>FormIcd9s.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormEhrSetup.cs">
@@ -4274,7 +4265,7 @@
     <Compile Include="Forms Temp\FormAdjust.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormAging.cs">
+    <Compile Include="Forms\FormAging.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormApptLists.cs">
@@ -4346,9 +4337,6 @@
     <Compile Include="Forms Temp\FormClaimForms.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormClaimPayEditOld.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Forms Temp\FormClaimPayTotal.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -4389,9 +4377,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormContacts.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormConvertLang39.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FormCounties.cs">
@@ -5835,9 +5820,6 @@
     <EmbeddedResource Include="Forms Temp\FormRadOrderList.resx">
       <DependentUpon>FormRadOrderList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormActionNeeded.resx">
-      <DependentUpon>FormActionNeeded.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormProviderMerge.resx">
       <DependentUpon>FormProviderMerge.cs</DependentUpon>
     </EmbeddedResource>
@@ -6075,7 +6057,7 @@
     <EmbeddedResource Include="Forms Temp\FormVaccineObsEdit.resx">
       <DependentUpon>FormVaccineObsEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormIcd10s.resx">
+    <EmbeddedResource Include="Forms\FormIcd10s.resx">
       <DependentUpon>FormIcd10s.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -6664,11 +6646,7 @@
       <DependentUpon>FormAllergySetup.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormIcd9Edit.resx">
-      <DependentUpon>FormIcd9Edit.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormIcd9s.resx">
+    <EmbeddedResource Include="Forms\FormIcd9s.resx">
       <DependentUpon>FormIcd9s.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7111,7 +7089,7 @@
       <DependentUpon>FormAdjust.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormAging.resx">
+    <EmbeddedResource Include="Forms\FormAging.resx">
       <DependentUpon>FormAging.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7207,10 +7185,6 @@
       <DependentUpon>FormClaimForms.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormClaimPayEditOld.resx">
-      <DependentUpon>FormClaimPayEditOld.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormClaimPayTotal.resx">
       <DependentUpon>FormClaimPayTotal.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -7265,10 +7239,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormContacts.resx">
       <DependentUpon>FormContacts.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormConvertLang39.resx">
-      <DependentUpon>FormConvertLang39.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormCounties.resx">
@@ -8610,6 +8580,8 @@
     <None Include="Web References\NewCrop\Update1.wsdl" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\IconFileImport.png" />
+    <None Include="Resources\IconSearchSmall.png" />
     <None Include="Resources\IconPlusGreen.png" />
     <None Include="Resources\IconTimesRed.png" />
     <None Include="Resources\IconTrashRed.png" />

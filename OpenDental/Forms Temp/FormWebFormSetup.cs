@@ -81,7 +81,7 @@ namespace OpenDental {
 					comboClinic.SelectedClinicNum=_defaultClinicNum;
 				}
 				else{
-					comboClinic.SelectedClinicNum=Clinics.ClinicId;
+					comboClinic.SelectedClinicNum=Clinics.Active.Id;
 				}
 				ConstructURLs();
 			}

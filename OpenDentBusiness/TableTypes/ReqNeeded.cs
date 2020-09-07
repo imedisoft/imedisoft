@@ -1,4 +1,5 @@
 using Imedisoft.Data.Annotations;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness
 {
@@ -6,7 +7,7 @@ namespace OpenDentBusiness
 	/// For Dental Schools. 
 	/// Requirements needed in order to complete a course.
 	/// </summary>
-	[Table]
+	[Table("school_course_requirements")]
 	public class ReqNeeded : TableBase
 	{
 		[PrimaryKey]
@@ -14,7 +15,7 @@ namespace OpenDentBusiness
 
 		public string Descript;
 
-		[ForeignKey(typeof(SchoolCourse), nameof(SchoolCourse.SchoolCourseNum))]
+		[ForeignKey(typeof(SchoolCourse), nameof(SchoolCourse.Id))]
 		public long SchoolCourseNum;
 
 		[ForeignKey(typeof(SchoolClass), nameof(SchoolClass.Id))]

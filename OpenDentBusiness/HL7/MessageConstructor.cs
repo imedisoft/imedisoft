@@ -31,7 +31,7 @@ namespace OpenDentBusiness.HL7 {
 			if(Prefs.GetBool(PrefName.ShowFeaturePatientClone)) {
 				pat=Patients.GetOriginalPatientForClone(pat);
 			}
-			Provider prov=Providers.GetProv(Patients.GetProvNum(pat));
+			Provider prov=Providers.GetById(Patients.GetProvNum(pat));
 			Appointment apt=Appointments.GetOneApt(aptNum);
 			List<PatPlan> listPatPlans=PatPlans.Refresh(pat.PatNum);
 			for(int i=0;i<hl7DefMessage.hl7DefSegments.Count;i++) {
@@ -46,7 +46,7 @@ namespace OpenDentBusiness.HL7 {
 				//or the patient does not have any current insplans for IN1 segments
 				for(int j=0;j<repeatCount;j++) {//FT1 is optional and can repeat so add as many FT1's as procs in procList, IN1 is optional and can repeat as well, repeat for the number of patplans in patplanList
 					if(hl7DefMessage.hl7DefSegments[i].SegmentName==SegmentNameHL7.FT1 && listProcs.Count>j) {
-						prov=Providers.GetProv(listProcs[j].ProvNum);
+						prov=Providers.GetById(listProcs[j].ProvNum);
 					}
 					Procedure proc=null;
 					if(listProcs.Count>j) {//procList could be an empty list
@@ -111,7 +111,7 @@ namespace OpenDentBusiness.HL7 {
 				pat=Patients.GetOriginalPatientForClone(pat);
 			}
 			MessageHL7 messageHL7=new MessageHL7(MessageTypeHL7.ADT);
-			Provider prov=Providers.GetProv(Patients.GetProvNum(pat));
+			Provider prov=Providers.GetById(Patients.GetProvNum(pat));
 			List<PatPlan> listPatPlans=PatPlans.Refresh(pat.PatNum);
 			for(int i=0;i<hl7DefMessage.hl7DefSegments.Count;i++) {
 				int countRepeat=1;
@@ -188,7 +188,7 @@ namespace OpenDentBusiness.HL7 {
 				pat=Patients.GetOriginalPatientForClone(pat);
 			}
 			MessageHL7 messageHL7=new MessageHL7(MessageTypeHL7.SIU);
-			Provider prov=Providers.GetProv(apt.ProvNum);
+			Provider prov=Providers.GetById(apt.ProvNum);
 			for(int i=0;i<hl7DefMessage.hl7DefSegments.Count;i++) {
 				int repeatCount=1;
 				//AIP segment can repeat, once for the dentist on the appt and once for the hygienist
@@ -197,7 +197,7 @@ namespace OpenDentBusiness.HL7 {
 				}
 				for(int j=0;j<repeatCount;j++) {//AIP will be repeated if there is a dentist and a hygienist on the appt
 					if(j>0) {
-						prov=Providers.GetProv(apt.ProvHyg);
+						prov=Providers.GetById(apt.ProvHyg);
 						if(prov==null) {
 							break;//shouldn't happen, apt.ProvHyg would have to be set to an invalid ProvNum on the appt, just in case
 						}
@@ -279,13 +279,13 @@ namespace OpenDentBusiness.HL7 {
 				pat=Patients.GetOriginalPatientForClone(pat);
 			}
 			MessageHL7 msgHl7=new MessageHL7(MessageTypeHL7.SRR);
-			Provider provPri=Providers.GetProv(apt.ProvNum);
+			Provider provPri=Providers.GetById(apt.ProvNum);
 			//go through each segment in the def
 			for(int i=0;i<hl7DefMessage.hl7DefSegments.Count;i++) {
 				List<Provider> listProvs=new List<Provider>();
 				listProvs.Add(provPri);
 				if(hl7DefMessage.hl7DefSegments[i].SegmentName==SegmentNameHL7.AIP && apt.ProvHyg>0) {
-					listProvs.Add(Providers.GetProv(apt.ProvHyg));
+					listProvs.Add(Providers.GetById(apt.ProvHyg));
 				}
 				for(int j=0;j<listProvs.Count;j++) {//AIP will be repeated if there is a dentist and a hygienist on the appt
 					Provider prov=listProvs[j];

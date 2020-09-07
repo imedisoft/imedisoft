@@ -111,9 +111,9 @@ namespace OpenDental {
 				_patRegarding=Patients.GetLim(_emailMessage.PatNumSubj);
 			}
 			if(Security.CurrentUser!=null) {
-				_provUserCur=Providers.GetProv(Security.CurrentUser.ProviderId);
+				_provUserCur=Providers.GetById(Security.CurrentUser.ProviderId);
 			}
-			List<long> listProvNums=listUsers.Select(x => x.ProviderId).Distinct().ToList();
+			List<long> listProvNums=listUsers.Select(x => x.ProviderId.Value).Distinct().ToList();
 			_listProviders=Providers.GetProvsByProvNums(listProvNums);
 			FillFields();
 		}
@@ -134,9 +134,9 @@ namespace OpenDental {
 					}
 				}
 				textTo.Text=_patCur.GetNameFL();
-				Provider patPriProv=Providers.GetProv(_patCur.PriProv);
+				Provider patPriProv=Providers.GetById(_patCur.PriProv);
 				//Check to see if the patients primary provider has a user associated to them.
-				if(_listProviders.Any(x => x.ProvNum==patPriProv.ProvNum)) {
+				if(_listProviders.Any(x => x.Id==patPriProv.Id)) {
 					//The patients primary provider has at least one user associated to them.
 					_provCur=patPriProv;
 				}
@@ -147,7 +147,7 @@ namespace OpenDental {
 				textFrom.Text=(_provCur==null) ? "" : _provCur.GetFormalName();
 			}
 			else {//An existing email has been passed in.
-				_provCur=Providers.GetProv(_emailMessage.ProvNumWebMail);
+				_provCur=Providers.GetById(_emailMessage.ProvNumWebMail);
 				_listPatients.Add(_patRegarding);
 				comboRegardingPatient.Items.Add(_patRegarding.GetNameFL());
 				comboRegardingPatient.SelectedIndex=0;
@@ -293,10 +293,10 @@ namespace OpenDental {
 				return false;
 			}
 			//Don't require validating credentials if the user currently logged in is associated to the selected provider.
-			if(_provUserCur!=null && _provUserCur.ProvNum==_provCur.ProvNum) {
+			if(_provUserCur!=null && _provUserCur.Id==_provCur.Id) {
 				return true;
 			}
-			List<Userod> listUsers=Userods.GetUsersByProvNum(_provCur.ProvNum);//Get all potential users for this provider.
+			List<Userod> listUsers=Userods.GetUsersByProvNum(_provCur.Id);//Get all potential users for this provider.
 			InputBox FormIB=new InputBox("Input a password for a User that is associated to provider:"+"\r\n"+_provCur.GetFormalName());
 			FormIB.textResult.PasswordChar='*';
 			while(true) {
@@ -378,8 +378,8 @@ namespace OpenDental {
 			FormProviderPick FormPP=new FormProviderPick(_listProviders);
 			FormPP.ShowDialog();
 			if(FormPP.DialogResult==DialogResult.OK) {
-				_provCur=_listProviders.First(x => x.ProvNum==FormPP.SelectedProviderId);
-				textFrom.Text=Providers.GetFormalName(_provCur.ProvNum);
+				_provCur=_listProviders.First(x => x.Id==FormPP.SelectedProviderId);
+				textFrom.Text=Providers.GetFormalName(_provCur.Id);
 			}
 		}
 
@@ -470,7 +470,7 @@ namespace OpenDental {
 			_secureMessage.ToAddress=textTo.Text;
 			_secureMessage.PatNum=_patCur.PatNum;
 			_secureMessage.SentOrReceived=EmailSentOrReceived.WebMailSent;  //this is secure so mark as webmail sent
-			_secureMessage.ProvNumWebMail=_provCur.ProvNum;
+			_secureMessage.ProvNumWebMail=_provCur.Id;
 			_secureMessage.Subject=textSubject.Text;
 			_secureMessage.BodyText=textBody.Text;
 			_secureMessage.MsgDateTime=DateTime.Now;

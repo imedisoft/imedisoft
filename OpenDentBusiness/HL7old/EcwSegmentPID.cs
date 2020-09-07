@@ -246,19 +246,19 @@ namespace OpenDentBusiness.HL7 {
 				prov=new Provider();
 				prov.Abbr=eID;//They can manually change this later.
 				prov.EcwID=eID;
-				prov.FeeSched=FeeScheds.GetFirst(true).FeeSchedNum;
+				prov.FeeScheduleId=FeeScheds.GetFirst(true).FeeSchedNum;
 			}
-			if(prov.LName!=field.GetComponentVal(1)) {
+			if(prov.LastName!=field.GetComponentVal(1)) {
 				provChanged=true;
-				prov.LName=field.GetComponentVal(1);
+				prov.LastName=field.GetComponentVal(1);
 			}
-			if(prov.FName!=field.GetComponentVal(2)) {
+			if(prov.FirstName!=field.GetComponentVal(2)) {
 				provChanged=true;
-				prov.FName=field.GetComponentVal(2);
+				prov.FirstName=field.GetComponentVal(2);
 			}
-			if(prov.MI!=field.GetComponentVal(3)) {
+			if(prov.Initials!=field.GetComponentVal(3)) {
 				provChanged=true;
-				prov.MI=field.GetComponentVal(3);
+				prov.Initials=field.GetComponentVal(3);
 			}
 			if(isNewProv) {
 				Providers.Insert(prov);
@@ -268,7 +268,7 @@ namespace OpenDentBusiness.HL7 {
 				Providers.Update(prov);
 				Providers.RefreshCache();
 			}
-			return prov.ProvNum;
+			return prov.Id;
 		}
 
 		/// <summary>Will return 0 if string cannot be parsed to a number.  Will return 0 if the fee schedule passed in does not exactly match the description of a regular fee schedule.</summary>

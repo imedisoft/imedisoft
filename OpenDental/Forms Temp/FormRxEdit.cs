@@ -48,21 +48,21 @@ namespace Imedisoft.Forms
 				viewLabel.Visible = false;
 				sheet = null;
 
-				if (Prefs.GetBool(PrefName.ShowFeatureEhr) && Security.CurrentUser.ProviderId != 0) // Is CPOE
+				if (Prefs.GetBool(PrefName.ShowFeatureEhr) && Security.CurrentUser.ProviderId.HasValue) // Is CPOE
 				{
 					cpoeLabel.Visible = true;
 					providerComboBox.Enabled = false;
 					providerButton.Enabled = false;
 
-					rxPat.ProvNum = Security.CurrentUser.ProviderId;
+					rxPat.ProvNum = Security.CurrentUser.ProviderId.Value;
 				}
 				else
 				{
-					var provider = Providers.GetProv(Security.CurrentUser.ProviderId);
+					var provider = Providers.GetById(Security.CurrentUser.ProviderId);
 					if (provider != null && !provider.IsSecondary)
 					{
 						// Only set the provider on the Rx if the provider is not a hygienist.
-						rxPat.ProvNum = Security.CurrentUser.ProviderId;
+						rxPat.ProvNum = provider.Id;
 					}
 				}
 			}
@@ -208,7 +208,7 @@ namespace Imedisoft.Forms
 				if (providerComboBox.Items.Count == 0) // No items in dropdown
 				{
 					// Use clinic default prov. We need some default selection.
-					providerComboBox.SetSelectedProvNum(Providers.GetDefaultProvider(comboClinic.SelectedClinicNum).ProvNum);
+					providerComboBox.SetSelectedProvNum(Providers.GetDefaultProvider(comboClinic.SelectedClinicNum).Id);
 				}
 				else
 				{
@@ -456,7 +456,7 @@ namespace Imedisoft.Forms
 			}
 			else
 			{
-				sheetDef = SheetDefs.GetSheetsDefault(SheetTypeEnum.Rx, Clinics.ClinicId);
+				sheetDef = SheetDefs.GetSheetsDefault(SheetTypeEnum.Rx, Clinics.Active.Id);
 			}
 
 			sheet = SheetUtil.CreateSheet(sheetDef, patient.PatNum);

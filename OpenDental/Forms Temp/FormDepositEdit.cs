@@ -685,11 +685,11 @@ namespace OpenDental
 					comboClinic.Visible=false;
 					labelClinic.Visible=false;
 				}
-				if(Clinics.ClinicId==0) {
+				if(!Clinics.ClinicId.HasValue) {
 					comboClinic.IsAllSelected=true;
 				}
 				else {
-					comboClinic.SelectedClinicNum=Clinics.ClinicId;
+					comboClinic.SelectedClinicNum=Clinics.ClinicId.Value;
 				}
 				
 				List<Definition> listPaymentTypeDefs=Definitions.GetDefsForCategory(DefinitionCategory.PaymentTypes,true);
@@ -1297,7 +1297,7 @@ namespace OpenDental
 			SheetPrinting.CreatePdf(sheet,tempFile,null);
 			Storage.Copy(tempFile,filePathAndName);
 			EmailMessage message=new EmailMessage();
-			EmailAddress address=EmailAddresses.GetByClinic(Clinics.ClinicId);
+			EmailAddress address=EmailAddresses.GetByClinic(Clinics.Active.Id);
 			message.FromAddress=address.GetFrom();
 			message.Subject=sheet.Description;
 			EmailAttach attach=new EmailAttach();

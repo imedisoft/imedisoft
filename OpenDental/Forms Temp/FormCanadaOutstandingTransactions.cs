@@ -27,7 +27,7 @@ namespace OpenDental {
 			}
 			_listProviders=Providers.GetDeepCopy(true);
 			for(int i=0;i<_listProviders.Count;i++) {
-				if(!_listProviders[i].IsCDAnet || _listProviders[i].NationalProvID=="" || _listProviders[i].CanadianOfficeNum=="") {
+				if(!_listProviders[i].IsCDAnet || _listProviders[i].NationalProviderID=="" || _listProviders[i].CanadianOfficeNum=="") {
 					continue;
 				}
 				if(!listOfficeNumbers.Items.Contains(_listProviders[i].CanadianOfficeNum)) {
@@ -76,7 +76,7 @@ namespace OpenDental {
 			Provider prov=null;
 			for(int i=0;i<_listProviders.Count;i++) {
 				if(_listProviders[i].CanadianOfficeNum==listOfficeNumbers.Items[listOfficeNumbers.SelectedIndex].ToString() 
-					&& _listProviders[i].NationalProvID!="" && _listProviders[i].IsCDAnet) {
+					&& _listProviders[i].NationalProviderID!="" && _listProviders[i].IsCDAnet) {
 					prov=_listProviders[i];
 					break;
 				}

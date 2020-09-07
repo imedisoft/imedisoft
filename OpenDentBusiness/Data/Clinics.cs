@@ -115,7 +115,7 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// The ID of the active clinic.
 		/// </summary>
-		private static long activeClinicId = 0; // TODO: This should be nullable...
+		private static long? activeClinicId = null;
 
 		[CacheGroup(nameof(InvalidType.Providers))]
 		private class ClinicCache : ListCache<Clinic>
@@ -158,7 +158,7 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// Gets or sets the ID of the active clinic.
 		/// </summary>
-		public static long ClinicId
+		public static long? ClinicId
 		{
 			get => activeClinicId;
 			set
@@ -176,10 +176,16 @@ namespace OpenDentBusiness
 
 				if (Prefs.GetString(PrefName.ClinicTrackLast) == "User")
 				{
-					UserPreference.Set(UserPreferenceName.ClinicLast, value);
+					UserPreference.Set(UserPreferenceName.ClinicLast, value ?? 0);
 				}
 			}
 		}
+
+		/// <summary>
+		/// Gets the active clinic.
+		/// </summary>
+		public static Clinic Active 
+			=> ClinicId.HasValue ? GetById(ClinicId.Value) : null;
 
 		///<summary>Sets Clinics.ClinicNum. Used when logging on to determines what clinic to start with based on user and workstation preferences.</summary>
 		public static void LoadActiveClinicForUser()
@@ -214,11 +220,11 @@ namespace OpenDentBusiness
 					return;//Error
 
 				case "User":
-					var clinicId = UserPreference.GetLong(UserPreferenceName.ClinicLast);
+					long clinicId = UserPreference.GetLong(UserPreferenceName.ClinicLast);
 
-					if (clinicId == 0)
+					if (clinicId == 0 && Security.CurrentUser.ClinicId.HasValue)
 					{
-						clinicId = Security.CurrentUser.ClinicId;
+						clinicId = Security.CurrentUser.ClinicId.Value;
 
 						UserPreference.Set(UserPreferenceName.ClinicLast, clinicId);
 					}
@@ -244,7 +250,7 @@ namespace OpenDentBusiness
 			switch (Prefs.GetString(PrefName.ClinicTrackLast))
 			{
 				case "Workstation":
-					ComputerPrefs.LocalComputer.ClinicNum = ClinicId;
+					ComputerPrefs.LocalComputer.ClinicNum = ClinicId ?? 0;
 					ComputerPrefs.Update(ComputerPrefs.LocalComputer);
 					break;
 
@@ -255,7 +261,7 @@ namespace OpenDentBusiness
 					break;
 			}
 
-			UserPreference.Set(UserPreferenceName.ClinicLast, ClinicId);
+			UserPreference.Set(UserPreferenceName.ClinicLast, ClinicId ?? 0);
 
 			activeClinicId = 0;
 		}
@@ -568,7 +574,15 @@ namespace OpenDentBusiness
 		/// (FormOpenDental.ClinicNum=0) and the pref PracticeIsMedicalOnly is true OR if the currently selected clinic's IsMedicalOnly flag is true.
 		/// Otherwise returns false.
 		/// </summary>
-		public static bool IsMedicalClinic(long clinicId) => GetById(clinicId)?.IsMedicalOnly ?? false;
+		public static bool IsMedicalClinic(long? clinicId)
+        {
+			if (!clinicId.HasValue)
+            {
+				return false;
+            }
+
+			return GetById(clinicId.Value)?.IsMedicalOnly ?? false;
+		}
 
 		/// <summary>
 		/// Returns a clinic object with ClinicNum=0, and values filled using practice level preferences. 

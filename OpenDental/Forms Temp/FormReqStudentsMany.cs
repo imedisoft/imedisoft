@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using System.Collections.Generic;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -153,13 +155,13 @@ namespace OpenDental{
 			_listSchoolClasses=SchoolClasses.GetDeepCopy();
 			_listSchoolCourses=SchoolCourses.GetDeepCopy();
 			for(int i=0;i<_listSchoolClasses.Count;i++) {
-				comboClass.Items.Add(SchoolClasses.GetDescript(_listSchoolClasses[i]));
+				comboClass.Items.Add(SchoolClasses.GetDescription(_listSchoolClasses[i]));
 			}
 			if(comboClass.Items.Count>0) {
 				comboClass.SelectedIndex=0;
 			}
 			for(int i=0;i<_listSchoolCourses.Count;i++) {
-				comboCourse.Items.Add(SchoolCourses.GetDescript(_listSchoolCourses[i]));
+				comboCourse.Items.Add(SchoolCourses.GetDescription(_listSchoolCourses[i]));
 			}
 			if(comboCourse.Items.Count>0) {
 				comboCourse.SelectedIndex=0;
@@ -172,7 +174,7 @@ namespace OpenDental{
 				return;
 			}
 			long schoolClass=_listSchoolClasses[comboClass.SelectedIndex].Id;
-			long schoolCourse=_listSchoolCourses[comboCourse.SelectedIndex].SchoolCourseNum;
+			long schoolCourse=_listSchoolCourses[comboCourse.SelectedIndex].Id;
 			table=ReqStudents.RefreshManyStudents(schoolClass,schoolCourse);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();

@@ -27,7 +27,7 @@ namespace OpenDental {
 			_listProviders=Providers.GetDeepCopy(true);
 			for(int i=0;i<_listProviders.Count;i++) {
 				comboProv.Items.Add(_listProviders[i].GetLongDesc());
-				if(MedOrderCur.ProvNum==_listProviders[i].ProvNum) {
+				if(MedOrderCur.ProvNum==_listProviders[i].Id) {
 					comboProv.SelectedIndex=i;
 				}
 			}
@@ -136,7 +136,7 @@ namespace OpenDental {
 				//don't make any changes to provnum.  0 is ok, but should never happen.  ProvNum might also be for a hidden prov.
 			}
 			else {
-				MedOrderCur.ProvNum=_listProviders[comboProv.SelectedIndex].ProvNum;
+				MedOrderCur.ProvNum=_listProviders[comboProv.SelectedIndex].Id;
 			}
 			if(IsNew) {
 				MedicalOrders.Insert(MedOrderCur);

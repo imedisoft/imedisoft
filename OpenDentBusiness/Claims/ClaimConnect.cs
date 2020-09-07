@@ -408,7 +408,7 @@ namespace OpenDentBusiness.Eclaims {
 				clinic=null;//If the practice isn't using clinics, but the claim is associated to a real clinic, pretend it isn't.
 			}
 			//Billing provider
-			Provider prov=Providers.GetProv(claim.ProvBill);
+			Provider prov=Providers.GetById(claim.ProvBill);
 			if(prov==null) {
 				throw new ODException("Invalid provider associated to claim.");
 			}
@@ -440,9 +440,9 @@ namespace OpenDentBusiness.Eclaims {
 			if(carrier==null) {
 				throw new ODException("Invalid patient subscriber associated to claim.");
 			}
-			attachment.BillProviderFirstName=prov.FName;
-			attachment.BillProviderLastName=prov.LName;
-			attachment.BillProviderNpi=prov.NationalProvID;
+			attachment.BillProviderFirstName=prov.FirstName;
+			attachment.BillProviderLastName=prov.LastName;
+			attachment.BillProviderNpi=prov.NationalProviderID;
 			attachment.BillProviderTaxonomy=X12Generator.GetTaxonomy(prov);
 			if(prov.UsingTIN) {
 				attachment.BillProviderTaxID=prov.SSN;

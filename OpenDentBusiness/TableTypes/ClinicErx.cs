@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenDentBusiness {
+namespace OpenDentBusiness
+{
 	///<summary>Tracks which clinics have access to eRx based on ClinicDescr.  Synchronized with HQ.</summary>
-	[Serializable,CrudTable(IsSynchable=true)]
-	public class ClinicErx:TableBase {
+	[Serializable, CrudTable(IsSynchable = true)]
+	public class ClinicErx : TableBase
+	{
 		///<summary>Primary key.</summary>
-		[CrudColumn(IsPriKey=true)]
+		[CrudColumn(IsPriKey = true)]
 		public long ClinicErxNum;
 		///<summary>FK to patient.PatNum.  Holder of registration key only for HQ record, in customer record this will be 0.</summary>
 		public long PatNum;
@@ -29,7 +31,8 @@ namespace OpenDentBusiness {
 		public long RegistrationKeyNum;
 
 		///<summary></summary>
-		public ClinicErx Copy() {
+		public ClinicErx Copy()
+		{
 			return (ClinicErx)this.MemberwiseClone();
 		}
 	}

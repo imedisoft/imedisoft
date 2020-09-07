@@ -331,18 +331,19 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static bool IsUserCpoe(Userod user)
 		{
-			//No need to check RemotingRole; no call to db.
-			if (user == null)
+			if (user == null || !user.ProviderId.HasValue)
 			{
 				return false;
 			}
-			Provider prov = Providers.GetProv(user.ProviderId);
-			if (prov == null)
+
+			var provider = Providers.GetById(user.ProviderId.Value);
+			if (provider == null)
 			{
 				return false;
 			}
-			//Check to see if this provider has had a valid key at any point in history.
-			return EhrProvKeys.HasProvHadKey(prov.LName, prov.FName);
+
+			// Check to see if this provider has had a valid key at any point in history.
+			return EhrProvKeys.HasProvHadKey(provider.LastName, provider.FirstName);
 		}
 
 		/// <summary>
@@ -470,28 +471,28 @@ namespace OpenDentBusiness
 		///<summary>Update for CEMT only.  Used when updating Remote databases with information from the CEMT.  Because of potentially different primary keys we have to update based on UserNumCEMT.</summary>
 		public static void UpdateCEMT(Userod userod)
 		{
-			//This should never happen, but is a failsafe to prevent the overwriting of all non-CEMT users in the remote database.
-			if (userod.UserNumCEMT == 0)
-			{
-				return;
-			}
-			//Validate(false,userod,false);//Can't use this validate. it's for normal updating only.
-			string command = "UPDATE userod SET "
-				+ "UserName          = '" + POut.String(userod.UserName) + "', "
-				+ "Password          = '" + POut.String(userod.PasswordHash) + "', "
-				//+"UserGroupNum      =  "+POut.Long(userod.UserGroupNum)+", "//need to find primary key of remote user group
-				+ "EmployeeNum       =  " + POut.Long(userod.EmployeeId) + ", "
-				+ "ClinicNum         =  " + POut.Long(userod.ClinicId) + ", "
-				+ "ProvNum           =  " + POut.Long(userod.ProviderId) + ", "
-				+ "IsHidden          =  " + POut.Bool(userod.IsHidden) + ", "
-				//+ "TaskListInBox     =  " + POut.Long(userod.InboxTaskListId) + ", "
-				+ "AnesthProvType    =  " + POut.Int(userod.AnesthProvType) + ", "
-				+ "DefaultHidePopups =  " + POut.Bool(userod.DefaultHidePopups) + ", "
-				+ "PasswordIsStrong  =  " + POut.Bool(userod.PasswordIsStrong) + ", "
-				+ "ClinicIsRestricted=  " + POut.Bool(userod.ClinicIsRestricted) + ", "
-				+ "InboxHidePopups   =  " + POut.Bool(userod.InboxHidePopups) + " "
-				+ "WHERE UserNumCEMT = " + POut.Long(userod.UserNumCEMT);
-			Database.ExecuteNonQuery(command);
+			////This should never happen, but is a failsafe to prevent the overwriting of all non-CEMT users in the remote database.
+			//if (userod.UserNumCEMT == 0)
+			//{
+			//	return;
+			//}
+			////Validate(false,userod,false);//Can't use this validate. it's for normal updating only.
+			//string command = "UPDATE userod SET "
+			//	+ "UserName          = '" + POut.String(userod.UserName) + "', "
+			//	+ "Password          = '" + POut.String(userod.PasswordHash) + "', "
+			//	//+"UserGroupNum      =  "+POut.Long(userod.UserGroupNum)+", "//need to find primary key of remote user group
+			//	+ "EmployeeNum       =  " + POut.Long(userod.EmployeeId) + ", "
+			//	+ "ClinicNum         =  " + POut.Long(userod.ClinicId) + ", "
+			//	+ "ProvNum           =  " + POut.Long(userod.ProviderId) + ", "
+			//	+ "IsHidden          =  " + POut.Bool(userod.IsHidden) + ", "
+			//	//+ "TaskListInBox     =  " + POut.Long(userod.InboxTaskListId) + ", "
+			//	+ "AnesthProvType    =  " + POut.Int(userod.AnesthProvType) + ", "
+			//	+ "DefaultHidePopups =  " + POut.Bool(userod.DefaultHidePopups) + ", "
+			//	+ "PasswordIsStrong  =  " + POut.Bool(userod.PasswordIsStrong) + ", "
+			//	+ "ClinicIsRestricted=  " + POut.Bool(userod.ClinicIsRestricted) + ", "
+			//	+ "InboxHidePopups   =  " + POut.Bool(userod.InboxHidePopups) + " "
+			//	+ "WHERE UserNumCEMT = " + POut.Long(userod.UserNumCEMT);
+			//Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Surround with try/catch because it can throw exceptions.

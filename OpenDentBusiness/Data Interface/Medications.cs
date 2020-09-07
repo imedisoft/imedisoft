@@ -1,116 +1,43 @@
+using Imedisoft.Data.Cache;
+using Imedisoft.Data.Models;
+using MySql.Data.MySqlClient;
+using OpenDentBusiness;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Reflection;
 using System.Linq;
-using Imedisoft.Data;
+using System.Reflection;
 
-namespace OpenDentBusiness
+namespace Imedisoft.Data
 {
-	public class Medications
+    public partial class Medications
 	{
-		#region Cache Pattern
-
-		private class MedicationCache : CacheDictAbs<Medication, long, Medication>
+		[CacheGroup(nameof(InvalidType.Medications))]
+		private class MedicationCache : ListCache<Medication>
 		{
-			protected override List<Medication> GetCacheFromDb()
-			{
-				string command = "SELECT * FROM medication ORDER BY MedName";
-				return Crud.MedicationCrud.SelectMany(command);
-			}
-			protected override List<Medication> TableToList(DataTable table)
-			{
-				return Crud.MedicationCrud.TableToList(table);
-			}
-			protected override Medication Copy(Medication medication)
-			{
-				return medication.Copy();
-			}
-			protected override DataTable DictToTable(Dictionary<long, Medication> dictMedications)
-			{
-				return Crud.MedicationCrud.ListToTable(dictMedications.Values.ToList(), "Medication");
-			}
-			protected override void FillCacheIfNeeded()
-			{
-				Medications.GetTableFromCache(false);
-			}
-			protected override long GetDictKey(Medication medication)
-			{
-				return medication.MedicationNum;
-			}
-			protected override Medication GetDictValue(Medication medication)
-			{
-				return medication;
-			}
-			protected override Medication CopyDictValue(Medication medication)
-			{
-				return medication.Copy();
-			}
-		}
+			protected override IEnumerable<Medication> Load() 
+				=> SelectMany("SELECT * FROM `medications` ORDER BY `name`");
+        }
 
-		///<summary>The object that accesses the cache in a thread-safe manner.</summary>
-		private static MedicationCache _medicationCache = new MedicationCache();
+		private static readonly MedicationCache cache = new MedicationCache();
 
-		public static Medication GetOne(long medicationNum)
-		{
-			return _medicationCache.GetOne(medicationNum);
-		}
+		public static Medication GetById(long medicationId) 
+			=> cache.FirstOrDefault(medication => medication.Id == medicationId);
 
-		public static List<Medication> GetWhere(Func<Medication, bool> match, bool isShort = false)
-		{
-			return _medicationCache.GetWhere(match, isShort);
-		}
+		public static List<Medication> GetWhere(Predicate<Medication> predicate) 
+			=> cache.Find(predicate);
 
-		public static bool GetContainsKey(long medicationNum)
-		{
-			return _medicationCache.GetContainsKey(medicationNum);
-		}
+		public static void RefreshCache() 
+			=> cache.Refresh();
 
-		///<summary>Refreshes the cache and returns it as a DataTable. This will refresh the ClientWeb's cache and the ServerWeb's cache.</summary>
-		public static DataTable RefreshCache()
-		{
-			return GetTableFromCache(true);
-		}
-
-		///<summary>Fills the local cache with the passed in DataTable.</summary>
 		public static void FillCacheFromTable(DataTable table)
 		{
-			_medicationCache.FillCacheFromTable(table);
+			// TODO: cache.FillCacheFromTable(table);
 		}
 
-		///<summary>Always refreshes the ClientWeb's cache.</summary>
-		public static DataTable GetTableFromCache(bool doRefreshCache)
-		{
-
-			return _medicationCache.GetTableFromCache(doRefreshCache);
-		}
-
-		#endregion Cache Pattern
-
-		/// <summary>
-		/// Checks to see if the medication exists in the current cache.
-		/// If not, the local cache will get refreshed and then searched again.
-		/// If med is still not found, false is returned because the med does not exist.
-		/// </summary>
-		private static bool HasMedicationInCache(long medicationNum)
-		{
-			return GetContainsKey(medicationNum);
-		}
-
-		/// <summary>
-		/// Only public so that the remoting works.
-		/// Do not call this from anywhere except in this class.
-		/// </summary>
-		public static List<Medication> GetListFromDb()
-		{
-			return Crud.MedicationCrud.SelectMany("SELECT * FROM medication ORDER BY MedName");
-		}
-
-		public static List<Medication> TableToList(DataTable table)
-		{
-			return Crud.MedicationCrud.TableToList(table);
-		}
+		public static IEnumerable<Medication> GetListFromDb() 
+			=> SelectMany("SELECT * FROM `medications` ORDER BY `name`");
 
 		/// <summary>
 		/// Returns medications that contain the passed in string.
@@ -118,32 +45,24 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static List<Medication> GetList(string str = "")
 		{
-			return GetWhere(x => str == "" || x.MedName.ToUpper().Contains(str.ToUpper()));
+			return GetWhere(x => str == "" || x.Name.ToUpper().Contains(str.ToUpper()));
 		}
 
-		public static void Update(Medication Cur)
-		{
-			Crud.MedicationCrud.Update(Cur);
-		}
+		public static void Update(Medication medication) 
+			=> ExecuteUpdate(medication);
 
-		public static long Insert(Medication Cur)
-		{
-			return Crud.MedicationCrud.Insert(Cur);
-		}
+		public static long Insert(Medication medication) 
+			=> ExecuteInsert(medication);
 
-		/// <summary>
-		/// Dependent brands and patients will already be checked.
-		/// Be sure to surround with try-catch.
-		/// </summary>
-		public static void Delete(Medication Cur)
+		public static void Delete(Medication medication)
 		{
-			string s = IsInUse(Cur);
-			if (s != "")
+			string message = IsInUse(medication);
+			if (!string.IsNullOrEmpty(message))
 			{
-				throw new ApplicationException(s);
+				throw new Exception(message);
 			}
 
-			Database.ExecuteNonQuery("DELETE from medication WHERE medicationNum = '" + Cur.MedicationNum.ToString() + "'");
+			ExecuteDelete(medication);
 		}
 
 		/// <summary>
@@ -153,9 +72,9 @@ namespace OpenDentBusiness
 		public static string IsInUse(Medication med)
 		{
 			string[] brands;
-			if (med.MedicationNum == med.GenericNum)
+			if (med.Id == med.GenericId)
 			{
-				brands = GetBrands(med.MedicationNum);
+				brands = GetBrands(med.Id);
 			}
 			else
 			{
@@ -167,32 +86,32 @@ namespace OpenDentBusiness
 				return "You can not delete a medication that has brand names attached.";
 			}
 
-			string command = "SELECT COUNT(*) FROM medicationpat WHERE MedicationNum=" + med.MedicationNum;
+			string command = "SELECT COUNT(*) FROM medicationpat WHERE MedicationNum=" + med.Id;
 			if (Database.ExecuteLong(command) != 0)
 			{
 				return "Not allowed to delete medication because it is in use by a patient";
 			}
 
-			command = "SELECT COUNT(*) FROM allergydef WHERE MedicationNum=" + med.MedicationNum;
+			command = "SELECT COUNT(*) FROM allergydef WHERE MedicationNum=" + med.Id;
 			if (Database.ExecuteLong(command) != 0)
 			{
 				return "Not allowed to delete medication because it is in use by an allergy";
 			}
 
-			command = "SELECT COUNT(*) FROM eduresource WHERE MedicationNum=" + med.MedicationNum;
+			command = "SELECT COUNT(*) FROM eduresource WHERE MedicationNum=" + med.Id;
 			if (Database.ExecuteLong(command) != 0)
 			{
 				return "Not allowed to delete medication because it is in use by an education resource";
 			}
 
-			command = "SELECT COUNT(*) FROM rxalert WHERE MedicationNum=" + med.MedicationNum;
+			command = "SELECT COUNT(*) FROM rxalert WHERE MedicationNum=" + med.Id;
 			if (Database.ExecuteLong(command) != 0)
 			{
 				return "Not allowed to delete medication because it is in use by an Rx alert";
 			}
 
 			// If any more tables are added here in the future, then also update GetAllInUseMedicationNums() to include the new table.
-			if (Prefs.GetLong(PrefName.MedicationsIndicateNone) == med.MedicationNum)
+			if (Prefs.GetLong(PrefName.MedicationsIndicateNone) == med.Id)
 			{
 				return "Not allowed to delete medication because it is in use by a medication";
 			}
@@ -250,87 +169,80 @@ namespace OpenDentBusiness
 			return retVal;
 		}
 
-		/// <summary>Returns null if not found.</summary>
-		public static Medication GetMedication(long medNum)
+		/// <summary>Deprecated. Use GetMedication instead.</summary>
+		public static Medication GetByIdNoCache(long medicationId) 
+			=> SelectOne("SELECT * FROM `medications` WHERE `id` = " + medicationId);
+
+		/// <summary>
+		/// Returns first medication with matching MedName, if not found returns null.
+		/// </summary>
+		public static Medication GetByNameNoCache(string medicationName)
 		{
-			if (!HasMedicationInCache(medNum))
+			var medications = SelectMany("SELECT * FROM `medications` WHERE `name` = '" + POut.String(medicationName) + "' ORDER BY `id`").ToList();
+
+			if (medications.Count > 0)
 			{
-				return null; // Should never happen.
-			}
-			return GetOne(medNum);
-		}
-
-		/// <summary>Deprecated.  Use GetMedication instead.</summary>
-		public static Medication GetMedicationFromDb(long medicationNum)
-		{
-			return Crud.MedicationCrud.SelectOne("SELECT * FROM medication WHERE MedicationNum=" + medicationNum);
-		}
-
-		/// <summary>Returns first medication with matching MedName, if not found returns null.</summary>
-		public static Medication GetMedicationFromDbByName(string medicationName)
-		{
-			List<Medication> retVal = Crud.MedicationCrud.SelectMany("SELECT * FROM medication WHERE MedName='" + POut.String(medicationName) + "' ORDER BY MedicationNum");
-
-			if (retVal.Count > 0)
-			{
-				return retVal[0];
+				return medications[0];
 			}
 
 			return null;
 		}
 
-		/// <summary>Gets the generic medication for the specified medication Num. Returns null if not found.</summary>
-		public static Medication GetGeneric(long medNum)
+		/// <summary>
+		/// Gets the generic medication for the specified medication Num. Returns null if not found.
+		/// </summary>
+		public static Medication GetGeneric(long medicationId)
 		{
-			if (!HasMedicationInCache(medNum))
+			var medication = GetById(medicationId);
+
+			if (medication != null && medication.GenericId.HasValue)
 			{
-				return null;
+				medication = GetById(medication.GenericId.Value);
 			}
-			return GetOne((GetOne(medNum)).GenericNum);
+
+			return medication;
 		}
 
-		/// <summary>Gets the medication name.  Also, generic in () if applicable.  Returns empty string if not found.</summary>
-		public static string GetDescription(long medNum)
+		public static string GetDescription(long medicationId)
 		{
-			if (!HasMedicationInCache(medNum))
-			{
+			var medication = GetById(medicationId);
+			if (medication == null)
+            {
 				return "";
-			}
-			Medication med = GetOne(medNum);
-			string retVal = med.MedName;
-			if (med.GenericNum == med.MedicationNum)
-			{//this is generic
-				return retVal;
-			}
-			if (!GetContainsKey(med.GenericNum))
-			{
-				return retVal;
-			}
-			Medication generic = GetOne(med.GenericNum);
-			return retVal + "(" + generic.MedName + ")";
+            }
+
+			if (medication.GenericId.HasValue)
+            {
+				var generic = GetById(medication.GenericId.Value);
+				if (generic != null)
+                {
+					return medication.Name + " (" + generic.Name + ")";
+                }
+            }
+
+			return medication.Name;
 		}
 
-		/// <summary>Gets the medication name. Copied from GetDescription.</summary>
-		public static string GetNameOnly(long medNum)
+		/// <summary>
+		/// Gets the medication name. Copied from GetDescription.
+		/// </summary>
+		public static string GetNameOnly(long medicationId)
 		{
-			if (!HasMedicationInCache(medNum))
-			{
-				return "";
-			}
-			return GetOne(medNum).MedName;
+			return GetById(medicationId)?.Name ?? "";
 		}
 
-		/// <summary>Gets the generic medication name, given it's generic Num.</summary>
-		public static string GetGenericName(long genericNum)
+		/// <summary>
+		/// Gets the generic medication name, given it's generic Num.
+		/// </summary>
+		public static string GetGenericName(long genericId)
 		{
-			if (!HasMedicationInCache(genericNum))
-			{
-				return "";
-			}
-			return GetOne(genericNum).MedName;
+			return GetById(genericId)?.Name ?? "";
 		}
 
-		/// <summary>Gets the generic medication name, given it's generic Num.  Will search through the passed in list before resorting to cache.</summary>
+		/// <summary>
+		/// Gets the generic medication name, given it's generic Num. 
+		/// Will search through the passed in list before resorting to cache.
+		/// </summary>
 		public static string GetGenericName(long genericNum, Hashtable hlist)
 		{
 			if (!hlist.ContainsKey(genericNum))
@@ -338,7 +250,8 @@ namespace OpenDentBusiness
 				//Medication not found.  Refresh the cache and check again.
 				return GetGenericName(genericNum);
 			}
-			return ((Medication)hlist[genericNum]).MedName;
+
+			return ((Medication)hlist[genericNum]).Name;
 		}
 
 		public static List<long> GetChangedSinceMedicationNums(DateTime changedSince)
@@ -354,62 +267,44 @@ namespace OpenDentBusiness
 			return medicationNums;
 		}
 
-		///<summary>Used along with GetChangedSinceMedicationNums</summary>
-		public static List<Medication> GetMultMedications(List<long> medicationNums)
+		public static IEnumerable<Medication> GetMultMedications(IEnumerable<long> medicationIds)
 		{
+			var medicationIdsList = medicationIds.ToList();
+			if (medicationIdsList.Count == 0)
+            {
+				return new List<Medication>();
+            }
 
-			string strMedicationNums = "";
-			DataTable table;
-			if (medicationNums.Count > 0)
-			{
-				for (int i = 0; i < medicationNums.Count; i++)
-				{
-					if (i > 0)
-					{
-						strMedicationNums += "OR ";
-					}
-					strMedicationNums += "MedicationNum='" + medicationNums[i].ToString() + "' ";
-				}
-				string command = "SELECT * FROM medication WHERE " + strMedicationNums;
-				table = Database.ExecuteDataTable(command);
-			}
-			else
-			{
-				table = new DataTable();
-			}
-			Medication[] multMedications = Crud.MedicationCrud.TableToList(table).ToArray();
-			List<Medication> MedicationList = new List<Medication>(multMedications);
-			return MedicationList;
+			return SelectMany(
+				"SELECT * FROM `medications` " +
+				"WHERE `id` IN (" + string.Join(", ", medicationIdsList) + ")");
 		}
 
 		///<summary>Deprecated.  Use MedicationPat.Refresh() instead.  Returns medication list for a specific patient.</summary>
-		public static List<Medication> GetMedicationsByPat(long patNum)
+		public static IEnumerable<Medication> GetByPatientNoCache(long patientId)
 		{
-
-			string command = "SELECT medication.* "
-				+ "FROM medication, medicationpat "
-				+ "WHERE medication.MedicationNum=medicationpat.MedicationNum "
-				+ "AND medicationpat.PatNum=" + POut.Long(patNum);
-			return Crud.MedicationCrud.SelectMany(command);
+			return SelectMany(
+				"SELECT m.* " +
+				"FROM `medications` m, `medicationpat` mp " +
+				"WHERE m.`id` = mp.`MedicationNum` " +
+				"AND mp.`PatNum` = " + patientId);
 		}
 
-		public static Medication GetMedicationFromDbByRxCui(long rxcui)
-		{
-			//an RxCui could be linked to multiple medications, the ORDER BY ensures we get the same medication every time we call this function
-			return Crud.MedicationCrud.SelectOne("SELECT * FROM medication WHERE RxCui=" + POut.Long(rxcui) + " ORDER BY MedicationNum");
-		}
+		public static List<Medication> GetByRxCui(string rxCui)
+			=> cache.Find(x => x.RxCui == rxCui).OrderBy(x => x.Id).ToList();
 
-		public static List<Medication> GetAllMedsByRxCui(long rxCui)
-		{
-			return GetWhere(x => x.RxCui == rxCui).OrderBy(x => x.MedicationNum).ToList();
-		}
+		public static Medication GetByRxCuiNoCache(string rxCui) 
+			=> SelectOne("SELECT * FROM `medications` WHERE `rx_cui` = @rx_cui ORDER BY `id`",
+				new MySqlParameter("rx_cui", rxCui ?? ""));
+
+
 
 		public static bool AreMedicationsEqual(Medication medication, Medication medicationOld)
 		{
 			if ((medicationOld == null || medication == null)
-				|| medicationOld.MedicationNum != medication.MedicationNum
-				|| medicationOld.MedName != medication.MedName
-				|| medicationOld.GenericNum != medication.GenericNum
+				|| medicationOld.Id != medication.Id
+				|| medicationOld.Name != medication.Name
+				|| medicationOld.GenericId != medication.GenericId
 				|| medicationOld.Notes != medication.Notes
 				|| medicationOld.RxCui != medication.RxCui)
 			{
@@ -449,7 +344,7 @@ namespace OpenDentBusiness
 			command = "UPDATE medicationpat SET RxCui=" + rxNorm + " WHERE MedicationNum=" + medNumInto;
 			Database.ExecuteNonQuery(command);
 			command = "SELECT * FROM ehrtrigger WHERE MedicationNumList LIKE '% " + POut.Long(medNumFrom) + " %'";
-			List<EhrTrigger> ListEhrTrigger = Crud.EhrTriggerCrud.SelectMany(command); //get all ehr triggers with matching mednum in mednumlist
+			List<EhrTrigger> ListEhrTrigger = OpenDentBusiness.Crud.EhrTriggerCrud.SelectMany(command); //get all ehr triggers with matching mednum in mednumlist
 			for (int i = 0; i < ListEhrTrigger.Count; i++)
 			{//for each trigger...
 				string[] arrayMedNums = ListEhrTrigger[i].MedicationNumList.Split(new char[] { ' ' }); //get an array of their medicationNums.
@@ -488,7 +383,7 @@ namespace OpenDentBusiness
 				ListEhrTrigger[i].MedicationNumList = strMedNumList;
 				EhrTriggers.Update(ListEhrTrigger[i]); //update the ehrtrigger list.
 			}//end for each trigger
-			Crud.MedicationCrud.Delete(medNumFrom); //finally, delete the mednum.
+			ExecuteDelete(medNumFrom); //finally, delete the mednum.
 			return rowsChanged;
 		}
 	}

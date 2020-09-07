@@ -151,7 +151,7 @@ namespace OpenDentBusiness{
 				&& CovCatNum!=ben.CovCatNum) {//and they are different
 				//return CovCats.GetOrderShort(CovCatNum).CompareTo(CovCats.GetOrderShort(ben.CovCatNum));
 				//this line was changed because we really do need to know if they have different covcats.
-				return CovCats.GetFindIndex(x => x.CovCatNum==CovCatNum).CompareTo(CovCats.GetFindIndex(x => x.CovCatNum==ben.CovCatNum));
+				return CovCats.GetFindIndex(x => x.Id==CovCatNum).CompareTo(CovCats.GetFindIndex(x => x.Id==ben.CovCatNum));
 			}
 			//ProcCode
 			if(CodeNum!=ben.CodeNum) {

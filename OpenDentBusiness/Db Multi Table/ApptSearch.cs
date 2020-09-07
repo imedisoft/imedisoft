@@ -312,12 +312,12 @@ namespace OpenDentBusiness
 		{
 			//No need to check RemotingRole; no call to db.
 			List<ApptSearchOperatorySchedule> listOpScheds = new List<ApptSearchOperatorySchedule>();
-			List<Operatory> listOps = Operatories.GetWhere(x => x.OperatoryNum.In(listOpNums));
+			List<Operatory> listOps = Operatories.GetWhere(x => x.Id.In(listOpNums));
 			//Remove any ScheduleOps that are not related to the operatories passed in.
 			listSchedOps.RemoveAll(x => !listOpNums.Contains(x.OperatoryNum));
 			//Create dictionaries that are comprised of every operatory in question and will keep track of all ProviderNums for specific scenarios.
-			Dictionary<long, List<long>> dictProvNumsInOpsBySched = listOps.ToDictionary(x => x.OperatoryNum, x => new List<long>());
-			Dictionary<long, List<long>> dictProvNumsInOpsByOp = listOps.ToDictionary(x => x.OperatoryNum,
+			Dictionary<long, List<long>> dictProvNumsInOpsBySched = listOps.ToDictionary(x => x.Id, x => new List<long>());
+			Dictionary<long, List<long>> dictProvNumsInOpsByOp = listOps.ToDictionary(x => x.Id,
 				x => new List<long>() { x.ProvDentist, x.ProvHygienist });//Could be a list of two 0's if no providers are associated to this op.
 			scheduleDate = scheduleDate.Date;//remove time component
 			foreach (long opNum in listOpNums)
@@ -356,21 +356,21 @@ namespace OpenDentBusiness
 			{
 				//If blockoutType is not 0 and 0 is the only provNum in listProvNums, we are just looking for blockout schedules in ops.
 				//Add zero to ProviderNums list for op if op has any blockout for the date we are searching. Unwanted blockouts are filtered out below.
-				if (blockoutType > 0 && listProvNums.Max() == 0 && dictProvNumsInOpsBySched[op.OperatoryNum].Contains(0))
+				if (blockoutType > 0 && listProvNums.Max() == 0 && dictProvNumsInOpsBySched[op.Id].Contains(0))
 				{
-					listOpScheds.First(x => x.OperatoryNum == op.OperatoryNum).ProviderNums.Add(0);
+					listOpScheds.First(x => x.OperatoryNum == op.Id).ProviderNums.Add(0);
 				}
 				//If the operatory does not have a primary and secondary provider use all providers from the schedules.
-				else if (dictProvNumsInOpsByOp[op.OperatoryNum][0] == 0 && dictProvNumsInOpsByOp[op.OperatoryNum][1] == 0)
+				else if (dictProvNumsInOpsByOp[op.Id][0] == 0 && dictProvNumsInOpsByOp[op.Id][1] == 0)
 				{
-					listOpScheds.First(x => x.OperatoryNum == op.OperatoryNum).ProviderNums = dictProvNumsInOpsBySched[op.OperatoryNum];
+					listOpScheds.First(x => x.OperatoryNum == op.Id).ProviderNums = dictProvNumsInOpsBySched[op.Id];
 				}
 				else
 				{//Otherwise; only add providers that intersect between schedules and being explicitly assigned to an operatory.
-					List<long> listIntersectingProvNums = dictProvNumsInOpsBySched[op.OperatoryNum].Intersect(dictProvNumsInOpsByOp[op.OperatoryNum]).ToList();
+					List<long> listIntersectingProvNums = dictProvNumsInOpsBySched[op.Id].Intersect(dictProvNumsInOpsByOp[op.Id]).ToList();
 					if (listIntersectingProvNums.Count() > 0)
 					{
-						listOpScheds.First(x => x.OperatoryNum == op.OperatoryNum).ProviderNums.AddRange(listIntersectingProvNums);
+						listOpScheds.First(x => x.OperatoryNum == op.Id).ProviderNums.AddRange(listIntersectingProvNums);
 					}
 				}
 			}

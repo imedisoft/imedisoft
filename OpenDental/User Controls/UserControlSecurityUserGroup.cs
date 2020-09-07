@@ -7,6 +7,8 @@ using OpenDentBusiness;
 using OpenDental.UI;
 using System.ComponentModel;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	///<summary>This control contains the User and User Group edit tabs for use in FormSecurity 
@@ -142,7 +144,7 @@ namespace OpenDental {
 			comboSchoolClass.Items.Add(new ODBoxItem<SchoolClass>("All"));
 			comboSchoolClass.SelectedIndex=0;
 			foreach(SchoolClass schoolClassCur in SchoolClasses.GetDeepCopy()) {
-				comboSchoolClass.Items.Add(new ODBoxItem<SchoolClass>(SchoolClasses.GetDescript(schoolClassCur),schoolClassCur));
+				comboSchoolClass.Items.Add(new ODBoxItem<SchoolClass>(SchoolClasses.GetDescription(schoolClassCur),schoolClassCur));
 			}
 			if(PrefC.HasClinicsEnabled) {
 				comboClinic.Visible=true;
@@ -169,7 +171,7 @@ namespace OpenDental {
 				return retVal;
 			}
 			if(_dictProvNumProvs == null) { //fill the dictionary if needed
-				_dictProvNumProvs=Providers.GetMultProviders(Userods.GetAll().Select(x => x.ProviderId).ToList()).ToDictionary(x => x.ProvNum,x => x);
+				_dictProvNumProvs=Providers.GetMultProviders(Userods.GetAll().Select(x => x.ProviderId ?? 0).ToList()).ToDictionary(x => x.Id,x => x);
 			}
 			retVal.RemoveAll(x => x.UserNumCEMT>0);//NEVER show CEMT users when not in the CEMT tool.
 			if(!checkShowHidden.Checked) {
@@ -188,15 +190,15 @@ namespace OpenDental {
 					break;
 				case UserFilters.Students:
 					//might not count user as student if attached to invalid providers.
-					retVal.RemoveAll(x => !_dictProvNumProvs.ContainsKey(x.ProviderId) || _dictProvNumProvs[x.ProviderId].IsInstructor);
+					retVal.RemoveAll(x => !_dictProvNumProvs.ContainsKey(x.ProviderId ?? 0) || _dictProvNumProvs[x.ProviderId ?? 0].IsInstructor);
 					if(classNum>0) {
-						retVal.RemoveAll(x => _dictProvNumProvs[x.ProviderId].SchoolClassNum!=classNum);
+						retVal.RemoveAll(x => _dictProvNumProvs[x.ProviderId ?? 0].SchoolClassId!=classNum);
 					}
 					break;
 				case UserFilters.Instructors:
-					retVal.RemoveAll(x => !_dictProvNumProvs.ContainsKey(x.ProviderId) || !_dictProvNumProvs[x.ProviderId].IsInstructor);
+					retVal.RemoveAll(x => !_dictProvNumProvs.ContainsKey(x.ProviderId ?? 0) || !_dictProvNumProvs[x.ProviderId ?? 0].IsInstructor);
 					if(classNum>0) {
-						retVal.RemoveAll(x => _dictProvNumProvs[x.ProviderId].SchoolClassNum!=classNum);
+						retVal.RemoveAll(x => _dictProvNumProvs[x.ProviderId ?? 0].SchoolClassId!=classNum);
 					}
 					break;
 				case UserFilters.Other:
@@ -215,12 +217,12 @@ namespace OpenDental {
 			if(!string.IsNullOrWhiteSpace(textPowerSearch.Text)) {
 				switch(((ODBoxItem<UserFilters>)comboShowOnly.SelectedItem).Tag) {
 					case UserFilters.Employees:
-						retVal.RemoveAll(x => !Employees.GetNameFL(x.EmployeeId).ToLower().Contains(textPowerSearch.Text.ToLower()));
+						retVal.RemoveAll(x => !Employees.GetNameFL(x.EmployeeId ?? 0).ToLower().Contains(textPowerSearch.Text.ToLower()));
 						break;
 					case UserFilters.Providers:
 					case UserFilters.Students:
 					case UserFilters.Instructors:
-						retVal.RemoveAll(x => !_dictProvNumProvs[x.ProviderId].GetLongDesc().ToLower().Contains(textPowerSearch.Text.ToLower()));
+						retVal.RemoveAll(x => !_dictProvNumProvs[x.ProviderId ?? 0].GetLongDesc().ToLower().Contains(textPowerSearch.Text.ToLower()));
 						break;
 					case UserFilters.AllUsers:
 					case UserFilters.Other:
@@ -315,10 +317,10 @@ namespace OpenDental {
 			foreach(Userod user in listFilteredUsers) {
 				GridRow row=new GridRow();
 				row.Cells.Add(user.UserName);
-				row.Cells.Add(Employees.GetNameFL(user.EmployeeId));
-				row.Cells.Add(Providers.GetLongDesc(user.ProviderId));
+				row.Cells.Add(Employees.GetNameFL(user.EmployeeId ?? 0));
+				row.Cells.Add(Providers.GetLongDesc(user.ProviderId ?? 0));
 				if(PrefC.HasClinicsEnabled) {
-					row.Cells.Add(Clinics.GetAbbr(user.ClinicId));
+					row.Cells.Add(Clinics.GetAbbr(user.ClinicId ?? 0));
 					row.Cells.Add(user.ClinicIsRestricted?"X":"");
 				}
 				row.Cells.Add(user.PasswordIsStrong?"X":"");

@@ -1,6 +1,7 @@
 using CodeBase;
 using DataConnectionBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
@@ -55,8 +56,8 @@ namespace OpenDental
 			}
 
 			return existingMedications.Any(
-				x => x.MedName.Trim().ToLower() == med.MedName.Trim().ToLower() && 
-				Medications.GetGenericName(x.GenericNum).Trim().ToLower() == genericName.Trim().ToLower() && 
+				x => x.Name.Trim().ToLower() == med.Name.Trim().ToLower() && 
+				Medications.GetGenericName(x.GenericId??0).Trim().ToLower() == genericName.Trim().ToLower() && 
 				x.RxCui == med.RxCui && 
 				(!isNoteChecked || (x.Notes.Trim().ToLower() == med.Notes.Trim().ToLower())));
 		}
@@ -71,10 +72,10 @@ namespace OpenDental
 			var newMedication = medicationInfo.Medication;
 
 			// Try to find a match for the generic medication.
-			long genericMedicationNum = existingMedications.FirstOrDefault(x => x.MedName == medicationInfo.GenericName)?.MedicationNum ?? 0;
+			long genericMedicationNum = existingMedications.FirstOrDefault(x => x.Name == medicationInfo.GenericName)?.Id ?? 0;
 			if (genericMedicationNum != 0)
 			{
-				newMedication.GenericNum = genericMedicationNum;
+				newMedication.GenericId = genericMedicationNum;
 			}
 
 			Medications.Insert(newMedication);
@@ -82,7 +83,7 @@ namespace OpenDental
 			// Found no match initially, assume given medication is the generic.
 			if (genericMedicationNum == 0)
 			{
-				newMedication.GenericNum = newMedication.MedicationNum;
+				newMedication.GenericId = newMedication.Id;
 
 				Medications.Update(newMedication);
 			}
@@ -102,10 +103,10 @@ namespace OpenDental
 			foreach (var medication in medications)
 			{
 				stringBuilder.AppendLine(
-					Quote(medication.MedName) + '\t' + 
-					Quote(Medications.GetGenericName(medication.GenericNum)) + '\t' +
+					Quote(medication.Name) + '\t' + 
+					Quote(Medications.GetGenericName(medication.GenericId ?? 0)) + '\t' +
 					Quote(medication.Notes) + '\t' + 
-					Quote(SOut.Long(medication.RxCui)));
+					Quote(medication.RxCui));
 			}
 
 			File.WriteAllText(path, stringBuilder.ToString());
@@ -145,9 +146,9 @@ namespace OpenDental
 
                 var medication = new Medication
                 {
-                    MedName = SIn.String(line[0]).Trim(),
+                    Name = SIn.String(line[0]).Trim(),
                     Notes = SIn.String(line[2]).Trim(),
-                    RxCui = SIn.Long(line[3])
+                    RxCui = line[3]
                 };
 
                 string genericName = SIn.String(line[1]).Trim();
@@ -227,7 +228,7 @@ namespace OpenDental
 
 			foreach ((Medication Medication, string GenericName) medicationInfo in medications)
 			{
-				if (medicationInfo.Medication.MedName.ToLower().In(medicationInfo.GenericName.ToLower(), ""))
+				if (medicationInfo.Medication.Name.ToLower().In(medicationInfo.GenericName.ToLower(), ""))
 				{
 					genericMedications.Add(medicationInfo);
 				}

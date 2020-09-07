@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using OpenDentBusiness;
 using System.ComponentModel;
 using System.Drawing.Drawing2D;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	///<summary>This control is comprised of an outer SplitContainer which houses the sorting group box on top and the graphing panel on bottom. The bottom graphing panel is also a SplitContrainer in itself. This is to accomodate scrolling of the graph region only. The x-axis region is in the bottom panel of the SplitContainer graphing panel and will not be scrolled.</summary>
@@ -401,7 +402,7 @@ namespace OpenDental {
 							textColor=ProviderTextColor;
 						}
 						else if(schedule.EmployeeNum!=0) { //Employee
-							desc=Employees.GetEmp(schedule.EmployeeNum).FName;
+							desc=Employees.GetEmp(schedule.EmployeeNum).FirstName;
 							barColor=EmployeeBarColor;
 							textColor=EmployeeTextColor;
 						}
@@ -607,10 +608,10 @@ namespace OpenDental {
 		///<summary>Name sort order differs according to ScheduleType. This sorts accordingly.<returns></returns>
 		private int CompareNames(Schedule x,Schedule y) {
 			if(x.ProvNum!=y.ProvNum) { //we are dealing with a provider
-				return Providers.GetProv(x.ProvNum).ItemOrder.CompareTo(Providers.GetProv(y.ProvNum).ItemOrder);
+				return Providers.GetById(x.ProvNum).ItemOrder.CompareTo(Providers.GetById(y.ProvNum).ItemOrder);
 			}
 			if(x.EmployeeNum!=y.EmployeeNum) { //we are dealing with an employee
-				return Employees.GetEmp(x.EmployeeNum).FName.CompareTo(Employees.GetEmp(y.EmployeeNum).FName);
+				return Employees.GetEmp(x.EmployeeNum).FirstName.CompareTo(Employees.GetEmp(y.EmployeeNum).FirstName);
 			}
 			return 0;
 		}

@@ -6,6 +6,8 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormProvStudentBulkEdit:ODForm {
@@ -24,7 +26,7 @@ namespace OpenDental {
 			comboClass.SelectedIndex=0;
 			_listSchoolClasses=SchoolClasses.GetDeepCopy();
 			for(int i=0;i<_listSchoolClasses.Count;i++) {
-				comboClass.Items.Add(SchoolClasses.GetDescript(_listSchoolClasses[i]));
+				comboClass.Items.Add(SchoolClasses.GetDescription(_listSchoolClasses[i]));
 			}
 			FillGrid();
 		}
@@ -92,9 +94,9 @@ namespace OpenDental {
 
 		private void butBulkEdit_Click(object sender,EventArgs e) {
 			for(int i=0;i<gridStudents.SelectedIndices.Length;i++) {
-				Provider studSelected=Providers.GetProv(PIn.Long(gridStudents.ListGridRows[i].Cells[0].Text));
-				studSelected.ProvColor=butColor.BackColor;
-				studSelected.OutlineColor=butOutlineColor.BackColor;
+				Provider studSelected=Providers.GetById(PIn.Long(gridStudents.ListGridRows[i].Cells[0].Text));
+				studSelected.Color=butColor.BackColor;
+				studSelected.ColorOutline=butOutlineColor.BackColor;
 				Providers.Update(studSelected);
 			}
 			MessageBox.Show("Selected students have been updated.");

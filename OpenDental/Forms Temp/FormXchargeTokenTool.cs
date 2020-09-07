@@ -41,10 +41,10 @@ namespace OpenDental {
 			//In order for X-Charge to be enabled, the enabled flag must be set and there must be a valid Username, Password, and PaymentType
 			//If clinics are enabled, the Username, Password, and PaymentType fields are allowed to be blank/invalid for any clinic not using X-Charge
 			//Therefore, we will validate the credentials and payment type using FormOpenDental.ClinicNum
-			string paymentType=ProgramProperties.GetPropVal(prog.Id,"PaymentType",Clinics.ClinicId);
+			string paymentType=ProgramProperties.GetPropVal(prog.Id,"PaymentType",Clinics.Active.Id);
 			List<Definition> _listPayTypeDefs=Definitions.GetDefsForCategory(DefinitionCategory.PaymentTypes,true).FindAll(x => x.Id.ToString()==paymentType);//should be a list of 0 or 1
-			_xUsername=ProgramProperties.GetPropVal(prog.Id,"Username",Clinics.ClinicId);
-			_xPassword=ProgramProperties.GetPropVal(prog.Id,"Password",Clinics.ClinicId);
+			_xUsername=ProgramProperties.GetPropVal(prog.Id,"Username",Clinics.Active.Id);
+			_xPassword=ProgramProperties.GetPropVal(prog.Id,"Password",Clinics.Active.Id);
 			if(string.IsNullOrEmpty(_xUsername) || string.IsNullOrEmpty(_xPassword) || _listPayTypeDefs.Count<1) {
 				MessageBox.Show("X-Charge username, password, or payment type for this clinic is invalid.");
 				DialogResult=DialogResult.Cancel;
@@ -125,8 +125,8 @@ namespace OpenDental {
 				info.Arguments+="/TRANSACTIONTYPE:ARCHIVEVAULTQUERY ";
 				info.Arguments+="/XCACCOUNTID:"+_listCreditCards[i].XChargeToken+" ";
 				info.Arguments+="/RESULTFILE:\""+resultfile+"\" ";
-				info.Arguments+="/USERID:"+ProgramProperties.GetPropVal(prog.Id,"Username",Clinics.ClinicId)+" ";
-				info.Arguments+="/PASSWORD:"+CodeBase.MiscUtils.Decrypt(ProgramProperties.GetPropVal(prog.Id,"Password",Clinics.ClinicId))+" ";
+				info.Arguments+="/USERID:"+ProgramProperties.GetPropVal(prog.Id,"Username",Clinics.Active.Id) +" ";
+				info.Arguments+="/PASSWORD:"+CodeBase.MiscUtils.Decrypt(ProgramProperties.GetPropVal(prog.Id,"Password",Clinics.Active.Id))+" ";
 				info.Arguments+="/AUTOPROCESS ";
 				info.Arguments+="/AUTOCLOSE ";
 				info.Arguments+="/NORESULTDIALOG ";

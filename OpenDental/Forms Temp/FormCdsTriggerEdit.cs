@@ -338,9 +338,9 @@ namespace OpenDental {
 			if(FormM.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			Medication m=Medications.GetMedication(FormM.SelectedMedicationNum);
-			EhrTriggerCur.MedicationNumList+=" "+m.MedicationNum+" ";
-			if(m.RxCui!=0) {
+			Medication m=Medications.GetById(FormM.SelectedMedicationNum);
+			EhrTriggerCur.MedicationNumList+=" "+m.Id+" ";
+			if(m.RxCui!="") {
 				EhrTriggerCur.RxCuiList+=" "+m.RxCui+" ";
 			}
 			FillGrid();

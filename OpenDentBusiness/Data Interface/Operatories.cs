@@ -15,31 +15,31 @@ namespace OpenDentBusiness{
 
 		public static string GetAbbrev(long operatoryNum) {
 			//No need to check RemotingRole; no call to db.
-			Operatory operatory=GetFirstOrDefault(x => x.OperatoryNum==operatoryNum);
+			Operatory operatory=GetFirstOrDefault(x => x.Id==operatoryNum);
 			return (operatory==null ? "" : operatory.Abbrev);
 		}
 
 		public static string GetOpName(long operatoryNum) {
 			//No need to check RemotingRole; no call to db.
-			Operatory operatory=GetFirstOrDefault(x => x.OperatoryNum==operatoryNum);
+			Operatory operatory=GetFirstOrDefault(x => x.Id==operatoryNum);
 			return (operatory==null ? "" : operatory.OpName);
 		}
 
 		///<summary>Gets the order of the op within ListShort or -1 if not found.</summary>
 		public static int GetOrder(long opNum) {
 			//No need to check RemotingRole; no call to db.
-			return _operatoryCache.GetFindIndex(x => x.OperatoryNum==opNum,true);
+			return _operatoryCache.GetFindIndex(x => x.Id==opNum,true);
 		}
 
 		///<summary>Gets operatory from the cache.</summary>
 		public static Operatory GetOperatory(long operatoryNum) {
 			//No need to check RemotingRole; no call to db.
-			return GetFirstOrDefault(x => x.OperatoryNum==operatoryNum);
+			return GetFirstOrDefault(x => x.Id==operatoryNum);
 		}
 
 		public static List<Operatory> GetOperatories(List<long> listOpNums,bool isShort=false) {
 			//No need to check RemotingRole; no call to db.
-			return GetWhere(x => x.OperatoryNum.In(listOpNums),isShort).ToList();
+			return GetWhere(x => x.Id.In(listOpNums),isShort).ToList();
 		}
 
 
@@ -63,7 +63,7 @@ namespace OpenDentBusiness{
 				.Select(x => x.FKey)
 				.Distinct()
 				.ToList();
-			return GetWhere(x => listOperatoryNums.Contains(x.OperatoryNum),isShort);
+			return GetWhere(x => listOperatoryNums.Contains(x.Id),isShort);
 		}
 
 		///<summary>Returns operatories that are associated to the WebSchedNewPatApptTypes definition passed in.</summary>
@@ -74,7 +74,7 @@ namespace OpenDentBusiness{
 				.Select(x => x.FKey)
 				.Distinct()
 				.ToList();
-			return GetWhere(x => listOperatoryNums.Contains(x.OperatoryNum),isShort);
+			return GetWhere(x => listOperatoryNums.Contains(x.Id),isShort);
 		}
 		#endregion
 
@@ -113,19 +113,13 @@ namespace OpenDentBusiness{
 			}
 			protected override List<Operatory> TableToList(DataTable table) {
 				List<Operatory> listOps=Crud.OperatoryCrud.TableToList(table);
-				//The IsInHQView flag is not important enough to cause filling the cache to fail.
-				ODException.SwallowAnyException(() => {
-					for(int i=0;i<table.Rows.Count;i++) {
-						listOps[i].IsInHQView=PIn.Bool(table.Rows[i]["IsInHQView"].ToString());
-					}
-				});
 				//WSNPA operatory defs are important enough that we want this portion to fail if it has problems.
 				//Create a dictionary comprised of Key: OperatoryNum and value: List of definition DefNums.
 				Dictionary<long,List<long>> dictWSNPAOperatoryDefNums=DefLinks.GetDefLinksByType(DefLinkType.Operatory)
 					.GroupBy(x => x.FKey)//FKey for DefLinkType.Operatory is OperatoryNum
 					.ToDictionary(x => x.Key,x => x.Select(y => y.DefinitionId).ToList());
 				foreach(long operatoryNum in dictWSNPAOperatoryDefNums.Keys) {
-					Operatory op=listOps.FirstOrDefault(x => x.OperatoryNum==operatoryNum);
+					Operatory op=listOps.FirstOrDefault(x => x.Id==operatoryNum);
 					if(op!=null) {
 						op.ListWSNPAOperatoryDefNums=dictWSNPAOperatoryDefNums[operatoryNum];
 					}
@@ -137,16 +131,6 @@ namespace OpenDentBusiness{
 			}
 			protected override DataTable ListToTable(List<Operatory> listOperatories) {
 				DataTable table=Crud.OperatoryCrud.ListToTable(listOperatories,"Operatory");
-				//The IsInHQView flag is not important enough to cause filling the cache to fail.
-				try {
-					table.Columns.Add("IsInHQView");
-					for(int i=0;i<table.Rows.Count;i++) {
-						table.Rows[i]["IsInHQView"]=POut.Bool(listOperatories[i].IsInHQView);
-					}
-				}
-				catch {
-
-				}
 				return table;
 			}
 			protected override void FillCacheIfNeeded() {
@@ -212,8 +196,8 @@ namespace OpenDentBusiness{
 				DefLinks.SyncWebSchedNewPatApptOpLinks(operatory,listDefLinksAll);
 			}
 			//Delete any deflinks for operatories that are present within listOld but are not present within listNew.
-			List<long> listDeleteOpNums=listOld.Where(x => !listNew.Any(y => y.OperatoryNum==x.OperatoryNum))
-				.Select(x => x.OperatoryNum)
+			List<long> listDeleteOpNums=listOld.Where(x => !listNew.Any(y => y.Id==x.Id))
+				.Select(x => x.Id)
 				.Distinct()
 				.ToList();
 			DefLinks.DeleteAllForFKeys(listDeleteOpNums,DefLinkType.Operatory);
@@ -293,7 +277,7 @@ namespace OpenDentBusiness{
 		public static void MergeOperatoriesIntoMaster(long masterOpNum,List<long> listOpNumsToMerge,List<Appointment> listApptsToMerge) {
 			//No need to check RemotingRole; No db call.
 			List<Operatory> listOps=Operatories.GetDeepCopy();
-			Operatory masterOp=listOps.FirstOrDefault(x => x.OperatoryNum==masterOpNum);
+			Operatory masterOp=listOps.FirstOrDefault(x => x.Id==masterOpNum);
 			if(masterOp==null) {
 				throw new ApplicationException("Operatory to merge into no longer exists.");
 			}
@@ -304,13 +288,13 @@ namespace OpenDentBusiness{
 				Appointments.Sync(listApptsNew,listApptsToMerge,0);
 			}
 			List<Operatory> listOpsToMerge=listOps.Select(x=> x.Copy()).ToList();//Copy object so that we do not change original object in memory.
-			listOpsToMerge.FindAll(x => x.OperatoryNum!=masterOpNum && listOpNumsToMerge.Contains(x.OperatoryNum))
+			listOpsToMerge.FindAll(x => x.Id!=masterOpNum && listOpNumsToMerge.Contains(x.Id))
 				.ForEach(x => x.IsHidden=true);
 			Operatories.Sync(listOpsToMerge,listOps);
 			SecurityLogs.MakeLogEntry(Permissions.Setup,0
 				,"The following operatories and all of their appointments were merged into the"
 					+" "+masterOp.Abbrev+" "+"operatory;"+" "
-					+string.Join(", ",listOpsToMerge.FindAll(x => x.OperatoryNum!=masterOpNum && listOpNumsToMerge.Contains(x.OperatoryNum)).Select(x => x.Abbrev)));
+					+string.Join(", ",listOpsToMerge.FindAll(x => x.Id!=masterOpNum && listOpNumsToMerge.Contains(x.Id)).Select(x => x.Abbrev)));
 		}
 	}
 	

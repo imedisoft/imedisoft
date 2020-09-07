@@ -332,7 +332,7 @@ namespace OpenDental.ReportingComplex
 		}
 
 		///<summary>Adds a summary object, of the specified color, for the specified group of queries, giving it a label with the given text and font.  The summary is placed under the specified column and summarizes the specified datafield.  Choosing a summaryOperation will change the displayed value calculation.  The summary will be offset of its position in pixels according to the given X/Y values.</summary>
-		public void AddGroupSummaryField(string staticText, string columnName, string dataFieldName, SummaryOperation summaryOperation, List<int> queryGroupValues = null, Color color = default(Color), Font font = null, int offSetX = 0, int offSetY = 0, string formatString = "")
+		public void AddGroupSummaryField(string staticText, string columnName, string dataFieldName, SummaryOperation summaryOperation, List<int> queryGroupValues = null, Color color = default, Font font = null, int offSetX = 0, int offSetY = 0, string formatString = "")
 		{
 			ReportComplexEvent.Fire(EventCategory.ReportComplex, "Adding Group Summary To Tables...");
 			Graphics grfx = Graphics.FromImage(new Bitmap(1, 1));
@@ -395,51 +395,59 @@ namespace OpenDental.ReportingComplex
 			}
 			if (summaryOrientation == SummaryOrientation.North)
 			{
-				ReportObject summaryLabel = new ReportObject(dataFieldName + "Label", AreaSectionType.GroupFooter
-						, summaryField.Location
-						, size
-						, summaryText
-						, font
-						, summaryField.ContentAlignment);
-				summaryLabel.DataField = dataFieldName;
-				summaryLabel.SummaryOrientation = summaryOrientation;
-				_reportObjects.Insert(_reportObjects.IndexOf(summaryField), summaryLabel);
+                ReportObject summaryLabel = new ReportObject(dataFieldName + "Label", AreaSectionType.GroupFooter
+                        , summaryField.Location
+                        , size
+                        , summaryText
+                        , font
+                        , summaryField.ContentAlignment)
+                {
+                    DataField = dataFieldName,
+                    SummaryOrientation = summaryOrientation
+                };
+                _reportObjects.Insert(_reportObjects.IndexOf(summaryField), summaryLabel);
 			}
 			else if (summaryOrientation == SummaryOrientation.South)
 			{
-				ReportObject summaryLabel = new ReportObject(dataFieldName + "Label", AreaSectionType.GroupFooter
-						, summaryField.Location
-						, size
-						, summaryText
-						, font
-						, summaryField.ContentAlignment);
-				summaryLabel.DataField = dataFieldName;
-				summaryLabel.SummaryOrientation = summaryOrientation;
-				_reportObjects.Add(summaryLabel);
+                ReportObject summaryLabel = new ReportObject(dataFieldName + "Label", AreaSectionType.GroupFooter
+                        , summaryField.Location
+                        , size
+                        , summaryText
+                        , font
+                        , summaryField.ContentAlignment)
+                {
+                    DataField = dataFieldName,
+                    SummaryOrientation = summaryOrientation
+                };
+                _reportObjects.Add(summaryLabel);
 			}
 			else if (summaryOrientation == SummaryOrientation.West)
 			{
-				ReportObject summaryLabel = new ReportObject(dataFieldName + "Label", AreaSectionType.GroupFooter
-						, new Point(summaryField.Location.X - size.Width)
-						, size
-						, summaryText
-						, font
-						, summaryField.ContentAlignment);
-				summaryLabel.DataField = dataFieldName;
-				summaryLabel.SummaryOrientation = summaryOrientation;
-				_reportObjects.Insert(_reportObjects.IndexOf(summaryField), summaryLabel);
+                ReportObject summaryLabel = new ReportObject(dataFieldName + "Label", AreaSectionType.GroupFooter
+                        , new Point(summaryField.Location.X - size.Width)
+                        , size
+                        , summaryText
+                        , font
+                        , summaryField.ContentAlignment)
+                {
+                    DataField = dataFieldName,
+                    SummaryOrientation = summaryOrientation
+                };
+                _reportObjects.Insert(_reportObjects.IndexOf(summaryField), summaryLabel);
 			}
 			else
 			{
-				ReportObject summaryLabel = new ReportObject(dataFieldName + "Label", AreaSectionType.GroupFooter
-						, new Point(summaryField.Location.X + size.Width + summaryField.Size.Width)
-						, size
-						, summaryText
-						, font
-						, summaryField.ContentAlignment);
-				summaryLabel.DataField = dataFieldName;
-				summaryLabel.SummaryOrientation = summaryOrientation;
-				_reportObjects.Insert(_reportObjects.IndexOf(summaryField) + 1, summaryLabel);
+                ReportObject summaryLabel = new ReportObject(dataFieldName + "Label", AreaSectionType.GroupFooter
+                        , new Point(summaryField.Location.X + size.Width + summaryField.Size.Width)
+                        , size
+                        , summaryText
+                        , font
+                        , summaryField.ContentAlignment)
+                {
+                    DataField = dataFieldName,
+                    SummaryOrientation = summaryOrientation
+                };
+                _reportObjects.Insert(_reportObjects.IndexOf(summaryField) + 1, summaryLabel);
 			}
 			grfx.Dispose();
 		}
@@ -452,8 +460,7 @@ namespace OpenDental.ReportingComplex
 			for (int i = 0; i < _reportTable.Rows.Count; i++)
 			{
 				string rawText;
-				string displayText = "";
-				string prevDisplayText = "";
+                string prevDisplayText = "";
 				int rowHeight = 0;
 				foreach (ReportObject reportObject in _reportObjects)
 				{
@@ -469,8 +476,8 @@ namespace OpenDental.ReportingComplex
 							continue;
 						}
 						List<string> listString = GetDisplayString(rawText, prevDisplayText, reportObject, i);
-						displayText = listString[0];
-						prevDisplayText = listString[1];
+                        string displayText = listString[0];
+                        prevDisplayText = listString[1];
 						int curCellHeight = 0;
 						if (isWrapping)
 						{
@@ -495,25 +502,27 @@ namespace OpenDental.ReportingComplex
 
 		public QueryObject DeepCopyQueryObject()
 		{
-			QueryObject queryObj = new QueryObject();
-			queryObj.Name = this.Name;//Doesn't need to be a deep copy.
-			queryObj.SectionType = this.SectionType;//Doesn't need to be a deep copy.
-			queryObj.ObjectType = this.ObjectType;//Doesn't need to be a deep copy.
-			queryObj._sections = this._sections;//Doesn't need to be a deep copy.
-			queryObj._arrDataFields = this._arrDataFields;//Doesn't need to be a deep copy.
-			queryObj._queryGroupValue = this._queryGroupValue;//Doesn't need to be a deep copy.
-			queryObj._isCentered = this._isCentered;//Doesn't need to be a deep copy.
-			queryObj._queryWidth = this._queryWidth;//Doesn't need to be a deep copy.
-			queryObj._suppressHeaders = this._suppressHeaders;//Doesn't need to be a deep copy.
-			queryObj._columnNameToSplitOn = this._columnNameToSplitOn;//Doesn't need to be a deep copy.
-			queryObj._splitByKind = this._splitByKind;//Doesn't need to be a deep copy.
-			queryObj.IsPrinted = this.IsPrinted;//Doesn't need to be a deep copy.
-			queryObj.SummaryOrientation = this.SummaryOrientation;//Doesn't need to be a deep copy.
-			queryObj.SummaryGroups = this.SummaryGroups;//Doesn't need to be a deep copy.
-			queryObj._isLastSplit = this._isLastSplit;//Doesn't need to be a deep copy.
-			queryObj._rowHeightValues = new List<int>();
-			queryObj._isNegativeSummary = this._isNegativeSummary;
-			for (int i = 0; i < this._rowHeightValues.Count; i++)
+            QueryObject queryObj = new QueryObject
+            {
+                Name = this.Name,//Doesn't need to be a deep copy.
+                SectionType = this.SectionType,//Doesn't need to be a deep copy.
+                ObjectType = this.ObjectType,//Doesn't need to be a deep copy.
+                _sections = this._sections,//Doesn't need to be a deep copy.
+                _arrDataFields = this._arrDataFields,//Doesn't need to be a deep copy.
+                _queryGroupValue = this._queryGroupValue,//Doesn't need to be a deep copy.
+                _isCentered = this._isCentered,//Doesn't need to be a deep copy.
+                _queryWidth = this._queryWidth,//Doesn't need to be a deep copy.
+                _suppressHeaders = this._suppressHeaders,//Doesn't need to be a deep copy.
+                _columnNameToSplitOn = this._columnNameToSplitOn,//Doesn't need to be a deep copy.
+                _splitByKind = this._splitByKind,//Doesn't need to be a deep copy.
+                IsPrinted = this.IsPrinted,//Doesn't need to be a deep copy.
+                SummaryOrientation = this.SummaryOrientation,//Doesn't need to be a deep copy.
+                SummaryGroups = this.SummaryGroups,//Doesn't need to be a deep copy.
+                _isLastSplit = this._isLastSplit,//Doesn't need to be a deep copy.
+                _rowHeightValues = new List<int>(),
+                _isNegativeSummary = this._isNegativeSummary
+            };
+            for (int i = 0; i < this._rowHeightValues.Count; i++)
 			{
 				queryObj._rowHeightValues.Add(this._rowHeightValues[i]);
 			}

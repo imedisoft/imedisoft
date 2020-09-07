@@ -438,7 +438,7 @@ namespace OpenDental {
 			if(textOrderingProvAAUID.Text==OIDInternals.GetForType(IdentifierType.Provider).IDRoot) {
 				Provider prov=null;
 				try {
-					prov=Providers.GetProv(PIn.Long(textOrderingProvIdentifier.Text));
+					prov=Providers.GetById(PIn.Long(textOrderingProvIdentifier.Text));
 				}
 				catch { }
 				if(prov==null) {
@@ -486,25 +486,25 @@ namespace OpenDental {
 			if(FormPP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			Provider prov=Providers.GetProv(FormPP.SelectedProviderId);
-			if(prov.NationalProvID!="") {
-				textOrderingProvIdentifier.Text=prov.NationalProvID;
+			Provider prov=Providers.GetById(FormPP.SelectedProviderId);
+			if(prov.NationalProviderID!="") {
+				textOrderingProvIdentifier.Text=prov.NationalProviderID;
 				comboOrderingProvIdType.SelectedIndex=(int)HL70203.NPI+1;
 				textOrderingProvAANID.Text="";
 				textOrderingProvAAUID.Text="2.16.840.1.113883.4.6";//NPI OID
 				textOrderingProvAAUIDType.Text="ISO";
 			}
 			else {
-				textOrderingProvIdentifier.Text=prov.ProvNum.ToString();
+				textOrderingProvIdentifier.Text=prov.Id.ToString();
 				comboOrderingProvIdType.SelectedIndex=(int)HL70203.PRN+1;
 				textOrderingProvAANID.Text="";
 				textOrderingProvAAUID.Text=OIDInternals.GetForType(IdentifierType.Provider).IDRoot;//Internal OID
 				textOrderingProvAAUIDType.Text="ISO";
 			}
 			comboOrderingProvNameType.SelectedIndex=(int)HL70200.L+1;
-			textOrderingProvFirstName.Text=prov.FName;
-			textOrderingProvLastName.Text=prov.LName;
-			textOrderingProvMiddleName.Text=prov.MI;
+			textOrderingProvFirstName.Text=prov.FirstName;
+			textOrderingProvLastName.Text=prov.LastName;
+			textOrderingProvMiddleName.Text=prov.Initials;
 		}
 
 		private void butServicePicker_Click(object sender,EventArgs e) {
@@ -532,8 +532,8 @@ namespace OpenDental {
 			if(!EntriesAreValid()) {
 				return;
 			} 
-			Provider prov=Providers.GetProv(Security.CurrentUser.ProviderId);
-			if(Security.CurrentUser.ProviderId!=0 && EhrProvKeys.GetKeysByFLName(prov.LName,prov.FName).Count>0) {//The user who is currently logged in is a provider and has a valid EHR key.
+			Provider prov=Providers.GetById(Security.CurrentUser.ProviderId);
+			if(Security.CurrentUser.ProviderId!=0 && EhrProvKeys.GetKeysByFLName(prov.LastName,prov.FirstName).Count>0) {//The user who is currently logged in is a provider and has a valid EHR key.
 				EhrLabCur.IsCpoe=true;
 			}
 			//if(EhrLabCur.PatNum==0) {

@@ -352,7 +352,7 @@ namespace OpenDental.UI
 			switch (fKType)
 			{
 				case ReportFKType.SchoolClass:
-					return SchoolClasses.GetDeepCopy().Select(x => SchoolClasses.GetDescript(x)).ToArray();
+					return SchoolClasses.GetDeepCopy().Select(x => SchoolClasses.GetDescription(x)).ToArray();
 			}
 			return retVal;
 		}

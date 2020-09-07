@@ -91,18 +91,18 @@ namespace OpenDental {
 		private void FormEHR_Shown(object sender,EventArgs e) {
 			ResultOnClosing=EhrFormResult.None;
 			PatCur=Patients.GetPat(PatNum);
-			ProvPat=Providers.GetProv(PatCur.PriProv);
+			ProvPat=Providers.GetById(PatCur.PriProv);
 			labelProvPat.Text=ProvPat.GetLongDesc();
-			if(EhrProvKeys.GetKeysByFLName(ProvPat.LName,ProvPat.FName).Count==0) {
+			if(EhrProvKeys.GetKeysByFLName(ProvPat.LastName,ProvPat.FirstName).Count==0) {
 				labelProvPat.Text+=" (no ehr provider key entered)";
 			}
 			if(Security.CurrentUser.ProviderId==0) {
 				labelProvUser.Text="none";
 			}
 			else {
-				Provider provUser=Providers.GetProv(Security.CurrentUser.ProviderId);
-				labelProvUser.Text=Providers.GetLongDesc(provUser.ProvNum);
-				if(EhrProvKeys.GetKeysByFLName(provUser.LName,provUser.FName).Count==0) {
+				Provider provUser=Providers.GetById(Security.CurrentUser.ProviderId);
+				labelProvUser.Text=Providers.GetLongDesc(provUser.Id);
+				if(EhrProvKeys.GetKeysByFLName(provUser.LastName,provUser.FirstName).Count==0) {
 					labelProvUser.Text+=" (no ehr provider key entered)";
 				}
 			}

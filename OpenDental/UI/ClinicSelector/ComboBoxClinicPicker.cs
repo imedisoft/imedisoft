@@ -695,7 +695,7 @@ namespace OpenDental.UI {
 				_listClinics.AddRange(listClinicsForUser);
 				//Will already be ordered alphabetically if that pref was set.  Unfortunately, a restart is required for that pref.
 				//Setting selected---------------------------------------------------------------------------------------------------------------
-				if(Clinics.ClinicId==0) {
+				if(Clinics.Active == null) {
 					if(IncludeUnassigned) {
 						SelectedClinicNum=CLINIC_NUM_UNASSIGNED;
 					}
@@ -705,7 +705,7 @@ namespace OpenDental.UI {
 				}
 				else {
 					//if Security.CurUser.ClinicIsRestricted, there will be only one clinic in the list, and it will not include default (0).
-					SelectedClinicNum=Clinics.ClinicId;
+					SelectedClinicNum=Clinics.Active.Id;
 				}
 			}
 			catch{

@@ -144,7 +144,7 @@ namespace Imedisoft.Forms
 
 			// Notes not copied: we don't want these kinds of notes cluttering things
 
-			if (Prefs.GetBool(PrefName.RxHasProc) && (Clinics.ClinicId == 0 || Clinics.GetById(Clinics.ClinicId).HasProcedureOnRx))
+			if (Prefs.GetBool(PrefName.RxHasProc) && (Clinics.ClinicId == 0 || Clinics.GetById(Clinics.Active.Id).HasProcedureOnRx))
 			{
 				rxPat.IsProcRequired = rxDef.IsProcRequired;
 			}

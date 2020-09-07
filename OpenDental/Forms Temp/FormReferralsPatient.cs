@@ -379,8 +379,8 @@ namespace OpenDental{
 			//We want to help EHR users meet their measures.  Therefore, we are going to make an educated guess as to who is making this referral.
 			//We are doing this for non-EHR users as well because we think it might be nice automation.
 			long provNumLastAppt=Appointments.GetProvNumFromLastApptForPat(PatNum);
-			if(Security.CurrentUser.ProviderId!=0) {
-				refattach.ProvNum=Security.CurrentUser.ProviderId;
+			if(Security.CurrentUser.ProviderId.HasValue) {
+				refattach.ProvNum=Security.CurrentUser.ProviderId.Value;
 			}
 			else if(provNumLastAppt!=0) {
 				refattach.ProvNum=provNumLastAppt;
@@ -412,17 +412,17 @@ namespace OpenDental{
 						}
 						Provider prov=null;
 						if(Security.CurrentUser.ProviderId!=0) {
-							prov=Providers.GetProv(Security.CurrentUser.ProviderId);
+							prov=Providers.GetById(Security.CurrentUser.ProviderId);
 						}
 						else {
-							prov=Providers.GetProv(PatCur.PriProv);
+							prov=Providers.GetById(PatCur.PriProv);
 						}
 						EmailMessage msgWebMail=new EmailMessage();//New mail object				
 						msgWebMail.FromAddress=prov.GetFormalName();//Adding from address
 						msgWebMail.ToAddress=PatCur.GetNameFL();//Adding to address
 						msgWebMail.PatNum=PatCur.PatNum;//Adding patient number
 						msgWebMail.SentOrReceived=EmailSentOrReceived.WebMailSent;//Setting to sent
-						msgWebMail.ProvNumWebMail=prov.ProvNum;//Adding provider number
+						msgWebMail.ProvNumWebMail=prov.Id;//Adding provider number
 						msgWebMail.Subject="Referral To "+FormRS.SelectedReferral.GetNameFL();
 						msgWebMail.BodyText=
 							"You have been referred to another provider.  Your summary of care is attached.\r\n"

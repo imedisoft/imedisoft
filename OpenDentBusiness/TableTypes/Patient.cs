@@ -116,7 +116,7 @@ namespace OpenDentBusiness
 		/// Required. 
 		/// The database maintenance tool ensures that every patient always has this number set, so the program no longer has to handle 0.
 		/// </summary>
-		[ForeignKey(typeof(Provider), nameof(Provider.ProvNum))]
+		[ForeignKey(typeof(Provider), nameof(Provider.Id))]
 		public long PriProv;
 
 		/// <summary>
@@ -224,11 +224,6 @@ namespace OpenDentBusiness
 		/// </summary>
 		[ForeignKey(typeof(Employer), nameof(Employer.Id))]
 		public long EmployerNum;
-
-		/// <summary>
-		/// Not used since version 2.8.
-		/// </summary>
-		[Obsolete] public string EmploymentNote;
 
 		/// <summary>
 		/// FK to county.CountyName, although it will not crash if key absent.
@@ -441,14 +436,6 @@ namespace OpenDentBusiness
 		/// If true, this guarantor should be included in superbilling statements.
 		/// </summary>
 		public bool HasSuperBilling;
-
-		/// <summary>
-		/// Deprecated, use patientlink table instead.
-		/// Indicates if this patient should act as a clone of another patient. 
-		/// Previously, ortho cloned patients were signified by capitalizing the name fields of the newly cloned patient.
-		/// This field will allow for an explicit flag to be set to indicate cloned status.
-		/// </summary>
-		[Obsolete] public long PatNumCloneFrom;
 
 		/// <summary>
 		/// FK to discountplan.DiscountPlanNum. Will be 0 if there is no DiscountPlan

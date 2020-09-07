@@ -90,7 +90,7 @@ namespace OpenDentBusiness {
 		#endregion Cache Pattern
 
 		public static List<ProviderClinicLink> GetForProvider(long provNum) {
-			return GetWhere(x => x.ProvNum==provNum);
+			return GetWhere(x => x.ProviderId==provNum);
 		}
 
 		public static List<ProviderClinicLink> GetForClinic(long clinicNum) {
@@ -102,9 +102,9 @@ namespace OpenDentBusiness {
 			if(clinicNum==0) {//Consider 0 as 'Headquarters'
 				return new List<long>();
 			}
-			HashSet<long> hashSetProvsThisClinic=new HashSet<long>(GetForClinic(clinicNum).Select(x => x.ProvNum));
-			return GetWhere(x => x.ClinicNum!=clinicNum && !hashSetProvsThisClinic.Contains(x.ProvNum))
-				.Select(x => x.ProvNum).Distinct().ToList();
+			HashSet<long> hashSetProvsThisClinic=new HashSet<long>(GetForClinic(clinicNum).Select(x => x.ProviderId));
+			return GetWhere(x => x.ClinicNum!=clinicNum && !hashSetProvsThisClinic.Contains(x.ProviderId))
+				.Select(x => x.ProviderId).Distinct().ToList();
 		}
 
 		///<summary></summary>

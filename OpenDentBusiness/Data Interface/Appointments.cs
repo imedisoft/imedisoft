@@ -2343,7 +2343,7 @@ namespace OpenDentBusiness
 			appointment.AptStatus=ApptStatus.Scheduled;
 			appointment.AptDateTime=dateTimeStart;
 			appointment.DateTimeAskedToArrive=dateTimeAskedToArrive;
-			appointment.Op=operatory.OperatoryNum;
+			appointment.Op=operatory.Id;
 			if(apptConfirmed==0) {
 				appointment.Confirmed=Definitions.GetFirstForCategory(DefinitionCategory.ApptConfirmed,true).Id;
 			}
@@ -2477,7 +2477,7 @@ namespace OpenDentBusiness
 				appt.Confirmed=Definitions.GetFirstForCategory(DefinitionCategory.ApptConfirmed,true).Id;
 			}
 			if(appt.ProvNum==0){
-				appt.ProvNum=Providers.GetFirst(true).ProvNum;
+				appt.ProvNum=Providers.GetFirst(true).Id;
 			}
 			double dayInterval=Prefs.GetDouble(PrefName.ApptReminderDayInterval);
 			double hourInterval=Prefs.GetDouble(PrefName.ApptReminderHourInterval);
@@ -3147,10 +3147,10 @@ namespace OpenDentBusiness
 				return true;
 			}
 			//Our op has an overlap but we are allowed to change so let's try all other ops.
-			int startingOp=visOps.Select(x => x.OperatoryNum).ToList().IndexOf(apt.Op);
+			int startingOp=visOps.Select(x => x.Id).ToList().IndexOf(apt.Op);
 			//Left-to-right start at op directly to the right of this one.
 			for(int i=startingOp+1;i<visOps.Count;i++) {
-				long opNum=visOps[i].OperatoryNum;
+				long opNum=visOps[i].Id;
 				if(!funcHasOverlap(opNum,out doesOverlapBlockout)) { //We found an open op. Set it and return.
 					apt.Op=opNum;
 					return false;
@@ -3158,7 +3158,7 @@ namespace OpenDentBusiness
 			}
 			//Right-to-left starting at op directly to left of this one.
 			for(int i=startingOp;i>=0;i--) {
-				long opNum=visOps[i].OperatoryNum;
+				long opNum=visOps[i].Id;
 				if(!funcHasOverlap(opNum,out doesOverlapBlockout)) { //We found an open op. Set it and return.
 					apt.Op=opNum;
 					return false;
@@ -3301,7 +3301,7 @@ namespace OpenDentBusiness
 			List<Procedure> procsForSingleApt=null;
 			if(doValidation) {//ContrAppt.MoveAppointments(...) has identical validation but allows for YesNo input, mimiced here as booleans.
 				#region Appointment validation and modifications
-				apt.Op=curOp.OperatoryNum;
+				apt.Op=curOp.Id;
 				provChanged=false;
 				hygChanged=false;
 				long assignedDent=Schedules.GetAssignedProvNumForSpot(schedListPeriod,curOp,false,apt.AptDateTime);
@@ -3955,10 +3955,10 @@ namespace OpenDentBusiness
 				//I don't suggest selecting a patient here because you can only change a patient for new appointments.
 				throw new ODException("Patient selected is not valid.");
 			}
-			if(Providers.GetProv(appt.ProvNum)==null) {
+			if(Providers.GetById(appt.ProvNum)==null) {
 				throw new ODException("Provider selected is not valid.  Please select a new provider.");
 			}
-			if(Providers.GetProv(appt.ProvNum).IsHidden) {
+			if(Providers.GetById(appt.ProvNum).IsHidden) {
 				throw new ODException("Provider selected is marked hidden.  Please select a new provider.");
 			}
 			if(!allowDoubleBooking && Appointments.TryAdjustAppointmentInCurrentOp(appt,false,true,out isPatternChanged,out doesOverlapBlockout)) {

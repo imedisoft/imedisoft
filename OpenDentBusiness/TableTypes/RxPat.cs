@@ -30,7 +30,7 @@ namespace OpenDentBusiness
 		/// <summary>Number of refills. Example: 3.  Example: 1 per month.</summary>
 		public string Refills;
 
-		[ForeignKey(typeof(Provider), nameof(Provider.ProvNum))]
+		[ForeignKey(typeof(Provider), nameof(Provider.Id))]
 		public long ProvNum;
 
 		///<summary>Notes specific to this Rx.  Will not show on the printout.  For staff use only.</summary>

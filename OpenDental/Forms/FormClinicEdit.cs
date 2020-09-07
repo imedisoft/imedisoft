@@ -127,7 +127,7 @@ namespace Imedisoft.Forms
 			foreach (var provider in providers)
             {
 				insBillingProviderComboBox.Items.Add(provider);
-				if (clinic.InsBillingProviderId == provider.ProvNum)
+				if (clinic.InsBillingProviderId == provider.Id)
                 {
 					insBillingProviderComboBox.SelectedItem = provider;
                 }
@@ -157,7 +157,7 @@ namespace Imedisoft.Forms
 			foreach (var provider in providers)
             {
 				defaultProviderComboBox.Items.Add(provider);
-				if (clinic.DefaultProviderId == provider.ProvNum)
+				if (clinic.DefaultProviderId == provider.Id)
                 {
 					defaultProviderComboBox.SelectedItem = provider;
                 }
@@ -233,7 +233,7 @@ namespace Imedisoft.Forms
 
             if (insBillingProviderComboBox.SelectedItem is Provider selected)
             {
-                formProviderPick.SelectedProviderId = selected.ProvNum;
+                formProviderPick.SelectedProviderId = selected.Id;
             }
 
             if (formProviderPick.ShowDialog(this) != DialogResult.OK)
@@ -243,7 +243,7 @@ namespace Imedisoft.Forms
 
 			foreach (var provider in providers)
             {
-				if (provider.ProvNum == formProviderPick.SelectedProviderId)
+				if (provider.Id == formProviderPick.SelectedProviderId)
                 {
 					insBillingProviderComboBox.SelectedItem = provider;
 
@@ -258,7 +258,7 @@ namespace Imedisoft.Forms
 
             if (defaultProviderComboBox.SelectedItem is Provider selected)
             {
-                formProviderPick.SelectedProviderId = selected.ProvNum;
+                formProviderPick.SelectedProviderId = selected.Id;
             }
 
             if (formProviderPick.ShowDialog(this) != DialogResult.OK)
@@ -268,7 +268,7 @@ namespace Imedisoft.Forms
 
 			foreach (var provider in providers)
 			{
-				if (provider.ProvNum == formProviderPick.SelectedProviderId)
+				if (provider.Id == formProviderPick.SelectedProviderId)
 				{
 					defaultProviderComboBox.SelectedItem = provider;
 
@@ -426,7 +426,7 @@ namespace Imedisoft.Forms
 					(insBillingProviderTreatingRadioButton.Checked ? 'T' : 'D');
 
 			var insBillingProvider = insBillingProviderComboBox.SelectedItem as Provider;
-			var insBillingProviderId = insBillingProvider?.ProvNum;
+			var insBillingProviderId = insBillingProvider?.Id;
 
 			if (insBillingProviderType == 'S' && insBillingProvider == null)
             {
@@ -436,7 +436,7 @@ namespace Imedisoft.Forms
             }
 
 			var defaultProvider = defaultProviderComboBox.SelectedItem as Provider;
-			var defaultProviderId = defaultProvider?.ProvNum;
+			var defaultProviderId = defaultProvider?.Id;
 
 			// Make sure there are no users that are restricted to this clinic. Hiding the clinic in that case
 			// would render the restricted users unable to login.

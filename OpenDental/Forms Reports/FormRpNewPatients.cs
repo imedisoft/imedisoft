@@ -351,13 +351,13 @@ namespace OpenDental{
 			string subtitleProvs="";
 			if(listProv.SelectedIndices[0]==0) {//'All' is selected
 				for(int i=0;i<listProvs.Count;i++) {
-					listProvNums.Add(listProvs[i].ProvNum);
+					listProvNums.Add(listProvs[i].Id);
 					subtitleProvs="All Providers";
 				}
 			}
 			else {
 				for(int i=0;i<listProv.SelectedIndices.Count;i++) {
-					listProvNums.Add(listProvs[listProv.SelectedIndices[i]-1].ProvNum);//Minus 1 from the selected index to account for 'All' option
+					listProvNums.Add(listProvs[listProv.SelectedIndices[i]-1].Id);//Minus 1 from the selected index to account for 'All' option
 					if(i>0) {
 						subtitleProvs+=", ";
 					}

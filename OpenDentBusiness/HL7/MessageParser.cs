@@ -1358,7 +1358,7 @@ namespace OpenDentBusiness.HL7 {
 					+pat.GetNameFLnoPref()+".  The RxNorm code supplied in the OBX segment was invalid.",EventLogEntryType.Information);
 				return;//not able to enter this medication if not given a valid rxnorm
 			}
-			Medication medCur=Medications.GetMedicationFromDbByRxCui(rxnorm);//an RxNorm could be attached to multiple medications, we will just add the first one we come to
+			Medication medCur=Medications.GetByRxCuiNoCache(rxnorm.ToString());//an RxNorm could be attached to multiple medications, we will just add the first one we come to
 			if(medCur==null) {
 				EventLog.WriteEntry("OpenDentHL7","A medication was not added for patient "+pat.GetNameFLnoPref()
 					+".  There is not a medication in the database with the RxNorm code of "+rxnorm.ToString()+".",EventLogEntryType.Information);
@@ -1366,15 +1366,15 @@ namespace OpenDentBusiness.HL7 {
 			}
 			List<MedicationPat> listMedPatsCur=MedicationPats.Refresh(pat.PatNum,false);
 			for(int i=0;i<listMedPatsCur.Count;i++) {
-				if(listMedPatsCur[i].MedicationNum==medCur.MedicationNum) {
+				if(listMedPatsCur[i].MedicationNum==medCur.Id) {
 					return;//this patient already has this medication recorded and active
 				}
 			}
 			MedicationPat medpatCur=new MedicationPat();
 			medpatCur.PatNum=pat.PatNum;
-			medpatCur.MedicationNum=medCur.MedicationNum;
+			medpatCur.MedicationNum=medCur.Id;
 			medpatCur.ProvNum=pat.PriProv;
-			medpatCur.RxCui=medCur.RxCui;
+			medpatCur.RxCui=int.Parse(medCur.RxCui);
 			MedicationPats.Insert(medpatCur);
 			if(_isVerboseLogging) {
 				EventLog.WriteEntry("OpenDentHL7","Inserted a new medication for patient "+pat.GetNameFLnoPref()+" due to an incoming OBX segment.",EventLogEntryType.Information);

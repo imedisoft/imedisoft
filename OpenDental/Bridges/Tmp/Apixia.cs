@@ -49,7 +49,7 @@ namespace OpenDental.Bridges
 				{
 					iniString += "ID=" + pat.ChartNumber + "\r\n";
 				}
-				Provider priProv = Providers.GetProv(pat.PriProv);
+				Provider priProv = Providers.GetById(pat.PriProv);
 				if (priProv == null)
 				{
 					MsgBox.Show("Invalid provider for the selected patient.");

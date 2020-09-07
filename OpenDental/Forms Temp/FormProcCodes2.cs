@@ -1254,7 +1254,7 @@ namespace OpenDental{
 				if(PrefC.HasClinicsEnabled) {
 					if(feeSchedNum1Selected==0 || comboClinic1.Enabled==false) {
 						//Previously selected FeeSched WAS global or there was none selected previously, select OD's selected Clinic
-						comboClinic1.SelectedClinicNum=Clinics.ClinicId;
+						comboClinic1.SelectedClinicNum=Clinics.Active.Id;
 					}
 					comboClinic1.Enabled=true;
 					butPickClinic1.Enabled=true;
@@ -1276,7 +1276,7 @@ namespace OpenDental{
 				if(PrefC.HasClinicsEnabled) {
 					if(comboClinic2.Enabled==false) {
 						//Previously selected FeeSched WAS global, select OD's selected Clinic
-						comboClinic2.SelectedClinicNum=Clinics.ClinicId;
+						comboClinic2.SelectedClinicNum=Clinics.Active.Id;
 					}
 					comboClinic2.Enabled=true;
 					butPickClinic2.Enabled=true;
@@ -1298,7 +1298,7 @@ namespace OpenDental{
 				if(PrefC.HasClinicsEnabled) {
 					if(comboClinic3.Enabled==false) {//Previously selected FeeSched WAS global
 						//Select OD's selected Clinic
-						comboClinic3.SelectedClinicNum=Clinics.ClinicId;
+						comboClinic3.SelectedClinicNum=Clinics.Active.Id;
 					}
 					comboClinic3.Enabled=true;
 					butPickClinic3.Enabled=true;
@@ -1355,13 +1355,13 @@ namespace OpenDental{
 			long provider2Num=0;
 			long provider3Num=0;
 			if(comboProvider1.SelectedIndex>0) {
-				provider1Num=_listProviders[comboProvider1.SelectedIndex-1].ProvNum;
+				provider1Num=_listProviders[comboProvider1.SelectedIndex-1].Id;
 			}
 			if(comboProvider2.SelectedIndex>0) {
-				provider2Num=_listProviders[comboProvider2.SelectedIndex-1].ProvNum;
+				provider2Num=_listProviders[comboProvider2.SelectedIndex-1].Id;
 			}
 			if(comboProvider3.SelectedIndex>0) {
-				provider3Num=_listProviders[comboProvider3.SelectedIndex-1].ProvNum;
+				provider3Num=_listProviders[comboProvider3.SelectedIndex-1].Id;
 			}
 			long clinic1Num=0;
 			long clinic2Num=0;
@@ -1462,13 +1462,13 @@ namespace OpenDental{
 			long provider2Num=0;
 			long provider3Num=0;
 			if(comboProvider1.SelectedIndex>0) {
-				provider1Num=_listProviders[comboProvider1.SelectedIndex-1].ProvNum;
+				provider1Num=_listProviders[comboProvider1.SelectedIndex-1].Id;
 			}
 			if(comboProvider2.SelectedIndex>0) {
-				provider2Num=_listProviders[comboProvider2.SelectedIndex-1].ProvNum;
+				provider2Num=_listProviders[comboProvider2.SelectedIndex-1].Id;
 			}
 			if(comboProvider3.SelectedIndex>0) {
-				provider3Num=_listProviders[comboProvider3.SelectedIndex-1].ProvNum;
+				provider3Num=_listProviders[comboProvider3.SelectedIndex-1].Id;
 			}
 			//Clinic nums will be 0 for "Default" or "Off" value.
 			long clinic1Num=0;
@@ -1669,7 +1669,7 @@ namespace OpenDental{
 			if(e.Col==4) {
 				feeSched=_listFeeScheds[comboFeeSched1.SelectedIndex];
 				if(comboProvider1.SelectedIndex>0) {
-					provNum=_listProviders[comboProvider1.SelectedIndex-1].ProvNum;
+					provNum=_listProviders[comboProvider1.SelectedIndex-1].Id;
 				}
 				if(PrefC.HasClinicsEnabled) {
 					if(checkGroups1.Checked && comboFeeSchedGroup1.SelectedIndex>-1) {
@@ -1689,7 +1689,7 @@ namespace OpenDental{
 				}
 				feeSched=_listFeeScheds[comboFeeSched2.SelectedIndex-1];
 				if(comboProvider2.SelectedIndex>0) {
-					provNum=_listProviders[comboProvider2.SelectedIndex-1].ProvNum;
+					provNum=_listProviders[comboProvider2.SelectedIndex-1].Id;
 				}
 				if(PrefC.HasClinicsEnabled) {
 					if(checkGroups2.Checked && comboFeeSchedGroup2.SelectedIndex>-1) {
@@ -1709,7 +1709,7 @@ namespace OpenDental{
 				}
 				feeSched=_listFeeScheds[comboFeeSched3.SelectedIndex-1];
 				if(comboProvider3.SelectedIndex>0) {
-					provNum=_listProviders[comboProvider3.SelectedIndex-1].ProvNum;
+					provNum=_listProviders[comboProvider3.SelectedIndex-1].Id;
 				}
 				if(PrefC.HasClinicsEnabled) {
 					if(checkGroups3.Checked && comboFeeSchedGroup3.SelectedIndex>-1) {

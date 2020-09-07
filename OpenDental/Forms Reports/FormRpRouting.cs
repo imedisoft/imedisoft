@@ -245,7 +245,7 @@ namespace OpenDental {
 				List<long> emptyProvNumList=new List<long>();
 				List<long> listClinicNums=new List<long>();
 				if(PrefC.HasClinicsEnabled) {
-					listClinicNums.Add(Clinics.ClinicId);
+					listClinicNums.Add(Clinics.Active.Id);
 				}
 				//Run for all providers and the currently selected day
 				List<long> aptNums=RpRouting.GetRouting(DateSelected,emptyProvNumList,listClinicNums);
@@ -380,7 +380,7 @@ namespace OpenDental {
 			}
 			List<long> listProvNums=new List<long>();
 			if(!checkProvAll.Checked) {
-				listProvNums=listProv.SelectedIndices.OfType<int>().Select(x => _listProviders[x].ProvNum).ToList();
+				listProvNums=listProv.SelectedIndices.OfType<int>().Select(x => _listProviders[x].Id).ToList();
 			}
 			List<long> listClinicNums=new List<long>();
 			if(PrefC.HasClinicsEnabled) {

@@ -601,7 +601,7 @@ namespace OpenDental{
 					DateTime dateTo=PIn.Date(textDateTo.Text);
 					long provNum=0;
 					if(comboProv.SelectedIndex!=0) {
-						provNum=_listProviders[comboProv.SelectedIndex-1].ProvNum;
+						provNum=_listProviders[comboProv.SelectedIndex-1].Id;
 					}
 					bool showRecalls=false;
 					bool showNonRecalls=false;
@@ -1131,7 +1131,7 @@ namespace OpenDental{
 				message=new EmailMessage();
 				message.PatNum=PIn.Long(Table.Rows[gridMain.SelectedIndices[i]]["PatNum"].ToString());
 				message.ToAddress=Table.Rows[gridMain.SelectedIndices[i]]["email"].ToString();//Could be guarantor email.
-				long clinicNum=Clinics.ClinicId;
+				long clinicNum=Clinics.Active.Id;
 				if(comboEmailFrom.SelectedIndex==0) { //clinic/practice default
 					clinicNum=PIn.Long(Table.Rows[gridMain.SelectedIndices[i]]["ClinicNum"].ToString());
 					emailAddress=EmailAddresses.GetByClinic(clinicNum);

@@ -32,7 +32,7 @@ namespace OpenDentBusiness.Eclaims {
 				//Now we need to update our cache of claims to reflect the change that took place in the database above in Etranss.SetClaimSentOrPrinted()
 				queueItem.ClaimStatus = "S";
 				Claim claim = Claims.GetClaim(queueItem.ClaimNum);
-				Provider provClaimTreat = Providers.GetProv(claim.ProvTreat);
+				Provider provClaimTreat = Providers.GetById(claim.ProvTreat);
 				DP_RACINDP dp = new DP_RACINDP();
 				#region Header
 				dp.CHN = DP_RACINDPCHN.Item06;
@@ -41,7 +41,7 @@ namespace OpenDentBusiness.Eclaims {
 				dp.ENRGSpecified = true;
 				//We hijack the TaxID number for the TRNSM field.  The TRNSM is a office identifying number.  Test range for developers is 18000 to 18999.
 				dp.TRNSM = clearinghouseClin.SenderTIN;
-				dp.DISP = provClaimTreat.NationalProvID;
+				dp.DISP = provClaimTreat.NationalProviderID;
 				//dp.CPTE_ADMN=;//Administrative account number.  Not currently used.
 				JulianCalendar calendar = new JulianCalendar();
 				dp.ATTES = (DateTime.Now.Year % 10).ToString()//One digit for year
@@ -235,7 +235,7 @@ namespace OpenDentBusiness.Eclaims {
 			StringBuilder sbErrors = new StringBuilder();
 			StringBuilder sbWarnings = new StringBuilder();
 			Claim claim = Claims.GetClaim(queueItem.ClaimNum);
-			Provider provClaimTreat = Providers.GetProv(claim.ProvTreat);
+			Provider provClaimTreat = Providers.GetById(claim.ProvTreat);
 			InsSub insSub = InsSubs.GetOne(claim.InsSubNum);
 			#region Header
 			//TRNSM
@@ -268,7 +268,7 @@ namespace OpenDentBusiness.Eclaims {
 				}
 			}
 			//DISP
-			if (!Regex.IsMatch(provClaimTreat.NationalProvID, @"^[27][0-9]{5}$"))
+			if (!Regex.IsMatch(provClaimTreat.NationalProviderID, @"^[27][0-9]{5}$"))
 			{
 				if (sbErrors.Length != 0)
 				{

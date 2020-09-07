@@ -594,10 +594,10 @@ namespace OpenDental{
 			}
 			arrayDiagnoses=Procedures.GetUniqueDiagnosticCodes(Procedures.GetProcsFromClaimProcs(ListClaimProcs),true).ToArray();
 			Provider providerFirst=Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-			Provider providerClaimTreat=Providers.GetFirstOrDefault(x => x.ProvNum==ClaimCur.ProvTreat)??providerFirst;
-			ProviderClinic provClinicClaimTreat=ProviderClinics.GetOneOrDefault(providerClaimTreat.ProvNum,(clinic==null ? 0 : clinic.Id));
-			Provider providerClaimBill=Providers.GetFirstOrDefault(x => x.ProvNum==ClaimCur.ProvBill)??providerFirst;
-			ProviderClinic provClinicClaimBill=ProviderClinics.GetOneOrDefault(providerClaimBill.ProvNum,(clinic==null ? 0 : clinic.Id));
+			Provider providerClaimTreat=Providers.GetFirstOrDefault(x => x.Id==ClaimCur.ProvTreat)??providerFirst;
+			ProviderClinic provClinicClaimTreat=ProviderClinics.GetOneOrDefault(providerClaimTreat.Id,(clinic==null ? 0 : clinic.Id));
+			Provider providerClaimBill=Providers.GetFirstOrDefault(x => x.Id==ClaimCur.ProvBill)??providerFirst;
+			ProviderClinic provClinicClaimBill=ProviderClinics.GetOneOrDefault(providerClaimBill.Id,(clinic==null ? 0 : clinic.Id));
 			if(ClaimFormCur==null){
 				if(ClaimCur.ClaimForm>0){
 					ClaimFormCur=ClaimForms.GetClaimForm(ClaimCur.ClaimForm);
@@ -1711,10 +1711,10 @@ namespace OpenDental{
 						break;
 					case "BillingDentist":
 						if(providerClaimBill.IsNotPerson) {
-							displayStrings[i]=providerClaimBill.LName+" "+providerClaimBill.Suffix;
+							displayStrings[i]=providerClaimBill.LastName+" "+providerClaimBill.Suffix;
 						}
 						else {
-							displayStrings[i]=providerClaimBill.FName+" "+providerClaimBill.MI+" "+providerClaimBill.LName+" "+providerClaimBill.Suffix;
+							displayStrings[i]=providerClaimBill.FirstName+" "+providerClaimBill.Initials+" "+providerClaimBill.LastName+" "+providerClaimBill.Suffix;
 						}
 						break;
 					case "BillingDentistMedicaidID":
@@ -1727,10 +1727,10 @@ namespace OpenDental{
 						}
 						break;
 					case "BillingDentistNPI":
-						displayStrings[i]=providerClaimBill.NationalProvID;
+						displayStrings[i]=providerClaimBill.NationalProviderID;
 						if(CultureInfo.CurrentCulture.Name.EndsWith("CA") && //Canadian. en-CA or fr-CA
 							carrier.ElectID=="000064" && //Pacific Blue Cross (PBC)
-							providerClaimBill.NationalProvID!=providerClaimTreat.NationalProvID && //Billing and treating providers are different
+							providerClaimBill.NationalProviderID!=providerClaimTreat.NationalProviderID && //Billing and treating providers are different
 							displayStrings[i].Length==9) { //Only for provider numbers which have been entered correctly (to prevent and indexing exception).
 							displayStrings[i]="00"+displayStrings[i].Substring(2,5)+"00";
 						}
@@ -1913,30 +1913,30 @@ namespace OpenDental{
 						break;
 					case "TreatingDentist":
 						if(providerClaimTreat.IsNotPerson) {
-							displayStrings[i]=providerClaimTreat.LName+" "+providerClaimTreat.Suffix;
+							displayStrings[i]=providerClaimTreat.LastName+" "+providerClaimTreat.Suffix;
 						}
 						else {
-							displayStrings[i]=providerClaimTreat.FName+" "+providerClaimTreat.MI+" "+providerClaimTreat.LName+" "+providerClaimTreat.Suffix;
+							displayStrings[i]=providerClaimTreat.FirstName+" "+providerClaimTreat.Initials+" "+providerClaimTreat.LastName+" "+providerClaimTreat.Suffix;
 						}
 						break;
 					case "TreatingDentistFName":
-						displayStrings[i]=providerClaimTreat.FName;
+						displayStrings[i]=providerClaimTreat.FirstName;
 						break;
 					case "TreatingDentistLName":
-						displayStrings[i]=providerClaimTreat.LName;
+						displayStrings[i]=providerClaimTreat.LastName;
 						break;
 					case "TreatingDentistSignature":
-						if(providerClaimTreat.SigOnFile){
+						if(providerClaimTreat.HasSignature){
 							if(Prefs.GetBool(PrefName.ClaimFormTreatDentSaysSigOnFile)){
 								displayStrings[i]="Signature on File";
 							}
 							else{
-								displayStrings[i]=providerClaimTreat.FName+" "+providerClaimTreat.MI+" "+providerClaimTreat.LName+" "+providerClaimTreat.Suffix;
+								displayStrings[i]=providerClaimTreat.FirstName+" "+providerClaimTreat.Initials+" "+providerClaimTreat.LastName+" "+providerClaimTreat.Suffix;
 							}
 						}
 						break;
 					case "TreatingDentistSigDate":
-						if(providerClaimTreat.SigOnFile && ClaimCur.DateSent.Year > 1860){
+						if(providerClaimTreat.HasSignature && ClaimCur.DateSent.Year > 1860){
 							if(ClaimFormCur.Items[i].FormatString=="") {
 								displayStrings[i]=ClaimCur.DateSent.ToShortDateString();
 							}
@@ -1955,7 +1955,7 @@ namespace OpenDental{
 						}
 						break;
 					case "TreatingDentistNPI":
-						displayStrings[i]=providerClaimTreat.NationalProvID;
+						displayStrings[i]=providerClaimTreat.NationalProviderID;
 						break;
 					case "TreatingDentistLicense":
 						displayStrings[i]=(provClinicClaimTreat==null ? "" : provClinicClaimTreat.StateLicense);
@@ -4306,9 +4306,9 @@ namespace OpenDental{
 				else if(ClaimFormCur.Items[i].FieldName=="MedIns"+insLine+"OtherProvID") { //MedInsAOtherProvID, MedInsBOtherProvID, MedInsCOtherProvID
 					string CarrierElectID=carrier.ElectID.ToString();
 					Provider providerFirst=Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-					Provider prov=Providers.GetFirstOrDefault(x => x.ProvNum==ClaimCur.ProvBill)??providerFirst;
-					if(prov.ProvNum>0 && CarrierElectID!="" && ProviderIdents.GetForPayor(prov.ProvNum,CarrierElectID).Length>0) {
-						ProviderIdent provID=ProviderIdents.GetForPayor(prov.ProvNum,CarrierElectID)[0];
+					Provider prov=Providers.GetFirstOrDefault(x => x.Id==ClaimCur.ProvBill)??providerFirst;
+					if(prov.Id>0 && CarrierElectID!="" && ProviderIdents.GetForPayor(prov.Id,CarrierElectID).Length>0) {
+						ProviderIdent provID=ProviderIdents.GetForPayor(prov.Id,CarrierElectID)[0];
 						if(provID.IDNumber != "") {
 							displayStrings[i]=provID.IDNumber.ToString();
 						}
@@ -4495,7 +4495,7 @@ namespace OpenDental{
 					}
 					else {
 						Provider providerFirst=Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-						Provider providerClaimProc=Providers.GetFirstOrDefault(x => x.ProvNum==ListClaimProcs[procIndex].ProvNum)??providerFirst;
+						Provider providerClaimProc=Providers.GetFirstOrDefault(x => x.Id==ListClaimProcs[procIndex].ProvNum)??providerFirst;
 						return providerClaimProc.MedicaidID;
 					}
 				case "TreatProvNPI":
@@ -4504,8 +4504,8 @@ namespace OpenDental{
 					}
 					else {
 						Provider providerFirst=Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-						Provider providerClaimProc=Providers.GetFirstOrDefault(x => x.ProvNum==ListClaimProcs[procIndex].ProvNum)??providerFirst;
-						return providerClaimProc.NationalProvID;
+						Provider providerClaimProc=Providers.GetFirstOrDefault(x => x.Id==ListClaimProcs[procIndex].ProvNum)??providerFirst;
+						return providerClaimProc.NationalProviderID;
 					}
 				case "PlaceNumericCode":
 					return ClaimCur.PlaceService;

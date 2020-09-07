@@ -157,9 +157,9 @@ namespace OpenDentBusiness{
 		///<summary>Gets one ProviderClinic from the list. Optional param to get default for ClinicNum 0 if passed in params result in a no match. Can be null.</summary>
 		public static ProviderClinic GetFromList(long provNum,long clinicNum,List<ProviderClinic> listProvClinics,bool canUseDefault=false) {
 			//No need to check RemotingRole; no call to db.;
-			ProviderClinic retVal=listProvClinics.FirstOrDefault(x => x.ProvNum==provNum && x.ClinicNum==clinicNum);
+			ProviderClinic retVal=listProvClinics.FirstOrDefault(x => x.ProviderId==provNum && x.ClinicId==clinicNum);
 			if(canUseDefault && retVal==null) {
-				retVal=listProvClinics.FirstOrDefault(x => x.ProvNum==provNum && x.ClinicNum==0);
+				retVal=listProvClinics.FirstOrDefault(x => x.ProviderId==provNum && x.ClinicId==0);
 			}
 			return retVal;
 		}

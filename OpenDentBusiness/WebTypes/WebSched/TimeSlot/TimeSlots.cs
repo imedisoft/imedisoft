@@ -29,9 +29,9 @@ namespace OpenDentBusiness.WebTypes.WebSched.TimeSlot
 			List<Provider> listProviders = Providers.GetProvidersForWebSched(recall.PatNum, clinic?.Id ?? 0);
 			if (provNum > 0 && !allowOtherProv)
 			{
-				listProviders = listProviders.FindAll(x => x.ProvNum == provNum);
+				listProviders = listProviders.FindAll(x => x.Id == provNum);
 			}
-			Logger.LogVerbose("listProviders:\r\n\t" + string.Join(",\r\n\t", listProviders.Select(x => x.ProvNum + " - " + x.Abbr)));
+			Logger.LogVerbose("listProviders:\r\n\t" + string.Join(",\r\n\t", listProviders.Select(x => x.Id + " - " + x.Abbr)));
 			RecallType recallType = RecallTypes.GetFirstOrDefault(x => x.RecallTypeNum == recall.RecallTypeNum);
 			return GetAvailableWebSchedTimeSlots(recallType, listProviders, clinic, dateStart, dateEnd, recall);
 		}
@@ -60,8 +60,8 @@ namespace OpenDentBusiness.WebTypes.WebSched.TimeSlot
 				throw new ODException("There are no operatories set up for Web Sched." + "\r\n"
 					+ "Please call us to schedule your appointment.", ODException.ErrorCodes.NoOperatoriesSetup);
 			}
-			Logger.LogVerbose("listOperatories:\r\n\t" + string.Join(",\r\n\t", listOperatories.Select(x => x.OperatoryNum + " - " + x.Abbrev)));
-			List<long> listProvNums = listProviders.Select(x => x.ProvNum).Distinct().ToList();
+			Logger.LogVerbose("listOperatories:\r\n\t" + string.Join(",\r\n\t", listOperatories.Select(x => x.Id + " - " + x.Abbrev)));
+			List<long> listProvNums = listProviders.Select(x => x.Id).Distinct().ToList();
 			List<Schedule> listSchedules = Schedules.GetSchedulesAndBlockoutsForWebSched(listProvNums, dateStart, dateEnd, true
 				, (clinic == null) ? 0 : clinic.Id);
 			Logger.LogVerbose("listSchedules:\r\n\t" + string.Join(",\r\n\t", listSchedules.Select(x => x.ScheduleNum + " - " + x.SchedDate + " " + x.StartTime)));
@@ -108,13 +108,13 @@ namespace OpenDentBusiness.WebTypes.WebSched.TimeSlot
 			string timePattern = AppointmentTypes.GetTimePatternForAppointmentType(appointmentType);
 			List<Provider> listProviders = Providers.GetProvidersForWebSchedNewPatAppt();
 			Clinic clinic = Clinics.GetById(clinicNum);
-			List<long> listProvNums = listProviders.Select(x => x.ProvNum).Distinct().ToList();
+			List<long> listProvNums = listProviders.Select(x => x.Id).Distinct().ToList();
 			List<Schedule> listRestrictedToBlockouts = null;
 			List<DefLink> listRestrictedToBlockoutDefLinks = DefLinks.GetDefLinksByType(DefLinkType.BlockoutType, defNumApptType);
 			if (listRestrictedToBlockoutDefLinks.Count > 0)
 			{
 				listRestrictedToBlockouts = Schedules.GetRestrictedToBlockoutsByReason(defNumApptType, dateStart, dateEnd, clinicNum,
-					listOperatories.Select(x => x.OperatoryNum).ToList(), listRestrictedBlockouts: listRestrictedToBlockoutDefLinks);
+					listOperatories.Select(x => x.Id).ToList(), listRestrictedBlockouts: listRestrictedToBlockoutDefLinks);
 			}
 			List<Schedule> listSchedules = Schedules.GetSchedulesAndBlockoutsForWebSched(listProvNums, dateStart, dateEnd, false, clinicNum, listRestrictedToBlockouts: listRestrictedToBlockouts);
 			return GetTimeSlotsForRange(dateStart, dateEnd, timePattern, listProvNums, listOperatories, listSchedules, clinic, defNumApptType,
@@ -136,14 +136,14 @@ namespace OpenDentBusiness.WebTypes.WebSched.TimeSlot
 		{
 			//No need to check RemotingRole; no call to db.
 			//Order the operatories passed in by their ItemOrder just in case they were passed in all jumbled up.
-			List<long> listOpNums = listOperatories.OrderBy(x => x.ItemOrder).Select(x => x.OperatoryNum).Distinct().ToList();
+			List<long> listOpNums = listOperatories.OrderBy(x => x.ItemOrder).Select(x => x.Id).Distinct().ToList();
 			//Remove all schedules that fall outside of the date range passed in.  Only consider the date right now, the time portion is handled later.
 			listSchedules.RemoveAll(x => !x.SchedDate.Date.Between(dateStart.Date, dateEnd.Date));
 			List<Schedule> listProviderSchedules = listSchedules.FindAll(x => x.BlockoutType == 0);
 			List<Schedule> listBlockoutSchedules = listSchedules.FindAll(x => x.BlockoutType > 0);
 			//Get every single appointment for all operatories within our start and end dates for double booking and overlapping consideration.
 			List<Appointment> listApptsForOps = Appointments.GetAppointmentsForOpsByPeriod(Operatories.GetDeepCopy(true)
-				.Where(x => (clinic == null) || (x.ClinicNum == clinic.Id)).Select(x => x.OperatoryNum).ToList(), dateStart, dateEnd);
+				.Where(x => (clinic == null) || (x.ClinicNum == clinic.Id)).Select(x => x.Id).ToList(), dateStart, dateEnd);
 			Logger.LogVerbose("listProviderSchedules:\r\n\t" + string.Join(",\r\n\t",
 				listProviderSchedules.Select(x => x.ScheduleNum + " - " + x.SchedDate.ToShortDateString() + " " + x.StartTime)));
 			Logger.LogVerbose("listBlockoutSchedules:\r\n\t" + string.Join(",\r\n\t",
@@ -196,7 +196,7 @@ namespace OpenDentBusiness.WebTypes.WebSched.TimeSlot
 				List<Operatory> listOpsForSchedule = new List<Operatory>();
 				if (schedule.Ops.Count > 0)
 				{
-					listOpsForSchedule = listOperatories.FindAll(x => schedule.Ops.Exists(y => y == x.OperatoryNum));
+					listOpsForSchedule = listOperatories.FindAll(x => schedule.Ops.Exists(y => y == x.Id));
 				}
 				else
 				{//Dynamic schedule.  Figure out what operatories this provider is part of that are associated to the corresponding eService.
@@ -222,11 +222,11 @@ namespace OpenDentBusiness.WebTypes.WebSched.TimeSlot
 					continue;//No valid operatories for this schedule.
 				}
 				Logger.LogVerbose("schedule: " + schedule.ScheduleNum + "\tlistOpsForSchedule:\r\n\t"
-					+ string.Join(",\r\n\t", listOpsForSchedule.Select(x => x.OperatoryNum + " - " + x.Abbrev)));
+					+ string.Join(",\r\n\t", listOpsForSchedule.Select(x => x.Id + " - " + x.Abbrev)));
 				//The list of operatories has been filtered above so we need to find ALL available time slots for this schedule in all operatories.
 				foreach (Operatory op in listOpsForSchedule)
 				{
-					AddTimeSlotsFromSchedule(listAvailableTimeSlots, schedule, op.OperatoryNum, timeSchedStart, timeSchedStop
+					AddTimeSlotsFromSchedule(listAvailableTimeSlots, schedule, op.Id, timeSchedStart, timeSchedStop
 						, listBlockoutSchedules, dictProvSchedules, listApptsForOps, timePattern, defNumApptType, isDoubleBookingAllowed, listRestrictToBlockouts);
 				}
 			}
@@ -411,7 +411,7 @@ namespace OpenDentBusiness.WebTypes.WebSched.TimeSlot
 						Operatory operatoryCur = Operatories.GetOperatory(timeSlotCur.OperatoryNum);
 						if (operatoryIn.ItemOrder < operatoryCur.ItemOrder)
 						{
-							timeSlotCur.OperatoryNum = operatoryIn.OperatoryNum;
+							timeSlotCur.OperatoryNum = operatoryIn.Id;
 						}
 					}
 					//Continue looking for more open slots starting at the end of this time slot.

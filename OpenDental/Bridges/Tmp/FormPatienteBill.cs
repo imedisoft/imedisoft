@@ -69,7 +69,7 @@ namespace OpenDental {
 			string passWord;
 
 			// Get Login / Password
-			Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.ClinicId);
+			Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.Active.Id);
 			if(clearinghouseClin!=null) {
 				loginID = clearinghouseClin.LoginID;
 				passWord = clearinghouseClin.Password;

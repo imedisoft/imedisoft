@@ -112,7 +112,7 @@ namespace OpenDental {
 				labelPassword.Font=new Font(labelPassword.Font,FontStyle.Bold);
 				labelPracticeAddr.Font=new Font(labelPracticeAddr.Font,FontStyle.Bold);
 				labelRemitAddr.Font=new Font(labelRemitAddr.Font,FontStyle.Bold);
-				comboClinic.SelectedClinicNum=Clinics.ClinicId;
+				comboClinic.SelectedClinicNum=Clinics.Active.Id;
 				Ebill eBill=null;
 				if(Clinics.ClinicId==0) {//Use the default Ebill if OD has Headquarters selected or if clinics are disabled.
 					eBill=_eBillDefault;

@@ -402,11 +402,11 @@ namespace OpenDental
 			List<long> listProvNums=new List<long>();
 			List<long> listClinicNums=new List<long>();
 			for(int i=0;i<listProv.SelectedIndices.Count;i++) {
-				listProvNums.Add(_listProviders[listProv.SelectedIndices[i]].ProvNum);
+				listProvNums.Add(_listProviders[listProv.SelectedIndices[i]].Id);
 			}
 			if(checkAllProv.Checked) {
 				for(int i=0;i<_listProviders.Count;i++) {
-					listProvNums.Add(_listProviders[i].ProvNum);
+					listProvNums.Add(_listProviders[i].Id);
 				}
 			}
 			if(PrefC.HasClinicsEnabled) {

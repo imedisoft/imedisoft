@@ -468,21 +468,21 @@ namespace OpenDental {
 			DateTime dateCur=PIn.Date(textDateIntervention.Text);
 			if(iCodeCur.CodeSystem=="RXNORM" && !checkPatientDeclined.Checked) {//if patient declines the medication, enter as a declined intervention
 				//codeVal will be RxCui of medication, see if it already exists in Medication table
-				Medication medCur=Medications.GetMedicationFromDbByRxCui(PIn.Long(iCodeCur.CodeValue));
+				Medication medCur=Medications.GetByRxCuiNoCache(iCodeCur.CodeValue);
 				if(medCur==null) {//no med with this RxCui, create one
 					medCur=new Medication();
 					Medications.Insert(medCur);//so that we will have the primary key
-					medCur.GenericNum=medCur.MedicationNum;
-					medCur.RxCui=PIn.Long(iCodeCur.CodeValue);
-					medCur.MedName=RxNorms.GetDescByRxCui(iCodeCur.CodeValue);
+					medCur.GenericId=medCur.Id;
+					medCur.RxCui=iCodeCur.CodeValue;
+					medCur.Name=RxNorms.GetDescByRxCui(iCodeCur.CodeValue);
 					Medications.Update(medCur);
 					Medications.RefreshCache();//refresh cache to include new medication
 				}
 				MedicationPat medPatCur=new MedicationPat();
 				medPatCur.PatNum=PatCur.PatNum;
 				medPatCur.ProvNum=PatCur.PriProv;
-				medPatCur.MedicationNum=medCur.MedicationNum;
-				medPatCur.RxCui=medCur.RxCui;
+				medPatCur.MedicationNum=medCur.Id;
+				medPatCur.RxCui=int.Parse(medCur.RxCui);
 				medPatCur.DateStart=dateCur;
 				FormMedPat FormMP=new FormMedPat();
 				FormMP.MedicationPatCur=medPatCur;

@@ -100,13 +100,13 @@ namespace OpenDentBusiness{
 		///<summary>Gets all supplemental identifiers that have been attached to this provider. Used in the provider edit window.</summary>
 		public static ProviderIdent[] GetForProv(long provNum) {
 			//No need to check RemotingRole; no call to db.
-			return GetWhere(x => x.ProvNum==provNum).ToArray();
+			return GetWhere(x => x.ProviderId==provNum).ToArray();
 		}
 
 		///<summary>Gets all supplemental identifiers that have been attached to this provider and for this particular payorID.  Called from X12 when creating a claim file.  Also used now on printed claims.</summary>
 		public static ProviderIdent[] GetForPayor(long provNum,string payorID) {
 			//No need to check RemotingRole; no call to db.
-			return GetWhere(x => x.ProvNum==provNum && x.PayorID==payorID).ToArray();
+			return GetWhere(x => x.ProviderId==provNum && x.PayorID==payorID).ToArray();
 		}
 
 		///<summary>Called from FormProvEdit if cancel on a new provider.</summary>
@@ -119,7 +119,7 @@ namespace OpenDentBusiness{
 		/// <summary></summary>
 		public static bool IdentExists(ProviderSupplementalID type,long provNum,string payorID) {
 			//No need to check RemotingRole; no call to db.
-			ProviderIdent providerIdent=GetFirstOrDefault(x => x.ProvNum==provNum && x.SuppIDType==type && x.PayorID==payorID);
+			ProviderIdent providerIdent=GetFirstOrDefault(x => x.ProviderId==provNum && x.SuppIDType==type && x.PayorID==payorID);
 			return (providerIdent!=null);
 		}
 	}

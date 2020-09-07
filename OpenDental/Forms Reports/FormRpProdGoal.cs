@@ -380,10 +380,10 @@ namespace OpenDental {
 				,DateTime.DaysInMonth(DateTime.Today.Year,DateTime.Today.Month)).ToShortDateString();
 			if(!Security.IsAuthorized(Permissions.ReportProdIncAllProviders,true)) {
 				//They either have permission or have a provider at this point.  If they don't have permission they must have a provider.
-				_listProviders=_listProviders.FindAll(x => x.ProvNum==Security.CurrentUser.ProviderId);
+				_listProviders=_listProviders.FindAll(x => x.Id==Security.CurrentUser.ProviderId);
 				Provider prov=_listProviders.FirstOrDefault();
 				if(prov!=null) {
-					_listProviders.AddRange(Providers.GetWhere(x => x.FName == prov.FName && x.LName == prov.LName && x.ProvNum != prov.ProvNum));
+					_listProviders.AddRange(Providers.GetWhere(x => x.FirstName == prov.FirstName && x.LastName == prov.LastName && x.Id != prov.Id));
 				}
 				checkAllProv.Checked=false;
 				checkAllProv.Enabled=false;
@@ -559,7 +559,7 @@ namespace OpenDental {
 				//Check here for multi clinic schedule overlap and give notification.
 				listSelectedClinicNums=listClinics.Select(x => x.Id).ToList();
 				var listConflicts=listProvs
-					.Select(x => new { x.Abbr,listScheds=Schedules.GetClinicOverlapsForProv(_dateFrom,_dateTo,x.ProvNum,listSelectedClinicNums) })
+					.Select(x => new { x.Abbr,listScheds=Schedules.GetClinicOverlapsForProv(_dateFrom,_dateTo,x.Id,listSelectedClinicNums) })
 					.Where(x => x.listScheds.Count>0).ToList();
 				if(listConflicts.Count>0) {
 					string errorMsg="This report is designed to show production goals by clinic and provider.  You have one or more providers during the "

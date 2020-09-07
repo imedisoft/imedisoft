@@ -907,8 +907,8 @@ namespace OpenDental{
 			comboNetwork.SelectedIndex=0;
 			List<CanadianNetwork> listCanadianNetworks=CanadianNetworks.GetDeepCopy();
 			for(int i=0;i<listCanadianNetworks.Count;i++) {
-				comboNetwork.Items.Add(listCanadianNetworks[i].Abbrev+" - "+listCanadianNetworks[i].Descript);
-				if(CarrierCur.CanadianNetworkNum==listCanadianNetworks[i].CanadianNetworkNum) {
+				comboNetwork.Items.Add(listCanadianNetworks[i].Abbr+" - "+listCanadianNetworks[i].Description);
+				if(CarrierCur.CanadianNetworkNum==listCanadianNetworks[i].Id) {
 					comboNetwork.SelectedIndex=i+1;
 				}
 			}

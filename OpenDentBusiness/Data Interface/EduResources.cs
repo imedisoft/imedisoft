@@ -43,7 +43,7 @@ namespace OpenDentBusiness{
 			eduResourceListAll.FindAll(x => x.DiseaseDefNum!=0 && diseaseList.Any(y => y.ProblemDefId==x.DiseaseDefNum)).ForEach(x => retVal.Add(x));
 			eduResourceListAll.FindAll(x => x.MedicationNum!=0
 					&& medicationPatList.Any(y => y.MedicationNum==x.MedicationNum 
-						|| (y.MedicationNum==0 && Medications.GetMedication(x.MedicationNum).RxCui==y.RxCui)))
+						|| (y.MedicationNum==0 && Medications.GetById(x.MedicationNum).RxCui==y.RxCui.ToString())))
 				.ForEach(x => retVal.Add(x));
 			eduResourceListAll.FindAll(x => x.SmokingSnoMed!="" && listTobaccoEvents.Any(y => y.CodeValueResult==x.SmokingSnoMed)).ForEach(x => retVal.Add(x));
 			foreach(EduResource resourceCur in eduResourceListAll.Where(x => x.LabResultID!="")) {

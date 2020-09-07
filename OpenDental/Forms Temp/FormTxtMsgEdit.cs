@@ -163,7 +163,7 @@ namespace OpenDental {
 						+"will be created and any replies to this message will not be automatically associated with any patient.  Continue?")) {
 					return;
 				}
-				long clinicNum= Clinics.ClinicId;
+				long clinicNum= Clinics.Active.Id;
 				if(clinicNum==0) {
 						clinicNum=Prefs.GetLong(PrefName.TextingDefaultClinicNum);
 				}

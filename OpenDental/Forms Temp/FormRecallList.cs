@@ -1131,7 +1131,7 @@ namespace OpenDental {
 				else {
 					clinicCur=Clinics.GetById(PIn.Long(addrTable.Rows[i]["ClinicNum"].ToString()));
 				}
-				long clinicNumEmail=clinicCur?.Id??Clinics.ClinicId;
+				long clinicNumEmail=clinicCur?.Id??Clinics.ClinicId??0;
 				ComboBox cbEmail=isRecallGridSelected?comboEmailFromRecalls:comboEmailFromReact;
 				if(cbEmail.SelectedIndex==0) { //clinic/practice default
 					clinicNumEmail=PIn.Long(addrTable.Rows[i]["ClinicNum"].ToString());

@@ -251,7 +251,7 @@ namespace OpenDental{
 			strBTime=new StringBuilder(NoteCur.ProcTime);
 			for(int i=0;i<_listProviders.Count;i++){
 				listProv.Items.Add(_listProviders[i].GetLongDesc());
-				if(NoteCur.ProvNum==_listProviders[i].ProvNum){
+				if(NoteCur.ProvNum==_listProviders[i].Id){
 					listProv.SelectedIndex=i;
 				}
 			}
@@ -339,7 +339,7 @@ namespace OpenDental{
 				return;
 			}
 			NoteCur.ProcTime=strBTime.ToString();
-			NoteCur.ProvNum=_listProviders[listProv.SelectedIndex].ProvNum;
+			NoteCur.ProvNum=_listProviders[listProv.SelectedIndex].Id;
 			NoteCur.Note=textNote.Text;
 			if(_isTp) {
 				NoteCur.ProcStatus=ProcStat.TP;

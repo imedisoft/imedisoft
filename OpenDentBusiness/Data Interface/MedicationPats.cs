@@ -1,5 +1,6 @@
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -115,10 +116,10 @@ namespace OpenDentBusiness
 				//Once the customer adds the medication to their medication list, then we can automatically attach the order to the medication.
 				//The reason we decided not to automatically create the medication if one does not already exist is because we do not want to
 				//accidentally bloat the medication list, if for example, the user has the medication entered but has not set the RxCui on it yet.
-				List<Medication> listMeds = Medications.GetAllMedsByRxCui(rxCui);
+				List<Medication> listMeds = Medications.GetByRxCui(rxCui.ToString());
 				if (listMeds.Count > 0)
 				{
-					medOrder.MedicationNum = listMeds[0].MedicationNum;
+					medOrder.MedicationNum = listMeds[0].Id;
 				}
 			}
 

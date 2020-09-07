@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using System.Collections.Generic;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -262,15 +263,15 @@ namespace OpenDental{
 
 		private void RefreshList(){
 			Employees.RefreshCache();
-			_listEmployeesFull=Employees.GetDeepCopy();
+			_listEmployeesFull=Employees.GetAll();
 		}
 
 		private void FillGrid(){
 			_listEmployeesShowing=new List<Employee>();
 			for(int i=0;i<_listEmployeesFull.Count;i++){
 				if(textSearch.Text!=""){
-					if(!_listEmployeesFull[i].LName.ToLower().Contains(textSearch.Text.ToLower())
-						&& !_listEmployeesFull[i].FName.ToLower().Contains(textSearch.Text.ToLower())
+					if(!_listEmployeesFull[i].LastName.ToLower().Contains(textSearch.Text.ToLower())
+						&& !_listEmployeesFull[i].FirstName.ToLower().Contains(textSearch.Text.ToLower())
 						//&&!_listEmployeesFull[i].EmployeeNum.ToString().Contains(textSearch.Text)
 						&&!_listEmployeesFull[i].WirelessPhone.Replace("-","").Replace("(","").Replace(")","").Contains(textSearch.Text))
 					{
@@ -318,9 +319,9 @@ namespace OpenDental{
 			GridRow row;
 			for(int i=0;i<_listEmployeesShowing.Count;i++){
 				row=new GridRow();
-				row.Cells.Add(_listEmployeesShowing[i].FName);
-				row.Cells.Add(_listEmployeesShowing[i].LName);
-				row.Cells.Add(_listEmployeesShowing[i].MiddleI);
+				row.Cells.Add(_listEmployeesShowing[i].FirstName);
+				row.Cells.Add(_listEmployeesShowing[i].LastName);
+				row.Cells.Add(_listEmployeesShowing[i].Initials);
 				if(_listEmployeesShowing[i].IsHidden){
 					row.Cells.Add("X");
 				}
@@ -375,7 +376,7 @@ namespace OpenDental{
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			long empNum=_listEmployeesShowing[e.Row].EmployeeNum;
+			long empNum=_listEmployeesShowing[e.Row].Id;
 			FormEmployeeEdit formEmployeeEdit=new FormEmployeeEdit();
 			formEmployeeEdit.EmployeeCur=_listEmployeesShowing[e.Row];
 			formEmployeeEdit.ShowDialog();
@@ -386,7 +387,7 @@ namespace OpenDental{
 			FillGrid();
 			isChanged=true;
 			for(int i=0;i<_listEmployeesShowing.Count;i++){
-				if(_listEmployeesShowing[i].EmployeeNum==empNum){
+				if(_listEmployeesShowing[i].Id==empNum){
 					gridMain.SetSelected(i,true);
 				}
 			}
@@ -398,7 +399,7 @@ namespace OpenDental{
 			}
 			for(int i=0;i<_listEmployeesShowing.Count;i++){
 				try{
-					Employees.Delete(_listEmployeesShowing[i].EmployeeNum);
+					Employees.Delete(_listEmployeesShowing[i].Id);
 				}
 				catch{}
 			}

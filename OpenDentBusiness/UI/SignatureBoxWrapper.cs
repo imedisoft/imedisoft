@@ -534,7 +534,7 @@ namespace OpenDental.UI {
 
 		private void butESign_Click(object sender,EventArgs e) {
 			Userod curUser=_userSig??Security.CurrentUser;
-			Provider provCur=Providers.GetProv(curUser.ProviderId);
+			Provider provCur=Providers.GetById(curUser.ProviderId??0);
 			string digitalSignature="Digitally Signed by ";
 			if(provCur!=null) {
 				digitalSignature+=provCur.GetLongDesc();
@@ -552,11 +552,6 @@ namespace OpenDental.UI {
 			OnSignatureChanged();
 			sigBox.Enabled=false;
 		}
-
-
-
-
-
 
 
 

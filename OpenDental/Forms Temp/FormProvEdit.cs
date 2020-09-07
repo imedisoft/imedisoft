@@ -1418,12 +1418,12 @@ namespace OpenDental{
 				labelEhrMU.Visible=false;
 			}
 			if(!Prefs.GetBool(PrefName.EasyHideDentalSchools) //Dental Schools is turned on
-				&& (ProvCur.SchoolClassNum!=0 || ProvCur.IsInstructor))//Adding/Editing Students or Instructors
+				&& (ProvCur.SchoolClassId!=0 || ProvCur.IsInstructor))//Adding/Editing Students or Instructors
 			{
 				if(!ProvCur.IsNew) {
 					labelPassDescription.Visible=true;
-					textProvNum.Text=ProvCur.ProvNum.ToString();
-					List<Userod> userList=Providers.GetAttachedUsers(ProvCur.ProvNum);
+					textProvNum.Text=ProvCur.Id.ToString();
+					List<Userod> userList=Providers.GetAttachedUsers(ProvCur.Id);
 					if(userList.Count>0) {
 						textUserName.Text=userList[0].UserName;//Should always happen if they are a student.
 						_existingUser=userList[0];
@@ -1434,13 +1434,13 @@ namespace OpenDental{
 				}
 				_listSchoolClasses=SchoolClasses.GetDeepCopy();
 				for(int i=0;i<_listSchoolClasses.Count;i++) {
-					comboSchoolClass.Items.Add(SchoolClasses.GetDescript(_listSchoolClasses[i]));
+					comboSchoolClass.Items.Add(SchoolClasses.GetDescription(_listSchoolClasses[i]));
 					comboSchoolClass.SelectedIndex=0;
-					if(_listSchoolClasses[i].Id==ProvCur.SchoolClassNum) {
+					if(_listSchoolClasses[i].Id==ProvCur.SchoolClassId) {
 						comboSchoolClass.SelectedIndex=i;
 					}
 				}
-				if(ProvCur.SchoolClassNum!=0) {
+				if(ProvCur.SchoolClassId!=0) {
 					labelSchoolClass.Visible=true;
 					comboSchoolClass.Visible=true;
 				}
@@ -1455,7 +1455,7 @@ namespace OpenDental{
 				labelEcwID.Visible=false;
 				textEcwID.Visible=false;
 			}
-			List<EhrProvKey> listProvKey=EhrProvKeys.GetKeysByFLName(ProvCur.LName,ProvCur.FName);
+			List<EhrProvKey> listProvKey=EhrProvKeys.GetKeysByFLName(ProvCur.LastName,ProvCur.FirstName);
 			if(listProvKey.Count>0) {
 				textLName.Enabled=false;
 				textFName.Enabled=false;
@@ -1465,13 +1465,13 @@ namespace OpenDental{
 				textFName.Enabled=true;
 			}
 			//We'll just always show the Anesthesia fields since they are part of the standard database.
-			if(ProvCur.ProvNum!=0) {
-				textProviderID.Text=ProvCur.ProvNum.ToString();
+			if(ProvCur.Id!=0) {
+				textProviderID.Text=ProvCur.Id.ToString();
 			}
 			textAbbr.Text=ProvCur.Abbr;
-			textLName.Text=ProvCur.LName;
-			textFName.Text=ProvCur.FName;
-			textMI.Text=ProvCur.MI;
+			textLName.Text=ProvCur.LastName;
+			textFName.Text=ProvCur.FirstName;
+			textMI.Text=ProvCur.Initials;
 			textSuffix.Text=ProvCur.Suffix;
 			textSSN.Text=ProvCur.SSN;
 			dateTerm.SetDateTime(ProvCur.DateTerm);
@@ -1481,43 +1481,43 @@ namespace OpenDental{
 			else {
 				radioSSN.Checked=true;
 			}
-			_listProvClinicsOld=ProviderClinics.GetListForProvider(ProvCur.ProvNum,
+			_listProvClinicsOld=ProviderClinics.GetListForProvider(ProvCur.Id,
 				Clinics.GetByCurrentUser().Select(x => x.Id)
 				.Union(new List<long>() { 0 })//Always include 0 clinic, this is the default, NOT a headquarters only value.
 				.Distinct()
 				.ToList());
 			_listProvClinicsNew=_listProvClinicsOld.Select(x => x.Copy()).ToList();
-			_provClinicDefault=_listProvClinicsNew.Find(x => x.ClinicNum==0);
+			_provClinicDefault=_listProvClinicsNew.Find(x => x.ClinicId==0);
 			//Doesn't exist in Db, create a new one.
 			if(_provClinicDefault==null) {
 				_provClinicDefault=new ProviderClinic {
-					ProvNum=ProvCur.ProvNum,
-					ClinicNum=0,
-					DEANum=ProvCur.DEANum,
+					ProviderId=ProvCur.Id,
+					ClinicId=0,
+					DeaNumber=ProvCur.DeaNumber,
 					StateLicense=ProvCur.StateLicense,
-					StateRxID=ProvCur.StateRxID,
+					StateRxId=ProvCur.StateRxId,
 					StateWhereLicensed=ProvCur.StateWhereLicensed,
 				};
 				_listProvClinicsNew.Add(_provClinicDefault);
 			}
-			textDEANum.Text=_provClinicDefault.DEANum;
+			textDEANum.Text=_provClinicDefault.DeaNumber;
 			textStateLicense.Text=_provClinicDefault.StateLicense;
 			textStateWhereLicensed.Text=_provClinicDefault.StateWhereLicensed;
-			textStateRxID.Text=_provClinicDefault.StateRxID;
+			textStateRxID.Text=_provClinicDefault.StateRxId;
 			//textBlueCrossID.Text=ProvCur.BlueCrossID;
 			textMedicaidID.Text=ProvCur.MedicaidID;
-			textNationalProvID.Text=ProvCur.NationalProvID;
+			textNationalProvID.Text=ProvCur.NationalProviderID;
 			textCanadianOfficeNum.Text=ProvCur.CanadianOfficeNum;
 			textCustomID.Text=ProvCur.CustomID;
 			textSchedRules.Text=ProvCur.SchedNote;
 			checkIsSecondary.Checked=ProvCur.IsSecondary;
-			checkSigOnFile.Checked=ProvCur.SigOnFile;
+			checkSigOnFile.Checked=ProvCur.HasSignature;
 			checkIsHidden.Checked=ProvCur.IsHidden;
 			checkIsInstructor.Checked=ProvCur.IsInstructor;
 			odColorPickerAppt.AllowTransparentColor=true;
 			odColorPickerOutline.AllowTransparentColor=true;
-			odColorPickerAppt.BackgroundColor=ProvCur.ProvColor;
-			odColorPickerOutline.BackgroundColor=ProvCur.OutlineColor;
+			odColorPickerAppt.BackgroundColor=ProvCur.Color;
+			odColorPickerOutline.BackgroundColor=ProvCur.ColorOutline;
 			checkIsHiddenOnReports.Checked=ProvCur.IsHiddenReport;
 			checkUseErx.Checked=(ProvCur.IsErxEnabled!=ErxEnabledStatus.Disabled);
 			ErxOption erxOption=Erx.GetErxOption();
@@ -1526,14 +1526,14 @@ namespace OpenDental{
 				checkAllowLegacy.Checked=(ProvCur.IsErxEnabled==ErxEnabledStatus.EnabledWithLegacy);
 			}
 			textBirthdate.Text="";
-			textProdGoalHr.Text=ProvCur.HourlyProdGoalAmt.ToString("f");
+			textProdGoalHr.Text=ProvCur.HourlyProductionGoal.ToString("f");
 			if(ProvCur.Birthdate.Year>=1880) {
 				textBirthdate.Text=ProvCur.Birthdate.ToShortDateString();
 			}
 			_listFeeSchedShort=FeeScheds.GetDeepCopy(true);
 			for(int i=0;i<_listFeeSchedShort.Count;i++){
 				this.listFeeSched.Items.Add(_listFeeSchedShort[i].Description);
-				if(_listFeeSchedShort[i].FeeSchedNum==ProvCur.FeeSched){
+				if(_listFeeSchedShort[i].FeeSchedNum==ProvCur.FeeScheduleId){
 					listFeeSched.SelectedIndex=i;
 				}
 			}
@@ -1575,7 +1575,7 @@ namespace OpenDental{
 			comboProv.SetSelectedProvNum(ProvCur.ProvNumBillingOverride);
 			textWebSchedDescript.Text=ProvCur.WebSchedDescript;
 			FillImage();
-			if(ProvCur.ProvStatus==ProviderStatus.Deleted) {
+			if(ProvCur.Status==ProviderStatus.Deleted) {
 				foreach(Control con in this.Controls) {
 					con.Enabled=false;
 				}
@@ -1583,7 +1583,7 @@ namespace OpenDental{
 				butCancel.Enabled=true;
 			}
 			if(PrefC.HasClinicsEnabled) {
-				_listProvClinicLinks=ProviderClinicLinks.GetForProvider(ProvCur.ProvNum);
+				_listProvClinicLinks=ProviderClinicLinks.GetForProvider(ProvCur.Id);
 				_listClinicsForUser=Clinics.GetByUser(Security.CurrentUser);
 				//If there are no ProviderClinicLinks, then the provider is associated to all clinics.
 				bool doSelectAll=(_listProvClinicLinks.Count==0 || _listClinicsForUser.All(x => _listProvClinicLinks.Any(y => y.ClinicNum==x.Id)));
@@ -1620,7 +1620,7 @@ namespace OpenDental{
 
 		private void FillProvIdent(){
 			ProviderIdents.RefreshCache();
-			ListProvIdent=ProviderIdents.GetForProv(ProvCur.ProvNum);
+			ListProvIdent=ProviderIdents.GetForProv(ProvCur.Id);
 			tbProvIdent.ResetRows(ListProvIdent.Length);
 			tbProvIdent.SetGridColor(Color.Gray);
 			for(int i=0;i<ListProvIdent.Length;i++){
@@ -1641,7 +1641,7 @@ namespace OpenDental{
 		private void butAdd_Click(object sender, System.EventArgs e) {
 			FormProviderIdentEdit FormP=new FormProviderIdentEdit();
 			FormP.ProvIdentCur=new ProviderIdent();
-			FormP.ProvIdentCur.ProvNum=ProvCur.ProvNum;
+			FormP.ProvIdentCur.ProviderId=ProvCur.Id;
 			FormP.IsNew=true;
 			FormP.ShowDialog();
 			FillProvIdent();
@@ -1713,18 +1713,18 @@ namespace OpenDental{
 
 		private void butClinicOverrides_Click(object sender,EventArgs e) {
 			//Update current changes in the form before going to look at all values
-			_provClinicDefault.DEANum=textDEANum.Text;
+			_provClinicDefault.DeaNumber=textDEANum.Text;
 			_provClinicDefault.StateLicense=textStateLicense.Text;
-			_provClinicDefault.StateRxID=textStateRxID.Text;
+			_provClinicDefault.StateRxId=textStateRxID.Text;
 			_provClinicDefault.StateWhereLicensed=textStateWhereLicensed.Text;
 			FormProvAdditional FormPA=new FormProvAdditional(_listProvClinicsNew,ProvCur);
 			FormPA.ShowDialog();
 			if(FormPA.DialogResult==DialogResult.OK) {
 				_listProvClinicsNew=FormPA.ListProviderClinicOut;
-				_provClinicDefault=_listProvClinicsNew.Find(x => x.ClinicNum==0);
-				textDEANum.Text=_provClinicDefault.DEANum;
+				_provClinicDefault=_listProvClinicsNew.Find(x => x.ClinicId==0);
+				textDEANum.Text=_provClinicDefault.DeaNumber;
 				textStateLicense.Text=_provClinicDefault.StateLicense;
-				textStateRxID.Text=_provClinicDefault.StateRxID;
+				textStateRxID.Text=_provClinicDefault.StateRxId;
 				textStateWhereLicensed.Text=_provClinicDefault.StateWhereLicensed;
 			}
 		}
@@ -1759,25 +1759,25 @@ namespace OpenDental{
 				return;
 			}
 			if(checkIsHidden.Checked) {
-				if(Prefs.GetLong(PrefName.PracticeDefaultProv)==ProvCur.ProvNum) {
+				if(Prefs.GetLong(PrefName.PracticeDefaultProv)==ProvCur.Id) {
 					MessageBox.Show("Not allowed to hide practice default provider.");
 					return;
 				}
-				if(Clinics.IsDefaultClinicProvider(ProvCur.ProvNum)) {
+				if(Clinics.IsDefaultClinicProvider(ProvCur.Id)) {
 					MessageBox.Show("Not allowed to hide a clinic default provider.");
 					return;
 				}
-				if(Prefs.GetLong(PrefName.InsBillingProv)==ProvCur.ProvNum) {
+				if(Prefs.GetLong(PrefName.InsBillingProv)==ProvCur.Id) {
 					if(!MsgBox.Show(MsgBoxButtons.YesNo,"You are about to hide the default ins billing provider. Continue?")) {
 						return;
 					}
 				}
-				if(Clinics.IsInsBillingProvider(ProvCur.ProvNum)) {
+				if(Clinics.IsInsBillingProvider(ProvCur.Id)) {
 					if(!MsgBox.Show(MsgBoxButtons.YesNo,"You are about to hide a clinic ins billing provider. Continue?")) {
 						return;
 					}
 				}
-				List<ApptViewItem> listApptViewItems=ApptViewItems.GetForProvider(ProvCur.ProvNum);
+				List<ApptViewItem> listApptViewItems=ApptViewItems.GetForProvider(ProvCur.Id);
 				if(!listApptViewItems.IsNullOrEmpty()) {	
 					#region Provider Attached to View Check
 					//Create a list of Provider associated Appointment Views
@@ -1792,7 +1792,7 @@ namespace OpenDental{
 					#endregion
 				}
 			}
-			if(Providers.GetExists(x => x.ProvNum!=ProvCur.ProvNum && x.Abbr==textAbbr.Text && Prefs.GetBool(PrefName.EasyHideDentalSchools))) {
+			if(Providers.GetExists(x => x.Id!=ProvCur.Id && x.Abbr==textAbbr.Text && Prefs.GetBool(PrefName.EasyHideDentalSchools))) {
 				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This abbreviation is already in use by another provider.  Continue anyway?")) {
 					return;
 				}
@@ -1819,9 +1819,9 @@ namespace OpenDental{
 				{
 					return;
 				}
-				Providers.RemoveProvFromFutureSchedule(ProvCur.ProvNum);
+				Providers.RemoveProvFromFutureSchedule(ProvCur.Id);
 			}
-			if(!Prefs.GetBool(PrefName.EasyHideDentalSchools) && (ProvCur.IsInstructor || ProvCur.SchoolClassNum!=0)) {//Is an Instructor or a Student
+			if(!Prefs.GetBool(PrefName.EasyHideDentalSchools) && (ProvCur.IsInstructor || ProvCur.SchoolClassId!=0)) {//Is an Instructor or a Student
 				if(textUserName.Text=="") {
 					MessageBox.Show("User Name is not allowed to be blank.");
 					return;
@@ -1831,14 +1831,14 @@ namespace OpenDental{
 			if(claimBillingOverrideProvNum!=0) {
 				Provider provClaimBillingOverride=comboProv.GetSelected<Provider>();
 				if(provClaimBillingOverride==null) {//Hidden provider, need to get them the normal way
-					provClaimBillingOverride=Providers.GetProv(claimBillingOverrideProvNum);//Can return null if the provider doesn't exist
+					provClaimBillingOverride=Providers.GetById(claimBillingOverrideProvNum);//Can return null if the provider doesn't exist
 				}
 				if(provClaimBillingOverride!=null && !provClaimBillingOverride.IsNotPerson) {//Override is a person.
 					MessageBox.Show("E-claim Billing Prov Override cannot be a person.");
 					return;
 				}
 			}
-			if(ProvCur.IsNew == false && comboProv.GetSelectedProvNum()==ProvCur.ProvNum) {//Override is the same provider.
+			if(ProvCur.IsNew == false && comboProv.GetSelectedProvNum()==ProvCur.Id) {//Override is the same provider.
 				MessageBox.Show("E-claim Billing Prov Override cannot be the same provider.");
 				return;
 			}
@@ -1858,30 +1858,30 @@ namespace OpenDental{
 				return;
 			}
 			ProvCur.Abbr=textAbbr.Text;
-			ProvCur.LName=textLName.Text;
-			ProvCur.FName=textFName.Text;
-			ProvCur.MI=textMI.Text;
+			ProvCur.LastName=textLName.Text;
+			ProvCur.FirstName=textFName.Text;
+			ProvCur.Initials=textMI.Text;
 			ProvCur.Suffix=textSuffix.Text;
 			ProvCur.SSN=textSSN.Text;
 			ProvCur.StateLicense=textStateLicense.Text;
 			_provClinicDefault.StateLicense=textStateLicense.Text;
 			ProvCur.StateWhereLicensed=textStateWhereLicensed.Text;
 			_provClinicDefault.StateWhereLicensed=textStateWhereLicensed.Text;
-			ProvCur.DEANum=textDEANum.Text;
-			_provClinicDefault.DEANum=textDEANum.Text;
-			ProvCur.StateRxID=textStateRxID.Text;
-			_provClinicDefault.StateRxID=textStateRxID.Text;
+			ProvCur.DeaNumber=textDEANum.Text;
+			_provClinicDefault.DeaNumber=textDEANum.Text;
+			ProvCur.StateRxId=textStateRxID.Text;
+			_provClinicDefault.StateRxId=textStateRxID.Text;
 			//ProvCur.BlueCrossID=textBlueCrossID.Text;
 			ProvCur.MedicaidID=textMedicaidID.Text;
-			ProvCur.NationalProvID=textNationalProvID.Text;
+			ProvCur.NationalProviderID=textNationalProvID.Text;
 			ProvCur.CanadianOfficeNum=textCanadianOfficeNum.Text;
 			//EhrKey and EhrHasReportAccess set when user uses the ... button
 			ProvCur.IsSecondary=checkIsSecondary.Checked;
-			ProvCur.SigOnFile=checkSigOnFile.Checked;
+			ProvCur.HasSignature=checkSigOnFile.Checked;
 			ProvCur.IsHidden=checkIsHidden.Checked;
 			ProvCur.IsCDAnet=checkIsCDAnet.Checked;
-			ProvCur.ProvColor=odColorPickerAppt.BackgroundColor;
-			ProvCur.OutlineColor=odColorPickerOutline.BackgroundColor;
+			ProvCur.Color=odColorPickerAppt.BackgroundColor;
+			ProvCur.ColorOutline=odColorPickerOutline.BackgroundColor;
 			ProvCur.IsInstructor=checkIsInstructor.Checked;
 			ProvCur.EhrMuStage=comboEhrMu.SelectedIndex;
 			ProvCur.IsHiddenReport=checkIsHiddenOnReports.Checked;
@@ -1896,15 +1896,15 @@ namespace OpenDental{
 			ProvCur.SchedNote=textSchedRules.Text;
 			ProvCur.Birthdate=PIn.Date(textBirthdate.Text);
 			ProvCur.WebSchedDescript=textWebSchedDescript.Text;
-			ProvCur.HourlyProdGoalAmt=PIn.Double(textProdGoalHr.Text);
+			ProvCur.HourlyProductionGoal=PIn.Double(textProdGoalHr.Text);
 			ProvCur.DateTerm=dateTerm.GetDateTime();
 			if(!Prefs.GetBool(PrefName.EasyHideDentalSchools)) {
-				if(ProvCur.SchoolClassNum!=0) {
-					ProvCur.SchoolClassNum=_listSchoolClasses[comboSchoolClass.SelectedIndex].Id;
+				if(ProvCur.SchoolClassId!=0) {
+					ProvCur.SchoolClassId=_listSchoolClasses[comboSchoolClass.SelectedIndex].Id;
 				}
 			}
 			if(listFeeSched.SelectedIndex!=-1) {
-				ProvCur.FeeSched=_listFeeSchedShort[listFeeSched.SelectedIndex].FeeSchedNum;
+				ProvCur.FeeScheduleId=_listFeeSchedShort[listFeeSched.SelectedIndex].FeeSchedNum;
 			}
 			//default to first specialty in the list if it can't find the specialty by exact name
 			ProvCur.Specialty=Definitions.GetByExactNameNeverZero(DefinitionCategory.ProviderSpecialties,listSpecialty.SelectedItem.ToString());//selected index defaults to 0
@@ -1923,7 +1923,7 @@ namespace OpenDental{
 			if(IsNew) {
 				long provNum=Providers.Insert(ProvCur);
 				//Set the providerclinics to the new provider's ProvNum that was just retreived from the database.
-				_listProvClinicsNew.ForEach(x => x.ProvNum=provNum);
+				_listProvClinicsNew.ForEach(x => x.ProviderId=provNum);
 				if(ProvCur.IsInstructor) {
 					Userod user=new Userod();
 					user.UserName=textUserName.Text;
@@ -1941,7 +1941,7 @@ namespace OpenDental{
 			}
 			else {
 				try {
-					if(_existingUser!=null && (ProvCur.IsInstructor || ProvCur.SchoolClassNum!=0)) {
+					if(_existingUser!=null && (ProvCur.IsInstructor || ProvCur.SchoolClassId!=0)) {
 						_existingUser.UserName=textUserName.Text;
 						_existingUser.PasswordHash= Password.Hash(textPassword.Text);
 						Userods.Update(_existingUser);
@@ -1954,7 +1954,7 @@ namespace OpenDental{
 				Providers.Update(ProvCur);
 				#region Date Term Check
 				if(ProvCur.DateTerm.Year > 1880 && ProvCur.DateTerm < DateTime.Now) {
-					List<ClaimPaySplit> listClaimPaySplits=Claims.GetOutstandingClaimsByProvider(ProvCur.ProvNum,ProvCur.DateTerm);
+					List<ClaimPaySplit> listClaimPaySplits=Claims.GetOutstandingClaimsByProvider(ProvCur.Id,ProvCur.DateTerm);
 					StringBuilder claimMessage=new StringBuilder("Clinic\tPatNum\tPatient Name\tDate of Service\tClaim Status\tFee\tCarrier"+"\r\n");
 					foreach(ClaimPaySplit claimPaySplit in listClaimPaySplits) {
 						claimMessage.Append(claimPaySplit.ClinicDesc+"\t"
@@ -2015,7 +2015,7 @@ namespace OpenDental{
 				}
 				List<ProviderClinicLink> listProvClinicLinksNew=_listProvClinicLinks.Select(x => x.Copy()).ToList();
 				listProvClinicLinksNew.RemoveAll(x => x.ClinicNum.In(listClinicNumsForUser) || x.ClinicNum==-1);
-				listProvClinicLinksNew.AddRange(listSelectedClinicNumLinks.Select(x => new ProviderClinicLink(x,ProvCur.ProvNum)));
+				listProvClinicLinksNew.AddRange(listSelectedClinicNumLinks.Select(x => new ProviderClinicLink(x,ProvCur.Id)));
 				if(ProviderClinicLinks.Sync(listProvClinicLinksNew,_listProvClinicLinks)) {
 					DataValid.SetInvalid(InvalidType.ProviderClinicLink);
 				}
@@ -2035,7 +2035,7 @@ namespace OpenDental{
 			}
 			if(IsNew){
 				//UserPermissions.DeleteAllForProv(Providers.Cur.ProvNum);
-				ProviderIdents.DeleteAllForProv(ProvCur.ProvNum);
+				ProviderIdents.DeleteAllForProv(ProvCur.Id);
 				Providers.Delete(ProvCur);
 			}
 		}

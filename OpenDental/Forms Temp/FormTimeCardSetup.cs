@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using CodeBase;
 using OpenDental.UI;
 using OpenDentBusiness;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -339,7 +340,7 @@ namespace OpenDental{
 			//Start with a convenient sorting of all employees on top, followed by a last name sort.
 			List<TimeCardRule> listSorted=TimeCardRules.GetDeepCopy().OrderBy(x => x.IsOvertimeExempt)
 				.ThenBy(x => x.EmployeeNum!=0)
-				.ThenBy(x => (Employees.GetEmp(x.EmployeeNum)??new Employee()).LName)
+				.ThenBy(x => (Employees.GetEmp(x.EmployeeNum)??new Employee()).LastName)
 				.ToList();
 			gridRules.BeginUpdate();
 			gridRules.ListGridColumns.Clear();
@@ -364,7 +365,7 @@ namespace OpenDental{
 				}
 				else {
 					Employee emp=Employees.GetEmp(listSorted[i].EmployeeNum);
-					row.Cells.Add(emp.FName+" "+emp.LName);
+					row.Cells.Add(emp.FirstName+" "+emp.LastName);
 				}
 				row.Cells.Add(listSorted[i].BeforeTimeOfDay.ToStringHmm());
 				row.Cells.Add(listSorted[i].AfterTimeOfDay.ToStringHmm());

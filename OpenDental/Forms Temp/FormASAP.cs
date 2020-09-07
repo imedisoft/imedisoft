@@ -880,7 +880,7 @@ namespace OpenDental {
 				() => {
 					long provNum=0;
 					if(comboProv.SelectedIndex!=0) {
-						provNum=_listProviders[comboProv.SelectedIndex-1].ProvNum;
+						provNum=_listProviders[comboProv.SelectedIndex-1].Id;
 					}
 					long siteNum=0;
 					if(!Prefs.GetBool(PrefName.EasyHidePublicHealth) && comboSite.SelectedIndex!=0) {
@@ -1091,7 +1091,7 @@ namespace OpenDental {
 					}
 					long provNum=0;
 					if(comboProv.SelectedIndex!=0) {
-						provNum=_listProviders[comboProv.SelectedIndex-1].ProvNum;
+						provNum=_listProviders[comboProv.SelectedIndex-1].Id;
 					}
 					long siteNum=0;
 					if(!Prefs.GetBool(PrefName.EasyHidePublicHealth) && comboSite.SelectedIndex!=0) {
@@ -1296,7 +1296,7 @@ namespace OpenDental {
 		}
 
 		private void butText_Click(object sender,EventArgs e) {
-			Clinic curClinic=Clinics.GetById(Clinics.ClinicId)??Clinics.GetDefaultForTexting()??Clinics.GetPracticeAsClinicZero();
+			Clinic curClinic = Clinics.Active ?? Clinics.GetDefaultForTexting() ?? Clinics.GetPracticeAsClinicZero();
 			List<PatComm> listPatCommsToSend;
 			if(tabControl.SelectedIndex==0) {//Appt Tab selected
 				Func<int,long> getPatNumFromGridRow=new Func<int,long>((rowIdx) =>	{
@@ -1366,7 +1366,7 @@ namespace OpenDental {
 		///<summary>Gets the template for this clinic and fills in the tags.</summary>
 		private string GetTextMessageText(Clinic curClinic) {
 			string textTemplate;
-			string clinicPref=ClinicPrefs.GetString(Clinics.ClinicId, PrefName.ASAPTextTemplate);
+			string clinicPref=ClinicPrefs.GetString(Clinics.Active.Id, PrefName.ASAPTextTemplate);
 			if(string.IsNullOrEmpty(clinicPref)) {
 				textTemplate=Prefs.GetString(PrefName.ASAPTextTemplate);
 			}

@@ -597,9 +597,9 @@ namespace OpenDental {
 						member.Pat.BillingType=Prefs.GetLong(PrefName.PracticeDefaultBillType);
 						if(!Prefs.GetBool(PrefName.PriProvDefaultToSelectProv)) {
 							//Set the patients primary provider to the practice default provider.
-							member.Pat.PriProv=Providers.GetDefaultProvider().ProvNum;
+							member.Pat.PriProv=Providers.GetDefaultProvider().Id;
 						}
-						member.Pat.ClinicNum=Clinics.ClinicId;
+						member.Pat.ClinicNum=Clinics.Active.Id;
 						member.Pat.Guarantor=member.Pat.PatNum;
 						Patients.Update(member.Pat,memberPatOld);
 						int patIdx=listPatients.BinarySearch(member.Pat);//Preserve sort order by locating the index in which to insert the newly added patient.

@@ -1198,38 +1198,6 @@ namespace OpenDentBusiness
 		ScheduleProv,
 		///<summary>2 - When a recall row is deleted, this records the PatNum for which it was deleted.</summary>
 		RecallPatNum,
-		///<summary>Deprecated</summary>
-		RxPat,
-		///<summary>Deprecated</summary>
-		LabPanel,
-		///<summary>Deprecated</summary>
-		LabResult,
-		///<summary>Deprecated</summary>
-		DrugUnit,
-		///<summary>Deprecated</summary>
-		Medication,
-		///<summary>Deprecated</summary>
-		MedicationPat,
-		///<summary>Deprecated</summary>
-		Allergy,
-		///<summary>Deprecated</summary>
-		AllergyDef,
-		///<summary>Deprecated</summary>
-		Disease,
-		///<summary>Deprecated</summary>
-		DiseaseDef,
-		///<summary>Deprecated</summary>
-		ICD9,
-		///<summary>Deprecated</summary>
-		Provider,
-		///<summary>Deprecated</summary>
-		Pharmacy,
-		///<summary>Deprecated</summary>
-		Statement,
-		///<summary>Deprecated</summary>
-		Document,
-		///<summary>Deprecated</summary>
-		Recall
 	}
 
 	public enum SmokingSnoMed

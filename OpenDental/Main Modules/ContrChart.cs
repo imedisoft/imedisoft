@@ -3818,10 +3818,10 @@ namespace OpenDental {
 								row.Cells.Add(listMeds[i].MedDescript);
 							}
 							else {
-								medication=Medications.GetMedication(listMeds[i].MedicationNum);
-								text=medication.MedName;
-								if(medication.MedicationNum != medication.GenericNum) {
-									text+="("+Medications.GetMedication(medication.GenericNum).MedName+")";
+								medication=Medications.GetById(listMeds[i].MedicationNum);
+								text=medication.Name;
+								if(medication.Id != medication.GenericId && medication.GenericId.HasValue) {
+									text+="("+Medications.GetById(medication.GenericId.Value).Name+")";
 								}
 								row.Cells.Add(text);
 							}
@@ -7028,8 +7028,8 @@ namespace OpenDental {
 				//(the same doctor entered multiple times, for example, one provider for each clinic).
 				ErxLog erxLog=ErxLogs.GetLatestForPat(rx.PatNum,rx.RxDate);//Locate the original request corresponding to this prescription.
 				if(erxLog!=null && erxLog.ProvNum!=0 && erxLog.DateTStamp.Date==rx.RxDate.Date) {
-					Provider provErxLog=Providers.GetFirstOrDefault(x => x.ProvNum==erxLog.ProvNum);
-					if((strProvNumOrNpi.Length==10 && provErxLog.NationalProvID==strProvNumOrNpi) || erxLog.ProvNum.ToString()==strProvNumOrNpi) {
+					Provider provErxLog=Providers.GetFirstOrDefault(x => x.Id==erxLog.ProvNum);
+					if((strProvNumOrNpi.Length==10 && provErxLog.NationalProviderID==strProvNumOrNpi) || erxLog.ProvNum.ToString()==strProvNumOrNpi) {
 						rx.ProvNum=erxLog.ProvNum;
 					}
 				}
@@ -7040,32 +7040,32 @@ namespace OpenDental {
 					if(rxOld==null) {//The prescription is being dowloaded for the first time, or is being downloaded again after it was deleted manually by the user.
 						List<Provider> listProviders=Providers.GetDeepCopy(true);
 						for(int j=0;j<listProviders.Count;j++) {//Try to locate a visible provider matching the NPI on the prescription.
-							if(strProvNumOrNpi.Length==10 && listProviders[j].NationalProvID==strProvNumOrNpi) {
-								rx.ProvNum=listProviders[j].ProvNum;
+							if(strProvNumOrNpi.Length==10 && listProviders[j].NationalProviderID==strProvNumOrNpi) {
+								rx.ProvNum=listProviders[j].Id;
 								break;
 							}
 						}
 						if(rx.ProvNum==0) {//No visible provider found matching the NPI on the prescription.
 							//Try finding a hidden provider matching the NPI on the prescription, or a matching provnum.
-							Provider provider=Providers.GetFirstOrDefault(x => x.NationalProvID==strProvNumOrNpi);
+							Provider provider=Providers.GetFirstOrDefault(x => x.NationalProviderID==strProvNumOrNpi);
 							if(provider==null) {
-								provider=Providers.GetFirstOrDefault(x => x.ProvNum.ToString()==strProvNumOrNpi);
+								provider=Providers.GetFirstOrDefault(x => x.Id.ToString()==strProvNumOrNpi);
 							}
 							if(provider!=null) {
-								rx.ProvNum=provider.ProvNum;
+								rx.ProvNum=provider.Id;
 							}
 						}
 						//If rx.ProvNum is still zero, then that means the provider NPI/ProvNum has been modified or somehow deleted (for example, database was lost) for the provider record originally used.
 						if(rx.ProvNum==0) {//Catch all
-							Provider provUnknown=Providers.GetFirstOrDefault(x => x.FName=="ERX" && x.LName=="UNKNOWN");
+							Provider provUnknown=Providers.GetFirstOrDefault(x => x.FirstName=="ERX" && x.LastName=="UNKNOWN");
 							if(provUnknown!=null) {
-								rx.ProvNum=provUnknown.ProvNum;
+								rx.ProvNum=provUnknown.Id;
 							}
 							if(provUnknown==null) {
 								provUnknown=new Provider();
 								provUnknown.Abbr="UNK";
-								provUnknown.FName="ERX";
-								provUnknown.LName="UNKNOWN";
+								provUnknown.FirstName="ERX";
+								provUnknown.LastName="UNKNOWN";
 								provUnknown.IsHidden=true;
 								rx.ProvNum=Providers.Insert(provUnknown);
 								Providers.RefreshCache();
@@ -7221,8 +7221,8 @@ namespace OpenDental {
 			menuItemDoseSpotRefillReqs.Visible=true;
 			menuItemDoseSpotTransactionErrors.Visible=true;
 			ODThread thread=new ODThread((odThread) => {
-				long clinicNum=Clinics.ClinicId;
-				if(PrefC.HasClinicsEnabled && !Prefs.GetBool(PrefName.ElectronicRxClinicUseSelected)) {
+				long? clinicNum=Clinics.ClinicId;
+				if(!Prefs.GetBool(PrefName.ElectronicRxClinicUseSelected)) {
 					clinicNum=_patCur.ClinicNum;
 				}
 				string doseSpotClinicID="";
@@ -7232,8 +7232,8 @@ namespace OpenDental {
 				int countErrors=0;
 				int countPendingPrescriptions=0;
 				try {
-					doseSpotUserID=DoseSpot.GetUserID(Security.CurrentUser,clinicNum);
-					DoseSpot.GetClinicIdAndKey(clinicNum,doseSpotUserID,null,null,out doseSpotClinicID,out doseSpotClinicKey);
+					doseSpotUserID=DoseSpot.GetUserID(Security.CurrentUser,clinicNum ?? 0);
+					DoseSpot.GetClinicIdAndKey(clinicNum??0,doseSpotUserID,null,null,out doseSpotClinicID,out doseSpotClinicKey);
 				}
 				catch{
 					SetErxButtonNotification(-1,-1,-1,true);
@@ -7251,7 +7251,7 @@ namespace OpenDental {
 					//Consent for DoseSpot to share medication history must be renewed every 24 hours. Once we have patient's consent stored in DB, we renew
 					//consent each time we refresh notifications.
 					if(_patientNoteCur.Consent.HasFlag(PatConsentFlags.ShareMedicationHistoryErx)) {
-						DoseSpot.SetMedicationHistConsent(_patCur,clinicNum);
+						DoseSpot.SetMedicationHistConsent(_patCur,clinicNum??0);
 					}
 				}
 				catch {
@@ -7626,7 +7626,7 @@ namespace OpenDental {
 			}
 			//Quarterly key check was removed from here so that any customer can use EHR tools
 			//But we require a EHR subscription for them to obtain their MU reports.
-			if(Providers.GetProv(_patCur.PriProv)==null) {
+			if(Providers.GetById(_patCur.PriProv)==null) {
 				MessageBox.Show("Please set the patient's primary provider first.");
 				return;
 			}
@@ -7661,11 +7661,11 @@ namespace OpenDental {
 			string doseSpotUserID="";
 			bool isEmp=Erx.IsUserAnEmployee(Security.CurrentUser);
 			Provider prov=null;
-			if(!isEmp && Security.CurrentUser.ProviderId!=0) {
-				prov=Providers.GetProv(Security.CurrentUser.ProviderId);
+			if(!isEmp && Security.CurrentUser.ProviderId.HasValue) {
+				prov=Providers.GetById(Security.CurrentUser.ProviderId.Value);
 			}
 			else {
-				prov=Providers.GetProv(_patCur.PriProv);
+				prov=Providers.GetById(_patCur.PriProv);
 			}
 			if(erxOption==ErxOption.DoseSpotWithLegacy) {
 				if(prov.IsErxEnabled==ErxEnabledStatus.EnabledWithLegacy) {
@@ -7688,7 +7688,7 @@ namespace OpenDental {
 			#region Provider Term Date Check
 			//Prevents prescriptions from being added that have a provider selected that is past their term date
 			string message="";
-			List<long> listInvalidProvs=Providers.GetInvalidProvsByTermDate(new List<long> { prov.ProvNum },DateTime.Now);
+			List<long> listInvalidProvs=Providers.GetInvalidProvsByTermDate(new List<long> { prov.Id },DateTime.Now);
 			if(listInvalidProvs.Count>0) {
 				if(!isEmp && Security.CurrentUser.ProviderId!=0) {
 					message="The provider attached to this user has a Term Date that has expired. "
@@ -7786,13 +7786,13 @@ namespace OpenDental {
 				}
 				//clinicNum should be 0 for offices not using clinics.
 				//This will work properly when retreiving the clinicKey and clinicID
-				long clinicNum=0;
-				if(PrefC.HasClinicsEnabled) {
-					clinicNum=Clinics.ClinicId;
-					if(!Prefs.GetBool(PrefName.ElectronicRxClinicUseSelected)) {
-						clinicNum=_patCur.ClinicNum;
-					}
+
+				long? clinicNum=Clinics.ClinicId;
+				if (!Prefs.GetBool(PrefName.ElectronicRxClinicUseSelected))
+				{
+					clinicNum = _patCur.ClinicNum;
 				}
+				
 				List<ProgramProperty> listDoseSpotProperties=ProgramProperties.GetForProgram(programErx.Id)
 					.FindAll(x => x.ClinicId==clinicNum 
 						&& (x.Name==Erx.PropertyDescs.ClinicID || x.Name==Erx.PropertyDescs.ClinicKey));
@@ -7800,8 +7800,8 @@ namespace OpenDental {
 				string queryString="";
 				bool isDoseSpotAccessAllowed=true;
 				try {
-					doseSpotUserID=DoseSpot.GetUserID(Security.CurrentUser,clinicNum);
-					DoseSpot.GetClinicIdAndKey(clinicNum,doseSpotUserID,programErx,listDoseSpotProperties,out doseSpotClinicID,out doseSpotClinicKey);
+					doseSpotUserID=DoseSpot.GetUserID(Security.CurrentUser,clinicNum??0);
+					DoseSpot.GetClinicIdAndKey(clinicNum??0,doseSpotUserID,programErx,listDoseSpotProperties,out doseSpotClinicID,out doseSpotClinicKey);
 					//BuildDoseSpotPostDataBytes will validate patient information and throw exceptions.
 					OIDExternal oIdExternal=DoseSpot.GetDoseSpotPatID(_patCur.PatNum);
 					if(oIdExternal==null) {
@@ -7815,12 +7815,12 @@ namespace OpenDental {
 					else {
 						string onBehalfOfUserId="";
 						if(isEmp) {
-							List<Provider> listProviders=Providers.GetProvsScheduledToday(clinicNum);
-							if(!listProviders.Any(x => x.ProvNum==prov.ProvNum)) {
+							List<Provider> listProviders=Providers.GetProvsScheduledToday(clinicNum??0);
+							if(!listProviders.Any(x => x.Id==prov.Id)) {
 								listProviders.Add(prov);
 							}
 							FormProviderPick formProviderPick=new FormProviderPick(listProviders);
-							formProviderPick.SelectedProviderId=prov.ProvNum;
+							formProviderPick.SelectedProviderId=prov.Id;
 							formProviderPick.IsNoneAvailable=false;
 							formProviderPick.IsShowAllAvailable=true;
 							formProviderPick.ShowDialog();
@@ -7830,7 +7830,7 @@ namespace OpenDental {
 							List<Userod> listDoseUsers=Userods.GetWhere(x => !x.IsHidden && x.ProviderId==formProviderPick.SelectedProviderId);//Only consider non-hidden users.
 							listDoseUsers=listDoseUsers.FindAll(x => {//Finds users that have a DoseSpot ID
 								try {
-									return !string.IsNullOrWhiteSpace(DoseSpot.GetUserID(x,clinicNum));
+									return !string.IsNullOrWhiteSpace(DoseSpot.GetUserID(x,clinicNum??0));
 								}
 								catch(Exception) {
 									return false;
@@ -7846,17 +7846,17 @@ namespace OpenDental {
 							else {
 								throw new ODException("There are too many Open Dental users associated to the selected provider.");
 							}
-							prov=Providers.GetProv(formProviderPick.SelectedProviderId);
+							prov=Providers.GetById(formProviderPick.SelectedProviderId);
 							#region Provider Term Date Check
 							//Prevents prescriptions from being added that have a provider selected that is past their term date
-							listInvalidProvs=Providers.GetInvalidProvsByTermDate(new List<long> { prov.ProvNum },DateTime.Now);
+							listInvalidProvs=Providers.GetInvalidProvsByTermDate(new List<long> { prov.Id },DateTime.Now);
 							if(listInvalidProvs.Count>0) {
 								message="The provider selected has a Term Date that has expired. Please select another provider.";
 								MessageBox.Show(message);
 								return;
 							}
 							#endregion Provider Term Date Check
-							onBehalfOfUserId=(DoseSpot.GetUserID(userOnBehalfOf,clinicNum));
+							onBehalfOfUserId=(DoseSpot.GetUserID(userOnBehalfOf,clinicNum??0));
 						}
 						arrayPostData=ErxXml.BuildDoseSpotPostDataBytes(doseSpotClinicID,doseSpotClinicKey,doseSpotUserID,onBehalfOfUserId,_patCur,out queryString);
 					}
@@ -7924,7 +7924,7 @@ namespace OpenDental {
 				ErxLog erxDoseSpotLog=new ErxLog();
 				erxDoseSpotLog.PatNum=_patCur.PatNum;
 				erxDoseSpotLog.MsgText=queryString;
-				erxDoseSpotLog.ProvNum=prov.ProvNum;
+				erxDoseSpotLog.ProvNum=prov.Id;
 				erxDoseSpotLog.UserNum=Security.CurrentUser.Id;
 				SecurityLogs.MakeLogEntry(Permissions.RxCreate,erxDoseSpotLog.PatNum,"eRx DoseSpot entry made for provider"+" "+Providers.GetAbbr(erxDoseSpotLog.ProvNum));
 				ErxLogs.Insert(erxDoseSpotLog);
@@ -7941,47 +7941,58 @@ namespace OpenDental {
 			}
 			Employee emp=null;
 			Clinic clinic=null;
-			try {
+			try
+			{
 				Erx.ValidatePracticeInfo();
 				//Clinic Validation
-				if(PrefC.HasClinicsEnabled) {
-					if(Prefs.GetBool(PrefName.ElectronicRxClinicUseSelected)) {
-						clinic=Clinics.GetById(Clinics.ClinicId);
-					}
-					else if(_patCur.ClinicNum!=0) {//Use patient default clinic if the patient has one.
-						clinic=Clinics.GetById(_patCur.ClinicNum);
-					}
-					if(clinic!=null) {
-						Erx.ValidateClinic(clinic);
-					}
+
+				if (Prefs.GetBool(PrefName.ElectronicRxClinicUseSelected))
+				{
+					clinic = Clinics.Active;
 				}
-				if(isEmp) {
-					emp=Employees.GetEmp(Security.CurrentUser.EmployeeId);
-					if(emp.LName=="") {//Checked in UI, but check here just in case this database was converted from another software.
-						MessageBox.Show("Employee last name missing for user"+": "+Security.CurrentUser.UserName);
+				else if (_patCur.ClinicNum != 0)
+				{//Use patient default clinic if the patient has one.
+					clinic = Clinics.GetById(_patCur.ClinicNum);
+				}
+				if (clinic != null)
+				{
+					Erx.ValidateClinic(clinic);
+				}
+
+				if (isEmp)
+				{
+					emp = Employees.GetEmp(Security.CurrentUser.EmployeeId.Value);
+					if (emp.LastName == "")
+					{//Checked in UI, but check here just in case this database was converted from another software.
+						MessageBox.Show("Employee last name missing for user: " + Security.CurrentUser.UserName);
 						return;
 					}
-					if(emp.FName=="") {//Not validated in UI.
-						MessageBox.Show("Employee first name missing for user"+": "+Security.CurrentUser.UserName);
+
+					if (emp.FirstName == "")
+					{//Not validated in UI.
+						MessageBox.Show("Employee first name missing for user: " + Security.CurrentUser.UserName);
 						return;
 					}
 				}
-				Erx.ValidateProv(prov,clinic);
+				Erx.ValidateProv(prov, clinic);
 				//hook for additional authorization before prescription is saved
-				bool[] arrayAuthorized=new bool[1] { false };
-				if(Plugins.HookMethod(this,"ContrChart.Tool_eRx_Click_Authorize2",arrayAuthorized,prov)) {
-					if(!arrayAuthorized[0]) {
+				bool[] arrayAuthorized = new bool[1] { false };
+				if (Plugins.HookMethod(this, "ContrChart.Tool_eRx_Click_Authorize2", arrayAuthorized, prov))
+				{
+					if (!arrayAuthorized[0])
+					{
 						throw new ODException("Provider is not authenticated");
 					}
 				}
 				Erx.ValidatePat(_patCur);
 			}
-			catch(ODException ex) {//Purposefully only catch exceptions we throw due to validation
+			catch (ODException ex)
+			{//Purposefully only catch exceptions we throw due to validation
 				MessageBox.Show(ex.Message);//All ODExceptions thrown in this context should have already been translated.
 				return;
 			}
 #region ProviderErx Validation
-			string npi=Regex.Replace(prov.NationalProvID,"[^0-9]*","");//NPI with all non-numeric characters removed.
+			string npi=Regex.Replace(prov.NationalProviderID,"[^0-9]*","");//NPI with all non-numeric characters removed.
 			bool isAccessAllowed=true;
 			UpdateErxAccess(npi,"",0,"","",erxOption);//0/blank/blank for clinicNum/clinicid/clinickey is fine because we don't enable/disable the clinic for NewCrop.
 			ProviderErx provErx=ProviderErxs.GetOneForNpiAndOption(npi,erxOption);
@@ -8047,7 +8058,7 @@ namespace OpenDental {
 			ErxLog erxLog=new ErxLog();
 			erxLog.PatNum=_patCur.PatNum;
 			erxLog.MsgText=clickThroughXml;
-			erxLog.ProvNum=prov.ProvNum;
+			erxLog.ProvNum=prov.Id;
 			erxLog.UserNum=Security.CurrentUser.Id;
 			SecurityLogs.MakeLogEntry(Permissions.RxCreate,erxLog.PatNum,"eRx entry made for provider"+" "+Providers.GetAbbr(erxLog.ProvNum));
 			ErxLogs.Insert(erxLog);
@@ -8504,16 +8515,16 @@ namespace OpenDental {
 					provPri=arrayAptToday[0].ProvNum;
 					provSec=arrayAptToday[0].ProvHyg;
 				}
-				if(Providers.GetProv(provPri).IsHidden) {
+				if(Providers.GetById(provPri).IsHidden) {
 					//If the Patient's Primary Provider is hidden, use the patient's clinic's default provider, or practice default provider
 					if(PrefC.HasClinicsEnabled){
-						provPri=Providers.GetDefaultProvider(_patCur.ClinicNum).ProvNum;
+						provPri=Providers.GetDefaultProvider(_patCur.ClinicNum).Id;
 					}
 					else {
-						provPri=Providers.GetDefaultProvider().ProvNum;
+						provPri=Providers.GetDefaultProvider().Id;
 					}
 				}
-				if(procCodeCur.IsHygiene && provSec!=0 && !Providers.GetProv(provSec).IsHidden) {//Do not assign Sec. Provider's to Procedures when hidden
+				if(procCodeCur.IsHygiene && provSec!=0 && !Providers.GetById(provSec).IsHidden) {//Do not assign Sec. Provider's to Procedures when hidden
 					ProcCur.ProvNum=provSec;
 				}
 				else {

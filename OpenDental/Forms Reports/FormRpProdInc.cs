@@ -480,10 +480,10 @@ namespace OpenDental {
 			textToday.Text=DateTime.Today.ToShortDateString();
 			if(!Security.IsAuthorized(Permissions.ReportProdIncAllProviders,true)) {
 				//They either have permission or have a provider at this point.  If they don't have permission they must have a provider.
-				_listProviders=_listProviders.FindAll(x => x.ProvNum==Security.CurrentUser.ProviderId);
+				_listProviders=_listProviders.FindAll(x => x.Id==Security.CurrentUser.ProviderId);
 				Provider prov=_listProviders.FirstOrDefault();
 				if(prov!=null) {
-					_listProviders.AddRange(Providers.GetWhere(x => x.FName == prov.FName && x.LName == prov.LName && x.ProvNum != prov.ProvNum));
+					_listProviders.AddRange(Providers.GetWhere(x => x.FirstName == prov.FirstName && x.LastName == prov.LastName && x.Id != prov.Id));
 				}
 				checkAllProv.Checked=false;
 				checkAllProv.Enabled=false;

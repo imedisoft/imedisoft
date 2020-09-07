@@ -52,7 +52,7 @@ namespace OpenDentBusiness{
 		///<summary></summary>
 		public static void Delete(Contact Cur){
 			
-			string command = "DELETE FROM contact WHERE contactnum = '"+Cur.ContactNum.ToString()+"'";
+			string command = "DELETE FROM contact WHERE contactnum = '"+Cur.Id.ToString()+"'";
 			Database.ExecuteNonQuery(command);
 		}
 

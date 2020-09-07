@@ -220,14 +220,14 @@ namespace OpenDental.UI
         {
             return alignment switch
             {
-                ContentAlignment.TopLeft => new Point(padding.Left, padding.Top),
+                ContentAlignment.TopLeft => new Point(padding.Left + 2, padding.Top),
                 ContentAlignment.TopCenter => new Point(bounds.Width / 2 - image.Width / 2, padding.Top),
-                ContentAlignment.TopRight => new Point(bounds.Width - image.Width - padding.Right, padding.Top),
-                ContentAlignment.MiddleLeft => new Point(padding.Left, bounds.Height / 2 - image.Height / 2),
-                ContentAlignment.MiddleRight => new Point(bounds.Width - image.Width - padding.Right, bounds.Height / 2 - image.Height / 2),
-                ContentAlignment.BottomLeft => new Point(padding.Left, bounds.Height - image.Height - padding.Bottom),
+                ContentAlignment.TopRight => new Point(bounds.Width - image.Width - padding.Right - 2, padding.Top),
+                ContentAlignment.MiddleLeft => new Point(padding.Left + 2, bounds.Height / 2 - image.Height / 2),
+                ContentAlignment.MiddleRight => new Point(bounds.Width - image.Width - padding.Right - 2, bounds.Height / 2 - image.Height / 2),
+                ContentAlignment.BottomLeft => new Point(padding.Left + 2, bounds.Height - image.Height - padding.Bottom),
                 ContentAlignment.BottomCenter => new Point(bounds.Width / 2 - image.Width / 2, bounds.Height - image.Height - padding.Bottom),
-                ContentAlignment.BottomRight => new Point(bounds.Width - image.Width - padding.Right, bounds.Height - image.Height - padding.Bottom),
+                ContentAlignment.BottomRight => new Point(bounds.Width - image.Width - padding.Right - 2, bounds.Height - image.Height - padding.Bottom),
 
                 // Default to center the image..
                 _ => new Point(bounds.Width / 2 - image.Width / 2, bounds.Height / 2 - image.Height / 2),
@@ -242,7 +242,7 @@ namespace OpenDental.UI
 				return Rectangle.FromLTRB(rect.Left, rect.Top - image.Height, rect.Right, rect.Bottom);
 
 			if (imageAlignment == ContentAlignment.MiddleLeft)
-				return Rectangle.FromLTRB(rect.Left + image.Width, rect.Top, rect.Right, rect.Bottom);
+				return Rectangle.FromLTRB(rect.Left + image.Width + 4, rect.Top, rect.Right, rect.Bottom);
 
 			if (imageAlignment == ContentAlignment.MiddleRight)
 				return Rectangle.FromLTRB(rect.Left, rect.Top, rect.Right - image.Width, rect.Bottom);

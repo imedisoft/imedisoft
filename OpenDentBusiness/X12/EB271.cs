@@ -109,7 +109,7 @@ namespace OpenDentBusiness
 			}
 			//3
 			if(eb03val!=null) {
-				Benefitt.CovCatNum=CovCats.GetForEbenCat(eb03val.ServiceType).CovCatNum;
+				Benefitt.CovCatNum=CovCats.GetForEbenCat(eb03val.ServiceType).Id;
 			}
 			//4-Insurance type - we ignore.
 			//5-Plan description - we ignore.

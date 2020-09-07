@@ -101,7 +101,7 @@ namespace OpenDental {
 
 		///<summary>Get the list of websched appointments using the RpAppointments query.</summary>
 		private DataTable GetAppointments() {
-			List<long> listProvNums=Providers.GetProvidersForWebSchedNewPatAppt().Select(x => x.ProvNum).ToList();
+			List<long> listProvNums=Providers.GetProvidersForWebSchedNewPatAppt().Select(x => x.Id).ToList();
 			List<long> listStatus=comboBoxMultiConfStatus.ListSelectedIndices.Select(x => ((ODBoxItem<long>)comboBoxMultiConfStatus.Items[x]).Tag).ToList();
 			return RpAppointments.GetAppointmentTable(
 				datePicker.GetDateTimeFrom(),

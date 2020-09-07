@@ -151,8 +151,8 @@ namespace OpenDental
 						secondaryCarrier = Carriers.GetCarrier(insplan2.CarrierNum);
 					}
 					//Provider info
-					provTreat = Providers.GetProv(claim.ProvTreat);
-					provBill = Providers.GetProv(claim.ProvBill);
+					provTreat = Providers.GetById(claim.ProvTreat);
+					provBill = Providers.GetById(claim.ProvBill);
 					//Claim related info
 					claimprocs = ClaimProcs.RefreshForClaim(claim.ClaimNum);
 					long clinicNum = 0;
@@ -175,11 +175,11 @@ namespace OpenDental
 				}
 				if (provTreat == null)
 				{
-					provTreat = Providers.GetProv(Patients.GetProvNum(patient));
+					provTreat = Providers.GetById(Patients.GetProvNum(patient));
 				}
 				if (provBill == null)
 				{
-					provBill = Providers.GetProv(Patients.GetProvNum(patient));
+					provBill = Providers.GetById(Patients.GetProvNum(patient));
 				}
 				List<Procedure> procsAll = Procedures.Refresh(etrans.PatNum);
 				extracted = Procedures.GetCanadianExtractedTeeth(procsAll);
@@ -2603,7 +2603,7 @@ namespace OpenDental
 		private SizeF PrintDentistName(Graphics g, float X, float Y)
 		{
 			//Treatment provider should match that retrieved from the CDA provider number in field B01.
-			text = provTreat.LName + ", " + provTreat.FName + " " + provTreat.MI + " " + provTreat.Suffix;
+			text = provTreat.LastName + ", " + provTreat.FirstName + " " + provTreat.Initials + " " + provTreat.Suffix;
 			return doc.DrawField(g, isFrench ? "DENTISTE" : "DENTIST", text, false, X, Y);
 		}
 

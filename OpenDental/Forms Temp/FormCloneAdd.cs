@@ -60,13 +60,13 @@ namespace OpenDental {
 			comboPriProv.Items.Clear();
 			for(int i = 0;i<_listProviders.Count;i++) {
 				comboPriProv.Items.Add(_listProviders[i].GetLongDesc());
-				if(_listProviders[i].ProvNum==_provNumSelected) {
+				if(_listProviders[i].Id==_provNumSelected) {
 					comboPriProv.SelectedIndex=i;
 				}
 			}
 			if(_provNumSelected==0) {
 				comboPriProv.SelectedIndex=0;
-				_provNumSelected=_listProviders[0].ProvNum;
+				_provNumSelected=_listProviders[0].Id;
 			}
 			if(comboPriProv.SelectedIndex==-1) {
 				comboPriProv.Text=Providers.GetLongDesc(_provNumSelected);
@@ -186,12 +186,12 @@ namespace OpenDental {
 			if(FormPP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			comboPriProv.SelectedIndex=_listProviders.FindIndex(x => x.ProvNum==FormPP.SelectedProviderId);
+			comboPriProv.SelectedIndex=_listProviders.FindIndex(x => x.Id==FormPP.SelectedProviderId);
 			_provNumSelected=FormPP.SelectedProviderId;
 		}
 
 		private void comboPriProv_SelectionChangeCommitted(object sender,EventArgs e) {
-			_provNumSelected=_listProviders[comboPriProv.SelectedIndex].ProvNum;
+			_provNumSelected=_listProviders[comboPriProv.SelectedIndex].Id;
 		}
 
 		///<summary>The clinic combo box needs to get refilled every time the specialty changes.</summary>

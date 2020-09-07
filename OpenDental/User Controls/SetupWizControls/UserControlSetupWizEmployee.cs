@@ -11,7 +11,7 @@ using System.Reflection;
 using OpenDental.UI;
 using OpenDental;
 using OpenDentBusiness;
-
+using Imedisoft.Data;
 
 namespace OpenDental.User_Controls.SetupWizard {
 	public partial class UserControlSetupWizEmployee:SetupWizControl {
@@ -26,14 +26,14 @@ namespace OpenDental.User_Controls.SetupWizard {
 
 		private void UserControlSetupWizEmployee_Load(object sender,EventArgs e) {
 			FillGrid();
-			if(_listEmployees.Where(x => x.FName.ToLower() != "default").ToList().Count==0) {
+			if(_listEmployees.Where(x => x.FirstName.ToLower() != "default").ToList().Count==0) {
 				MessageBox.Show("You have no valid employees. Please click the 'Add' button to add an employee.");
 				timerBlink.Start();
 			}
 		}
 
 		private void FillGrid() {
-			_listEmployees=Employees.GetDeepCopy(true);
+			_listEmployees=Employees.GetAll(true);
 			Color colorNeedsAttn = OpenDental.SetupWizard.GetColor(ODSetupStatus.NeedsAttention);
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
@@ -48,24 +48,24 @@ namespace OpenDental.User_Controls.SetupWizard {
 			gridMain.ListGridRows.Clear();
 			GridRow row;
 			bool isAllComplete=true;
-			if(_listEmployees.Where(x => x.FName.ToLower()!="default").ToList().Count==0) {
+			if(_listEmployees.Where(x => x.FirstName.ToLower()!="default").ToList().Count==0) {
 				isAllComplete=false;
 			}
 			foreach(Employee emp in _listEmployees) {
 				row = new GridRow();
-				row.Cells.Add(emp.LName);
-				if(string.IsNullOrEmpty(emp.LName) || emp.LName.ToLower() == "default") {
+				row.Cells.Add(emp.LastName);
+				if(string.IsNullOrEmpty(emp.LastName) || emp.LastName.ToLower() == "default") {
 					row.Cells[row.Cells.Count-1].BackColor=colorNeedsAttn;
 					isAllComplete=false;
 				}
-				row.Cells.Add(emp.FName);
-				if(string.IsNullOrEmpty(emp.FName) || emp.FName.ToLower() == "default") {
+				row.Cells.Add(emp.FirstName);
+				if(string.IsNullOrEmpty(emp.FirstName) || emp.FirstName.ToLower() == "default") {
 					row.Cells[row.Cells.Count-1].BackColor=colorNeedsAttn;
 					isAllComplete=false;
 				}
-				row.Cells.Add(emp.MiddleI);
+				row.Cells.Add(emp.Initials);
 				//middle initial is not a required column
-				row.Cells.Add(emp.PayrollID);
+				row.Cells.Add(emp.PayrollId);
 				//Payroll ID is not a required column
 				row.Tag=emp;
 				gridMain.ListGridRows.Add(row);

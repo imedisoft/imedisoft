@@ -258,8 +258,8 @@ namespace OpenDental{
 					listCategory.SelectedIndex=i;
 				}
 			}
-			textLName.Text=ContactCur.LName;
-			textFName.Text=ContactCur.FName;
+			textLName.Text=ContactCur.LastName;
+			textFName.Text=ContactCur.FirstName;
 			textWkPhone.Text=ContactCur.WkPhone;
 			textFax.Text=ContactCur.Fax;
 			textNotes.Text=ContactCur.Notes;
@@ -299,8 +299,8 @@ namespace OpenDental{
 			}
 			//a category will always be selected because of the manner in which Contact is accessed
 			ContactCur.Category=_listContactCategoryDefs[listCategory.SelectedIndex].Id;
-			ContactCur.LName=textLName.Text;
-			ContactCur.FName=textFName.Text;
+			ContactCur.LastName=textLName.Text;
+			ContactCur.FirstName=textFName.Text;
 			ContactCur.WkPhone=textWkPhone.Text;
 			ContactCur.Fax=textFax.Text;
 			ContactCur.Notes=textNotes.Text;

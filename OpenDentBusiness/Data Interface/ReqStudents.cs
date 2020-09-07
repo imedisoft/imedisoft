@@ -143,7 +143,7 @@ namespace OpenDentBusiness{
 
 		public static List<Provider> GetStudents(long classNum) {
 			//No need to check RemotingRole; no call to db.
-			return Providers.GetWhere(x => x.SchoolClassNum==classNum,true);
+			return Providers.GetWhere(x => x.SchoolClassId==classNum,true);
 		}
 
 		///<summary>Provider(student) is required.</summary>

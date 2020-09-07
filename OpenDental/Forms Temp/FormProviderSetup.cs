@@ -11,6 +11,7 @@ using System.Linq;
 using CodeBase;
 using Imedisoft.Forms;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -628,7 +629,7 @@ namespace OpenDental{
 				comboClass.SelectedIndex=0;
 				_listSchoolClasses=SchoolClasses.GetDeepCopy();
 				for(int i=0;i<_listSchoolClasses.Count;i++){
-					comboClass.Items.Add(SchoolClasses.GetDescript(_listSchoolClasses[i]));
+					comboClass.Items.Add(SchoolClasses.GetDescription(_listSchoolClasses[i]));
 				}
 				butUp.Visible=false;
 				butDown.Visible=false;
@@ -663,7 +664,7 @@ namespace OpenDental{
 				Provider prov;
 				for(int i=0;i<_tableProvs.Rows.Count;i++) {
 					if(_tableProvs.Rows[i]["ItemOrder"].ToString()!=i.ToString()) {
-						prov=_listProvs.Find(x => x.ProvNum==PIn.Long(_tableProvs.Rows[i]["ProvNum"].ToString()));
+						prov=_listProvs.Find(x => x.Id==PIn.Long(_tableProvs.Rows[i]["ProvNum"].ToString()));
 						prov.ItemOrder=i;
 						Providers.Update(prov);
 						_tableProvs.Rows[i]["ItemOrder"]=i.ToString();
@@ -682,7 +683,7 @@ namespace OpenDental{
 				ODProgress.ShowAction(() => RefreshTable(selectedIndex),
 					startingMessage:"Refreshing data...");
 			}
-			List<long> listSelectedProvNums=gridMain.SelectedIndices.OfType<int>().Select(x => ((Provider)gridMain.ListGridRows[x].Tag).ProvNum).ToList();
+			List<long> listSelectedProvNums=gridMain.SelectedIndices.OfType<int>().Select(x => ((Provider)gridMain.ListGridRows[x].Tag).Id).ToList();
 			int scroll=gridMain.ScrollValue;
 			int sortColIndx=gridMain.SortedByColumnIdx;
 			bool isSortAsc=gridMain.SortedIsAscending;
@@ -742,7 +743,7 @@ namespace OpenDental{
 					row.Cells.Add(rowCur["PatCountSec"].ToString());
 				}
 				long provNumCur=PIn.Long(rowCur["ProvNum"].ToString());
-				row.Tag=_listProvs.Find(x => x.ProvNum==provNumCur);
+				row.Tag=_listProvs.Find(x => x.Id==provNumCur);
 				gridMain.ListGridRows.Add(row);
 			}
 			gridMain.EndUpdate();
@@ -750,7 +751,7 @@ namespace OpenDental{
 				gridMain.SortForced(sortColIndx,isSortAsc);
 			}
 			for(int i=0;i<gridMain.ListGridRows.Count;i++) {
-				long provNumCur=((Provider)gridMain.ListGridRows[i].Tag).ProvNum;
+				long provNumCur=((Provider)gridMain.ListGridRows[i].Tag).Id;
 				if(listSelectedProvNums.Contains(provNumCur)) {
 					gridMain.SetSelected(i,true);
 				}
@@ -806,16 +807,16 @@ namespace OpenDental{
 						MessageBox.Show("A class must be selected from the drop down box before a new student can be created");
 						return;
 					}
-					FormPSE.ProvStudent.SchoolClassNum=_listSchoolClasses[comboClass.SelectedIndex-1].Id;
-					FormPSE.ProvStudent.FName=textFirstName.Text;
-					FormPSE.ProvStudent.LName=textLastName.Text;
+					FormPSE.ProvStudent.SchoolClassId=_listSchoolClasses[comboClass.SelectedIndex-1].Id;
+					FormPSE.ProvStudent.FirstName=textFirstName.Text;
+					FormPSE.ProvStudent.LastName=textLastName.Text;
 				}
 				if(radioInstructors.Checked && !Security.IsAuthorized(Permissions.AdminDentalInstructors)) {
 					return;
 				}
 				FormPE.ProvCur.IsInstructor=radioInstructors.Checked;
-				FormPE.ProvCur.FName=textFirstName.Text;
-				FormPE.ProvCur.LName=textLastName.Text;
+				FormPE.ProvCur.FirstName=textFirstName.Text;
+				FormPE.ProvCur.LastName=textLastName.Text;
 			}
 			else {//Not using Dental Schools feature.
 				if(gridMain.SelectedIndices.Length>0) {//place new provider after the first selected index. No changes are made to DB until after provider is actually inserted.
@@ -859,7 +860,7 @@ namespace OpenDental{
 			FillGrid();
 			gridMain.ScrollToEnd();//should change this to scroll to the same place as before.
 			for(int i=0;i<gridMain.ListGridRows.Count;i++) {//Providers.ListShallow.Count;i++) {
-				if(((Provider)gridMain.ListGridRows[i].Tag).ProvNum==provCur.ProvNum) {
+				if(((Provider)gridMain.ListGridRows[i].Tag).Id==provCur.Id) {
 					gridMain.SetSelected(i,true);
 					break;
 				}
@@ -938,7 +939,7 @@ namespace OpenDental{
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			Provider provSelected=(Provider)gridMain.ListGridRows[e.Row].Tag;
-			if(!Prefs.GetBool(PrefName.EasyHideDentalSchools) && Providers.IsAttachedToUser(provSelected.ProvNum)) {//Dental schools is turned on and the provider selected is attached to a user.
+			if(!Prefs.GetBool(PrefName.EasyHideDentalSchools) && Providers.IsAttachedToUser(provSelected.Id)) {//Dental schools is turned on and the provider selected is attached to a user.
 				//provSelected could be a provider or a student at this point.
 				if(!provSelected.IsInstructor && !Security.IsAuthorized(Permissions.AdminDentalStudents)) {
 					return;
@@ -987,7 +988,7 @@ namespace OpenDental{
 			}
 			_provNumMoveTo=formPick.SelectedProviderId;
 			if(_provNumMoveTo>0) {
-				Provider provTo=_listProvs.Find(x => x.ProvNum==_provNumMoveTo);
+				Provider provTo=_listProvs.Find(x => x.Id==_provNumMoveTo);
 				textMoveTo.Text=provTo.GetLongDesc();
 			}
 			else {
@@ -1013,7 +1014,7 @@ namespace OpenDental{
 				MessageBox.Show("'None' is not a valid primary provider.");
 				return;
 			}
-			Provider provTo=_listProvs.FirstOrDefault(x => x.ProvNum==_provNumMoveTo);
+			Provider provTo=_listProvs.FirstOrDefault(x => x.Id==_provNumMoveTo);
 			if(provTo==null) {
 				MessageBox.Show("The provider could not be found.");
 				return;
@@ -1022,7 +1023,7 @@ namespace OpenDental{
 			Dictionary<long,List<long>> dictPriProvPats=null;
 			ODProgress.ShowAction(() => {
 					//get pats with original (from) priprov
-					dictPriProvPats=Patients.GetPatNumsByPriProvs(listProvsFrom.Select(x => x.ProvNum).ToList()).Select()
+					dictPriProvPats=Patients.GetPatNumsByPriProvs(listProvsFrom.Select(x => x.Id).ToList()).Select()
 						.GroupBy(x => PIn.Long(x["PriProv"].ToString()),x => PIn.Long(x["PatNum"].ToString()))
 						.ToDictionary(x => x.Key,x => x.ToList());
 				},
@@ -1033,7 +1034,7 @@ namespace OpenDental{
 				MessageBox.Show("The selected providers are not primary providers for any patients.");
 				return;
 			}
-			string strProvFromDesc=string.Join(", ",listProvsFrom.FindAll(x => dictPriProvPats.ContainsKey(x.ProvNum)).Select(x => x.Abbr));
+			string strProvFromDesc=string.Join(", ",listProvsFrom.FindAll(x => dictPriProvPats.ContainsKey(x.Id)).Select(x => x.Abbr));
 			string strProvToDesc=provTo.Abbr;
 			string msg="Move all primary patients to"+" "+strProvToDesc+" "+"from the following providers"+": "+strProvFromDesc+"?";
 			if(MessageBox.Show(msg,"",MessageBoxButtons.OKCancel)!=DialogResult.OK) {
@@ -1045,7 +1046,7 @@ namespace OpenDental{
 					List<Action> listActions=dictPriProvPats.Select(x => new Action(() => {
 						patsMoved+=x.Value.Count;
 						PatientEvent.Fire(EventCategory.Patient,"Moving patients"+": "+patsMoved+" out of "+totalPatCount);
-						Patients.ChangePrimaryProviders(x.Key,provTo.ProvNum);//update all priprovs to new provider
+						Patients.ChangePrimaryProviders(x.Key,provTo.Id);//update all priprovs to new provider
 						SecurityLogs.MakeLogEntry(Permissions.PatPriProvEdit,0,"Primary provider changed for "+x.Value.Count+" patients from "
 							+Providers.GetLongDesc(x.Key)+" to "+provTo.GetLongDesc()+".");
 					})).ToList();
@@ -1070,7 +1071,7 @@ namespace OpenDental{
 				MessageBox.Show("You must pick a 'To' provider in the box above to move patients to.");
 				return;
 			}
-			Provider provTo=_listProvs.FirstOrDefault(x => x.ProvNum==_provNumMoveTo);
+			Provider provTo=_listProvs.FirstOrDefault(x => x.Id==_provNumMoveTo);
 			string msg;
 			if(provTo==null) {
 				msg="Remove all secondary patients from the selected providers"+"?";
@@ -1084,8 +1085,8 @@ namespace OpenDental{
 			}
 			Cursor=Cursors.WaitCursor;
 			ODProgress.ShowAction(() => {
-					List<Action> listActions=listProvsFrom.Select(x => new Action(() => { Patients.ChangeSecondaryProviders(x.ProvNum,
-						provTo?.ProvNum??0); })).ToList();
+					List<Action> listActions=listProvsFrom.Select(x => new Action(() => { Patients.ChangeSecondaryProviders(x.Id,
+						provTo?.Id??0); })).ToList();
 					ODThread.RunParallel(listActions,TimeSpan.FromMinutes(2));//each group of actions gets 2 minutes
 				},
 				startingMessage:"Reassigning patients"+"...");
@@ -1106,7 +1107,7 @@ namespace OpenDental{
 			}
 			Action actionCloseProgress=ODProgress.Show(EventCategory.Provider,startingMessage:"Gathering patient and provider details"+"...");
 			Cursor=Cursors.WaitCursor;
-			List<long> listProvNumsFrom=gridMain.SelectedIndices.OfType<int>().Select(x => ((Provider)gridMain.ListGridRows[x].Tag).ProvNum).ToList();
+			List<long> listProvNumsFrom=gridMain.SelectedIndices.OfType<int>().Select(x => ((Provider)gridMain.ListGridRows[x].Tag).Id).ToList();
 			DataTable tablePatNums=Patients.GetPatNumsByPriProvs(listProvNumsFrom);//list of all patients who are using the selected providers.
 			if(tablePatNums.Rows.Count==0 || gridMain.ListGridRows.Count==0 || listProvNumsFrom.Count==0) {
 				actionCloseProgress?.Invoke();
@@ -1165,7 +1166,7 @@ namespace OpenDental{
 				return;
 			}
 			for(int i=0;i<gridMain.SelectedIndices.Length;i++){
-				if(Providers.IsAttachedToUser(((Provider)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag).ProvNum)) {
+				if(Providers.IsAttachedToUser(((Provider)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag).Id)) {
 					MessageBox.Show("Not allowed to create users on providers which already have users.");
 					return;
 				}
@@ -1177,8 +1178,8 @@ namespace OpenDental{
 			for(int i=0;i<gridMain.SelectedIndices.Length;i++){
 				Provider prov=(Provider)gridMain.ListGridRows[gridMain.SelectedIndices[i]].Tag;
 				Userod user=new Userod();
-				user.ProviderId=prov.ProvNum;
-				user.UserName=GetUniqueUserName(prov.LName,prov.FName);
+				user.ProviderId=prov.Id;
+				user.UserName=GetUniqueUserName(prov.LastName,prov.FirstName);
 				user.PasswordHash= Password.Hash(user.UserName);
 				try{
 					Userods.Insert(user,comboUserGroup.ListSelectedItems.OfType<ODBoxItem<UserGroup>>().Select(x => x.Tag.Id).ToList());

@@ -198,11 +198,11 @@ namespace OpenDental {
 			if(comboEmailAddress.Items.Count > 0) {
 				comboEmailAddress.SelectedIndex=0;//This could be the default practice address, or personal address, or another address.
 			}
-			if(Security.CurrentUser.ProviderId!=0) { //If the first item in the combobox is selected, make checks to see if the current user has a provnum.
+			if(Security.CurrentUser.ProviderId.HasValue) { //If the first item in the combobox is selected, make checks to see if the current user has a provnum.
 				comboEmailAddress.Items.Insert(0,"WebMail");//Only providers have access to see Webmail messages.
 				_listEmailAddresses.Insert(0,new EmailAddress {
 					EmailUsername="WebMail",
-					WebmailProvNum=Security.CurrentUser.ProviderId
+					WebmailProvNum=Security.CurrentUser.ProviderId.Value
 				});
 			}
 			for(int i=0;i<_listEmailAddresses.Count;i++) {

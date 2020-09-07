@@ -171,7 +171,7 @@ namespace OpenDental
 				{
 					return;//user has been inactive for a while, so stop checking alerts.
 				}
-				long clinicNumCur = Clinics.ClinicId;
+				long clinicNumCur = Clinics.Active.Id;
 				long userNumCur = Security.CurrentUser.Id;
 				// TODO: Logger.LogToPath("",LogPath.Signals,LogPhase.Start);
 				List<List<AlertItem>> listUniqueAlerts = AlertItems.GetUniqueAlerts(userNumCur, clinicNumCur);

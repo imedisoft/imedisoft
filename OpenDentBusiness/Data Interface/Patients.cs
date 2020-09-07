@@ -2947,7 +2947,7 @@ namespace OpenDentBusiness
 
 			if (retval == 0)
 			{
-				retval = Providers.GetFirstOrDefault(x => true, true)?.ProvNum ?? 0;
+				retval = Providers.GetFirstOrDefault(x => true, true)?.Id ?? 0;
 			}
 
 			return retval;

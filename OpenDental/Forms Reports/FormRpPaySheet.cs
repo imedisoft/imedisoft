@@ -349,10 +349,10 @@ namespace OpenDental{
 			date2.SelectionStart=DateTime.Today;
 			if(!Security.IsAuthorized(Permissions.ReportDailyAllProviders,true)) {
 				//They either have permission or have a provider at this point.  If they don't have permission they must have a provider.
-				_listProviders=_listProviders.FindAll(x => x.ProvNum==Security.CurrentUser.ProviderId);
+				_listProviders=_listProviders.FindAll(x => x.Id==Security.CurrentUser.ProviderId);
 				Provider prov=_listProviders.FirstOrDefault();
 				if(prov!=null) {
-					_listProviders.AddRange(Providers.GetWhere(x => x.FName==prov.FName && x.LName==prov.LName && x.ProvNum!=prov.ProvNum));
+					_listProviders.AddRange(Providers.GetWhere(x => x.FirstName==prov.FirstName && x.LastName==prov.LastName && x.Id!=prov.Id));
 				}
 				checkAllProv.Checked=false;
 				checkAllProv.Enabled=false;
@@ -493,10 +493,10 @@ namespace OpenDental{
 			List<long> listPatTypes=new List<long>();
 			List<long> listSelectedClaimPayGroupNums=new List<long>();
 			if(checkAllProv.Checked) {
-				listProvNums=_listProviders.Select(x => x.ProvNum).ToList();
+				listProvNums=_listProviders.Select(x => x.Id).ToList();
 			}
 			else {
-				listProvNums=listProv.SelectedIndices.OfType<int>().ToList().Select(x => _listProviders[x].ProvNum).ToList();
+				listProvNums=listProv.SelectedIndices.OfType<int>().ToList().Select(x => _listProviders[x].Id).ToList();
 			}
 			if(PrefC.HasClinicsEnabled) {
 				for(int i=0;i<listClin.SelectedIndices.Count;i++) {

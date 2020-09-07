@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using System.Linq;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -338,20 +340,20 @@ namespace OpenDental{
 		}
 
 		private void FillForm() {
-			textMedName.Text=MedicationCur.MedName;
+			textMedName.Text=MedicationCur.Name;
 			if(!IsNew) {
 				textMedName.ReadOnly=true;
 			}
-			if(MedicationCur.GenericNum==0) {
+			if(MedicationCur.GenericId==0) {
 				//Probably occurred from a previous bug.  This makes sure we have a generic num that is not 0. 
-				MedicationCur.GenericNum=MedicationCur.MedicationNum;
+				MedicationCur.GenericId=MedicationCur.Id;
 				MessageBox.Show( "This medication had a missing generic name.  The generic name has been set to the medication name.");
 			}
-			if(MedicationCur.MedicationNum==MedicationCur.GenericNum) {
-				textGenericName.Text=MedicationCur.MedName;
+			if(!MedicationCur.GenericId.HasValue) {
+				textGenericName.Text=MedicationCur.Name;
 				textNotes.Text=MedicationCur.Notes;
 				textNotes.ReadOnly=false;
-				Brands=Medications.GetBrands(MedicationCur.MedicationNum);
+				Brands=Medications.GetBrands(MedicationCur.Id);
 				comboBrands.Items.Clear();
 				comboBrands.Items.AddRange(Brands);
 				if(Brands.Length>0) {
@@ -359,20 +361,20 @@ namespace OpenDental{
 				}
 			}
 			else {
-				textGenericName.Text=Medications.GetMedication(MedicationCur.GenericNum).MedName;
-				textNotes.Text=Medications.GetMedication(MedicationCur.GenericNum).Notes;
+				textGenericName.Text=Medications.GetById(MedicationCur.GenericId.Value).Name;
+				textNotes.Text=Medications.GetById(MedicationCur.GenericId.Value).Notes;
 				textNotes.ReadOnly=true;
 				Brands=new string[0];
 				comboBrands.Visible=false;
 				labelBrands.Visible=false;
 			}
-			_patNameMeds=Medications.GetPatNamesForMed(MedicationCur.MedicationNum);
+			_patNameMeds=Medications.GetPatNamesForMed(MedicationCur.Id);
 			comboPatients.Items.Clear();
 			comboPatients.Items.AddRange(_patNameMeds);
 			if(_patNameMeds.Length>0) {
 				comboPatients.SelectedIndex=0;
 			}
-			AllergyDef alD=AllergyDefs.GetAllergyDefFromMedication(MedicationCur.MedicationNum);
+			AllergyDef alD=AllergyDefs.GetAllergyDefFromMedication(MedicationCur.Id);
 			if(alD!=null) {
 				_patNameAllergies=Allergies.GetPatNamesForAllergy(alD.Id).ToArray();
 				comboPatientAllergy.Items.Clear();
@@ -393,7 +395,7 @@ namespace OpenDental{
 	
 		private void textMedName_TextChanged(object sender, System.EventArgs e) {
 			//this causes immediate display update with each keypress
-			if(MedicationCur.MedicationNum==MedicationCur.GenericNum){
+			if(MedicationCur.Id==MedicationCur.GenericId){
 				textGenericName.Text=textMedName.Text;
 			}
 		}
@@ -406,7 +408,7 @@ namespace OpenDental{
 			if(FormRN.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			MedicationCur.RxCui=PIn.Long(FormRN.SelectedRxNorm.RxCui);
+			MedicationCur.RxCui=FormRN.SelectedRxNorm.RxCui;
 			textRxNormDesc.Text=RxNorms.GetDescByRxCui(MedicationCur.RxCui.ToString());
 			if(IsNew) {
 				textMedName.Text=RxNorms.GetDescByRxCui(MedicationCur.RxCui.ToString());
@@ -432,29 +434,29 @@ namespace OpenDental{
 
 		private void butOK_Click(object sender, System.EventArgs e) {
 			//generic num already handled
-			MedicationCur.MedName=textMedName.Text;
-			if(MedicationCur.MedName=="") {
+			MedicationCur.Name=textMedName.Text;
+			if(MedicationCur.Name=="") {
 				MessageBox.Show("Not allowed to save a medication without a Drug Name.");
 				return;
 			}
 			if(CultureInfo.CurrentCulture.Name.EndsWith("US")) {//United States
-				if(MedicationCur.RxCui==0 && !MsgBox.Show(MsgBoxButtons.YesNo,"Warning: RxNorm was not picked.  "
+				if(MedicationCur.RxCui=="" && !MsgBox.Show(MsgBoxButtons.YesNo,"Warning: RxNorm was not picked.  "
 					+"RxNorm uniquely identifies drugs in the United States and helps you keep your medications organized.  "
 					+"RxNorm is used to send information to and from eRx if you are using or plan to use eRx.\r\n"
 					+"Click OK to continue without an RxNorm, or click Cancel to stay in this window."))
 				{
 					return;
 				}
-				else if(MedicationCur.RxCui!=0) {
-					List <Medication> listExistingMeds=Medications.GetAllMedsByRxCui(MedicationCur.RxCui);
-					if(listExistingMeds.FindAll(x => x.MedicationNum!=MedicationCur.MedicationNum).Count > 0) {
+				else if(MedicationCur.RxCui!="") {
+					List <Medication> listExistingMeds=Medications.GetByRxCui(MedicationCur.RxCui);
+					if(listExistingMeds.FindAll(x => x.Id!=MedicationCur.Id).Count > 0) {
 						MessageBox.Show("A medication in the medication list is already using the selected RxNorm.\r\n"
 							+"Please select a different RxNorm or use the other medication instead.");
 						return;
 					}
 				}
 			}
-			if(MedicationCur.MedicationNum==MedicationCur.GenericNum){
+			if(MedicationCur.Id==MedicationCur.GenericId){
 				MedicationCur.Notes=textNotes.Text;
 			}
 			else{
@@ -463,7 +465,7 @@ namespace OpenDental{
 			//MedicationCur has its RxCui set when the butRxNormSelect button is pressed.
 			//The following behavior must match what happens when the user clicks the RxNorm column in FormMedications to pick RxCui.
 			Medications.Update(MedicationCur);
-			MedicationPats.UpdateRxCuiForMedication(MedicationCur.MedicationNum,MedicationCur.RxCui);
+			MedicationPats.UpdateRxCuiForMedication(MedicationCur.Id,int.Parse(MedicationCur.RxCui));
 			DataValid.SetInvalid(InvalidType.Medications);
 			DialogResult=DialogResult.OK;
 		}

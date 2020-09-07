@@ -1216,9 +1216,9 @@ namespace OpenDental{
 				}
 				else {
 					Medication generic=Medications.GetGeneric(medList[i].MedicationNum);
-					string medName=Medications.GetMedication(medList[i].MedicationNum).MedName;
-					if(generic.MedicationNum!=medList[i].MedicationNum) {//not generic
-						medName+=" ("+generic.MedName+")";
+					string medName=Medications.GetById(medList[i].MedicationNum).Name;
+					if(generic.Id!=medList[i].MedicationNum) {//not generic
+						medName+=" ("+generic.Name+")";
 					}
 					row.Cells.Add(medName);
 					row.Cells.Add(Medications.GetGeneric(medList[i].MedicationNum).Notes);
@@ -1286,7 +1286,7 @@ namespace OpenDental{
 			{
 				FormCDSIntervention FormCDSI=new FormCDSIntervention();
 				if(FormMP.MedicationPatCur.MedicationNum > 0) {//0 indicats the med is from NewCrop.
-					Medication medication=Medications.GetMedication(FormMP.MedicationPatCur.MedicationNum);
+					Medication medication=Medications.GetById(FormMP.MedicationPatCur.MedicationNum);
 					if(medication!=null) {
 						FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(medication,PatCur);
 						FormCDSI.ShowIfRequired(false);
@@ -1313,7 +1313,7 @@ namespace OpenDental{
 			} 
 			if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurrentUser.Id).MedicationCDS) {
 				FormCDSIntervention FormCDSI=new FormCDSIntervention();
-				FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(Medications.GetMedication(FormM.SelectedMedicationNum),PatCur);
+				FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(Medications.GetById(FormM.SelectedMedicationNum),PatCur);
 				FormCDSI.ShowIfRequired();
 				if(FormCDSI.DialogResult==DialogResult.Abort) {
 					return;//do not add medication
@@ -1322,7 +1322,7 @@ namespace OpenDental{
 			MedicationPat MedicationPatCur=new MedicationPat();
 			MedicationPatCur.PatNum=PatCur.PatNum;
 			MedicationPatCur.MedicationNum=FormM.SelectedMedicationNum;
-			MedicationPatCur.RxCui=Medications.GetMedication(FormM.SelectedMedicationNum).RxCui;
+			MedicationPatCur.RxCui=int.Parse(Medications.GetById(FormM.SelectedMedicationNum).RxCui);
 			//MedicationPatCur.ProvNum=PatCur.PriProv;//Medications are not prescribed by dentists, so this wouldn't make sense.
 			FormMedPat FormMP=new FormMedPat();
 			FormMP.MedicationPatCur=MedicationPatCur;
@@ -2236,21 +2236,21 @@ namespace OpenDental{
 			DateTime dateCur=PIn.Date(textDateIntervention.Text);
 			if(iCodeCur.CodeSystem=="RXNORM" && !checkPatientDeclined.Checked) {//if patient declines the medication, enter as a declined intervention
 				//codeVal will be RxCui of medication, see if it already exists in Medication table
-				Medication medCur=Medications.GetMedicationFromDbByRxCui(PIn.Long(iCodeCur.CodeValue));
+				Medication medCur=Medications.GetByRxCuiNoCache(iCodeCur.CodeValue);
 				if(medCur==null) {//no med with this RxCui, create one
 					medCur=new Medication();
 					Medications.Insert(medCur);//so that we will have the primary key
-					medCur.GenericNum=medCur.MedicationNum;
-					medCur.RxCui=PIn.Long(iCodeCur.CodeValue);
-					medCur.MedName=RxNorms.GetDescByRxCui(iCodeCur.CodeValue);
+					medCur.GenericId=medCur.Id;
+					medCur.RxCui=iCodeCur.CodeValue;
+					medCur.Name=RxNorms.GetDescByRxCui(iCodeCur.CodeValue);
 					Medications.Update(medCur);
 					Medications.RefreshCache();//refresh cache to include new medication
 				}
 				MedicationPat medPatCur=new MedicationPat();
 				medPatCur.PatNum=PatCur.PatNum;
 				medPatCur.ProvNum=PatCur.PriProv;
-				medPatCur.MedicationNum=medCur.MedicationNum;
-				medPatCur.RxCui=medCur.RxCui;
+				medPatCur.MedicationNum=medCur.Id;
+				medPatCur.RxCui=int.Parse(medCur.RxCui);
 				medPatCur.DateStart=dateCur;
 				FormMedPat FormMP=new FormMedPat();
 				FormMP.MedicationPatCur=medPatCur;

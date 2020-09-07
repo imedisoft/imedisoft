@@ -103,7 +103,7 @@ namespace OpenDental
 
 				if (PrefC.HasClinicsEnabled && Clinics.ClinicId > 0)
                 {
-					sheetDefNum = ClinicPrefs.GetLong(Clinics.ClinicId, PrefName.SheetsDefaultChartModule);
+					sheetDefNum = ClinicPrefs.GetLong(Clinics.Active.Id, PrefName.SheetsDefaultChartModule);
                 }
 
 				if (sheetDefNum == 0)
@@ -137,7 +137,7 @@ namespace OpenDental
 		{
 			_hasUserLoggedOff = false;//At this point we are showing the chart module to a user, reset.
 			_userNumCur = Security.CurrentUser.Id;
-			_clinicNumCur = Clinics.ClinicId;
+			_clinicNumCur = Clinics.Active.Id;
 			if (!isForcedRefresh && _sheetDefDynamicLayoutCur != null && sheetDef.SheetDefNum == _sheetDefDynamicLayoutCur.SheetDefNum)
 			{
 				//Not forcing a refresh and _dynamicLayoutCur and sheetDef are the same sheet. No point in re-running logic.  Prevents flicker.
@@ -199,7 +199,7 @@ namespace OpenDental
 
 			if (PrefC.HasClinicsEnabled && Clinics.ClinicId > 0)
             {
-				defaultSheetDefNum = ClinicPrefs.GetLong(Clinics.ClinicId, PrefName.SheetsDefaultChartModule);
+				defaultSheetDefNum = ClinicPrefs.GetLong(Clinics.Active.Id, PrefName.SheetsDefaultChartModule);
 			}
 
 			if (defaultSheetDefNum == 0)

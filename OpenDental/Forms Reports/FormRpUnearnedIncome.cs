@@ -150,7 +150,7 @@ namespace OpenDental {
 				return;
 			}
 			List<long> listClinicNums = listUnearnedAllocationClins.SelectedItems.OfType<ODBoxItem<Clinic>>().Select(x => x.Tag.Id).ToList();
-			List<long> listProvNums = listUnearnedAllocationProvs.SelectedItems.OfType<ODBoxItem<Provider>>().Select(x => x.Tag.ProvNum).ToList();
+			List<long> listProvNums = listUnearnedAllocationProvs.SelectedItems.OfType<ODBoxItem<Provider>>().Select(x => x.Tag.Id).ToList();
 			List<long> listUnearnedTypeNums = listUnearnedAllocationTypes.SelectedItems.OfType<ODBoxItem<Definition>>().Select(x => x.Tag.Id).ToList();
 			ReportComplex report = new ReportComplex(true,true);
 			DataTable table = RpUnearnedIncome.GetUnearnedAllocationData(listClinicNums,listProvNums,listUnearnedTypeNums,
@@ -265,7 +265,7 @@ namespace OpenDental {
 				return;
 			}
 			List<long> listClinicNums = listNetUnearnedClins.SelectedItems.OfType<ODBoxItem<Clinic>>().Select(x => x.Tag.Id).ToList();
-			List<long> listProvNums = listNetUnearnedProvs.SelectedItems.OfType<ODBoxItem<Provider>>().Select(x => x.Tag.ProvNum).ToList();
+			List<long> listProvNums = listNetUnearnedProvs.SelectedItems.OfType<ODBoxItem<Provider>>().Select(x => x.Tag.Id).ToList();
 			List<long> listUnearnedTypeNums = listNetUnearnedTypes.SelectedItems.OfType<ODBoxItem<Definition>>().Select(x => x.Tag.Id).ToList();
 			ReportComplex report = new ReportComplex(true,false);
 			DataTable table = RpUnearnedIncome.GetNetUnearnedData(listClinicNums,listProvNums,listUnearnedTypeNums,checkNetUnearnedExcludeZero.Checked);

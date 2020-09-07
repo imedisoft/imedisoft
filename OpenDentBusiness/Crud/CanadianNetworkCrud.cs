@@ -41,11 +41,11 @@ namespace OpenDentBusiness.Crud{
 			CanadianNetwork canadianNetwork;
 			foreach(DataRow row in table.Rows) {
 				canadianNetwork=new CanadianNetwork();
-				canadianNetwork.CanadianNetworkNum       = PIn.Long  (row["CanadianNetworkNum"].ToString());
-				canadianNetwork.Abbrev                   = PIn.String(row["Abbrev"].ToString());
-				canadianNetwork.Descript                 = PIn.String(row["Descript"].ToString());
-				canadianNetwork.CanadianTransactionPrefix= PIn.String(row["CanadianTransactionPrefix"].ToString());
-				canadianNetwork.CanadianIsRprHandler     = PIn.Bool  (row["CanadianIsRprHandler"].ToString());
+				canadianNetwork.Id       = PIn.Long  (row["CanadianNetworkNum"].ToString());
+				canadianNetwork.Abbr                   = PIn.String(row["Abbrev"].ToString());
+				canadianNetwork.Description                 = PIn.String(row["Descript"].ToString());
+				canadianNetwork.TransactionPrefix= PIn.String(row["CanadianTransactionPrefix"].ToString());
+				canadianNetwork.IsRprHandler     = PIn.Bool  (row["CanadianIsRprHandler"].ToString());
 				retVal.Add(canadianNetwork);
 			}
 			return retVal;
@@ -64,11 +64,11 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("CanadianIsRprHandler");
 			foreach(CanadianNetwork canadianNetwork in listCanadianNetworks) {
 				table.Rows.Add(new object[] {
-					POut.Long  (canadianNetwork.CanadianNetworkNum),
-					            canadianNetwork.Abbrev,
-					            canadianNetwork.Descript,
-					            canadianNetwork.CanadianTransactionPrefix,
-					POut.Bool  (canadianNetwork.CanadianIsRprHandler),
+					POut.Long  (canadianNetwork.Id),
+					            canadianNetwork.Abbr,
+					            canadianNetwork.Description,
+					            canadianNetwork.TransactionPrefix,
+					POut.Bool  (canadianNetwork.IsRprHandler),
 				});
 			}
 			return table;
@@ -82,7 +82,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one CanadianNetwork into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(CanadianNetwork canadianNetwork,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				canadianNetwork.CanadianNetworkNum=ReplicationServers.GetKey("canadiannetwork","CanadianNetworkNum");
+				canadianNetwork.Id=ReplicationServers.GetKey("canadiannetwork","CanadianNetworkNum");
 			}
 			string command="INSERT INTO canadiannetwork (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -90,20 +90,20 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="Abbrev,Descript,CanadianTransactionPrefix,CanadianIsRprHandler) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(canadianNetwork.CanadianNetworkNum)+",";
+				command+=POut.Long(canadianNetwork.Id)+",";
 			}
 			command+=
-				 "'"+POut.String(canadianNetwork.Abbrev)+"',"
-				+"'"+POut.String(canadianNetwork.Descript)+"',"
-				+"'"+POut.String(canadianNetwork.CanadianTransactionPrefix)+"',"
-				+    POut.Bool  (canadianNetwork.CanadianIsRprHandler)+")";
+				 "'"+POut.String(canadianNetwork.Abbr)+"',"
+				+"'"+POut.String(canadianNetwork.Description)+"',"
+				+"'"+POut.String(canadianNetwork.TransactionPrefix)+"',"
+				+    POut.Bool  (canadianNetwork.IsRprHandler)+")";
 			if(useExistingPK || PrefC.RandomKeys) {
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				canadianNetwork.CanadianNetworkNum=Database.ExecuteInsert(command);
+				canadianNetwork.Id=Database.ExecuteInsert(command);
 			}
-			return canadianNetwork.CanadianNetworkNum;
+			return canadianNetwork.Id;
 		}
 
 		///<summary>Inserts one CanadianNetwork into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -116,64 +116,64 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO canadiannetwork (";
 			if(!useExistingPK) {
-				canadianNetwork.CanadianNetworkNum=ReplicationServers.GetKeyNoCache("canadiannetwork","CanadianNetworkNum");
+				canadianNetwork.Id=ReplicationServers.GetKeyNoCache("canadiannetwork","CanadianNetworkNum");
 			}
 			if(useExistingPK) {
 				command+="CanadianNetworkNum,";
 			}
 			command+="Abbrev,Descript,CanadianTransactionPrefix,CanadianIsRprHandler) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(canadianNetwork.CanadianNetworkNum)+",";
+				command+=POut.Long(canadianNetwork.Id)+",";
 			}
 			command+=
-				 "'"+POut.String(canadianNetwork.Abbrev)+"',"
-				+"'"+POut.String(canadianNetwork.Descript)+"',"
-				+"'"+POut.String(canadianNetwork.CanadianTransactionPrefix)+"',"
-				+    POut.Bool  (canadianNetwork.CanadianIsRprHandler)+")";
+				 "'"+POut.String(canadianNetwork.Abbr)+"',"
+				+"'"+POut.String(canadianNetwork.Description)+"',"
+				+"'"+POut.String(canadianNetwork.TransactionPrefix)+"',"
+				+    POut.Bool  (canadianNetwork.IsRprHandler)+")";
 			if(useExistingPK) {
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				canadianNetwork.CanadianNetworkNum=Database.ExecuteInsert(command);
+				canadianNetwork.Id=Database.ExecuteInsert(command);
 			}
-			return canadianNetwork.CanadianNetworkNum;
+			return canadianNetwork.Id;
 		}
 
 		///<summary>Updates one CanadianNetwork in the database.</summary>
 		public static void Update(CanadianNetwork canadianNetwork) {
 			string command="UPDATE canadiannetwork SET "
-				+"Abbrev                   = '"+POut.String(canadianNetwork.Abbrev)+"', "
-				+"Descript                 = '"+POut.String(canadianNetwork.Descript)+"', "
-				+"CanadianTransactionPrefix= '"+POut.String(canadianNetwork.CanadianTransactionPrefix)+"', "
-				+"CanadianIsRprHandler     =  "+POut.Bool  (canadianNetwork.CanadianIsRprHandler)+" "
-				+"WHERE CanadianNetworkNum = "+POut.Long(canadianNetwork.CanadianNetworkNum);
+				+"Abbrev                   = '"+POut.String(canadianNetwork.Abbr)+"', "
+				+"Descript                 = '"+POut.String(canadianNetwork.Description)+"', "
+				+"CanadianTransactionPrefix= '"+POut.String(canadianNetwork.TransactionPrefix)+"', "
+				+"CanadianIsRprHandler     =  "+POut.Bool  (canadianNetwork.IsRprHandler)+" "
+				+"WHERE CanadianNetworkNum = "+POut.Long(canadianNetwork.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Updates one CanadianNetwork in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
 		public static bool Update(CanadianNetwork canadianNetwork,CanadianNetwork oldCanadianNetwork) {
 			string command="";
-			if(canadianNetwork.Abbrev != oldCanadianNetwork.Abbrev) {
+			if(canadianNetwork.Abbr != oldCanadianNetwork.Abbr) {
 				if(command!="") { command+=",";}
-				command+="Abbrev = '"+POut.String(canadianNetwork.Abbrev)+"'";
+				command+="Abbrev = '"+POut.String(canadianNetwork.Abbr)+"'";
 			}
-			if(canadianNetwork.Descript != oldCanadianNetwork.Descript) {
+			if(canadianNetwork.Description != oldCanadianNetwork.Description) {
 				if(command!="") { command+=",";}
-				command+="Descript = '"+POut.String(canadianNetwork.Descript)+"'";
+				command+="Descript = '"+POut.String(canadianNetwork.Description)+"'";
 			}
-			if(canadianNetwork.CanadianTransactionPrefix != oldCanadianNetwork.CanadianTransactionPrefix) {
+			if(canadianNetwork.TransactionPrefix != oldCanadianNetwork.TransactionPrefix) {
 				if(command!="") { command+=",";}
-				command+="CanadianTransactionPrefix = '"+POut.String(canadianNetwork.CanadianTransactionPrefix)+"'";
+				command+="CanadianTransactionPrefix = '"+POut.String(canadianNetwork.TransactionPrefix)+"'";
 			}
-			if(canadianNetwork.CanadianIsRprHandler != oldCanadianNetwork.CanadianIsRprHandler) {
+			if(canadianNetwork.IsRprHandler != oldCanadianNetwork.IsRprHandler) {
 				if(command!="") { command+=",";}
-				command+="CanadianIsRprHandler = "+POut.Bool(canadianNetwork.CanadianIsRprHandler)+"";
+				command+="CanadianIsRprHandler = "+POut.Bool(canadianNetwork.IsRprHandler)+"";
 			}
 			if(command=="") {
 				return false;
 			}
 			command="UPDATE canadiannetwork SET "+command
-				+" WHERE CanadianNetworkNum = "+POut.Long(canadianNetwork.CanadianNetworkNum);
+				+" WHERE CanadianNetworkNum = "+POut.Long(canadianNetwork.Id);
 			Database.ExecuteNonQuery(command);
 			return true;
 		}
@@ -181,16 +181,16 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Returns true if Update(CanadianNetwork,CanadianNetwork) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
 		public static bool UpdateComparison(CanadianNetwork canadianNetwork,CanadianNetwork oldCanadianNetwork) {
-			if(canadianNetwork.Abbrev != oldCanadianNetwork.Abbrev) {
+			if(canadianNetwork.Abbr != oldCanadianNetwork.Abbr) {
 				return true;
 			}
-			if(canadianNetwork.Descript != oldCanadianNetwork.Descript) {
+			if(canadianNetwork.Description != oldCanadianNetwork.Description) {
 				return true;
 			}
-			if(canadianNetwork.CanadianTransactionPrefix != oldCanadianNetwork.CanadianTransactionPrefix) {
+			if(canadianNetwork.TransactionPrefix != oldCanadianNetwork.TransactionPrefix) {
 				return true;
 			}
-			if(canadianNetwork.CanadianIsRprHandler != oldCanadianNetwork.CanadianIsRprHandler) {
+			if(canadianNetwork.IsRprHandler != oldCanadianNetwork.IsRprHandler) {
 				return true;
 			}
 			return false;

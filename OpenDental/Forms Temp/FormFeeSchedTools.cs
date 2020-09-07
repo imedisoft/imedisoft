@@ -873,7 +873,7 @@ namespace OpenDental {
 			}
 			long provNum=0;
 			if(comboProvider.SelectedIndex!=0) {
-				provNum=_listProvs[comboProvider.SelectedIndex-1].ProvNum;
+				provNum=_listProvs[comboProvider.SelectedIndex-1].Id;
 			}
 			//ODProgress.ShowAction(() => {
 			string logText="";
@@ -881,11 +881,11 @@ namespace OpenDental {
 				Fees.DeleteFees(feeSchedNum,clinicNum,provNum);
 				logText+="Procedures for Fee Schedule"+" "+FeeScheds.GetDescription(feeSchedNum);
 				if(PrefC.HasClinicsEnabled) {
-					if(Clinics.GetAbbr(Clinics.ClinicId)=="") {
+					if(Clinics.GetAbbr(Clinics.Active.Id) =="") {
 						logText+=" at Headquarters";
 					}
 					else {
-						logText+=" at clinic"+" "+Clinics.GetAbbr(Clinics.ClinicId);
+						logText+=" at clinic"+" "+Clinics.GetAbbr(Clinics.Active.Id);
 					}
 				}
 				logText+=" "+"were all cleared."+"\r\n";
@@ -910,7 +910,7 @@ namespace OpenDental {
 			}
 			long toProvNum=0;
 			if(comboProviderTo.SelectedIndex!=0) {
-				toProvNum=_listProvs[comboProviderTo.SelectedIndex-1].ProvNum;
+				toProvNum=_listProvs[comboProviderTo.SelectedIndex-1].Id;
 			}
 			FeeSched toFeeSched=_listFeeScheds[comboFeeSchedTo.SelectedIndex];
 			long fromClinicNum=0;
@@ -919,7 +919,7 @@ namespace OpenDental {
 			}
 			long fromProvNum=0;
 			if(comboProvider.SelectedIndex!=0) {
-				fromProvNum=_listProvs[comboProvider.SelectedIndex-1].ProvNum;
+				fromProvNum=_listProvs[comboProvider.SelectedIndex-1].Id;
 			}
 			if(checkShowGroups.Checked) {
 				//verify we aren't copying the same group into itself
@@ -1014,7 +1014,7 @@ namespace OpenDental {
 			}
 			long provNum=0;
 			if(comboProvider.SelectedIndex>0){
-				provNum=_listProvs[comboProvider.SelectedIndex-1].ProvNum;
+				provNum=_listProvs[comboProvider.SelectedIndex-1].Id;
 			}
 			List<Fee> listFees=Fees.GetListExact(feeSchedNum,clinicNum,provNum);
 			bool doIncreaseFees=EvaluateOverrides(clinicNum,provNum,feeSchedNum,listFees);
@@ -1167,7 +1167,7 @@ namespace OpenDental {
 			}
 			long provNum=0;
 			if(comboProvider.SelectedIndex!=0) {
-				provNum=_listProvs[comboProvider.SelectedIndex-1].ProvNum;
+				provNum=_listProvs[comboProvider.SelectedIndex-1].Id;
 			}
 			string fileName="Fees"+feeSchedDesc+".txt";
 			string filePath=ODFileUtils.CombinePaths(Path.GetTempPath(),fileName);
@@ -1245,7 +1245,7 @@ namespace OpenDental {
 			}
 			long provNum=0;
 			if(comboProvider.SelectedIndex!=0) {
-				provNum=_listProvs[comboProvider.SelectedIndex-1].ProvNum;
+				provNum=_listProvs[comboProvider.SelectedIndex-1].Id;
 			}
 			bool isImportSuccessful=true;
 			ODProgress.ShowAction(
@@ -1411,7 +1411,7 @@ namespace OpenDental {
 			}
 			long provNum=0;
 			if(comboProvider.SelectedIndex!=0) {
-				provNum=_listProvs[comboProvider.SelectedIndex-1].ProvNum;
+				provNum=_listProvs[comboProvider.SelectedIndex-1].Id;
 			}
 			FeeScheds.ImportCanadaFeeSchedule2(feeSched,feeData,clinicNum,provNum,out numImported,out numSkipped);
 			actionCloseFeeSchedImportCanadaProgress?.Invoke();

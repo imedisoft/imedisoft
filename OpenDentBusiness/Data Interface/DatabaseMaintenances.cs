@@ -5195,41 +5195,6 @@ namespace OpenDentBusiness
 		}
 
 		[DbmMethodAttr]
-		public static string MedicationWithInvalidGenericNum(bool verbose, DbmMode modeCur)
-		{
-			string log = "";
-			string command;
-			switch (modeCur)
-			{
-				case DbmMode.Check:
-					command = @"SELECT COUNT(*) FROM medication WHERE GenericNum NOT IN (SELECT MedicationNum FROM medication)";
-					int numFound = PIn.Int(Database.ExecuteString(command));
-					if (numFound > 0 || verbose)
-					{
-						log += "Medications with missing generic brand found: " + numFound + "\r\n";
-					}
-					break;
-				case DbmMode.Fix:
-					List<Medication> listMeds;
-					//Select into list because the following query is not valid in MySQL
-					//UPDATE medication SET GenericNum=MedicationNum WHERE GenericNum NOT IN (SELECT MedicationNum FROM medication)
-					command = "SELECT * FROM medication WHERE GenericNum NOT IN (SELECT MedicationNum FROM medication)";
-					listMeds = Crud.MedicationCrud.SelectMany(command);
-					for (int i = 0; i < listMeds.Count; i++)
-					{
-						listMeds[i].GenericNum = listMeds[i].MedicationNum;
-						Medications.Update(listMeds[i]);
-					}
-					if (listMeds.Count > 0 || verbose)
-					{
-						log += "Medications with missing generic brand fixed: " + listMeds.Count.ToString() + "\r\n";
-					}
-					break;
-			}
-			return log;
-		}
-
-		[DbmMethodAttr]
 		public static string MessageButtonDuplicateButtonIndex(bool verbose, DbmMode modeCur)
 		{
 			string queryStr = "SELECT COUNT(*) NumFound,SigButDefNum,ButtonIndex,ComputerName FROM sigbutdef GROUP BY ComputerName,ButtonIndex HAVING COUNT(*) > 1";
@@ -5299,7 +5264,7 @@ namespace OpenDentBusiness
 						{
                             Operatory op = new Operatory
                             {
-                                OperatoryNum = opNum,
+                                Id = opNum,
                                 OpName = "UNKNOWN-" + opNum,
                                 Abbrev = "UNKN"
                             };
@@ -6826,7 +6791,7 @@ namespace OpenDentBusiness
 			}
 			string log = "";
 			long insBillingProvNum = Prefs.GetLong(PrefName.InsBillingProv);
-			Provider prov = Providers.GetProv(insBillingProvNum);
+			Provider prov = Providers.GetById(insBillingProvNum);
 			if (insBillingProvNum == 0 || prov != null)
 			{//0 means the program will use the default practice provider.
 				if (verbose)
@@ -8061,7 +8026,7 @@ namespace OpenDentBusiness
 						log += ", including:\r\n";
 						for (int i = 0; i < table.Rows.Count; i++)
 						{
-							prov = Providers.GetProv(PIn.Long(table.Rows[i]["ProvNum"].ToString()));
+							prov = Providers.GetById(PIn.Long(table.Rows[i]["ProvNum"].ToString()));
 							log += prov.Abbr + " has claim payments entered as recently as "
 								+ PIn.Date(table.Rows[i]["ProcDate"].ToString()).ToShortDateString() + "\r\n";
 						}

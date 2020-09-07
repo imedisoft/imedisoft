@@ -148,7 +148,7 @@ namespace OpenDentBusiness
 			listOpDefLinks ??= GetDefLinksForWebSchedNewPatApptOperatories();
 			
 			// Filter the deflinks down in order to get the current DefNums that are linked to the operatory passed in.
-			listOpDefLinks = listOpDefLinks.Where(x => x.FKey == operatory.OperatoryNum).ToList();
+			listOpDefLinks = listOpDefLinks.Where(x => x.FKey == operatory.Id).ToList();
 			
 			// Delete all def links that are associated to DefNums that are not in listDefNums.
 			List<DefLink> listDefLinksToDelete = listOpDefLinks.Where(x => !operatory.ListWSNPAOperatoryDefNums.Contains(x.DefinitionId)).ToList();
@@ -156,7 +156,7 @@ namespace OpenDentBusiness
 			
 			// Insert new DefLinks for all DefNums that were passed in that are not in listOpDefLinks.
 			List<long> listDefNumsToInsert = operatory.ListWSNPAOperatoryDefNums.Where(x => !listOpDefLinks.Select(y => y.DefinitionId).Contains(x)).ToList();
-			InsertDefLinksForDefs(listDefNumsToInsert, operatory.OperatoryNum, DefLinkType.Operatory);
+			InsertDefLinksForDefs(listDefNumsToInsert, operatory.Id, DefLinkType.Operatory);
 			
 			// There is no reason to "update" deflinks so there is nothing else to do.
 		}

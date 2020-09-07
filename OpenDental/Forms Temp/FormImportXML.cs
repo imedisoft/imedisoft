@@ -453,7 +453,7 @@ namespace OpenDental{
 			if(annualMax!=-1 && CovCats.GetCount(true) > 0){
 				Benefit ben=new Benefit();
 				ben.BenefitType=InsBenefitType.Limitations;
-				ben.CovCatNum=CovCats.GetFirst(true).CovCatNum;
+				ben.CovCatNum=CovCats.GetFirst(true).Id;
 				ben.MonetaryAmt=annualMax;
 				ben.PlanNum=plan.PlanNum;
 				ben.TimePeriod=BenefitTimePeriod.CalendarYear;
@@ -462,7 +462,7 @@ namespace OpenDental{
 			if(deductible!=-1 && CovCats.GetCount(true) > 0) {
 				Benefit ben=new Benefit();
 				ben.BenefitType=InsBenefitType.Deductible;
-				ben.CovCatNum=CovCats.GetFirst(true).CovCatNum;
+				ben.CovCatNum=CovCats.GetFirst(true).Id;
 				ben.MonetaryAmt=deductible;
 				ben.PlanNum=plan.PlanNum;
 				ben.TimePeriod=BenefitTimePeriod.CalendarYear;

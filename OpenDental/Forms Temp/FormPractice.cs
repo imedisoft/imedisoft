@@ -817,7 +817,7 @@ namespace OpenDental{
 			if(comboProv.SelectedIndex==-1){//practice really needs a default prov
 				comboProv.SelectedIndex=0;
 			}
-			if(Providers.GetProv(comboProv.GetSelectedProvNum()).FeeSched==0){
+			if(Providers.GetById(comboProv.GetSelectedProvNum()).FeeScheduleId==0){
 				MessageBox.Show("The selected provider must have a fee schedule set before they can be the default provider.");
 				return;
 			}

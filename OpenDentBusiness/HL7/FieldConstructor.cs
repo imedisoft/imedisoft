@@ -509,22 +509,22 @@ namespace OpenDentBusiness.HL7 {
 						return "";
 					}
 					if(_isEcwDef) {
-						return gConcat(def.ComponentSeparator,prov.EcwID,prov.LName,prov.FName,prov.MI);
+						return gConcat(def.ComponentSeparator,prov.EcwID,prov.LastName,prov.FirstName,prov.Initials);
 					}
 					//Will return all provider IDs in the oidexternals table linked to this provider as repetitions
 					//For an AIG, the provider name is one component in the form LName, FName MI and the fourth component is the provider abbreviation
 					//For a PV1 or AIP, the provider name is separated into three components like LName^FName^MI and the sixth component is the provider abbreviation
 					//AIG Example: |2.16.840.1.113883.3.4337.1486.6566.3.1^Abbott, Sarah L, DMD^^DrAbbott~OtherSoftware.Root.Provider.ProvID^Abbott, Sarah L, DMD^^DrAbbott|
 					//PV1 or AIP Example: 2.16.840.1.113883.3.4337.1486.6566.3.1^Abbott^Sarah^L^DMD^DrAbbott~OtherSoftware.Root.Provider.ProvID^Abbott^Sarah^L^DMD^DrAbbott
-					List<OIDExternal> listProvOidExt=OIDExternals.GetByInternalIDAndType(prov.ProvNum,IdentifierType.Provider);
+					List<OIDExternal> listProvOidExt=OIDExternals.GetByInternalIDAndType(prov.Id,IdentifierType.Provider);
 					string provName="";
 					if(segName==SegmentNameHL7.AIG) {
-						provName=prov.LName+", "+prov.FName+" "+prov.MI+", "+prov.Suffix;
+						provName=prov.LastName+", "+prov.FirstName+" "+prov.Initials+", "+prov.Suffix;
 					}
 					else {
-						provName=gConcat(def.ComponentSeparator,prov.LName,prov.FName,prov.MI,prov.Suffix);
+						provName=gConcat(def.ComponentSeparator,prov.LastName,prov.FirstName,prov.Initials,prov.Suffix);
 					}
-					retval=gConcat(def.ComponentSeparator,OIDInternals.GetForType(IdentifierType.Provider).IDRoot+"."+prov.ProvNum,provName,prov.Abbr);
+					retval=gConcat(def.ComponentSeparator,OIDInternals.GetForType(IdentifierType.Provider).IDRoot+"."+prov.Id,provName,prov.Abbr);
 					for(int i=0;i<listProvOidExt.Count;i++) {
 						retval+=def.RepetitionSeparator+gConcat(def.ComponentSeparator,listProvOidExt[i].rootExternal+"."+listProvOidExt[i].IDExternal,provName,prov.Abbr);
 					}
@@ -540,7 +540,7 @@ namespace OpenDentBusiness.HL7 {
 						return "D";
 					}
 					//if we have an appt, return 'D' if prov is the dentist and 'H' if prov is the hygienist, regardless of whether they are marked secondary or not
-					if(prov.ProvNum==apt.ProvHyg) {
+					if(prov.Id==apt.ProvHyg) {
 						return "H";
 					}
 					return "D";//default to 'D' - dentist

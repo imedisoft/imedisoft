@@ -652,14 +652,14 @@ namespace OpenDental {
 								continue;
 							}
 							if(listConditions[i].Operator==ConditionOperator.Equals
-								&& PIn.Long(listConditions[i].ConditionValue)==_listProviders[provIdx].ProvNum) 
+								&& PIn.Long(listConditions[i].ConditionValue)==_listProviders[provIdx].Id) 
 							{
 								areConditionsMet=true;
 								break;//From the for loop
 							}
 							if(listConditions[i].Operator==ConditionOperator.NotEquals
 								&& !listConditions.FindAll(x => x.ConditionType==RequiredFieldName.PrimaryProvider)
-										.Any(x => x.ConditionValue==_listProviders[provIdx].ProvNum.ToString())) 
+										.Any(x => x.ConditionValue==_listProviders[provIdx].Id.ToString())) 
 							{
 								areConditionsMet=true;
 								break;//From the for loop
@@ -2276,7 +2276,7 @@ namespace OpenDental {
 			pat.Country=textCountry.Text;
 			pat.Zip=textZip.Text.Trim();
 			pat.AddrNote=textAddrNotes.Text;
-			pat.ClinicNum=Clinics.ClinicId;
+			pat.ClinicNum=Clinics.Active.Id;
 			RefAttach refAttachCur=new RefAttach();
 			if(_refCur!=null) {
 				refAttachCur.ReferralNum=_refCur.ReferralNum;
@@ -2300,14 +2300,14 @@ namespace OpenDental {
 						pat.Birthdate=PIn.Date(textBirthdate1.Text);
 						if(Prefs.GetBool(PrefName.PriProvDefaultToSelectProv)) {
 							if(comboPriProv1.SelectedIndex>0) {//'Select Provider'
-								pat.PriProv=_listProviders[comboPriProv1.SelectedIndex-1].ProvNum;
+								pat.PriProv=_listProviders[comboPriProv1.SelectedIndex-1].Id;
 							}
 						}
 						else {
-							pat.PriProv=_listProviders[comboPriProv1.SelectedIndex].ProvNum;
+							pat.PriProv=_listProviders[comboPriProv1.SelectedIndex].Id;
 						}
 						if(comboSecProv1.SelectedIndex>0) {
-							pat.SecProv=_listProviders[comboSecProv1.SelectedIndex-1].ProvNum;//comboSecProv# contains 'none' so selected index -1
+							pat.SecProv=_listProviders[comboSecProv1.SelectedIndex-1].Id;//comboSecProv# contains 'none' so selected index -1
 						}
 						pat.SSN=Patients.SSNRemoveDashes(textSSN1.Text);
 						pat.Email=textEmail1.Text;
@@ -2331,14 +2331,14 @@ namespace OpenDental {
 						pat.Birthdate=PIn.Date(textBirthdate2.Text);
 						if(Prefs.GetBool(PrefName.PriProvDefaultToSelectProv)) {
 							if(comboPriProv2.SelectedIndex>0) {//'Select Provider'
-								pat.PriProv=_listProviders[comboPriProv2.SelectedIndex-1].ProvNum;
+								pat.PriProv=_listProviders[comboPriProv2.SelectedIndex-1].Id;
 							}
 						}
 						else {
-							pat.PriProv=_listProviders[comboPriProv2.SelectedIndex].ProvNum;
+							pat.PriProv=_listProviders[comboPriProv2.SelectedIndex].Id;
 						}
 						if(comboSecProv2.SelectedIndex>0) {
-							pat.SecProv=_listProviders[comboSecProv2.SelectedIndex-1].ProvNum;//comboSecProv# contains 'none' so selected index -1
+							pat.SecProv=_listProviders[comboSecProv2.SelectedIndex-1].Id;//comboSecProv# contains 'none' so selected index -1
 						}
 						pat.SSN=Patients.SSNRemoveDashes(textSSN2.Text);
 						pat.Email=textEmail2.Text;
@@ -2362,14 +2362,14 @@ namespace OpenDental {
 						pat.Birthdate=PIn.Date(textBirthdate3.Text);
 						if(Prefs.GetBool(PrefName.PriProvDefaultToSelectProv)) {
 							if(comboPriProv3.SelectedIndex>0) {//'Select Provider'
-								pat.PriProv=_listProviders[comboPriProv3.SelectedIndex-1].ProvNum;
+								pat.PriProv=_listProviders[comboPriProv3.SelectedIndex-1].Id;
 							}
 						}
 						else {
-							pat.PriProv=_listProviders[comboPriProv3.SelectedIndex].ProvNum;
+							pat.PriProv=_listProviders[comboPriProv3.SelectedIndex].Id;
 						}
 						if(comboSecProv3.SelectedIndex>0) {
-							pat.SecProv=_listProviders[comboSecProv3.SelectedIndex-1].ProvNum;//comboSecProv# contains 'none' so selected index -1
+							pat.SecProv=_listProviders[comboSecProv3.SelectedIndex-1].Id;//comboSecProv# contains 'none' so selected index -1
 						}
 						pat.SSN=Patients.SSNRemoveDashes(textSSN3.Text);
 						pat.Email=textEmail3.Text;
@@ -2393,14 +2393,14 @@ namespace OpenDental {
 						pat.Birthdate=PIn.Date(textBirthdate4.Text);
 						if(Prefs.GetBool(PrefName.PriProvDefaultToSelectProv)) {
 							if(comboPriProv4.SelectedIndex>0) {//'Select Provider'
-								pat.PriProv=_listProviders[comboPriProv4.SelectedIndex-1].ProvNum;
+								pat.PriProv=_listProviders[comboPriProv4.SelectedIndex-1].Id;
 							}
 						}
 						else {
-							pat.PriProv=_listProviders[comboPriProv4.SelectedIndex].ProvNum;
+							pat.PriProv=_listProviders[comboPriProv4.SelectedIndex].Id;
 						}
 						if(comboSecProv4.SelectedIndex>0) {
-							pat.SecProv=_listProviders[comboSecProv4.SelectedIndex-1].ProvNum;//comboSecProv# contains 'none' so selected index -1
+							pat.SecProv=_listProviders[comboSecProv4.SelectedIndex-1].Id;//comboSecProv# contains 'none' so selected index -1
 						}
 						pat.SSN=Patients.SSNRemoveDashes(textSSN4.Text);
 						pat.Email=textEmail4.Text;
@@ -2424,14 +2424,14 @@ namespace OpenDental {
 						pat.Birthdate=PIn.Date(textBirthdate5.Text);
 						if(Prefs.GetBool(PrefName.PriProvDefaultToSelectProv)) {
 							if(comboPriProv5.SelectedIndex>0) {//'Select Provider'
-								pat.PriProv=_listProviders[comboPriProv5.SelectedIndex-1].ProvNum;
+								pat.PriProv=_listProviders[comboPriProv5.SelectedIndex-1].Id;
 							}
 						}
 						else {
-							pat.PriProv=_listProviders[comboPriProv5.SelectedIndex].ProvNum;
+							pat.PriProv=_listProviders[comboPriProv5.SelectedIndex].Id;
 						}
 						if(comboSecProv5.SelectedIndex>0) {
-							pat.SecProv=_listProviders[comboSecProv5.SelectedIndex-1].ProvNum;//comboSecProv# contains 'none' so selected index -1
+							pat.SecProv=_listProviders[comboSecProv5.SelectedIndex-1].Id;//comboSecProv# contains 'none' so selected index -1
 						}
 						pat.SSN=Patients.SSNRemoveDashes(textSSN5.Text);
 						pat.Email=textEmail5.Text;
@@ -2536,7 +2536,7 @@ namespace OpenDental {
 					ben.CodeNum=0;//same for all benefits inserted
 					ben.CoverageLevel=BenefitCoverageLevel.None;//same for all benefits inserted from CovCats.ListShort
 					foreach(CovCat covCat in listCovCats) {
-						ben.CovCatNum=covCat.CovCatNum;
+						ben.CovCatNum=covCat.Id;
 						ben.Percent=covCat.DefaultPercent;
 						Benefits.Insert(ben);
 					}
@@ -2546,12 +2546,12 @@ namespace OpenDental {
 					ben.CoverageLevel=BenefitCoverageLevel.Individual;//same for Diagnostic and RoutinePreventive
 					//Zero deductible diagnostic
 					if(CovCats.GetForEbenCat(EbenefitCategory.Diagnostic)!=null) {
-						ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.Diagnostic).CovCatNum;
+						ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.Diagnostic).Id;
 						Benefits.Insert(ben);
 					}
 					//Zero deductible preventive
 					if(CovCats.GetForEbenCat(EbenefitCategory.RoutinePreventive)!=null) {
-						ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.RoutinePreventive).CovCatNum;
+						ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.RoutinePreventive).Id;
 						Benefits.Insert(ben);
 					}
 				}
@@ -2597,7 +2597,7 @@ namespace OpenDental {
 					ben.CodeNum=0;//same for all benefits inserted
 					ben.CoverageLevel=BenefitCoverageLevel.None;//same for all benefits inserted from CovCats.ListShort
 					foreach(CovCat covCat in listCovCats) {
-						ben.CovCatNum=covCat.CovCatNum;
+						ben.CovCatNum=covCat.Id;
 						ben.Percent=covCat.DefaultPercent;
 						Benefits.Insert(ben);
 					}
@@ -2607,12 +2607,12 @@ namespace OpenDental {
 					ben.CoverageLevel=BenefitCoverageLevel.Individual;//same for Diagnostic and RoutinePreventive
 					//Zero deductible diagnostic
 					if(CovCats.GetForEbenCat(EbenefitCategory.Diagnostic)!=null) {
-						ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.Diagnostic).CovCatNum;
+						ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.Diagnostic).Id;
 						Benefits.Insert(ben);
 					}
 					//Zero deductible preventive
 					if(CovCats.GetForEbenCat(EbenefitCategory.RoutinePreventive)!=null) {
-						ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.RoutinePreventive).CovCatNum;
+						ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.RoutinePreventive).Id;
 						Benefits.Insert(ben);
 					}
 				}

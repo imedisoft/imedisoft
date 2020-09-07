@@ -316,7 +316,7 @@ namespace OpenDental {
 				}
 			}
 			else {
-				row.Adj.ProviderId=comboProv.GetSelected<Provider>().ProvNum;
+				row.Adj.ProviderId=comboProv.GetSelected<Provider>().Id;
 			}
 			//set clinic
 			long selectedClinicNum=0;
@@ -378,7 +378,7 @@ namespace OpenDental {
 			if(FormProvPick.ShowDialog()==DialogResult.OK) {
 				comboProv.SelectedIndex=-1;
 				foreach(ODBoxItem<Provider> boxItemProvCur in comboProv.Items.OfType<ODBoxItem<Provider>>()) {
-					if(boxItemProvCur.Tag.ProvNum==FormProvPick.SelectedProviderId) {
+					if(boxItemProvCur.Tag.Id==FormProvPick.SelectedProviderId) {
 						comboProv.SelectedItem=boxItemProvCur;
 						break;
 					}

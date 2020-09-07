@@ -36,7 +36,7 @@ namespace OpenDentBusiness
 		[ForeignKey(typeof(Definition), nameof(Definition.Id))]
 		public long Type;
 
-		[ForeignKey(typeof(Provider), nameof(Provider.ProvNum))]
+		[ForeignKey(typeof(Provider), nameof(Provider.Id))]
 		public long ProviderId;
 
 		/// <summary>

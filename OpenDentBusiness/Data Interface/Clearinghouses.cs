@@ -467,7 +467,7 @@ namespace OpenDentBusiness
 			}
 			else
 			{
-				listClinicNums = new List<long> { Clinics.ClinicId };
+				listClinicNums = new List<long> { Clinics.Active.Id };
 			}
 
             bool isTimeToRetrieve = IsTimeToRetrieveReports(true, out string errMsg);

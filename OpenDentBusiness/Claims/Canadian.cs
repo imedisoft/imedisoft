@@ -158,8 +158,8 @@ namespace OpenDentBusiness.Eclaims {
 			claim=Claims.GetClaim(claim.ClaimNum);
 			clinic=Clinics.GetById(claim.ClinicNum);
 			Provider providerFirst=Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-			billProv=Providers.GetFirstOrDefault(x => x.ProvNum==claim.ProvBill)??providerFirst;
-			treatProv=Providers.GetFirstOrDefault(x => x.ProvNum==claim.ProvTreat)??providerFirst;
+			billProv=Providers.GetFirstOrDefault(x => x.Id==claim.ProvBill)??providerFirst;
+			treatProv=Providers.GetFirstOrDefault(x => x.Id==claim.ProvTreat)??providerFirst;
 			insPlan=InsPlans.GetPlan(planNum,new List <InsPlan> ());
 			insSub=InsSubs.GetSub(insSubNum,new List<InsSub>());
 			if(planNum2>0) {
@@ -199,7 +199,7 @@ namespace OpenDentBusiness.Eclaims {
 			strb=new StringBuilder();
 			#region Construct outoing message
 			//A01 transaction prefix 12 AN
-			strb.Append(TidyAN(network.CanadianTransactionPrefix,12));
+			strb.Append(TidyAN(network.TransactionPrefix,12));
 			//A02 office sequence number 6 N
 			strb.Append(TidyN(etrans.OfficeSequenceNumber,6));
 			//A03 format version number 2 N
@@ -262,13 +262,13 @@ namespace OpenDentBusiness.Eclaims {
 #endif
 			}
 			//B01 CDA provider number 9 AN
-			strb.Append(TidyAN(treatProv.NationalProvID,9));//already validated
+			strb.Append(TidyAN(treatProv.NationalProviderID,9));//already validated
 			//B02 (treating) provider office number 4 AN
 			strb.Append(TidyAN(treatProv.CanadianOfficeNum,4));//already validated	
 			if(carrierReceiver.CDAnetVersion!="02") { //version 04
 				//B03 billing provider number 9 AN
 				//might need to account for possible 5 digit prov id assigned by carrier
-				strb.Append(TidyAN(billProv.NationalProvID,9));//already validated
+				strb.Append(TidyAN(billProv.NationalProviderID,9));//already validated
 				//B04 billing provider office number 4 AN
 				strb.Append(TidyAN(billProv.CanadianOfficeNum,4));//already validated	
 				//B05 referring provider 10 AN
@@ -1396,17 +1396,17 @@ namespace OpenDentBusiness.Eclaims {
 					saveFolder=dirInfo.Parent.FullName;
 				}
 				string subDir="";
-				if(network.Abbrev=="ABC") {//Alberta Blue Cross
+				if(network.Abbr=="ABC") {//Alberta Blue Cross
 					subDir="abc";
 				}
-				else if(network.Abbrev=="TELUS A") {
+				else if(network.Abbr=="TELUS A") {
 					subDir="telusa";
 				}
-				else if(network.Abbrev=="TELUS B") {
+				else if(network.Abbr=="TELUS B") {
 					subDir="telusb";
 				}
 				else {
-					errorMsg="ClaimStream does not support this transaction for network"+" "+network.Descript;
+					errorMsg="ClaimStream does not support this transaction for network"+" "+network.Description;
 					return "";//Return empty response, since we never received one.
 				}
 				saveFolder=ODFileUtils.CombinePaths(saveFolder,subDir);
@@ -1417,10 +1417,10 @@ namespace OpenDentBusiness.Eclaims {
 			}
 			if(isClaimstream) {
 				string certFileName="";
-				if(network.Abbrev=="ABC") {//Alberta Blue Cross
+				if(network.Abbr=="ABC") {//Alberta Blue Cross
 					certFileName="OPENDENTAL.pem";
 				}
-				else if(network.Abbrev=="TELUS A" || network.Abbrev=="TELUS B") {
+				else if(network.Abbr=="TELUS A" || network.Abbr=="TELUS B") {
 #if DEBUG
 					certFileName="OD_2018-02-26_2023-03-02_staging.pem";
 #else
@@ -2212,8 +2212,8 @@ namespace OpenDentBusiness.Eclaims {
 			string retVal="";
 			Claim claim=Claims.GetClaim(queueItem.ClaimNum);
 			Provider providerFirst=Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-			Provider billProv=Providers.GetFirstOrDefault(x => x.ProvNum==claim.ProvBill)??providerFirst;
-			Provider treatProv=Providers.GetFirstOrDefault(x => x.ProvNum==claim.ProvTreat)??providerFirst;
+			Provider billProv=Providers.GetFirstOrDefault(x => x.Id==claim.ProvBill)??providerFirst;
+			Provider treatProv=Providers.GetFirstOrDefault(x => x.Id==claim.ProvTreat)??providerFirst;
 			InsSub insSub=InsSubs.GetSub(claim.InsSubNum,new List<InsSub>());
 			InsPlan insPlan=InsPlans.GetPlan(claim.PlanNum,new List <InsPlan> ());
 			Carrier carrier=Carriers.GetCarrier(insPlan.CarrierNum);
@@ -2257,7 +2257,7 @@ namespace OpenDentBusiness.Eclaims {
 					retVal+=", ";
 				retVal+="CarrierId 6 digits";
 			}
-			if(treatProv.NationalProvID.Length!=9) {
+			if(treatProv.NationalProviderID.Length!=9) {
 				if(retVal!="")
 					retVal+=", ";
 				retVal+="TreatingProv CDA num 9 digits";
@@ -2267,7 +2267,7 @@ namespace OpenDentBusiness.Eclaims {
 					retVal+=", ";
 				retVal+="TreatingProv office num 4 char";
 			}
-			if(billProv.NationalProvID.Length!=9) {
+			if(billProv.NationalProviderID.Length!=9) {
 				if(retVal!="")
 					retVal+=", ";
 				retVal+="BillingProv CDA num 9 digits";

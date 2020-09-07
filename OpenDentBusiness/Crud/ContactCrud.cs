@@ -45,9 +45,9 @@ namespace OpenDentBusiness.Crud
 			Contact contact;
 			foreach(DataRow row in table.Rows) {
 				contact=new Contact();
-				contact.ContactNum= PIn.Long  (row["ContactNum"].ToString());
-				contact.LName     = PIn.String(row["LName"].ToString());
-				contact.FName     = PIn.String(row["FName"].ToString());
+				contact.Id= PIn.Long  (row["ContactNum"].ToString());
+				contact.LastName     = PIn.String(row["LName"].ToString());
+				contact.FirstName     = PIn.String(row["FName"].ToString());
 				contact.WkPhone   = PIn.String(row["WkPhone"].ToString());
 				contact.Fax       = PIn.String(row["Fax"].ToString());
 				contact.Category  = PIn.Long  (row["Category"].ToString());
@@ -72,9 +72,9 @@ namespace OpenDentBusiness.Crud
 			table.Columns.Add("Notes");
 			foreach(Contact contact in listContacts) {
 				table.Rows.Add(new object[] {
-					POut.Long  (contact.ContactNum),
-					            contact.LName,
-					            contact.FName,
+					POut.Long  (contact.Id),
+					            contact.LastName,
+					            contact.FirstName,
 					            contact.WkPhone,
 					            contact.Fax,
 					POut.Long  (contact.Category),
@@ -92,7 +92,7 @@ namespace OpenDentBusiness.Crud
 		///<summary>Inserts one Contact into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(Contact contact,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				contact.ContactNum=ReplicationServers.GetKey("contact","ContactNum");
+				contact.Id=ReplicationServers.GetKey("contact","ContactNum");
 			}
 			string command="INSERT INTO contact (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -100,11 +100,11 @@ namespace OpenDentBusiness.Crud
 			}
 			command+="LName,FName,WkPhone,Fax,Category,Notes) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(contact.ContactNum)+",";
+				command+=POut.Long(contact.Id)+",";
 			}
 			command+=
-				 "'"+POut.String(contact.LName)+"',"
-				+"'"+POut.String(contact.FName)+"',"
+				 "'"+POut.String(contact.LastName)+"',"
+				+"'"+POut.String(contact.FirstName)+"',"
 				+"'"+POut.String(contact.WkPhone)+"',"
 				+"'"+POut.String(contact.Fax)+"',"
 				+    POut.Long  (contact.Category)+","
@@ -117,9 +117,9 @@ namespace OpenDentBusiness.Crud
 				Database.ExecuteNonQuery(command,paramNotes);
 			}
 			else {
-				contact.ContactNum=Database.ExecuteInsert(command,paramNotes);
+				contact.Id=Database.ExecuteInsert(command,paramNotes);
 			}
-			return contact.ContactNum;
+			return contact.Id;
 		}
 
 		///<summary>Inserts one Contact into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -132,18 +132,18 @@ namespace OpenDentBusiness.Crud
 			
 			string command="INSERT INTO contact (";
 			if(!useExistingPK) {
-				contact.ContactNum=ReplicationServers.GetKeyNoCache("contact","ContactNum");
+				contact.Id=ReplicationServers.GetKeyNoCache("contact","ContactNum");
 			}
 			if(useExistingPK) {
 				command+="ContactNum,";
 			}
 			command+="LName,FName,WkPhone,Fax,Category,Notes) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(contact.ContactNum)+",";
+				command+=POut.Long(contact.Id)+",";
 			}
 			command+=
-				 "'"+POut.String(contact.LName)+"',"
-				+"'"+POut.String(contact.FName)+"',"
+				 "'"+POut.String(contact.LastName)+"',"
+				+"'"+POut.String(contact.FirstName)+"',"
 				+"'"+POut.String(contact.WkPhone)+"',"
 				+"'"+POut.String(contact.Fax)+"',"
 				+    POut.Long  (contact.Category)+","
@@ -156,21 +156,21 @@ namespace OpenDentBusiness.Crud
 				Database.ExecuteNonQuery(command,paramNotes);
 			}
 			else {
-				contact.ContactNum=Database.ExecuteInsert(command,paramNotes);
+				contact.Id=Database.ExecuteInsert(command,paramNotes);
 			}
-			return contact.ContactNum;
+			return contact.Id;
 		}
 
 		///<summary>Updates one Contact in the database.</summary>
 		public static void Update(Contact contact) {
 			string command="UPDATE contact SET "
-				+"LName     = '"+POut.String(contact.LName)+"', "
-				+"FName     = '"+POut.String(contact.FName)+"', "
+				+"LName     = '"+POut.String(contact.LastName)+"', "
+				+"FName     = '"+POut.String(contact.FirstName)+"', "
 				+"WkPhone   = '"+POut.String(contact.WkPhone)+"', "
 				+"Fax       = '"+POut.String(contact.Fax)+"', "
 				+"Category  =  "+POut.Long  (contact.Category)+", "
 				+"Notes     =  "+DbHelper.ParamChar+"paramNotes "
-				+"WHERE ContactNum = "+POut.Long(contact.ContactNum);
+				+"WHERE ContactNum = "+POut.Long(contact.Id);
 			if(contact.Notes==null) {
 				contact.Notes="";
 			}
@@ -181,13 +181,13 @@ namespace OpenDentBusiness.Crud
 		///<summary>Updates one Contact in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
 		public static bool Update(Contact contact,Contact oldContact) {
 			string command="";
-			if(contact.LName != oldContact.LName) {
+			if(contact.LastName != oldContact.LastName) {
 				if(command!="") { command+=",";}
-				command+="LName = '"+POut.String(contact.LName)+"'";
+				command+="LName = '"+POut.String(contact.LastName)+"'";
 			}
-			if(contact.FName != oldContact.FName) {
+			if(contact.FirstName != oldContact.FirstName) {
 				if(command!="") { command+=",";}
-				command+="FName = '"+POut.String(contact.FName)+"'";
+				command+="FName = '"+POut.String(contact.FirstName)+"'";
 			}
 			if(contact.WkPhone != oldContact.WkPhone) {
 				if(command!="") { command+=",";}
@@ -213,7 +213,7 @@ namespace OpenDentBusiness.Crud
 			}
 			var paramNotes = new MySqlParameter("paramNotes", POut.StringParam(contact.Notes));
 			command="UPDATE contact SET "+command
-				+" WHERE ContactNum = "+POut.Long(contact.ContactNum);
+				+" WHERE ContactNum = "+POut.Long(contact.Id);
 			Database.ExecuteNonQuery(command,paramNotes);
 			return true;
 		}
@@ -221,10 +221,10 @@ namespace OpenDentBusiness.Crud
 		///<summary>Returns true if Update(Contact,Contact) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
 		public static bool UpdateComparison(Contact contact,Contact oldContact) {
-			if(contact.LName != oldContact.LName) {
+			if(contact.LastName != oldContact.LastName) {
 				return true;
 			}
-			if(contact.FName != oldContact.FName) {
+			if(contact.FirstName != oldContact.FirstName) {
 				return true;
 			}
 			if(contact.WkPhone != oldContact.WkPhone) {

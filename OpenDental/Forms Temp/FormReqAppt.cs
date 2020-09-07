@@ -7,6 +7,8 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -255,13 +257,13 @@ namespace OpenDental{
 			_listSchoolClasses=SchoolClasses.GetDeepCopy();
 			_listSchoolCourses=SchoolCourses.GetDeepCopy();
 			for(int i=0;i<_listSchoolClasses.Count;i++) {
-				comboClass.Items.Add(SchoolClasses.GetDescript(_listSchoolClasses[i]));
+				comboClass.Items.Add(SchoolClasses.GetDescription(_listSchoolClasses[i]));
 			}
 			if(comboClass.Items.Count>0) {
 				comboClass.SelectedIndex=0;
 			}
 			for(int i=0;i<_listSchoolCourses.Count;i++) {
-				comboCourse.Items.Add(SchoolCourses.GetDescript(_listSchoolCourses[i]));
+				comboCourse.Items.Add(SchoolCourses.GetDescription(_listSchoolCourses[i]));
 			}
 			if(comboCourse.Items.Count>0) {
 				comboCourse.SelectedIndex=0;
@@ -299,7 +301,7 @@ namespace OpenDental{
 			GridRow row;
 			for(int i=0;i<StudentList.Count;i++) {
 				row=new GridRow();
-				row.Cells.Add(StudentList[i].LName+", "+StudentList[i].FName);
+				row.Cells.Add(StudentList[i].LastName+", "+StudentList[i].FirstName);
 				gridStudents.ListGridRows.Add(row);
 			}
 			gridStudents.EndUpdate();
@@ -308,7 +310,7 @@ namespace OpenDental{
 		private void FillReqs(){
 			long schoolCourse=0;
 			if(comboCourse.SelectedIndex!=-1){
-				schoolCourse=_listSchoolCourses[comboCourse.SelectedIndex].SchoolCourseNum;
+				schoolCourse=_listSchoolCourses[comboCourse.SelectedIndex].Id;
 			}
 			long schoolClass=0;
 			if(comboClass.SelectedIndex!=-1) {
@@ -399,7 +401,7 @@ namespace OpenDental{
 					reqsAttached[i].InstructorNum=0;
 				}
 				else{
-					reqsAttached[i].InstructorNum=_listProviders[comboInstructor.SelectedIndex-1].ProvNum;
+					reqsAttached[i].InstructorNum=_listProviders[comboInstructor.SelectedIndex-1].Id;
 				}
 			}
 		}
@@ -416,13 +418,13 @@ namespace OpenDental{
 				//req.DateCompleted
 				req.Descript=ReqTable.Rows[gridReqs.SelectedIndices[i]]["Descript"].ToString();
 				if(comboInstructor.SelectedIndex>0){
-					req.InstructorNum=_listProviders[comboInstructor.SelectedIndex-1].ProvNum;
+					req.InstructorNum=_listProviders[comboInstructor.SelectedIndex-1].Id;
 				}
 				req.PatNum=PatNum;
-				req.ProvNum=StudentList[gridStudents.GetSelectedIndex()].ProvNum;
+				req.ProvNum=StudentList[gridStudents.GetSelectedIndex()].Id;
 				req.ReqNeededNum=PIn.Long(ReqTable.Rows[gridReqs.SelectedIndices[i]]["ReqNeededNum"].ToString());
 				//req.ReqStudentNum=0 until synch on OK.
-				req.SchoolCourseNum=_listSchoolCourses[comboCourse.SelectedIndex].SchoolCourseNum;
+				req.SchoolCourseNum=_listSchoolCourses[comboCourse.SelectedIndex].Id;
 				reqsAttached.Add(req);
 				hasChanged=true;
 			}

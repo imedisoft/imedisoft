@@ -116,17 +116,17 @@ namespace OpenDental {
 				Dictionary<string,int> dictEnabledProcessors=new Dictionary<string,int>();
 				int idx=0;
 				bool hasXChargePreventCcAdd=PIn.Bool(ProgramProperties.GetPropVal(Programs.GetCur(ProgramName.Xcharge).Id,
-					ProgramProperties.PropertyDescs.XCharge.XChargePreventSavingNewCC,Clinics.ClinicId));
+					ProgramProperties.PropertyDescs.XCharge.XChargePreventSavingNewCC,Clinics.Active.Id));
 				if(Programs.IsEnabled(ProgramName.Xcharge) && !hasXChargePreventCcAdd) {
 					dictEnabledProcessors["X-Charge"]=idx++;
 				}
 				bool hasPayConnectPreventCcAdd=PIn.Bool(ProgramProperties.GetPropVal(Programs.GetCur(ProgramName.PayConnect).Id,
-					PayConnect.ProgramProperties.PayConnectPreventSavingNewCC,Clinics.ClinicId));
+					PayConnect.ProgramProperties.PayConnectPreventSavingNewCC,Clinics.Active.Id));
 				if(Programs.IsEnabled(ProgramName.PayConnect) && !hasPayConnectPreventCcAdd) {
 					dictEnabledProcessors["PayConnect"]=idx++;
 				}
 				bool hasPaySimplePreventCCAdd=PIn.Bool(ProgramProperties.GetPropVal(Programs.GetCur(ProgramName.PaySimple).Id,
-					PaySimple.PropertyDescs.PaySimplePreventSavingNewCC,Clinics.ClinicId));
+					PaySimple.PropertyDescs.PaySimplePreventSavingNewCC,Clinics.Active.Id));
 				if(Programs.IsEnabled(ProgramName.PaySimple) && !hasPaySimplePreventCCAdd) {
 					dictEnabledProcessors["PaySimple"]=idx++;
 				}
@@ -158,8 +158,8 @@ namespace OpenDental {
 				if(hasXCharge) {
 					Program prog=Programs.GetCur(ProgramName.Xcharge);
 					string path=Programs.GetProgramPath(prog);
-					string xUsername=ProgramProperties.GetPropVal(prog.Id,"Username",Clinics.ClinicId).Trim();
-					string xPassword=ProgramProperties.GetPropVal(prog.Id,"Password",Clinics.ClinicId).Trim();
+					string xUsername=ProgramProperties.GetPropVal(prog.Id,"Username",Clinics.Active.Id).Trim();
+					string xPassword=ProgramProperties.GetPropVal(prog.Id,"Password",Clinics.Active.Id).Trim();
 					//Force user to retry entering information until it's correct or they press cancel
 					while(!File.Exists(path) || string.IsNullOrEmpty(xPassword) || string.IsNullOrEmpty(xUsername)) {
 						MessageBox.Show("The Path, Username, and/or Password for X-Charge have not been set or are invalid.");
@@ -173,8 +173,8 @@ namespace OpenDental {
 						}
 						prog=Programs.GetCur(ProgramName.Xcharge);//refresh local variable prog to reflect any changes made in setup window
 						path=Programs.GetProgramPath(prog);
-						xUsername=ProgramProperties.GetPropVal(prog.Id,"Username",Clinics.ClinicId).Trim();
-						xPassword=ProgramProperties.GetPropVal(prog.Id,"Password",Clinics.ClinicId).Trim();
+						xUsername=ProgramProperties.GetPropVal(prog.Id,"Username",Clinics.Active.Id).Trim();
+						xPassword=ProgramProperties.GetPropVal(prog.Id,"Password",Clinics.Active.Id).Trim();
 					}
 					xPassword=CodeBase.MiscUtils.Decrypt(xPassword);
 					ProcessStartInfo info=new ProcessStartInfo(path);
@@ -250,7 +250,7 @@ namespace OpenDental {
 								creditCardCur.CCExpiration=new DateTime(Convert.ToInt32("20"+PIn.String(exp.Substring(2,2))),Convert.ToInt32(PIn.String(exp.Substring(0,2))),1);
 								creditCardCur.Procedures=Prefs.GetString(PrefName.DefaultCCProcs);
 								creditCardCur.CCSource=CreditCardSource.XServer;
-								creditCardCur.ClinicNum=Clinics.ClinicId;
+								creditCardCur.ClinicNum=Clinics.Active.Id;
 								CreditCards.Insert(creditCardCur);
 							}
 						}
@@ -260,11 +260,11 @@ namespace OpenDental {
 					}
 				}
 				if(hasPayConnect) {
-					FormPayConnect FormPC=new FormPayConnect(Clinics.ClinicId,PatCur,(decimal)0.01,creditCardCur,true);
+					FormPayConnect FormPC=new FormPayConnect(Clinics.Active.Id, PatCur,(decimal)0.01,creditCardCur,true);
 					FormPC.ShowDialog();
 				}
 				if(hasPaySimple) {
-					FormPaySimple formPS=new FormPaySimple(Clinics.ClinicId,PatCur,(decimal)0.01,creditCardCur,true);
+					FormPaySimple formPS=new FormPaySimple(Clinics.Active.Id, PatCur,(decimal)0.01,creditCardCur,true);
 					formPS.ShowDialog();
 				}
 				FillGrid();

@@ -1,3 +1,5 @@
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 using System;
@@ -76,7 +78,7 @@ namespace Imedisoft.Forms
 			{
 				for (int i = 0; i < providers.Count; i++)
 				{
-					if (providers[i].ProvNum == SelectedProviderId)
+					if (providers[i].Id == SelectedProviderId)
 					{
 						providersGrid.SetSelected(i, true);
 
@@ -107,12 +109,11 @@ namespace Imedisoft.Forms
             long classId = 0;
 			if (IsStudentPicker)
 			{
-				var schoolClass = classComboBox.SelectedItem as SchoolClass;
-				if (schoolClass != null)
+                if (classComboBox.SelectedItem is SchoolClass schoolClass)
                 {
-					classId = schoolClass.Id;
+                    classId = schoolClass.Id;
                 }
-			}
+            }
 
 			providersGrid.BeginUpdate();
 			providersGrid.ListGridColumns.Clear();
@@ -127,16 +128,16 @@ namespace Imedisoft.Forms
 
 			foreach (var provider in filteredProviders)
 			{
-				if (IsStudentPicker && provider.SchoolClassNum == 0)
+				if (IsStudentPicker && provider.SchoolClassId == 0)
 				{
 					continue;
 				}
 
 				var gridRow = new GridRow();
-				gridRow.Cells.Add(provider.ProvNum.ToString());
+				gridRow.Cells.Add(provider.Id.ToString());
 				gridRow.Cells.Add(provider.Abbr);
-				gridRow.Cells.Add(provider.LName);
-				gridRow.Cells.Add(provider.FName);
+				gridRow.Cells.Add(provider.LastName);
+				gridRow.Cells.Add(provider.FirstName);
 				gridRow.Tag = provider;
 
 				providersGrid.ListGridRows.Add(gridRow);
@@ -177,7 +178,7 @@ namespace Imedisoft.Forms
 				return;
 			}
 
-			SelectedProviderId = provider.ProvNum;
+			SelectedProviderId = provider.Id;
 
 			DialogResult = DialogResult.OK;
 		}

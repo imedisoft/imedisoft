@@ -1133,7 +1133,7 @@ namespace OpenDental{
 			Cursor.Current=Cursors.WaitCursor;
 			//Loop through and validate all claims.
 			Clearinghouse clearinghouseHq=ClearinghouseL.GetClearinghouseHq(listClaimsToValidate[0].ClearinghouseNum);
-			Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.ClinicId);
+			Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.Active.Id);
 			//Grabs list of claims here to prevent multiple database calls. Needed to extract provnums
 			List<Claim> listClaims=Claims.GetClaimsFromClaimNums(listClaimsToValidate.Select(x => x.ClaimNum).ToList());
 			for(int i=0;i<listClaimsToValidate.Count;i++) {

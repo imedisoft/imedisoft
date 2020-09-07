@@ -358,7 +358,7 @@ namespace OpenDental {
 						MessageBox.Show("Please enter a valid medication.");
 						return false;
 					}
-					if(Medications.GetMedicationFromDbByName(textCompareString.Text)==null) {
+					if(Medications.GetByNameNoCache(textCompareString.Text)==null) {
 						MessageBox.Show("Medication does not exist in database, pick from list.");
 						return false;
 					}

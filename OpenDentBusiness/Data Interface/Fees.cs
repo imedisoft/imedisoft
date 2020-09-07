@@ -246,31 +246,31 @@ namespace OpenDentBusiness{
 			List<long> listFeeScheds=new List<long>();
 			//Add feesched for first provider (See Claims.CalculateAndUpdate)---------------------------------------------------------------------
 			Provider provFirst=Providers.GetFirst();
-			if(provFirst!=null && provFirst.FeeSched!=0 && !listFeeScheds.Contains(provFirst.FeeSched)){
-				listFeeScheds.Add(provFirst.FeeSched);
+			if(provFirst!=null && provFirst.FeeScheduleId!=0 && !listFeeScheds.Contains(provFirst.FeeScheduleId)){
+				listFeeScheds.Add(provFirst.FeeScheduleId);
 			}
 			//Add feesched for PracticeDefaultProv------------------------------------------------------------------------------------------------
-			Provider provPracticeDefault=Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv));
-			if(provPracticeDefault!=null && provPracticeDefault.FeeSched!=0 && !listFeeScheds.Contains(provPracticeDefault.FeeSched)){
-				listFeeScheds.Add(provPracticeDefault.FeeSched);
+			Provider provPracticeDefault=Providers.GetById(Prefs.GetLong(PrefName.PracticeDefaultProv));
+			if(provPracticeDefault!=null && provPracticeDefault.FeeScheduleId!=0 && !listFeeScheds.Contains(provPracticeDefault.FeeScheduleId)){
+				listFeeScheds.Add(provPracticeDefault.FeeScheduleId);
 			}
 			//Add feescheds for all treating providers---------------------------------------------------------------------------------------------
 			if(listProvNumsTreat!=null){
 				foreach(long provNumTreat in listProvNumsTreat){
-					Provider provTreat=Providers.GetProv(provNumTreat);
-					if(provTreat!=null && provTreat.FeeSched!=0 && !listFeeScheds.Contains(provTreat.FeeSched)){
-						listFeeScheds.Add(provTreat.FeeSched);//treating provs fee scheds
+					Provider provTreat=Providers.GetById(provNumTreat);
+					if(provTreat!=null && provTreat.FeeScheduleId!=0 && !listFeeScheds.Contains(provTreat.FeeScheduleId)){
+						listFeeScheds.Add(provTreat.FeeScheduleId);//treating provs fee scheds
 					}
 				}
 			}
 			//Add feescheds for the patient's primary and secondary providers----------------------------------------------------------------------
-			Provider providerPatPri=Providers.GetProv(patPriProv);
-			if(providerPatPri!=null && providerPatPri.FeeSched!=0 && !listFeeScheds.Contains(providerPatPri.FeeSched)){
-				listFeeScheds.Add(providerPatPri.FeeSched);
+			Provider providerPatPri=Providers.GetById(patPriProv);
+			if(providerPatPri!=null && providerPatPri.FeeScheduleId!=0 && !listFeeScheds.Contains(providerPatPri.FeeScheduleId)){
+				listFeeScheds.Add(providerPatPri.FeeScheduleId);
 			}
-			Provider providerPatSec=Providers.GetProv(patSecProv);
-			if(providerPatSec!=null && providerPatSec.FeeSched!=0 && !listFeeScheds.Contains(providerPatSec.FeeSched)){
-				listFeeScheds.Add(providerPatSec.FeeSched);
+			Provider providerPatSec=Providers.GetById(patSecProv);
+			if(providerPatSec!=null && providerPatSec.FeeScheduleId!=0 && !listFeeScheds.Contains(providerPatSec.FeeScheduleId)){
+				listFeeScheds.Add(providerPatSec.FeeScheduleId);
 			}
 			//Add feescheds for all procedurecode.ProvNumDefaults---------------------------------------------------------------------------------
 			foreach(ProcedureCode procedureCode in listProcedureCodes){
@@ -281,21 +281,21 @@ namespace OpenDentBusiness{
 				if(provNumDefault==0){
 					continue;
 				}
-				Provider provDefault=Providers.GetProv(provNumDefault);
-				if(provDefault!=null && provDefault.FeeSched!=0 && !listFeeScheds.Contains(provDefault.FeeSched)){
-					listFeeScheds.Add(provDefault.FeeSched);
+				Provider provDefault=Providers.GetById(provNumDefault);
+				if(provDefault!=null && provDefault.FeeScheduleId!=0 && !listFeeScheds.Contains(provDefault.FeeScheduleId)){
+					listFeeScheds.Add(provDefault.FeeScheduleId);
 				}
 			}
 			//Add feescheds for appointment providers---------------------------------------------------------------------------------------------
 			if(listAppts!=null){
 				foreach(Appointment appointment in listAppts){
-					Provider provAppt=Providers.GetProv(appointment.ProvNum);
-					if(provAppt!=null && provAppt.FeeSched!=0 && !listFeeScheds.Contains(provAppt.FeeSched)){
-						listFeeScheds.Add(provAppt.FeeSched);
+					Provider provAppt=Providers.GetById(appointment.ProvNum);
+					if(provAppt!=null && provAppt.FeeScheduleId!=0 && !listFeeScheds.Contains(provAppt.FeeScheduleId)){
+						listFeeScheds.Add(provAppt.FeeScheduleId);
 					}
-					Provider provApptHyg=Providers.GetProv(appointment.ProvHyg);
-					if(provApptHyg!=null && provApptHyg.FeeSched!=0 && !listFeeScheds.Contains(provApptHyg.FeeSched)){
-						listFeeScheds.Add(provApptHyg.FeeSched);
+					Provider provApptHyg=Providers.GetById(appointment.ProvHyg);
+					if(provApptHyg!=null && provApptHyg.FeeScheduleId!=0 && !listFeeScheds.Contains(provApptHyg.FeeScheduleId)){
+						listFeeScheds.Add(provApptHyg.FeeScheduleId);
 					}
 				}
 			}
@@ -431,9 +431,9 @@ namespace OpenDentBusiness{
 				provNum=Prefs.GetLong(PrefName.PracticeDefaultProv);
 			}
 			Provider providerFirst=Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-			Provider provider=Providers.GetFirstOrDefault(x => x.ProvNum==provNum)??providerFirst;
+			Provider provider=Providers.GetFirstOrDefault(x => x.Id==provNum)??providerFirst;
 			//get the fee based on code and prov fee sched
-			double ppoFee=GetAmount0(proc.CodeNum,provider.FeeSched,proc.ClinicNum,provNum);
+			double ppoFee=GetAmount0(proc.CodeNum,provider.FeeScheduleId,proc.ClinicNum,provNum);
 			double ucrFee=proc.ProcFee;
 			if(ucrFee > ppoFee) {
 				return proc.Quantity * ucrFee;

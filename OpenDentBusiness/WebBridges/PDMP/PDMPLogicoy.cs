@@ -178,13 +178,13 @@ namespace OpenDentBusiness {
 				RequestDestinations=arrRequestDestinations,
 				Provider=new PDMPScript.Provider {
 					Role=role,
-					FirstName=_prov.FName,
-					LastName=_prov.LName,
+					FirstName=_prov.FirstName,
+					LastName=_prov.LastName,
 					DEANumber=new PDMPScript.DEANumberType {
 						Value=_strDeaNum,
 					},
 					NPINumber=new PDMPScript.NPINumberType {
-						Value=_prov.NationalProvID,
+						Value=_prov.NationalProviderID,
 					},
 				},
 				Location=new PDMPScript.Location {
@@ -193,7 +193,7 @@ namespace OpenDentBusiness {
 						Value=_strDeaNum,
 					},
 					NPINumber=new PDMPScript.NPINumberType {
-						Value=_prov.NationalProvID,
+						Value=_prov.NationalProviderID,
 					},
 				},
 			};

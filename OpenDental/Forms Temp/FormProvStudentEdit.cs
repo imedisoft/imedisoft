@@ -4,6 +4,8 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 
 namespace OpenDental
@@ -39,7 +41,7 @@ namespace OpenDental
 			_listSchoolClasses = SchoolClasses.GetDeepCopy();
 			for (int i = 0; i < _listSchoolClasses.Count; i++)
 			{
-				comboClass.Items.Add(SchoolClasses.GetDescript(_listSchoolClasses[i]));
+				comboClass.Items.Add(SchoolClasses.GetDescription(_listSchoolClasses[i]));
 			}
 			comboClass.SelectedIndex = 0;
 			//Create a provider object if none has been provided
@@ -55,15 +57,15 @@ namespace OpenDental
 				textUserName.Text = POut.Long(_autoUserName);//User-names are suggested to be the ProvNum of the provider.  This can be changed at will.
 				for (int i = 0; i < _listSchoolClasses.Count - 1; i++)
 				{
-					if (_listSchoolClasses[i].Id != ProvStudent.SchoolClassNum)
+					if (_listSchoolClasses[i].Id != ProvStudent.SchoolClassId)
 					{
 						continue;
 					}
 					comboClass.SelectedIndex = i;
 					break;
 				}
-				textFirstName.Text = ProvStudent.FName;
-				textLastName.Text = ProvStudent.LName;
+				textFirstName.Text = ProvStudent.FirstName;
+				textLastName.Text = ProvStudent.LastName;
 			}
 			//Double-Clicking an existing student
 			else
@@ -71,7 +73,7 @@ namespace OpenDental
 				_isGeneratingAbbr = false;
 				for (int i = 0; i < _listSchoolClasses.Count - 1; i++)
 				{
-					if (_listSchoolClasses[i].Id != ProvStudent.SchoolClassNum)
+					if (_listSchoolClasses[i].Id != ProvStudent.SchoolClassId)
 					{
 						continue;
 					}
@@ -79,15 +81,15 @@ namespace OpenDental
 					break;
 				}
 				textAbbr.Text = ProvStudent.Abbr;
-				textFirstName.Text = ProvStudent.FName;
-				textLastName.Text = ProvStudent.LName;
-				List<Userod> userList = Providers.GetAttachedUsers(ProvStudent.ProvNum);
+				textFirstName.Text = ProvStudent.FirstName;
+				textLastName.Text = ProvStudent.LastName;
+				List<Userod> userList = Providers.GetAttachedUsers(ProvStudent.Id);
 				if (userList.Count > 0)
 				{
 					textUserName.Text = userList[0].UserName;//Should always happen if they are a student.
 					_existingUser = userList[0];
 				}
-				textProvNum.Text = POut.Long(ProvStudent.ProvNum);
+				textProvNum.Text = POut.Long(ProvStudent.Id);
 			}
 		}
 
@@ -140,10 +142,10 @@ namespace OpenDental
 				MessageBox.Show("Please fill in a user name.");
 				return;
 			}
-			ProvStudent.FName = textFirstName.Text;
-			ProvStudent.LName = textLastName.Text;
+			ProvStudent.FirstName = textFirstName.Text;
+			ProvStudent.LastName = textLastName.Text;
 			ProvStudent.Abbr = textAbbr.Text;
-			ProvStudent.SchoolClassNum = _listSchoolClasses[comboClass.SelectedIndex].Id;
+			ProvStudent.SchoolClassId = _listSchoolClasses[comboClass.SelectedIndex].Id;
 			Userod newUser = new Userod();
 			bool isAutoUserName = true;
 			if (!ProvStudent.IsNew || _autoUserName.ToString() != textUserName.Text)

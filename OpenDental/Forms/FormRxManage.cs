@@ -114,7 +114,7 @@ namespace Imedisoft.Forms
 				// old way of printing one rx
 				// This logic is an exact copy of FormRxEdit.butPrint_Click()'s logic.  If this is updated, that method needs to be updated as well.
 
-				var sheetDef = SheetDefs.GetSheetsDefault(SheetTypeEnum.Rx, Clinics.ClinicId);
+				var sheetDef = SheetDefs.GetSheetsDefault(SheetTypeEnum.Rx, Clinics.Active.Id);
 				var sheet = SheetUtil.CreateSheet(sheetDef, patient.PatNum);
 
 				SheetParameter.SetParameter(sheet, "RxNum", rxPats[0].Id);

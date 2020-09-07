@@ -7,6 +7,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Printing;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -331,8 +332,8 @@ namespace OpenDental {
 					toolTip.ToolTipTitle=toolTip.ToolTipTitle+" ("+listEmps.Count.ToString()+" Techs)";
 					listEmps.Sort(new Employees.EmployeeComparer(Employees.EmployeeComparer.SortBy.firstName));
 					for(int p=0;p<listEmps.Count;p++) {
-						List<Schedule> sch=Schedules.GetForEmployee(_listSchedules,listEmps[p].EmployeeNum);
-						employees+=listEmps[p].FName;
+						List<Schedule> sch=Schedules.GetForEmployee(_listSchedules,listEmps[p].Id);
+						employees+=listEmps[p].FirstName;
 						employees+=Schedules.GetCommaDelimStringForScheds(sch);
 						employees+="\r\n";
 					}

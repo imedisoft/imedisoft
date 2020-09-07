@@ -93,13 +93,13 @@ namespace OpenDentBusiness{
 		///<summary>Uses cache.</summary>
 		public static CanadianNetwork GetNetwork(long networkNum,Clearinghouse clearinghouseClin) {
 			//No need to check RemotingRole; no call to db.
-			CanadianNetwork network=GetFirstOrDefault(x => x.CanadianNetworkNum==networkNum);
+			CanadianNetwork network=GetFirstOrDefault(x => x.Id==networkNum);
 			//CSI is the previous name for the network now known as INSTREAM.
 			//For ClaimStream, we use a "bidirect" such that any communication going to INSTREAM/CSI will be redirected to the TELUS B network instead.
 			//This works because INSTREAM was bought out by TELUS and communications to both networks and handled by the same organization now.
 			//Sending directly to INSTREAM fails with an error because TELUS expects us to use the "bidirect".
-			if(clearinghouseClin.CommBridge==EclaimsCommBridge.Claimstream && network.Abbrev=="CSI") {
-				network=GetFirstOrDefault(x => x.Abbrev=="TELUS B");
+			if(clearinghouseClin.CommBridge==EclaimsCommBridge.Claimstream && network.Abbr=="CSI") {
+				network=GetFirstOrDefault(x => x.Abbr=="TELUS B");
 			}
 			return network;
 		}

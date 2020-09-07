@@ -745,10 +745,10 @@ namespace OpenDentBusiness{
 				listApptDates.Add(DateTime.Today);
 			}
 			string command="SELECT schedule.* FROM schedule INNER JOIN scheduleop ON schedule.ScheduleNum=scheduleop.ScheduleNum "
-				+"WHERE scheduleop.OperatoryNum="+POut.Long(op.OperatoryNum)+" AND schedule.SchedDate IN("+string.Join(",",listApptDates.Select(x => POut.Date(x)))+")";
+				+"WHERE scheduleop.OperatoryNum="+POut.Long(op.Id)+" AND schedule.SchedDate IN("+string.Join(",",listApptDates.Select(x => POut.Date(x)))+")";
 			List<Schedule> listScheds=Crud.ScheduleCrud.SelectMany(command);
 			foreach(Schedule sched in listScheds) {
-				sched.Ops.Add(op.OperatoryNum);//we know this schedule has op's operatorynum.  Add it here for later use.
+				sched.Ops.Add(op.Id);//we know this schedule has op's operatorynum.  Add it here for later use.
 			}
 			return listScheds;
 		}
@@ -765,7 +765,7 @@ namespace OpenDentBusiness{
 			List<Schedule> listSchedules=new List<Schedule>();
 			foreach(Schedule schedule in listSchedulesPeriod.FindAll(x => x.SchedType==ScheduleType.Provider)) {//only schedules for provs
 				if(schedule.Ops.Count(x => x!=0)>0) {//leaving count only non 0's, but 0's are no longer added in ConvertTableToList with remove empty entries code
-					if(schedule.Ops.Contains(op.OperatoryNum)) {//the schedule is for specific op(s), add if it is for this op
+					if(schedule.Ops.Contains(op.Id)) {//the schedule is for specific op(s), add if it is for this op
 						listSchedules.Add(schedule.Copy());
 					}
 					continue;
@@ -806,7 +806,7 @@ namespace OpenDentBusiness{
 				if(aptDateTime.Date!=listForPeriod[i].SchedDate){
 					continue;
 				}
-				if(!listForPeriod[i].Ops.Contains(op.OperatoryNum)){
+				if(!listForPeriod[i].Ops.Contains(op.Id)){
 					continue;
 				}
 				if(isSecondary && !Providers.GetIsSec(listForPeriod[i].ProvNum)){
@@ -976,7 +976,7 @@ namespace OpenDentBusiness{
 			List<Schedule> listSchedules = Schedules.GetForDate(dateClear);
 			listSchedules.RemoveAll(x => x.SchedType!=ScheduleType.Blockout);
 			//Find the sched ops that we want to delete.
-			List<long> listOpNums = Operatories.GetOpsForClinic(clinicNum).Select(x=>x.OperatoryNum).ToList();
+			List<long> listOpNums = Operatories.GetOpsForClinic(clinicNum).Select(x=>x.Id).ToList();
 			List<ScheduleOp> listSchedOps = ScheduleOps.GetForSchedList(listSchedules);
 			listSchedOps.RemoveAll(x => !listOpNums.Contains(x.OperatoryNum));
 			ScheduleOps.DeleteBatch(listSchedOps.Select(x => x.ScheduleOpNum).ToList());
@@ -1015,7 +1015,7 @@ namespace OpenDentBusiness{
 			
 			string command="SELECT COUNT(*) FROM schedule "
 				//only count holiday schedules for the entire practice or for the currently selected clinic
-				+"WHERE (ClinicNum=0 OR ClinicNum="+POut.Long(Clinics.ClinicId)+") "
+				+"WHERE (ClinicNum=0 OR ClinicNum="+POut.Long(Clinics.Active.Id)+") "
 				+"AND Status="+POut.Int((int)SchedStatus.Holiday)+" "
 				+"AND SchedType="+POut.Int((int)ScheduleType.Practice)+" "
 				+"AND SchedDate="+POut.Date(date);
@@ -1267,7 +1267,7 @@ namespace OpenDentBusiness{
 			if(!listBlockoutTypeDefNums.Contains(0)) {
 				listBlockoutTypeDefNums.Add(0);//Non-blockouts must always be considered.
 			}
-			listOperatoryNums.AddRange(listOperatories.Select(x => x.OperatoryNum));
+			listOperatoryNums.AddRange(listOperatories.Select(x => x.Id));
 			List<long> listClinicNums=new List<long>();
 			if(PrefC.HasClinicsEnabled) {
 				listClinicNums.Add(clinicNum);
@@ -1587,7 +1587,7 @@ namespace OpenDentBusiness{
 				if(listEmps.Count==0) {
 					return table;
 				}
-				command+="AND employee.EmployeeNum IN ("+string.Join(",",listEmps.Select(x => x.EmployeeNum))+") ";
+				command+="AND employee.EmployeeNum IN ("+string.Join(",",listEmps.Select(x => x.Id))+") ";
 			}
 			command+="GROUP BY schedule.ScheduleNum ";
 
@@ -1627,13 +1627,13 @@ namespace OpenDentBusiness{
 			}
 			List<long> listProvNums;
 			if(PrefC.HasClinicsEnabled) {//Using clinics.
-				listProvNums=Providers.GetProvsForClinic(clinicNum).Select(x => x.ProvNum).ToList();
+				listProvNums=Providers.GetProvsForClinic(clinicNum).Select(x => x.Id).ToList();
 				if(listProvNums.Count==0) {
 					return table;
 				}
 			}
 			else {
-				listProvNums=Providers.GetDeepCopy(true).OrderBy(x => x.ItemOrder).Select(y => y.ProvNum).ToList();
+				listProvNums=Providers.GetDeepCopy(true).OrderBy(x => x.ItemOrder).Select(y => y.Id).ToList();
 			}
 			List<Schedule> ListSchedulesForDate=Schedules.GetAllForDateAndType(dateStart,ScheduleType.Provider);
 			List<Schedule> listScheds=ListSchedulesForDate.FindAll(x => listProvNums.Contains(x.ProvNum));

@@ -242,7 +242,7 @@ namespace OpenDental{
 			}
 			string providersUsingFee="";
 			for(int i=0;i<_listProviders.Count;i++) {
-				if(FeeSchedCur.FeeSchedNum==_listProviders[i].FeeSched) {
+				if(FeeSchedCur.FeeSchedNum==_listProviders[i].FeeScheduleId) {
 					if(providersUsingFee!=""){//There is a name before this on the list
 						providersUsingFee+=", ";
 					}

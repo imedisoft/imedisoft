@@ -123,7 +123,7 @@ namespace OpenDentBusiness
 			//Add ProvTreat from all claims
 			listProvNums.AddRange(listClaims.Select(x => x.ProvTreat).ToList());
 			//Add providerFirst.ProvNum
-			listProvNums.Add(providerFirst.ProvNum);
+			listProvNums.Add(providerFirst.Id);
 			//Get all ProviderClinic for all providers on claims.
 			List<ProviderClinic> listProvClinics = ProviderClinics.GetByProvNums(listProvNums.Distinct().ToList());
 			ProviderClinic provClinicBill = null;
@@ -222,8 +222,8 @@ namespace OpenDentBusiness
 						+ "20*"//HL03: Heirarchical level code. 20=Information source
 						+ "1~");//HL04: Heirarchical child code. 1=child HL present
 								//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-					billProv = Providers.GetFirstOrDefault(x => x.ProvNum == claimItems[i].ProvBill1) ?? providerFirst;
-					provClinicBill = ProviderClinics.GetFromList(billProv.ProvNum, (clinic == null ? 0 : clinic.Id), listProvClinics, true);
+					billProv = Providers.GetFirstOrDefault(x => x.Id == claimItems[i].ProvBill1) ?? providerFirst;
+					provClinicBill = ProviderClinics.GetFromList(billProv.Id, (clinic == null ? 0 : clinic.Id), listProvClinics, true);
 					if (isMedical)
 					{
 						//2000A PRV: Provider Specialty Information
@@ -236,7 +236,7 @@ namespace OpenDentBusiness
 					{//dental
 					 //2000A PRV: Provider Specialty Information (Optional Rendering prov for all claims in this HL)
 					 //Not used when the Billing or Pay-to Provider (we do not support pay-to provider for 4010s) is a group (not a person) and the individual Rendering Provider is in loop 2310B.
-						if (billProv.FName != "")
+						if (billProv.FirstName != "")
 						{ //We send the PRV segment when billing prov is a person. Loop 2310B is always used, so we do not need to check anything else.
 							seg++;
 							sw.WriteLine("PRV*PT*"//PRV01: Provider Code. BI=Billing, PT=Pay-To
@@ -247,7 +247,7 @@ namespace OpenDentBusiness
 					//2010AA NM1: Billing provider
 					seg++;
 					sw.Write("NM1*85*");//NM101: 85=Billing provider
-					if (billProv.FName == "")
+					if (billProv.FirstName == "")
 					{
 						sw.Write("2*");//NM102: 1=person,2=non-person
 					}
@@ -255,15 +255,15 @@ namespace OpenDentBusiness
 					{
 						sw.Write("1*");
 					}
-					sw.Write(Sout(billProv.LName, 35) + "*"//NM103: Last name
+					sw.Write(Sout(billProv.LastName, 35) + "*"//NM103: Last name
 														   //NM103 allowable length increased to 60?
-						+ Sout(billProv.FName, 25) + "*"//NM104: First name. Might be blank.
-						+ Sout(billProv.MI, 25) + "*"//NM105: Middle name. Since this is optional, there is no min length.
+						+ Sout(billProv.FirstName, 25) + "*"//NM104: First name. Might be blank.
+						+ Sout(billProv.Initials, 25) + "*"//NM105: Middle name. Since this is optional, there is no min length.
 						+ "*"//NM106: not used
 						+ "*");//NM107: Name suffix. not used
 							   //It's after the NPI date now, so only one choice here:
 					sw.Write("XX*");//NM108: ID code qualifier. 24=EIN. 34=SSN, XX=NPI
-					sw.WriteLine(Sout(billProv.NationalProvID, 80) + "~");//NM109: ID code. NPI validated
+					sw.WriteLine(Sout(billProv.NationalProviderID, 80) + "~");//NM109: ID code. NPI validated
 																		  //2010AA N3: Billing provider address
 					seg++;
 					if (clinic != null && clinic.BillingAddressOnClaims)
@@ -1057,21 +1057,21 @@ namespace OpenDentBusiness
 				//2310B Rendering provider. Only required if different from the billing provider
 				//But required by WebClaim, so we will always include it
 				//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-				provTreat = Providers.GetFirstOrDefault(x => x.ProvNum == claim.ProvTreat) ?? providerFirst;
-				provClinicTreat = ProviderClinics.GetFromList(provTreat.ProvNum, (clinic == null ? 0 : clinic.Id), listProvClinics, true);
+				provTreat = Providers.GetFirstOrDefault(x => x.Id == claim.ProvTreat) ?? providerFirst;
+				provClinicTreat = ProviderClinics.GetFromList(provTreat.Id, (clinic == null ? 0 : clinic.Id), listProvClinics, true);
 				//if(claim.ProvTreat!=claim.ProvBill){
 				//2310B NM1: name
 				seg++;
 				sw.Write("NM1*82*"//82=rendering prov
 					+ "1*"//NM102: 1=person
-					+ Sout(provTreat.LName, 35) + "*"//NM103: LName
-					+ Sout(provTreat.FName, 25) + "*"//NM104: FName
-					+ Sout(provTreat.MI, 25) + "*"//NM105: MiddleName
+					+ Sout(provTreat.LastName, 35) + "*"//NM103: LName
+					+ Sout(provTreat.FirstName, 25) + "*"//NM104: FName
+					+ Sout(provTreat.Initials, 25) + "*"//NM105: MiddleName
 					+ "*"//NM106: not used
 					+ "*");//NM107: suffix. We don't support
 						   //It's after the NPI date, now, so always send NPI here:
 				sw.Write("XX*");//NM108: ID code qualifier. 24=EIN. 34=SSN, XX=NPI
-				sw.WriteLine(Sout(provTreat.NationalProvID, 80) + "~");//NM109: ID code.  NPI validated.
+				sw.WriteLine(Sout(provTreat.NationalProviderID, 80) + "~");//NM109: ID code.  NPI validated.
 																	   //2310B PRV: Rendering provider information
 				if (isMedical)
 				{
@@ -1110,13 +1110,13 @@ namespace OpenDentBusiness
 					seg++;
 					sw.WriteLine("NM1*FA*"//FA=Facility
 						+ "2*"//NM102: 2=non-person
-						+ Sout(billProv.LName, 35) + "*"//NM103:Facility Name
+						+ Sout(billProv.LastName, 35) + "*"//NM103:Facility Name
 						+ "*"//NM104: not used
 						+ "*"//NM105: not used
 						+ "*"//NM106: not used
 						+ "*"//NM107: not used
 						+ "XX*"//NM108: XX=NPI
-						+ Sout(billProv.NationalProvID, 80) + "~");//NM109: NPI. Validated.
+						+ Sout(billProv.NationalProviderID, 80) + "~");//NM109: NPI. Validated.
 				}
 				//or 2310D (medical)NM1: Service facility location. Required if different from 2010AA. Not supported.
 				//2310D (medical)N3,N4,REF,PER: not supported.
@@ -1459,18 +1459,18 @@ namespace OpenDentBusiness
 						&& Prefs.GetBool(PrefName.EclaimsSeparateTreatProv))
 					{
 						//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-						provTreat = Providers.GetFirstOrDefault(x => x.ProvNum == proc.ProvNum) ?? providerFirst;
+						provTreat = Providers.GetFirstOrDefault(x => x.Id == proc.ProvNum) ?? providerFirst;
 						seg++;
 						sw.Write("NM1*82*"//82=rendering prov
 							+ "1*"//NM102: 1=person
-							+ Sout(provTreat.LName, 35) + "*"//NM103: LName
-							+ Sout(provTreat.FName, 25) + "*"//NM104: FName
-							+ Sout(provTreat.MI, 25) + "*"//NM105: MiddleName
+							+ Sout(provTreat.LastName, 35) + "*"//NM103: LName
+							+ Sout(provTreat.FirstName, 25) + "*"//NM104: FName
+							+ Sout(provTreat.Initials, 25) + "*"//NM105: MiddleName
 							+ "*"//NM106: not used.
 							+ "*");//NM107: suffix. not supported.
 								   //After NPI date, so always do it one way:
 						sw.Write("XX*");//NM108: XX=NPI
-						sw.Write(Sout(provTreat.NationalProvID, 80));//NM109: ID.  NPI validated.
+						sw.Write(Sout(provTreat.NationalProviderID, 80));//NM109: ID.  NPI validated.
 						sw.WriteLine("~");
 						//2420A PRV: Rendering provider information
 						seg++;
@@ -1595,7 +1595,7 @@ namespace OpenDentBusiness
 					+ Sout(prov.MedicaidID, 30, 1) + "~");//REF02. ID number
 			}
 			//I don't think there would be additional id's if Medicaid, but just in case, no return.
-			ProviderIdent[] provIdents = ProviderIdents.GetForPayor(prov.ProvNum, payorID);
+			ProviderIdent[] provIdents = ProviderIdents.GetForPayor(prov.Id, payorID);
 			for (int i = 0; i < provIdents.Length; i++)
 			{
 				if (provIdents[i].IDNumber.Trim().Length < 2)
@@ -1920,9 +1920,9 @@ namespace OpenDentBusiness
 			}
 			List<X12TransactionItem> claimItems = Claims.GetX12TransactionInfo(((ClaimSendQueueItem)queueItem).ClaimNum);//just to get prov. Needs work.
 			Provider providerFirst = Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
-			Provider billProv = Providers.GetFirstOrDefault(x => x.ProvNum == claimItems[0].ProvBill1) ?? providerFirst;
-			Provider treatProv = Providers.GetFirstOrDefault(x => x.ProvNum == claim.ProvTreat) ?? providerFirst;
-			ProviderClinic provClinicTreat = ProviderClinics.GetOneOrDefault(treatProv.ProvNum, (clinic == null ? 0 : clinic.Id));
+			Provider billProv = Providers.GetFirstOrDefault(x => x.Id == claimItems[0].ProvBill1) ?? providerFirst;
+			Provider treatProv = Providers.GetFirstOrDefault(x => x.Id == claim.ProvTreat) ?? providerFirst;
+			ProviderClinic provClinicTreat = ProviderClinics.GetOneOrDefault(treatProv.Id, (clinic == null ? 0 : clinic.Id));
 			InsPlan insPlan = InsPlans.GetPlan(claim.PlanNum, null);
 			InsSub sub = InsSubs.GetSub(claim.InsSubNum, null);
 			//if(insPlan.IsMedical) {
@@ -1931,7 +1931,7 @@ namespace OpenDentBusiness
 			//billProv
 			X12Validate.BillProv(billProv, strb);
 			//treatProv
-			if (treatProv.LName == "")
+			if (treatProv.LastName == "")
 			{
 				if (strb.Length != 0)
 				{
@@ -1939,7 +1939,7 @@ namespace OpenDentBusiness
 				}
 				strb.Append("Treating Prov LName");
 			}
-			if (treatProv.FName == "")
+			if (treatProv.FirstName == "")
 			{
 				if (strb.Length != 0)
 				{
@@ -1948,7 +1948,7 @@ namespace OpenDentBusiness
 				strb.Append("Treating Prov FName");
 			}
 			//Treating prov SSN/TIN is not sent on paper or eclaims. Do not verify or block.
-			if (!Regex.IsMatch(treatProv.NationalProvID, "^(80840)?[0-9]{10}$"))
+			if (!Regex.IsMatch(treatProv.NationalProviderID, "^(80840)?[0-9]{10}$"))
 			{
 				if (strb.Length != 0)
 				{
@@ -2334,8 +2334,8 @@ namespace OpenDentBusiness
 				}
 				if (claim.ProvTreat != proc.ProvNum && Prefs.GetBool(PrefName.EclaimsSeparateTreatProv))
 				{
-					treatProv = Providers.GetFirstOrDefault(x => x.ProvNum == proc.ProvNum) ?? providerFirst;
-					if (treatProv.LName == "")
+					treatProv = Providers.GetFirstOrDefault(x => x.Id == proc.ProvNum) ?? providerFirst;
+					if (treatProv.LastName == "")
 					{
 						if (strb.Length != 0)
 						{
@@ -2343,7 +2343,7 @@ namespace OpenDentBusiness
 						}
 						strb.Append("Treating Prov LName");
 					}
-					if (treatProv.FName == "")
+					if (treatProv.FirstName == "")
 					{
 						if (strb.Length != 0)
 						{
@@ -2352,7 +2352,7 @@ namespace OpenDentBusiness
 						strb.Append("Treating Prov FName");
 					}
 					//Treating prov SSN/TIN is not sent on paper or eclaims. Do not verify or block.
-					if (treatProv.NationalProvID.Length < 2)
+					if (treatProv.NationalProviderID.Length < 2)
 					{
 						if (strb.Length != 0)
 						{

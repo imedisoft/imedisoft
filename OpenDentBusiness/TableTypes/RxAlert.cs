@@ -43,7 +43,7 @@ namespace OpenDentBusiness
 		/// This will be compared against medicationpat.MedicationNum using PatNum.
 		/// Drug-Drug checking is also performed in NewCrop.
 		/// </summary>
-		[ForeignKey(typeof(Medication), nameof(Medication.MedicationNum))]
+		[ForeignKey(typeof(Medication), nameof(Medication.Id))]
 		public long MedicationId;
 
 		/// <summary>
@@ -77,10 +77,10 @@ namespace OpenDentBusiness
 
 			if (MedicationId > 0)
 			{
-				var medication = Medications.GetMedication(MedicationId);
+				var medication = Medications.GetById(MedicationId);
 				if (medication != null)
 				{
-					return medication.MedName;
+					return medication.Name;
 				}
 			}
 

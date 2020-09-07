@@ -219,7 +219,7 @@ namespace OpenDentBusiness
 			{
 				throw new ODException("Provider not found");
 			}
-			ProviderClinic provClinic = ProviderClinics.GetOneOrDefault(prov.ProvNum, (clinic == null ? 0 : clinic.Id));
+			ProviderClinic provClinic = ProviderClinics.GetOneOrDefault(prov.Id, (clinic == null ? 0 : clinic.Id));
 			if (prov.IsErxEnabled == ErxEnabledStatus.Disabled)
 			{
 				throw new ODException("Erx is disabled for provider" + ": " + prov.Abbr + ".  " + "To enable, edit provider in Lists | Providers and acknowledge Electronic Prescription fees.");
@@ -232,7 +232,7 @@ namespace OpenDentBusiness
 			{
 				throw new ODException("Provider must be a person" + ": " + prov.Abbr);
 			}
-			string fname = prov.FName.Trim();
+			string fname = prov.FirstName.Trim();
 			if (fname == "")
 			{
 				throw new ODException("Provider first name missing" + ": " + prov.Abbr);
@@ -241,7 +241,7 @@ namespace OpenDentBusiness
 			{
 				throw new ODException("Provider first name can only contain letters, dashes, apostrophes, or spaces." + ": " + prov.Abbr);
 			}
-			string lname = prov.LName.Trim();
+			string lname = prov.LastName.Trim();
 			if (lname == "")
 			{
 				throw new ODException("Provider last name missing" + ": " + prov.Abbr);
@@ -251,16 +251,16 @@ namespace OpenDentBusiness
 				throw new ODException("Provider last name can only contain letters, dashes, apostrophes, or spaces.  Use the suffix box for I, II, III, Jr, or Sr" + ": " + prov.Abbr);
 			}
 			//prov.Suffix is not validated here. In ErxXml.cs, the suffix is converted to the appropriate suffix enumeration value, or defaults to DDS if the suffix does not make sense.
-			string deaNum = prov.DEANum;
+			string deaNum = prov.DeaNumber;
 			if (provClinic != null)
 			{
-				deaNum = provClinic.DEANum;
+				deaNum = provClinic.DeaNumber;
 			}
 			if (deaNum.ToLower() != "none" && !Regex.IsMatch(deaNum, "^[A-Za-z]{2}[0-9]{7}$"))
 			{
 				throw new ODException("Provider DEA Number must be 2 letters followed by 7 digits.  If no DEA Number, enter NONE." + ": " + prov.Abbr);
 			}
-			string npi = Regex.Replace(prov.NationalProvID, "[^0-9]*", "");//NPI with all non-numeric characters removed.
+			string npi = Regex.Replace(prov.NationalProviderID, "[^0-9]*", "");//NPI with all non-numeric characters removed.
 			if (npi.Length != 10)
 			{
 				throw new ODException("Provider NPI must be exactly 10 digits" + ": " + prov.Abbr);
@@ -301,18 +301,18 @@ namespace OpenDentBusiness
 		public static bool IsUserAnEmployee(Userod user)
 		{
 			bool isEmp = false;
-			if (user.EmployeeId == 0)
+			if (user.EmployeeId == null)
 			{//The current user does not have an employee associated.
 				isEmp = false;
 			}
-			else if (user.ProviderId == 0)
+			else if (user.ProviderId == null)
 			{//The current user has an employee associated and no provider associated.
 				isEmp = true;
 			}
 			else
 			{//Both an employee and provider are associated to the current user.
-				Provider provUser = Providers.GetProv(user.ProviderId);
-				if (provUser.IsSecondary && provUser.NationalProvID == "")
+				var provUser = Providers.GetById(user.ProviderId.Value);
+				if (provUser.IsSecondary && provUser.NationalProviderID == "")
 				{
 					isEmp = true;
 				}

@@ -88,7 +88,7 @@ namespace OpenDental{
 		private bool _isTimeCardSecurityApplicable {
 			get{
 				return Security.CurrentUser!=null &&
-				Security.CurrentUser.EmployeeId==EmployeeCur.EmployeeNum &&
+				Security.CurrentUser.EmployeeId==EmployeeCur.Id &&
 				Prefs.GetBool(PrefName.TimecardSecurityEnabled);
 			} 
 		}
@@ -602,7 +602,7 @@ namespace OpenDental{
 
 		/// <summary>Returns title of FormTimeCard based on employee name and any restrictions that may apply to editing.</summary>
 		private string GetTitle() {
-			string textString="Time Card for"+" "+EmployeeCur.FName+" "+EmployeeCur.LName;
+			string textString="Time Card for"+" "+EmployeeCur.FirstName+" "+EmployeeCur.LastName;
 			if(_cannotEditOwnTimecard) {
 				textString+=" - You cannot modify your time card";
 			}
@@ -683,10 +683,10 @@ namespace OpenDental{
 		private TimeAdjust GetOrCreatePayPeriodNote() {
 			DateTime date=_listPayPeriods[SelectedPayPeriod].DateStart.Date;
 			DateTime midnightFirstDay=new DateTime(date.Year,date.Month,date.Day,0,0,0);
-			TimeAdjust noteRow=TimeAdjusts.GetPayPeriodNote(EmployeeCur.EmployeeNum,midnightFirstDay);
+			TimeAdjust noteRow=TimeAdjusts.GetPayPeriodNote(EmployeeCur.Id,midnightFirstDay);
 			if(noteRow==null) {
 				noteRow=new TimeAdjust {
-					EmployeeNum=EmployeeCur.EmployeeNum,
+					EmployeeNum=EmployeeCur.Id,
 					TimeEntry=midnightFirstDay,
 					Note="",
 					IsAuto=false
@@ -741,12 +741,12 @@ namespace OpenDental{
 		///<summary>fromDB is set to false when it is refreshing every second so that there will be no extra network traffic.</summary>
 		private void FillMain(bool fromDB){
 			if(fromDB){
-				ClockEventList=ClockEvents.Refresh(EmployeeCur.EmployeeNum,PIn.Date(textDateStart.Text),PIn.Date(textDateStop.Text),IsBreaks);
+				ClockEventList=ClockEvents.Refresh(EmployeeCur.Id,PIn.Date(textDateStart.Text),PIn.Date(textDateStop.Text),IsBreaks);
 				if(IsBreaks){
 					TimeAdjustList=new List<TimeAdjust>();
 				}
 				else{
-					TimeAdjustList=TimeAdjusts.Refresh(EmployeeCur.EmployeeNum,PIn.Date(textDateStart.Text),PIn.Date(textDateStop.Text));
+					TimeAdjustList=TimeAdjusts.Refresh(EmployeeCur.Id,PIn.Date(textDateStart.Text),PIn.Date(textDateStop.Text));
 				}
 			}
 			TimeAdjustList.RemoveAll(x => x.TimeAdjustNum==_timeAdjustNote.TimeAdjustNum);//Do not show the note row in the grid.
@@ -811,7 +811,7 @@ namespace OpenDental{
 			TimeSpan ptoSpan=new TimeSpan(0);//used for PTO totals.
 			if(mergedAL.Count>0) {  //Have to check fromDB here because we dont want to call DB every timer tick
 				if(fromDB) {
-					weekSpan=ClockEvents.GetWeekTotal(EmployeeCur.EmployeeNum,GetDateForRow(0));
+					weekSpan=ClockEvents.GetWeekTotal(EmployeeCur.Id,GetDateForRow(0));
 					storedWeekSpan=weekSpan;
 				}
 				else {
@@ -1163,10 +1163,9 @@ namespace OpenDental{
 				return;
 			}
 			TimeAdjust adjust=new TimeAdjust();
-			adjust.EmployeeNum=EmployeeCur.EmployeeNum;
-			if(PrefC.HasClinicsEnabled) {
-				adjust.ClinicNum=Clinics.ClinicId;
-			}
+			adjust.EmployeeNum=EmployeeCur.Id;
+			adjust.ClinicNum=Clinics.Active.Id;
+			
 			DateTime dateStop=PIn.Date(textDateStop.Text);
 			if(DateTime.Today<=dateStop && DateTime.Today>=PIn.Date(textDateStart.Text)) {
 				adjust.TimeEntry=DateTime.Now;
@@ -1216,7 +1215,7 @@ namespace OpenDental{
 				//Security.IsAuthorized() shows the error to the user already.
 				return;
 			}
-			string errors=TimeCardRules.ValidateOvertimeRules(new List<long>{EmployeeCur.EmployeeNum});
+			string errors=TimeCardRules.ValidateOvertimeRules(new List<long>{EmployeeCur.Id});
 			if(errors != "") {
 				MessageBox.Show(this,"Please fix the following timecard rule errors first:\r\n"+errors);
 				return;
@@ -1239,7 +1238,7 @@ namespace OpenDental{
 			SaveNoteToDb();
 			linesPrinted=0;
 			PrinterL.TryPrintOrDebugClassicPreview(pd_PrintPage,
-				"Time card for"+" "+EmployeeCur.LName+","+EmployeeCur.FName+" "+"printed",
+				"Time card for"+" "+EmployeeCur.LastName+","+EmployeeCur.FirstName+" "+"printed",
 				new Margins(0,0,0,0),
 				printoutOrigin:PrintoutOrigin.AtMargin
 			);
@@ -1257,7 +1256,7 @@ namespace OpenDental{
 			SolidBrush brush=new SolidBrush(Color.Black);
 			Pen pen=new Pen(Color.Black);
 			//Title
-			str=EmployeeCur.FName+" "+EmployeeCur.LName;
+			str=EmployeeCur.FirstName+" "+EmployeeCur.LastName;
 			str+="\r\n"+"Note"+": "+_timeAdjustNote.Note.ToString();
 			int threeLineHeight=(int)e.Graphics.MeasureString("1\r\n2\r\n3",fontTitle).Height;
 			int marginBothSides=(int)xPos*2;//110
@@ -1372,7 +1371,7 @@ namespace OpenDental{
 			int empIndex=0;
 			for(int i=0;i<_listEmp.Count;i++) {
 				//find current employee index by Employeenum
-				if(EmployeeCur.EmployeeNum==_listEmp[i].EmployeeNum) {
+				if(EmployeeCur.Id==_listEmp[i].Id) {
 					if(sender.Equals(butPrevEmp)) {
 						empIndex=i-1;//go to previous employee in list
 					}

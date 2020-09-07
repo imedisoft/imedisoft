@@ -475,7 +475,7 @@ namespace OpenDental{
 			_listProviders=Providers.GetDeepCopy(true);
 			for(int i=0;i<_listProviders.Count;i++) {
 				comboProvNum.Items.Add(_listProviders[i].GetLongDesc());//Only visible provs added to combobox.
-				if(_listProviders[i].ProvNum==RefAttachCur.ProvNum) {
+				if(_listProviders[i].Id==RefAttachCur.ProvNum) {
 					comboProvNum.SelectedIndex=i;//Sets combo text too.
 				}
 			}
@@ -580,7 +580,7 @@ namespace OpenDental{
 		}
 
 		private void comboProvNum_SelectionChangeCommitted(object sender,EventArgs e) {
-			_provNumSelected=_listProviders[comboProvNum.SelectedIndex].ProvNum;
+			_provNumSelected=_listProviders[comboProvNum.SelectedIndex].Id;
 		}
 
 		private void butPickProv_Click(object sender,EventArgs e) {

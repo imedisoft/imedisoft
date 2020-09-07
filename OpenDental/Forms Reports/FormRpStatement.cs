@@ -443,13 +443,13 @@ namespace OpenDental
 					par.AddLineBreak();
 					if (CultureInfo.CurrentCulture.Name == "en-AU")
 					{//Australia
-						Provider defaultProv = Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv));
-						par.AddText("ABN: " + defaultProv.NationalProvID);
+						Provider defaultProv = Providers.GetById(Prefs.GetLong(PrefName.PracticeDefaultProv));
+						par.AddText("ABN: " + defaultProv.NationalProviderID);
 						par.AddLineBreak();
 					}
 					if (CultureInfo.CurrentCulture.Name == "en-NZ")
 					{//New Zealand
-						Provider defaultProv = Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv));
+						Provider defaultProv = Providers.GetById(Prefs.GetLong(PrefName.PracticeDefaultProv));
 						par.AddText("GST: " + defaultProv.SSN);
 						par.AddLineBreak();
 					}
@@ -489,13 +489,13 @@ namespace OpenDental
 					par.AddLineBreak();
 					if (CultureInfo.CurrentCulture.Name == "en-AU")
 					{//Australia
-						Provider defaultProv = Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv));
-						par.AddText("ABN: " + defaultProv.NationalProvID);
+						Provider defaultProv = Providers.GetById(Prefs.GetLong(PrefName.PracticeDefaultProv));
+						par.AddText("ABN: " + defaultProv.NationalProviderID);
 						par.AddLineBreak();
 					}
 					if (CultureInfo.CurrentCulture.Name == "en-NZ")
 					{//New Zealand
-						Provider defaultProv = Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv));
+						Provider defaultProv = Providers.GetById(Prefs.GetLong(PrefName.PracticeDefaultProv));
 						par.AddText("GST: " + defaultProv.SSN);
 						par.AddLineBreak();
 					}
@@ -776,7 +776,7 @@ namespace OpenDental
 					{
 						suffix = ", " + prov.Suffix.Trim();
 					}
-					par.AddText(prov.Abbr + " - " + prov.FName + " " + prov.LName + suffix + " - " + prov.MedicaidID);
+					par.AddText(prov.Abbr + " - " + prov.FirstName + " " + prov.LastName + suffix + " - " + prov.MedicaidID);
 					par.AddLineBreak();
 				}
 				par.AddLineBreak();

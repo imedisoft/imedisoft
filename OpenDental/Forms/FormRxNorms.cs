@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using OpenDental;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -104,7 +105,7 @@ namespace Imedisoft.Forms
 			Cursor = Cursors.WaitCursor;
 
 			var rxNorms = RxNorms.GetListByCodeOrDesc(codeTextBox.Text, exactMatch, ignoreCheckBox.Checked);
-			var rxCuisMedication = Medications.GetWhere(x => x.RxCui != 0).Select(x => x.RxCui.ToString()).Distinct().ToList();
+			var rxCuisMedication = Medications.GetWhere(x => x.RxCui != "").Select(x => x.RxCui.ToString()).Distinct().ToList();
 			var rxCuisPatientMedication = MedicationPats.GetForRxCuis(rxNorms.Select(x => x.RxCui).ToList()).Select(x => x.RxCui.ToString()).ToList();
 
 			rxNormsGrid.BeginUpdate();

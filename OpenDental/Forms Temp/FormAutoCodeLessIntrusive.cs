@@ -192,7 +192,7 @@ namespace OpenDental {
 				_procCur.ProcFee=Fees.GetAmount0(_procCur.CodeNum,FeeScheds.GetFeeSched(_patCur,_listInsPlans,_listPatPlans,_listInsSubs,_procCur.ProvNum),
 					_procCur.ClinicNum,_procCur.ProvNum);
 				if(priplan!=null && priplan.PlanType=="p") {//PPO
-					double standardfee=Fees.GetAmount0(_procCur.CodeNum,Providers.GetProv(Patients.GetProvNum(_patCur)).FeeSched,_procCur.ClinicNum,
+					double standardfee=Fees.GetAmount0(_procCur.CodeNum,Providers.GetById(Patients.GetProvNum(_patCur)).FeeScheduleId,_procCur.ClinicNum,
 						_procCur.ProvNum);
 					_procCur.ProcFee=Math.Max(_procCur.ProcFee,standardfee);
 				}

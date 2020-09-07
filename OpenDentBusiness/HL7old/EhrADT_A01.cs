@@ -43,8 +43,8 @@ namespace OpenDentBusiness.HL7 {
 		}
 
 		private void InitializeVariables() {
-			Provider provFacility=Providers.GetProv(PrefC.GetInt(PrefName.PracticeDefaultProv));
-			_sendingFacilityNpi=provFacility.NationalProvID;
+			Provider provFacility=Providers.GetById(PrefC.GetInt(PrefName.PracticeDefaultProv));
+			_sendingFacilityNpi=provFacility.NationalProviderID;
 			_sendingFacilityName=Prefs.GetString(PrefName.PracticeTitle);
 			_sendingFacilityAddress1=Prefs.GetString(PrefName.PracticeAddress);
 			_sendingFacilityAddress2=Prefs.GetString(PrefName.PracticeAddress2);
@@ -543,8 +543,8 @@ namespace OpenDentBusiness.HL7 {
 
 		public static string Validate(Appointment appt) {
 			StringBuilder sb=new StringBuilder();
-			Provider provFacility=Providers.GetProv(PrefC.GetInt(PrefName.PracticeDefaultProv));
-			if(!Regex.IsMatch(provFacility.NationalProvID,"^(80840)?[0-9]{10}$")) {
+			Provider provFacility=Providers.GetById(PrefC.GetInt(PrefName.PracticeDefaultProv));
+			if(!Regex.IsMatch(provFacility.NationalProviderID,"^(80840)?[0-9]{10}$")) {
 				WriteError(sb,"Invalid NPI for provider '"+provFacility.Abbr+"'");
 			}
 			if(PrefC.HasClinicsEnabled && appt.ClinicNum!=0) {//Using clinics and a clinic is assigned.

@@ -43,7 +43,7 @@ namespace OpenDentBusiness.Crud{
 			Operatory operatory;
 			foreach(DataRow row in table.Rows) {
 				operatory=new Operatory();
-				operatory.OperatoryNum  = PIn.Long  (row["OperatoryNum"].ToString());
+				operatory.Id  = PIn.Long  (row["OperatoryNum"].ToString());
 				operatory.OpName        = PIn.String(row["OpName"].ToString());
 				operatory.Abbrev        = PIn.String(row["Abbrev"].ToString());
 				operatory.ItemOrder     = PIn.Int   (row["ItemOrder"].ToString());
@@ -82,7 +82,7 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("IsNewPatAppt");
 			foreach(Operatory operatory in listOperatorys) {
 				table.Rows.Add(new object[] {
-					POut.Long  (operatory.OperatoryNum),
+					POut.Long  (operatory.Id),
 					            operatory.OpName,
 					            operatory.Abbrev,
 					POut.Int   (operatory.ItemOrder),
@@ -108,7 +108,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one Operatory into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(Operatory operatory,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				operatory.OperatoryNum=ReplicationServers.GetKey("operatory","OperatoryNum");
+				operatory.Id=ReplicationServers.GetKey("operatory","OperatoryNum");
 			}
 			string command="INSERT INTO operatory (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -116,7 +116,7 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="OpName,Abbrev,ItemOrder,IsHidden,ProvDentist,ProvHygienist,IsHygiene,ClinicNum,SetProspective,IsWebSched,IsNewPatAppt) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(operatory.OperatoryNum)+",";
+				command+=POut.Long(operatory.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(operatory.OpName)+"',"
@@ -135,9 +135,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				operatory.OperatoryNum=Database.ExecuteInsert(command);
+				operatory.Id=Database.ExecuteInsert(command);
 			}
-			return operatory.OperatoryNum;
+			return operatory.Id;
 		}
 
 		///<summary>Inserts one Operatory into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -150,14 +150,14 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO operatory (";
 			if(!useExistingPK) {
-				operatory.OperatoryNum=ReplicationServers.GetKeyNoCache("operatory","OperatoryNum");
+				operatory.Id=ReplicationServers.GetKeyNoCache("operatory","OperatoryNum");
 			}
 			if(useExistingPK) {
 				command+="OperatoryNum,";
 			}
 			command+="OpName,Abbrev,ItemOrder,IsHidden,ProvDentist,ProvHygienist,IsHygiene,ClinicNum,SetProspective,IsWebSched,IsNewPatAppt) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(operatory.OperatoryNum)+",";
+				command+=POut.Long(operatory.Id)+",";
 			}
 			command+=
 				 "'"+POut.String(operatory.OpName)+"',"
@@ -176,9 +176,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				operatory.OperatoryNum=Database.ExecuteInsert(command);
+				operatory.Id=Database.ExecuteInsert(command);
 			}
-			return operatory.OperatoryNum;
+			return operatory.Id;
 		}
 
 		///<summary>Updates one Operatory in the database.</summary>
@@ -196,7 +196,7 @@ namespace OpenDentBusiness.Crud{
 				//DateTStamp can only be set by MySQL
 				+"IsWebSched    =  "+POut.Bool  (operatory.IsWebSched)+", "
 				+"IsNewPatAppt  =  "+POut.Bool  (operatory.IsNewPatAppt)+" "
-				+"WHERE OperatoryNum = "+POut.Long(operatory.OperatoryNum);
+				+"WHERE OperatoryNum = "+POut.Long(operatory.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
@@ -252,7 +252,7 @@ namespace OpenDentBusiness.Crud{
 				return false;
 			}
 			command="UPDATE operatory SET "+command
-				+" WHERE OperatoryNum = "+POut.Long(operatory.OperatoryNum);
+				+" WHERE OperatoryNum = "+POut.Long(operatory.Id);
 			Database.ExecuteNonQuery(command);
 			return true;
 		}
@@ -311,8 +311,8 @@ namespace OpenDentBusiness.Crud{
 			List<Operatory> listUpdNew =new List<Operatory>();
 			List<Operatory> listUpdDB  =new List<Operatory>();
 			List<Operatory> listDel    =new List<Operatory>();
-			listNew.Sort((Operatory x,Operatory y) => { return x.OperatoryNum.CompareTo(y.OperatoryNum); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
-			listDB.Sort((Operatory x,Operatory y) => { return x.OperatoryNum.CompareTo(y.OperatoryNum); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			listNew.Sort((Operatory x,Operatory y) => { return x.Id.CompareTo(y.Id); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
+			listDB.Sort((Operatory x,Operatory y) => { return x.Id.CompareTo(y.Id); });//Anonymous function, sorts by compairing PK.  Lambda expressions are not allowed, this is the one and only exception.  JS approved.
 			int idxNew=0;
 			int idxDB=0;
 			int rowsUpdatedCount=0;
@@ -340,12 +340,12 @@ namespace OpenDentBusiness.Crud{
 					idxDB++;
 					continue;
 				}
-				else if(fieldNew.OperatoryNum<fieldDB.OperatoryNum) {//newPK less than dbPK, newItem is 'next'
+				else if(fieldNew.Id<fieldDB.Id) {//newPK less than dbPK, newItem is 'next'
 					listIns.Add(fieldNew);
 					idxNew++;
 					continue;
 				}
-				else if(fieldNew.OperatoryNum>fieldDB.OperatoryNum) {//dbPK less than newPK, dbItem is 'next'
+				else if(fieldNew.Id>fieldDB.Id) {//dbPK less than newPK, dbItem is 'next'
 					listDel.Add(fieldDB);
 					idxDB++;
 					continue;
@@ -366,7 +366,7 @@ namespace OpenDentBusiness.Crud{
 				}
 			}
 			for(int i=0;i<listDel.Count;i++) {
-				Delete(listDel[i].OperatoryNum);
+				Delete(listDel[i].Id);
 			}
 			if(rowsUpdatedCount>0 || listIns.Count>0 || listDel.Count>0) {
 				return true;

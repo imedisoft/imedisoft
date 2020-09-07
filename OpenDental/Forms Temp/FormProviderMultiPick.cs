@@ -39,14 +39,14 @@ namespace OpenDental {
 			for(int i=0;i<_listProviders.Count;i++){
 				row=new GridRow();
 				row.Cells.Add(_listProviders[i].Abbr);
-				row.Cells.Add(_listProviders[i].LName);
-				row.Cells.Add(_listProviders[i].FName);
+				row.Cells.Add(_listProviders[i].LastName);
+				row.Cells.Add(_listProviders[i].FirstName);
 				gridMain.ListGridRows.Add(row);
 			}
 			gridMain.EndUpdate();
-			List<long> listSelectedProvNums=SelectedProviders.Select(x => x.ProvNum).ToList();
+			List<long> listSelectedProvNums=SelectedProviders.Select(x => x.Id).ToList();
 			for(int i=0;i<_listProviders.Count;i++) {
-				if(_listProviders[i].ProvNum.In(listSelectedProvNums)) {
+				if(_listProviders[i].Id.In(listSelectedProvNums)) {
 					gridMain.SetSelected(i,true);
 				}
 			}

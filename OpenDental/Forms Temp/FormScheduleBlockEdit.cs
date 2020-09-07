@@ -264,7 +264,7 @@ namespace OpenDental{
 				}
 				listOp.Items.Add(listOpsShort[i].OpName);
 				_listOps.Add(listOpsShort[i]);
-				if(_schedCur.Ops.Contains(listOpsShort[i].OperatoryNum)) {
+				if(_schedCur.Ops.Contains(listOpsShort[i].Id)) {
 					listOp.SetSelected(listOp.Items.Count-1,true);//Select the item that was just added.
 				}
 			}
@@ -311,7 +311,7 @@ namespace OpenDental{
 			_schedCur.BlockoutType=_listBlockoutCatDefs[listType.SelectedIndex].Id;
 			_schedCur.Ops=new List<long>();
 			for(int i=0;i<listOp.SelectedIndices.Count;i++){
-				_schedCur.Ops.Add(_listOps[listOp.SelectedIndices[i]].OperatoryNum);
+				_schedCur.Ops.Add(_listOps[listOp.SelectedIndices[i]].Id);
 			}
 			List<Schedule> listOverlapSchedules;
 			if(Schedules.Overlaps(_schedCur,out listOverlapSchedules)) {

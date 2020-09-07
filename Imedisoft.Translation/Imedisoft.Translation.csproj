@@ -64,6 +64,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Rx.resx</DependentUpon>
     </Compile>
+    <Compile Include="SecurityLog.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SecurityLog.resx</DependentUpon>
+    </Compile>
     <Compile Include="X12.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -86,6 +91,10 @@
     <EmbeddedResource Include="Rx.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Rx.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SecurityLog.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>SecurityLog.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="X12.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

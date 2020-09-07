@@ -218,7 +218,7 @@ namespace OpenDental
 				procFee = Fees.GetAmount0(brokenProcedure.CodeNum, feeSch, brokenProcedure.ClinicNum, brokenProcedure.ProvNum);
 				if (insPlanPrimary != null && insPlanPrimary.PlanType == "p" && !insPlanPrimary.IsMedical)
 				{//PPO
-					double provFee = Fees.GetAmount0(brokenProcedure.CodeNum, Providers.GetProv(brokenProcedure.ProvNum).FeeSched, brokenProcedure.ClinicNum,
+					double provFee = Fees.GetAmount0(brokenProcedure.CodeNum, Providers.GetById(brokenProcedure.ProvNum).FeeScheduleId, brokenProcedure.ClinicNum,
 					brokenProcedure.ProvNum);
 					brokenProcedure.ProcFee = Math.Max(provFee, procFee);
 				}

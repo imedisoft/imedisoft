@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace OpenDentBusiness.HL7 {
@@ -456,20 +457,20 @@ namespace OpenDentBusiness.HL7 {
 			//ORD-10 Entered By.  Required if known.  Cardinality [0..1].  Type XCN.  This is the person that entered the immunization record into the system.
 			Userod userod=Userods.GetUser(vaccine.UserNum);//Can be null if vaccine.UserNum=0 for older records before the vaccine.UserNum column existed.
 			if(userod!=null) {
-				if(userod.ProviderId!=0) {
-					Provider provEnteredBy=Providers.GetProv(userod.ProviderId);
-					WriteXCN(10,provEnteredBy.FName,provEnteredBy.LName,provEnteredBy.MI,vaccine.UserNum.ToString(),cityWhereEntered,stateWhereEntered,"D");
+				if(userod.ProviderId.HasValue) {
+					Provider provEnteredBy=Providers.GetById(userod.ProviderId.Value);
+					WriteXCN(10,provEnteredBy.FirstName,provEnteredBy.LastName,provEnteredBy.Initials,vaccine.UserNum.ToString(),cityWhereEntered,stateWhereEntered,"D");
 				}
-				else if(userod.EmployeeId!=0) {
-					Employee employee=Employees.GetEmp(userod.EmployeeId);
-					WriteXCN(10,employee.FName,employee.LName,employee.MiddleI,vaccine.UserNum.ToString(),cityWhereEntered,stateWhereEntered,"D");
+				else if(userod.EmployeeId.HasValue) {
+					Employee employee=Employees.GetEmp(userod.EmployeeId.Value);
+					WriteXCN(10,employee.FirstName,employee.LastName,employee.Initials,vaccine.UserNum.ToString(),cityWhereEntered,stateWhereEntered,"D");
 				}
 			}
 			//ORD-11 Verified By.  Optional.
 			//ORD-12 Ordering Provider.  Required if known. Cardinality [0..1].  Type XCN.  This shall be the provider ordering the immunization.  It is expected to be empty if the immunization record is transcribed from a historical record.
-			Provider provOrdering=Providers.GetProv(vaccine.ProvNumOrdering);//Can be null if vaccine.ProvNumOrdering is zero.
+			Provider provOrdering=Providers.GetById(vaccine.ProvNumOrdering);//Can be null if vaccine.ProvNumOrdering is zero.
 			if(provOrdering!=null) {
-				WriteXCN(12,provOrdering.FName,provOrdering.LName,provOrdering.MI,provOrdering.ProvNum.ToString(),cityWhereEntered,stateWhereEntered,"L");
+				WriteXCN(12,provOrdering.FirstName,provOrdering.LastName,provOrdering.Initials,provOrdering.Id.ToString(),cityWhereEntered,stateWhereEntered,"L");
 			}
 			//ORD-13 Enterer's Location.  Optional.
 			//ORD-14 Call Back Phone Number.  Optional.
@@ -734,9 +735,9 @@ namespace OpenDentBusiness.HL7 {
 				}
 			}
 			//RXA-10 Administering Provider.  Required if known.  Type XCN.  This is the person who gave the administration or the vaccinaton.  It is not the ordering clinician.
-			Provider provAdministering=Providers.GetProv(vaccine.ProvNumAdminister);//Can be null when vaccine.ProvNumAdminister is zero.
+			Provider provAdministering=Providers.GetById(vaccine.ProvNumAdminister);//Can be null when vaccine.ProvNumAdminister is zero.
 			if(provAdministering!=null) {
-				WriteXCN(10,provAdministering.FName,provAdministering.LName,provAdministering.MI,provAdministering.ProvNum.ToString(),cityWhereEntered,stateWhereEntered,"L");
+				WriteXCN(10,provAdministering.FirstName,provAdministering.LastName,provAdministering.Initials,provAdministering.Id.ToString(),cityWhereEntered,stateWhereEntered,"L");
 			}
 			//RXA-11 Administered-at Location.  Required if known.  Type LA2 (guide page 68).  This is the clinic/site where the vaccine was administered.
 			WriteLA2(11,_sendingFacilityName);

@@ -47,12 +47,12 @@ namespace OpenDental {
 				//  textCriterionFK.Text=ICD9s.GetDescription(RuleCur.CriterionFK);
 				//  break;
 				case EhrCriterion.Medication:
-					Medication tempMed = Medications.GetMedication(RuleCur.CriterionFK);
-					if(tempMed.MedicationNum==tempMed.GenericNum) {//handle generic medication names.
-						textCriterionFK.Text=tempMed.MedName;
+					Medication tempMed = Medications.GetById(RuleCur.CriterionFK);
+					if(tempMed.IsGeneric) {//handle generic medication names.
+						textCriterionFK.Text=tempMed.Name;
 					}
 					else {
-						textCriterionFK.Text=tempMed.MedName+" / "+Medications.GetGenericName(tempMed.GenericNum);
+						textCriterionFK.Text=tempMed.Name+" / "+Medications.GetGenericName(tempMed.GenericId.Value);
 					}
 					break;
 				case EhrCriterion.Allergy:

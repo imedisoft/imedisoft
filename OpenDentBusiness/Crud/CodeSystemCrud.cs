@@ -43,8 +43,8 @@ namespace OpenDentBusiness.Crud{
 			CodeSystem codeSystem;
 			foreach(DataRow row in table.Rows) {
 				codeSystem=new CodeSystem();
-				codeSystem.CodeSystemNum = PIn.Long  (row["CodeSystemNum"].ToString());
-				codeSystem.CodeSystemName= PIn.String(row["CodeSystemName"].ToString());
+				codeSystem.Id = PIn.Long  (row["CodeSystemNum"].ToString());
+				codeSystem.Name= PIn.String(row["CodeSystemName"].ToString());
 				codeSystem.VersionCur    = PIn.String(row["VersionCur"].ToString());
 				codeSystem.VersionAvail  = PIn.String(row["VersionAvail"].ToString());
 				codeSystem.HL7OID        = PIn.String(row["HL7OID"].ToString());
@@ -68,8 +68,8 @@ namespace OpenDentBusiness.Crud{
 			table.Columns.Add("Note");
 			foreach(CodeSystem codeSystem in listCodeSystems) {
 				table.Rows.Add(new object[] {
-					POut.Long  (codeSystem.CodeSystemNum),
-					            codeSystem.CodeSystemName,
+					POut.Long  (codeSystem.Id),
+					            codeSystem.Name,
 					            codeSystem.VersionCur,
 					            codeSystem.VersionAvail,
 					            codeSystem.HL7OID,
@@ -87,7 +87,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Inserts one CodeSystem into the database.  Provides option to use the existing priKey.</summary>
 		public static long Insert(CodeSystem codeSystem,bool useExistingPK) {
 			if(!useExistingPK && PrefC.RandomKeys) {
-				codeSystem.CodeSystemNum=ReplicationServers.GetKey("codesystem","CodeSystemNum");
+				codeSystem.Id=ReplicationServers.GetKey("codesystem","CodeSystemNum");
 			}
 			string command="INSERT INTO codesystem (";
 			if(useExistingPK || PrefC.RandomKeys) {
@@ -95,10 +95,10 @@ namespace OpenDentBusiness.Crud{
 			}
 			command+="CodeSystemName,VersionCur,VersionAvail,HL7OID,Note) VALUES(";
 			if(useExistingPK || PrefC.RandomKeys) {
-				command+=POut.Long(codeSystem.CodeSystemNum)+",";
+				command+=POut.Long(codeSystem.Id)+",";
 			}
 			command+=
-				 "'"+POut.String(codeSystem.CodeSystemName)+"',"
+				 "'"+POut.String(codeSystem.Name)+"',"
 				+"'"+POut.String(codeSystem.VersionCur)+"',"
 				+"'"+POut.String(codeSystem.VersionAvail)+"',"
 				+"'"+POut.String(codeSystem.HL7OID)+"',"
@@ -107,9 +107,9 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				codeSystem.CodeSystemNum=Database.ExecuteInsert(command);
+				codeSystem.Id=Database.ExecuteInsert(command);
 			}
-			return codeSystem.CodeSystemNum;
+			return codeSystem.Id;
 		}
 
 		///<summary>Inserts one CodeSystem into the database.  Returns the new priKey.  Doesn't use the cache.</summary>
@@ -122,17 +122,17 @@ namespace OpenDentBusiness.Crud{
 			
 			string command="INSERT INTO codesystem (";
 			if(!useExistingPK) {
-				codeSystem.CodeSystemNum=ReplicationServers.GetKeyNoCache("codesystem","CodeSystemNum");
+				codeSystem.Id=ReplicationServers.GetKeyNoCache("codesystem","CodeSystemNum");
 			}
 			if(useExistingPK) {
 				command+="CodeSystemNum,";
 			}
 			command+="CodeSystemName,VersionCur,VersionAvail,HL7OID,Note) VALUES(";
 			if(useExistingPK) {
-				command+=POut.Long(codeSystem.CodeSystemNum)+",";
+				command+=POut.Long(codeSystem.Id)+",";
 			}
 			command+=
-				 "'"+POut.String(codeSystem.CodeSystemName)+"',"
+				 "'"+POut.String(codeSystem.Name)+"',"
 				+"'"+POut.String(codeSystem.VersionCur)+"',"
 				+"'"+POut.String(codeSystem.VersionAvail)+"',"
 				+"'"+POut.String(codeSystem.HL7OID)+"',"
@@ -141,29 +141,29 @@ namespace OpenDentBusiness.Crud{
 				Database.ExecuteNonQuery(command);
 			}
 			else {
-				codeSystem.CodeSystemNum=Database.ExecuteInsert(command);
+				codeSystem.Id=Database.ExecuteInsert(command);
 			}
-			return codeSystem.CodeSystemNum;
+			return codeSystem.Id;
 		}
 
 		///<summary>Updates one CodeSystem in the database.</summary>
 		public static void Update(CodeSystem codeSystem) {
 			string command="UPDATE codesystem SET "
-				+"CodeSystemName= '"+POut.String(codeSystem.CodeSystemName)+"', "
+				+"CodeSystemName= '"+POut.String(codeSystem.Name)+"', "
 				+"VersionCur    = '"+POut.String(codeSystem.VersionCur)+"', "
 				+"VersionAvail  = '"+POut.String(codeSystem.VersionAvail)+"', "
 				+"HL7OID        = '"+POut.String(codeSystem.HL7OID)+"', "
 				+"Note          = '"+POut.String(codeSystem.Note)+"' "
-				+"WHERE CodeSystemNum = "+POut.Long(codeSystem.CodeSystemNum);
+				+"WHERE CodeSystemNum = "+POut.Long(codeSystem.Id);
 			Database.ExecuteNonQuery(command);
 		}
 
 		///<summary>Updates one CodeSystem in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
 		public static bool Update(CodeSystem codeSystem,CodeSystem oldCodeSystem) {
 			string command="";
-			if(codeSystem.CodeSystemName != oldCodeSystem.CodeSystemName) {
+			if(codeSystem.Name != oldCodeSystem.Name) {
 				if(command!="") { command+=",";}
-				command+="CodeSystemName = '"+POut.String(codeSystem.CodeSystemName)+"'";
+				command+="CodeSystemName = '"+POut.String(codeSystem.Name)+"'";
 			}
 			if(codeSystem.VersionCur != oldCodeSystem.VersionCur) {
 				if(command!="") { command+=",";}
@@ -185,7 +185,7 @@ namespace OpenDentBusiness.Crud{
 				return false;
 			}
 			command="UPDATE codesystem SET "+command
-				+" WHERE CodeSystemNum = "+POut.Long(codeSystem.CodeSystemNum);
+				+" WHERE CodeSystemNum = "+POut.Long(codeSystem.Id);
 			Database.ExecuteNonQuery(command);
 			return true;
 		}
@@ -193,7 +193,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Returns true if Update(CodeSystem,CodeSystem) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
 		public static bool UpdateComparison(CodeSystem codeSystem,CodeSystem oldCodeSystem) {
-			if(codeSystem.CodeSystemName != oldCodeSystem.CodeSystemName) {
+			if(codeSystem.Name != oldCodeSystem.Name) {
 				return true;
 			}
 			if(codeSystem.VersionCur != oldCodeSystem.VersionCur) {

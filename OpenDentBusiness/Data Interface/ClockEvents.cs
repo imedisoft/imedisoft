@@ -259,7 +259,7 @@ namespace OpenDentBusiness{
 				clockEvent=new ClockEvent();
 				clockEvent.EmployeeNum=employeeNum;
 				clockEvent.ClockStatus=TimeClockStatus.Home;
-				clockEvent.ClinicNum=Clinics.ClinicId;
+				clockEvent.ClinicNum=Clinics.Active.Id;
 				ClockEvents.Insert(clockEvent);//times handled
 			}
 			else if(clockEvent.ClockStatus==TimeClockStatus.Break) {//only incomplete breaks will have been returned.
@@ -282,12 +282,12 @@ namespace OpenDentBusiness{
 					clockEvent=new ClockEvent();
 					clockEvent.EmployeeNum=employeeNum;
 					clockEvent.ClockStatus=tcs;
-					clockEvent.ClinicNum=Clinics.ClinicId;
+					clockEvent.ClinicNum=Clinics.Active.Id;
 					ClockEvents.Insert(clockEvent);//times handled
 				}
 			}
 			Employee emp=Employees.GetEmp(employeeNum);
-			SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff,0,emp.FName+" "+emp.LName+" "+"clocked in from "+clockEvent.ClockStatus.ToString()+".");
+			SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff,0,emp.FirstName+" "+emp.LastName+" "+"clocked in from "+clockEvent.ClockStatus.ToString()+".");
 		}
 
 		///<summary>Will throw an exception if already clocked out.</summary>
@@ -325,7 +325,7 @@ namespace OpenDentBusiness{
 				ClockEvents.Update(clockEvent);
 			}
 			Employee emp=Employees.GetEmp(employeeNum);
-			SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff,0,emp.FName+" "+emp.LName+" "+"clocked out for "+clockEvent.ClockStatus.ToString()+".");
+			SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff,0,emp.FirstName+" "+emp.LastName+" "+"clocked out for "+clockEvent.ClockStatus.ToString()+".");
 		}
 
 		///<summary>Used in the timecard to track hours worked per week when the week started in a previous time period.  This gets all the hours of the first week before the date listed.  Also adds in any adjustments for that week.</summary>
@@ -499,9 +499,9 @@ namespace OpenDentBusiness{
 			retVal.Columns.Add("rate3Hours");
 			retVal.Columns.Add("Note");
 			//Loop through employees.  Each employee adds one row to table --------------------------------------------------------------------------------
-			List<Employee> listEmployees=Employees.GetForTimeCard();//Gets all non-hidden employees
+			List<Employee> listEmployees=Employees.GetForTimeCard().ToList();//Gets all non-hidden employees
 			List<Employee> listEmpsForClinic=Employees.GetEmpsForClinic(clinicNum);
-			List<long> listEmpNums=listEmployees.Select(x => x.EmployeeNum).ToList();
+			List<long> listEmpNums=listEmployees.Select(x => x.Id).ToList();
 			List<ClockEvent> listClockEvents=GetListForTimeCardManage(listEmpNums,clinicNum,startDate,stopDate,isAll);
 			List<TimeAdjust> listTimeAdjusts=TimeAdjusts.GetListForTimeCardManage(listEmpNums,clinicNum,startDate,stopDate,isAll);
 			//get all pay period notes for all employees for this pay period. 
@@ -511,22 +511,22 @@ namespace OpenDentBusiness{
 				DataRow dataRowCur=retVal.NewRow();
 				dataRowCur.ItemArray.Initialize();//changes all nulls to blanks and zeros.
 				//PayrollID-------------------------------------------------------------------------------------------------------------------------------------
-				dataRowCur["PayrollID"]=employee.PayrollID;
+				dataRowCur["PayrollID"]=employee.PayrollId;
 				//EmployeeNum and Name----------------------------------------------------------------------------------------------------------------------------------
-				dataRowCur["EmployeeNum"]=employee.EmployeeNum;
-				dataRowCur["firstName"]=employee.FName;
-				dataRowCur["lastName"]=employee.LName;
+				dataRowCur["EmployeeNum"]=employee.Id;
+				dataRowCur["firstName"]=employee.FirstName;
+				dataRowCur["lastName"]=employee.LastName;
 				//Begin calculations------------------------------------------------------------------------------------------------------------------------------------
 				//each list below will contain one entry per week.
 				List<TimeSpan> listTsRegularHoursWeekly			=new List<TimeSpan>();//Total non-overtime hours.  Used for calculation, not displayed or part of dataTable.
 				List<TimeSpan> listTsOTHoursWeekly					=new List<TimeSpan>();//Total overtime hours.  Used for calculation, not displayed or part of dataTable.
 				List<TimeSpan> listTsDifferentialHoursWeekly=new List<TimeSpan>();//Not included in total hours worked.  tsDifferentialHours is differant than r2Hours and r2OTHours
-				List<ClockEvent> listEmpClockEvents=listClockEvents.FindAll(x => x.EmployeeNum==employee.EmployeeNum);
-				List<TimeAdjust> listEmpTimeAdjusts=listTimeAdjusts.FindAll(x => x.EmployeeNum==employee.EmployeeNum);
+				List<ClockEvent> listEmpClockEvents=listClockEvents.FindAll(x => x.EmployeeNum==employee.Id);
+				List<TimeAdjust> listEmpTimeAdjusts=listTimeAdjusts.FindAll(x => x.EmployeeNum==employee.Id);
 				//If there are no clock events, nor time adjusts, and the current employee isn't "assigned" to the clinic passed in, skip.
 				if(listEmpClockEvents.Count==0 //employee has no clock events for this clinic.
 					&& listEmpTimeAdjusts.Count==0 //employee has no time adjusts for this clinic.
-					&& (!isAll && listEmpsForClinic.Count(x => x.EmployeeNum==employee.EmployeeNum)==0)) //employee not explicitly assigned to clinic
+					&& (!isAll && listEmpsForClinic.Count(x => x.Id==employee.Id)==0)) //employee not explicitly assigned to clinic
 				{
 					continue;
 				}
@@ -624,7 +624,7 @@ namespace OpenDentBusiness{
 				dataRowCur["rate1OTHours"]=TimeSpan.FromHours(r1OTHours).ToString();
 				dataRowCur["rate2OTHours"]=TimeSpan.FromHours(r2OTHours).ToString();
 				dataRowCur["rate3Hours"]=TimeSpan.FromHours(r3Hours).ToString();
-				string payPeriodNote=listPayPeriodNotes.FirstOrDefault(x => x.EmployeeNum==employee.EmployeeNum)?.Note;
+				string payPeriodNote=listPayPeriodNotes.FirstOrDefault(x => x.EmployeeNum==employee.Id)?.Note;
 				if(string.IsNullOrEmpty(payPeriodNote)){
 					dataRowCur["Note"]=note;
 				}

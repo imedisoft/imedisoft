@@ -168,8 +168,8 @@ namespace OpenDental{
 			GridRow row;
 			foreach(Contact contactCur in ContactList) {
 				row=new GridRow();
-				row.Cells.Add(contactCur.LName);
-				row.Cells.Add(contactCur.FName);
+				row.Cells.Add(contactCur.LastName);
+				row.Cells.Add(contactCur.FirstName);
 				row.Cells.Add(contactCur.WkPhone);
 				row.Cells.Add(contactCur.Fax);
 				row.Cells.Add(contactCur.Notes);

@@ -266,7 +266,7 @@ namespace OpenDental {
 			ReportComplex report=new ReportComplex(true,false);
 			List<long> listProvNums = new List<long>();
 			if(!checkAllProv.Checked) {
-				listProvNums.AddRange(listProv.SelectedIndices.OfType<int>().Select(x => _listProviders[x].ProvNum).ToList());
+				listProvNums.AddRange(listProv.SelectedIndices.OfType<int>().Select(x => _listProviders[x].Id).ToList());
 			}
 			List<long> listBillingDefNums= new List<long>();
 			if(!checkAllBilling.Checked) {

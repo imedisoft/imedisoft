@@ -350,7 +350,7 @@ namespace OpenDental{
 			_listCovCats=CovCats.GetDeepCopy(true);
 			for(int i=0;i<_listCovCats.Count;i++) {
 				listCategory.Items.Add(_listCovCats[i].Description);
-				if(_listCovCats[i].CovCatNum==BenCur.CovCatNum){
+				if(_listCovCats[i].Id==BenCur.CovCatNum){
 					listCategory.SelectedIndex=i+1;
 				}
 			}
@@ -460,7 +460,7 @@ namespace OpenDental{
 				BenCur.CovCatNum=0;
 			}
 			else {
-				BenCur.CovCatNum=_listCovCats[listCategory.SelectedIndex-1].CovCatNum;
+				BenCur.CovCatNum=_listCovCats[listCategory.SelectedIndex-1].Id;
 			}
 			BenCur.CodeNum=ProcedureCodes.GetCodeNum(textProcCode.Text);
 			BenCur.BenefitType=(InsBenefitType)listType.SelectedIndex;

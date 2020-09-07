@@ -449,8 +449,8 @@ namespace OpenDental{
 			}
 			else {
 				List<Clinic> listClinics=Clinics.GetByCurrentUser().ToList();
-				if(!listClinics.Exists(x => x.Id==Clinics.ClinicId)) {//Could have a hidden clinic selected
-					listClinics.Add(Clinics.GetById(Clinics.ClinicId));
+				if(!listClinics.Exists(x => x.Id==Clinics.Active.Id)) {//Could have a hidden clinic selected
+					listClinics.Add(Clinics.GetById(Clinics.Active.Id));
 				}
 				listClin.Items.AddRange(listClinics.Select(x => new ODBoxItem<Clinic>(x.Abbr+(x.IsHidden?(" "+"(hidden)"):""),x)).ToArray());
 				listClin.SelectedIndex=listClinics.FindIndex(x => x.Id==Clinics.ClinicId);//FindIndex could return -1, which is fine
@@ -496,7 +496,7 @@ namespace OpenDental{
 				rpo.ListBillTypes=listBillType.SelectedIndices.OfType<int>().Select(x => _listBillingTypeDefs[x].Id).ToList();
 			}
 			if(!checkProvAll.Checked) {
-				rpo.ListProvNums=listProv.SelectedIndices.OfType<int>().Select(x => _listProviders[x].ProvNum).ToList();
+				rpo.ListProvNums=listProv.SelectedIndices.OfType<int>().Select(x => _listProviders[x].Id).ToList();
 			}
 			if(PrefC.HasClinicsEnabled) {
 				//if "All" is selected and the user is not restricted, show ALL clinics, including the 0 clinic.

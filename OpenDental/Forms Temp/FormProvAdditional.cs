@@ -43,17 +43,17 @@ namespace OpenDental {
 			gridProvProperties.ListGridColumns.Add(col);
 			gridProvProperties.ListGridRows.Clear();
 			GridRow row;
-			_provClinicDefault=_listProvClinic.Find(x => x.ClinicNum==0);
+			_provClinicDefault=_listProvClinic.Find(x => x.ClinicId==0);
 			//Didn't have an HQ row
 			if(_provClinicDefault==null) {//Doesn't exist in list
-				_provClinicDefault=ProviderClinics.GetOne(_provCur.ProvNum,0);
+				_provClinicDefault=ProviderClinics.GetOne(_provCur.Id,0);
 				if(_provClinicDefault==null) {//Doesn't exist in database
 					_provClinicDefault=new ProviderClinic {
-						ProvNum=_provCur.ProvNum,
-						ClinicNum=0,
-						DEANum=_provCur.DEANum,
+						ProviderId=_provCur.Id,
+						ClinicId=0,
+						DeaNumber=_provCur.DeaNumber,
 						StateLicense=_provCur.StateLicense,
-						StateRxID=_provCur.StateRxID,
+						StateRxId=_provCur.StateRxId,
 						StateWhereLicensed=_provCur.StateWhereLicensed,
 					};
 				}
@@ -61,28 +61,28 @@ namespace OpenDental {
 			}
 			row=new GridRow();
 			row.Cells.Add("Default");
-			row.Cells.Add(_provClinicDefault.DEANum);
+			row.Cells.Add(_provClinicDefault.DeaNumber);
 			row.Cells.Add(_provClinicDefault.StateLicense);
-			row.Cells.Add(_provClinicDefault.StateRxID);
+			row.Cells.Add(_provClinicDefault.StateRxId);
 			row.Cells.Add(_provClinicDefault.StateWhereLicensed);
 			row.Tag=_provClinicDefault;
 			gridProvProperties.ListGridRows.Add(row);
 			if(PrefC.HasClinicsEnabled) {
 				foreach(Clinic clinicCur in Clinics.GetByUser(Security.CurrentUser)) {
 					row=new GridRow();
-					ProviderClinic provClinic=_listProvClinic.Find(x => x.ClinicNum == clinicCur.Id);
+					ProviderClinic provClinic=_listProvClinic.Find(x => x.ClinicId == clinicCur.Id);
 					//Doesn't exist in Db, create a new one
 					if(provClinic==null) {
 						provClinic=new ProviderClinic() {
-							ProvNum=_provCur.ProvNum,
-							ClinicNum=clinicCur.Id,
+							ProviderId=_provCur.Id,
+							ClinicId=clinicCur.Id,
 						};
 						_listProvClinic.Add(provClinic);
 					}
 					row.Cells.Add(clinicCur.Abbr);
-					row.Cells.Add(provClinic.DEANum);
+					row.Cells.Add(provClinic.DeaNumber);
 					row.Cells.Add(provClinic.StateLicense);
-					row.Cells.Add(provClinic.StateRxID);
+					row.Cells.Add(provClinic.StateRxId);
 					row.Cells.Add(provClinic.StateWhereLicensed);
 					row.Tag=provClinic;
 					gridProvProperties.ListGridRows.Add(row);
@@ -100,13 +100,13 @@ namespace OpenDental {
 			ProviderClinic provClin=(ProviderClinic)selectedRow.Tag;
 			string strNewValue=PIn.String(selectedRow.Cells[e.Col].Text);
 			if(e.Col==1) {
-				provClin.DEANum=strNewValue;
+				provClin.DeaNumber=strNewValue;
 			}
 			else if(e.Col==2) {
 				provClin.StateLicense=strNewValue;
 			}
 			else if(e.Col==3) {
-				provClin.StateRxID=strNewValue;
+				provClin.StateRxId=strNewValue;
 			}
 			else if(e.Col==4) {
 				provClin.StateWhereLicensed=strNewValue;
@@ -116,9 +116,9 @@ namespace OpenDental {
 		///<summary>Returns true if provClinic is empty. ProvClinic is considered empty if the DEANum,StateLicense,StateRxID,and StateWereLicensed are
 		///empty.</summary>
 		private bool IsEmpty(ProviderClinic provClinic) {
-			return (provClinic!=null && string.IsNullOrEmpty(provClinic.DEANum)
+			return (provClinic!=null && string.IsNullOrEmpty(provClinic.DeaNumber)
 					&& string.IsNullOrEmpty(provClinic.StateLicense)
-					&& string.IsNullOrEmpty(provClinic.StateRxID)
+					&& string.IsNullOrEmpty(provClinic.StateRxId)
 					&& string.IsNullOrEmpty(provClinic.StateWhereLicensed));
 		}
 

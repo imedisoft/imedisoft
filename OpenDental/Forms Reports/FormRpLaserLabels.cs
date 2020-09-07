@@ -958,7 +958,7 @@ namespace OpenDental {
 						if(i > 0) {
 							whereProv += ",";
 						}
-						whereProv += "'" + POut.Long(_listProviders[listProviders.SelectedIndices[i]].ProvNum) + "'";
+						whereProv += "'" + POut.Long(_listProviders[listProviders.SelectedIndices[i]].Id) + "'";
 					}
 					whereProv += ") ";
 					patStat = BuildPatStatList(checkActiveOnly.Checked);
@@ -1195,11 +1195,11 @@ namespace OpenDental {
 					emSize = 2F;
 				}
 			}
-			using (Font newFont = new Font(font.FontFamily, emSize, font.Style))
-			{
-				graphics.DrawString(text, newFont, brush, rectF, stringFormat);
-			}
-		}
+
+            using var newFont = new Font(font.FontFamily, emSize, font.Style);
+
+            graphics.DrawString(text, newFont, brush, rectF, stringFormat);
+        }
 
 		private void pdLabels_PrintPage(object sender,PrintPageEventArgs ev) {
 			int totalPages = (int)Math.Ceiling((double)AddrTable.Rows.Count / 30);

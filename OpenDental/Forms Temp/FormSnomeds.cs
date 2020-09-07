@@ -37,18 +37,18 @@ namespace OpenDental {
 			ActiveControl=textCode;
 			//This check is here to prevent Snomeds from being used in non-member nations.
 			groupBox1.Visible=false;
-			Provider prov=Providers.GetProv(Security.CurrentUser.ProviderId);
+			Provider prov=Providers.GetById(Security.CurrentUser.ProviderId);
 			if(prov==null) {
 				return;
 			}
 			string ehrKey="";
 			int yearValue=0;
-			List<EhrProvKey> listProvKeys=EhrProvKeys.GetKeysByFLName(prov.LName,prov.FName);
+			List<EhrProvKey> listProvKeys=EhrProvKeys.GetKeysByFLName(prov.LastName,prov.FirstName);
 			if(listProvKeys.Count!=0) {
 				ehrKey=listProvKeys[0].ProvKey;
 				yearValue=listProvKeys[0].YearValue;
 			}
-			if(FormEHR.ProvKeyIsValid(prov.LName,prov.FName,yearValue,ehrKey)) {
+			if(FormEHR.ProvKeyIsValid(prov.LastName,prov.FirstName,yearValue,ehrKey)) {
 				//EHR has been valid.
 				groupBox1.Visible=true;
 			}

@@ -66,7 +66,7 @@ namespace OpenDental {
 			gridMain.ListGridColumns.Add(col);
 			gridMain.ListGridRows.Clear();
 			GridRow row;
-			List<long> listWSNPAOperatoryNums=Operatories.GetOpsForWebSchedNewPatAppts().Select(x => x.OperatoryNum).ToList();
+			List<long> listWSNPAOperatoryNums=Operatories.GetOpsForWebSchedNewPatAppts().Select(x => x.Id).ToList();
 			foreach(Operatory opCur in _listOps) {
 				row=new GridRow();
 				row.Cells.Add(opCur.OpName);
@@ -89,7 +89,7 @@ namespace OpenDental {
 					row.Cells.Add("");
 				}
 				row.Cells.Add(opCur.IsWebSched?"X":"");
-				row.Cells.Add(listWSNPAOperatoryNums.Contains(opCur.OperatoryNum) ? "X" : "");
+				row.Cells.Add(listWSNPAOperatoryNums.Contains(opCur.Id) ? "X" : "");
 				row.Tag=opCur;
 				gridMain.ListGridRows.Add(row);
 			}
@@ -102,7 +102,7 @@ namespace OpenDental {
 				MessageBox.Show("Please select an item first.");
 				return false;
 			}
-			SelectedOperatoryNum=((Operatory)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag).OperatoryNum;
+			SelectedOperatoryNum=((Operatory)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag).Id;
 			return true;
 		}
 		

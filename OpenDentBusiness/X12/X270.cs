@@ -100,13 +100,13 @@ namespace OpenDentBusiness
 			//2100B NM1: Information Receiver Name
 			strb.AppendLine("NM1*1P*"//NM101: 1P=Provider
 				+(billProv.IsNotPerson?"2":"1")+"*"//NM102: 1=person,2=non-person
-				+Sout(billProv.LName,35)+"*"//NM103: Last name
-				+Sout(billProv.FName,25)+"*"//NM104: First name
-				+Sout(billProv.MI,25,1)+"*"//NM105: Middle name
+				+Sout(billProv.LastName,35)+"*"//NM103: Last name
+				+Sout(billProv.FirstName,25)+"*"//NM104: First name
+				+Sout(billProv.Initials,25,1)+"*"//NM105: Middle name
 				+"*"//NM106: not used
 				+"*"//NM107: Name suffix. not used
 				+"XX*"//NM108: ID code qualifier. 24=EIN. 34=SSN, XX=NPI
-				+Sout(billProv.NationalProvID,80)+"~");//NM109: ID code. NPI validated
+				+Sout(billProv.NationalProviderID,80)+"~");//NM109: ID code. NPI validated
 			//2100B REF: Information Receiver ID
 			if(IsEmdeonDental(clearinghouseClin) && IsDentiCalCarrier(carrier)) {
 				string ref4aSegment="";

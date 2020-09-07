@@ -44,7 +44,7 @@ namespace OpenDentBusiness.Crud{
 			foreach(DataRow row in table.Rows) {
 				providerIdent=new ProviderIdent();
 				providerIdent.ProviderIdentNum= PIn.Long  (row["ProviderIdentNum"].ToString());
-				providerIdent.ProvNum         = PIn.Long  (row["ProvNum"].ToString());
+				providerIdent.ProviderId         = PIn.Long  (row["ProvNum"].ToString());
 				providerIdent.PayorID         = PIn.String(row["PayorID"].ToString());
 				providerIdent.SuppIDType      = (OpenDentBusiness.ProviderSupplementalID)PIn.Int(row["SuppIDType"].ToString());
 				providerIdent.IDNumber        = PIn.String(row["IDNumber"].ToString());
@@ -67,7 +67,7 @@ namespace OpenDentBusiness.Crud{
 			foreach(ProviderIdent providerIdent in listProviderIdents) {
 				table.Rows.Add(new object[] {
 					POut.Long  (providerIdent.ProviderIdentNum),
-					POut.Long  (providerIdent.ProvNum),
+					POut.Long  (providerIdent.ProviderId),
 					            providerIdent.PayorID,
 					POut.Int   ((int)providerIdent.SuppIDType),
 					            providerIdent.IDNumber,
@@ -95,7 +95,7 @@ namespace OpenDentBusiness.Crud{
 				command+=POut.Long(providerIdent.ProviderIdentNum)+",";
 			}
 			command+=
-				     POut.Long  (providerIdent.ProvNum)+","
+				     POut.Long  (providerIdent.ProviderId)+","
 				+"'"+POut.String(providerIdent.PayorID)+"',"
 				+    POut.Int   ((int)providerIdent.SuppIDType)+","
 				+"'"+POut.String(providerIdent.IDNumber)+"')";
@@ -128,7 +128,7 @@ namespace OpenDentBusiness.Crud{
 				command+=POut.Long(providerIdent.ProviderIdentNum)+",";
 			}
 			command+=
-				     POut.Long  (providerIdent.ProvNum)+","
+				     POut.Long  (providerIdent.ProviderId)+","
 				+"'"+POut.String(providerIdent.PayorID)+"',"
 				+    POut.Int   ((int)providerIdent.SuppIDType)+","
 				+"'"+POut.String(providerIdent.IDNumber)+"')";
@@ -144,7 +144,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Updates one ProviderIdent in the database.</summary>
 		public static void Update(ProviderIdent providerIdent) {
 			string command="UPDATE providerident SET "
-				+"ProvNum         =  "+POut.Long  (providerIdent.ProvNum)+", "
+				+"ProvNum         =  "+POut.Long  (providerIdent.ProviderId)+", "
 				+"PayorID         = '"+POut.String(providerIdent.PayorID)+"', "
 				+"SuppIDType      =  "+POut.Int   ((int)providerIdent.SuppIDType)+", "
 				+"IDNumber        = '"+POut.String(providerIdent.IDNumber)+"' "
@@ -155,9 +155,9 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Updates one ProviderIdent in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
 		public static bool Update(ProviderIdent providerIdent,ProviderIdent oldProviderIdent) {
 			string command="";
-			if(providerIdent.ProvNum != oldProviderIdent.ProvNum) {
+			if(providerIdent.ProviderId != oldProviderIdent.ProviderId) {
 				if(command!="") { command+=",";}
-				command+="ProvNum = "+POut.Long(providerIdent.ProvNum)+"";
+				command+="ProvNum = "+POut.Long(providerIdent.ProviderId)+"";
 			}
 			if(providerIdent.PayorID != oldProviderIdent.PayorID) {
 				if(command!="") { command+=",";}
@@ -183,7 +183,7 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Returns true if Update(ProviderIdent,ProviderIdent) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
 		public static bool UpdateComparison(ProviderIdent providerIdent,ProviderIdent oldProviderIdent) {
-			if(providerIdent.ProvNum != oldProviderIdent.ProvNum) {
+			if(providerIdent.ProviderId != oldProviderIdent.ProviderId) {
 				return true;
 			}
 			if(providerIdent.PayorID != oldProviderIdent.PayorID) {

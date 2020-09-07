@@ -80,10 +80,10 @@ namespace OpenDental{
 			listEmployee.Items.Clear();
 			listEmployee.Items.Add("none");
 			listEmployee.SelectedIndex=0;
-			_listEmployees=Employees.GetDeepCopy(true);
+			_listEmployees=Employees.GetAll(true);
 			for(int i=0;i<_listEmployees.Count;i++){
 				listEmployee.Items.Add(Employees.GetNameFL(_listEmployees[i]));
-				if(UserCur.EmployeeId==_listEmployees[i].EmployeeNum) {
+				if(UserCur.EmployeeId==_listEmployees[i].Id) {
 					listEmployee.SelectedIndex=i+1;
 				}
 			}
@@ -93,7 +93,7 @@ namespace OpenDental{
 			_listProviders=Providers.GetDeepCopy(true);
 			for(int i=0;i<_listProviders.Count;i++) {
 				listProv.Items.Add(_listProviders[i].GetLongDesc());
-				if(UserCur.ProviderId==_listProviders[i].ProvNum) {
+				if(UserCur.ProviderId==_listProviders[i].Id) {
 					listProv.SelectedIndex=i+1;
 				}
 			}
@@ -365,10 +365,10 @@ namespace OpenDental{
 				UserCur.EmployeeId=0;
 			}
 			else{
-				UserCur.EmployeeId=_listEmployees[listEmployee.SelectedIndex-1].EmployeeNum;
+				UserCur.EmployeeId=_listEmployees[listEmployee.SelectedIndex-1].Id;
 			}
 			if(listProv.SelectedIndex==0) {
-				Provider prov=Providers.GetProv(UserCur.ProviderId);
+				Provider prov=Providers.GetById(UserCur.ProviderId);
 				if(prov!=null) {
 					prov.IsInstructor=false;//If there are more than 1 users associated to this provider, they will no longer be an instructor.
 					Providers.Update(prov);	
@@ -376,14 +376,14 @@ namespace OpenDental{
 				UserCur.ProviderId=0;
 			}
 			else {
-				Provider prov=Providers.GetProv(UserCur.ProviderId);
+				Provider prov=Providers.GetById(UserCur.ProviderId);
 				if(prov!=null) {
-					if(prov.ProvNum!=_listProviders[listProv.SelectedIndex-1].ProvNum) {
+					if(prov.Id!=_listProviders[listProv.SelectedIndex-1].Id) {
 						prov.IsInstructor=false;//If there are more than 1 users associated to this provider, they will no longer be an instructor.
 					}
 					Providers.Update(prov);
 				}
-				UserCur.ProviderId=_listProviders[listProv.SelectedIndex-1].ProvNum;
+				UserCur.ProviderId=_listProviders[listProv.SelectedIndex-1].Id;
 			}
 			try{
 				if(IsNew){

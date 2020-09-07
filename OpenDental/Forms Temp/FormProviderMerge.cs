@@ -15,18 +15,18 @@ namespace OpenDental {
 		public FormProviderMerge() {
 			InitializeComponent();
 			
-			_listActiveProvs=Providers.GetWhere(x => x.ProvStatus != ProviderStatus.Deleted,true);
+			_listActiveProvs=Providers.GetWhere(x => x.Status != ProviderStatus.Deleted,true);
 		}
 
 		private void butChangeProvInto_Click(object sender,EventArgs e) {
 			FormProviderPick FormPP=new FormProviderPick(_listActiveProvs);
 			FormPP.ShowDialog();
 			if(FormPP.DialogResult==DialogResult.OK) {
-				Provider selectedProv=Providers.GetProv(FormPP.SelectedProviderId);
+				Provider selectedProv=Providers.GetById(FormPP.SelectedProviderId);
 				textAbbrInto.Text=selectedProv.Abbr;
-				textProvNumInto.Text=POut.Long(selectedProv.ProvNum);
-				textNpiInto.Text=selectedProv.NationalProvID;
-				textFullNameInto.Text=selectedProv.FName+" "+selectedProv.LName;
+				textProvNumInto.Text=POut.Long(selectedProv.Id);
+				textNpiInto.Text=selectedProv.NationalProviderID;
+				textFullNameInto.Text=selectedProv.FirstName+" "+selectedProv.LastName;
 				CheckUIState();
 			}
 		}
@@ -35,11 +35,11 @@ namespace OpenDental {
 			FormProviderPick FormPP=new FormProviderPick(checkDeletedProvs.Checked ? Providers.GetDeepCopy() : _listActiveProvs);
 			FormPP.ShowDialog();
 			if(FormPP.DialogResult==DialogResult.OK) {
-				Provider selectedProv=Providers.GetProv(FormPP.SelectedProviderId);
+				Provider selectedProv=Providers.GetById(FormPP.SelectedProviderId);
 				textAbbrFrom.Text=selectedProv.Abbr;
-				textProvNumFrom.Text=POut.Long(selectedProv.ProvNum);
-				textNpiFrom.Text=selectedProv.NationalProvID;
-				textFullNameFrom.Text=selectedProv.FName+" "+selectedProv.LName;
+				textProvNumFrom.Text=POut.Long(selectedProv.Id);
+				textNpiFrom.Text=selectedProv.NationalProviderID;
+				textFullNameFrom.Text=selectedProv.FirstName+" "+selectedProv.LastName;
 				CheckUIState();
 			}
 		}
@@ -87,7 +87,7 @@ namespace OpenDental {
 			CheckUIState();
 			MessageBox.Show("Done.");
 			DataValid.SetInvalid(InvalidType.Providers);
-			_listActiveProvs=Providers.GetWhere(x => x.ProvStatus != ProviderStatus.Deleted,true);
+			_listActiveProvs=Providers.GetWhere(x => x.Status != ProviderStatus.Deleted,true);
 		}
 
 		private void butClose_Click(object sender,EventArgs e) {

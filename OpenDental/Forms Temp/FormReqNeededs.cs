@@ -9,6 +9,8 @@ using OpenDental.UI;
 using OpenDentBusiness;
 using OpenDentBusiness.Crud;
 using System.Linq;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -318,7 +320,7 @@ namespace OpenDental{
 				selectedReqNum=_listReqsInGrid[gridMain.GetSelectedIndex()].ReqNeededNum;
 			}
 			long schoolClass=_listSchoolClasses[comboClassFrom.SelectedIndex].Id;
-			long schoolCourse=_listSchoolCourses[comboCourseFrom.SelectedIndex].SchoolCourseNum;
+			long schoolCourse=_listSchoolCourses[comboCourseFrom.SelectedIndex].Id;
 			int scroll=gridMain.ScrollValue;
 			gridMain.BeginUpdate();
 			gridMain.ListGridColumns.Clear();
@@ -363,7 +365,7 @@ namespace OpenDental{
 			FormReqNeededEdit FormR=new FormReqNeededEdit();
 			FormR.ReqCur=new ReqNeeded();
 			FormR.ReqCur.SchoolClassNum=_listSchoolClasses[comboClassFrom.SelectedIndex].Id;
-			FormR.ReqCur.SchoolCourseNum=_listSchoolCourses[comboCourseFrom.SelectedIndex].SchoolCourseNum;
+			FormR.ReqCur.SchoolCourseNum=_listSchoolCourses[comboCourseFrom.SelectedIndex].Id;
 			FormR.IsNew=true;
 			FormR.ShowDialog();
 			if(FormR.DialogResult!=DialogResult.OK){
@@ -405,8 +407,8 @@ namespace OpenDental{
 			if(MsgBox.Show(MsgBoxButtons.OKCancel,"Are you sure you would like to copy over the requirements? Doing so will not replace any previous requirements.")) {
 				long schoolClassFrom=_listSchoolClasses[comboClassFrom.SelectedIndex].Id;
 				long schoolClassTo=_listSchoolClasses[comboClassTo.SelectedIndex].Id;
-				long schoolCourseFrom=_listSchoolCourses[comboCourseFrom.SelectedIndex].SchoolCourseNum;
-				long schoolCourseTo=_listSchoolCourses[comboCourseTo.SelectedIndex].SchoolCourseNum;
+				long schoolCourseFrom=_listSchoolCourses[comboCourseFrom.SelectedIndex].Id;
+				long schoolCourseTo=_listSchoolCourses[comboCourseTo.SelectedIndex].Id;
 				if(schoolClassFrom==schoolClassTo && schoolCourseFrom==schoolCourseTo) {
 						 return;
 				}

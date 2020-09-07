@@ -58,7 +58,7 @@ namespace OpenDental {
 				labelUpdated.Visible = false;
 				checkForceDuplicates.Visible = true;
 				checkForceDuplicates.Checked = PIn.Bool(ProgramProperties.GetPropValForClinicOrDefault(progCur.Id,
-					PayConnect.ProgramProperties.PayConnectForceRecurringCharge, Clinics.ClinicId));
+					PayConnect.ProgramProperties.PayConnectForceRecurringCharge, Clinics.Active.Id));
 			}
 			if (Programs.IsEnabled(ProgramName.Xcharge))
 			{
@@ -67,7 +67,7 @@ namespace OpenDental {
 				checkForceDuplicates.Visible = true;
 				string xPath = Programs.GetProgramPath(progCur);
 				checkForceDuplicates.Checked = PIn.Bool(ProgramProperties.GetPropValForClinicOrDefault(progCur.Id,
-					ProgramProperties.PropertyDescs.XCharge.XChargeForceRecurringCharge, Clinics.ClinicId));
+					ProgramProperties.PropertyDescs.XCharge.XChargeForceRecurringCharge, Clinics.Active.Id));
 				if (!File.Exists(xPath))
 				{//program path is invalid
 				 //if user has setup permission and they want to edit the program path, show the X-Charge setup window

@@ -199,11 +199,11 @@ namespace OpenDental
 						bool isHyg = provider.IsSecondary;
 
 						if (((isDentist || isHyg) && string.IsNullOrEmpty(provider.Abbr)) ||
-							((isDentist || isHyg) && string.IsNullOrEmpty(provider.LName)) ||
-							((isDentist || isHyg) && string.IsNullOrEmpty(provider.FName)) ||
+							((isDentist || isHyg) && string.IsNullOrEmpty(provider.LastName)) ||
+							((isDentist || isHyg) && string.IsNullOrEmpty(provider.FirstName)) ||
 							(isDentist && string.IsNullOrEmpty(provider.Suffix)) ||
 							(isDentist && string.IsNullOrEmpty(provider.SSN)) ||
-							(isDentist && string.IsNullOrEmpty(provider.NationalProvID)))
+							(isDentist && string.IsNullOrEmpty(provider.NationalProviderID)))
 						{
 							return ODSetupStatus.NeedsAttention;
 						}
@@ -312,7 +312,7 @@ namespace OpenDental
 			{
 				get
 				{
-					var employees = Employees.GetDeepCopy(true);
+					var employees = Employees.GetAll(true);
 					if (employees.Count == 0)
 					{
 						return ODSetupStatus.NotStarted;
@@ -320,7 +320,7 @@ namespace OpenDental
 
 					foreach (var employee in employees)
 					{
-						if (string.IsNullOrEmpty(employee.FName) || string.IsNullOrEmpty(employee.LName))
+						if (string.IsNullOrEmpty(employee.FirstName) || string.IsNullOrEmpty(employee.LastName))
 						{
 							return ODSetupStatus.NeedsAttention;
 						}
@@ -426,7 +426,7 @@ namespace OpenDental
 					var providers = Providers.GetWhere(x => !x.IsNotPerson, true).ToList();
 					foreach (var provider in providers)
 					{
-						if (!schedules.Select(x => x.ProvNum).Contains(provider.ProvNum))
+						if (!schedules.Select(x => x.ProvNum).Contains(provider.Id))
 						{
 							return ODSetupStatus.NeedsAttention;
 						}

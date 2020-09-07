@@ -22,7 +22,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 
 		private void UserControlSetupWizProvider_Load(object sender,EventArgs e) {
 			FillGrid();
-			if(Providers.GetWhere(x => x.FName.ToLower() != "default",true).ToList().Count==0) {
+			if(Providers.GetWhere(x => x.FirstName.ToLower() != "default",true).ToList().Count==0) {
 				MsgBox.Show("You have no valid providers. Please click the add button to Add a provider or Add information to the default providers.");
 				timer1.Start();
 			}
@@ -54,20 +54,20 @@ namespace OpenDental.User_Controls.SetupWizard {
 			gridMain.ListGridRows.Clear();
 			GridRow row;
 			bool isAllComplete = true;
-			if(listProvs.Where(x => x.FName.ToLower() != "default").ToList().Count==0) {
+			if(listProvs.Where(x => x.FirstName.ToLower() != "default").ToList().Count==0) {
 				isAllComplete=false;
 			}
 			foreach(Provider prov in listProvs) {
 				row = new GridRow();
 				bool isDentist = OpenDental.SetupWizard.ProvSetup.IsPrimary(prov);
 				bool isHyg = prov.IsSecondary;
-				row.Cells.Add(prov.FName);
-				if((isDentist || isHyg) && (string.IsNullOrEmpty(prov.FName) || prov.FName.ToLower() == "default")) {
+				row.Cells.Add(prov.FirstName);
+				if((isDentist || isHyg) && (string.IsNullOrEmpty(prov.FirstName) || prov.FirstName.ToLower() == "default")) {
 					row.Cells[row.Cells.Count-1].BackColor=needsAttnCol;
 					isAllComplete=false;
 				}
-				row.Cells.Add(prov.LName);
-				if((isDentist || isHyg) && string.IsNullOrEmpty(prov.LName)) {
+				row.Cells.Add(prov.LastName);
+				if((isDentist || isHyg) && string.IsNullOrEmpty(prov.LastName)) {
 					row.Cells[row.Cells.Count-1].BackColor=needsAttnCol;
 					isAllComplete=false;
 				}
@@ -86,16 +86,16 @@ namespace OpenDental.User_Controls.SetupWizard {
 					row.Cells[row.Cells.Count-1].BackColor=needsAttnCol;
 					isAllComplete=false;
 				}
-				row.Cells.Add(prov.NationalProvID);
-				if((isDentist) && string.IsNullOrEmpty(prov.NationalProvID)) {
+				row.Cells.Add(prov.NationalProviderID);
+				if((isDentist) && string.IsNullOrEmpty(prov.NationalProviderID)) {
 					row.Cells[row.Cells.Count-1].BackColor=needsAttnCol;
 					isAllComplete=false;
 				}
 				row.Cells.Add("");
-				row.Cells[row.Cells.Count-1].BackColor = prov.ProvColor;
+				row.Cells[row.Cells.Count-1].BackColor = prov.Color;
 				//not required
 				row.Cells.Add("");
-				row.Cells[row.Cells.Count-1].BackColor = prov.OutlineColor;
+				row.Cells[row.Cells.Count-1].BackColor = prov.ColorOutline;
 				//not required
 				row.Cells.Add(prov.IsSecondary?"X":"");
 				//not required

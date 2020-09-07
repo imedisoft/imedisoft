@@ -975,15 +975,15 @@ namespace OpenDentBusiness {
 			if(feeSched==0) {
 				if(provNum==0) {//slight corruption
 					if(lookupFees!=null){
-						listFees=lookupFees[new FeeKey2(substCodeNum,Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv)).FeeSched)].ToList();
+						listFees=lookupFees[new FeeKey2(substCodeNum,Providers.GetById(Prefs.GetLong(PrefName.PracticeDefaultProv)).FeeScheduleId)].ToList();
 					}
-					return Fees.GetAmount(substCodeNum,Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv)).FeeSched,clinicNum,provNum,listFees);
+					return Fees.GetAmount(substCodeNum,Providers.GetById(Prefs.GetLong(PrefName.PracticeDefaultProv)).FeeScheduleId,clinicNum,provNum,listFees);
 				}
 				else{
 					if(lookupFees!=null){
-						listFees=lookupFees[new FeeKey2(substCodeNum,Providers.GetProv(provNum).FeeSched)].ToList();
+						listFees=lookupFees[new FeeKey2(substCodeNum,Providers.GetById(provNum).FeeScheduleId)].ToList();
 					}
-					return Fees.GetAmount(substCodeNum,Providers.GetProv(provNum).FeeSched,clinicNum,provNum,listFees);
+					return Fees.GetAmount(substCodeNum,Providers.GetById(provNum).FeeScheduleId,clinicNum,provNum,listFees);
 				}
 			}
 			if(lookupFees!=null){

@@ -2370,7 +2370,7 @@ namespace OpenDental{
 				foreach(CovCat covCat in CovCats.GetWhere(x => x.DefaultPercent!=-1,true)) {
 					ben=new Benefit();
 					ben.BenefitType=InsBenefitType.CoInsurance;
-					ben.CovCatNum=covCat.CovCatNum;
+					ben.CovCatNum=covCat.Id;
 					ben.PlanNum=plan.PlanNum;
 					ben.Percent=covCat.DefaultPercent;
 					ben.TimePeriod=BenefitTimePeriod.CalendarYear;
@@ -2382,7 +2382,7 @@ namespace OpenDental{
 					ben=new Benefit();
 					ben.CodeNum=0;
 					ben.BenefitType=InsBenefitType.Deductible;
-					ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.Diagnostic).CovCatNum;
+					ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.Diagnostic).Id;
 					ben.PlanNum=plan.PlanNum;
 					ben.TimePeriod=BenefitTimePeriod.CalendarYear;
 					ben.MonetaryAmt=0;
@@ -2395,7 +2395,7 @@ namespace OpenDental{
 					ben=new Benefit();
 					ben.CodeNum=0;
 					ben.BenefitType=InsBenefitType.Deductible;
-					ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.RoutinePreventive).CovCatNum;
+					ben.CovCatNum=CovCats.GetForEbenCat(EbenefitCategory.RoutinePreventive).Id;
 					ben.PlanNum=plan.PlanNum;
 					ben.TimePeriod=BenefitTimePeriod.CalendarYear;
 					ben.MonetaryAmt=0;
@@ -2709,7 +2709,7 @@ namespace OpenDental{
 					}
 					else if(benMatrix[x,y].BenefitType==InsBenefitType.Limitations
 						&& CovCats.GetForEbenCat(EbenefitCategory.Orthodontics)!=null
-						&& benMatrix[x,y].CovCatNum==CovCats.GetForEbenCat(EbenefitCategory.Orthodontics).CovCatNum
+						&& benMatrix[x,y].CovCatNum==CovCats.GetForEbenCat(EbenefitCategory.Orthodontics).Id
 						&& benMatrix[x,y].QuantityQualifier==BenefitQuantity.None
 						&& benMatrix[x,y].TimePeriod==BenefitTimePeriod.Lifetime)
 					{

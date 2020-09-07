@@ -1312,9 +1312,9 @@ namespace OpenDental {
 			comboProviderFilter.Items.Clear();
 			comboProviderFilter.IncludeAll=true;
 			comboProviderFilter.Items.AddProvNone();
-			List<Provider> listProviders=_listAccountCharges.Select(x => Providers.GetFirstOrDefault(y => y.ProvNum==x.ProvNum))
+			List<Provider> listProviders=_listAccountCharges.Select(x => Providers.GetFirstOrDefault(y => y.Id==x.ProvNum))
 				.Where(x => x!=null)
-				.DistinctBy(x => x.ProvNum)
+				.DistinctBy(x => x.Id)
 				.ToList();
 			comboProviderFilter.Items.AddProvsAbbr(listProviders);
 			comboProviderFilter.IsAllSelected=true;

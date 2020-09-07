@@ -62,8 +62,8 @@ namespace OpenDentBusiness.HL7 {
 		private void PV1(long aptNum,long provNum){
 			seg=new SegmentHL7(SegmentNameHL7.PV1);
 			seg.SetField(0,"PV1");
-			Provider prov=Providers.GetProv(provNum);
-			seg.SetField(7,prov.EcwID,prov.LName,prov.FName,prov.MI);
+			Provider prov=Providers.GetById(provNum);
+			seg.SetField(7,prov.EcwID,prov.LastName,prov.FirstName,prov.Initials);
 			seg.SetField(19,aptNum.ToString());
 			msg.Segments.Add(seg);
 		}
@@ -84,9 +84,9 @@ namespace OpenDentBusiness.HL7 {
 				seg.SetField(10,"1.0");
 				seg.SetField(16,"");//location code and description???
 				seg.SetField(19,listProcs[i].DiagnosticCode);
-				Provider prov=Providers.GetProv(listProcs[i].ProvNum);
-				seg.SetField(20,prov.EcwID,prov.LName,prov.FName,prov.MI);//performed by provider.
-				seg.SetField(21,prov.EcwID,prov.LName,prov.FName,prov.MI);//ordering provider.
+				Provider prov=Providers.GetById(listProcs[i].ProvNum);
+				seg.SetField(20,prov.EcwID,prov.LastName,prov.FirstName,prov.Initials);//performed by provider.
+				seg.SetField(21,prov.EcwID,prov.LastName,prov.FirstName,prov.Initials);//ordering provider.
 				seg.SetField(22,listProcs[i].ProcFee.ToString("F2"));
 				procCode=ProcedureCodes.GetProcCode(listProcs[i].CodeNum);
 				if(procCode.ProcCode.Length>5 && procCode.ProcCode.StartsWith("D")) {

@@ -513,11 +513,11 @@ namespace OpenDental{
 			//ListClinics can be called even when Clinics is not turned on, therefore it needs to be set to something to avoid a null reference.
 			ListClinics=new List<Clinic>();
 			_listStatementNumsToSkip=new List<long>();
-			if(Clinics.ClinicId==0) {
+			if(Clinics.ClinicId==null) {
 				comboClinic.IsAllSelected=true;
 			}
 			else {
-				comboClinic.SelectedClinicNum=Clinics.ClinicId;
+				comboClinic.SelectedClinicNum=Clinics.ClinicId.Value;
 			}
 			FillComboEmail();
 			_isActivateFillDisabled=false;

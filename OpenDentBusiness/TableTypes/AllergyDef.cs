@@ -1,4 +1,5 @@
 ﻿using Imedisoft.Data.Annotations;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections;
 using System.Drawing;
@@ -38,7 +39,7 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// Optional, only used with CCD messages.
 		/// </summary>
-		[ForeignKey(typeof(Medication), nameof(Medication.MedicationNum))]
+		[ForeignKey(typeof(Medication), nameof(Medication.Id))]
 		public long MedicationId;
 
 		/// <summary>

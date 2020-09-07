@@ -303,23 +303,23 @@ namespace OpenDental {
 					return;
 				}
 			}
-			Provider prov=Providers.GetProv(FormPP.SelectedProviderId);
+			Provider prov=Providers.GetById(FormPP.SelectedProviderId);
 			for(int i=0;i<ListMedLabs.Count;i++) {
-				ListMedLabs[i].OrderingProvLName=prov.LName;
-				ListMedLabs[i].OrderingProvFName=prov.FName;
-				ListMedLabs[i].OrderingProvNPI=prov.NationalProvID;
-				ListMedLabs[i].OrderingProvLocalID=prov.ProvNum.ToString();
-				ListMedLabs[i].ProvNum=prov.ProvNum;
+				ListMedLabs[i].OrderingProvLName=prov.LastName;
+				ListMedLabs[i].OrderingProvFName=prov.FirstName;
+				ListMedLabs[i].OrderingProvNPI=prov.NationalProviderID;
+				ListMedLabs[i].OrderingProvLocalID=prov.Id.ToString();
+				ListMedLabs[i].ProvNum=prov.Id;
 				MedLabs.Update(ListMedLabs[i]);
 			}
-			string provName=prov.LName;
-			if(provName!="" && prov.FName!="") {
+			string provName=prov.LastName;
+			if(provName!="" && prov.FirstName!="") {
 				provName+=", ";
 			}
-			provName+=prov.FName;
+			provName+=prov.FirstName;
 			textPhysicianName.Text=provName;
-			textPhysicianNPI.Text=prov.NationalProvID;
-			textPhysicianID.Text=prov.ProvNum.ToString();
+			textPhysicianNPI.Text=prov.NationalProviderID;
+			textPhysicianID.Text=prov.Id.ToString();
 		}
 
 		///<summary>Uses sheet framework to generate a PDF file, save it to patient's image folder, and attempt to launch file with defualt reader.

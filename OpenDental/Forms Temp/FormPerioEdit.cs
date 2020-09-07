@@ -146,7 +146,7 @@ namespace OpenDental{
 			_listProviders=Providers.GetDeepCopy(true);
 			for(int i=0;i<_listProviders.Count;i++) {
 				listProv.Items.Add(_listProviders[i].Abbr);
-				if(_listProviders[i].ProvNum==PerioExamCur.ProvNum){
+				if(_listProviders[i].Id==PerioExamCur.ProvNum){
 					listProv.SelectedIndex=i;
 				}
 			}
@@ -160,7 +160,7 @@ namespace OpenDental{
 				return;
 			}
 			PerioExamCur.ExamDate=PIn.Date(textDate.Text);
-			PerioExamCur.ProvNum=_listProviders[listProv.SelectedIndex].ProvNum;
+			PerioExamCur.ProvNum=_listProviders[listProv.SelectedIndex].Id;
 			PerioExams.Update(PerioExamCur);
 			DialogResult=DialogResult.OK;
 		}

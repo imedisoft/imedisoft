@@ -284,7 +284,7 @@ namespace OpenDental
 			comboClinic.SelectedClinicNum=ClaimCur.ClinicNum;
 			SetOrderingProvider(null);//Clears both the internal ordering and referral ordering providers.
 			if(ClaimCur.ProvOrderOverride!=0) {
-				SetOrderingProvider(Providers.GetProv(ClaimCur.ProvOrderOverride));
+				SetOrderingProvider(Providers.GetById(ClaimCur.ProvOrderOverride));
 			}
 			else if(ClaimCur.OrderingReferralNum!=0) {
 				Referral referral;
@@ -294,13 +294,13 @@ namespace OpenDental
 			FillCombosProv();
 			if(ClaimCur.ProvBill==0){
 				//setting combo to 0 would just show "0", and this field is required.
-				comboProvBill.SetSelectedProvNum(Providers.GetFirst(true).ProvNum);
+				comboProvBill.SetSelectedProvNum(Providers.GetFirst(true).Id);
 			}
 			else{
 				comboProvBill.SetSelectedProvNum(ClaimCur.ProvBill);
 			}
 			if(ClaimCur.ProvTreat==0){
-				comboProvTreat.SetSelectedProvNum(Providers.GetFirst(true).ProvNum);
+				comboProvTreat.SetSelectedProvNum(Providers.GetFirst(true).Id);
 			}
 			else{
 				comboProvTreat.SetSelectedProvNum(ClaimCur.ProvTreat);
@@ -407,7 +407,7 @@ namespace OpenDental
 			if(formP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			SetOrderingProvider(Providers.GetProv(formP.SelectedProviderId));
+			SetOrderingProvider(Providers.GetById(formP.SelectedProviderId));
 		}
 
 		private void butPickOrderProvReferral_Click(object sender,EventArgs e) {
@@ -434,8 +434,8 @@ namespace OpenDental
 				textOrderingProviderOverride.Text="";
 			}
 			else {
-				_provNumOrdering=prov.ProvNum;
-				textOrderingProviderOverride.Text=prov.GetFormalName()+"  NPI: "+(prov.NationalProvID.Trim()==""?"Missing":prov.NationalProvID);
+				_provNumOrdering=prov.Id;
+				textOrderingProviderOverride.Text=prov.GetFormalName()+"  NPI: "+(prov.NationalProviderID.Trim()==""?"Missing":prov.NationalProviderID);
 			}
 			_referralOrdering=null;
 		}
@@ -2591,7 +2591,7 @@ namespace OpenDental
 			InsSub insSub=InsSubs.GetOne(ClaimCur.InsSubNum);
 			Carrier carrier=Carriers.GetCarrier(insPlan.CarrierNum);
 			Clearinghouse clearinghouseHq=Canadian.GetCanadianClearinghouseHq(carrier);
-			Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.ClinicId);
+			Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.Active.Id);
 			try {
 				long etransNumAck=CanadianOutput.SendClaimReversal(clearinghouseClin,ClaimCur,insPlan,insSub,false,FormCCDPrint.PrintCCD);
 				Etrans etransAck=Etranss.GetEtrans(etransNumAck);
@@ -2634,7 +2634,7 @@ namespace OpenDental
 					return;
 				}
 				Clearinghouse clearinghouseHq=ClearinghouseL.GetClearinghouseHq(listQueue[0].ClearinghouseNum);
-				Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.ClinicId);
+				Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.Active.Id);
 				listQueue[0]=Eclaims.GetMissingData(clearinghouseClin,listQueue[0]);
 				if(listQueue[0].MissingData!="") {
 					MessageBox.Show("Cannot add attachments until missing data is fixed:"+"\r\n"+listQueue[0].MissingData);
@@ -3385,7 +3385,7 @@ namespace OpenDental
 				//string warnings;
 				//string missingData=
 				Clearinghouse clearinghouseHq=ClearinghouseL.GetClearinghouseHq(listQueue[0].ClearinghouseNum);
-				Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.ClinicId);
+				Clearinghouse clearinghouseClin=Clearinghouses.OverrideFields(clearinghouseHq,Clinics.Active.Id);
 				listQueue[0]=Eclaims.GetMissingData(clearinghouseClin,listQueue[0]);
 				if(!string.IsNullOrEmpty(listQueue[0].ErrorsPreventingSave)) {
 					MessageBox.Show(listQueue[0].ErrorsPreventingSave);

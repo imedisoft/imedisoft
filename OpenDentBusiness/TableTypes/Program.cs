@@ -11,19 +11,18 @@ namespace OpenDentBusiness
     [Table]
 	public class Program : TableBase
 	{
-		[Column("ProgramNum"), PrimaryKey]
+		[PrimaryKey]
 		public long Id;
 
 		/// <summary>
 		/// The name of the program. This value is hardcoded and cannot be modified.
 		/// </summary>
-		[Column("ProgName", ReadOnly = true)]
+		[Column(ReadOnly = true)]
 		public string Name;
 
 		/// <summary>
 		/// A description of the program.
 		/// </summary>
-		[Column("ProgDesc")]
 		public string Description; // TODO: Description should be provided by the bridge, that way it can be translated...
 
 		/// <summary>

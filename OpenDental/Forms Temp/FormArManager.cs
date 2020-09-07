@@ -832,7 +832,7 @@ namespace OpenDental
 			#region Fill Grid Rows
 			gridUnsent.ListGridRows.Clear();
 			Dictionary<long,string> dictClinicAbbrs=_listClinics.ToDictionary(x => x.Id,x => x.Abbr);
-			Dictionary<long,string> dictProvAbbrs=_listProviders.ToDictionary(x => x.ProvNum,x => x.Abbr);
+			Dictionary<long,string> dictProvAbbrs=_listProviders.ToDictionary(x => x.Id,x => x.Abbr);
 			Dictionary<long,string> dictBillTypeNames=Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes).ToDictionary(x => x.Id,x => x.Name);
 			Dictionary<long,DateTime> dictSuspendDateTimes=new Dictionary<long,DateTime>();
 			foreach(PatAging pAgeCur in listPatAgingIndexFiltered.Select(x => _listPatAgingUnsentAll[x])) {
@@ -977,7 +977,7 @@ namespace OpenDental
 			}
 			List<long> listProvNums=new List<long>();
 			if(!comboBoxMultiUnsentProvs.ListSelectedIndices.Contains(0)) {
-				listProvNums=comboBoxMultiUnsentProvs.ListSelectedIndices.Select(x => _listProviders[x-1].ProvNum).ToList();
+				listProvNums=comboBoxMultiUnsentProvs.ListSelectedIndices.Select(x => _listProviders[x-1].Id).ToList();
 			}
 			List<long> listClinicNums=new List<long>();
 			if(PrefC.HasClinicsEnabled) {
@@ -1640,7 +1640,7 @@ namespace OpenDental
 			#region Fill Grid Rows
 			gridSent.ListGridRows.Clear();
 			Dictionary<long,string> dictClinicAbbrs=_listClinics.ToDictionary(x => x.Id,x => x.Abbr);
-			Dictionary<long,string> dictProvAbbrs=_listProviders.ToDictionary(x => x.ProvNum,x => x.Abbr);
+			Dictionary<long,string> dictProvAbbrs=_listProviders.ToDictionary(x => x.Id,x => x.Abbr);
 			double bal0_30=0;
 			double bal31_60=0;
 			double bal61_90=0;
@@ -1772,7 +1772,7 @@ namespace OpenDental
 			}
 			List<long> listProvNums=new List<long>();
 			if(!comboBoxMultiSentProvs.ListSelectedIndices.Contains(0)) {
-				listProvNums=comboBoxMultiSentProvs.ListSelectedIndices.Select(x => _listProviders[x-1].ProvNum).ToList();
+				listProvNums=comboBoxMultiSentProvs.ListSelectedIndices.Select(x => _listProviders[x-1].Id).ToList();
 			}
 			List<long> listClinicNums=new List<long>();
 			if(PrefC.HasClinicsEnabled) {
@@ -2135,7 +2135,7 @@ namespace OpenDental
 			#region Fill Grid Rows
 			gridExcluded.ListGridRows.Clear();
 			Dictionary<long,string> dictClinicAbbrs=_listClinics.ToDictionary(x => x.Id,x => x.Abbr);
-			Dictionary<long,string> dictProvAbbrs=_listProviders.ToDictionary(x => x.ProvNum,x => x.Abbr);
+			Dictionary<long,string> dictProvAbbrs=_listProviders.ToDictionary(x => x.Id,x => x.Abbr);
 			Dictionary<long,string> dictBillTypeNames=Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes).ToDictionary(x => x.Id,x => x.Name);
 			Dictionary<long,DateTime> dictSuspendDateTimes=new Dictionary<long,DateTime>();
 			foreach(PatAging pAgeCur in listPatAgingIndexFiltered.Select(x => _listPatAgingExcludedAll[x])) {
@@ -2276,7 +2276,7 @@ namespace OpenDental
 			AgeOfAccount accountAge=new[] { AgeOfAccount.Any,AgeOfAccount.Over30,AgeOfAccount.Over60,AgeOfAccount.Over90 }[comboExcludedAccountAge.SelectedIndex];
 			List<long> listProvNums=new List<long>();
 			if(!comboBoxMultiExcludedProvs.ListSelectedIndices.Contains(0)) {
-				listProvNums=comboBoxMultiExcludedProvs.ListSelectedIndices.Select(x => _listProviders[x-1].ProvNum).ToList();
+				listProvNums=comboBoxMultiExcludedProvs.ListSelectedIndices.Select(x => _listProviders[x-1].Id).ToList();
 			}
 			List<long> listClinicNums=new List<long>();
 			if(PrefC.HasClinicsEnabled) {

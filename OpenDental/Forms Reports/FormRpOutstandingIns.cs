@@ -101,7 +101,7 @@ namespace OpenDental
 				List<long> listProvNums = new List<long>();
 				if (!comboBoxMultiProv.ListSelectedItems.Select(x => ((ODBoxItem<Provider>)x).Tag).Contains(null))
 				{ //"All" is selected.
-					listProvNums = comboBoxMultiProv.ListSelectedItems.Select(x => ((ODBoxItem<Provider>)x).Tag.ProvNum).ToList();
+					listProvNums = comboBoxMultiProv.ListSelectedItems.Select(x => ((ODBoxItem<Provider>)x).Tag.Id).ToList();
 				}
 				return listProvNums;
 			}

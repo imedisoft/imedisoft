@@ -668,7 +668,7 @@ namespace OpenDentBusiness {
 				procFeeRet=Fees.GetAmount0(procCodeNum,feeSch,procClinicNum,procProvNum,listFees);
 			}
 			if(insPlanPrimary!=null && insPlanPrimary.PlanType=="p") {//PPO
-				double ucrFee=Fees.GetAmount0(procCodeNum,Providers.GetProv(Patients.GetProvNum(pat)).FeeSched,procClinicNum,procProvNum,listFees);
+				double ucrFee=Fees.GetAmount0(procCodeNum,Providers.GetById(Patients.GetProvNum(pat)).FeeScheduleId,procClinicNum,procProvNum,listFees);
 				if(procFeeRet < ucrFee || Prefs.GetBool(PrefName.InsPpoAlwaysUseUcrFee)) {
 					procFeeRet=ucrFee;
 				}
@@ -690,7 +690,7 @@ namespace OpenDentBusiness {
 							listBenefits)==0) 
 				{
 					//Get the fee from the provider's fee schedule (ucr fee)
-					procFeeRet=Fees.GetAmount0(procCodeNum,Providers.GetProv(Patients.GetProvNum(pat)).FeeSched,procClinicNum,procProvNum,listFees);
+					procFeeRet=Fees.GetAmount0(procCodeNum,Providers.GetById(Patients.GetProvNum(pat)).FeeScheduleId,procClinicNum,procProvNum,listFees);
 				}
 			}
 			return procFeeRet;
@@ -1758,7 +1758,7 @@ namespace OpenDentBusiness {
 			}
 			Procedure proc=new Procedure();
 			proc.PatNum=pat.PatNum;
-			proc.ClinicNum=Clinics.ClinicId;
+			proc.ClinicNum=Clinics.Active.Id;
 			proc.ProcStatus=procStatus;
 			proc.ProvNum=provNum;
 			proc.AptNum=aptNum;
@@ -1801,7 +1801,7 @@ namespace OpenDentBusiness {
 			long feeSch=FeeScheds.GetFeeSched(pat,insPlanList,patPlanList,subList,provNum);
 			proc.ProcFee=Fees.GetAmount0(proc.CodeNum,feeSch,proc.ClinicNum,provNum);
 			if(insPlanPrimary!=null && insPlanPrimary.PlanType=="p") {//PPO
-				double provFee=Fees.GetAmount0(proc.CodeNum,Providers.GetProv(provNum).FeeSched,proc.ClinicNum,provNum);
+				double provFee=Fees.GetAmount0(proc.CodeNum,Providers.GetById(provNum).FeeScheduleId,proc.ClinicNum,provNum);
 				proc.ProcFee=Math.Max(proc.ProcFee,provFee);//use greater of standard fee or ins fee
 			}
 			ProcedureCode procCodeCur=ProcedureCodes.GetProcCode(proc.CodeNum);
@@ -2259,9 +2259,9 @@ namespace OpenDentBusiness {
 			lookupFeesByCodeAndSched=(Lookup<FeeKey2,Fee>)listFeesHQandClinic.ToLookup(x => new FeeKey2(x.CodeNum,x.FeeSched));
 			//lookup will make it very fast to look up the fees we need.
 			long practDefaultProvNum=Prefs.GetLong(PrefName.PracticeDefaultProv);
-			long practDefaultProvFeeSched=Providers.GetFirstOrDefault(x => x.ProvNum==practDefaultProvNum)?.FeeSched??0;//default to 0 if prov is not found
-			long firstNonHiddenProvFeeSched=Providers.GetFirstOrDefault(x => !x.IsHidden)?.FeeSched??0;//default to 0 if all provs hidden (not likely to happen)
-			Dictionary<long,long> dictProvFeeSched=Providers.GetDeepCopy().ToDictionary(x => x.ProvNum,x => x.FeeSched);
+			long practDefaultProvFeeSched=Providers.GetFirstOrDefault(x => x.Id==practDefaultProvNum)?.FeeScheduleId??0;//default to 0 if prov is not found
+			long firstNonHiddenProvFeeSched=Providers.GetFirstOrDefault(x => !x.IsHidden)?.FeeScheduleId??0;//default to 0 if all provs hidden (not likely to happen)
+			Dictionary<long,long> dictProvFeeSched=Providers.GetDeepCopy().ToDictionary(x => x.Id,x => x.FeeScheduleId);
 			//dictionary of fee key linked to a list of lists of longs in order to keep each update statement limited to updating 1000 procedures per query
 			Dictionary<double,List<List<long>>> dictFeeListCodes=new Dictionary<double,List<List<long>>>();
 			DataTable table=new DataTable();

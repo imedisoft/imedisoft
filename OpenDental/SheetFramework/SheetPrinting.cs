@@ -74,7 +74,7 @@ namespace OpenDental
 			}
 			if (Clinics.ClinicId != 0)
 			{//Not HQ
-				Clinic clinic = Clinics.GetById(Clinics.ClinicId);
+				Clinic clinic = Clinics.Active;
 				if (!clinic.HasProcedureOnRx)
 				{
 					//The clinic option allows the user to completely disable Rx ProcCode validation for one clinic.

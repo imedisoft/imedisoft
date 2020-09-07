@@ -234,7 +234,7 @@ namespace OpenDentBusiness {
 		///<summary>Returns the Authorization header for the api call, using the passed in clinicNum if provided, otherwise uses the currently selected clinic.</summary>
 		private static string GetAuthHeader(long clinicNum=-1,bool isWebhook=false) {
 			if(clinicNum==-1) {
-				clinicNum=Clinics.ClinicId;
+				clinicNum= Clinics.Active.Id;
 			}
 			string apiUserName=ProgramProperties.GetPropValForClinicOrDefault(Programs.GetCur(ProgramName.PaySimple).Id
 				,PropertyDescs.PaySimpleApiUserName
@@ -256,7 +256,7 @@ namespace OpenDentBusiness {
 		///If this method doesn't throw an exception, everything is assumed to be valid.</summary>
 		private static void ValidateProgram(long clinicNum=-1) {
 			if(clinicNum==-1) {
-				clinicNum=Clinics.ClinicId;
+				clinicNum=Clinics.Active.Id;
 			}
 			Program progPaySimple=Programs.GetCur(ProgramName.PaySimple);
 			if(progPaySimple==null) {

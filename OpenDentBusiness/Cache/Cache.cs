@@ -126,8 +126,8 @@ namespace OpenDentBusiness
 			if (invalidTypes.Contains(InvalidType.DentalSchools) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.DentalSchools.ToString());
-				SchoolClasses.GetTableFromCache(true);
-				SchoolCourses.GetTableFromCache(true);
+				SchoolClasses.RefreshCache();
+				SchoolCourses.RefreshCache();
 			}
 			if (invalidTypes.Contains(InvalidType.DictCustoms) || refreshAll)
 			{
@@ -175,7 +175,7 @@ namespace OpenDentBusiness
 			if (invalidTypes.Contains(InvalidType.Employees) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Employees.ToString());
-				Employees.GetTableFromCache(true);
+				Employees.RefreshCache();
 				PayPeriods.GetTableFromCache(true);
 			}
 			if (invalidTypes.Contains(InvalidType.Employers) || refreshAll)
@@ -222,7 +222,7 @@ namespace OpenDentBusiness
 			if (invalidTypes.Contains(InvalidType.Medications) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Medications.ToString());
-				Medications.GetTableFromCache(true);
+				Medications.RefreshCache();
 			}
 			if (invalidTypes.Contains(InvalidType.Operatories) || refreshAll)
 			{

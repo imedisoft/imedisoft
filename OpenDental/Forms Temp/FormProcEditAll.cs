@@ -151,7 +151,7 @@ namespace OpenDental {
 			_listProvsForClinic=_listProvsForClinic.Where(x => !x.IsHidden).OrderBy(x => x.ItemOrder).ToList();
 			Provider provOldSelection=null;
 			if(tryMaintainOldSelection && comboProv.GetSelected<Provider>()!=null){//Only true on manual selection, not on load.
-				provOldSelection=_listProvsForClinic.FirstOrDefault(x => x.ProvNum==comboProv.GetSelectedProvNum());
+				provOldSelection=_listProvsForClinic.FirstOrDefault(x => x.Id==comboProv.GetSelectedProvNum());
 			}
 			comboProv.Items.Clear();
 			comboProv.Items.Add("",null);
@@ -159,12 +159,12 @@ namespace OpenDental {
 			comboProv.SelectedIndex=0;//default selected index to blank/original values, override if there is a different match below.
 			bool isAllProcsForSameProv=ProcList.Select(x => x.ProvNum).Distinct().ToList().Count==1;
 			if(tryMaintainOldSelection && provOldSelection!=null){
-				comboProv.SetSelectedProvNum(provOldSelection.ProvNum);//set to previous selection
+				comboProv.SetSelectedProvNum(provOldSelection.Id);//set to previous selection
 			}
 			else if(isAllProcsForSameProv){
 				comboProv.SetSelectedProvNum(ProcList[0].ProvNum);//default to the proc's prov if all procs have same prov
 			}
-			if(isAllProcsForSameProv && !_listProvsForClinic.Any(x => x.ProvNum==ProcList[0].ProvNum)) {
+			if(isAllProcsForSameProv && !_listProvsForClinic.Any(x => x.Id==ProcList[0].ProvNum)) {
 				//All procedure clinics are the same but value is missing from our list.
 				//We might eventaully check to see how many clincs from proc list do not exists in listClinics.
 				comboProv.SetSelectedProvNum(ProcList[0].ProvNum);//selectedIndex -1
@@ -228,7 +228,7 @@ namespace OpenDental {
 				}
 				#region Provider change validation.
 				List<ClaimProc> listClaimProcsForProc=ClaimProcs.GetForProc(listClaimProcsForPat,proc.ProcNum);
-				long selectedProvNum=(comboProv.GetSelected<Provider>()?.ProvNum??0);//0 if no selection made
+				long selectedProvNum=(comboProv.GetSelected<Provider>()?.Id??0);//0 if no selection made
 				if(selectedProvNum!=0 && !ProcedureL.ValidateProvider(listClaimProcsForProc,selectedProvNum,proc.ProvNum)) {
 					return false;
 				}
@@ -328,8 +328,8 @@ namespace OpenDental {
 					hasDateChanged=true;
 					hasChanged=true;
 				}
-				if(comboProv.GetSelected<Provider>()!=null && comboProv.GetSelected<Provider>().ProvNum!=proc.ProvNum) {//Using selection
-					proc.ProvNum=comboProv.GetSelected<Provider>().ProvNum;
+				if(comboProv.GetSelected<Provider>()!=null && comboProv.GetSelected<Provider>().Id!=proc.ProvNum) {//Using selection
+					proc.ProvNum=comboProv.GetSelected<Provider>().Id;
 					//Mimics FormProcEdit, uses different criteria than Procedures.ComputeEstimates().
 					ClaimProcs.TrySetProvFromProc(proc,listClaimProcsForProc);
 					hasChanged=true;

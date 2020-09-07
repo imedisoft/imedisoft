@@ -294,7 +294,7 @@ namespace OpenDentBusiness {
 			,bool hasAllClinics,PPOWriteoffDateCalc writeoffPayType,bool isCEMT=false) 
 		{
 			List<long> listClinicNums=listClinics.Select(x => x.Id).ToList();
-			List<long> listProvNums=listProvs.Select(x => x.ProvNum).ToList();
+			List<long> listProvNums=listProvs.Select(x => x.Id).ToList();
 			#region Procedures
 			string whereProv="";
 			if(!hasAllProvs && listProvNums.Count>0) {

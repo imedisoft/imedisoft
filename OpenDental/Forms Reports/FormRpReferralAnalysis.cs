@@ -387,7 +387,7 @@ namespace OpenDental{
 			}
 			for(int i=0;i<listProv.SelectedIndices.Count;i++) {
 				//Minus 1 due to the 'All' option.
-				listProvNums.Add(_listProviders[listProv.SelectedIndices[i]-1].ProvNum);
+				listProvNums.Add(_listProviders[listProv.SelectedIndices[i]-1].Id);
 				listProvNames.Add(_listProviders[listProv.SelectedIndices[i]-1].Abbr);
 			}
 			ReportComplex report;

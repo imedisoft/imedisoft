@@ -253,11 +253,11 @@ namespace OpenDentBusiness{
 					medication=(Medication)triggerObject;
 					RxNorm rxNormCur=RxNorms.GetByRxCUI(medication.RxCui.ToString());
 					if(rxNormCur!=null) {
-						triggerObjectMessage="  - "+medication.MedName+(medication.RxCui==0?"":" (RxCui:"+rxNormCur.RxCui+")")+"\r\n";
+						triggerObjectMessage="  - "+medication.Name+(medication.RxCui==""?"":" (RxCui:"+rxNormCur.RxCui+")")+"\r\n";
 					}
 					command="SELECT * FROM ehrtrigger"
-					+" WHERE MedicationNumList LIKE '% "+POut.String(medication.MedicationNum.ToString())+" %'";// '% <code> %' so that we can get exact matches.
-					if(medication.RxCui!=0) {
+					+" WHERE MedicationNumList LIKE '% "+POut.String(medication.Id.ToString())+" %'";// '% <code> %' so that we can get exact matches.
+					if(medication.RxCui!="") {
 						command+=" OR RxCuiList LIKE '% "+POut.String(medication.RxCui.ToString())+" %'";// '% <code> %' so that we can get exact matches.
 					}
 					break;
@@ -570,31 +570,31 @@ namespace OpenDentBusiness{
 			for(int m=0;m<listMedicationPats.Count;m++) {
 				if(ehrTrig.MedicationNumList.Contains(" "+listMedicationPats[m].MedicationNum+" ")) {
 					listObjectMatches.Add(listMedicationPats[m]);
-					Medication medCur=Medications.GetMedication(listMedicationPats[m].MedicationNum);
+					Medication medCur=Medications.GetById(listMedicationPats[m].MedicationNum);
 					if(medCur==null) {
 						continue;
 					}
-					triggerMessage+="  - "+medCur.MedName;
+					triggerMessage+="  - "+medCur.Name;
 					RxNorm rxNormCur=RxNorms.GetByRxCUI(medCur.RxCui.ToString());
 					if(rxNormCur==null) {
 						continue;
 					}
-					triggerMessage+=(medCur.RxCui==0 ? "" : " (RxCui:"+rxNormCur.RxCui+")")+"\r\n";
+					triggerMessage+=(medCur.RxCui=="" ? "" : " (RxCui:"+rxNormCur.RxCui+")")+"\r\n";
 					continue;
 				}
 				if(listMedicationPats[m].RxCui!=0
 					&& ehrTrig.RxCuiList.Contains(" "+listMedicationPats[m].RxCui+" ")) {
 					listObjectMatches.Add(listMedicationPats[m]);
-					Medication medCur=Medications.GetMedication(listMedicationPats[m].MedicationNum);
+					Medication medCur=Medications.GetById(listMedicationPats[m].MedicationNum);
 					if(medCur==null) {
 						continue;
 					}
-					triggerMessage+="  - "+medCur.MedName;
+					triggerMessage+="  - "+medCur.Name;
 					RxNorm rxNormCur=RxNorms.GetByRxCUI(medCur.RxCui.ToString());
 					if(rxNormCur==null) {
 						continue;
 					}
-					triggerMessage+=(medCur.RxCui==0 ? "" : " (RxCui:"+rxNormCur.RxCui+")")+"\r\n";
+					triggerMessage+=(medCur.RxCui=="" ? "" : " (RxCui:"+rxNormCur.RxCui+")")+"\r\n";
 					continue;
 				}
 				//Cvx 
@@ -1072,7 +1072,7 @@ namespace OpenDentBusiness{
 					}
 					break;
 				case "Medication":
-					if(((Medication)objectMatch).RxCui!=0) {
+					if(((Medication)objectMatch).RxCui!="") {
 						cdsTrig=new KnowledgeRequest();
 						RxNorm rxNorm=RxNorms.GetByRxCUI(((Medication)objectMatch).RxCui.ToString());
 						cdsTrig.Type="Medication";
@@ -1081,12 +1081,12 @@ namespace OpenDentBusiness{
 						cdsTrig.Description=rxNorm.Description;
 						listCDSTrigs.Add(cdsTrig);
 					}
-					if(((Medication)objectMatch).RxCui==0) {
+					if(((Medication)objectMatch).RxCui=="") {
 						cdsTrig=new KnowledgeRequest();
 						cdsTrig.Type="Medication";
 						cdsTrig.Code="";
 						cdsTrig.CodeSystem=CodeSyst.None;
-						cdsTrig.Description=((Medication)objectMatch).MedName;
+						cdsTrig.Description=((Medication)objectMatch).Name;
 						listCDSTrigs.Add(cdsTrig);
 					}
 					break;

@@ -1009,6 +1009,16 @@ namespace Imedisoft.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap IconFileImport {
+            get {
+                object obj = ResourceManager.GetObject("IconFileImport", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap IconFilePdf {
             get {
                 object obj = ResourceManager.GetObject("IconFilePdf", resourceCulture);
@@ -1172,6 +1182,16 @@ namespace Imedisoft.Properties {
         public static System.Drawing.Bitmap IconSearch {
             get {
                 object obj = ResourceManager.GetObject("IconSearch", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconSearchSmall {
+            get {
+                object obj = ResourceManager.GetObject("IconSearchSmall", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

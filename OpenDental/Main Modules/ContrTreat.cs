@@ -2339,11 +2339,11 @@ namespace OpenDental
 				if(PatCur.DiscountPlanNum!=0) {
 					Fee procFee=Fees.GetFee(procCodeCur.CodeNum,discountPlan.FeeSchedNum,listProcForTP[i].ClinicNum,listProcForTP[i].ProvNum,loadActiveData.ListFees);
 					if(procFee==null) {//No fee for discount plan's feesched and proc's provider
-						Provider patProv=Providers.GetProv(PatCur.PriProv);
-						procFee=Fees.GetFee(procCodeCur.CodeNum,patProv.FeeSched,listProcForTP[i].ClinicNum,patProv.ProvNum,loadActiveData.ListFees);
+						Provider patProv=Providers.GetById(PatCur.PriProv);
+						procFee=Fees.GetFee(procCodeCur.CodeNum,patProv.FeeScheduleId,listProcForTP[i].ClinicNum,patProv.Id,loadActiveData.ListFees);
 						if(procFee==null) {//No fee for pat's pri prov feesched and pat's pri prov
-							patProv=Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv));
-							procFee=Fees.GetFee(procCodeCur.CodeNum,patProv.FeeSched,listProcForTP[i].ClinicNum,patProv.ProvNum,loadActiveData.ListFees);
+							patProv=Providers.GetById(Prefs.GetLong(PrefName.PracticeDefaultProv));
+							procFee=Fees.GetFee(procCodeCur.CodeNum,patProv.FeeScheduleId,listProcForTP[i].ClinicNum,patProv.Id,loadActiveData.ListFees);
 						}
 					}
 					decimal procFeeAmt=(procFee == null) ? fee : (decimal)procFee.Amount;
@@ -3638,7 +3638,7 @@ namespace OpenDental
 				if(!ClaimCur.IsOrtho && Prefs.GetBool(PrefName.OrthoClaimMarkAsOrtho)) {//If it's already marked as Ortho (from a previous procedure), skip this
 					CovCat orthoCategory=CovCats.GetFirstOrDefault(x => x.EbenefitCat==EbenefitCategory.Orthodontics,true);
 					if(orthoCategory!=null) {
-						if(CovSpans.IsCodeInSpans(procCode.ProcCode,CovSpans.GetWhere(x => x.CovCatNum==orthoCategory.CovCatNum).ToArray()))	{
+						if(CovSpans.IsCodeInSpans(procCode.ProcCode,CovSpans.GetWhere(x => x.CovCatNum==orthoCategory.Id).ToArray()))	{
 							ClaimCur.IsOrtho=true;
 						}
 					}
@@ -3688,7 +3688,7 @@ namespace OpenDental
 				//OK if 0, because auto select first in list when open claim
 			}
 			ClaimCur.ProvBill=Providers.GetBillingProviderId(ClaimCur.ProvTreat,ClaimCur.ClinicNum);
-			Provider prov=Providers.GetProv(ClaimCur.ProvBill);
+			Provider prov=Providers.GetById(ClaimCur.ProvBill);
 			if(prov.ProvNumBillingOverride!=0) {
 				ClaimCur.ProvBill=prov.ProvNumBillingOverride;
 			}

@@ -5767,7 +5767,7 @@ BMI 18.5-25.";
 			if(strErrors!="") {
 				throw new ApplicationException(strErrors);
 			}
-			_provOutQrda=Providers.GetProv(provNum);
+			_provOutQrda=Providers.GetById(provNum);
 			if(_provOutQrda==null) {
 				throw new ApplicationException("Invalid provider selected.");
 			}
@@ -5887,8 +5887,8 @@ BMI 18.5-25.";
 				TimeElement("time",DateTime.Now);
 				StartAndEnd("signatureCode","code","S");
 				Start("assignedEntity");
-				Provider provLegal=Providers.GetProv(_provNumLegal);
-				StartAndEnd("id","root","2.16.840.1.113883.4.6","extension",provLegal.NationalProvID,"assigningAuthorityName","NPI");//Validated NPI
+				Provider provLegal=Providers.GetById(_provNumLegal);
+				StartAndEnd("id","root","2.16.840.1.113883.4.6","extension",provLegal.NationalProviderID,"assigningAuthorityName","NPI");//Validated NPI
 				Start("representedOrganization");
 				StartAndEnd("id","root",_strOIDInternalRoot);//This is the root assigned to the practice, based on the OD root 2.16.840.1.113883.3.4337
 				_w.WriteElementString("name",Prefs.GetString(PrefName.PracticeTitle));//Validated
@@ -5912,16 +5912,16 @@ BMI 18.5-25.";
 				StartAndEnd("high","value",dateEnd.ToString("yyyyMMdd")+"235959");
 				End("time");
 				Start("assignedEntity");
-				if(_provOutQrda.NationalProvID!="") {
+				if(_provOutQrda.NationalProviderID!="") {
 					_w.WriteComment("This is the provider NPI");
-					StartAndEnd("id","root","2.16.840.1.113883.4.6","extension",_provOutQrda.NationalProvID);
+					StartAndEnd("id","root","2.16.840.1.113883.4.6","extension",_provOutQrda.NationalProviderID);
 				}
 				if(_provOutQrda.UsingTIN && _provOutQrda.SSN!="") {
 					_w.WriteComment("This is the provider TIN");
 					StartAndEnd("id","root","2.16.840.1.113883.4.2","extension",_provOutQrda.SSN);
 				}
 				_w.WriteComment("This is the practice OID provider root and Open Dental assigned ProvNum extension");
-				StartAndEnd("id","root",_strOIDInternalProvRoot,"extension",_provOutQrda.ProvNum.ToString());
+				StartAndEnd("id","root",_strOIDInternalProvRoot,"extension",_provOutQrda.Id.ToString());
 				Start("representedOrganization");
 				//we don't currently have an organization level TIN or an organization Facility CMS Certification Number (CCN)
 				//both id's are identified as "SHOULD" elements.  We will include the practice name
@@ -7234,14 +7234,14 @@ BMI 18.5-25.";
 					TimeElement("time",DateTime.Now);
 					StartAndEnd("signatureCode","code","S");
 					Start("assignedEntity");
-					Provider provLegal=Providers.GetProv(_provNumLegal);
-					StartAndEnd("id","root","2.16.840.1.113883.4.6","extension",provLegal.NationalProvID,"assigningAuthorityName","NPI");//Validated NPI
+					Provider provLegal=Providers.GetById(_provNumLegal);
+					StartAndEnd("id","root","2.16.840.1.113883.4.6","extension",provLegal.NationalProviderID,"assigningAuthorityName","NPI");//Validated NPI
 					AddressUnitedStates(Prefs.GetString(PrefName.PracticeAddress),Prefs.GetString(PrefName.PracticeAddress2),Prefs.GetString(PrefName.PracticeCity),Prefs.GetString(PrefName.PracticeST),Prefs.GetString(PrefName.PracticeZip),"WP");//Validated
 					StartAndEnd("telecom","use","WP","value","tel:"+strPracticePhone);//Validated
 					Start("assignedPerson");
 					Start("name");
-					_w.WriteElementString("given",provLegal.FName);//Validated
-					_w.WriteElementString("family",provLegal.LName);//Validated
+					_w.WriteElementString("given",provLegal.FirstName);//Validated
+					_w.WriteElementString("family",provLegal.LastName);//Validated
 					End("name");
 					End("assignedPerson");
 					End("assignedEntity");
@@ -7258,16 +7258,16 @@ BMI 18.5-25.";
 					#region performer
 					Start("performer","typeCode","PRF");
 					Start("assignedEntity");
-					if(_provOutQrda.NationalProvID!="") {
+					if(_provOutQrda.NationalProviderID!="") {
 						_w.WriteComment("This is the provider NPI");
-						StartAndEnd("id","root","2.16.840.1.113883.4.6","extension",_provOutQrda.NationalProvID);
+						StartAndEnd("id","root","2.16.840.1.113883.4.6","extension",_provOutQrda.NationalProviderID);
 					}
 					if(_provOutQrda.UsingTIN && _provOutQrda.SSN!="") {
 						_w.WriteComment("This is the provider TIN");
 						StartAndEnd("id","root","2.16.840.1.113883.4.2","extension",_provOutQrda.SSN);
 					}
 					_w.WriteComment("This is the practice OID provider root and Open Dental assigned ProvNum extension");
-					StartAndEnd("id","root",_strOIDInternalProvRoot,"extension",_provOutQrda.ProvNum.ToString());
+					StartAndEnd("id","root",_strOIDInternalProvRoot,"extension",_provOutQrda.Id.ToString());
 					Start("representedOrganization");
 					//we don't currently have an organization level TIN or an organization Facility CMS Certification Number (CCN)
 					//both id's are identified as "SHOULD" elements.  We will include the practice name
@@ -8949,20 +8949,20 @@ BMI 18.5-25.";
 			}
 			//The Legal Authenticator must have a valid first name, last name, and NPI number and is the "single person legally responsible for the document" and "must be a person".
 			//Guaranteed to be a provider that is not marked 'Not a Person' when we get here.
-			Provider provLegal=Providers.GetProv(_provNumLegal);
-			if(provLegal.FName.Trim()=="") {
+			Provider provLegal=Providers.GetById(_provNumLegal);
+			if(provLegal.FirstName.Trim()=="") {
 				if(strErrors!="") {
 					strErrors+="\r\n";
 				}
 				strErrors+="Missing Legal Authenticator "+provLegal.Abbr+" first name.";
 			}
-			if(provLegal.LName.Trim()=="") {
+			if(provLegal.LastName.Trim()=="") {
 				if(strErrors!="") {
 					strErrors+="\r\n";
 				}
 				strErrors+="Missing Legal Authenticator "+provLegal.Abbr+" last name.";
 			}
-			if(provLegal.NationalProvID.Trim()=="") {
+			if(provLegal.NationalProviderID.Trim()=="") {
 				if(strErrors!="") {
 					strErrors+="\r\n";
 				}
@@ -9038,20 +9038,20 @@ BMI 18.5-25.";
 				}
 				strErrors+="Missing patient phone. Must have home, wireless, or work phone.";
 			}
-			Provider provPri=Providers.GetProv(pat.PriProv);
-			if(provPri.FName.Trim()=="") {
+			Provider provPri=Providers.GetById(pat.PriProv);
+			if(provPri.FirstName.Trim()=="") {
 				if(strErrors!="") {
 					strErrors+="\r\n";
 				}
 				strErrors+="Missing provider "+provPri.Abbr+" first name.";
 			}
-			if(provPri.LName.Trim()=="") {
+			if(provPri.LastName.Trim()=="") {
 				if(strErrors!="") {
 					strErrors+="\r\n";
 				}
 				strErrors+="Missing provider "+provPri.Abbr+" last name.";
 			}
-			if(provPri.NationalProvID.Trim()=="") {
+			if(provPri.NationalProviderID.Trim()=="") {
 				if(strErrors!="") {
 					strErrors+="\r\n";
 				}

@@ -376,10 +376,10 @@ namespace OpenDental{
 			//Fill comboAssistant with employees and none option
 			comboAssistant.Items.Add("none");
 			comboAssistant.SelectedIndex=0;
-			_listEmployees=Employees.GetDeepCopy(true);
+			_listEmployees=Employees.GetAll(true);
 			for(int i=0;i<_listEmployees.Count;i++) {
-				comboAssistant.Items.Add(_listEmployees[i].FName);
-				if(_listEmployees[i].EmployeeNum==AptCur.Assistant)
+				comboAssistant.Items.Add(_listEmployees[i].FirstName);
+				if(_listEmployees[i].Id==AptCur.Assistant)
 					comboAssistant.SelectedIndex=i+1;
 			}
 			textLabCase.Text=GetLabCaseDescript();
@@ -423,8 +423,8 @@ namespace OpenDental{
 					if(i > 0) {
 						requirements+="\r\n";
 					}
-					Provider student=Providers.GetDeepCopy().First(x => x.ProvNum==listStudents[i].ProvNum);
-					requirements+=student.LName+", "+student.FName+": "+listStudents[i].Descript;
+					Provider student=Providers.GetDeepCopy().First(x => x.Id==listStudents[i].ProvNum);
+					requirements+=student.LastName+", "+student.FirstName+": "+listStudents[i].Descript;
 				}
 				textRequirement.Text=requirements;
 			}
@@ -1446,8 +1446,8 @@ namespace OpenDental{
 			}
 			List<ReqStudent> listStudents=ReqStudents.GetForAppt(AptCur.AptNum);
 			textRequirement.Text = string.Join("\r\n",listStudents
-				.Select(x => new { Student = Providers.GetDeepCopy().First(y => y.ProvNum==x.ProvNum),Descript = x.Descript })
-				.Select(x => x.Student.LName+", "+x.Student.FName+": "+x.Descript).ToList());
+				.Select(x => new { Student = Providers.GetDeepCopy().First(y => y.Id==x.ProvNum),Descript = x.Descript })
+				.Select(x => x.Student.LastName+", "+x.Student.FirstName+": "+x.Descript).ToList());
 		}
 
 		private void butSyndromicObservations_Click(object sender,EventArgs e) {
@@ -1815,7 +1815,7 @@ namespace OpenDental{
 				AptCur.Assistant=0;
 			}
 			else {
-				AptCur.Assistant=_listEmployees[comboAssistant.SelectedIndex-1].EmployeeNum;
+				AptCur.Assistant=_listEmployees[comboAssistant.SelectedIndex-1].Id;
 			}
 			AptCur.IsNewPatient=checkIsNewPatient.Checked;
 			AptCur.DateTimeAskedToArrive=dateTimeAskedToArrive;
@@ -2041,7 +2041,7 @@ namespace OpenDental{
 			for(int i=0;i<procsForDay.Count;i++){
 				Procedure proc=procsForDay[i];
 				ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
-				Provider prov=Providers.GetDeepCopy().First(x => x.ProvNum==proc.ProvNum);
+				Provider prov=Providers.GetDeepCopy().First(x => x.Id==proc.ProvNum);
 				Userod usr=Userods.GetUser(proc.UserNum);
 				GridRow row=new GridRow();
 				row.LowerBorderColor=System.Drawing.Color.Black;

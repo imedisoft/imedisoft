@@ -262,7 +262,7 @@ namespace OpenDental{
 			date2.SelectionStart=DateTime.Today;
 			if(!Security.IsAuthorized(Permissions.ReportDailyAllProviders,true)) {
 				//They either have permission or have a provider at this point.  If they don't have permission they must have a provider.
-				_listProviders=_listProviders.FindAll(x => x.ProvNum==Security.CurrentUser.ProviderId);
+				_listProviders=_listProviders.FindAll(x => x.Id==Security.CurrentUser.ProviderId);
 				checkAllProv.Checked=false;
 				checkAllProv.Enabled=false;
 			}
@@ -380,13 +380,13 @@ namespace OpenDental{
 			List<long> listProvNums=new List<long>();
 			if(checkAllProv.Checked) {
 				for(int i = 0;i<_listProviders.Count;i++) {
-					listProvNums.Add(_listProviders[i].ProvNum);
+					listProvNums.Add(_listProviders[i].Id);
 					listProvNames.Add(_listProviders[i].Abbr);
 				}	
 			}
 			else {
 				for(int i=0;i<listProv.SelectedIndices.Count;i++) {
-					listProvNums.Add(_listProviders[listProv.SelectedIndices[i]].ProvNum);
+					listProvNums.Add(_listProviders[listProv.SelectedIndices[i]].Id);
 					listProvNames.Add(_listProviders[listProv.SelectedIndices[i]].Abbr);
 				}
 			}

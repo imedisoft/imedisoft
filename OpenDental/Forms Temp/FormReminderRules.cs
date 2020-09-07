@@ -42,12 +42,12 @@ namespace OpenDental {
 						row.Cells.Add("Problem ="+def.CodeIcd9+" "+def.Description);
 						break;
 					case EhrCriterion.Medication:
-						Medication tempMed = Medications.GetMedication(listReminders[i].CriterionFK);
-						if(tempMed.MedicationNum==tempMed.GenericNum) {//handle generic medication names.
-							row.Cells.Add("Medication = "+tempMed.MedName);
+						Medication tempMed = Medications.GetById(listReminders[i].CriterionFK);
+						if(tempMed.IsGeneric) {//handle generic medication names.
+							row.Cells.Add("Medication = "+tempMed.Name);
 						}
 						else {
-							row.Cells.Add("Medication = "+tempMed.MedName+" / "+Medications.GetGenericName(tempMed.GenericNum));
+							row.Cells.Add("Medication = "+tempMed.Name+" / "+Medications.GetGenericName(tempMed.GenericId.Value));
 						}
 						break;
 					case EhrCriterion.Allergy:

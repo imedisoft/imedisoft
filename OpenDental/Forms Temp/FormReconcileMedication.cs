@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
+using System.Linq;
 
 namespace OpenDental {
 	public partial class FormReconcileMedication:ODForm {
@@ -176,12 +179,12 @@ namespace OpenDental {
 					medicationNums.Add(_listMedicationPatCur[h].MedicationNum);
 				}
 			}
-			_listMedicationCur=Medications.GetMultMedications(medicationNums);
+			_listMedicationCur=Medications.GetMultMedications(medicationNums).ToList();
 			GridRow row;
 			Medication med;
 			for(int i=0;i<_listMedicationPatCur.Count;i++) {
 				row=new GridRow();
-				med=Medications.GetMedication(_listMedicationPatCur[i].MedicationNum);//Possibly change if we decided to postpone caching medications
+				med=Medications.GetById(_listMedicationPatCur[i].MedicationNum);//Possibly change if we decided to postpone caching medications
 				row.Cells.Add(_listMedicationPatCur[i].DateTStamp.ToShortDateString());
 				if(_listMedicationPatCur[i].DateStart.Year<1880) {
 					row.Cells.Add("");
@@ -195,11 +198,11 @@ namespace OpenDental {
 				else {
 					row.Cells.Add(_listMedicationPatCur[i].DateStop.ToShortDateString());
 				}
-				if(med.MedName==null) {
+				if(med.Name==null) {
 					row.Cells.Add("");
 				}
 				else {
-					row.Cells.Add(med.MedName);
+					row.Cells.Add(med.Name);
 				}
 				gridMedExisting.ListGridRows.Add(row);
 			}
@@ -247,12 +250,12 @@ namespace OpenDental {
 					}
 				}
 				else {
-					Medication med=Medications.GetMedication(_listMedicationPatReconcile[i].MedicationNum);
-					if(med.MedName==null) {
+					Medication med=Medications.GetById(_listMedicationPatReconcile[i].MedicationNum);
+					if(med.Name==null) {
 						row.Cells.Add("");
 					}
 					else {
-						row.Cells.Add(med.MedName);
+						row.Cells.Add(med.Name);
 					}
 				}
 				if(_listMedicationPatReconcile[i].PatNote==null) {
@@ -378,17 +381,17 @@ namespace OpenDental {
 					continue;
 				}
 				if(_listMedicationPatReconcile[j]==ListMedicationPatNew[index]) {
-					med=Medications.GetMedicationFromDbByRxCui(_listMedicationPatReconcile[j].RxCui);
+					med=Medications.GetByRxCuiNoCache(_listMedicationPatReconcile[j].RxCui.ToString());
 					if(med==null) {
 						med=new Medication();
-						med.MedName=ListMedicationPatNew[index].MedDescript;
-						med.RxCui=ListMedicationPatNew[index].RxCui;
+						med.Name=ListMedicationPatNew[index].MedDescript;
+						med.RxCui=ListMedicationPatNew[index].RxCui.ToString();
 						ListMedicationPatNew[index].MedicationNum=Medications.Insert(med);
-						med.GenericNum=med.MedicationNum;
+						med.GenericId=med.Id;
 						Medications.Update(med);
 					}
 					else {
-						ListMedicationPatNew[index].MedicationNum=med.MedicationNum;
+						ListMedicationPatNew[index].MedicationNum=med.Id;
 					}
 					ListMedicationPatNew[index].ProvNum=0;//Since imported, set provnum to 0 so it does not affect CPOE.
 					MedicationPats.Insert(ListMedicationPatNew[index]);
@@ -402,7 +405,7 @@ namespace OpenDental {
 			EhrMeasureEvents.Insert(newMeasureEvent);
 			for(int inter=0;inter<_listMedicationPatReconcile.Count;inter++) {
 				if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurrentUser.Id).MedicationCDS) {
-					Medication medInter=Medications.GetMedicationFromDbByRxCui(_listMedicationPatReconcile[inter].RxCui);
+					Medication medInter=Medications.GetByRxCuiNoCache(_listMedicationPatReconcile[inter].RxCui.ToString());
 					FormCDSIntervention FormCDSI=new FormCDSIntervention();
 					FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(medInter,_patCur);
 					FormCDSI.ShowIfRequired(false);

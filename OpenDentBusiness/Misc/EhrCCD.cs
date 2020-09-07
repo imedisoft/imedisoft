@@ -256,11 +256,11 @@ namespace OpenDentBusiness {
 				#region author--------------------------------------------------------------------------------------------------------------------------------
 				//The author element represents the creator of the clinical document.  The author may be a device, or a person.  Section 2.1.2, page 65
 				//pat.PrivProv cannot be zero, because of validation below.
-				Provider provAuthor=Providers.GetProv(pat.PriProv);//Uses primary provider, the primary provider cannot have the IsNotPerson set to true so they must have a first name.
+				Provider provAuthor=Providers.GetById(pat.PriProv);//Uses primary provider, the primary provider cannot have the IsNotPerson set to true so they must have a first name.
 				Start("author");
 				TimeElement("time",DateTime.Now);
 				Start("assignedAuthor");
-				StartAndEnd("id","extension",provAuthor.NationalProvID,"root","2.16.840.1.113883.4.6");//Validated NPI. TODO: We might need to assign a global GUID for each office so that the provider can be uniquely identified anywhere in the world.
+				StartAndEnd("id","extension",provAuthor.NationalProviderID,"root","2.16.840.1.113883.4.6");//Validated NPI. TODO: We might need to assign a global GUID for each office so that the provider can be uniquely identified anywhere in the world.
 				StartAndEnd("code","code",GetTaxonomy(provAuthor),"codeSystem",strCodeSystemNucc,"codeSystemName",strCodeSystemNameNucc);
 				AddressUnitedStates(Prefs.GetString(PrefName.PracticeAddress),Prefs.GetString(PrefName.PracticeAddress2),Prefs.GetString(PrefName.PracticeCity),Prefs.GetString(PrefName.PracticeST));//Validated
 				string strPracticePhone=Prefs.GetString(PrefName.PracticePhone);//Validated
@@ -268,8 +268,8 @@ namespace OpenDentBusiness {
 				StartAndEnd("telecom","use","WP","value","tel:"+strPracticePhone);//Validated
 				Start("assignedPerson");
 				Start("name");
-				_w.WriteElementString("given",provAuthor.FName.Trim());//Validated
-				_w.WriteElementString("family",provAuthor.LName.Trim());//Validated
+				_w.WriteElementString("given",provAuthor.FirstName.Trim());//Validated
+				_w.WriteElementString("family",provAuthor.LastName.Trim());//Validated
 				End("name");
 				End("assignedPerson");
 				End("assignedAuthor");
@@ -278,11 +278,11 @@ namespace OpenDentBusiness {
 				#region custodian-----------------------------------------------------------------------------------------------------------------------------
 				//"Represents the organization in charge of maintaining the document." Section 2.1.5, page 72
 				//The custodian is the steward that is entrusted with the care of the document. Every CDA document has exactly one custodian.
-				Provider provCustodian=Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv));
+				Provider provCustodian=Providers.GetById(Prefs.GetLong(PrefName.PracticeDefaultProv));
 				Start("custodian");
 				Start("assignedCustodian");
 				Start("representedCustodianOrganization");
-				StartAndEnd("id","extension",provCustodian.NationalProvID,"root","2.16.840.1.113883.4.6");//Validated NPI. We might need to assign a global GUID for each office so that the provider can be uniquely identified anywhere in the world.
+				StartAndEnd("id","extension",provCustodian.NationalProviderID,"root","2.16.840.1.113883.4.6");//Validated NPI. We might need to assign a global GUID for each office so that the provider can be uniquely identified anywhere in the world.
 				string custodianTitle=Prefs.GetString(PrefName.PracticeTitle);
 				string custodianAddress=Prefs.GetString(PrefName.PracticeAddress);//Validated
 				string custodianAddress2=Prefs.GetString(PrefName.PracticeAddress2);//Validated
@@ -307,16 +307,16 @@ namespace OpenDentBusiness {
 				#endregion custodian
 				#region legalAuthenticator--------------------------------------------------------------------------------------------------------------------
 				//This element identifies the single person legally responsible for the document and must be present if the document has been legally authenticated.
-				Provider provLegal=Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv));
+				Provider provLegal=Providers.GetById(Prefs.GetLong(PrefName.PracticeDefaultProv));
 				if(!provLegal.IsNotPerson) {
 					Start("legalAuthenticator");
 					TimeElement("time",DateTime.Now);
 					StartAndEnd("signatureCode","code","S");
 					Start("assignedEntity");
 					if(pat.PriProv>0) {
-						provLegal=Providers.GetProv(pat.PriProv);
+						provLegal=Providers.GetById(pat.PriProv);
 					}
-					StartAndEnd("id","root","2.16.840.1.113883.4.6","extension",provLegal.NationalProvID);//Validated NPI. We might need to assign a global GUID for each office so that the provider can be uniquely identified anywhere in the world.
+					StartAndEnd("id","root","2.16.840.1.113883.4.6","extension",provLegal.NationalProviderID);//Validated NPI. We might need to assign a global GUID for each office so that the provider can be uniquely identified anywhere in the world.
 					string legalAuthAddress=Prefs.GetString(PrefName.PracticeAddress);//Validated
 					string legalAuthAddress2=Prefs.GetString(PrefName.PracticeAddress2);//Validated
 					string legalAuthCity=Prefs.GetString(PrefName.PracticeCity);//Validated
@@ -334,8 +334,8 @@ namespace OpenDentBusiness {
 					StartAndEnd("telecom","use","WP","value","tel:"+legalAuthPhone);//Validated
 					Start("assignedPerson");
 					Start("name");
-					_w.WriteElementString("given",provLegal.FName.Trim());//Validated
-					_w.WriteElementString("family",provLegal.LName.Trim());//Validated
+					_w.WriteElementString("given",provLegal.FirstName.Trim());//Validated
+					_w.WriteElementString("family",provLegal.LastName.Trim());//Validated
 					End("name");
 					End("assignedPerson");
 					End("assignedEntity");
@@ -349,20 +349,20 @@ namespace OpenDentBusiness {
 				TimeElement("low",DateTime.Now);
 				TimeElement("high",DateTime.Now);
 				End("effectiveTime");
-				Provider provPri=Providers.GetProv(_patOutCcd.PriProv);//Cannot be zero, because of validation below.
+				Provider provPri=Providers.GetById(_patOutCcd.PriProv);//Cannot be zero, because of validation below.
 				if(!provPri.IsNotPerson) {
 					Start("performer","typeCode","PRF");
 					Start("assignedEntity");
 					if(provPri==null) {
-						provPri=Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv));
+						provPri=Providers.GetById(Prefs.GetLong(PrefName.PracticeDefaultProv));
 					}
-					StartAndEnd("id","root","2.16.840.1.113883.4.6","extension",provPri.NationalProvID);//Validated NPI. We might need to assign a global GUID for each office so that the provider can be uniquely identified anywhere in the world.
+					StartAndEnd("id","root","2.16.840.1.113883.4.6","extension",provPri.NationalProviderID);//Validated NPI. We might need to assign a global GUID for each office so that the provider can be uniquely identified anywhere in the world.
 					AddressUnitedStates(Prefs.GetString(PrefName.PracticeAddress),Prefs.GetString(PrefName.PracticeAddress2),Prefs.GetString(PrefName.PracticeCity),Prefs.GetString(PrefName.PracticeST));//Validated
 					StartAndEnd("telecom","use","WP","value","tel:"+strPracticePhone);//Validated
 					Start("assignedPerson");
 					Start("name");
-					_w.WriteElementString("given",provPri.FName.Trim());//Validated
-					_w.WriteElementString("family",provPri.LName.Trim());//Validated
+					_w.WriteElementString("given",provPri.FirstName.Trim());//Validated
+					_w.WriteElementString("family",provPri.LastName.Trim());//Validated
 					End("name");
 					End("assignedPerson");
 					End("assignedEntity");
@@ -471,8 +471,8 @@ Allergies
 						}
 					}
 					else {
-						med=Medications.GetMedication(allergyDef.MedicationId);
-						_w.WriteElementString("td",med.RxCui.ToString()+" - "+med.MedName);
+						med=Medications.GetById(allergyDef.MedicationId);
+						_w.WriteElementString("td",med.RxCui.ToString()+" - "+med.Name);
 					}
 					//}
 					_w.WriteElementString("td",allergy.Reaction);
@@ -612,8 +612,8 @@ Allergies
 				//For example, you might enter an allergy for Vicoprofen.
 				//}
 				else {//Medication Brand Name or Medication Clinical Drug (RxNorm codes)
-					Medication med=Medications.GetMedication(allergyDef.MedicationId);
-					StartAndEnd("code","code",med.RxCui.ToString(),"displayName",med.MedName,"codeSystem",strCodeSystemRxNorm,"codeSystemName",strCodeSystemNameRxNorm);
+					Medication med=Medications.GetById(allergyDef.MedicationId);
+					StartAndEnd("code","code",med.RxCui.ToString(),"displayName",med.Name,"codeSystem",strCodeSystemRxNorm,"codeSystemName",strCodeSystemNameRxNorm);
 				}
 				End("playingEntity");
 				End("participantRole");
@@ -723,7 +723,7 @@ Encounters
 						_w.WriteElementString("td","");
 					}
 					else {
-						_w.WriteElementString("td",Providers.GetProv(listEncountersFiltered[i].ProvNum).GetFormalName());
+						_w.WriteElementString("td",Providers.GetById(listEncountersFiltered[i].ProvNum).GetFormalName());
 					}
 					Snomed snomedDiagnosis=Snomeds.GetByCode(listEncountersFiltered[i].CodeValue);
 					if(snomedDiagnosis==null) {//Could be null if the code was imported from another EHR.
@@ -765,7 +765,7 @@ Encounters
 				else {
 					StartAndEnd("effectiveTime","value",listEncountersFiltered[i].DateEncounter.ToString("yyyyMMdd"));
 				}
-				Provider prov=Providers.GetProv(listEncountersFiltered[i].ProvNum);
+				Provider prov=Providers.GetById(listEncountersFiltered[i].ProvNum);
 				if(prov!=null && !prov.IsNotPerson) {
 					Start("performer");
 					Start("assignedEntity");
@@ -775,7 +775,7 @@ Encounters
 						StartAndEnd("code","nullFlavor","UNK");
 					}
 					else {
-						prov=Providers.GetProv(listEncountersFiltered[i].ProvNum);
+						prov=Providers.GetById(listEncountersFiltered[i].ProvNum);
 						StartAndEnd("code","code",GetTaxonomy(prov),"codeSystem",strCodeSystemNucc,"codeSystemName",strCodeSystemNameNucc);
 					}
 					//The assignedPerson element might not be allowed here. If that is the case, then performer is useless, because it would only contain the specialty code. Our HTML output shows the prov name.
@@ -789,9 +789,9 @@ Encounters
 							_w.WriteElementString("given","");//Not needed for CCD
 						}
 						else {
-							_w.WriteElementString("given",prov.FName.Trim());
+							_w.WriteElementString("given",prov.FirstName.Trim());
 						}
-						_w.WriteElementString("family",prov.LName.Trim());
+						_w.WriteElementString("family",prov.LastName.Trim());
 						End("name");
 					}
 					End("assignedPerson");
@@ -2438,20 +2438,20 @@ Vital Signs
 				}
 				strErrors+="Invalid practice state.  Must be two letters.";
 			}
-			Provider provDefault=Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv));
-			if(provDefault.FName.Trim()=="" && !provDefault.IsNotPerson) {//Have a first name and is a person.
+			Provider provDefault=Providers.GetById(Prefs.GetLong(PrefName.PracticeDefaultProv));
+			if(provDefault.FirstName.Trim()=="" && !provDefault.IsNotPerson) {//Have a first name and is a person.
 				if(strErrors!="") {
 					strErrors+="\r\n";
 				}
 				strErrors+="Missing provider "+provDefault.Abbr+" first name.";
 			}
-			if(provDefault.LName.Trim()=="") {
+			if(provDefault.LastName.Trim()=="") {
 				if(strErrors!="") {
 					strErrors+="\r\n";
 				}
 				strErrors+="Missing provider "+provDefault.Abbr+" last name.";
 			}
-			if(provDefault.NationalProvID.Trim()=="") {
+			if(provDefault.NationalProviderID.Trim()=="") {
 				if(strErrors!="") {
 					strErrors+="\r\n";
 				}
@@ -2563,40 +2563,40 @@ Vital Signs
 					strErrors+="Invalid clinic '"+clinic.Description+"' state.  Must be two letters.";
 				}
 			}
-			Provider provPractice=Providers.GetProv(Prefs.GetLong(PrefName.PracticeDefaultProv));
-			if(provPractice.FName.Trim()=="" && !provPractice.IsNotPerson) {
+			Provider provPractice=Providers.GetById(Prefs.GetLong(PrefName.PracticeDefaultProv));
+			if(provPractice.FirstName.Trim()=="" && !provPractice.IsNotPerson) {
 				if(strErrors!="") {
 					strErrors+="\r\n";
 				}
 				strErrors+="Missing provider "+provPractice.Abbr+" first name.";
 			}
-			if(provPractice.LName.Trim()=="") {
+			if(provPractice.LastName.Trim()=="") {
 				if(strErrors!="") {
 					strErrors+="\r\n";
 				}
 				strErrors+="Missing provider "+provPractice.Abbr+" last name.";
 			}
-			if(provPractice.NationalProvID.Trim()=="") {
+			if(provPractice.NationalProviderID.Trim()=="") {
 				if(strErrors!="") {
 					strErrors+="\r\n";
 				}
 				strErrors+="Missing provider "+provPractice.Abbr+" NPI.";
 			}
 			if(pat.PriProv>0 && pat.PriProv!=Prefs.GetLong(PrefName.PracticeDefaultProv)) {
-				Provider provPri=Providers.GetProv(pat.PriProv);
-				if(provPri.FName.Trim()=="" && !provPri.IsNotPerson) {
+				Provider provPri=Providers.GetById(pat.PriProv);
+				if(provPri.FirstName.Trim()=="" && !provPri.IsNotPerson) {
 					if(strErrors!="") {
 						strErrors+="\r\n";
 					}
 					strErrors+="Missing provider "+provPri.Abbr+" first name.";
 				}
-				if(provPri.LName.Trim()=="") {
+				if(provPri.LastName.Trim()=="") {
 					if(strErrors!="") {
 						strErrors+="\r\n";
 					}
 					strErrors+="Missing provider "+provPri.Abbr+" last name.";
 				}
-				if(provPri.NationalProvID.Trim()=="") {
+				if(provPri.NationalProviderID.Trim()=="") {
 					if(strErrors!="") {
 						strErrors+="\r\n";
 					}
@@ -2623,8 +2623,8 @@ Vital Signs
 				allergyDef=AllergyDefs.GetOne(listAllergiesAll[i].AllergyDefId);
 				bool isMedAllergy=false;
 				if(allergyDef.MedicationId!=0) {
-					Medication med=Medications.GetMedication(allergyDef.MedicationId);
-					if(med.RxCui!=0) {
+					Medication med=Medications.GetById(allergyDef.MedicationId);
+					if(med.RxCui!="") {
 						isMedAllergy=true;
 					}
 				}
@@ -3233,13 +3233,13 @@ Vital Signs
 					string strCodeRx=xmlNodeCode.Attributes["code"].Value;
 					string strRxName=xmlNodeCode.Attributes["displayName"].Value;//Look into this being required or not.
 					allergyDefName=strRxName;
-					med=Medications.GetMedicationFromDbByRxCui(PIn.Long(strCodeRx));
+					med=Medications.GetByRxCuiNoCache(strCodeRx);
 					if(med==null) {
 						med=new Medication();
-						med.MedName=strRxName;
-						med.RxCui=PIn.Long(strCodeRx);
+						med.Name=strRxName;
+						med.RxCui=strCodeRx;
 						Medications.Insert(med);
-						med.GenericNum=med.MedicationNum;
+						med.GenericId=med.Id;
 						Medications.Update(med);
 					}
 					allergyMeds.Add(med);
@@ -3253,15 +3253,15 @@ Vital Signs
 					}
 					AllergyDef allergyDef=new AllergyDef();
 					allergyDef.IsNew=true;//Needed for reconcile window to know this record is not in the db yet.
-					if(med.MedicationNum!=0) {
-						allergyDef.MedicationId=med.MedicationNum;
+					if(med.Id!=0) {
+						allergyDef.MedicationId=med.Id;
 					}
 					//else {TODO: Change to Unii
 					//	allergyDef.SnomedAllergyTo=PIn.String(strCode);
 					//}
 					allergyDef.Description=allergyDefName;
 					allergyDef.IsHidden=false;
-					allergyDef.MedicationId=allergyMeds[j].MedicationNum;
+					allergyDef.MedicationId=allergyMeds[j].Id;
 					#region Snomed type determination
 					if(strCode=="419511003") {
 						allergyDef.SnomedType=SnomedAllergy.AdverseReactionsToDrug;

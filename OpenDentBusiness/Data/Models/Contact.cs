@@ -1,34 +1,25 @@
 using Imedisoft.Data.Annotations;
-using System;
-using System.Collections;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness
 {
-    /// <summary>
-    /// Like a rolodex for businesses that the office interacts with. Used to store pharmacies, etc.
-    /// </summary>
     [Table("contacts")]
 	public class Contact : TableBase
 	{
 		[PrimaryKey]
-		public long ContactNum;
+		public long Id;
 
-		///<summary>Last name or, frequently, the entire name.</summary>
-		public string LName;
+		public string LastName;
 
-		///<summary>First name is optional.</summary>
-		public string FName;
+		public string FirstName;
 
-		///<summary>Work phone.</summary>
 		public string WkPhone;
 
-		///<summary>Fax number.</summary>
 		public string Fax;
 
-		///<summary>FK to definition.DefNum</summary>
+		[ForeignKey(typeof(Definition), nameof(Definition.Id))]
 		public long Category;
 
-		///<summary>Note for this contact.</summary>
 		public string Notes;
 	}
 }
