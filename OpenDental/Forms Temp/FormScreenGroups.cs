@@ -213,19 +213,19 @@ namespace OpenDental{
 		private void FillGrid() {
 			_listScreenGroups=ScreenGroups.Refresh(PIn.Date(textDateFrom.Text),PIn.Date(textDateTo.Text));
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Date",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Description",140);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			foreach(ScreenGroup screenGroup in _listScreenGroups) {
 				row=new GridRow();
 				row.Cells.Add(screenGroup.SGDate.ToShortDateString());
 				row.Cells.Add(screenGroup.Description);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

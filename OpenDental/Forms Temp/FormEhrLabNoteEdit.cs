@@ -36,11 +36,11 @@ namespace OpenDental {
 		private void FillGrid() {
 
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Comments",80);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			string[] comments=LabNoteCur.Comments.Split('^');
 			for(int i=0;i<comments.Length;i++) {
 				if(LabNoteCur.Comments=="") {
@@ -48,7 +48,7 @@ namespace OpenDental {
 				}
 				GridRow row=new GridRow();
 				row.Cells.Add(comments[i]);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

@@ -58,18 +58,18 @@ namespace OpenDental {
 				HL7DefMesCur.hl7DefSegments=HL7DefSegments.GetDeepFromDb(HL7DefMesCur.HL7DefMessageNum);
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Seg",35);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Order",40,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Can Repeat",73,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Is Optional",67,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Note",100);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			if(HL7DefMesCur!=null && HL7DefMesCur.hl7DefSegments!=null) {
 				for(int i=0;i<HL7DefMesCur.hl7DefSegments.Count;i++) {
 					GridRow row=new GridRow();
@@ -78,7 +78,7 @@ namespace OpenDental {
 					row.Cells.Add(HL7DefMesCur.hl7DefSegments[i].CanRepeat?"X":"");
 					row.Cells.Add(HL7DefMesCur.hl7DefSegments[i].IsOptional?"X":"");
 					row.Cells.Add(HL7DefMesCur.hl7DefSegments[i].Note);
-					gridMain.ListGridRows.Add(row);
+					gridMain.Rows.Add(row);
 				}
 			}
 			gridMain.EndUpdate();

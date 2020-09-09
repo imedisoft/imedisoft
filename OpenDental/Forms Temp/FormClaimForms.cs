@@ -297,14 +297,14 @@ namespace OpenDental{
 
 		private void FillGridInternal() {
 			gridInternal.BeginUpdate();
-			gridInternal.ListGridColumns.Clear();
-			gridInternal.ListGridColumns.Add(new GridColumn("ClaimForm",150));
-			gridInternal.ListGridRows.Clear();
+			gridInternal.Columns.Clear();
+			gridInternal.Columns.Add(new GridColumn("ClaimForm",150));
+			gridInternal.Rows.Clear();
 			foreach(ClaimForm internalForm in ClaimForms.GetInternalClaims()) {
 				GridRow row = new GridRow();
 				row.Cells.Add(internalForm.Description);
 				row.Tag = internalForm;
-				gridInternal.ListGridRows.Add(row);
+				gridInternal.Rows.Add(row);
 			}
 			gridInternal.EndUpdate();
 		}
@@ -315,11 +315,11 @@ namespace OpenDental{
 			ClaimForms.RefreshCache();
 			comboReassign.Items.Clear();
 			gridCustom.BeginUpdate();
-			gridCustom.ListGridColumns.Clear();
-			gridCustom.ListGridColumns.Add(new GridColumn("ClaimForm",145));
-			gridCustom.ListGridColumns.Add(new GridColumn("Default",50,HorizontalAlignment.Center));
-			gridCustom.ListGridColumns.Add(new GridColumn("Hidden",0,HorizontalAlignment.Center));
-			gridCustom.ListGridRows.Clear();
+			gridCustom.Columns.Clear();
+			gridCustom.Columns.Add(new GridColumn("ClaimForm",145));
+			gridCustom.Columns.Add(new GridColumn("Default",50,HorizontalAlignment.Center));
+			gridCustom.Columns.Add(new GridColumn("Hidden",0,HorizontalAlignment.Center));
+			gridCustom.Rows.Clear();
 			string description;
 			foreach(ClaimForm claimFormCur in ClaimForms.GetDeepCopy()) {
 				description=claimFormCur.Description;
@@ -340,7 +340,7 @@ namespace OpenDental{
 					row.Cells.Add("");
 				}
 				row.Tag = claimFormCur;
-				gridCustom.ListGridRows.Add(row);
+				gridCustom.Rows.Add(row);
 				comboReassign.Items.Add(new ODBoxItem<ClaimForm>(description,claimFormCur));
 			}
 			gridCustom.EndUpdate();
@@ -353,7 +353,7 @@ namespace OpenDental{
 				return;
 			}
 			//just insert it into the db.
-			ClaimForm claimFormInternal = (ClaimForm)gridInternal.ListGridRows[gridInternal.GetSelectedIndex()].Tag;
+			ClaimForm claimFormInternal = (ClaimForm)gridInternal.Rows[gridInternal.GetSelectedIndex()].Tag;
 			long claimFormNum = ClaimForms.Insert(claimFormInternal,true);
 			FillGridCustom();
 		}
@@ -362,7 +362,7 @@ namespace OpenDental{
 			if(e.Row==-1) {
 				return;
 			}
-			FormClaimFormEdit FormCFE = new FormClaimFormEdit((ClaimForm)gridInternal.ListGridRows[e.Row].Tag);
+			FormClaimFormEdit FormCFE = new FormClaimFormEdit((ClaimForm)gridInternal.Rows[e.Row].Tag);
 			FormCFE.ShowDialog();
 			if(FormCFE.DialogResult==DialogResult.OK) {
 				changed=true;
@@ -373,7 +373,7 @@ namespace OpenDental{
 			if(e.Row==-1) {
 				return;
 			}
-			FormClaimFormEdit FormCFE = new FormClaimFormEdit((ClaimForm)gridCustom.ListGridRows[e.Row].Tag);
+			FormClaimFormEdit FormCFE = new FormClaimFormEdit((ClaimForm)gridCustom.Rows[e.Row].Tag);
 			FormCFE.ShowDialog();
 			if(FormCFE.DialogResult!=DialogResult.OK) {
 				return;
@@ -402,7 +402,7 @@ namespace OpenDental{
 				MessageBox.Show("Please select a Custom Claim Form first.");
 				return;
 			}
-			ClaimForm claimFormCur = (ClaimForm)gridCustom.ListGridRows[gridCustom.GetSelectedIndex()].Tag;
+			ClaimForm claimFormCur = (ClaimForm)gridCustom.Rows[gridCustom.GetSelectedIndex()].Tag;
 			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete custom claim form?")) {
 				return;
 			}
@@ -420,7 +420,7 @@ namespace OpenDental{
 				MessageBox.Show("Please select a Custom Claim Form first.");
 				return;
 			}
-			ClaimForm claimFormCur = (ClaimForm)gridCustom.ListGridRows[gridCustom.GetSelectedIndex()].Tag;
+			ClaimForm claimFormCur = (ClaimForm)gridCustom.Rows[gridCustom.GetSelectedIndex()].Tag;
 			long oldClaimFormNum=claimFormCur.ClaimFormNum;
 			//claimFormCur.UniqueID="";//designates it as a user added claimform
 			ClaimForms.Insert(claimFormCur,true);//this duplicates the original claimform, but no items.
@@ -435,7 +435,7 @@ namespace OpenDental{
 				MessageBox.Show("Please select a Custom Claim Form first.");
 				return;
 			}
-			ClaimForm claimFormCur = (ClaimForm)gridCustom.ListGridRows[gridCustom.GetSelectedIndex()].Tag;
+			ClaimForm claimFormCur = (ClaimForm)gridCustom.Rows[gridCustom.GetSelectedIndex()].Tag;
 			string filename = "ClaimForm"+claimFormCur.Description+".xml";
 			try {
 				using(SaveFileDialog saveDlg=new SaveFileDialog()) {
@@ -483,7 +483,7 @@ namespace OpenDental{
 				MessageBox.Show("Please select a claimform from the list first.");
 				return;
 			}
-			ClaimForm claimFormCur = (ClaimForm)gridCustom.ListGridRows[gridCustom.GetSelectedIndex()].Tag;
+			ClaimForm claimFormCur = (ClaimForm)gridCustom.Rows[gridCustom.GetSelectedIndex()].Tag;
 			if(Prefs.Set(PrefName.DefaultClaimForm,claimFormCur.ClaimFormNum)){
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
@@ -500,7 +500,7 @@ namespace OpenDental{
 				MessageBox.Show("Please select a claimform from the list below.");
 				return;
 			}
-			ClaimForm claimFormCur = (ClaimForm)gridCustom.ListGridRows[gridCustom.GetSelectedIndex()].Tag;
+			ClaimForm claimFormCur = (ClaimForm)gridCustom.Rows[gridCustom.GetSelectedIndex()].Tag;
 			ClaimForm claimFormNew = ((ODBoxItem<ClaimForm>)comboReassign.SelectedItem).Tag;
 			long result=ClaimForms.Reassign(claimFormCur.ClaimFormNum,claimFormNew.ClaimFormNum);
 			MessageBox.Show(result.ToString()+" plans changed.");

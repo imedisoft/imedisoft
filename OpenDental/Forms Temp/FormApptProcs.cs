@@ -65,21 +65,21 @@ namespace OpenDental {
 				ProcList.Add(entireList[i]);
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("OtherAppt",70,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Code",55);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Priority",55);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Tooth",50);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Description",250);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Fee",60,HorizontalAlignment.Right);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<ProcList.Count;i++){
 				row=new GridRow();
@@ -100,7 +100,7 @@ namespace OpenDental {
 				row.Cells.Add(Tooth.ToInternat(ProcList[i].ToothNum));
 				row.Cells.Add(ProcedureCodes.GetLaymanTerm(ProcList[i].CodeNum));
 				row.Cells.Add(ProcList[i].ProcFee.ToString("F"));
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

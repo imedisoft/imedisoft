@@ -36,13 +36,13 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("CVX Code",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Description",500);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			listCvxs=Cvxs.GetBySearchText(textCode.Text);
 			for(int i=0;i<listCvxs.Count;i++) {
@@ -50,14 +50,14 @@ namespace OpenDental {
 				row.Cells.Add(listCvxs[i].CvxCode);
 				row.Cells.Add(listCvxs[i].Description);
 				row.Tag=listCvxs[i];
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			if(IsSelectionMode) {
-				SelectedCvx=(Cvx)gridMain.ListGridRows[e.Row].Tag;
+				SelectedCvx=(Cvx)gridMain.Rows[e.Row].Tag;
 				DialogResult=DialogResult.OK;
 				return;
 			}
@@ -69,7 +69,7 @@ namespace OpenDental {
 				MessageBox.Show("Please select an item first.");
 				return;
 			}
-			SelectedCvx=(Cvx)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
+			SelectedCvx=(Cvx)gridMain.Rows[gridMain.GetSelectedIndex()].Tag;
 			DialogResult=DialogResult.OK;
 		}
 

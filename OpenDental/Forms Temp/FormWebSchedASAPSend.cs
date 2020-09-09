@@ -70,19 +70,19 @@ namespace OpenDental {
 			int countTexts=_asapListSender.CountTextsToSend;
 			int countEmails=_asapListSender.CountEmailsToSend;
 			gridSendDetails.BeginUpdate();
-			gridSendDetails.ListGridColumns.Clear();
+			gridSendDetails.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Patient",120);
-			gridSendDetails.ListGridColumns.Add(col);
+			gridSendDetails.Columns.Add(col);
 			col=new GridColumn("Sending Text",100,HorizontalAlignment.Center);
-			gridSendDetails.ListGridColumns.Add(col);
+			gridSendDetails.Columns.Add(col);
 			col=new GridColumn("Sending Email",100,HorizontalAlignment.Center);
-			gridSendDetails.ListGridColumns.Add(col);
+			gridSendDetails.Columns.Add(col);
 			col=new GridColumn("Type",150);
-			gridSendDetails.ListGridColumns.Add(col);
+			gridSendDetails.Columns.Add(col);
 			col=new GridColumn("Notes",300);
-			gridSendDetails.ListGridColumns.Add(col);
-			gridSendDetails.ListGridRows.Clear();
+			gridSendDetails.Columns.Add(col);
+			gridSendDetails.Rows.Clear();
 			foreach(AsapComm comm in _asapListSender.ListAsapComms) {
 				GridRow row=new GridRow();
 				AsapComms.AsapListSender.PatientDetail patDetail=_asapListSender.ListDetails.First(x => x.PatNum==comm.PatNum);
@@ -92,7 +92,7 @@ namespace OpenDental {
 				row.Cells.Add(Enum.GetName(typeof(AsapCommFKeyType),comm.FKeyType));
 				row.Cells.Add(patDetail.Note);
 				row.Tag=patDetail;
-				gridSendDetails.ListGridRows.Add(row);
+				gridSendDetails.Rows.Add(row);
 			}
 			gridSendDetails.SortForced(0,false);
 			gridSendDetails.EndUpdate();

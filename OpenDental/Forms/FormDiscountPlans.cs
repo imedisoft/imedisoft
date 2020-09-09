@@ -41,17 +41,17 @@ namespace Imedisoft.Forms
 			discountPlans.Sort(DiscountPlanComparer);
 
 			discountPlansGrid.BeginUpdate();
-			discountPlansGrid.ListGridColumns.Clear();
-			discountPlansGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Description, 200));
-			discountPlansGrid.ListGridColumns.Add(new GridColumn(Translation.Common.FeeSchedule, 170));
-			discountPlansGrid.ListGridColumns.Add(new GridColumn(Translation.Common.AdjustmentType, showHiddenCheckBox.Checked ? 150 : 170));
-			discountPlansGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Patients, 40));
+			discountPlansGrid.Columns.Clear();
+			discountPlansGrid.Columns.Add(new GridColumn(Translation.Common.Description, 200));
+			discountPlansGrid.Columns.Add(new GridColumn(Translation.Common.FeeSchedule, 170));
+			discountPlansGrid.Columns.Add(new GridColumn(Translation.Common.AdjustmentType, showHiddenCheckBox.Checked ? 150 : 170));
+			discountPlansGrid.Columns.Add(new GridColumn(Translation.Common.Patients, 40));
 			if (showHiddenCheckBox.Checked)
 			{
-				discountPlansGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Hidden, 20, HorizontalAlignment.Center));
+				discountPlansGrid.Columns.Add(new GridColumn(Translation.Common.Hidden, 20, HorizontalAlignment.Center));
 			}
 
-			discountPlansGrid.ListGridRows.Clear();
+			discountPlansGrid.Rows.Clear();
 
 			int selectedIdx = -1;
 			foreach (var discountPlan in discountPlans)
@@ -72,10 +72,10 @@ namespace Imedisoft.Forms
 
 				gridRow.Tag = discountPlan;
 
-				discountPlansGrid.ListGridRows.Add(gridRow);
+				discountPlansGrid.Rows.Add(gridRow);
 				if (SelectedPlan != null && discountPlan.DiscountPlanNum == SelectedPlan.DiscountPlanNum)
 				{
-					selectedIdx = discountPlansGrid.ListGridRows.Count - 1;
+					selectedIdx = discountPlansGrid.Rows.Count - 1;
 				}
 			}
 
@@ -168,7 +168,7 @@ namespace Imedisoft.Forms
 					return;
 				}
 
-				SelectedPlan = (DiscountPlan)discountPlansGrid.ListGridRows[discountPlansGrid.GetSelectedIndex()].Tag;
+				SelectedPlan = (DiscountPlan)discountPlansGrid.Rows[discountPlansGrid.GetSelectedIndex()].Tag;
 			}
 
 			DialogResult = DialogResult.OK;

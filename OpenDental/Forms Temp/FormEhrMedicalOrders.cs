@@ -23,19 +23,19 @@ namespace OpenDental {
 
 		private void FillGridMedOrders() {
 			gridMedOrders.BeginUpdate();
-			gridMedOrders.ListGridColumns.Clear();
+			gridMedOrders.Columns.Clear();
 			GridColumn col=new GridColumn("Date",70);
-			gridMedOrders.ListGridColumns.Add(col);
+			gridMedOrders.Columns.Add(col);
 			col=new GridColumn("Type",80);
-			gridMedOrders.ListGridColumns.Add(col);
+			gridMedOrders.Columns.Add(col);
 			col=new GridColumn("Prov",70);
-			gridMedOrders.ListGridColumns.Add(col);
+			gridMedOrders.Columns.Add(col);
 			col=new GridColumn("Instructions",280);
-			gridMedOrders.ListGridColumns.Add(col);
+			gridMedOrders.Columns.Add(col);
 			col=new GridColumn("Status",100);
-			gridMedOrders.ListGridColumns.Add(col);
+			gridMedOrders.Columns.Add(col);
 			table=MedicalOrders.GetOrderTable(_patCur.PatNum, checkBoxShowDiscontinued.Checked);
-			gridMedOrders.ListGridRows.Clear();
+			gridMedOrders.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<table.Rows.Count;i++) {
 				row=new GridRow();
@@ -44,7 +44,7 @@ namespace OpenDental {
 				row.Cells.Add(table.Rows[i]["prov"].ToString());
 				row.Cells.Add(table.Rows[i]["description"].ToString());
 				row.Cells.Add(table.Rows[i]["status"].ToString());
-				gridMedOrders.ListGridRows.Add(row);
+				gridMedOrders.Rows.Add(row);
 			}
 			gridMedOrders.EndUpdate();
 		}

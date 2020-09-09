@@ -26,17 +26,17 @@ namespace OpenDental {
 		///<summary>Fills patient information from message contents, not from PatCur.</summary>
 		private void FillGridPatInfo() {
 			gridPidInfo.BeginUpdate();
-			gridPidInfo.ListGridColumns.Clear();
+			gridPidInfo.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Patient Name",335);
-			gridPidInfo.ListGridColumns.Add(col);
+			gridPidInfo.Columns.Add(col);
 			col=new GridColumn("Birthdate",150);
-			gridPidInfo.ListGridColumns.Add(col);
+			gridPidInfo.Columns.Add(col);
 			col=new GridColumn("Gender",150);
-			gridPidInfo.ListGridColumns.Add(col);
+			gridPidInfo.Columns.Add(col);
 			col=new GridColumn("SSN",150);
-			gridPidInfo.ListGridColumns.Add(col);
-			gridPidInfo.ListGridRows.Clear();
+			gridPidInfo.Columns.Add(col);
+			gridPidInfo.Rows.Clear();
 			List<string[]> listPats=GetPatInfoFromPidSegments();
 			GridRow row;
 			for(int i=0;i<listPats.Count;i++) {
@@ -48,7 +48,7 @@ namespace OpenDental {
 				row.Cells.Add(listPats[i][1]);//Birthdate
 				row.Cells.Add(listPats[i][2]);//Gender
 				row.Cells.Add(listPats[i][3]);//SSN
-				gridPidInfo.ListGridRows.Add(row);
+				gridPidInfo.Rows.Add(row);
 			}
 			gridPidInfo.EndUpdate();
 		}
@@ -145,23 +145,23 @@ namespace OpenDental {
 
 		private void FillGridLabs() {
 			gridLabs.BeginUpdate();
-			gridLabs.ListGridColumns.Clear();
+			gridLabs.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Test Description",175);
-			gridLabs.ListGridColumns.Add(col);
+			gridLabs.Columns.Add(col);
 			col=new GridColumn("Provider",100);
-			gridLabs.ListGridColumns.Add(col);
+			gridLabs.Columns.Add(col);
 			col=new GridColumn("Placer Specimen ID",120);//should be the ID sent on the specimen container to lab
-			gridLabs.ListGridColumns.Add(col);
+			gridLabs.Columns.Add(col);
 			col=new GridColumn("Filler Specimen ID",120);//lab assigned specimen ID
-			gridLabs.ListGridColumns.Add(col);
+			gridLabs.Columns.Add(col);
 			col=new GridColumn("Date & Time Entered",135);
 			col.SortingStrategy=GridSortingStrategy.DateParse;
-			gridLabs.ListGridColumns.Add(col);
+			gridLabs.Columns.Add(col);
 			col=new GridColumn("Date & Time Reported",135);
 			col.SortingStrategy=GridSortingStrategy.DateParse;
-			gridLabs.ListGridColumns.Add(col);
-			gridLabs.ListGridRows.Clear();
+			gridLabs.Columns.Add(col);
+			gridLabs.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<ListMedLabs.Count;i++) {
 				row=new GridRow();
@@ -171,7 +171,7 @@ namespace OpenDental {
 				row.Cells.Add(ListMedLabs[i].SpecimenIDFiller);
 				row.Cells.Add(ListMedLabs[i].DateTimeEntered.ToString("MM/dd/yyyy hh:mm tt"));//DT format matches LabCorp examples (US only company)
 				row.Cells.Add(ListMedLabs[i].DateTimeReported.ToString("MM/dd/yyyy hh:mm tt"));//DT format matches LabCorp examples (US only company)
-				gridLabs.ListGridRows.Add(row);
+				gridLabs.Rows.Add(row);
 			}
 			gridLabs.EndUpdate();
 		}

@@ -78,15 +78,15 @@ namespace OpenDental {
 				gridClaimAdjustments.Title="EOB Claim Adjustments";
 			}
 			gridClaimAdjustments.BeginUpdate();
-			gridClaimAdjustments.ListGridColumns.Clear();
+			gridClaimAdjustments.Columns.Clear();
 			const int colWidthReason=507;
 			const int colWidthAdjAmt=62;
 			int colWidthVariable=gridClaimAdjustments.Width-10-colWidthReason-colWidthAdjAmt;
 			//The size and order of the columns here mimics the EOB Claim Adjustments grid in FormEtrans835ClaimPay as close as possible.
-			gridClaimAdjustments.ListGridColumns.Add(new UI.GridColumn("Reason",colWidthReason,HorizontalAlignment.Left));
-			gridClaimAdjustments.ListGridColumns.Add(new UI.GridColumn("AdjAmt",colWidthAdjAmt,HorizontalAlignment.Right));
-			gridClaimAdjustments.ListGridColumns.Add(new UI.GridColumn("Remarks",colWidthVariable,HorizontalAlignment.Left));
-			gridClaimAdjustments.ListGridRows.Clear();
+			gridClaimAdjustments.Columns.Add(new UI.GridColumn("Reason",colWidthReason,HorizontalAlignment.Left));
+			gridClaimAdjustments.Columns.Add(new UI.GridColumn("AdjAmt",colWidthAdjAmt,HorizontalAlignment.Right));
+			gridClaimAdjustments.Columns.Add(new UI.GridColumn("Remarks",colWidthVariable,HorizontalAlignment.Left));
+			gridClaimAdjustments.Rows.Clear();
 			_claimAdjAmtSum=0;
 			for(int i=0;i<_claimPaid.ListClaimAdjustments.Count;i++) {
 				Hx835_Adj adj=_claimPaid.ListClaimAdjustments[i];
@@ -96,7 +96,7 @@ namespace OpenDental {
 				row.Cells.Add(new GridCell(adj.AdjAmt.ToString("f2")));//AdjAmt
 				row.Cells.Add(new GridCell(adj.AdjustRemarks));//Remarks
 				_claimAdjAmtSum+=_claimPaid.ListClaimAdjustments[i].AdjAmt;
-				gridClaimAdjustments.ListGridRows.Add(row);
+				gridClaimAdjustments.Rows.Add(row);
 			}
 			gridClaimAdjustments.EndUpdate();
 			textClaimAdjAmtSum.Text=_claimAdjAmtSum.ToString("f2");
@@ -110,16 +110,16 @@ namespace OpenDental {
 				gridProcedureBreakdown.Title="EOB Procedure Breakdown";
 			}
 			gridProcedureBreakdown.BeginUpdate();
-			gridProcedureBreakdown.ListGridColumns.Clear();
-			gridProcedureBreakdown.ListGridColumns.Add(new GridColumn("ProcNum",80,HorizontalAlignment.Left));
-			gridProcedureBreakdown.ListGridColumns.Add(new GridColumn("ProcCode",80,HorizontalAlignment.Center));
-			gridProcedureBreakdown.ListGridColumns.Add(new GridColumn("ProcDescript",80,HorizontalAlignment.Left){ IsWidthDynamic=true });
-			gridProcedureBreakdown.ListGridColumns.Add(new GridColumn("FeeBilled",70,HorizontalAlignment.Right));
-			gridProcedureBreakdown.ListGridColumns.Add(new GridColumn("InsPaid",70,HorizontalAlignment.Right));
-			gridProcedureBreakdown.ListGridColumns.Add(new GridColumn("PatPort",70,HorizontalAlignment.Right));
-			gridProcedureBreakdown.ListGridColumns.Add(new GridColumn("Deduct",70,HorizontalAlignment.Right));
-			gridProcedureBreakdown.ListGridColumns.Add(new GridColumn("Writeoff",70,HorizontalAlignment.Right));
-			gridProcedureBreakdown.ListGridRows.Clear();
+			gridProcedureBreakdown.Columns.Clear();
+			gridProcedureBreakdown.Columns.Add(new GridColumn("ProcNum",80,HorizontalAlignment.Left));
+			gridProcedureBreakdown.Columns.Add(new GridColumn("ProcCode",80,HorizontalAlignment.Center));
+			gridProcedureBreakdown.Columns.Add(new GridColumn("ProcDescript",80,HorizontalAlignment.Left){ IsWidthDynamic=true });
+			gridProcedureBreakdown.Columns.Add(new GridColumn("FeeBilled",70,HorizontalAlignment.Right));
+			gridProcedureBreakdown.Columns.Add(new GridColumn("InsPaid",70,HorizontalAlignment.Right));
+			gridProcedureBreakdown.Columns.Add(new GridColumn("PatPort",70,HorizontalAlignment.Right));
+			gridProcedureBreakdown.Columns.Add(new GridColumn("Deduct",70,HorizontalAlignment.Right));
+			gridProcedureBreakdown.Columns.Add(new GridColumn("Writeoff",70,HorizontalAlignment.Right));
+			gridProcedureBreakdown.Rows.Clear();
 			_procAdjAmtSum=0;
 			for(int i=0;i<_claimPaid.ListProcs.Count;i++) {
 				//Logic mimics SheetUtil.getTable_EraClaimsPaid(...)
@@ -144,7 +144,7 @@ namespace OpenDental {
 				row.Cells.Add(new GridCell(proc.PatientPortionAmt.ToString("f2")));//PatPort
 				row.Cells.Add(new GridCell(proc.DeductibleAmt.ToString("f2")));//Deduct
 				row.Cells.Add(new GridCell(proc.WriteoffAmt.ToString("f2")));//Writeoff
-				gridProcedureBreakdown.ListGridRows.Add(row);
+				gridProcedureBreakdown.Rows.Add(row);
 			}
 			gridProcedureBreakdown.EndUpdate();
 			textProcAdjAmtSum.Text=_procAdjAmtSum.ToString("f2");
@@ -158,17 +158,17 @@ namespace OpenDental {
 				gridAdjudicationInfo.Title="EOB Claim Adjudication Info";
 			}
 			gridAdjudicationInfo.BeginUpdate();
-			gridAdjudicationInfo.ListGridColumns.Clear();
-			gridAdjudicationInfo.ListGridColumns.Add(new UI.GridColumn("Description",gridAdjudicationInfo.Width/2,HorizontalAlignment.Left));
-			gridAdjudicationInfo.ListGridColumns.Add(new UI.GridColumn("Value",gridAdjudicationInfo.Width/2,HorizontalAlignment.Left));
-			gridAdjudicationInfo.ListGridRows.Clear();
+			gridAdjudicationInfo.Columns.Clear();
+			gridAdjudicationInfo.Columns.Add(new UI.GridColumn("Description",gridAdjudicationInfo.Width/2,HorizontalAlignment.Left));
+			gridAdjudicationInfo.Columns.Add(new UI.GridColumn("Value",gridAdjudicationInfo.Width/2,HorizontalAlignment.Left));
+			gridAdjudicationInfo.Rows.Clear();
 			for(int i=0;i<_claimPaid.ListAdjudicationInfo.Count;i++) {
 				Hx835_Info info=_claimPaid.ListAdjudicationInfo[i];
 				GridRow row=new GridRow();
 				row.Tag=info;
 				row.Cells.Add(new UI.GridCell(info.FieldName));//Description
 				row.Cells.Add(new UI.GridCell(info.FieldValue));//Value
-				gridAdjudicationInfo.ListGridRows.Add(row);
+				gridAdjudicationInfo.Rows.Add(row);
 			}
 			gridAdjudicationInfo.EndUpdate();
 		}
@@ -181,43 +181,43 @@ namespace OpenDental {
 				gridSupplementalInfo.Title="EOB Supplemental Info";
 			}
 			gridSupplementalInfo.BeginUpdate();
-			gridSupplementalInfo.ListGridColumns.Clear();
+			gridSupplementalInfo.Columns.Clear();
 			const int colWidthAmt=80;
 			int colWidthVariable=gridSupplementalInfo.Width-10-colWidthAmt;
-			gridSupplementalInfo.ListGridColumns.Add(new GridColumn("Description",colWidthVariable,HorizontalAlignment.Left));
-			gridSupplementalInfo.ListGridColumns.Add(new GridColumn("Amt",colWidthAmt,HorizontalAlignment.Right));
-			gridSupplementalInfo.ListGridRows.Clear();
+			gridSupplementalInfo.Columns.Add(new GridColumn("Description",colWidthVariable,HorizontalAlignment.Left));
+			gridSupplementalInfo.Columns.Add(new GridColumn("Amt",colWidthAmt,HorizontalAlignment.Right));
+			gridSupplementalInfo.Rows.Clear();
 			for(int i=0;i<_claimPaid.ListSupplementalInfo.Count;i++) {
 				Hx835_Info info=_claimPaid.ListSupplementalInfo[i];
 				GridRow row=new GridRow();
 				row.Tag=info;
 				row.Cells.Add(info.FieldName);//Description
 				row.Cells.Add(info.FieldValue);//Amount
-				gridSupplementalInfo.ListGridRows.Add(row);
+				gridSupplementalInfo.Rows.Add(row);
 			}
 			gridSupplementalInfo.EndUpdate();
 		}
 
 		private void gridClaimAdjustments_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			Hx835_Adj adj=(Hx835_Adj)gridClaimAdjustments.ListGridRows[e.Row].Tag;
+			Hx835_Adj adj=(Hx835_Adj)gridClaimAdjustments.Rows[e.Row].Tag;
 			MsgBoxCopyPaste msgbox=new MsgBoxCopyPaste(adj.AdjCode+" "+adj.AdjustRemarks+"\r\r"+adj.ReasonDescript+"\r\n"+adj.AdjAmt.ToString("f2"));
 			msgbox.Show(this);//This window is just used to display information.
 		}
 
 		private void gridProcedureBreakdown_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			Hx835_Proc proc=(Hx835_Proc)gridProcedureBreakdown.ListGridRows[e.Row].Tag;
+			Hx835_Proc proc=(Hx835_Proc)gridProcedureBreakdown.Rows[e.Row].Tag;
 			FormEtrans835ProcEdit form=new FormEtrans835ProcEdit(proc);
 			form.Show(this);//This window is just used to display information.
 		}
 
 		private void gridAdjudicationInfo_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			Hx835_Info info=(Hx835_Info)gridAdjudicationInfo.ListGridRows[e.Row].Tag;
+			Hx835_Info info=(Hx835_Info)gridAdjudicationInfo.Rows[e.Row].Tag;
 			MsgBoxCopyPaste msgbox=new MsgBoxCopyPaste(info.FieldName+"\r\n"+info.FieldValue);
 			msgbox.Show(this);//This window is just used to display information.
 		}
 
 		private void gridSupplementalInfo_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			Hx835_Info info=(Hx835_Info)gridSupplementalInfo.ListGridRows[e.Row].Tag;
+			Hx835_Info info=(Hx835_Info)gridSupplementalInfo.Rows[e.Row].Tag;
 			MsgBoxCopyPaste msgbox=new MsgBoxCopyPaste(info.FieldName+"\r\n"+info.FieldValue);
 			msgbox.Show(this);//This window is just used to display information.
 		}

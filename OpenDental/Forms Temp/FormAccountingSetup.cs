@@ -655,18 +655,18 @@ namespace OpenDental{
 
 		private void FillPayGrid(){
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Payment Type",200);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Pick List",250);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<payList.Count;i++){
 				row=new GridRow();
 				row.Cells.Add(Definitions.GetName(DefinitionCategory.PaymentTypes,payList[i].PayType));
 				row.Cells.Add(AccountingAutoPays.GetPickListDesc(payList[i]));
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

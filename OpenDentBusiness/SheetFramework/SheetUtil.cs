@@ -757,11 +757,11 @@ namespace OpenDentBusiness{
 			}
 			#region  Fill Grid
 			odGrid.BeginUpdate();
-			odGrid.ListGridColumns.Clear();
+			odGrid.Columns.Clear();
 			GridColumn col;
 			for(int i=0;i<columns.Count;i++) {
 				col=new GridColumn(columns[i].InternalName,columns[i].ColumnWidth);
-				odGrid.ListGridColumns.Add(col);
+				odGrid.Columns.Add(col);
 			}
 			GridRow row;
 			for(int i=0;i<table.Rows.Count;i++) {
@@ -777,7 +777,7 @@ namespace OpenDentBusiness{
 				if(table.Columns.Contains("PatNum")) {//Used for statments to determine account splitting.
 					row.Tag=table.Rows[i]["PatNum"].ToString();
 				}
-				odGrid.ListGridRows.Add(row);
+				odGrid.Rows.Add(row);
 			}
 			odGrid.EndUpdate();//Calls ComputeRows and ComputeColumns, meaning the RowHeights int[] has been filled.
 			#endregion

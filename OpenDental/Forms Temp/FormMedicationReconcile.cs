@@ -33,14 +33,14 @@ namespace OpenDental {
 			Medications.RefreshCache();
 			medList=MedicationPats.Refresh(PatCur.PatNum,checkDiscontinued.Checked);
 			gridMeds.BeginUpdate();
-			gridMeds.ListGridColumns.Clear();
+			gridMeds.Columns.Clear();
 			GridColumn col=new GridColumn("Medication",140);
-			gridMeds.ListGridColumns.Add(col);
+			gridMeds.Columns.Add(col);
 			col=new GridColumn("Notes for Patient",225);
-			gridMeds.ListGridColumns.Add(col);
+			gridMeds.Columns.Add(col);
 			col=new GridColumn("Disc",10,HorizontalAlignment.Center);//discontinued
-			gridMeds.ListGridColumns.Add(col);
-			gridMeds.ListGridRows.Clear();
+			gridMeds.Columns.Add(col);
+			gridMeds.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<medList.Count;i++) {
 				row=new GridRow();
@@ -62,7 +62,7 @@ namespace OpenDental {
 				else {//discontinued
 					row.Cells.Add("X");
 				}
-				gridMeds.ListGridRows.Add(row);
+				gridMeds.Rows.Add(row);
 			}
 			gridMeds.EndUpdate();
 		}
@@ -107,19 +107,19 @@ namespace OpenDental {
 
 		private void FillReconcilesGrid() {
 			gridReconcileEvents.BeginUpdate();
-			gridReconcileEvents.ListGridColumns.Clear();
+			gridReconcileEvents.Columns.Clear();
 			GridColumn col=new GridColumn("DateTime",130);
-			gridReconcileEvents.ListGridColumns.Add(col);
+			gridReconcileEvents.Columns.Add(col);
 			col=new GridColumn("Details",600);
-			gridReconcileEvents.ListGridColumns.Add(col);
+			gridReconcileEvents.Columns.Add(col);
 			ehrMeasureEventsList=EhrMeasureEvents.RefreshByType(PatCur.PatNum,EhrMeasureEventType.MedicationReconcile);
-			gridReconcileEvents.ListGridRows.Clear();
+			gridReconcileEvents.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<ehrMeasureEventsList.Count;i++) {
 				row=new GridRow();
 				row.Cells.Add(ehrMeasureEventsList[i].DateTEvent.ToString());
 				row.Cells.Add(ehrMeasureEventsList[i].EventType.ToString());
-				gridReconcileEvents.ListGridRows.Add(row);
+				gridReconcileEvents.Rows.Add(row);
 			}
 			gridReconcileEvents.EndUpdate();
 		}

@@ -114,9 +114,9 @@ namespace OpenDental {
 			}
 			_listAssessmentCodes.ForEach(x => comboAssessmentType.Items.Add(x.Description));
 			string mostRecentAssessmentCode="";
-			if(gridAssessments.ListGridRows.Count>1) {
+			if(gridAssessments.Rows.Count>1) {
 				//gridAssessments.Rows are tagged with all TobaccoUseAssessed events for the patient ordered by DateTEvent, last is most recent
-				mostRecentAssessmentCode=((EhrMeasureEvent)gridAssessments.ListGridRows[gridAssessments.ListGridRows.Count-1].Tag).CodeValueResult;
+				mostRecentAssessmentCode=((EhrMeasureEvent)gridAssessments.Rows[gridAssessments.Rows.Count-1].Tag).CodeValueResult;
 			}
 			//use Math.Max so that if _listAssessmentCodes doesn't contain the mostRecentAssessment code the combobox will default to the first in the list
 			comboAssessmentType.SelectedIndex=Math.Max(0,_listAssessmentCodes.FindIndex(x => x.CodeValue==mostRecentAssessmentCode));
@@ -133,7 +133,7 @@ namespace OpenDental {
 			string[] codeValues=_listUserCodes.Concat(_listNonUserCodes).Concat(_listRecentTobaccoCodes).Select(x => x.CodeValue).ToArray();
 			//listEventCodes will contain all unique tobacco codes that are not in the user and non-user lists
 			List<string> listEventCodes=new List<string>();
-			foreach(GridRow row in gridAssessments.ListGridRows) {
+			foreach(GridRow row in gridAssessments.Rows) {
 				string eventCodeCur=((EhrMeasureEvent)row.Tag).CodeValueResult;
 				if(codeValues.Contains(eventCodeCur) || listEventCodes.Contains(eventCodeCur)) {
 					continue;
@@ -169,12 +169,12 @@ namespace OpenDental {
 
 		private void FillGridAssessments() {
 			gridAssessments.BeginUpdate();
-			gridAssessments.ListGridColumns.Clear();
-			gridAssessments.ListGridColumns.Add(new GridColumn("Date",70));
-			gridAssessments.ListGridColumns.Add(new GridColumn("Type",170));
-			gridAssessments.ListGridColumns.Add(new GridColumn("Description",170));
-			gridAssessments.ListGridColumns.Add(new GridColumn("Documentation",170));
-			gridAssessments.ListGridRows.Clear();
+			gridAssessments.Columns.Clear();
+			gridAssessments.Columns.Add(new GridColumn("Date",70));
+			gridAssessments.Columns.Add(new GridColumn("Type",170));
+			gridAssessments.Columns.Add(new GridColumn("Description",170));
+			gridAssessments.Columns.Add(new GridColumn("Documentation",170));
+			gridAssessments.Rows.Clear();
 			GridRow row;
 			List<EhrMeasureEvent> listEvents=EhrMeasureEvents.RefreshByType(PatCur.PatNum,EhrMeasureEventType.TobaccoUseAssessed);
 			foreach(EhrMeasureEvent eventCur in listEvents) {
@@ -186,20 +186,20 @@ namespace OpenDental {
 				row.Cells.Add(sCur!=null?sCur.Description:"");
 				row.Cells.Add(eventCur.MoreInfo);
 				row.Tag=eventCur;
-				gridAssessments.ListGridRows.Add(row);
+				gridAssessments.Rows.Add(row);
 			}
 			gridAssessments.EndUpdate();
 		}
 
 		private void FillGridInterventions() {
 			gridInterventions.BeginUpdate();
-			gridInterventions.ListGridColumns.Clear();
-			gridInterventions.ListGridColumns.Add(new GridColumn("Date",70));
-			gridInterventions.ListGridColumns.Add(new GridColumn("Type",150));
-			gridInterventions.ListGridColumns.Add(new GridColumn("Description",160));
-			gridInterventions.ListGridColumns.Add(new GridColumn("Declined",60) { TextAlign=HorizontalAlignment.Center });
-			gridInterventions.ListGridColumns.Add(new GridColumn("Documentation",140));
-			gridInterventions.ListGridRows.Clear();
+			gridInterventions.Columns.Clear();
+			gridInterventions.Columns.Add(new GridColumn("Date",70));
+			gridInterventions.Columns.Add(new GridColumn("Type",150));
+			gridInterventions.Columns.Add(new GridColumn("Description",160));
+			gridInterventions.Columns.Add(new GridColumn("Declined",60) { TextAlign=HorizontalAlignment.Center });
+			gridInterventions.Columns.Add(new GridColumn("Documentation",140));
+			gridInterventions.Rows.Clear();
 			//build list of rows of CessationInterventions and CessationMedications so we can order the list by date and type before filling the grid
 			List<GridRow> listRows=new List<GridRow>();
 			GridRow row;
@@ -264,19 +264,19 @@ namespace OpenDental {
 				.ThenBy(x => x.Cells[3].Text!="")
 				//interventions at the top, declined med interventions below normal interventions
 				.ThenBy(x => x.Tag.GetType().Name!="Intervention" || ((Intervention)x.Tag).CodeSystem=="RXNORM").ToList()
-				.ForEach(x => gridInterventions.ListGridRows.Add(x));//then add rows to gridInterventions
+				.ForEach(x => gridInterventions.Rows.Add(x));//then add rows to gridInterventions
 			gridInterventions.EndUpdate();
 		}
 
 		private void gridAssessments_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			//we will allow them to change the DateTEvent, but not the status or more info box
-			FormEhrMeasureEventEdit FormM=new FormEhrMeasureEventEdit((EhrMeasureEvent)gridAssessments.ListGridRows[e.Row].Tag);
+			FormEhrMeasureEventEdit FormM=new FormEhrMeasureEventEdit((EhrMeasureEvent)gridAssessments.Rows[e.Row].Tag);
 			FormM.ShowDialog();
 			FillGridAssessments();
 		}
 
 		private void gridInterventions_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			Object objCur=gridInterventions.ListGridRows[e.Row].Tag;
+			Object objCur=gridInterventions.Rows[e.Row].Tag;
 			//the intervention grid will be filled with Interventions and MedicationPats, load form accordingly
 			if(objCur is Intervention) {
 				FormInterventionEdit FormI=new FormInterventionEdit();
@@ -302,7 +302,7 @@ namespace OpenDental {
 			//Insert measure event if one does not already exist for this date
 			DateTime dateTEntered=PIn.Date(textDateAssessed.Text);//will be set to DateTime.Now when form loads
 			EhrMeasureEvent eventCur;
-			foreach(GridRow row in gridAssessments.ListGridRows) {
+			foreach(GridRow row in gridAssessments.Rows) {
 				eventCur=(EhrMeasureEvent)row.Tag;
 				if(eventCur.DateTEvent.Date==dateTEntered.Date) {//one already exists for this date, don't auto insert event
 					return;

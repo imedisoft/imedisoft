@@ -37,13 +37,13 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("UCUM Code",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Description",500);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			_listUcum=Ucums.GetBySearchText(textCode.Text).ToList();
 			for(int i=0;i<_listUcum.Count;i++) {
@@ -51,14 +51,14 @@ namespace OpenDental {
 				row.Cells.Add(_listUcum[i].Code);
 				row.Cells.Add(_listUcum[i].Description);
 				row.Tag=_listUcum[i];
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			if(IsSelectionMode) {
-				SelectedUcum=(Ucum)gridMain.ListGridRows[e.Row].Tag;
+				SelectedUcum=(Ucum)gridMain.Rows[e.Row].Tag;
 				DialogResult=DialogResult.OK;
 				return;
 			}
@@ -70,7 +70,7 @@ namespace OpenDental {
 				MessageBox.Show("Please select an item first.");
 				return;
 			}
-			SelectedUcum=(Ucum)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
+			SelectedUcum=(Ucum)gridMain.Rows[gridMain.GetSelectedIndex()].Tag;
 			DialogResult=DialogResult.OK;
 		}
 

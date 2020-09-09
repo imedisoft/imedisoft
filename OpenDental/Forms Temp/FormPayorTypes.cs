@@ -24,21 +24,21 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Date Start",70);
 			col.TextAlign=HorizontalAlignment.Center;
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Date End",70);
 			col.TextAlign=HorizontalAlignment.Center;
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("SOP Code",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Description",250);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Note",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			ListPayorTypes=PayorTypes.Refresh(PatCur.PatNum);
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<ListPayorTypes.Count;i++) {
 				row=new GridRow();
@@ -52,7 +52,7 @@ namespace OpenDental {
 				row.Cells.Add(ListPayorTypes[i].SopCode);
 				row.Cells.Add(Sops.GetDescriptionFromCode(ListPayorTypes[i].SopCode));
 				row.Cells.Add(ListPayorTypes[i].Note);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

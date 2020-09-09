@@ -31,22 +31,22 @@ namespace OpenDental {
 
 		private void FillGrid(){
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Date",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("PatName",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Prov",55);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Code",55);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Tooth",50);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Description",150);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Fee",60,HorizontalAlignment.Right);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			List<ProcedureCode> listProcCodes=ProcedureCodes.GetAllCodes();
 			foreach(DataRow tableRow in _tableSuperFamAcct.Rows) {
@@ -75,13 +75,13 @@ namespace OpenDental {
 				}
 				row.Cells.Add(PIn.Double(tableRow["Amount"].ToString()).ToString("F"));
 				row.Tag=tableRow;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			DataRow row=(DataRow)gridMain.ListGridRows[e.Row].Tag;
+			DataRow row=(DataRow)gridMain.Rows[e.Row].Tag;
 			string type="";
 			if(!string.IsNullOrWhiteSpace(row["AdjType"].ToString())){	//It's an adjustment
 				type="Adj";
@@ -111,7 +111,7 @@ namespace OpenDental {
 				return;
 			}
 			for(int i=0;i<gridMain.SelectedIndices.Length;i++) {
-				DataRow row=(DataRow)gridMain.ListGridRows[gridMain.SelectedIndices[i]].Tag;
+				DataRow row=(DataRow)gridMain.Rows[gridMain.SelectedIndices[i]].Tag;
 				string type="";
 				if(!string.IsNullOrWhiteSpace(row["AdjType"].ToString())){	//It's an adjustment
 					type="Adj";

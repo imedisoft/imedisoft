@@ -27,22 +27,22 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Date",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Prov",50);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Intervention Type",115);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Code",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Code System",85);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Code Description",300);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Note",100);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			#region Interventions
 			listIntervention=Interventions.Refresh(PatCur.PatNum);
@@ -91,7 +91,7 @@ namespace OpenDental {
 				row.Cells.Add(descript);
 				row.Cells.Add(listIntervention[i].Note);
 				row.Tag=listIntervention[i];
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			#endregion
 			#region MedicationPats
@@ -134,14 +134,14 @@ namespace OpenDental {
 				row.Cells.Add(descript);
 				row.Cells.Add(listMedPats[i].PatNote);
 				row.Tag=listMedPats[i];
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			#endregion
 			gridMain.EndUpdate();
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			object objCur=gridMain.ListGridRows[e.Row].Tag;
+			object objCur=gridMain.Rows[e.Row].Tag;
 			if(objCur.GetType().Name=="Intervention") {//grid can contain MedicationPat or Intervention objects, launch appropriate window
 				FormInterventionEdit FormInt=new FormInterventionEdit();
 				FormInt.InterventionCur=(Intervention)objCur;

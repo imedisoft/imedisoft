@@ -414,9 +414,9 @@ namespace OpenDental {
 				SetSig(null);
 			}
 			gridAttachments.BeginUpdate();
-			gridAttachments.ListGridRows.Clear();
-			gridAttachments.ListGridColumns.Clear();
-			gridAttachments.ListGridColumns.Add(new OpenDental.UI.GridColumn("",90){ IsWidthDynamic=true });//No name column, since there is only one column.
+			gridAttachments.Rows.Clear();
+			gridAttachments.Columns.Clear();
+			gridAttachments.Columns.Add(new OpenDental.UI.GridColumn("",90){ IsWidthDynamic=true });//No name column, since there is only one column.
 			for(int i=0;i<_emailMessage.Attachments.Count;i++) {
 				if(_emailMessage.Attachments[i].DisplayedFileName.ToLower()=="smime.p7s") {
 					if(!_isComposing) {
@@ -431,11 +431,11 @@ namespace OpenDental {
 				}
 				OpenDental.UI.GridRow row=new UI.GridRow();
 				row.Cells.Add(_emailMessage.Attachments[i].DisplayedFileName);
-				gridAttachments.ListGridRows.Add(row);
+				gridAttachments.Rows.Add(row);
 				_listEmailAttachDisplayed.Add(_emailMessage.Attachments[i]);
 			}
 			gridAttachments.EndUpdate();
-			if(gridAttachments.ListGridRows.Count>0) {
+			if(gridAttachments.Rows.Count>0) {
 				gridAttachments.SetSelected(0,true);
 			}
 		}
@@ -788,13 +788,13 @@ namespace OpenDental {
 			#region Key navigation and filtering
 			switch(key) {
 				case Keys.Enter://Select currently highlighted recommendation.
-					if(gridContacts.ListGridRows.Count==0) {
+					if(gridContacts.Rows.Count==0) {
 						return;
 					}
 					CloseAndSetRecommendedContacts(gridContacts,true);
 					return;
 				case Keys.Up://Navigate the recommendations from the textBox indirectly.
-					if(gridContacts.ListGridRows.Count==0) {
+					if(gridContacts.Rows.Count==0) {
 						return;
 					}
 					//gridContacts is multi select. We are navigating 1 row at a time so clear and set the selected index.
@@ -804,11 +804,11 @@ namespace OpenDental {
 					gridContacts.ScrollToIndex(index);
 					break;
 				case Keys.Down://Navigate the recommendations from the textBox indirectly.
-					if(gridContacts.ListGridRows.Count==0) {
+					if(gridContacts.Rows.Count==0) {
 						return;
 					}
 					//gridContacts is multi select. We are navigating 1 row at a time so clear and set the selected index.
-					index=Math.Min(gridContacts.GetSelectedIndex()+1,gridContacts.ListGridRows.Count-1);
+					index=Math.Min(gridContacts.GetSelectedIndex()+1,gridContacts.Rows.Count-1);
 					gridContacts.SetSelected(false);
 					gridContacts.SetSelected(new int[] { index },true);
 					gridContacts.ScrollToIndex(index);
@@ -829,14 +829,14 @@ namespace OpenDental {
 					}
 					listFilteredContacts.Sort();
 					gridContacts.BeginUpdate();
-					if(gridContacts.ListGridColumns.Count==0) {//First time loading.
-						gridContacts.ListGridColumns.Add(new GridColumn());
+					if(gridContacts.Columns.Count==0) {//First time loading.
+						gridContacts.Columns.Add(new GridColumn());
 					}
-					gridContacts.ListGridRows.Clear();
+					gridContacts.Rows.Clear();
 					foreach(string email in listFilteredContacts) {
 						GridRow row=new GridRow(email);
 						row.Tag=email;
-						gridContacts.ListGridRows.Add(row);
+						gridContacts.Rows.Add(row);
 					}
 					gridContacts.EndUpdate();
 					gridContacts.SetSelected(0,true);//Force a selection.
@@ -907,11 +907,11 @@ namespace OpenDental {
 			if(isSelectionMade) {
 				int index=textBox.Text.LastIndexOf(',');//-1 if not found.
 				if(index==-1) {//The selected email is the first email being placed in our textbox.
-					textBox.Text=string.Join(",",grid.SelectedGridRows.Select(x => ((string)x.Tag)).ToList());
+					textBox.Text=string.Join(",",grid.SelectedRows.Select(x => ((string)x.Tag)).ToList());
 				}
 				else{//Adding multiple emails.
 					textBox.Text=textBox.Text.Remove(index+1,textBox.Text.Length-index-1);//Remove filter characters
-					textBox.Text+=string.Join(",",grid.SelectedGridRows.Select(x => ((string)x.Tag)).ToList());//Replace with selected email
+					textBox.Text+=string.Join(",",grid.SelectedRows.Select(x => ((string)x.Tag)).ToList());//Replace with selected email
 				}
 			}
 			textBox.Focus();//Ensures that auto complete textbox maintains focus after auto complete.

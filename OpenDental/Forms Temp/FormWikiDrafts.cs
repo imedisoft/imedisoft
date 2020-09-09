@@ -22,7 +22,7 @@ namespace OpenDental {
 		private void FormWikiDrafts_Load(object sender,EventArgs e) {
 			ResizeControls();
 			FillGrid();
-			gridMain.SetSelected(gridMain.ListGridRows.Count-1,true);//select most recent draft
+			gridMain.SetSelected(gridMain.Rows.Count-1,true);//select most recent draft
 			LoadWikiPage(_listWikiPage[gridMain.SelectedIndices[0]]);
 			Text="Wiki Drafts"+" - "+OwnerForm.WikiPageCur.PageTitle;
 		}
@@ -59,18 +59,18 @@ namespace OpenDental {
 		/// <summary></summary>
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("User",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Last Saved",80);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			_listWikiPage=WikiPages.GetDraftsByTitle(OwnerForm.WikiPageCur.PageTitle);
 			for(int i=0;i<_listWikiPage.Count;i++) {
 				GridRow row=new GridRow();
 				row.Cells.Add(Userods.GetName(_listWikiPage[i].UserNum));
 				row.Cells.Add(_listWikiPage[i].DateTimeSaved.ToString());
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

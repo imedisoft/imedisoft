@@ -38,20 +38,20 @@ namespace OpenDental {
 				listSubDunnings.RemoveAll(x => x.IsSuperFamily);
 			}
 			gridDunning.BeginUpdate();
-			gridDunning.ListGridColumns.Clear();
-			gridDunning.ListGridColumns.Add(new GridColumn("Billing Type",80));
-			gridDunning.ListGridColumns.Add(new GridColumn("Aging",70));
-			gridDunning.ListGridColumns.Add(new GridColumn("Ins",40));
-			gridDunning.ListGridColumns.Add(new GridColumn("Message",150));
-			gridDunning.ListGridColumns.Add(new GridColumn("Bold Message",150));
-			gridDunning.ListGridColumns.Add(new GridColumn("Email",35,HorizontalAlignment.Center));
+			gridDunning.Columns.Clear();
+			gridDunning.Columns.Add(new GridColumn("Billing Type",80));
+			gridDunning.Columns.Add(new GridColumn("Aging",70));
+			gridDunning.Columns.Add(new GridColumn("Ins",40));
+			gridDunning.Columns.Add(new GridColumn("Message",150));
+			gridDunning.Columns.Add(new GridColumn("Bold Message",150));
+			gridDunning.Columns.Add(new GridColumn("Email",35,HorizontalAlignment.Center));
 			if(Prefs.GetBool(PrefName.ShowFeatureSuperfamilies)) {
-				gridDunning.ListGridColumns.Add(new GridColumn("SF",30,HorizontalAlignment.Center));
+				gridDunning.Columns.Add(new GridColumn("SF",30,HorizontalAlignment.Center));
 			}
 			if(PrefC.HasClinicsEnabled) {
-				gridDunning.ListGridColumns.Add(new GridColumn("Clinic",50));
+				gridDunning.Columns.Add(new GridColumn("Clinic",50));
 			}
-			gridDunning.ListGridRows.Clear();
+			gridDunning.Rows.Clear();
 			GridRow row;
 			foreach(Dunning dunnCur in listSubDunnings) {
 				row=new GridRow();
@@ -86,7 +86,7 @@ namespace OpenDental {
 					row.Cells.Add(Clinics.GetAbbr(dunnCur.ClinicNum));
 				}
 				row.Tag=dunnCur;
-				gridDunning.ListGridRows.Add(row);
+				gridDunning.Rows.Add(row);
 			}
 			gridDunning.EndUpdate();
 		}
@@ -111,7 +111,7 @@ namespace OpenDental {
 		}
 
 		private void gridDunning_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			FormDunningEdit formD=new FormDunningEdit((Dunning)gridDunning.ListGridRows[e.Row].Tag);
+			FormDunningEdit formD=new FormDunningEdit((Dunning)gridDunning.Rows[e.Row].Tag);
 			if(formD.ShowDialog()!=DialogResult.OK) {
 				return;
 			}
@@ -137,10 +137,10 @@ namespace OpenDental {
 				MessageBox.Show("Please select a message to duplicate first.");
 				return;
 			}
-			Dunning dun=((Dunning)gridDunning.ListGridRows[gridDunning.GetSelectedIndex()].Tag).Copy();
+			Dunning dun=((Dunning)gridDunning.Rows[gridDunning.GetSelectedIndex()].Tag).Copy();
 			Dunnings.Insert(dun);
 			FillGrids(true);
-			gridDunning.SetSelected(gridDunning.ListGridRows.OfType<GridRow>().ToList().FindIndex(x => ((Dunning)x.Tag).DunningNum==dun.DunningNum),true);
+			gridDunning.SetSelected(gridDunning.Rows.OfType<GridRow>().ToList().FindIndex(x => ((Dunning)x.Tag).DunningNum==dun.DunningNum),true);
 		}
 
 		private void butClose_Click(object sender,EventArgs e) {

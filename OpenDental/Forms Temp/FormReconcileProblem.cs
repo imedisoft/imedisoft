@@ -191,16 +191,16 @@ namespace OpenDental {
 		private void FillImportGrid()
 		{
 			gridProbImport.BeginUpdate();
-			gridProbImport.ListGridColumns.Clear();
+			gridProbImport.Columns.Clear();
 			GridColumn col = new GridColumn("Last Modified", 100, HorizontalAlignment.Center);
-			gridProbImport.ListGridColumns.Add(col);
+			gridProbImport.Columns.Add(col);
 			col = new GridColumn("Date Start", 100, HorizontalAlignment.Center);
-			gridProbImport.ListGridColumns.Add(col);
+			gridProbImport.Columns.Add(col);
 			col = new GridColumn("Problem Name", 200);
-			gridProbImport.ListGridColumns.Add(col);
+			gridProbImport.Columns.Add(col);
 			col = new GridColumn("Status", 80, HorizontalAlignment.Center);
-			gridProbImport.ListGridColumns.Add(col);
-			gridProbImport.ListGridRows.Clear();
+			gridProbImport.Columns.Add(col);
+			gridProbImport.Rows.Clear();
 			GridRow row;
 			for (int i = 0; i < ListProblemNew.Count; i++)
 			{
@@ -228,23 +228,23 @@ namespace OpenDental {
 				{
 					row.Cells.Add("Inactive");
 				}
-				gridProbImport.ListGridRows.Add(row);
+				gridProbImport.Rows.Add(row);
 			}
 			gridProbImport.EndUpdate();
 		}
 
 		private void FillExistingGrid() {
 			gridProbExisting.BeginUpdate();
-			gridProbExisting.ListGridColumns.Clear();
+			gridProbExisting.Columns.Clear();
 			GridColumn col=new GridColumn("Last Modified",100,HorizontalAlignment.Center);
-			gridProbExisting.ListGridColumns.Add(col);
+			gridProbExisting.Columns.Add(col);
 			col=new GridColumn("Date Start",100,HorizontalAlignment.Center);
-			gridProbExisting.ListGridColumns.Add(col);
+			gridProbExisting.Columns.Add(col);
 			col=new GridColumn("Problem Name",200);
-			gridProbExisting.ListGridColumns.Add(col);
+			gridProbExisting.Columns.Add(col);
 			col=new GridColumn("Status",80,HorizontalAlignment.Center);
-			gridProbExisting.ListGridColumns.Add(col);
-			gridProbExisting.ListGridRows.Clear();
+			gridProbExisting.Columns.Add(col);
+			gridProbExisting.Rows.Clear();
 			_listProblemCur=Problems.GetByPatient(_patCur.PatNum,true).ToList();
 			List<long> problemDefNums=new List<long>();
 			for(int h=0;h<_listProblemCur.Count;h++) {
@@ -277,27 +277,27 @@ namespace OpenDental {
 				else {
 					row.Cells.Add("Inactive");
 				}
-				gridProbExisting.ListGridRows.Add(row);
+				gridProbExisting.Rows.Add(row);
 			}
 			gridProbExisting.EndUpdate();
 		}
 
 		private void FillReconcileGrid() {
 			gridProbReconcile.BeginUpdate();
-			gridProbReconcile.ListGridColumns.Clear();
+			gridProbReconcile.Columns.Clear();
 			GridColumn col=new GridColumn("Last Modified",130,HorizontalAlignment.Center);
-			gridProbReconcile.ListGridColumns.Add(col);
+			gridProbReconcile.Columns.Add(col);
 			col=new GridColumn("Date Start",100,HorizontalAlignment.Center);
-			gridProbReconcile.ListGridColumns.Add(col);
+			gridProbReconcile.Columns.Add(col);
 			col=new GridColumn("Problem Name",260);
-			gridProbReconcile.ListGridColumns.Add(col);
+			gridProbReconcile.Columns.Add(col);
 			col=new GridColumn("Notes",300);
-			gridProbReconcile.ListGridColumns.Add(col);
+			gridProbReconcile.Columns.Add(col);
 			col=new GridColumn("Status",80,HorizontalAlignment.Center);
-			gridProbReconcile.ListGridColumns.Add(col);
+			gridProbReconcile.Columns.Add(col);
 			col=new GridColumn("Is Incoming",50,HorizontalAlignment.Center);
-			gridProbReconcile.ListGridColumns.Add(col);
-			gridProbReconcile.ListGridRows.Clear();
+			gridProbReconcile.Columns.Add(col);
+			gridProbReconcile.Rows.Clear();
 			GridRow row;
 			ProblemDefinition disD;
 			for(int i=0;i<_listProblemReconcile.Count;i++) {
@@ -338,7 +338,7 @@ namespace OpenDental {
 					row.Cells.Add("Inactive");
 				}
 				row.Cells.Add(_listProblemReconcile[i].Id == 0?"X":"");
-				gridProbReconcile.ListGridRows.Add(row);
+				gridProbReconcile.Rows.Add(row);
 			}
 			gridProbReconcile.EndUpdate();
 		}

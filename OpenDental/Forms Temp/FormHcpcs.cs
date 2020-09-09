@@ -36,13 +36,13 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("HCPCS Code",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Description",500);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			listHcpcses=Hcpcses.GetBySearchText(textCode.Text);
 			for(int i=0;i<listHcpcses.Count;i++) {
@@ -50,14 +50,14 @@ namespace OpenDental {
 				row.Cells.Add(listHcpcses[i].HcpcsCode);
 				row.Cells.Add(listHcpcses[i].DescriptionShort);
 				row.Tag=listHcpcses[i];
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			if(IsSelectionMode) {
-				SelectedHcpcs=(Hcpcs)gridMain.ListGridRows[e.Row].Tag;
+				SelectedHcpcs=(Hcpcs)gridMain.Rows[e.Row].Tag;
 				DialogResult=DialogResult.OK;
 				return;
 			}
@@ -69,7 +69,7 @@ namespace OpenDental {
 				MessageBox.Show("Please select an item first.");
 				return;
 			}
-			SelectedHcpcs=(Hcpcs)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
+			SelectedHcpcs=(Hcpcs)gridMain.Rows[gridMain.GetSelectedIndex()].Tag;
 			DialogResult=DialogResult.OK;
 		}
 

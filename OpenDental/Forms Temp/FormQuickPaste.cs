@@ -388,10 +388,10 @@ namespace OpenDental{
 		private void FillMain() {
 			int selectedIdx=gridMain.GetSelectedIndex();
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("Abbr",75));
-			gridMain.ListGridColumns.Add(new GridColumn("Note",600));
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("Abbr",75));
+			gridMain.Columns.Add(new GridColumn("Note",600));
+			gridMain.Rows.Clear();
 			if(listCat.SelectedIndex==-1) {
 				gridMain.EndUpdate();
 				return;
@@ -406,14 +406,14 @@ namespace OpenDental{
 				row.Cells.Add(string.IsNullOrWhiteSpace(note.Abbreviation)?"":"?"+note.Abbreviation);
 				row.Cells.Add(note.Note.Replace("\r","").Replace("\n","").Left(120,true));
 				row.Tag=note;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			if(selectedIdx==-1) {//Select the last option.
-				gridMain.SetSelected(gridMain.ListGridRows.Count-1,true);
+				gridMain.SetSelected(gridMain.Rows.Count-1,true);
 				gridMain.ScrollToEnd();
 			}
-			else if(selectedIdx<gridMain.ListGridRows.Count) {//Select the previously selected position.
+			else if(selectedIdx<gridMain.Rows.Count) {//Select the previously selected position.
 				gridMain.SetSelected(selectedIdx,true);
 			}
 		}
@@ -521,7 +521,7 @@ namespace OpenDental{
 				_listNotes.Add(FormQ.QuickNote);
 			}
 			else { 
-				int selectedIdx=_listNotes.IndexOf((QuickPasteNote)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag);
+				int selectedIdx=_listNotes.IndexOf((QuickPasteNote)gridMain.Rows[gridMain.GetSelectedIndex()].Tag);
 				_listNotes.Insert(selectedIdx,FormQ.QuickNote);//Insert the new note at the selected index.
 			}			
 			FillMain();
@@ -532,12 +532,12 @@ namespace OpenDental{
 				MessageBox.Show("Please select a note first.");
 				return;
 			}
-			QuickPasteNote quickNote=(QuickPasteNote)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
+			QuickPasteNote quickNote=(QuickPasteNote)gridMain.Rows[gridMain.GetSelectedIndex()].Tag;
 			ShowEditWindow(quickNote);
 		}
 
 		private void ShowEditWindow(QuickPasteNote quickNote) {
-			FormQuickPasteNoteEdit FormQ=new FormQuickPasteNoteEdit((QuickPasteNote)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag);
+			FormQuickPasteNoteEdit FormQ=new FormQuickPasteNoteEdit((QuickPasteNote)gridMain.Rows[gridMain.GetSelectedIndex()].Tag);
 			FormQ.ShowDialog();
 			if(FormQ.DialogResult!=DialogResult.OK) {
 				return;
@@ -567,11 +567,11 @@ namespace OpenDental{
 				MessageBox.Show("Please select a note first.");
 				return;
 			}
-			if(!destinationIdx.Between(0,gridMain.ListGridRows.Count-1)) {
+			if(!destinationIdx.Between(0,gridMain.Rows.Count-1)) {
 				return;//can't go up or down any more
 			}
-			QuickPasteNote sourceNote=(QuickPasteNote)gridMain.ListGridRows[selectedIdx].Tag;
-			QuickPasteNote destNote=(QuickPasteNote)gridMain.ListGridRows[destinationIdx].Tag;
+			QuickPasteNote sourceNote=(QuickPasteNote)gridMain.Rows[selectedIdx].Tag;
+			QuickPasteNote destNote=(QuickPasteNote)gridMain.Rows[destinationIdx].Tag;
 			sourceNote.ItemOrder=_listNotes.IndexOf(destNote);
 			destNote.ItemOrder=_listNotes.IndexOf(sourceNote);
 			gridMain.SetSelected(false);
@@ -604,11 +604,11 @@ namespace OpenDental{
 
 		private void gridMain_CellDoubleClick(object sender,UI.ODGridClickEventArgs e) {
 			if(_isSetupMode) {
-				QuickPasteNote quickNote=(QuickPasteNote)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
+				QuickPasteNote quickNote=(QuickPasteNote)gridMain.Rows[gridMain.GetSelectedIndex()].Tag;
 				ShowEditWindow(quickNote);
 			}
 			else {
-				InsertValue(((QuickPasteNote)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag).Note);
+				InsertValue(((QuickPasteNote)gridMain.Rows[gridMain.GetSelectedIndex()].Tag).Note);
 				DialogResult=DialogResult.OK;
 			}
 		}
@@ -624,7 +624,7 @@ namespace OpenDental{
 					MessageBox.Show("Please select a note first.");
 					return;
 				}
-				InsertValue(((QuickPasteNote)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag).Note);
+				InsertValue(((QuickPasteNote)gridMain.Rows[gridMain.GetSelectedIndex()].Tag).Note);
 			}
 			DialogResult=DialogResult.OK;
 		}

@@ -45,40 +45,40 @@ namespace OpenDental {
 
 		private void FillGridAvailable() {
 			gridAvailable.BeginUpdate();
-			gridAvailable.ListGridColumns.Clear();
+			gridAvailable.Columns.Clear();
 			GridColumn col; 
 			col=new GridColumn("Abbr",75);
-			gridAvailable.ListGridColumns.Add(col);
+			gridAvailable.Columns.Add(col);
 			col=new GridColumn("Description",200);
-			gridAvailable.ListGridColumns.Add(col);
-			gridAvailable.ListGridRows.Clear();
+			gridAvailable.Columns.Add(col);
+			gridAvailable.Rows.Clear();
 			GridRow row;
 			foreach(Clinic clinicAvailable in GetAvailableClinics()) {
 				row=new GridRow();
 				row.Cells.Add(clinicAvailable.Abbr);
 				row.Cells.Add(clinicAvailable.Description+(clinicAvailable.IsHidden?" (Hidden)":""));
 				row.Tag=clinicAvailable;
-				gridAvailable.ListGridRows.Add(row);
+				gridAvailable.Rows.Add(row);
 			}
 			gridAvailable.EndUpdate();
 		}
 
 		private void FillGridGroup() {
 			gridGroup.BeginUpdate();
-			gridGroup.ListGridColumns.Clear();
+			gridGroup.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Abbr",75);
-			gridGroup.ListGridColumns.Add(col);
+			gridGroup.Columns.Add(col);
 			col=new GridColumn("Description",200);
-			gridGroup.ListGridColumns.Add(col);
-			gridGroup.ListGridRows.Clear();
+			gridGroup.Columns.Add(col);
+			gridGroup.Rows.Clear();
 			GridRow row;
 			foreach(Clinic clinicGrouped in _listClinicsInGroup) {
 				row=new GridRow();
 				row.Cells.Add(clinicGrouped.Abbr);
 				row.Cells.Add(clinicGrouped.Description+(clinicGrouped.IsHidden?" (Hidden)":""));
 				row.Tag=clinicGrouped;
-				gridGroup.ListGridRows.Add(row);
+				gridGroup.Rows.Add(row);
 			}
 			gridGroup.EndUpdate();
 		}
@@ -182,7 +182,7 @@ namespace OpenDental {
 				MessageBox.Show("Please select a fee schedule before selecting clinics.");
 				return;
 			}
-			foreach(GridRow row in gridAvailable.SelectedGridRows) {
+			foreach(GridRow row in gridAvailable.SelectedRows) {
 				_listClinicsInGroup.Add((Clinic)row.Tag);
 			}
 			RefreshAvailableClinics();
@@ -193,7 +193,7 @@ namespace OpenDental {
 				MessageBox.Show("Please select a fee schedule before selecting clinics.");
 				return;
 			}
-			foreach(GridRow row in gridGroup.SelectedGridRows) {
+			foreach(GridRow row in gridGroup.SelectedRows) {
 				_listClinicsInGroup.Remove((Clinic)row.Tag);
 			}
 			RefreshAvailableClinics();

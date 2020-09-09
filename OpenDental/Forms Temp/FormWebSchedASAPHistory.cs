@@ -52,35 +52,35 @@ namespace OpenDental {
 				.Between(datePicker.GetDateTimeFrom(),datePicker.GetDateTimeTo()))
 				.Where(x => !isClinicsEnabled || x.AsapComm.ClinicNum.In(comboClinic.ListSelectedClinicNums)).ToList();
 			gridHistory.BeginUpdate();
-			gridHistory.ListGridColumns.Clear();
+			gridHistory.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Patient",120);
-			gridHistory.ListGridColumns.Add(col);
+			gridHistory.Columns.Add(col);
 			col=new GridColumn("Status",120);
-			gridHistory.ListGridColumns.Add(col);
+			gridHistory.Columns.Add(col);
 			col=new GridColumn("SMS Send Time",140);
-			gridHistory.ListGridColumns.Add(col);
+			gridHistory.Columns.Add(col);
 			col=new GridColumn("Email Send Time",140);
-			gridHistory.ListGridColumns.Add(col);
+			gridHistory.Columns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
 				col=new GridColumn("Clinic",120);
-				gridHistory.ListGridColumns.Add(col);
+				gridHistory.Columns.Add(col);
 			}
 			col=new GridColumn("Original Appt Time",140);
-			gridHistory.ListGridColumns.Add(col);
+			gridHistory.Columns.Add(col);
 			col=new GridColumn("Slot Start",140);
-			gridHistory.ListGridColumns.Add(col);
+			gridHistory.Columns.Add(col);
 			col=new GridColumn("Slot Stop",140);
-			gridHistory.ListGridColumns.Add(col);
+			gridHistory.Columns.Add(col);
 			col=new GridColumn("Date Entry",140);
-			gridHistory.ListGridColumns.Add(col);
+			gridHistory.Columns.Add(col);
 			col=new GridColumn("SMS Message Text",250);
-			gridHistory.ListGridColumns.Add(col);
+			gridHistory.Columns.Add(col);
 			col=new GridColumn("Email Message Text",250);
-			gridHistory.ListGridColumns.Add(col);
+			gridHistory.Columns.Add(col);
 			col=new GridColumn("Note",250);
-			gridHistory.ListGridColumns.Add(col);
-			gridHistory.ListGridRows.Clear();
+			gridHistory.Columns.Add(col);
+			gridHistory.Rows.Clear();
 			foreach(AsapComms.AsapCommHist asapHist in listHist) {
 				GridRow row=new GridRow();
 				row.Cells.Add(asapHist.PatientName);
@@ -115,7 +115,7 @@ namespace OpenDental {
 				row.Cells.Add(asapHist.EmailMessageText);
 				row.Cells.Add(asapHist.AsapComm.Note);
 				row.Tag=asapHist;
-				gridHistory.ListGridRows.Add(row);
+				gridHistory.Rows.Add(row);
 			}
 			gridHistory.EndUpdate();
 			textFilled.Text=listHist.Select(x => x.AsapComm)

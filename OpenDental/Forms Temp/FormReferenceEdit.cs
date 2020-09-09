@@ -32,17 +32,17 @@ namespace OpenDental {
 		private void FillMain() {
 			RefEntryList=CustRefEntries.GetEntryListForReference(RefCur.PatNum);
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("PatNum",65);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Last Name",120);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("First Name",120);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Date Entry",40){ IsWidthDynamic=true };
 			col.TextAlign=HorizontalAlignment.Center;
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<RefEntryList.Count;i++) {
 				row=new GridRow();
@@ -51,7 +51,7 @@ namespace OpenDental {
 				row.Cells.Add(pat.LName);
 				row.Cells.Add(pat.FName);
 				row.Cells.Add(RefEntryList[i].DateEntry.ToShortDateString());
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

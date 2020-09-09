@@ -84,21 +84,21 @@ namespace OpenDental {
 			//fill the grid
 			gridMain.BeginUpdate();
 			//columns
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col = new GridColumn("Patient",180);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("DateLastPmt",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("#Overdue",75);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("AmtOverdue",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("DaysOverdue",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("CarrierName/Phone",180){ IsWidthDynamic=true };
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			//rows
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			foreach(PayPlanExtended payPlanCur in _listPayPlanExtended) {
 				if(daysPassedFilter > payPlanCur.DaysOverdue || payPlanCur.DaysOverdue < 1) {
@@ -120,7 +120,7 @@ namespace OpenDental {
 				row.Cells.Add(payPlanCur.AmtOverdue.ToString("f"));
 				row.Cells.Add(payPlanCur.DaysOverdue.ToString());
 				row.Cells.Add(carrierNamePhone);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -221,15 +221,15 @@ namespace OpenDental {
 				//new FileStream(,FileMode.Create,FileAccess.Write,FileShare.Read)))
 				{
 					String line="";
-					for(int i = 0;i<gridMain.ListGridColumns.Count;i++) {
-						line+=gridMain.ListGridColumns[i].HeaderText+"\t";
+					for(int i = 0;i<gridMain.Columns.Count;i++) {
+						line+=gridMain.Columns[i].HeaderText+"\t";
 					}
 					sw.WriteLine(line);
-					for(int i = 0;i<gridMain.ListGridRows.Count;i++) {
+					for(int i = 0;i<gridMain.Rows.Count;i++) {
 						line="";
-						for(int j = 0;j<gridMain.ListGridColumns.Count;j++) {
-							line+=gridMain.ListGridRows[i].Cells[j].Text;
-							if(j<gridMain.ListGridColumns.Count-1) {
+						for(int j = 0;j<gridMain.Columns.Count;j++) {
+							line+=gridMain.Rows[i].Cells[j].Text;
+							if(j<gridMain.Columns.Count-1) {
 								line+="\t";
 							}
 						}

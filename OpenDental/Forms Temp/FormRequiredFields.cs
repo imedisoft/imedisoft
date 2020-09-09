@@ -124,13 +124,13 @@ namespace OpenDental {
 
 		private void FillMain() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Field Name",150);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Conditions",80,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			_listReqFields=RequiredFields.GetDeepCopy();
 			for(int i=0;i<_listReqFields.Count;i++) {
@@ -143,21 +143,21 @@ namespace OpenDental {
 				else {
 					row.Cells.Add("");
 				}				
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
 
 		private void FillConditions() {
 			gridConditions.BeginUpdate();
-			gridConditions.ListGridColumns.Clear();
+			gridConditions.Columns.Clear();
 			GridColumn col=new GridColumn("Type",120);
-			gridConditions.ListGridColumns.Add(col);
+			gridConditions.Columns.Add(col);
 			col=new GridColumn("Operator",80,HorizontalAlignment.Center);
-			gridConditions.ListGridColumns.Add(col);
+			gridConditions.Columns.Add(col);
 			col=new GridColumn("Value",150);
-			gridConditions.ListGridColumns.Add(col);
-			gridConditions.ListGridRows.Clear();
+			gridConditions.Columns.Add(col);
+			gridConditions.Rows.Clear();
 			GridRow row;
 			RequiredFieldName currentType;
 			string allCondValues="";
@@ -234,7 +234,7 @@ namespace OpenDental {
 				else {//The last condition of this type, now add the row
 					row.Cells.Add(allCondValues);
 					row.Tag=currentType;
-					gridConditions.ListGridRows.Add(row);
+					gridConditions.Rows.Add(row);
 					allCondValues="";//for rebuilding the next Value string
 				}
 			}
@@ -246,7 +246,7 @@ namespace OpenDental {
 			if(gridMain.SelectedIndices.Length!=1) {
 				labelExplanation.Text="";
 				gridConditions.BeginUpdate();
-				gridConditions.ListGridRows.Clear();
+				gridConditions.Rows.Clear();
 				gridConditions.EndUpdate();
 				return;
 			}
@@ -303,7 +303,7 @@ namespace OpenDental {
 		}
 
 		private void gridConditions_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			FormReqFieldCondEdit FormR=new FormReqFieldCondEdit(_reqFieldCur,(RequiredFieldName)gridConditions.ListGridRows[e.Row].Tag);
+			FormReqFieldCondEdit FormR=new FormReqFieldCondEdit(_reqFieldCur,(RequiredFieldName)gridConditions.Rows[e.Row].Tag);
 			FormR.IsNew=false;
 			FormR.ShowDialog();
 			if(FormR.DialogResult==DialogResult.OK) {
@@ -330,7 +330,7 @@ namespace OpenDental {
 			FillAvailable();
 			FillMain();
 			gridConditions.BeginUpdate();
-			gridConditions.ListGridRows.Clear();
+			gridConditions.Rows.Clear();
 			gridConditions.EndUpdate();
 			labelExplanation.Text="";
 			checkMedicaidLength.Visible=false;
@@ -355,7 +355,7 @@ namespace OpenDental {
 			FillAvailable();
 			FillMain();
 			gridConditions.BeginUpdate();
-			gridConditions.ListGridRows.Clear();
+			gridConditions.Rows.Clear();
 			gridConditions.EndUpdate();
 			labelExplanation.Text="";
 			checkMedicaidLength.Visible=false;
@@ -394,7 +394,7 @@ namespace OpenDental {
 			RequiredFieldName selectedType;
 			for(int i=0;i<gridConditions.SelectedIndices.Length;i++) {
 				//Delete all the conditions of the same type
-				selectedType=(RequiredFieldName)gridConditions.ListGridRows[gridConditions.SelectedIndices[i]].Tag;
+				selectedType=(RequiredFieldName)gridConditions.Rows[gridConditions.SelectedIndices[i]].Tag;
 				RequiredFieldConditions.DeleteAll(_reqFieldCur.ListRequiredFieldConditions.FindAll(x => x.ConditionType==selectedType)
 					.Select(x => x.RequiredFieldConditionNum).ToList());
 			}

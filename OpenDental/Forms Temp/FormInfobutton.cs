@@ -136,17 +136,17 @@ namespace OpenDental {
 
 		private void fillKnowledgeRequestitems() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Type",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Code",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("CodeSystem",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Description",80);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			foreach(KnowledgeRequest knowRequest in _listKnowledgeRequests) {
 				row=new GridRow();
@@ -155,7 +155,7 @@ namespace OpenDental {
 				row.Cells.Add(knowRequest.GetCodeSystemDisplay());
 				row.Cells.Add(knowRequest.Description);
 				row.Tag=knowRequest;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -1075,13 +1075,13 @@ namespace OpenDental {
 
 		private void butPreviewRequest_Click(object sender,EventArgs e) {
 			KnowledgeRequestNotification.KnowledgeRequestNotification krn;
-			for(int i=0;i<gridMain.ListGridRows.Count;i++){
-				if(gridMain.ListGridRows[i].Tag==null){
+			for(int i=0;i<gridMain.Rows.Count;i++){
+				if(gridMain.Rows[i].Tag==null){
 					MessageBox.Show("Cannot search without a valid code.");
 					continue;
 				}
 				krn=new KnowledgeRequestNotification.KnowledgeRequestNotification();
-				krn.AddKnowledgeRequest((KnowledgeRequest)gridMain.ListGridRows[i].Tag);
+				krn.AddKnowledgeRequest((KnowledgeRequest)gridMain.Rows[i].Tag);
 				krn.performerIsPatient=radioReqPat.Checked;
 				krn.recipientIsPatient=radioRecPat.Checked;
 				MsgBoxCopyPaste msgbox=new MsgBoxCopyPaste("http://apps.nlm.nih.gov/medlineplus/services/mpconnect.cfm?"+krn.ToUrl());
@@ -1094,13 +1094,13 @@ namespace OpenDental {
 
 		private void butSend_Click(object sender,EventArgs e) {
 			KnowledgeRequestNotification.KnowledgeRequestNotification krn;
-			for(int i=0;i<gridMain.ListGridRows.Count;i++) {
-				if(gridMain.ListGridRows[i].Tag==null) {
+			for(int i=0;i<gridMain.Rows.Count;i++) {
+				if(gridMain.Rows[i].Tag==null) {
 					MessageBox.Show("Cannot search without a valid code.");
 					continue;
 				}
 				krn=new KnowledgeRequestNotification.KnowledgeRequestNotification();
-				krn.AddKnowledgeRequest((KnowledgeRequest)gridMain.ListGridRows[i].Tag);
+				krn.AddKnowledgeRequest((KnowledgeRequest)gridMain.Rows[i].Tag);
 				krn.performerIsPatient=radioReqPat.Checked;
 				krn.recipientIsPatient=radioRecPat.Checked;
 				//FormInfobuttonResponse FormIR = new FormInfobuttonResponse();

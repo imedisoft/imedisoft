@@ -19,17 +19,17 @@ namespace OpenDental {
 
 		private void FillGrid(){
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Last Name",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("First Name",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Year",30);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Key",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			_listKeys=EhrProvKeys.GetAllKeys();
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listKeys.Count;i++) {
 				row=new GridRow();
@@ -37,7 +37,7 @@ namespace OpenDental {
 				row.Cells.Add(_listKeys[i].FName);
 				row.Cells.Add(_listKeys[i].YearValue.ToString());
 				row.Cells.Add(_listKeys[i].ProvKey);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

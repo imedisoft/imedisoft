@@ -143,19 +143,19 @@ namespace OpenDental {
 		///<summary>Reads the X12 835 text in the MessageText variable and displays the information from Table 2 (Detail).</summary>
 		private void FillClaimDetails() {
 			gridClaimDetails.BeginUpdate();
-			gridClaimDetails.ListGridColumns.Clear();
-			gridClaimDetails.ListGridColumns.Add(new GridColumn("Recd",32,HorizontalAlignment.Center));
-			gridClaimDetails.ListGridColumns.Add(new GridColumn("Patient",70,HorizontalAlignment.Left){ IsWidthDynamic=true });
-			gridClaimDetails.ListGridColumns.Add(new GridColumn("DateService",80,HorizontalAlignment.Center));
-			gridClaimDetails.ListGridColumns.Add(new GridColumn("Claim\r\nIdentifier",50,HorizontalAlignment.Left));
-			gridClaimDetails.ListGridColumns.Add(new GridColumn("Payor\r\nControl#",56,HorizontalAlignment.Center));//Payer Claim Control Number (CLP07)
-			gridClaimDetails.ListGridColumns.Add(new GridColumn("Status",70,HorizontalAlignment.Left){ IsWidthDynamic=true });//Claim Status Code Description (CLP02)
-			gridClaimDetails.ListGridColumns.Add(new GridColumn("ClaimFee",70,HorizontalAlignment.Right));//Total Claim Charge Amount (CLP03)
-			gridClaimDetails.ListGridColumns.Add(new GridColumn("InsPaid",70,HorizontalAlignment.Right));//Claim Payment Amount (CLP04)
-			gridClaimDetails.ListGridColumns.Add(new GridColumn("PatPort",70,HorizontalAlignment.Right));//Patient Portion
-			gridClaimDetails.ListGridColumns.Add(new GridColumn("Deduct",70,HorizontalAlignment.Right));//Deductible
-			gridClaimDetails.ListGridColumns.Add(new GridColumn("Writeoff",70,HorizontalAlignment.Right));//Writeoff
-			gridClaimDetails.ListGridRows.Clear();
+			gridClaimDetails.Columns.Clear();
+			gridClaimDetails.Columns.Add(new GridColumn("Recd",32,HorizontalAlignment.Center));
+			gridClaimDetails.Columns.Add(new GridColumn("Patient",70,HorizontalAlignment.Left){ IsWidthDynamic=true });
+			gridClaimDetails.Columns.Add(new GridColumn("DateService",80,HorizontalAlignment.Center));
+			gridClaimDetails.Columns.Add(new GridColumn("Claim\r\nIdentifier",50,HorizontalAlignment.Left));
+			gridClaimDetails.Columns.Add(new GridColumn("Payor\r\nControl#",56,HorizontalAlignment.Center));//Payer Claim Control Number (CLP07)
+			gridClaimDetails.Columns.Add(new GridColumn("Status",70,HorizontalAlignment.Left){ IsWidthDynamic=true });//Claim Status Code Description (CLP02)
+			gridClaimDetails.Columns.Add(new GridColumn("ClaimFee",70,HorizontalAlignment.Right));//Total Claim Charge Amount (CLP03)
+			gridClaimDetails.Columns.Add(new GridColumn("InsPaid",70,HorizontalAlignment.Right));//Claim Payment Amount (CLP04)
+			gridClaimDetails.Columns.Add(new GridColumn("PatPort",70,HorizontalAlignment.Right));//Patient Portion
+			gridClaimDetails.Columns.Add(new GridColumn("Deduct",70,HorizontalAlignment.Right));//Deductible
+			gridClaimDetails.Columns.Add(new GridColumn("Writeoff",70,HorizontalAlignment.Right));//Writeoff
+			gridClaimDetails.Rows.Clear();
 			_claimInsPaidSum=0;
 			List<int> listMatchedRows=new List<int>();
 			List<Hx835_Claim> listClaimsPaid=_x835.ListClaimsPaid;
@@ -164,7 +164,7 @@ namespace OpenDental {
 				GridRow row=new GridRow();
 				SetClaimDetailRows(new List<GridRow>() { row },new List<Hx835_Claim>() { claimPaid });
 				_claimInsPaidSum+=claimPaid.InsPaid;
-				gridClaimDetails.ListGridRows.Add(row);
+				gridClaimDetails.Rows.Add(row);
 				if(!_hasPrintPreviewOnLoad//Only show print prevew once.
 					&& claimPaid.ClaimNum!=0 && claimPaid.ClaimNum==_preLoadedPrintPreviewClaimNum)//Specific claim num provided for auto selecting and print preview.
 				{
@@ -228,16 +228,16 @@ namespace OpenDental {
 			const int colWidthAmount=80;
 			int colWidthVariable=gridProviderAdjustments.Width-colWidthNPI-colWidthFiscalPeriod-colWidthReasonCode-colWidthRefIdent-colWidthAmount;
 			gridProviderAdjustments.BeginUpdate();
-			gridProviderAdjustments.ListGridColumns.Clear();
-			gridProviderAdjustments.ListGridColumns.Add(new GridColumn("NPI",colWidthNPI,HorizontalAlignment.Center));
-			gridProviderAdjustments.ListGridColumns.Add(new GridColumn("FiscalPeriod",colWidthFiscalPeriod,HorizontalAlignment.Center));
-			gridProviderAdjustments.ListGridColumns.Add(new GridColumn("Reason",colWidthVariable,HorizontalAlignment.Left));
-			gridProviderAdjustments.ListGridColumns.Add(new GridColumn("ReasonCode",colWidthReasonCode,HorizontalAlignment.Center));
-			gridProviderAdjustments.ListGridColumns.Add(new GridColumn("RefIdent",colWidthRefIdent,HorizontalAlignment.Center));			
-			gridProviderAdjustments.ListGridColumns.Add(new GridColumn("AdjAmt",colWidthAmount,HorizontalAlignment.Right));
+			gridProviderAdjustments.Columns.Clear();
+			gridProviderAdjustments.Columns.Add(new GridColumn("NPI",colWidthNPI,HorizontalAlignment.Center));
+			gridProviderAdjustments.Columns.Add(new GridColumn("FiscalPeriod",colWidthFiscalPeriod,HorizontalAlignment.Center));
+			gridProviderAdjustments.Columns.Add(new GridColumn("Reason",colWidthVariable,HorizontalAlignment.Left));
+			gridProviderAdjustments.Columns.Add(new GridColumn("ReasonCode",colWidthReasonCode,HorizontalAlignment.Center));
+			gridProviderAdjustments.Columns.Add(new GridColumn("RefIdent",colWidthRefIdent,HorizontalAlignment.Center));			
+			gridProviderAdjustments.Columns.Add(new GridColumn("AdjAmt",colWidthAmount,HorizontalAlignment.Right));
 			gridProviderAdjustments.EndUpdate();
 			gridProviderAdjustments.BeginUpdate();
-			gridProviderAdjustments.ListGridRows.Clear();
+			gridProviderAdjustments.Rows.Clear();
 			_provAdjAmtSum=0;
 			for(int i=0;i<_x835.ListProvAdjustments.Count;i++) {
 				Hx835_ProvAdj provAdj=_x835.ListProvAdjustments[i];
@@ -250,7 +250,7 @@ namespace OpenDental {
 				row.Cells.Add(new GridCell(provAdj.RefIdentification));//RefIdent
 				row.Cells.Add(new GridCell(provAdj.AdjAmt.ToString("f2")));//AdjAmt
 				_provAdjAmtSum+=provAdj.AdjAmt;
-				gridProviderAdjustments.ListGridRows.Add(row);
+				gridProviderAdjustments.Rows.Add(row);
 			}
 			gridProviderAdjustments.EndUpdate();
 		}
@@ -267,7 +267,7 @@ namespace OpenDental {
 		}
 
 		private void gridProviderAdjustments_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			Hx835_ProvAdj provAdj=(Hx835_ProvAdj)gridProviderAdjustments.ListGridRows[e.Row].Tag;
+			Hx835_ProvAdj provAdj=(Hx835_ProvAdj)gridProviderAdjustments.Rows[e.Row].Tag;
 			MsgBoxCopyPaste msgbox=new MsgBoxCopyPaste(
 				provAdj.Npi+"\r\n"
 				+provAdj.DateFiscalPeriod.ToShortDateString()+"\r\n"
@@ -278,7 +278,7 @@ namespace OpenDental {
 		}
 
 		private void gridClaimDetails_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			Hx835_Claim claimPaid=(Hx835_Claim)gridClaimDetails.ListGridRows[e.Row].Tag;
+			Hx835_Claim claimPaid=(Hx835_Claim)gridClaimDetails.Rows[e.Row].Tag;
 			Claim claim=claimPaid.GetClaimFromDb();
 			bool isAttachNeeded=(!claimPaid.IsAttachedToClaim);
 			if(claim==null) {//Not found in db.
@@ -321,12 +321,12 @@ namespace OpenDental {
 			if(!gridClaimDetails.IsDisposed) {//Not sure how the grid is sometimes disposed, perhaps because of it being non-modal.
 				//Refresh the claim detail row in case something changed above.
 				gridClaimDetails.BeginUpdate();
-				List<GridRow> listRows=new List<GridRow>() { gridClaimDetails.ListGridRows[e.Row] };//Row associated to claimPaid
+				List<GridRow> listRows=new List<GridRow>() { gridClaimDetails.Rows[e.Row] };//Row associated to claimPaid
 				if(claimPaid.IsSplitClaim) {//Need to update multiple rows.
 					List<Hx835_Claim> listOtherSplitClaims=claimPaid.GetOtherNotDetachedSplitClaims();
-					List<GridRow> listAdditionalRows=gridClaimDetails.ListGridRows
+					List<GridRow> listAdditionalRows=gridClaimDetails.Rows
 						.Where(x =>
-							x!=gridClaimDetails.ListGridRows[e.Row]
+							x!=gridClaimDetails.Rows[e.Row]
 							&& listOtherSplitClaims.Contains((Hx835_Claim)x.Tag)
 						).ToList();
 					listRows.AddRange(listAdditionalRows);
@@ -391,7 +391,7 @@ namespace OpenDental {
 			if(index==-1) {//Should not happen, menu item is only enabled when exactly 1 row is selected.
 				return;
 			}
-			Hx835_Claim claimPaid=(Hx835_Claim)gridClaimDetails.ListGridRows[index].Tag;
+			Hx835_Claim claimPaid=(Hx835_Claim)gridClaimDetails.Rows[index].Tag;
 			int menuItemIndex=((MenuItem)sender).Index;//sender is the selected menuItem
 #region Go To Account
 			if(menuItemIndex==0) {
@@ -467,7 +467,7 @@ namespace OpenDental {
 		private void DetachClaimHelper(List<int> listGridIndices) {
 			gridClaimDetails.BeginUpdate();
 			for(int i=0;i<listGridIndices.Count;i++) {
-				GridRow row=gridClaimDetails.ListGridRows[listGridIndices[i]];
+				GridRow row=gridClaimDetails.Rows[listGridIndices[i]];
 				Hx835_Claim claimPaid=(Hx835_Claim)row.Tag;
 				Etrans835Attaches.DetachEraClaim(claimPaid);
 				SetClaimDetailRows(new List<GridRow>() { row },new List<Hx835_Claim>() { claimPaid },true);
@@ -478,7 +478,7 @@ namespace OpenDental {
 		private void buttonFindClaimMatch_Click(object sender,EventArgs e) {
 			List<Hx835_Claim> listDetachedPaidClaims=gridClaimDetails
 				.SelectedIndices
-				.Select(x => (Hx835_Claim)gridClaimDetails.ListGridRows[x].Tag)
+				.Select(x => (Hx835_Claim)gridClaimDetails.Rows[x].Tag)
 				.ToList();
 			if(listDetachedPaidClaims.Any(x => x.IsAttachedToClaim && x.ClaimNum!=0)) {
 				MessageBox.Show("Only manually detached rows can be selected.");
@@ -495,7 +495,7 @@ namespace OpenDental {
 				for(int i=0;i<listDetachedPaidClaims.Count;i++) {
 					CreateAttachForClaim(listDetachedPaidClaims[i],listClaimNums[i],true);
 				}
-				List<GridRow> listGridRows=gridClaimDetails.ListGridRows
+				List<GridRow> listGridRows=gridClaimDetails.Rows
 					.Where(x =>
 						listDetachedPaidClaims.Contains((Hx835_Claim)x.Tag)
 					).ToList();
@@ -511,7 +511,7 @@ namespace OpenDental {
 				MessageBox.Show("Choose a claim paid before viewing details.");
 				return;
 			}
-			Hx835_Claim claimPaid=(Hx835_Claim)gridClaimDetails.ListGridRows[gridClaimDetails.SelectedIndices[0]].Tag;
+			Hx835_Claim claimPaid=(Hx835_Claim)gridClaimDetails.Rows[gridClaimDetails.SelectedIndices[0]].Tag;
 			FormEtrans835ClaimEdit formE=new FormEtrans835ClaimEdit(_x835,claimPaid);
 			formE.Show(this);//This window is just used to display information.
 		}
@@ -533,7 +533,7 @@ namespace OpenDental {
 		
 		///<summary>Since ERAs are only used in the United States, we do not need to translate any text shown to the user.</summary>
 		private void butBatch_Click(object sender,EventArgs e) {
-			if(gridClaimDetails.ListGridRows.Count==0) {
+			if(gridClaimDetails.Rows.Count==0) {
 				return;
 			}
 			Cursor=Cursors.WaitCursor;
@@ -558,8 +558,8 @@ namespace OpenDental {
 		private void butOK_Click(object sender,EventArgs e) {
 			EtransCur.Note=textNote.Text;
 			bool isReceived=true;
-			for(int i=0;i<gridClaimDetails.ListGridRows.Count;i++) {
-				if(gridClaimDetails.ListGridRows[i].Cells[0].Text=="") {
+			for(int i=0;i<gridClaimDetails.Rows.Count;i++) {
+				if(gridClaimDetails.Rows[i].Cells[0].Text=="") {
 					isReceived=false;
 					break;
 				}

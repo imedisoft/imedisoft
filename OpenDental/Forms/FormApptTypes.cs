@@ -101,10 +101,10 @@ namespace Imedisoft.Forms
 					ListSelectedApptTypes.Add(SelectedAptType);
 				}
 
-				for (int i = 0; i < appointmentTypesGrid.ListGridRows.Count; i++)
+				for (int i = 0; i < appointmentTypesGrid.Rows.Count; i++)
 				{
-					if (((AppointmentType)appointmentTypesGrid.ListGridRows[i].Tag) != null //The "None" option will always be null
-						&& ListSelectedApptTypes.Any(x => x.Id == ((AppointmentType)appointmentTypesGrid.ListGridRows[i].Tag).Id))
+					if (((AppointmentType)appointmentTypesGrid.Rows[i].Tag) != null //The "None" option will always be null
+						&& ListSelectedApptTypes.Any(x => x.Id == ((AppointmentType)appointmentTypesGrid.Rows[i].Tag).Id))
 					{
 						appointmentTypesGrid.SetSelected(i, true);
 					}
@@ -115,11 +115,11 @@ namespace Imedisoft.Forms
 		private void FillMain()
 		{
 			appointmentTypesGrid.BeginUpdate();
-			appointmentTypesGrid.ListGridColumns.Clear();
-			appointmentTypesGrid.ListGridColumns.Add(new GridColumn("Name", 200));
-			appointmentTypesGrid.ListGridColumns.Add(new GridColumn("Color", 50, HorizontalAlignment.Center));
-			appointmentTypesGrid.ListGridColumns.Add(new GridColumn("Hidden", 60, HorizontalAlignment.Center) { IsWidthDynamic = true });
-			appointmentTypesGrid.ListGridRows.Clear();
+			appointmentTypesGrid.Columns.Clear();
+			appointmentTypesGrid.Columns.Add(new GridColumn("Name", 200));
+			appointmentTypesGrid.Columns.Add(new GridColumn("Color", 50, HorizontalAlignment.Center));
+			appointmentTypesGrid.Columns.Add(new GridColumn("Hidden", 60, HorizontalAlignment.Center) { IsWidthDynamic = true });
+			appointmentTypesGrid.Rows.Clear();
 
 			appointmentTypes.Sort(AppointmentTypes.SortItemOrder);
 			foreach (var appointmentType in appointmentTypes)
@@ -131,7 +131,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(appointmentType.Hidden ? "X" : "");
 				gridRow.Tag = appointmentType;
 
-				appointmentTypesGrid.ListGridRows.Add(gridRow);
+				appointmentTypesGrid.Rows.Add(gridRow);
 			}
 
 			// Always add a None option to the end of the list when in selection mode.
@@ -141,7 +141,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add("None");
 				gridRow.Cells.Add("");
 				gridRow.Cells.Add("");
-				appointmentTypesGrid.ListGridRows.Add(gridRow);
+				appointmentTypesGrid.Rows.Add(gridRow);
 			}
 
 			appointmentTypesGrid.EndUpdate();

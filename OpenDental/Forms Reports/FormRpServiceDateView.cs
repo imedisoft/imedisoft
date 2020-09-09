@@ -46,18 +46,18 @@ namespace OpenDental {
 			DataTable table=RpServiceDateView.GetData(PatNum,IsFamily,checkDetailedView.Checked);
 			gridMain.BeginUpdate();
 			//Columns
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("Service Date",90));
-			gridMain.ListGridColumns.Add(new GridColumn("Trans Date",80));
-			gridMain.ListGridColumns.Add(new GridColumn("Patient",150));
-			gridMain.ListGridColumns.Add(new GridColumn("Reference",220));
-			gridMain.ListGridColumns.Add(new GridColumn("Charge",80,HorizontalAlignment.Right));
-			gridMain.ListGridColumns.Add(new GridColumn("Credit",80,HorizontalAlignment.Right));
-			gridMain.ListGridColumns.Add(new GridColumn("Prov",80));
-			gridMain.ListGridColumns.Add(new GridColumn("InsBal",80,HorizontalAlignment.Right));
-			gridMain.ListGridColumns.Add(new GridColumn("AcctBal",80,HorizontalAlignment.Right));
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("Service Date",90));
+			gridMain.Columns.Add(new GridColumn("Trans Date",80));
+			gridMain.Columns.Add(new GridColumn("Patient",150));
+			gridMain.Columns.Add(new GridColumn("Reference",220));
+			gridMain.Columns.Add(new GridColumn("Charge",80,HorizontalAlignment.Right));
+			gridMain.Columns.Add(new GridColumn("Credit",80,HorizontalAlignment.Right));
+			gridMain.Columns.Add(new GridColumn("Prov",80));
+			gridMain.Columns.Add(new GridColumn("InsBal",80,HorizontalAlignment.Right));
+			gridMain.Columns.Add(new GridColumn("AcctBal",80,HorizontalAlignment.Right));
 			//Rows
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			DataRow lastRow=table.Select().LastOrDefault();
 			foreach(DataRow row in table.Rows) {
 				GridRow newRow=new GridRow();
@@ -85,7 +85,7 @@ namespace OpenDental {
 				if(isTotalsRow) {
 					newRow.Bold=true;
 				}
-				gridMain.ListGridRows.Add(newRow);
+				gridMain.Rows.Add(newRow);
 			}
 			gridMain.EndUpdate();
 		}
@@ -96,7 +96,7 @@ namespace OpenDental {
 		}
 
 		private void butSavePDFToImages_Click(object sender,EventArgs e) {
-			if(gridMain.ListGridRows.Count==0) {
+			if(gridMain.Rows.Count==0) {
 				MessageBox.Show("Grid is empty.");
 				return;
 			}
@@ -174,7 +174,7 @@ namespace OpenDental {
 		}
 
 		private void butPrint_Click(object sender,EventArgs e) {
-			if(gridMain.ListGridRows.Count==0) {
+			if(gridMain.Rows.Count==0) {
 				MessageBox.Show("Grid is empty.");
 				return;
 			}

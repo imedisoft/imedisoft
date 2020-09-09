@@ -193,9 +193,9 @@ namespace OpenDental {
 
 		private void FillGridPriority() {
 			gridPriorities.BeginUpdate();
-			gridPriorities.ListGridColumns.Clear();
-			gridPriorities.ListGridColumns.Add(new GridColumn("",50){ IsWidthDynamic=true });
-			gridPriorities.ListGridRows.Clear();
+			gridPriorities.Columns.Clear();
+			gridPriorities.Columns.Add(new GridColumn("",50){ IsWidthDynamic=true });
+			gridPriorities.Rows.Clear();
 			for(int i = 0;i<_sendOrder.Count;i++) {
 				CommType typeCur = _sendOrder[i];
 				GridRow gridRow;
@@ -206,19 +206,19 @@ namespace OpenDental {
 					}
 					gridRow=new GridRow();
 					gridRow.Cells.Add("Preferred Confirm Method");
-					gridPriorities.ListGridRows.Add(gridRow);
+					gridPriorities.Rows.Add(gridRow);
 					continue;
 				}
 				if(typeCur==CommType.Text && !SmsPhones.IsIntegratedTextingEnabled()) {
 					gridRow=new GridRow();
 					gridRow.Cells.Add(typeCur.ToString()+" ("+"Not Configured"+")");
 					gridRow.BackColor=Color.LightGray;
-					gridPriorities.ListGridRows.Add(gridRow);
+					gridPriorities.Rows.Add(gridRow);
 				}
 				else {
 					gridRow=new GridRow();
 					gridRow.Cells.Add(typeCur.ToString());
-					gridPriorities.ListGridRows.Add(gridRow);
+					gridPriorities.Rows.Add(gridRow);
 				}
 			}
 			gridPriorities.EndUpdate();

@@ -31,7 +31,7 @@ namespace OpenDental {
 				if(gridFeeSchedFiles.GetSelectedIndex()==-1) {
 					return "";
 				}
-				return gridFeeSchedFiles.ListGridRows[gridFeeSchedFiles.GetSelectedIndex()].Cells[0].Text;
+				return gridFeeSchedFiles.Rows[gridFeeSchedFiles.GetSelectedIndex()].Cells[0].Text;
 			}
 		}
 
@@ -87,15 +87,15 @@ namespace OpenDental {
 			}
 			ListFeeSchedFilesAll.Sort();
 			gridFeeSchedFiles.BeginUpdate();
-			gridFeeSchedFiles.ListGridColumns.Clear();
+			gridFeeSchedFiles.Columns.Clear();
 			GridColumn col=new GridColumn("",35);
-			gridFeeSchedFiles.ListGridColumns.Add(col);
-			gridFeeSchedFiles.ListGridRows.Clear();
+			gridFeeSchedFiles.Columns.Add(col);
+			gridFeeSchedFiles.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<ListFeeSchedFilesAll.Count;i++) {
 				row=new GridRow();
 				row.Cells.Add(ListFeeSchedFilesAll[i]);
-				gridFeeSchedFiles.ListGridRows.Add(row);
+				gridFeeSchedFiles.Rows.Add(row);
 			}
 			gridFeeSchedFiles.EndUpdate();
 		}

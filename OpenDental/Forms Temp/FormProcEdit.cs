@@ -1148,32 +1148,32 @@ namespace OpenDental {
 				_listClaimProcsForProc=ClaimProcs.RefreshForProc(_procCur.ProcNum);
 			}
 			gridIns.BeginUpdate();
-			gridIns.ListGridColumns.Clear();
+			gridIns.Columns.Clear();
 			GridColumn col=new GridColumn("Ins Plan",190);
-			gridIns.ListGridColumns.Add(col);
+			gridIns.Columns.Add(col);
 			col=new GridColumn("Pri/Sec",50,HorizontalAlignment.Center);
-			gridIns.ListGridColumns.Add(col);
+			gridIns.Columns.Add(col);
 			col=new GridColumn("Status",50,HorizontalAlignment.Center);
-			gridIns.ListGridColumns.Add(col);
+			gridIns.Columns.Add(col);
 			col=new GridColumn("NoBill",45,HorizontalAlignment.Center);
-			gridIns.ListGridColumns.Add(col);
+			gridIns.Columns.Add(col);
 			col=new GridColumn("Copay",55,HorizontalAlignment.Right);
-			gridIns.ListGridColumns.Add(col);
+			gridIns.Columns.Add(col);
 			col=new GridColumn("Deduct",55,HorizontalAlignment.Right);
-			gridIns.ListGridColumns.Add(col);
+			gridIns.Columns.Add(col);
 			col=new GridColumn("Percent",55,HorizontalAlignment.Center);
-			gridIns.ListGridColumns.Add(col);
+			gridIns.Columns.Add(col);
 			col=new GridColumn("Ins Est",55,HorizontalAlignment.Right);
-			gridIns.ListGridColumns.Add(col);
+			gridIns.Columns.Add(col);
 			col=new GridColumn("Ins Pay",55,HorizontalAlignment.Right);
-			gridIns.ListGridColumns.Add(col);
+			gridIns.Columns.Add(col);
 			col=new GridColumn("WriteOff",55,HorizontalAlignment.Right);
-			gridIns.ListGridColumns.Add(col);
+			gridIns.Columns.Add(col);
 			col=new GridColumn("Estimate Note",100);
-			gridIns.ListGridColumns.Add(col);		 
+			gridIns.Columns.Add(col);		 
 			col=new GridColumn("Remarks",165);
-			gridIns.ListGridColumns.Add(col);		 
-			gridIns.ListGridRows.Clear();
+			gridIns.Columns.Add(col);		 
+			gridIns.Rows.Clear();
 			GridRow row;
 			checkNoBillIns.CheckState=CheckState.Unchecked;
 			bool allNoBillIns=true;
@@ -1250,7 +1250,7 @@ namespace OpenDental {
 						row.Cells.Add("");
 						row.Cells.Add("");
 						row.Cells.Add("");
-						gridIns.ListGridRows.Add(row);
+						gridIns.Rows.Add(row);
 						continue;
 					}
 				}
@@ -1279,7 +1279,7 @@ namespace OpenDental {
 				}
 				row.Cells.Add(_listClaimProcsForProc[i].EstimateNote);
 				row.Cells.Add(_listClaimProcsForProc[i].Remarks);			  
-				gridIns.ListGridRows.Add(row);
+				gridIns.Rows.Add(row);
 			}
 			gridIns.EndUpdate();
 			if(_listClaimProcsForProc.Count==0) {
@@ -1385,16 +1385,16 @@ namespace OpenDental {
 			_listPaymentsForProc=_loadData.ListPaymentsForProc;
 			_paySplitsForProc=PaySplits.GetForProc(_procCur.ProcNum,_loadData.ArrPaySplits);
 			gridPay.BeginUpdate();
-			gridPay.ListGridColumns.Clear();
+			gridPay.Columns.Clear();
 			GridColumn col=new GridColumn("Entry Date",70,HorizontalAlignment.Center);
-			gridPay.ListGridColumns.Add(col);
+			gridPay.Columns.Add(col);
 			col=new GridColumn("Amount",55,HorizontalAlignment.Right);
-			gridPay.ListGridColumns.Add(col);
+			gridPay.Columns.Add(col);
 			col=new GridColumn("Tot Amt",55,HorizontalAlignment.Right);
-			gridPay.ListGridColumns.Add(col);
+			gridPay.Columns.Add(col);
 			col=new GridColumn("Note",250,HorizontalAlignment.Left);
-			gridPay.ListGridColumns.Add(col);
-			gridPay.ListGridRows.Clear();
+			gridPay.Columns.Add(col);
+			gridPay.Rows.Clear();
 			GridRow row;
 			Payment PaymentCur;//used in loop
 			for(int i=0;i<_paySplitsForProc.Count;i++){
@@ -1405,7 +1405,7 @@ namespace OpenDental {
 				PaymentCur=Payments.GetFromList(((PaySplit)_paySplitsForProc[i]).PayNum,_listPaymentsForProc);
 				row.Cells.Add(PaymentCur.PayAmt.ToString("F"));
 				row.Cells.Add(PaymentCur.PayNote);
-				gridPay.ListGridRows.Add(row);
+				gridPay.Rows.Add(row);
 			}
 			gridPay.EndUpdate();
 		}
@@ -1422,16 +1422,16 @@ namespace OpenDental {
 			Adjustment[] AdjustmentList=_loadData.ArrAdjustments;
 			_adjustmentsForProc=Adjustments.GetForProc(_procCur.ProcNum,AdjustmentList);
 			gridAdj.BeginUpdate();
-			gridAdj.ListGridColumns.Clear();
+			gridAdj.Columns.Clear();
 			GridColumn col=new GridColumn("Entry Date",70,HorizontalAlignment.Center);
-			gridAdj.ListGridColumns.Add(col);
+			gridAdj.Columns.Add(col);
 			col=new GridColumn("Amount",55,HorizontalAlignment.Right);
-			gridAdj.ListGridColumns.Add(col);
+			gridAdj.Columns.Add(col);
 			col=new GridColumn("Type",100,HorizontalAlignment.Left);
-			gridAdj.ListGridColumns.Add(col);
+			gridAdj.Columns.Add(col);
 			col=new GridColumn("Note",250,HorizontalAlignment.Left);
-			gridAdj.ListGridColumns.Add(col);
-			gridAdj.ListGridRows.Clear();
+			gridAdj.Columns.Add(col);
+			gridAdj.Rows.Clear();
 			GridRow row;
 			double discountAmt=0;//Total discount amount from all adjustments of default type.
 			for(int i=0;i<_adjustmentsForProc.Count;i++){
@@ -1442,7 +1442,7 @@ namespace OpenDental {
 				row.Cells[row.Cells.Count-1].Bold= true;
 				row.Cells.Add(Definitions.GetName(DefinitionCategory.AdjTypes,adjustment.Type));
 				row.Cells.Add(adjustment.Note);
-				gridAdj.ListGridRows.Add(row);
+				gridAdj.Rows.Add(row);
 				if(adjustment.Type==Prefs.GetLong(PrefName.TreatPlanDiscountAdjustmentType)) {
 					discountAmt-=adjustment.AdjustAmount;//Discounts are stored as negatives, we want a positive discount value.
 				}

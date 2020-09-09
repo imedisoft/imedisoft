@@ -1925,24 +1925,24 @@ namespace OpenDental{
 		private void FillGrid() {
 			benefitList.Sort();
 			gridBenefits.BeginUpdate();
-			gridBenefits.ListGridColumns.Clear();
+			gridBenefits.Columns.Clear();
 			GridColumn col=new GridColumn("Pat",35);
-			gridBenefits.ListGridColumns.Add(col);
+			gridBenefits.Columns.Add(col);
 			col=new GridColumn("Level",60);
-			gridBenefits.ListGridColumns.Add(col);
+			gridBenefits.Columns.Add(col);
 			col=new GridColumn("Type",90);
-			gridBenefits.ListGridColumns.Add(col);
+			gridBenefits.Columns.Add(col);
 			col=new GridColumn("Category",90);
-			gridBenefits.ListGridColumns.Add(col);
+			gridBenefits.Columns.Add(col);
 			col=new GridColumn("%",35);//,HorizontalAlignment.Right);
-			gridBenefits.ListGridColumns.Add(col);
+			gridBenefits.Columns.Add(col);
 			col=new GridColumn("Amt",50);//,HorizontalAlignment.Right);
-			gridBenefits.ListGridColumns.Add(col);
+			gridBenefits.Columns.Add(col);
 			col=new GridColumn("Time Period",80);
-			gridBenefits.ListGridColumns.Add(col);
+			gridBenefits.Columns.Add(col);
 			col=new GridColumn("Quantity",115);
-			gridBenefits.ListGridColumns.Add(col);
-			gridBenefits.ListGridRows.Clear();
+			gridBenefits.Columns.Add(col);
+			gridBenefits.Rows.Clear();
 			GridRow row;
 			//bool isCalendarYear=true;
 			for(int i=0;i<benefitList.Count;i++) {
@@ -1992,7 +1992,7 @@ namespace OpenDental{
 				else {
 					row.Cells.Add("");
 				}
-				gridBenefits.ListGridRows.Add(row);
+				gridBenefits.Rows.Add(row);
 			}
 			gridBenefits.EndUpdate();
 		}

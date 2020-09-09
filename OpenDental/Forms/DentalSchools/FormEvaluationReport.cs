@@ -32,10 +32,10 @@ namespace Imedisoft.Forms
 		private void FillCourses()
 		{
 			schoolCoursesGrid.BeginUpdate();
-			schoolCoursesGrid.ListGridColumns.Clear();
-			schoolCoursesGrid.ListGridColumns.Add(new GridColumn(Translation.DentalSchools.Course, 60));
-			schoolCoursesGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Description, 90));
-			schoolCoursesGrid.ListGridRows.Clear();
+			schoolCoursesGrid.Columns.Clear();
+			schoolCoursesGrid.Columns.Add(new GridColumn(Translation.DentalSchools.Course, 60));
+			schoolCoursesGrid.Columns.Add(new GridColumn(Translation.Common.Description, 90));
+			schoolCoursesGrid.Rows.Clear();
 	
 			foreach (var schoolCourse in SchoolCourses.GetAll())
 			{
@@ -44,7 +44,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(schoolCourse.Description);
 				gridRow.Tag = schoolCourse;
 
-				schoolCoursesGrid.ListGridRows.Add(gridRow);
+				schoolCoursesGrid.Rows.Add(gridRow);
 			}
 
 			schoolCoursesGrid.EndUpdate();
@@ -53,11 +53,11 @@ namespace Imedisoft.Forms
 		private void FillInstructors()
 		{
 			instructorsGrid.BeginUpdate();
-			instructorsGrid.ListGridColumns.Clear();
-			instructorsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.ProviderIdAbbr, 50));
-			instructorsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.LastName, 80));
-			instructorsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.FirstName, 80));
-			instructorsGrid.ListGridRows.Clear();
+			instructorsGrid.Columns.Clear();
+			instructorsGrid.Columns.Add(new GridColumn(Translation.Common.ProviderIdAbbr, 50));
+			instructorsGrid.Columns.Add(new GridColumn(Translation.Common.LastName, 80));
+			instructorsGrid.Columns.Add(new GridColumn(Translation.Common.FirstName, 80));
+			instructorsGrid.Rows.Clear();
 
 			foreach (var provider in Providers.GetInstructors())
 			{
@@ -67,7 +67,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(provider.FirstName);
 				gridRow.Tag = provider;
 
-				instructorsGrid.ListGridRows.Add(gridRow);
+				instructorsGrid.Rows.Add(gridRow);
 			}
 
 			instructorsGrid.EndUpdate();
@@ -82,11 +82,11 @@ namespace Imedisoft.Forms
 				instructorsGrid.SelectedTags<Provider>().Select(prov => prov.Id);
 
 			studentsGrid.BeginUpdate();
-			studentsGrid.ListGridColumns.Clear();
-			studentsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.ProviderIdAbbr, 60));
-			studentsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.LastName, 80));
-			studentsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.FirstName, 80));
-			studentsGrid.ListGridRows.Clear();
+			studentsGrid.Columns.Clear();
+			studentsGrid.Columns.Add(new GridColumn(Translation.Common.ProviderIdAbbr, 60));
+			studentsGrid.Columns.Add(new GridColumn(Translation.Common.LastName, 80));
+			studentsGrid.Columns.Add(new GridColumn(Translation.Common.FirstName, 80));
+			studentsGrid.Rows.Clear();
 
 			foreach (var studentInfo in Evaluations.GetStudents(schoolCourseIds, instructorIds))
 			{
@@ -96,7 +96,7 @@ namespace Imedisoft.Forms
 				row.Cells.Add(studentInfo.FirstName);
 				row.Tag = studentInfo;
 
-				studentsGrid.ListGridRows.Add(row);
+				studentsGrid.Rows.Add(row);
 			}
 
 			studentsGrid.EndUpdate();
@@ -145,7 +145,7 @@ namespace Imedisoft.Forms
 		{
 			changedStudentSelectionFromGrid = true;
 
-			allStudentsCheckBox.Checked = studentsGrid.SelectedGridRows.Count == studentsGrid.ListGridRows.Count;
+			allStudentsCheckBox.Checked = studentsGrid.SelectedRows.Count == studentsGrid.Rows.Count;
 
 			changedStudentSelectionFromGrid = false;
 		}

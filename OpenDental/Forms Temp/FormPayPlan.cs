@@ -1340,29 +1340,29 @@ namespace OpenDental{
 		/// <summary>Called 5 times.  This also fills prov and clinic based on the first charge if not new.</summary>
 		private void FillCharges() {
 			gridCharges.BeginUpdate();
-			gridCharges.ListGridColumns.Clear();
+			gridCharges.Columns.Clear();
 			GridColumn col;
 			//If this column is changed from a date column then the comparer method (ComparePayPlanRows) needs to be updated.
 			//If changes are made to the order of the grid, changes need to also be made for butPrint_Click
 			col=new GridColumn("Date",64,HorizontalAlignment.Center);//0
-			gridCharges.ListGridColumns.Add(col);
+			gridCharges.Columns.Add(col);
 			col=new GridColumn("Provider",50);//1
-			gridCharges.ListGridColumns.Add(col);
+			gridCharges.Columns.Add(col);
 			col=new GridColumn("Description",130);//2
-			gridCharges.ListGridColumns.Add(col);
+			gridCharges.Columns.Add(col);
 			col=new GridColumn("Principal",60,HorizontalAlignment.Right);//3
-			gridCharges.ListGridColumns.Add(col);
+			gridCharges.Columns.Add(col);
 			col=new GridColumn("Interest",52,HorizontalAlignment.Right);//4
-			gridCharges.ListGridColumns.Add(col);
+			gridCharges.Columns.Add(col);
 			col=new GridColumn("Due",60,HorizontalAlignment.Right);//5
-			gridCharges.ListGridColumns.Add(col);
+			gridCharges.Columns.Add(col);
 			col=new GridColumn("Payment",60,HorizontalAlignment.Right);//6
-			gridCharges.ListGridColumns.Add(col);
+			gridCharges.Columns.Add(col);
 			col=new GridColumn("Adjustment",70,HorizontalAlignment.Right);//7
-			gridCharges.ListGridColumns.Add(col);
+			gridCharges.Columns.Add(col);
 			col=new GridColumn("Balance",60,HorizontalAlignment.Right);//8
-			gridCharges.ListGridColumns.Add(col);
-			gridCharges.ListGridRows.Clear();
+			gridCharges.Columns.Add(col);
+			gridCharges.Rows.Clear();
 			List<GridRow> listPayPlanRows=new List<GridRow>();
 			int numCharges=1;
 			for(int i=0;i<_listPayPlanCharges.Count;i++) {//Payplan Charges
@@ -1400,7 +1400,7 @@ namespace OpenDental{
 			for(int i=0;i<listPayPlanRows.Count;i++) {
 				if(!checkExcludePast.Checked || DateTime.Parse(listPayPlanRows[i].Cells[0].Text)>DateTime.Today) {
 					//Add the row if we aren't excluding past activity or the activity is in the future.
-					gridCharges.ListGridRows.Add(listPayPlanRows[i]);
+					gridCharges.Rows.Add(listPayPlanRows[i]);
 				}
 				if(listPayPlanRows[i].Cells[3].Text!="") {//Principal
 					TotPrinc+=PIn.Double(listPayPlanRows[i].Cells[3].Text);
@@ -1419,7 +1419,7 @@ namespace OpenDental{
 					negAdjAmt-=PIn.Double(listPayPlanRows[i].Cells[7].Text);//+ because adjustments are negatvie, increment
 				}
 				if(!checkExcludePast.Checked || DateTime.Parse(listPayPlanRows[i].Cells[0].Text)>DateTime.Today) {
-					gridCharges.ListGridRows[gridCharges.ListGridRows.Count-1].Cells[8].Text=balanceAmt.ToString("f");
+					gridCharges.Rows[gridCharges.Rows.Count-1].Cells[8].Text=balanceAmt.ToString("f");
 				}
 				if(DateTime.Parse(listPayPlanRows[i].Cells[0].Text)<=DateTime.Today) {//Totals row
 					textPrincipal.Text=TotPrinc.ToString("f");
@@ -1428,8 +1428,8 @@ namespace OpenDental{
 					textPayment.Text=TotPay.ToString("f");
 					textAdjustment.Text=negAdjAmt.ToString("f");
 					textBalance.Text=balanceAmt.ToString("f");
-					if(gridCharges.ListGridRows.Count>0) {
-						totalsRowIndex=gridCharges.ListGridRows.Count-1;
+					if(gridCharges.Rows.Count>0) {
+						totalsRowIndex=gridCharges.Rows.Count-1;
 					}
 				}
 			}
@@ -1462,9 +1462,9 @@ namespace OpenDental{
 				//don't damage what's already in textDateFirstPay.Text
 			}
 			gridCharges.EndUpdate();
-			if(gridCharges.ListGridRows.Count>0 && totalsRowIndex != -1) {
-				gridCharges.ListGridRows[totalsRowIndex].LowerBorderColor=Color.Black;
-				gridCharges.ListGridRows[totalsRowIndex].Cells[6].Bold= true;
+			if(gridCharges.Rows.Count>0 && totalsRowIndex != -1) {
+				gridCharges.Rows[totalsRowIndex].LowerBorderColor=Color.Black;
+				gridCharges.Rows[totalsRowIndex].Cells[6].Bold= true;
 			}
 			textAccumulatedDue.Text=PayPlans.GetAccumDue(_payPlanCur.PayPlanNum,_listPayPlanCharges).ToString("f");
 			textPrincPaid.Text=PayPlans.GetPrincPaid(AmtPaid,_payPlanCur.PayPlanNum,_listPayPlanCharges).ToString("f");
@@ -1493,7 +1493,7 @@ namespace OpenDental{
 				MessageBox.Show("Not allowed to change the guarantor because payments are attached.");
 				return;
 			}
-			if(gridCharges.ListGridRows.Count>0) {
+			if(gridCharges.Rows.Count>0) {
 				MessageBox.Show("Not allowed to change the guarantor without first clearing the amortization schedule.");
 				return;
 			}
@@ -1675,11 +1675,11 @@ namespace OpenDental{
 		}
 
 		private void gridCharges_CellDoubleClick(object sender,OpenDental.UI.ODGridClickEventArgs e) { 
-			if(gridCharges.ListGridRows[e.Row].Tag==null) {//Prevent double clicking on the "Current Totals" row
+			if(gridCharges.Rows[e.Row].Tag==null) {//Prevent double clicking on the "Current Totals" row
 				return;
 			}
-			if(gridCharges.ListGridRows[e.Row].Tag.GetType()==typeof(PayPlanCharge)) {
-				PayPlanCharge payPlanCharge=(PayPlanCharge)gridCharges.ListGridRows[e.Row].Tag;
+			if(gridCharges.Rows[e.Row].Tag.GetType()==typeof(PayPlanCharge)) {
+				PayPlanCharge payPlanCharge=(PayPlanCharge)gridCharges.Rows[e.Row].Tag;
 				double payPlanChargeOldAmt=payPlanCharge.Principal;
 				FormPayPlanChargeEdit FormP=new FormPayPlanChargeEdit(payPlanCharge);//This automatically takes care of our in-memory list because the Tag is referencing our list of objects.
 				FormP.ShowDialog();
@@ -1692,7 +1692,7 @@ namespace OpenDental{
 						textAmount.Text=(PIn.Double(textAmount.Text)-(payPlanChargeOldAmt)).ToString("f");//charge will be negative, - to add the amount back
 					}
 					gridCharges.BeginUpdate();
-					gridCharges.ListGridRows.RemoveAt(e.Row);
+					gridCharges.Rows.RemoveAt(e.Row);
 					gridCharges.EndUpdate();
 					return;
 				}
@@ -1710,8 +1710,8 @@ namespace OpenDental{
 					textAmount.Text=(PIn.Double(textAmount.Text)+(amtChanged)).ToString("f");
 				}
 			}
-			else if(gridCharges.ListGridRows[e.Row].Tag.GetType()==typeof(PaySplit)) {
-				PaySplit paySplit=(PaySplit)gridCharges.ListGridRows[e.Row].Tag;
+			else if(gridCharges.Rows[e.Row].Tag.GetType()==typeof(PaySplit)) {
+				PaySplit paySplit=(PaySplit)gridCharges.Rows[e.Row].Tag;
 				Payment pay=Payments.GetPayment(paySplit.PayNum);
 				if(pay==null) {
 					MessageBox.Show("No payment exists.  Please run database maintenance method"+" "+nameof(DatabaseMaintenances.PaySplitWithInvalidPayNum));
@@ -1724,8 +1724,8 @@ namespace OpenDental{
 					return;
 				}
 			}
-			else if(gridCharges.ListGridRows[e.Row].Tag.GetType()==typeof(DataRow)) {//Claim payment or bundle.
-				DataRow bundledClaimProc=(DataRow)gridCharges.ListGridRows[e.Row].Tag;
+			else if(gridCharges.Rows[e.Row].Tag.GetType()==typeof(DataRow)) {//Claim payment or bundle.
+				DataRow bundledClaimProc=(DataRow)gridCharges.Rows[e.Row].Tag;
 				Claim claimCur=Claims.GetClaim(PIn.Long(bundledClaimProc["ClaimNum"].ToString()));
 				if(claimCur==null) {
 					MessageBox.Show("The claim has been deleted.");
@@ -1769,7 +1769,7 @@ namespace OpenDental{
 			textDateInterestStart.ReadOnly=false;
 			textDownPayment.ReadOnly=false;
 			gridCharges.BeginUpdate();
-			gridCharges.ListGridRows.Clear();
+			gridCharges.Rows.Clear();
 			gridCharges.EndUpdate();
 		}
 
@@ -1884,17 +1884,17 @@ namespace OpenDental{
 				tbl.Columns.Add("adjustment");
 				tbl.Columns.Add("balance");
 				DataRow row;
-				for(int i = 0;i<gridCharges.ListGridRows.Count;i++) {
+				for(int i = 0;i<gridCharges.Rows.Count;i++) {
 					row=tbl.NewRow();
-					row["date"]=gridCharges.ListGridRows[i].Cells[0].Text;
-					row["prov"]=gridCharges.ListGridRows[i].Cells[1].Text;
-					row["description"]=gridCharges.ListGridRows[i].Cells[2].Text;
-					row["principal"]=gridCharges.ListGridRows[i].Cells[3].Text;
-					row["interest"]=gridCharges.ListGridRows[i].Cells[4].Text;
-					row["due"]=gridCharges.ListGridRows[i].Cells[5].Text;
-					row["payment"]=gridCharges.ListGridRows[i].Cells[6].Text;
-					row["adjustment"]=gridCharges.ListGridRows[i].Cells[7].Text;
-					row["balance"]=gridCharges.ListGridRows[i].Cells[8].Text;
+					row["date"]=gridCharges.Rows[i].Cells[0].Text;
+					row["prov"]=gridCharges.Rows[i].Cells[1].Text;
+					row["description"]=gridCharges.Rows[i].Cells[2].Text;
+					row["principal"]=gridCharges.Rows[i].Cells[3].Text;
+					row["interest"]=gridCharges.Rows[i].Cells[4].Text;
+					row["due"]=gridCharges.Rows[i].Cells[5].Text;
+					row["payment"]=gridCharges.Rows[i].Cells[6].Text;
+					row["adjustment"]=gridCharges.Rows[i].Cells[7].Text;
+					row["balance"]=gridCharges.Rows[i].Cells[8].Text;
 					tbl.Rows.Add(row);
 				}
 				QueryObject query=report.AddQuery(tbl,"","",SplitByKind.None,1,true);
@@ -1986,7 +1986,7 @@ namespace OpenDental{
 				MessageBox.Show("Please fix data entry errors first.");
 				return true;
 			}
-			if(gridCharges.ListGridRows.Count==0) {
+			if(gridCharges.Rows.Count==0) {
 				MessageBox.Show("An amortization schedule must be created first.");
 				return true;
 			}

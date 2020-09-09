@@ -25,13 +25,13 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridEdu.BeginUpdate();
-			gridEdu.ListGridColumns.Clear();
+			gridEdu.Columns.Clear();
 			GridColumn col=new GridColumn("Criteria",300);
-			gridEdu.ListGridColumns.Add(col);
+			gridEdu.Columns.Add(col);
 			col=new GridColumn("Link",700);
-			gridEdu.ListGridColumns.Add(col);
+			gridEdu.Columns.Add(col);
 			eduResourceList=EduResources.SelectAll();
-			gridEdu.ListGridRows.Clear();
+			gridEdu.Rows.Clear();
 			GridRow row;
 			foreach(EduResource eduResCur in eduResourceList) {
 				row=new GridRow();
@@ -54,7 +54,7 @@ namespace OpenDental {
 					row.Cells.Add("Lab Results: "+eduResCur.LabResultName+" "+eduResCur.LabResultCompare);
 				}
 				row.Cells.Add(eduResCur.ResourceUrl);
-				gridEdu.ListGridRows.Add(row);
+				gridEdu.Rows.Add(row);
 			}
 			gridEdu.EndUpdate();
 		}

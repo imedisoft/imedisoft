@@ -1191,12 +1191,12 @@ namespace OpenDental{
 		private void FillFees(){
 			_listFees=Fees.GetFeesForCodeNoOverrides(ProcCode.CodeNum);
 			gridFees.BeginUpdate();
-			gridFees.ListGridColumns.Clear();
+			gridFees.Columns.Clear();
 			GridColumn col=new GridColumn("Sched",120);
-			gridFees.ListGridColumns.Add(col);
+			gridFees.Columns.Add(col);
 			col=new GridColumn("Amount",60,HorizontalAlignment.Right);
-			gridFees.ListGridColumns.Add(col); 
-			gridFees.ListGridRows.Clear();
+			gridFees.Columns.Add(col); 
+			gridFees.Rows.Clear();
 			GridRow row;
 			Fee fee;
 			for(int i=0;i<_listFeeScheds.Count;i++){
@@ -1209,7 +1209,7 @@ namespace OpenDental{
 				else{
 					row.Cells.Add(fee.Amount.ToString("n"));
 				}
-				gridFees.ListGridRows.Add(row);
+				gridFees.Rows.Add(row);
 			}
 			gridFees.EndUpdate();
 		}
@@ -1238,26 +1238,26 @@ namespace OpenDental{
 			NoteList=ProcCodeNotes.GetList(ProcCode.CodeNum);
 			gridNotes.BeginUpdate();
 			gridTpNotes.BeginUpdate();
-			gridNotes.ListGridColumns.Clear();
-			gridTpNotes.ListGridColumns.Clear();
+			gridNotes.Columns.Clear();
+			gridTpNotes.Columns.Clear();
 			#region gridNotes
 			GridColumn col=new GridColumn("Prov",80);
-			gridNotes.ListGridColumns.Add(col);
+			gridNotes.Columns.Add(col);
 			col=new GridColumn("Time",150);
-			gridNotes.ListGridColumns.Add(col);
+			gridNotes.Columns.Add(col);
 			col=new GridColumn("Note",400);
-			gridNotes.ListGridColumns.Add(col);
+			gridNotes.Columns.Add(col);
 			#endregion
 			#region gridTpNotes
 			GridColumn column=new GridColumn("Prov",80);
-			gridTpNotes.ListGridColumns.Add(column);
+			gridTpNotes.Columns.Add(column);
 			column=new GridColumn("Time",150);
-			gridTpNotes.ListGridColumns.Add(column);
+			gridTpNotes.Columns.Add(column);
 			column=new GridColumn("Note",400);
-			gridTpNotes.ListGridColumns.Add(column);
+			gridTpNotes.Columns.Add(column);
 			#endregion
-			gridNotes.ListGridRows.Clear();
-			gridTpNotes.ListGridRows.Clear();
+			gridNotes.Rows.Clear();
+			gridTpNotes.Rows.Clear();
 			GridRow row;
 			foreach(ProcCodeNote procNoteCur in NoteList) {
 				row=new GridRow();
@@ -1265,10 +1265,10 @@ namespace OpenDental{
 				row.Cells.Add(procNoteCur.ProcTime);
 				row.Cells.Add(procNoteCur.Note);
 				if(procNoteCur.ProcStatus==ProcStat.TP) {
-					gridTpNotes.ListGridRows.Add(row);
+					gridTpNotes.Rows.Add(row);
 				}
 				else {
-					gridNotes.ListGridRows.Add(row);
+					gridNotes.Rows.Add(row);
 				}
 			}
 			gridNotes.EndUpdate();

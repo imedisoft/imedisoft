@@ -92,15 +92,15 @@ namespace OpenDental.User_Controls.SetupWizard {
 
 		private void FillGrid(ODGrid grid, List<Schedule> listSched) {
 			grid.BeginUpdate();
-			grid.ListGridColumns.Clear();
-			grid.ListGridColumns.Add(new GridColumn("StartTime",105));
-			grid.ListGridColumns.Add(new GridColumn("EndTime",105));
-			grid.ListGridRows.Clear();
+			grid.Columns.Clear();
+			grid.Columns.Add(new GridColumn("StartTime",105));
+			grid.Columns.Add(new GridColumn("EndTime",105));
+			grid.Rows.Clear();
 			listSched.ForEach(x => {
 				GridRow row = new GridRow();
 				row.Cells.Add(x.StartTime.ToShortTimeString());
 				row.Cells.Add(x.StopTime.ToShortTimeString());
-				grid.ListGridRows.Add(row);
+				grid.Rows.Add(row);
 			});
 			grid.EndUpdate();
 		}
@@ -148,37 +148,37 @@ namespace OpenDental.User_Controls.SetupWizard {
 		}
 
 		private void checkMonday_CheckedChanged(object sender,EventArgs e) {
-			gridMonday.ListGridRows.Clear();
+			gridMonday.Rows.Clear();
 			groupMon.Visible=checkMonday.Checked;
 		}
 
 		private void checkTuesday_CheckedChanged(object sender,EventArgs e) {
-			gridTuesday.ListGridRows.Clear();
+			gridTuesday.Rows.Clear();
 			groupTue.Visible=checkTuesday.Checked;
 		}
 
 		private void checkWednesday_CheckedChanged(object sender,EventArgs e) {
-			gridWednesday.ListGridRows.Clear();
+			gridWednesday.Rows.Clear();
 			groupWed.Visible=checkWednesday.Checked;
 		}
 
 		private void checkThursday_CheckedChanged(object sender,EventArgs e) {
-			gridThursday.ListGridRows.Clear();
+			gridThursday.Rows.Clear();
 			groupThu.Visible=checkThursday.Checked;
 		}
 
 		private void checkFriday_CheckedChanged(object sender,EventArgs e) {
-			gridFriday.ListGridRows.Clear();
+			gridFriday.Rows.Clear();
 			groupFri.Visible=checkFriday.Checked;
 		}
 
 		private void checkSaturday_CheckedChanged(object sender,EventArgs e) {
-			gridSaturday.ListGridRows.Clear();
+			gridSaturday.Rows.Clear();
 			groupSat.Visible=checkSaturday.Checked;
 		}
 
 		private void checkSunday_CheckedChanged(object sender,EventArgs e) {
-			gridSunday.ListGridRows.Clear();
+			gridSunday.Rows.Clear();
 			groupSun.Visible=checkSunday.Checked;
 		}
 

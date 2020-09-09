@@ -115,16 +115,16 @@ namespace Imedisoft.Forms
 			}
 
 			definitionsGrid.BeginUpdate();
-			definitionsGrid.ListGridColumns.Clear();
-			definitionsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Definition, 200));
-			definitionsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Value, 70));
+			definitionsGrid.Columns.Clear();
+			definitionsGrid.Columns.Add(new GridColumn(Translation.Common.Definition, 200));
+			definitionsGrid.Columns.Add(new GridColumn(Translation.Common.Value, 70));
 
 			if (AllowShowHidden)
 			{
-				definitionsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Hidden, 20) { IsWidthDynamic = true });
+				definitionsGrid.Columns.Add(new GridColumn(Translation.Common.Hidden, 20) { IsWidthDynamic = true });
 			}
 
-			definitionsGrid.ListGridRows.Clear();
+			definitionsGrid.Rows.Clear();
 
 			foreach (var definition in definitions)
 			{
@@ -155,10 +155,10 @@ namespace Imedisoft.Forms
 
 				gridRow.Tag = definition;
 
-				definitionsGrid.ListGridRows.Add(gridRow);
+				definitionsGrid.Rows.Add(gridRow);
 				if (selectedDefinitionIds.Contains(definition.Id))
                 {
-					selectedDefinitionIndices.Add(definitionsGrid.ListGridRows.Count - 1);
+					selectedDefinitionIndices.Add(definitionsGrid.Rows.Count - 1);
                 }
 			}
 
@@ -176,7 +176,7 @@ namespace Imedisoft.Forms
 
 		private void AcceptButton_Click(object sender, EventArgs e)
 		{
-			if (definitionsGrid.SelectedGridRows.Count == 0)
+			if (definitionsGrid.SelectedRows.Count == 0)
             {
 				return;
             }

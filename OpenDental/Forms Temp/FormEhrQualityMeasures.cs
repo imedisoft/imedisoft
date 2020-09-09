@@ -74,23 +74,23 @@ namespace OpenDental {
 			DateTime dateEnd=PIn.Date(textDateEnd.Text);
 			long provNum=listProvsKeyed[comboProv.SelectedIndex].Id;
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Id",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Description",200);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Denom",60,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Numerator",60,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Exclusion",60,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("NotMet",60,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("PerformanceRate",110,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			listQ=QualityMeasures.GetAll(dateStart,dateEnd,provNum);
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<listQ.Count;i++) {
 				row=new GridRow();
@@ -102,7 +102,7 @@ namespace OpenDental {
 				row.Cells.Add(listQ[i].NotMet.ToString());
 				row.Cells.Add(listQ[i].Numerator.ToString()+"/"+(listQ[i].Numerator+listQ[i].NotMet).ToString()
 					+"  = "+listQ[i].PerformanceRate.ToString()+"%");
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

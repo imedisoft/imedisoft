@@ -806,25 +806,25 @@ namespace OpenDental{
 			}
 			ClaimProcs.SetPaymentRow(listClaimNumsToUpdate,ClaimPaymentCur.ClaimPaymentNum,listPaymentRows);
 			gridAttached.BeginUpdate();
-			gridAttached.ListGridColumns.Clear();
+			gridAttached.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("#",25);
-			gridAttached.ListGridColumns.Add(col);
+			gridAttached.Columns.Add(col);
 			col=new GridColumn("Service Date",80);
-			gridAttached.ListGridColumns.Add(col);
+			gridAttached.Columns.Add(col);
 			col=new GridColumn("Clinic",70);
-			gridAttached.ListGridColumns.Add(col);
+			gridAttached.Columns.Add(col);
 			col=new GridColumn("Claim Status",80);
-			gridAttached.ListGridColumns.Add(col);
+			gridAttached.Columns.Add(col);
 			col=new GridColumn("Carrier",186);
-			gridAttached.ListGridColumns.Add(col);
+			gridAttached.Columns.Add(col);
 			col=new GridColumn("Patient",130);
-			gridAttached.ListGridColumns.Add(col);
+			gridAttached.Columns.Add(col);
 			col=new GridColumn("Fee",70,HorizontalAlignment.Right);
-			gridAttached.ListGridColumns.Add(col);
+			gridAttached.Columns.Add(col);
 			col=new GridColumn("Payment",70,HorizontalAlignment.Right);
-			gridAttached.ListGridColumns.Add(col); 
-			gridAttached.ListGridRows.Clear();
+			gridAttached.Columns.Add(col); 
+			gridAttached.Rows.Clear();
 			GridRow row;
 			double total=0;
 			foreach(ClaimPaySplit claimPS in _listClaimsAttached) {
@@ -847,7 +847,7 @@ namespace OpenDental{
 				row.Cells.Add(claimPS.FeeBilled.ToString("F"));
 				row.Cells.Add(claimPS.InsPayAmt.ToString("F"));
 				row.Tag=claimPS;
-				gridAttached.ListGridRows.Add(row);
+				gridAttached.Rows.Add(row);
 			}
 			gridAttached.Tag=_listClaimsAttached;
 			gridAttached.EndUpdate();
@@ -878,24 +878,24 @@ namespace OpenDental{
 				_listDetachedClaims.Clear();
 			}
 			gridOut.BeginUpdate();
-			gridOut.ListGridColumns.Clear();
+			gridOut.Columns.Clear();
 			col=new GridColumn("",25);//so that it lines up with the grid above
-			gridOut.ListGridColumns.Add(col);
+			gridOut.Columns.Add(col);
 			col=new GridColumn("Service Date",80);
-			gridOut.ListGridColumns.Add(col);
+			gridOut.Columns.Add(col);
 			col=new GridColumn("Clinic",70);
-			gridOut.ListGridColumns.Add(col);
+			gridOut.Columns.Add(col);
 			col=new GridColumn("Claim Status",80);
-			gridOut.ListGridColumns.Add(col);
+			gridOut.Columns.Add(col);
 			col=new GridColumn("Carrier",186);
-			gridOut.ListGridColumns.Add(col);
+			gridOut.Columns.Add(col);
 			col=new GridColumn("Patient",130);
-			gridOut.ListGridColumns.Add(col);
+			gridOut.Columns.Add(col);
 			col=new GridColumn("Fee",70,HorizontalAlignment.Right);
-			gridOut.ListGridColumns.Add(col);
+			gridOut.Columns.Add(col);
 			col=new GridColumn("Payment",70,HorizontalAlignment.Right);
-			gridOut.ListGridColumns.Add(col);
-			gridOut.ListGridRows.Clear();
+			gridOut.Columns.Add(col);
+			gridOut.Rows.Clear();
 			foreach(ClaimPaySplit claimPS in _listClaimsOutstanding) {
 				if(textClaimID.Text!="" && !claimPS.ClaimIdentifier.Contains(textClaimID.Text.Trim())) {
 					continue;
@@ -921,7 +921,7 @@ namespace OpenDental{
 				row.Cells.Add(claimPS.FeeBilled.ToString("F"));
 				row.Cells.Add(claimPS.InsPayAmt.ToString("F"));
 				row.Tag=claimPS;
-				gridOut.ListGridRows.Add(row);
+				gridOut.Rows.Add(row);
 			}
 			gridOut.Tag=_listClaimsOutstanding;
 			gridOut.EndUpdate();
@@ -949,7 +949,7 @@ namespace OpenDental{
 				return;
 			}
 			bool hasClaimNoValidReceivedPayments=false;
-			int paymentRow=gridAttached.ListGridRows.Count;//1-indexed
+			int paymentRow=gridAttached.Rows.Count;//1-indexed
 			foreach(ClaimPaySplit selectedClaimPS in gridOut.SelectedTags<ClaimPaySplit>()) {
 				if(ClaimProcs.AttachToPayment(selectedClaimPS.ClaimNum,ClaimPaymentCur.ClaimPaymentNum,ClaimPaymentCur.CheckDate,paymentRow) > 0) {
 					paymentRow++;//Only increment the paymentRow if there were claimprocs attached to the payment.
@@ -977,8 +977,8 @@ namespace OpenDental{
 			_listDetachedClaims.AddRange(listDetachedClaims);
 			FillGrids(false);
 			bool didReorder=false;
-			for(int i=0;i<gridAttached.ListGridRows.Count;i++) {
-				ClaimPaySplit claimPSAttached=(ClaimPaySplit)gridAttached.ListGridRows[i].Tag;
+			for(int i=0;i<gridAttached.Rows.Count;i++) {
+				ClaimPaySplit claimPSAttached=(ClaimPaySplit)gridAttached.Rows[i].Tag;
 				if(claimPSAttached.PaymentRow!=i+1) {
 					ClaimProcs.SetPaymentRow(claimPSAttached.ClaimNum,ClaimPaymentCur.ClaimPaymentNum,i+1);
 					didReorder=true;
@@ -995,10 +995,10 @@ namespace OpenDental{
 			}
 			//top grid
 			//bring up claimedit window.  User should be able to edit if not locked.
-			if(e.Row<0 || e.Row>=gridAttached.ListGridRows.Count) {//If an invalid row was clicked on somehow, return.
+			if(e.Row<0 || e.Row>=gridAttached.Rows.Count) {//If an invalid row was clicked on somehow, return.
 				return;
 			}
-			ClaimPaySplit claimPS=(ClaimPaySplit)gridAttached.ListGridRows[e.Row].Tag;
+			ClaimPaySplit claimPS=(ClaimPaySplit)gridAttached.Rows[e.Row].Tag;
 			Claim claimCur=Claims.GetClaim(claimPS.ClaimNum);
 			if(claimCur==null) {
 				MessageBox.Show("The claim has been deleted.");
@@ -1024,8 +1024,8 @@ namespace OpenDental{
 				return;
 			}
 			for(int i=0;i<selected.Length;i++) {
-				ClaimPaySplit claimPaySplitAbove=(ClaimPaySplit)gridAttached.ListGridRows[selected[i]-1].Tag;
-				ClaimPaySplit selectedClaimPaySplit=(ClaimPaySplit)gridAttached.ListGridRows[selected[i]].Tag;
+				ClaimPaySplit claimPaySplitAbove=(ClaimPaySplit)gridAttached.Rows[selected[i]-1].Tag;
+				ClaimPaySplit selectedClaimPaySplit=(ClaimPaySplit)gridAttached.Rows[selected[i]].Tag;
 				//In the db, move the one above down to the current pos
 				ClaimProcs.SetPaymentRow(claimPaySplitAbove.ClaimNum,ClaimPaymentCur.ClaimPaymentNum,selected[i]+1);
 				//and move this row up one
@@ -1046,12 +1046,12 @@ namespace OpenDental{
 			for(int i=0;i<gridAttached.SelectedIndices.Length;i++) {
 				selected[i]=gridAttached.SelectedIndices[i];
 			}
-			if(selected[selected.Length-1]==gridAttached.ListGridRows.Count-1) {//already at the bottom
+			if(selected[selected.Length-1]==gridAttached.Rows.Count-1) {//already at the bottom
 				return;
 			}
 			for(int i=selected.Length-1;i>=0;i--) {//go backwards
-				ClaimPaySplit claimPaySplitBelow=(ClaimPaySplit)gridAttached.ListGridRows[selected[i]+1].Tag;
-				ClaimPaySplit selectedClaimPaySplit=(ClaimPaySplit)gridAttached.ListGridRows[selected[i]].Tag;
+				ClaimPaySplit claimPaySplitBelow=(ClaimPaySplit)gridAttached.Rows[selected[i]+1].Tag;
+				ClaimPaySplit selectedClaimPaySplit=(ClaimPaySplit)gridAttached.Rows[selected[i]].Tag;
 				//In the db, move the one below up to the current pos
 				ClaimProcs.SetPaymentRow(claimPaySplitBelow.ClaimNum,ClaimPaymentCur.ClaimPaymentNum,selected[i]+1);
 				//and move this row down one
@@ -1071,10 +1071,10 @@ namespace OpenDental{
 			//bring up claimedit window
 			//after returning from the claim edit window, use a query to get a list of all the claimprocs that have amounts entered for that claim, but have ClaimPaymentNumber of 0.
 			//Set all those claimprocs to be attached.
-			if(e.Row<0 || e.Row>=gridOut.ListGridRows.Count) {//If an invalid row was clicked on, return.
+			if(e.Row<0 || e.Row>=gridOut.Rows.Count) {//If an invalid row was clicked on, return.
 				return;
 			}
-			ClaimPaySplit claimPS=(ClaimPaySplit)gridOut.ListGridRows[e.Row].Tag;
+			ClaimPaySplit claimPS=(ClaimPaySplit)gridOut.Rows[e.Row].Tag;
 			Claim claimCur=Claims.GetClaim(claimPS.ClaimNum);
 			if(claimCur==null) {
 				MessageBox.Show("The claim has been deleted.");
@@ -1087,7 +1087,7 @@ namespace OpenDental{
 			if(FormCE.DialogResult!=DialogResult.OK){
 				return;
 			}
-			if(ClaimProcs.AttachToPayment(claimCur.ClaimNum,ClaimPaymentCur.ClaimPaymentNum,ClaimPaymentCur.CheckDate,gridAttached.ListGridRows.Count+1)==0) {
+			if(ClaimProcs.AttachToPayment(claimCur.ClaimNum,ClaimPaymentCur.ClaimPaymentNum,ClaimPaymentCur.CheckDate,gridAttached.Rows.Count+1)==0) {
 				MessageBox.Show("There are no valid received payments for this claim.");
 			}
 			FillGrids(false);
@@ -1239,7 +1239,7 @@ namespace OpenDental{
 			if(!IsAmountAndTotalEqual()) {
 				return;
 			}
-			if(gridAttached.ListGridRows.Count==0) {
+			if(gridAttached.Rows.Count==0) {
 				MessageBox.Show("At least one claim must be attached to this insurance payment.");
 				return;
 			}
@@ -1280,7 +1280,7 @@ namespace OpenDental{
 			}
 			if(ClaimPaymentCur.IsPartial) {
 				if(IsAmountAndTotalEqual(isSilent:true)) {
-					if(gridAttached.ListGridRows.Count > 0
+					if(gridAttached.Rows.Count > 0
 						&& !Prefs.GetBool(PrefName.PromptForSecondaryClaim))
 					{
 						//If PromptForSecondaryClaim is enabled the user was prompted to make a decision when there are secondary claims for every claim they attached.

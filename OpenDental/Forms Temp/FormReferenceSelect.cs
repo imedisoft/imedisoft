@@ -53,42 +53,42 @@ namespace OpenDental {
 			RefTable=CustReferences.GetReferenceTable(limit,billingTypes,checkBadRefs.Checked,checkUsedRefs.Checked,checkGuarOnly.Checked,textCity.Text,textState.Text,
 				textZip.Text,textAreaCode.Text,textSpecialty.Text,superFam,textLName.Text,textFName.Text,textPatNum.Text,age,textCountry.Text);
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("PatNum",50);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("First Name",75);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Last Name",75);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("HmPhone",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("State",45);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("City",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Zip Code",60);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Country",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Specialty",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Age",40);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Super",50);
 			col.TextAlign=HorizontalAlignment.Center;
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Last Used",70);
 			col.TextAlign=HorizontalAlignment.Center;
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Times Used",70);
 			col.TextAlign=HorizontalAlignment.Center;
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if(checkBadRefs.Checked) {
 				col=new GridColumn("Bad",50);
 				col.TextAlign=HorizontalAlignment.Center;
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<RefTable.Rows.Count;i++) {
 				row=new GridRow();
@@ -108,7 +108,7 @@ namespace OpenDental {
 				if(checkBadRefs.Checked) {
 					row.Cells.Add(RefTable.Rows[i]["IsBadRef"].ToString());
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			gridMain.SetSelected(0,true);

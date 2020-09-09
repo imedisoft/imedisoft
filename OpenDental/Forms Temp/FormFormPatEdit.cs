@@ -202,18 +202,18 @@ namespace OpenDental{
 		private void FillGrid(){
 			//QuestionList=Questions.Refresh(PatNum);
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Question",370);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Answer",370);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<FormPatCur.QuestionList.Count;i++){
 				row=new GridRow();
 				row.Cells.Add(FormPatCur.QuestionList[i].Description);
 				row.Cells.Add(FormPatCur.QuestionList[i].Answer);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

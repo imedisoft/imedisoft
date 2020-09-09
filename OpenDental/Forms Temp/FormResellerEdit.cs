@@ -50,27 +50,27 @@ namespace OpenDental {
 			double total=0;
 			_tableCustomers=Resellers.GetResellerCustomersList(_resellerCur.PatNum);
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("PatNum",55);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("RegKey",130);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("ProcCode",60);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Descript",180);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Fee",70);
 			col.TextAlign=HorizontalAlignment.Right;
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("DateStart",80);
 			col.TextAlign=HorizontalAlignment.Center;
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("DateStop",80);
 			col.TextAlign=HorizontalAlignment.Center;
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Note",200);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_tableCustomers.Rows.Count;i++) {
 				row=new GridRow();
@@ -86,7 +86,7 @@ namespace OpenDental {
 				DateTime dateStop=PIn.Date(_tableCustomers.Rows[i]["DateStop"].ToString());
 				row.Cells.Add(dateStop.Year>1880 ? dateStop.ToShortDateString() : "");
 				row.Cells.Add(_tableCustomers.Rows[i]["Note"].ToString());
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			labelTotal.Text="Total: "+total.ToString("C");
@@ -95,19 +95,19 @@ namespace OpenDental {
 		private void FillGridServices() {
 			_listServices=ResellerServices.GetServicesForReseller(_resellerCur.ResellerNum);
 			gridServices.BeginUpdate();
-			gridServices.ListGridColumns.Clear();
+			gridServices.Columns.Clear();
 			GridColumn col=new GridColumn("Description",180);
-			gridServices.ListGridColumns.Add(col);
+			gridServices.Columns.Add(col);
 			col=new GridColumn("Fee",40){ IsWidthDynamic=true };
 			col.TextAlign=HorizontalAlignment.Right;
-			gridServices.ListGridColumns.Add(col);
-			gridServices.ListGridRows.Clear();
+			gridServices.Columns.Add(col);
+			gridServices.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listServices.Count;i++) {
 				row=new GridRow();
 				row.Cells.Add(ProcedureCodes.GetLaymanTerm(_listServices[i].CodeNum));
 				row.Cells.Add(_listServices[i].Fee.ToString("F"));
-				gridServices.ListGridRows.Add(row);
+				gridServices.Rows.Add(row);
 			}
 			gridServices.EndUpdate();
 			//The Available Services grid has changed, re-evaluate the bundle requirement label visibility.

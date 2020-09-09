@@ -132,16 +132,16 @@ namespace OpenDental{
 			AppointmentRules.RefreshCache();
 			_listAppointmentRules=AppointmentRules.GetDeepCopy();
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Description",200);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Start Code",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("End Code",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Enabled",50,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			UI.GridRow row;
 			for(int i=0;i<_listAppointmentRules.Count;i++){
 				row=new OpenDental.UI.GridRow();
@@ -154,7 +154,7 @@ namespace OpenDental{
 				else{
 					row.Cells.Add("");
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

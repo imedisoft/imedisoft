@@ -406,7 +406,7 @@ namespace OpenDentBusiness {
 			odGrid.SheetPageHeight=sheet.HeightPage;
 			#region  Fill Grid, Set Text Alignment
 			odGrid.BeginUpdate();
-			odGrid.ListGridColumns.Clear();
+			odGrid.Columns.Clear();
 			GridColumn col;
 			foreach(DisplayField colCur in Columns) {
 				if(string.IsNullOrEmpty(colCur.Description)) {
@@ -475,7 +475,7 @@ namespace OpenDentBusiness {
 						col.TextAlign=HorizontalAlignment.Left;
 						break;
 				}
-				odGrid.ListGridColumns.Add(col);
+				odGrid.Columns.Add(col);
 			}
 			GridRow row;
 			foreach(DataRow rowCur in table.Rows) {
@@ -507,11 +507,11 @@ namespace OpenDentBusiness {
 						row.LowerBorderColor=Color.Black;
 					}
 				}
-				odGrid.ListGridRows.Add(row);
+				odGrid.Rows.Add(row);
 			}
 			odGrid.EndUpdate();//Calls ComputeRows and ComputeColumns, meaning the RowHeights int[] has been filled.
 			#endregion
-			for(int i=0;i<odGrid.ListGridRows.Count;i++) {
+			for(int i=0;i<odGrid.Rows.Count;i++) {
 				GridSheetRow gridSheetRow=odGrid.ListGridSheetRows[i];
 				if(_isPrinting
 					&& (gridSheetRow.YPos-_printMargin.Top<_yPosPrint //rows at the end of previous page
@@ -625,7 +625,7 @@ namespace OpenDentBusiness {
 								odGrid.SheetDrawTitle(g,field.XPos,gridSheetRow.YPos-_yPosPrint);
 							}
 							else {
-								odGrid.SheetDrawTitleX(gx,field.XPos,gridSheetRow.YPos-_yPosPrint);
+								odGrid.SheetDrawTitlePdf(gx,field.XPos,gridSheetRow.YPos-_yPosPrint);
 							}
 							break;
 					}
@@ -650,7 +650,7 @@ namespace OpenDentBusiness {
 				else {
 					odGrid.SheetDrawRowX(i,gx,field.XPos,gridSheetRow.YPos-_yPosPrint+_yAdjCurRow,gridSheetRow.IsBottomRow,true);
 				}
-				_yAdjCurRow+=odGrid.ListGridRows[i].State.HeightMain;
+				_yAdjCurRow+=odGrid.Rows[i].State.HeightMain;
 				#endregion
 				#region Draw Footer (rare)
 				if(gridSheetRow.IsFooterRow) {

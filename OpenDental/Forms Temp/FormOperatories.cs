@@ -204,7 +204,7 @@ namespace OpenDental{
 			List<long> listSelectedOpNums=gridMain.SelectedTags<Operatory>().Select(x => x.Id).ToList();
 			int scrollValueCur=gridMain.ScrollValue;
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			int opNameWidth=180;
 			int clinicWidth=85;
 			if(!PrefC.HasClinicsEnabled) {
@@ -212,26 +212,26 @@ namespace OpenDental{
 				opNameWidth+=clinicWidth;
 			}
 			GridColumn col=new GridColumn("Op Name",opNameWidth);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Abbrev",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("IsHidden",64,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
 				col=new GridColumn("Clinic",clinicWidth);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			col=new GridColumn("Provider",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Hygienist",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("IsHygiene",64,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("IsWebSched",74,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("IsNewPat",50,HorizontalAlignment.Center){ IsWidthDynamic=true };
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			UI.GridRow row;
 			for(int i=0;i<_listOps.Count;i++){
 				if(PrefC.HasClinicsEnabled 
@@ -263,11 +263,11 @@ namespace OpenDental{
 				row.Cells.Add(_listOps[i].IsWebSched?"X":"");
 				row.Cells.Add((_listOps[i].ListWSNPAOperatoryDefNums!=null && _listOps[i].ListWSNPAOperatoryDefNums.Count > 0) ? "X" : "");
 				row.Tag=_listOps[i];
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
-			for(int i=0;i<gridMain.ListGridRows.Count;i++) {
-				Operatory op=(Operatory)gridMain.ListGridRows[i].Tag;
+			for(int i=0;i<gridMain.Rows.Count;i++) {
+				Operatory op=(Operatory)gridMain.Rows[i].Tag;
 				if(op.Id.In(listSelectedOpNums)) {
 					gridMain.SetSelected(i,true);
 				}
@@ -276,7 +276,7 @@ namespace OpenDental{
 		}
 
 		private void gridMain_CellDoubleClick(object sender, OpenDental.UI.ODGridClickEventArgs e) {
-			FormOperatoryEdit FormOE=new FormOperatoryEdit((Operatory)gridMain.ListGridRows[e.Row].Tag);
+			FormOperatoryEdit FormOE=new FormOperatoryEdit((Operatory)gridMain.Rows[e.Row].Tag);
 			FormOE.ListOps=_listOps;
 			FormOE.ContrApptRef=ContrApptRef;
 			FormOE.ShowDialog();
@@ -336,7 +336,7 @@ namespace OpenDental{
 				return;
 			}
 			#region Get selected OperatoryNums
-			bool hasNewOp=gridMain.SelectedIndices.ToList().Exists(x => ((Operatory)gridMain.ListGridRows[x].Tag).IsNew);
+			bool hasNewOp=gridMain.SelectedIndices.ToList().Exists(x => ((Operatory)gridMain.Rows[x].Tag).IsNew);
 			if(hasNewOp) {
 				//This is needed due to the user adding an operatory then clicking combine.
 				//The newly added operatory does not hava and OperatoryNum , so sync.
@@ -346,7 +346,7 @@ namespace OpenDental{
 			}
 			List<long> listSelectedOpNums=new List<long>();
 			for(int i=0;i<gridMain.SelectedIndices.Length;i++) {
-				listSelectedOpNums.Add(((Operatory)gridMain.ListGridRows[gridMain.SelectedIndices[i]].Tag).Id);
+				listSelectedOpNums.Add(((Operatory)gridMain.Rows[gridMain.SelectedIndices[i]].Tag).Id);
 			}
 			#endregion
 			#region Determine what Op to keep as the 'master'
@@ -419,8 +419,8 @@ namespace OpenDental{
 			if(selected==0){
 				return;//already at the top
 			}
-			Operatory selectedOp = (Operatory)gridMain.ListGridRows[selected].Tag;
-			Operatory aboveSelectedOp = (Operatory)gridMain.ListGridRows[selected - 1].Tag;
+			Operatory selectedOp = (Operatory)gridMain.Rows[selected].Tag;
+			Operatory aboveSelectedOp = (Operatory)gridMain.Rows[selected - 1].Tag;
 			string strErr;
 			if(!CanReorderOps(selectedOp,aboveSelectedOp,out strErr)) {
 				MessageBox.Show(strErr); //already translated
@@ -444,11 +444,11 @@ namespace OpenDental{
 				return;
 			}
 			int selected = gridMain.GetSelectedIndex();
-			if(selected == gridMain.ListGridRows.Count - 1) {
+			if(selected == gridMain.Rows.Count - 1) {
 				return;//already at the bottom
 			}
-			Operatory selectedOp = (Operatory)gridMain.ListGridRows[selected].Tag;
-			Operatory belowSelectedOp = (Operatory)gridMain.ListGridRows[selected + 1].Tag;
+			Operatory selectedOp = (Operatory)gridMain.Rows[selected].Tag;
+			Operatory belowSelectedOp = (Operatory)gridMain.Rows[selected + 1].Tag;
 			string strErr;
 			if(!CanReorderOps(selectedOp,belowSelectedOp,out strErr)) {
 				MessageBox.Show(strErr); //already translated
@@ -482,9 +482,9 @@ namespace OpenDental{
 		///<summary>Swaps two rows in the grid for use with the Up and Down buttons.  Does not edit lists or do any calls to cache or DB to refresh the grid.</summary>
 		private void SwapGridMainLocations(int indxMoveFrom, int indxMoveTo) {
 			gridMain.BeginUpdate();
-			GridRow dataRow=gridMain.ListGridRows[indxMoveFrom];
-			gridMain.ListGridRows.RemoveAt(indxMoveFrom);
-			gridMain.ListGridRows.Insert(indxMoveTo,dataRow);
+			GridRow dataRow=gridMain.Rows[indxMoveFrom];
+			gridMain.Rows.RemoveAt(indxMoveFrom);
+			gridMain.Rows.Insert(indxMoveTo,dataRow);
 			gridMain.EndUpdate();		
 		}
 

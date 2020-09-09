@@ -34,19 +34,19 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Phone Number",120);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Patient",200);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			foreach(IGrouping<string,PatComm> patCommGroup in _listPatComms.GroupBy(x => DoCombineNumbers ? x.WirelessPhone : x.PatNum.ToString())) {
 				GridRow row=new GridRow();
 				row.Cells.Add(patCommGroup.First().WirelessPhone);
 				row.Cells.Add(string.Join("\r\n",patCommGroup.Select(x => x.LName+", "+x.FName)));
 				row.Tag=patCommGroup.ToList();
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -88,7 +88,7 @@ namespace OpenDental {
 			}
 			Cursor=Cursors.WaitCursor;
 			int numTextsSent=0;
-			foreach(List<PatComm> listPatComms in gridMain.ListGridRows.Select(x => x.Tag).Cast<List<PatComm>>()) {
+			foreach(List<PatComm> listPatComms in gridMain.Rows.Select(x => x.Tag).Cast<List<PatComm>>()) {
 				try {
 					//Use the guarantor if in the list, otherwise use the first name alphabetically.
 					PatComm patComm=listPatComms.OrderByDescending(x => x.PatNum==x.Guarantor).ThenBy(x => x.FName).First();

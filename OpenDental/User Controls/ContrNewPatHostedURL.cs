@@ -88,19 +88,19 @@ namespace OpenDental.User_Controls {
 		private void FillGrid() {
 			gridOptions.BeginUpdate();
 			//Columns
-			gridOptions.ListGridColumns.Clear();
+			gridOptions.Columns.Clear();
 			GridColumn col=new GridColumn("Allow Children",95,HorizontalAlignment.Center);
-			gridOptions.ListGridColumns.Add(col);
+			gridOptions.Columns.Add(col);
 			col=new GridColumn("Show Pre-Screen Questions",180,HorizontalAlignment.Center);
-			gridOptions.ListGridColumns.Add(col);
+			gridOptions.Columns.Add(col);
 			col=new GridColumn("Verify Email",85,HorizontalAlignment.Center);
-			gridOptions.ListGridColumns.Add(col);
+			gridOptions.Columns.Add(col);
 			col=new GridColumn("Verify Text",85,HorizontalAlignment.Center);
-			gridOptions.ListGridColumns.Add(col);
+			gridOptions.Columns.Add(col);
 			col=new GridColumn("Launch WebForm on Complete",200,HorizontalAlignment.Center);
-			gridOptions.ListGridColumns.Add(col);
+			gridOptions.Columns.Add(col);
 			//Rows
-			gridOptions.ListGridRows.Clear();
+			gridOptions.Rows.Clear();
 			GridRow row=new GridRow();
 			row.Cells.Add(ToGridStr(ClinicPrefs.GetBool(Signup.ClinicNum, PrefName.WebSchedNewPatAllowChildren)));
 			row.Cells.Add(ToGridStr(ClinicPrefs.GetBool(Signup.ClinicNum, PrefName.WebSchedNewPatVerifyInfo)));
@@ -117,7 +117,7 @@ namespace OpenDental.User_Controls {
 				}
 			}
 			row.Cells.Add(ToGridStr(!string.IsNullOrWhiteSpace(url)));
-			gridOptions.ListGridRows.Add(row);
+			gridOptions.Rows.Add(row);
 			gridOptions.EndUpdate();
 			SetFormToLaunch(url);			
 		}
@@ -127,7 +127,7 @@ namespace OpenDental.User_Controls {
 		}
 
 		private string FromGridCell(int cellIdx) {
-			return gridOptions.ListGridRows[0].Cells[cellIdx].Text=="X" ? "1" : "0";
+			return gridOptions.Rows[0].Cells[cellIdx].Text=="X" ? "1" : "0";
 		}
 
 		private static void AddContextMenu(TextBox text) {
@@ -151,11 +151,11 @@ namespace OpenDental.User_Controls {
 			textWebFormToLaunch.Text=formURL;
 			string extraParams="";
 			if(!string.IsNullOrWhiteSpace(formURL)) {
-				gridOptions.ListGridRows[0].Cells[LAUNCHWF_COL].Text="X";
+				gridOptions.Rows[0].Cells[LAUNCHWF_COL].Text="X";
 				extraParams+="&WF=Y&ReturnURL="+formURL.Replace("&","%26");//encode &s so they aren't misinterpreted as separate parameters
 			}
 			else {
-				gridOptions.ListGridRows[0].Cells[LAUNCHWF_COL].Text="";
+				gridOptions.Rows[0].Cells[LAUNCHWF_COL].Text="";
 			}
 			gridOptions.Refresh();
 			textSchedulingURL.Text=Signup.HostedUrl+extraParams;
@@ -196,9 +196,9 @@ namespace OpenDental.User_Controls {
 					break;
 				default: break;
 			}
-			string cellTextCur=gridOptions.ListGridRows[e.Row].Cells[e.Col].Text;
+			string cellTextCur=gridOptions.Rows[e.Row].Cells[e.Col].Text;
 			string cellTextNew=(cellTextCur=="X" ? "" : "X");
-			gridOptions.ListGridRows[e.Row].Cells[e.Col].Text=cellTextNew;
+			gridOptions.Rows[e.Row].Cells[e.Col].Text=cellTextNew;
 			gridOptions.Refresh();
 		}
 

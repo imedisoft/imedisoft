@@ -37,14 +37,14 @@ namespace OpenDental.User_Controls.SetupWizard {
 		private void FillGrid(){
 			_listFeeScheds=_listFeeScheds.OrderBy(x => x.ItemOrder).ToList();
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Description",145);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Type",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Hidden",60,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			IsDone=true;
 			if(_listFeeScheds.Where(x => x.Description.ToLower()!="default").ToList().Count==0) {
@@ -56,7 +56,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 				row.Cells.Add(feeSched.Description);
 				row.Cells.Add(feeSched.FeeSchedType.ToString());
 				row.Cells.Add(feeSched.IsHidden ? "X" : "");
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -81,7 +81,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 		}
 
 		private void butImport_Click(object sender,EventArgs e) {
-			if(gridMain.SelectedGridRows.Count==0) {
+			if(gridMain.SelectedRows.Count==0) {
 				MessageBox.Show("Please select a fee schedule to import fees into.");
 				return;
 			}
@@ -110,7 +110,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 				Cursor=Cursors.Default;
 				return;
 			}
-			FeeSched feeSched=((FeeSched)gridMain.SelectedGridRows[0].Tag);//get selected fee sched from grid.
+			FeeSched feeSched=((FeeSched)gridMain.SelectedRows[0].Tag);//get selected fee sched from grid.
 			try { 
 				FeeL.ImportFees(Dlg.FileName,feeSched.FeeSchedNum,clinicNum,provNum);
 				_isChanged=true;

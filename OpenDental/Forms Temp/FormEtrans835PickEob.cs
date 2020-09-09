@@ -27,13 +27,13 @@ namespace OpenDental {
 
 		private void FillGridEobs() {
 			gridEobs.BeginUpdate();
-			gridEobs.ListGridColumns.Clear();
-			gridEobs.ListGridColumns.Add(new UI.GridColumn("",20){ IsWidthDynamic=true });
-			gridEobs.ListGridRows.Clear();
+			gridEobs.Columns.Clear();
+			gridEobs.Columns.Add(new UI.GridColumn("",20){ IsWidthDynamic=true });
+			gridEobs.Rows.Clear();
 			for(int i=0;i<_listEobTranIds.Count;i++) {
 				UI.GridRow row=new UI.GridRow();
 				row.Cells.Add(_listEobTranIds[i]);
-				gridEobs.ListGridRows.Add(row);
+				gridEobs.Rows.Add(row);
 			}
 			gridEobs.EndUpdate();
 		}

@@ -51,14 +51,14 @@ namespace OpenDental {
 		///<summary>Fills either grid since both grids contain the same data type and thus the same columns.</summary>
 		private void FillGrid(ODGrid grid,List<SheetDef> listSheetDefs,long selectedSheetNum=-1) {
 			grid.BeginUpdate();
-			grid.ListGridColumns.Clear();
-			grid.ListGridColumns.Add(new GridColumn("Description",120){ IsWidthDynamic=true });
-			grid.ListGridColumns.Add(new GridColumn("User",120));
-			grid.ListGridRows.Clear();
+			grid.Columns.Clear();
+			grid.Columns.Add(new GridColumn("Description",120){ IsWidthDynamic=true });
+			grid.Columns.Add(new GridColumn("User",120));
+			grid.Rows.Clear();
 			int selectedRowIndex=-1;
 			foreach(SheetDef sheetDef in listSheetDefs) {
 				if(sheetDef.SheetDefNum==selectedSheetNum) {
-					selectedRowIndex=grid.ListGridRows.Count;
+					selectedRowIndex=grid.Rows.Count;
 				}
 				//grid.Rows.Add(new ODGridRow(sheetDef.Description,Userods.GetName(sheetDef.UserNum)));
 			}

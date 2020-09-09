@@ -1096,17 +1096,17 @@ namespace OpenDental
 			gridPP.TranslationName = "";
 			this.Controls.Add(gridPP);
 			gridPP.BeginUpdate();
-			gridPP.ListGridColumns.Clear();
+			gridPP.Columns.Clear();
 			gcol = new GridColumn("Date", 73);
-			gridPP.ListGridColumns.Add(gcol);
+			gridPP.Columns.Add(gcol);
 			gcol = new GridColumn("Description", 270);
-			gridPP.ListGridColumns.Add(gcol);
+			gridPP.Columns.Add(gcol);
 			gcol = new GridColumn("Charges", 60, HorizontalAlignment.Right);
-			gridPP.ListGridColumns.Add(gcol);
+			gridPP.Columns.Add(gcol);
 			gcol = new GridColumn("Credits", 60, HorizontalAlignment.Right);
-			gridPP.ListGridColumns.Add(gcol);
+			gridPP.Columns.Add(gcol);
 			gcol = new GridColumn("Balance", 60, HorizontalAlignment.Right);
-			gridPP.ListGridColumns.Add(gcol);
+			gridPP.Columns.Add(gcol);
 			gridPP.Width = gridPP.WidthAllColumns + 20;
 			gridPP.EndUpdate();
 			#endregion PayPlan grid definition
@@ -1126,7 +1126,7 @@ namespace OpenDental
 				par.AddText("Payment Plans");
 				MigraDocHelper.InsertSpacer(section, 2);
 				gridPP.BeginUpdate();
-				gridPP.ListGridRows.Clear();
+				gridPP.Rows.Clear();
 				for (int p = 0; p < tablePP.Rows.Count; p++)
 				{
 					grow = new GridRow();
@@ -1144,7 +1144,7 @@ namespace OpenDental
 						gcell.Bold = true;
 					}
 					grow.Cells.Add(gcell);
-					gridPP.ListGridRows.Add(grow);
+					gridPP.Rows.Add(grow);
 				}
 				gridPP.EndUpdate();
 				MigraDocHelper.DrawGrid(section, gridPP);
@@ -1171,39 +1171,39 @@ namespace OpenDental
 			gridPat.TranslationName = "";
 			this.Controls.Add(gridPat);
 			gridPat.BeginUpdate();
-			gridPat.ListGridColumns.Clear();
+			gridPat.Columns.Clear();
 			gcol = new GridColumn("Date", 73);
-			gridPat.ListGridColumns.Add(gcol);
+			gridPat.Columns.Add(gcol);
 			gcol = new GridColumn("Patient", 100);
-			gridPat.ListGridColumns.Add(gcol);
+			gridPat.Columns.Add(gcol);
 			//prov
 			if (Clinics.IsMedicalClinic(Clinics.ClinicId))
 			{
 				gcol = new GridColumn("Code", 87);
-				gridPat.ListGridColumns.Add(gcol);
+				gridPat.Columns.Add(gcol);
 			}
 			else
 			{
 				gcol = new GridColumn("Code", 45);
-				gridPat.ListGridColumns.Add(gcol);
+				gridPat.Columns.Add(gcol);
 				gcol = new GridColumn("Tooth", 42);
-				gridPat.ListGridColumns.Add(gcol);
+				gridPat.Columns.Add(gcol);
 			}
 			gcol = new GridColumn("Description", 270);
-			gridPat.ListGridColumns.Add(gcol);
+			gridPat.Columns.Add(gcol);
 			gcol = new GridColumn("Charges", 60, HorizontalAlignment.Right);
-			gridPat.ListGridColumns.Add(gcol);
+			gridPat.Columns.Add(gcol);
 			gcol = new GridColumn("Credits", 60, HorizontalAlignment.Right);
-			gridPat.ListGridColumns.Add(gcol);
+			gridPat.Columns.Add(gcol);
 			if (Stmt.IsInvoice)
 			{
 				gcol = new GridColumn("Total", 60, HorizontalAlignment.Right);
-				gridPat.ListGridColumns.Add(gcol);
+				gridPat.Columns.Add(gcol);
 			}
 			else
 			{
 				gcol = new GridColumn("Balance", 60, HorizontalAlignment.Right);
-				gridPat.ListGridColumns.Add(gcol);
+				gridPat.Columns.Add(gcol);
 			}
 			gridPat.Width = gridPat.WidthAllColumns + 20;
 			gridPat.EndUpdate();
@@ -1240,7 +1240,7 @@ namespace OpenDental
 				//	par.AddText(FamilyStatementDataList[famIndex].PatAboutList[i].ApptDescript);
 				//}
 				gridPat.BeginUpdate();
-				gridPat.ListGridRows.Clear();
+				gridPat.Rows.Clear();
 				//lineData=FamilyStatementDataList[famIndex].PatDataList[i].PatData;
 				foreach (DataRow rowCur in tableAccount.Rows)
 				{
@@ -1332,7 +1332,7 @@ namespace OpenDental
 					grow.Cells.Add(rowCur["charges"].ToString());
 					grow.Cells.Add(rowCur["credits"].ToString());
 					grow.Cells.Add(rowCur["balance"].ToString());
-					gridPat.ListGridRows.Add(grow);
+					gridPat.Rows.Add(grow);
 				}
 				gridPat.EndUpdate();
 				MigraDocHelper.DrawGrid(section, gridPat);

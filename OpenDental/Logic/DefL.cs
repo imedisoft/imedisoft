@@ -321,12 +321,12 @@ namespace OpenDental
 			int scroll = grid.ScrollValue;
 
 			grid.BeginUpdate();
-			grid.ListGridColumns.Clear();
-			grid.ListGridColumns.Add(new GridColumn("Name", 190));
-			grid.ListGridColumns.Add(new GridColumn(selectedCategoryOptions.ValueText, 190));
-			grid.ListGridColumns.Add(new GridColumn(selectedCategoryOptions.EnableColor ? "Color" : "", 40));
-			grid.ListGridColumns.Add(new GridColumn(selectedCategoryOptions.CanHide ? "Hide" : "", 30, HorizontalAlignment.Center));
-			grid.ListGridRows.Clear();
+			grid.Columns.Clear();
+			grid.Columns.Add(new GridColumn("Name", 190));
+			grid.Columns.Add(new GridColumn(selectedCategoryOptions.ValueText, 190));
+			grid.Columns.Add(new GridColumn(selectedCategoryOptions.EnableColor ? "Color" : "", 40));
+			grid.Columns.Add(new GridColumn(selectedCategoryOptions.CanHide ? "Hide" : "", 30, HorizontalAlignment.Center));
+			grid.Rows.Clear();
 
 			foreach (var definition in definitions)
 			{
@@ -371,11 +371,11 @@ namespace OpenDental
 				gridRow.Cells.Add(definition.IsHidden ? "X" : "");
 				gridRow.Tag = definition;
 
-				grid.ListGridRows.Add(gridRow);
+				grid.Rows.Add(gridRow);
 
 				if (definition.Id == selectedDefinition.Id)
                 {
-					selectedDefinitionIndex = grid.ListGridRows.Count - 1;
+					selectedDefinitionIndex = grid.Rows.Count - 1;
 				}
 			}
 
@@ -496,7 +496,7 @@ namespace OpenDental
 
 				default:
 					var currentDefs = new List<Definition>();
-					foreach (var gridRow in grid.ListGridRows)
+					foreach (var gridRow in grid.Rows)
 					{
 						currentDefs.Add((Definition)gridRow.Tag);
 					}
@@ -680,8 +680,8 @@ namespace OpenDental
 				return false;
 			}
 
-			var item1 = (Definition)grid.ListGridRows[index].Tag;
-			var item2 = (Definition)grid.ListGridRows[index - 1].Tag;
+			var item1 = (Definition)grid.Rows[index].Tag;
+			var item2 = (Definition)grid.Rows[index - 1].Tag;
 
 			(item1.SortOrder, item2.SortOrder) = (item2.SortOrder, item1.SortOrder);
 
@@ -706,13 +706,13 @@ namespace OpenDental
 				return false;
 			}
 
-			if (index == grid.ListGridRows.Count - 1)
+			if (index == grid.Rows.Count - 1)
 			{
 				return false;
 			}
 
-			var item1 = (Definition)grid.ListGridRows[index].Tag;
-			var item2 = (Definition)grid.ListGridRows[index + 1].Tag;
+			var item1 = (Definition)grid.Rows[index].Tag;
+			var item2 = (Definition)grid.Rows[index + 1].Tag;
 
 			(item1.SortOrder, item2.SortOrder) = (item2.SortOrder, item1.SortOrder);
 

@@ -1007,11 +1007,11 @@ namespace OpenDental {
 		private void FillGrid() {
 			_listDbmMethodsGrid=GetDbmMethodsForGrid();
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("Name",300));
-			gridMain.ListGridColumns.Add(new GridColumn("Break\r\nDown",40,HorizontalAlignment.Center));
-			gridMain.ListGridColumns.Add(new GridColumn("Results",300){ IsWidthDynamic=true });
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("Name",300));
+			gridMain.Columns.Add(new GridColumn("Break\r\nDown",40,HorizontalAlignment.Center));
+			gridMain.Columns.Add(new GridColumn("Results",300){ IsWidthDynamic=true });
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listDbmMethodsGrid.Count;i++) {
 				row=new GridRow();
@@ -1019,7 +1019,7 @@ namespace OpenDental {
 				row.Cells.Add(DatabaseMaintenances.MethodHasBreakDown(_listDbmMethodsGrid[i]) ? "X" : "");
 				row.Cells.Add("");
 				row.Tag=_listDbmMethodsGrid[i];
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -1027,15 +1027,15 @@ namespace OpenDental {
 		private void FillGridHidden() {
 			_listDbmMethodsGridHidden=GetDbmMethodsForGrid(isHidden: true,isOld: false);
 			gridHidden.BeginUpdate();
-			gridHidden.ListGridColumns.Clear();
-			gridHidden.ListGridColumns.Add(new GridColumn("Name",340));
-			gridHidden.ListGridRows.Clear();
+			gridHidden.Columns.Clear();
+			gridHidden.Columns.Add(new GridColumn("Name",340));
+			gridHidden.Rows.Clear();
 			GridRow row;
 			for(int i = 0;i<_listDbmMethodsGridHidden.Count;i++) {
 				row=new GridRow();
 				row.Cells.Add(_listDbmMethodsGridHidden[i].Name);
 				row.Tag=_listDbmMethodsGridHidden[i];
-				gridHidden.ListGridRows.Add(row);
+				gridHidden.Rows.Add(row);
 			}
 			gridHidden.EndUpdate();
 		}
@@ -1045,14 +1045,14 @@ namespace OpenDental {
 			_listDbmMethodsGridOld.AddRange(GetDbmMethodsForGrid(isHidden: true,isOld: true));
 			_listDbmMethodsGridOld.Sort(new MethodInfoComparer());
 			gridOld.BeginUpdate();
-			gridOld.ListGridColumns.Clear();
-			gridOld.ListGridColumns.Add(new GridColumn("Name",300));
+			gridOld.Columns.Clear();
+			gridOld.Columns.Add(new GridColumn("Name",300));
 			if(checkShowHidden.Checked) {
-				gridOld.ListGridColumns.Add(new GridColumn("Hidden",45,HorizontalAlignment.Center));
+				gridOld.Columns.Add(new GridColumn("Hidden",45,HorizontalAlignment.Center));
 			}
-			gridOld.ListGridColumns.Add(new GridColumn("Break\r\nDown",40,HorizontalAlignment.Center));
-			gridOld.ListGridColumns.Add(new GridColumn("Results",300){ IsWidthDynamic=true });
-			gridOld.ListGridRows.Clear();
+			gridOld.Columns.Add(new GridColumn("Break\r\nDown",40,HorizontalAlignment.Center));
+			gridOld.Columns.Add(new GridColumn("Results",300){ IsWidthDynamic=true });
+			gridOld.Rows.Clear();
 			GridRow row;
 			for(int i = 0;i<_listDbmMethodsGridOld.Count;i++) {
 				bool isMethodHidden=_listDatabaseMaintenances.Any(x => x.MethodName==_listDbmMethodsGridOld[i].Name && x.IsHidden);
@@ -1067,7 +1067,7 @@ namespace OpenDental {
 				row.Cells.Add(DatabaseMaintenances.MethodHasBreakDown(_listDbmMethodsGridOld[i]) ? "X" : "");
 				row.Cells.Add("");
 				row.Tag=_listDbmMethodsGridOld[i];
-				gridOld.ListGridRows.Add(row);
+				gridOld.Rows.Add(row);
 			}
 			gridOld.EndUpdate();
 		}
@@ -1103,7 +1103,7 @@ namespace OpenDental {
 				contextMenuStrip1.Hide();
 				return;
 			}
-			MethodInfo method=(MethodInfo)grid.ListGridRows[grid.SelectedIndices[0]].Tag;
+			MethodInfo method=(MethodInfo)grid.Rows[grid.SelectedIndices[0]].Tag;
 			if(method!=null) {
 				bool isMethodHidden=_listDatabaseMaintenances.Any(x => x.MethodName==method.Name && x.IsHidden);
 				hideToolStripMenuItem.Visible=!isMethodHidden;
@@ -1145,7 +1145,7 @@ namespace OpenDental {
 
 		private void UpdateDbmIsHiddenForGrid(ODGrid grid,bool isHidden) {
 			for(int i=0;i<grid.SelectedIndices.Length;i++) {
-				MethodInfo method=(MethodInfo)grid.ListGridRows[grid.SelectedIndices[i]].Tag;
+				MethodInfo method=(MethodInfo)grid.Rows[grid.SelectedIndices[i]].Tag;
 				DatabaseMaintenance dbm=_listDatabaseMaintenances.FirstOrDefault(x=>x.MethodName==method.Name);
 				if(dbm==null) {
 					continue;
@@ -1412,7 +1412,7 @@ namespace OpenDental {
 			ToggleUI(true);//Turn off all UI buttons except the Stop DBM button
 			_isCancelled=false;
 			Cursor=Cursors.WaitCursor;
-			if(grid.ListGridRows.Count > 0 && grid.ListGridColumns.Count < 3) {//Enforce the requirement of having the Results column as the third column.
+			if(grid.Rows.Count > 0 && grid.Columns.Count < 3) {//Enforce the requirement of having the Results column as the third column.
 				MessageBox.Show("Must have at least three columns in the grid.");
 				return;
 			}
@@ -1421,8 +1421,8 @@ namespace OpenDental {
 				colresults=3;//There is an extra "Hidden" column to account for when setting the "Results" column.
 			}
 			//Clear out the result column for all rows before every "run"
-			for(int i=0;i<grid.ListGridRows.Count;i++) {
-				grid.ListGridRows[i].Cells[colresults].Text="";//Don't use UpdateResultTextForRow here because users will see the rows clearing out one by one.
+			for(int i=0;i<grid.Rows.Count;i++) {
+				grid.Rows[i].Cells[colresults].Text="";//Don't use UpdateResultTextForRow here because users will see the rows clearing out one by one.
 			}
 			bool verbose=checkShow.Checked;
 			StringBuilder logText=new StringBuilder();
@@ -1449,7 +1449,7 @@ namespace OpenDental {
 			_threadRunDBM=new ODThread(new ODThread.WorkerDelegate((ODThread o) => {
 				for(int i=0;i<selectedIndices.Length;i++) {
 					selectedIndex=selectedIndices[i];
-					MethodInfo method=(MethodInfo)grid.ListGridRows[selectedIndices[i]].Tag;
+					MethodInfo method=(MethodInfo)grid.Rows[selectedIndices[i]].Tag;
 					ScrollToBottom(grid,selectedIndices[i]);
 					UpdateResultTextForRow(grid,selectedIndices[i],"Running"+"...");
 					string result=RunMethod(method,modeCur);
@@ -1573,7 +1573,7 @@ namespace OpenDental {
 				colresults=3;//There is an extra "Hidden" column to account for when setting the "Results" column.
 			}
 			grid.BeginUpdate();
-			grid.ListGridRows[index].Cells[colresults].Text=text;
+			grid.Rows[index].Cells[colresults].Text=text;
 			grid.EndUpdate();
 			Application.DoEvents();
 		}
@@ -1592,10 +1592,10 @@ namespace OpenDental {
 			}
 			int[] selectedIndices=gridMain.SelectedIndices;
 			for(int i=0;i<selectedIndices.Length;i++) {
-				string resultText=gridMain.ListGridRows[selectedIndices[i]].Cells[2].Text;
+				string resultText=gridMain.Rows[selectedIndices[i]].Cells[2].Text;
 				if(!String.IsNullOrEmpty(resultText) && resultText!="Done.  No maintenance needed.") {
-					strB.Append(gridMain.ListGridRows[selectedIndices[i]].Cells[0].Text+"\r\n");
-					strB.Append("---"+gridMain.ListGridRows[selectedIndices[i]].Cells[2].Text+"\r\n");
+					strB.Append(gridMain.Rows[selectedIndices[i]].Cells[0].Text+"\r\n");
+					strB.Append("---"+gridMain.Rows[selectedIndices[i]].Cells[2].Text+"\r\n");
 					strB.AppendLine();
 				}
 			}

@@ -273,11 +273,11 @@ namespace Imedisoft.Forms
 			if (taskDeleted) return;
 
 			notesGrid.BeginUpdate();
-			notesGrid.ListGridColumns.Clear();
-			notesGrid.ListGridColumns.Add(new GridColumn("Date Time", 120));
-			notesGrid.ListGridColumns.Add(new GridColumn("User", 80));
-			notesGrid.ListGridColumns.Add(new GridColumn("Note", 400));
-			notesGrid.ListGridRows.Clear();
+			notesGrid.Columns.Clear();
+			notesGrid.Columns.Add(new GridColumn("Date Time", 120));
+			notesGrid.Columns.Add(new GridColumn("User", 80));
+			notesGrid.Columns.Add(new GridColumn("Note", 400));
+			notesGrid.Rows.Clear();
 
 			taskNotes = TaskNotes.GetForTask(task.Id);
 			foreach (var taskNote in taskNotes)
@@ -289,7 +289,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(taskNote.Note);
 				gridRow.Tag = taskNote;
 
-				notesGrid.ListGridRows.Add(gridRow);
+				notesGrid.Rows.Add(gridRow);
 			}
 
 			notesGrid.EndUpdate();
@@ -299,7 +299,7 @@ namespace Imedisoft.Forms
 		{
 			if (taskDeleted) return;
 
-			if (!(notesGrid.ListGridRows[e.Row].Tag is TaskNote taskNote))
+			if (!(notesGrid.Rows[e.Row].Tag is TaskNote taskNote))
 			{
 				return;
 			}

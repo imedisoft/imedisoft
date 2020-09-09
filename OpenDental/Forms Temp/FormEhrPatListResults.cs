@@ -37,54 +37,54 @@ namespace OpenDental {
 			int colWidth=0;
 			Graphics g=CreateGraphics();
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("PatNum",60,HorizontalAlignment.Center);
 			col.SortingStrategy=GridSortingStrategy.AmountParse;
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Full Name",200);
 			col.SortingStrategy=GridSortingStrategy.StringCompare;
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			for(int i=0;i<elementList.Count;i++) {
 				if(orderByColumn==-1 && elementList[i].OrderBy) {
 					//There can be 0 to 1 elements that have OrderBy set to true. 
 					//we will use this to determine how to use the ASC/DESC buttons.
 					//some elements add one column, others add two, this selects the column that is to be added next.
-					orderByColumn=gridMain.ListGridColumns.Count;
+					orderByColumn=gridMain.Columns.Count;
 				}
 				switch(elementList[i].Restriction) {
 					case EhrRestrictionType.Birthdate:
 						col=new GridColumn("Birthdate",80,HorizontalAlignment.Center);
 						col.SortingStrategy=GridSortingStrategy.DateParse;
-						gridMain.ListGridColumns.Add(col);
+						gridMain.Columns.Add(col);
 						break;
 					case EhrRestrictionType.Gender:
 						col=new GridColumn("Gender",80,HorizontalAlignment.Center);
-						gridMain.ListGridColumns.Add(col);
+						gridMain.Columns.Add(col);
 						break;
 					case EhrRestrictionType.LabResult:
 						colWidth=System.Convert.ToInt32(g.MeasureString("Lab Value: "+elementList[i].CompareString,this.Font).Width);
 						col.SortingStrategy=GridSortingStrategy.AmountParse;
 						colWidth=colWidth+(colWidth/10);//Add 10%
 						col=new GridColumn("Lab Value: "+elementList[i].CompareString,colWidth,HorizontalAlignment.Center);
-						gridMain.ListGridColumns.Add(col);
+						gridMain.Columns.Add(col);
 						break;
 					case EhrRestrictionType.Medication:
 						col=new GridColumn("Medication",90,HorizontalAlignment.Center);
 						col.SortingStrategy=GridSortingStrategy.StringCompare;
-						gridMain.ListGridColumns.Add(col);
+						gridMain.Columns.Add(col);
 						break;
 					case EhrRestrictionType.Problem:
 						col=new GridColumn("Disease",160,HorizontalAlignment.Center);
 						col.SortingStrategy=GridSortingStrategy.StringCompare;
-						gridMain.ListGridColumns.Add(col);
+						gridMain.Columns.Add(col);
 						break;
 					default:
 						//should not happen.
 						break;
 				}
 			}
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<table.Rows.Count;i++) {
 				row=new GridRow();
@@ -120,7 +120,7 @@ namespace OpenDental {
 					}
 					
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			g.Dispose();
@@ -226,7 +226,7 @@ namespace OpenDental {
 		//}
 
 		private void radioOrderBy_CheckedChanged(object sender,EventArgs e) {
-			if(orderByColumn==-1 || orderByColumn>gridMain.ListGridColumns.Count-1) {
+			if(orderByColumn==-1 || orderByColumn>gridMain.Columns.Count-1) {
 				return;//no order by collumn set, or index out of bounds.
 			}
 			gridMain.SortForced(orderByColumn,radioAsc.Checked);

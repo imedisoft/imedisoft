@@ -43,18 +43,18 @@ namespace OpenDental {
 		private void FillGrid() {
 			if (textSearch.TextLength<3) {
 				gridMain.BeginUpdate();
-				gridMain.ListGridColumns.Clear();
-				gridMain.ListGridRows.Clear();
+				gridMain.Columns.Clear();
+				gridMain.Rows.Clear();
 				gridMain.EndUpdate();
 				return;
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Title",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			//col=new ODGridColumn("Saved",42);
 			//gridMain.Columns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			listWikiPages=WikiPages.GetByTitleContains(textSearch.Text);
 			for(int i=0;i<listWikiPages.Count;i++) {
 				GridRow row=new GridRow();
@@ -62,7 +62,7 @@ namespace OpenDental {
 				//	row.ColorText=Color.Red;
 				//}
 				row.Cells.Add(listWikiPages[i].PageTitle);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

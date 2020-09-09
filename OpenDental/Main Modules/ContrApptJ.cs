@@ -1681,7 +1681,7 @@ namespace OpenDental {
 				//no longer allow double click on checkbox, because it's annoying.
 				return;
 			}
-			GridRow row=gridReminders.ListGridRows[e.Row];
+			GridRow row=gridReminders.Rows[e.Row];
 			Task reminderTask=((Task)row.Tag);
 			//It's important to grab the task directly from the db because the status in this list is fake, being the "unread" status instead.
 			Task task=Tasks.GetOne(reminderTask.Id);
@@ -1700,7 +1700,7 @@ namespace OpenDental {
 			if(e.Button!=MouseButtons.Left) {
 				return;
 			}
-			GridRow row=gridReminders.ListGridRows[clickedI];
+			GridRow row=gridReminders.Rows[clickedI];
 			Task reminderTask=((Task)row.Tag).Copy();
 			if(clickedCol==0){//check tasks off
 				if(Prefs.GetBool(PrefName.TasksNewTrackedByUser)) {
@@ -1751,7 +1751,7 @@ namespace OpenDental {
 			if(gridReminders.GetSelectedIndex()==-1) {
 				return;
 			}
-			Task task=(Task)gridReminders.ListGridRows[gridReminders.GetSelectedIndex()].Tag;
+			Task task=(Task)gridReminders.Rows[gridReminders.GetSelectedIndex()].Tag;
 			Task oldTask=task.Copy();
 			task.Status=TaskStatus.Done;
 			if(!task.DateCompleted.HasValue) {
@@ -1774,7 +1774,7 @@ namespace OpenDental {
 			long signalNum=Signalods.SetInvalid(InvalidType.Task,KeyType.Task,task.Id);
 			UserControlTasks.RefillLocalTaskGrids(task,new List<long>() { signalNum });
 			gridReminders.BeginUpdate();
-			gridReminders.ListGridRows.RemoveAt(gridReminders.GetSelectedIndex());
+			gridReminders.Rows.RemoveAt(gridReminders.GetSelectedIndex());
 			gridReminders.EndUpdate();
 		}
 
@@ -1783,7 +1783,7 @@ namespace OpenDental {
 			if(gridReminders.GetSelectedIndex()==-1) {
 				return;
 			}
-			Task task=(Task)gridReminders.ListGridRows[gridReminders.GetSelectedIndex()].Tag;
+			Task task=(Task)gridReminders.Rows[gridReminders.GetSelectedIndex()].Tag;
 			//FormOpenDental.S_TaskGoTo(task.ObjectType,task.KeyNum);
 		}
 
@@ -2736,19 +2736,19 @@ namespace OpenDental {
 				tabReminders.Text+="*";
 			}
 			gridReminders.BeginUpdate();
-			if(gridReminders.ListGridColumns.Count==0) {
-				gridReminders.ListGridColumns.Clear();
+			if(gridReminders.Columns.Count==0) {
+				gridReminders.Columns.Clear();
 				GridColumn col=new GridColumn("",17);//The status column showing new/viewed in a checkbox.
 				col.ImageList=imageListTasks;
-				gridReminders.ListGridColumns.Add(col);
+				gridReminders.Columns.Add(col);
 				col=new GridColumn("Description",200);//any width
-				gridReminders.ListGridColumns.Add(col);
+				gridReminders.Columns.Add(col);
 			}
-			gridReminders.ListGridRows.Clear();
+			gridReminders.Rows.Clear();
 			for(int i=0;i<listSortedReminderTasks.Count;i++) {
 				GridRow row=new GridRow();
 				SetReminderGridRow(row,listSortedReminderTasks[i]);
-				gridReminders.ListGridRows.Add(row);
+				gridReminders.Rows.Add(row);
 			}
 			gridReminders.EndUpdate();
 			// TODO: Logger.LogToPath("",LogPath.Signals,LogPhase.End);
@@ -2925,16 +2925,16 @@ namespace OpenDental {
 		private void FillEmpSched(bool hasNotes) {
 			DataTable table=contrApptPanel.TableEmpSched;
 			gridEmpSched.BeginUpdate();
-			gridEmpSched.ListGridColumns.Clear();
+			gridEmpSched.Columns.Clear();
 			GridColumn col=new GridColumn("Employee",80);
-			gridEmpSched.ListGridColumns.Add(col);
+			gridEmpSched.Columns.Add(col);
 			col=new GridColumn("Schedule",70);
-			gridEmpSched.ListGridColumns.Add(col);
+			gridEmpSched.Columns.Add(col);
 			if(hasNotes) {
 				col=new GridColumn("Notes",100);
-				gridEmpSched.ListGridColumns.Add(col);
+				gridEmpSched.Columns.Add(col);
 			}
-			gridEmpSched.ListGridRows.Clear();
+			gridEmpSched.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<table.Rows.Count;i++) {
 				row=new GridRow();
@@ -2943,7 +2943,7 @@ namespace OpenDental {
 				if(hasNotes) {
 					row.Cells.Add(table.Rows[i]["Note"].ToString());
 				}
-				gridEmpSched.ListGridRows.Add(row);
+				gridEmpSched.Rows.Add(row);
 			}
 			gridEmpSched.EndUpdate();
 		}
@@ -3022,16 +3022,16 @@ namespace OpenDental {
 		private void FillProvSched(bool hasNotes) {
 			DataTable table=contrApptPanel.TableProvSched;
 			gridProv.BeginUpdate();
-			gridProv.ListGridColumns.Clear();
+			gridProv.Columns.Clear();
 			GridColumn col=new GridColumn("Provider",80);
-			gridProv.ListGridColumns.Add(col);
+			gridProv.Columns.Add(col);
 			col=new GridColumn("Schedule",70);
-			gridProv.ListGridColumns.Add(col);
+			gridProv.Columns.Add(col);
 			if(hasNotes) {
 				col=new GridColumn("Notes",100);
-				gridProv.ListGridColumns.Add(col);
+				gridProv.Columns.Add(col);
 			}
-			gridProv.ListGridRows.Clear();
+			gridProv.Rows.Clear();
 			GridRow row;
 			foreach(DataRow dRow in table.Rows) { 
 				row=new GridRow();
@@ -3040,7 +3040,7 @@ namespace OpenDental {
 				if(hasNotes) {
 					row.Cells.Add(dRow["Note"].ToString());
 				}
-				gridProv.ListGridRows.Add(row);
+				gridProv.Rows.Add(row);
 			}
 			gridProv.EndUpdate();
 		}
@@ -3089,12 +3089,12 @@ namespace OpenDental {
 				listOpsForClinic=Operatories.GetOpsForClinic(Clinics.Active.Id);
 			}
 			gridWaiting.BeginUpdate();
-			gridWaiting.ListGridColumns.Clear();
+			gridWaiting.Columns.Clear();
 			GridColumn col=new GridColumn("Patient",130);
-			gridWaiting.ListGridColumns.Add(col);
+			gridWaiting.Columns.Add(col);
 			col=new GridColumn("Waited",100,HorizontalAlignment.Center);
-			gridWaiting.ListGridColumns.Add(col);
-			gridWaiting.ListGridRows.Clear();
+			gridWaiting.Columns.Add(col);
+			gridWaiting.Rows.Clear();
 			DateTime waitTime;
 			GridRow row;
 			int waitingRoomAlertTime=PrefC.GetInt(PrefName.WaitingRoomAlertTime);
@@ -3136,7 +3136,7 @@ namespace OpenDental {
 					row.ForeColor=waitingRoomAlertColor;
 					row.Bold=true;
 				}
-				gridWaiting.ListGridRows.Add(row);
+				gridWaiting.Rows.Add(row);
 			}
 			gridWaiting.EndUpdate();
 		}

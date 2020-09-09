@@ -130,16 +130,16 @@ namespace OpenDental{
 			TableRegKeys=RegistrationKeys.GetAllWithoutCharges();
 			Cursor.Current=Cursors.Default;
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("PatNum",60);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("RegKey",140);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Family",200);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			//col=new ODGridColumn("Repeating Charge",150);
 			//gridMain.Columns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<TableRegKeys.Rows.Count;i++){
 				row=new GridRow();
@@ -147,7 +147,7 @@ namespace OpenDental{
 				row.Cells.Add(TableRegKeys.Rows[i]["RegKey"].ToString());
 				row.Cells.Add(TableRegKeys.Rows[i]["LName"].ToString()+", "+TableRegKeys.Rows[i]["FName"].ToString());
 				//row.Cells.Add(table.Rows[i]["dateStop"].ToString());
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

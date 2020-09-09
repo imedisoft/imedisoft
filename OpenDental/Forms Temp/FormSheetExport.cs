@@ -35,18 +35,18 @@ namespace OpenDental {
 			//If from normal Sheet window, populate all Sheets except Dashboard types.
 			_listSheetDefs=SheetDefs.GetDeepCopy(false).FindAll(x => SheetDefs.IsDashboardType(x)==_isOpenedFromDashboardSetup);
 			gridCustomSheet.BeginUpdate();
-			gridCustomSheet.ListGridColumns.Clear();
+			gridCustomSheet.Columns.Clear();
 			GridColumn col=new GridColumn("Description",170);
-			gridCustomSheet.ListGridColumns.Add(col);
+			gridCustomSheet.Columns.Add(col);
 			col=new GridColumn("Type",100);
-			gridCustomSheet.ListGridColumns.Add(col);
-			gridCustomSheet.ListGridRows.Clear();
+			gridCustomSheet.Columns.Add(col);
+			gridCustomSheet.Rows.Clear();
 			GridRow row;
 			foreach(SheetDef sheetDef in _listSheetDefs) {
 				row=new GridRow();
 				row.Cells.Add(sheetDef.Description);
 				row.Cells.Add(sheetDef.SheetType.ToString());
-				gridCustomSheet.ListGridRows.Add(row);
+				gridCustomSheet.Rows.Add(row);
 			}
 			gridCustomSheet.EndUpdate();
 		}

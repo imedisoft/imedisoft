@@ -317,20 +317,20 @@ namespace OpenDental {
 				() => {
 					RefreshReport();
 					gridMain.BeginUpdate();
-					if(gridMain.ListGridColumns.Count==0) {
-						gridMain.ListGridColumns.Add(new GridColumn("Patient",_colWidthPatName,GridSortingStrategy.StringCompare));
-						gridMain.ListGridColumns.Add(new GridColumn("Date",_colWidthProcDate,HorizontalAlignment.Center,GridSortingStrategy.DateParse));
-						gridMain.ListGridColumns.Add(new GridColumn("Code",_colWidthProcCode,GridSortingStrategy.StringCompare));
-						gridMain.ListGridColumns.Add(new GridColumn("Tth",_colWidthProcTth,GridSortingStrategy.StringCompare));
-						gridMain.ListGridColumns.Add(new GridColumn("Prov",_colWidthProv,GridSortingStrategy.StringCompare));
-						gridMain.ListGridColumns.Add(new GridColumn("Fee",_colWidthFee,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-						gridMain.ListGridColumns.Add(new GridColumn("Ins Paid",_colWidthInsPay,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-						gridMain.ListGridColumns.Add(new GridColumn("Write-off",_colWidthWO,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-						gridMain.ListGridColumns.Add(new GridColumn("Pt Paid",_colWidthPtPaid,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-						gridMain.ListGridColumns.Add(new GridColumn("Adjust",_colWidthAdj,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-						gridMain.ListGridColumns.Add(new GridColumn("Overpayment",_colWidthOverpay,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
+					if(gridMain.Columns.Count==0) {
+						gridMain.Columns.Add(new GridColumn("Patient",_colWidthPatName,GridSortingStrategy.StringCompare));
+						gridMain.Columns.Add(new GridColumn("Date",_colWidthProcDate,HorizontalAlignment.Center,GridSortingStrategy.DateParse));
+						gridMain.Columns.Add(new GridColumn("Code",_colWidthProcCode,GridSortingStrategy.StringCompare));
+						gridMain.Columns.Add(new GridColumn("Tth",_colWidthProcTth,GridSortingStrategy.StringCompare));
+						gridMain.Columns.Add(new GridColumn("Prov",_colWidthProv,GridSortingStrategy.StringCompare));
+						gridMain.Columns.Add(new GridColumn("Fee",_colWidthFee,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
+						gridMain.Columns.Add(new GridColumn("Ins Paid",_colWidthInsPay,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
+						gridMain.Columns.Add(new GridColumn("Write-off",_colWidthWO,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
+						gridMain.Columns.Add(new GridColumn("Pt Paid",_colWidthPtPaid,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
+						gridMain.Columns.Add(new GridColumn("Adjust",_colWidthAdj,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
+						gridMain.Columns.Add(new GridColumn("Overpayment",_colWidthOverpay,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
 					}
-					gridMain.ListGridRows.Clear();
+					gridMain.Rows.Clear();
 					GridRow row;
 					for(int i = 0;i<_myReport.ReportObjects.Count;i++) {
 						if(_myReport.ReportObjects[i].ObjectType!=ReportObjectType.QueryObject) {
@@ -352,7 +352,7 @@ namespace OpenDental {
 							row.Cells.Add(PIn.Double(rowCur["adjAmt"].ToString()).ToString("c"));
 							row.Cells.Add(PIn.Double(rowCur["overpay"].ToString()).ToString("c"));
 							row.Tag=rowCur;
-							gridMain.ListGridRows.Add(row);
+							gridMain.Rows.Add(row);
 						}
 					}
 					gridMain.EndUpdate();
@@ -483,7 +483,7 @@ namespace OpenDental {
 				MessageBox.Show("Please select exactly one patient.");
 				return;
 			}
-			DataRow row=(DataRow)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
+			DataRow row=(DataRow)gridMain.Rows[gridMain.GetSelectedIndex()].Tag;
 			long patNum=PIn.Long(row["PatNum"].ToString());
 			GotoModule.GotoAccount(patNum);
 			SendToBack();

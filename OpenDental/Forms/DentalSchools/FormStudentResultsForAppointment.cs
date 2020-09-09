@@ -66,9 +66,9 @@ namespace Imedisoft.Forms
             }
 
             studentsGrid.BeginUpdate();
-			studentsGrid.ListGridColumns.Clear();
-			studentsGrid.ListGridColumns.Add(new GridColumn("", 100));
-			studentsGrid.ListGridRows.Clear();
+			studentsGrid.Columns.Clear();
+			studentsGrid.Columns.Add(new GridColumn("", 100));
+			studentsGrid.Rows.Clear();
 
 			foreach (var student in StudentResults.GetStudents(schoolClass.Id))
 			{
@@ -76,7 +76,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(student.LastName + ", " + student.FirstName);
 				gridRow.Tag = student;
 
-				studentsGrid.ListGridRows.Add(gridRow);
+				studentsGrid.Rows.Add(gridRow);
 			}
 
 			studentsGrid.EndUpdate();
@@ -87,9 +87,9 @@ namespace Imedisoft.Forms
 			var student = studentsGrid.SelectedTag<Provider>();
 
             requirementsGrid.BeginUpdate();
-            requirementsGrid.ListGridColumns.Clear();
-			requirementsGrid.ListGridColumns.Add(new GridColumn("", 100));
-			requirementsGrid.ListGridRows.Clear();
+            requirementsGrid.Columns.Clear();
+			requirementsGrid.Columns.Add(new GridColumn("", 100));
+			requirementsGrid.Rows.Clear();
 
 			if (student == null ||
 				!(classComboBox.SelectedItem is SchoolClass schoolClass) || 
@@ -106,7 +106,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(requirement.Description);
 				gridRow.Tag = requirement;
 
-				requirementsGrid.ListGridRows.Add(gridRow);
+				requirementsGrid.Rows.Add(gridRow);
 			}
 
 			requirementsGrid.EndUpdate();
@@ -115,11 +115,11 @@ namespace Imedisoft.Forms
 		private void FillStudentResults()
 		{
 			resultsGrid.BeginUpdate();
-			resultsGrid.ListGridColumns.Clear();
-			resultsGrid.ListGridColumns.Add(new GridColumn(Translation.DentalSchools.Student, 130));
-			resultsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Description, 150));
-			resultsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Completed, 40));
-			resultsGrid.ListGridRows.Clear();
+			resultsGrid.Columns.Clear();
+			resultsGrid.Columns.Add(new GridColumn(Translation.DentalSchools.Student, 130));
+			resultsGrid.Columns.Add(new GridColumn(Translation.Common.Description, 150));
+			resultsGrid.Columns.Add(new GridColumn(Translation.Common.Completed, 40));
+			resultsGrid.Rows.Clear();
 
 			foreach (var studentResult in StudentResults.GetByAppt(apptId))
             {
@@ -129,7 +129,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(studentResult.CompletionDate.HasValue ? "X" : "");
 				gridRow.Tag = studentResult;
 
-				resultsGrid.ListGridRows.Add(gridRow);
+				resultsGrid.Rows.Add(gridRow);
 			}
 
 

@@ -36,22 +36,22 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Description",200);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Cardinality",140);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Trigger Categories",200);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			ListEhrTriggers=EhrTriggers.GetAll();
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<ListEhrTriggers.Count;i++) {
 				row=new GridRow();
 				row.Cells.Add(ListEhrTriggers[i].Description);
 				row.Cells.Add(ListEhrTriggers[i].Cardinality.ToString());
 				row.Cells.Add(ListEhrTriggers[i].GetTriggerCategories());
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

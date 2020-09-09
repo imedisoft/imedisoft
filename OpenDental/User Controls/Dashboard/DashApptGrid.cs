@@ -143,7 +143,7 @@ namespace OpenDental {
 				gridMain.HScrollVisible=true;
 			}
 			FillGrid();
-			if(Parent.Width<gridMain.Width || Width<gridMain.ListGridColumns.Sum(x => x.ColumnWidth)) {
+			if(Parent.Width<gridMain.Width || Width<gridMain.Columns.Sum(x => x.ColumnWidth)) {
 				gridMain.HScrollVisible=true;
 			}
 			else {
@@ -199,26 +199,26 @@ namespace OpenDental {
 			long selectedApptOtherNum=SelectedApptOther?.AptNum??-1;
 			int selectedIndex=-1;
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Appt Status",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Prov",50);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
 				col=new GridColumn("Clinic",80);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			col=new GridColumn("Date",70);//If the order changes, reflect the change for dateIndex below.
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Time",70);//Must immediately follow Date column.
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Min",40);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Procedures",150);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Notes",320);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			int dateIndex=3;
 			if(!PrefC.HasClinicsEnabled) {
@@ -312,7 +312,7 @@ namespace OpenDental {
 				row.Cells.Add(_listApptOthers[i].ProcDescript);
 				row.Cells.Add(_listApptOthers[i].Note);
 				row.Tag=_listApptOthers[i].AptNum;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 				if((long)row.Tag==selectedApptOtherNum) {
 					selectedIndex=i;
 				}

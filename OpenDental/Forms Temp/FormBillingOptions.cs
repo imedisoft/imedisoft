@@ -972,20 +972,20 @@ namespace OpenDental{
 			}
 			_listDunnings=Dunnings.Refresh(listClinicNums);
 			gridDun.BeginUpdate();
-			gridDun.ListGridColumns.Clear();
+			gridDun.Columns.Clear();
 			GridColumn col=new GridColumn("Billing Type",80);
-			gridDun.ListGridColumns.Add(col);
+			gridDun.Columns.Add(col);
 			col=new GridColumn("Aging",70);
-			gridDun.ListGridColumns.Add(col);
+			gridDun.Columns.Add(col);
 			col=new GridColumn("Ins",40);
-			gridDun.ListGridColumns.Add(col);
+			gridDun.Columns.Add(col);
 			col=new GridColumn("Message",150);
-			gridDun.ListGridColumns.Add(col);
+			gridDun.Columns.Add(col);
 			col=new GridColumn("Bold Message",150);
-			gridDun.ListGridColumns.Add(col);
+			gridDun.Columns.Add(col);
 			col=new GridColumn("Email",30, HorizontalAlignment.Center);
-			gridDun.ListGridColumns.Add(col);
-			gridDun.ListGridRows.Clear();
+			gridDun.Columns.Add(col);
+			gridDun.Rows.Clear();
 			GridRow row;
 			foreach(Dunning dunnCur in _listDunnings) {
 				row=new GridRow();
@@ -1018,7 +1018,7 @@ namespace OpenDental{
 				else {
 					row.Cells.Add("");
 				}
-				gridDun.ListGridRows.Add(row);
+				gridDun.Rows.Add(row);
 			}
 			gridDun.EndUpdate();
 		}

@@ -158,13 +158,13 @@ namespace OpenDental{
 		private void FillGrid(){
 			ContactList=Contacts.Refresh(_listContactCategoryDefs[listCategory.SelectedIndex].Id);
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("Last Name",100));
-			gridMain.ListGridColumns.Add(new GridColumn("First Name",100));
-			gridMain.ListGridColumns.Add(new GridColumn("Wk Phone",90));
-			gridMain.ListGridColumns.Add(new GridColumn("Fax",90));
-			gridMain.ListGridColumns.Add(new GridColumn("Note",250));
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("Last Name",100));
+			gridMain.Columns.Add(new GridColumn("First Name",100));
+			gridMain.Columns.Add(new GridColumn("Wk Phone",90));
+			gridMain.Columns.Add(new GridColumn("Fax",90));
+			gridMain.Columns.Add(new GridColumn("Note",250));
+			gridMain.Rows.Clear();
 			GridRow row;
 			foreach(Contact contactCur in ContactList) {
 				row=new GridRow();
@@ -173,7 +173,7 @@ namespace OpenDental{
 				row.Cells.Add(contactCur.WkPhone);
 				row.Cells.Add(contactCur.Fax);
 				row.Cells.Add(contactCur.Notes);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

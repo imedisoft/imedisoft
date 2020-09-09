@@ -29,12 +29,12 @@ namespace Imedisoft.Forms
 			var fees = Fees.GetFeesForCode(procedureCode.CodeNum, clinicIds);
 
 			feesGrid.BeginUpdate();
-			feesGrid.ListGridColumns.Clear();
-			feesGrid.ListGridColumns.Add(new GridColumn("Schedule", 130));
-			feesGrid.ListGridColumns.Add(new GridColumn("Clinic", 130));
-			feesGrid.ListGridColumns.Add(new GridColumn("Provider", 75));
-			feesGrid.ListGridColumns.Add(new GridColumn("Amount", 100, HorizontalAlignment.Right));
-			feesGrid.ListGridRows.Clear();
+			feesGrid.Columns.Clear();
+			feesGrid.Columns.Add(new GridColumn("Schedule", 130));
+			feesGrid.Columns.Add(new GridColumn("Clinic", 130));
+			feesGrid.Columns.Add(new GridColumn("Provider", 75));
+			feesGrid.Columns.Add(new GridColumn("Amount", 100, HorizontalAlignment.Right));
+			feesGrid.Rows.Clear();
 
 			long lastFeeScheduleId = 0;
 			foreach (var fee in fees)
@@ -58,7 +58,7 @@ namespace Imedisoft.Forms
 							FeeSched = fee.FeeSched
 						};
 
-						feesGrid.ListGridRows.Add(gridRow);
+						feesGrid.Rows.Add(gridRow);
 
 						// Now that we have a placeholder for the default fee (none was found), go about adding the next row (non-default fee).
 						gridRow = new GridRow();
@@ -75,7 +75,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(fee.Amount.ToString("n"));
 				gridRow.Tag = fee;
 
-				feesGrid.ListGridRows.Add(gridRow);
+				feesGrid.Rows.Add(gridRow);
 			}
 			feesGrid.EndUpdate();
 		}

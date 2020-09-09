@@ -33,11 +33,11 @@ namespace OpenDental {
 		/// <summary></summary>
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("Column",200));
-			gridMain.ListGridColumns.Add(new GridColumn("Value",400,true));
-			gridMain.ListGridRows.Clear();
-			gridMain.ListGridRows.AddRange(_tableWikiList.Columns.OfType<DataColumn>().Skip(1).Select(x => new GridRow(x.ColumnName,_tableWikiList.Rows[0][x].ToString())));
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("Column",200));
+			gridMain.Columns.Add(new GridColumn("Value",400,true));
+			gridMain.Rows.Clear();
+			gridMain.Rows.AddRange(_tableWikiList.Columns.OfType<DataColumn>().Skip(1).Select(x => new GridRow(x.ColumnName,_tableWikiList.Rows[0][x].ToString())));
 			gridMain.EndUpdate();
 			gridMain.Title="Edit List Item";
 		}
@@ -56,15 +56,15 @@ namespace OpenDental {
 			comboEntry.SelectedIndex=listComboOptions.FindIndex(x => x==_tableWikiList.Rows[0][e.Row+1].ToString());
 			//Hack together the location to put the combo box
 			Point drawLoc=new Point();
-			drawLoc.Y=gridMain.ListGridRows[e.Row].State.YPos+gridMain.Location.Y
+			drawLoc.Y=gridMain.Rows[e.Row].State.YPos+gridMain.Location.Y
 				+15//gridMain.HeaderHeight
 				+18//gridMain.TitleHeight
 				+1;
-			drawLoc.X=gridMain.ListGridColumns[0].ColumnWidth+gridMain.Location.X+1;
+			drawLoc.X=gridMain.Columns[0].ColumnWidth+gridMain.Location.X+1;
 			comboEntry.Location=drawLoc;
 			//Get the size to set the combo box to cover the item
-			comboEntry.Width=gridMain.ListGridColumns[1].ColumnWidth+1;
-			comboEntry.Height=(gridMain.ListGridRows[e.Row].State.HeightMain-1);
+			comboEntry.Width=gridMain.Columns[1].ColumnWidth+1;
+			comboEntry.Height=(gridMain.Rows[e.Row].State.HeightMain-1);
 			comboEntry.Visible=true;
 			comboEntry.Focus();
 			comboEntry.DroppedDown=true;
@@ -73,8 +73,8 @@ namespace OpenDental {
 
 		private void gridMain_CellLeave(object sender,ODGridClickEventArgs e) {
 			//Save data from grid into table. No call to DB, so this should be safe.
-			for(int i=0;i<gridMain.ListGridRows.Count;i++) {
-				_tableWikiList.Rows[0][i+1]=gridMain.ListGridRows[i].Cells[1].Text.Replace("\r\n","\n").Replace("\n","\r\n");//Column 0 of TableItems.Rows[0] is in the title bar, so it is off from the grid by 1.
+			for(int i=0;i<gridMain.Rows.Count;i++) {
+				_tableWikiList.Rows[0][i+1]=gridMain.Rows[i].Cells[1].Text.Replace("\r\n","\n").Replace("\n","\r\n");//Column 0 of TableItems.Rows[0] is in the title bar, so it is off from the grid by 1.
 			}
 		}
 

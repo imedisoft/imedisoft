@@ -72,13 +72,13 @@ namespace Imedisoft.Forms
 			Accounts.RefreshCache();
 
 			accountsGrid.BeginUpdate();
-			accountsGrid.ListGridColumns.Clear();
-			accountsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Type, 70));
-			accountsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Description, 170));
-			accountsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Balance, 80, HorizontalAlignment.Right));
-			accountsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.BankNumber, 100));
-			accountsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Inactive, 70, HorizontalAlignment.Center));
-			accountsGrid.ListGridRows.Clear();
+			accountsGrid.Columns.Clear();
+			accountsGrid.Columns.Add(new GridColumn(Translation.Common.Type, 70));
+			accountsGrid.Columns.Add(new GridColumn(Translation.Common.Description, 170));
+			accountsGrid.Columns.Add(new GridColumn(Translation.Common.Balance, 80, HorizontalAlignment.Right));
+			accountsGrid.Columns.Add(new GridColumn(Translation.Common.BankNumber, 100));
+			accountsGrid.Columns.Add(new GridColumn(Translation.Common.Inactive, 70, HorizontalAlignment.Center));
+			accountsGrid.Rows.Clear();
 
 			var date = DateTime.Today;
 			if (!string.IsNullOrEmpty(dateTextBox.Text) && DateTime.TryParse(dateTextBox.Text, out var result))
@@ -109,7 +109,7 @@ namespace Imedisoft.Forms
 					selectedAccountIndex = i;
                 }
 
-				accountsGrid.ListGridRows.Add(gridRow);
+				accountsGrid.Rows.Add(gridRow);
 			}
 
 			accountsGrid.EndUpdate();
@@ -176,7 +176,7 @@ namespace Imedisoft.Forms
 		private void AccountsGrid_SelectionCommitted(object sender, EventArgs e)
 		{
 			editButton.Enabled = deleteButton.Enabled = 
-				accountsGrid.SelectedGridRows.Count > 0;
+				accountsGrid.SelectedRows.Count > 0;
 		}
 
 		private void AddButton_Click(object sender, EventArgs e)

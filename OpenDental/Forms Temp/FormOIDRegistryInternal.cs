@@ -30,15 +30,15 @@ namespace OpenDental {
 				labelRetrieveStatus.Text="There is no OID root stored.  It is recommended that you press the 'Retrieve OIDs' button.";
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Type",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Recommended Value",220);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Actual Value",220);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listOIDInternal.Count;i++) {
 				row=new GridRow();
@@ -51,7 +51,7 @@ namespace OpenDental {
 					row.Cells.Add(_rootOIDString+"."+i.ToString());//adds the .1, .2, .3, and .4 (etc...) to the root
 				}
 				row.Cells.Add(_listOIDInternal[i].IDRoot);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

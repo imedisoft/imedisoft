@@ -552,39 +552,39 @@ namespace OpenDental{
 		private void FillGrid() {
 			_listScreens=Screens.GetScreensForGroup(_screenGroup.ScreenGroupNum);
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("#",30);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Name",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Grade",55);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Age",40);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Race",105);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Sex",45);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Urgency",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if(!Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				col=new GridColumn("Caries",45,HorizontalAlignment.Center);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col=new GridColumn("ECC",30,HorizontalAlignment.Center);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col=new GridColumn("CarExp",50,HorizontalAlignment.Center);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col=new GridColumn("ExSeal",45,HorizontalAlignment.Center);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col=new GridColumn("NeedSeal",60,HorizontalAlignment.Center);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col=new GridColumn("NoTeeth",55,HorizontalAlignment.Center);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			col=new GridColumn("Comments",100);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			foreach(OpenDentBusiness.Screen screen in _listScreens) {
 				row=new GridRow();
@@ -605,7 +605,7 @@ namespace OpenDental{
 					row.Cells.Add(screen.MissingAllTeeth==YN.Yes ? "X":"");
 				}
 				row.Cells.Add(screen.Comments);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.Title="Screenings"+" - "+_listScreens.Count;
 			gridMain.EndUpdate();
@@ -614,15 +614,15 @@ namespace OpenDental{
 		private void FillScreenPats() {
 			gridScreenPats.BeginUpdate();
 			gridScreenPats.Title="Patients for Screening"+" - "+_listScreenPats.Count;
-			gridScreenPats.ListGridColumns.Clear();
+			gridScreenPats.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Patient",200);
-			gridScreenPats.ListGridColumns.Add(col);
+			gridScreenPats.Columns.Add(col);
 			col=new GridColumn("Permission",100);
-			gridScreenPats.ListGridColumns.Add(col);
+			gridScreenPats.Columns.Add(col);
 			col=new GridColumn("Screened",90,HorizontalAlignment.Center);
-			gridScreenPats.ListGridColumns.Add(col);
-			gridScreenPats.ListGridRows.Clear();
+			gridScreenPats.Columns.Add(col);
+			gridScreenPats.Rows.Clear();
 			GridRow row;
 			foreach(ScreenPat screenPat in _listScreenPats) {
 				row=new GridRow();
@@ -631,7 +631,7 @@ namespace OpenDental{
 				row.Cells.Add(screenPat.PatScreenPerm.ToString());
 				OpenDentBusiness.Screen screen=_listScreens.FirstOrDefault(x => x.ScreenPatNum==screenPat.ScreenPatNum);
 				row.Cells.Add((screen==null)?"":"X");
-				gridScreenPats.ListGridRows.Add(row);
+				gridScreenPats.Rows.Add(row);
 			}
 			gridScreenPats.EndUpdate();
 		}

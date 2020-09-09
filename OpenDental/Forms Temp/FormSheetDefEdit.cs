@@ -947,17 +947,17 @@ namespace OpenDental {
 				odGrid.Width+=columns[c].ColumnWidth;
 			}
 			odGrid.BeginUpdate();
-			odGrid.ListGridColumns.Clear();
+			odGrid.Columns.Clear();
 			GridColumn col;
 			for(int c=0;c<columns.Count;c++) {
 				col=new GridColumn(columns[c].Description,columns[c].ColumnWidth);
-				odGrid.ListGridColumns.Add(col);
+				odGrid.Columns.Add(col);
 			}
 			GridRow row=new GridRow(); //Add dummy row
 			for(int c=0;c<columns.Count;c++) {
 				row.Cells.Add(" "); //add dummy row.
 			}
-			odGrid.ListGridRows.Add(row);
+			odGrid.Rows.Add(row);
 			odGrid.EndUpdate(); //Calls ComputeRows and ComputeColumns, meaning the RowHeights int[] has been filled.
 			return odGrid;
 		}
@@ -968,19 +968,19 @@ namespace OpenDental {
 			odGrid.Width=fieldDef.Width;
 			odGrid.TranslationName="";
 			odGrid.BeginUpdate();
-			odGrid.ListGridColumns.Clear();
+			odGrid.Columns.Clear();
 			foreach(DisplayField column in listColumns) { 
 				string colHeader=column.Description;
 				if(string.IsNullOrEmpty(colHeader)) {
 					colHeader=column.InternalName;
 				}
-				odGrid.ListGridColumns.Add(new GridColumn(colHeader,column.ColumnWidth));
+				odGrid.Columns.Add(new GridColumn(colHeader,column.ColumnWidth));
 			}
 			GridRow row=new GridRow();//Add empty row
 			for(int c=0;c<listColumns.Count; c++) {
 				row.Cells.Add(" ");//Add empty cell to give the empty row some content
 			}
-			odGrid.ListGridRows.Add(row);
+			odGrid.Rows.Add(row);
 			odGrid.EndUpdate();//Calls ComputeRows and ComputeColumns, meaning the RowHeights int[] has been filled.
 			return odGrid;
 		}

@@ -94,29 +94,29 @@ namespace OpenDental {
 				CreatePayPlanEntries();
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Date",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Provider",65);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Stat",30);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Code",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Fee",55,HorizontalAlignment.Right);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Rem Before",70,HorizontalAlignment.Right);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Credit Date",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Amount",55,HorizontalAlignment.Right);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Rem After",60,HorizontalAlignment.Right);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Note",70){ IsWidthDynamic=true };
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			double totalAttached=0;
 			foreach(PayPlanEdit.PayPlanEntry entryCur in _listPayPlanEntries) { //for all account charges
@@ -164,7 +164,7 @@ namespace OpenDental {
 				if(!entryCur.IsChargeOrd) {
 					row.LowerBorderColor=Color.Black;
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			textTotal.Text=totalAttached.ToString("f");
@@ -183,7 +183,7 @@ namespace OpenDental {
 		private void SetTextBoxes() {
 			List<PayPlanEdit.PayPlanEntry> listSelectedEntries=new List<PayPlanEdit.PayPlanEntry>();
 			for(int i=0;i < gridMain.SelectedIndices.Count();i++) { //fill the list with all the selected items in the grid.
-				listSelectedEntries.Add((PayPlanEdit.PayPlanEntry)(gridMain.ListGridRows[gridMain.SelectedIndices[i]].Tag));
+				listSelectedEntries.Add((PayPlanEdit.PayPlanEntry)(gridMain.Rows[gridMain.SelectedIndices[i]].Tag));
 			}
 			bool isUpdateButton=false;//keep track of the state of the button, if it is add or update. 
 			if(listSelectedEntries.Count==0) { //if there are no entries selected
@@ -290,7 +290,7 @@ namespace OpenDental {
 		private void butAddOrUpdate_Click(object sender,EventArgs e) {
 			List<PayPlanEdit.PayPlanEntry> listSelectedEntries=new List<PayPlanEdit.PayPlanEntry>();
 			for(int i=0;i < gridMain.SelectedIndices.Count();i++) { //add all of the currently selected entries to this list.
-				listSelectedEntries.Add((PayPlanEdit.PayPlanEntry)(gridMain.ListGridRows[gridMain.SelectedIndices[i]].Tag));
+				listSelectedEntries.Add((PayPlanEdit.PayPlanEntry)(gridMain.Rows[gridMain.SelectedIndices[i]].Tag));
 			}
 			if(listSelectedEntries.Count<=1) { //validation (doesn't matter if multiple are selected)
 				if(string.IsNullOrEmpty(textAmt.Text) || textAmt.errorProvider1.GetError(textAmt)!="" || PIn.Double(textAmt.Text)==0) {
@@ -336,7 +336,7 @@ namespace OpenDental {
 				if(selectedEntry.IsChargeOrd) {
 					//get the charge from the grid.
 					//DO NOT use PayPlanChargeNum. They are not pre-inserted so they will all be 0 if new.
-					selectedCharge=((PayPlanEdit.PayPlanEntry)(gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag)).Charge;
+					selectedCharge=((PayPlanEdit.PayPlanEntry)(gridMain.Rows[gridMain.SelectedIndices[0]].Tag)).Charge;
 				}
 				ListPayPlanCreditsCur=PayPlanEdit.CreateOrUpdateChargeForSelectedEntry(selectedEntry,ListPayPlanCreditsCur,PIn.Double(textAmt.Text),textNote.Text,textDate.Text
 					,_patCur.PatNum,_payPlanCur.PayPlanNum,selectedCharge);
@@ -423,7 +423,7 @@ namespace OpenDental {
 		private void butDelete_Click(object sender,EventArgs e) {
 			List<PayPlanEdit.PayPlanEntry> listSelectedEntries=new List<PayPlanEdit.PayPlanEntry>();
 			for(int i=0;i < gridMain.SelectedIndices.Count();i++) {
-				listSelectedEntries.Add((PayPlanEdit.PayPlanEntry)(gridMain.ListGridRows[gridMain.SelectedIndices[i]].Tag));
+				listSelectedEntries.Add((PayPlanEdit.PayPlanEntry)(gridMain.Rows[gridMain.SelectedIndices[i]].Tag));
 			}
 			List<PayPlanCharge> listSelectedCharges=listSelectedEntries.Where(x => x.Charge != null).Select(x => x.Charge).ToList();
 			//remove all procedures from the list. you cannot delete procedures from here.

@@ -354,18 +354,18 @@ namespace OpenDental{
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Chk #",60,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Date",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Deposits",70,HorizontalAlignment.Right);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Withdrawals",75,HorizontalAlignment.Right);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("X",30,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			decimal sum=0;//to avoid cumulative errors.
 			for(int i=0;i<JournalList.Count;i++) {
@@ -411,7 +411,7 @@ namespace OpenDental{
 						//Just a format error in the amount probably, who cares.
 					}
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			textSum.Text=sum.ToString("n");

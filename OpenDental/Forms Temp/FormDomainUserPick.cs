@@ -37,12 +37,12 @@ namespace OpenDental {
 				return;
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Clear();
+			gridMain.Rows.Clear();
 			GridColumn col;
 			for(int i=0;i<_fields.Length;i++) {
 				col=new GridColumn(_fields[i],175);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			GridRow row;
 			foreach(SearchResult result in listResults) {
@@ -64,7 +64,7 @@ namespace OpenDental {
 						row.Cells.Add("");
 					}
 				}				
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -101,7 +101,7 @@ namespace OpenDental {
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			SelectedDomainName=PIn.String(gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag.ToString());
+			SelectedDomainName=PIn.String(gridMain.Rows[gridMain.GetSelectedIndex()].Tag.ToString());
 			DialogResult=DialogResult.OK;
 		}
 		
@@ -112,7 +112,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			if(gridMain.GetSelectedIndex()!=-1) {
-				SelectedDomainName=PIn.String(gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag.ToString());
+				SelectedDomainName=PIn.String(gridMain.Rows[gridMain.GetSelectedIndex()].Tag.ToString());
 			}
 			else {
 				SelectedDomainName="";

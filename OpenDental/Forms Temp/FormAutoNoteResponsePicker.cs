@@ -22,15 +22,15 @@ namespace OpenDental {
 			AutoNotes.RefreshCache();
 			List<AutoNote> listAutoNotes=AutoNotes.GetDeepCopy();
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("",100));
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("",100));
+			gridMain.Rows.Clear();
 			GridRow row;
 			foreach(AutoNote autoNote in listAutoNotes) {
 				row=new GridRow();
 				row.Cells.Add(autoNote.AutoNoteName);
 				row.Tag=autoNote;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

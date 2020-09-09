@@ -53,19 +53,19 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			gridMain.AllowSortingByColumn=true;
 			GridColumn col=new GridColumn("Date",90,HorizontalAlignment.Center,GridSortingStrategy.DateParse);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Name",220);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Code",50);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Abbr",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Description",110){ IsWidthDynamic=true };
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listNonCpoeProcs.Count;i++) {
 				Patient pat=_listPats.FirstOrDefault(x => x.PatNum==_listNonCpoeProcs[i].PatNum);
@@ -81,7 +81,7 @@ namespace OpenDental {
 				row.Cells.Add(procCode.AbbrDesc);
 				row.Cells.Add(procCode.Descript);
 				row.Tag=_listNonCpoeProcs[i];
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -94,7 +94,7 @@ namespace OpenDental {
 				MessageBox.Show("Please select a radiology order first.");
 				return;
 			}
-			Procedure proc=(Procedure)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
+			Procedure proc=(Procedure)gridMain.Rows[gridMain.GetSelectedIndex()].Tag;
 			GotoModule.GotoFamily(proc.PatNum);
 		}
 
@@ -106,7 +106,7 @@ namespace OpenDental {
 				MessageBox.Show("Please select a radiology order first.");
 				return;
 			}
-			Procedure proc=(Procedure)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
+			Procedure proc=(Procedure)gridMain.Rows[gridMain.GetSelectedIndex()].Tag;
 			GotoModule.GotoChart(proc.PatNum);
 		}
 
@@ -117,7 +117,7 @@ namespace OpenDental {
 			}
 			List<Procedure> listSelectedProcs=new List<Procedure>();
 			for(int i=0;i<gridMain.SelectedIndices.Length;i++) {
-				Procedure proc=(Procedure)gridMain.ListGridRows[gridMain.SelectedIndices[i]].Tag;
+				Procedure proc=(Procedure)gridMain.Rows[gridMain.SelectedIndices[i]].Tag;
 				listSelectedProcs.Add(proc);
 				_listNonCpoeProcs.Remove(proc);
 			}

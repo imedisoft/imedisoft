@@ -45,23 +45,23 @@ namespace Imedisoft.Forms
 			int selectedIndex = requestsGrid.GetSelectedIndex();
 			if (selectedIndex != -1)
 			{
-				if (requestsGrid.ListGridRows[selectedIndex].Tag is FeatureRequestDto featureRequest)
+				if (requestsGrid.Rows[selectedIndex].Tag is FeatureRequestDto featureRequest)
 				{
 					selectedRequestId = featureRequest.Id;
 				}
 			}
 
 			requestsGrid.BeginUpdate();
-			requestsGrid.ListGridColumns.Clear();
-			requestsGrid.ListGridColumns.Add(new GridColumn("Req#", 40, GridSortingStrategy.AmountParse));
-			requestsGrid.ListGridColumns.Add(new GridColumn("Mine", 40, GridSortingStrategy.StringCompare));
-			requestsGrid.ListGridColumns.Add(new GridColumn("Comments", 70, GridSortingStrategy.AmountParse));
-			requestsGrid.ListGridColumns.Add(new GridColumn("Version", 75, GridSortingStrategy.VersionNumber));
-			requestsGrid.ListGridColumns.Add(new GridColumn("Diff", 40, GridSortingStrategy.AmountParse));
-			requestsGrid.ListGridColumns.Add(new GridColumn("Weight", 45, HorizontalAlignment.Right, GridSortingStrategy.AmountParse));
-			requestsGrid.ListGridColumns.Add(new GridColumn("Status", 90, GridSortingStrategy.StringCompare));
-			requestsGrid.ListGridColumns.Add(new GridColumn("Description", 500, GridSortingStrategy.StringCompare));
-			requestsGrid.ListGridRows.Clear();
+			requestsGrid.Columns.Clear();
+			requestsGrid.Columns.Add(new GridColumn("Req#", 40, GridSortingStrategy.AmountParse));
+			requestsGrid.Columns.Add(new GridColumn("Mine", 40, GridSortingStrategy.StringCompare));
+			requestsGrid.Columns.Add(new GridColumn("Comments", 70, GridSortingStrategy.AmountParse));
+			requestsGrid.Columns.Add(new GridColumn("Version", 75, GridSortingStrategy.VersionNumber));
+			requestsGrid.Columns.Add(new GridColumn("Diff", 40, GridSortingStrategy.AmountParse));
+			requestsGrid.Columns.Add(new GridColumn("Weight", 45, HorizontalAlignment.Right, GridSortingStrategy.AmountParse));
+			requestsGrid.Columns.Add(new GridColumn("Status", 90, GridSortingStrategy.StringCompare));
+			requestsGrid.Columns.Add(new GridColumn("Description", 500, GridSortingStrategy.StringCompare));
+			requestsGrid.Rows.Clear();
 
 			foreach (var featureRequest in featureRequestsFiltered)
             {
@@ -85,7 +85,7 @@ namespace Imedisoft.Forms
 					gridRow.BackColor = Color.FromArgb(255, 255, 230); // Light yellow.
 				}
 
-				requestsGrid.ListGridRows.Add(gridRow);
+				requestsGrid.Rows.Add(gridRow);
 				gridRow.Tag = featureRequest;
 			}
 
@@ -93,9 +93,9 @@ namespace Imedisoft.Forms
 
 			if (selectedRequestId > 0)
             {
-				for (int i = 0; i < requestsGrid.ListGridRows.Count; ++i)
+				for (int i = 0; i < requestsGrid.Rows.Count; ++i)
                 {
-					if (requestsGrid.ListGridRows[i].Tag is FeatureRequestDto featureRequest && featureRequest.Id == selectedRequestId)
+					if (requestsGrid.Rows[i].Tag is FeatureRequestDto featureRequest && featureRequest.Id == selectedRequestId)
                     {
 						requestsGrid.SetSelected(i, true);
 
@@ -130,7 +130,7 @@ namespace Imedisoft.Forms
 
 		private void RequestsGrid_CellDoubleClick(object sender, ODGridClickEventArgs e)
 		{
-            if (!(requestsGrid.ListGridRows[e.Row].Tag is FeatureRequestDto featureRequest)) return;
+            if (!(requestsGrid.Rows[e.Row].Tag is FeatureRequestDto featureRequest)) return;
 
 			using (var formRequestEdit = new FormRequestEdit(featureRequest))
 			{
@@ -156,7 +156,7 @@ namespace Imedisoft.Forms
 				return;
 			}
 
-            if (!(requestsGrid.ListGridRows[index].Tag is FeatureRequestDto featureRequest))
+            if (!(requestsGrid.Rows[index].Tag is FeatureRequestDto featureRequest))
             {
                 return;
             }

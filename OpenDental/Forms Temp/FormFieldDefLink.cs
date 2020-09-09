@@ -47,9 +47,9 @@ namespace Imedisoft.Forms
 			//Find all FieldDefLinks for the currently selected location, then find the apptfield/patfield for each, to display.
 			int selectedIdx = displayedGrid.GetSelectedIndex();
 			displayedGrid.BeginUpdate();
-			displayedGrid.ListGridColumns.Clear();
-			displayedGrid.ListGridColumns.Add(new GridColumn("", 20) { IsWidthDynamic = true });
-			displayedGrid.ListGridRows.Clear();
+			displayedGrid.Columns.Clear();
+			displayedGrid.Columns.Add(new GridColumn("", 20) { IsWidthDynamic = true });
+			displayedGrid.Rows.Clear();
 
 			GridRow row;
 			switch ((FieldLocations)locationComboBox.SelectedIndex)
@@ -70,7 +70,7 @@ namespace Imedisoft.Forms
 						row = new GridRow();
 						row.Cells.Add(patField.FieldName);
 						row.Tag = patField;
-						displayedGrid.ListGridRows.Add(row);
+						displayedGrid.Rows.Add(row);
 					}
 					break;
 
@@ -86,12 +86,12 @@ namespace Imedisoft.Forms
 						row = new GridRow();
 						row.Cells.Add(apptField.Name);
 						row.Tag = apptField;
-						displayedGrid.ListGridRows.Add(row);
+						displayedGrid.Rows.Add(row);
 					}
 					break;
 			}
 			displayedGrid.EndUpdate();
-			if (displayedGrid.ListGridRows.Count - 1 >= selectedIdx)
+			if (displayedGrid.Rows.Count - 1 >= selectedIdx)
 			{
 				displayedGrid.SetSelected(selectedIdx, true);
 			}
@@ -103,9 +103,9 @@ namespace Imedisoft.Forms
 		{
 			int selectedIdx = hiddenGrid.GetSelectedIndex();
 			hiddenGrid.BeginUpdate();
-			hiddenGrid.ListGridColumns.Clear();
-			hiddenGrid.ListGridColumns.Add(new GridColumn("", 20) { IsWidthDynamic = true });
-			hiddenGrid.ListGridRows.Clear();
+			hiddenGrid.Columns.Clear();
+			hiddenGrid.Columns.Add(new GridColumn("", 20) { IsWidthDynamic = true });
+			hiddenGrid.Rows.Clear();
 			GridRow row;
 			List<FieldDefLink> listFieldDefLinksForLoc = _listFieldDefLinks.FindAll(x => x.FieldLocation == (FieldLocations)locationComboBox.SelectedIndex);
 			List<FieldDefLink> listLinksToDelete = new List<FieldDefLink>();//Some links could exists to deleted FieldDefs prior to 18.1
@@ -123,7 +123,7 @@ namespace Imedisoft.Forms
 						row = new GridRow();
 						row.Cells.Add(patFieldDef.FieldName);
 						row.Tag = fieldDefLink;
-						hiddenGrid.ListGridRows.Add(row);
+						hiddenGrid.Rows.Add(row);
 						break;
 
 					case FieldDefTypes.Appointment:
@@ -136,7 +136,7 @@ namespace Imedisoft.Forms
 						row = new GridRow();
 						row.Cells.Add(apptFieldDef.Name);
 						row.Tag = fieldDefLink;
-						hiddenGrid.ListGridRows.Add(row);
+						hiddenGrid.Rows.Add(row);
 						break;
 				}
 			}
@@ -148,7 +148,7 @@ namespace Imedisoft.Forms
 			}
 
 			hiddenGrid.EndUpdate();
-			if (hiddenGrid.ListGridRows.Count - 1 >= selectedIdx)
+			if (hiddenGrid.Rows.Count - 1 >= selectedIdx)
 			{
 				hiddenGrid.SetSelected(selectedIdx, true);
 			}
@@ -176,7 +176,7 @@ namespace Imedisoft.Forms
 				case FieldLocations.Family:
 				case FieldLocations.GroupNote:
 				case FieldLocations.OrthoChart:
-					PatFieldDef patFieldDef = (PatFieldDef)displayedGrid.ListGridRows[displayedGrid.GetSelectedIndex()].Tag;
+					PatFieldDef patFieldDef = (PatFieldDef)displayedGrid.Rows[displayedGrid.GetSelectedIndex()].Tag;
 					fieldDefLink = new FieldDefLink();
 					fieldDefLink.FieldDefNum = patFieldDef.Id;
 					fieldDefLink.FieldDefType = FieldDefTypes.Patient;
@@ -185,7 +185,7 @@ namespace Imedisoft.Forms
 					break;
 
 				case FieldLocations.AppointmentEdit://AppointmentEdit is the only place where ApptFields are used.
-					AppointmentFieldDefinition apptFieldDef = (AppointmentFieldDefinition)displayedGrid.ListGridRows[displayedGrid.GetSelectedIndex()].Tag;
+					AppointmentFieldDefinition apptFieldDef = (AppointmentFieldDefinition)displayedGrid.Rows[displayedGrid.GetSelectedIndex()].Tag;
 					fieldDefLink = new FieldDefLink();
 					fieldDefLink.FieldDefNum = apptFieldDef.Id;
 					fieldDefLink.FieldDefType = FieldDefTypes.Appointment;
@@ -206,7 +206,7 @@ namespace Imedisoft.Forms
 				return;
 			}
 
-			_listFieldDefLinks.Remove((FieldDefLink)hiddenGrid.ListGridRows[hiddenGrid.GetSelectedIndex()].Tag);
+			_listFieldDefLinks.Remove((FieldDefLink)hiddenGrid.Rows[hiddenGrid.GetSelectedIndex()].Tag);
 			FillGridDisplayed();
 			FillGridHidden();
 		}

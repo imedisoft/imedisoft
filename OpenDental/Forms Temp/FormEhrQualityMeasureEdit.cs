@@ -39,19 +39,19 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("PatNum",50);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Patient Name",140);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Numerator",60,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Exclusion",60,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Explanation",200);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			table=QualityMeasures.GetTable(Qcur.Type,DateStart,DateEnd,ProvNum);
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<table.Rows.Count;i++) {
 				row=new GridRow();
@@ -63,7 +63,7 @@ namespace OpenDental {
 				//if(table.Rows[i]["met"].ToString()=="X") {
 				//	row.ColorBackG=Color.LightGreen;
 				//}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

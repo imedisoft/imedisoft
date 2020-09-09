@@ -76,15 +76,15 @@ namespace OpenDental {
 		///<summary>Both grid s should be filled with the same columns. This method prevents the need for two nearly identical fill grid patterns.</summary>
 		private void FillGrid(ref ODGrid grid) {
 			grid.BeginUpdate();
-			grid.ListGridColumns.Clear();
-			grid.ListGridColumns.Add(new GridColumn("Status",40));
-			grid.ListGridColumns.Add(new GridColumn("Tth",30));
-			grid.ListGridColumns.Add(new GridColumn("Surf",40));
-			grid.ListGridColumns.Add(new GridColumn("Code",40));
-			grid.ListGridColumns.Add(new GridColumn("Description",195));
-			grid.ListGridColumns.Add(new GridColumn("TPs",35));
-			grid.ListGridColumns.Add(new GridColumn("Apt",40));
-			grid.ListGridRows.Clear();
+			grid.Columns.Clear();
+			grid.Columns.Add(new GridColumn("Status",40));
+			grid.Columns.Add(new GridColumn("Tth",30));
+			grid.Columns.Add(new GridColumn("Surf",40));
+			grid.Columns.Add(new GridColumn("Code",40));
+			grid.Columns.Add(new GridColumn("Description",195));
+			grid.Columns.Add(new GridColumn("TPs",35));
+			grid.Columns.Add(new GridColumn("Apt",40));
+			grid.Rows.Clear();
 			GridRow row;
 			List<Procedure> listProcs;
 			if(grid==gridAll) {
@@ -137,7 +137,7 @@ namespace OpenDental {
 				}
 				row.Cells.Add(aptStatus);
 				row.Tag=proc;
-				grid.ListGridRows.Add(row);
+				grid.Rows.Add(row);
 			}
 			grid.EndUpdate();
 		}
@@ -159,7 +159,7 @@ namespace OpenDental {
 				return;
 			}
 			foreach(int idx in gridAll.SelectedIndices) {
-				Procedure procCur=(Procedure)gridAll.ListGridRows[idx].Tag;
+				Procedure procCur=(Procedure)gridAll.Rows[idx].Tag;
 				if(procCur==null) {
 					continue;
 				}
@@ -174,7 +174,7 @@ namespace OpenDental {
 			}
 			bool hasMsgShow=false;
 			foreach(int idx in gridTP.SelectedIndices) {
-				Procedure procCur=(Procedure)gridTP.ListGridRows[idx].Tag;
+				Procedure procCur=(Procedure)gridTP.Rows[idx].Tag;
 				if(procCur==null || (TreatPlanCur.TPStatus==TreatPlanStatus.Active && (procCur.AptNum>0 || procCur.PlannedAptNum>0))) {
 					//if active TP, don't allow scheduled procedures to me moved off the TP.
 					if(!hasMsgShow) {//Only show msgbox once.
@@ -206,10 +206,10 @@ namespace OpenDental {
 			gridTP.ContextMenu=null;
 			ODGrid grid=(ODGrid)sender;
 			int row=grid.PointToRow(e.Y);
-			if(row<0 || row>=grid.ListGridRows.Count) {
+			if(row<0 || row>=grid.Rows.Count) {
 				return;
 			}
-			Procedure proc=(Procedure)grid.ListGridRows[row].Tag;
+			Procedure proc=(Procedure)grid.Rows[row].Tag;
 			if(proc==null) {
 				return;//should never happen
 			}

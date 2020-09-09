@@ -55,10 +55,10 @@ namespace OpenDental {
 				}
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.AddRange(_listColumnHeaders.Select(x => new GridColumn(x.ColName,x.ColWidth)));
-			gridMain.ListGridRows.Clear();
-			gridMain.ListGridRows.AddRange(_table.Select().Select((x,index) => new GridRow(x.ItemArray.Select(y => y.ToString()).ToArray()){ Tag=index }));
+			gridMain.Columns.Clear();
+			gridMain.Columns.AddRange(_listColumnHeaders.Select(x => new GridColumn(x.ColName,x.ColWidth)));
+			gridMain.Rows.Clear();
+			gridMain.Rows.AddRange(_table.Select().Select((x,index) => new GridRow(x.ItemArray.Select(y => y.ToString()).ToArray()){ Tag=index }));
 			gridMain.Title=WikiListCurName;
 			gridMain.EndUpdate();
 			FilterGrid();
@@ -78,12 +78,12 @@ namespace OpenDental {
 			}
 			if(radioButFilter.Checked) {
 				gridMain.BeginUpdate();
-				gridMain.ListGridRows.Clear();
+				gridMain.Rows.Clear();
 			}
 			bool isScrollSet=false;
 			for(int i=0;i<_table.Rows.Count;i++) {
 				if(radioButHighlight.Checked) {
-					gridMain.ListGridRows[i].BackColor=Color.White;
+					gridMain.Rows[i].BackColor=Color.White;
 				}
 				string[] listCellVals=_table.Rows[i].ItemArray.Select(x => x.ToString()).ToArray();
 				if((_arraySearchColIdxs.IsNullOrEmpty()//not advanced search, so compare to all cell values
@@ -95,10 +95,10 @@ namespace OpenDental {
 				}
 				//matching row
 				if(radioButFilter.Checked) {
-					gridMain.ListGridRows.Add(new GridRow(listCellVals) { Tag=i });
+					gridMain.Rows.Add(new GridRow(listCellVals) { Tag=i });
 				}
 				else {
-					gridMain.ListGridRows[i].BackColor=Color.Yellow;
+					gridMain.Rows[i].BackColor=Color.Yellow;
 					if(!isScrollSet) {
 						gridMain.ScrollToIndex(i);
 						isScrollSet=true;
@@ -113,7 +113,7 @@ namespace OpenDental {
 		private void gridMain_CellDoubleClick(object sender,OpenDental.UI.ODGridClickEventArgs e) {
 			using(FormWikiListItemEdit FormWLIE=new FormWikiListItemEdit()) {
 				FormWLIE.WikiListCurName=WikiListCurName;
-				FormWLIE.ItemNum=PIn.Long(_table.Rows[(int)gridMain.ListGridRows[e.Row].Tag][0].ToString());
+				FormWLIE.ItemNum=PIn.Long(_table.Rows[(int)gridMain.Rows[e.Row].Tag][0].ToString());
 				FormWLIE.ListColumnHeaders=_listColumnHeaders;
 				//saving occurs from within the form.
 				if(FormWLIE.ShowDialog()!=DialogResult.OK) {
@@ -143,12 +143,12 @@ namespace OpenDental {
 			if(!Security.IsAuthorized(Permissions.WikiListSetup)) {//gives a message box if no permission
 				return;
 			}
-			if(gridMain.SelectedCell.X>gridMain.ListGridColumns.Count-2) {//can't shift the last column right
+			if(gridMain.SelectedCell.X>gridMain.Columns.Count-2) {//can't shift the last column right
 				return;
 			}
 			SetIsEdited();
 			Point pointNewSelectedCell=gridMain.SelectedCell;
-			pointNewSelectedCell.X=Math.Min(gridMain.ListGridColumns.Count-1,pointNewSelectedCell.X+1);
+			pointNewSelectedCell.X=Math.Min(gridMain.Columns.Count-1,pointNewSelectedCell.X+1);
 			WikiLists.ShiftColumnRight(WikiListCurName,_table.Columns[gridMain.SelectedCell.X].ColumnName);
 			FillGrid();
 			gridMain.SetSelected(pointNewSelectedCell);
@@ -208,9 +208,9 @@ namespace OpenDental {
 			}
 			SetIsEdited();
 			FillGrid();
-			for(int i = 0;i<gridMain.ListGridRows.Count;i++) {
-				if(gridMain.ListGridRows[i].Cells[0].Text==itemNum.ToString()) {
-					gridMain.ListGridRows[i].BackColor=Color.FromArgb(255,255,128);
+			for(int i = 0;i<gridMain.Rows.Count;i++) {
+				if(gridMain.Rows[i].Cells[0].Text==itemNum.ToString()) {
+					gridMain.Rows[i].BackColor=Color.FromArgb(255,255,128);
 					gridMain.ScrollToIndex(i);
 				}
 			}
@@ -269,7 +269,7 @@ namespace OpenDental {
 			if(!Security.IsAuthorized(Permissions.WikiListSetup)) {//gives a message box if no permission
 				return;
 			}
-			if(gridMain.ListGridRows.Count>0) {
+			if(gridMain.Rows.Count>0) {
 				MessageBox.Show("Cannot delete a non-empty list.  Remove all items first and try again.");
 				return;
 			}

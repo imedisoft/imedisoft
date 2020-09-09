@@ -123,16 +123,16 @@ namespace OpenDental {
 
 		private void FillImportGrid() {
 			gridMedImport.BeginUpdate();
-			gridMedImport.ListGridColumns.Clear();
+			gridMedImport.Columns.Clear();
 			GridColumn col=new GridColumn("Last Modified",100,HorizontalAlignment.Center);
-			gridMedImport.ListGridColumns.Add(col);
+			gridMedImport.Columns.Add(col);
 			col=new GridColumn("Date Start",100,HorizontalAlignment.Center);
-			gridMedImport.ListGridColumns.Add(col);
+			gridMedImport.Columns.Add(col);
 			col=new GridColumn("Date Stop",100,HorizontalAlignment.Center);
-			gridMedImport.ListGridColumns.Add(col);
+			gridMedImport.Columns.Add(col);
 			col=new GridColumn("Description",220);
-			gridMedImport.ListGridColumns.Add(col);
-			gridMedImport.ListGridRows.Clear();
+			gridMedImport.Columns.Add(col);
+			gridMedImport.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<ListMedicationPatNew.Count;i++) {
 				row=new GridRow();
@@ -155,23 +155,23 @@ namespace OpenDental {
 				else {
 					row.Cells.Add(ListMedicationPatNew[i].MedDescript);
 				}
-				gridMedImport.ListGridRows.Add(row);
+				gridMedImport.Rows.Add(row);
 			}
 			gridMedImport.EndUpdate();
 		}
 
 		private void FillExistingGrid() {
 			gridMedExisting.BeginUpdate();
-			gridMedExisting.ListGridColumns.Clear();
+			gridMedExisting.Columns.Clear();
 			GridColumn col=new GridColumn("Last Modified",100,HorizontalAlignment.Center);
-			gridMedExisting.ListGridColumns.Add(col);
+			gridMedExisting.Columns.Add(col);
 			col=new GridColumn("Date Start",100,HorizontalAlignment.Center);
-			gridMedExisting.ListGridColumns.Add(col);
+			gridMedExisting.Columns.Add(col);
 			col=new GridColumn("Date Stop",100,HorizontalAlignment.Center);
-			gridMedExisting.ListGridColumns.Add(col);
+			gridMedExisting.Columns.Add(col);
 			col=new GridColumn("Description",320);
-			gridMedExisting.ListGridColumns.Add(col);
-			gridMedExisting.ListGridRows.Clear();
+			gridMedExisting.Columns.Add(col);
+			gridMedExisting.Rows.Clear();
 			_listMedicationPatCur=MedicationPats.GetMedPatsForReconcile(_patCur.PatNum);
 			List<long> medicationNums=new List<long>();
 			for(int h=0;h<_listMedicationPatCur.Count;h++) {
@@ -204,27 +204,27 @@ namespace OpenDental {
 				else {
 					row.Cells.Add(med.Name);
 				}
-				gridMedExisting.ListGridRows.Add(row);
+				gridMedExisting.Rows.Add(row);
 			}
 			gridMedExisting.EndUpdate();
 		}
 
 		private void FillReconcileGrid() {
 			gridMedReconcile.BeginUpdate();
-			gridMedReconcile.ListGridColumns.Clear();
+			gridMedReconcile.Columns.Clear();
 			GridColumn col=new GridColumn("Last Modified",130,HorizontalAlignment.Center);
-			gridMedReconcile.ListGridColumns.Add(col);
+			gridMedReconcile.Columns.Add(col);
 			col=new GridColumn("Date Start",100,HorizontalAlignment.Center);
-			gridMedReconcile.ListGridColumns.Add(col);
+			gridMedReconcile.Columns.Add(col);
 			col=new GridColumn("Date Stop",100,HorizontalAlignment.Center);
-			gridMedReconcile.ListGridColumns.Add(col);
+			gridMedReconcile.Columns.Add(col);
 			col=new GridColumn("Description",350);
-			gridMedReconcile.ListGridColumns.Add(col);
+			gridMedReconcile.Columns.Add(col);
 			col=new GridColumn("Notes",150);
-			gridMedReconcile.ListGridColumns.Add(col);
+			gridMedReconcile.Columns.Add(col);
 			col=new GridColumn("Is Incoming",50,HorizontalAlignment.Center);
-			gridMedReconcile.ListGridColumns.Add(col);
-			gridMedReconcile.ListGridRows.Clear();
+			gridMedReconcile.Columns.Add(col);
+			gridMedReconcile.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listMedicationPatReconcile.Count;i++) {
 				row=new GridRow();
@@ -265,7 +265,7 @@ namespace OpenDental {
 					row.Cells.Add(_listMedicationPatReconcile[i].PatNote);
 				}
 				row.Cells.Add(_listMedicationPatReconcile[i].IsNew?"X":"");
-				gridMedReconcile.ListGridRows.Add(row);
+				gridMedReconcile.Rows.Add(row);
 			}
 			gridMedReconcile.EndUpdate();
 		}
@@ -282,7 +282,7 @@ namespace OpenDental {
 				isValid=true;
 				//Since gridMedImport and ListMedicationPatNew are a 1:1 list we can use the selected index position to get our medP
 				medP=ListMedicationPatNew[gridMedImport.SelectedIndices[i]];
-				for(int j=0;j<gridMedReconcile.ListGridRows.Count;j++) {
+				for(int j=0;j<gridMedReconcile.Rows.Count;j++) {
 					if(medP.RxCui > 0 && medP.RxCui==_listMedicationPatReconcile[j].RxCui) {
 						isValid=false;
 						skipCount++;
@@ -311,7 +311,7 @@ namespace OpenDental {
 				isValid=true;
 				//Since gridMedImport and ListMedicationPatNew are a 1:1 list we can use the selected index position to get our medP
 				medP=_listMedicationPatCur[gridMedExisting.SelectedIndices[i]];
-				for(int j=0;j<gridMedReconcile.ListGridRows.Count;j++) {
+				for(int j=0;j<gridMedReconcile.Rows.Count;j++) {
 					if(medP.RxCui > 0 && medP.RxCui==_listMedicationPatReconcile[j].RxCui) {
 						isValid=false;
 						skipCount++;

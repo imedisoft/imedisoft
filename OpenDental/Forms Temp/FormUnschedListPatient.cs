@@ -25,20 +25,20 @@ namespace OpenDental {
 		private void FillGrid() {
 			this.Cursor=Cursors.WaitCursor;
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Date",65,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("AptStatus",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("UnschedStatus",110);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Prov",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Procedures",150);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Notes",200);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			foreach(Appointment apt in _listUnschedApptsForPat) {
 				row=new GridRow();
@@ -49,7 +49,7 @@ namespace OpenDental {
 				row.Cells.Add(apt.ProcDescript);
 				row.Cells.Add(apt.Note);
 				row.Tag=apt;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			this.Cursor=Cursors.Default;

@@ -46,28 +46,28 @@ namespace OpenDental {
 				carrierWidth=200;
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Patient",patientWidth);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Carrier",carrierWidth);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("TxMonths",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Banding",80,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("MonthsRem",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("#Sent",60);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("LastSent",80,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("NextClaim",80,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if(PrefC.HasClinicsEnabled) { //clinics is turned on
 				col=new GridColumn("Clinic",clinicWidth,HorizontalAlignment.Center);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			foreach(DataRow rowCur in _tableOutstandingAutoClaims.Rows) {
 				//need a check for if clinics is on here
@@ -101,7 +101,7 @@ namespace OpenDental {
 					row.Cells.Add(Clinics.GetAbbr(PIn.Long(rowCur["ClinicNum"].ToString())));
 				}
 				row.Tag=rowCur;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 
 			}
 			gridMain.EndUpdate();
@@ -119,7 +119,7 @@ namespace OpenDental {
 			List<long> listPatPlanNums = new List<long>();
 			List<long> listInsSubNums = new List<long>();
 			for(int i = 0;i < gridMain.SelectedIndices.Count();i++) {
-				DataRow rowCur =(DataRow)gridMain.ListGridRows[gridMain.SelectedIndices[i]].Tag;
+				DataRow rowCur =(DataRow)gridMain.Rows[gridMain.SelectedIndices[i]].Tag;
 				listPlanNums.Add(PIn.Long(rowCur["PlanNum"].ToString()));
 				listPatPlanNums.Add(PIn.Long(rowCur["PatPlanNum"].ToString()));
 				listInsSubNums.Add(PIn.Long(rowCur["InsSubNum"].ToString()));
@@ -132,7 +132,7 @@ namespace OpenDental {
 			List<Benefit> listBenefitsAll=Benefits.Refresh(listSelectedPatPlans,listSelectedInsSubs);
 			for(int i = 0;i < gridMain.SelectedIndices.Count();i++) {
 				try {
-					DataRow rowCur =(DataRow)gridMain.ListGridRows[gridMain.SelectedIndices[i]].Tag;
+					DataRow rowCur =(DataRow)gridMain.Rows[gridMain.SelectedIndices[i]].Tag;
 					long patNumCur = PIn.Long(rowCur["PatNum"].ToString());
 					Patient patCur = Patients.GetPat(patNumCur);
 					PatientNote patNoteCur = PatientNotes.Refresh(patNumCur,patCur.Guarantor);

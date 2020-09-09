@@ -53,36 +53,36 @@ namespace OpenDental {
 		private void FillGrid() {
 			if(!checkWebSchedNewPat.Checked && !checkWebSchedRecall.Checked && !checkASAP.Checked) {
 				gridMain.BeginUpdate();
-				gridMain.ListGridRows.Clear();
+				gridMain.Rows.Clear();
 				gridMain.EndUpdate();
 				return;
 			}
 			DataTable table=GetAppointments();
 			gridMain.BeginUpdate();
 			//Columns
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			if(PrefC.HasClinicsEnabled) {
 				col=new GridColumn("Clinic",100);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			col=new GridColumn("Date Time Created",150);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Appt Date Time",150);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Patient Name",150);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Patient DOB",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Confirmation Status",150);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Appt Note",300);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			//Rows
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			DataColumnCollection columns=table.Columns;
 			foreach(DataRow row in table.Rows) {
-				GridCell[] cellsArray=new GridCell[gridMain.ListGridColumns.Count];
+				GridCell[] cellsArray=new GridCell[gridMain.Columns.Count];
 				GridRow newRow=new GridRow();				
 				if(PrefC.HasClinicsEnabled) {
 					newRow.Cells.Add(row["ClinicDesc"].ToString());
@@ -94,7 +94,7 @@ namespace OpenDental {
 				newRow.Cells.Add(Definitions.GetDef(DefinitionCategory.ApptConfirmed,PIn.Long(row["Confirmed"].ToString())).Name);
 				newRow.Cells.Add(row["Note"].ToString());
 				newRow.Tag=row["AptNum"].ToString();
-				gridMain.ListGridRows.Add(newRow);
+				gridMain.Rows.Add(newRow);
 			}
 			gridMain.EndUpdate();
 		}
@@ -125,11 +125,11 @@ namespace OpenDental {
 
 		///<summary></summary>
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			OpenEditAppointmentWindow(gridMain.ListGridRows[e.Row]);
+			OpenEditAppointmentWindow(gridMain.Rows[e.Row]);
 		}
 
 		private void mainGridMenuItemPatChart_Click(object sender,EventArgs e) {
-			List<GridRow> listSelected=gridMain.SelectedGridRows;
+			List<GridRow> listSelected=gridMain.SelectedRows;
 			if(listSelected.Count==1) {
 				long aptNum=PIn.Long(listSelected[0].Tag.ToString());
 				Appointment apt=Appointments.GetOneApt(aptNum);
@@ -139,7 +139,7 @@ namespace OpenDental {
 		}
 
 		private void mainGridMenuItemApptEdit_Click(object sender,EventArgs e) {
-			List<GridRow> listSelected=gridMain.SelectedGridRows;
+			List<GridRow> listSelected=gridMain.SelectedRows;
 			if(listSelected.Count==1) {
 				OpenEditAppointmentWindow(listSelected.First());
 			}

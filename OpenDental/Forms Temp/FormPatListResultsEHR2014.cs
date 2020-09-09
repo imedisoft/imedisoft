@@ -38,64 +38,64 @@ namespace OpenDental {
 			int colWidth=0;
 			Graphics g=CreateGraphics();
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("PatNum",60,HorizontalAlignment.Center);
 			col.SortingStrategy=GridSortingStrategy.AmountParse;
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Full Name",200);
 			col.SortingStrategy=GridSortingStrategy.StringCompare;
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			for(int i=0;i<elementList.Count;i++) {
 				switch(elementList[i].Restriction) {
 					case EhrRestrictionType.Birthdate:
 						col=new GridColumn("Birthdate",80,HorizontalAlignment.Center);
 						col.SortingStrategy=GridSortingStrategy.DateParse;
-						gridMain.ListGridColumns.Add(col);
+						gridMain.Columns.Add(col);
 						col=new GridColumn("Age",80,HorizontalAlignment.Center);
 						col.SortingStrategy=GridSortingStrategy.AmountParse;
-						gridMain.ListGridColumns.Add(col);
+						gridMain.Columns.Add(col);
 						break;
 					case EhrRestrictionType.Gender:
 						col=new GridColumn("Gender",80,HorizontalAlignment.Center);
-						gridMain.ListGridColumns.Add(col);
+						gridMain.Columns.Add(col);
 						break;
 					case EhrRestrictionType.LabResult:
 						colWidth=System.Convert.ToInt32(g.MeasureString("Lab Value: "+elementList[i].CompareString,this.Font).Width);
 						col.SortingStrategy=GridSortingStrategy.AmountParse;
 						colWidth=colWidth+(colWidth/10);//Add 10%
 						col=new GridColumn("Lab Value: "+elementList[i].CompareString,colWidth,HorizontalAlignment.Center);
-						gridMain.ListGridColumns.Add(col);
+						gridMain.Columns.Add(col);
 						colWidth=System.Convert.ToInt32(g.MeasureString("Lab Date: "+elementList[i].CompareString,this.Font).Width);
 						colWidth=colWidth+(colWidth/10);//Add 10%
 						col=new GridColumn("Lab Date: "+elementList[i].CompareString,colWidth,HorizontalAlignment.Center);
 						col.SortingStrategy=GridSortingStrategy.DateParse;
-						gridMain.ListGridColumns.Add(col);
+						gridMain.Columns.Add(col);
 						break;
 					case EhrRestrictionType.Medication:
 						colWidth=System.Convert.ToInt32(g.MeasureString("Prescription Date: "+elementList[i].CompareString,this.Font).Width);
 						colWidth=colWidth+(colWidth/10);//Add 10%
 						col=new GridColumn("Prescription Date: "+elementList[i].CompareString,colWidth,HorizontalAlignment.Center);
 						col.SortingStrategy=GridSortingStrategy.DateParse;
-						gridMain.ListGridColumns.Add(col);
+						gridMain.Columns.Add(col);
 						break;
 					case EhrRestrictionType.Problem:
 						colWidth=System.Convert.ToInt32(g.MeasureString("Date Diagnosed: "+ProblemDefinitions.GetNameByCode(elementList[i].CompareString),this.Font).Width);
 						colWidth=colWidth+(colWidth/10);//Add 10%
 						col=new GridColumn("Date Diagnosed: "+ProblemDefinitions.GetNameByCode(elementList[i].CompareString),colWidth,HorizontalAlignment.Center);
 						col.SortingStrategy=GridSortingStrategy.DateParse;
-						gridMain.ListGridColumns.Add(col);
+						gridMain.Columns.Add(col);
 						break;
 					case EhrRestrictionType.Allergy:
 						colWidth=System.Convert.ToInt32(g.MeasureString("Date Alergic Reaction: "+elementList[i].CompareString,this.Font).Width);
 						colWidth=colWidth+(colWidth/10);//Add 10%
 						col=new GridColumn("Date Alergic Reaction: "+elementList[i].CompareString,colWidth,HorizontalAlignment.Center);
 						col.SortingStrategy=GridSortingStrategy.DateParse;
-						gridMain.ListGridColumns.Add(col);
+						gridMain.Columns.Add(col);
 						break;
 					case EhrRestrictionType.CommPref:
 						col=new GridColumn("Communication Preference",180,HorizontalAlignment.Center);
-						gridMain.ListGridColumns.Add(col);
+						gridMain.Columns.Add(col);
 						break;
 				}
 			}
@@ -104,7 +104,7 @@ namespace OpenDental {
 				//  if(colWidth<90) {
 				//    colWidth=90;//Minimum of 90 width.
 				//  }
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<table.Rows.Count;i++) {
 				row=new GridRow();
@@ -176,7 +176,7 @@ namespace OpenDental {
 							break;
 					}
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			g.Dispose();

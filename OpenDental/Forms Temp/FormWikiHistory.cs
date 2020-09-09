@@ -22,7 +22,7 @@ namespace OpenDental {
 			ResizeControls();
 			//textContent.ReadOnly=true;
 			FillGrid();
-			LoadWikiPage(gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag as WikiPageHist);//should never be null.
+			LoadWikiPage(gridMain.Rows[gridMain.GetSelectedIndex()].Tag as WikiPageHist);//should never be null.
 			Text="Wiki History"+" - "+PageTitleCur;
 			//Page is locked and user doesn't have permission
 			if(IsLocked && !Security.IsAuthorized(Permissions.WikiAdmin,true)) {
@@ -68,14 +68,14 @@ namespace OpenDental {
 		/// <summary></summary>
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("User",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Del",25);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Saved",80);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			List<WikiPageHist> listWikiPageHists=WikiPageHists.GetByTitleNoPageContent(PageTitleCur);
 			WikiPage wp=WikiPages.GetByTitle(PageTitleCur);
 			if(wp!=null) {
@@ -93,10 +93,10 @@ namespace OpenDental {
 				row.Cells.Add((wPage.IsDeleted?"X":""));
 				row.Cells.Add(wPage.DateTimeSaved.ToString());
 				row.Tag=wPage;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
-			gridMain.SetSelected(gridMain.ListGridRows.Count-1,true);//There will always be at least one page in the history (the current revision of the page)
+			gridMain.SetSelected(gridMain.Rows.Count-1,true);//There will always be at least one page in the history (the current revision of the page)
 			gridMain.ScrollToEnd();//in case there are LOTS of revisions
 		}
 
@@ -105,7 +105,7 @@ namespace OpenDental {
 				return;
 			}
 			webBrowserWiki.AllowNavigation=true;
-			LoadWikiPage(gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag as WikiPageHist);
+			LoadWikiPage(gridMain.Rows[gridMain.GetSelectedIndex()].Tag as WikiPageHist);
 			gridMain.Focus();
 		}
 
@@ -130,14 +130,14 @@ namespace OpenDental {
 			if(gridMain.GetSelectedIndex()==-1){
 				return;
 			}
-			if(gridMain.GetSelectedIndex()==gridMain.ListGridRows.Count-1) {//current revision of page
+			if(gridMain.GetSelectedIndex()==gridMain.Rows.Count-1) {//current revision of page
 				//DialogResult=DialogResult.OK;
 				return;
 			}
 			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Revert page to currently selected revision?")) {
 				return;
 			}
-			WikiPage wikiPageNew = WikiPageHists.RevertFrom(gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag as WikiPageHist);
+			WikiPage wikiPageNew = WikiPageHists.RevertFrom(gridMain.Rows[gridMain.GetSelectedIndex()].Tag as WikiPageHist);
 			wikiPageNew.UserNum=Security.CurrentUser.Id;
 			WikiPages.InsertAndArchive(wikiPageNew);
 			FillGrid();

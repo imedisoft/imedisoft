@@ -93,25 +93,25 @@ namespace OpenDental {
 			_table=Patients.GetExportList(patNum,firstName,lastName,provNum,clinicNum,siteNum);
 			//Create grid			
 			//Patient Name | Primary Provider | Date Last Visit | Clinic | Site 
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("PatNum",60);
 			col.SortingStrategy=GridSortingStrategy.AmountParse;
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Patient Name",200);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Primary Provider",110);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
 				col=new GridColumn("Clinic",110);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			if(!Prefs.GetBool(PrefName.EasyHidePublicHealth)) {
 				col=new GridColumn("Site",110);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			//Fill grid
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_table.Rows.Count;i++) {
 				row=new GridRow();
@@ -125,7 +125,7 @@ namespace OpenDental {
 					row.Cells.Add(_table.Rows[i]["Site"].ToString());
 				}
 				row.Tag=PIn.Long(_table.Rows[i]["PatNum"].ToString());
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -167,7 +167,7 @@ namespace OpenDental {
 			int numSkipped=0;  //Number of patients skipped. Set to -1 if only one patient was selected and had CcdValidationErrors.
 			string patientsSkipped="";  //Names of the patients that were skipped, so we can tell the user which ones didn't export correctly.
 			for(int i=0;i<gridMain.SelectedIndices.Length;i++) {
-				patCur=Patients.GetPat((long)gridMain.ListGridRows[gridMain.SelectedIndices[i]].Tag);//Cannot use GetLim because more information is needed in the CCD message generation below.
+				patCur=Patients.GetPat((long)gridMain.Rows[gridMain.SelectedIndices[i]].Tag);//Cannot use GetLim because more information is needed in the CCD message generation below.
 				strCcdValidationErrors=EhrCCD.ValidatePatient(patCur);
 				if(strCcdValidationErrors!="") {
 					if(gridMain.SelectedIndices.Length==1) {

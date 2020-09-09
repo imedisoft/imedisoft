@@ -269,7 +269,7 @@ namespace OpenDental {
 			//Remember current email selections and sorting column.
 			List<long> listEmailMessageNumsSelected=new List<long>();
 			for(int i=0;i<gridInbox.SelectedIndices.Length;i++) {
-				EmailMessage emailMessage=(EmailMessage)gridInbox.ListGridRows[gridInbox.SelectedIndices[i]].Tag;
+				EmailMessage emailMessage=(EmailMessage)gridInbox.Rows[gridInbox.SelectedIndices[i]].Tag;
 				listEmailMessageNumsSelected.Add(emailMessage.EmailMessageNum);
 			}
 			int sortByColIdx=gridInbox.SortedByColumnIdx;
@@ -283,26 +283,26 @@ namespace OpenDental {
 				RefreshInboxEmailList();
 			}
 			gridInbox.BeginUpdate();
-			gridInbox.ListGridRows.Clear();
-			gridInbox.ListGridColumns.Clear();
+			gridInbox.Rows.Clear();
+			gridInbox.Columns.Clear();
 			int colReceivedDatePixCount=140;
 			int colMessageTypePixCount=120;
 			int colFromPixCount=200;
 			int colSigPixCount=40;
 			int colPatientPixCount=140;
 			int variableWidth=gridInbox.Width-10-colFromPixCount-colReceivedDatePixCount-colMessageTypePixCount-colSigPixCount-colPatientPixCount;
-			gridInbox.ListGridColumns.Add(new UI.GridColumn("From",colFromPixCount,HorizontalAlignment.Left));//0
-			gridInbox.ListGridColumns[gridInbox.ListGridColumns.Count-1].SortingStrategy=UI.GridSortingStrategy.StringCompare;
-			gridInbox.ListGridColumns.Add(new UI.GridColumn("Subject",variableWidth,HorizontalAlignment.Left));//1
-			gridInbox.ListGridColumns[gridInbox.ListGridColumns.Count-1].SortingStrategy=UI.GridSortingStrategy.StringCompare;
-			gridInbox.ListGridColumns.Add(new UI.GridColumn("Date Received",colReceivedDatePixCount,HorizontalAlignment.Left));//2
-			gridInbox.ListGridColumns[gridInbox.ListGridColumns.Count-1].SortingStrategy=UI.GridSortingStrategy.DateParse;
-			gridInbox.ListGridColumns.Add(new UI.GridColumn("MessageType",colMessageTypePixCount,HorizontalAlignment.Left));//3
-			gridInbox.ListGridColumns[gridInbox.ListGridColumns.Count-1].SortingStrategy=UI.GridSortingStrategy.StringCompare;
-			gridInbox.ListGridColumns.Add(new UI.GridColumn("Sig",colSigPixCount,HorizontalAlignment.Center));//4
-			gridInbox.ListGridColumns[gridInbox.ListGridColumns.Count-1].SortingStrategy=UI.GridSortingStrategy.StringCompare;
-			gridInbox.ListGridColumns.Add(new UI.GridColumn("Patient",colPatientPixCount,HorizontalAlignment.Left));//5
-			gridInbox.ListGridColumns[gridInbox.ListGridColumns.Count-1].SortingStrategy=UI.GridSortingStrategy.StringCompare;
+			gridInbox.Columns.Add(new UI.GridColumn("From",colFromPixCount,HorizontalAlignment.Left));//0
+			gridInbox.Columns[gridInbox.Columns.Count-1].SortingStrategy=UI.GridSortingStrategy.StringCompare;
+			gridInbox.Columns.Add(new UI.GridColumn("Subject",variableWidth,HorizontalAlignment.Left));//1
+			gridInbox.Columns[gridInbox.Columns.Count-1].SortingStrategy=UI.GridSortingStrategy.StringCompare;
+			gridInbox.Columns.Add(new UI.GridColumn("Date Received",colReceivedDatePixCount,HorizontalAlignment.Left));//2
+			gridInbox.Columns[gridInbox.Columns.Count-1].SortingStrategy=UI.GridSortingStrategy.DateParse;
+			gridInbox.Columns.Add(new UI.GridColumn("MessageType",colMessageTypePixCount,HorizontalAlignment.Left));//3
+			gridInbox.Columns[gridInbox.Columns.Count-1].SortingStrategy=UI.GridSortingStrategy.StringCompare;
+			gridInbox.Columns.Add(new UI.GridColumn("Sig",colSigPixCount,HorizontalAlignment.Center));//4
+			gridInbox.Columns[gridInbox.Columns.Count-1].SortingStrategy=UI.GridSortingStrategy.StringCompare;
+			gridInbox.Columns.Add(new UI.GridColumn("Patient",colPatientPixCount,HorizontalAlignment.Left));//5
+			gridInbox.Columns[gridInbox.Columns.Count-1].SortingStrategy=UI.GridSortingStrategy.StringCompare;
 			List<EmailMessage> listEmailsFiltered;
 			if(_isSearching) { //if searching, use the search list. Should already be filled.
 				listEmailsFiltered=_listInboxSearched.Where(x => EmailMessages.GetAddressSimple(x.RecipientAddress).ToLower().Contains(AddressCur.EmailUsername.ToLower())).ToList();
@@ -357,14 +357,14 @@ namespace OpenDental {
 					patNumRegardingPatient=emailMessage.PatNumSubj;
 				}
 				row.Cells.Add(GetPatientName(patNumRegardingPatient));//5 Patient
-				gridInbox.ListGridRows.Add(row);
+				gridInbox.Rows.Add(row);
 			}
 			gridInbox.EndUpdate();
 			//sorting/reselcting previously selected rows
 			gridInbox.SortForced(sortByColIdx,isSortAsc);
 			//Selection must occur after EndUpdate().
-			for(int i=0;i<gridInbox.ListGridRows.Count;i++) {
-				EmailMessage emailMessage=(EmailMessage)gridInbox.ListGridRows[i].Tag;
+			for(int i=0;i<gridInbox.Rows.Count;i++) {
+				EmailMessage emailMessage=(EmailMessage)gridInbox.Rows[i].Tag;
 				if(listEmailMessageNumsSelected.Contains(emailMessage.EmailMessageNum)) {
 					gridInbox.SetSelected(i,true);
 				}
@@ -381,7 +381,7 @@ namespace OpenDental {
 			//remember emails selected
 			List<long> listEmailMessageNumsSelected=new List<long>();
 			for(int i=0;i<gridSent.SelectedIndices.Length;i++) {
-				EmailMessage emailMessage=(EmailMessage)gridSent.ListGridRows[gridSent.SelectedIndices[i]].Tag;
+				EmailMessage emailMessage=(EmailMessage)gridSent.Rows[gridSent.SelectedIndices[i]].Tag;
 				listEmailMessageNumsSelected.Add(emailMessage.EmailMessageNum);
 			}
 			//sorting
@@ -403,27 +403,27 @@ namespace OpenDental {
 			int colPatientPixCount=140;
 			int variableWidth=gridSent.Width-10-colSentToPixCount-colSentDatePixCount-colMessageTypePixCount-colSigPixCount-colPatientPixCount;
 			gridSent.BeginUpdate();
-			gridSent.ListGridColumns.Clear();
+			gridSent.Columns.Clear();
 			//add columns
 			GridColumn col=new GridColumn("Sent To",colSentToPixCount,HorizontalAlignment.Left);
 			col.SortingStrategy=GridSortingStrategy.StringCompare;
-			gridSent.ListGridColumns.Add(col);
+			gridSent.Columns.Add(col);
 			col=new GridColumn("Subject",variableWidth,HorizontalAlignment.Left);
 			col.SortingStrategy=GridSortingStrategy.StringCompare;
-			gridSent.ListGridColumns.Add(col);
+			gridSent.Columns.Add(col);
 			col=new GridColumn("Date Sent",colSentDatePixCount,HorizontalAlignment.Left);
 			col.SortingStrategy=GridSortingStrategy.DateParse;
-			gridSent.ListGridColumns.Add(col);
+			gridSent.Columns.Add(col);
 			col=new GridColumn("MsgType",colMessageTypePixCount,HorizontalAlignment.Left);
 			col.SortingStrategy=GridSortingStrategy.StringCompare;
-			gridSent.ListGridColumns.Add(col);
+			gridSent.Columns.Add(col);
 			col=new GridColumn("Sig",colSigPixCount,HorizontalAlignment.Center);
 			col.SortingStrategy=GridSortingStrategy.StringCompare;
-			gridSent.ListGridColumns.Add(col);
+			gridSent.Columns.Add(col);
 			col=new GridColumn("Patient",colPatientPixCount,HorizontalAlignment.Left);
 			col.SortingStrategy=GridSortingStrategy.StringCompare;
-			gridSent.ListGridColumns.Add(col);
-			gridSent.ListGridRows.Clear();
+			gridSent.Columns.Add(col);
+			gridSent.Rows.Clear();
 			List<EmailMessage> listEmailsFiltered;
 			if(_isSearching) { //if searching, use the search list. Should be prefilled.
 				listEmailsFiltered=_listSentMessagesSearched.Where(x => AddressCur.EmailUsername.ToLower() == EmailMessages.GetAddressSimple(x.FromAddress).ToLower()).ToList();
@@ -473,14 +473,14 @@ namespace OpenDental {
 				}
 				row.Cells.Add(GetPatientName(patNumRegardingPatient));//5 Patient
 				row.Tag=emailMessage;
-				gridSent.ListGridRows.Add(row);
+				gridSent.Rows.Add(row);
 			}
 			gridSent.EndUpdate();
 			//sorting/reselcting previously selected rows
 			gridSent.SortForced(sortByColIdx,isSortAsc);
 			//Select the previously selected emails
-			for(int i=0;i<gridSent.ListGridRows.Count;i++) {
-				EmailMessage emailMessage=(EmailMessage)gridSent.ListGridRows[i].Tag;
+			for(int i=0;i<gridSent.Rows.Count;i++) {
+				EmailMessage emailMessage=(EmailMessage)gridSent.Rows[i].Tag;
 				if(listEmailMessageNumsSelected.Contains(emailMessage.EmailMessageNum)) {
 					gridSent.SetSelected(i,true);
 				}
@@ -499,8 +499,8 @@ namespace OpenDental {
 		///<summary>Updates listShowIn according to current selections in GridSent/GridInbox</summary>
 		private void RefreshShowIn() {
 			EmailMessage emailMessageCur=null;
-			if(ActiveGrid.SelectedGridRows.Count!=0) { //at least one selected email
-				emailMessageCur=(EmailMessage)(ActiveGrid.SelectedGridRows[0].Tag);
+			if(ActiveGrid.SelectedRows.Count!=0) { //at least one selected email
+				emailMessageCur=(EmailMessage)(ActiveGrid.SelectedRows[0].Tag);
 			}
 			//set all listShowIn Items to match selected email, default to all items not selected if no email selected
 			for(int i=0;i<_listHideInFlags.Count;i++) {
@@ -518,7 +518,7 @@ namespace OpenDental {
 				return;
 			}
 			//compare current email HideInFlags to other selected emails and modify listShowIn accordingly
-			foreach(GridRow row in ActiveGrid.SelectedGridRows) {
+			foreach(GridRow row in ActiveGrid.SelectedRows) {
 				EmailMessage emailMessage=(EmailMessage)row.Tag;
 				if(emailMessage.HideIn==emailMessageCur.HideIn) {
 					continue;
@@ -648,7 +648,7 @@ namespace OpenDental {
 				activeSplitContainer.Panel2Collapsed=true;//Do not show preview if there are more than one emails selected.
 				return;
 			}
-			EmailMessage emailMessage=(EmailMessage)ActiveGrid.ListGridRows[e.Row].Tag;
+			EmailMessage emailMessage=(EmailMessage)ActiveGrid.Rows[e.Row].Tag;
 			if(EmailMessages.IsSecureWebMail(emailMessage.SentOrReceived)) {
 				//We do not yet have a preview for secure web mail messages.
 				activeSplitContainer.Panel2Collapsed=true;
@@ -707,7 +707,7 @@ namespace OpenDental {
 			if(e.Row==-1) {
 				return;
 			}
-			EmailMessage emailMessage=(EmailMessage)ActiveGrid.ListGridRows[e.Row].Tag;
+			EmailMessage emailMessage=(EmailMessage)ActiveGrid.Rows[e.Row].Tag;
 			//When an email is read from the database for display in the inbox, the BodyText is limited to 50 characters and the RawEmailIn is blank.
 			emailMessage=EmailMessages.GetOne(emailMessage.EmailMessageNum);//Refresh the email from the database to include the full BodyText and RawEmailIn.
 			if(emailMessage.SentOrReceived==EmailSentOrReceived.WebMailReceived
@@ -733,7 +733,7 @@ namespace OpenDental {
 		private void butMarkUnread_Click(object sender,EventArgs e) {
 			Cursor=Cursors.WaitCursor;
 			for(int i=0;i<gridInbox.SelectedIndices.Length;i++) {
-				EmailMessage emailMessage=(EmailMessage)gridInbox.ListGridRows[gridInbox.SelectedIndices[i]].Tag;
+				EmailMessage emailMessage=(EmailMessage)gridInbox.Rows[gridInbox.SelectedIndices[i]].Tag;
 				emailMessage.SentOrReceived=EmailMessages.UpdateSentOrReceivedUnread(emailMessage);
 			}
 			FillGridInbox();
@@ -743,7 +743,7 @@ namespace OpenDental {
 		private void butMarkRead_Click(object sender,EventArgs e) {
 			Cursor=Cursors.WaitCursor;
 			for(int i=0;i<gridInbox.SelectedIndices.Length;i++) {
-				EmailMessage emailMessage=(EmailMessage)gridInbox.ListGridRows[gridInbox.SelectedIndices[i]].Tag;
+				EmailMessage emailMessage=(EmailMessage)gridInbox.Rows[gridInbox.SelectedIndices[i]].Tag;
 				emailMessage.SentOrReceived=EmailMessages.UpdateSentOrReceivedRead(emailMessage);
 			}
 			FillGridInbox();
@@ -761,7 +761,7 @@ namespace OpenDental {
 			}
 			Cursor=Cursors.WaitCursor;
 			for(int i=0;i<ActiveGrid.SelectedIndices.Length;i++) {
-				EmailMessage emailMessage=(EmailMessage)ActiveGrid.ListGridRows[ActiveGrid.SelectedIndices[i]].Tag;
+				EmailMessage emailMessage=(EmailMessage)ActiveGrid.Rows[ActiveGrid.SelectedIndices[i]].Tag;
 				emailMessage.PatNum=form.SelectedPatientId;
 				EmailMessages.UpdatePatNum(emailMessage);
 			}
@@ -941,7 +941,7 @@ namespace OpenDental {
 				return;
 			}
 			EmailMessage selectedMessage=EmailMessages.GetOne(((EmailMessage)gridInbox
-			  .ListGridRows[gridInbox.GetSelectedIndex()].Tag).EmailMessageNum);//Refresh from the database to get the full body text.
+			  .Rows[gridInbox.GetSelectedIndex()].Tag).EmailMessageNum);//Refresh from the database to get the full body text.
 			FormEmailMessageEdit FormE=new FormEmailMessageEdit(EmailMessages.CreateReply(selectedMessage,AddressCur,isReplyAll),AddressCur,true,_listInboxEmails,_listSentEmails);
 			FormE.IsNew=true;
 			FormE.FormClosed+=FormEmailMessage_Closed;//takes care of updating the SentMessages grid.
@@ -957,7 +957,7 @@ namespace OpenDental {
 				return;
 			}
 			EmailMessage selectedMessage=EmailMessages.GetOne(((EmailMessage)gridInbox
-						.ListGridRows[gridInbox.GetSelectedIndex()].Tag).EmailMessageNum);//Refresh from the database to get the full body text.
+						.Rows[gridInbox.GetSelectedIndex()].Tag).EmailMessageNum);//Refresh from the database to get the full body text.
 			FormEmailMessageEdit FormE=new FormEmailMessageEdit(EmailMessages.CreateForward(selectedMessage,AddressCur),AddressCur,true,_listInboxEmails,_listSentEmails);
 			FormE.IsNew=true;
 			FormE.FormClosed+=FormEmailMessage_Closed;//takes care of updating the SentMessages grid.
@@ -1046,7 +1046,7 @@ namespace OpenDental {
 			bool isGridRefreshRequired=false;
 			EmailMessage emailMessage;
 			HideInFlags flags=GetHideInFlagsFromListBox();
-			foreach(GridRow row in ActiveGrid.SelectedGridRows) {
+			foreach(GridRow row in ActiveGrid.SelectedRows) {
 				emailMessage=(EmailMessage)row.Tag;
 				if(emailMessage.HideIn==flags) {
 					continue;
@@ -1077,7 +1077,7 @@ namespace OpenDental {
 			}
 			Cursor=Cursors.WaitCursor;
 			for(int i=0;i<ActiveGrid.SelectedIndices.Length;i++) {
-				EmailMessage emailMessage=(EmailMessage)ActiveGrid.ListGridRows[ActiveGrid.SelectedIndices[i]].Tag;
+				EmailMessage emailMessage=(EmailMessage)ActiveGrid.Rows[ActiveGrid.SelectedIndices[i]].Tag;
 				//If attached to a patient, simply hide the email message instead of deleting it so that it still shows in other parts of the program.
 				if(emailMessage.PatNum!=0) {
 					emailMessage.HideIn=(HideInFlags)_listHideInFlags

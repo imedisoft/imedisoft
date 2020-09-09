@@ -45,10 +45,10 @@ namespace Imedisoft.Forms
 			SchoolCourses.RefreshCache();
 
 			schoolCoursesGrid.BeginUpdate();
-			schoolCoursesGrid.ListGridColumns.Clear();
-			schoolCoursesGrid.ListGridColumns.Add(new GridColumn(Translation.DentalSchools.CourseID, 100));
-			schoolCoursesGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Description, 80));
-			schoolCoursesGrid.ListGridRows.Clear();
+			schoolCoursesGrid.Columns.Clear();
+			schoolCoursesGrid.Columns.Add(new GridColumn(Translation.DentalSchools.CourseID, 100));
+			schoolCoursesGrid.Columns.Add(new GridColumn(Translation.Common.Description, 80));
+			schoolCoursesGrid.Rows.Clear();
 
 			foreach (var schoolCourse in SchoolCourses.GetAll())
 			{
@@ -57,7 +57,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(schoolCourse.Description);
 				gridRow.Tag = schoolCourse;
 
-				schoolCoursesGrid.ListGridRows.Add(gridRow);
+				schoolCoursesGrid.Rows.Add(gridRow);
 			}
 
 			schoolCoursesGrid.EndUpdate();

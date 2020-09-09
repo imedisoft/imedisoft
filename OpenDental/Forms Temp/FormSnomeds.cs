@@ -60,24 +60,24 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			if(_showingInfoButton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
 				col=new GridColumn("",18);//infoButton
 				col.ImageList=imageListInfoButton;
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			col=new GridColumn("SNOMED CT",125);//column width of 125 holds the longest Snomed CT code as of 8/7/15 which is 900000000000002006
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			//col=new ODGridColumn("Deprecated",75,HorizontalAlignment.Center);
 			//gridMain.Columns.Add(col);
 			col=new GridColumn("Description",500);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Used By CQM's",185);//width 185 so all of our CQM measure nums as of 8/7/15 will fit 68,69,74,75,127,138,147,155,165
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			//col=new ODGridColumn("Date Of Standard",100);
 			//gridMain.Columns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			if(textCode.Text.Contains(",")) {
 				SnomedList=Snomeds.GetByCodes(textCode.Text).ToList();
@@ -104,7 +104,7 @@ namespace OpenDental {
 			}
 			listAll.Sort(SortMeasuresMet);
 			for(int i=0;i<listAll.Count;i++) {
-				gridMain.ListGridRows.Add(listAll[i]);
+				gridMain.Rows.Add(listAll[i]);
 			}
 			gridMain.EndUpdate();
 		}
@@ -116,7 +116,7 @@ namespace OpenDental {
 			if(e.Col!=0) {
 				return;
 			}
-			List<KnowledgeRequest> listKnowledgeRequests=EhrTriggers.ConvertToKnowledgeRequests(Snomeds.GetByCode(gridMain.ListGridRows[e.Row].Cells[1].Text));
+			List<KnowledgeRequest> listKnowledgeRequests=EhrTriggers.ConvertToKnowledgeRequests(Snomeds.GetByCode(gridMain.Rows[e.Row].Cells[1].Text));
 			FormInfobutton FormIB=new FormInfobutton(listKnowledgeRequests);
 			FormIB.ShowDialog();
 		}
@@ -143,9 +143,9 @@ namespace OpenDental {
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			if(IsSelectionMode || IsMultiSelectMode) {
-				SelectedSnomed=(Snomed)gridMain.ListGridRows[e.Row].Tag;
+				SelectedSnomed=(Snomed)gridMain.Rows[e.Row].Tag;
 				ListSelectedSnomeds=new List<Snomed>();
-				ListSelectedSnomeds.Add((Snomed)gridMain.ListGridRows[e.Row].Tag);
+				ListSelectedSnomeds.Add((Snomed)gridMain.Rows[e.Row].Tag);
 				DialogResult=DialogResult.OK;
 				return;
 			}
@@ -173,10 +173,10 @@ namespace OpenDental {
 				MessageBox.Show("Please select an item first.");
 				return;
 			}
-			SelectedSnomed=(Snomed)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
+			SelectedSnomed=(Snomed)gridMain.Rows[gridMain.GetSelectedIndex()].Tag;
 			ListSelectedSnomeds=new List<Snomed>();
 			for(int i=0;i<gridMain.SelectedIndices.Length;i++) {
-				ListSelectedSnomeds.Add((Snomed)gridMain.ListGridRows[gridMain.SelectedIndices[i]].Tag);
+				ListSelectedSnomeds.Add((Snomed)gridMain.Rows[gridMain.SelectedIndices[i]].Tag);
 			}
 			DialogResult=DialogResult.OK;
 		}

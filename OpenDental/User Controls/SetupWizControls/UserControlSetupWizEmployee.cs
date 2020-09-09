@@ -36,16 +36,16 @@ namespace OpenDental.User_Controls.SetupWizard {
 			_listEmployees=Employees.GetAll(true);
 			Color colorNeedsAttn = OpenDental.SetupWizard.GetColor(ODSetupStatus.NeedsAttention);
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col = new GridColumn("Last Name",135);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("First Name",135);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("MI",65);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("Payroll ID",105);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			bool isAllComplete=true;
 			if(_listEmployees.Where(x => x.FirstName.ToLower()!="default").ToList().Count==0) {
@@ -68,7 +68,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 				row.Cells.Add(emp.PayrollId);
 				//Payroll ID is not a required column
 				row.Tag=emp;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			if(isAllComplete) {
@@ -82,7 +82,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 		private void timerBlink_Tick(object sender,EventArgs e) {
 			if(_blink > 5) {
 				pictureAdd.Visible=true;
-				foreach(GridRow rowCur in gridMain.ListGridRows) {
+				foreach(GridRow rowCur in gridMain.Rows) {
 					rowCur.BackColor=OpenDental.SetupWizard.GetColor(ODSetupStatus.NeedsAttention);
 				}
 				gridMain.Invalidate();
@@ -90,7 +90,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 				return;
 			}
 			pictureAdd.Visible=!pictureAdd.Visible;
-			foreach(GridRow rowCur in gridMain.ListGridRows) {
+			foreach(GridRow rowCur in gridMain.Rows) {
 				rowCur.BackColor=rowCur.BackColor==Color.White?OpenDental.SetupWizard.GetColor(ODSetupStatus.NeedsAttention):Color.White;
 			}
 			gridMain.Invalidate();
@@ -98,7 +98,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			Employee selectedEmployee=(Employee)gridMain.ListGridRows[e.Row].Tag;
+			Employee selectedEmployee=(Employee)gridMain.Rows[e.Row].Tag;
 			FormEmployeeEdit FormEE=new FormEmployeeEdit();
 			FormEE.EmployeeCur=selectedEmployee;
 			FormEE.ShowDialog();

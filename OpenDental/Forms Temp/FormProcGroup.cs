@@ -808,18 +808,18 @@ namespace OpenDental{
 		private void FillPatientData(){
 			if(PatCur==null){
 				gridPat.BeginUpdate();
-				gridPat.ListGridRows.Clear();
-				gridPat.ListGridColumns.Clear();
+				gridPat.Rows.Clear();
+				gridPat.Columns.Clear();
 				gridPat.EndUpdate();
 				return;
 			}
 			gridPat.BeginUpdate();
-			gridPat.ListGridColumns.Clear();
+			gridPat.Columns.Clear();
 			GridColumn col=new GridColumn("",150);
-			gridPat.ListGridColumns.Add(col);
+			gridPat.Columns.Add(col);
 			col=new GridColumn("",250);
-			gridPat.ListGridColumns.Add(col);
-			gridPat.ListGridRows.Clear();
+			gridPat.Columns.Add(col);
+			gridPat.Rows.Clear();
 			GridRow row;
 			PatFieldList=PatFields.Refresh(PatCur.PatNum);
 			List<DisplayField> fields=DisplayFields.GetForCategory(DisplayFieldCategory.PatientInformation);
@@ -862,7 +862,7 @@ namespace OpenDental{
 								}
 							}
 							row.Tag="PatField"+i.ToString();
-							gridPat.ListGridRows.Add(row);
+							gridPat.Rows.Add(row);
 						}
 						break;
 				}
@@ -870,7 +870,7 @@ namespace OpenDental{
 					//don't add the row here
 				}
 				else{
-					gridPat.ListGridRows.Add(row);
+					gridPat.Rows.Add(row);
 				}
 			}
 			gridPat.EndUpdate();
@@ -878,7 +878,7 @@ namespace OpenDental{
 
 		private void FillProcedures(){
 			gridProc.BeginUpdate();
-			gridProc.ListGridColumns.Clear();
+			gridProc.Columns.Clear();
 			GridColumn col;
 			DisplayFields.RefreshCache();//probably needs to be removed
 			List<DisplayField> fields=DisplayFields.GetForCategory(DisplayFieldCategory.ProcedureGroupNote);
@@ -895,9 +895,9 @@ namespace OpenDental{
 				if(fields[i].InternalName=="Proc Code") {
 					col.TextAlign=HorizontalAlignment.Center;
 				}
-				gridProc.ListGridColumns.Add(col);
+				gridProc.Columns.Add(col);
 			}
-			gridProc.ListGridRows.Clear();
+			gridProc.Rows.Clear();
 			for(int i=0;i<ProcList.Count;i++) {
 				GridRow row=new GridRow();
 				for(int f=0;f<fields.Count;f++) {
@@ -963,7 +963,7 @@ namespace OpenDental{
 							break;
 					}
 				}
-				gridProc.ListGridRows.Add(row);
+				gridProc.Rows.Add(row);
 			}
 			gridProc.EndUpdate();
 		}
@@ -1035,19 +1035,19 @@ namespace OpenDental{
 			}
 			//Fill grid
 			gridPlanned.BeginUpdate();
-			gridPlanned.ListGridColumns.Clear();
+			gridPlanned.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("#",15,HorizontalAlignment.Center);
-			gridPlanned.ListGridColumns.Add(col);
+			gridPlanned.Columns.Add(col);
 			col=new GridColumn("Min",25);
-			gridPlanned.ListGridColumns.Add(col);
+			gridPlanned.Columns.Add(col);
 			col=new GridColumn("Procedures",160);
-			gridPlanned.ListGridColumns.Add(col);
+			gridPlanned.Columns.Add(col);
 			col=new GridColumn("Note",115);
-			gridPlanned.ListGridColumns.Add(col);
+			gridPlanned.Columns.Add(col);
 			col=new GridColumn("SchedBy",50);
-			gridPlanned.ListGridColumns.Add(col);
-			gridPlanned.ListGridRows.Clear();
+			gridPlanned.Columns.Add(col);
+			gridPlanned.Rows.Clear();
 			GridRow row;
 			TablePlanned=ChartModules.GetPlannedApt(PatCur.PatNum);
 			//This gets done in the business layer:
@@ -1098,7 +1098,7 @@ namespace OpenDental{
 				row.Cells.Add(text);
 				row.ForeColor=Color.FromArgb(PIn.Int(TablePlanned.Rows[i]["colorText"].ToString()));
 				row.BackColor=Color.FromArgb(PIn.Int(TablePlanned.Rows[i]["colorBackG"].ToString()));
-				gridPlanned.ListGridRows.Add(row);
+				gridPlanned.Rows.Add(row);
 			}
 			gridPlanned.EndUpdate();
 		}
@@ -1448,7 +1448,7 @@ namespace OpenDental{
 		}
 
 		private void gridPat_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			string tag=gridPat.ListGridRows[e.Row].Tag.ToString();
+			string tag=gridPat.Rows[e.Row].Tag.ToString();
 			tag=tag.Substring(8);//strips off all but the number: PatField1
 			int index=PIn.Int(tag);
 			PatField field=PatFields.GetByName(_listPatFieldDefs[index].FieldName,PatFieldList);

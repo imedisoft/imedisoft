@@ -76,15 +76,15 @@ namespace OpenDental {
 				isSortAsc=false;
 			}
 			gridClaims.BeginUpdate();
-			gridClaims.ListGridRows.Clear();
-			gridClaims.ListGridColumns.Clear();
-			gridClaims.ListGridColumns.Add(new UI.GridColumn("Date Service",100,HorizontalAlignment.Center) { SortingStrategy=UI.GridSortingStrategy.DateParse });
-			gridClaims.ListGridColumns.Add(new UI.GridColumn("Carrier",240,HorizontalAlignment.Center) { SortingStrategy=UI.GridSortingStrategy.StringCompare });
-			gridClaims.ListGridColumns.Add(new UI.GridColumn("Status",120,HorizontalAlignment.Center) { SortingStrategy=UI.GridSortingStrategy.StringCompare });			
+			gridClaims.Rows.Clear();
+			gridClaims.Columns.Clear();
+			gridClaims.Columns.Add(new UI.GridColumn("Date Service",100,HorizontalAlignment.Center) { SortingStrategy=UI.GridSortingStrategy.DateParse });
+			gridClaims.Columns.Add(new UI.GridColumn("Carrier",240,HorizontalAlignment.Center) { SortingStrategy=UI.GridSortingStrategy.StringCompare });
+			gridClaims.Columns.Add(new UI.GridColumn("Status",120,HorizontalAlignment.Center) { SortingStrategy=UI.GridSortingStrategy.StringCompare });			
 			if(PrefC.HasClinicsEnabled) {//Using clinics
-				gridClaims.ListGridColumns.Add(new UI.GridColumn("Clinic",190,HorizontalAlignment.Left) { SortingStrategy=UI.GridSortingStrategy.StringCompare });
+				gridClaims.Columns.Add(new UI.GridColumn("Clinic",190,HorizontalAlignment.Left) { SortingStrategy=UI.GridSortingStrategy.StringCompare });
 			}
-			gridClaims.ListGridColumns.Add(new UI.GridColumn("ClaimFee",70,HorizontalAlignment.Right) { SortingStrategy=UI.GridSortingStrategy.AmountParse });
+			gridClaims.Columns.Add(new UI.GridColumn("ClaimFee",70,HorizontalAlignment.Right) { SortingStrategy=UI.GridSortingStrategy.AmountParse });
 			List<Claim> listClaims=Claims.Refresh(_patNum);
 			for(int i=0;i<listClaims.Count;i++) {
 				UI.GridRow row=new UI.GridRow();
@@ -102,7 +102,7 @@ namespace OpenDental {
 					}
 				}
 				row.Cells.Add(listClaims[i].ClaimFee.ToString("f"));//Claimfee
-				gridClaims.ListGridRows.Add(row);
+				gridClaims.Rows.Add(row);
 			}
 			gridClaims.EndUpdate();
 			gridClaims.SortForced(sortByColIdx,isSortAsc);
@@ -116,10 +116,10 @@ namespace OpenDental {
 			int rowsHighlightCount=0;
 			int lastHighlightIndex=0;
 			gridClaims.BeginUpdate();
-			for(int i=0;i<gridClaims.ListGridRows.Count;i++) {
-				gridClaims.ListGridRows[i].ForeColor=Color.Black;  //reset row highlighting
-				gridClaims.ListGridRows[i].Bold=false;  //reset row highlighting
-				Claim claim=(Claim)gridClaims.ListGridRows[i].Tag;
+			for(int i=0;i<gridClaims.Rows.Count;i++) {
+				gridClaims.Rows[i].ForeColor=Color.Black;  //reset row highlighting
+				gridClaims.Rows[i].Bold=false;  //reset row highlighting
+				Claim claim=(Claim)gridClaims.Rows[i].Tag;
 				YN isFeeMatch=YN.No;  //If fee matches then yes, if fee doesnt match then no, if no fee entered then unknown
 				YN isDateMatch=YN.No; //If both dates match then yes, if both dates dont match then no, if no dates entered then unknown
 				//Check fee
@@ -156,8 +156,8 @@ namespace OpenDental {
 				}
 				if(isBasicMatch && isPlanMatch) {
 					//Highlight row
-					gridClaims.ListGridRows[i].ForeColor=Color.Red;
-					gridClaims.ListGridRows[i].Bold=true;
+					gridClaims.Rows[i].ForeColor=Color.Red;
+					gridClaims.Rows[i].Bold=true;
 					rowsHighlightCount++;
 					lastHighlightIndex=i;
 				}
@@ -189,23 +189,23 @@ namespace OpenDental {
 		}
 
 		private void FillClaimDetails(int rowIndex) {
-			Claim claimSelected=(Claim)gridClaims.ListGridRows[rowIndex].Tag;
+			Claim claimSelected=(Claim)gridClaims.Rows[rowIndex].Tag;
 			bool isSupplemental=(claimSelected.ClaimStatus=="R");
 			_listClaimProcsForClaim=ClaimProcs.RefreshForClaim(claimSelected.ClaimNum)
 				.Where(x => x.ProcNum!=0 && x.Status.In(ClaimProcStatus.Received,ClaimProcStatus.NotReceived,ClaimProcStatus.Preauth))
 				.ToList();
 			gridClaimDetails.BeginUpdate();
-			if(gridClaimDetails.ListGridColumns.Count==0) {
+			if(gridClaimDetails.Columns.Count==0) {
 				#region grid columns
-				gridClaimDetails.ListGridColumns.Add(new UI.GridColumn("ProcCode",100));
-				gridClaimDetails.ListGridColumns.Add(new UI.GridColumn("ProcFee",100));
-				gridClaimDetails.ListGridColumns.Add(new UI.GridColumn("ProcStatus",50){ IsWidthDynamic=true });
-				gridClaimDetails.ListGridColumns.Add(new UI.GridColumn("IsMatch",15){ IsWidthDynamic=true });
-				gridClaimDetails.ListGridColumns.Add(new UI.GridColumn("EraCode",100));
-				gridClaimDetails.ListGridColumns.Add(new UI.GridColumn("EraFee",100));
+				gridClaimDetails.Columns.Add(new UI.GridColumn("ProcCode",100));
+				gridClaimDetails.Columns.Add(new UI.GridColumn("ProcFee",100));
+				gridClaimDetails.Columns.Add(new UI.GridColumn("ProcStatus",50){ IsWidthDynamic=true });
+				gridClaimDetails.Columns.Add(new UI.GridColumn("IsMatch",15){ IsWidthDynamic=true });
+				gridClaimDetails.Columns.Add(new UI.GridColumn("EraCode",100));
+				gridClaimDetails.Columns.Add(new UI.GridColumn("EraFee",100));
 				#endregion
 			}
-			gridClaimDetails.ListGridRows.Clear();
+			gridClaimDetails.Rows.Clear();
 			List<Hx835_Proc> listUnMatchedEraProcs=new List<Hx835_Proc>();
 			List<Tuple<Hx835_Proc,ClaimProc>> listMatchedEraProcs=new List<Tuple<Hx835_Proc,ClaimProc>>();
 			foreach(Hx835_Proc proc in _x835Claim.ListProcs) {
@@ -236,7 +236,7 @@ namespace OpenDental {
 				row.Cells.Add(POut.Decimal(proc.ProcFee));
 				row.ForeColor=Color.Red;
 				row.Bold=true;
-				gridClaimDetails.ListGridRows.Add(row);
+				gridClaimDetails.Rows.Add(row);
 			}
 			#endregion
 			#region ERA procs that we can match.
@@ -261,7 +261,7 @@ namespace OpenDental {
 				row.Cells.Add(POut.Decimal(proc.ProcFee));
 				row.ForeColor=Color.Green;
 				row.Bold=true;
-				gridClaimDetails.ListGridRows.Add(row);
+				gridClaimDetails.Rows.Add(row);
 			}
 			#endregion
 			#region Claim claimProcs that could not be matched.
@@ -285,7 +285,7 @@ namespace OpenDental {
 				row.Cells.Add("N");
 				row.Cells.Add("");
 				row.Cells.Add("");
-				gridClaimDetails.ListGridRows.Add(row);
+				gridClaimDetails.Rows.Add(row);
 			}
 			#endregion
 			gridClaimDetails.EndUpdate();
@@ -295,20 +295,20 @@ namespace OpenDental {
 			if(!Security.IsAuthorized(Permissions.ClaimView)) {
 				return;
 			}
-			Claim claim=Claims.GetClaim(((Claim)gridClaims.ListGridRows[e.Row].Tag).ClaimNum);//This is the easiest way to determine if the claim was deleted.
+			Claim claim=Claims.GetClaim(((Claim)gridClaims.Rows[e.Row].Tag).ClaimNum);//This is the easiest way to determine if the claim was deleted.
 			if(claim==null) {//Was deleted.
 				MessageBox.Show("Claim has been deleted by another user.");
 				gridClaims.BeginUpdate();
-				gridClaims.ListGridRows.RemoveAt(e.Row);//This will also deselect the row.
+				gridClaims.Rows.RemoveAt(e.Row);//This will also deselect the row.
 				gridClaims.EndUpdate();
 				return;
 			}
 			FormClaimEdit formCE=new FormClaimEdit(claim,Patients.GetPat(_patNum),Patients.GetFamily(_patNum));
 			formCE.ShowDialog();
-			claim=Claims.GetClaim(((Claim)gridClaims.ListGridRows[e.Row].Tag).ClaimNum);//This is the easiest way to determine if the claim was deleted.
+			claim=Claims.GetClaim(((Claim)gridClaims.Rows[e.Row].Tag).ClaimNum);//This is the easiest way to determine if the claim was deleted.
 			if(claim==null) {//Was deleted.
 				gridClaims.BeginUpdate();
-				gridClaims.ListGridRows.RemoveAt(e.Row);//This will also deselect the row.
+				gridClaims.Rows.RemoveAt(e.Row);//This will also deselect the row.
 				gridClaims.EndUpdate();
 				return;
 			}
@@ -330,7 +330,7 @@ namespace OpenDental {
 				}
 				row.Cells.Add(claim.ClaimFee.ToString("f"));//Claimfee
 				gridClaims.BeginUpdate();
-				gridClaims.ListGridRows[e.Row]=row;
+				gridClaims.Rows[e.Row]=row;
 				gridClaims.EndUpdate();
 				gridClaims.SetSelected(e.Row,true);//Reselect Row
 			}
@@ -365,7 +365,7 @@ namespace OpenDental {
 				MessageBox.Show("You must select a claim.");
 				return;
 			}
-			Claim claimSelected=(Claim)gridClaims.ListGridRows[gridClaims.GetSelectedIndex()].Tag;
+			Claim claimSelected=(Claim)gridClaims.Rows[gridClaims.GetSelectedIndex()].Tag;
 			double claimFee835=(double)_x835Claim.ClaimFee;
 			if(_x835Claim.IsReversal) {
 				claimFee835=Math.Abs(claimFee835);

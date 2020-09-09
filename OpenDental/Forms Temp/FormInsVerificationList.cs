@@ -382,35 +382,35 @@ namespace OpenDental {
 					ODGrid grid=GetVisibleGrid();
 					_selectedRowVerifyGrid=grid.GetSelectedIndex();
 					grid.BeginUpdate();
-					grid.ListGridColumns.Clear();
+					grid.Columns.Clear();
 					GridColumn col;
 					col=new GridColumn("Type",45);
-					grid.ListGridColumns.Add(col);
+					grid.Columns.Add(col);
 					if(PrefC.HasClinicsEnabled) {
 						col=new GridColumn("Clinic",90);
-						grid.ListGridColumns.Add(col);
+						grid.Columns.Add(col);
 					}
 					col=new GridColumn("Patient",120);
-					grid.ListGridColumns.Add(col);
+					grid.Columns.Add(col);
 					col=new GridColumn("Appt Date Time",130,HorizontalAlignment.Center,GridSortingStrategy.DateParse);
-					grid.ListGridColumns.Add(col);
+					grid.Columns.Add(col);
 					col=new GridColumn("Carrier",160);
-					grid.ListGridColumns.Add(col);
+					grid.Columns.Add(col);
 					col=new GridColumn("Last Verified",90,HorizontalAlignment.Center,GridSortingStrategy.DateParse);
-					grid.ListGridColumns.Add(col);
+					grid.Columns.Add(col);
 					col=new GridColumn("Status",110);
-					grid.ListGridColumns.Add(col);
+					grid.Columns.Add(col);
 					col=new GridColumn("Status Date",80,HorizontalAlignment.Center);
-					grid.ListGridColumns.Add(col);
+					grid.Columns.Add(col);
 					col=new GridColumn("Assigned to",120){ IsWidthDynamic=true };
-					grid.ListGridColumns.Add(col);
-					grid.ListGridRows.Clear();
+					grid.Columns.Add(col);
+					grid.Rows.Clear();
 					List<InsVerifyGridRow> listGridRows=GetRowsForGrid(false);
 					InsuranceVerificationEvent.Fire(EventCategory.InsVerification,"Sorting Rows...");
 					listGridRows.Sort(CompareGridRows);
 					InsuranceVerificationEvent.Fire(EventCategory.InsVerification,"Filling the grid...");
 					for(int i=0;i<listGridRows.Count;i++) {
-						grid.ListGridRows.Add(VerifyRowToODGridRow(listGridRows[i],false));
+						grid.Rows.Add(VerifyRowToODGridRow(listGridRows[i],false));
 					}
 					grid.EndUpdate();
 					grid.SetSelected(_selectedRowVerifyGrid,true);
@@ -422,11 +422,11 @@ namespace OpenDental {
 		}
 
 		private void gridMain_CellClick(object sender,UI.ODGridClickEventArgs e) {
-			UpdateSelectedInfo(((InsVerifyGridObject)gridMain.ListGridRows[e.Row].Tag));
+			UpdateSelectedInfo(((InsVerifyGridObject)gridMain.Rows[e.Row].Tag));
 		}
 
 		private void gridPastDue_CellClick(object sender,UI.ODGridClickEventArgs e) {
-			UpdateSelectedInfo(((InsVerifyGridObject)gridPastDue.ListGridRows[e.Row].Tag));
+			UpdateSelectedInfo(((InsVerifyGridObject)gridPastDue.Rows[e.Row].Tag));
 		}
 
 		private void UpdateSelectedInfo(InsVerifyGridObject obj) {
@@ -463,7 +463,7 @@ namespace OpenDental {
 				MessageBox.Show("Please select an insurance to verify.");
 				return;
 			}
-			InsVerifyGridObject selectedRowObject=((InsVerifyGridObject)grid.ListGridRows[grid.GetSelectedIndex()].Tag);
+			InsVerifyGridObject selectedRowObject=((InsVerifyGridObject)grid.Rows[grid.GetSelectedIndex()].Tag);
 			if((planToVerifyEnum==PlanToVerify.Both && !selectedRowObject.IsPatAndInsRow()) 
 				|| (planToVerifyEnum==PlanToVerify.PatientEligibility && selectedRowObject.PatInsVerify==null) 
 				|| (planToVerifyEnum==PlanToVerify.InsuranceBenefits && selectedRowObject.PlanInsVerify==null)) 
@@ -514,7 +514,7 @@ namespace OpenDental {
 				return;
 			}
 			//The _gridRowSelected needs to get updated before we run our menu item logic because Popup fires before CellClick.
-			_gridRowSelected=(InsVerifyGridObject)grid.ListGridRows[grid.GetSelectedIndex()].Tag;
+			_gridRowSelected=(InsVerifyGridObject)grid.Rows[grid.GetSelectedIndex()].Tag;
 			menuRightClick.MenuItems.Add(new MenuItem("Go to Patient",gridMainRight_click));
 			string verifyDescription="Go to Insurance Plan";
 			if(_gridRowSelected.PatInsVerify!=null) {
@@ -637,33 +637,33 @@ namespace OpenDental {
 				() => {
 					_selectedRowAssignGrid=gridAssign.GetSelectedIndex();
 					gridAssign.BeginUpdate();
-					gridAssign.ListGridColumns.Clear();
+					gridAssign.Columns.Clear();
 					GridColumn col;
 					col=new GridColumn("Type",45);
-					gridAssign.ListGridColumns.Add(col);
+					gridAssign.Columns.Add(col);
 					if(PrefC.HasClinicsEnabled) {
 						col=new GridColumn("Clinic",90);
-						gridAssign.ListGridColumns.Add(col);
+						gridAssign.Columns.Add(col);
 					}
 					col=new GridColumn("Patient",120);
-					gridAssign.ListGridColumns.Add(col);
+					gridAssign.Columns.Add(col);
 					col=new GridColumn("Appt Date Time",130,GridSortingStrategy.DateParse);
 					col.TextAlign=HorizontalAlignment.Center;
-					gridAssign.ListGridColumns.Add(col);
+					gridAssign.Columns.Add(col);
 					col=new GridColumn("Carrier",160);
-					gridAssign.ListGridColumns.Add(col);
+					gridAssign.Columns.Add(col);
 					col=new GridColumn("Last Verified",90,GridSortingStrategy.DateParse);
 					col.TextAlign=HorizontalAlignment.Center;
-					gridAssign.ListGridColumns.Add(col);
+					gridAssign.Columns.Add(col);
 					col=new GridColumn("Status",110);
-					gridAssign.ListGridColumns.Add(col);
+					gridAssign.Columns.Add(col);
 					col=new GridColumn("Assigned to",120){ IsWidthDynamic=true };
-					gridAssign.ListGridColumns.Add(col);
-					gridAssign.ListGridRows.Clear();
+					gridAssign.Columns.Add(col);
+					gridAssign.Rows.Clear();
 					List<InsVerifyGridRow> listGridRows=GetRowsForGrid(true);
 					listGridRows.Sort(CompareGridRows);
 					for(int i=0;i<listGridRows.Count;i++) {
-						gridAssign.ListGridRows.Add(VerifyRowToODGridRow(listGridRows[i],true));
+						gridAssign.Rows.Add(VerifyRowToODGridRow(listGridRows[i],true));
 					}
 					gridAssign.EndUpdate();
 					gridAssign.SetSelected(_selectedRowAssignGrid,true);
@@ -677,7 +677,7 @@ namespace OpenDental {
 		private List<InsVerifyGridObject> GetSelectedInsVerifyList() {
 			List<InsVerifyGridObject> selectedGridObjectRows=new List<InsVerifyGridObject>();
 			for(int i=0;i<gridAssign.SelectedIndices.Length;i++) {
-				selectedGridObjectRows.Add(((InsVerifyGridObject)gridAssign.ListGridRows[gridAssign.SelectedIndices[i]].Tag));
+				selectedGridObjectRows.Add(((InsVerifyGridObject)gridAssign.Rows[gridAssign.SelectedIndices[i]].Tag));
 			}
 			return selectedGridObjectRows;
 		}

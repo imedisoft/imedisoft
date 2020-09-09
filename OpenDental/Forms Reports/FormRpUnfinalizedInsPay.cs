@@ -72,25 +72,25 @@ namespace OpenDental {
 			//fill the grid
 			gridMain.BeginUpdate();
 			//columns
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Type",120);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Patient",200);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Carrier",200);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
 				col=new GridColumn("Clinic",160);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			col=new GridColumn("Date",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Date of Service",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Amount",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			//rows
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			foreach(RpUnfinalizedInsPay.UnfinalizedInsPay unfinalCur in _listUnfinalizedInsPay) {
 				if(!listType.Contains("All") && !listType.Contains(unfinalCur.Type.GetDescription())) {
@@ -122,7 +122,7 @@ namespace OpenDental {
 				row.Cells.Add((unfinalCur.DateOfService.Year < 1880)?"": unfinalCur.DateOfService.ToShortDateString());
 				row.Cells.Add(unfinalCur.Amount.ToString("f"));
 				row.Tag=unfinalCur;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -141,7 +141,7 @@ namespace OpenDental {
 				return;
 			}
 			if(e.Button==MouseButtons.Right) {
-				RpUnfinalizedInsPay.UnfinalizedInsPay unfinalPay=(RpUnfinalizedInsPay.UnfinalizedInsPay)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag;
+				RpUnfinalizedInsPay.UnfinalizedInsPay unfinalPay=(RpUnfinalizedInsPay.UnfinalizedInsPay)gridMain.Rows[gridMain.SelectedIndices[0]].Tag;
 				switch(unfinalPay.Type) {
 					case RpUnfinalizedInsPay.UnfinalizedInsPay.UnfinalizedPaymentType.PartialPayment:
 						goToAccountToolStripMenuItem.Visible=unfinalPay.CountPats!=0;
@@ -178,7 +178,7 @@ namespace OpenDental {
 				MessageBox.Show("Please use Batch Insurance in Manage Module to Finalize Payments.");
 				return;
 			}
-			RpUnfinalizedInsPay.UnfinalizedInsPay unfinalPay=(RpUnfinalizedInsPay.UnfinalizedInsPay)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag;
+			RpUnfinalizedInsPay.UnfinalizedInsPay unfinalPay=(RpUnfinalizedInsPay.UnfinalizedInsPay)gridMain.Rows[gridMain.SelectedIndices[0]].Tag;
 			if(unfinalPay.ClaimCur==null) {
 				MessageBox.Show("Unable to find claim for this partial payment.");
 				return;
@@ -216,7 +216,7 @@ namespace OpenDental {
 			if(!Security.IsAuthorized(Permissions.ClaimView)) {
 				return;
 			}
-			RpUnfinalizedInsPay.UnfinalizedInsPay unfinalPay=(RpUnfinalizedInsPay.UnfinalizedInsPay)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag;
+			RpUnfinalizedInsPay.UnfinalizedInsPay unfinalPay=(RpUnfinalizedInsPay.UnfinalizedInsPay)gridMain.Rows[gridMain.SelectedIndices[0]].Tag;
 			//Refresh claim from database.  Will return null if not in db, or unfinalPay.ClaimCur already null.
 			unfinalPay.ClaimCur=Claims.GetClaim(unfinalPay.ClaimCur?.ClaimNum??0);
 			if(unfinalPay.ClaimCur==null) {
@@ -233,7 +233,7 @@ namespace OpenDental {
 
 		/// <summary>Go to the selected patient's account.</summary>
 		private void goToAccountToolStripMenuItem_Click(object sender,EventArgs e) {
-			RpUnfinalizedInsPay.UnfinalizedInsPay unfinalPay=(RpUnfinalizedInsPay.UnfinalizedInsPay)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag;
+			RpUnfinalizedInsPay.UnfinalizedInsPay unfinalPay=(RpUnfinalizedInsPay.UnfinalizedInsPay)gridMain.Rows[gridMain.SelectedIndices[0]].Tag;
 			GotoModule.GotoAccount(unfinalPay.PatientCur.PatNum);
 		}
 
@@ -242,7 +242,7 @@ namespace OpenDental {
 			if(!Security.IsAuthorized(Permissions.InsPayCreate)) {
 				return;
 			}
-			RpUnfinalizedInsPay.UnfinalizedInsPay unfinalPay=(RpUnfinalizedInsPay.UnfinalizedInsPay)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag;
+			RpUnfinalizedInsPay.UnfinalizedInsPay unfinalPay=(RpUnfinalizedInsPay.UnfinalizedInsPay)gridMain.Rows[gridMain.SelectedIndices[0]].Tag;
 			if(unfinalPay.ClaimPaymentCur==null) {
 				MessageBox.Show("This claim payment has been deleted.");
 				return;
@@ -255,7 +255,7 @@ namespace OpenDental {
 
 		/// <summary>Deletes the selected insurance payment selected.</summary>
 		private void deleteEOBToolStripMenuItem_Click(object sender,EventArgs e) {
-			RpUnfinalizedInsPay.UnfinalizedInsPay unfinalPay=(RpUnfinalizedInsPay.UnfinalizedInsPay)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag;
+			RpUnfinalizedInsPay.UnfinalizedInsPay unfinalPay=(RpUnfinalizedInsPay.UnfinalizedInsPay)gridMain.Rows[gridMain.SelectedIndices[0]].Tag;
 			if(unfinalPay.ClaimPaymentCur==null) {
 				MessageBox.Show("This claim payment has been deleted.");
 				return;
@@ -370,15 +370,15 @@ namespace OpenDental {
 				using(StreamWriter sw=new StreamWriter(filePath,false))
 				{
 					String line="";
-					for(int i=0;i<gridMain.ListGridColumns.Count;i++) {
-						line+=gridMain.ListGridColumns[i].HeaderText+"\t";
+					for(int i=0;i<gridMain.Columns.Count;i++) {
+						line+=gridMain.Columns[i].HeaderText+"\t";
 					}
 					sw.WriteLine(line);
-					for(int i=0;i<gridMain.ListGridRows.Count;i++) {
+					for(int i=0;i<gridMain.Rows.Count;i++) {
 						line="";
-						for(int j=0;j<gridMain.ListGridColumns.Count;j++) {
-							line+=gridMain.ListGridRows[i].Cells[j].Text;
-							if(j<gridMain.ListGridColumns.Count-1) {
+						for(int j=0;j<gridMain.Columns.Count;j++) {
+							line+=gridMain.Rows[i].Cells[j].Text;
+							if(j<gridMain.Columns.Count-1) {
 								line+="\t";
 							}
 						}

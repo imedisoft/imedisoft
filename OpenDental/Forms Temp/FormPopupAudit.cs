@@ -27,18 +27,18 @@ namespace OpenDental {
 		private void FillGrid() {//The grid cannot be changed to be sortable. This audit relies on the oldest popup changes being located at the top
 			ListPopupAud=Popups.GetArchivesForPopup(PopupCur.PopupNum);
 			gridPopupAudit.BeginUpdate();
-			gridPopupAudit.ListGridColumns.Clear();
+			gridPopupAudit.Columns.Clear();
 			GridColumn col=new GridColumn("Create Date",140);
-			gridPopupAudit.ListGridColumns.Add(col);
+			gridPopupAudit.Columns.Add(col);
 			col=new GridColumn("Edit Date",140);
-			gridPopupAudit.ListGridColumns.Add(col);
+			gridPopupAudit.Columns.Add(col);
 			col=new GridColumn("Level",80);
-			gridPopupAudit.ListGridColumns.Add(col);
+			gridPopupAudit.Columns.Add(col);
 			col=new GridColumn("Disabled",60,HorizontalAlignment.Center);
-			gridPopupAudit.ListGridColumns.Add(col);
+			gridPopupAudit.Columns.Add(col);
 			col=new GridColumn("Popup Message",100);
-			gridPopupAudit.ListGridColumns.Add(col);
-			gridPopupAudit.ListGridRows.Clear();
+			gridPopupAudit.Columns.Add(col);
+			gridPopupAudit.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<ListPopupAud.Count;i++) {
 				row=new GridRow();
@@ -57,7 +57,7 @@ namespace OpenDental {
 				row.Cells.Add(ListPopupAud[i].PopupLevel.ToString());
 				row.Cells.Add(ListPopupAud[i].IsDisabled?"X":"");
 				row.Cells.Add(ListPopupAud[i].Description);
-				gridPopupAudit.ListGridRows.Add(row);
+				gridPopupAudit.Rows.Add(row);
 			}
 			gridPopupAudit.EndUpdate();
 		}

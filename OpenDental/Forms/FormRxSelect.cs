@@ -70,14 +70,14 @@ namespace Imedisoft.Forms
 			}
 
 			rxDefsGrid.BeginUpdate();
-			rxDefsGrid.ListGridColumns.Clear();
-			rxDefsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Drug, 140));
-			rxDefsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Controlled, 70, HorizontalAlignment.Center));
-			rxDefsGrid.ListGridColumns.Add(new GridColumn(Translation.Rx.SIG, 250));
-			rxDefsGrid.ListGridColumns.Add(new GridColumn(Translation.Rx.DispenseAbbr, 70));
-			rxDefsGrid.ListGridColumns.Add(new GridColumn(Translation.Rx.Refills, 70));
-			rxDefsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Notes, 300));
-			rxDefsGrid.ListGridRows.Clear();
+			rxDefsGrid.Columns.Clear();
+			rxDefsGrid.Columns.Add(new GridColumn(Translation.Common.Drug, 140));
+			rxDefsGrid.Columns.Add(new GridColumn(Translation.Common.Controlled, 70, HorizontalAlignment.Center));
+			rxDefsGrid.Columns.Add(new GridColumn(Translation.Rx.SIG, 250));
+			rxDefsGrid.Columns.Add(new GridColumn(Translation.Rx.DispenseAbbr, 70));
+			rxDefsGrid.Columns.Add(new GridColumn(Translation.Rx.Refills, 70));
+			rxDefsGrid.Columns.Add(new GridColumn(Translation.Common.Notes, 300));
+			rxDefsGrid.Rows.Clear();
 
 			foreach (var rxDef in rxDefs)
 			{
@@ -90,7 +90,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(rxDef.Notes);
 				gridRow.Tag = rxDef;
 
-				rxDefsGrid.ListGridRows.Add(gridRow);
+				rxDefsGrid.Rows.Add(gridRow);
 			}
 
 			rxDefsGrid.EndUpdate();

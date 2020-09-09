@@ -41,19 +41,19 @@ namespace OpenDental {
 			_sortedByColumnIdx=gridInsPlans.SortedByColumnIdx;
 			_isSortAscending=gridInsPlans.SortedIsAscending;
 			gridInsPlans.BeginUpdate();
-			if(gridInsPlans.ListGridColumns.Count==0) {
-				gridInsPlans.ListGridColumns.Clear();
-				gridInsPlans.ListGridColumns.Add(new UI.GridColumn("Name",200,HorizontalAlignment.Left,UI.GridSortingStrategy.StringCompare));
-				gridInsPlans.ListGridColumns.Add(new UI.GridColumn("Birthdate",74,HorizontalAlignment.Center,UI.GridSortingStrategy.DateParse));
-				gridInsPlans.ListGridColumns.Add(new UI.GridColumn("SSN",66,HorizontalAlignment.Center,UI.GridSortingStrategy.StringCompare));
-				_patNumCol=gridInsPlans.ListGridColumns.Count;
-				gridInsPlans.ListGridColumns.Add(new UI.GridColumn("PatNum",68,HorizontalAlignment.Center,UI.GridSortingStrategy.StringCompare));
-				gridInsPlans.ListGridColumns.Add(new UI.GridColumn("Date Begin",84,HorizontalAlignment.Center,UI.GridSortingStrategy.DateParse));
-				gridInsPlans.ListGridColumns.Add(new UI.GridColumn("Date Term",84,HorizontalAlignment.Center,UI.GridSortingStrategy.DateParse));
-				gridInsPlans.ListGridColumns.Add(new UI.GridColumn("Relation",70,HorizontalAlignment.Center,UI.GridSortingStrategy.StringCompare));
-				gridInsPlans.ListGridColumns.Add(new UI.GridColumn("SubscriberID",96,HorizontalAlignment.Left,UI.GridSortingStrategy.StringCompare));
-				gridInsPlans.ListGridColumns.Add(new UI.GridColumn("GroupNum",100,HorizontalAlignment.Left,UI.GridSortingStrategy.StringCompare));
-				gridInsPlans.ListGridColumns.Add(new UI.GridColumn("Payer",100,HorizontalAlignment.Left,UI.GridSortingStrategy.StringCompare){ IsWidthDynamic=true });
+			if(gridInsPlans.Columns.Count==0) {
+				gridInsPlans.Columns.Clear();
+				gridInsPlans.Columns.Add(new UI.GridColumn("Name",200,HorizontalAlignment.Left,UI.GridSortingStrategy.StringCompare));
+				gridInsPlans.Columns.Add(new UI.GridColumn("Birthdate",74,HorizontalAlignment.Center,UI.GridSortingStrategy.DateParse));
+				gridInsPlans.Columns.Add(new UI.GridColumn("SSN",66,HorizontalAlignment.Center,UI.GridSortingStrategy.StringCompare));
+				_patNumCol=gridInsPlans.Columns.Count;
+				gridInsPlans.Columns.Add(new UI.GridColumn("PatNum",68,HorizontalAlignment.Center,UI.GridSortingStrategy.StringCompare));
+				gridInsPlans.Columns.Add(new UI.GridColumn("Date Begin",84,HorizontalAlignment.Center,UI.GridSortingStrategy.DateParse));
+				gridInsPlans.Columns.Add(new UI.GridColumn("Date Term",84,HorizontalAlignment.Center,UI.GridSortingStrategy.DateParse));
+				gridInsPlans.Columns.Add(new UI.GridColumn("Relation",70,HorizontalAlignment.Center,UI.GridSortingStrategy.StringCompare));
+				gridInsPlans.Columns.Add(new UI.GridColumn("SubscriberID",96,HorizontalAlignment.Left,UI.GridSortingStrategy.StringCompare));
+				gridInsPlans.Columns.Add(new UI.GridColumn("GroupNum",100,HorizontalAlignment.Left,UI.GridSortingStrategy.StringCompare));
+				gridInsPlans.Columns.Add(new UI.GridColumn("Payer",100,HorizontalAlignment.Left,UI.GridSortingStrategy.StringCompare){ IsWidthDynamic=true });
 				_sortedByColumnIdx=0;//Sort by Patient Last Name by default.
 				_isSortAscending=true;//Start with A and progress to Z.
 			}
@@ -85,7 +85,7 @@ namespace OpenDental {
 			ShowStatus("Loading patient information");
 			const int previewLimitCount=40;
 			gridInsPlans.BeginUpdate();
-			gridInsPlans.ListGridRows.Clear();
+			gridInsPlans.Rows.Clear();
 			gridInsPlans.EndUpdate();
 			Application.DoEvents();
 			if(_listPatients==null) {
@@ -103,25 +103,25 @@ namespace OpenDental {
 				Hx834_Tran tran=_x834.ListTransactions[i];
 				for(int j=0;j<tran.ListMembers.Count;j++) {
 					Hx834_Member member=tran.ListMembers[j];
-					ShowStatus("Loading "+(gridInsPlans.ListGridRows.Count+1).ToString().PadLeft(6)+"/"+rowCount.ToString().PadLeft(6)
+					ShowStatus("Loading "+(gridInsPlans.Rows.Count+1).ToString().PadLeft(6)+"/"+rowCount.ToString().PadLeft(6)
 						+"  Patient "+member.Pat.GetNameLF());
-					if(gridInsPlans.ListGridRows.Count < previewLimitCount) {
+					if(gridInsPlans.Rows.Count < previewLimitCount) {
 						gridInsPlans.BeginUpdate();
 					}
 					if(member.ListHealthCoverage.Count==0) {
 						UI.GridRow row=new UI.GridRow();
-						gridInsPlans.ListGridRows.Add(row);
+						gridInsPlans.Rows.Add(row);
 						FillGridRow(row,member,null);
 					}
 					else {//There is at least one insurance plan.
 						for(int a=0;a<member.ListHealthCoverage.Count;a++) {
 							Hx834_HealthCoverage healthCoverage=member.ListHealthCoverage[a];
 							UI.GridRow row=new UI.GridRow();
-							gridInsPlans.ListGridRows.Add(row);
+							gridInsPlans.Rows.Add(row);
 							FillGridRow(row,null,healthCoverage);
 						}
 					}
-					if(gridInsPlans.ListGridRows.Count < previewLimitCount) {
+					if(gridInsPlans.Rows.Count < previewLimitCount) {
 						gridInsPlans.EndUpdate();//Also invalidates grid.
 						Application.DoEvents();
 					}
@@ -187,11 +187,11 @@ namespace OpenDental {
 		private void gridInsPlans_CellDoubleClick(object sender,UI.ODGridClickEventArgs e) {
 			Hx834_Member member=null;
 			Hx834_HealthCoverage healthCoverage=null;
-			if(gridInsPlans.ListGridRows[e.Row].Tag is Hx834_Member) {
-				member=(Hx834_Member)gridInsPlans.ListGridRows[e.Row].Tag;
+			if(gridInsPlans.Rows[e.Row].Tag is Hx834_Member) {
+				member=(Hx834_Member)gridInsPlans.Rows[e.Row].Tag;
 			}
 			else {
-				healthCoverage=(Hx834_HealthCoverage)gridInsPlans.ListGridRows[e.Row].Tag;
+				healthCoverage=(Hx834_HealthCoverage)gridInsPlans.Rows[e.Row].Tag;
 				member=healthCoverage.Member;
 			}
 			FormPatientSelect FormPS=new FormPatientSelect(member.Pat);
@@ -200,16 +200,16 @@ namespace OpenDental {
 				gridInsPlans.BeginUpdate();
 				//Refresh all rows for this member to show the newly selected PatNum.
 				//There will be multiple rows if there are multiple insurance plans for the member.
-				for(int i=0;i<gridInsPlans.ListGridRows.Count;i++) {
+				for(int i=0;i<gridInsPlans.Rows.Count;i++) {
 					Hx834_Member memberRefresh=null;
-					if(gridInsPlans.ListGridRows[i].Tag is Hx834_Member) {
-						memberRefresh=(Hx834_Member)gridInsPlans.ListGridRows[i].Tag;
+					if(gridInsPlans.Rows[i].Tag is Hx834_Member) {
+						memberRefresh=(Hx834_Member)gridInsPlans.Rows[i].Tag;
 					}
 					else {
-						memberRefresh=((Hx834_HealthCoverage)gridInsPlans.ListGridRows[i].Tag).Member;
+						memberRefresh=((Hx834_HealthCoverage)gridInsPlans.Rows[i].Tag).Member;
 					}
 					if(memberRefresh==member) {
-						FillGridRow(gridInsPlans.ListGridRows[e.Row],member,healthCoverage);
+						FillGridRow(gridInsPlans.Rows[e.Row],member,healthCoverage);
 					}
 				}
 				gridInsPlans.EndUpdate();
@@ -244,7 +244,7 @@ namespace OpenDental {
 			EtransL.ImportInsurancePlans(_x834,_listPatients,checkIsPatientCreate.Checked,checkDropExistingIns.Checked,out createdPatsCount,
 				out updatedPatsCount,out skippedPatsCount,out createdCarrierCount,out createdInsPlanCount,out updatedInsPlanCount,out createdInsSubCount,
 				out updatedInsSubCount,out createdPatPlanCount,out droppedPatPlanCount,out updatedPatPlanCount,out sbErrorMessages,(rowIndex,pat) => {
-				ShowStatus("Progress "+(rowIndex).ToString().PadLeft(6)+"/"+gridInsPlans.ListGridRows.Count.ToString().PadLeft(6)
+				ShowStatus("Progress "+(rowIndex).ToString().PadLeft(6)+"/"+gridInsPlans.Rows.Count.ToString().PadLeft(6)
 					+"  Importing plans for patient "+pat.GetNameLF());
 			});
 			Cursor=Cursors.Default;

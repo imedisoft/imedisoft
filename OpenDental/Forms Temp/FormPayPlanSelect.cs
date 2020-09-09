@@ -165,17 +165,17 @@ namespace OpenDental{
 		private void FillGrid() {
 			gridMain.BeginUpdate();
 			GridColumn col = new GridColumn("Date",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("Patient",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("Category",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("Total Cost",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("Balance",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("Due Now",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			List<long> listPayPlanNums=_listValidPayPlans.Select(x => x.PayPlanNum).ToList();
 			List<PaySplit> listPaySplits=PaySplits.GetForPayPlans(listPayPlanNums);
 			List<Patient> listPats=Patients.GetLimForPats(_listValidPayPlans.Select(x=>x.PatNum).ToList());
@@ -196,7 +196,7 @@ namespace OpenDental{
 				row.Cells.Add(PayPlans.GetBalance(planCur.PayPlanNum,_listPayPlanCharges,listPaySplits).ToString("F"));//balance
 				row.Cells.Add(PayPlans.GetDueNow(planCur.PayPlanNum,_listPayPlanCharges,listPaySplits).ToString("F"));//due now
 				row.Tag=planCur.PayPlanNum;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -205,7 +205,7 @@ namespace OpenDental{
 			if(gridMain.GetSelectedIndex()==-1) {
 				return;
 			}
-			SelectedPayPlanNum=(long)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
+			SelectedPayPlanNum=(long)gridMain.Rows[gridMain.GetSelectedIndex()].Tag;
 			DialogResult=DialogResult.OK;
 		}
 
@@ -218,7 +218,7 @@ namespace OpenDental{
 			if(gridMain.GetSelectedIndex()==-1 || (e.KeyCode!=Keys.Enter)) {
 				return;
 			}
-			SelectedPayPlanNum=(long)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
+			SelectedPayPlanNum=(long)gridMain.Rows[gridMain.GetSelectedIndex()].Tag;
 			DialogResult=DialogResult.OK;
 		}
 
@@ -227,7 +227,7 @@ namespace OpenDental{
 				MessageBox.Show("Please select a payment plan first.");
 				return;
 			}
-			SelectedPayPlanNum=(long)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
+			SelectedPayPlanNum=(long)gridMain.Rows[gridMain.GetSelectedIndex()].Tag;
 			DialogResult=DialogResult.OK;
 		}
 

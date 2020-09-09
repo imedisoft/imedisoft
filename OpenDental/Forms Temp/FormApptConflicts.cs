@@ -36,20 +36,20 @@ namespace OpenDental {
 			this.Cursor=Cursors.WaitCursor;
 			_listPatients=Patients.GetLimForPats(_listAppts.Select(x => x.PatNum).Distinct().ToList());
 			gridConflicts.BeginUpdate();
-			gridConflicts.ListGridColumns.Clear();
+			gridConflicts.Columns.Clear();
 			GridColumn col=new GridColumn("Patient",140);
-			gridConflicts.ListGridColumns.Add(col);
+			gridConflicts.Columns.Add(col);
 			col=new GridColumn("Date",120);
-			gridConflicts.ListGridColumns.Add(col);
+			gridConflicts.Columns.Add(col);
 			col=new GridColumn("Op",110);
-			gridConflicts.ListGridColumns.Add(col);
+			gridConflicts.Columns.Add(col);
 			col=new GridColumn("Prov",50);
-			gridConflicts.ListGridColumns.Add(col);
+			gridConflicts.Columns.Add(col);
 			col=new GridColumn("Procedures",150);
-			gridConflicts.ListGridColumns.Add(col);
+			gridConflicts.Columns.Add(col);
 			col=new GridColumn("Notes",200);
-			gridConflicts.ListGridColumns.Add(col);
-			gridConflicts.ListGridRows.Clear();
+			gridConflicts.Columns.Add(col);
+			gridConflicts.Rows.Clear();
 			GridRow row;
 			foreach(Appointment apptCur in _listAppts) {
 				row=new GridRow();
@@ -71,7 +71,7 @@ namespace OpenDental {
 				row.Cells.Add(apptCur.ProcDescript);
 				row.Cells.Add(apptCur.Note);
 				row.Tag=apptCur;
-				gridConflicts.ListGridRows.Add(row);
+				gridConflicts.Rows.Add(row);
 			}
 			gridConflicts.EndUpdate();
 			Cursor=Cursors.Default;
@@ -80,7 +80,7 @@ namespace OpenDental {
 		private void gridConflicts_DoubleClick(object sender,ODGridClickEventArgs e) {
 			int currentSelection=e.Row;
 			int currentScroll=gridConflicts.ScrollValue;
-			Appointment apptCur=(Appointment)gridConflicts.ListGridRows[e.Row].Tag;
+			Appointment apptCur=(Appointment)gridConflicts.Rows[e.Row].Tag;
 			long SelectedPatNum=apptCur.PatNum;
 			Patient pat=_listPatients.First(x => x.PatNum==SelectedPatNum);
 			FormOpenDental.S_Contr_PatientSelected(pat,true);
@@ -110,7 +110,7 @@ namespace OpenDental {
 			}
 			List<long> listSelectedAptNums=new List<long>();
 			for(int i=0;i<gridConflicts.SelectedIndices.Length;i++) {
-				listSelectedAptNums.Add(((Appointment)gridConflicts.ListGridRows[gridConflicts.SelectedIndices[i]].Tag).AptNum);
+				listSelectedAptNums.Add(((Appointment)gridConflicts.Rows[gridConflicts.SelectedIndices[i]].Tag).AptNum);
 			}
 			_listAppts.RemoveAll(x => listSelectedAptNums.Contains(x.AptNum));
 			FillGrid();

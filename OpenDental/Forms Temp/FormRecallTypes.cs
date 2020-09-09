@@ -169,20 +169,20 @@ namespace OpenDental{
 			RecallTypes.RefreshCache();
 			_listRecallTypes=RecallTypes.GetDeepCopy();
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Description",110);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Special Type",110);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Triggers",190);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Interval",60);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Time Pattern",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Procedures",190);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			//string txt;
 			for(int i=0;i<_listRecallTypes.Count;i++){
@@ -193,7 +193,7 @@ namespace OpenDental{
 				row.Cells.Add(_listRecallTypes[i].DefaultInterval.ToString());
 				row.Cells.Add(_listRecallTypes[i].TimePattern);
 				row.Cells.Add(_listRecallTypes[i].Procedures);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

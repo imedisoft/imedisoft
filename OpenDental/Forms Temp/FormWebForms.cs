@@ -64,20 +64,20 @@ namespace OpenDental {
 				MessageBox.Show("Invalid date");
 				return;
 			}
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Date",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Time",42);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Patient Last Name",110);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Patient First Name",110);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Description",240);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Deleted",40,HorizontalAlignment.Center){ IsWidthDynamic=true };
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			DataTable table=Sheets.GetWebFormSheetsTable(dateFrom,dateTo,comboClinics.ListSelectedClinicNums);
 			for(int i=0;i<table.Rows.Count;i++) {
 				long patNum=PIn.Long(table.Rows[i]["PatNum"].ToString());
@@ -92,7 +92,7 @@ namespace OpenDental {
 					row.Cells.Add(table.Rows[i]["description"].ToString());
 					row.Cells.Add(table.Rows[i]["IsDeleted"].ToString()=="0" ? "" : "X");
 					row.Tag=sheetNum;
-					gridMain.ListGridRows.Add(row);
+					gridMain.Rows.Add(row);
 				}
 			} 
 			gridMain.EndUpdate();
@@ -219,13 +219,13 @@ namespace OpenDental {
 		}
 
 		private void gridMain_CellClick(object sender,ODGridClickEventArgs e) {
-			long sheetNum=(long)gridMain.ListGridRows[e.Row].Tag;
+			long sheetNum=(long)gridMain.Rows[e.Row].Tag;
 			Sheet sheet=Sheets.GetSheet(sheetNum);
 			GotoModule.GotoFamily(sheet.PatNum);
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			long sheetNum=(long)gridMain.ListGridRows[e.Row].Tag;
+			long sheetNum=(long)gridMain.Rows[e.Row].Tag;
 			Sheet sheet=Sheets.GetSheet(sheetNum);
 			FormSheetFillEdit.ShowForm(sheet,delegate { FillGrid(); }); //We must refresh the grid because the web form clicked might have been deleted by the user.
 		}
@@ -256,7 +256,7 @@ namespace OpenDental {
 		}
 
 		private void menuItemViewAllSheets_Click(object sender,EventArgs e) {
-			long sheetNum=(long)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag;
+			long sheetNum=(long)gridMain.Rows[gridMain.SelectedIndices[0]].Tag;
 			Sheet sheet=Sheets.GetSheet(sheetNum);
 			FormPatientForms formP=new FormPatientForms();
 			formP.PatNum=sheet.PatNum;

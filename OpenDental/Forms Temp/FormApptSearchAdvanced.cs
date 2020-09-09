@@ -147,14 +147,14 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Day",85);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Date",85,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Time",85,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			foreach(ScheduleOpening opening in _listOpenings) {
 				row=new GridRow();
@@ -162,7 +162,7 @@ namespace OpenDental {
 				row.Cells.Add(opening.DateTimeAvail.Date.ToShortDateString());
 				row.Cells.Add(opening.DateTimeAvail.ToShortTimeString());
 				row.Tag=opening;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -314,7 +314,7 @@ namespace OpenDental {
 
 		private void gridMain_CellClick(object sender,ODGridClickEventArgs e) {
 			//get the day for the row that was clicked on.
-			DateTime rowDate=((ScheduleOpening)gridMain.ListGridRows[e.Row].Tag).DateTimeAvail;
+			DateTime rowDate=((ScheduleOpening)gridMain.Rows[e.Row].Tag).DateTimeAvail;
 			//move the calendar day on the appt module to the day that was clicked on. 
 			GotoModule.GotoAppointment(rowDate.Date,_appt.AptNum);
 			//if clinics, move to the clinic as well? 

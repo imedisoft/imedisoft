@@ -120,14 +120,14 @@ namespace OpenDental{
 
 		private void FillGrid(){
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Date",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Category",120);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Description",300);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			Docs=Documents.GetAllWithPat(PatNum);
 			for(int i=0;i<Docs.Length;i++){
@@ -135,7 +135,7 @@ namespace OpenDental{
 				row.Cells.Add(Docs[i].DateCreated.ToString());
 				row.Cells.Add(Definitions.GetName(DefinitionCategory.ImageCats,Docs[i].DocCategory));
 			  row.Cells.Add(Docs[i].Description);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

@@ -32,16 +32,16 @@ namespace OpenDental {
 			AutoNoteControls.RefreshCache();
 			_listAutoNoteControls=AutoNoteControls.GetDeepCopy();
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Description",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Type",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Prompt Text",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Options",100);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listAutoNoteControls.Count;i++){
 				row=new GridRow();
@@ -49,7 +49,7 @@ namespace OpenDental {
 				row.Cells.Add(_listAutoNoteControls[i].ControlType);
 				row.Cells.Add(_listAutoNoteControls[i].ControlLabel);
 				row.Cells.Add(_listAutoNoteControls[i].ControlOptions);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

@@ -170,19 +170,19 @@ namespace OpenDental {
 
 		private void FillObservations() {
 			gridObservations.BeginUpdate();
-			gridObservations.ListGridColumns.Clear();
-			gridObservations.ListGridColumns.Add(new UI.GridColumn("Question",150));
-			gridObservations.ListGridColumns.Add(new UI.GridColumn("Value",80){ IsWidthDynamic=true });
+			gridObservations.Columns.Clear();
+			gridObservations.Columns.Add(new UI.GridColumn("Question",150));
+			gridObservations.Columns.Add(new UI.GridColumn("Value",80){ IsWidthDynamic=true });
 			gridObservations.EndUpdate();
 			gridObservations.BeginUpdate();
-			gridObservations.ListGridRows.Clear();
+			gridObservations.Rows.Clear();
 			for(int i=0;i<_listVaccineObservations.Count;i++) {
 				VaccineObs vaccineObs=_listVaccineObservations[i];
 				UI.GridRow row=new UI.GridRow();
 				row.Tag=vaccineObs;
 				row.Cells.Add(new UI.GridCell(vaccineObs.IdentifyingCode.ToString()));
 				row.Cells.Add(new UI.GridCell(vaccineObs.ValReported));
-				gridObservations.ListGridRows.Add(row);
+				gridObservations.Rows.Add(row);
 			}
 			if(_listVaccineObservationGroups==null) {
 				_listVaccineObservationGroups=new List<VaccineObs>();
@@ -268,7 +268,7 @@ namespace OpenDental {
 		}
 
 		private void gridObservations_CellDoubleClick(object sender,UI.ODGridClickEventArgs e) {
-			VaccineObs vaccineObs=(VaccineObs)gridObservations.ListGridRows[e.Row].Tag;
+			VaccineObs vaccineObs=(VaccineObs)gridObservations.Rows[e.Row].Tag;
 			FormVaccineObsEdit form=new FormVaccineObsEdit(vaccineObs);
 			form.ShowDialog();
 			if(vaccineObs.VaccinePatNum==0) {//Was deleted
@@ -309,7 +309,7 @@ namespace OpenDental {
 				MessageBox.Show("Two or more observations must be selected.");
 				return;
 			}
-			VaccineObs vaccineObsGroup=(VaccineObs)gridObservations.ListGridRows[gridObservations.SelectedIndices[0]].Tag;
+			VaccineObs vaccineObsGroup=(VaccineObs)gridObservations.Rows[gridObservations.SelectedIndices[0]].Tag;
 			for(int i=0;i<gridObservations.SelectedIndices.Length;i++) {
 				_listVaccineObservationGroups[gridObservations.SelectedIndices[i]]=vaccineObsGroup;
 			}

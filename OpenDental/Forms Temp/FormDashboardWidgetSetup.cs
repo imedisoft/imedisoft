@@ -62,13 +62,13 @@ namespace OpenDental {
 		private void FillGrid(ODGrid grid,bool isSelectionMaintained,params SheetDef[] arrDashboardSheetDefs) {
 			List<SheetDef> listSelectedDashboards=grid.SelectedTags<SheetDef>();
 			grid.BeginUpdate();
-			grid.ListGridColumns.Clear();
-			grid.ListGridColumns.Add(new GridColumn("Name",100,HorizontalAlignment.Left){ IsWidthDynamic=true});
+			grid.Columns.Clear();
+			grid.Columns.Add(new GridColumn("Name",100,HorizontalAlignment.Left){ IsWidthDynamic=true});
 			if(grid==gridCustom) {
-				grid.ListGridColumns.Add(new GridColumn("Allowed",50,HorizontalAlignment.Center));
-				_colAllowed=gridCustom.ListGridColumns.Count-1;//Dynamically determines the 'Allowed' column index in case we add others later.
+				grid.Columns.Add(new GridColumn("Allowed",50,HorizontalAlignment.Center));
+				_colAllowed=gridCustom.Columns.Count-1;//Dynamically determines the 'Allowed' column index in case we add others later.
 			}
-			grid.ListGridRows.Clear();
+			grid.Rows.Clear();
 			foreach(SheetDef sheetDefWidget in arrDashboardSheetDefs) {
 				GridRow row=new GridRow();
 				row.Cells.Add(sheetDefWidget.Description);
@@ -77,7 +77,7 @@ namespace OpenDental {
 					row.Cells.Add(isAllowed ? "X":"");
 				}
 				row.Tag=sheetDefWidget;
-				grid.ListGridRows.Add(row);
+				grid.Rows.Add(row);
 			}
 			grid.EndUpdate();
 			if(isSelectionMaintained) {
@@ -167,7 +167,7 @@ namespace OpenDental {
 		}
 
 		private void gridInternal_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			if(gridInternal.SelectedGridRows.Count==0) {
+			if(gridInternal.SelectedRows.Count==0) {
 				return;
 			}
 			FormSheetDefEdit FormS=new FormSheetDefEdit(gridInternal.SelectedTag<SheetDef>());
@@ -198,7 +198,7 @@ namespace OpenDental {
 			}
 			bool isAllowed=ToggleDashboardPermission(comboUserGroup.GetSelected<UserGroup>(),gridCustom.SelectedTag<SheetDef>());
 			gridCustom.BeginUpdate();
-			gridCustom.SelectedGridRows[0].Cells[_colAllowed].Text=(isAllowed ? "X":"");
+			gridCustom.SelectedRows[0].Cells[_colAllowed].Text=(isAllowed ? "X":"");
 			gridCustom.EndUpdate();
 		}
 

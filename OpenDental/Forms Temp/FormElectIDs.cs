@@ -137,16 +137,16 @@ namespace OpenDental{
 			ElectIDs.RefreshCache();
 			_listElectIDs=ElectIDs.GetDeepCopy();
 			gridElectIDs.BeginUpdate();
-			gridElectIDs.ListGridColumns.Clear();
+			gridElectIDs.Columns.Clear();
 			GridColumn col=new GridColumn("Carrier",320);
-			gridElectIDs.ListGridColumns.Add(col);
+			gridElectIDs.Columns.Add(col);
 			col=new GridColumn("Payer ID",80);
-			gridElectIDs.ListGridColumns.Add(col);
+			gridElectIDs.Columns.Add(col);
 			col=new GridColumn("Is Medicaid",70,HorizontalAlignment.Center);
-			gridElectIDs.ListGridColumns.Add(col);
+			gridElectIDs.Columns.Add(col);
 			col=new GridColumn("Comments",390);
-			gridElectIDs.ListGridColumns.Add(col);
-			gridElectIDs.ListGridRows.Clear();
+			gridElectIDs.Columns.Add(col);
+			gridElectIDs.Rows.Clear();
 			GridRow row;
 			int selectedIndex=-1;
 			for(int i=0;i<_listElectIDs.Count;i++) {
@@ -155,7 +155,7 @@ namespace OpenDental{
 				row.Cells.Add(_listElectIDs[i].PayorID);
 				row.Cells.Add(_listElectIDs[i].IsMedicaid?"X":"");
 				row.Cells.Add(_listElectIDs[i].Comments);
-				gridElectIDs.ListGridRows.Add(row);
+				gridElectIDs.Rows.Add(row);
 				if(_listElectIDs[i].ElectIDNum==electIDSelect) {
 					selectedIndex=i;
 				}

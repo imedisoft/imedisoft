@@ -439,16 +439,16 @@ namespace OpenDental{
 				logList=new SecurityLog[0];
 			}
 			grid.BeginUpdate();
-			grid.ListGridColumns.Clear();
-			grid.ListGridColumns.Add(new GridColumn("Date",70,GridSortingStrategy.DateParse));
-			grid.ListGridColumns.Add(new GridColumn("Time",60,GridSortingStrategy.DateParse));
-			grid.ListGridColumns.Add(new GridColumn("Patient",100));
-			grid.ListGridColumns.Add(new GridColumn("User",70));
-			grid.ListGridColumns.Add(new GridColumn("Permission",190));
-			grid.ListGridColumns.Add(new GridColumn("Computer",70));
-			grid.ListGridColumns.Add(new GridColumn("Log Text",279));
-			grid.ListGridColumns.Add(new GridColumn("Last Edit",100));
-			grid.ListGridRows.Clear();
+			grid.Columns.Clear();
+			grid.Columns.Add(new GridColumn("Date",70,GridSortingStrategy.DateParse));
+			grid.Columns.Add(new GridColumn("Time",60,GridSortingStrategy.DateParse));
+			grid.Columns.Add(new GridColumn("Patient",100));
+			grid.Columns.Add(new GridColumn("User",70));
+			grid.Columns.Add(new GridColumn("Permission",190));
+			grid.Columns.Add(new GridColumn("Computer",70));
+			grid.Columns.Add(new GridColumn("Log Text",279));
+			grid.Columns.Add(new GridColumn("Last Edit",100));
+			grid.Rows.Clear();
 			GridRow row;
 			foreach(SecurityLog logCur in logList) {
 				row=new GridRow();
@@ -495,14 +495,14 @@ namespace OpenDental{
 					row.ForeColor=Color.Red; //Bad hash or no hash entry at all.  This prevents users from deleting the entire hash table to make the audit trail look valid and encrypted.
 					//historical entries will show as red.
 				}
-				grid.ListGridRows.Add(row);
+				grid.Rows.Add(row);
 			}
 			grid.EndUpdate();
 			grid.ScrollToEnd();
 		}
 
 		private void grid_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			(grid.ListGridRows[e.Row].Tag as Action)?.Invoke();
+			(grid.Rows[e.Row].Tag as Action)?.Invoke();
 		}
 
 		private void butRefresh_Click(object sender, System.EventArgs e) {

@@ -396,20 +396,20 @@ namespace OpenDental{
 			ODProgress.ShowAction(//Show progress window while filling the grid.
 				() => {
 					gridMain.BeginUpdate();
-					gridMain.ListGridColumns.Clear();
+					gridMain.Columns.Clear();
 					GridColumn col=new GridColumn("Patient",140);
-					gridMain.ListGridColumns.Add(col);
+					gridMain.Columns.Add(col);
 					col=new GridColumn("Date",65);
-					gridMain.ListGridColumns.Add(col);
+					gridMain.Columns.Add(col);
 					col=new GridColumn("Status",110);
-					gridMain.ListGridColumns.Add(col);
+					gridMain.Columns.Add(col);
 					col=new GridColumn("Prov",50);
-					gridMain.ListGridColumns.Add(col);
+					gridMain.Columns.Add(col);
 					col=new GridColumn("Procedures",150);
-					gridMain.ListGridColumns.Add(col);
+					gridMain.Columns.Add(col);
 					col=new GridColumn("Notes",200);
-					gridMain.ListGridColumns.Add(col);
-					gridMain.ListGridRows.Clear();
+					gridMain.Columns.Add(col);
+					gridMain.Rows.Clear();
 					GridRow row;
 					Dictionary<long,string> dictPatNames=Patients.GetLimForPats(_listPlannedAppts.Select(x => x.PatNum).ToList())
 						.ToDictionary(x => x.PatNum,x => x.GetNameLF());
@@ -436,7 +436,7 @@ namespace OpenDental{
 						row.Cells.Add(apt.ProcDescript);
 						row.Cells.Add(apt.Note);
 			  
-						gridMain.ListGridRows.Add(row);
+						gridMain.Rows.Add(row);
 					}
 					gridMain.EndUpdate();
 				},

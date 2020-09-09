@@ -157,11 +157,11 @@ namespace OpenDental {
 			form.Controls.Add(grid);
 			form.Controls.Add(butClose);
 			grid.BeginUpdate();
-			grid.ListGridColumns.Clear();
-			grid.ListGridColumns.Add(new GridColumn("Name",100){ IsWidthDynamic=true });
-			grid.ListGridRows.Clear();
+			grid.Columns.Clear();
+			grid.Columns.Add(new GridColumn("Name",100){ IsWidthDynamic=true });
+			grid.Rows.Clear();
 			foreach(string patName in _listPatNames) {
-				grid.ListGridRows.Add(new GridRow(patName));
+				grid.Rows.Add(new GridRow(patName));
 			}
 			grid.EndUpdate();
 			form.ShowDialog();

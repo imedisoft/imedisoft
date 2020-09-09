@@ -121,22 +121,22 @@ namespace OpenDental
 			_listSupplyOrders = _listSupplyOrders.OrderBy(x => x.DateReceived.Year < 1880)
 				.ThenBy(x => x.DatePlaced).ToList();
 			gridOrders.BeginUpdate();
-			gridOrders.ListGridColumns.Clear();
+			gridOrders.Columns.Clear();
 			GridColumn col = new GridColumn("Date Placed", 80);
-			gridOrders.ListGridColumns.Add(col);
+			gridOrders.Columns.Add(col);
 			col = new GridColumn("Date Received", 90);
-			gridOrders.ListGridColumns.Add(col);
+			gridOrders.Columns.Add(col);
 			col = new GridColumn("Amount", 70, HorizontalAlignment.Right);
-			gridOrders.ListGridColumns.Add(col);
+			gridOrders.Columns.Add(col);
 			col = new GridColumn("Shipping", 70, HorizontalAlignment.Right);
-			gridOrders.ListGridColumns.Add(col);
+			gridOrders.Columns.Add(col);
 			col = new GridColumn("Supplier", 120);
-			gridOrders.ListGridColumns.Add(col);
+			gridOrders.Columns.Add(col);
 			col = new GridColumn("Note", 200);
-			gridOrders.ListGridColumns.Add(col);
+			gridOrders.Columns.Add(col);
 			col = new GridColumn("Placed By", 100);
-			gridOrders.ListGridColumns.Add(col);
-			gridOrders.ListGridRows.Clear();
+			gridOrders.Columns.Add(col);
+			gridOrders.Rows.Clear();
 			GridRow row;
 			for (int i = 0; i < _listSupplyOrders.Count; i++)
 			{
@@ -175,7 +175,7 @@ namespace OpenDental
 					row.Cells.Add(Userods.GetName(_listSupplyOrders[i].UserNum));
 				}
 				row.Tag = _listSupplyOrders[i];
-				gridOrders.ListGridRows.Add(row);
+				gridOrders.Rows.Add(row);
 			}
 			gridOrders.EndUpdate();
 		}
@@ -192,20 +192,20 @@ namespace OpenDental
 				_tableOrderItems = SupplyOrderItems.GetItemsForOrder(orderNum);
 			}
 			gridItems.BeginUpdate();
-			gridItems.ListGridColumns.Clear();
+			gridItems.Columns.Clear();
 			GridColumn col = new GridColumn("Catalog #", 80);
-			gridItems.ListGridColumns.Add(col);
+			gridItems.Columns.Add(col);
 			col = new GridColumn("Description", 320);
-			gridItems.ListGridColumns.Add(col);
+			gridItems.Columns.Add(col);
 			col = new GridColumn("Qty", 60, HorizontalAlignment.Center);
 			col.IsEditable = true;
-			gridItems.ListGridColumns.Add(col);
+			gridItems.Columns.Add(col);
 			col = new GridColumn("Price/Unit", 70, HorizontalAlignment.Right);
 			col.IsEditable = true;
-			gridItems.ListGridColumns.Add(col);
+			gridItems.Columns.Add(col);
 			col = new GridColumn("Subtotal", 70, HorizontalAlignment.Right);
-			gridItems.ListGridColumns.Add(col);
-			gridItems.ListGridRows.Clear();
+			gridItems.Columns.Add(col);
+			gridItems.Rows.Clear();
 			GridRow row;
 			double price;
 			int qty;
@@ -221,7 +221,7 @@ namespace OpenDental
 				row.Cells.Add(price.ToString("n"));
 				subtotal = ((double)qty) * price;
 				row.Cells.Add(subtotal.ToString("n"));
-				gridItems.ListGridRows.Add(row);
+				gridItems.Rows.Add(row);
 			}
 			gridItems.EndUpdate();
 		}
@@ -351,11 +351,11 @@ namespace OpenDental
 			int qtyNew = 0;
 			try
 			{
-				qtyNew = PIn.Int(gridItems.ListGridRows[e.Row].Cells[2].Text);//0 if not valid input
+				qtyNew = PIn.Int(gridItems.Rows[e.Row].Cells[2].Text);//0 if not valid input
 			}
 			catch { }
 			double priceOld = PIn.Double(_tableOrderItems.Rows[e.Row]["Price"].ToString());
-			double priceNew = PIn.Double(gridItems.ListGridRows[e.Row].Cells[3].Text);//0 if not valid input
+			double priceNew = PIn.Double(gridItems.Rows[e.Row].Cells[3].Text);//0 if not valid input
 																					  //if(e.Col==2){//Qty
 																					  //gridItems.ListGridRows[e.Row].Cells[2].Text=qtyNew.ToString();//Fix the cell formatting
 																					  //if(qtyOld==qtyNew){
@@ -393,7 +393,7 @@ namespace OpenDental
 					return;
 				}
 				_listSupplyOrders[index] = updatedSupplyOrderItem;
-				gridOrders.SelectedGridRows[0].Cells[2].Text = updatedSupplyOrderItem.AmountTotal.ToString("c2");
+				gridOrders.SelectedRows[0].Cells[2].Text = updatedSupplyOrderItem.AmountTotal.ToString("c2");
 				gridOrders.Invalidate();
 			}
 		}
@@ -403,9 +403,9 @@ namespace OpenDental
 			SupplyOrder gridSelect = gridOrders.SelectedTag<SupplyOrder>();
 			SupplyOrders.UpdateOrderPrice(_listSupplyOrders[gridOrders.GetSelectedIndex()].SupplyOrderNum);
 			FillGridOrders();
-			for (int i = 0; i < gridOrders.ListGridRows.Count; i++)
+			for (int i = 0; i < gridOrders.Rows.Count; i++)
 			{
-				if (gridSelect != null && ((SupplyOrder)gridOrders.ListGridRows[i].Tag).SupplyOrderNum == gridSelect.SupplyOrderNum)
+				if (gridSelect != null && ((SupplyOrder)gridOrders.Rows[i].Tag).SupplyOrderNum == gridSelect.SupplyOrderNum)
 				{
 					gridOrders.SetSelected(i, true);
 				}

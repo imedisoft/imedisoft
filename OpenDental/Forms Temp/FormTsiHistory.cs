@@ -95,20 +95,20 @@ namespace OpenDental {
 			List<int> listLogIndexesFiltered=GetListIndexesFiltered();
 			#region Set Grid Columns
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("Guarantor",PrefC.HasClinicsEnabled?200:300){ IsWidthDynamic=true,DynamicWeight=PrefC.HasClinicsEnabled?20:30 });
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("Guarantor",PrefC.HasClinicsEnabled?200:300){ IsWidthDynamic=true,DynamicWeight=PrefC.HasClinicsEnabled?20:30 });
 			if(PrefC.HasClinicsEnabled) {
-				gridMain.ListGridColumns.Add(new GridColumn("Clinic",100){ IsWidthDynamic=true,DynamicWeight=10 });
+				gridMain.Columns.Add(new GridColumn("Clinic",100){ IsWidthDynamic=true,DynamicWeight=10 });
 			}
-			gridMain.ListGridColumns.Add(new GridColumn("User",100){ IsWidthDynamic=true,DynamicWeight=10 });
-			gridMain.ListGridColumns.Add(new GridColumn("Trans Type",80){ IsWidthDynamic=true,DynamicWeight=10 });
-			gridMain.ListGridColumns.Add(new GridColumn("Trans Date Time",120,HorizontalAlignment.Center,GridSortingStrategy.DateParse){ IsWidthDynamic=true,DynamicWeight=12 });
-			gridMain.ListGridColumns.Add(new GridColumn("Demand Type",85){ IsWidthDynamic=true,DynamicWeight=8.5f });
-			gridMain.ListGridColumns.Add(new GridColumn("Service Code",85){ IsWidthDynamic=true,DynamicWeight=8.5f });
-			gridMain.ListGridColumns.Add(new GridColumn("Client ID",75){ IsWidthDynamic=true,DynamicWeight=7.5f });
-			gridMain.ListGridColumns.Add(new GridColumn("Trans Amt",70,HorizontalAlignment.Right,GridSortingStrategy.AmountParse){ IsWidthDynamic=true,DynamicWeight=7 });
-			gridMain.ListGridColumns.Add(new GridColumn("Account Bal",80,HorizontalAlignment.Right,GridSortingStrategy.AmountParse){ IsWidthDynamic=true,DynamicWeight=8 });
-			gridMain.ListGridColumns.Add(new GridColumn("Key Type",100){ IsWidthDynamic=true,DynamicWeight=10 });
+			gridMain.Columns.Add(new GridColumn("User",100){ IsWidthDynamic=true,DynamicWeight=10 });
+			gridMain.Columns.Add(new GridColumn("Trans Type",80){ IsWidthDynamic=true,DynamicWeight=10 });
+			gridMain.Columns.Add(new GridColumn("Trans Date Time",120,HorizontalAlignment.Center,GridSortingStrategy.DateParse){ IsWidthDynamic=true,DynamicWeight=12 });
+			gridMain.Columns.Add(new GridColumn("Demand Type",85){ IsWidthDynamic=true,DynamicWeight=8.5f });
+			gridMain.Columns.Add(new GridColumn("Service Code",85){ IsWidthDynamic=true,DynamicWeight=8.5f });
+			gridMain.Columns.Add(new GridColumn("Client ID",75){ IsWidthDynamic=true,DynamicWeight=7.5f });
+			gridMain.Columns.Add(new GridColumn("Trans Amt",70,HorizontalAlignment.Right,GridSortingStrategy.AmountParse){ IsWidthDynamic=true,DynamicWeight=7 });
+			gridMain.Columns.Add(new GridColumn("Account Bal",80,HorizontalAlignment.Right,GridSortingStrategy.AmountParse){ IsWidthDynamic=true,DynamicWeight=8 });
+			gridMain.Columns.Add(new GridColumn("Key Type",100){ IsWidthDynamic=true,DynamicWeight=10 });
 			#endregion Set Grid Columns
 			#region Fill Grid Rows
 			List<Patient> listFilteredPatLims=listLogIndexesFiltered.Where(x => _dictPatLims.ContainsKey(_listTsiTransLogsAll[x].PatNum))//Just in case.
@@ -118,7 +118,7 @@ namespace OpenDental {
 			Dictionary<long,string> dictPatClinicAbbrs=listFilteredPatLims.ToDictionary(x => x.PatNum,x => Clinics.GetAbbr(x.ClinicNum));
 			Dictionary<long,string> dictUserNames=Userods.GetUsers(listLogIndexesFiltered.Select(x => _listTsiTransLogsAll[x].UserNum).Distinct().ToList())
 				.ToDictionary(x => x.Id,x => x.UserName);
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			int rowToReselect=-1;
 			GridRow row;
 			foreach(int i in listLogIndexesFiltered) {
@@ -142,9 +142,9 @@ namespace OpenDental {
 				row.Cells.Add(logCur.AccountBalance.ToString("n"));
 				row.Cells.Add(logCur.FKeyType.GetDescription());
 				row.Tag=i;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 				if(_selectedLog!=null && _selectedLog.TsiTransLogNum==logCur.TsiTransLogNum) {
-					rowToReselect=gridMain.ListGridRows.Count-1;
+					rowToReselect=gridMain.Rows.Count-1;
 				}
 			}
 			#endregion Fill Grid Rows
@@ -228,7 +228,7 @@ namespace OpenDental {
 				return;
 			}
 			//SetSelected handles -1, so safely handles the case of item not found with selected TsiTransLogNum
-			gridMain.SetSelected(gridMain.ListGridRows.ToList()
+			gridMain.SetSelected(gridMain.Rows.ToList()
 				.FindIndex(x => x.Tag is int
 					&& (int)x.Tag>=0
 					&& (int)x.Tag<_listTsiTransLogsAll.Count
@@ -238,14 +238,14 @@ namespace OpenDental {
 
 		private void gridMain_CellClick(object sender,ODGridClickEventArgs e) {
 			if(e.Row<0
-				|| e.Row>=gridMain.ListGridRows.Count
-				|| !(gridMain.ListGridRows[e.Row].Tag is int)
-				|| (int)gridMain.ListGridRows[e.Row].Tag<0
-				|| (int)gridMain.ListGridRows[e.Row].Tag>=_listTsiTransLogsAll.Count)
+				|| e.Row>=gridMain.Rows.Count
+				|| !(gridMain.Rows[e.Row].Tag is int)
+				|| (int)gridMain.Rows[e.Row].Tag<0
+				|| (int)gridMain.Rows[e.Row].Tag>=_listTsiTransLogsAll.Count)
 			{
 				return;
 			}
-			_selectedLog=_listTsiTransLogsAll[(int)gridMain.ListGridRows[e.Row].Tag];
+			_selectedLog=_listTsiTransLogsAll[(int)gridMain.Rows[e.Row].Tag];
 			textSelectedFieldName.Clear();
 			textSelectedFieldDetails.Clear();
 			textRawMsg.SelectionChanged-=textRawMsg_SelectionChanged;
@@ -256,8 +256,8 @@ namespace OpenDental {
 			}
 			if(_selectedLog.TransType==TsiTransType.Agg) {//When an aggregate row is selected, then also highlight the rows which belong to the aggregate.
 				//Rows which belong to the aggregate should all be visible, since the date/time for all the rows should be within 1 second of each other.
-				for(int i=0;i<gridMain.ListGridRows.Count;i++) {
-					TsiTransLog tsiTransLogCur=_listTsiTransLogsAll[(int)gridMain.ListGridRows[i].Tag];
+				for(int i=0;i<gridMain.Rows.Count;i++) {
+					TsiTransLog tsiTransLogCur=_listTsiTransLogsAll[(int)gridMain.Rows[i].Tag];
 					if(tsiTransLogCur.AggTransLogNum==_selectedLog.TsiTransLogNum) {
 						gridMain.SetSelected(i,true);
 					}
@@ -268,7 +268,7 @@ namespace OpenDental {
 		private void textRawMsg_SelectionChanged(object sender,EventArgs e) {			
 			textSelectedFieldName.Clear();
 			textSelectedFieldDetails.Clear();
-			if(gridMain.GetSelectedIndex()<0 || gridMain.GetSelectedIndex()>=gridMain.ListGridRows.Count || !(gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag is int)) {
+			if(gridMain.GetSelectedIndex()<0 || gridMain.GetSelectedIndex()>=gridMain.Rows.Count || !(gridMain.Rows[gridMain.GetSelectedIndex()].Tag is int)) {
 				return;//because gridMain.SelectedTag will return default(T), which is 0 for type int and we don't want to use 0 unless it's actually selected
 			}
 			int selectedLogIndex=gridMain.SelectedTag<int>();
@@ -474,11 +474,11 @@ namespace OpenDental {
 		}
 
 		private void menuItemGoTo_Click(object sender,EventArgs e) {
-			if(gridMain.SelectedGridRows.Count!=1) {
+			if(gridMain.SelectedRows.Count!=1) {
 				MessageBox.Show("Please select one TSI transaction log first.");
 				return;
 			}
-			object logIndex=gridMain.SelectedGridRows[0].Tag;//Index is original location in _listTsiTransLogsAll
+			object logIndex=gridMain.SelectedRows[0].Tag;//Index is original location in _listTsiTransLogsAll
 			if(!(logIndex is int) || (int)logIndex<0 || (int)logIndex>=_listTsiTransLogsAll.Count) {
 				return;
 			}

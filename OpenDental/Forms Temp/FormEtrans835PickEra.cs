@@ -24,17 +24,17 @@ namespace OpenDental {
 
 		private void FillGridEras() {
 			gridEras.BeginUpdate();
-			gridEras.ListGridColumns.Clear();
-			gridEras.ListGridColumns.Add(new UI.GridColumn("Carrier",200));
-			gridEras.ListGridColumns.Add(new UI.GridColumn("Date Rec'd",70,HorizontalAlignment.Center));
-			gridEras.ListGridColumns.Add(new UI.GridColumn("Note",70){ IsWidthDynamic=true });
-			gridEras.ListGridRows.Clear();
+			gridEras.Columns.Clear();
+			gridEras.Columns.Add(new UI.GridColumn("Carrier",200));
+			gridEras.Columns.Add(new UI.GridColumn("Date Rec'd",70,HorizontalAlignment.Center));
+			gridEras.Columns.Add(new UI.GridColumn("Note",70){ IsWidthDynamic=true });
+			gridEras.Rows.Clear();
 			for(int i=0;i<_listEtrans.Count;i++) {
 				UI.GridRow row=new UI.GridRow();
 				row.Cells.Add(_listEtrans[i].CarrierNameRaw);
 				row.Cells.Add(_listEtrans[i].DateTimeTrans.ToShortDateString());
 				row.Cells.Add(_listEtrans[i].Note);
-				gridEras.ListGridRows.Add(row);
+				gridEras.Rows.Add(row);
 			}
 			gridEras.EndUpdate();
 		}

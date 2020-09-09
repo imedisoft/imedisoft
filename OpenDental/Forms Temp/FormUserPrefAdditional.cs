@@ -29,12 +29,12 @@ namespace OpenDental {
 		private void FillGrid() {
 			Cursor=Cursors.WaitCursor;
 			gridUserProperties.BeginUpdate();
-			gridUserProperties.ListGridColumns.Clear();
+			gridUserProperties.Columns.Clear();
 			GridColumn col=new GridColumn("Clinic",120);
-			gridUserProperties.ListGridColumns.Add(col);
+			gridUserProperties.Columns.Add(col);
 			col=new GridColumn("DoseSpot User ID",120,true);
-			gridUserProperties.ListGridColumns.Add(col);
-			gridUserProperties.ListGridRows.Clear();
+			gridUserProperties.Columns.Add(col);
+			gridUserProperties.Rows.Clear();
 			GridRow row;
 			//UserOdPref userPrefDefault=_listUserPref.Find(x => x.ClinicNum==0);
 			//Doesn't exist in Db, create one

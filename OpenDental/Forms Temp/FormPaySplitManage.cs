@@ -82,25 +82,25 @@ namespace OpenDental {
 		private void FillGridSplits() {
 			//Fill left grid with paysplits created
 			gridSplits.BeginUpdate();
-			gridSplits.ListGridColumns.Clear();
+			gridSplits.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Date",65,HorizontalAlignment.Center);
-			gridSplits.ListGridColumns.Add(col);
+			gridSplits.Columns.Add(col);
 			col=new GridColumn("Prov",40);
-			gridSplits.ListGridColumns.Add(col);
+			gridSplits.Columns.Add(col);
 			if(PrefC.HasClinicsEnabled) {//Clinics
 				col=new GridColumn("Clinic",40);
-				gridSplits.ListGridColumns.Add(col);
+				gridSplits.Columns.Add(col);
 			}
 			col=new GridColumn("Patient",100);
-			gridSplits.ListGridColumns.Add(col);
+			gridSplits.Columns.Add(col);
 			col=new GridColumn("ProcCode",60);
-			gridSplits.ListGridColumns.Add(col);
+			gridSplits.Columns.Add(col);
 			col=new GridColumn("Type",100);
-			gridSplits.ListGridColumns.Add(col);
+			gridSplits.Columns.Add(col);
 			col=new GridColumn("Amount",55,HorizontalAlignment.Right);
-			gridSplits.ListGridColumns.Add(col);
-			gridSplits.ListGridRows.Clear();
+			gridSplits.Columns.Add(col);
+			gridSplits.Rows.Clear();
 			GridRow row;
 			decimal splitTotal=0;
 			for(int i=0;i<ListSplitsCur.Count;i++) {
@@ -142,7 +142,7 @@ namespace OpenDental {
 					row.Cells[row.Cells.Count-1].ForeColor=Color.Red;
 				}
 				row.Cells.Add(ListSplitsCur[i].SplitAmt.ToString("f"));//Amount
-				gridSplits.ListGridRows.Add(row);
+				gridSplits.Rows.Add(row);
 			}
 			textSplitTotal.Text=POut.Decimal(splitTotal);
 			gridSplits.EndUpdate();
@@ -153,29 +153,29 @@ namespace OpenDental {
 		private void FillGridCharges() {
 			//Fill right-hand grid with all the charges, filtered based on checkbox.
 			gridCharges.BeginUpdate();
-			gridCharges.ListGridColumns.Clear();
+			gridCharges.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Date",65);
-			gridCharges.ListGridColumns.Add(col);
+			gridCharges.Columns.Add(col);
 			col=new GridColumn("Prov",40);
-			gridCharges.ListGridColumns.Add(col);
+			gridCharges.Columns.Add(col);
 			if(PrefC.HasClinicsEnabled) {//Clinics
 				col=new GridColumn("Clinic",40);
-				gridCharges.ListGridColumns.Add(col);
+				gridCharges.Columns.Add(col);
 			}
 			col=new GridColumn("Patient",100);
-			gridCharges.ListGridColumns.Add(col);
+			gridCharges.Columns.Add(col);
 			col=new GridColumn("ProcCode",60);
-			gridCharges.ListGridColumns.Add(col);
+			gridCharges.Columns.Add(col);
 			col=new GridColumn("Type",100);
-			gridCharges.ListGridColumns.Add(col);
+			gridCharges.Columns.Add(col);
 			col=new GridColumn("Amt Orig",55,HorizontalAlignment.Right);
-			gridCharges.ListGridColumns.Add(col);
+			gridCharges.Columns.Add(col);
 			col=new GridColumn("Amt Start",55,HorizontalAlignment.Right);
-			gridCharges.ListGridColumns.Add(col);
+			gridCharges.Columns.Add(col);
 			col=new GridColumn("Amt End",55,HorizontalAlignment.Right);
-			gridCharges.ListGridColumns.Add(col);
-			gridCharges.ListGridRows.Clear();
+			gridCharges.Columns.Add(col);
+			gridCharges.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listAccountCharges.Count;i++) {
 				AccountEntry entryCharge=_listAccountCharges[i];
@@ -184,8 +184,8 @@ namespace OpenDental {
 					if(entryCharge.AmountEnd!=0) {
 						isFound=true;
 					}
-					for(int j=0;j<gridSplits.ListGridRows.Count;j++) {
-						PaySplit entryCredit=(PaySplit)gridSplits.ListGridRows[j].Tag;
+					for(int j=0;j<gridSplits.Rows.Count;j++) {
+						PaySplit entryCredit=(PaySplit)gridSplits.Rows[j].Tag;
 						if(entryCharge.SplitCollection.Contains(entryCredit)) 
 							//Charge is paid for by a split in this payment, display it.
 						{
@@ -234,7 +234,7 @@ namespace OpenDental {
 				row.Cells.Add(entryCharge.AmountOriginal.ToString("f"));//Amount Original
 				row.Cells.Add(entryCharge.AmountAvailable.ToString("f"));//Amount Start
 				row.Cells.Add(entryCharge.AmountEnd.ToString("f"));//Amount End
-				gridCharges.ListGridRows.Add(row);
+				gridCharges.Rows.Add(row);
 			}
 			gridCharges.EndUpdate();
 		}
@@ -598,7 +598,7 @@ namespace OpenDental {
 			List<long> listPayPlanChargeNum=new List<long>();
 			for(int i=gridSplits.SelectedIndices.Length-1;i>=0;i--) {
 				int idx=gridSplits.SelectedIndices[i];
-				PaySplit paySplit=(PaySplit)gridSplits.ListGridRows[idx].Tag;
+				PaySplit paySplit=(PaySplit)gridSplits.Rows[idx].Tag;
 				if(paySplit.DateEntry!=DateTime.MinValue && !Security.IsAuthorized(Permissions.PaymentEdit,paySplit.DatePay,suppressMessage)) {
 					suppressMessage=true;
 					continue;//Don't delete this paysplit
@@ -666,7 +666,7 @@ namespace OpenDental {
 		
 		///<summary>Allows editing of an individual double clicked paysplit entry.</summary>
 		private void gridSplits_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			PaySplit paySplitOld=(PaySplit)gridSplits.ListGridRows[e.Row].Tag;
+			PaySplit paySplitOld=(PaySplit)gridSplits.Rows[e.Row].Tag;
 			PaySplit paySplit=paySplitOld.Copy();
 			if(paySplit.DateEntry!=DateTime.MinValue && !Security.IsAuthorized(Permissions.PaymentEdit,paySplit.DatePay,false)) {
 				return;
@@ -703,9 +703,9 @@ namespace OpenDental {
 		private void HighlightChargesForSplits() {
 			gridCharges.SetSelected(false);
 			for(int i=0;i<gridSplits.SelectedIndices.Length;i++) {
-				PaySplit paySplit=(PaySplit)gridSplits.ListGridRows[gridSplits.SelectedIndices[i]].Tag;
-				for(int j=0;j<gridCharges.ListGridRows.Count;j++) {
-					AccountEntry accountEntryCharge=(AccountEntry)gridCharges.ListGridRows[j].Tag;
+				PaySplit paySplit=(PaySplit)gridSplits.Rows[gridSplits.SelectedIndices[i]].Tag;
+				for(int j=0;j<gridCharges.Rows.Count;j++) {
+					AccountEntry accountEntryCharge=(AccountEntry)gridCharges.Rows[j].Tag;
 					if(accountEntryCharge.SplitCollection.Contains(paySplit)) {
 						gridCharges.SetSelected(j,true);
 					}
@@ -717,9 +717,9 @@ namespace OpenDental {
 		private void gridCharges_CellClick(object sender,ODGridClickEventArgs e) {
 			gridSplits.SetSelected(false);
 			for(int i=0;i<gridCharges.SelectedIndices.Length;i++) {
-				AccountEntry accountEntryCharge=(AccountEntry)gridCharges.ListGridRows[gridCharges.SelectedIndices[i]].Tag;
-				for(int j=0;j<gridSplits.ListGridRows.Count;j++) {
-					PaySplit paySplit=(PaySplit)gridSplits.ListGridRows[j].Tag;
+				AccountEntry accountEntryCharge=(AccountEntry)gridCharges.Rows[gridCharges.SelectedIndices[i]].Tag;
+				for(int j=0;j<gridSplits.Rows.Count;j++) {
+					PaySplit paySplit=(PaySplit)gridSplits.Rows[j].Tag;
 					if(accountEntryCharge.SplitCollection.Contains(paySplit)) {
 						gridSplits.SetSelected(j,true);
 					}
@@ -760,7 +760,7 @@ namespace OpenDental {
 		///<summary>Creates paysplits for selected charges if there is enough payment left.</summary>
 		private void butAddSplit_Click(object sender,EventArgs e) {
 			for(int i=0;i<gridCharges.SelectedIndices.Length;i++) {
-				AccountEntry charge=(AccountEntry)gridCharges.ListGridRows[gridCharges.SelectedIndices[i]].Tag;
+				AccountEntry charge=(AccountEntry)gridCharges.Rows[gridCharges.SelectedIndices[i]].Tag;
 				CreateSplit(charge,PaymentAmt);
 			}
 			FillGridSplits();//Fills charge grid too.
@@ -771,13 +771,13 @@ namespace OpenDental {
 			for(int i=0;i<gridCharges.SelectedIndices.Length;i++) {
 				string chargeDescript="";
 				if(PrefC.HasClinicsEnabled) {//Clinics
-					chargeDescript=gridCharges.ListGridRows[gridCharges.SelectedIndices[i]].Cells[4].Text;
+					chargeDescript=gridCharges.Rows[gridCharges.SelectedIndices[i]].Cells[4].Text;
 				}
 				else {
-					chargeDescript=gridCharges.ListGridRows[gridCharges.SelectedIndices[i]].Cells[3].Text;
+					chargeDescript=gridCharges.Rows[gridCharges.SelectedIndices[i]].Cells[3].Text;
 				}
 				FormAmountEdit FormAE=new FormAmountEdit(chargeDescript);
-				AccountEntry selectedEntry=(AccountEntry)gridCharges.ListGridRows[gridCharges.SelectedIndices[i]].Tag;
+				AccountEntry selectedEntry=(AccountEntry)gridCharges.Rows[gridCharges.SelectedIndices[i]].Tag;
 				FormAE.Amount=selectedEntry.AmountEnd;
 				FormAE.ShowDialog();
 				if(FormAE.DialogResult==DialogResult.OK) {

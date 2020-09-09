@@ -49,13 +49,13 @@ namespace OpenDental {
 		private void FillTransfers() {
 			string translationName=gridTransfers.TranslationName;
 			gridTransfers.BeginUpdate();
-			gridTransfers.ListGridColumns.Clear();
-			gridTransfers.ListGridColumns.Add(new GridColumn("Date",65,HorizontalAlignment.Center));
+			gridTransfers.Columns.Clear();
+			gridTransfers.Columns.Add(new GridColumn("Date",65,HorizontalAlignment.Center));
 			if(PrefC.HasClinicsEnabled) {//Clinics
-				gridTransfers.ListGridColumns.Add(new GridColumn("Clinic",80){ IsWidthDynamic=true });
+				gridTransfers.Columns.Add(new GridColumn("Clinic",80){ IsWidthDynamic=true });
 			}
-			gridTransfers.ListGridColumns.Add(new GridColumn("Paid By",80){ IsWidthDynamic=true });
-			gridTransfers.ListGridRows.Clear();
+			gridTransfers.Columns.Add(new GridColumn("Paid By",80){ IsWidthDynamic=true });
+			gridTransfers.Rows.Clear();
 			List<Payment> transfers=Payments.GetTransfers(_famCur.GetPatNums().ToArray());
 			foreach(Payment transfer in transfers.OrderBy(x => x.PayDate)) {
 				GridRow row=new GridRow();
@@ -65,7 +65,7 @@ namespace OpenDental {
 				}
 				row.Cells.Add(_famCur.GetNameInFamFL(transfer.PatNum));
 				row.Tag=transfer;
-				gridTransfers.ListGridRows.Add(row);
+				gridTransfers.Rows.Add(row);
 			}
 			gridTransfers.EndUpdate();
 			gridTransfers.ScrollToEnd();
@@ -74,16 +74,16 @@ namespace OpenDental {
 		///<summary></summary>
 		private void FillGridCharges() {
 			gridImbalances.BeginUpdate();
-			gridImbalances.ListGridColumns.Clear();
-			gridImbalances.ListGridColumns.Add(new GridColumn("Prov",80){ IsWidthDynamic=true });
-			gridImbalances.ListGridColumns.Add(new GridColumn("Patient",80){ IsWidthDynamic=true });
+			gridImbalances.Columns.Clear();
+			gridImbalances.Columns.Add(new GridColumn("Prov",80){ IsWidthDynamic=true });
+			gridImbalances.Columns.Add(new GridColumn("Patient",80){ IsWidthDynamic=true });
 			if(PrefC.HasClinicsEnabled) {
-				gridImbalances.ListGridColumns.Add(new GridColumn("Clinic",80){ IsWidthDynamic=true });
+				gridImbalances.Columns.Add(new GridColumn("Clinic",80){ IsWidthDynamic=true });
 			}
-			gridImbalances.ListGridColumns.Add(new GridColumn("Charges",80,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-			gridImbalances.ListGridColumns.Add(new GridColumn("Credits",80,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-			gridImbalances.ListGridColumns.Add(new GridColumn("Balance",80,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-			gridImbalances.ListGridRows.Clear();
+			gridImbalances.Columns.Add(new GridColumn("Charges",80,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
+			gridImbalances.Columns.Add(new GridColumn("Credits",80,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
+			gridImbalances.Columns.Add(new GridColumn("Balance",80,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
+			gridImbalances.Rows.Clear();
 			_constructResults=PaymentEdit.ConstructAndLinkChargeCredits(_famCur.GetPatNums(),_patCur.PatNum,
 				new List<PaySplit>(),new Payment(),new List<AccountEntry>(),isIncomeTxfr:true);
 			//Get information for any patient that is not currently present within the family.
@@ -115,7 +115,7 @@ namespace OpenDental {
 				row.Cells.Add(kvp.Value.ListNegativeEntries.Sum(x => x.AmountEnd).ToString("c"));
 				row.Cells.Add(kvp.Value.ListAccountEntries.Sum(x => x.AmountEnd).ToString("c"));
 				row.Tag=kvp.Value.ListAccountEntries;
-				gridImbalances.ListGridRows.Add(row);
+				gridImbalances.Rows.Add(row);
 			}
 			gridImbalances.EndUpdate();
 		}
@@ -143,7 +143,7 @@ namespace OpenDental {
 		}
 
 		private void gridTransfers_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			FormPayment FormPayment2=new FormPayment(_patCur,_famCur,(Payment)gridTransfers.ListGridRows[e.Row].Tag,false);
+			FormPayment FormPayment2=new FormPayment(_patCur,_famCur,(Payment)gridTransfers.Rows[e.Row].Tag,false);
 			FormPayment2.IsNew=false;
 			FormPayment2.ShowDialog();
 			RefreshWindow();//The user could have done anything, refresh the UI just to be safe.

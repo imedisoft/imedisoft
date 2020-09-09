@@ -205,18 +205,18 @@ namespace OpenDental{
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			gridMain.AllowSortingByColumn=true;
 			col=new GridColumn("Field Name",200);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Field Type",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if(!_isSelectionMode) {
 				col=new GridColumn("Hidden",150,HorizontalAlignment.Center);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listPatFieldDefs.Count;i++) {
 				row=new GridRow();
@@ -225,7 +225,7 @@ namespace OpenDental{
 				if(!_isSelectionMode) {
 					row.Cells.Add(_listPatFieldDefs[i].IsHidden?"X":"");
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

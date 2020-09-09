@@ -91,18 +91,18 @@ namespace Imedisoft.Forms
 			var selectedClinicIndices = new List<int>();
 
 			clinicsGrid.BeginUpdate();
-			clinicsGrid.ListGridColumns.Clear();
-			clinicsGrid.ListGridColumns.Add(new GridColumn("Abbr", 120));
-			clinicsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Description, 200));
-			clinicsGrid.ListGridColumns.Add(new GridColumn("Specialty", 150));
+			clinicsGrid.Columns.Clear();
+			clinicsGrid.Columns.Add(new GridColumn("Abbr", 120));
+			clinicsGrid.Columns.Add(new GridColumn(Translation.Common.Description, 200));
+			clinicsGrid.Columns.Add(new GridColumn("Specialty", 150));
 
 			if (!IsSelectionMode)
 			{
-				clinicsGrid.ListGridColumns.Add(new GridColumn("Patients", 80, HorizontalAlignment.Center));
-				clinicsGrid.ListGridColumns.Add(new GridColumn("Hidden", 40, HorizontalAlignment.Center) { IsWidthDynamic = true });
+				clinicsGrid.Columns.Add(new GridColumn("Patients", 80, HorizontalAlignment.Center));
+				clinicsGrid.Columns.Add(new GridColumn("Hidden", 40, HorizontalAlignment.Center) { IsWidthDynamic = true });
 			}
 
-			clinicsGrid.ListGridRows.Clear();
+			clinicsGrid.Rows.Clear();
 
 			var clinicSpecialityDescriptions = Definitions.GetByCategory(DefinitionCategory.ClinicSpecialty, true).ToDictionary(x => x.Id, x => x.Name);
 			var clinicSpecialityLinks = DefLinks.GetListByFKeys(clinics.Select(x => x.Id).ToList(), DefLinkType.Clinic);
@@ -135,11 +135,11 @@ namespace Imedisoft.Forms
 
 				gridRow.Tag = clinic;
 
-				clinicsGrid.ListGridRows.Add(gridRow);
+				clinicsGrid.Rows.Add(gridRow);
 
 				if (selectedClinicsIds.Contains(clinic.Id))
 				{
-					selectedClinicIndices.Add(clinicsGrid.ListGridRows.Count - 1);
+					selectedClinicIndices.Add(clinicsGrid.Rows.Count - 1);
 				}
 			}
 

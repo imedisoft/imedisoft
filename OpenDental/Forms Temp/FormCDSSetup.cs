@@ -27,7 +27,7 @@ namespace OpenDental
 				return;//name and group name columns.
 			}
 			for(int i=0;i<_listCdsPermissions.Count;i++) {
-				if(_listCdsPermissions[i].CDSPermissionNum!=(long)gridMain.ListGridRows[e.Row].Tag) {
+				if(_listCdsPermissions[i].CDSPermissionNum!=(long)gridMain.Rows[e.Row].Tag) {
 					continue;
 				}
 				switch(e.Col){
@@ -76,33 +76,33 @@ namespace OpenDental
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("User Name",120);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Group Name",120);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Show CDS",80,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Show i",80,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Edit CDS",80,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Source",80,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Problem",80,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Medication",80,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Allergy",80,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Demographic",80,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Labs",80,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Vitals",80,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			List<Userod> ListUsers=Userods.GetAll(true);
 			UserGroup[] ArrayGroups=UserGroups.GetDeepCopy().ToArray();
@@ -134,7 +134,7 @@ namespace OpenDental
 					row.Tag=_listCdsPermissions[p].CDSPermissionNum;//used to edit correct permission.
 					break;
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			//}
 			//else {//by user group

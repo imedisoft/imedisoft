@@ -37,7 +37,7 @@ namespace OpenDental {
 
 		private void FillGrid(){
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			int opNameWidth=180;
 			int clinicWidth=85;
 			if(!PrefC.HasClinicsEnabled) {
@@ -45,26 +45,26 @@ namespace OpenDental {
 				opNameWidth+=clinicWidth;
 			}
 			GridColumn col=new GridColumn("Op Name",opNameWidth);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Abbrev",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("IsHidden",64,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
 				col=new GridColumn("Clinic",clinicWidth);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			col=new GridColumn("Provider",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Hygienist",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("IsHygiene",64,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("IsWebSched",74,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("IsNewPat",50,HorizontalAlignment.Center){ IsWidthDynamic=true };
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			List<long> listWSNPAOperatoryNums=Operatories.GetOpsForWebSchedNewPatAppts().Select(x => x.Id).ToList();
 			foreach(Operatory opCur in _listOps) {
@@ -91,7 +91,7 @@ namespace OpenDental {
 				row.Cells.Add(opCur.IsWebSched?"X":"");
 				row.Cells.Add(listWSNPAOperatoryNums.Contains(opCur.Id) ? "X" : "");
 				row.Tag=opCur;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -102,7 +102,7 @@ namespace OpenDental {
 				MessageBox.Show("Please select an item first.");
 				return false;
 			}
-			SelectedOperatoryNum=((Operatory)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag).Id;
+			SelectedOperatoryNum=((Operatory)gridMain.Rows[gridMain.GetSelectedIndex()].Tag).Id;
 			return true;
 		}
 		

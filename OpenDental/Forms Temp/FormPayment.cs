@@ -515,7 +515,7 @@ namespace OpenDental {
 
 		private void butPay_Click(object sender,EventArgs e) {
 			if(checkPayTypeNone.Checked) {//Income transfer mode.
-				if(!gridSplits.ListGridRows.IsNullOrEmpty()) {
+				if(!gridSplits.Rows.IsNullOrEmpty()) {
 					if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Performing a transfer will overwrite all Current Payment Splits.  Continue?")) {
 						return;
 					}
@@ -675,7 +675,7 @@ namespace OpenDental {
 
 		///<summary>Allows editing of an individual double clicked paysplit entry.</summary>
 		private void gridSplits_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			PaySplit paySplitOld=(PaySplit)gridSplits.ListGridRows[e.Row].Tag;
+			PaySplit paySplitOld=(PaySplit)gridSplits.Rows[e.Row].Tag;
 			PaySplit paySplit=paySplitOld.Copy();
 			if(paySplit.DateEntry!=DateTime.MinValue && !Security.IsAuthorized(Permissions.PaymentEdit,paySplit.DatePay,false)) {
 				return;
@@ -1342,18 +1342,18 @@ namespace OpenDental {
 				return;
 			}
 			gridAllocated.BeginUpdate();
-			gridAllocated.ListGridColumns.Clear();
+			gridAllocated.Columns.Clear();
 			GridColumn col=new GridColumn("Date",80);
-			gridAllocated.ListGridColumns.Add(col);
+			gridAllocated.Columns.Add(col);
 			col=new GridColumn("Clinic",80);
-			gridAllocated.ListGridColumns.Add(col);
+			gridAllocated.Columns.Add(col);
 			col=new GridColumn("Patient",140);
-			gridAllocated.ListGridColumns.Add(col);
+			gridAllocated.Columns.Add(col);
 			col=new GridColumn("Amount",80,HorizontalAlignment.Right);
-			gridAllocated.ListGridColumns.Add(col);
+			gridAllocated.Columns.Add(col);
 			col=new GridColumn("Unearned",50);
-			gridAllocated.ListGridColumns.Add(col);
-			gridAllocated.ListGridRows.Clear();
+			gridAllocated.Columns.Add(col);
+			gridAllocated.Rows.Clear();
 			GridRow row;
 			foreach(PaySplit paySplit in _loadData.ListPaySplitAllocations) {
 				row=new GridRow();
@@ -1362,7 +1362,7 @@ namespace OpenDental {
 				row.Cells.Add(_curFamOrSuperFam.GetNameInFamFL(paySplit.PatNum));
 				row.Cells.Add(paySplit.SplitAmt.ToString("F"));
 				row.Cells.Add(Definitions.GetName(DefinitionCategory.PaySplitUnearnedType,paySplit.UnearnedType));//handles 0 just fine
-				gridAllocated.ListGridRows.Add(row);
+				gridAllocated.Rows.Add(row);
 			}
 			gridAllocated.EndUpdate();
 		}
@@ -1371,7 +1371,7 @@ namespace OpenDental {
 		private void FillGridCharges() {
 			//Fill right-hand grid with all the charges, filtered based on checkbox and filters.
 			gridCharges.BeginUpdate();
-			gridCharges.ListGridColumns.Clear();
+			gridCharges.Columns.Clear();
 			_dictGridChargesPaySplitIndices.Clear();
 			GridColumn col;
 			decimal chargeTotal=0;
@@ -1380,24 +1380,24 @@ namespace OpenDental {
 			#region Group By Provider
 			if(comboGroupBy.SelectedIndex==1) {//Group by 'Provider'
 				col=new GridColumn("Prov",checkPayTypeNone.Checked?70:110);
-				gridCharges.ListGridColumns.Add(col);
+				gridCharges.Columns.Add(col);
 				if(checkPayTypeNone.Checked) {
 					col=new GridColumn("Patient",119);
-					gridCharges.ListGridColumns.Add(col);
+					gridCharges.Columns.Add(col);
 				}
 				col=new GridColumn("Codes",50){ IsWidthDynamic=true,DynamicWeight=1 };
-				gridCharges.ListGridColumns.Add(col);
+				gridCharges.Columns.Add(col);
 				col=new GridColumn("Amt End",70,HorizontalAlignment.Right,GridSortingStrategy.AmountParse);
-				gridCharges.ListGridColumns.Add(col);
-				gridCharges.ListGridRows.Clear();
+				gridCharges.Columns.Add(col);
+				gridCharges.Rows.Clear();
 				var dictProvPatEntries=listOutstandingCharges.Where(x => (checkShowAll.Checked || !x.AmountAvailable.IsZero()))
 					.GroupBy(x => new { x.ProvNum,x.PatNum })
 					.ToDictionary(x => x.Key,x => x.ToList());
 				foreach(var key in dictProvPatEntries.Keys) {
 					foreach(AccountEntry accountEntry in dictProvPatEntries[key]) {
-						AddIndexToDictForPaySplit(gridCharges.ListGridRows.Count,accountEntry,_dictGridChargesPaySplitIndices);
+						AddIndexToDictForPaySplit(gridCharges.Rows.Count,accountEntry,_dictGridChargesPaySplitIndices);
 					}
-					gridCharges.ListGridRows.Add(FillChargesHelper(dictProvPatEntries[key],false));
+					gridCharges.Rows.Add(FillChargesHelper(dictProvPatEntries[key],false));
 					chargeTotal+=dictProvPatEntries[key].Sum(x => x.AmountEnd);
 				}
 			}
@@ -1405,26 +1405,26 @@ namespace OpenDental {
 			#region Group By Clinic and Provider
 			else if(comboGroupBy.SelectedIndex==2) {//Group by 'Clinic and Provider'
 				col=new GridColumn("Prov",checkPayTypeNone.Checked?70:100);
-				gridCharges.ListGridColumns.Add(col);
+				gridCharges.Columns.Add(col);
 				if(checkPayTypeNone.Checked) {
 					col=new GridColumn("Patient",100);
-					gridCharges.ListGridColumns.Add(col);
+					gridCharges.Columns.Add(col);
 				}
 				col=new GridColumn("Clinic",60);
-				gridCharges.ListGridColumns.Add(col);
+				gridCharges.Columns.Add(col);
 				col=new GridColumn("Codes",50){ IsWidthDynamic=true };
-				gridCharges.ListGridColumns.Add(col);
+				gridCharges.Columns.Add(col);
 				col=new GridColumn("Amt End",70,HorizontalAlignment.Right,GridSortingStrategy.AmountParse);
-				gridCharges.ListGridColumns.Add(col);
-				gridCharges.ListGridRows.Clear();
+				gridCharges.Columns.Add(col);
+				gridCharges.Rows.Clear();
 				var dictProvPatClinicEntries=listOutstandingCharges.Where(x => (checkShowAll.Checked || !x.AmountAvailable.IsZero()))
 					.GroupBy(x => new { x.ProvNum,x.PatNum,x.ClinicNum })
 					.ToDictionary(x => x.Key,x => x.ToList());
 				foreach(var key in dictProvPatClinicEntries.Keys) {
 					foreach(AccountEntry accountEntry in dictProvPatClinicEntries[key]) {
-						AddIndexToDictForPaySplit(gridCharges.ListGridRows.Count,accountEntry,_dictGridChargesPaySplitIndices);
+						AddIndexToDictForPaySplit(gridCharges.Rows.Count,accountEntry,_dictGridChargesPaySplitIndices);
 					}
-					gridCharges.ListGridRows.Add(FillChargesHelper(dictProvPatClinicEntries[key],true));
+					gridCharges.Rows.Add(FillChargesHelper(dictProvPatClinicEntries[key],true));
 					chargeTotal+=dictProvPatClinicEntries[key].Sum(x => x.AmountEnd);
 				}
 			}
@@ -1432,28 +1432,28 @@ namespace OpenDental {
 			#region Group By None
 			else { //Group by 'None'
 				col=new GridColumn("Date",65,GridSortingStrategy.DateParse);
-				gridCharges.ListGridColumns.Add(col);
+				gridCharges.Columns.Add(col);
 				col=new GridColumn("Patient",92,GridSortingStrategy.StringCompare);
-				gridCharges.ListGridColumns.Add(col);
+				gridCharges.Columns.Add(col);
 				col=new GridColumn("Prov",40,GridSortingStrategy.StringCompare);
-				gridCharges.ListGridColumns.Add(col);
+				gridCharges.Columns.Add(col);
 				if(PrefC.HasClinicsEnabled) {//Clinics
 					col=new GridColumn("Clinic",55,GridSortingStrategy.StringCompare);
-					gridCharges.ListGridColumns.Add(col);
+					gridCharges.Columns.Add(col);
 				}
 				col=new GridColumn("Code",45,GridSortingStrategy.StringCompare);
-				gridCharges.ListGridColumns.Add(col);
+				gridCharges.Columns.Add(col);
 				col=new GridColumn("Tth",25,GridSortingStrategy.ToothNumberParse);
-				gridCharges.ListGridColumns.Add(col);
+				gridCharges.Columns.Add(col);
 				col=new GridColumn("Type",90,GridSortingStrategy.StringCompare);
-				gridCharges.ListGridColumns.Add(col);
+				gridCharges.Columns.Add(col);
 				col=new GridColumn("AmtOrig",55,HorizontalAlignment.Right,GridSortingStrategy.AmountParse);
-				gridCharges.ListGridColumns.Add(col);
+				gridCharges.Columns.Add(col);
 				col=new GridColumn("AmtAvail",57,HorizontalAlignment.Right,GridSortingStrategy.AmountParse);
-				gridCharges.ListGridColumns.Add(col);
+				gridCharges.Columns.Add(col);
 				col=new GridColumn("AmtEnd",55,HorizontalAlignment.Right,GridSortingStrategy.AmountParse);
-				gridCharges.ListGridColumns.Add(col);
-				gridCharges.ListGridRows.Clear();
+				gridCharges.Columns.Add(col);
+				gridCharges.Rows.Clear();
 				GridRow row;
 				foreach(AccountEntry entryCharge in listOutstandingCharges) {
 					//Filter out those that are paid in full and from other payments if checkbox unchecked.
@@ -1552,14 +1552,14 @@ namespace OpenDental {
 					chargeTotal+=entryCharge.AmountEnd;
 					//Associate every single split for every single account entry that matches this PayPlanChargeNum
 					if(entryCharge.PayPlanChargeNum > 0) {
-						AddIndexToDictForPaySplit(gridCharges.ListGridRows.Count,
+						AddIndexToDictForPaySplit(gridCharges.Rows.Count,
 							listOutstandingCharges.FindAll(x => x.PayPlanChargeNum==entryCharge.PayPlanChargeNum),
 							_dictGridChargesPaySplitIndices);
 					}
 					else {//Just add the index for the splits associated to the current entryCharge.
-						AddIndexToDictForPaySplit(gridCharges.ListGridRows.Count,entryCharge,_dictGridChargesPaySplitIndices);
+						AddIndexToDictForPaySplit(gridCharges.Rows.Count,entryCharge,_dictGridChargesPaySplitIndices);
 					}
-					gridCharges.ListGridRows.Add(row);
+					gridCharges.Rows.Add(row);
 				}
 			}
 			#endregion
@@ -1574,31 +1574,31 @@ namespace OpenDental {
 				.Select(x => x.ProcNum).ToList();
 			_loadData.ListProcsForSplits.AddRange(Procedures.GetManyProc(listMissingProcsNums,false));
 			gridSplits.BeginUpdate();
-			gridSplits.ListGridColumns.Clear();
+			gridSplits.Columns.Clear();
 			_dictGridSplitsPaySplitIndices.Clear();
 			GridColumn col;
 			col=new GridColumn("Date",65,HorizontalAlignment.Center,GridSortingStrategy.DateParse);
-			gridSplits.ListGridColumns.Add(col);
+			gridSplits.Columns.Add(col);
 			col=new GridColumn("Prov",40, GridSortingStrategy.StringCompare);
-			gridSplits.ListGridColumns.Add(col);
+			gridSplits.Columns.Add(col);
 			if(PrefC.HasClinicsEnabled) {//Clinics
 				col=new GridColumn("Clinic",40, GridSortingStrategy.StringCompare);
-				gridSplits.ListGridColumns.Add(col);
+				gridSplits.Columns.Add(col);
 			}
 			col=new GridColumn("Patient",100,GridSortingStrategy.StringCompare);
-			gridSplits.ListGridColumns.Add(col);
+			gridSplits.Columns.Add(col);
 			col=new GridColumn("Code",60, GridSortingStrategy.StringCompare);
-			gridSplits.ListGridColumns.Add(col);
+			gridSplits.Columns.Add(col);
 			col=new GridColumn("Type",100, GridSortingStrategy.StringCompare);
-			gridSplits.ListGridColumns.Add(col);
+			gridSplits.Columns.Add(col);
 			col=new GridColumn("Amount",55,HorizontalAlignment.Right, GridSortingStrategy.AmountParse);
-			gridSplits.ListGridColumns.Add(col);
-			gridSplits.ListGridRows.Clear();
+			gridSplits.Columns.Add(col);
+			gridSplits.Rows.Clear();
 			GridRow row;
 			decimal splitTotal=0;
 			foreach(PaySplit splitCur in _listSplitsCur) {
 				PaySplitHelper paySplitHelper=new PaySplitHelper(splitCur);
-				int index=gridSplits.ListGridRows.Count;
+				int index=gridSplits.Rows.Count;
 				splitTotal+=(decimal)splitCur.SplitAmt;
 				row=new GridRow();
 				row.Tag=splitCur;
@@ -1665,7 +1665,7 @@ namespace OpenDental {
 					listTypeStrs.Add("(split to another family)");
 				}
 				row.Cells.Add(splitCur.SplitAmt.ToString("f"));//Amount
-				gridSplits.ListGridRows.Add(row);
+				gridSplits.Rows.Add(row);
 			}
 			textSplitTotal.Text=splitTotal.ToString("f");
 			gridSplits.EndUpdate();
@@ -1675,33 +1675,33 @@ namespace OpenDental {
 		private void FillGridTreatPlan() {
 			//Fill right-hand grid with all the TP procedures.
 			gridTreatPlan.BeginUpdate();
-			gridTreatPlan.ListGridColumns.Clear();
+			gridTreatPlan.Columns.Clear();
 			_dictGridTreatPlanPaySplitIndices.Clear();
 			GridColumn col;
 			#region Group By None
 			col=new GridColumn("Date",65,GridSortingStrategy.DateParse);
-			gridTreatPlan.ListGridColumns.Add(col);
+			gridTreatPlan.Columns.Add(col);
 			col=new GridColumn("Patient",92,GridSortingStrategy.StringCompare);
-			gridTreatPlan.ListGridColumns.Add(col);
+			gridTreatPlan.Columns.Add(col);
 			col=new GridColumn("Prov",40,GridSortingStrategy.StringCompare);
-			gridTreatPlan.ListGridColumns.Add(col);
+			gridTreatPlan.Columns.Add(col);
 			if(PrefC.HasClinicsEnabled) {//Clinics
 				col=new GridColumn("Clinic",55,GridSortingStrategy.StringCompare);
-				gridTreatPlan.ListGridColumns.Add(col);
+				gridTreatPlan.Columns.Add(col);
 			}
 			col=new GridColumn("Code",45,GridSortingStrategy.StringCompare);
-			gridTreatPlan.ListGridColumns.Add(col);
+			gridTreatPlan.Columns.Add(col);
 			col=new GridColumn("Tth",25,GridSortingStrategy.ToothNumberParse);
-			gridTreatPlan.ListGridColumns.Add(col);
+			gridTreatPlan.Columns.Add(col);
 			col=new GridColumn("Type",90,GridSortingStrategy.StringCompare);
-			gridTreatPlan.ListGridColumns.Add(col);
+			gridTreatPlan.Columns.Add(col);
 			col=new GridColumn("AmtOrig",55,HorizontalAlignment.Right,GridSortingStrategy.AmountParse);
-			gridTreatPlan.ListGridColumns.Add(col);
+			gridTreatPlan.Columns.Add(col);
 			col=new GridColumn("AmtAvail",57,HorizontalAlignment.Right,GridSortingStrategy.AmountParse);
-			gridTreatPlan.ListGridColumns.Add(col);
+			gridTreatPlan.Columns.Add(col);
 			col=new GridColumn("AmtEnd",55,HorizontalAlignment.Right,GridSortingStrategy.AmountParse);
-			gridTreatPlan.ListGridColumns.Add(col);
-			gridTreatPlan.ListGridRows.Clear();
+			gridTreatPlan.Columns.Add(col);
+			gridTreatPlan.Rows.Clear();
 			GridRow row;
 			foreach(AccountEntry entryCharge in _listAccountCharges) {
 				if(entryCharge.GetType()!=typeof(Procedure) || ((Procedure)entryCharge.Tag).ProcStatus!=ProcStat.TP) {
@@ -1753,8 +1753,8 @@ namespace OpenDental {
 				row.Cells.Add(entryCharge.AmountOriginal.ToString("f"));//Amount Original
 				row.Cells.Add(entryCharge.AmountAvailable.ToString("f"));//Amount Start
 				row.Cells.Add(entryCharge.AmountEnd.ToString("f"));//Amount End
-				AddIndexToDictForPaySplit(gridTreatPlan.ListGridRows.Count,entryCharge,_dictGridTreatPlanPaySplitIndices);
-				gridTreatPlan.ListGridRows.Add(row);
+				AddIndexToDictForPaySplit(gridTreatPlan.Rows.Count,entryCharge,_dictGridTreatPlanPaySplitIndices);
+				gridTreatPlan.Rows.Add(row);
 			}
 			#endregion
 			gridTreatPlan.EndUpdate();

@@ -1123,12 +1123,12 @@ namespace OpenDental
 		private void FillEmps()
 		{
 			gridEmp.BeginUpdate();
-			gridEmp.ListGridColumns.Clear();
+			gridEmp.Columns.Clear();
 			GridColumn col = new GridColumn("Employee", 180);
-			gridEmp.ListGridColumns.Add(col);
+			gridEmp.Columns.Add(col);
 			col = new GridColumn("Status", 104);
-			gridEmp.ListGridColumns.Add(col);
-			gridEmp.ListGridRows.Clear();
+			gridEmp.Columns.Add(col);
+			gridEmp.Rows.Clear();
 			UI.GridRow row;
 			if (PrefC.HasClinicsEnabled)
 			{
@@ -1144,7 +1144,7 @@ namespace OpenDental
 				row.Cells.Add(Employees.GetNameFL(emp));
 				row.Cells.Add(ConvertClockStatus(emp.ClockStatus));//Translated in function.
 				row.Tag = emp;
-				gridEmp.ListGridRows.Add(row);
+				gridEmp.Rows.Add(row);
 			}
 			gridEmp.EndUpdate();
 			listStatus.Items.Clear();
@@ -1287,7 +1287,7 @@ namespace OpenDental
 
 		private void butClockIn_Click(object sender, System.EventArgs e)
 		{
-			if (gridEmp.SelectedGridRows.Count > 1)
+			if (gridEmp.SelectedRows.Count > 1)
 			{
 				SelectEmpI(-1);
 				return;
@@ -1320,7 +1320,7 @@ namespace OpenDental
 
 		private void butClockOut_Click(object sender, System.EventArgs e)
 		{
-			if (gridEmp.SelectedGridRows.Count > 1)
+			if (gridEmp.SelectedRows.Count > 1)
 			{
 				SelectEmpI(-1);
 				return;
@@ -1371,7 +1371,7 @@ namespace OpenDental
 
 		private void gridEmp_CellDoubleClick(object sender, ODGridClickEventArgs e)
 		{
-			if (gridEmp.SelectedGridRows.Count > 1)
+			if (gridEmp.SelectedRows.Count > 1)
 			{//Just in case
 				return;
 			}
@@ -1392,7 +1392,7 @@ namespace OpenDental
 
 		private void butTimeCard_Click(object sender, System.EventArgs e)
 		{
-			if (gridEmp.SelectedGridRows.Count > 1)
+			if (gridEmp.SelectedRows.Count > 1)
 			{
 				SelectEmpI(-1);
 				return;
@@ -1410,7 +1410,7 @@ namespace OpenDental
 
 		private void butBreaks_Click(object sender, EventArgs e)
 		{
-			if (gridEmp.SelectedGridRows.Count > 1)
+			if (gridEmp.SelectedRows.Count > 1)
 			{
 				SelectEmpI(-1);
 				return;
@@ -1429,7 +1429,7 @@ namespace OpenDental
 
 		private void butViewSched_Click(object sender, EventArgs e)
 		{
-			List<long> listPreSelectedEmpNums = gridEmp.SelectedGridRows.Select(x => ((Employee)x.Tag).Id).ToList();
+			List<long> listPreSelectedEmpNums = gridEmp.SelectedRows.Select(x => ((Employee)x.Tag).Id).ToList();
 			List<long> listPreSelectedProvNums = Userods.GetWhere(x => listPreSelectedEmpNums.Contains(x.EmployeeId.Value) && x.ProviderId != 0)
 				.Select(x => x.ProviderId.Value)
 				.ToList();
@@ -1489,19 +1489,19 @@ namespace OpenDental
 			}
 			List<long> listSelectedSigMessageNums = gridMessages.SelectedTags<SigMessage>().Select(x => x.SigMessageNum).ToList();
 			gridMessages.BeginUpdate();
-			gridMessages.ListGridColumns.Clear();
+			gridMessages.Columns.Clear();
 			GridColumn col = new GridColumn("To", 60);
-			gridMessages.ListGridColumns.Add(col);
+			gridMessages.Columns.Add(col);
 			col = new GridColumn("From", 60);
-			gridMessages.ListGridColumns.Add(col);
+			gridMessages.Columns.Add(col);
 			col = new GridColumn("Sent", 63);
-			gridMessages.ListGridColumns.Add(col);
+			gridMessages.Columns.Add(col);
 			col = new GridColumn("Ack'd", 63);
 			col.TextAlign = HorizontalAlignment.Center;
-			gridMessages.ListGridColumns.Add(col);
+			gridMessages.Columns.Add(col);
 			col = new GridColumn("Text", 274);
-			gridMessages.ListGridColumns.Add(col);
-			gridMessages.ListGridRows.Clear();
+			gridMessages.Columns.Add(col);
+			gridMessages.Rows.Clear();
 			GridRow row;
 			string str;
 			foreach (SigMessage sigMessage in _listSigMessages)
@@ -1569,12 +1569,12 @@ namespace OpenDental
 				}
 				row.Cells.Add(str);
 				row.Tag = sigMessage.Copy();
-				gridMessages.ListGridRows.Add(row);
+				gridMessages.Rows.Add(row);
 			}
 			gridMessages.EndUpdate();
-			for (int i = 0; i < gridMessages.ListGridRows.Count; i++)
+			for (int i = 0; i < gridMessages.Rows.Count; i++)
 			{
-				SigMessage sigMessage = (SigMessage)gridMessages.ListGridRows[i].Tag;
+				SigMessage sigMessage = (SigMessage)gridMessages.Rows[i].Tag;
 				if (sigMessage.SigMessageNum.In(listSelectedSigMessageNums))
 				{
 					gridMessages.SetSelected(i, true);
@@ -1693,7 +1693,7 @@ namespace OpenDental
 			SigMessage sigMessage;
 			for (int i = gridMessages.SelectedIndices.Length - 1; i >= 0; i--)
 			{//go backwards so that we can remove rows without problems.
-				sigMessage = (SigMessage)gridMessages.ListGridRows[gridMessages.SelectedIndices[i]].Tag;
+				sigMessage = (SigMessage)gridMessages.Rows[gridMessages.SelectedIndices[i]].Tag;
 				if (sigMessage.AckDateTime.Year > 1880)
 				{
 					continue;//totally ignore if trying to ack a previously acked signal
@@ -1702,13 +1702,13 @@ namespace OpenDental
 				//change the grid temporarily until the next timer event.  This makes it feel more responsive.
 				if (checkIncludeAck.Checked)
 				{
-					gridMessages.ListGridRows[gridMessages.SelectedIndices[i]].Cells[3].Text = sigMessage.MessageDateTime.ToShortTimeString();
+					gridMessages.Rows[gridMessages.SelectedIndices[i]].Cells[3].Text = sigMessage.MessageDateTime.ToShortTimeString();
 				}
 				else
 				{
 					try
 					{
-						gridMessages.ListGridRows.RemoveAt(gridMessages.SelectedIndices[i]);
+						gridMessages.Rows.RemoveAt(gridMessages.SelectedIndices[i]);
 					}
 					catch
 					{

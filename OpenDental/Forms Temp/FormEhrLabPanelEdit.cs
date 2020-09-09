@@ -39,21 +39,21 @@ namespace OpenDental {
 	
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Test Date",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("LOINC",75);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Test Performed",130);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("ResultVal",60);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Units",45);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Range",55);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			listResults = LabResults.GetForPanel(PanelCur.LabPanelNum);
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<listResults.Count;i++) {
 				row=new GridRow();
@@ -63,7 +63,7 @@ namespace OpenDental {
 				row.Cells.Add(listResults[i].ObsValue);
 				row.Cells.Add(listResults[i].ObsUnits);
 				row.Cells.Add(listResults[i].ObsRange);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

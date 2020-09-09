@@ -116,12 +116,12 @@ namespace Imedisoft.Forms
             }
 
 			providersGrid.BeginUpdate();
-			providersGrid.ListGridColumns.Clear();
-			providersGrid.ListGridColumns.Add(new GridColumn(Translation.Common.ID, 60));
-			providersGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Abbr, 80));
-			providersGrid.ListGridColumns.Add(new GridColumn(Translation.Common.FirstName, 100));
-			providersGrid.ListGridColumns.Add(new GridColumn(Translation.Common.LastName, 100));
-			providersGrid.ListGridRows.Clear();
+			providersGrid.Columns.Clear();
+			providersGrid.Columns.Add(new GridColumn(Translation.Common.ID, 60));
+			providersGrid.Columns.Add(new GridColumn(Translation.Common.Abbr, 80));
+			providersGrid.Columns.Add(new GridColumn(Translation.Common.FirstName, 100));
+			providersGrid.Columns.Add(new GridColumn(Translation.Common.LastName, 100));
+			providersGrid.Rows.Clear();
 
 			var filteredProviders = providers != null && !showAllCheckBox.Checked ?
 				providers : Providers.GetFilteredProviderList(providerId, lastNameTextBox.Text, firstNameTextBox.Text, classId);
@@ -140,7 +140,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(provider.FirstName);
 				gridRow.Tag = provider;
 
-				providersGrid.ListGridRows.Add(gridRow);
+				providersGrid.Rows.Add(gridRow);
 			}
 
 			providersGrid.EndUpdate();

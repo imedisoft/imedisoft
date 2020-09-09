@@ -25,13 +25,13 @@ namespace OpenDental {
 
 		private void FillProviders() {
 			gridProviders.BeginUpdate();
-			gridProviders.ListGridRows.Clear();
-			gridProviders.ListGridColumns.Clear();
-			gridProviders.ListGridColumns.Add(new UI.GridColumn("Type",74,HorizontalAlignment.Left));//Column width determined in LayoutProviders().
-			gridProviders.ListGridColumns.Add(new UI.GridColumn("IsEnabled",74,HorizontalAlignment.Center));//Column width determined in LayoutProviders().
-			gridProviders.ListGridColumns.Add(new UI.GridColumn("IsIDPd",74,HorizontalAlignment.Center));//Column width determined in LayoutProviders().
-			gridProviders.ListGridColumns.Add(new UI.GridColumn("IsEPCS",74,HorizontalAlignment.Center));
-			gridProviders.ListGridColumns.Add(new UI.GridColumn("NPI",74,HorizontalAlignment.Left){ IsWidthDynamic=true });//Column width determined in LayoutProviders().
+			gridProviders.Rows.Clear();
+			gridProviders.Columns.Clear();
+			gridProviders.Columns.Add(new UI.GridColumn("Type",74,HorizontalAlignment.Left));//Column width determined in LayoutProviders().
+			gridProviders.Columns.Add(new UI.GridColumn("IsEnabled",74,HorizontalAlignment.Center));//Column width determined in LayoutProviders().
+			gridProviders.Columns.Add(new UI.GridColumn("IsIDPd",74,HorizontalAlignment.Center));//Column width determined in LayoutProviders().
+			gridProviders.Columns.Add(new UI.GridColumn("IsEPCS",74,HorizontalAlignment.Center));
+			gridProviders.Columns.Add(new UI.GridColumn("NPI",74,HorizontalAlignment.Left){ IsWidthDynamic=true });//Column width determined in LayoutProviders().
 			//Gets from db.  Better to call db than to use cache at HQ, since cache might be large.
 			//Only get Legacy eRx items.  Other types will be in the BroadcasterMonitor.
 			_listProvErxs=ProviderErxs.Refresh(_patCur.PatNum).FindAll(x => x.ErxType==ErxOption.Legacy);
@@ -50,7 +50,7 @@ namespace OpenDental {
 				row.Cells.Add(new UI.GridCell(_listProvErxs[i].IsIdentifyProofed?"X":""));
 				row.Cells.Add(new UI.GridCell(_listProvErxs[i].IsEpcs?"X":""));
 				row.Cells.Add(new UI.GridCell(_listProvErxs[i].NationalProviderID));
-				gridProviders.ListGridRows.Add(row);
+				gridProviders.Rows.Add(row);
 			}
 			gridProviders.EndUpdate();
 		}
@@ -71,7 +71,7 @@ namespace OpenDental {
 			gridProviders.BeginUpdate();
 			for(int i=0;i<gridProviders.SelectedIndices.Length;i++) {
 				int index=gridProviders.SelectedIndices[i];
-				UI.GridRow row=gridProviders.ListGridRows[index];
+				UI.GridRow row=gridProviders.Rows[index];
 				row.Cells[1].Text="X";
 				ProviderErx provErx=(ProviderErx)row.Tag;
 				provErx.IsEnabled=ErxStatus.Enabled;
@@ -92,7 +92,7 @@ namespace OpenDental {
 			gridProviders.BeginUpdate();
 			for(int i=0;i<gridProviders.SelectedIndices.Length;i++) {
 				int index=gridProviders.SelectedIndices[i];
-				UI.GridRow row=gridProviders.ListGridRows[index];
+				UI.GridRow row=gridProviders.Rows[index];
 				row.Cells[1].Text="";
 				ProviderErx provErx=(ProviderErx)row.Tag;
 				provErx.IsEnabled=ErxStatus.Disabled;
@@ -108,7 +108,7 @@ namespace OpenDental {
 			gridProviders.BeginUpdate();
 			for(int i=0;i<gridProviders.SelectedIndices.Length;i++) {
 				int index=gridProviders.SelectedIndices[i];
-				UI.GridRow row=gridProviders.ListGridRows[index];
+				UI.GridRow row=gridProviders.Rows[index];
 				row.Cells[2].Text="X";
 				ProviderErx provErx=(ProviderErx)row.Tag;
 				provErx.IsIdentifyProofed=true;
@@ -127,7 +127,7 @@ namespace OpenDental {
 			gridProviders.BeginUpdate();
 			for(int i=0;i<gridProviders.SelectedIndices.Length;i++) {
 				int index=gridProviders.SelectedIndices[i];
-				UI.GridRow row=gridProviders.ListGridRows[index];
+				UI.GridRow row=gridProviders.Rows[index];
 				row.Cells[2].Text="";
 				ProviderErx provErx=(ProviderErx)row.Tag;
 				provErx.IsIdentifyProofed=false;
@@ -143,7 +143,7 @@ namespace OpenDental {
 			gridProviders.BeginUpdate();
 			for(int i=0;i<gridProviders.SelectedIndices.Length;i++) {
 				int index=gridProviders.SelectedIndices[i];
-				UI.GridRow row=gridProviders.ListGridRows[index];
+				UI.GridRow row=gridProviders.Rows[index];
 				row.Cells[3].Text="X";
 				ProviderErx provErx=(ProviderErx)row.Tag;
 				provErx.IsEpcs=true;
@@ -159,7 +159,7 @@ namespace OpenDental {
 			gridProviders.BeginUpdate();
 			for(int i=0;i<gridProviders.SelectedIndices.Length;i++) {
 				int index=gridProviders.SelectedIndices[i];
-				UI.GridRow row=gridProviders.ListGridRows[index];
+				UI.GridRow row=gridProviders.Rows[index];
 				row.Cells[3].Text="";
 				ProviderErx provErx=(ProviderErx)row.Tag;
 				provErx.IsEpcs=false;

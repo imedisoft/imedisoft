@@ -96,8 +96,8 @@ namespace OpenDental {
 					.Contains(x.WebSheetDefID)).Select(y => y.Description));
 			}
 			if(_selectedWebFormSheetID!=0) {//If entering the form with WSDID, have corresponding grid item selected and URL updated.
-				for(int i=0;i<gridMain.ListGridRows.Count;i++) {
-					if(((WebForms_SheetDef)gridMain.ListGridRows[i].Tag).WebSheetDefID==_selectedWebFormSheetID) {
+				for(int i=0;i<gridMain.Rows.Count;i++) {
+					if(((WebForms_SheetDef)gridMain.Rows[i].Tag).WebSheetDefID==_selectedWebFormSheetID) {
 						gridMain.SetSelected(i,true);
 					}
 				}
@@ -150,15 +150,15 @@ namespace OpenDental {
 					MessageBox.Show("Failed to download sheet definitions.");
 					_listWebFormSheetDefs=new List<WebForms_SheetDef>();
 				}
-				gridMain.ListGridColumns.Clear();
+				gridMain.Columns.Clear();
 				GridColumn col=new GridColumn("Description",200);
-				gridMain.ListGridColumns.Add(col);
-				gridMain.ListGridRows.Clear();
+				gridMain.Columns.Add(col);
+				gridMain.Rows.Clear();
 				foreach(WebForms_SheetDef sheetDef in _listWebFormSheetDefs) {
 					GridRow row=new GridRow();
 					row.Tag=sheetDef;
 					row.Cells.Add(sheetDef.Description);
-					gridMain.ListGridRows.Add(row);
+					gridMain.Rows.Add(row);
 				}
 				gridMain.EndUpdate();
 			}

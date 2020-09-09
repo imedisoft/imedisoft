@@ -56,12 +56,12 @@ namespace OpenDental {
 		/// <summary></summary>
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Title",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			//col=new ODGridColumn("Saved",42);
 			//gridMain.Columns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			if(checkArchivedOnly.Checked) {
 				//This used to search the wikipagehist table, now archived pages are stored in wikipage.  See JobNum 4429.
 				listWikiPageTitles=WikiPages.GetForSearch(textSearch.Text,checkIgnoreContent.Checked,isDeleted:true);
@@ -72,7 +72,7 @@ namespace OpenDental {
 			for(int i=0;i<listWikiPageTitles.Count;i++) {
 				GridRow row=new GridRow();
 				row.Cells.Add(listWikiPageTitles[i]);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			webBrowserWiki.DocumentText="";

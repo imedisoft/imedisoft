@@ -144,16 +144,16 @@ namespace OpenDental{
 			ProcApptColors.RefreshCache();
 			_listProcApptColors=ProcApptColors.GetDeepCopy();
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Code Range",20){ IsWidthDynamic=true };
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listProcApptColors.Count;i++) {
 				row=new GridRow();
 				row.Cells.Add(_listProcApptColors[i].CodeRange);
 				row.ForeColor=_listProcApptColors[i].ColorText;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

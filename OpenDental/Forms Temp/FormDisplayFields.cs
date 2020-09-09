@@ -233,22 +233,22 @@ namespace OpenDental{
 		private void FillGrids(){
 			AvailList=DisplayFields.GetAllAvailableList(Category);//This one needs to be called repeatedly.
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("FieldName",110);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("New Descript",110);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Width",60);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<ListShowing.Count;i++){
 				row=new GridRow();
 				row.Cells.Add(ListShowing[i].InternalName);
 				row.Cells.Add(ListShowing[i].Description);
 				row.Cells.Add(ListShowing[i].ColumnWidth.ToString());
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			//Remove items from AvailList that are in the ListShowing.

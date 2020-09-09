@@ -103,13 +103,13 @@ namespace OpenDental {
 
 		private void FillGrid(ODGrid grid,List<Cdcrec> listCdcRecs) {
 			grid.BeginUpdate();
-			grid.ListGridColumns.Clear();
+			grid.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("CDCREC Code",100);
-			grid.ListGridColumns.Add(col);
+			grid.Columns.Add(col);
 			col=new GridColumn("Description",150);
-			grid.ListGridColumns.Add(col);
-			grid.ListGridRows.Clear();
+			grid.Columns.Add(col);
+			grid.Rows.Clear();
 			GridRow row;
 			foreach(Cdcrec cdcrec in listCdcRecs) {
 				row=new GridRow();
@@ -123,7 +123,7 @@ namespace OpenDental {
 				}
 				row.Cells.Add(cdcrec.Description);
 				row.Tag=cdcrec;
-				grid.ListGridRows.Add(row);
+				grid.Rows.Add(row);
 			}
 			grid.EndUpdate();
 		}
@@ -221,13 +221,13 @@ namespace OpenDental {
 		private void butRight_Click(object sender,EventArgs e) {
 			//Remove the selected rows in the Race grid
 			foreach(int selectedIndex in gridRace.SelectedIndices) {
-				Cdcrec race=(Cdcrec)gridRace.ListGridRows[selectedIndex].Tag;
+				Cdcrec race=(Cdcrec)gridRace.Rows[selectedIndex].Tag;
 				_listPatRaces.RemoveAll(x => x.CdcrecCode==race.CdcrecCode);
 			}
 			FillGrid(gridRace,_listPatRaces);
 			//Remove the selected rows in the Ethnicities grid
 			foreach(int selectedIndex in gridEthnicity.SelectedIndices) {
-				Cdcrec ethnicity=(Cdcrec)gridEthnicity.ListGridRows[selectedIndex].Tag;
+				Cdcrec ethnicity=(Cdcrec)gridEthnicity.Rows[selectedIndex].Tag;
 				_listPatEthnicities.RemoveAll(x => x.CdcrecCode==ethnicity.CdcrecCode);
 			}
 			FillGrid(gridEthnicity,_listPatEthnicities);

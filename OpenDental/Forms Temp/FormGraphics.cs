@@ -533,29 +533,29 @@ namespace OpenDental{
 		private void FillGrid() {
 			int selectionIndex=-1;
 			gridFormats.BeginUpdate();
-			gridFormats.ListGridRows.Clear();
+			gridFormats.Rows.Clear();
 			if(this.radioDirectXChart.Checked){
 				textSelected.Text="";
 				gridFormats.BeginUpdate();
-				gridFormats.ListGridColumns.Clear();
+				gridFormats.Columns.Clear();
 				GridColumn col=new GridColumn("FormatNum",80);
-				gridFormats.ListGridColumns.Add(col);
+				gridFormats.Columns.Add(col);
 				col=new GridColumn("Adapter",60);
-				gridFormats.ListGridColumns.Add(col);
+				gridFormats.Columns.Add(col);
 				col=new GridColumn("Accelerated",80);
-				gridFormats.ListGridColumns.Add(col);
+				gridFormats.Columns.Add(col);
 				col=new GridColumn("Buffered",75);
-				gridFormats.ListGridColumns.Add(col);
+				gridFormats.Columns.Add(col);
 				col=new GridColumn("ColorBits",75);
-				gridFormats.ListGridColumns.Add(col);
+				gridFormats.Columns.Add(col);
 				col=new GridColumn("ColorFormat",75);
-				gridFormats.ListGridColumns.Add(col);
+				gridFormats.Columns.Add(col);
 				col=new GridColumn("DepthBits",75);
-				gridFormats.ListGridColumns.Add(col);
+				gridFormats.Columns.Add(col);
 				col=new GridColumn("DepthFormat",75);
-				gridFormats.ListGridColumns.Add(col);
+				gridFormats.Columns.Add(col);
 				col=new GridColumn("Antialiasing",75);
-				gridFormats.ListGridColumns.Add(col);
+				gridFormats.Columns.Add(col);
 				gridFormats.EndUpdate();
 				for(int i=0;i<xformats.Length;i++) {
 					GridRow row=new GridRow();
@@ -568,7 +568,7 @@ namespace OpenDental{
 					row.Cells.Add(ToothChartDirectX.GetFormatBitCount(xformats[i].DepthStencilFormat).ToString());//Depth buffer bits.
 					row.Cells.Add(xformats[i].DepthStencilFormat);
 					row.Cells.Add(xformats[i].MultiSampleCount.ToString());
-					gridFormats.ListGridRows.Add(row);
+					gridFormats.Rows.Add(row);
 					if(xformats[i].ToString()==selectedDirectXFormat) {
 					  selectionIndex=i;
 						textSelected.Text=(i+1).ToString();
@@ -578,25 +578,25 @@ namespace OpenDental{
 			else if(this.radioOpenGLChart.Checked){
 				textSelected.Text=selectedFormatNum.ToString();
 				gridFormats.BeginUpdate();
-				gridFormats.ListGridColumns.Clear();
+				gridFormats.Columns.Clear();
 				GridColumn col=new GridColumn("FormatNum",80);
-				gridFormats.ListGridColumns.Add(col);
+				gridFormats.Columns.Add(col);
 				col=new GridColumn("OpenGL",60);
-				gridFormats.ListGridColumns.Add(col);
+				gridFormats.Columns.Add(col);
 				col=new GridColumn("Windowed",80);
-				gridFormats.ListGridColumns.Add(col);
+				gridFormats.Columns.Add(col);
 				col=new GridColumn("Bitmapped",80);
-				gridFormats.ListGridColumns.Add(col);
+				gridFormats.Columns.Add(col);
 				col=new GridColumn("Palette",75);
-				gridFormats.ListGridColumns.Add(col);
+				gridFormats.Columns.Add(col);
 				col=new GridColumn("Accelerated",80);
-				gridFormats.ListGridColumns.Add(col);
+				gridFormats.Columns.Add(col);
 				col=new GridColumn("Buffered",75);
-				gridFormats.ListGridColumns.Add(col);
+				gridFormats.Columns.Add(col);
 				col=new GridColumn("ColorBits",75);
-				gridFormats.ListGridColumns.Add(col);
+				gridFormats.Columns.Add(col);
 				col=new GridColumn("DepthBits",75);
-				gridFormats.ListGridColumns.Add(col);
+				gridFormats.Columns.Add(col);
 				gridFormats.EndUpdate();
 				for(int i=0;i<formats.Length;i++) {
 					GridRow row=new GridRow();
@@ -609,7 +609,7 @@ namespace OpenDental{
 					row.Cells.Add(OpenGLWinFormsControl.FormatSupportsDoubleBuffering(formats[i].pfd)?"Yes":"No");
 					row.Cells.Add(formats[i].pfd.cColorBits.ToString());
 					row.Cells.Add(formats[i].pfd.cDepthBits.ToString());
-					gridFormats.ListGridRows.Add(row);
+					gridFormats.Rows.Add(row);
 					if(formats[i].formatNumber==selectedFormatNum) {
 						selectionIndex=i;
 					}
@@ -624,7 +624,7 @@ namespace OpenDental{
 		///<Summary>Get all formats for the grid based on the current filters.</Summary>
 		private void RefreshFormats() {
 			this.Cursor=Cursors.WaitCursor;
-			gridFormats.ListGridRows.Clear();
+			gridFormats.Rows.Clear();
 			gridFormats.Invalidate();
 			textSelected.Text="";
 			Application.DoEvents();
@@ -685,7 +685,7 @@ namespace OpenDental{
 		}
 
 		private void gridFormats_CellClick(object sender,ODGridClickEventArgs e) {
-			int formatNum=Convert.ToInt32(gridFormats.ListGridRows[e.Row].Cells[0].Text);
+			int formatNum=Convert.ToInt32(gridFormats.Rows[e.Row].Cells[0].Text);
 			textSelected.Text=formatNum.ToString();
 			if(radioDirectXChart.Checked) {
 				selectedDirectXFormat=xformats[formatNum-1].ToString();

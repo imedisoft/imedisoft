@@ -330,42 +330,42 @@ namespace OpenDental{
 			bool includeUnsignedNotes=checkUnsignedNote.Checked;
 			gridMain.BeginUpdate();
 			//Columns
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Date",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Patient Name",120);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				col=new GridColumn("Code",150);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col=new GridColumn("Description",220);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			else {
 				col=new GridColumn("Code",150);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col=new GridColumn("Description",220);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col=new GridColumn("Tth",30);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col=new GridColumn("Surf",40);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			if(includeUnsignedNotes || includeNoNotes) {
 				col=new GridColumn("Incomplete",80);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			if(includeNoNotes) {
 				col=new GridColumn("No Note",60);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			if(includeUnsignedNotes) {
 				col=new GridColumn("Unsigned",70);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			//Rows
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			foreach(DataRow row in table.Rows) {
 				GridRow newRow=new GridRow();
 				newRow.Cells.Add(PIn.Date(row["ProcDate"].ToString()).ToString("d"));
@@ -390,7 +390,7 @@ namespace OpenDental{
 					newRow.Cells.Add(row["HasUnsignedNote"].ToString());
 				}
 				newRow.Tag=row["PatNum"].ToString();
-				gridMain.ListGridRows.Add(newRow);
+				gridMain.Rows.Add(newRow);
 			}
 			gridMain.EndUpdate();
 		}
@@ -424,7 +424,7 @@ namespace OpenDental{
 			if(gridMain.SelectedIndices.Length!=1) {
 				return;
 			}
-			long goToPatNum=PIn.Long(gridMain.ListGridRows[e.Row].Tag.ToString());
+			long goToPatNum=PIn.Long(gridMain.Rows[e.Row].Tag.ToString());
 			Patient pat=Patients.GetPat(goToPatNum);
 			FormOpenDental.S_Contr_PatientSelected(pat,false);
 		}
@@ -436,7 +436,7 @@ namespace OpenDental{
 			if(!Security.IsAuthorized(Permissions.ChartModule)) {
 				return;
 			}
-			long goToPatNum=PIn.Long(gridMain.ListGridRows[e.Row].Tag.ToString());
+			long goToPatNum=PIn.Long(gridMain.Rows[e.Row].Tag.ToString());
 			SendToBack();
 			GotoModule.GotoChart(goToPatNum);
 		}
@@ -449,7 +449,7 @@ namespace OpenDental{
 			if(!Security.IsAuthorized(Permissions.ChartModule)) {
 				return;
 			}
-			long patNum=PIn.Long(gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag.ToString());
+			long patNum=PIn.Long(gridMain.Rows[gridMain.SelectedIndices[0]].Tag.ToString());
 			Patient pat=Patients.GetPat(patNum);
 			FormOpenDental.S_Contr_PatientSelected(pat,false);
 			SendToBack();

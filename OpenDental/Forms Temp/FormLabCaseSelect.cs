@@ -151,16 +151,16 @@ namespace OpenDental{
 		private void FillGrid(){
 			labCaseList=LabCases.GetForPat(PatNum,IsPlanned);
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Date Created",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Lab",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Phone",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Instructions",200);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			DateTime dateCreated;
 			Laboratory lab;
@@ -179,7 +179,7 @@ namespace OpenDental{
 				}				
 				row.Cells.Add(labCase.Instructions);
 				row.Tag=labCase;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

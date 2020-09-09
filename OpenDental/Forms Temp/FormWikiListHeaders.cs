@@ -32,22 +32,22 @@ namespace OpenDental {
 		///<summary>Each item defines a column in the wiki list grid.</summary>
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("Column Name",100,true));
-			gridMain.ListGridColumns.Add(new GridColumn("Width",0,true));
-			gridMain.ListGridRows.Clear();
-			gridMain.ListGridRows.AddRange(_listTableHeaders.Select(x => new GridRow(x.ColName,x.ColWidth.ToString())));
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("Column Name",100,true));
+			gridMain.Columns.Add(new GridColumn("Width",0,true));
+			gridMain.Rows.Clear();
+			gridMain.Rows.AddRange(_listTableHeaders.Select(x => new GridRow(x.ColName,x.ColWidth.ToString())));
 			gridMain.EndUpdate();
 		}
 
 		///<summary>Filled when Add, Remove, or change main header idx.</summary>
 		private void FillGridPickList() {
 			gridPickList.BeginUpdate();
-			gridPickList.ListGridColumns.Clear();
-			gridPickList.ListGridColumns.Add(new GridColumn("Input Text",100,true));
-			gridPickList.ListGridRows.Clear();
+			gridPickList.Columns.Clear();
+			gridPickList.Columns.Add(new GridColumn("Input Text",100,true));
+			gridPickList.Rows.Clear();
 			if(gridMain.SelectedCell.Y!=-1 && _listStringPick.Count>0) {
-				gridPickList.ListGridRows.AddRange(_listStringPick.Select(x => new GridRow(x)));
+				gridPickList.Rows.AddRange(_listStringPick.Select(x => new GridRow(x)));
 			}
 			gridPickList.EndUpdate();
 			if(_pickListIndex > -1 && _listStringPick.Count > _pickListIndex) {
@@ -81,7 +81,7 @@ namespace OpenDental {
 		}
 
 		private void gridPickList_CellLeave(object sender,ODGridClickEventArgs e) {
-			string addedListItem=gridPickList.ListGridRows[e.Row].Cells[0].Text;
+			string addedListItem=gridPickList.Rows[e.Row].Cells[0].Text;
 			if(e.Row < _listStringPick.Count) {
 				_listStringPick[e.Row]=addedListItem;
 			}
@@ -116,9 +116,9 @@ namespace OpenDental {
 			}
 			#region Validation
 			List<string> listColNames=new List<string>();
-			for(int i=1;i<gridMain.ListGridRows.Count;i++) {//start with index 1, first col is PK
-				string colName=gridMain.ListGridRows[i].Cells[0].Text;
-				string colWidth=gridMain.ListGridRows[i].Cells[1].Text;
+			for(int i=1;i<gridMain.Rows.Count;i++) {//start with index 1, first col is PK
+				string colName=gridMain.Rows[i].Cells[0].Text;
+				string colWidth=gridMain.Rows[i].Cells[1].Text;
 				#region Validate Column Widths
 				if(Regex.IsMatch(colWidth,@"\D")) {// "\D" matches any non-decimal character
 					MessageBox.Show("Column widths must only contain positive integers.");
@@ -162,9 +162,9 @@ namespace OpenDental {
 			#region Update _listTableHeaders
 			for(int i=0;i<_listTableHeaders.Count;i++) {
 				if(i>0) {//don't allow renaming the first column, it's the PK
-					_listTableHeaders[i].ColName=PIn.String(gridMain.ListGridRows[i].Cells[0].Text);
+					_listTableHeaders[i].ColName=PIn.String(gridMain.Rows[i].Cells[0].Text);
 				}
-				_listTableHeaders[i].ColWidth=PIn.Int(gridMain.ListGridRows[i].Cells[1].Text);
+				_listTableHeaders[i].ColWidth=PIn.Int(gridMain.Rows[i].Cells[1].Text);
 			}
 			#endregion Update _listTableHeaders
 			#region Try Update DB

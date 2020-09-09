@@ -671,9 +671,9 @@ namespace OpenDental{
 			double debits=0;
 			double credits=0;
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Account",150);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			string str="Debit";
 			if(AccountOfOrigin!=null){
 				if(Accounts.DebitIsPos(AccountOfOrigin.Type)) {
@@ -684,7 +684,7 @@ namespace OpenDental{
 				}
 			}
 			col=new GridColumn(str,70,HorizontalAlignment.Right);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			str="Credit";
 			if(AccountOfOrigin!=null){
 				if(Accounts.DebitIsPos(AccountOfOrigin.Type)) {
@@ -695,10 +695,10 @@ namespace OpenDental{
 				}
 			}
 			col=new GridColumn(str,70,HorizontalAlignment.Right);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Memo",200);
-			gridMain.ListGridColumns.Add(col);			 
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);			 
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<JournalList.Count;i++){
 				row=new GridRow();
@@ -716,7 +716,7 @@ namespace OpenDental{
 					row.Cells.Add(((JournalEntry)JournalList[i]).CreditAmt.ToString("n"));
 				}
 				row.Cells.Add(((JournalEntry)JournalList[i]).Memo);
-				gridMain.ListGridRows.Add(row);  
+				gridMain.Rows.Add(row);  
 				if(i==0){
 					memo=((JournalEntry)JournalList[i]).Memo;
 				}

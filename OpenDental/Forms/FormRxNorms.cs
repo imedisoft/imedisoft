@@ -22,7 +22,7 @@ namespace Imedisoft.Forms
             get
             {
 				if (rxNormsGrid.SelectedIndices.Length > 0 &&
-					rxNormsGrid.SelectedGridRows[0].Tag is RxNorm rxNorm)
+					rxNormsGrid.SelectedRows[0].Tag is RxNorm rxNorm)
                 {
 					return rxNorm;
                 }
@@ -70,7 +70,7 @@ namespace Imedisoft.Forms
 				}
 
 				FillGrid(true); // Try exact match first.
-				if (rxNormsGrid.ListGridRows.Count == 0)
+				if (rxNormsGrid.Rows.Count == 0)
 				{
 					// If no exact matches, then show similar matches.
 					FillGrid(false);
@@ -109,12 +109,12 @@ namespace Imedisoft.Forms
 			var rxCuisPatientMedication = MedicationPats.GetForRxCuis(rxNorms.Select(x => x.RxCui).ToList()).Select(x => x.RxCui.ToString()).ToList();
 
 			rxNormsGrid.BeginUpdate();
-			rxNormsGrid.ListGridColumns.Clear();
-			rxNormsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Code, 80));
-			rxNormsGrid.ListGridColumns.Add(new GridColumn("InMedList", 60, HorizontalAlignment.Center));
-			rxNormsGrid.ListGridColumns.Add(new GridColumn("MedCount", 60, HorizontalAlignment.Center));
-			rxNormsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Description, 80) { IsWidthDynamic = true });
-			rxNormsGrid.ListGridRows.Clear();
+			rxNormsGrid.Columns.Clear();
+			rxNormsGrid.Columns.Add(new GridColumn(Translation.Common.Code, 80));
+			rxNormsGrid.Columns.Add(new GridColumn("InMedList", 60, HorizontalAlignment.Center));
+			rxNormsGrid.Columns.Add(new GridColumn("MedCount", 60, HorizontalAlignment.Center));
+			rxNormsGrid.Columns.Add(new GridColumn(Translation.Common.Description, 80) { IsWidthDynamic = true });
+			rxNormsGrid.Rows.Clear();
 
 			foreach (var rxNorm in rxNorms)
 			{
@@ -126,7 +126,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(rxNorm.Description);
 				gridRow.Tag = rxNorm;
 
-				rxNormsGrid.ListGridRows.Add(gridRow);
+				rxNormsGrid.Rows.Add(gridRow);
 			}
 
 			rxNormsGrid.EndUpdate();

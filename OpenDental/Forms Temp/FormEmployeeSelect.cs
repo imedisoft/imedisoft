@@ -296,26 +296,26 @@ namespace OpenDental{
 				_listEmployeesShowing.Add(_listEmployeesFull[i]);
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("FName",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("LName",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("MI",30);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Hid",30,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Wireless",120);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Email Work",220);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Email Personal",220);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Furlo",35,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Home",30,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listEmployeesShowing.Count;i++){
 				row=new GridRow();
@@ -328,7 +328,7 @@ namespace OpenDental{
 				else{
 					row.Cells.Add("");
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 				row.Cells.Add(_listEmployeesShowing[i].WirelessPhone);
 				row.Cells.Add(_listEmployeesShowing[i].EmailWork);
 				row.Cells.Add(_listEmployeesShowing[i].EmailPersonal);

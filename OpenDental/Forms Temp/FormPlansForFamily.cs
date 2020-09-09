@@ -124,21 +124,21 @@ namespace OpenDental{
 			}
 			PlanList=InsPlans.RefreshForSubList(SubList);
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			//=new ODGridColumn("#",20);
 			//gridMain.Columns.Add(col);
 			col=new GridColumn("Subscriber",140);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Ins Carrier",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Date Effect.",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Date Term.",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Used By",90);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			//PatPlan[] patPlanArray;
 			InsPlan plan;
@@ -159,7 +159,7 @@ namespace OpenDental{
 				}
 				int countPatPlans=PatPlans.GetCountBySubNum(SubList[i].InsSubNum);
 				row.Cells.Add(countPatPlans.ToString());
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

@@ -36,18 +36,18 @@ namespace OpenDental
 				selectedSheetNum=PIn.Long(table.Rows[gridMain.GetSelectedIndex()]["SheetNum"].ToString());
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Date",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Time",42);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Kiosk",55,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Description",210);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Image Category",120);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			table=Sheets.GetPatientFormsTable(PatNum);
 			for(int i=0;i<table.Rows.Count;i++){
@@ -57,7 +57,7 @@ namespace OpenDental
 				row.Cells.Add(table.Rows[i]["showInTerminal"].ToString());
 				row.Cells.Add(table.Rows[i]["description"].ToString());
 				row.Cells.Add(table.Rows[i]["imageCat"].ToString());
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			if(selectedSheetNum!=0) {

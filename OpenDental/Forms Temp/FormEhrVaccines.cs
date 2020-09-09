@@ -23,13 +23,13 @@ namespace OpenDental {
 
 		private void FillGridVaccine() {
 			gridVaccine.BeginUpdate();
-			gridVaccine.ListGridColumns.Clear();
+			gridVaccine.Columns.Clear();
 			GridColumn col=new GridColumn("Date",90);
-			gridVaccine.ListGridColumns.Add(col);
+			gridVaccine.Columns.Add(col);
 			col=new GridColumn("Vaccine",100);
-			gridVaccine.ListGridColumns.Add(col);
+			gridVaccine.Columns.Add(col);
 			VaccineList=VaccinePats.Refresh(PatCur.PatNum);
-			gridVaccine.ListGridRows.Clear();
+			gridVaccine.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<VaccineList.Count;i++) {
 				row=new GridRow();
@@ -47,7 +47,7 @@ namespace OpenDental {
 					str=VaccineDefs.GetOne(VaccineList[i].VaccineDefNum).VaccineName;
 				}
 				row.Cells.Add(str);
-				gridVaccine.ListGridRows.Add(row);
+				gridVaccine.Rows.Add(row);
 			}
 			gridVaccine.EndUpdate();
 		}

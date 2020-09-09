@@ -76,13 +76,13 @@ namespace Imedisoft.Forms
 		private void FillCriterions()
 		{
 			evaluationCriteriaGrid.BeginUpdate();
-			evaluationCriteriaGrid.ListGridColumns.Clear();
-			evaluationCriteriaGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Description, 150));
-			evaluationCriteriaGrid.ListGridColumns.Add(new GridColumn(Translation.DentalSchools.GradingScale, 90));
-			evaluationCriteriaGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Showing, 60));
-			evaluationCriteriaGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Number, 60) { IsEditable = true });
-			evaluationCriteriaGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Note, 120) { IsEditable = true });
-			evaluationCriteriaGrid.ListGridRows.Clear();
+			evaluationCriteriaGrid.Columns.Clear();
+			evaluationCriteriaGrid.Columns.Add(new GridColumn(Translation.Common.Description, 150));
+			evaluationCriteriaGrid.Columns.Add(new GridColumn(Translation.DentalSchools.GradingScale, 90));
+			evaluationCriteriaGrid.Columns.Add(new GridColumn(Translation.Common.Showing, 60));
+			evaluationCriteriaGrid.Columns.Add(new GridColumn(Translation.Common.Number, 60) { IsEditable = true });
+			evaluationCriteriaGrid.Columns.Add(new GridColumn(Translation.Common.Note, 120) { IsEditable = true });
+			evaluationCriteriaGrid.Rows.Clear();
 			
 			foreach (var evaluationCriterion in evaluationCriteria)
 			{
@@ -105,7 +105,7 @@ namespace Imedisoft.Forms
 					gridRow.Cells.Add(evaluationCriterion.GradeNumber.ToString());
 					gridRow.Cells.Add(evaluationCriterion.Notes);
 				}
-				evaluationCriteriaGrid.ListGridRows.Add(gridRow);
+				evaluationCriteriaGrid.Rows.Add(gridRow);
 			}
 
 			evaluationCriteriaGrid.EndUpdate();
@@ -114,25 +114,25 @@ namespace Imedisoft.Forms
 		private void FillGradingScales(EvaluationCriterion evaluationCriterion)
 		{
 			gradingScalesGrid.BeginUpdate();
-			gradingScalesGrid.ListGridColumns.Clear();
-			gradingScalesGrid.ListGridRows.Clear();
+			gradingScalesGrid.Columns.Clear();
+			gradingScalesGrid.Rows.Clear();
 
 			if (evaluationCriterion != null && gradingScales.TryGetValue(evaluationCriterion.GradingScaleId, out var gradingScale))
 			{
 				switch (gradingScale.Type)
                 {
 					case GradingScaleType.Weighted:
-						gradingScalesGrid.ListGridColumns.Add(new GridColumn(Translation.DentalSchools.MaxPoints, 100, HorizontalAlignment.Center));
+						gradingScalesGrid.Columns.Add(new GridColumn(Translation.DentalSchools.MaxPoints, 100, HorizontalAlignment.Center));
 						break;
 
 					case GradingScaleType.Percentage:
-						gradingScalesGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Percentage, 100, HorizontalAlignment.Center));
+						gradingScalesGrid.Columns.Add(new GridColumn(Translation.Common.Percentage, 100, HorizontalAlignment.Center));
 						break;
 
 					case GradingScaleType.PickList:
-						gradingScalesGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Number, 60));
-						gradingScalesGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Showing, 60));
-						gradingScalesGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Description, 150));
+						gradingScalesGrid.Columns.Add(new GridColumn(Translation.Common.Number, 60));
+						gradingScalesGrid.Columns.Add(new GridColumn(Translation.Common.Showing, 60));
+						gradingScalesGrid.Columns.Add(new GridColumn(Translation.Common.Description, 150));
 						break;
                 }
 
@@ -141,12 +141,12 @@ namespace Imedisoft.Forms
 					switch (gradingScale.Type)
 					{
 						case GradingScaleType.Weighted:
-							gradingScalesGrid.ListGridRows.Add(
+							gradingScalesGrid.Rows.Add(
 								new GridRow(evaluationCriterion.MaxPointsAllowed.ToString()));
 							break;
 
 						case GradingScaleType.Percentage:
-							gradingScalesGrid.ListGridRows.Add(
+							gradingScalesGrid.Rows.Add(
 								new GridRow(Translation.DentalSchools.ZeroToOneHundred));
 							break;
 
@@ -161,7 +161,7 @@ namespace Imedisoft.Forms
 									gridRow.Cells.Add(gradingScaleItem.Description);
 									gridRow.Tag = gradingScaleItem;
 
-									gradingScalesGrid.ListGridRows.Add(gridRow);
+									gradingScalesGrid.Rows.Add(gridRow);
 								}
 							}
 							break;
@@ -230,7 +230,7 @@ namespace Imedisoft.Forms
 		{
 			if (e.Row == -1 || e.Col == -1) return;
 
-            if (!(evaluationCriteriaGrid.ListGridRows[e.Row].Tag is EvaluationCriterion evaluationCriterion))
+            if (!(evaluationCriteriaGrid.Rows[e.Row].Tag is EvaluationCriterion evaluationCriterion))
             {
                 return;
             }
@@ -242,9 +242,9 @@ namespace Imedisoft.Forms
 					return;
 				}
 
-				if (!float.TryParse(evaluationCriteriaGrid.ListGridRows[e.Row].Cells[3].Text, out float gradeNumber))
+				if (!float.TryParse(evaluationCriteriaGrid.Rows[e.Row].Cells[3].Text, out float gradeNumber))
                 {
-                    evaluationCriteriaGrid.ListGridRows[e.Row].Cells[3].Text = evaluationCriterion.GradeNumber.ToString();
+                    evaluationCriteriaGrid.Rows[e.Row].Cells[3].Text = evaluationCriterion.GradeNumber.ToString();
 
                     return;
                 }
@@ -264,7 +264,7 @@ namespace Imedisoft.Forms
 
 									valid = true;
 
-									evaluationCriteriaGrid.ListGridRows[e.Row].Cells[2].Text = gradingScaleItem.Text;
+									evaluationCriteriaGrid.Rows[e.Row].Cells[2].Text = gradingScaleItem.Text;
 
 									break;
 								}
@@ -272,7 +272,7 @@ namespace Imedisoft.Forms
 
 							if (!valid)
 							{
-								evaluationCriteriaGrid.ListGridRows[e.Row].Cells[3].Text = evaluationCriterion.GradeNumber.ToString();
+								evaluationCriteriaGrid.Rows[e.Row].Cells[3].Text = evaluationCriterion.GradeNumber.ToString();
 							}
 						}
 						break;
@@ -280,7 +280,7 @@ namespace Imedisoft.Forms
 					default:
 						evaluationCriterion.GradeNumber = gradeNumber;
 						evaluationCriterion.GradeShowing = gradeNumber.ToString();
-						evaluationCriteriaGrid.ListGridRows[e.Row].Cells[2].Text = gradeNumber.ToString();
+						evaluationCriteriaGrid.Rows[e.Row].Cells[2].Text = gradeNumber.ToString();
 						break;
                 }
 
@@ -439,7 +439,7 @@ namespace Imedisoft.Forms
 
 			Evaluations.Save(evaluation);
 
-			foreach (var gridRow in evaluationCriteriaGrid.ListGridRows)
+			foreach (var gridRow in evaluationCriteriaGrid.Rows)
 			{
 				if (gridRow.Tag is EvaluationCriterion evaluationCriterion)
 				{

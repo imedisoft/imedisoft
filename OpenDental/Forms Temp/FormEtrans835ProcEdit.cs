@@ -77,14 +77,14 @@ namespace OpenDental {
 				gridProcedureAdjustments.Title="Procedure Adjustments";
 			}
 			gridProcedureAdjustments.BeginUpdate();
-			gridProcedureAdjustments.ListGridColumns.Clear();
+			gridProcedureAdjustments.Columns.Clear();
 			const int colWidthDescription=200;
 			const int colWidthAdjAmt=80;
 			int colWidthVariable=gridProcedureAdjustments.Width-10-colWidthDescription-colWidthAdjAmt;
-			gridProcedureAdjustments.ListGridColumns.Add(new UI.GridColumn("Description",colWidthDescription,HorizontalAlignment.Left));
-			gridProcedureAdjustments.ListGridColumns.Add(new UI.GridColumn("Reason",colWidthVariable,HorizontalAlignment.Left));
-			gridProcedureAdjustments.ListGridColumns.Add(new UI.GridColumn("AdjAmt",colWidthAdjAmt,HorizontalAlignment.Right));
-			gridProcedureAdjustments.ListGridRows.Clear();
+			gridProcedureAdjustments.Columns.Add(new UI.GridColumn("Description",colWidthDescription,HorizontalAlignment.Left));
+			gridProcedureAdjustments.Columns.Add(new UI.GridColumn("Reason",colWidthVariable,HorizontalAlignment.Left));
+			gridProcedureAdjustments.Columns.Add(new UI.GridColumn("AdjAmt",colWidthAdjAmt,HorizontalAlignment.Right));
+			gridProcedureAdjustments.Rows.Clear();
 			_patRespSum=0;
 			_contractualObligationSum=0;
 			_payorInitiatedReductionSum=0;
@@ -108,7 +108,7 @@ namespace OpenDental {
 				else {//Other Adjustments
 					_otherAdjustmentSum+=adj.AdjAmt;
 				}
-				gridProcedureAdjustments.ListGridRows.Add(row);
+				gridProcedureAdjustments.Rows.Add(row);
 			}
 			gridProcedureAdjustments.EndUpdate();
 			textPatRespSum.Text=_patRespSum.ToString("f2");
@@ -125,14 +125,14 @@ namespace OpenDental {
 				gridRemarks.Title="Remarks";
 			}
 			gridRemarks.BeginUpdate();
-			gridRemarks.ListGridColumns.Clear();
-			gridRemarks.ListGridColumns.Add(new UI.GridColumn("",gridRemarks.Width,HorizontalAlignment.Left));
-			gridRemarks.ListGridRows.Clear();
+			gridRemarks.Columns.Clear();
+			gridRemarks.Columns.Add(new UI.GridColumn("",gridRemarks.Width,HorizontalAlignment.Left));
+			gridRemarks.Rows.Clear();
 			for(int i=0;i<_proc.ListRemarks.Count;i++) {
 				GridRow row=new GridRow();
 				row.Tag=_proc.ListRemarks[i].Value;
 				row.Cells.Add(new UI.GridCell(_proc.ListRemarks[i].Value));
-				gridRemarks.ListGridRows.Add(row);
+				gridRemarks.Rows.Add(row);
 			}
 			gridRemarks.EndUpdate();
 		}
@@ -145,37 +145,37 @@ namespace OpenDental {
 				gridSupplementalInfo.Title="Supplemental Info";
 			}
 			gridSupplementalInfo.BeginUpdate();
-			gridSupplementalInfo.ListGridColumns.Clear();
+			gridSupplementalInfo.Columns.Clear();
 			const int colWidthAmt=80;
 			int colWidthVariable=gridSupplementalInfo.Width-10-colWidthAmt;
-			gridSupplementalInfo.ListGridColumns.Add(new GridColumn("Description",colWidthVariable,HorizontalAlignment.Left));
-			gridSupplementalInfo.ListGridColumns.Add(new GridColumn("Amt",colWidthAmt,HorizontalAlignment.Right));
-			gridSupplementalInfo.ListGridRows.Clear();
+			gridSupplementalInfo.Columns.Add(new GridColumn("Description",colWidthVariable,HorizontalAlignment.Left));
+			gridSupplementalInfo.Columns.Add(new GridColumn("Amt",colWidthAmt,HorizontalAlignment.Right));
+			gridSupplementalInfo.Rows.Clear();
 			for(int i=0;i<_proc.ListSupplementalInfo.Count;i++) {
 				Hx835_Info info=_proc.ListSupplementalInfo[i];
 				GridRow row=new GridRow();
 				row.Tag=info;
 				row.Cells.Add(info.FieldName);//Description
 				row.Cells.Add(info.FieldValue);//Amount
-				gridSupplementalInfo.ListGridRows.Add(row);
+				gridSupplementalInfo.Rows.Add(row);
 			}
 			gridSupplementalInfo.EndUpdate();
 		}
 
 		private void gridProcedureAdjustments_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			Hx835_Adj adj=(Hx835_Adj)gridProcedureAdjustments.ListGridRows[e.Row].Tag;
+			Hx835_Adj adj=(Hx835_Adj)gridProcedureAdjustments.Rows[e.Row].Tag;
 			MsgBoxCopyPaste msgbox=new MsgBoxCopyPaste(adj.AdjCode+" "+adj.AdjustRemarks+"\r\r"+adj.ReasonDescript+"\r\n"+adj.AdjAmt.ToString("f2"));
 			msgbox.Show(this);//This window is just used to display information.
 		}
 
 		private void gridRemarks_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			string remark=(string)gridRemarks.ListGridRows[e.Row].Tag;
+			string remark=(string)gridRemarks.Rows[e.Row].Tag;
 			MsgBoxCopyPaste msgbox=new MsgBoxCopyPaste(remark);
 			msgbox.Show(this);//This window is just used to display information.
 		}
 
 		private void gridSupplementalInfo_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			Hx835_Info info=(Hx835_Info)gridSupplementalInfo.ListGridRows[e.Row].Tag;
+			Hx835_Info info=(Hx835_Info)gridSupplementalInfo.Rows[e.Row].Tag;
 			MsgBoxCopyPaste msgbox=new MsgBoxCopyPaste(info.FieldName+"\r\n"+info.FieldValue);
 			msgbox.Show(this);//This window is just used to display information.
 		}
@@ -220,14 +220,14 @@ namespace OpenDental {
 				ODGrid grid=new ODGrid();
 				grid.Width=gridProcedureAdjustments.Width;
 				grid.BeginUpdate();
-				grid.ListGridColumns.Add(new GridColumn("Proc Fee"+" -",40){ IsWidthDynamic=true });
-				grid.ListGridColumns.Add(new GridColumn("Patient Resp Sum"+" -",40){ IsWidthDynamic=true });
-				grid.ListGridColumns.Add(new GridColumn("Contractual Oblig. Sum"+" -",40){ IsWidthDynamic=true });
-				grid.ListGridColumns.Add(new GridColumn("Payor Reduction Sum"+" -",40){ IsWidthDynamic=true });
-				grid.ListGridColumns.Add(new GridColumn("Other Adjustment Sum"+" =",40){ IsWidthDynamic=true });
-				grid.ListGridColumns.Add(new GridColumn("Ins Paid Calc",40){ IsWidthDynamic=true });
+				grid.Columns.Add(new GridColumn("Proc Fee"+" -",40){ IsWidthDynamic=true });
+				grid.Columns.Add(new GridColumn("Patient Resp Sum"+" -",40){ IsWidthDynamic=true });
+				grid.Columns.Add(new GridColumn("Contractual Oblig. Sum"+" -",40){ IsWidthDynamic=true });
+				grid.Columns.Add(new GridColumn("Payor Reduction Sum"+" -",40){ IsWidthDynamic=true });
+				grid.Columns.Add(new GridColumn("Other Adjustment Sum"+" =",40){ IsWidthDynamic=true });
+				grid.Columns.Add(new GridColumn("Ins Paid Calc",40){ IsWidthDynamic=true });
 				//grid.ComputeColumns();
-				grid.ListGridRows.Add(new GridRow(textProcFee.Text,
+				grid.Rows.Add(new GridRow(textProcFee.Text,
 					textPatRespSum.Text,
 					textContractualObligSum.Text,
 					textPayorReductionSum.Text,

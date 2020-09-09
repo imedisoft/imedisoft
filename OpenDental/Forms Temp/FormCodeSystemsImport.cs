@@ -62,9 +62,9 @@ namespace Imedisoft.Forms
 
 				foreach (var codeSystemName in autoImportCodeSystemNames)
 				{
-					for (int i = 0; i < codeSystemsGrid.ListGridRows.Count; i++)
+					for (int i = 0; i < codeSystemsGrid.Rows.Count; i++)
 					{
-						if (codeSystemsGrid.ListGridRows[i].Cells[0].Text.ToLower() == codeSystemName.ToString().ToLower())
+						if (codeSystemsGrid.Rows[i].Cells[0].Text.ToLower() == codeSystemName.ToString().ToLower())
 						{
 							codeSystemsGrid.SetSelected(i, true);
 						}
@@ -80,12 +80,12 @@ namespace Imedisoft.Forms
 			_listCodeSystems = CodeSystems.GetForCurrentVersion(_isMemberNation);
 
 			codeSystemsGrid.BeginUpdate();
-			codeSystemsGrid.ListGridColumns.Clear();
-			codeSystemsGrid.ListGridColumns.Add(new GridColumn("Code System", 200));
-			codeSystemsGrid.ListGridColumns.Add(new GridColumn("Current Version", 100));
-			codeSystemsGrid.ListGridColumns.Add(new GridColumn("Available Version", 100));
-			codeSystemsGrid.ListGridColumns.Add(new GridColumn("Download Status", 100));
-			codeSystemsGrid.ListGridRows.Clear();
+			codeSystemsGrid.Columns.Clear();
+			codeSystemsGrid.Columns.Add(new GridColumn("Code System", 200));
+			codeSystemsGrid.Columns.Add(new GridColumn("Current Version", 100));
+			codeSystemsGrid.Columns.Add(new GridColumn("Available Version", 100));
+			codeSystemsGrid.Columns.Add(new GridColumn("Download Status", 100));
+			codeSystemsGrid.Rows.Clear();
 
 			for (int i = 0; i < _listCodeSystems.Count; i++)
 			{
@@ -99,7 +99,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(status);
 				gridRow.Tag = _listCodeSystems[i];
 
-				codeSystemsGrid.ListGridRows.Add(gridRow);
+				codeSystemsGrid.Rows.Add(gridRow);
 			}
 
 			codeSystemsGrid.EndUpdate();
@@ -634,11 +634,11 @@ namespace Imedisoft.Forms
 		{
 			//This is called a lot from the import threads so don't bother with the full FillGrid. Just find our row and column and update the cell's text.
 			codeSystemsGrid.BeginUpdate();
-			for (int i = 0; i < codeSystemsGrid.ListGridRows.Count; i++)
+			for (int i = 0; i < codeSystemsGrid.Rows.Count; i++)
 			{
-				if (codeSystemsGrid.ListGridRows[i].Tag == null
-					|| !(codeSystemsGrid.ListGridRows[i].Tag is CodeSystem)
-					|| !(((CodeSystem)codeSystemsGrid.ListGridRows[i].Tag).Name == codeSystem.Name))
+				if (codeSystemsGrid.Rows[i].Tag == null
+					|| !(codeSystemsGrid.Rows[i].Tag is CodeSystem)
+					|| !(((CodeSystem)codeSystemsGrid.Rows[i].Tag).Name == codeSystem.Name))
 				{
 					continue;
 				}
@@ -657,7 +657,7 @@ namespace Imedisoft.Forms
 						cellText = "Import failed" + "! -- " + status;
 					}
 				}
-				codeSystemsGrid.ListGridRows[i].Cells[3].Text = cellText;
+				codeSystemsGrid.Rows[i].Cells[3].Text = cellText;
 			}
 			codeSystemsGrid.EndUpdate();  //Need to call this instead of gridMain.Invalidate() because we need text wrapping to happen if there was a long error message.
 		}

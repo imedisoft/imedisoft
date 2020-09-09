@@ -31,15 +31,15 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Date Time",135);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Service",200);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			listLP = LabPanels.Refresh(PatCur.PatNum);
 			List<LabResult> listResults;
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<listLP.Count;i++) {
 				row=new GridRow();
@@ -51,7 +51,7 @@ namespace OpenDental {
 					row.Cells.Add(listResults[0].DateTimeTest.ToString());
 				}
 				row.Cells.Add(listLP[i].ServiceName);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

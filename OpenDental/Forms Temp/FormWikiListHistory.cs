@@ -20,8 +20,8 @@ namespace OpenDental {
 
 		private void FormWikiListHistory_Load(object sender,EventArgs e) {
 			FillGridMain();
-			if(gridMain.ListGridRows.Count>0) {
-				gridMain.SetSelected(gridMain.ListGridRows.Count-1,true);
+			if(gridMain.Rows.Count>0) {
+				gridMain.SetSelected(gridMain.Rows.Count-1,true);
 				gridMain.ScrollToEnd();
 			}
 			Text="Wiki List History - "+ListNameCur;
@@ -41,10 +41,10 @@ namespace OpenDental {
 		/// <summary></summary>
 		private void FillGridMain() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridRows.Clear();
-			gridMain.ListGridColumns.AddRange(new[] { new GridColumn("User",70),new GridColumn("Saved",80) });
-			gridMain.ListGridRows.AddRange(WikiListHists.GetByNameNoContent(ListNameCur)
+			gridMain.Columns.Clear();
+			gridMain.Rows.Clear();
+			gridMain.Columns.AddRange(new[] { new GridColumn("User",70),new GridColumn("Saved",80) });
+			gridMain.Rows.AddRange(WikiListHists.GetByNameNoContent(ListNameCur)
 				.Select(x => new GridRow(Userods.GetName(x.UserNum),x.DateTimeSaved.ToString()) { Tag=x }));
 			gridMain.EndUpdate();
 		}
@@ -52,14 +52,14 @@ namespace OpenDental {
 		/// <summary></summary>
 		private void FillGridOld() {
 			gridOld.BeginUpdate();
-			gridOld.ListGridColumns.Clear();
-			gridOld.ListGridRows.Clear();
+			gridOld.Columns.Clear();
+			gridOld.Rows.Clear();
 			if(gridMain.GetSelectedIndex()<0) {
 				gridOld.EndUpdate();
 				return;
 			}
 			if(string.IsNullOrEmpty(gridMain.SelectedTag<WikiListHist>()?.ListHeaders)) {
-				gridMain.SelectedGridRows[0].Tag=WikiListHists.SelectOne(gridMain.SelectedTag<WikiListHist>()?.WikiListHistNum??0);
+				gridMain.SelectedRows[0].Tag=WikiListHists.SelectOne(gridMain.SelectedTag<WikiListHist>()?.WikiListHistNum??0);
 			}
 			Dictionary<string,int> dictColWidths=WikiListHeaderWidths.GetFromListHist(gridMain.SelectedTag<WikiListHist>())
 				.ToDictionary(x => x.ColName,x => x.ColWidth);
@@ -75,9 +75,9 @@ namespace OpenDental {
 						return;
 					}
 				}
-				gridOld.ListGridColumns.AddRange(
+				gridOld.Columns.AddRange(
 					table.Columns.OfType<DataColumn>().Select(x => new GridColumn(x.ColumnName,dictColWidths.TryGetValue(x.ColumnName,out int width)?width:100)));
-				gridOld.ListGridRows.AddRange(table.Select().Select(x => new GridRow(x.ItemArray.Select(y => y.ToString()).ToArray())));
+				gridOld.Rows.AddRange(table.Select().Select(x => new GridRow(x.ItemArray.Select(y => y.ToString()).ToArray())));
 			}
 			gridOld.EndUpdate();
 		}
@@ -85,13 +85,13 @@ namespace OpenDental {
 		/// <summary></summary>
 		private void FillGridCur() {
 			gridCur.BeginUpdate();
-			gridCur.ListGridColumns.Clear();
-			gridCur.ListGridRows.Clear();
+			gridCur.Columns.Clear();
+			gridCur.Rows.Clear();
 			Dictionary<string,int> dictColWidths=WikiListHeaderWidths.GetForList(ListNameCur).ToDictionary(x => x.ColName,x => x.ColWidth);
 			using(DataTable table=WikiLists.GetByName(ListNameCur)) {
-				gridCur.ListGridColumns.AddRange(
+				gridCur.Columns.AddRange(
 					table.Columns.OfType<DataColumn>().Select(x => new GridColumn(x.ColumnName,dictColWidths.TryGetValue(x.ColumnName,out int width)?width:100)));
-				gridCur.ListGridRows.AddRange(table.Select().Select(x => new GridRow(x.ItemArray.Select(y => y.ToString()).ToArray())));
+				gridCur.Rows.AddRange(table.Select().Select(x => new GridRow(x.ItemArray.Select(y => y.ToString()).ToArray())));
 			}			
 			gridCur.EndUpdate();
 		}
@@ -119,7 +119,7 @@ namespace OpenDental {
 				return;
 			}
 			FillGridMain();
-			gridMain.SetSelected(gridMain.ListGridRows.Count-1,true);//select the new revision.
+			gridMain.SetSelected(gridMain.Rows.Count-1,true);//select the new revision.
 			gridMain.ScrollToEnd();//in case there are LOTS of revisions. Should this go in the fill grid code? 
 			FillGridOld();
 			FillGridCur();

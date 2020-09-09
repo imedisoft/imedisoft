@@ -119,18 +119,18 @@ namespace OpenDental{
 		private void FillGrid(){
 			RList=Reconciles.GetList(AccountNum);
 			grid.BeginUpdate();
-			grid.ListGridColumns.Clear();
+			grid.Columns.Clear();
 			GridColumn col=new GridColumn("Date",80);
-			grid.ListGridColumns.Add(col);
+			grid.Columns.Add(col);
 			col=new GridColumn("Ending Bal",100,HorizontalAlignment.Right);
-			grid.ListGridColumns.Add(col);
-			grid.ListGridRows.Clear();
+			grid.Columns.Add(col);
+			grid.Rows.Clear();
 			OpenDental.UI.GridRow row;
 			for(int i=0;i<RList.Length;i++){
 				row=new OpenDental.UI.GridRow();
 				row.Cells.Add(RList[i].DateReconcile.ToShortDateString());
 				row.Cells.Add(RList[i].EndingBal.ToString("F"));
-				grid.ListGridRows.Add(row);
+				grid.Rows.Add(row);
 			}
 			grid.EndUpdate();
 			grid.ScrollToEnd();

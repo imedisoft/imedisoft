@@ -73,18 +73,18 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Category",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Code",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("CodeSystem",120);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			//col=new ODGridColumn("Op+Value",80);//Example: >=150
 			//gridMain.Columns.Add(col);
 			col=new GridColumn("Description",250);//Also includes values for labloinc and demographics and vitals. Example: ">150, BP Systolic"
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			//EhrTriggerCur.ProblemDefNumList-----------------------------------------------------------------------------------------------------------------------
 			string[] arrayString=EhrTriggerCur.ProblemDefNumList.Split(new string[] { " " },StringSplitOptions.RemoveEmptyEntries);
@@ -94,7 +94,7 @@ namespace OpenDental {
 				row.Cells.Add(arrayString[i]);
 				row.Cells.Add("Problem Def");
 				row.Cells.Add(ProblemDefinitions.GetItem(PIn.Long(arrayString[i])).Description);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			//EhrTriggerCur.ProblemIcd9List---------------------------------------------------------------------------------------------------------------------------
 			arrayString=EhrTriggerCur.ProblemIcd9List.Split(new string[] { " " },StringSplitOptions.RemoveEmptyEntries);
@@ -104,7 +104,7 @@ namespace OpenDental {
 				row.Cells.Add(arrayString[i]);
 				row.Cells.Add("ICD9 CM");
 				row.Cells.Add(Icd9s.GetByCode(arrayString[i]).Description);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			//EhrTriggerCur.ProblemIcd10List;
 			arrayString=EhrTriggerCur.ProblemIcd10List.Split(new string[] { " " },StringSplitOptions.RemoveEmptyEntries);
@@ -114,7 +114,7 @@ namespace OpenDental {
 				row.Cells.Add(arrayString[i]);
 				row.Cells.Add("ICD10 CM");
 				row.Cells.Add(Icd10s.GetByCode(arrayString[i]).Description);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			//EhrTriggerCur.ProblemSnomedList;
 			arrayString=EhrTriggerCur.ProblemSnomedList.Split(new string[] { " " },StringSplitOptions.RemoveEmptyEntries);
@@ -124,7 +124,7 @@ namespace OpenDental {
 				row.Cells.Add(arrayString[i]);
 				row.Cells.Add("SNOMED CT");
 				row.Cells.Add(Snomeds.GetByCode(arrayString[i]).Description);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			//EhrTriggerCur.MedicationNumList
 			arrayString=EhrTriggerCur.MedicationNumList.Split(new string[] { " " },StringSplitOptions.RemoveEmptyEntries);
@@ -134,7 +134,7 @@ namespace OpenDental {
 				row.Cells.Add(arrayString[i]);
 				row.Cells.Add("Medication Def");
 				row.Cells.Add(Medications.GetDescription(PIn.Long(arrayString[i])));
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			//EhrTriggerCur.RxCuiList
 			arrayString=EhrTriggerCur.RxCuiList.Split(new string[] { " " },StringSplitOptions.RemoveEmptyEntries);
@@ -144,7 +144,7 @@ namespace OpenDental {
 				row.Cells.Add(arrayString[i]);
 				row.Cells.Add("RxCui");
 				row.Cells.Add(RxNorms.GetByRxCUI(arrayString[i]).Description);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			//EhrTriggerCur.CvxList
 			arrayString=EhrTriggerCur.CvxList.Split(new string[] { " " },StringSplitOptions.RemoveEmptyEntries);
@@ -154,7 +154,7 @@ namespace OpenDental {
 				row.Cells.Add(arrayString[i]);
 				row.Cells.Add("Cvx");
 				row.Cells.Add(Cvxs.GetByCode(arrayString[i]).Description);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			//EhrTriggerCur.AllergyDefNumList
 			arrayString=EhrTriggerCur.AllergyDefNumList.Split(new string[] { " " },StringSplitOptions.RemoveEmptyEntries);
@@ -164,7 +164,7 @@ namespace OpenDental {
 				row.Cells.Add(arrayString[i]);
 				row.Cells.Add("Allergy Def");
 				row.Cells.Add(AllergyDefs.GetOne(PIn.Long(arrayString[i])).Description);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			//EhrTriggerCur.DemographicsList
 			arrayString=EhrTriggerCur.DemographicsList.Split(new string[] { " " },StringSplitOptions.RemoveEmptyEntries);
@@ -177,14 +177,14 @@ namespace OpenDental {
 						row.Cells.Add("30525-0");
 						row.Cells.Add("LOINC");
 						row.Cells.Add("Age"+arrayStringElements[1]);//Example "Age>55"
-						gridMain.ListGridRows.Add(row);
+						gridMain.Rows.Add(row);
 						break;
 					case "gender":
 						row.Cells.Add("Demographic");
 						row.Cells.Add("46098-0");
 						row.Cells.Add("LOINC");
 						row.Cells.Add("Gender:"+arrayString[i].Replace("gender,",""));//Example "Gender:Male, Female, Unknown/Undifferentiated"
-						gridMain.ListGridRows.Add(row);
+						gridMain.Rows.Add(row);
 						break;
 					default:
 						//should never happen
@@ -222,7 +222,7 @@ namespace OpenDental {
 				//		row.Cells.Add("");
 				//		break;
 				//}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			//EhrTriggerCur.VitalLoincList
 			arrayString=EhrTriggerCur.VitalLoincList.Split(new string[] { " " },StringSplitOptions.RemoveEmptyEntries);
@@ -235,28 +235,28 @@ namespace OpenDental {
 						row.Cells.Add("8302-2");
 						row.Cells.Add("LOINC");
 						row.Cells.Add("Height"+arrayString[i].Replace("height,","")+" in.");//Example "Age>55"
-						gridMain.ListGridRows.Add(row);
+						gridMain.Rows.Add(row);
 						break;
 					case "weight":
 						row.Cells.Add("Vitals");
 						row.Cells.Add("29463-7");
 						row.Cells.Add("LOINC");
 						row.Cells.Add("Weight:"+arrayString[i].Replace("weight,",""));//Example "Gender:Male, Female, Unknown/Undifferentiated"
-						gridMain.ListGridRows.Add(row);
+						gridMain.Rows.Add(row);
 						break;
 					case "bp???":
 						row.Cells.Add("Vitals");
 						row.Cells.Add("???There are two.");
 						row.Cells.Add("LOINC");
 						row.Cells.Add("???");//Example "Gender:Male, Female, Unknown/Undifferentiated"
-						gridMain.ListGridRows.Add(row);
+						gridMain.Rows.Add(row);
 						break;
 					case "BMI":
 						row.Cells.Add("Vitals");
 						row.Cells.Add("39156-5");
 						row.Cells.Add("LOINC");
 						row.Cells.Add("BMI"+arrayString[i].Replace("BMI,","").Replace("%","")+"%");//Example "Gender:Male, Female, Unknown/Undifferentiated"
-						gridMain.ListGridRows.Add(row);
+						gridMain.Rows.Add(row);
 						break;
 					default:
 						//should never happen

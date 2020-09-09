@@ -24,14 +24,14 @@ namespace OpenDental {
 
 		private void FormProvidersMultiPick_Load(object sender,EventArgs e) {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Abbrev",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Last Name",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("First Name",90);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			if(_listProviders==null) {
 				_listProviders=Providers.GetDeepCopy(true);
@@ -41,7 +41,7 @@ namespace OpenDental {
 				row.Cells.Add(_listProviders[i].Abbr);
 				row.Cells.Add(_listProviders[i].LastName);
 				row.Cells.Add(_listProviders[i].FirstName);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			List<long> listSelectedProvNums=SelectedProviders.Select(x => x.Id).ToList();

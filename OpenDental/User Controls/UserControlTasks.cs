@@ -198,7 +198,7 @@ namespace OpenDental
 		{
 			taskListsTree.Nodes.Clear();
 
-			tasksGrid.ListGridRows.Clear();
+			tasksGrid.Rows.Clear();
 			tasksGrid.Invalidate();
 		}
 
@@ -390,7 +390,7 @@ namespace OpenDental
 			if (Security.CurrentUser == null)
 			{
 				tasksGrid.BeginUpdate();
-				tasksGrid.ListGridRows.Clear();
+				tasksGrid.Rows.Clear();
 				tasksGrid.EndUpdate();
 
 				return;
@@ -438,13 +438,13 @@ namespace OpenDental
 			}
 
 			tasksGrid.BeginUpdate();
-			tasksGrid.ListGridColumns.Clear();
-			tasksGrid.ListGridColumns.Add(new GridColumn("", 17) { ImageList = imageListTree });
+			tasksGrid.Columns.Clear();
+			tasksGrid.Columns.Add(new GridColumn("", 17) { ImageList = imageListTree });
 			var column = new GridColumn("+/-", 17, HorizontalAlignment.Center);
 			column.CustomClickEvent += GridHeaderClickEvent;
-			tasksGrid.ListGridColumns.Add(column);
-			tasksGrid.ListGridColumns.Add(new GridColumn("Description", 200));
-			tasksGrid.ListGridRows.Clear();
+			tasksGrid.Columns.Add(column);
+			tasksGrid.Columns.Add(new GridColumn("Description", 200));
+			tasksGrid.Rows.Clear();
 
 			var appointmentIds = tasks.Where(x => x.AppointmentId.HasValue).Select(y => y.AppointmentId.Value).ToList();
 			var appointmentDescriptions = Tasks.GetAppointmentDescriptions(appointmentIds);
@@ -566,10 +566,10 @@ namespace OpenDental
 				gridRow.BackColor = Definitions.GetColor(DefinitionCategory.TaskPriorities, task.PriorityId);
 				gridRow.Tag = task;
 
-				tasksGrid.ListGridRows.Add(gridRow);
+				tasksGrid.Rows.Add(gridRow);
 				if (_clickedTask is Task && task.Id == _clickedTask.Id)
 				{
-					selectedTaskIndex = tasksGrid.ListGridRows.Count - 1;
+					selectedTaskIndex = tasksGrid.Rows.Count - 1;
 				}
 			}
 
@@ -1549,7 +1549,7 @@ namespace OpenDental
 
 			if (_clickedI == -1) return;
 
-			if (_clickedI >= tasksGrid.ListGridRows.Count)
+			if (_clickedI >= tasksGrid.Rows.Count)
 			{//Grid refreshed mid-click and _clickedI is no longer valid.
 				_clickedI = -1;
 				_clickedTask = null;
@@ -1557,9 +1557,9 @@ namespace OpenDental
 				return;
 			}
 
-			if (tasksGrid.ListGridRows[_clickedI].Tag is Task)
+			if (tasksGrid.Rows[_clickedI].Tag is Task)
 			{
-				_clickedTask = (Task)tasksGrid.ListGridRows[_clickedI].Tag;//Task lists cause _clickedTask to be null
+				_clickedTask = (Task)tasksGrid.Rows[_clickedI].Tag;//Task lists cause _clickedTask to be null
 			}
 			else
 			{

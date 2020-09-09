@@ -49,12 +49,12 @@ namespace Imedisoft.Forms
 			}
 
 			grid.BeginUpdate();
-			grid.ListGridColumns.Clear();
-			grid.ListGridColumns.Add(new GridColumn("Date Time", 120));
-			grid.ListGridColumns.Add(new GridColumn("User", 70));
-			grid.ListGridColumns.Add(new GridColumn("Permission", 170));
-			grid.ListGridColumns.Add(new GridColumn("Log Text", 510));
-			grid.ListGridRows.Clear();
+			grid.Columns.Clear();
+			grid.Columns.Add(new GridColumn("Date Time", 120));
+			grid.Columns.Add(new GridColumn("User", 70));
+			grid.Columns.Add(new GridColumn("Permission", 170));
+			grid.Columns.Add(new GridColumn("Log Text", 510));
+			grid.Rows.Clear();
 
 			foreach (var securityLog in securityLogs)
 			{
@@ -66,7 +66,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(securityLog.Type.ToString());
 				gridRow.Cells.Add(securityLog.LogMessage);
 
-				grid.ListGridRows.Add(gridRow);
+				grid.Rows.Add(gridRow);
 			}
 
 			grid.EndUpdate();

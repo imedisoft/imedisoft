@@ -388,9 +388,9 @@ namespace OpenDental
 			Table table = new Table();
 			Column col;
 			col = table.AddColumn(Unit.FromInch(dummyColW / 100));
-			for (int i = 0; i < grid.ListGridColumns.Count; i++)
+			for (int i = 0; i < grid.Columns.Count; i++)
 			{
-				col = table.AddColumn(Unit.FromInch((double)grid.ListGridColumns[i].ColumnWidth / 96));
+				col = table.AddColumn(Unit.FromInch((double)grid.Columns[i].ColumnWidth / 96));
 				col.LeftPadding = Unit.FromInch(.01);
 				col.RightPadding = Unit.FromInch(.01);
 			}
@@ -410,11 +410,11 @@ namespace OpenDental
 			PdfDocument pdfd = new PdfDocument();
 			PdfPage pg = pdfd.AddPage();
 			XGraphics gx = XGraphics.FromPdfPage(pg);//A dummy graphics object for measuring the text
-			for (int i = 0; i < grid.ListGridColumns.Count; i++)
+			for (int i = 0; i < grid.Columns.Count; i++)
 			{
 				cell = row.Cells[i + 1];
 				par = cell.AddParagraph();
-				par.AddFormattedText(grid.ListGridColumns[i].HeaderText, fontHead);
+				par.AddFormattedText(grid.Columns[i].HeaderText, fontHead);
 				par.Format.Alignment = ParagraphAlignment.Center;
 				cell.Format.Alignment = ParagraphAlignment.Center;
 				cell.Borders.Width = Unit.FromPoint(1);
@@ -425,17 +425,17 @@ namespace OpenDental
 			bool isBold;
             GdiColor color;
 			int edgeRows = 1;
-			for (int i = 0; i < grid.ListGridRows.Count; i++, edgeRows++)
+			for (int i = 0; i < grid.Rows.Count; i++, edgeRows++)
 			{
 				row = table.AddRow();
 				row.TopPadding = Unit.FromInch(.01);
 				row.BottomPadding = Unit.FromInch(0);
-				for (int j = 0; j < grid.ListGridColumns.Count; j++)
+				for (int j = 0; j < grid.Columns.Count; j++)
 				{
 					cell = row.Cells[j + 1];
 					par = cell.AddParagraph();
-					isBold = grid.ListGridRows[i].Cells[j].Bold ?? grid.ListGridRows[i].Bold;
-					color = grid.ListGridRows[i].Cells[j].ForeColor ?? grid.ListGridRows[i].ForeColor;
+					isBold = grid.Rows[i].Cells[j].Bold ?? grid.Rows[i].Bold;
+					color = grid.Rows[i].Cells[j].ForeColor ?? grid.Rows[i].ForeColor;
 					
 					fontBody = CreateFont(8.5f, isBold, color);
 					XFont xFont;
@@ -448,8 +448,8 @@ namespace OpenDental
 					{
 						xFont = new XFont("Arial", 11.65);//Yep, a guess-and-check value here too.
 					}
-					int colWidth = grid.ListGridColumns[j].ColumnWidth;
-					string cellText = grid.ListGridRows[i].Cells[j].Text;
+					int colWidth = grid.Columns[j].ColumnWidth;
+					string cellText = grid.Rows[i].Cells[j].Text;
 					List<string> listWords = cellText.Split(new[] { " ", "\t", "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
 						 .Where(x => !string.IsNullOrWhiteSpace(x)).ToList();//PdfSharp.MeasureString sometimes throws an exception when measuring whitespace
 					bool isAnyWordWiderThanColumn = listWords.Any(x => gx.MeasureString(x, xFont).Width > colWidth);
@@ -463,39 +463,39 @@ namespace OpenDental
 						//Do our own line splitting and word splitting
 						DrawTextWithWordSplits(par, fontBody, colWidth, cellText, gx, xFont);
 					}
-					if (grid.ListGridColumns[j].TextAlign == HorizontalAlignment.Center)
+					if (grid.Columns[j].TextAlign == HorizontalAlignment.Center)
 					{
 						cell.Format.Alignment = ParagraphAlignment.Center;
 					}
-					if (grid.ListGridColumns[j].TextAlign == HorizontalAlignment.Left)
+					if (grid.Columns[j].TextAlign == HorizontalAlignment.Left)
 					{
 						cell.Format.Alignment = ParagraphAlignment.Left;
 					}
-					if (grid.ListGridColumns[j].TextAlign == HorizontalAlignment.Right)
+					if (grid.Columns[j].TextAlign == HorizontalAlignment.Right)
 					{
 						cell.Format.Alignment = ParagraphAlignment.Right;
 					}
 					cell.Borders.Color = new MigraDoc.DocumentObjectModel.Color(180, 180, 180);
-					if (grid.ListGridRows[i].LowerBorderColor.HasValue)
+					if (grid.Rows[i].LowerBorderColor.HasValue)
 					{
-						cell.Borders.Bottom.Color = ConvertColor(grid.ListGridRows[i].LowerBorderColor.Value);
+						cell.Borders.Bottom.Color = ConvertColor(grid.Rows[i].LowerBorderColor.Value);
 					}
 				}
-				if (grid.ListGridRows[i].Note != null && grid.ListGridRows[i].Note != "" && grid.NoteSpanStop > 0 && grid.NoteSpanStart < grid.ListGridColumns.Count)
+				if (grid.Rows[i].Note != null && grid.Rows[i].Note != "" && grid.NoteSpanStop > 0 && grid.NoteSpanStart < grid.Columns.Count)
 				{
 					row = table.AddRow();
 					row.TopPadding = Unit.FromInch(.01);
 					row.BottomPadding = Unit.FromInch(0);
 					cell = row.Cells[grid.NoteSpanStart + 1];
 					par = cell.AddParagraph();
-					par.AddFormattedText(grid.ListGridRows[i].Note, fontBody);
+					par.AddFormattedText(grid.Rows[i].Note, fontBody);
 					cell.Format.Alignment = ParagraphAlignment.Left;
 					cell.Borders.Color = new MigraDoc.DocumentObjectModel.Color(180, 180, 180);
-					cell.MergeRight = grid.ListGridColumns.Count - 1 - grid.NoteSpanStart;
+					cell.MergeRight = grid.Columns.Count - 1 - grid.NoteSpanStart;
 					edgeRows++;
 				}
 			}
-			table.SetEdge(1, 0, grid.ListGridColumns.Count, edgeRows, Edge.Box, MigraDoc.DocumentObjectModel.BorderStyle.Single, 1, Colors.Black);
+			table.SetEdge(1, 0, grid.Columns.Count, edgeRows, Edge.Box, MigraDoc.DocumentObjectModel.BorderStyle.Single, 1, Colors.Black);
 			section.Add(table);
 		}
 

@@ -37,9 +37,9 @@ namespace Imedisoft.Forms
 		private void FillGrid()
 		{
 			gradingScalesGrid.BeginUpdate();
-			gradingScalesGrid.ListGridColumns.Clear();
-			gradingScalesGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Description, 160));
-			gradingScalesGrid.ListGridRows.Clear();
+			gradingScalesGrid.Columns.Clear();
+			gradingScalesGrid.Columns.Add(new GridColumn(Translation.Common.Description, 160));
+			gradingScalesGrid.Rows.Clear();
 
 			foreach (var gradingScale in GradingScales.GetAll())
 			{
@@ -47,7 +47,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(gradingScale.Description);
 				gridRow.Tag = gradingScale;
 
-				gradingScalesGrid.ListGridRows.Add(gridRow);
+				gradingScalesGrid.Rows.Add(gridRow);
 			}
 
 			gradingScalesGrid.EndUpdate();

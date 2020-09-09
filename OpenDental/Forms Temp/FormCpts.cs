@@ -36,17 +36,17 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("CPT Code",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			//col=new ODGridColumn("Deprecated",75,HorizontalAlignment.Center);
 			//gridMain.Columns.Add(col);
 			col=new GridColumn("Description",500);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			//col=new ODGridColumn("Used By CQM's",75);
 			//gridMain.Columns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			listCpts=Cpts.GetBySearchText(textCode.Text);
 			//List<ODGridRow> listAll=new List<ODGridRow>();//for sorting grid after it has been filled.
@@ -57,7 +57,7 @@ namespace OpenDental {
 				//row.Cells.Add(EhrCodes.GetMeasureIdsForCode(listCpts[i].SnomedCode,"SNOMEDCT"));
 				row.Tag=listCpts[i];;
 				//listAll.Add(row);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			//listAll.Sort(SortMeasuresMet);
 			//for(int i=0;i<listAll.Count;i++) {
@@ -84,7 +84,7 @@ namespace OpenDental {
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			if(IsSelectionMode) {
-				SelectedCpt=(Cpt)gridMain.ListGridRows[e.Row].Tag;
+				SelectedCpt=(Cpt)gridMain.Rows[e.Row].Tag;
 				DialogResult=DialogResult.OK;
 				return;
 			}
@@ -113,7 +113,7 @@ namespace OpenDental {
 				MessageBox.Show("Please select an item first.");
 				return;
 			}
-			SelectedCpt=(Cpt)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
+			SelectedCpt=(Cpt)gridMain.Rows[gridMain.GetSelectedIndex()].Tag;
 			DialogResult=DialogResult.OK;
 		}
 

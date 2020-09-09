@@ -24,22 +24,22 @@ namespace OpenDental {
 
 		private void FillGrid(){
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Year",50);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Quarter",50);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Key",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			listKeys=EhrQuarterlyKeys.Refresh(0);
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<listKeys.Count;i++) {
 				row=new GridRow();
 				row.Cells.Add(listKeys[i].YearValue.ToString());
 				row.Cells.Add(listKeys[i].QuarterValue.ToString());
 				row.Cells.Add(listKeys[i].KeyValue);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

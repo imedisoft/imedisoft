@@ -25,41 +25,41 @@ namespace OpenDental.User_Controls.SetupWizard {
 		private void FillGrid() {
 			Color needsAttnCol = OpenDental.SetupWizard.GetColor(ODSetupStatus.NeedsAttention);
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			if(PrefC.HasClinicsEnabled) {
 				col = new GridColumn("OpName",110);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col = new GridColumn("Abbrev",110);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col = new GridColumn("Clinic",110);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col = new GridColumn("ProvDentist",110);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col = new GridColumn("ProvHygienist",110);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col = new GridColumn("IsHygiene",60,HorizontalAlignment.Center);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col = new GridColumn("IsHidden",60,HorizontalAlignment.Center);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			else {
 				col = new GridColumn("OpName",135);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col = new GridColumn("Abbrev",120);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col = new GridColumn("ProvDentist",130);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col = new GridColumn("ProvHygienist",130);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col = new GridColumn("IsHygiene",80,HorizontalAlignment.Center);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col = new GridColumn("IsHidden",80,HorizontalAlignment.Center);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			//col = new ODGridColumn("Clinic",120);
 			//gridMain.Columns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			bool IsAllComplete = true;
 			if(_listOps.Count == 0) {
@@ -96,7 +96,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 				//	IsAllComplete=false;
 				//}
 				row.Tag=opCur;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			if(IsAllComplete) {
@@ -134,7 +134,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			Operatory opCur = (Operatory)gridMain.ListGridRows[e.Row].Tag;
+			Operatory opCur = (Operatory)gridMain.Rows[e.Row].Tag;
 			FormOperatoryEdit FormOE = new FormOperatoryEdit(opCur);
 			List<Operatory> listOld = new List<Operatory>();
 			foreach(Operatory op in _listOps) {

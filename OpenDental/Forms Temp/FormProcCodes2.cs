@@ -1099,8 +1099,8 @@ namespace OpenDental{
 			FillGrid();
 			//Preselect corresponding procedure codes once on load.  Do not do it within FillGrid().
 			if(ListSelectedProcCodes.Count > 0) {
-				for(int i=0;i<gridMain.ListGridRows.Count;i++) {
-					if(ListSelectedProcCodes.Any(x => x.CodeNum==((ProcedureCode)gridMain.ListGridRows[i].Tag).CodeNum)) {
+				for(int i=0;i<gridMain.Rows.Count;i++) {
+					if(ListSelectedProcCodes.Any(x => x.CodeNum==((ProcedureCode)gridMain.Rows[i].Tag).CodeNum)) {
 						gridMain.SetSelected(i,true);
 					}
 				}
@@ -1438,7 +1438,7 @@ namespace OpenDental{
 		private void FillGrid() {
 			if(_listFeeScheds.Count==0) {
 				gridMain.BeginUpdate();
-				gridMain.ListGridRows.Clear();
+				gridMain.Rows.Clear();
 				gridMain.EndUpdate();
 				MessageBox.Show("You must have at least one fee schedule created.");
 				return;
@@ -1505,23 +1505,23 @@ namespace OpenDental{
 				}
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			//The order of these columns are important for gridMain_CellDoubleClick(), gridMain_CellLeave(), and GridMain_CellEnter()
 			GridColumn col=new GridColumn("Category",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Description",206);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Abbr",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Code",50);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Fee 1",50,HorizontalAlignment.Right,true);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Fee 2",50,HorizontalAlignment.Right,true);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Fee 3",50,HorizontalAlignment.Right,true);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			string searchAbbr=textAbbreviation.Text;
 			string searchDesc=textDescription.Text;
@@ -1596,7 +1596,7 @@ namespace OpenDental{
 					row.Cells.Add(fee3.Amount.ToString("n"));
 					row.Cells[row.Cells.Count-1].ForeColor=GetColorForFee(fee3);
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			gridMain.ScrollValue=scroll;
@@ -1620,9 +1620,9 @@ namespace OpenDental{
 				SynchAndFillListFees(true);
 			}
 			if(IsSelectionMode) {
-				SelectedCodeNum=((ProcedureCode)gridMain.ListGridRows[e.Row].Tag).CodeNum;
+				SelectedCodeNum=((ProcedureCode)gridMain.Rows[e.Row].Tag).CodeNum;
 				ListSelectedProcCodes.Clear();
-				ListSelectedProcCodes.Add(((ProcedureCode)gridMain.ListGridRows[e.Row].Tag).Copy());
+				ListSelectedProcCodes.Add(((ProcedureCode)gridMain.Rows[e.Row].Tag).Copy());
 				DialogResult=DialogResult.OK;
 				return;
 			}
@@ -1636,7 +1636,7 @@ namespace OpenDental{
 			}
 			//not on a fee: Edit code instead
 			//changed=false;//We just updated the database and synced our cache, set changed to false.
-			ProcedureCode procCode=(ProcedureCode)gridMain.ListGridRows[e.Row].Tag;
+			ProcedureCode procCode=(ProcedureCode)gridMain.Rows[e.Row].Tag;
 			Definition defProcCat=Definitions.GetDefsForCategory(DefinitionCategory.ProcCodeCats).FirstOrDefault(x => x.Id==procCode.ProcCat);
 			FormProcCodeEdit formProcCodeEdit=new FormProcCodeEdit(procCode);
 			formProcCodeEdit.IsNew=false;
@@ -1660,7 +1660,7 @@ namespace OpenDental{
 				return;
 			}
 			//Logic only works for columns 4 to 6.
-			long codeNum=((ProcedureCode)gridMain.ListGridRows[e.Row].Tag).CodeNum;
+			long codeNum=((ProcedureCode)gridMain.Rows[e.Row].Tag).CodeNum;
 			FeeSched feeSched=null;
 			long provNum=0;
 			long clinicNum=0;
@@ -1684,7 +1684,7 @@ namespace OpenDental{
 			}
 			else if(e.Col==5) {
 				if(comboFeeSched2.SelectedIndex==0) {//It's on the "none" option
-					gridMain.ListGridRows[e.Row].Cells[e.Col].Text="";
+					gridMain.Rows[e.Row].Cells[e.Col].Text="";
 					return;
 				}
 				feeSched=_listFeeScheds[comboFeeSched2.SelectedIndex-1];
@@ -1704,7 +1704,7 @@ namespace OpenDental{
 			}
 			else if(e.Col==6) {
 				if(comboFeeSched3.SelectedIndex==0) {//It's on the "none" option
-					gridMain.ListGridRows[e.Row].Cells[e.Col].Text="";
+					gridMain.Rows[e.Row].Cells[e.Col].Text="";
 					return;
 				}
 				feeSched=_listFeeScheds[comboFeeSched3.SelectedIndex-1];
@@ -1730,21 +1730,21 @@ namespace OpenDental{
 				datePrevious = fee.SecDateTEdit;
 				feeAmtOld=fee.Amount.ToString("n");
 			}
-			string feeAmtNewStr=gridMain.ListGridRows[e.Row].Cells[e.Col].Text;
+			string feeAmtNewStr=gridMain.Rows[e.Row].Cells[e.Col].Text;
 			double feeAmtNew=0;
 			//Attempt to parse the entered value for errors.
-			if(feeAmtNewStr!="" && !Double.TryParse(gridMain.ListGridRows[e.Row].Cells[e.Col].Text,out feeAmtNew)) {
+			if(feeAmtNewStr!="" && !Double.TryParse(gridMain.Rows[e.Row].Cells[e.Col].Text,out feeAmtNew)) {
 				gridMain.SetSelected(new Point(e.Col,e.Row));
-				gridMain.ListGridRows[e.Row].Cells[e.Col].Text=feeAmtOld;
+				gridMain.Rows[e.Row].Cells[e.Col].Text=feeAmtOld;
 				MessageBox.Show("Please fix data entry error first.");
 				return;
 			}
 			if(Fees.IsFeeAmtEqual(fee,feeAmtNewStr) || !FeeL.CanEditFee(feeSched,provNum,clinicNum)) {
 				if(fee==null || fee.Amount==-1) {
-					gridMain.ListGridRows[e.Row].Cells[e.Col].Text="";
+					gridMain.Rows[e.Row].Cells[e.Col].Text="";
 				}
 				else {
-					gridMain.ListGridRows[e.Row].Cells[e.Col].Text=feeAmtOld;
+					gridMain.Rows[e.Row].Cells[e.Col].Text=feeAmtOld;
 				}
 				gridMain.Invalidate();
 				return;
@@ -1758,17 +1758,17 @@ namespace OpenDental{
 					//Duplicating if check from above to prevent us from accidentally hitting users with infinite popups. We want the same end result for both of the checks
 					//but we need to do the group check 2nd.
 					if(fee==null || fee.Amount==-1) {
-						gridMain.ListGridRows[e.Row].Cells[e.Col].Text="";
+						gridMain.Rows[e.Row].Cells[e.Col].Text="";
 					}
 					else {
-						gridMain.ListGridRows[e.Row].Cells[e.Col].Text=feeAmtOld;
+						gridMain.Rows[e.Row].Cells[e.Col].Text=feeAmtOld;
 					}
 					gridMain.Invalidate();
 					return;
 				}
 			}
 			if(feeAmtNewStr!="") {
-				gridMain.ListGridRows[e.Row].Cells[e.Col].Text=feeAmtNew.ToString("n"); //Fix the number formatting and display it.
+				gridMain.Rows[e.Row].Cells[e.Col].Text=feeAmtNew.ToString("n"); //Fix the number formatting and display it.
 			}
 			if(feeSched.IsGlobal) { //Global fee schedules have only one fee so blindly insert/update the fee. There will be no more localized copy.
 				if(fee==null) { //Fee doesn't exist, insert
@@ -1954,8 +1954,8 @@ namespace OpenDental{
 				return;
 			}
 			List<ProcedureCode> listCodes=new List<ProcedureCode>();
-			for(int i=0;i<gridMain.ListGridRows.Count;i++) {
-				ProcedureCode procCode=(ProcedureCode)gridMain.ListGridRows[i].Tag;
+			for(int i=0;i<gridMain.Rows.Count;i++) {
+				ProcedureCode procCode=(ProcedureCode)gridMain.Rows[i].Tag;
 				if(procCode.ProcCode=="") {
 					continue;
 				}

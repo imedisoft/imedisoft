@@ -950,7 +950,7 @@ namespace OpenDental
 			}
 			_preauthOption = comboPreauthOptions.GetSelected<RpOutstandingIns.PreauthOptions>();
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			List<DisplayField> listDisplayFields = DisplayFields.GetForCategory(DisplayFieldCategory.OutstandingInsReport);
 			foreach (DisplayField fieldCur in listDisplayFields)
 			{
@@ -971,12 +971,12 @@ namespace OpenDental
 					sortingStrat = GridSortingStrategy.AmountParse;
 					textAlign = HorizontalAlignment.Right;
 				}
-				gridMain.ListGridColumns.Add(new GridColumn(string.IsNullOrEmpty(fieldCur.Description) ? fieldCur.InternalName : fieldCur.Description
+				gridMain.Columns.Add(new GridColumn(string.IsNullOrEmpty(fieldCur.Description) ? fieldCur.InternalName : fieldCur.Description
 					, fieldCur.ColumnWidth
 					, textAlign
 					, sortingStrat));
 			}
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			//UI elements need to be called on main thread for our progress bar pattern.
 			DateTime dateTimeFrom = GetDateFrom();
 			DateTime dateTimeTo = GetDateTo();
@@ -1011,11 +1011,11 @@ namespace OpenDental
 				gridMain.EndUpdate();
 				return;
 			}
-			listRows.ForEach(x => gridMain.ListGridRows.Add(x));
+			listRows.ForEach(x => gridMain.Rows.Add(x));
 			gridMain.EndUpdate();
 			checkIgnoreCustom.Checked = isIgnoreCustomChecked;
 			textBox1.Text = total.ToString("c");
-			labelClaimCount.Text = string.Format("{0} {1}", gridMain.ListGridRows.Count, gridMain.ListGridRows.Count == 1 ? "claim" : "claims");
+			labelClaimCount.Text = string.Format("{0} {1}", gridMain.Rows.Count, gridMain.Rows.Count == 1 ? "claim" : "claims");
 			RefreshSelectedInfo();
 		}
 
@@ -1202,7 +1202,7 @@ namespace OpenDental
 			switch (menuCode)
 			{
 				case 0://Go to Account
-					GotoModule.GotoAccount(((RpOutstandingIns.OutstandingInsClaim)gridMain.ListGridRows[index].Tag).PatNum);
+					GotoModule.GotoAccount(((RpOutstandingIns.OutstandingInsClaim)gridMain.Rows[index].Tag).PatNum);
 					break;
 				case 1://Assign to Me
 					AssignUserHelper(Security.CurrentUser.Id);
@@ -1219,7 +1219,7 @@ namespace OpenDental
 			{
 				return;
 			}
-			Claim claim = Claims.GetClaim(((RpOutstandingIns.OutstandingInsClaim)gridMain.ListGridRows[e.Row].Tag).ClaimNum);
+			Claim claim = Claims.GetClaim(((RpOutstandingIns.OutstandingInsClaim)gridMain.Rows[e.Row].Tag).ClaimNum);
 			if (claim == null)
 			{
 				MessageBox.Show("The claim has been deleted.");
@@ -1236,9 +1236,9 @@ namespace OpenDental
 		private void buttonUpdateCustomTrack_Click(object sender, EventArgs e)
 		{
 			List<long> listClaimNum = new List<long>();
-			for (int i = 0; i < gridMain.ListGridRows.Count; i++)
+			for (int i = 0; i < gridMain.Rows.Count; i++)
 			{
-				listClaimNum.Add(((RpOutstandingIns.OutstandingInsClaim)gridMain.ListGridRows[i].Tag).ClaimNum);
+				listClaimNum.Add(((RpOutstandingIns.OutstandingInsClaim)gridMain.Rows[i].Tag).ClaimNum);
 			}
 			if (listClaimNum.Count == 0)
 			{
@@ -1286,7 +1286,7 @@ namespace OpenDental
 			List<ODTuple<long, long>> listTrackingNumsAndClaimNums = new List<ODTuple<long, long>>();
 			foreach (int index in gridMain.SelectedIndices)
 			{
-				RpOutstandingIns.OutstandingInsClaim outstandingInsClaim = (RpOutstandingIns.OutstandingInsClaim)gridMain.ListGridRows[index].Tag;
+				RpOutstandingIns.OutstandingInsClaim outstandingInsClaim = (RpOutstandingIns.OutstandingInsClaim)gridMain.Rows[index].Tag;
 				long claimTrackingNum = _listNewClaimTrackings.FirstOrDefault(x => x.ClaimNum == outstandingInsClaim.ClaimNum)?.ClaimTrackingNum ?? 0;
 				long claimNum = outstandingInsClaim?.ClaimNum ?? 0;
 				listTrackingNumsAndClaimNums.Add(new Tuple<long, long>(claimTrackingNum, claimNum));
@@ -1477,7 +1477,7 @@ namespace OpenDental
 
 		private void RefreshSelectedInfo()
 		{
-			List<RpOutstandingIns.OutstandingInsClaim> listSelected = gridMain.SelectedGridRows.Select(x => x.Tag)
+			List<RpOutstandingIns.OutstandingInsClaim> listSelected = gridMain.SelectedRows.Select(x => x.Tag)
 				.OfType<RpOutstandingIns.OutstandingInsClaim>().ToList();
 			if (listSelected.Count == 0)
 			{
@@ -1624,18 +1624,18 @@ namespace OpenDental
 				//new FileStream(,FileMode.Create,FileAccess.Write,FileShare.Read)))
 				{
 					String line = "";
-					for (int i = 0; i < gridMain.ListGridColumns.Count; i++)
+					for (int i = 0; i < gridMain.Columns.Count; i++)
 					{
-						line += gridMain.ListGridColumns[i].HeaderText + "\t";
+						line += gridMain.Columns[i].HeaderText + "\t";
 					}
 					sw.WriteLine(line);
-					for (int i = 0; i < gridMain.ListGridRows.Count; i++)
+					for (int i = 0; i < gridMain.Rows.Count; i++)
 					{
 						line = "";
-						for (int j = 0; j < gridMain.ListGridColumns.Count; j++)
+						for (int j = 0; j < gridMain.Columns.Count; j++)
 						{
-							line += gridMain.ListGridRows[i].Cells[j].Text;
-							if (j < gridMain.ListGridColumns.Count - 1)
+							line += gridMain.Rows[i].Cells[j].Text;
+							if (j < gridMain.Columns.Count - 1)
 							{
 								line += "\t";
 							}

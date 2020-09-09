@@ -25,24 +25,24 @@ namespace OpenDental
 		{
 			_listPatClones = Patients.GetAllPatients(); //change this to get a list of all patients WITH possible clones
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			List<DisplayField> fields = DisplayFields.GetForCategory(DisplayFieldCategory.PatientInformation);
 			col = new GridColumn("First Name", 115);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("Last Name", 115);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("Middle", 65);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("Gender", 65);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("Birthdate", 75);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("PriProv", 135);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("SecProv", 135);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for (int i = 0; i < _listPatClones.Count; i++)
 			{
@@ -55,7 +55,7 @@ namespace OpenDental
 				row.Cells.Add(Providers.GetLongDesc(Patients.GetProvNum(_listPatClones[i])));
 				row.Cells.Add(Providers.GetLongDesc(_listPatClones[i].SecProv));
 				row.Tag = _listPatClones[i];
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

@@ -415,14 +415,14 @@ namespace OpenDental{
 		private void FillGrid(){
 			//does not refresh from database.
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Service Description",300);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Days Published",120);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Actual Days",120);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<turnaroundList.Count;i++){
 				row=new GridRow();
@@ -434,7 +434,7 @@ namespace OpenDental{
 					row.Cells.Add(turnaroundList[i].DaysPublished.ToString());
 				}
 				row.Cells.Add(turnaroundList[i].DaysActual.ToString());
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

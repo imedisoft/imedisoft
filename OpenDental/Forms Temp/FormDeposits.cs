@@ -178,16 +178,16 @@ namespace OpenDental{
 				}
 			}
 			grid.BeginUpdate();
-			grid.ListGridColumns.Clear();
+			grid.Columns.Clear();
 			GridColumn col=new GridColumn("Date",80);
-			grid.ListGridColumns.Add(col);
+			grid.Columns.Add(col);
 			col=new GridColumn("Amount",90,HorizontalAlignment.Right);
-			grid.ListGridColumns.Add(col);
+			grid.Columns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
 				col=new GridColumn("Clinic",150);
-				grid.ListGridColumns.Add(col);
+				grid.Columns.Add(col);
 			}
-			grid.ListGridRows.Clear();
+			grid.Rows.Clear();
 			OpenDental.UI.GridRow row;
 			for(int i=0;i<DList.Length;i++){
 				row=new OpenDental.UI.GridRow();
@@ -196,7 +196,7 @@ namespace OpenDental{
 				if(PrefC.HasClinicsEnabled) {
 					row.Cells.Add(" "+DList[i].ClinicAbbr);//padding left with space to add separation between amount and clinic abbr
 				}
-				grid.ListGridRows.Add(row);
+				grid.Rows.Add(row);
 			}
 			grid.EndUpdate();
 			grid.ScrollToEnd();

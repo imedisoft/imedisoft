@@ -356,7 +356,7 @@ namespace OpenDental{
 			}
 			//Carriers.Refresh();
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			/*if(checkCDAnet.Checked){
 				//gridMain.Size=new Size(745,gridMain.Height);
@@ -390,31 +390,31 @@ namespace OpenDental{
 			else{*/
 				//gridMain.Size=new Size(839,gridMain.Height);
 			col=new GridColumn("Carrier Name",160);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Phone",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Address",130);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			//col=new ODGridColumn("Address2",120);
 			//gridMain.Columns.Add(col);
 			col=new GridColumn("City",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("ST",50);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Zip",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("ElectID",50);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Hidden",50,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Plans",50);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
 				col=new GridColumn("CDAnet",50);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			//}
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			table=Carriers.GetBigList(checkCDAnet.Checked,checkShowHidden.Checked,textCarrier.Text,textPhone.Text);
 			for(int i=0;i<table.Rows.Count;i++){
@@ -453,7 +453,7 @@ namespace OpenDental{
 					row.Cells.Add(table.Rows[i]["isCDA"].ToString());
 				}
 				//}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			for(int i=0;i<table.Rows.Count;i++){
@@ -492,7 +492,7 @@ namespace OpenDental{
 		}
 
 		private void gridMain_CellClick(object sender,ODGridClickEventArgs e) {
-			GridCell gridCellCur=gridMain.ListGridRows[e.Row].Cells[e.Col];
+			GridCell gridCellCur=gridMain.Rows[e.Row].Cells[e.Col];
 			//Only grid cells with phone numbers are blue and underlined.
 			if(gridCellCur.ForeColor==System.Drawing.Color.Blue && gridCellCur.Underline==true && Programs.GetCur(ProgramName.DentalTekSmartOfficePhone).Enabled) {
 				DentalTek.PlaceCall(gridCellCur.Text);

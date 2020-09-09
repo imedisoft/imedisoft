@@ -119,19 +119,19 @@ namespace OpenDental {
 		///<summary>Formatting for fields in this grid designed to emulate as accurately as possible the sample provided by LabCorp.</summary>
 		private void FillGridResults() {
 			gridResults.BeginUpdate();
-			gridResults.ListGridColumns.Clear();
+			gridResults.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Test / Result",500);
-			gridResults.ListGridColumns.Add(col);
+			gridResults.Columns.Add(col);
 			col=new GridColumn("Flag",115);
-			gridResults.ListGridColumns.Add(col);
+			gridResults.Columns.Add(col);
 			col=new GridColumn("Units",110);
-			gridResults.ListGridColumns.Add(col);
+			gridResults.Columns.Add(col);
 			col=new GridColumn("Reference Interval",145);
-			gridResults.ListGridColumns.Add(col);
+			gridResults.Columns.Add(col);
 			col=new GridColumn("Lab",60);
-			gridResults.ListGridColumns.Add(col);
-			gridResults.ListGridRows.Clear();
+			gridResults.Columns.Add(col);
+			gridResults.Rows.Clear();
 			GridRow row;
 			string obsDescriptPrev="";
 			for(int i=0;i<_listResults.Count;i++) {
@@ -197,32 +197,32 @@ namespace OpenDental {
 				row.Cells.Add(newLine+_listResults[i].ReferenceRange);
 				row.Cells.Add(newLine+_listResults[i].FacilityID);
 				row.Tag=_listResults[i];
-				gridResults.ListGridRows.Add(row);
+				gridResults.Rows.Add(row);
 			}
 			gridResults.EndUpdate();
 		}
 
 		private void FillGridFacilities() {
 			gridFacilities.BeginUpdate();
-			gridFacilities.ListGridColumns.Clear();
+			gridFacilities.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("ID",40);//Facility ID from the MedLabResult
-			gridFacilities.ListGridColumns.Add(col);
+			gridFacilities.Columns.Add(col);
 			col=new GridColumn("Name",200);
-			gridFacilities.ListGridColumns.Add(col);
+			gridFacilities.Columns.Add(col);
 			col=new GridColumn("Address",165);
-			gridFacilities.ListGridColumns.Add(col);
+			gridFacilities.Columns.Add(col);
 			col=new GridColumn("City",90);
-			gridFacilities.ListGridColumns.Add(col);
+			gridFacilities.Columns.Add(col);
 			col=new GridColumn("State",35);
-			gridFacilities.ListGridColumns.Add(col);
+			gridFacilities.Columns.Add(col);
 			col=new GridColumn("Zip",70);
-			gridFacilities.ListGridColumns.Add(col);
+			gridFacilities.Columns.Add(col);
 			col=new GridColumn("Phone",130);
-			gridFacilities.ListGridColumns.Add(col);
+			gridFacilities.Columns.Add(col);
 			col=new GridColumn("Director",200);//FName LName, Title
-			gridFacilities.ListGridColumns.Add(col);
-			gridFacilities.ListGridRows.Clear();
+			gridFacilities.Columns.Add(col);
+			gridFacilities.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listFacilities.Count;i++) {
 				MedLabFacility facilityCur=_listFacilities[i];
@@ -243,7 +243,7 @@ namespace OpenDental {
 					directorName+=", "+facilityCur.DirectorTitle;
 				}
 				row.Cells.Add(directorName);//could be blank
-				gridFacilities.ListGridRows.Add(row);
+				gridFacilities.Rows.Add(row);
 			}
 			gridFacilities.EndUpdate();
 		}
@@ -252,7 +252,7 @@ namespace OpenDental {
 		private void gridResults_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			FormMedLabResultHist FormRH=new FormMedLabResultHist();
 			FormRH.PatCur=PatCur;
-			FormRH.ResultCur=(MedLabResult)gridResults.ListGridRows[e.Row].Tag;
+			FormRH.ResultCur=(MedLabResult)gridResults.Rows[e.Row].Tag;
 			FormRH.ShowDialog();
 		}
 

@@ -86,16 +86,16 @@ namespace Imedisoft.Forms
 			var problems = FilterList(problemDefinitions);
 
 			problemsGrid.BeginUpdate();
-			problemsGrid.ListGridColumns.Clear();
-			problemsGrid.ListGridColumns.Add(new GridColumn("ICD-9", 50));
-			problemsGrid.ListGridColumns.Add(new GridColumn("ICD-10", 50));
-			problemsGrid.ListGridColumns.Add(new GridColumn("SNOMED CT", 100));
-			problemsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Description, 250));
+			problemsGrid.Columns.Clear();
+			problemsGrid.Columns.Add(new GridColumn("ICD-9", 50));
+			problemsGrid.Columns.Add(new GridColumn("ICD-10", 50));
+			problemsGrid.Columns.Add(new GridColumn("SNOMED CT", 100));
+			problemsGrid.Columns.Add(new GridColumn(Translation.Common.Description, 250));
 			if (!IsSelectionMode)
 			{
-				problemsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Hidden, 50, HorizontalAlignment.Center));
+				problemsGrid.Columns.Add(new GridColumn(Translation.Common.Hidden, 50, HorizontalAlignment.Center));
 			}
-			problemsGrid.ListGridRows.Clear();
+			problemsGrid.Rows.Clear();
 
 			foreach (var problem in problems)
 			{
@@ -115,7 +115,7 @@ namespace Imedisoft.Forms
 					row.BackColor = Color.LightCyan;
 				}
 
-				problemsGrid.ListGridRows.Add(row);
+				problemsGrid.Rows.Add(row);
 			}
 
 			problemsGrid.EndUpdate();

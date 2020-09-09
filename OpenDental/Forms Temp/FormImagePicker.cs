@@ -30,10 +30,10 @@ namespace OpenDental {
 		/// <summary></summary>
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Image Name",70);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			List<string> listFileNames=null;
 			try {
 				listFileNames = Storage.EnumerateDirectory(_imageFolder).ToList();
@@ -57,7 +57,7 @@ namespace OpenDental {
 			for(int i=0;i<ImageNamesList.Count;i++) {
 				GridRow row=new GridRow();
 				row.Cells.Add(Path.GetFileName(ImageNamesList[i]));
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			labelImageSize.Text="Image Size"+":";

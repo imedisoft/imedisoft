@@ -394,14 +394,14 @@ namespace OpenDental{
 			}
 			_listFeeSchedsForType.Sort(CompareItemOrder);
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Description",145);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Type",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Hidden",60,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listFeeSchedsForType.Count;i++){
 				if(_isSelectionMode && _listFeeSchedsForType[i].IsHidden) {
@@ -417,7 +417,7 @@ namespace OpenDental{
 				else{
 					row.Cells.Add("");
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -462,7 +462,7 @@ namespace OpenDental{
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			if(_isSelectionMode) {
-				SelectedFeeSchedNum=((FeeSched)gridMain.ListGridRows[e.Row].Tag).FeeSchedNum;
+				SelectedFeeSchedNum=((FeeSched)gridMain.Rows[e.Row].Tag).FeeSchedNum;
 				DialogResult=DialogResult.OK;
 				Close();
 				return;
@@ -640,7 +640,7 @@ namespace OpenDental{
 				MessageBox.Show("Please select a row first.");
 				return;
 			}
-			SelectedFeeSchedNum=((FeeSched)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag).FeeSchedNum;
+			SelectedFeeSchedNum=((FeeSched)gridMain.Rows[gridMain.GetSelectedIndex()].Tag).FeeSchedNum;
 			DialogResult=DialogResult.OK;
 		}
 

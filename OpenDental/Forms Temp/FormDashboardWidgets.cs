@@ -26,18 +26,18 @@ namespace OpenDental {
 				.Where(x => Security.IsAuthorized(Permissions.DashboardWidget,x.SheetDefNum,true)).ToList();
 			List<SheetDef> listSelectedDashboards=gridMain.SelectedTags<SheetDef>();
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("Dashboard Name",0,HorizontalAlignment.Left));
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("Dashboard Name",0,HorizontalAlignment.Left));
+			gridMain.Rows.Clear();
 			foreach(SheetDef sheetDashboardWidget in listDashboardWidgets) {
 				GridRow row=new GridRow();
 				row.Cells.Add(sheetDashboardWidget.Description);
 				row.Tag=sheetDashboardWidget;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
-			for(int i=0;i<gridMain.ListGridRows.Count;i++) {
-				if(((SheetDef)gridMain.ListGridRows[i].Tag).SheetDefNum.In(listSelectedDashboards.Select(x => x.SheetDefNum))) {
+			for(int i=0;i<gridMain.Rows.Count;i++) {
+				if(((SheetDef)gridMain.Rows[i].Tag).SheetDefNum.In(listSelectedDashboards.Select(x => x.SheetDefNum))) {
 					gridMain.SetSelected(i,true);
 				}
 			}

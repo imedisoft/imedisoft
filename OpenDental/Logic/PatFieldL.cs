@@ -41,7 +41,7 @@ namespace OpenDental {
 					}
 				}
 				row.Tag=patFieldDef;
-				grid.ListGridRows.Add(row);
+				grid.Rows.Add(row);
 			}
 			if(!Prefs.GetBool(PrefName.DisplayRenamedPatFields)) {
 				return;
@@ -53,7 +53,7 @@ namespace OpenDental {
 				row.Cells.Add(patField.FieldValue);
 				row.Tag=patField;
 				row.ForeColor=Color.DarkSlateGray;
-				grid.ListGridRows.Add(row);
+				grid.Rows.Add(row);
 			}
 		}
 

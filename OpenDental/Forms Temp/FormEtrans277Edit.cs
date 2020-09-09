@@ -74,32 +74,32 @@ namespace OpenDental {
 				}
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			int variableWidth=this.Width-2*gridMain.Left-10;
 			if(showServiceDateRange) {
 				const int serviceDateFromWidth=86;
 				col=new GridColumn("ServDateFrom",serviceDateFromWidth,HorizontalAlignment.Center);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				variableWidth-=serviceDateFromWidth;
 				const int serviceDateToWidth=80;
 				col=new GridColumn("ServDateTo",serviceDateToWidth,HorizontalAlignment.Center);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				variableWidth-=serviceDateToWidth;
 			}
 			else {
 				const int serviceDateWidth=80;
 				col=new GridColumn("ServiceDate",serviceDateWidth,HorizontalAlignment.Center);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				variableWidth-=serviceDateWidth;
 			}
 			const int amountWidth=80;
 			col=new GridColumn("Amount",amountWidth,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			variableWidth-=amountWidth;
 			const int statusWidth=54;
 			col=new GridColumn("Status",statusWidth,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			variableWidth-=statusWidth;
 			const int lnameWidth=150;
 			const int fnameWidth=100;
@@ -107,16 +107,16 @@ namespace OpenDental {
 			const int payorControlNumWidth=126;
 			variableWidth+=-lnameWidth-fnameWidth-claimIdWidth-payorControlNumWidth;
 			col=new GridColumn("Reason",variableWidth);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("LName",lnameWidth);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("FName",fnameWidth);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("ClaimIdentifier",claimIdWidth);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("PayorControlNum",payorControlNumWidth);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			for(int i=0;i<claimTrackingNumbers.Count;i++) {
 				string[] claimInfo=x277.GetClaimInfo(claimTrackingNumbers[i]);
 			  GridRow row=new GridRow();
@@ -143,7 +143,7 @@ namespace OpenDental {
 				row.Cells.Add(new GridCell(claimInfo[1]));//fname
 				row.Cells.Add(new GridCell(claimTrackingNumbers[i]));//claim identifier
 				row.Cells.Add(new GridCell(claimInfo[4]));//payor control number
-			  gridMain.ListGridRows.Add(row);
+			  gridMain.Rows.Add(row);
 			}			
 			gridMain.EndUpdate();
 			textQuantityAccepted.Text=numAccepted.ToString();

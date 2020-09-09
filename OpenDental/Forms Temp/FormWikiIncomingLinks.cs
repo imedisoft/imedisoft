@@ -41,18 +41,18 @@ namespace OpenDental {
 		/// <summary></summary>
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Page Title",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			//col=new ODGridColumn("Saved",42);
 			//gridMain.Columns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			ListWikiPages=WikiPages.GetIncomingLinks(PageTitleCur);
 			for(int i=0;i<ListWikiPages.Count;i++) {
 				GridRow row=new GridRow();
 				row.Cells.Add(ListWikiPages[i].PageTitle);
 				//row.Cells.Add(page.DateTimeSaved.ToString());
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

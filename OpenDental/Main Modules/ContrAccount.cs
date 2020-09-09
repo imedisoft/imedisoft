@@ -94,7 +94,7 @@ namespace OpenDental {
 				if(_dataSetMain==null) {
 					return false;
 				}
-				return gridAcctPat.GetSelectedIndex()==gridAcctPat.ListGridRows.Count-1;
+				return gridAcctPat.GetSelectedIndex()==gridAcctPat.Rows.Count-1;
 			}
 		}
 
@@ -182,10 +182,10 @@ namespace OpenDental {
 		}
 
 		private void ButMakeOrthoCaseActive_Click(object sender,EventArgs e) {
-			if(gridOrthoCases.SelectedGridRows.Count<1) {
+			if(gridOrthoCases.SelectedRows.Count<1) {
 				return;
 			}
-			OrthoCase selectedOrthoCase=(OrthoCase)gridOrthoCases.SelectedGridRows[0].Tag;
+			OrthoCase selectedOrthoCase=(OrthoCase)gridOrthoCases.SelectedRows[0].Tag;
 			_listOrthoCases=OrthoCases.Activate(selectedOrthoCase,_patCur.PatNum);
 			RefreshOrthoCasesGridRows();
 			OrthoProcLink debondProcLink=OrthoProcLinks.GetByType(selectedOrthoCase.OrthoCaseNum,OrthoProcType.Debond);
@@ -320,8 +320,8 @@ namespace OpenDental {
 			gridPayPlan.SetSelected(false);
 			foreach(int rowNum in gridAccount.SelectedIndices) {
 				if(table.Rows[rowNum]["PayPlanNum"].ToString()!="0") {
-					for(int i=0;i<gridPayPlan.ListGridRows.Count;i++) {
-						if(((DataRow)(gridPayPlan.ListGridRows[i].Tag))["PayPlanNum"].ToString()==table.Rows[rowNum]["PayPlanNum"].ToString()) {
+					for(int i=0;i<gridPayPlan.Rows.Count;i++) {
+						if(((DataRow)(gridPayPlan.Rows[i].Tag))["PayPlanNum"].ToString()==table.Rows[rowNum]["PayPlanNum"].ToString()) {
 							gridPayPlan.SetSelected(i,true);
 						}
 					}
@@ -499,12 +499,12 @@ namespace OpenDental {
 		}
 
 		private void gridAcctPat_CellClick(object sender,ODGridClickEventArgs e) {			
-			if(e.Row==gridAcctPat.ListGridRows.Count-1) {//last row
+			if(e.Row==gridAcctPat.Rows.Count-1) {//last row
 				FormOpenDental.S_Contr_PatientSelected(_famCur.ListPats[0],false);
 				ModuleSelected(_famCur.ListPats[0].PatNum,true);
 			}
 			else{
-				long patNum=(long)gridAcctPat.ListGridRows[e.Row].Tag;
+				long patNum=(long)gridAcctPat.Rows[e.Row].Tag;
 				Patient pat=_famCur.ListPats.First(x => x.PatNum==patNum);
 				if(pat==null) {
 					return;
@@ -515,10 +515,10 @@ namespace OpenDental {
 		}
 
 		private void gridAutoOrtho_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			if(gridAutoOrtho.ListGridRows[e.Row].Tag==null || gridAutoOrtho.ListGridRows[e.Row].Tag.GetType()!=typeof(AutoOrthoPat)) {
+			if(gridAutoOrtho.Rows[e.Row].Tag==null || gridAutoOrtho.Rows[e.Row].Tag.GetType()!=typeof(AutoOrthoPat)) {
 				return;
 			}
-			AutoOrthoPat orthoPatCur=(AutoOrthoPat)gridAutoOrtho.ListGridRows[e.Row].Tag;
+			AutoOrthoPat orthoPatCur=(AutoOrthoPat)gridAutoOrtho.Rows[e.Row].Tag;
 			if(orthoPatCur.InsPlan.OrthoType!=OrthoClaimType.InitialPlusPeriodic) {
 				MessageBox.Show("To view this setup window, the insurance plan must be set to have an Ortho Claim Type of Initial Plus Periodic.");
 				return;
@@ -532,7 +532,7 @@ namespace OpenDental {
 		}
 
 		private void gridComm_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			int row=(int)gridComm.ListGridRows[e.Row].Tag;
+			int row=(int)gridComm.Rows[e.Row].Tag;
 			if(_dataSetMain.Tables["Commlog"].Rows[row]["CommlogNum"].ToString()!="0") {
 				Commlog commlogCur=
 					Commlogs.GetOne(PIn.Long(_dataSetMain.Tables["Commlog"].Rows[row]["CommlogNum"].ToString()));
@@ -585,7 +585,7 @@ namespace OpenDental {
 		}
 
 		private void GridOrthoCases_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			FormOrthoCase formOrthoCase=new FormOrthoCase(false,_patCur,(OrthoCase)gridOrthoCases.ListGridRows[e.Row].Tag);
+			FormOrthoCase formOrthoCase=new FormOrthoCase(false,_patCur,(OrthoCase)gridOrthoCases.Rows[e.Row].Tag);
 			formOrthoCase.ShowDialog();
 			ModuleSelected(_patCur.PatNum);
 		}
@@ -595,13 +595,13 @@ namespace OpenDental {
 				MessageBox.Show("Patient is currently entering info at a reception terminal.  Please try again later.");
 				return;
 			}
-			if(gridPatInfo.ListGridRows[e.Row].Tag is PatFieldDef) {//patfield for an existing PatFieldDef
-				PatFieldDef patFieldDef=(PatFieldDef)gridPatInfo.ListGridRows[e.Row].Tag;
+			if(gridPatInfo.Rows[e.Row].Tag is PatFieldDef) {//patfield for an existing PatFieldDef
+				PatFieldDef patFieldDef=(PatFieldDef)gridPatInfo.Rows[e.Row].Tag;
 				PatField patField=PatFields.GetByName(patFieldDef.FieldName,_listPatField);
 				PatFieldL.OpenPatField(patField,patFieldDef,_patCur.PatNum);
 			}
-			else if(gridPatInfo.ListGridRows[e.Row].Tag is PatField) {//PatField for a PatFieldDef that no longer exists
-				PatField patField=(PatField)gridPatInfo.ListGridRows[e.Row].Tag;
+			else if(gridPatInfo.Rows[e.Row].Tag is PatField) {//PatField for a PatFieldDef that no longer exists
+				PatField patField=(PatField)gridPatInfo.Rows[e.Row].Tag;
 				FormPatFieldEdit formPatFieldEdit=new FormPatFieldEdit(patField);
 				formPatFieldEdit.ShowDialog();
 			}
@@ -617,7 +617,7 @@ namespace OpenDental {
 		}
 
 		private void gridPayPlan_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			DataRow selectedRow=((DataRow)(gridPayPlan.ListGridRows[e.Row].Tag));
+			DataRow selectedRow=((DataRow)(gridPayPlan.Rows[e.Row].Tag));
 			if(selectedRow["PayPlanNum"].ToString()!="0") {//Payment plan
 				PayPlan payPlan=PayPlans.GetOne(PIn.Long(selectedRow["PayPlanNum"].ToString()));
 				if(payPlan==null) {
@@ -661,7 +661,7 @@ namespace OpenDental {
 		}
 
 		private void GridTpSplits_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			PaySplit paySplit=(PaySplit)gridTpSplits.ListGridRows[e.Row].Tag;
+			PaySplit paySplit=(PaySplit)gridTpSplits.Rows[e.Row].Tag;
 			if(paySplit==null) {
 				return;
 			}
@@ -2273,7 +2273,7 @@ namespace OpenDental {
 
 		private void RefreshOrthoCasesGridRows() {
 			gridOrthoCases.BeginUpdate();
-			gridOrthoCases.ListGridRows.Clear();
+			gridOrthoCases.Rows.Clear();
 			if(IsSelectingFamily) {
 				gridOrthoCases.EndUpdate();
 				return;
@@ -2345,7 +2345,7 @@ namespace OpenDental {
 					row.Cells.Add("Debond Incomplete");
 				}
 				row.Tag=orthoCase;
-				gridOrthoCases.ListGridRows.Add(row);
+				gridOrthoCases.Rows.Add(row);
 			}
 			gridOrthoCases.EndUpdate();
 		}
@@ -2447,10 +2447,10 @@ namespace OpenDental {
 				return;
 			}
 			gridAutoOrtho.BeginUpdate();
-			gridAutoOrtho.ListGridColumns.Clear();
-			gridAutoOrtho.ListGridColumns.Add(new GridColumn("",(gridAutoOrtho.Width/2)-20));//,HorizontalAlignment.Right));
-			gridAutoOrtho.ListGridColumns.Add(new GridColumn("",(gridAutoOrtho.Width/2)+20));
-			gridAutoOrtho.ListGridRows.Clear();
+			gridAutoOrtho.Columns.Clear();
+			gridAutoOrtho.Columns.Add(new GridColumn("",(gridAutoOrtho.Width/2)-20));//,HorizontalAlignment.Right));
+			gridAutoOrtho.Columns.Add(new GridColumn("",(gridAutoOrtho.Width/2)+20));
+			gridAutoOrtho.Rows.Clear();
 			GridRow row = new GridRow();
 			//Insurance Information
 			//PriClaimType
@@ -2459,7 +2459,7 @@ namespace OpenDental {
 				row = new GridRow();
 				row.Cells.Add("");
 				row.Cells.Add("Patient has no insurance.");
-				gridAutoOrtho.ListGridRows.Add(row);
+				gridAutoOrtho.Rows.Add(row);
 			}
 			else {
 				List<Definition> listDefs=Definitions.GetByCategory(DefinitionCategory.MiscColors, true);
@@ -2498,7 +2498,7 @@ namespace OpenDental {
 					row.Cells.Add("");
 					row.Bold=true;
 					row.Tag=orthoPatCur;
-					gridAutoOrtho.ListGridRows.Add(row);
+					gridAutoOrtho.Rows.Add(row);
 					//claimtype
 					row=new GridRow();
 					row.Cells.Add("ClaimType");
@@ -2509,7 +2509,7 @@ namespace OpenDental {
 						row.Cells.Add(insPlanCur.OrthoType.ToString());
 					}
 					row.Tag=orthoPatCur;
-					gridAutoOrtho.ListGridRows.Add(row);
+					gridAutoOrtho.Rows.Add(row);
 					//Only show for initialPlusPeriodic claimtype.
 					if(insPlanCur.OrthoType == OrthoClaimType.InitialPlusPeriodic) {
 						//Frequency
@@ -2517,13 +2517,13 @@ namespace OpenDental {
 						row.Cells.Add("Frequency");
 						row.Cells.Add(insPlanCur.OrthoAutoProcFreq.ToString());
 						row.Tag=orthoPatCur;
-						gridAutoOrtho.ListGridRows.Add(row);
+						gridAutoOrtho.Rows.Add(row);
 						//Fee
 						row= new GridRow();
 						row.Cells.Add("FeeBilled");
 						row.Cells.Add(patPlanCur.OrthoAutoFeeBilledOverride==-1 ? POut.Double(insPlanCur.OrthoAutoFeeBilled) : POut.Double(patPlanCur.OrthoAutoFeeBilledOverride));
 						row.Tag=orthoPatCur;
-						gridAutoOrtho.ListGridRows.Add(row);
+						gridAutoOrtho.Rows.Add(row);
 					}
 					//Last Claim Date
 					row= new GridRow();
@@ -2534,14 +2534,14 @@ namespace OpenDental {
 					row.Cells.Add("LastClaim");
 					row.Cells.Add(dateLast==null || dateLast.Date == DateTime.MinValue.Date ? "None Sent" : dateLast.ToShortDateString());
 					row.Tag=orthoPatCur;
-					gridAutoOrtho.ListGridRows.Add(row);
+					gridAutoOrtho.Rows.Add(row);
 					//NextClaimDate - Only show for initialPlusPeriodic claimtype.
 					if(insPlanCur.OrthoType == OrthoClaimType.InitialPlusPeriodic) {
 						row= new GridRow();
 						row.Cells.Add("NextClaim");
 						row.Cells.Add(patPlanCur.OrthoAutoNextClaimDate.Date == DateTime.MinValue.Date ? "Stopped" : patPlanCur.OrthoAutoNextClaimDate.ToShortDateString());
 						row.Tag=orthoPatCur;
-						gridAutoOrtho.ListGridRows.Add(row);
+						gridAutoOrtho.Rows.Add(row);
 					}
 				}
 			}
@@ -2552,7 +2552,7 @@ namespace OpenDental {
 			row.BackColor=Color.LightCyan;
 			row.Bold=true;
 			row.LowerBorderColor=Color.Black;
-			gridAutoOrtho.ListGridRows.Add(row);
+			gridAutoOrtho.Rows.Add(row);
 			//OrthoAutoProc Freq
 			if(doCalculateFirstDate) {
 				_loadData.FirstOrthoProcDate=Procedures.GetFirstOrthoProcDate(_patientNoteCur);
@@ -2579,35 +2579,35 @@ namespace OpenDental {
 					strDateDiff+=dateSpan.DaysDiff+" "+"day"+(dateSpan.DaysDiff==1 ? "" : "s");
 				}
 				row.Cells.Add(strDateDiff);
-				gridAutoOrtho.ListGridRows.Add(row);
+				gridAutoOrtho.Rows.Add(row);
 				//Date Start
 				row = new GridRow();
 				row.Cells.Add("Date Start"); //Date of the first ortho procedure on this account
 				row.Cells.Add(firstOrthoProcDate.ToShortDateString());
-				gridAutoOrtho.ListGridRows.Add(row);
+				gridAutoOrtho.Rows.Add(row);
 				//Tx Months Total
 				row = new GridRow();
 				row.Cells.Add("Tx Months Total"); //this patient's OrthoClaimMonthsTreatment, or the practice default if 0.
 				int txMonthsTotal=(_patientNoteCur.OrthoMonthsTreatOverride==-1?Prefs.GetByte(PrefName.OrthoDefaultMonthsTreat):_patientNoteCur.OrthoMonthsTreatOverride);
 				row.Cells.Add(txMonthsTotal.ToString());
-				gridAutoOrtho.ListGridRows.Add(row);
+				gridAutoOrtho.Rows.Add(row);
 				//Months in treatment
 				row = new GridRow();
 				int txTimeInMonths=(dateSpan.YearsDiff * 12) + dateSpan.MonthsDiff + (dateSpan.DaysDiff < 15? 0: 1);
 				row.Cells.Add("Months in Treatment");
 				row.Cells.Add(txTimeInMonths.ToString());
-				gridAutoOrtho.ListGridRows.Add(row);
+				gridAutoOrtho.Rows.Add(row);
 				//Months Rem
 				row = new GridRow();
 				row.Cells.Add("Months Rem"); //Months Total - Total Tx Time
 				row.Cells.Add(Math.Max(0,txMonthsTotal-txTimeInMonths).ToString());
-				gridAutoOrtho.ListGridRows.Add(row);
+				gridAutoOrtho.Rows.Add(row);
 			}
 			else { //no ortho procedures charted for this patient.
 				row = new GridRow();
 				row.Cells.Add(""); 
 				row.Cells.Add("No ortho procedures charted.");
-				gridAutoOrtho.ListGridRows.Add(row);
+				gridAutoOrtho.Rows.Add(row);
 			}
 			gridAutoOrtho.EndUpdate();
 		}
@@ -2616,27 +2616,27 @@ namespace OpenDental {
 		private void FillComm() {
 			if(_dataSetMain==null) {
 				gridComm.BeginUpdate();
-				gridComm.ListGridRows.Clear();
+				gridComm.Rows.Clear();
 				gridComm.EndUpdate();
 				return;
 			}
 			gridComm.BeginUpdate();
-			gridComm.ListGridColumns.Clear();
+			gridComm.Columns.Clear();
 			GridColumn col=new GridColumn("Date",70);
-			gridComm.ListGridColumns.Add(col);
+			gridComm.Columns.Add(col);
 			col=new GridColumn("Time",42);//,HorizontalAlignment.Right);
-			gridComm.ListGridColumns.Add(col);
+			gridComm.Columns.Add(col);
 			col=new GridColumn("Name",80);
-			gridComm.ListGridColumns.Add(col);
+			gridComm.Columns.Add(col);
 			col=new GridColumn("Type",80);
-			gridComm.ListGridColumns.Add(col);
+			gridComm.Columns.Add(col);
 			col=new GridColumn("Mode",55);
-			gridComm.ListGridColumns.Add(col);
+			gridComm.Columns.Add(col);
 			//col=new ODGridColumn("Sent/Recd",75);
 			//gridComm.Columns.Add(col);
 			col=new GridColumn("Note",455);
-			gridComm.ListGridColumns.Add(col);
-			gridComm.ListGridRows.Clear();
+			gridComm.Columns.Add(col);
+			gridComm.Rows.Clear();
 			GridRow row;
 			DataTable table=_dataSetMain.Tables["Commlog"];
 			for(int i=0;i<table.Rows.Count;i++) {
@@ -2676,7 +2676,7 @@ namespace OpenDental {
 				//row.Cells.Add(table.Rows[i]["sentOrReceived"].ToString());
 				row.Cells.Add(table.Rows[i]["Note"].ToString());
 				row.Tag=i;
-				gridComm.ListGridRows.Add(row);
+				gridComm.Rows.Add(row);
 			}
 			gridComm.EndUpdate();
 			gridComm.ScrollToEnd();
@@ -2684,7 +2684,7 @@ namespace OpenDental {
 
 		private void FillMain() {
 			gridAccount.BeginUpdate();
-			gridAccount.ListGridColumns.Clear();
+			gridAccount.Columns.Clear();
 			GridColumn col;
 			_listFieldsForMainGrid=DisplayFields.GetForCategory(DisplayFieldCategory.AccountModule);
 			if(!PrefC.HasClinicsEnabled) {
@@ -2709,14 +2709,14 @@ namespace OpenDental {
 				else {
 					col=new GridColumn(_listFieldsForMainGrid[i].Description,_listFieldsForMainGrid[i].ColumnWidth,align);
 				}
-				gridAccount.ListGridColumns.Add(col);
+				gridAccount.Columns.Add(col);
 			}
-			if(gridAccount.ListGridColumns.Sum(x => x.ColumnWidth)>gridAccount.Width) {
+			if(gridAccount.Columns.Sum(x => x.ColumnWidth)>gridAccount.Width) {
 				gridAccount.HScrollVisible=true;
 			}
 			else {
 			}
-			gridAccount.ListGridRows.Clear();
+			gridAccount.Rows.Clear();
 			GridRow row;
 			DataTable table=null;
 			if(_patCur==null){
@@ -2784,7 +2784,7 @@ namespace OpenDental {
 				{
 					row.LowerBorderColor=Color.Black;
 				}
-				gridAccount.ListGridRows.Add(row);
+				gridAccount.Rows.Add(row);
 			}
 			gridAccount.EndUpdate();
 			if(_scrollValueWhenDoubleClick==-1) {
@@ -2828,17 +2828,17 @@ namespace OpenDental {
 
 		private void FillOrthoCasesGrid() {
 			gridOrthoCases.BeginUpdate();
-			gridOrthoCases.ListGridColumns.Clear();
+			gridOrthoCases.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Is Active",70,HorizontalAlignment.Center);
-			gridOrthoCases.ListGridColumns.Add(col);
+			gridOrthoCases.Columns.Add(col);
 			col=new GridColumn("Is Transfer",70,HorizontalAlignment.Center);
-			gridOrthoCases.ListGridColumns.Add(col);
+			gridOrthoCases.Columns.Add(col);
 			col=new GridColumn("Start Date",130,HorizontalAlignment.Center);
-			gridOrthoCases.ListGridColumns.Add(col);
+			gridOrthoCases.Columns.Add(col);
 			col=new GridColumn("Completion Date",120,HorizontalAlignment.Center){ IsWidthDynamic=true };
-			gridOrthoCases.ListGridColumns.Add(col);
-			gridOrthoCases.ListGridRows.Clear();
+			gridOrthoCases.Columns.Add(col);
+			gridOrthoCases.Rows.Clear();
 			gridOrthoCases.EndUpdate();
 			RefreshOrthoCasesGridRows();
 		}
@@ -2846,18 +2846,18 @@ namespace OpenDental {
 		private void FillPatInfo() {
 			if(_patCur==null) {
 				gridPatInfo.BeginUpdate();
-				gridPatInfo.ListGridRows.Clear();
-				gridPatInfo.ListGridColumns.Clear();
+				gridPatInfo.Rows.Clear();
+				gridPatInfo.Columns.Clear();
 				gridPatInfo.EndUpdate();
 				return;
 			}
 			gridPatInfo.BeginUpdate();
-			gridPatInfo.ListGridColumns.Clear();
+			gridPatInfo.Columns.Clear();
 			GridColumn col=new GridColumn("",80);
-			gridPatInfo.ListGridColumns.Add(col);
+			gridPatInfo.Columns.Add(col);
 			col=new GridColumn("",150);
-			gridPatInfo.ListGridColumns.Add(col);
-			gridPatInfo.ListGridRows.Clear();
+			gridPatInfo.Columns.Add(col);
+			gridPatInfo.Rows.Clear();
 			GridRow row;
 			_listPatInfoDisplayFields=DisplayFields.GetForCategory(DisplayFieldCategory.AccountPatientInformation);
 			for(int f=0;f<_listPatInfoDisplayFields.Count;f++) {
@@ -2890,7 +2890,7 @@ namespace OpenDental {
 					//don't add the row here
 				}
 				else {
-					gridPatInfo.ListGridRows.Add(row);
+					gridPatInfo.Rows.Add(row);
 				}
 			}
 			gridPatInfo.EndUpdate();
@@ -2899,17 +2899,17 @@ namespace OpenDental {
 		private void FillPats(bool isSelectingFamily) {
 			if(_patCur==null) {
 				gridAcctPat.BeginUpdate();
-				gridAcctPat.ListGridRows.Clear();
+				gridAcctPat.Rows.Clear();
 				gridAcctPat.EndUpdate();
 				return;
 			}
 			gridAcctPat.BeginUpdate();
-			gridAcctPat.ListGridColumns.Clear();
+			gridAcctPat.Columns.Clear();
 			GridColumn col=new GridColumn("Patient",105);
-			gridAcctPat.ListGridColumns.Add(col);
+			gridAcctPat.Columns.Add(col);
 			col=new GridColumn("Bal",49,HorizontalAlignment.Right);
-			gridAcctPat.ListGridColumns.Add(col);
-			gridAcctPat.ListGridRows.Clear();
+			gridAcctPat.Columns.Add(col);
+			gridAcctPat.Rows.Clear();
 			GridRow row;
 			DataTable table=_dataSetMain.Tables["patient"];
 			decimal balance=0;
@@ -2929,14 +2929,14 @@ namespace OpenDental {
 				if(i==0 || i==table.Rows.Count-1) {
 					row.Bold=true;
 				}
-				gridAcctPat.ListGridRows.Add(row);
+				gridAcctPat.Rows.Add(row);
 			}
 			gridAcctPat.EndUpdate();
 			if(isSelectingFamily){
-				gridAcctPat.SetSelected(gridAcctPat.ListGridRows.Count-1,true);
+				gridAcctPat.SetSelected(gridAcctPat.Rows.Count-1,true);
 			}
 			else{
-				int index=gridAcctPat.ListGridRows.ToList().FindIndex(x => (long)x.Tag==_patCur.PatNum);
+				int index=gridAcctPat.Rows.ToList().FindIndex(x => (long)x.Tag==_patCur.PatNum);
 				if(index>=0) {
 					//If the index is greater than the number of rows, it will return and not select anything.
 					gridAcctPat.SetSelected(index,true);
@@ -2985,35 +2985,35 @@ namespace OpenDental {
 			splitContainerRepChargesPP.Panel2Collapsed=false;
 			gridPayPlan.Visible=true;
 			gridPayPlan.BeginUpdate();
-			gridPayPlan.ListGridColumns.Clear();
+			gridPayPlan.Columns.Clear();
 			GridColumn col=new GridColumn("Date",65);
-			gridPayPlan.ListGridColumns.Add(col);
+			gridPayPlan.Columns.Add(col);
 			col=new GridColumn("Guarantor",100);
-			gridPayPlan.ListGridColumns.Add(col);
+			gridPayPlan.Columns.Add(col);
 			col=new GridColumn("Patient",100);
-			gridPayPlan.ListGridColumns.Add(col);
+			gridPayPlan.Columns.Add(col);
 			col=new GridColumn("Type",30,HorizontalAlignment.Center);
-			gridPayPlan.ListGridColumns.Add(col);
+			gridPayPlan.Columns.Add(col);
 			col=new GridColumn("Category",60,HorizontalAlignment.Center);
-			gridPayPlan.ListGridColumns.Add(col);
+			gridPayPlan.Columns.Add(col);
 			col=new GridColumn("Principal",60,HorizontalAlignment.Right);
-			gridPayPlan.ListGridColumns.Add(col);
+			gridPayPlan.Columns.Add(col);
 			col=new GridColumn("Total Cost",60,HorizontalAlignment.Right);
-			gridPayPlan.ListGridColumns.Add(col);
+			gridPayPlan.Columns.Add(col);
 			col=new GridColumn("Paid",60,HorizontalAlignment.Right);
-			gridPayPlan.ListGridColumns.Add(col);
+			gridPayPlan.Columns.Add(col);
 			col=new GridColumn("PrincPaid",60,HorizontalAlignment.Right);
-			gridPayPlan.ListGridColumns.Add(col);
+			gridPayPlan.Columns.Add(col);
 			col=new GridColumn("Balance",60,HorizontalAlignment.Right);
-			gridPayPlan.ListGridColumns.Add(col);
+			gridPayPlan.Columns.Add(col);
 			if(Prefs.GetBool(PrefName.PayPlanHideDueNow)) {
 				col=new GridColumn("Closed",60,HorizontalAlignment.Center);
 			}
 			else {
 				col=new GridColumn("Due Now",60,HorizontalAlignment.Right);
 			}
-			gridPayPlan.ListGridColumns.Add(col);
-			gridPayPlan.ListGridRows.Clear();
+			gridPayPlan.Columns.Add(col);
+			gridPayPlan.Rows.Clear();
 			GridRow row;
 			GridCell cell;
 			for(int i=0;i<table.Rows.Count;i++) {
@@ -3072,7 +3072,7 @@ namespace OpenDental {
 						row.BackColor=Color.FromArgb(255,255,128);
 					}
 				}
-				gridPayPlan.ListGridRows.Add(row);
+				gridPayPlan.Rows.Add(row);
 				_PPBalanceTotal+=(Convert.ToDecimal(PIn.Double(table.Rows[i]["balance"].ToString())));
 			}
 			gridPayPlan.EndUpdate();
@@ -3104,20 +3104,20 @@ namespace OpenDental {
 			splitContainerRepChargesPP.Panel1Collapsed=false;
 			gridRepeat.Visible=true;
 			gridRepeat.BeginUpdate();
-			gridRepeat.ListGridColumns.Clear();
+			gridRepeat.Columns.Clear();
 			GridColumn col=new GridColumn("Description",150);
-			gridRepeat.ListGridColumns.Add(col);
+			gridRepeat.Columns.Add(col);
 			col=new GridColumn("Amount",60,HorizontalAlignment.Right);
-			gridRepeat.ListGridColumns.Add(col);
+			gridRepeat.Columns.Add(col);
 			col=new GridColumn("Start Date",70,HorizontalAlignment.Center);
-			gridRepeat.ListGridColumns.Add(col);
+			gridRepeat.Columns.Add(col);
 			col=new GridColumn("Stop Date",70,HorizontalAlignment.Center);
-			gridRepeat.ListGridColumns.Add(col);
+			gridRepeat.Columns.Add(col);
 			col=new GridColumn("Enabled",55,HorizontalAlignment.Center);
-			gridRepeat.ListGridColumns.Add(col);
+			gridRepeat.Columns.Add(col);
 			col=new GridColumn("Note",355);
-			gridRepeat.ListGridColumns.Add(col);
-			gridRepeat.ListGridRows.Clear();
+			gridRepeat.Columns.Add(col);
+			gridRepeat.Rows.Clear();
 			GridRow row;
 			ProcedureCode procCode;
 			for(int i=0;i<_arrayRepeatCharge.Length;i++) {
@@ -3155,7 +3155,7 @@ namespace OpenDental {
 				}
 				note+=_arrayRepeatCharge[i].Note;
 				row.Cells.Add(note);
-				gridRepeat.ListGridRows.Add(row);
+				gridRepeat.Rows.Add(row);
 			}
 			gridRepeat.EndUpdate();
 		}
@@ -3289,24 +3289,24 @@ namespace OpenDental {
 			}
 			List<Procedure> listProceduresForHiddenSplits=Procedures.GetManyProc(_listSplitsHidden.Select(x => x.ProcNum).ToList(),false);
 			gridTpSplits.BeginUpdate();
-			gridTpSplits.ListGridColumns.Clear();
+			gridTpSplits.Columns.Clear();
 			GridColumn col=new GridColumn("Date",65);
-			gridTpSplits.ListGridColumns.Add(col);
+			gridTpSplits.Columns.Add(col);
 			col=new GridColumn("Patient",150);
-			gridTpSplits.ListGridColumns.Add(col);
+			gridTpSplits.Columns.Add(col);
 			col=new GridColumn("Provider",70);
-			gridTpSplits.ListGridColumns.Add(col);
+			gridTpSplits.Columns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
 				col=new GridColumn("Clinic",60);
-				gridTpSplits.ListGridColumns.Add(col);
+				gridTpSplits.Columns.Add(col);
 			}
 			col=new GridColumn("Code",80);
-			gridTpSplits.ListGridColumns.Add(col);
+			gridTpSplits.Columns.Add(col);
 			col=new GridColumn("Description",180);
-			gridTpSplits.ListGridColumns.Add(col);
+			gridTpSplits.Columns.Add(col);
 			col=new GridColumn("Amount",60);
-			gridTpSplits.ListGridColumns.Add(col);
-			gridTpSplits.ListGridRows.Clear();
+			gridTpSplits.Columns.Add(col);
+			gridTpSplits.Rows.Clear();
 			Dictionary<long,Patient> dictPats=new Dictionary<long, Patient>();
 			foreach(PaySplit tpSplit in _listSplitsHidden) {
 				GridRow row=new GridRow();
@@ -3341,7 +3341,7 @@ namespace OpenDental {
 				Color defColor=Definitions.GetByCategory(DefinitionCategory.AccountColors, true)[3].Color;
 				row.LowerBorderColor=defColor;
 				row.ForeColor=defColor;
-				gridTpSplits.ListGridRows.Add(row);
+				gridTpSplits.Rows.Add(row);
 			}
 			gridTpSplits.EndUpdate();
 		}
@@ -3711,7 +3711,7 @@ namespace OpenDental {
 				adjustmentCur.ProviderId=_patCur.PriProv;
 				adjustmentCur.PatientId=_patCur.PatNum;
 				adjustmentCur.ClinicId=_patCur.ClinicNum;
-				if(gridAccount.SelectedGridRows.Count==1) {
+				if(gridAccount.SelectedRows.Count==1) {
 					OrthoProcLink orthoProcLink=OrthoProcLinks.GetByProcNum(PIn.Long(tableAcct.Rows[gridAccount.SelectedIndices[0]]["ProcNum"].ToString()));
 					if(orthoProcLink!=null) {
 						MessageBox.Show("Procedures linked to ortho cases cannot be adjusted.");

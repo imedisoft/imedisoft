@@ -150,16 +150,16 @@ namespace OpenDental{
 
 		private void FillGridMain() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("LName",100));
-			gridMain.ListGridColumns.Add(new GridColumn("FName",100));
-			gridMain.ListGridColumns.Add(new GridColumn(_monthT2.ToString("MMMM yyyy"),100,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn(_monthT1.ToString("MMMM yyyy"),100,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("LName",100));
+			gridMain.Columns.Add(new GridColumn("FName",100));
+			gridMain.Columns.Add(new GridColumn(_monthT2.ToString("MMMM yyyy"),100,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
+			gridMain.Columns.Add(new GridColumn(_monthT1.ToString("MMMM yyyy"),100,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
 			if(!checkIgnore.Checked) {
-				gridMain.ListGridColumns.Add(new GridColumn(_monthT0.ToString("MMMM yyyy"),100,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
+				gridMain.Columns.Add(new GridColumn(_monthT0.ToString("MMMM yyyy"),100,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
 			}
-			gridMain.ListGridColumns.Add(new GridColumn("Letter",100));
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(new GridColumn("Letter",100));
+			gridMain.Rows.Clear();
 			List<Employee> listEmpsAll = Employees.GetAll(true).OrderBy(x => x.LastName).ThenBy(x => x.FirstName).ToList();
 			List<ClockEvent> listClockEventsAll = ClockEvents.GetAllForPeriod(_monthT2,_monthT2.AddMonths(3));//get all three months of clock events
 			listClockEventsAll.RemoveAll(x => x.ClockStatus==TimeClockStatus.Break);//remove breaks, they have already been acounted for on the clock events.
@@ -234,7 +234,7 @@ namespace OpenDental{
 					letterNumber="First";
 				}
 				row.Cells.Add(letterNumber);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -291,8 +291,8 @@ namespace OpenDental{
 
 		private void butExportGrid_Click(object sender,EventArgs e) {
 			StringBuilder sb=new StringBuilder();
-			sb.AppendLine(string.Join(",",gridMain.ListGridColumns.OfType<GridColumn>().Select(x => x.HeaderText)));
-			gridMain.ListGridRows.OfType<GridRow>().ToList()
+			sb.AppendLine(string.Join(",",gridMain.Columns.OfType<GridColumn>().Select(x => x.HeaderText)));
+			gridMain.Rows.OfType<GridRow>().ToList()
 				.ForEach(row => sb.AppendLine(string.Join(",",row.Cells.Select(cell => cell.Text.Replace(',','-').Replace('\t',',')))));
 
 			FolderBrowserDialog fbd = new FolderBrowserDialog();

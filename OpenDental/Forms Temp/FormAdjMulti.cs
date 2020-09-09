@@ -80,32 +80,32 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Date",70,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn() { HeaderText="Provider", IsWidthDynamic=true };
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
 				col=new GridColumn() { HeaderText="Clinic", IsWidthDynamic=true };
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}		 	 
 			col=new GridColumn() { HeaderText="Type", IsWidthDynamic=true };
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Fee",70,HorizontalAlignment.Right);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Rem Before",70,HorizontalAlignment.Right);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Adj Amt",70,HorizontalAlignment.Left);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Rem After",70,HorizontalAlignment.Left);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			RecalculateGridEntries();
 			foreach(MultiAdjEntry entryCur in _listGridEntries) {
 				GridRow row=entryCur.ToGridRow();
 				row.Tag=entryCur;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			butAdd.Text="Add Adjustments";
@@ -359,7 +359,7 @@ namespace OpenDental {
 
 		private void butDelete_Click(object sender,EventArgs e) {
 			for(int i=0;i<gridMain.SelectedIndices.Count();i++) {
-				MultiAdjEntry selectedRow=(MultiAdjEntry)gridMain.ListGridRows[gridMain.SelectedIndices[i]].Tag;
+				MultiAdjEntry selectedRow=(MultiAdjEntry)gridMain.Rows[gridMain.SelectedIndices[i]].Tag;
 				if(selectedRow.Adj!=null) {//user selected an adjustment row
 					if(selectedRow.Proc==null) {//unattached adjustment
 						_listGridEntries.Remove(selectedRow);

@@ -64,20 +64,20 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("PatNum",50);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Patient Name",140);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Numerator",65,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Exclusion",60,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Exception",60,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Explanation",140);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			if(MeasureCur.Type2014==QualityType2014.MedicationsEntered) {
 				foreach(KeyValuePair<long,List<EhrCqmEncounter>> kvpair in MeasureCur.DictPatNumListEncounters) {
@@ -98,7 +98,7 @@ namespace OpenDental {
 						row.Cells.Add(categoryCur);
 						row.Cells.Add(kvpair.Value[i].Explanation);
 						row.Tag=kvpair.Key.ToString();
-						gridMain.ListGridRows.Add(row);
+						gridMain.Rows.Add(row);
 					}
 				}
 			}
@@ -127,7 +127,7 @@ namespace OpenDental {
 					row.Cells.Add(categoryCur);
 					row.Cells.Add(MeasureCur.ListEhrPats[i].Explanation);
 					row.Tag=MeasureCur.ListEhrPats[i].EhrCqmPat.PatNum.ToString();
-					gridMain.ListGridRows.Add(row);
+					gridMain.Rows.Add(row);
 				}
 			}
 			gridMain.EndUpdate();
@@ -139,7 +139,7 @@ namespace OpenDental {
 			}
 			selectedPatNum=0;
 			try {
-				selectedPatNum=PIn.Long(gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag.ToString());
+				selectedPatNum=PIn.Long(gridMain.Rows[gridMain.GetSelectedIndex()].Tag.ToString());
 			}
 			catch { }
 			if(selectedPatNum==0) {

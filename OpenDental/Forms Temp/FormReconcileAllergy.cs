@@ -200,16 +200,16 @@ namespace OpenDental {
 
 		private void FillImportGrid() {
 			gridAllergyImport.BeginUpdate();
-			gridAllergyImport.ListGridColumns.Clear();
+			gridAllergyImport.Columns.Clear();
 			GridColumn col=new GridColumn("Last Modified",90,HorizontalAlignment.Center);
-			gridAllergyImport.ListGridColumns.Add(col);
+			gridAllergyImport.Columns.Add(col);
 			col=new GridColumn("Description",200);
-			gridAllergyImport.ListGridColumns.Add(col);
+			gridAllergyImport.Columns.Add(col);
 			col=new GridColumn("Reaction",100);
-			gridAllergyImport.ListGridColumns.Add(col);
+			gridAllergyImport.Columns.Add(col);
 			col=new GridColumn("Inactive",80,HorizontalAlignment.Center);
-			gridAllergyImport.ListGridColumns.Add(col);
-			gridAllergyImport.ListGridRows.Clear();
+			gridAllergyImport.Columns.Add(col);
+			gridAllergyImport.Rows.Clear();
 			GridRow row;
 			//ListAllergyNew and ListAllergyDefNew should be a 1:1 ratio so we can use the same loop for both.
 			for(int i=0;i<ListAllergyNew.Count;i++) {
@@ -233,23 +233,23 @@ namespace OpenDental {
 				else {
 					row.Cells.Add("X");
 				}
-				gridAllergyImport.ListGridRows.Add(row);
+				gridAllergyImport.Rows.Add(row);
 			}
 			gridAllergyImport.EndUpdate();
 		}
 
 		private void FillExistingGrid() {
 			gridAllergyExisting.BeginUpdate();
-			gridAllergyExisting.ListGridColumns.Clear();
+			gridAllergyExisting.Columns.Clear();
 			GridColumn col=new GridColumn("Last Modified",90,HorizontalAlignment.Center);
-			gridAllergyExisting.ListGridColumns.Add(col);
+			gridAllergyExisting.Columns.Add(col);
 			col=new GridColumn("Description",200);
-			gridAllergyExisting.ListGridColumns.Add(col);
+			gridAllergyExisting.Columns.Add(col);
 			col=new GridColumn("Reaction",100);
-			gridAllergyExisting.ListGridColumns.Add(col);
+			gridAllergyExisting.Columns.Add(col);
 			col=new GridColumn("Inactive",80,HorizontalAlignment.Center);
-			gridAllergyExisting.ListGridColumns.Add(col);
-			gridAllergyExisting.ListGridRows.Clear();
+			gridAllergyExisting.Columns.Add(col);
+			gridAllergyExisting.Rows.Clear();
 			_listAllergyCur=Allergies.GetByPatient(_patCur.PatNum,false);
 			List<long> allergyDefNums=new List<long>();
 			for(int h=0;h<_listAllergyCur.Count;h++) {
@@ -283,25 +283,25 @@ namespace OpenDental {
 				else {
 					row.Cells.Add("X");
 				}
-				gridAllergyExisting.ListGridRows.Add(row);
+				gridAllergyExisting.Rows.Add(row);
 			}
 			gridAllergyExisting.EndUpdate();
 		}
 
 		private void FillReconcileGrid() {
 			gridAllergyReconcile.BeginUpdate();
-			gridAllergyReconcile.ListGridColumns.Clear();
+			gridAllergyReconcile.Columns.Clear();
 			GridColumn col=new GridColumn("Last Modified",90,HorizontalAlignment.Center);
-			gridAllergyReconcile.ListGridColumns.Add(col);
+			gridAllergyReconcile.Columns.Add(col);
 			col=new GridColumn("Description",400);
-			gridAllergyReconcile.ListGridColumns.Add(col);
+			gridAllergyReconcile.Columns.Add(col);
 			col=new GridColumn("Reaction",300);
-			gridAllergyReconcile.ListGridColumns.Add(col);
+			gridAllergyReconcile.Columns.Add(col);
 			col=new GridColumn("Inactive",80,HorizontalAlignment.Center);
-			gridAllergyReconcile.ListGridColumns.Add(col);
+			gridAllergyReconcile.Columns.Add(col);
 			col=new GridColumn("Is Incoming",100,HorizontalAlignment.Center);
-			gridAllergyReconcile.ListGridColumns.Add(col);
-			gridAllergyReconcile.ListGridRows.Clear();
+			gridAllergyReconcile.Columns.Add(col);
+			gridAllergyReconcile.Rows.Clear();
 			GridRow row;
 			AllergyDef ald=new AllergyDef();
 			for(int i=0;i<_listAllergyReconcile.Count;i++) {
@@ -337,7 +337,7 @@ namespace OpenDental {
 					row.Cells.Add("X");
 				}
 				row.Cells.Add(_listAllergyReconcile[i].IsNew?"X":"");
-				gridAllergyReconcile.ListGridRows.Add(row);
+				gridAllergyReconcile.Rows.Add(row);
 			}
 			gridAllergyReconcile.EndUpdate();
 		}

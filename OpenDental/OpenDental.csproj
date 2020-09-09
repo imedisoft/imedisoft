@@ -534,34 +534,34 @@
     <Compile Include="Forms Reports\FormRpServiceDateView.designer.cs">
       <DependentUpon>FormRpServiceDateView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormSchoolClassEdit.Designer.cs">
+    <Compile Include="Forms\DentalSchools\FormSchoolClassEdit.Designer.cs">
       <DependentUpon>FormSchoolClassEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormSchoolClasses.Designer.cs">
+    <Compile Include="Forms\DentalSchools\FormSchoolClasses.Designer.cs">
       <DependentUpon>FormSchoolClasses.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormSchoolCourseEdit.Designer.cs">
+    <Compile Include="Forms\DentalSchools\FormSchoolCourseEdit.Designer.cs">
       <DependentUpon>FormSchoolCourseEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormSchoolCourses.Designer.cs">
+    <Compile Include="Forms\DentalSchools\FormSchoolCourses.Designer.cs">
       <DependentUpon>FormSchoolCourses.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormStudentResultsMany.Designer.cs">
+    <Compile Include="Forms\DentalSchools\FormStudentResultsMany.Designer.cs">
       <DependentUpon>FormStudentResultsMany.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormStudentResultEdit.Designer.cs">
+    <Compile Include="Forms\DentalSchools\FormStudentResultEdit.Designer.cs">
       <DependentUpon>FormStudentResultEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormStudentResultsOne.Designer.cs">
+    <Compile Include="Forms\DentalSchools\FormStudentResultsOne.Designer.cs">
       <DependentUpon>FormStudentResultsOne.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormSchoolCourseRequirementEdit.Designer.cs">
+    <Compile Include="Forms\DentalSchools\FormSchoolCourseRequirementEdit.Designer.cs">
       <DependentUpon>FormSchoolCourseRequirementEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormSchoolCourseRequirements.Designer.cs">
+    <Compile Include="Forms\DentalSchools\FormSchoolCourseRequirements.Designer.cs">
       <DependentUpon>FormSchoolCourseRequirements.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormStudentResultsForAppointment.Designer.cs">
+    <Compile Include="Forms\DentalSchools\FormStudentResultsForAppointment.Designer.cs">
       <DependentUpon>FormStudentResultsForAppointment.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormAging.Designer.cs">
@@ -2179,10 +2179,10 @@
     <Compile Include="Forms Temp\FormEtrans835PickEob.designer.cs">
       <DependentUpon>FormEtrans835PickEob.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormEvaluationReport.cs">
+    <Compile Include="Forms\DentalSchools\FormEvaluationReport.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormEvaluationReport.designer.cs">
+    <Compile Include="Forms\DentalSchools\FormEvaluationReport.designer.cs">
       <DependentUpon>FormEvaluationReport.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormDispensary.cs">
@@ -2191,52 +2191,52 @@
     <Compile Include="Forms Temp\FormDispensary.designer.cs">
       <DependentUpon>FormDispensary.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormEvaluationEdit.cs">
+    <Compile Include="Forms\DentalSchools\FormEvaluationEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormEvaluationEdit.designer.cs">
+    <Compile Include="Forms\DentalSchools\FormEvaluationEdit.designer.cs">
       <DependentUpon>FormEvaluationEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormEvaluations.cs">
+    <Compile Include="Forms\DentalSchools\FormEvaluations.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormEvaluations.designer.cs">
+    <Compile Include="Forms\DentalSchools\FormEvaluations.designer.cs">
       <DependentUpon>FormEvaluations.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormEvaluationCriterionDefEdit.cs">
+    <Compile Include="Forms\DentalSchools\FormEvaluationCriterionDefEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormEvaluationCriterionDefEdit.designer.cs">
+    <Compile Include="Forms\DentalSchools\FormEvaluationCriterionDefEdit.designer.cs">
       <DependentUpon>FormEvaluationCriterionDefEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormGradingScaleItemEdit.cs">
+    <Compile Include="Forms\DentalSchools\FormGradingScaleItemEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormGradingScaleItemEdit.designer.cs">
+    <Compile Include="Forms\DentalSchools\FormGradingScaleItemEdit.designer.cs">
       <DependentUpon>FormGradingScaleItemEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormGradingScaleEdit.cs">
+    <Compile Include="Forms\DentalSchools\FormGradingScaleEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormGradingScaleEdit.designer.cs">
+    <Compile Include="Forms\DentalSchools\FormGradingScaleEdit.designer.cs">
       <DependentUpon>FormGradingScaleEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormGradingScales.cs">
+    <Compile Include="Forms\DentalSchools\FormGradingScales.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormGradingScales.designer.cs">
+    <Compile Include="Forms\DentalSchools\FormGradingScales.designer.cs">
       <DependentUpon>FormGradingScales.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormEvaluationDefEdit.cs">
+    <Compile Include="Forms\DentalSchools\FormEvaluationDefEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormEvaluationDefEdit.designer.cs">
+    <Compile Include="Forms\DentalSchools\FormEvaluationDefEdit.designer.cs">
       <DependentUpon>FormEvaluationDefEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormEvaluationDefs.cs">
+    <Compile Include="Forms\DentalSchools\FormEvaluationDefs.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormEvaluationDefs.designer.cs">
+    <Compile Include="Forms\DentalSchools\FormEvaluationDefs.designer.cs">
       <DependentUpon>FormEvaluationDefs.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormProvStudentEdit.cs">
@@ -2260,10 +2260,10 @@
     <Compile Include="Forms Temp\FormUserGroupPicker.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormDentalSchoolSetup.cs">
+    <Compile Include="Forms\DentalSchools\FormDentalSchoolSetup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormDentalSchoolSetup.designer.cs">
+    <Compile Include="Forms\DentalSchools\FormDentalSchoolSetup.designer.cs">
       <DependentUpon>FormDentalSchoolSetup.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormEhrProviderKeyEdit.cs">
@@ -4175,7 +4175,7 @@
     <Compile Include="Forms Temp\FormTrojanCollect.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormStudentResultsForAppointment.cs">
+    <Compile Include="Forms\DentalSchools\FormStudentResultsForAppointment.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormEtransEdit.cs">
@@ -4205,22 +4205,22 @@
     <Compile Include="Forms Temp\FormMountEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormStudentResultEdit.cs">
+    <Compile Include="Forms\DentalSchools\FormStudentResultEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormStudentResultsOne.cs">
+    <Compile Include="Forms\DentalSchools\FormStudentResultsOne.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormStudentResultsMany.cs">
+    <Compile Include="Forms\DentalSchools\FormStudentResultsMany.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormReportsMore.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormSchoolCourseRequirementEdit.cs">
+    <Compile Include="Forms\DentalSchools\FormSchoolCourseRequirementEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormSchoolCourseRequirements.cs">
+    <Compile Include="Forms\DentalSchools\FormSchoolCourseRequirements.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormBlockoutCutCopyPaste.cs">
@@ -4751,16 +4751,16 @@
     <Compile Include="Forms Temp\FormScheduleBlockEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormSchoolClassEdit.cs">
+    <Compile Include="Forms\DentalSchools\FormSchoolClassEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormSchoolClasses.cs">
+    <Compile Include="Forms\DentalSchools\FormSchoolClasses.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormSchoolCourseEdit.cs">
+    <Compile Include="Forms\DentalSchools\FormSchoolCourseEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\DentalSchools\FormSchoolCourses.cs">
+    <Compile Include="Forms\DentalSchools\FormSchoolCourses.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormScreenEdit.cs">
@@ -5972,34 +5972,34 @@
     <EmbeddedResource Include="Forms Temp\FormEtrans835PickEob.resx">
       <DependentUpon>FormEtrans835PickEob.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\DentalSchools\FormEvaluationReport.resx">
+    <EmbeddedResource Include="Forms\DentalSchools\FormEvaluationReport.resx">
       <DependentUpon>FormEvaluationReport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormDispensary.resx">
       <DependentUpon>FormDispensary.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\DentalSchools\FormEvaluationEdit.resx">
+    <EmbeddedResource Include="Forms\DentalSchools\FormEvaluationEdit.resx">
       <DependentUpon>FormEvaluationEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\DentalSchools\FormEvaluations.resx">
+    <EmbeddedResource Include="Forms\DentalSchools\FormEvaluations.resx">
       <DependentUpon>FormEvaluations.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\DentalSchools\FormEvaluationCriterionDefEdit.resx">
+    <EmbeddedResource Include="Forms\DentalSchools\FormEvaluationCriterionDefEdit.resx">
       <DependentUpon>FormEvaluationCriterionDefEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\DentalSchools\FormGradingScaleItemEdit.resx">
+    <EmbeddedResource Include="Forms\DentalSchools\FormGradingScaleItemEdit.resx">
       <DependentUpon>FormGradingScaleItemEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\DentalSchools\FormGradingScaleEdit.resx">
+    <EmbeddedResource Include="Forms\DentalSchools\FormGradingScaleEdit.resx">
       <DependentUpon>FormGradingScaleEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\DentalSchools\FormGradingScales.resx">
+    <EmbeddedResource Include="Forms\DentalSchools\FormGradingScales.resx">
       <DependentUpon>FormGradingScales.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\DentalSchools\FormEvaluationDefEdit.resx">
+    <EmbeddedResource Include="Forms\DentalSchools\FormEvaluationDefEdit.resx">
       <DependentUpon>FormEvaluationDefEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\DentalSchools\FormEvaluationDefs.resx">
+    <EmbeddedResource Include="Forms\DentalSchools\FormEvaluationDefs.resx">
       <DependentUpon>FormEvaluationDefs.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormProvStudentEdit.resx">
@@ -6015,7 +6015,7 @@
       <DependentUpon>FormUserGroupPicker.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\DentalSchools\FormDentalSchoolSetup.resx">
+    <EmbeddedResource Include="Forms\DentalSchools\FormDentalSchoolSetup.resx">
       <DependentUpon>FormDentalSchoolSetup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormEhrProviderKeyEdit.resx">
@@ -6966,7 +6966,7 @@
       <DependentUpon>FormTrojanCollect.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\DentalSchools\FormStudentResultsForAppointment.resx">
+    <EmbeddedResource Include="Forms\DentalSchools\FormStudentResultsForAppointment.resx">
       <DependentUpon>FormStudentResultsForAppointment.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -6998,15 +6998,15 @@
       <DependentUpon>FormMountEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\DentalSchools\FormStudentResultEdit.resx">
+    <EmbeddedResource Include="Forms\DentalSchools\FormStudentResultEdit.resx">
       <DependentUpon>FormStudentResultEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\DentalSchools\FormStudentResultsOne.resx">
+    <EmbeddedResource Include="Forms\DentalSchools\FormStudentResultsOne.resx">
       <DependentUpon>FormStudentResultsOne.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\DentalSchools\FormStudentResultsMany.resx">
+    <EmbeddedResource Include="Forms\DentalSchools\FormStudentResultsMany.resx">
       <DependentUpon>FormStudentResultsMany.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7014,11 +7014,11 @@
       <DependentUpon>FormReportsMore.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\DentalSchools\FormSchoolCourseRequirementEdit.resx">
+    <EmbeddedResource Include="Forms\DentalSchools\FormSchoolCourseRequirementEdit.resx">
       <DependentUpon>FormSchoolCourseRequirementEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\DentalSchools\FormSchoolCourseRequirements.resx">
+    <EmbeddedResource Include="Forms\DentalSchools\FormSchoolCourseRequirements.resx">
       <DependentUpon>FormSchoolCourseRequirements.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7726,19 +7726,19 @@
       <DependentUpon>FormScheduleBlockEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\DentalSchools\FormSchoolClassEdit.resx">
+    <EmbeddedResource Include="Forms\DentalSchools\FormSchoolClassEdit.resx">
       <DependentUpon>FormSchoolClassEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\DentalSchools\FormSchoolClasses.resx">
+    <EmbeddedResource Include="Forms\DentalSchools\FormSchoolClasses.resx">
       <DependentUpon>FormSchoolClasses.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\DentalSchools\FormSchoolCourseEdit.resx">
+    <EmbeddedResource Include="Forms\DentalSchools\FormSchoolCourseEdit.resx">
       <DependentUpon>FormSchoolCourseEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\DentalSchools\FormSchoolCourses.resx">
+    <EmbeddedResource Include="Forms\DentalSchools\FormSchoolCourses.resx">
       <DependentUpon>FormSchoolCourses.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -9364,7 +9364,9 @@
       <Name>SparksToothChart</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Forms T\" />
+  </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>

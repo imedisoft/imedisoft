@@ -201,18 +201,18 @@ namespace OpenDental {
 			CovSpans.RefreshCache();
 			_listCovCats=CovCats.GetDeepCopy();
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Category",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("From Code",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("To Code",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Hidden",45);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("E-Benefit Category",100);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			CovSpan[] spansForCat;
 			for(int i=0;i<_listCovCats.Count;i++) {
@@ -220,7 +220,7 @@ namespace OpenDental {
 				row.Tag=_listCovCats[i].Copy();
 				row.BackColor=Color.FromArgb(225,225,225);
 				if(i!=0) {
-					gridMain.ListGridRows[gridMain.ListGridRows.Count-1].LowerBorderColor=Color.Black;
+					gridMain.Rows[gridMain.Rows.Count-1].LowerBorderColor=Color.Black;
 				}
 				row.Cells.Add(_listCovCats[i].Description);
 				row.Cells.Add("");
@@ -237,7 +237,7 @@ namespace OpenDental {
 				else{
 					row.Cells.Add(_listCovCats[i].EbenefitCat.ToString());
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 				spansForCat=CovSpans.GetForCat(_listCovCats[i].Id);
 				for(int j=0;j<spansForCat.Length;j++){
 					row=new GridRow();
@@ -247,7 +247,7 @@ namespace OpenDental {
 					row.Cells.Add(spansForCat[j].ToCode);
 					row.Cells.Add("");
 					row.Cells.Add("");
-					gridMain.ListGridRows.Add(row);
+					gridMain.Rows.Add(row);
 				}
 			}
 			gridMain.EndUpdate();
@@ -256,18 +256,18 @@ namespace OpenDental {
 		private void gridMain_CellDoubleClick(object sender,OpenDental.UI.ODGridClickEventArgs e) {
 			bool isCat=false;
 			long selectedKey=0;
-			if(gridMain.ListGridRows[e.Row].Tag.GetType()==typeof(CovCat)){
+			if(gridMain.Rows[e.Row].Tag.GetType()==typeof(CovCat)){
 				isCat=true;
-				selectedKey=((CovCat)gridMain.ListGridRows[e.Row].Tag).Id;
-				FormInsuranceCategoryEdit FormE=new FormInsuranceCategoryEdit((CovCat)gridMain.ListGridRows[e.Row].Tag);
+				selectedKey=((CovCat)gridMain.Rows[e.Row].Tag).Id;
+				FormInsuranceCategoryEdit FormE=new FormInsuranceCategoryEdit((CovCat)gridMain.Rows[e.Row].Tag);
 				FormE.ShowDialog();
 				if(FormE.DialogResult!=DialogResult.OK) {
 					return;
 				}	
 			}
 			else{//covSpan
-				selectedKey=((CovSpan)gridMain.ListGridRows[e.Row].Tag).CovSpanNum;
-				FormInsSpanEdit FormE=new FormInsSpanEdit((CovSpan)gridMain.ListGridRows[e.Row].Tag);
+				selectedKey=((CovSpan)gridMain.Rows[e.Row].Tag).CovSpanNum;
+				FormInsSpanEdit FormE=new FormInsSpanEdit((CovSpan)gridMain.Rows[e.Row].Tag);
 				FormE.ShowDialog();
 				if(FormE.DialogResult!=DialogResult.OK){
 					return;
@@ -275,14 +275,14 @@ namespace OpenDental {
 			}
 			changed=true;
 			FillSpans();
-			for(int i=0;i<gridMain.ListGridRows.Count;i++){
-				if(isCat && gridMain.ListGridRows[i].Tag.GetType()==typeof(CovCat) 
-					&& selectedKey==((CovCat)gridMain.ListGridRows[i].Tag).Id)
+			for(int i=0;i<gridMain.Rows.Count;i++){
+				if(isCat && gridMain.Rows[i].Tag.GetType()==typeof(CovCat) 
+					&& selectedKey==((CovCat)gridMain.Rows[i].Tag).Id)
 				{
 					gridMain.SetSelected(i,true);
 				}
-				if(!isCat && gridMain.ListGridRows[i].Tag.GetType()==typeof(CovSpan) 
-					&& selectedKey==((CovSpan)gridMain.ListGridRows[i].Tag).CovSpanNum)
+				if(!isCat && gridMain.Rows[i].Tag.GetType()==typeof(CovSpan) 
+					&& selectedKey==((CovSpan)gridMain.Rows[i].Tag).CovSpanNum)
 				{
 					gridMain.SetSelected(i,true);
 				}
@@ -294,12 +294,12 @@ namespace OpenDental {
 				MessageBox.Show("Please select a category first.");
 				return;
 			}
-			if(gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag.GetType()!=typeof(CovCat)){
+			if(gridMain.Rows[gridMain.SelectedIndices[0]].Tag.GetType()!=typeof(CovCat)){
 				MessageBox.Show("Please select a category first.");
 				return;
 			}
 			CovSpan covspan=new CovSpan();
-			covspan.CovCatNum=((CovCat)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag).Id;
+			covspan.CovCatNum=((CovCat)gridMain.Rows[gridMain.SelectedIndices[0]].Tag).Id;
 			FormInsSpanEdit FormE=new FormInsSpanEdit(covspan);
 			FormE.IsNew=true;
 			FormE.ShowDialog();
@@ -315,16 +315,16 @@ namespace OpenDental {
 				MessageBox.Show("Please select a category first.");
 				return;
 			}
-			if(gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag.GetType()!=typeof(CovCat)){
+			if(gridMain.Rows[gridMain.SelectedIndices[0]].Tag.GetType()!=typeof(CovCat)){
 				MessageBox.Show("Please select a category first.");
 				return;
 			}
-			long catNum=((CovCat)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag).Id;
-			CovCats.MoveUp((CovCat)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag);
+			long catNum=((CovCat)gridMain.Rows[gridMain.SelectedIndices[0]].Tag).Id;
+			CovCats.MoveUp((CovCat)gridMain.Rows[gridMain.SelectedIndices[0]].Tag);
 			changed=true;
 			FillSpans();
-			for(int i=0;i<gridMain.ListGridRows.Count;i++) {
-				if(gridMain.ListGridRows[i].Tag.GetType()==typeof(CovCat) && catNum==((CovCat)gridMain.ListGridRows[i].Tag).Id){
+			for(int i=0;i<gridMain.Rows.Count;i++) {
+				if(gridMain.Rows[i].Tag.GetType()==typeof(CovCat) && catNum==((CovCat)gridMain.Rows[i].Tag).Id){
 					gridMain.SetSelected(i,true);
 				}
 			}
@@ -335,16 +335,16 @@ namespace OpenDental {
 				MessageBox.Show("Please select a category first.");
 				return;
 			}
-			if(gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag.GetType()!=typeof(CovCat)){
+			if(gridMain.Rows[gridMain.SelectedIndices[0]].Tag.GetType()!=typeof(CovCat)){
 				MessageBox.Show("Please select a category first.");
 				return;
 			}
-			long catNum=((CovCat)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag).Id;
-			CovCats.MoveDown((CovCat)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag);
+			long catNum=((CovCat)gridMain.Rows[gridMain.SelectedIndices[0]].Tag).Id;
+			CovCats.MoveDown((CovCat)gridMain.Rows[gridMain.SelectedIndices[0]].Tag);
 			changed=true;
 			FillSpans();
-			for(int i=0;i<gridMain.ListGridRows.Count;i++) {
-				if(gridMain.ListGridRows[i].Tag.GetType()==typeof(CovCat) && catNum==((CovCat)gridMain.ListGridRows[i].Tag).Id) {
+			for(int i=0;i<gridMain.Rows.Count;i++) {
+				if(gridMain.Rows[i].Tag.GetType()==typeof(CovCat) && catNum==((CovCat)gridMain.Rows[i].Tag).Id) {
 					gridMain.SetSelected(i,true);
 				}
 			}

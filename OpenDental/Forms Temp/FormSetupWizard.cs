@@ -45,16 +45,16 @@ namespace OpenDental
 			FillListSetupItems();
 
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("Setup Item", 250));
-			gridMain.ListGridColumns.Add(new GridColumn("Status", 100, HorizontalAlignment.Center));
-			gridMain.ListGridColumns.Add(new GridColumn("?", 35, HorizontalAlignment.Center) { ImageList = imageList1 });
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("Setup Item", 250));
+			gridMain.Columns.Add(new GridColumn("Status", 100, HorizontalAlignment.Center));
+			gridMain.Columns.Add(new GridColumn("?", 35, HorizontalAlignment.Center) { ImageList = imageList1 });
+			gridMain.Rows.Clear();
 
 			var gridRows = ConstructGridRows();
 			foreach (var gridRow in gridRows)
 			{
-				gridMain.ListGridRows.Add(gridRow);
+				gridMain.Rows.Add(gridRow);
 			}
 
 			gridMain.EndUpdate();
@@ -145,13 +145,13 @@ namespace OpenDental
 
 		private void gridMain_CellClick(object sender, ODGridClickEventArgs e)
 		{
-			GridRow clickedRow = gridMain.ListGridRows[e.Row];
-			GridColumn clickedCol = gridMain.ListGridColumns[e.Col];
+			GridRow clickedRow = gridMain.Rows[e.Row];
+			GridColumn clickedCol = gridMain.Columns[e.Col];
 			if (clickedRow.Tag.GetType() == typeof(ODSetupCategory))
 			{
-				for (int i = 0; i < gridMain.ListGridRows.Count; i++)
+				for (int i = 0; i < gridMain.Rows.Count; i++)
 				{
-					GridRow row = gridMain.ListGridRows[i];
+					GridRow row = gridMain.Rows[i];
 					if (row.Tag is SetupWizard.SetupWizClass
 						&& ((SetupWizard.SetupWizClass)row.Tag).Category == (ODSetupCategory)clickedRow.Tag)
 					{
@@ -171,7 +171,7 @@ namespace OpenDental
 		private void gridMain_CellDoubleClick(object sender, ODGridClickEventArgs e)
 		{
 			//Show a "Congatulations, you've already finished this!" section for finished sections.
-			GridRow clickedRow = gridMain.ListGridRows[e.Row];
+			GridRow clickedRow = gridMain.Rows[e.Row];
 			FormSetupWizardProgress FormSWP;
 			List<SetupWizard.SetupWizClass> listSetupClasses = new List<SetupWizard.SetupWizClass>();
 			if (clickedRow.Tag.GetType().BaseType != typeof(SetupWizard.SetupWizClass))
@@ -225,7 +225,7 @@ namespace OpenDental
 			List<SetupWizard.SetupWizClass> listSetupClasses = new List<SetupWizard.SetupWizClass>();
 			foreach (int rowNum in gridMain.SelectedIndices)
 			{
-				GridRow selectedRow = gridMain.ListGridRows[rowNum];
+				GridRow selectedRow = gridMain.Rows[rowNum];
 				if (selectedRow.Tag.GetType().BaseType != typeof(OpenDental.SetupWizard.SetupWizClass))
 				{
 					continue;

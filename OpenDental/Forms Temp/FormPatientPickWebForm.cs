@@ -67,19 +67,19 @@ namespace OpenDental {
 			if(HasMoreThanOneMatch) {
 				gridMain.Title="Matches";
 			}
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Last Name",110);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("First Name",110);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Birthdate",110);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
 				col=new GridColumn("Clinic Name",110);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			listPats=Patients.GetSimilarList(LnameEntered,FnameEntered,BdateEntered);
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<listPats.Count;i++) {
 				row=new GridRow();
@@ -90,7 +90,7 @@ namespace OpenDental {
 					string clinicName=Clinics.GetDescription(listPats[i].ClinicNum);
 					row.Cells.Add(!string.IsNullOrWhiteSpace(clinicName) ? clinicName : "N/A");
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

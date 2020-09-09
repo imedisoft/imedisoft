@@ -294,7 +294,7 @@ namespace OpenDental {
 				_tableRecalls=_getRecallTable();
 				RecallListEvent.Fire(EventCategory.RecallList,"Filling the Recall List grid...");
 				gridRecalls.BeginUpdate();
-				gridRecalls.ListGridColumns.Clear();
+				gridRecalls.Columns.Clear();
 				List<DisplayField> fields=DisplayFields.GetForCategory(DisplayFieldCategory.RecallList);
 				GridColumn col;
 				foreach(DisplayField f in fields) {
@@ -307,9 +307,9 @@ namespace OpenDental {
 						col.SortingStrategy=GridSortingStrategy.AmountParse;
 						col.TextAlign=HorizontalAlignment.Right;
 					}
-					gridRecalls.ListGridColumns.Add(col);
+					gridRecalls.Columns.Add(col);
 				}
-				gridRecalls.ListGridRows.Clear();
+				gridRecalls.Rows.Clear();
 				GridRow row;
 				List<long> listConflictingPatNums=new List<long>();
 				if(checkShowConflictingTypes.Checked) {
@@ -386,13 +386,13 @@ namespace OpenDental {
 						PIn.String(rowCur["webSchedSendError"].ToString()),
 						PIn.Enum<AutoCommStatus>(PIn.Int(rowCur["webSchedSmsSendStatus"].ToString()),AutoCommStatus.Undefined),
 						PIn.Enum<AutoCommStatus>(PIn.Int(rowCur["webSchedEmailSendStatus"].ToString()),AutoCommStatus.Undefined));
-					gridRecalls.ListGridRows.Add(row);
+					gridRecalls.Rows.Add(row);
 					if(listSelectedRows.Any(x => x.PriKeyNum==((PatRowTag)row.Tag).PriKeyNum)) {
-						gridRecalls.SetSelected(gridRecalls.ListGridRows.Count-1,true);
+						gridRecalls.SetSelected(gridRecalls.Rows.Count-1,true);
 					}
 				}
 				gridRecalls.EndUpdate();
-				labelPatientCount.Text="Patient Count:"+" "+gridRecalls.ListGridRows.Count;
+				labelPatientCount.Text="Patient Count:"+" "+gridRecalls.Rows.Count;
 			};
 			//Show progress window while filling the grid.
 			ODProgress.ShowAction(
@@ -413,8 +413,8 @@ namespace OpenDental {
 				return; //family colors not applicable here
 			}
 			if(_gridCur.SelectedIndices.Length!=1) { //If we don't have a single row selected, reset colors to black
-				for(int i=0;i<_gridCur.ListGridRows.Count;i++) {
-					_gridCur.ListGridRows[i].ForeColor=Color.Black;
+				for(int i=0;i<_gridCur.Rows.Count;i++) {
+					_gridCur.Rows[i].ForeColor=Color.Black;
 				}
 				_gridCur.Invalidate();
 				return;
@@ -422,36 +422,36 @@ namespace OpenDental {
 			//only one row is selected so highlight family members if we can
 			long guar=_gridCur.SelectedTag<PatRowTag>().GuarantorNum;
 			int famCount=0;
-			for(int i=0;i<_gridCur.ListGridRows.Count;i++) {
-				if(((PatRowTag)_gridCur.ListGridRows[i].Tag).GuarantorNum==guar){ //family member
+			for(int i=0;i<_gridCur.Rows.Count;i++) {
+				if(((PatRowTag)_gridCur.Rows[i].Tag).GuarantorNum==guar){ //family member
 					famCount++;
-					_gridCur.ListGridRows[i].ForeColor=Color.Red;
+					_gridCur.Rows[i].ForeColor=Color.Red;
 				}
 				else {
-					_gridCur.ListGridRows[i].ForeColor=Color.Black;
+					_gridCur.Rows[i].ForeColor=Color.Black;
 				}
 			}
 			if(famCount==1) {//only the highlighted patient is red at this point
-				_gridCur.ListGridRows[_gridCur.SelectedIndices[0]].ForeColor=Color.Black;
+				_gridCur.Rows[_gridCur.SelectedIndices[0]].ForeColor=Color.Black;
 			}
 			_gridCur.Invalidate();
 		}
 
 		private void gridRecalls_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			if(gridRecalls.ListGridColumns[e.Col].Tag.ToString()=="WebSched") {//A column's tag is its display field internal name.
-				using(MsgBoxCopyPaste msgBox=new MsgBoxCopyPaste(((PatRowTag)gridRecalls.ListGridRows[e.Row].Tag).WebSchedSendError)) {
+			if(gridRecalls.Columns[e.Col].Tag.ToString()=="WebSched") {//A column's tag is its display field internal name.
+				using(MsgBoxCopyPaste msgBox=new MsgBoxCopyPaste(((PatRowTag)gridRecalls.Rows[e.Row].Tag).WebSchedSendError)) {
 					msgBox.Text="Web Sched Notification Send Error";
 					msgBox.ShowDialog();
 					return;
 				}
 			}
-			Recall recall=Recalls.GetRecall(((PatRowTag)gridRecalls.ListGridRows[e.Row].Tag).PriKeyNum);
+			Recall recall=Recalls.GetRecall(((PatRowTag)gridRecalls.Rows[e.Row].Tag).PriKeyNum);
 			if(recall==null) {
 				MessageBox.Show("Recall for this patient has been removed.");
 				FillRecalls();
 				return;
 			}
-			long selectedPatNum=((PatRowTag)gridRecalls.ListGridRows[e.Row].Tag).PatNum;
+			long selectedPatNum=((PatRowTag)gridRecalls.Rows[e.Row].Tag).PatNum;
 			using(FormRecallEdit FormR=new FormRecallEdit { RecallCur=recall.Copy() }) {
 				if(FormR.ShowDialog()!=DialogResult.OK) {
 					return;
@@ -516,7 +516,7 @@ namespace OpenDental {
 				}
 			}
 			FillRecalls();
-			gridRecalls.SetSelected(gridRecalls.ListGridRows.Select((x,i) => ((PatRowTag)x.Tag).PatNum==selectedPatNum?i:-1).Where(x => x>-1).ToArray(),true);
+			gridRecalls.SetSelected(gridRecalls.Rows.Select((x,i) => ((PatRowTag)x.Tag).PatNum==selectedPatNum?i:-1).Where(x => x>-1).ToArray(),true);
 			SetFamilyColors();
 		}
 
@@ -614,7 +614,7 @@ namespace OpenDental {
 			List<long> listClinicNumsNotSignedUp=new List<long>();
 			List<int> listGridIndicesNotSignUp=new List<int>();
 			for(int i=0;i<gridRecalls.SelectedIndices.Length;i++) {
-				long clinicNum=((PatRowTag)gridRecalls.ListGridRows[gridRecalls.SelectedIndices[i]].Tag).ClinicNum;
+				long clinicNum=((PatRowTag)gridRecalls.Rows[gridRecalls.SelectedIndices[i]].Tag).ClinicNum;
 				//We don't want to send users to the sign up portal for clinic 0 if clinics are enabled because there will be nothing for them to do there. 
 				if(clinicNum==0 && !_listClinicNumsWebSched.Contains(0)) {
 					continue;//We will deselect these rows later.
@@ -640,7 +640,7 @@ namespace OpenDental {
 			}
 			#endregion Check Web Sched Pref and Show Promo
 			#region Recall List Validation
-			if(gridRecalls.ListGridRows.Count < 1) {
+			if(gridRecalls.Rows.Count < 1) {
 				MessageBox.Show("There are no Patients in the Recall table.  Must have at least one.");
 				return;
 			}
@@ -668,7 +668,7 @@ namespace OpenDental {
 			//If the user didn't manually select any recalls we will automatically select all rows that have an email or text prefer recall method.
 			if(gridRecalls.SelectedIndices.Length==0) {
 				gridRecalls.SetSelected(
-					gridRecalls.ListGridRows.Select((x,i) => ((PatRowTag)x.Tag).RecallMethodPreferred.In(ContactMethod.Email,ContactMethod.TextMessage)?i:-1)
+					gridRecalls.Rows.Select((x,i) => ((PatRowTag)x.Tag).RecallMethodPreferred.In(ContactMethod.Email,ContactMethod.TextMessage)?i:-1)
 						.Where(x => x>-1).ToArray(),
 					true);
 			}
@@ -688,7 +688,7 @@ namespace OpenDental {
 			DataTable tableRecallsCur=_getRecallTable();
 			List<long> listPatNumsInTableRecallCur=tableRecallsCur.Select().Select(x => PIn.Long(x["PatNum"].ToString())).ToList();
 			for(int i=gridRecalls.SelectedIndices.Length-1;i>=0;i--) {
-				PatRowTag rowTag=gridRecalls.ListGridRows[gridRecalls.SelectedIndices[i]].Tag as PatRowTag;
+				PatRowTag rowTag=gridRecalls.Rows[gridRecalls.SelectedIndices[i]].Tag as PatRowTag;
 				if(rowTag.PatNum.In(listRestricted)){
 					skippedRestricted++;
 					gridRecalls.SetSelected(gridRecalls.SelectedIndices[i],false);
@@ -805,13 +805,13 @@ namespace OpenDental {
 			if(!Security.IsAuthorized(Permissions.UserQuery)) {
 				return;
 			}
-		  if(gridRecalls.ListGridRows.Count < 1){
+		  if(gridRecalls.Rows.Count < 1){
         MessageBox.Show("There are no Patients in the Recall table.  Must have at least one to run report.");    
         return;
       }
 			List<long> recallNums=new List<long>();
       if(gridRecalls.SelectedIndices.Length==0) {
-        recallNums=gridRecalls.ListGridRows.Select(x => ((PatRowTag)x.Tag).PriKeyNum).ToList();
+        recallNums=gridRecalls.Rows.Select(x => ((PatRowTag)x.Tag).PriKeyNum).ToList();
       }
       else{
 				recallNums=gridRecalls.SelectedTags<PatRowTag>().Select(x => x.PriKeyNum).ToList();
@@ -933,7 +933,7 @@ namespace OpenDental {
 					return;
 				}
 			}
-			if(gridRecalls.ListGridRows.Count < 1) {
+			if(gridRecalls.Rows.Count < 1) {
 				MessageBox.Show("There are no Patients in the Recall table.  Must have at least one to send.");
 				return;
 			}
@@ -943,7 +943,7 @@ namespace OpenDental {
 			}
 			if(gridRecalls.SelectedIndices.Length==0) {
 				gridRecalls.SetSelected(
-					gridRecalls.ListGridRows
+					gridRecalls.Rows
 						.Select((x,i) => ((PatRowTag)x.Tag).RecallMethodPreferred.In(ContactMethod.Mail,ContactMethod.None)?i:-1)
 						.Where(x => x>-1).ToArray(),
 					true);
@@ -1090,7 +1090,7 @@ namespace OpenDental {
 					//deselect the ones that do not have email addresses specified
 					int skipped=0;
 					for(int i=_gridCur.SelectedIndices.Length-1;i>=0;i--) {
-						PatRowTag tag=(PatRowTag)_gridCur.ListGridRows[_gridCur.SelectedIndices[i]].Tag;
+						PatRowTag tag=(PatRowTag)_gridCur.Rows[_gridCur.SelectedIndices[i]].Tag;
 						if(string.IsNullOrWhiteSpace(tag.Email)) {
 							skipped++;
 							_gridCur.SetSelected(_gridCur.SelectedIndices[i],false);
@@ -1213,17 +1213,17 @@ namespace OpenDental {
 				//Add current row to the list of rows sent.
 				if(isRecallGridSelected) {
 					List<long> listRecallNums=addrTable.Rows[i]["recallNums"].ToString().Split(',').Select(x => PIn.Long(x)).ToList();
-					for(int j=0;j<gridCur.ListGridRows.Count;j++) {
-						if(((PatRowTag)gridCur.ListGridRows[j].Tag).PriKeyNum.In(listRecallNums)) {
-							listRowsSent.Add((PatRowTag)gridCur.ListGridRows[j].Tag);
+					for(int j=0;j<gridCur.Rows.Count;j++) {
+						if(((PatRowTag)gridCur.Rows[j].Tag).PriKeyNum.In(listRecallNums)) {
+							listRowsSent.Add((PatRowTag)gridCur.Rows[j].Tag);
 						}
 					}
 				}
 				else {//Reactivation
 					List<long> listPatNums=addrTable.Rows[i]["patNums"].ToString().Split(',').Select(x => PIn.Long(x)).ToList();
-					for(int j=0;j<gridCur.ListGridRows.Count;j++) {
-						if(((PatRowTag)gridCur.ListGridRows[j].Tag).PatNum.In(listPatNums)) {
-							listRowsSent.Add((PatRowTag)gridCur.ListGridRows[j].Tag);
+					for(int j=0;j<gridCur.Rows.Count;j++) {
+						if(((PatRowTag)gridCur.Rows[j].Tag).PatNum.In(listPatNums)) {
+							listRowsSent.Add((PatRowTag)gridCur.Rows[j].Tag);
 						}
 					}
 				}
@@ -1562,7 +1562,7 @@ namespace OpenDental {
 
 		///<summary>We don't fill tabPageRecall when selected as that is the default selected tab and is filled on load.</summary>
 		private void tabControl_SelectedIndexChanged(object sender,EventArgs e) {
-			if(_gridCur.ListGridColumns.Count>0) {
+			if(_gridCur.Columns.Count>0) {
 				return;
 			}
 			if(IsReminderGridSelected()) {//The grid has not been initialized yet.
@@ -1580,16 +1580,16 @@ namespace OpenDental {
 						comboClinicRemind.ListSelectedClinicNums);
 					RecallListEvent.Fire(EventCategory.RecallList,"Filling the Recently Contacted grid...");
 					gridReminders.BeginUpdate();
-					gridReminders.ListGridColumns.Clear();
-					gridReminders.ListGridColumns.Add(new GridColumn("Date Time Sent",140,GridSortingStrategy.DateParse));
-					gridReminders.ListGridColumns.Add(new GridColumn("Patient",200));
-					gridReminders.ListGridColumns.Add(new GridColumn("Reminder Type",180));
-					gridReminders.ListGridColumns.Add(new GridColumn("Age",50,GridSortingStrategy.AmountParse));
-					gridReminders.ListGridColumns.Add(new GridColumn("Due Date",100,GridSortingStrategy.DateParse));
-					gridReminders.ListGridColumns.Add(new GridColumn("Recall Type",130));
-					gridReminders.ListGridColumns.Add(new GridColumn("Recall Status",130));
-					gridReminders.ListGridRows.Clear();
-					gridReminders.ListGridRows.AddRange(listRecent.Select(x => new GridRow(
+					gridReminders.Columns.Clear();
+					gridReminders.Columns.Add(new GridColumn("Date Time Sent",140,GridSortingStrategy.DateParse));
+					gridReminders.Columns.Add(new GridColumn("Patient",200));
+					gridReminders.Columns.Add(new GridColumn("Reminder Type",180));
+					gridReminders.Columns.Add(new GridColumn("Age",50,GridSortingStrategy.AmountParse));
+					gridReminders.Columns.Add(new GridColumn("Due Date",100,GridSortingStrategy.DateParse));
+					gridReminders.Columns.Add(new GridColumn("Recall Type",130));
+					gridReminders.Columns.Add(new GridColumn("Recall Status",130));
+					gridReminders.Rows.Clear();
+					gridReminders.Rows.AddRange(listRecent.Select(x => new GridRow(
 						x.DateSent.ToString(),
 						x.PatientName,
 						x.ReminderType,
@@ -1626,24 +1626,24 @@ namespace OpenDental {
 				startingMessage:"Retrieving Reactivation List..."
 			);
 			gridReactivations.BeginUpdate();
-			gridReactivations.ListGridColumns.Clear();
-			gridReactivations.ListGridColumns.Add(new GridColumn("Last Seen",75,GridSortingStrategy.DateParse));
-			gridReactivations.ListGridColumns.Add(new GridColumn("Patient",90));
-			gridReactivations.ListGridColumns.Add(new GridColumn("Age",30,GridSortingStrategy.AmountParse));
-			gridReactivations.ListGridColumns.Add(new GridColumn("Provider",90));
+			gridReactivations.Columns.Clear();
+			gridReactivations.Columns.Add(new GridColumn("Last Seen",75,GridSortingStrategy.DateParse));
+			gridReactivations.Columns.Add(new GridColumn("Patient",90));
+			gridReactivations.Columns.Add(new GridColumn("Age",30,GridSortingStrategy.AmountParse));
+			gridReactivations.Columns.Add(new GridColumn("Provider",90));
 			if(PrefC.HasClinicsEnabled) {
-				gridReactivations.ListGridColumns.Add(new GridColumn("Clinic",75));
+				gridReactivations.Columns.Add(new GridColumn("Clinic",75));
 			}
 			if(!Prefs.GetBool(PrefName.EasyHidePublicHealth)) {
-				gridReactivations.ListGridColumns.Add(new GridColumn("Site",75));
+				gridReactivations.Columns.Add(new GridColumn("Site",75));
 			}
-			gridReactivations.ListGridColumns.Add(new GridColumn("Billing Type",85));
-			gridReactivations.ListGridColumns.Add(new GridColumn("#Remind",55,GridSortingStrategy.AmountParse));
-			gridReactivations.ListGridColumns.Add(new GridColumn("Last Contacted",100,GridSortingStrategy.DateParse));
-			gridReactivations.ListGridColumns.Add(new GridColumn("Contact",100));
-			gridReactivations.ListGridColumns.Add(new GridColumn("Status",80));
-			gridReactivations.ListGridColumns.Add(new GridColumn("Note",150));
-			gridReactivations.ListGridRows.Clear();
+			gridReactivations.Columns.Add(new GridColumn("Billing Type",85));
+			gridReactivations.Columns.Add(new GridColumn("#Remind",55,GridSortingStrategy.AmountParse));
+			gridReactivations.Columns.Add(new GridColumn("Last Contacted",100,GridSortingStrategy.DateParse));
+			gridReactivations.Columns.Add(new GridColumn("Contact",100));
+			gridReactivations.Columns.Add(new GridColumn("Status",80));
+			gridReactivations.Columns.Add(new GridColumn("Note",150));
+			gridReactivations.Rows.Clear();
 			foreach(DataRow row in tableReacts.Rows) {
 				GridRow rowNew=new GridRow();
 				if(PIn.Bool(row["DoNotContact"].ToString())) {
@@ -1676,17 +1676,17 @@ namespace OpenDental {
 					PIn.Long(row["Guarantor"].ToString()),
 					PIn.Long(row["ClinicNum"].ToString()),
 					wirelessPhone:PIn.String(row["WirelessPhone"].ToString()));
-				gridReactivations.ListGridRows.Add(rowNew);
+				gridReactivations.Rows.Add(rowNew);
 				if(listSelectedRows.Any(x => x.PriKeyNum==((PatRowTag)rowNew.Tag).PriKeyNum)) {
-					gridReactivations.SetSelected(gridReactivations.ListGridRows.Count-1,true);
+					gridReactivations.SetSelected(gridReactivations.Rows.Count-1,true);
 				}
 			}
 			gridReactivations.EndUpdate();
-			labelReactPatCount.Text="Patient Count:"+" "+gridReactivations.ListGridRows.Count.ToString();
+			labelReactPatCount.Text="Patient Count:"+" "+gridReactivations.Rows.Count.ToString();
 		}
 
 		private void gridReactivations_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			PatRowTag tag=(PatRowTag)gridReactivations.ListGridRows[e.Row].Tag;
+			PatRowTag tag=(PatRowTag)gridReactivations.Rows[e.Row].Tag;
 			FormReactivationEdit formRE;
 			if(tag.PriKeyNum==0) {//Patient has never been contacted for reactivations before.
 				formRE=new FormReactivationEdit(tag.PatNum);
@@ -1753,7 +1753,7 @@ namespace OpenDental {
 
 		///<summary>Shared functionality with Recalls and Reactivations, be careful when making changes.</summary>
 		private bool IsGridEmpty() {
-			if(_gridCur.ListGridRows.Count<1) {
+			if(_gridCur.Rows.Count<1) {
 				MessageBox.Show("There are no Patients in the table.  Must have at least one.");    
         return true;
       }
@@ -1798,8 +1798,8 @@ namespace OpenDental {
 				return true;
 			}
 			//No rows selected, try to select rows that don't have a status
-			for(int i=0;i<_gridCur.ListGridRows.Count;i++) {
-				PatRowTag tag=(PatRowTag)_gridCur.ListGridRows[i].Tag;
+			for(int i=0;i<_gridCur.Rows.Count;i++) {
+				PatRowTag tag=(PatRowTag)_gridCur.Rows[i].Tag;
 				if(tag.StatusDefNum!=0 //we only want rows without a status
 					|| (tag.RecallMethodPreferred!=method && (method!=ContactMethod.Mail || tag.RecallMethodPreferred!=ContactMethod.None)))
 				{

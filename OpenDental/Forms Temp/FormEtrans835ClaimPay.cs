@@ -474,8 +474,8 @@ namespace OpenDental {
 				//but make rows bold if they are associated to this split claims procs.
 				//Auto select the first bold row.
 				selectedIndex=0;
-				for(int i=0;i<gridPayments.ListGridRows.Count;i++){
-					if(gridPayments.ListGridRows[i].Bold){
+				for(int i=0;i<gridPayments.Rows.Count;i++){
+					if(gridPayments.Rows[i].Bold){
 						selectedIndex=i;
 						break;
 					}
@@ -498,12 +498,12 @@ namespace OpenDental {
 				gridClaimAdjustments.Title="EOB Claim Adjustments";
 			}
 			gridClaimAdjustments.BeginUpdate();
-			gridClaimAdjustments.ListGridColumns.Clear();
-			gridClaimAdjustments.ListGridColumns.Add(new UI.GridColumn("Reason",445,HorizontalAlignment.Left));
-			gridClaimAdjustments.ListGridColumns.Add(new UI.GridColumn("Allowed",62,HorizontalAlignment.Right));
-			gridClaimAdjustments.ListGridColumns.Add(new UI.GridColumn("Ins Pay",62,HorizontalAlignment.Right));
-			gridClaimAdjustments.ListGridColumns.Add(new UI.GridColumn("Remarks",62,HorizontalAlignment.Left){ IsWidthDynamic=true });
-			gridClaimAdjustments.ListGridRows.Clear();
+			gridClaimAdjustments.Columns.Clear();
+			gridClaimAdjustments.Columns.Add(new UI.GridColumn("Reason",445,HorizontalAlignment.Left));
+			gridClaimAdjustments.Columns.Add(new UI.GridColumn("Allowed",62,HorizontalAlignment.Right));
+			gridClaimAdjustments.Columns.Add(new UI.GridColumn("Ins Pay",62,HorizontalAlignment.Right));
+			gridClaimAdjustments.Columns.Add(new UI.GridColumn("Remarks",62,HorizontalAlignment.Left){ IsWidthDynamic=true });
+			gridClaimAdjustments.Rows.Clear();
 			foreach(Hx835_Adj adj in _listAllClaimsPaid.SelectMany(x => x.ListClaimAdjustments).ToList()) { 
 				GridRow row=new GridRow();
 				row.Tag=adj;
@@ -511,7 +511,7 @@ namespace OpenDental {
 				row.Cells.Add(new GridCell((-adj.AdjAmt).ToString("f2")));//Allowed
 				row.Cells.Add(new GridCell((-adj.AdjAmt).ToString("f2")));//Ins Pay
 				row.Cells.Add(new GridCell(adj.AdjustRemarks));//Remarks
-				gridClaimAdjustments.ListGridRows.Add(row);
+				gridClaimAdjustments.Rows.Add(row);
 			}
 			gridClaimAdjustments.EndUpdate();
 		}
@@ -524,21 +524,21 @@ namespace OpenDental {
 				gridProcedureBreakdown.Title="EOB Procedure Breakdown";
 			}
 			gridProcedureBreakdown.BeginUpdate();
-			gridProcedureBreakdown.ListGridColumns.Clear();
-			gridProcedureBreakdown.ListGridColumns.Add(new GridColumn("ProcNum",116,HorizontalAlignment.Left));
-			gridProcedureBreakdown.ListGridColumns.Add(new GridColumn("Code",50,HorizontalAlignment.Center));
-			gridProcedureBreakdown.ListGridColumns.Add(new GridColumn("",25,HorizontalAlignment.Center));
-			gridProcedureBreakdown.ListGridColumns.Add(new GridColumn("Description",130,HorizontalAlignment.Left));
-			gridProcedureBreakdown.ListGridColumns.Add(new GridColumn("Fee Billed",62,HorizontalAlignment.Right));
-			gridProcedureBreakdown.ListGridColumns.Add(new GridColumn("Deduct",62,HorizontalAlignment.Right));
-			gridProcedureBreakdown.ListGridColumns.Add(new GridColumn("Allowed",62,HorizontalAlignment.Right));
+			gridProcedureBreakdown.Columns.Clear();
+			gridProcedureBreakdown.Columns.Add(new GridColumn("ProcNum",116,HorizontalAlignment.Left));
+			gridProcedureBreakdown.Columns.Add(new GridColumn("Code",50,HorizontalAlignment.Center));
+			gridProcedureBreakdown.Columns.Add(new GridColumn("",25,HorizontalAlignment.Center));
+			gridProcedureBreakdown.Columns.Add(new GridColumn("Description",130,HorizontalAlignment.Left));
+			gridProcedureBreakdown.Columns.Add(new GridColumn("Fee Billed",62,HorizontalAlignment.Right));
+			gridProcedureBreakdown.Columns.Add(new GridColumn("Deduct",62,HorizontalAlignment.Right));
+			gridProcedureBreakdown.Columns.Add(new GridColumn("Allowed",62,HorizontalAlignment.Right));
 			string insTitle="InsPay";
 			if(_claimPaid.IsPreauth) {
 				insTitle="InsEst";
 			}
-			gridProcedureBreakdown.ListGridColumns.Add(new GridColumn(insTitle,62,HorizontalAlignment.Right));
-			gridProcedureBreakdown.ListGridColumns.Add(new GridColumn("Remarks",62,HorizontalAlignment.Left){ IsWidthDynamic=true });
-			gridProcedureBreakdown.ListGridRows.Clear();
+			gridProcedureBreakdown.Columns.Add(new GridColumn(insTitle,62,HorizontalAlignment.Right));
+			gridProcedureBreakdown.Columns.Add(new GridColumn("Remarks",62,HorizontalAlignment.Left){ IsWidthDynamic=true });
+			gridProcedureBreakdown.Rows.Clear();
 			foreach(Hx835_Proc proc in _listAllClaimsPaid.SelectMany(x => x.ListProcs)) {
 				GridRow row=new GridRow();
 				row.Tag=proc;
@@ -567,7 +567,7 @@ namespace OpenDental {
 				row.Cells.Add(new GridCell(proc.AllowedAmt.ToString("f2")));//Allowed
 				row.Cells.Add(new GridCell(proc.InsPaid.ToString("f2")));//InsPay or InsEst
 				row.Cells.Add(new GridCell(proc.GetRemarks()));//Remarks
-				gridProcedureBreakdown.ListGridRows.Add(row);
+				gridProcedureBreakdown.Rows.Add(row);
 			}
 			gridProcedureBreakdown.EndUpdate();
 		}
@@ -579,46 +579,46 @@ namespace OpenDental {
 			//also calculates totals for this "payment"
 			//the payment itself is imaginary and is simply the sum of the claimprocs on this form
 			gridPayments.BeginUpdate();
-			gridPayments.ListGridColumns.Clear();
+			gridPayments.Columns.Clear();
 			GridColumn col=new GridColumn("Split",30,HorizontalAlignment.Center);//Split proc selection column
-			gridPayments.ListGridColumns.Add(col);
-			splitIndex=gridPayments.ListGridColumns.Count-1;
+			gridPayments.Columns.Add(col);
+			splitIndex=gridPayments.Columns.Count-1;
 			col=new GridColumn("Date",66);
-			gridPayments.ListGridColumns.Add(col);
+			gridPayments.Columns.Add(col);
 			col=new GridColumn("Prov",50);
-			gridPayments.ListGridColumns.Add(col);
+			gridPayments.Columns.Add(col);
 			col=new GridColumn("Code",50);
-			gridPayments.ListGridColumns.Add(col);
+			gridPayments.Columns.Add(col);
 			col=new GridColumn("Tth",25);
-			gridPayments.ListGridColumns.Add(col);
+			gridPayments.Columns.Add(col);
 			col=new GridColumn("Description",130);
-			gridPayments.ListGridColumns.Add(col);
+			gridPayments.Columns.Add(col);
 			col=new GridColumn("Fee Billed",62,HorizontalAlignment.Right);
-			gridPayments.ListGridColumns.Add(col);
+			gridPayments.Columns.Add(col);
 			col=new GridColumn("Deduct",62,HorizontalAlignment.Right,true);
-			gridPayments.ListGridColumns.Add(col);
-			deductIndex=gridPayments.ListGridColumns.Count-1;
+			gridPayments.Columns.Add(col);
+			deductIndex=gridPayments.Columns.Count-1;
 			col=new GridColumn("Allowed",62,HorizontalAlignment.Right,true);
-			gridPayments.ListGridColumns.Add(col);
-			allowedIndex=gridPayments.ListGridColumns.Count-1;
+			gridPayments.Columns.Add(col);
+			allowedIndex=gridPayments.Columns.Count-1;
 			string insTitle="InsPay";
 			if(_claimPaid.IsPreauth) {
 				insTitle="InsEst";
 			}
 			col=new GridColumn(insTitle,62,HorizontalAlignment.Right,true);
-			gridPayments.ListGridColumns.Add(col);
-			insPayEstIndex=gridPayments.ListGridColumns.Count-1;
+			gridPayments.Columns.Add(col);
+			insPayEstIndex=gridPayments.Columns.Count-1;
 			col=new GridColumn("Writeoff",62,HorizontalAlignment.Right,isWOIncluded);
-			gridPayments.ListGridColumns.Add(col);
-			writeoffIndex=gridPayments.ListGridColumns.Count-1;
+			gridPayments.Columns.Add(col);
+			writeoffIndex=gridPayments.Columns.Count-1;
 			col=new GridColumn("Status",50,HorizontalAlignment.Center);
-			gridPayments.ListGridColumns.Add(col);
+			gridPayments.Columns.Add(col);
 			col=new GridColumn("Pmt",30,HorizontalAlignment.Center);
-			gridPayments.ListGridColumns.Add(col);
+			gridPayments.Columns.Add(col);
 			col=new GridColumn("Remarks",62,true){ IsWidthDynamic=true };
-			gridPayments.ListGridColumns.Add(col);
-			remarkIndex=gridPayments.ListGridColumns.Count-1;
-			gridPayments.ListGridRows.Clear();
+			gridPayments.Columns.Add(col);
+			remarkIndex=gridPayments.Columns.Count-1;
+			gridPayments.Rows.Clear();
 			GridRow row;
 			Procedure ProcCur;
 			for(int i=0;i<ListClaimProcsForClaim.Count;i++){
@@ -707,20 +707,20 @@ namespace OpenDental {
 					row.Cells.Add("");
 				}
 				row.Cells.Add(claimProc.Remarks);
-				gridPayments.ListGridRows.Add(row);
+				gridPayments.Rows.Add(row);
 			}
 			gridPayments.EndUpdate();
 			FillTotals();
 		}
 
 		private void gridClaimAdjustments_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			Hx835_Adj adj=(Hx835_Adj)gridClaimAdjustments.ListGridRows[e.Row].Tag;
+			Hx835_Adj adj=(Hx835_Adj)gridClaimAdjustments.Rows[e.Row].Tag;
 			MsgBoxCopyPaste msgbox=new MsgBoxCopyPaste(adj.AdjCode+" "+adj.AdjustRemarks+"\r\r"+adj.ReasonDescript+"\r\n"+adj.AdjAmt.ToString("f2"));
 			msgbox.Show(this);//This window is just used to display information.
 		}
 
 		private void gridProcedureBreakdown_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			Hx835_Proc proc=(Hx835_Proc)gridProcedureBreakdown.ListGridRows[e.Row].Tag;
+			Hx835_Proc proc=(Hx835_Proc)gridProcedureBreakdown.Rows[e.Row].Tag;
 			FormEtrans835ProcEdit Form=new FormEtrans835ProcEdit(proc);
 			Form.Show(this);//This window is just used to display information.
 		}
@@ -735,7 +735,7 @@ namespace OpenDental {
 			}
 			List<ClaimProcHist> histList=null;
 			List<ClaimProcHist> loopList=null;
-			ClaimProc claimProc=(ClaimProc)gridPayments.ListGridRows[e.Row].Tag;
+			ClaimProc claimProc=(ClaimProc)gridPayments.Rows[e.Row].Tag;
 			FormClaimProc FormCP=new FormClaimProc(claimProc,null,_famCur,_patCur,_listPlans,histList,ref loopList,_listPatPlans,false,_listInsSubs);
 			FormCP.IsInClaim=true;
 			//no need to worry about permissions here
@@ -759,11 +759,11 @@ namespace OpenDental {
 			switch(e.Col) {
 				case 0://Split claim column
 					bool isSpliting=false;
-					if(gridPayments.ListGridRows[e.Row].Cells[e.Col].Text=="") {//Row is not selected to split currently, will select for split.
+					if(gridPayments.Rows[e.Row].Cells[e.Col].Text=="") {//Row is not selected to split currently, will select for split.
 						isSpliting=true;
 					}
 					gridPayments.BeginUpdate();
-					gridPayments.ListGridRows[e.Row].Cells[e.Col].Text=(isSpliting?"X":"");
+					gridPayments.Rows[e.Row].Cells[e.Col].Text=(isSpliting?"X":"");
 					gridPayments.EndUpdate();
 					break;
 				case 10://WO column and not including WOs, so do not let them edit.
@@ -775,13 +775,13 @@ namespace OpenDental {
 		}
 
 		private void HighlightEraProcRow(int gridPaymentRowIndex) {
-			ClaimProc selectedClaimProc=(ClaimProc)gridPayments.ListGridRows[gridPaymentRowIndex].Tag;
+			ClaimProc selectedClaimProc=(ClaimProc)gridPayments.Rows[gridPaymentRowIndex].Tag;
 			if(selectedClaimProc.ProcNum==0) {
 				return;
 			}
 			List<ClaimProc> listClaimProcsToMatch=new List<ClaimProc>() { selectedClaimProc };
-			for(int i=0;i<gridProcedureBreakdown.ListGridRows.Count;i++){
-				Hx835_Proc eraProc=(Hx835_Proc)gridProcedureBreakdown.ListGridRows[i].Tag;
+			for(int i=0;i<gridProcedureBreakdown.Rows.Count;i++){
+				Hx835_Proc eraProc=(Hx835_Proc)gridProcedureBreakdown.Rows[i].Tag;
 				ClaimProc matchedClaimProc;
 				eraProc.TryGetMatchedClaimProc(out matchedClaimProc,listClaimProcsToMatch,_isSupplementalPay);
 				gridProcedureBreakdown.SetSelected(i,(matchedClaimProc!=null));
@@ -796,13 +796,13 @@ namespace OpenDental {
 			double insPayAmt=0;
 			double writeOff=0;
 			//double amt;
-			for(int i=0;i<gridPayments.ListGridRows.Count;i++){
-				ClaimProc claimProc=(ClaimProc)gridPayments.ListGridRows[i].Tag;
+			for(int i=0;i<gridPayments.Rows.Count;i++){
+				ClaimProc claimProc=(ClaimProc)gridPayments.Rows[i].Tag;
 				claimFee+=claimProc.FeeBilled;//5
-				dedApplied+=PIn.Double(gridPayments.ListGridRows[i].Cells[deductIndex].Text);//6.deduct
-				insPayAmtAllowed+=PIn.Double(gridPayments.ListGridRows[i].Cells[allowedIndex].Text);//7.allowed
-				insPayAmt+=PIn.Double(gridPayments.ListGridRows[i].Cells[insPayEstIndex].Text);//8.inspayest
-				writeOff+=PIn.Double(gridPayments.ListGridRows[i].Cells[writeoffIndex].Text);//9.writeoff
+				dedApplied+=PIn.Double(gridPayments.Rows[i].Cells[deductIndex].Text);//6.deduct
+				insPayAmtAllowed+=PIn.Double(gridPayments.Rows[i].Cells[allowedIndex].Text);//7.allowed
+				insPayAmt+=PIn.Double(gridPayments.Rows[i].Cells[insPayEstIndex].Text);//8.inspayest
+				writeOff+=PIn.Double(gridPayments.Rows[i].Cells[writeoffIndex].Text);//9.writeoff
 			}
 			textClaimFee.Text=claimFee.ToString("F");
 			textDedApplied.Text=dedApplied.ToString("F");
@@ -815,44 +815,44 @@ namespace OpenDental {
 		private void SaveGridChanges(){
 			//validate all grid cells
 			double dbl;
-			for(int i=0;i<gridPayments.ListGridRows.Count;i++){
-				if(gridPayments.ListGridRows[i].Cells[deductIndex].Text!=""){//deduct
+			for(int i=0;i<gridPayments.Rows.Count;i++){
+				if(gridPayments.Rows[i].Cells[deductIndex].Text!=""){//deduct
 					try{
-						dbl=Convert.ToDouble(gridPayments.ListGridRows[i].Cells[deductIndex].Text);
+						dbl=Convert.ToDouble(gridPayments.Rows[i].Cells[deductIndex].Text);
 					}
 					catch{
-						throw new ApplicationException("Deductible not valid: "+gridPayments.ListGridRows[i].Cells[deductIndex].Text);
+						throw new ApplicationException("Deductible not valid: "+gridPayments.Rows[i].Cells[deductIndex].Text);
 					}
 				}
-				if(gridPayments.ListGridRows[i].Cells[allowedIndex].Text!=""){//allowed
+				if(gridPayments.Rows[i].Cells[allowedIndex].Text!=""){//allowed
 					try{
-						dbl=Convert.ToDouble(gridPayments.ListGridRows[i].Cells[allowedIndex].Text);
+						dbl=Convert.ToDouble(gridPayments.Rows[i].Cells[allowedIndex].Text);
 					}
 					catch{
-						throw new ApplicationException("Allowed amt not valid: "+gridPayments.ListGridRows[i].Cells[allowedIndex].Text);
+						throw new ApplicationException("Allowed amt not valid: "+gridPayments.Rows[i].Cells[allowedIndex].Text);
 					}
 				}
-				if(gridPayments.ListGridRows[i].Cells[insPayEstIndex].Text!=""){//inspay
+				if(gridPayments.Rows[i].Cells[insPayEstIndex].Text!=""){//inspay
 					try{
-						dbl=Convert.ToDouble(gridPayments.ListGridRows[i].Cells[insPayEstIndex].Text);
+						dbl=Convert.ToDouble(gridPayments.Rows[i].Cells[insPayEstIndex].Text);
 					}
 					catch{
-						throw new ApplicationException("Ins Pay not valid: "+gridPayments.ListGridRows[i].Cells[insPayEstIndex].Text);
+						throw new ApplicationException("Ins Pay not valid: "+gridPayments.Rows[i].Cells[insPayEstIndex].Text);
 					}
 				}
-				if(gridPayments.ListGridRows[i].Cells[writeoffIndex].Text!=""){//writeoff
+				if(gridPayments.Rows[i].Cells[writeoffIndex].Text!=""){//writeoff
 					try{
-						dbl=Convert.ToDouble(gridPayments.ListGridRows[i].Cells[writeoffIndex].Text);
+						dbl=Convert.ToDouble(gridPayments.Rows[i].Cells[writeoffIndex].Text);
 						if(dbl<0 && !_claimPaid.IsReversal){//Claim reversals have negative writeoffs.
-							throw new ApplicationException("Writeoff cannot be negative: "+gridPayments.ListGridRows[i].Cells[writeoffIndex].Text);
+							throw new ApplicationException("Writeoff cannot be negative: "+gridPayments.Rows[i].Cells[writeoffIndex].Text);
 						}
 					}
 					catch{
-						throw new ApplicationException("Writeoff not valid: "+gridPayments.ListGridRows[i].Cells[writeoffIndex].Text);
+						throw new ApplicationException("Writeoff not valid: "+gridPayments.Rows[i].Cells[writeoffIndex].Text);
 					}
 				}
 			}
-			foreach(GridRow row in gridPayments.ListGridRows) {
+			foreach(GridRow row in gridPayments.Rows) {
 				ClaimProc claimProc=(ClaimProc)row.Tag;
 				claimProc.DedApplied=PIn.Double(row.Cells[deductIndex].Text);
 				if(row.Cells[allowedIndex].Text==""){
@@ -887,8 +887,8 @@ namespace OpenDental {
 			Double dedAmt=0;
 			ClaimProc claimProc;
 			//remove the existing deductible from each payment line and move it to dedAmt.
-			for(int i=0;i<gridPayments.ListGridRows.Count;i++) {
-				claimProc=(ClaimProc)gridPayments.ListGridRows[i].Tag;
+			for(int i=0;i<gridPayments.Rows.Count;i++) {
+				claimProc=(ClaimProc)gridPayments.Rows[i].Tag;
 				if(claimProc.DedApplied > 0){
 					dedAmt+=claimProc.DedApplied;
 					claimProc.InsPayEst+=claimProc.DedApplied;//dedAmt might be more
@@ -901,7 +901,7 @@ namespace OpenDental {
 				return;
 			}
 			//then move dedAmt to the selected proc
-			claimProc=(ClaimProc)gridPayments.ListGridRows[gridPayments.SelectedCell.Y].Tag;
+			claimProc=(ClaimProc)gridPayments.Rows[gridPayments.SelectedCell.Y].Tag;
 			claimProc.DedApplied=dedAmt;
 			claimProc.InsPayEst-=dedAmt;
 			claimProc.InsPayAmt-=dedAmt;
@@ -923,8 +923,8 @@ namespace OpenDental {
 			//fix later: does not take into account other payments.
 			double unpaidAmt=0;
 			List<Procedure> ProcList=Procedures.Refresh(_patCur.PatNum);
-			for(int i=0;i<gridPayments.ListGridRows.Count;i++) {
-				ClaimProc claimProc=(ClaimProc)gridPayments.ListGridRows[i].Tag;
+			for(int i=0;i<gridPayments.Rows.Count;i++) {
+				ClaimProc claimProc=(ClaimProc)gridPayments.Rows[i].Tag;
 				if(claimProc.ProcNum==0) {
 					continue;//Ignore "Total Payment" lines.
 				}
@@ -942,8 +942,8 @@ namespace OpenDental {
 		private void SaveAllowedFees(){
 			//if no allowed fees entered, then nothing to do 
 			bool allowedFeesEntered=false;
-			for(int i=0;i<gridPayments.ListGridRows.Count;i++){
-				if(gridPayments.ListGridRows[i].Cells[allowedIndex].Text!=""){
+			for(int i=0;i<gridPayments.Rows.Count;i++){
+				if(gridPayments.Rows[i].Cells[allowedIndex].Text!=""){
 					allowedFeesEntered=true;
 					break;
 				}
@@ -973,8 +973,8 @@ namespace OpenDental {
 			List<Procedure> listProcs=Procedures.Refresh(_patCur.PatNum);
 			Procedure proc;
 			List<long> invalidFeeSchedNums = new List<long>();
-			for(int i=0;i<gridPayments.ListGridRows.Count;i++) {
-				ClaimProc claimProc=(ClaimProc)gridPayments.ListGridRows[i].Tag;
+			for(int i=0;i<gridPayments.Rows.Count;i++) {
+				ClaimProc claimProc=(ClaimProc)gridPayments.Rows[i].Tag;
 				proc=Procedures.GetProcFromList(listProcs,claimProc.ProcNum);
 				codeNum=proc.CodeNum;
 				//skip total payments
@@ -989,11 +989,11 @@ namespace OpenDental {
 					feeCur.CodeNum=codeNum;
 					feeCur.ClinicNum=(FeeScheds.GetFirst(x => x.FeeSchedNum==feeSched).IsGlobal) ? 0 : proc.ClinicNum;
 					feeCur.ProvNum=(FeeScheds.GetFirst(x => x.FeeSchedNum==feeSched).IsGlobal) ? 0 : proc.ProvNum;
-					feeCur.Amount=PIn.Double(gridPayments.ListGridRows[i].Cells[allowedIndex].Text);
+					feeCur.Amount=PIn.Double(gridPayments.Rows[i].Cells[allowedIndex].Text);
 					Fees.Insert(feeCur);
 				}
 				else{
-					feeCur.Amount=PIn.Double(gridPayments.ListGridRows[i].Cells[allowedIndex].Text);
+					feeCur.Amount=PIn.Double(gridPayments.Rows[i].Cells[allowedIndex].Text);
 					datePrevious=feeCur.SecDateTEdit;
 					Fees.Update(feeCur);
 				}
@@ -1017,8 +1017,8 @@ namespace OpenDental {
 			double dedApplied=0;
 			double insPayAmtAllowed=0;
 			double insPayAmt=0;
-			for(int i=0;i<gridPayments.ListGridRows.Count;i++){
-				ClaimProc claimProc=(ClaimProc)gridPayments.ListGridRows[i].Tag;
+			for(int i=0;i<gridPayments.Rows.Count;i++){
+				ClaimProc claimProc=(ClaimProc)gridPayments.Rows[i].Tag;
 				if((_isSupplementalPay && claimProc.Status!=ClaimProcStatus.Supplemental)
 					|| (!_isSupplementalPay && claimProc.Status!=ClaimProcStatus.Received )
 					|| !claimProc.IsNew)
@@ -1028,9 +1028,9 @@ namespace OpenDental {
 					continue;
 				}
 				claimFee+=claimProc.FeeBilled;
-				dedApplied+=PIn.Double(gridPayments.ListGridRows[i].Cells[deductIndex].Text);
-				insPayAmtAllowed+=PIn.Double(gridPayments.ListGridRows[i].Cells[allowedIndex].Text);
-				insPayAmt+=PIn.Double(gridPayments.ListGridRows[i].Cells[insPayEstIndex].Text);
+				dedApplied+=PIn.Double(gridPayments.Rows[i].Cells[deductIndex].Text);
+				insPayAmtAllowed+=PIn.Double(gridPayments.Rows[i].Cells[allowedIndex].Text);
+				insPayAmt+=PIn.Double(gridPayments.Rows[i].Cells[insPayEstIndex].Text);
 			}
 			if(textEobClaimFee.Text!=claimFee.ToString("F")
 				|| textEobDedApplied.Text!=dedApplied.ToString("F")
@@ -1046,7 +1046,7 @@ namespace OpenDental {
 			if(checkIncludeWOPercCoPay.Checked) {
 				//WO's might have been cleared from grid and saved as 0 in claimProc.WriteOff. See SaveGridChanges().
 				//Need to set claimProc.WriteOff back to original value when including writeoffs.
-				foreach(GridRow row in gridPayments.ListGridRows) {
+				foreach(GridRow row in gridPayments.Rows) {
 					ClaimProc claimProcCur=(ClaimProc)row.Tag;
 					ClaimProc claimProcOld=_listClaimProcsOld.First(x => x.ClaimProcNum==claimProcCur.ClaimProcNum);
 					if(claimProcCur.WriteOff==claimProcOld.WriteOff) {
@@ -1059,7 +1059,7 @@ namespace OpenDental {
 		}
 		
 		private void butSplitProcs_Click(object sender,EventArgs e) {
-			List<GridRow> listSelectedPayRows=gridPayments.ListGridRows.Where(x => x.Cells[splitIndex].Text=="X").ToList();//Split column is "checked".
+			List<GridRow> listSelectedPayRows=gridPayments.Rows.Where(x => x.Cells[splitIndex].Text=="X").ToList();//Split column is "checked".
 			if(listSelectedPayRows.Count()==0) {
 				MessageBox.Show("Please use the Split column to select at least one procedure.");
 				return;
@@ -1096,7 +1096,7 @@ namespace OpenDental {
 			}
 			//Make sure that there is at least one procedure left on the claim before splitting.
 			//The claim would become orphaned if we allow users to split off all procedures on the claim and DBM would be required to run to clean up.
-			if(gridPayments.ListGridRows.Count==listSelectedClaimProcs.Count) {//All procedures are selected for the split...
+			if(gridPayments.Rows.Count==listSelectedClaimProcs.Count) {//All procedures are selected for the split...
 				MessageBox.Show("All procedures were selected.  At least one procedure must remain on this claim after splitting.  Deselect at least one procedure before continuing.");
 				return;
 			}
@@ -1128,7 +1128,7 @@ namespace OpenDental {
 				MessageBox.Show(ex.Message);
 				return;
 			}
-			if(!Prefs.GetBool(PrefName.EraAllowTotalPayments) && gridPayments.ListGridRows.Select(x => (x.Tag as ClaimProc)).Any(x => x.ProcNum==0 && x.InsPayAmt>0)){
+			if(!Prefs.GetBool(PrefName.EraAllowTotalPayments) && gridPayments.Rows.Select(x => (x.Tag as ClaimProc)).Any(x => x.ProcNum==0 && x.InsPayAmt>0)){
 				MsgBox.Show("Please allocate all InsPay amounts from Total Payment rows to a procedure before continuing.");
 				return;
 			}

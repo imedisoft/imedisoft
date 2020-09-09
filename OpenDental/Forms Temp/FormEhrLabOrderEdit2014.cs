@@ -182,27 +182,27 @@ namespace OpenDental {
 		///<summary>Lab Results</summary>
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowInfobutton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
 				col=new GridColumn("",18);//infoButton
 				col.ImageList=imageListInfoButton;
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			col=new GridColumn("Test Date",70);
 			col.SortingStrategy=GridSortingStrategy.DateParse;
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("LOINC",60);//LoincCode
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Test Performed",230);//ShortDescription
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Result Value",160);//Complicated
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Units",60);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Flags",40);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<EhrLabCur.ListEhrLabResults.Count;i++) {
 				row=new GridRow();
@@ -260,7 +260,7 @@ namespace OpenDental {
 				}
 				row.Cells.Add(EhrLabCur.ListEhrLabResults[i].UnitsID);
 				row.Cells.Add(EhrLabCur.ListEhrLabResults[i].AbnormalFlags.Replace("N",""));//abnormal flags, show blank if flag is "Normal"
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -268,19 +268,19 @@ namespace OpenDental {
 		///<summary>Lab Result Notes. Currently includes notes for results too... TODO: seperate notes for labs and results.</summary>
 		private void FillGridNotes() {
 			gridNotes.BeginUpdate();
-			gridNotes.ListGridColumns.Clear();
+			gridNotes.Columns.Clear();
 			GridColumn col=new GridColumn("Note Num",60);
-			gridNotes.ListGridColumns.Add(col);
+			gridNotes.Columns.Add(col);
 			col=new GridColumn("Comments",300);
-			gridNotes.ListGridColumns.Add(col);
-			gridNotes.ListGridRows.Clear();
+			gridNotes.Columns.Add(col);
+			gridNotes.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<EhrLabCur.ListEhrLabNotes.Count;i++) {
 				for(int j=0;j<EhrLabCur.ListEhrLabNotes[i].Comments.Split('^').Length;j++) {
 					row=new GridRow();
 					row.Cells.Add((j==0?(i+1).ToString():""));//add note number if this is first comment for the note, otherwise add blank cell.
 					row.Cells.Add(EhrLabCur.ListEhrLabNotes[i].Comments.Split('^')[j]);//Add each comment.
-					gridNotes.ListGridRows.Add(row);
+					gridNotes.Rows.Add(row);
 				}
 			}
 			gridNotes.EndUpdate();
@@ -289,10 +289,10 @@ namespace OpenDental {
 		///<summary></summary>
 		private void FillGridResultsCopyTo() {
 			gridResultsCopyTo.BeginUpdate();
-			gridResultsCopyTo.ListGridColumns.Clear();
+			gridResultsCopyTo.Columns.Clear();
 			GridColumn col=new GridColumn("Name",60);
-			gridResultsCopyTo.ListGridColumns.Add(col);
-			gridResultsCopyTo.ListGridRows.Clear();
+			gridResultsCopyTo.Columns.Add(col);
+			gridResultsCopyTo.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<EhrLabCur.ListEhrLabResultsCopyTo.Count;i++) {
 				row=new GridRow();
@@ -301,22 +301,22 @@ namespace OpenDental {
 					+EhrLabCur.ListEhrLabResultsCopyTo[i].CopyToLName+" "
 					+EhrLabCur.ListEhrLabResultsCopyTo[i].CopyToSuffix);
 				//TODO: Make this neater. Will display extra spaces if missing prefix suffix or middle names.
-				gridResultsCopyTo.ListGridRows.Add(row);
+				gridResultsCopyTo.Rows.Add(row);
 			}
 			gridResultsCopyTo.EndUpdate();
 		}
 
 		private void FillGridClinicalInformation() {
 			gridClinicalInformation.BeginUpdate();
-			gridClinicalInformation.ListGridColumns.Clear();
+			gridClinicalInformation.Columns.Clear();
 			GridColumn col=new GridColumn("",60);//arbitrary width, only column in grid.
-			gridClinicalInformation.ListGridColumns.Add(col);
-			gridClinicalInformation.ListGridRows.Clear();
+			gridClinicalInformation.Columns.Add(col);
+			gridClinicalInformation.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<EhrLabCur.ListRelevantClinicalInformations.Count;i++) {
 				row=new GridRow();
 				row.Cells.Add(EhrLabCur.ListRelevantClinicalInformations[i].ClinicalInfoText);//may be blank, if so, check the "alt" text
-				gridClinicalInformation.ListGridRows.Add(row);
+				gridClinicalInformation.Rows.Add(row);
 			}
 			gridClinicalInformation.EndUpdate();
 		}
@@ -324,18 +324,18 @@ namespace OpenDental {
 		///<summary>Lab Results</summary>
 		private void FillGridSpecimen() {
 			gridSpecimen.BeginUpdate();
-			gridSpecimen.ListGridColumns.Clear();
+			gridSpecimen.Columns.Clear();
 			GridColumn col=new GridColumn("Rej",30,HorizontalAlignment.Center);//arbitrary width, only column in grid.
-			gridSpecimen.ListGridColumns.Add(col);
+			gridSpecimen.Columns.Add(col);
 			col=new GridColumn("Specimen Type",60);//arbitrary width, only column in grid.
-			gridSpecimen.ListGridColumns.Add(col);
-			gridSpecimen.ListGridRows.Clear();
+			gridSpecimen.Columns.Add(col);
+			gridSpecimen.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<EhrLabCur.ListEhrLabSpecimens.Count;i++) {
 				row=new GridRow();
 				row.Cells.Add((EhrLabCur.ListEhrLabSpecimens[i].ListEhrLabSpecimenRejectReason.Count==0?"":"X"));//X is specimen rejected.
 				row.Cells.Add(EhrLabCur.ListEhrLabSpecimens[i].SpecimenTypeText);//may be blank, if so, check the "alt" text
-				gridSpecimen.ListGridRows.Add(row);
+				gridSpecimen.Rows.Add(row);
 			}
 			gridSpecimen.EndUpdate();
 		}

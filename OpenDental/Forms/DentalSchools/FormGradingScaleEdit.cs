@@ -70,11 +70,11 @@ namespace Imedisoft.Forms
 		private void FillGrid()
 		{
 			gradingScaleItemsGrid.BeginUpdate();
-			gradingScaleItemsGrid.ListGridColumns.Clear();
-			gradingScaleItemsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Shown, 60));
-			gradingScaleItemsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Number, 60));
-			gradingScaleItemsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Description, 160));
-			gradingScaleItemsGrid.ListGridRows.Clear();
+			gradingScaleItemsGrid.Columns.Clear();
+			gradingScaleItemsGrid.Columns.Add(new GridColumn(Translation.Common.Shown, 60));
+			gradingScaleItemsGrid.Columns.Add(new GridColumn(Translation.Common.Number, 60));
+			gradingScaleItemsGrid.Columns.Add(new GridColumn(Translation.Common.Description, 160));
+			gradingScaleItemsGrid.Rows.Clear();
 
 			if (SelectedGradingScaleType == GradingScaleType.PickList)
 			{
@@ -86,7 +86,7 @@ namespace Imedisoft.Forms
 					gridRow.Cells.Add(gradingScaleItem.Description);
 					gridRow.Tag = gradingScaleItem;
 
-					gradingScaleItemsGrid.ListGridRows.Add(gridRow);
+					gradingScaleItemsGrid.Rows.Add(gridRow);
 				}
 			}
 

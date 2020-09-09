@@ -26,10 +26,10 @@ namespace Imedisoft.Forms
 		private void FormQueryMonitor_Load(object sender, EventArgs e)
 		{
 			queryGrid.BeginUpdate();
-			queryGrid.ListGridColumns.Clear();
-			queryGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Command, 100) { IsWidthDynamic = true });
-			queryGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Start, 125, HorizontalAlignment.Center, GridSortingStrategy.DateParse));
-			queryGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Elapsed, 100, HorizontalAlignment.Center));
+			queryGrid.Columns.Clear();
+			queryGrid.Columns.Add(new GridColumn(Translation.Common.Command, 100) { IsWidthDynamic = true });
+			queryGrid.Columns.Add(new GridColumn(Translation.Common.Start, 125, HorizontalAlignment.Center, GridSortingStrategy.DateParse));
+			queryGrid.Columns.Add(new GridColumn(Translation.Common.Elapsed, 100, HorizontalAlignment.Center));
 			queryGrid.EndUpdate();
 		}
 
@@ -58,7 +58,7 @@ namespace Imedisoft.Forms
 			elapsedTextBox.Clear();
 			commandTextBox.Clear();
 
-            if (!(queryGrid.ListGridRows[e.Row].Tag is QueryInfo query))
+            if (!(queryGrid.Rows[e.Row].Tag is QueryInfo query))
             {
                 return;
             }
@@ -91,7 +91,7 @@ namespace Imedisoft.Forms
 			// Use TakeLast(X) instead of a loop because a bunch of queries could have been queued (e.g. pasting schedules can queue thousands).
 			var displayQueries = queriesDictionary.Values.TakeLast(500);
 			queryGrid.BeginUpdate();
-			queryGrid.ListGridRows.Clear();
+			queryGrid.Rows.Clear();
 
 			foreach (var query in displayQueries)
 			{
@@ -100,11 +100,11 @@ namespace Imedisoft.Forms
 					Tag = query
 				};
 
-				queryGrid.ListGridRows.Add(row);
+				queryGrid.Rows.Add(row);
 			}
 
 			queryGrid.EndUpdate();
-			queryGrid.ScrollToIndex(queryGrid.ListGridRows.Count - 1);
+			queryGrid.ScrollToIndex(queryGrid.Rows.Count - 1);
 		}
 
 		private void Start()

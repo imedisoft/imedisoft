@@ -92,27 +92,27 @@ namespace OpenDental {
 			}
 			MainTable=ClockEvents.GetTimeCardManage(DateStart,DateStop,clinicNum,isAll);
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Employee",140);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Total Hrs",75);
 			col.TextAlign=HorizontalAlignment.Right;
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Rate1",75);
 			col.TextAlign=HorizontalAlignment.Right;
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Rate1 OT",75);
 			col.TextAlign=HorizontalAlignment.Right;
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Rate2",75);
 			col.TextAlign=HorizontalAlignment.Right;
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Rate2 OT",75);
 			col.TextAlign=HorizontalAlignment.Right;
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Rate3 PTO",75);
 			col.TextAlign=HorizontalAlignment.Right;
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			//col=new ODGridColumn("Auto Adj",64);
 			//col.TextAlign=HorizontalAlignment.Right;
 			//gridMain.Columns.Add(col);
@@ -132,8 +132,8 @@ namespace OpenDental {
 			//col.TextAlign=HorizontalAlignment.Right;
 			//gridMain.Columns.Add(col);
 			col=new GridColumn("Notes",140){ IsWidthDynamic=true };
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<MainTable.Rows.Count;i++) {
 				row=new GridRow();
@@ -168,7 +168,7 @@ namespace OpenDental {
 					row.Cells.Add(PIn.Time(MainTable.Rows[i]["rate3Hours"].ToString()).ToStringHmm());
 				}
 				row.Cells.Add(MainTable.Rows[i]["Note"].ToString());
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -222,36 +222,36 @@ namespace OpenDental {
 			IComparer myComparer=new ObjectDateComparer();
 			mergedAL.Sort(myComparer);
 			gridTimeCard.BeginUpdate();
-			gridTimeCard.ListGridColumns.Clear();
+			gridTimeCard.Columns.Clear();
 			GridColumn col=new GridColumn("Date",70);
-			gridTimeCard.ListGridColumns.Add(col);
+			gridTimeCard.Columns.Add(col);
 			col=new GridColumn("Day",45);
-			gridTimeCard.ListGridColumns.Add(col);
+			gridTimeCard.Columns.Add(col);
 			col=new GridColumn("In",60,HorizontalAlignment.Right);
-			gridTimeCard.ListGridColumns.Add(col);
+			gridTimeCard.Columns.Add(col);
 			col=new GridColumn("Out",60,HorizontalAlignment.Right);
-			gridTimeCard.ListGridColumns.Add(col);
+			gridTimeCard.Columns.Add(col);
 			col=new GridColumn("Total",50,HorizontalAlignment.Right);
-			gridTimeCard.ListGridColumns.Add(col);
+			gridTimeCard.Columns.Add(col);
 			col=new GridColumn("Adjust",45,HorizontalAlignment.Right);
-			gridTimeCard.ListGridColumns.Add(col);
+			gridTimeCard.Columns.Add(col);
 			col=new GridColumn("Rate2",45,HorizontalAlignment.Right);
-			gridTimeCard.ListGridColumns.Add(col);
+			gridTimeCard.Columns.Add(col);
 			col=new GridColumn("PTO",45,HorizontalAlignment.Right);
-			gridTimeCard.ListGridColumns.Add(col);
+			gridTimeCard.Columns.Add(col);
 			col=new GridColumn("OT",45,HorizontalAlignment.Right);
-			gridTimeCard.ListGridColumns.Add(col);
+			gridTimeCard.Columns.Add(col);
 			col=new GridColumn("Day",50,HorizontalAlignment.Right);
-			gridTimeCard.ListGridColumns.Add(col);
+			gridTimeCard.Columns.Add(col);
 			col=new GridColumn("Week",50,HorizontalAlignment.Right);
-			gridTimeCard.ListGridColumns.Add(col);
+			gridTimeCard.Columns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
 				col=new GridColumn("Clinic",50,HorizontalAlignment.Left);
-				gridTimeCard.ListGridColumns.Add(col);
+				gridTimeCard.Columns.Add(col);
 			}
 			col=new GridColumn("Note",70){ IsWidthDynamic=true };
-			gridTimeCard.ListGridColumns.Add(col);
-			gridTimeCard.ListGridRows.Clear();
+			gridTimeCard.Columns.Add(col);
+			gridTimeCard.Rows.Clear();
 			GridRow row;
 			TimeSpan[] weeklyTotals=new TimeSpan[mergedAL.Count];
 			TimeSpan alteredSpan=new TimeSpan(0);//used to display altered times
@@ -477,7 +477,7 @@ namespace OpenDental {
 					row.Cells.Add(adjust.Note);
 					row.Cells[row.Cells.Count-1].ForeColor=Color.Red;
 				}
-				gridTimeCard.ListGridRows.Add(row);
+				gridTimeCard.Rows.Add(row);
 			}
 			gridTimeCard.EndUpdate();
 			totalTime=periodSpan.ToStringHmm();
@@ -503,14 +503,14 @@ namespace OpenDental {
 
 		//Prints one timecard for each employee.
 		private void butPrintAll_Click(object sender,EventArgs e) {
-			if(gridMain.ListGridRows.Count==0) {
+			if(gridMain.Rows.Count==0) {
 				MessageBox.Show("No time cards to print.");
 				return;
 			}
 			_pagesPrinted=0;
 			PrinterL.TryPreview(pd2_PrintPage,
 				"Employee time cards printed",
-				totalPages:gridMain.ListGridRows.Count
+				totalPages:gridMain.Rows.Count
 			);
 		}
 
@@ -521,7 +521,7 @@ namespace OpenDental {
 		private void PrintEveryTimeCard(object sender,System.Drawing.Printing.PrintPageEventArgs e) {
 			//A preview of every single emp on their own page will show up. User will print from there.
 			Employee employeeCur=Employees.GetEmp(PIn.Long(MainTable.Rows[_pagesPrinted]["EmployeeNum"].ToString()));
-			PrintTimeCard(sender,e,employeeCur,gridMain.ListGridRows.Count);	
+			PrintTimeCard(sender,e,employeeCur,gridMain.Rows.Count);	
 		}
 
 		///<summary>Print timecards for selected employees only.</summary>
@@ -628,14 +628,14 @@ namespace OpenDental {
 				e.Graphics.DrawString(ColCaption[i],fontHeader,brush,colPos[i]+2,yPos+1);
 			}
 			yPos+=18;
-			while(yPos < e.PageBounds.Height-75-50-32-16 && linesPrinted < timeCardGrid.ListGridRows.Count) {
+			while(yPos < e.PageBounds.Height-75-50-32-16 && linesPrinted < timeCardGrid.Rows.Count) {
 				for(int i=0;i<colPos.Length-1;i++) {
-					if(timeCardGrid.ListGridRows[linesPrinted].Cells[i].ForeColor==Color.Empty || timeCardGrid.ListGridRows[linesPrinted].Cells[i].ForeColor==Color.Black) {
-						e.Graphics.DrawString(timeCardGrid.ListGridRows[linesPrinted].Cells[i].Text,font,brush
+					if(timeCardGrid.Rows[linesPrinted].Cells[i].ForeColor==Color.Empty || timeCardGrid.Rows[linesPrinted].Cells[i].ForeColor==Color.Black) {
+						e.Graphics.DrawString(timeCardGrid.Rows[linesPrinted].Cells[i].Text,font,brush
 							,new RectangleF(colPos[i]+2,yPos,colPos[i+1]-colPos[i]-5,font.GetHeight(e.Graphics)));
 					}
 					else { //The only other color currently supported is red.
-						e.Graphics.DrawString(timeCardGrid.ListGridRows[linesPrinted].Cells[i].Text,font,Brushes.Red
+						e.Graphics.DrawString(timeCardGrid.Rows[linesPrinted].Cells[i].Text,font,Brushes.Red
 							,new RectangleF(colPos[i]+2,yPos,colPos[i+1]-colPos[i]-5,font.GetHeight(e.Graphics)));
 					}
 				}

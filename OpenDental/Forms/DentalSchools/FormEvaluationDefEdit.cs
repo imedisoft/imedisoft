@@ -58,14 +58,14 @@ namespace Imedisoft.Forms
 			bool isWeighted = gradingScale != null && gradingScale.Type == GradingScaleType.Weighted;
 
 			evaluationCriterionDefsGrid.BeginUpdate();
-			evaluationCriterionDefsGrid.ListGridColumns.Clear();
-			evaluationCriterionDefsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Description, 140));
-			evaluationCriterionDefsGrid.ListGridColumns.Add(new GridColumn(Translation.DentalSchools.GradingScale, 100));
+			evaluationCriterionDefsGrid.Columns.Clear();
+			evaluationCriterionDefsGrid.Columns.Add(new GridColumn(Translation.Common.Description, 140));
+			evaluationCriterionDefsGrid.Columns.Add(new GridColumn(Translation.DentalSchools.GradingScale, 100));
 			if (isWeighted)
 			{
-				evaluationCriterionDefsGrid.ListGridColumns.Add(new GridColumn(Translation.DentalSchools.MaxPoints, 80));
+				evaluationCriterionDefsGrid.Columns.Add(new GridColumn(Translation.DentalSchools.MaxPoints, 80));
 			}
-			evaluationCriterionDefsGrid.ListGridRows.Clear();
+			evaluationCriterionDefsGrid.Rows.Clear();
 
 			var totalPoints = 0f;
 			foreach (var evaluationCriterionDef in evaluationCriterionDefs)
@@ -104,7 +104,7 @@ namespace Imedisoft.Forms
 					}
 				}
 
-				evaluationCriterionDefsGrid.ListGridRows.Add(gridRow);
+				evaluationCriterionDefsGrid.Rows.Add(gridRow);
 			}
 
 			evaluationCriterionDefsGrid.EndUpdate();
@@ -165,7 +165,7 @@ namespace Imedisoft.Forms
 
 			downButton.Enabled = 
 				selectedIndices.Any(
-					index => index < evaluationCriterionDefsGrid.ListGridRows.Count - 1);
+					index => index < evaluationCriterionDefsGrid.Rows.Count - 1);
 		}
 
 		private void AddButton_Click(object sender, EventArgs e)
@@ -252,8 +252,8 @@ namespace Imedisoft.Forms
             {
 				if (index < 1) continue;
 
-				var item1 = evaluationCriterionDefsGrid.ListGridRows[index].Tag as EvaluationCriterionDef;
-				var item2 = evaluationCriterionDefsGrid.ListGridRows[index - 1].Tag as EvaluationCriterionDef;
+				var item1 = evaluationCriterionDefsGrid.Rows[index].Tag as EvaluationCriterionDef;
+				var item2 = evaluationCriterionDefsGrid.Rows[index - 1].Tag as EvaluationCriterionDef;
 
 				(item1.SortOrder, item2.SortOrder) = (item2.SortOrder, item1.SortOrder);
 
@@ -281,13 +281,13 @@ namespace Imedisoft.Forms
 
 			var selectedIndices = new List<int>();
 
-			var lastIndex = evaluationCriterionDefsGrid.ListGridRows.Count - 1;
+			var lastIndex = evaluationCriterionDefsGrid.Rows.Count - 1;
 			foreach (var index in evaluationCriterionDefsGrid.SelectedIndices)
 			{
 				if (index >= lastIndex) continue;
 
-				var item1 = evaluationCriterionDefsGrid.ListGridRows[index].Tag as EvaluationCriterionDef;
-				var item2 = evaluationCriterionDefsGrid.ListGridRows[index + 1].Tag as EvaluationCriterionDef;
+				var item1 = evaluationCriterionDefsGrid.Rows[index].Tag as EvaluationCriterionDef;
+				var item2 = evaluationCriterionDefsGrid.Rows[index + 1].Tag as EvaluationCriterionDef;
 
 				(item1.SortOrder, item2.SortOrder) = (item2.SortOrder, item1.SortOrder);
 

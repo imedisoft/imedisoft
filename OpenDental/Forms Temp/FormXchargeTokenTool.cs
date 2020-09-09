@@ -70,20 +70,20 @@ namespace OpenDental {
 				return;
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("PatNum",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("First",120);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Last",120);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("CCNumberMasked",150);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Exp",50);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Token",100);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listCreditCards.Count;i++) {
 				row=new GridRow();
@@ -100,7 +100,7 @@ namespace OpenDental {
 				row.Cells.Add(_listCreditCards[i].CCExpiration.ToString("MMyy"));
 				row.Cells.Add(_listCreditCards[i].XChargeToken);
 				row.Tag=_listCreditCards[i];
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -181,21 +181,21 @@ namespace OpenDental {
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			CreditCard cc=(CreditCard)gridMain.ListGridRows[e.Row].Tag;
+			CreditCard cc=(CreditCard)gridMain.Rows[e.Row].Tag;
 			FormCreditCardManage FormCCM=new FormCreditCardManage(Patients.GetPat(cc.PatNum));
 			FormCCM.ShowDialog();
 			int totalCCs=PIn.Int(textTotal.Text);
 			int invalidCCs=PIn.Int(textInvalid.Text);
 			List<CreditCard> listCardsForPat=CreditCards.Refresh(cc.PatNum);
 			gridMain.BeginUpdate();
-			for(int i=gridMain.ListGridRows.Count-1;i>-1;i--) {//loop through backwards and remove any cards that are no longer in the list
-				CreditCard ccGrid=(CreditCard)gridMain.ListGridRows[i].Tag;
+			for(int i=gridMain.Rows.Count-1;i>-1;i--) {//loop through backwards and remove any cards that are no longer in the list
+				CreditCard ccGrid=(CreditCard)gridMain.Rows[i].Tag;
 				if(cc.PatNum!=ccGrid.PatNum) {
 					continue;
 				}
 				if(!listCardsForPat.Any(x => x.CreditCardNum==ccGrid.CreditCardNum)) {//this row is one of the cards for the patient
 					//if the card is no longer in the list of cards for the patient, it must have been deleted from FormCreditCardManage, remove from grid
-					gridMain.ListGridRows.RemoveAt(i);
+					gridMain.Rows.RemoveAt(i);
 					_listCreditCards.RemoveAt(i);//so the list and grid contain the same number of items
 					//Valid cards may have been deleted as well, but we only maintain the count of invalids changing.
 					//Valid card count and total card count will be refreshed if/when the user presses the Check button again.
@@ -210,7 +210,7 @@ namespace OpenDental {
 
 		private void butCheck_Click(object sender,EventArgs e) {
 			gridMain.BeginUpdate();
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			gridMain.EndUpdate();
 			_listCreditCards=CreditCards.GetCardsWithTokenBySource(
 				new List<CreditCardSource> { CreditCardSource.XServer,CreditCardSource.XServerPayConnect });

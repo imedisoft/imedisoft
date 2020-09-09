@@ -68,9 +68,9 @@ namespace Imedisoft.Forms
 			int scroll = requirementsGrid.ScrollValue;
 
 			requirementsGrid.BeginUpdate();
-			requirementsGrid.ListGridColumns.Clear();
-			requirementsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Description, 200));
-			requirementsGrid.ListGridRows.Clear();
+			requirementsGrid.Columns.Clear();
+			requirementsGrid.Columns.Add(new GridColumn(Translation.Common.Description, 200));
+			requirementsGrid.Rows.Clear();
 
 			var requirements = schoolCourseRequirements
 				.Where(schoolCourseRequirement => 
@@ -85,18 +85,18 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(schoolCourseRequirement.Description);
 				gridRow.Tag = schoolCourseRequirement;
 
-				requirementsGrid.ListGridRows.Add(gridRow);
+				requirementsGrid.Rows.Add(gridRow);
 
 				if (schoolCourseRequirement.Id == selectedRequirement)
 				{
-					requirementsGrid.SetSelected(requirementsGrid.ListGridRows.Count - 1, true);
+					requirementsGrid.SetSelected(requirementsGrid.Rows.Count - 1, true);
 				}
 			}
 
 			requirementsGrid.EndUpdate();
 			requirementsGrid.ScrollValue = scroll;
 
-			deleteAllButton.Enabled = requirementsGrid.ListGridRows.Count > 0;
+			deleteAllButton.Enabled = requirementsGrid.Rows.Count > 0;
 		}
 
 		private void ClassComboBox_SelectionChangeCommitted(object sender, EventArgs e)

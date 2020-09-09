@@ -56,13 +56,13 @@ namespace Imedisoft.Forms
 		private void FillGrid()
 		{
 			adjustmentsGrid.BeginUpdate();
-			adjustmentsGrid.ListGridRows.Clear();
-			adjustmentsGrid.ListGridColumns.Clear();
-			adjustmentsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Date, 70, HorizontalAlignment.Center));
-			adjustmentsGrid.ListGridColumns.Add(new GridColumn("Provider", 60) { IsWidthDynamic = true });
-			adjustmentsGrid.ListGridColumns.Add(new GridColumn("Clinic", 60) { IsWidthDynamic = true });
-			adjustmentsGrid.ListGridColumns.Add(new GridColumn("Amt. Orig.", 60, HorizontalAlignment.Right));
-			adjustmentsGrid.ListGridColumns.Add(new GridColumn("Amt. Avail.", 60, HorizontalAlignment.Right));
+			adjustmentsGrid.Rows.Clear();
+			adjustmentsGrid.Columns.Clear();
+			adjustmentsGrid.Columns.Add(new GridColumn(Translation.Common.Date, 70, HorizontalAlignment.Center));
+			adjustmentsGrid.Columns.Add(new GridColumn("Provider", 60) { IsWidthDynamic = true });
+			adjustmentsGrid.Columns.Add(new GridColumn("Clinic", 60) { IsWidthDynamic = true });
+			adjustmentsGrid.Columns.Add(new GridColumn("Amt. Orig.", 60, HorizontalAlignment.Right));
+			adjustmentsGrid.Columns.Add(new GridColumn("Amt. Avail.", 60, HorizontalAlignment.Right));
 
 			foreach (var accountEntry in _listPatAdjEntries)
 			{
@@ -74,7 +74,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(accountEntry.AmountAvailable.ToString("F"));
 				gridRow.Tag = accountEntry;
 
-				adjustmentsGrid.ListGridRows.Add(gridRow);
+				adjustmentsGrid.Rows.Add(gridRow);
 			}
 
 			adjustmentsGrid.EndUpdate();

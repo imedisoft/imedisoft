@@ -71,19 +71,19 @@ namespace OpenDental {
 				}
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("User Name",240);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Sender Address",270);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("User",135);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Default",50,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Notify",50,HorizontalAlignment.Center) { IsWidthDynamic=true };
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			foreach(EmailAddress emailAddress in _listEmailAddresses) {
 				row=new GridRow();
@@ -93,7 +93,7 @@ namespace OpenDental {
 				row.Cells.Add((emailAddress.EmailAddressNum==Prefs.GetLong(PrefName.EmailDefaultAddressNum))?"X":"");
 				row.Cells.Add((emailAddress.EmailAddressNum==Prefs.GetLong(PrefName.EmailNotifyAddressNum))?"X":"");
 				row.Tag=emailAddress;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

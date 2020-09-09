@@ -32,27 +32,27 @@ namespace OpenDental.User_Controls.SetupWizard {
 		private void FillGrid() {
 			Color needsAttnCol = OpenDental.SetupWizard.GetColor(ODSetupStatus.NeedsAttention);
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col = new GridColumn("Clinic",110);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("Abbrev",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("Phone",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("Address",120);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("City",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("State",50);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("ZIP",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("Default Prov",75);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("IsHidden",55,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			bool IsAllComplete = true;
 			List<Clinic> listClins = Clinics.GetAll(true);
@@ -99,7 +99,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 				row.Cells.Add(clinCur.DefaultProviderId.HasValue ? Providers.GetAbbr(clinCur.DefaultProviderId.Value) : "");
 				row.Cells.Add(clinCur.IsHidden?"X":"");
 				row.Tag=clinCur;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			if(IsAllComplete) {
@@ -133,7 +133,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			Clinic clinCur = (Clinic)gridMain.ListGridRows[e.Row].Tag;
+			Clinic clinCur = (Clinic)gridMain.Rows[e.Row].Tag;
 			FormClinicEdit FormCE = new FormClinicEdit(clinCur);
 			FormCE.ShowDialog();
 			if(FormCE.DialogResult==DialogResult.OK) {

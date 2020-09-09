@@ -641,31 +641,31 @@ namespace OpenDental{
 			//Get filtered list from list all
 			ClaimSendQueueItem[] arrayQueueFiltered=GetListQueueFiltered();//We update the class wide variable because it is used in double clicking and other events.
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("DateService",75,HorizontalAlignment.Center);//new column
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Patient Name",120);//was 190
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Carrier Name",200);//was 220, before that was 100 but was too small.  In Insurance Plans window is 140.
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
 				col=new GridColumn("Clinic",80);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			col=new GridColumn("Provider",55);//Just large enough to show the title
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("M/D",30);//Just large enough to hold 4 characters (see below)
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Clearinghouse",85);//Just large enough for the title
-			gridMain.ListGridColumns.Add(col);
-			clearinghouseIndex=gridMain.ListGridColumns.Count-1;
+			gridMain.Columns.Add(col);
+			clearinghouseIndex=gridMain.Columns.Count-1;
 			col=new GridColumn("Warnings",120);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Missing Info",300);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("ProcCodes",120){ IsWidthDynamic=true };
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			foreach(ClaimSendQueueItem queueItem in arrayQueueFiltered){
 				row=new GridRow();
@@ -699,12 +699,12 @@ namespace OpenDental{
 				}
 				row.Cells.Add(queueItem.ProcedureCodeString);
 				row.Tag=queueItem.Copy();
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			gridMain.ScrollValue=oldScrollValue;
-			for(int i=0;i<gridMain.ListGridRows.Count;i++) {
-				if(((ClaimSendQueueItem)gridMain.ListGridRows[i].Tag).ClaimNum.In(listOldSelectedClaimNums)) {
+			for(int i=0;i<gridMain.Rows.Count;i++) {
+				if(((ClaimSendQueueItem)gridMain.Rows[i].Tag).ClaimNum.In(listOldSelectedClaimNums)) {
 					gridMain.SetSelected(i,true);//select row
 				}
 			}
@@ -759,8 +759,8 @@ namespace OpenDental{
 			int selected=e.Row;
 			FormClaimPrint FormCP;
 			FormCP=new FormClaimPrint();
-			FormCP.PatNumCur=((ClaimSendQueueItem)gridMain.ListGridRows[selected].Tag).PatNum;
-			FormCP.ClaimNumCur=((ClaimSendQueueItem)gridMain.ListGridRows[selected].Tag).ClaimNum;
+			FormCP.PatNumCur=((ClaimSendQueueItem)gridMain.Rows[selected].Tag).PatNum;
+			FormCP.ClaimNumCur=((ClaimSendQueueItem)gridMain.Rows[selected].Tag).ClaimNum;
 			FormCP.PrintImmediately=false;
 			FormCP.ShowDialog();
 			FillGrid();
@@ -866,8 +866,8 @@ namespace OpenDental{
 		private void toolBarButPrint_Click(){
 			FormClaimPrint FormCP=new FormClaimPrint();
 			if(gridMain.SelectedTags<ClaimSendQueueItem>().Count==0){
-				for(int i=0;i<gridMain.ListGridRows.Count;i++) {
-					ClaimSendQueueItem queueItem=(ClaimSendQueueItem)gridMain.ListGridRows[i].Tag;
+				for(int i=0;i<gridMain.Rows.Count;i++) {
+					ClaimSendQueueItem queueItem=(ClaimSendQueueItem)gridMain.Rows[i].Tag;
 					if((queueItem.ClaimStatus=="W" || queueItem.ClaimStatus=="P") && !queueItem.CanSendElect){
 						gridMain.SetSelected(i,true);
 					}
@@ -878,12 +878,12 @@ namespace OpenDental{
 			}
 			bool doUsePrinterSettingsForAll=false;
 			bool isFirstIteration=true;
-			foreach(GridRow row in gridMain.SelectedGridRows) {
+			foreach(GridRow row in gridMain.SelectedRows) {
 				ClaimSendQueueItem queueItem=(ClaimSendQueueItem)row.Tag;
 				FormCP.PatNumCur=queueItem.PatNum;
 				FormCP.ClaimNumCur=queueItem.ClaimNum;
 				FormCP.ClaimFormCur=null;//so that it will pull from the individual claim or plan.
-				if(isFirstIteration && gridMain.SelectedGridRows.Count>1) {
+				if(isFirstIteration && gridMain.SelectedRows.Count>1) {
 					doUsePrinterSettingsForAll=MsgBox.Show(MsgBoxButtons.YesNo,"Use the same printer settings for all selected claims?");
 				}
 				if(!FormCP.PrintImmediate("Multiple claims printed",PrintSituation.Claim,0,(doUsePrinterSettingsForAll && !isFirstIteration))) {
@@ -909,7 +909,7 @@ namespace OpenDental{
 			Claim claim;
 			InsPlan plan;
 			List<long> carrierNums=new List<long>();
-			foreach(GridRow row in gridMain.SelectedGridRows) {
+			foreach(GridRow row in gridMain.SelectedRows) {
 				ClaimSendQueueItem queueItem=(ClaimSendQueueItem)row.Tag;
 				claim=Claims.GetClaim(queueItem.ClaimNum);
 				plan=InsPlans.GetPlan(claim.PlanNum,new List <InsPlan> ());
@@ -995,8 +995,8 @@ namespace OpenDental{
 				#endif
 			}
 			if(gridMain.SelectedTags<ClaimSendQueueItem>().Count==0){//if none are selected
-				for(int i=0;i<gridMain.ListGridRows.Count;i++) {//loop through all rows
-					ClaimSendQueueItem queueItem=(ClaimSendQueueItem)gridMain.ListGridRows[i].Tag;
+				for(int i=0;i<gridMain.Rows.Count;i++) {//loop through all rows
+					ClaimSendQueueItem queueItem=(ClaimSendQueueItem)gridMain.Rows[i].Tag;
 					if(queueItem.CanSendElect) {
 						if(hqClearinghouseNum==0) {//they did not use the dropdown list for specific clearinghouse
 							//If clearinghouse is zero because they just pushed the button instead of using the dropdown list,
@@ -1021,8 +1021,8 @@ namespace OpenDental{
 					if(!MsgBox.Show(MsgBoxButtons.YesNo,"Send all e-claims through selected clearinghouse?")) {
 						return;
 					}
-					for(int i=0;i<gridMain.ListGridRows.Count;i++) {//loop through all filtered rows
-						ClaimSendQueueItem queueItem=(ClaimSendQueueItem)gridMain.ListGridRows[i].Tag;
+					for(int i=0;i<gridMain.Rows.Count;i++) {//loop through all filtered rows
+						ClaimSendQueueItem queueItem=(ClaimSendQueueItem)gridMain.Rows[i].Tag;
 						if(queueItem.CanSendElect) {
 							gridMain.SetSelected(i,true);//this will include other clearinghouses
 						}
@@ -1033,7 +1033,7 @@ namespace OpenDental{
 					return;
 				}
 				if(hqClearinghouseNum!=0) {//if they used the dropdown list to specify clearinghouse
-					foreach(GridRow row in gridMain.SelectedGridRows){
+					foreach(GridRow row in gridMain.SelectedRows){
 						ClaimSendQueueItem queueItem=(ClaimSendQueueItem)row.Tag;
 						Clearinghouse clearRow=Clearinghouses.GetClearinghouse(queueItem.ClearinghouseNum);
 						if(clearDefault.TypeName!=clearRow.TypeName) {
@@ -1054,7 +1054,7 @@ namespace OpenDental{
 			}
 			else {//some rows were manually selected by the user
 				if(hqClearinghouseNum!=0) {//if they used the dropdown list to specify clearinghouse
-					foreach(GridRow row in gridMain.SelectedGridRows){
+					foreach(GridRow row in gridMain.SelectedRows){
 						ClaimSendQueueItem queueItem=(ClaimSendQueueItem)row.Tag;
 						Clearinghouse clearRow=Clearinghouses.GetClearinghouse(queueItem.ClearinghouseNum);
 						if(clearDefault.TypeName!=clearRow.TypeName) {
@@ -1233,30 +1233,30 @@ namespace OpenDental{
 			tableHistory=Etranss.RefreshHistory(dateFrom,dateTo,listSelectedEtransTypes);
 			//listQueue=Claims.GetQueueList();
 			gridHistory.BeginUpdate();
-			gridHistory.ListGridColumns.Clear();
+			gridHistory.Columns.Clear();
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
 				GridColumn col;
 				col=new GridColumn("Patient Name",120);
-				gridHistory.ListGridColumns.Add(col);
+				gridHistory.Columns.Add(col);
 				col=new GridColumn("Carrier Name",150);
-				gridHistory.ListGridColumns.Add(col);
+				gridHistory.Columns.Add(col);
 				col=new GridColumn("Clearinghouse",90);
-				gridHistory.ListGridColumns.Add(col);
+				gridHistory.Columns.Add(col);
 				col=new GridColumn("Date",70,HorizontalAlignment.Center);
-				gridHistory.ListGridColumns.Add(col);
+				gridHistory.Columns.Add(col);
 				col=new GridColumn("Type",90);
-				gridHistory.ListGridColumns.Add(col);
+				gridHistory.Columns.Add(col);
 				col=new GridColumn("AckCode",90,HorizontalAlignment.Center);
-				gridHistory.ListGridColumns.Add(col);
+				gridHistory.Columns.Add(col);
 				col=new GridColumn("Note",90);
-				gridHistory.ListGridColumns.Add(col);
+				gridHistory.Columns.Add(col);
 				col=new GridColumn("Office#",90);
-				gridHistory.ListGridColumns.Add(col);
+				gridHistory.Columns.Add(col);
 				col=new GridColumn("User",80);
-				gridHistory.ListGridColumns.Add(col);
+				gridHistory.Columns.Add(col);
 				col=new GridColumn("# Carriers",30){ IsWidthDynamic=true };
-				gridHistory.ListGridColumns.Add(col);
-				gridHistory.ListGridRows.Clear();
+				gridHistory.Columns.Add(col);
+				gridHistory.Rows.Clear();
 				GridRow row;
 				for(int i=0;i<tableHistory.Rows.Count;i++) {
 					row=new GridRow();
@@ -1273,28 +1273,28 @@ namespace OpenDental{
 					Userod user=Userods.GetUser(PIn.Long(tableHistory.Rows[i]["UserNum"].ToString()));
 					row.Cells.Add(user==null ? "" : user.UserName);
 					row.Cells.Add(tableHistory.Rows[i]["CarrierTransCounter"].ToString());
-					gridHistory.ListGridRows.Add(row);
+					gridHistory.Rows.Add(row);
 				}
 			}
 			else {
 				GridColumn col;
 				col=new GridColumn("Patient Name",130);
-				gridHistory.ListGridColumns.Add(col);
+				gridHistory.Columns.Add(col);
 				col=new GridColumn("Carrier Name",170);
-				gridHistory.ListGridColumns.Add(col);
+				gridHistory.Columns.Add(col);
 				col=new GridColumn("Clearinghouse",90);
-				gridHistory.ListGridColumns.Add(col);
+				gridHistory.Columns.Add(col);
 				col=new GridColumn("Date",70,HorizontalAlignment.Center);
-				gridHistory.ListGridColumns.Add(col);
+				gridHistory.Columns.Add(col);
 				col=new GridColumn("Type",100);
-				gridHistory.ListGridColumns.Add(col);
+				gridHistory.Columns.Add(col);
 				col=new GridColumn("AckCode",100,HorizontalAlignment.Center);
-				gridHistory.ListGridColumns.Add(col);
+				gridHistory.Columns.Add(col);
 				col=new GridColumn("Note",170);
-				gridHistory.ListGridColumns.Add(col);
+				gridHistory.Columns.Add(col);
 				col=new GridColumn("User",130){ IsWidthDynamic=true };
-				gridHistory.ListGridColumns.Add(col);
-				gridHistory.ListGridRows.Clear();
+				gridHistory.Columns.Add(col);
+				gridHistory.Rows.Clear();
 				GridRow row;
 				for(int i=0;i<tableHistory.Rows.Count;i++) {
 					row=new GridRow();
@@ -1307,7 +1307,7 @@ namespace OpenDental{
 					row.Cells.Add(tableHistory.Rows[i]["Note"].ToString());
 					Userod user=Userods.GetUser(PIn.Long(tableHistory.Rows[i]["UserNum"].ToString()));
 					row.Cells.Add(user==null ? "" : user.UserName);
-					gridHistory.ListGridRows.Add(row);
+					gridHistory.Rows.Add(row);
 				}
 			}
 			gridHistory.EndUpdate();
@@ -1517,7 +1517,7 @@ namespace OpenDental{
 
 		private void PrintItem_Click(){
 			//not currently accessible
-			if(gridHistory.ListGridRows.Count==0){
+			if(gridHistory.Rows.Count==0){
 				MessageBox.Show("There are no items to print.");
 				return;
 			}

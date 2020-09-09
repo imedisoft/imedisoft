@@ -552,7 +552,7 @@ namespace OpenDental{
 				return;
 			}
 			int scrollPos=gridBill.ScrollValue;
-			List<long> selectedKeys=gridBill.SelectedIndices.OfType<int>().Select(x => PIn.Long(((DataRow)gridBill.ListGridRows[x].Tag)["StatementNum"].ToString())).ToList();
+			List<long> selectedKeys=gridBill.SelectedIndices.OfType<int>().Select(x => PIn.Long(((DataRow)gridBill.Rows[x].Tag)["StatementNum"].ToString())).ToList();
 			DateTime dateFrom=PIn.Date(textDateStart.Text);
 			DateTime dateTo=new DateTime(2200,1,1);
 			if(textDateEnd.Text!=""){
@@ -564,7 +564,7 @@ namespace OpenDental{
 			}
 			table=Statements.GetBilling(radioSent.Checked,comboOrder.SelectedIndex,dateFrom,dateTo,clinicNums);
 			gridBill.BeginUpdate();
-			gridBill.ListGridColumns.Clear();
+			gridBill.Columns.Clear();
 			GridColumn col=null;
 			if(Prefs.GetBool(PrefName.ShowFeatureSuperfamilies)) {
 				col=new GridColumn("Name",150);
@@ -572,26 +572,26 @@ namespace OpenDental{
 			else {
 				col=new GridColumn("Name",180);
 			}
-			gridBill.ListGridColumns.Add(col);
+			gridBill.Columns.Add(col);
 			col=new GridColumn("BillType",110);
-			gridBill.ListGridColumns.Add(col);
+			gridBill.Columns.Add(col);
 			col=new GridColumn("Mode",80);
-			gridBill.ListGridColumns.Add(col);
+			gridBill.Columns.Add(col);
 			col=new GridColumn("LastStatement",100);
-			gridBill.ListGridColumns.Add(col);
+			gridBill.Columns.Add(col);
 			col=new GridColumn("BalTot",70,HorizontalAlignment.Right);
-			gridBill.ListGridColumns.Add(col);
+			gridBill.Columns.Add(col);
 			col=new GridColumn("-InsEst",70,HorizontalAlignment.Right);
-			gridBill.ListGridColumns.Add(col);
+			gridBill.Columns.Add(col);
 			col=new GridColumn("=AmtDue",70,HorizontalAlignment.Right);
-			gridBill.ListGridColumns.Add(col);
+			gridBill.Columns.Add(col);
 			col=new GridColumn("PayPlanDue",70,HorizontalAlignment.Right);
-			gridBill.ListGridColumns.Add(col);
+			gridBill.Columns.Add(col);
 			if(Prefs.GetBool(PrefName.ShowFeatureSuperfamilies)) {
 				col=new GridColumn("SF",30);
-				gridBill.ListGridColumns.Add(col);
+				gridBill.Columns.Add(col);
 			}
-			gridBill.ListGridRows.Clear();
+			gridBill.Rows.Clear();
 			GridRow row;
 			foreach(DataRow rowCur in table.Rows) {
 				row=new GridRow();
@@ -612,7 +612,7 @@ namespace OpenDental{
 					row.Cells.Add("X");
 				}
 				row.Tag=rowCur;
-				gridBill.ListGridRows.Add(row);
+				gridBill.Rows.Add(row);
 			}
 			gridBill.EndUpdate();
 			if(isInitial){
@@ -620,8 +620,8 @@ namespace OpenDental{
 				isInitial=false;
 			}
 			else {
-				for(int i=0;i<gridBill.ListGridRows.Count;i++) {
-					gridBill.SetSelected(i,selectedKeys.Contains(PIn.Long(((DataRow)gridBill.ListGridRows[i].Tag)["StatementNum"].ToString())));
+				for(int i=0;i<gridBill.Rows.Count;i++) {
+					gridBill.SetSelected(i,selectedKeys.Contains(PIn.Long(((DataRow)gridBill.Rows[i].Tag)["StatementNum"].ToString())));
 				}
 			}
 			gridBill.ScrollValue=scrollPos;
@@ -699,7 +699,7 @@ namespace OpenDental{
 		private void gridBill_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			FormStatementOptions FormSO=new FormStatementOptions(true);
 			Statement stmt;
-			stmt=Statements.GetStatement(PIn.Long(((DataRow)gridBill.ListGridRows[e.Row].Tag)["StatementNum"].ToString()));
+			stmt=Statements.GetStatement(PIn.Long(((DataRow)gridBill.Rows[e.Row].Tag)["StatementNum"].ToString()));
 			if(stmt==null) {
 				MessageBox.Show("The statement has been deleted.");
 				return;
@@ -719,7 +719,7 @@ namespace OpenDental{
 				MessageBox.Show("Please select one bill first.");
 				return;
 			}
-			long patNum=PIn.Long(((DataRow)gridBill.ListGridRows[gridBill.GetSelectedIndex()].Tag)["PatNum"].ToString());
+			long patNum=PIn.Long(((DataRow)gridBill.Rows[gridBill.GetSelectedIndex()].Tag)["PatNum"].ToString());
 			FormOpenDental.S_Contr_PatientSelected(Patients.GetPat(patNum),false);
 			GotoModule.GotoAccount(0);
 			SendToBack();
@@ -733,7 +733,7 @@ namespace OpenDental{
 			FormStatementOptions FormSO=new FormStatementOptions(true);
 			List<long> listStatementNums=new List<long>();
 			foreach(int index in gridBill.SelectedIndices) {
-				listStatementNums.Add(PIn.Long(((DataRow)gridBill.ListGridRows[index].Tag)["StatementNum"].ToString()));
+				listStatementNums.Add(PIn.Long(((DataRow)gridBill.Rows[index].Tag)["StatementNum"].ToString()));
 			}
 			FormSO.StmtList=Statements.GetStatements(listStatementNums);
 			FormSO.ShowDialog();
@@ -1721,7 +1721,7 @@ namespace OpenDental{
 				}
 				Thread.Sleep(100);
 				if(!_progExtended.IsPaused) {
-					List<long> listStatementNumsSelected=gridBill.ListGridRows.OfType<GridRow>()
+					List<long> listStatementNumsSelected=gridBill.Rows.OfType<GridRow>()
 						.Select(x =>PIn.Long(((DataRow)x.Tag)["StatementNum"].ToString())).ToList();
 					listStatementNumsUnsent=listStatementNumsSelected.FindAll(x => !_listStatementNumsSent.Contains(x)).ToList();
 					dateFrom=PIn.Date(textDateStart.Text);
@@ -1752,7 +1752,7 @@ namespace OpenDental{
 		}
 
 		private void butCancel_Click(object sender,EventArgs e) {
-			if(gridBill.ListGridRows.Count>0){
+			if(gridBill.Rows.Count>0){
 				_isActivateFillDisabled=true;
 				DialogResult result=MessageBox.Show("You may leave this window open while you work.  If you do close it, do you want to delete all unsent bills?",
 					"",MessageBoxButtons.YesNoCancel);
@@ -1761,7 +1761,7 @@ namespace OpenDental{
 					int totalCount=0;
 					ODProgress.ShowAction(
 						() => { 
-							dictClinicStatmentsToDelete=gridBill.ListGridRows.Select(x => (DataRow)x.Tag)
+							dictClinicStatmentsToDelete=gridBill.Rows.Select(x => (DataRow)x.Tag)
 								.Where(x => x["IsSent"].ToString()=="0")
 								.GroupBy(x => PIn.Long(x["ClinicNum"].ToString()),x => PIn.Long(x["StatementNum"].ToString()))
 								.ToDictionary(x => x.Key,x => x.ToList());

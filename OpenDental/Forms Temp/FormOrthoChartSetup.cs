@@ -27,18 +27,18 @@ namespace OpenDental {
 
 		private void FillGridTabNames() {
 			gridTabNames.BeginUpdate();
-			gridTabNames.ListGridRows.Clear();
-			gridTabNames.ListGridColumns.Clear();
+			gridTabNames.Rows.Clear();
+			gridTabNames.Columns.Clear();
 			int isHiddenWidth=100;
 			int tabNameWidth=gridTabNames.Width-10-isHiddenWidth;//10 for scrollbar.
-			gridTabNames.ListGridColumns.Add(new UI.GridColumn("Tab Name",tabNameWidth,HorizontalAlignment.Left));
-			gridTabNames.ListGridColumns.Add(new UI.GridColumn("Is Hidden",isHiddenWidth,HorizontalAlignment.Center));
+			gridTabNames.Columns.Add(new UI.GridColumn("Tab Name",tabNameWidth,HorizontalAlignment.Left));
+			gridTabNames.Columns.Add(new UI.GridColumn("Is Hidden",isHiddenWidth,HorizontalAlignment.Center));
 			foreach(OrthoChartTab orthoChartTab in _listNewOrthoChartTabs) {
 				UI.GridRow row=new UI.GridRow();
 				row.Tag=orthoChartTab;
 				row.Cells.Add(orthoChartTab.TabName);
 				row.Cells.Add(orthoChartTab.IsHidden?"X":"");
-				gridTabNames.ListGridRows.Add(row);
+				gridTabNames.Rows.Add(row);
 			}
 			gridTabNames.EndUpdate();
 		}
@@ -57,7 +57,7 @@ namespace OpenDental {
 				return;//no selection
 			}
 			int index=gridTabNames.SelectedIndices[0];
-			if(index==gridTabNames.ListGridRows.Count-1) {
+			if(index==gridTabNames.Rows.Count-1) {
 				return;//end of list
 			}
 			OrthoChartTab orthoChartTabTemp=_listNewOrthoChartTabs[index];
@@ -83,7 +83,7 @@ namespace OpenDental {
 		}
 
 		private void gridTabNames_CellDoubleClick(object sender,UI.ODGridClickEventArgs e) {
-			OrthoChartTab orthoChartTab=(OrthoChartTab)gridTabNames.ListGridRows[e.Row].Tag;
+			OrthoChartTab orthoChartTab=(OrthoChartTab)gridTabNames.Rows[e.Row].Tag;
 			FormOrthoChartTabEdit form=new FormOrthoChartTabEdit(orthoChartTab);
 			if(form.ShowDialog()==DialogResult.OK) {
 				FillGridTabNames();

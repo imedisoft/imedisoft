@@ -47,15 +47,15 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Mode",61);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("",300);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Message",500);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			#region Confirmation
 			//Confirmation---------------------------------------------------------------------------------------------
@@ -64,21 +64,21 @@ namespace OpenDental {
 			row.Cells.Add("Confirmation message.  Use [date]  and [time] where you want those values to be inserted");
 			row.Cells.Add(Prefs.GetString(PrefName.ConfirmPostcardMessage));
 			row.Tag=PrefName.ConfirmPostcardMessage;
-			gridMain.ListGridRows.Add(row);
+			gridMain.Rows.Add(row);
 			//
 			row=new GridRow();
 			row.Cells.Add("E-mail");
 			row.Cells.Add("Confirmation subject line.");
 			row.Cells.Add(Prefs.GetString(PrefName.ConfirmEmailSubject));
 			row.Tag=PrefName.ConfirmEmailSubject;
-			gridMain.ListGridRows.Add(row);
+			gridMain.Rows.Add(row);
 			//
 			row=new GridRow();
 			row.Cells.Add("E-mail");
 			row.Cells.Add("Confirmation message. Available variables: [NameF], [date], [time].");
 			row.Cells.Add(Prefs.GetString(PrefName.ConfirmEmailMessage));
 			row.Tag=PrefName.ConfirmEmailMessage;
-			gridMain.ListGridRows.Add(row);
+			gridMain.Rows.Add(row);
 			#endregion
 			#region Text Messaging
 			//Text Messaging----------------------------------------------------------------------------------------------
@@ -87,13 +87,13 @@ namespace OpenDental {
 			row.Cells.Add("Confirmation message. Available variables: [NameF], [date], [time].");
 			row.Cells.Add(Prefs.GetString(PrefName.ConfirmTextMessage));
 			row.Tag=PrefName.ConfirmTextMessage;
-			gridMain.ListGridRows.Add(row);
+			gridMain.Rows.Add(row);
 			#endregion
 			gridMain.EndUpdate();
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			string prefName=(string)gridMain.ListGridRows[e.Row].Tag;
+			string prefName=(string)gridMain.Rows[e.Row].Tag;
 			FormRecallMessageEdit FormR=new FormRecallMessageEdit(prefName);
 			FormR.MessageVal=Prefs.GetString(prefName);
 			FormR.ShowDialog();

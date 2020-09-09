@@ -2778,16 +2778,16 @@ namespace OpenDental{
 			form.Controls.Add(grid);
 			form.Controls.Add(butClose);
 			grid.BeginUpdate();
-			grid.ListGridColumns.Clear();
-			grid.ListGridColumns.Add(new GridColumn("Name",20){ IsWidthDynamic=true });
-			grid.ListGridRows.Clear();
+			grid.Columns.Clear();
+			grid.Columns.Add(new GridColumn("Name",20){ IsWidthDynamic=true });
+			grid.Rows.Clear();
 			long excludeSub=-1;
 			if(_subCur!=null){
 				excludeSub=_subCur.InsSubNum;
 			}
 			List<string> listSubs=InsSubs.GetSubscribersForPlan(_planCur.PlanNum,excludeSub);
 			foreach(string subName in listSubs) {
-				grid.ListGridRows.Add(new GridRow(subName));
+				grid.Rows.Add(new GridRow(subName));
 			}
 			grid.EndUpdate();
 			form.ShowDialog();
@@ -4146,24 +4146,24 @@ namespace OpenDental{
 		private void FillBenefits() {
 			benefitList.Sort();
 			gridBenefits.BeginUpdate();
-			gridBenefits.ListGridColumns.Clear();
+			gridBenefits.Columns.Clear();
 			GridColumn col=new GridColumn("Pat",28);
-			gridBenefits.ListGridColumns.Add(col);
+			gridBenefits.Columns.Add(col);
 			col=new GridColumn("Level",60);
-			gridBenefits.ListGridColumns.Add(col);
+			gridBenefits.Columns.Add(col);
 			col=new GridColumn("Type",70);
-			gridBenefits.ListGridColumns.Add(col);
+			gridBenefits.Columns.Add(col);
 			col=new GridColumn("Category",72);
-			gridBenefits.ListGridColumns.Add(col);
+			gridBenefits.Columns.Add(col);
 			col=new GridColumn("%",30);//,HorizontalAlignment.Right);
-			gridBenefits.ListGridColumns.Add(col);
+			gridBenefits.Columns.Add(col);
 			col=new GridColumn("Amt",40);//,HorizontalAlignment.Right);
-			gridBenefits.ListGridColumns.Add(col);
+			gridBenefits.Columns.Add(col);
 			col=new GridColumn("Time Period",80);
-			gridBenefits.ListGridColumns.Add(col);
+			gridBenefits.Columns.Add(col);
 			col=new GridColumn("Quantity",115);
-			gridBenefits.ListGridColumns.Add(col);
-			gridBenefits.ListGridRows.Clear();
+			gridBenefits.Columns.Add(col);
+			gridBenefits.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<benefitList.Count;i++) {
 				row=new GridRow();
@@ -4232,7 +4232,7 @@ namespace OpenDental{
 				else {
 					row.Cells.Add("");
 				}
-				gridBenefits.ListGridRows.Add(row);
+				gridBenefits.Rows.Add(row);
 			}
 			gridBenefits.EndUpdate();
 			/*if(allCalendarYear){

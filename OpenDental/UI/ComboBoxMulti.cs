@@ -462,28 +462,28 @@ namespace OpenDental.UI {
 		private void FillGrid() {
 			List <object> listSelectedTags=new List<object>();//This list is used to maintain previous selections.
 			foreach(int index in gridMain.SelectedIndices) {
-				listSelectedTags.Add(gridMain.ListGridRows[index].Tag);
+				listSelectedTags.Add(gridMain.Rows[index].Tag);
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridRows.Clear();//Clears the selections also.
-			gridMain.ListGridColumns.Clear();
+			gridMain.Rows.Clear();//Clears the selections also.
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn();
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			GridRow row;
 			for(int i=0;i<_listItems.Count;i++) {
 				row=new GridRow();
 				row.Tag=_listItems[i];
 				row.Cells.Add(_listItems[i].ToString());
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
-			for(int i=0;i<gridMain.ListGridRows.Count;i++) {
-				if(listSelectedTags.Contains(gridMain.ListGridRows[i].Tag)) {
+			for(int i=0;i<gridMain.Rows.Count;i++) {
+				if(listSelectedTags.Contains(gridMain.Rows[i].Tag)) {
 					gridMain.SetSelected(i,true);
 				}
 			}
 			//Arbitrary padding: 1 (for upper grid border) +1 (for lower grid border) +1 (for toolbar magic space at top) = 3
-			gridMain.Height=Math.Min((gridMain.ListGridRows.Sum(x => x.State.HeightMain) + 3),_maxDropDownHeight);
+			gridMain.Height=Math.Min((gridMain.Rows.Sum(x => x.State.HeightMain) + 3),_maxDropDownHeight);
 		}
 
 		private void FillText() {
@@ -511,9 +511,9 @@ namespace OpenDental.UI {
 		///<summary>Synchronizes gridMain with Items if needed.  This is critical to do before displaying the grid to the user or before asking
 		///the grid for the currently selected indices.</summary>
 		private void SynchronizeGrid() {
-			if(gridMain.ListGridRows.Count==Items.Count) {
-				for(int i=0;i<gridMain.ListGridRows.Count;i++) {
-					if(gridMain.ListGridRows[i].Tag!=_listItems[i]) {
+			if(gridMain.Rows.Count==Items.Count) {
+				for(int i=0;i<gridMain.Rows.Count;i++) {
+					if(gridMain.Rows[i].Tag!=_listItems[i]) {
 						FillGrid();
 						break;
 					}

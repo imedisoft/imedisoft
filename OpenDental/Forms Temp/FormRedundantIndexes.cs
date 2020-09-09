@@ -18,7 +18,7 @@ namespace OpenDental {
 
 		private void FormRedundantIndexes_Load(object sender,EventArgs e) {
 			FillGrid();
-			if(gridMain.ListGridRows.Count==0) {
+			if(gridMain.Rows.Count==0) {
 				MessageBox.Show("There are no redundant indexes in the current database.");
 				DialogResult=DialogResult.OK;
 			}
@@ -30,13 +30,13 @@ namespace OpenDental {
 				return;
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("Table",165));
-			gridMain.ListGridColumns.Add(new GridColumn("Index",165));
-			gridMain.ListGridColumns.Add(new GridColumn("Index Columns",200));
-			gridMain.ListGridColumns.Add(new GridColumn("Redundant Of",615));
-			gridMain.ListGridRows.Clear();
-			gridMain.ListGridRows.AddRange(table.Select().Select(x =>
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("Table",165));
+			gridMain.Columns.Add(new GridColumn("Index",165));
+			gridMain.Columns.Add(new GridColumn("Index Columns",200));
+			gridMain.Columns.Add(new GridColumn("Redundant Of",615));
+			gridMain.Rows.Clear();
+			gridMain.Rows.AddRange(table.Select().Select(x =>
 				new GridRow(new[] { "TABLE_NAME","INDEX_NAME","INDEX_COLS","REDUNDANT_OF" }.Select(y => PIn.String(x[y].ToString())).ToArray()) { Tag=x }));
 			gridMain.EndUpdate();
 		}

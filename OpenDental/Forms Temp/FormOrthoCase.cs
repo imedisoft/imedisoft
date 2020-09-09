@@ -137,16 +137,16 @@ namespace OpenDental {
 
 		private void FillGridOrthoScheduleColumns() {
 			gridOrthoSchedule.BeginUpdate();
-			gridOrthoSchedule.ListGridColumns.Clear();
+			gridOrthoSchedule.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Procedure",80);
-			gridOrthoSchedule.ListGridColumns.Add(col);
+			gridOrthoSchedule.Columns.Add(col);
 			col=new GridColumn("Percent",60,HorizontalAlignment.Right);
-			gridOrthoSchedule.ListGridColumns.Add(col);
+			gridOrthoSchedule.Columns.Add(col);
 			col=new GridColumn("Amount",80,HorizontalAlignment.Right);
-			gridOrthoSchedule.ListGridColumns.Add(col);
+			gridOrthoSchedule.Columns.Add(col);
 			col=new GridColumn("Date Completed",90,HorizontalAlignment.Right){ IsWidthDynamic=true };
-			gridOrthoSchedule.ListGridColumns.Add(col);
+			gridOrthoSchedule.Columns.Add(col);
 			gridOrthoSchedule.EndUpdate();
 		}
 
@@ -254,7 +254,7 @@ namespace OpenDental {
 
 		private void RefreshGridOrthoScheduleRows() {
 			gridOrthoSchedule.BeginUpdate();
-			gridOrthoSchedule.ListGridRows.Clear();
+			gridOrthoSchedule.Rows.Clear();
 			if((textBandingAmount.Enabled && textBandingAmount.Text=="") || (textBandingPercent.Enabled && textBandingPercent.Text=="")
 				|| textTotalFee.Text=="" || textAllVisitsAmount.Text=="" || textDebondAmount.Text=="" || textAllVisitsPercent.Text==""
 				|| textDebondPercent.Text=="" || textVisitPercent.Text=="" || textVisitAmount.Text=="" || textVisitCountPlanned.Text=="") {
@@ -276,7 +276,7 @@ namespace OpenDental {
 					row.Tag=_bandingProc;
 				}
 				row.Cells.Add(dateCompleted);
-				gridOrthoSchedule.ListGridRows.Add(row);
+				gridOrthoSchedule.Rows.Add(row);
 			}
 			//Add Visits
 			int visitRowCount=Math.Max(PIn.Int(textVisitCountPlanned.Text,false),_listVisitProcs.Count);
@@ -304,7 +304,7 @@ namespace OpenDental {
 					row.Tag=_listVisitProcs[i];
 				}
 				row.Cells.Add(dateCompleted);
-				gridOrthoSchedule.ListGridRows.Add(row);
+				gridOrthoSchedule.Rows.Add(row);
 			}
 			//Add Debond
 			row=new GridRow();
@@ -318,7 +318,7 @@ namespace OpenDental {
 				row.Tag=_debondProc;
 			}
 			row.Cells.Add(dateCompleted);
-			gridOrthoSchedule.ListGridRows.Add(row);
+			gridOrthoSchedule.Rows.Add(row);
 			gridOrthoSchedule.EndUpdate();
 		}
 
@@ -695,7 +695,7 @@ namespace OpenDental {
 				textAllVisitsAmount.Text="";
 			}
 			gridOrthoSchedule.BeginUpdate();
-			gridOrthoSchedule.ListGridRows.Clear();
+			gridOrthoSchedule.Rows.Clear();
 			gridOrthoSchedule.EndUpdate();
 		}
 
@@ -753,24 +753,24 @@ namespace OpenDental {
 		///<summary>Ortho grid rows should never have only 1 grid row selected. This is because when detaching procedures, all procedures
 		///under the one selected need to be removed as well.</summary>
 		private void SelectOrthoGridRowsHelper() {
-			if(gridOrthoSchedule.SelectedGridRows.Count<=0) {
+			if(gridOrthoSchedule.SelectedRows.Count<=0) {
 				return;
 			}
-			int indexSelectedRow=gridOrthoSchedule.ListGridRows.IndexOf(gridOrthoSchedule.SelectedGridRows[0]);
+			int indexSelectedRow=gridOrthoSchedule.Rows.IndexOf(gridOrthoSchedule.SelectedRows[0]);
 			gridOrthoSchedule.SelectionMode=GridSelectionMode.MultiExtended;
-			for(int i = indexSelectedRow+1;i<gridOrthoSchedule.ListGridRows.Count;i++) {
-				gridOrthoSchedule.SelectedGridRows.Add(gridOrthoSchedule.ListGridRows[i]);
+			for(int i = indexSelectedRow+1;i<gridOrthoSchedule.Rows.Count;i++) {
+				gridOrthoSchedule.SelectedRows.Add(gridOrthoSchedule.Rows[i]);
 				gridOrthoSchedule.SetSelected(i,true);
 			}
 			gridOrthoSchedule.SelectionMode=GridSelectionMode.One;
 		}
 
 		private void ButDetachProc_Click(object sender,EventArgs e) {
-			if(gridOrthoSchedule.SelectedGridRows.Where(x => x.Tag!=null).ToList().Count<=0) {//Return if no selected rows have an attached procedure.
+			if(gridOrthoSchedule.SelectedRows.Where(x => x.Tag!=null).ToList().Count<=0) {//Return if no selected rows have an attached procedure.
 				return;
 			}
 			//If row is bandingProc prompt for deletion of orthocase
-			if(_bandingProc!=null && ((Procedure)gridOrthoSchedule.SelectedGridRows[0].Tag).ProcNum==_bandingProc.ProcNum) {
+			if(_bandingProc!=null && ((Procedure)gridOrthoSchedule.SelectedRows[0].Tag).ProcNum==_bandingProc.ProcNum) {
 				if(!MsgBox.Show(MsgBoxButtons.YesNo,"Detaching the banding procedure requires that the ortho case be deleted. " +
 					"Do you want to delete this ortho case?")) 
 				{
@@ -792,7 +792,7 @@ namespace OpenDental {
 			{
 				return;
 			}
-			foreach(GridRow row in gridOrthoSchedule.SelectedGridRows) {
+			foreach(GridRow row in gridOrthoSchedule.SelectedRows) {
 				if(row.Tag!=null) {
 					DetachProcedure(((Procedure)row.Tag).ProcNum);
 				}

@@ -964,14 +964,14 @@ namespace OpenDental {
 			}
 			#endregion
 			gridInterventions.BeginUpdate();
-			gridInterventions.ListGridColumns.Clear();
+			gridInterventions.Columns.Clear();
 			GridColumn col=new GridColumn("Date",70);
-			gridInterventions.ListGridColumns.Add(col);
+			gridInterventions.Columns.Add(col);
 			col=new GridColumn("Intervention Type",115);
-			gridInterventions.ListGridColumns.Add(col);
+			gridInterventions.Columns.Add(col);
 			col=new GridColumn("Code Description",200);
-			gridInterventions.ListGridColumns.Add(col);
-			gridInterventions.ListGridRows.Clear();
+			gridInterventions.Columns.Add(col);
+			gridInterventions.Rows.Clear();
 			GridRow row;
 			#region AddInterventionRows
 			for(int i=0;i<listIntervention.Count;i++) {
@@ -1015,7 +1015,7 @@ namespace OpenDental {
 				}
 				row.Cells.Add(descript);
 				row.Tag=listIntervention[i];
-				gridInterventions.ListGridRows.Add(row);
+				gridInterventions.Rows.Add(row);
 			}
 			#endregion
 			#region AddMedicationRows
@@ -1033,7 +1033,7 @@ namespace OpenDental {
 				string descript=RxNorms.GetDescByRxCui(listMedPats[i].RxCui.ToString());
 				row.Cells.Add(descript);
 				row.Tag=listMedPats[i];
-				gridInterventions.ListGridRows.Add(row);
+				gridInterventions.Rows.Add(row);
 			}
 			#endregion
 			gridInterventions.EndUpdate();
@@ -1248,7 +1248,7 @@ Do you want to remove the pregnancy diagnosis?"))
 		}
 
 		private void gridInterventions_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			object objCur=gridInterventions.ListGridRows[e.Row].Tag;
+			object objCur=gridInterventions.Rows[e.Row].Tag;
 			if(objCur.GetType().Name=="Intervention") {//grid can contain MedicationPat or Intervention objects, launch appropriate window
 				FormInterventionEdit FormInt=new FormInterventionEdit();
 				FormInt.InterventionCur=(Intervention)objCur;

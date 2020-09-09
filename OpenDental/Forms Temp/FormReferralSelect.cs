@@ -294,18 +294,18 @@ namespace OpenDental {
 			int scrollValue=gridMain.ScrollValue;
 			long selectedRefNum=-1;
 			if(gridMain.GetSelectedIndex()>-1) {
-				selectedRefNum=((Referral)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag).ReferralNum;
+				selectedRefNum=((Referral)gridMain.Rows[gridMain.GetSelectedIndex()].Tag).ReferralNum;
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("LastName",150));
-			gridMain.ListGridColumns.Add(new GridColumn("FirstName",80));
-			gridMain.ListGridColumns.Add(new GridColumn("MI",30));
-			gridMain.ListGridColumns.Add(new GridColumn("Title",70));
-			gridMain.ListGridColumns.Add(new GridColumn("Specialty",60));
-			gridMain.ListGridColumns.Add(new GridColumn("Patient",45));
-			gridMain.ListGridColumns.Add(new GridColumn("Note",250));
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("LastName",150));
+			gridMain.Columns.Add(new GridColumn("FirstName",80));
+			gridMain.Columns.Add(new GridColumn("MI",30));
+			gridMain.Columns.Add(new GridColumn("Title",70));
+			gridMain.Columns.Add(new GridColumn("Specialty",60));
+			gridMain.Columns.Add(new GridColumn("Patient",45));
+			gridMain.Columns.Add(new GridColumn("Note",250));
+			gridMain.Rows.Clear();
 			GridRow row;
 			int indexSelectedRef=-1;
 			foreach(Referral refCur in listRef) {
@@ -321,9 +321,9 @@ namespace OpenDental {
 					row.ForeColor=Color.Gray;
 				}
 				row.Tag=refCur;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 				if(refCur.ReferralNum==selectedRefNum) {
-					indexSelectedRef=gridMain.ListGridRows.Count-1;
+					indexSelectedRef=gridMain.Rows.Count-1;
 				}
 			}
 			gridMain.EndUpdate();
@@ -331,7 +331,7 @@ namespace OpenDental {
 				gridMain.SetSelected(indexSelectedRef,true);
 			}
 			gridMain.ScrollValue=scrollValue;
-			labelResultCount.Text=gridMain.ListGridRows.Count.ToString()+" results found";
+			labelResultCount.Text=gridMain.Rows.Count.ToString()+" results found";
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {

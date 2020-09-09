@@ -28,20 +28,20 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowInfobutton) {
 				col=new GridColumn("",18);//infobutton
 				col.ImageList=imageListInfoButton;
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			col=new GridColumn("Conditions",300);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Instructions",400);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Bibliography",120);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_table.Rows.Count;i++) {
 				row=new GridRow();
@@ -52,7 +52,7 @@ namespace OpenDental {
 				row.Cells.Add(_table.Rows[i][2].ToString());//TriggerInstructions
 				row.Cells.Add(_table.Rows[i][3].ToString());//Bibliography
 				row.Tag=(List<KnowledgeRequest>)_table.Rows[i][4];//List of objects to be sent to FormInfobutton;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -64,7 +64,7 @@ namespace OpenDental {
 			if(e.Col!=0) {
 				return;//not infobutton column
 			}
-			FormInfobutton FormIB=new FormInfobutton((List<KnowledgeRequest>)gridMain.ListGridRows[e.Row].Tag);
+			FormInfobutton FormIB=new FormInfobutton((List<KnowledgeRequest>)gridMain.Rows[e.Row].Tag);
 			FormIB.ShowDialog();
 		}
 

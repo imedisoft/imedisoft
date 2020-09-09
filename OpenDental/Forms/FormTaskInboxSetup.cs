@@ -42,10 +42,10 @@ namespace Imedisoft.Forms
 		private void FillGrid()
 		{
 			usersGrid.BeginUpdate();
-			usersGrid.ListGridColumns.Clear();
-			usersGrid.ListGridColumns.Add(new GridColumn("User", 100));
-			usersGrid.ListGridColumns.Add(new GridColumn("Inbox", 100));
-			usersGrid.ListGridRows.Clear();
+			usersGrid.Columns.Clear();
+			usersGrid.Columns.Add(new GridColumn("User", 100));
+			usersGrid.Columns.Add(new GridColumn("Inbox", 100));
+			usersGrid.Rows.Clear();
 
 			foreach (var user in users)
 			{
@@ -54,7 +54,7 @@ namespace Imedisoft.Forms
 				row.Cells.Add(user.UserName);
 				row.Cells.Add(GetDescription(user.InboxTaskListId));
 
-				usersGrid.ListGridRows.Add(row);
+				usersGrid.Rows.Add(row);
 			}
 
 			usersGrid.EndUpdate();

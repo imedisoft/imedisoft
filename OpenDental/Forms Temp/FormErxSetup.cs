@@ -113,21 +113,21 @@ namespace OpenDental {
 		
 		private void FillGridDoseSpot() {
 			gridProperties.BeginUpdate();
-			gridProperties.ListGridColumns.Clear();
+			gridProperties.Columns.Clear();
 			GridColumn col=new GridColumn("Clinic",120);
-			gridProperties.ListGridColumns.Add(col);
+			gridProperties.Columns.Add(col);
 			col=new GridColumn("Clinic ID",160);
-			gridProperties.ListGridColumns.Add(col);
+			gridProperties.Columns.Add(col);
 			col=new GridColumn("Clinic Key",160);
-			gridProperties.ListGridColumns.Add(col);
-			gridProperties.ListGridRows.Clear();
+			gridProperties.Columns.Add(col);
+			gridProperties.Rows.Clear();
 			DoseSpotGridRowModel clinicHqModel=new DoseSpotGridRowModel();
 			clinicHqModel.Clinic=new Clinic();
 			clinicHqModel.Clinic.Id=0;
 			clinicHqModel.Clinic.Abbr="Headquarters";
 			clinicHqModel.ClinicIDProperty=GetPropertyForClinic(0,Erx.PropertyDescs.ClinicID);
 			clinicHqModel.ClinicKeyProperty=GetPropertyForClinic(0,Erx.PropertyDescs.ClinicKey);
-			gridProperties.ListGridRows.Add(CreateDoseSpotGridRow(clinicHqModel));//If clinics isn't enabled, this will be the only row in the grid.
+			gridProperties.Rows.Add(CreateDoseSpotGridRow(clinicHqModel));//If clinics isn't enabled, this will be the only row in the grid.
 			if(PrefC.HasClinicsEnabled) {
 				foreach(Clinic clinicCur in Clinics.GetByUser(Security.CurrentUser)) {
 					if(!checkShowHiddenClinics.Checked && clinicCur.IsHidden) {
@@ -137,7 +137,7 @@ namespace OpenDental {
 					model.Clinic=clinicCur.Copy();
 					model.ClinicIDProperty=GetPropertyForClinic(clinicCur.Id,Erx.PropertyDescs.ClinicID);
 					model.ClinicKeyProperty=GetPropertyForClinic(clinicCur.Id,Erx.PropertyDescs.ClinicKey);
-					gridProperties.ListGridRows.Add(CreateDoseSpotGridRow(model));
+					gridProperties.Rows.Add(CreateDoseSpotGridRow(model));
 				}
 			}
 			gridProperties.EndUpdate();
@@ -197,7 +197,7 @@ namespace OpenDental {
 		}
 
 		private void gridProperties_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			DoseSpotGridRowModel model=(DoseSpotGridRowModel)gridProperties.ListGridRows[e.Row].Tag;
+			DoseSpotGridRowModel model=(DoseSpotGridRowModel)gridProperties.Rows[e.Row].Tag;
 			FormDoseSpotPropertyEdit FormDPE=new FormDoseSpotPropertyEdit(model.Clinic,model.ClinicIDProperty.Value,model.ClinicKeyProperty.Value,_listProgramProperties);
 			FormDPE.ShowDialog();
 			if(FormDPE.DialogResult==DialogResult.OK) {

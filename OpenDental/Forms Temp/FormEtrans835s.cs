@@ -170,22 +170,22 @@ namespace OpenDental {
 			}
 			gridMain.BeginUpdate();
 			#region Initilize columns
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("Patient Name",250));
-			gridMain.ListGridColumns.Add(new GridColumn("Carrier Name",190));
-			gridMain.ListGridColumns.Add(new GridColumn("Status",80));
-			gridMain.ListGridColumns.Add(new GridColumn("Date",80,GridSortingStrategy.DateParse));
-			gridMain.ListGridColumns.Add(new GridColumn("Amount",80,GridSortingStrategy.AmountParse));
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("Patient Name",250));
+			gridMain.Columns.Add(new GridColumn("Carrier Name",190));
+			gridMain.Columns.Add(new GridColumn("Status",80));
+			gridMain.Columns.Add(new GridColumn("Date",80,GridSortingStrategy.DateParse));
+			gridMain.Columns.Add(new GridColumn("Amount",80,GridSortingStrategy.AmountParse));
 			if(PrefC.HasClinicsEnabled) {
-				gridMain.ListGridColumns.Add(new GridColumn("Clinic",70));
+				gridMain.Columns.Add(new GridColumn("Clinic",70));
 			}
-			gridMain.ListGridColumns.Add(new GridColumn("Code",37,HorizontalAlignment.Center));
+			gridMain.Columns.Add(new GridColumn("Code",37,HorizontalAlignment.Center));
 			if(Prefs.GetBool(PrefName.EraShowControlIdFilter)) {
-				gridMain.ListGridColumns.Add(new GridColumn("ControlID",70){ IsWidthDynamic=true });
+				gridMain.Columns.Add(new GridColumn("ControlID",70){ IsWidthDynamic=true });
 			}
-			gridMain.ListGridColumns.Add(new GridColumn("Note",250){ IsWidthDynamic=true,DynamicWeight=2 });
+			gridMain.Columns.Add(new GridColumn("Note",250){ IsWidthDynamic=true,DynamicWeight=2 });
 			#endregion
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			foreach(Etrans etrans in _listAllEtrans) {
 				X835 x835=_dictEtrans835s[etrans.EtransNum];
 				#region Filter: Carrier Name
@@ -257,7 +257,7 @@ namespace OpenDental {
 				}
 				row.Cells.Add(etrans.Note);
 				row.Tag=etrans;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			actionCloseProgress?.Invoke();//When this function executes quickly this can fail rarely, fail silently because of WaitCursor.
@@ -303,7 +303,7 @@ namespace OpenDental {
 			}
 			//Mimics FormClaimsSend.gridHistory_CellDoubleClick(...)
 			Cursor=Cursors.WaitCursor;
-			Etrans et=(Etrans)gridMain.ListGridRows[index].Tag;
+			Etrans et=(Etrans)gridMain.Rows[index].Tag;
 			//Sadly this is needed due to FormEtrans835Edit calling Etranss.Update .
 			//See Etranss.RefreshHistory(...), this query does not select all etrans columns.
 			//Mimics FormClaimsSend.gridHistory_CellDoubleClick(...)

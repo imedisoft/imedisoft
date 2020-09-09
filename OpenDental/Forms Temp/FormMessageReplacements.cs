@@ -23,7 +23,7 @@ namespace OpenDental {
 				if(gridMain==null || gridMain.IsDisposed || gridMain.GetSelectedIndex()==-1) {
 					return "";
 				}
-				return gridMain.ListGridRows[gridMain.GetSelectedIndex()].Cells[1].Text;
+				return gridMain.Rows[gridMain.GetSelectedIndex()].Cells[1].Text;
 			}
 		}
 
@@ -47,14 +47,14 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Type",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Replacement",155);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Description",200){ IsWidthDynamic=true };
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			foreach(ReplacementField tag in GetReplacementFieldList(_allowPHI,_replaceTypes)) {
 				AddReplacementRow(tag);
 			}
@@ -195,7 +195,7 @@ namespace OpenDental {
 				row.ForeColor=Color.Red;
 			}
 			row.Tag=tag;
-			gridMain.ListGridRows.Add(row);
+			gridMain.Rows.Add(row);
 		}
 
 		///<summary>Replaces all family fields in the given message with the given family's information.  Returns the resulting string.
@@ -234,11 +234,11 @@ namespace OpenDental {
 				MessageBox.Show("Please select a field.");
 				return;
 			}
-			if(!((ReplacementField)gridMain.ListGridRows[index].Tag).IsSupported) {
+			if(!((ReplacementField)gridMain.Rows[index].Tag).IsSupported) {
 				MessageBox.Show("The selected field is not supported for this method of communication.");
 				return;
 			}
-			if(((ReplacementField)gridMain.ListGridRows[index].Tag).IsPHI && !_allowPHI) {
+			if(((ReplacementField)gridMain.Rows[index].Tag).IsPHI && !_allowPHI) {
 				MessageBox.Show("The selected field is considered Protected Health Information and this method of communication does not allow PHI.");
 				return;
 			}

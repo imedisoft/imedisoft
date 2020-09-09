@@ -711,10 +711,10 @@ namespace OpenDental{
 			}
 			//Now fill the lists on the screen--------------------------------------------------
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("",100);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<displayedElementsMain.Count;i++){
 				row=new GridRow();
@@ -739,15 +739,15 @@ namespace OpenDental{
 				else{
 					row.ForeColor=displayedElementsMain[i].ElementColor;
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			//gridUR---------------------------------------------------------
 			gridUR.BeginUpdate();
-			gridUR.ListGridColumns.Clear();
+			gridUR.Columns.Clear();
 			col=new GridColumn("",100);
-			gridUR.ListGridColumns.Add(col);
-			gridUR.ListGridRows.Clear();
+			gridUR.Columns.Add(col);
+			gridUR.Rows.Clear();
 			for(int i=0;i<displayedElementsUR.Count;i++) {
 				row=new GridRow();
 				if(displayedElementsUR[i].ApptFieldDefNum>0) {
@@ -771,15 +771,15 @@ namespace OpenDental{
 				else{
 					row.ForeColor=displayedElementsUR[i].ElementColor;
 				}
-				gridUR.ListGridRows.Add(row);
+				gridUR.Rows.Add(row);
 			}
 			gridUR.EndUpdate();
 			//gridLR-----------------------------------------------------------
 			gridLR.BeginUpdate();
-			gridLR.ListGridColumns.Clear();
+			gridLR.Columns.Clear();
 			col=new GridColumn("",100);
-			gridLR.ListGridColumns.Add(col);
-			gridLR.ListGridRows.Clear();
+			gridLR.Columns.Add(col);
+			gridLR.Rows.Clear();
 			for(int i=0;i<displayedElementsLR.Count;i++) {
 				row=new GridRow();
 				if(displayedElementsLR[i].ApptFieldDefNum>0) {
@@ -803,31 +803,31 @@ namespace OpenDental{
 				else{
 					row.ForeColor=displayedElementsLR[i].ElementColor;
 				}
-				gridLR.ListGridRows.Add(row);
+				gridLR.Rows.Add(row);
 			}
 			gridLR.EndUpdate();
 			//gridAvailable-----------------------------------------------------------
 			gridAvailable.BeginUpdate();
-			gridAvailable.ListGridColumns.Clear();
+			gridAvailable.Columns.Clear();
 			col=new GridColumn("",100);
-			gridAvailable.ListGridColumns.Add(col);
-			gridAvailable.ListGridRows.Clear();
+			gridAvailable.Columns.Add(col);
+			gridAvailable.Rows.Clear();
 			displayedAvailable=new List<int>();
 			for(int i=0;i<elementsAll.Count;i++) {
 				if(!ElementIsDisplayed(elementsAll[i])) {
 					displayedAvailable.Add(i);
 					row=new GridRow();
 					row.Cells.Add(elementsAll[i]);
-					gridAvailable.ListGridRows.Add(row);
+					gridAvailable.Rows.Add(row);
 				}
 			}
 			gridAvailable.EndUpdate();
 			//gridApptFieldDefs-----------------------------------------------------------
 			gridApptFieldDefs.BeginUpdate();
-			gridApptFieldDefs.ListGridColumns.Clear();
+			gridApptFieldDefs.Columns.Clear();
 			col=new GridColumn("",100);
-			gridApptFieldDefs.ListGridColumns.Add(col);
-			gridApptFieldDefs.ListGridRows.Clear();
+			gridApptFieldDefs.Columns.Add(col);
+			gridApptFieldDefs.Rows.Clear();
 			displayedAvailableApptFieldDefs=new List<long>();
 			List<AppointmentFieldDefinition> listApptFieldDefs=AppointmentFieldDefinitions.All;
 			for(int i=0;i<listApptFieldDefs.Count;i++) {
@@ -835,16 +835,16 @@ namespace OpenDental{
 					displayedAvailableApptFieldDefs.Add(listApptFieldDefs[i].Id);
 					row=new GridRow();
 					row.Cells.Add(listApptFieldDefs[i].Name);
-					gridApptFieldDefs.ListGridRows.Add(row);
+					gridApptFieldDefs.Rows.Add(row);
 				}
 			}
 			gridApptFieldDefs.EndUpdate();
 			//gridPatFieldDefs-----------------------------------------------------------
 			gridPatFieldDefs.BeginUpdate();
-			gridPatFieldDefs.ListGridColumns.Clear();
+			gridPatFieldDefs.Columns.Clear();
 			col=new GridColumn("",100);
-			gridPatFieldDefs.ListGridColumns.Add(col);
-			gridPatFieldDefs.ListGridRows.Clear();
+			gridPatFieldDefs.Columns.Add(col);
+			gridPatFieldDefs.Rows.Clear();
 			_listPatFieldDefNums=new List<long>();
 			List<PatFieldDef> listPatFieldDefs=PatFieldDefs.GetDeepCopy(true);
 			for(int i=0;i<listPatFieldDefs.Count;i++) {
@@ -852,7 +852,7 @@ namespace OpenDental{
 					_listPatFieldDefNums.Add(listPatFieldDefs[i].Id);
 					row=new GridRow();
 					row.Cells.Add(listPatFieldDefs[i].FieldName);
-					gridPatFieldDefs.ListGridRows.Add(row);
+					gridPatFieldDefs.Rows.Add(row);
 				}
 			}
 			gridPatFieldDefs.EndUpdate();

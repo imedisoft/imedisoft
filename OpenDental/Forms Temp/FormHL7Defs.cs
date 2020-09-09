@@ -168,18 +168,18 @@ namespace OpenDental{
 			//Our strategy in this window and all sub windows is to get all data directly from the database (or internal).
 			ListInternal=HL7Defs.GetDeepInternalList();
 			grid1.BeginUpdate();
-			grid1.ListGridColumns.Clear();
+			grid1.Columns.Clear();
 			GridColumn col=new GridColumn("Description",100);
-			grid1.ListGridColumns.Add(col);
+			grid1.Columns.Add(col);
 			col=new GridColumn("Mode",40);
-			grid1.ListGridColumns.Add(col);
+			grid1.Columns.Add(col);
 			col=new GridColumn("In Folder / Socket",130);
-			grid1.ListGridColumns.Add(col);
+			grid1.Columns.Add(col);
 			col=new GridColumn("Out Folder / Socket",130);
-			grid1.ListGridColumns.Add(col);
+			grid1.Columns.Add(col);
 			col=new GridColumn("Enabled",35);
-			grid1.ListGridColumns.Add(col);
-			grid1.ListGridRows.Clear();
+			grid1.Columns.Add(col);
+			grid1.Rows.Clear();
 			for(int i=0;i<ListInternal.Count;i++) {
 				GridRow row=new GridRow();
 				row.Cells.Add(ListInternal[i].Description);
@@ -197,7 +197,7 @@ namespace OpenDental{
 					row.Cells.Add("N/A");
 				}
 				row.Cells.Add(ListInternal[i].IsEnabled?"X":"");
-				grid1.ListGridRows.Add(row);
+				grid1.Rows.Add(row);
 			}
 			grid1.EndUpdate();
 		}
@@ -207,18 +207,18 @@ namespace OpenDental{
 			//If it's too slow in this window due to the 20-30 database calls per row in grid2, then we might later optimize to pull from the cache.
 			ListCustom=HL7Defs.GetDeepCustomList();
 			grid2.BeginUpdate();
-			grid2.ListGridColumns.Clear();
+			grid2.Columns.Clear();
 			GridColumn col=new GridColumn("Description",100);
-			grid2.ListGridColumns.Add(col);
+			grid2.Columns.Add(col);
 			col=new GridColumn("Mode",40);
-			grid2.ListGridColumns.Add(col);
+			grid2.Columns.Add(col);
 			col=new GridColumn("In Folder / Socket",130);
-			grid2.ListGridColumns.Add(col);
+			grid2.Columns.Add(col);
 			col=new GridColumn("Out Folder / Socket",130);
-			grid2.ListGridColumns.Add(col);
+			grid2.Columns.Add(col);
 			col=new GridColumn("Enabled",35);
-			grid2.ListGridColumns.Add(col);
-			grid2.ListGridRows.Clear();
+			grid2.Columns.Add(col);
+			grid2.Rows.Clear();
 			for(int i=0;i<ListCustom.Count;i++) {
 				GridRow row=new GridRow();
 				row.Cells.Add(ListCustom[i].Description);
@@ -236,7 +236,7 @@ namespace OpenDental{
 					row.Cells.Add("N/A");
 				}
 				row.Cells.Add(ListCustom[i].IsEnabled?"X":"");
-				grid2.ListGridRows.Add(row);
+				grid2.Rows.Add(row);
 			}
 			grid2.EndUpdate();
 		}

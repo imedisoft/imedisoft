@@ -307,10 +307,10 @@ namespace OpenDental{
 
 		private void FillGrid1(){
 			grid1.BeginUpdate();
-			grid1.ListGridColumns.Clear();
-			grid1.ListGridColumns.Add(new GridColumn("Description",100){ IsWidthDynamic=true });
-			grid1.ListGridColumns.Add(new GridColumn("Type",100));
-			grid1.ListGridRows.Clear();
+			grid1.Columns.Clear();
+			grid1.Columns.Add(new GridColumn("Description",100){ IsWidthDynamic=true });
+			grid1.Columns.Add(new GridColumn("Type",100));
+			grid1.Rows.Clear();
 			foreach(SheetDef internalDef in internalList){
 				if(listFilter.SelectedItems.Count>0 && !listFilter.GetListSelected<SheetTypeEnum>().Contains(internalDef.SheetType)) {
 					continue;
@@ -319,7 +319,7 @@ namespace OpenDental{
 				row.Cells.Add(internalDef.Description);
 				row.Cells.Add(internalDef.SheetType.ToString());
 				row.Tag=internalDef;
-				grid1.ListGridRows.Add(row);
+				grid1.Rows.Add(row);
 			}
 			grid1.EndUpdate();
 		}
@@ -333,11 +333,11 @@ namespace OpenDental{
 			SheetFieldDefs.RefreshCache();
 			_listSheetDefs=SheetDefs.GetDeepCopy().FindAll(x => !SheetDefs.IsDashboardType(x));
 			grid2.BeginUpdate();
-			grid2.ListGridColumns.Clear();
-			grid2.ListGridColumns.Add(new GridColumn("Description",100){ IsWidthDynamic=true });
-			grid2.ListGridColumns.Add(new GridColumn("Type",100));
-			grid2.ListGridColumns.Add(new GridColumn("Use Mobile\r\nLayout",65,HorizontalAlignment.Center));
-			grid2.ListGridRows.Clear();
+			grid2.Columns.Clear();
+			grid2.Columns.Add(new GridColumn("Description",100){ IsWidthDynamic=true });
+			grid2.Columns.Add(new GridColumn("Type",100));
+			grid2.Columns.Add(new GridColumn("Use Mobile\r\nLayout",65,HorizontalAlignment.Center));
+			grid2.Rows.Clear();
 			int selectedIndex=-1;
 			foreach(SheetDef sheetDef in _listSheetDefs){
 				if(listFilter.SelectedItems.Count>0 && !listFilter.GetListSelected<SheetTypeEnum>().Contains(sheetDef.SheetType)) {
@@ -349,9 +349,9 @@ namespace OpenDental{
 				row.Cells.Add(sheetDef.HasMobileLayout?"X":"");
 				row.Tag=sheetDef;
 				if(selectedSheetDefNum==sheetDef.SheetDefNum) {
-					selectedIndex=grid2.ListGridRows.Count;//Zero based index.
+					selectedIndex=grid2.Rows.Count;//Zero based index.
 				}
-				grid2.ListGridRows.Add(row);
+				grid2.Rows.Add(row);
 			}
 			grid2.EndUpdate();
 			if(selectedIndex!=-1) {

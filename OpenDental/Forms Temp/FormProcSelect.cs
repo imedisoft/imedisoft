@@ -102,36 +102,36 @@ namespace OpenDental{
 			_listAccountCharges=AccountModules.GetListUnpaidAccountCharges(_listProcedures, _listAdjustments,
 				_listPaySplits, _listClaimProcs, _listPayPlanCharges, _listInsPayAsTotal, credCalc, ListSplitsCur);
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Date",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Prov",55);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Code",55);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				col=new GridColumn("Description",290);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			else {
 				col=new GridColumn("Tooth",40);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col=new GridColumn("Description",250);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			if(credCalc == CreditCalcType.ExcludeAll) {
 				col=new GridColumn("Amt",40,HorizontalAlignment.Right){ IsWidthDynamic=true };
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			else {
 				col=new GridColumn("Amt Orig",60,HorizontalAlignment.Right);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col=new GridColumn("Amt Avail",60,HorizontalAlignment.Right);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col=new GridColumn("Amt End",60,HorizontalAlignment.Right);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			foreach(AccountEntry entry in _listAccountCharges) {
 				if((entry.GetType()!=typeof(ProcExtended) || Math.Round(entry.AmountEnd,3) == 0) && credCalc!=CreditCalcType.ExcludeAll) {
@@ -158,7 +158,7 @@ namespace OpenDental{
 					row.Cells.Add(entry.AmountEnd.ToString("f"));
 				}
 				row.Tag=entry;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			if(!_isSimpleView) {

@@ -28,9 +28,9 @@ namespace Imedisoft.Forms
 			SchoolClasses.RefreshCache();
 
 			schoolClassesGrid.BeginUpdate();
-			schoolClassesGrid.ListGridColumns.Clear();
-			schoolClassesGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Description, 80));
-			schoolClassesGrid.ListGridRows.Clear();
+			schoolClassesGrid.Columns.Clear();
+			schoolClassesGrid.Columns.Add(new GridColumn(Translation.Common.Description, 80));
+			schoolClassesGrid.Rows.Clear();
 
 			foreach (var schoolClass in SchoolClasses.GetAll())
 			{
@@ -38,7 +38,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(schoolClass.Description);
 				gridRow.Tag = schoolClass;
 
-				schoolClassesGrid.ListGridRows.Add(gridRow);
+				schoolClassesGrid.Rows.Add(gridRow);
 			}
 
 			schoolClassesGrid.EndUpdate();

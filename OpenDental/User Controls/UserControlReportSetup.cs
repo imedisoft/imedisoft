@@ -91,61 +91,61 @@ namespace OpenDental.User_Controls {
 			gridPublicHealth.BeginUpdate();
 			//Add Columns
 			int widthDisplayNameCol=140;
-			gridProdInc.ListGridColumns.Clear();
+			gridProdInc.Columns.Clear();
 			string displayColumnTitle="Display Name";
 			string allowedColumnTitle="Allowed";
 			string subMenuColumnTitle="Sub\r\nMenu";
 			string hiddenColumnTitle="Hidden";
-			gridProdInc.ListGridColumns.Add(new GridColumn(displayColumnTitle,widthDisplayNameCol,!_isPermissionMode));
+			gridProdInc.Columns.Add(new GridColumn(displayColumnTitle,widthDisplayNameCol,!_isPermissionMode));
 			if(_isPermissionMode) {
-				gridProdInc.ListGridColumns.Add(new GridColumn(allowedColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
+				gridProdInc.Columns.Add(new GridColumn(allowedColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
 			}
 			else {
-				gridProdInc.ListGridColumns.Add(new GridColumn(subMenuColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
-				gridProdInc.ListGridColumns.Add(new GridColumn(hiddenColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
+				gridProdInc.Columns.Add(new GridColumn(subMenuColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
+				gridProdInc.Columns.Add(new GridColumn(hiddenColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
 			}
-			gridDaily.ListGridColumns.Clear();
-			gridDaily.ListGridColumns.Add(new GridColumn(displayColumnTitle,widthDisplayNameCol,!_isPermissionMode));
+			gridDaily.Columns.Clear();
+			gridDaily.Columns.Add(new GridColumn(displayColumnTitle,widthDisplayNameCol,!_isPermissionMode));
 			if(_isPermissionMode) {
-				gridDaily.ListGridColumns.Add(new GridColumn(allowedColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
+				gridDaily.Columns.Add(new GridColumn(allowedColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
 			}
 			else {
-				gridDaily.ListGridColumns.Add(new GridColumn(subMenuColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
-				gridDaily.ListGridColumns.Add(new GridColumn(hiddenColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
+				gridDaily.Columns.Add(new GridColumn(subMenuColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
+				gridDaily.Columns.Add(new GridColumn(hiddenColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
 			}
-			gridMonthly.ListGridColumns.Clear();
-			gridMonthly.ListGridColumns.Add(new GridColumn(displayColumnTitle,widthDisplayNameCol,!_isPermissionMode));
+			gridMonthly.Columns.Clear();
+			gridMonthly.Columns.Add(new GridColumn(displayColumnTitle,widthDisplayNameCol,!_isPermissionMode));
 			if(_isPermissionMode) {
-				gridMonthly.ListGridColumns.Add(new GridColumn(allowedColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
+				gridMonthly.Columns.Add(new GridColumn(allowedColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
 			}
 			else {
-				gridMonthly.ListGridColumns.Add(new GridColumn(subMenuColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
-				gridMonthly.ListGridColumns.Add(new GridColumn(hiddenColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
+				gridMonthly.Columns.Add(new GridColumn(subMenuColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
+				gridMonthly.Columns.Add(new GridColumn(hiddenColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
 			}
-			gridLists.ListGridColumns.Clear();
-			gridLists.ListGridColumns.Add(new GridColumn(displayColumnTitle,widthDisplayNameCol,!_isPermissionMode));
+			gridLists.Columns.Clear();
+			gridLists.Columns.Add(new GridColumn(displayColumnTitle,widthDisplayNameCol,!_isPermissionMode));
 			if(_isPermissionMode) {
-				gridLists.ListGridColumns.Add(new GridColumn(allowedColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
+				gridLists.Columns.Add(new GridColumn(allowedColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
 			}
 			else {
-				gridLists.ListGridColumns.Add(new GridColumn(subMenuColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
-				gridLists.ListGridColumns.Add(new GridColumn(hiddenColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
+				gridLists.Columns.Add(new GridColumn(subMenuColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
+				gridLists.Columns.Add(new GridColumn(hiddenColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
 			}
-			gridPublicHealth.ListGridColumns.Clear();
-			gridPublicHealth.ListGridColumns.Add(new GridColumn(displayColumnTitle,widthDisplayNameCol,!_isPermissionMode));
+			gridPublicHealth.Columns.Clear();
+			gridPublicHealth.Columns.Add(new GridColumn(displayColumnTitle,widthDisplayNameCol,!_isPermissionMode));
 			if(_isPermissionMode) {
-				gridPublicHealth.ListGridColumns.Add(new GridColumn(allowedColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
+				gridPublicHealth.Columns.Add(new GridColumn(allowedColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
 			}
 			else {
-				gridPublicHealth.ListGridColumns.Add(new GridColumn(subMenuColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
-				gridPublicHealth.ListGridColumns.Add(new GridColumn(hiddenColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
+				gridPublicHealth.Columns.Add(new GridColumn(subMenuColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
+				gridPublicHealth.Columns.Add(new GridColumn(hiddenColumnTitle,10,HorizontalAlignment.Center){ IsWidthDynamic=true });
 			}
 			//Add Rows
-			gridProdInc.ListGridRows.Clear();
-			gridDaily.ListGridRows.Clear();
-			gridMonthly.ListGridRows.Clear();
-			gridLists.ListGridRows.Clear();
-			gridPublicHealth.ListGridRows.Clear();
+			gridProdInc.Rows.Clear();
+			gridDaily.Rows.Clear();
+			gridMonthly.Rows.Clear();
+			gridLists.Rows.Clear();
+			gridPublicHealth.Rows.Clear();
 			foreach(DisplayReport reportCur in ListDisplayReportAll) {
 				GridRow row= new GridRow();
 				if(_isPermissionMode) {
@@ -160,19 +160,19 @@ namespace OpenDental.User_Controls {
 				row.Tag=reportCur;
 				switch(reportCur.Category) {
 					case DisplayReportCategory.ProdInc:
-						gridProdInc.ListGridRows.Add(row);
+						gridProdInc.Rows.Add(row);
 						break;
 					case DisplayReportCategory.Daily:
-						gridDaily.ListGridRows.Add(row);
+						gridDaily.Rows.Add(row);
 						break;
 					case DisplayReportCategory.Monthly:
-						gridMonthly.ListGridRows.Add(row);
+						gridMonthly.Rows.Add(row);
 						break;
 					case DisplayReportCategory.Lists:
-						gridLists.ListGridRows.Add(row);
+						gridLists.Rows.Add(row);
 						break;
 					case DisplayReportCategory.PublicHealth:
-						gridPublicHealth.ListGridRows.Add(row);
+						gridPublicHealth.Rows.Add(row);
 						break;
 					case DisplayReportCategory.ArizonaPrimaryCare:
 					default:
@@ -186,8 +186,8 @@ namespace OpenDental.User_Controls {
 			gridLists.EndUpdate();
 			gridPublicHealth.EndUpdate();
 			if(_selectedGrid != null && _selectedCell.Y != -1) {
-				_selectedGrid.ListGridRows[_selectedCell.Y].BackColor=Color.LightCyan;
-				if(_selectedCell.X < _selectedGrid.ListGridColumns.Count) {
+				_selectedGrid.Rows[_selectedCell.Y].BackColor=Color.LightCyan;
+				if(_selectedCell.X < _selectedGrid.Columns.Count) {
 					_selectedGrid.SetSelected(_selectedCell);
 				}
 				else {
@@ -206,7 +206,7 @@ namespace OpenDental.User_Controls {
 			_selectedCell.Y=e.Row;
 			_selectedGrid=(ODGrid)sender;
 			//this label makes sure the user always has some idea of what the selected report is, even if the DisplayName might be incomprehensible.
-			labelODInternal.Text=GetInternalName((DisplayReport)_selectedGrid.ListGridRows[_selectedCell.Y].Tag);
+			labelODInternal.Text=GetInternalName((DisplayReport)_selectedGrid.Rows[_selectedCell.Y].Tag);
 			DisplayReportCategory selectedCat=(DisplayReportCategory)_selectedGrid.Tag;
 			//de-select all but the currently selected grid
 			if(selectedCat!=DisplayReportCategory.ProdInc) { gridProdInc.SetSelected(-1,true); }
@@ -367,7 +367,7 @@ namespace OpenDental.User_Controls {
 		private void CommitChange() {
 			DisplayReportCategory selectedCat=(DisplayReportCategory)_selectedGrid.Tag;
 			DisplayReport clicked=ListDisplayReportAll.Find(x => x.Category == selectedCat && x.ItemOrder == _selectedCell.Y);
-			clicked.Description=_selectedGrid.ListGridRows[_selectedCell.Y].Cells[0].Text.Replace(" (hidden)","");//Remove (hidden) text
+			clicked.Description=_selectedGrid.Rows[_selectedCell.Y].Cells[0].Text.Replace(" (hidden)","");//Remove (hidden) text
 		}
 	
 		private void grid_CellLeave(object sender,ODGridClickEventArgs e) {
@@ -398,7 +398,7 @@ namespace OpenDental.User_Controls {
 			}
 			DisplayReportCategory selectedCat = (DisplayReportCategory)_selectedGrid.Tag;
 			DisplayReport selectedReport=ListDisplayReportAll.Find(x => x.Category == selectedCat && x.ItemOrder == _selectedCell.Y);
-			if(selectedReport.ItemOrder==_selectedGrid.ListGridRows.Count-1) {
+			if(selectedReport.ItemOrder==_selectedGrid.Rows.Count-1) {
 				return; //the item is already the last in the list and cannot go down anymore.
 			}
 			DisplayReport switchReport=ListDisplayReportAll.Find(x => x.Category == selectedCat && x.ItemOrder == _selectedCell.Y+1);

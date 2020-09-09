@@ -47,10 +47,10 @@ namespace OpenDental {
 			Point selectedCell = gridMain.SelectedCell;
 			List<string> listSetStmts = UserQueries.ParseSetStatements(_queryCur.QueryText);
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("Variable",200));
-			gridMain.ListGridColumns.Add(new GridColumn("Value",200,true));
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("Variable",200));
+			gridMain.Columns.Add(new GridColumn("Value",200,true));
+			gridMain.Rows.Clear();
 			foreach(string strSetStmt in listSetStmts) { //for each SET statement
 				List<QuerySetStmtObject> listQObjs = UserQueries.GetListQuerySetStmtObjs(strSetStmt); //find the variable name
 				foreach(QuerySetStmtObject qObj in listQObjs) {
@@ -58,7 +58,7 @@ namespace OpenDental {
 					row.Cells.Add(qObj.Variable);
 					row.Cells.Add(qObj.Value);
 					row.Tag=qObj;
-					gridMain.ListGridRows.Add(row);
+					gridMain.Rows.Add(row);
 				}
 			}
 			gridMain.EndUpdate();
@@ -74,7 +74,7 @@ namespace OpenDental {
 		
 		///<summary>When a row is double clicked, bring up an input box that allows the user to change the variable's value.</summary>
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			QuerySetStmtObject qObjCur = (QuerySetStmtObject)gridMain.SelectedGridRows[0].Tag;
+			QuerySetStmtObject qObjCur = (QuerySetStmtObject)gridMain.SelectedRows[0].Tag;
 			InputBox inputBox=new InputBox(new List<InputBoxParam> {
 				new InputBoxParam(InputBoxType.TextBox,"Set value for"+" "+ qObjCur.Variable,text: qObjCur.Value)
 			});
@@ -102,7 +102,7 @@ namespace OpenDental {
 		}
 
 		private void SelectTextForSelectedRow() {
-			QuerySetStmtObject qObjCur = (QuerySetStmtObject)gridMain.SelectedGridRows[0].Tag;
+			QuerySetStmtObject qObjCur = (QuerySetStmtObject)gridMain.SelectedRows[0].Tag;
 			int startidx = textQuery.Text.IndexOf(qObjCur.Stmt);
 			if(startidx == -1) {
 				//the query object does not have comments in it, while the text area does.
@@ -134,7 +134,7 @@ namespace OpenDental {
 			try {
 				//Can not use gridMain.SelectedGridRows due to leave being hit multiple times by input texboxes.
 				//Base grid logic fires this leave function multiple times.
-				rowLeaving=gridMain.ListGridRows[e.Row];
+				rowLeaving=gridMain.Rows[e.Row];
 				qObjCur=(QuerySetStmtObject)rowLeaving.Tag;
 			}
 			catch {//Has occurend when user types SHIFT+ENTER on the keyboard.
@@ -147,7 +147,7 @@ namespace OpenDental {
 			if(UserQueries.SplitQuery(valNew,true,";").Count > 1) {
 				Point _selectedCell = gridMain.SelectedCell;
 				MessageBox.Show("You may not include semicolons in the value text. Please remove all semicolons.");
-				gridMain.SelectedGridRows[0].Cells[1].Text = valOld;
+				gridMain.SelectedRows[0].Cells[1].Text = valOld;
 				gridMain.SetSelected(_selectedCell); //this just refreshes the cell that is being left. Is there an easy way to cancel the CellLeave action?
 				return;
 			}
@@ -164,7 +164,7 @@ namespace OpenDental {
 			textQuery.Text=_queryCur.QueryText;
 			qObjCur.Stmt=stmtNew;
 			qObjCur.Value=valNew;
-			gridMain.ListGridRows.OfType<GridRow>().Where(x => ((QuerySetStmtObject)x.Tag).Stmt == stmtOld).ToList().ForEach(y => {
+			gridMain.Rows.OfType<GridRow>().Where(x => ((QuerySetStmtObject)x.Tag).Stmt == stmtOld).ToList().ForEach(y => {
 				((QuerySetStmtObject)y.Tag).Stmt = stmtNew;
 			});
 		}

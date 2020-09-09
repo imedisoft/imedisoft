@@ -28,20 +28,20 @@ namespace OpenDental {
 
 		private void FillGridDates() {
 			gridHist.BeginUpdate();
-			gridHist.ListGridColumns.Clear();
+			gridHist.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Date",70);
-			gridHist.ListGridColumns.Add(col);
+			gridHist.Columns.Add(col);
 			col=new GridColumn("Entries",50,HorizontalAlignment.Center);
-			gridHist.ListGridColumns.Add(col);
-			gridHist.ListGridRows.Clear();
+			gridHist.Columns.Add(col);
+			gridHist.Rows.Clear();
 			GridRow row;
 			foreach(DateTime dt in DictDateOrthoLogs.Keys) {//must use foreach to enumerate through keys in the dictionary
 				row=new GridRow();
 				row.Cells.Add(dt.ToShortDateString());
 				row.Cells.Add(DictDateOrthoLogs[dt].Count.ToString());
 				row.Tag=dt;
-				gridHist.ListGridRows.Add(row);
+				gridHist.Rows.Add(row);
 			}
 			gridHist.EndUpdate();
 			gridHist.ScrollToEnd();
@@ -50,22 +50,22 @@ namespace OpenDental {
 
 		private void FillGridMain() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Date Time",120);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("User",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Permission",110);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Log Text",569);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			Userod user;
 			//First Selected Ortho Chart Logs
 			foreach(int iDate in gridHist.SelectedIndices) {
-				DateTime dateRow=(DateTime)gridHist.ListGridRows[iDate].Tag;
+				DateTime dateRow=(DateTime)gridHist.Rows[iDate].Tag;
 				if(!DictDateOrthoLogs.ContainsKey(dateRow)){
 					continue;
 				}
@@ -81,7 +81,7 @@ namespace OpenDental {
 					}
 					row.Cells.Add(DictDateOrthoLogs[dateRow][i].Type.ToString());
 					row.Cells.Add(DictDateOrthoLogs[dateRow][i].LogMessage);
-					gridMain.ListGridRows.Add(row);
+					gridMain.Rows.Add(row);
 				}
 			}
 			//Then any applicable patient field logs.
@@ -91,7 +91,7 @@ namespace OpenDental {
 				row.Cells.Add(Userods.GetUser(PatientFieldLogs[i].UserId).UserName);
 				row.Cells.Add(PatientFieldLogs[i].Type.ToString());
 				row.Cells.Add(PatientFieldLogs[i].LogMessage);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			gridMain.ScrollToEnd();

@@ -180,34 +180,34 @@ namespace OpenDental {
 
 		private void FillGridDates() {
 			gridDates.BeginUpdate();
-			gridDates.ListGridColumns.Clear();
+			gridDates.Columns.Clear();
 			GridColumn col=new GridColumn("Date",150);
-			gridDates.ListGridColumns.Add(col);
+			gridDates.Columns.Add(col);
 			col=new GridColumn("Qualifier",230);
-			gridDates.ListGridColumns.Add(col);
-			gridDates.ListGridRows.Clear();
+			gridDates.Columns.Add(col);
+			gridDates.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<listDTP.Count;i++) {
 				row=new GridRow();
 				row.Cells.Add(DTP271.GetDateStr(listDTP[i].Segment.Get(2),listDTP[i].Segment.Get(3)));
 				row.Cells.Add(DTP271.GetQualifierDescription(listDTP[i].Segment.Get(1)));
-				gridDates.ListGridRows.Add(row);
+				gridDates.Rows.Add(row);
 			}
 			gridDates.EndUpdate();
 		}
 
 		private void FillGrid(){
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Response",360);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if(radioModeElect.Checked) {
 				col=new GridColumn("Note",212);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col=new GridColumn("Import As Benefit",360);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<listEB.Count;i++) {
 				row=new GridRow();
@@ -221,7 +221,7 @@ namespace OpenDental {
 						row.Cells.Add(listEB[i].Benefitt.ToString(true));
 					}
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -258,15 +258,15 @@ namespace OpenDental {
 
 		private void FillGridBen() {
 			gridBen.BeginUpdate();
-			gridBen.ListGridColumns.Clear();
+			gridBen.Columns.Clear();
 			GridColumn col=new GridColumn("",420);
-			gridBen.ListGridColumns.Add(col);
-			gridBen.ListGridRows.Clear();
+			gridBen.Columns.Add(col);
+			gridBen.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<benList.Count;i++) {
 				row=new GridRow();
 				row.Cells.Add(benList[i].ToString());
-				gridBen.ListGridRows.Add(row);
+				gridBen.Rows.Add(row);
 			}
 			gridBen.EndUpdate();
 		}

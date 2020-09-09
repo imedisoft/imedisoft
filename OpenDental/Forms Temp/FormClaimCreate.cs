@@ -171,18 +171,18 @@ namespace OpenDental{
 
 		private void FillPlanData(){
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Plan",50);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Subscriber",140);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Ins Carrier",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Date Effect.",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Date Term.",90);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			List<GridRow> listRows=new List<GridRow>(); //create a list of gridrows so that we can order them by Ordinal after creating them.
 			for(int i=0;i<SubList.Count;i++) {
@@ -233,7 +233,7 @@ namespace OpenDental{
 				.ThenBy(x => x.Cells[0].Text !="Other")
 				.ThenBy(x => x.Cells[0].Text !="Not Used").ToList();
 			for(int i=0; i<listRows.Count;i++) {
-				gridMain.ListGridRows.Add(listRows[i]);
+				gridMain.Rows.Add(listRows[i]);
 			}
 			gridMain.EndUpdate();
 			listRelat.Items.Clear();
@@ -252,7 +252,7 @@ namespace OpenDental{
 				return;
 			}
 			PatRelat=(Relat)listRelat.SelectedIndex;
-			SelectedSub=(InsSub)gridMain.ListGridRows[e.Row].Tag;
+			SelectedSub=(InsSub)gridMain.Rows[e.Row].Tag;
 			SelectedPlan=InsPlans.GetPlan(SelectedSub.PlanNum,PlanList);
 			DialogResult=DialogResult.OK;
 		}
@@ -271,7 +271,7 @@ namespace OpenDental{
 			//	return;
 			//}
 			PatRelat=(Relat)listRelat.SelectedIndex;
-			SelectedSub=(InsSub)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
+			SelectedSub=(InsSub)gridMain.Rows[gridMain.GetSelectedIndex()].Tag;
 			SelectedPlan=InsPlans.GetPlan(SelectedSub.PlanNum,PlanList);
 			//ClaimFormNum=ClaimForms.ListShort[comboClaimForm.SelectedIndex].ClaimFormNum;
       DialogResult=DialogResult.OK;

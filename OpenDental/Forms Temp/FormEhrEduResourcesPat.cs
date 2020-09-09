@@ -28,13 +28,13 @@ namespace OpenDental {
 
 		private void FillGridEdu() {
 			gridEdu.BeginUpdate();
-			gridEdu.ListGridColumns.Clear();
+			gridEdu.Columns.Clear();
 			GridColumn col=new GridColumn("Criteria",300);
-			gridEdu.ListGridColumns.Add(col);
+			gridEdu.Columns.Add(col);
 			col=new GridColumn("Link",100);
-			gridEdu.ListGridColumns.Add(col);
+			gridEdu.Columns.Add(col);
 			eduResourceList=EduResources.GenerateForPatient(patCur.PatNum);
-			gridEdu.ListGridRows.Clear();
+			gridEdu.Rows.Clear();
 			GridRow row;
 			foreach(EduResource eduResCur in eduResourceList) {
 				row=new GridRow();
@@ -57,7 +57,7 @@ namespace OpenDental {
 					row.Cells.Add("Lab Results: "+eduResCur.LabResultName);
 				}
 				row.Cells.Add(eduResCur.ResourceUrl);
-				gridEdu.ListGridRows.Add(row);
+				gridEdu.Rows.Add(row);
 			}
 			gridEdu.EndUpdate();
 		}
@@ -90,19 +90,19 @@ namespace OpenDental {
 
 		private void FillGridProvided() {
 			gridProvided.BeginUpdate();
-			gridProvided.ListGridColumns.Clear();
+			gridProvided.Columns.Clear();
 			GridColumn col=new GridColumn("DateTime",140);
-			gridProvided.ListGridColumns.Add(col);
+			gridProvided.Columns.Add(col);
 			col=new GridColumn("Details",600);
-			gridProvided.ListGridColumns.Add(col);
+			gridProvided.Columns.Add(col);
 			eduMeasureProvidedList=EhrMeasureEvents.RefreshByType(patCur.PatNum,EhrMeasureEventType.EducationProvided);
-			gridProvided.ListGridRows.Clear();
+			gridProvided.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<eduMeasureProvidedList.Count;i++) {
 				row=new GridRow();
 				row.Cells.Add(eduMeasureProvidedList[i].DateTEvent.ToString());
 				row.Cells.Add(eduMeasureProvidedList[i].MoreInfo);
-				gridProvided.ListGridRows.Add(row);
+				gridProvided.Rows.Add(row);
 			}
 			gridProvided.EndUpdate();
 		}

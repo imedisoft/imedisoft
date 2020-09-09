@@ -34,13 +34,13 @@ namespace Imedisoft.Forms
 		private void FillGrid()
 		{
 			requirementSummaryGrid.BeginUpdate();
-			requirementSummaryGrid.ListGridColumns.Clear();
-			requirementSummaryGrid.ListGridColumns.Add(new GridColumn(Translation.DentalSchools.Course, 100));
-			requirementSummaryGrid.ListGridColumns.Add(new GridColumn(Translation.DentalSchools.Requirement, 200));
-			requirementSummaryGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Done, 40));
-			requirementSummaryGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Patient, 140));
-			requirementSummaryGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Appointment, 190));
-			requirementSummaryGrid.ListGridRows.Clear();
+			requirementSummaryGrid.Columns.Clear();
+			requirementSummaryGrid.Columns.Add(new GridColumn(Translation.DentalSchools.Course, 100));
+			requirementSummaryGrid.Columns.Add(new GridColumn(Translation.DentalSchools.Requirement, 200));
+			requirementSummaryGrid.Columns.Add(new GridColumn(Translation.Common.Done, 40));
+			requirementSummaryGrid.Columns.Add(new GridColumn(Translation.Common.Patient, 140));
+			requirementSummaryGrid.Columns.Add(new GridColumn(Translation.Common.Appointment, 190));
+			requirementSummaryGrid.Rows.Clear();
 
 			foreach (var summary in StudentResults.GetSummaryForStudentResults(studentProviderId))
 			{
@@ -52,7 +52,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(summary.Appointment);
 				gridRow.Tag = summary;
 
-				requirementSummaryGrid.ListGridRows.Add(gridRow);
+				requirementSummaryGrid.Rows.Add(gridRow);
 			}
 
 			requirementSummaryGrid.EndUpdate();

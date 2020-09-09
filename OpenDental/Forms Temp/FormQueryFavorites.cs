@@ -282,12 +282,12 @@ namespace OpenDental{
 				selectedQueryNum=gridMain.SelectedTag<UserQuery>().QueryNum;
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("Query",350));
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("Query",350));
 			if(Security.IsAuthorized(Permissions.UserQueryAdmin,true)) {
-				gridMain.ListGridColumns.Add(new GridColumn("Released",55,HorizontalAlignment.Center));
+				gridMain.Columns.Add(new GridColumn("Released",55,HorizontalAlignment.Center));
 			}
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			foreach(UserQuery queryCur in listDisplayQueries) {
 				if(!Security.IsAuthorized(Permissions.UserQueryAdmin,true) && !queryCur.IsReleased) {
 					continue; //non-released queries only appear for people with UserQueryAdmin permission.
@@ -298,10 +298,10 @@ namespace OpenDental{
 					row.Cells.Add(queryCur.IsReleased ? "X" : "");
 				}
 				row.Tag = queryCur;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
-			int selectedIdx=gridMain.ListGridRows.Select(x => (UserQuery)x.Tag).ToList().FindIndex(y => y.QueryNum==selectedQueryNum);
+			int selectedIdx=gridMain.Rows.Select(x => (UserQuery)x.Tag).ToList().FindIndex(y => y.QueryNum==selectedQueryNum);
 			if(selectedIdx>-1) {
 				gridMain.SetSelected(selectedIdx,true);
 			}
@@ -319,7 +319,7 @@ namespace OpenDental{
 			UserQueryCur = null;
 			textQuery.Text="";
 			if(gridMain.GetSelectedIndex() != -1) {
-				UserQueryCur = (UserQuery)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
+				UserQueryCur = (UserQuery)gridMain.Rows[gridMain.GetSelectedIndex()].Tag;
 				textQuery.Text=UserQueryCur.QueryText;
 			}
 		}

@@ -209,19 +209,19 @@ namespace OpenDental {
 
 		private void FillGridNotes() {
 			gridNotes.BeginUpdate();
-			gridNotes.ListGridColumns.Clear();
+			gridNotes.Columns.Clear();
 			GridColumn col=new GridColumn("Note Num",60);
-			gridNotes.ListGridColumns.Add(col);
+			gridNotes.Columns.Add(col);
 			col=new GridColumn("Comments",300);
-			gridNotes.ListGridColumns.Add(col);
-			gridNotes.ListGridRows.Clear();
+			gridNotes.Columns.Add(col);
+			gridNotes.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<EhrLabResultCur.ListEhrLabResultNotes.Count;i++) {
 				for(int j=0;j<EhrLabResultCur.ListEhrLabResultNotes[i].Comments.Split('^').Length;j++) {
 					row=new GridRow();
 					row.Cells.Add((j==0?(i+1).ToString():""));//add note number if this is first comment for the note, otherwise add blank cell.
 					row.Cells.Add(EhrLabResultCur.ListEhrLabResultNotes[i].Comments.Split('^')[j]);//Add each comment.
-					gridNotes.ListGridRows.Add(row);
+					gridNotes.Rows.Add(row);
 				}
 			}
 			gridNotes.EndUpdate();

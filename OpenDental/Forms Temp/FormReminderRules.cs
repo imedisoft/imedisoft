@@ -25,14 +25,14 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Reminder Criterion",200);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Message",200);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			listReminders=ReminderRules.SelectAll();
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<listReminders.Count;i++) {
 				row=new GridRow();
@@ -67,7 +67,7 @@ namespace OpenDental {
 					//  break;
 				}
 				row.Cells.Add(listReminders[i].Message);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

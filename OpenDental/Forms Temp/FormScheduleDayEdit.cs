@@ -612,20 +612,20 @@ namespace OpenDental{
 			
 			graphScheduleDay.SetSchedules(_listScheds);
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Provider",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Employee",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Start Time",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Stop Time",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Ops",150);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Note",100);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			string note;
 			string opdesc;
@@ -703,7 +703,7 @@ namespace OpenDental{
 						continue;//Do not add this row to gridMain.
 					}
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -758,7 +758,7 @@ namespace OpenDental{
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			Schedule selectedSchedule=(Schedule)gridMain.ListGridRows[e.Row].Tag;
+			Schedule selectedSchedule=(Schedule)gridMain.Rows[e.Row].Tag;
 			if(selectedSchedule==null) {
 				return;//nothing to do
 			}

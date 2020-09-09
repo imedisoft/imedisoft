@@ -370,13 +370,13 @@ namespace OpenDental
 			//clear rows here because the rows are tagged with the PatAging objects and we want to dispose of them before we get the 
 			//aging list again so we don't have an out of memory error for large db's
 			gridSent.BeginUpdate();//Clears selected indices.
-			gridSent.ListGridRows.Clear();
+			gridSent.Rows.Clear();
 			gridSent.EndUpdate();
 			gridUnsent.BeginUpdate();//Clears selected indices.
-			gridUnsent.ListGridRows.Clear();
+			gridUnsent.Rows.Clear();
 			gridUnsent.EndUpdate();
 			gridExcluded.BeginUpdate();//Clears selected indices.
-			gridExcluded.ListGridRows.Clear();
+			gridExcluded.Rows.Clear();
 			gridExcluded.EndUpdate();
 			string msgText="Retrieving aging list as of"+" "+MiscData.GetNowDateTime().ToShortDateString()+"...";
 			ODProgress.ShowAction(
@@ -490,11 +490,11 @@ namespace OpenDental
 				gridCur=gridSent;
 				listPatAgingsAll=_listPatAgingSentAll;
 			}
-			if(gridCur.SelectedGridRows.Count!=1) {
+			if(gridCur.SelectedRows.Count!=1) {
 				MessageBox.Show("Please select one patient first.");
 				return;
 			}
-			object pAgeIndex=gridCur.SelectedGridRows[0].Tag;
+			object pAgeIndex=gridCur.SelectedRows[0].Tag;
 			if(!(pAgeIndex is int) || (int)pAgeIndex<0 || (int)pAgeIndex>=listPatAgingsAll.Count) {
 				return;
 			}
@@ -685,7 +685,7 @@ namespace OpenDental
 			else if(grid==gridExcluded) {
 				listPatAgingsAll=_listPatAgingExcludedAll;
 			}
-			return grid.SelectedGridRows
+			return grid.SelectedRows
 					.Where(x => x.Tag is int && (int)x.Tag>=0 && (int)x.Tag<listPatAgingsAll.Count)
 					.Select(x => listPatAgingsAll[(int)x.Tag]).ToList();
 		}
@@ -702,7 +702,7 @@ namespace OpenDental
 			else if(grid==gridExcluded) {
 				listPatAgingsAll=_listPatAgingExcludedAll;
 			}
-			grid.SetSelected(listPatNums.Select(x => grid.ListGridRows.ToList()
+			grid.SetSelected(listPatNums.Select(x => grid.Rows.ToList()
 					.FindIndex(y => y.Tag is int && (int)y.Tag>=0 && (int)y.Tag<listPatAgingsAll.Count && x==listPatAgingsAll[(int)y.Tag].PatNum))
 					.Where(x => x>-1)//Ignore any entries within listPatNums that were not found in our grid.
 					.ToArray(),true);
@@ -733,11 +733,11 @@ namespace OpenDental
 				gridCur=gridExcluded;
 				listPatAgingsAll=_listPatAgingExcludedAll;
 			}
-			if(gridCur.SelectedGridRows.Count!=1) {
+			if(gridCur.SelectedRows.Count!=1) {
 				MessageBox.Show("Please select one patient first.");
 				return;
 			}
-			object pAgeIndex=gridCur.SelectedGridRows[0].Tag;
+			object pAgeIndex=gridCur.SelectedRows[0].Tag;
 			if(!(pAgeIndex is int) || (int)pAgeIndex<0 || (int)pAgeIndex>=listPatAgingsAll.Count) {
 				return;
 			}
@@ -778,7 +778,7 @@ namespace OpenDental
 		private Dictionary<string,Tuple<int,int>> GetXPosAndWidths(ODGrid grid,int hScrollValue) {
 			Dictionary<string,Tuple<int,int>> retval=new Dictionary<string,Tuple<int,int>>();
 			int xPos=grid.Location.X-hScrollValue;
-			foreach(GridColumn column in grid.ListGridColumns) {
+			foreach(GridColumn column in grid.Columns) {
 				retval[column.HeaderText]=Tuple.Create(xPos+1,column.ColumnWidth+1);//+1 because the textbox lines seem to be slightly thinner than the grid column lines
 				xPos+=column.ColumnWidth;
 			}
@@ -794,7 +794,7 @@ namespace OpenDental
 			List<int> listPatAgingIndexFiltered=GetPatAgingIndexUnsentFiltered();
 			#region Set Grid Title and Columns
 			gridUnsent.BeginUpdate();
-			gridUnsent.ListGridColumns.Clear();
+			gridUnsent.Columns.Clear();
 			List<DisplayField> listDisplayFields=DisplayFields.GetForCategory(DisplayFieldCategory.ArManagerUnsentGrid);
 			foreach(DisplayField fieldCur in listDisplayFields) {
 				if(fieldCur.InternalName=="Clinic" && !PrefC.HasClinicsEnabled) {
@@ -815,22 +815,22 @@ namespace OpenDental
 				else if(!fieldCur.InternalName.In("Guarantor","Clinic","Prov","Billing Type")) {
 					continue;//shouldn't happen, but the loop to fill the rows will skip any columns that aren't one of these so we'll skip here as well
 				}
-				gridUnsent.ListGridColumns.Add(new GridColumn(string.IsNullOrEmpty(fieldCur.Description)?fieldCur.InternalName:fieldCur.Description,
+				gridUnsent.Columns.Add(new GridColumn(string.IsNullOrEmpty(fieldCur.Description)?fieldCur.InternalName:fieldCur.Description,
 					fieldCur.ColumnWidth,hAlign,sortingStrat));
 			}
 			//this form initially set to the max allowed (by OD) form size 1246, which is also the minimum size for this form.  If the user resizes the form
 			//to be larger, increase each column width by the same ratio to spread out the additional real estate
-			int widthColsAndScroll=gridUnsent.ListGridColumns.Sum(x => x.ColumnWidth)+20;//+20 for vertical scroll bar
+			int widthColsAndScroll=gridUnsent.Columns.Sum(x => x.ColumnWidth)+20;//+20 for vertical scroll bar
 			//widthColsAndScroll is width of columns as set in the display fields, i.e. haven't grown or shrunk due to form resizing so won't be shrunk to
 			//less than the sizes set in display fields, only grown from there.  Thus the display field sizes are basically a minimum size.
 			if(widthColsAndScroll<gridUnsent.Width) {
-				gridUnsent.ListGridColumns.ToList().ForEach(x => x.ColumnWidth=(int)Math.Round((float)x.ColumnWidth*gridUnsent.Width/widthColsAndScroll,MidpointRounding.AwayFromZero));
+				gridUnsent.Columns.ToList().ForEach(x => x.ColumnWidth=(int)Math.Round((float)x.ColumnWidth*gridUnsent.Width/widthColsAndScroll,MidpointRounding.AwayFromZero));
 				//adjust the last col width to take any remaining pixels so that the cols take the full width of the grid (to account for rounding above)
-				gridUnsent.ListGridColumns[gridUnsent.ListGridColumns.Count-1].ColumnWidth-=gridUnsent.ListGridColumns.Sum(x => x.ColumnWidth)+20-gridUnsent.Width;
+				gridUnsent.Columns[gridUnsent.Columns.Count-1].ColumnWidth-=gridUnsent.Columns.Sum(x => x.ColumnWidth)+20-gridUnsent.Width;
 			}
 			#endregion Set Grid Title and Columns
 			#region Fill Grid Rows
-			gridUnsent.ListGridRows.Clear();
+			gridUnsent.Rows.Clear();
 			Dictionary<long,string> dictClinicAbbrs=_listClinics.ToDictionary(x => x.Id,x => x.Abbr);
 			Dictionary<long,string> dictProvAbbrs=_listProviders.ToDictionary(x => x.Id,x => x.Abbr);
 			Dictionary<long,string> dictBillTypeNames=Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes).ToDictionary(x => x.Id,x => x.Name);
@@ -935,14 +935,14 @@ namespace OpenDental
 					row.Cells.OfType<GridCell>().ToList().ForEach(x => x.BackColor=Color.FromArgb(255,255,230,234));
 				}
 				row.Tag=i;//tag the row with the index in the class-wide list of all unsent PatAgings
-				gridUnsent.ListGridRows.Add(row);
+				gridUnsent.Rows.Add(row);
 				if(retainSelection && listSelectedPatNums.Contains(patAgeCur.PatNum)) {
-					listIndicesToReselect.Add(gridUnsent.ListGridRows.Count-1);
+					listIndicesToReselect.Add(gridUnsent.Rows.Count-1);
 				}
 			}
 			gridUnsent.EndUpdate();
 			#endregion Fill Grid Rows
-			groupPlaceAccounts.Enabled=(gridUnsent.ListGridRows.Count>0);
+			groupPlaceAccounts.Enabled=(gridUnsent.Rows.Count>0);
 			if(retainSelection && listIndicesToReselect.Count>0) {
 				gridUnsent.SetSelected(listIndicesToReselect.ToArray(),true);
 			}
@@ -1050,7 +1050,7 @@ namespace OpenDental
 				if(rowIndex==lastRowIndex) {
 					return;
 				}
-				object pAgeIndex=gridUnsent.ListGridRows[rowIndex].Tag;
+				object pAgeIndex=gridUnsent.Rows[rowIndex].Tag;
 				if(!(pAgeIndex is int) || (int)pAgeIndex<0 || (int)pAgeIndex>=_listPatAgingUnsentAll.Count) {
 					_toolTipUnsentErrors.RemoveAll();
 					return;
@@ -1603,7 +1603,7 @@ namespace OpenDental
 			List<int> listPatAgingIndexFiltered=GetPatAgingIndexSentFiltered();
 			#region Set Grid Title and Columns
 			gridSent.BeginUpdate();
-			gridSent.ListGridColumns.Clear();
+			gridSent.Columns.Clear();
 			List<DisplayField> listDisplayFields=DisplayFields.GetForCategory(DisplayFieldCategory.ArManagerSentGrid);
 			foreach(DisplayField fieldCur in listDisplayFields) {
 				if(fieldCur.InternalName=="Clinic" && !PrefC.HasClinicsEnabled) {
@@ -1624,21 +1624,21 @@ namespace OpenDental
 				else if(!fieldCur.InternalName.In("Guarantor","Clinic","Prov","Demand Type","Last Transaction")) {
 					continue;//shouldn't happen, but the loop to fill the rows will skip any columns that aren't one of these so we'll skip here as well
 				}
-				gridSent.ListGridColumns.Add(new GridColumn(string.IsNullOrEmpty(fieldCur.Description)?fieldCur.InternalName:fieldCur.Description,
+				gridSent.Columns.Add(new GridColumn(string.IsNullOrEmpty(fieldCur.Description)?fieldCur.InternalName:fieldCur.Description,
 					fieldCur.ColumnWidth,hAlign,sortingStrat));
 			}
 			//this form initially set to the max allowed (by OD) form size 1246, which is also the minimum size for this form.  If the user resizes the form
 			//to be larger, increase each column width by the same ratio to spread out the additional real estate
-			int widthColsAndScroll=gridSent.ListGridColumns.Sum(x => x.ColumnWidth)+20;//+20 for vertical scroll bar
+			int widthColsAndScroll=gridSent.Columns.Sum(x => x.ColumnWidth)+20;//+20 for vertical scroll bar
 			if(widthColsAndScroll<gridSent.Width) {
 				//don't grow/shrink column widths until all columns are visible, i.e no horizontal scroll bar active, all columns fully visible
-				gridSent.ListGridColumns.ToList().ForEach(x => x.ColumnWidth=(int)Math.Round((float)x.ColumnWidth*gridSent.Width/widthColsAndScroll,MidpointRounding.AwayFromZero));
+				gridSent.Columns.ToList().ForEach(x => x.ColumnWidth=(int)Math.Round((float)x.ColumnWidth*gridSent.Width/widthColsAndScroll,MidpointRounding.AwayFromZero));
 				//increase the last col width to be the full width of the grid (to account for rounding away from zero above)
-				gridSent.ListGridColumns[gridSent.ListGridColumns.Count-1].ColumnWidth-=gridSent.ListGridColumns.Sum(x => x.ColumnWidth)+20-gridSent.Width;
+				gridSent.Columns[gridSent.Columns.Count-1].ColumnWidth-=gridSent.Columns.Sum(x => x.ColumnWidth)+20-gridSent.Width;
 			}
 			#endregion Set Grid Title and Columns
 			#region Fill Grid Rows
-			gridSent.ListGridRows.Clear();
+			gridSent.Rows.Clear();
 			Dictionary<long,string> dictClinicAbbrs=_listClinics.ToDictionary(x => x.Id,x => x.Abbr);
 			Dictionary<long,string> dictProvAbbrs=_listProviders.ToDictionary(x => x.Id,x => x.Abbr);
 			double bal0_30=0;
@@ -1730,14 +1730,14 @@ namespace OpenDental
 					}
 				}
 				row.Tag=i;
-				gridSent.ListGridRows.Add(row);
+				gridSent.Rows.Add(row);
 				if(retainSelection && listSelectedPatNums.Contains(patAgeCur.PatNum)) {
-					listIndicesToReselect.Add(gridSent.ListGridRows.Count-1);
+					listIndicesToReselect.Add(gridSent.Rows.Count-1);
 				}
 			}
 			gridSent.EndUpdate();
 			#endregion Fill Grid Rows
-			groupUpdateAccounts.Enabled=(gridSent.ListGridRows.Count>0);
+			groupUpdateAccounts.Enabled=(gridSent.Rows.Count>0);
 			if(retainSelection && listIndicesToReselect.Count>0) {
 				gridSent.SetSelected(listIndicesToReselect.ToArray(),true);
 			}
@@ -2097,7 +2097,7 @@ namespace OpenDental
 			List<int> listPatAgingIndexFiltered=GetPatAgingIndexExcludedFiltered();
 			#region Set Grid Title and Columns
 			gridExcluded.BeginUpdate();
-			gridExcluded.ListGridColumns.Clear();
+			gridExcluded.Columns.Clear();
 			List<DisplayField> listDisplayFields=DisplayFields.GetForCategory(DisplayFieldCategory.ArManagerExcludedGrid);
 			foreach(DisplayField fieldCur in listDisplayFields) {
 				if(fieldCur.InternalName=="Clinic" && !PrefC.HasClinicsEnabled) {
@@ -2118,22 +2118,22 @@ namespace OpenDental
 				else if(!fieldCur.InternalName.In("Guarantor","Clinic","Prov","Billing Type")) {
 					continue;//shouldn't happen, but the loop to fill the rows will skip any columns that aren't one of these so we'll skip here as well
 				}
-				gridExcluded.ListGridColumns.Add(new GridColumn(string.IsNullOrEmpty(fieldCur.Description)?fieldCur.InternalName:fieldCur.Description,
+				gridExcluded.Columns.Add(new GridColumn(string.IsNullOrEmpty(fieldCur.Description)?fieldCur.InternalName:fieldCur.Description,
 					fieldCur.ColumnWidth,hAlign,sortingStrat));
 			}
 			//this form initially set to the max allowed (by OD) form size 1246, which is also the minimum size for this form.  If the user resizes the form
 			//to be larger, increase each column width by the same ratio to spread out the additional real estate
-			int widthColsAndScroll=gridExcluded.ListGridColumns.Sum(x => x.ColumnWidth)+20;//+20 for vertical scroll bar
+			int widthColsAndScroll=gridExcluded.Columns.Sum(x => x.ColumnWidth)+20;//+20 for vertical scroll bar
 			//widthColsAndScroll is width of columns as set in the display fields, i.e. haven't grown or shrunk due to form resizing so won't be shrunk to
 			//less than the sizes set in display fields, only grown from there.  Thus the display field sizes are basically a minimum size.
 			if(widthColsAndScroll<gridExcluded.Width) {
-				gridExcluded.ListGridColumns.ToList().ForEach(x => x.ColumnWidth=(int)Math.Round((float)x.ColumnWidth*gridExcluded.Width/widthColsAndScroll,MidpointRounding.AwayFromZero));
+				gridExcluded.Columns.ToList().ForEach(x => x.ColumnWidth=(int)Math.Round((float)x.ColumnWidth*gridExcluded.Width/widthColsAndScroll,MidpointRounding.AwayFromZero));
 				//adjust the last col width to take any remaining pixels so that the cols take the full width of the grid (to account for rounding above)
-				gridExcluded.ListGridColumns[gridExcluded.ListGridColumns.Count-1].ColumnWidth-=gridExcluded.ListGridColumns.Sum(x => x.ColumnWidth)+20-gridExcluded.Width;
+				gridExcluded.Columns[gridExcluded.Columns.Count-1].ColumnWidth-=gridExcluded.Columns.Sum(x => x.ColumnWidth)+20-gridExcluded.Width;
 			}
 			#endregion Set Grid Title and Columns
 			#region Fill Grid Rows
-			gridExcluded.ListGridRows.Clear();
+			gridExcluded.Rows.Clear();
 			Dictionary<long,string> dictClinicAbbrs=_listClinics.ToDictionary(x => x.Id,x => x.Abbr);
 			Dictionary<long,string> dictProvAbbrs=_listProviders.ToDictionary(x => x.Id,x => x.Abbr);
 			Dictionary<long,string> dictBillTypeNames=Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes).ToDictionary(x => x.Id,x => x.Name);
@@ -2238,14 +2238,14 @@ namespace OpenDental
 					row.Cells.OfType<GridCell>().ToList().ForEach(x => x.BackColor=Color.FromArgb(255,255,230,234));
 				}
 				row.Tag=i;//tag the row with the index in the class-wide list of all excluded PatAgings
-				gridExcluded.ListGridRows.Add(row);
+				gridExcluded.Rows.Add(row);
 				if(retainSelection && listSelectedPatNums.Contains(patAgeCur.PatNum)) {
-					listIndicesToReselect.Add(gridExcluded.ListGridRows.Count-1);
+					listIndicesToReselect.Add(gridExcluded.Rows.Count-1);
 				}
 			}
 			gridExcluded.EndUpdate();
 			#endregion Fill Grid Rows
-			groupExcludedPlaceAccounts.Enabled=(gridExcluded.ListGridRows.Count>0);
+			groupExcludedPlaceAccounts.Enabled=(gridExcluded.Rows.Count>0);
 			if(retainSelection && listIndicesToReselect.Count>0) {
 				gridExcluded.SetSelected(listIndicesToReselect.ToArray(),true);
 			}

@@ -83,17 +83,17 @@ namespace Imedisoft.Forms
 					providerId, schoolCourse?.Id, instructor?.Id);
 			
 			evaluationsGrid.BeginUpdate();
-			evaluationsGrid.ListGridColumns.Clear();
-			evaluationsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Date, 70, HorizontalAlignment.Center));
-			evaluationsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Title, 90));
-			evaluationsGrid.ListGridColumns.Add(new GridColumn(Translation.DentalSchools.Instructor, 90));
-			evaluationsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.ProviderIdAbbr, 60));
-			evaluationsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.LastName, 90));
-			evaluationsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.FirstName, 80));
-			evaluationsGrid.ListGridColumns.Add(new GridColumn(Translation.DentalSchools.Course, 90));
-			evaluationsGrid.ListGridColumns.Add(new GridColumn(Translation.DentalSchools.Grade, 60));
-			evaluationsGrid.ListGridColumns.Add(new GridColumn(Translation.DentalSchools.GradingScale, 90));
-			evaluationsGrid.ListGridRows.Clear();
+			evaluationsGrid.Columns.Clear();
+			evaluationsGrid.Columns.Add(new GridColumn(Translation.Common.Date, 70, HorizontalAlignment.Center));
+			evaluationsGrid.Columns.Add(new GridColumn(Translation.Common.Title, 90));
+			evaluationsGrid.Columns.Add(new GridColumn(Translation.DentalSchools.Instructor, 90));
+			evaluationsGrid.Columns.Add(new GridColumn(Translation.Common.ProviderIdAbbr, 60));
+			evaluationsGrid.Columns.Add(new GridColumn(Translation.Common.LastName, 90));
+			evaluationsGrid.Columns.Add(new GridColumn(Translation.Common.FirstName, 80));
+			evaluationsGrid.Columns.Add(new GridColumn(Translation.DentalSchools.Course, 90));
+			evaluationsGrid.Columns.Add(new GridColumn(Translation.DentalSchools.Grade, 60));
+			evaluationsGrid.Columns.Add(new GridColumn(Translation.DentalSchools.GradingScale, 90));
+			evaluationsGrid.Rows.Clear();
 
 			foreach (var summary in evaluations)
 			{
@@ -109,7 +109,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(summary.GradingScale);
 				gridRow.Tag = summary;
 
-				evaluationsGrid.ListGridRows.Add(gridRow);
+				evaluationsGrid.Rows.Add(gridRow);
 			}
 
 			evaluationsGrid.EndUpdate();
@@ -122,7 +122,7 @@ namespace Imedisoft.Forms
 
 		private void EvaluationsGrid_SelectionCommitted(object sender, EventArgs e)
 		{
-			editButton.Enabled = deleteButton.Enabled = evaluationsGrid.SelectedGridRows.Count > 0;
+			editButton.Enabled = deleteButton.Enabled = evaluationsGrid.SelectedRows.Count > 0;
 		}
 
 		private void DateTextBox_Validating(object sender, System.ComponentModel.CancelEventArgs e)

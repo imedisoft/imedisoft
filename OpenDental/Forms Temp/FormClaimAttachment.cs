@@ -89,15 +89,15 @@ namespace OpenDental {
 		///The grid is populated by AddImageToGrid().</summary>
 		private void FillGrid() {
 			gridAttachedImages.BeginUpdate();
-			gridAttachedImages.ListGridColumns.Clear();
-			gridAttachedImages.ListGridRows.Clear();
+			gridAttachedImages.Columns.Clear();
+			gridAttachedImages.Rows.Clear();
 			GridColumn col;
 			col=new GridColumn("Date", 80);
-			gridAttachedImages.ListGridColumns.Add(col);
+			gridAttachedImages.Columns.Add(col);
 			col=new GridColumn("Image Type",150);
-			gridAttachedImages.ListGridColumns.Add(col);
+			gridAttachedImages.Columns.Add(col);
 			col=new GridColumn("File",150);
-			gridAttachedImages.ListGridColumns.Add(col);
+			gridAttachedImages.Columns.Add(col);
 			GridRow row;
 			for(int i=0;i<_listImageAttachments.Count;i++) {
 				row=new GridRow();
@@ -105,7 +105,7 @@ namespace OpenDental {
 				row.Cells.Add(_listImageAttachments[i].ImageType.GetDescription());
 				row.Cells.Add(_listImageAttachments[i].ImageFileNameDisplay);
 				row.Tag=_listImageAttachments[i];
-				gridAttachedImages.ListGridRows.Add(row);
+				gridAttachedImages.Rows.Add(row);
 			}
 			gridAttachedImages.EndUpdate();
 		}
@@ -248,7 +248,7 @@ namespace OpenDental {
 
 		///<summary>Allows the user to edit an existing ImageAttachment object.</summary>
 		private void CellDoubleClick_EditImage(object sender,ODGridClickEventArgs e) {
-			GridRow selectedRow=gridAttachedImages.ListGridRows[gridAttachedImages.GetSelectedIndex()];
+			GridRow selectedRow=gridAttachedImages.Rows[gridAttachedImages.GetSelectedIndex()];
 			ClaimConnect.ImageAttachment selectedAttachment=(ClaimConnect.ImageAttachment)selectedRow.Tag;
 			FormClaimAttachmentItemEdit FormCAIE=new FormClaimAttachmentItemEdit(selectedAttachment.Image
 				,selectedAttachment.ImageFileNameDisplay,selectedAttachment.ImageDate,selectedAttachment.ImageType);
@@ -279,8 +279,8 @@ namespace OpenDental {
 		private void CreateAndSendAttachments() {
 			//Grab all ImageAttachments from the grid.
 			List<ClaimConnect.ImageAttachment> listImagesToSend=new List<ClaimConnect.ImageAttachment>();
-			for(int i=0;i<gridAttachedImages.ListGridRows.Count;i++) {
-				listImagesToSend.Add((ClaimConnect.ImageAttachment)gridAttachedImages.ListGridRows[i].Tag);
+			for(int i=0;i<gridAttachedImages.Rows.Count;i++) {
+				listImagesToSend.Add((ClaimConnect.ImageAttachment)gridAttachedImages.Rows[i].Tag);
 			}
 			AddAttachments(listImagesToSend);
 		}
@@ -290,8 +290,8 @@ namespace OpenDental {
 		///the response from Dentalxchange for the first attachment sent. Will also prompt the user to re-validate the claim.</summary>
 		private void BatchSendAttachments() {
 			ClaimConnect.ImageAttachment attachment;
-			for(int i=0;i<gridAttachedImages.ListGridRows.Count;i++) {
-				attachment=((ClaimConnect.ImageAttachment)gridAttachedImages.ListGridRows[i].Tag);
+			for(int i=0;i<gridAttachedImages.Rows.Count;i++) {
+				attachment=((ClaimConnect.ImageAttachment)gridAttachedImages.Rows[i].Tag);
 				AddAttachments(new List<ClaimConnect.ImageAttachment>() { attachment });
 			}
 		}
@@ -335,7 +335,7 @@ namespace OpenDental {
 		///a list of ClaimAttach objects to associate to the given claim.</summary>
 		private void buttonOK_Click(object sender,EventArgs e) {
 			//The user must create an image or narrative attachment before sending.
-			if(gridAttachedImages.ListGridRows.Count==0 && textNarrative.Text.Trim().Length==0) {
+			if(gridAttachedImages.Rows.Count==0 && textNarrative.Text.Trim().Length==0) {
 				MessageBox.Show("An image or narrative must be specified before continuing.");
 				return;
 			}
@@ -369,8 +369,8 @@ namespace OpenDental {
 				imageTypeDefNum=Definitions.GetByCategory(DefinitionCategory.ImageCats).FirstOrDefault().Id;
 			}
 			List<ClaimAttach> listClaimAttachments=new List<ClaimAttach>();
-			for(int i=0;i<gridAttachedImages.ListGridRows.Count;i++) {
-				ClaimConnect.ImageAttachment imageRow=((ClaimConnect.ImageAttachment)gridAttachedImages.ListGridRows[i].Tag);
+			for(int i=0;i<gridAttachedImages.Rows.Count;i++) {
+				ClaimConnect.ImageAttachment imageRow=((ClaimConnect.ImageAttachment)gridAttachedImages.Rows[i].Tag);
 				if(Prefs.GetBool(PrefName.SaveDXCAttachments)) {
 					Bitmap imageBitmap=new Bitmap(imageRow.Image);
 					Document docCur=ImageStore.Import(imageBitmap,imageTypeDefNum,ImageType.Document,_claimPat);

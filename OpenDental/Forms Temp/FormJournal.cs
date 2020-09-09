@@ -340,27 +340,27 @@ namespace OpenDental{
 			ODGrid gridToFill=isPrinting?gridMainPrint:gridMain;
 			gridToFill.BeginUpdate();
 			gridToFill.Title=_acctCur.Description+" ("+_acctCur.Type.ToString()+")";
-			gridToFill.ListGridColumns.Clear();
+			gridToFill.Columns.Clear();
 			GridColumn col=new GridColumn("Chk #",60,HorizontalAlignment.Center);
-			gridToFill.ListGridColumns.Add(col);
+			gridToFill.Columns.Add(col);
 			col=new GridColumn("Date",70,HorizontalAlignment.Left);
-			gridToFill.ListGridColumns.Add(col);
+			gridToFill.Columns.Add(col);
 			col=new GridColumn("Memo",isPrinting?200:220,HorizontalAlignment.Left);
-			gridToFill.ListGridColumns.Add(col);
+			gridToFill.Columns.Add(col);
 			col=new GridColumn("Splits",isPrinting?200:220,HorizontalAlignment.Left);
-			gridToFill.ListGridColumns.Add(col);
+			gridToFill.Columns.Add(col);
 			col=new GridColumn("Debit"+(Accounts.DebitIsPos(_acctCur.Type)?"(+)":"(-)"),70,HorizontalAlignment.Right);
-			gridToFill.ListGridColumns.Add(col);
+			gridToFill.Columns.Add(col);
 			col=new GridColumn("Credit"+(Accounts.DebitIsPos(_acctCur.Type)?"(-)":"(+)"),70,HorizontalAlignment.Right);
-			gridToFill.ListGridColumns.Add(col);
+			gridToFill.Columns.Add(col);
 			col=new GridColumn("Balance",78,HorizontalAlignment.Right);
-			gridToFill.ListGridColumns.Add(col);
+			gridToFill.Columns.Add(col);
 			col=new GridColumn("Created By",95,HorizontalAlignment.Left);
-			gridToFill.ListGridColumns.Add(col);
+			gridToFill.Columns.Add(col);
 			col=new GridColumn("Last Edited By",95,HorizontalAlignment.Left);
-			gridToFill.ListGridColumns.Add(col);
+			gridToFill.Columns.Add(col);
 			col=new GridColumn("Clear",40,HorizontalAlignment.Center);
-			gridToFill.ListGridColumns.Add(col);
+			gridToFill.Columns.Add(col);
 			DateTime dateFrom=PIn.Date(textDateFrom.Text);
 			DateTime dateTo=string.IsNullOrEmpty(textDateTo.Text)?DateTime.MaxValue:PIn.Date(textDateTo.Text);
 			double filterAmt=string.IsNullOrEmpty(textAmt.errorProvider1.GetError(textAmt))?PIn.Double(textAmt.Text):0;
@@ -369,7 +369,7 @@ namespace OpenDental{
 				_dictTransUsers=Transactions.GetManyTrans(_listJEntries.Select(x => x.TransactionNum).ToList())
 					.ToDictionary(x => x.Id,x => x.UserId);
 			}
-			gridToFill.ListGridRows.Clear();
+			gridToFill.Rows.Clear();
 			GridRow row;
 			decimal bal=0;
 			for(int i=0;i<_listJEntries.Count;i++) {
@@ -403,7 +403,7 @@ namespace OpenDental{
 				row.Cells.Add(Userods.GetName(_listJEntries[i].SecUserNumEdit));
 				row.Cells.Add(_listJEntries[i].ReconcileNum==0?"":"X");
 				row.Tag=_listJEntries[i].TransactionNum;
-				gridToFill.ListGridRows.Add(row);
+				gridToFill.Rows.Add(row);
 			}
 			gridToFill.EndUpdate();
 		}
@@ -494,7 +494,7 @@ namespace OpenDental{
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			int selectedRow=e.Row;
 			int scrollValue=gridMain.ScrollValue;
-			FormTransactionEdit FormT=new FormTransactionEdit((long)gridMain.ListGridRows[e.Row].Tag,_acctCur.Id);
+			FormTransactionEdit FormT=new FormTransactionEdit((long)gridMain.Rows[e.Row].Tag,_acctCur.Id);
 			FormT.ShowDialog();
 			if(FormT.DialogResult==DialogResult.Cancel) {
 				return;

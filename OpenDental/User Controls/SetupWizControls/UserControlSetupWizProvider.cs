@@ -32,26 +32,26 @@ namespace OpenDental.User_Controls.SetupWizard {
 			List<Provider> listProvs=Providers.GetDeepCopy(true);
 			Color needsAttnCol = OpenDental.SetupWizard.GetColor(ODSetupStatus.NeedsAttention);
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col = new GridColumn("First Name",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("Last Name",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("Abbrev",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("Suffix",60);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("SSN/TIN",130);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("NPI",130);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("AptColor",60);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("LineColor",60);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("IsHyg",60,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			bool isAllComplete = true;
 			if(listProvs.Where(x => x.FirstName.ToLower() != "default").ToList().Count==0) {
@@ -100,7 +100,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 				row.Cells.Add(prov.IsSecondary?"X":"");
 				//not required
 				row.Tag=prov;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			if(isAllComplete) {
@@ -114,7 +114,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 		private void timer1_Tick(object sender,EventArgs e) {
 			if(_blink > 5) {
 				pictureAdd.Visible=true;
-				foreach(GridRow rowCur in gridMain.ListGridRows) {
+				foreach(GridRow rowCur in gridMain.Rows) {
 					rowCur.BackColor=OpenDental.SetupWizard.GetColor(ODSetupStatus.NeedsAttention);
 				}
 				gridMain.Invalidate();
@@ -122,7 +122,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 				return;
 			}
 			pictureAdd.Visible=!pictureAdd.Visible;
-			foreach(GridRow rowCur in gridMain.ListGridRows) {
+			foreach(GridRow rowCur in gridMain.Rows) {
 				rowCur.BackColor=rowCur.BackColor==Color.White?OpenDental.SetupWizard.GetColor(ODSetupStatus.NeedsAttention):Color.White;
 			}
 			gridMain.Invalidate();
@@ -130,7 +130,7 @@ namespace OpenDental.User_Controls.SetupWizard {
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			Provider selectedProv = (Provider)gridMain.ListGridRows[e.Row].Tag;
+			Provider selectedProv = (Provider)gridMain.Rows[e.Row].Tag;
 			FormProvEdit FormPE = new FormProvEdit();
 			FormPE.ProvCur = selectedProv;
 			FormPE.ShowDialog();
@@ -145,10 +145,10 @@ namespace OpenDental.User_Controls.SetupWizard {
 			FormPE.ProvCur.IsNew=true;
 			Provider provCur = new Provider();
 			if(gridMain.SelectedIndices.Length>0) {//place new provider after the first selected index. No changes are made to DB until after provider is actually inserted.
-				FormPE.ProvCur.ItemOrder=((Provider)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag).ItemOrder;//now two with this itemorder
+				FormPE.ProvCur.ItemOrder=((Provider)gridMain.Rows[gridMain.SelectedIndices[0]].Tag).ItemOrder;//now two with this itemorder
 			}
-			else if(gridMain.ListGridRows.Count>0) {
-				FormPE.ProvCur.ItemOrder=((Provider)gridMain.ListGridRows[gridMain.ListGridRows.Count-1].Tag).ItemOrder+1;
+			else if(gridMain.Rows.Count>0) {
+				FormPE.ProvCur.ItemOrder=((Provider)gridMain.Rows[gridMain.Rows.Count-1].Tag).ItemOrder+1;
 			}
 			else {
 				FormPE.ProvCur.ItemOrder=0;

@@ -963,46 +963,46 @@ namespace OpenDental
 			ClaimCur.InsPayAmt=0;
 			ClaimCur.WriteOff=0;
 			gridProc.BeginUpdate();
-			gridProc.ListGridColumns.Clear();
+			gridProc.Columns.Clear();
 			GridColumn col=new GridColumn("#",25);
-			gridProc.ListGridColumns.Add(col);
+			gridProc.Columns.Add(col);
 			col=new GridColumn("Date",66);
-			gridProc.ListGridColumns.Add(col);
+			gridProc.Columns.Add(col);
 			col=new GridColumn("Prov",62);
-			gridProc.ListGridColumns.Add(col);
+			gridProc.Columns.Add(col);
 			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				col=new GridColumn("Code",75);
-				gridProc.ListGridColumns.Add(col);
+				gridProc.Columns.Add(col);
 			}
 			else {
 				col=new GridColumn("Code",50);
-				gridProc.ListGridColumns.Add(col);
+				gridProc.Columns.Add(col);
 				col=new GridColumn("Tth",25);
-				gridProc.ListGridColumns.Add(col);
+				gridProc.Columns.Add(col);
 			}
 			col=new GridColumn("Description",130);
-			gridProc.ListGridColumns.Add(col);
+			gridProc.Columns.Add(col);
 			col=new GridColumn("Fee",62,HorizontalAlignment.Right);
-			gridProc.ListGridColumns.Add(col);
+			gridProc.Columns.Add(col);
 			col=new GridColumn("Billed to Ins",75,HorizontalAlignment.Right);
-			gridProc.ListGridColumns.Add(col);
+			gridProc.Columns.Add(col);
 			col=new GridColumn("Deduct",62,HorizontalAlignment.Right);
-			gridProc.ListGridColumns.Add(col);
+			gridProc.Columns.Add(col);
 			col=new GridColumn("Ins Est",62,HorizontalAlignment.Right);
-			gridProc.ListGridColumns.Add(col);
+			gridProc.Columns.Add(col);
 			col=new GridColumn("Ins Pay",62,HorizontalAlignment.Right);
-			gridProc.ListGridColumns.Add(col);
+			gridProc.Columns.Add(col);
 			col=new GridColumn("WriteOff",62,HorizontalAlignment.Right);
-			gridProc.ListGridColumns.Add(col);
+			gridProc.Columns.Add(col);
 			col=new GridColumn("Status",50,HorizontalAlignment.Center);
-			gridProc.ListGridColumns.Add(col);
+			gridProc.Columns.Add(col);
 			col=new GridColumn("Pmt",30,HorizontalAlignment.Center);
-			gridProc.ListGridColumns.Add(col);
+			gridProc.Columns.Add(col);
 			col=new GridColumn("Pay Tracking",90,HorizontalAlignment.Center);
-			gridProc.ListGridColumns.Add(col);
+			gridProc.Columns.Add(col);
 			col=new GridColumn("Remarks",60){ IsWidthDynamic=true };
-			gridProc.ListGridColumns.Add(col);
-			gridProc.ListGridRows.Clear();
+			gridProc.Columns.Add(col);
+			gridProc.Rows.Clear();
 			GridRow row;
 			_listClaimProcsForClaim=ClaimProcs.RefreshForClaim(ClaimCur.ClaimNum,ProcList,ClaimProcList);//Excludes labs.
 			//ClaimProcs should always be ordered by their LineNumber (most important).
@@ -1041,7 +1041,7 @@ namespace OpenDental
 				row=new GridRow();
 				listClaimProcIntermingle.Add(_listClaimProcsForClaim[i]);
 				ClaimProcRowHelper(row,_listClaimProcsForClaim[i]);
-				gridProc.ListGridRows.Add(row);
+				gridProc.Rows.Add(row);
 				if(CultureInfo.CurrentCulture.Name.EndsWith("CA") && _dictCanadianLabClaimProcs.ContainsKey(_listClaimProcsForClaim[i].ProcNum)) {//This proc has one or more labs attached.
 					foreach(ClaimProc labClaimProc in _dictCanadianLabClaimProcs[_listClaimProcsForClaim[i].ProcNum]) {//Add one row for each attached proc, just below the parent proc.
 						//The following 'continue' logic does not skip adding lab rows to gridProc.
@@ -1058,7 +1058,7 @@ namespace OpenDental
 						listClaimProcIntermingle.Add(labClaimProc);
 						ClaimProcRowHelper(labRow,labClaimProc);
 						labRow.Tag=labClaimProc;
-						gridProc.ListGridRows.Add(labRow);
+						gridProc.Rows.Add(labRow);
 					}
 				}
 				row.Tag=_listClaimProcsForClaim[i];
@@ -1082,20 +1082,20 @@ namespace OpenDental
 			textWriteOff.Text=ClaimCur.WriteOff.ToString("F");
 			//payments
 			gridPay.BeginUpdate();
-			gridPay.ListGridColumns.Clear();
+			gridPay.Columns.Clear();
 			col=new GridColumn("Date",70);
-			gridPay.ListGridColumns.Add(col);
+			gridPay.Columns.Add(col);
 			col=new GridColumn("Type",60);
-			gridPay.ListGridColumns.Add(col);
+			gridPay.Columns.Add(col);
 			col=new GridColumn("Amount",80,HorizontalAlignment.Right);
-			gridPay.ListGridColumns.Add(col);
+			gridPay.Columns.Add(col);
 			col=new GridColumn("Check Num",90);
-			gridPay.ListGridColumns.Add(col);
+			gridPay.Columns.Add(col);
 			col=new GridColumn("Bank/Branch",100);
-			gridPay.ListGridColumns.Add(col);
+			gridPay.Columns.Add(col);
 			col=new GridColumn("Note",180);
-			gridPay.ListGridColumns.Add(col);
-			gridPay.ListGridRows.Clear();
+			gridPay.Columns.Add(col);
+			gridPay.Rows.Clear();
 			if(doRefreshData) {
 				tablePayments=ClaimPayments.GetForClaim(ClaimCur.ClaimNum);
 			}
@@ -1107,7 +1107,7 @@ namespace OpenDental
 				row.Cells.Add(tablePayments.Rows[i]["CheckNum"].ToString());
 				row.Cells.Add(tablePayments.Rows[i]["BankBranch"].ToString());
 				row.Cells.Add(tablePayments.Rows[i]["Note"].ToString());
-				gridPay.ListGridRows.Add(row);
+				gridPay.Rows.Add(row);
 			}
 			gridPay.EndUpdate();
 			FillStatusHistory(doRefreshData);
@@ -1115,24 +1115,24 @@ namespace OpenDental
 
 		private void fillGridSentAttachments() {
 			gridSent.BeginUpdate();
-			gridSent.ListGridColumns.Clear();
-			gridSent.ListGridRows.Clear();
+			gridSent.Columns.Clear();
+			gridSent.Rows.Clear();
 			GridColumn col;
 			col=new GridColumn("File",200);
-			gridSent.ListGridColumns.Add(col);
+			gridSent.Columns.Add(col);
 			GridRow row;
 			for(int i=0;i<ClaimCur.Attachments.Count;i++) {
 				row=new GridRow();
 				row.Cells.Add(ClaimCur.Attachments[i].DisplayedFileName);
 				row.Tag=ClaimCur.Attachments[i];
-				gridSent.ListGridRows.Add(row);
+				gridSent.Rows.Add(row);
 			}
 			gridSent.EndUpdate();
 		}
 
 		private void gridSent_CellDoubleClick(object sender, ODGridClickEventArgs e)
 		{
-			ClaimAttach claimAttachCur = (ClaimAttach)gridSent.ListGridRows[e.Row].Tag;
+			ClaimAttach claimAttachCur = (ClaimAttach)gridSent.Rows[e.Row].Tag;
 			string patFolder = ImageStore.GetPatientFolder(PatCur, OpenDentBusiness.FileIO.FileAtoZ.GetPreferredAtoZpath());
 
 
@@ -1262,13 +1262,13 @@ namespace OpenDental
 		private void FillStatusHistory(bool doRefreshStatusEntries=true) {
 			////status history
 			gridStatusHistory.BeginUpdate();
-			gridStatusHistory.ListGridColumns.Clear();
-			gridStatusHistory.ListGridColumns.Add(new GridColumn("Date",120));
-			gridStatusHistory.ListGridColumns.Add(new GridColumn("Description",270));
-			gridStatusHistory.ListGridColumns.Add(new GridColumn("Log Note",320));
-			gridStatusHistory.ListGridColumns.Add(new GridColumn("ErrorCode",90));
-			gridStatusHistory.ListGridColumns.Add(new GridColumn("User",90));
-			gridStatusHistory.ListGridRows.Clear();
+			gridStatusHistory.Columns.Clear();
+			gridStatusHistory.Columns.Add(new GridColumn("Date",120));
+			gridStatusHistory.Columns.Add(new GridColumn("Description",270));
+			gridStatusHistory.Columns.Add(new GridColumn("Log Note",320));
+			gridStatusHistory.Columns.Add(new GridColumn("ErrorCode",90));
+			gridStatusHistory.Columns.Add(new GridColumn("User",90));
+			gridStatusHistory.Rows.Clear();
 			List<ClaimTracking> listCustomStatusEntries;
 			if(doRefreshStatusEntries) {
 				listCustomStatusEntries=ClaimTrackings.RefreshForClaim(ClaimTrackingType.StatusHistory,ClaimCur.ClaimNum);
@@ -1285,7 +1285,7 @@ namespace OpenDental
 				row.Cells.Add(claimTrackingEntry.Note);
 				row.Cells.Add(Definitions.GetName(DefinitionCategory.ClaimErrorCode,claimTrackingEntry.TrackingErrorDefNum));
 				row.Cells.Add(Userods.GetName(claimTrackingEntry.UserNum));
-				gridStatusHistory.ListGridRows.Add(row);
+				gridStatusHistory.Rows.Add(row);
 				row.Tag=claimTrackingEntry;
 			}
 			gridStatusHistory.EndUpdate();
@@ -1360,10 +1360,10 @@ namespace OpenDental
 		}
 		
 		private void contextAdjust_Popup(object sender,EventArgs e) {
-			if(gridProc.SelectedGridRows.Count>0) {
+			if(gridProc.SelectedRows.Count>0) {
 				menuItemAddAdj.Enabled=true;
 			}
-			if(gridProc.SelectedGridRows.Count<=0) {
+			if(gridProc.SelectedRows.Count<=0) {
 				menuItemAddAdj.Enabled=false;
 			}
 		}
@@ -1775,11 +1775,11 @@ namespace OpenDental
 
 		private void menuItemAddAdj_Click(object sender,EventArgs e) {
 			//check to make sure one and only one row is selected
-			if(gridProc.SelectedGridRows.Count!=1) {
+			if(gridProc.SelectedRows.Count!=1) {
 				MessageBox.Show("Select one procedure to add an adjustment.");
 				return;
 			}
-			long procNum=((ClaimProc)gridProc.SelectedGridRows[0].Tag).ProcNum;
+			long procNum=((ClaimProc)gridProc.SelectedRows[0].Tag).ProcNum;
 			Procedure procForAdj=new Procedure();
 			procForAdj=Procedures.GetOneProc(procNum,false);
 			if(procForAdj.ProcStatus!=ProcStat.C) {
@@ -2658,7 +2658,7 @@ namespace OpenDental
 		}
 
 		private void gridStatusHistory_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			ClaimTracking claimTrack=(ClaimTracking)gridStatusHistory.ListGridRows[e.Row].Tag;
+			ClaimTracking claimTrack=(ClaimTracking)gridStatusHistory.Rows[e.Row].Tag;
 			if(Security.IsAuthorized(Permissions.ClaimHistoryEdit,claimTrack.DateTimeEntry)){
 				FormClaimCustomTrackingUpdate FormCCTU=new FormClaimCustomTrackingUpdate(ClaimCur,claimTrack);
 				FormCCTU.ShowDialog();

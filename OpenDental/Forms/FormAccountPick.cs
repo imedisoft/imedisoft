@@ -50,13 +50,13 @@ namespace Imedisoft.Forms
 		private void FillGrid()
 		{
 			accountsGrid.BeginUpdate();
-			accountsGrid.ListGridColumns.Clear();
-			accountsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Type, 70));
-			accountsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Description, 170));
-			accountsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Balance, 65, HorizontalAlignment.Right));
-			accountsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.BankNumber, 100));
-			accountsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Inactive, 70));
-			accountsGrid.ListGridRows.Clear();
+			accountsGrid.Columns.Clear();
+			accountsGrid.Columns.Add(new GridColumn(Translation.Common.Type, 70));
+			accountsGrid.Columns.Add(new GridColumn(Translation.Common.Description, 170));
+			accountsGrid.Columns.Add(new GridColumn(Translation.Common.Balance, 65, HorizontalAlignment.Right));
+			accountsGrid.Columns.Add(new GridColumn(Translation.Common.BankNumber, 100));
+			accountsGrid.Columns.Add(new GridColumn(Translation.Common.Inactive, 70));
+			accountsGrid.Rows.Clear();
 
 			var accounts = Accounts.All;
 			for (int i = 0; i < accounts.Count; ++i)
@@ -92,7 +92,7 @@ namespace Imedisoft.Forms
 				gridRow.Tag = account;
 				
 
-				accountsGrid.ListGridRows.Add(gridRow);
+				accountsGrid.Rows.Add(gridRow);
 			}
 
 			accountsGrid.EndUpdate();
@@ -115,9 +115,9 @@ namespace Imedisoft.Forms
 			Cursor.Current = Cursors.Default;
 			
 			accountsGrid.BeginUpdate();
-			accountsGrid.ListGridColumns.Clear();
-			accountsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Description, 200));
-			accountsGrid.ListGridRows.Clear();
+			accountsGrid.Columns.Clear();
+			accountsGrid.Columns.Add(new GridColumn(Translation.Common.Description, 200));
+			accountsGrid.Rows.Clear();
 
 			if (accounts != null)
 			{
@@ -127,7 +127,7 @@ namespace Imedisoft.Forms
 					gridRow.Cells.Add(account);
 					gridRow.Tag = account;
 
-					accountsGrid.ListGridRows.Add(gridRow);
+					accountsGrid.Rows.Add(gridRow);
 				}
 			}
 
@@ -159,12 +159,12 @@ namespace Imedisoft.Forms
 
 				for (int i = 0; i < accountsGrid.SelectedIndices.Length; i++)
 				{
-					SelectedQuickBookAccounts.Add((string)accountsGrid.ListGridRows[accountsGrid.SelectedIndices[i]].Tag);
+					SelectedQuickBookAccounts.Add((string)accountsGrid.Rows[accountsGrid.SelectedIndices[i]].Tag);
 				}
 			}
 			else
 			{
-				SelectedAccount = (Account)accountsGrid.ListGridRows[accountsGrid.GetSelectedIndex()].Tag;
+				SelectedAccount = (Account)accountsGrid.Rows[accountsGrid.GetSelectedIndex()].Tag;
 			}
 
 			DialogResult = DialogResult.OK;

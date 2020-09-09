@@ -46,16 +46,16 @@ namespace OpenDental {
 				selectedSheetNum=_listSheets[gridMain.GetSelectedIndex()].SheetNum;//PIn.Long(table.Rows[gridMain.GetSelectedIndex()]["SheetNum"].ToString());
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Date",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Time",50);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Description",210);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Type",50){ IsWidthDynamic=true };
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			long selectedDefNum=listExamTypes.GetSelected<SheetDef>().SheetDefNum;//-1 when 'All' is selected
 			_listSheets=Sheets.GetExamSheetsTable(PatNum,DateTime.MinValue,DateTime.MaxValue,selectedDefNum);
@@ -66,7 +66,7 @@ namespace OpenDental {
 				row.Cells.Add(_listSheets[i].DateTimeSheet.ToShortTimeString());// ["time"].ToString());
 				row.Cells.Add(_listSheets[i].Description);
 				row.Cells.Add(listExamSheetDefs.FirstOrDefault(x => x.SheetDefNum==_listSheets[i].SheetDefNum)?.Description??"");
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			//reselect
@@ -132,7 +132,7 @@ namespace OpenDental {
 				}
 				FillGrid();
 				gridMain.SetSelected(false);//unselect all rows
-				gridMain.SetSelected(gridMain.ListGridRows.Count-1,true);//Select the newly added row. Always last, since ordered by date.
+				gridMain.SetSelected(gridMain.Rows.Count-1,true);//Select the newly added row. Always last, since ordered by date.
 			}
 		}
 

@@ -54,23 +54,23 @@ namespace OpenDental{
 			RefreshReport();
 			gridMain.BeginUpdate();
 			GridColumn col=null;
-			if(gridMain.ListGridColumns.Count==0) {
+			if(gridMain.Columns.Count==0) {
 				col=new GridColumn("Patient Name",_colWidthPatName);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col=new GridColumn("Stat",_colWidthStat,HorizontalAlignment.Center);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col=new GridColumn("Procedure Date",_colWidthProcDate,HorizontalAlignment.Center);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col=new GridColumn("Procedure Description",410) { IsWidthDynamic=true };
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				if(PrefC.HasClinicsEnabled) {
 					col=new GridColumn("Clinic",_colWidthClinic);
-					gridMain.ListGridColumns.Add(col);
+					gridMain.Columns.Add(col);
 				}
 				col=new GridColumn("Amount",_colWidthAmount,HorizontalAlignment.Right);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_myReport.ReportObjects.Count;i++) {
 				if(_myReport.ReportObjects[i].ObjectType!=ReportObjectType.QueryObject) {
@@ -95,7 +95,7 @@ namespace OpenDental{
 					row.Cells.Add(PIn.Double(queryObj.ReportTable.Rows[j][4].ToString()).ToString("c"));//Amount
 					_procTotalAmt+=PIn.Decimal(queryObj.ReportTable.Rows[j][4].ToString());
 					row.Tag=((QueryObject)_myReport.ReportObjects[i]).ReportTable.Rows[j];
-					gridMain.ListGridRows.Add(row);
+					gridMain.Rows.Add(row);
 				}
 			}
 			gridMain.EndUpdate();
@@ -205,9 +205,9 @@ namespace OpenDental{
 			table.Columns.Add("chargesDouble");
 			table.Columns.Add("ProcNumLab");
 			List<long> listProcNumsPastLockDate=new List<long>();
-			for(int i=0;i<gridMain.ListGridRows.Count;i++) {//Loop through every row in gridMain to construct datatable and listNotBilledProcs.
+			for(int i=0;i<gridMain.Rows.Count;i++) {//Loop through every row in gridMain to construct datatable and listNotBilledProcs.
 				//Table is passed to toolBarButIns_Click(...) and must contain data for every row in the grid.
-				DataRow rowCur=(DataRow)gridMain.ListGridRows[i].Tag;
+				DataRow rowCur=(DataRow)gridMain.Rows[i].Tag;
 				long procNumCur=PIn.Long(rowCur["ProcNum"].ToString());
 				Procedure procCur=Procedures.GetOneProc(procNumCur,false);
 				if(dateRestricted.HasValue && procCur.ProcDate <= dateRestricted) {//current procedure is past or on the lock date. 
@@ -402,7 +402,7 @@ namespace OpenDental{
 				MessageBox.Show("Please select exactly one item first.");
 				return;
 			}
-			DataRow row=(DataRow)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
+			DataRow row=(DataRow)gridMain.Rows[gridMain.GetSelectedIndex()].Tag;
 			long patNum=PIn.Long(row["PatNum"].ToString());
 			if(patNum==0) {
 				MessageBox.Show("Please select an item with a patient.");

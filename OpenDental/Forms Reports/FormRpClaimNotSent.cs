@@ -225,27 +225,27 @@ namespace OpenDental{
 			DataTable table=RpClaimNotSent.GetClaimsNotSent(_startDate,_endDate,listClinicNums,false
 				,(ClaimNotSentStatuses)comboBoxInsFilter.SelectedItem);//this query can get slow with a large number of clinics (like NADG)
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			if(PrefC.HasClinicsEnabled) {
 				col=new GridColumn("Clinic",90);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			col=new GridColumn("Date of Service",90,GridSortingStrategy.DateParse);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Claim Type",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Claim Status",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Patient Name",150);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Carrier Name",150);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Claim Fee",90,GridSortingStrategy.AmountParse);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Proc Codes",100);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i = 0;i<table.Rows.Count;i++) {
 				row=new GridRow();
@@ -292,7 +292,7 @@ namespace OpenDental{
 					unsentClaim.ClaimTrackingNum=claimTrackingCur.ClaimTrackingNum;
 				}
 				row.Tag=unsentClaim;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -368,7 +368,7 @@ namespace OpenDental{
 			int menuCode=(int)((MenuItem)sender).Tag;
 			switch(menuCode) {
 				case 0://Go to Account
-					GotoModule.GotoAccount(((UnsentInsClaim)gridMain.ListGridRows[index].Tag).PatNum);
+					GotoModule.GotoAccount(((UnsentInsClaim)gridMain.Rows[index].Tag).PatNum);
 					break;
 			}
 		}
@@ -377,7 +377,7 @@ namespace OpenDental{
 			if(!Security.IsAuthorized(Permissions.ClaimView)) {
 				return;
 			}
-			Claim claim=Claims.GetClaim(((UnsentInsClaim)gridMain.ListGridRows[e.Row].Tag).ClaimNum);
+			Claim claim=Claims.GetClaim(((UnsentInsClaim)gridMain.Rows[e.Row].Tag).ClaimNum);
 			if(claim==null) {
 				MessageBox.Show("The claim has been deleted.");
 				FillGrid();

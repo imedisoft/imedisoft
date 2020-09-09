@@ -350,16 +350,16 @@ namespace OpenDental {
 
 		private void FillAttachments() {
 			gridAttachments.BeginUpdate();
-			gridAttachments.ListGridRows.Clear();
-			gridAttachments.ListGridColumns.Clear();
-			gridAttachments.ListGridColumns.Add(new GridColumn("",90){ IsWidthDynamic=true });//No name column, since there is only one column.
+			gridAttachments.Rows.Clear();
+			gridAttachments.Columns.Clear();
+			gridAttachments.Columns.Add(new GridColumn("",90){ IsWidthDynamic=true });//No name column, since there is only one column.
 			foreach(EmailAttach attachment in _listEmailAttachDisplayed) {
 				GridRow row=new GridRow();
 				row.Cells.Add(attachment.DisplayedFileName);
-				gridAttachments.ListGridRows.Add(row);
+				gridAttachments.Rows.Add(row);
 			}
 			gridAttachments.EndUpdate();
-			if(gridAttachments.ListGridRows.Count>0) {
+			if(gridAttachments.Rows.Count>0) {
 				gridAttachments.SetSelected(0,true);
 			}
 		}

@@ -28,23 +28,23 @@ namespace OpenDental {
 
 		private void FillGrid(){
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("LName",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("FName",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Year",60);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Key",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Charge",60,HorizontalAlignment.Right);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("FTE",35,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Notes",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			listKeys=EhrProvKeys.RefreshForFam(Guarantor);
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			decimal feeTotal=0;
 			decimal fee=0;
@@ -59,7 +59,7 @@ namespace OpenDental {
 				row.Cells.Add(fee.ToString("c"));
 				row.Cells.Add(listKeys[i].FullTimeEquiv.ToString());
 				row.Cells.Add(listKeys[i].Notes);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			textCharge.Text=feeTotal.ToString("c");
@@ -85,19 +85,19 @@ namespace OpenDental {
 
 		private void FillGridQ() {
 			gridQ.BeginUpdate();
-			gridQ.ListGridColumns.Clear();
+			gridQ.Columns.Clear();
 			GridColumn col=new GridColumn("Practice Title",120);
-			gridQ.ListGridColumns.Add(col);
+			gridQ.Columns.Add(col);
 			col=new GridColumn("Year",40);
-			gridQ.ListGridColumns.Add(col);
+			gridQ.Columns.Add(col);
 			col=new GridColumn("Quarter",50);
-			gridQ.ListGridColumns.Add(col);
+			gridQ.Columns.Add(col);
 			col=new GridColumn("Key",100);
-			gridQ.ListGridColumns.Add(col);
+			gridQ.Columns.Add(col);
 			col=new GridColumn("Notes",100);
-			gridQ.ListGridColumns.Add(col);
+			gridQ.Columns.Add(col);
 			listKeysQuart=EhrQuarterlyKeys.Refresh(Guarantor);
-			gridQ.ListGridRows.Clear();
+			gridQ.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<listKeysQuart.Count;i++) {
 				row=new GridRow();
@@ -106,7 +106,7 @@ namespace OpenDental {
 				row.Cells.Add(listKeysQuart[i].QuarterValue.ToString());
 				row.Cells.Add(listKeysQuart[i].KeyValue);
 				row.Cells.Add(listKeysQuart[i].Notes);
-				gridQ.ListGridRows.Add(row);
+				gridQ.Rows.Add(row);
 			}
 			gridQ.EndUpdate();
 		}

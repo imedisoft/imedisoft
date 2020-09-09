@@ -38,16 +38,16 @@ namespace OpenDental {
 				_listEhrMeasureEvents=EhrMeasureEvents.GetAllByTypeFromDB(PIn.Date(textDateStart.Text),PIn.Date(textDateEnd.Text),(EhrMeasureEventType)comboType.SelectedIndex-1,false);
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Event Type",140);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Date",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("PatNum",60);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("More Info",160);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listEhrMeasureEvents.Count;i++) {
 				row=new GridRow();
@@ -55,7 +55,7 @@ namespace OpenDental {
 				row.Cells.Add(_listEhrMeasureEvents[i].DateTEvent.ToShortDateString());
 				row.Cells.Add(_listEhrMeasureEvents[i].PatNum.ToString());
 				row.Cells.Add(_listEhrMeasureEvents[i].MoreInfo);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

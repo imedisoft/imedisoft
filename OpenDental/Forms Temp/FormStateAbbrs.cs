@@ -128,19 +128,19 @@ namespace OpenDental{
 			long previousSelectedStateAbbrNum=-1;
 			int newSelectedIdx=-1;
 			if(gridMain.GetSelectedIndex()!=-1){
-				previousSelectedStateAbbrNum=((StateAbbr)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag).StateAbbrNum;
+				previousSelectedStateAbbrNum=((StateAbbr)gridMain.Rows[gridMain.GetSelectedIndex()].Tag).StateAbbrNum;
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Description",175);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Abbr",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if(Prefs.GetBool(PrefName.EnforceMedicaidIDLength)) {
 				col=new GridColumn("Medicaid ID Length",200);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			List<StateAbbr> stateAbbrs=StateAbbrs.GetDeepCopy();
 			for(int i=0;i<stateAbbrs.Count;i++) {
@@ -156,7 +156,7 @@ namespace OpenDental{
 					}
 				}
 				row.Tag=stateAbbrs[i];
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 				if(stateAbbrs[i].StateAbbrNum==previousSelectedStateAbbrNum) {
 					newSelectedIdx=i;
 				}
@@ -183,11 +183,11 @@ namespace OpenDental{
 				return;
 			}
 			if(IsSelectionMode) {
-				StateAbbrSelected=(StateAbbr)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
+				StateAbbrSelected=(StateAbbr)gridMain.Rows[gridMain.GetSelectedIndex()].Tag;
 				DialogResult=DialogResult.OK;
 				return;
 			}
-			FormStateAbbrEdit FormSAE=new FormStateAbbrEdit((StateAbbr)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag);
+			FormStateAbbrEdit FormSAE=new FormStateAbbrEdit((StateAbbr)gridMain.Rows[gridMain.GetSelectedIndex()].Tag);
 			FormSAE.ShowDialog();
 			if(FormSAE.DialogResult!=DialogResult.OK) {
 				return;
@@ -206,7 +206,7 @@ namespace OpenDental{
 				MessageBox.Show("Please select a state.");
 				return;
 			}
-			StateAbbrSelected=(StateAbbr)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
+			StateAbbrSelected=(StateAbbr)gridMain.Rows[gridMain.GetSelectedIndex()].Tag;
 			DialogResult=DialogResult.OK;
 		}
 

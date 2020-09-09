@@ -39,10 +39,10 @@ namespace Imedisoft.Forms
 		private void FillGrid()
 		{
 			icd9Grid.BeginUpdate();
-			icd9Grid.ListGridColumns.Clear();
-			icd9Grid.ListGridColumns.Add(new GridColumn("ICD-9", 100));
-			icd9Grid.ListGridColumns.Add(new GridColumn(Translation.Common.Description, 500));
-			icd9Grid.ListGridRows.Clear();
+			icd9Grid.Columns.Clear();
+			icd9Grid.Columns.Add(new GridColumn("ICD-9", 100));
+			icd9Grid.Columns.Add(new GridColumn(Translation.Common.Description, 500));
+			icd9Grid.Rows.Clear();
 
 			foreach (var icd10 in Icd9s.GetByCodeOrDescription(searchTextBox.Text))
 			{
@@ -51,7 +51,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(icd10.Description);
 				gridRow.Tag = icd10;
 
-				icd9Grid.ListGridRows.Add(gridRow);
+				icd9Grid.Rows.Add(gridRow);
 			}
 
 			icd9Grid.EndUpdate();

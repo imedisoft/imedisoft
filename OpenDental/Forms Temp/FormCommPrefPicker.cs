@@ -23,22 +23,22 @@ namespace OpenDental {
 
 		private void fillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Contact Preference",120,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			//col=new ODGridColumn("ICD9 Code",80);
 			//gridMain.Columns.Add(col);
 			//col=new ODGridColumn("SNOMED Code",80);
 			//gridMain.Columns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<Enum.GetNames(typeof(ContactMethod)).Length;i++) {
 				row=new GridRow();
 				row.Cells.Add(Enum.GetNames(typeof(ContactMethod))[i]);
 				//row.Cells.Add(DiseaseDefs.ListShallow[i].ICD9Code);
 				//row.Cells.Add(DiseaseDefs.ListShallow[i].SnomedCode);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

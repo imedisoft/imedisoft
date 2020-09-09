@@ -30,17 +30,17 @@ namespace OpenDental {
 
 		private void FillCarePlans() {
 			gridCarePlans.BeginUpdate();
-			gridCarePlans.ListGridColumns.Clear();
+			gridCarePlans.Columns.Clear();
 			int colDatePixCount=66;
 			int variablePixCount=gridCarePlans.Width-10-colDatePixCount;
 			int colGoalPixCount=variablePixCount/2;
 			int colInstructionsPixCount=variablePixCount-colGoalPixCount;
-			gridCarePlans.ListGridColumns.Add(new UI.GridColumn("Date",colDatePixCount));
-			gridCarePlans.ListGridColumns.Add(new UI.GridColumn("Goal",colGoalPixCount));
-			gridCarePlans.ListGridColumns.Add(new UI.GridColumn("Instructions",colInstructionsPixCount));
+			gridCarePlans.Columns.Add(new UI.GridColumn("Date",colDatePixCount));
+			gridCarePlans.Columns.Add(new UI.GridColumn("Goal",colGoalPixCount));
+			gridCarePlans.Columns.Add(new UI.GridColumn("Instructions",colInstructionsPixCount));
 			gridCarePlans.EndUpdate();
 			gridCarePlans.BeginUpdate();
-			gridCarePlans.ListGridRows.Clear();
+			gridCarePlans.Rows.Clear();
 			_listCarePlans=EhrCarePlans.Refresh(_patCur.PatNum);
 			for(int i=0;i<_listCarePlans.Count;i++) {
 				UI.GridRow row=new UI.GridRow();
@@ -53,7 +53,7 @@ namespace OpenDental {
 					row.Cells.Add(snomedEducation.Description);//GoalDescript
 				}
 				row.Cells.Add(_listCarePlans[i].Instructions);//Instructions
-				gridCarePlans.ListGridRows.Add(row);
+				gridCarePlans.Rows.Add(row);
 			}
 			gridCarePlans.EndUpdate();
 		}

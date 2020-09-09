@@ -29,14 +29,14 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Reminder Criterion",135);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Message",200);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			listReminders=ReminderRules.GetRemindersForPatient(PatCur);
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<listReminders.Count;i++) {
 				row=new GridRow();
@@ -71,26 +71,26 @@ namespace OpenDental {
 					//  break;
 				}
 				row.Cells.Add(listReminders[i].Message);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
 
 		private void FillGridProvided() {
 			gridProvided.BeginUpdate();
-			gridProvided.ListGridColumns.Clear();
+			gridProvided.Columns.Clear();
 			GridColumn col=new GridColumn("DateTime",130);
-			gridProvided.ListGridColumns.Add(col);
+			gridProvided.Columns.Add(col);
 			col=new GridColumn("Details",600);
-			gridProvided.ListGridColumns.Add(col);
+			gridProvided.Columns.Add(col);
 			reminderSentList=EhrMeasureEvents.RefreshByType(PatCur.PatNum,EhrMeasureEventType.ReminderSent);
-			gridProvided.ListGridRows.Clear();
+			gridProvided.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<reminderSentList.Count;i++) {
 				row=new GridRow();
 				row.Cells.Add(reminderSentList[i].DateTEvent.ToString());
 				row.Cells.Add(reminderSentList[i].MoreInfo);
-				gridProvided.ListGridRows.Add(row);
+				gridProvided.Rows.Add(row);
 			}
 			gridProvided.EndUpdate();
 		}
@@ -102,7 +102,7 @@ namespace OpenDental {
 			newMeasureEvent.PatNum=PatCur.PatNum;
 			string moreInfo="";
 			if(gridMain.GetSelectedIndex() > -1) {
-				moreInfo=gridMain.ListGridRows[gridMain.GetSelectedIndex()].Cells[1].Text;
+				moreInfo=gridMain.Rows[gridMain.GetSelectedIndex()].Cells[1].Text;
 			}
 			newMeasureEvent.MoreInfo=moreInfo;
 			EhrMeasureEvents.Insert(newMeasureEvent);

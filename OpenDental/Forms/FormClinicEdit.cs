@@ -199,9 +199,9 @@ namespace Imedisoft.Forms
 			var clinicSpecialtyDefs = Definitions.GetDefsForCategory(DefinitionCategory.ClinicSpecialty).ToDictionary(x => x.Id);
 
 			specialtiesGrid.BeginUpdate();
-			specialtiesGrid.ListGridColumns.Clear();
-			specialtiesGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Specialty, 100));
-			specialtiesGrid.ListGridRows.Clear();
+			specialtiesGrid.Columns.Clear();
+			specialtiesGrid.Columns.Add(new GridColumn(Translation.Common.Specialty, 100));
+			specialtiesGrid.Rows.Clear();
 
 			foreach (var specialtyLink in specialtyLinks)
 			{
@@ -215,7 +215,7 @@ namespace Imedisoft.Forms
 				row.Cells.Add(specialtyDescript);
 				row.Tag = specialtyLink;
 
-				specialtiesGrid.ListGridRows.Add(row);
+				specialtiesGrid.Rows.Add(row);
 			}
 
 			specialtiesGrid.EndUpdate();
@@ -304,7 +304,7 @@ namespace Imedisoft.Forms
 
 		private void SpecialtiesGrid_SelectionCommitted(object sender, EventArgs e)
 		{
-			removeSpecialtyButton.Enabled = specialtiesGrid.SelectedGridRows.Count > 0;
+			removeSpecialtyButton.Enabled = specialtiesGrid.SelectedRows.Count > 0;
 		}
 
 		private void AddSpecialtyButton_Click(object sender, EventArgs e)

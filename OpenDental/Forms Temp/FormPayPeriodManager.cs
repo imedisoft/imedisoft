@@ -429,14 +429,14 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Start Date",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("End Date",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Paycheck Date",100);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listPayPeriods.Count;i++) {
 				row=new GridRow();
@@ -448,7 +448,7 @@ namespace OpenDental {
 				else{
 					row.Cells.Add(_listPayPeriods[i].DatePaycheck.ToShortDateString());
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -613,7 +613,7 @@ namespace OpenDental {
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {
-			if(gridMain.ListGridRows.Count==0) {
+			if(gridMain.Rows.Count==0) {
 				MessageBox.Show("Pay periods must be generated first.");
 				return;
 			}

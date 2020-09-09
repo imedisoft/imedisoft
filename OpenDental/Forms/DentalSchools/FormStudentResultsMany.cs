@@ -42,11 +42,11 @@ namespace Imedisoft.Forms
             }
 
             studentsGrid.BeginUpdate();
-			studentsGrid.ListGridColumns.Clear();
-			studentsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.LastName, 100));
-			studentsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.FirstName, 100));
-			studentsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Done, 50));
-			studentsGrid.ListGridRows.Clear();
+			studentsGrid.Columns.Clear();
+			studentsGrid.Columns.Add(new GridColumn(Translation.Common.LastName, 100));
+			studentsGrid.Columns.Add(new GridColumn(Translation.Common.FirstName, 100));
+			studentsGrid.Columns.Add(new GridColumn(Translation.Common.Done, 50));
+			studentsGrid.Rows.Clear();
 
 			foreach (var summary in StudentResults.GetSummaryForStudents(schoolClass.Id, schoolCourse.Id))
 			{
@@ -56,7 +56,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add($"{summary.ReqCompleted}/{summary.ReqTotal}");
 				gridRow.Tag = summary;
 
-				studentsGrid.ListGridRows.Add(gridRow);
+				studentsGrid.Rows.Add(gridRow);
 			}
 
 			studentsGrid.EndUpdate();

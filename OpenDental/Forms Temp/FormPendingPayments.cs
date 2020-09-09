@@ -69,21 +69,21 @@ namespace OpenDental {
 				.ThenBy(x => x.PayDate)
 				.ThenBy(x => Patients.GetOnePat(_arrayPats,x.PatNum).GetNameLFnoPref()).ToList();
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			if(PrefC.HasClinicsEnabled) {
 				col=new GridColumn("Clinic",100);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}			
 			col=new GridColumn("Patient",110);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Date",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Amount",70,HorizontalAlignment.Right);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Note",200);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			foreach(Payment pay in listPaymentsClinic) {
 				row=new GridRow();
@@ -96,7 +96,7 @@ namespace OpenDental {
 				row.Cells.Add(pay.PayAmt.ToString("F"));
 				row.Cells.Add(pay.PayNote);
 				row.Tag=pay;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -128,7 +128,7 @@ namespace OpenDental {
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			Payment pay=(Payment)gridMain.ListGridRows[e.Row].Tag;
+			Payment pay=(Payment)gridMain.Rows[e.Row].Tag;
 			Patient pat=Patients.GetOnePat(_arrayPats,pay.PatNum);
 			Family fam=Patients.GetFamily(pat.PatNum);
 			FormPayment FormP=new FormPayment(pat,fam,pay,false);
@@ -141,7 +141,7 @@ namespace OpenDental {
 				MessageBox.Show("Please select one payment first.");
 				return;
 			}
-			long patNum=((Payment)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag).PatNum;
+			long patNum=((Payment)gridMain.Rows[gridMain.SelectedIndices[0]].Tag).PatNum;
 			FormOpenDental.S_Contr_PatientSelected(Patients.GetPat(patNum),false);
 			GotoModule.GotoAccount(0);
 		}

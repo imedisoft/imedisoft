@@ -683,30 +683,30 @@ namespace OpenDental{
 				ODProgress.ShowAction(() => RefreshTable(selectedIndex),
 					startingMessage:"Refreshing data...");
 			}
-			List<long> listSelectedProvNums=gridMain.SelectedIndices.OfType<int>().Select(x => ((Provider)gridMain.ListGridRows[x].Tag).Id).ToList();
+			List<long> listSelectedProvNums=gridMain.SelectedIndices.OfType<int>().Select(x => ((Provider)gridMain.Rows[x].Tag).Id).ToList();
 			int scroll=gridMain.ScrollValue;
 			int sortColIndx=gridMain.SortedByColumnIdx;
 			bool isSortAsc=gridMain.SortedIsAscending;
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			if(!Prefs.GetBool(PrefName.EasyHideDentalSchools)) {
-				gridMain.ListGridColumns.Add(new GridColumn("ProvNum",60,GridSortingStrategy.AmountParse));
+				gridMain.Columns.Add(new GridColumn("ProvNum",60,GridSortingStrategy.AmountParse));
 			}
-			gridMain.ListGridColumns.Add(new GridColumn("Abbrev",90));
-			gridMain.ListGridColumns.Add(new GridColumn("Last Name",90));
-			gridMain.ListGridColumns.Add(new GridColumn("First Name",90));
-			gridMain.ListGridColumns.Add(new GridColumn("User Name",90));
-			gridMain.ListGridColumns.Add(new GridColumn("Hidden",50,HorizontalAlignment.Center));
-			gridMain.ListGridColumns.Add(new GridColumn("HideOnReports",100,HorizontalAlignment.Center));
+			gridMain.Columns.Add(new GridColumn("Abbrev",90));
+			gridMain.Columns.Add(new GridColumn("Last Name",90));
+			gridMain.Columns.Add(new GridColumn("First Name",90));
+			gridMain.Columns.Add(new GridColumn("User Name",90));
+			gridMain.Columns.Add(new GridColumn("Hidden",50,HorizontalAlignment.Center));
+			gridMain.Columns.Add(new GridColumn("HideOnReports",100,HorizontalAlignment.Center));
 			if(!Prefs.GetBool(PrefName.EasyHideDentalSchools)) {
-				gridMain.ListGridColumns.Add(new GridColumn("Class",90));
-				gridMain.ListGridColumns.Add(new GridColumn("Instructor",60,HorizontalAlignment.Center));
+				gridMain.Columns.Add(new GridColumn("Class",90));
+				gridMain.Columns.Add(new GridColumn("Instructor",60,HorizontalAlignment.Center));
 			}
 			if(checkShowPatientCount.Checked) {
-				gridMain.ListGridColumns.Add(new GridColumn("PriPats",50,HorizontalAlignment.Center,GridSortingStrategy.AmountParse));
-				gridMain.ListGridColumns.Add(new GridColumn("SecPats",50,HorizontalAlignment.Center,GridSortingStrategy.AmountParse));
+				gridMain.Columns.Add(new GridColumn("PriPats",50,HorizontalAlignment.Center,GridSortingStrategy.AmountParse));
+				gridMain.Columns.Add(new GridColumn("SecPats",50,HorizontalAlignment.Center,GridSortingStrategy.AmountParse));
 			}
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			List<string> listSearchWords=textSearch.Text.ToLower().Trim().Split(" ",StringSplitOptions.RemoveEmptyEntries).ToList();
 			foreach(DataRow rowCur in _tableProvs.Rows) {
@@ -744,14 +744,14 @@ namespace OpenDental{
 				}
 				long provNumCur=PIn.Long(rowCur["ProvNum"].ToString());
 				row.Tag=_listProvs.Find(x => x.Id==provNumCur);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
-			if(sortColIndx>-1 && sortColIndx<gridMain.ListGridColumns.Count) {
+			if(sortColIndx>-1 && sortColIndx<gridMain.Columns.Count) {
 				gridMain.SortForced(sortColIndx,isSortAsc);
 			}
-			for(int i=0;i<gridMain.ListGridRows.Count;i++) {
-				long provNumCur=((Provider)gridMain.ListGridRows[i].Tag).Id;
+			for(int i=0;i<gridMain.Rows.Count;i++) {
+				long provNumCur=((Provider)gridMain.Rows[i].Tag).Id;
 				if(listSelectedProvNums.Contains(provNumCur)) {
 					gridMain.SetSelected(i,true);
 				}
@@ -820,10 +820,10 @@ namespace OpenDental{
 			}
 			else {//Not using Dental Schools feature.
 				if(gridMain.SelectedIndices.Length>0) {//place new provider after the first selected index. No changes are made to DB until after provider is actually inserted.
-					FormPE.ProvCur.ItemOrder=((Provider)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag).ItemOrder;//now two with this itemorder
+					FormPE.ProvCur.ItemOrder=((Provider)gridMain.Rows[gridMain.SelectedIndices[0]].Tag).ItemOrder;//now two with this itemorder
 				}
-				else if(gridMain.ListGridRows.Count>0) {
-					FormPE.ProvCur.ItemOrder=((Provider)gridMain.ListGridRows[gridMain.ListGridRows.Count-1].Tag).ItemOrder+1;
+				else if(gridMain.Rows.Count>0) {
+					FormPE.ProvCur.ItemOrder=((Provider)gridMain.Rows[gridMain.Rows.Count-1].Tag).ItemOrder+1;
 				}
 				else {
 					FormPE.ProvCur.ItemOrder=0;
@@ -859,8 +859,8 @@ namespace OpenDental{
 			_listProvs=Providers.GetDeepCopy();
 			FillGrid();
 			gridMain.ScrollToEnd();//should change this to scroll to the same place as before.
-			for(int i=0;i<gridMain.ListGridRows.Count;i++) {//Providers.ListShallow.Count;i++) {
-				if(((Provider)gridMain.ListGridRows[i].Tag).Id==provCur.Id) {
+			for(int i=0;i<gridMain.Rows.Count;i++) {//Providers.ListShallow.Count;i++) {
+				if(((Provider)gridMain.Rows[i].Tag).Id==provCur.Id) {
 					gridMain.SetSelected(i,true);
 					break;
 				}
@@ -887,8 +887,8 @@ namespace OpenDental{
 			//Note: sourceProv will always be the selected prov, but destProv isn't necessarily the provider that is +1 idx in the table.
 			//The grid is filtered, the table is not.
 			//The provider's position in the table needs to reflect their item orders.
-			Provider sourceProv=((Provider)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag);
-			Provider destProv=((Provider)gridMain.ListGridRows[gridMain.SelectedIndices[0]-1].Tag);
+			Provider sourceProv=((Provider)gridMain.Rows[gridMain.SelectedIndices[0]].Tag);
+			Provider destProv=((Provider)gridMain.Rows[gridMain.SelectedIndices[0]-1].Tag);
 			int sourceIdx=sourceProv.ItemOrder;
 			sourceProv.ItemOrder=destProv.ItemOrder;
 			Providers.Update(sourceProv);
@@ -906,14 +906,14 @@ namespace OpenDental{
 				MessageBox.Show("Please select exactly one provider first.");
 				return;
 			}
-			if(gridMain.SelectedIndices[0]==gridMain.ListGridRows.Count-1) {//already at bottom
+			if(gridMain.SelectedIndices[0]==gridMain.Rows.Count-1) {//already at bottom
 				return;
 			}
 			//Note: sourceProv will always be the selected prov, but destProv isn't necessarily the provider that is +1 idx in the table.
 			//The grid is filtered, the table is not.
 			//The provider's position in the table needs to reflect their item orders.
-			Provider sourceProv=((Provider)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag);
-			Provider destProv=((Provider)gridMain.ListGridRows[gridMain.SelectedIndices[0]+1].Tag);
+			Provider sourceProv=((Provider)gridMain.Rows[gridMain.SelectedIndices[0]].Tag);
+			Provider destProv=((Provider)gridMain.Rows[gridMain.SelectedIndices[0]+1].Tag);
 			int sourceIdx=sourceProv.ItemOrder;
 			sourceProv.ItemOrder=destProv.ItemOrder;
 			Providers.Update(sourceProv);
@@ -927,9 +927,9 @@ namespace OpenDental{
 
 		private void SwapGridMainLocations(int indxMoveFrom, int indxMoveTo) {
 			gridMain.BeginUpdate();
-			GridRow dataRow=gridMain.ListGridRows[indxMoveFrom];
-			gridMain.ListGridRows.RemoveAt(indxMoveFrom);
-			gridMain.ListGridRows.Insert(indxMoveTo,dataRow);
+			GridRow dataRow=gridMain.Rows[indxMoveFrom];
+			gridMain.Rows.RemoveAt(indxMoveFrom);
+			gridMain.Rows.Insert(indxMoveTo,dataRow);
 			gridMain.EndUpdate();		
 		}
 
@@ -938,7 +938,7 @@ namespace OpenDental{
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			Provider provSelected=(Provider)gridMain.ListGridRows[e.Row].Tag;
+			Provider provSelected=(Provider)gridMain.Rows[e.Row].Tag;
 			if(!Prefs.GetBool(PrefName.EasyHideDentalSchools) && Providers.IsAttachedToUser(provSelected.Id)) {//Dental schools is turned on and the provider selected is attached to a user.
 				//provSelected could be a provider or a student at this point.
 				if(!provSelected.IsInstructor && !Security.IsAuthorized(Permissions.AdminDentalStudents)) {
@@ -949,7 +949,7 @@ namespace OpenDental{
 				}
 				if(!radioStudents.Checked) {
 					FormProvEdit FormPE=new FormProvEdit();
-					FormPE.ProvCur=(Provider)gridMain.ListGridRows[e.Row].Tag;
+					FormPE.ProvCur=(Provider)gridMain.Rows[e.Row].Tag;
 					FormPE.ShowDialog();
 					if(FormPE.DialogResult!=DialogResult.OK) {
 						return;
@@ -957,7 +957,7 @@ namespace OpenDental{
 				}
 				else {
 					FormProvStudentEdit FormPSE=new FormProvStudentEdit();
-					FormPSE.ProvStudent=(Provider)gridMain.ListGridRows[e.Row].Tag;
+					FormPSE.ProvStudent=(Provider)gridMain.Rows[e.Row].Tag;
 					FormPSE.ShowDialog();
 					if(FormPSE.DialogResult!=DialogResult.OK) {
 						return;
@@ -966,7 +966,7 @@ namespace OpenDental{
 			}
 			else {//No Dental Schools or provider is not attached to a user
 				FormProvEdit FormPE=new FormProvEdit();
-				FormPE.ProvCur=(Provider)gridMain.ListGridRows[e.Row].Tag;
+				FormPE.ProvCur=(Provider)gridMain.Rows[e.Row].Tag;
 				FormPE.ShowDialog();
 				if(FormPE.DialogResult!=DialogResult.OK) {
 					return;
@@ -1005,7 +1005,7 @@ namespace OpenDental{
 				MessageBox.Show("You must select at least one provider to move patients from.");
 				return;
 			}
-			List<Provider> listProvsFrom=gridMain.SelectedIndices.OfType<int>().Select(x => (Provider)gridMain.ListGridRows[x].Tag).ToList();
+			List<Provider> listProvsFrom=gridMain.SelectedIndices.OfType<int>().Select(x => (Provider)gridMain.Rows[x].Tag).ToList();
 			if(_provNumMoveTo==-1){
 				MessageBox.Show("You must pick a 'To' provider in the box above to move patients to.");
 				return;
@@ -1066,7 +1066,7 @@ namespace OpenDental{
 				MessageBox.Show("You must select at least one provider to move patients from.");
 				return;
 			}
-			List<Provider> listProvsFrom=gridMain.SelectedIndices.OfType<int>().Select(x => (Provider)gridMain.ListGridRows[x].Tag).ToList();
+			List<Provider> listProvsFrom=gridMain.SelectedIndices.OfType<int>().Select(x => (Provider)gridMain.Rows[x].Tag).ToList();
 			if(_provNumMoveTo==-1) {
 				MessageBox.Show("You must pick a 'To' provider in the box above to move patients to.");
 				return;
@@ -1107,9 +1107,9 @@ namespace OpenDental{
 			}
 			Action actionCloseProgress=ODProgress.Show(EventCategory.Provider,startingMessage:"Gathering patient and provider details"+"...");
 			Cursor=Cursors.WaitCursor;
-			List<long> listProvNumsFrom=gridMain.SelectedIndices.OfType<int>().Select(x => ((Provider)gridMain.ListGridRows[x].Tag).Id).ToList();
+			List<long> listProvNumsFrom=gridMain.SelectedIndices.OfType<int>().Select(x => ((Provider)gridMain.Rows[x].Tag).Id).ToList();
 			DataTable tablePatNums=Patients.GetPatNumsByPriProvs(listProvNumsFrom);//list of all patients who are using the selected providers.
-			if(tablePatNums.Rows.Count==0 || gridMain.ListGridRows.Count==0 || listProvNumsFrom.Count==0) {
+			if(tablePatNums.Rows.Count==0 || gridMain.Rows.Count==0 || listProvNumsFrom.Count==0) {
 				actionCloseProgress?.Invoke();
 				Cursor=Cursors.Default;
 				MessageBox.Show("No patients to reassign.");
@@ -1166,7 +1166,7 @@ namespace OpenDental{
 				return;
 			}
 			for(int i=0;i<gridMain.SelectedIndices.Length;i++){
-				if(Providers.IsAttachedToUser(((Provider)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag).Id)) {
+				if(Providers.IsAttachedToUser(((Provider)gridMain.Rows[gridMain.SelectedIndices[0]].Tag).Id)) {
 					MessageBox.Show("Not allowed to create users on providers which already have users.");
 					return;
 				}
@@ -1176,7 +1176,7 @@ namespace OpenDental{
 				return;
 			}
 			for(int i=0;i<gridMain.SelectedIndices.Length;i++){
-				Provider prov=(Provider)gridMain.ListGridRows[gridMain.SelectedIndices[i]].Tag;
+				Provider prov=(Provider)gridMain.Rows[gridMain.SelectedIndices[i]].Tag;
 				Userod user=new Userod();
 				user.ProviderId=prov.Id;
 				user.UserName=GetUniqueUserName(prov.LastName,prov.FirstName);

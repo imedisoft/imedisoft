@@ -19,21 +19,21 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Entry Date",70);
 			col.TextAlign=HorizontalAlignment.Center;
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Status",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Source",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Description",170);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Scanned",25);
 			col.TextAlign=HorizontalAlignment.Center;
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			ListAmendments=EhrAmendments.Refresh(PatCur.PatNum);
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<ListAmendments.Count;i++) {
 				row=new GridRow();
@@ -55,7 +55,7 @@ namespace OpenDental {
 				else {
 					row.Cells.Add("");
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

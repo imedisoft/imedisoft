@@ -229,7 +229,7 @@ namespace OpenDental {
 			if(!Security.IsAuthorized(Permissions.Setup)) {
 				return;
 			}
-			int count=gridChartViews.ListGridRows.Count;
+			int count=gridChartViews.Rows.Count;
 			int selectedIndex=gridChartViews.GetSelectedIndex();
 			FormChartView formChartView=new FormChartView();
 			formChartView.ChartViewCur=new ChartView();
@@ -282,7 +282,7 @@ namespace OpenDental {
 			formChartView.ChartViewCur.IsAudit=checkAudit.Checked;
 			formChartView.ShowDialog();
 			FillChartViewsGrid();
-			int count2=gridChartViews.ListGridRows.Count;
+			int count2=gridChartViews.Rows.Count;
 			if(count2==0) { 
 				return; 
 			}
@@ -432,7 +432,7 @@ namespace OpenDental {
 			}
 			_dateTimeShowDateStart=formCVDF.DateStart;
 			_dateTimeShowDateEnd=formCVDF.DateEnd;
-			if(gridChartViews.ListGridRows.Count>0) {//enable custom view label
+			if(gridChartViews.Rows.Count>0) {//enable custom view label
 				labelCustView.Visible=true;
 			}
 			chartCustViewChanged=true; 
@@ -453,20 +453,20 @@ namespace OpenDental {
 			if(!Security.IsAuthorized(Permissions.Setup)) {
 				return;
 			}
-			int count=gridChartViews.ListGridRows.Count;
+			int count=gridChartViews.Rows.Count;
 			FormChartView formChartView=new FormChartView();
 			formChartView.ChartViewCur=_listChartViews[e.Row];
 			formChartView.ShowDialog();
 			FillChartViewsGrid();
-			if(gridChartViews.ListGridRows.Count==0) {
+			if(gridChartViews.Rows.Count==0) {
 				FillProgNotes();
 				return;//deleted last view, so display default
 			}
-			if(gridChartViews.ListGridRows.Count==count) {
+			if(gridChartViews.Rows.Count==count) {
 				gridChartViews.SetSelected(formChartView.ChartViewCur.ItemOrder,true);
 				SetChartView(_listChartViews[formChartView.ChartViewCur.ItemOrder]);
 			}
-			else if(gridChartViews.ListGridRows.Count>0) {
+			else if(gridChartViews.Rows.Count>0) {
 				for(int i=0;i<_listChartViews.Count;i++) {
 					_listChartViews[i].ItemOrder=i;
 					ChartViews.Update(_listChartViews[i]);
@@ -496,7 +496,7 @@ namespace OpenDental {
 		}
 
 		private void checkTPChart_Click(object sender,EventArgs e) {
-			if(gridChartViews.ListGridRows.Count>0) {
+			if(gridChartViews.Rows.Count>0) {
 				labelCustView.Visible=true;
 			}
 			if(_chartViewCurDisplay!=null) {
@@ -576,7 +576,7 @@ namespace OpenDental {
 		private void gridProg_CellClick(object sender,ODGridClickEventArgs e) {
 			DataTable tableProgNotes=LoadData.TableProgNotes;
 			//DataRow rowClicked=progNotes.Rows[e.Row];
-			DataRow rowClicked=(DataRow)gridProg.ListGridRows[e.Row].Tag;
+			DataRow rowClicked=(DataRow)gridProg.Rows[e.Row].Tag;
 			long procNum=PIn.Long(rowClicked["ProcNum"].ToString());
 			if(procNum==0) {//if not a procedure
 				return;
@@ -587,8 +587,8 @@ namespace OpenDental {
 			}
 			List<ProcGroupItem> listGroupItems=ProcGroupItems.GetForGroup(procNum);
 			//for(int i=0;i<progNotes.Rows.Count;i++){
-			for(int i=0;i<gridProg.ListGridRows.Count;i++) {
-				DataRow row=(DataRow)gridProg.ListGridRows[i].Tag;
+			for(int i=0;i<gridProg.Rows.Count;i++) {
+				DataRow row=(DataRow)gridProg.Rows[i].Tag;
 				if(row["ProcNum"].ToString()=="0") {
 					continue;
 				}
@@ -622,21 +622,21 @@ namespace OpenDental {
 				MessageBox.Show("Patient is currently entering info at a reception terminal.  Please try again later.");
 				return;
 			}
-			if(gridPtInfo.ListGridRows[e.Row].Tag!=null && gridPtInfo.ListGridRows[e.Row].Tag.ToString()!="DOB") {
-				if(new[] { "tabMedical","tabProblems","tabMedications","tabAllergies","tabTobaccoUse" }.Contains(gridPtInfo.ListGridRows[e.Row].Tag.ToString())) {
-					FormMedical formMedical=new FormMedical(_patientNoteCur,_patCur,gridPtInfo.ListGridRows[e.Row].Tag.ToString());
+			if(gridPtInfo.Rows[e.Row].Tag!=null && gridPtInfo.Rows[e.Row].Tag.ToString()!="DOB") {
+				if(new[] { "tabMedical","tabProblems","tabMedications","tabAllergies","tabTobaccoUse" }.Contains(gridPtInfo.Rows[e.Row].Tag.ToString())) {
+					FormMedical formMedical=new FormMedical(_patientNoteCur,_patCur,gridPtInfo.Rows[e.Row].Tag.ToString());
 					formMedical.ShowDialog();
 					ModuleSelected(_patCur.PatNum);
 					return;
 				}
-				if(gridPtInfo.ListGridRows[e.Row].Tag.ToString()=="EhrProvKeys") {
+				if(gridPtInfo.Rows[e.Row].Tag.ToString()=="EhrProvKeys") {
 					FormEhrProvKeysCustomer formEhrPKC=new FormEhrProvKeysCustomer();
 					formEhrPKC.Guarantor=_patCur.Guarantor;
 					formEhrPKC.ShowDialog();
 					ModuleSelected(_patCur.PatNum);
 					return;
 				}
-				if(gridPtInfo.ListGridRows[e.Row].Tag.ToString()=="Referral") {
+				if(gridPtInfo.Rows[e.Row].Tag.ToString()=="Referral") {
 					//RefAttach refattach=(RefAttach)gridPat.Rows[e.Row].Tag;
 					FormReferralsPatient formRP=new FormReferralsPatient();
 					formRP.PatNum=_patCur.PatNum;
@@ -644,7 +644,7 @@ namespace OpenDental {
 					ModuleSelected(_patCur.PatNum);
 					return;
 				}
-				if(gridPtInfo.ListGridRows[e.Row].Tag.ToString()=="References") {
+				if(gridPtInfo.Rows[e.Row].Tag.ToString()=="References") {
 					FormReference formReference=new FormReference();
 					formReference.ShowDialog();
 					if(formReference.GotoPatNum!=0) {
@@ -666,7 +666,7 @@ namespace OpenDental {
 					FillPtInfo();
 					return;
 				}
-				if(gridPtInfo.ListGridRows[e.Row].Tag.ToString()=="Patient Portal") {
+				if(gridPtInfo.Rows[e.Row].Tag.ToString()=="Patient Portal") {
 					FormPatientPortal formPP=new FormPatientPortal(_patCur);
 					formPP.ShowDialog();
 					if(formPP.DialogResult==DialogResult.OK) {
@@ -674,7 +674,7 @@ namespace OpenDental {
 					}
 					return;
 				}
-				if(gridPtInfo.ListGridRows[e.Row].Tag.ToString()=="Payor Types") {
+				if(gridPtInfo.Rows[e.Row].Tag.ToString()=="Payor Types") {
 					FormPayorTypes formPayorTypes=new FormPayorTypes();
 					formPayorTypes.PatCur=_patCur;
 					formPayorTypes.ShowDialog();
@@ -683,22 +683,22 @@ namespace OpenDental {
 					}
 					return;
 				}
-				if(gridPtInfo.ListGridRows[e.Row].Tag.ToString()=="Broken Appts") {					
+				if(gridPtInfo.Rows[e.Row].Tag.ToString()=="Broken Appts") {					
 					return;//This row is just for display; it can't be edited.
 				}
-				if(gridPtInfo.ListGridRows[e.Row].Tag.GetType()==typeof(CustRefEntry)) {
-					FormReferenceEntryEdit formREE=new FormReferenceEntryEdit((CustRefEntry)gridPtInfo.ListGridRows[e.Row].Tag);
+				if(gridPtInfo.Rows[e.Row].Tag.GetType()==typeof(CustRefEntry)) {
+					FormReferenceEntryEdit formREE=new FormReferenceEntryEdit((CustRefEntry)gridPtInfo.Rows[e.Row].Tag);
 					formREE.ShowDialog();
 					FillPtInfo();
 					return;
 				}
-				else if(gridPtInfo.ListGridRows[e.Row].Tag is PatFieldDef) {//patfield for an existing PatFieldDef
-					PatFieldDef patFieldDef=(PatFieldDef)gridPtInfo.ListGridRows[e.Row].Tag;
+				else if(gridPtInfo.Rows[e.Row].Tag is PatFieldDef) {//patfield for an existing PatFieldDef
+					PatFieldDef patFieldDef=(PatFieldDef)gridPtInfo.Rows[e.Row].Tag;
 					PatField patField=PatFields.GetByName(patFieldDef.FieldName,_arrayPatFields);
 					PatFieldL.OpenPatField(patField,patFieldDef,_patCur.PatNum);
 				}
-				else if(gridPtInfo.ListGridRows[e.Row].Tag is PatField) {//PatField for a PatFieldDef that no longer exists
-					PatField patField=(PatField)gridPtInfo.ListGridRows[e.Row].Tag;
+				else if(gridPtInfo.Rows[e.Row].Tag is PatField) {//PatField for a PatFieldDef that no longer exists
+					PatField patField=(PatField)gridPtInfo.Rows[e.Row].Tag;
 					FormPatFieldEdit formPatFieldEdit=new FormPatFieldEdit(patField);
 					formPatFieldEdit.ShowDialog();
 				}
@@ -719,10 +719,10 @@ namespace OpenDental {
 		}
 
 		private void gridTpProcs_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			if(gridTpProcs.ListGridRows[e.Row].Tag==null) {
+			if(gridTpProcs.Rows[e.Row].Tag==null) {
 				return;//clicked on header row
 			}
-			ProcTP procTpCur=(ProcTP)gridTpProcs.ListGridRows[e.Row].Tag;
+			ProcTP procTpCur=(ProcTP)gridTpProcs.Rows[e.Row].Tag;
 			Procedure procCur=Procedures.GetOneProc(procTpCur.ProcNumOrig,true);
 			List<ClaimProc> listClaimProc=ClaimProcs.RefreshForTP(_patCur.PatNum);
 			//generate a new loop list containing only the procs before this one in it
@@ -743,11 +743,11 @@ namespace OpenDental {
 			gridTreatPlans.SetSelected(false);
 			listSelectedTpNums.ForEach(x => gridTreatPlans.SetSelected(_listTreatPlans.IndexOf(_listTreatPlans.FirstOrDefault(y => y.TreatPlanNum==x)),true));
 			FillTpProcs();
-			for(int i=0;i<gridTpProcs.ListGridRows.Count;i++) {
-				if(gridTpProcs.ListGridRows[i].Tag==null) {
+			for(int i=0;i<gridTpProcs.Rows.Count;i++) {
+				if(gridTpProcs.Rows[i].Tag==null) {
 					continue;
 				}
-				ProcTP procTp=(ProcTP)gridTpProcs.ListGridRows[i].Tag;
+				ProcTP procTp=(ProcTP)gridTpProcs.Rows[i].Tag;
 				gridTpProcs.SetSelected(i,(procTp.ProcNumOrig==procTpCur.ProcNumOrig && procTp.TreatPlanNum==procTpCur.TreatPlanNum));
 			}
 		}
@@ -874,14 +874,14 @@ namespace OpenDental {
 			listSelectedTpNums.AddRange(gridTreatPlans.SelectedIndices.Select(x => _listTreatPlans[x].TreatPlanNum));
 			//Priority of Procedures is dependent on which TP it is attached to. Track selected procedures by TPNum and ProcNum
 			List<Tuple<long,long>> listSelectedTpNumProcNums=new List<Tuple<long,long>>();
-			listSelectedTpNumProcNums.AddRange(gridTpProcs.SelectedIndices.Where(x => gridTpProcs.ListGridRows[x].Tag!=null).Select(x => (ProcTP)gridTpProcs.ListGridRows[x].Tag)
+			listSelectedTpNumProcNums.AddRange(gridTpProcs.SelectedIndices.Where(x => gridTpProcs.Rows[x].Tag!=null).Select(x => (ProcTP)gridTpProcs.Rows[x].Tag)
 				.Select(x => new Tuple<long,long>(x.TreatPlanNum,x.ProcNumOrig)));
-			List<TreatPlanAttach> listAllTpAttaches=gridTreatPlans.SelectedIndices.ToList().SelectMany(x => (List<TreatPlanAttach>)gridTreatPlans.ListGridRows[x].Tag).ToList();
+			List<TreatPlanAttach> listAllTpAttaches=gridTreatPlans.SelectedIndices.ToList().SelectMany(x => (List<TreatPlanAttach>)gridTreatPlans.Rows[x].Tag).ToList();
 			foreach(int selectedIdx in gridTpProcs.SelectedIndices) {
-				if(gridTpProcs.ListGridRows[selectedIdx].Tag==null) {
+				if(gridTpProcs.Rows[selectedIdx].Tag==null) {
 					continue;//must be a header row.
 				}
-				ProcTP procTpCur=(ProcTP)gridTpProcs.ListGridRows[selectedIdx].Tag;
+				ProcTP procTpCur=(ProcTP)gridTpProcs.Rows[selectedIdx].Tag;
 				TreatPlanAttach treatPlanAttach=listAllTpAttaches.FirstOrDefault(x => x.ProcNum==procTpCur.ProcNumOrig && x.TreatPlanNum==procTpCur.TreatPlanNum);
 				if(treatPlanAttach==null) {
 					continue;//should never happen.
@@ -898,17 +898,17 @@ namespace OpenDental {
 			listSelectedTpNums.ForEach(x => gridTreatPlans.SetSelected(_listTreatPlans.IndexOf(_listTreatPlans.FirstOrDefault(y => y.TreatPlanNum==x)),true));
 			FillTpProcs();
 			//Reselect TPs and Procs.
-			for(int i=0;i<gridTpProcs.ListGridRows.Count;i++) {
-				if(gridTpProcs.ListGridRows[i].Tag==null) {
+			for(int i=0;i<gridTpProcs.Rows.Count;i++) {
+				if(gridTpProcs.Rows[i].Tag==null) {
 					continue;
 				}
-				ProcTP procTpCur=(ProcTP)gridTpProcs.ListGridRows[i].Tag;
+				ProcTP procTpCur=(ProcTP)gridTpProcs.Rows[i].Tag;
 				gridTpProcs.SetSelected(i,listSelectedTpNumProcNums.Contains(new Tuple<long,long>(procTpCur.TreatPlanNum,procTpCur.ProcNumOrig)));
 			}
 		}
 
 		private void listProcStatusCodes_MouseUp(object sender,MouseEventArgs e) {
-			if(gridChartViews.ListGridRows.Count>0) {
+			if(gridChartViews.Rows.Count>0) {
 				labelCustView.Visible=true;
 			}
 			chartCustViewChanged=true;
@@ -1060,7 +1060,7 @@ namespace OpenDental {
 			DataRow row;
 			List<Procedure> listProcs=new List<Procedure>();
 			for(int i=0;i<gridProg.SelectedIndices.Length;i++) {
-				row=(DataRow)gridProg.ListGridRows[gridProg.SelectedIndices[i]].Tag;
+				row=(DataRow)gridProg.Rows[gridProg.SelectedIndices[i]].Tag;
 				if(!CanEditRow(row,doCheckDb:true,isSilent:false,listProcs)) {
 					return;
 				}
@@ -1090,7 +1090,7 @@ namespace OpenDental {
 			}
 			List<Procedure> listProcs=new List<Procedure>();
 			foreach(int i in gridProg.SelectedIndices) {
-				DataRow row=(DataRow)gridProg.ListGridRows[i].Tag;
+				DataRow row=(DataRow)gridProg.Rows[i].Tag;
 				if(!CanGroupMultiVisit(row,doCheckDb:true,isSilent:false)) {
 					return;
 				}
@@ -1205,7 +1205,7 @@ namespace OpenDental {
 				MessageBox.Show("Please select exactly one lab procedure first.");
 				return;
 			}
-			DataRow row=(DataRow)gridProg.ListGridRows[gridProg.SelectedIndices[0]].Tag;
+			DataRow row=(DataRow)gridProg.Rows[gridProg.SelectedIndices[0]].Tag;
 			if(!CanDetachLabFee(row,isSilent:false)) {
 				return;
 			}
@@ -1229,12 +1229,12 @@ namespace OpenDental {
 			}
 			int idxRowClick=gridPtInfo.PointToRow(_pointLastClicked.Y);
 			int idxColClick=gridPtInfo.PointToCol(_pointLastClicked.X);//Make sure the user clicked within the bounds of the grid.
-			if(idxRowClick>-1 && idxColClick>-1 && (gridPtInfo.ListGridRows[idxRowClick].Tag!=null)
-				&& gridPtInfo.ListGridRows[idxRowClick].Tag is string
-				&& ((string)gridPtInfo.ListGridRows[idxRowClick].Tag=="DOB")) 
+			if(idxRowClick>-1 && idxColClick>-1 && (gridPtInfo.Rows[idxRowClick].Tag!=null)
+				&& gridPtInfo.Rows[idxRowClick].Tag is string
+				&& ((string)gridPtInfo.Rows[idxRowClick].Tag=="DOB")) 
 			{
 				if(Security.IsAuthorized(Permissions.PatientDOBView,true) 
-					&& gridPtInfo.ListGridRows[idxRowClick].Cells[gridPtInfo.ListGridRows[idxRowClick].Cells.Count-1].Text!="") 
+					&& gridPtInfo.Rows[idxRowClick].Cells[gridPtInfo.Rows[idxRowClick].Cells.Count-1].Text!="") 
 				{
 					menuItemDOB.Visible=true;
 					menuItemDOB.Enabled=true;
@@ -1267,7 +1267,7 @@ namespace OpenDental {
 				MessageBox.Show("Please select at least one item first.");
 				return;
 			}
-			DataRow row=(DataRow)gridProg.ListGridRows[gridProg.SelectedIndices[0]].Tag;
+			DataRow row=(DataRow)gridProg.Rows[gridProg.SelectedIndices[0]].Tag;
 			//hospitalDate=PIn.Date(row["ProcDate"].ToString());
 			//Store the state of all checkboxes in temporary variables
 			bool showRx=this.checkRx.Checked;
@@ -1309,7 +1309,7 @@ namespace OpenDental {
 			chartCustViewChanged=true;//custom view will not reset the check boxes so we force it true.
 			//Fill progress notes with only desired rows to be printed, then print.
 			FillProgNotes();
-			if(gridProg.ListGridRows.Count==0) {
+			if(gridProg.Rows.Count==0) {
 				MessageBox.Show("No completed procedures or notes to print");
 			}
 			else {
@@ -1363,7 +1363,7 @@ namespace OpenDental {
 			if(!CanPrintRoutingSlip(isSilent: false)) {
 				return;
 			}
-			Appointment apt=Appointments.GetOneApt(PIn.Long(((DataRow)gridProg.ListGridRows[gridProg.SelectedIndices[0]].Tag)["AptNum"].ToString()));
+			Appointment apt=Appointments.GetOneApt(PIn.Long(((DataRow)gridProg.Rows[gridProg.SelectedIndices[0]].Tag)["AptNum"].ToString()));
 			//for now, this only allows one type of routing slip.  But it could be easily changed.
 			FormRpRouting formRpRouting=new FormRpRouting();
 			formRpRouting.AptNum=apt.AptNum;
@@ -1389,8 +1389,8 @@ namespace OpenDental {
 			}
 			//get list of DataRows from the selected row's tags in gridProg, in case the grid is refilled and our selections are cleared
 			//(happens if right-clicking and marking a task done and with the prompt message box up another task is edited before pressing the OK button)
-			List<DataRow> listSelectedRows=gridProg.SelectedIndices.Where(x => x>-1 && x<gridProg.ListGridRows.Count)
-				.Select(x => (DataRow)gridProg.ListGridRows[x].Tag).ToList();
+			List<DataRow> listSelectedRows=gridProg.SelectedIndices.Where(x => x>-1 && x<gridProg.Rows.Count)
+				.Select(x => (DataRow)gridProg.Rows[x].Tag).ToList();
 			long patNum=_patCur.PatNum;//local patNum variable to make sure the patient hasn't changed since the above list was created
 			#region One Appointment
 			if(CanCompleteAppointment(doCheckDb:true,isSilent:!CanDisplayAppointment())) {
@@ -1471,7 +1471,7 @@ namespace OpenDental {
 			}
 			List <long> listProcNums=new List<long>();
 			foreach(int i in gridProg.SelectedIndices) {
-				DataRow row=(DataRow)gridProg.ListGridRows[i].Tag;
+				DataRow row=(DataRow)gridProg.Rows[i].Tag;
 				if(!CanUngroupMultiVisit(row,doCheckDb: true,isSilent: false)) {
 					return;
 				}
@@ -1501,7 +1501,7 @@ namespace OpenDental {
 			//Guaranteed to be clicking on a valid row & column.
 			int rowClick = gridPtInfo.PointToRow(_pointLastClicked.Y);
 			gridPtInfo.BeginUpdate();
-			GridRow row=gridPtInfo.ListGridRows[rowClick];
+			GridRow row=gridPtInfo.Rows[rowClick];
 			row.Cells[row.Cells.Count-1].Text=Patients.DOBFormatHelper(_patCur.Birthdate,false);
 			gridPtInfo.EndUpdate();
 			string logText="Date of birth unmasked in Chart Module";
@@ -1735,8 +1735,8 @@ namespace OpenDental {
 					DataRow row;
 					long procNum;
 					long clinicNum;
-					for(int i=0;i<gridProg.ListGridRows.Count;i++) {
-						row=(DataRow)gridProg.ListGridRows[i].Tag;
+					for(int i=0;i<gridProg.Rows.Count;i++) {
+						row=(DataRow)gridProg.Rows[i].Tag;
 						procNum=PIn.Long(row["ProcNum"].ToString());
 						if(procNum==0) {
 							continue;
@@ -2102,7 +2102,7 @@ namespace OpenDental {
 
 		private void gridProg_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			_chartScrollVal=gridProg.ScrollValue;
-			DataRow row=(DataRow)gridProg.ListGridRows[e.Row].Tag;
+			DataRow row=(DataRow)gridProg.Rows[e.Row].Tag;
 			switch(ChartModules.GetRowType(row,out long rowPk)){
 				case ProgNotesRowType.Proc:
 					if(checkAudit.Checked){
@@ -2721,7 +2721,7 @@ namespace OpenDental {
 				return;
 			}
 			List<long> listProcNums=null;
-			if(checkTreatPlans.Checked && gridTpProcs.SelectedGridRows.Count>0) {//Showing TPs and user has proc selections.
+			if(checkTreatPlans.Checked && gridTpProcs.SelectedRows.Count>0) {//Showing TPs and user has proc selections.
 				if( _listTreatPlans[gridTreatPlans.GetSelectedIndex()].TPStatus!=TreatPlanStatus.Active) {//Only allow pre selecting procs on active TP.
 					string msgText="Planned appointments can only be created using an Active treatment plan when selecting Procedures."+"\r\n"
 						+"Continue without selections?";
@@ -2730,7 +2730,7 @@ namespace OpenDental {
 					}
 				}
 				else {
-					listProcNums=gridTpProcs.SelectedGridRows
+					listProcNums=gridTpProcs.SelectedRows
 						.FindAll(x => x.Tag!=null && x.Tag.GetType()==typeof(ProcTP))//ProcTP's only
 						.Select(x => ((ProcTP)(x.Tag)).ProcNumOrig).ToList();//get ProcNums
 				}
@@ -2841,7 +2841,7 @@ namespace OpenDental {
 		}
 
 		private void gridPlanned_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			long aptNum=(long)gridPlanned.ListGridRows[e.Row].Tag;
+			long aptNum=(long)gridPlanned.Rows[e.Row].Tag;
 			FormApptEdit formApptEdit=new FormApptEdit(aptNum);
 			formApptEdit.ShowDialog();
 			if(Programs.UsingOrion) {
@@ -2853,8 +2853,8 @@ namespace OpenDental {
 				ModuleSelected(_patCur.PatNum);//if procs were added in appt, then this will display them*/
 			}
 			gridPlanned.SetSelected(false);
-			for(int i=0;i<gridPlanned.ListGridRows.Count;i++) {
-				if((long)gridPlanned.ListGridRows[i].Tag==aptNum) {
+			for(int i=0;i<gridPlanned.Rows.Count;i++) {
+				if((long)gridPlanned.Rows[i].Tag==aptNum) {
 					gridPlanned.SetSelected(i,true);
 				}
 			}
@@ -2867,7 +2867,7 @@ namespace OpenDental {
 		}
 
 		private void butShowAll_Click(object sender,System.EventArgs e) {
-			if(gridChartViews.ListGridRows.Count>0) {
+			if(gridChartViews.Rows.Count>0) {
 				labelCustView.Visible=true;
 			}
 			chartCustViewChanged=true;
@@ -2890,7 +2890,7 @@ namespace OpenDental {
 		}
 
 		private void butShowNone_Click(object sender,System.EventArgs e) {
-			if(gridChartViews.ListGridRows.Count>0) {
+			if(gridChartViews.Rows.Count>0) {
 				labelCustView.Visible=true;
 			}
 			chartCustViewChanged=true;
@@ -2913,7 +2913,7 @@ namespace OpenDental {
 		}
 
 		private void checkAppt_Click(object sender,EventArgs e) {
-			if(gridChartViews.ListGridRows.Count>0) {
+			if(gridChartViews.Rows.Count>0) {
 				labelCustView.Visible=true;
 			}
 			chartCustViewChanged=true;
@@ -2921,7 +2921,7 @@ namespace OpenDental {
 		}
 
 		private void checkAudit_Click(object sender,EventArgs e) {
-			if(gridChartViews.ListGridRows.Count>0) {
+			if(gridChartViews.Rows.Count>0) {
 				labelCustView.Visible=true;
 			}
 			chartCustViewChanged=true;
@@ -2929,7 +2929,7 @@ namespace OpenDental {
 		}
 
 		private void checkComm_Click(object sender,EventArgs e) {
-			if(gridChartViews.ListGridRows.Count>0) {
+			if(gridChartViews.Rows.Count>0) {
 				labelCustView.Visible=true;
 			}
 			chartCustViewChanged=true;
@@ -2937,7 +2937,7 @@ namespace OpenDental {
 		}
 
 		private void checkCommFamily_Click(object sender,EventArgs e) {
-			if(gridChartViews.ListGridRows.Count>0) {
+			if(gridChartViews.Rows.Count>0) {
 				labelCustView.Visible=true;
 			}
 			chartCustViewChanged=true;
@@ -2945,7 +2945,7 @@ namespace OpenDental {
 		}
 
 		private void checkEmail_Click(object sender,EventArgs e) {
-			if(gridChartViews.ListGridRows.Count>0) {
+			if(gridChartViews.Rows.Count>0) {
 				labelCustView.Visible=true;
 			}
 			chartCustViewChanged=true;
@@ -2953,7 +2953,7 @@ namespace OpenDental {
 		}
 
 		private void checkLabCase_Click(object sender,EventArgs e) {
-			if(gridChartViews.ListGridRows.Count>0) {
+			if(gridChartViews.Rows.Count>0) {
 				labelCustView.Visible=true;
 			}
 			chartCustViewChanged=true;
@@ -2961,7 +2961,7 @@ namespace OpenDental {
 		}
 
 		private void checkNotes_Click(object sender,EventArgs e) {
-			if(gridChartViews.ListGridRows.Count>0) {
+			if(gridChartViews.Rows.Count>0) {
 				labelCustView.Visible=true;
 			}
 			chartCustViewChanged=true;
@@ -2969,7 +2969,7 @@ namespace OpenDental {
 		}
 
 		private void checkRx_Click(object sender,EventArgs e) {
-			if(gridChartViews.ListGridRows.Count>0) {
+			if(gridChartViews.Rows.Count>0) {
 				labelCustView.Visible=true;
 			}
 			chartCustViewChanged=true;
@@ -2977,7 +2977,7 @@ namespace OpenDental {
 		}
 
 		private void checkSheets_Click(object sender,EventArgs e) {
-			if(gridChartViews.ListGridRows.Count>0) {
+			if(gridChartViews.Rows.Count>0) {
 				labelCustView.Visible=true;
 			}
 			chartCustViewChanged=true;
@@ -2985,7 +2985,7 @@ namespace OpenDental {
 		}
 
 		private void checkShowC_Click(object sender,EventArgs e) {
-			if(gridChartViews.ListGridRows.Count>0) {
+			if(gridChartViews.Rows.Count>0) {
 				labelCustView.Visible=true;
 			}
 			chartCustViewChanged=true;
@@ -2993,7 +2993,7 @@ namespace OpenDental {
 		}
 
 		private void checkShowCn_Click(object sender,EventArgs e) {
-			if(gridChartViews.ListGridRows.Count>0) {
+			if(gridChartViews.Rows.Count>0) {
 				labelCustView.Visible=true;
 			}
 			chartCustViewChanged=true;
@@ -3001,7 +3001,7 @@ namespace OpenDental {
 		}
 
 		private void checkShowE_Click(object sender,EventArgs e) {
-			if(gridChartViews.ListGridRows.Count>0) {
+			if(gridChartViews.Rows.Count>0) {
 				labelCustView.Visible=true;
 			}
 			chartCustViewChanged=true;
@@ -3009,7 +3009,7 @@ namespace OpenDental {
 		}
 
 		private void checkShowR_Click(object sender,EventArgs e) {
-			if(gridChartViews.ListGridRows.Count>0) {
+			if(gridChartViews.Rows.Count>0) {
 				labelCustView.Visible=true;
 			}
 			chartCustViewChanged=true;
@@ -3017,7 +3017,7 @@ namespace OpenDental {
 		}
 
 		private void checkShowTP_Click(object sender,EventArgs e) {
-			if(gridChartViews.ListGridRows.Count>0) {
+			if(gridChartViews.Rows.Count>0) {
 				labelCustView.Visible=true;
 			}
 			chartCustViewChanged=true;
@@ -3025,7 +3025,7 @@ namespace OpenDental {
 		}
 
 		private void checkShowTeeth_Click(object sender,EventArgs e) {
-			if(gridChartViews.ListGridRows.Count>0) {
+			if(gridChartViews.Rows.Count>0) {
 				labelCustView.Visible=true;
 			}
 			chartCustViewChanged=true;
@@ -3065,7 +3065,7 @@ namespace OpenDental {
 		}
 
 		private void checkTasks_Click(object sender,EventArgs e) {
-			if(gridChartViews.ListGridRows.Count>0) {
+			if(gridChartViews.Rows.Count>0) {
 				labelCustView.Visible=true;
 			}
 			chartCustViewChanged=true;
@@ -3349,11 +3349,11 @@ namespace OpenDental {
 			//Make a reference to all of the tags (custom DataRow) that are currently selected within gridProg for reselecting.
 			List<DataRow> listSelectedDataRows=gridProg.SelectedTags<DataRow>();
 			gridProg.BeginUpdate();
-			gridProg.ListGridColumns.Clear();
+			gridProg.Columns.Clear();
 			GridColumn col;
 			List<DisplayField> listDisplayFields;
 			//DisplayFields.RefreshCache();
-			if(gridChartViews.ListGridRows.Count==0) {//No chart views, Use default values.
+			if(gridChartViews.Rows.Count==0) {//No chart views, Use default values.
 				listDisplayFields=DisplayFields.GetDefaultList(DisplayFieldCategory.None);
 				gridProg.Title="Progress Notes";
 				if(!chartCustViewChanged) {
@@ -3457,22 +3457,22 @@ namespace OpenDental {
 				{
 					col.TextAlign=HorizontalAlignment.Center;
 				}
-				gridProg.ListGridColumns.Add(col);
+				gridProg.Columns.Add(col);
 			}
-			if(gridProg.ListGridColumns.Count<3) {//0 wouldn't be possible.
+			if(gridProg.Columns.Count<3) {//0 wouldn't be possible.
 				gridProg.NoteSpanStart=0;
-				gridProg.NoteSpanStop=gridProg.ListGridColumns.Count-1;
+				gridProg.NoteSpanStop=gridProg.Columns.Count-1;
 			}
 			else {
 				gridProg.NoteSpanStart=2;
-				if(gridProg.ListGridColumns.Count>7) {
+				if(gridProg.Columns.Count>7) {
 					gridProg.NoteSpanStop=7;
 				}
 				else {
-					gridProg.NoteSpanStop=gridProg.ListGridColumns.Count-1;
+					gridProg.NoteSpanStop=gridProg.Columns.Count-1;
 				}
 			}
-			gridProg.ListGridRows.Clear();//Needed even when paging handles rows for us due to the change in columns and EndUpdate() logic.
+			gridProg.Rows.Clear();//Needed even when paging handles rows for us due to the change in columns and EndUpdate() logic.
 			gridProg.EndUpdate();
 			//Type type;
 			if(LoadData==null) {
@@ -3561,7 +3561,7 @@ namespace OpenDental {
 					.Select(x => _listTreatPlans[x].TreatPlanNum).ToList();
 			}
 			FillTreatPlans();
-			for(int i=0;i<gridTreatPlans.ListGridRows.Count && listTreatPlanNums.Count>0;i++) {
+			for(int i=0;i<gridTreatPlans.Rows.Count && listTreatPlanNums.Count>0;i++) {
 				gridTreatPlans.SetSelected(i,listTreatPlanNums.Contains(_listTreatPlans[i].TreatPlanNum));
 			}
 			if(gridTreatPlans.GetSelectedIndex()>-1) {
@@ -3583,8 +3583,8 @@ namespace OpenDental {
 			textTreatmentNotes.Text="";
 			if(_patCur==null) {
 				gridPtInfo.BeginUpdate();
-				gridPtInfo.ListGridRows.Clear();
-				gridPtInfo.ListGridColumns.Clear();
+				gridPtInfo.Rows.Clear();
+				gridPtInfo.Columns.Clear();
 				gridPtInfo.EndUpdate();
 				TreatmentNoteChanged=false;
 				return;
@@ -3597,12 +3597,12 @@ namespace OpenDental {
 				TreatmentNoteChanged=false;
 			}
 			gridPtInfo.BeginUpdate();
-			gridPtInfo.ListGridColumns.Clear();
+			gridPtInfo.Columns.Clear();
 			GridColumn col=new GridColumn("",100);//"",);
-			gridPtInfo.ListGridColumns.Add(col);
+			gridPtInfo.Columns.Add(col);
 			col=new GridColumn("",50){ IsWidthDynamic=true };//HScrollVisible is false, dynamic col width.
-			gridPtInfo.ListGridColumns.Add(col);
-			gridPtInfo.ListGridRows.Clear();
+			gridPtInfo.Columns.Add(col);
+			gridPtInfo.Rows.Clear();
 			GridCell cell;
 			GridRow row;
 			List<Definition> listMiscColorDefs=Definitions.GetDefsForCategory(DefinitionCategory.MiscColors);
@@ -3651,7 +3651,7 @@ namespace OpenDental {
 						row.Tag="tabAllergies";
 						if(listAllergies.Count>0) {
 							row.Cells.Add("");
-							gridPtInfo.ListGridRows.Add(row);
+							gridPtInfo.Rows.Add(row);
 						}
 						else {
 							row.Cells.Add("none");
@@ -3676,7 +3676,7 @@ namespace OpenDental {
 							row.BackColor=listMiscColorDefs[3].Color;
 							row.Tag="tabAllergies";
 							if(i!=listAllergies.Count-1) {
-								gridPtInfo.ListGridRows.Add(row);
+								gridPtInfo.Rows.Add(row);
 							}
 						}
 						break;
@@ -3805,7 +3805,7 @@ namespace OpenDental {
 						row.Tag="tabMedications";
 						if(listMeds.Count>0) {
 							row.Cells.Add("");
-							gridPtInfo.ListGridRows.Add(row);
+							gridPtInfo.Rows.Add(row);
 						}
 						else {
 							row.Cells.Add("none");
@@ -3837,7 +3837,7 @@ namespace OpenDental {
 							row.BackColor=listMiscColorDefs[3].Color;
 							row.Tag="tabMedications";
 							if(i!=listMeds.Count-1) {
-								gridPtInfo.ListGridRows.Add(row);
+								gridPtInfo.Rows.Add(row);
 							}
 						}
 						break;
@@ -3869,7 +3869,7 @@ namespace OpenDental {
 							if(i==listPatRestricts.Count-1) {//last row added outside of switch statement
 								break;
 							}
-							gridPtInfo.ListGridRows.Add(row);
+							gridPtInfo.Rows.Add(row);
 						}
 						break;
 					#endregion Pat Restrictions
@@ -3917,7 +3917,7 @@ namespace OpenDental {
 							row.Cells.Add(cell);
 							row.BackColor=listMiscColorDefs[3].Color;
 							row.Tag="tabMedical";
-							gridPtInfo.ListGridRows.Add(row);
+							gridPtInfo.Rows.Add(row);
 						}
 						break;
 					#endregion Premedicate
@@ -3959,7 +3959,7 @@ namespace OpenDental {
 						row.Tag="tabProblems";
 						if(listDiseases.Count>0) {
 							row.Cells.Add("");
-							gridPtInfo.ListGridRows.Add(row);
+							gridPtInfo.Rows.Add(row);
 						}
 						else {
 							row.Cells.Add("none");
@@ -3985,7 +3985,7 @@ namespace OpenDental {
 							row.BackColor=listMiscColorDefs[3].Color;
 							row.Tag="tabProblems";
 							if(i!=listDiseases.Count-1) {
-								gridPtInfo.ListGridRows.Add(row);
+								gridPtInfo.Rows.Add(row);
 							}
 						}
 						break;
@@ -4021,7 +4021,7 @@ namespace OpenDental {
 							row.Cells.Add("");
 							row.Tag="References";
 							row.BackColor=listMiscColorShortDefs[8].Color;
-							gridPtInfo.ListGridRows.Add(row);
+							gridPtInfo.Rows.Add(row);
 						}
 						for(int i=0;i<listCustRefEntries.Count;i++) {
 							row=new GridRow();
@@ -4030,7 +4030,7 @@ namespace OpenDental {
 							row.Tag=listCustRefEntries[i];
 							row.BackColor=listMiscColorShortDefs[8].Color;
 							if(i<listCustRefEntries.Count-1) {
-								gridPtInfo.ListGridRows.Add(row);
+								gridPtInfo.Rows.Add(row);
 							}
 						}
 						break;
@@ -4091,7 +4091,7 @@ namespace OpenDental {
 							}
 							row.Cells.Add(str);
 							row.Tag=arrayKeys[i].Copy();
-							gridPtInfo.ListGridRows.Add(row);
+							gridPtInfo.Rows.Add(row);
 						}
 						break;
 					#endregion Registration Keys
@@ -4154,7 +4154,7 @@ namespace OpenDental {
 						row.Cells.Add(new GridCell(Text=fieldCur.Description==""?fieldCur.InternalName:fieldCur.Description) { Bold= true });
 						row.Cells.Add(listTobaccoStatuses.Count>0?"":"none");
 						if(listTobaccoStatuses.Count>0) {
-							gridPtInfo.ListGridRows.Add(row);
+							gridPtInfo.Rows.Add(row);
 						}
 						Snomed snmCur;
 						for(int i=0;i<listTobaccoStatuses.Count;i++) {//show the last three tobacco use assessments at most
@@ -4166,7 +4166,7 @@ namespace OpenDental {
 							if(i==listTobaccoStatuses.Count-1) {
 								break;//don't add last row here, handled outside of switch statement
 							}
-							gridPtInfo.ListGridRows.Add(row);
+							gridPtInfo.Rows.Add(row);
 						}
 						break;
 						#endregion Tobacco Use (Patient Smoking Status)
@@ -4177,7 +4177,7 @@ namespace OpenDental {
 					//Do not add those kinds here.
 				}
 				else {
-					gridPtInfo.ListGridRows.Add(row);
+					gridPtInfo.Rows.Add(row);
 				}
 			}
 			gridPtInfo.EndUpdate();
@@ -4187,73 +4187,73 @@ namespace OpenDental {
 			List<ChartView> listChartViews=ChartViews.GetDeepCopy();
 			switch(keys) {
 				case Keys.F1: 
-					if(gridChartViews.ListGridRows.Count>0) {
+					if(gridChartViews.Rows.Count>0) {
 						gridChartViews.SetSelected(0,true);
 						SetChartView(listChartViews[0]);
 					}
 					break;
 				case Keys.F2:
-					if(gridChartViews.ListGridRows.Count>1) {
+					if(gridChartViews.Rows.Count>1) {
 						gridChartViews.SetSelected(1,true);
 						SetChartView(listChartViews[1]);
 					}
 					break;
 				case Keys.F3:
-					if(gridChartViews.ListGridRows.Count>2) {
+					if(gridChartViews.Rows.Count>2) {
 						gridChartViews.SetSelected(2,true);
 						SetChartView(listChartViews[2]);
 					}
 					break;
 				case Keys.F4:
-					if(gridChartViews.ListGridRows.Count>3) {
+					if(gridChartViews.Rows.Count>3) {
 						gridChartViews.SetSelected(3,true);
 						SetChartView(listChartViews[3]);
 					}
 					break;
 				case Keys.F5:
-					if(gridChartViews.ListGridRows.Count>4) {
+					if(gridChartViews.Rows.Count>4) {
 						gridChartViews.SetSelected(4,true);
 						SetChartView(listChartViews[4]);
 					}
 					break;
 				case Keys.F6:
-					if(gridChartViews.ListGridRows.Count>5) {
+					if(gridChartViews.Rows.Count>5) {
 						gridChartViews.SetSelected(5,true);
 						SetChartView(listChartViews[5]);
 					}
 					break;
 				case Keys.F7:
-					if(gridChartViews.ListGridRows.Count>6) {
+					if(gridChartViews.Rows.Count>6) {
 						gridChartViews.SetSelected(6,true);
 						SetChartView(listChartViews[6]);
 					}
 					break;
 				case Keys.F8:
-					if(gridChartViews.ListGridRows.Count>7) {
+					if(gridChartViews.Rows.Count>7) {
 						gridChartViews.SetSelected(7,true);
 						SetChartView(listChartViews[7]);
 					}
 					break;
 				case Keys.F9:
-					if(gridChartViews.ListGridRows.Count>8) {
+					if(gridChartViews.Rows.Count>8) {
 						gridChartViews.SetSelected(8,true);
 						SetChartView(listChartViews[8]);
 					}
 					break;
 				case Keys.F10:
-					if(gridChartViews.ListGridRows.Count>9) {
+					if(gridChartViews.Rows.Count>9) {
 						gridChartViews.SetSelected(9,true);
 						SetChartView(listChartViews[9]);
 					}
 					break;
 				case Keys.F11:
-					if(gridChartViews.ListGridRows.Count>10) {
+					if(gridChartViews.Rows.Count>10) {
 						gridChartViews.SetSelected(10,true);
 						SetChartView(listChartViews[10]);
 					}
 					break;
 				case Keys.F12:
-					if(gridChartViews.ListGridRows.Count>11) {
+					if(gridChartViews.Rows.Count>11) {
 						gridChartViews.SetSelected(11,true);
 						SetChartView(listChartViews[11]);
 					}
@@ -4788,7 +4788,7 @@ namespace OpenDental {
 				return false;
 			}
 			for(int i=0;i<gridProg.SelectedIndices.Length;i++) {
-				row=(DataRow)gridProg.ListGridRows[gridProg.SelectedIndices[i]].Tag;
+				row=(DataRow)gridProg.Rows[gridProg.SelectedIndices[i]].Tag;
 				if(!CanGroupRow(row,doCheckDb:doCheckDb,isSilent:isSilent,listProcs)) {
 					return false;
 				}
@@ -4835,11 +4835,11 @@ namespace OpenDental {
 				return false;
 			}
 			//One check that is not made is whether a lab proc is already attached to a different proc.
-			DataRow row1=(DataRow)gridProg.ListGridRows[gridProg.SelectedIndices[0]].Tag;
-			DataRow row2=(DataRow)gridProg.ListGridRows[gridProg.SelectedIndices[1]].Tag;
+			DataRow row1=(DataRow)gridProg.Rows[gridProg.SelectedIndices[0]].Tag;
+			DataRow row2=(DataRow)gridProg.Rows[gridProg.SelectedIndices[1]].Tag;
 			DataRow row3=null;
 			if(gridProg.SelectedIndices.Length==3) {
-				row3=(DataRow)gridProg.ListGridRows[gridProg.SelectedIndices[2]].Tag;
+				row3=(DataRow)gridProg.Rows[gridProg.SelectedIndices[2]].Tag;
 			}
 			if(row1["ProcNum"].ToString()=="0" || row2["ProcNum"].ToString()=="0" || (row3!=null && row3["ProcNum"].ToString()=="0")) {
 				if(!isSilent) {
@@ -5005,8 +5005,8 @@ namespace OpenDental {
 
 		///<summary>Returns true if the row is an appointment and can be set complete.</summary>
 		private bool CanCompleteAppointment(bool doCheckDb,bool isSilent) {
-			List<DataRow> listSelectedRows=gridProg.SelectedIndices.Where(x => x>-1 && x<gridProg.ListGridRows.Count)
-				.Select(x => (DataRow)gridProg.ListGridRows[x].Tag).ToList();
+			List<DataRow> listSelectedRows=gridProg.SelectedIndices.Where(x => x>-1 && x<gridProg.Rows.Count)
+				.Select(x => (DataRow)gridProg.Rows[x].Tag).ToList();
 			if(!CanDisplayAppointment() || listSelectedRows.Count!=1) {
 				if(!isSilent) {
 					MessageBox.Show("Only procedures, single appointments, or single tasks may be set complete.");
@@ -5097,8 +5097,8 @@ namespace OpenDental {
 
 		///<summary>Returns true if the selected task row can be set complete.</summary>
 		private bool CanCompleteTask(bool doCheckDb,bool isSilent) {
-			List<DataRow> listSelectedRows=gridProg.SelectedIndices.Where(x => x>-1 && x<gridProg.ListGridRows.Count)
-				.Select(x => (DataRow)gridProg.ListGridRows[x].Tag).ToList();
+			List<DataRow> listSelectedRows=gridProg.SelectedIndices.Where(x => x>-1 && x<gridProg.Rows.Count)
+				.Select(x => (DataRow)gridProg.Rows[x].Tag).ToList();
 			if(!CanDisplayTask() || listSelectedRows.Count!=1) {
 				if(!isSilent) {
 					MessageBox.Show("Only procedures, single appointments, or single tasks may be set complete.");
@@ -5219,8 +5219,8 @@ namespace OpenDental {
 
 		///<summary>Returns true if at least one appointment row is selected.</summary>
 		private bool CanDisplayAppointment() {
-			List<DataRow> listSelectedRows=gridProg.SelectedIndices.Where(x => x>-1 && x<gridProg.ListGridRows.Count)
-				.Select(x => (DataRow)gridProg.ListGridRows[x].Tag).ToList();
+			List<DataRow> listSelectedRows=gridProg.SelectedIndices.Where(x => x>-1 && x<gridProg.Rows.Count)
+				.Select(x => (DataRow)gridProg.Rows[x].Tag).ToList();
 			if(listSelectedRows.Any(x => x["AptNum"].ToString()!="0")) {
 				return true;
 			}
@@ -5232,13 +5232,13 @@ namespace OpenDental {
 			if(checkAudit.Checked) {
 				return false;
 			}
-			return gridProg.SelectedIndices.Any(x => ((DataRow)gridProg.ListGridRows[x].Tag)["AptNum"].ToString()!="0");
+			return gridProg.SelectedIndices.Any(x => ((DataRow)gridProg.Rows[x].Tag)["AptNum"].ToString()!="0");
 		}
 
 		///<summary>Returns true if at least one task is selected.</summary>
 		private bool CanDisplayTask() {
-			List<DataRow> listSelectedRows=gridProg.SelectedIndices.Where(x => x>-1 && x<gridProg.ListGridRows.Count)
-				.Select(x => (DataRow)gridProg.ListGridRows[x].Tag).ToList();
+			List<DataRow> listSelectedRows=gridProg.SelectedIndices.Where(x => x>-1 && x<gridProg.Rows.Count)
+				.Select(x => (DataRow)gridProg.Rows[x].Tag).ToList();
 			if(listSelectedRows.Any(x => x["TaskNum"].ToString()=="0")) {
 				//Row selected is not a task.
 				return false;
@@ -5359,7 +5359,7 @@ namespace OpenDental {
 			DateTime dateRow=PIn.Date(row["ProcDate"].ToString()).Date;
 			//Look at all the rows of the same date before this row.
 			for(int i=rowIdx-1;i>=0;i--) {
-				DataRow otherRow=(DataRow)gridProg.ListGridRows[i].Tag;
+				DataRow otherRow=(DataRow)gridProg.Rows[i].Tag;
 				DateTime dateOtherRow=PIn.Date(otherRow["ProcDate"].ToString());
 				if(dateRow!=dateOtherRow) {
 					break;
@@ -5369,8 +5369,8 @@ namespace OpenDental {
 				}
 			}
 			//Look at all the rows of the same date after this row.
-			for(int i=rowIdx+1;i<gridProg.ListGridRows.Count;i++) {
-				DataRow otherRow=(DataRow)gridProg.ListGridRows[i].Tag;
+			for(int i=rowIdx+1;i<gridProg.Rows.Count;i++) {
+				DataRow otherRow=(DataRow)gridProg.Rows[i].Tag;
 				DateTime dateOtherRow=PIn.Date(otherRow["ProcDate"].ToString()).Date;
 				if(dateRow!=dateOtherRow) {
 					break;
@@ -5397,7 +5397,7 @@ namespace OpenDental {
 				return false;
 			}
 			if(gridProg.SelectedIndices.Length!=1
-				|| ((DataRow)gridProg.ListGridRows[gridProg.SelectedIndices[0]].Tag)["AptNum"].ToString()=="0") 
+				|| ((DataRow)gridProg.Rows[gridProg.SelectedIndices[0]].Tag)["AptNum"].ToString()=="0") 
 			{
 				if(!isSilent) {
 					MessageBox.Show("Routing slips can only be printed for single appointments.");
@@ -5783,12 +5783,12 @@ namespace OpenDental {
 				ChartViews.RefreshCache();//Ideally this would use signals to refresh
 			}
 			gridChartViews.BeginUpdate();
-			gridChartViews.ListGridColumns.Clear();
+			gridChartViews.Columns.Clear();
 			GridColumn col=new GridColumn("F#",25);
-			gridChartViews.ListGridColumns.Add(col);
+			gridChartViews.Columns.Add(col);
 			col=new GridColumn("View",50){ IsWidthDynamic=true };
-			gridChartViews.ListGridColumns.Add(col);
-			gridChartViews.ListGridRows.Clear();
+			gridChartViews.Columns.Add(col);
+			gridChartViews.Rows.Clear();
 			GridRow row;
 			_listChartViews=ChartViews.GetDeepCopy();
 			for(int i=0;i<_listChartViews.Count;i++) {
@@ -5798,7 +5798,7 @@ namespace OpenDental {
 					row.Cells.Add("F"+(i+1));
 				}
 				row.Cells.Add(_listChartViews[i].Description);
-				gridChartViews.ListGridRows.Add(row);
+				gridChartViews.Rows.Add(row);
 			}
 			gridChartViews.EndUpdate();
 		}
@@ -6181,11 +6181,11 @@ namespace OpenDental {
 
 		private void FillTreatPlans() {
 			gridTreatPlans.BeginUpdate();
-			gridTreatPlans.ListGridColumns.Clear();
-			gridTreatPlans.ListGridColumns.Add(new GridColumn("Status",50));
-			gridTreatPlans.ListGridColumns.Add(new GridColumn("Heading",60){ IsWidthDynamic=true });
-			gridTreatPlans.ListGridColumns.Add(new GridColumn("Procs",50,HorizontalAlignment.Center));
-			gridTreatPlans.ListGridRows.Clear();
+			gridTreatPlans.Columns.Clear();
+			gridTreatPlans.Columns.Add(new GridColumn("Status",50));
+			gridTreatPlans.Columns.Add(new GridColumn("Heading",60){ IsWidthDynamic=true });
+			gridTreatPlans.Columns.Add(new GridColumn("Procs",50,HorizontalAlignment.Center));
+			gridTreatPlans.Rows.Clear();
 			if(_patCur==null || !checkTreatPlans.Checked) {
 				gridTreatPlans.EndUpdate();
 				return;
@@ -6205,7 +6205,7 @@ namespace OpenDental {
 				//}
 				row.Cells.Add(listTpAttaches.FindAll(x=>x.TreatPlanNum==_listTreatPlans[i].TreatPlanNum).Count.ToString());
 				row.Tag=listTpAttaches.FindAll(x => x.TreatPlanNum==_listTreatPlans[i].TreatPlanNum);
-				gridTreatPlans.ListGridRows.Add(row);
+				gridTreatPlans.Rows.Add(row);
 			}
 			gridTreatPlans.EndUpdate();
 			gridTreatPlans.SetSelected(0,true);
@@ -6227,7 +6227,7 @@ namespace OpenDental {
 			for(int i=0;i<gridTreatPlans.SelectedIndices.Length;i++) {
 				listTpRows=new List<TpRow>();
 				long treatPlanNumCur=_listTreatPlans[gridTreatPlans.SelectedIndices[i]].TreatPlanNum;
-				List<TreatPlanAttach> listTreatPlanAttaches=(List<TreatPlanAttach>)gridTreatPlans.ListGridRows[gridTreatPlans.SelectedIndices[i]].Tag;
+				List<TreatPlanAttach> listTreatPlanAttaches=(List<TreatPlanAttach>)gridTreatPlans.Rows[gridTreatPlans.SelectedIndices[i]].Tag;
 				List<Procedure> listProcsForTP=Procedures.GetManyProc(listTreatPlanAttaches.Select(x => x.ProcNum).ToList(),false)
 					.OrderBy(x => Definitions.GetOrder(DefinitionCategory.TxPriorities,listTreatPlanAttaches.FirstOrDefault(y => y.ProcNum==x.ProcNum).Priority)<0)
 					.ThenBy(x => Definitions.GetOrder(DefinitionCategory.TxPriorities,listTreatPlanAttaches.FirstOrDefault(y => y.ProcNum==x.ProcNum).Priority))
@@ -6293,14 +6293,14 @@ namespace OpenDental {
 		///<summary>Fills gridTpProcs with data in _dictTpNumListTpRows.  Could be filled with procs from more than one TP.</summary>
 		private void FillTpProcDisplay() {
 			gridTpProcs.BeginUpdate();
-			gridTpProcs.ListGridColumns.Clear();
-			gridTpProcs.ListGridColumns.Add(new GridColumn("Priority",50));
-			gridTpProcs.ListGridColumns.Add(new GridColumn("Tth",35));
-			gridTpProcs.ListGridColumns.Add(new GridColumn("Surf",40));
-			gridTpProcs.ListGridColumns.Add(new GridColumn("Code",50));
-			gridTpProcs.ListGridColumns.Add(new GridColumn("Description",50){ IsWidthDynamic=true });
-			gridTpProcs.ListGridRows.Clear();
-			if(_patCur==null || _dictTpNumListTpRows==null || gridTreatPlans.ListGridRows.Count==0) {
+			gridTpProcs.Columns.Clear();
+			gridTpProcs.Columns.Add(new GridColumn("Priority",50));
+			gridTpProcs.Columns.Add(new GridColumn("Tth",35));
+			gridTpProcs.Columns.Add(new GridColumn("Surf",40));
+			gridTpProcs.Columns.Add(new GridColumn("Code",50));
+			gridTpProcs.Columns.Add(new GridColumn("Description",50){ IsWidthDynamic=true });
+			gridTpProcs.Rows.Clear();
+			if(_patCur==null || _dictTpNumListTpRows==null || gridTreatPlans.Rows.Count==0) {
 				gridTpProcs.EndUpdate();
 				return;
 			}
@@ -6316,7 +6316,7 @@ namespace OpenDental {
 					row.Bold=true;
 					row.LowerBorderColor=Color.FromArgb(102,102,122);//from odGrid painting logic
 					row.BackColor=Color.FromArgb(224,223,227);//from odGrid painting logic
-					gridTpProcs.ListGridRows.Add(row);
+					gridTpProcs.Rows.Add(row);
 					row=new GridRow();
 				}
 				foreach(TpRow tpRow in kvPair.Value) {
@@ -6333,7 +6333,7 @@ namespace OpenDental {
 					row.LowerBorderColor=tpRow.ColorLborder;
 					row.Tag=tpRow.Tag;//Tag is a ProcTP
 					row.Bold=tpRow.Bold;
-					gridTpProcs.ListGridRows.Add(row);
+					gridTpProcs.Rows.Add(row);
 					row=new GridRow();
 				}
 			}
@@ -6629,7 +6629,7 @@ namespace OpenDental {
 		}
 
 		private bool IsAuditMode(bool isSilent) {
-			if(gridProg.SelectedIndices.Count(x => x>-1 && x<gridProg.ListGridRows.Count)==0) {
+			if(gridProg.SelectedIndices.Count(x => x>-1 && x<gridProg.Rows.Count)==0) {
 				if(!isSilent) {
 					MessageBox.Show("Please select an item first."); 
 				}
@@ -6655,8 +6655,8 @@ namespace OpenDental {
 
 		///<summary>Sets the selected rows to the ProcStatus passed in.</summary>
 		private void MenuItemSetSelectedProcsStatus(ProcStat newProcStatus) {
-			List<DataRow> listSelectedRows=gridProg.SelectedIndices.Where(x => x>-1 && x<gridProg.ListGridRows.Count)
-				.Select(x => (DataRow)gridProg.ListGridRows[x].Tag).ToList();
+			List<DataRow> listSelectedRows=gridProg.SelectedIndices.Where(x => x>-1 && x<gridProg.Rows.Count)
+				.Select(x => (DataRow)gridProg.Rows[x].Tag).ToList();
 			if(!listSelectedRows.All(x => CanChangeProcsStatus(newProcStatus,x,doCheckDb:true,isSilent:false))) {
 				return;
 			}
@@ -7522,8 +7522,8 @@ namespace OpenDental {
 
 		///<summary>Displays the menu item as enabled if all the selected rows return true for isRowRelevant. Displays the menu item as disabled if at least one but not all return true. Hides the menu item if no rows return true.</summary>
 		private void ShowMenuItemHelper(MenuItem menuItem,Func<DataRowWithIdx,bool> isRowRelevant) {
-			List<DataRowWithIdx> listSelectedRows=gridProg.SelectedIndices.Where(x => x>-1 && x<gridProg.ListGridRows.Count)
-				.Select(x => new DataRowWithIdx((DataRow)gridProg.ListGridRows[x].Tag,x)).ToList();
+			List<DataRowWithIdx> listSelectedRows=gridProg.SelectedIndices.Where(x => x>-1 && x<gridProg.Rows.Count)
+				.Select(x => new DataRowWithIdx((DataRow)gridProg.Rows[x].Tag,x)).ToList();
 			int countRelevant=listSelectedRows.Count(x => isRowRelevant(x));
 			if(countRelevant==0) {
 				menuItem.Visible=false;
@@ -8081,9 +8081,9 @@ namespace OpenDental {
 			if (gridProg.SelectedIndices.Length == 0)
 			{
 				//autoselect procedures
-				for (int i = 0; i < gridProg.ListGridRows.Count; i++)
+				for (int i = 0; i < gridProg.Rows.Count; i++)
 				{//loop through every line showing in progress notes
-					row = (DataRow)gridProg.ListGridRows[i].Tag;
+					row = (DataRow)gridProg.Rows[i].Tag;
 					if (row["ProcNum"].ToString() == "0")
 					{
 						continue;//ignore non-procedures
@@ -8107,7 +8107,7 @@ namespace OpenDental {
 			bool allAreProcedures = true;
 			for (int i = 0; i < gridProg.SelectedIndices.Length; i++)
 			{
-				row = (DataRow)gridProg.ListGridRows[gridProg.SelectedIndices[i]].Tag;
+				row = (DataRow)gridProg.Rows[gridProg.SelectedIndices[i]].Tag;
 				if (row["ProcNum"].ToString() == "0")
 				{
 					allAreProcedures = false;
@@ -8726,8 +8726,8 @@ namespace OpenDental {
 			int skippedC=0;
 			int skippedAttached=0;
 			int skippedLinkedToOrthoCase=0;
-			List<DataRow> listSelectedRows=gridProg.SelectedIndices.Where(x => x>-1 && x<gridProg.ListGridRows.Count)
-				.Select(x => (DataRow)gridProg.ListGridRows[x].Tag).ToList();
+			List<DataRow> listSelectedRows=gridProg.SelectedIndices.Where(x => x>-1 && x<gridProg.Rows.Count)
+				.Select(x => (DataRow)gridProg.Rows[x].Tag).ToList();
 			OrthoProcLink orthoProcLink=null;
 			Dictionary<long,OrthoProcLink> dictOrthoProcLinks=OrthoProcLinks.GetManyForProcs(listSelectedRows.Where(x => PIn.Long(x["ProcNum"].ToString())!=0)
 				.ToList().Select(y => PIn.Long(y["ProcNum"].ToString())).ToList()).ToDictionary(z => z.ProcNum,z => z);
@@ -9406,7 +9406,7 @@ namespace OpenDental {
 			if(_patCur==null) {
 				//clear patient data, might be left over if login sessions changed
 				gridPlanned.BeginUpdate();
-				gridPlanned.ListGridRows.Clear();
+				gridPlanned.Rows.Clear();
 				gridPlanned.EndUpdate();
 				checkDone.Checked=false;
 				butNew.Enabled=false;
@@ -9433,24 +9433,24 @@ namespace OpenDental {
 			}
 			//Fill grid
 			gridPlanned.BeginUpdate();
-			gridPlanned.ListGridColumns.Clear();
+			gridPlanned.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("#",25,HorizontalAlignment.Center);
-			gridPlanned.ListGridColumns.Add(col);
+			gridPlanned.Columns.Add(col);
 			col=new GridColumn("Min",35);
-			gridPlanned.ListGridColumns.Add(col);
+			gridPlanned.Columns.Add(col);
 			col=new GridColumn("Procedures",175);
-			gridPlanned.ListGridColumns.Add(col);
+			gridPlanned.Columns.Add(col);
 			col=new GridColumn("Note",175);
-			gridPlanned.ListGridColumns.Add(col);
+			gridPlanned.Columns.Add(col);
 			if(Programs.UsingOrion) {
 				col=new GridColumn("SchedBy",80);
 			}
 			else {
 				col=new GridColumn("DateSched",80);
 			}
-			gridPlanned.ListGridColumns.Add(col);
-			gridPlanned.ListGridRows.Clear();
+			gridPlanned.Columns.Add(col);
+			gridPlanned.Rows.Clear();
 			GridRow row;
 			_tablePlannedAll=LoadData.TablePlannedAppts;
 			//This gets done in the business layer:
@@ -9475,7 +9475,7 @@ namespace OpenDental {
 				}
 				_listPlannedAppt.Add(_tablePlannedAll.Rows[i]);//List containing only rows we are showing, can be the same as _tablePlannedAll
 				row=new GridRow();
-				row.Cells.Add((gridPlanned.ListGridRows.Count+1).ToString());
+				row.Cells.Add((gridPlanned.Rows.Count+1).ToString());
 				row.Cells.Add(_tablePlannedAll.Rows[i]["minutes"].ToString());
 				row.Cells.Add(_tablePlannedAll.Rows[i]["ProcDescript"].ToString());
 				row.Cells.Add(_tablePlannedAll.Rows[i]["Note"].ToString());
@@ -9521,7 +9521,7 @@ namespace OpenDental {
 				row.ForeColor=Color.FromArgb(PIn.Int(_tablePlannedAll.Rows[i]["colorText"].ToString()));
 				row.BackColor=Color.FromArgb(PIn.Int(_tablePlannedAll.Rows[i]["colorBackG"].ToString()));
 				row.Tag=PIn.Long(_tablePlannedAll.Rows[i]["AptNum"].ToString());
-				gridPlanned.ListGridRows.Add(row);
+				gridPlanned.Rows.Add(row);
 			}
 			gridPlanned.EndUpdate();
 			for(int i=0;i<_listPlannedAppt.Count;i++) {

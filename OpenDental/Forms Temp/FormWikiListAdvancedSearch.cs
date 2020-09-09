@@ -24,10 +24,10 @@ namespace OpenDental {
 		/// <summary>Populates the grid with the current Wiki's column headers</summary>
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("",80));
-			gridMain.ListGridRows.Clear();
-			gridMain.ListGridRows.AddRange(_listColHeaders.Select(x => new GridRow(x.ColName)));
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("",80));
+			gridMain.Rows.Clear();
+			gridMain.Rows.AddRange(_listColHeaders.Select(x => new GridRow(x.ColName)));
 			gridMain.EndUpdate();
 			if(SelectedColumnIndices.Length>0) {
 				gridMain.SetSelected(SelectedColumnIndices,true);

@@ -22,12 +22,12 @@ namespace Imedisoft.Forms
 			ZipCodes.RefreshCache();
 
 			zipCodesGrid.BeginUpdate();
-			zipCodesGrid.ListGridColumns.Clear();
-			zipCodesGrid.ListGridColumns.Add(new GridColumn("Zip", 75));
-			zipCodesGrid.ListGridColumns.Add(new GridColumn("City", 270));
-			zipCodesGrid.ListGridColumns.Add(new GridColumn("State", 50));
-			zipCodesGrid.ListGridColumns.Add(new GridColumn("Frequent", 80));
-			zipCodesGrid.ListGridRows.Clear();
+			zipCodesGrid.Columns.Clear();
+			zipCodesGrid.Columns.Add(new GridColumn("Zip", 75));
+			zipCodesGrid.Columns.Add(new GridColumn("City", 270));
+			zipCodesGrid.Columns.Add(new GridColumn("State", 50));
+			zipCodesGrid.Columns.Add(new GridColumn("Frequent", 80));
+			zipCodesGrid.Rows.Clear();
 
 			foreach (var zipCode in ZipCodes.GetDeepCopy())
 			{
@@ -38,7 +38,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add((zipCode.IsFrequent ? "X" : ""));
 				gridRow.Tag = zipCode;
 
-				zipCodesGrid.ListGridRows.Add(gridRow);
+				zipCodesGrid.Rows.Add(gridRow);
 			}
 
 			zipCodesGrid.EndUpdate();
@@ -66,7 +66,7 @@ namespace Imedisoft.Forms
 
 		private void ZipCodesGrid_SelectionCommitted(object sender, EventArgs e)
 		{
-			deleteButton.Enabled = zipCodesGrid.SelectedGridRows.Count > 0;
+			deleteButton.Enabled = zipCodesGrid.SelectedRows.Count > 0;
 		}
 
 		private void DeleteButton_Click(object sender, EventArgs e)

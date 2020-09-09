@@ -120,17 +120,17 @@ namespace OpenDental {
 
 		private void FillGridMu() {
 			gridMu.BeginUpdate();
-			gridMu.ListGridColumns.Clear();
+			gridMu.Columns.Clear();
 			GridColumn col=new GridColumn("MeasureType",145);
-			gridMu.ListGridColumns.Add(col);
+			gridMu.Columns.Add(col);
 			col=new GridColumn("Met",35,HorizontalAlignment.Center);
-			gridMu.ListGridColumns.Add(col);
+			gridMu.Columns.Add(col);
 			col=new GridColumn("Details",170);
-			gridMu.ListGridColumns.Add(col);
+			gridMu.Columns.Add(col);
 			col=new GridColumn("Click to Take Action",168);
-			gridMu.ListGridColumns.Add(col);
+			gridMu.Columns.Add(col);
 			col=new GridColumn("Related Actions",142);
-			gridMu.ListGridColumns.Add(col);
+			gridMu.Columns.Add(col);
 			//Always fill the grid regardless if the patient's provider has a valid ehr key.
 			//TODO: ProvPat may not be the primary provider in the future.
 			if(ProvPat.EhrMuStage==0) {//Use the global preference
@@ -159,7 +159,7 @@ namespace OpenDental {
 				gridMu.Title="Modified Stage 2 Meaningful Use for this patient";
 				listMu=EhrMeasures.GetMu2Mod(PatCur);
 			}
-			gridMu.ListGridRows.Clear();
+			gridMu.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<listMu.Count;i++) {
 				row=new GridRow();
@@ -183,7 +183,7 @@ namespace OpenDental {
 				row.Cells.Add(listMu[i].Details);
 				row.Cells.Add(listMu[i].Action);
 				row.Cells.Add(listMu[i].Action2);
-				gridMu.ListGridRows.Add(row);
+				gridMu.Rows.Add(row);
 			}
 			gridMu.EndUpdate();
 		}

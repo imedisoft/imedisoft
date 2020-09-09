@@ -255,15 +255,15 @@ namespace OpenDental{
 				referralDescript="Referral (other)";
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("Referral Type",85));
-			gridMain.ListGridColumns.Add(new GridColumn("Name",120));
-			gridMain.ListGridColumns.Add(new GridColumn("Date",65));
-			gridMain.ListGridColumns.Add(new GridColumn("Status",70));
-			gridMain.ListGridColumns.Add(new GridColumn("Proc",120));
-			gridMain.ListGridColumns.Add(new GridColumn("Note",170));
-			gridMain.ListGridColumns.Add(new GridColumn("Email",190));
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("Referral Type",85));
+			gridMain.Columns.Add(new GridColumn("Name",120));
+			gridMain.Columns.Add(new GridColumn("Date",65));
+			gridMain.Columns.Add(new GridColumn("Status",70));
+			gridMain.Columns.Add(new GridColumn("Proc",120));
+			gridMain.Columns.Add(new GridColumn("Note",170));
+			gridMain.Columns.Add(new GridColumn("Email",190));
+			gridMain.Rows.Clear();
 			bool hasInvalidRef=false;
 			GridRow row;
 			List<string> listRefTypeNames=new List<string>() {"To","From",referralDescript };
@@ -300,7 +300,7 @@ namespace OpenDental{
 				}
 				row.Cells.Add(referral.EMail);
 				row.Tag=refAttachCur;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			if(hasInvalidRef) {
 				ReferralL.ShowReferralErrorMsg();
@@ -317,7 +317,7 @@ namespace OpenDental{
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			//This does not automatically select a retattch when in selection mode; it just lets user edit.
 			FormRefAttachEdit FormRAE2=new FormRefAttachEdit();
-			RefAttach refattach=((RefAttach)gridMain.ListGridRows[e.Row].Tag).Copy();
+			RefAttach refattach=((RefAttach)gridMain.Rows[e.Row].Tag).Copy();
 			FormRAE2.RefAttachCur=refattach;
 			FormRAE2.ShowDialog();
 			FillGrid();
@@ -512,7 +512,7 @@ namespace OpenDental{
 				MessageBox.Show("Please select a referral first");
 				return;
 			}
-			Referral referral=ReferralL.GetReferral(((RefAttach)gridMain.ListGridRows[idx].Tag).ReferralNum);
+			Referral referral=ReferralL.GetReferral(((RefAttach)gridMain.Rows[idx].Tag).ReferralNum);
 			if(referral==null) {
 				return;
 			}
@@ -540,8 +540,8 @@ namespace OpenDental{
 			if(selectedIdx==0) {//already at top
 				return;
 			}
-			RefAttach sourceAttach=((RefAttach)gridMain.ListGridRows[selectedIdx].Tag);
-			RefAttach destAttach=((RefAttach)gridMain.ListGridRows[selectedIdx-1].Tag);
+			RefAttach sourceAttach=((RefAttach)gridMain.Rows[selectedIdx].Tag);
+			RefAttach destAttach=((RefAttach)gridMain.Rows[selectedIdx-1].Tag);
 			int sourceIdx=sourceAttach.ItemOrder;
 			sourceAttach.ItemOrder=destAttach.ItemOrder;
 			RefAttaches.Update(sourceAttach);
@@ -560,11 +560,11 @@ namespace OpenDental{
 				return;
 			}
 			int selectedIdx=gridMain.GetSelectedIndex();
-			if(selectedIdx==gridMain.ListGridRows.Count-1) {//already at bottom
+			if(selectedIdx==gridMain.Rows.Count-1) {//already at bottom
 				return;
 			}
-			RefAttach sourceAttach=((RefAttach)gridMain.ListGridRows[selectedIdx].Tag);
-			RefAttach destAttach=((RefAttach)gridMain.ListGridRows[selectedIdx+1].Tag);
+			RefAttach sourceAttach=((RefAttach)gridMain.Rows[selectedIdx].Tag);
+			RefAttach destAttach=((RefAttach)gridMain.Rows[selectedIdx+1].Tag);
 			int sourceIdx=sourceAttach.ItemOrder;
 			sourceAttach.ItemOrder=destAttach.ItemOrder;
 			RefAttaches.Update(sourceAttach);

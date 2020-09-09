@@ -161,15 +161,15 @@ namespace OpenDental{
 
 		private void FormNotePick_Load(object sender,EventArgs e) {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("",630);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<Notes.Length;i++) {
 				row=new GridRow();
 				row.Cells.Add(Notes[i]);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			if(Notes.Length>0){

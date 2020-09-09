@@ -844,20 +844,20 @@ namespace OpenDental
 			}
 			Patient[] pats=Patients.GetMultPats(patNums);
 			gridPat.BeginUpdate();
-			gridPat.ListGridColumns.Clear();
+			gridPat.Columns.Clear();
 			GridColumn col=new GridColumn("Date",80);
-			gridPat.ListGridColumns.Add(col);
+			gridPat.Columns.Add(col);
 			col=new GridColumn("Patient",150);
-			gridPat.ListGridColumns.Add(col);
+			gridPat.Columns.Add(col);
 			col=new GridColumn("Type",70);
-			gridPat.ListGridColumns.Add(col);
+			gridPat.Columns.Add(col);
 			col=new GridColumn("Check Number",95);
-			gridPat.ListGridColumns.Add(col);
+			gridPat.Columns.Add(col);
 			col=new GridColumn("Bank-Branch",80);
-			gridPat.ListGridColumns.Add(col);
+			gridPat.Columns.Add(col);
 			col=new GridColumn("Amount",80);
-			gridPat.ListGridColumns.Add(col);
-			gridPat.ListGridRows.Clear();
+			gridPat.Columns.Add(col);
+			gridPat.Rows.Clear();
 			OpenDental.UI.GridRow row;
 			for(int i=0;i<PatPayList.Count;i++){
 				row=new OpenDental.UI.GridRow();
@@ -867,25 +867,25 @@ namespace OpenDental
 				row.Cells.Add(PatPayList[i].CheckNum);
 				row.Cells.Add(PatPayList[i].BankBranch);
 				row.Cells.Add(PatPayList[i].PayAmt.ToString("F"));
-				gridPat.ListGridRows.Add(row);
+				gridPat.Rows.Add(row);
 			}
 			gridPat.EndUpdate();
 			//Fill Insurance Payment Grid-------------------------------------
 			gridIns.BeginUpdate();
-			gridIns.ListGridColumns.Clear();
+			gridIns.Columns.Clear();
 			col=new GridColumn("Date",80);
-			gridIns.ListGridColumns.Add(col);
+			gridIns.Columns.Add(col);
 			col=new GridColumn("Carrier",150);
-			gridIns.ListGridColumns.Add(col);
+			gridIns.Columns.Add(col);
 			col=new GridColumn("Type",70);
-			gridIns.ListGridColumns.Add(col);
+			gridIns.Columns.Add(col);
 			col=new GridColumn("Check Number",95);
-			gridIns.ListGridColumns.Add(col);
+			gridIns.Columns.Add(col);
 			col=new GridColumn("Bank-Branch",80);
-			gridIns.ListGridColumns.Add(col);
+			gridIns.Columns.Add(col);
 			col=new GridColumn("Amount",90);
-			gridIns.ListGridColumns.Add(col);
-			gridIns.ListGridRows.Clear();
+			gridIns.Columns.Add(col);
+			gridIns.Rows.Clear();
 			for(int i=0;i<ClaimPayList.Length;i++){
 				row=new OpenDental.UI.GridRow();
 				row.Cells.Add(ClaimPayList[i].CheckDate.ToShortDateString());
@@ -894,7 +894,7 @@ namespace OpenDental
 				row.Cells.Add(ClaimPayList[i].CheckNum);
 				row.Cells.Add(ClaimPayList[i].BankBranch);
 				row.Cells.Add(ClaimPayList[i].CheckAmt.ToString("F"));
-				gridIns.ListGridRows.Add(row);
+				gridIns.Rows.Add(row);
 			}
 			gridIns.EndUpdate();
 		}
@@ -906,7 +906,7 @@ namespace OpenDental
 				textItemNum.Text=(gridIns.SelectedIndices.Length+gridPat.SelectedIndices.Length).ToString();
 			}
 			else {//if not new, amount cannot be changed, return
-				textItemNum.Text=(gridIns.ListGridRows.Count+gridPat.ListGridRows.Count).ToString();
+				textItemNum.Text=(gridIns.Rows.Count+gridPat.Rows.Count).ToString();
 				return;
 			}
 			decimal amount=0;
@@ -922,46 +922,46 @@ namespace OpenDental
 
 		private void Search() {
 			bool isScrollSet=false;
-			for(int i=0;i<gridIns.ListGridRows.Count;i++) {
+			for(int i=0;i<gridIns.Rows.Count;i++) {
 				bool isBold=false;
-				if(textAmountSearch.Text!="" && gridIns.ListGridRows[i].Cells[5].Text.ToUpper().Contains(textAmountSearch.Text.ToUpper())) {
+				if(textAmountSearch.Text!="" && gridIns.Rows[i].Cells[5].Text.ToUpper().Contains(textAmountSearch.Text.ToUpper())) {
 					isBold=true;
 				}
-				if(textCheckNumSearch.Text!="" && gridIns.ListGridRows[i].Cells[3].Text.ToUpper().Contains(textCheckNumSearch.Text.ToUpper())) {
+				if(textCheckNumSearch.Text!="" && gridIns.Rows[i].Cells[3].Text.ToUpper().Contains(textCheckNumSearch.Text.ToUpper())) {
 					isBold=true;
 				}
-				gridIns.ListGridRows[i].Bold=isBold;
+				gridIns.Rows[i].Bold=isBold;
 				if(isBold) {
-					gridIns.ListGridRows[i].ForeColor=Color.Red;					
+					gridIns.Rows[i].ForeColor=Color.Red;					
 					if(!isScrollSet) {//scroll to the first match in the list.
 						gridIns.ScrollToIndex(i);
 						isScrollSet=true;
 					}
 				}
 				else {//Standard row.
-					gridIns.ListGridRows[i].ForeColor=Color.Black;
+					gridIns.Rows[i].ForeColor=Color.Black;
 				}
 			}//end i
 			gridIns.Invalidate();
 			bool isScrollSetPat=false;
-			for(int i=0;i<gridPat.ListGridRows.Count;i++) {
+			for(int i=0;i<gridPat.Rows.Count;i++) {
 				bool isBold=false;
-				if(textAmountSearch.Text!="" && gridPat.ListGridRows[i].Cells[5].Text.ToUpper().Contains(textAmountSearch.Text.ToUpper())) {
+				if(textAmountSearch.Text!="" && gridPat.Rows[i].Cells[5].Text.ToUpper().Contains(textAmountSearch.Text.ToUpper())) {
 					isBold=true;
 				}
-				if(textCheckNumSearch.Text!="" && gridPat.ListGridRows[i].Cells[3].Text.ToUpper().Contains(textCheckNumSearch.Text.ToUpper())) {
+				if(textCheckNumSearch.Text!="" && gridPat.Rows[i].Cells[3].Text.ToUpper().Contains(textCheckNumSearch.Text.ToUpper())) {
 					isBold=true;
 				}
-				gridPat.ListGridRows[i].Bold=isBold;
+				gridPat.Rows[i].Bold=isBold;
 				if(isBold) {
-					gridPat.ListGridRows[i].ForeColor=Color.Red;
+					gridPat.Rows[i].ForeColor=Color.Red;
 					if(!isScrollSetPat) {//scroll to the first match in the list.
 						gridPat.ScrollToIndex(i);
 						isScrollSetPat=true;
 					}
 				}
 				else {//Standard row.
-					gridPat.ListGridRows[i].ForeColor=Color.Black;
+					gridPat.Rows[i].ForeColor=Color.Black;
 				}
 			}//end i
 			gridPat.Invalidate();

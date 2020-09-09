@@ -71,8 +71,8 @@ namespace OpenDental {
 					return;
 				}
 				labelUserCurr.Text=_selectedUser.UserName;
-				for(int i=0;i<gridUsers.ListGridRows.Count;i++){
-					if(((Userod)(gridUsers.ListGridRows[i].Tag)).Id==_selectedUser.Id) {
+				for(int i=0;i<gridUsers.Rows.Count;i++){
+					if(((Userod)(gridUsers.Rows[i].Tag)).Id==_selectedUser.Id) {
 						gridUsers.SetSelected(i,true);
 						break;
 					}
@@ -303,16 +303,16 @@ namespace OpenDental {
 			_isFillingList=true;
 			Userod selectedUser=SelectedUser;//preserve user selection.
 			gridUsers.BeginUpdate();
-			gridUsers.ListGridColumns.Clear();
-			gridUsers.ListGridColumns.Add(new GridColumn("Username",90));
-			gridUsers.ListGridColumns.Add(new GridColumn("Employee",90));
-			gridUsers.ListGridColumns.Add(new GridColumn("Provider",90));
+			gridUsers.Columns.Clear();
+			gridUsers.Columns.Add(new GridColumn("Username",90));
+			gridUsers.Columns.Add(new GridColumn("Employee",90));
+			gridUsers.Columns.Add(new GridColumn("Provider",90));
 			if(PrefC.HasClinicsEnabled) {
-				gridUsers.ListGridColumns.Add(new GridColumn("Clinic",80));
-				gridUsers.ListGridColumns.Add(new GridColumn("Clinic\r\nRestr",38,HorizontalAlignment.Center));
+				gridUsers.Columns.Add(new GridColumn("Clinic",80));
+				gridUsers.Columns.Add(new GridColumn("Clinic\r\nRestr",38,HorizontalAlignment.Center));
 			}
-			gridUsers.ListGridColumns.Add(new GridColumn("Strong\r\nPwd",45,HorizontalAlignment.Center));
-			gridUsers.ListGridRows.Clear();
+			gridUsers.Columns.Add(new GridColumn("Strong\r\nPwd",45,HorizontalAlignment.Center));
+			gridUsers.Rows.Clear();
 			List<Userod> listFilteredUsers=GetFilteredUsersHelper();
 			foreach(Userod user in listFilteredUsers) {
 				GridRow row=new GridRow();
@@ -325,7 +325,7 @@ namespace OpenDental {
 				}
 				row.Cells.Add(user.PasswordIsStrong?"X":"");
 				row.Tag=user;
-				gridUsers.ListGridRows.Add(row);
+				gridUsers.Rows.Add(row);
 			}
 			gridUsers.EndUpdate();
 			_isFillingList=false;//Done filling the grid.

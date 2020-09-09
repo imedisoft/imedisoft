@@ -52,18 +52,18 @@ namespace OpenDental
 		private void FillInternalGrid(long selectedIneranlKey)
 		{
 			internalGrid.BeginUpdate();
-			internalGrid.ListGridColumns.Clear();
-			internalGrid.ListGridColumns.Add(new GridColumn("Description", 100));
-			internalGrid.ListGridRows.Clear();
+			internalGrid.Columns.Clear();
+			internalGrid.Columns.Add(new GridColumn("Description", 100));
+			internalGrid.Rows.Clear();
 
 			for (int i = 0; i < alertCategoriesInternal.Count; i++)
 			{
 				var gridRow = new GridRow();
 				gridRow.Cells.Add(alertCategoriesInternal[i].Description);
 				gridRow.Tag = alertCategoriesInternal[i].Id;
-				internalGrid.ListGridRows.Add(gridRow);
+				internalGrid.Rows.Add(gridRow);
 
-				int index = internalGrid.ListGridRows.Count - 1;
+				int index = internalGrid.Rows.Count - 1;
 				if (selectedIneranlKey == alertCategoriesInternal[i].Id)
 				{
 					customGrid.SetSelected(index, true);
@@ -76,9 +76,9 @@ namespace OpenDental
 		private void FillCustomGrid(long selectedCustomKey)
 		{
 			customGrid.BeginUpdate();
-			customGrid.ListGridColumns.Clear();
-			customGrid.ListGridColumns.Add(new GridColumn("Description", 100));
-			customGrid.ListGridRows.Clear();
+			customGrid.Columns.Clear();
+			customGrid.Columns.Add(new GridColumn("Description", 100));
+			customGrid.Rows.Clear();
 
 			int index = 0;
 			for (int i = 0; i < alertCategoriesCustom.Count; i++)
@@ -87,9 +87,9 @@ namespace OpenDental
 				gridRow.Cells.Add(alertCategoriesCustom[i].Description);
 				gridRow.Tag = alertCategoriesCustom[i].Id;
 
-				customGrid.ListGridRows.Add(gridRow);
+				customGrid.Rows.Add(gridRow);
 
-				index = customGrid.ListGridRows.Count - 1;
+				index = customGrid.Rows.Count - 1;
 				if (selectedCustomKey != alertCategoriesCustom[i].Id)
 				{
 					index = 0;
@@ -106,7 +106,7 @@ namespace OpenDental
 
 		private void InternalGrid_CellDoubleClick(object sender, ODGridClickEventArgs e)
 		{
-			if (!(internalGrid.ListGridRows[e.Row].Tag is AlertCategory alertCategory))
+			if (!(internalGrid.Rows[e.Row].Tag is AlertCategory alertCategory))
 			{
 				return;
 			}
@@ -121,7 +121,7 @@ namespace OpenDental
 
 		private void CustomGrid_CellDoubleClick(object sender, ODGridClickEventArgs e)
 		{
-			if (!(internalGrid.ListGridRows[e.Row].Tag is AlertCategory alertCategory))
+			if (!(internalGrid.Rows[e.Row].Tag is AlertCategory alertCategory))
 			{
 				return;
 			}

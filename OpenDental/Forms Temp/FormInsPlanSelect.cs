@@ -199,21 +199,21 @@ namespace OpenDental{
 
 		private void FillPlanData(){
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			//col=new ODGridColumn("#",20);
 			//gridMain.Columns.Add(col);
 			col=new GridColumn("Subscriber",140);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Ins Carrier",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Date Effect.",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Date Term.",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Used By",90);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			//PatPlan[] patPlanArray;
 			InsPlan plan;
@@ -241,7 +241,7 @@ namespace OpenDental{
 				}
 				int countPatPlans=PatPlans.GetCountBySubNum(SubList[i].InsSubNum);
 				row.Cells.Add(countPatPlans.ToString());
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			listRelat.Items.Clear();
@@ -262,7 +262,7 @@ namespace OpenDental{
 			if(ViewRelat) {
 				PatRelat=(Relat)listRelat.SelectedIndex;
 			}
-			SelectedSub=(InsSub)gridMain.ListGridRows[e.Row].Tag;
+			SelectedSub=(InsSub)gridMain.Rows[e.Row].Tag;
 			SelectedPlan=InsPlans.GetPlan(SelectedSub.PlanNum,PlanList);
 			DialogResult=DialogResult.OK;
 		}
@@ -284,7 +284,7 @@ namespace OpenDental{
 			if(ViewRelat){
 				PatRelat=(Relat)listRelat.SelectedIndex;
 			}
-			SelectedSub=(InsSub)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
+			SelectedSub=(InsSub)gridMain.Rows[gridMain.GetSelectedIndex()].Tag;
 			SelectedPlan=InsPlans.GetPlan(SelectedSub.PlanNum,PlanList);
       DialogResult=DialogResult.OK;		
 		}

@@ -569,12 +569,12 @@ namespace OpenDental{
 		private void FillPatient(){
 			DataTable table=_loadData.PatientTable;
 			gridPatient.BeginUpdate();
-			gridPatient.ListGridColumns.Clear();
+			gridPatient.Columns.Clear();
 			GridColumn col=new GridColumn("",120);//Add 2 blank columns
-			gridPatient.ListGridColumns.Add(col);
+			gridPatient.Columns.Add(col);
 			col=new GridColumn("",120);
-			gridPatient.ListGridColumns.Add(col);
-			gridPatient.ListGridRows.Clear();
+			gridPatient.Columns.Add(col);
+			gridPatient.Rows.Clear();
 			GridRow row;
 			for(int i=1;i<table.Rows.Count;i++) {//starts with 1 to skip name
 				row=new GridRow();
@@ -584,13 +584,13 @@ namespace OpenDental{
 					row.Cells[row.Cells.Count-1].ForeColor=System.Drawing.Color.Blue;
 					row.Cells[row.Cells.Count-1].Underline= true;
 				}
-				gridPatient.ListGridRows.Add(row);
+				gridPatient.Rows.Add(row);
 			}
 			//Add a UI managed row to display the total fee for the selected procedures in this appointment.
 			row=new GridRow();
 			row.Cells.Add("Fee This Appt");
 			row.Cells.Add("");//Calculated below
-			gridPatient.ListGridRows.Add(row);
+			gridPatient.Rows.Add(row);
 			CalcPatientFeeThisAppt();
 			gridPatient.EndUpdate();
 			gridPatient.ScrollToEnd();
@@ -600,9 +600,9 @@ namespace OpenDental{
 		private void CalcPatientFeeThisAppt() {
 			double feeThisAppt=0;
 			for(int i=0;i<gridProc.SelectedIndices.Length;i++) {
-				feeThisAppt+=((Procedure)(gridProc.ListGridRows[gridProc.SelectedIndices[i]].Tag)).ProcFeeTotal;
+				feeThisAppt+=((Procedure)(gridProc.Rows[gridProc.SelectedIndices[i]].Tag)).ProcFeeTotal;
 			}
-			gridPatient.ListGridRows[gridPatient.ListGridRows.Count-1].Cells[1].Text=POut.Double(feeThisAppt);
+			gridPatient.Rows[gridPatient.Rows.Count-1].Cells[1].Text=POut.Double(feeThisAppt);
 			gridPatient.Invalidate();
 		}
 
@@ -620,7 +620,7 @@ namespace OpenDental{
 			foreach(Procedure proc in listSelectedProcedures) {
 				totalEstPatientPortion+=ClaimProcs.GetPatPortion(proc,_listClaimProcs,_listAdjustments);
 			}
-			GridRow row=gridPatient.ListGridRows.ToList().Find(x => x.Cells[0].Text=="Est. Patient Portion");
+			GridRow row=gridPatient.Rows.ToList().Find(x => x.Cells[0].Text=="Est. Patient Portion");
 			if(row==null) {
 				return;//Probably some weird translation issue
 			}
@@ -629,30 +629,30 @@ namespace OpenDental{
 
 		private void FillFields() {
 			gridFields.BeginUpdate();
-			gridFields.ListGridColumns.Clear();
+			gridFields.Columns.Clear();
 			GridColumn col=new GridColumn("",100);
-			gridFields.ListGridColumns.Add(col);
+			gridFields.Columns.Add(col);
 			col=new GridColumn("",100);
-			gridFields.ListGridColumns.Add(col);
-			gridFields.ListGridRows.Clear();
+			gridFields.Columns.Add(col);
+			gridFields.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_tableFields.Rows.Count;i++) {
 				row=new GridRow();
 				row.Cells.Add(_tableFields.Rows[i]["FieldName"].ToString());
 				row.Cells.Add(_tableFields.Rows[i]["FieldValue"].ToString());
-				gridFields.ListGridRows.Add(row);
+				gridFields.Rows.Add(row);
 			}
 			gridFields.EndUpdate();
 		}
 
 		private void FillComm(){
 			gridComm.BeginUpdate();
-			gridComm.ListGridColumns.Clear();
+			gridComm.Columns.Clear();
 			GridColumn col=new GridColumn("DateTime",80);
-			gridComm.ListGridColumns.Add(col);
+			gridComm.Columns.Add(col);
 			col=new GridColumn("Description",80);
-			gridComm.ListGridColumns.Add(col);
-			gridComm.ListGridRows.Clear();
+			gridComm.Columns.Add(col);
+			gridComm.Rows.Clear();
 			GridRow row;
 			List<Definition> listMiscColorDefs=Definitions.GetDefsForCategory(DefinitionCategory.MiscColors);
 			for(int i=0;i<_tableComms.Rows.Count;i++) {
@@ -672,14 +672,14 @@ namespace OpenDental{
 					row.Cells.Add(_tableComms.Rows[i]["Subject"].ToString());
 				}
 				row.Tag=_tableComms.Rows[i];
-				gridComm.ListGridRows.Add(row);
+				gridComm.Rows.Add(row);
 			}
 			gridComm.EndUpdate();
 			gridComm.ScrollToEnd();
 		}
 
 		private void gridComm_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			DataRow row=((DataRow)gridComm.ListGridRows[e.Row].Tag);
+			DataRow row=((DataRow)gridComm.Rows[e.Row].Tag);
 			long commNum=PIn.Long(row["CommlogNum"].ToString());
 			long msgNum=PIn.Long(row["EmailMessageNum"].ToString());
 			if (commNum>0) {
@@ -729,12 +729,12 @@ namespace OpenDental{
 				listNumsSelected.AddRange(_listProcNumsAttachedStart);
 			}
 			else {//Filling the grid later on.
-				listNumsSelected.AddRange(gridProc.SelectedIndices.OfType<int>().Select(x => ((Procedure)gridProc.ListGridRows[x].Tag).ProcNum));
+				listNumsSelected.AddRange(gridProc.SelectedIndices.OfType<int>().Select(x => ((Procedure)gridProc.Rows[x].Tag).ProcNum));
 			}
 			bool isMedical=Clinics.IsMedicalClinic(comboClinic.SelectedClinicNum);
 			gridProc.BeginUpdate();
-			gridProc.ListGridRows.Clear();
-			gridProc.ListGridColumns.Clear();
+			gridProc.Rows.Clear();
+			gridProc.Columns.Clear();
 			List<DisplayField> listAptDisplayFields;
 			if(AptCur.AptStatus==ApptStatus.Planned){
 				listAptDisplayFields=DisplayFields.GetForCategory(DisplayFieldCategory.PlannedAppointmentEdit);
@@ -746,7 +746,7 @@ namespace OpenDental{
 				if(isMedical && (displayField.InternalName=="Surf" || displayField.InternalName=="Tth")) {
 					continue;
 				}
-				gridProc.ListGridColumns.Add(new GridColumn(displayField.InternalName,displayField.ColumnWidth));
+				gridProc.Columns.Add(new GridColumn(displayField.InternalName,displayField.ColumnWidth));
 			}
 			if(listAptDisplayFields.Sum(x => x.ColumnWidth) > gridProc.Width) {
 				gridProc.HScrollVisible=true;
@@ -824,7 +824,7 @@ namespace OpenDental{
 					}
 				}
 				row.Tag=proc;
-				gridProc.ListGridRows.Add(row);
+				gridProc.Rows.Add(row);
 			}
 			gridProc.EndUpdate();
 			for(int i=0;i<listProcs.Count;i++) {
@@ -929,18 +929,18 @@ namespace OpenDental{
 			List <int> listIndicies=new List<int>();
 			listIndicies.Add(index);
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
-				Procedure procSelected=((Procedure)gridProc.ListGridRows[index].Tag);
+				Procedure procSelected=((Procedure)gridProc.Rows[index].Tag);
 				if(procSelected.ProcNumLab==0) {//Not a lab, but could be a parent to a lab.
-					for(int i=0;i<gridProc.ListGridRows.Count;i++) {
-						Procedure proc=(Procedure)gridProc.ListGridRows[i].Tag;
+					for(int i=0;i<gridProc.Rows.Count;i++) {
+						Procedure proc=(Procedure)gridProc.Rows[i].Tag;
 						if(proc.ProcNumLab==procSelected.ProcNum) {//Is lab of selected procedure.
 							listIndicies.Add(i);
 						}
 					}
 				}
 				else {//Is a lab.
-					for(int i=0;i<gridProc.ListGridRows.Count;i++) {
-						Procedure proc=(Procedure)gridProc.ListGridRows[i].Tag;
+					for(int i=0;i<gridProc.Rows.Count;i++) {
+						Procedure proc=(Procedure)gridProc.Rows[i].Tag;
 						if(proc.ProcNum==procSelected.ProcNumLab) {//Parent of selected lab.
 							listIndicies.Add(i);
 						}
@@ -960,7 +960,7 @@ namespace OpenDental{
 				return;
 			}
 			toolTip1.RemoveAll();
-			Procedure selectedProc=((Procedure)gridProc.ListGridRows[e.Row].Tag);
+			Procedure selectedProc=((Procedure)gridProc.Rows[e.Row].Tag);
 			if(DisableDetachingOfCompletedProcFromCompletedAppt(selectedProc,AptCur,out string msg)){
 				toolTip1.AutoPopDelay=5000;//5000 is the maximum a tooltip can be displayed for using this method. 
 				toolTip1.IsBalloon=true;//Shows the tooltip in an easier to read speach bubble like view.
@@ -980,7 +980,7 @@ namespace OpenDental{
 				return;
 			}
 			toolTip1.RemoveAll();//Ensure that any tooltip that was showing due to gridProc_CellClick(...) is removed since user was trying to double click.
-			Procedure selectedProc=((Procedure)gridProc.ListGridRows[e.Row].Tag);
+			Procedure selectedProc=((Procedure)gridProc.Rows[e.Row].Tag);
 			//Only invert the procedure if we didn't block the original row inversino in gridProc_CellClick(...)
 			if(!DisableDetachingOfCompletedProcFromCompletedAppt(selectedProc,AptCur,out string msg)){
 				InvertCurProcSelected(e.Row);
@@ -988,7 +988,7 @@ namespace OpenDental{
 			//This will put the selection back to what is was before the single click event.
 			//Get fresh copy from DB so we are not editing a stale procedure
 			//If this is to be changed, make sure that this window is registering for procedure changes via signals or by some other means.
-			Procedure proc=Procedures.GetOneProc(((Procedure)gridProc.ListGridRows[e.Row].Tag).ProcNum,true);
+			Procedure proc=Procedures.GetOneProc(((Procedure)gridProc.Rows[e.Row].Tag).ProcNum,true);
 			FormProcEdit FormP=new FormProcEdit(proc,pat,fam);
 			FormP.ShowDialog();
 			if(FormP.DialogResult!=DialogResult.OK){
@@ -1038,10 +1038,10 @@ namespace OpenDental{
 			bool isProcDeleted=false;
 			OrthoProcLink orthoProcLink;
 			Dictionary<long,OrthoProcLink> dictOrthoProcLinks=
-				OrthoProcLinks.GetManyForProcs(gridProc.ListGridRows.Select(x => ((Procedure)x.Tag).ProcNum).ToList()).ToDictionary(y => y.ProcNum,y => y);
+				OrthoProcLinks.GetManyForProcs(gridProc.Rows.Select(x => ((Procedure)x.Tag).ProcNum).ToList()).ToDictionary(y => y.ProcNum,y => y);
 			try{
 				for(int i=gridProc.SelectedIndices.Length-1;i>=0;i--) {
-					Procedure proc=(Procedure)gridProc.ListGridRows[gridProc.SelectedIndices[i]].Tag;
+					Procedure proc=(Procedure)gridProc.Rows[gridProc.SelectedIndices[i]].Tag;
 					if(!Procedures.IsProcComplDeleteAuthorized(proc)) {
 							skipped++;
 							skippedSecurity++;
@@ -1147,8 +1147,8 @@ namespace OpenDental{
 			}
 			_listProcsForAppt=Procedures.GetProcsForApptEdit(AptCur);
 			FillProcedures();
-			for(int i=0;i<gridProc.ListGridRows.Count;i++) {
-				if(proc.ProcNum==((Procedure)gridProc.ListGridRows[i].Tag).ProcNum) {
+			for(int i=0;i<gridProc.Rows.Count;i++) {
+				if(proc.ProcNum==((Procedure)gridProc.Rows[i].Tag).ProcNum) {
 					gridProc.SetSelected(i,true);//Select those that were just added.
 				}
 			}
@@ -1279,7 +1279,7 @@ namespace OpenDental{
 		private void CalculatePatternFromProcs(bool ignoreTimeLocked=false) {
 			List<Procedure> listProcs=new List<Procedure>();
 			foreach(int i in gridProc.SelectedIndices) {
-				listProcs.Add((Procedure)gridProc.ListGridRows[i].Tag);
+				listProcs.Add((Procedure)gridProc.Rows[i].Tag);
 			}
 			contrApptProvSlider.Pattern=Appointments.CalculatePattern(pat,comboProv.GetSelectedProvNum(),comboProvHyg.GetSelectedProvNum(),
 				listProcs,checkTimeLocked.Checked,ignoreTimeLocked);
@@ -1300,7 +1300,7 @@ namespace OpenDental{
 		}
 
 		private void gridPatient_CellClick(object sender,ODGridClickEventArgs e) {
-			GridCell gridCellCur=gridPatient.ListGridRows[e.Row].Cells[e.Col];
+			GridCell gridCellCur=gridPatient.Rows[e.Row].Cells[e.Col];
 			//Only grid cells with phone numbers are blue and underlined.
 			if(gridCellCur.ForeColor==System.Drawing.Color.Blue && gridCellCur.Underline== true && Programs.GetCur(ProgramName.DentalTekSmartOfficePhone).Enabled) {
 				DentalTek.PlaceCall(gridCellCur.Text);
@@ -1353,9 +1353,9 @@ namespace OpenDental{
 			}
 			listQuickAdd.SelectedIndex=-1;
 			FillProcedures();
-			for(int i=0;i<gridProc.ListGridRows.Count;i++) {
+			for(int i=0;i<gridProc.Rows.Count;i++) {
 				//at this point, all procedures in the list should have a Primary Key.
-				long procNumCur=((Procedure)gridProc.ListGridRows[i].Tag).ProcNum;
+				long procNumCur=((Procedure)gridProc.Rows[i].Tag).ProcNum;
 				if(listAddedProcs.Any(x => x.ProcNum==procNumCur)) {
 					gridProc.SetSelected(i,true);//Select those that were just added.
 				}
@@ -1529,9 +1529,9 @@ namespace OpenDental{
 				return false;
 			}
 			if(_selectedApptStatus==ApptStatus.Complete 
-				&& gridProc.SelectedIndices.Select(x => (Procedure)gridProc.ListGridRows[x].Tag).Any(x => x.ProcStatus!=ProcStat.C)) 
+				&& gridProc.SelectedIndices.Select(x => (Procedure)gridProc.Rows[x].Tag).Any(x => x.ProcStatus!=ProcStat.C)) 
 			{//Appt is complete, but a selected proc is not.
-				List<Procedure> listSelectedProcs=gridProc.SelectedIndices.Select(x => (Procedure)gridProc.ListGridRows[x].Tag).ToList();
+				List<Procedure> listSelectedProcs=gridProc.SelectedIndices.Select(x => (Procedure)gridProc.Rows[x].Tag).ToList();
 				listSelectedProcs.RemoveAll(x => x.ProcStatus==ProcStat.C);//only care about the procs that are not already complete (new attaching procs)
 				foreach(Procedure proc in listSelectedProcs) {
 					if(!Security.IsAuthorized(Permissions.ProcComplCreate,AptCur.AptDateTime,proc.CodeNum,proc.ProcFee)) {
@@ -1548,8 +1548,8 @@ namespace OpenDental{
 			//The value is the count of procedures being moved from the associated aptNum.
 			//We will use this to determine if the procedure's original appointment needs to be deleted (if all procedures are moved to another appointment).
 			Dictionary<long,int> dictProcsBeingMoved=new Dictionary<long,int>();
-			for(int i=0;i<gridProc.ListGridRows.Count;i++) {
-				Procedure proc=(Procedure)gridProc.ListGridRows[i].Tag;
+			for(int i=0;i<gridProc.Rows.Count;i++) {
+				Procedure proc=(Procedure)gridProc.Rows[i].Tag;
 				bool isAttaching=gridProc.SelectedIndices.Contains(i);
 				bool isAttachedStart=_listProcNumsAttachedStart.Contains(proc.ProcNum);
 				if(!isAttachedStart && isAttaching && _isPlanned) {//Attaching to this planned appointment.
@@ -1626,7 +1626,7 @@ namespace OpenDental{
 					return false;
 				}
 				if(Prefs.GetBool(PrefName.UnscheduledListNoRecalls) 
-					&& Appointments.IsRecallAppointment(AptCur,gridProc.SelectedGridRows.Select(x => (Procedure)(x.Tag)).ToList())) 
+					&& Appointments.IsRecallAppointment(AptCur,gridProc.SelectedRows.Select(x => (Procedure)(x.Tag)).ToList())) 
 				{
 					if(MsgBox.Show(MsgBoxButtons.YesNo,"Recall appointments cannot be sent to the Unscheduled List.\r\nDelete appointment instead?")) {
 						OnDelete_Click(true);//Skip the standard "Delete Appointment?" prompt since we have already prompted here. Closes form and syncs data.
@@ -1703,7 +1703,7 @@ namespace OpenDental{
 			}
 			bool hasProcsAttached=gridProc.SelectedIndices
 				//Get tags on rows as procedures if possible
-				.Select(x=>gridProc.ListGridRows[x].Tag as Procedure)
+				.Select(x=>gridProc.Rows[x].Tag as Procedure)
 				//true if any row had a valid procedure as a tag
 				.Any(x=>x!=null);
 			if(!Prefs.GetBool(PrefName.ApptAllowEmptyComplete)
@@ -1745,7 +1745,7 @@ namespace OpenDental{
 				}
 			}
 			#endregion Provider Term Date Check
-			List<Procedure> listProcs=gridProc.SelectedIndices.OfType<int>().Select(x => (Procedure)gridProc.ListGridRows[x].Tag).ToList();
+			List<Procedure> listProcs=gridProc.SelectedIndices.OfType<int>().Select(x => (Procedure)gridProc.Rows[x].Tag).ToList();
 			if(listProcs.Count > 0 && comboStatus.SelectedIndex==1 && AptCur.AptDateTime.Date > DateTime.Today.Date 
 				&& !Prefs.GetBool(PrefName.FutureTransDatesAllowed)) 
 			{
@@ -1844,8 +1844,8 @@ namespace OpenDental{
 			//Determins if we would like to update ProcFees when a provider changes, considers PrefName.ProcFeeUpdatePrompt.
 			bool updateProcFees=false;
 			if(AptCur.AptStatus!=ApptStatus.Complete && (comboProv.GetSelectedProvNum()!=AptOld.ProvNum || comboProvHyg.GetSelectedProvNum()!=AptOld.ProvHyg)) {//Either the primary or hygienist changed.
-				List<Procedure> listNewProcs=gridProc.SelectedIndices.Select(x => Procedures.ChangeProcInAppointment(AptCur,((Procedure)gridProc.ListGridRows[x].Tag).Copy())).ToList();
-				List<Procedure> listOldProcs=gridProc.SelectedIndices.Select(x => ((Procedure)gridProc.ListGridRows[x].Tag).Copy()).ToList();
+				List<Procedure> listNewProcs=gridProc.SelectedIndices.Select(x => Procedures.ChangeProcInAppointment(AptCur,((Procedure)gridProc.Rows[x].Tag).Copy())).ToList();
+				List<Procedure> listOldProcs=gridProc.SelectedIndices.Select(x => ((Procedure)gridProc.Rows[x].Tag).Copy()).ToList();
 				ProcFeeHelper procFeeHelper=new ProcFeeHelper(AptCur.PatNum);
 				string promptText="";
 				//PatientNote "Appointment" will never have fees.  Prompting/Updating proc fees unnecessary.
@@ -1881,11 +1881,11 @@ namespace OpenDental{
 			#region Update gridProc tags
 			//update tags with changes made so that anyone accessing it later has an updated copy.
 			foreach(int index in gridProc.SelectedIndices) {
-				Procedure procNew=_listProcsForAppt.FirstOrDefault(x => x.ProcNum==((Procedure)gridProc.ListGridRows[index].Tag).ProcNum);
+				Procedure procNew=_listProcsForAppt.FirstOrDefault(x => x.ProcNum==((Procedure)gridProc.Rows[index].Tag).ProcNum);
 				if(procNew==null) {
 					continue;
 				}
-				gridProc.ListGridRows[index].Tag=procNew.Copy();
+				gridProc.Rows[index].Tag=procNew.Copy();
 			}
 			#endregion
 			#region Automation and Broken Appt Logic
@@ -2008,7 +2008,7 @@ namespace OpenDental{
 			gridProg.TranslationName="";
 			this.Controls.Add(gridProg);//Only added temporarily so that printing will work. Removed at end with Dispose().
 			gridProg.BeginUpdate();
-			gridProg.ListGridColumns.Clear();
+			gridProg.Columns.Clear();
 			GridColumn col;
 			List<DisplayField> fields=DisplayFields.GetDefaultList(DisplayFieldCategory.None);
 			for(int i=0;i<fields.Count;i++){
@@ -2028,11 +2028,11 @@ namespace OpenDental{
 				{
 					col.TextAlign=HorizontalAlignment.Center;
 				}
-				gridProg.ListGridColumns.Add(col);
+				gridProg.Columns.Add(col);
 			}
 			gridProg.NoteSpanStart=2;
 			gridProg.NoteSpanStop=7;
-			gridProg.ListGridRows.Clear();
+			gridProg.Rows.Clear();
 			List<Procedure> procsForDay=Procedures.GetProcsForPatByDate(AptCur.PatNum,AptCur.AptDateTime);
 			List<Definition> listProgNoteColorDefs=Definitions.GetDefsForCategory(DefinitionCategory.ProgNoteColors);
 			List<Definition> listMiscColorDefs=Definitions.GetDefsForCategory(DefinitionCategory.MiscColors);
@@ -2119,7 +2119,7 @@ namespace OpenDental{
 				if(proc.ProcDate.Date==DateTime.Today) {
 					row.BackColor=listMiscColorDefs[6].Color;
 				}				
-				gridProg.ListGridRows.Add(row);
+				gridProg.Rows.Add(row);
 			}
 			MigraDocHelper.DrawGrid(section,gridProg);
 			#endregion		
@@ -2159,7 +2159,7 @@ namespace OpenDental{
 				butDeleteProc.Enabled=true;
 				return;
 			}
-			List<Procedure> listProcsForAppt=gridProc.SelectedIndices.OfType<int>().Select(x => (Procedure)gridProc.ListGridRows[x].Tag).ToList();
+			List<Procedure> listProcsForAppt=gridProc.SelectedIndices.OfType<int>().Select(x => (Procedure)gridProc.Rows[x].Tag).ToList();
 			string duplicateProcs=ProcedureL.ProcsContainDuplicates(listProcsForAppt);
 			if(duplicateProcs!="") {
 				MessageBox.Show(duplicateProcs);
@@ -2294,8 +2294,8 @@ namespace OpenDental{
 			AppointmentType aptTypeCur=_listAppointmentType[comboApptType.SelectedIndex-1];
 			List<ProcedureCode> listAptTypeProcs=ProcedureCodes.GetFromCommaDelimitedList(aptTypeCur.ProcedureCodes);
 			if(listAptTypeProcs.Count>0) {//AppointmentType is associated to procs.
-				List<Procedure> listSelectedProcs=gridProc.ListGridRows.Cast<GridRow>()
-					.Where(x => gridProc.SelectedIndices.Contains(gridProc.ListGridRows.IndexOf(x)))
+				List<Procedure> listSelectedProcs=gridProc.Rows.Cast<GridRow>()
+					.Where(x => gridProc.SelectedIndices.Contains(gridProc.Rows.IndexOf(x)))
 					.Select(x => ((Procedure)x.Tag)).ToList();
 				List<long> listProcCodeNumsToDetach=listSelectedProcs.Select(y => y.CodeNum).ToList()
 				.Except(listAptTypeProcs.Select(x => x.CodeNum).ToList()).ToList();
@@ -2313,8 +2313,8 @@ namespace OpenDental{
 				//Since we have detached and attached all pertinent procs by this point it is safe to just use the PlannedAptNum or AptNum.
 				gridProc.SetSelected(false);
 				foreach(ProcedureCode procCodeCur in listAptTypeProcs) {
-					for(int i=0;i<gridProc.ListGridRows.Count;i++) {
-						Procedure rowProc=(Procedure)gridProc.ListGridRows[i].Tag;
+					for(int i=0;i<gridProc.Rows.Count;i++) {
+						Procedure rowProc=(Procedure)gridProc.Rows[i].Tag;
 						if(rowProc.CodeNum==procCodeCur.CodeNum
 							//if the procedure code already exists in the grid and it's not attached to another appointment or planned appointment
 							&& (_isPlanned && (rowProc.PlannedAptNum==0 || rowProc.PlannedAptNum==AptCur.AptNum)
@@ -2475,7 +2475,7 @@ namespace OpenDental{
 		private bool CheckFrequencies() {
 			List<Procedure> listProcsForFrequency=new List<Procedure>();
 			foreach(int index in gridProc.SelectedIndices) {
-				Procedure proc=((Procedure)gridProc.ListGridRows[index].Tag).Copy();
+				Procedure proc=((Procedure)gridProc.Rows[index].Tag).Copy();
 				if(proc.ProcStatus==ProcStat.TP) {
 					listProcsForFrequency.Add(proc);
 				}
@@ -2653,7 +2653,7 @@ namespace OpenDental{
 			if(DialogResult!=DialogResult.OK) {
 				if(AptCur.AptStatus==ApptStatus.Complete) {
 					//This is a completed appointment and we need to warn the user if they are trying to leave the window and need to detach procs first.
-					foreach(GridRow row in gridProc.ListGridRows) {
+					foreach(GridRow row in gridProc.Rows) {
 						bool attached=false;
 						if(AptCur.AptStatus==ApptStatus.Planned && ((Procedure)row.Tag).PlannedAptNum==AptCur.AptNum) {
 							attached=true;

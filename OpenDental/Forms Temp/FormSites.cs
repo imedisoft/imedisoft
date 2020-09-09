@@ -183,18 +183,18 @@ namespace OpenDental{
 			Sites.RefreshCache();
 			_listSites=Sites.GetDeepCopy();
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("Description",220));
-			gridMain.ListGridColumns.Add(new GridColumn("PlaceOfService",142));
-			gridMain.ListGridColumns.Add(new GridColumn("Note",90){ IsWidthDynamic=true });
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("Description",220));
+			gridMain.Columns.Add(new GridColumn("PlaceOfService",142));
+			gridMain.Columns.Add(new GridColumn("Note",90){ IsWidthDynamic=true });
+			gridMain.Rows.Clear();
 			GridRow row;
 			foreach(Site site in _listSites) {
 				row=new GridRow();
 				row.Cells.Add(site.Description);
 				row.Cells.Add(site.PlaceService.ToString());
 				row.Cells.Add(site.Note);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

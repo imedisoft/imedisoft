@@ -44,17 +44,17 @@ namespace OpenDental
 			long.TryParse(textProvNum.Text, out selectedProvNum);
 			DataTable table = Providers.RefreshForDentalSchool(schoolClass, textLName.Text, textFName.Text, textProvNum.Text, false, false);
 			gridStudents.BeginUpdate();
-			gridStudents.ListGridColumns.Clear();
+			gridStudents.Columns.Clear();
 			GridColumn col;
 			col = new GridColumn("ProvNum", 60);
-			gridStudents.ListGridColumns.Add(col);
+			gridStudents.Columns.Add(col);
 			col = new GridColumn("Last Name", 90);
-			gridStudents.ListGridColumns.Add(col);
+			gridStudents.Columns.Add(col);
 			col = new GridColumn("First Name", 90);
-			gridStudents.ListGridColumns.Add(col);
+			gridStudents.Columns.Add(col);
 			col = new GridColumn("Class", 100);
-			gridStudents.ListGridColumns.Add(col);
-			gridStudents.ListGridRows.Clear();
+			gridStudents.Columns.Add(col);
+			gridStudents.Rows.Clear();
 			GridRow row;
 			for (int i = 0; i < table.Rows.Count; i++)
 			{
@@ -71,7 +71,7 @@ namespace OpenDental
 					row.Cells.Add("");
 				}
 				row.Tag = table.Rows[i]["ProvNum"];
-				gridStudents.ListGridRows.Add(row);
+				gridStudents.Rows.Add(row);
 			}
 			gridStudents.EndUpdate();
 			for (int i = 0; i < table.Rows.Count; i++)
@@ -87,20 +87,20 @@ namespace OpenDental
 		private void FillDispSupply()
 		{
 			long selectedProvNum = 0;
-			long.TryParse(gridStudents.ListGridRows[gridStudents.GetSelectedIndex()].Tag.ToString(), out selectedProvNum);
+			long.TryParse(gridStudents.Rows[gridStudents.GetSelectedIndex()].Tag.ToString(), out selectedProvNum);
 			DataTable table = DispSupplies.RefreshDispensary(PIn.Long(textProvNum.Text));
 			gridDispSupply.BeginUpdate();
-			gridDispSupply.ListGridColumns.Clear();
+			gridDispSupply.Columns.Clear();
 			GridColumn col;
 			col = new GridColumn("DateDispensed", 100);
-			gridDispSupply.ListGridColumns.Add(col);
+			gridDispSupply.Columns.Add(col);
 			col = new GridColumn("Description", 90);
-			gridDispSupply.ListGridColumns.Add(col);
+			gridDispSupply.Columns.Add(col);
 			col = new GridColumn("Qty", 40);
-			gridDispSupply.ListGridColumns.Add(col);
+			gridDispSupply.Columns.Add(col);
 			col = new GridColumn("Note", 100);
-			gridDispSupply.ListGridColumns.Add(col);
-			gridDispSupply.ListGridRows.Clear();
+			gridDispSupply.Columns.Add(col);
+			gridDispSupply.Rows.Clear();
 			GridRow row;
 			for (int i = 0; i < table.Rows.Count; i++)
 			{
@@ -109,7 +109,7 @@ namespace OpenDental
 				row.Cells.Add(table.Rows[i]["Descript"].ToString());
 				row.Cells.Add(table.Rows[i]["DispQuantity"].ToString());
 				row.Cells.Add(table.Rows[i]["Note"].ToString());
-				gridDispSupply.ListGridRows.Add(row);
+				gridDispSupply.Rows.Add(row);
 			}
 			gridDispSupply.EndUpdate();
 		}

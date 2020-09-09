@@ -675,8 +675,8 @@ namespace OpenDental{
 			}
 			//Clear out the columns and rows for dynamic resizing of the grid to calculate column widths
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Clear();
+			gridMain.Rows.Clear();
 			gridMain.EndUpdate();
 			_provsChanged=false;
 			List<long> provNums=new List<long>();
@@ -699,21 +699,21 @@ namespace OpenDental{
 				// TODO: Logger.LogToPath("Schedules.GetPeriod",LogPath.Signals,LogPhase.End);
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			if(checkWeekend.Checked && checkWeekend.CheckState!=CheckState.Indeterminate) {
-				gridMain.ListGridColumns.Add(new GridColumn("Sunday",50){ IsWidthDynamic=true });
+				gridMain.Columns.Add(new GridColumn("Sunday",50){ IsWidthDynamic=true });
 			}
 			if(checkWeekend.CheckState!=CheckState.Indeterminate) {
-				gridMain.ListGridColumns.Add(new GridColumn("Monday",50){ IsWidthDynamic=true });
-				gridMain.ListGridColumns.Add(new GridColumn("Tuesday",50){ IsWidthDynamic=true });
-				gridMain.ListGridColumns.Add(new GridColumn("Wednesday",50){ IsWidthDynamic=true });
-				gridMain.ListGridColumns.Add(new GridColumn("Thursday",50){ IsWidthDynamic=true });
-				gridMain.ListGridColumns.Add(new GridColumn("Friday",50){ IsWidthDynamic=true });
+				gridMain.Columns.Add(new GridColumn("Monday",50){ IsWidthDynamic=true });
+				gridMain.Columns.Add(new GridColumn("Tuesday",50){ IsWidthDynamic=true });
+				gridMain.Columns.Add(new GridColumn("Wednesday",50){ IsWidthDynamic=true });
+				gridMain.Columns.Add(new GridColumn("Thursday",50){ IsWidthDynamic=true });
+				gridMain.Columns.Add(new GridColumn("Friday",50){ IsWidthDynamic=true });
 			}
 			if(checkWeekend.Checked){
-				gridMain.ListGridColumns.Add(new GridColumn("Saturday",50){ IsWidthDynamic=true });
+				gridMain.Columns.Add(new GridColumn("Saturday",50){ IsWidthDynamic=true });
 			}
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_tableScheds.Rows.Count;i++){
 				row=new GridRow();
@@ -730,7 +730,7 @@ namespace OpenDental{
 				if(checkWeekend.Checked) {
 					row.Cells.Add(_tableScheds.Rows[i][6].ToString());
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			//Set today red
@@ -747,12 +747,12 @@ namespace OpenDental{
 			if(!checkWeekend.Checked){
 				colI--;
 			}
-			gridMain.ListGridRows[Schedules.GetRowCal(_fromDateCur,DateTime.Today)].Cells[colI].ForeColor=Color.Red;
+			gridMain.Rows[Schedules.GetRowCal(_fromDateCur,DateTime.Today)].Cells[colI].ForeColor=Color.Red;
 			if(_clickedCell!=null //when first opening form
 				&& _clickedCell.Y>-1 
-				&& _clickedCell.Y< gridMain.ListGridRows.Count
+				&& _clickedCell.Y< gridMain.Rows.Count
 				&& _clickedCell.X>-1
-				&& _clickedCell.X<gridMain.ListGridColumns.Count) 
+				&& _clickedCell.X<gridMain.Columns.Count) 
 			{
 				gridMain.SetSelected(_clickedCell);
 			}

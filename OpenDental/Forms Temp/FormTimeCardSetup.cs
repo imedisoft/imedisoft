@@ -304,14 +304,14 @@ namespace OpenDental{
 			PayPeriods.RefreshCache();
 			_listPayPeriods=PayPeriods.GetDeepCopy().OrderBy(x => x.DateStart).ToList();
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Start Date",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("End Date",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Paycheck Date",100);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			UI.GridRow row;
 			foreach(PayPeriod payPeriodCur in _listPayPeriods) {
 				if(checkHideOlder.Checked && payPeriodCur.DateStart < DateTimeOD.Today.AddMonths(-6)) {
@@ -330,7 +330,7 @@ namespace OpenDental{
 				if(payPeriodCur.DateStart<=DateTimeOD.Today && payPeriodCur.DateStop >=DateTimeOD.Today) {
 					row.BackColor=Color.LightCyan;
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -343,20 +343,20 @@ namespace OpenDental{
 				.ThenBy(x => (Employees.GetEmp(x.EmployeeNum)??new Employee()).LastName)
 				.ToList();
 			gridRules.BeginUpdate();
-			gridRules.ListGridColumns.Clear();
+			gridRules.Columns.Clear();
 			GridColumn col=new GridColumn("Employee",150,GridSortingStrategy.StringCompare);
-			gridRules.ListGridColumns.Add(col);
+			gridRules.Columns.Add(col);
 			col=new GridColumn("OT before x Time",105,GridSortingStrategy.TimeParse);
-			gridRules.ListGridColumns.Add(col);
+			gridRules.Columns.Add(col);
 			col=new GridColumn("OT after x Time",100,GridSortingStrategy.TimeParse);
-			gridRules.ListGridColumns.Add(col);
+			gridRules.Columns.Add(col);
 			col=new GridColumn("OT after x Hours",110,GridSortingStrategy.TimeParse);
-			gridRules.ListGridColumns.Add(col);
+			gridRules.Columns.Add(col);
 			col=new GridColumn("Min Clock In Time",105,GridSortingStrategy.TimeParse);
-			gridRules.ListGridColumns.Add(col);
+			gridRules.Columns.Add(col);
 			col=new GridColumn("Is OT Exempt",100,HorizontalAlignment.Center,GridSortingStrategy.StringCompare);
-			gridRules.ListGridColumns.Add(col);
-			gridRules.ListGridRows.Clear();
+			gridRules.Columns.Add(col);
+			gridRules.Rows.Clear();
 			UI.GridRow row;
 			for(int i=0;i<listSorted.Count;i++) {
 				row=new GridRow();
@@ -373,7 +373,7 @@ namespace OpenDental{
 				row.Cells.Add(listSorted[i].MinClockInTime.ToStringHmm());
 				row.Cells.Add(listSorted[i].IsOvertimeExempt ? "X" : "");
 				row.Tag=listSorted[i];
-				gridRules.ListGridRows.Add(row);
+				gridRules.Rows.Add(row);
 			}
 			gridRules.EndUpdate();
 		}
@@ -414,7 +414,7 @@ namespace OpenDental{
 		}
 
 		private void gridMain_CellDoubleClick(object sender,OpenDental.UI.ODGridClickEventArgs e) {
-			FormPayPeriodEdit FormP=new FormPayPeriodEdit((PayPeriod)gridMain.ListGridRows[e.Row].Tag);
+			FormPayPeriodEdit FormP=new FormPayPeriodEdit((PayPeriod)gridMain.Rows[e.Row].Tag);
 			FormP.ShowDialog();
 			if(FormP.DialogResult==DialogResult.Cancel) {
 				return;
@@ -493,7 +493,7 @@ namespace OpenDental{
 		}
 
 		private void gridRules_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			FormTimeCardRuleEdit FormT=new FormTimeCardRuleEdit((TimeCardRule)gridRules.ListGridRows[e.Row].Tag);
+			FormTimeCardRuleEdit FormT=new FormTimeCardRuleEdit((TimeCardRule)gridRules.Rows[e.Row].Tag);
 			FormT.ShowDialog();
 			FillRules();
 			changed=true;
@@ -518,7 +518,7 @@ namespace OpenDental{
 			}
 			List<PayPeriod> listSelectedPayPeriods = new List<PayPeriod>();
 			for(int i = 0;i < gridMain.SelectedIndices.Length;i++) {
-				listSelectedPayPeriods.Add((PayPeriod)gridMain.ListGridRows[gridMain.SelectedIndices[i]].Tag);
+				listSelectedPayPeriods.Add((PayPeriod)gridMain.Rows[gridMain.SelectedIndices[i]].Tag);
 			}
 			List<PayPeriod> listPayPeriodsToDelete;
 			if(!IsSafeToDelete(listSelectedPayPeriods,out listPayPeriodsToDelete)) {

@@ -329,27 +329,27 @@ namespace OpenDental{
 		private void FillGridAllMedications(bool shouldRetainSelection=true){
 			Medication medSelected=null;
 			if(shouldRetainSelection && gridAllMedications.GetSelectedIndex()!=-1) {
-				medSelected=(Medication)gridAllMedications.ListGridRows[gridAllMedications.GetSelectedIndex()].Tag;
+				medSelected=(Medication)gridAllMedications.Rows[gridAllMedications.GetSelectedIndex()].Tag;
 			}
 			List <long> listInUseMedicationNums=Medications.GetAllInUseMedicationNums();
 			int sortColIndex=gridAllMedications.SortedByColumnIdx;
 			bool isSortAscending=gridAllMedications.SortedIsAscending;
 			gridAllMedications.BeginUpdate();
-			gridAllMedications.ListGridColumns.Clear();
+			gridAllMedications.Columns.Clear();
 			//The order of these columns is important.  See gridAllMedications_CellClick()
 			GridColumn col=new GridColumn("Drug Name",120,GridSortingStrategy.StringCompare);
-			gridAllMedications.ListGridColumns.Add(col);
+			gridAllMedications.Columns.Add(col);
 			col=new GridColumn("Generic Name",120,GridSortingStrategy.StringCompare);
-			gridAllMedications.ListGridColumns.Add(col);
+			gridAllMedications.Columns.Add(col);
 			col=new GridColumn("InUse",55,HorizontalAlignment.Center,GridSortingStrategy.StringCompare);
-			gridAllMedications.ListGridColumns.Add(col);
+			gridAllMedications.Columns.Add(col);
 			if(CultureInfo.CurrentCulture.Name.EndsWith("US")) {//United States
 				col=new GridColumn("RxNorm",70,GridSortingStrategy.StringCompare);
-				gridAllMedications.ListGridColumns.Add(col);
+				gridAllMedications.Columns.Add(col);
 			}
 			col=new GridColumn("Notes for Generic",250,GridSortingStrategy.StringCompare);
-			gridAllMedications.ListGridColumns.Add(col);
-			gridAllMedications.ListGridRows.Clear();
+			gridAllMedications.Columns.Add(col);
+			gridAllMedications.Rows.Clear();
 			List <Medication> listMeds=Medications.GetList(textSearch.Text);
 			foreach(Medication med in listMeds) {
 				GridRow row=new GridRow();
@@ -378,13 +378,13 @@ namespace OpenDental{
 					}
 				}
 				row.Cells.Add(med.Notes);
-				gridAllMedications.ListGridRows.Add(row);
+				gridAllMedications.Rows.Add(row);
 			}
 			gridAllMedications.EndUpdate();
 			gridAllMedications.SortForced(sortColIndex,isSortAscending);
 			if(medSelected!=null) {//Will be null if nothing is selected.
-				for(int i=0;i<gridAllMedications.ListGridRows.Count;i++) {
-					Medication medCur=(Medication)gridAllMedications.ListGridRows[i].Tag;
+				for(int i=0;i<gridAllMedications.Rows.Count;i++) {
+					Medication medCur=(Medication)gridAllMedications.Rows[i].Tag;
 					if(medCur.Id==medSelected.Id) {
 						gridAllMedications.SetSelected(i,true);
 						break;
@@ -397,12 +397,12 @@ namespace OpenDental{
 			int sortColIndex=gridMissing.SortedByColumnIdx;
 			bool isSortAscending=gridMissing.SortedIsAscending;
 			gridMissing.BeginUpdate();
-			gridMissing.ListGridColumns.Clear();
+			gridMissing.Columns.Clear();
 			GridColumn col=new GridColumn("RxNorm",70,GridSortingStrategy.StringCompare);
-			gridMissing.ListGridColumns.Add(col);
+			gridMissing.Columns.Add(col);
 			col=new GridColumn("Drug Description",140,GridSortingStrategy.StringCompare){ IsWidthDynamic=true };
-			gridMissing.ListGridColumns.Add(col);
-			gridMissing.ListGridRows.Clear();
+			gridMissing.Columns.Add(col);
+			gridMissing.Rows.Clear();
 			List<MedicationPat> listMedPats=MedicationPats.GetAllMissingMedications();
 			Dictionary <string,List<MedicationPat>> dictMissingUnique=new Dictionary<string,List<MedicationPat>>();
 			foreach(MedicationPat medPat in listMedPats) {
@@ -418,7 +418,7 @@ namespace OpenDental{
 						row.Cells.Add(medPat.RxCui.ToString());
 					}
 					row.Cells.Add(medPat.MedDescript);
-					gridMissing.ListGridRows.Add(row);
+					gridMissing.Rows.Add(row);
 				}
 				dictMissingUnique[key].Add(medPat);
 			}
@@ -442,7 +442,7 @@ namespace OpenDental{
 				MessageBox.Show("You must first highlight the generic medication from the list.  If it is not already on the list, then you must add it first.");
 				return;
 			}
-			Medication medSelected=(Medication)gridAllMedications.ListGridRows[gridAllMedications.GetSelectedIndex()].Tag;
+			Medication medSelected=(Medication)gridAllMedications.Rows[gridAllMedications.GetSelectedIndex()].Tag;
 			if(medSelected.Id!=medSelected.GenericId){
 				MessageBox.Show("The selected medication is not generic.");
 				return;
@@ -554,7 +554,7 @@ namespace OpenDental{
 		}
 
 		private void gridAllMedications_CellClick(object sender,ODGridClickEventArgs e) {
-			Medication med=(Medication)gridAllMedications.ListGridRows[e.Row].Tag;
+			Medication med=(Medication)gridAllMedications.Rows[e.Row].Tag;
 			if(CultureInfo.CurrentCulture.Name.EndsWith("US") && e.Col==3) {//United States RxNorm Column
 				FormRxNorms formRxNorm=new FormRxNorms();
 				formRxNorm.IsSelectionMode=true;
@@ -572,7 +572,7 @@ namespace OpenDental{
 		}
 
 		private void gridAllMedications_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			Medication med=(Medication)gridAllMedications.ListGridRows[e.Row].Tag;
+			Medication med=(Medication)gridAllMedications.Rows[e.Row].Tag;
 			med=Medications.GetById(med.Id);
 			if(med==null) {//Possible to delete the medication from a separate WS while medication loaded in memory.
 				MessageBox.Show("An error occurred loading medication.");
@@ -597,7 +597,7 @@ namespace OpenDental{
 				MessageBox.Show("Please select an item from the list before attempting to convert.");
 				return;
 			}
-			List<MedicationPat> listMedPats=(List<MedicationPat>)gridMissing.ListGridRows[gridMissing.SelectedIndices[0]].Tag;
+			List<MedicationPat> listMedPats=(List<MedicationPat>)gridMissing.Rows[gridMissing.SelectedIndices[0]].Tag;
 			List<Medication> listRxCuiMeds=null;
 			Medication medGeneric=null;
 			if(listMedPats[0].RxCui!=0) {
@@ -642,7 +642,7 @@ namespace OpenDental{
 				MessageBox.Show("Please select an item from the list before attempting to convert.");
 				return;
 			}
-			List<MedicationPat> listMedPats=(List<MedicationPat>)gridMissing.ListGridRows[gridMissing.SelectedIndices[0]].Tag;
+			List<MedicationPat> listMedPats=(List<MedicationPat>)gridMissing.Rows[gridMissing.SelectedIndices[0]].Tag;
 			List<Medication> listRxCuiMeds=null;
 			Medication medBrand=null;
 			if(listMedPats[0].RxCui!=0) {
@@ -657,7 +657,7 @@ namespace OpenDental{
 			if(listRxCuiMeds==null || listRxCuiMeds.Count==0) {//No medications found matching the RxCui
 				Medication medGeneric=null;
 				if(gridAllMedications.SelectedIndices.Length > 0) {
-					medGeneric=(Medication)gridAllMedications.ListGridRows[gridAllMedications.SelectedIndices[0]].Tag;
+					medGeneric=(Medication)gridAllMedications.Rows[gridAllMedications.SelectedIndices[0]].Tag;
 					if(medGeneric.Id!=medGeneric.GenericId) {
 						medGeneric=null;//The selected medication is a brand medication, not a generic medication.
 					}
@@ -699,7 +699,7 @@ namespace OpenDental{
 				MessageBox.Show("Please select an item first.");
 				return;
 			}
-			SelectedMedicationNum=((Medication)gridAllMedications.ListGridRows[gridAllMedications.GetSelectedIndex()].Tag).Id;
+			SelectedMedicationNum=((Medication)gridAllMedications.Rows[gridAllMedications.GetSelectedIndex()].Tag).Id;
 			DialogResult=DialogResult.OK;
 		}
 

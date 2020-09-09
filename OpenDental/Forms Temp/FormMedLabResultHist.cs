@@ -24,23 +24,23 @@ namespace OpenDental {
 				return;
 			}
 			gridResultHist.BeginUpdate();
-			gridResultHist.ListGridColumns.Clear();
+			gridResultHist.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Result Description / Value",425);
-			gridResultHist.ListGridColumns.Add(col);
+			gridResultHist.Columns.Add(col);
 			col=new GridColumn("Flag",110);
-			gridResultHist.ListGridColumns.Add(col);
+			gridResultHist.Columns.Add(col);
 			col=new GridColumn("Units",65);
-			gridResultHist.ListGridColumns.Add(col);
+			gridResultHist.Columns.Add(col);
 			col=new GridColumn("Date/Time Reported",130);//OBR-22, Date/Time Observations Reported
 			col.SortingStrategy=GridSortingStrategy.DateParse;
-			gridResultHist.ListGridColumns.Add(col);
+			gridResultHist.Columns.Add(col);
 			col=new GridColumn("Date/Time Observed",130);//OBX-11, Date/Time of Observation
 			col.SortingStrategy=GridSortingStrategy.DateParse;
-			gridResultHist.ListGridColumns.Add(col);
+			gridResultHist.Columns.Add(col);
 			col=new GridColumn("Status",70);
-			gridResultHist.ListGridColumns.Add(col);
-			gridResultHist.ListGridRows.Clear();
+			gridResultHist.Columns.Add(col);
+			gridResultHist.Rows.Clear();
 			GridRow row;
 			long patNum=0;
 			if(PatCur!=null) {
@@ -67,7 +67,7 @@ namespace OpenDental {
 				row.Cells.Add(dateReported);
 				row.Cells.Add(listResults[i].DateTimeObs.ToString("MM/dd/yyyy hh:mm tt"));//DT format matches LabCorp examples (US only company)
 				row.Cells.Add(MedLabs.GetStatusDescript(listResults[i].ResultStatus));
-				gridResultHist.ListGridRows.Add(row);
+				gridResultHist.Rows.Add(row);
 			}
 			gridResultHist.EndUpdate();
 		}

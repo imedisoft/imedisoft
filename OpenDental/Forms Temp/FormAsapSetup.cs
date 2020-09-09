@@ -18,26 +18,26 @@ namespace OpenDental {
 
 		private void FillPrefs() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Type",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("",250);//Random tidbits regarding the template
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Template",500);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			checkUseDefaults.Checked=true;
 			string baseVars="Available variables:"+" [NameF], [Date], [Time], [OfficeName], [OfficePhone]";
 			GridRow row;
 			row=BuildRowForTemplate(PrefName.ASAPTextTemplate,"Text manual",baseVars);
-			gridMain.ListGridRows.Add(row);
+			gridMain.Rows.Add(row);
 			row=BuildRowForTemplate(PrefName.WebSchedAsapTextTemplate,"Web Sched Text",baseVars+", [AsapURL]");
-			gridMain.ListGridRows.Add(row);
+			gridMain.Rows.Add(row);
 			row=BuildRowForTemplate(PrefName.WebSchedAsapEmailTemplate,"Web Sched Email Body",baseVars+", [AsapURL]");
-			gridMain.ListGridRows.Add(row);
+			gridMain.Rows.Add(row);
 			row=BuildRowForTemplate(PrefName.WebSchedAsapEmailSubj,"Web Sched Email Subject",baseVars);
-			gridMain.ListGridRows.Add(row);
+			gridMain.Rows.Add(row);
 			gridMain.EndUpdate();
 			if(comboClinic.SelectedClinicNum==0) {
 				textWebSchedPerDay.Text=Prefs.GetString(PrefName.WebSchedAsapTextLimit);

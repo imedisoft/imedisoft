@@ -59,10 +59,10 @@ namespace Imedisoft.Forms
 			var schoolCourseId = schoolCourse?.Id;
 
 			evaluationDefsGrid.BeginUpdate();
-			evaluationDefsGrid.ListGridColumns.Clear();
-			evaluationDefsGrid.ListGridColumns.Add(new GridColumn(Translation.DentalSchools.Course, 100));
-			evaluationDefsGrid.ListGridColumns.Add(new GridColumn(Translation.DentalSchools.Evaluation, 180));
-			evaluationDefsGrid.ListGridRows.Clear();
+			evaluationDefsGrid.Columns.Clear();
+			evaluationDefsGrid.Columns.Add(new GridColumn(Translation.DentalSchools.Course, 100));
+			evaluationDefsGrid.Columns.Add(new GridColumn(Translation.DentalSchools.Evaluation, 180));
+			evaluationDefsGrid.Rows.Clear();
 
 			foreach (var summary in EvaluationDefs.GetSummaryForCourse(schoolCourseId))
 			{
@@ -71,7 +71,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(summary.EvaluationTitle);
 				gridRow.Tag = summary;
 
-				evaluationDefsGrid.ListGridRows.Add(gridRow);
+				evaluationDefsGrid.Rows.Add(gridRow);
 			}
 
 			evaluationDefsGrid.EndUpdate();
@@ -98,7 +98,7 @@ namespace Imedisoft.Forms
 
 		private void EvaluationDefsGrid_SelectionCommitted(object sender, EventArgs e)
 		{
-			editButton.Enabled = deleteButton.Enabled = evaluationDefsGrid.SelectedGridRows.Count > 0;
+			editButton.Enabled = deleteButton.Enabled = evaluationDefsGrid.SelectedRows.Count > 0;
 		}
 
 		private void SchoolCourseComboBox_SelectionChangeCommitted(object sender, EventArgs e)

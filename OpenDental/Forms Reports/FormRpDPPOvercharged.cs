@@ -75,39 +75,39 @@ namespace OpenDental {
 				() => {
 					RefreshReport();
 					gridMain.BeginUpdate();
-					if(gridMain.ListGridColumns.Count==0) {
+					if(gridMain.Columns.Count==0) {
 						#region Set Column Header Values
-						gridMain.ListGridColumns.Add(new GridColumn("Start Date",
+						gridMain.Columns.Add(new GridColumn("Start Date",
 							colWidthStartDate,HorizontalAlignment.Center,GridSortingStrategy.DateParse));
-						gridMain.ListGridColumns.Add(new GridColumn("Patient",colWidthNames,GridSortingStrategy.StringCompare));
-						gridMain.ListGridColumns.Add(new GridColumn("Guarantor",colWidthNames,GridSortingStrategy.StringCompare));
-						gridMain.ListGridColumns.Add(new GridColumn("Provider",
+						gridMain.Columns.Add(new GridColumn("Patient",colWidthNames,GridSortingStrategy.StringCompare));
+						gridMain.Columns.Add(new GridColumn("Guarantor",colWidthNames,GridSortingStrategy.StringCompare));
+						gridMain.Columns.Add(new GridColumn("Provider",
 							colWidthPovAndClin,HorizontalAlignment.Center,GridSortingStrategy.StringCompare));
 						if(PrefC.HasClinicsEnabled) {//Only show when clinics are on
-							gridMain.ListGridColumns.Add(new GridColumn("Clinic",
+							gridMain.Columns.Add(new GridColumn("Clinic",
 								colWidthPovAndClin,HorizontalAlignment.Center,GridSortingStrategy.StringCompare));
 						}
-						gridMain.ListGridColumns.Add(new GridColumn("Description",
+						gridMain.Columns.Add(new GridColumn("Description",
 							colAmtsAndDescript,HorizontalAlignment.Center,GridSortingStrategy.StringCompare));
-						gridMain.ListGridColumns.Add(new GridColumn("Overridden",
+						gridMain.Columns.Add(new GridColumn("Overridden",
 							colWidthOverriden,HorizontalAlignment.Center,GridSortingStrategy.StringCompare));
-						gridMain.ListGridColumns.Add(new GridColumn("Pat Portion",
+						gridMain.Columns.Add(new GridColumn("Pat Portion",
 							colAmtsAndDescript,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-						gridMain.ListGridColumns.Add(new GridColumn("Pat Paid Outside Plan",
+						gridMain.Columns.Add(new GridColumn("Pat Paid Outside Plan",
 							colWidthWideAmts,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-						gridMain.ListGridColumns.Add(new GridColumn("Pat Portion On Plan",
+						gridMain.Columns.Add(new GridColumn("Pat Portion On Plan",
 							colAmtsAndDescript,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-						gridMain.ListGridColumns.Add(new GridColumn("Plan Debits",
+						gridMain.Columns.Add(new GridColumn("Plan Debits",
 							colAmtsAndDescript,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-						gridMain.ListGridColumns.Add(new GridColumn("Overcharged",
+						gridMain.Columns.Add(new GridColumn("Overcharged",
 							colWidthWideAmts,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-						gridMain.ListGridColumns.Add(new GridColumn("Pat Paid\r\nOn Plan",
+						gridMain.Columns.Add(new GridColumn("Pat Paid\r\nOn Plan",
 							colAmtsAndDescript,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
-						gridMain.ListGridColumns.Add(new GridColumn("Pat Overpaid",
+						gridMain.Columns.Add(new GridColumn("Pat Overpaid",
 							colWidthWideAmts,HorizontalAlignment.Right,GridSortingStrategy.AmountParse));
 						#endregion
 					}
-					gridMain.ListGridRows.Clear();
+					gridMain.Rows.Clear();
 					GridRow row;
 					//Null coalescing in case _reportCur has not been loaded, meaning no dynamic payment plans to load.
 					//If there are no dynamic payment plans to load, just show an empty grid.
@@ -138,7 +138,7 @@ namespace OpenDental {
 							row.Cells.Add(PIn.Double(rowCur["amtOverpaid"].ToString()).ToString("c"));
 							#endregion
 							row.Tag=rowCur;
-							gridMain.ListGridRows.Add(row);
+							gridMain.Rows.Add(row);
 						}
 					}
 					gridMain.EndUpdate();
@@ -290,7 +290,7 @@ namespace OpenDental {
 				MessageBox.Show("Please select exactly one patient.");
 				return;
 			}
-			DataRow row=(DataRow)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
+			DataRow row=(DataRow)gridMain.Rows[gridMain.GetSelectedIndex()].Tag;
 			long patNum=PIn.Long(row["patNum"].ToString());
 			GotoModule.GotoAccount(patNum);
 			SendToBack();

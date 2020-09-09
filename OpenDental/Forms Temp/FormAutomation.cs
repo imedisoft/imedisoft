@@ -138,16 +138,16 @@ namespace OpenDental{
 			Automations.RefreshCache();
 			_listAutomations=Automations.GetDeepCopy();
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Description",200);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Trigger",150);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Action",150);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Details",200);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			UI.GridRow row;
 			string detail;
 			for(int i=0;i<_listAutomations.Count;i++){
@@ -176,7 +176,7 @@ namespace OpenDental{
 					detail+=_listAutomations[i].PatStatus.GetDescription();
 				}
 				row.Cells.Add(detail);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

@@ -39,30 +39,30 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("Card Number",140));
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("Card Number",140));
 			if(Programs.IsEnabled(ProgramName.Xcharge)) {
-				gridMain.ListGridColumns.Add(new GridColumn("X-Charge",70,HorizontalAlignment.Center));
+				gridMain.Columns.Add(new GridColumn("X-Charge",70,HorizontalAlignment.Center));
 			}
 			if(Programs.IsEnabled(ProgramName.PayConnect)) {
-				gridMain.ListGridColumns.Add(new GridColumn("PayConnect",85,HorizontalAlignment.Center));
+				gridMain.Columns.Add(new GridColumn("PayConnect",85,HorizontalAlignment.Center));
 			}
 			if(Programs.IsEnabled(ProgramName.PaySimple)) {
-				gridMain.ListGridColumns.Add(new GridColumn("PaySimple",80,HorizontalAlignment.Center));
-				gridMain.ListGridColumns.Add(new GridColumn("ACH",40,HorizontalAlignment.Center));
+				gridMain.Columns.Add(new GridColumn("PaySimple",80,HorizontalAlignment.Center));
+				gridMain.Columns.Add(new GridColumn("ACH",40,HorizontalAlignment.Center));
 			}
 			if(PrefC.HasOnlinePaymentEnabled(out ProgramName progNameForPayments)) {
 				if(progNameForPayments==ProgramName.Xcharge) {
-					gridMain.ListGridColumns.Add(new GridColumn("XWeb",45,HorizontalAlignment.Center));
+					gridMain.Columns.Add(new GridColumn("XWeb",45,HorizontalAlignment.Center));
 				}
 				else {
-					gridMain.ListGridColumns.Add(new GridColumn("PayConnect\r\nPortal",85,HorizontalAlignment.Center));
+					gridMain.Columns.Add(new GridColumn("PayConnect\r\nPortal",85,HorizontalAlignment.Center));
 				}
 			}
-			if(gridMain.ListGridColumns.Sum(x => x.ColumnWidth) > gridMain.Width) {
+			if(gridMain.Columns.Sum(x => x.ColumnWidth) > gridMain.Width) {
 				gridMain.HScrollVisible=true;
 			}
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			_listCreditCards=CreditCards.Refresh(PatCur.PatNum);
 			foreach(CreditCard cc in _listCreditCards) {
@@ -92,18 +92,18 @@ namespace OpenDental {
 					}
 				}
 				row.Tag=cc;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			FormCreditCardEdit FormCCE=new FormCreditCardEdit(PatCur);
-			FormCCE.CreditCardCur=(CreditCard)gridMain.ListGridRows[e.Row].Tag;
+			FormCCE.CreditCardCur=(CreditCard)gridMain.Rows[e.Row].Tag;
 			FormCCE.ShowDialog();
 			FillGrid();
-			if(gridMain.ListGridRows.Count>0) {//could have deleted the only CC, make sure there's at least one row
-				int indexCC=gridMain.ListGridRows.OfType<GridRow>().ToList().FindIndex(x => ((CreditCard)x.Tag).CreditCardNum==FormCCE.CreditCardCur.CreditCardNum);
+			if(gridMain.Rows.Count>0) {//could have deleted the only CC, make sure there's at least one row
+				int indexCC=gridMain.Rows.OfType<GridRow>().ToList().FindIndex(x => ((CreditCard)x.Tag).CreditCardNum==FormCCE.CreditCardCur.CreditCardNum);
 				gridMain.SetSelected(Math.Max(0,indexCC),true);
 			}
 		}
@@ -268,8 +268,8 @@ namespace OpenDental {
 					formPS.ShowDialog();
 				}
 				FillGrid();
-				if(gridMain.ListGridRows.Count>0 && creditCardCur!=null) {
-					gridMain.SetSelected(gridMain.ListGridRows.Count-1,true);
+				if(gridMain.Rows.Count>0 && creditCardCur!=null) {
+					gridMain.SetSelected(gridMain.Rows.Count-1,true);
 				}
 				return;
 			}
@@ -281,8 +281,8 @@ namespace OpenDental {
 			FormCCE.ShowDialog();
 			if(FormCCE.DialogResult==DialogResult.OK) {
 				FillGrid();
-				if(gridMain.ListGridRows.Count>0) {
-					gridMain.SetSelected(gridMain.ListGridRows.Count-1,true);
+				if(gridMain.Rows.Count>0) {
+					gridMain.SetSelected(gridMain.Rows.Count-1,true);
 				}
 			}
 		}

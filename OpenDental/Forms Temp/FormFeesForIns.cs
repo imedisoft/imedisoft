@@ -345,20 +345,20 @@ namespace OpenDental{
 			table=InsPlans.GetListFeeCheck(textCarrier.Text,textCarrierNot.Text,feeSchedWithout,feeSchedWith,
 				(FeeScheduleType)(listType.SelectedIndex));
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Employer",170);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Carrier",170);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Group#",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Group Name",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Plan Type",65);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Fee Schedule",90);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			string planType;
 			for(int i=0;i<table.Rows.Count;i++) {
@@ -381,7 +381,7 @@ namespace OpenDental{
 					row.Cells.Add("Cat%");
 				}
 				row.Cells.Add(table.Rows[i]["FeeSchedName"].ToString());
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			gridMain.ScrollValue=0;
@@ -392,7 +392,7 @@ namespace OpenDental{
 		}
 
 		private void butOK_Click(object sender, System.EventArgs e) {
-			if(gridMain.ListGridRows.Count==0){
+			if(gridMain.Rows.Count==0){
 				MessageBox.Show("No rows to fix.");
 				return;
 			}

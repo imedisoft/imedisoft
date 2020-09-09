@@ -63,10 +63,10 @@ namespace OpenDental {
 		private void FormClaimPayTotal_Shown(object sender,EventArgs e) {
 			InsPlan plan=InsPlans.GetPlan(ClaimProcsToEdit[0].PlanNum,PlanList);
 			if(plan.AllowedFeeSched!=0){//allowed fee sched
-				gridMain.SetSelected(new Point(gridMain.ListGridColumns.GetIndex("Allowed"),0));//Allowed, first row.
+				gridMain.SetSelected(new Point(gridMain.Columns.GetIndex("Allowed"),0));//Allowed, first row.
 			}
 			else{
-				gridMain.SetSelected(new Point(gridMain.ListGridColumns.GetIndex("Ins Pay"),0));//InsPay, first row.
+				gridMain.SetSelected(new Point(gridMain.Columns.GetIndex("Ins Pay"),0));//InsPay, first row.
 			}
 		}
 
@@ -76,54 +76,54 @@ namespace OpenDental {
 			//also calculates totals for this "payment"
 			//the payment itself is imaginary and is simply the sum of the claimprocs on this form
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			List<string> listDefDescripts=new List<string>();
 			listDefDescripts.Add("None");
 			for(int i=0;i<_listClaimPaymentTrackingDefs.Count;i++){
 				listDefDescripts.Add(_listClaimPaymentTrackingDefs[i].Name);
 			}
 			GridColumn col=new GridColumn("Date",66);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Prov",50);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if(Clinics.IsMedicalClinic(Clinics.ClinicId)) {
 				col=new GridColumn("Code",75);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			else {
 				col=new GridColumn("Code",50);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col=new GridColumn("Tth",25);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			col=new GridColumn("Description",130);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Fee",62,HorizontalAlignment.Right);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Billed to Ins",75,HorizontalAlignment.Right);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
 				col=new GridColumn("Labs",62,HorizontalAlignment.Right);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			col=new GridColumn("Deduct",62,HorizontalAlignment.Right,true);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Allowed",62,HorizontalAlignment.Right,true);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Ins Pay",62,HorizontalAlignment.Right,true);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Writeoff",62,HorizontalAlignment.Right,_isWriteOffEditable);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Status",50,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Pmt",62,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Pay Tracking",90){ 
 				ListDisplayStrings=listDefDescripts, DropDownWidth=160 };
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Remarks",130,true){ IsWidthDynamic=true };
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			Procedure ProcCur;
 			for(int i=0;i<ClaimProcsToEdit.Length;i++){
@@ -217,7 +217,7 @@ namespace OpenDental {
 					row.Cells[row.Cells.Count-1].ComboSelectedIndex=0;
 				}
 				row.Cells.Add(ClaimProcsToEdit[i].Remarks);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			FillTotals();
@@ -253,15 +253,15 @@ namespace OpenDental {
 			double insPayAmt=0;
 			double writeOff=0;
 			//double amt;
-			for(int i=0;i<gridMain.ListGridRows.Count;i++){
+			for(int i=0;i<gridMain.Rows.Count;i++){
 				claimFee+=ClaimProcsToEdit[i].FeeBilled;//5
 				if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
-					labFees+=PIn.Double(gridMain.ListGridRows[i].Cells[gridMain.ListGridColumns.GetIndex("Labs")].Text);
+					labFees+=PIn.Double(gridMain.Rows[i].Cells[gridMain.Columns.GetIndex("Labs")].Text);
 				}
-				dedApplied+=PIn.Double(gridMain.ListGridRows[i].Cells[gridMain.ListGridColumns.GetIndex("Deduct")].Text);
-				insPayAmtAllowed+=PIn.Double(gridMain.ListGridRows[i].Cells[gridMain.ListGridColumns.GetIndex("Allowed")].Text);
-				insPayAmt+=PIn.Double(gridMain.ListGridRows[i].Cells[gridMain.ListGridColumns.GetIndex("Ins Pay")].Text);
-				writeOff+=PIn.Double(gridMain.ListGridRows[i].Cells[gridMain.ListGridColumns.GetIndex("Writeoff")].Text);
+				dedApplied+=PIn.Double(gridMain.Rows[i].Cells[gridMain.Columns.GetIndex("Deduct")].Text);
+				insPayAmtAllowed+=PIn.Double(gridMain.Rows[i].Cells[gridMain.Columns.GetIndex("Allowed")].Text);
+				insPayAmt+=PIn.Double(gridMain.Rows[i].Cells[gridMain.Columns.GetIndex("Ins Pay")].Text);
+				writeOff+=PIn.Double(gridMain.Rows[i].Cells[gridMain.Columns.GetIndex("Writeoff")].Text);
 			}
 			textClaimFee.Text=claimFee.ToString("F");
 			textLabFees.Text=labFees.ToString("F");
@@ -274,26 +274,26 @@ namespace OpenDental {
 		private bool SaveGridChanges(){
 			//validate all grid cells
 			double dbl=0;
-			int deductIdx=gridMain.ListGridColumns.GetIndex("Deduct");
-			int allowedIdx=gridMain.ListGridColumns.GetIndex("Allowed");
-			int insPayIdx=gridMain.ListGridColumns.GetIndex("Ins Pay");
-			int writeoffIdx=gridMain.ListGridColumns.GetIndex("Writeoff");
-			int statusIdx=gridMain.ListGridColumns.GetIndex("Status");
-			for(int i=0;i<gridMain.ListGridRows.Count;i++){
+			int deductIdx=gridMain.Columns.GetIndex("Deduct");
+			int allowedIdx=gridMain.Columns.GetIndex("Allowed");
+			int insPayIdx=gridMain.Columns.GetIndex("Ins Pay");
+			int writeoffIdx=gridMain.Columns.GetIndex("Writeoff");
+			int statusIdx=gridMain.Columns.GetIndex("Status");
+			for(int i=0;i<gridMain.Rows.Count;i++){
 				try{
 					//Check for invalid numbers being entered.
-					if(gridMain.ListGridRows[i].Cells[deductIdx].Text != "") {
-						dbl=Convert.ToDouble(gridMain.ListGridRows[i].Cells[deductIdx].Text);
+					if(gridMain.Rows[i].Cells[deductIdx].Text != "") {
+						dbl=Convert.ToDouble(gridMain.Rows[i].Cells[deductIdx].Text);
 					}
-					if(gridMain.ListGridRows[i].Cells[allowedIdx].Text != "") {
-						dbl=Convert.ToDouble(gridMain.ListGridRows[i].Cells[allowedIdx].Text);
+					if(gridMain.Rows[i].Cells[allowedIdx].Text != "") {
+						dbl=Convert.ToDouble(gridMain.Rows[i].Cells[allowedIdx].Text);
 					}
-					if(gridMain.ListGridRows[i].Cells[insPayIdx].Text != "") {
-						dbl=Convert.ToDouble(gridMain.ListGridRows[i].Cells[insPayIdx].Text);
+					if(gridMain.Rows[i].Cells[insPayIdx].Text != "") {
+						dbl=Convert.ToDouble(gridMain.Rows[i].Cells[insPayIdx].Text);
 					}
-					if(gridMain.ListGridRows[i].Cells[writeoffIdx].Text != "") {
-						dbl=Convert.ToDouble(gridMain.ListGridRows[i].Cells[writeoffIdx].Text);
-						if(dbl<0 && gridMain.ListGridRows[i].Cells[statusIdx].Text!="Supp") {
+					if(gridMain.Rows[i].Cells[writeoffIdx].Text != "") {
+						dbl=Convert.ToDouble(gridMain.Rows[i].Cells[writeoffIdx].Text);
+						if(dbl<0 && gridMain.Rows[i].Cells[statusIdx].Text!="Supp") {
 							MessageBox.Show("Only supplemental payments can have a negative writeoff.");
 							return false;
 						}
@@ -316,18 +316,18 @@ namespace OpenDental {
 				return false;
 			}
 			for(int i=0;i<ClaimProcsToEdit.Length;i++) {
-				ClaimProcsToEdit[i].DedApplied=PIn.Double(gridMain.ListGridRows[i].Cells[deductIdx].Text);
-				if(gridMain.ListGridRows[i].Cells[allowedIdx].Text=="") {
+				ClaimProcsToEdit[i].DedApplied=PIn.Double(gridMain.Rows[i].Cells[deductIdx].Text);
+				if(gridMain.Rows[i].Cells[allowedIdx].Text=="") {
 					ClaimProcsToEdit[i].AllowedOverride=-1;
 				}
 				else {
-					ClaimProcsToEdit[i].AllowedOverride=PIn.Double(gridMain.ListGridRows[i].Cells[allowedIdx].Text);
+					ClaimProcsToEdit[i].AllowedOverride=PIn.Double(gridMain.Rows[i].Cells[allowedIdx].Text);
 				}
-				ClaimProcsToEdit[i].InsPayAmt=PIn.Double(gridMain.ListGridRows[i].Cells[insPayIdx].Text);
-				ClaimProcsToEdit[i].WriteOff=PIn.Double(gridMain.ListGridRows[i].Cells[writeoffIdx].Text);
-				int idx=gridMain.ListGridRows[i].Cells[gridMain.ListGridColumns.GetIndex("Pay Tracking")].ComboSelectedIndex;
+				ClaimProcsToEdit[i].InsPayAmt=PIn.Double(gridMain.Rows[i].Cells[insPayIdx].Text);
+				ClaimProcsToEdit[i].WriteOff=PIn.Double(gridMain.Rows[i].Cells[writeoffIdx].Text);
+				int idx=gridMain.Rows[i].Cells[gridMain.Columns.GetIndex("Pay Tracking")].ComboSelectedIndex;
 				ClaimProcsToEdit[i].ClaimPaymentTracking=idx==0 ? 0 : _listClaimPaymentTrackingDefs[idx-1].Id;
-				ClaimProcsToEdit[i].Remarks=gridMain.ListGridRows[i].Cells[gridMain.ListGridColumns.GetIndex("Remarks")].Text;
+				ClaimProcsToEdit[i].Remarks=gridMain.Rows[i].Cells[gridMain.Columns.GetIndex("Remarks")].Text;
 			}
 			return true;
 		}
@@ -354,14 +354,14 @@ namespace OpenDental {
 			List<string> listProcDescripts=new List<string>();
 			for(int i=0;i<ClaimProcsToEdit.Length;i++) {
 				ClaimProc claimProcCur=ClaimProcsToEdit[i];
-				int insPayIdx=gridMain.ListGridColumns.GetIndex("Ins Pay");
-				int writeoffIdx=gridMain.ListGridColumns.GetIndex("Writeoff");
-				int feeAcctIdx=gridMain.ListGridColumns.GetIndex("Fee");
+				int insPayIdx=gridMain.Columns.GetIndex("Ins Pay");
+				int writeoffIdx=gridMain.Columns.GetIndex("Writeoff");
+				int feeAcctIdx=gridMain.Columns.GetIndex("Fee");
 				decimal insPayAmt=(decimal)ClaimProcs.ProcInsPay(listClaimProcsForPat.FindAll(x => x.ClaimProcNum!=claimProcCur.ClaimProcNum),claimProcCur.ProcNum)
-					+PIn.Decimal(gridMain.ListGridRows[i].Cells[insPayIdx].Text);
+					+PIn.Decimal(gridMain.Rows[i].Cells[insPayIdx].Text);
 				decimal writeOff=(decimal)ClaimProcs.ProcWriteoff(listClaimProcsForPat.FindAll(x => x.ClaimProcNum!=claimProcCur.ClaimProcNum),claimProcCur.ProcNum)
-					+PIn.Decimal(gridMain.ListGridRows[i].Cells[writeoffIdx].Text);
-				decimal feeAcct=PIn.Decimal(gridMain.ListGridRows[i].Cells[feeAcctIdx].Text);
+					+PIn.Decimal(gridMain.Rows[i].Cells[writeoffIdx].Text);
+				decimal feeAcct=PIn.Decimal(gridMain.Rows[i].Cells[feeAcctIdx].Text);
 				decimal adj=listAdjForSelectedCP.Where(x=>x.ProcedureId==claimProcCur.ProcNum).Select(x=>(decimal)x.AdjustAmount).Sum();
 				decimal patPayAmt=listPaySplitForSelectedCP.Where(x=>x.ProcNum==claimProcCur.ProcNum).Select(x=>(decimal)x.SplitAmt).Sum();
 				//Any changes to this calculation should also consider FormClaimProc.IsClaimProcGreaterThanProcFee().
@@ -407,11 +407,11 @@ namespace OpenDental {
 				ClaimProc claimProcCur=ClaimProcsToEdit[i];
 				//Fetch all adjustments for the given procedure.
 				List<Adjustment> listClaimProcAdjustments=listAdjustmentsForPat.Where(x => x.ProcedureId==claimProcCur.ProcNum).ToList();
-				int writeoffIdx=gridMain.ListGridColumns.GetIndex("Writeoff");
-				int feeAcctIdx=gridMain.ListGridColumns.GetIndex("Fee");
+				int writeoffIdx=gridMain.Columns.GetIndex("Writeoff");
+				int feeAcctIdx=gridMain.Columns.GetIndex("Fee");
 				decimal writeOff=(decimal)ClaimProcs.ProcWriteoff(listClaimProcsForPat.FindAll(x => x.ClaimProcNum!=claimProcCur.ClaimProcNum),claimProcCur.ProcNum)
-					+PIn.Decimal(gridMain.ListGridRows[i].Cells[writeoffIdx].Text);
-				decimal feeAcct=PIn.Decimal(gridMain.ListGridRows[i].Cells[feeAcctIdx].Text);
+					+PIn.Decimal(gridMain.Rows[i].Cells[writeoffIdx].Text);
+				decimal feeAcct=PIn.Decimal(gridMain.Rows[i].Cells[feeAcctIdx].Text);
 				decimal adjAcct=listClaimProcAdjustments.Sum(x => (decimal)x.AdjustAmount);
 				//Any changes to this calculation should also consider FormClaimProc.IsWriteOffGreaterThanProc().
 				decimal writeoffRem=feeAcct-writeOff+adjAcct;
@@ -539,8 +539,8 @@ namespace OpenDental {
 		private void SaveAllowedFees(){
 			//if no allowed fees entered, then nothing to do 
 			bool allowedFeesEntered=false;
-			for(int i=0;i<gridMain.ListGridRows.Count;i++){
-				if(gridMain.ListGridRows[i].Cells[gridMain.ListGridColumns.GetIndex("Allowed")].Text!=""){
+			for(int i=0;i<gridMain.Rows.Count;i++){
+				if(gridMain.Rows[i].Cells[gridMain.Columns.GetIndex("Allowed")].Text!=""){
 					allowedFeesEntered=true;
 					break;
 				}
@@ -582,7 +582,7 @@ namespace OpenDental {
 				if(codeNum==0){
 					continue;
 				}
-				if(gridMain.ListGridRows[i].Cells[gridMain.ListGridColumns.GetIndex("Allowed")].Text.Trim()==""//Nothing is entered in allowed 
+				if(gridMain.Rows[i].Cells[gridMain.Columns.GetIndex("Allowed")].Text.Trim()==""//Nothing is entered in allowed 
 					&& _listClaimProcsOld[i].AllowedOverride==-1) //And there was not originally a value in the allowed column
 				{
 					continue;
@@ -596,12 +596,12 @@ namespace OpenDental {
 					FeeCur.CodeNum=codeNum;
 					FeeCur.ClinicNum=(feeSchedObj.IsGlobal) ? 0 : proc.ClinicNum;
 					FeeCur.ProvNum=(feeSchedObj.IsGlobal) ? 0 : proc.ProvNum;
-					FeeCur.Amount=PIn.Double(gridMain.ListGridRows[i].Cells[gridMain.ListGridColumns.GetIndex("Allowed")].Text);
+					FeeCur.Amount=PIn.Double(gridMain.Rows[i].Cells[gridMain.Columns.GetIndex("Allowed")].Text);
 					Fees.Insert(FeeCur);
 				}
 				else{
 					datePrevious=FeeCur.SecDateTEdit;
-					FeeCur.Amount=PIn.Double(gridMain.ListGridRows[i].Cells[gridMain.ListGridColumns.GetIndex("Allowed")].Text);
+					FeeCur.Amount=PIn.Double(gridMain.Rows[i].Cells[gridMain.Columns.GetIndex("Allowed")].Text);
 					Fees.Update(FeeCur);
 				}
 				SecurityLogs.MakeLogEntry(Permissions.ProcFeeEdit,0,"Procedure"+": "+ProcedureCodes.GetStringProcCode(FeeCur.CodeNum)

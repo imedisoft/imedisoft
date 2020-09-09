@@ -52,11 +52,11 @@ namespace Imedisoft.Forms
 			var patients = Patients.GetMultPats(GetPatientIds().Distinct());
 
 			etransGrid.BeginUpdate();
-			etransGrid.ListGridColumns.Clear();
-			etransGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Date, 100));
-			etransGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Patient, 100));
-			etransGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Response, 100));
-			etransGrid.ListGridRows.Clear();
+			etransGrid.Columns.Clear();
+			etransGrid.Columns.Add(new GridColumn(Translation.Common.Date, 100));
+			etransGrid.Columns.Add(new GridColumn(Translation.Common.Patient, 100));
+			etransGrid.Columns.Add(new GridColumn(Translation.Common.Response, 100));
+			etransGrid.Rows.Clear();
 
 			foreach (var transaction in transactions)
 			{
@@ -69,7 +69,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(transaction.Note);
 				gridRow.Tag = transaction;
 
-				etransGrid.ListGridRows.Add(gridRow);
+				etransGrid.Rows.Add(gridRow);
 			}
 
 			etransGrid.EndUpdate();

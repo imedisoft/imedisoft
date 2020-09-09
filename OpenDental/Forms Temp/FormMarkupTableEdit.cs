@@ -106,20 +106,20 @@ namespace OpenDental {
 		/// <summary></summary>
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			for(int c=0;c<ColNames.Count;c++){
 				col=new GridColumn(ColNames[c],ColWidths[c],true);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<Table.Rows.Count;i++){
 				row=new GridRow();
 				for(int c=0;c<ColNames.Count;c++) {
 					row.Cells.Add(Table.Rows[i][c].ToString());
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -133,7 +133,7 @@ namespace OpenDental {
 		}
 
 		private void gridMain_CellLeave(object sender,ODGridClickEventArgs e) {
-			Table.Rows[e.Row][e.Col]=gridMain.ListGridRows[e.Row].Cells[e.Col].Text;
+			Table.Rows[e.Row][e.Col]=gridMain.Rows[e.Row].Cells[e.Col].Text;
 		}
 
 		/*No longer necessary because gridMain_CellLeave does this as text is changed.
@@ -275,13 +275,13 @@ namespace OpenDental {
 			ColNames.Insert(index+1,"Header"+(Table.Columns.Count));
 			ColWidths.Insert(index+1,100);
 			for(int i=0;i<Table.Rows.Count;i++) {
-				for(int j=gridMain.ListGridColumns.Count-1;j>index;j--) {
+				for(int j=gridMain.Columns.Count-1;j>index;j--) {
 					Table.Rows[i][j+1]=Table.Rows[i][j];
 				}
 				Table.Rows[i][index+1]="";
 			}
 			Point newCellSelected=new Point(index,gridMain.SelectedCell.Y);
-			if(gridMain.SelectedCell.X==gridMain.ListGridColumns.Count-1) {//only if this is the last column
+			if(gridMain.SelectedCell.X==gridMain.Columns.Count-1) {//only if this is the last column
 				newCellSelected=new Point(index+1,gridMain.SelectedCell.Y);//shift the selected column to the right
 			}
 			FillGrid();//gridMain.SelectedCell gets cleared.
@@ -295,7 +295,7 @@ namespace OpenDental {
 				MessageBox.Show("Please select a column first.");
 				return;
 			}
-			if(gridMain.ListGridColumns.Count==1) {
+			if(gridMain.Columns.Count==1) {
 				MessageBox.Show("Cannot delete last column.");
 				return;
 			}
@@ -370,7 +370,7 @@ namespace OpenDental {
 				MessageBox.Show("Please select a row first.");
 				return;
 			}
-			if(gridMain.ListGridRows.Count==1) {
+			if(gridMain.Rows.Count==1) {
 				MessageBox.Show("Cannot delete last row.");
 				return;
 			}
@@ -432,7 +432,7 @@ namespace OpenDental {
 			//access data as arrayTblBuilder[Y][X], arrayTblBuilder contains all of the table data in a potentially uneven array (technically a list), 
 			//Check for enough columns---------------------------------------------------------------------------------------------------------
 			if(pointStarting.X + colsNeeded > Table.Columns.Count) {
-				MessageBox.Show(this,"Additional columns required to paste"+": "+(pointStarting.X+colsNeeded-gridMain.ListGridColumns.Count));
+				MessageBox.Show(this,"Additional columns required to paste"+": "+(pointStarting.X+colsNeeded-gridMain.Columns.Count));
 				return;
 			}
 			//Check for Content----------------------------------------------------------------------------------------------------------------
@@ -470,8 +470,8 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			//PumpGridIntoTable();
-			for(int h=0;h<gridMain.ListGridColumns.Count;h++) {//loops through every header in the main grid
-				string s=gridMain.ListGridColumns[h].HeaderText.ToString();
+			for(int h=0;h<gridMain.Columns.Count;h++) {//loops through every header in the main grid
+				string s=gridMain.Columns[h].HeaderText.ToString();
 				s=s.Replace("&","&amp;");
 				s=s.Replace("&amp;<","&lt;");//because "&" was changed to "&amp;" in the line above.
 				s=s.Replace("&amp;>","&gt;");//because "&" was changed to "&amp;" in the line above.

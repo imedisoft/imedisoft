@@ -622,28 +622,28 @@ namespace OpenDental{
 					ConfirmationListEvent.Fire(EventCategory.ConfirmationList,"Filling the Confirmation List grid...");
 					int scrollVal=gridMain.ScrollValue;
 					gridMain.BeginUpdate();
-					gridMain.ListGridColumns.Clear();
+					gridMain.Columns.Clear();
 					GridColumn col=new GridColumn("Date Time",70);
-					gridMain.ListGridColumns.Add(col);
+					gridMain.Columns.Add(col);
 					col=new GridColumn("DateSched",80);
-					gridMain.ListGridColumns.Add(col);
+					gridMain.Columns.Add(col);
 					col=new GridColumn("Patient",80);
-					gridMain.ListGridColumns.Add(col);
+					gridMain.Columns.Add(col);
 					col=new GridColumn("Age",30);
-					gridMain.ListGridColumns.Add(col);
+					gridMain.Columns.Add(col);
 					col=new GridColumn("Contact",150);
-					gridMain.ListGridColumns.Add(col);
+					gridMain.Columns.Add(col);
 					col=new GridColumn("Addr/Ph Note",100);
-					gridMain.ListGridColumns.Add(col);
+					gridMain.Columns.Add(col);
 					col=new GridColumn("Status",80);//confirmed
-					gridMain.ListGridColumns.Add(col);
+					gridMain.Columns.Add(col);
 					col=new GridColumn("Procs",110);
-					gridMain.ListGridColumns.Add(col);
+					gridMain.Columns.Add(col);
 					col=new GridColumn("Medical",80);
-					gridMain.ListGridColumns.Add(col);
+					gridMain.Columns.Add(col);
 					col=new GridColumn("Appt Note",124);
-					gridMain.ListGridColumns.Add(col);
-					gridMain.ListGridRows.Clear();
+					gridMain.Columns.Add(col);
+					gridMain.Rows.Clear();
 					GridRow row;
 					GridCell cell;
 					foreach(DataRow dataRow in Table.Rows) {
@@ -660,7 +660,7 @@ namespace OpenDental{
 						cell.ForeColor=Color.Red;
 						row.Cells.Add(cell);
 						row.Cells.Add(dataRow["Note"].ToString());
-						gridMain.ListGridRows.Add(row);
+						gridMain.Rows.Add(row);
 					}
 					gridMain.EndUpdate();
 					gridMain.ScrollValue=scrollVal;
@@ -679,25 +679,25 @@ namespace OpenDental{
 
 		private void SetFamilyColors(){
 			if(gridMain.SelectedIndices.Length!=1){
-				for(int i=0;i<gridMain.ListGridRows.Count;i++){
-					gridMain.ListGridRows[i].ForeColor=Color.Black;
+				for(int i=0;i<gridMain.Rows.Count;i++){
+					gridMain.Rows[i].ForeColor=Color.Black;
 				}
 				gridMain.Invalidate();
 				return;
 			}
 			long guar=PIn.Long(Table.Rows[gridMain.SelectedIndices[0]]["Guarantor"].ToString());
 			int famCount=0;
-			for(int i=0;i<gridMain.ListGridRows.Count;i++){
+			for(int i=0;i<gridMain.Rows.Count;i++){
 				if(PIn.Long(Table.Rows[i]["Guarantor"].ToString())==guar){
 					famCount++;
-					gridMain.ListGridRows[i].ForeColor=Color.Red;
+					gridMain.Rows[i].ForeColor=Color.Red;
 				}
 				else{
-					gridMain.ListGridRows[i].ForeColor=Color.Black;
+					gridMain.Rows[i].ForeColor=Color.Black;
 				}
 			}
 			if(famCount==1){//only the highlighted patient is red at this point
-				gridMain.ListGridRows[gridMain.SelectedIndices[0]].ForeColor=Color.Black;
+				gridMain.Rows[gridMain.SelectedIndices[0]].ForeColor=Color.Black;
 			}
 			gridMain.Invalidate();
 		}
@@ -1069,7 +1069,7 @@ namespace OpenDental{
 			if(!Security.IsAuthorized(Permissions.EmailSend)){
 				return;
 			}
-			if(gridMain.ListGridRows.Count==0) {
+			if(gridMain.Rows.Count==0) {
 				MessageBox.Show("There are no Patients in the table.  Must have at least one.");
 				return;
 			}
@@ -1207,7 +1207,7 @@ namespace OpenDental{
 			long patNum;
 			string wirelessPhone;
 			YN txtMsgOk;
-			if(gridMain.ListGridRows.Count==0) {
+			if(gridMain.Rows.Count==0) {
 				MessageBox.Show("There are no Patients in the table.  Must have at least one.");
 				return;
 			}

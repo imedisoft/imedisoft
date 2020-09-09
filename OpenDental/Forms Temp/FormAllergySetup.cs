@@ -30,12 +30,12 @@ namespace OpenDental {
 		private void FillGrid() {
 			listAllergyDefs=AllergyDefs.GetAll(checkShowHidden.Checked);
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Desciption",160);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Hidden",60);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<listAllergyDefs.Count;i++) {
 				row=new GridRow();
@@ -46,7 +46,7 @@ namespace OpenDental {
 				else {
 					row.Cells.Add("");
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

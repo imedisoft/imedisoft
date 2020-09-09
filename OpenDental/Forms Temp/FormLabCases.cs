@@ -254,24 +254,24 @@ namespace OpenDental{
 			}
 			table=LabCases.Refresh(PIn.Date(textDateFrom.Text),dateMax,checkShowAll.Checked,checkShowUnattached.Checked);
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Appt Date Time",120);
 			col.SortingStrategy=GridSortingStrategy.DateParse;
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Procedures",200);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Patient",120);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Status",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Lab",75);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Lab Phone",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Instructions",100);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			List<long> operatoryNums = new List<long>();
 			if(comboClinic.IsAllSelected && !Security.CurrentUser.ClinicIsRestricted) {//"All"
@@ -299,14 +299,14 @@ namespace OpenDental{
 				row.Cells.Add(table.Rows[i]["phone"].ToString());
 				row.Cells.Add(table.Rows[i]["Instructions"].ToString());
 				row.Tag=table.Rows[i];
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.AllowSortingByColumn=true;
 			gridMain.EndUpdate();
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			DataRow row=(DataRow)gridMain.ListGridRows[e.Row].Tag;
+			DataRow row=(DataRow)gridMain.Rows[e.Row].Tag;
 			long selectedLabCase=PIn.Long(row["LabCaseNum"].ToString());
 			FormLabCaseEdit FormL=new FormLabCaseEdit();
 			FormL.CaseCur=LabCases.GetOne(selectedLabCase);
@@ -394,7 +394,7 @@ namespace OpenDental{
 		}
 
 		private void butPrint_Click(object sender,EventArgs e) {
-			if(gridMain.ListGridRows.Count<1) {
+			if(gridMain.Rows.Count<1) {
 				MessageBox.Show("Nothing to print.");
 				return;
 			}

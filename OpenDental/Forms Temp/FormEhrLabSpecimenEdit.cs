@@ -46,11 +46,11 @@ namespace OpenDental {
 
 		private void FillGridCondition() {
 			gridCondition.BeginUpdate();
-			gridCondition.ListGridColumns.Clear();
+			gridCondition.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Description",80);
-			gridCondition.ListGridColumns.Add(col);
-			gridCondition.ListGridRows.Clear();
+			gridCondition.Columns.Add(col);
+			gridCondition.Rows.Clear();
 				GridRow row;
 			for(int i=0;i<EhrLabSpecimenCur.ListEhrLabSpecimenCondition.Count;i++) {
 				row=new GridRow();
@@ -66,18 +66,18 @@ namespace OpenDental {
 				else {
 					row.Cells.Add("Unkown Condition Code.");//should never happen
 				}
-				gridCondition.ListGridRows.Add(row);
+				gridCondition.Rows.Add(row);
 			}
 			gridCondition.EndUpdate();
 		}
 
 		private void FillGridReject() {
 			gridReject.BeginUpdate();
-			gridReject.ListGridColumns.Clear();
+			gridReject.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Description",80);
-			gridReject.ListGridColumns.Add(col);
-			gridReject.ListGridRows.Clear();
+			gridReject.Columns.Add(col);
+			gridReject.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<EhrLabSpecimenCur.ListEhrLabSpecimenRejectReason.Count;i++) {
 				row=new GridRow();
@@ -93,7 +93,7 @@ namespace OpenDental {
 				else {
 					row.Cells.Add("Unkown Reject Reason Code.");//should never happen
 				}
-				gridReject.ListGridRows.Add(row);
+				gridReject.Rows.Add(row);
 			}
 			gridReject.EndUpdate();
 		}

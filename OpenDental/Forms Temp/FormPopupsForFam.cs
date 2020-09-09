@@ -68,22 +68,22 @@ namespace OpenDental {
 			_listPopups=_listPopups.OrderBy(x => x.PatNum).ThenBy(x => x.PopupLevel).ToList();
 			#endregion Automation PopUpThenDisable10Min
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Patient",120);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Level",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Disabled",60,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Last Viewed",80,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if(checkDeleted.Checked) {
 				col=new GridColumn("Deleted",60,HorizontalAlignment.Center);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			col=new GridColumn("Popup Message",120);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			_listPopups.RemoveAll(x => x.PopupLevel==EnumPopupLevel.Automation && !listAutomations.Any(y => y.Id==x.PopupNum));
 			for(int i=0;i<_listPopups.Count;i++) {
@@ -115,18 +115,18 @@ namespace OpenDental {
 				}
 				row.Cells.Add(_listPopups[i].Description);
 				row.Tag=_listPopups[i];
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			if(((Popup)gridMain.ListGridRows[e.Row].Tag).PopupLevel==EnumPopupLevel.Automation){
+			if(((Popup)gridMain.Rows[e.Row].Tag).PopupLevel==EnumPopupLevel.Automation){
 				MessageBox.Show("To edit automations go to Setup | Automation");
 			}
 			else{
 				FormPopupEdit FormPE=new FormPopupEdit();
-				FormPE.PopupCur=(Popup)gridMain.ListGridRows[e.Row].Tag;
+				FormPE.PopupCur=(Popup)gridMain.Rows[e.Row].Tag;
 				FormPE.ShowDialog();
 				if(FormPE.DialogResult==DialogResult.OK) {
 					FillGrid();

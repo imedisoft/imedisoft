@@ -215,14 +215,14 @@ namespace OpenDental {
 				HL7DefCur.hl7DefMessages=HL7DefMessages.GetDeepFromDb(HL7DefCur.HL7DefNum);
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Message",150);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Seg",35);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Note",100);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			if(HL7DefCur!=null && HL7DefCur.hl7DefMessages!=null) {
 				for(int i=0;i<HL7DefCur.hl7DefMessages.Count;i++) {
 					GridRow row=new GridRow();
@@ -230,7 +230,7 @@ namespace OpenDental {
 					row.Cells.Add("");
 					row.Cells.Add(HL7DefCur.hl7DefMessages[i].Note);
 					row.Tag=HL7DefCur.hl7DefMessages[i];
-					gridMain.ListGridRows.Add(row);
+					gridMain.Rows.Add(row);
 					if(HL7DefCur.hl7DefMessages[i].hl7DefSegments!=null) {
 						for(int j=0;j<HL7DefCur.hl7DefMessages[i].hl7DefSegments.Count;j++) {
 							row=new GridRow();
@@ -238,7 +238,7 @@ namespace OpenDental {
 							row.Cells.Add(HL7DefCur.hl7DefMessages[i].hl7DefSegments[j].SegmentName.ToString());
 							row.Cells.Add(HL7DefCur.hl7DefMessages[i].hl7DefSegments[j].Note);
 							row.Tag=HL7DefCur.hl7DefMessages[i];
-							gridMain.ListGridRows.Add(row);
+							gridMain.Rows.Add(row);
 						}
 					}
 				}
@@ -282,7 +282,7 @@ namespace OpenDental {
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			FormHL7DefMessageEdit FormS=new FormHL7DefMessageEdit();
-			FormS.HL7DefMesCur=(HL7DefMessage)gridMain.ListGridRows[e.Row].Tag;
+			FormS.HL7DefMesCur=(HL7DefMessage)gridMain.Rows[e.Row].Tag;
 			FormS.IsHL7DefInternal=HL7DefCur.IsInternal;
 			FormS.InternalType=HL7DefCur.InternalType;
 			FormS.ShowDialog();
@@ -290,12 +290,12 @@ namespace OpenDental {
 		}
 
 		private void gridMain_CellClick(object sender,ODGridClickEventArgs e) {
-			for(int i=0;i<gridMain.ListGridRows.Count;i++) {
-				if(gridMain.ListGridRows[i].Tag==gridMain.ListGridRows[e.Row].Tag) {
-					gridMain.ListGridRows[i].ForeColor=Color.Red;
+			for(int i=0;i<gridMain.Rows.Count;i++) {
+				if(gridMain.Rows[i].Tag==gridMain.Rows[e.Row].Tag) {
+					gridMain.Rows[i].ForeColor=Color.Red;
 				}
 				else {
-					gridMain.ListGridRows[i].ForeColor=Color.Black;
+					gridMain.Rows[i].ForeColor=Color.Black;
 				}
 			}
 			gridMain.Invalidate();

@@ -43,12 +43,12 @@ namespace OpenDental {
 		private void FillGrid() {
 			int curSelection=gridMain.GetSelectedIndex();
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("Attached",60,HorizontalAlignment.Center));
-			gridMain.ListGridColumns.Add(new GridColumn("Date",80,HorizontalAlignment.Center));
-			gridMain.ListGridColumns.Add(new GridColumn("Category",80,HorizontalAlignment.Center));
-			gridMain.ListGridColumns.Add(new GridColumn("Desc",180,HorizontalAlignment.Left));
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("Attached",60,HorizontalAlignment.Center));
+			gridMain.Columns.Add(new GridColumn("Date",80,HorizontalAlignment.Center));
+			gridMain.Columns.Add(new GridColumn("Category",80,HorizontalAlignment.Center));
+			gridMain.Columns.Add(new GridColumn("Desc",180,HorizontalAlignment.Left));
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listPatientDocuments.Count;i++) {
 				if(_listPatientDocuments[i].DocNum<=0) { //Invalid doc num indicates 'Waiting for images'. This flag is set in the Load event.
@@ -68,7 +68,7 @@ namespace OpenDental {
 				row.Cells.Add(Definitions.GetName(DefinitionCategory.ImageCats,_listPatientDocuments[i].DocCategory));			  
 				row.Cells.Add(_listPatientDocuments[i].Description);
 				row.Tag=_listPatientDocuments[i];
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}			
 			gridMain.EndUpdate();
 			if(curSelection>=0) {
@@ -79,11 +79,11 @@ namespace OpenDental {
 		///<summary>Throws exception if current grid selection is invalid</summary>
 		private Document GetSelectedDocument() {
 			if(gridMain.GetSelectedIndex()==-1
-				|| gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag==null
-				|| !(gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag is Document)) {
+				|| gridMain.Rows[gridMain.GetSelectedIndex()].Tag==null
+				|| !(gridMain.Rows[gridMain.GetSelectedIndex()].Tag is Document)) {
 				throw new Exception("Invalid selection");
 			}
-			Document doc=(Document)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
+			Document doc=(Document)gridMain.Rows[gridMain.GetSelectedIndex()].Tag;
 			return doc; 			
 		}
 

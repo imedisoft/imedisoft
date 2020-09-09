@@ -52,7 +52,7 @@ namespace OpenDental {
 				if(gridMessages.GetSelectedIndex()==-1) {
 					return null;
 				}
-				object selectedTag=gridMessages.ListGridRows[gridMessages.GetSelectedIndex()].Tag;
+				object selectedTag=gridMessages.Rows[gridMessages.GetSelectedIndex()].Tag;
 				if(!(selectedTag is TextMessageGrouped)) {
 					return null;
 				}
@@ -65,7 +65,7 @@ namespace OpenDental {
 				if(gridMessages.GetSelectedIndex()==-1) {
 					return null;
 				}
-				object selectedTag=gridMessages.ListGridRows[gridMessages.GetSelectedIndex()].Tag;
+				object selectedTag=gridMessages.Rows[gridMessages.GetSelectedIndex()].Tag;
 				if(!(selectedTag is SmsFromMobile)) {
 					return null;
 				}
@@ -78,7 +78,7 @@ namespace OpenDental {
 				if(gridMessages.GetSelectedIndex()==-1) {
 					return null;
 				}
-				object selectedTag=gridMessages.ListGridRows[gridMessages.GetSelectedIndex()].Tag;
+				object selectedTag=gridMessages.Rows[gridMessages.GetSelectedIndex()].Tag;
 				if(!(selectedTag is SmsToMobile)) {
 					return null;
 				}
@@ -246,7 +246,7 @@ namespace OpenDental {
 			.ForEach(x => x.Visible=!_isGrouped);
 			if(PrefC.HasClinicsEnabled && comboClinics.ListSelectedClinicNums.Count==0) {
 				gridMessages.BeginUpdate();
-				gridMessages.ListGridRows.Clear();
+				gridMessages.Rows.Clear();
 				gridMessages.EndUpdate();
 				return;
 			}
@@ -277,21 +277,21 @@ namespace OpenDental {
 		private void FillGridTextMessagesGroupedNo(int sortByColIdx,bool isSortAsc,long selectedPatNum,SmsToMobile selectedSmsToMobile,SmsFromMobile selectedSmsFromMobile) {
 			gridMessages.Title="Text Messages - Right click for options - Unread messages always shown";
 			gridMessages.BeginUpdate();
-			gridMessages.ListGridRows.Clear();
-			gridMessages.ListGridColumns.Clear();
-			gridMessages.ListGridColumns.Add(new UI.GridColumn("DateTime",140,HorizontalAlignment.Left) { SortingStrategy=UI.GridSortingStrategy.DateParse });
-			gridMessages.ListGridColumns.Add(new UI.GridColumn("Sent /\r\nReceived",80,HorizontalAlignment.Center){SortingStrategy=UI.GridSortingStrategy.StringCompare} );
-			gridMessages.ListGridColumns.Add(new UI.GridColumn("Status",70,HorizontalAlignment.Center) { SortingStrategy=UI.GridSortingStrategy.StringCompare });
-			_columnStatusIdx=gridMessages.ListGridColumns.Count-1;
-			gridMessages.ListGridColumns.Add(new UI.GridColumn("#Phone\r\nMatches",60,HorizontalAlignment.Center) { SortingStrategy=UI.GridSortingStrategy.AmountParse });
-			gridMessages.ListGridColumns.Add(new UI.GridColumn("Patient\r\nPhone",100,HorizontalAlignment.Center) { SortingStrategy=UI.GridSortingStrategy.StringCompare });
-			gridMessages.ListGridColumns.Add(new UI.GridColumn("Patient",150,HorizontalAlignment.Left) { SortingStrategy=UI.GridSortingStrategy.StringCompare });
-			gridMessages.ListGridColumns.Add(new UI.GridColumn("Cost",32,HorizontalAlignment.Right) { SortingStrategy=UI.GridSortingStrategy.AmountParse });
+			gridMessages.Rows.Clear();
+			gridMessages.Columns.Clear();
+			gridMessages.Columns.Add(new UI.GridColumn("DateTime",140,HorizontalAlignment.Left) { SortingStrategy=UI.GridSortingStrategy.DateParse });
+			gridMessages.Columns.Add(new UI.GridColumn("Sent /\r\nReceived",80,HorizontalAlignment.Center){SortingStrategy=UI.GridSortingStrategy.StringCompare} );
+			gridMessages.Columns.Add(new UI.GridColumn("Status",70,HorizontalAlignment.Center) { SortingStrategy=UI.GridSortingStrategy.StringCompare });
+			_columnStatusIdx=gridMessages.Columns.Count-1;
+			gridMessages.Columns.Add(new UI.GridColumn("#Phone\r\nMatches",60,HorizontalAlignment.Center) { SortingStrategy=UI.GridSortingStrategy.AmountParse });
+			gridMessages.Columns.Add(new UI.GridColumn("Patient\r\nPhone",100,HorizontalAlignment.Center) { SortingStrategy=UI.GridSortingStrategy.StringCompare });
+			gridMessages.Columns.Add(new UI.GridColumn("Patient",150,HorizontalAlignment.Left) { SortingStrategy=UI.GridSortingStrategy.StringCompare });
+			gridMessages.Columns.Add(new UI.GridColumn("Cost",32,HorizontalAlignment.Right) { SortingStrategy=UI.GridSortingStrategy.AmountParse });
 			if(PrefC.HasClinicsEnabled) {
-				gridMessages.ListGridColumns.Add(new UI.GridColumn("Clinic",130,HorizontalAlignment.Left) { SortingStrategy=UI.GridSortingStrategy.StringCompare });
+				gridMessages.Columns.Add(new UI.GridColumn("Clinic",130,HorizontalAlignment.Left) { SortingStrategy=UI.GridSortingStrategy.StringCompare });
 			}
 			if(checkHidden.Checked) {
-				gridMessages.ListGridColumns.Add(new UI.GridColumn("Hidden",46,HorizontalAlignment.Center){SortingStrategy=UI.GridSortingStrategy.StringCompare});
+				gridMessages.Columns.Add(new UI.GridColumn("Hidden",46,HorizontalAlignment.Center){SortingStrategy=UI.GridSortingStrategy.StringCompare});
 			}
 			foreach(SmsFromMobile smsFromMobile in _listSmsFromMobile) {
 				if(!checkHidden.Checked && smsFromMobile.IsHidden) {
@@ -324,7 +324,7 @@ namespace OpenDental {
 				if(selectedPatNum!=0 && smsFromMobile.PatNum==selectedPatNum) {
 					row.BackColor=_colorSelect;
 				}
-				gridMessages.ListGridRows.Add(row);
+				gridMessages.Rows.Add(row);
 			}
 			if(checkSent.Checked) {
 				foreach(SmsToMobile smsToMobile in _listSmsToMobile) {
@@ -368,21 +368,21 @@ namespace OpenDental {
 					if(selectedPatNum!=0 && smsToMobile.PatNum==selectedPatNum) {
 						row.BackColor=_colorSelect;
 					}
-					gridMessages.ListGridRows.Add(row);
+					gridMessages.Rows.Add(row);
 				}
 			}
 			gridMessages.EndUpdate();
 			gridMessages.SortForced(sortByColIdx,isSortAsc);
 			//Check new grid rows against previous selection and re-select.			
-			for(int i=0;i<gridMessages.ListGridRows.Count;i++) { 
-				if(gridMessages.ListGridRows[i].Tag is SmsFromMobile && selectedSmsFromMobile!=null
-					&& ((SmsFromMobile)gridMessages.ListGridRows[i].Tag).SmsFromMobileNum==selectedSmsFromMobile.SmsFromMobileNum) 
+			for(int i=0;i<gridMessages.Rows.Count;i++) { 
+				if(gridMessages.Rows[i].Tag is SmsFromMobile && selectedSmsFromMobile!=null
+					&& ((SmsFromMobile)gridMessages.Rows[i].Tag).SmsFromMobileNum==selectedSmsFromMobile.SmsFromMobileNum) 
 				{
 					gridMessages.SetSelected(i,true);
 					break;
 				}
-				if(gridMessages.ListGridRows[i].Tag is SmsToMobile && selectedSmsToMobile!=null
-					&& ((SmsToMobile)gridMessages.ListGridRows[i].Tag).SmsToMobileNum==selectedSmsToMobile.SmsToMobileNum) 
+				if(gridMessages.Rows[i].Tag is SmsToMobile && selectedSmsToMobile!=null
+					&& ((SmsToMobile)gridMessages.Rows[i].Tag).SmsToMobileNum==selectedSmsToMobile.SmsToMobileNum) 
 				{
 					gridMessages.SetSelected(i,true);
 					break;
@@ -409,17 +409,17 @@ namespace OpenDental {
 		private void FillGridTextMessagesGroupedYes(int sortByColIdx,bool isSortAsc,long selectedPatNum,TextMessageGrouped selectedSmsGroup) {
 			gridMessages.Title="Text Messages - Grouped by "+(radioGroupByPatient.Checked ? "patient" : "phone number");
 			gridMessages.BeginUpdate();
-			gridMessages.ListGridRows.Clear();
-			gridMessages.ListGridColumns.Clear();
-			gridMessages.ListGridColumns.Add(new UI.GridColumn("DateTime",140,HorizontalAlignment.Left) { SortingStrategy=UI.GridSortingStrategy.DateParse });
-			gridMessages.ListGridColumns.Add(new UI.GridColumn("Status",100,HorizontalAlignment.Left) { SortingStrategy=UI.GridSortingStrategy.StringCompare });
-			_columnStatusIdx=gridMessages.ListGridColumns.Count-1;
-			gridMessages.ListGridColumns.Add(new UI.GridColumn("Patient\r\nPhone",100,HorizontalAlignment.Center) { SortingStrategy=UI.GridSortingStrategy.StringCompare });
-			gridMessages.ListGridColumns.Add(new UI.GridColumn("Patient",150,HorizontalAlignment.Left) { SortingStrategy=UI.GridSortingStrategy.StringCompare });
+			gridMessages.Rows.Clear();
+			gridMessages.Columns.Clear();
+			gridMessages.Columns.Add(new UI.GridColumn("DateTime",140,HorizontalAlignment.Left) { SortingStrategy=UI.GridSortingStrategy.DateParse });
+			gridMessages.Columns.Add(new UI.GridColumn("Status",100,HorizontalAlignment.Left) { SortingStrategy=UI.GridSortingStrategy.StringCompare });
+			_columnStatusIdx=gridMessages.Columns.Count-1;
+			gridMessages.Columns.Add(new UI.GridColumn("Patient\r\nPhone",100,HorizontalAlignment.Center) { SortingStrategy=UI.GridSortingStrategy.StringCompare });
+			gridMessages.Columns.Add(new UI.GridColumn("Patient",150,HorizontalAlignment.Left) { SortingStrategy=UI.GridSortingStrategy.StringCompare });
 			if(PrefC.HasClinicsEnabled) {
-				gridMessages.ListGridColumns.Add(new UI.GridColumn("Clinic",130,HorizontalAlignment.Left) { SortingStrategy=UI.GridSortingStrategy.StringCompare });
+				gridMessages.Columns.Add(new UI.GridColumn("Clinic",130,HorizontalAlignment.Left) { SortingStrategy=UI.GridSortingStrategy.StringCompare });
 			}
-			gridMessages.ListGridColumns.Add(new UI.GridColumn("Latest Message",150,HorizontalAlignment.Left) { SortingStrategy=UI.GridSortingStrategy.StringCompare });			
+			gridMessages.Columns.Add(new UI.GridColumn("Latest Message",150,HorizontalAlignment.Left) { SortingStrategy=UI.GridSortingStrategy.StringCompare });			
 			List<TextMessageGrouped> groupAll=GetMessageGroups();
 			foreach(TextMessageGrouped sms in groupAll) {				
 				UI.GridRow row=new UI.GridRow();
@@ -435,17 +435,17 @@ namespace OpenDental {
 					row.Cells.Add(sms.ClinicAbbr);
 				}
 				row.Cells.Add(sms.TextMsg);
-				gridMessages.ListGridRows.Add(row);
+				gridMessages.Rows.Add(row);
 			}
 			gridMessages.EndUpdate();
 			gridMessages.SortForced(sortByColIdx,isSortAsc);
 			//Check new grid rows against previous selection and re-select.			
-			for(int i=0;i<gridMessages.ListGridRows.Count;i++) {
+			for(int i=0;i<gridMessages.Rows.Count;i++) {
 				if(
-					gridMessages.ListGridRows[i].Tag is TextMessageGrouped && 
+					gridMessages.Rows[i].Tag is TextMessageGrouped && 
 					selectedSmsGroup!=null &&
-					((TextMessageGrouped)gridMessages.ListGridRows[i].Tag).PatPhone==selectedSmsGroup.PatPhone &&
-					((TextMessageGrouped)gridMessages.ListGridRows[i].Tag).PatNum==selectedSmsGroup.PatNum)
+					((TextMessageGrouped)gridMessages.Rows[i].Tag).PatPhone==selectedSmsGroup.PatPhone &&
+					((TextMessageGrouped)gridMessages.Rows[i].Tag).PatNum==selectedSmsGroup.PatNum)
 				{
 					gridMessages.SetSelected(i,true);
 					break;
@@ -650,15 +650,15 @@ namespace OpenDental {
 					SmsFromMobiles.Update(fromMobile,oldSmsFromMobile);
 				}
 				//Fix the rows in place. Forcing an entire refresh would cause sorting of grid not to persist.
-				gridMessages.ListGridRows[gridMessages.SelectedIndices[0]].Bold=false;
-				var tag=gridMessages.ListGridRows[gridMessages.SelectedIndices[0]].Tag;
+				gridMessages.Rows[gridMessages.SelectedIndices[0]].Bold=false;
+				var tag=gridMessages.Rows[gridMessages.SelectedIndices[0]].Tag;
 				if(tag is TextMessageGrouped) {
 					TextMessageGrouped smsGroup=(TextMessageGrouped)tag;
 					smsGroup.HasUnread=false;
 					//Latest entry wins for this column value.
 					var latestFromMobile=smsGroup.ListFromMobile.OrderByDescending(x => x.DateTimeReceived).FirstOrDefault()??new SmsFromMobile() { DateTimeReceived=DateTime.MinValue };
 					var latestToMobile=smsGroup.ListToMobile.OrderByDescending(x => x.DateTimeSent).FirstOrDefault()??new SmsToMobile() {DateTimeSent=DateTime.MinValue };
-					gridMessages.ListGridRows[gridMessages.SelectedIndices[0]].Cells[_columnStatusIdx].Text=
+					gridMessages.Rows[gridMessages.SelectedIndices[0]].Cells[_columnStatusIdx].Text=
 						latestFromMobile.DateTimeReceived>latestToMobile.DateTimeSent ? 
 							"Rcv"+" - "+SmsFromMobiles.GetSmsFromStatusDescript(SmsFromStatus.ReceivedRead) : 
 							"Sent"+" - "+GetDeliverStatus(latestToMobile.SmsStatus);
@@ -666,12 +666,12 @@ namespace OpenDental {
 				else if(tag is SmsFromMobile) {
 					SmsFromMobile smsFrom=(SmsFromMobile)tag;
 					smsFrom.SmsStatus=SmsFromStatus.ReceivedRead;
-					gridMessages.ListGridRows[gridMessages.SelectedIndices[0]].Cells[_columnStatusIdx].Text=SmsFromMobiles.GetSmsFromStatusDescript(SmsFromStatus.ReceivedRead);
+					gridMessages.Rows[gridMessages.SelectedIndices[0]].Cells[_columnStatusIdx].Text=SmsFromMobiles.GetSmsFromStatusDescript(SmsFromStatus.ReceivedRead);
 				}			
 			}
 			//Update highlighted rows.
 			long selectedPatNum=_selectedPatNum;
-			gridMessages.ListGridRows.ToList().ForEach(x => {
+			gridMessages.Rows.ToList().ForEach(x => {
 				long patNum=0;
 				if(x.Tag is TextMessageGrouped) {
 					patNum=((TextMessageGrouped)x.Tag).PatNum;
@@ -699,7 +699,7 @@ namespace OpenDental {
 				return;
 			}
 			Cursor=Cursors.WaitCursor;			
-			UI.GridRow row=gridMessages.ListGridRows[gridMessages.GetSelectedIndex()];
+			UI.GridRow row=gridMessages.Rows[gridMessages.GetSelectedIndex()];
 			SmsFromMobile smsFromMobile=_selectedSmsFromMobile;
 			SmsFromMobile oldSmsFromMobile=smsFromMobile.Copy();
 			smsFromMobile.SmsStatus=smsFromStatus;
@@ -885,8 +885,8 @@ namespace OpenDental {
 			//This was happening for the user due to the way ODGrid.CellClick functions.  This issue should now be fixed, but this is a catch-all
 			//to ensure that it is impossible for the user to send to the wrong patient due to invalid selections.
 			bool isInvalidSelection=false;
-			for(int i=0;i<gridMessages.ListGridRows.Count;i++) {
-				UI.GridRow row=gridMessages.ListGridRows[i];
+			for(int i=0;i<gridMessages.Rows.Count;i++) {
+				UI.GridRow row=gridMessages.Rows[i];
 				if(row.BackColor!=_colorSelect) { //Verify that the row the user appears to have selected is actually the selected row.
 					continue;
 				}

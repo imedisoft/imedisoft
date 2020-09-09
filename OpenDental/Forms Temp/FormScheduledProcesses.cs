@@ -19,17 +19,17 @@ namespace OpenDental {
 		private void FillGrid() {
 			List<ScheduledProcess> listScheduledProcesses=ScheduledProcesses.Refresh();
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Scheduled Action",120);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Frequency to Run",150);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Time To Run",75);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Time of Last Run",155);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			foreach(ScheduledProcess schedProc in listScheduledProcesses) {
 				row=new GridRow();
@@ -43,7 +43,7 @@ namespace OpenDental {
 					row.Cells.Add("");
 				}
 				row.Tag=schedProc;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

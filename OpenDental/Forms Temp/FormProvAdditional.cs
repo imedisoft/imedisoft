@@ -30,18 +30,18 @@ namespace OpenDental {
 		private void FillGrid() {
 			Cursor=Cursors.WaitCursor;
 			gridProvProperties.BeginUpdate();
-			gridProvProperties.ListGridColumns.Clear();
+			gridProvProperties.Columns.Clear();
 			GridColumn col=new GridColumn("Clinic",120);
-			gridProvProperties.ListGridColumns.Add(col);
+			gridProvProperties.Columns.Add(col);
 			col=new GridColumn("DEA Num",120,true);
-			gridProvProperties.ListGridColumns.Add(col);
+			gridProvProperties.Columns.Add(col);
 			col=new GridColumn("State License Num",120,true);
-			gridProvProperties.ListGridColumns.Add(col);
+			gridProvProperties.Columns.Add(col);
 			col=new GridColumn("State Rx ID",120,true);
-			gridProvProperties.ListGridColumns.Add(col);
+			gridProvProperties.Columns.Add(col);
 			col=new GridColumn("State Where Licensed",120,true);
-			gridProvProperties.ListGridColumns.Add(col);
-			gridProvProperties.ListGridRows.Clear();
+			gridProvProperties.Columns.Add(col);
+			gridProvProperties.Rows.Clear();
 			GridRow row;
 			_provClinicDefault=_listProvClinic.Find(x => x.ClinicId==0);
 			//Didn't have an HQ row
@@ -66,7 +66,7 @@ namespace OpenDental {
 			row.Cells.Add(_provClinicDefault.StateRxId);
 			row.Cells.Add(_provClinicDefault.StateWhereLicensed);
 			row.Tag=_provClinicDefault;
-			gridProvProperties.ListGridRows.Add(row);
+			gridProvProperties.Rows.Add(row);
 			if(PrefC.HasClinicsEnabled) {
 				foreach(Clinic clinicCur in Clinics.GetByUser(Security.CurrentUser)) {
 					row=new GridRow();
@@ -85,7 +85,7 @@ namespace OpenDental {
 					row.Cells.Add(provClinic.StateRxId);
 					row.Cells.Add(provClinic.StateWhereLicensed);
 					row.Tag=provClinic;
-					gridProvProperties.ListGridRows.Add(row);
+					gridProvProperties.Rows.Add(row);
 				}
 			}
 			gridProvProperties.EndUpdate();
@@ -93,7 +93,7 @@ namespace OpenDental {
 		}
 
 		private void gridProvProperties_CellLeave(object sender,ODGridClickEventArgs e) {
-			GridRow selectedRow=gridProvProperties.SelectedGridRows.First();
+			GridRow selectedRow=gridProvProperties.SelectedRows.First();
 			if(selectedRow==null) {
 				return;
 			}
@@ -124,7 +124,7 @@ namespace OpenDental {
 
 		private void butOK_Click(object sender,EventArgs e) {
 			ListProviderClinicOut=new List<ProviderClinic>();
-			foreach(GridRow row in gridProvProperties.ListGridRows) {
+			foreach(GridRow row in gridProvProperties.Rows) {
 				ProviderClinic provClinic=(ProviderClinic)row.Tag;
 				//always add the default _provClinicDefault
 				if(provClinic==null || (provClinic!=_provClinicDefault && IsEmpty(provClinic))) {

@@ -123,13 +123,13 @@ namespace OpenDental {
 
 		private List<Appointment> _listSelectedAppts {
 			get {
-				return gridAppts.SelectedIndices.Select(x => (Appointment)gridAppts.ListGridRows[x].Tag).ToList();
+				return gridAppts.SelectedIndices.Select(x => (Appointment)gridAppts.Rows[x].Tag).ToList();
 			}
 		}
 
 		private List<Recall> _listSelectedRecalls {
 			get {
-				return gridRecalls.SelectedIndices.Select(x => (Recall)gridRecalls.ListGridRows[x].Tag).ToList();
+				return gridRecalls.SelectedIndices.Select(x => (Recall)gridRecalls.Rows[x].Tag).ToList();
 			}
 		}
 
@@ -897,31 +897,31 @@ namespace OpenDental {
 					int scrollVal=gridAppts.ScrollValue;
 					List<long> listAptNumsSelected=gridAppts.SelectedTags<Appointment>().Select(x => x.AptNum).ToList();
 					gridAppts.BeginUpdate();
-					gridAppts.ListGridColumns.Clear();
+					gridAppts.Columns.Clear();
 					GridColumn col=new GridColumn("Patient",140);
-					gridAppts.ListGridColumns.Add(col);
+					gridAppts.Columns.Add(col);
 					col=new GridColumn("Date",65);
-					gridAppts.ListGridColumns.Add(col);
+					gridAppts.Columns.Add(col);
 					col=new GridColumn("Unsched Status",110);
-					gridAppts.ListGridColumns.Add(col);
+					gridAppts.Columns.Add(col);
 					col=new GridColumn("Apt Status",75);
-					gridAppts.ListGridColumns.Add(col);
+					gridAppts.Columns.Add(col);
 					col=new GridColumn("Prov",50);
-					gridAppts.ListGridColumns.Add(col);
+					gridAppts.Columns.Add(col);
 					col=new GridColumn("Procedures",150);
-					gridAppts.ListGridColumns.Add(col);
+					gridAppts.Columns.Add(col);
 					col=new GridColumn("Length",60);
-					gridAppts.ListGridColumns.Add(col);
+					gridAppts.Columns.Add(col);
 					col=new GridColumn("Notes",160);
-					gridAppts.ListGridColumns.Add(col);
+					gridAppts.Columns.Add(col);
 					int widths=0;
-					for(int i=0;i<gridAppts.ListGridColumns.Count;i++) {
-						widths+=gridAppts.ListGridColumns[i].ColumnWidth;
+					for(int i=0;i<gridAppts.Columns.Count;i++) {
+						widths+=gridAppts.Columns[i].ColumnWidth;
 					}
 					if(widths > Width) {
 						gridAppts.HScrollVisible=true;
 					}
-					gridAppts.ListGridRows.Clear();
+					gridAppts.Rows.Clear();
 					GridRow row;
 					if(_listASAPs.Any(x => !_dictPatientNames.ContainsKey(x.PatNum))) {
 						Patients.GetPatientNames(_listASAPs.Select(x => x.PatNum).ToList()).ForEach(x => _dictPatientNames[x.Key]=x.Value);
@@ -952,12 +952,12 @@ namespace OpenDental {
 						row.Cells.Add(_listASAPs[i].Length.ToString());
 						row.Cells.Add(_listASAPs[i].Note);
 						row.Tag=_listASAPs[i];
-						gridAppts.ListGridRows.Add(row);
+						gridAppts.Rows.Add(row);
 					}
 					gridAppts.EndUpdate();
 					gridAppts.ScrollValue=scrollVal;
-					for(int i=0;i<gridAppts.ListGridRows.Count;i++) {
-						if(((Appointment)gridAppts.ListGridRows[i].Tag).AptNum.In(listAptNumsSelected)) {
+					for(int i=0;i<gridAppts.Rows.Count;i++) {
+						if(((Appointment)gridAppts.Rows[i].Tag).AptNum.In(listAptNumsSelected)) {
 							gridAppts.SetSelected(i,true);
 						}
 					}
@@ -971,10 +971,10 @@ namespace OpenDental {
 		private void gridAppts_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			int currentSelection=e.Row;
 			int currentScroll=gridAppts.ScrollValue;
-			SelectedPatNum=((Appointment)gridAppts.ListGridRows[e.Row].Tag).PatNum;	//check against grid
+			SelectedPatNum=((Appointment)gridAppts.Rows[e.Row].Tag).PatNum;	//check against grid
 			Patient pat=Patients.GetPat(SelectedPatNum);
 			FormOpenDental.S_Contr_PatientSelected(pat,true);
-			FormApptEdit FormAE=new FormApptEdit(((Appointment)gridAppts.ListGridRows[e.Row].Tag).AptNum);
+			FormApptEdit FormAE=new FormApptEdit(((Appointment)gridAppts.Rows[e.Row].Tag).AptNum);
 			FormAE.PinIsVisible=true;
 			FormAE.ShowDialog();
 			if(FormAE.DialogResult!=DialogResult.OK){
@@ -1005,7 +1005,7 @@ namespace OpenDental {
 				return;
 			}
 			for(int i=0;i<gridAppts.SelectedIndices.Length;i++) {
-				Appointment apt=(Appointment)gridAppts.SelectedGridRows[i].Tag;
+				Appointment apt=(Appointment)gridAppts.SelectedRows[i].Tag;
 				DateTime datePrevious=apt.DateTStamp;
 				Appointments.SetPriority(apt,ApptPriority.Normal);
 				SecurityLogs.MakeLogEntry(Permissions.AppointmentEdit,apt.PatNum,"Appointment priority set from ASAP to normal from ASAP list.",apt.AptNum,
@@ -1105,9 +1105,9 @@ namespace OpenDental {
 						.ToString())).ToList());
 					ASAPEvent.Fire(EventCategory.ASAP,"Filling the Recall ASAP grid...");
 					List<long> listRecallNumsSelected=gridRecalls.SelectedTags<Recall>().Select(x => x.RecallNum).ToList();
-					bool hasGridBeenFilledBefore=(gridRecalls.ListGridColumns.Count > 0);
+					bool hasGridBeenFilledBefore=(gridRecalls.Columns.Count > 0);
 					gridRecalls.BeginUpdate();
-					gridRecalls.ListGridColumns.Clear();
+					gridRecalls.Columns.Clear();
 					GridColumn col;
 					List<DisplayField> fields=DisplayFields.GetForCategory(DisplayFieldCategory.RecallList);
 					for(int i=0;i<fields.Count;i++) {
@@ -1118,9 +1118,9 @@ namespace OpenDental {
 							col=new GridColumn(fields[i].Description,fields[i].ColumnWidth);
 						}
 						col.Tag=fields[i].InternalName;
-						gridRecalls.ListGridColumns.Add(col);
+						gridRecalls.Columns.Add(col);
 					}
-					gridRecalls.ListGridRows.Clear();
+					gridRecalls.Rows.Clear();
 					GridRow row;
 					for(int i=0;i<tableRecalls.Rows.Count;i++){
 						row=new GridRow();
@@ -1166,14 +1166,14 @@ namespace OpenDental {
 						}
 						row.Tag=listRecalls.FirstOrDefault(x => x.RecallNum==PIn.Long(tableRecalls.Rows[i]["RecallNum"].ToString()));
 						_dictPatientNames[PIn.Long(tableRecalls.Rows[i]["PatNum"].ToString())]=tableRecalls.Rows[i]["patientName"].ToString();
-						gridRecalls.ListGridRows.Add(row);
+						gridRecalls.Rows.Add(row);
 					}
 					gridRecalls.EndUpdate();
 					if(!hasGridBeenFilledBefore) {
 						SetSelectedRecalls();
 					}
-					for(int i=0;i<gridRecalls.ListGridRows.Count;i++) {
-						if(((Recall)gridRecalls.ListGridRows[i].Tag).RecallNum.In(listRecallNumsSelected)) {
+					for(int i=0;i<gridRecalls.Rows.Count;i++) {
+						if(((Recall)gridRecalls.Rows[i].Tag).RecallNum.In(listRecallNumsSelected)) {
 							gridRecalls.SetSelected(i,true);
 						}
 					}
@@ -1185,7 +1185,7 @@ namespace OpenDental {
 		}
 
 		private void gridRecalls_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			Recall recall=(Recall)gridRecalls.ListGridRows[e.Row].Tag;
+			Recall recall=(Recall)gridRecalls.Rows[e.Row].Tag;
 			Patient pat=Patients.GetPat(recall.PatNum);
 			FormOpenDental.S_Contr_PatientSelected(pat,true);
 			FormRecallEdit formRE=new FormRecallEdit();
@@ -1240,14 +1240,14 @@ namespace OpenDental {
 				}
 				switch(menuApptsRightClick.Items.IndexOf(menu)) {
 					case 0:
-						SelectPatient_Click(((Appointment)gridAppts.SelectedGridRows.Last().Tag).PatNum);
+						SelectPatient_Click(((Appointment)gridAppts.SelectedRows.Last().Tag).PatNum);
 						break;
 					case 1:
 						if(gridAppts.SelectedIndices.Length==0) {
 							MessageBox.Show("Please select an appointment first.");
 							return;
 						}
-						SeeChart_Click(((Appointment)gridAppts.SelectedGridRows.Last().Tag).PatNum);
+						SeeChart_Click(((Appointment)gridAppts.SelectedRows.Last().Tag).PatNum);
 						break;
 					case 2:
 						SendPinboard_Click();
@@ -1300,17 +1300,17 @@ namespace OpenDental {
 			List<PatComm> listPatCommsToSend;
 			if(tabControl.SelectedIndex==0) {//Appt Tab selected
 				Func<int,long> getPatNumFromGridRow=new Func<int,long>((rowIdx) =>	{
-					return ((Appointment)gridAppts.ListGridRows[rowIdx].Tag).PatNum;
+					return ((Appointment)gridAppts.Rows[rowIdx].Tag).PatNum;
 				});
 				listPatCommsToSend=GetPatCommsForTexting(curClinic,gridAppts,_listASAPs.Select(x => x.PatNum).ToList(),getPatNumFromGridRow);
 			}
 			else {//Recall tab selected
 				List<Recall> listRecalls=new List<Recall>();
-				foreach(GridRow row in gridRecalls.ListGridRows) {
+				foreach(GridRow row in gridRecalls.Rows) {
 					listRecalls.Add((Recall)row.Tag);
 				}
 				Func<int,long> getPatNumFromGridRow=new Func<int,long>((rowIdx) =>	{
-					return ((Recall)gridRecalls.ListGridRows[rowIdx].Tag).PatNum;
+					return ((Recall)gridRecalls.Rows[rowIdx].Tag).PatNum;
 				});
 				listPatCommsToSend=GetPatCommsForTexting(curClinic,gridRecalls,listRecalls.Select(x => x.PatNum).ToList(),getPatNumFromGridRow);
 			}
@@ -1502,19 +1502,19 @@ namespace OpenDental {
 				.OrderByDescending(funcOrderBy)
 				.ThenBy(x => _dictPatientNames[x.AsapComm.PatNum]).ToList();
 			gridWebSched.BeginUpdate();
-			gridWebSched.ListGridColumns.Clear();
+			gridWebSched.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Patient",150);
-			gridWebSched.ListGridColumns.Add(col);
+			gridWebSched.Columns.Add(col);
 			col=new GridColumn("Text Send Time",120);
-			gridWebSched.ListGridColumns.Add(col);
+			gridWebSched.Columns.Add(col);
 			col=new GridColumn("Email Send Time",120);
-			gridWebSched.ListGridColumns.Add(col);
+			gridWebSched.Columns.Add(col);
 			col=new GridColumn("Time Slot Start",120);
-			gridWebSched.ListGridColumns.Add(col);
+			gridWebSched.Columns.Add(col);
 			col=new GridColumn("Notes",300);
-			gridWebSched.ListGridColumns.Add(col);
-			gridWebSched.ListGridRows.Clear();
+			gridWebSched.Columns.Add(col);
+			gridWebSched.Rows.Clear();
 			foreach(AsapComms.AsapCommHist asapCommHist in listAsapHists) {
 				GridRow row=new GridRow();
 				row.Cells.Add(_dictPatientNames[asapCommHist.AsapComm.PatNum]);
@@ -1540,7 +1540,7 @@ namespace OpenDental {
 				row.Cells.Add(asapCommHist.DateTimeSlotStart.ToString());
 				row.Cells.Add(asapCommHist.AsapComm.Note);
 				row.Tag=asapCommHist;
-				gridWebSched.ListGridRows.Add(row);
+				gridWebSched.Rows.Add(row);
 			}
 			gridWebSched.EndUpdate();
 		}
@@ -1550,8 +1550,8 @@ namespace OpenDental {
 				return;
 			}
 			int slotLength=(int)(_selectedTimeEnd-_selectedTimeStart).TotalMinutes;
-			for(int i=0;i<gridAppts.ListGridRows.Count;i++) {
-				if(((Appointment)gridAppts.ListGridRows[i].Tag).Length<=slotLength) {
+			for(int i=0;i<gridAppts.Rows.Count;i++) {
+				if(((Appointment)gridAppts.Rows[i].Tag).Length<=slotLength) {
 					gridAppts.SetSelected(i,true);
 				}
 				else {
@@ -1566,8 +1566,8 @@ namespace OpenDental {
 			}
 			int timeIncrements=PrefC.GetInt(PrefName.AppointmentTimeIncrement);
 			int slotLength=(int)(_selectedTimeEnd-_selectedTimeStart).TotalMinutes;
-			for(int i=0;i<gridRecalls.ListGridRows.Count;i++) {
-				Recall recallCur=gridRecalls.ListGridRows[i].Tag as Recall;
+			for(int i=0;i<gridRecalls.Rows.Count;i++) {
+				Recall recallCur=gridRecalls.Rows[i].Tag as Recall;
 				string timePattern=RecallTypes.GetTimePattern(recallCur.RecallTypeNum);
 				int length=timePattern.Length*timeIncrements;
 				if(length<=slotLength) {

@@ -206,14 +206,14 @@ namespace OpenDental {
 			InsFilingCodes.RefreshCache();
 			_listInsFilingCodes=InsFilingCodes.GetDeepCopy();
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Description",250);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Group",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("EclaimCode",100);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listInsFilingCodes.Count;i++){
 				row=new GridRow();
@@ -224,7 +224,7 @@ namespace OpenDental {
 				}
 				row.Cells.Add(group);
 				row.Cells.Add(_listInsFilingCodes[i].EclaimCode);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

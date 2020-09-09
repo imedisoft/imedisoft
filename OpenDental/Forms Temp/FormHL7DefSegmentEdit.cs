@@ -50,18 +50,18 @@ namespace OpenDental {
 				HL7DefSegCur.hl7DefFields=HL7DefFields.GetFromDb(HL7DefSegCur.HL7DefSegmentNum);
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Field Name",140);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Fixed Text",240);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Type",40);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Order",40,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Table ID",75);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			if(HL7DefSegCur!=null && HL7DefSegCur.hl7DefFields!=null) {
 				for(int i=0;i<HL7DefSegCur.hl7DefFields.Count;i++) {
 					GridRow row=new GridRow();
@@ -70,7 +70,7 @@ namespace OpenDental {
 					row.Cells.Add(HL7DefSegCur.hl7DefFields[i].DataType.ToString());
 					row.Cells.Add(HL7DefSegCur.hl7DefFields[i].OrdinalPos.ToString());
 					row.Cells.Add(HL7DefSegCur.hl7DefFields[i].TableId);
-					gridMain.ListGridRows.Add(row);
+					gridMain.Rows.Add(row);
 				}
 			}
 			gridMain.EndUpdate();

@@ -27,25 +27,25 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Date",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Prov",50);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Item Not Performed",130);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Code",102);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Code Description",150);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Reason Code",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Reason Description",150);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Note",150);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			listNotPerf=EhrNotPerformeds.Refresh(PatCur.PatNum);
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<listNotPerf.Count;i++) {
 				row=new GridRow();
@@ -114,7 +114,7 @@ namespace OpenDental {
 				row.Cells.Add(descript);
 				//Note--------------------------------------------------------------------------
 				row.Cells.Add(listNotPerf[i].Note);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -122,7 +122,7 @@ namespace OpenDental {
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			FormEhrNotPerformedEdit FormEE=new FormEhrNotPerformedEdit();
 			FormEE.EhrNotPerfCur=listNotPerf[e.Row];
-			FormEE.SelectedItemIndex=(int)Enum.Parse(typeof(EhrNotPerformedItem),gridMain.ListGridRows[e.Row].Cells[2].Text,true);//Parse the text displayed from the enum and convert to int
+			FormEE.SelectedItemIndex=(int)Enum.Parse(typeof(EhrNotPerformedItem),gridMain.Rows[e.Row].Cells[2].Text,true);//Parse the text displayed from the enum and convert to int
 			FormEE.ShowDialog();
 			FillGrid();
 		}

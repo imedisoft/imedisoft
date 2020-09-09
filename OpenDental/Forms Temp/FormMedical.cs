@@ -1184,26 +1184,26 @@ namespace OpenDental{
 			Medications.RefreshCache();
 			medList=MedicationPats.Refresh(PatCur.PatNum,checkDiscontinued.Checked);
 			gridToFill.BeginUpdate();
-			gridToFill.ListGridColumns.Clear();
+			gridToFill.Columns.Clear();
 			GridColumn col;
 			if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowInfobutton && !isForPrinting) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
 				col=new GridColumn("",18);//infoButton
 				col.ImageList=imageListInfoButton;
-				gridToFill.ListGridColumns.Add(col);
+				gridToFill.Columns.Add(col);
 			}
 			col=new GridColumn("Medication",200);
-			gridToFill.ListGridColumns.Add(col);
+			gridToFill.Columns.Add(col);
 			col=new GridColumn("Notes",100){ IsWidthDynamic=true };
-			gridToFill.ListGridColumns.Add(col);
+			gridToFill.Columns.Add(col);
 			col=new GridColumn("Notes for Patient",100){ IsWidthDynamic=true };
-			gridToFill.ListGridColumns.Add(col);
+			gridToFill.Columns.Add(col);
 			col=new GridColumn("Status",45,HorizontalAlignment.Center);
-			gridToFill.ListGridColumns.Add(col);
+			gridToFill.Columns.Add(col);
 			if(!isForPrinting) {
 				col=new GridColumn("Source",60);
-				gridToFill.ListGridColumns.Add(col);
+				gridToFill.Columns.Add(col);
 			}
-			gridToFill.ListGridRows.Clear();
+			gridToFill.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<medList.Count;i++) {
 				row=new GridRow();
@@ -1241,7 +1241,7 @@ namespace OpenDental{
 						row.Cells.Add("");
 					}
 				}
-				gridToFill.ListGridRows.Add(row);
+				gridToFill.Rows.Add(row);
 			}
 			gridToFill.EndUpdate();
 		}
@@ -1424,7 +1424,7 @@ namespace OpenDental{
 			g.DrawString(text,subHeadingFont,Brushes.Black,center-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 			yPos+=(int)g.MeasureString(text,subHeadingFont).Height;
 			yPos+=25;
-			if(gridDiseases.ListGridRows.Count>0) {
+			if(gridDiseases.Rows.Count>0) {
 				text="Problems";
 				g.DrawString(text,subHeadingFont,Brushes.Black,center-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,subHeadingFont).Height;
@@ -1432,7 +1432,7 @@ namespace OpenDental{
 				yPos=gridDiseases.PrintPage(g,0,bounds,yPos);
 				yPos+=25;
 			}
-			if(gridAllergies.ListGridRows.Count>0) {
+			if(gridAllergies.Rows.Count>0) {
 				text="Allergies";
 				g.DrawString(text,subHeadingFont,Brushes.Black,center-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,subHeadingFont).Height;
@@ -1480,21 +1480,21 @@ namespace OpenDental{
 		private void FillFamilyHealth() {
 			ListFamHealth=FamilyHealths.GetFamilyHealthForPat(PatCur.PatNum);
 			gridFamilyHealth.BeginUpdate();
-			gridFamilyHealth.ListGridColumns.Clear();
+			gridFamilyHealth.Columns.Clear();
 			GridColumn col=new GridColumn("Relationship",150,HorizontalAlignment.Center);
-			gridFamilyHealth.ListGridColumns.Add(col);
+			gridFamilyHealth.Columns.Add(col);
 			col=new GridColumn("Name",150);
-			gridFamilyHealth.ListGridColumns.Add(col);
+			gridFamilyHealth.Columns.Add(col);
 			col=new GridColumn("Problem",180);
-			gridFamilyHealth.ListGridColumns.Add(col);
-			gridFamilyHealth.ListGridRows.Clear();
+			gridFamilyHealth.Columns.Add(col);
+			gridFamilyHealth.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<ListFamHealth.Count;i++) {
 				row=new GridRow();
 				row.Cells.Add(ListFamHealth[i].Relationship.ToString());
 				row.Cells.Add(ListFamHealth[i].PersonName);
 				row.Cells.Add(ProblemDefinitions.GetName(ListFamHealth[i].DiseaseDefNum));
-				gridFamilyHealth.ListGridRows.Add(row);
+				gridFamilyHealth.Rows.Add(row);
 			}
 			gridFamilyHealth.EndUpdate();
 		}
@@ -1524,20 +1524,20 @@ namespace OpenDental{
 		private void FillProblems(){
 			DiseaseList=Problems.Refresh(checkShowInactiveProblems.Checked,PatCur.PatNum).ToList();
 			gridDiseases.BeginUpdate();
-			gridDiseases.ListGridColumns.Clear();
+			gridDiseases.Columns.Clear();
 			GridColumn col;
 			if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowInfobutton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
 				col=new GridColumn("",18);//infoButton
 				col.ImageList=imageListInfoButton;
-				gridDiseases.ListGridColumns.Add(col);
+				gridDiseases.Columns.Add(col);
 			}
 			col=new GridColumn("Name",200);//total is about 325
-			gridDiseases.ListGridColumns.Add(col);
+			gridDiseases.Columns.Add(col);
 			col=new GridColumn("Patient Note",450);
-			gridDiseases.ListGridColumns.Add(col);
+			gridDiseases.Columns.Add(col);
 			col=new GridColumn("Status",40,HorizontalAlignment.Center);
-			gridDiseases.ListGridColumns.Add(col);
-			gridDiseases.ListGridRows.Clear();
+			gridDiseases.Columns.Add(col);
+			gridDiseases.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<DiseaseList.Count;i++){
 				row=new GridRow();
@@ -1552,7 +1552,7 @@ namespace OpenDental{
 				}
 				row.Cells.Add(DiseaseList[i].PatientNote);
 				row.Cells.Add(DiseaseList[i].Status.ToString());
-				gridDiseases.ListGridRows.Add(row);
+				gridDiseases.Rows.Add(row);
 			}
 			gridDiseases.EndUpdate();
 		}
@@ -1642,20 +1642,20 @@ namespace OpenDental{
 		private void FillAllergies() {
 			allergyList=Allergies.GetByPatient(PatCur.PatNum,checkShowInactiveAllergies.Checked);
 			gridAllergies.BeginUpdate();
-			gridAllergies.ListGridColumns.Clear();
+			gridAllergies.Columns.Clear();
 			GridColumn col;
 			if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowInfobutton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
 				col=new GridColumn("",18);//infoButton
 				col.ImageList=imageListInfoButton;
-				gridAllergies.ListGridColumns.Add(col);
+				gridAllergies.Columns.Add(col);
 			}
 			col=new GridColumn("Allergy",150);
-			gridAllergies.ListGridColumns.Add(col);
+			gridAllergies.Columns.Add(col);
 			col=new GridColumn("Reaction",500);
-			gridAllergies.ListGridColumns.Add(col);
+			gridAllergies.Columns.Add(col);
 			col=new GridColumn("Status",40,HorizontalAlignment.Center);
-			gridAllergies.ListGridColumns.Add(col);
-			gridAllergies.ListGridRows.Clear();
+			gridAllergies.Columns.Add(col);
+			gridAllergies.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<allergyList.Count;i++){
 				row=new GridRow();
@@ -1676,7 +1676,7 @@ namespace OpenDental{
 				else {
 					row.Cells.Add("Inactive");
 				}
-				gridAllergies.ListGridRows.Add(row);
+				gridAllergies.Rows.Add(row);
 			}
 			gridAllergies.EndUpdate();
 		}
@@ -1736,23 +1736,23 @@ namespace OpenDental{
 		#region Vital Signs Tab
 		private void FillVitalSigns() {
 			gridVitalSigns.BeginUpdate();
-			gridVitalSigns.ListGridColumns.Clear();
+			gridVitalSigns.Columns.Clear();
 			GridColumn col=new GridColumn("Date",80);
-			gridVitalSigns.ListGridColumns.Add(col);
+			gridVitalSigns.Columns.Add(col);
 			col=new GridColumn("Pulse",55);
-			gridVitalSigns.ListGridColumns.Add(col);
+			gridVitalSigns.Columns.Add(col);
 			col=new GridColumn("Height",55);
-			gridVitalSigns.ListGridColumns.Add(col);
+			gridVitalSigns.Columns.Add(col);
 			col=new GridColumn("Weight",55);
-			gridVitalSigns.ListGridColumns.Add(col);
+			gridVitalSigns.Columns.Add(col);
 			col=new GridColumn("BP",55);
-			gridVitalSigns.ListGridColumns.Add(col);
+			gridVitalSigns.Columns.Add(col);
 			col=new GridColumn("BMI",55);
-			gridVitalSigns.ListGridColumns.Add(col);
+			gridVitalSigns.Columns.Add(col);
 			col=new GridColumn("Documentation for Followup or Ineligible",150);
-			gridVitalSigns.ListGridColumns.Add(col);
+			gridVitalSigns.Columns.Add(col);
 			_listVitalSigns=Vitalsigns.Refresh(PatCur.PatNum);
-			gridVitalSigns.ListGridRows.Clear();
+			gridVitalSigns.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listVitalSigns.Count;i++) {
 				row=new GridRow();
@@ -1774,7 +1774,7 @@ namespace OpenDental{
 					row.Cells.Add("");
 				}
 				row.Cells.Add(_listVitalSigns[i].Documentation);
-				gridVitalSigns.ListGridRows.Add(row);
+				gridVitalSigns.Rows.Add(row);
 			}
 			gridVitalSigns.EndUpdate();
 		}
@@ -1874,9 +1874,9 @@ namespace OpenDental{
 			}
 			_listAssessmentCodes.ForEach(x => comboAssessmentType.Items.Add(x.Description));
 			string mostRecentAssessmentCode="";
-			if(gridAssessments.ListGridRows.Count>1) {
+			if(gridAssessments.Rows.Count>1) {
 				//gridAssessments.Rows are tagged with all TobaccoUseAssessed events for the patient ordered by DateTEvent, last is most recent
-				mostRecentAssessmentCode=((EhrMeasureEvent)gridAssessments.ListGridRows[gridAssessments.ListGridRows.Count-1].Tag).CodeValueResult;
+				mostRecentAssessmentCode=((EhrMeasureEvent)gridAssessments.Rows[gridAssessments.Rows.Count-1].Tag).CodeValueResult;
 			}
 			//use Math.Max so that if _listAssessmentCodes doesn't contain the mostRecentAssessment code the combobox will default to the first in the list
 			comboAssessmentType.SelectedIndex=Math.Max(0,_listAssessmentCodes.FindIndex(x => x.CodeValue==mostRecentAssessmentCode));
@@ -1893,7 +1893,7 @@ namespace OpenDental{
 			string[] codeValues=_listUserCodes.Concat(_listNonUserCodes).Concat(_listRecentTobaccoCodes).Select(x => x.CodeValue).ToArray();
 			//listEventCodes will contain all unique tobacco codes that are not in the user and non-user lists
 			List<string> listEventCodes=new List<string>();
-			foreach(GridRow row in gridAssessments.ListGridRows) {
+			foreach(GridRow row in gridAssessments.Rows) {
 				string eventCodeCur=((EhrMeasureEvent)row.Tag).CodeValueResult;
 				if(codeValues.Contains(eventCodeCur) || listEventCodes.Contains(eventCodeCur)) {
 					continue;
@@ -1929,12 +1929,12 @@ namespace OpenDental{
 
 		private void FillGridAssessments() {
 			gridAssessments.BeginUpdate();
-			gridAssessments.ListGridColumns.Clear();
-			gridAssessments.ListGridColumns.Add(new GridColumn("Date",70));
-			gridAssessments.ListGridColumns.Add(new GridColumn("Type",170));
-			gridAssessments.ListGridColumns.Add(new GridColumn("Description",170));
-			gridAssessments.ListGridColumns.Add(new GridColumn("Documentation",170));
-			gridAssessments.ListGridRows.Clear();
+			gridAssessments.Columns.Clear();
+			gridAssessments.Columns.Add(new GridColumn("Date",70));
+			gridAssessments.Columns.Add(new GridColumn("Type",170));
+			gridAssessments.Columns.Add(new GridColumn("Description",170));
+			gridAssessments.Columns.Add(new GridColumn("Documentation",170));
+			gridAssessments.Rows.Clear();
 			GridRow row;
 			Loinc lCur;
 			Snomed sCur;
@@ -1948,20 +1948,20 @@ namespace OpenDental{
 				row.Cells.Add(sCur!=null?sCur.Description:"");
 				row.Cells.Add(eventCur.MoreInfo);
 				row.Tag=eventCur;
-				gridAssessments.ListGridRows.Add(row);
+				gridAssessments.Rows.Add(row);
 			}
 			gridAssessments.EndUpdate();
 		}
 
 		private void FillGridInterventions() {
 			gridInterventions.BeginUpdate();
-			gridInterventions.ListGridColumns.Clear();
-			gridInterventions.ListGridColumns.Add(new GridColumn("Date",70));
-			gridInterventions.ListGridColumns.Add(new GridColumn("Type",150));
-			gridInterventions.ListGridColumns.Add(new GridColumn("Description",160));
-			gridInterventions.ListGridColumns.Add(new GridColumn("Declined",60) { TextAlign=HorizontalAlignment.Center });
-			gridInterventions.ListGridColumns.Add(new GridColumn("Documentation",140));
-			gridInterventions.ListGridRows.Clear();
+			gridInterventions.Columns.Clear();
+			gridInterventions.Columns.Add(new GridColumn("Date",70));
+			gridInterventions.Columns.Add(new GridColumn("Type",150));
+			gridInterventions.Columns.Add(new GridColumn("Description",160));
+			gridInterventions.Columns.Add(new GridColumn("Declined",60) { TextAlign=HorizontalAlignment.Center });
+			gridInterventions.Columns.Add(new GridColumn("Documentation",140));
+			gridInterventions.Rows.Clear();
 			//build list of rows of CessationInterventions and CessationMedications so we can order the list by date and type before filling the grid
 			List<GridRow> listRows=new List<GridRow>();
 			GridRow row;
@@ -2031,19 +2031,19 @@ namespace OpenDental{
 				.ThenBy(x => x.Cells[3].Text!="")
 				//interventions at the top, declined med interventions below normal interventions
 				.ThenBy(x => x.Tag.GetType().Name!="Intervention" || ((Intervention)x.Tag).CodeSystem=="RXNORM").ToList()
-				.ForEach(x => gridInterventions.ListGridRows.Add(x));//then add rows to gridInterventions
+				.ForEach(x => gridInterventions.Rows.Add(x));//then add rows to gridInterventions
 			gridInterventions.EndUpdate();
 		}
 
 		private void gridAssessments_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			//we will allow them to change the DateTEvent, but not the status or more info box
-			FormEhrMeasureEventEdit FormM=new FormEhrMeasureEventEdit((EhrMeasureEvent)gridAssessments.ListGridRows[e.Row].Tag);
+			FormEhrMeasureEventEdit FormM=new FormEhrMeasureEventEdit((EhrMeasureEvent)gridAssessments.Rows[e.Row].Tag);
 			FormM.ShowDialog();
 			FillGridAssessments();
 		}
 
 		private void gridInterventions_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			Object objCur=gridInterventions.ListGridRows[e.Row].Tag;
+			Object objCur=gridInterventions.Rows[e.Row].Tag;
 			//the intervention grid will be filled with Interventions and MedicationPats, load form accordingly
 			if(objCur is Intervention) {
 				FormInterventionEdit FormI=new FormInterventionEdit();
@@ -2069,7 +2069,7 @@ namespace OpenDental{
 			//Insert measure event if one does not already exist for this date
 			DateTime dateTEntered=PIn.Date(textDateAssessed.Text);//will be set to DateTime.Now when form loads
 			EhrMeasureEvent eventCur;
-			foreach(GridRow row in gridAssessments.ListGridRows) {
+			foreach(GridRow row in gridAssessments.Rows) {
 				eventCur=(EhrMeasureEvent)row.Tag;
 				if(eventCur.DateTEvent.Date==dateTEntered.Date) {//one already exists for this date, don't auto insert event
 					return;

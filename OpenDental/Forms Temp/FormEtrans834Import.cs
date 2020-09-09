@@ -48,18 +48,18 @@ namespace OpenDental {
 
 		private void FillGridInsPlanFiles() {
 			gridInsPlanFiles.BeginUpdate();
-			if(gridInsPlanFiles.ListGridColumns.Count==0) {
-				gridInsPlanFiles.ListGridColumns.Add(new UI.GridColumn("FileName",300,UI.GridSortingStrategy.StringCompare));
-				_colDateIndex=gridInsPlanFiles.ListGridColumns.Count;
-				gridInsPlanFiles.ListGridColumns.Add(new UI.GridColumn("Date",80,UI.GridSortingStrategy.StringCompare));
-				_colPatCountIndex=gridInsPlanFiles.ListGridColumns.Count;
-				gridInsPlanFiles.ListGridColumns.Add(new UI.GridColumn("PatCount",80,UI.GridSortingStrategy.AmountParse));
-				_colPlanCountIndex=gridInsPlanFiles.ListGridColumns.Count;
-				gridInsPlanFiles.ListGridColumns.Add(new UI.GridColumn("PlanCount",80,UI.GridSortingStrategy.AmountParse));
-				_colErrorIndex=gridInsPlanFiles.ListGridColumns.Count;
-				gridInsPlanFiles.ListGridColumns.Add(new UI.GridColumn("Errors",80,UI.GridSortingStrategy.StringCompare){ IsWidthDynamic=true });
+			if(gridInsPlanFiles.Columns.Count==0) {
+				gridInsPlanFiles.Columns.Add(new UI.GridColumn("FileName",300,UI.GridSortingStrategy.StringCompare));
+				_colDateIndex=gridInsPlanFiles.Columns.Count;
+				gridInsPlanFiles.Columns.Add(new UI.GridColumn("Date",80,UI.GridSortingStrategy.StringCompare));
+				_colPatCountIndex=gridInsPlanFiles.Columns.Count;
+				gridInsPlanFiles.Columns.Add(new UI.GridColumn("PatCount",80,UI.GridSortingStrategy.AmountParse));
+				_colPlanCountIndex=gridInsPlanFiles.Columns.Count;
+				gridInsPlanFiles.Columns.Add(new UI.GridColumn("PlanCount",80,UI.GridSortingStrategy.AmountParse));
+				_colErrorIndex=gridInsPlanFiles.Columns.Count;
+				gridInsPlanFiles.Columns.Add(new UI.GridColumn("Errors",80,UI.GridSortingStrategy.StringCompare){ IsWidthDynamic=true });
 			}			
-			gridInsPlanFiles.ListGridRows.Clear();
+			gridInsPlanFiles.Rows.Clear();
 			gridInsPlanFiles.EndUpdate();
 			if(!Directory.Exists(textImportPath.Text)) {
 				return;
@@ -68,7 +68,7 @@ namespace OpenDental {
 			_arrayImportFilePaths=Directory.GetFiles(textImportPath.Text);
 			for(int i=0;i<_arrayImportFilePaths.Length;i++) {
 				UI.GridRow row=new UI.GridRow();
-				gridInsPlanFiles.ListGridRows.Add(row);
+				gridInsPlanFiles.Rows.Add(row);
 				string filePath=_arrayImportFilePaths[i];
 				row.Tag=filePath;				
 				string fileName=Path.GetFileName(filePath);
@@ -108,8 +108,8 @@ namespace OpenDental {
 			const int previewLimitCount=40;
 			int selectedIndex=-1;
 			_x834selected=null;
-			for(int i=0;i<gridInsPlanFiles.ListGridRows.Count;i++) {
-				UI.GridRow row=gridInsPlanFiles.ListGridRows[i];
+			for(int i=0;i<gridInsPlanFiles.Rows.Count;i++) {
+				UI.GridRow row=gridInsPlanFiles.Rows[i];
 				if(i < previewLimitCount) {
 					gridInsPlanFiles.BeginUpdate();
 				}
@@ -154,7 +154,7 @@ namespace OpenDental {
 			GC.Collect();
 			gridInsPlanFiles.BeginUpdate();
 			if(selectedIndex >= 0) {
-				gridInsPlanFiles.ListGridRows[selectedIndex].BackColor=Color.LightYellow;
+				gridInsPlanFiles.Rows[selectedIndex].BackColor=Color.LightYellow;
 			}
 			gridInsPlanFiles.EndUpdate();//Also invalidates grid.  Update required in case there was large error text.
 			ShowStatus("");

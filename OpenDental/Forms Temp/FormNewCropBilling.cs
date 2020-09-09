@@ -126,7 +126,7 @@ namespace OpenDental {
 
 		private void RefreshGridColumns() {
 			gridBillingList.BeginUpdate();
-			gridBillingList.ListGridColumns.Clear();
+			gridBillingList.Columns.Clear();
 			int gridWidth=this.Width-50;
 			int erxAccountIdWidth=80;//fixed width
 			int patNumWidth=50;//fixed width
@@ -144,20 +144,20 @@ namespace OpenDental {
 			int variableWidth=gridWidth-isNewWidth-erxAccountIdWidth-patNumWidth-npiWidth-firstLastNameWidth-deaWidth-dateAddedWidth-compFteWidth
 				-basicFteWidth-drugWidth-formWidth-epcsWidth-idpWidth;
 			int practiceTitleWidth=variableWidth;//variable width
-			gridBillingList.ListGridColumns.Add(new GridColumn("New",isNewWidth,HorizontalAlignment.Center));//0
-			gridBillingList.ListGridColumns.Add(new GridColumn("ErxAccountId",erxAccountIdWidth,HorizontalAlignment.Center));//1
-			gridBillingList.ListGridColumns.Add(new GridColumn("PatNum",patNumWidth,HorizontalAlignment.Center));//2
-			gridBillingList.ListGridColumns.Add(new GridColumn("NPI",npiWidth,HorizontalAlignment.Center));//3
-			gridBillingList.ListGridColumns.Add(new GridColumn("FirstLastName",firstLastNameWidth,HorizontalAlignment.Left));//4
-			gridBillingList.ListGridColumns.Add(new GridColumn("DEA",deaWidth,HorizontalAlignment.Center));//5
-			gridBillingList.ListGridColumns.Add(new GridColumn("DateAdded",dateAddedWidth,HorizontalAlignment.Center));//6
-			gridBillingList.ListGridColumns.Add(new GridColumn("cFTE",compFteWidth,HorizontalAlignment.Center));//7
-			gridBillingList.ListGridColumns.Add(new GridColumn("bFTE",basicFteWidth,HorizontalAlignment.Center));//8
-			gridBillingList.ListGridColumns.Add(new GridColumn("Drug",drugWidth,HorizontalAlignment.Center));//9
-			gridBillingList.ListGridColumns.Add(new GridColumn("Form",formWidth,HorizontalAlignment.Center));//10
-			gridBillingList.ListGridColumns.Add(new GridColumn("EPCS",epcsWidth,HorizontalAlignment.Center));//11
-			gridBillingList.ListGridColumns.Add(new GridColumn("IDP",idpWidth,HorizontalAlignment.Center));//12
-			gridBillingList.ListGridColumns.Add(new GridColumn("PracticeTitle",practiceTitleWidth,HorizontalAlignment.Left));//13
+			gridBillingList.Columns.Add(new GridColumn("New",isNewWidth,HorizontalAlignment.Center));//0
+			gridBillingList.Columns.Add(new GridColumn("ErxAccountId",erxAccountIdWidth,HorizontalAlignment.Center));//1
+			gridBillingList.Columns.Add(new GridColumn("PatNum",patNumWidth,HorizontalAlignment.Center));//2
+			gridBillingList.Columns.Add(new GridColumn("NPI",npiWidth,HorizontalAlignment.Center));//3
+			gridBillingList.Columns.Add(new GridColumn("FirstLastName",firstLastNameWidth,HorizontalAlignment.Left));//4
+			gridBillingList.Columns.Add(new GridColumn("DEA",deaWidth,HorizontalAlignment.Center));//5
+			gridBillingList.Columns.Add(new GridColumn("DateAdded",dateAddedWidth,HorizontalAlignment.Center));//6
+			gridBillingList.Columns.Add(new GridColumn("cFTE",compFteWidth,HorizontalAlignment.Center));//7
+			gridBillingList.Columns.Add(new GridColumn("bFTE",basicFteWidth,HorizontalAlignment.Center));//8
+			gridBillingList.Columns.Add(new GridColumn("Drug",drugWidth,HorizontalAlignment.Center));//9
+			gridBillingList.Columns.Add(new GridColumn("Form",formWidth,HorizontalAlignment.Center));//10
+			gridBillingList.Columns.Add(new GridColumn("EPCS",epcsWidth,HorizontalAlignment.Center));//11
+			gridBillingList.Columns.Add(new GridColumn("IDP",idpWidth,HorizontalAlignment.Center));//12
+			gridBillingList.Columns.Add(new GridColumn("PracticeTitle",practiceTitleWidth,HorizontalAlignment.Left));//13
 			gridBillingList.EndUpdate();
 		}
 
@@ -166,7 +166,7 @@ namespace OpenDental {
 				CreateChargeList();
 				RefreshGridColumns();
 				gridBillingList.BeginUpdate();
-				gridBillingList.ListGridRows.Clear();
+				gridBillingList.Rows.Clear();
 				labelDuplicateProviders.Visible=false;
 				foreach(NewCropCharge charge in _listNewCropCharges) {
 					GridRow gr=new GridRow();
@@ -211,7 +211,7 @@ namespace OpenDental {
 					gr.Cells.Add(new GridCell(charge.IDP));
 					//13 PracticeTitle
 					gr.Cells.Add(new GridCell(charge.AccountName));
-					gridBillingList.ListGridRows.Add(gr);
+					gridBillingList.Rows.Add(gr);
 				}
 				gridBillingList.EndUpdate();
 			}

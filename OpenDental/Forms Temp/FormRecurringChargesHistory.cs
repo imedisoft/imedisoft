@@ -66,30 +66,30 @@ namespace OpenDental {
 				RefreshRecurringCharges();
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("PatNum",55,GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn("Name",185));
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("PatNum",55,GridSortingStrategy.AmountParse));
+			gridMain.Columns.Add(new GridColumn("Name",185));
 			if(PrefC.HasClinicsEnabled) {
-				gridMain.ListGridColumns.Add(new GridColumn("Clinic",65));
+				gridMain.Columns.Add(new GridColumn("Clinic",65));
 			}
-			gridMain.ListGridColumns.Add(new GridColumn("Date Charge",135,HorizontalAlignment.Center,
+			gridMain.Columns.Add(new GridColumn("Date Charge",135,HorizontalAlignment.Center,
 				GridSortingStrategy.DateParse));
-			gridMain.ListGridColumns.Add(new GridColumn("Charge Status",90));
-			gridMain.ListGridColumns.Add(new GridColumn("User",90));
-			gridMain.ListGridColumns.Add(new GridColumn("Family Bal",PrefC.HasClinicsEnabled ? 70 : 85,HorizontalAlignment.Right,
+			gridMain.Columns.Add(new GridColumn("Charge Status",90));
+			gridMain.Columns.Add(new GridColumn("User",90));
+			gridMain.Columns.Add(new GridColumn("Family Bal",PrefC.HasClinicsEnabled ? 70 : 85,HorizontalAlignment.Right,
 				GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn("PayPlan Due",PrefC.HasClinicsEnabled ? 80 : 90,HorizontalAlignment.Right,
+			gridMain.Columns.Add(new GridColumn("PayPlan Due",PrefC.HasClinicsEnabled ? 80 : 90,HorizontalAlignment.Right,
 				GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn("Total Due",PrefC.HasClinicsEnabled ? 65 : 80,HorizontalAlignment.Right,
+			gridMain.Columns.Add(new GridColumn("Total Due",PrefC.HasClinicsEnabled ? 65 : 80,HorizontalAlignment.Right,
 				GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn("Repeat Amt",PrefC.HasClinicsEnabled ? 75 : 90,HorizontalAlignment.Right,
+			gridMain.Columns.Add(new GridColumn("Repeat Amt",PrefC.HasClinicsEnabled ? 75 : 90,HorizontalAlignment.Right,
 				GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn("Charge Amt",PrefC.HasClinicsEnabled ? 85 : 95,HorizontalAlignment.Right,
+			gridMain.Columns.Add(new GridColumn("Charge Amt",PrefC.HasClinicsEnabled ? 85 : 95,HorizontalAlignment.Right,
 				GridSortingStrategy.AmountParse));
 			if(gridMain.WidthAllColumns > gridMain.Width) {
 				gridMain.HScrollVisible=true;
 			}
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			foreach(RecurringCharge charge in _listRecurringCharges.OrderBy(x => x.DateTimeCharge)) {
 				bool isAutomated=(charge.UserNum==0);
 				if(!datePicker.IsInDateRange(charge.DateTimeCharge) 
@@ -118,7 +118,7 @@ namespace OpenDental {
 				row.Cells.Add(charge.RepeatAmt.ToString("c"));
 				row.Cells.Add(charge.ChargeAmt.ToString("c"));
 				row.Tag=charge;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

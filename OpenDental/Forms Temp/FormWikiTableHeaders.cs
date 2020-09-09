@@ -25,29 +25,29 @@ namespace OpenDental {
 
 		private void FormWikiTableHeaders_Load(object sender,EventArgs e) {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			for(int i=1;i<ColNames.Count+1;i++) {
 				col=new GridColumn("",75,true);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row0=new GridRow();
 			GridRow row1=new GridRow();
 			for(int i=0;i<ColNames.Count;i++) {
 				row0.Cells.Add(ColNames[i]);
 				row1.Cells.Add(ColWidths[i].ToString());
 			}
-			gridMain.ListGridRows.Add(row0);
-			gridMain.ListGridRows.Add(row1);
+			gridMain.Rows.Add(row0);
+			gridMain.Rows.Add(row1);
 			gridMain.EndUpdate();
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {
 			for(int i=0;i<ColNames.Count;i++) {
-				ColNames[i]=gridMain.ListGridRows[0].Cells[i].Text;
+				ColNames[i]=gridMain.Rows[0].Cells[i].Text;
 				try {
-					ColWidths[i]=PIn.Int(gridMain.ListGridRows[1].Cells[i].Text);
+					ColWidths[i]=PIn.Int(gridMain.Rows[1].Cells[i].Text);
 				}
 				catch {
 					MessageBox.Show("Please enter only positive integer widths in the 2nd row");

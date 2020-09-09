@@ -30,8 +30,8 @@ namespace Imedisoft.Forms
         {
             get
             {
-				if (imagesGrid.SelectedGridRows.Count > 0 &&
-					imagesGrid.SelectedGridRows[0].Tag is Document document)
+				if (imagesGrid.SelectedRows.Count > 0 &&
+					imagesGrid.SelectedRows[0].Tag is Document document)
                 {
 					return document.DocNum;
                 }
@@ -55,11 +55,11 @@ namespace Imedisoft.Forms
 		private void FillGrid()
 		{
 			imagesGrid.BeginUpdate();
-			imagesGrid.ListGridColumns.Clear();
-			imagesGrid.ListGridColumns.Add(new GridColumn("Date", 100));
-			imagesGrid.ListGridColumns.Add(new GridColumn("Category", 120));
-			imagesGrid.ListGridColumns.Add(new GridColumn("Description", 300));
-			imagesGrid.ListGridRows.Clear();
+			imagesGrid.Columns.Clear();
+			imagesGrid.Columns.Add(new GridColumn("Date", 100));
+			imagesGrid.Columns.Add(new GridColumn("Category", 120));
+			imagesGrid.Columns.Add(new GridColumn("Description", 300));
+			imagesGrid.Rows.Clear();
 
 			var documents = Documents.GetAllWithPat(patientId).ToList();
 			if (OnlyShowImages)
@@ -76,7 +76,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(document.Description);
 				gridRow.Tag = document;
 
-				imagesGrid.ListGridRows.Add(gridRow);
+				imagesGrid.Rows.Add(gridRow);
 			}
 
 			imagesGrid.EndUpdate();
@@ -84,7 +84,7 @@ namespace Imedisoft.Forms
 
 		private void ImagesGrid_CellDoubleClick(object sender, ODGridClickEventArgs e)
 		{
-			if (imagesGrid.SelectedGridRows.Count > 0)
+			if (imagesGrid.SelectedRows.Count > 0)
             {
 				AcceptButton_Click(sender, EventArgs.Empty);
             }

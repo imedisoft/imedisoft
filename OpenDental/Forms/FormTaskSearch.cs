@@ -76,11 +76,11 @@ namespace Imedisoft.Forms
 		private void FillGrid()
 		{
 			tasksGrid.BeginUpdate();
-			tasksGrid.ListGridColumns.Clear();
-			tasksGrid.ListGridRows.Clear();
-			tasksGrid.ListGridColumns.Add(new GridColumn("Created", 70, HorizontalAlignment.Left));
-			tasksGrid.ListGridColumns.Add(new GridColumn("Completed", 70, HorizontalAlignment.Left));
-			tasksGrid.ListGridColumns.Add(new GridColumn("Description", 70) { IsWidthDynamic = true });
+			tasksGrid.Columns.Clear();
+			tasksGrid.Rows.Clear();
+			tasksGrid.Columns.Add(new GridColumn("Created", 70, HorizontalAlignment.Left));
+			tasksGrid.Columns.Add(new GridColumn("Completed", 70, HorizontalAlignment.Left));
+			tasksGrid.Columns.Add(new GridColumn("Description", 70) { IsWidthDynamic = true });
 
 			foreach (var searchResult in searchResults)
 			{
@@ -93,7 +93,7 @@ namespace Imedisoft.Forms
 				gridRow.ForeColor = Color.FromArgb(searchResult.Color);
 				gridRow.Tag = searchResult;
 
-				tasksGrid.ListGridRows.Add(gridRow);
+				tasksGrid.Rows.Add(gridRow);
 			}
 
 			tasksGrid.EndUpdate();
@@ -180,7 +180,7 @@ namespace Imedisoft.Forms
 
 		private void TasksGrid_CellDoubleClick(object sender, ODGridClickEventArgs e)
 		{
-			if (tasksGrid.ListGridRows[e.Row].Tag is Tasks.TaskSearchResult searchResult)
+			if (tasksGrid.Rows[e.Row].Tag is Tasks.TaskSearchResult searchResult)
 			{
 				if (IsSelectionMode)
 				{

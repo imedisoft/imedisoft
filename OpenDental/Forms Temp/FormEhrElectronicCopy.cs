@@ -26,13 +26,13 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("DateTime",140);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("Type",600);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			listHistory=EhrMeasureEvents.RefreshByType(PatCur.PatNum,EhrMeasureEventType.ElectronicCopyRequested,EhrMeasureEventType.ElectronicCopyProvidedToPt);
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<listHistory.Count;i++) {
 				row=new GridRow();
@@ -45,7 +45,7 @@ namespace OpenDental {
 						row.Cells.Add("Provided to patient");
 						break;
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

@@ -32,10 +32,10 @@ namespace Imedisoft.Forms
 			programs.RemoveAll(x => x.Name == ProgramName.CareCredit.ToString());
 
 			programsGrid.BeginUpdate();
-			programsGrid.ListGridColumns.Clear();
-			programsGrid.ListGridColumns.Add(new GridColumn("Enabled", 55, HorizontalAlignment.Center));
-			programsGrid.ListGridColumns.Add(new GridColumn("Program Name", 100) { IsWidthDynamic = true });
-			programsGrid.ListGridRows.Clear();
+			programsGrid.Columns.Clear();
+			programsGrid.Columns.Add(new GridColumn("Enabled", 55, HorizontalAlignment.Center));
+			programsGrid.Columns.Add(new GridColumn("Program Name", 100) { IsWidthDynamic = true });
+			programsGrid.Rows.Clear();
 
 			foreach (var program in programs)
 			{
@@ -46,7 +46,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(program.Description);
 				gridRow.Tag = program;
 
-				programsGrid.ListGridRows.Add(gridRow);
+				programsGrid.Rows.Add(gridRow);
 			}
 
 			programsGrid.EndUpdate();

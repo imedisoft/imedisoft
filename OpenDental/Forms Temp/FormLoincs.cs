@@ -28,19 +28,19 @@ namespace OpenDental {
 
 		private void fillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Loinc Code",80);//,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Status",80);//,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Long Name",500);//,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("UCUM Units",100);//,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Order or Observation",100);//,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			listLoincSearch=Loincs.GetBySearchString(textCode.Text);
 			for(int i=0;i<listLoincSearch.Count;i++) {
@@ -50,7 +50,7 @@ namespace OpenDental {
 				row.Cells.Add(listLoincSearch[i].NameLongCommon);
 				row.Cells.Add(listLoincSearch[i].UnitsUCUM);
 				row.Cells.Add(listLoincSearch[i].OrderObs);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

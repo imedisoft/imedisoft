@@ -115,16 +115,16 @@ namespace OpenDental{
 		private void FillGrid(){
 			ListLabs=Laboratories.Refresh();
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Description",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Phone",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Hidden",50,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Notes",200);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<ListLabs.Count;i++){
 				row=new GridRow();
@@ -132,7 +132,7 @@ namespace OpenDental{
 				row.Cells.Add(ListLabs[i].Phone);
 				row.Cells.Add(ListLabs[i].IsHidden?"X":"");
 				row.Cells.Add(ListLabs[i].Notes);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

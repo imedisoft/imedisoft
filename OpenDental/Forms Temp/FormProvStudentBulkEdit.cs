@@ -39,17 +39,17 @@ namespace OpenDental {
 			}
 			DataTable table=Providers.RefreshForDentalSchool(schoolClass,"","",textProvNum.Text,false,false);
 			gridStudents.BeginUpdate();
-			gridStudents.ListGridColumns.Clear();
+			gridStudents.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("ProvNum",60);
-			gridStudents.ListGridColumns.Add(col);
+			gridStudents.Columns.Add(col);
 			col=new GridColumn("Last Name",90);
-			gridStudents.ListGridColumns.Add(col);
+			gridStudents.Columns.Add(col);
 			col=new GridColumn("First Name",90);
-			gridStudents.ListGridColumns.Add(col);
+			gridStudents.Columns.Add(col);
 			col=new GridColumn("Class",100);
-			gridStudents.ListGridColumns.Add(col);
-			gridStudents.ListGridRows.Clear();
+			gridStudents.Columns.Add(col);
+			gridStudents.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<table.Rows.Count;i++) {
 				row=new GridRow();
@@ -65,7 +65,7 @@ namespace OpenDental {
 						row.Cells.Add("");
 				}
 
-				gridStudents.ListGridRows.Add(row);
+				gridStudents.Rows.Add(row);
 			}
 			gridStudents.EndUpdate();
 			for(int i=0;i<table.Rows.Count;i++) {
@@ -94,7 +94,7 @@ namespace OpenDental {
 
 		private void butBulkEdit_Click(object sender,EventArgs e) {
 			for(int i=0;i<gridStudents.SelectedIndices.Length;i++) {
-				Provider studSelected=Providers.GetById(PIn.Long(gridStudents.ListGridRows[i].Cells[0].Text));
+				Provider studSelected=Providers.GetById(PIn.Long(gridStudents.Rows[i].Cells[0].Text));
 				studSelected.Color=butColor.BackColor;
 				studSelected.ColorOutline=butOutlineColor.BackColor;
 				Providers.Update(studSelected);

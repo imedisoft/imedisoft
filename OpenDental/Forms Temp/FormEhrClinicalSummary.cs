@@ -27,19 +27,19 @@ namespace OpenDental {
 
 		private void FillGridEHRMeasureEvents() {
 			gridEHRMeasureEvents.BeginUpdate();
-			gridEHRMeasureEvents.ListGridColumns.Clear();
+			gridEHRMeasureEvents.Columns.Clear();
 			GridColumn col = new GridColumn("DateTime",140);
-			gridEHRMeasureEvents.ListGridColumns.Add(col);
+			gridEHRMeasureEvents.Columns.Add(col);
 			//col = new ODGridColumn("Details",600);
 			//gridEHRMeasureEvents.Columns.Add(col);
 			summariesSentList = EhrMeasureEvents.RefreshByType(PatCur.PatNum,EhrMeasureEventType.ClinicalSummaryProvidedToPt);
-			gridEHRMeasureEvents.ListGridRows.Clear();
+			gridEHRMeasureEvents.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<summariesSentList.Count;i++) {
 				row = new GridRow();
 				row.Cells.Add(summariesSentList[i].DateTEvent.ToString());
 				//row.Cells.Add(summariesSentList[i].EventType.ToString());
-				gridEHRMeasureEvents.ListGridRows.Add(row);
+				gridEHRMeasureEvents.Rows.Add(row);
 			}
 			gridEHRMeasureEvents.EndUpdate();
 		}

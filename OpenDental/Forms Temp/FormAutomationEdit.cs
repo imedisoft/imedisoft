@@ -323,12 +323,12 @@ namespace OpenDental{
 			AutomationConditions.RefreshCache();
 			autoList=AutomationConditions.GetListByAutomationNum(AutoCur.Id);
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("Field",200));
-			gridMain.ListGridColumns.Add(new GridColumn("Comparison",75));
-			gridMain.ListGridColumns.Add(new GridColumn("Text",100));
-			gridMain.ListGridRows.Clear();
-			autoList.ForEach(x => gridMain.ListGridRows.Add(new GridRow(x.CompareField.ToString(),x.Comparison.ToString(),x.CompareString)));
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("Field",200));
+			gridMain.Columns.Add(new GridColumn("Comparison",75));
+			gridMain.Columns.Add(new GridColumn("Text",100));
+			gridMain.Rows.Clear();
+			autoList.ForEach(x => gridMain.Rows.Add(new GridRow(x.CompareField.ToString(),x.Comparison.ToString(),x.CompareString)));
 			gridMain.EndUpdate();
 		}
 

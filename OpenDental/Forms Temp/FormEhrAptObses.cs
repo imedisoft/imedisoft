@@ -27,11 +27,11 @@ namespace OpenDental {
 
 		private void FillGridObservations() {
 			gridObservations.BeginUpdate();
-			gridObservations.ListGridColumns.Clear();
-			gridObservations.ListGridColumns.Add(new UI.GridColumn("Observation",200));//0
-			gridObservations.ListGridColumns.Add(new UI.GridColumn("Value Type",200));//1
-			gridObservations.ListGridColumns.Add(new UI.GridColumn("Value",100){ IsWidthDynamic=true });//2
-			gridObservations.ListGridRows.Clear();
+			gridObservations.Columns.Clear();
+			gridObservations.Columns.Add(new UI.GridColumn("Observation",200));//0
+			gridObservations.Columns.Add(new UI.GridColumn("Value Type",200));//1
+			gridObservations.Columns.Add(new UI.GridColumn("Value",100){ IsWidthDynamic=true });//2
+			gridObservations.Rows.Clear();
 			List<EhrAptObs> listEhrAptObses=EhrAptObses.Refresh(_appt.AptNum);
 			for(int i=0;i<listEhrAptObses.Count;i++) {
 				EhrAptObs obs=listEhrAptObses[i];
@@ -78,13 +78,13 @@ namespace OpenDental {
 					row.Cells.Add(obs.ValType.ToString());//1 Value Type
 					row.Cells.Add(obs.ValReported);//2 Value
 				}
-				gridObservations.ListGridRows.Add(row);
+				gridObservations.Rows.Add(row);
 			}
 			gridObservations.EndUpdate();
 		}
 
 		private void gridObservations_CellDoubleClick(object sender,UI.ODGridClickEventArgs e) {
-			EhrAptObs obs=(EhrAptObs)gridObservations.ListGridRows[e.Row].Tag;
+			EhrAptObs obs=(EhrAptObs)gridObservations.Rows[e.Row].Tag;
 			FormEhrAptObsEdit formE=new FormEhrAptObsEdit(obs);
 			if(formE.ShowDialog()==DialogResult.OK) {
 				if(obs.EhrAptObsNum!=0) {//Was not deleted.

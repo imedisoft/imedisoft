@@ -174,24 +174,24 @@ namespace OpenDental{
 				dictPharmClinics=Clinics.GetDictClinicsForPharmacy(_listPharmacies.Select(x => x.PharmacyNum).ToArray());
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Store Name",130);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Phone",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Fax",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Address",120);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("City",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
 				col=new GridColumn("Clinics",115);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			col=new GridColumn("Note",100);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			string txt;
 			foreach(Pharmacy pharm in _listPharmacies) {
@@ -217,7 +217,7 @@ namespace OpenDental{
 					row.Cells.Add(string.Join(",",listClinics.Select(x => x.Abbr)));
 				}
 				row.Cells.Add(pharm.Note);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -247,7 +247,7 @@ namespace OpenDental{
 		}
 
 		private void gridMain_CellClick(object sender,ODGridClickEventArgs e) {
-			GridCell gridCellCur=gridMain.ListGridRows[e.Row].Cells[e.Col];
+			GridCell gridCellCur=gridMain.Rows[e.Row].Cells[e.Col];
 			//Only grid cells with phone numbers are blue and underlined.
 			if(gridCellCur.ForeColor==System.Drawing.Color.Blue && gridCellCur.Underline== true && Programs.GetCur(ProgramName.DentalTekSmartOfficePhone).Enabled) {
 				DentalTek.PlaceCall(gridCellCur.Text);

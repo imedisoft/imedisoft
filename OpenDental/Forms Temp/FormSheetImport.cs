@@ -1471,19 +1471,19 @@ namespace OpenDental {
 		private void FillGrid() {
 			int scrollVal=gridMain.ScrollValue;
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col; 
 			col=new GridColumn("FieldName",140);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Current Value",175);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Entered Value",175);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Import Value",175);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Do Import",60,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			GridCell cell;
 			for(int i=0;i<Rows.Count;i++) {
@@ -1525,7 +1525,7 @@ namespace OpenDental {
 						row.Cells.Add("");
 					}
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			gridMain.ScrollValue=scrollVal;

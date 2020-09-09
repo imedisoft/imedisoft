@@ -83,13 +83,13 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Code",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("CodeSystem",90);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Description",200);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			string selectedValue=comboCodeSet.SelectedItem.ToString();
 			List<string> listValSetOIDs=new List<string>();
 			if(selectedValue=="All") {
@@ -99,7 +99,7 @@ namespace OpenDental {
 				listValSetOIDs.Add(dictValueCodeSets[selectedValue]);
 			}
 			listCodes=EhrCodes.GetForValueSetOIDs(listValSetOIDs,true);//these codes will exist in the corresponding table or will not be in the list
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			int selectedIdx=-1;
 			for(int i=0;i<listCodes.Count;i++) {				
@@ -144,7 +144,7 @@ namespace OpenDental {
 						break;
 				}
 				row.Cells.Add(descript);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 				if(listCodes[i].CodeValue==InterventionCur.CodeValue && listCodes[i].CodeSystem==InterventionCur.CodeSystem) {
 					selectedIdx=i;
 				}

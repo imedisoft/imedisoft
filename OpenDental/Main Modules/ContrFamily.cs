@@ -583,9 +583,9 @@ namespace OpenDental{
 				MessageBox.Show("Patient is currently entering info at a reception terminal.  Please try again later.");
 				return;
 			}
-			if(gridPat.ListGridRows[e.Row].Tag==null 
-				|| gridPat.ListGridRows[e.Row].Tag.ToString()=="SS#"
-				|| gridPat.ListGridRows[e.Row].Tag.ToString()=="DOB") 
+			if(gridPat.Rows[e.Row].Tag==null 
+				|| gridPat.Rows[e.Row].Tag.ToString()=="SS#"
+				|| gridPat.Rows[e.Row].Tag.ToString()=="DOB") 
 			{
 				FormPatientEdit FormP=new FormPatientEdit(PatCur,FamCur);
 				FormP.IsNew=false;
@@ -595,13 +595,13 @@ namespace OpenDental{
 				}
 			}
 			//Check tags and perform corresponding action for said tag type.
-			else if(gridPat.ListGridRows[e.Row].Tag.ToString()=="Referral"){
+			else if(gridPat.Rows[e.Row].Tag.ToString()=="Referral"){
 				//RefAttach refattach=(RefAttach)gridPat.Rows[e.Row].Tag;
 				FormReferralsPatient FormRE=new FormReferralsPatient();
 				FormRE.PatNum=PatCur.PatNum;
 				FormRE.ShowDialog();
 			}
-			else if(gridPat.ListGridRows[e.Row].Tag.ToString()=="References") {
+			else if(gridPat.Rows[e.Row].Tag.ToString()=="References") {
 				FormReference FormR=new FormReference();
 				FormR.ShowDialog();
 				if(FormR.GotoPatNum!=0) {
@@ -621,22 +621,22 @@ namespace OpenDental{
 					CustRefEntries.Insert(custEntry);
 				}
 			}
-			else if(gridPat.ListGridRows[e.Row].Tag.GetType()==typeof(CustRefEntry)) {
-				FormReferenceEntryEdit FormRE=new FormReferenceEntryEdit((CustRefEntry)gridPat.ListGridRows[e.Row].Tag);
+			else if(gridPat.Rows[e.Row].Tag.GetType()==typeof(CustRefEntry)) {
+				FormReferenceEntryEdit FormRE=new FormReferenceEntryEdit((CustRefEntry)gridPat.Rows[e.Row].Tag);
 				FormRE.ShowDialog();
 			}
-			else if(gridPat.ListGridRows[e.Row].Tag.ToString().Equals("Payor Types")) {
+			else if(gridPat.Rows[e.Row].Tag.ToString().Equals("Payor Types")) {
 				FormPayorTypes FormPT = new FormPayorTypes();
 				FormPT.PatCur=PatCur;
 				FormPT.ShowDialog();
 			}
-			else if(gridPat.ListGridRows[e.Row].Tag is PatFieldDef) {//patfield for an existing PatFieldDef
-				PatFieldDef patFieldDef=(PatFieldDef)gridPat.ListGridRows[e.Row].Tag;
+			else if(gridPat.Rows[e.Row].Tag is PatFieldDef) {//patfield for an existing PatFieldDef
+				PatFieldDef patFieldDef=(PatFieldDef)gridPat.Rows[e.Row].Tag;
 				PatField field=PatFields.GetByName(patFieldDef.FieldName,PatFieldList);
 				PatFieldL.OpenPatField(field,patFieldDef,PatCur.PatNum);
 			}
-			else if(gridPat.ListGridRows[e.Row].Tag is PatField) {//PatField for a PatFieldDef that no longer exists
-				PatField field=(PatField)gridPat.ListGridRows[e.Row].Tag;
+			else if(gridPat.Rows[e.Row].Tag is PatField) {//PatField for a PatFieldDef that no longer exists
+				PatField field=(PatField)gridPat.Rows[e.Row].Tag;
 				FormPatFieldEdit FormPF=new FormPatFieldEdit(field);
 				FormPF.ShowDialog();
 			}
@@ -644,7 +644,7 @@ namespace OpenDental{
 		}
 
 		private void gridPat_CellClick(object sender,ODGridClickEventArgs e) {
-			GridCell gridCellCur=gridPat.ListGridRows[e.Row].Cells[e.Col];
+			GridCell gridCellCur=gridPat.Rows[e.Row].Cells[e.Col];
 			//Only grid cells with phone numbers are blue and underlined. 
 			//If we support color and underline in the future, this might be changed to a regex of the cell text.
 			if(gridCellCur.ForeColor==System.Drawing.Color.Blue && gridCellCur.Underline== true && Programs.GetCur(ProgramName.DentalTekSmartOfficePhone).Enabled) {
@@ -660,12 +660,12 @@ namespace OpenDental{
 			if(menuItemSeperator==null) { return; }//Should not happen
 			int idxRowClick = gridPat.PointToRow(_lastClickedPoint.Y);
 			int idxColClick = gridPat.PointToCol(_lastClickedPoint.X);//Make sure the user clicked within the bounds of the grid.
-			if(idxRowClick > -1 && idxColClick > -1 && (gridPat.ListGridRows[idxRowClick].Tag!=null) 
-				&& gridPat.ListGridRows[idxRowClick].Tag is string
-				&& ((string)gridPat.ListGridRows[idxRowClick].Tag=="SS#"))
+			if(idxRowClick > -1 && idxColClick > -1 && (gridPat.Rows[idxRowClick].Tag!=null) 
+				&& gridPat.Rows[idxRowClick].Tag is string
+				&& ((string)gridPat.Rows[idxRowClick].Tag=="SS#"))
 			{
 				if(Security.IsAuthorized(Permissions.PatientSSNView,true) 
-					&& gridPat.ListGridRows[idxRowClick].Cells[gridPat.ListGridRows[idxRowClick].Cells.Count-1].Text!="")
+					&& gridPat.Rows[idxRowClick].Cells[gridPat.Rows[idxRowClick].Cells.Count-1].Text!="")
 				{
 					menuItemSSN.Visible=true;
 					menuItemSSN.Enabled=true;
@@ -698,7 +698,7 @@ namespace OpenDental{
 			//Guaranteed to be clicking on a valid row & column.
 			int rowClick = gridPat.PointToRow(_lastClickedPoint.Y);
 			gridPat.BeginUpdate();
-			GridRow row=gridPat.ListGridRows[rowClick];
+			GridRow row=gridPat.Rows[rowClick];
 			row.Cells[row.Cells.Count-1].Text=Patients.SSNFormatHelper(PatCur.SSN,false);
 			gridPat.EndUpdate();
 			string logtext="";
@@ -720,12 +720,12 @@ namespace OpenDental{
 			if(menuItemSeperator==null) { return; }//Should not happen
 			int idxRowClick = gridPat.PointToRow(_lastClickedPoint.Y);
 			int idxColClick = gridPat.PointToCol(_lastClickedPoint.X);//Make sure the user clicked within the bounds of the grid.
-			if(idxRowClick > -1 && idxColClick > -1 && (gridPat.ListGridRows[idxRowClick].Tag!=null) 
-				&& gridPat.ListGridRows[idxRowClick].Tag is string
-				&& ((string)gridPat.ListGridRows[idxRowClick].Tag=="DOB"))
+			if(idxRowClick > -1 && idxColClick > -1 && (gridPat.Rows[idxRowClick].Tag!=null) 
+				&& gridPat.Rows[idxRowClick].Tag is string
+				&& ((string)gridPat.Rows[idxRowClick].Tag=="DOB"))
 			{
 				if(Security.IsAuthorized(Permissions.PatientDOBView,true)
-					&& gridPat.ListGridRows[idxRowClick].Cells[gridPat.ListGridRows[idxRowClick].Cells.Count-1].Text!="")
+					&& gridPat.Rows[idxRowClick].Cells[gridPat.Rows[idxRowClick].Cells.Count-1].Text!="")
 				{
 					menuItemDOB.Visible=true;
 					menuItemDOB.Enabled=true;
@@ -758,7 +758,7 @@ namespace OpenDental{
 			//Guaranteed to be clicking on a valid row & column.
 			int rowClick = gridPat.PointToRow(_lastClickedPoint.Y);
 			gridPat.BeginUpdate();
-			GridRow row=gridPat.ListGridRows[rowClick];
+			GridRow row=gridPat.Rows[rowClick];
 			row.Cells[row.Cells.Count-1].Text=Patients.DOBFormatHelper(PatCur.Birthdate,false);
 			gridPat.EndUpdate();
 			string logtext="Date of birth unmasked in Family Module";
@@ -772,8 +772,8 @@ namespace OpenDental{
 		private void FillPatientData(){
 			if(PatCur==null){
 				gridPat.BeginUpdate();
-				gridPat.ListGridRows.Clear();
-				gridPat.ListGridColumns.Clear();
+				gridPat.Rows.Clear();
+				gridPat.Columns.Clear();
 				gridPat.EndUpdate();
 				return;
 			}
@@ -811,12 +811,12 @@ namespace OpenDental{
 				menu.Popup+=MenuItemPopupUnmaskDOB;
 			}
 			gridPat.BeginUpdate();
-			gridPat.ListGridColumns.Clear();
+			gridPat.Columns.Clear();
 			GridColumn col=new GridColumn("",100);
-			gridPat.ListGridColumns.Add(col);
+			gridPat.Columns.Add(col);
 			col=new GridColumn("",150);
-			gridPat.ListGridColumns.Add(col);
-			gridPat.ListGridRows.Clear();
+			gridPat.Columns.Add(col);
+			gridPat.Rows.Clear();
 			GridRow row;
 			List<DisplayField> fields=DisplayFields.GetForCategory(DisplayFieldCategory.PatientInformation);
 			DisplayField fieldCur;
@@ -1078,7 +1078,7 @@ namespace OpenDental{
 							if(i==listPatRestricts.Count-1) {//last row added outside of switch statement
 								break;
 							}
-							gridPat.ListGridRows.Add(row);
+							gridPat.Rows.Add(row);
 						}
 						break;
 					#endregion Pat Restrictions
@@ -1120,7 +1120,7 @@ namespace OpenDental{
 							row.Cells.Add("");
 							row.Tag="References";
 							row.BackColor=listMiscColorDefs[8].Color;
-							gridPat.ListGridRows.Add(row);
+							gridPat.Rows.Add(row);
 						}
 						for(int i=0;i<custREList.Count;i++) {
 							row=new GridRow();
@@ -1135,7 +1135,7 @@ namespace OpenDental{
 							row.Tag=custREList[i];
 							row.BackColor=listMiscColorDefs[8].Color;
 							if(i<custREList.Count-1) {
-								gridPat.ListGridRows.Add(row);
+								gridPat.Rows.Add(row);
 							}
 						}
 						break;
@@ -1188,7 +1188,7 @@ namespace OpenDental{
 							row.Tag="Referral";
 							row.BackColor=listMiscColorDefs[8].Color;
 							if(i<listRefs.Count-1){
-								gridPat.ListGridRows.Add(row);
+								gridPat.Rows.Add(row);
 							}
 						}
 						break;
@@ -1298,7 +1298,7 @@ namespace OpenDental{
 					//don't add the row here
 				}
 				else{
-					gridPat.ListGridRows.Add(row);
+					gridPat.Rows.Add(row);
 				}
 			}
 			gridPat.EndUpdate();
@@ -1310,20 +1310,20 @@ namespace OpenDental{
 
 		private void FillFamilyData(){
 			gridFamily.BeginUpdate();
-			gridFamily.ListGridColumns.Clear();
+			gridFamily.Columns.Clear();
 			GridColumn col=new GridColumn("Name",140);
-			gridFamily.ListGridColumns.Add(col);
+			gridFamily.Columns.Add(col);
 			col=new GridColumn("Position",65);
-			gridFamily.ListGridColumns.Add(col);
+			gridFamily.Columns.Add(col);
 			col=new GridColumn("Gender",55);
-			gridFamily.ListGridColumns.Add(col);
+			gridFamily.Columns.Add(col);
 			col=new GridColumn("Status",65);
-			gridFamily.ListGridColumns.Add(col);
+			gridFamily.Columns.Add(col);
 			col=new GridColumn("Age",45);
-			gridFamily.ListGridColumns.Add(col);
+			gridFamily.Columns.Add(col);
 			col=new GridColumn("Recall Due",80);
-			gridFamily.ListGridColumns.Add(col);
-			gridFamily.ListGridRows.Clear();
+			gridFamily.Columns.Add(col);
+			gridFamily.Rows.Clear();
 			if(PatCur==null){
 				gridFamily.EndUpdate();
 				return;
@@ -1366,8 +1366,8 @@ namespace OpenDental{
 					row.Bold=true;
 				}
 				row.Tag=FamCur.ListPats[i];
-				gridFamily.ListGridRows.Add(row);
-				int idx=gridFamily.ListGridRows.Count-1;
+				gridFamily.Rows.Add(row);
+				int idx=gridFamily.Rows.Count-1;
 				if(FamCur.ListPats[i].PatNum==PatCur.PatNum) {
 					selectedRow=idx;
 				}
@@ -1757,7 +1757,7 @@ namespace OpenDental{
 			else {
 				gridRecall.Width=354;
 			}
-			gridRecall.ListGridColumns.Clear();
+			gridRecall.Columns.Clear();
 			List<DisplayField> listRecallFields=DisplayFields.GetForCategory(DisplayFieldCategory.FamilyRecallGrid);
 			GridColumn col;
 			for(int i=0;i<listRecallFields.Count;i++) {
@@ -1767,9 +1767,9 @@ namespace OpenDental{
 				else {
 					col=new GridColumn(listRecallFields[i].Description,listRecallFields[i].ColumnWidth);
 				}
-				gridRecall.ListGridColumns.Add(col);
+				gridRecall.Columns.Add(col);
 			}
-			gridRecall.ListGridRows.Clear();
+			gridRecall.Rows.Clear();
 			if(PatCur==null){
 				gridRecall.EndUpdate();
 				return;
@@ -1863,7 +1863,7 @@ namespace OpenDental{
 							break;
 					}
 				}
-				gridRecall.ListGridRows.Add(row);
+				gridRecall.Rows.Add(row);
 			}
 			gridRecall.EndUpdate();
 		}
@@ -1886,12 +1886,12 @@ namespace OpenDental{
 		#region gridSuperFam
 		private void FillGridSuperFam() {
 			gridSuperFam.BeginUpdate();
-			gridSuperFam.ListGridColumns.Clear();
+			gridSuperFam.Columns.Clear();
 			GridColumn col=new GridColumn("Name",280);
-			gridSuperFam.ListGridColumns.Add(col);
+			gridSuperFam.Columns.Add(col);
 			col=new GridColumn("Stmt",280){ IsWidthDynamic=true };
-			gridSuperFam.ListGridColumns.Add(col);
-			gridSuperFam.ListGridRows.Clear();
+			gridSuperFam.Columns.Add(col);
+			gridSuperFam.Rows.Clear();
 			if(PatCur==null) {
 				gridSuperFam.EndUpdate();
 				return;
@@ -1925,11 +1925,11 @@ namespace OpenDental{
 				else {
 					row.Cells.Add("");
 				}
-				gridSuperFam.ListGridRows.Add(row);
+				gridSuperFam.Rows.Add(row);
 			}
 			gridSuperFam.EndUpdate();
-			for(int i=0;i<gridSuperFam.ListGridRows.Count;i++) {
-				if((long)gridSuperFam.ListGridRows[i].Tag==PatCur.Guarantor) {
+			for(int i=0;i<gridSuperFam.Rows.Count;i++) {
+				if((long)gridSuperFam.Rows[i].Tag==PatCur.Guarantor) {
 					gridSuperFam.SetSelected(i,true);
 					break;
 				}
@@ -2157,13 +2157,13 @@ namespace OpenDental{
 		#region Patient Clones
 		private void FillGridPatientClones() {
 			gridPatientClones.BeginUpdate();
-			gridPatientClones.ListGridColumns.Clear();
-			gridPatientClones.ListGridColumns.Add(new GridColumn("Name",150));
+			gridPatientClones.Columns.Clear();
+			gridPatientClones.Columns.Add(new GridColumn("Name",150));
 			if(PrefC.HasClinicsEnabled) {
-				gridPatientClones.ListGridColumns.Add(new GridColumn("Clinic",80));
+				gridPatientClones.Columns.Add(new GridColumn("Clinic",80));
 			}
-			gridPatientClones.ListGridColumns.Add(new GridColumn("Specialty",150){ IsWidthDynamic=true });
-			gridPatientClones.ListGridRows.Clear();
+			gridPatientClones.Columns.Add(new GridColumn("Specialty",150){ IsWidthDynamic=true });
+			gridPatientClones.Rows.Clear();
 			if(PatCur==null) {
 				gridPatientClones.EndUpdate();
 				return;
@@ -2185,14 +2185,14 @@ namespace OpenDental{
 				row.Tag=cloneAndSpecialty.Key;
 				//If we are about to add the clone that is currently selected, save the index of said patient so that we can select them after the update.
 				if(PatCur!=null && cloneAndSpecialty.Key.PatNum==PatCur.PatNum) {
-					selectedIndex=gridPatientClones.ListGridRows.Count;
+					selectedIndex=gridPatientClones.Rows.Count;
 				}
-				gridPatientClones.ListGridRows.Add(row);
+				gridPatientClones.Rows.Add(row);
 			}
 			//The first entry will always be the original or master patient which we want to stand out a little bit much like the Super Family grid.
-			if(gridPatientClones.ListGridRows.Count > 0) {
-				gridPatientClones.ListGridRows[0].Cells[0].Bold=true;
-				gridPatientClones.ListGridRows[0].Cells[0].ForeColor=Color.OrangeRed;
+			if(gridPatientClones.Rows.Count > 0) {
+				gridPatientClones.Rows[0].Cells[0].Bold=true;
+				gridPatientClones.Rows[0].Cells[0].ForeColor=Color.OrangeRed;
 			}
 			gridPatientClones.EndUpdate();
 			//The grid has finished refreshing and can now have it's selected index changed.
@@ -2202,10 +2202,10 @@ namespace OpenDental{
 		}
 
 		private void gridPatientClone_CellClick(object sender,ODGridClickEventArgs e) {
-			if(gridPatientClones.ListGridRows[e.Row].Tag==null || gridPatientClones.ListGridRows[e.Row].Tag.GetType()!=typeof(Patient)) {
+			if(gridPatientClones.Rows[e.Row].Tag==null || gridPatientClones.Rows[e.Row].Tag.GetType()!=typeof(Patient)) {
 				return;
 			}
-			Patient patient=(Patient)gridPatientClones.ListGridRows[e.Row].Tag;
+			Patient patient=(Patient)gridPatientClones.Rows[e.Row].Tag;
 			FormOpenDental.S_Contr_PatientSelected(patient,false);
 			ModuleSelected(patient.PatNum);
 		}
@@ -2461,10 +2461,10 @@ namespace OpenDental{
 			if(PatCur!=null && PatCur.DiscountPlanNum!=0) {
 				gridIns.BeginUpdate();
 				gridIns.Title="Discount Plan";
-				gridIns.ListGridColumns.Clear();
-				gridIns.ListGridRows.Clear();
-				gridIns.ListGridColumns.Add(new GridColumn("",170));
-				gridIns.ListGridColumns.Add(new GridColumn("Discount Plan",170));
+				gridIns.Columns.Clear();
+				gridIns.Rows.Clear();
+				gridIns.Columns.Add(new GridColumn("",170));
+				gridIns.Columns.Add(new GridColumn("Discount Plan",170));
 				DiscountPlan discountPlan;
 				if(_loadData.DiscountPlan==null || _loadData.DiscountPlan.DiscountPlanNum!=PatCur.DiscountPlanNum) {
 					discountPlan=DiscountPlans.GetPlan(PatCur.DiscountPlanNum);
@@ -2477,15 +2477,15 @@ namespace OpenDental{
 				discountRow.Cells.Add("Description");
 				discountRow.Cells.Add(discountPlan.Description);
 				discountRow.BackColor=Definitions.GetFirstForCategory(DefinitionCategory.MiscColors).Color;
-				gridIns.ListGridRows.Add(discountRow);
+				gridIns.Rows.Add(discountRow);
 				discountRow=new GridRow();
 				discountRow.Cells.Add("Adjustment Type");
 				discountRow.Cells.Add(adjType.Name);
-				gridIns.ListGridRows.Add(discountRow);
+				gridIns.Rows.Add(discountRow);
 				discountRow=new GridRow();
 				discountRow.Cells.Add("Fee Schedule");
 				discountRow.Cells.Add(FeeScheds.GetDescription(discountPlan.FeeSchedNum));
-				gridIns.ListGridRows.Add(discountRow);
+				gridIns.Rows.Add(discountRow);
 				gridIns.EndUpdate();
 				return;
 			}
@@ -2494,8 +2494,8 @@ namespace OpenDental{
 			}
 			if(PatPlanList.Count==0){
 				gridIns.BeginUpdate();
-				gridIns.ListGridColumns.Clear();
-				gridIns.ListGridRows.Clear();
+				gridIns.Columns.Clear();
+				gridIns.Rows.Clear();
 				gridIns.EndUpdate();
 				return;
 			}
@@ -2509,29 +2509,29 @@ namespace OpenDental{
 				planArray.Add(InsPlans.GetPlan(sub.PlanNum,PlanList));
 			}
 			gridIns.BeginUpdate();
-			gridIns.ListGridColumns.Clear();
-			gridIns.ListGridRows.Clear();
+			gridIns.Columns.Clear();
+			gridIns.Rows.Clear();
 			OpenDental.UI.GridColumn col;
 			col=new GridColumn("",150);
-			gridIns.ListGridColumns.Add(col);
+			gridIns.Columns.Add(col);
 			int dentalOrdinal=1;
 			for(int i=0;i<PatPlanList.Count;i++) {
 				if(planArray[i].IsMedical) {
 					col=new GridColumn("Medical",170);
-					gridIns.ListGridColumns.Add(col);
+					gridIns.Columns.Add(col);
 				}
 				else { //dental
 					if(dentalOrdinal==1) {
 						col=new GridColumn("Primary",170);
-						gridIns.ListGridColumns.Add(col);
+						gridIns.Columns.Add(col);
 					}
 					else if(dentalOrdinal==2) {
 						col=new GridColumn("Secondary",170);
-						gridIns.ListGridColumns.Add(col);
+						gridIns.Columns.Add(col);
 					}
 					else {
 						col=new GridColumn("Other",170);
-						gridIns.ListGridColumns.Add(col);
+						gridIns.Columns.Add(col);
 					}
 					dentalOrdinal++;
 				}
@@ -2543,7 +2543,7 @@ namespace OpenDental{
 				row.Cells.Add(FamCur.GetNameInFamFL(subArray[i].Subscriber));
 			}
 			row.BackColor=listDefs[0].Color;
-			gridIns.ListGridRows.Add(row);
+			gridIns.Rows.Add(row);
 			//subscriber ID
 			row=new GridRow();
 			row.Cells.Add("Subscriber ID");
@@ -2551,7 +2551,7 @@ namespace OpenDental{
 				row.Cells.Add(subArray[i].SubscriberID);
 			}
 			row.BackColor=listDefs[0].Color;
-			gridIns.ListGridRows.Add(row);
+			gridIns.Rows.Add(row);
 			//relationship
 			row=new GridRow();
 			row.Cells.Add("Rel'ship to Sub");
@@ -2559,7 +2559,7 @@ namespace OpenDental{
 				row.Cells.Add(PatPlanList[i].Relationship.ToString());
 			}
 			row.BackColor=listDefs[0].Color;
-			gridIns.ListGridRows.Add(row);
+			gridIns.Rows.Add(row);
 			//patient ID
 			row=new GridRow();
 			row.Cells.Add("Patient ID");
@@ -2567,7 +2567,7 @@ namespace OpenDental{
 				row.Cells.Add(PatPlanList[i].PatID);
 			}
 			row.BackColor=listDefs[0].Color;
-			gridIns.ListGridRows.Add(row);
+			gridIns.Rows.Add(row);
 			//pending
 			row=new GridRow();
 			row.Cells.Add("Pending");
@@ -2581,28 +2581,28 @@ namespace OpenDental{
 			}
 			row.BackColor=listDefs[0].Color;
 			row.LowerBorderColor=Color.Black;
-			gridIns.ListGridRows.Add(row);
+			gridIns.Rows.Add(row);
 			//employer
 			row=new GridRow();
 			row.Cells.Add("Employer");
 			for(int i=0;i<PatPlanList.Count;i++) {
 				row.Cells.Add(Employers.GetName(planArray[i].EmployerNum));
 			}
-			gridIns.ListGridRows.Add(row);
+			gridIns.Rows.Add(row);
 			//carrier
 			row=new GridRow();
 			row.Cells.Add("Carrier");
 			for(int i=0;i<PatPlanList.Count;i++) {
 				row.Cells.Add(InsPlans.GetCarrierName(planArray[i].PlanNum,planArray));
 			}
-			gridIns.ListGridRows.Add(row);
+			gridIns.Rows.Add(row);
 			//group name
 			row=new GridRow();
 			row.Cells.Add("Group Name");
 			for(int i=0;i<PatPlanList.Count;i++) {
 				row.Cells.Add(planArray[i].GroupName);
 			}
-			gridIns.ListGridRows.Add(row);
+			gridIns.Rows.Add(row);
 			//group number
 			row=new GridRow();
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
@@ -2614,7 +2614,7 @@ namespace OpenDental{
 			for(int i=0;i<PatPlanList.Count;i++) {
 				row.Cells.Add(planArray[i].GroupNum);
 			}
-			gridIns.ListGridRows.Add(row);
+			gridIns.Rows.Add(row);
 			//plan type
 			row=new GridRow();
 			row.Cells.Add("Type");
@@ -2643,7 +2643,7 @@ namespace OpenDental{
 						break;
 				}
 			}
-			gridIns.ListGridRows.Add(row);
+			gridIns.Rows.Add(row);
 			//fee schedule
 			row=new GridRow();
 			row.Cells.Add("Fee Schedule");
@@ -2651,7 +2651,7 @@ namespace OpenDental{
 				row.Cells.Add(FeeScheds.GetDescription(planArray[i].FeeSched));
 			}
 			row.LowerBorderColor=Color.Black;
-			gridIns.ListGridRows.Add(row);
+			gridIns.Rows.Add(row);
 			//Calendar vs service year------------------------------------------------------------------------------------
 			row=new GridRow();
 			row.Cells.Add("Benefit Period");
@@ -2664,7 +2664,7 @@ namespace OpenDental{
 					row.Cells.Add("Service year begins:"+" "+dateservice.ToString("MMMM"));
 				}
 			}
-			gridIns.ListGridRows.Add(row);
+			gridIns.Rows.Add(row);
 			//Benefits-----------------------------------------------------------------------------------------------------
 			List <Benefit> bensForPat=_loadData.ListBenefits;
 			Benefit[,] benMatrix=Benefits.GetDisplayMatrix(bensForPat,PatPlanList,SubList);
@@ -2878,7 +2878,7 @@ namespace OpenDental{
 					//}
 					row.Cells.Add(val);
 				}
-				gridIns.ListGridRows.Add(row);
+				gridIns.Rows.Add(row);
 			}
 			//Plan note
 			row=new GridRow();
@@ -2891,7 +2891,7 @@ namespace OpenDental{
 				cell.Bold= true;
 				row.Cells.Add(cell);
 			}
-			gridIns.ListGridRows.Add(row);
+			gridIns.Rows.Add(row);
 			//Subscriber Note
 			row=new GridRow();
 			row.Cells.Add("Subscriber Note");
@@ -2903,7 +2903,7 @@ namespace OpenDental{
 				row.Cells.Add(cell);
 			}
 			row.LowerBorderColor=Color.Black;
-			gridIns.ListGridRows.Add(row);
+			gridIns.Rows.Add(row);
 			//InsHist
 			Dictionary<long,InsProcHist> dictInsProcHist=PatPlanList.Select(x => x.InsSubNum).Distinct()
 				.ToDictionary(x => x,x => new InsProcHist(Procedures.GetDictInsHistProcs(PatCur.PatNum,x,out List<ClaimProc> listClaimProcs),listClaimProcs));
@@ -2923,7 +2923,7 @@ namespace OpenDental{
 					row.Cells.Add(new GridCell(procDate.Year>1880?procDate.ToShortDateString():"No History"));
 				}
 				row.Tag=prefName.ToString();//Tag with prefname
-				gridIns.ListGridRows.Add(row);
+				gridIns.Rows.Add(row);
 			}
 			gridIns.EndUpdate();
 		}
@@ -2964,7 +2964,7 @@ namespace OpenDental{
 			PlanList=InsPlans.RefreshForSubList(SubList);//this is only here in case, if in FormModuleSetup, the InsDefaultCobRule is changed and cob changed for all plans.
 			InsSub insSub=SubList.Find(x => x.InsSubNum==patPlan.InsSubNum);
 			InsPlan insPlan=InsPlans.GetPlan(insSub.PlanNum,PlanList);
-			string insHistPref=(string)((ODGrid)sender).ListGridRows[e.Row].Tag;
+			string insHistPref=(string)((ODGrid)sender).Rows[e.Row].Tag;
 			if(string.IsNullOrEmpty(insHistPref)) {
 				Cursor=Cursors.Default;
 				FormInsPlan FormIP=new FormInsPlan(insPlan,patPlan,insSub);

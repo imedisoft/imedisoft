@@ -246,7 +246,7 @@ namespace Imedisoft.Forms
 		private void InitializeGridColumns()
 		{
 			patientsGrid.BeginUpdate();
-			patientsGrid.ListGridColumns.Clear();
+			patientsGrid.Columns.Clear();
 
 			displayFields = DisplayFields.GetForCategory(DisplayFieldCategory.PatientSelect);
 			foreach (var displayField in displayFields)
@@ -256,7 +256,7 @@ namespace Imedisoft.Forms
                     Tag = displayField
                 };
 
-                patientsGrid.ListGridColumns.Add(gridColumn);
+                patientsGrid.Columns.Add(gridColumn);
 			}
 
 			patientsGrid.EndUpdate();
@@ -314,9 +314,9 @@ namespace Imedisoft.Forms
 
 			int idxGridPatSSNCol = -1;
 
-			for (int i = 0; i < patientsGrid.ListGridColumns.Count; i++)
+			for (int i = 0; i < patientsGrid.Columns.Count; i++)
             {
-				if (patientsGrid.ListGridColumns[i].Tag is DisplayField displayField && displayField.InternalName == "SSN")
+				if (patientsGrid.Columns[i].Tag is DisplayField displayField && displayField.InternalName == "SSN")
                 {
 					idxGridPatSSNCol = i;
 
@@ -328,7 +328,7 @@ namespace Imedisoft.Forms
 			int idxRowClick = patientsGrid.PointToRow(_lastClickedPoint.Y);
 			if (idxRowClick > -1 && idxColClick > -1 && idxGridPatSSNCol == idxColClick)
 			{
-				if (Security.IsAuthorized(Permissions.PatientSSNView, true) && patientsGrid.ListGridRows[idxRowClick].Cells[idxColClick].Text != "")
+				if (Security.IsAuthorized(Permissions.PatientSSNView, true) && patientsGrid.Rows[idxRowClick].Cells[idxColClick].Text != "")
 				{
 					menuItemSSN.Visible = true;
 					menuItemSSN.Enabled = true;
@@ -374,7 +374,7 @@ namespace Imedisoft.Forms
 			int idxRowClick = patientsGrid.PointToRow(_lastClickedPoint.Y);
 			long patNumClicked = PIn.Long(_DataTablePats.Rows[idxRowClick]["PatNum"].ToString());
 			patientsGrid.BeginUpdate();
-			patientsGrid.ListGridRows[idxRowClick].Cells[idxColClick].Text = Patients.SSNFormatHelper(Patients.GetPat(patNumClicked).SSN, false);
+			patientsGrid.Rows[idxRowClick].Cells[idxColClick].Text = Patients.SSNFormatHelper(Patients.GetPat(patNumClicked).SSN, false);
 			patientsGrid.EndUpdate();
             string logtext;
             if (CultureInfo.CurrentCulture.Name.EndsWith("CA"))
@@ -399,9 +399,9 @@ namespace Imedisoft.Forms
 
 			int idxGridPatDOBCol = -1;
 
-			for (int i = 0; i < patientsGrid.ListGridColumns.Count; i++)
+			for (int i = 0; i < patientsGrid.Columns.Count; i++)
 			{
-				if (patientsGrid.ListGridColumns[i].Tag is DisplayField displayField && displayField.InternalName == "Birthdate")
+				if (patientsGrid.Columns[i].Tag is DisplayField displayField && displayField.InternalName == "Birthdate")
 				{
 					idxGridPatDOBCol = i;
 
@@ -413,7 +413,7 @@ namespace Imedisoft.Forms
 			int idxRowClick = patientsGrid.PointToRow(_lastClickedPoint.Y);
 			if (idxRowClick > -1 && idxColClick > -1 && idxGridPatDOBCol == idxColClick)
 			{
-				if (Security.IsAuthorized(Permissions.PatientDOBView, true) && patientsGrid.ListGridRows[idxRowClick].Cells[idxColClick].Text != "")
+				if (Security.IsAuthorized(Permissions.PatientDOBView, true) && patientsGrid.Rows[idxRowClick].Cells[idxColClick].Text != "")
 				{
 					menuItemDOB.Visible = true;
 					menuItemDOB.Enabled = true;
@@ -459,7 +459,7 @@ namespace Imedisoft.Forms
 			long patNumClicked = PIn.Long(_DataTablePats.Rows[idxRowClick]["PatNum"].ToString());
 			DateTime birthdate = PIn.Date(_DataTablePats.Rows[idxRowClick]["Birthdate"].ToString());
 			patientsGrid.BeginUpdate();
-			patientsGrid.ListGridRows[idxRowClick].Cells[idxColClick].Text = Patients.DOBFormatHelper(birthdate, false);
+			patientsGrid.Rows[idxRowClick].Cells[idxColClick].Text = Patients.DOBFormatHelper(birthdate, false);
 			patientsGrid.EndUpdate();
 			string logtext = "Date of birth unmasked in Patient Select";
 			SecurityLogs.MakeLogEntry(Permissions.PatientDOBView, patNumClicked, logtext);
@@ -654,7 +654,7 @@ namespace Imedisoft.Forms
 			}
 
 			patientsGrid.BeginUpdate();
-			patientsGrid.ListGridRows.Clear();
+			patientsGrid.Rows.Clear();
 
 			for (int i = 0; i < _DataTablePats.Rows.Count; i++)
 			{
@@ -767,7 +767,7 @@ namespace Imedisoft.Forms
 							break;
 					}
 				}
-				patientsGrid.ListGridRows.Add(row);
+				patientsGrid.Rows.Add(row);
 			}
 
 			patientsGrid.EndUpdate();
@@ -799,7 +799,7 @@ namespace Imedisoft.Forms
 
 		private void PatientsGrid_CellClick(object sender, ODGridClickEventArgs e)
 		{
-			var gridCell = patientsGrid.ListGridRows[e.Row].Cells[e.Col];
+			var gridCell = patientsGrid.Rows[e.Row].Cells[e.Col];
 
 			// Only grid cells with phone numbers are blue and underlined.
 			if (gridCell.ForeColor == Color.Blue && 

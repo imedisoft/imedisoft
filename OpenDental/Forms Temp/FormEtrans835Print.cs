@@ -32,17 +32,17 @@ namespace OpenDental {
 
 		private void FillGridMain() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new UI.GridColumn("EnterBy",50,HorizontalAlignment.Center));
-			gridMain.ListGridColumns.Add(new UI.GridColumn("Claim",340,HorizontalAlignment.Left) { IsWidthDynamic=true });
-			gridMain.ListGridColumns.Add(new UI.GridColumn("Date",66,HorizontalAlignment.Center));
-			gridMain.ListGridColumns.Add(new UI.GridColumn("Code",40,HorizontalAlignment.Center));
-			gridMain.ListGridColumns.Add(new UI.GridColumn("CodeBill",56,HorizontalAlignment.Center));
-			gridMain.ListGridColumns.Add(new UI.GridColumn("Billed",56,HorizontalAlignment.Right));
-			gridMain.ListGridColumns.Add(new UI.GridColumn("PatResp",48,HorizontalAlignment.Right));
-			gridMain.ListGridColumns.Add(new UI.GridColumn("Allowed",56,HorizontalAlignment.Right));
-			gridMain.ListGridColumns.Add(new UI.GridColumn("InsPay",56,HorizontalAlignment.Right));
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new UI.GridColumn("EnterBy",50,HorizontalAlignment.Center));
+			gridMain.Columns.Add(new UI.GridColumn("Claim",340,HorizontalAlignment.Left) { IsWidthDynamic=true });
+			gridMain.Columns.Add(new UI.GridColumn("Date",66,HorizontalAlignment.Center));
+			gridMain.Columns.Add(new UI.GridColumn("Code",40,HorizontalAlignment.Center));
+			gridMain.Columns.Add(new UI.GridColumn("CodeBill",56,HorizontalAlignment.Center));
+			gridMain.Columns.Add(new UI.GridColumn("Billed",56,HorizontalAlignment.Right));
+			gridMain.Columns.Add(new UI.GridColumn("PatResp",48,HorizontalAlignment.Right));
+			gridMain.Columns.Add(new UI.GridColumn("Allowed",56,HorizontalAlignment.Right));
+			gridMain.Columns.Add(new UI.GridColumn("InsPay",56,HorizontalAlignment.Right));
+			gridMain.Rows.Clear();
 			List<Hx835_Claim> listClaims;
 			if(_x835!=null) {
 				listClaims=_x835.ListClaimsPaid;
@@ -92,7 +92,7 @@ namespace OpenDental {
 				rowClaim.Cells.Add(new UI.GridCell(claimPaid.PatientRespAmt.ToString("f2")));//PatResp
 				rowClaim.Cells.Add(new UI.GridCell(""));//Allowed
 				rowClaim.Cells.Add(new UI.GridCell(claimPaid.InsPaid.ToString("f2")));//InsPay
-				gridMain.ListGridRows.Add(rowClaim);
+				gridMain.Rows.Add(rowClaim);
 				for(int j=0;j<claimPaid.ListProcs.Count;j++) {
 					Hx835_Proc proc=claimPaid.ListProcs[j];
 					UI.GridRow rowProc=new UI.GridRow();
@@ -109,7 +109,7 @@ namespace OpenDental {
 					rowProc.Cells.Add(new UI.GridCell(proc.PatRespTotal.ToString("f2")));//PatResp
 					rowProc.Cells.Add(new UI.GridCell(proc.AllowedAmt.ToString("f2")));//Allowed
 					rowProc.Cells.Add(new UI.GridCell(proc.InsPaid.ToString("f2")));//InsPay
-					gridMain.ListGridRows.Add(rowProc);
+					gridMain.Rows.Add(rowProc);
 				}
 			}
 			gridMain.EndUpdate();

@@ -31,10 +31,10 @@ namespace OpenDental
 		private void FillGrid() {
 			//Get Cloud directory based on textPath.Text
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("File Name",20){ IsWidthDynamic=true };
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			//GridRow row;
 			//Get list of contents in directory of textPath.Text
 			//OpenDentalCloud.Core.TaskStateListFolders state=CloudStorage.ListFolderContents(textPath.Text);
@@ -58,7 +58,7 @@ namespace OpenDental
 		private void butPreview_Click(object sender,EventArgs e) {
 			//A couple options here
 			//Download the file and run the explorer windows process to show the temporary file
-			if(!gridMain.ListGridRows[gridMain.GetSelectedIndex()].Cells[0].Text.Contains(".")) {//File path doesn't contain an extension and thus is a subfolder.
+			if(!gridMain.Rows[gridMain.GetSelectedIndex()].Cells[0].Text.Contains(".")) {//File path doesn't contain an extension and thus is a subfolder.
 				return;
 			}
 			//FormProgress FormP=new FormProgress();
@@ -147,13 +147,13 @@ namespace OpenDental
 			//Determine if it's a folder or a file. 
 			//If a folder, append the folder's name to the path and display folder contents
 			//If it's a file, return it as the only item selected.
-			if(gridMain.ListGridRows[gridMain.GetSelectedIndex()].Cells[0].Text.Contains(".")) {//They selected a file because there is an extension.
+			if(gridMain.Rows[gridMain.GetSelectedIndex()].Cells[0].Text.Contains(".")) {//They selected a file because there is an extension.
 				SelectedFiles.Clear();
-				SelectedFiles.Add(ODFileUtils.CombinePaths(textPath.Text,gridMain.ListGridRows[gridMain.GetSelectedIndex()].Cells[0].Text));
+				SelectedFiles.Add(ODFileUtils.CombinePaths(textPath.Text,gridMain.Rows[gridMain.GetSelectedIndex()].Cells[0].Text));
 				DialogResult=DialogResult.OK;
 			}
 			else {
-				textPath.Text=ODFileUtils.CombinePaths(textPath.Text,gridMain.ListGridRows[gridMain.GetSelectedIndex()].Cells[0].Text);
+				textPath.Text=ODFileUtils.CombinePaths(textPath.Text,gridMain.Rows[gridMain.GetSelectedIndex()].Cells[0].Text);
 				FillGrid();
 			}
 		}
@@ -174,7 +174,7 @@ namespace OpenDental
 			//Add all selected files to the list to be returned
 			SelectedFiles.Clear();//Just in case
 			foreach(int idx in gridMain.SelectedIndices) {
-				SelectedFiles.Add(ODFileUtils.CombinePaths(textPath.Text,gridMain.ListGridRows[idx].Cells[0].Text));
+				SelectedFiles.Add(ODFileUtils.CombinePaths(textPath.Text,gridMain.Rows[idx].Cells[0].Text));
 			}
 			DialogResult=DialogResult.OK;
 		}

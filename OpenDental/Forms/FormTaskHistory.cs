@@ -27,12 +27,12 @@ namespace Imedisoft.Forms
 		private void FillGrid()
 		{
 			taskHistoryGrid.BeginUpdate();
-			taskHistoryGrid.ListGridColumns.Clear();
-			taskHistoryGrid.ListGridColumns.Add(new GridColumn("Create Date", 140));
-			taskHistoryGrid.ListGridColumns.Add(new GridColumn("Edit Date", 140));
-			taskHistoryGrid.ListGridColumns.Add(new GridColumn("Editing User", 80));
-			taskHistoryGrid.ListGridColumns.Add(new GridColumn("Changes", 100));
-			taskHistoryGrid.ListGridRows.Clear();
+			taskHistoryGrid.Columns.Clear();
+			taskHistoryGrid.Columns.Add(new GridColumn("Create Date", 140));
+			taskHistoryGrid.Columns.Add(new GridColumn("Edit Date", 140));
+			taskHistoryGrid.Columns.Add(new GridColumn("Editing User", 80));
+			taskHistoryGrid.Columns.Add(new GridColumn("Changes", 100));
+			taskHistoryGrid.Rows.Clear();
 
 			for (int i = 1; i < taskHistory.Count; i++)
 			{
@@ -60,7 +60,7 @@ namespace Imedisoft.Forms
 				row.Cells.Add(Userods.GetUser(userId).UserName);
 				row.Cells.Add(TaskHists.GetChangesDescription(taskHistoryCurrent, taskHistoryNext));
 
-				taskHistoryGrid.ListGridRows.Add(row);
+				taskHistoryGrid.Rows.Add(row);
 			}
 
 			// Compare the current task with the last hist entry (Add the "current revision" of the task if necessary.)
@@ -93,7 +93,7 @@ namespace Imedisoft.Forms
 
 					row.Cells.Add(Userods.GetUser(userId).UserName);
 					row.Cells.Add(TaskHists.GetChangesDescription(taskHistoryCurrent, taskHistoryNext));
-					taskHistoryGrid.ListGridRows.Add(row);
+					taskHistoryGrid.Rows.Add(row);
 				}
 			}
 

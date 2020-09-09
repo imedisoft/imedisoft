@@ -361,18 +361,18 @@ namespace OpenDental{
 				}
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Description",150);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Export Path",230);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Format",110);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Is Default",60);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Payors",80){ IsWidthDynamic=true };//310
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listClearinghousesHq.Count;i++) {
 				Clearinghouse[] listClearinghouseTag=new Clearinghouse[3];//[0]=clearinghouseHq, [1]=clearinghouseClinic, [2]=clearinghouseCur per ODGridRow
@@ -411,13 +411,13 @@ namespace OpenDental{
 				}
 				row.Cells.Add(s);
 				row.Cells.Add(clearinghouseCur.Payors);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			Clearinghouse clearinghouseHq=((Clearinghouse[])(gridMain.ListGridRows[e.Row].Tag))[0].Copy();//cannot be null
+			Clearinghouse clearinghouseHq=((Clearinghouse[])(gridMain.Rows[e.Row].Tag))[0].Copy();//cannot be null
 			FormClearinghouseEdit FormCE=new FormClearinghouseEdit();
 			FormCE.ClearinghouseHq=clearinghouseHq;
 			FormCE.ClearinghouseHqOld=clearinghouseHq.Copy(); //cannot be null

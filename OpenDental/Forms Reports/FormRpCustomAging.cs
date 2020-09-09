@@ -79,32 +79,32 @@ namespace OpenDental {
 		private void FillGrid(List<AgingPat> listAgingPats) {
 			gridMain.BeginUpdate();
 			gridTotals.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridTotals.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
+			gridTotals.Columns.Clear();
 			GridColumn col = new GridColumn("Patient",200,GridSortingStrategy.StringCompare);
-			gridMain.ListGridColumns.Add(col);
-			gridTotals.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
+			gridTotals.Columns.Add(col);
 			col = new GridColumn("0-30 Days",100,GridSortingStrategy.AmountParse);
-			gridMain.ListGridColumns.Add(col);
-			gridTotals.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
+			gridTotals.Columns.Add(col);
 			col = new GridColumn("31-60 Days",100,GridSortingStrategy.AmountParse);
-			gridMain.ListGridColumns.Add(col);
-			gridTotals.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
+			gridTotals.Columns.Add(col);
 			col = new GridColumn("61-90 Days",100,GridSortingStrategy.AmountParse);
-			gridMain.ListGridColumns.Add(col);
-			gridTotals.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
+			gridTotals.Columns.Add(col);
 			col = new GridColumn("> 90 Days",100,GridSortingStrategy.AmountParse);
-			gridMain.ListGridColumns.Add(col);
-			gridTotals.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
+			gridTotals.Columns.Add(col);
 			col = new GridColumn("Total",100,GridSortingStrategy.AmountParse);
-			gridMain.ListGridColumns.Add(col);
-			gridTotals.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
+			gridTotals.Columns.Add(col);
 			double totalZeroThirty = 0;
 			double totalThirtySixty = 0;
 			double totalSixtyNinety = 0;
 			double totalOverNinety = 0;
 			double totalBalTotal = 0;
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			foreach(AgingPat agingPatCur in listAgingPats) {
 				GridRow row = new GridRow();
 				string patName = agingPatCur.Pat.LName + ", " + agingPatCur.Pat.FName;
@@ -120,10 +120,10 @@ namespace OpenDental {
 				totalBalTotal+=agingPatCur.BalTotal;
 				row.Cells.Add(agingPatCur.BalTotal.ToString("f"));
 				row.Tag=agingPatCur;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
-			gridTotals.ListGridRows.Clear();
-			gridTotals.ListGridRows.Add(new GridRow("Totals:",totalZeroThirty.ToString("f"),totalThirtySixty.ToString("f")
+			gridTotals.Rows.Clear();
+			gridTotals.Rows.Add(new GridRow("Totals:",totalZeroThirty.ToString("f"),totalThirtySixty.ToString("f")
 				,totalSixtyNinety.ToString("f"),totalOverNinety.ToString("f"),totalBalTotal.ToString("f")));
 			gridMain.EndUpdate();
 			gridTotals.EndUpdate();
@@ -253,15 +253,15 @@ namespace OpenDental {
 			if(!Security.IsAuthorized(Permissions.AccountModule)) {
 				return;
 			}
-			if(gridMain.SelectedGridRows.Count==0) {
+			if(gridMain.SelectedRows.Count==0) {
 				MessageBox.Show("Please select a patient first.");
 				return;
 			}
-			GotoModule.GotoAccount(((AgingPat)gridMain.SelectedGridRows[0].Tag).Pat.PatNum);
+			GotoModule.GotoAccount(((AgingPat)gridMain.SelectedRows[0].Tag).Pat.PatNum);
 		}
 
 		private void butPrint_Click(object sender,EventArgs e) {
-			if(gridMain.ListGridRows.Count==0) {
+			if(gridMain.Rows.Count==0) {
 				MessageBox.Show("The report has no results to show. Please click 'Refresh' to populate the grid first.");
 				return;
 			}
@@ -273,7 +273,7 @@ namespace OpenDental {
 			tableReportCur.Columns.Add("Over90");
 			tableReportCur.Columns.Add("BatTotal");
 			//Uses the grid's rows so that the user's row sorting selection is retained.
-			foreach(AgingPat agingPatCur in gridMain.ListGridRows.Select(x => (AgingPat)x.Tag)) {
+			foreach(AgingPat agingPatCur in gridMain.Rows.Select(x => (AgingPat)x.Tag)) {
 				DataRow row = tableReportCur.NewRow();
 				row["Patient"] = agingPatCur.Pat.GetNameLF();
 				row["0_30"] = agingPatCur.BalZeroThirty.ToString("f");

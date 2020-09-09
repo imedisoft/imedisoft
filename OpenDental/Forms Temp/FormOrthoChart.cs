@@ -160,11 +160,11 @@ namespace OpenDental {
 			gridMain.BeginUpdate();
 			//Set the title of the grid to the title of the currently selected ortho chart tab.  This is so that medical users don't see Ortho Chart.
 			gridMain.Title=orthoChartTab.TabName;
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			//First column will always be the date.  gridMain_CellLeave() depends on this fact.
 			col=new GridColumn("Date",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			foreach(DisplayField field in listSelectedTabDisplayFields) {
 				string columnHeader=string.IsNullOrEmpty(field.DescriptionOverride) ? field.Description : field.DescriptionOverride;
 				int colWidth=field.ColumnWidth;
@@ -179,16 +179,16 @@ namespace OpenDental {
 				else {
 					col=new GridColumn(columnHeader,colWidth,true);
 					if(field.InternalName=="Signature") {
-						_sigColIdx=gridMain.ListGridColumns.Count;
+						_sigColIdx=gridMain.Columns.Count;
 						col.TextAlign=HorizontalAlignment.Center;
 						col.IsEditable=false;
 					}
 				}
 				col.Tag=field.Description;
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			_showSigBox=_listOrthDisplayFields.Any(x => x.InternalName=="Signature");//Must be set before CanEditRow(...)
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			foreach(KeyValuePair<DateTime, List<OrthoChart>> kvPair in _dictOrthoCharts) {
 				row=new GridRow();
@@ -219,7 +219,7 @@ namespace OpenDental {
 					}
 				}
 				if(!areAllColumnsBlank || _listDatesAdded.Contains(tempDate)) {
-					gridMain.ListGridRows.Add(row);
+					gridMain.Rows.Add(row);
 				}
 				CanEditRow(tempDate);//Function uses _showSigBox, must be set prior to calling.
 			}
@@ -237,7 +237,7 @@ namespace OpenDental {
 			textUser.Visible=_showSigBox;
 			butChangeUser.Visible=_showSigBox;
 			if(_showSigBox) {
-				for(int i=0;i<gridMain.ListGridRows.Count;i++) {
+				for(int i=0;i<gridMain.Rows.Count;i++) {
 					DisplaySignature(i,false);
 				}
 				signatureBoxWrapper.ClearSignature(false);
@@ -249,13 +249,13 @@ namespace OpenDental {
 
 		private void FillGridPat() {
 			gridPat.BeginUpdate();
-			gridPat.ListGridColumns.Clear();
+			gridPat.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Field",150);
-			gridPat.ListGridColumns.Add(col);
+			gridPat.Columns.Add(col);
 			col=new GridColumn("Value",200);
-			gridPat.ListGridColumns.Add(col);
-			gridPat.ListGridRows.Clear();
+			gridPat.Columns.Add(col);
+			gridPat.Rows.Clear();
 			_arrayPatientFields=PatFields.Refresh(_patCur.PatNum);
 			PatFieldDefs.RefreshCache();
 			PatFieldL.AddPatFieldsToGrid(gridPat,_arrayPatientFields.ToList(),FieldLocations.OrthoChart);
@@ -265,10 +265,10 @@ namespace OpenDental {
 		///<summary>Same as FillOrtho() in the ContrAccount.</summary>
 		private void FillOrtho() {
 			gridOrtho.BeginUpdate();
-			gridOrtho.ListGridColumns.Clear();
-			gridOrtho.ListGridColumns.Add(new GridColumn("",(gridOrtho.Width/2)-20,HorizontalAlignment.Right));
-			gridOrtho.ListGridColumns.Add(new GridColumn("",(gridOrtho.Width/2)+20,HorizontalAlignment.Left));
-			gridOrtho.ListGridRows.Clear();
+			gridOrtho.Columns.Clear();
+			gridOrtho.Columns.Add(new GridColumn("",(gridOrtho.Width/2)-20,HorizontalAlignment.Right));
+			gridOrtho.Columns.Add(new GridColumn("",(gridOrtho.Width/2)+20,HorizontalAlignment.Left));
+			gridOrtho.Rows.Clear();
 			GridRow row = new GridRow();
 			DateTime firstOrthoProc = Procedures.GetFirstOrthoProcDate(_patNoteCur);
 			if(firstOrthoProc!=DateTime.MinValue) {
@@ -291,35 +291,35 @@ namespace OpenDental {
 					strDateDiff+=dateSpan.DaysDiff+" "+"day"+(dateSpan.DaysDiff==1 ? "" : "s");
 				}
 				row.Cells.Add(strDateDiff);
-				gridOrtho.ListGridRows.Add(row);
+				gridOrtho.Rows.Add(row);
 				row = new GridRow();
 				row.Cells.Add("Date Start"+": "); //Date of the first ortho procedure on this account
 				row.Cells.Add(firstOrthoProc.ToShortDateString());
-				gridOrtho.ListGridRows.Add(row);
+				gridOrtho.Rows.Add(row);
 
 				row = new GridRow();
 				row.Cells.Add("Tx Months Total"+": "); //this patient's OrthoClaimMonthsTreatment, or the practice default if 0.
 				int txMonthsTotal=(_patNoteCur.OrthoMonthsTreatOverride==-1?Prefs.GetByte(PrefName.OrthoDefaultMonthsTreat):_patNoteCur.OrthoMonthsTreatOverride);
 				row.Cells.Add(txMonthsTotal.ToString());
-				gridOrtho.ListGridRows.Add(row);
+				gridOrtho.Rows.Add(row);
 
 				row = new GridRow();
 				int txTimeInMonths=dateSpan.YearsDiff * 12 + dateSpan.MonthsDiff + (dateSpan.DaysDiff < 15? 0: 1);
 				row.Cells.Add("Months in Treatment"+": "); //idk what the difference between this and 'Total Tx Time' is.
 				row.Cells.Add(txTimeInMonths.ToString());
-				gridOrtho.ListGridRows.Add(row);
+				gridOrtho.Rows.Add(row);
 
 				row = new GridRow();
 				row.Cells.Add("Months Rem"+": "); //Months Total - Total Tx Time
 				row.Cells.Add(Math.Max(0,txMonthsTotal-txTimeInMonths).ToString());
-				gridOrtho.ListGridRows.Add(row);
+				gridOrtho.Rows.Add(row);
 
 			}
 			else {
 				row = new GridRow();
 				row.Cells.Add(""); //idk what the difference between this and 'Total Tx Time' is.
 				row.Cells.Add("No ortho procedures charted"+".");
-				gridOrtho.ListGridRows.Add(row);
+				gridOrtho.Rows.Add(row);
 			}
 			gridOrtho.EndUpdate();
 		}
@@ -406,11 +406,11 @@ namespace OpenDental {
 			Logger.LogAction("gridMain_CellLeave",() => {
 				//Get the date for the ortho chart that was just edited.
 				DateTime orthoDate=GetOrthoDate(e.Row);
-				string oldText=GetValueFromDict(orthoDate,(string)gridMain.ListGridColumns[e.Col].Tag);
-				string newText=gridMain.ListGridRows[e.Row].Cells[e.Col].Text;
+				string oldText=GetValueFromDict(orthoDate,(string)gridMain.Columns[e.Col].Tag);
+				string newText=gridMain.Rows[e.Row].Cells[e.Col].Text;
 				if(CanEditRow(orthoDate)) {
 					if(newText != oldText) {
-						SetValueInDict(newText,orthoDate,(string)gridMain.ListGridColumns[e.Col].Tag);
+						SetValueInDict(newText,orthoDate,(string)gridMain.Columns[e.Col].Tag);
 						//Cannot be placed in if statement below as we only want to clear the signature when the grid text has changed.
 						//We cannot use a textchanged event to call the .dll as this causes massive slowness for certain customers.
 						if(_showSigBox) {
@@ -427,7 +427,7 @@ namespace OpenDental {
 					//User is not authorized to edit this cell.  Check if they changed the old value and if they did, put it back to the way it was and warn them about security.
 					if(newText!=oldText) {
 						//The user actually changed the cell's value and we need to change it back and warn them that they don't have permission.
-						gridMain.ListGridRows[e.Row].Cells[e.Col].Text=oldText;
+						gridMain.Rows[e.Row].Cells[e.Col].Text=oldText;
 						gridMain.Invalidate();
 						MessageBox.Show("You need either Ortho Chart Edit (full) or Ortho Chart Edit (same user, signed) to edit this ortho chart.");
 					}
@@ -454,10 +454,10 @@ namespace OpenDental {
 				OrthoSignature sig=new OrthoSignature(listOrthoCharts.Find(x => x.FieldName==sigColumnName).FieldValue);
 				if(sig.SigString=="") {
 					Logger.LogAction("DisplaySignature",() => { signatureBoxWrapper.ClearSignature(false); });
-					gridMain.ListGridRows[gridRow].BackColor=SystemColors.Window;
+					gridMain.Rows[gridRow].BackColor=SystemColors.Window;
 					//Empty out the signature column displaying to the user.
 					if(_sigColIdx > 0) {//User might be vieweing a tab that does not have the signature column.  Greater than 0 because index 0 is a Date column.
-						gridMain.ListGridRows[gridRow].Cells[_sigColIdx].Text="";
+						gridMain.Rows[gridRow].Cells[_sigColIdx].Text="";
 					}
 					if(hasRefresh) {
 						gridMain.Refresh();
@@ -478,18 +478,18 @@ namespace OpenDental {
 					});
 				}
 				if(signatureBoxWrapper.IsValid) {
-					gridMain.ListGridRows[gridRow].BackColor=Color.FromArgb(0,245,165);//A lighter version of Color.MediumSpringGreen
+					gridMain.Rows[gridRow].BackColor=Color.FromArgb(0,245,165);//A lighter version of Color.MediumSpringGreen
 					if(_sigColIdx > 0) {//User might be vieweing a tab that does not have the signature column.  Greater than 0 because index 0 is a Date column.
-						gridMain.ListGridRows[gridRow].Cells[_sigColIdx].Text="Valid";
+						gridMain.Rows[gridRow].Cells[_sigColIdx].Text="Valid";
 						//Only display user if the signature is valid.
 						long userNum=_dictOrthoCharts[orthoDate].Where(x => x.FieldName==sigColumnName).Select(x => x.UserNum).FirstOrDefault();
 						textUser.Text=Userods.GetName(userNum);
 					}
 				}
 				else {
-					gridMain.ListGridRows[gridRow].BackColor=Color.FromArgb(255,140,143);//A darker version of Color.LightPink
+					gridMain.Rows[gridRow].BackColor=Color.FromArgb(255,140,143);//A darker version of Color.LightPink
 					if(_sigColIdx > 0) {//User might be vieweing a tab that does not have the signature column.  Greater than 0 because index 0 is a Date column.
-						gridMain.ListGridRows[gridRow].Cells[_sigColIdx].Text="Invalid";
+						gridMain.Rows[gridRow].Cells[_sigColIdx].Text="Invalid";
 					}
 				}
 				if(hasRefresh) {
@@ -568,7 +568,7 @@ namespace OpenDental {
 		///<summary>Gets the date of the ortho chart for the passed in grid row.</summary>
 		private DateTime GetOrthoDate(int gridRow) {
 			//The grid row tag gets set to the key of the dictionary. Return the tag.
-			return (DateTime)gridMain.ListGridRows[gridRow].Tag;
+			return (DateTime)gridMain.Rows[gridRow].Tag;
 		}
 
 		///<summary>Gets the value from _dictOrthoCharts for the specified date and column heading.  Returns empty string if not found.
@@ -632,13 +632,13 @@ namespace OpenDental {
 		}
 
 		private void gridPat_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			if(gridPat.ListGridRows[e.Row].Tag is PatFieldDef) {//patfield for an existing PatFieldDef
-				PatFieldDef patFieldDef=(PatFieldDef)gridPat.ListGridRows[e.Row].Tag;
+			if(gridPat.Rows[e.Row].Tag is PatFieldDef) {//patfield for an existing PatFieldDef
+				PatFieldDef patFieldDef=(PatFieldDef)gridPat.Rows[e.Row].Tag;
 				PatField field=PatFields.GetByName(patFieldDef.FieldName,_arrayPatientFields);
 				PatFieldL.OpenPatField(field,patFieldDef,_patCur.PatNum,true);
 			}
-			else if(gridPat.ListGridRows[e.Row].Tag is PatField) {//PatField for a PatFieldDef that no longer exists
-				PatField field=(PatField)gridPat.ListGridRows[e.Row].Tag;
+			else if(gridPat.Rows[e.Row].Tag is PatField) {//PatField for a PatFieldDef that no longer exists
+				PatField field=(PatField)gridPat.Rows[e.Row].Tag;
 				FormPatFieldEdit FormPF=new FormPatFieldEdit(field);
 				FormPF.IsLaunchedFromOrtho=true;
 				FormPF.ShowDialog();
@@ -675,7 +675,7 @@ namespace OpenDental {
 				MessageBox.Show("Please select an editable Ortho Chart cell first.");
 				return;
 			}
-			if(HasPickList(gridMain.ListGridColumns[gridMain.SelectedCell.X].HeaderText)) {
+			if(HasPickList(gridMain.Columns[gridMain.SelectedCell.X].HeaderText)) {
 				MessageBox.Show("Cannot add auto notes to a field with a pick list.");
 				return;
 			}
@@ -684,7 +684,7 @@ namespace OpenDental {
 			if(FormA.DialogResult==DialogResult.OK) {
 				Point selectedCell=new Point(gridMain.SelectedCell.X,gridMain.SelectedCell.Y);
 				//Add text to current focused cell				
-				gridMain.ListGridRows[gridMain.SelectedCell.Y].Cells[gridMain.SelectedCell.X].Text+=FormA.CompletedNote;
+				gridMain.Rows[gridMain.SelectedCell.Y].Cells[gridMain.SelectedCell.X].Text+=FormA.CompletedNote;
 				//Since the redrawing of the row height is dependent on the edit text box built into the ODGrid, we have to manually tell the grid to redraw.
 				//This will essentially "refresh" the grid.  We do not want to call FillGrid() because that will lose data in other cells that have not been saved to datatable.
 				if(_showSigBox && FormA.CompletedNote != "") {
@@ -740,7 +740,7 @@ namespace OpenDental {
 			}
 			SortedDictionary<DateTime,List<SecurityLog>> dictDatesOfServiceLogEntries=new SortedDictionary<DateTime,List<SecurityLog>>();
 			//Add all dates from grid first, some may not have audit trail entries, but should be selectable from FormAO
-			for(int i=0;i<gridMain.ListGridRows.Count;i++) {
+			for(int i=0;i<gridMain.Rows.Count;i++) {
 				DateTime dtCur=GetOrthoDate(i);
 				if(dictDatesOfServiceLogEntries.ContainsKey(dtCur)) {
 					continue;

@@ -29,18 +29,18 @@ namespace OpenDental
 		private void FillGridNeeded(){
 			listNeeded=SupplyNeededs.CreateObjects();
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Date Added",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Description",300);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<listNeeded.Count;i++){
 				row=new GridRow();
 				row.Cells.Add(listNeeded[i].DateAdded.ToShortDateString());
 				row.Cells.Add(listNeeded[i].Description);
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

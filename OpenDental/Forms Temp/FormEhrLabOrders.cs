@@ -20,21 +20,21 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Date Time",80,HorizontalAlignment.Center);//Formatted yyyyMMdd
 			col.SortingStrategy=GridSortingStrategy.DateParse;
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Placer Order Number",130,HorizontalAlignment.Center);//Should be PK but might not be. Instead use Placer Order Num.
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Filler Order Number",130,HorizontalAlignment.Center);//Should be PK but might not be. Instead use Placer Order Num.
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Test Performed",430);//Should be PK but might not be. Instead use Placer Order Num.
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Results In",80,HorizontalAlignment.Center);//Or date of latest result? or both?
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			ListEhrLabs = EhrLabs.GetAllForPat(PatCur.PatNum);
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<ListEhrLabs.Count;i++) {
 				row=new GridRow();
@@ -45,7 +45,7 @@ namespace OpenDental {
 				row.Cells.Add(ListEhrLabs[i].FillerOrderNum);
 				row.Cells.Add(ListEhrLabs[i].UsiText);
 				row.Cells.Add(ListEhrLabs[i].ListEhrLabResults.Count.ToString());
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

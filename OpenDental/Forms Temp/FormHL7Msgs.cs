@@ -48,18 +48,18 @@ namespace OpenDental {
 			}
 			MsgList=HL7Msgs.GetHL7Msgs(PIn.Date(textDateStart.Text),PIn.Date(textDateEnd.Text),SelectedPatNum,comboHL7Status.SelectedIndex);
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("DateTime",180);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Patient",170);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("AptNum",60);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Status",75);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Note",400);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			if(MsgList!=null) {
 			  for(int i=0;i<MsgList.Count;i++) {
 					GridRow row=new GridRow();
@@ -78,7 +78,7 @@ namespace OpenDental {
 					}
 					row.Cells.Add(Enum.GetName(typeof(HL7MessageStatus),MsgList[i].HL7Status));
 					row.Cells.Add(MsgList[i].Note);
-					gridMain.ListGridRows.Add(row);
+					gridMain.Rows.Add(row);
 				}
 			}
 			gridMain.EndUpdate();

@@ -62,20 +62,20 @@ namespace OpenDental {
 
 		private void FillGridGroups() {
 			gridGroups.BeginUpdate();
-			gridGroups.ListGridColumns.Clear();
+			gridGroups.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Group Name",200);
-			gridGroups.ListGridColumns.Add(col);
+			gridGroups.Columns.Add(col);
 			col=new GridColumn("Fee Schedule",75);
-			gridGroups.ListGridColumns.Add(col);
-			gridGroups.ListGridRows.Clear();
+			gridGroups.Columns.Add(col);
+			gridGroups.Rows.Clear();
 			GridRow row;
 			foreach(FeeSchedGroup feeSchedGroupCur in _listFeeSchedGroupsFiltered) {
 				row=new GridRow();
 				row.Cells.Add(feeSchedGroupCur.Description);
 				row.Cells.Add(FeeScheds.GetDescription(feeSchedGroupCur.FeeSchedNum));//Returns empty string if the FeeSched couldn't be found.
 				row.Tag=feeSchedGroupCur;
-				gridGroups.ListGridRows.Add(row);
+				gridGroups.Rows.Add(row);
 			} 
 			gridGroups.EndUpdate();
 		}
@@ -86,20 +86,20 @@ namespace OpenDental {
 				_listClinicsForGroup=Clinics.GetClinics(gridGroups.SelectedTag<FeeSchedGroup>().ListClinicNumsAll).OrderBy(x => x.Abbr).ToList();
 			}
 			gridClinics.BeginUpdate();
-			gridClinics.ListGridColumns.Clear();
+			gridClinics.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Abbr",100){ IsWidthDynamic=true };
-			gridClinics.ListGridColumns.Add(col);
+			gridClinics.Columns.Add(col);
 			col=new GridColumn("Description",100){ IsWidthDynamic=true,DynamicWeight=2 };
-			gridClinics.ListGridColumns.Add(col);
-			gridClinics.ListGridRows.Clear();
+			gridClinics.Columns.Add(col);
+			gridClinics.Rows.Clear();
 			GridRow row;
 			foreach(Clinic clinicCur in _listClinicsForGroup) {
 				row=new GridRow();
 				row.Cells.Add(clinicCur.Abbr);
 				row.Cells.Add(clinicCur.Description+(clinicCur.IsHidden?" (Hidden)":""));
 				row.Tag=clinicCur;
-				gridClinics.ListGridRows.Add(row);
+				gridClinics.Rows.Add(row);
 			}
 			gridClinics.EndUpdate();
 		}
@@ -109,7 +109,7 @@ namespace OpenDental {
 		}
 
 		private void gridGroups_CellDoubleClick(object sender,UI.ODGridClickEventArgs e) {
-			FeeSchedGroup feeSchedGroupCur=(FeeSchedGroup)gridGroups.ListGridRows[e.Row].Tag;
+			FeeSchedGroup feeSchedGroupCur=(FeeSchedGroup)gridGroups.Rows[e.Row].Tag;
 			FormFeeSchedGroupEdit formFG=new FormFeeSchedGroupEdit(feeSchedGroupCur);
 			formFG.ShowDialog();
 			if(formFG.DialogResult==DialogResult.OK) {

@@ -48,13 +48,13 @@ namespace Imedisoft.Forms
 			}
 
 			adjustmentsGrid.BeginUpdate();
-			adjustmentsGrid.ListGridColumns.Clear();
-			adjustmentsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Date, 90));
-			adjustmentsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.PatientId, 100));
-			adjustmentsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Type, 120));
-			adjustmentsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Amount, 70));
-			adjustmentsGrid.ListGridColumns.Add(new GridColumn(Translation.Common.HasProc, 0, HorizontalAlignment.Center));
-			adjustmentsGrid.ListGridRows.Clear();
+			adjustmentsGrid.Columns.Clear();
+			adjustmentsGrid.Columns.Add(new GridColumn(Translation.Common.Date, 90));
+			adjustmentsGrid.Columns.Add(new GridColumn(Translation.Common.PatientId, 100));
+			adjustmentsGrid.Columns.Add(new GridColumn(Translation.Common.Type, 120));
+			adjustmentsGrid.Columns.Add(new GridColumn(Translation.Common.Amount, 70));
+			adjustmentsGrid.Columns.Add(new GridColumn(Translation.Common.HasProc, 0, HorizontalAlignment.Center));
+			adjustmentsGrid.Rows.Clear();
 
 			foreach (var adjustment in adjustments)
 			{
@@ -66,7 +66,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(adjustment.ProcedureId != 0 ? "X" : "");
 				gridRow.Tag = adjustment;
 
-				adjustmentsGrid.ListGridRows.Add(gridRow);
+				adjustmentsGrid.Rows.Add(gridRow);
 			}
 
 			adjustmentsGrid.EndUpdate();

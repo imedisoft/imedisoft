@@ -125,7 +125,7 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			List<DisplayField> fieldsForGrid=DisplayFields.GetForCategory(DisplayFieldCategory.AccountModule);
 			if(!PrefC.HasClinicsEnabled) {
 				//remove clinics from displayfields if clinics are disabled
@@ -147,13 +147,13 @@ namespace OpenDental {
 				if(fieldsForGrid[i].InternalName=="Date") {
 					sort=GridSortingStrategy.DateParse;
 				}
-				gridMain.ListGridColumns.Add(new GridColumn(fieldsForGrid[i].Description==""?fieldsForGrid[i].InternalName:fieldsForGrid[i].Description,
+				gridMain.Columns.Add(new GridColumn(fieldsForGrid[i].Description==""?fieldsForGrid[i].InternalName:fieldsForGrid[i].Description,
 					fieldsForGrid[i].ColumnWidth,align,sort));
 			}
-			if(gridMain.ListGridColumns.Sum(x => x.ColumnWidth) > gridMain.Width) {
+			if(gridMain.Columns.Sum(x => x.ColumnWidth) > gridMain.Width) {
 				gridMain.HScrollVisible=true;
 			}
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listLimitedRows.Count;i++) {
 				LimitedRow limitedRow=_listLimitedRows[i];
@@ -207,11 +207,11 @@ namespace OpenDental {
 					row.LowerBorderColor=Color.Black;
 				}
 				row.Tag=limitedRow;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
-			for(int i=0;i<gridMain.ListGridRows.Count;i++) {
-				LimitedRow lRow=gridMain.ListGridRows[i].Tag as LimitedRow;
+			for(int i=0;i<gridMain.Rows.Count;i++) {
+				LimitedRow lRow=gridMain.Rows[i].Tag as LimitedRow;
 				gridMain.SetSelected(i,_dictSelectedRows.TryGetValue(lRow.Type,out List<long> listPriKeys) && listPriKeys.Contains(lRow.PrimaryKey));
 			}
 			//this will refresh _dictSelectedRows and add any associated trans to the previously selected rows
@@ -244,13 +244,13 @@ namespace OpenDental {
 			List<long> listSelectedAdjNums=listSelectedRows.FindAll(x => x.Type==AccountEntryType.Adjustment).Select(x => x.PrimaryKey).Distinct().ToList();
 			List<int> listSelectedIndices=gridMain.SelectedIndices.ToList();
 			for(int i=0;i<listSelectedIndices.Count;i++) {
-				LimitedRow lSelectedRow=gridMain.ListGridRows[listSelectedIndices[i]].Tag as LimitedRow;
+				LimitedRow lSelectedRow=gridMain.Rows[listSelectedIndices[i]].Tag as LimitedRow;
 				if(lSelectedRow.Type==AccountEntryType.ClaimPayment) {
 					listSelectedProcNums.AddRange(lSelectedRow.ListProcsOnObject.Where(x => x>0 && !listSelectedProcNums.Contains(x)));
 					List<LimitedRow> listClaimRows=_listLimitedRows.FindAll(x => x.Type==AccountEntryType.Claim && x.PrimaryKey.In(listSelectedPayClaimNums));
 					listSelectedProcNums.AddRange(listClaimRows.SelectMany(x => x.ListProcsOnObject.Where(y => y>0 && !listSelectedProcNums.Contains(y))).Distinct());
-					for(int j=0;j<gridMain.ListGridRows.Count;j++) {
-						LimitedRow lRow=gridMain.ListGridRows[j].Tag as LimitedRow;
+					for(int j=0;j<gridMain.Rows.Count;j++) {
+						LimitedRow lRow=gridMain.Rows[j].Tag as LimitedRow;
 						if(lRow.Type==AccountEntryType.ClaimPayment && lRow.PrimaryKey.In(listSelectedPayClaimNums)) {
 							if(!listSelectedIndices.Contains(j)) {
 								listSelectedIndices.Add(j);
@@ -260,8 +260,8 @@ namespace OpenDental {
 						}
 					}
 					listSelectedProcNums=listSelectedProcNums.Distinct().Where(x => x>0).ToList();
-					for(int j=0;j<gridMain.ListGridRows.Count;j++) {
-						LimitedRow lRow=gridMain.ListGridRows[j].Tag as LimitedRow;
+					for(int j=0;j<gridMain.Rows.Count;j++) {
+						LimitedRow lRow=gridMain.Rows[j].Tag as LimitedRow;
 						if(lRow.Type==AccountEntryType.Procedure && listSelectedProcNums.Any(x => lRow.PrimaryKey==x || lRow.ProcNumLab==x)) {
 							if(!listSelectedIndices.Contains(j)) {
 								listSelectedIndices.Add(j);
@@ -274,8 +274,8 @@ namespace OpenDental {
 					listSelectedProcNums.AddRange(lSelectedRow.ListProcsOnObject.Where(x => x>0 && !listSelectedProcNums.Contains(x)));
 					listSelectedPayNums.AddRange(lSelectedRow.ListPaymentsOnObj.Where(x => x>0 && !listSelectedPayNums.Contains(x)));
 					listSelectedAdjNums.AddRange(lSelectedRow.ListAdjustsOnObj.Where(x => x>0 && !listSelectedAdjNums.Contains(x)));
-					for(int j=0;j<gridMain.ListGridRows.Count;j++) {
-						LimitedRow lRow=gridMain.ListGridRows[j].Tag as LimitedRow;
+					for(int j=0;j<gridMain.Rows.Count;j++) {
+						LimitedRow lRow=gridMain.Rows[j].Tag as LimitedRow;
 						if(lRow.Type==AccountEntryType.Payment && listSelectedPayNums.Contains(lRow.PrimaryKey)) {
 							if(!listSelectedIndices.Contains(j)) {
 								listSelectedIndices.Add(j);
@@ -286,8 +286,8 @@ namespace OpenDental {
 							listSelectedAdjNums.AddRange(lRow.ListAdjustsOnObj.Where(x => x>0 && !listSelectedAdjNums.Contains(x)));
 						}
 					}
-					for(int j=0;j<gridMain.ListGridRows.Count;j++) {
-						LimitedRow lRow=gridMain.ListGridRows[j].Tag as LimitedRow;
+					for(int j=0;j<gridMain.Rows.Count;j++) {
+						LimitedRow lRow=gridMain.Rows[j].Tag as LimitedRow;
 						if(lRow.Type==AccountEntryType.Procedure && listSelectedProcNums.Contains(lRow.PrimaryKey)) {
 							if(!listSelectedIndices.Contains(j)) {
 								listSelectedIndices.Add(j);
@@ -309,8 +309,8 @@ namespace OpenDental {
 					}
 				}
 				else if(lSelectedRow.Type==AccountEntryType.Adjustment && lSelectedRow.ListProcsOnObject.Count==1) {
-					for(int j=0;j<gridMain.ListGridRows.Count;j++) {
-						LimitedRow lRow=gridMain.ListGridRows[j].Tag as LimitedRow;
+					for(int j=0;j<gridMain.Rows.Count;j++) {
+						LimitedRow lRow=gridMain.Rows[j].Tag as LimitedRow;
 						if(lRow.Type==AccountEntryType.Procedure && lRow.PrimaryKey==lSelectedRow.ListProcsOnObject[0]) {
 							if(!listSelectedIndices.Contains(j)) {
 								listSelectedIndices.Add(j);
@@ -321,8 +321,8 @@ namespace OpenDental {
 					}
 				}
 				else if(lSelectedRow.Type==AccountEntryType.Procedure || lSelectedRow.ProcNumLab!=0) {
-					for(int j=0;j<gridMain.ListGridRows.Count;j++) {
-						LimitedRow lRow=gridMain.ListGridRows[j].Tag as LimitedRow;
+					for(int j=0;j<gridMain.Rows.Count;j++) {
+						LimitedRow lRow=gridMain.Rows[j].Tag as LimitedRow;
 						if(lSelectedRow.ProcNumLab>0) {
 							if(lRow.PrimaryKey==lSelectedRow.ProcNumLab || lRow.ProcNumLab==lSelectedRow.ProcNumLab) {
 								if(!listSelectedIndices.Contains(j)) {
@@ -346,8 +346,8 @@ namespace OpenDental {
 		}
 
 		private void gridMain_ColumnSorted(object sender,EventArgs e) {
-			for(int i=0;i<gridMain.ListGridRows.Count;i++) {
-				LimitedRow lRow=gridMain.ListGridRows[i].Tag as LimitedRow;
+			for(int i=0;i<gridMain.Rows.Count;i++) {
+				LimitedRow lRow=gridMain.Rows[i].Tag as LimitedRow;
 				gridMain.SetSelected(i,_dictSelectedRows.TryGetValue(lRow.Type,out List<long> listPriKeys) && listPriKeys.Contains(lRow.PrimaryKey));
 			}
 		}
@@ -360,8 +360,8 @@ namespace OpenDental {
 		}
 
 		private void butToday_Click(object sender,EventArgs e) {
-			for(int i=0;i<gridMain.ListGridRows.Count;i++) {
-				gridMain.SetSelected(i,(gridMain.ListGridRows[i].Tag as LimitedRow).DateTime.Date==DateTime.Today.Date);
+			for(int i=0;i<gridMain.Rows.Count;i++) {
+				gridMain.SetSelected(i,(gridMain.Rows[i].Tag as LimitedRow).DateTime.Date==DateTime.Today.Date);
 			}
 			SelectAssociatedTrans();
 			if(gridMain.SelectedIndices.Length==0) {

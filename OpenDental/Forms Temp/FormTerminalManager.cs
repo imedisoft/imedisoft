@@ -44,7 +44,7 @@ namespace OpenDental {
 		private void FillGrid() {
 			SheetDevice selected=new SheetDevice(new MobileAppDevice());//just instantiate to something random that won't match any of our actual devices
 			if(gridMain.GetSelectedIndex()>-1) {
-				selected=(SheetDevice)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
+				selected=(SheetDevice)gridMain.Rows[gridMain.GetSelectedIndex()].Tag;
 			}
 			List<SheetDevice> listDevices=new List<SheetDevice>();
 			foreach(TerminalActive kiosk in TerminalActives.Refresh()) {
@@ -71,24 +71,24 @@ namespace OpenDental {
 			}
 			int selectedIndex=-1;
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Device Name",150);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Session Name",110);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Patient",185);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
 				col=new GridColumn("Clinic",150);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			col=new GridColumn("Action",50,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if(_isSetupMode) {
 				col=new GridColumn("Delete",50,HorizontalAlignment.Center);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			} 
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			foreach(SheetDevice device in listDevices) {
 				GridRow row=new GridRow();
 				row.Tag=device;
@@ -183,9 +183,9 @@ namespace OpenDental {
 					cell.Clicked=DeleteClick;
 					row.Cells.Add(cell);
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 				if(selected!=null && device.Matches(selected)) {
-					selectedIndex=gridMain.ListGridRows.Count-1;
+					selectedIndex=gridMain.Rows.Count-1;
 				}
 			}
 			gridMain.EndUpdate();
@@ -204,7 +204,7 @@ namespace OpenDental {
 				labelSheets.Text="";
 				return;
 			}
-			SheetDevice device=(SheetDevice)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
+			SheetDevice device=(SheetDevice)gridMain.Rows[gridMain.GetSelectedIndex()].Tag;
 			listSheets.Items.Clear();
 			if(device.PatNum==0) {
 				groupBoxPatient.Text="Patient to Load to Device";
@@ -257,7 +257,7 @@ namespace OpenDental {
 				return;
 			}
 			FormPatientForms formPF=new FormPatientForms();
-			SheetDevice device=(SheetDevice)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
+			SheetDevice device=(SheetDevice)gridMain.Rows[gridMain.GetSelectedIndex()].Tag;
 			formPF.PatNum=device.PatNum==0?FormOpenDental.CurPatNum:device.PatNum;
 			formPF.ShowDialog();
 			FillPat();

@@ -38,18 +38,18 @@ namespace OpenDental {
 				Cursor=Cursors.Default;
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("",25)); //for the drop down arrows.
-			gridMain.ListGridColumns.Add(new GridColumn("Log Date",135));
-			gridMain.ListGridColumns.Add(new GridColumn("User",100));
-			gridMain.ListGridColumns.Add(new GridColumn("Table",100));
-			gridMain.ListGridColumns.Add(new GridColumn("Key",55));
-			gridMain.ListGridColumns.Add(new GridColumn("Description",150));
-			gridMain.ListGridColumns.Add(new GridColumn("Field",110));
-			gridMain.ListGridColumns.Add(new GridColumn("Before",150));
-			gridMain.ListGridColumns.Add(new GridColumn("After",150));
-			gridMain.ListGridRows.Clear();
-			ConstructGridRows().ForEach(x => { gridMain.ListGridRows.Add(x); });
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("",25)); //for the drop down arrows.
+			gridMain.Columns.Add(new GridColumn("Log Date",135));
+			gridMain.Columns.Add(new GridColumn("User",100));
+			gridMain.Columns.Add(new GridColumn("Table",100));
+			gridMain.Columns.Add(new GridColumn("Key",55));
+			gridMain.Columns.Add(new GridColumn("Description",150));
+			gridMain.Columns.Add(new GridColumn("Field",110));
+			gridMain.Columns.Add(new GridColumn("Before",150));
+			gridMain.Columns.Add(new GridColumn("After",150));
+			gridMain.Rows.Clear();
+			ConstructGridRows().ForEach(x => { gridMain.Rows.Add(x); });
 			gridMain.EndUpdate();
 		}
 

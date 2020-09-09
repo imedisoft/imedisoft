@@ -760,46 +760,46 @@ namespace OpenDental{
 			IComparer myComparer=new ObjectDateComparer();
 			mergedAL.Sort(myComparer);
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Date",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Day",45);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			//col=new ODGridColumn("Altered",50,HorizontalAlignment.Center);//use red now instead of separate col
 			//gridMain.Columns.Add(col);
 			if(IsBreaks){
 				col=new GridColumn("Out",64,HorizontalAlignment.Right);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col=new GridColumn("In",64,HorizontalAlignment.Right);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			else{
 				col=new GridColumn("In",64,HorizontalAlignment.Right);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 				col=new GridColumn("Out",64,HorizontalAlignment.Right);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			col=new GridColumn("Total",50,HorizontalAlignment.Right);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Adjust",45,HorizontalAlignment.Right);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Rate2",45,HorizontalAlignment.Right);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("PTO",45,HorizontalAlignment.Right);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("OT",45,HorizontalAlignment.Right);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Day",50,HorizontalAlignment.Right);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Week",50,HorizontalAlignment.Right);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if(PrefC.HasClinicsEnabled) {
 				col=new GridColumn("Clinic",100);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			col=new GridColumn("Note",100){ IsWidthDynamic=true };
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			WeeklyTotals=new TimeSpan[mergedAL.Count];
 			TimeSpan alteredSpan=new TimeSpan(0);//used to display altered times
@@ -1092,7 +1092,7 @@ namespace OpenDental{
 					//Note-----------------------------------------
 					row.Cells.Add(adjust.Note);
 				}
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			if(IsBreaks){
@@ -1140,17 +1140,17 @@ namespace OpenDental{
 				return;
 			}
 			timerUpdateBreak.Enabled=false;
-			if(gridMain.ListGridRows[e.Row].Tag.GetType()==typeof(TimeAdjust)) {
+			if(gridMain.Rows[e.Row].Tag.GetType()==typeof(TimeAdjust)) {
 				if(!Security.IsAuthorized(Permissions.TimecardsEditAll)) {
 					timerUpdateBreak.Enabled=true;
 					return;
 				}
-				TimeAdjust adjust=(TimeAdjust)gridMain.ListGridRows[e.Row].Tag;
+				TimeAdjust adjust=(TimeAdjust)gridMain.Rows[e.Row].Tag;
 				FormTimeAdjustEdit FormT=new FormTimeAdjustEdit(adjust);
 				FormT.ShowDialog();
 			}
 			else {
-				ClockEvent ce=(ClockEvent)gridMain.ListGridRows[e.Row].Tag;
+				ClockEvent ce=(ClockEvent)gridMain.Rows[e.Row].Tag;
 				FormClockEventEdit FormCEE=new FormClockEventEdit(ce);
 				FormCEE.ShowDialog();
 			}
@@ -1328,14 +1328,14 @@ namespace OpenDental{
 				e.Graphics.DrawString(ColCaption[i],fontHeader,brush,colPos[i]+2,yPos+1);
 			}
 			yPos+=18;
-			while(yPos < e.PageBounds.Height-75-50-32-16 && linesPrinted < gridMain.ListGridRows.Count) {
+			while(yPos < e.PageBounds.Height-75-50-32-16 && linesPrinted < gridMain.Rows.Count) {
 				for(int i=0;i<colPos.Length-1;i++) {
-					if(gridMain.ListGridRows[linesPrinted].Cells[i].ForeColor==Color.Empty || gridMain.ListGridRows[linesPrinted].Cells[i].ForeColor==Color.Black) {
-						e.Graphics.DrawString(gridMain.ListGridRows[linesPrinted].Cells[i].Text,font,brush
+					if(gridMain.Rows[linesPrinted].Cells[i].ForeColor==Color.Empty || gridMain.Rows[linesPrinted].Cells[i].ForeColor==Color.Black) {
+						e.Graphics.DrawString(gridMain.Rows[linesPrinted].Cells[i].Text,font,brush
 							,new RectangleF(colPos[i]+2,yPos,colPos[i+1]-colPos[i]-5,font.GetHeight(e.Graphics)));
 					}
 					else { //The only other color currently supported is red.
-						e.Graphics.DrawString(gridMain.ListGridRows[linesPrinted].Cells[i].Text,font,Brushes.Red
+						e.Graphics.DrawString(gridMain.Rows[linesPrinted].Cells[i].Text,font,Brushes.Red
 							,new RectangleF(colPos[i]+2,yPos,colPos[i+1]-colPos[i]-5,font.GetHeight(e.Graphics)));
 					}
 				}
@@ -1358,7 +1358,7 @@ namespace OpenDental{
 			g.DrawString("Rate 2 Time"+": "+textRateTwo.Text+" ("+textRateTwo2.Text+")",fontHeader,brush,xPos,yPos);
 			yPos+=16;
 			g.DrawString("PTO Time"+": "+textPTO.Text+" ("+textPTO2.Text+")",fontHeader,brush,xPos,yPos);
-			if(linesPrinted==gridMain.ListGridRows.Count) {
+			if(linesPrinted==gridMain.Rows.Count) {
 				e.HasMorePages=false;
 			}
 			else {
@@ -1408,7 +1408,7 @@ namespace OpenDental{
 			if(IsBreaks) {
 				int idx = gridMain.GetSelectedIndex();
 				FillMain(false);//deselects current index.
-				if(idx>-1 && idx<gridMain.ListGridRows.Count) {
+				if(idx>-1 && idx<gridMain.Rows.Count) {
 					gridMain.SetSelected(idx,true);
 				}
 			}

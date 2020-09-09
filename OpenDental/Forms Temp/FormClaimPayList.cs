@@ -60,29 +60,29 @@ namespace OpenDental
 			DataTable tableClaimPayments = ClaimPayments.GetForDateRange(dateFrom, dateTo, clinicNum, selectedGroupNum);
 			ListClaimPay = ClaimPaymentCrud.TableToList(tableClaimPayments);
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col = new GridColumn("Date", 65);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("Type", 70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("Amount", 75, HorizontalAlignment.Right);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("Partial", 40, HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("Carrier", 180);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("PayGroup", 80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if (PrefC.HasClinicsEnabled)
 			{
 				col = new GridColumn("Clinic", 80);
-				gridMain.ListGridColumns.Add(col);
+				gridMain.Columns.Add(col);
 			}
 			col = new GridColumn("Note", 180);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col = new GridColumn("Scanned", 40, HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for (int i = 0; i < ListClaimPay.Count; i++)
 			{
@@ -106,7 +106,7 @@ namespace OpenDental
 				}
 				row.Cells.Add(ListClaimPay[i].Note);
 				row.Cells.Add((tableClaimPayments.Rows[i]["hasEobAttach"].ToString() == "1") ? "X" : "");
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			gridMain.ScrollToEnd();

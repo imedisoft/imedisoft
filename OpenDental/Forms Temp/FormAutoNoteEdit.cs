@@ -44,15 +44,15 @@ namespace OpenDental {
 			AutoNoteControls.RefreshCache();
 			_listAutoNoteControls=AutoNoteControls.GetDeepCopy(false);
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("",100);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listAutoNoteControls.Count;i++) {
 				row=new GridRow();
 				row.Cells.Add(_listAutoNoteControls[i].Descript);  
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}

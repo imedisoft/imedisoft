@@ -95,18 +95,18 @@ namespace OpenDental {
 			}
 			Application.DoEvents();
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("Date & Time Reported",135,GridSortingStrategy.DateParse));//most recent date and time a result came in
-			gridMain.ListGridColumns.Add(new GridColumn("Date & Time Entered",135,GridSortingStrategy.DateParse));
-			gridMain.ListGridColumns.Add(new GridColumn("Status",75));
-			gridMain.ListGridColumns.Add(new GridColumn("Patient",180));
-			gridMain.ListGridColumns.Add(new GridColumn("Provider",70));
-			gridMain.ListGridColumns.Add(new GridColumn("Specimen ID",100));//should be the ID sent on the specimen container to lab
-			gridMain.ListGridColumns.Add(new GridColumn("Test(s) Description",235));//description of the test ordered
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("Date & Time Reported",135,GridSortingStrategy.DateParse));//most recent date and time a result came in
+			gridMain.Columns.Add(new GridColumn("Date & Time Entered",135,GridSortingStrategy.DateParse));
+			gridMain.Columns.Add(new GridColumn("Status",75));
+			gridMain.Columns.Add(new GridColumn("Patient",180));
+			gridMain.Columns.Add(new GridColumn("Provider",70));
+			gridMain.Columns.Add(new GridColumn("Specimen ID",100));//should be the ID sent on the specimen container to lab
+			gridMain.Columns.Add(new GridColumn("Test(s) Description",235));//description of the test ordered
 			if(PrefC.HasClinicsEnabled) {
-				gridMain.ListGridColumns.Add(new GridColumn("Clinic",150));
+				gridMain.Columns.Add(new GridColumn("Clinic",150));
 			}
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			DateTime dateEnd=PIn.Date(textDateEnd.Text);
 			if(dateEnd==DateTime.MinValue) {
@@ -154,7 +154,7 @@ namespace OpenDental {
 					row.Cells.Add(clinicDesc);
 				}
 				row.Tag=medLabCur.PatNum.ToString()+","+medLabCur.SpecimenID+","+medLabCur.SpecimenIDFiller;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			Cursor=Cursors.Default;
@@ -167,7 +167,7 @@ namespace OpenDental {
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			FormMedLabEdit FormLE=new FormMedLabEdit();
 			long patNum=0;
-			string[] patSpecimenIds=gridMain.ListGridRows[e.Row].Tag.ToString().Split(',');
+			string[] patSpecimenIds=gridMain.Rows[e.Row].Tag.ToString().Split(',');
 			if(patSpecimenIds.Length>0) {
 				patNum=PIn.Long(patSpecimenIds[0]);//if PatNum portion of the tag is an empty string, patNum will remain 0
 			}

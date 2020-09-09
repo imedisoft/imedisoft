@@ -119,10 +119,10 @@ namespace Imedisoft.Forms
 			Plugins.HookAddCode(this, "FormProgramLinkEdit.FillGrid_GetProgramProperties", programProperties, ProgramCur);
 
 			propertiesGrid.BeginUpdate();
-			propertiesGrid.ListGridColumns.Clear();
-			propertiesGrid.ListGridColumns.Add(new GridColumn("Property", 260));
-			propertiesGrid.ListGridColumns.Add(new GridColumn("Value", 130));
-			propertiesGrid.ListGridRows.Clear();
+			propertiesGrid.Columns.Clear();
+			propertiesGrid.Columns.Add(new GridColumn("Property", 260));
+			propertiesGrid.Columns.Add(new GridColumn("Value", 130));
+			propertiesGrid.Rows.Clear();
 
 			foreach (var property in programProperties)
 			{
@@ -164,7 +164,7 @@ namespace Imedisoft.Forms
 
 				gridRow.Tag = property;
 
-				propertiesGrid.ListGridRows.Add(gridRow);
+				propertiesGrid.Rows.Add(gridRow);
 			}
 
 			propertiesGrid.EndUpdate();
@@ -231,7 +231,7 @@ namespace Imedisoft.Forms
 		/// </summary>
 		private void PropertiesGrid_CellDoubleClick(object sender, ODGridClickEventArgs e)
 		{
-			if (propertiesGrid.ListGridRows[e.Row].Tag is ProgramProperty programProperty)
+			if (propertiesGrid.Rows[e.Row].Tag is ProgramProperty programProperty)
 			{
 				switch (ProgramCur.Name)
 				{

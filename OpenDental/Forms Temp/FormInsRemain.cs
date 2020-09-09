@@ -29,25 +29,25 @@ namespace OpenDental {
 		private void SetGridCols() { 
 			GridColumn col;
 			gridRemainTimeUnits.BeginUpdate();
-			gridRemainTimeUnits.ListGridColumns.Clear();
+			gridRemainTimeUnits.Columns.Clear();
 			col=new GridColumn("Carrier",60){ IsWidthDynamic=true };
-			gridRemainTimeUnits.ListGridColumns.Add(col);
+			gridRemainTimeUnits.Columns.Add(col);
 			col=new GridColumn("Subscriber",60){ IsWidthDynamic=true };
-			gridRemainTimeUnits.ListGridColumns.Add(col);
+			gridRemainTimeUnits.Columns.Add(col);
 			col=new GridColumn("Category",60){ IsWidthDynamic=true };
-			gridRemainTimeUnits.ListGridColumns.Add(col);
+			gridRemainTimeUnits.Columns.Add(col);
 			col=new GridColumn("Qty",60,HorizontalAlignment.Center);
-			gridRemainTimeUnits.ListGridColumns.Add(col);
+			gridRemainTimeUnits.Columns.Add(col);
 			col=new GridColumn("Used",60,HorizontalAlignment.Center);
-			gridRemainTimeUnits.ListGridColumns.Add(col);
+			gridRemainTimeUnits.Columns.Add(col);
 			col=new GridColumn("Remaining",60,HorizontalAlignment.Center);
-			gridRemainTimeUnits.ListGridColumns.Add(col);
+			gridRemainTimeUnits.Columns.Add(col);
 			gridRemainTimeUnits.EndUpdate();
 		}
 
 		private void FillGrid() {
 			gridRemainTimeUnits.BeginUpdate();
-			gridRemainTimeUnits.ListGridRows.Clear();
+			gridRemainTimeUnits.Rows.Clear();
 			List<PatPlan> listPatPlans=PatPlans.Refresh(_patCur.PatNum);
 			List<InsSub> listInsSubs=InsSubs.GetMany(listPatPlans.Select(x => x.InsSubNum).ToList());
 			List<Benefit> listPatBenefits=Benefits.Refresh(listPatPlans,listInsSubs);
@@ -134,7 +134,7 @@ namespace OpenDental {
 						benefit.Quantity.ToString(),
 						amtUsed.ToString("F"),
 						(amtRemain > 0) ? amtRemain.ToString("F") : "0");
-					gridRemainTimeUnits.ListGridRows.Add(gridRow);
+					gridRemainTimeUnits.Rows.Add(gridRow);
 				}
 			}
 			gridRemainTimeUnits.EndUpdate();

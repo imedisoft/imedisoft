@@ -110,31 +110,31 @@ namespace OpenDental {
 				}
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Category",130);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Catalog #",80);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Supplier",100);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Description",200);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Price",60,HorizontalAlignment.Right);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Stock",50,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Order",50,HorizontalAlignment.Center);
 			if(checkEnterQty.Checked){
 				col.IsEditable=true;
 			}
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Hidden",50,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listSupplies.Count;i++) {
 				row=new GridRow();
-				if(gridMain.ListGridRows.Count==0 || _listSupplies[i].Category != _listSupplies[i-1].Category) {
+				if(gridMain.Rows.Count==0 || _listSupplies[i].Category != _listSupplies[i-1].Category) {
 					row.Cells.Add(Definitions.GetName(DefinitionCategory.SupplyCats,_listSupplies[i].Category));//Add the new category header in this row if it doesn't match the previous row's category.
 				}
 				else {
@@ -166,7 +166,7 @@ namespace OpenDental {
 				//hidden:
 				row.Cells.Add(_listSupplies[i].IsHidden?"X":"");
 				//row.Tag=_listSupplies[i];
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			//for(int i=0;i<gridMain.ListGridRows.Count;i++) {
@@ -435,7 +435,7 @@ namespace OpenDental {
 			int qtyOld=_listSupplies[e.Row].OrderQty;
 			int qtyNew=0;
 			try {
-				qtyNew=PIn.Int(gridMain.ListGridRows[e.Row].Cells[6].Text);//0 if not valid input
+				qtyNew=PIn.Int(gridMain.Rows[e.Row].Cells[6].Text);//0 if not valid input
 			}
 			catch { }
 			if(qtyOld==qtyNew){
@@ -449,7 +449,7 @@ namespace OpenDental {
 		}
 
 		private void butPrint_Click(object sender,EventArgs e) {
-			if(gridMain.ListGridRows.Count<1) {
+			if(gridMain.Rows.Count<1) {
 				MessageBox.Show("Supply list is Empty.");
 				return;
 			}

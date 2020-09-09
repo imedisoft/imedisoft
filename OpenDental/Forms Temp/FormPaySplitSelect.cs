@@ -91,15 +91,15 @@ namespace OpenDental {
 
 		private void FillGrid(bool isShowAll){
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col=new GridColumn("Date",70);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Patient Name",120);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Prov",120);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("UnearnedType",150);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			if(isShowAll) {
 				//Original because we don't know how much has been allocated
 				col=new GridColumn("Amt Original",60,HorizontalAlignment.Right);
@@ -107,8 +107,8 @@ namespace OpenDental {
 			else {
 				col=new GridColumn("Amt End",60,HorizontalAlignment.Right);
 			}
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			foreach(PaySplit paySplit in _listPaySplits) {
 				row=new GridRow();
@@ -123,13 +123,13 @@ namespace OpenDental {
 					row.Cells.Add(_dictLeftOverAmounts[paySplit.SplitNum].ToString("F"));//show amount remaining
 				}
 				row.Tag=paySplit;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			PaySplit paySplit=(PaySplit)gridMain.ListGridRows[e.Row].Tag;
+			PaySplit paySplit=(PaySplit)gridMain.Rows[e.Row].Tag;
 			ListSelectedSplits.Clear();
 			ListSelectedSplits.Add(paySplit);
 			DialogResult=DialogResult.OK;
@@ -146,7 +146,7 @@ namespace OpenDental {
 				return;
 			}
 			ListSelectedSplits.Clear();
-			PaySplit paySplit=(PaySplit)gridMain.ListGridRows[gridMain.GetSelectedIndex()].Tag;
+			PaySplit paySplit=(PaySplit)gridMain.Rows[gridMain.GetSelectedIndex()].Tag;
 			ListSelectedSplits.Add(paySplit);
 			DialogResult=DialogResult.OK;
 		}

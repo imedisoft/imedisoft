@@ -525,24 +525,24 @@ namespace OpenDental
 			Stopwatch sw = Stopwatch.StartNew();
 #endif
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			//0=PatNum
-			gridMain.ListGridColumns.Add(new GridColumn("LName", 100));
-			gridMain.ListGridColumns.Add(new GridColumn("FName", 100));
-			gridMain.ListGridColumns.Add(new GridColumn("Contact", 120));
+			gridMain.Columns.Add(new GridColumn("LName", 100));
+			gridMain.Columns.Add(new GridColumn("FName", 100));
+			gridMain.Columns.Add(new GridColumn("Contact", 120));
 			//4=address
 			//5=cityStateZip
-			gridMain.ListGridColumns.Add(new GridColumn("Annual Max", 80, HorizontalAlignment.Right, GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn("Amt Used", 70, HorizontalAlignment.Right, GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn("Amt Pend", 70, HorizontalAlignment.Right, GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn("Amt Rem", 70, HorizontalAlignment.Right, GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn("Treat Plan", 70, HorizontalAlignment.Right, GridSortingStrategy.AmountParse));
-			gridMain.ListGridColumns.Add(new GridColumn("Insurance Carrier", 225));
+			gridMain.Columns.Add(new GridColumn("Annual Max", 80, HorizontalAlignment.Right, GridSortingStrategy.AmountParse));
+			gridMain.Columns.Add(new GridColumn("Amt Used", 70, HorizontalAlignment.Right, GridSortingStrategy.AmountParse));
+			gridMain.Columns.Add(new GridColumn("Amt Pend", 70, HorizontalAlignment.Right, GridSortingStrategy.AmountParse));
+			gridMain.Columns.Add(new GridColumn("Amt Rem", 70, HorizontalAlignment.Right, GridSortingStrategy.AmountParse));
+			gridMain.Columns.Add(new GridColumn("Treat Plan", 70, HorizontalAlignment.Right, GridSortingStrategy.AmountParse));
+			gridMain.Columns.Add(new GridColumn("Insurance Carrier", 225));
 			if (PrefC.HasClinicsEnabled)
 			{
-				gridMain.ListGridColumns.Add(new GridColumn("Clinic", 120));
+				gridMain.Columns.Add(new GridColumn("Clinic", 120));
 			}
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			Cursor = Cursors.WaitCursor;
 			using (DataTable table = RpTreatmentFinder.GetTreatmentFinderList(checkIncludeNoIns.Checked, checkIncludePatsWithApts.Checked, monthStart, dateSince,
 				aboveAmount, comboBoxMultiProv.SelectedTags<Provider>().Select(x => x.Id).ToList(),
@@ -570,20 +570,20 @@ namespace OpenDental
 						}
 						row.Cells.Add(cellData);
 					}
-					gridMain.ListGridRows.Add(row);
+					gridMain.Rows.Add(row);
 				}
 			}
 			gridMain.EndUpdate();
 #if DEBUG
 			sw.Stop();
-			Console.WriteLine("Finished fetching data and filling grid: {0}, Rows: {1}", (sw.Elapsed.Seconds == 0 ? "" : (sw.Elapsed.Seconds + " sec ")) + (sw.Elapsed.TotalMilliseconds - (sw.Elapsed.Seconds * 1000)) + " ms", gridMain.ListGridRows.Count);
+			Console.WriteLine("Finished fetching data and filling grid: {0}, Rows: {1}", (sw.Elapsed.Seconds == 0 ? "" : (sw.Elapsed.Seconds + " sec ")) + (sw.Elapsed.TotalMilliseconds - (sw.Elapsed.Seconds * 1000)) + " ms", gridMain.Rows.Count);
 #endif
 			Cursor = Cursors.Default;
 		}
 
 		private void gridMain_CellClick(object sender, ODGridClickEventArgs e)
 		{
-			if (gridMain.SelectedGridRows.Count == 0)
+			if (gridMain.SelectedRows.Count == 0)
 			{//When deselecting with CTR+Click.
 				return;
 			}
@@ -648,8 +648,8 @@ namespace OpenDental
 				for (int j = 0; j < gridMain.SelectedIndices.Length; j++)
 				{
 					sheetDef = FormS.SelectedSheetDefs[i];
-					sheet = SheetUtil.CreateSheet(sheetDef, PIn.Long(((DataRow)gridMain.SelectedGridRows[j].Tag)["PatNum"].ToString()));
-					SheetParameter.SetParameter(sheet, "PatNum", PIn.Long(((DataRow)gridMain.SelectedGridRows[j].Tag)["PatNum"].ToString()));
+					sheet = SheetUtil.CreateSheet(sheetDef, PIn.Long(((DataRow)gridMain.SelectedRows[j].Tag)["PatNum"].ToString()));
+					SheetParameter.SetParameter(sheet, "PatNum", PIn.Long(((DataRow)gridMain.SelectedRows[j].Tag)["PatNum"].ToString()));
 					SheetFiller.FillFields(sheet);
 					sheet.SheetFields.Sort(SheetFields.SortDrawingOrderLayers);
 					SheetUtil.CalculateHeights(sheet);
@@ -689,7 +689,7 @@ namespace OpenDental
 			{
 				text = "";
 				//print single label
-				DataRow curRow = (DataRow)gridMain.SelectedGridRows[i].Tag;
+				DataRow curRow = (DataRow)gridMain.SelectedRows[i].Tag;
 				text = curRow["FName"].ToString() + " " + curRow["LName"].ToString() + "\r\n";
 				text += curRow["address"].ToString() + "\r\n";
 				text += curRow["City"].ToString() + ", " + curRow["State"].ToString() + " " + curRow["Zip"].ToString() + "\r\n";
@@ -726,7 +726,7 @@ namespace OpenDental
 			while (yPos < 1000 && patientsPrinted < gridMain.SelectedIndices.Length)
 			{
 				text = "";
-				DataRow curRow = (DataRow)gridMain.SelectedGridRows[patientsPrinted].Tag;
+				DataRow curRow = (DataRow)gridMain.SelectedRows[patientsPrinted].Tag;
 				text = curRow["FName"].ToString() + " " + curRow["LName"].ToString() + "\r\n";
 				text += curRow["address"].ToString() + "\r\n";
 				text += curRow["City"].ToString() + ", " + curRow["State"].ToString() + " " + curRow["Zip"].ToString() + "\r\n";
@@ -851,8 +851,8 @@ namespace OpenDental
 			{
 				using (StreamWriter sw = new StreamWriter(filePath, false))
 				{
-					sw.WriteLine(string.Join("\t", gridMain.ListGridColumns.Select(x => x.HeaderText)));
-					gridMain.ListGridRows.ForEach(x => sw.WriteLine(
+					sw.WriteLine(string.Join("\t", gridMain.Columns.Select(x => x.HeaderText)));
+					gridMain.Rows.ForEach(x => sw.WriteLine(
 						string.Join("\t", x.Cells.Select(y => string.Concat(y.Text.Where(z => !z.In('\r', '\n', '\t', '\"')))))));
 				}
 			}

@@ -48,18 +48,18 @@ namespace OpenDental {
 			List<Patient> listPatients=Patients.GetPatsToChangeStatus(_isConvertToPatient,odDatePickerSince.GetDateTime()
 				,includeTPProc,includeCompletedProc,includeAppointments,listClinicNums);
 			gridMain.BeginUpdate();
-			if(gridMain.ListGridColumns.Count==0) {
-				gridMain.ListGridColumns.Add(new GridColumn("PatNum",75,GridSortingStrategy.AmountParse));
-				gridMain.ListGridColumns.Add(new GridColumn("PatStatusCur",100,GridSortingStrategy.StringCompare));
-				gridMain.ListGridColumns.Add(new GridColumn("PatStatusNew",100,GridSortingStrategy.StringCompare));
-				gridMain.ListGridColumns.Add(new GridColumn("First Name",125,GridSortingStrategy.StringCompare));
-				gridMain.ListGridColumns.Add(new GridColumn("Last Name",125,GridSortingStrategy.StringCompare));
-				gridMain.ListGridColumns.Add(new GridColumn("Birthdate",75,GridSortingStrategy.DateParse));
+			if(gridMain.Columns.Count==0) {
+				gridMain.Columns.Add(new GridColumn("PatNum",75,GridSortingStrategy.AmountParse));
+				gridMain.Columns.Add(new GridColumn("PatStatusCur",100,GridSortingStrategy.StringCompare));
+				gridMain.Columns.Add(new GridColumn("PatStatusNew",100,GridSortingStrategy.StringCompare));
+				gridMain.Columns.Add(new GridColumn("First Name",125,GridSortingStrategy.StringCompare));
+				gridMain.Columns.Add(new GridColumn("Last Name",125,GridSortingStrategy.StringCompare));
+				gridMain.Columns.Add(new GridColumn("Birthdate",75,GridSortingStrategy.DateParse));
 				if(PrefC.HasClinicsEnabled) {
-					gridMain.ListGridColumns.Add(new GridColumn("Clinic",75,GridSortingStrategy.StringCompare));
+					gridMain.Columns.Add(new GridColumn("Clinic",75,GridSortingStrategy.StringCompare));
 				}
 			}
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			//Mimics FormPatientEdit
 			string patientStatus="Patient";
 			string inactiveStatus="Inactive";
@@ -76,7 +76,7 @@ namespace OpenDental {
 					row.Cells.Add(Clinics.GetAbbr(pat.ClinicNum));
 				}
 				row.Tag=pat;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -120,7 +120,7 @@ namespace OpenDental {
 			StringBuilder builder=new StringBuilder();
 			List<long> listPatNums=new List<long>();
 			foreach(int index in gridMain.SelectedIndices) {
-				Patient patOld=(Patient)gridMain.ListGridRows[index].Tag;
+				Patient patOld=(Patient)gridMain.Rows[index].Tag;
 				Patient patCur=patOld.Copy();
 				listPatNums.Add(patCur.PatNum);
 				patCur.PatStatus=(_isConvertToPatient?PatientStatus.Patient:PatientStatus.Inactive);

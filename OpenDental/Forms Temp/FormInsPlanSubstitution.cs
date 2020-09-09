@@ -45,14 +45,14 @@ namespace OpenDental {
 		private void FillGridMain() {
 			ProcedureCode selectedCode=gridMain.SelectedTag<ProcedureCode>();
 			gridMain.BeginUpdate();
-			gridMain.ListGridRows.Clear();
-			if(gridMain.ListGridColumns.Count==0) {
-				gridMain.ListGridColumns.Add(new GridColumn("ProcCode",90));
-				gridMain.ListGridColumns.Add(new GridColumn("AbbrDesc",100));
-				gridMain.ListGridColumns.Add(new GridColumn("SubstOnlyIf",100){ListDisplayStrings=_listSubConditions });//Dropdown combobox
-				gridMain.ListGridColumns.Add(new GridColumn("SubstCode",90,true));//Can edit cell
-				gridMain.ListGridColumns.Add(new GridColumn("SubstDesc",90));
-				gridMain.ListGridColumns.Add(new GridColumn("InsOnly",15){ IsWidthDynamic=true });
+			gridMain.Rows.Clear();
+			if(gridMain.Columns.Count==0) {
+				gridMain.Columns.Add(new GridColumn("ProcCode",90));
+				gridMain.Columns.Add(new GridColumn("AbbrDesc",100));
+				gridMain.Columns.Add(new GridColumn("SubstOnlyIf",100){ListDisplayStrings=_listSubConditions });//Dropdown combobox
+				gridMain.Columns.Add(new GridColumn("SubstCode",90,true));//Can edit cell
+				gridMain.Columns.Add(new GridColumn("SubstDesc",90));
+				gridMain.Columns.Add(new GridColumn("InsOnly",15){ IsWidthDynamic=true });
 			}
 			//Add all substitution codes for procedure code level
 			foreach(ProcedureCode procCode in _listSubstProcCodes) {
@@ -77,7 +77,7 @@ namespace OpenDental {
 			gridMain.EndUpdate();
 			//Try an reselect the procedure code that was already selected prior to refreshing the grid.
 			if(selectedCode!=null) {
-				int index=gridMain.ListGridRows.ToList().FindIndex(x => (x.Tag as ProcedureCode).CodeNum==selectedCode.CodeNum);
+				int index=gridMain.Rows.ToList().FindIndex(x => (x.Tag as ProcedureCode).CodeNum==selectedCode.CodeNum);
 				if(index > -1) {
 					gridMain.SetSelected(new Point(2,index));
 				}
@@ -117,7 +117,7 @@ namespace OpenDental {
 			row.Cells.Add(subCodeDescript);
 			row.Cells.Add(insOnly);
 			row.Tag=procCode;
-			grid.ListGridRows.Add(row);
+			grid.Rows.Add(row);
 		}
 
 		///<summary>Opens FormProcCodes in SelectionMode. Creates a new SubstitutionLink for the selected Procedure.</summary>
@@ -143,23 +143,23 @@ namespace OpenDental {
 			_listSubstLinks.Add(subLink);
 			FillGridMain();
 			//Set the substitution link we just added as selected. The X pos at 3 is the SubstCode column.
-			gridMain.SetSelected(new Point(3,gridMain.ListGridRows.ToList().FindIndex(x => (x.Tag as ProcedureCode).CodeNum==subLink.CodeNum)));
+			gridMain.SetSelected(new Point(3,gridMain.Rows.ToList().FindIndex(x => (x.Tag as ProcedureCode).CodeNum==subLink.CodeNum)));
 		}
 
 		///<summary>Changes the SubstOnlyIf after the user selects a new SubstitutionCondition.
 		///If the user modifies a procedure level substitution code, a new SubstitutionLink will be added for the inplan(override).
 		///The new SubstitutionLink will be added to _listDbSubstLinks</summary>
 		private void gridMain_CellSelectionCommitted(object sender,ODGridClickEventArgs e) {
-			if(e.Col!=2 || e.Row<0 || e.Row>=gridMain.ListGridRows.Count) {//Return if not SubstOnlyIf column or invalid row
+			if(e.Col!=2 || e.Row<0 || e.Row>=gridMain.Rows.Count) {//Return if not SubstOnlyIf column or invalid row
 				return;
 			}
 			//Get the grid tag
-			ProcedureCode procCode=gridMain.ListGridRows[e.Row].Tag as ProcedureCode;
+			ProcedureCode procCode=gridMain.Rows[e.Row].Tag as ProcedureCode;
 			if(procCode==null) {
 				return;
 			}
 			//Get the selected substitution condition.
-			SubstitutionCondition selectedCondition=(SubstitutionCondition)_listSubConditions.IndexOf(gridMain.ListGridRows[e.Row].Cells[e.Col].Text);
+			SubstitutionCondition selectedCondition=(SubstitutionCondition)_listSubConditions.IndexOf(gridMain.Rows[e.Row].Cells[e.Col].Text);
 			//Get the SubstitutionLink if one exist
 			SubstitutionLink subLink=_listSubstLinks.FirstOrDefault(x => x.CodeNum==procCode.CodeNum);
 			if(subLink!=null) {//Ins level sub code
@@ -181,7 +181,7 @@ namespace OpenDental {
 
 		///<summary>Sets _oldText. Used in gridMain_CellLeave to check whether the text changed when leaving the cell.</summary>
 		private void gridMain_CellEnter(object sender,ODGridClickEventArgs e) { 
-			_oldText=gridMain.ListGridRows[e.Row].Cells[e.Col].Text;
+			_oldText=gridMain.Rows[e.Row].Cells[e.Col].Text;
 		}
 
 		///<summary>Changes the SubstitutionCode to what is entered in the cell. 
@@ -191,11 +191,11 @@ namespace OpenDental {
 			if(e.Col!=3 || e.Row<0) {//Return if not substitution code column or invalid row
 				return;
 			}
-			ProcedureCode procCode=gridMain.ListGridRows[e.Row].Tag as ProcedureCode;
+			ProcedureCode procCode=gridMain.Rows[e.Row].Tag as ProcedureCode;
 			if(procCode==null) {
 				return;
 			}
-			string newText=gridMain.ListGridRows[e.Row].Cells[e.Col].Text;
+			string newText=gridMain.Rows[e.Row].Cells[e.Col].Text;
 			if(_oldText==newText) {
 				return;
 			}
@@ -220,12 +220,12 @@ namespace OpenDental {
 		}
 
 		private void SortGridByProc(ODGrid grid) {
-			List<GridRow> listRows=grid.ListGridRows.ToList();
+			List<GridRow> listRows=grid.Rows.ToList();
 			listRows=listRows.OrderBy(x => ((ProcedureCode)x.Tag).ProcCode).ToList();
 			grid.BeginUpdate();
-			grid.ListGridRows.Clear();
+			grid.Rows.Clear();
 			foreach(GridRow row in listRows) {
-				grid.ListGridRows.Add(row);
+				grid.Rows.Add(row);
 			}
 			grid.EndUpdate();
 		}

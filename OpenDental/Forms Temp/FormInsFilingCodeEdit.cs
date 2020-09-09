@@ -223,15 +223,15 @@ namespace OpenDental {
 			InsFilingCodeSubtypes.RefreshCache();
 			insFilingCodeSubtypes=InsFilingCodeSubtypes.GetForInsFilingCode(InsFilingCodeCur.InsFilingCodeNum);
 			gridInsFilingCodeSubtypes.BeginUpdate();
-			gridInsFilingCodeSubtypes.ListGridColumns.Clear();
+			gridInsFilingCodeSubtypes.Columns.Clear();
 			GridColumn col=new GridColumn("Description",100);
-			gridInsFilingCodeSubtypes.ListGridColumns.Add(col);
-			gridInsFilingCodeSubtypes.ListGridRows.Clear();
+			gridInsFilingCodeSubtypes.Columns.Add(col);
+			gridInsFilingCodeSubtypes.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<insFilingCodeSubtypes.Count;i++) {
 				row=new GridRow();
 				row.Cells.Add(insFilingCodeSubtypes[i].Descript);
-				gridInsFilingCodeSubtypes.ListGridRows.Add(row);
+				gridInsFilingCodeSubtypes.Rows.Add(row);
 			}
 			gridInsFilingCodeSubtypes.EndUpdate();
 		}

@@ -27,14 +27,14 @@ namespace OpenDental {
 		private void FillGridSent() {
 			List<RefAttach> listRefAttaches;
 			gridSent.BeginUpdate();
-			gridSent.ListGridColumns.Clear();
+			gridSent.Columns.Clear();
 			GridColumn col=new GridColumn("DateTime",130,HorizontalAlignment.Center);
-			gridSent.ListGridColumns.Add(col);
+			gridSent.Columns.Add(col);
 			col=new GridColumn("Meets",140,HorizontalAlignment.Center);
-			gridSent.ListGridColumns.Add(col);
+			gridSent.Columns.Add(col);
 			_listHistorySent=EhrMeasureEvents.RefreshByType(PatCur.PatNum,EhrMeasureEventType.SummaryOfCareProvidedToDr);
 			listRefAttaches=RefAttaches.GetRefAttachesForSummaryOfCareForPat(PatCur.PatNum);
-			gridSent.ListGridRows.Clear();
+			gridSent.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listHistorySent.Count;i++) {
 				row=new GridRow();
@@ -51,7 +51,7 @@ namespace OpenDental {
 						}
 					}
 				}
-				gridSent.ListGridRows.Add(row);
+				gridSent.Rows.Add(row);
 			}
 			gridSent.EndUpdate();
 		}
@@ -71,16 +71,16 @@ namespace OpenDental {
 
 		private void FillGridRec() {
 			gridRec.BeginUpdate();
-			gridRec.ListGridColumns.Clear();
+			gridRec.Columns.Clear();
 			GridColumn col=new GridColumn("DateTime",140,HorizontalAlignment.Center);
-			gridRec.ListGridColumns.Add(col);
+			gridRec.Columns.Add(col);
 			_listCcdRec=EhrSummaryCcds.Refresh(PatCur.PatNum);
-			gridRec.ListGridRows.Clear();
+			gridRec.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listCcdRec.Count;i++) {
 				row=new GridRow();
 				row.Cells.Add(_listCcdRec[i].DateSummary.ToShortDateString());
-				gridRec.ListGridRows.Add(row);
+				gridRec.Rows.Add(row);
 			}
 			gridRec.EndUpdate();
 		}

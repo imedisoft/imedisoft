@@ -46,15 +46,15 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Developer",200);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("API Key",180);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Enabled",80,HorizontalAlignment.Center);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listApiKeys.Count;i++) {
 				row=new GridRow();
@@ -73,7 +73,7 @@ namespace OpenDental {
 						break;
 				}
 				row.Tag=_listApiKeys[i];
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -160,7 +160,7 @@ namespace OpenDental {
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			FormFHIRAPIKeyEdit formFHIRAPIKeyEdit=new FormFHIRAPIKeyEdit((APIKey)gridMain.ListGridRows[e.Row].Tag);
+			FormFHIRAPIKeyEdit formFHIRAPIKeyEdit=new FormFHIRAPIKeyEdit((APIKey)gridMain.Rows[e.Row].Tag);
 			formFHIRAPIKeyEdit.ShowDialog();
 			if(formFHIRAPIKeyEdit.HasChanged) {
 				FillGrid();
@@ -172,7 +172,7 @@ namespace OpenDental {
 			if(gridMain.SelectedIndices.Length<1) {
 				return;
 			}
-			APIKey apiKey=(APIKey)gridMain.ListGridRows[gridMain.SelectedIndices[0]].Tag;
+			APIKey apiKey=(APIKey)gridMain.Rows[gridMain.SelectedIndices[0]].Tag;
 			listPermissions.SetItems(apiKey.ListPermissions);
 		}
 

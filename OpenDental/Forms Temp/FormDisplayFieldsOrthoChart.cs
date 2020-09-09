@@ -310,13 +310,13 @@ namespace OpenDental{
 		private void FillGrids() {
 			labelCategory.Text=_listOrthoChartTabs[0].TabName;//Placed here so that Up/Down buttons will affect the label text.			
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
+			gridMain.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Description",200);
-			gridMain.ListGridColumns.Add(col);
+			gridMain.Columns.Add(col);
 			col=new GridColumn("Width",80);
-			gridMain.ListGridColumns.Add(col);
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Add(col);
+			gridMain.Rows.Clear();
 			OrthoChartTabFields orthoChartTabFields=GetSelectedFields();
 			List<OrthoChartTabLink> listLinks=_listOrthoChartTabLinks.FindAll(x => x.OrthoChartTabNum==orthoChartTabFields.OrthoChartTab.OrthoChartTabNum);
 			_listAvailableFields=GetAllFields();
@@ -336,7 +336,7 @@ namespace OpenDental{
 					columnWidth=link.ColumnWidthOverride;
 				}
 				row.Cells.Add(POut.Int(columnWidth));
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 			listAvailable.Items.Clear();
@@ -408,7 +408,7 @@ namespace OpenDental{
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			DisplayField df=(DisplayField)gridMain.ListGridRows[e.Row].Tag;
+			DisplayField df=(DisplayField)gridMain.Rows[e.Row].Tag;
 			//OrthoChartTabFields orthoChartTabFields=GetSelectedFields();
 			long orthoChartTabNum=_listOrthoChartTabs[comboOrthoChartTabs.SelectedIndex].OrthoChartTabNum;
 			OrthoChartTabLink linkCur=_listOrthoChartTabLinks.FirstOrDefault(x => x.OrthoChartTabNum==orthoChartTabNum
@@ -491,7 +491,7 @@ namespace OpenDental{
 			OrthoChartTabFields orthoChartTabFields=GetSelectedFields();
 			for(int i=gridMain.SelectedIndices.Length-1;i>=0;i--) {//go backwards
 				int index=gridMain.SelectedIndices[i];
-				DisplayField df=(DisplayField)gridMain.ListGridRows[index].Tag;
+				DisplayField df=(DisplayField)gridMain.Rows[index].Tag;
 				listRemovedFields.Add(df);//Keep track of all display fields removed.
 				orthoChartTabFields.ListDisplayFields.Remove(df);
 			}

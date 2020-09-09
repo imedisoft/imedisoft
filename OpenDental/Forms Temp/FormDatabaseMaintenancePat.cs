@@ -56,11 +56,11 @@ namespace OpenDental {
 		private void FillGrid() {
 			_listDbmMethodsGrid=DbmMethodsForGridHelper(isHidden: false,isOld: false);
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("Name",300));
-			gridMain.ListGridColumns.Add(new GridColumn(BREAKDOWN_COLUMN_NAME,40,HorizontalAlignment.Center));
-			gridMain.ListGridColumns.Add(new GridColumn(RESULTS_COLUMN_NAME,300){ IsWidthDynamic=true });
-			gridMain.ListGridRows.Clear();
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("Name",300));
+			gridMain.Columns.Add(new GridColumn(BREAKDOWN_COLUMN_NAME,40,HorizontalAlignment.Center));
+			gridMain.Columns.Add(new GridColumn(RESULTS_COLUMN_NAME,300){ IsWidthDynamic=true });
+			gridMain.Rows.Clear();
 			GridRow row;
 			//_listDbmMethodsGrid has already been filled on load with the correct methods to display in the grid.
 			foreach(MethodInfo meth in _listDbmMethodsGrid) {
@@ -69,7 +69,7 @@ namespace OpenDental {
 				row.Cells.Add(DatabaseMaintenances.MethodHasBreakDown(meth) ? "X" : "");
 				row.Cells.Add("");
 				row.Tag=meth;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
 		}
@@ -83,12 +83,12 @@ namespace OpenDental {
 				_listDbmMethodsGridOld.Sort(new MethodInfoComparer());
 			}
 			gridOld.BeginUpdate();
-			gridOld.ListGridColumns.Clear();
-			gridOld.ListGridColumns.Add(new GridColumn("Name",300));
-			gridOld.ListGridColumns.Add(new GridColumn("Hidden",45,HorizontalAlignment.Center));
-			gridOld.ListGridColumns.Add(new GridColumn(BREAKDOWN_COLUMN_NAME,40,HorizontalAlignment.Center));
-			gridOld.ListGridColumns.Add(new GridColumn(RESULTS_COLUMN_NAME,300){ IsWidthDynamic=true });
-			gridOld.ListGridRows.Clear();
+			gridOld.Columns.Clear();
+			gridOld.Columns.Add(new GridColumn("Name",300));
+			gridOld.Columns.Add(new GridColumn("Hidden",45,HorizontalAlignment.Center));
+			gridOld.Columns.Add(new GridColumn(BREAKDOWN_COLUMN_NAME,40,HorizontalAlignment.Center));
+			gridOld.Columns.Add(new GridColumn(RESULTS_COLUMN_NAME,300){ IsWidthDynamic=true });
+			gridOld.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listDbmMethodsGridOld.Count;i++) {
 				bool isMethodHidden=_listDatabaseMaintenances.Any(x => x.MethodName==_listDbmMethodsGridOld[i].Name && x.IsHidden);
@@ -98,7 +98,7 @@ namespace OpenDental {
 				row.Cells.Add(DatabaseMaintenances.MethodHasBreakDown(_listDbmMethodsGridOld[i]) ? "X" : "");
 				row.Cells.Add("");
 				row.Tag=_listDbmMethodsGridOld[i];
-				gridOld.ListGridRows.Add(row);
+				gridOld.Rows.Add(row);
 			}
 			gridOld.EndUpdate();
 		}
@@ -106,15 +106,15 @@ namespace OpenDental {
 		private void FillGridHidden() {
 			_listDbmMethodsGridHidden=DbmMethodsForGridHelper(isHidden: true,isOld: false);
 			gridHidden.BeginUpdate();
-			gridHidden.ListGridColumns.Clear();
-			gridHidden.ListGridColumns.Add(new GridColumn("Name",340));
-			gridHidden.ListGridRows.Clear();
+			gridHidden.Columns.Clear();
+			gridHidden.Columns.Add(new GridColumn("Name",340));
+			gridHidden.Rows.Clear();
 			GridRow row;
 			for(int i=0;i<_listDbmMethodsGridHidden.Count;i++) {
 				row=new GridRow();
 				row.Cells.Add(_listDbmMethodsGridHidden[i].Name);
 				row.Tag=_listDbmMethodsGridHidden[i];
-				gridHidden.ListGridRows.Add(row);
+				gridHidden.Rows.Add(row);
 			}
 			gridHidden.EndUpdate();
 		}
@@ -126,9 +126,9 @@ namespace OpenDental {
 			}
 			Cursor=Cursors.WaitCursor;
 			//Clear out the result column for all rows before every "run"
-			for(int i=0;i<gridCur.ListGridRows.Count;i++) {
+			for(int i=0;i<gridCur.Rows.Count;i++) {
 				//gridMain and gridOld have a different number of columns, but their matching columns will be named the same.
-				gridCur.ListGridRows[i].Cells[gridCur.ListGridColumns.GetIndex(RESULTS_COLUMN_NAME)].Text="";//Don't use UpdateResultTextForRow here because users will see the rows clearing out one by one.
+				gridCur.Rows[i].Cells[gridCur.Columns.GetIndex(RESULTS_COLUMN_NAME)].Text="";//Don't use UpdateResultTextForRow here because users will see the rows clearing out one by one.
 			}
 			bool verbose=checkShow.Checked;
 			StringBuilder logText=new StringBuilder();
@@ -140,7 +140,7 @@ namespace OpenDental {
 			string result;
 			int[] selectedIndices=gridCur.SelectedIndices;
 			foreach(int i in gridCur.SelectedIndices) {
-				DbmMethodAttr methodAttributes=(DbmMethodAttr)Attribute.GetCustomAttribute((MethodInfo)gridCur.ListGridRows[i].Tag,typeof(DbmMethodAttr));
+				DbmMethodAttr methodAttributes=(DbmMethodAttr)Attribute.GetCustomAttribute((MethodInfo)gridCur.Rows[i].Tag,typeof(DbmMethodAttr));
 				//We always send verbose and modeCur into all DBM methods.
 				List<object> parameters=new List<object>() { verbose,modeCur };
 				//There are optional paramaters available to some methods and adding them in the following order is very important.
@@ -152,9 +152,9 @@ namespace OpenDental {
 					gridCur.ScrollToIndexBottom(i);
 					UpdateResultTextForRow(i,"Running"+"...",gridCur);
 					gridCur.SetSelected(selectedIndices,true);//Reselect all rows that were originally selected.
-					result=(string)((MethodInfo)gridCur.ListGridRows[i].Tag).Invoke(null,parameters.ToArray());
+					result=(string)((MethodInfo)gridCur.Rows[i].Tag).Invoke(null,parameters.ToArray());
 					if(modeCur==DbmMode.Fix) {
-						DatabaseMaintenances.UpdateDateLastRun(((MethodInfo)gridCur.ListGridRows[i].Tag).Name);
+						DatabaseMaintenances.UpdateDateLastRun(((MethodInfo)gridCur.Rows[i].Tag).Name);
 					}
 				}
 				catch(Exception ex) {
@@ -185,17 +185,17 @@ namespace OpenDental {
 
 		///<summary>Updates the result column for the specified row in the grid with the text passed in.</summary>
 		private void UpdateResultTextForRow(int index,string text,ODGrid gridCur) {
-			int breakdownIndex=gridCur.ListGridColumns.GetIndex(BREAKDOWN_COLUMN_NAME);
-			int resultsIndex=gridCur.ListGridColumns.GetIndex(RESULTS_COLUMN_NAME);
+			int breakdownIndex=gridCur.Columns.GetIndex(BREAKDOWN_COLUMN_NAME);
+			int resultsIndex=gridCur.Columns.GetIndex(RESULTS_COLUMN_NAME);
 			gridCur.BeginUpdate();
 			//Checks to see if it has a breakdown, and if it needs any maintenance to decide whether or not to apply the "X"
-			if(!DatabaseMaintenances.MethodHasBreakDown((MethodInfo)gridCur.ListGridRows[index].Tag) || text=="Done.  No maintenance needed.") {
-				gridCur.ListGridRows[index].Cells[breakdownIndex].Text="";
+			if(!DatabaseMaintenances.MethodHasBreakDown((MethodInfo)gridCur.Rows[index].Tag) || text=="Done.  No maintenance needed.") {
+				gridCur.Rows[index].Cells[breakdownIndex].Text="";
 			}
 			else {
-				gridCur.ListGridRows[index].Cells[breakdownIndex].Text="X";
+				gridCur.Rows[index].Cells[breakdownIndex].Text="X";
 			}
-			gridCur.ListGridRows[index].Cells[resultsIndex].Text=text;
+			gridCur.Rows[index].Cells[resultsIndex].Text=text;
 			gridCur.EndUpdate();
 			Application.DoEvents();
 		}

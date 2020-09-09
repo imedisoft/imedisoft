@@ -564,22 +564,22 @@ namespace OpenDental{
 					UnscheduleListEvent.Fire(EventCategory.UnscheduledList,"Filling the Unscheduled List grid...");
 					int scrollVal=grid.ScrollValue;
 					grid.BeginUpdate();
-					grid.ListGridColumns.Clear();
+					grid.Columns.Clear();
 					GridColumn col=new GridColumn("Patient",140);
-					grid.ListGridColumns.Add(col);
+					grid.Columns.Add(col);
 					col=new GridColumn("Date",65);
-					grid.ListGridColumns.Add(col);
+					grid.Columns.Add(col);
 					col=new GridColumn("AptStatus",90);
-					grid.ListGridColumns.Add(col);
+					grid.Columns.Add(col);
 					col=new GridColumn("UnschedStatus",110);
-					grid.ListGridColumns.Add(col);
+					grid.Columns.Add(col);
 					col=new GridColumn("Prov",50);
-					grid.ListGridColumns.Add(col);
+					grid.Columns.Add(col);
 					col=new GridColumn("Procedures",150);
-					grid.ListGridColumns.Add(col);
+					grid.Columns.Add(col);
 					col=new GridColumn("Notes",200);
-					grid.ListGridColumns.Add(col);
-					grid.ListGridRows.Clear();
+					grid.Columns.Add(col);
+					grid.Rows.Clear();
 					GridRow row;
 					Dictionary<long,string> dictPatNames=Patients.GetPatientNames(_listUnschedApt.Select(x => x.PatNum).ToList());
 					foreach(Appointment apt in _listUnschedApt) {
@@ -603,7 +603,7 @@ namespace OpenDental{
 						row.Cells.Add(Providers.GetAbbr(apt.ProvNum));
 						row.Cells.Add(apt.ProcDescript);
 						row.Cells.Add(apt.Note);
-						grid.ListGridRows.Add(row);
+						grid.Rows.Add(row);
 					}
 					grid.EndUpdate();
 					grid.ScrollValue=scrollVal;

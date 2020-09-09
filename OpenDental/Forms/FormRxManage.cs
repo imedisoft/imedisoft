@@ -28,16 +28,16 @@ namespace Imedisoft.Forms
 		private void FillGrid()
 		{
 			rxPatGrid.BeginUpdate();
-			rxPatGrid.ListGridColumns.Clear();
-			rxPatGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Date, 70));
-			rxPatGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Drug, 140));
-			rxPatGrid.ListGridColumns.Add(new GridColumn(Translation.Rx.SIG, 70) { IsWidthDynamic = true });
-			rxPatGrid.ListGridColumns.Add(new GridColumn(Translation.Rx.DispenseAbbr, 70));
-			rxPatGrid.ListGridColumns.Add(new GridColumn(Translation.Rx.Refills, 70));
-			rxPatGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Provider, 70));
-			rxPatGrid.ListGridColumns.Add(new GridColumn(Translation.Common.Notes, 70) { IsWidthDynamic = true });
-			rxPatGrid.ListGridColumns.Add(new GridColumn(Translation.Common.MissingInfo, 70) { IsWidthDynamic = true });
-			rxPatGrid.ListGridRows.Clear();
+			rxPatGrid.Columns.Clear();
+			rxPatGrid.Columns.Add(new GridColumn(Translation.Common.Date, 70));
+			rxPatGrid.Columns.Add(new GridColumn(Translation.Common.Drug, 140));
+			rxPatGrid.Columns.Add(new GridColumn(Translation.Rx.SIG, 70) { IsWidthDynamic = true });
+			rxPatGrid.Columns.Add(new GridColumn(Translation.Rx.DispenseAbbr, 70));
+			rxPatGrid.Columns.Add(new GridColumn(Translation.Rx.Refills, 70));
+			rxPatGrid.Columns.Add(new GridColumn(Translation.Common.Provider, 70));
+			rxPatGrid.Columns.Add(new GridColumn(Translation.Common.Notes, 70) { IsWidthDynamic = true });
+			rxPatGrid.Columns.Add(new GridColumn(Translation.Common.MissingInfo, 70) { IsWidthDynamic = true });
+			rxPatGrid.Rows.Clear();
 
 			rxPats = RxPats.GetAllForPat(patient.PatNum);
 			rxPats.Sort((rx1, rx2) =>
@@ -64,7 +64,7 @@ namespace Imedisoft.Forms
 				gridRow.Cells.Add(OpenDental.SheetPrinting.ValidateRxForSheet(rxPat));
 				gridRow.Tag = rxPat;
 
-				rxPatGrid.ListGridRows.Add(gridRow);
+				rxPatGrid.Rows.Add(gridRow);
 			}
 			rxPatGrid.EndUpdate();
 		}

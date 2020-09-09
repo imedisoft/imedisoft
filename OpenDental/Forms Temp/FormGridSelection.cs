@@ -30,8 +30,8 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridMain.BeginUpdate();
-			_listGridColumns.ForEach(x => gridMain.ListGridColumns.Add(x) );
-			_listGridRows.ForEach(x => gridMain.ListGridRows.Add(x) );
+			_listGridColumns.ForEach(x => gridMain.Columns.Add(x) );
+			_listGridRows.ForEach(x => gridMain.Rows.Add(x) );
 			gridMain.EndUpdate();
 		}
 

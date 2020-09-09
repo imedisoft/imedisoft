@@ -29,13 +29,13 @@ namespace OpenDental {
 
 		private void FillGrid() {
 			gridTpBandingProcs.BeginUpdate();
-			gridTpBandingProcs.ListGridColumns.Clear();
+			gridTpBandingProcs.Columns.Clear();
 			GridColumn col;
 			col=new GridColumn("Code",70);
-			gridTpBandingProcs.ListGridColumns.Add(col);
+			gridTpBandingProcs.Columns.Add(col);
 			col=new GridColumn("Description",140){ IsWidthDynamic=true };
-			gridTpBandingProcs.ListGridColumns.Add(col);
-			gridTpBandingProcs.ListGridRows.Clear();
+			gridTpBandingProcs.Columns.Add(col);
+			gridTpBandingProcs.Rows.Clear();
 			GridRow row;
 			foreach(Procedure proc in _listTpBandingProcs) {
 				row=new GridRow();
@@ -43,13 +43,13 @@ namespace OpenDental {
 				row.Cells.Add(procCode.ProcCode);
 				row.Cells.Add(procCode.Descript);
 				row.Tag=proc;
-				gridTpBandingProcs.ListGridRows.Add(row);
+				gridTpBandingProcs.Rows.Add(row);
 			}
 			gridTpBandingProcs.EndUpdate();
 		}
 
 		private void GridTpBandingProcs_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			SelectProcedure((Procedure)gridTpBandingProcs.ListGridRows[e.Row].Tag);
+			SelectProcedure((Procedure)gridTpBandingProcs.Rows[e.Row].Tag);
 			DialogResult=DialogResult.OK;
 		}
 
@@ -66,7 +66,7 @@ namespace OpenDental {
 				MessageBox.Show("Please select a procedure first.");
 				return;
 			}
-			SelectProcedure((Procedure)gridTpBandingProcs.ListGridRows[gridTpBandingProcs.GetSelectedIndex()].Tag);
+			SelectProcedure((Procedure)gridTpBandingProcs.Rows[gridTpBandingProcs.GetSelectedIndex()].Tag);
 			DialogResult=DialogResult.OK;
 		}
 

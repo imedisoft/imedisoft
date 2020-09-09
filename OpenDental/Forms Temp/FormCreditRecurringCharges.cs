@@ -152,30 +152,30 @@ namespace OpenDental {
 				listChargesCur=_charger.ListRecurringChargeData;
 			}
 			gridMain.BeginUpdate();
-			gridMain.ListGridColumns.Clear();
-			gridMain.ListGridColumns.Add(new GridColumn("PatNum",55));
-			gridMain.ListGridColumns.Add(new GridColumn("Name",PrefC.HasClinicsEnabled?190:220));
+			gridMain.Columns.Clear();
+			gridMain.Columns.Add(new GridColumn("PatNum",55));
+			gridMain.Columns.Add(new GridColumn("Name",PrefC.HasClinicsEnabled?190:220));
 			if(PrefC.HasClinicsEnabled) {
-				gridMain.ListGridColumns.Add(new GridColumn("Clinic",65));
+				gridMain.Columns.Add(new GridColumn("Clinic",65));
 			}
-			gridMain.ListGridColumns.Add(new GridColumn("Date",PrefC.HasClinicsEnabled?80:80,HorizontalAlignment.Right));
-			gridMain.ListGridColumns.Add(new GridColumn("Family Bal",PrefC.HasClinicsEnabled?70:85,HorizontalAlignment.Right));
-			gridMain.ListGridColumns.Add(new GridColumn("PayPlan Due",PrefC.HasClinicsEnabled?75:85,HorizontalAlignment.Right));
-			gridMain.ListGridColumns.Add(new GridColumn("Total Due",PrefC.HasClinicsEnabled?65:80,HorizontalAlignment.Right));
-			gridMain.ListGridColumns.Add(new GridColumn("Repeat Amt",PrefC.HasClinicsEnabled?75:90,HorizontalAlignment.Right));//RptChrgAmt
-			gridMain.ListGridColumns.Add(new GridColumn("Charge Amt",PrefC.HasClinicsEnabled?85:100,HorizontalAlignment.Right));
+			gridMain.Columns.Add(new GridColumn("Date",PrefC.HasClinicsEnabled?80:80,HorizontalAlignment.Right));
+			gridMain.Columns.Add(new GridColumn("Family Bal",PrefC.HasClinicsEnabled?70:85,HorizontalAlignment.Right));
+			gridMain.Columns.Add(new GridColumn("PayPlan Due",PrefC.HasClinicsEnabled?75:85,HorizontalAlignment.Right));
+			gridMain.Columns.Add(new GridColumn("Total Due",PrefC.HasClinicsEnabled?65:80,HorizontalAlignment.Right));
+			gridMain.Columns.Add(new GridColumn("Repeat Amt",PrefC.HasClinicsEnabled?75:90,HorizontalAlignment.Right));//RptChrgAmt
+			gridMain.Columns.Add(new GridColumn("Charge Amt",PrefC.HasClinicsEnabled?85:100,HorizontalAlignment.Right));
 			if(Programs.HasMultipleCreditCardProgramsEnabled()) {
 				if(Programs.IsEnabled(ProgramName.Xcharge)) {
-					gridMain.ListGridColumns.Add(new GridColumn("X-Charge",PrefC.HasClinicsEnabled ? 70 : 80,HorizontalAlignment.Center));
+					gridMain.Columns.Add(new GridColumn("X-Charge",PrefC.HasClinicsEnabled ? 70 : 80,HorizontalAlignment.Center));
 				}
 				if(Programs.IsEnabled(ProgramName.PayConnect)) {
-					gridMain.ListGridColumns.Add(new GridColumn("PayConnect",PrefC.HasClinicsEnabled ? 85 : 95,HorizontalAlignment.Center));
+					gridMain.Columns.Add(new GridColumn("PayConnect",PrefC.HasClinicsEnabled ? 85 : 95,HorizontalAlignment.Center));
 				}
 				if(Programs.IsEnabled(ProgramName.PaySimple)) {
-					gridMain.ListGridColumns.Add(new GridColumn("PaySimple",PrefC.HasClinicsEnabled ? 80 : 90,HorizontalAlignment.Center));
+					gridMain.Columns.Add(new GridColumn("PaySimple",PrefC.HasClinicsEnabled ? 80 : 90,HorizontalAlignment.Center));
 				}
 			}
-			gridMain.ListGridRows.Clear();
+			gridMain.Rows.Clear();
 			GridRow row;
 			foreach(RecurringChargeData chargeCur in listChargesCur) {
 				row=new GridRow();
@@ -241,10 +241,10 @@ namespace OpenDental {
 					}
 				}
 				row.Tag=chargeCur;
-				gridMain.ListGridRows.Add(row);
+				gridMain.Rows.Add(row);
 			}
 			gridMain.EndUpdate();
-			labelTotal.Text="Total="+gridMain.ListGridRows.Count.ToString();
+			labelTotal.Text="Total="+gridMain.Rows.Count.ToString();
 			labelSelected.Text="Selected="+gridMain.SelectedIndices.Length.ToString();
 			Cursor=Cursors.Default;
 		}
@@ -282,7 +282,7 @@ namespace OpenDental {
 				MessageBox.Show("Must select at least one recurring charge.");
 				return;
 			}
-			long patNum=((RecurringChargeData)gridMain.ListGridRows[e.Row].Tag).RecurringCharge.PatNum;
+			long patNum=((RecurringChargeData)gridMain.Rows[e.Row].Tag).RecurringCharge.PatNum;
 			GotoModule.GotoAccount(patNum);
 		}
 
@@ -302,8 +302,8 @@ namespace OpenDental {
 				gridMain.SetSelected(true);
 			}
 			else {
-				for(int i=0;i<gridMain.ListGridRows.Count;i++) {
-					long creditCardNum=((RecurringChargeData)gridMain.ListGridRows[i].Tag).RecurringCharge.CreditCardNum;
+				for(int i=0;i<gridMain.Rows.Count;i++) {
+					long creditCardNum=((RecurringChargeData)gridMain.Rows[i].Tag).RecurringCharge.CreditCardNum;
 					if(listSelectedCCNums.Contains(creditCardNum)) {
 						gridMain.SetSelected(i,true);
 					}
