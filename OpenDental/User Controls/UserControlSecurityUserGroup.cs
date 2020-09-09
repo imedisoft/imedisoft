@@ -143,7 +143,7 @@ namespace OpenDental {
 			comboShowOnly.SelectedIndex=0;
 			comboSchoolClass.Items.Add(new ODBoxItem<SchoolClass>("All"));
 			comboSchoolClass.SelectedIndex=0;
-			foreach(SchoolClass schoolClassCur in SchoolClasses.GetDeepCopy()) {
+			foreach(SchoolClass schoolClassCur in SchoolClasses.GetAll()) {
 				comboSchoolClass.Items.Add(new ODBoxItem<SchoolClass>(SchoolClasses.GetDescription(schoolClassCur),schoolClassCur));
 			}
 			if(PrefC.HasClinicsEnabled) {

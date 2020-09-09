@@ -652,4 +652,40 @@
   <data name="IconFileImport" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\IconFileImport.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Icon32School" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon32School.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconPassport" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconPassport.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconPen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconPen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconPenBlack" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconPenBlack.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSchool" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconSchool.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconEllipsis" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconEllipsis.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconEllipsisSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconEllipsisSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconUnlink" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconUnlink.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconUnlinkSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconUnlinkSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconUnlinkRed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconUnlinkRed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconUnlinkSmallRed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconUnlinkSmallRed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconArrowDownGreen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconArrowDownGreen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

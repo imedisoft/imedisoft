@@ -56,7 +56,7 @@ namespace Imedisoft.Forms
 				Text = Translation.Common.StudentPicker;
 				providersGrid.Title = Translation.Common.Students;
 
-				foreach (var schoolClass in SchoolClasses.GetDeepCopy())
+				foreach (var schoolClass in SchoolClasses.GetAll())
                 {
 					classComboBox.Items.Add(schoolClass);
                 }

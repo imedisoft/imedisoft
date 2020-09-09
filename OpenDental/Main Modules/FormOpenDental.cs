@@ -5024,7 +5024,7 @@ namespace OpenDental
 			{
 				return;
 			}
-			FormReqNeededs FormR = new FormReqNeededs();
+			FormSchoolCourseRequirements FormR = new FormSchoolCourseRequirements();
 			FormR.ShowDialog();
 			SecurityLogs.MakeLogEntry(Permissions.Setup, 0, "Requirements Needed");
 		}
@@ -5943,17 +5943,18 @@ namespace OpenDental
 				MessageBox.Show("The current user is not attached to a provider. Attach the user to a provider to gain access to this feature.");
 				return;
 			}
+
 			if (!prov.IsInstructor)
 			{//if a student is logged in
 			 //the student always has permission to view their own requirements
-				FormReqStudentOne FormO = new FormReqStudentOne();
-				FormO.ProvNum = prov.Id;
+				FormStudentResultsOne FormO = new FormStudentResultsOne(prov.Id);
 				FormO.ShowDialog();
 				return;
 			}
+
 			if (prov.IsInstructor)
 			{
-				FormReqStudentsMany FormM = new FormReqStudentsMany();
+				FormStudentResultsMany FormM = new FormStudentResultsMany();
 				FormM.ShowDialog();
 			}
 		}

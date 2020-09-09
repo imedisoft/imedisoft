@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AllCourses" xml:space="preserve">
+    <value>All Courses</value>
+  </data>
+  <data name="AllInstructors" xml:space="preserve">
+    <value>All Instructors</value>
+  </data>
+  <data name="CannotMoveInstructorsDueToSecurityAdminPermission" xml:space="preserve">
+    <value>Cannot move instructors to the new user group because it would leave no users with the SecurityAdmin permission. Give the SecurityAdmin permission to at least one user that is in another group or is not flagged as an instructor.</value>
+  </data>
+  <data name="CannotMoveStudentsDueToSecurityAdminPermission" xml:space="preserve">
+    <value>Cannot move students to the new user group because it would leave no users with the SecurityAdmin permission. Give the SecurityAdmin permission to at least one user that is in another group or is not flagged as a student.</value>
+  </data>
+  <data name="ClassInUse" xml:space="preserve">
+    <value>The class is already in use.</value>
+  </data>
+  <data name="ConfirmChangeEvaluationDefTitle" xml:space="preserve">
+    <value>Changing the evaluation definition titles during a term could interfere with grading reports. Continue?</value>
+  </data>
+  <data name="ConfirmCopyRequirements" xml:space="preserve">
+    <value>Are you sure you would like to copy over the requirements? Doing so will not replace any previous requirements.</value>
+  </data>
+  <data name="ConfirmDeleteRequirements" xml:space="preserve">
+    <value>Are you sure you would like to delete all requirements?</value>
+  </data>
+  <data name="ConfirmMoveInstructorsToNewGroup" xml:space="preserve">
+    <value>Update all existing instructors to this user group?
+
+Choose No to just save the new default user group for instructors.</value>
+  </data>
+  <data name="ConfirmMoveStudentsToNewGroup" xml:space="preserve">
+    <value>Update all existing students to this user group?
+
+Choose No to just save the new default user group for students.</value>
+  </data>
+  <data name="Course" xml:space="preserve">
+    <value>Course</value>
+  </data>
+  <data name="CourseAverage" xml:space="preserve">
+    <value>Course Average</value>
+  </data>
+  <data name="CourseID" xml:space="preserve">
+    <value>Course ID</value>
+  </data>
+  <data name="CourseInUse" xml:space="preserve">
+    <value>The course is already in use.</value>
+  </data>
+  <data name="CourseMustBeSelectedForEvaluationDef" xml:space="preserve">
+    <value>A course must be selected for this evaluation definition before it can be saved.</value>
+  </data>
+  <data name="Evaluation" xml:space="preserve">
+    <value>Evaluation</value>
+  </data>
+  <data name="Grade" xml:space="preserve">
+    <value>Grade</value>
+  </data>
+  <data name="GradeNumber" xml:space="preserve">
+    <value>Grade Number</value>
+  </data>
+  <data name="GradeShowing" xml:space="preserve">
+    <value>Grade Showing</value>
+  </data>
+  <data name="GradingScale" xml:space="preserve">
+    <value>Grading Scale</value>
+  </data>
+  <data name="GradingScaleCannotBeModifiedInUseByEvaluation" xml:space="preserve">
+    <value>Grading scale cannot be modified. It is currently in use by an evaluation.</value>
+  </data>
+  <data name="GradingScaleInUse" xml:space="preserve">
+    <value>The grading scale is already in use.</value>
+  </data>
+  <data name="GradingScaleMustBeSelectedForEvaluationDef" xml:space="preserve">
+    <value>A grading scale must be selected for this evaluation definition before it can be saved.</value>
+  </data>
+  <data name="GradingScaleType" xml:space="preserve">
+    <value>Scale Type</value>
+  </data>
+  <data name="Instructor" xml:space="preserve">
+    <value>Instructor</value>
+  </data>
+  <data name="MaxPoints" xml:space="preserve">
+    <value>Max. Points</value>
+  </data>
+  <data name="OnlyInstructorsMayViewOrEditEvaluations" xml:space="preserve">
+    <value>Only instructors may view or edit evaluations.</value>
+  </data>
+  <data name="OverrideForOverallGradeNumberIsNotValid" xml:space="preserve">
+    <value>The override for Overall Grade Number is not a valid number. Please input a valid number to save the evaluation.</value>
+  </data>
+  <data name="PleaseAttachStudentToThisEvaluation" xml:space="preserve">
+    <value>Please attach a student to this evaluation.</value>
+  </data>
+  <data name="PleaseEnterGradeNumber" xml:space="preserve">
+    <value>Grade Number is a required field and cannot be empty.</value>
+  </data>
+  <data name="PleaseEnterGradeNumberInValidFormat" xml:space="preserve">
+    <value>Grade Number is not in a valid format. Please type in a number.</value>
+  </data>
+  <data name="PleaseEnterGraduationYear" xml:space="preserve">
+    <value>Please enter a graduation year.</value>
+  </data>
+  <data name="PleaseEnterUniqueGradingScaleDescription" xml:space="preserve">
+    <value>The selected grading scale description is already used by another grading scale. Please input a unique description.</value>
+  </data>
+  <data name="PleaseSelectAtLeastOneRequirementFromListLeft" xml:space="preserve">
+    <value>Please select at least one requirement from the list at the left first.</value>
+  </data>
+  <data name="PleaseSelectAtLeastOneResultFromListBelow" xml:space="preserve">
+    <value>Please select at least one result from the list below first.</value>
+  </data>
+  <data name="PleaseSelectClassAndCourseFirst" xml:space="preserve">
+    <value>Please select a class and course first.</value>
+  </data>
+  <data name="PleaseSelectGradingScaleBeforeAddingCriterion" xml:space="preserve">
+    <value>Please select a grading scale before adding criterion.</value>
+  </data>
+  <data name="Requirement" xml:space="preserve">
+    <value>Requirement</value>
+  </data>
+  <data name="RequirementAlreadyExists" xml:space="preserve">
+    <value>Requirement already exist.</value>
+  </data>
+  <data name="RequirementAlreadyInUseConfirmDelete" xml:space="preserve">
+    <value>Requirement is already in use by student(s) with grade point(s) attached.
+
+Delete anyway? Student grades will not be affected.</value>
+  </data>
+  <data name="Student" xml:space="preserve">
+    <value>Student</value>
+  </data>
+  <data name="StudentsMayOnlyEditTheirOwnResults" xml:space="preserve">
+    <value>Students may only edit their own results.</value>
+  </data>
+  <data name="ZeroToOneHundred" xml:space="preserve">
+    <value>0 to 100</value>
+  </data>
+</root>

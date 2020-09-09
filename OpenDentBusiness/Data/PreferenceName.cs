@@ -1744,10 +1744,20 @@ namespace OpenDentBusiness
 		///<summary>Boolean. Off by default so that users will have to opt into utilizing the screening with sheets feature.
 		///Screening with sheets is extremely customized for Dental3 (D3)</summary>
 		public const string ScreeningsUseSheets = "ScreeningsUseSheets";
-		///<summary>UserGroupNum for Instructors.  Set only for dental schools in dental school setup.</summary>
+
+
+		/// <summary>
+		/// The ID of the default user group for instructors. Set only for dental schools in dental school setup.
+		/// </summary>
 		public const string SecurityGroupForInstructors = "SecurityGroupForInstructors";
-		///<summary>UserGroupNum for Students.  Set only for dental schools in dental school setup.</summary>
+
+		/// <summary>
+		/// The ID of the default user group for students. Set only for dental schools in dental school setup.
+		/// </summary>
 		public const string SecurityGroupForStudents = "SecurityGroupForStudents";
+
+
+
 		public const string SecurityLockDate = "SecurityLockDate";
 		///<summary>Set to 0 to always grant permission. 1 means only today.</summary>
 		public const string SecurityLockDays = "SecurityLockDays";

@@ -45,12 +45,12 @@ namespace OpenDental.UI {
 		//Colors-------------------------------------------------------------------------------------------------
 		///<summary>The gray text when a button is disabled.</summary>
 		private static Color _colorTextDisabled=Color.FromArgb(161,161,146);
-		private static Color _colorTitleTop=Color.FromArgb(156,175,230);
+		private static Color _colorTitleTop=Color.FromArgb(245, 247, 250);
 		///<summary>This is a little bit misused.  Review.</summary>
-		private static Color _colorTitleBottom=Color.FromArgb(60,90,150);
+		private static Color _colorTitleBottom=Color.FromArgb(195, 207, 226);
 		//Brushes------------------------------------------------------------------------------------------------
-		private SolidBrush _brushBackground=new SolidBrush(Color.FromArgb(202,212,222));
-		private SolidBrush _brushHeaderBackground=new SolidBrush(Color.FromArgb(223,234,245));
+		private SolidBrush _brushBackground=new SolidBrush(Color.FromArgb(230, 230, 230));
+		private SolidBrush _brushHeaderBackground=new SolidBrush(Color.FromArgb(255,255,255));
 		private SolidBrush _brushHeaderText=(SolidBrush)Brushes.Black;
 		private SolidBrush _brushTitleText=(SolidBrush)Brushes.White;
 		//Fonts--------------------------------------------------------------------------------------------------
@@ -62,7 +62,7 @@ namespace OpenDental.UI {
 		///<summary>Seems to only be used once as the line between title and headers.</summary>
 		private Pen _penGridInnerLine=new Pen(Color.FromArgb(102,102,122));
 		private Pen _penGridline=new Pen(Color.FromArgb(180,180,180));
-		private Pen _penOutline=new Pen(Color.FromArgb(47,70,117));
+		private Pen _penOutline=new Pen(Color.FromArgb(0, 70, 140));
 		#endregion Fields - Private Static Drawing
 
 		#region Fields - Private Drawing
@@ -128,7 +128,7 @@ namespace OpenDental.UI {
 		///<summary>Is set when ComputeRows is called, then used . If any columns are editable, hasEditableColumn is true, and all row heights are slightly taller.</summary>
 		private bool _hasEditableColumn;
 		///<summary>Starts out 18.  If title is not visible, this will be set to 0.</summary>
-		private int _heightTitle=18;
+		private int _heightTitle=22;
 		///<summary>Starts out 15, but code can push it higher to fit multiline text. If header is not visible, this will be set to 0.</summary>
 		private int _heightHeader=15;
 		///<summary>The total height of the actual grid area, including the parts hidden by scroll.</summary>
@@ -1190,46 +1190,77 @@ namespace OpenDental.UI {
 			}
 		}
 
-		private void DrawTitle(Graphics g) {
-			if(_heightTitle==0) {
+		private static readonly Color ColorTitleText = Color.FromArgb(0, 70, 140);
+		private static readonly Color ColorTitleTop = Color.FromArgb(245, 247, 250);
+		private static readonly Color ColorTitleBottom = Color.FromArgb(195, 207, 226);
+
+		private void DrawTitle(Graphics g)
+		{
+			if (_heightTitle == 0)
+			{
 				return;
 			}
-			g.FillRectangle(_brushTitleBackground,1,1,Width,DpiScale(_heightTitle));
-			if(!DesignMode){
-				g.DrawString(_title,_fontTitle,Brushes.White,Width/2-g.MeasureString(_title,_fontTitle).Width/2,2);
+
+			using (var background = new LinearGradientBrush(new Point(0, 0), new Point(0, _heightTitle), ColorTitleTop, ColorTitleBottom))
+			{
+				g.FillRectangle(background, 1, 1, Width, DpiScale(_heightTitle));
 			}
-			if(!HasAddButton) {
+
+			
+			
+
+			if (!string.IsNullOrEmpty(_title))
+            {
+				TextRenderer.DrawText(g, _title, Font,
+					new Rectangle(1, 1, Width, _heightTitle),
+					Color.White,
+					TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter);
+
+				TextRenderer.DrawText(g, _title, Font, 
+					new Rectangle(0, 0, Width, _heightTitle),
+					ColorTitleText, 
+					TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter);
+            }
+
+
+			if (!HasAddButton)
+			{
 				return;
 			}
+
+
 			//Everything from here down is AddButton
-			int addW=DpiScale(_heightTitle);
-			int dividerX=Width-addW-3;
-			const int dividerLineWidth=1;
-			const int plusSignWidth=4;
-			Brush brushPlusSign=Brushes.White;//new SolidBrush(ODColorTheme.GridTextBrush.Color);//cannot dispose a brush from ODColorTheme
-			if(!_addButtonEnabled) {
+			int addW = DpiScale(_heightTitle);
+			int dividerX = Width - addW - 3;
+			const int dividerLineWidth = 1;
+			const int plusSignWidth = 4;
+			Brush brushPlusSign = Brushes.White;//new SolidBrush(ODColorTheme.GridTextBrush.Color);//cannot dispose a brush from ODColorTheme
+			if (!_addButtonEnabled)
+			{
 				//"gray out" darkest background color for plus sign
-				const double fadeFactor=0.8;
-				brushPlusSign=new LinearGradientBrush(new Rectangle(0,0,Width,DpiScale(_heightTitle)),
-					Color.FromArgb((int)(_colorTitleTop.R*fadeFactor),(int)(_colorTitleTop.G*fadeFactor),(int)(_colorTitleTop.B*fadeFactor)),
-					Color.FromArgb((int)(_colorTitleBottom.R*fadeFactor),(int)(_colorTitleBottom.G*fadeFactor),(int)(_colorTitleBottom.B*fadeFactor)),
+				const double fadeFactor = 0.8;
+				brushPlusSign = new LinearGradientBrush(new Rectangle(0, 0, Width, DpiScale(_heightTitle)),
+					Color.FromArgb((int)(_colorTitleTop.R * fadeFactor), (int)(_colorTitleTop.G * fadeFactor), (int)(_colorTitleTop.B * fadeFactor)),
+					Color.FromArgb((int)(_colorTitleBottom.R * fadeFactor), (int)(_colorTitleBottom.G * fadeFactor), (int)(_colorTitleBottom.B * fadeFactor)),
 					LinearGradientMode.Vertical);//"gray out" AddButton
 			}
-			using(Pen pDark=new Pen(Color.FromArgb(102,102,122))) {
-				g.DrawLine(Pens.LightGray,new Point(dividerX,0),new Point(dividerX,DpiScale(_heightTitle)));//divider line(right side)
-				g.DrawLine(pDark,new Point(dividerX-dividerLineWidth,0),new Point(dividerX-dividerLineWidth,DpiScale(_heightTitle)));//divider line(left side)
+			using (Pen pDark = new Pen(Color.FromArgb(102, 102, 122)))
+			{
+				g.DrawLine(Pens.LightGray, new Point(dividerX, 0), new Point(dividerX, DpiScale(_heightTitle)));//divider line(right side)
+				g.DrawLine(pDark, new Point(dividerX - dividerLineWidth, 0), new Point(dividerX - dividerLineWidth, DpiScale(_heightTitle)));//divider line(left side)
 				g.FillRectangle(brushPlusSign,//vertical bar in "+" sign
-					Width-addW/2-plusSignWidth,2,
-					plusSignWidth,addW-plusSignWidth);
+					Width - addW / 2 - plusSignWidth, 2,
+					plusSignWidth, addW - plusSignWidth);
 				//Width-addW/2+2,addW-2);
 				g.FillRectangle(brushPlusSign,//horizontal bar in "+" sign
-					Width-addW,(addW-plusSignWidth)/2,
-					addW-plusSignWidth,plusSignWidth);
+					Width - addW, (addW - plusSignWidth) / 2,
+					addW - plusSignWidth, plusSignWidth);
 				//Width-2,addW/2+2);
 				//g.DrawString("+",titleFont,brushTitleText,Width-addW+4,2);
 			}
-			AddButtonWidth=addW;
+			AddButtonWidth = addW;
 		}
+
 
 		private void DrawHeaders(Graphics g) {
 			if(_heightHeader==0) {
@@ -2833,7 +2864,7 @@ namespace OpenDental.UI {
 			_fontUnderline=new Font(FontFamily.GenericSansSerif,DpiScaleF(8.5f),FontStyle.Underline);
 			_fontUnderlineBold=new Font(FontFamily.GenericSansSerif,DpiScaleF(8.5f),FontStyle.Underline | FontStyle.Bold);
 			_fontHeader=new Font(FontFamily.GenericSansSerif,DpiScaleF(8.5f),FontStyle.Bold);
-			_fontTitle=new Font(FontFamily.GenericSansSerif,DpiScaleF(10),FontStyle.Bold);
+			_fontTitle=new Font(FontFamily.GenericSansSerif,DpiScaleF(9),FontStyle.Bold);
 		}
 
 		private void vScroll_Scroll(object sender,System.Windows.Forms.ScrollEventArgs e) {

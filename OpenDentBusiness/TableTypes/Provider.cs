@@ -261,30 +261,28 @@ namespace OpenDentBusiness
 		{
 		}
 
-		public override string ToString() => $"[{Abbr}] {LastName}, {FirstName}";
+		public override string ToString() => GetLongDesc();
 
 
-		///<Summary>For use in areas of the program where we have more room than just simple abbr.  Such as pick boxes in reports.  This will give Abbr - LName, FName (hidden).  If dental schools is turned on then the Abbr will be replaced with the ProvNum.</Summary>
+		/// <summary>
+		/// For use in areas of the program where we have more room than just simple abbr. 
+		/// Such as pick boxes in reports. This will give Abbr - LName, FName (hidden). 
+		/// If dental schools is turned on then the Abbr will be replaced with the ProvNum.
+		/// </summary>
 		public string GetLongDesc()
 		{
-			if (Id == 0)
-			{
-				return Abbr; // this is only useful for spoofed providers in a list. I.e. "none" or "Select Provider" items.
-			}
-
-			string retval = Abbr + "- " + LastName + ", " + FirstName;
-			if (!Prefs.GetBool(PrefName.EasyHideDentalSchools))
-			{
-				retval = Id + "- " + LastName + ", " + FirstName;
-			}
+			var name = Prefs.GetBool(PrefName.EasyHideDentalSchools) ?
+				$"[{Id}] {LastName}, {FirstName}" : 
+				$"[{Abbr}] {LastName}, {FirstName}";
 
 			if (IsHidden)
 			{
-				retval += " " + "(hidden)";
+				name += " " + "(hidden)";
 			}
 
-			return retval;
+			return name;
 		}
+
 
 
 		///<Summary>For use in areas of the program where we have only have room for the simple abbr.  Such as pick boxes in the claim edit window.  This will give Abbr (hidden).</Summary>

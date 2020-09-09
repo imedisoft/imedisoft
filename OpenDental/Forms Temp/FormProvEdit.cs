@@ -1432,7 +1432,7 @@ namespace OpenDental{
 				else {
 					textUserName.Text=Providers.GetNextAvailableProvNum().ToString();//User-names are suggested to be the ProvNum of the provider.  This can be changed at will.
 				}
-				_listSchoolClasses=SchoolClasses.GetDeepCopy();
+				_listSchoolClasses=SchoolClasses.GetAll();
 				for(int i=0;i<_listSchoolClasses.Count;i++) {
 					comboSchoolClass.Items.Add(SchoolClasses.GetDescription(_listSchoolClasses[i]));
 					comboSchoolClass.SelectedIndex=0;

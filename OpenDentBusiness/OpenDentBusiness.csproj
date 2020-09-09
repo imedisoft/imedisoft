@@ -740,10 +740,10 @@
     <Compile Include="Crud\EServiceSignalCrud.cs" />
     <Compile Include="Crud\EtransCrud.cs" />
     <Compile Include="Crud\EtransMessageTextCrud.cs" />
-    <Compile Include="Crud\EvaluationCriterionCrud.cs" />
-    <Compile Include="Crud\EvaluationCriterionDefCrud.cs" />
-    <Compile Include="Crud\EvaluationCrud.cs" />
-    <Compile Include="Crud\EvaluationDefCrud.cs" />
+    <Compile Include="Data\DentalSchools\Crud\EvaluationCriterions.cs" />
+    <Compile Include="Data\DentalSchools\Crud\EvaluationCriterionDefs.cs" />
+    <Compile Include="Data\DentalSchools\Crud\Evaluations.cs" />
+    <Compile Include="Data\DentalSchools\Crud\EvaluationDefs.cs" />
     <Compile Include="Crud\FamAgingCrud.cs" />
     <Compile Include="Crud\FamilyHealthCrud.cs" />
     <Compile Include="Crud\FeeCrud.cs" />
@@ -752,8 +752,8 @@
     <Compile Include="Crud\FHIRSubscriptionCrud.cs" />
     <Compile Include="Crud\FieldDefLinkCrud.cs" />
     <Compile Include="Crud\FormPatCrud.cs" />
-    <Compile Include="Crud\GradingScaleCrud.cs" />
-    <Compile Include="Crud\GradingScaleItemCrud.cs" />
+    <Compile Include="Data\DentalSchools\Crud\GradingScales.cs" />
+    <Compile Include="Data\DentalSchools\Crud\GradingScaleItems.cs" />
     <Compile Include="Crud\GroupPermissionCrud.cs" />
     <Compile Include="Crud\GuardianCrud.cs" />
     <Compile Include="Crud\HcpcsCrud.cs" />
@@ -852,8 +852,8 @@
     <Compile Include="Crud\ReminderRuleCrud.cs" />
     <Compile Include="Crud\RepeatChargeCrud.cs" />
     <Compile Include="Crud\ReplicationServerCrud.cs" />
-    <Compile Include="Crud\ReqNeededCrud.cs" />
-    <Compile Include="Crud\ReqStudentCrud.cs" />
+    <Compile Include="Data\DentalSchools\Crud\SchoolCourseRequirements.cs" />
+    <Compile Include="Data\DentalSchools\Crud\StudentResults.cs" />
     <Compile Include="Crud\RequiredFieldConditionCrud.cs" />
     <Compile Include="Crud\RequiredFieldCrud.cs" />
     <Compile Include="Crud\ResellerCrud.cs" />
@@ -864,8 +864,8 @@
     <Compile Include="Crud\RxPatCrud.cs" />
     <Compile Include="Crud\ScheduleCrud.cs" />
     <Compile Include="Crud\ScheduleOpCrud.cs" />
-    <Compile Include="Data\Crud\SchoolClasses.cs" />
-    <Compile Include="Data\Crud\SchoolCourses.cs" />
+    <Compile Include="Data\DentalSchools\Crud\SchoolClasses.cs" />
+    <Compile Include="Data\DentalSchools\Crud\SchoolCourses.cs" />
     <Compile Include="Crud\ScreenCrud.cs" />
     <Compile Include="Crud\ScreenGroupCrud.cs" />
     <Compile Include="Crud\ScreenPatCrud.cs" />
@@ -999,13 +999,13 @@
     <Compile Include="Data Interface\EmailMessageUids.cs" />
     <Compile Include="Data Interface\Encounters.cs" />
     <Compile Include="Data Interface\EServiceSignals.cs" />
-    <Compile Include="Data Interface\EvaluationCriterionDefs.cs" />
-    <Compile Include="Data Interface\EvaluationCriterions.cs" />
-    <Compile Include="Data Interface\EvaluationDefs.cs" />
-    <Compile Include="Data Interface\Evaluations.cs" />
+    <Compile Include="Data\DentalSchools\Logic\EvaluationCriterionDefs.cs" />
+    <Compile Include="Data\DentalSchools\Logic\EvaluationCriterions.cs" />
+    <Compile Include="Data\DentalSchools\Logic\EvaluationDefs.cs" />
+    <Compile Include="Data\DentalSchools\Logic\Evaluations.cs" />
     <Compile Include="Data Interface\FamilyHealths.cs" />
-    <Compile Include="Data Interface\GradingScaleItems.cs" />
-    <Compile Include="Data Interface\GradingScales.cs" />
+    <Compile Include="Data\DentalSchools\Logic\GradingScaleItems.cs" />
+    <Compile Include="Data\DentalSchools\Logic\GradingScales.cs" />
     <Compile Include="Data Interface\Hcpcses.cs" />
     <Compile Include="Data\Icd10s.cs" />
     <Compile Include="Data Interface\Interventions.cs" />
@@ -1230,15 +1230,15 @@
     <Compile Include="Data Interface\Referrals.cs" />
     <Compile Include="Data Interface\RegistrationKeys.cs" />
     <Compile Include="Data Interface\RepeatCharges.cs" />
-    <Compile Include="Data Interface\ReqNeededs.cs" />
-    <Compile Include="Data Interface\ReqStudents.cs" />
+    <Compile Include="Data\DentalSchools\Logic\SchoolCourseRequirements.cs" />
+    <Compile Include="Data\DentalSchools\Logic\StudentResults.cs" />
     <Compile Include="Data Interface\RxAlerts.cs" />
     <Compile Include="Data Interface\RxDefs.cs" />
     <Compile Include="Data Interface\RxPats.cs" />
     <Compile Include="Data Interface\ScheduleOps.cs" />
     <Compile Include="Data Interface\Schedules.cs" />
-    <Compile Include="Data\Logic\SchoolClasses.cs" />
-    <Compile Include="Data\Logic\SchoolCourses.cs" />
+    <Compile Include="Data\DentalSchools\Logic\SchoolClasses.cs" />
+    <Compile Include="Data\DentalSchools\Logic\SchoolCourses.cs" />
     <Compile Include="Data Interface\ScreenGroups.cs" />
     <Compile Include="Data Interface\Screens.cs" />
     <Compile Include="Db Multi Table\Security.cs" />
@@ -1463,12 +1463,6 @@
     <Compile Include="TableTypes\Reseller.cs" />
     <Compile Include="TableTypes\VaccineObs.cs" />
     <Compile Include="TableTypes\WikiListHeaderWidth.cs" />
-    <Compile Include="TableTypes\EvaluationCriterion.cs" />
-    <Compile Include="TableTypes\GradingScaleItem.cs" />
-    <Compile Include="TableTypes\EvaluationCriterionDef.cs" />
-    <Compile Include="TableTypes\EvaluationDef.cs" />
-    <Compile Include="TableTypes\GradingScale.cs" />
-    <Compile Include="TableTypes\Evaluation.cs" />
     <Compile Include="TableTypes\WikiPageHist.cs" />
     <Compile Include="TableTypes\WikiPage.cs" />
     <Compile Include="TableTypes\DictCustom.cs" />
@@ -1684,8 +1678,6 @@
     <Compile Include="TableTypes\Popup.cs" />
     <Compile Include="TableTypes\DisplayField.cs" />
     <Compile Include="TableTypes\ProcCodeNote.cs" />
-    <Compile Include="TableTypes\ReqStudent.cs" />
-    <Compile Include="TableTypes\ReqNeeded.cs" />
     <Compile Include="TableTypes\LabTurnaround.cs" />
     <Compile Include="TableTypes\LabCase.cs" />
     <Compile Include="TableTypes\Laboratory.cs" />
@@ -2265,7 +2257,9 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Data\Logic\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -79,6 +79,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All.
+        /// </summary>
+        public static string All {
+            get {
+                return ResourceManager.GetString("All", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Amount.
         /// </summary>
         public static string Amount {
@@ -93,6 +102,15 @@ namespace Imedisoft.Translation {
         public static string AndXOthers {
             get {
                 return ResourceManager.GetString("AndXOthers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Appointment.
+        /// </summary>
+        public static string Appointment {
+            get {
+                return ResourceManager.GetString("Appointment", resourceCulture);
             }
         }
         
@@ -232,6 +250,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Completed.
+        /// </summary>
+        public static string Completed {
+            get {
+                return ResourceManager.GetString("Completed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete?.
         /// </summary>
         public static string ConfirmDelete {
@@ -318,6 +345,15 @@ namespace Imedisoft.Translation {
         public static string Description {
             get {
                 return ResourceManager.GetString("Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Done.
+        /// </summary>
+        public static string Done {
+            get {
+                return ResourceManager.GetString("Done", resourceCulture);
             }
         }
         
@@ -549,11 +585,38 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to n/a.
+        /// </summary>
+        public static string NotApplicableAbbr {
+            get {
+                return ResourceManager.GetString("NotApplicableAbbr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Note.
+        /// </summary>
+        public static string Note {
+            get {
+                return ResourceManager.GetString("Note", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Notes.
         /// </summary>
         public static string Notes {
             get {
                 return ResourceManager.GetString("Notes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Number.
+        /// </summary>
+        public static string Number {
+            get {
+                return ResourceManager.GetString("Number", resourceCulture);
             }
         }
         
@@ -603,6 +666,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Percentage.
+        /// </summary>
+        public static string Percentage {
+            get {
+                return ResourceManager.GetString("Percentage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pick List.
         /// </summary>
         public static string PickList {
@@ -617,6 +689,15 @@ namespace Imedisoft.Translation {
         public static string PleaseEnterAbbreviation {
             get {
                 return ResourceManager.GetString("PleaseEnterAbbreviation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter a date..
+        /// </summary>
+        public static string PleaseEnterDate {
+            get {
+                return ResourceManager.GetString("PleaseEnterDate", resourceCulture);
             }
         }
         
@@ -644,6 +725,15 @@ namespace Imedisoft.Translation {
         public static string PleaseEnterPassword {
             get {
                 return ResourceManager.GetString("PleaseEnterPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter a title..
+        /// </summary>
+        public static string PleaseEnterTitle {
+            get {
+                return ResourceManager.GetString("PleaseEnterTitle", resourceCulture);
             }
         }
         
@@ -738,6 +828,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Prov. #.
+        /// </summary>
+        public static string ProviderIdAbbr {
+            get {
+                return ResourceManager.GetString("ProviderIdAbbr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Response.
         /// </summary>
         public static string Response {
@@ -761,6 +860,24 @@ namespace Imedisoft.Translation {
         public static string SetGraphicsForComputerToSimple {
             get {
                 return ResourceManager.GetString("SetGraphicsForComputerToSimple", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Showing.
+        /// </summary>
+        public static string Showing {
+            get {
+                return ResourceManager.GetString("Showing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shown.
+        /// </summary>
+        public static string Shown {
+            get {
+                return ResourceManager.GetString("Shown", resourceCulture);
             }
         }
         
@@ -819,6 +936,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to (copy).
+        /// </summary>
+        public static string TagCopy {
+            get {
+                return ResourceManager.GetString("TagCopy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to (hidden).
         /// </summary>
         public static string TagHidden {
@@ -828,11 +954,38 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to (none).
+        /// </summary>
+        public static string TagNone {
+            get {
+                return ResourceManager.GetString("TagNone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (null).
+        /// </summary>
+        public static string TagNull {
+            get {
+                return ResourceManager.GetString("TagNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Text.
         /// </summary>
         public static string Text {
             get {
                 return ResourceManager.GetString("Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Title.
+        /// </summary>
+        public static string Title {
+            get {
+                return ResourceManager.GetString("Title", resourceCulture);
             }
         }
         
@@ -869,6 +1022,15 @@ namespace Imedisoft.Translation {
         public static string Value {
             get {
                 return ResourceManager.GetString("Value", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Weighted.
+        /// </summary>
+        public static string Weighted {
+            get {
+                return ResourceManager.GetString("Weighted", resourceCulture);
             }
         }
         

@@ -849,6 +849,16 @@ namespace Imedisoft.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap Icon32School {
+            get {
+                object obj = ResourceManager.GetObject("Icon32School", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap Icon32Tooth {
             get {
                 object obj = ResourceManager.GetObject("Icon32Tooth", resourceCulture);
@@ -872,6 +882,16 @@ namespace Imedisoft.Properties {
         public static System.Drawing.Bitmap IconArrowDown {
             get {
                 object obj = ResourceManager.GetObject("IconArrowDown", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconArrowDownGreen {
+            get {
+                object obj = ResourceManager.GetObject("IconArrowDownGreen", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -959,9 +979,29 @@ namespace Imedisoft.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap IconEllipsis {
+            get {
+                object obj = ResourceManager.GetObject("IconEllipsis", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap IconEllipsisH {
             get {
                 object obj = ResourceManager.GetObject("IconEllipsisH", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconEllipsisSmall {
+            get {
+                object obj = ResourceManager.GetObject("IconEllipsisSmall", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1119,6 +1159,36 @@ namespace Imedisoft.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap IconPassport {
+            get {
+                object obj = ResourceManager.GetObject("IconPassport", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconPen {
+            get {
+                object obj = ResourceManager.GetObject("IconPen", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconPenBlack {
+            get {
+                object obj = ResourceManager.GetObject("IconPenBlack", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap IconPencil {
             get {
                 object obj = ResourceManager.GetObject("IconPencil", resourceCulture);
@@ -1172,6 +1242,16 @@ namespace Imedisoft.Properties {
         public static System.Drawing.Bitmap IconSave {
             get {
                 object obj = ResourceManager.GetObject("IconSave", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconSchool {
+            get {
+                object obj = ResourceManager.GetObject("IconSchool", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1282,6 +1362,46 @@ namespace Imedisoft.Properties {
         public static System.Drawing.Bitmap IconTrashRed {
             get {
                 object obj = ResourceManager.GetObject("IconTrashRed", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconUnlink {
+            get {
+                object obj = ResourceManager.GetObject("IconUnlink", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconUnlinkRed {
+            get {
+                object obj = ResourceManager.GetObject("IconUnlinkRed", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconUnlinkSmall {
+            get {
+                object obj = ResourceManager.GetObject("IconUnlinkSmall", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconUnlinkSmallRed {
+            get {
+                object obj = ResourceManager.GetObject("IconUnlinkSmallRed", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

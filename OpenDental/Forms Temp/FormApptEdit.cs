@@ -417,14 +417,14 @@ namespace OpenDental{
 				textInsPlan2.Text=InsPlans.GetCarrierName(AptCur.InsPlan2,PlanList);
 			}
 			if(!Prefs.GetBool(PrefName.EasyHideDentalSchools)) {
-				List<ReqStudent> listStudents=_loadData.ListStudents;
+				List<StudentResult> listStudents=_loadData.ListStudents;
 				string requirements="";
 				for(int i=0;i<listStudents.Count;i++) {
 					if(i > 0) {
 						requirements+="\r\n";
 					}
-					Provider student=Providers.GetDeepCopy().First(x => x.Id==listStudents[i].ProvNum);
-					requirements+=student.LastName+", "+student.FirstName+": "+listStudents[i].Descript;
+					Provider student=Providers.GetDeepCopy().First(x => x.Id==listStudents[i].ProviderId);
+					requirements+=student.LastName+", "+student.FirstName+": "+listStudents[i].Description;
 				}
 				textRequirement.Text=requirements;
 			}
@@ -1437,16 +1437,14 @@ namespace OpenDental{
 			if(_isInsertRequired && !UpdateListAndDB(false)) {
 				return;
 			}			
-			FormReqAppt FormR=new FormReqAppt();
-			FormR.AptNum=AptCur.AptNum;
-			FormR.PatNum=AptCur.PatNum;
+			FormStudentResultsForAppointment FormR=new FormStudentResultsForAppointment(AptCur.PatNum, AptCur.AptNum);
 			FormR.ShowDialog();
 			if(FormR.DialogResult!=DialogResult.OK){
 				return;
 			}
-			List<ReqStudent> listStudents=ReqStudents.GetForAppt(AptCur.AptNum);
+			List<StudentResult> listStudents=StudentResults.GetByAppt(AptCur.AptNum).ToList();
 			textRequirement.Text = string.Join("\r\n",listStudents
-				.Select(x => new { Student = Providers.GetDeepCopy().First(y => y.Id==x.ProvNum),Descript = x.Descript })
+				.Select(x => new { Student = Providers.GetDeepCopy().First(y => y.Id==x.ProviderId),Descript = x.Description })
 				.Select(x => x.Student.LastName+", "+x.Student.FirstName+": "+x.Descript).ToList());
 		}
 

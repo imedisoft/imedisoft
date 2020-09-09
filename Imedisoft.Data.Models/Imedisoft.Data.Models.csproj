@@ -79,7 +79,13 @@
     <Compile Include="County.cs" />
     <Compile Include="Definition.cs" />
     <Compile Include="DefinitionCategory.cs" />
+    <Compile Include="DentalSchools\Evaluation.cs" />
+    <Compile Include="DentalSchools\EvaluationCriterion.cs" />
+    <Compile Include="DentalSchools\EvaluationCriterionDef.cs" />
+    <Compile Include="DentalSchools\EvaluationDef.cs" />
     <Compile Include="Employee.cs" />
+    <Compile Include="DentalSchools\GradingScale.cs" />
+    <Compile Include="DentalSchools\GradingScaleItem.cs" />
     <Compile Include="Medication.cs" />
     <Compile Include="Problem.cs" />
     <Compile Include="ProblemDefinition.cs" />
@@ -87,8 +93,10 @@
     <Compile Include="Icd9.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SchoolClass.cs" />
-    <Compile Include="SchoolCourse.cs" />
+    <Compile Include="DentalSchools\SchoolCourseRequirement.cs" />
+    <Compile Include="DentalSchools\StudentResult.cs" />
+    <Compile Include="DentalSchools\SchoolClass.cs" />
+    <Compile Include="DentalSchools\SchoolCourse.cs" />
     <Compile Include="SecurityLog.cs" />
     <Compile Include="SecurityLogHash.cs" />
     <Compile Include="SecurityLogSource.cs" />

@@ -24,7 +24,7 @@ namespace OpenDental {
 				textProvNum);
 			comboClass.Items.Add("All");
 			comboClass.SelectedIndex=0;
-			_listSchoolClasses=SchoolClasses.GetDeepCopy();
+			_listSchoolClasses=SchoolClasses.GetAll();
 			for(int i=0;i<_listSchoolClasses.Count;i++) {
 				comboClass.Items.Add(SchoolClasses.GetDescription(_listSchoolClasses[i]));
 			}

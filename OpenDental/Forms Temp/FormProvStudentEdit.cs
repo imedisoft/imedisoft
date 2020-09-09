@@ -38,7 +38,7 @@ namespace OpenDental
 				textFirstName, textLastName);
 			_existingUser = new Userod();
 			//Load the Combo Box
-			_listSchoolClasses = SchoolClasses.GetDeepCopy();
+			_listSchoolClasses = SchoolClasses.GetAll();
 			for (int i = 0; i < _listSchoolClasses.Count; i++)
 			{
 				comboClass.Items.Add(SchoolClasses.GetDescription(_listSchoolClasses[i]));

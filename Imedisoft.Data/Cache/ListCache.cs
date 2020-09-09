@@ -43,6 +43,19 @@ namespace Imedisoft.Data.Cache
 		}
 
 		/// <summary>
+		/// Removes the specified item from the cache.
+		/// </summary>
+		/// <param name="item">The item to remove.</param>
+		/// <returns>True if the item was removed; otherwise, false.</returns>
+		public bool Remove(TValue item)
+        {
+            lock (items)
+            {
+				return items.Remove(item);
+            }
+        }
+
+		/// <summary>
 		/// Returns the number of cache entries.
 		/// </summary>
 		/// <returns>The number of cache entries.</returns>

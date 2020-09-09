@@ -123,11 +123,17 @@
   <data name="AdjustmentType" xml:space="preserve">
     <value>Adjustment Type</value>
   </data>
+  <data name="All" xml:space="preserve">
+    <value>All</value>
+  </data>
   <data name="Amount" xml:space="preserve">
     <value>Amount</value>
   </data>
   <data name="AndXOthers" xml:space="preserve">
     <value>And {0} others...</value>
+  </data>
+  <data name="Appointment" xml:space="preserve">
+    <value>Appointment</value>
   </data>
   <data name="Balance" xml:space="preserve">
     <value>Balance</value>
@@ -174,6 +180,9 @@
   <data name="Command" xml:space="preserve">
     <value>Command</value>
   </data>
+  <data name="Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
   <data name="ConfirmDelete" xml:space="preserve">
     <value>Delete?</value>
   </data>
@@ -203,6 +212,9 @@
   </data>
   <data name="Description" xml:space="preserve">
     <value>Description</value>
+  </data>
+  <data name="Done" xml:space="preserve">
+    <value>Done</value>
   </data>
   <data name="Drug" xml:space="preserve">
     <value>Drug</value>
@@ -282,8 +294,17 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="NoQueriesInTheQueryFeedToLog" xml:space="preserve">
     <value>No queries in the Query Feed to log.</value>
   </data>
+  <data name="NotApplicableAbbr" xml:space="preserve">
+    <value>n/a</value>
+  </data>
+  <data name="Note" xml:space="preserve">
+    <value>Note</value>
+  </data>
   <data name="Notes" xml:space="preserve">
     <value>Notes</value>
+  </data>
+  <data name="Number" xml:space="preserve">
+    <value>Number</value>
   </data>
   <data name="OperationComplete" xml:space="preserve">
     <value>Done.</value>
@@ -300,11 +321,17 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="Patients" xml:space="preserve">
     <value>Patients</value>
   </data>
+  <data name="Percentage" xml:space="preserve">
+    <value>Percentage</value>
+  </data>
   <data name="PickList" xml:space="preserve">
     <value>Pick List</value>
   </data>
   <data name="PleaseEnterAbbreviation" xml:space="preserve">
     <value>Please enter an abbreviation.</value>
+  </data>
+  <data name="PleaseEnterDate" xml:space="preserve">
+    <value>Please enter a date.</value>
   </data>
   <data name="PleaseEnterDescription" xml:space="preserve">
     <value>Please enter a description.</value>
@@ -314,6 +341,9 @@ If you do have a printer installed, restarting the workstation may solve the pro
   </data>
   <data name="PleaseEnterPassword" xml:space="preserve">
     <value>Please enter password</value>
+  </data>
+  <data name="PleaseEnterTitle" xml:space="preserve">
+    <value>Please enter a title.</value>
   </data>
   <data name="PleaseEnterValidAmount" xml:space="preserve">
     <value>Please enter a valid amount.</value>
@@ -345,6 +375,10 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="Provider" xml:space="preserve">
     <value>Provider</value>
   </data>
+  <data name="ProviderIdAbbr" xml:space="preserve">
+    <value>Prov. #</value>
+    <comment>Abbreviation of Provider ID, used in various column headings.</comment>
+  </data>
   <data name="Response" xml:space="preserve">
     <value>Response</value>
   </data>
@@ -353,6 +387,12 @@ If you do have a printer installed, restarting the workstation may solve the pro
   </data>
   <data name="SetGraphicsForComputerToSimple" xml:space="preserve">
     <value>Set the graphics for computer '{0}' to simple.</value>
+  </data>
+  <data name="Showing" xml:space="preserve">
+    <value>Showing</value>
+  </data>
+  <data name="Shown" xml:space="preserve">
+    <value>Shown</value>
   </data>
   <data name="Specialty" xml:space="preserve">
     <value>Specialty</value>
@@ -372,11 +412,23 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="Students" xml:space="preserve">
     <value>Students</value>
   </data>
+  <data name="TagCopy" xml:space="preserve">
+    <value>(copy)</value>
+  </data>
   <data name="TagHidden" xml:space="preserve">
     <value>(hidden)</value>
   </data>
+  <data name="TagNone" xml:space="preserve">
+    <value>(none)</value>
+  </data>
+  <data name="TagNull" xml:space="preserve">
+    <value>(null)</value>
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Text</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Title</value>
   </data>
   <data name="Type" xml:space="preserve">
     <value>Type</value>
@@ -389,6 +441,9 @@ If you do have a printer installed, restarting the workstation may solve the pro
   </data>
   <data name="Value" xml:space="preserve">
     <value>Value</value>
+  </data>
+  <data name="Weighted" xml:space="preserve">
+    <value>Weighted</value>
   </data>
   <data name="YouHaveSelectedProblemWithUnofficialSnomedCode" xml:space="preserve">
     <value>You have selected a problem with an unofficial SNOMED CT code. Please correct the problem definition by going to Lists | Problems and choosing an official code from the SNOMED CT list.</value>

@@ -250,9 +250,16 @@ namespace OpenDentBusiness
 		///<summary>80- There is no user interface in the security window for this permission.  It is only used for tracking.  Mainly used for ortho clinics.</summary>
 		[Description("Patient Field Edit")]
 		PatientFieldEdit,
-		///<summary>81- Assign this permission to a staff person who will edit evaluations in case of an emergency.  This is not meant to be a permanent permission given to a group.</summary>
+
+
+		/// <summary>
+		/// Assign this permission to a staff person who will edit evaluations in case of an emergency. 
+		/// This is not meant to be a permanent permission given to a group.
+		/// </summary>
 		[Description("Admin Evaluation Edit")]
 		AdminDentalEvaluations,
+
+
 		///<summary>82- There is no user interface in the security window for this permission.  It is only used for tracking.</summary>
 		[Description("Treat Plan Discount Edit")]
 		TreatPlanDiscountEdit,

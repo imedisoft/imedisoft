@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness
 {
@@ -33,7 +35,7 @@ namespace OpenDentBusiness
 			data.ListAdjustments = Adjustments.GetForProcs(data.ListProcsForAppt.Select(x => x.ProcNum).ToList());
 			if (!Prefs.GetBool(PrefName.EasyHideDentalSchools))
 			{
-				data.ListStudents = ReqStudents.GetForAppt(AptCur.AptNum);
+				data.ListStudents = StudentResults.GetByAppt(AptCur.AptNum).ToList();
 			}
 			return data;
 		}
@@ -97,7 +99,7 @@ namespace OpenDentBusiness
 			public DataTable TableComms;
 			public LabCase Lab;
 			public DataTable PatientTable;
-			public List<ReqStudent> ListStudents;
+			public List<StudentResult> ListStudents;
 			public List<ClaimProc> ListClaimProcs;
 			public List<Adjustment> ListAdjustments;
 		}
