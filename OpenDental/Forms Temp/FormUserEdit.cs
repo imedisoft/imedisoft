@@ -65,7 +65,7 @@ namespace OpenDental{
 			_isFillingList=true;
 			for(int i=0;i<_listUserGroups.Count;i++){
 				listUserGroup.Items.Add(new ODBoxItem<UserGroup>(_listUserGroups[i].Description,_listUserGroups[i]));
-				if(!_isFromAddUser && UserCur.IsInUserGroup(_listUserGroups[i].Id)) {
+				if(!_isFromAddUser && Userods.IsInUserGroup(UserCur.Id, _listUserGroups[i].Id)) {
 					listUserGroup.SetSelected(i,true);
 				}
 				if(_isFromAddUser && _listUserGroups[i].Id==Prefs.GetLong(PrefName.DefaultUserGroup)) {
@@ -258,7 +258,7 @@ namespace OpenDental{
 			{
 				return;
 			}
-			UserCur.FailedLoginDateTime=DateTime.MinValue;
+			UserCur.FailedLoginDate=DateTime.MinValue;
 			UserCur.FailedAttempts=0;
 			try {
 				Userods.Update(UserCur);
@@ -396,7 +396,7 @@ namespace OpenDental{
 				}
 				else{
 					List<UserGroup> listNewUserGroups=listUserGroup.SelectedItems.OfType<ODBoxItem<UserGroup>>().Select(x => x.Tag).ToList();
-					List<UserGroup> listOldUserGroups=UserCur.GetGroups();
+					List<UserGroup> listOldUserGroups=UserGroups.GetForUser(UserCur.Id,false).ToList();
 					Userods.Update(UserCur,listNewUserGroups.Select(x => x.Id).ToList());
 					//if this is the current user, update the user, credentials, etc.
 					if(UserCur.Id==Security.CurrentUser.Id) {

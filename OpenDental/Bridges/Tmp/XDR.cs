@@ -19,8 +19,8 @@ namespace OpenDental.Bridges
 			List<ProgramProperty> listXDRProperties = ProgramProperties.GetListForProgramAndClinicWithDefault(ProgramCur.Id, Clinics.Active.Id);
 			
 			// Look for a locationID for the current clinic, use that locationID if present else just leave blank
-			string locationID = listXDRProperties.FirstOrDefault(x => x.ClinicId == Clinics.ClinicId && x.Name == XDR.PropertyDescs.LocationID)?.Value;
-			string infoFile = listXDRProperties.FirstOrDefault(x => x.Name == XDR.PropertyDescs.InfoFilePath)?.Value;
+			string locationID = listXDRProperties.FirstOrDefault(x => x.ClinicId == Clinics.ClinicId && x.Description == XDR.PropertyDescs.LocationID)?.Value;
+			string infoFile = listXDRProperties.FirstOrDefault(x => x.Description == XDR.PropertyDescs.InfoFilePath)?.Value;
 			if (infoFile.Trim() == "")
 			{
 				infoFile = CodeBase.ODFileUtils.CombinePaths(Storage.GetTempPath(), "infofile.txt");
@@ -34,7 +34,7 @@ namespace OpenDental.Bridges
 					//There is no validation to ensure that length is 8 char or less.
 					string id = "";
 					//If we can exactly match the pat/chart program link to ChartNum, use ChartNum, for all other cases fall back on PatNum as a fail safe.
-					if (listXDRProperties.FirstOrDefault(x => x.Name == XDR.PropertyDescs.PatNumOrChartNum)?.Value == "1")
+					if (listXDRProperties.FirstOrDefault(x => x.Description == XDR.PropertyDescs.PatNumOrChartNum)?.Value == "1")
 					{
 						id = pat.ChartNumber;
 					}

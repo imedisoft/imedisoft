@@ -1,5 +1,4 @@
 using Imedisoft.Data.Annotations;
-using System;
 
 namespace OpenDentBusiness
 {
@@ -9,37 +8,34 @@ namespace OpenDentBusiness
     /// The property is usually retrieved based on its name.
     /// </summary>
     [Table]
-	[CrudTable(IsSynchable = true, HasBatchWriteMethods = true)]
-	public class ProgramProperty : TableBase
+	public class ProgramProperty
 	{
-		[Column("ProgramPropertyNum"), PrimaryKey]
+		[PrimaryKey]
 		public long Id;
 
-		[Column("ProgramNum"), ForeignKey(typeof(Program), nameof(Program.Id))]
+		//[Column("ProgramNum"), ForeignKey(typeof(Program), nameof(Program.Id))]
 		public long ProgramId;
 
 		/// <summary>
 		/// The (internal) name of the property.
 		/// </summary>
-		[Column("PropertyDesc")]
-		public string Name;
+		public string Description;
 
 		/// <summary>
 		/// The property value
 		/// </summary>
-		[Column("PropertyValue")]
 		public string Value;
 
 		/// <summary>
 		/// The name of the computer the property applies to.
 		/// </summary>
-		[Column("ComputerName")]
+		[Nullable]
 		public string MachineName;
 
 		/// <summary>
 		/// The ID of the clinic the property applies to.
 		/// </summary>
-		[Column("ClinicNum"), ForeignKey(typeof(Clinic), nameof(Clinic.Id))]
+		//[Column("ClinicNum"), ForeignKey(typeof(Clinic), nameof(Clinic.Id))]
 		public long ClinicId;
 
 		public ProgramProperty Copy()

@@ -24,7 +24,7 @@ namespace Imedisoft.Forms
 
 		private void FormProgramProperty_Load(object sender, EventArgs e)
 		{
-			propertyTextBox.Text = programProperty.Name;
+			propertyTextBox.Text = programProperty.Description;
 
 			if (encrypted && programProperty.Value != "")
 			{
@@ -49,7 +49,7 @@ namespace Imedisoft.Forms
                 //programProperty.Value = encryptedText;
 			}
 
-			ProgramProperties.Update(programProperty);
+			ProgramProperties.Save(programProperty);
 
 			DialogResult = DialogResult.OK;
 		}

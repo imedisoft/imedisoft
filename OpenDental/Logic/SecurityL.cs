@@ -16,7 +16,7 @@ namespace OpenDental
 		/// </summary>
 		public static bool ChangePassword(bool forcedLogOff)
 		{
-			if (Security.CurrentUser.UserNumCEMT != 0)
+			if (Security.CurrentUser.UserIdCEMT != 0)
 			{
 				ODMessageBox.Show("Use the CEMT tool to change your password.", "Imedisoft",
 					MessageBoxButtons.OK, MessageBoxIcon.Information);

@@ -22,7 +22,7 @@ using OpenDentBusiness.Crud;
 namespace OpenDentBusiness
 {
     ///<summary>(Users OD)</summary>
-    public class Userods
+    public partial class Userods
 	{
 		#region Get Methods
 
@@ -33,21 +33,21 @@ namespace OpenDentBusiness
 		public static long GetFirstSecurityAdminUserNumNoPasswordNoCache()
 		{
 			//The query will order by UserName in order to preserve old behavior (mimics the cache).
-			string command = @"SELECT userod.UserNum,CASE WHEN COALESCE(userod.Password,'')='' THEN 0 ELSE 1 END HasPassword 
-				FROM userod
-				INNER JOIN usergroupattach ON userod.UserNum=usergroupattach.UserNum
+			string command = @"SELECT users.id, CASE WHEN COALESCE(users.password_hash, '') = '' THEN 0 ELSE 1 END has_password 
+				FROM users
+				INNER JOIN usergroupattach ON users.id = usergroupattach.UserNum
 				INNER JOIN `group_permissions` ON usergroupattach.UserGroupNum = `group_permissions`.`user_group_id` 
-				WHERE userod.IsHidden=0
+				WHERE users.is_hidden=0
 				AND `group_permissions`.`permission` = " + (int)Permissions.SecurityAdmin + @"
-				GROUP BY userod.UserNum
-				ORDER BY userod.UserName
+				GROUP BY users.id
+				ORDER BY users.user_name
 				LIMIT 1";
 			DataTable table = Database.ExecuteDataTable(command);
 			long userNumAdminNoPass = 0;
-			if (table != null && table.Rows.Count > 0 && table.Rows[0]["HasPassword"].ToString() == "0")
+			if (table != null && table.Rows.Count > 0 && table.Rows[0]["has_password"].ToString() == "0")
 			{
 				//The first admin user in the database does NOT have a password set.  Return their UserNum.
-				userNumAdminNoPass = PIn.Long(table.Rows[0]["UserNum"].ToString());
+				userNumAdminNoPass = PIn.Long(table.Rows[0]["id"].ToString());
 			}
 			return userNumAdminNoPass;
 		}
@@ -55,8 +55,7 @@ namespace OpenDentBusiness
 		///<summary>Gets the corresponding user for the userNum passed in without using the cache.</summary>
 		public static Userod GetUserNoCache(long userNum)
 		{
-			string command = "SELECT * FROM userod WHERE userod.UserNum=" + POut.Long(userNum);
-			return Crud.UserodCrud.SelectOne(command);
+			return SelectOne(userNum);
 		}
 
 		///<summary>Gets the user name for the userNum passed in.  Returns empty string if not found in the database.</summary>
@@ -97,10 +96,10 @@ namespace OpenDentBusiness
 		///<summary>Returns true if at least one admin user is present within the database.  Otherwise; false.</summary>
 		public static bool HasSecurityAdminUserNoCache()
 		{
-			string command = @"SELECT COUNT(*) FROM userod
-				INNER JOIN usergroupattach ON userod.UserNum=usergroupattach.UserNum
-				INNER JOIN `group_permissions` ON usergroupattach.UserGroupNum= `group_permissions`.`user_group_id` 
-				WHERE userod.IsHidden=0
+			string command = @"SELECT COUNT(*) FROM `users`
+				INNER JOIN usergroupattach ON `users`.`id` = usergroupattach.UserNum
+				INNER JOIN `group_permissions` ON usergroupattach.UserGroupNum = `group_permissions`.`user_group_id` 
+				WHERE `users`.`is_hidden` = 0
 				AND `group_permissions`.`permission` = " + (int)Permissions.SecurityAdmin;
 
 			return Database.ExecuteLong(command) != 0;
@@ -131,7 +130,7 @@ namespace OpenDentBusiness
         private class UserodsCache : ListCache<Userod>
         {
             protected override IEnumerable<Userod> Load()
-                => UserodCrud.SelectMany("SELECT * FROM userod ORDER BY UserName");
+                => SelectMany("SELECT * FROM `users` ORDER BY `user_name`");
         }
 
         private static readonly UserodsCache cache = new UserodsCache();
@@ -148,10 +147,10 @@ namespace OpenDentBusiness
         {
             if (isShort)
             {
-                return UserodCrud.SelectMany("SELECT * FROM userod WHERE IsHidden = 0 ORDER BY UserName").ToList();
+                return SelectMany("SELECT * FROM users WHERE is_hidden = 0 ORDER BY user_name").ToList();
             }
 
-            return UserodCrud.SelectMany("SELECT * FROM userod ORDER BY UserName").ToList();
+            return SelectMany("SELECT * FROM users ORDER BY user_name").ToList();
         }
 
 		public static Userod GetUser(long userNum)
@@ -173,7 +172,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static List<Userod> GetUsers(bool includeCEMT = false)
 		{
-            return cache.Find(user => !user.IsHidden && (includeCEMT || user.UserNumCEMT == 0)).ToList();
+            return cache.Find(user => !user.IsHidden && (includeCEMT || user.UserIdCEMT == 0)).ToList();
         }
 
 		/// <summary>
@@ -194,7 +193,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static List<Userod> GetUsersNoCache()
         {
-            return UserodCrud.SelectMany("SELECT * FROM userod").ToList();
+            return SelectMany("SELECT * FROM users").ToList();
         }
 
 		/// <summary>
@@ -202,7 +201,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static List<Userod> GetUsersForCEMT()
         {
-            return cache.Find(user => user.UserNumCEMT != 0).ToList();
+            return cache.Find(user => user.UserIdCEMT != 0).ToList();
         }
 
 		///<summary>Returns null if not found.  Is not case sensitive.  isEcwTight isn't even used.</summary>
@@ -216,7 +215,7 @@ namespace OpenDentBusiness
 		///Does not use the cache to find a corresponding user with the passed in userName.  Every middle tier call passes through here.</summary>
 		public static Userod GetUserByNameNoCache(string userName)
         {
-            return UserodCrud.SelectMany("SELECT * FROM userod WHERE UserName='" + POut.String(userName) + "'")
+            return SelectMany("SELECT * FROM users WHERE user_name='" + POut.String(userName) + "'")
                 .FirstOrDefault(user => !user.IsHidden && user.UserName.ToLower() == userName.ToLower());
         }
 
@@ -375,7 +374,7 @@ namespace OpenDentBusiness
 			// For now we are hardcoding a 5 minute delay when the user has failed to log in 5 times in a row.
 			// An admin user can reset the password or the failure attempt count for the user failing to log in via the Security window.
 			var serverTime = MiscData.GetNowDateTime();
-			if (user.FailedLoginDateTime.Year > 1880 && serverTime.Subtract(user.FailedLoginDateTime) < TimeSpan.FromMinutes(5) && user.FailedAttempts >= 5)
+			if (user.FailedLoginDate.HasValue && serverTime.Subtract(user.FailedLoginDate.Value) < TimeSpan.FromMinutes(5) && user.FailedAttempts >= 5)
 			{
 				if (hasExceptions)
 				{
@@ -390,16 +389,16 @@ namespace OpenDentBusiness
 			var passwordOk = Password.Verify(plaintextPassword, user.PasswordHash);
 			if (!passwordOk)
 			{
-				user.FailedLoginDateTime = serverTime;
+				user.FailedLoginDate = serverTime;
 				user.FailedAttempts += 1;
 			}
             else
             {
 				user.FailedAttempts = 0;
-				user.FailedLoginDateTime = DateTime.MinValue;
+				user.FailedLoginDate = DateTime.MinValue;
 			}
 
-			UserodCrud.Update(user);
+			ExecuteUpdate(user);
 
 			if (!passwordOk)
 			{
@@ -459,7 +458,7 @@ namespace OpenDentBusiness
 		{
 			Validate(false, userod, false, listUserGroupNums);
 
-			UserodCrud.Update(userod);
+			ExecuteUpdate(userod);
 			if (listUserGroupNums == null)
 			{
 				return;
@@ -503,7 +502,8 @@ namespace OpenDentBusiness
 			userToUpdate.PasswordHash = passwordHash;
 			userToUpdate.PasswordIsStrong = isPasswordStrong;
 
-			List<UserGroup> listUserGroups = userToUpdate.GetGroups(); //do not include CEMT users.
+
+			List<UserGroup> listUserGroups = UserGroups.GetForUser(userToUpdate.Id, false).ToList(); //do not include CEMT users.
 			if (listUserGroups.Count < 1)
 			{
 				throw new Exception("The current user must be in at least one user group.");
@@ -511,7 +511,7 @@ namespace OpenDentBusiness
 
 			Validate(false, userToUpdate, true, listUserGroups.Select(x => x.Id).ToList());
 
-			Crud.UserodCrud.Update(userToUpdate);
+			ExecuteUpdate(userToUpdate);
 		}
 
 		///<summary>Sets the TaskListInBox to 0 for any users that have this as their inbox.</summary>
@@ -530,19 +530,19 @@ namespace OpenDentBusiness
 				throw new Exception("Admins cannot be hidden.");
 			}
 			Validate(true, userod, false, listUserGroupNums);
-			long userNum = Crud.UserodCrud.Insert(userod);
+			long userNum = ExecuteInsert(userod);
 			UserGroupAttaches.SyncForUser(userod, listUserGroupNums);
 			if (isForCEMT)
 			{
-				userod.UserNumCEMT = userNum;
-				Crud.UserodCrud.Update(userod);
+				userod.UserIdCEMT = userNum;
+				ExecuteUpdate(userod);
 			}
 			return userNum;
 		}
 
 		public static long InsertNoCache(Userod userod)
 		{
-			return Crud.UserodCrud.Insert(userod);
+			return ExecuteInsert(userod);
 		}
 
 		///<summary>Surround with try/catch because it can throw exceptions.  
@@ -596,7 +596,7 @@ namespace OpenDentBusiness
 				throw new ApplicationException("At least one user must have Security Admin permission.");
 			}
 			if (user.IsHidden//hidden 
-				&& user.UserNumCEMT == 0//and non-CEMT
+				&& user.UserIdCEMT == 0//and non-CEMT
 				&& Database.ExecuteString(command) != "0")//if this user is admin
 			{
 				throw new ApplicationException("Admins cannot be hidden.");
@@ -723,7 +723,7 @@ namespace OpenDentBusiness
 
 		public static List<Userod> GetForGroup(long userGroupNum)
 		{
-            return cache.Find(x => x.IsInUserGroup(userGroupNum)).ToList();
+            return cache.Find(x => IsInUserGroup(x.Id, userGroupNum)).ToList();
 		}
 
 		/// <summary>
@@ -741,7 +741,7 @@ namespace OpenDentBusiness
 				+ "AND userclinic.ClinicNum = " + POut.Long(clinicNum) + " "
 			+ "INNER JOIN userod ON userod.UserNum = userclinic.UserNum ";
 
-			return UserodCrud.SelectMany(command).ToList();
+			return SelectMany(command).ToList();
 		}
 
 		/// <summary>
@@ -752,20 +752,13 @@ namespace OpenDentBusiness
             return GetFirstOrDefault(x => x.Id == userNum)?.InboxTaskListId ?? 0;
         }
 
-		/// <summary>
-		/// Returns 3, which is non-admin provider type, if no match found.
-		/// </summary>
-		public static long GetAnesthProvType(long anesthProvType)
-		{
-			return GetFirstOrDefault(x => x.AnesthProvType == anesthProvType)?.AnesthProvType ?? 3;
-        }
 
 		public static List<Userod> GetUsersForJobs()
 		{
 			string command = "SELECT * FROM userod "
 				+ "INNER JOIN jobpermission ON userod.UserNum=jobpermission.UserNum "
 				+ "WHERE IsHidden=0 GROUP BY userod.UserNum ORDER BY UserName";
-			return UserodCrud.SelectMany(command).ToList();
+			return SelectMany(command).ToList();
 		}
 
 		///<summary>Returns empty string if password is strong enough.  Otherwise, returns explanation of why it's not strong enough.</summary>

@@ -165,7 +165,7 @@ namespace OpenDentBusiness
 			}
 
 			// Include CEMT users, as a CEMT user could be logged in when this is checked.
-			var dateAuthorized = GroupPermissions.GetDateRestrictedForPermission(permission, user.GetGroups(true).Select(x => x.Id).ToList());
+			var dateAuthorized = GroupPermissions.GetDateRestrictedForPermission(permission, UserGroups.GetForUser(user.Id, true).Select(x => x.Id).ToList());
 			if (!dateAuthorized.HasValue || date > dateAuthorized)
 			{
 				return;

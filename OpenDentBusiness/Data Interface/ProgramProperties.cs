@@ -18,16 +18,16 @@ namespace OpenDentBusiness
 		private class ProgramPropertyCache : ListCache<ProgramProperty>
 		{
             protected override IEnumerable<ProgramProperty> Load()
-				=> SelectMany("SELECT * FROM programproperty");
+				=> SelectMany("SELECT * FROM `program_properties`");
 		}
 
 		private static readonly ProgramPropertyCache cache = new ProgramPropertyCache();
 
-		public static ProgramProperty GetFirstOrDefault(Predicate<ProgramProperty> match) 
-			=> cache.FirstOrDefault(match);
+		public static ProgramProperty GetFirstOrDefault(Predicate<ProgramProperty> predicate) 
+			=> cache.FirstOrDefault(predicate);
 
-		public static List<ProgramProperty> GetWhere(Predicate<ProgramProperty> match) 
-			=> cache.Find(match);
+		public static List<ProgramProperty> GetWhere(Predicate<ProgramProperty> predicate) 
+			=> cache.Find(predicate);
 
 		public static void RefreshCache()
 			=> cache.Refresh();
@@ -45,10 +45,19 @@ namespace OpenDentBusiness
 
 			programProperty.Value = newValue;
 
-			Update(programProperty);
+			ExecuteUpdate(programProperty);
 
 			return true;
 		}
+
+		public static void Save(ProgramProperty programProperty)
+        {
+			if (programProperty.Id == 0) ExecuteInsert(programProperty);
+            else
+            {
+				ExecuteUpdate(programProperty);
+            }
+        }
 
 		/// <summary>
 		/// Copies rows for a given programNum for each clinic in listClinicNums.
@@ -61,18 +70,10 @@ namespace OpenDentBusiness
 				return false;
 			}
 
-            var command = "INSERT INTO programproperty (ProgramNum,PropertyDesc,PropertyValue,ComputerName,ClinicNum) ";
-            for (int i = 0; i < clinicIds.Count; i++)
-			{
-				if (i > 0)
-				{
-					command += " UNION ";
-				}
-
-				command += 
-					"SELECT ProgramNum,PropertyDesc,PropertyValue,ComputerName," + clinicIds[i] + " " +
-					"FROM programproperty WHERE ProgramNum=" + programId + " AND ClinicNum=0";
-			}
+			var command = "INSERT INTO `program_properties` (`program_id`, `description`, `value`, `machine_name`, `clinic_id`) " + 
+				string.Join(" UNION ", clinicIds.Select(clinicId =>
+					"SELECT `id`, `description`, `value`, `machine_name`, " + clinicId + " " +
+					"FROM `program_properties` WHERE `id` = " + programId + " AND `clinic_id` IS NULL"));
 
             return Database.ExecuteInsert(command) > 0;
 		}
@@ -98,8 +99,8 @@ namespace OpenDentBusiness
 			}
 
 			return GetForProgram(program.Id).Any(x => 
-				(x.Name == "Disable Advertising" && x.Value == "1") || //Office has decided to hide the advertising
-				(x.Name == "Disable Advertising HQ" && x.Value == "1"));//HQ has decided to hide the advertising
+				(x.Description == "Disable Advertising" && x.Value == "1") || //Office has decided to hide the advertising
+				(x.Description == "Disable Advertising HQ" && x.Value == "1"));//HQ has decided to hide the advertising
 		}
 
 		/// <summary>
@@ -112,7 +113,7 @@ namespace OpenDentBusiness
 		/// <returns>The value of the property or a empty string if the property is not set.</returns>
 		public static string Get(long programId, string programPropertyName, long? clinicId, string machineName)
         {
-			var programProperties = cache.Find(prop => prop.ProgramId == programId && prop.Name == programPropertyName.ToLower());
+			var programProperties = cache.Find(prop => prop.ProgramId == programId && prop.Description == programPropertyName.ToLower());
 			var programProperty = programProperties.FirstOrDefault(prop =>
 				prop.ClinicId == 0 && prop.MachineName == "");
 
@@ -157,7 +158,7 @@ namespace OpenDentBusiness
 		/// True if this is a program that we advertise.
 		/// </summary>
 		public static bool IsAdvertisingBridge(long programId) 
-			=> GetForProgram(programId).Any(x => x.Name.In("Disable Advertising", "Disable Advertising HQ"));
+			=> GetForProgram(programId).Any(x => x.Description.In("Disable Advertising", "Disable Advertising HQ"));
 
 		/// <summary>
 		/// Returns a list of ProgramProperties with the specified programNum and the specified clinicNum from the cache.
@@ -165,7 +166,7 @@ namespace OpenDentBusiness
 		/// Does not include path overrides.
 		/// </summary>
 		public static List<ProgramProperty> GetListForProgramAndClinic(long programId, long clinicId) 
-			=> GetWhere(x => x.ProgramId == programId && x.ClinicId == clinicId && x.Name != "");
+			=> GetWhere(x => x.ProgramId == programId && x.ClinicId == clinicId && x.Description != "");
 
 		/// <summary>
 		/// Returns a List of ProgramProperties attached to the specified programNum with the given clinicnum.  
@@ -181,7 +182,7 @@ namespace OpenDentBusiness
 
 			// Get all the defaults and return a list of defaults mixed with overrides.
 			List<ProgramProperty> listClinicAndDefaultProperties = GetWhere(x => x.ProgramId == programId && x.ClinicId == 0
-				  && !clinicProperties.Any(y => y.Name == x.Name));
+				  && !clinicProperties.Any(y => y.Description == x.Description));
 			listClinicAndDefaultProperties.AddRange(clinicProperties);
 			return listClinicAndDefaultProperties;//Clinic users need to have all properties, defaults with the clinic overrides.
 		}
@@ -190,7 +191,7 @@ namespace OpenDentBusiness
 		/// Returns the property value of the clinic override or default program property if no clinic override is found.
 		/// </summary>
 		public static string GetPropValForClinicOrDefault(long programNum, string desc, long clinicNum) 
-			=> GetListForProgramAndClinicWithDefault(programNum, clinicNum).FirstOrDefault(x => x.Name == desc).Value;
+			=> GetListForProgramAndClinicWithDefault(programNum, clinicNum).FirstOrDefault(x => x.Description == desc).Value;
 
 		/// <summary>
 		/// Returns a list of ProgramProperties attached to the specified programNum.
@@ -199,7 +200,7 @@ namespace OpenDentBusiness
 		/// Each call to this method creates an copy of the entire ProgramProperty cache.
 		/// </summary>
 		public static List<ProgramProperty> GetForProgram(long programNum) 
-			=> GetWhere(x => x.ProgramId == programNum && x.Name != "")
+			=> GetWhere(x => x.ProgramId == programNum && x.Description != "")
 				.OrderBy(x => x.ClinicId)
 				.ThenBy(x => x.Id)
 				.ToList();
@@ -209,20 +210,20 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static long SetProperty(long programId, string desc, string propval) 
 			=> Database.ExecuteNonQuery(
-				$"UPDATE programproperty SET PropertyValue='{POut.String(propval)}' " +
-				$"WHERE ProgramNum={programId} AND PropertyDesc='{POut.String(desc)}'");
+				$"UPDATE `program_properties` SET `value` = '{POut.String(propval)}' " +
+				$"WHERE `program_id` = {programId} AND `description` = '{POut.String(desc)}'");
 
 		/// <summary>
 		/// After GetForProgram has been run, this gets one of those properties. DO NOT MODIFY the returned property. Read only.
 		/// </summary>
 		public static ProgramProperty GetCur(List<ProgramProperty> programProperties, string propertyDescription) 
-			=> programProperties.FirstOrDefault(x => x.Name == propertyDescription);
+			=> programProperties.FirstOrDefault(x => x.Description == propertyDescription);
 
 		/// <summary>
 		/// Throws exception if program property is not found.
 		/// </summary>
 		public static string GetPropVal(long programNum, string desc) 
-			=> GetFirstOrDefault(x => x.ProgramId == programNum && x.Name == desc)?.Value 
+			=> GetFirstOrDefault(x => x.ProgramId == programNum && x.Description == desc)?.Value 
 				?? throw new ApplicationException("Property not found: " + desc);
 
 		public static string GetPropVal(ProgramName programName, string desc) 
@@ -244,7 +245,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static string GetPropValFromList(List<ProgramProperty> properties, string propertyDesc, long clinicId = 0) 
 			=> properties
-				.Where(x => x.ClinicId == clinicId && x.Name == propertyDesc)
+				.Where(x => x.ClinicId == clinicId && x.Description == propertyDesc)
 				.FirstOrDefault()?.Value ?? "";
 
 		/// <summary>
@@ -255,7 +256,7 @@ namespace OpenDentBusiness
 		{
 			for (int i = 0; i < properties.Count; i++)
 			{
-				if (properties[i].Name == propertyDesc)
+				if (properties[i].Description == propertyDesc)
 				{
 					return properties[i];
 				}
@@ -269,22 +270,22 @@ namespace OpenDentBusiness
 		/// Null if the property cannot be found by the description.
 		/// </summary>
 		public static ProgramProperty GetPropForProgByDesc(long programNum, string propertyDesc) 
-			=> GetForProgram(programNum).FirstOrDefault(x => x.Name == propertyDesc);
+			=> GetForProgram(programNum).FirstOrDefault(x => x.Description == propertyDesc);
 
 		/// <summary>
 		/// Returns the property with the matching description from the provided list.
 		/// Null if the property cannot be found by the description.
 		/// </summary>
 		public static ProgramProperty GetPropForProgByDesc(long programNum, string propertyDesc, long clinicNum = 0) 
-			=> GetForProgram(programNum).FirstOrDefault(x => x.Name == propertyDesc && x.ClinicId == clinicNum);
+			=> GetForProgram(programNum).FirstOrDefault(x => x.Description == propertyDesc && x.ClinicId == clinicNum);
 
 		/// <summary>
 		/// Used in FormUAppoint to get frequent and current data.
 		/// </summary>
 		public static string GetValFromDb(long programNum, string desc) 
 			=> Database.ExecuteString(
-				"SELECT PropertyValue FROM programproperty " +
-				"WHERE ProgramNum=" + programNum + " AND PropertyDesc='" + POut.String(desc) + "'");
+				"SELECT `value` FROM `program_properties` " +
+				"WHERE `program_id` = " + programNum + " AND `description` ='" + POut.String(desc) + "'");
 
 		/// <summary>
 		/// Returns the path override for the current computer and the specified programNum. 
@@ -293,7 +294,7 @@ namespace OpenDentBusiness
 		public static string GetLocalPathOverrideForProgram(long programNum) 
 			=> GetFirstOrDefault(x => 
 				x.ProgramId == programNum && 
-				x.Name == "" && 
+				x.Description == "" && 
 				x.MachineName.ToUpper() == Environment.MachineName.ToUpper())?.Value ?? "";
 		
 
@@ -305,19 +306,19 @@ namespace OpenDentBusiness
 			var programProperty = 
 				GetFirstOrDefault(x => 
 					x.ProgramId == programId && 
-					x.Name == "" && 
+					x.Description == "" && 
 					x.MachineName.ToUpper() == Environment.MachineName.ToUpper());
 
 			if (programProperty != null)
 			{
 				programProperty.Value = newPath;
 
-				Update(programProperty);
+				ExecuteUpdate(programProperty);
 
 				return; // Will only be one override per computer per program.
 			}
 
-            Insert(new ProgramProperty
+            ExecuteInsert(new ProgramProperty
 			{
 				ProgramId = programId,
 				Value = newPath,
@@ -333,13 +334,13 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static bool Sync(List<ProgramProperty> newProperties, long programId)
 		{
-			Database.ExecuteNonQuery("DELETE FROM programproperty WHERE ProgramNum = " + programId);
+			Database.ExecuteNonQuery("DELETE FROM `program_properties` WHERE `program_id` = " + programId);
 
 			foreach (var property in newProperties)
             {
 				property.ProgramId = programId;
 
-				Insert(property);
+				ExecuteInsert(property);
             }
 
 			cache.Refresh();
@@ -358,16 +359,16 @@ namespace OpenDentBusiness
 		{
 			var existingProperties = GetWhere(x => 
 				x.ProgramId == programId && 
-				x.Name != "" && 
+				x.Description != "" && 
 				clinicsIds.Contains(x.ClinicId));
 
-			Database.ExecuteNonQuery("DELETE FROM programproperty WHERE ProgramNum = " + programId + " AND ClinicNum IN (" + string.Join(", ", clinicsIds) + ")");
+			Database.ExecuteNonQuery("DELETE FROM `program_properties` WHERE `program_id` = " + programId + " AND `clinic_id` IN (" + string.Join(", ", clinicsIds) + ")");
 
 			foreach (var property in newProperties)
 			{
 				property.ProgramId = programId;
 
-				Insert(property);
+				ExecuteInsert(property);
 			}
 
 			cache.Refresh();
@@ -471,12 +472,12 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static void Delete(ProgramProperty programProperty)
 		{
-			if (!GetDeletablePropertyDescriptions().Contains(programProperty.Name))
+			if (!GetDeletablePropertyDescriptions().Contains(programProperty.Description))
 			{
-				throw new Exception("Not allowed to delete the ProgramProperty with a description of: " + programProperty.Name);
+				throw new Exception("Not allowed to delete the program property with description '" + programProperty.Description + "'.");
 			}
 
-			Database.ExecuteNonQuery("DELETE FROM programproperty WHERE ProgramPropertyNum=" + programProperty.Id);
+			ExecuteDelete(programProperty);
 		}
 
 		/// <summary>

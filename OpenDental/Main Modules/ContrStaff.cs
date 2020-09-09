@@ -967,14 +967,14 @@ namespace OpenDental
 					continue;
 				}
 				listPropsForClinic = listProperties.FindAll(x => x.ClinicId == clinicNum);
-				string sftpAddress = listPropsForClinic.Find(x => x.Name == "SftpServerAddress")?.Value ?? "";
+				string sftpAddress = listPropsForClinic.Find(x => x.Description == "SftpServerAddress")?.Value ?? "";
 				int sftpPort;
-				if (!int.TryParse(listPropsForClinic.Find(x => x.Name == "SftpServerPort")?.Value ?? "", out sftpPort))
+				if (!int.TryParse(listPropsForClinic.Find(x => x.Description == "SftpServerPort")?.Value ?? "", out sftpPort))
 				{
 					sftpPort = 22;//default to port 22
 				}
-				string userName = listPropsForClinic.Find(x => x.Name == "SftpUsername")?.Value ?? "";
-				string userPassword = listPropsForClinic.Find(x => x.Name == "SftpPassword")?.Value ?? "";
+				string userName = listPropsForClinic.Find(x => x.Description == "SftpUsername")?.Value ?? "";
+				string userPassword = listPropsForClinic.Find(x => x.Description == "SftpPassword")?.Value ?? "";
 				if (Sftp.TestConnection(sftpAddress, userName, userPassword, sftpPort))
 				{
 					return true;

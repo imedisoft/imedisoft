@@ -35,11 +35,11 @@ namespace OpenDental {
 			}
 			Program programErx=Programs.GetCur(ProgramName.eRx);
 			ProgramProperty ppClinicID=ListProperties
-					.FirstOrDefault(x => x.ClinicId!=_clinicCur.Id && x.Name==Erx.PropertyDescs.ClinicID && x.Value!="");
+					.FirstOrDefault(x => x.ClinicId!=_clinicCur.Id && x.Description==Erx.PropertyDescs.ClinicID && x.Value!="");
 			ProgramProperty ppClinicKey=null;
 			if(ppClinicID!=null) {
 				ppClinicKey=ListProperties
-					.FirstOrDefault(x => x.ClinicId==ppClinicID.ClinicId && x.Name==Erx.PropertyDescs.ClinicKey && x.Value!="");
+					.FirstOrDefault(x => x.ClinicId==ppClinicID.ClinicId && x.Description==Erx.PropertyDescs.ClinicKey && x.Value!="");
 			}
 			if(ppClinicID==null || string.IsNullOrWhiteSpace(ppClinicID.Value)
 				|| ppClinicKey==null || string.IsNullOrWhiteSpace(ppClinicKey.Value))
@@ -69,11 +69,11 @@ namespace OpenDental {
 			try {
 				Program programErx=Programs.GetCur(ProgramName.eRx);
 				ProgramProperty ppClinicID=ListProperties
-					.FirstOrDefault(x => x.ClinicId!=_clinicCur.Id && x.Name==Erx.PropertyDescs.ClinicID && x.Value!="");
+					.FirstOrDefault(x => x.ClinicId!=_clinicCur.Id && x.Description==Erx.PropertyDescs.ClinicID && x.Value!="");
 				ProgramProperty ppClinicKey=null;
 				if(ppClinicID!=null) {
 					ppClinicKey=ListProperties
-						.FirstOrDefault(x => x.ClinicId==ppClinicID.ClinicId && x.Name==Erx.PropertyDescs.ClinicKey && x.Value!="");
+						.FirstOrDefault(x => x.ClinicId==ppClinicID.ClinicId && x.Description==Erx.PropertyDescs.ClinicKey && x.Value!="");
 				}
 				if(ppClinicID==null || string.IsNullOrWhiteSpace(ppClinicID.Value)
 					|| ppClinicKey==null || string.IsNullOrWhiteSpace(ppClinicKey.Value))

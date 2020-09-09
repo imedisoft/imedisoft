@@ -111,7 +111,7 @@ namespace OpenDental
 				row=new GridRow();
 				row.Cells.Add(ListUsers[i].UserName);
 				for(int g=0;g<ArrayGroups.Length;g++) {//group name.
-					if(!ListUsers[i].IsInUserGroup(ArrayGroups[g].Id)) {
+					if(!Userods.IsInUserGroup(ListUsers[i].Id, ArrayGroups[g].Id)) {
 						continue;
 					}
 					row.Cells.Add(ArrayGroups[g].Description);

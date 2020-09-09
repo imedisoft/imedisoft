@@ -86,44 +86,44 @@ namespace OpenDental {
 		}
 
 		private void AddNeededProgramProperties(long clinicNum) {
-			if(!_listProgProps.Any(x => x.ClinicId==clinicNum && x.Name==PaySimple.PropertyDescs.PaySimpleApiUserName)) {
+			if(!_listProgProps.Any(x => x.ClinicId==clinicNum && x.Description==PaySimple.PropertyDescs.PaySimpleApiUserName)) {
 				_listProgProps.Add(new ProgramProperty() {
 					ClinicId=clinicNum,
-					Name=PaySimple.PropertyDescs.PaySimpleApiUserName,
+					Description=PaySimple.PropertyDescs.PaySimpleApiUserName,
 					ProgramId=_progCur.Id,
-					Value=_listProgProps.FirstOrDefault(x => x.Name==PaySimple.PropertyDescs.PaySimpleApiUserName && x.ClinicId==0).Value,
+					Value=_listProgProps.FirstOrDefault(x => x.Description==PaySimple.PropertyDescs.PaySimpleApiUserName && x.ClinicId==0).Value,
 				});
 			}
-			if(!_listProgProps.Any(x => x.ClinicId==clinicNum && x.Name==PaySimple.PropertyDescs.PaySimpleApiKey)) {
+			if(!_listProgProps.Any(x => x.ClinicId==clinicNum && x.Description==PaySimple.PropertyDescs.PaySimpleApiKey)) {
 				_listProgProps.Add(new ProgramProperty() {
 					ClinicId=clinicNum,
-					Name=PaySimple.PropertyDescs.PaySimpleApiKey,
+					Description=PaySimple.PropertyDescs.PaySimpleApiKey,
 					ProgramId=_progCur.Id,
-					Value=_listProgProps.FirstOrDefault(x => x.Name==PaySimple.PropertyDescs.PaySimpleApiKey && x.ClinicId==0).Value,
+					Value=_listProgProps.FirstOrDefault(x => x.Description==PaySimple.PropertyDescs.PaySimpleApiKey && x.ClinicId==0).Value,
 				});
 			}
-			if(!_listProgProps.Any(x => x.ClinicId==clinicNum && x.Name==PaySimple.PropertyDescs.PaySimplePayTypeCC)) {
+			if(!_listProgProps.Any(x => x.ClinicId==clinicNum && x.Description==PaySimple.PropertyDescs.PaySimplePayTypeCC)) {
 				_listProgProps.Add(new ProgramProperty() {
 					ClinicId=clinicNum,
-					Name=PaySimple.PropertyDescs.PaySimplePayTypeCC,
+					Description=PaySimple.PropertyDescs.PaySimplePayTypeCC,
 					ProgramId=_progCur.Id,
-					Value=_listProgProps.FirstOrDefault(x => x.Name==PaySimple.PropertyDescs.PaySimplePayTypeCC && x.ClinicId==0).Value,
+					Value=_listProgProps.FirstOrDefault(x => x.Description==PaySimple.PropertyDescs.PaySimplePayTypeCC && x.ClinicId==0).Value,
 				});
 			}
-			if(!_listProgProps.Any(x => x.ClinicId==clinicNum && x.Name==PaySimple.PropertyDescs.PaySimplePayTypeACH)) {
+			if(!_listProgProps.Any(x => x.ClinicId==clinicNum && x.Description==PaySimple.PropertyDescs.PaySimplePayTypeACH)) {
 				_listProgProps.Add(new ProgramProperty() {
 					ClinicId=clinicNum,
-					Name=PaySimple.PropertyDescs.PaySimplePayTypeACH,
+					Description=PaySimple.PropertyDescs.PaySimplePayTypeACH,
 					ProgramId=_progCur.Id,
-					Value=_listProgProps.FirstOrDefault(x => x.Name==PaySimple.PropertyDescs.PaySimplePayTypeACH && x.ClinicId==0).Value,
+					Value=_listProgProps.FirstOrDefault(x => x.Description==PaySimple.PropertyDescs.PaySimplePayTypeACH && x.ClinicId==0).Value,
 				});
 			}
-			if(!_listProgProps.Any(x => x.ClinicId==clinicNum && x.Name==PaySimple.PropertyDescs.PaySimplePreventSavingNewCC)) {
+			if(!_listProgProps.Any(x => x.ClinicId==clinicNum && x.Description==PaySimple.PropertyDescs.PaySimplePreventSavingNewCC)) {
 				_listProgProps.Add(new ProgramProperty() {
 					ClinicId=clinicNum,
-					Name=PaySimple.PropertyDescs.PaySimplePreventSavingNewCC,
+					Description=PaySimple.PropertyDescs.PaySimplePreventSavingNewCC,
 					ProgramId=_progCur.Id,
-					Value=_listProgProps.FirstOrDefault(x => x.Name==PaySimple.PropertyDescs.PaySimplePreventSavingNewCC && x.ClinicId==0)?.Value??"0",
+					Value=_listProgProps.FirstOrDefault(x => x.Description==PaySimple.PropertyDescs.PaySimplePreventSavingNewCC && x.ClinicId==0)?.Value??"0",
 				});
 			}
 		}
@@ -169,20 +169,20 @@ namespace OpenDental {
 			}
 			SynchWithHQ();//if the user just modified the HQ credentials, change any credentials that were the same as HQ to keep them synched
 			//set the values in the list for the clinic we are switching from, at _clinicIndexRevert
-			_listProgProps.FindAll(x => x.ClinicId==_listUserClinicNums[_indexClinicRevert] && x.Name==PaySimple.PropertyDescs.PaySimpleApiUserName)
+			_listProgProps.FindAll(x => x.ClinicId==_listUserClinicNums[_indexClinicRevert] && x.Description==PaySimple.PropertyDescs.PaySimpleApiUserName)
 				.ForEach(x => x.Value=textUsername.Text);//always 1 item; null safe
-			_listProgProps.FindAll(x => x.ClinicId==_listUserClinicNums[_indexClinicRevert] && x.Name==PaySimple.PropertyDescs.PaySimpleApiKey)
+			_listProgProps.FindAll(x => x.ClinicId==_listUserClinicNums[_indexClinicRevert] && x.Description==PaySimple.PropertyDescs.PaySimpleApiKey)
 				.ForEach(x => x.Value=textKey.Text);//always 1 item; null safe
 			_listProgProps.FindAll(x => x.ClinicId==_listUserClinicNums[_indexClinicRevert] 
-					&& x.Name==PaySimple.PropertyDescs.PaySimplePayTypeCC 
+					&& x.Description==PaySimple.PropertyDescs.PaySimplePayTypeCC 
 					&& comboPaymentTypeCC.SelectedIndex>-1)
 				.ForEach(x => x.Value=comboPaymentTypeCC.GetSelected<Definition>().Id.ToString());//always 1 item selected
 			_listProgProps.FindAll(x => x.ClinicId==_listUserClinicNums[_indexClinicRevert]
-					&& x.Name==PaySimple.PropertyDescs.PaySimplePayTypeACH
+					&& x.Description==PaySimple.PropertyDescs.PaySimplePayTypeACH
 					&& comboPaymentTypeACH.SelectedIndex>-1)
 				.ForEach(x => x.Value=comboPaymentTypeACH.GetSelected<Definition>().Id.ToString());//always 1 item selected
 			_listProgProps.FindAll(x => x.ClinicId==_listUserClinicNums[_indexClinicRevert]
-				&& x.Name==PaySimple.PropertyDescs.PaySimplePreventSavingNewCC)
+				&& x.Description==PaySimple.PropertyDescs.PaySimplePreventSavingNewCC)
 				.ForEach(x => x.Value=POut.Bool(checkPreventSavingNewCC.Checked));
 			_indexClinicRevert=comboClinic.SelectedIndex;//now that we've updated the values for the clinic we're switching from, update _indexClinicRevert
 			FillFields();
@@ -223,24 +223,24 @@ namespace OpenDental {
 			//for each distinct ClinicNum in the prog property list for PaySimple except HQ
 			foreach(long clinicNum in _listProgProps.Select(x => x.ClinicId).Where(x => x>0).Distinct()) {
 				//if this clinic has a different username or key, skip it
-				if(!_listProgProps.Exists(x => x.ClinicId==clinicNum && x.Name==PaySimple.PropertyDescs.PaySimpleApiUserName && x.Value==hqUsername)
-					|| !_listProgProps.Exists(x => x.ClinicId==clinicNum && x.Name==PaySimple.PropertyDescs.PaySimpleApiKey && x.Value==hqKey)) {
+				if(!_listProgProps.Exists(x => x.ClinicId==clinicNum && x.Description==PaySimple.PropertyDescs.PaySimpleApiUserName && x.Value==hqUsername)
+					|| !_listProgProps.Exists(x => x.ClinicId==clinicNum && x.Description==PaySimple.PropertyDescs.PaySimpleApiKey && x.Value==hqKey)) {
 					continue;
 				}
 				//this clinic had a matching username and key, so update the username and key to keep it synched with HQ
-				_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Name==PaySimple.PropertyDescs.PaySimpleApiUserName)
+				_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Description==PaySimple.PropertyDescs.PaySimpleApiUserName)
 					.ForEach(x => x.Value=textUsername.Text);//always 1 item; null safe
-				_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Name==PaySimple.PropertyDescs.PaySimpleApiKey)
+				_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Description==PaySimple.PropertyDescs.PaySimpleApiKey)
 					.ForEach(x => x.Value=textKey.Text);//always 1 item; null safe
 				if(!string.IsNullOrEmpty(payTypeCC)) {
 					//update clinic payment type if it originally matched HQ's payment type and the selected payment type is valid
-					_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Name==PaySimple.PropertyDescs.PaySimplePayTypeCC 
+					_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Description==PaySimple.PropertyDescs.PaySimplePayTypeCC 
 							&& x.Value==hqPayTypeCC)
 						.ForEach(x => x.Value=payTypeCC);
 				}
 				if(!string.IsNullOrEmpty(payTypeACH)) {
 					//update clinic payment type if it originally matched HQ's payment type and the selected payment type is valid
-					_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Name==PaySimple.PropertyDescs.PaySimplePayTypeACH
+					_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Description==PaySimple.PropertyDescs.PaySimplePayTypeACH
 							&& x.Value==hqPayTypeACH)
 						.ForEach(x => x.Value=payTypeACH);
 				}
@@ -307,15 +307,15 @@ namespace OpenDental {
 				payTypeACHSelected=comboPaymentTypeACH.GetSelected<Definition>().Id.ToString();
 			}
 			//set the values in the list for this clinic
-			_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Name==PaySimple.PropertyDescs.PaySimpleApiUserName)
+			_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Description==PaySimple.PropertyDescs.PaySimpleApiUserName)
 				.ForEach(x => x.Value=textUsername.Text);//always 1 item; null safe
-			_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Name==PaySimple.PropertyDescs.PaySimpleApiKey)
+			_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Description==PaySimple.PropertyDescs.PaySimpleApiKey)
 				.ForEach(x => x.Value=textKey.Text);//always 1 item; null safe
-			_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Name==PaySimple.PropertyDescs.PaySimplePayTypeCC)
+			_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Description==PaySimple.PropertyDescs.PaySimplePayTypeCC)
 				.ForEach(x => x.Value=payTypeCCSelected);//always 1 item
-			_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Name==PaySimple.PropertyDescs.PaySimplePayTypeACH)
+			_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Description==PaySimple.PropertyDescs.PaySimplePayTypeACH)
 				.ForEach(x => x.Value=payTypeACHSelected);//always 1 item
-			_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Name==PaySimple.PropertyDescs.PaySimplePreventSavingNewCC)
+			_listProgProps.FindAll(x => x.ClinicId==clinicNum && x.Description==PaySimple.PropertyDescs.PaySimplePreventSavingNewCC)
 				.ForEach(x => x.Value=POut.Bool(checkPreventSavingNewCC.Checked));
 			string payTypeCC;
 			string payTypeACH;

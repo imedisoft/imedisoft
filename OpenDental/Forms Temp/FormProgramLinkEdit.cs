@@ -60,7 +60,7 @@ namespace Imedisoft.Forms
 		{
 			hideButtonsCheckBox.Visible = true;
 
-			ProgramProperty prop = ProgramProperties.GetForProgram(ProgramCur.Id).FirstOrDefault(x => x.Name == "Disable Advertising");
+			ProgramProperty prop = ProgramProperties.GetForProgram(ProgramCur.Id).FirstOrDefault(x => x.Description == "Disable Advertising");
 			if (enabledCheckBox.Checked || prop == null)
 			{
 				hideButtonsCheckBox.Visible = false;
@@ -126,22 +126,22 @@ namespace Imedisoft.Forms
 
 			foreach (var property in programProperties)
 			{
-				if (property.Name.In("Disable Advertising", ProgramProperties.PropertyDescs.ClinicHideButton))
+				if (property.Description.In("Disable Advertising", ProgramProperties.PropertyDescs.ClinicHideButton))
 				{
 					continue;
 				}
 
 				var gridRow = new GridRow();
 
-				gridRow.Cells.Add(property.Name);
-				if (ProgramCur.Name == ProgramName.XVWeb.ToString() && property.Name == XVWeb.ProgramProps.Password)
+				gridRow.Cells.Add(property.Description);
+				if (ProgramCur.Name == ProgramName.XVWeb.ToString() && property.Description == XVWeb.ProgramProps.Password)
 				{
                     //CDT.Class1.Decrypt(property.Value, out string decrypted);
 
                     gridRow.Cells.Add(new string('*', property.Value.Length));//Show the password as '*'
 
 				}
-				else if (ProgramCur.Name == ProgramName.XVWeb.ToString() && property.Name == XVWeb.ProgramProps.ImageCategory)
+				else if (ProgramCur.Name == ProgramName.XVWeb.ToString() && property.Description == XVWeb.ProgramProps.ImageCategory)
 				{
 					Definition imageCat = Definitions.GetDefsForCategory(DefinitionCategory.ImageCats).FirstOrDefault(x => x.Id == PIn.Long(property.Value));
 					if (imageCat == null)
@@ -189,7 +189,7 @@ namespace Imedisoft.Forms
 		{
 			var properties =
 				ProgramProperties.GetForProgram(ProgramCur.Id)
-					.Where(x => x.Name == ProgramProperties.PropertyDescs.ClinicHideButton).ToList();
+					.Where(x => x.Description == ProgramProperties.PropertyDescs.ClinicHideButton).ToList();
 
 			if (PrefC.HasClinicsEnabled && !properties.IsNullOrEmpty())
 			{
@@ -236,7 +236,7 @@ namespace Imedisoft.Forms
 				switch (ProgramCur.Name)
 				{
 					case nameof(ProgramName.XVWeb):
-						switch (programProperty.Name)
+						switch (programProperty.Description)
 						{
 							case XVWeb.ProgramProps.ImageCategory:
 								List<string> listDefNums = Definitions.GetDefsForCategory(DefinitionCategory.ImageCats, true).Select(x => POut.Long(x.Id)).ToList();
@@ -298,7 +298,7 @@ namespace Imedisoft.Forms
 				return;
 			}
 
-			ProgramProperty property = ProgramProperties.GetForProgram(ProgramCur.Id).FirstOrDefault(x => x.Name == "Disable Advertising");
+			ProgramProperty property = ProgramProperties.GetForProgram(ProgramCur.Id).FirstOrDefault(x => x.Description == "Disable Advertising");
 			if (property == null)
 			{
 				return;//should never happen.
@@ -313,12 +313,12 @@ namespace Imedisoft.Forms
 				property.Value = "0";
 			}
 
-			ProgramProperties.Update(property);
+			ProgramProperties.Save(property);
 		}
 
 		private void ShowFormProgramProperty(ProgramProperty programProperty)
 		{
-			bool encrypted = ProgramCur.Name == ProgramName.XVWeb.ToString() && programProperty.Name == XVWeb.ProgramProps.Password;
+			bool encrypted = ProgramCur.Name == ProgramName.XVWeb.ToString() && programProperty.Description == XVWeb.ProgramProps.Password;
 
 			using (var formProgramProperty = new FormProgramProperty(programProperty, encrypted))
 			{
@@ -351,7 +351,7 @@ namespace Imedisoft.Forms
 				return;
 			}
 			programProperty.Value = listValuesForDb[inputBox.SelectedIndex];
-			ProgramProperties.Update(programProperty, programPropertyOld);
+			ProgramProperties.Save(programProperty);
 			ProgramProperties.RefreshCache();
 			FillGrid();
 		}
@@ -385,7 +385,7 @@ namespace Imedisoft.Forms
 
 			var properties = 
 				ProgramProperties.GetForProgram(ProgramCur.Id)
-					.Where(x => x.Name == ProgramProperties.PropertyDescs.ClinicHideButton && clinicIds.Contains(x.ClinicId))
+					.Where(x => x.Description == ProgramProperties.PropertyDescs.ClinicHideButton && clinicIds.Contains(x.ClinicId))
 					.ToList();
 
 			using (var formProgramLinkHideClinics = new FormProgramLinkHideClinics(ProgramCur, properties, clinics))

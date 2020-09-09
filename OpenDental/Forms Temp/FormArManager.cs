@@ -1118,8 +1118,8 @@ namespace OpenDental
 			}
 			comboDemandType.Items.Clear();
 			Dictionary<long,string[]> dictClinicSelectedServices=_dictClinicProgProps
-				.Where(x => x.Value.Any(y => y.Name=="SelectedServices" && !string.IsNullOrEmpty(y.Value)))
-				.ToDictionary(x => x.Key,x => x.Value.Find(y => y.Name=="SelectedServices").Value.Split(','));
+				.Where(x => x.Value.Any(y => y.Description=="SelectedServices" && !string.IsNullOrEmpty(y.Value)))
+				.ToDictionary(x => x.Key,x => x.Value.Find(y => y.Description=="SelectedServices").Value.Split(','));
 			if(listClinicNums.Any(x => dictClinicSelectedServices.ContainsKey(x) 
 				&& dictClinicSelectedServices[x].Contains(((int)TsiDemandType.Accelerator).ToString()))) 
 			{
@@ -1264,8 +1264,8 @@ namespace OpenDental
 			#endregion Get PatAgings and Age of Accounts Dictionary
 			#region Validate Selected Pats and Demand Type
 			Dictionary<long,string[]> dictClinicSelectedServices=_dictClinicProgProps
-				.Where(x => x.Value.Any(y => y.Name=="SelectedServices" && !string.IsNullOrEmpty(y.Value)))
-				.ToDictionary(x => x.Key,x => x.Value.Find(y => y.Name=="SelectedServices").Value.Split(','));
+				.Where(x => x.Value.Any(y => y.Description=="SelectedServices" && !string.IsNullOrEmpty(y.Value)))
+				.ToDictionary(x => x.Key,x => x.Value.Find(y => y.Description=="SelectedServices").Value.Split(','));
 			TsiDemandType demandType=(tabControlMain.SelectedTab==tabUnsent?comboDemandType.GetSelected<TsiDemandType>():comboExcludedDemandType.GetSelected<TsiDemandType>());
 			List<long> listPatNumsToReselect=listPatAging.FindAll(x => !dictClinicSelectedServices.ContainsKey(PrefC.HasClinicsEnabled?x.ClinicNum:0)
 						|| !dictClinicSelectedServices[PrefC.HasClinicsEnabled?x.ClinicNum:0].Contains(((int)demandType).ToString())).Select(x => x.PatNum).ToList();
@@ -1385,10 +1385,10 @@ namespace OpenDental
 					continue;
 				}
 				if(demandType==TsiDemandType.Accelerator) {
-					clientID=listProgProps.Find(x => x.Name=="ClientIdAccelerator")?.Value??"";
+					clientID=listProgProps.Find(x => x.Description=="ClientIdAccelerator")?.Value??"";
 				}
 				else {
-					clientID=listProgProps.Find(x => x.Name=="ClientIdCollection")?.Value??"";
+					clientID=listProgProps.Find(x => x.Description=="ClientIdCollection")?.Value??"";
 				}
 				try {
 					//find most recent account change log less than 50 days ago and if it was a suspend trans send reinstate update msg instead of placement msg
@@ -1492,13 +1492,13 @@ namespace OpenDental
 					listFailedPatNums.AddRange(kvp.Value.Keys);
 					continue;
 				}
-				string sftpAddress=listProps.Find(x => x.Name=="SftpServerAddress")?.Value??"";
+				string sftpAddress=listProps.Find(x => x.Description=="SftpServerAddress")?.Value??"";
 				int sftpPort;
-				if(!int.TryParse(listProps.Find(x => x.Name=="SftpServerPort")?.Value??"",out sftpPort)) {
+				if(!int.TryParse(listProps.Find(x => x.Description=="SftpServerPort")?.Value??"",out sftpPort)) {
 					sftpPort=22;//default to port 22
 				}
-				string userName=listProps.Find(x => x.Name=="SftpUsername")?.Value??"";
-				string userPassword=listProps.Find(x => x.Name=="SftpPassword")?.Value??"";
+				string userName=listProps.Find(x => x.Description=="SftpUsername")?.Value??"";
+				string userPassword=listProps.Find(x => x.Description=="SftpPassword")?.Value??"";
 				byte[] fileContents=Encoding.ASCII.GetBytes(TsiMsgConstructor.GetPlacementFileHeader()+"\r\n"+string.Join("\r\n",kvp.Value.Values));
 				try {
 					Sftp.Upload(sftpAddress, userName, userPassword, sftpPort, 
@@ -1541,13 +1541,13 @@ namespace OpenDental
 					listFailedPatNums.AddRange(kvp.Value.Keys);
 					continue;
 				}
-				string sftpAddress=listProps.Find(x => x.Name=="SftpServerAddress")?.Value??"";
+				string sftpAddress=listProps.Find(x => x.Description=="SftpServerAddress")?.Value??"";
 				int sftpPort;
-				if(!int.TryParse(listProps.Find(x => x.Name=="SftpServerPort")?.Value??"",out sftpPort)) {
+				if(!int.TryParse(listProps.Find(x => x.Description=="SftpServerPort")?.Value??"",out sftpPort)) {
 					sftpPort=22;//default to port 22
 				}
-				string userName=listProps.Find(x => x.Name=="SftpUsername")?.Value??"";
-				string userPassword=listProps.Find(x => x.Name=="SftpPassword")?.Value??"";
+				string userName=listProps.Find(x => x.Description=="SftpUsername")?.Value??"";
+				string userPassword=listProps.Find(x => x.Description=="SftpPassword")?.Value??"";
 				byte[] fileContents=Encoding.ASCII.GetBytes(TsiMsgConstructor.GetUpdateFileHeader()+"\r\n"+string.Join("\r\n",kvp.Value.Values));
 				try {
 					Sftp.Upload(sftpAddress, userName, userPassword, sftpPort,
@@ -1971,10 +1971,10 @@ namespace OpenDental
 					clientId=pAgingCur.ListTsiLogs[0].ClientId;
 				}
 				if(string.IsNullOrEmpty(clientId)) {
-					clientId=listProgProps.Find(x => x.Name=="ClientIdAccelerator")?.Value;
+					clientId=listProgProps.Find(x => x.Description=="ClientIdAccelerator")?.Value;
 				}
 				if(string.IsNullOrEmpty(clientId)) {
-					clientId=listProgProps.Find(x => x.Name=="ClientIdCollection")?.Value;
+					clientId=listProgProps.Find(x => x.Description=="ClientIdCollection")?.Value;
 				}
 				if(string.IsNullOrEmpty(clientId)) {
 					listFailedPatNums.Add(pAgingCur.PatNum);
@@ -2037,13 +2037,13 @@ namespace OpenDental
 					listFailedPatNums.AddRange(kvp.Value.Keys);
 					continue;
 				}
-				string sftpAddress=listProps.Find(x => x.Name=="SftpServerAddress")?.Value??"";
+				string sftpAddress=listProps.Find(x => x.Description=="SftpServerAddress")?.Value??"";
 				int sftpPort;
-				if(!int.TryParse(listProps.Find(x => x.Name=="SftpServerPort")?.Value??"",out sftpPort)) {
+				if(!int.TryParse(listProps.Find(x => x.Description=="SftpServerPort")?.Value??"",out sftpPort)) {
 					sftpPort=22;//default to port 22
 				}
-				string userName=listProps.Find(x => x.Name=="SftpUsername")?.Value??"";
-				string userPassword=listProps.Find(x => x.Name=="SftpPassword")?.Value??"";
+				string userName=listProps.Find(x => x.Description=="SftpUsername")?.Value??"";
+				string userPassword=listProps.Find(x => x.Description=="SftpPassword")?.Value??"";
 				byte[] fileContents=Encoding.ASCII.GetBytes(TsiMsgConstructor.GetUpdateFileHeader()+"\r\n"+string.Join("\r\n",kvp.Value.Values));
 				try {
 					Sftp.Upload(sftpAddress, userName, userPassword, sftpPort,
@@ -2322,8 +2322,8 @@ namespace OpenDental
 			}
 			comboExcludedDemandType.Items.Clear();
 			Dictionary<long,string[]> dictClinicSelectedServices=_dictClinicProgProps
-				.Where(x => x.Value.Any(y => y.Name=="SelectedServices" && !string.IsNullOrEmpty(y.Value)))
-				.ToDictionary(x => x.Key,x => x.Value.Find(y => y.Name=="SelectedServices").Value.Split(','));
+				.Where(x => x.Value.Any(y => y.Description=="SelectedServices" && !string.IsNullOrEmpty(y.Value)))
+				.ToDictionary(x => x.Key,x => x.Value.Find(y => y.Description=="SelectedServices").Value.Split(','));
 			if(listClinicNums.Any(x => dictClinicSelectedServices.ContainsKey(x) 
 				&& dictClinicSelectedServices[x].Contains(((int)TsiDemandType.Accelerator).ToString()))) 
 			{

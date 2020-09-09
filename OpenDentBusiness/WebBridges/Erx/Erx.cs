@@ -28,7 +28,7 @@ namespace OpenDentBusiness
 			}
 
 			List<ProgramProperty> listProgramProperties = ProgramProperties.GetForProgram(progCur.Id);
-			ProgramProperty propCur = listProgramProperties.FirstOrDefault(x => x.Name == PropertyDescs.ErxOption);
+			ProgramProperty propCur = listProgramProperties.FirstOrDefault(x => x.Description == PropertyDescs.ErxOption);
 			if (propCur == null)
 			{
 				throw new ODException("The eRx Option program property is missing from the database.");

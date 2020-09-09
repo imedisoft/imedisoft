@@ -92,6 +92,7 @@
     <Compile Include="Icd10.cs" />
     <Compile Include="Icd9.cs" />
     <Compile Include="Permissions.cs" />
+    <Compile Include="ProgramProperty.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DentalSchools\SchoolCourseRequirement.cs" />
     <Compile Include="DentalSchools\StudentResult.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="SecurityLogHash.cs" />
     <Compile Include="SecurityLogSource.cs" />
     <Compile Include="Snomed.cs" />
+    <Compile Include="Userod.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Imedisoft.Data\Imedisoft.Data.csproj">

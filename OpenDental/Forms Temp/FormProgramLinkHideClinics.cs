@@ -21,7 +21,7 @@ namespace Imedisoft.Forms
 				return hiddenListBox.AllTags<Clinic>().Select(x => new ProgramProperty()
 				{
 					ProgramId = programId,
-					Name = ProgramProperties.PropertyDescs.ClinicHideButton,//Give it description we can use to delimit on later.
+					Description = ProgramProperties.PropertyDescs.ClinicHideButton,//Give it description we can use to delimit on later.
 					ClinicId = x.Id,
 				}).ToList();
 			}
@@ -72,7 +72,7 @@ namespace Imedisoft.Forms
 			List<Clinic> listUserClinics = Clinics.GetByCurrentUser();
 			//Get the cached list of button hiding ProgramProperties for clinics this user has access to, i.e. the "Old" list.
 			List<ProgramProperty> listHiddenForUserOld = ProgramProperties.GetForProgram(programId)
-				.Where(x => x.Name == ProgramProperties.PropertyDescs.ClinicHideButton
+				.Where(x => x.Description == ProgramProperties.PropertyDescs.ClinicHideButton
 					&& x.ClinicId.In(listUserClinics.Select(y => y.Id))).ToList();
 			//Compares the old list of ProgramProperties to the new one, if a clinic exists in the old list but not the new list then it was deleted by the 
 			//user and we remove it from the db.
@@ -89,7 +89,7 @@ namespace Imedisoft.Forms
 			{
 				if (!propNew.Id.In(listHiddenForUserOld.Select(x => x.Id)))
 				{//Clinic was Added to List
-					ProgramProperties.Insert(propNew);//Insert ProgramProperty
+					ProgramProperties.Save(propNew);//Insert ProgramProperty
 				}
 			}
 		}

@@ -481,9 +481,9 @@ namespace Imedisoft.Data
 			return -1;
 		}
 
-		public static List<Userod> GetAttachedUsers(long providerId) 
-			=> OpenDentBusiness.Crud.UserodCrud.SelectMany(
-				"SELECT userod.* FROM userod, `providers` p WHERE userod.ProvNum = p.`id` AND p.`id` =" + providerId).ToList();
+		public static List<Userod> GetAttachedUsers(long providerId) // TODO: Move to Userods...
+			=> Userods.SelectMany(
+				"SELECT * FROM `users` WHERE u.`provider_id` = " + providerId).ToList();
 
 		/// <summary>
 		/// Returns the billing provnum to use based on practice/clinic settings.

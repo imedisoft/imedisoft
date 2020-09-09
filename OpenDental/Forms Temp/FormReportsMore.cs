@@ -39,11 +39,7 @@ namespace OpenDental {
 		private MenuStrip menuMain;
 		private UI.Button butPatList;
 		private UI.Button butPatExport;
-		private GroupBox groupPatientReviews;
 		private ToolStripMenuItem setupToolStripMenuItem;
-		private UI.ODPictureBox picturePodium;
-		private UI.ODPictureBox pictureDentalIntel;
-		private GroupBox groupBusiness;
 		///<summary>After this form closes, this value is checked to see if any non-modal dialog boxes are needed.</summary>
 		public ReportNonModalSelection RpNonModalSelection;
 		///<summary>The Date currently selected on the Appointment Module.</summary>
@@ -54,7 +50,6 @@ namespace OpenDental {
 		private List<DisplayReport> _listList;
 		private List<DisplayReport> _listPublicHealth;
 		private List<DisplayReport> _listArizonaPrimary;
-		private UI.ODPictureBox picturePracticeByNumbers;
 		private List<GroupPermission> _listReportPermissions;
 
 		///<summary></summary>
@@ -84,343 +79,278 @@ namespace OpenDental {
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormReportsMore));
-			this.groupBusiness = new System.Windows.Forms.GroupBox();
-			this.picturePracticeByNumbers = new OpenDental.UI.ODPictureBox();
-			this.pictureDentalIntel = new OpenDental.UI.ODPictureBox();
-			this.groupPatientReviews = new System.Windows.Forms.GroupBox();
-			this.picturePodium = new OpenDental.UI.ODPictureBox();
-			this.labelArizonaPrimaryCare = new System.Windows.Forms.Label();
-			this.label6 = new System.Windows.Forms.Label();
-			this.labelDaily = new System.Windows.Forms.Label();
-			this.labelProdInc = new System.Windows.Forms.Label();
-			this.labelMonthly = new System.Windows.Forms.Label();
-			this.labelLists = new System.Windows.Forms.Label();
-			this.labelPublicHealth = new System.Windows.Forms.Label();
-			this.menuMain = new System.Windows.Forms.MenuStrip();
-			this.setupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.butPatExport = new OpenDental.UI.Button();
-			this.butPatList = new OpenDental.UI.Button();
-			this.listArizonaPrimaryCare = new OpenDental.UI.ListBoxClickable();
-			this.butLaserLabels = new OpenDental.UI.Button();
-			this.listDaily = new OpenDental.UI.ListBoxClickable();
-			this.listProdInc = new OpenDental.UI.ListBoxClickable();
-			this.butPW = new OpenDental.UI.Button();
-			this.butUserQuery = new OpenDental.UI.Button();
-			this.listPublicHealth = new OpenDental.UI.ListBoxClickable();
-			this.listLists = new OpenDental.UI.ListBoxClickable();
-			this.listMonthly = new OpenDental.UI.ListBoxClickable();
-			this.butClose = new OpenDental.UI.Button();
-			this.groupBusiness.SuspendLayout();
-			this.groupPatientReviews.SuspendLayout();
-			this.menuMain.SuspendLayout();
-			this.SuspendLayout();
-			// 
-			// groupBusiness
-			// 
-			this.groupBusiness.Controls.Add(this.picturePracticeByNumbers);
-			this.groupBusiness.Controls.Add(this.pictureDentalIntel);
-			this.groupBusiness.Location = new System.Drawing.Point(532, 72);
-			this.groupBusiness.Name = "groupBusiness";
-			this.groupBusiness.Size = new System.Drawing.Size(113, 81);
-			this.groupBusiness.TabIndex = 28;
-			this.groupBusiness.TabStop = false;
-			this.groupBusiness.Text = "Business Analytics";
-			// 
-			// picturePracticeByNumbers
-			// 
-			this.picturePracticeByNumbers.HasBorder = false;
-			this.picturePracticeByNumbers.Image = global::Imedisoft.Properties.Resources.PracticeByNumbers_100x24;
-			this.picturePracticeByNumbers.Location = new System.Drawing.Point(8, 49);
-			this.picturePracticeByNumbers.Name = "picturePracticeByNumbers";
-			this.picturePracticeByNumbers.Size = new System.Drawing.Size(95, 24);
-			this.picturePracticeByNumbers.TabIndex = 31;
-			this.picturePracticeByNumbers.TextNullImage = "Practice By Numbers";
-			this.picturePracticeByNumbers.Click += new System.EventHandler(this.picturePracticeByNumbers_Click);
-			// 
-			// pictureDentalIntel
-			// 
-			this.pictureDentalIntel.HasBorder = false;
-			this.pictureDentalIntel.Image = global::Imedisoft.Properties.Resources.DentalIntelligence_Button_100x24;
-			this.pictureDentalIntel.Location = new System.Drawing.Point(8, 19);
-			this.pictureDentalIntel.Name = "pictureDentalIntel";
-			this.pictureDentalIntel.Size = new System.Drawing.Size(95, 24);
-			this.pictureDentalIntel.TabIndex = 0;
-			this.pictureDentalIntel.TextNullImage = null;
-			this.pictureDentalIntel.Click += new System.EventHandler(this.pictureDentalIntel_Click);
-			// 
-			// groupPatientReviews
-			// 
-			this.groupPatientReviews.Controls.Add(this.picturePodium);
-			this.groupPatientReviews.Location = new System.Drawing.Point(532, 159);
-			this.groupPatientReviews.Name = "groupPatientReviews";
-			this.groupPatientReviews.Size = new System.Drawing.Size(113, 54);
-			this.groupPatientReviews.TabIndex = 26;
-			this.groupPatientReviews.TabStop = false;
-			this.groupPatientReviews.Text = "Patient Reviews";
-			// 
-			// picturePodium
-			// 
-			this.picturePodium.HasBorder = false;
-			this.picturePodium.Image = global::Imedisoft.Properties.Resources.Podium_Button_100x24;
-			this.picturePodium.Location = new System.Drawing.Point(8, 19);
-			this.picturePodium.Name = "picturePodium";
-			this.picturePodium.Size = new System.Drawing.Size(95, 24);
-			this.picturePodium.TabIndex = 28;
-			this.picturePodium.TextNullImage = null;
-			this.picturePodium.Click += new System.EventHandler(this.picturePodium_Click);
-			// 
-			// labelArizonaPrimaryCare
-			// 
-			this.labelArizonaPrimaryCare.Location = new System.Drawing.Point(281, 410);
-			this.labelArizonaPrimaryCare.Name = "labelArizonaPrimaryCare";
-			this.labelArizonaPrimaryCare.Size = new System.Drawing.Size(156, 13);
-			this.labelArizonaPrimaryCare.TabIndex = 20;
-			this.labelArizonaPrimaryCare.Text = "Arizona Primary Care";
-			this.labelArizonaPrimaryCare.Visible = false;
-			// 
-			// label6
-			// 
-			this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.label6.Location = new System.Drawing.Point(9, 574);
-			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(568, 82);
-			this.label6.TabIndex = 17;
-			this.label6.Text = resources.GetString("label6.Text");
-			// 
-			// labelDaily
-			// 
-			this.labelDaily.Location = new System.Drawing.Point(9, 200);
-			this.labelDaily.Name = "labelDaily";
-			this.labelDaily.Size = new System.Drawing.Size(118, 18);
-			this.labelDaily.TabIndex = 15;
-			this.labelDaily.Text = "Daily";
-			this.labelDaily.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			// 
-			// labelProdInc
-			// 
-			this.labelProdInc.Location = new System.Drawing.Point(9, 54);
-			this.labelProdInc.Name = "labelProdInc";
-			this.labelProdInc.Size = new System.Drawing.Size(207, 18);
-			this.labelProdInc.TabIndex = 13;
-			this.labelProdInc.Text = "Production and Income";
-			this.labelProdInc.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			// 
-			// labelMonthly
-			// 
-			this.labelMonthly.Location = new System.Drawing.Point(9, 349);
-			this.labelMonthly.Name = "labelMonthly";
-			this.labelMonthly.Size = new System.Drawing.Size(118, 18);
-			this.labelMonthly.TabIndex = 6;
-			this.labelMonthly.Text = "Monthly";
-			this.labelMonthly.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			// 
-			// labelLists
-			// 
-			this.labelLists.Location = new System.Drawing.Point(281, 54);
-			this.labelLists.Name = "labelLists";
-			this.labelLists.Size = new System.Drawing.Size(118, 18);
-			this.labelLists.TabIndex = 4;
-			this.labelLists.Text = "Lists";
-			this.labelLists.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			// 
-			// labelPublicHealth
-			// 
-			this.labelPublicHealth.Location = new System.Drawing.Point(281, 305);
-			this.labelPublicHealth.Name = "labelPublicHealth";
-			this.labelPublicHealth.Size = new System.Drawing.Size(118, 18);
-			this.labelPublicHealth.TabIndex = 2;
-			this.labelPublicHealth.Text = "Public Health";
-			this.labelPublicHealth.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			// 
-			// menuMain
-			// 
-			this.menuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormReportsMore));
+            this.labelArizonaPrimaryCare = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.labelDaily = new System.Windows.Forms.Label();
+            this.labelProdInc = new System.Windows.Forms.Label();
+            this.labelMonthly = new System.Windows.Forms.Label();
+            this.labelLists = new System.Windows.Forms.Label();
+            this.labelPublicHealth = new System.Windows.Forms.Label();
+            this.menuMain = new System.Windows.Forms.MenuStrip();
+            this.setupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.butPatExport = new OpenDental.UI.Button();
+            this.butPatList = new OpenDental.UI.Button();
+            this.listArizonaPrimaryCare = new OpenDental.UI.ListBoxClickable();
+            this.butLaserLabels = new OpenDental.UI.Button();
+            this.listDaily = new OpenDental.UI.ListBoxClickable();
+            this.listProdInc = new OpenDental.UI.ListBoxClickable();
+            this.butPW = new OpenDental.UI.Button();
+            this.butUserQuery = new OpenDental.UI.Button();
+            this.listPublicHealth = new OpenDental.UI.ListBoxClickable();
+            this.listLists = new OpenDental.UI.ListBoxClickable();
+            this.listMonthly = new OpenDental.UI.ListBoxClickable();
+            this.butClose = new OpenDental.UI.Button();
+            this.menuMain.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // labelArizonaPrimaryCare
+            // 
+            this.labelArizonaPrimaryCare.Location = new System.Drawing.Point(281, 410);
+            this.labelArizonaPrimaryCare.Name = "labelArizonaPrimaryCare";
+            this.labelArizonaPrimaryCare.Size = new System.Drawing.Size(156, 13);
+            this.labelArizonaPrimaryCare.TabIndex = 20;
+            this.labelArizonaPrimaryCare.Text = "Arizona Primary Care";
+            this.labelArizonaPrimaryCare.Visible = false;
+            // 
+            // label6
+            // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label6.Location = new System.Drawing.Point(9, 574);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(568, 82);
+            this.label6.TabIndex = 17;
+            this.label6.Text = resources.GetString("label6.Text");
+            // 
+            // labelDaily
+            // 
+            this.labelDaily.Location = new System.Drawing.Point(9, 200);
+            this.labelDaily.Name = "labelDaily";
+            this.labelDaily.Size = new System.Drawing.Size(118, 18);
+            this.labelDaily.TabIndex = 15;
+            this.labelDaily.Text = "Daily";
+            this.labelDaily.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // labelProdInc
+            // 
+            this.labelProdInc.Location = new System.Drawing.Point(9, 54);
+            this.labelProdInc.Name = "labelProdInc";
+            this.labelProdInc.Size = new System.Drawing.Size(207, 18);
+            this.labelProdInc.TabIndex = 13;
+            this.labelProdInc.Text = "Production and Income";
+            this.labelProdInc.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // labelMonthly
+            // 
+            this.labelMonthly.Location = new System.Drawing.Point(9, 349);
+            this.labelMonthly.Name = "labelMonthly";
+            this.labelMonthly.Size = new System.Drawing.Size(118, 18);
+            this.labelMonthly.TabIndex = 6;
+            this.labelMonthly.Text = "Monthly";
+            this.labelMonthly.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // labelLists
+            // 
+            this.labelLists.Location = new System.Drawing.Point(281, 54);
+            this.labelLists.Name = "labelLists";
+            this.labelLists.Size = new System.Drawing.Size(118, 18);
+            this.labelLists.TabIndex = 4;
+            this.labelLists.Text = "Lists";
+            this.labelLists.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // labelPublicHealth
+            // 
+            this.labelPublicHealth.Location = new System.Drawing.Point(281, 305);
+            this.labelPublicHealth.Name = "labelPublicHealth";
+            this.labelPublicHealth.Size = new System.Drawing.Size(118, 18);
+            this.labelPublicHealth.TabIndex = 2;
+            this.labelPublicHealth.Text = "Public Health";
+            this.labelPublicHealth.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // menuMain
+            // 
+            this.menuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.setupToolStripMenuItem});
-			this.menuMain.Location = new System.Drawing.Point(0, 0);
-			this.menuMain.Name = "menuMain";
-			this.menuMain.Size = new System.Drawing.Size(680, 24);
-			this.menuMain.TabIndex = 22;
-			// 
-			// setupToolStripMenuItem
-			// 
-			this.setupToolStripMenuItem.Name = "setupToolStripMenuItem";
-			this.setupToolStripMenuItem.Size = new System.Drawing.Size(49, 20);
-			this.setupToolStripMenuItem.Text = "Setup";
-			this.setupToolStripMenuItem.Click += new System.EventHandler(this.setupToolStripMenuItem_Click);
-			// 
-			// butPatExport
-			// 
-			this.butPatExport.Location = new System.Drawing.Point(538, 262);
-			this.butPatExport.Name = "butPatExport";
-			this.butPatExport.Size = new System.Drawing.Size(101, 24);
-			this.butPatExport.TabIndex = 24;
-			this.butPatExport.Text = "EHR Pat Export";
-			this.butPatExport.Visible = false;
-			this.butPatExport.Click += new System.EventHandler(this.butPatExport_Click);
-			// 
-			// butPatList
-			// 
-			this.butPatList.Location = new System.Drawing.Point(538, 232);
-			this.butPatList.Name = "butPatList";
-			this.butPatList.Size = new System.Drawing.Size(101, 24);
-			this.butPatList.TabIndex = 23;
-			this.butPatList.Text = "EHR Patient List";
-			this.butPatList.Visible = false;
-			this.butPatList.Click += new System.EventHandler(this.butPatList_Click);
-			// 
-			// listArizonaPrimaryCare
-			// 
-			this.listArizonaPrimaryCare.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-			this.listArizonaPrimaryCare.FormattingEnabled = true;
-			this.listArizonaPrimaryCare.ItemHeight = 15;
-			this.listArizonaPrimaryCare.Location = new System.Drawing.Point(284, 424);
-			this.listArizonaPrimaryCare.Name = "listArizonaPrimaryCare";
-			this.listArizonaPrimaryCare.SelectionMode = System.Windows.Forms.SelectionMode.None;
-			this.listArizonaPrimaryCare.Size = new System.Drawing.Size(242, 49);
-			this.listArizonaPrimaryCare.TabIndex = 19;
-			this.listArizonaPrimaryCare.Visible = false;
-			this.listArizonaPrimaryCare.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listArizonaPrimaryCare_MouseDown);
-			// 
-			// butLaserLabels
-			// 
-			this.butLaserLabels.Location = new System.Drawing.Point(294, 26);
-			this.butLaserLabels.Name = "butLaserLabels";
-			this.butLaserLabels.Size = new System.Drawing.Size(75, 24);
-			this.butLaserLabels.TabIndex = 18;
-			this.butLaserLabels.Text = "Laser Labels";
-			this.butLaserLabels.UseVisualStyleBackColor = true;
-			this.butLaserLabels.Click += new System.EventHandler(this.butLaserLabels_Click);
-			// 
-			// listDaily
-			// 
-			this.listDaily.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-			this.listDaily.FormattingEnabled = true;
-			this.listDaily.ItemHeight = 15;
-			this.listDaily.Location = new System.Drawing.Point(12, 221);
-			this.listDaily.Name = "listDaily";
-			this.listDaily.SelectionMode = System.Windows.Forms.SelectionMode.None;
-			this.listDaily.Size = new System.Drawing.Size(242, 124);
-			this.listDaily.TabIndex = 16;
-			this.listDaily.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listDaily_MouseDown);
-			// 
-			// listProdInc
-			// 
-			this.listProdInc.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-			this.listProdInc.FormattingEnabled = true;
-			this.listProdInc.ItemHeight = 15;
-			this.listProdInc.Location = new System.Drawing.Point(12, 75);
-			this.listProdInc.Name = "listProdInc";
-			this.listProdInc.SelectionMode = System.Windows.Forms.SelectionMode.None;
-			this.listProdInc.Size = new System.Drawing.Size(242, 124);
-			this.listProdInc.TabIndex = 14;
-			this.listProdInc.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listProdInc_MouseDown);
-			// 
-			// butPW
-			// 
-			this.butPW.Location = new System.Drawing.Point(135, 26);
-			this.butPW.Name = "butPW";
-			this.butPW.Size = new System.Drawing.Size(84, 24);
-			this.butPW.TabIndex = 12;
-			this.butPW.Text = "PW Reports";
-			this.butPW.Click += new System.EventHandler(this.butPW_Click);
-			// 
-			// butUserQuery
-			// 
-			this.butUserQuery.Location = new System.Drawing.Point(12, 26);
-			this.butUserQuery.Name = "butUserQuery";
-			this.butUserQuery.Size = new System.Drawing.Size(84, 24);
-			this.butUserQuery.TabIndex = 11;
-			this.butUserQuery.Text = "User Query";
-			this.butUserQuery.Click += new System.EventHandler(this.butUserQuery_Click);
-			// 
-			// listPublicHealth
-			// 
-			this.listPublicHealth.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-			this.listPublicHealth.FormattingEnabled = true;
-			this.listPublicHealth.ItemHeight = 15;
-			this.listPublicHealth.Location = new System.Drawing.Point(284, 325);
-			this.listPublicHealth.Name = "listPublicHealth";
-			this.listPublicHealth.SelectionMode = System.Windows.Forms.SelectionMode.None;
-			this.listPublicHealth.Size = new System.Drawing.Size(242, 79);
-			this.listPublicHealth.TabIndex = 10;
-			this.listPublicHealth.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listPublicHealth_MouseDown);
-			// 
-			// listLists
-			// 
-			this.listLists.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-			this.listLists.FormattingEnabled = true;
-			this.listLists.ItemHeight = 15;
-			this.listLists.Location = new System.Drawing.Point(284, 75);
-			this.listLists.Name = "listLists";
-			this.listLists.SelectionMode = System.Windows.Forms.SelectionMode.None;
-			this.listLists.Size = new System.Drawing.Size(242, 229);
-			this.listLists.TabIndex = 9;
-			this.listLists.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listLists_MouseDown);
-			// 
-			// listMonthly
-			// 
-			this.listMonthly.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-			this.listMonthly.FormattingEnabled = true;
-			this.listMonthly.ItemHeight = 15;
-			this.listMonthly.Location = new System.Drawing.Point(12, 370);
-			this.listMonthly.Name = "listMonthly";
-			this.listMonthly.SelectionMode = System.Windows.Forms.SelectionMode.None;
-			this.listMonthly.Size = new System.Drawing.Size(242, 199);
-			this.listMonthly.TabIndex = 8;
-			this.listMonthly.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listMonthly_MouseDown);
-			// 
-			// butClose
-			// 
-			this.butClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.butClose.Location = new System.Drawing.Point(583, 618);
-			this.butClose.Name = "butClose";
-			this.butClose.Size = new System.Drawing.Size(75, 26);
-			this.butClose.TabIndex = 0;
-			this.butClose.Text = "Close";
-			this.butClose.Click += new System.EventHandler(this.butClose_Click);
-			// 
-			// FormReportsMore
-			// 
-			this.CancelButton = this.butClose;
-			this.ClientSize = new System.Drawing.Size(680, 665);
-			this.Controls.Add(this.groupBusiness);
-			this.Controls.Add(this.groupPatientReviews);
-			this.Controls.Add(this.butPatExport);
-			this.Controls.Add(this.butPatList);
-			this.Controls.Add(this.labelArizonaPrimaryCare);
-			this.Controls.Add(this.listArizonaPrimaryCare);
-			this.Controls.Add(this.butLaserLabels);
-			this.Controls.Add(this.label6);
-			this.Controls.Add(this.listDaily);
-			this.Controls.Add(this.labelDaily);
-			this.Controls.Add(this.listProdInc);
-			this.Controls.Add(this.labelProdInc);
-			this.Controls.Add(this.butPW);
-			this.Controls.Add(this.butUserQuery);
-			this.Controls.Add(this.listPublicHealth);
-			this.Controls.Add(this.listLists);
-			this.Controls.Add(this.listMonthly);
-			this.Controls.Add(this.labelMonthly);
-			this.Controls.Add(this.labelLists);
-			this.Controls.Add(this.labelPublicHealth);
-			this.Controls.Add(this.butClose);
-			this.Controls.Add(this.menuMain);
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.MainMenuStrip = this.menuMain;
-			this.MaximizeBox = false;
-			this.MinimizeBox = false;
-			this.Name = "FormReportsMore";
-			this.ShowInTaskbar = false;
-			this.Text = "Reports";
-			this.Load += new System.EventHandler(this.FormReportsMore_Load);
-			this.groupBusiness.ResumeLayout(false);
-			this.groupPatientReviews.ResumeLayout(false);
-			this.menuMain.ResumeLayout(false);
-			this.menuMain.PerformLayout();
-			this.ResumeLayout(false);
-			this.PerformLayout();
+            this.menuMain.Location = new System.Drawing.Point(0, 0);
+            this.menuMain.Name = "menuMain";
+            this.menuMain.Size = new System.Drawing.Size(680, 24);
+            this.menuMain.TabIndex = 22;
+            // 
+            // setupToolStripMenuItem
+            // 
+            this.setupToolStripMenuItem.Name = "setupToolStripMenuItem";
+            this.setupToolStripMenuItem.Size = new System.Drawing.Size(49, 20);
+            this.setupToolStripMenuItem.Text = "Setup";
+            this.setupToolStripMenuItem.Click += new System.EventHandler(this.setupToolStripMenuItem_Click);
+            // 
+            // butPatExport
+            // 
+            this.butPatExport.Location = new System.Drawing.Point(538, 262);
+            this.butPatExport.Name = "butPatExport";
+            this.butPatExport.Size = new System.Drawing.Size(101, 24);
+            this.butPatExport.TabIndex = 24;
+            this.butPatExport.Text = "EHR Pat Export";
+            this.butPatExport.Visible = false;
+            this.butPatExport.Click += new System.EventHandler(this.butPatExport_Click);
+            // 
+            // butPatList
+            // 
+            this.butPatList.Location = new System.Drawing.Point(538, 232);
+            this.butPatList.Name = "butPatList";
+            this.butPatList.Size = new System.Drawing.Size(101, 24);
+            this.butPatList.TabIndex = 23;
+            this.butPatList.Text = "EHR Patient List";
+            this.butPatList.Visible = false;
+            this.butPatList.Click += new System.EventHandler(this.butPatList_Click);
+            // 
+            // listArizonaPrimaryCare
+            // 
+            this.listArizonaPrimaryCare.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.listArizonaPrimaryCare.FormattingEnabled = true;
+            this.listArizonaPrimaryCare.ItemHeight = 15;
+            this.listArizonaPrimaryCare.Location = new System.Drawing.Point(284, 424);
+            this.listArizonaPrimaryCare.Name = "listArizonaPrimaryCare";
+            this.listArizonaPrimaryCare.SelectionMode = System.Windows.Forms.SelectionMode.None;
+            this.listArizonaPrimaryCare.Size = new System.Drawing.Size(242, 49);
+            this.listArizonaPrimaryCare.TabIndex = 19;
+            this.listArizonaPrimaryCare.Visible = false;
+            this.listArizonaPrimaryCare.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listArizonaPrimaryCare_MouseDown);
+            // 
+            // butLaserLabels
+            // 
+            this.butLaserLabels.Location = new System.Drawing.Point(294, 26);
+            this.butLaserLabels.Name = "butLaserLabels";
+            this.butLaserLabels.Size = new System.Drawing.Size(75, 24);
+            this.butLaserLabels.TabIndex = 18;
+            this.butLaserLabels.Text = "Laser Labels";
+            this.butLaserLabels.UseVisualStyleBackColor = true;
+            this.butLaserLabels.Click += new System.EventHandler(this.butLaserLabels_Click);
+            // 
+            // listDaily
+            // 
+            this.listDaily.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.listDaily.FormattingEnabled = true;
+            this.listDaily.ItemHeight = 15;
+            this.listDaily.Location = new System.Drawing.Point(12, 221);
+            this.listDaily.Name = "listDaily";
+            this.listDaily.SelectionMode = System.Windows.Forms.SelectionMode.None;
+            this.listDaily.Size = new System.Drawing.Size(242, 124);
+            this.listDaily.TabIndex = 16;
+            this.listDaily.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listDaily_MouseDown);
+            // 
+            // listProdInc
+            // 
+            this.listProdInc.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.listProdInc.FormattingEnabled = true;
+            this.listProdInc.ItemHeight = 15;
+            this.listProdInc.Location = new System.Drawing.Point(12, 75);
+            this.listProdInc.Name = "listProdInc";
+            this.listProdInc.SelectionMode = System.Windows.Forms.SelectionMode.None;
+            this.listProdInc.Size = new System.Drawing.Size(242, 124);
+            this.listProdInc.TabIndex = 14;
+            this.listProdInc.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listProdInc_MouseDown);
+            // 
+            // butPW
+            // 
+            this.butPW.Location = new System.Drawing.Point(135, 26);
+            this.butPW.Name = "butPW";
+            this.butPW.Size = new System.Drawing.Size(84, 24);
+            this.butPW.TabIndex = 12;
+            this.butPW.Text = "PW Reports";
+            this.butPW.Click += new System.EventHandler(this.butPW_Click);
+            // 
+            // butUserQuery
+            // 
+            this.butUserQuery.Location = new System.Drawing.Point(12, 26);
+            this.butUserQuery.Name = "butUserQuery";
+            this.butUserQuery.Size = new System.Drawing.Size(84, 24);
+            this.butUserQuery.TabIndex = 11;
+            this.butUserQuery.Text = "User Query";
+            this.butUserQuery.Click += new System.EventHandler(this.butUserQuery_Click);
+            // 
+            // listPublicHealth
+            // 
+            this.listPublicHealth.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.listPublicHealth.FormattingEnabled = true;
+            this.listPublicHealth.ItemHeight = 15;
+            this.listPublicHealth.Location = new System.Drawing.Point(284, 325);
+            this.listPublicHealth.Name = "listPublicHealth";
+            this.listPublicHealth.SelectionMode = System.Windows.Forms.SelectionMode.None;
+            this.listPublicHealth.Size = new System.Drawing.Size(242, 79);
+            this.listPublicHealth.TabIndex = 10;
+            this.listPublicHealth.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listPublicHealth_MouseDown);
+            // 
+            // listLists
+            // 
+            this.listLists.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.listLists.FormattingEnabled = true;
+            this.listLists.ItemHeight = 15;
+            this.listLists.Location = new System.Drawing.Point(284, 75);
+            this.listLists.Name = "listLists";
+            this.listLists.SelectionMode = System.Windows.Forms.SelectionMode.None;
+            this.listLists.Size = new System.Drawing.Size(242, 229);
+            this.listLists.TabIndex = 9;
+            this.listLists.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listLists_MouseDown);
+            // 
+            // listMonthly
+            // 
+            this.listMonthly.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.listMonthly.FormattingEnabled = true;
+            this.listMonthly.ItemHeight = 15;
+            this.listMonthly.Location = new System.Drawing.Point(12, 370);
+            this.listMonthly.Name = "listMonthly";
+            this.listMonthly.SelectionMode = System.Windows.Forms.SelectionMode.None;
+            this.listMonthly.Size = new System.Drawing.Size(242, 199);
+            this.listMonthly.TabIndex = 8;
+            this.listMonthly.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listMonthly_MouseDown);
+            // 
+            // butClose
+            // 
+            this.butClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.butClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.butClose.Location = new System.Drawing.Point(583, 618);
+            this.butClose.Name = "butClose";
+            this.butClose.Size = new System.Drawing.Size(75, 26);
+            this.butClose.TabIndex = 0;
+            this.butClose.Text = "Close";
+            this.butClose.Click += new System.EventHandler(this.butClose_Click);
+            // 
+            // FormReportsMore
+            // 
+            this.CancelButton = this.butClose;
+            this.ClientSize = new System.Drawing.Size(680, 665);
+            this.Controls.Add(this.butPatExport);
+            this.Controls.Add(this.butPatList);
+            this.Controls.Add(this.labelArizonaPrimaryCare);
+            this.Controls.Add(this.listArizonaPrimaryCare);
+            this.Controls.Add(this.butLaserLabels);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.listDaily);
+            this.Controls.Add(this.labelDaily);
+            this.Controls.Add(this.listProdInc);
+            this.Controls.Add(this.labelProdInc);
+            this.Controls.Add(this.butPW);
+            this.Controls.Add(this.butUserQuery);
+            this.Controls.Add(this.listPublicHealth);
+            this.Controls.Add(this.listLists);
+            this.Controls.Add(this.listMonthly);
+            this.Controls.Add(this.labelMonthly);
+            this.Controls.Add(this.labelLists);
+            this.Controls.Add(this.labelPublicHealth);
+            this.Controls.Add(this.butClose);
+            this.Controls.Add(this.menuMain);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this.menuMain;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "FormReportsMore";
+            this.ShowInTaskbar = false;
+            this.Text = "Reports";
+            this.Load += new System.EventHandler(this.FormReportsMore_Load);
+            this.menuMain.ResumeLayout(false);
+            this.menuMain.PerformLayout();
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
 		}
 		#endregion
@@ -432,32 +362,6 @@ namespace OpenDental {
 			//butPatList.Visible=Prefs.GetBool(PrefName.ShowFeatureEhr);
 			butPatExport.Visible=Prefs.GetBool(PrefName.ShowFeatureEhr);
 			FillLists();
-			if(ProgramProperties.IsAdvertisingDisabled(ProgramName.Podium)) {
-				groupPatientReviews.Visible=false;
-			}
-			if(ProgramProperties.IsAdvertisingDisabled(ProgramName.DentalIntel)
-				&& ProgramProperties.IsAdvertisingDisabled(ProgramName.PracticeByNumbers)) 
-			{
-				groupBusiness.Visible=false;
-			}
-			else if(ProgramProperties.IsAdvertisingDisabled(ProgramName.DentalIntel)
-				|| (!Programs.GetCur(ProgramName.DentalIntel).Enabled && Programs.GetCur(ProgramName.PracticeByNumbers).Enabled))
-			{
-				//Don't show the marketing button if:
-				//1.  HQ wants to hide the button
-				//2.  The office wants to hide the button
-				//3.  The office is using PBN but not DentalIntel
-				pictureDentalIntel.Visible=false;
-			}
-			else if(ProgramProperties.IsAdvertisingDisabled(ProgramName.PracticeByNumbers) 
-				|| (!Programs.GetCur(ProgramName.PracticeByNumbers).Enabled && Programs.GetCur(ProgramName.DentalIntel).Enabled))
-			{
-				//Don't show the marketing button if:
-				//1.  HQ wants to hide the button
-				//2.  The office wants to hide the button
-				//3.  The office is using DentalIntel but not PBN
-				picturePracticeByNumbers.Visible=false;
-			}
 		}
 
 		///<summary>Takes all non-hidden display reports and displays them in their various listboxes.  
@@ -469,7 +373,7 @@ namespace OpenDental {
 			_listList=DisplayReports.GetForCategory(DisplayReportCategory.Lists,false);
 			_listPublicHealth=DisplayReports.GetForCategory(DisplayReportCategory.PublicHealth,false);
 			_listArizonaPrimary=DisplayReports.GetForCategory(DisplayReportCategory.ArizonaPrimaryCare,false);
-			_listReportPermissions=GroupPermissions.GetPermissionsForReports().Where(x => Security.CurrentUser.IsInUserGroup(x.UserGroupId)).ToList();
+			_listReportPermissions=GroupPermissions.GetPermissionsForReports().Where(x => Userods.IsInUserGroup(Security.CurrentUser.Id, x.UserGroupId)).ToList();
 			//add the items to the list boxes and set the list box heights. (positions too?)
 			listProdInc.Items.Clear();
 			listDaily.Items.Clear();
@@ -732,7 +636,7 @@ namespace OpenDental {
 		{
 			if(doValidatePerm) {
 				if(listReportPermissions==null) {
-					listReportPermissions=GroupPermissions.GetPermissionsForReports().Where(x => Security.CurrentUser.IsInUserGroup(x.UserGroupId)).ToList();
+					listReportPermissions=GroupPermissions.GetPermissionsForReports().Where(x => Userods.IsInUserGroup(Security.CurrentUser.Id, x.UserGroupId)).ToList();
 				}
 				if(!listReportPermissions.Exists(x => x.ObjectId==displayReport.DisplayReportNum)) {
 					MsgBox.Show("You do not have permission to run this report.");

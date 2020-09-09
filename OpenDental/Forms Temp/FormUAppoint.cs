@@ -436,7 +436,7 @@ namespace OpenDental{
 
 		private string GetProp(string desc){
 			for(int i=0;i<PropertyList.Count;i++){
-				if(PropertyList[i].Name==desc){
+				if(PropertyList[i].Description==desc){
 					return PropertyList[i].Value;
 				}
 			}

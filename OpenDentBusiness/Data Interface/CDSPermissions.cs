@@ -51,9 +51,9 @@ namespace OpenDentBusiness{
         /// </summary>
         private static void InsertMissingValues()
         {
-            const string command = "SELECT * FROM userod WHERE IsHidden = 0 AND UserNum NOT IN (SELECT UserNum FROM cdspermission)";
+            const string command = "SELECT * FROM users WHERE is_hidden = 0 AND id NOT IN (SELECT UserNum FROM cdspermission)";
 
-            foreach (var user in Crud.UserodCrud.SelectMany(command))
+            foreach (var user in Userods.SelectMany(command))
             {
                 Insert(new CDSPermission
                 {

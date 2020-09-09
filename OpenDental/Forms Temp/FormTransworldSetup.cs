@@ -102,7 +102,7 @@ namespace OpenDental {
 				listPropsCurClinic=_dictClinicListProgProps[0];//dictionary guaranteed to have ClinicNum 0 in it
 			}
 			foreach(ProgramProperty propCur in listPropsCurClinic) {
-				switch(propCur.Name) {
+				switch(propCur.Description) {
 					case "SftpServerAddress":
 						textSftpAddress.Text=propCur.Value;
 						continue;
@@ -142,7 +142,7 @@ namespace OpenDental {
 		
 		///<summary>Handles both visibility and checking of checkHideButtons.</summary>
 		private void SetAdvertising() {
-			ProgramProperty prop=_dictClinicListProgProps[0].FirstOrDefault(x => x.Name=="Disable Advertising");//dict guaranteed to contain key 0
+			ProgramProperty prop=_dictClinicListProgProps[0].FirstOrDefault(x => x.Description=="Disable Advertising");//dict guaranteed to contain key 0
 			checkHideButtons.Visible=(prop!=null && !checkEnabled.Checked);//show check box if disable prop exists and program is not enabled
 			checkHideButtons.Checked=(prop?.Value=="1");//check box checked if disable prop exists and is set to "1" for HQ
 		}
@@ -161,7 +161,7 @@ namespace OpenDental {
 				listPropsCur=listHqProps.Select(x => new ProgramProperty() {
 					ProgramId=x.ProgramId,
 					ClinicId=_selectedClinicNum,
-					Name=x.Name
+					Description=x.Description
 				}).ToList();
 			}
 			//these are the props that will be synced with HQ and used to determine whether a clinic's props should be deleted or used instead of the HQ props
@@ -169,7 +169,7 @@ namespace OpenDental {
 			string[] listSyncedProps=new[] { "SftpServerAddress","SftpServerPort","SftpUsername","SftpPassword","ClientIdAccelerator","ClientIdCollection",
 				"IsThankYouLetterEnabled","SelectedServices","SyncExcludePosAdjType","SyncExcludeNegAdjType" };
 			foreach(ProgramProperty propCur in listPropsCur) {//update the currently selected props with the current form values
-				switch(propCur.Name) {
+				switch(propCur.Description) {
 					case "SftpServerAddress":
 						propCur.Value=textSftpAddress.Text;
 						continue;
@@ -192,14 +192,14 @@ namespace OpenDental {
 						propCur.Value=POut.Bool(checkThankYouLetter.Checked);
 						continue;
 					case "Disable Advertising":
-						_dictClinicListProgProps.Values.SelectMany(x => x.Where(y => y.Name=="Disable Advertising")).ToList()
+						_dictClinicListProgProps.Values.SelectMany(x => x.Where(y => y.Description=="Disable Advertising")).ToList()
 							.ForEach(y => y.Value=POut.Bool(checkHideButtons.Checked));
 						propCur.Value=POut.Bool(checkHideButtons.Checked);//in case list is for a new clinic and not in dict
 						continue;
 					case "Disable Advertising HQ":
 						//false if prop is null or if the value is anything but "1"
-						bool isAdvertDisabledHQ=(listHqProps.FirstOrDefault(x => x.Name=="Disable Advertising HQ")?.Value=="1");
-						_dictClinicListProgProps.Values.SelectMany(x => x.Where(y => y.Name=="Disable Advertising HQ")).ToList()
+						bool isAdvertDisabledHQ=(listHqProps.FirstOrDefault(x => x.Description=="Disable Advertising HQ")?.Value=="1");
+						_dictClinicListProgProps.Values.SelectMany(x => x.Where(y => y.Description=="Disable Advertising HQ")).ToList()
 							.ForEach(x => x.Value=POut.Bool(isAdvertDisabledHQ));//in case list is for a new clinic and not in dict
 						propCur.Value=POut.Bool(isAdvertDisabledHQ);
 						continue;
@@ -227,12 +227,12 @@ namespace OpenDental {
 			if(_selectedClinicNum==0) {//if HQ selected
 				_dictClinicListProgProps.ToList()//go through all clinic properties
 					.RemoveAll(x => x.Key>0 //remove the non-HQ clinic props
-						&& x.Value.All(y => !listSyncedProps.Contains(y.Name)//the prop is an HQ only prop, i.e. the clinic prop is ignored
-							|| listHqProps.Any(z => z.Name==y.Name && z.Value==y.Value)));//have matching HQ prop desc and value
+						&& x.Value.All(y => !listSyncedProps.Contains(y.Description)//the prop is an HQ only prop, i.e. the clinic prop is ignored
+							|| listHqProps.Any(z => z.Description==y.Description && z.Value==y.Value)));//have matching HQ prop desc and value
 			}
 			else {
-				if(listPropsCur.All(x => !listSyncedProps.Contains(x.Name)//if all props for the non-HQ clinic are HQ only props, i.e. the clinic prop is ignored
-					|| listHqProps.Any(y => y.Name==x.Name && y.Value==x.Value)))//have matching HQ prop desc and value
+				if(listPropsCur.All(x => !listSyncedProps.Contains(x.Description)//if all props for the non-HQ clinic are HQ only props, i.e. the clinic prop is ignored
+					|| listHqProps.Any(y => y.Description==x.Description && y.Value==x.Value)))//have matching HQ prop desc and value
 				{
 					//remove non-HQ clinic props, they are synced with HQ
 					_dictClinicListProgProps.Remove(_selectedClinicNum);//does not throw exception if dict doesn't contain the key! (according to MSDN)

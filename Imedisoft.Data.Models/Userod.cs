@@ -1,10 +1,8 @@
+using Imedisoft.Data.Annotations;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
-using Imedisoft.Data.Annotations;
-using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness
 {
@@ -15,7 +13,7 @@ namespace OpenDentBusiness
     /// A user can be a provider, employee, or neither.
     /// </summary>
     [Table("users")]
-    public class Userod : TableBase
+    public class Userod
     {
         [PrimaryKey]
         public long Id;
@@ -35,8 +33,13 @@ namespace OpenDentBusiness
         ///         by the <see cref="Password.Verify(string, string)"/> method.
         ///     </para>
         /// </summary>
-        [Column("Password")]
         public string PasswordHash;
+
+        /// <summary>
+        /// Gets set to true if strong passwords are turned on, and this user changes their password to a strong password. 
+        /// We don't store actual passwords, so this flag is the only way to tell.
+        /// </summary>
+        public bool PasswordIsStrong;
 
         /// <summary>
         /// Cannot be used if provnum is used.
@@ -53,7 +56,7 @@ namespace OpenDentBusiness
         ///         May be null for users that have no default clinic or when clinics are disabled.
         ///     </para>
         /// </summary> 	
-        [ForeignKey(typeof(Clinic), nameof(Clinic.Id))]
+        // [ForeignKey(typeof(Clinic), nameof(Clinic.Id))]
         public long? ClinicId;
 
         /// <summary>
@@ -76,7 +79,7 @@ namespace OpenDentBusiness
         ///         Tasks sent to a user will be moved into this list.
         ///     </para>
         /// </summary>
-        [ForeignKey(typeof(TaskList), nameof(TaskList.Id))]
+        // [ForeignKey(typeof(TaskList), nameof(TaskList.Id))]
         public long? InboxTaskListId;
 
         /// <summary>
@@ -87,54 +90,64 @@ namespace OpenDentBusiness
         ///         If set to NULL the user can access all task lists at the trunk level.
         ///     </para>
         /// </summary>
-        [ForeignKey(typeof(TaskList), nameof(TaskList.Id))]
+        // [ForeignKey(typeof(TaskList), nameof(TaskList.Id))]
         public long? RootTaskListId;
 
-        /// <summary> Defaults to 3 (regular user) unless specified. Helps populates the Anesthetist, Surgeon, Assistant and Circulator dropdowns properly on FormAnestheticRecord/// </summary>
-        public int AnesthProvType;
-
-        ///<summary>If set to true, the BlockSubsc button will start out pressed for this user.</summary>
+        /// <summary>
+        /// If set to true, the BlockSubsc button will start out pressed for this user.
+        /// </summary>
         public bool DefaultHidePopups;
 
-        ///<summary>Gets set to true if strong passwords are turned on, and this user changes their password to a strong password.  We don't store actual passwords, so this flag is the only way to tell.</summary>
-        public bool PasswordIsStrong;
-
-        ///<summary>When true, prevents user from having access to clinics that are not in the corresponding userclinic table.
-        ///Many places throughout the program will optionally remove the 'All' option from this user when true.</summary>
+        /// <summary>
+        /// When true, prevents user from having access to clinics that are not in the corresponding userclinic table.
+        /// Many places throughout the program will optionally remove the 'All' option from this user when true.
+        /// </summary>
         public bool ClinicIsRestricted;
 
         ///<summary>If set to true, the BlockInbox button will start out pressed for this user.</summary>
         public bool InboxHidePopups;
 
-        ///<summary>FK to userod.UserNum.  The user num within the Central Manager database.  Only editable via CEMT.  Can change when CEMT syncs.</summary>
-        public long UserNumCEMT;
+        /// <summary>
+        /// FK to userod.UserNum. The user num within the Central Manager database. Only editable via CEMT. Can change when CEMT syncs.
+        /// </summary>
+        [Column("cemt_user_id")]
+        public long? UserIdCEMT;
 
         /// <summary>
         /// The date and time of the most recent log in failure for this user. Set to MinValue after user logs in successfully.
         /// </summary>
-        [Column("DateTFail")]
-        public DateTime FailedLoginDateTime;
+        public DateTime? FailedLoginDate;
 
         /// <summary>
         /// The number of times this user has failed to log into their account. Set to 0 after user logs in successfully.
         /// </summary>
-        public byte FailedAttempts;
+        public int FailedAttempts;
 
-        /// <summary>The username for the ActiveDirectory user to link the account to.</summary>
+        /// <summary>
+        /// The username for the ActiveDirectory user to link the account to.
+        /// </summary>
         public string DomainUser;
 
-        ///<summary>Boolean.  If true, the user's password needs to be reset on next login.</summary>
+        /// <summary
+        /// >Boolean. If true, the user's password needs to be reset on next login.
+        /// </summary>
         public bool IsPasswordResetRequired;
 
-        ///<summary>A hashed pin that is used for mobile web validation on eClipboard. Not used in OD proper.</summary>
+        /// <summary>
+        /// A hashed pin that is used for mobile web validation on eClipboard. Not used in OD proper.
+        /// </summary>
         public string MobileWebPin;
 
-        ///<summary>The number of attempts the mobile web pin has failed. Reset on successful attempt.</summary>
-        public byte MobileWebPinFailedAttempts;
+        /// <summary>
+        /// The number of attempts the mobile web pin has failed. Reset on successful attempt.
+        /// </summary>
+        public int MobileWebPinFailedAttempts;
 
-        ///<summary>Minimum date if last login date and time is unknown.
-        ///Otherwise contians the last date and time this user successfully logged in.</summary>
-        public DateTime DateTLastLogin;
+        /// <summary>
+        /// Minimum date if last login date and time is unknown.
+        /// Otherwise contians the last date and time this user successfully logged in.
+        /// </summary>
+        public DateTime LastLoginDate;
 
         public Userod Copy() 
             => (Userod)MemberwiseClone();
@@ -142,12 +155,12 @@ namespace OpenDentBusiness
         public override string ToString() 
             => UserName;
 
-        public bool IsInUserGroup(long userGroupNum) 
-            => Userods.IsInUserGroup(Id, userGroupNum);
+        //public bool IsInUserGroup(long userGroupNum) 
+        //    => Userods.IsInUserGroup(Id, userGroupNum);
 
-        /// <summary>
-        /// Gets all of the usergroups attached to this user.
-        /// </summary>
-        public List<UserGroup> GetGroups(bool includeCEMT = false) => UserGroups.GetForUser(Id, includeCEMT).ToList();
+        ///// <summary>
+        ///// Gets all of the usergroups attached to this user.
+        ///// </summary>
+        //public List<UserGroup> GetGroups(bool includeCEMT = false) => UserGroups.GetForUser(Id, includeCEMT).ToList();
     }
 }

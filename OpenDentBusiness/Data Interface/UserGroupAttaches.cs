@@ -91,7 +91,7 @@ namespace OpenDentBusiness{
 			List<Userod> listRemoteUsers = Userods.GetUsersNoCache();
 			List<UserGroup> listRemoteGroups = UserGroups.GetCEMTGroupsNoCache().ToList();
 			foreach(UserGroupAttach attachCur in listUserGroupAttachCEMT) {
-				Userod userCur = listRemoteUsers.FirstOrDefault(x => attachCur.UserId == x.UserNumCEMT);
+				Userod userCur = listRemoteUsers.FirstOrDefault(x => attachCur.UserId == x.UserIdCEMT);
 				UserGroup userGroupCur = listRemoteGroups.FirstOrDefault(x => attachCur.UserGroupId == x.CentralUserGroupId);
 				if(userCur == null || userGroupCur == null) {
 					continue;
@@ -171,7 +171,7 @@ namespace OpenDentBusiness{
 		///<summary>Does not add a new usergroupattach if the passed-in userCur is already attached to userGroup.</summary>
 		public static void AddForUser(Userod userCur,long userGroupNum) {
 			
-			if(!userCur.IsInUserGroup(userGroupNum)) {
+			if(!Userods.IsInUserGroup(userCur.Id, userGroupNum)) {
 				UserGroupAttach userGroupAttach = new UserGroupAttach();
 				userGroupAttach.UserGroupId = userGroupNum;
 				userGroupAttach.UserId = userCur.Id;
@@ -186,7 +186,7 @@ namespace OpenDentBusiness{
 			
 			long rowsChanged=0;
 			foreach(long userGroupNum in listUserGroupNums) {
-				if(!userCur.IsInUserGroup(userGroupNum)) {
+				if(!Userods.IsInUserGroup(userCur.Id, userGroupNum)) {
 					UserGroupAttach userGroupAttach = new UserGroupAttach();
 					userGroupAttach.UserGroupId = userGroupNum;
 					userGroupAttach.UserId = userCur.Id;

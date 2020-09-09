@@ -17,7 +17,7 @@ namespace OpenDental {
 
 		private ProgramProperty ErxOptionPP {
 			get {
-				ProgramProperty retVal=_listProgramProperties.FirstOrDefault(x => x.Name==Erx.PropertyDescs.ErxOption);
+				ProgramProperty retVal=_listProgramProperties.FirstOrDefault(x => x.Description==Erx.PropertyDescs.ErxOption);
 				if(retVal==null) {
 					throw new Exception("The database is missing an eRx option program property.");
 				}
@@ -59,14 +59,14 @@ namespace OpenDental {
 					//HideLegacy();
 				}
 				textNewCropAccountID.Text=Prefs.GetString(PrefName.NewCropAccountId);
-				List<ProgramProperty> listClinicIDs=_listProgramProperties.FindAll(x => x.Name==Erx.PropertyDescs.ClinicID);
-				List<ProgramProperty> listClinicKeys=_listProgramProperties.FindAll(x => x.Name==Erx.PropertyDescs.ClinicKey);
+				List<ProgramProperty> listClinicIDs=_listProgramProperties.FindAll(x => x.Description==Erx.PropertyDescs.ClinicID);
+				List<ProgramProperty> listClinicKeys=_listProgramProperties.FindAll(x => x.Description==Erx.PropertyDescs.ClinicKey);
 				//Always make sure clinicnum 0 (HQ) exists, regardless of if clinics are enabled
 				if(!listClinicIDs.Exists(x => x.ClinicId==0)) {
 					ProgramProperty ppClinicID=new ProgramProperty();
 					ppClinicID.ProgramId=_progCur.Id;
 					ppClinicID.ClinicId=0;
-					ppClinicID.Name=Erx.PropertyDescs.ClinicID;
+					ppClinicID.Description=Erx.PropertyDescs.ClinicID;
 					ppClinicID.Value="";
 					_listProgramProperties.Add(ppClinicID);
 				}
@@ -74,7 +74,7 @@ namespace OpenDental {
 					ProgramProperty ppClinicKey=new ProgramProperty();
 					ppClinicKey.ProgramId=_progCur.Id;
 					ppClinicKey.ClinicId=0;
-					ppClinicKey.Name=Erx.PropertyDescs.ClinicKey;
+					ppClinicKey.Description=Erx.PropertyDescs.ClinicKey;
 					ppClinicKey.Value="";
 					_listProgramProperties.Add(ppClinicKey);
 				}
@@ -84,7 +84,7 @@ namespace OpenDental {
 							ProgramProperty ppClinicID=new ProgramProperty();
 							ppClinicID.ProgramId=_progCur.Id;
 							ppClinicID.ClinicId=clinicCur.Id;
-							ppClinicID.Name=Erx.PropertyDescs.ClinicID;
+							ppClinicID.Description=Erx.PropertyDescs.ClinicID;
 							ppClinicID.Value="";
 							_listProgramProperties.Add(ppClinicID);
 						}
@@ -92,7 +92,7 @@ namespace OpenDental {
 							ProgramProperty ppClinicKey=new ProgramProperty();
 							ppClinicKey.ProgramId=_progCur.Id;
 							ppClinicKey.ClinicId=clinicCur.Id;
-							ppClinicKey.Name=Erx.PropertyDescs.ClinicKey;
+							ppClinicKey.Description=Erx.PropertyDescs.ClinicKey;
 							ppClinicKey.Value="";
 							_listProgramProperties.Add(ppClinicKey);
 						}
@@ -154,7 +154,7 @@ namespace OpenDental {
 
 		private ProgramProperty GetPropertyForClinic(long clinicNum,string propDesc) {
 			return _listProgramProperties.FindAll(x => x.ClinicId==clinicNum)
-					.FirstOrDefault(x => x.Name==propDesc);
+					.FirstOrDefault(x => x.Description==propDesc);
 		}
 
 		///<summary>All references removed in I12045.</summary>

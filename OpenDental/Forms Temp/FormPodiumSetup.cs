@@ -34,56 +34,68 @@ namespace OpenDental {
 			
 		}
 
-		private void FormPodiumSetup_Load(object sender,EventArgs e) {
-			if(PrefC.HasClinicsEnabled) {//Using clinics
-				if(Security.CurrentUser.ClinicIsRestricted) {
-					if(checkEnabled.Checked) {
-						checkEnabled.Enabled=false;
+		private void FormPodiumSetup_Load(object sender, EventArgs e)
+		{
+			if (PrefC.HasClinicsEnabled)
+			{//Using clinics
+				if (Security.CurrentUser.ClinicIsRestricted)
+				{
+					if (checkEnabled.Checked)
+					{
+						checkEnabled.Enabled = false;
 					}
 				}
-				comboClinic.SelectedClinicNum=Clinics.Active.Id;
-				_clinicNumCur=comboClinic.SelectedClinicNum;
+				comboClinic.SelectedClinicNum = Clinics.Active.Id;
+				_clinicNumCur = comboClinic.SelectedClinicNum;
 			}
-			else {//clinics are not enabled, use ClinicNum 0 to indicate 'Headquarters' or practice level program properties
-				_clinicNumCur=0;
+			else
+			{//clinics are not enabled, use ClinicNum 0 to indicate 'Headquarters' or practice level program properties
+				_clinicNumCur = 0;
 			}
-			_progCur=Programs.GetCur(ProgramName.Podium);
-			if(_progCur==null) {
+			_progCur = Programs.GetCur(ProgramName.Podium);
+			if (_progCur == null)
+			{
 				MessageBox.Show("The Podium bridge is missing from the database.");//should never happen
-				DialogResult=DialogResult.Cancel;
+				DialogResult = DialogResult.Cancel;
 				return;
 			}
-			try {
+			try
+			{
 				List<long> listUserClinicNums;
-				listUserClinicNums=Clinics.GetByCurrentUser().Select(x => x.Id).ToList();
-				
-				long clinicNum=0;
-				if(!comboClinic.IsUnassignedSelected) {
-					clinicNum=comboClinic.SelectedClinicNum;
+				listUserClinicNums = Clinics.GetByCurrentUser().Select(x => x.Id).ToList();
+
+				long clinicNum = 0;
+				if (!comboClinic.IsUnassignedSelected)
+				{
+					clinicNum = comboClinic.SelectedClinicNum;
 				}
-				_listProgramProperties=ProgramProperties.GetListForProgramAndClinicWithDefault(_progCur.Id,clinicNum);
-				_useService=_listProgramProperties.FirstOrDefault(x => x.Name==Podium.PropertyDescs.UseService);
-				_disableAdvertising=_listProgramProperties.FirstOrDefault(x => x.Name==Podium.PropertyDescs.DisableAdvertising);
-				_apptSetCompleteMins=_listProgramProperties.FirstOrDefault(x => x.Name==Podium.PropertyDescs.ApptSetCompletedMinutes);
-				_apptTimeArrivedMins=_listProgramProperties.FirstOrDefault(x => x.Name==Podium.PropertyDescs.ApptTimeArrivedMinutes);
-				_apptTimeDismissedMins=_listProgramProperties.FirstOrDefault(x => x.Name==Podium.PropertyDescs.ApptTimeDismissedMinutes);
-				_compName=_listProgramProperties.FirstOrDefault(x => x.Name==Podium.PropertyDescs.ComputerNameOrIP);
-				_apiToken=_listProgramProperties.FirstOrDefault(x => x.Name==Podium.PropertyDescs.APIToken);
-				List<ProgramProperty> listLocationIDs=ProgramProperties.GetForProgram(_progCur.Id).FindAll(x => x.Name==Podium.PropertyDescs.LocationID);
+				_listProgramProperties = ProgramProperties.GetListForProgramAndClinicWithDefault(_progCur.Id, clinicNum);
+				_useService = _listProgramProperties.FirstOrDefault(x => x.Description == Podium.PropertyDescs.UseService);
+				_disableAdvertising = _listProgramProperties.FirstOrDefault(x => x.Description == Podium.PropertyDescs.DisableAdvertising);
+				_apptSetCompleteMins = _listProgramProperties.FirstOrDefault(x => x.Description == Podium.PropertyDescs.ApptSetCompletedMinutes);
+				_apptTimeArrivedMins = _listProgramProperties.FirstOrDefault(x => x.Description == Podium.PropertyDescs.ApptTimeArrivedMinutes);
+				_apptTimeDismissedMins = _listProgramProperties.FirstOrDefault(x => x.Description == Podium.PropertyDescs.ApptTimeDismissedMinutes);
+				_compName = _listProgramProperties.FirstOrDefault(x => x.Description == Podium.PropertyDescs.ComputerNameOrIP);
+				_apiToken = _listProgramProperties.FirstOrDefault(x => x.Description == Podium.PropertyDescs.APIToken);
+				List<ProgramProperty> listLocationIDs = ProgramProperties.GetForProgram(_progCur.Id).FindAll(x => x.Description == Podium.PropertyDescs.LocationID);
 				_dictLocationIDs.Clear();
-				foreach(ProgramProperty ppCur in listLocationIDs) {//If clinics is off, this will only grab the program property with a 0 clinic num (_listUserClinicNums will only have 0).
-					if(_dictLocationIDs.ContainsKey(ppCur.ClinicId) || !listUserClinicNums.Contains(ppCur.ClinicId)) {
+				foreach (ProgramProperty ppCur in listLocationIDs)
+				{//If clinics is off, this will only grab the program property with a 0 clinic num (_listUserClinicNums will only have 0).
+
+					if (_dictLocationIDs.ContainsKey(ppCur.ClinicId) || !listUserClinicNums.Contains(ppCur.ClinicId))
+					{
 						continue;
 					}
-					_dictLocationIDs.Add(ppCur.ClinicId,ppCur);
+					_dictLocationIDs.Add(ppCur.ClinicId, ppCur);
 				}
-				_newPatTriggerType=_listProgramProperties.FirstOrDefault(x => x.Name==Podium.PropertyDescs.NewPatientTriggerType);
-				_existingPatTriggerType=_listProgramProperties.FirstOrDefault(x => x.Name==Podium.PropertyDescs.ExistingPatientTriggerType);
-				_showCommlogsInChartAndAccount=_listProgramProperties.FirstOrDefault(x => x.Name==Podium.PropertyDescs.ShowCommlogsInChartAndAccount);
+				_newPatTriggerType = _listProgramProperties.FirstOrDefault(x => x.Description == Podium.PropertyDescs.NewPatientTriggerType);
+				_existingPatTriggerType = _listProgramProperties.FirstOrDefault(x => x.Description == Podium.PropertyDescs.ExistingPatientTriggerType);
+				_showCommlogsInChartAndAccount = _listProgramProperties.FirstOrDefault(x => x.Description == Podium.PropertyDescs.ShowCommlogsInChartAndAccount);
 			}
-			catch(Exception) {
+			catch (Exception)
+			{
 				MessageBox.Show("You are missing a program property for Podium.  Please contact support to resolve this issue.");
-				DialogResult=DialogResult.Cancel;
+				DialogResult = DialogResult.Cancel;
 				return;
 			}
 			FillForm();
@@ -93,7 +105,7 @@ namespace OpenDental {
 		///<summary>Handles both visibility and checking of checkHideButtons.</summary>
 		private void SetAdvertising() {
 			checkHideButtons.Visible=true;
-			ProgramProperty prop=ProgramProperties.GetForProgram(_progCur.Id).FirstOrDefault(x => x.Name=="Disable Advertising");
+			ProgramProperty prop=ProgramProperties.GetForProgram(_progCur.Id).FirstOrDefault(x => x.Description=="Disable Advertising");
 			if(checkEnabled.Checked || prop==null) {
 				checkHideButtons.Visible=false;
 			}
@@ -138,7 +150,7 @@ namespace OpenDental {
 			}
 			else {//Get default programproperty from db.
 				ppLocationID=ProgramProperties.GetListForProgramAndClinicWithDefault(_progCur.Id,_clinicNumCur)
-					.FirstOrDefault(x => x.Name==Podium.PropertyDescs.LocationID);
+					.FirstOrDefault(x => x.Description==Podium.PropertyDescs.LocationID);
 			}
 			if(ppLocationID.ClinicId==0) {//No program property for current clinic, since _clinicNumCur!=0
 				ProgramProperty ppLocationIDNew=ppLocationID.Copy();
@@ -267,19 +279,19 @@ namespace OpenDental {
 				return;
 			}
 			ppFromDb.Value=newpropertyValue;
-			ProgramProperties.Update(ppFromDb);
+			ProgramProperties.Save(ppFromDb);
 			_hasProgramPropertyChanged=true;
 		}
 
 		private void UpsertProgramPropertiesForClinics() {
-			List<ProgramProperty> listLocationIDsFromDb=ProgramProperties.GetForProgram(_progCur.Id).FindAll(x => x.Name==Podium.PropertyDescs.LocationID);
+			List<ProgramProperty> listLocationIDsFromDb=ProgramProperties.GetForProgram(_progCur.Id).FindAll(x => x.Description==Podium.PropertyDescs.LocationID);
 			List<ProgramProperty> listLocationIDsCur=_dictLocationIDs.Values.ToList();
 			foreach(ProgramProperty ppCur in listLocationIDsCur) {
 				if(listLocationIDsFromDb.Exists(x => x.Id == ppCur.Id)) {
 					UpdateProgramProperty(listLocationIDsFromDb[listLocationIDsFromDb.FindIndex(x => x.Id == ppCur.Id)],ppCur.Value);//ppCur.PropertyValue will match textLocationID.Text
 				}
 				else {
-					ProgramProperties.Insert(ppCur);//Program property for that clinicnum didn't exist, so insert it into the db.
+					ProgramProperties.Save(ppCur);//Program property for that clinicnum didn't exist, so insert it into the db.
 					_hasProgramPropertyChanged=true;
 				}
 			}

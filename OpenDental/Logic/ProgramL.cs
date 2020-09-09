@@ -525,7 +525,8 @@ namespace OpenDental
 			foreach (ToolButItem toolButItemCur in toolButItems)
 			{
 				Program programCur = Programs.GetProgram(toolButItemCur.ProgramNum);
-				if (PrefC.HasClinicsEnabled)
+
+				if (Clinics.Active != null)
 				{
 					//User should not have PL hidden if Clinics are not Enabled, otherwise this could create a situation where users may turn clinics off but 
 					//have hidden the PL button for HQ and then be unable to turn the button back on without re-enabling Clinics.
@@ -536,6 +537,8 @@ namespace OpenDental
 						continue;//If there exists a programProp for a clinic which should have its buttons hidden, carry on and do not display the button.
 					}
 				}
+
+
 				if (ProgramProperties.IsAdvertisingDisabled(programCur))
 				{
 					continue;
@@ -554,7 +557,7 @@ namespace OpenDental
 				}
 				else if (programCur.Name == ProgramName.Midway.ToString())
 				{
-					Image image = global::Imedisoft.Properties.Resources.Midway_Icon_22x22;
+					Image image = Imedisoft.Properties.Resources.Midway_Icon_22x22;
 					toolBar.ImageList.Images.Add(key, image);
 				}
 				if (toolBarsAvail != ToolBarsAvail.MainToolbar)

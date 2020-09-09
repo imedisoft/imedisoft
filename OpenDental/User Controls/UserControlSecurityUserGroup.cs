@@ -173,7 +173,7 @@ namespace OpenDental {
 			if(_dictProvNumProvs == null) { //fill the dictionary if needed
 				_dictProvNumProvs=Providers.GetMultProviders(Userods.GetAll().Select(x => x.ProviderId ?? 0).ToList()).ToDictionary(x => x.Id,x => x);
 			}
-			retVal.RemoveAll(x => x.UserNumCEMT>0);//NEVER show CEMT users when not in the CEMT tool.
+			retVal.RemoveAll(x => x.UserIdCEMT>0);//NEVER show CEMT users when not in the CEMT tool.
 			if(!checkShowHidden.Checked) {
 				retVal.RemoveAll(x => x.IsHidden);
 			}
@@ -212,7 +212,7 @@ namespace OpenDental {
 				retVal.RemoveAll(x => x.ClinicId!=((ODBoxItem<Clinic>)comboClinic.SelectedItem).Tag.Id);
 			}
 			if(comboGroups.SelectedIndex>0) {
-				retVal.RemoveAll(x => !x.IsInUserGroup(((ODBoxItem<UserGroup>)comboGroups.SelectedItem).Tag.Id));
+				retVal.RemoveAll(x => !Userods.IsInUserGroup(x.Id, ((ODBoxItem<UserGroup>)comboGroups.SelectedItem).Tag.Id));
 			}
 			if(!string.IsNullOrWhiteSpace(textPowerSearch.Text)) {
 				switch(((ODBoxItem<UserFilters>)comboShowOnly.SelectedItem).Tag) {
@@ -242,7 +242,7 @@ namespace OpenDental {
 		///<summary>Refreshes the UserGroups list box on the "User" tab. Also refreshes the security tree. 
 		///Public so that it can be called from the Form that implements this control.</summary>
 		public void RefreshUserTabGroups() {
-			List<UserGroup> listUserGroups=(SelectedUser==null) ? UserGroups.GetList(IsForCEMT) : SelectedUser.GetGroups(IsForCEMT);
+			List<UserGroup> listUserGroups=(SelectedUser==null) ? UserGroups.GetList(IsForCEMT) : UserGroups.GetForUser(SelectedUser.Id, IsForCEMT).ToList();
 			_isFillingList=true;
 			listUserTabUserGroups.Items.Clear();
 			for(int i=0;i<listUserGroups.Count;i++) {

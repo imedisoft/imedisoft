@@ -263,7 +263,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static bool HasPermission(Userod user, Permissions permission, long? objectId)
 		{
-			var groupPermission = GetFirstOrDefault(x => x.Permission == permission && x.ObjectId == objectId && user.IsInUserGroup(x.UserGroupId));
+			var groupPermission = GetFirstOrDefault(x => x.Permission == permission && x.ObjectId == objectId && Userods.IsInUserGroup(user.Id, x.UserGroupId));
 
 			return groupPermission != null;
 		}

@@ -83,7 +83,7 @@ namespace OpenDentBusiness {
       Clinic clinic=Clinics.GetById(clinicErx.ClinicNum);
       List<ProgramProperty> listDoseSpotClinicProperties=ProgramProperties.GetForProgram(Programs.GetProgramNum(ProgramName.eRx))
           .FindAll(x => x.ClinicId==0
-            && (x.Name==Erx.PropertyDescs.ClinicID || x.Name==Erx.PropertyDescs.ClinicKey)
+            && (x.Description==Erx.PropertyDescs.ClinicID || x.Description==Erx.PropertyDescs.ClinicKey)
             && !string.IsNullOrWhiteSpace(x.Value));
       if(clinic!=null || clinicAutomaticallyAttached) {
         //A clinic was associated with the clinicerx successfully, no user action needed.
@@ -555,10 +555,10 @@ namespace OpenDentBusiness {
 			if(listErxProperties==null) {
 				listErxProperties=ProgramProperties.GetForProgram(programErx.Id)
 					.FindAll(x => x.ClinicId==clinicNum
-						&& (x.Name==Erx.PropertyDescs.ClinicID || x.Name==Erx.PropertyDescs.ClinicKey));
+						&& (x.Description==Erx.PropertyDescs.ClinicID || x.Description==Erx.PropertyDescs.ClinicKey));
 			}
-			ProgramProperty ppClinicID=listErxProperties.FirstOrDefault(x => x.ClinicId==clinicNum && x.Name==Erx.PropertyDescs.ClinicID);
-			ProgramProperty ppClinicKey=listErxProperties.FirstOrDefault(x => x.ClinicId==clinicNum && x.Name==Erx.PropertyDescs.ClinicKey);
+			ProgramProperty ppClinicID=listErxProperties.FirstOrDefault(x => x.ClinicId==clinicNum && x.Description==Erx.PropertyDescs.ClinicID);
+			ProgramProperty ppClinicKey=listErxProperties.FirstOrDefault(x => x.ClinicId==clinicNum && x.Description==Erx.PropertyDescs.ClinicKey);
 			//If the current clinic doesn't have a clinic id/key, use a different clinic to make them.
 			if(ppClinicID==null || string.IsNullOrWhiteSpace(ppClinicID.Value)
 				|| ppClinicKey==null || string.IsNullOrWhiteSpace(ppClinicKey.Value))
@@ -600,8 +600,8 @@ namespace OpenDentBusiness {
 			DoseSpotREST.PostClinic(token,clinicCur,out clinicIdNew,out clinicKeyNew);
 			long erxProgramNum=Programs.GetCur(ProgramName.eRx).Id;
 			List<ProgramProperty> listPropsForClinic=ProgramProperties.GetListForProgramAndClinic(erxProgramNum,clinicNum);
-			ProgramProperty ppClinicID=listPropsForClinic.FirstOrDefault(x => x.Name==Erx.PropertyDescs.ClinicID);
-			ProgramProperty ppClinicKey=listPropsForClinic.FirstOrDefault(x => x.Name==Erx.PropertyDescs.ClinicKey);
+			ProgramProperty ppClinicID=listPropsForClinic.FirstOrDefault(x => x.Description==Erx.PropertyDescs.ClinicID);
+			ProgramProperty ppClinicKey=listPropsForClinic.FirstOrDefault(x => x.Description==Erx.PropertyDescs.ClinicKey);
 			//Update the database with the new id/key.
 			InsertOrUpdate(ppClinicID,erxProgramNum,Erx.PropertyDescs.ClinicID,clinicIdNew,clinicNum);
 			InsertOrUpdate(ppClinicKey,erxProgramNum,Erx.PropertyDescs.ClinicKey,clinicKeyNew,clinicNum);
@@ -820,8 +820,8 @@ namespace OpenDentBusiness {
 		///This will create ClinicNum 0 entries, thus supporting offices without clinics enabled, as well as clinics using the "Headquarters" clinic.</summary>
 		private static void MakeClinicErxsForDoseSpot() {
 			long programNum=Programs.GetCur(ProgramName.eRx).Id;
-			List<ProgramProperty> listClinicIDs=ProgramProperties.GetWhere(x => x.ProgramId==programNum && x.Name==Erx.PropertyDescs.ClinicID);
-			List<ProgramProperty> listClinicKeys=ProgramProperties.GetWhere(x => x.ProgramId==programNum && x.Name==Erx.PropertyDescs.ClinicKey);
+			List<ProgramProperty> listClinicIDs=ProgramProperties.GetWhere(x => x.ProgramId==programNum && x.Description==Erx.PropertyDescs.ClinicID);
+			List<ProgramProperty> listClinicKeys=ProgramProperties.GetWhere(x => x.ProgramId==programNum && x.Description==Erx.PropertyDescs.ClinicKey);
 			bool isRefreshNeeded=false;
 			foreach(ProgramProperty ppClinicId in listClinicIDs) {
 				ProgramProperty ppClinicKey=listClinicKeys.FirstOrDefault(x => x.ClinicId==ppClinicId.ClinicId);
@@ -875,19 +875,24 @@ namespace OpenDentBusiness {
 
 		///<summary>Inserts a new ProgramProperty into the database if the passed in ppCur is null.
 		///If ppCur is not null, it just sets the PropertyValue and updates.</summary>
-		private static void InsertOrUpdate(ProgramProperty ppCur,long programNum,string propDesc,string propValue,long clinicNum) {
-			if(ppCur==null) {
-				ppCur=new ProgramProperty();
-				ppCur.ProgramId=programNum;
-				ppCur.Name=propDesc;
-				ppCur.Value=propValue;
-				ppCur.ClinicId=clinicNum;
-				ProgramProperties.Insert(ppCur);
+		private static void InsertOrUpdate(ProgramProperty ppCur, long programNum, string propDesc, string propValue, long clinicNum)
+		{
+			if (ppCur == null)
+			{
+                ppCur = new ProgramProperty
+                {
+                    ProgramId = programNum,
+                    Description = propDesc,
+                    Value = propValue,
+                    ClinicId = clinicNum
+                };
+            }
+			else
+			{
+				ppCur.Value = propValue;
 			}
-			else {
-				ppCur.Value=propValue;
-				ProgramProperties.Update(ppCur);
-			}
+
+			ProgramProperties.Save(ppCur);
 		}
 
 		///<summary>Generates a DoseSpot clinic based on the passed in clinic.

@@ -726,7 +726,7 @@ namespace OpenDental
 
 		private bool SetAdvertising(ProgramName progName, XmlDocument doc)
 		{
-			ProgramProperty property = ProgramProperties.GetForProgram(Programs.GetCur(progName).Id).FirstOrDefault(x => x.Name == "Disable Advertising HQ");
+			ProgramProperty property = ProgramProperties.GetForProgram(Programs.GetCur(progName).Id).FirstOrDefault(x => x.Description == "Disable Advertising HQ");
 			ProgramProperty propOld = null;
 			XmlNode node = doc.SelectSingleNode("//" + progName.ToString());
 			if (node == null)
@@ -736,7 +736,7 @@ namespace OpenDental
 			if (property == null)
 			{
 				property = new ProgramProperty();
-				property.Name = "Disable Advertising HQ";
+				property.Description = "Disable Advertising HQ";
 				property.ProgramId = Programs.GetCur(progName).Id;
 			}
 			else
@@ -748,15 +748,10 @@ namespace OpenDental
 			//This is because the boolean from HQ is whether or not to show the advertisement, whereas in OD the boolean is whether or not to hide the advertisement
 			bool isDisabledByHQ = !(node.InnerText.ToLower() == "true");
 			property.Value = POut.Bool(isDisabledByHQ);
-			if (propOld == null)
-			{
-				ProgramProperties.Insert(property);
-				return true;
-			}
-			else
-			{
-				return ProgramProperties.Update(property, propOld);
-			}
+
+			ProgramProperties.Save(property);
+			return true;
+
 		}
 
 		/// <summary>
@@ -6631,7 +6626,7 @@ namespace OpenDental
 			if (listDisplayReports.Count > 0)
 			{
 				List<long> listReportPermissionFkeys = GroupPermissions.GetPermissionsForReports()
-					.Where(x => x.ObjectId.HasValue && Security.CurrentUser.IsInUserGroup(x.UserGroupId))
+					.Where(x => x.ObjectId.HasValue && Userods.IsInUserGroup(Security.CurrentUser.Id, x.UserGroupId))
 					.Select(x => x.ObjectId.Value)
 					.ToList();
 				listDisplayReports.RemoveAll(x => !listReportPermissionFkeys.Contains(x.DisplayReportNum));//Remove reports user does not have permission for
@@ -7365,7 +7360,7 @@ namespace OpenDental
 				//This catches domain logins, middle-tier, regular login, and logging in with passwords disabled.
 				try
 				{
-					Security.CurrentUser.DateTLastLogin = DateTime.Now;
+					Security.CurrentUser.LastLoginDate = DateTime.UtcNow;
 					Userods.Update(Security.CurrentUser);//Unfortunately there is no update(new,old) for Userods yet due to comlexity.
 				}
 				catch (Exception ex)

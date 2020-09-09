@@ -70,9 +70,9 @@ namespace OpenDental {
 					clinicNum=_listUserClinicNums[comboClinic.SelectedIndex];
 				}
 				_listProgramProperties=ProgramProperties.GetListForProgramAndClinicWithDefault(_progCur.Id,clinicNum);
-				_patNumOrChartNum=_listProgramProperties.FirstOrDefault(x => x.Name==XDR.PropertyDescs.PatNumOrChartNum);
-				_infoFilePath=_listProgramProperties.FirstOrDefault(x => x.Name==XDR.PropertyDescs.InfoFilePath);
-				List<ProgramProperty> listLocationIDs=ProgramProperties.GetForProgram(_progCur.Id).FindAll(x => x.Name==XDR.PropertyDescs.LocationID);
+				_patNumOrChartNum=_listProgramProperties.FirstOrDefault(x => x.Description==XDR.PropertyDescs.PatNumOrChartNum);
+				_infoFilePath=_listProgramProperties.FirstOrDefault(x => x.Description==XDR.PropertyDescs.InfoFilePath);
+				List<ProgramProperty> listLocationIDs=ProgramProperties.GetForProgram(_progCur.Id).FindAll(x => x.Description==XDR.PropertyDescs.LocationID);
 				_dictLocationIDs.Clear();
 				//If clinics is off, this will only grab the program property with a 0 clinicNum (_listUserClinicNums will only have 0).
 				foreach(ProgramProperty ppCur in listLocationIDs) {
@@ -149,7 +149,7 @@ namespace OpenDental {
 			}
 			else {//Get default programproperty from db.
 				ppLocationID=ProgramProperties.GetListForProgramAndClinicWithDefault(_progCur.Id,_clinicNumCur)
-					.FirstOrDefault(x => x.Name==XDR.PropertyDescs.LocationID);
+					.FirstOrDefault(x => x.Description==XDR.PropertyDescs.LocationID);
 			}
 			if(ppLocationID.ClinicId==0) {//No program property for current clinic, since _clinicNumCur!=0
 				ProgramProperty ppLocationIDNew=ppLocationID.Copy();
@@ -202,19 +202,19 @@ namespace OpenDental {
 				return;
 			}
 			ppFromDb.Value=newpropertyValue;
-			ProgramProperties.Update(ppFromDb);
+			ProgramProperties.Save(ppFromDb);
 			_hasProgramPropertyChanged=true;
 		}
 
 		private void UpsertProgramPropertiesForClinics() {
-			List<ProgramProperty> listLocationIDsFromDb=ProgramProperties.GetForProgram(_progCur.Id).FindAll(x => x.Name==XDR.PropertyDescs.LocationID);
+			List<ProgramProperty> listLocationIDsFromDb=ProgramProperties.GetForProgram(_progCur.Id).FindAll(x => x.Description==XDR.PropertyDescs.LocationID);
 			List<ProgramProperty> listLocationIDsCur=_dictLocationIDs.Values.ToList();
 			foreach(ProgramProperty ppCur in listLocationIDsCur) {
 				if(listLocationIDsFromDb.Exists(x => x.Id == ppCur.Id)) {
 					UpdateProgramProperty(listLocationIDsFromDb[listLocationIDsFromDb.FindIndex(x => x.Id == ppCur.Id)],ppCur.Value);//ppCur.PropertyValue will match textLocationID.Text
 				}
 				else {
-					ProgramProperties.Insert(ppCur);//Program property for that clinicnum didn't exist, so insert it into the db.
+					ProgramProperties.Save(ppCur);//Program property for that clinicnum didn't exist, so insert it into the db.
 					_hasProgramPropertyChanged=true;
 				}
 			}

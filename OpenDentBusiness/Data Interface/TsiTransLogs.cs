@@ -160,7 +160,7 @@ namespace OpenDentBusiness
 			if (!isFromTsi)
 			{//if not an adj due to a payment from TSI, see if it is an excluded adj type
 				Dictionary<long, List<ProgramProperty>> dictClinicProps = ProgramProperties
-					.GetWhere(x => x.ProgramId == progCur.Id && x.Name.In(ExcludeAdjustTypes) && x.ClinicId.In(0, guar.ClinicNum))
+					.GetWhere(x => x.ProgramId == progCur.Id && x.Description.In(ExcludeAdjustTypes) && x.ClinicId.In(0, guar.ClinicNum))
 					.GroupBy(x => x.ClinicId)
 					.ToDictionary(x => x.Key, x => x.ToList());
 				//use guar's clinic if clinics are enabled and props for that clinic exist, otherwise use ClinicNum 0
@@ -228,21 +228,21 @@ namespace OpenDentBusiness
 			{
 				return false;
 			}
-			string sftpAddress = listPropsForClinic.Find(x => x.Name == "SftpServerAddress")?.Value;
+			string sftpAddress = listPropsForClinic.Find(x => x.Description == "SftpServerAddress")?.Value;
 			int sftpPort;
-			if (!int.TryParse(listPropsForClinic.Find(x => x.Name == "SftpServerPort")?.Value, out sftpPort)
+			if (!int.TryParse(listPropsForClinic.Find(x => x.Description == "SftpServerPort")?.Value, out sftpPort)
 				|| sftpPort < ushort.MinValue//0
 				|| sftpPort > ushort.MaxValue)//65,535
 			{
 				sftpPort = 22;//default to port 22
 			}
-			string userName = listPropsForClinic.Find(x => x.Name == "SftpUsername")?.Value;
-			string userPassword = listPropsForClinic.Find(x => x.Name == "SftpPassword")?.Value;
+			string userName = listPropsForClinic.Find(x => x.Description == "SftpUsername")?.Value;
+			string userPassword = listPropsForClinic.Find(x => x.Description == "SftpPassword")?.Value;
 			if (string.IsNullOrWhiteSpace(sftpAddress) || string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(userPassword))
 			{
 				return false;
 			}
-			string[] selectedServices = listPropsForClinic.FirstOrDefault(x => x.Name == "SelectedServices")
+			string[] selectedServices = listPropsForClinic.FirstOrDefault(x => x.Description == "SelectedServices")
 				?.Value
 				?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 			if (selectedServices.IsNullOrEmpty())
@@ -334,25 +334,25 @@ namespace OpenDentBusiness
 			}
 			if (string.IsNullOrEmpty(clientId))
 			{
-				clientId = listProps.Find(x => x.Name == "ClientIdAccelerator")?.Value;
+				clientId = listProps.Find(x => x.Description == "ClientIdAccelerator")?.Value;
 			}
 			if (string.IsNullOrEmpty(clientId))
 			{
-				clientId = listProps.Find(x => x.Name == "ClientIdCollection")?.Value;
+				clientId = listProps.Find(x => x.Description == "ClientIdCollection")?.Value;
 			}
 			if (string.IsNullOrEmpty(clientId))
 			{
 				return "There is no client ID in the Transworld program link"
 					+ (PrefC.HasClinicsEnabled ? (" " + "for the guarantor's clinic" + ", " + clinicDesc) : "") + ".";
 			}
-			string sftpAddress = listProps.Find(x => x.Name == "SftpServerAddress")?.Value ?? "";
+			string sftpAddress = listProps.Find(x => x.Description == "SftpServerAddress")?.Value ?? "";
 			int sftpPort;
-			if (!int.TryParse(listProps.Find(x => x.Name == "SftpServerPort")?.Value ?? "", out sftpPort))
+			if (!int.TryParse(listProps.Find(x => x.Description == "SftpServerPort")?.Value ?? "", out sftpPort))
 			{
 				sftpPort = 22;//default to port 22
 			}
-			string userName = listProps.Find(x => x.Name == "SftpUsername")?.Value ?? "";
-			string userPassword = listProps.Find(x => x.Name == "SftpPassword")?.Value ?? "";
+			string userName = listProps.Find(x => x.Description == "SftpUsername")?.Value ?? "";
+			string userPassword = listProps.Find(x => x.Description == "SftpPassword")?.Value ?? "";
 			if (new[] { sftpAddress, userName, userPassword }.Any(x => string.IsNullOrEmpty(x)))
 			{
 				return "The SFTP address, username, or password for the Transworld program link" + " "

@@ -7795,7 +7795,7 @@ namespace OpenDental {
 				
 				List<ProgramProperty> listDoseSpotProperties=ProgramProperties.GetForProgram(programErx.Id)
 					.FindAll(x => x.ClinicId==clinicNum 
-						&& (x.Name==Erx.PropertyDescs.ClinicID || x.Name==Erx.PropertyDescs.ClinicKey));
+						&& (x.Description==Erx.PropertyDescs.ClinicID || x.Description==Erx.PropertyDescs.ClinicKey));
 				byte[] arrayPostData=new byte[1];
 				string queryString="";
 				bool isDoseSpotAccessAllowed=true;

@@ -23,8 +23,8 @@ namespace OpenDental {
 		private void FormDoseSpotAssignUserId_Load(object sender,EventArgs e) {
       _listClinicsInComboBox=Clinics.GetByCurrentUser();
       List<ProgramProperty> listProgramProperties=ProgramProperties.GetForProgram(Programs.GetCur(ProgramName.eRx).Id);
-      _listClinicIDs=listProgramProperties.FindAll(x => x.Name==Erx.PropertyDescs.ClinicID);
-      _listClinicKeys=listProgramProperties.FindAll(x => x.Name==Erx.PropertyDescs.ClinicKey);
+      _listClinicIDs=listProgramProperties.FindAll(x => x.Description==Erx.PropertyDescs.ClinicID);
+      _listClinicKeys=listProgramProperties.FindAll(x => x.Description==Erx.PropertyDescs.ClinicKey);
       _listClinicsInComboBox.RemoveAll(x =>//Remove all clinics that already have a DoseSpot Clinic ID OR Clinic Key entered
         _listClinicIDs.FindAll(y => !string.IsNullOrWhiteSpace(y.Value)).Select(y => y.ClinicId).Contains(x.Id) 
         || _listClinicKeys.FindAll(y => !string.IsNullOrWhiteSpace(y.Value)).Select(y => y.ClinicId).Contains(x.Id)
@@ -57,26 +57,26 @@ namespace OpenDental {
         ppClinicID=new ProgramProperty();
         ppClinicID.ProgramId=progErx.Id;
         ppClinicID.ClinicId=_clinicErxCur.ClinicNum;
-        ppClinicID.Name=Erx.PropertyDescs.ClinicID;
+        ppClinicID.Description=Erx.PropertyDescs.ClinicID;
         ppClinicID.Value=_clinicErxCur.ClinicId;
-        ProgramProperties.Insert(ppClinicID);
+        ProgramProperties.Save(ppClinicID);
       }
       else {
         ppClinicID.Value=_clinicErxCur.ClinicId;
-        ProgramProperties.Update(ppClinicID);
+        ProgramProperties.Save(ppClinicID);
       }
       ProgramProperty ppClinicKey=_listClinicKeys.FirstOrDefault(x => x.ClinicId==_clinicErxCur.ClinicNum);
       if(ppClinicKey==null) {
         ppClinicKey=new ProgramProperty();
         ppClinicKey.ProgramId=progErx.Id;
         ppClinicKey.ClinicId=_clinicErxCur.ClinicNum;
-        ppClinicKey.Name=Erx.PropertyDescs.ClinicKey;
+        ppClinicKey.Description=Erx.PropertyDescs.ClinicKey;
         ppClinicKey.Value=_clinicErxCur.ClinicKey;
-        ProgramProperties.Insert(ppClinicKey);
+        ProgramProperties.Save(ppClinicKey);
       }
       else {
         ppClinicKey.Value=_clinicErxCur.ClinicKey;
-        ProgramProperties.Update(ppClinicKey);
+        ProgramProperties.Save(ppClinicKey);
       }
       DataValid.SetInvalid(InvalidType.Programs);
       DialogResult=DialogResult.OK;

@@ -834,7 +834,7 @@
     <Compile Include="Crud\ProcNoteCrud.cs" />
     <Compile Include="Crud\ProcTPCrud.cs" />
     <Compile Include="Crud\ProgramCrud.cs" />
-    <Compile Include="Crud\ProgramPropertyCrud.cs" />
+    <Compile Include="Data\Crud\ProgramProperties.cs" />
     <Compile Include="Data\Crud\Providers.cs" />
     <Compile Include="Crud\ProviderErxCrud.cs" />
     <Compile Include="Crud\ProviderIdentCrud.cs" />
@@ -948,7 +948,7 @@
     <Compile Include="Data\Crud\Ucums.cs" />
     <Compile Include="Data\Crud\UserGroups.cs" />
     <Compile Include="Crud\UserodApptViewCrud.cs" />
-    <Compile Include="Crud\UserodCrud.cs" />
+    <Compile Include="Data\Crud\Users.cs" />
     <Compile Include="Crud\UserQueryCrud.cs" />
     <Compile Include="Crud\VaccineDefCrud.cs" />
     <Compile Include="Crud\VaccineObsCrud.cs" />
@@ -1308,7 +1308,7 @@
     <Compile Include="Logic\TelephoneNumbers.cs" />
     <Compile Include="Logic\Tooth.cs" />
     <Compile Include="Logic\ToothComparer.cs" />
-    <Compile Include="Data Interface\Userods.cs" />
+    <Compile Include="Data\Logic\Userods.cs" />
     <Compile Include="Db\DbHelper.cs" />
     <Compile Include="Misc\HouseCallsQueries.cs" />
     <Compile Include="Misc\LetterMergesQueries.cs" />
@@ -1730,7 +1730,6 @@
     <Compile Include="TableTypes\ProcNote.cs" />
     <Compile Include="TableTypes\ProcTP.cs" />
     <Compile Include="TableTypes\Program.cs" />
-    <Compile Include="TableTypes\ProgramProperty.cs" />
     <Compile Include="TableTypes\ProviderIdent.cs" />
     <Compile Include="TableTypes\Question.cs" />
     <Compile Include="TableTypes\QuestionDef.cs" />
@@ -1758,7 +1757,6 @@
     <Compile Include="TableTypes\ToothInitial.cs" />
     <Compile Include="TableTypes\Transaction.cs" />
     <Compile Include="TableTypes\TreatPlan.cs" />
-    <Compile Include="TableTypes\Userod.cs" />
     <Compile Include="Data\Models\UserGroup.cs" />
     <Compile Include="TableTypes\UserQuery.cs" />
     <Compile Include="TableTypes\ZipCode.cs" />
