@@ -12,6 +12,8 @@ using OpenDental.UI;
 using OpenDental;
 using OpenDentBusiness;
 using System.Globalization;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental.User_Controls.SetupWizard {
 	public partial class UserControlSetupWizPractice:SetupWizControl {

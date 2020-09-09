@@ -6,6 +6,8 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using System.Data;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental
 {

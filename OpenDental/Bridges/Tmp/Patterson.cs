@@ -1,4 +1,6 @@
-﻿using OpenDentBusiness;
+﻿using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using OpenDentBusiness;
 
 namespace OpenDental.Bridges
 {

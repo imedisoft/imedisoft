@@ -14,6 +14,8 @@ using System.IO;
 using OpenDental.UI;
 using System.Net;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormInfobutton:ODForm {

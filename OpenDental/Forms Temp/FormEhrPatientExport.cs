@@ -6,6 +6,8 @@ using CodeBase;
 using OpenDental.UI;
 using OpenDentBusiness;
 using System.Collections.Generic;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormEhrPatientExport:ODForm {

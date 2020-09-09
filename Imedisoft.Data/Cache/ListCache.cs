@@ -136,6 +136,18 @@ namespace Imedisoft.Data.Cache
 		}
 
 		/// <summary>
+		/// Gets the first entry in the cache, or a default value if the cache is empty.
+		/// </summary>
+		/// <returns>The first entry in the cache; or the default value.</returns>
+		public TValue FirstOrDefault()
+        {
+			lock (items)
+            {
+				return items.FirstOrDefault();
+            }
+        }
+
+		/// <summary>
 		/// Gets the first entry that matches the specified condition.
 		/// </summary>
 		/// <param name="predicate">A function to test each cache entry for a condition.</param>
@@ -156,6 +168,23 @@ namespace Imedisoft.Data.Cache
 
 			return default;
         }
+
+		/// <summary>
+		/// Gets the first entry that matches the specified condition.
+		/// </summary>
+		/// <param name="predicate">A function to test each cache entry for a condition.</param>
+		/// <returns>The first entry that matched the given condition.</returns>
+		public TValue LastOrDefault(Predicate<TValue> predicate)
+		{
+			if (predicate == null) return default;
+
+			if (requiresRefresh) Refresh();
+
+			lock (items)
+			{
+				return items.LastOrDefault(item => predicate(item));
+			}
+		}
 
 		/// <summary>
 		/// Determines whether the cache contains any element that satisfies the given condition.

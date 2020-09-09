@@ -11,6 +11,8 @@ using System.Drawing.Printing;
 using System.IO;
 using CodeBase;
 using OpenDental.Thinfinity;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormRpInsPayPlansPastDue:ODForm {

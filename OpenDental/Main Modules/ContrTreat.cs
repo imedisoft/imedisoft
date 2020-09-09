@@ -3689,8 +3689,8 @@ namespace OpenDental
 			}
 			ClaimCur.ProvBill=Providers.GetBillingProviderId(ClaimCur.ProvTreat,ClaimCur.ClinicNum);
 			Provider prov=Providers.GetById(ClaimCur.ProvBill);
-			if(prov.ProvNumBillingOverride!=0) {
-				ClaimCur.ProvBill=prov.ProvNumBillingOverride;
+			if(prov.BillingOverrideProviderId.HasValue) {
+				ClaimCur.ProvBill=prov.BillingOverrideProviderId.Value;
 			}
 			ClaimCur.EmployRelated=YN.No;
       ClaimCur.ClaimType="PreAuth";

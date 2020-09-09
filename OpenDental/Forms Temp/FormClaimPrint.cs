@@ -15,6 +15,7 @@ using System.Linq;
 using OpenDentBusiness.IO;
 using Imedisoft.X12.Codes;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental{
 	///<summary></summary>
@@ -2160,7 +2161,7 @@ namespace OpenDental{
 						displayStrings[i]=ClaimCur.IsOutsideLab?"":"X";
 						break;
 					case "OfficeNumber":
-						displayStrings[i]=providerClaimTreat.CanadianOfficeNum;
+						displayStrings[i]=providerClaimTreat.CanadianOfficeNumber;
 						break;
 				}//switch
 				if(CultureInfo.CurrentCulture.Name=="nl-BE"	&& displayStrings[i]==""){//Dutch Belgium

@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using System.Linq;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	public partial class FormProvAdditional:ODForm {
@@ -53,7 +54,7 @@ namespace OpenDental {
 						ClinicId=0,
 						DeaNumber=_provCur.DeaNumber,
 						StateLicense=_provCur.StateLicense,
-						StateRxId=_provCur.StateRxId,
+						StateRxId=_provCur.StateRxID,
 						StateWhereLicensed=_provCur.StateWhereLicensed,
 					};
 				}

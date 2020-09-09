@@ -6,6 +6,7 @@ using OpenDental.UI;
 using OpenDentBusiness;
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental{
 	///<summary></summary>
@@ -722,7 +723,7 @@ namespace OpenDental{
 				return x.SchedType.CompareTo(y.SchedType);
 			}
 			if(x.ProvNum!=y.ProvNum){
-				return _dictProvNumProvider[x.ProvNum].ItemOrder.CompareTo(_dictProvNumProvider[y.ProvNum].ItemOrder);
+				return _dictProvNumProvider[x.ProvNum].SortOrder.CompareTo(_dictProvNumProvider[y.ProvNum].SortOrder);
 			}
 			if(x.EmployeeNum!=y.EmployeeNum) {
 				Employee empx= _dictEmpNumEmployee[x.EmployeeNum];//use dictionary to greatly speed up sort

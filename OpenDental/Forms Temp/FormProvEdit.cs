@@ -1420,7 +1420,7 @@ namespace OpenDental{
 			if(!Prefs.GetBool(PrefName.EasyHideDentalSchools) //Dental Schools is turned on
 				&& (ProvCur.SchoolClassId!=0 || ProvCur.IsInstructor))//Adding/Editing Students or Instructors
 			{
-				if(!ProvCur.IsNew) {
+				if(ProvCur.Id > 0) {
 					labelPassDescription.Visible=true;
 					textProvNum.Text=ProvCur.Id.ToString();
 					List<Userod> userList=Providers.GetAttachedUsers(ProvCur.Id);
@@ -1474,7 +1474,7 @@ namespace OpenDental{
 			textMI.Text=ProvCur.Initials;
 			textSuffix.Text=ProvCur.Suffix;
 			textSSN.Text=ProvCur.SSN;
-			dateTerm.SetDateTime(ProvCur.DateTerm);
+			dateTerm.SetDateTime(ProvCur.TerminationDate.Value);
 			if(ProvCur.UsingTIN){
 				radioTIN.Checked=true;
 			}
@@ -1495,7 +1495,7 @@ namespace OpenDental{
 					ClinicId=0,
 					DeaNumber=ProvCur.DeaNumber,
 					StateLicense=ProvCur.StateLicense,
-					StateRxId=ProvCur.StateRxId,
+					StateRxId=ProvCur.StateRxID,
 					StateWhereLicensed=ProvCur.StateWhereLicensed,
 				};
 				_listProvClinicsNew.Add(_provClinicDefault);
@@ -1507,9 +1507,9 @@ namespace OpenDental{
 			//textBlueCrossID.Text=ProvCur.BlueCrossID;
 			textMedicaidID.Text=ProvCur.MedicaidID;
 			textNationalProvID.Text=ProvCur.NationalProviderID;
-			textCanadianOfficeNum.Text=ProvCur.CanadianOfficeNum;
+			textCanadianOfficeNum.Text=ProvCur.CanadianOfficeNumber;
 			textCustomID.Text=ProvCur.CustomID;
-			textSchedRules.Text=ProvCur.SchedNote;
+			textSchedRules.Text=ProvCur.SchedulingNote;
 			checkIsSecondary.Checked=ProvCur.IsSecondary;
 			checkSigOnFile.Checked=ProvCur.HasSignature;
 			checkIsHidden.Checked=ProvCur.IsHidden;
@@ -1527,8 +1527,8 @@ namespace OpenDental{
 			}
 			textBirthdate.Text="";
 			textProdGoalHr.Text=ProvCur.HourlyProductionGoal.ToString("f");
-			if(ProvCur.Birthdate.Year>=1880) {
-				textBirthdate.Text=ProvCur.Birthdate.ToShortDateString();
+			if(ProvCur.Birthdate.HasValue) {
+				textBirthdate.Text=ProvCur.Birthdate.Value.ToShortDateString();
 			}
 			_listFeeSchedShort=FeeScheds.GetDeepCopy(true);
 			for(int i=0;i<_listFeeSchedShort.Count;i++){
@@ -1551,20 +1551,7 @@ namespace OpenDental{
 			textTaxonomyOverride.Text=ProvCur.TaxonomyCodeOverride;
 			FillProvIdent();
 			//These radio buttons are used to properly filter the provider dropdowns on FormAnetheticRecord
-			if (ProvCur.AnesthProvType == 0)
-				{
-					radNone.Checked = true;
-				}
-			
-			if (ProvCur.AnesthProvType == 1)
-				{
-					radAnesthSurg.Checked = true;
-				}
 
-			if (ProvCur.AnesthProvType == 2)
-			{
-				radAsstCirc.Checked = true;
-			}
 			checkIsCDAnet.Checked=ProvCur.IsCDAnet;
 			if(CultureInfo.CurrentCulture.Name.EndsWith("CA")) {//Canadian. en-CA or fr-CA
 				checkIsCDAnet.Visible=true;
@@ -1572,8 +1559,8 @@ namespace OpenDental{
 			checkIsNotPerson.Checked=ProvCur.IsNotPerson;
 			comboProv.Items.AddProvNone();
 			comboProv.Items.AddProvsFull(Providers.GetDeepCopy(true));
-			comboProv.SetSelectedProvNum(ProvCur.ProvNumBillingOverride);
-			textWebSchedDescript.Text=ProvCur.WebSchedDescript;
+			comboProv.SetSelectedProvNum(ProvCur.BillingOverrideProviderId.Value);
+			textWebSchedDescript.Text=ProvCur.WebSchedDescription;
 			FillImage();
 			if(ProvCur.Status==ProviderStatus.Deleted) {
 				foreach(Control con in this.Controls) {
@@ -1838,7 +1825,7 @@ namespace OpenDental{
 					return;
 				}
 			}
-			if(ProvCur.IsNew == false && comboProv.GetSelectedProvNum()==ProvCur.Id) {//Override is the same provider.
+			if(ProvCur.Id > 0 && comboProv.GetSelectedProvNum()==ProvCur.Id) {//Override is the same provider.
 				MessageBox.Show("E-claim Billing Prov Override cannot be the same provider.");
 				return;
 			}
@@ -1869,12 +1856,12 @@ namespace OpenDental{
 			_provClinicDefault.StateWhereLicensed=textStateWhereLicensed.Text;
 			ProvCur.DeaNumber=textDEANum.Text;
 			_provClinicDefault.DeaNumber=textDEANum.Text;
-			ProvCur.StateRxId=textStateRxID.Text;
+			ProvCur.StateRxID=textStateRxID.Text;
 			_provClinicDefault.StateRxId=textStateRxID.Text;
 			//ProvCur.BlueCrossID=textBlueCrossID.Text;
 			ProvCur.MedicaidID=textMedicaidID.Text;
 			ProvCur.NationalProviderID=textNationalProvID.Text;
-			ProvCur.CanadianOfficeNum=textCanadianOfficeNum.Text;
+			ProvCur.CanadianOfficeNumber=textCanadianOfficeNum.Text;
 			//EhrKey and EhrHasReportAccess set when user uses the ... button
 			ProvCur.IsSecondary=checkIsSecondary.Checked;
 			ProvCur.HasSignature=checkSigOnFile.Checked;
@@ -1893,11 +1880,11 @@ namespace OpenDental{
 				ProvCur.IsErxEnabled=ErxEnabledStatus.EnabledWithLegacy;
 			}
 			ProvCur.CustomID=textCustomID.Text;
-			ProvCur.SchedNote=textSchedRules.Text;
+			ProvCur.SchedulingNote=textSchedRules.Text;
 			ProvCur.Birthdate=PIn.Date(textBirthdate.Text);
-			ProvCur.WebSchedDescript=textWebSchedDescript.Text;
+			ProvCur.WebSchedDescription=textWebSchedDescript.Text;
 			ProvCur.HourlyProductionGoal=PIn.Double(textProdGoalHr.Text);
-			ProvCur.DateTerm=dateTerm.GetDateTime();
+			ProvCur.TerminationDate=dateTerm.GetDateTime();
 			if(!Prefs.GetBool(PrefName.EasyHideDentalSchools)) {
 				if(ProvCur.SchoolClassId!=0) {
 					ProvCur.SchoolClassId=_listSchoolClasses[comboSchoolClass.SelectedIndex].Id;
@@ -1909,17 +1896,8 @@ namespace OpenDental{
 			//default to first specialty in the list if it can't find the specialty by exact name
 			ProvCur.Specialty=Definitions.GetByExactNameNeverZero(DefinitionCategory.ProviderSpecialties,listSpecialty.SelectedItem.ToString());//selected index defaults to 0
 			ProvCur.TaxonomyCodeOverride=textTaxonomyOverride.Text;
-			if(radAnesthSurg.Checked) {
-				ProvCur.AnesthProvType=1;
-			}
-			else if(radAsstCirc.Checked) {
-				ProvCur.AnesthProvType=2;
-			}
-			else {
-				ProvCur.AnesthProvType=0;
-			}
 			ProvCur.IsNotPerson=checkIsNotPerson.Checked;
-			ProvCur.ProvNumBillingOverride=comboProv.GetSelectedProvNum();
+			ProvCur.BillingOverrideProviderId=comboProv.GetSelectedProvNum();
 			if(IsNew) {
 				long provNum=Providers.Insert(ProvCur);
 				//Set the providerclinics to the new provider's ProvNum that was just retreived from the database.
@@ -1953,8 +1931,8 @@ namespace OpenDental{
 				}
 				Providers.Update(ProvCur);
 				#region Date Term Check
-				if(ProvCur.DateTerm.Year > 1880 && ProvCur.DateTerm < DateTime.Now) {
-					List<ClaimPaySplit> listClaimPaySplits=Claims.GetOutstandingClaimsByProvider(ProvCur.Id,ProvCur.DateTerm);
+				if(ProvCur.TerminationDate.HasValue && ProvCur.TerminationDate < DateTime.Now) {
+					List<ClaimPaySplit> listClaimPaySplits=Claims.GetOutstandingClaimsByProvider(ProvCur.Id,ProvCur.TerminationDate.Value);
 					StringBuilder claimMessage=new StringBuilder("Clinic\tPatNum\tPatient Name\tDate of Service\tClaim Status\tFee\tCarrier"+"\r\n");
 					foreach(ClaimPaySplit claimPaySplit in listClaimPaySplits) {
 						claimMessage.Append(claimPaySplit.ClinicDesc+"\t"

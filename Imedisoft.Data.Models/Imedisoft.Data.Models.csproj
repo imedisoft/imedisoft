@@ -97,6 +97,7 @@
     <Compile Include="DentalSchools\StudentResult.cs" />
     <Compile Include="DentalSchools\SchoolClass.cs" />
     <Compile Include="DentalSchools\SchoolCourse.cs" />
+    <Compile Include="Provider.cs" />
     <Compile Include="SecurityLog.cs" />
     <Compile Include="SecurityLogHash.cs" />
     <Compile Include="SecurityLogSource.cs" />

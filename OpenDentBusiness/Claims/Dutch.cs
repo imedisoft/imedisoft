@@ -7,6 +7,8 @@ using OpenDentBusiness;
 using System.Windows.Forms;
 using CodeBase;
 using Imedisoft.Claims;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness.Eclaims
 {

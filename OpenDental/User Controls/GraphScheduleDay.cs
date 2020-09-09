@@ -608,7 +608,7 @@ namespace OpenDental {
 		///<summary>Name sort order differs according to ScheduleType. This sorts accordingly.<returns></returns>
 		private int CompareNames(Schedule x,Schedule y) {
 			if(x.ProvNum!=y.ProvNum) { //we are dealing with a provider
-				return Providers.GetById(x.ProvNum).ItemOrder.CompareTo(Providers.GetById(y.ProvNum).ItemOrder);
+				return Providers.GetById(x.ProvNum).SortOrder.CompareTo(Providers.GetById(y.ProvNum).SortOrder);
 			}
 			if(x.EmployeeNum!=y.EmployeeNum) { //we are dealing with an employee
 				return Employees.GetEmp(x.EmployeeNum).FirstName.CompareTo(Employees.GetEmp(y.EmployeeNum).FirstName);

@@ -14,6 +14,7 @@ using OpenDentBusiness;
 using CodeBase;
 using Imedisoft.Data.Models;
 using Imedisoft.Data;
+using System.Linq;
 
 namespace OpenDental{
 	/// <summary> </summary>
@@ -560,7 +561,7 @@ namespace OpenDental{
 					timeStartSynch=DateTime.Now;
 					//get various objects from the database.
 					patientsToSynch=Patients.GetChangedSince(dateTimeLastUploaded);//datetime will be handled better soon with delta
-					provsToSynch=Providers.GetChangedSince(dateTimeLastUploaded);
+					provsToSynch=Providers.GetChangedSince(dateTimeLastUploaded).ToList();
 					apptsToSynch=Appointments.GetChangedSince(dateTimeLastUploaded,DateTime.MinValue);
 					apptProcsToSynch=Appointments.GetUAppointProcs(apptsToSynch);
 					delObjToSynch=DeletedObjects.GetDeletedSince(dateTimeLastUploaded);

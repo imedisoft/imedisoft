@@ -11,6 +11,7 @@ using CodeBase;
 using DataConnectionBase;
 using System.Xml.Serialization;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness
 {

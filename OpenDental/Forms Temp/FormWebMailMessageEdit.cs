@@ -11,6 +11,7 @@ using OpenDentBusiness.IO;
 using Imedisoft.UI;
 using Imedisoft.Forms;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	///<summary>DialogResult will be Abort if message was unable to be read. 

@@ -1,4 +1,6 @@
-﻿using OpenDentBusiness;
+﻿using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -257,11 +259,11 @@ namespace OpenDental
 		/// </summary>
 		public static int CompareProvs(Provider prov1, Provider prov2)
 		{
-			if (prov1.ItemOrder < prov2.ItemOrder)
+			if (prov1.SortOrder < prov2.SortOrder)
 			{
 				return -1;
 			}
-			else if (prov1.ItemOrder > prov2.ItemOrder)
+			else if (prov1.SortOrder > prov2.SortOrder)
 			{
 				return 1;
 			}

@@ -11,7 +11,8 @@ using System.Reflection;
 using OpenDental.UI;
 using OpenDental;
 using OpenDentBusiness;
-
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental.User_Controls.SetupWizard {
 	public partial class UserControlSetupWizProvider:SetupWizControl {
@@ -142,16 +143,15 @@ namespace OpenDental.User_Controls.SetupWizard {
 		private void butAdd_Click(object sender,EventArgs e) {
 			FormProvEdit FormPE = new FormProvEdit();
 			FormPE.ProvCur=new Provider();
-			FormPE.ProvCur.IsNew=true;
 			Provider provCur = new Provider();
 			if(gridMain.SelectedIndices.Length>0) {//place new provider after the first selected index. No changes are made to DB until after provider is actually inserted.
-				FormPE.ProvCur.ItemOrder=((Provider)gridMain.Rows[gridMain.SelectedIndices[0]].Tag).ItemOrder;//now two with this itemorder
+				FormPE.ProvCur.SortOrder=((Provider)gridMain.Rows[gridMain.SelectedIndices[0]].Tag).SortOrder;//now two with this itemorder
 			}
 			else if(gridMain.Rows.Count>0) {
-				FormPE.ProvCur.ItemOrder=((Provider)gridMain.Rows[gridMain.Rows.Count-1].Tag).ItemOrder+1;
+				FormPE.ProvCur.SortOrder=((Provider)gridMain.Rows[gridMain.Rows.Count-1].Tag).SortOrder+1;
 			}
 			else {
-				FormPE.ProvCur.ItemOrder=0;
+				FormPE.ProvCur.SortOrder=0;
 			}
 			FormPE.IsNew=true;
 			FormPE.ShowDialog();

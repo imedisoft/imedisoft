@@ -16,7 +16,7 @@ namespace OpenDentBusiness
 		public static DataTable GetActivePatientTable(DateTime dateStart, DateTime dateEnd, List<long> listProvNums, List<long> listClinicNums, List<long> listBillingTypes, bool hasAllProvs, bool hasAllClinics, bool hasAllBilling)
 		{
 			bool hasClinicsEnabled = true;
-			List<Provider> listProvs = Providers.GetAll();
+			List<Provider> listProvs = Providers.GetAll().ToList();
 			List<Definition> listDefs = Definitions.GetDefsNoCache(DefinitionCategory.BillingTypes);
 			List<Clinic> listClinics = Clinics.GetClinicsNoCache().ToList();
 			DataTable table = new DataTable();

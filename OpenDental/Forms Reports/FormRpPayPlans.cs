@@ -11,6 +11,8 @@ using OpenDental.UI;
 using OpenDentBusiness;
 using CodeBase;
 using System.Collections.Generic;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental
 {

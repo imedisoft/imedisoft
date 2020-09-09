@@ -11,6 +11,8 @@ using OpenDental;
 using OpenDental.UI;
 using CodeBase;
 using Imedisoft.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	public partial class FormEhrLabOrderImport:ODForm {

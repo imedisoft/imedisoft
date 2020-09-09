@@ -1023,7 +1023,7 @@ namespace OpenDental.UI
 							}
 							txt += "\r\n" + "Scheduled " + schedule.StartTime.ToShortTimeString() + "-" + schedule.StopTime.ToShortTimeString() + ": "
 								+ providerScheduled.GetFormalName() + schedProcDef;
-							txt += string.IsNullOrWhiteSpace(providerScheduled.SchedNote) ? "" : "\r\n\t(" + providerScheduled.SchedNote + ")";
+							txt += string.IsNullOrWhiteSpace(providerScheduled.SchedulingNote) ? "" : "\r\n\t(" + providerScheduled.SchedulingNote + ")";
 						}
 						if (PrefC.HasClinicsEnabled && Clinics.ClinicId != 0)
 						{//HQ cannot have clinic specialties.

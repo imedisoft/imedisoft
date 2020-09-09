@@ -3758,9 +3758,9 @@ namespace OpenDentBusiness
 			//}
 			ClaimCur.ProvBill = Providers.GetBillingProviderId(ClaimCur.ProvTreat, ClaimCur.ClinicNum);//,useClinic,clinicInsBillingProv);//OK if zero, because it will get fixed in claim
 			Provider prov = Providers.GetById(ClaimCur.ProvTreat);
-			if (prov.ProvNumBillingOverride != 0)
+			if (prov.BillingOverrideProviderId.HasValue)
 			{
-				ClaimCur.ProvBill = prov.ProvNumBillingOverride;
+				ClaimCur.ProvBill = prov.BillingOverrideProviderId.Value;
 			}
 			ClaimCur.EmployRelated = YN.No;
 			ClaimCur.ClaimForm = PlanCur.ClaimFormNum;

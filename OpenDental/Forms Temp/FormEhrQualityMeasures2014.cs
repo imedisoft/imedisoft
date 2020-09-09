@@ -13,6 +13,8 @@ using System.Xml.XPath;
 using CodeBase;
 using System.IO;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 #if EHRTEST
 using EHR;
 #endif

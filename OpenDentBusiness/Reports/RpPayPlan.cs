@@ -176,7 +176,7 @@ namespace OpenDentBusiness {
 				command+="ORDER BY LName,FName";
 			}
             DataTable raw = Database.ExecuteDataTable(command);
-			List<Provider> listProvs=Providers.GetAll();
+			List<Provider> listProvs=Providers.GetAll().ToList();
 			//DateTime payplanDate;
 			Patient pat;
 			double princ;

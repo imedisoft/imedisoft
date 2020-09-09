@@ -78,6 +78,12 @@ namespace Imedisoft.Data.CrudGenerator.Schema
                 IsAutoIncrement = primaryKey.AutoIncrement;
             }
 
+            var nullableAttribute = fieldInfo.GetCustomAttribute<NullableAttribute>();
+            if (nullableAttribute != null)
+            {
+                Nullable = true;
+            }
+
             Type = fieldInfo.FieldType;
         }
 

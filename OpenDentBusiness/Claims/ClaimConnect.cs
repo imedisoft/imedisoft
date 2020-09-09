@@ -16,6 +16,8 @@ using CodeBase;
 using System.Linq;
 using System.Drawing;
 using System.ComponentModel;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness.Eclaims {
 	/// <summary>

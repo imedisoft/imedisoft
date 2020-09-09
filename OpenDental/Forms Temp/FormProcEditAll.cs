@@ -10,6 +10,7 @@ using OpenDentBusiness;
 using CodeBase;
 using Imedisoft.Forms;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	public partial class FormProcEditAll:ODForm {
@@ -148,7 +149,7 @@ namespace OpenDental {
 			else {
 				_listProvsForClinic=Providers.GetProvsForClinic(comboClinic.GetSelected<Clinic>().Id);
 			}
-			_listProvsForClinic=_listProvsForClinic.Where(x => !x.IsHidden).OrderBy(x => x.ItemOrder).ToList();
+			_listProvsForClinic=_listProvsForClinic.Where(x => !x.IsHidden).OrderBy(x => x.SortOrder).ToList();
 			Provider provOldSelection=null;
 			if(tryMaintainOldSelection && comboProv.GetSelected<Provider>()!=null){//Only true on manual selection, not on load.
 				provOldSelection=_listProvsForClinic.FirstOrDefault(x => x.Id==comboProv.GetSelectedProvNum());

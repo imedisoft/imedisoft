@@ -18,6 +18,7 @@ using System.IO;
 using System.Web;
 using System.Net;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormPatienteBill:ODForm {

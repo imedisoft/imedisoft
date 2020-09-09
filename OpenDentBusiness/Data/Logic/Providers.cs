@@ -7,24 +7,26 @@ using System.Linq;
 using System.Reflection;
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Cache;
+using Imedisoft.Data.Models;
+using MySql.Data.MySqlClient;
+using OpenDentBusiness;
 
-namespace OpenDentBusiness
+namespace Imedisoft.Data
 {
-
-	public class Providers
+	public partial class Providers
 	{
-		#region Get Methods
-
-		///<summary>Checks to see if the providers passed in have term dates that occur after the date passed in.
-		///Returns a list of the ProvNums that have invalid term dates.  Otherwise; empty list.</summary>
-		public static List<long> GetInvalidProvsByTermDate(List<long> listProvNums, DateTime dateCompare)
+		/// <summary>
+		/// Checks to see if the providers passed in have term dates that occur after the date passed in.
+		/// Returns a list of the ProvNums that have invalid term dates. Otherwise; empty list.
+		/// </summary>
+		public static List<long> GetInvalidProvsByTermDate(List<long> providerIds, DateTime dateCompare)
 		{
-			//No need to check RemotingRole; no call to db.
-			return GetWhere(x => listProvNums.Any(y => y == x.Id) && x.DateTerm.Year > 1880 && x.DateTerm.Date < dateCompare.Date)
-				.Select(x => x.Id).ToList();
+			return 
+				GetWhere(x => providerIds.Any(y => y == x.Id) && x.TerminationDate.HasValue && x.TerminationDate < dateCompare.Date).Select(x => x.Id).ToList();
 		}
 
-		#endregion
+
 
 		#region Misc Methods
 
@@ -34,7 +36,6 @@ namespace OpenDentBusiness
 		///isSetComplete simply modifies the message. Use this when checking if an appointment should be set complete.</summary>
 		public static string CheckApptProvidersTermDates(Appointment apt, bool isSetComplete = false)
 		{
-			//No need to check RemotingRole; no call to db.
 			string message = "";
 			List<long> listProvNums = new List<long> { apt.ProvNum, apt.ProvHyg };
 			List<long> listInvalidProvNums = Providers.GetInvalidProvsByTermDate(listProvNums, apt.AptDateTime);
@@ -54,8 +55,9 @@ namespace OpenDentBusiness
 				}
 				message += "hygienist";
 			}
+
 			if (listInvalidProvNums.Contains(apt.ProvNum) && listInvalidProvNums.Contains(apt.ProvHyg))
-			{//used for grammar
+			{
 				message = "The " + message + " selected for this appointment have Term Dates prior to the selected day and time. "
 					+ "Please select another " + message + (isSetComplete ? " to set the appointment complete." : ".");
 			}
@@ -70,151 +72,79 @@ namespace OpenDentBusiness
 
 		#endregion
 
-		#region CachePattern
 
-		private class ProviderCache : CacheListAbs<Provider>
+		[CacheGroup(nameof(InvalidType.Providers))]
+		private class ProviderCache : ListCache<Provider>
 		{
-			protected override List<Provider> GetCacheFromDb()
-			{
-				string command = "SELECT * FROM provider";
-				if (Prefs.GetBool(PrefName.EasyHideDentalSchools))
-				{
-					command += " ORDER BY ItemOrder";
-				}
-				return Crud.ProviderCrud.SelectMany(command);
-			}
-			protected override List<Provider> TableToList(DataTable table)
-			{
-				return Crud.ProviderCrud.TableToList(table);
-			}
-			protected override Provider Copy(Provider provider)
-			{
-				return provider.Copy();
-			}
-			protected override DataTable ListToTable(List<Provider> listProviders)
-			{
-				return Crud.ProviderCrud.ListToTable(listProviders, "Provider");
-			}
-			protected override void FillCacheIfNeeded()
-			{
-				Providers.GetTableFromCache(false);
-			}
-			protected override bool IsInListShort(Provider provider)
-			{
-				return !provider.IsHidden && provider.Status != ProviderStatus.Deleted;
-			}
-		}
+			protected override IEnumerable<Provider> Load() 
+				=> SelectMany("SELECT * FROM `providers` ORDER BY `sort_order`");
+        }
 
 		private static readonly ProviderCache cache = new ProviderCache();
 
 		public static List<Provider> GetDeepCopy(bool isShort = false)
 		{
-			return cache.GetDeepCopy(isShort);
+			return cache.GetAll();
 		}
 
 		public static bool GetExists(Predicate<Provider> match, bool isShort = false)
 		{
-			return cache.GetExists(match, isShort);
-		}
-
-		public static int GetFindIndex(Predicate<Provider> match, bool isShort = false)
-		{
-			return cache.GetFindIndex(match, isShort);
+			return cache.Any(match);
 		}
 
 		public static Provider GetFirst(bool isShort = false)
 		{
-			return cache.GetFirst(isShort);
+			return cache.FirstOrDefault();
 		}
 
-		public static Provider GetFirst(Func<Provider, bool> match, bool isShort = false)
+		public static Provider GetFirst(Predicate<Provider> predicate, bool isShort = false)
 		{
-			return cache.GetFirst(match, isShort);
+			return cache.FirstOrDefault(predicate);
 		}
 
-		public static Provider GetFirstOrDefault(Func<Provider, bool> match, bool isShort = false)
+		public static Provider GetFirstOrDefault(Predicate<Provider> predicate, bool isShort = false)
 		{
-			return cache.GetFirstOrDefault(match, isShort);
+			return cache.FirstOrDefault(predicate);
 		}
 
-		public static Provider GetLastOrDefault(Func<Provider, bool> match, bool isShort = false)
+		public static Provider GetLastOrDefault(Predicate<Provider> predicate, bool isShort = false)
 		{
-			return cache.GetLastOrDefault(match, isShort);
+			return cache.LastOrDefault(predicate);
 		}
 
 		public static List<Provider> GetWhere(Predicate<Provider> match, bool isShort = false)
 		{
-			return cache.GetWhere(match, isShort);
+			return cache.Find(match);
 		}
 
-		///<summary>Refreshes the cache and returns it as a DataTable. This will refresh the ClientWeb's cache and the ServerWeb's cache.</summary>
-		public static DataTable RefreshCache()
-		{
-			return GetTableFromCache(true);
-		}
+		public static void RefreshCache() 
+			=> cache.Refresh();
 
-		///<summary>Fills the local cache with the passed in DataTable.</summary>
-		public static void FillCacheFromTable(DataTable table)
-		{
-			cache.FillCacheFromTable(table);
-		}
+		public static IEnumerable<Provider> GetAll() 
+			=> SelectMany("SELECT * FROM `providers`");
 
-		///<summary>Always refreshes the ClientWeb's cache.</summary>
-		public static DataTable GetTableFromCache(bool doRefreshCache)
-		{
-			return cache.GetTableFromCache(doRefreshCache);
-		}
+		public static void Update(Provider provider) 
+			=> ExecuteUpdate(provider);
 
-		#endregion
+		public static long Insert(Provider provider) 
+			=> ExecuteInsert(provider);
 
-		///<summary>Gets list of all providers from the database.  Returns an empty list if none are found.</summary>
-		public static List<Provider> GetAll()
-		{
+		/// <summary>
+		/// This checks for the maximum number of provnum in the database and then returns the one directly after.
+		/// Not guaranteed to be a unique primary key.
+		/// </summary>
+		public static long GetNextAvailableProvNum() 
+			=> Database.ExecuteLong("SELECT MAX(`id`) FROM `providers`") + 1;
 
-			string command = "SELECT * FROM provider";
-			return Crud.ProviderCrud.SelectMany(command);
-		}
+		public static void MoveDownBelow(Provider provider) 
+			=> Database.ExecuteNonQuery(
+				"UPDATE `providers` SET `sort_order` = `sort_order` + 1 " +
+				"WHERE `provider_id` != " + provider.Id+ " AND `sort_order` >= " + provider.SortOrder);
 
-		///<summary></summary>
-		public static void Update(Provider provider)
-		{
+		public static void Delete(Provider provider) 
+			=> ExecuteDelete(provider);
 
-			Crud.ProviderCrud.Update(provider);
-		}
 
-		///<summary></summary>
-		public static long Insert(Provider provider)
-		{
-
-			return Crud.ProviderCrud.Insert(provider);
-		}
-
-		/// <summary>This checks for the maximum number of provnum in the database and then returns the one directly after.  Not guaranteed to be a unique primary key.</summary>
-		public static long GetNextAvailableProvNum()
-		{
-
-			string command = "SELECT MAX(provNum) FROM provider";
-			return Database.ExecuteLong(command) + 1;
-		}
-
-		///<summary>Increments all (privider.ItemOrder)s that are >= the ItemOrder of the provider passed in 
-		///but does not change the item order of the provider passed in.</summary>
-		public static void MoveDownBelow(Provider provider)
-		{
-
-			//Add 1 to all item orders equal to or greater than new provider's item order
-			Database.ExecuteNonQuery("UPDATE provider SET ItemOrder=ItemOrder+1"
-				+ " WHERE ProvNum!=" + provider.Id
-				+ " AND ItemOrder>=" + provider.ItemOrder);
-		}
-
-		///<summary>Only used from FormProvEdit if user clicks cancel before finishing entering a new provider.</summary>
-		public static void Delete(Provider prov)
-		{
-
-			string command = "DELETE from provider WHERE provnum = '" + prov.Id.ToString() + "'";
-			Database.ExecuteNonQuery(command);
-		}
 
 		///<summary>Gets table for the FormProviderSetup window.  Always orders by ItemOrder.</summary>
 		public static DataTable RefreshStandard(bool canShowPatCount)
@@ -291,42 +221,33 @@ namespace OpenDentBusiness
 			return Database.ExecuteDataTable(command);
 		}
 
-		///<summary>Gets list of all instructors.  Returns an empty list if none are found.</summary>
-		public static List<Provider> GetInstructors()
-		{
-			//No need to check RemotingRole; no call to db.
-			return GetWhere(x => x.IsInstructor);
-		}
+		public static List<Provider> GetInstructors() 
+			=> GetWhere(x => x.IsInstructor);
 
-		public static List<Provider> GetChangedSince(DateTime changedSince)
-		{
+		public static IEnumerable<Provider> GetChangedSince(DateTime changedSince) 
+			=> SelectMany("SELECT * FROM `providers` WHERE `last_modified_date` > @date",
+				new MySqlParameter("date", changedSince));
 
-			string command = "SELECT * FROM provider WHERE DateTStamp > " + POut.DateT(changedSince);
-			//DataTable table=Db.GetTable(command);
-			//return TableToList(table);
-			return Crud.ProviderCrud.SelectMany(command);
-		}
 
-		///<summary></summary>
-		public static string GetAbbr(long provNum, bool includeHidden = false)
+		public static string GetAbbr(long providerId, bool includeHidden = false)
 		{
-			//No need to check RemotingRole; no call to db.
-			Provider prov = cache.GetFirstOrDefault(x => x.Id == provNum);
-			if (prov == null)
+			var provider = cache.FirstOrDefault(x => x.Id == providerId);
+			if (provider == null)
 			{
 				return "";
 			}
+
 			if (includeHidden)
 			{
-				return prov.GetAbbr();
+				return provider.GetAbbr();
 			}
-			return prov.Abbr;//keeping old behavior, just in case
+
+			return provider.Abbr;
 		}
 
-		///<summary></summary>
+
 		public static string GetLName(long provNum, List<Provider> listProvs = null)
 		{
-			//No need to check RemotingRole; no call to db.
 			Provider provider;
 			if (listProvs == null)
 			{//Use the cache.
@@ -356,39 +277,17 @@ namespace OpenDentBusiness
 			return retStr;
 		}
 
-		///<summary>Abbr - LName, FName (hidden).  For dental schools -- ProvNum - LName, FName (hidden).</summary>
-		public static string GetLongDesc(long provNum)
-		{
-			//No need to check RemotingRole; no call to db.
-			Provider provider = GetFirstOrDefault(x => x.Id == provNum);
-			return (provider == null ? "" : provider.GetLongDesc());
-		}
+		/// <summary>
+		/// Abbr - LName, FName (hidden).  For dental schools -- ProvNum - LName, FName (hidden).
+		/// </summary>
+		public static string GetLongDesc(long providerId) 
+			=> cache.FirstOrDefault(x => x.Id == providerId)?.GetLongDesc() ?? "";
 
-		///<summary></summary>
-		public static Color GetColor(long provNum)
-		{
-			//No need to check RemotingRole; no call to db.
-			Provider prov = cache.GetFirstOrDefault(x => x.Id == provNum);
-			if (prov == null)
-			{
-				return Color.White;
-			}
-			return prov.Color;
-		}
+		public static Color GetColor(long providerId) 
+			=> cache.FirstOrDefault(x => x.Id == providerId)?.Color ?? Color.White;
 
-		///<summary></summary>
-		public static Color GetOutlineColor(long provNum)
-		{
-			//No need to check RemotingRole; no call to db.
-			Provider prov = cache.GetFirstOrDefault(x => x.Id == provNum);
-			if (prov == null)
-			{
-				return Color.Black;
-			}
-			return prov.ColorOutline;
-		}
-
-
+		public static Color GetOutlineColor(long providerId) 
+			=> cache.FirstOrDefault(x => x.Id == providerId)?.ColorOutline ?? Color.Black;
 
 		public static Provider GetById(long? providerId)
         {
@@ -397,16 +296,11 @@ namespace OpenDentBusiness
 				return null;
             }
 
-			return cache.GetFirstOrDefault(x => x.Id == providerId); ;
+			return cache.FirstOrDefault(x => x.Id == providerId);
 		}
 
-
-
-
-		public static bool GetIsSec(long providerId)
-		{
-			return GetById(providerId)?.IsSecondary ?? false;
-		}
+		public static bool GetIsSec(long providerId) 
+			=> GetById(providerId)?.IsSecondary ?? false;
 
 		///<summary>Gets all providers that have the matching prov nums from ListLong.  Returns an empty list if no matches.</summary>
 		public static List<Provider> GetProvsByProvNums(List<long> listProvNums, bool isShort = false)
@@ -415,16 +309,22 @@ namespace OpenDentBusiness
 			return GetWhere(x => x.Id.In(listProvNums), isShort);
 		}
 
-		///<summary>Gets a list of providers from ListLong.  If none found or if either LName or FName are an empty string, returns an empty list.  There may be more than on provider with the same FName and LName so we will return a list of all such providers.  Usually only one will exist with the FName and LName provided so list returned will have count 0 or 1 normally.  Name match is not case sensitive.</summary>
+		/// <summary>
+		/// Gets a list of providers from ListLong. 
+		/// If none found or if either LName or FName are an empty string, returns an empty list. 
+		/// There may be more than on provider with the same FName and LName so we will return a list of all such providers. 
+		/// Usually only one will exist with the FName and LName provided so list returned will have count 0 or 1 normally. 
+		/// Name match is not case sensitive.
+		/// </summary>
 		public static List<Provider> GetProvsByFLName(string lName, string fName)
 		{
-			//No need to check RemotingRole; no call to db.
 			if (string.IsNullOrWhiteSpace(lName) || string.IsNullOrWhiteSpace(fName))
 			{
 				return new List<Provider>();
 			}
+
 			//GetListLong already returns a copy of the prov from the cache, no need to .Copy
-			return Providers.GetWhere(x => x.LastName.ToLower() == lName.ToLower() && x.FirstName.ToLower() == fName.ToLower());
+			return GetWhere(x => x.LastName.ToLower() == lName.ToLower() && x.FirstName.ToLower() == fName.ToLower());
 		}
 
 		///<summary>Gets a list of providers from ListLong with either the NPI provided or a blank NPI and the Medicaid ID provided.
@@ -461,7 +361,10 @@ namespace OpenDentBusiness
 			return retval;
 		}
 
-		///<summary>Gets all providers associated to users that have a clinic set to the clinic passed in.  Passing in 0 will get a list of providers not assigned to any clinic or to any users.</summary>
+		/// <summary>
+		/// Gets all providers associated to users that have a clinic set to the clinic passed in. 
+		/// Passing in 0 will get a list of providers not assigned to any clinic or to any users.
+		/// </summary>
 		public static List<Provider> GetProvsByClinic(long clinicNum)
 		{
 			//No need to check RemotingRole; no call to db.
@@ -512,13 +415,12 @@ namespace OpenDentBusiness
 			}
 		}
 
-		///<summary>Gets all providers from the database.  Doesn't use the cache.</summary>
-		public static List<Provider> GetProvsNoCache()
+		/// <summary>
+		/// Gets all providers from the database.  Doesn't use the cache.
+		/// </summary>
+		public static IEnumerable<Provider> GetProvsNoCache()
 		{
-
-			string command = "SELECT * FROM provider";
-			return Crud.ProviderCrud.SelectMany(command);
-
+			return SelectMany("SELECT * FROM providers");
 		}
 
 		///<summary>Gets a provider from the List.  If EcwID is not found, then it returns null.</summary>
@@ -570,20 +472,18 @@ namespace OpenDentBusiness
 			return providerId;
 		}
 
-		///<summary>Within the regular list of visible providers.  Will return -1 if the specified provider is not in the list.</summary>
-		public static int GetIndex(long provNum)
+		/// <summary>
+		/// Within the regular list of visible providers. 
+		/// Will return -1 if the specified provider is not in the list.
+		/// </summary>
+		public static int GetIndex(long providerId)
 		{
-			//No need to check RemotingRole; no call to db.
-			return cache.GetFindIndex(x => x.Id == provNum, true);
+			return -1;
 		}
 
-		public static List<Userod> GetAttachedUsers(long provNum)
-		{
-			return Crud.UserodCrud.SelectMany(
-				"SELECT userod.* FROM userod,provider " +
-				"WHERE userod.ProvNum=provider.ProvNum " +
-				"AND provider.provNum=" + provNum).ToList();
-		}
+		public static List<Userod> GetAttachedUsers(long providerId) 
+			=> OpenDentBusiness.Crud.UserodCrud.SelectMany(
+				"SELECT userod.* FROM userod, `providers` p WHERE userod.ProvNum = p.`id` AND p.`id` =" + providerId).ToList();
 
 		/// <summary>
 		/// Returns the billing provnum to use based on practice/clinic settings.
@@ -635,7 +535,7 @@ namespace OpenDentBusiness
 				|| dictProvUsers[x.Id].Any(y => dictUserClinics[y].Count == 0) //provider associated with user not restricted to any clinics
 				|| dictProvUsers[x.Id].Any(y => dictUserClinics[y].Contains(clinicNum))) //provider associated to user restricted to clinic at hand
 				&& !hashSetProvsRestrictedOtherClinic.Contains(x.Id)
-				, true).OrderBy(x => x.ItemOrder).ToList();
+				, true).OrderBy(x => x.SortOrder).ToList();
 		}
 
 		///<Summary>Used once in the Provider Select window to warn user of duplicate Abbrs.</Summary>
@@ -776,45 +676,29 @@ namespace OpenDentBusiness
 			return Providers.GetWhere(x => !x.IsNotPerson, true);//Make sure that we only return not is not persons.
 		}
 
-		public static List<long> GetChangedSinceProvNums(DateTime changedSince)
+		public static IEnumerable<long> GetChangedSinceProvNums(DateTime changedSince) 
+			=> Database.SelectMany("SELECT `id` FROM `providers` WHERE `last_modified_date` > @date", Database.ToScalar<long>,
+				new MySqlParameter("date", changedSince));
+
+		public static List<Provider> GetMultProviders(IEnumerable<long> providerIds)
 		{
+			var providers = new List<Provider>();
 
-			string command = "SELECT ProvNum FROM provider WHERE DateTStamp > " + POut.DateT(changedSince);
-			DataTable dt = Database.ExecuteDataTable(command);
-			List<long> provnums = new List<long>(dt.Rows.Count);
-			for (int i = 0; i < dt.Rows.Count; i++)
-			{
-				provnums.Add(PIn.Long(dt.Rows[i]["ProvNum"].ToString()));
+			if (providerIds == null)
+            {
+				return providers;
 			}
-			return provnums;
-		}
 
-		///<summary>Used along with GetChangedSinceProvNums</summary>
-		public static List<Provider> GetMultProviders(List<long> provNums)
-		{
+			var providerIdsList = providerIds.ToList();
+			if (providerIdsList.Count == 0)
+            {
+				return providers;
+			}
 
-			string strProvNums = "";
-			DataTable table;
-			if (provNums.Count > 0)
-			{
-				for (int i = 0; i < provNums.Count; i++)
-				{
-					if (i > 0)
-					{
-						strProvNums += "OR ";
-					}
-					strProvNums += "ProvNum='" + provNums[i].ToString() + "' ";
-				}
-				string command = "SELECT * FROM provider WHERE " + strProvNums;
-				table = Database.ExecuteDataTable(command);
-			}
-			else
-			{
-				table = new DataTable();
-			}
-			Provider[] multProviders = Crud.ProviderCrud.TableToList(table).ToArray();
-			List<Provider> providerList = new List<Provider>(multProviders);
-			return providerList;
+			providers.AddRange(SelectMany(
+				"SELECT * FROM `providers` WHERE `id` IN (" + string.Join(", ", providerIdsList) + ")"));
+
+			return providers;
 		}
 
 		/// <summary>Currently only used for Dental Schools and will only return Providers.ListShort if Dental Schools is not active.  Otherwise this will return a filtered provider list.</summary>

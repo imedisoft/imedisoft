@@ -5,6 +5,7 @@ using OpenDentBusiness;
 using OpenDentBusiness.HL7;
 using OpenDental.UI;
 using Imedisoft.Forms;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormMedLabPatSelect:ODForm {

@@ -835,7 +835,7 @@
     <Compile Include="Crud\ProcTPCrud.cs" />
     <Compile Include="Crud\ProgramCrud.cs" />
     <Compile Include="Crud\ProgramPropertyCrud.cs" />
-    <Compile Include="Crud\ProviderCrud.cs" />
+    <Compile Include="Data\Crud\Providers.cs" />
     <Compile Include="Crud\ProviderErxCrud.cs" />
     <Compile Include="Crud\ProviderIdentCrud.cs" />
     <Compile Include="Crud\QuestionCrud.cs" />
@@ -1267,7 +1267,7 @@
     <Compile Include="Data Interface\Mounts.cs" />
     <Compile Include="Data Interface\PatientNotes.cs" />
     <Compile Include="Data Interface\Patients.cs" />
-    <Compile Include="Data Interface\Providers.cs" />
+    <Compile Include="Data\Logic\Providers.cs" />
     <Compile Include="Data Interface\Suppliers.cs" />
     <Compile Include="Data Interface\Supplies.cs" />
     <Compile Include="Data Interface\SupplyNeededs.cs" />
@@ -1731,7 +1731,6 @@
     <Compile Include="TableTypes\ProcTP.cs" />
     <Compile Include="TableTypes\Program.cs" />
     <Compile Include="TableTypes\ProgramProperty.cs" />
-    <Compile Include="TableTypes\Provider.cs" />
     <Compile Include="TableTypes\ProviderIdent.cs" />
     <Compile Include="TableTypes\Question.cs" />
     <Compile Include="TableTypes\QuestionDef.cs" />
@@ -2257,9 +2256,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\Logic\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

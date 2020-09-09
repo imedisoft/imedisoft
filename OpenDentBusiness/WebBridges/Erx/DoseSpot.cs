@@ -918,7 +918,7 @@ namespace OpenDentBusiness {
 			retVal.Address1=clinic.AddressLine1;
 			retVal.Address2=clinic.AddressLine2;
 			retVal.City=clinic.City;
-			retVal.DateOfBirth=prov.Birthdate;
+			retVal.DateOfBirth=prov.Birthdate.Value;
 			retVal.DEANumber=ProviderClinics.GetDEANum(prov.Id,clinic.Id);//
 			retVal.Email=emailAddress;//Email should have been validated by now.
 			retVal.FirstName=prov.FirstName;
@@ -1027,7 +1027,7 @@ namespace OpenDentBusiness {
 			if(provClinic==null || !USlocales.IsValidAbbr(provClinic.StateWhereLicensed)) {
 				sbErrors.AppendLine("State where licensed invalid");
 			}
-			if(prov.Birthdate.Year<1880) {
+			if(!prov.Birthdate.HasValue) {
 				sbErrors.AppendLine("Birthdate invalid");
 			}
 			if(sbErrors.ToString().Length>0) {

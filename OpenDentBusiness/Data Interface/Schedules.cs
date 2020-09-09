@@ -1633,7 +1633,7 @@ namespace OpenDentBusiness{
 				}
 			}
 			else {
-				listProvNums=Providers.GetDeepCopy(true).OrderBy(x => x.ItemOrder).Select(y => y.Id).ToList();
+				listProvNums=Providers.GetDeepCopy(true).OrderBy(x => x.SortOrder).Select(y => y.Id).ToList();
 			}
 			List<Schedule> ListSchedulesForDate=Schedules.GetAllForDateAndType(dateStart,ScheduleType.Provider);
 			List<Schedule> listScheds=ListSchedulesForDate.FindAll(x => listProvNums.Contains(x.ProvNum));

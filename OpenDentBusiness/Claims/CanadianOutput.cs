@@ -61,7 +61,7 @@ namespace OpenDentBusiness.Eclaims {
 				if(error!="") error+=", ";
 				error+="Prov CDA num 9 digits";
 			}
-			if(provDefaultTreat.CanadianOfficeNum.Length!=4) {
+			if(provDefaultTreat.CanadianOfficeNumber.Length!=4) {
 				if(error!="") error+=", ";
 				error+="Prov office num 4 char";
 			}
@@ -159,7 +159,7 @@ namespace OpenDentBusiness.Eclaims {
 			//B01 CDA provider number 9 AN
 			strb.Append(Canadian.TidyAN(provDefaultTreat.NationalProviderID,9));//already validated
 																																			//B02 provider office number 4 AN
-			strb.Append(Canadian.TidyAN(provDefaultTreat.CanadianOfficeNum,4));//already validated
+			strb.Append(Canadian.TidyAN(provDefaultTreat.CanadianOfficeNumber,4));//already validated
 			if(carrier.CDAnetVersion=="04") {
 				//B03 billing provider number 9 AN
 				Provider provBilling=Providers.GetById(Providers.GetBillingProviderId(provDefaultTreat.Id,patient.ClinicNum));
@@ -410,13 +410,13 @@ namespace OpenDentBusiness.Eclaims {
 			//B01 CDA provider number 9 AN
 			strb.Append(Canadian.TidyAN(prov.NationalProviderID,9));//already validated
 																													//B02 provider office number 4 AN
-			strb.Append(Canadian.TidyAN(prov.CanadianOfficeNum,4));//already validated
+			strb.Append(Canadian.TidyAN(prov.CanadianOfficeNumber,4));//already validated
 			if(carrier.CDAnetVersion!="02") { //version 04
 																				//B03 billing provider number 9 AN
 																				//might need to account for possible 5 digit prov id assigned by carrier
 				strb.Append(Canadian.TidyAN(billProv.NationalProviderID,9));//already validated
 																																//B04 billing provider office number 4 AN
-				strb.Append(Canadian.TidyAN(billProv.CanadianOfficeNum,4));//already validated
+				strb.Append(Canadian.TidyAN(billProv.CanadianOfficeNumber,4));//already validated
 			}
 			if(carrier.CDAnetVersion=="02") {
 				//C01 primary policy/plan number 8 AN
@@ -574,12 +574,12 @@ namespace OpenDentBusiness.Eclaims {
 				//B01 CDA provider number 9 AN
 				strb.Append(Canadian.TidyAN(provTreat.NationalProviderID,9));//already validated
 																																 //B02 (treating) provider office number 4 AN
-				strb.Append(Canadian.TidyAN(provTreat.CanadianOfficeNum,4));//already validated
+				strb.Append(Canadian.TidyAN(provTreat.CanadianOfficeNumber,4));//already validated
 																																		//B03 billing provider number 9 AN
 																																		//might need to account for possible 5 digit prov id assigned by carrier
 				strb.Append(Canadian.TidyAN(provBilling.NationalProviderID,9));//already validated
 																																	 //B04 billing provider office number 4 AN
-				strb.Append(Canadian.TidyAN(provBilling.CanadianOfficeNum,4));//already validated
+				strb.Append(Canadian.TidyAN(provBilling.CanadianOfficeNumber,4));//already validated
 																																			//F33 Reconciliation Date 8 N
 				strb.Append(reconciliationDate.ToString("yyyyMMdd"));
 				//F38 Current Reconciliation Page Number N 1
@@ -682,7 +682,7 @@ namespace OpenDentBusiness.Eclaims {
 			//B01 CDA provider number 9 AN
 			strb.Append(Canadian.TidyAN(provTreat.NationalProviderID,9));//already validated
 																															 //B02 (treating) provider office number 4 AN
-			strb.Append(Canadian.TidyAN(provTreat.CanadianOfficeNum,4));//already validated
+			strb.Append(Canadian.TidyAN(provTreat.CanadianOfficeNumber,4));//already validated
 																																	//F33 Reconciliation Date 8 N
 			strb.Append(reconciliationDate.ToString("yyyyMMdd"));
 			//End of message construction.
@@ -806,7 +806,7 @@ namespace OpenDentBusiness.Eclaims {
 				//B01 CDA provider number 9 AN
 				strb.Append(Canadian.TidyAN(prov.NationalProviderID,9));//already validated
 				//B02 (treating) provider office number 4 AN
-				strb.Append(Canadian.TidyAN(prov.CanadianOfficeNum,4));//already validated
+				strb.Append(Canadian.TidyAN(prov.CanadianOfficeNumber,4));//already validated
 				if(formatVersion=="04") {
 					//B03 billing provider number 9 AN
 					//might need to account for possible 5 digit prov id assigned by carrier

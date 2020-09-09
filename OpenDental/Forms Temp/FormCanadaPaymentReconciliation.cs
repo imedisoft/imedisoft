@@ -5,6 +5,8 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 using OpenDentBusiness.Eclaims;
 
@@ -33,9 +35,9 @@ namespace OpenDental {
 					listTreatingProvider.Items.Add(_listProviders[i].Abbr);
 					if(_listProviders[i].Id==defaultProvNum) {
 						listBillingProvider.SelectedIndex=i;
-						textBillingOfficeNumber.Text=_listProviders[i].CanadianOfficeNum;
+						textBillingOfficeNumber.Text=_listProviders[i].CanadianOfficeNumber;
 						listTreatingProvider.SelectedIndex=i;
-						textTreatingOfficeNumber.Text=_listProviders[i].CanadianOfficeNum;
+						textTreatingOfficeNumber.Text=_listProviders[i].CanadianOfficeNumber;
 					}
 				}
 			}
@@ -43,11 +45,11 @@ namespace OpenDental {
 		}
 
 		private void listBillingProvider_Click(object sender,EventArgs e) {
-			textBillingOfficeNumber.Text=_listProviders[listBillingProvider.SelectedIndex].CanadianOfficeNum;
+			textBillingOfficeNumber.Text=_listProviders[listBillingProvider.SelectedIndex].CanadianOfficeNumber;
 		}
 
 		private void listTreatingProvider_Click(object sender,EventArgs e) {
-			textTreatingOfficeNumber.Text=_listProviders[listTreatingProvider.SelectedIndex].CanadianOfficeNum;
+			textTreatingOfficeNumber.Text=_listProviders[listTreatingProvider.SelectedIndex].CanadianOfficeNumber;
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {

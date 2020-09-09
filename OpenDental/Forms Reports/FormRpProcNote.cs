@@ -12,6 +12,7 @@ using System.IO;
 using OpenDental.UI;
 using CodeBase;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	public class FormRpProcNote:ODForm {

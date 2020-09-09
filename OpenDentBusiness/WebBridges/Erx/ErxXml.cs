@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness {
 	public class ErxXml {

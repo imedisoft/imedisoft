@@ -1,12 +1,12 @@
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
-using OpenDentBusiness;
 using System;
 using System.Windows.Forms;
 
 namespace Imedisoft.Forms
 {
-	public partial class FormStudentResultsOne : FormBase
+    public partial class FormStudentResultsOne : FormBase
 	{
 		private readonly long studentProviderId;
 		private Provider studentProvider;

@@ -93,6 +93,7 @@
     <Compile Include="Annotations\ColumnAttribute.cs" />
     <Compile Include="Annotations\ForeignKeyAttribute.cs" />
     <Compile Include="Annotations\IgnoreAttribute.cs" />
+    <Compile Include="Annotations\NullableAttribute.cs" />
     <Compile Include="Annotations\PrimaryKeyAttribute.cs" />
     <Compile Include="Annotations\TableAttribute.cs" />
     <Compile Include="Annotations\TableOperations.cs" />

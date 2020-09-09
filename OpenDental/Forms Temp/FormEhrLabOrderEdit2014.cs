@@ -7,6 +7,8 @@ using EhrLaboratories;
 using System.Text;
 using System.Text.RegularExpressions;
 using Imedisoft.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	public partial class FormEhrLabOrderEdit2014:ODForm {

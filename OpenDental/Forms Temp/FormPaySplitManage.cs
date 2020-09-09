@@ -9,6 +9,7 @@ using OpenDentBusiness;
 using OpenDental.UI;
 using CodeBase;
 using Imedisoft.Forms;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormPaySplitManage:ODForm {

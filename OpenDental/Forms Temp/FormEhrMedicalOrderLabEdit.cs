@@ -9,6 +9,8 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental;
 using OpenDental.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormEhrMedicalOrderLabEdit:ODForm {

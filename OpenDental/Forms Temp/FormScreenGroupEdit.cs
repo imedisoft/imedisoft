@@ -9,6 +9,8 @@ using OpenDentBusiness;
 using OpenDental.UI;
 using Imedisoft.Forms;
 using Imedisoft.X12.Codes;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>

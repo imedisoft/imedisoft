@@ -10,6 +10,7 @@ using DataConnectionBase;
 using System.Reflection;
 using Imedisoft.Forms;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 #if EHRTEST
 using EHR;
 #endif

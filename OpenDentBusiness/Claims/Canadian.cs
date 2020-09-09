@@ -264,13 +264,13 @@ namespace OpenDentBusiness.Eclaims {
 			//B01 CDA provider number 9 AN
 			strb.Append(TidyAN(treatProv.NationalProviderID,9));//already validated
 			//B02 (treating) provider office number 4 AN
-			strb.Append(TidyAN(treatProv.CanadianOfficeNum,4));//already validated	
+			strb.Append(TidyAN(treatProv.CanadianOfficeNumber,4));//already validated	
 			if(carrierReceiver.CDAnetVersion!="02") { //version 04
 				//B03 billing provider number 9 AN
 				//might need to account for possible 5 digit prov id assigned by carrier
 				strb.Append(TidyAN(billProv.NationalProviderID,9));//already validated
 				//B04 billing provider office number 4 AN
-				strb.Append(TidyAN(billProv.CanadianOfficeNum,4));//already validated	
+				strb.Append(TidyAN(billProv.CanadianOfficeNumber,4));//already validated	
 				//B05 referring provider 10 AN
 				strb.Append(TidyAN(claim.CanadianReferralProviderNum,10));
 				//B06 referral reason 2 N
@@ -2262,7 +2262,7 @@ namespace OpenDentBusiness.Eclaims {
 					retVal+=", ";
 				retVal+="TreatingProv CDA num 9 digits";
 			}
-			if(treatProv.CanadianOfficeNum.Length!=4) {
+			if(treatProv.CanadianOfficeNumber.Length!=4) {
 				if(retVal!="")
 					retVal+=", ";
 				retVal+="TreatingProv office num 4 char";
@@ -2272,7 +2272,7 @@ namespace OpenDentBusiness.Eclaims {
 					retVal+=", ";
 				retVal+="BillingProv CDA num 9 digits";
 			}
-			if(billProv.CanadianOfficeNum.Length!=4) {
+			if(billProv.CanadianOfficeNumber.Length!=4) {
 				if(retVal!="")
 					retVal+=", ";
 				retVal+="BillingProv office num 4 char";

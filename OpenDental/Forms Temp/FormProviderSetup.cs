@@ -665,7 +665,7 @@ namespace OpenDental{
 				for(int i=0;i<_tableProvs.Rows.Count;i++) {
 					if(_tableProvs.Rows[i]["ItemOrder"].ToString()!=i.ToString()) {
 						prov=_listProvs.Find(x => x.Id==PIn.Long(_tableProvs.Rows[i]["ProvNum"].ToString()));
-						prov.ItemOrder=i;
+						prov.SortOrder=i;
 						Providers.Update(prov);
 						_tableProvs.Rows[i]["ItemOrder"]=i.ToString();
 						hasChanged=true;
@@ -792,10 +792,8 @@ namespace OpenDental{
 		private void butAdd_Click(object sender, System.EventArgs e) {
 			FormProvEdit FormPE=new FormProvEdit();
 			FormPE.ProvCur=new Provider();
-			FormPE.ProvCur.IsNew=true;
 			FormProvStudentEdit FormPSE=new FormProvStudentEdit();
 			FormPSE.ProvStudent=new Provider();
-			FormPSE.ProvStudent.IsNew=true;
 			Provider provCur=new Provider();
 			if(groupDentalSchools.Visible) {
 				//Dental schools do not worry about item orders.
@@ -820,13 +818,13 @@ namespace OpenDental{
 			}
 			else {//Not using Dental Schools feature.
 				if(gridMain.SelectedIndices.Length>0) {//place new provider after the first selected index. No changes are made to DB until after provider is actually inserted.
-					FormPE.ProvCur.ItemOrder=((Provider)gridMain.Rows[gridMain.SelectedIndices[0]].Tag).ItemOrder;//now two with this itemorder
+					FormPE.ProvCur.SortOrder=((Provider)gridMain.Rows[gridMain.SelectedIndices[0]].Tag).SortOrder;//now two with this itemorder
 				}
 				else if(gridMain.Rows.Count>0) {
-					FormPE.ProvCur.ItemOrder=((Provider)gridMain.Rows[gridMain.Rows.Count-1].Tag).ItemOrder+1;
+					FormPE.ProvCur.SortOrder=((Provider)gridMain.Rows[gridMain.Rows.Count-1].Tag).SortOrder+1;
 				}
 				else {
-					FormPE.ProvCur.ItemOrder=0;
+					FormPE.ProvCur.SortOrder=0;
 				}
 			}
 			if(!radioStudents.Checked) {
@@ -889,10 +887,10 @@ namespace OpenDental{
 			//The provider's position in the table needs to reflect their item orders.
 			Provider sourceProv=((Provider)gridMain.Rows[gridMain.SelectedIndices[0]].Tag);
 			Provider destProv=((Provider)gridMain.Rows[gridMain.SelectedIndices[0]-1].Tag);
-			int sourceIdx=sourceProv.ItemOrder;
-			sourceProv.ItemOrder=destProv.ItemOrder;
+			int sourceIdx=sourceProv.SortOrder;
+			sourceProv.SortOrder=destProv.SortOrder;
 			Providers.Update(sourceProv);
-			destProv.ItemOrder=sourceIdx;
+			destProv.SortOrder=sourceIdx;
 			Providers.Update(destProv);	
 			_hasChanged=true;
 			int selectedIdx=gridMain.SelectedIndices[0];
@@ -914,10 +912,10 @@ namespace OpenDental{
 			//The provider's position in the table needs to reflect their item orders.
 			Provider sourceProv=((Provider)gridMain.Rows[gridMain.SelectedIndices[0]].Tag);
 			Provider destProv=((Provider)gridMain.Rows[gridMain.SelectedIndices[0]+1].Tag);
-			int sourceIdx=sourceProv.ItemOrder;
-			sourceProv.ItemOrder=destProv.ItemOrder;
+			int sourceIdx=sourceProv.SortOrder;
+			sourceProv.SortOrder=destProv.SortOrder;
 			Providers.Update(sourceProv);
-			destProv.ItemOrder=sourceIdx;
+			destProv.SortOrder=sourceIdx;
 			Providers.Update(destProv);
 			_hasChanged=true;		
 			int selectedIdx=gridMain.SelectedIndices[0];	
@@ -1244,10 +1242,10 @@ namespace OpenDental{
 			bool changed = false; 
 			for(int i = 0;i<listProvsAll.Count;i++) {
 				Provider prov = listProvsAll[i];
-				if(prov.ItemOrder==i) {
+				if(prov.SortOrder==i) {
 					continue;
 				}
-				prov.ItemOrder=i;
+				prov.SortOrder=i;
 				Providers.Update(prov);
 				changed=true;
 			}

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using System.Xml;
 using System.Xml.Schema;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness {
 	public class PDMPLogicoy {

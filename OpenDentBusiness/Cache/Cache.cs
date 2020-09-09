@@ -292,7 +292,7 @@ namespace OpenDentBusiness
 			if (invalidTypes.Contains(InvalidType.Providers) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Providers.ToString());
-				Providers.GetTableFromCache(true);
+				Providers.RefreshCache(); ;
 				//Refresh the clinics as well because InvalidType.Providers has a comment that says "also includes clinics".  Also, there currently isn't an itype for Clinics.
 				Clinics.RefreshCache();
 			}

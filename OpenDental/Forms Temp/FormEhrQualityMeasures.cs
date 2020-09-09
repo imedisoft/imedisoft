@@ -11,6 +11,8 @@ using OpenDental.UI;
 using System.Xml;
 using System.Xml.XPath;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 #if EHRTEST
 using EHR;
 #endif

@@ -7,6 +7,7 @@ using OpenDental.UI;
 using OpenDentBusiness;
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental{
 	/// <summary></summary>

@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using System.Xml;
 using OpenDentBusiness.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {

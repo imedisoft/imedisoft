@@ -11,6 +11,8 @@ using CodeBase;
 using System.Xml;
 using OpenDental.UI;
 using OpenDentBusiness.IO;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	public partial class FormEhrClinicalSummary:ODForm {
@@ -95,7 +97,7 @@ namespace OpenDental {
 				return;
 			}
 			Provider prov=null;
-			if(Security.CurrentUser.ProviderId!=0) {//If the current user is a provider.
+			if(Security.CurrentUser.ProviderId.HasValue) {//If the current user is a provider.
 				prov=Providers.GetById(Security.CurrentUser.ProviderId);
 			}
 			else {

@@ -7,6 +7,7 @@ using System.IO;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using System.Collections.Generic;
+using Imedisoft.Data;
 
 namespace OpenDental
 {

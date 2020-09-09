@@ -50,7 +50,7 @@ namespace OpenDental
 				ProvStudent = new Provider();
 			}
 			//From the add button - Select as much pre-given info as possible
-			if (ProvStudent.IsNew)
+			if (ProvStudent.Id == 0)
 			{
 				labelPassDescription.Visible = false;
 				_autoUserName = Providers.GetNextAvailableProvNum();
@@ -148,7 +148,7 @@ namespace OpenDental
 			ProvStudent.SchoolClassId = _listSchoolClasses[comboClass.SelectedIndex].Id;
 			Userod newUser = new Userod();
 			bool isAutoUserName = true;
-			if (!ProvStudent.IsNew || _autoUserName.ToString() != textUserName.Text)
+			if (ProvStudent.Id > 0 || _autoUserName.ToString() != textUserName.Text)
 			{
 				isAutoUserName = false;
 			}
@@ -176,7 +176,7 @@ namespace OpenDental
 			{//Has changed the user name from the default or is editing a pre-existing student
 				try
 				{
-					if (ProvStudent.IsNew)
+					if (ProvStudent.Id == 0)
 					{
 						long provNum = Providers.Insert(ProvStudent);
 						newUser.UserName = textUserName.Text;
@@ -194,7 +194,7 @@ namespace OpenDental
 				}
 				catch (Exception ex)
 				{
-					if (ProvStudent.IsNew)
+					if (ProvStudent.Id == 0)
 					{
 						Providers.Delete(ProvStudent);
 					}
