@@ -117,6 +117,21 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="exportPathButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAABRSURBVChTYxgWwKXbgcGtp4LBrbsBlQ/EILZ7nxCQncXg3jOfwaNdgYHBtWc2UOA/GLv2hjK4
+        9c5C8EFy3RFwvlvPVPwa3LFpINlJQx0wMAAAvfY/h5t5qgYAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="pathButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAABRSURBVChTYxgWwKXbgcGtp4LBrbsBlQ/EILZ7nxCQncXg3jOfwaNdgYHBtWc2UOA/GLv2hjK4
+        9c5C8EFy3RFwvlvPVPwa3LFpINlJQx0wMAAAvfY/h5t5qgYAAAAASUVORK5CYII=
+</value>
+  </data>
   <data name="exportPathLabel.Text" xml:space="preserve">
     <value>For exporting tables. If you use a network path (like \\SERVER\ImedisoftExport), the data will be exported to one central computer. But it is usually easier to use a local path (like C:\ImedisoftExport), and the data will be stored on the local hard drive of the computer you export on. The folder will be created later if it does not exist.</value>
   </data>
@@ -126,10 +141,23 @@
   <data name="letterMergePathLabel.Text" xml:space="preserve">
     <value>The location where your letter templates are stored. Letters are usually stored in one central location, so use a network path (like \\SERVER\ImedisoftLetters). Don't forget to share the folder so all the computers can access it. However, if you only have one computer with no network, then use a local path (like C:\ImedisoftLetters). </value>
   </data>
+  <data name="letterMergeButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAABRSURBVChTYxgWwKXbgcGtp4LBrbsBlQ/EILZ7nxCQncXg3jOfwaNdgYHBtWc2UOA/GLv2hjK4
+        9c5C8EFy3RFwvlvPVPwa3LFpINlJQx0wMAAAvfY/h5t5qgYAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="localPathButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAABRSURBVChTYxgWwKXbgcGtp4LBrbsBlQ/EILZ7nxCQncXg3jOfwaNdgYHBtWc2UOA/GLv2hjK4
+        9c5C8EFy3RFwvlvPVPwa3LFpINlJQx0wMAAAvfY/h5t5qgYAAAAASUVORK5CYII=
+</value>
+  </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>60</value>
   </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAUAEBAAAAEAIABoBAAAVgAAABgYAAABACAAiAkAAL4EAAAgIAAAAQAgAKgQAABGDgAAMDAAAAEA
