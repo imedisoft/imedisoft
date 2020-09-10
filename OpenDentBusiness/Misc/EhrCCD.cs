@@ -462,7 +462,7 @@ Allergies
 					//}
 					//else {//Medication allergy
 					Medication med;
-					if(allergyDef.MedicationId==0) {
+					if(!allergyDef.MedicationId.HasValue) {
 						if(allergyDef.UniiCode=="") {
 							_w.WriteElementString("td","");
 						}
@@ -471,13 +471,13 @@ Allergies
 						}
 					}
 					else {
-						med=Medications.GetById(allergyDef.MedicationId);
+						med=Medications.GetById(allergyDef.MedicationId.Value);
 						_w.WriteElementString("td",med.RxCui.ToString()+" - "+med.Name);
 					}
 					//}
 					_w.WriteElementString("td",allergy.Reaction);
-					_w.WriteElementString("td",AllergyDefs.GetSnomedAllergyDesc(allergyDef.SnomedType));
-					_w.WriteElementString("td",allergy.StatusIsActive?"Active":"Inactive");
+					_w.WriteElementString("td", SnomedAllergyCode.GetDescription(allergyDef.SnomedCode));
+					_w.WriteElementString("td",allergy.IsActive?"Active":"Inactive");
 					End("tr");
 				}
 				End("tbody");
@@ -499,49 +499,10 @@ Allergies
 				else {
 					allergyDef=AllergyDefs.GetOne(allergy.AllergyDefId);
 				}
-				string allergyType="";
-				string allergyTypeName="";
-				#region Allergy Type
-				if(allergyDef.SnomedType==SnomedAllergy.AdverseReactionsToDrug) {
-					allergyType="419511003";
-					allergyTypeName="Propensity to adverse reaction to drug";
-				}
-				else if(allergyDef.SnomedType==SnomedAllergy.AdverseReactionsToFood) {
-					allergyType="418471000";
-					allergyTypeName="Propensity to adverse reaction to food";
-				}
-				else if(allergyDef.SnomedType==SnomedAllergy.AdverseReactionsToSubstance) {
-					allergyType="419199007";
-					allergyTypeName="Propensity to adverse reaction to substance";
-				}
-				else if(allergyDef.SnomedType==SnomedAllergy.AllergyToSubstance) {
-					allergyType="418038007";
-					allergyTypeName="Allergy to substance";
-				}
-				else if(allergyDef.SnomedType==SnomedAllergy.DrugAllergy) {
-					allergyType="416098002";
-					allergyTypeName="Drug allergy";
-				}
-				else if(allergyDef.SnomedType==SnomedAllergy.DrugIntolerance) {
-					allergyType="59037007";
-					allergyTypeName="Drug intolerance";
-				}
-				else if(allergyDef.SnomedType==SnomedAllergy.FoodAllergy) {
-					allergyType="414285001";
-					allergyTypeName="Food allergy";
-				}
-				else if(allergyDef.SnomedType==SnomedAllergy.FoodIntolerance) {
-					allergyType="235719002";
-					allergyTypeName="Food intolerance";
-				}
-				else if(allergyDef.SnomedType==SnomedAllergy.AdverseReactions) {
-					allergyType="420134006";
-					allergyTypeName="Adverse reaction";
-				}
-				else {
-					allergyType="";
-					allergyTypeName="None";
-				}
+
+				string allergyType= allergyDef.SnomedCode ?? "";
+				string allergyTypeName= SnomedAllergyCode.GetPreferredConceptName(allergyType);
+
 				#endregion
 				Start("entry","typeCode","DRIV");
 				Start("act","classCode","ACT","moodCode","EVN");
@@ -549,24 +510,24 @@ Allergies
 				Guid();
 				StartAndEnd("code","code","48765-2","codeSystem",strCodeSystemLoinc,"codeSystemName",strCodeSystemNameLoinc,"displayName","Allergies and adverse reactions");
 				//statusCode values allowed: active, suspended, aborted, completed.
-				if(allergy.StatusIsActive) {
+				if(allergy.IsActive) {
 					StartAndEnd("statusCode","code","active");
 				}
 				else {
 					StartAndEnd("statusCode","code","completed");
 				}
 				Start("effectiveTime");
-				if(allergy.DateLastModified.Year<1880) {
+				if(allergy.LastModifiedDate.Year<1880) {
 					StartAndEnd("low","nullFlavor","UNK");
 					StartAndEnd("high","nullFlavor","UNK");
 				}
-				else if(allergy.StatusIsActive) {
-					StartAndEnd("low","value",allergy.DateLastModified.ToString("yyyyMMdd"));
+				else if(allergy.IsActive) {
+					StartAndEnd("low","value",allergy.LastModifiedDate.ToString("yyyyMMdd"));
 					StartAndEnd("high","nullFlavor","UNK");
 				}
 				else {
 					StartAndEnd("low","nullFlavor","UNK");
-					StartAndEnd("high","value",allergy.DateLastModified.ToString("yyyyMMdd"));
+					StartAndEnd("high","value",allergy.LastModifiedDate.ToString("yyyyMMdd"));
 				}
 				End("effectiveTime");
 				Start("entryRelationship","typeCode","SUBJ");
@@ -579,7 +540,7 @@ Allergies
 				StartAndEnd("effectiveTime","nullFlavor","UNK");//We have no field to store the date the allergy became active. DateTStamp is not the same as the active date.
 				Start("value");
 				_w.WriteAttributeString("xsi","type",null,"CD");
-				if(allergyDef.SnomedType==SnomedAllergy.None) {
+				if(string.IsNullOrEmpty(allergyDef.SnomedCode)) {
 					Attribs("nullFlavor","UNK");
 				}
 				else {
@@ -594,7 +555,7 @@ Allergies
 				//Or the ValueSet 2.16.840.1.113883.3.88.12.80.17 Medication Clinical Drug (code system: RxNorm 2.16.840.1.113883.6.88). Example: 313850	RxNorm	Amoxicillin 40 MG/ML Oral Suspensionv 
 				//In an allergy to a class of medications the code SHALL be selected from the ValueSet 2.16.840.1.113883.3.88.12.80.18 Medication Drug Class (code system: NDF-RT 2.16.840.1.113883.3.26.1.5). Example: 2-Propanol, Inhibitors
 				//In an allergy to a food or other substance the code SHALL be selected from the ValueSet 2.16.840.1.113883.3.88.12.80.20 Ingredient Name (code system: Unique Ingredient Identifier (UNII) 2.16.840.1.113883.4.9). Example: Peanut, Red 40
-				if(allergyDef.MedicationId==0) {//Unique Ingredient Identifier (UNII codes)
+				if(!allergyDef.MedicationId.HasValue) {//Unique Ingredient Identifier (UNII codes)
 					if(allergyDef.UniiCode=="") {
 						StartAndEnd("code","nullFlavor","UNK");
 					}
@@ -612,7 +573,7 @@ Allergies
 				//For example, you might enter an allergy for Vicoprofen.
 				//}
 				else {//Medication Brand Name or Medication Clinical Drug (RxNorm codes)
-					Medication med=Medications.GetById(allergyDef.MedicationId);
+					Medication med=Medications.GetById(allergyDef.MedicationId.Value);
 					StartAndEnd("code","code",med.RxCui.ToString(),"displayName",med.Name,"codeSystem",strCodeSystemRxNorm,"codeSystemName",strCodeSystemNameRxNorm);
 				}
 				End("playingEntity");
@@ -624,7 +585,7 @@ Allergies
 				TemplateId("2.16.840.1.113883.10.20.22.4.28");
 				StartAndEnd("code","code","33999-4","codeSystem",strCodeSystemLoinc,"codeSystemName",strCodeSystemNameLoinc,"displayName","Status");
 				StartAndEnd("statusCode","code","completed");//fixed value (required)
-				string status=allergy.StatusIsActive?"Active":"Inactive";
+				string status=allergy.IsActive?"Active":"Inactive";
 				if(allergy.Id==0) {
 					Start("value");
 					_w.WriteAttributeString("xsi","type",null,"CE");
@@ -653,17 +614,17 @@ Allergies
 				StartAndEnd("code","code","ASSERTION","codeSystem","2.16.840.1.113883.5.4");
 				StartAndEnd("statusCode","code","completed");//fixed value (required)
 				Start("effectiveTime");
-				if(allergy.DateLastModified.Year<1880) {
+				if(allergy.LastModifiedDate.Year<1880) {
 					StartAndEnd("low","nullFlavor","UNK");
 				}
-				else if(allergy.StatusIsActive) {
-					StartAndEnd("low","value",allergy.DateLastModified.ToString("yyyyMMdd"));
+				else if(allergy.IsActive) {
+					StartAndEnd("low","value",allergy.LastModifiedDate.ToString("yyyyMMdd"));
 				}
 				else {
 					StartAndEnd("low","nullFlavor","UNK");
 				}
 				End("effectiveTime");
-				if(String.IsNullOrEmpty(allergy.SnomedReaction)) {
+				if(String.IsNullOrEmpty(allergy.ReactionSnomedCode)) {
 					Start("value");
 					_w.WriteAttributeString("xsi","type",null,"CD");
 					Attribs("nullFlavor","UNK");
@@ -672,7 +633,7 @@ Allergies
 				else {
 					Start("value");
 					_w.WriteAttributeString("xsi","type",null,"CD");
-					Attribs("code",allergy.SnomedReaction,"codeSystem",strCodeSystemSnomed,"displayName",allergy.Reaction);
+					Attribs("code",allergy.ReactionSnomedCode,"codeSystem",strCodeSystemSnomed,"displayName",allergy.Reaction);
 					End("value");
 				}
 				End("observation");
@@ -2617,18 +2578,18 @@ Vital Signs
 		private static void FilterAllergy(Patient patCur) {
 			//TODO: Add validation for UNII codes once the table has been implemented.
 			AllergyDef allergyDef;
-			List<Allergy> listAllergiesAll=Allergies.GetByPatient(patCur.PatNum);
+			List<Allergy> listAllergiesAll=Allergies.GetByPatient(patCur.PatNum).ToList();
 			List<Allergy> listAllergiesFiltered=new List<Allergy>();
 			for(int i=0;i<listAllergiesAll.Count;i++) {
 				allergyDef=AllergyDefs.GetOne(listAllergiesAll[i].AllergyDefId);
 				bool isMedAllergy=false;
-				if(allergyDef.MedicationId!=0) {
-					Medication med=Medications.GetById(allergyDef.MedicationId);
+				if(allergyDef.MedicationId.HasValue) {
+					Medication med=Medications.GetById(allergyDef.MedicationId.Value);
 					if(med.RxCui!="") {
 						isMedAllergy=true;
 					}
 				}
-				if(allergyDef.SnomedType!=SnomedAllergy.AdverseReactionsToDrug && allergyDef.SnomedType!=SnomedAllergy.DrugAllergy && allergyDef.SnomedType!=SnomedAllergy.DrugIntolerance) {
+				if(allergyDef.SnomedCode!= SnomedAllergyCode.AdverseReactionsToDrug && allergyDef.SnomedCode!= SnomedAllergyCode.DrugAllergy && allergyDef.SnomedCode!= SnomedAllergyCode.DrugIntolerance) {
 					isMedAllergy=false;
 				}
 				//bool isSnomedAllergy=false;
@@ -2870,8 +2831,6 @@ Vital Signs
 			}
 			_listVitalSignsFiltered=listVitalSignsFiltered;
 		}
-
-		#endregion CCD Creation
 
 		#region CCD Reading
 
@@ -3195,11 +3154,10 @@ Vital Signs
 						continue;//We can only import Snomeds
 					}
 					Allergy allergy=new Allergy();
-					allergy.IsNew=true;//Needed for reconcile window to know this record is not in the db yet.
-					allergy.SnomedReaction=PIn.String(strCodeReaction);
+					allergy.ReactionSnomedCode=PIn.String(strCodeReaction);
 					allergy.Reaction=PIn.String(strAlgStatusDescript);
-					allergy.DateAdverseReaction=dateTimeEffectiveLow;
-					allergy.StatusIsActive=isActive;
+					allergy.AdverseReactionDate=dateTimeEffectiveLow;
+					allergy.IsActive=isActive;
 					listAllergies.Add(allergy);
 				}
 				#endregion
@@ -3252,48 +3210,15 @@ Vital Signs
 						continue;//We can only import Snomeds
 					}
 					AllergyDef allergyDef=new AllergyDef();
-					allergyDef.IsNew=true;//Needed for reconcile window to know this record is not in the db yet.
 					if(med.Id!=0) {
 						allergyDef.MedicationId=med.Id;
 					}
-					//else {TODO: Change to Unii
-					//	allergyDef.SnomedAllergyTo=PIn.String(strCode);
-					//}
+
 					allergyDef.Description=allergyDefName;
 					allergyDef.IsHidden=false;
 					allergyDef.MedicationId=allergyMeds[j].Id;
-					#region Snomed type determination
-					if(strCode=="419511003") {
-						allergyDef.SnomedType=SnomedAllergy.AdverseReactionsToDrug;
-					}
-					else if(strCode=="418471000") {
-						allergyDef.SnomedType=SnomedAllergy.AdverseReactionsToFood;
-					}
-					else if(strCode=="419199007") {
-						allergyDef.SnomedType=SnomedAllergy.AdverseReactionsToSubstance;
-					}
-					else if(strCode=="418038007") {
-						allergyDef.SnomedType=SnomedAllergy.AllergyToSubstance;
-					}
-					else if(strCode=="416098002") {
-						allergyDef.SnomedType=SnomedAllergy.DrugAllergy;
-					}
-					else if(strCode=="59037007") {
-						allergyDef.SnomedType=SnomedAllergy.DrugIntolerance;
-					}
-					else if(strCode=="414285001") {
-						allergyDef.SnomedType=SnomedAllergy.FoodAllergy;
-					}
-					else if(strCode=="235719002") {
-						allergyDef.SnomedType=SnomedAllergy.FoodIntolerance;
-					}
-					else if(strCode=="420134006") {
-						allergyDef.SnomedType=SnomedAllergy.AdverseReactions;
-					}
-					else {
-						allergyDef.SnomedType=SnomedAllergy.None;
-					}
-					#endregion
+					allergyDef.SnomedCode = SnomedAllergyCode.IsAllergyCode(strCode) ? strCode : null;
+
 					listAllergyDefs.Add(allergyDef);
 				}
 			}

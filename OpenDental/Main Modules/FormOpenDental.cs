@@ -5220,7 +5220,7 @@ namespace OpenDental
 
 		private void menuItemAllergies_Click(object sender, EventArgs e)
 		{
-			new FormAllergySetup().ShowDialog();
+			new FormAllergyDefs().ShowDialog();
 		}
 
 		private void menuItemClinics_Click(object sender, System.EventArgs e)

@@ -1,13 +1,11 @@
-using Imedisoft.Data;
 using Imedisoft.Data.Models;
 using MySql.Data.MySqlClient;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Imedisoft.Data
 {
-	public partial class Icd10s
+    public partial class Icd10s
 	{
 		public static IEnumerable<Icd10> GetAll() 
 			=> SelectMany("SELECT * FROM `icd10`");

@@ -1,16 +1,13 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Reflection;
-using System.Linq;
 using Imedisoft.Data;
 using Imedisoft.Data.Cache;
-using OpenDentBusiness.DoseSpotService;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 
 namespace OpenDentBusiness
 {
-	public partial class UserGroups
+    public partial class UserGroups
 	{
 		[CacheGroup(nameof(InvalidType.Security))]
 		private class UserGroupCache : ListCache<UserGroup>

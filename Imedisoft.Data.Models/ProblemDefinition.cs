@@ -17,19 +17,19 @@ namespace Imedisoft.Data.Models
 		/// <summary>
 		/// Example: 250.00 for diabetes. 
 		/// </summary>
-		[ForeignKey(typeof(Icd9), nameof(Icd9.Code))]
+		[ForeignKey(typeof(Icd9), nameof(Icd9.Code)), Nullable]
 		public string CodeIcd9;
 
 		/// <summary>
 		/// Example: E10.1 for 'Type 1 diabetes mellitus with ketoacidosis'.
 		/// </summary>
-		[ForeignKey(typeof(Icd10), nameof(Icd10.Code))]
+		[ForeignKey(typeof(Icd10), nameof(Icd10.Code)), Nullable]
 		public string CodeIcd10;
 
 		/// <summary>
 		/// Example: 230572002 for diabetic neuropathy.
 		/// </summary>
-		[ForeignKey(typeof(Snomed), nameof(Snomed.Code))]
+		[ForeignKey(typeof(Snomed), nameof(Snomed.Code)), Nullable]
 		public string CodeSnomed;
 
 		/// <summary>

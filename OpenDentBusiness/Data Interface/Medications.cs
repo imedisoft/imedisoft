@@ -123,10 +123,11 @@ namespace Imedisoft.Data
 		{
 
 			//If any more tables are added here in the future, then also update IsInUse() to include the new table.
-			string command = "SELECT MedicationNum FROM medicationpat WHERE MedicationNum!=0 "
-				+ "UNION SELECT MedicationNum FROM allergydef WHERE MedicationNum!=0 "
-				+ "UNION SELECT MedicationNum FROM eduresource WHERE MedicationNum!=0 "
-				+ "GROUP BY MedicationNum";
+			string command = 
+				"SELECT MedicationNum FROM medicationpat WHERE MedicationNum!=0 " +
+				"UNION SELECT `medication_id` FROM `allergy_defs` WHERE `medication_id` IS NOT NULL " +
+				"UNION SELECT MedicationNum FROM eduresource WHERE MedicationNum!=0 " +
+				"GROUP BY MedicationNum";
 			List<long> listMedicationNums = Database.GetListLong(command);
 			if (Prefs.GetLong(PrefName.MedicationsIndicateNone) != 0)
 			{

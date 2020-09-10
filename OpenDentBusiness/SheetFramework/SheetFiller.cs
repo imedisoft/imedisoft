@@ -2448,13 +2448,13 @@ namespace OpenDentBusiness {
 				}
 				if(field.FieldType==SheetFieldType.CheckBox) {
 					if(field.FieldName.StartsWith("allergy:")) {//"allergy:Pen"
-						List<Allergy> allergies=Allergies.GetByPatient(pat.PatNum,true);
+						List<Allergy> allergies=Allergies.GetByPatient(pat.PatNum).ToList();
 						for(int i=0;i<allergies.Count;i++) {
 							if(AllergyDefs.GetDescription(allergies[i].AllergyDefId)==field.FieldName.Remove(0,8)) {
-								if(allergies[i].StatusIsActive && field.RadioButtonValue=="Y") {
+								if(allergies[i].IsActive && field.RadioButtonValue=="Y") {
 									field.FieldValue="X";
 								}
-								else if(!allergies[i].StatusIsActive && field.RadioButtonValue=="N") {
+								else if(!allergies[i].IsActive && field.RadioButtonValue=="N") {
 									field.FieldValue="X";
 								}
 								break;

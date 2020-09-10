@@ -770,7 +770,7 @@ namespace OpenDentBusiness.HL7 {
 				return;//no allergydef for this rxnorm exists
 			}
 			//see if there is already an active allergy with this AllergyDefNum for this patient
-			List<Allergy> listAllergForPat=Allergies.GetByPatient(pat.PatNum,false);
+			List<Allergy> listAllergForPat=Allergies.GetByPatient(pat.PatNum,false).ToList();
 			for(int i=0;i<listAllergForPat.Count;i++) {
 				if(listAllergForPat[i].AllergyDefId==allergyDefCur.Id) {
 					return;//already an active allergy with this AllergyDefNum
@@ -779,8 +779,8 @@ namespace OpenDentBusiness.HL7 {
 			Allergy allergyCur=new Allergy();
 			allergyCur.AllergyDefId=allergyDefCur.Id;
 			allergyCur.PatientId=pat.PatNum;
-			allergyCur.StatusIsActive=true;
-			Allergies.Insert(allergyCur);
+			allergyCur.IsActive=true;
+			Allergies.Save(allergyCur);
 			if(_isVerboseLogging) {
 				EventLog.WriteEntry("OpenDentHL7","Inserted a new allergy for patient "+pat.GetNameFLnoPref()+" due to an incoming AL1 segment.",EventLogEntryType.Information);
 			}

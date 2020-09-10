@@ -556,6 +556,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Need to set up at least one allergy from EHR setup window..
+        /// </summary>
+        public static string NeedToSetupAtLeastOneAllergy {
+            get {
+                return ResourceManager.GetString("NeedToSetupAtLeastOneAllergy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to None.
         /// </summary>
         public static string None {
@@ -770,6 +779,15 @@ namespace Imedisoft.Translation {
         public static string PleaseSelectAccountFirst {
             get {
                 return ResourceManager.GetString("PleaseSelectAccountFirst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select an allergy..
+        /// </summary>
+        public static string PleaseSelectAllergy {
+            get {
+                return ResourceManager.GetString("PleaseSelectAllergy", resourceCulture);
             }
         }
         

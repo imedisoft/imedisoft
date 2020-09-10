@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Imedisoft.Data
 {
-	public partial class SchoolCourses
+    public partial class SchoolCourses
 	{
 		[CacheGroup(nameof(InvalidType.DentalSchools))]
 		private class SchoolCourseCache : ListCache<SchoolCourse>

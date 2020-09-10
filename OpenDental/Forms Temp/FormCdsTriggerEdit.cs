@@ -371,13 +371,13 @@ namespace OpenDental {
 		}
 
 		private void butAddAllergy_Click(object sender,EventArgs e) {
-			FormAllergySetup FormAS=new FormAllergySetup();
+			FormAllergyDefs FormAS=new FormAllergyDefs();
 			FormAS.IsSelectionMode=true;
 			FormAS.ShowDialog();
 			if(FormAS.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			EhrTriggerCur.AllergyDefNumList+=" "+FormAS.SelectedAllergyDefNum+" ";
+			EhrTriggerCur.AllergyDefNumList+=" "+FormAS.SelectedAllergyDef+" ";
 			FillGrid();
 		}
 

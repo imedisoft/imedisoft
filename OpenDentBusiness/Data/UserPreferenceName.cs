@@ -1,9 +1,9 @@
 ﻿namespace OpenDentBusiness
 {
-	/// <summary>
-	/// Storage class that holds all the names of commonly used user preferences.
-	/// </summary>
-	public static class UserPreferenceName
+    /// <summary>
+    /// Storage class that holds all the names of commonly used user preferences.
+    /// </summary>
+    public static class UserPreferenceName
     {
 		public const string Definition = "definition";
 

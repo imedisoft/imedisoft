@@ -10,12 +10,11 @@
 using Imedisoft.Data.Models;
 using MySql.Data.MySqlClient;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Imedisoft.Data
 {
-	public partial class EvaluationCriterions
+    public partial class EvaluationCriterions
 	{
 		public static EvaluationCriterion FromReader(MySqlDataReader dataReader)
 		{

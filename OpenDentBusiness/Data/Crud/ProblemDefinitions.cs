@@ -23,16 +23,16 @@ namespace Imedisoft.Data
 			{
 				Id = (long)dataReader["id"],
 				Description = (string)dataReader["description"],
-				CodeIcd9 = (string)dataReader["code_icd9"],
-				CodeIcd10 = (string)dataReader["code_icd10"],
-				CodeSnomed = (string)dataReader["code_snomed"],
+				CodeIcd9 = dataReader["code_icd9"] as string,
+				CodeIcd10 = dataReader["code_icd10"] as string,
+				CodeSnomed = dataReader["code_snomed"] as string,
 				IsHidden = (Convert.ToInt32(dataReader["is_hidden"]) == 1),
 				LastModifiedDate = (DateTime)dataReader["last_modified_date"]
 			};
 		}
 
 		/// <summary>
-		/// Selects a single DiseaseDef object from the database using the specified SQL command.
+		/// Selects a single ProblemDefinition object from the database using the specified SQL command.
 		/// </summary>
 		/// <param name="command">The SELECT command to execute.</param>
 		/// <param name="parameters">The (optional) command parameters.</param>
@@ -57,26 +57,26 @@ namespace Imedisoft.Data
 		/// <summary>
 		/// Inserts the specified <see cref="ProblemDefinition"/> into the database.
 		/// </summary>
-		/// <param name="diseaseDef">The <see cref="ProblemDefinition"/> to insert into the database.</param>
-		private static long ExecuteInsert(ProblemDefinition diseaseDef)
-			=> diseaseDef.Id = Database.ExecuteInsert(
+		/// <param name="problemDefinition">The <see cref="ProblemDefinition"/> to insert into the database.</param>
+		private static long ExecuteInsert(ProblemDefinition problemDefinition)
+			=> problemDefinition.Id = Database.ExecuteInsert(
 				"INSERT INTO `problem_definitions` " +
 				"(`description`, `code_icd9`, `code_icd10`, `code_snomed`, `is_hidden`) " +
 				"VALUES (" +
 					"@description, @code_icd9, @code_icd10, @code_snomed, @is_hidden" +
 				")",
-					new MySqlParameter("description", diseaseDef.Description ?? ""),
-					new MySqlParameter("code_icd9", diseaseDef.CodeIcd9 ?? ""),
-					new MySqlParameter("code_icd10", diseaseDef.CodeIcd10 ?? ""),
-					new MySqlParameter("code_snomed", diseaseDef.CodeSnomed ?? ""),
-					new MySqlParameter("is_hidden", (diseaseDef.IsHidden ? 1 : 0)),
-					new MySqlParameter("last_modified_date", diseaseDef.LastModifiedDate));
+					new MySqlParameter("description", problemDefinition.Description ?? ""),
+					new MySqlParameter("code_icd9", (object)problemDefinition.CodeIcd9 ?? DBNull.Value),
+					new MySqlParameter("code_icd10", (object)problemDefinition.CodeIcd10 ?? DBNull.Value),
+					new MySqlParameter("code_snomed", (object)problemDefinition.CodeSnomed ?? DBNull.Value),
+					new MySqlParameter("is_hidden", (problemDefinition.IsHidden ? 1 : 0)),
+					new MySqlParameter("last_modified_date", problemDefinition.LastModifiedDate));
 
 		/// <summary>
 		/// Updates the specified <see cref="ProblemDefinition"/> in the database.
 		/// </summary>
-		/// <param name="diseaseDef">The <see cref="ProblemDefinition"/> to update.</param>
-		private static void ExecuteUpdate(ProblemDefinition diseaseDef)
+		/// <param name="problemDefinition">The <see cref="ProblemDefinition"/> to update.</param>
+		private static void ExecuteUpdate(ProblemDefinition problemDefinition)
 			=> Database.ExecuteNonQuery(
 				"UPDATE `problem_definitions` SET " +
 					"`description` = @description, " +
@@ -85,13 +85,13 @@ namespace Imedisoft.Data
 					"`code_snomed` = @code_snomed, " +
 					"`is_hidden` = @is_hidden " +
 				"WHERE `id` = @id",
-					new MySqlParameter("id", diseaseDef.Id),
-					new MySqlParameter("description", diseaseDef.Description ?? ""),
-					new MySqlParameter("code_icd9", diseaseDef.CodeIcd9 ?? ""),
-					new MySqlParameter("code_icd10", diseaseDef.CodeIcd10 ?? ""),
-					new MySqlParameter("code_snomed", diseaseDef.CodeSnomed ?? ""),
-					new MySqlParameter("is_hidden", (diseaseDef.IsHidden ? 1 : 0)),
-					new MySqlParameter("last_modified_date", diseaseDef.LastModifiedDate));
+					new MySqlParameter("id", problemDefinition.Id),
+					new MySqlParameter("description", problemDefinition.Description ?? ""),
+					new MySqlParameter("code_icd9", (object)problemDefinition.CodeIcd9 ?? DBNull.Value),
+					new MySqlParameter("code_icd10", (object)problemDefinition.CodeIcd10 ?? DBNull.Value),
+					new MySqlParameter("code_snomed", (object)problemDefinition.CodeSnomed ?? DBNull.Value),
+					new MySqlParameter("is_hidden", (problemDefinition.IsHidden ? 1 : 0)),
+					new MySqlParameter("last_modified_date", problemDefinition.LastModifiedDate));
 
 		/// <summary>
 		/// Deletes a single <see cref="ProblemDefinition"/> object from the database.
@@ -103,8 +103,8 @@ namespace Imedisoft.Data
 		/// <summary>
 		/// Deletes the specified <see cref="ProblemDefinition"/> object from the database.
 		/// </summary>
-		/// <param name="diseaseDef">The <see cref="ProblemDefinition"/> to delete.</param>
-		private static void ExecuteDelete(ProblemDefinition diseaseDef)
-			=> ExecuteDelete(diseaseDef.Id);
+		/// <param name="problemDefinition">The <see cref="ProblemDefinition"/> to delete.</param>
+		private static void ExecuteDelete(ProblemDefinition problemDefinition)
+			=> ExecuteDelete(problemDefinition.Id);
 	}
 }

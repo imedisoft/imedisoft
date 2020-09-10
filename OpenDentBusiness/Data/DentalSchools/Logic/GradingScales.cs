@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Imedisoft.Data
 {
-	public partial class GradingScales
+    public partial class GradingScales
 	{
 		public static IEnumerable<GradingScale> GetAll() 
 			=> SelectMany("SELECT * FROM `grading_scales`");

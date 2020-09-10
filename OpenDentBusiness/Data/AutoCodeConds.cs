@@ -1,14 +1,11 @@
 using Imedisoft.Data;
 using Imedisoft.Data.Cache;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using System.Reflection;
 
 namespace OpenDentBusiness
 {
-	public partial class AutoCodeConds
+    public partial class AutoCodeConds
 	{
 		[CacheGroup(nameof(InvalidType.AutoCodes))]
 		private class AutoCodeCondCache : ListCache<AutoCodeCond>

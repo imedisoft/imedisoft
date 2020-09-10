@@ -57,7 +57,7 @@ namespace OpenDental
 		}
 
 		private void butAllergies_Click(object sender,EventArgs e) {
-			FormAllergySetup FAS=new FormAllergySetup();
+			FormAllergyDefs FAS=new FormAllergyDefs();
 			FAS.ShowDialog();
 		}
 

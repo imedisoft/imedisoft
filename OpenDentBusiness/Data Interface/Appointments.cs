@@ -763,7 +763,7 @@ namespace OpenDentBusiness
 					listClinicNumProcs.Union(new List<long> { 0 }).ToList())
 				.Select(x => (Fee)x).ToList();
 			List<long> listPatsWithDisease=Problems.GetPatientsWithDisease(listPatNums).ToList();
-			List<long> listPatsWithAllergy=Allergies.GetPatientsWithAllergy(listPatNums);
+			List<long> listPatsWithAllergy=Allergies.GetPatientsWithAllergy(listPatNums).ToList();
 			Dictionary<long,string> dictRefFromPatNums=new Dictionary<long,string>();//Only contains FROM referrals 
 			Dictionary<long,string> dictRefToPatNums=new Dictionary<long,string>();//Only contains TO referrals
 			List<long> listRefNums=new List<long>();

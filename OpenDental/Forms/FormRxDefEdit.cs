@@ -165,7 +165,7 @@ namespace Imedisoft.Forms
 
 		private void AddAllergyButton_Click(object sender, EventArgs e)
 		{
-            using var formAllergySetup = new FormAllergySetup
+            using var formAllergySetup = new FormAllergyDefs
             {
                 IsSelectionMode = true
             };
@@ -177,7 +177,7 @@ namespace Imedisoft.Forms
 
 			var rxAlert = new RxAlert
 			{
-				AllergyDefId = formAllergySetup.SelectedAllergyDefNum
+				AllergyDefId = formAllergySetup.SelectedAllergyDef.Id
 			};
 
 			alertsListBox.Items.Add(rxAlert);

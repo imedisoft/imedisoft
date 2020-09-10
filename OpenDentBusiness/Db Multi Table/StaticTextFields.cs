@@ -359,7 +359,7 @@ namespace OpenDentBusiness
 			}
 			if (IsQueryNeeded(ref ListAllergies, StaticTextFieldDependency.ListAllergies))
 			{
-				ListAllergies = Allergies.GetByPatient(pat.PatNum, false);
+				ListAllergies = Allergies.GetByPatient(pat.PatNum, false).ToList();
 			}
 			if (IsQueryNeeded(ref ListMedicationPats, StaticTextFieldDependency.ListMedicationPats))
 			{

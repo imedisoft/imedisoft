@@ -9,13 +9,11 @@
 //------------------------------------------------------------------------------
 using Imedisoft.Data.Models.Cemt;
 using MySql.Data.MySqlClient;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Imedisoft.Data.Cemt
 {
-	public partial class ConnectionGroups
+    public partial class ConnectionGroups
 	{
 		public static ConnectionGroup FromReader(MySqlDataReader dataReader)
 		{

@@ -7,6 +7,7 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
+using Imedisoft.Data.Models;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections;

@@ -10,11 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OpenDentBusiness</RootNamespace>
     <AssemblyName>OpenDentBusiness</AssemblyName>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <ResGenToolArchitecture>Managed32Bit</ResGenToolArchitecture>
     <TargetFrameworkProfile />
@@ -28,13 +24,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <OutputType>Library</OutputType>
-    <AssemblyName>OpenDentBusiness</AssemblyName>
-    <RootNamespace>OpenDentBusiness</RootNamespace>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     <Prefer32Bit>false</Prefer32Bit>
     <LangVersion>8.0</LangVersion>
-    <CodeAnalysisRuleSet />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -46,164 +38,32 @@
     <DocumentationFile>bin\Release\OpenDentBusiness.xml</DocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <OutputType>Library</OutputType>
-    <AssemblyName>OpenDentBusiness</AssemblyName>
     <DebugSymbols>true</DebugSymbols>
-    <RootNamespace>OpenDentBusiness</RootNamespace>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     <Prefer32Bit>false</Prefer32Bit>
     <LangVersion>8.0</LangVersion>
-    <CodeAnalysisRuleSet />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'LinuxRelease|AnyCPU' ">
-    <OutputPath>bin\LinuxRelease\</OutputPath>
-    <DefineConstants>TRACE;LINUX</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <OutputType>Library</OutputType>
-    <AssemblyName>OpenDentBusiness</AssemblyName>
-    <DebugSymbols>true</DebugSymbols>
-    <RootNamespace>OpenDentBusiness</RootNamespace>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <LangVersion>8.0</LangVersion>
-    <CodeAnalysisRuleSet />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <DocumentationFile>bin\Debug\OpenDentBusiness.XML</DocumentationFile>
-    <WarningLevel>3</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
     <LangVersion>8.0</LangVersion>
-    <CodeAnalysisRuleSet />
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>8.0</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <DocumentationFile>bin\Release\OpenDentBusiness.xml</DocumentationFile>
-    <Optimize>true</Optimize>
-    <WarningLevel>3</WarningLevel>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <Prefer32Bit>false</Prefer32Bit>
-    <LangVersion>8.0</LangVersion>
-    <CodeAnalysisRuleSet />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'LinuxRelease|x86' ">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\LinuxRelease\</OutputPath>
-    <DefineConstants>TRACE;LINUX</DefineConstants>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <Prefer32Bit>false</Prefer32Bit>
-    <LangVersion>8.0</LangVersion>
-    <CodeAnalysisRuleSet />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Alpha_Release|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Alpha_Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <DocumentationFile>bin\Release\OpenDentBusiness.xml</DocumentationFile>
-    <Optimize>true</Optimize>
-    <WarningLevel>3</WarningLevel>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>
-    </CodeAnalysisRuleSet>
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Alpha_Release|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Alpha_Release\</OutputPath>
-    <DefineConstants>TRACE;ALPHA</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <DocumentationFile>bin\Release\OpenDentBusiness.xml</DocumentationFile>
-    <Optimize>true</Optimize>
-    <WarningLevel>3</WarningLevel>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>
-    </CodeAnalysisRuleSet>
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Alpha_Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Alpha_Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>
-    </CodeAnalysisRuleSet>
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Alpha_Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Alpha_Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;ALPHA</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <DocumentationFile>bin\Debug\OpenDentBusiness.XML</DocumentationFile>
-    <WarningLevel>3</WarningLevel>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>
-    </CodeAnalysisRuleSet>
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug_Web|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug_Web\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>
-    </CodeAnalysisRuleSet>
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug_Web|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug_Web\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <DocumentationFile>bin\Debug\OpenDentBusiness.XML</DocumentationFile>
-    <WarningLevel>3</WarningLevel>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>
-    </CodeAnalysisRuleSet>
-    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Avalara.AvaTax.RestClient.net45">
@@ -631,8 +491,8 @@
     <Compile Include="Crud\AdjustmentCrud.cs" />
     <Compile Include="Crud\AlertItemCrud.cs" />
     <Compile Include="Crud\AlertSubCrud.cs" />
-    <Compile Include="Data\Crud\Allergies.Crud.cs" />
-    <Compile Include="Crud\AllergyDefCrud.cs" />
+    <Compile Include="Data\Crud\Allergies.cs" />
+    <Compile Include="Data\Crud\AllergyDefs.cs" />
     <Compile Include="Crud\AppointmentCrud.cs" />
     <Compile Include="Crud\AppointmentRuleCrud.cs" />
     <Compile Include="Crud\AppointmentTypeCrud.cs" />
@@ -960,7 +820,7 @@
     <Compile Include="Crud\WikiPageHistCrud.cs" />
     <Compile Include="Crud\XChargeTransactionCrud.cs" />
     <Compile Include="Crud\ZipCodeCrud.cs" />
-    <Compile Include="Data\Allergies.cs" />
+    <Compile Include="Data\Logic\Allergies.cs" />
     <Compile Include="Data Interface\AllergyDefs.cs" />
     <Compile Include="Data Interface\AppointmentTypes.cs" />
     <Compile Include="Data\AppointmentFieldDefinitions.cs" />
@@ -1441,8 +1301,6 @@
     <Compile Include="TableTypes\ApptField.cs" />
     <Compile Include="TableTypes\AutomationCondition.cs" />
     <Compile Include="TableTypes\ChartView.cs" />
-    <Compile Include="TableTypes\AllergyDef.cs" />
-    <Compile Include="Data\Models\Allergy.cs" />
     <Compile Include="TableTypes\CodeSystem.cs" />
     <Compile Include="TableTypes\Cdcrec.cs" />
     <Compile Include="TableTypes\Cpt.cs" />

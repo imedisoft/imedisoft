@@ -1,10 +1,9 @@
 using Imedisoft.Data.Models;
-using System;
 using System.Collections.Generic;
 
 namespace Imedisoft.Data
 {
-	public partial class EvaluationCriterionDefs
+    public partial class EvaluationCriterionDefs
 	{
 		public static IEnumerable<EvaluationCriterionDef> GetAvailableCriterionDefs() 
 			=> SelectMany("SELECT * FROM `evaluation_criterion_defs` WHERE `evaluation_def_id` IS NULL");

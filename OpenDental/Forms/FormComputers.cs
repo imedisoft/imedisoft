@@ -1,5 +1,6 @@
 using Imedisoft.Data;
 using Imedisoft.Data.Cache;
+using Imedisoft.Data.Models;
 using OpenDental;
 using OpenDentBusiness;
 using System;
@@ -39,11 +40,17 @@ namespace Imedisoft.Forms
 		{
 			Computers.RefreshCache();
 
+			var machineName = Environment.MachineName.ToUpper();
+
 			computersListBox.Items.Clear();
 
 			foreach (var computer in Computers.GetAll())
 			{
 				computersListBox.Items.Add(computer);
+				if (computer.MachineName.Equals(machineName, StringComparison.InvariantCultureIgnoreCase))
+                {
+					computersListBox.SelectedItem = computer;
+                }
 			}
 		}
 
@@ -69,7 +76,7 @@ namespace Imedisoft.Forms
 
 		private void ComputersListBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			deleteButton.Enabled = computersListBox.SelectedItem != null;
+			deleteButton.Enabled = fixGraphicsButton.Enabled = computersListBox.SelectedItem != null;
 		}
 
 		private void FixGraphicsButton_Click(object sender, EventArgs e)

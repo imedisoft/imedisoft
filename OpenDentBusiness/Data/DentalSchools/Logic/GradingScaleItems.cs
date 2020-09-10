@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Imedisoft.Data
 {
-	public partial class GradingScaleItems
+    public partial class GradingScaleItems
 	{
 		public static IEnumerable<GradingScaleItem> GetByGradingScale(long gradingScaleId) 
 			=> SelectMany(

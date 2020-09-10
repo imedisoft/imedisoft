@@ -298,14 +298,14 @@ namespace OpenDental{
 
 		#region Methods - Event Handlers Chart
 		private void butAllergiesIndicateNone_Click(object sender,EventArgs e) {
-			FormAllergySetup formA=new FormAllergySetup();
+			FormAllergyDefs formA=new FormAllergyDefs();
 			formA.IsSelectionMode=true;
 			formA.ShowDialog();
 			if(formA.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			_alergyDefNum=formA.SelectedAllergyDefNum;
-			textAllergiesIndicateNone.Text=AllergyDefs.GetOne(formA.SelectedAllergyDefNum).Description;
+			_alergyDefNum=formA.SelectedAllergyDef.Id;
+			textAllergiesIndicateNone.Text=AllergyDefs.GetOne(_alergyDefNum).Description;
 		}
 
 		private void butDiagnosisCode_Click(object sender,EventArgs e) {

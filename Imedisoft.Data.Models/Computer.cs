@@ -1,7 +1,7 @@
 using Imedisoft.Data.Annotations;
 using System;
 
-namespace Imedisoft.Data
+namespace Imedisoft.Data.Models
 {
     [Table("computers")]
 	public class Computer

@@ -459,7 +459,7 @@ namespace OpenDental
 
 		private static bool AllergyComparison(AutomationCondition autoCond, long patNum)
 		{
-			List<AllergyDef> listAllergyDefs = AllergyDefs.GetAllergyDefs(patNum, false);
+			List<AllergyDef> listAllergyDefs = AllergyDefs.GetAllergyDefs(patNum, false).ToList();
 
             return autoCond.Comparison switch
             {

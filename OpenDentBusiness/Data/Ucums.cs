@@ -1,16 +1,12 @@
-using System;
+using Imedisoft.Data;
+using MySql.Data.MySqlClient;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using DataConnectionBase;
-using Imedisoft.Data;
-using MySql.Data.MySqlClient;
 
 namespace OpenDentBusiness
 {
-	public partial class Ucums
+    public partial class Ucums
 	{
 		public static IEnumerable<Ucum> GetAll() 
 			=> SelectMany("SELECT * FROM `ucums` ORDER BY `code`");

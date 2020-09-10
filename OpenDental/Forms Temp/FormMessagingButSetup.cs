@@ -7,6 +7,7 @@ using OpenDentBusiness;
 using System.Collections.Generic;
 using System.Linq;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental{
 	/// <summary>

@@ -1,5 +1,4 @@
 using Imedisoft.Data.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -7,7 +6,7 @@ using System.Text;
 
 namespace Imedisoft.Data
 {
-	public partial class SecurityLogHashes
+    public partial class SecurityLogHashes
 	{
 		public static SecurityLogHash GetOne(long securityLogHashNum)
 		{

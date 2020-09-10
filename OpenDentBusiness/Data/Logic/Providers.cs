@@ -1,20 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Reflection;
 using CodeBase;
-using Imedisoft.Data;
 using Imedisoft.Data.Cache;
 using Imedisoft.Data.Models;
 using MySql.Data.MySqlClient;
 using OpenDentBusiness;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.Linq;
 
 namespace Imedisoft.Data
 {
-	public partial class Providers
+    public partial class Providers
 	{
 		/// <summary>
 		/// Checks to see if the providers passed in have term dates that occur after the date passed in.

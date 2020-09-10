@@ -3634,7 +3634,7 @@ namespace OpenDental {
 					#region Allergies
 					case "Allergies":
 						if(doRefreshData || LoadData.ListAllergies==null) {
-							LoadData.ListAllergies=Allergies.GetByPatient(_patCur.PatNum,false);
+							LoadData.ListAllergies=Allergies.GetByPatient(_patCur.PatNum,false).ToList();
 						}
 						List<Allergy> listAllergies=LoadData.ListAllergies;
 						row=new GridRow();

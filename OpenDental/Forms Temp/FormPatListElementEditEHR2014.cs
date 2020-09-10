@@ -488,13 +488,13 @@ namespace OpenDental {
 					textCompareString.Text=Enum.GetName(typeof(ContactMethod),FormCPP.ContMethCur);
 					break;
 				case 6://Alergy
-					FormAllergySetup FormAS=new FormAllergySetup();
+					FormAllergyDefs FormAS=new FormAllergyDefs();
 					FormAS.IsSelectionMode=true;
 					FormAS.ShowDialog();
 					if(FormAS.DialogResult!=DialogResult.OK) {
 						return;
 					}
-					textCompareString.Text=AllergyDefs.GetDescription(FormAS.SelectedAllergyDefNum);
+					textCompareString.Text=FormAS.SelectedAllergyDef.Description;
 					break;
 				default://should never happen
 					break;

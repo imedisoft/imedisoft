@@ -283,6 +283,9 @@
   <data name="MissingInfo" xml:space="preserve">
     <value>Missing Info</value>
   </data>
+  <data name="NeedToSetupAtLeastOneAllergy" xml:space="preserve">
+    <value>Need to set up at least one allergy from EHR setup window.</value>
+  </data>
   <data name="None" xml:space="preserve">
     <value>None</value>
   </data>
@@ -356,6 +359,9 @@ If you do have a printer installed, restarting the workstation may solve the pro
   </data>
   <data name="PleaseSelectAccountFirst" xml:space="preserve">
     <value>Please select an account first.</value>
+  </data>
+  <data name="PleaseSelectAllergy" xml:space="preserve">
+    <value>Please select an allergy.</value>
   </data>
   <data name="PleaseSelectItem" xml:space="preserve">
     <value>Please select an item.</value>

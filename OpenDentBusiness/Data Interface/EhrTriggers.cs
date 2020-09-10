@@ -498,7 +498,7 @@ namespace OpenDentBusiness{
 				listInterventions.Add(cdsi);
 			}
 			//Fill object lists to be checked---------------------------------------------------------------------------------------------------------------
-			List<Allergy> listAllergies=Allergies.GetByPatient(patCur.PatNum,false);
+			List<Allergy> listAllergies=Allergies.GetByPatient(patCur.PatNum,false).ToList();
 			List<Problem> listDiseases=Problems.GetByPatient(patCur.PatNum,true).ToList();
 			List<ProblemDefinition> listDiseaseDefs=new List<ProblemDefinition>();
 			List<EhrLab> listEhrLabs=EhrLabs.GetAllForPat(patCur.PatNum);

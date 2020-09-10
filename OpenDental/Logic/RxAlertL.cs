@@ -17,7 +17,7 @@ namespace OpenDental
             List<RxAlert> alertList = RxAlerts.Refresh(rxDefNum);
             
             List<Problem> diseases = Problems.GetByPatient(patNum).ToList();
-			List<Allergy> allergies = Allergies.GetByPatient(patNum);
+			List<Allergy> allergies = Allergies.GetByPatient(patNum).ToList();
 			List<MedicationPat> medicationPats = MedicationPats.Refresh(patNum, false);//Exclude discontinued, only active meds.
 			List<string> diseaseMatches = new List<string>();
 			List<string> allergiesMatches = new List<string>();
@@ -45,7 +45,7 @@ namespace OpenDental
 
 				for (int j = 0; j < allergies.Count; j++)
 				{
-					if (alertList[i].AllergyDefId == allergies[j].AllergyDefId && allergies[j].StatusIsActive)
+					if (alertList[i].AllergyDefId == allergies[j].AllergyDefId && allergies[j].IsActive)
 					{
 						if (alertList[i].NotificationMsg == "")
 						{

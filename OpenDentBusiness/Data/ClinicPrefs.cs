@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace OpenDentBusiness
 {
-	public class ClinicPrefs
+    public class ClinicPrefs
 	{
 		private class Preference
         {

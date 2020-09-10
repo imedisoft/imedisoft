@@ -126,14 +126,14 @@ namespace OpenDental {
 					RuleCur.CriterionFK=formM.SelectedMedicationNum;
 					break;
 				case EhrCriterion.Allergy:
-					FormAllergySetup formA=new FormAllergySetup();
+					FormAllergyDefs formA=new FormAllergyDefs();
 					formA.IsSelectionMode=true;
 					formA.ShowDialog();
 					if(formA.DialogResult!=DialogResult.OK) {
 						RuleCur.CriterionFK=-1;
 						return;
 					}
-					RuleCur.CriterionFK=formA.SelectedAllergyDefNum;
+					RuleCur.CriterionFK=formA.SelectedAllergyDef.Id;
 					break;
 				//case EhrCriterion.ICD9:
 				//  FormIcd9s FormICD9Select = new FormIcd9s();

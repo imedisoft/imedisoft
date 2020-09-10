@@ -9,13 +9,11 @@
 //------------------------------------------------------------------------------
 using Imedisoft.Data.Models;
 using MySql.Data.MySqlClient;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Imedisoft.Data
 {
-	public partial class EvaluationDefs
+    public partial class EvaluationDefs
 	{
 		public static EvaluationDef FromReader(MySqlDataReader dataReader)
 		{

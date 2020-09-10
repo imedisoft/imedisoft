@@ -99,6 +99,7 @@
             // 
             // fixGraphicsButton
             // 
+            this.fixGraphicsButton.Enabled = false;
             this.fixGraphicsButton.Location = new System.Drawing.Point(37, 176);
             this.fixGraphicsButton.Name = "fixGraphicsButton";
             this.fixGraphicsButton.Size = new System.Drawing.Size(120, 25);

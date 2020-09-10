@@ -20,8 +20,6 @@ namespace Imedisoft.Data
 
 		private static readonly DefinitionCache cache = new DefinitionCache();
 
-
-
 		public static Dictionary<string, List<Definition>> GetDictionaryNoCache(bool includeHidden = false)
 		{
 			var results = new Dictionary<string, List<Definition>>();

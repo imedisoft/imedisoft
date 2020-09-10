@@ -9,13 +9,11 @@
 //------------------------------------------------------------------------------
 using Imedisoft.Data.Models;
 using MySql.Data.MySqlClient;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Imedisoft.Data
 {
-	public partial class SchoolCourseRequirements
+    public partial class SchoolCourseRequirements
 	{
 		public static SchoolCourseRequirement FromReader(MySqlDataReader dataReader)
 		{

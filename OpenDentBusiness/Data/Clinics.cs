@@ -1,4 +1,3 @@
-using DataConnectionBase;
 using Imedisoft.Data;
 using Imedisoft.Data.Cache;
 using Imedisoft.X12.Codes;

@@ -162,7 +162,7 @@ namespace OpenDental {
 			switch(medListType) {
 				case MedicalListType.allergy:
 					if(_listAllergies==null) {
-						_listAllergies=AllergyDefs.GetAll(false);
+						_listAllergies=AllergyDefs.GetAll(false).ToList();
 					}
 					listMedical.SetItems(_listAllergies,(item) => item.Description,(item) => item.Description==medSelection);
 					break;
@@ -299,16 +299,20 @@ namespace OpenDental {
 			AddAllergy(SheetFieldDefCur);
 		}
 
-		private void AddAllergy(SheetFieldDef SheetFieldDefCur) {
-			FormAllergyDefEdit formADE=new FormAllergyDefEdit();
-			formADE.AllergyDefCur=new AllergyDef();
-			formADE.AllergyDefCur.IsNew=true;
-			formADE.AllergyDefCur.Description=SheetFieldDefCur?.FieldName.Replace("allergy:","")??"";
-			formADE.ShowDialog();
-			if(formADE.DialogResult!=DialogResult.OK) {
+		private void AddAllergy(SheetFieldDef SheetFieldDefCur)
+		{
+            var allergyDef = new AllergyDef
+            {
+                Description = SheetFieldDefCur?.FieldName.Replace("allergy:", "") ?? ""
+            };
+
+            using var formAllergyDefEdit = new FormAllergyDefEdit(allergyDef);
+			if (formAllergyDefEdit.ShowDialog(this) != DialogResult.OK)
+			{
 				return;
 			}
-			_listAllergies.Add(formADE.AllergyDefCur);
+
+			_listAllergies.Add(allergyDef);
 			FillListMedical(MedicalListType.allergy);
 		}
 

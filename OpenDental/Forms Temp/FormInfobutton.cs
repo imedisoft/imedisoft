@@ -1043,13 +1043,13 @@ namespace OpenDental {
 		}
 
 		private void butAddAllergy_Click(object sender,EventArgs e) {
-			FormAllergySetup FormA=new FormAllergySetup();
+			FormAllergyDefs FormA=new FormAllergyDefs();
 			FormA.IsSelectionMode=true;
 			FormA.ShowDialog();
 			if(FormA.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			EhrTriggers.ConvertToKnowledgeRequests(AllergyDefs.GetOne(FormA.SelectedAllergyDefNum)).ForEach(x => _listKnowledgeRequests.Add(x));
+			EhrTriggers.ConvertToKnowledgeRequests(AllergyDefs.GetOne(FormA.SelectedAllergyDef.Id)).ForEach(x => _listKnowledgeRequests.Add(x));
 			fillKnowledgeRequestitems();
 		}
 

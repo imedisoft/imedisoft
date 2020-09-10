@@ -1,7 +1,5 @@
-using Imedisoft.Data;
 using Imedisoft.Data.Models;
 using MySql.Data.MySqlClient;
-using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
 using System.Data;

@@ -6,6 +6,7 @@ using System.Drawing.Printing;
 using System.Reflection;
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness
 {
@@ -137,7 +138,6 @@ namespace OpenDentBusiness
 		///<summary>Gets the set printer whether or not it is valid.  Returns null if the current computer OR printer cannot be found.</summary>
 		public static Printer GetForSit(PrintSituation sit)
 		{
-			//No need to check RemotingRole; no call to db.
 			Computer compCur = Computers.GetCurrent();
 			if (compCur == null)
 			{

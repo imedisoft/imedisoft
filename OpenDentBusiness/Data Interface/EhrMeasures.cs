@@ -1858,7 +1858,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region AllergyList
 					case EhrMeasureType.AllergyList:
-						List<Allergy> listAllergies=Allergies.GetByPatient(pat.PatNum);
+						List<Allergy> listAllergies=Allergies.GetByPatient(pat.PatNum).ToList();
 						if(listAllergies.Count==0) {
 							mu.Details="No allergies entered.";
 						}
@@ -5708,7 +5708,7 @@ namespace OpenDentBusiness{
 					#endregion
 					#region AllergyList
 					case EhrMeasureType.AllergyList:
-						List<Allergy> listAllergies=Allergies.GetByPatient(pat.PatNum);
+						List<Allergy> listAllergies=Allergies.GetByPatient(pat.PatNum).ToList();
 						if(listAllergies.Count==0) {
 							mu.Details="No allergies entered.";
 						}

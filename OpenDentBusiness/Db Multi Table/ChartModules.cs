@@ -135,7 +135,7 @@ namespace OpenDentBusiness
 				switch (field.InternalName)
 				{
 					case "Allergies":
-						data.ListAllergies = Allergies.GetByPatient(patNum, false);
+						data.ListAllergies = Allergies.GetByPatient(patNum, false).ToList();
 						break;
 					case "Medications":
 						// TODO: data.TableMeds = Medications.RefreshCache();
