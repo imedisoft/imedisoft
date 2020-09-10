@@ -102,8 +102,8 @@ namespace OpenDentBusiness.HL7 {
 				else {
 					guar.PatNum=guarNum;
 				}
-				guar.PriProv=Prefs.GetLong(PrefName.PracticeDefaultProv);
-				guar.BillingType=Prefs.GetLong(PrefName.PracticeDefaultBillType);
+				guar.PriProv=Preferences.GetLong(PreferenceName.PracticeDefaultProv);
+				guar.BillingType=Preferences.GetLong(PreferenceName.PracticeDefaultBillType);
 			}
 			else {
 				guarOld=guar.Copy();

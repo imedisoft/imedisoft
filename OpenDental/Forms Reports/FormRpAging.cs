@@ -536,11 +536,11 @@ namespace OpenDental{
 
 		private void FormAging_Load(object sender, System.EventArgs e) {
 			_listProviders=Providers.GetListReports();
-			DateTime lastAgingDate=PrefC.GetDate(PrefName.DateLastAging);
+			DateTime lastAgingDate=PrefC.GetDate(PreferenceName.DateLastAging);
 			if(lastAgingDate.Year<1880) {
 				textDate.Text="";
 			}
-			else if(Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)){
+			else if(Preferences.GetBool(PreferenceName.AgingCalculatedMonthlyInsteadOfDaily)){
 				textDate.Text=lastAgingDate.ToShortDateString();
 			}
 			else{
@@ -580,12 +580,12 @@ namespace OpenDental{
 					listClin.Visible=false;
 				}
 			}
-			if(Prefs.GetBool(PrefName.AgingReportShowAgePatPayplanPayments)) {
+			if(Preferences.GetBool(PreferenceName.AgingReportShowAgePatPayplanPayments)) {
 				//Visibility set to false in designer, only set to visible here.  No UI for pref, only set true via query for specific customer.
 				checkAgePatPayPlanPayments.Visible=true;
 			}
-			if(Prefs.GetBool(PrefName.FutureTransDatesAllowed) || Prefs.GetBool(PrefName.AccountAllowFutureDebits) 
-				|| Prefs.GetBool(PrefName.AllowFutureInsPayments)) 
+			if(Preferences.GetBool(PreferenceName.FutureTransDatesAllowed) || Preferences.GetBool(PreferenceName.AccountAllowFutureDebits) 
+				|| Preferences.GetBool(PreferenceName.AllowFutureInsPayments)) 
 			{
 				labelFutureTrans.Visible=true;//Set to false in designer
 			}
@@ -734,7 +734,7 @@ namespace OpenDental{
 			report.IsLandscape=checkHasDateLastPay.Checked;
 			report.ReportName="AGING OF ACCOUNTS RECEIVABLE REPORT";
 			report.AddTitle("Aging Report","AGING OF ACCOUNTS RECEIVABLE");
-			report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle));
+			report.AddSubTitle("PracTitle",Preferences.GetString(PreferenceName.PracticeTitle));
 			report.AddSubTitle("AsOf","As of "+textDate.Text);
 			if(radioAny.Checked){
 				report.AddSubTitle("Balance","Any Balance");

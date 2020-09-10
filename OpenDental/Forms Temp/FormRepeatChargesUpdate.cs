@@ -126,7 +126,7 @@ namespace OpenDental{
 		#endregion
 
 		private void FormRepeatChargesUpdate_Load(object sender, EventArgs e) {
-			checkRunAging.Checked=Prefs.GetBool(PrefName.RepeatingChargesRunAging);//this will cause the label text to be updated
+			checkRunAging.Checked=Preferences.GetBool(PreferenceName.RepeatingChargesRunAging);//this will cause the label text to be updated
 		}
 
 		///<summary>Do not use this method in release code. This is only to be used for Unit Tests 53-56.</summary>
@@ -151,11 +151,11 @@ namespace OpenDental{
 		///passed since the tool was started, user will be blocked from running Repeating Charges.  Otherwise, SecurityAdmin users can restart the tool.
 		///</summary>
 		private bool CheckBeginDateTime() {
-			Prefs.RefreshCache();//Just to be sure we don't miss someone who has just started running repeating charges.
-			if(Prefs.GetString(PrefName.RepeatingChargesBeginDateTime)=="") {
+			Preferences.RefreshCache();//Just to be sure we don't miss someone who has just started running repeating charges.
+			if(Preferences.GetString(PreferenceName.RepeatingChargesBeginDateTime)=="") {
 				return true;
 			}
-			DateTime repeatingChargesBeginDateTime=PrefC.GetDate(PrefName.RepeatingChargesBeginDateTime);
+			DateTime repeatingChargesBeginDateTime=PrefC.GetDate(PreferenceName.RepeatingChargesBeginDateTime);
 			if((MiscData.GetNowDateTime()-repeatingChargesBeginDateTime).TotalHours < 24) {
 				MessageBox.Show("Repeating charges already running on another workstation, you must wait for them to finish before continuing.");
 				return false;

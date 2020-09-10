@@ -67,7 +67,7 @@ namespace Imedisoft.Forms
 			schedulingNotesTextBox.Text = clinic.SchedulingNote;
 			procCodeRequiredCheckBox.Checked = clinic.HasProcedureOnRx;
 
-			if (Prefs.GetBool(PrefName.RxHasProc))
+			if (Preferences.GetBool(PreferenceName.RxHasProc))
 			{
 				procCodeRequiredCheckBox.Enabled = true;
 			}
@@ -486,7 +486,7 @@ namespace Imedisoft.Forms
 			clinic.SchedulingNote = schedulingNotesTextBox.Text;
 			clinic.EmailAddressId = emailAddressId;
 
-			if (Prefs.GetBool(PrefName.RxHasProc))
+			if (Preferences.GetBool(PreferenceName.RxHasProc))
 			{
 				clinic.HasProcedureOnRx = procCodeRequiredCheckBox.Checked;
 			}

@@ -41,10 +41,10 @@ namespace OpenDental{
 			gridMain.ContextMenu=contextMenuGrid;
 			dateRangePicker.SetDateTimeTo(DateTime.Today);
 			dateRangePicker.SetDateTimeFrom(DateTime.Today);
-			if(Prefs.GetBool(PrefName.ShowFeatureMedicalInsurance)) {
+			if(Preferences.GetBool(PreferenceName.ShowFeatureMedicalInsurance)) {
 				checkMedical.Visible=true;
 			}
-			if(Prefs.GetBool(PrefName.ClaimProcsNotBilledToInsAutoGroup)) {
+			if(Preferences.GetBool(PreferenceName.ClaimProcsNotBilledToInsAutoGroup)) {
 				checkAutoGroupProcs.Checked=true;
 			}
 			FillGrid();
@@ -119,7 +119,7 @@ namespace OpenDental{
 			_myReport=new ReportComplex(true,false,false);
 			_myReport.ReportName="Procedures Not Billed to Insurance";
 			_myReport.AddTitle("Title","Procedures Not Billed to Insurance");
-			_myReport.AddSubTitle("Practice Name",Prefs.GetString(PrefName.PracticeTitle));
+			_myReport.AddSubTitle("Practice Name",Preferences.GetString(PreferenceName.PracticeTitle));
 			if(_myReportDateFrom==_myReportDateTo) {
 				_myReport.AddSubTitle("Report Dates",_myReportDateFrom.ToShortDateString());
 			}
@@ -290,7 +290,7 @@ namespace OpenDental{
 					if(PrefC.HasClinicsEnabled) {//Group by clinic only if clinics enabled.
 						listProcs=listProcs.FindAll(x => x.ClinicNum==procNotBilled.ClinicNum);
 					}
-					else if(!Prefs.GetBool(PrefName.EasyHidePublicHealth)) {//Group by Place of Service only if Public Health feature is enabled.
+					else if(!Preferences.GetBool(PreferenceName.EasyHidePublicHealth)) {//Group by Place of Service only if Public Health feature is enabled.
 						listProcs=listProcs.FindAll(x => x.PlaceService==procNotBilled.PlaceService);
 					}
 				}
@@ -417,7 +417,7 @@ namespace OpenDental{
 		}
 
 		private void FormRpProcNotBilledIns_FormClosing(object sender,FormClosingEventArgs e) {
-			Prefs.Set(PrefName.ClaimProcsNotBilledToInsAutoGroup,checkAutoGroupProcs.Checked);
+			Preferences.Set(PreferenceName.ClaimProcsNotBilledToInsAutoGroup,checkAutoGroupProcs.Checked);
 		}
 
 		public delegate void OnPostClaimCreationHandler();

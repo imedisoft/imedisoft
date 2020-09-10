@@ -19,8 +19,8 @@ namespace OpenDental {
 		}
 		
 		private void FormRpUnearnedIncome_Load(object sender,System.EventArgs e) {
-			checkUnearnedAllocationShowProv.Checked=Prefs.GetBool(PrefName.AllowPrepayProvider);
-			checkLineItemShowProv.Checked=Prefs.GetBool(PrefName.AllowPrepayProvider);
+			checkUnearnedAllocationShowProv.Checked=Preferences.GetBool(PreferenceName.AllowPrepayProvider);
+			checkLineItemShowProv.Checked=Preferences.GetBool(PreferenceName.AllowPrepayProvider);
 			FillClinics();
 			FillProviders();
 			FillUnearnedTypes();
@@ -175,7 +175,7 @@ namespace OpenDental {
 			query.AddColumn("Fee",100,FieldValueType.String);
 			query.AddColumn("RemAmt",100,FieldValueType.String);
 			report.AddTitle("Title","Unearned Allocation Report");
-			report.AddSubTitle("Practice Title",Prefs.GetString(PrefName.PracticeTitle));
+			report.AddSubTitle("Practice Title",Preferences.GetString(PreferenceName.PracticeTitle));
 			if(checkUnearnedAllocationAllTypes.Checked) {
 				report.AddSubTitle("UnearnedTypes","All Unearned Types");
 			}
@@ -276,7 +276,7 @@ namespace OpenDental {
 			query.AddColumn("Unearned Amt",100,FieldValueType.Number);
 			query.AddColumn("Fam Bal",100,FieldValueType.String);
 			report.AddTitle("Title","Net Unearned Income");
-			report.AddSubTitle("Practice Title",Prefs.GetString(PrefName.PracticeTitle));
+			report.AddSubTitle("Practice Title",Preferences.GetString(PreferenceName.PracticeTitle));
 			if(checkNetUnearnedAllTypes.Checked) {
 				report.AddSubTitle("UnearnedTypes","All Unearned Types");
 			}
@@ -343,7 +343,7 @@ namespace OpenDental {
 				checkLineItemShowProv.Checked);
 			report.ReportName="Line Item Unearned Income Report";
 			report.AddTitle("Title","Line Item Unearned Income Activity");
-			report.AddSubTitle("Practice Title",Prefs.GetString(PrefName.PracticeTitle));
+			report.AddSubTitle("Practice Title",Preferences.GetString(PreferenceName.PracticeTitle));
 			string dateRange = dateLineItemFrom.SelectionStart.ToShortDateString()+" - "+dateLineItemTo.SelectionStart.ToShortDateString();
 			report.AddSubTitle("Date",dateRange);			
 			if(PrefC.HasClinicsEnabled) {//show sub titles if clinics are enabled. 
@@ -415,7 +415,7 @@ namespace OpenDental {
 			DataTable table = RpUnearnedIncome.GetUnearnedAccountData(listClinicNums);
 			report.ReportName="Unearned Accounts Report";
 			report.AddTitle("Title","Unearned Accounts");
-			report.AddSubTitle("Practice Title",Prefs.GetString(PrefName.PracticeTitle));
+			report.AddSubTitle("Practice Title",Preferences.GetString(PreferenceName.PracticeTitle));
 			if(PrefC.HasClinicsEnabled) {//show sub titles if clinics are enabled. 
 				if(checkUnearnedAcctAllClins.Checked) {
 					report.AddSubTitle("Clinics","All Clinics");

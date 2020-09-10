@@ -48,7 +48,7 @@ namespace Imedisoft.Forms
         {
 			foreach (var preferenceName in preferenceNames)
             {
-				if (Prefs.GetLong(preferenceName) == definitionId)
+				if (Preferences.GetLong(preferenceName) == definitionId)
                 {
 					return true;
                 }
@@ -61,12 +61,12 @@ namespace Imedisoft.Forms
 		{
 			if (definition.Category == DefinitionCategory.ApptConfirmed)
 			{
-				excludeSendIds = Prefs.GetString(PrefName.ApptConfirmExcludeESend).Split(',').ToList().Select(x => PIn.Long(x)).ToList();
-				excludeConfirmIds = Prefs.GetString(PrefName.ApptConfirmExcludeEConfirm).Split(',').ToList().Select(x => PIn.Long(x)).ToList();
-				excludeReminderIds = Prefs.GetString(PrefName.ApptConfirmExcludeERemind).Split(',').ToList().Select(x => PIn.Long(x)).ToList();
-				excludeThankYouIds = Prefs.GetString(PrefName.ApptConfirmExcludeEThankYou).Split(',').ToList().Select(x => PIn.Long(x)).ToList();
-				excludeArrivalSendIds = Prefs.GetString(PrefName.ApptConfirmExcludeArrivalSend).Split(',').ToList().Select(x => PIn.Long(x)).ToList();
-				excludeArrivelResponseIds = Prefs.GetString(PrefName.ApptConfirmExcludeArrivalResponse).Split(',').ToList().Select(x => PIn.Long(x)).ToList();
+				excludeSendIds = Preferences.GetString(PreferenceName.ApptConfirmExcludeESend).Split(',').ToList().Select(x => PIn.Long(x)).ToList();
+				excludeConfirmIds = Preferences.GetString(PreferenceName.ApptConfirmExcludeEConfirm).Split(',').ToList().Select(x => PIn.Long(x)).ToList();
+				excludeReminderIds = Preferences.GetString(PreferenceName.ApptConfirmExcludeERemind).Split(',').ToList().Select(x => PIn.Long(x)).ToList();
+				excludeThankYouIds = Preferences.GetString(PreferenceName.ApptConfirmExcludeEThankYou).Split(',').ToList().Select(x => PIn.Long(x)).ToList();
+				excludeArrivalSendIds = Preferences.GetString(PreferenceName.ApptConfirmExcludeArrivalSend).Split(',').ToList().Select(x => PIn.Long(x)).ToList();
+				excludeArrivelResponseIds = Preferences.GetString(PreferenceName.ApptConfirmExcludeArrivalResponse).Split(',').ToList().Select(x => PIn.Long(x)).ToList();
 
 				// 0 will get automatically added to the list when this is the first of its kind.  We never want 0 inserted.
 				excludeSendIds.Remove(0);
@@ -93,9 +93,9 @@ namespace Imedisoft.Forms
 
 			// We never want to send confirmation or reminders to an appointment when it is in a triggered confirm status.
 			if (IsDefinitionInUse(definition.Id, 
-				PrefName.AppointmentTimeArrivedTrigger,
-				PrefName.AppointmentTimeDismissedTrigger,
-				PrefName.AppointmentTimeSeatedTrigger))
+				PreferenceName.AppointmentTimeArrivedTrigger,
+				PreferenceName.AppointmentTimeDismissedTrigger,
+				PreferenceName.AppointmentTimeSeatedTrigger))
 			{
 				checkExcludeConfirm.Enabled = false;
 				checkExcludeRemind.Enabled = false;
@@ -467,17 +467,17 @@ namespace Imedisoft.Forms
 			if (definition.Category == DefinitionCategory.ApptConfirmed)
 			{
 				//==================== EXCLUDE SEND ====================
-				UpdateExlusionsList(checkExcludeSend, excludeSendIds, definition, PrefName.ApptConfirmExcludeESend);
+				UpdateExlusionsList(checkExcludeSend, excludeSendIds, definition, PreferenceName.ApptConfirmExcludeESend);
 				//==================== EXCLUDE CONFIRM ====================
-				UpdateExlusionsList(checkExcludeConfirm, excludeConfirmIds, definition, PrefName.ApptConfirmExcludeEConfirm);
+				UpdateExlusionsList(checkExcludeConfirm, excludeConfirmIds, definition, PreferenceName.ApptConfirmExcludeEConfirm);
 				//==================== EXCLUDE REMIND ====================				
-				UpdateExlusionsList(checkExcludeRemind, excludeReminderIds, definition, PrefName.ApptConfirmExcludeERemind);
+				UpdateExlusionsList(checkExcludeRemind, excludeReminderIds, definition, PreferenceName.ApptConfirmExcludeERemind);
 				//==================== EXCLUDE THANKYOU ====================
-				UpdateExlusionsList(checkExcludeThanks, excludeThankYouIds, definition, PrefName.ApptConfirmExcludeEThankYou);
+				UpdateExlusionsList(checkExcludeThanks, excludeThankYouIds, definition, PreferenceName.ApptConfirmExcludeEThankYou);
 				//==================== EXCLUDE ARRIVAL SEND ====================
-				UpdateExlusionsList(checkExcludeArrivalSend, excludeArrivalSendIds, definition, PrefName.ApptConfirmExcludeArrivalSend);
+				UpdateExlusionsList(checkExcludeArrivalSend, excludeArrivalSendIds, definition, PreferenceName.ApptConfirmExcludeArrivalSend);
 				//==================== EXCLUDE ARRIVAL RESPONSE ====================
-				UpdateExlusionsList(checkExcludeArrivalResponse, excludeArrivelResponseIds, definition, PrefName.ApptConfirmExcludeArrivalResponse);
+				UpdateExlusionsList(checkExcludeArrivalResponse, excludeArrivelResponseIds, definition, PreferenceName.ApptConfirmExcludeArrivalResponse);
 				Signalods.SetInvalid(InvalidType.Prefs);
 			}
 
@@ -495,7 +495,7 @@ namespace Imedisoft.Forms
 				excludedIds.RemoveAll(x => x == definition.Id);
 			}
 
-			Prefs.Set(preferenceName, string.Join(",", excludedIds.Distinct().OrderBy(x => x)));
+			Preferences.Set(preferenceName, string.Join(",", excludedIds.Distinct().OrderBy(x => x)));
 		}
 	}
 }

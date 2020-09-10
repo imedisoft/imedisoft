@@ -390,7 +390,7 @@ namespace OpenDental
 			par.AddLineBreak();
 			par.AddFormattedText(text, font);
 			text = "Account Number" + " ";
-			if (Prefs.GetBool(PrefName.StatementAccountsUseChartNumber))
+			if (Preferences.GetBool(PreferenceName.StatementAccountsUseChartNumber))
 			{
 				text += PatGuar.ChartNumber;
 			}
@@ -422,7 +422,7 @@ namespace OpenDental
 			#endregion Tax Invoice Copy
 			//Practice Address--------------------------------------------------------------------------------------------------
 			#region Practice Address
-			if (Prefs.GetBool(PrefName.StatementShowReturnAddress))
+			if (Preferences.GetBool(PreferenceName.StatementShowReturnAddress))
 			{
 				font = MigraDocHelper.CreateFont(10);
 				frame = section.AddTextFrame();
@@ -443,13 +443,13 @@ namespace OpenDental
 					par.AddLineBreak();
 					if (CultureInfo.CurrentCulture.Name == "en-AU")
 					{//Australia
-						Provider defaultProv = Providers.GetById(Prefs.GetLong(PrefName.PracticeDefaultProv));
+						Provider defaultProv = Providers.GetById(Preferences.GetLong(PreferenceName.PracticeDefaultProv));
 						par.AddText("ABN: " + defaultProv.NationalProviderID);
 						par.AddLineBreak();
 					}
 					if (CultureInfo.CurrentCulture.Name == "en-NZ")
 					{//New Zealand
-						Provider defaultProv = Providers.GetById(Prefs.GetLong(PrefName.PracticeDefaultProv));
+						Provider defaultProv = Providers.GetById(Preferences.GetLong(PreferenceName.PracticeDefaultProv));
 						par.AddText("GST: " + defaultProv.SSN);
 						par.AddLineBreak();
 					}
@@ -485,41 +485,41 @@ namespace OpenDental
 				{
 					par = frame.AddParagraph();
 					par.Format.Font = font;
-					par.AddText(Prefs.GetString(PrefName.PracticeTitle));
+					par.AddText(Preferences.GetString(PreferenceName.PracticeTitle));
 					par.AddLineBreak();
 					if (CultureInfo.CurrentCulture.Name == "en-AU")
 					{//Australia
-						Provider defaultProv = Providers.GetById(Prefs.GetLong(PrefName.PracticeDefaultProv));
+						Provider defaultProv = Providers.GetById(Preferences.GetLong(PreferenceName.PracticeDefaultProv));
 						par.AddText("ABN: " + defaultProv.NationalProviderID);
 						par.AddLineBreak();
 					}
 					if (CultureInfo.CurrentCulture.Name == "en-NZ")
 					{//New Zealand
-						Provider defaultProv = Providers.GetById(Prefs.GetLong(PrefName.PracticeDefaultProv));
+						Provider defaultProv = Providers.GetById(Preferences.GetLong(PreferenceName.PracticeDefaultProv));
 						par.AddText("GST: " + defaultProv.SSN);
 						par.AddLineBreak();
 					}
-					par.AddText(Prefs.GetString(PrefName.PracticeAddress));
+					par.AddText(Preferences.GetString(PreferenceName.PracticeAddress));
 					par.AddLineBreak();
-					if (Prefs.GetString(PrefName.PracticeAddress2) != "")
+					if (Preferences.GetString(PreferenceName.PracticeAddress2) != "")
 					{
-						par.AddText(Prefs.GetString(PrefName.PracticeAddress2));
+						par.AddText(Preferences.GetString(PreferenceName.PracticeAddress2));
 						par.AddLineBreak();
 					}
 					if (CultureInfo.CurrentCulture.Name.EndsWith("CH"))
 					{//CH is for switzerland. eg de-CH
-						par.AddText(Prefs.GetString(PrefName.PracticeZip) + " " + Prefs.GetString(PrefName.PracticeCity));
+						par.AddText(Preferences.GetString(PreferenceName.PracticeZip) + " " + Preferences.GetString(PreferenceName.PracticeCity));
 					}
 					else if (CultureInfo.CurrentCulture.Name.EndsWith("SG"))
 					{//SG=Singapore
-						par.AddText(Prefs.GetString(PrefName.PracticeCity) + " " + Prefs.GetString(PrefName.PracticeZip));
+						par.AddText(Preferences.GetString(PreferenceName.PracticeCity) + " " + Preferences.GetString(PreferenceName.PracticeZip));
 					}
 					else
 					{
-						par.AddText(Prefs.GetString(PrefName.PracticeCity) + ", " + Prefs.GetString(PrefName.PracticeST) + " " + Prefs.GetString(PrefName.PracticeZip));
+						par.AddText(Preferences.GetString(PreferenceName.PracticeCity) + ", " + Preferences.GetString(PreferenceName.PracticeST) + " " + Preferences.GetString(PreferenceName.PracticeZip));
 					}
 					par.AddLineBreak();
-					text = Prefs.GetString(PrefName.PracticePhone);
+					text = Preferences.GetString(PreferenceName.PracticePhone);
 					if (text.Length == 10)
 					{
 						text = "(" + text.Substring(0, 3) + ")" + text.Substring(3, 3) + "-" + text.Substring(6);
@@ -567,7 +567,7 @@ namespace OpenDental
 				if (Stmt.StatementType == StmtType.LimitedStatement)
 				{
 					//statementTotal and patInsEstLimited calculated above and used here and in the Floating Balance region
-					if (Prefs.GetBool(PrefName.BalancesDontSubtractIns))
+					if (Preferences.GetBool(PreferenceName.BalancesDontSubtractIns))
 					{
 						row.Cells[0].AddParagraph().AddFormattedText(statementTotal.ToString("F"), font);
 					}
@@ -579,14 +579,14 @@ namespace OpenDental
 				else
 				{
 					double balTotal = PatGuar.BalTotal;
-					if (!Prefs.GetBool(PrefName.BalancesDontSubtractIns))
+					if (!Preferences.GetBool(PreferenceName.BalancesDontSubtractIns))
 					{//this is typical
 						balTotal -= PatGuar.InsEst;
 					}
 					for (int m = 0; m < tableMisc.Rows.Count; m++)
 					{
 						//only add the payplandue value for version 1. (version 2+ already account for it when calculating aging)
-						if (tableMisc.Rows[m]["descript"].ToString() == "payPlanDue" && PrefC.GetInt(PrefName.PayPlansVersion) == 1)
+						if (tableMisc.Rows[m]["descript"].ToString() == "payPlanDue" && PrefC.GetInt(PreferenceName.PayPlansVersion) == 1)
 						{
 							balTotal += PIn.Double(tableMisc.Rows[m]["value"].ToString());
 							//payPlanDue;//PatGuar.PayPlanDue;
@@ -621,13 +621,13 @@ namespace OpenDental
 					par = cell.AddParagraph();
 					par.AddFormattedText(text, font);
 				}
-				if (Prefs.GetLong(PrefName.StatementsCalcDueDate) == -1)
+				if (Preferences.GetLong(PreferenceName.StatementsCalcDueDate) == -1)
 				{
 					text = "Upon Receipt";
 				}
 				else
 				{
-					text = DateTime.Today.AddDays(Prefs.GetLong(PrefName.StatementsCalcDueDate)).ToShortDateString();
+					text = DateTime.Today.AddDays(Preferences.GetLong(PreferenceName.StatementsCalcDueDate)).ToShortDateString();
 				}
 				cell = row.Cells[1];
 				par = cell.AddParagraph();
@@ -902,7 +902,7 @@ namespace OpenDental
 				text = "Adjustments:";
 				par.AddFormattedText(text, font);
 				par.AddLineBreak();
-				if (PrefC.GetInt(PrefName.PayPlansVersion) == (int)PayPlanVersions.AgeCreditsAndDebits)
+				if (PrefC.GetInt(PreferenceName.PayPlansVersion) == (int)PayPlanVersions.AgeCreditsAndDebits)
 				{
 					text = "Pay Plan Charges:";
 					par.AddFormattedText(text, font);
@@ -912,7 +912,7 @@ namespace OpenDental
 				par.AddFormattedText(text, font);
 				par.AddLineBreak();
 			}
-			else if (Prefs.GetBool(PrefName.BalancesDontSubtractIns))
+			else if (Preferences.GetBool(PreferenceName.BalancesDontSubtractIns))
 			{
 				text = "Balance:";
 				par.AddFormattedText(text, fontBold);
@@ -926,7 +926,7 @@ namespace OpenDental
 			}
 			else
 			{//this is more common
-				if (Prefs.GetBool(PrefName.FuchsOptionsOn))
+				if (Preferences.GetBool(PreferenceName.FuchsOptionsOn))
 				{
 					text = "Balance:";
 					par.AddFormattedText(text, font);
@@ -997,7 +997,7 @@ namespace OpenDental
 				text = adjAmt.ToString("c");
 				par.AddFormattedText(text, font);
 				par.AddLineBreak();
-				if (PrefC.GetInt(PrefName.PayPlansVersion) == (int)PayPlanVersions.AgeCreditsAndDebits)
+				if (PrefC.GetInt(PreferenceName.PayPlansVersion) == (int)PayPlanVersions.AgeCreditsAndDebits)
 				{
 					text = payplanAmt.ToString("c");
 					par.AddFormattedText(text, font);
@@ -1013,7 +1013,7 @@ namespace OpenDental
 			else if (Stmt.StatementType == StmtType.LimitedStatement)
 			{
 				//statementTotal and patInsEstLimited calculated above and used here and in the Amount Enclosed region
-				if (Prefs.GetBool(PrefName.BalancesDontSubtractIns))
+				if (Preferences.GetBool(PreferenceName.BalancesDontSubtractIns))
 				{
 					par.AddFormattedText(statementTotal.ToString("c"), font);
 				}
@@ -1024,7 +1024,7 @@ namespace OpenDental
 					par.AddFormattedText((statementTotal - patInsEstLimited).ToString("c"), fontBold);
 				}
 			}
-			else if (Prefs.GetBool(PrefName.BalancesDontSubtractIns))
+			else if (Preferences.GetBool(PreferenceName.BalancesDontSubtractIns))
 			{
 				if (Stmt.SinglePatient)
 				{
@@ -1433,20 +1433,20 @@ namespace OpenDental
 				frame.Width = Unit.FromInch(8.3);
 				frame.Height = 300;
 				//RectangleF=new RectangleF(0,0,
-				MigraDocHelper.DrawString(frame, Prefs.GetString(PrefName.BankAddress), swfont, 30, 30);
-				MigraDocHelper.DrawString(frame, Prefs.GetString(PrefName.BankAddress), swfont, 246, 30);
+				MigraDocHelper.DrawString(frame, Preferences.GetString(PreferenceName.BankAddress), swfont, 30, 30);
+				MigraDocHelper.DrawString(frame, Preferences.GetString(PreferenceName.BankAddress), swfont, 246, 30);
 				//Office Name and Address----------------------------------------------
-				text = Prefs.GetString(PrefName.PracticeTitle) + "\r\n"
-					+ Prefs.GetString(PrefName.PracticeAddress) + "\r\n";
-				if (Prefs.GetString(PrefName.PracticeAddress2) != "")
+				text = Preferences.GetString(PreferenceName.PracticeTitle) + "\r\n"
+					+ Preferences.GetString(PreferenceName.PracticeAddress) + "\r\n";
+				if (Preferences.GetString(PreferenceName.PracticeAddress2) != "")
 				{
-					text += Prefs.GetString(PrefName.PracticeAddress2) + "\r\n";
+					text += Preferences.GetString(PreferenceName.PracticeAddress2) + "\r\n";
 				}
-				text += Prefs.GetString(PrefName.PracticeZip) + " " + Prefs.GetString(PrefName.PracticeCity);
+				text += Preferences.GetString(PreferenceName.PracticeZip) + " " + Preferences.GetString(PreferenceName.PracticeCity);
 				MigraDocHelper.DrawString(frame, text, swfont, 30, 89);
 				MigraDocHelper.DrawString(frame, text, swfont, 246, 89);
 				//Bank account number--------------------------------------------------
-				string origBankNum = Prefs.GetString(PrefName.PracticeBankNumber);//must be exactly 9 digits. 2+6+1.
+				string origBankNum = Preferences.GetString(PreferenceName.PracticeBankNumber);//must be exactly 9 digits. 2+6+1.
 																				  //the 6 digit portion might have 2 leading 0's which would not go into the dashed bank num.
 				string dashedBankNum = "?";
 				//examples: 01-200027-2
@@ -1488,7 +1488,7 @@ namespace OpenDental
 																		//First 6 numbers are what we are calling the BankRouting number.
 																		//Next 20 numbers represent the invoice #.
 																		//27th number is the checksum
-				string referenceNum = Prefs.GetString(PrefName.BankRouting);//6 digits
+				string referenceNum = Preferences.GetString(PreferenceName.BankRouting);//6 digits
 				if (referenceNum.Length != 6)
 				{
 					referenceNum = "000000";

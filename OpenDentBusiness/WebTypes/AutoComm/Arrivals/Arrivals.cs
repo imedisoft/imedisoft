@@ -1,4 +1,5 @@
 ﻿using CodeBase;
+using Imedisoft.Data;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -33,10 +34,10 @@ namespace OpenDentBusiness.AutoComm
 				clinicIds = new List<long> { 0 };
 			}
 
-			List<long> listSignedUpClinics = clinicIds.Where(x => ClinicPrefs.GetBool(x, PrefName.ApptConfirmAutoSignedUp)).ToList();
+			List<long> listSignedUpClinics = clinicIds.Where(x => ClinicPrefs.GetBool(x, PreferenceName.ApptConfirmAutoSignedUp)).ToList();
 
 			// Only do the work of looking up ApptReminderSents and ApptReminderRules if the appropriate eServices are enabled and in use.
-			if (!appointmentIds.IsNullOrEmpty() && listSignedUpClinics.Any() && Prefs.GetBool(PrefName.ApptArrivalAutoEnabled))
+			if (!appointmentIds.IsNullOrEmpty() && listSignedUpClinics.Any() && Preferences.GetBool(PreferenceName.ApptArrivalAutoEnabled))
 			{
 				arrivals.ListApptReminderRules = GetApptReminderRules(listSignedUpClinics);
 				if (arrivals.ListApptReminderRules.Any())
@@ -134,7 +135,7 @@ namespace OpenDentBusiness.AutoComm
 
 			List<Appointment> listApptsAutomationEnabled = appointmentsToday
 				//Check if (given clinic exists and has automation enabled) or (HQ "clinic" and Arrivals are enabled)
-				.Where(x => Clinics.GetById(x.ClinicNum)?.IsConfirmEnabled ?? (x.ClinicNum == 0 && Prefs.GetBool(PrefName.ApptArrivalAutoEnabled)))
+				.Where(x => Clinics.GetById(x.ClinicNum)?.IsConfirmEnabled ?? (x.ClinicNum == 0 && Preferences.GetBool(PreferenceName.ApptArrivalAutoEnabled)))
 				.ToList();
 
 			if (listApptsAutomationEnabled.Count == 0)
@@ -168,7 +169,7 @@ namespace OpenDentBusiness.AutoComm
 		/// </summary>
 		private void MarkArrived(IEnumerable<Appointment> listAppts)
 		{
-			long arrivedTrigger = Prefs.GetLong(PrefName.AppointmentTimeArrivedTrigger);
+			long arrivedTrigger = Preferences.GetLong(PreferenceName.AppointmentTimeArrivedTrigger);
 
 			foreach (Appointment appt in listAppts.Where(x => x.Confirmed != arrivedTrigger))
 			{
@@ -258,7 +259,7 @@ namespace OpenDentBusiness.AutoComm
 		private List<ApptResponse> GetApptResponses(List<Appointment> listAppts)
 		{
 			List<ApptResponse> listResponses = new List<ApptResponse>();
-			List<long> listConfirmStatusToSkip = Prefs.GetString(PrefName.ApptConfirmExcludeArrivalResponse)
+			List<long> listConfirmStatusToSkip = Preferences.GetString(PreferenceName.ApptConfirmExcludeArrivalResponse)
 				.Split(",", StringSplitOptions.RemoveEmptyEntries)
 				.Select(x => PIn.Long(x))
 				.ToList();

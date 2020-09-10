@@ -356,7 +356,7 @@ namespace OpenDentBusiness
 		public static Tuple<UserWeb, string, string> GetNewPatientPortalCredentials(Patient pat, string passwordOverride = "")
 		{
 			//No need to check RemotingRole; no call to db.
-			if (string.IsNullOrEmpty(Prefs.GetString(PrefName.PatientPortalURL)))
+			if (string.IsNullOrEmpty(Preferences.GetString(PreferenceName.PatientPortalURL)))
 			{
 				return null;//Haven't set up patient portal yet.
 			}

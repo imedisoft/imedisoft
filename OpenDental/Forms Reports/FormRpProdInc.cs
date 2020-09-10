@@ -516,8 +516,8 @@ namespace OpenDental {
 				checkClinicBreakdown.Visible=false;
 			}
 			else {
-				checkClinicInfo.Checked=Prefs.GetBool(PrefName.ReportPandIhasClinicInfo);
-				checkClinicBreakdown.Checked=Prefs.GetBool(PrefName.ReportPandIhasClinicBreakdown);
+				checkClinicInfo.Checked=Preferences.GetBool(PreferenceName.ReportPandIhasClinicInfo);
+				checkClinicBreakdown.Checked=Preferences.GetBool(PreferenceName.ReportPandIhasClinicBreakdown);
 				_listClinics=Clinics.GetByUser(Security.CurrentUser);
 				if(!Security.CurrentUser.ClinicIsRestricted) {
 					listClin.Items.Add("Unassigned");
@@ -547,7 +547,7 @@ namespace OpenDental {
 					break;
 			}
 			SetDates();
-			switch(PrefC.GetInt(PrefName.ReportsPPOwriteoffDefaultToProcDate)) {
+			switch(PrefC.GetInt(PreferenceName.ReportsPPOwriteoffDefaultToProcDate)) {
 				case 0: radioWriteoffPay.Checked=true; break;
 				case 1: radioWriteoffProc.Checked=true; break;
 				case 2: radioWriteoffBoth.Checked=true; break;
@@ -842,7 +842,7 @@ namespace OpenDental {
 			}
 			report.ReportName="DailyP&I";
 			report.AddTitle("Title","Daily Production and Income");
-			report.AddSubTitle("PracName",Prefs.GetString(PrefName.PracticeTitle));
+			report.AddSubTitle("PracName",Preferences.GetString(PreferenceName.PracticeTitle));
 			string dateRangeStr=dateFrom.ToShortDateString()+" - "+dateTo.ToShortDateString();
 			if(dateFrom.Date==dateTo.Date) {
 				dateRangeStr=dateFrom.ToShortDateString();//Do not show a date range for the same day...
@@ -1135,7 +1135,7 @@ namespace OpenDental {
 			}
 			report.ReportName="MonthlyP&I";
 			report.AddTitle("Title","Monthly Production and Income");
-			report.AddSubTitle("PracName",Prefs.GetString(PrefName.PracticeTitle));
+			report.AddSubTitle("PracName",Preferences.GetString(PreferenceName.PracticeTitle));
 			report.AddSubTitle("Date",dateFrom.ToShortDateString()+" - "+dateTo.ToShortDateString());
 			if(checkAllProv.Checked) {
 				report.AddSubTitle("Providers","All Providers");
@@ -1346,7 +1346,7 @@ namespace OpenDental {
 			}
 			report.ReportName="AnnualP&I";
 			report.AddTitle("Title","Annual Production and Income");
-			report.AddSubTitle("PracName",Prefs.GetString(PrefName.PracticeTitle));
+			report.AddSubTitle("PracName",Preferences.GetString(PreferenceName.PracticeTitle));
 			report.AddSubTitle("Date",dateFrom.ToShortDateString()+" - "+dateTo.ToShortDateString());
 			if(checkAllProv.Checked) {
 				report.AddSubTitle("Providers","All Providers");
@@ -1535,7 +1535,7 @@ namespace OpenDental {
 				,checkUnearned.Checked,GetWriteoffType());
 			report.ReportName="Provider P&I";
 			report.AddTitle("Title","Provider Production and Income");
-			report.AddSubTitle("PracName",Prefs.GetString(PrefName.PracticeTitle));
+			report.AddSubTitle("PracName",Preferences.GetString(PreferenceName.PracticeTitle));
 			report.AddSubTitle("Date",dateFrom.ToShortDateString()+" - "+dateTo.ToShortDateString());
 			if(checkAllProv.Checked) {
 				report.AddSubTitle("Providers","All Providers");

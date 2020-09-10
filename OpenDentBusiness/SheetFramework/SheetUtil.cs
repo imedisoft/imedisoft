@@ -76,7 +76,7 @@ namespace OpenDentBusiness{
 							//This logic mimics SheetPrinting.drawFieldGrid(...)
 							SheetParameter param=SheetParameter.GetParamByName(sheet.Parameters,"IsSingleClaimPaid");
 							bool isSingleClaim=(param.ParamValue==null)?false:true;//param is only set when true
-							bool isOneClaimPerPage=Prefs.GetBool(PrefName.EraPrintOneClaimPerPage);
+							bool isOneClaimPerPage=Preferences.GetBool(PreferenceName.EraPrintOneClaimPerPage);
 							X835 era=(X835)SheetParameter.GetParamByName(sheet.Parameters,"ERA").ParamValue;//Required field.
 							DataTable tableClaimsPaid=SheetDataTableUtil.GetDataTableForGridType(sheet,dataSet,field.FieldName,stmt,medLab);
 							DataTable tableRemarks=SheetDataTableUtil.GetDataTableForGridType(sheet,dataSet,"EraClaimsPaidProcRemarks",stmt,medLab);

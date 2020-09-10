@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -162,7 +163,7 @@ namespace OpenDental {
 			if(Rule.TypeCur==ApptReminderType.ScheduleThankYou) {
 				//ThankYou templates can only use the [AddToCalendar] tag when Confirmations are enabled.
 				string addToCalTag=ApptThankYouSents.ADD_TO_CALENDAR.ToLower();
-				if(!Prefs.GetBool(PrefName.ApptConfirmAutoSignedUp)) {
+				if(!Preferences.GetBool(PreferenceName.ApptConfirmAutoSignedUp)) {
 					if(textSMSAggPerAppt.Text.ToLower().Contains(addToCalTag)) {
 						errors.Add("Automated Thank-You texts cannot contain "+ApptThankYouSents.ADD_TO_CALENDAR
 							+" when not signed up for eConfirmations.");
@@ -182,7 +183,7 @@ namespace OpenDental {
 						+". Use Per Appointment instead.");
 				}
 			}
-			if(Prefs.GetBool(PrefName.EmailDisclaimerIsOn) && !_templateEmailAggShared.ToLower().Contains("[emaildisclaimer]")) {
+			if(Preferences.GetBool(PreferenceName.EmailDisclaimerIsOn) && !_templateEmailAggShared.ToLower().Contains("[emaildisclaimer]")) {
 				errors.Add("Email must contain the \"[EmailDisclaimer]\" tag.");
 			}
 			return errors;

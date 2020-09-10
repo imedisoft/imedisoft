@@ -15,12 +15,15 @@ using System.Resources;
 using System.Globalization;
 using System.Text;
 using OpenDental.Thinfinity;
+using Imedisoft.Data;
 
-namespace OpenDental{
+namespace OpenDental
+{
 	/// <summary>
 	/// Summary description for FormBasicTemplate.
 	/// </summary>
-	public class FormClaimForms : ODForm {
+	public class FormClaimForms : ODForm
+	{
 		private OpenDental.UI.Button butAdd;
 		private OpenDental.UI.Button butClose;
 		private OpenDental.UI.Button butDuplicate;
@@ -50,22 +53,22 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			
+
 		}
 
 		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
-		protected override void Dispose( bool disposing )
+		protected override void Dispose(bool disposing)
 		{
-			if( disposing )
+			if (disposing)
 			{
-				if(components != null)
+				if (components != null)
 				{
 					components.Dispose();
 				}
 			}
-			base.Dispose( disposing );
+			base.Dispose(disposing);
 		}
 
 		#region Windows Form Designer generated code
@@ -135,7 +138,7 @@ namespace OpenDental{
 			this.label2.Size = new System.Drawing.Size(203, 47);
 			this.label2.TabIndex = 14;
 			this.label2.Text = "Reassign all insurance plans that use the selected claim form at the left to the " +
-    "claim form below";
+	"claim form below";
 			// 
 			// groupBox1
 			// 
@@ -204,12 +207,12 @@ namespace OpenDental{
 			this.label1.Size = new System.Drawing.Size(263, 28);
 			this.label1.TabIndex = 19;
 			this.label1.Text = "Internal forms cannot be edited or printed. \r\nCopy the form over to a custom form" +
-    " first.";
+	" first.";
 			// 
 			// gridCustom
 			// 
-			this.gridCustom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+			this.gridCustom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)));
 			this.gridCustom.Location = new System.Drawing.Point(274, 38);
 			this.gridCustom.Name = "gridCustom";
 			this.gridCustom.Size = new System.Drawing.Size(260, 372);
@@ -220,8 +223,8 @@ namespace OpenDental{
 			// 
 			// gridInternal
 			// 
-			this.gridInternal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+			this.gridInternal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)));
 			this.gridInternal.Location = new System.Drawing.Point(8, 38);
 			this.gridInternal.Name = "gridInternal";
 			this.gridInternal.Size = new System.Drawing.Size(186, 372);
@@ -290,17 +293,20 @@ namespace OpenDental{
 		}
 		#endregion
 
-		private void FormClaimForms_Load(object sender, System.EventArgs e) {
+		private void FormClaimForms_Load(object sender, System.EventArgs e)
+		{
 			FillGridInternal();
 			FillGridCustom();
 		}
 
-		private void FillGridInternal() {
+		private void FillGridInternal()
+		{
 			gridInternal.BeginUpdate();
 			gridInternal.Columns.Clear();
-			gridInternal.Columns.Add(new GridColumn("ClaimForm",150));
+			gridInternal.Columns.Add(new GridColumn("ClaimForm", 150));
 			gridInternal.Rows.Clear();
-			foreach(ClaimForm internalForm in ClaimForms.GetInternalClaims()) {
+			foreach (ClaimForm internalForm in ClaimForms.GetInternalClaims())
+			{
 				GridRow row = new GridRow();
 				row.Cells.Add(internalForm.Description);
 				row.Tag = internalForm;
@@ -310,231 +316,252 @@ namespace OpenDental{
 		}
 
 		///<summary></summary>
-		private void FillGridCustom() {
+		private void FillGridCustom()
+		{
 			ClaimFormItems.RefreshCache();
 			ClaimForms.RefreshCache();
 			comboReassign.Items.Clear();
 			gridCustom.BeginUpdate();
 			gridCustom.Columns.Clear();
-			gridCustom.Columns.Add(new GridColumn("ClaimForm",145));
-			gridCustom.Columns.Add(new GridColumn("Default",50,HorizontalAlignment.Center));
-			gridCustom.Columns.Add(new GridColumn("Hidden",0,HorizontalAlignment.Center));
+			gridCustom.Columns.Add(new GridColumn("ClaimForm", 145));
+			gridCustom.Columns.Add(new GridColumn("Default", 50, HorizontalAlignment.Center));
+			gridCustom.Columns.Add(new GridColumn("Hidden", 0, HorizontalAlignment.Center));
 			gridCustom.Rows.Clear();
 			string description;
-			foreach(ClaimForm claimFormCur in ClaimForms.GetDeepCopy()) {
-				description=claimFormCur.Description;
+			foreach (ClaimForm claimFormCur in ClaimForms.GetDeepCopy())
+			{
+				description = claimFormCur.Description;
 				GridRow row = new GridRow();
 				row.Cells.Add(claimFormCur.Description);
-				if(claimFormCur.ClaimFormNum==Prefs.GetLong(PrefName.DefaultClaimForm)) {
-					description+=" "+"(default)";
+				if (claimFormCur.ClaimFormNum == Preferences.GetLong(PreferenceName.DefaultClaimForm))
+				{
+					description += " " + "(default)";
 					row.Cells.Add("X");
 				}
-				else {
+				else
+				{
 					row.Cells.Add("");
 				}
-				if(claimFormCur.IsHidden) {
-					description+=" "+"(hidden)";
+				if (claimFormCur.IsHidden)
+				{
+					description += " " + "(hidden)";
 					row.Cells.Add("X");
 				}
-				else {
+				else
+				{
 					row.Cells.Add("");
 				}
 				row.Tag = claimFormCur;
 				gridCustom.Rows.Add(row);
-				comboReassign.Items.Add(new ODBoxItem<ClaimForm>(description,claimFormCur));
+				comboReassign.Items.Add(new ODBoxItem<ClaimForm>(description, claimFormCur));
 			}
 			gridCustom.EndUpdate();
 		}
 
 		///<summary>Copy an internal form over to a new custom form.</summary>
-		private void butCopy_Click(object sender,EventArgs e) {
-			if(gridInternal.GetSelectedIndex()==-1) {
+		private void butCopy_Click(object sender, EventArgs e)
+		{
+			if (gridInternal.GetSelectedIndex() == -1)
+			{
 				MessageBox.Show("Please select an item from the internal grid to copy over to the custom grid.");
 				return;
 			}
 			//just insert it into the db.
 			ClaimForm claimFormInternal = (ClaimForm)gridInternal.Rows[gridInternal.GetSelectedIndex()].Tag;
-			long claimFormNum = ClaimForms.Insert(claimFormInternal,true);
+			long claimFormNum = ClaimForms.Insert(claimFormInternal, true);
 			FillGridCustom();
 		}
 
-		private void gridInternal_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			if(e.Row==-1) {
+		private void gridInternal_CellDoubleClick(object sender, ODGridClickEventArgs e)
+		{
+			if (e.Row == -1)
+			{
 				return;
 			}
 			FormClaimFormEdit FormCFE = new FormClaimFormEdit((ClaimForm)gridInternal.Rows[e.Row].Tag);
 			FormCFE.ShowDialog();
-			if(FormCFE.DialogResult==DialogResult.OK) {
-				changed=true;
+			if (FormCFE.DialogResult == DialogResult.OK)
+			{
+				changed = true;
 			}
 		}
 
-		private void gridCustom_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			if(e.Row==-1) {
+		private void gridCustom_CellDoubleClick(object sender, ODGridClickEventArgs e)
+		{
+			if (e.Row == -1)
+			{
 				return;
 			}
 			FormClaimFormEdit FormCFE = new FormClaimFormEdit((ClaimForm)gridCustom.Rows[e.Row].Tag);
 			FormCFE.ShowDialog();
-			if(FormCFE.DialogResult!=DialogResult.OK) {
+			if (FormCFE.DialogResult != DialogResult.OK)
+			{
 				return;
 			}
-			changed=true;
+			changed = true;
 			FillGridCustom();
 		}
 
 		///<summary>Add a custom claim form.</summary>
-		private void butAdd_Click(object sender, System.EventArgs e) {
-			ClaimForm ClaimFormCur=new ClaimForm();
-			ClaimForms.Insert(ClaimFormCur,false);
-			ClaimFormCur.IsNew=true;
-			FormClaimFormEdit FormCFE=new FormClaimFormEdit(ClaimFormCur);
+		private void butAdd_Click(object sender, System.EventArgs e)
+		{
+			ClaimForm ClaimFormCur = new ClaimForm();
+			ClaimForms.Insert(ClaimFormCur, false);
+			ClaimFormCur.IsNew = true;
+			FormClaimFormEdit FormCFE = new FormClaimFormEdit(ClaimFormCur);
 			FormCFE.ShowDialog();
-			if(FormCFE.DialogResult!=DialogResult.OK){
+			if (FormCFE.DialogResult != DialogResult.OK)
+			{
 				return;
 			}
-			changed=true;
+			changed = true;
 			FillGridCustom();
 		}
 
 		///<summary>Delete an unusued custom claim form.</summary>
-		private void butDelete_Click(object sender, System.EventArgs e) {
-			if(gridCustom.GetSelectedIndex()==-1){
+		private void butDelete_Click(object sender, System.EventArgs e)
+		{
+			if (gridCustom.GetSelectedIndex() == -1)
+			{
 				MessageBox.Show("Please select a Custom Claim Form first.");
 				return;
 			}
 			ClaimForm claimFormCur = (ClaimForm)gridCustom.Rows[gridCustom.GetSelectedIndex()].Tag;
-			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete custom claim form?")) {
+			if (!MsgBox.Show(MsgBoxButtons.OKCancel, "Delete custom claim form?"))
+			{
 				return;
 			}
-			if(!ClaimForms.Delete(claimFormCur)){
+			if (!ClaimForms.Delete(claimFormCur))
+			{
 				MessageBox.Show("Claim form is already in use.");
 				return;
 			}
-			changed=true;
+			changed = true;
 			FillGridCustom();
 		}
 
 		///<summary>Duplicate a custom claim form.</summary>
-		private void butDuplicate_Click(object sender, System.EventArgs e) {
-			if(gridCustom.GetSelectedIndex()==-1){
+		private void butDuplicate_Click(object sender, System.EventArgs e)
+		{
+			if (gridCustom.GetSelectedIndex() == -1)
+			{
 				MessageBox.Show("Please select a Custom Claim Form first.");
 				return;
 			}
 			ClaimForm claimFormCur = (ClaimForm)gridCustom.Rows[gridCustom.GetSelectedIndex()].Tag;
-			long oldClaimFormNum=claimFormCur.ClaimFormNum;
+			long oldClaimFormNum = claimFormCur.ClaimFormNum;
 			//claimFormCur.UniqueID="";//designates it as a user added claimform
-			ClaimForms.Insert(claimFormCur,true);//this duplicates the original claimform, but no items.
-			changed=true;
+			ClaimForms.Insert(claimFormCur, true);//this duplicates the original claimform, but no items.
+			changed = true;
 			FillGridCustom();
 		}
 
 		///<summary>Export a custom claim form. Even though we could probably allow this for internal claim forms as well, 
 		///users can always copy over an internal claim form to a custom form and then export it.</summary>
-		private void butExport_Click(object sender, System.EventArgs e) {
-			if(gridCustom.GetSelectedIndex()==-1){
+		private void butExport_Click(object sender, System.EventArgs e)
+		{
+			if (gridCustom.GetSelectedIndex() == -1)
+			{
 				MessageBox.Show("Please select a Custom Claim Form first.");
 				return;
 			}
 			ClaimForm claimFormCur = (ClaimForm)gridCustom.Rows[gridCustom.GetSelectedIndex()].Tag;
-			string filename = "ClaimForm"+claimFormCur.Description+".xml";
-			try {
-				using(SaveFileDialog saveDlg=new SaveFileDialog()) {
-					saveDlg.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
-					saveDlg.FileName=filename;
-					if(saveDlg.ShowDialog()!=DialogResult.OK) {
+			string filename = "ClaimForm" + claimFormCur.Description + ".xml";
+			try
+			{
+				using (SaveFileDialog saveDlg = new SaveFileDialog())
+				{
+					saveDlg.InitialDirectory = Preferences.GetString(PreferenceName.ExportPath);
+					saveDlg.FileName = filename;
+					if (saveDlg.ShowDialog() != DialogResult.OK)
+					{
 						return;
 					}
-					XmlSerializer serializer=new XmlSerializer(typeof(ClaimForm));
-					using(TextWriter writer=new StreamWriter(saveDlg.FileName)) {
-						serializer.Serialize(writer,claimFormCur);
+					XmlSerializer serializer = new XmlSerializer(typeof(ClaimForm));
+					using (TextWriter writer = new StreamWriter(saveDlg.FileName))
+					{
+						serializer.Serialize(writer, claimFormCur);
 					}
 				}
 				MessageBox.Show("Exported");
 			}
-			catch {
+			catch
+			{
 				MessageBox.Show("Export failed.  This could be due to lack of permissions in the designated folder.");
 			}
 		}
 
 		///<summary>Import an XML file into the custom claim forms list.</summary>
-		private void butImport_Click(object sender, System.EventArgs e) {
-			OpenFileDialog openDlg=new OpenFileDialog();
-			openDlg.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
+		private void butImport_Click(object sender, System.EventArgs e)
+		{
+			OpenFileDialog openDlg = new OpenFileDialog();
+			openDlg.InitialDirectory = Preferences.GetString(PreferenceName.ExportPath);
 			ClaimForm claimForm;
-			if(openDlg.ShowDialog()!=DialogResult.OK){
+			if (openDlg.ShowDialog() != DialogResult.OK)
+			{
 				return;
 			}
-			try{
-				claimForm=ClaimForms.DeserializeClaimForm(openDlg.FileName,"");
+			try
+			{
+				claimForm = ClaimForms.DeserializeClaimForm(openDlg.FileName, "");
 			}
-			catch(ApplicationException ex){
+			catch (ApplicationException ex)
+			{
 				MessageBox.Show(ex.Message);
 				return;
 			}
-			ClaimForms.Insert(claimForm,true);//now we have a primary key.
+			ClaimForms.Insert(claimForm, true);//now we have a primary key.
 			MessageBox.Show("Imported");
-			changed=true;
+			changed = true;
 			FillGridCustom();
-		}		
+		}
 
 		///<summary>Sets a custom claim form as the default.  We do not currently allow setting internal claim forms as default - users need to copy it over first.</summary>
-		private void butDefault_Click(object sender,EventArgs e) {
-			if(gridCustom.GetSelectedIndex()==-1){
+		private void butDefault_Click(object sender, EventArgs e)
+		{
+			if (gridCustom.GetSelectedIndex() == -1)
+			{
 				MessageBox.Show("Please select a claimform from the list first.");
 				return;
 			}
 			ClaimForm claimFormCur = (ClaimForm)gridCustom.Rows[gridCustom.GetSelectedIndex()].Tag;
-			if(Prefs.Set(PrefName.DefaultClaimForm,claimFormCur.ClaimFormNum)){
+			if (Preferences.Set(PreferenceName.DefaultClaimForm, claimFormCur.ClaimFormNum))
+			{
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			FillGridCustom();
 		}
 
 		///<summary>Reassigns all current insurance plans using the selected claimform to another claimform.</summary>
-		private void butReassign_Click(object sender,EventArgs e) {
-			if(gridCustom.GetSelectedIndex()==-1) {
+		private void butReassign_Click(object sender, EventArgs e)
+		{
+			if (gridCustom.GetSelectedIndex() == -1)
+			{
 				MessageBox.Show("Please select a claimform from the list at the left first.");
 				return;
 			}
-			if(comboReassign.SelectedIndex==-1) {
+			if (comboReassign.SelectedIndex == -1)
+			{
 				MessageBox.Show("Please select a claimform from the list below.");
 				return;
 			}
 			ClaimForm claimFormCur = (ClaimForm)gridCustom.Rows[gridCustom.GetSelectedIndex()].Tag;
 			ClaimForm claimFormNew = ((ODBoxItem<ClaimForm>)comboReassign.SelectedItem).Tag;
-			long result=ClaimForms.Reassign(claimFormCur.ClaimFormNum,claimFormNew.ClaimFormNum);
-			MessageBox.Show(result.ToString()+" plans changed.");
+			long result = ClaimForms.Reassign(claimFormCur.ClaimFormNum, claimFormNew.ClaimFormNum);
+			MessageBox.Show(result.ToString() + " plans changed.");
 		}
 
-		private void butClose_Click(object sender, System.EventArgs e) {
+		private void butClose_Click(object sender, System.EventArgs e)
+		{
 			Close();
 		}
 
-		private void FormClaimForms_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
-			if(changed){
+		private void FormClaimForms_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			if (changed)
+			{
 				DataValid.SetInvalid(InvalidType.ClaimForms);
 			}
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

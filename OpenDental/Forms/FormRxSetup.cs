@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using Imedisoft.Data.Cache;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -12,7 +13,7 @@ namespace Imedisoft.Forms
 
 		private void FormRxSetup_Load(object sender, EventArgs e)
 		{
-			procCodeRequiredCheckBox.Checked = Prefs.GetBool(PrefName.RxHasProc);
+			procCodeRequiredCheckBox.Checked = Preferences.GetBool(PreferenceName.RxHasProc);
 
 			FillGrid();
 		}
@@ -50,7 +51,7 @@ namespace Imedisoft.Forms
 
 		private void ProcCodeRequiredCheckBox_Click(object sender, EventArgs e)
 		{
-			if (Prefs.Set(PrefName.RxHasProc, procCodeRequiredCheckBox.Checked))
+			if (Preferences.Set(PreferenceName.RxHasProc, procCodeRequiredCheckBox.Checked))
 			{
 				CacheManager.RefreshGlobal(nameof(InvalidType.Prefs));
 			}

@@ -53,7 +53,7 @@ namespace OpenDental {
 			GridRow row;
 			for(int i=0;i<table.Rows.Count;i++) {
 				row=new GridRow();
-				if(!Prefs.GetBool(PrefName.EasyHideDentalSchools)) {
+				if(!Preferences.GetBool(PreferenceName.EasyHideDentalSchools)) {
 					row.Cells.Add(table.Rows[i]["ProvNum"].ToString());
 				}
 				row.Cells.Add(table.Rows[i]["LName"].ToString());

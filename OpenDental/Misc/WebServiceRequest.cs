@@ -1,4 +1,5 @@
 ﻿using System.Xml;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace OpenDental
@@ -20,7 +21,7 @@ namespace OpenDental
 			if (node != null)
 			{
 				// Disabled message. Update the preference and return the error.
-				if (Prefs.Set(PrefName.RegistrationKeyIsDisabled, true))
+				if (Preferences.Set(PreferenceName.RegistrationKeyIsDisabled, true))
 				{
 					DataValid.SetInvalid(InvalidType.Prefs);
 				}
@@ -28,7 +29,7 @@ namespace OpenDental
 			}
 
 			// No error, and no disabled message
-			if (Prefs.Set(PrefName.RegistrationKeyIsDisabled, false))
+			if (Preferences.Set(PreferenceName.RegistrationKeyIsDisabled, false))
 			{
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}

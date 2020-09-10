@@ -98,7 +98,7 @@ namespace OpenDental
 		/// <summary>
 		/// Returns true if PrefName.BrokenApptProcedure is greater than 0.
 		/// </summary>
-		public static bool HasBrokenApptProcs() => Prefs.GetLong(PrefName.BrokenApptProcedure) > 0;
+		public static bool HasBrokenApptProcs() => Preferences.GetLong(PreferenceName.BrokenApptProcedure) > 0;
 
 		/// <summary>
 		/// Sets given appt.AptStatus to broken.
@@ -165,7 +165,7 @@ namespace OpenDental
 			double brokenProcAmount = 0;
 			Procedure brokenProcedure = new Procedure();
 			bool wasBrokenProcDeleted = false;
-			if (Prefs.GetBool(PrefName.PrePayAllowedForTpProcs))
+			if (Preferences.GetBool(PreferenceName.PrePayAllowedForTpProcs))
 			{
 				listProcedures = Procedures.GetProcsForSingle(appt.AptNum, false);
 				if (listProcedures.Count > 0)
@@ -194,7 +194,7 @@ namespace OpenDental
 				brokenProcedure.ClinicNum = appt.ClinicNum;
 				brokenProcedure.UserNum = Security.CurrentUser.Id;
 				brokenProcedure.Note = "Appt BROKEN for" + " " + appt.ProcDescript + "  " + appt.AptDateTime.ToString();
-				brokenProcedure.PlaceService = Prefs.GetString(PrefName.DefaultProcedurePlaceService, PlaceOfService.Office);//Default proc place of service for the Practice is used. 
+				brokenProcedure.PlaceService = Preferences.GetString(PreferenceName.DefaultProcedurePlaceService, PlaceOfService.Office);//Default proc place of service for the Practice is used. 
 				List<InsSub> listInsSubs = InsSubs.RefreshForFam(Patients.GetFamily(pat.PatNum));
 				List<InsPlan> listInsPlans = InsPlans.RefreshForSubList(listInsSubs);
 				List<PatPlan> listPatPlans = PatPlans.Refresh(pat.PatNum);
@@ -222,7 +222,7 @@ namespace OpenDental
 					brokenProcedure.ProvNum);
 					brokenProcedure.ProcFee = Math.Max(provFee, procFee);
 				}
-				else if (listSplitsForApptProcs.Count > 0 && Prefs.GetBool(PrefName.TpPrePayIsNonRefundable) && procCode.ProcCode == "D9986")
+				else if (listSplitsForApptProcs.Count > 0 && Preferences.GetBool(PreferenceName.TpPrePayIsNonRefundable) && procCode.ProcCode == "D9986")
 				{
 					//if there are pre-payments, non-refundable pre-payments is turned on, and the broken appointment is a missed code then auto-fill 
 					//the window with the sum of the procs for the appointment. Transfer money below after broken procedure is confirmed by the user.
@@ -233,7 +233,7 @@ namespace OpenDental
 				{
 					brokenProcedure.ProcFee = procFee;
 				}
-				if (!Prefs.GetBool(PrefName.EasyHidePublicHealth))
+				if (!Preferences.GetBool(PreferenceName.EasyHidePublicHealth))
 				{
 					brokenProcedure.SiteNum = pat.SiteNum;
 				}
@@ -250,7 +250,7 @@ namespace OpenDental
 			}
 			#endregion
 			#region BrokenApptAdjustment
-			if (Prefs.GetBool(PrefName.BrokenApptAdjustment))
+			if (Preferences.GetBool(PreferenceName.BrokenApptAdjustment))
 			{
                 Adjustment AdjustmentCur = new Adjustment
                 {
@@ -259,7 +259,7 @@ namespace OpenDental
                     ProcedureDate = DateTime.Today,
                     ProviderId = appt.ProvNum,
                     PatientId = pat.PatNum,
-                    Type = Prefs.GetLong(PrefName.BrokenAppointmentAdjustmentType),
+                    Type = Preferences.GetLong(PreferenceName.BrokenAppointmentAdjustmentType),
                     ClinicId = appt.ClinicNum
                 };
                 FormAdjust FormA = new FormAdjust(pat, AdjustmentCur);
@@ -268,7 +268,7 @@ namespace OpenDental
 			}
 			#endregion
 			#region BrokenApptCommLog
-			if (Prefs.GetBool(PrefName.BrokenApptCommLog))
+			if (Preferences.GetBool(PreferenceName.BrokenApptCommLog))
 			{
                 Commlog commlogCur = new Commlog
                 {
@@ -549,7 +549,7 @@ namespace OpenDental
 																							   //See Appointments.GetApptTimePatternForNoProcs().
 
 			AptCur.Pattern = Appointments.CalculatePattern(pat, AptCur.ProvNum, AptCur.ProvHyg, listProcs);
-			AptCur.TimeLocked = Prefs.GetBool(PrefName.AppointmentTimeIsLocked);
+			AptCur.TimeLocked = Preferences.GetBool(PreferenceName.AppointmentTimeIsLocked);
 			Appointments.Insert(AptCur);
 
             PlannedAppt plannedAppt = new PlannedAppt
@@ -680,15 +680,15 @@ namespace OpenDental
 			if (MobileAppDevices.IsClinicSignedUpForEClipboard(clinicNum))
 			{
 				// If they have eClipboard and want to pop up the kiosk on check-in, show the kiosk manager.
-				if (ClinicPrefs.GetBool(clinicNum, PrefName.EClipboardPopupKioskOnCheckIn)
+				if (ClinicPrefs.GetBool(clinicNum, PreferenceName.EClipboardPopupKioskOnCheckIn)
 					&& newConfirmed != oldAppt.Confirmed
-					&& newConfirmed == Prefs.GetLong(PrefName.AppointmentTimeArrivedTrigger))
+					&& newConfirmed == Preferences.GetLong(PreferenceName.AppointmentTimeArrivedTrigger))
 				{
 					FormTerminalManager formTM = new FormTerminalManager();
 					formTM.ShowDialog();
 				}
 			}
-			else if (newConfirmed != oldAppt.Confirmed && newConfirmed == Prefs.GetLong(PrefName.AppointmentTimeArrivedTrigger))
+			else if (newConfirmed != oldAppt.Confirmed && newConfirmed == Preferences.GetLong(PreferenceName.AppointmentTimeArrivedTrigger))
 			{
 				//Manually marked as Arrived, if they had been sent an Arrival sms, try to process and send the Arrival Response.
 				OpenDentBusiness.AutoComm.Arrivals.ProcessArrival(oldAppt.PatNum, oldAppt.PatNum.SingleItemToList(), oldAppt.ClinicNum, listAppts: oldAppt.SingleItemToList());//Pass oldAppt so it still has the old confirmation status; which has already updated in db.
@@ -718,7 +718,7 @@ namespace OpenDental
 			{
 				return true;
 			}
-			if (!Prefs.GetBool(PrefName.ApptPreventChangesToCompleted) //The preference is turned off.
+			if (!Preferences.GetBool(PreferenceName.ApptPreventChangesToCompleted) //The preference is turned off.
 				|| (apt.AptStatus != ApptStatus.Complete)//The appointment status is not complete. Allow changes.
 				|| !Appointments.HasCompletedProcsAttached(apt.AptNum, listAttachedProcs))//Apt does not have completed procedures attached
 			{

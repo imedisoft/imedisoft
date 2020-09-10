@@ -718,7 +718,7 @@ namespace OpenDentBusiness {
 			using(XmlWriter writer=XmlWriter.Create(strbuild,settings)) {
 				writer.WriteStartElement("ErxClinicAccessRequest");
 				writer.WriteStartElement("RegistrationKey");
-				writer.WriteString(Prefs.GetString(PrefName.RegistrationKey));
+				writer.WriteString(Preferences.GetString(PreferenceName.RegistrationKey));
 				writer.WriteEndElement();//End reg key
 				writer.WriteStartElement("RegKeyDisabledOverride");
 				//Allow disabled regkeys to use eRx.  This functionality matches how we handle a disabled regkey for providererx
@@ -858,14 +858,14 @@ namespace OpenDentBusiness {
 			bool isPractice=false;
 			if(clinicCur==null) {//Make a fake ClinicNum 0 clinic containing practice info for validation/registering a new clinician if needed.
 				clinicCur=new Clinic();
-				clinicCur.Abbr=Prefs.GetString(PrefName.PracticeTitle);
-				clinicCur.AddressLine1=Prefs.GetString(PrefName.PracticeAddress);
-				clinicCur.AddressLine2=Prefs.GetString(PrefName.PracticeAddress2);
-				clinicCur.City=Prefs.GetString(PrefName.PracticeCity);
-				clinicCur.State=Prefs.GetString(PrefName.PracticeST);
-				clinicCur.Zip=Prefs.GetString(PrefName.PracticeZip);
-				clinicCur.Phone=Prefs.GetString(PrefName.PracticePhone);
-				clinicCur.Fax=Prefs.GetString(PrefName.PracticeFax);
+				clinicCur.Abbr=Preferences.GetString(PreferenceName.PracticeTitle);
+				clinicCur.AddressLine1=Preferences.GetString(PreferenceName.PracticeAddress);
+				clinicCur.AddressLine2=Preferences.GetString(PreferenceName.PracticeAddress2);
+				clinicCur.City=Preferences.GetString(PreferenceName.PracticeCity);
+				clinicCur.State=Preferences.GetString(PreferenceName.PracticeST);
+				clinicCur.Zip=Preferences.GetString(PreferenceName.PracticeZip);
+				clinicCur.Phone=Preferences.GetString(PreferenceName.PracticePhone);
+				clinicCur.Fax=Preferences.GetString(PreferenceName.PracticeFax);
 				isPractice=true;
 			}
 			ValidateClinic(clinicCur,isPractice);

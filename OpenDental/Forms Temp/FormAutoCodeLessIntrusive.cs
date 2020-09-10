@@ -147,7 +147,7 @@ namespace OpenDental {
 			labelMain.Text=ProcedureCodes.GetProcCode(_verifyCode).ProcCode
 				+" ("+ProcedureCodes.GetProcCode(_verifyCode).Descript+") "
 				+"is the recommended procedure code for this procedure.  Change procedure code and fee?";
-			if(Prefs.GetBool(PrefName.ProcEditRequireAutoCodes)) {
+			if(Preferences.GetBool(PreferenceName.ProcEditRequireAutoCodes)) {
 				butNo.Text="Edit Proc";//Button will otherwise say 'No'.
 			}
 		}

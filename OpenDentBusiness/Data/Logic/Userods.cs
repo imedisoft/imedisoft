@@ -58,7 +58,7 @@ namespace OpenDentBusiness
 		{
 			string command = $@"SELECT userod.UserName FROM userod 
 				WHERE userod.IsHidden=0 
-				{ (Prefs.GetBool(PrefName.UserNameManualEntry) ? " " : " AND userod.UserNumCEMT" + (hasOnlyCEMT ? "!=" : "=") + @"0 ") }
+				{ (Preferences.GetBool(PreferenceName.UserNameManualEntry) ? " " : " AND userod.UserNumCEMT" + (hasOnlyCEMT ? "!=" : "=") + @"0 ") }
 				ORDER BY userod.UserName";
 			return Database.GetListString(command);
 		}
@@ -105,7 +105,7 @@ namespace OpenDentBusiness
 		{
 			//No need to check RemotingRole; no call to db.
 			Userod userSig = user == null ? Security.CurrentUser : user;
-			if (Prefs.GetBool(PrefName.NotesProviderSignatureOnly) && userSig.ProviderId == 0)
+			if (Preferences.GetBool(PreferenceName.NotesProviderSignatureOnly) && userSig.ProviderId == 0)
 			{
 				return false;//Prefernce is on and our user is not a provider.
 			}
@@ -784,7 +784,7 @@ namespace OpenDentBusiness
 			{
 				return "Password must contain at least one lower case letter when the strong password feature is turned on.";
 			}
-			if (Prefs.GetBool(PrefName.PasswordsStrongIncludeSpecial))
+			if (Preferences.GetBool(PreferenceName.PasswordsStrongIncludeSpecial))
 			{
 				bool hasSpecial = false;
 				for (int i = 0; i < pass.Length; i++)

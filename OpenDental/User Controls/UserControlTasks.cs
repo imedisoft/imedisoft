@@ -185,7 +185,7 @@ namespace OpenDental
 
 			LayoutToolBar();
 
-			_isTaskSortApptDateTime = Prefs.GetBool(PrefName.TaskSortApptDateTime);//This sets it for use and also for the task options default value.
+			_isTaskSortApptDateTime = Preferences.GetBool(PreferenceName.TaskSortApptDateTime);//This sets it for use and also for the task options default value.
 			_isCollapsedByDefault = UserPreference.GetBool(UserPreferenceName.TaskCollapse);
 			_hasListSwitched = true;
 			_taskCollapsedState = _isCollapsedByDefault ? 1 : 0;

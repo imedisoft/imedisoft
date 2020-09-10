@@ -1,14 +1,10 @@
-﻿using CodeBase;
-using System;
+﻿using Imedisoft.Data;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WebServiceSerializer;
 
 namespace OpenDentBusiness.WebTypes.WebForms
 {
-	public class WebForms_Preferences
+    public class WebForms_Preferences
 	{
 		/// <summary>
 		/// Attempts to set preferences on web forms server using the currently saved connection url, or urlOverride if specified.
@@ -18,7 +14,7 @@ namespace OpenDentBusiness.WebTypes.WebForms
 			bool retVal = false;
 			if (string.IsNullOrEmpty(regKey))
 			{
-				regKey = Prefs.GetString(PrefName.RegistrationKey);
+				regKey = Preferences.GetString(PreferenceName.RegistrationKey);
 			}
 
 			try
@@ -44,7 +40,7 @@ namespace OpenDentBusiness.WebTypes.WebForms
 			pref = new WebForms_Preference();
 			if (string.IsNullOrEmpty(regKey))
 			{
-				regKey = Prefs.GetString(PrefName.RegistrationKey);
+				regKey = Preferences.GetString(PreferenceName.RegistrationKey);
 			}
 
 			try

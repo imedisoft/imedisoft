@@ -24,7 +24,7 @@ namespace OpenDental {
 		}
 
 		private void FormTreatmentPlanDiscount_Load(object sender,EventArgs e) {
-			textPercentage.Text=Prefs.GetString(PrefName.TreatPlanDiscountPercent);
+			textPercentage.Text=Preferences.GetString(PreferenceName.TreatPlanDiscountPercent);
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {

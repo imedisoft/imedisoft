@@ -4,6 +4,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -187,13 +188,13 @@ namespace OpenDental{
 		#endregion
 
 		private void FormSecurityLock_Load(object sender,EventArgs e) {
-			if(PrefC.GetDate(PrefName.SecurityLockDate).Year>1880){
-				textDate.Text=PrefC.GetDate(PrefName.SecurityLockDate).ToShortDateString();
+			if(PrefC.GetDate(PreferenceName.SecurityLockDate).Year>1880){
+				textDate.Text=PrefC.GetDate(PreferenceName.SecurityLockDate).ToShortDateString();
 			}
-			if(PrefC.GetInt(PrefName.SecurityLockDays)>0) {
-				textDays.Text=PrefC.GetInt(PrefName.SecurityLockDays).ToString();
+			if(PrefC.GetInt(PreferenceName.SecurityLockDays)>0) {
+				textDays.Text=PrefC.GetInt(PreferenceName.SecurityLockDays).ToString();
 			}
-			checkAdmin.Checked=Prefs.GetBool(PrefName.SecurityLockIncludesAdmin);
+			checkAdmin.Checked=Preferences.GetBool(PreferenceName.SecurityLockIncludesAdmin);
 		}
 
 		private void textDate_KeyDown(object sender,System.Windows.Forms.KeyEventArgs e) {
@@ -231,9 +232,9 @@ namespace OpenDental{
 				}
 			}
 			DateTime date=PIn.Date(textDate.Text);
-			if(Prefs.Set(PrefName.SecurityLockDate,POut.Date(date,false))
-				| Prefs.Set(PrefName.SecurityLockDays,days)
-				| Prefs.Set(PrefName.SecurityLockIncludesAdmin,checkAdmin.Checked)  )
+			if(Preferences.Set(PreferenceName.SecurityLockDate,POut.Date(date,false))
+				| Preferences.Set(PreferenceName.SecurityLockDays,days)
+				| Preferences.Set(PreferenceName.SecurityLockIncludesAdmin,checkAdmin.Checked)  )
 			{
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}

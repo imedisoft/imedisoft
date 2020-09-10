@@ -281,7 +281,7 @@ namespace OpenDentBusiness
 							unearnedSplit.DatePay = DateTime.Today;
 							unearnedSplit.PatNum = payAsTotal.PatNum;
 							unearnedSplit.PayNum = unearnedPayment.PayNum;
-							if (Prefs.GetBool(PrefName.AllowPrepayProvider))
+							if (Preferences.GetBool(PreferenceName.AllowPrepayProvider))
 							{
 								unearnedSplit.ProvNum = payAsTotal.ProvNum;
 							}
@@ -290,7 +290,7 @@ namespace OpenDentBusiness
 								unearnedSplit.ProvNum = 0;
 							}
 							unearnedSplit.SplitAmt = payAsTotal.SummedInsPayAmt + payAsTotal.SummedWriteOff;
-							unearnedSplit.UnearnedType = Prefs.GetLong(PrefName.PrepaymentUnearnedType);
+							unearnedSplit.UnearnedType = Preferences.GetLong(PreferenceName.PrepaymentUnearnedType);
 							insertedResults.ListInsertedPaySplits.Add(unearnedSplit);
 							continue;
 						}
@@ -1579,7 +1579,7 @@ namespace OpenDentBusiness
 		//
 		{
 			//No need to check RemotingRole; no call to db.
-			if (cp.Status == ClaimProcStatus.Received && !Prefs.GetBool(PrefName.InsEstRecalcReceived))
+			if (cp.Status == ClaimProcStatus.Received && !Preferences.GetBool(PreferenceName.InsEstRecalcReceived))
 			{
 				return;
 			}
@@ -1726,7 +1726,7 @@ namespace OpenDentBusiness
 				{
 					cp.CopayAmt -= feeFixedBenefit.Amount;//Deduct the fixed benefit amount from the proc fee to determine the copay for this claimproc.
 				}
-				if (feeFixedBenefit == null && !Prefs.GetBool(PrefName.FixedBenefitBlankLikeZero))
+				if (feeFixedBenefit == null && !Preferences.GetBool(PreferenceName.FixedBenefitBlankLikeZero))
 				{
 					cp.CopayAmt = -1;
 				}
@@ -1963,7 +1963,7 @@ namespace OpenDentBusiness
 				{
 					cp.EstimateNote += ", ";
 				}
-				if (Prefs.GetBool(PrefName.InsPlanExclusionsMarkDoNotBillIns))
+				if (Preferences.GetBool(PreferenceName.InsPlanExclusionsMarkDoNotBillIns))
 				{
 					cp.NoBillIns = true;
 				}
@@ -2046,7 +2046,7 @@ namespace OpenDentBusiness
 				{
 					remainingWriteOff = 0;
 				}
-				if ((!Prefs.GetBool(PrefName.InsPPOsecWriteoffs) && paidOtherInsTot > 0) || writeOffOtherIns > 0)
+				if ((!Preferences.GetBool(PreferenceName.InsPPOsecWriteoffs) && paidOtherInsTot > 0) || writeOffOtherIns > 0)
 				{
 					//This pref solves a conflict between two customers.  One customer paid for a past feature request.
 					//They need this new preference because they have a non-PPO as primary and a pseudo-PPO (Medicaid flagged as PPO) as secondary.
@@ -2894,7 +2894,7 @@ namespace OpenDentBusiness
 		public static bool TrySetProvFromProc(Procedure proc, List<ClaimProc> listClaimProcs)
 		{
 			bool retVal = true;
-			if (Prefs.GetBool(PrefName.ProcProvChangesClaimProcWithClaim))
+			if (Preferences.GetBool(PreferenceName.ProcProvChangesClaimProcWithClaim))
 			{
 				//This will only change providers for claimproc estimates
 				listClaimProcs.FindAll(x => x.ProcNum == proc.ProcNum).ForEach(x => x.ProvNum = proc.ProvNum);

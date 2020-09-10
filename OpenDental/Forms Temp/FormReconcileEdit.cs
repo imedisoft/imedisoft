@@ -602,10 +602,10 @@ namespace OpenDental{
 			text=Accounts.GetAccount(ReconcileCur.AccountNum).Description.ToUpper();
 			par.AddFormattedText(text,totalFontx);
 			par.AddLineBreak();
-			text=Prefs.GetString(PrefName.PracticeTitle);
+			text=Preferences.GetString(PreferenceName.PracticeTitle);
 			par.AddText(text);
 			par.AddLineBreak();
-			text=Prefs.GetString(PrefName.PracticePhone);
+			text=Preferences.GetString(PreferenceName.PracticePhone);
 			if(text.Length==10&&Application.CurrentCulture.Name=="en-US") {
 				text="("+text.Substring(0,3)+")"+text.Substring(3,3)+"-"+text.Substring(6);
 			}

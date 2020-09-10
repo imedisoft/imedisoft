@@ -37,8 +37,8 @@ namespace OpenDentBusiness{
 		///Only creates snapshots if the feature is enabled and if the claimproc is of certain statuses.</summary>
 		public static void CreateClaimSnapshot(List<ClaimProc> listClaimProcs,ClaimSnapshotTrigger triggerType,string claimType) {
 			//No need to check RemotingRole; no call to db.
-			if(!Prefs.GetBool(PrefName.ClaimSnapshotEnabled)
-				|| PIn.Enum<ClaimSnapshotTrigger>(Prefs.GetString(PrefName.ClaimSnapshotTriggerType),true)!=triggerType) 
+			if(!Preferences.GetBool(PreferenceName.ClaimSnapshotEnabled)
+				|| PIn.Enum<ClaimSnapshotTrigger>(Preferences.GetString(PreferenceName.ClaimSnapshotTriggerType),true)!=triggerType) 
 			{
 				return;
 			}

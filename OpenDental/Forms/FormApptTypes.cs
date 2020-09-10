@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using Imedisoft.Data.Cache;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -85,8 +86,8 @@ namespace Imedisoft.Forms
 				}
 			}
 
-			promptCheckBox.Checked = Prefs.GetBool(PrefName.AppointmentTypeShowPrompt);
-			warnCheckBox.Checked = Prefs.GetBool(PrefName.AppointmentTypeShowWarning);
+			promptCheckBox.Checked = Preferences.GetBool(PreferenceName.AppointmentTypeShowPrompt);
+			warnCheckBox.Checked = Preferences.GetBool(PreferenceName.AppointmentTypeShowWarning);
 
 			// Don't show hidden appointment types in selection mode
 			appointmentTypes = AppointmentTypes.GetDeepCopy(IsSelectionMode);
@@ -273,8 +274,8 @@ namespace Imedisoft.Forms
 		{
 			if (!IsSelectionMode)
 			{
-				Prefs.Set(PrefName.AppointmentTypeShowPrompt, promptCheckBox.Checked);
-				Prefs.Set(PrefName.AppointmentTypeShowWarning, warnCheckBox.Checked);
+				Preferences.Set(PreferenceName.AppointmentTypeShowPrompt, promptCheckBox.Checked);
+				Preferences.Set(PreferenceName.AppointmentTypeShowWarning, warnCheckBox.Checked);
 
 				for (int i = 0; i < appointmentTypes.Count; i++)
 				{

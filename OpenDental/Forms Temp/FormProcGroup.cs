@@ -710,7 +710,7 @@ namespace OpenDental{
 			textDateEntry.Text=GroupCur.DateEntryC.ToShortDateString();
 			textUser.Text=Userods.GetName(GroupCur.UserNum);//might be blank. Will change automatically if user changes note or alters sig.
 			textNotes.Text=GroupCur.Note;
-			if(GroupCur.ProcStatus==ProcStat.EC && Prefs.GetBool(PrefName.ProcLockingIsAllowed) && !GroupCur.IsLocked) {
+			if(GroupCur.ProcStatus==ProcStat.EC && Preferences.GetBool(PreferenceName.ProcLockingIsAllowed) && !GroupCur.IsLocked) {
 				butLock.Visible=true;
 			}
 			else {
@@ -1124,7 +1124,7 @@ namespace OpenDental{
 			AptCur.AptStatus=ApptStatus.Planned;
 			AptCur.AptDateTime=DateTimeOD.Today;
 			AptCur.Pattern="/X/";
-			AptCur.TimeLocked=Prefs.GetBool(PrefName.AppointmentTimeIsLocked);
+			AptCur.TimeLocked=Preferences.GetBool(PreferenceName.AppointmentTimeIsLocked);
 			Appointments.Insert(AptCur);
 			PlannedAppt plannedAppt=new PlannedAppt();
 			plannedAppt.AptNum=AptCur.AptNum;

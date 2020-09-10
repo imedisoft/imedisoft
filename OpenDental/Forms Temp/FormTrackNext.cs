@@ -334,7 +334,7 @@ namespace OpenDental{
 			for(int i=0;i<_listProviders.Count;i++) {
 				comboProv.Items.Add(_listProviders[i].GetLongDesc());
 			}
-			if(Prefs.GetBool(PrefName.EasyHidePublicHealth)){
+			if(Preferences.GetBool(PreferenceName.EasyHidePublicHealth)){
 				comboSite.Visible=false;
 				labelSite.Visible=false;
 			}
@@ -346,7 +346,7 @@ namespace OpenDental{
 					comboSite.Items.Add(_listSites[i].Description);
 				}
 			}
-			if(Prefs.GetBool(PrefName.EnterpriseApptList)){
+			if(Preferences.GetBool(PreferenceName.EnterpriseApptList)){
 				comboClinic.IncludeAll=false;
 			}
 			InitDateRange();
@@ -361,9 +361,9 @@ namespace OpenDental{
 		}
 
 		private void InitDateRange() {
-			int dayCount=PrefC.GetInt(PrefName.PlannedApptDaysPast);
+			int dayCount=PrefC.GetInt(PreferenceName.PlannedApptDaysPast);
 			dateRangePicker.SetDateTimeFrom(DateTime.Today.AddDays(-dayCount));
-			dayCount=PrefC.GetInt(PrefName.PlannedApptDaysFuture);
+			dayCount=PrefC.GetInt(PreferenceName.PlannedApptDaysFuture);
 			dateRangePicker.SetDateTimeTo(DateTime.Today.AddDays(dayCount));
 		}
 		
@@ -464,7 +464,7 @@ namespace OpenDental{
 				provNum=_listProviders[comboProv.SelectedIndex-1].Id;
 			}
 			long siteNum=0;
-			if(!Prefs.GetBool(PrefName.EasyHidePublicHealth) && comboSite.SelectedIndex!=0) {
+			if(!Preferences.GetBool(PreferenceName.EasyHidePublicHealth) && comboSite.SelectedIndex!=0) {
 				siteNum=_listSites[comboSite.SelectedIndex-1].SiteNum;
 			}
 			long clinicNum=PrefC.HasClinicsEnabled ? comboClinic.SelectedClinicNum : -1;

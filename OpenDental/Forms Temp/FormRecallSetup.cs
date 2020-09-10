@@ -585,35 +585,35 @@ namespace OpenDental{
 
 		///<summary>Called on load to initially load the recall window with values from the database.  Calls FillGrid at the end.</summary>
 		private void FillManualRecall() {
-			checkGroupFamilies.Checked = Prefs.GetBool(PrefName.RecallGroupByFamily);
-			textPostcardsPerSheet.Text=Prefs.GetLong(PrefName.RecallPostcardsPerSheet).ToString();
-			checkReturnAdd.Checked=Prefs.GetBool(PrefName.RecallCardsShowReturnAdd);
-			checkGroupFamilies.Checked=Prefs.GetBool(PrefName.RecallGroupByFamily);
-			textDaysPast.Text=Prefs.GetLongHideNegOne(PrefName.RecallDaysPast);
-			textDaysFuture.Text=Prefs.GetLongHideNegOne(PrefName.RecallDaysFuture);
-			if(Prefs.GetBool(PrefName.RecallExcludeIfAnyFutureAppt)) {
+			checkGroupFamilies.Checked = Preferences.GetBool(PreferenceName.RecallGroupByFamily);
+			textPostcardsPerSheet.Text=Preferences.GetLong(PreferenceName.RecallPostcardsPerSheet).ToString();
+			checkReturnAdd.Checked=Preferences.GetBool(PreferenceName.RecallCardsShowReturnAdd);
+			checkGroupFamilies.Checked=Preferences.GetBool(PreferenceName.RecallGroupByFamily);
+			textDaysPast.Text=Preferences.GetLongHideNegOne(PreferenceName.RecallDaysPast);
+			textDaysFuture.Text=Preferences.GetLongHideNegOne(PreferenceName.RecallDaysFuture);
+			if(Preferences.GetBool(PreferenceName.RecallExcludeIfAnyFutureAppt)) {
 				radioExcludeFutureYes.Checked=true;
 			}
 			else {
 				radioExcludeFutureNo.Checked=true;
 			}
-			textRight.Text=Prefs.GetDouble(PrefName.RecallAdjustRight).ToString();
-			textDown.Text=Prefs.GetDouble(PrefName.RecallAdjustDown).ToString();
+			textRight.Text=Preferences.GetDouble(PreferenceName.RecallAdjustRight).ToString();
+			textDown.Text=Preferences.GetDouble(PreferenceName.RecallAdjustDown).ToString();
 			List<Definition> listUnschedStatusDefs=Definitions.GetDefsForCategory(DefinitionCategory.RecallUnschedStatus,true);
 			comboStatusMailedRecall.Items.Clear();
 			comboStatusMailedRecall.Items.AddDefs(listUnschedStatusDefs);
-			comboStatusMailedRecall.SetSelectedDefNum(Prefs.GetLong(PrefName.RecallStatusMailed));
+			comboStatusMailedRecall.SetSelectedDefNum(Preferences.GetLong(PreferenceName.RecallStatusMailed));
 			comboStatusEmailedRecall.Items.Clear();
 			comboStatusEmailedRecall.Items.AddDefs(listUnschedStatusDefs);
-			comboStatusEmailedRecall.SetSelectedDefNum(Prefs.GetLong(PrefName.RecallStatusEmailed));
+			comboStatusEmailedRecall.SetSelectedDefNum(Preferences.GetLong(PreferenceName.RecallStatusEmailed));
 			comboStatusTextedRecall.Items.Clear();
 			comboStatusTextedRecall.Items.AddDefs(listUnschedStatusDefs);
-			comboStatusTextedRecall.SetSelectedDefNum(Prefs.GetLong(PrefName.RecallStatusTexted));
+			comboStatusTextedRecall.SetSelectedDefNum(Preferences.GetLong(PreferenceName.RecallStatusTexted));
 			comboStatusEmailTextRecall.Items.Clear();
 			comboStatusEmailTextRecall.Items.AddDefs(listUnschedStatusDefs);
-			comboStatusEmailTextRecall.SetSelectedDefNum(Prefs.GetLong(PrefName.RecallStatusEmailedTexted));
+			comboStatusEmailTextRecall.SetSelectedDefNum(Preferences.GetLong(PreferenceName.RecallStatusEmailedTexted));
 			List<long> recalltypes=new List<long>();
-			string[] typearray=Prefs.GetString(PrefName.RecallTypesShowingInList).Split(',');
+			string[] typearray=Preferences.GetString(PreferenceName.RecallTypesShowingInList).Split(',');
 			if(typearray.Length>0) {
 				for(int i=0;i<typearray.Length;i++) {
 					recalltypes.Add(PIn.Long(typearray[i]));
@@ -626,10 +626,10 @@ namespace OpenDental{
 					listTypes.SetSelected(i,true);
 				}
 			}
-			textDaysFirstReminder.Text=Prefs.GetLongHideNegOne(PrefName.RecallShowIfDaysFirstReminder);
-			textDaysSecondReminder.Text=Prefs.GetLongHideNegOne(PrefName.RecallShowIfDaysSecondReminder);
-			textMaxReminders.Text=Prefs.GetLongHideNegOne(PrefName.RecallMaxNumberReminders);
-			if(Prefs.GetBool(PrefName.RecallUseEmailIfHasEmailAddress)) {
+			textDaysFirstReminder.Text=Preferences.GetLongHideNegOne(PreferenceName.RecallShowIfDaysFirstReminder);
+			textDaysSecondReminder.Text=Preferences.GetLongHideNegOne(PreferenceName.RecallShowIfDaysSecondReminder);
+			textMaxReminders.Text=Preferences.GetLongHideNegOne(PreferenceName.RecallMaxNumberReminders);
+			if(Preferences.GetBool(PreferenceName.RecallUseEmailIfHasEmailAddress)) {
 				radioUseEmailTrue.Checked=true;
 			}
 			else {
@@ -659,7 +659,7 @@ namespace OpenDental{
 			row.Cells.Add("1");
 			row.Cells.Add("E-mail");
 			row.Cells.Add("Subject line");
-			row.Cells.Add(Prefs.GetString(PrefName.RecallEmailSubject));//old
+			row.Cells.Add(Preferences.GetString(PreferenceName.RecallEmailSubject));//old
 			row.Tag="RecallEmailSubject";
 			gridMain.Rows.Add(row);
 			//
@@ -667,7 +667,7 @@ namespace OpenDental{
 			row.Cells.Add("1");
 			row.Cells.Add("E-mail");
 			row.Cells.Add("Available variables"+": [NameFL], "+availableFields);
-			row.Cells.Add(Prefs.GetString(PrefName.RecallEmailMessage));
+			row.Cells.Add(Preferences.GetString(PreferenceName.RecallEmailMessage));
 			row.Tag="RecallEmailMessage";
 			gridMain.Rows.Add(row);
 			//
@@ -675,7 +675,7 @@ namespace OpenDental{
 			row.Cells.Add("1");
 			row.Cells.Add("E-mail");
 			row.Cells.Add("For multiple patients in one family.  Use [FamilyList] where the list of family members should show.");
-			row.Cells.Add(Prefs.GetString(PrefName.RecallEmailFamMsg));
+			row.Cells.Add(Preferences.GetString(PreferenceName.RecallEmailFamMsg));
 			row.Tag="RecallEmailFamMsg";
 			gridMain.Rows.Add(row);
 			//
@@ -683,7 +683,7 @@ namespace OpenDental{
 			row.Cells.Add("1");
 			row.Cells.Add("Postcard");
 			row.Cells.Add("Available variables"+": [NameFL], "+availableFields);
-			row.Cells.Add(Prefs.GetString(PrefName.RecallPostcardMessage));//old
+			row.Cells.Add(Preferences.GetString(PreferenceName.RecallPostcardMessage));//old
 			row.Tag="RecallPostcardMessage";
 			gridMain.Rows.Add(row);
 			//
@@ -691,7 +691,7 @@ namespace OpenDental{
 			row.Cells.Add("1");
 			row.Cells.Add("Postcard");
 			row.Cells.Add("For multiple patients in one family.  Use [FamilyList] where the list of family members should show.");
-			row.Cells.Add(Prefs.GetString(PrefName.RecallPostcardFamMsg));//old
+			row.Cells.Add(Preferences.GetString(PreferenceName.RecallPostcardFamMsg));//old
 			row.Tag="RecallPostcardFamMsg";
 			gridMain.Rows.Add(row);
 			//
@@ -699,7 +699,7 @@ namespace OpenDental{
 			row.Cells.Add("1");
 			row.Cells.Add("WebSched Email");
 			row.Cells.Add("Subject line.  Available variables"+": [NameF]");
-			row.Cells.Add(Prefs.GetString(PrefName.WebSchedSubject));
+			row.Cells.Add(Preferences.GetString(PreferenceName.WebSchedSubject));
 			row.Tag="WebSchedSubject";
 			gridMain.Rows.Add(row);
 			//
@@ -707,23 +707,23 @@ namespace OpenDental{
 			row.Cells.Add("1");
 			row.Cells.Add("WebSched Email");
 			row.Cells.Add("Email body.  Available variables"+": [URL], "+availableFields);
-			row.Cells.Add(Prefs.GetString(PrefName.WebSchedMessage));
+			row.Cells.Add(Preferences.GetString(PreferenceName.WebSchedMessage));
 			row.Tag="WebSchedMessage";
 			gridMain.Rows.Add(row);
 			AddRow("All","WebSched Email Aggregate","Subject Line.  Available variables"+": [NameF], "
-				+"[ClinicName], [PracticeName], [OfficeName]",PrefName.WebSchedAggregatedEmailSubject);
+				+"[ClinicName], [PracticeName], [OfficeName]",PreferenceName.WebSchedAggregatedEmailSubject);
 			AddRow("All","WebSched Email Aggregate","Email body.  Available variables"+": [FamilyListURLs], [NameF],"
-				+" [ClinicName], [ClinicPhone], [PracticeName], [PracticePhone], [OfficeName], [OfficePhone]",PrefName.WebSchedAggregatedEmailBody);
+				+" [ClinicName], [ClinicPhone], [PracticeName], [PracticePhone], [OfficeName], [OfficePhone]",PreferenceName.WebSchedAggregatedEmailBody);
 			//
 			row=new GridRow();
 			row.Cells.Add("1");
 			row.Cells.Add("WebSched Text");
 			row.Cells.Add("Available variables"+": [URL], "+availableFields);
-			row.Cells.Add(Prefs.GetString(PrefName.WebSchedMessageText));
-			row.Tag=PrefName.WebSchedMessageText.ToString();
+			row.Cells.Add(Preferences.GetString(PreferenceName.WebSchedMessageText));
+			row.Tag=PreferenceName.WebSchedMessageText.ToString();
 			gridMain.Rows.Add(row);
 			AddRow("All","WebSched Text Aggregate","Available variables"+": [FamilyListURLs], [NameF], [ClinicName],"
-				+" [ClinicPhone], [PracticeName], [PracticePhone], [OfficeName], [OfficePhone]",PrefName.WebSchedAggregatedTextMessage);
+				+" [ClinicPhone], [PracticeName], [PracticePhone], [OfficeName], [OfficePhone]",PreferenceName.WebSchedAggregatedTextMessage);
 			#endregion
 			#region 2nd Reminder
 			//2---------------------------------------------------------------------------------------------
@@ -732,7 +732,7 @@ namespace OpenDental{
 			row.Cells.Add("2");
 			row.Cells.Add("E-mail");
 			row.Cells.Add("Subject line");
-			row.Cells.Add(Prefs.GetString(PrefName.RecallEmailSubject2));
+			row.Cells.Add(Preferences.GetString(PreferenceName.RecallEmailSubject2));
 			row.Tag="RecallEmailSubject2";
 			gridMain.Rows.Add(row);
 			//
@@ -740,7 +740,7 @@ namespace OpenDental{
 			row.Cells.Add("2");
 			row.Cells.Add("E-mail");
 			row.Cells.Add("Available variables"+": "+availableFields);
-			row.Cells.Add(Prefs.GetString(PrefName.RecallEmailMessage2));
+			row.Cells.Add(Preferences.GetString(PreferenceName.RecallEmailMessage2));
 			row.Tag="RecallEmailMessage2";
 			gridMain.Rows.Add(row);
 			//
@@ -748,7 +748,7 @@ namespace OpenDental{
 			row.Cells.Add("2");
 			row.Cells.Add("E-mail");
 			row.Cells.Add("For multiple patients in one family.  Use [FamilyList].");
-			row.Cells.Add(Prefs.GetString(PrefName.RecallEmailFamMsg2));
+			row.Cells.Add(Preferences.GetString(PreferenceName.RecallEmailFamMsg2));
 			row.Tag="RecallEmailFamMsg2";
 			gridMain.Rows.Add(row);
 			//
@@ -756,7 +756,7 @@ namespace OpenDental{
 			row.Cells.Add("2");
 			row.Cells.Add("Postcard");
 			row.Cells.Add("Available variables"+": [NameFL], "+availableFields);
-			row.Cells.Add(Prefs.GetString(PrefName.RecallPostcardMessage2));
+			row.Cells.Add(Preferences.GetString(PreferenceName.RecallPostcardMessage2));
 			row.Tag="RecallPostcardMessage2";
 			gridMain.Rows.Add(row);
 			//
@@ -764,7 +764,7 @@ namespace OpenDental{
 			row.Cells.Add("2");
 			row.Cells.Add("Postcard");
 			row.Cells.Add("For multiple patients in one family.  Use [FamilyList].");
-			row.Cells.Add(Prefs.GetString(PrefName.RecallPostcardFamMsg2));
+			row.Cells.Add(Preferences.GetString(PreferenceName.RecallPostcardFamMsg2));
 			row.Tag="RecallPostcardFamMsg2";
 			gridMain.Rows.Add(row);
 			//
@@ -772,7 +772,7 @@ namespace OpenDental{
 			row.Cells.Add("2");
 			row.Cells.Add("WebSched Email");
 			row.Cells.Add("Subject line.  Available variables"+": [NameF]");
-			row.Cells.Add(Prefs.GetString(PrefName.WebSchedSubject2));
+			row.Cells.Add(Preferences.GetString(PreferenceName.WebSchedSubject2));
 			row.Tag="WebSchedSubject2";
 			gridMain.Rows.Add(row);
 			//
@@ -780,7 +780,7 @@ namespace OpenDental{
 			row.Cells.Add("2");
 			row.Cells.Add("WebSched Email");
 			row.Cells.Add("Email body.  Available variables"+": [URL], "+availableFields);
-			row.Cells.Add(Prefs.GetString(PrefName.WebSchedMessage2));
+			row.Cells.Add(Preferences.GetString(PreferenceName.WebSchedMessage2));
 			row.Tag="WebSchedMessage2";
 			gridMain.Rows.Add(row);
 			//
@@ -788,8 +788,8 @@ namespace OpenDental{
 			row.Cells.Add("2");
 			row.Cells.Add("WebSched Text");
 			row.Cells.Add("Available variables"+": [URL], "+availableFields);
-			row.Cells.Add(Prefs.GetString(PrefName.WebSchedMessageText2));
-			row.Tag=PrefName.WebSchedMessageText2;
+			row.Cells.Add(Preferences.GetString(PreferenceName.WebSchedMessageText2));
+			row.Tag=PreferenceName.WebSchedMessageText2;
 			gridMain.Rows.Add(row);
 			#endregion
 			#region 3rd Reminder
@@ -799,7 +799,7 @@ namespace OpenDental{
 			row.Cells.Add("3");
 			row.Cells.Add("E-mail");
 			row.Cells.Add("Subject line");
-			row.Cells.Add(Prefs.GetString(PrefName.RecallEmailSubject3));
+			row.Cells.Add(Preferences.GetString(PreferenceName.RecallEmailSubject3));
 			row.Tag="RecallEmailSubject3";
 			gridMain.Rows.Add(row);
 			//
@@ -807,7 +807,7 @@ namespace OpenDental{
 			row.Cells.Add("3");
 			row.Cells.Add("E-mail");
 			row.Cells.Add("Available variables"+": "+availableFields);
-			row.Cells.Add(Prefs.GetString(PrefName.RecallEmailMessage3));
+			row.Cells.Add(Preferences.GetString(PreferenceName.RecallEmailMessage3));
 			row.Tag="RecallEmailMessage3";
 			gridMain.Rows.Add(row);
 			//
@@ -815,7 +815,7 @@ namespace OpenDental{
 			row.Cells.Add("3");
 			row.Cells.Add("E-mail");
 			row.Cells.Add("For multiple patients in one family.  Use [FamilyList].");
-			row.Cells.Add(Prefs.GetString(PrefName.RecallEmailFamMsg3));
+			row.Cells.Add(Preferences.GetString(PreferenceName.RecallEmailFamMsg3));
 			row.Tag="RecallEmailFamMsg3";
 			gridMain.Rows.Add(row);
 			//
@@ -823,7 +823,7 @@ namespace OpenDental{
 			row.Cells.Add("3");
 			row.Cells.Add("Postcard");
 			row.Cells.Add("Available variables"+": [NameFL], "+availableFields);
-			row.Cells.Add(Prefs.GetString(PrefName.RecallPostcardMessage3));
+			row.Cells.Add(Preferences.GetString(PreferenceName.RecallPostcardMessage3));
 			row.Tag="RecallPostcardMessage3";
 			gridMain.Rows.Add(row);
 			//
@@ -831,7 +831,7 @@ namespace OpenDental{
 			row.Cells.Add("3");
 			row.Cells.Add("Postcard");
 			row.Cells.Add("For multiple patients in one family.  Use [FamilyList].");
-			row.Cells.Add(Prefs.GetString(PrefName.RecallPostcardFamMsg3));
+			row.Cells.Add(Preferences.GetString(PreferenceName.RecallPostcardFamMsg3));
 			row.Tag="RecallPostcardFamMsg3";
 			gridMain.Rows.Add(row);
 			//
@@ -839,7 +839,7 @@ namespace OpenDental{
 			row.Cells.Add("3");
 			row.Cells.Add("WebSched Email");
 			row.Cells.Add("Subject line.  Available variables"+": [NameF]");
-			row.Cells.Add(Prefs.GetString(PrefName.WebSchedSubject3));
+			row.Cells.Add(Preferences.GetString(PreferenceName.WebSchedSubject3));
 			row.Tag="WebSchedSubject3";
 			gridMain.Rows.Add(row);
 			//
@@ -847,7 +847,7 @@ namespace OpenDental{
 			row.Cells.Add("3");
 			row.Cells.Add("WebSched Email");
 			row.Cells.Add("Email body.  Available variables"+": [URL], "+availableFields);
-			row.Cells.Add(Prefs.GetString(PrefName.WebSchedMessage3));
+			row.Cells.Add(Preferences.GetString(PreferenceName.WebSchedMessage3));
 			row.Tag="WebSchedMessage3";
 			gridMain.Rows.Add(row);
 			//
@@ -855,8 +855,8 @@ namespace OpenDental{
 			row.Cells.Add("3");
 			row.Cells.Add("WebSched Text");
 			row.Cells.Add("Available variables"+": [URL], "+availableFields);
-			row.Cells.Add(Prefs.GetString(PrefName.WebSchedMessageText3));
-			row.Tag=PrefName.WebSchedMessageText3.ToString();
+			row.Cells.Add(Preferences.GetString(PreferenceName.WebSchedMessageText3));
+			row.Tag=PreferenceName.WebSchedMessageText3.ToString();
 			gridMain.Rows.Add(row);
 			#endregion
 			gridMain.EndUpdate();
@@ -865,28 +865,28 @@ namespace OpenDental{
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			string prefName =(string)gridMain.Rows[e.Row].Tag;
 			string newPrefValue;
-			bool isHtmlTemplate=prefName.In(PrefName.WebSchedMessage,PrefName.WebSchedMessage2,PrefName.WebSchedMessage3,
-				PrefName.WebSchedAggregatedEmailBody);
+			bool isHtmlTemplate=prefName.In(PreferenceName.WebSchedMessage,PreferenceName.WebSchedMessage2,PreferenceName.WebSchedMessage3,
+				PreferenceName.WebSchedAggregatedEmailBody);
 			if(isHtmlTemplate) {
 				string emailTypePref ="";
 				switch(prefName) {
-					case PrefName.WebSchedMessage:
-						emailTypePref=PrefName.WebSchedRecallEmailTemplateType;
+					case PreferenceName.WebSchedMessage:
+						emailTypePref=PreferenceName.WebSchedRecallEmailTemplateType;
 						break;
-					case PrefName.WebSchedMessage2:
-						emailTypePref=PrefName.WebSchedRecallEmailTemplateType2;
+					case PreferenceName.WebSchedMessage2:
+						emailTypePref=PreferenceName.WebSchedRecallEmailTemplateType2;
 						break;
-					case PrefName.WebSchedMessage3:
-						emailTypePref=PrefName.WebSchedRecallEmailTemplateType3;
+					case PreferenceName.WebSchedMessage3:
+						emailTypePref=PreferenceName.WebSchedRecallEmailTemplateType3;
 						break;
-					case PrefName.WebSchedAggregatedEmailBody:
-						emailTypePref=PrefName.WebSchedRecallEmailTemplateTypeAgg;
+					case PreferenceName.WebSchedAggregatedEmailBody:
+						emailTypePref=PreferenceName.WebSchedRecallEmailTemplateTypeAgg;
 						break;
 					default:
 						break;
 				}
 				FormEmailEdit formEmailEdit=new FormEmailEdit {
-					MarkupText=Prefs.GetString(prefName),
+					MarkupText=Preferences.GetString(prefName),
 					DoCheckForDisclaimer=true,
 					IsRawAllowed=true,
 					IsRaw=PrefC.GetEnum<EmailType>(emailTypePref)==EmailType.RawHtml,
@@ -895,12 +895,12 @@ namespace OpenDental{
 				if(formEmailEdit.DialogResult!=DialogResult.OK) {
 					return;
 				}
-				Prefs.Set(emailTypePref,(formEmailEdit.IsRaw?(int)EmailType.RawHtml:(int)EmailType.Html));
+				Preferences.Set(emailTypePref,(formEmailEdit.IsRaw?(int)EmailType.RawHtml:(int)EmailType.Html));
 				newPrefValue=formEmailEdit.MarkupText;
 			}
 			else {
 				FormRecallMessageEdit FormR=new FormRecallMessageEdit(prefName) {
-					MessageVal=Prefs.GetString(prefName),
+					MessageVal=Preferences.GetString(prefName),
 				};
 				FormR.ShowDialog();
 				if(FormR.DialogResult!=DialogResult.OK) {
@@ -908,7 +908,7 @@ namespace OpenDental{
 				}
 				newPrefValue=FormR.MessageVal;
 			}
-			Prefs.Set(prefName,newPrefValue);
+			Preferences.Set(prefName,newPrefValue);
 			FillGrid();
 		}		
 
@@ -917,7 +917,7 @@ namespace OpenDental{
 			row.Cells.Add(reminderNum);
 			row.Cells.Add(title);
 			row.Cells.Add(availableVariables);
-			row.Cells.Add(Prefs.GetString(pref));
+			row.Cells.Add(Preferences.GetString(pref));
 			row.Tag=pref.ToString();
 			gridMain.Rows.Add(row);
 		}
@@ -962,29 +962,29 @@ namespace OpenDental{
 				return;
 			}
 			//End of Validation
-			if(Prefs.Set(PrefName.RecallPostcardsPerSheet,textPostcardsPerSheet.Text)) {
+			if(Preferences.Set(PreferenceName.RecallPostcardsPerSheet,textPostcardsPerSheet.Text)) {
 				if(textPostcardsPerSheet.Text=="1") {
 					MessageBox.Show("If using 1 postcard per sheet, you must adjust the position, and also the preview will not work");
 				}
 			}
-			Prefs.Set(PrefName.RecallCardsShowReturnAdd,checkReturnAdd.Checked);
-			Prefs.Set(PrefName.RecallGroupByFamily,checkGroupFamilies.Checked);
-			Prefs.Set(PrefName.RecallDaysPast,GetLongFromString(textDaysPast.Text));
-			Prefs.Set(PrefName.RecallDaysFuture,GetLongFromString(textDaysFuture.Text));
-			Prefs.Set(PrefName.RecallExcludeIfAnyFutureAppt,radioExcludeFutureYes.Checked);
-			Prefs.Set(PrefName.RecallAdjustRight,PIn.Double(textRight.Text));
-			Prefs.Set(PrefName.RecallAdjustDown,PIn.Double(textDown.Text));
+			Preferences.Set(PreferenceName.RecallCardsShowReturnAdd,checkReturnAdd.Checked);
+			Preferences.Set(PreferenceName.RecallGroupByFamily,checkGroupFamilies.Checked);
+			Preferences.Set(PreferenceName.RecallDaysPast,GetLongFromString(textDaysPast.Text));
+			Preferences.Set(PreferenceName.RecallDaysFuture,GetLongFromString(textDaysFuture.Text));
+			Preferences.Set(PreferenceName.RecallExcludeIfAnyFutureAppt,radioExcludeFutureYes.Checked);
+			Preferences.Set(PreferenceName.RecallAdjustRight,PIn.Double(textRight.Text));
+			Preferences.Set(PreferenceName.RecallAdjustDown,PIn.Double(textDown.Text));
 			//combo boxes These have already been checked for -1
-			Prefs.Set(PrefName.RecallStatusEmailed,comboStatusEmailedRecall.GetSelected<Definition>().Id);
-			Prefs.Set(PrefName.RecallStatusMailed,comboStatusMailedRecall.GetSelected<Definition>().Id);
-			Prefs.Set(PrefName.RecallStatusTexted,comboStatusTextedRecall.GetSelected<Definition>().Id);
-			Prefs.Set(PrefName.RecallStatusEmailedTexted,comboStatusEmailTextRecall.GetSelected<Definition>().Id);
+			Preferences.Set(PreferenceName.RecallStatusEmailed,comboStatusEmailedRecall.GetSelected<Definition>().Id);
+			Preferences.Set(PreferenceName.RecallStatusMailed,comboStatusMailedRecall.GetSelected<Definition>().Id);
+			Preferences.Set(PreferenceName.RecallStatusTexted,comboStatusTextedRecall.GetSelected<Definition>().Id);
+			Preferences.Set(PreferenceName.RecallStatusEmailedTexted,comboStatusEmailTextRecall.GetSelected<Definition>().Id);
 			string recalltypes = string.Join(",",listTypes.SelectedIndices.OfType<int>().Select(x => listRecallCache[x].RecallTypeNum));
-			Prefs.Set(PrefName.RecallTypesShowingInList,recalltypes);
-			Prefs.Set(PrefName.RecallShowIfDaysFirstReminder,GetLongFromString(textDaysFirstReminder.Text));
-			Prefs.Set(PrefName.RecallShowIfDaysSecondReminder,GetLongFromString(textDaysSecondReminder.Text));
-			Prefs.Set(PrefName.RecallMaxNumberReminders,GetLongFromString(textMaxReminders.Text));
-			Prefs.Set(PrefName.RecallUseEmailIfHasEmailAddress,radioUseEmailTrue.Checked);
+			Preferences.Set(PreferenceName.RecallTypesShowingInList,recalltypes);
+			Preferences.Set(PreferenceName.RecallShowIfDaysFirstReminder,GetLongFromString(textDaysFirstReminder.Text));
+			Preferences.Set(PreferenceName.RecallShowIfDaysSecondReminder,GetLongFromString(textDaysSecondReminder.Text));
+			Preferences.Set(PreferenceName.RecallMaxNumberReminders,GetLongFromString(textMaxReminders.Text));
+			Preferences.Set(PreferenceName.RecallUseEmailIfHasEmailAddress,radioUseEmailTrue.Checked);
 			//If we want to take the time to check every Update and see if something changed 
 			//then we could move this to a FormClosing event later.
 			DataValid.SetInvalid(InvalidType.Prefs);

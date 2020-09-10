@@ -155,7 +155,7 @@ namespace Imedisoft.Forms
 		{
             var clinic = new Clinic
             {
-				IsMedicalOnly = Prefs.GetBool(PrefName.PracticeIsMedicalOnly)
+				IsMedicalOnly = Preferences.GetBool(PreferenceName.PracticeIsMedicalOnly)
 			};
 
 			using var formClinicEdit = new FormClinicEdit(clinic);

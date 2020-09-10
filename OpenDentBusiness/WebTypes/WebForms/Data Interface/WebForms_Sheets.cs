@@ -1,16 +1,15 @@
-﻿using System;
+﻿using CodeBase;
+using Imedisoft.Data;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using CodeBase;
 using WebServiceSerializer;
 
 namespace OpenDentBusiness.WebTypes.WebForms
 {
-	public class WebForms_Sheets
+    public class WebForms_Sheets
 	{
 
 		public static bool TryGetSheets(out List<WebForms_Sheet> listWebFormsSheets, string regKey = null)
@@ -18,7 +17,7 @@ namespace OpenDentBusiness.WebTypes.WebForms
 			listWebFormsSheets = new List<WebForms_Sheet>();
 			if (string.IsNullOrEmpty(regKey))
 			{
-				regKey = Prefs.GetString(PrefName.RegistrationKey);
+				regKey = Preferences.GetString(PreferenceName.RegistrationKey);
 			}
 			try
 			{
@@ -41,7 +40,7 @@ namespace OpenDentBusiness.WebTypes.WebForms
 		{
 			if (string.IsNullOrEmpty(regKey))
 			{
-				regKey = Prefs.GetString(PrefName.RegistrationKey);
+				regKey = Preferences.GetString(PreferenceName.RegistrationKey);
 			}
 			try
 			{
@@ -114,7 +113,7 @@ namespace OpenDentBusiness.WebTypes.WebForms
 				}
 				else
 				{
-					webFormPrefCulture = Prefs.GetString(PrefName.LanguageAndRegion);
+					webFormPrefCulture = Preferences.GetString(PreferenceName.LanguageAndRegion);
 				}
 			}
 

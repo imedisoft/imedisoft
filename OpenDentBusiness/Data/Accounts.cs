@@ -51,7 +51,7 @@ namespace Imedisoft.Data
 					INNER JOIN journalentry je2 ON je2.TransactionNum=journalentry.TransactionNum
 					INNER JOIN account ON account.AccountNum=je2.AccountNum
 					WHERE journalentry.AccountNum=" + account.Id + @"
-					AND journalentry.DateDisplayed > " + POut.Date(PrefC.GetDate(PrefName.AccountingLockDate)) + @"
+					AND journalentry.DateDisplayed > " + POut.Date(PrefC.GetDate(PreferenceName.AccountingLockDate)) + @"
 					ORDER BY je2.TransactionNum";
 
 			DataTable table = Database.ExecuteDataTable(command);
@@ -156,7 +156,7 @@ namespace Imedisoft.Data
 					Translation.Accounting.NotAllowedToDeleteAccountWithJournalEntries);
 			}
 
-			string[] depositAccountIds = Prefs.GetString(PrefName.AccountingDepositAccounts, "").Split(new char[] { ',' });
+			string[] depositAccountIds = Preferences.GetString(PreferenceName.AccountingDepositAccounts, "").Split(new char[] { ',' });
 			for (int i = 0; i < depositAccountIds.Length; i++)
 			{
 				if (depositAccountIds[i] == account.Id.ToString())
@@ -165,13 +165,13 @@ namespace Imedisoft.Data
 				}
 			}
 
-			var incomingAccount = Prefs.GetString(PrefName.AccountingIncomeAccount);
+			var incomingAccount = Preferences.GetString(PreferenceName.AccountingIncomeAccount);
 			if (incomingAccount == account.Id.ToString())
 			{
 				throw new Exception(Translation.Accounting.AccountInUseInSetup);
 			}
 
-			var cashIncomeAccount = Prefs.GetString(PrefName.AccountingCashIncomeAccount);
+			var cashIncomeAccount = Preferences.GetString(PreferenceName.AccountingCashIncomeAccount);
 			if (cashIncomeAccount == account.Id.ToString())
 			{
 				throw new Exception(Translation.Accounting.AccountInUseInSetup);
@@ -239,24 +239,24 @@ namespace Imedisoft.Data
 		/// </summary>
 		public static bool DepositsLinked()
 		{
-			if (PrefC.GetInt(PrefName.AccountingSoftware) == (int)AccountingSoftware.QuickBooks)
+			if (PrefC.GetInt(PreferenceName.AccountingSoftware) == (int)AccountingSoftware.QuickBooks)
 			{
-				if (Prefs.GetString(PrefName.QuickBooksDepositAccounts) == "")
+				if (Preferences.GetString(PreferenceName.QuickBooksDepositAccounts) == "")
 				{
 					return false;
 				}
-				if (Prefs.GetString(PrefName.QuickBooksIncomeAccount) == "")
+				if (Preferences.GetString(PreferenceName.QuickBooksIncomeAccount) == "")
 				{
 					return false;
 				}
 			}
 			else
 			{
-				if (Prefs.GetString(PrefName.AccountingDepositAccounts) == "")
+				if (Preferences.GetString(PreferenceName.AccountingDepositAccounts) == "")
 				{
 					return false;
 				}
-				if (Prefs.GetLong(PrefName.AccountingIncomeAccount) == 0)
+				if (Preferences.GetLong(PreferenceName.AccountingIncomeAccount) == 0)
 				{
 					return false;
 				}
@@ -274,7 +274,7 @@ namespace Imedisoft.Data
 				return false;
 			}
 
-			if (Prefs.GetLong(PrefName.AccountingCashIncomeAccount) == 0)
+			if (Preferences.GetLong(PreferenceName.AccountingCashIncomeAccount) == 0)
 			{
 				return false;
 			}
@@ -285,7 +285,7 @@ namespace Imedisoft.Data
 		public static long[] GetDepositAccounts()
 		{
 			var depositAccountIds = new List<long>();
-			var depositAccounts = Prefs.GetString(PrefName.AccountingDepositAccounts, "").Split(',');
+			var depositAccounts = Preferences.GetString(PreferenceName.AccountingDepositAccounts, "").Split(',');
 
 			foreach (var depositAccount in depositAccounts)
             {
@@ -303,7 +303,7 @@ namespace Imedisoft.Data
 		public static List<string> GetDepositAccountsQB()
 		{
 			//No need to check RemotingRole; no call to db.
-			string depStr = Prefs.GetString(PrefName.QuickBooksDepositAccounts);
+			string depStr = Preferences.GetString(PreferenceName.QuickBooksDepositAccounts);
 			string[] depStrArray = depStr.Split(new char[] { ',' });
 			List<string> retVal = new List<string>();
 			for (int i = 0; i < depStrArray.Length; i++)
@@ -321,7 +321,7 @@ namespace Imedisoft.Data
 		public static List<string> GetIncomeAccountsQB()
 		{
 			//No need to check RemotingRole; no call to db.
-			string incomeStr = Prefs.GetString(PrefName.QuickBooksIncomeAccount);
+			string incomeStr = Preferences.GetString(PreferenceName.QuickBooksIncomeAccount);
 			string[] incomeStrArray = incomeStr.Split(new char[] { ',' });
 			List<string> retVal = new List<string>();
 			for (int i = 0; i < incomeStrArray.Length; i++)

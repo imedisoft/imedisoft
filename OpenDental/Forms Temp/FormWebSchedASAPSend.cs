@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -34,9 +35,9 @@ namespace OpenDental {
 			Clinic curClinic=Clinics.GetById(_clinicNum)??Clinics.GetDefaultForTexting()??Clinics.GetPracticeAsClinicZero();
 			List<long> listPatNums=(_listAppts.Select(x => x.PatNum).Union(_listRecalls.Select(x => x.PatNum))).Distinct().ToList();
 			_listPatComms=Patients.GetPatComms(listPatNums,curClinic,isGetFamily: false);
-			string textTemplate=ClinicPrefs.GetString(_clinicNum, PrefName.WebSchedAsapTextTemplate);
-			string emailTemplate=ClinicPrefs.GetString(_clinicNum, PrefName.WebSchedAsapEmailTemplate);
-			string emailSubject=ClinicPrefs.GetString(_clinicNum, PrefName.WebSchedAsapEmailSubj);
+			string textTemplate=ClinicPrefs.GetString(_clinicNum, PreferenceName.WebSchedAsapTextTemplate);
+			string emailTemplate=ClinicPrefs.GetString(_clinicNum, PreferenceName.WebSchedAsapEmailTemplate);
+			string emailSubject=ClinicPrefs.GetString(_clinicNum, PreferenceName.WebSchedAsapEmailSubj);
 			textTextTemplate.Text=AsapComms.ReplacesTemplateTags(textTemplate,_clinicNum,_dtSlotStart);
 			_emailText=AsapComms.ReplacesTemplateTags(emailTemplate,_clinicNum,_dtSlotStart,isHtmlEmail:true);
 			RefreshEmail();
@@ -47,7 +48,7 @@ namespace OpenDental {
 			else {
 				radioEmail.Checked=true;
 			}
-			_isTemplateRawHtml=PIn.Enum<EmailType>(ClinicPrefs.GetString(_clinicNum, PrefName.WebSchedAsapEmailTemplateType))==EmailType.RawHtml;
+			_isTemplateRawHtml=PIn.Enum<EmailType>(ClinicPrefs.GetString(_clinicNum, PreferenceName.WebSchedAsapEmailTemplateType))==EmailType.RawHtml;
 			FillSendDetails();
 			timerUpdateDetails.Start();
 		}

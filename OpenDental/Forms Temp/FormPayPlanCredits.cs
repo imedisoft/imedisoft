@@ -7,6 +7,7 @@ using System.Linq;
 using System.Drawing;
 using System.Drawing.Printing;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	///<summary>This form will not be available to those who are still using PayPlans Version 1.</summary>
@@ -309,7 +310,7 @@ namespace OpenDental {
 				return;
 			}
 			if(listSelectedEntries.Count==0 ) {
-				if(PrefC.GetInt(PrefName.RigorousAccounting)==(int)RigorousAccounting.EnforceFully) { //if they have none selected
+				if(PrefC.GetInt(PreferenceName.RigorousAccounting)==(int)RigorousAccounting.EnforceFully) { //if they have none selected
 					MessageBox.Show("All treatment credits (excluding adjustments) must have a procedure.");
 					return;
 				}
@@ -324,7 +325,7 @@ namespace OpenDental {
 					MessageBox.Show("This procedure is already linked to a dynamic payment plan.");
 					return;
 				}
-				if(PrefC.GetInt(PrefName.RigorousAccounting)==(int)RigorousAccounting.EnforceFully) {
+				if(PrefC.GetInt(PreferenceName.RigorousAccounting)==(int)RigorousAccounting.EnforceFully) {
 					if((selectedEntry.Proc==null || selectedEntry.Proc.ProcNum==0)
 						&& !(selectedEntry.Charge!=null && selectedEntry.Charge.IsCreditAdjustment)) 
 					{
@@ -442,7 +443,7 @@ namespace OpenDental {
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {
-			if(PrefC.GetInt(PrefName.RigorousAccounting)==(int)RigorousAccounting.EnforceFully) {
+			if(PrefC.GetInt(PreferenceName.RigorousAccounting)==(int)RigorousAccounting.EnforceFully) {
 				//If no procs attached and not an adjustment with a negative amount
 				if(ListPayPlanCreditsCur.Any(x => x.ProcNum==0 && !x.IsCreditAdjustment)) {
 					MessageBox.Show("All treatment credits (excluding adjustments) must have a procedure.");

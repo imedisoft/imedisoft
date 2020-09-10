@@ -461,7 +461,7 @@ namespace OpenDental{
 			if(PrefC.HasClinicsEnabled) {
 				comboClinics.SelectedClinicNum=_dunningCur.ClinicNum;
 			}
-			if(Prefs.GetBool(PrefName.ShowFeatureSuperfamilies)) {
+			if(Preferences.GetBool(PreferenceName.ShowFeatureSuperfamilies)) {
 				checkSuperFamily.Visible=true;
 				checkSuperFamily.Checked=_dunningCur.IsSuperFamily;
 			}

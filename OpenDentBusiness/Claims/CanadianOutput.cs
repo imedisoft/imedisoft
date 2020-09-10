@@ -36,7 +36,7 @@ namespace OpenDentBusiness.Eclaims {
 			CanadianNetwork network=CanadianNetworks.GetNetwork(carrier.CanadianNetworkNum,clearinghouseClin);
 			Patient patient=Patients.GetPat(patNum);
 			Patient subscriber=Patients.GetPat(insSub.Subscriber);
-			Provider provDefaultTreat=Providers.GetById(Prefs.GetLong(PrefName.PracticeDefaultProv));
+			Provider provDefaultTreat=Providers.GetById(Preferences.GetLong(PreferenceName.PracticeDefaultProv));
 			if(clearinghouseClin==null) {
 				throw new ApplicationException("Canadian clearinghouse not found.");
 			}

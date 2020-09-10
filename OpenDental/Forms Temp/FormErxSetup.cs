@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using System.Linq;
 using OpenDental.UI;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	///<summary>This form is used to make changes for the eRx program link.
@@ -58,7 +59,7 @@ namespace OpenDental {
 					radioDoseSpotLegacy.Checked=true;
 					//HideLegacy();
 				}
-				textNewCropAccountID.Text=Prefs.GetString(PrefName.NewCropAccountId);
+				textNewCropAccountID.Text=Preferences.GetString(PreferenceName.NewCropAccountId);
 				List<ProgramProperty> listClinicIDs=_listProgramProperties.FindAll(x => x.Description==Erx.PropertyDescs.ClinicID);
 				List<ProgramProperty> listClinicKeys=_listProgramProperties.FindAll(x => x.Description==Erx.PropertyDescs.ClinicKey);
 				//Always make sure clinicnum 0 (HQ) exists, regardless of if clinics are enabled

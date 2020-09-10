@@ -487,7 +487,7 @@ namespace OpenDental{
 			selectedFormatNum=ComputerPrefCur.PreferredPixelFormatNum;
 			selectedDirectXFormat=ComputerPrefCur.DirectXFormat;
 			textSelected.Text="";
-			if(Prefs.GetBool(PrefName.DirectX11ToothChartUseIfAvail)){
+			if(Preferences.GetBool(PreferenceName.DirectX11ToothChartUseIfAvail)){
 				radioDirectX11Use.Checked=true;
 			}
 			else{
@@ -738,7 +738,7 @@ namespace OpenDental{
 		}
 
 		private void butOK_Click(object sender,System.EventArgs e) {
-			bool changed=Prefs.Set(PrefName.DirectX11ToothChartUseIfAvail,radioDirectX11Use.Checked);
+			bool changed=Preferences.Set(PreferenceName.DirectX11ToothChartUseIfAvail,radioDirectX11Use.Checked);
 			//ComputerPrefCur doesn't change until here, so make the old copy exactly when we need it instead of when the form is created.
 			ComputerPref computerPrefOld=ComputerPrefCur.Copy();
 			if(radioDirectX11ThisCompUseGlobal.Checked) {

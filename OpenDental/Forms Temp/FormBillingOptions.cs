@@ -700,7 +700,7 @@ namespace OpenDental{
 				labelModesToText.Visible=false;
 			}
 			SetClinicFilters();
-			if(!Prefs.GetBool(PrefName.ShowFeatureSuperfamilies)) {
+			if(!Preferences.GetBool(PreferenceName.ShowFeatureSuperfamilies)) {
 				checkSuperFam.Visible=false;
 			}
 			//blank is allowed
@@ -1055,12 +1055,12 @@ namespace OpenDental{
 		}
 
 		private void SetDefaults(){
-			textDateStart.Text=DateTime.Today.AddDays(-Prefs.GetLong(PrefName.BillingDefaultsLastDays)).ToShortDateString();
+			textDateStart.Text=DateTime.Today.AddDays(-Preferences.GetLong(PreferenceName.BillingDefaultsLastDays)).ToShortDateString();
 			textDateEnd.Text=DateTime.Today.ToShortDateString();
-			checkIntermingled.Checked=Prefs.GetBool(PrefName.BillingDefaultsIntermingle);
-			checkSinglePatient.Checked=Prefs.GetBool(PrefName.BillingDefaultsSinglePatient);
+			checkIntermingled.Checked=Preferences.GetBool(PreferenceName.BillingDefaultsIntermingle);
+			checkSinglePatient.Checked=Preferences.GetBool(PreferenceName.BillingDefaultsSinglePatient);
 			if(SmsPhones.IsIntegratedTextingEnabled()) {
-				foreach(string modeIdx in Prefs.GetString(PrefName.BillingDefaultsModesToText)
+				foreach(string modeIdx in Preferences.GetString(PreferenceName.BillingDefaultsModesToText)
 					.Split(new string[] { "," },StringSplitOptions.RemoveEmptyEntries)) {
 					listModeToText.SetSelected(PIn.Int(modeIdx),true);
 				}
@@ -1127,12 +1127,12 @@ namespace OpenDental{
 		private bool RunAgingEnterprise() {
 			DateTime dtNow=MiscData.GetNowDateTime();
 			DateTime dtToday=dtNow.Date;
-			DateTime dateLastAging=PrefC.GetDate(PrefName.DateLastAging);
+			DateTime dateLastAging=PrefC.GetDate(PreferenceName.DateLastAging);
 			if(dateLastAging.Date==dtToday) {
 				return true;//already ran aging for this date, just move on
 			}
-			Prefs.RefreshCache();
-			DateTime dateTAgingBeganPref=PrefC.GetDate(PrefName.AgingBeginDateTime);
+			Preferences.RefreshCache();
+			DateTime dateTAgingBeganPref=PrefC.GetDate(PreferenceName.AgingBeginDateTime);
 			if(dateTAgingBeganPref>DateTime.MinValue) {
 				MessageBox.Show("In order to create statments, aging must be calculated, but you cannot run aging until it has finished the "
 					+"current calculations which began on"+" "+dateTAgingBeganPref.ToString()+".\r\n"+"If you believe the current aging process "
@@ -1141,14 +1141,14 @@ namespace OpenDental{
 				return false;
 			}
 			SecurityLogs.MakeLogEntry(Permissions.AgingRan,0,"Starting Aging - Billing Options");
-			Prefs.Set(PrefName.AgingBeginDateTime,POut.DateT(dtNow,false));//get lock on pref to block others
+			Preferences.Set(PreferenceName.AgingBeginDateTime,POut.DateT(dtNow,false));//get lock on pref to block others
 			Signalods.SetInvalid(InvalidType.Prefs);//signal a cache refresh so other computers will have the updated pref as quickly as possible
 			Cursor=Cursors.WaitCursor;
 			string msgText="Calculating enterprise aging for all patients as of"+" "+dtToday.ToShortDateString()+"...";
 			bool result=true;
 			ODProgress.ShowAction(() => {
 					Ledgers.ComputeAging(0,dtToday);
-					Prefs.Set(PrefName.DateLastAging,POut.Date(dtToday,false));
+					Preferences.Set(PreferenceName.DateLastAging,POut.Date(dtToday,false));
 				},
 				startingMessage:msgText,
 				actionException:ex => {
@@ -1158,7 +1158,7 @@ namespace OpenDental{
 			);
 			Cursor=Cursors.Default;
 			SecurityLogs.MakeLogEntry(Permissions.AgingRan,0,"Aging completed - Billing Options");
-			Prefs.Set(PrefName.AgingBeginDateTime,"");//clear lock on pref whether aging was successful or not
+			Preferences.Set(PreferenceName.AgingBeginDateTime,"");//clear lock on pref whether aging was successful or not
 			Signalods.SetInvalid(InvalidType.Prefs);
 			return result;
 		}
@@ -1166,7 +1166,7 @@ namespace OpenDental{
 		///<summary>Returns the mode for the statement.</summary>
 		private StatementMode GetStatementMode(PatAging patAge) {
 			StatementMode mode;
-			if(PrefC.GetInt(PrefName.BillingUseElectronic).In(1,2,3,4)) {
+			if(PrefC.GetInt(PreferenceName.BillingUseElectronic).In(1,2,3,4)) {
 				mode=StatementMode.Electronic;
 			}
 			else {
@@ -1202,14 +1202,14 @@ namespace OpenDental{
 				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
-			if(Prefs.GetBool(PrefName.AgingIsEnterprise)) {
+			if(Preferences.GetBool(PreferenceName.AgingIsEnterprise)) {
 				if(!RunAgingEnterprise()) {
 					return;
 				}
 			}
-			else if(!Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)) {
+			else if(!Preferences.GetBool(PreferenceName.AgingCalculatedMonthlyInsteadOfDaily)) {
 				SecurityLogs.MakeLogEntry(Permissions.AgingRan,0,"Starting Aging - Billing Options");
-				DateTime asOfDate=(Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)?PrefC.GetDate(PrefName.DateLastAging):DateTime.Today);
+				DateTime asOfDate=(Preferences.GetBool(PreferenceName.AgingCalculatedMonthlyInsteadOfDaily)?PrefC.GetDate(PreferenceName.DateLastAging):DateTime.Today);
 				ODProgress.ShowAction(() => Ledgers.RunAging(),
 					startingMessage:"Calculating aging for all patients as of"+" "+asOfDate.ToShortDateString()+"...",
 					actionException:ex => {
@@ -1219,9 +1219,9 @@ namespace OpenDental{
 			}
 			Cursor=Cursors.WaitCursor;
 			//All places in the program that have the ability to run aging against the entire database require the Setup permission because it can take a long time.
-			if(Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily) 
+			if(Preferences.GetBool(PreferenceName.AgingCalculatedMonthlyInsteadOfDaily) 
 				&& Security.IsAuthorized(Permissions.Setup,true)
-				&& PrefC.GetDate(PrefName.DateLastAging) < DateTime.Today.AddDays(-15)) 
+				&& PrefC.GetDate(PreferenceName.DateLastAging) < DateTime.Today.AddDays(-15)) 
 			{
 				MessageBox.Show("Last aging date seems old, so you will now be given a chance to update it.  The billing process will continue whether or not aging gets updated.");
 				FormAging FormA=new FormAging();
@@ -1445,16 +1445,16 @@ namespace OpenDental{
 			}
 			Statement stmt;
 			DateTime dateAsOf=DateTime.Today;//used to determine when the balance on this date began
-			if(Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)) {//if aging calculated monthly, use the last aging date instead of today
-				dateAsOf=PrefC.GetDate(PrefName.DateLastAging);
+			if(Preferences.GetBool(PreferenceName.AgingCalculatedMonthlyInsteadOfDaily)) {//if aging calculated monthly, use the last aging date instead of today
+				dateAsOf=PrefC.GetDate(PreferenceName.DateLastAging);
 			}
 			List<WebServiceMainHQProxy.ShortGuidResult> listShortGuidUrls=new List<WebServiceMainHQProxy.ShortGuidResult>();
 			SheetDef stmtSheet=SheetUtil.GetStatementSheetDef();
 			if(//They are going to send texts
 				listModeToText.SelectedIndices.Count > 0 
 				//Or the email body has a statement URL
-				|| Prefs.GetString(PrefName.BillingEmailBodyText).ToLower().Contains("[statementurl]")
-				|| Prefs.GetString(PrefName.BillingEmailBodyText).ToLower().Contains("[statementshorturl]")
+				|| Preferences.GetString(PreferenceName.BillingEmailBodyText).ToLower().Contains("[statementurl]")
+				|| Preferences.GetString(PreferenceName.BillingEmailBodyText).ToLower().Contains("[statementshorturl]")
 				//Or the statement sheet has a URL field
 				|| (stmtSheet!=null && stmtSheet.SheetFieldDefs.Any(x => x.FieldType==SheetFieldType.OutputText 
 							&& (x.FieldValue.ToLower().Contains("[statementurl]") || x.FieldValue.ToLower().Contains("[statementshorturl]"))))) 
@@ -1467,8 +1467,8 @@ namespace OpenDental{
 				catch(Exception ex) {
 					FriendlyException.Show("Unable to create a unique URL for each statement. The Patient Portal URL will be used instead.",ex);
 					listShortGuidUrls=listPatAging.Select(x => new WebServiceMainHQProxy.ShortGuidResult {
-						MediumURL=Prefs.GetString(PrefName.PatientPortalURL),
-						ShortURL=Prefs.GetString(PrefName.PatientPortalURL),
+						MediumURL=Preferences.GetString(PreferenceName.PatientPortalURL),
+						ShortURL=Preferences.GetString(PreferenceName.PatientPortalURL),
 						ShortGuid=""
 					}).ToList();
 				}
@@ -1486,7 +1486,7 @@ namespace OpenDental{
 				stmt.Intermingled=checkIntermingled.Checked;
 				stmt.IsSent=false;
 				stmt.Mode_=GetStatementMode(patAgeCur);
-				if(PrefC.GetInt(PrefName.BillingUseElectronic).In(1,2,3,4)) {
+				if(PrefC.GetInt(PreferenceName.BillingUseElectronic).In(1,2,3,4)) {
 					stmt.Intermingled=true;
 				}
 				bool doSendSms=DoSendSms(patAgeCur,dictPatAgingData);

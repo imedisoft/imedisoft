@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using OpenDental;
 using OpenDentBusiness;
 using System;
@@ -143,7 +144,7 @@ namespace Imedisoft.Forms
 			sliderButton.Location = new Point(timeTable.Location.X + 2, timeTable.Location.Y + timeStringBuilder.Length * 14 + 1);
 			if (timeStringBuilder.Length > 0)
 			{
-				timeTextBox.Text = (timeStringBuilder.Length * PrefC.GetInt(PrefName.AppointmentTimeIncrement)).ToString();
+				timeTextBox.Text = (timeStringBuilder.Length * PrefC.GetInt(PreferenceName.AppointmentTimeIncrement)).ToString();
 			}
 			else
 			{

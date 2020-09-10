@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Data;
 using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
@@ -6,8 +7,9 @@ using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace OpenDental {
-	public partial class FormCreditRecurringDateChoose:ODForm {
+namespace OpenDental
+{
+    public partial class FormCreditRecurringDateChoose:ODForm {
 		private CreditCard _creditCardCur;
 		public DateTime PayDate;
 		private Patient _pat;
@@ -27,7 +29,7 @@ namespace OpenDental {
 				//We are using the This Month/Last Month buttons instead of the comboBox.
 				DateTime thisMonth=GetValidPayDate(DateTime.Today);
 				DateTime lastMonth=GetValidPayDate(DateTime.Today.AddMonths(-1));
-				if(Prefs.GetBool(PrefName.RecurringChargesUseTransDate)) {
+				if(Preferences.GetBool(PreferenceName.RecurringChargesUseTransDate)) {
 					//Labels set here, buttons set in respective button methods butLastMonth_Click/butThisMonth_Click
 					labelLastMonth.Text="Recurring charge date will be:"+" "+lastMonth.ToShortDateString();
 					labelThisMonth.Text="Recurring charge date will be:"+" "+thisMonth.ToShortDateString();

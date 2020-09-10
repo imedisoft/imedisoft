@@ -2,12 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using Imedisoft.Data;
 using OpenDental.UI;
 using OpenDentBusiness;
 
-namespace OpenDental{
+namespace OpenDental
+{
 	///<summary></summary>
-	public class FormDisplayFields : ODForm {
+	public class FormDisplayFields : ODForm
+	{
 		private OpenDental.UI.Button butCancel;
 		private OpenDental.UI.ODGrid gridMain;
 		///<summary>Required designer variable.</summary>
@@ -33,14 +36,18 @@ namespace OpenDental{
 		///the list at the right.</summary>
 		private List<DisplayField> AvailList;
 
-		public FormDisplayFields() {
+		public FormDisplayFields()
+		{
 			InitializeComponent();
-			
+
 		}
 
-		protected override void Dispose(bool disposing) {
-			if(disposing) {
-				if(components!=null) {
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (components != null)
+				{
 					components.Dispose();
 				}
 			}
@@ -137,7 +144,7 @@ namespace OpenDental{
 			// 
 			// butLeft
 			// 
-			
+
 			this.butLeft.Image = global::Imedisoft.Properties.Resources.Left;
 			this.butLeft.Location = new System.Drawing.Point(320, 252);
 			this.butLeft.Name = "butLeft";
@@ -215,36 +222,39 @@ namespace OpenDental{
 		}
 		#endregion
 
-		private void FormDisplayFields_Load(object sender,EventArgs e) {
-			labelCategory.Text=Category.ToString();
+		private void FormDisplayFields_Load(object sender, EventArgs e)
+		{
+			labelCategory.Text = Category.ToString();
 			DisplayFields.RefreshCache();
-			ListShowing=DisplayFields.GetForCategory(Category);
-			if(Category==DisplayFieldCategory.ChartPatientInformation
-				&& !Prefs.GetBool(PrefName.ShowFeatureEhr)
-				&& ListShowing.Any(x => x.InternalName=="Tobacco Use"))
+			ListShowing = DisplayFields.GetForCategory(Category);
+			if (Category == DisplayFieldCategory.ChartPatientInformation
+				&& !Preferences.GetBool(PreferenceName.ShowFeatureEhr)
+				&& ListShowing.Any(x => x.InternalName == "Tobacco Use"))
 			{
 				//user may have enable EHR features, added the tobacco use display field, and then disabled EHR features, remove the tobacco use display field
-				ListShowing.RemoveAll(x => x.InternalName=="Tobacco Use");
-				changed=true;
+				ListShowing.RemoveAll(x => x.InternalName == "Tobacco Use");
+				changed = true;
 			}
 			FillGrids();
 		}
 
-		private void FillGrids(){
-			AvailList=DisplayFields.GetAllAvailableList(Category);//This one needs to be called repeatedly.
+		private void FillGrids()
+		{
+			AvailList = DisplayFields.GetAllAvailableList(Category);//This one needs to be called repeatedly.
 			gridMain.BeginUpdate();
 			gridMain.Columns.Clear();
 			GridColumn col;
-			col=new GridColumn("FieldName",110);
+			col = new GridColumn("FieldName", 110);
 			gridMain.Columns.Add(col);
-			col=new GridColumn("New Descript",110);
+			col = new GridColumn("New Descript", 110);
 			gridMain.Columns.Add(col);
-			col=new GridColumn("Width",60);
+			col = new GridColumn("Width", 60);
 			gridMain.Columns.Add(col);
 			gridMain.Rows.Clear();
 			GridRow row;
-			for(int i=0;i<ListShowing.Count;i++){
-				row=new GridRow();
+			for (int i = 0; i < ListShowing.Count; i++)
+			{
+				row = new GridRow();
 				row.Cells.Add(ListShowing[i].InternalName);
 				row.Cells.Add(ListShowing[i].Description);
 				row.Cells.Add(ListShowing[i].ColumnWidth.ToString());
@@ -252,123 +262,150 @@ namespace OpenDental{
 			}
 			gridMain.EndUpdate();
 			//Remove items from AvailList that are in the ListShowing.
-			for(int i=0;i<ListShowing.Count;i++){
-				for(int j=0;j<AvailList.Count;j++) {
+			for (int i = 0; i < ListShowing.Count; i++)
+			{
+				for (int j = 0; j < AvailList.Count; j++)
+				{
 					//Only removing one item from AvailList per iteration of i, so RemoveAt() is safe without going backwards.
-					if(ListShowing[i].InternalName==AvailList[j].InternalName) {
+					if (ListShowing[i].InternalName == AvailList[j].InternalName)
+					{
 						AvailList.RemoveAt(j);
 						break;
 					}
 				}
 			}
 			listAvailable.Items.Clear();
-			for(int i=0;i<AvailList.Count;i++) {
+			for (int i = 0; i < AvailList.Count; i++)
+			{
 				listAvailable.Items.Add(AvailList[i]);
 			}
 		}
 
-		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			DisplayField tempField=ListShowing[e.Row].Copy();
-			FormDisplayFieldEdit formD=new FormDisplayFieldEdit();
-			formD.FieldCur=ListShowing[e.Row];
+		private void gridMain_CellDoubleClick(object sender, ODGridClickEventArgs e)
+		{
+			DisplayField tempField = ListShowing[e.Row].Copy();
+			FormDisplayFieldEdit formD = new FormDisplayFieldEdit();
+			formD.FieldCur = ListShowing[e.Row];
 			formD.ShowDialog();
-			if(formD.DialogResult!=DialogResult.OK) {
-				ListShowing[e.Row]=tempField.Copy();
+			if (formD.DialogResult != DialogResult.OK)
+			{
+				ListShowing[e.Row] = tempField.Copy();
 				return;
 			}
 			FillGrids();
-			changed=true;
+			changed = true;
 		}
 
-		private void butDefault_Click(object sender,EventArgs e) {
-			ListShowing=DisplayFields.GetDefaultList(Category);
+		private void butDefault_Click(object sender, EventArgs e)
+		{
+			ListShowing = DisplayFields.GetDefaultList(Category);
 			FillGrids();
-			changed=true;
+			changed = true;
 		}
 
-		private void butLeft_Click(object sender,EventArgs e) {
-			if(listAvailable.SelectedItems.Count==0) {
+		private void butLeft_Click(object sender, EventArgs e)
+		{
+			if (listAvailable.SelectedItems.Count == 0)
+			{
 				MessageBox.Show("Please select an item in the list on the right first.");
 				return;
 			}
 			DisplayField field;
-			for(int i=0;i<listAvailable.SelectedItems.Count;i++) {
-				field=(DisplayField)listAvailable.SelectedItems[i];
+			for (int i = 0; i < listAvailable.SelectedItems.Count; i++)
+			{
+				field = (DisplayField)listAvailable.SelectedItems[i];
 				ListShowing.Add(field);
 			}
-			changed=true;
+			changed = true;
 			FillGrids();
 		}
 
-		private void butRight_Click(object sender,EventArgs e) {
-			if(gridMain.SelectedIndices.Length==0) {
+		private void butRight_Click(object sender, EventArgs e)
+		{
+			if (gridMain.SelectedIndices.Length == 0)
+			{
 				MessageBox.Show("Please select an item in the grid on the left first.");
 				return;
 			}
-			for(int i=gridMain.SelectedIndices.Length-1;i>=0;i--){//go backwards
+			for (int i = gridMain.SelectedIndices.Length - 1; i >= 0; i--)
+			{//go backwards
 				ListShowing.RemoveAt(gridMain.SelectedIndices[i]);
 			}
 			FillGrids();
-			changed=true;
+			changed = true;
 		}
 
-		private void butUp_Click(object sender,EventArgs e) {
-			if(gridMain.SelectedIndices.Length==0) {
+		private void butUp_Click(object sender, EventArgs e)
+		{
+			if (gridMain.SelectedIndices.Length == 0)
+			{
 				MessageBox.Show("Please select an item in the grid first.");
 				return;
 			}
-			int[] selected=new int[gridMain.SelectedIndices.Length];
-			for(int i=0;i<gridMain.SelectedIndices.Length;i++){
-				selected[i]=gridMain.SelectedIndices[i];
+			int[] selected = new int[gridMain.SelectedIndices.Length];
+			for (int i = 0; i < gridMain.SelectedIndices.Length; i++)
+			{
+				selected[i] = gridMain.SelectedIndices[i];
 			}
-			if(selected[0]==0){
+			if (selected[0] == 0)
+			{
 				return;
 			}
-			for(int i=0;i<selected.Length;i++){
-				ListShowing.Reverse(selected[i]-1,2);
+			for (int i = 0; i < selected.Length; i++)
+			{
+				ListShowing.Reverse(selected[i] - 1, 2);
 			}
 			FillGrids();
-			for(int i=0;i<selected.Length;i++){
-				gridMain.SetSelected(selected[i]-1,true);
+			for (int i = 0; i < selected.Length; i++)
+			{
+				gridMain.SetSelected(selected[i] - 1, true);
 			}
-			changed=true;
+			changed = true;
 		}
 
-		private void butDown_Click(object sender,EventArgs e) {
-			if(gridMain.SelectedIndices.Length==0) {
+		private void butDown_Click(object sender, EventArgs e)
+		{
+			if (gridMain.SelectedIndices.Length == 0)
+			{
 				MessageBox.Show("Please select an item in the grid first.");
 				return;
 			}
-			int[] selected=new int[gridMain.SelectedIndices.Length];
-			for(int i=0;i<gridMain.SelectedIndices.Length;i++) {
-				selected[i]=gridMain.SelectedIndices[i];
+			int[] selected = new int[gridMain.SelectedIndices.Length];
+			for (int i = 0; i < gridMain.SelectedIndices.Length; i++)
+			{
+				selected[i] = gridMain.SelectedIndices[i];
 			}
-			if(selected[selected.Length-1]==ListShowing.Count-1) {
+			if (selected[selected.Length - 1] == ListShowing.Count - 1)
+			{
 				return;
 			}
-			for(int i=selected.Length-1;i>=0;i--) {//go backwards
-				ListShowing.Reverse(selected[i],2);
+			for (int i = selected.Length - 1; i >= 0; i--)
+			{//go backwards
+				ListShowing.Reverse(selected[i], 2);
 			}
 			FillGrids();
-			for(int i=0;i<selected.Length;i++) {
-				gridMain.SetSelected(selected[i]+1,true);
+			for (int i = 0; i < selected.Length; i++)
+			{
+				gridMain.SetSelected(selected[i] + 1, true);
 			}
-			changed=true;
+			changed = true;
 		}
 
-		private void butOK_Click(object sender,EventArgs e) {
-			if(!changed) {
-				DialogResult=DialogResult.OK;
+		private void butOK_Click(object sender, EventArgs e)
+		{
+			if (!changed)
+			{
+				DialogResult = DialogResult.OK;
 				return;
 			}
-			DisplayFields.SaveListForCategory(ListShowing,Category);
+			DisplayFields.SaveListForCategory(ListShowing, Category);
 			DataValid.SetInvalid(InvalidType.DisplayFields);
-			DialogResult=DialogResult.OK;
+			DialogResult = DialogResult.OK;
 		}
 
-		private void butCancel_Click(object sender, System.EventArgs e) {
-			DialogResult=DialogResult.Cancel;
+		private void butCancel_Click(object sender, System.EventArgs e)
+		{
+			DialogResult = DialogResult.Cancel;
 		}
-
 	}
 }

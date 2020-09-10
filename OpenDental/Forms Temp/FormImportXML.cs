@@ -142,17 +142,17 @@ namespace OpenDental{
 				return;
 			}
 			pat=new Patient();
-			pat.PriProv=Prefs.GetLong(PrefName.PracticeDefaultProv);
-			pat.BillingType=Prefs.GetLong(PrefName.PracticeDefaultBillType);
+			pat.PriProv=Preferences.GetLong(PreferenceName.PracticeDefaultProv);
+			pat.BillingType=Preferences.GetLong(PreferenceName.PracticeDefaultBillType);
 			guar=new Patient();
-			guar.PriProv=Prefs.GetLong(PrefName.PracticeDefaultProv);
-			guar.BillingType=Prefs.GetLong(PrefName.PracticeDefaultBillType);
+			guar.PriProv=Preferences.GetLong(PreferenceName.PracticeDefaultProv);
+			guar.BillingType=Preferences.GetLong(PreferenceName.PracticeDefaultBillType);
 			subsc=new Patient();
-			subsc.PriProv=Prefs.GetLong(PrefName.PracticeDefaultProv);
-			subsc.BillingType=Prefs.GetLong(PrefName.PracticeDefaultBillType);
+			subsc.PriProv=Preferences.GetLong(PreferenceName.PracticeDefaultProv);
+			subsc.BillingType=Preferences.GetLong(PreferenceName.PracticeDefaultBillType);
 			sub=new InsSub();
 			sub.ReleaseInfo=true;
-			sub.AssignBen=Prefs.GetBool(PrefName.InsDefaultAssignBen);
+			sub.AssignBen=Preferences.GetBool(PreferenceName.InsDefaultAssignBen);
 			plan=new InsPlan();
 			carrier=new Carrier();
 			insRelat="self";//this is the default if not included
@@ -849,10 +849,10 @@ namespace OpenDental{
 							sub.AssignBen=false;
 							break;
 						case "":
-							sub.AssignBen=Prefs.GetBool(PrefName.InsDefaultAssignBen);
+							sub.AssignBen=Preferences.GetBool(PreferenceName.InsDefaultAssignBen);
 							break;
 						default:
-							sub.AssignBen=Prefs.GetBool(PrefName.InsDefaultAssignBen);
+							sub.AssignBen=Preferences.GetBool(PreferenceName.InsDefaultAssignBen);
 							warnings+="Invalid AssignmentOfBenefits\r\n";
 							break;
 					}

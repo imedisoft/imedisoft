@@ -1,98 +1,117 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using Imedisoft.Data;
 using OpenDental.UI;
 using OpenDentBusiness;
 
-namespace OpenDental {
-	public partial class FormAsapSetup:ODForm {
-		public FormAsapSetup() {
+namespace OpenDental
+{
+	public partial class FormAsapSetup : ODForm
+	{
+		public FormAsapSetup()
+		{
 			InitializeComponent();
-			
+
 		}
 
-		private void FormAsapSetup_Load(object sender,EventArgs e) {
-			comboClinic.SelectedClinicNum=Clinics.Active.Id;
+		private void FormAsapSetup_Load(object sender, EventArgs e)
+		{
+			comboClinic.SelectedClinicNum = Clinics.Active.Id;
 			FillPrefs();
 		}
 
-		private void FillPrefs() {
+		private void FillPrefs()
+		{
 			gridMain.BeginUpdate();
 			gridMain.Columns.Clear();
 			GridColumn col;
-			col=new GridColumn("Type",100);
+			col = new GridColumn("Type", 100);
 			gridMain.Columns.Add(col);
-			col=new GridColumn("",250);//Random tidbits regarding the template
+			col = new GridColumn("", 250);//Random tidbits regarding the template
 			gridMain.Columns.Add(col);
-			col=new GridColumn("Template",500);
+			col = new GridColumn("Template", 500);
 			gridMain.Columns.Add(col);
 			gridMain.Rows.Clear();
-			checkUseDefaults.Checked=true;
-			string baseVars="Available variables:"+" [NameF], [Date], [Time], [OfficeName], [OfficePhone]";
+			checkUseDefaults.Checked = true;
+			string baseVars = "Available variables:" + " [NameF], [Date], [Time], [OfficeName], [OfficePhone]";
 			GridRow row;
-			row=BuildRowForTemplate(PrefName.ASAPTextTemplate,"Text manual",baseVars);
+			row = BuildRowForTemplate(PreferenceName.ASAPTextTemplate, "Text manual", baseVars);
 			gridMain.Rows.Add(row);
-			row=BuildRowForTemplate(PrefName.WebSchedAsapTextTemplate,"Web Sched Text",baseVars+", [AsapURL]");
+			row = BuildRowForTemplate(PreferenceName.WebSchedAsapTextTemplate, "Web Sched Text", baseVars + ", [AsapURL]");
 			gridMain.Rows.Add(row);
-			row=BuildRowForTemplate(PrefName.WebSchedAsapEmailTemplate,"Web Sched Email Body",baseVars+", [AsapURL]");
+			row = BuildRowForTemplate(PreferenceName.WebSchedAsapEmailTemplate, "Web Sched Email Body", baseVars + ", [AsapURL]");
 			gridMain.Rows.Add(row);
-			row=BuildRowForTemplate(PrefName.WebSchedAsapEmailSubj,"Web Sched Email Subject",baseVars);
+			row = BuildRowForTemplate(PreferenceName.WebSchedAsapEmailSubj, "Web Sched Email Subject", baseVars);
 			gridMain.Rows.Add(row);
 			gridMain.EndUpdate();
-			if(comboClinic.SelectedClinicNum==0) {
-				textWebSchedPerDay.Text=Prefs.GetString(PrefName.WebSchedAsapTextLimit);
-				checkUseDefaults.Checked=false;
+			if (comboClinic.SelectedClinicNum == 0)
+			{
+				textWebSchedPerDay.Text = Preferences.GetString(PreferenceName.WebSchedAsapTextLimit);
+				checkUseDefaults.Checked = false;
 			}
-			else {
-				var clinicPref=ClinicPrefs.GetString(comboClinic.SelectedClinicNum,PrefName.WebSchedAsapTextLimit);
-				if(string.IsNullOrEmpty(clinicPref)) {
-					textWebSchedPerDay.Text=Prefs.GetString(PrefName.WebSchedAsapTextLimit);
+			else
+			{
+				var clinicPref = ClinicPrefs.GetString(comboClinic.SelectedClinicNum, PreferenceName.WebSchedAsapTextLimit);
+				if (string.IsNullOrEmpty(clinicPref))
+				{
+					textWebSchedPerDay.Text = Preferences.GetString(PreferenceName.WebSchedAsapTextLimit);
 				}
-				else {
-					textWebSchedPerDay.Text=clinicPref;
-					checkUseDefaults.Checked=false;
+				else
+				{
+					textWebSchedPerDay.Text = clinicPref;
+					checkUseDefaults.Checked = false;
 				}
 			}
 		}
 
 		///<summary>Creates a row for the passed in template type. Unchecks checkUseDefaults if a clinic-level template is in use.</summary>
-		private GridRow BuildRowForTemplate(string prefName,string templateName,string availableVars) {
+		private GridRow BuildRowForTemplate(string prefName, string templateName, string availableVars)
+		{
 			string templateText;
-			bool doShowDefault=false;
-			if(comboClinic.SelectedClinicNum==0) {
-				templateText=Prefs.GetString(prefName);
-				checkUseDefaults.Checked=false;
+			bool doShowDefault = false;
+			if (comboClinic.SelectedClinicNum == 0)
+			{
+				templateText = Preferences.GetString(prefName);
+				checkUseDefaults.Checked = false;
 			}
-			else {
-				var clinicPref=ClinicPrefs.GetString(comboClinic.SelectedClinicNum, prefName);
-				if(string.IsNullOrEmpty(clinicPref)) {
-					templateText=Prefs.GetString(prefName);
-					doShowDefault=true;
+			else
+			{
+				var clinicPref = ClinicPrefs.GetString(comboClinic.SelectedClinicNum, prefName);
+				if (string.IsNullOrEmpty(clinicPref))
+				{
+					templateText = Preferences.GetString(prefName);
+					doShowDefault = true;
 				}
-				else {
-					templateText=clinicPref;
-					checkUseDefaults.Checked=false;
+				else
+				{
+					templateText = clinicPref;
+					checkUseDefaults.Checked = false;
 				}
 			}
-			GridRow row=new GridRow();
-			row.Cells.Add(templateName+(doShowDefault ? " "+"(Default)" : ""));
+			GridRow row = new GridRow();
+			row.Cells.Add(templateName + (doShowDefault ? " " + "(Default)" : ""));
 			row.Cells.Add(availableVars);
 			row.Cells.Add(templateText);
-			row.Tag=prefName;
+			row.Tag = prefName;
 			return row;
 		}
 
-		private void comboClinic_SelectedIndexChanged(object sender,EventArgs e) {
-			if(comboClinic.SelectedClinicNum==0) {
-				checkUseDefaults.Visible=false;
+		private void comboClinic_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (comboClinic.SelectedClinicNum == 0)
+			{
+				checkUseDefaults.Visible = false;
 			}
-			else {
-				checkUseDefaults.Visible=true;
+			else
+			{
+				checkUseDefaults.Visible = true;
 			}
 			FillPrefs();
 		}
 
-		private void checkUseDefaults_Click(object sender,EventArgs e) {
+		private void checkUseDefaults_Click(object sender, EventArgs e)
+		{
 			//List<string> listPrefs=new List<string> {
 			//	PrefName.ASAPTextTemplate,
 			//	PrefName.WebSchedAsapTextTemplate,
@@ -123,7 +142,8 @@ namespace OpenDental {
 			//FillPrefs();
 		}
 
-		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
+		private void gridMain_CellDoubleClick(object sender, ODGridClickEventArgs e)
+		{
 			//string prefName =(string)gridMain.ListGridRows[e.Row].Tag;
 			//string curPrefValue=GetClinicPrefValue(prefName);
 			//EmailType emailType=PIn.Enum<EmailType>(GetClinicPrefValue(PrefName.WebSchedAsapEmailTemplateType));
@@ -167,9 +187,11 @@ namespace OpenDental {
 			//FillPrefs();
 		}
 
-		private string GetClinicPrefValue(string prefName) {
-			if(comboClinic.SelectedClinicNum==0) {
-				return Prefs.GetString(prefName);
+		private string GetClinicPrefValue(string prefName)
+		{
+			if (comboClinic.SelectedClinicNum == 0)
+			{
+				return Preferences.GetString(prefName);
 			}
 			//ClinicPref clinicPref=ClinicPrefs.GetPref(prefName,comboClinic.SelectedClinicNum);
 			//if(clinicPref==null || string.IsNullOrEmpty(clinicPref.ValueString)) {
@@ -179,7 +201,8 @@ namespace OpenDental {
 			return "";
 		}
 
-		private void textWebSchedPerDay_Leave(object sender,EventArgs e) {
+		private void textWebSchedPerDay_Leave(object sender, EventArgs e)
+		{
 			//if(!textWebSchedPerDay.IsValid) {
 			//	return;
 			//}
@@ -195,18 +218,22 @@ namespace OpenDental {
 			//}
 		}
 
-		private void butClose_Click(object sender,EventArgs e) {
+		private void butClose_Click(object sender, EventArgs e)
+		{
 			Close();
 		}
 
-		private class ComboClinicItem {
+		private class ComboClinicItem
+		{
 			public string DisplayName;
 			public long ClinicNum;
-			public ComboClinicItem(string displayName,long clinicNum) {
-				DisplayName=displayName;
-				ClinicNum=clinicNum;
+			public ComboClinicItem(string displayName, long clinicNum)
+			{
+				DisplayName = displayName;
+				ClinicNum = clinicNum;
 			}
-			public override string ToString() {
+			public override string ToString()
+			{
 				return DisplayName;
 			}
 		}

@@ -43,14 +43,14 @@ namespace OpenDentBusiness.HL7 {
 		}
 
 		private void InitializeVariables() {
-			Provider provFacility=Providers.GetById(PrefC.GetInt(PrefName.PracticeDefaultProv));
+			Provider provFacility=Providers.GetById(PrefC.GetInt(PreferenceName.PracticeDefaultProv));
 			_sendingFacilityNpi=provFacility.NationalProviderID;
-			_sendingFacilityName=Prefs.GetString(PrefName.PracticeTitle);
-			_sendingFacilityAddress1=Prefs.GetString(PrefName.PracticeAddress);
-			_sendingFacilityAddress2=Prefs.GetString(PrefName.PracticeAddress2);
-			_sendingFacilityCity=Prefs.GetString(PrefName.PracticeCity);
-			_sendingFacilityState=Prefs.GetString(PrefName.PracticeST);
-			_sendingFacilityZip=Prefs.GetString(PrefName.PracticeZip);
+			_sendingFacilityName=Preferences.GetString(PreferenceName.PracticeTitle);
+			_sendingFacilityAddress1=Preferences.GetString(PreferenceName.PracticeAddress);
+			_sendingFacilityAddress2=Preferences.GetString(PreferenceName.PracticeAddress2);
+			_sendingFacilityCity=Preferences.GetString(PreferenceName.PracticeCity);
+			_sendingFacilityState=Preferences.GetString(PreferenceName.PracticeST);
+			_sendingFacilityZip=Preferences.GetString(PreferenceName.PracticeZip);
 			if(PrefC.HasClinicsEnabled && _appt.ClinicNum!=0) {//Using clinics and a clinic is assigned.
 				Clinic clinic=Clinics.GetById(_appt.ClinicNum);
 				_sendingFacilityName=clinic.Description;
@@ -543,7 +543,7 @@ namespace OpenDentBusiness.HL7 {
 
 		public static string Validate(Appointment appt) {
 			StringBuilder sb=new StringBuilder();
-			Provider provFacility=Providers.GetById(PrefC.GetInt(PrefName.PracticeDefaultProv));
+			Provider provFacility=Providers.GetById(PrefC.GetInt(PreferenceName.PracticeDefaultProv));
 			if(!Regex.IsMatch(provFacility.NationalProviderID,"^(80840)?[0-9]{10}$")) {
 				WriteError(sb,"Invalid NPI for provider '"+provFacility.Abbr+"'");
 			}
@@ -554,7 +554,7 @@ namespace OpenDentBusiness.HL7 {
 				}
 			}
 			else {//Not using clinics for this patient
-				if(Prefs.GetString(PrefName.PracticeTitle)=="") {
+				if(Preferences.GetString(PreferenceName.PracticeTitle)=="") {
 					WriteError(sb,"Missing practice title.");
 				}
 			}

@@ -140,7 +140,7 @@ namespace OpenDental{
 		private void FillToothChart(){
 			Cursor=Cursors.WaitCursor;
 			_toothChartRelay.BeginUpdate();
-			_toothChartRelay.SetToothNumberingNomenclature((ToothNumberingNomenclature)PrefC.GetInt(PrefName.UseInternationalToothNumbers));
+			_toothChartRelay.SetToothNumberingNomenclature((ToothNumberingNomenclature)PrefC.GetInt(PreferenceName.UseInternationalToothNumbers));
 			List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.ChartGraphicColors);
 			_toothChartRelay.ColorBackgroundMain=listDefs[10].Color;
 			_toothChartRelay.ColorText=listDefs[11].Color;

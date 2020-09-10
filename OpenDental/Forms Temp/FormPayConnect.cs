@@ -132,8 +132,8 @@ namespace OpenDental {
 			else {//Other cards
 				textZipCode.Text=_patCur.Zip;
 				textNameOnCard.Text=_patCur.GetNameFL();
-				checkSaveToken.Checked=Prefs.GetBool(PrefName.StoreCCtokens);
-				if(Prefs.GetBool(PrefName.StoreCCnumbers)) {
+				checkSaveToken.Checked=Preferences.GetBool(PreferenceName.StoreCCtokens);
+				if(Preferences.GetBool(PreferenceName.StoreCCnumbers)) {
 					labelStoreCCNumWarning.Visible=true;
 				}
 				FillFieldsFromCard();
@@ -556,7 +556,7 @@ namespace OpenDental {
 				_receiptStr=PayConnect.BuildReceiptString(_request,_response,sigResponse,_clinicNum);
 				PrintReceipt(_receiptStr);
 			}
-			if(!Prefs.GetBool(PrefName.StoreCCnumbers) && !checkSaveToken.Checked) {//not storing the card number or the token
+			if(!Preferences.GetBool(PreferenceName.StoreCCnumbers) && !checkSaveToken.Checked) {//not storing the card number or the token
 				return true;
 			}
 			//response must be non-null and the status code must be 0=Approved
@@ -569,7 +569,7 @@ namespace OpenDental {
 				_creditCardCur.ItemOrder=itemOrderCount.Count;
 			}
 			_creditCardCur.CCExpiration=new DateTime(expYear,expMonth,DateTime.DaysInMonth(expYear,expMonth));
-			if(Prefs.GetBool(PrefName.StoreCCnumbers)) {
+			if(Preferences.GetBool(PreferenceName.StoreCCnumbers)) {
 				_creditCardCur.CCNumberMasked=textCardNumber.Text;
 			}
 			else {
@@ -587,7 +587,7 @@ namespace OpenDental {
 			_creditCardCur.CCSource=CreditCardSource.PayConnect;
 			if(_creditCardCur.IsNew) {
 				_creditCardCur.ClinicNum=_clinicNum;
-				_creditCardCur.Procedures=Prefs.GetString(PrefName.DefaultCCProcs);
+				_creditCardCur.Procedures=Preferences.GetString(PreferenceName.DefaultCCProcs);
 				CreditCards.Insert(_creditCardCur);
 			}
 			else {

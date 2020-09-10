@@ -179,7 +179,7 @@ namespace OpenDentBusiness{
 			
       long clockEventNum=0;
 			clockEventNum=Crud.ClockEventCrud.Insert(clockEvent);
-      if(Prefs.GetBool(PrefName.LocalTimeOverridesServerTime)) {
+      if(Preferences.GetBool(PreferenceName.LocalTimeOverridesServerTime)) {
         //Cannot call update since we manually have to update the TimeEntered1 because it is a DateEntry column
         string command="UPDATE clockevent SET TimeEntered1="+POut.DateT(DateTime.Now)+", TimeDisplayed1="+POut.DateT(DateTime.Now)+" WHERE clockEventNum="+POut.Long(clockEventNum);
         Database.ExecuteNonQuery(command);
@@ -264,7 +264,7 @@ namespace OpenDentBusiness{
 			}
 			else if(clockEvent.ClockStatus==TimeClockStatus.Break) {//only incomplete breaks will have been returned.
 				//clocking back in from break
-        if(Prefs.GetBool(PrefName.LocalTimeOverridesServerTime)) {
+        if(Preferences.GetBool(PreferenceName.LocalTimeOverridesServerTime)) {
           clockEvent.TimeEntered2=DateTime.Now;
         }
         else {
@@ -314,7 +314,7 @@ namespace OpenDentBusiness{
 				ClockEvents.Insert(clockEvent);//times handled
 			}
 			else {//finish the existing event
-        if(Prefs.GetBool(PrefName.LocalTimeOverridesServerTime)) {
+        if(Preferences.GetBool(PreferenceName.LocalTimeOverridesServerTime)) {
           clockEvent.TimeEntered2=DateTime.Now;
         }
         else {
@@ -333,7 +333,7 @@ namespace OpenDentBusiness{
 			//No need to check RemotingRole; no call to db.
 			TimeSpan retVal=new TimeSpan(0);
 			//If the first day of the pay period is the starting date for the overtime, then there is no need to retrieve any times from the previous pay period.
-			if(date.DayOfWeek==(DayOfWeek)PrefC.GetInt(PrefName.TimeCardOvertimeFirstDayOfWeek)) {
+			if(date.DayOfWeek==(DayOfWeek)PrefC.GetInt(PreferenceName.TimeCardOvertimeFirstDayOfWeek)) {
 				return retVal;
 			}
 			//We only want to go back to the most recent "FirstDayOfWeek" week day.
@@ -348,7 +348,7 @@ namespace OpenDentBusiness{
 			DateTime mostRecentFirstDayOfWeekDate=date;//Start with the current date.
 			//Loop backwards through the week days until the TimeCardOvertimeFirstDayOfWeek is hit.
 			for(int i=1;i<7;i++) {//1 based because we already know that TimeCardOvertimeFirstDayOfWeek is not set to today so no need to check it.
-				if(mostRecentFirstDayOfWeekDate.AddDays(-i).DayOfWeek==(DayOfWeek)PrefC.GetInt(PrefName.TimeCardOvertimeFirstDayOfWeek)) {
+				if(mostRecentFirstDayOfWeekDate.AddDays(-i).DayOfWeek==(DayOfWeek)PrefC.GetInt(PreferenceName.TimeCardOvertimeFirstDayOfWeek)) {
 					mostRecentFirstDayOfWeekDate=mostRecentFirstDayOfWeekDate.AddDays(-i);
 					break;
 				}
@@ -400,13 +400,13 @@ namespace OpenDentBusiness{
 
 		///<summary>-hh:mm or -hh.mm.ss or -hh.mm, depending on the pref.TimeCardsUseDecimalInsteadOfColon and pref.TimeCardShowSeconds.  Blank if zero.</summary>
 		public static string Format(TimeSpan span) {
-			if(Prefs.GetBool(PrefName.TimeCardsUseDecimalInsteadOfColon)){
+			if(Preferences.GetBool(PreferenceName.TimeCardsUseDecimalInsteadOfColon)){
 				if(span==TimeSpan.Zero){
 					return "";
 				}
 				return span.TotalHours.ToString("n");
 			}
-			else if(Prefs.GetBool(PrefName.TimeCardShowSeconds)) {//Colon format with seconds
+			else if(Preferences.GetBool(PreferenceName.TimeCardShowSeconds)) {//Colon format with seconds
 				return span.ToStringHmmss();
 			}
 			else {//Colon format without seconds
@@ -697,7 +697,7 @@ namespace OpenDentBusiness{
 		///return a list containing "10-27-2013"(Sunday),"11-03-2013"(Sunday),and"11-10-2013"(Sunday).  Used to determine which week time adjustments and clock events belong to when totalling timespans.</summary>
 		private static List<DateTime> weekStartHelper(DateTime startDate,DateTime stopDate) {
 			List<DateTime> retVal=new List<DateTime>();
-			DayOfWeek fdow=(DayOfWeek)PrefC.GetInt(PrefName.TimeCardOvertimeFirstDayOfWeek);
+			DayOfWeek fdow=(DayOfWeek)PrefC.GetInt(PreferenceName.TimeCardOvertimeFirstDayOfWeek);
 			for(int i=0;i<7;i++) {//start date of first week.
 				if(startDate.AddDays(-i).DayOfWeek==fdow) {
 					retVal.Add(startDate.AddDays(-i));//found and added start date of first week.

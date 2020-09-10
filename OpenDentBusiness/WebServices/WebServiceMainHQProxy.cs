@@ -34,7 +34,7 @@ namespace OpenDentBusiness
 #endif
 			if (string.IsNullOrEmpty(webServiceHqUrl))
 			{ //Default to the production URL.				
-				service.Url = Prefs.GetString(PrefName.WebServiceHQServerURL);
+				service.Url = Preferences.GetString(PreferenceName.WebServiceHQServerURL);
 			}
 			else
 			{ //URL was provided so use that.
@@ -64,8 +64,8 @@ namespace OpenDentBusiness
 			//Clinics will be stored in this order at HQ to allow signup portal to display them in proper order.
 			List<Clinic> clinics = Clinics.GetAll(true).OrderBy(x => x.Abbr).ToList();
 
-			string shortCodePracticeTitle = string.IsNullOrWhiteSpace(Prefs.GetString(PrefName.ShortCodeOptInClinicTitle))
-				? Prefs.GetString(PrefName.PracticeTitle) : Prefs.GetString(PrefName.ShortCodeOptInClinicTitle);
+			string shortCodePracticeTitle = string.IsNullOrWhiteSpace(Preferences.GetString(PreferenceName.ShortCodeOptInClinicTitle))
+				? Preferences.GetString(PreferenceName.PracticeTitle) : Preferences.GetString(PreferenceName.ShortCodeOptInClinicTitle);
 			bool isMockChanged = false;
 
 #if DEBUG
@@ -90,7 +90,7 @@ namespace OpenDentBusiness
 									HasClinics = PrefC.HasClinicsEnabled,
 									//ClinicNum is not currently used as input.
 									ClinicNum = 0,
-									ProgramVersionStr = Prefs.GetString(PrefName.ProgramVersion),
+									ProgramVersionStr = Preferences.GetString(PreferenceName.ProgramVersion),
 									SignupPortalPermissionInt = (int)permission,
 									Clinics = clinics
 										.Select(x => new EServiceSetup.SignupIn.ClinicLiteIn()
@@ -99,7 +99,7 @@ namespace OpenDentBusiness
 											ClinicTitle = x.Abbr,
 											IsHidden = x.IsHidden,
 											//Use the ClinicPref as an override, otherwise, Clinic.Abbr is used, if blank, finally use practice title.
-											ShortCodeOptInYourDentist = ClinicPrefs.GetString(x.Id, PrefName.ShortCodeOptInClinicTitle)
+											ShortCodeOptInYourDentist = ClinicPrefs.GetString(x.Id, PreferenceName.ShortCodeOptInClinicTitle)
 												?? (string.IsNullOrWhiteSpace(x.Description) ? shortCodePracticeTitle : x.Description),
 										}).ToList(),
 									IsSwitchClinicPref = isSwitchClinicPref,
@@ -162,9 +162,9 @@ namespace OpenDentBusiness
 					};
 
 				isCacheInvalid |= 
-					Prefs.Set(PrefName.SmsContractDate, practiceSignup.SmsContractDate) | 
-					Prefs.Set(PrefName.TextingDefaultClinicNum, 0L) | 
-					Prefs.Set(PrefName.SmsMonthlyLimit, practiceSignup.MonthlySmsLimit);
+					Preferences.Set(PreferenceName.SmsContractDate, practiceSignup.SmsContractDate) | 
+					Preferences.Set(PreferenceName.TextingDefaultClinicNum, 0L) | 
+					Preferences.Set(PreferenceName.SmsMonthlyLimit, practiceSignup.MonthlySmsLimit);
 
 				isSmsEnabled |= practiceSignup.IsEnabled;
 				isCacheInvalid |= ImportHQShortCodeSettings(practiceSignup);
@@ -190,7 +190,7 @@ namespace OpenDentBusiness
 
 			#endregion
 			#region eConfirmations
-			if (Prefs.Set(PrefName.ApptConfirmAutoSignedUp, IsEServiceActive(signupOut, eServiceCode.ConfirmationRequest)))
+			if (Preferences.Set(PreferenceName.ApptConfirmAutoSignedUp, IsEServiceActive(signupOut, eServiceCode.ConfirmationRequest)))
 			{
 				//HQ does not match the local pref. Make it match with HQ.
 				isCacheInvalid = true;
@@ -202,7 +202,7 @@ namespace OpenDentBusiness
 			List<long> listEClipboardClinicNums = signupOut.EServices.Where(x => x.EService == eServiceCode.EClipboard && x.IsEnabled)
 				.Select(x => x.ClinicNum).ToList();
 			string clinicNumsEClipboard = string.Join(",", listEClipboardClinicNums);
-			if (Prefs.Set(PrefName.EClipboardClinicsSignedUp, clinicNumsEClipboard))
+			if (Preferences.Set(PreferenceName.EClipboardClinicsSignedUp, clinicNumsEClipboard))
 			{
 				//HQ didn't match the local pref.
 				isCacheInvalid = true;
@@ -225,7 +225,7 @@ namespace OpenDentBusiness
 				//Logout all these clinics' users.
 				.ForEach(x => { PushNotificationUtils.ODM_LogoutClinic(x); });
 			string clinicNumsMobileWeb = string.Join(",", listMobileWebClinicNumsAfter);
-			if (Prefs.Set(PrefName.MobileWebClinicsSignedUp, clinicNumsMobileWeb))
+			if (Preferences.Set(PreferenceName.MobileWebClinicsSignedUp, clinicNumsMobileWeb))
 			{
 				//HQ didn't match the local pref.
 				isCacheInvalid = true;
@@ -235,7 +235,7 @@ namespace OpenDentBusiness
 			#region MassEmail
 			//Sync mass email prefs by clinic.
 			List<EServiceSetup.SignupOut.SignupOutEService> massEmailSignups = signupOut.EServices.Where(x => x.EService == eServiceCode.EmailMassUsage).ToList();
-			var massEmailPrefs = ClinicPrefs.GetPreferenceForAllClinics(PrefName.MassEmailStatus).ToList();
+			var massEmailPrefs = ClinicPrefs.GetPreferenceForAllClinics(PreferenceName.MassEmailStatus).ToList();
 			foreach (EServiceSetup.SignupOut.SignupOutEService massEmailSignup in massEmailSignups)
 			{
 				var massEmailPref = massEmailPrefs.FirstOrDefault(x => x.Item1 == massEmailSignup.ClinicNum);
@@ -257,11 +257,11 @@ namespace OpenDentBusiness
 
 
 				//If we made it this far, we have activated that account successfully.
-				ClinicPrefs.Set(massEmailSignup.ClinicNum, PrefName.MassEmailStatus, ((int)existingFlags).ToString());
+				ClinicPrefs.Set(massEmailSignup.ClinicNum, PreferenceName.MassEmailStatus, ((int)existingFlags).ToString());
 			}
 			#endregion
 			#region WebSchedASAP
-			if (Prefs.Set(PrefName.WebSchedAsapEnabled, IsEServiceActive(signupOut, eServiceCode.WebSchedASAP)))
+			if (Preferences.Set(PreferenceName.WebSchedAsapEnabled, IsEServiceActive(signupOut, eServiceCode.WebSchedASAP)))
 			{
 				isCacheInvalid = true;
 				SecurityLogs.MakeLogEntry(Permissions.EServicesSetup, 0, "Web Sched ASAP automatically changed by HQ. Local pref set to "
@@ -298,13 +298,13 @@ namespace OpenDentBusiness
 				//	continue;
 				//}
 
-				var preference = Prefs.GetString(pushablePref.PrefName);
+				var preference = Preferences.GetString(pushablePref.PrefName);
 				if (preference == pushablePref.ValueString)
 				{//No change.
 					continue;
 				}
 
-				Prefs.Set(pushablePref.PrefName, pushablePref.ValueString);
+				Preferences.Set(pushablePref.PrefName, pushablePref.ValueString);
 
 
 				isCacheInvalid = true;
@@ -499,13 +499,13 @@ namespace OpenDentBusiness
 			if (clinicSignup.ShortCodeTypeFlags == ShortCodeTypeFlag.None)
 			{
 				//No need to insert or update ClinicPrefs for ShortCodeTypeFlag.None.  Just delete it if it exists.
-				ClinicPrefs.Delete(clinicSignup.ClinicNum, new List<string>() { PrefName.ShortCodeApptReminderTypes });
+				ClinicPrefs.Delete(clinicSignup.ClinicNum, new List<string>() { PreferenceName.ShortCodeApptReminderTypes });
 
 				return false;
 			}
 
 			//Upsert clinicpref to match HQ.
-			return ClinicPrefs.Set(clinicSignup.ClinicNum, PrefName.ShortCodeApptReminderTypes, POut.Int((int)clinicSignup.ShortCodeTypeFlags));
+			return ClinicPrefs.Set(clinicSignup.ClinicNum, PreferenceName.ShortCodeApptReminderTypes, POut.Int((int)clinicSignup.ShortCodeTypeFlags));
 		}
 
 		///<summary>Called by local practice db to query HQ for EService setup info. Must remain very lite and versionless. Will be used by signup portal.

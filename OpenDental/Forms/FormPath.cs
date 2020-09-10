@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using OpenDental;
 using OpenDentBusiness;
 using System;
@@ -31,11 +32,11 @@ namespace Imedisoft.Forms
 				acceptButton.Enabled = false;
 			}
 
-			pathTextBox.Text = Prefs.GetString(PrefName.DocPath);
+			pathTextBox.Text = Preferences.GetString(PreferenceName.DocPath);
 
 			localPathTextBox.Text = OpenDentBusiness.FileIO.FileAtoZ.LocalAtoZpath;//This was set on startup.  //compPref.AtoZpath;
-			exportPathTextBox.Text = Prefs.GetString(PrefName.ExportPath);
-			letterMergePathTextBox.Text = Prefs.GetString(PrefName.LetterMergePath);
+			exportPathTextBox.Text = Preferences.GetString(PreferenceName.ExportPath);
+			letterMergePathTextBox.Text = Preferences.GetString(PreferenceName.LetterMergePath);
 
 			if (notConfigured)
 			{
@@ -149,9 +150,9 @@ namespace Imedisoft.Forms
                 }
             }
 
-			if (Prefs.Set(PrefName.DocPath, pathTextBox.Text) |
-				Prefs.Set(PrefName.ExportPath, exportPathTextBox.Text) |
-				Prefs.Set(PrefName.LetterMergePath, letterMergePathTextBox.Text))
+			if (Preferences.Set(PreferenceName.DocPath, pathTextBox.Text) |
+				Preferences.Set(PreferenceName.ExportPath, exportPathTextBox.Text) |
+				Preferences.Set(PreferenceName.LetterMergePath, letterMergePathTextBox.Text))
 			{
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}

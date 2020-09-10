@@ -2610,7 +2610,7 @@ namespace OpenDental
 
 		private SizeF PrintDentistPhone(Graphics g, float X, float Y)
 		{
-			text = Prefs.GetString(PrefName.PracticePhone);
+			text = Preferences.GetString(PreferenceName.PracticePhone);
 			if (text.Length == 10)
 			{//May need to format for nice appearance.
 				text = text.Substring(0, 3) + "-" + text.Substring(3, 3) + "-" + text.Substring(6, 4);
@@ -2622,8 +2622,8 @@ namespace OpenDental
 		private SizeF PrintDentistAddress(Graphics g, float X, float Y, float maxWidthInPixels)
 		{
 			SizeF size1 = doc.DrawString(g, isFrench ? "ADRESSE: " : "ADDRESS: ", X, Y);
-			SizeF size2 = PrintAddress(g, X + size1.Width, Y, Prefs.GetString(PrefName.PracticeAddress), Prefs.GetString(PrefName.PracticeAddress2),
-				Prefs.GetString(PrefName.PracticeCity) + ", " + Prefs.GetString(PrefName.PracticeST) + " " + Prefs.GetString(PrefName.PracticeZip), 150f, maxWidthInPixels);
+			SizeF size2 = PrintAddress(g, X + size1.Width, Y, Preferences.GetString(PreferenceName.PracticeAddress), Preferences.GetString(PreferenceName.PracticeAddress2),
+				Preferences.GetString(PreferenceName.PracticeCity) + ", " + Preferences.GetString(PreferenceName.PracticeST) + " " + Preferences.GetString(PreferenceName.PracticeZip), 150f, maxWidthInPixels);
 			return new SizeF(size1.Width + size2.Width, Math.Max(size1.Height, size2.Height));
 		}
 
@@ -3147,15 +3147,15 @@ namespace OpenDental
 		{
 			if (clinic == null)
 			{
-				if (Prefs.GetBool(PrefName.UseBillingAddressOnClaims))
+				if (Preferences.GetBool(PreferenceName.UseBillingAddressOnClaims))
 				{
-					text = Patients.GetAddressFull(Prefs.GetString(PrefName.PracticeBillingAddress), Prefs.GetString(PrefName.PracticeBillingAddress2),
-						Prefs.GetString(PrefName.PracticeBillingCity), Prefs.GetString(PrefName.PracticeBillingST), Prefs.GetString(PrefName.PracticeBillingZip));
+					text = Patients.GetAddressFull(Preferences.GetString(PreferenceName.PracticeBillingAddress), Preferences.GetString(PreferenceName.PracticeBillingAddress2),
+						Preferences.GetString(PreferenceName.PracticeBillingCity), Preferences.GetString(PreferenceName.PracticeBillingST), Preferences.GetString(PreferenceName.PracticeBillingZip));
 				}
 				else
 				{
-					text = Patients.GetAddressFull(Prefs.GetString(PrefName.PracticeAddress), Prefs.GetString(PrefName.PracticeAddress2),
-						Prefs.GetString(PrefName.PracticeCity), Prefs.GetString(PrefName.PracticeST), Prefs.GetString(PrefName.PracticeZip));
+					text = Patients.GetAddressFull(Preferences.GetString(PreferenceName.PracticeAddress), Preferences.GetString(PreferenceName.PracticeAddress2),
+						Preferences.GetString(PreferenceName.PracticeCity), Preferences.GetString(PreferenceName.PracticeST), Preferences.GetString(PreferenceName.PracticeZip));
 				}
 			}
 			else

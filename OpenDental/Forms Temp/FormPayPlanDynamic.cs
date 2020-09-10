@@ -120,9 +120,9 @@ namespace OpenDental {
 				butGoToGuar.Visible=false;
 				butGoToPat.Visible=false;
 			}
-			checkExcludePast.Checked=Prefs.GetBool(PrefName.PayPlansExcludePastActivity);
+			checkExcludePast.Checked=Preferences.GetBool(PreferenceName.PayPlansExcludePastActivity);
 			#endregion
-			if(Prefs.GetBool(PrefName.PayPlansUseSheets)) {
+			if(Preferences.GetBool(PreferenceName.PayPlansUseSheets)) {
 				Sheet sheetPP=null;
 				sheetPP=PayPlanToSheet(_payPlanCur);
 				//check to see if sig box is on the sheet
@@ -759,7 +759,7 @@ namespace OpenDental {
 				MessageBox.Show("Please fix data entry errors first.");
 				return false;
 			}
-			if(PIn.Date(textDate.Text).Date > DateTime.Today.Date && !Prefs.GetBool(PrefName.FutureTransDatesAllowed)) {
+			if(PIn.Date(textDate.Text).Date > DateTime.Today.Date && !Preferences.GetBool(PreferenceName.FutureTransDatesAllowed)) {
 				MessageBox.Show("Payment plan date cannot be set for the future.");
 				return false;
 			}
@@ -957,7 +957,7 @@ namespace OpenDental {
 			if(!ValidateTerms()) {
 				return;
 			} 
-			if(Prefs.GetBool(PrefName.PayPlansUseSheets)) {
+			if(Preferences.GetBool(PreferenceName.PayPlansUseSheets)) {
 				Sheet sheetPP=null;
 				sheetPP=PayPlanToSheet(_payPlanCur);
 				SheetPrinting.Print(sheetPP);
@@ -969,7 +969,7 @@ namespace OpenDental {
 				Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
 				ReportComplex report=new ReportComplex(false,false);
 				report.AddTitle("Title","Payment Plan Terms",fontTitle);
-				report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
+				report.AddSubTitle("PracTitle",Preferences.GetString(PreferenceName.PracticeTitle),fontSubTitle);
 				report.AddSubTitle("Date SubTitle",DateTime.Today.ToShortDateString(),fontSubTitle);
 				AreaSectionType sectType=AreaSectionType.ReportHeader;
 				Section section=report.Sections[AreaSectionType.ReportHeader];

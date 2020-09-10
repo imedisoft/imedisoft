@@ -2437,10 +2437,10 @@
     <Compile Include="Forms Temp\FormEhrPatientExport.designer.cs">
       <DependentUpon>FormEhrPatientExport.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormReconcileAllergy.cs">
+    <Compile Include="Forms Temp\FormReconcileAllergy.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormReconcileAllergy.designer.cs">
+    <Compile Include="Forms Temp\FormReconcileAllergy.designer.cs">
       <DependentUpon>FormReconcileAllergy.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormReconcileProblem.cs">
@@ -3376,10 +3376,10 @@
     <Compile Include="Forms Temp\FormMedicationReconcile.designer.cs">
       <DependentUpon>FormMedicationReconcile.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormAllergyDefEdit.cs">
+    <Compile Include="Forms\FormAllergyDefEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormAllergyDefEdit.designer.cs">
+    <Compile Include="Forms\FormAllergyDefEdit.designer.cs">
       <DependentUpon>FormAllergyDefEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormRxAlertEdit.cs">
@@ -3388,16 +3388,16 @@
     <Compile Include="Forms\FormRxAlertEdit.designer.cs">
       <DependentUpon>FormRxAlertEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormAllergyEdit.cs">
+    <Compile Include="Forms\FormAllergyEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormAllergyEdit.designer.cs">
+    <Compile Include="Forms\FormAllergyEdit.designer.cs">
       <DependentUpon>FormAllergyEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormAllergyDefs.cs">
+    <Compile Include="Forms\FormAllergyDefs.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormAllergyDefs.designer.cs">
+    <Compile Include="Forms\FormAllergyDefs.designer.cs">
       <DependentUpon>FormAllergyDefs.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormIcd9s.cs">
@@ -6117,7 +6117,7 @@
     <EmbeddedResource Include="Forms Temp\FormEhrPatientExport.resx">
       <DependentUpon>FormEhrPatientExport.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormReconcileAllergy.resx">
+    <EmbeddedResource Include="Forms Temp\FormReconcileAllergy.resx">
       <DependentUpon>FormReconcileAllergy.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormReconcileProblem.resx">
@@ -6651,7 +6651,7 @@
       <DependentUpon>FormMedicationReconcile.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormAllergyDefEdit.resx">
+    <EmbeddedResource Include="Forms\FormAllergyDefEdit.resx">
       <DependentUpon>FormAllergyDefEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -6659,11 +6659,11 @@
       <DependentUpon>FormRxAlertEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormAllergyEdit.resx">
+    <EmbeddedResource Include="Forms\FormAllergyEdit.resx">
       <DependentUpon>FormAllergyEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormAllergyDefs.resx">
+    <EmbeddedResource Include="Forms\FormAllergyDefs.resx">
       <DependentUpon>FormAllergyDefs.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -9364,7 +9364,9 @@
       <Name>SparksToothChart</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Forms T\" />
+  </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>

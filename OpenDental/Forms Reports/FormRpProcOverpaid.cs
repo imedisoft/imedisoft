@@ -398,7 +398,7 @@ namespace OpenDental {
 			_myReport=new ReportComplex(true,false,false);
 			_myReport.ReportName="Overpaid Procedures";
 			_myReport.AddTitle("Title","Overpaid Procedures");
-			_myReport.AddSubTitle("Practice Name",Prefs.GetString(PrefName.PracticeTitle));
+			_myReport.AddSubTitle("Practice Name",Preferences.GetString(PreferenceName.PracticeTitle));
 			if(_myReportDateFrom==_myReportDateTo) {
 				_myReport.AddSubTitle("Report Dates",_myReportDateFrom.ToShortDateString());
 			}

@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
@@ -7,23 +8,25 @@ using System.Windows.Forms;
 
 namespace OpenDental
 {
-    ///<summary>THIS FORM HAS BEEN DEPRECATED!!! All functionality that previously existed in this form has been moved to FormPatientPortalSetup.</summary>
-    public partial class FormMobile:ODForm {
-		private static Imedisoft.MobileWeb.Mobile mb=new Imedisoft.MobileWeb.Mobile();
+	///<summary>THIS FORM HAS BEEN DEPRECATED!!! All functionality that previously existed in this form has been moved to FormPatientPortalSetup.</summary>
+	public partial class FormMobile : ODForm
+	{
+		private static Imedisoft.MobileWeb.Mobile mb = new Imedisoft.MobileWeb.Mobile();
 		//private static int BatchSize=100;
 		/////<summary>All statements of a patient are not uploaded. The limit is defined by the recent [statementLimitPerPatient] records</summary>
 		//private static int statementLimitPerPatient=5;
 		///<summary>This variable prevents the synching methods from being called when a previous synch is in progress.</summary>
 		private static bool IsSynching;
 		///<summary>This variable prevents multiple error message boxes from popping up if mobile synch server is not available.</summary>
-		private static bool IsServerAvail=true;
+		private static bool IsServerAvail = true;
 		///<summary>True if a pref was saved and the other workstations need to have their cache refreshed when this form closes.</summary>
 		private bool changed;
 		///<summary>If this variable is true then records are uploaded one at a time so that an error in uploading can be traced down to a single record</summary>
 		//private static bool IsTroubleshootMode=false;
 		private static FormProgress FormP;
 
-		private enum SynchEntity {
+		private enum SynchEntity
+		{
 			patient,
 			appointment,
 			prescription,
@@ -45,45 +48,52 @@ namespace OpenDental
 			patientdel
 		}
 
-		public FormMobile() {
+		public FormMobile()
+		{
 			InitializeComponent();
-			
+
 		}
 
-		private void FormMobileSetup_Load(object sender,EventArgs e) {
-			textMobileSyncServerURL.Text=Prefs.GetString(PrefName.MobileSyncServerURL);
-			textSynchMinutes.Text=PrefC.GetInt(PrefName.MobileSyncIntervalMinutes).ToString();
-			textDateBefore.Text=PrefC.GetDate(PrefName.MobileExcludeApptsBeforeDate).ToShortDateString();
-			textMobileSynchWorkStation.Text=Prefs.GetString(PrefName.MobileSyncWorkstationName);
-			textMobileUserName.Text=Prefs.GetString(PrefName.MobileUserName);
-			textMobilePassword.Text="";//not stored locally, and not pulled from web server
-			DateTime lastRun=PrefC.GetDate(PrefName.MobileSyncDateTimeLastRun);
-			if(lastRun.Year>1880) {
-				textDateTimeLastRun.Text=lastRun.ToShortDateString()+" "+lastRun.ToShortTimeString();
+		private void FormMobileSetup_Load(object sender, EventArgs e)
+		{
+			textMobileSyncServerURL.Text = Preferences.GetString(PreferenceName.MobileSyncServerURL);
+			textSynchMinutes.Text = PrefC.GetInt(PreferenceName.MobileSyncIntervalMinutes).ToString();
+			textDateBefore.Text = PrefC.GetDate(PreferenceName.MobileExcludeApptsBeforeDate).ToShortDateString();
+			textMobileSynchWorkStation.Text = Preferences.GetString(PreferenceName.MobileSyncWorkstationName);
+			textMobileUserName.Text = Preferences.GetString(PreferenceName.MobileUserName);
+			textMobilePassword.Text = "";//not stored locally, and not pulled from web server
+			DateTime lastRun = PrefC.GetDate(PreferenceName.MobileSyncDateTimeLastRun);
+			if (lastRun.Year > 1880)
+			{
+				textDateTimeLastRun.Text = lastRun.ToShortDateString() + " " + lastRun.ToShortTimeString();
 			}
 			//Web server is not contacted when loading this form.  That would be too slow.
 			//CreateAppointments(5);
 		}
 
-		private void butCurrentWorkstation_Click(object sender,EventArgs e) {
-			textMobileSynchWorkStation.Text=System.Environment.MachineName.ToUpper();
+		private void butCurrentWorkstation_Click(object sender, EventArgs e)
+		{
+			textMobileSynchWorkStation.Text = System.Environment.MachineName.ToUpper();
 		}
 
-		private void butSave_Click(object sender,EventArgs e) {
-			Cursor=Cursors.WaitCursor;
-			if(!SavePrefs()) {
-				Cursor=Cursors.Default;
+		private void butSave_Click(object sender, EventArgs e)
+		{
+			Cursor = Cursors.WaitCursor;
+			if (!SavePrefs())
+			{
+				Cursor = Cursors.Default;
 				return;
 			}
-			Cursor=Cursors.Default;
+			Cursor = Cursors.Default;
 			MessageBox.Show("Done");
 		}
 
 		///<summary>Returns false if validation failed.  This also makes sure the web service exists, the customer is paid, and the registration key is correct.</summary>
-		private bool SavePrefs(){
+		private bool SavePrefs()
+		{
 			//validation
-			if( textSynchMinutes.errorProvider1.GetError(textSynchMinutes)!=""
-				|| textDateBefore.errorProvider1.GetError(textDateBefore)!="")
+			if (textSynchMinutes.errorProvider1.GetError(textSynchMinutes) != ""
+				|| textDateBefore.errorProvider1.GetError(textDateBefore) != "")
 			{
 				MessageBox.Show("Please fix data entry errors first.");
 				return false;
@@ -95,68 +105,81 @@ namespace OpenDental
 			//}
 			// the text field is read because the keyed in values have not been saved yet
 			//if(textMobileSyncServerURL.Text.Contains("192.168.0.196") || textMobileSyncServerURL.Text.Contains("localhost")) {
-			if(textMobileSyncServerURL.Text.Contains("10.10.1.196") || textMobileSyncServerURL.Text.Contains("localhost")) {
+			if (textMobileSyncServerURL.Text.Contains("10.10.1.196") || textMobileSyncServerURL.Text.Contains("localhost"))
+			{
 				IgnoreCertificateErrors();// done so that TestWebServiceExists() does not thow an error.
 			}
 			// if this is not done then an old non-functional url prevents any new url from being saved.
-			Prefs.Set(PrefName.MobileSyncServerURL,textMobileSyncServerURL.Text);
-			if(!TestWebServiceExists()) {
+			Preferences.Set(PreferenceName.MobileSyncServerURL, textMobileSyncServerURL.Text);
+			if (!TestWebServiceExists())
+			{
 				MessageBox.Show("Web service not found.");
 				return false;
 			}
-			if(mb.GetCustomerNum(Prefs.GetString(PrefName.RegistrationKey))==0) {
+			if (mb.GetCustomerNum(Preferences.GetString(PreferenceName.RegistrationKey)) == 0)
+			{
 				MessageBox.Show("Registration key is incorrect.");
 				return false;
 			}
-			if(!VerifyPaidCustomer()) {
+			if (!VerifyPaidCustomer())
+			{
 				return false;
 			}
 			//Minimum 10 char.  Must contain uppercase, lowercase, numbers, and symbols. Valid symbols are: !@#$%^&+= 
 			//The set of symbols checked was far too small, not even including periods, commas, and parentheses.
 			//So I rewrote it all.  New error messages say exactly what's wrong with it.
-			if(textMobileUserName.Text!="") {//allowed to be blank
-				if(textMobileUserName.Text.Length<10) {
+			if (textMobileUserName.Text != "")
+			{//allowed to be blank
+				if (textMobileUserName.Text.Length < 10)
+				{
 					MessageBox.Show("User Name must be at least 10 characters long.");
 					return false;
 				}
-				if(!Regex.IsMatch(textMobileUserName.Text,"[A-Z]+")) {
+				if (!Regex.IsMatch(textMobileUserName.Text, "[A-Z]+"))
+				{
 					MessageBox.Show("User Name must contain an uppercase letter.");
 					return false;
 				}
-				if(!Regex.IsMatch(textMobileUserName.Text,"[a-z]+")) {
+				if (!Regex.IsMatch(textMobileUserName.Text, "[a-z]+"))
+				{
 					MessageBox.Show("User Name must contain an lowercase letter.");
 					return false;
 				}
-				if(!Regex.IsMatch(textMobileUserName.Text,"[0-9]+")) {
+				if (!Regex.IsMatch(textMobileUserName.Text, "[0-9]+"))
+				{
 					MessageBox.Show("User Name must contain a number.");
 					return false;
 				}
-				if(!Regex.IsMatch(textMobileUserName.Text,"[^0-9a-zA-Z]+")) {//absolutely anything except number, lower or upper.
+				if (!Regex.IsMatch(textMobileUserName.Text, "[^0-9a-zA-Z]+"))
+				{//absolutely anything except number, lower or upper.
 					MessageBox.Show("User Name must contain punctuation or symbols.");
 					return false;
 				}
 			}
-			if(textDateBefore.Text==""){//default to one year if empty
-				textDateBefore.Text=DateTime.Today.AddYears(-1).ToShortDateString();
+			if (textDateBefore.Text == "")
+			{//default to one year if empty
+				textDateBefore.Text = DateTime.Today.AddYears(-1).ToShortDateString();
 				//not going to bother informing user.  They can see it.
 			}
 			//save to db------------------------------------------------------------------------------------
-			if(Prefs.Set(PrefName.MobileSyncServerURL,textMobileSyncServerURL.Text)
-				| Prefs.Set(PrefName.MobileSyncIntervalMinutes,PIn.Int(textSynchMinutes.Text))//blank entry allowed
-				| Prefs.Set(PrefName.MobileExcludeApptsBeforeDate,POut.Date(PIn.Date(textDateBefore.Text),false))//blank 
-				| Prefs.Set(PrefName.MobileSyncWorkstationName,textMobileSynchWorkStation.Text)
-				| Prefs.Set(PrefName.MobileUserName,textMobileUserName.Text)
-			){
-				changed=true;
-				Prefs.RefreshCache();
+			if (Preferences.Set(PreferenceName.MobileSyncServerURL, textMobileSyncServerURL.Text)
+				| Preferences.Set(PreferenceName.MobileSyncIntervalMinutes, PIn.Int(textSynchMinutes.Text))//blank entry allowed
+				| Preferences.Set(PreferenceName.MobileExcludeApptsBeforeDate, POut.Date(PIn.Date(textDateBefore.Text), false))//blank 
+				| Preferences.Set(PreferenceName.MobileSyncWorkstationName, textMobileSynchWorkStation.Text)
+				| Preferences.Set(PreferenceName.MobileUserName, textMobileUserName.Text)
+			)
+			{
+				changed = true;
+				Preferences.RefreshCache();
 			}
 			//Username and password-----------------------------------------------------------------------------
-			mb.SetMobileWebUserPassword(Prefs.GetString(PrefName.RegistrationKey),textMobileUserName.Text.Trim(),textMobilePassword.Text.Trim());
+			mb.SetMobileWebUserPassword(Preferences.GetString(PreferenceName.RegistrationKey), textMobileUserName.Text.Trim(), textMobilePassword.Text.Trim());
 			return true;
 		}
 
 		///<summary>Uploads Preferences to the Patient Portal /Mobile Web.</summary>
-		public static void UploadPreference(string prefname) {
+		public static void UploadPreference(string prefname)
+		{
 			//if(Prefs.GetString(PrefName.RegistrationKey)=="") {
 			//	return;//Prevents a bug when using the trial version with no registration key.  Practice edit, OK, was giving error.
 			//}
@@ -171,97 +194,116 @@ namespace OpenDental
 			//}
 		}
 
-		private void butDelete_Click(object sender,EventArgs e) {
-			if(!SavePrefs()) {
+		private void butDelete_Click(object sender, EventArgs e)
+		{
+			if (!SavePrefs())
+			{
 				return;
 			}
-			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete all your data from our server?  This happens automatically before a full synch.")) {
+			if (!MsgBox.Show(MsgBoxButtons.OKCancel, "Delete all your data from our server?  This happens automatically before a full synch."))
+			{
 				return;
 			}
-			mb.DeleteAllRecords(Prefs.GetString(PrefName.RegistrationKey));
+			mb.DeleteAllRecords(Preferences.GetString(PreferenceName.RegistrationKey));
 			MessageBox.Show("Done");
 		}
-		
-		private void butFullSync_Click(object sender,EventArgs e) {
-			if(!SavePrefs()) {
+
+		private void butFullSync_Click(object sender, EventArgs e)
+		{
+			if (!SavePrefs())
+			{
 				return;
 			}
-			if(IsSynching) {
+			if (IsSynching)
+			{
 				MessageBox.Show("A Synch is in progress at the moment. Please try again later.");
 				return;
 			}
-			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This will be time consuming. Continue anyway?")) {
+			if (!MsgBox.Show(MsgBoxButtons.OKCancel, "This will be time consuming. Continue anyway?"))
+			{
 				return;
 			}
 			//for full synch, delete all records then repopulate.
-			mb.DeleteAllRecords(Prefs.GetString(PrefName.RegistrationKey));
+			mb.DeleteAllRecords(Preferences.GetString(PreferenceName.RegistrationKey));
 			ShowProgressForm(DateTime.MinValue);
 		}
 
-		private void butSync_Click(object sender,EventArgs e) {
-			if(!SavePrefs()) {
+		private void butSync_Click(object sender, EventArgs e)
+		{
+			if (!SavePrefs())
+			{
 				return;
 			}
-			if(IsSynching) {
+			if (IsSynching)
+			{
 				MessageBox.Show("A Synch is in progress at the moment. Please try again later.");
 				return;
 			}
-			if(PrefC.GetDate(PrefName.MobileExcludeApptsBeforeDate).Year<1880) {
+			if (PrefC.GetDate(PreferenceName.MobileExcludeApptsBeforeDate).Year < 1880)
+			{
 				MessageBox.Show("Full synch has never been run before.");
 				return;
 			}
-			DateTime changedSince=PrefC.GetDate(PrefName.MobileSyncDateTimeLastRun);
+			DateTime changedSince = PrefC.GetDate(PreferenceName.MobileSyncDateTimeLastRun);
 			ShowProgressForm(changedSince);
 		}
-		
-		private void ShowProgressForm(DateTime changedSince){
-			DateTime timeSynchStarted=MiscData.GetNowDateTime();
-			FormP=new FormProgress();
-			FormP.MaxVal=100;//to keep the form from closing until the real MaxVal is set.
-			FormP.NumberMultiplication=1;
-			FormP.DisplayText="Preparing records for upload.";
-			FormP.NumberFormat="F0";
+
+		private void ShowProgressForm(DateTime changedSince)
+		{
+			DateTime timeSynchStarted = MiscData.GetNowDateTime();
+			FormP = new FormProgress();
+			FormP.MaxVal = 100;//to keep the form from closing until the real MaxVal is set.
+			FormP.NumberMultiplication = 1;
+			FormP.DisplayText = "Preparing records for upload.";
+			FormP.NumberFormat = "F0";
 			//start the thread that will perform the upload
-			ThreadStart uploadDelegate= delegate { UploadWorker(changedSince,timeSynchStarted); };
-			Thread workerThread=new Thread(uploadDelegate);
+			ThreadStart uploadDelegate = delegate { UploadWorker(changedSince, timeSynchStarted); };
+			Thread workerThread = new Thread(uploadDelegate);
 			workerThread.Start();
 			//display the progress dialog to the user:
 			FormP.ShowDialog();
-			if(FormP.DialogResult==DialogResult.Cancel) {
+			if (FormP.DialogResult == DialogResult.Cancel)
+			{
 				workerThread.Abort();
 			}
-			changed=true;
-			textDateTimeLastRun.Text=PrefC.GetDate(PrefName.MobileSyncDateTimeLastRun).ToShortDateString()+" "+PrefC.GetDate(PrefName.MobileSyncDateTimeLastRun).ToShortTimeString();
+			changed = true;
+			textDateTimeLastRun.Text = PrefC.GetDate(PreferenceName.MobileSyncDateTimeLastRun).ToShortDateString() + " " + PrefC.GetDate(PreferenceName.MobileSyncDateTimeLastRun).ToShortTimeString();
 		}
 
 
 		///<summary>This is the function that the worker thread uses to actually perform the upload.  Can also call this method in the ordinary way if the data to be transferred is small.  The timeSynchStarted must be passed in to ensure that no records are skipped due to small time differences.</summary>
-		private static void UploadWorker(DateTime changedSince,DateTime timeSynchStarted) {
-			int totalCount=100;
-			try {//Dennis: try catch may not work: Does not work in threads, not sure about this. Note that all methods inside this try catch block are without exception handling. This is done on purpose so that when an exception does occur it does not update PrefName.MobileSyncDateTimeLastRun
-				//The handling of PrefName.MobileSynchNewTables79 should never be removed in future versions
-				DateTime changedProv=changedSince;
-				DateTime changedDeleted=changedSince;
-				DateTime changedPat=changedSince;
-				DateTime changedStatement=changedSince;
-				DateTime changedDocument=changedSince;
-				DateTime changedRecall=changedSince;
-				if(!Prefs.GetBool(PrefName.MobileSynchNewTables79Done,false)) {
-					changedProv=DateTime.MinValue;
-					changedDeleted=DateTime.MinValue;
+		private static void UploadWorker(DateTime changedSince, DateTime timeSynchStarted)
+		{
+			int totalCount = 100;
+			try
+			{//Dennis: try catch may not work: Does not work in threads, not sure about this. Note that all methods inside this try catch block are without exception handling. This is done on purpose so that when an exception does occur it does not update PrefName.MobileSyncDateTimeLastRun
+			 //The handling of PrefName.MobileSynchNewTables79 should never be removed in future versions
+				DateTime changedProv = changedSince;
+				DateTime changedDeleted = changedSince;
+				DateTime changedPat = changedSince;
+				DateTime changedStatement = changedSince;
+				DateTime changedDocument = changedSince;
+				DateTime changedRecall = changedSince;
+				if (!Preferences.GetBool(PreferenceName.MobileSynchNewTables79Done, false))
+				{
+					changedProv = DateTime.MinValue;
+					changedDeleted = DateTime.MinValue;
 				}
-				if(!Prefs.GetBool(PrefName.MobileSynchNewTables112Done,false)) {
-				    changedPat=DateTime.MinValue;
-					changedStatement=DateTime.MinValue;
-					changedDocument=DateTime.MinValue;
+				if (!Preferences.GetBool(PreferenceName.MobileSynchNewTables112Done, false))
+				{
+					changedPat = DateTime.MinValue;
+					changedStatement = DateTime.MinValue;
+					changedDocument = DateTime.MinValue;
 				}
-				if(!Prefs.GetBool(PrefName.MobileSynchNewTables121Done,false)) {
-					changedRecall=DateTime.MinValue;
-					UploadPreference(PrefName.PracticeTitle); //done again because the previous upload did not include the prefnum
+				if (!Preferences.GetBool(PreferenceName.MobileSynchNewTables121Done, false))
+				{
+					changedRecall = DateTime.MinValue;
+					UploadPreference(PreferenceName.PracticeTitle); //done again because the previous upload did not include the prefnum
 				}
-				bool synchDelPat=true;
-				if(PrefC.GetDate(PrefName.MobileSyncDateTimeLastRun).Hour==timeSynchStarted.Hour) {
-					synchDelPat=false;// synching delPatNumList is timeconsuming (15 seconds) for a dental office with around 5000 patients and it's mostly the same records that have to be deleted every time a synch happens. So it's done only once hourly.
+				bool synchDelPat = true;
+				if (PrefC.GetDate(PreferenceName.MobileSyncDateTimeLastRun).Hour == timeSynchStarted.Hour)
+				{
+					synchDelPat = false;// synching delPatNumList is timeconsuming (15 seconds) for a dental office with around 5000 patients and it's mostly the same records that have to be deleted every time a synch happens. So it's done only once hourly.
 				}
 				//MobileWeb
 				//List<long> patNumList=Patientms.GetChangedSincePatNums(changedPat);
@@ -286,21 +328,23 @@ namespace OpenDental
 				List<long> recallNumList=Recallms.GetChangedSinceRecallNums(changedRecall);*/
 				//List<long> delPatNumList=Patientms.GetPatNumsForDeletion();
 				//List<DeletedObject> dO=DeletedObjects.GetDeletedSince(changedDeleted);dennis: delete this line later
-				List<long> deletedObjectNumList=DeletedObjects.GetChangedSinceDeletedObjectNums(changedDeleted);//to delete appointments from mobile
+				List<long> deletedObjectNumList = DeletedObjects.GetChangedSinceDeletedObjectNums(changedDeleted);//to delete appointments from mobile
 				totalCount = 0// patNumList.Count+aptNumList.Count+rxNumList.Count+provNumList.Count+pharNumList.Count
-					//+labPanelNumList.Count+labResultNumList.Count+medicationNumList.Count+medicationPatNumList.Count
-					//+allergyDefNumList.Count//+allergyNumList.Count+diseaseDefNumList.Count+diseaseNumList.Count+icd9NumList.Count
-					//+statementNumList.Count+documentNumList.Count+recallNumList.Count
-					+deletedObjectNumList.Count;
-				if(synchDelPat) {
+							  //+labPanelNumList.Count+labResultNumList.Count+medicationNumList.Count+medicationPatNumList.Count
+							  //+allergyDefNumList.Count//+allergyNumList.Count+diseaseDefNumList.Count+diseaseNumList.Count+icd9NumList.Count
+							  //+statementNumList.Count+documentNumList.Count+recallNumList.Count
+					+ deletedObjectNumList.Count;
+				if (synchDelPat)
+				{
 					//totalCount+=delPatNumList.Count;
 				}
-				double currentVal=0;
-				if(Application.OpenForms["FormProgress"]!=null) {// without this line the following error is thrown: "Invoke or BeginInvoke cannot be called on a control until the window handle has been created." or a null pointer exception is thrown when an automatic synch is done by the system.
+				double currentVal = 0;
+				if (Application.OpenForms["FormProgress"] != null)
+				{// without this line the following error is thrown: "Invoke or BeginInvoke cannot be called on a control until the window handle has been created." or a null pointer exception is thrown when an automatic synch is done by the system.
 					FormP.Invoke(new PassProgressDelegate(PassProgressToDialog),
-						new object[] { currentVal,"?currentVal of ?maxVal records uploaded",totalCount,"" });
+						new object[] { currentVal, "?currentVal of ?maxVal records uploaded", totalCount, "" });
 				}
-				IsSynching=true;
+				IsSynching = true;
 				//SynchGeneric(patNumList,SynchEntity.patient,totalCount,ref currentVal);
 				//SynchGeneric(aptNumList,SynchEntity.appointment,totalCount,ref currentVal);
 				//SynchGeneric(rxNumList,SynchEntity.prescription,totalCount,ref currentVal);
@@ -320,34 +364,41 @@ namespace OpenDental
 				SynchGeneric(statementNumList,SynchEntity.statement,totalCount,ref currentVal);
 				SynchGeneric(documentNumList,SynchEntity.document,totalCount,ref currentVal);
 				SynchGeneric(recallNumList,SynchEntity.recall,totalCount,ref currentVal);*/
-				if(synchDelPat) {
+				if (synchDelPat)
+				{
 					//SynchGeneric(delPatNumList,SynchEntity.patientdel,totalCount,ref currentVal);
 				}
 				//DeleteObjects(dO,totalCount,ref currentVal);// this has to be done at this end because objects may have been created and deleted between synchs. If this function is place above then the such a deleted object will not be deleted from the server.
-				SynchGeneric(deletedObjectNumList,SynchEntity.deletedobject,totalCount,ref currentVal);// this has to be done at this end because objects may have been created and deleted between synchs. If this function is place above then the such a deleted object will not be deleted from the server.
-				if(!Prefs.GetBool(PrefName.MobileSynchNewTables79Done,true)) {
-				    Prefs.Set(PrefName.MobileSynchNewTables79Done,true);
+				SynchGeneric(deletedObjectNumList, SynchEntity.deletedobject, totalCount, ref currentVal);// this has to be done at this end because objects may have been created and deleted between synchs. If this function is place above then the such a deleted object will not be deleted from the server.
+				if (!Preferences.GetBool(PreferenceName.MobileSynchNewTables79Done, true))
+				{
+					Preferences.Set(PreferenceName.MobileSynchNewTables79Done, true);
 				}
-				if(!Prefs.GetBool(PrefName.MobileSynchNewTables112Done,true)) {
-				    Prefs.Set(PrefName.MobileSynchNewTables112Done,true);
+				if (!Preferences.GetBool(PreferenceName.MobileSynchNewTables112Done, true))
+				{
+					Preferences.Set(PreferenceName.MobileSynchNewTables112Done, true);
 				}
-				if(!Prefs.GetBool(PrefName.MobileSynchNewTables121Done,true)) {
-					Prefs.Set(PrefName.MobileSynchNewTables121Done,true);
+				if (!Preferences.GetBool(PreferenceName.MobileSynchNewTables121Done, true))
+				{
+					Preferences.Set(PreferenceName.MobileSynchNewTables121Done, true);
 				}
-				Prefs.Set(PrefName.MobileSyncDateTimeLastRun,timeSynchStarted);
-				IsSynching=false;
+				Preferences.Set(PreferenceName.MobileSyncDateTimeLastRun, timeSynchStarted);
+				IsSynching = false;
 			}
-			catch(Exception e) {
-				IsSynching=false;// this will ensure that the synch can start again. If this variable remains true due to an exception then a synch will never take place automatically.
-				if(Application.OpenForms["FormProgress"]!=null) {// without this line the following error is thrown: "Invoke or BeginInvoke cannot be called on a control until the window handle has been created." or a null pointer exception is thrown when an automatic synch is done by the system.
+			catch (Exception e)
+			{
+				IsSynching = false;// this will ensure that the synch can start again. If this variable remains true due to an exception then a synch will never take place automatically.
+				if (Application.OpenForms["FormProgress"] != null)
+				{// without this line the following error is thrown: "Invoke or BeginInvoke cannot be called on a control until the window handle has been created." or a null pointer exception is thrown when an automatic synch is done by the system.
 					FormP.Invoke(new PassProgressDelegate(PassProgressToDialog),
-						new object[] { 0,"?currentVal of ?maxVal records uploaded",totalCount,e.Message });
+						new object[] { 0, "?currentVal of ?maxVal records uploaded", totalCount, e.Message });
 				}
 			}
 		}
 
 		///<summary>a general function to reduce the amount of code for uploading</summary>
-		private static void SynchGeneric(List<long> PKNumList,SynchEntity entity,double totalCount,ref double currentVal) {
+		private static void SynchGeneric(List<long> PKNumList, SynchEntity entity, double totalCount, ref double currentVal)
+		{
 			//Dennis: a try catch block here has been avoid on purpose.
 			/*
 			List<long> BlockPKNumList=null;
@@ -460,11 +511,12 @@ namespace OpenDental
 		}
 
 		///<summary>This method gets invoked from the worker thread.</summary>
-		private static void PassProgressToDialog(double currentVal,string displayText,double maxVal,string errorMessage) {
-			FormP.CurrentVal=currentVal;
-			FormP.DisplayText=displayText;
-			FormP.MaxVal=maxVal;
-			FormP.ErrorMessage=errorMessage;
+		private static void PassProgressToDialog(double currentVal, string displayText, double maxVal, string errorMessage)
+		{
+			FormP.CurrentVal = currentVal;
+			FormP.DisplayText = displayText;
+			FormP.MaxVal = maxVal;
+			FormP.ErrorMessage = errorMessage;
 		}
 
 		/*
@@ -497,31 +549,38 @@ namespace OpenDental
 			}//for loop ends here
 			
 		}
-		*/	 
+		*/
 		/// <summary>An empty method to test if the webservice is up and running. This was made with the intention of testing the correctness of the webservice URL. If an incorrect webservice URL is used in a background thread the exception cannot be handled easily to a point where even a correct URL cannot be keyed in by the user. Because an exception in a background thread closes the Form which spawned it.</summary>
-		private static bool TestWebServiceExists() {
-			try {
-				mb.Url=Prefs.GetString(PrefName.MobileSyncServerURL);
-				if(mb.ServiceExists()) {
+		private static bool TestWebServiceExists()
+		{
+			try
+			{
+				mb.Url = Preferences.GetString(PreferenceName.MobileSyncServerURL);
+				if (mb.ServiceExists())
+				{
 					return true;
 				}
 			}
-			catch{
+			catch
+			{
 				return false;
 			}
 			return false;
 		}
 
-		private bool VerifyPaidCustomer() {
+		private bool VerifyPaidCustomer()
+		{
 			//if(textMobileSyncServerURL.Text.Contains("192.168.0.196") || textMobileSyncServerURL.Text.Contains("localhost")) {
-			if(textMobileSyncServerURL.Text.Contains("10.10.1.196") || textMobileSyncServerURL.Text.Contains("localhost")) {
+			if (textMobileSyncServerURL.Text.Contains("10.10.1.196") || textMobileSyncServerURL.Text.Contains("localhost"))
+			{
 				IgnoreCertificateErrors();
 			}
-			bool isPaidCustomer=mb.IsPaidCustomer(Prefs.GetString(PrefName.RegistrationKey));
-			if(!isPaidCustomer) {
-				textSynchMinutes.Text="0";
-				Prefs.Set(PrefName.MobileSyncIntervalMinutes,0);
-				changed=true;
+			bool isPaidCustomer = mb.IsPaidCustomer(Preferences.GetString(PreferenceName.RegistrationKey));
+			if (!isPaidCustomer)
+			{
+				textSynchMinutes.Text = "0";
+				Preferences.Set(PreferenceName.MobileSyncIntervalMinutes, 0);
+				changed = true;
 				MessageBox.Show("This feature requires a separate monthly payment.  Please call customer support.");
 				return false;
 			}
@@ -529,144 +588,168 @@ namespace OpenDental
 		}
 
 		///<summary>Called from FormOpenDental and from FormEhrOnlineAccess.  doForce is set to false to follow regular synching interval.</summary>
-		public static void SynchFromMain(bool doForce) {
-			if(Application.OpenForms["FormMobile"]!=null) {//tested.  This prevents main synch whenever this form is open.
+		public static void SynchFromMain(bool doForce)
+		{
+			if (Application.OpenForms["FormMobile"] != null)
+			{//tested.  This prevents main synch whenever this form is open.
 				return;
 			}
-			if(IsSynching) {
+			if (IsSynching)
+			{
 				return;
 			}
-			DateTime timeSynchStarted=MiscData.GetNowDateTime();
-			if(!doForce) {//if doForce, we skip checking the interval
-				if(timeSynchStarted < PrefC.GetDate(PrefName.MobileSyncDateTimeLastRun).AddMinutes(PrefC.GetInt(PrefName.MobileSyncIntervalMinutes))) {
+			DateTime timeSynchStarted = MiscData.GetNowDateTime();
+			if (!doForce)
+			{//if doForce, we skip checking the interval
+				if (timeSynchStarted < PrefC.GetDate(PreferenceName.MobileSyncDateTimeLastRun).AddMinutes(PrefC.GetInt(PreferenceName.MobileSyncIntervalMinutes)))
+				{
 					return;
 				}
 			}
 			//if(Prefs.GetString(PrefName.MobileSyncServerURL).Contains("192.168.0.196") || Prefs.GetString(PrefName.MobileSyncServerURL).Contains("localhost")) {
-			if(Prefs.GetString(PrefName.MobileSyncServerURL).Contains("10.10.1.196") || Prefs.GetString(PrefName.MobileSyncServerURL).Contains("localhost")) {
+			if (Preferences.GetString(PreferenceName.MobileSyncServerURL).Contains("10.10.1.196") || Preferences.GetString(PreferenceName.MobileSyncServerURL).Contains("localhost"))
+			{
 				IgnoreCertificateErrors();
 			}
-			if(!TestWebServiceExists()) {
-				if(!doForce) {//if being used from FormOpenDental as part of timer
-					if(IsServerAvail) {//this will only happen the first time to prevent multiple windows.
-						IsServerAvail=false;
-						DialogResult res=MessageBox.Show("Mobile synch server not available.  Synch failed.  Turn off synch?","",MessageBoxButtons.YesNo);
-						if(res==DialogResult.Yes) {
-							Prefs.Set(PrefName.MobileSyncIntervalMinutes,0);
+			if (!TestWebServiceExists())
+			{
+				if (!doForce)
+				{//if being used from FormOpenDental as part of timer
+					if (IsServerAvail)
+					{//this will only happen the first time to prevent multiple windows.
+						IsServerAvail = false;
+						DialogResult res = MessageBox.Show("Mobile synch server not available.  Synch failed.  Turn off synch?", "", MessageBoxButtons.YesNo);
+						if (res == DialogResult.Yes)
+						{
+							Preferences.Set(PreferenceName.MobileSyncIntervalMinutes, 0);
 						}
 					}
 				}
 				return;
 			}
-			else {
-				IsServerAvail=true;
+			else
+			{
+				IsServerAvail = true;
 			}
-			DateTime changedSince=PrefC.GetDate(PrefName.MobileSyncDateTimeLastRun);			
+			DateTime changedSince = PrefC.GetDate(PreferenceName.MobileSyncDateTimeLastRun);
 			//FormProgress FormP=new FormProgress();//but we won't display it.
 			//FormP.NumberFormat="";
 			//FormP.DisplayText="";
 			//start the thread that will perform the upload
-			ThreadStart uploadDelegate= delegate { UploadWorker(changedSince,timeSynchStarted); };
-			Thread workerThread=new Thread(uploadDelegate);
+			ThreadStart uploadDelegate = delegate { UploadWorker(changedSince, timeSynchStarted); };
+			Thread workerThread = new Thread(uploadDelegate);
 			workerThread.Start();
 		}
 
 		#region Testing
 		///<summary>This allows the code to continue by not throwing an exception even if there is a problem with the security certificate.</summary>
-		private static void IgnoreCertificateErrors() {
-			System.Net.ServicePointManager.ServerCertificateValidationCallback+=
-			delegate(object sender,System.Security.Cryptography.X509Certificates.X509Certificate certificate,
+		private static void IgnoreCertificateErrors()
+		{
+			System.Net.ServicePointManager.ServerCertificateValidationCallback +=
+			delegate (object sender, System.Security.Cryptography.X509Certificates.X509Certificate certificate,
 									System.Security.Cryptography.X509Certificates.X509Chain chain,
-									System.Net.Security.SslPolicyErrors sslPolicyErrors) {
+									System.Net.Security.SslPolicyErrors sslPolicyErrors)
+			{
 				return true;
 			};
 		}
-		
+
 		/// <summary>For testing only</summary>
-		private static void CreatePatients(int PatientCount) {
-			for(int i=0;i<PatientCount;i++) {
-				Patient newPat=new Patient();
-				newPat.LName="Mathew"+i;
-				newPat.FName="Dennis"+i;
-				newPat.Address="Address Line 1.Address Line 1___"+i;
-				newPat.Address2="Address Line 2. Address Line 2__"+i;
-				newPat.AddrNote="Lives off in far off Siberia Lives off in far off Siberia"+i;
-				newPat.AdmitDate=new DateTime(1985,3,3).AddDays(i);
-				newPat.ApptModNote="Flies from Siberia on specially chartered flight piloted by goblins:)"+i;
-				newPat.AskToArriveEarly=1555;
-				newPat.BillingType=3;
-				newPat.ChartNumber="111111"+i;
-				newPat.City="NL";
-				newPat.ClinicNum=i;
-				newPat.CreditType="A";
-				newPat.DateFirstVisit=new DateTime(1985,3,3).AddDays(i);
-				newPat.Email="dennis.mathew________________seb@siberiacrawlmail.com";
-				newPat.HmPhone="416-222-5678";
-				newPat.WkPhone="416-222-5678";
-				newPat.Zip="M3L 2L9";
-				newPat.WirelessPhone="416-222-5678";
-				newPat.Birthdate=new DateTime(1970,3,3).AddDays(i);
-				Patients.Insert(newPat,false);
+		private static void CreatePatients(int PatientCount)
+		{
+			for (int i = 0; i < PatientCount; i++)
+			{
+				Patient newPat = new Patient();
+				newPat.LName = "Mathew" + i;
+				newPat.FName = "Dennis" + i;
+				newPat.Address = "Address Line 1.Address Line 1___" + i;
+				newPat.Address2 = "Address Line 2. Address Line 2__" + i;
+				newPat.AddrNote = "Lives off in far off Siberia Lives off in far off Siberia" + i;
+				newPat.AdmitDate = new DateTime(1985, 3, 3).AddDays(i);
+				newPat.ApptModNote = "Flies from Siberia on specially chartered flight piloted by goblins:)" + i;
+				newPat.AskToArriveEarly = 1555;
+				newPat.BillingType = 3;
+				newPat.ChartNumber = "111111" + i;
+				newPat.City = "NL";
+				newPat.ClinicNum = i;
+				newPat.CreditType = "A";
+				newPat.DateFirstVisit = new DateTime(1985, 3, 3).AddDays(i);
+				newPat.Email = "dennis.mathew________________seb@siberiacrawlmail.com";
+				newPat.HmPhone = "416-222-5678";
+				newPat.WkPhone = "416-222-5678";
+				newPat.Zip = "M3L 2L9";
+				newPat.WirelessPhone = "416-222-5678";
+				newPat.Birthdate = new DateTime(1970, 3, 3).AddDays(i);
+				Patients.Insert(newPat, false);
 				//set Guarantor field the same as PatNum
-				Patient patOld=newPat.Copy();
-				newPat.Guarantor=newPat.PatNum;
-				Patients.Update(newPat,patOld);
+				Patient patOld = newPat.Copy();
+				newPat.Guarantor = newPat.PatNum;
+				Patients.Update(newPat, patOld);
 			}
 		}
 
 		/// <summary>For testing only</summary>
-		private static void CreateAppointments(int AppointmentCount) {
-			long[] patNumArray=Patients.GetAllPatNums(true);
-			DateTime appdate= DateTime.Now;
-			for(int i=0;i<patNumArray.Length;i++) {
-				appdate=appdate.AddMinutes(20);
-				for(int j=0;j<AppointmentCount;j++) {
-					Appointment apt=new Appointment();
-					appdate=appdate.AddMinutes(20);
-					apt.PatNum=patNumArray[i];
-					apt.DateTimeArrived=appdate;
-					apt.DateTimeAskedToArrive=appdate;
-					apt.DateTimeDismissed=appdate;
-					apt.DateTimeSeated=appdate;
-					apt.AptDateTime=appdate;
-					apt.Note="some notenote noten otenotenot enotenot enote"+j;
-					apt.IsNewPatient=true;
-					apt.ProvNum=3;
-					apt.AptStatus=ApptStatus.Scheduled;
-					apt.AptDateTime=appdate;
-					apt.Op=2;
-					apt.Pattern="//XX//////";
-					apt.ProcDescript="4-BWX";
-					apt.ProcsColored="<span color=\"-16777216\">4-BWX</span>";
+		private static void CreateAppointments(int AppointmentCount)
+		{
+			long[] patNumArray = Patients.GetAllPatNums(true);
+			DateTime appdate = DateTime.Now;
+			for (int i = 0; i < patNumArray.Length; i++)
+			{
+				appdate = appdate.AddMinutes(20);
+				for (int j = 0; j < AppointmentCount; j++)
+				{
+					Appointment apt = new Appointment();
+					appdate = appdate.AddMinutes(20);
+					apt.PatNum = patNumArray[i];
+					apt.DateTimeArrived = appdate;
+					apt.DateTimeAskedToArrive = appdate;
+					apt.DateTimeDismissed = appdate;
+					apt.DateTimeSeated = appdate;
+					apt.AptDateTime = appdate;
+					apt.Note = "some notenote noten otenotenot enotenot enote" + j;
+					apt.IsNewPatient = true;
+					apt.ProvNum = 3;
+					apt.AptStatus = ApptStatus.Scheduled;
+					apt.AptDateTime = appdate;
+					apt.Op = 2;
+					apt.Pattern = "//XX//////";
+					apt.ProcDescript = "4-BWX";
+					apt.ProcsColored = "<span color=\"-16777216\">4-BWX</span>";
 					Appointments.Insert(apt);
 				}
 			}
 		}
 
 		/// <summary>For testing only</summary>
-		private static void CreatePrescriptions(int PrescriptionCount) {
-			long[] patNumArray=Patients.GetAllPatNums(true);
-			for(int i=0;i<patNumArray.Length;i++) {
-				for(int j=0;j<PrescriptionCount;j++) {
-					RxPat rxpat= new RxPat();
-					rxpat.Drug="VicodinA VicodinB VicodinC"+j;
-					rxpat.Disp="50.50";
-					rxpat.IsControlled=true;
-					rxpat.PatNum=patNumArray[i];
-					rxpat.RxDate=new DateTime(2010,12,1,11,0,0);
+		private static void CreatePrescriptions(int PrescriptionCount)
+		{
+			long[] patNumArray = Patients.GetAllPatNums(true);
+			for (int i = 0; i < patNumArray.Length; i++)
+			{
+				for (int j = 0; j < PrescriptionCount; j++)
+				{
+					RxPat rxpat = new RxPat();
+					rxpat.Drug = "VicodinA VicodinB VicodinC" + j;
+					rxpat.Disp = "50.50";
+					rxpat.IsControlled = true;
+					rxpat.PatNum = patNumArray[i];
+					rxpat.RxDate = new DateTime(2010, 12, 1, 11, 0, 0);
 					RxPats.Insert(rxpat);
 				}
 			}
 		}
 
-		private static void CreateStatements(int StatementCount) {
-			long[] patNumArray=Patients.GetAllPatNums(true);
-			for(int i=0;i<patNumArray.Length;i++) {
-				for(int j=0;j<StatementCount;j++) {
-					Statement st= new Statement();
-					st.DateSent=new DateTime(2010,12,1,11,0,0).AddDays(1+j);
-					st.DocNum=i+j;
-					st.PatNum=patNumArray[i];
+		private static void CreateStatements(int StatementCount)
+		{
+			long[] patNumArray = Patients.GetAllPatNums(true);
+			for (int i = 0; i < patNumArray.Length; i++)
+			{
+				for (int j = 0; j < StatementCount; j++)
+				{
+					Statement st = new Statement();
+					st.DateSent = new DateTime(2010, 12, 1, 11, 0, 0).AddDays(1 + j);
+					st.DocNum = i + j;
+					st.PatNum = patNumArray[i];
 					Statements.Insert(st);
 				}
 			}
@@ -674,34 +757,17 @@ namespace OpenDental
 
 		#endregion Testing
 
-		private void butClose_Click(object sender,EventArgs e) {
+		private void butClose_Click(object sender, EventArgs e)
+		{
 			Close();
 		}
 
-		private void FormMobile_FormClosed(object sender,FormClosedEventArgs e) {
-			if(changed) {
+		private void FormMobile_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			if (changed)
+			{
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 		}
-
-		
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	}
 }

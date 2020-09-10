@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using Imedisoft.Data.Cache;
 using OpenDental;
 using OpenDentBusiness;
@@ -20,8 +21,8 @@ namespace Imedisoft.Forms
 				return;
 			}
 
-			var studentGroup = UserGroups.GetGroup(Prefs.GetLong(PrefName.SecurityGroupForStudents));
-			var instructorGroup = UserGroups.GetGroup(Prefs.GetLong(PrefName.SecurityGroupForInstructors));
+			var studentGroup = UserGroups.GetGroup(Preferences.GetLong(PreferenceName.SecurityGroupForStudents));
+			var instructorGroup = UserGroups.GetGroup(Preferences.GetLong(PreferenceName.SecurityGroupForInstructors));
 
 			studentsTextBox.Text = studentGroup?.Description;
 			instructorsTextBox.Text = instructorGroup?.Description;
@@ -61,8 +62,7 @@ namespace Imedisoft.Forms
 				}
 			}
 
-
-			Prefs.Set(PrefName.SecurityGroupForStudents, formUserGroupPicker.UserGroup.Id);
+			Preferences.Set(PreferenceName.SecurityGroupForStudents, formUserGroupPicker.UserGroup.Id);
 
 			studentsTextBox.Text = formUserGroupPicker.UserGroup.Description;
 
@@ -100,7 +100,7 @@ namespace Imedisoft.Forms
 				}
 			}
 
-			Prefs.Set(PrefName.SecurityGroupForInstructors, formUserGroupPicker.UserGroup.Id);
+			Preferences.Set(PreferenceName.SecurityGroupForInstructors, formUserGroupPicker.UserGroup.Id);
 
 			instructorsTextBox.Text = formUserGroupPicker.UserGroup.Description;
 

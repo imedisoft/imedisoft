@@ -109,7 +109,7 @@ namespace OpenDentBusiness{
 				procLink=linkingData.BandingProcLink;
 			}
 			//Link visit procedure
-			else if(OrthoCases.GetListProcTypeProcCodes(PrefName.OrthoVisitCodes).Contains(procCode)) {
+			else if(OrthoCases.GetListProcTypeProcCodes(PreferenceName.OrthoVisitCodes).Contains(procCode)) {
 				procType=OrthoProcType.Visit;
 				procLink=CreateHelper(linkingData.ActiveOrthoCase.OrthoCaseNum,proc.ProcNum,OrthoProcType.Visit);
 				procLink.OrthoProcLinkNum=Insert(procLink);
@@ -117,7 +117,7 @@ namespace OpenDentBusiness{
 				linkingData.ListProcLinksForCase.Add(procLink);
 			}
 			else {//Link Debond procedure
-				if(!OrthoCases.GetListProcTypeProcCodes(PrefName.OrthoDebondCodes).Contains(procCode)) {
+				if(!OrthoCases.GetListProcTypeProcCodes(PreferenceName.OrthoDebondCodes).Contains(procCode)) {
 					return null;//just an extra precaution to make sure that we are infact a debond procedure. 
 				}
 				procType=OrthoProcType.Debond;
@@ -324,7 +324,7 @@ namespace OpenDentBusiness{
 			}
 			//If case is transfer or we already have a banding procedure and we're attempting to link another banding procedure, do not continue.
 			if(((BandingProc!=null && proc.ProcNum!=BandingProc.ProcNum) || ActiveOrthoCase.IsTransfer) 
-				&& OrthoCases.GetListProcTypeProcCodes(PrefName.OrthoBandingCodes).Contains(ProcedureCodes.GetProcCode(proc.CodeNum).ProcCode)) 
+				&& OrthoCases.GetListProcTypeProcCodes(PreferenceName.OrthoBandingCodes).Contains(ProcedureCodes.GetProcCode(proc.CodeNum).ProcCode)) 
 			{
 				return false;
 			}

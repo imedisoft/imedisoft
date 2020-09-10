@@ -198,7 +198,7 @@ namespace OpenDentBusiness{
 
 			var clinicId = 
 				Database.ExecuteLong("SELECT `clinic_id` FROM `clinic_preferences` WHERE `key` = @key AND `value` = @value",
-					new MySqlParameter("key", PrefName.SheetsDefaultRx),
+					new MySqlParameter("key", PreferenceName.SheetsDefaultRx),
 					new MySqlParameter("value", sheetDefNum));
 			
 			if (clinicId > 0)
@@ -288,7 +288,7 @@ namespace OpenDentBusiness{
 				}
 				else
 				{
-					var clinicPrefCur = ClinicPrefs.GetLong(clinicNum, Prefs.GetSheetDefPref(sheetTypeEnum));
+					var clinicPrefCur = ClinicPrefs.GetLong(clinicNum, Preferences.GetSheetDefPref(sheetTypeEnum));
 
 					defaultSheetDef = SheetsInternal.GetSheetDef(sheetTypeEnum);
 					if (clinicPrefCur > 0)
@@ -310,7 +310,7 @@ namespace OpenDentBusiness{
 		///<summary>Passing in a clinicNum of 0 will use the base default sheet def.  Otherwise returns the clinic specific default sheetdef.</summary>
 		public static SheetDef GetSheetsDefault(SheetTypeEnum sheetType, long clinicNum = 0)
 		{
-			var clinicPrefCur = ClinicPrefs.GetLong(clinicNum, Prefs.GetSheetDefPref(sheetType));
+			var clinicPrefCur = ClinicPrefs.GetLong(clinicNum, Preferences.GetSheetDefPref(sheetType));
 
 			SheetDef defaultSheetDef;
 			if (clinicPrefCur == 0)

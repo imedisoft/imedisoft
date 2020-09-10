@@ -1,17 +1,11 @@
-﻿using System;
+﻿using CodeBase;
+using Imedisoft.Data;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using CodeBase;
-using OpenDentBusiness;
 using WebServiceSerializer;
 
 namespace OpenDentBusiness.WebTypes.WebForms
 {
-	public class WebForms_SheetDefs
+    public class WebForms_SheetDefs
 	{
 
 		/// <summary></summary>
@@ -21,7 +15,7 @@ namespace OpenDentBusiness.WebTypes.WebForms
 		{
 			if (string.IsNullOrEmpty(regKey))
 			{
-				regKey = Prefs.GetString(PrefName.RegistrationKey);
+				regKey = Preferences.GetString(PreferenceName.RegistrationKey);
 			}
 			listWebFormSheetDefs = new List<WebForms_SheetDef>();
 			try
@@ -42,7 +36,7 @@ namespace OpenDentBusiness.WebTypes.WebForms
 		///<param name="sheetDef">The SheetDef object to be uploaded.</param>
 		public static void TryUploadSheetDef(SheetDef sheetDef)
 		{
-			string regKey = Prefs.GetString(PrefName.RegistrationKey);
+			string regKey = Preferences.GetString(PreferenceName.RegistrationKey);
 			List<PayloadItem> listPayloadItems = new List<PayloadItem> {
 				new PayloadItem(regKey,"RegKey"),
 				new PayloadItem(sheetDef,"SheetDef")
@@ -56,7 +50,7 @@ namespace OpenDentBusiness.WebTypes.WebForms
 		/// than the provided chunkSize. Size is measured in bytes.</summary>
 		public static void TryUploadSheetDefChunked(SheetDef sheetDef, int chunkSize)
 		{
-			string regKey = Prefs.GetString(PrefName.RegistrationKey);
+			string regKey = Preferences.GetString(PreferenceName.RegistrationKey);
 			List<PayloadItem> listPayloadItems = new List<PayloadItem> {
 				new PayloadItem(regKey,"RegKey"),
 				new PayloadItem(sheetDef,"SheetDef")
@@ -74,7 +68,7 @@ namespace OpenDentBusiness.WebTypes.WebForms
 		{
 			if (string.IsNullOrEmpty(regKey))
 			{
-				regKey = Prefs.GetString(PrefName.RegistrationKey);
+				regKey = Preferences.GetString(PreferenceName.RegistrationKey);
 			}
 			try
 			{
@@ -100,7 +94,7 @@ namespace OpenDentBusiness.WebTypes.WebForms
 		{
 			if (string.IsNullOrEmpty(regKey))
 			{
-				regKey = Prefs.GetString(PrefName.RegistrationKey);
+				regKey = Preferences.GetString(PreferenceName.RegistrationKey);
 			}
 			try
 			{
@@ -127,7 +121,7 @@ namespace OpenDentBusiness.WebTypes.WebForms
 		/// than the provided chunkSize. Size is measured in bytes.</summary>
 		public static bool UpdateSheetDefChunked(long webSheetDefId, SheetDef sheetDef, int chunkSize)
 		{
-			string regKey = Prefs.GetString(PrefName.RegistrationKey);
+			string regKey = Preferences.GetString(PreferenceName.RegistrationKey);
 			List<PayloadItem> listPayloadItems = new List<PayloadItem> {
 				new PayloadItem(regKey,"RegKey"),
 				new PayloadItem(webSheetDefId,"WebSheetDefID"),

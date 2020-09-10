@@ -988,17 +988,17 @@ namespace OpenDental {
 				butApptProcs.Visible=false;
 				labelApptProcs.Visible=false;
 			}
-			if(Prefs.GetBool(PrefName.DatabaseMaintenanceDisableOptimize)) {
+			if(Preferences.GetBool(PreferenceName.DatabaseMaintenanceDisableOptimize)) {
 				butOptimize.Enabled=false;
 			}
-			if(Prefs.GetBool(PrefName.DatabaseMaintenanceSkipCheckTable)) {
+			if(Preferences.GetBool(PreferenceName.DatabaseMaintenanceSkipCheckTable)) {
 				labelSkipCheckTable.Visible=true;
 			}
 			FillGrid();
 			FillGridHidden();
 			FillGridOld();
 
-			textBoxUpdateInProg.Text=Prefs.GetString(PrefName.UpdateInProgressOnComputerName);
+			textBoxUpdateInProg.Text=Preferences.GetString(PreferenceName.UpdateInProgressOnComputerName);
 			if(string.IsNullOrWhiteSpace(textBoxUpdateInProg.Text)) {
 				butClearUpdateInProgress.Enabled=false;
 			}
@@ -1174,7 +1174,7 @@ namespace OpenDental {
 		#region Database Tools
 
 		private void butClearUpdateInProgress_Click(object sender,EventArgs e) {
-			Prefs.Set(PrefName.UpdateInProgressOnComputerName,"");
+			Preferences.Set(PreferenceName.UpdateInProgressOnComputerName,"");
 			DataValid.SetInvalid(InvalidType.Prefs);
 			textBoxUpdateInProg.Text="";
 		}

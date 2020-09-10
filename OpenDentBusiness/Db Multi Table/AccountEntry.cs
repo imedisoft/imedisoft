@@ -399,7 +399,7 @@ namespace OpenDentBusiness {
 			this.IsAdjustment=(payPlanCharge.IsCreditAdjustment || payPlanCharge.IsDebitAdjustment);
 			if(this.IsAdjustment) {
 				this.AdjNum=payPlanCharge.FKey;
-				this.UnearnedType=Prefs.GetLong(PrefName.PrepaymentUnearnedType);
+				this.UnearnedType=Preferences.GetLong(PreferenceName.PrepaymentUnearnedType);
 			}
 			this.Tag=this;
 		}

@@ -311,8 +311,8 @@ namespace OpenDental{
 		#endregion
 
 		private void FormRpProcNote_Load(object sender,System.EventArgs e) {
-			checkNoNotes.Checked=Prefs.GetBool(PrefName.ReportsIncompleteProcsNoNotes);
-			checkUnsignedNote.Checked=Prefs.GetBool(PrefName.ReportsIncompleteProcsUnsigned);
+			checkNoNotes.Checked=Preferences.GetBool(PreferenceName.ReportsIncompleteProcsNoNotes);
+			checkUnsignedNote.Checked=Preferences.GetBool(PreferenceName.ReportsIncompleteProcsUnsigned);
 			FillProvs();
 			dateRangePicker.SetDateTimeFrom(DateTime.Today);
 			dateRangePicker.SetDateTimeTo(DateTime.Today);
@@ -409,7 +409,7 @@ namespace OpenDental{
 			}
 			return RpProcNote.GetData(GetListSelectedProvNums(),comboClinics.ListSelectedClinicNums,dateRangePicker.GetDateTimeFrom(),
 				dateRangePicker.GetDateTimeTo(),checkNoNotes.Checked,checkUnsignedNote.Checked,
-				(ToothNumberingNomenclature)PrefC.GetInt(PrefName.UseInternationalToothNumbers),groupBy);
+				(ToothNumberingNomenclature)PrefC.GetInt(PreferenceName.UseInternationalToothNumbers),groupBy);
 		}
 
 		///<summary></summary>
@@ -488,7 +488,7 @@ namespace OpenDental{
 				text="Incomplete Procedure Notes";
 				g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,headingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
-				text=Prefs.GetString(PrefName.PracticeTitle);
+				text=Preferences.GetString(PreferenceName.PracticeTitle);
 				g.DrawString(text,subHeadingFont,Brushes.Black,center-g.MeasureString(text,subHeadingFont).Width/2,yPos);
 				yPos+=(int)g.MeasureString(text,headingFont).Height;
 				if(comboProvs.IsAllSelected){

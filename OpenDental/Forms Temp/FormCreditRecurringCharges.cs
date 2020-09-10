@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
 using OpenDental.Bridges;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -190,7 +191,7 @@ namespace OpenDental {
 					row.Cells.Add(clinicCur!=null?clinicCur.Description:"");//get description from cache if clinics are enabled
 				}
 				int billingDay=0;
-				if(Prefs.GetBool(PrefName.BillingUseBillingCycleDay)) {
+				if(Preferences.GetBool(PreferenceName.BillingUseBillingCycleDay)) {
 					billingDay=chargeCur.BillingCycleDay;
 				}
 				else {

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -48,7 +49,7 @@ namespace OpenDental {
 					}
 				}
 				labelSheetType.Text="Patient Forms and Medical Histories";//Change name?
-				if(Prefs.GetBool(PrefName.PatientFormsShowConsent)) {//only if they want to see consent forms with patient forms.
+				if(Preferences.GetBool(PreferenceName.PatientFormsShowConsent)) {//only if they want to see consent forms with patient forms.
 					if(listConSheets.Count==0) {//use internal consent forms
 						listSheets.Add(SheetsInternal.GetSheetDef(SheetInternalType.Consent));
 					}

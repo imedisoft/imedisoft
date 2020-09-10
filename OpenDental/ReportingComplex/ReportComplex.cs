@@ -11,6 +11,7 @@ using System.IO;
 using System.Text;
 using CodeBase;
 using System.Linq;
+using Imedisoft.Data;
 
 namespace OpenDental.ReportingComplex {
 	/// <summary>This class is loosely modeled after CrystalReports.ReportDocument, but with less inheritence and heirarchy.</summary>
@@ -132,7 +133,7 @@ namespace OpenDental.ReportingComplex {
 				_actionCloseReportProgress=ODProgress.Show(EventCategory.ReportComplex
 					,typeof(ReportComplexEvent)
 					,startingMessage: "Running Report Query..."
-					,hasHistory:Prefs.GetBool(PrefName.ReportsShowHistory));
+					,hasHistory:Preferences.GetBool(PreferenceName.ReportsShowHistory));
 			}
 			_grfx=Graphics.FromImage(new Bitmap(1,1));
 			_isLandscape=isLandscape;

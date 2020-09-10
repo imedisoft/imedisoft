@@ -38,8 +38,8 @@ namespace Imedisoft.Forms
 				return;
 			}
 
-			if (Prefs.GetBool(PrefName.PasswordsMustBeStrong) && 
-				Prefs.GetBool(PrefName.PasswordsWeakChangeToStrong))
+			if (Preferences.GetBool(PreferenceName.PasswordsMustBeStrong) && 
+				Preferences.GetBool(PreferenceName.PasswordsWeakChangeToStrong))
 			{
 				if (Userods.IsPasswordStrong(passwordTextBox.Text) != "")
 				{

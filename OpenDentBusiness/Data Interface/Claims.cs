@@ -1099,7 +1099,7 @@ namespace OpenDentBusiness
 					long provNum = ProcCur.ProvNum;
 					if (provNum == 0)
 					{//if no prov set, then use practice default.
-						provNum = Prefs.GetLong(PrefName.PracticeDefaultProv);
+						provNum = Preferences.GetLong(PreferenceName.PracticeDefaultProv);
 					}
 					Provider providerFirst = Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
 					Provider provider = Providers.GetFirstOrDefault(x => x.Id == provNum) ?? providerFirst;
@@ -1241,7 +1241,7 @@ namespace OpenDentBusiness
 				case "Med":
 					claimCur.PatRelat = PatPlans.GetFromList(patPlanList, subCur.InsSubNum).Relationship;
 					claimCur.ClaimType = "Other";
-					if (Prefs.GetBool(PrefName.ClaimMedTypeIsInstWhenInsPlanIsMedical))
+					if (Preferences.GetBool(PreferenceName.ClaimMedTypeIsInstWhenInsPlanIsMedical))
 					{
 						claimCur.MedType = EnumClaimMedType.Institutional;
 					}
@@ -1257,7 +1257,7 @@ namespace OpenDentBusiness
 					claimCur.ClaimForm = claimFormNum;
 					if (planCur.IsMedical)
 					{
-						if (Prefs.GetBool(PrefName.ClaimMedTypeIsInstWhenInsPlanIsMedical))
+						if (Preferences.GetBool(PreferenceName.ClaimMedTypeIsInstWhenInsPlanIsMedical))
 						{
 							claimCur.MedType = EnumClaimMedType.Institutional;
 						}
@@ -1349,11 +1349,11 @@ namespace OpenDentBusiness
 			claimCur.PlanNum = insPlanCur.PlanNum;
 			claimCur.InsSubNum = inssubCur.InsSubNum;
 			claimCur.ClaimFee = feeBilled;
-			if (Prefs.GetBool(PrefName.OrthoClaimMarkAsOrtho))
+			if (Preferences.GetBool(PreferenceName.OrthoClaimMarkAsOrtho))
 			{
 				claimCur.IsOrtho = true;
 			}
-			if (Prefs.GetBool(PrefName.OrthoClaimUseDatePlacement))
+			if (Preferences.GetBool(PreferenceName.OrthoClaimUseDatePlacement))
 			{
 				claimCur.OrthoDate = dateBanding;
 				claimCur.OrthoTotalM = PIn.Byte(totalMonths.ToString(), false);
@@ -1490,7 +1490,7 @@ namespace OpenDentBusiness
 		public static DateTime GetDateLastOrthoClaim(PatPlan patPlanCur, OrthoClaimType claimType)
 		{
 
-			long orthoDefaultAutoCodeNum = Prefs.GetLong(PrefName.OrthoAutoProcCodeNum);
+			long orthoDefaultAutoCodeNum = Preferences.GetLong(PreferenceName.OrthoAutoProcCodeNum);
 			string command = "";
 			if (claimType == OrthoClaimType.InitialPlusPeriodic)
 			{
@@ -1572,7 +1572,7 @@ namespace OpenDentBusiness
 				pat = Patients.GetPat(claim.PatNum);
 			}
 
-			return Patients.ReplacePatient(Prefs.GetString(PrefName.ClaimIdPrefix), pat) + claim.ClaimNum;
+			return Patients.ReplacePatient(Preferences.GetString(PreferenceName.ClaimIdPrefix), pat) + claim.ClaimNum;
 		}
 
 		/// <summary>

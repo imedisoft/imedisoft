@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -238,10 +239,10 @@ namespace OpenDental{
 		private void FormApptViews_Load(object sender, System.EventArgs e) {
 			comboClinic.SelectedClinicNum=Clinics.Active.Id;
 			FillViewList();
-			if(PrefC.GetInt(PrefName.AppointmentTimeIncrement)==5){
+			if(PrefC.GetInt(PreferenceName.AppointmentTimeIncrement)==5){
 				radioFive.Checked=true;
 			}
-			else if(PrefC.GetInt(PrefName.AppointmentTimeIncrement)==10) {
+			else if(PrefC.GetInt(PreferenceName.AppointmentTimeIncrement)==10) {
 				radioTen.Checked=true;
 			}
 			else{
@@ -378,7 +379,7 @@ namespace OpenDental{
 			if(radioTen.Checked) {
 				newIncrement=10;
 			}
-			if(Prefs.Set(PrefName.AppointmentTimeIncrement,newIncrement)){
+			if(Preferences.Set(PreferenceName.AppointmentTimeIncrement,newIncrement)){
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			if(viewChanged){

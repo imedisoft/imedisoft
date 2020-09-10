@@ -1052,7 +1052,7 @@ namespace OpenDental{
 				gridMain.SelectionMode=GridSelectionMode.MultiExtended;
 			}
 			if(_canShowHidden) {
-				checkShowHidden.Checked=Prefs.GetBool(PrefName.ProcCodeListShowHidden);
+				checkShowHidden.Checked=Preferences.GetBool(PreferenceName.ProcCodeListShowHidden);
 			}
 			else {//checkShowHidden will always be unchecked.
 				checkShowHidden.Visible=false;
@@ -1082,7 +1082,7 @@ namespace OpenDental{
 			labelProvider1.ForeColor=_colorProv;
 			labelProvider2.ForeColor=_colorProv;
 			labelProvider3.ForeColor=_colorProv;
-			bool _isShowingGroups=Prefs.GetBool(PrefName.ShowFeeSchedGroups);
+			bool _isShowingGroups=Preferences.GetBool(PreferenceName.ShowFeeSchedGroups);
 			checkGroups1.Visible=_isShowingGroups;
 			checkGroups2.Visible=_isShowingGroups;
 			checkGroups3.Visible=_isShowingGroups;
@@ -1094,7 +1094,7 @@ namespace OpenDental{
 			for(int i=0;i<Enum.GetNames(typeof(ProcCodeListSort)).Length;i++) {
 				comboSort.Items.Add(Enum.GetNames(typeof(ProcCodeListSort))[i]);
 			}
-			_procCodeSort=(ProcCodeListSort)PrefC.GetInt(PrefName.ProcCodeListSortOrder);
+			_procCodeSort=(ProcCodeListSort)PrefC.GetInt(PreferenceName.ProcCodeListSortOrder);
 			comboSort.SelectedIndex=(int)_procCodeSort;
 			FillGrid();
 			//Preselect corresponding procedure codes once on load.  Do not do it within FillGrid().
@@ -1217,7 +1217,7 @@ namespace OpenDental{
 				for(int i=0;i<_listClinics.Count;i++) {
 					ODBoxItem<Clinic> boxItemClinic=new ODBoxItem<Clinic>(_listClinics[i].Abbr,_listClinics[i]);
 					//When FeeSchedGroups are on don't include clinics that are in a group for that particular fee schedule.
-					if(Prefs.GetBool(PrefName.ShowFeeSchedGroups)) {
+					if(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups)) {
 						//At this point, we do not know if we are going to display fee sched groups
 						AddFeeSchedGroupToComboBox(comboFeeSchedGroup1,feeSchedNum1Selected
 							,feeSchedGroup1Num,listCombo1GroupNums,boxItemClinic);
@@ -1367,7 +1367,7 @@ namespace OpenDental{
 			long clinic2Num=0;
 			long clinic3Num=0;
 			if(PrefC.HasClinicsEnabled) { //Clinics is on
-				if(Prefs.GetBool(PrefName.ShowFeeSchedGroups)) {
+				if(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups)) {
 					//First groupbox
 					if(checkGroups1.Checked && comboFeeSchedGroup1.SelectedIndex>-1) {
 						clinic1Num=comboFeeSchedGroup1.GetSelected<FeeSchedGroup>().ListClinicNumsAll.FirstOrDefault();
@@ -1475,7 +1475,7 @@ namespace OpenDental{
 			long clinic2Num=0;
 			long clinic3Num=0;
 			if(PrefC.HasClinicsEnabled) { //Clinics is on
-				if(Prefs.GetBool(PrefName.ShowFeeSchedGroups)) {
+				if(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups)) {
 					//First groupbox
 					if(checkGroups1.Checked && comboFeeSchedGroup1.SelectedIndex>-1) {
 						clinic1Num=comboFeeSchedGroup1.GetSelected<FeeSchedGroup>().ListClinicNumsAll.FirstOrDefault();
@@ -1750,7 +1750,7 @@ namespace OpenDental{
 				return;
 			}
 			//Can't use values from fee object as it could be null. Instead use values pulled from UI that are also used to set new fees below.
-			if(Prefs.GetBool(PrefName.ShowFeeSchedGroups) && provNum==0 && !isEditingGroup) {//Ignore provider fees and don't block from editing a group.
+			if(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups) && provNum==0 && !isEditingGroup) {//Ignore provider fees and don't block from editing a group.
 				FeeSchedGroup groupForClinic=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSched.FeeSchedNum,clinicNum);
 				if(groupForClinic!=null) {
 					MsgBox.Show("Fee Schedule: "+feeSched.Description+" for Clinic: "+(_listClinics.FirstOrDefault(x => x.Id==clinicNum)).Abbr+
@@ -1893,7 +1893,7 @@ namespace OpenDental{
 		}
 
 		private void butShowHiddenDefault_Click(object sender,EventArgs e) {
-			Prefs.Set(PrefName.ProcCodeListShowHidden,checkShowHidden.Checked);
+			Preferences.Set(PreferenceName.ProcCodeListShowHidden,checkShowHidden.Checked);
 			string hiddenStatus="";
 			if(checkShowHidden.Checked) {
 				hiddenStatus="checked.";
@@ -1966,7 +1966,7 @@ namespace OpenDental{
 			string filePath=ODFileUtils.CombinePaths(Path.GetTempPath(),filename); 
 
 				SaveFileDialog saveDlg=new SaveFileDialog();
-				saveDlg.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
+				saveDlg.InitialDirectory=Preferences.GetString(PreferenceName.ExportPath);
 				saveDlg.FileName=filename;
 				if(saveDlg.ShowDialog()!=DialogResult.OK) {
 					return;
@@ -1987,7 +1987,7 @@ namespace OpenDental{
 				SynchAndFillListFees(true);
 			}
 			OpenFileDialog openDlg=new OpenFileDialog();
-			openDlg.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
+			openDlg.InitialDirectory=Preferences.GetString(PreferenceName.ExportPath);
 			if(openDlg.ShowDialog()!=DialogResult.OK) {
 				return;
 			}

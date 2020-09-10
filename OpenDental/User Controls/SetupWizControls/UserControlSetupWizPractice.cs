@@ -31,18 +31,18 @@ namespace OpenDental.User_Controls.SetupWizard {
 
 		private void FillControls() {
 			_listProviders=Providers.GetDeepCopy(true);
-			textPracticeTitle.Text=Prefs.GetString(PrefName.PracticeTitle);
-			textAddress.Text=Prefs.GetString(PrefName.PracticeAddress);
-			textAddress2.Text=Prefs.GetString(PrefName.PracticeAddress2);
-			textCity.Text=Prefs.GetString(PrefName.PracticeCity);
-			textST.Text=Prefs.GetString(PrefName.PracticeST);
-			textZip.Text=Prefs.GetString(PrefName.PracticeZip);
-			textPhone.Text=TelephoneNumbers.ReFormat(Prefs.GetString(PrefName.PracticePhone));
-			textFax.Text=TelephoneNumbers.ReFormat(Prefs.GetString(PrefName.PracticeFax));
+			textPracticeTitle.Text=Preferences.GetString(PreferenceName.PracticeTitle);
+			textAddress.Text=Preferences.GetString(PreferenceName.PracticeAddress);
+			textAddress2.Text=Preferences.GetString(PreferenceName.PracticeAddress2);
+			textCity.Text=Preferences.GetString(PreferenceName.PracticeCity);
+			textST.Text=Preferences.GetString(PreferenceName.PracticeST);
+			textZip.Text=Preferences.GetString(PreferenceName.PracticeZip);
+			textPhone.Text=TelephoneNumbers.ReFormat(Preferences.GetString(PreferenceName.PracticePhone));
+			textFax.Text=TelephoneNumbers.ReFormat(Preferences.GetString(PreferenceName.PracticeFax));
 			listProvider.Items.Clear();
 			for(int i = 0;i<_listProviders.Count;i++) {
 				listProvider.Items.Add(_listProviders[i].GetLongDesc());
-				if(_listProviders[i].Id==Prefs.GetLong(PrefName.PracticeDefaultProv)) {
+				if(_listProviders[i].Id==Preferences.GetLong(PreferenceName.PracticeDefaultProv)) {
 					listProvider.SelectedIndex=i;
 				}
 			}
@@ -109,19 +109,19 @@ namespace OpenDental.User_Controls.SetupWizard {
 				}
 			}
 			bool changed = false;
-			if(Prefs.Set(PrefName.PracticeTitle,textPracticeTitle.Text)
-				| Prefs.Set(PrefName.PracticeAddress,textAddress.Text)
-				| Prefs.Set(PrefName.PracticeAddress2,textAddress2.Text)
-				| Prefs.Set(PrefName.PracticeCity,textCity.Text)
-				| Prefs.Set(PrefName.PracticeST,textST.Text)
-				| Prefs.Set(PrefName.PracticeZip,textZip.Text)
-				| Prefs.Set(PrefName.PracticePhone,phone)
-				| Prefs.Set(PrefName.PracticeFax,fax))
+			if(Preferences.Set(PreferenceName.PracticeTitle,textPracticeTitle.Text)
+				| Preferences.Set(PreferenceName.PracticeAddress,textAddress.Text)
+				| Preferences.Set(PreferenceName.PracticeAddress2,textAddress2.Text)
+				| Preferences.Set(PreferenceName.PracticeCity,textCity.Text)
+				| Preferences.Set(PreferenceName.PracticeST,textST.Text)
+				| Preferences.Set(PreferenceName.PracticeZip,textZip.Text)
+				| Preferences.Set(PreferenceName.PracticePhone,phone)
+				| Preferences.Set(PreferenceName.PracticeFax,fax))
 			{
 				changed=true;
 			}
 			if(listProvider.SelectedIndex!=-1) {
-				if(Prefs.Set(PrefName.PracticeDefaultProv,_listProviders[listProvider.SelectedIndex].Id)) {
+				if(Preferences.Set(PreferenceName.PracticeDefaultProv,_listProviders[listProvider.SelectedIndex].Id)) {
 					changed=true;
 				}
 			}

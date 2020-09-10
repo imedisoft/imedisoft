@@ -200,7 +200,7 @@ namespace OpenDental {
 				Appointment apt;
 				foreach(Procedure proc in ProcList){//first validate for all dates. 
 					#region Future dating completed procedures validation.
-					if(!Prefs.GetBool(PrefName.FutureTransDatesAllowed) && proc.ProcStatus==ProcStat.C && procDate>DateTime.Today) {
+					if(!Preferences.GetBool(PreferenceName.FutureTransDatesAllowed) && proc.ProcStatus==ProcStat.C && procDate>DateTime.Today) {
 						MessageBox.Show("Completed procedures cannot have future dates.");
 						return false;
 					}

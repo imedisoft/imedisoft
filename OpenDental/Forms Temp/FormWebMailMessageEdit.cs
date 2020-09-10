@@ -53,14 +53,14 @@ namespace OpenDental {
 		///<summary>Helper property to get the Web Mail subject preference.</summary>
 		private string SubjectInsecure {
 			get {
-				return Prefs.GetString(PrefName.PatientPortalNotifySubject);
+				return Preferences.GetString(PreferenceName.PatientPortalNotifySubject);
 			}
 		}
 
 		///<summary>Helper property to get the Web Mail body text preference.  Also replaces all replaceable variables.</summary>
 		private string BodyTextInsecure {
 			get {
-				return Prefs.GetString(PrefName.PatientPortalNotifyBody).Replace("[URL]",Prefs.GetString(PrefName.PatientPortalURL));
+				return Preferences.GetString(PreferenceName.PatientPortalNotifyBody).Replace("[URL]",Preferences.GetString(PreferenceName.PatientPortalURL));
 			}
 		}
 
@@ -91,7 +91,7 @@ namespace OpenDental {
 				}
 			}
 			//Webmail notification email address.  One notification email per database (not clinic specific).
-			_emailAddressSender=EmailAddresses.GetOne(Prefs.GetLong(PrefName.EmailNotifyAddressNum));
+			_emailAddressSender=EmailAddresses.GetOne(Preferences.GetLong(PreferenceName.EmailNotifyAddressNum));
 			if(_emailAddressSender==null
 				|| _emailAddressSender.EmailAddressNum==0
 				|| _emailAddressSender.EmailUsername=="") 
@@ -254,10 +254,10 @@ namespace OpenDental {
 					BlockSendNotificationMessage("Patient who sent this message cannot access PHI for regarding patient.");
 				}
 			}
-			if(Prefs.GetString(PrefName.PatientPortalNotifySubject)=="") {
+			if(Preferences.GetString(PreferenceName.PatientPortalNotifySubject)=="") {
 				BlockSendNotificationMessage("Missing notification email subject. Create a subject in Setup.");
 			}
-			if(Prefs.GetString(PrefName.PatientPortalNotifyBody)=="") {
+			if(Preferences.GetString(PreferenceName.PatientPortalNotifyBody)=="") {
 				BlockSendNotificationMessage("Missing notification email body. Create a body in Setup.");
 			}
 			if(_allowSendNotificationMessage && _webMailMode!=WebMailMode.View) {//If in view mode, do not include notification email information.
@@ -462,7 +462,7 @@ namespace OpenDental {
 				return;
 			}
 			butSend.Enabled=false;
-			EmailType emailType=PrefC.GetEnum<EmailType>(PrefName.PortalWebEmailTemplateType);
+			EmailType emailType=PrefC.GetEnum<EmailType>(PreferenceName.PortalWebEmailTemplateType);
 			//Insert the message. The patient will not see this as an actual email.
 			//Rather, they must login to the patient portal (secured) and view the message that way.
 			//This is how we get around sending the patient a secure message, which would be a hassle for all involved.

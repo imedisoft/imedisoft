@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -15,7 +16,7 @@ namespace OpenDental {
 		private void FormStateAbbrEdit_Load(object sender,EventArgs e) {
 			textDescription.Text=_stateAbbrCur.Description;
 			textAbbr.Text=_stateAbbrCur.Abbr;
-			if(Prefs.GetBool(PrefName.EnforceMedicaidIDLength)) {
+			if(Preferences.GetBool(PreferenceName.EnforceMedicaidIDLength)) {
 				if(_stateAbbrCur.MedicaidIDLength!=0) {
 					textMedIDLength.Text=_stateAbbrCur.MedicaidIDLength.ToString();
 				}
@@ -54,7 +55,7 @@ namespace OpenDental {
 			}
 			_stateAbbrCur.Description=textDescription.Text;
 			_stateAbbrCur.Abbr=textAbbr.Text;
-			if(Prefs.GetBool(PrefName.EnforceMedicaidIDLength)) {
+			if(Preferences.GetBool(PreferenceName.EnforceMedicaidIDLength)) {
 				_stateAbbrCur.MedicaidIDLength=0;
 				if(textMedIDLength.Text!="") {
 					_stateAbbrCur.MedicaidIDLength=PIn.Int(textMedIDLength.Text);

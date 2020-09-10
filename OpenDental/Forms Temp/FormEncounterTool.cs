@@ -148,10 +148,10 @@ namespace OpenDental {
 			}
 			long encInserted=Encounters.InsertEncsFromProcDates(PIn.Date(textDateStart.Text),PIn.Date(textDateEnd.Text),codeValue,EncCodeSystem);
 			MessageBox.Show("Number of encounters inserted:"+" "+encInserted.ToString());
-			if(Prefs.GetString(PrefName.CQMDefaultEncounterCodeValue)=="none") {
+			if(Preferences.GetString(PreferenceName.CQMDefaultEncounterCodeValue)=="none") {
 				if(MsgBox.Show(MsgBoxButtons.YesNo,"Do you want to set this code as the default encounter code?")) {
-					Prefs.Set(PrefName.CQMDefaultEncounterCodeValue,codeValue);
-					Prefs.Set(PrefName.CQMDefaultEncounterCodeSystem,EncCodeSystem);
+					Preferences.Set(PreferenceName.CQMDefaultEncounterCodeValue,codeValue);
+					Preferences.Set(PreferenceName.CQMDefaultEncounterCodeSystem,EncCodeSystem);
 				}
 			}
 			DialogResult=DialogResult.OK;

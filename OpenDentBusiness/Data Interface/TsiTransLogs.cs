@@ -320,7 +320,7 @@ namespace OpenDentBusiness
 					+ "or is not setup properly.";
 			}
 			List<ProgramProperty> listProps = dictAllProps[clinicNum];
-			Definition newBillType = Definitions.GetDef(DefinitionCategory.BillingTypes, Prefs.GetLong(PrefName.TransworldPaidInFullBillingType));
+			Definition newBillType = Definitions.GetDef(DefinitionCategory.BillingTypes, Preferences.GetLong(PreferenceName.TransworldPaidInFullBillingType));
 			if (newBillType == null)
 			{
 				return "The default paid in full billing type is not set.  An automated suspend message cannot be sent until the "

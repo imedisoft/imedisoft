@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
 using CodeBase;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -22,7 +23,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			string script=_pat.ShortCodeOptIn==YN.No ? Prefs.GetString(PrefName.ShortCodeOptedOutScript) : Prefs.GetString(PrefName.ShortCodeOptInScript);
+			string script=_pat.ShortCodeOptIn==YN.No ? Preferences.GetString(PreferenceName.ShortCodeOptedOutScript) : Preferences.GetString(PreferenceName.ShortCodeOptInScript);
 			if(!string.IsNullOrWhiteSpace(script)) {
 				label1.Text=script
 					.Replace("[FName]",_pat.GetNameFirstOrPreferred())
@@ -40,7 +41,7 @@ namespace OpenDental {
 			if(patComm is null) {
 				return;
 			}
-			bool isClinicPrompting=ClinicPrefs.GetBool(clinicNum, PrefName.ShortCodeOptInOnApptComplete);
+			bool isClinicPrompting=ClinicPrefs.GetBool(clinicNum, PreferenceName.ShortCodeOptInOnApptComplete);
 			if(!isClinicPrompting//Auto prompt is disabled (practice pref if not found for clinic)
 				&& patComm.IsPatientShortCodeEligible(clinicNum)//The patient might be able to receive short code sms.
 				&& pat.ShortCodeOptIn==YN.Unknown)//And the patient has not explicitly opted in or out yet.

@@ -189,7 +189,7 @@ namespace OpenDental {
 			_reportCur=new ReportComplex(true,true,false);
 			_reportCur.ReportName="Overcharged Dynamic Payment Plans";
 			_reportCur.AddTitle("Title","Overcharged Dynamic Payment Plans");
-			_reportCur.AddSubTitle("Practice Name",Prefs.GetString(PrefName.PracticeTitle));
+			_reportCur.AddSubTitle("Practice Name",Preferences.GetString(PreferenceName.PracticeTitle));
 			if(_dateFrom==_dateTo) {
 				_reportCur.AddSubTitle("Report Dates",_dateFrom.ToShortDateString());
 			}

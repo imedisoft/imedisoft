@@ -391,8 +391,8 @@ namespace OpenDental{
 				listProv.Items.Add(_listProviders[i].GetLongDesc());
 			}
 			if(PrefC.HasClinicsEnabled){
-        checkClinicInfo.Checked=Prefs.GetBool(PrefName.ReportPandIhasClinicInfo);
-				checkClinicBreakdown.Checked=Prefs.GetBool(PrefName.ReportPandIhasClinicBreakdown);
+        checkClinicInfo.Checked=Preferences.GetBool(PreferenceName.ReportPandIhasClinicInfo);
+				checkClinicBreakdown.Checked=Preferences.GetBool(PreferenceName.ReportPandIhasClinicBreakdown);
 				_listClinics=Clinics.GetByUser(Security.CurrentUser);
 				if(!Security.CurrentUser.ClinicIsRestricted) {
 					listClin.Items.Add("Unassigned");
@@ -469,7 +469,7 @@ namespace OpenDental{
 			if(radioSimpleReport.Checked) {
 			}
 			else if(radioDetailedReport.Checked) {
-				if(!Prefs.GetBool(PrefName.ProviderPayrollAllowToday)) {
+				if(!Preferences.GetBool(PreferenceName.ProviderPayrollAllowToday)) {
 					if(dtPickerTo.Value>=DateTime.Today) {
 						dtPickerTo.Value=DateTime.Today.AddDays(-1);
 					}
@@ -482,7 +482,7 @@ namespace OpenDental{
 
 		private void dtPickerFrom_ValueChanged(object sender,EventArgs e) {
 			if(radioDetailedReport.Checked 
-				&& !Prefs.GetBool(PrefName.ProviderPayrollAllowToday) 
+				&& !Preferences.GetBool(PreferenceName.ProviderPayrollAllowToday) 
 				&& dtPickerFrom.Value>=DateTime.Today) 
 			{
 				dtPickerFrom.Value=DateTime.Today.AddDays(-1);
@@ -491,7 +491,7 @@ namespace OpenDental{
 
 		private void dtPickerTo_ValueChanged(object sender,EventArgs e) {
 			if(radioDetailedReport.Checked 
-				&& !Prefs.GetBool(PrefName.ProviderPayrollAllowToday) 
+				&& !Preferences.GetBool(PreferenceName.ProviderPayrollAllowToday) 
 				&& dtPickerTo.Value>=DateTime.Today) 
 			{
 				dtPickerTo.Value=DateTime.Today.AddDays(-1);
@@ -591,7 +591,7 @@ namespace OpenDental{
 				,checkAllProv.Checked,checkAllClin.Checked,radioDetailedReport.Checked);
 			report.ReportName="Provider Payroll P&I";
 			report.AddTitle("Title","Provider Payroll Production and Income");
-			report.AddSubTitle("PracName",Prefs.GetString(PrefName.PracticeTitle));
+			report.AddSubTitle("PracName",Preferences.GetString(PreferenceName.PracticeTitle));
 			report.AddSubTitle("Date",dateFrom.ToShortDateString()+" - "+dateTo.ToShortDateString());
 			if(checkAllProv.Checked) {
 				report.AddSubTitle("Providers","All Providers");

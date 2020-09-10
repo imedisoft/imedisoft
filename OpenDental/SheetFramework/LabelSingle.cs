@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
@@ -14,12 +15,12 @@ namespace OpenDental
 		{
 			SheetDef sheetDef = SheetsInternal.GetSheetDef(SheetInternalType.LabelPatientMail);
 
-			if (Prefs.GetLong(PrefName.LabelPatientDefaultSheetDefNum) != 0)
+			if (Preferences.GetLong(PreferenceName.LabelPatientDefaultSheetDefNum) != 0)
 			{
 				// Try to use custom label sheet.
 				try
 				{
-					sheetDef = SheetDefs.GetSheetDef(Prefs.GetLong(PrefName.LabelPatientDefaultSheetDefNum));
+					sheetDef = SheetDefs.GetSheetDef(Preferences.GetLong(PreferenceName.LabelPatientDefaultSheetDefNum));
 				}
 				catch
 				{

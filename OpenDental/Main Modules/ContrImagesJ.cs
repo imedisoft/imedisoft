@@ -263,10 +263,10 @@ namespace OpenDental{
 					SelectTreeNode((NodeObjTag)treeNode.Tag);
 				}
 			}
-			if(PrefC.GetInt(PrefName.ImagesModuleTreeIsCollapsed)==0) {//Expand the document tree each time the Images module is visited
+			if(PrefC.GetInt(PreferenceName.ImagesModuleTreeIsCollapsed)==0) {//Expand the document tree each time the Images module is visited
 				treeMain.ExpandAll();//Invalidates tree too.
 			}
-			else if(PrefC.GetInt(PrefName.ImagesModuleTreeIsCollapsed)==1) {//Document tree collapses when patient changes
+			else if(PrefC.GetInt(PreferenceName.ImagesModuleTreeIsCollapsed)==1) {//Document tree collapses when patient changes
 				TreeNode treeNodeSelected=treeMain.SelectedNode;//Save the selection so we can reselect after collapsing.
 				treeMain.CollapseAll();//Invalidates tree and clears selection too.
 				treeMain.SelectedNode=treeNodeSelected;//This will expand any category/folder nodes necessary to show the selection.
@@ -2491,7 +2491,7 @@ namespace OpenDental{
 			//supports multiple file imports, so user doesn't actually need to select a mount item first.
 			OpenFileDialog openFileDialog=new OpenFileDialog();
 			openFileDialog.Multiselect=true;
-			if(Prefs.Exists(PrefName.UseAlternateOpenFileDialogWindow) && Prefs.GetBool(PrefName.UseAlternateOpenFileDialogWindow)){//Hidden pref, almost always false.
+			if(Preferences.Exists(PreferenceName.UseAlternateOpenFileDialogWindow) && Preferences.GetBool(PreferenceName.UseAlternateOpenFileDialogWindow)){//Hidden pref, almost always false.
 				//We don't know why this makes any difference but people have mentioned this will stop some hanging issues.
 				//https://stackoverflow.com/questions/6718148/windows-forms-gui-hangs-when-calling-openfiledialog-showdialog
 				openFileDialog.ShowHelp=true;
@@ -2578,7 +2578,7 @@ namespace OpenDental{
 			}
 			OpenFileDialog openFileDialog=new OpenFileDialog();
 			openFileDialog.Multiselect=true;
-			if(Prefs.Exists(PrefName.UseAlternateOpenFileDialogWindow) && Prefs.GetBool(PrefName.UseAlternateOpenFileDialogWindow)){//Hidden pref, almost always false.
+			if(Preferences.Exists(PreferenceName.UseAlternateOpenFileDialogWindow) && Preferences.GetBool(PreferenceName.UseAlternateOpenFileDialogWindow)){//Hidden pref, almost always false.
 				//We don't know why this makes any difference but people have mentioned this will stop some hanging issues.
 				//https://stackoverflow.com/questions/6718148/windows-forms-gui-hangs-when-calling-openfiledialog-showdialog
 				openFileDialog.ShowHelp=true;
@@ -3202,7 +3202,7 @@ namespace OpenDental{
 		}
 
 		private void UpdateUserOdPrefForImageCat(long defNum,bool isExpand) {
-			if(PrefC.GetInt(PrefName.ImagesModuleTreeIsCollapsed)!=2) {//Document tree folders persistent expand/collapse per user.
+			if(PrefC.GetInt(PreferenceName.ImagesModuleTreeIsCollapsed)!=2) {//Document tree folders persistent expand/collapse per user.
 				return;
 			}
 			//Calls to Expand() and Collapse() in code cause the TreeDocuments_AfterExpand() and TreeDocuments_AfterCollapse() events to fire.

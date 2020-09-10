@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using OpenDental;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -26,7 +27,7 @@ namespace Imedisoft.Forms
 
 		private void FormRxSelect_Load(object sender, EventArgs e)
 		{
-			if (Prefs.GetBool(PrefName.ShowFeatureEhr))
+			if (Preferences.GetBool(PreferenceName.ShowFeatureEhr))
 			{
 				// We cannot allow blank prescription when using EHR, because each prescription created in this window must have an RxCui.
 				// If we allowed blank, we would not know where to pull the RxCui from.
@@ -110,7 +111,7 @@ namespace Imedisoft.Forms
 				return;
             }
 
-			if (Prefs.GetBool(PrefName.ShowFeatureEhr) && rxDef.RxCui == 0)
+			if (Preferences.GetBool(PreferenceName.ShowFeatureEhr) && rxDef.RxCui == 0)
 			{
 				string error = Translation.Rx.SelectedPrescriptionIsMissingRxNorm;
 
@@ -138,13 +139,13 @@ namespace Imedisoft.Forms
                 Sig = rxDef.Sig,
                 Disp = rxDef.Disp,
                 Refills = rxDef.Refills,
-                SendStatus = Prefs.GetBool(PrefName.RxSendNewToQueue) ? RxSendStatus.InElectQueue : RxSendStatus.Unsent,
+                SendStatus = Preferences.GetBool(PreferenceName.RxSendNewToQueue) ? RxSendStatus.InElectQueue : RxSendStatus.Unsent,
                 PatientInstruction = rxDef.PatientInstruction
             };
 
 			// Notes not copied: we don't want these kinds of notes cluttering things
 
-			if (Prefs.GetBool(PrefName.RxHasProc) && (Clinics.ClinicId == 0 || Clinics.GetById(Clinics.Active.Id).HasProcedureOnRx))
+			if (Preferences.GetBool(PreferenceName.RxHasProc) && (Clinics.ClinicId == 0 || Clinics.GetById(Clinics.Active.Id).HasProcedureOnRx))
 			{
 				rxPat.IsProcRequired = rxDef.IsProcRequired;
 			}
@@ -179,7 +180,7 @@ namespace Imedisoft.Forms
                 RxDate = DateTime.Today,
                 PatNum = patient.PatNum,
                 ClinicNum = patient.ClinicNum,
-                SendStatus = Prefs.GetBool(PrefName.RxSendNewToQueue) ? RxSendStatus.InElectQueue : RxSendStatus.Unsent
+                SendStatus = Preferences.GetBool(PreferenceName.RxSendNewToQueue) ? RxSendStatus.InElectQueue : RxSendStatus.Unsent
             };
 
 			using var formRxEdit = new FormRxEdit(patient, rxPat);
@@ -197,7 +198,7 @@ namespace Imedisoft.Forms
 			if (rxDefsGrid.GetSelectedIndex() == -1)
 			{
 				ShowError(
-					Prefs.GetBool(PrefName.ShowFeatureEhr) ? 
+					Preferences.GetBool(PreferenceName.ShowFeatureEhr) ? 
 						Translation.Rx.PleaseSelectRxFirst : 
 						Translation.Rx.PleaseSelectRxFirstOrClickBlank);
 

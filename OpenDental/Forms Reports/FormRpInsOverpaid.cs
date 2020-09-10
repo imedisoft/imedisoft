@@ -8,10 +8,13 @@ using System.Windows.Forms;
 using OpenDental.ReportingComplex;
 using OpenDentBusiness;
 using CodeBase;
+using Imedisoft.Data;
 
-namespace OpenDental{
-///<summary></summary>
-	public class FormRpInsOverpaid:ODForm {
+namespace OpenDental
+{
+	///<summary></summary>
+	public class FormRpInsOverpaid : ODForm
+	{
 		private OpenDental.UI.Button butCancel;
 		private OpenDental.UI.Button butOK;
 		private Label label1;
@@ -26,24 +29,29 @@ namespace OpenDental{
 		private List<Clinic> _listClinics;
 
 		///<summary></summary>
-		public FormRpInsOverpaid() {
+		public FormRpInsOverpaid()
+		{
 			InitializeComponent();
-			
+
 		}
 
 		///<summary></summary>
-		protected override void Dispose( bool disposing ){
-			if( disposing ){
-				if(components != null){
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (components != null)
+				{
 					components.Dispose();
 				}
 			}
-			base.Dispose( disposing );
+			base.Dispose(disposing);
 		}
 
 		#region Windows Form Designer generated code
 
-		private void InitializeComponent(){
+		private void InitializeComponent()
+		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormRpInsOverpaid));
 			this.butCancel = new OpenDental.UI.Button();
 			this.butOK = new OpenDental.UI.Button();
@@ -84,8 +92,8 @@ namespace OpenDental{
 			this.label1.Size = new System.Drawing.Size(501, 38);
 			this.label1.TabIndex = 20;
 			this.label1.Text = "Helps find situations where the insurance payment plus any writeoff exceeds the f" +
-    "ee for procedures in the date range.  See the manual for suggestions on how to h" +
-    "andle the results.";
+	"ee for procedures in the date range.  See the manual for suggestions on how to h" +
+	"andle the results.";
 			// 
 			// radioGroupByProc
 			// 
@@ -174,124 +182,157 @@ namespace OpenDental{
 		}
 		#endregion
 
-		private void FormRpInsOverpaid_Load(object sender, System.EventArgs e) {
-			dateStart.SelectionStart=DateTime.Today.AddMonths(-1);
-			dateEnd.SelectionStart=DateTime.Today;
-			if(PrefC.HasClinicsEnabled) {
-				_listClinics=Clinics.GetByUser(Security.CurrentUser);
-				if(!Security.CurrentUser.ClinicIsRestricted) {
+		private void FormRpInsOverpaid_Load(object sender, System.EventArgs e)
+		{
+			dateStart.SelectionStart = DateTime.Today.AddMonths(-1);
+			dateEnd.SelectionStart = DateTime.Today;
+			if (PrefC.HasClinicsEnabled)
+			{
+				_listClinics = Clinics.GetByUser(Security.CurrentUser);
+				if (!Security.CurrentUser.ClinicIsRestricted)
+				{
 					listClin.Items.Add("Unassigned");
-					listClin.SetSelected(0,true);
+					listClin.SetSelected(0, true);
 				}
-				for(int i=0;i<_listClinics.Count;i++) {
-					int curIndex=listClin.Items.Add(_listClinics[i].Abbr);
-					if(Clinics.ClinicId==0) {
-						listClin.SetSelected(curIndex,true);
-						checkAllClin.Checked=true;
+				for (int i = 0; i < _listClinics.Count; i++)
+				{
+					int curIndex = listClin.Items.Add(_listClinics[i].Abbr);
+					if (Clinics.ClinicId == 0)
+					{
+						listClin.SetSelected(curIndex, true);
+						checkAllClin.Checked = true;
 					}
-					if(_listClinics[i].Id==Clinics.ClinicId) {
+					if (_listClinics[i].Id == Clinics.ClinicId)
+					{
 						listClin.SelectedIndices.Clear();
-						listClin.SetSelected(curIndex,true);
+						listClin.SetSelected(curIndex, true);
 					}
 				}
 			}
-			else {
-				listClin.Visible=false;
-				labelClin.Visible=false;
-				checkAllClin.Visible=false;
+			else
+			{
+				listClin.Visible = false;
+				labelClin.Visible = false;
+				checkAllClin.Visible = false;
 				//Adjust the location of the window size to make up for the clinic list being invisible
-				this.Height=412;
+				this.Height = 412;
 			}
 		}
 
-		private void checkAllClin_Click(object sender,EventArgs e) {
-			if(checkAllClin.Checked) {
-				for(int i=0;i<listClin.Items.Count;i++) {
-					listClin.SetSelected(i,true);
+		private void checkAllClin_Click(object sender, EventArgs e)
+		{
+			if (checkAllClin.Checked)
+			{
+				for (int i = 0; i < listClin.Items.Count; i++)
+				{
+					listClin.SetSelected(i, true);
 				}
 			}
-			else {
+			else
+			{
 				listClin.SelectedIndices.Clear();
 			}
 		}
 
-		private void listClin_Click(object sender,EventArgs e) {
-			if(listClin.SelectedIndices.Count>0) {
-				checkAllClin.Checked=false;
+		private void listClin_Click(object sender, EventArgs e)
+		{
+			if (listClin.SelectedIndices.Count > 0)
+			{
+				checkAllClin.Checked = false;
 			}
 		}
 
-		private void butOK_Click(object sender, System.EventArgs e) {
-			if(PrefC.HasClinicsEnabled) {
-				if(!checkAllClin.Checked && listClin.SelectedIndices.Count==0) {
+		private void butOK_Click(object sender, System.EventArgs e)
+		{
+			if (PrefC.HasClinicsEnabled)
+			{
+				if (!checkAllClin.Checked && listClin.SelectedIndices.Count == 0)
+				{
 					MessageBox.Show("At least one clinic must be selected.");
 					return;
 				}
 			}
-			ReportComplex report=new ReportComplex(true,false);
-			Cursor=Cursors.WaitCursor;
-			List<long> listClinicNums=new List<long>();
-			if(PrefC.HasClinicsEnabled) {
-				for(int i=0;i<listClin.SelectedIndices.Count;i++) {
-					if(Security.CurrentUser.ClinicIsRestricted) {
+			ReportComplex report = new ReportComplex(true, false);
+			Cursor = Cursors.WaitCursor;
+			List<long> listClinicNums = new List<long>();
+			if (PrefC.HasClinicsEnabled)
+			{
+				for (int i = 0; i < listClin.SelectedIndices.Count; i++)
+				{
+					if (Security.CurrentUser.ClinicIsRestricted)
+					{
 						listClinicNums.Add(_listClinics[listClin.SelectedIndices[i]].Id);//we know that the list is a 1:1 to _listClinics
 					}
-					else {
-						if(listClin.SelectedIndices[i]==0) {
+					else
+					{
+						if (listClin.SelectedIndices[i] == 0)
+						{
 							listClinicNums.Add(0);
 						}
-						else {
-							listClinicNums.Add(_listClinics[listClin.SelectedIndices[i]-1].Id);//Minus 1 from the selected index
+						else
+						{
+							listClinicNums.Add(_listClinics[listClin.SelectedIndices[i] - 1].Id);//Minus 1 from the selected index
 						}
 					}
 				}
 			}
-			DataTable tableOverpaid=RpInsOverpaid.GetInsuranceOverpaid(dateStart.SelectionStart,dateEnd.SelectionStart,listClinicNums,
+			DataTable tableOverpaid = RpInsOverpaid.GetInsuranceOverpaid(dateStart.SelectionStart, dateEnd.SelectionStart, listClinicNums,
 				radioGroupByProc.Checked);
-			Cursor=Cursors.Default;
-			string subtitleClinics="";
-			if(PrefC.HasClinicsEnabled) {
-				if(checkAllClin.Checked) {
-					subtitleClinics="All Clinics";
+			Cursor = Cursors.Default;
+			string subtitleClinics = "";
+			if (PrefC.HasClinicsEnabled)
+			{
+				if (checkAllClin.Checked)
+				{
+					subtitleClinics = "All Clinics";
 				}
-				else {
-					for(int i=0;i<listClin.SelectedIndices.Count;i++) {
-						if(i>0) {
-							subtitleClinics+=", ";
+				else
+				{
+					for (int i = 0; i < listClin.SelectedIndices.Count; i++)
+					{
+						if (i > 0)
+						{
+							subtitleClinics += ", ";
 						}
-						if(Security.CurrentUser.ClinicIsRestricted) {
-							subtitleClinics+=_listClinics[listClin.SelectedIndices[i]].Abbr;
+						if (Security.CurrentUser.ClinicIsRestricted)
+						{
+							subtitleClinics += _listClinics[listClin.SelectedIndices[i]].Abbr;
 						}
-						else {
-							if(listClin.SelectedIndices[i]==0) {
-								subtitleClinics+="Unassigned";
+						else
+						{
+							if (listClin.SelectedIndices[i] == 0)
+							{
+								subtitleClinics += "Unassigned";
 							}
-							else {
-								subtitleClinics+=_listClinics[listClin.SelectedIndices[i]-1].Abbr;//Minus 1 from the selected index
+							else
+							{
+								subtitleClinics += _listClinics[listClin.SelectedIndices[i] - 1].Abbr;//Minus 1 from the selected index
 							}
 						}
 					}
 				}
 			}
-			report.ReportName="Insurance Overpaid";
-			report.AddTitle("Title","Insurance Overpaid");
-			report.AddSubTitle("Practice Name",Prefs.GetString(PrefName.PracticeTitle));
-			if(PrefC.HasClinicsEnabled) {
-				report.AddSubTitle("Clinics",subtitleClinics);
+			report.ReportName = "Insurance Overpaid";
+			report.AddTitle("Title", "Insurance Overpaid");
+			report.AddSubTitle("Practice Name", Preferences.GetString(PreferenceName.PracticeTitle));
+			if (PrefC.HasClinicsEnabled)
+			{
+				report.AddSubTitle("Clinics", subtitleClinics);
 			}
-			QueryObject query=report.AddQuery(tableOverpaid,DateTimeOD.Today.ToShortDateString());
-			query.AddColumn("Pat Name",200,FieldValueType.String);
-			query.AddColumn("Date",90,FieldValueType.Date);
-			query.GetColumnDetail("Date").StringFormat="d";
-			query.AddColumn("Fee",100,FieldValueType.Number);
-			query.AddColumn("InsPaid+W/O",120,FieldValueType.Number);
+			QueryObject query = report.AddQuery(tableOverpaid, DateTimeOD.Today.ToShortDateString());
+			query.AddColumn("Pat Name", 200, FieldValueType.String);
+			query.AddColumn("Date", 90, FieldValueType.Date);
+			query.GetColumnDetail("Date").StringFormat = "d";
+			query.AddColumn("Fee", 100, FieldValueType.Number);
+			query.AddColumn("InsPaid+W/O", 120, FieldValueType.Number);
 			report.AddPageNum();
-			if(!report.SubmitQueries()) {
+			if (!report.SubmitQueries())
+			{
 				return;
 			}
-			FormReportComplex FormR=new FormReportComplex(report);
+			FormReportComplex FormR = new FormReportComplex(report);
 			FormR.ShowDialog();
-			DialogResult=DialogResult.OK;
+			DialogResult = DialogResult.OK;
 		}
 
 	}

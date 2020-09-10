@@ -7,6 +7,7 @@ using System.Text;
 using System.Linq;
 using CodeBase;
 using System.Reflection;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
@@ -139,7 +140,7 @@ namespace OpenDentBusiness
 			int statusCode = -100;  //Set default to a failure, negative because http status codes are 1xx-5xx
 			string apiUrl = "https://api.podium.com/api/v3/switchboard_invitations";
 			string apiToken = ProgramProperties.GetPropVal(Programs.GetProgramNum(ProgramName.Podium), PropertyDescs.APIToken);
-			if (pat.TxtMsgOk == YN.No || (pat.TxtMsgOk == YN.Unknown && Prefs.GetBool(PrefName.TextMsgOkStatusTreatAsNo)))
+			if (pat.TxtMsgOk == YN.No || (pat.TxtMsgOk == YN.Unknown && Preferences.GetBool(PreferenceName.TextMsgOkStatusTreatAsNo)))
 			{//Don't text
 			 //Try to use email
 				statusCode = MakeWebCall(apiToken, apiUrl, locationId, "", pat);
@@ -176,7 +177,7 @@ namespace OpenDentBusiness
 		private static int MakeWebCall(string apiToken, string apiUrl, string locationId, string phoneNumber, Patient pat)
 		{
 			int retVal = -100;
-			if (pat.TxtMsgOk == YN.No || (pat.TxtMsgOk == YN.Unknown && Prefs.GetBool(PrefName.TextMsgOkStatusTreatAsNo)))
+			if (pat.TxtMsgOk == YN.No || (pat.TxtMsgOk == YN.Unknown && Preferences.GetBool(PreferenceName.TextMsgOkStatusTreatAsNo)))
 			{//Use email.
 				retVal = -200;//Our code for 'no email address'
 				phoneNumber = "";//Ensure that there is no way we send a phone number to Podium if the patient doesn't approve text messages.
@@ -305,7 +306,7 @@ namespace OpenDentBusiness
 				string homePhone = new string(pat.HmPhone.Where(x => char.IsDigit(x)).ToArray());
 				List<string> phonesTried = new List<string> { wirelessPhone, homePhone }.FindAll(x => x != "");
 				string phoneNumbersTried = ", " + "No valid phone number found.";
-				if (pat.TxtMsgOk == YN.No || (pat.TxtMsgOk == YN.Unknown && Prefs.GetBool(PrefName.TextMsgOkStatusTreatAsNo)))
+				if (pat.TxtMsgOk == YN.No || (pat.TxtMsgOk == YN.Unknown && Preferences.GetBool(PreferenceName.TextMsgOkStatusTreatAsNo)))
 				{//Used email
 					phoneNumbersTried = "";
 				}

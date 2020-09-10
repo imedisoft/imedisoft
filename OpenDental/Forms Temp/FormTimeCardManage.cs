@@ -139,7 +139,7 @@ namespace OpenDental {
 				row=new GridRow();
 				//row.Cells.Add(Employees.GetNameFL(PIn.Long(MainTable.Rows[i]["EmployeeNum"].ToString())));
 				row.Cells.Add(MainTable.Rows[i]["lastName"]+", "+MainTable.Rows[i]["firstName"]);
-				if(Prefs.GetBool(PrefName.TimeCardsUseDecimalInsteadOfColon)) {
+				if(Preferences.GetBool(PreferenceName.TimeCardsUseDecimalInsteadOfColon)) {
 					row.Cells.Add(PIn.Time(MainTable.Rows[i]["totalHours"].ToString()).TotalHours.ToString("n"));
 					row.Cells.Add(PIn.Time(MainTable.Rows[i]["rate1Hours"].ToString()).TotalHours.ToString("n"));
 					row.Cells.Add(PIn.Time(MainTable.Rows[i]["rate1OTHours"].ToString()).TotalHours.ToString("n"));
@@ -151,7 +151,7 @@ namespace OpenDental {
 					//row.Cells.Add(PIn.Time(MainTable.Rows[i]["TimeAdjustRegAdj"].ToString()).TotalHours.ToString("n"));
 					//row.Cells.Add(PIn.Time(MainTable.Rows[i]["TimeAdjustOTAdj"].ToString()).TotalHours.ToString("n"));
 				}
-				else if(Prefs.GetBool(PrefName.TimeCardShowSeconds)) {//Colon format with seconds
+				else if(Preferences.GetBool(PreferenceName.TimeCardShowSeconds)) {//Colon format with seconds
 					row.Cells.Add(PIn.Time(MainTable.Rows[i]["totalHours"].ToString()).ToStringHmmss());
 					row.Cells.Add(PIn.Time(MainTable.Rows[i]["rate1Hours"].ToString()).ToStringHmmss());
 					row.Cells.Add(PIn.Time(MainTable.Rows[i]["rate1OTHours"].ToString()).ToStringHmmss());
@@ -380,8 +380,8 @@ namespace OpenDental {
 					weeklyTotals[i]=weekSpan;
 					//if this is the last entry for a given week
 					if(i==mergedAL.Count-1//if this is the last row 
-						|| cal.GetWeekOfYear(GetDateForRow(i+1,mergedAL),rule,(DayOfWeek)PrefC.GetInt(PrefName.TimeCardOvertimeFirstDayOfWeek))//or the next row has a
-						!= cal.GetWeekOfYear(clock.TimeDisplayed1.Date,rule,(DayOfWeek)PrefC.GetInt(PrefName.TimeCardOvertimeFirstDayOfWeek)))//different week of year
+						|| cal.GetWeekOfYear(GetDateForRow(i+1,mergedAL),rule,(DayOfWeek)PrefC.GetInt(PreferenceName.TimeCardOvertimeFirstDayOfWeek))//or the next row has a
+						!= cal.GetWeekOfYear(clock.TimeDisplayed1.Date,rule,(DayOfWeek)PrefC.GetInt(PreferenceName.TimeCardOvertimeFirstDayOfWeek)))//different week of year
 					{
 						row.Cells.Add(ClockEvents.Format(weekSpan));
 						weekSpan=new TimeSpan(0);
@@ -458,8 +458,8 @@ namespace OpenDental {
 					weeklyTotals[i]=weekSpan;
 					//if this is the last entry for a given week
 					if(i==mergedAL.Count-1//if this is the last row 
-						|| cal.GetWeekOfYear(GetDateForRow(i+1,mergedAL),rule,(DayOfWeek)PrefC.GetInt(PrefName.TimeCardOvertimeFirstDayOfWeek))//or the next row has a
-						!= cal.GetWeekOfYear(adjust.TimeEntry.Date,rule,(DayOfWeek)PrefC.GetInt(PrefName.TimeCardOvertimeFirstDayOfWeek)))//different week of year
+						|| cal.GetWeekOfYear(GetDateForRow(i+1,mergedAL),rule,(DayOfWeek)PrefC.GetInt(PreferenceName.TimeCardOvertimeFirstDayOfWeek))//or the next row has a
+						!= cal.GetWeekOfYear(adjust.TimeEntry.Date,rule,(DayOfWeek)PrefC.GetInt(PreferenceName.TimeCardOvertimeFirstDayOfWeek)))//different week of year
 					{
 						GridCell cell=new GridCell(ClockEvents.Format(weekSpan));
 						cell.ForeColor=Color.Black;
@@ -926,10 +926,10 @@ namespace OpenDental {
 						case "rate2OTHours":
 						case "rate3Hours":
 							//Time must me formatted differently.
-							if(Prefs.GetBool(PrefName.TimeCardsUseDecimalInsteadOfColon)) {
+							if(Preferences.GetBool(PreferenceName.TimeCardsUseDecimalInsteadOfColon)) {
 								row+=PIn.Time(MainTable.Rows[i][c].ToString()).TotalHours.ToString("n");
 							}
-							else if(Prefs.GetBool(PrefName.TimeCardShowSeconds)) {//Colon format with seconds
+							else if(Preferences.GetBool(PreferenceName.TimeCardShowSeconds)) {//Colon format with seconds
 								row+=PIn.Time(MainTable.Rows[i][c].ToString()).ToStringHmmss();
 							}
 							else {//Colon format without seconds
@@ -968,12 +968,12 @@ namespace OpenDental {
 			string errors="";
 			string warnings="";
 			string errorIndent="  ";
-			strb.Append("Co Code,Batch ID,File #"+(Prefs.GetBool(PrefName.TimeCardADPExportIncludesName)?",Employee Name":"")+",Rate Code,Reg Hours,O/T Hours");
+			strb.Append("Co Code,Batch ID,File #"+(Preferences.GetBool(PreferenceName.TimeCardADPExportIncludesName)?",Employee Name":"")+",Rate Code,Reg Hours,O/T Hours");
 			if(hasVisiblePtoDef) { 
 				strb.Append(",Hours 3 Code,Hours 3 Amount");
 			} 
 			strb.AppendLine();
-			string coCode=Prefs.GetString(PrefName.ADPCompanyCode);
+			string coCode=Preferences.GetString(PreferenceName.ADPCompanyCode);
 			string batchID=DateStop.ToString("yyyyMMdd");//max 8 characters
 			if(coCode.Length<2 || coCode.Length>3){
 				errors+=errorIndent+"Company code must be two to three alpha numeric characters long.  Go to Setup>TimeCards to edit.\r\n";
@@ -1028,7 +1028,7 @@ namespace OpenDental {
 				}
 				string textToAdd="";
 				if(r1hours!="" || r1OThours!="" || r3hours!="") {//no entry should be made unless there are actually hours for this employee.
-					textToAdd+=coCode+","+batchID+","+fileNum+(Prefs.GetBool(PrefName.TimeCardADPExportIncludesName)?","+employeeName:"")+",,"+r1hours+","+r1OThours;
+					textToAdd+=coCode+","+batchID+","+fileNum+(Preferences.GetBool(PreferenceName.TimeCardADPExportIncludesName)?","+employeeName:"")+",,"+r1hours+","+r1OThours;
 					if(hasVisiblePtoDef)	{
 						if(r3hours=="") {
 							textToAdd+=",,";
@@ -1040,7 +1040,7 @@ namespace OpenDental {
 					textToAdd+="\r\n";
 				}
 				if(r2hours!="" || r2OThours!="") {//no entry should be made unless there are actually hours for this employee.
-					textToAdd+=coCode+","+batchID+","+fileNum+(Prefs.GetBool(PrefName.TimeCardADPExportIncludesName)?","+employeeName:"")+",2,"+r2hours+","+r2OThours+"\r\n";
+					textToAdd+=coCode+","+batchID+","+fileNum+(Preferences.GetBool(PreferenceName.TimeCardADPExportIncludesName)?","+employeeName:"")+",2,"+r2hours+","+r2OThours+"\r\n";
 				}
 				if(textToAdd=="") {
 					warningsForEmployee+=errorIndent+"No clocked hours.\r\n";// for "+Employees.GetNameFL(Employees.GetEmp(PIn.Long(MainTable.Rows[i]["EmployeeNum"].ToString())))+"\r\n";

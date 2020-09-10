@@ -343,7 +343,7 @@ namespace OpenDental
 				SetFormReadOnly(this);
 				this.Text+=" - "+"CLAIM CLINIC IS HIDDEN";
 			}
-			if(!Prefs.GetBool(PrefName.AllowProcAdjFromClaim)) {
+			if(!Preferences.GetBool(PreferenceName.AllowProcAdjFromClaim)) {
 				contextAdjust.MenuItems.Remove(menuItemAddAdj);
 			}
 			//Show the claim attachment button if the office is using ClaimConnect
@@ -618,7 +618,7 @@ namespace OpenDental
 			}
 			else{
 				textOrthoDate.Text=ClaimCur.OrthoDate.ToShortDateString();
-				if(Prefs.GetBool(PrefName.OrthoClaimUseDatePlacement) && ClaimCur.OrthoDate != null && ClaimCur.OrthoDate.Year > 1880) {
+				if(Preferences.GetBool(PreferenceName.OrthoClaimUseDatePlacement) && ClaimCur.OrthoDate != null && ClaimCur.OrthoDate.Year > 1880) {
 					textOrthoDate.Enabled=false;
 				}
 			}
@@ -1501,7 +1501,7 @@ namespace OpenDental
 				if(MessageBox.Show("If you enter by total, the insurance payment will affect the patient balance.  It is recommended to enter by procedure instead.  Continue anyway?","",MessageBoxButtons.OKCancel)!=DialogResult.OK)
 				return;
 			}
-			if(Prefs.GetBool(PrefName.OrthoInsPayConsolidated)) {
+			if(Preferences.GetBool(PreferenceName.OrthoInsPayConsolidated)) {
 				InsPlan planCur = InsPlans.GetPlan(ClaimCur.PlanNum,PlanList);
 				long orthoAutoCodeNum = InsPlans.GetOrthoAutoProc(planCur);
 				//if all the procedures on this claim are ortho auto procedures...
@@ -1651,7 +1651,7 @@ namespace OpenDental
 			}
 			SelectLabProcs();
 			#region OrthoInsPayConsolidated
-			if(Prefs.GetBool(PrefName.OrthoInsPayConsolidated)) {
+			if(Preferences.GetBool(PreferenceName.OrthoInsPayConsolidated)) {
 				List<int> listOrthoAutoGridRows = new List<int>();
 				InsPlan planCur = InsPlans.GetPlan(ClaimCur.PlanNum,PlanList);
 				long orthoAutoCodeNum = InsPlans.GetOrthoAutoProc(planCur);
@@ -1987,7 +1987,7 @@ namespace OpenDental
 			if(!Security.IsAuthorized(Permissions.InsPayCreate)) {//date not checked here, but it will be checked when saving the check to prevent backdating
 				return;
 			}
-			if(Prefs.GetBool(PrefName.ClaimPaymentBatchOnly)) {
+			if(Preferences.GetBool(PreferenceName.ClaimPaymentBatchOnly)) {
 				//Is there a permission in the manage module that would block this behavior? Are we sending the user into a TRAP?!
 				MessageBox.Show("Please use Batch Insurance in Manage Module to Finalize Payments.");
 				return;
@@ -2069,7 +2069,7 @@ namespace OpenDental
 		///<summary>Helper method that shows the payment window if the user has the "Show provider income transfer window after entering insurance payment"
 		///preference enabled.  This method should always be called after an insurance payment has been made.</summary>
 		public static void ShowProviderTransferWindow(Claim claimCur,Patient patCur, Family famCur) {
-			if(!Prefs.GetBool(PrefName.ProviderIncomeTransferShows) || claimCur.ClaimType=="PreAuth") {
+			if(!Preferences.GetBool(PreferenceName.ProviderIncomeTransferShows) || claimCur.ClaimType=="PreAuth") {
 				return;
 			}
 			Payment PaymentCur=new Payment();
@@ -2180,7 +2180,7 @@ namespace OpenDental
 			string text=PatCur.GetNameFL();
 			Font font=new Font("Microsoft Sans Serif",12,FontStyle.Bold);
 			g.DrawString(text,font,Brushes.Black,595/2-g.MeasureString(text,font).Width/2,5);
-			text=Prefs.GetString(PrefName.PracticeTitle);
+			text=Preferences.GetString(PreferenceName.PracticeTitle);
 			font=new Font("Microsoft Sans Serif",9,FontStyle.Bold);
 			g.DrawString(text,font,Brushes.Black,595/2-g.MeasureString(text,font).Width/2,28);
 			g.DrawImage(bitmap,0,50);
@@ -2205,7 +2205,7 @@ namespace OpenDental
 		}
 
 		private void butExport_Click(object sender,EventArgs e) {
-			string exportPath=Prefs.GetString(PrefName.ClaimAttachExportPath);
+			string exportPath=Preferences.GetString(PreferenceName.ClaimAttachExportPath);
 			if(!Directory.Exists(exportPath)){
 				if(MessageBox.Show("The claim export path no longer exists at:"+" "+exportPath+"\r\n"
 					+"Would you like to create it?","", MessageBoxButtons.YesNo)==DialogResult.Yes) 
@@ -3446,7 +3446,7 @@ namespace OpenDental
 					SecurityLogs.MakeLogEntry(_claimEditPermission,PatCur.PatNum,"Claim saved for "+PatCur.LName+","+PatCur.FName);
 				}
 				if(comboClaimStatus.SelectedIndex==5) {//Received
-					if(_isPaymentEntered && Prefs.GetBool(PrefName.PromptForSecondaryClaim) && Security.IsAuthorized(Permissions.ClaimSend,true)) {
+					if(_isPaymentEntered && Preferences.GetBool(PreferenceName.PromptForSecondaryClaim) && Security.IsAuthorized(Permissions.ClaimSend,true)) {
 						//We currenlty require that payment be entered in this instance of the form.
 						//We might later decide that we want to check for secondary whenever the primary is recieved and there is financial values entered
 						//regardless of when they were entered.
@@ -3468,8 +3468,8 @@ namespace OpenDental
 			DeleteClaimHelper();
 			//When the user "cancels" out of a new claim we want to delete any corresponding claim snapshots, but only if not using the service trigger type
 			//The service trigger type snapshots have nothing to do with creating this claim, so leave as is.
-			if(Prefs.GetBool(PrefName.ClaimSnapshotEnabled)
-				&& PIn.Enum<ClaimSnapshotTrigger>(Prefs.GetString(PrefName.ClaimSnapshotTriggerType),true)!=ClaimSnapshotTrigger.Service)
+			if(Preferences.GetBool(PreferenceName.ClaimSnapshotEnabled)
+				&& PIn.Enum<ClaimSnapshotTrigger>(Preferences.GetString(PreferenceName.ClaimSnapshotTriggerType),true)!=ClaimSnapshotTrigger.Service)
 			{
 				ClaimSnapshots.DeleteForClaimProcs(_listClaimProcsForClaim.Select(x => x.ClaimProcNum).ToList());
 			}

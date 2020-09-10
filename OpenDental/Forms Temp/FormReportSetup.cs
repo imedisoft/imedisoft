@@ -38,20 +38,20 @@ namespace OpenDental {
 				checkReportPIClinicInfo.Visible=false;
 			}
 			FillComboReportWriteoff();
-			comboReportWriteoff.SelectedIndex=PrefC.GetInt(PrefName.ReportsPPOwriteoffDefaultToProcDate);
-			checkProviderPayrollAllowToday.Checked=Prefs.GetBool(PrefName.ProviderPayrollAllowToday);
-			checkNetProdDetailUseSnapshotToday.Checked=Prefs.GetBool(PrefName.NetProdDetailUseSnapshotToday);
-			checkReportsShowPatNum.Checked=Prefs.GetBool(PrefName.ReportsShowPatNum);
-			checkReportProdWO.Checked=Prefs.GetBool(PrefName.ReportPandIschedProdSubtractsWO);
-			checkReportPIClinicInfo.Checked=Prefs.GetBool(PrefName.ReportPandIhasClinicInfo);
-			checkReportPIClinic.Checked=Prefs.GetBool(PrefName.ReportPandIhasClinicBreakdown);
-			checkReportPrintWrapColumns.Checked=Prefs.GetBool(PrefName.ReportsWrapColumns);
-			checkReportsShowHistory.Checked=Prefs.GetBool(PrefName.ReportsShowHistory);
-			checkReportsIncompleteProcsNoNotes.Checked=Prefs.GetBool(PrefName.ReportsIncompleteProcsNoNotes);
-			checkReportsIncompleteProcsUnsigned.Checked=Prefs.GetBool(PrefName.ReportsIncompleteProcsUnsigned);
-			checkBenefitAssumeGeneral.Checked=Prefs.GetBool(PrefName.TreatFinderProcsAllGeneral);
-			checkOutstandingRpDateTab.Checked=Prefs.GetBool(PrefName.OutstandingInsReportDateFilterTab);
-			checkReportDisplayUnearnedTP.Checked=Prefs.GetBool(PrefName.ReportsDoShowHiddenTPPrepayments);
+			comboReportWriteoff.SelectedIndex=PrefC.GetInt(PreferenceName.ReportsPPOwriteoffDefaultToProcDate);
+			checkProviderPayrollAllowToday.Checked=Preferences.GetBool(PreferenceName.ProviderPayrollAllowToday);
+			checkNetProdDetailUseSnapshotToday.Checked=Preferences.GetBool(PreferenceName.NetProdDetailUseSnapshotToday);
+			checkReportsShowPatNum.Checked=Preferences.GetBool(PreferenceName.ReportsShowPatNum);
+			checkReportProdWO.Checked=Preferences.GetBool(PreferenceName.ReportPandIschedProdSubtractsWO);
+			checkReportPIClinicInfo.Checked=Preferences.GetBool(PreferenceName.ReportPandIhasClinicInfo);
+			checkReportPIClinic.Checked=Preferences.GetBool(PreferenceName.ReportPandIhasClinicBreakdown);
+			checkReportPrintWrapColumns.Checked=Preferences.GetBool(PreferenceName.ReportsWrapColumns);
+			checkReportsShowHistory.Checked=Preferences.GetBool(PreferenceName.ReportsShowHistory);
+			checkReportsIncompleteProcsNoNotes.Checked=Preferences.GetBool(PreferenceName.ReportsIncompleteProcsNoNotes);
+			checkReportsIncompleteProcsUnsigned.Checked=Preferences.GetBool(PreferenceName.ReportsIncompleteProcsUnsigned);
+			checkBenefitAssumeGeneral.Checked=Preferences.GetBool(PreferenceName.TreatFinderProcsAllGeneral);
+			checkOutstandingRpDateTab.Checked=Preferences.GetBool(PreferenceName.OutstandingInsReportDateFilterTab);
+			checkReportDisplayUnearnedTP.Checked=Preferences.GetBool(PreferenceName.ReportsDoShowHiddenTPPrepayments);
 
 				FillReportServer();
 			
@@ -62,17 +62,17 @@ namespace OpenDental {
 		}
 
 		private void FillReportServer() {
-			checkUseReportServer.Checked=Prefs.GetString(PrefName.ReportingServerCompName)!="" || Prefs.GetString(PrefName.ReportingServerURI)!="";
-			radioReportServerDirect.Checked=Prefs.GetString(PrefName.ReportingServerURI)=="";
-			radioReportServerMiddleTier.Checked=Prefs.GetString(PrefName.ReportingServerURI)!="";
-			comboServerName.Text=Prefs.GetString(PrefName.ReportingServerCompName);
-			comboDatabase.Text=Prefs.GetString(PrefName.ReportingServerDbName);
-			textMysqlUser.Text=Prefs.GetString(PrefName.ReportingServerMySqlUser);
+			checkUseReportServer.Checked=Preferences.GetString(PreferenceName.ReportingServerCompName)!="" || Preferences.GetString(PreferenceName.ReportingServerURI)!="";
+			radioReportServerDirect.Checked=Preferences.GetString(PreferenceName.ReportingServerURI)=="";
+			radioReportServerMiddleTier.Checked=Preferences.GetString(PreferenceName.ReportingServerURI)!="";
+			comboServerName.Text=Preferences.GetString(PreferenceName.ReportingServerCompName);
+			comboDatabase.Text=Preferences.GetString(PreferenceName.ReportingServerDbName);
+			textMysqlUser.Text=Preferences.GetString(PreferenceName.ReportingServerMySqlUser);
 			string decryptedPass;
 			//CDT.Class1.Decrypt(Prefs.GetString(PrefName.ReportingServerMySqlPassHash),out decryptedPass);
-			textMysqlPass.Text= Prefs.GetString(PrefName.ReportingServerMySqlPassHash);
+			textMysqlPass.Text= Preferences.GetString(PreferenceName.ReportingServerMySqlPassHash);
 			textMysqlPass.PasswordChar='*';
-			textMiddleTierURI.Text=Prefs.GetString(PrefName.ReportingServerURI);
+			textMiddleTierURI.Text=Preferences.GetString(PreferenceName.ReportingServerURI);
 			FillComboComputers();
 			FillComboDatabases();
 			SetReportServerUIEnabled();
@@ -232,32 +232,32 @@ namespace OpenDental {
 		private bool UpdateReportingServer() {
 			bool changed=false;
 			if(!checkUseReportServer.Checked) {
-				if(Prefs.Set(PrefName.ReportingServerCompName,"")
-						| Prefs.Set(PrefName.ReportingServerDbName,"")
-						| Prefs.Set(PrefName.ReportingServerMySqlUser,"")
-						| Prefs.Set(PrefName.ReportingServerMySqlPassHash,"")
-						| Prefs.Set(PrefName.ReportingServerURI,"")) 
+				if(Preferences.Set(PreferenceName.ReportingServerCompName,"")
+						| Preferences.Set(PreferenceName.ReportingServerDbName,"")
+						| Preferences.Set(PreferenceName.ReportingServerMySqlUser,"")
+						| Preferences.Set(PreferenceName.ReportingServerMySqlPassHash,"")
+						| Preferences.Set(PreferenceName.ReportingServerURI,"")) 
 					{
 					changed=true;
 				}
 			}
 			else {
 				if(radioReportServerDirect.Checked) {
-					if(Prefs.Set(PrefName.ReportingServerCompName,comboServerName.Text)
-							| Prefs.Set(PrefName.ReportingServerDbName,comboDatabase.Text)
-							| Prefs.Set(PrefName.ReportingServerMySqlUser,textMysqlUser.Text)
-							| Prefs.Set(PrefName.ReportingServerMySqlPassHash, textMysqlPass.Text)
-							| Prefs.Set(PrefName.ReportingServerURI,"")
+					if(Preferences.Set(PreferenceName.ReportingServerCompName,comboServerName.Text)
+							| Preferences.Set(PreferenceName.ReportingServerDbName,comboDatabase.Text)
+							| Preferences.Set(PreferenceName.ReportingServerMySqlUser,textMysqlUser.Text)
+							| Preferences.Set(PreferenceName.ReportingServerMySqlPassHash, textMysqlPass.Text)
+							| Preferences.Set(PreferenceName.ReportingServerURI,"")
 					) {
 					changed=true;
 					}
 				}
 				else {
-					if(Prefs.Set(PrefName.ReportingServerCompName,"")
-							|Prefs.Set(PrefName.ReportingServerDbName,"")
-							|Prefs.Set(PrefName.ReportingServerMySqlUser,"")
-							|Prefs.Set(PrefName.ReportingServerMySqlPassHash,"")
-							|Prefs.Set(PrefName.ReportingServerURI,textMiddleTierURI.Text)
+					if(Preferences.Set(PreferenceName.ReportingServerCompName,"")
+							|Preferences.Set(PreferenceName.ReportingServerDbName,"")
+							|Preferences.Set(PreferenceName.ReportingServerMySqlUser,"")
+							|Preferences.Set(PreferenceName.ReportingServerMySqlPassHash,"")
+							|Preferences.Set(PreferenceName.ReportingServerURI,textMiddleTierURI.Text)
 					) {
 					changed=true;
 					}
@@ -267,20 +267,20 @@ namespace OpenDental {
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {
-			if(Prefs.Set(PrefName.ReportsPPOwriteoffDefaultToProcDate,comboReportWriteoff.SelectedIndex)
-				| Prefs.Set(PrefName.ReportsShowPatNum,checkReportsShowPatNum.Checked)
-				| Prefs.Set(PrefName.ReportPandIschedProdSubtractsWO,checkReportProdWO.Checked)
-				| Prefs.Set(PrefName.ReportPandIhasClinicInfo,checkReportPIClinicInfo.Checked)
-				| Prefs.Set(PrefName.ReportPandIhasClinicBreakdown,checkReportPIClinic.Checked)
-				| Prefs.Set(PrefName.ProviderPayrollAllowToday,checkProviderPayrollAllowToday.Checked)
-				| Prefs.Set(PrefName.NetProdDetailUseSnapshotToday,checkNetProdDetailUseSnapshotToday.Checked)
-				| Prefs.Set(PrefName.ReportsWrapColumns,checkReportPrintWrapColumns.Checked)
-				| Prefs.Set(PrefName.ReportsIncompleteProcsNoNotes,checkReportsIncompleteProcsNoNotes.Checked)
-				| Prefs.Set(PrefName.ReportsIncompleteProcsUnsigned,checkReportsIncompleteProcsUnsigned.Checked)
-				| Prefs.Set(PrefName.TreatFinderProcsAllGeneral,checkBenefitAssumeGeneral.Checked)
-				| Prefs.Set(PrefName.ReportsShowHistory,checkReportsShowHistory.Checked)
-				| Prefs.Set(PrefName.OutstandingInsReportDateFilterTab,checkOutstandingRpDateTab.Checked)
-				| Prefs.Set(PrefName.ReportsDoShowHiddenTPPrepayments,checkReportDisplayUnearnedTP.Checked)
+			if(Preferences.Set(PreferenceName.ReportsPPOwriteoffDefaultToProcDate,comboReportWriteoff.SelectedIndex)
+				| Preferences.Set(PreferenceName.ReportsShowPatNum,checkReportsShowPatNum.Checked)
+				| Preferences.Set(PreferenceName.ReportPandIschedProdSubtractsWO,checkReportProdWO.Checked)
+				| Preferences.Set(PreferenceName.ReportPandIhasClinicInfo,checkReportPIClinicInfo.Checked)
+				| Preferences.Set(PreferenceName.ReportPandIhasClinicBreakdown,checkReportPIClinic.Checked)
+				| Preferences.Set(PreferenceName.ProviderPayrollAllowToday,checkProviderPayrollAllowToday.Checked)
+				| Preferences.Set(PreferenceName.NetProdDetailUseSnapshotToday,checkNetProdDetailUseSnapshotToday.Checked)
+				| Preferences.Set(PreferenceName.ReportsWrapColumns,checkReportPrintWrapColumns.Checked)
+				| Preferences.Set(PreferenceName.ReportsIncompleteProcsNoNotes,checkReportsIncompleteProcsNoNotes.Checked)
+				| Preferences.Set(PreferenceName.ReportsIncompleteProcsUnsigned,checkReportsIncompleteProcsUnsigned.Checked)
+				| Preferences.Set(PreferenceName.TreatFinderProcsAllGeneral,checkBenefitAssumeGeneral.Checked)
+				| Preferences.Set(PreferenceName.ReportsShowHistory,checkReportsShowHistory.Checked)
+				| Preferences.Set(PreferenceName.OutstandingInsReportDateFilterTab,checkOutstandingRpDateTab.Checked)
+				| Preferences.Set(PreferenceName.ReportsDoShowHiddenTPPrepayments,checkReportDisplayUnearnedTP.Checked)
 				) 
 			{
 				changed=true;

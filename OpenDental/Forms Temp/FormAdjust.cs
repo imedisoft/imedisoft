@@ -95,7 +95,7 @@ namespace OpenDental {
 			comboClinic.SelectedClinicNum=_adjustmentCur.ClinicId;
 			comboProv.SetSelectedProvNum(_adjustmentCur.ProviderId);
 			FillComboProv();
-			if(_adjustmentCur.ProcedureId!=0 && PrefC.GetInt(PrefName.RigorousAdjustments)==(int)RigorousAdjustments.EnforceFully) {
+			if(_adjustmentCur.ProcedureId!=0 && PrefC.GetInt(PreferenceName.RigorousAdjustments)==(int)RigorousAdjustments.EnforceFully) {
 				comboProv.Enabled=false;
 				butPickProv.Enabled=false;
 				comboClinic.Enabled=false;
@@ -231,11 +231,11 @@ namespace OpenDental {
 				MessageBox.Show("Adjustments cannot be attached to a procedure that is linked to an ortho case.");
 				return;
 			}
-			if(PrefC.GetInt(PrefName.RigorousAdjustments)<2) {//Enforce Linking
+			if(PrefC.GetInt(PreferenceName.RigorousAdjustments)<2) {//Enforce Linking
 				//_selectedProvNum=FormPS.ListSelectedProcs[0].ProvNum;
 				comboClinic.SelectedClinicNum=formPS.ListSelectedProcs[0].ClinicNum;
 				comboProv.SetSelectedProvNum(formPS.ListSelectedProcs[0].ProvNum);
-				if(PrefC.GetInt(PrefName.RigorousAdjustments)==(int)RigorousAdjustments.EnforceFully && !_isEditAnyway) {
+				if(PrefC.GetInt(PreferenceName.RigorousAdjustments)==(int)RigorousAdjustments.EnforceFully && !_isEditAnyway) {
 					if(Security.IsAuthorized(Permissions.Setup,true)) {
 						labelEditAnyway.Visible=true;
 						butEditAnyway.Visible=true;
@@ -278,7 +278,7 @@ namespace OpenDental {
 				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
-			if(PIn.Date(textAdjDate.Text).Date > DateTime.Today.Date && !Prefs.GetBool(PrefName.FutureTransDatesAllowed)) {
+			if(PIn.Date(textAdjDate.Text).Date > DateTime.Today.Date && !Preferences.GetBool(PreferenceName.FutureTransDatesAllowed)) {
 				MessageBox.Show("Adjustment date can not be in the future.");
 				return;
 			}
@@ -290,7 +290,7 @@ namespace OpenDental {
 				MessageBox.Show("Please select a type first.");
 				return;
 			}
-			if(PrefC.GetInt(PrefName.RigorousAdjustments)==0 && _adjustmentCur.ProcedureId==0) {
+			if(PrefC.GetInt(PreferenceName.RigorousAdjustments)==0 && _adjustmentCur.ProcedureId==0) {
 				MessageBox.Show("You must attach a procedure to the adjustment.");
 				return;
 			}
@@ -330,7 +330,7 @@ namespace OpenDental {
 						if(!Security.IsAuthorized(Permissions.PaymentEdit,Payments.GetPayment(paySplit.PayNum).PayDate)) {
 							return;
 						}
-						if(comboProv.GetSelectedProvNum()!=paySplit.ProvNum && PrefC.GetInt(PrefName.RigorousAccounting)==(int)RigorousAdjustments.EnforceFully) {
+						if(comboProv.GetSelectedProvNum()!=paySplit.ProvNum && PrefC.GetInt(PreferenceName.RigorousAccounting)==(int)RigorousAdjustments.EnforceFully) {
 							changeAdjSplit=true;
 							break;
 						}

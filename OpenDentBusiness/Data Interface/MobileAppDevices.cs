@@ -104,7 +104,7 @@ namespace OpenDentBusiness{
 		///<summary>Returns true if this clinicNum is subscribed for eClipboard.</summary>
 		public static bool IsClinicSignedUpForEClipboard(long clinicNum) {
 			//No remoting role check needed.
-			return Prefs.GetString(PrefName.EClipboardClinicsSignedUp)
+			return Preferences.GetString(PreferenceName.EClipboardClinicsSignedUp)
 				.Split(',')
 				.Where(x => x!="")
 				.Select(x => PIn.Long(x))
@@ -121,7 +121,7 @@ namespace OpenDentBusiness{
 		///Will include ClinicNum 0 if not using clinics and practice is enabled.</summary>
 		public static List<long> GetClinicSignedUpForMobileWeb() {
 			//No remoting role check needed.
-			return Prefs.GetString(PrefName.MobileWebClinicsSignedUp)
+			return Preferences.GetString(PreferenceName.MobileWebClinicsSignedUp)
 				.Split(',')
 				.Where(x => x!="")
 				.Select(x => PIn.Long(x)).ToList();

@@ -1,15 +1,15 @@
 using DataConnectionBase;
-using Imedisoft.Data;
 using Imedisoft.Data.Cache;
 using MySql.Data.MySqlClient;
+using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace OpenDentBusiness
+namespace Imedisoft.Data
 {
-    public class Prefs
+    public class Preferences
 	{
 		private class Preference
         {
@@ -480,16 +480,16 @@ namespace OpenDentBusiness
 		///<summary>Returns a list of all of the InsHist preferences.</summary>
 		public static List<string> GetInsHistPrefs() 
 			=> GetPrefs(new List<string> { 
-				PrefName.InsHistBWCodes,
-				PrefName.InsHistDebridementCodes,
-				PrefName.InsHistExamCodes,
-				PrefName.InsHistPanoCodes,
-				PrefName.InsHistPerioLLCodes,
-				PrefName.InsHistPerioLRCodes,
-				PrefName.InsHistPerioMaintCodes,
-				PrefName.InsHistPerioULCodes,
-				PrefName.InsHistPerioURCodes,
-				PrefName.InsHistProphyCodes 
+				PreferenceName.InsHistBWCodes,
+				PreferenceName.InsHistDebridementCodes,
+				PreferenceName.InsHistExamCodes,
+				PreferenceName.InsHistPanoCodes,
+				PreferenceName.InsHistPerioLLCodes,
+				PreferenceName.InsHistPerioLRCodes,
+				PreferenceName.InsHistPerioMaintCodes,
+				PreferenceName.InsHistPerioULCodes,
+				PreferenceName.InsHistPerioURCodes,
+				PreferenceName.InsHistProphyCodes 
 			});
 
 		/// <summary>
@@ -497,22 +497,22 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static List<string> GetInsHistPrefNames() 
 			=> new List<string> { 
-				PrefName.InsHistBWCodes,
-				PrefName.InsHistPanoCodes,
-				PrefName.InsHistExamCodes,
-				PrefName.InsHistProphyCodes,
-				PrefName.InsHistPerioURCodes,
-				PrefName.InsHistPerioULCodes,
-				PrefName.InsHistPerioLRCodes,
-				PrefName.InsHistPerioLLCodes,
-				PrefName.InsHistPerioMaintCodes,
-				PrefName.InsHistDebridementCodes 
+				PreferenceName.InsHistBWCodes,
+				PreferenceName.InsHistPanoCodes,
+				PreferenceName.InsHistExamCodes,
+				PreferenceName.InsHistProphyCodes,
+				PreferenceName.InsHistPerioURCodes,
+				PreferenceName.InsHistPerioULCodes,
+				PreferenceName.InsHistPerioLRCodes,
+				PreferenceName.InsHistPerioLLCodes,
+				PreferenceName.InsHistPerioMaintCodes,
+				PreferenceName.InsHistDebridementCodes 
 			};
 
 		/// <summary>
 		/// Same as <see cref="PrefC.HasClinicsEnabled"/> but doesn't use the cache.
 		/// </summary>
 		public static bool HasClinicsEnabledNoCache => 
-			!GetBoolNoCache(nameof(PrefName.EasyNoClinics)) && Clinics.GetClinicsNoCache().Count(x => !x.IsHidden) > 0;
+			!GetBoolNoCache(nameof(PreferenceName.EasyNoClinics)) && Clinics.GetClinicsNoCache().Count(x => !x.IsHidden) > 0;
 	}
 }

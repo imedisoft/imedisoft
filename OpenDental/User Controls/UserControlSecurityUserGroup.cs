@@ -135,7 +135,7 @@ namespace OpenDental {
 		///<summary>Fills the filter comboboxes on the "Users" tab.</summary>
 		private void FillFilters() {
 			foreach(UserFilters filterCur in Enum.GetValues(typeof(UserFilters))) {
-				if(Prefs.GetBool(PrefName.EasyHideDentalSchools) && (filterCur == UserFilters.Students || filterCur == UserFilters.Instructors)) {
+				if(Preferences.GetBool(PreferenceName.EasyHideDentalSchools) && (filterCur == UserFilters.Students || filterCur == UserFilters.Instructors)) {
 					continue;
 				}
 				comboShowOnly.Items.Add(new ODBoxItem<UserFilters>(filterCur.GetDescription(),filterCur));

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -66,25 +67,25 @@ namespace OpenDental {
 		///<summary>Returns the text box control corresponding to the given procType</summary>
 		private TextBox GetControlForPrefName(string prefName) {
 			switch(prefName) {
-				case PrefName.InsHistExamCodes:
+				case PreferenceName.InsHistExamCodes:
 					return textDateExam;
-				case PrefName.InsHistProphyCodes:
+				case PreferenceName.InsHistProphyCodes:
 					return textDateProphy;
-				case PrefName.InsHistBWCodes:
+				case PreferenceName.InsHistBWCodes:
 					return textDateBW;
-				case PrefName.InsHistPanoCodes:
+				case PreferenceName.InsHistPanoCodes:
 					return textDateFmxPano;
-				case PrefName.InsHistPerioURCodes:
+				case PreferenceName.InsHistPerioURCodes:
 					return textDatePerioScalingUR;
-				case PrefName.InsHistPerioULCodes:
+				case PreferenceName.InsHistPerioULCodes:
 					return textDatePerioScalingUL;
-				case PrefName.InsHistPerioLRCodes:
+				case PreferenceName.InsHistPerioLRCodes:
 					return textDatePerioScalingLR;
-				case PrefName.InsHistPerioLLCodes:
+				case PreferenceName.InsHistPerioLLCodes:
 					return textDatePerioScalingLL;
-				case PrefName.InsHistPerioMaintCodes:
+				case PreferenceName.InsHistPerioMaintCodes:
 					return textDatePerioMaint;
-				case PrefName.InsHistDebridementCodes:
+				case PreferenceName.InsHistDebridementCodes:
 					return textDateDebridgement;
 				default:
 					return null;
@@ -94,7 +95,7 @@ namespace OpenDental {
 		///<summary></summary>
 		private bool IsValid() {
 			DateTime dateEntry;
-			foreach(string prefName in Prefs.GetInsHistPrefNames()) {
+			foreach(string prefName in Preferences.GetInsHistPrefNames()) {
 				TextBox textBox=GetControlForPrefName(prefName);
 				//Continue if no date is entered or the date entered is valid.
 				if(!textBox.Enabled || string.IsNullOrEmpty(textBox.Text) || textBox.Text.Trim()==NO_INSHIST) {

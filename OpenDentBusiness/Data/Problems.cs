@@ -1,6 +1,5 @@
 using Imedisoft.Data.Models;
 using MySql.Data.MySqlClient;
-using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
 
@@ -76,7 +75,7 @@ namespace Imedisoft.Data
 			return Database.SelectMany(
 				"SELECT DISTINCT `patient_id` FROM `problems` " +
 				"WHERE `patient_id` IN (" + string.Join(", ", patientIds) + ") " +
-				"AND `problems`.`problem_def_id` != " + Prefs.GetLong(PrefName.ProblemsIndicateNone),
+				"AND `problems`.`problem_def_id` != " + Preferences.GetLong(PreferenceName.ProblemsIndicateNone),
 					Database.ToScalar<long>);
 		}
 

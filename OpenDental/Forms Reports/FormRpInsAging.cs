@@ -425,11 +425,11 @@ namespace OpenDental{
 
 		private void FormRpInsAging_Load(object sender, System.EventArgs e) {
 			_listProviders=Providers.GetListReports();
-			DateTime lastAgingDate=PrefC.GetDate(PrefName.DateLastAging);
+			DateTime lastAgingDate=PrefC.GetDate(PreferenceName.DateLastAging);
 			if(lastAgingDate.Year<1880) {
 				textDate.Text="";
 			}
-			else if(Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily)){
+			else if(Preferences.GetBool(PreferenceName.AgingCalculatedMonthlyInsteadOfDaily)){
 				textDate.Text=lastAgingDate.ToShortDateString();
 			}
 			else{
@@ -456,8 +456,8 @@ namespace OpenDental{
 				listClin.SelectedIndex=listClinics.FindIndex(x => x.Id==Clinics.ClinicId);//FindIndex could return -1, which is fine
 				checkAllClin.Checked=(Clinics.ClinicId==0);//event handler will set visibility
 			}
-			if(Prefs.GetBool(PrefName.FutureTransDatesAllowed) || Prefs.GetBool(PrefName.AccountAllowFutureDebits) 
-				|| Prefs.GetBool(PrefName.AllowFutureInsPayments)) 
+			if(Preferences.GetBool(PreferenceName.FutureTransDatesAllowed) || Preferences.GetBool(PreferenceName.AccountAllowFutureDebits) 
+				|| Preferences.GetBool(PreferenceName.AllowFutureInsPayments)) 
 			{
 				labelFutureTrans.Visible=true;//Set to false in designer
 			}
@@ -556,7 +556,7 @@ namespace OpenDental{
 			tableAging=RpInsAging.GetInsAgingTable(rpo);
 			report.ReportName="Insurance Aging Report";
 			report.AddTitle("InsAging","Insurance Aging Report");
-			report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle));
+			report.AddSubTitle("PracTitle",Preferences.GetString(PreferenceName.PracticeTitle));
 			report.AddSubTitle("AsOf","As of"+" "+rpo.AsOfDate.ToShortDateString());
 			if(radioAny.Checked){
 				report.AddSubTitle("Balance","Any Balance");

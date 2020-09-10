@@ -81,7 +81,7 @@ namespace Imedisoft.Data
 
 		private static bool IsInUse(long problemDefinitionId)
         {
-			if (Prefs.GetLong(PrefName.ProblemsIndicateNone) == problemDefinitionId)
+			if (Preferences.GetLong(PreferenceName.ProblemsIndicateNone) == problemDefinitionId)
 				return true;
 
 			var commands = new string[]

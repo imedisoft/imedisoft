@@ -1,4 +1,5 @@
-﻿using OpenDentBusiness;
+﻿using Imedisoft.Data;
+using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -6,7 +7,8 @@ using System.Windows.Forms;
 
 namespace OpenDental
 {
-    public partial class FormPatientPortal:ODForm {
+    public partial class FormPatientPortal : ODForm
+	{
 		private Patient _patCur;
 		///<summary>The current UserWeb instance from the passed in Patient.</summary>
 		private UserWeb _userWebCur;
@@ -16,226 +18,264 @@ namespace OpenDental
 		private bool _wasPrinted;
 		private bool _isNew;
 
-		public FormPatientPortal(Patient patCur) {
+		public FormPatientPortal(Patient patCur)
+		{
 			InitializeComponent();
-			_patCur=patCur;
+			_patCur = patCur;
 		}
 
-		private void FormPatientPortal_Load(object sender,EventArgs e) {
-			_userWebCur=UserWebs.GetByFKeyAndType(_patCur.PatNum,UserWebFKeyType.PatientPortal);
-			if(_userWebCur==null) {
-				_isNew=true;
-				_userWebCur=new UserWeb();
-				_userWebCur.UserName=UserWebs.CreateUserNameFromPat(_patCur,UserWebFKeyType.PatientPortal,new List<string>());
-				_userWebCur.FKey=_patCur.PatNum;
-				_userWebCur.FKeyType=UserWebFKeyType.PatientPortal;
-				_userWebCur.RequireUserNameChange=true;
+		private void FormPatientPortal_Load(object sender, EventArgs e)
+		{
+			_userWebCur = UserWebs.GetByFKeyAndType(_patCur.PatNum, UserWebFKeyType.PatientPortal);
+			if (_userWebCur == null)
+			{
+				_isNew = true;
+				_userWebCur = new UserWeb();
+				_userWebCur.UserName = UserWebs.CreateUserNameFromPat(_patCur, UserWebFKeyType.PatientPortal, new List<string>());
+				_userWebCur.FKey = _patCur.PatNum;
+				_userWebCur.FKeyType = UserWebFKeyType.PatientPortal;
+				_userWebCur.RequireUserNameChange = true;
 				_userWebCur.PasswordHash = Password.Hash("");
 				UserWebs.Insert(_userWebCur);
 			}
-			_userWebOld=_userWebCur.Copy();
-			textOnlineUsername.Text=_userWebCur.UserName;
-			textOnlinePassword.Text="";
-			if(_userWebCur.PasswordHash!="") {//if a password was already filled in
-				butGiveAccess.Text="Remove Online Access";
+			_userWebOld = _userWebCur.Copy();
+			textOnlineUsername.Text = _userWebCur.UserName;
+			textOnlinePassword.Text = "";
+			if (_userWebCur.PasswordHash != "")
+			{//if a password was already filled in
+				butGiveAccess.Text = "Remove Online Access";
 				//We do not want to show the password hash that is stored in the database so we will fill the online password with asterisks.
-				textOnlinePassword.Text="********";
-				textOnlinePassword.ReadOnly=false;
-				textOnlineUsername.ReadOnly=false;
+				textOnlinePassword.Text = "********";
+				textOnlinePassword.ReadOnly = false;
+				textOnlineUsername.ReadOnly = false;
 			}
-			textPatientPortalURL.Text=Prefs.GetString(PrefName.PatientPortalURL);
+			textPatientPortalURL.Text = Preferences.GetString(PreferenceName.PatientPortalURL);
 		}
 
-		private void menuItemSetup_Click(object sender,EventArgs e) {
+		private void menuItemSetup_Click(object sender, EventArgs e)
+		{
 			//FormEServicesPatientPortal formESPatPortal=new FormEServicesPatientPortal();
 			//formESPatPortal.ShowDialog();
 			//textPatientPortalURL.Text=Prefs.GetString(PrefName.PatientPortalURL);
 		}
 
-		private void butGiveAccess_Click(object sender,EventArgs e) {
-			if(butGiveAccess.Text=="Provide Online Access") {//When form open opens with a blank password
-				if(Prefs.GetString(PrefName.PatientPortalURL)=="") {
+		private void butGiveAccess_Click(object sender, EventArgs e)
+		{
+			if (butGiveAccess.Text == "Provide Online Access")
+			{//When form open opens with a blank password
+				if (Preferences.GetString(PreferenceName.PatientPortalURL) == "")
+				{
 					//User probably hasn't set up the patient portal yet.
 					MessageBox.Show("Patient Facing URL is required to be set before granting online access.  Click Setup to set the Patient Facing URL.");
 					return;
 				}
 				string error;
-				if(!UserWebs.ValidatePatientAccess(_patCur,out error)) { 
+				if (!UserWebs.ValidatePatientAccess(_patCur, out error))
+				{
 					MessageBox.Show(error);
 					return;
 				}
-				Cursor=Cursors.WaitCursor;
+				Cursor = Cursors.WaitCursor;
 				//1. Fill password.
-				string passwordGenerated=UserWebs.GenerateRandomPassword(8);
-				textOnlinePassword.Text=passwordGenerated;
+				string passwordGenerated = UserWebs.GenerateRandomPassword(8);
+				textOnlinePassword.Text = passwordGenerated;
 				//2. Make the username and password editable in case they want to change it.
-				textOnlineUsername.ReadOnly=false;
-				textOnlinePassword.ReadOnly=false;
+				textOnlineUsername.ReadOnly = false;
+				textOnlinePassword.ReadOnly = false;
 				//3. Save password to db.
 				// We only save the hash of the generated password.
-				_userWebCur.PasswordHash=Password.Hash(passwordGenerated);
-				UserWebs.Update(_userWebCur,_userWebOld);
+				_userWebCur.PasswordHash = Password.Hash(passwordGenerated);
+				UserWebs.Update(_userWebCur, _userWebOld);
 				_userWebOld.PasswordHash = _userWebCur.PasswordHash;
 				//4. Insert EhrMeasureEvent
-				EhrMeasureEvent newMeasureEvent=new EhrMeasureEvent();
-				newMeasureEvent.DateTEvent=DateTime.Now;
-				newMeasureEvent.EventType=EhrMeasureEventType.OnlineAccessProvided;
-				newMeasureEvent.PatNum=_userWebCur.FKey;
-				newMeasureEvent.MoreInfo="";
+				EhrMeasureEvent newMeasureEvent = new EhrMeasureEvent();
+				newMeasureEvent.DateTEvent = DateTime.Now;
+				newMeasureEvent.EventType = EhrMeasureEventType.OnlineAccessProvided;
+				newMeasureEvent.PatNum = _userWebCur.FKey;
+				newMeasureEvent.MoreInfo = "";
 				EhrMeasureEvents.Insert(newMeasureEvent);
 				//5. Rename button
-				butGiveAccess.Text="Remove Online Access";
-				Cursor=Cursors.Default;
+				butGiveAccess.Text = "Remove Online Access";
+				Cursor = Cursors.Default;
 			}
-			else {//remove access
-				Cursor=Cursors.WaitCursor;
+			else
+			{//remove access
+				Cursor = Cursors.WaitCursor;
 				//1. Clear password
-				textOnlinePassword.Text="";
+				textOnlinePassword.Text = "";
 				//2. Make in uneditable
-				textOnlinePassword.ReadOnly=true;
+				textOnlinePassword.ReadOnly = true;
 				//3. Save password to db
 				_userWebCur.PasswordHash = Password.Hash(textOnlinePassword.Text);
-				UserWebs.Update(_userWebCur,_userWebOld);
+				UserWebs.Update(_userWebCur, _userWebOld);
 				_userWebOld.PasswordHash = _userWebCur.PasswordHash;
 				//4. Rename button
-				butGiveAccess.Text="Provide Online Access";
-				Cursor=Cursors.Default;
+				butGiveAccess.Text = "Provide Online Access";
+				Cursor = Cursors.Default;
 			}
 		}
 
-		private void butOpen_Click(object sender,EventArgs e) {
-			if(textPatientPortalURL.Text=="") {
+		private void butOpen_Click(object sender, EventArgs e)
+		{
+			if (textPatientPortalURL.Text == "")
+			{
 				MessageBox.Show("Please use Setup to set the Online Access Link first.");
 				return;
 			}
-			try {
+			try
+			{
 				System.Diagnostics.Process.Start(textPatientPortalURL.Text);
 			}
-			catch(Exception ex) {
+			catch (Exception ex)
+			{
 				MessageBox.Show(ex.Message);
 			}
 		}
-		
-		private void butGenerate_Click(object sender,EventArgs e) {
-			if(textOnlinePassword.ReadOnly) {
+
+		private void butGenerate_Click(object sender, EventArgs e)
+		{
+			if (textOnlinePassword.ReadOnly)
+			{
 				MessageBox.Show("Please use the Provide Online Access button first.");
 				return;
 			}
-			Cursor=Cursors.WaitCursor;
-			string passwordGenerated=UserWebs.GenerateRandomPassword(8);
-			textOnlinePassword.Text=passwordGenerated;
+			Cursor = Cursors.WaitCursor;
+			string passwordGenerated = UserWebs.GenerateRandomPassword(8);
+			textOnlinePassword.Text = passwordGenerated;
 			// We only save the hash of the generated password.
 			_userWebCur.PasswordHash = Password.Hash(passwordGenerated);
-			UserWebs.Update(_userWebCur,_userWebOld);
+			UserWebs.Update(_userWebCur, _userWebOld);
 			_userWebOld.PasswordHash = _userWebCur.PasswordHash;
-			Cursor=Cursors.Default;
+			Cursor = Cursors.Default;
 		}
 
-		private void butPrint_Click(object sender,EventArgs e) {
-			if(textPatientPortalURL.Text=="") {
+		private void butPrint_Click(object sender, EventArgs e)
+		{
+			if (textPatientPortalURL.Text == "")
+			{
 				MessageBox.Show("Online Access Link required. Please use Setup to set the Online Access Link first.");
 				return;
 			}
-			if(textOnlinePassword.Text=="" || textOnlinePassword.Text=="********") {
+			if (textOnlinePassword.Text == "" || textOnlinePassword.Text == "********")
+			{
 				MessageBox.Show("Password required. Please generate a new password.");
 				return;
 			}
-			string error=Patients.IsPortalPasswordValid(textOnlinePassword.Text);
-			if(error!="") {//Non-empty string means it was invalid.
-				MessageBox.Show(this,error);
+			string error = Patients.IsPortalPasswordValid(textOnlinePassword.Text);
+			if (error != "")
+			{//Non-empty string means it was invalid.
+				MessageBox.Show(this, error);
 				return;
 			}
-			_wasPrinted=true;
+			_wasPrinted = true;
 			//Then, print the info that the patient will be given in order for them to log in online.
 			PrintPatientInfo();
 		}
 
-		private void PrintPatientInfo() {
-			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage,"Patient portal login information printed",auditPatNum:_patCur.PatNum);
+		private void PrintPatientInfo()
+		{
+			PrinterL.TryPrintOrDebugRpPreview(pd_PrintPage, "Patient portal login information printed", auditPatNum: _patCur.PatNum);
 		}
 
-		private void pd_PrintPage(object sender,System.Drawing.Printing.PrintPageEventArgs e) {
-			Rectangle bounds=e.MarginBounds;
+		private void pd_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
+		{
+			Rectangle bounds = e.MarginBounds;
 			//new Rectangle(50,40,800,1035);//Some printers can handle up to 1042
-			Graphics g=e.Graphics;
+			Graphics g = e.Graphics;
 			string text;
-			Font headingFont=new Font("Arial",13,FontStyle.Bold);
-			Font font=new Font("Arial",10,FontStyle.Regular);
-			int yPos=bounds.Top+100;
-			int center=bounds.X+bounds.Width/2;
-			text="Online Access";
-			g.DrawString(text,headingFont,Brushes.Black,center-g.MeasureString(text,font).Width/2,yPos);
-			yPos+=50;
-			text="Website: "+textPatientPortalURL.Text;
-			g.DrawString(text,font,Brushes.Black,bounds.Left+100,yPos);
-			yPos+=25;
-			text="Username: "+textOnlineUsername.Text;
-			g.DrawString(text,font,Brushes.Black,bounds.Left+100,yPos);
-			yPos+=25;
-			text="Password: "+textOnlinePassword.Text;
-			g.DrawString(text,font,Brushes.Black,bounds.Left+100,yPos);
+			Font headingFont = new Font("Arial", 13, FontStyle.Bold);
+			Font font = new Font("Arial", 10, FontStyle.Regular);
+			int yPos = bounds.Top + 100;
+			int center = bounds.X + bounds.Width / 2;
+			text = "Online Access";
+			g.DrawString(text, headingFont, Brushes.Black, center - g.MeasureString(text, font).Width / 2, yPos);
+			yPos += 50;
+			text = "Website: " + textPatientPortalURL.Text;
+			g.DrawString(text, font, Brushes.Black, bounds.Left + 100, yPos);
+			yPos += 25;
+			text = "Username: " + textOnlineUsername.Text;
+			g.DrawString(text, font, Brushes.Black, bounds.Left + 100, yPos);
+			yPos += 25;
+			text = "Password: " + textOnlinePassword.Text;
+			g.DrawString(text, font, Brushes.Black, bounds.Left + 100, yPos);
 			g.Dispose();
-			e.HasMorePages=false;
+			e.HasMorePages = false;
 		}
 
-		private void butOK_Click(object sender,EventArgs e) {
-			bool shouldUpdateUserWeb=false;
-			bool shouldPrint=false;
-			if(textOnlineUsername.ReadOnly==false) {
-				if(textOnlineUsername.Text=="") {
+		private void butOK_Click(object sender, EventArgs e)
+		{
+			bool shouldUpdateUserWeb = false;
+			bool shouldPrint = false;
+			if (textOnlineUsername.ReadOnly == false)
+			{
+				if (textOnlineUsername.Text == "")
+				{
 					MessageBox.Show("Online Username cannot be blank.");
 					return;
 				}
-				else if(_userWebCur.UserName!=textOnlineUsername.Text) {
-					if(UserWebs.UserNameExists(textOnlineUsername.Text,UserWebFKeyType.PatientPortal)) {
+				else if (_userWebCur.UserName != textOnlineUsername.Text)
+				{
+					if (UserWebs.UserNameExists(textOnlineUsername.Text, UserWebFKeyType.PatientPortal))
+					{
 						MessageBox.Show("The Online Username already exists.");
 						return;
 					}
-					_userWebCur.UserName=textOnlineUsername.Text;
-					shouldUpdateUserWeb=true;
-					if(!_wasPrinted) {
-						shouldPrint=true;
+					_userWebCur.UserName = textOnlineUsername.Text;
+					shouldUpdateUserWeb = true;
+					if (!_wasPrinted)
+					{
+						shouldPrint = true;
 					}
 				}
 			}
-			if(textOnlinePassword.Text!="" && textOnlinePassword.Text!="********") {
-				string error=Patients.IsPortalPasswordValid(textOnlinePassword.Text);
-				if(error!="") {//Non-empty string means it was invalid.
-					MessageBox.Show(this,error);
+			if (textOnlinePassword.Text != "" && textOnlinePassword.Text != "********")
+			{
+				string error = Patients.IsPortalPasswordValid(textOnlinePassword.Text);
+				if (error != "")
+				{//Non-empty string means it was invalid.
+					MessageBox.Show(this, error);
 					return;
 				}
-				if(!_wasPrinted) {
-					shouldPrint=true;
+				if (!_wasPrinted)
+				{
+					shouldPrint = true;
 				}
-				shouldUpdateUserWeb=true;
+				shouldUpdateUserWeb = true;
 				_userWebCur.PasswordHash = Password.Hash(textOnlinePassword.Text);
 			}
-			if(shouldPrint) {
-				DialogResult result=MessageBox.Show("Online Username or Password changed but was not printed, would you like to print?"
-					,"Print Patient Info"
-					,MessageBoxButtons.YesNoCancel);
-				if(result==DialogResult.Yes) {
+			if (shouldPrint)
+			{
+				DialogResult result = MessageBox.Show("Online Username or Password changed but was not printed, would you like to print?"
+					, "Print Patient Info"
+					, MessageBoxButtons.YesNoCancel);
+				if (result == DialogResult.Yes)
+				{
 					//Print the showing information.
 					PrintPatientInfo();
 				}
-				else if(result==DialogResult.No) {
+				else if (result == DialogResult.No)
+				{
 					//User does not want to print.  Do nothing.
 				}
-				else if(result==DialogResult.Cancel) {
+				else if (result == DialogResult.Cancel)
+				{
 					return;
 				}
 			}
-			if(shouldUpdateUserWeb) {
-				UserWebs.Update(_userWebCur,_userWebOld);
+			if (shouldUpdateUserWeb)
+			{
+				UserWebs.Update(_userWebCur, _userWebOld);
 			}
-			DialogResult=DialogResult.OK;
+			DialogResult = DialogResult.OK;
 		}
 
-		private void butCancel_Click(object sender,EventArgs e) {
-			if(_isNew) {
+		private void butCancel_Click(object sender, EventArgs e)
+		{
+			if (_isNew)
+			{
 				UserWebs.Delete(_userWebCur.UserWebNum);
 			}
-			DialogResult=DialogResult.Cancel;
+			DialogResult = DialogResult.Cancel;
 		}
 	}
 }

@@ -139,7 +139,7 @@ namespace OpenDental{
 			Font fontSubTitle=new Font("Tahoma",8);
 			report.ReportName="General Ledger";
 			report.AddTitle("Title","Detail of General Ledger",fontTitle);
-			report.AddSubTitle("PracName",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
+			report.AddSubTitle("PracName",Preferences.GetString(PreferenceName.PracticeTitle),fontSubTitle);
 			report.AddSubTitle("Date",date1.SelectionStart.ToShortDateString()+" - "+date2.SelectionStart.ToShortDateString(),fontSubTitle);
 			report.Sections[AreaSectionType.ReportHeader].Height-=20;
 			//setup query

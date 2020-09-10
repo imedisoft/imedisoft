@@ -170,16 +170,16 @@ namespace OpenDental{
 					else
 						saveFileDialog2.FileName=_userQueryCur.FileName;
 				}
-				if(!Directory.Exists(Prefs.GetString(PrefName.ExportPath))) {
+				if(!Directory.Exists(Preferences.GetString(PreferenceName.ExportPath))) {
 					try {
-						Directory.CreateDirectory(Prefs.GetString(PrefName.ExportPath));
-						saveFileDialog2.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
+						Directory.CreateDirectory(Preferences.GetString(PreferenceName.ExportPath));
+						saveFileDialog2.InitialDirectory=Preferences.GetString(PreferenceName.ExportPath);
 					}
 					catch {
 						//initialDirectory will be blank
 					}
 				}
-				else saveFileDialog2.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
+				else saveFileDialog2.InitialDirectory=Preferences.GetString(PreferenceName.ExportPath);
 				//saveFileDialog2.DefaultExt="txt";
 				saveFileDialog2.Filter="Text files(*.txt)|*.txt|Excel Files(*.xls)|*.xls|All files(*.*)|*.*";
 				saveFileDialog2.FilterIndex=0;
@@ -387,8 +387,8 @@ namespace OpenDental{
 				butAdd.Enabled=false;
 				butPaste.Enabled=false;
 			}
-			if(string.IsNullOrWhiteSpace(Prefs.GetString(PrefName.ReportingServerDbName)) 
-				|| string.IsNullOrWhiteSpace(Prefs.GetString(PrefName.ReportingServerCompName))) {
+			if(string.IsNullOrWhiteSpace(Preferences.GetString(PreferenceName.ReportingServerDbName)) 
+				|| string.IsNullOrWhiteSpace(Preferences.GetString(PreferenceName.ReportingServerCompName))) {
 				checkReportServer.Visible=false;
 			}
 			else {//default to report server when one is set up.
@@ -571,10 +571,10 @@ namespace OpenDental{
 						case "temptotaltime":
 						case "tempreghrs":
 						case "tempovertime":
-							if(Prefs.GetBool(PrefName.TimeCardsUseDecimalInsteadOfColon)) {
+							if(Preferences.GetBool(PreferenceName.TimeCardsUseDecimalInsteadOfColon)) {
 								tableOut.Rows[i][j]=PIn.Time(tableOut.Rows[i][j].ToString()).TotalHours.ToString("n");
 							}
-							else if(Prefs.GetBool(PrefName.TimeCardShowSeconds)) {//Colon format with seconds
+							else if(Preferences.GetBool(PreferenceName.TimeCardShowSeconds)) {//Colon format with seconds
 								tableOut.Rows[i][j]=PIn.Time(tableOut.Rows[i][j].ToString()).ToStringHmmss();
 							}
 							else {//Colon format without seconds
@@ -1007,7 +1007,7 @@ namespace OpenDental{
 			}
 			_reportSimpleGrid.Title=textTitle.Text;
 			_reportSimpleGrid.SubTitle.Clear();
-			_reportSimpleGrid.SubTitle.Add(Prefs.GetString(PrefName.PracticeTitle));
+			_reportSimpleGrid.SubTitle.Add(Preferences.GetString(PreferenceName.PracticeTitle));
 			for(int iCol = 0;iCol<_reportSimpleGrid.TableQ.Columns.Count;iCol++) {
 				_reportSimpleGrid.ColCaption[iCol]=_reportSimpleGrid.TableQ.Columns[iCol].Caption;
 				//again, I don't know why this would fail, so here's a check:
@@ -1171,7 +1171,7 @@ namespace OpenDental{
 			while(yPos<bounds.Top+bounds.Height-18//The 18 is minimum allowance for the line about to print. 
 				&& _linesPrinted < _reportSimpleGrid.TableQ.Rows.Count)//Page might finish early on the last page.
 			{
-				bool isColWrap=Prefs.GetBool(PrefName.ReportsWrapColumns);
+				bool isColWrap=Preferences.GetBool(PreferenceName.ReportsWrapColumns);
 				if(isColWrap && yPos > yPosTableTop) {//First row always prints.  Otherwise the row might be pushed to next page if too tall.
 					int cellWidth;//Width to be adjusted and used to calculate row height.
 					bool isRowTooTall=false;//Bool to indicate if a row we are about to print is too tall for the avaible space on page.

@@ -1,16 +1,15 @@
+using CodeBase;
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using CodeBase;
-using Newtonsoft.Json;
 
-namespace OpenDentBusiness{
-	///<summary></summary>
-	public class WebSchedRecalls{
+namespace OpenDentBusiness
+{
+    ///<summary></summary>
+    public class WebSchedRecalls{
 		#region Get Methods
 
 		///<summary>Gets the WebSchedRecall row for the passed in recallNum.  Will return null if the recallNum isn't found.</summary>
@@ -119,21 +118,21 @@ namespace OpenDentBusiness{
 		///<summary>Returns true if any Web Sched Recall text or email template contains a URL tag.</summary>
 		public static bool TemplatesHaveURLTags() {
 			foreach(string pref in new List<string> {
-				PrefName.WebSchedSubject,
-				PrefName.WebSchedMessage,
-				PrefName.WebSchedMessageText,
-				PrefName.WebSchedAggregatedEmailBody,
-				PrefName.WebSchedAggregatedEmailSubject,
-				PrefName.WebSchedAggregatedTextMessage,
-				PrefName.WebSchedSubject2,
-				PrefName.WebSchedMessage2,
-				PrefName.WebSchedMessageText2,
-				PrefName.WebSchedSubject3,
-				PrefName.WebSchedMessage3,
-				PrefName.WebSchedMessageText3,
+				PreferenceName.WebSchedSubject,
+				PreferenceName.WebSchedMessage,
+				PreferenceName.WebSchedMessageText,
+				PreferenceName.WebSchedAggregatedEmailBody,
+				PreferenceName.WebSchedAggregatedEmailSubject,
+				PreferenceName.WebSchedAggregatedTextMessage,
+				PreferenceName.WebSchedSubject2,
+				PreferenceName.WebSchedMessage2,
+				PreferenceName.WebSchedMessageText2,
+				PreferenceName.WebSchedSubject3,
+				PreferenceName.WebSchedMessage3,
+				PreferenceName.WebSchedMessageText3,
 			}) 
 			{
-				if(HasURLTag(Prefs.GetString(pref))) {
+				if(HasURLTag(Preferences.GetString(pref))) {
 					return true;
 				}
 			}

@@ -61,7 +61,7 @@ namespace OpenDentBusiness
 		/// <returns>True if the service is running; otherwise, false.</returns>
 		public static bool IsODServiceRunning()
 		{
-			var dateTime = Prefs.GetDateTimeOrNull(PrefName.OpenDentalServiceHeartbeat);
+			var dateTime = Preferences.GetDateTimeOrNull(PreferenceName.OpenDentalServiceHeartbeat);
 
 			if (!dateTime.HasValue || dateTime.Value.AddMinutes(6) < DateTime.UtcNow)
 			{

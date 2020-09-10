@@ -40,8 +40,8 @@ namespace OpenDental {
 
 		private void FormReqFieldCondEdit_Load(object sender,EventArgs e) {
 			_listLanguages=new List<string>();
-			if(Prefs.GetString(PrefName.LanguagesUsedByPatients)!="") {
-				_listLanguages=Prefs.GetString(PrefName.LanguagesUsedByPatients).Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries).ToList();
+			if(Preferences.GetString(PreferenceName.LanguagesUsedByPatients)!="") {
+				_listLanguages=Preferences.GetString(PreferenceName.LanguagesUsedByPatients).Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries).ToList();
 			}
 			_listBillingTypeDefs=Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes,true);
 			_listClinics=Clinics.GetAll(true);
@@ -55,7 +55,7 @@ namespace OpenDental {
 			comboOperator2.Items.Add("\u2265");//Greater than or equal to
 			comboOperator2.Items.Add("\u2264");//Less than or equal to
 			_listIndexFieldNames=new List<RequiredFieldName>();
-			if(!Prefs.GetBool(PrefName.EasyHideHospitals)) {
+			if(!Preferences.GetBool(PreferenceName.EasyHideHospitals)) {
 				AddListConditionType(RequiredFieldName.AdmitDate);
 			}
 			AddListConditionType(RequiredFieldName.Birthdate);
@@ -63,14 +63,14 @@ namespace OpenDental {
 			if(PrefC.HasClinicsEnabled) {
 				AddListConditionType(RequiredFieldName.Clinic);
 			}
-			if(Prefs.GetBool(PrefName.ShowFeatureEhr)) {
+			if(Preferences.GetBool(PreferenceName.ShowFeatureEhr)) {
 				AddListConditionType(RequiredFieldName.DateTimeDeceased);
 			}
 			AddListConditionType(RequiredFieldName.Gender);
-			if(Prefs.GetString(PrefName.LanguagesUsedByPatients)!="") {
+			if(Preferences.GetString(PreferenceName.LanguagesUsedByPatients)!="") {
 				AddListConditionType(RequiredFieldName.Language);
 			}
-			if(!Prefs.GetBool(PrefName.EasyHideMedicaid)) {
+			if(!Preferences.GetBool(PreferenceName.EasyHideMedicaid)) {
 				AddListConditionType(RequiredFieldName.MedicaidID);
 				AddListConditionType(RequiredFieldName.MedicaidState);
 			}

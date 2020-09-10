@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Data;
 using OpenDental;
 using OpenDentBusiness;
 using System;
@@ -26,7 +27,7 @@ namespace Imedisoft.Forms
 
 		private void FormApptBreak_Load(object sender, EventArgs e)
 		{
-			var brokenApptProcs = Prefs.GetEnum<BrokenApptProcedure>(PrefName.BrokenApptProcedure);
+			var brokenApptProcs = Preferences.GetEnum<BrokenApptProcedure>(PreferenceName.BrokenApptProcedure);
 
 			missedRadioButton.Enabled = brokenApptProcs == BrokenApptProcedure.Missed || brokenApptProcs == BrokenApptProcedure.Both;
 			cancelledRadioButton.Enabled = brokenApptProcs == BrokenApptProcedure.Cancelled || brokenApptProcs == BrokenApptProcedure.Both;
@@ -55,7 +56,7 @@ namespace Imedisoft.Forms
 
 		private void PromptTextASAPList()
 		{
-			if (!Prefs.GetBool(PrefName.WebSchedAsapEnabled)) return;
+			if (!Preferences.GetBool(PreferenceName.WebSchedAsapEnabled)) return;
 
 			if (Appointments.RefreshASAP(0, 0, appointment.ClinicNum, new List<ApptStatus>()).Count == 0 || Prompt("Text patients on the ASAP List and offer them this opening?") == DialogResult.No)
 			{
@@ -93,7 +94,7 @@ namespace Imedisoft.Forms
 		{
 			if (!ValidateSelection()) return;
 
-			if (Prefs.GetBool(PrefName.UnscheduledListNoRecalls, true) && Appointments.IsRecallAppointment(appointment))
+			if (Preferences.GetBool(PreferenceName.UnscheduledListNoRecalls, true) && Appointments.IsRecallAppointment(appointment))
 			{
 				if (Prompt("Recall appointments cannot be sent to the Unscheduled List.\r\nDelete appointment instead?") == DialogResult.Yes)
 				{

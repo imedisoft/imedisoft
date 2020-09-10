@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using CodeBase;
+﻿using Imedisoft.Data;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 
-namespace OpenDentBusiness {
-	///<summary></summary>
-	public class Introspection {
+namespace OpenDentBusiness
+{
+    ///<summary></summary>
+    public class Introspection
+	{
 		///<summary>The dictionary of testing overrides.  This variable should ONLY be used from within the DictOverrides property.</summary>
-		private static Dictionary<IntrospectionEntity,string> _dictOverrides;
+		private static Dictionary<IntrospectionEntity, string> _dictOverrides;
 
 		///<summary>Fills _dictOverrides when it is null and returns it.  Will always return null if the IntrospectionItems preference is not present in the database.
 		///This getter will check the preference cache for the aforementioned preference until it finds it.
@@ -22,7 +19,7 @@ namespace OpenDentBusiness {
 		{
 			get
 			{
-				if (_dictOverrides != null || !Prefs.Exists(PrefName.IntrospectionItems))
+				if (_dictOverrides != null || !Preferences.Exists(PreferenceName.IntrospectionItems))
 				{
 					return _dictOverrides;
 				}
@@ -30,8 +27,8 @@ namespace OpenDentBusiness {
 				//Try to extract the introspection overrides from the preference. 
 				try
 				{
-					string introspectionItems = Prefs.GetString(PrefName.IntrospectionItems);//Cache call so it is fine to do this a lot.  Purposefully throws exceptions.
-																							 //At this point we know the database has the IntrospectionItems preference so we need to instantiate _dictOverrides.
+					string introspectionItems = Preferences.GetString(PreferenceName.IntrospectionItems);//Cache call so it is fine to do this a lot.  Purposefully throws exceptions.
+																										 //At this point we know the database has the IntrospectionItems preference so we need to instantiate _dictOverrides.
 					_dictOverrides = JsonConvert.DeserializeObject<Dictionary<IntrospectionEntity, string>>(introspectionItems);
 				}
 				catch (Exception ex)
@@ -43,22 +40,27 @@ namespace OpenDentBusiness {
 		}
 
 		///<summary>Returns true if the IntrospectionItems preference is present within the preference cache.  Otherwise; false.</summary>
-		public static bool IsTestingMode {
-			get {
-				return (DictOverrides!=null);
+		public static bool IsTestingMode
+		{
+			get
+			{
+				return (DictOverrides != null);
 			}
 		}
 
 		///<summary>Returns the defaultValue passed in if the entity cannot be found in the global dictionary of testing overrides.
 		///Purposefully throws an exception (not meant to be caught) if the IntrospectionItems preference is present in the database (should be missing in general)
 		///and does not contain the entity that was passed in.  This will mean that the preference is malformed or is out of date and the preference value needs to be updated.</summary>
-		public static string GetOverride(IntrospectionEntity entity,string defaultValue="") {
-			if(DictOverrides!=null) {
+		public static string GetOverride(IntrospectionEntity entity, string defaultValue = "")
+		{
+			if (DictOverrides != null)
+			{
 				//DictOverrides was not null so we can assume it has the IntrospectionEntity passed in.
 				//If the dictionary does not have the entity passed in then we will purposefully throw an exception tailored for engineers.
 				string overrideStr;
-				if(!DictOverrides.TryGetValue(entity,out overrideStr)) {
-					throw new ApplicationException("Testing mode is on and the following introspection entity is not present in the IntrospectionItems preference: "+entity.ToString());
+				if (!DictOverrides.TryGetValue(entity, out overrideStr))
+				{
+					throw new ApplicationException("Testing mode is on and the following introspection entity is not present in the IntrospectionItems preference: " + entity.ToString());
 				}
 				return overrideStr;
 			}
@@ -67,13 +69,15 @@ namespace OpenDentBusiness {
 		}
 
 		///<summary>Only used for unit tests. SHOULD NOT be used otherwise.</summary>
-		public static void ClearDictOverrides() {
+		public static void ClearDictOverrides()
+		{
 			//This wouldn't be the end of the world if a non-unit test class does this because it just causes the dictionary to automatically refresh itself later.
-			_dictOverrides=null;
+			_dictOverrides = null;
 		}
 
 		///<summary>Holds 3rd party API information. IF AN ENTRY IS ADDED TO THIS ENUM PLEASE UPDATE THE QUERY BELOW.</summary>
-		public enum IntrospectionEntity {
+		public enum IntrospectionEntity
+		{
 			///<summary></summary>
 			DentalXChangeDwsURL,
 			///<summary></summary>

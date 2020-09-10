@@ -19,7 +19,7 @@ namespace Imedisoft.Forms
                 versionLabel.Text += "  Since: " + updateHistory.InstalledOn.ToShortDateString();
             }
 
-            copyrightLabel.Text = Prefs.GetString(PrefName.SoftwareName) + " Copyright 2003-" + DateTime.Now.ToString("yyyy") + ", Jordan Sparks, D.M.D.";
+            copyrightLabel.Text = Preferences.GetString(PreferenceName.SoftwareName) + " Copyright 2003-" + DateTime.Now.ToString("yyyy") + ", Jordan Sparks, D.M.D.";
 
             var serviceInfo = Computers.GetServiceInfo();
             serviceHostnameLabel.Text = serviceInfo.hostname;

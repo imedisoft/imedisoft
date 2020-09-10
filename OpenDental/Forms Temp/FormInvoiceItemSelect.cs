@@ -60,7 +60,7 @@ namespace OpenDental {
 					row.Cells.Add(Definitions.GetName(DefinitionCategory.AdjTypes,PIn.Long(tableRow["AdjType"].ToString())));//Adjustment type
 				}
 				else if(!string.IsNullOrWhiteSpace(tableRow["ChargeType"].ToString())) {	//It's a payplan charge
-					if(PrefC.GetInt(PrefName.PayPlansVersion)!=(int)PayPlanVersions.AgeCreditsAndDebits) {
+					if(PrefC.GetInt(PreferenceName.PayPlansVersion)!=(int)PayPlanVersions.AgeCreditsAndDebits) {
 						continue;//They can only attach debits to invoices and they can only do so if they're on version 2.
 					}
 					row.Cells.Add("Pay Plan");

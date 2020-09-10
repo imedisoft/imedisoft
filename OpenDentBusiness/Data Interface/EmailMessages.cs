@@ -672,19 +672,19 @@ namespace OpenDentBusiness{
 		///<summary>Gets the value in the EmailDisclaimerTemplate preference with the [PostalAddress] replaced. Returns an empty string if the pref is 
 		///off.</summary>
 		public static string GetEmailDisclaimer(long clinicNum) {
-			if(!Prefs.GetBool(PrefName.EmailDisclaimerIsOn)) {
+			if(!Preferences.GetBool(PreferenceName.EmailDisclaimerIsOn)) {
 				return "";
 			}
-			string disclaimer=Prefs.GetString(PrefName.EmailDisclaimerTemplate);
+			string disclaimer=Preferences.GetString(PreferenceName.EmailDisclaimerTemplate);
 			if(string.IsNullOrEmpty(disclaimer)) {
 				return "";
 			}
-			string postalAddress=Prefs.GetString(PrefName.PracticeTitle)+"\r\n"+Patients.GetAddressFull(
-				Prefs.GetString(PrefName.PracticeAddress),
-				Prefs.GetString(PrefName.PracticeAddress2),
-				Prefs.GetString(PrefName.PracticeCity),
-				Prefs.GetString(PrefName.PracticeST),
-				Prefs.GetString(PrefName.PracticeZip));
+			string postalAddress=Preferences.GetString(PreferenceName.PracticeTitle)+"\r\n"+Patients.GetAddressFull(
+				Preferences.GetString(PreferenceName.PracticeAddress),
+				Preferences.GetString(PreferenceName.PracticeAddress2),
+				Preferences.GetString(PreferenceName.PracticeCity),
+				Preferences.GetString(PreferenceName.PracticeST),
+				Preferences.GetString(PreferenceName.PracticeZip));
 			if(PrefC.HasClinicsEnabled) {
 				Clinic clinic=Clinics.GetById(clinicNum);
 				if(clinic!=null) {
@@ -2460,7 +2460,7 @@ namespace OpenDentBusiness{
 		///<summary>This method is only for ehr testing purposes, and it always uses the hidden pref EHREmailToAddress to send to.  For privacy reasons, this cannot be used with production patient info.  AttachName should include extension.</summary>
 		public static void SendTestUnsecure(string subjectAndBody,string attachName1,string attachContents1,string attachName2,string attachContents2) {
 			//No need to check RemotingRole; no call to db.
-			string strTo=Prefs.GetString(PrefName.EHREmailToAddress);
+			string strTo=Preferences.GetString(PreferenceName.EHREmailToAddress);
 			if(strTo=="") {
 				throw new ApplicationException("This feature cannot be used except in a test environment because email is not secure.");
 			}
@@ -2485,17 +2485,17 @@ namespace OpenDentBusiness{
 		///<summary>Receives one email from the inbox, and returns the contents of the attachment as a string.  Will throw an exception if anything goes wrong, so surround with a try-catch.</summary>
 		public static string ReceiveOneForEhrTest() {
 			//No need to check RemotingRole; no call to db.
-			if(Prefs.GetString(PrefName.EHREmailToAddress)=="") {//this pref is hidden, so no practical way for user to turn this on.
+			if(Preferences.GetString(PreferenceName.EHREmailToAddress)=="") {//this pref is hidden, so no practical way for user to turn this on.
 				throw new ApplicationException("This feature cannot be used except in a test environment because email is not secure.");
 			}
-			if(Prefs.GetString(PrefName.EHREmailPOPserver)=="") {
+			if(Preferences.GetString(PreferenceName.EHREmailPOPserver)=="") {
 				throw new ApplicationException("No POP server set up.");
 			}
 			EmailAddress emailAddress=new EmailAddress();
-			emailAddress.Pop3ServerIncoming=Prefs.GetString(PrefName.EHREmailPOPserver);
-			emailAddress.ServerPortIncoming=PrefC.GetInt(PrefName.EHREmailPort);
-			emailAddress.EmailUsername=Prefs.GetString(PrefName.EHREmailFromAddress);
-			emailAddress.EmailPassword=Prefs.GetString(PrefName.EHREmailPassword);
+			emailAddress.Pop3ServerIncoming=Preferences.GetString(PreferenceName.EHREmailPOPserver);
+			emailAddress.ServerPortIncoming=PrefC.GetInt(PreferenceName.EHREmailPort);
+			emailAddress.EmailUsername=Preferences.GetString(PreferenceName.EHREmailFromAddress);
+			emailAddress.EmailPassword=Preferences.GetString(PreferenceName.EHREmailPassword);
 			List<string> listSkipMsgUids=new List<string>();
 			List<EmailMessage> emailMessages=ReceiveFromInbox(1,emailAddress,ref listSkipMsgUids);
 			if(emailMessages.Count==0) {

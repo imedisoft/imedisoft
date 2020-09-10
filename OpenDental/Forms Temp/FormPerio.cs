@@ -1142,12 +1142,12 @@ namespace OpenDental{
 			butColorPus.BackColor = _listMiscColorDefs[2].Color;
 			butColorPlaque.BackColor = _listMiscColorDefs[4].Color;
 			butColorCalculus.BackColor = _listMiscColorDefs[5].Color;
-			textRedProb.Text = Prefs.GetString(PrefName.PerioRedProb);
-			textRedMGJ.Text = Prefs.GetString(PrefName.PerioRedMGJ);
-			textRedGing.Text = Prefs.GetString(PrefName.PerioRedGing);
-			textRedCAL.Text = Prefs.GetString(PrefName.PerioRedCAL);
-			textRedFurc.Text = Prefs.GetString(PrefName.PerioRedFurc);
-			textRedMob.Text = Prefs.GetString(PrefName.PerioRedMob);
+			textRedProb.Text = Preferences.GetString(PreferenceName.PerioRedProb);
+			textRedMGJ.Text = Preferences.GetString(PreferenceName.PerioRedMGJ);
+			textRedGing.Text = Preferences.GetString(PreferenceName.PerioRedGing);
+			textRedCAL.Text = Preferences.GetString(PreferenceName.PerioRedCAL);
+			textRedFurc.Text = Preferences.GetString(PreferenceName.PerioRedFurc);
+			textRedMob.Text = Preferences.GetString(PreferenceName.PerioRedMob);
 			//Procedure[] procList=Procedures.Refresh(PatCur.PatNum);
 			List<ToothInitial> initialList = ToothInitials.Refresh(PatCur.PatNum);
 			_listMissingTeeth = ToothInitials.GetMissingOrHiddenTeeth(initialList);
@@ -1802,14 +1802,14 @@ namespace OpenDental{
 				listSkippedTeeth=PerioMeasures.GetSkipped(PerioExams.ListExams[PerioExams.ListExams.Count-1].PerioExamNum);
 			}
 			//For patient's first perio chart, any teeth marked missing are automatically marked skipped.
-			if(PerioExams.ListExams.Count==0 || Prefs.GetBool(PrefName.PerioSkipMissingTeeth)) {
+			if(PerioExams.ListExams.Count==0 || Preferences.GetBool(PreferenceName.PerioSkipMissingTeeth)) {
 				for(int i=0;i<_listMissingTeeth.Count;i++) {
 					if(_listMissingTeeth[i].CompareTo("A") >= 0 && _listMissingTeeth[i].CompareTo("Z") <= 0) {//if is a letter (not a number)
 						continue;//Skipped teeth are only recorded by tooth number within the perio exam.
 					}
 					int toothNum=PIn.Int(_listMissingTeeth[i]);
 					//Check if this tooth has had an implant done AND the office has the preference to SHOW implants
-					if(Prefs.GetBool(PrefName.PerioTreatImplantsAsNotMissing) && ContrPerio.IsImplant(toothNum)) {
+					if(Preferences.GetBool(PreferenceName.PerioTreatImplantsAsNotMissing) && ContrPerio.IsImplant(toothNum)) {
 						listSkippedTeeth.RemoveAll(x => x==toothNum);//Remove the tooth from the list of skipped teeth if it exists.
 						continue;//We do note want to add it back to the list below.
 					}
@@ -2107,24 +2107,24 @@ namespace OpenDental{
 			}
 			//this is necessary because Microsoft's updown control is too buggy to be useful
 			Cursor=Cursors.WaitCursor;
-			string prefname=PrefName.PerioRedProb;
+			string prefname=PreferenceName.PerioRedProb;
 			if(sender==updownProb){
-				prefname=PrefName.PerioRedProb;
+				prefname=PreferenceName.PerioRedProb;
 			}
 			else if(sender==updownMGJ) {
-				prefname=PrefName.PerioRedMGJ;
+				prefname=PreferenceName.PerioRedMGJ;
 			}
 			else if(sender==updownGing) {
-				prefname=PrefName.PerioRedGing;
+				prefname=PreferenceName.PerioRedGing;
 			}
 			else if(sender==updownCAL) {
-				prefname=PrefName.PerioRedCAL;
+				prefname=PreferenceName.PerioRedCAL;
 			}
 			else if(sender==updownFurc) {
-				prefname=PrefName.PerioRedFurc;
+				prefname=PreferenceName.PerioRedFurc;
 			}
 			else if(sender==updownMob) {
-				prefname=PrefName.PerioRedMob;
+				prefname=PreferenceName.PerioRedMob;
 			}
 			int currentValue=PrefC.GetInt(prefname);
 			if(e.Y<8){//up
@@ -2137,7 +2137,7 @@ namespace OpenDental{
 				}
 				currentValue--;
 			}
-			Prefs.Set(prefname,currentValue);
+			Preferences.Set(prefname,currentValue);
 			//pref.ValueString=currentValue.ToString();
 			//Prefs.Update(pref);
 			localDefsChanged=true;
@@ -2230,7 +2230,7 @@ namespace OpenDental{
 				clinicName=clinic.Description;
 			} 
 			else {
-				clinicName=Prefs.GetString(PrefName.PracticeTitle);
+				clinicName=Preferences.GetString(PreferenceName.PracticeTitle);
 			}
 			float y=50f;
 			SizeF m;
@@ -2349,7 +2349,7 @@ namespace OpenDental{
 				clinicName=clinic.Description;
 			} 
 			else {
-				clinicName=Prefs.GetString(PrefName.PracticeTitle);
+				clinicName=Preferences.GetString(PreferenceName.PracticeTitle);
 			}
 			StringFormat format=new StringFormat();
 			format.Alignment=StringAlignment.Center;

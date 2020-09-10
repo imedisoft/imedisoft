@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CodeBase;
+using Imedisoft.Data;
 using Newtonsoft.Json;
 using PdfSharp.Pdf;
 
@@ -96,10 +97,10 @@ namespace OpenDentBusiness.WebTypes
 		{
 			//See CI_NewEClipboardPrefs for input details.
 			SendPushBackground(PushType.CI_NewEClipboardPrefs, clinicNum: clinicNum, listTags: new List<string>() {
-				POut.Bool(ClinicPrefs.GetBool(clinicNum, PrefName.EClipboardAllowSelfCheckIn)),
-				ClinicPrefs.GetString(clinicNum, PrefName.EClipboardMessageComplete),
-				POut.Bool(ClinicPrefs.GetBool(clinicNum, PrefName.EClipboardAllowSelfPortraitOnCheckIn)),
-				POut.Bool(ClinicPrefs.GetBool(clinicNum, PrefName.EClipboardPresentAvailableFormsOnCheckIn)),
+				POut.Bool(ClinicPrefs.GetBool(clinicNum, PreferenceName.EClipboardAllowSelfCheckIn)),
+				ClinicPrefs.GetString(clinicNum, PreferenceName.EClipboardMessageComplete),
+				POut.Bool(ClinicPrefs.GetBool(clinicNum, PreferenceName.EClipboardAllowSelfPortraitOnCheckIn)),
+				POut.Bool(ClinicPrefs.GetBool(clinicNum, PreferenceName.EClipboardPresentAvailableFormsOnCheckIn)),
 			});
 		}
 

@@ -5,12 +5,15 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using System.Collections.Generic;
+using Imedisoft.Data;
 
-namespace OpenDental{
+namespace OpenDental
+{
 	/// <summary>
 	/// Summary description for FormBasicTemplate.
 	/// </summary>
-	public class FormPatFieldDefEdit : ODForm {
+	public class FormPatFieldDefEdit : ODForm
+	{
 		private OpenDental.UI.Button butCancel;
 		private OpenDental.UI.Button butOK;
 		private System.Windows.Forms.TextBox textName;
@@ -37,22 +40,22 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			
+
 		}
 
 		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
-		protected override void Dispose( bool disposing )
+		protected override void Dispose(bool disposing)
 		{
-			if( disposing )
+			if (disposing)
 			{
-				if(components != null)
+				if (components != null)
 				{
 					components.Dispose();
 				}
 			}
-			base.Dispose( disposing );
+			base.Dispose(disposing);
 		}
 
 		#region Windows Form Designer generated code
@@ -206,112 +209,99 @@ namespace OpenDental{
 		}
 		#endregion
 
-		private void FormPatFieldDefEdit_Load(object sender, System.EventArgs e) {
-			textName.Text=FieldDef.FieldName;
-			textPickList.Visible=false;
-			textName.ReadOnly=false;
+		private void FormPatFieldDefEdit_Load(object sender, System.EventArgs e)
+		{
+			textName.Text = FieldDef.FieldName;
+			textPickList.Visible = false;
+			textName.ReadOnly = false;
 			comboFieldType.Items.Clear();
 			comboFieldType.Items.AddRange(Enum.GetNames(typeof(PatFieldType)));
 			//DEPRECATED. (Only used 16.3.1,deprecated by 16.3.4)
 			comboFieldType.Items.Remove("InCaseOfEmergency");
-			comboFieldType.SelectedIndex=(int)FieldDef.FieldType;
-			if(!IsNew){
-				OldFieldName=FieldDef.FieldName;
-				checkHidden.Checked=FieldDef.IsHidden;
+			comboFieldType.SelectedIndex = (int)FieldDef.FieldType;
+			if (!IsNew)
+			{
+				OldFieldName = FieldDef.FieldName;
+				checkHidden.Checked = FieldDef.IsHidden;
 			}
-			if(comboFieldType.SelectedIndex==(int)PatFieldType.PickList) {
-				textPickList.Visible=true;
-				labelWarning.Visible=true;
-				textPickList.Text=FieldDef.PickList;
+			if (comboFieldType.SelectedIndex == (int)PatFieldType.PickList)
+			{
+				textPickList.Visible = true;
+				labelWarning.Visible = true;
+				textPickList.Text = FieldDef.PickList;
 			}
 		}
 
-		private void comboFieldType_SelectedIndexChanged(object sender,EventArgs e) {
-			if(!IsNew){
+		private void comboFieldType_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (!IsNew)
+			{
 				//todo: check existing values to make sure that it makes sense to change the type.  Especially when moving to currency or date.
 			}
-			textPickList.Visible=false;
-			labelWarning.Visible=false;
-			textName.ReadOnly=false;
-			if(comboFieldType.SelectedIndex==(int)PatFieldType.PickList) {
-				textPickList.Visible=true;
-				labelWarning.Visible=true;
+			textPickList.Visible = false;
+			labelWarning.Visible = false;
+			textName.ReadOnly = false;
+			if (comboFieldType.SelectedIndex == (int)PatFieldType.PickList)
+			{
+				textPickList.Visible = true;
+				labelWarning.Visible = true;
 			}
 		}
 
-		private void buttonDelete_Click(object sender,EventArgs e) {
-			if(IsNew){
-				DialogResult=DialogResult.Cancel;
+		private void buttonDelete_Click(object sender, EventArgs e)
+		{
+			if (IsNew)
+			{
+				DialogResult = DialogResult.Cancel;
 				return;
 			}
-			try{
+			try
+			{
 				PatFieldDefs.Delete(FieldDef);//Throws if in use.
-				FieldDefLinks.DeleteForFieldDefNum(FieldDef.Id,FieldDefTypes.Patient);//Delete any FieldDefLinks to this PatFieldDef
-				FieldDef=null;
-				DialogResult=DialogResult.OK;
+				FieldDefLinks.DeleteForFieldDefNum(FieldDef.Id, FieldDefTypes.Patient);//Delete any FieldDefLinks to this PatFieldDef
+				FieldDef = null;
+				DialogResult = DialogResult.OK;
 			}
-			catch(ApplicationException ex){
+			catch (ApplicationException ex)
+			{
 				MessageBox.Show(ex.Message);
 			}
 		}
 
-		private void butOK_Click(object sender, System.EventArgs e) {
-			if(OldFieldName!=textName.Text && !IsNew) {
-				if(!Prefs.GetBool(PrefName.DisplayRenamedPatFields)
-					&& !MsgBox.Show(MsgBoxButtons.YesNo,"Changing the field name will cause existing information for this field to be hidden.  Continue?")) 
+		private void butOK_Click(object sender, System.EventArgs e)
+		{
+			if (OldFieldName != textName.Text && !IsNew)
+			{
+				if (!Preferences.GetBool(PreferenceName.DisplayRenamedPatFields)
+					&& !MsgBox.Show(MsgBoxButtons.YesNo, "Changing the field name will cause existing information for this field to be hidden.  Continue?"))
 				{
-					textName.Text=OldFieldName;
+					textName.Text = OldFieldName;
 					return;
 				}
-				if(PatFieldDefs.GetExists(x => x.FieldName==textName.Text)) {
+				if (PatFieldDefs.GetExists(x => x.FieldName == textName.Text))
+				{
 					MessageBox.Show("Field name currently being used.");
 					return;
 				}
 			}
-			FieldDef.FieldName=textName.Text;
-			FieldDef.IsHidden=checkHidden.Checked;
-			FieldDef.FieldType=(PatFieldType)comboFieldType.SelectedIndex;
-			if(FieldDef.FieldType==PatFieldType.PickList) {
-				if(textPickList.Text=="") {
+			FieldDef.FieldName = textName.Text;
+			FieldDef.IsHidden = checkHidden.Checked;
+			FieldDef.FieldType = (PatFieldType)comboFieldType.SelectedIndex;
+			if (FieldDef.FieldType == PatFieldType.PickList)
+			{
+				if (textPickList.Text == "")
+				{
 					MessageBox.Show("List cannot be blank.");
 					return;
 				}
-				FieldDef.PickList=textPickList.Text;
+				FieldDef.PickList = textPickList.Text;
 			}
-			DialogResult=DialogResult.OK;
+			DialogResult = DialogResult.OK;
 		}
 
-		private void butCancel_Click(object sender, System.EventArgs e) {
-			DialogResult=DialogResult.Cancel;
+		private void butCancel_Click(object sender, System.EventArgs e)
+		{
+			DialogResult = DialogResult.Cancel;
 		}
-
-
-
-	
-
-		
-
-
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

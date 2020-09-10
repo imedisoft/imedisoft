@@ -1,4 +1,5 @@
-﻿using OpenDentBusiness;
+﻿using Imedisoft.Data;
+using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,19 +42,19 @@ namespace OpenDental {
 			string bencoTitle="Benco Practice Management powered by Open Dental";
 			string bencoSoftware="Benco Practice Management";
 			if(_prog.Enabled) {
-				if(Prefs.GetString(PrefName.MainWindowTitle)==odTitle) {
-					hasPrefChanged|=Prefs.Set(PrefName.MainWindowTitle,bencoTitle);
+				if(Preferences.GetString(PreferenceName.MainWindowTitle)==odTitle) {
+					hasPrefChanged|=Preferences.Set(PreferenceName.MainWindowTitle,bencoTitle);
 				}
-				if(Prefs.GetString(PrefName.SoftwareName)!=bencoSoftware) {
-					hasPrefChanged|=Prefs.Set(PrefName.SoftwareName,bencoSoftware);
+				if(Preferences.GetString(PreferenceName.SoftwareName)!=bencoSoftware) {
+					hasPrefChanged|=Preferences.Set(PreferenceName.SoftwareName,bencoSoftware);
 				}
 			}
 			else {
-				if(Prefs.GetString(PrefName.MainWindowTitle)==bencoTitle) {
-					hasPrefChanged|=Prefs.Set(PrefName.MainWindowTitle,odTitle);
+				if(Preferences.GetString(PreferenceName.MainWindowTitle)==bencoTitle) {
+					hasPrefChanged|=Preferences.Set(PreferenceName.MainWindowTitle,odTitle);
 				}
-				if(Prefs.GetString(PrefName.SoftwareName)!=odSoftware) {
-					hasPrefChanged|=Prefs.Set(PrefName.SoftwareName,odSoftware);
+				if(Preferences.GetString(PreferenceName.SoftwareName)!=odSoftware) {
+					hasPrefChanged|=Preferences.Set(PreferenceName.SoftwareName,odSoftware);
 				}
 			}
 			if(hasPrefChanged) {

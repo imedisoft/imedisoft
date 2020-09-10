@@ -34,9 +34,9 @@ namespace OpenDental {
 			datePicker.SetDateTimeTo(DateTime.Today.AddDays(7));
 			//Add the appointment confirmation types
 			comboBoxMultiConfStatus.Items.Clear();
-			long defaultStatus=Prefs.GetLong(PrefName.WebSchedNewPatConfirmStatus);
+			long defaultStatus=Preferences.GetLong(PreferenceName.WebSchedNewPatConfirmStatus);
 			if(!checkWebSchedNewPat.Checked && checkWebSchedRecall.Checked) {
-				defaultStatus=Prefs.GetLong(PrefName.WebSchedRecallConfirmStatus);
+				defaultStatus=Preferences.GetLong(PreferenceName.WebSchedRecallConfirmStatus);
 			}
 			List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.ApptConfirmed,true);
 			foreach(Definition defCur in listDefs) {

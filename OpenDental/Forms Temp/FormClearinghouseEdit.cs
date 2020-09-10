@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using System.Collections.Generic;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -1142,7 +1143,7 @@ namespace OpenDental{
 				checkIsClaimExportAllowed.Checked=ClearinghouseCur.IsClaimExportAllowed;
 			}
 			//Uncheck and disable if not ClaimConnect as this checkbox only applies to ClaimConnect.
-			checkSaveDXC.Checked=Prefs.GetBool(PrefName.SaveDXCAttachments);
+			checkSaveDXC.Checked=Preferences.GetBool(PreferenceName.SaveDXCAttachments);
 			if(ClearinghouseCur.CommBridge!=EclaimsCommBridge.ClaimConnect) {
 				checkAllowAttachSend.Enabled=false;
 				checkAllowAttachSend.Checked=false;
@@ -1325,7 +1326,7 @@ namespace OpenDental{
 			}
 			if(ClearinghouseCur.CommBridge==EclaimsCommBridge.ClaimConnect && (ClearinghouseCur.LoginID!=textLoginID.Text || ClearinghouseCur.Password!=textPassword.Text)){
 				Program progPayConnect=Programs.GetCur(ProgramName.PayConnect);
-				int billingUseDentalExchangeIdx=PrefC.GetInt(PrefName.BillingUseElectronic);//idx of 1= DentalXChange.
+				int billingUseDentalExchangeIdx=PrefC.GetInt(PreferenceName.BillingUseElectronic);//idx of 1= DentalXChange.
 				if(progPayConnect.Enabled || billingUseDentalExchangeIdx==1) {
 					MessageBox.Show("ClaimConnect, PayConnect, and Electronic Billing credentials are usually all changed at the same time when using DentalXChange.");
 				}
@@ -1533,12 +1534,12 @@ namespace OpenDental{
 				return;
 			}
 			Clearinghouses.Delete(ClearinghouseHq);
-			if(Prefs.GetLong(PrefName.ClearinghouseDefaultDent)==ClearinghouseHq.ClearinghouseNum) {
-				Prefs.Set(PrefName.ClearinghouseDefaultDent,0);
+			if(Preferences.GetLong(PreferenceName.ClearinghouseDefaultDent)==ClearinghouseHq.ClearinghouseNum) {
+				Preferences.Set(PreferenceName.ClearinghouseDefaultDent,0);
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
-			if(Prefs.GetLong(PrefName.ClearinghouseDefaultMed)==ClearinghouseHq.ClearinghouseNum) {
-				Prefs.Set(PrefName.ClearinghouseDefaultMed,0);
+			if(Preferences.GetLong(PreferenceName.ClearinghouseDefaultMed)==ClearinghouseHq.ClearinghouseNum) {
+				Preferences.Set(PreferenceName.ClearinghouseDefaultMed,0);
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			ClearinghouseCur=null;
@@ -1579,7 +1580,7 @@ namespace OpenDental{
 				RevealClearinghousePass(c);
 			}
 			//If the DXC attachment saving preference changed send a signal to have all clients update their preference cache.
-			if(Prefs.Set(PrefName.SaveDXCAttachments,checkSaveDXC.Checked)) {
+			if(Preferences.Set(PreferenceName.SaveDXCAttachments,checkSaveDXC.Checked)) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			DialogResult=DialogResult.OK;

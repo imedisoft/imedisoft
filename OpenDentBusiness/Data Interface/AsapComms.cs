@@ -385,8 +385,8 @@ namespace OpenDentBusiness{
 				_dictPatComms=listPatComms.GroupBy(x => x.PatNum).ToDictionary(x => x.Key,x => x.First());
 				_dictPatDetails=listPatComms.GroupBy(x => x.PatNum).ToDictionary(x => x.Key,x => new PatientDetail(x.First()));
 				_dictPatAsapComms=GetForPats(listPatComms.Select(x => x.PatNum).ToList()).GroupBy(x => x.PatNum).ToDictionary(x => x.Key,x => x.ToList());
-				TimeSpan timeAutoCommStart=PrefC.GetDate(PrefName.AutomaticCommunicationTimeStart).TimeOfDay;
-				TimeSpan timeAutoCommEnd=PrefC.GetDate(PrefName.AutomaticCommunicationTimeEnd).TimeOfDay;
+				TimeSpan timeAutoCommStart=PrefC.GetDate(PreferenceName.AutomaticCommunicationTimeStart).TimeOfDay;
+				TimeSpan timeAutoCommEnd=PrefC.GetDate(PreferenceName.AutomaticCommunicationTimeEnd).TimeOfDay;
 				DtSendEmail=dtStartSend;//All emails will be sent immediately.
 				DtStartSendText=dtStartSend;
 				if(PrefC.DoRestrictAutoSendWindow) {
@@ -401,7 +401,7 @@ namespace OpenDentBusiness{
 						IsOutsideSendWindow=true;
 					}
 				}
-				string maxTextsPrefVal=ClinicPrefs.GetString(clinicNum,PrefName.WebSchedAsapTextLimit);
+				string maxTextsPrefVal=ClinicPrefs.GetString(clinicNum,PreferenceName.WebSchedAsapTextLimit);
 				_maxTextsPerDay=String.IsNullOrWhiteSpace(maxTextsPrefVal) ? int.MaxValue : PIn.Int(maxTextsPrefVal); //The pref may be set to blank to have no limit
 				DtTextSendEnd=DtStartSendText.Date.Add(timeAutoCommEnd);
 				_dtSlotStart=dtSlotStart;
@@ -621,7 +621,7 @@ namespace OpenDentBusiness{
 
 			///<summary>Returns true if the recall will fit in the time slot and there are no other appointments in the slot.</summary>
 			public bool IsApptSlotAvailable(Recall recall,long opNum,DateTime slotStart,DateTime slotEnd) {
-				int minutes=RecallTypes.GetTimePattern(recall.RecallTypeNum).Length*PrefC.GetInt(PrefName.AppointmentTimeIncrement);
+				int minutes=RecallTypes.GetTimePattern(recall.RecallTypeNum).Length*PrefC.GetInt(PreferenceName.AppointmentTimeIncrement);
 				return IsApptSlotAvailable(minutes,opNum,slotStart,slotEnd);
 			}
 

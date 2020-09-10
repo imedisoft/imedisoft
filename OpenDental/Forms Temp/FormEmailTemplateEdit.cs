@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
 using Imedisoft.UI;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -475,7 +476,7 @@ namespace OpenDental {
 					else {
 						//handle aggregation of the full document text with the template ourselves so we can display properly but only save the html string. 
 						htmlText=MarkupEdit.TranslateToXhtml(textBodyText.Text,false,false,true,false);
-						_htmlDocument=Prefs.GetString(PrefName.EmailMasterTemplate).Replace("@@@body@@@",htmlText);
+						_htmlDocument=Preferences.GetString(PreferenceName.EmailMasterTemplate).Replace("@@@body@@@",htmlText);
 					}
 					_hasTextChanged=false;
 				}

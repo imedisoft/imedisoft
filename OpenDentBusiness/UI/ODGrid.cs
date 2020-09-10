@@ -1,5 +1,5 @@
 using CodeBase;
-using OpenDental.Thinfinity;
+using Imedisoft.Data;
 using OpenDentBusiness;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
@@ -189,12 +189,12 @@ namespace OpenDental.UI
 			_stringFormat = new StringFormat();
 			_stringFormat.SetTabStops(0.0f, new float[] { 50.0f });
 			_stringFormat.LineAlignment = StringAlignment.Near;
-			
+
 			DoubleBuffered = true;
 
 			LayoutScrollsAndFonts();
 		}
-	
+
 
 
 		#region Events - Raise
@@ -692,7 +692,7 @@ namespace OpenDental.UI
 
 
 		[Browsable(false)]
-		private bool IsControlKeyDown => 
+		private bool IsControlKeyDown =>
 			System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.LeftCtrl) ||
 			System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.RightCtrl);
 
@@ -924,7 +924,7 @@ namespace OpenDental.UI
 		protected override void OnPaint(PaintEventArgs e)
 		{
 			if (_isUpdating || Width < 1 || Height < 1) return;
-			
+
 			ComputeColumns(); // it's only here because I can't figure out how to do it when columns are added. It will be removed.
 
 
@@ -945,14 +945,14 @@ namespace OpenDental.UI
 			// For the little square at the lower right between the two scrollbars.
 			if (hScroll.Visible)
 			{
-                using var brush = new SolidBrush(SystemColors.Control);
+				using var brush = new SolidBrush(SystemColors.Control);
 
-                g.FillRectangle(brush,
-                    Width - vScroll.Width - 1,
-                    Height - hScroll.Height - 1,
-                    vScroll.Width,
-                    hScroll.Height);
-            }
+				g.FillRectangle(brush,
+					Width - vScroll.Width - 1,
+					Height - hScroll.Height - 1,
+					vScroll.Width,
+					hScroll.Height);
+			}
 
 			// Draw a border around the grid.
 			using (var borderPen = new Pen(ColorBorder))
@@ -1354,7 +1354,7 @@ namespace OpenDental.UI
 			}
 		}
 
-		
+
 
 
 		private void DrawTitle(Graphics g)
@@ -1726,7 +1726,7 @@ namespace OpenDental.UI
 			{
 				//NOTE: if this preference is changed while the program is open there MAY be some lingering wiki links in the context menu. 
 				//It is not worth it to force users to log off and back on again, or to run the link removal code below EVERY time, even if the pref is disabled.
-				doWikiLogic = Prefs.GetBool(PrefName.WikiDetectLinks);//if this fails then we do not have a pref table or a wiki, so don't bother going with this part.
+				doWikiLogic = Preferences.GetBool(PreferenceName.WikiDetectLinks);//if this fails then we do not have a pref table or a wiki, so don't bother going with this part.
 			}
 			catch
 			{
@@ -2901,13 +2901,13 @@ namespace OpenDental.UI
 
 		public void SheetDrawTitle(Graphics g, int x, int y)
 		{
-			using var backgroundBrush = 
+			using var backgroundBrush =
 				new LinearGradientBrush(
 					new Rectangle(x, y, Width, titleHeight),
-					ColorTitleTop, ColorTitleBottom, 
+					ColorTitleTop, ColorTitleBottom,
 					LinearGradientMode.Vertical);
 
-			using var brushText = 
+			using var brushText =
 				new SolidBrush(ColorTitleText);
 
 			g.FillRectangle(backgroundBrush, x, y, Width, titleHeight);
@@ -3935,12 +3935,12 @@ namespace OpenDental.UI
 			SaveFileDialog saveFileDialog = new SaveFileDialog();
 			saveFileDialog.AddExtension = true;
 			saveFileDialog.FileName = fileName;
-			if (!Directory.Exists(Prefs.GetString(PrefName.ExportPath)))
+			if (!Directory.Exists(Preferences.GetString(PreferenceName.ExportPath)))
 			{
 				try
 				{
-					Directory.CreateDirectory(Prefs.GetString(PrefName.ExportPath));
-					saveFileDialog.InitialDirectory = Prefs.GetString(PrefName.ExportPath);
+					Directory.CreateDirectory(Preferences.GetString(PreferenceName.ExportPath));
+					saveFileDialog.InitialDirectory = Preferences.GetString(PreferenceName.ExportPath);
 				}
 				catch
 				{
@@ -3949,7 +3949,7 @@ namespace OpenDental.UI
 			}
 			else
 			{
-				saveFileDialog.InitialDirectory = Prefs.GetString(PrefName.ExportPath);
+				saveFileDialog.InitialDirectory = Preferences.GetString(PreferenceName.ExportPath);
 			}
 			saveFileDialog.Filter = "Text files(*.txt)|*.txt|Excel Files(*.xls)|*.xls|All files(*.*)|*.*";
 			saveFileDialog.FilterIndex = 0;

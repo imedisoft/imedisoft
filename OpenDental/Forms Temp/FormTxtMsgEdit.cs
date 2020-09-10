@@ -65,7 +65,7 @@ namespace OpenDental {
 				return false;
 			}
 			if(SmsPhones.IsIntegratedTextingEnabled()) {
-				if(!PrefC.HasClinicsEnabled && PrefC.GetDate(PrefName.SmsContractDate).Year<1880) { //Checking for practice (clinics turned off).
+				if(!PrefC.HasClinicsEnabled && PrefC.GetDate(PreferenceName.SmsContractDate).Year<1880) { //Checking for practice (clinics turned off).
 					MessageBox.Show("Integrated Texting has not been enabled.");
 					return false;
 				}
@@ -85,7 +85,7 @@ namespace OpenDental {
 				MessageBox.Show("CallFire Program Link must be enabled.");
 				return false;
 			}
-			if(patNum!=0 && txtMsgOk==YN.Unknown && Prefs.GetBool(PrefName.TextMsgOkStatusTreatAsNo)){
+			if(patNum!=0 && txtMsgOk==YN.Unknown && Preferences.GetBool(PreferenceName.TextMsgOkStatusTreatAsNo)){
 				MessageBox.Show("It is not OK to text this patient.");
 				return false;
 			}
@@ -165,7 +165,7 @@ namespace OpenDental {
 				}
 				long clinicNum= Clinics.Active.Id;
 				if(clinicNum==0) {
-						clinicNum=Prefs.GetLong(PrefName.TextingDefaultClinicNum);
+						clinicNum=Preferences.GetLong(PreferenceName.TextingDefaultClinicNum);
 				}
 				if(!SendText(0,textWirelessPhone.Text,textMessage.Text,YN.Unknown,clinicNum,SmsMessageSource.DirectSms,true)) {  //0 as PatNum to denote no pat specified
 					return;//Allow the user to try again.  A message was already shown to the user inside SendText().

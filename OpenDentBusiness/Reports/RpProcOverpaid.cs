@@ -16,7 +16,7 @@ namespace OpenDentBusiness {
 				Definitions.GetDefsNoCache(DefinitionCategory.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.Value)).Select(x => x.Id).ToList();
 			#region Completed Procs
 			string command="SELECT ";
-			if(Prefs.GetBool(PrefName.ReportsShowPatNum)) {
+			if(Preferences.GetBool(PreferenceName.ReportsShowPatNum)) {
 				command+=DbHelper.Concat("CAST(patient.PatNum AS CHAR)","'-'","patient.LName","', '","patient.FName","' '","patient.MiddleI");
 			}
 			else {

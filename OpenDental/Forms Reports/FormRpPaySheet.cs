@@ -392,7 +392,7 @@ namespace OpenDental{
 					}
 				}
 			}
-			checkReportDisplayUnearnedTP.Checked=Prefs.GetBool(PrefName.ReportsDoShowHiddenTPPrepayments);
+			checkReportDisplayUnearnedTP.Checked=Preferences.GetBool(PreferenceName.ReportsDoShowHiddenTPPrepayments);
 			_listPayDefs=Definitions.GetDefsForCategory(DefinitionCategory.PaymentTypes,true);
 			_listInsDefs=Definitions.GetDefsForCategory(DefinitionCategory.InsurancePaymentType,true);
 			_listClaimPayGroupDefs=Definitions.GetDefsForCategory(DefinitionCategory.ClaimPaymentGroups,true);
@@ -577,7 +577,7 @@ namespace OpenDental{
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
 			report.ReportName="Daily Payments";
 			report.AddTitle("Title","Daily Payments",fontTitle);
-			report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
+			report.AddSubTitle("PracTitle",Preferences.GetString(PreferenceName.PracticeTitle),fontSubTitle);
 			report.AddSubTitle("Providers",subtitleProvs,fontSubTitle);
 			if(PrefC.HasClinicsEnabled) {
 				report.AddSubTitle("Clinics",subtitleClinics,fontSubTitle);

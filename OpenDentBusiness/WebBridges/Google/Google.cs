@@ -1,20 +1,16 @@
 ﻿using CodeBase;
+using Imedisoft.Data;
 using Newtonsoft.Json;
-using OpenDentBusiness.Email;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using WebServiceSerializer;
 
 namespace OpenDentBusiness
 {
-	public class Google
+    public class Google
 	{
 		/// <summary>
 		/// Returns the full URL according to the route/route id(s) given.  RouteIDs must be added in order left to right as they appear in the API call.
@@ -117,7 +113,7 @@ namespace OpenDentBusiness
 			{
 				string url = GetApiUrl(UrlEndpoint.Root);
 				url += "?" + JsonConvert.DeserializeObject(
-						WebServiceMainHQProxy.GetWebServiceMainHQInstance().BuildOAuthUrl(Prefs.GetString(PrefName.RegistrationKey), OAuthApplicationNames.Google.ToString()));
+						WebServiceMainHQProxy.GetWebServiceMainHQInstance().BuildOAuthUrl(Preferences.GetString(PreferenceName.RegistrationKey), OAuthApplicationNames.Google.ToString()));
 				url += "&login_hint=" + emailAddress;
 				return url;
 			}

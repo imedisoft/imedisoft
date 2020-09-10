@@ -43,8 +43,8 @@ namespace OpenDentBusiness.AutoComm
 			ReplaceOneTag(stringBuilder, "[ClinicPhone]", TelephoneNumbers.ReFormat(clinic.Phone.ToString()), isEmailBody);
 			ReplaceOneTag(stringBuilder, "[OfficePhone]", TelephoneNumbers.ReFormat(Clinics.GetOfficePhone(clinic)), isEmailBody);
 			ReplaceOneTag(stringBuilder, "[OfficeName]", Clinics.GetOfficeName(clinic), isEmailBody);
-			ReplaceOneTag(stringBuilder, "[PracticeName]", Prefs.GetString(PrefName.PracticeTitle), isEmailBody);
-			ReplaceOneTag(stringBuilder, "[PracticePhone]", TelephoneNumbers.ReFormat(Prefs.GetString(PrefName.PracticePhone)), isEmailBody);
+			ReplaceOneTag(stringBuilder, "[PracticeName]", Preferences.GetString(PreferenceName.PracticeTitle), isEmailBody);
+			ReplaceOneTag(stringBuilder, "[PracticePhone]", TelephoneNumbers.ReFormat(Preferences.GetString(PreferenceName.PracticePhone)), isEmailBody);
 			ReplaceOneTag(stringBuilder, "[ProvName]", Providers.GetFormalName(autoCommObj.ProvNum), isEmailBody);
 			ReplaceOneTag(stringBuilder, "[ProvAbbr]", Providers.GetAbbr(autoCommObj.ProvNum), isEmailBody);
 			ReplaceOneTag(stringBuilder, "[EmailDisclaimer]", EmailMessages.GetEmailDisclaimer(clinic.Id), isEmailBody);

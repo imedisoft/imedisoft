@@ -1,47 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CodeBase;
-using OpenDentBusiness;
+﻿using Imedisoft.Data;
 using WebServiceSerializer;
 
 namespace OpenDentBusiness.WebTypes.WebForms
 {
 	public class WebUtils
 	{
-		public static long GetDentalOfficeID(string regKey = null)
+		public static long GetDentalOfficeID(string registrationKey = null)
 		{
-			if (string.IsNullOrEmpty(regKey))
+			if (string.IsNullOrEmpty(registrationKey))
 			{
-				regKey = Prefs.GetString(PrefName.RegistrationKey);
+				registrationKey = Preferences.GetString(PreferenceName.RegistrationKey);
 			}
+
 			try
 			{
-				string payload = PayloadHelper.CreatePayloadWebHostSynch(regKey, new PayloadItem(regKey, "RegKey"));
+				string payload = PayloadHelper.CreatePayloadWebHostSynch(registrationKey, new PayloadItem(registrationKey, "RegKey"));
+
 				return WebSerializer.DeserializeTag<long>(SheetsSynchProxy.GetWebServiceInstance().GetDentalOfficeID(payload), "Success");
 			}
 			catch
 			{
 			}
+
 			return 0;
 		}
 
-		public static string GetSheetDefAddress(string regKey = null)
+		public static string GetSheetDefAddress(string registrationKey = null)
 		{
-			if (string.IsNullOrEmpty(regKey))
+			if (string.IsNullOrEmpty(registrationKey))
 			{
-				regKey = Prefs.GetString(PrefName.RegistrationKey);
+				registrationKey = Preferences.GetString(PreferenceName.RegistrationKey);
 			}
+
 			try
 			{
-				string payload = PayloadHelper.CreatePayloadWebHostSynch(regKey, new PayloadItem(regKey, "RegKey"));
+				string payload = PayloadHelper.CreatePayloadWebHostSynch(registrationKey, new PayloadItem(registrationKey, "RegKey"));
+
 				return WebSerializer.DeserializeTag<string>(SheetsSynchProxy.GetWebServiceInstance().GetSheetDefAddress(payload), "Success");
 			}
 			catch
 			{
 			}
+
 			return "";
 		}
 	}

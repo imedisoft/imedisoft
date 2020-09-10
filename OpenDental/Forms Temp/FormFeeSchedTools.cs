@@ -703,7 +703,7 @@ namespace OpenDental {
 				return;
 			}
 			//Only unrestricted users should be using fee tools with feeschedgroups.
-			checkShowGroups.Visible=(Prefs.GetBool(PrefName.ShowFeeSchedGroups) && !Security.CurrentUser.ClinicIsRestricted);
+			checkShowGroups.Visible=(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups) && !Security.CurrentUser.ClinicIsRestricted);
 			comboGroup.Location=new Point(100,46);
 			comboGroupTo.Location=new Point(100,45);
 			FillComboBoxes();
@@ -853,7 +853,7 @@ namespace OpenDental {
 				listClinicNums.Add(comboClinic.SelectedClinicNum);
 			}
 			long feeSchedNum=_listFeeScheds[comboFeeSched.SelectedIndex].FeeSchedNum;
-			if(Prefs.GetBool(PrefName.ShowFeeSchedGroups) && !checkShowGroups.Checked) {
+			if(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups) && !checkShowGroups.Checked) {
 				FeeSchedGroup groupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSchedNum,comboClinic.SelectedClinicNum);//get the selected clinic num
 				if(groupCur!=null) {
 					MsgBox.Show("Selected clinic is a member of Fee Schedule Group: "+groupCur.Description
@@ -939,7 +939,7 @@ namespace OpenDental {
 				MessageBox.Show("Fee Schedules are not allowed to be copied into themselves. Please choose another fee schedule to copy.");
 				return;
 			}
-			if(Prefs.GetBool(PrefName.ShowFeeSchedGroups) && !checkShowGroups.Checked) {
+			if(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups) && !checkShowGroups.Checked) {
 				//Pref is on but we are copying clinics.
 				foreach(long clinicNumTo in listClinicNumsTo) {
 					FeeSchedGroup groupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(toFeeSched.FeeSchedNum,clinicNumTo);
@@ -997,7 +997,7 @@ namespace OpenDental {
 				clinicNum=comboClinic.SelectedClinicNum;
 			}
 			long feeSchedNum=_listFeeScheds[comboFeeSched.SelectedIndex].FeeSchedNum;
-			if(Prefs.GetBool(PrefName.ShowFeeSchedGroups) && !checkShowGroups.Checked) {
+			if(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups) && !checkShowGroups.Checked) {
 				FeeSchedGroup groupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSchedNum,clinicNum);
 				if(groupCur!=null) {
 					MsgBox.Show("Selected clinic is a member of Fee Schedule Group: "+groupCur.Description
@@ -1175,8 +1175,8 @@ namespace OpenDental {
 
 				Cursor=Cursors.WaitCursor;
 				SaveFileDialog Dlg=new SaveFileDialog();
-				if(Directory.Exists(Prefs.GetString(PrefName.ExportPath))) {
-					Dlg.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
+				if(Directory.Exists(Preferences.GetString(PreferenceName.ExportPath))) {
+					Dlg.InitialDirectory=Preferences.GetString(PreferenceName.ExportPath);
 				}
 				else if(Directory.Exists("C:\\")) {
 					Dlg.InitialDirectory="C:\\";
@@ -1208,8 +1208,8 @@ namespace OpenDental {
 				return;
 			}
 			OpenFileDialog Dlg=new OpenFileDialog();
-			if(Directory.Exists(Prefs.GetString(PrefName.ExportPath))) {
-				Dlg.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
+			if(Directory.Exists(Preferences.GetString(PreferenceName.ExportPath))) {
+				Dlg.InitialDirectory=Preferences.GetString(PreferenceName.ExportPath);
 			}
 			else if(Directory.Exists("C:\\")) {
 				Dlg.InitialDirectory="C:\\";
@@ -1228,7 +1228,7 @@ namespace OpenDental {
 				clinicNum=comboClinic.SelectedClinicNum;
 			}
 			FeeSched feeSched=_listFeeScheds[comboFeeSched.SelectedIndex];
-			if(Prefs.GetBool(PrefName.ShowFeeSchedGroups) && !checkShowGroups.Checked) {
+			if(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups) && !checkShowGroups.Checked) {
 				FeeSchedGroup groupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSched.FeeSchedNum,clinicNum);
 				if(groupCur!=null) {
 					MsgBox.Show("Selected clinic is a member of Fee Schedule Group: "+groupCur.Description
@@ -1307,7 +1307,7 @@ namespace OpenDental {
 				using(XmlWriter writer=XmlWriter.Create(strbuild,settings)) {
 					writer.WriteStartElement("RequestFeeSched");
 					writer.WriteStartElement("RegistrationKey");
-					writer.WriteString(Prefs.GetString(PrefName.RegistrationKey));
+					writer.WriteString(Preferences.GetString(PreferenceName.RegistrationKey));
 					writer.WriteEndElement();//RegistrationKey
 					writer.WriteStartElement("FeeSchedFileName");
 					writer.WriteString(formPick.FileChosenName);
@@ -1353,14 +1353,14 @@ namespace OpenDental {
 				node=doc.SelectSingleNode("//KeyDisabled");
 				if(node==null) {
 					//no error, and no disabled message
-					if(Prefs.Set(PrefName.RegistrationKeyIsDisabled,false)) {//this is one of three places in the program where this happens.
+					if(Preferences.Set(PreferenceName.RegistrationKeyIsDisabled,false)) {//this is one of three places in the program where this happens.
 						DataValid.SetInvalid(InvalidType.Prefs);
 					}
 				}
 				else {
 					actionCloseFeeSchedImportCanadaProgress?.Invoke();
 					MessageBox.Show(node.InnerText);
-					if(Prefs.Set(PrefName.RegistrationKeyIsDisabled,true)) {//this is one of three places in the program where this happens.
+					if(Preferences.Set(PreferenceName.RegistrationKeyIsDisabled,true)) {//this is one of three places in the program where this happens.
 						DataValid.SetInvalid(InvalidType.Prefs);
 					}
 					return;
@@ -1394,7 +1394,7 @@ namespace OpenDental {
 				clinicNum=comboClinic.SelectedClinicNum;
 			}
 			FeeSched feeSched=_listFeeScheds[comboFeeSched.SelectedIndex];
-			if(Prefs.GetBool(PrefName.ShowFeeSchedGroups) && !checkShowGroups.Checked) {
+			if(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups) && !checkShowGroups.Checked) {
 				FeeSchedGroup groupCur=FeeSchedGroups.GetOneForFeeSchedAndClinic(feeSched.FeeSchedNum,clinicNum);
 				if(groupCur!=null) {
 					MsgBox.Show("Selected clinic is a member of Fee Schedule Group: "+groupCur.Description
@@ -1512,10 +1512,10 @@ namespace OpenDental {
 			if(PrefC.HasClinicsEnabled
 				&& !Security.CurrentUser.ClinicIsRestricted
 				&& comboGlobalUpdateClinics.IsAllSelected 
-				&& !string.IsNullOrEmpty(Prefs.GetString(PrefName.GlobalUpdateWriteOffLastClinicCompleted)))//previous 'All' run was interrupted, resume
+				&& !string.IsNullOrEmpty(Preferences.GetString(PreferenceName.GlobalUpdateWriteOffLastClinicCompleted)))//previous 'All' run was interrupted, resume
 			{
 				try {
-					long prevClinicNum=Prefs.GetLong(PrefName.GlobalUpdateWriteOffLastClinicCompleted);
+					long prevClinicNum=Preferences.GetLong(PreferenceName.GlobalUpdateWriteOffLastClinicCompleted);
 					indexPrevClinic=listWriteoffClinics.FindIndex(x => x==prevClinicNum);
 				}
 				catch {

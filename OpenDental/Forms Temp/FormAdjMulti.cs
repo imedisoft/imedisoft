@@ -37,7 +37,7 @@ namespace OpenDental {
 				return;
 			}
 			dateAdjustment.Text=DateTime.Today.ToShortDateString();
-			_rigorousAdjustment=PrefC.GetEnum<RigorousAdjustments>(PrefName.RigorousAdjustments);
+			_rigorousAdjustment=PrefC.GetEnum<RigorousAdjustments>(PreferenceName.RigorousAdjustments);
 			FillListBoxAdjTypes();
 			FillComboProv();
 			if(PrefC.HasClinicsEnabled) {
@@ -243,7 +243,7 @@ namespace OpenDental {
 				MessageBox.Show("Please enter a valid date.");
 				return false;
 			}
-			if(PIn.Date(dateAdjustment.Text).Date > DateTime.Today.Date && !Prefs.GetBool(PrefName.FutureTransDatesAllowed)) {
+			if(PIn.Date(dateAdjustment.Text).Date > DateTime.Today.Date && !Preferences.GetBool(PreferenceName.FutureTransDatesAllowed)) {
 				MessageBox.Show("Adjustments cannot be made for future dates");
 				return false;
 			}

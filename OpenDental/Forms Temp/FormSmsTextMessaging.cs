@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
 using Imedisoft.Forms;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormSmsTextMessaging:ODForm {
@@ -196,7 +197,7 @@ namespace OpenDental {
 				//comboClinics.HqDescription="Practice";
 				//hqClinic.Abbr=(Prefs.GetString(PrefName.PracticeTitle)+" ("+"Practice"+")");
 				comboClinics.SelectedClinicNum=Clinics.Active.Id;
-				if(Prefs.GetBool(PrefName.EnterpriseApptList)) {//This form behaves differently when compared to the other 6 forms
+				if(Preferences.GetBool(PreferenceName.EnterpriseApptList)) {//This form behaves differently when compared to the other 6 forms
 					comboClinics.IncludeAll=false;
 				}
 				else {
@@ -311,7 +312,7 @@ namespace OpenDental {
 				row.Cells.Add("0.00");//Cost
 				if(PrefC.HasClinicsEnabled) {
 					if(smsFromMobile.ClinicNum==0) {
-						row.Cells.Add(Prefs.GetString(PrefName.PracticeTitle)+" ("+"Practice"+")");
+						row.Cells.Add(Preferences.GetString(PreferenceName.PracticeTitle)+" ("+"Practice"+")");
 					}
 					else { 
 						Clinic clinic=Clinics.GetById(smsFromMobile.ClinicNum);
@@ -355,7 +356,7 @@ namespace OpenDental {
 					row.Cells.Add(smsToMobile.MsgChargeUSD.ToString("f"));//Cost
 					if(PrefC.HasClinicsEnabled) {
 						if(smsToMobile.ClinicNum==0) {
-							row.Cells.Add(Prefs.GetString(PrefName.PracticeTitle)+" ("+"Practice"+")");
+							row.Cells.Add(Preferences.GetString(PreferenceName.PracticeTitle)+" ("+"Practice"+")");
 						}
 						else { 
 							Clinic clinic=Clinics.GetById(smsToMobile.ClinicNum);
@@ -467,7 +468,7 @@ namespace OpenDental {
 					PatPhone=x.First().MobilePhoneNumber,
 					PatNum=x.First().PatNum,
 					ClinicNum=x.First().ClinicNum,
-					ClinicAbbr=PrefC.HasClinicsEnabled ? (x.First().ClinicNum==0 ? Prefs.GetString(PrefName.PracticeTitle)+
+					ClinicAbbr=PrefC.HasClinicsEnabled ? (x.First().ClinicNum==0 ? Preferences.GetString(PreferenceName.PracticeTitle)+
 						" ("+"Practice"+")" : Clinics.GetById(x.First().ClinicNum).Abbr) : "",
 					PatName=x.First().PatNum==0 ? "Unassigned" : GetPatientName(x.First().PatNum),
 					TextMsg=x.First().MsgText,
@@ -487,7 +488,7 @@ namespace OpenDental {
 						PatPhone=x.First().MobilePhoneNumber,
 						PatNum=x.First().PatNum,
 						ClinicNum=x.First().ClinicNum,
-						ClinicAbbr=PrefC.HasClinicsEnabled ? (x.First().ClinicNum==0 ? Prefs.GetString(PrefName.PracticeTitle)+" ("+"Practice"+")"
+						ClinicAbbr=PrefC.HasClinicsEnabled ? (x.First().ClinicNum==0 ? Preferences.GetString(PreferenceName.PracticeTitle)+" ("+"Practice"+")"
 							: Clinics.GetById(x.First().ClinicNum).Abbr) : "",
 						PatName=x.First().PatNum==0 ? "Unassigned" : GetPatientName(x.First().PatNum),
 						TextMsg=x.First().MsgText,
@@ -875,7 +876,7 @@ namespace OpenDental {
 				return;
 			}
 			if(PrefC.HasClinicsEnabled && clinicNum==0) {
-				clinicNum=Prefs.GetLong(PrefName.TextingDefaultClinicNum);
+				clinicNum=Preferences.GetLong(PreferenceName.TextingDefaultClinicNum);
 				if(clinicNum==0) {
 					MessageBox.Show("No default clinic setup for texting.");
 					return;

@@ -25,7 +25,7 @@ namespace OpenDentBusiness {
 				whereProv+=") ";
 			}
 			string whereClin="";
-			bool hasClinicsEnabled=Prefs.HasClinicsEnabledNoCache;
+			bool hasClinicsEnabled=Preferences.HasClinicsEnabledNoCache;
 			if(hasClinicsEnabled) {//Using clinics
 				whereClin+=" AND payplancharge.ClinicNum IN(";
 				for(int i=0;i<listClinicNums.Count;i++) {

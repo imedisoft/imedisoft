@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	///<summary> Appointment Reminder Rules are used to track the automated generation and sending of appointment reminders and confirmations. 
@@ -239,34 +240,34 @@ namespace OpenDentBusiness {
 		//IMPORTANT: Every value defined in this enum must have a ShortCodeAttribute with SmsMessageSource and EServicePrefName properly defined.
 		//PrefIsEnabledValues/EnabledValueType are optional/only required if EServicePrefNames are not bool values.
 		[ShortCode(SmsMessageSource=new SmsMessageSource[] { SmsMessageSource.ConfirmationRequest,SmsMessageSource.ConfirmationAutoReply }
-			,EServicePrefNames=new string[] { PrefName.ApptConfirmAutoSignedUp,PrefName.ApptConfirmAutoEnabled })]
+			,EServicePrefNames=new string[] { PreferenceName.ApptConfirmAutoSignedUp,PreferenceName.ApptConfirmAutoEnabled })]
 		Confirmations=0b1,
 		[ShortCode(SmsMessageSource = new SmsMessageSource[] { SmsMessageSource.Recall,SmsMessageSource.RecallAuto }
 			//WebSchedRecall is determined to be enabled or not via a web call.
-			,EServicePrefNames=new string[] { PrefName.WebSchedAutomaticSendTextSetting }
+			,EServicePrefNames=new string[] { PreferenceName.WebSchedAutomaticSendTextSetting }
 			,PrefIsEnabledValues=new int[] { (int)WebSchedAutomaticSend.SendToText }
 			,EnabledValueType=typeof(WebSchedAutomaticSend))]
 		WebSchedRecall = 0b10,
 		[ShortCode(SmsMessageSource = new SmsMessageSource[] { SmsMessageSource.Reminder }
-			,EServicePrefNames=new string[] { PrefName.ApptRemindAutoEnabled })]
+			,EServicePrefNames=new string[] { PreferenceName.ApptRemindAutoEnabled })]
 		Reminders = 0b100,
 		[ShortCode(SmsMessageSource = new SmsMessageSource[] { SmsMessageSource.ApptThankYou }
-			,EServicePrefNames=new string[] { PrefName.ApptThankYouAutoEnabled })]
+			,EServicePrefNames=new string[] { PreferenceName.ApptThankYouAutoEnabled })]
 		ThankYous = 0b1000,
 		[ShortCode(SmsMessageSource = new SmsMessageSource[] { SmsMessageSource.WebSchedASAP }
-			,EServicePrefNames=new string[] { PrefName.WebSchedAsapEnabled })]
+			,EServicePrefNames=new string[] { PreferenceName.WebSchedAsapEnabled })]
 		WebSchedASAP = 0b10000,
 		[ShortCode(SmsMessageSource = new SmsMessageSource[] { SmsMessageSource.Verify }
-			,EServicePrefNames = new string[] { PrefName.WebSchedVerifyASAPType,PrefName.WebSchedVerifyNewPatType,PrefName.WebSchedVerifyRecallType }
+			,EServicePrefNames = new string[] { PreferenceName.WebSchedVerifyASAPType,PreferenceName.WebSchedVerifyNewPatType,PreferenceName.WebSchedVerifyRecallType }
 			,PrefIsEnabledValues=new int[] { (int)WebSchedVerifyType.Text,(int)WebSchedVerifyType.TextAndEmail }
 			,EnabledValueType=typeof(WebSchedVerifyType))]
 		WebSchedVerify = 0b100000,
 		[ShortCode(SmsMessageSource = new SmsMessageSource[] { SmsMessageSource.VerifyWSNP }
-			,EServicePrefNames=new string[] { PrefName.WebSchedNewPatDoAuthText })]
+			,EServicePrefNames=new string[] { PreferenceName.WebSchedNewPatDoAuthText })]
 		WebSchedNewPat = 0b1000000,
 		[ShortCode(SmsMessageSource = new SmsMessageSource[] { SmsMessageSource.Statements }
 			//BillingDefaultsModesToText is a comma separated string, PIn.Bool() will return false if empty, true otherwise.
-			,EServicePrefNames=new string[] { PrefName.BillingDefaultsModesToText })]
+			,EServicePrefNames=new string[] { PreferenceName.BillingDefaultsModesToText })]
 		BillingStatements = 0b10000000,
 		[ShortCode(SmsMessageSource=new SmsMessageSource[] { SmsMessageSource.Confirmation }
 			//NotApplicable means only Texting is required for this eService 
@@ -277,7 +278,7 @@ namespace OpenDentBusiness {
 			,EServicePrefNames=new string[] {})]
 		ASAPManual=0b1000000000,		
 		[ShortCode(SmsMessageSource=new SmsMessageSource[] { SmsMessageSource.Arrival }
-			,EServicePrefNames=new string[] { PrefName.ApptConfirmAutoSignedUp,PrefName.ApptConfirmAutoEnabled })]
+			,EServicePrefNames=new string[] { PreferenceName.ApptConfirmAutoSignedUp,PreferenceName.ApptConfirmAutoEnabled })]
 		Arrivals=0b10000000000,
 	}
 

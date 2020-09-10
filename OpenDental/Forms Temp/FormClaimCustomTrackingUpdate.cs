@@ -40,7 +40,7 @@ namespace OpenDental {
 		}
 
 		private void FormClaimCustomTrackingUpdate_Load(object sender,EventArgs e) {
-			if(!Prefs.GetBool(PrefName.ClaimTrackingStatusExcludesNone)) {
+			if(!Preferences.GetBool(PreferenceName.ClaimTrackingStatusExcludesNone)) {
 				//None is allowed as an option
 				comboCustomTracking.Items.AddDefNone();
 				comboCustomTracking.SelectedIndex=0;
@@ -98,7 +98,7 @@ namespace OpenDental {
 				MessageBox.Show("You must specify a Custom Track Status.");
 				return;
 			}
-			if(Prefs.GetBool(PrefName.ClaimTrackingRequiresError) 
+			if(Preferences.GetBool(PreferenceName.ClaimTrackingRequiresError) 
 				&& ((ODBoxItem<Definition>)comboErrorCode.SelectedItem).Tag == null 
 				&& comboErrorCode.Enabled )
 			{

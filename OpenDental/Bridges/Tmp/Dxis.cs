@@ -1,10 +1,11 @@
 using CodeBase;
+using Imedisoft.Data;
 using OpenDentBusiness;
 using System.Diagnostics;
 
 namespace OpenDental.Bridges
 {
-    public static class Dxis
+	public static class Dxis
 	{
 		/// <summary>
 		/// Launches the program using a combination of command line characters and the patient.Cur data.
@@ -21,7 +22,7 @@ namespace OpenDental.Bridges
 				return;
 			}
 
-            string info = "/i /t:" + pat.LName + " " + pat.FName + " " + pat.PatNum.ToString() + " - " + Prefs.GetString(PrefName.PracticeTitle);
+			string info = "/i /t:" + pat.LName + " " + pat.FName + " " + pat.PatNum.ToString() + " - " + Preferences.GetString(PreferenceName.PracticeTitle);
 			try
 			{
 				Process process = ODFileUtils.ProcessStart(path, info);

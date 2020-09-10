@@ -173,7 +173,7 @@ namespace OpenDental {
 			if(!Security.IsAuthorized(Permissions.InsPayCreate)) {//date not checked here, but it will be checked when saving the check to prevent backdating
 				return;
 			}
-			if(Prefs.GetBool(PrefName.ClaimPaymentBatchOnly)) {
+			if(Preferences.GetBool(PreferenceName.ClaimPaymentBatchOnly)) {
 				//Is there a permission in the manage module that would block this behavior? Are we sending the user into a TRAP?!
 				MessageBox.Show("Please use Batch Insurance in Manage Module to Finalize Payments.");
 				return;
@@ -347,17 +347,17 @@ namespace OpenDental {
 				SaveFileDialog saveFileDialog=new SaveFileDialog();
 				saveFileDialog.AddExtension=true;
 				saveFileDialog.FileName=fileName;
-				if(!Directory.Exists(Prefs.GetString(PrefName.ExportPath))) {
+				if(!Directory.Exists(Preferences.GetString(PreferenceName.ExportPath))) {
 					try {
-						Directory.CreateDirectory(Prefs.GetString(PrefName.ExportPath));
-						saveFileDialog.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
+						Directory.CreateDirectory(Preferences.GetString(PreferenceName.ExportPath));
+						saveFileDialog.InitialDirectory=Preferences.GetString(PreferenceName.ExportPath);
 					}
 					catch {
 						//initialDirectory will be blank
 					}
 				}
 				else {
-					saveFileDialog.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
+					saveFileDialog.InitialDirectory=Preferences.GetString(PreferenceName.ExportPath);
 				}
 				saveFileDialog.Filter="Text files(*.txt)|*.txt|Excel Files(*.xls)|*.xls|All files(*.*)|*.*";
 				saveFileDialog.FilterIndex=0;

@@ -152,7 +152,7 @@ namespace OpenDental
 			{
 				isAutoUserName = false;
 			}
-			if (isAutoUserName && !Prefs.GetBool(PrefName.RandomPrimaryKeys))
+			if (isAutoUserName && !Preferences.GetBool(PreferenceName.RandomPrimaryKeys))
 			{//Is a new student using the default user name given
 				long provNum = Providers.GetNextAvailableProvNum();
 				if (_autoUserName != provNum)
@@ -170,7 +170,7 @@ namespace OpenDental
 				newUser.UserName = _autoUserName.ToString();
 				newUser.PasswordHash = Password.Hash(textPassword.Text);
 				newUser.ProviderId = provNum;
-				Userods.Insert(newUser, new List<long> { Prefs.GetLong(PrefName.SecurityGroupForStudents) });
+				Userods.Insert(newUser, new List<long> { Preferences.GetLong(PreferenceName.SecurityGroupForStudents) });
 			}
 			else
 			{//Has changed the user name from the default or is editing a pre-existing student
@@ -182,7 +182,7 @@ namespace OpenDental
 						newUser.UserName = textUserName.Text;
 						newUser.PasswordHash = Password.Hash(textPassword.Text);
 						newUser.ProviderId = provNum;
-						Userods.Insert(newUser, new List<long> { Prefs.GetLong(PrefName.SecurityGroupForStudents) });//Performs validation
+						Userods.Insert(newUser, new List<long> { Preferences.GetLong(PreferenceName.SecurityGroupForStudents) });//Performs validation
 					}
 					else
 					{

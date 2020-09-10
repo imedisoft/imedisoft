@@ -18,7 +18,7 @@ namespace OpenDentBusiness {
 			string ninetyDaysAgo=POut.Date(rpo.AsOfDate.AddDays(-90));
 			string patOrGuar=(rpo.IsGroupByFam?"guar":"patient");
 			string command="SELECT guarAging.PatNum,";
-			if(Prefs.GetBoolNoCache(PrefName.ReportsShowPatNum)) {
+			if(Preferences.GetBoolNoCache(PreferenceName.ReportsShowPatNum)) {
 				command+=DbHelper.Concat("guarAging.PatNum","' - '","guarAging.LName","', '","guarAging.FName","' '","guarAging.MiddleI");
 			}
 			else {

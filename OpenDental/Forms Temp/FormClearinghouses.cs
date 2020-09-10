@@ -5,6 +5,7 @@ using System.Net;
 using System.Collections.Generic;
 using OpenDental.UI;
 using System.Globalization;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>
@@ -331,9 +332,9 @@ namespace OpenDental{
 		#endregion
 
 		private void FormClearinghouses_Load(object sender, System.EventArgs e) {
-			textReportComputerName.Text=Prefs.GetString(PrefName.ClaimReportComputerName);
-			int claimReportReceiveInterval=PrefC.GetInt(PrefName.ClaimReportReceiveInterval);
-			checkReceiveReportsService.Checked=Prefs.GetBool(PrefName.ClaimReportReceivedByService);
+			textReportComputerName.Text=Preferences.GetString(PreferenceName.ClaimReportComputerName);
+			int claimReportReceiveInterval=PrefC.GetInt(PreferenceName.ClaimReportReceiveInterval);
+			checkReceiveReportsService.Checked=Preferences.GetBool(PreferenceName.ClaimReportReceivedByService);
 			_listClearinghousesHq=Clearinghouses.GetDeepCopy(true);
 			_listClearinghousesClinicAll=Clearinghouses.GetAllNonHq();
 			_listClearinghousesClinicCur=new List<Clearinghouse>();
@@ -344,7 +345,7 @@ namespace OpenDental{
 			FillGrid();
 			if(claimReportReceiveInterval==0) {
 				radioTime.Checked=true;
-				DateTime fullDateTime=PrefC.GetDate(PrefName.ClaimReportReceiveTime);
+				DateTime fullDateTime=PrefC.GetDate(PreferenceName.ClaimReportReceiveTime);
 				textReportCheckTime.Text=fullDateTime.ToShortTimeString();
 			}
 			else {
@@ -392,16 +393,16 @@ namespace OpenDental{
 				row.Cells.Add(clearinghouseCur.ExportPath);
 				row.Cells.Add(clearinghouseCur.TypeName);
 				string s="";
-				if(Prefs.GetLong(PrefName.ClearinghouseDefaultDent)==_listClearinghousesHq[i].ClearinghouseNum) {
+				if(Preferences.GetLong(PreferenceName.ClearinghouseDefaultDent)==_listClearinghousesHq[i].ClearinghouseNum) {
 					s+="Dent";
 				}
-				if(Prefs.GetLong(PrefName.ClearinghouseDefaultMed)==_listClearinghousesHq[i].ClearinghouseNum) {
+				if(Preferences.GetLong(PreferenceName.ClearinghouseDefaultMed)==_listClearinghousesHq[i].ClearinghouseNum) {
 					if(s!="") {
 						s+=",";
 					}
 					s+="Med";
 				}
-				if(Prefs.GetLong(PrefName.ClearinghouseDefaultEligibility)==_listClearinghousesHq[i].ClearinghouseNum 
+				if(Preferences.GetLong(PreferenceName.ClearinghouseDefaultEligibility)==_listClearinghousesHq[i].ClearinghouseNum 
 					&& !CultureInfo.CurrentCulture.Name.EndsWith("CA")) //Canadian. en-CA or fr-CA
 				{
 					if(s!="") {
@@ -480,12 +481,12 @@ namespace OpenDental{
 			//}
 			bool isInvalid=false;
 			if(!CultureInfo.CurrentCulture.Name.EndsWith("CA") 
-				&& Prefs.GetLong(PrefName.ClearinghouseDefaultEligibility)==0
-				&& Prefs.Set(PrefName.ClearinghouseDefaultEligibility,ch.ClearinghouseNum)) 
+				&& Preferences.GetLong(PreferenceName.ClearinghouseDefaultEligibility)==0
+				&& Preferences.Set(PreferenceName.ClearinghouseDefaultEligibility,ch.ClearinghouseNum)) 
 			{
 				isInvalid=true;
 			}
-			if(Prefs.Set(PrefName.ClearinghouseDefaultDent,ch.ClearinghouseNum)) {
+			if(Preferences.Set(PreferenceName.ClearinghouseDefaultDent,ch.ClearinghouseNum)) {
 				isInvalid=true;
 			}
 			if(isInvalid) {
@@ -506,12 +507,12 @@ namespace OpenDental{
 			//}
 			bool isInvalid=false;
 			if(!CultureInfo.CurrentCulture.Name.EndsWith("CA") 
-				&& Prefs.GetLong(PrefName.ClearinghouseDefaultEligibility)==0
-				&& Prefs.Set(PrefName.ClearinghouseDefaultEligibility,ch.ClearinghouseNum)) 
+				&& Preferences.GetLong(PreferenceName.ClearinghouseDefaultEligibility)==0
+				&& Preferences.Set(PreferenceName.ClearinghouseDefaultEligibility,ch.ClearinghouseNum)) 
 			{
 				isInvalid=true;
 			}
-			if(Prefs.Set(PrefName.ClearinghouseDefaultMed,ch.ClearinghouseNum)) {
+			if(Preferences.Set(PreferenceName.ClearinghouseDefaultMed,ch.ClearinghouseNum)) {
 				isInvalid=true;
 			}
 			if(isInvalid) {
@@ -526,7 +527,7 @@ namespace OpenDental{
 					return;
 			}
 			Clearinghouse ch=_listClearinghousesHq[gridMain.GetSelectedIndex()];
-			if(Prefs.Set(PrefName.ClearinghouseDefaultEligibility,ch.ClearinghouseNum)) {
+			if(Preferences.Set(PreferenceName.ClearinghouseDefaultEligibility,ch.ClearinghouseNum)) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			FillGrid();
@@ -585,22 +586,22 @@ namespace OpenDental{
 			}
 			bool doRestartToShowChanges=false;
 			bool doInvalidateCache=false;
-			if(Prefs.Set(PrefName.ClaimReportComputerName,textReportComputerName.Text)) {
+			if(Preferences.Set(PreferenceName.ClaimReportComputerName,textReportComputerName.Text)) {
 				doRestartToShowChanges=true;
 				//No point in invalidating prefs since this only affects a workstation on startup.
 			}
-			if(Prefs.Set(PrefName.ClaimReportReceiveInterval,reportCheckIntervalMinuteCount)) {
+			if(Preferences.Set(PreferenceName.ClaimReportReceiveInterval,reportCheckIntervalMinuteCount)) {
 				doInvalidateCache=true;
 			}
 			if(radioTime.Checked) {
-				if(Prefs.Set(PrefName.ClaimReportReceiveTime,PIn.Date(textReportCheckTime.Text))) {
+				if(Preferences.Set(PreferenceName.ClaimReportReceiveTime,PIn.Date(textReportCheckTime.Text))) {
 					doInvalidateCache=true;
 				}
 			}
-			else if(textReportCheckTime.Text=="" && Prefs.Set(PrefName.ClaimReportReceiveTime,DateTime.MinValue)) {
+			else if(textReportCheckTime.Text=="" && Preferences.Set(PreferenceName.ClaimReportReceiveTime,DateTime.MinValue)) {
 				doInvalidateCache=true;
 			}
-			if(Prefs.Set(PrefName.ClaimReportReceivedByService,checkReceiveReportsService.Checked)) {
+			if(Preferences.Set(PreferenceName.ClaimReportReceivedByService,checkReceiveReportsService.Checked)) {
 				if(checkReceiveReportsService.Checked) {
 					doInvalidateCache=true;
 				}
@@ -618,7 +619,7 @@ namespace OpenDental{
 		}
 
 		private void FormClearinghouses_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
-			if(Prefs.GetLong(PrefName.ClearinghouseDefaultDent)==0){
+			if(Preferences.GetLong(PreferenceName.ClearinghouseDefaultDent)==0){
 				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"A default clearinghouse should be set. Continue anyway?")){
 					e.Cancel=true;
 					return;

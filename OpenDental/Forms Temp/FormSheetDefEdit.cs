@@ -371,7 +371,7 @@ namespace OpenDental {
 		///<para>Called when loading or after user adds a new language for translations.</para>
 		///</summary>
 		public void RefreshLanguages(string selectedThreeLetterLanguage=null) {
-			List<string> listAllLanguages=Prefs.GetString(PrefName.LanguagesUsedByPatients)//Must be before initial InitLayoutModes().
+			List<string> listAllLanguages=Preferences.GetString(PreferenceName.LanguagesUsedByPatients)//Must be before initial InitLayoutModes().
 				.Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries)
 				.Where(x => x!=Patients.LANGUAGE_DECLINED_TO_SPECIFY).ToList();
 			List<string> listUsedLanguageThreeLetters=_sheetDefCur.SheetFieldDefs.FindAll(x => !x.Language.IsNullOrEmpty())
@@ -463,7 +463,7 @@ namespace OpenDental {
 		///<summary>Fills _listWebSheetIds with any webforms_sheetdefs that have the same SheetDefNum of the current SheetDef.</summary>
 		private void GetWebSheetDefs(ODThread odThread) {
 			//Ignore the certificate errors for the staging machine and development machine
-			if(Prefs.GetString(PrefName.WebHostSynchServerURL).In(WebFormL.SynchUrlStaging,WebFormL.SynchUrlDev)) {
+			if(Preferences.GetString(PreferenceName.WebHostSynchServerURL).In(WebFormL.SynchUrlStaging,WebFormL.SynchUrlDev)) {
 				WebFormL.IgnoreCertificateErrors();
 			}
 			List<WebForms_SheetDef> listWebFormSheetDefs;
@@ -904,7 +904,7 @@ namespace OpenDental {
 				g.FillRectangle(Brushes.White,rf);
 				StringFormat sf=new StringFormat();
 				sf.Alignment=StringAlignment.Far;
-				if(Prefs.GetBool(PrefName.InvoicePaymentsGridShowNetProd)) {
+				if(Preferences.GetBool(PreferenceName.InvoicePaymentsGridShowNetProd)) {
 					g.DrawString("Total Payments & WriteOffs:  0.00",new Font(FontFamily.GenericSansSerif,10,FontStyle.Bold),new SolidBrush(Color.Black),rf,sf);
 				}
 				else {
@@ -1297,7 +1297,7 @@ namespace OpenDental {
 				ComputerPrefs.LocalComputer.PreferredPixelFormatNum=toothChartWrapper.PreferredPixelFormatNumber;
 				ComputerPrefs.Update(ComputerPrefs.LocalComputer);
 			
-			toothChartRelay.SetToothNumberingNomenclature((ToothNumberingNomenclature)PrefC.GetInt(PrefName.UseInternationalToothNumbers));
+			toothChartRelay.SetToothNumberingNomenclature((ToothNumberingNomenclature)PrefC.GetInt(PreferenceName.UseInternationalToothNumbers));
 			List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.ChartGraphicColors);
 			toothChartRelay.ColorBackgroundMain=listDefs[14].Color;
 			toothChartRelay.ColorText=listDefs[15].Color;
@@ -1412,7 +1412,7 @@ namespace OpenDental {
 				HashRtfStringCache[index.ToString()]=data;
 			}
 			Point[] charPositions=(Point[])data[0];
-			if(Prefs.GetBool(PrefName.ImeCompositionCompatibility) && !IsWesternChars(str)) {
+			if(Preferences.GetBool(PreferenceName.ImeCompositionCompatibility) && !IsWesternChars(str)) {
 				//Only draw word by word if the user defined preference is set, and there is at least one character in the string that isn't a "Western" 
 				//alphabet character.  Only use right-to-left formatting if the user's computer is set to a right-to-left culture.  This will preserve
 				//desired formatting and spacing in as many scenarios as we can unless we later add a textbox specific setting for this type of formatting.
@@ -2354,7 +2354,7 @@ namespace OpenDental {
 				DialogResult=DialogResult.Cancel;
 				return;
 			}
-			if(GetIsDynamicSheetType() && _sheetDefCur.SheetDefNum==Prefs.GetLong(PrefName.SheetsDefaultChartModule)) {
+			if(GetIsDynamicSheetType() && _sheetDefCur.SheetDefNum==Preferences.GetLong(PreferenceName.SheetsDefaultChartModule)) {
 				MessageBox.Show("This is the current Chart module default layout.\r\nPlease select a new default in Sheet Def Defaults first.");
 				return;
 			}

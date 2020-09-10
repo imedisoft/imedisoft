@@ -249,7 +249,7 @@ namespace OpenDentBusiness
 			if (invalidTypes.Contains(InvalidType.Prefs) || refreshAll)
 			{
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.Prefs.ToString());
-				Prefs.RefreshCache();
+				Preferences.RefreshCache();
 			}
 			if (invalidTypes.Contains(InvalidType.ProcButtons) || refreshAll)
 			{

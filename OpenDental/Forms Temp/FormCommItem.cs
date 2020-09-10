@@ -76,7 +76,7 @@ namespace OpenDental {
 				butCancel.Text="Close";
 				butDelete.Visible=false;
 			}
-			if(_commlogOld.IsNew && Prefs.GetBool(PrefName.CommLogAutoSave)) {
+			if(_commlogOld.IsNew && Preferences.GetBool(PreferenceName.CommLogAutoSave)) {
 				timerAutoSave.Start();
 			}
 			textPatientName.Text=Patients.GetLim(_commlogCur.PatNum).GetNameFL();

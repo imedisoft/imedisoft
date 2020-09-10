@@ -320,7 +320,7 @@ namespace OpenDental{
 			SuperFamilyGuarantors=_loadData.SuperFamilyGuarantors;
 			_dictCloneSpecialty=_loadData.DictCloneSpecialities;
 			//Takes the preference string and converts it to an enum object
-			_superFamSortStrat=(SortStrategy)PrefC.GetInt(PrefName.SuperFamSortStrategy);
+			_superFamSortStrat=(SortStrategy)PrefC.GetInt(PreferenceName.SuperFamSortStrategy);
 		}
 
 		private void RefreshModuleScreen(){
@@ -330,7 +330,7 @@ namespace OpenDental{
 				ToolBarMain.Buttons["Delete"].Enabled=true;
 				ToolBarMain.Buttons["Guarantor"].Enabled=true;
 				ToolBarMain.Buttons["Move"].Enabled=true;
-				if(ToolBarMain.Buttons["Ins"]!=null && !Prefs.GetBool(PrefName.EasyHideInsurance)) {
+				if(ToolBarMain.Buttons["Ins"]!=null && !Preferences.GetBool(PreferenceName.EasyHideInsurance)) {
 					ToolBarMain.Buttons["Ins"].Enabled=true;
 					ToolBarMain.Buttons["Discount"].Enabled=true;
 				}
@@ -344,7 +344,7 @@ namespace OpenDental{
 					gridIns.Location=splitSuperClones.Location;
 					gridIns.Width=this.Width-gridIns.Left;
 				}
-				if(Prefs.GetBool(PrefName.ShowFeatureSuperfamilies) && ToolBarMain.Buttons["AddSuper"]!=null) {
+				if(Preferences.GetBool(PreferenceName.ShowFeatureSuperfamilies) && ToolBarMain.Buttons["AddSuper"]!=null) {
 					ToolBarMain.Buttons["AddSuper"].Enabled=true;
 				}
 				if(PatCur.SuperFamily==0 || ToolBarMain.Buttons["AddSuper"]==null) {
@@ -358,7 +358,7 @@ namespace OpenDental{
 					ToolBarMain.Buttons["RemoveSuper"].Enabled=true;
 					ToolBarMain.Buttons["DisbandSuper"].Enabled=true;
 				}
-				if(Prefs.GetBool(PrefName.ShowFeaturePatientClone)
+				if(Preferences.GetBool(PreferenceName.ShowFeaturePatientClone)
 					&& ToolBarMain.Buttons["AddClone"]!=null)
 				{
 					ToolBarMain.Buttons["AddClone"].Enabled=true;
@@ -397,11 +397,11 @@ namespace OpenDental{
 					ToolBarMain.Buttons["RemoveSuper"].Enabled=false;
 					ToolBarMain.Buttons["DisbandSuper"].Enabled=false;
 				}
-				if(ToolBarMain.Buttons["Ins"]!=null && !Prefs.GetBool(PrefName.EasyHideInsurance)) {
+				if(ToolBarMain.Buttons["Ins"]!=null && !Preferences.GetBool(PreferenceName.EasyHideInsurance)) {
 					ToolBarMain.Buttons["Ins"].Enabled=false;
 					ToolBarMain.Buttons["Discount"].Enabled=false;
 				}
-				if(Prefs.GetBool(PrefName.ShowFeaturePatientClone)
+				if(Preferences.GetBool(PreferenceName.ShowFeaturePatientClone)
 					&& ToolBarMain.Buttons["AddClone"]!=null
 					&& ToolBarMain.Buttons["SynchClone"]!=null
 					&& ToolBarMain.Buttons["BreakClone"]!=null)
@@ -412,7 +412,7 @@ namespace OpenDental{
 				}
 				ToolBarMain.Invalidate();
 			}
-			if(Prefs.GetBool(PrefName.EasyHideInsurance)){
+			if(Preferences.GetBool(PreferenceName.EasyHideInsurance)){
 				gridIns.Visible=false;
 			}
 			else{
@@ -424,7 +424,7 @@ namespace OpenDental{
 				if(def.ShowDemographics!=HL7ShowDemographics.ChangeAndAdd) {
 					ToolBarMain.Buttons["Add"].Enabled=false;
 					ToolBarMain.Buttons["Delete"].Enabled=false;
-					if(Prefs.GetBool(PrefName.ShowFeaturePatientClone)
+					if(Preferences.GetBool(PreferenceName.ShowFeaturePatientClone)
 						&& ToolBarMain.Buttons["AddClone"]!=null
 						&& ToolBarMain.Buttons["SynchClone"]!=null
 						&& ToolBarMain.Buttons["BreakClone"]!=null)
@@ -488,7 +488,7 @@ namespace OpenDental{
 			ToolBarMain.Buttons.Add(new ODToolBarButton("Delete",3,"Delete Family Member","Delete"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton("Set Guarantor",4,"Set as Guarantor","Guarantor"));
 			ToolBarMain.Buttons.Add(new ODToolBarButton("Move",5,"Move to Another Family","Move"));
-			if(Prefs.GetBool(PrefName.ShowFeaturePatientClone)) {
+			if(Preferences.GetBool(PreferenceName.ShowFeaturePatientClone)) {
 				ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
 				button=new ODToolBarButton("Clones:",-1,"","");
 				button.Style=ODToolBarButtonStyle.Label;
@@ -497,7 +497,7 @@ namespace OpenDental{
 				ToolBarMain.Buttons.Add(new ODToolBarButton("Synch",-1,"Synch information to the clone patient or create a clone of the currently selected patient if one does not exist","SynchClone"));
 				ToolBarMain.Buttons.Add(new ODToolBarButton("Break",-1,"Remove selected patient from the clone group.","BreakClone"));
 			}
-			if(Prefs.GetBool(PrefName.ShowFeatureSuperfamilies)){
+			if(Preferences.GetBool(PreferenceName.ShowFeatureSuperfamilies)){
 				ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
 				button=new ODToolBarButton("Super Family:",-1,"","");
 				button.Style=ODToolBarButtonStyle.Label;
@@ -506,7 +506,7 @@ namespace OpenDental{
 				ToolBarMain.Buttons.Add(new ODToolBarButton("Remove",-1,"Remove selected patient, and their family, from super family","RemoveSuper"));
 				ToolBarMain.Buttons.Add(new ODToolBarButton("Disband",-1,"Disband the current super family by removing all members of the super family.","DisbandSuper"));
 			}
-			if(!Prefs.GetBool(PrefName.EasyHideInsurance)){
+			if(!Preferences.GetBool(PreferenceName.EasyHideInsurance)){
 				ToolBarMain.Buttons.Add(new ODToolBarButton(ODToolBarButtonStyle.Separator));
 				button=new ODToolBarButton("Add Insurance",6,"","Ins");
 				button.Style=ODToolBarButtonStyle.DropDownButton;
@@ -777,7 +777,7 @@ namespace OpenDental{
 				gridPat.EndUpdate();
 				return;
 			}
-			if(Prefs.GetBool(PrefName.PatientSSNMasked)) {
+			if(Preferences.GetBool(PreferenceName.PatientSSNMasked)) {
 				//Add "View SS#" right click option, MenuItemPopupUnmaskSSN will show and hide it as needed.
 				if(gridPat.ContextMenu==null) {
 					gridPat.ContextMenu=new ContextMenu();//ODGrid will automatically attach the defaut Popups
@@ -795,7 +795,7 @@ namespace OpenDental{
 				menu.MenuItems.Add(menuItemUnmaskSSN);
 				menu.Popup+=MenuItemPopupUnmaskSSN;
 			}
-			if(Prefs.GetBool(PrefName.PatientDOBMasked)) {
+			if(Preferences.GetBool(PreferenceName.PatientDOBMasked)) {
 				//Add "View DOB" right click option, MenuItemPopupUnmaskDOB will show and hide it as needed.
 				if(gridPat.ContextMenu==null) {
 					gridPat.ContextMenu=new ContextMenu();//ODGrid will automatically attach the defaut Popups
@@ -933,7 +933,7 @@ namespace OpenDental{
 					#endregion Billing Type
 					#region Birthdate
 					case "Birthdate":
-						if(Prefs.GetBool(PrefName.PatientDOBMasked)) {
+						if(Preferences.GetBool(PreferenceName.PatientDOBMasked)) {
 							row.Cells.Add(Patients.DOBFormatHelper(PatCur.Birthdate,true));
 							row.Tag="DOB";//Used later to tell if we're right clicking on the DOB row
 						}
@@ -1221,7 +1221,7 @@ namespace OpenDental{
 					#endregion Sec. Provider
 					#region SS#
 					case "SS#":
-						if(Prefs.GetBool(PrefName.PatientSSNMasked)) {
+						if(Preferences.GetBool(PreferenceName.PatientSSNMasked)) {
 							row.Cells.Add(Patients.SSNFormatHelper(PatCur.SSN,true));
 							row.Tag="SS#";//Used later to tell if we're right clicking on the SSN row
 						}
@@ -1347,8 +1347,8 @@ namespace OpenDental{
 				recallDate=DateTime.MinValue;
 				for(int j=0;j<RecallList.Count;j++){
 					if(RecallList[j].PatNum==FamCur.ListPats[i].PatNum
-						&& (RecallList[j].RecallTypeNum==Prefs.GetLong(PrefName.RecallTypeSpecialProphy)
-						|| RecallList[j].RecallTypeNum==Prefs.GetLong(PrefName.RecallTypeSpecialPerio)))
+						&& (RecallList[j].RecallTypeNum==Preferences.GetLong(PreferenceName.RecallTypeSpecialProphy)
+						|| RecallList[j].RecallTypeNum==Preferences.GetLong(PreferenceName.RecallTypeSpecialPerio)))
 					{
 						recallDate=RecallList[j].DateDue;
 					}
@@ -1407,7 +1407,7 @@ namespace OpenDental{
 			tempPat.HmPhone    =PatCur.HmPhone;
 			tempPat.Guarantor  =PatCur.Guarantor;
 			tempPat.CreditType =PatCur.CreditType;
-			if(!Prefs.GetBool(PrefName.PriProvDefaultToSelectProv)) {
+			if(!Preferences.GetBool(PreferenceName.PriProvDefaultToSelectProv)) {
 				tempPat.PriProv  =PatCur.PriProv;
 			}
 			tempPat.SecProv    =PatCur.SecProv;
@@ -1667,7 +1667,7 @@ namespace OpenDental{
 						//keep current superfamily
 						Patients.Update(PatCur,PatOld);
 						//if moving a superfamily non-guar family member out as guar of their own family within the sf, and pref is set, add ins to family members if necessary
-						if(PatCur.SuperFamily>0 && Prefs.GetBool(PrefName.SuperFamNewPatAddIns)) {
+						if(PatCur.SuperFamily>0 && Preferences.GetBool(PreferenceName.SuperFamNewPatAddIns)) {
 							AddSuperGuarPriInsToFam(PatCur.Guarantor);
 						}
 						SecurityLogs.MakeLogEntry(Permissions.PatientEdit,PatCur.PatNum,"Patient moved to new family.");
@@ -2014,7 +2014,7 @@ namespace OpenDental{
 			}
 			if(diagResult==DialogResult.Yes) {
 				Patients.MoveSuperFamily(patSelected.SuperFamily,PatCur.SuperFamily);
-				if(Prefs.GetBool(PrefName.SuperFamNewPatAddIns)) {
+				if(Preferences.GetBool(PreferenceName.SuperFamNewPatAddIns)) {
 					listSuperFamPats.Select(x => x.Guarantor).Distinct().ForEach(x => AddSuperGuarPriInsToFam(x));
 				}
 			}
@@ -2023,7 +2023,7 @@ namespace OpenDental{
 					Patients.DisbandSuperFamily(patSelected.SuperFamily);//adding to this super family will happen below
 				}
 				Patients.AssignToSuperfamily(patSelected.Guarantor,PatCur.SuperFamily);
-				if(Prefs.GetBool(PrefName.SuperFamNewPatAddIns)) {
+				if(Preferences.GetBool(PreferenceName.SuperFamNewPatAddIns)) {
 					AddSuperGuarPriInsToFam(patSelected.Guarantor);
 				}
 			}
@@ -2364,7 +2364,7 @@ namespace OpenDental{
 					sub.SubscriberID=subscriber.MedicaidID;
 				}
 				sub.ReleaseInfo=true;
-				sub.AssignBen=Prefs.GetBool(PrefName.InsDefaultAssignBen);
+				sub.AssignBen=Preferences.GetBool(PreferenceName.InsDefaultAssignBen);
 				InsSubs.Insert(sub);
 				Benefit ben;
 				foreach(CovCat covCat in CovCats.GetWhere(x => x.DefaultPercent!=-1,true)) {
@@ -2907,7 +2907,7 @@ namespace OpenDental{
 			//InsHist
 			Dictionary<long,InsProcHist> dictInsProcHist=PatPlanList.Select(x => x.InsSubNum).Distinct()
 				.ToDictionary(x => x,x => new InsProcHist(Procedures.GetDictInsHistProcs(PatCur.PatNum,x,out List<ClaimProc> listClaimProcs),listClaimProcs));
-			foreach(string prefName in Prefs.GetInsHistPrefNames()) {
+			foreach(string prefName in Preferences.GetInsHistPrefNames()) {
 				row=new GridRow();
 				row.Cells.Add(prefName);
 				foreach(PatPlan patPlan in PatPlanList) {

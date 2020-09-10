@@ -36,7 +36,7 @@ namespace OpenDental
 				{
 					continue;
 				}
-				if (claim.DateReceived.Date > curDate && !Prefs.GetBool(PrefName.AllowFutureInsPayments) && !Prefs.GetBool(PrefName.FutureTransDatesAllowed))
+				if (claim.DateReceived.Date > curDate && !Preferences.GetBool(PreferenceName.AllowFutureInsPayments) && !Preferences.GetBool(PreferenceName.FutureTransDatesAllowed))
 				{
 					invalidClaimDate += "\r\n" + "PatNum" + " " + claim.PatNum + ", " + claim.DateService.ToShortDateString();
 					continue;

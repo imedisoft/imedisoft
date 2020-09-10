@@ -11,6 +11,7 @@ using System.Threading;
 using System.Xml;
 using System.Windows.Forms;
 using OpenDentBusiness;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary> </summary>
@@ -222,7 +223,7 @@ namespace OpenDental{
 			textProgName.Text=ProgramCur.Name;
 			textProgDesc.Text=ProgramCur.Description;
 			checkEnabled.Checked=ProgramCur.Enabled;
-			textHL7FolderOut.Text=Prefs.GetString(PrefName.HL7FolderOut);
+			textHL7FolderOut.Text=Preferences.GetString(PreferenceName.HL7FolderOut);
 		}
 
 		private void checkEnabled_Click(object sender,EventArgs e) {
@@ -241,7 +242,7 @@ namespace OpenDental{
 			ProgramCur.Description=textProgDesc.Text;
 			ProgramCur.Enabled=checkEnabled.Checked;
 			Programs.Update(ProgramCur);
-			Prefs.Set(PrefName.HL7FolderOut,textHL7FolderOut.Text);
+			Preferences.Set(PreferenceName.HL7FolderOut,textHL7FolderOut.Text);
 			DataValid.SetInvalid(InvalidType.Programs,InvalidType.Prefs);
 			return true;
 		}

@@ -108,7 +108,7 @@ namespace OpenDentBusiness
 		///All intended exceptions are ODExceptions and should be translated by the caller.</summary>
 		public static void ValidatePracticeInfo()
 		{
-			string practicePhone = Prefs.GetString(PrefName.PracticePhone);
+			string practicePhone = Preferences.GetString(PreferenceName.PracticePhone);
 			if (!Regex.IsMatch(practicePhone, "^[0-9]{10}$"))
 			{//"^[0-9]{10}(x[0-9]+)?$")) {
 				throw new ODException("Practice phone must be exactly 10 digits.");
@@ -121,7 +121,7 @@ namespace OpenDentBusiness
 			{
 				throw new ODException("Practice phone cannot contain 555 in the middle 3 digits.");
 			}
-			string practiceFax = Prefs.GetString(PrefName.PracticeFax);
+			string practiceFax = Preferences.GetString(PreferenceName.PracticeFax);
 			if (!Regex.IsMatch(practiceFax, "^[0-9]{10}(x[0-9]+)?$"))
 			{
 				throw new ODException("Practice fax must be exactly 10 digits.");
@@ -134,23 +134,23 @@ namespace OpenDentBusiness
 			{
 				throw new ODException("Practice fax cannot contain 555 in the middle 3 digits.");
 			}
-			if (Prefs.GetString(PrefName.PracticeAddress) == "")
+			if (Preferences.GetString(PreferenceName.PracticeAddress) == "")
 			{
 				throw new ODException("Practice address blank.");
 			}
-			if (Regex.IsMatch(Prefs.GetString(PrefName.PracticeAddress), ".*P\\.?O\\.? .*", RegexOptions.IgnoreCase))
+			if (Regex.IsMatch(Preferences.GetString(PreferenceName.PracticeAddress), ".*P\\.?O\\.? .*", RegexOptions.IgnoreCase))
 			{
 				throw new ODException("Practice address cannot be a PO BOX.");
 			}
-			if (Prefs.GetString(PrefName.PracticeCity) == "")
+			if (Preferences.GetString(PreferenceName.PracticeCity) == "")
 			{
 				throw new ODException("Practice city blank.");
 			}
-			if (!USlocales.IsValidAbbr(Prefs.GetString(PrefName.PracticeST)))
+			if (!USlocales.IsValidAbbr(Preferences.GetString(PreferenceName.PracticeST)))
 			{
 				throw new ODException("Practice state abbreviation invalid.");
 			}
-			string practiceZip = Regex.Replace(Prefs.GetString(PrefName.PracticeZip), "[^0-9]*", "");//Zip with all non-numeric characters removed.
+			string practiceZip = Regex.Replace(Preferences.GetString(PreferenceName.PracticeZip), "[^0-9]*", "");//Zip with all non-numeric characters removed.
 			if (practiceZip.Length != 9)
 			{
 				throw new ODException("Practice zip must be 9 digits.");

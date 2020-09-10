@@ -1,5 +1,6 @@
 using CodeBase;
 using Imedisoft.Bridges;
+using Imedisoft.Data;
 using OpenDental.Bridges;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -42,7 +43,7 @@ namespace OpenDental
 				MessageBox.Show("Error, program entry not found in database.");
 				return;
 			}
-			if (pat != null && Prefs.GetBool(PrefName.ShowFeaturePatientClone))
+			if (pat != null && Preferences.GetBool(PreferenceName.ShowFeaturePatientClone))
 			{
 				pat = Patients.GetOriginalPatientForClone(pat);
 			}

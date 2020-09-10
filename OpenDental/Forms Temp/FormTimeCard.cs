@@ -80,7 +80,7 @@ namespace OpenDental{
 		private bool _cannotEditOwnTimecard {
 			get {
 				return _isTimeCardSecurityApplicable &&
-					Prefs.GetBool(PrefName.TimecardUsersDontEditOwnCard);
+					Preferences.GetBool(PreferenceName.TimecardUsersDontEditOwnCard);
 			}
 		}
 
@@ -89,7 +89,7 @@ namespace OpenDental{
 			get{
 				return Security.CurrentUser!=null &&
 				Security.CurrentUser.EmployeeId==EmployeeCur.Id &&
-				Prefs.GetBool(PrefName.TimecardSecurityEnabled);
+				Preferences.GetBool(PreferenceName.TimecardSecurityEnabled);
 			} 
 		}
 
@@ -97,7 +97,7 @@ namespace OpenDental{
 		private bool _cannotEditSelectedPayPeriod {
 			get {
 				return _isTimeCardSecurityApplicable &&
-					Prefs.GetBool(PrefName.TimecardUsersCantEditPastPayPeriods) &&
+					Preferences.GetBool(PreferenceName.TimecardUsersCantEditPastPayPeriods) &&
 					SelectedPayPeriod!=PayPeriods.GetForDate(DateTimeOD.Today);
 			}
 		}
@@ -619,7 +619,7 @@ namespace OpenDental{
 			if(SelectedPayPeriod==0) {
 				SelectedPayPeriod=PayPeriods.GetForDate(dateInitial);
 			}
-			if(!Prefs.GetBool(PrefName.ClockEventAllowBreak)) {//Breaks turned off, Lunch is now "Break", but maintains Lunch functionality.
+			if(!Preferences.GetBool(PreferenceName.ClockEventAllowBreak)) {//Breaks turned off, Lunch is now "Break", but maintains Lunch functionality.
 				IsBreaks=false;
 				groupBox2.Visible=false;
 			}
@@ -870,7 +870,7 @@ namespace OpenDental{
 					//status--------------------------------------
 					//row.Cells.Add(clock.ClockStatus.ToString());
 					//in------------------------------------------
-					if(Prefs.GetBool(PrefName.TimeCardShowSeconds)) {
+					if(Preferences.GetBool(PreferenceName.TimeCardShowSeconds)) {
 						row.Cells.Add(clock.TimeDisplayed1.ToLongTimeString());
 					}
 					else {
@@ -884,7 +884,7 @@ namespace OpenDental{
 						row.Cells.Add("");//not clocked out yet
 					}
 					else{
-						if(Prefs.GetBool(PrefName.TimeCardShowSeconds)) {
+						if(Preferences.GetBool(PreferenceName.TimeCardShowSeconds)) {
 							row.Cells.Add(clock.TimeDisplayed2.ToLongTimeString());
 						}
 						else {
@@ -992,8 +992,8 @@ namespace OpenDental{
 					}
 					//if this is the last entry for a given week
 					else if(i==mergedAL.Count-1//if this is the last row 
-						|| cal.GetWeekOfYear(GetDateForRow(i+1),rule,(DayOfWeek)PrefC.GetInt(PrefName.TimeCardOvertimeFirstDayOfWeek))//or the next row has a
-						!= cal.GetWeekOfYear(clock.TimeDisplayed1.Date,rule,(DayOfWeek)PrefC.GetInt(PrefName.TimeCardOvertimeFirstDayOfWeek)))//different week of year
+						|| cal.GetWeekOfYear(GetDateForRow(i+1),rule,(DayOfWeek)PrefC.GetInt(PreferenceName.TimeCardOvertimeFirstDayOfWeek))//or the next row has a
+						!= cal.GetWeekOfYear(clock.TimeDisplayed1.Date,rule,(DayOfWeek)PrefC.GetInt(PreferenceName.TimeCardOvertimeFirstDayOfWeek)))//different week of year
 					{
 						row.Cells.Add(ClockEvents.Format(weekSpan));
 						weekSpan=new TimeSpan(0);
@@ -1074,8 +1074,8 @@ namespace OpenDental{
 					}
 					//if this is the last entry for a given week
 					else if(i==mergedAL.Count-1//if this is the last row 
-						|| cal.GetWeekOfYear(GetDateForRow(i+1),rule,(DayOfWeek)PrefC.GetInt(PrefName.TimeCardOvertimeFirstDayOfWeek))//or the next row has a
-						!= cal.GetWeekOfYear(adjust.TimeEntry.Date,rule,(DayOfWeek)PrefC.GetInt(PrefName.TimeCardOvertimeFirstDayOfWeek)))//different week of year
+						|| cal.GetWeekOfYear(GetDateForRow(i+1),rule,(DayOfWeek)PrefC.GetInt(PreferenceName.TimeCardOvertimeFirstDayOfWeek))//or the next row has a
+						!= cal.GetWeekOfYear(adjust.TimeEntry.Date,rule,(DayOfWeek)PrefC.GetInt(PreferenceName.TimeCardOvertimeFirstDayOfWeek)))//different week of year
 					{
 						GridCell cell=new GridCell(ClockEvents.Format(weekSpan));
 						cell.ForeColor=Color.Black;
@@ -1211,7 +1211,7 @@ namespace OpenDental{
 			if(_cannotEditSelectedPayPeriod) {
 				MsgBox.Show("You do not have permission to modify your past pay periods.");
 			}
-			else if(!Prefs.GetBool(PrefName.TimecardSecurityEnabled) && !Security.IsAuthorized(Permissions.TimecardsEditAll)) {
+			else if(!Preferences.GetBool(PreferenceName.TimecardSecurityEnabled) && !Security.IsAuthorized(Permissions.TimecardsEditAll)) {
 				//Security.IsAuthorized() shows the error to the user already.
 				return;
 			}

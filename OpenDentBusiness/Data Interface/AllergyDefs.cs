@@ -83,7 +83,7 @@ namespace Imedisoft.Data
 				return true;
 			}
 
-			if (allergyDefId == Prefs.GetLong(PrefName.AllergiesIndicateNone))
+			if (allergyDefId == Preferences.GetLong(PreferenceName.AllergiesIndicateNone))
 			{
 				return true;
 			}

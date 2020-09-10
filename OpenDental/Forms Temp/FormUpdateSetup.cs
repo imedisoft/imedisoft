@@ -373,14 +373,14 @@ namespace OpenDental
                 butChangeRegKey.Enabled = false;
                 butOK.Enabled = false;
             }
-            textUpdateServerAddress.Text = Prefs.GetString(PrefName.UpdateServerAddress);
-            textWebsitePath.Text = Prefs.GetString(PrefName.UpdateWebsitePath);
-            textWebProxyAddress.Text = Prefs.GetString(PrefName.UpdateWebProxyAddress);
-            textWebProxyUserName.Text = Prefs.GetString(PrefName.UpdateWebProxyUserName);
-            textWebProxyPassword.Text = Prefs.GetString(PrefName.UpdateWebProxyPassword);
-            textMultiple.Text = Prefs.GetString(PrefName.UpdateMultipleDatabases);
-            checkShowMsi.Checked = Prefs.GetBool(PrefName.UpdateShowMsiButtons);
-            _updateTime = PrefC.GetDate(PrefName.UpdateDateTime);
+            textUpdateServerAddress.Text = Preferences.GetString(PreferenceName.UpdateServerAddress);
+            textWebsitePath.Text = Preferences.GetString(PreferenceName.UpdateWebsitePath);
+            textWebProxyAddress.Text = Preferences.GetString(PreferenceName.UpdateWebProxyAddress);
+            textWebProxyUserName.Text = Preferences.GetString(PreferenceName.UpdateWebProxyUserName);
+            textWebProxyPassword.Text = Preferences.GetString(PreferenceName.UpdateWebProxyPassword);
+            textMultiple.Text = Preferences.GetString(PreferenceName.UpdateMultipleDatabases);
+            checkShowMsi.Checked = Preferences.GetBool(PreferenceName.UpdateShowMsiButtons);
+            _updateTime = PrefC.GetDate(PreferenceName.UpdateDateTime);
             textUpdateTime.Text = _updateTime.ToString();
         }
 
@@ -396,7 +396,7 @@ namespace OpenDental
             {
                 _updateTime = FormTP.SelectedDTime;
                 textUpdateTime.Text = _updateTime.ToString();
-                if (Prefs.Set(PrefName.UpdateDateTime, _updateTime))
+                if (Preferences.Set(PreferenceName.UpdateDateTime, _updateTime))
                 {
                     //Updating to db now in case the user does not have enough permission to click the OK button on this form.			
                     Cursor = Cursors.WaitCursor;
@@ -431,13 +431,13 @@ namespace OpenDental
                 regkey = textRegKey.Text;
             }
             bool refreshCache = false;
-            if (Prefs.Set(PrefName.UpdateServerAddress, textUpdateServerAddress.Text)
-                | Prefs.Set(PrefName.UpdateShowMsiButtons, checkShowMsi.Checked)
-                | Prefs.Set(PrefName.UpdateWebsitePath, textWebsitePath.Text)
-                | Prefs.Set(PrefName.UpdateWebProxyAddress, textWebProxyAddress.Text)
-                | Prefs.Set(PrefName.UpdateWebProxyUserName, textWebProxyUserName.Text)
-                | Prefs.Set(PrefName.UpdateWebProxyPassword, textWebProxyPassword.Text)
-                | Prefs.Set(PrefName.UpdateMultipleDatabases, textMultiple.Text))
+            if (Preferences.Set(PreferenceName.UpdateServerAddress, textUpdateServerAddress.Text)
+                | Preferences.Set(PreferenceName.UpdateShowMsiButtons, checkShowMsi.Checked)
+                | Preferences.Set(PreferenceName.UpdateWebsitePath, textWebsitePath.Text)
+                | Preferences.Set(PreferenceName.UpdateWebProxyAddress, textWebProxyAddress.Text)
+                | Preferences.Set(PreferenceName.UpdateWebProxyUserName, textWebProxyUserName.Text)
+                | Preferences.Set(PreferenceName.UpdateWebProxyPassword, textWebProxyPassword.Text)
+                | Preferences.Set(PreferenceName.UpdateMultipleDatabases, textMultiple.Text))
             {
                 refreshCache = true;
             }

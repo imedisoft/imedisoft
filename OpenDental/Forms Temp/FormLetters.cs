@@ -11,12 +11,15 @@ using OpenDentBusiness;
 using CodeBase;
 using System.IO;
 using System.Collections.Generic;
+using Imedisoft.Data;
 
-namespace OpenDental{
+namespace OpenDental
+{
 	/// <summary>
 	/// Summary description for FormBasicTemplate.
 	/// </summary>
-	public class FormLetters : ODForm {
+	public class FormLetters : ODForm
+	{
 		private System.Windows.Forms.Label label1;
 		private OpenDental.UI.Button butAdd;
 		private System.Windows.Forms.ListBox listLetters;
@@ -42,25 +45,26 @@ namespace OpenDental{
 		//private string ExtraImageToPrint;
 
 		///<summary></summary>
-		public FormLetters(){
+		public FormLetters()
+		{
 			InitializeComponent();// Required for Windows Form Designer support
-			PatCur=new Patient();
-			
+			PatCur = new Patient();
+
 		}
 
 		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
-		protected override void Dispose( bool disposing )
+		protected override void Dispose(bool disposing)
 		{
-			if( disposing )
+			if (disposing)
 			{
-				if(components != null)
+				if (components != null)
 				{
 					components.Dispose();
 				}
 			}
-			base.Dispose( disposing );
+			base.Dispose(disposing);
 		}
 
 		#region Windows Form Designer generated code
@@ -85,26 +89,26 @@ namespace OpenDental{
 			// 
 			this.butCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.butCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.butCancel.Location = new System.Drawing.Point(758,633);
+			this.butCancel.Location = new System.Drawing.Point(758, 633);
 			this.butCancel.Name = "butCancel";
-			this.butCancel.Size = new System.Drawing.Size(79,26);
+			this.butCancel.Size = new System.Drawing.Size(79, 26);
 			this.butCancel.TabIndex = 0;
 			this.butCancel.Text = "&Cancel";
 			this.butCancel.Click += new System.EventHandler(this.butCancel_Click);
 			// 
 			// listLetters
 			// 
-			this.listLetters.Location = new System.Drawing.Point(20,133);
+			this.listLetters.Location = new System.Drawing.Point(20, 133);
 			this.listLetters.Name = "listLetters";
-			this.listLetters.Size = new System.Drawing.Size(164,277);
+			this.listLetters.Size = new System.Drawing.Size(164, 277);
 			this.listLetters.TabIndex = 2;
 			this.listLetters.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listLetters_MouseDown);
 			// 
 			// label1
 			// 
-			this.label1.Location = new System.Drawing.Point(19,114);
+			this.label1.Location = new System.Drawing.Point(19, 114);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(124,14);
+			this.label1.Size = new System.Drawing.Size(124, 14);
 			this.label1.TabIndex = 3;
 			this.label1.Text = "Letters";
 			this.label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -113,9 +117,9 @@ namespace OpenDental{
 			// 
 			this.butEdit.Image = global::Imedisoft.Properties.Resources.editPencil;
 			this.butEdit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.butEdit.Location = new System.Drawing.Point(106,414);
+			this.butEdit.Location = new System.Drawing.Point(106, 414);
 			this.butEdit.Name = "butEdit";
-			this.butEdit.Size = new System.Drawing.Size(79,26);
+			this.butEdit.Size = new System.Drawing.Size(79, 26);
 			this.butEdit.TabIndex = 8;
 			this.butEdit.Text = "&Edit";
 			this.butEdit.Click += new System.EventHandler(this.butEdit_Click);
@@ -124,18 +128,18 @@ namespace OpenDental{
 			// 
 			this.butAdd.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.butAdd.Location = new System.Drawing.Point(19,414);
+			this.butAdd.Location = new System.Drawing.Point(19, 414);
 			this.butAdd.Name = "butAdd";
-			this.butAdd.Size = new System.Drawing.Size(79,26);
+			this.butAdd.Size = new System.Drawing.Size(79, 26);
 			this.butAdd.TabIndex = 7;
 			this.butAdd.Text = "&Add";
 			this.butAdd.Click += new System.EventHandler(this.butAdd_Click);
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(22,12);
+			this.label2.Location = new System.Drawing.Point(22, 12);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(711,32);
+			this.label2.Size = new System.Drawing.Size(711, 32);
 			this.label2.TabIndex = 12;
 			this.label2.Text = resources.GetString("label2.Text");
 			// 
@@ -143,28 +147,28 @@ namespace OpenDental{
 			// 
 			this.butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.butDelete.Location = new System.Drawing.Point(19,448);
+			this.butDelete.Location = new System.Drawing.Point(19, 448);
 			this.butDelete.Name = "butDelete";
-			this.butDelete.Size = new System.Drawing.Size(79,26);
+			this.butDelete.Size = new System.Drawing.Size(79, 26);
 			this.butDelete.TabIndex = 16;
 			this.butDelete.Text = "&Delete";
 			this.butDelete.Click += new System.EventHandler(this.butDelete_Click);
 			// 
 			// textBody
 			// 
-			this.textBody.Location = new System.Drawing.Point(206,133);
+			this.textBody.Location = new System.Drawing.Point(206, 133);
 			this.textBody.Multiline = true;
 			this.textBody.Name = "textBody";
 			this.textBody.QuickPasteType = OpenDentBusiness.QuickPasteType.Letter;
 			this.textBody.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-			this.textBody.Size = new System.Drawing.Size(630,486);
+			this.textBody.Size = new System.Drawing.Size(630, 486);
 			this.textBody.TabIndex = 18;
 			// 
 			// FormLetters
 			// 
-			this.AutoScaleBaseSize = new System.Drawing.Size(5,13);
+			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.CancelButton = this.butCancel;
-			this.ClientSize = new System.Drawing.Size(858,674);
+			this.ClientSize = new System.Drawing.Size(858, 674);
 			this.Controls.Add(this.textBody);
 			this.Controls.Add(this.butDelete);
 			this.Controls.Add(this.label2);
@@ -188,29 +192,34 @@ namespace OpenDental{
 		}
 		#endregion
 
-		private void FormLetterSetup_Load(object sender, System.EventArgs e) {
+		private void FormLetterSetup_Load(object sender, System.EventArgs e)
+		{
 			//if(Prefs.GetBool(PrefName.LettersIncludeReturnAddress")){
 			//	checkIncludeRet.Checked=true;
 			//}
 			//if(Prefs.GetBool(PrefName.FuchsOptionsOn")) {
-				//buttonTYDMF.Visible = true;
-				//buttonTYREF.Visible = true;
+			//buttonTYDMF.Visible = true;
+			//buttonTYREF.Visible = true;
 			//}
 			FillList();
 		}
 
-		private void FillList(){
+		private void FillList()
+		{
 			Letters.RefreshCache();
-			_listLetters=Letters.GetDeepCopy();
+			_listLetters = Letters.GetDeepCopy();
 			listLetters.Items.Clear();
-			for(int i=0;i<_listLetters.Count;i++){
+			for (int i = 0; i < _listLetters.Count; i++)
+			{
 				listLetters.Items.Add(_listLetters[i].Description);
 			}
 			//no items are initially selected
 		}
 
-		private void listLetters_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e) {
-			if (listLetters.SelectedIndex == -1) {
+		private void listLetters_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+		{
+			if (listLetters.SelectedIndex == -1)
+			{
 				return;
 			}
 			if (!WarnOK())
@@ -219,27 +228,29 @@ namespace OpenDental{
 			StringBuilder str = new StringBuilder();
 			//return address
 			//if (checkIncludeRet.Checked) {
-				str.Append(Prefs.GetString(PrefName.PracticeTitle) + "\r\n");
-				str.Append(Prefs.GetString(PrefName.PracticeAddress) + "\r\n");
-				if (Prefs.GetString(PrefName.PracticeAddress2) != "")
-					str.Append(Prefs.GetString(PrefName.PracticeAddress2) + "\r\n");
-				str.Append(Prefs.GetString(PrefName.PracticeCity) + ", ");
-				str.Append(Prefs.GetString(PrefName.PracticeST) + "  ");
-				str.Append(Prefs.GetString(PrefName.PracticeZip) + "\r\n");
+			str.Append(Preferences.GetString(PreferenceName.PracticeTitle) + "\r\n");
+			str.Append(Preferences.GetString(PreferenceName.PracticeAddress) + "\r\n");
+			if (Preferences.GetString(PreferenceName.PracticeAddress2) != "")
+				str.Append(Preferences.GetString(PreferenceName.PracticeAddress2) + "\r\n");
+			str.Append(Preferences.GetString(PreferenceName.PracticeCity) + ", ");
+			str.Append(Preferences.GetString(PreferenceName.PracticeST) + "  ");
+			str.Append(Preferences.GetString(PreferenceName.PracticeZip) + "\r\n");
 			//}
 			//else {
 			//	str.Append("\r\n\r\n\r\n\r\n");
 			//}
 			str.Append("\r\n\r\n");
 			//address
-			if (ReferralCur == null) {
+			if (ReferralCur == null)
+			{
 				str.Append(PatCur.FName + " " + PatCur.MiddleI + " " + PatCur.LName + "\r\n");
 				str.Append(PatCur.Address + "\r\n");
 				if (PatCur.Address2 != "")
 					str.Append(PatCur.Address2 + "\r\n");
 				str.Append(PatCur.City + ", " + PatCur.State + "  " + PatCur.Zip);
 			}
-			else {
+			else
+			{
 				str.Append(Referrals.GetNameFL(ReferralCur.ReferralNum) + "\r\n");
 				str.Append(ReferralCur.Address + "\r\n");
 				if (ReferralCur.Address2 != "")
@@ -250,26 +261,33 @@ namespace OpenDental{
 			//date
 			str.Append(DateTimeOD.Today.ToLongDateString() + "\r\n");
 			//referral RE
-			if (ReferralCur != null) {
+			if (ReferralCur != null)
+			{
 				str.Append("RE Patient: " + PatCur.GetNameFL() + "\r\n");
 			}
 			str.Append("\r\n");
 			//greeting
 			str.Append("Dear ");
-			if (ReferralCur == null) {
-				if (CultureInfo.CurrentCulture.Name == "en-GB") {
+			if (ReferralCur == null)
+			{
+				if (CultureInfo.CurrentCulture.Name == "en-GB")
+				{
 					if (PatCur.Salutation != "")
 						str.Append(PatCur.Salutation);
-					else {
-						if (PatCur.Gender == PatientGender.Female) {
+					else
+					{
+						if (PatCur.Gender == PatientGender.Female)
+						{
 							str.Append("Ms. " + PatCur.LName);
 						}
-						else {
+						else
+						{
 							str.Append("Mr. " + PatCur.LName);
 						}
 					}
 				}
-				else {
+				else
+				{
 					if (PatCur.Salutation != "")
 						str.Append(PatCur.Salutation);
 					else if (PatCur.Preferred != "")
@@ -278,54 +296,63 @@ namespace OpenDental{
 						str.Append(PatCur.FName);
 				}
 			}
-			else {//referral
+			else
+			{//referral
 				str.Append(ReferralCur.FName);
 			}
 			str.Append(",\r\n\r\n");
 			//body text
 			str.Append(LetterCur.BodyText);
 			//closing
-			if (CultureInfo.CurrentCulture.Name == "en-GB") {
+			if (CultureInfo.CurrentCulture.Name == "en-GB")
+			{
 				str.Append("\r\n\r\nYours sincerely,\r\n\r\n\r\n\r\n");
 			}
-			else {
+			else
+			{
 				str.Append("\r\n\r\n" + "Sincerely," + "\r\n\r\n\r\n\r\n");
 			}
-			str.Append(Prefs.GetString(PrefName.PracticeTitle));
+			str.Append(Preferences.GetString(PreferenceName.PracticeTitle));
 			textBody.Text = str.ToString();
 			//bodyChanged = false;
 		}
 
-		private void butAdd_Click(object sender, System.EventArgs e) {
-			if(!WarnOK())
+		private void butAdd_Click(object sender, System.EventArgs e)
+		{
+			if (!WarnOK())
 				return;
-			FormLetterEdit FormLE=new FormLetterEdit();
-			FormLE.LetterCur=new Letter();
-			FormLE.IsNew=true;
+			FormLetterEdit FormLE = new FormLetterEdit();
+			FormLE.LetterCur = new Letter();
+			FormLE.IsNew = true;
 			FormLE.ShowDialog();
 			FillList();
 		}
 
-		private void butEdit_Click(object sender, System.EventArgs e) {
-			if(!WarnOK())
+		private void butEdit_Click(object sender, System.EventArgs e)
+		{
+			if (!WarnOK())
 				return;
-			if(listLetters.SelectedIndex==-1){
+			if (listLetters.SelectedIndex == -1)
+			{
 				MessageBox.Show("Please select an item first.");
 				return;
 			}
-      FormLetterEdit FormLE=new FormLetterEdit();
-			FormLE.LetterCur=_listLetters[listLetters.SelectedIndex];//just in case
+			FormLetterEdit FormLE = new FormLetterEdit();
+			FormLE.LetterCur = _listLetters[listLetters.SelectedIndex];//just in case
 			FormLE.ShowDialog();
 			FillList();
 		}
 
-		private void butDelete_Click(object sender, System.EventArgs e) {
-			if(listLetters.SelectedIndex==-1){
+		private void butDelete_Click(object sender, System.EventArgs e)
+		{
+			if (listLetters.SelectedIndex == -1)
+			{
 				MessageBox.Show("Please select an item first.");
 				return;
 			}
-			if(MessageBox.Show("Delete letter permanently for all patients?","",MessageBoxButtons.OKCancel)
-				!=DialogResult.OK){
+			if (MessageBox.Show("Delete letter permanently for all patients?", "", MessageBoxButtons.OKCancel)
+				!= DialogResult.OK)
+			{
 				return;
 			}
 			Letters.Delete(_listLetters[listLetters.SelectedIndex]);
@@ -339,7 +366,8 @@ namespace OpenDental{
 		//}
 
 		///<summary>If the user has selected a letter, and then edited it in the main textbox, this warns them before continuing.</summary>
-		private bool WarnOK(){
+		private bool WarnOK()
+		{
 			/*if(bodyChanged){
 				if(!MsgBox.Show(MsgBoxButtons.YesNo,
 					"Any changes you made to the letter you were working on will be lost.  Do you wish to continue?"))
@@ -350,60 +378,21 @@ namespace OpenDental{
 			return true;
 		}
 
-		private void textBody_TextChanged(object sender, System.EventArgs e) {
+		private void textBody_TextChanged(object sender, System.EventArgs e)
+		{
 			//bodyChanged=true;
 		}
 
-		private void butCancel_Click(object sender, System.EventArgs e) {
-			DialogResult=DialogResult.Cancel;
+		private void butCancel_Click(object sender, System.EventArgs e)
+		{
+			DialogResult = DialogResult.Cancel;
 		}
 
-		private void FormLetters_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+		private void FormLetters_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
 			//if(localChanged){
 			//	DataValid.SetInvalid(InvalidType.Letters);
 			//}
 		}
-
-		
-
-
-		
-
-		
-
-		
-
-		
-
-		
-
-		
-
-		
-
-		
-
-
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

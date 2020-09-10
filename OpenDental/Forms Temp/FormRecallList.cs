@@ -82,7 +82,7 @@ namespace OpenDental {
 			gridRecalls.ContextMenu=menuRightClick;
 			gridReminders.ContextMenu=menuRightClick;
 			gridReactivations.ContextMenu=menuRightClick;
-			if(!Prefs.GetBool(PrefName.ShowFeatureReactivations)) {
+			if(!Preferences.GetBool(PreferenceName.ShowFeatureReactivations)) {
 				tabControl.Controls.Remove(tabPageReactivations);
 			}
 			
@@ -93,8 +93,8 @@ namespace OpenDental {
 #if DEBUG
 			butECards.Visible=true;
 #endif
-			checkGroupFamiliesRecalls.Checked=Prefs.GetBool(PrefName.RecallGroupByFamily);
-			checkGroupFamiliesReact.Checked=Prefs.GetBool(PrefName.ReactivationGroupByFamily);
+			checkGroupFamiliesRecalls.Checked=Preferences.GetBool(PreferenceName.RecallGroupByFamily);
+			checkGroupFamiliesReact.Checked=Preferences.GetBool(PreferenceName.ReactivationGroupByFamily);
 			#region Fill Sort Types
 			comboSortRecalls.Items.AddEnums<RecallListSort>();
 			comboSortRecalls.SelectedIndex=0;
@@ -104,7 +104,7 @@ namespace OpenDental {
 			#region Fill Number Reminders and Reactivations
 			comboShowReminders.IncludeAll=true;
 			comboShowReactivate.IncludeAll=true;
-			int maxReactivationNums=PrefC.GetInt(PrefName.ReactivationCountContactMax);
+			int maxReactivationNums=PrefC.GetInt(PreferenceName.ReactivationCountContactMax);
 			for(int i=0;i<=6;i++) {
 				comboShowReminders.Items.Add(i==6?"6+":i.ToString(),(RecallListShowNumberReminders)(i+1));
 				if(maxReactivationNums>-1 && maxReactivationNums<(i+1)) {
@@ -116,14 +116,14 @@ namespace OpenDental {
 			comboShowReactivate.IsAllSelected=true;
 			#endregion Fill Number Reminders and Reactivations
 			#region Set Recall Dates
-			int daysPast=PrefC.GetInt(PrefName.RecallDaysPast);
-			int daysFuture=PrefC.GetInt(PrefName.RecallDaysFuture);
+			int daysPast=PrefC.GetInt(PreferenceName.RecallDaysPast);
+			int daysFuture=PrefC.GetInt(PreferenceName.RecallDaysFuture);
 			//since this is the selected tab on load the datePicker load event will fire before this load event we need to overwrite the defaults
 			datePickerRecalls.SetDateTimeFrom(daysPast==-1?DateTime.MinValue:DateTime.Today.AddDays(-daysPast));
 			datePickerRecalls.SetDateTimeTo(daysFuture==-1?DateTime.MinValue:DateTime.Today.AddDays(daysFuture));
 			#endregion Set Recall Dates
 			#region Set Reactivation Dates
-			int daysSince=PrefC.GetInt(PrefName.ReactivationDaysPast);
+			int daysSince=PrefC.GetInt(PreferenceName.ReactivationDaysPast);
 			//set the default, datePicker load event will fire when the tab is selected and fill from and to dates with the defaults
 			datePickerReact.DefaultDateTimeFrom=daysSince==-1?DateTime.MinValue:DateTime.Today.AddDays(-daysSince).AddMonths(_reactDateStopOffset);
 			datePickerReact.DefaultDateTimeTo=daysSince==-1?DateTime.MinValue:DateTime.Today.AddDays(-daysSince);
@@ -142,11 +142,11 @@ namespace OpenDental {
 			comboProviderReact.Items.AddList(_listProv,x => x.GetLongDesc());
 			comboProviderReact.IsAllSelected=true;
 			#endregion Providers
-			if(Prefs.GetBool(PrefName.EnterpriseApptList)){
+			if(Preferences.GetBool(PreferenceName.EnterpriseApptList)){
 				comboClinicRecalls.IncludeAll=false;
 			}
 			#region Sites
-			if(Prefs.GetBool(PrefName.EasyHidePublicHealth)) {
+			if(Preferences.GetBool(PreferenceName.EasyHidePublicHealth)) {
 				labelSiteRecalls.Visible=false;
 				comboSiteRecalls.Visible=false;
 				labelSiteReact.Visible=false;
@@ -176,7 +176,7 @@ namespace OpenDental {
 			#endregion Billing Types
 			#region Recall Types
 			comboRecallTypes.IncludeAll=true;
-			string recallTypesShowingPref=Prefs.GetString(PrefName.RecallTypesShowingInList);
+			string recallTypesShowingPref=Preferences.GetString(PreferenceName.RecallTypesShowingInList);
 			List<RecallType> listRecallTypes=null;
 			if(string.IsNullOrEmpty(recallTypesShowingPref)) {
 				listRecallTypes=RecallTypes.GetDeepCopy();
@@ -252,7 +252,7 @@ namespace OpenDental {
 		private void FillComboEmail() {
 			//Exclude any email addresses that are associated to a clinic or are the default practice and web mail notification email addresses.
 			List<long> listExcludeEmailAddressNums=Clinics.GetAll(true).Where(x => x.EmailAddressId.HasValue).Select(x => x.EmailAddressId.Value)
-				.Concat(new[] { Prefs.GetLong(PrefName.EmailDefaultAddressNum),Prefs.GetLong(PrefName.EmailNotifyAddressNum) }).ToList();
+				.Concat(new[] { Preferences.GetLong(PreferenceName.EmailDefaultAddressNum),Preferences.GetLong(PreferenceName.EmailNotifyAddressNum) }).ToList();
 			_listEmailAddresses=EmailAddresses.GetWhere(x => !listExcludeEmailAddressNums.Contains(x.EmailAddressNum));
 			comboEmailFromRecalls.Items.Add("Practice/Clinic");//default
 			comboEmailFromRecalls.SelectedIndex=0;
@@ -280,7 +280,7 @@ namespace OpenDental {
 				//remember which recallnums were selected
 				List<PatRowTag> listSelectedRows=gridRecalls.SelectedTags<PatRowTag>();
 				long siteNum=0;
-				if(!Prefs.GetBool(PrefName.EasyHidePublicHealth) && !comboSiteRecalls.IsAllSelected) {
+				if(!Preferences.GetBool(PreferenceName.EasyHidePublicHealth) && !comboSiteRecalls.IsAllSelected) {
 					siteNum=comboSiteRecalls.GetSelectedKey<Site>(x => x.SiteNum);
 				}
 				long clinicNum=PrefC.HasClinicsEnabled?comboClinicRecalls.SelectedClinicNum:-1;
@@ -648,9 +648,9 @@ namespace OpenDental {
 				MessageBox.Show("You need to enter an SMTP server name in email setup before you can send email.");
 				return;
 			}
-			if(Prefs.GetLong(PrefName.RecallStatusEmailed)==0
-				|| Prefs.GetLong(PrefName.RecallStatusTexted)==0
-				|| Prefs.GetLong(PrefName.RecallStatusEmailedTexted)==0) 
+			if(Preferences.GetLong(PreferenceName.RecallStatusEmailed)==0
+				|| Preferences.GetLong(PreferenceName.RecallStatusTexted)==0
+				|| Preferences.GetLong(PreferenceName.RecallStatusEmailedTexted)==0) 
 			{
 				MessageBox.Show("You need to set an email status, text status, and email and text status first in the Recall Setup window.");
 				return;
@@ -823,7 +823,7 @@ namespace OpenDental {
 
 		///<summary>Shared functionality with Recalls and Reactivations, be careful when making changes.</summary>
 		private void butLabels_Click(object sender, System.EventArgs e) {
-			if(!IsGridEmpty() && IsStatusSet(PrefName.RecallStatusMailed,PrefName.ReactivationStatusMailed) && IsAnyPatToContact("labels",ContactMethod.Mail)) {
+			if(!IsGridEmpty() && IsStatusSet(PreferenceName.RecallStatusMailed,PreferenceName.ReactivationStatusMailed) && IsAnyPatToContact("labels",ContactMethod.Mail)) {
 				CommItemTypeAuto commType=IsRecallGridSelected()?CommItemTypeAuto.RECALL:CommItemTypeAuto.REACT;
 				addrTable=GetAddrTable();
 				pagesPrinted=0;
@@ -876,14 +876,14 @@ namespace OpenDental {
 		///<summary>Changes made to printing recall postcards need to be made in FormConfirmList.butPostcards_Click() as well.
 		///Shared functionality with Recalls and Reactivations, be careful when making changes.</summary>
 		private void butPostcards_Click(object sender,System.EventArgs e) {
-			if(!IsGridEmpty() && IsStatusSet(PrefName.RecallStatusMailed,PrefName.ReactivationStatusMailed) && IsAnyPatToContact("postcards",ContactMethod.Mail)) {
+			if(!IsGridEmpty() && IsStatusSet(PreferenceName.RecallStatusMailed,PreferenceName.ReactivationStatusMailed) && IsAnyPatToContact("postcards",ContactMethod.Mail)) {
 				CommItemTypeAuto commType=IsRecallGridSelected()?CommItemTypeAuto.RECALL:CommItemTypeAuto.REACT;
 				addrTable=GetAddrTable();
 				pagesPrinted=0;
 				patientsPrinted=0;
 				PaperSize paperSize;
 				PrintoutOrientation orient=PrintoutOrientation.Default;
-				long postcardsPerSheet=Prefs.GetLong(commType==CommItemTypeAuto.RECALL?PrefName.RecallPostcardsPerSheet:PrefName.ReactivationPostcardsPerSheet);
+				long postcardsPerSheet=Preferences.GetLong(commType==CommItemTypeAuto.RECALL?PreferenceName.RecallPostcardsPerSheet:PreferenceName.ReactivationPostcardsPerSheet);
 				if(postcardsPerSheet==1) {
 					paperSize=new PaperSize("Postcard",500,700);
 					orient=PrintoutOrientation.Landscape;
@@ -937,7 +937,7 @@ namespace OpenDental {
 				MessageBox.Show("There are no Patients in the Recall table.  Must have at least one to send.");
 				return;
 			}
-			if(Prefs.GetLong(PrefName.RecallStatusMailed)==0) {
+			if(Preferences.GetLong(PreferenceName.RecallStatusMailed)==0) {
 				MessageBox.Show("You need to set a status first in the Recall Setup window.");
 				return;
 			}
@@ -977,26 +977,26 @@ namespace OpenDental {
 				//Body text, family card ------------------------------------------------------------------
 				if(checkGroupFamiliesRecalls.Checked	&& addrTable.Rows[i]["famList"].ToString()!=""){
 					if(addrTable.Rows[i]["numberOfReminders"].ToString()=="0") {
-						message=Prefs.GetString(PrefName.RecallPostcardFamMsg);
+						message=Preferences.GetString(PreferenceName.RecallPostcardFamMsg);
 					}
 					else if(addrTable.Rows[i]["numberOfReminders"].ToString()=="1") {
-						message=Prefs.GetString(PrefName.RecallPostcardFamMsg2);
+						message=Preferences.GetString(PreferenceName.RecallPostcardFamMsg2);
 					}
 					else {
-						message=Prefs.GetString(PrefName.RecallPostcardFamMsg3);
+						message=Preferences.GetString(PreferenceName.RecallPostcardFamMsg3);
 					}
 					message=message.Replace("[FamilyList]",addrTable.Rows[i]["famList"].ToString());
 				}
 				//Body text, single card-------------------------------------------------------------------
 				else{
 					if(addrTable.Rows[i]["numberOfReminders"].ToString()=="0") {
-						message=Prefs.GetString(PrefName.RecallPostcardMessage);
+						message=Preferences.GetString(PreferenceName.RecallPostcardMessage);
 					}
 					else if(addrTable.Rows[i]["numberOfReminders"].ToString()=="1") {
-						message=Prefs.GetString(PrefName.RecallPostcardMessage2);
+						message=Preferences.GetString(PreferenceName.RecallPostcardMessage2);
 					}
 					else {
-						message=Prefs.GetString(PrefName.RecallPostcardMessage3);
+						message=Preferences.GetString(PreferenceName.RecallPostcardMessage3);
 					}
 					message=message.Replace("[DueDate]",addrTable.Rows[i]["dateDue"].ToString());
 					message=message.Replace("[NameF]",addrTable.Rows[i]["patientNameF"].ToString());
@@ -1005,11 +1005,11 @@ namespace OpenDental {
 				Clinic clinicCur=Clinics.GetClinicForRecall(PIn.Long(addrTable.Rows[i]["recallNums"].ToString().Split(',').FirstOrDefault()));
 				message=message.Replace("[ClinicName]",clinicCur.Abbr);
 				message=message.Replace("[ClinicPhone]",clinicCur.Phone);
-				message=message.Replace("[PracticeName]",Prefs.GetString(PrefName.PracticeTitle));
-				message=message.Replace("[PracticePhone]",Prefs.GetString(PrefName.PracticePhone));
+				message=message.Replace("[PracticeName]",Preferences.GetString(PreferenceName.PracticeTitle));
+				message=message.Replace("[PracticePhone]",Preferences.GetString(PreferenceName.PracticePhone));
 				string officePhone=clinicCur.Phone;
 				if(string.IsNullOrEmpty(officePhone)) {
-					officePhone=Prefs.GetString(PrefName.PracticePhone);
+					officePhone=Preferences.GetString(PreferenceName.PracticePhone);
 				}
 				message=message.Replace("[OfficePhone]",clinicCur.Phone);
 				postcard.Message=message;
@@ -1032,13 +1032,13 @@ namespace OpenDental {
 				phone=clinic.Phone;
 			}
 			else {
-				practice.Company=Prefs.GetString(PrefName.PracticeTitle);
-				practice.Address1=Prefs.GetString(PrefName.PracticeAddress);
-				practice.Address2=Prefs.GetString(PrefName.PracticeAddress2);
-				practice.City=Prefs.GetString(PrefName.PracticeCity);
-				practice.State=Prefs.GetString(PrefName.PracticeST);
-				practice.Zip=Prefs.GetString(PrefName.PracticeZip);
-				phone=Prefs.GetString(PrefName.PracticePhone);
+				practice.Company=Preferences.GetString(PreferenceName.PracticeTitle);
+				practice.Address1=Preferences.GetString(PreferenceName.PracticeAddress);
+				practice.Address2=Preferences.GetString(PreferenceName.PracticeAddress2);
+				practice.City=Preferences.GetString(PreferenceName.PracticeCity);
+				practice.State=Preferences.GetString(PreferenceName.PracticeST);
+				practice.Zip=Preferences.GetString(PreferenceName.PracticeZip);
+				phone=Preferences.GetString(PreferenceName.PracticePhone);
 			}
 			practice.Phone=TelephoneNumbers.ReFormat(phone);
 			DivvyConnect.PostcardServiceClient client=new DivvyConnect.PostcardServiceClient();
@@ -1082,7 +1082,7 @@ namespace OpenDental {
 				MessageBox.Show("You need to enter an SMTP server name in e-mail setup before you can send e-mail.");
 				return;
 			}
-			if(!IsStatusSet(PrefName.RecallStatusEmailed,PrefName.ReactivationStatusEmailed)) {
+			if(!IsStatusSet(PreferenceName.RecallStatusEmailed,PreferenceName.ReactivationStatusEmailed)) {
 				return;
 			}
 			if(gridRecalls.SelectedIndices.Length==0) {
@@ -1142,46 +1142,46 @@ namespace OpenDental {
 				}
 				message.FromAddress=emailAddress.GetFrom();
 				if(addrTable.Rows[i]["numberOfReminders"].ToString()=="0") {
-					message.Subject=Prefs.GetString(isRecallGridSelected? PrefName.RecallEmailSubject:PrefName.ReactivationEmailSubject);
+					message.Subject=Preferences.GetString(isRecallGridSelected? PreferenceName.RecallEmailSubject:PreferenceName.ReactivationEmailSubject);
 				}
 				else if(addrTable.Rows[i]["numberOfReminders"].ToString()=="1") {
-					message.Subject=Prefs.GetString(isRecallGridSelected ? PrefName.RecallEmailSubject2:PrefName.ReactivationEmailSubject);
+					message.Subject=Preferences.GetString(isRecallGridSelected ? PreferenceName.RecallEmailSubject2:PreferenceName.ReactivationEmailSubject);
 				}
 				else {
-					message.Subject=Prefs.GetString(isRecallGridSelected ? PrefName.RecallEmailSubject3:PrefName.ReactivationEmailSubject);
+					message.Subject=Preferences.GetString(isRecallGridSelected ? PreferenceName.RecallEmailSubject3:PreferenceName.ReactivationEmailSubject);
 				}
 				//family
 				if(doGroupFamilies && addrTable.Rows[i]["famList"].ToString()!="") {
 					if(addrTable.Rows[i]["numberOfReminders"].ToString()=="0") {
-						str=Prefs.GetString(isRecallGridSelected ? PrefName.RecallEmailFamMsg:PrefName.ReactivationEmailFamMsg);
+						str=Preferences.GetString(isRecallGridSelected ? PreferenceName.RecallEmailFamMsg:PreferenceName.ReactivationEmailFamMsg);
 					}
 					else if(addrTable.Rows[i]["numberOfReminders"].ToString()=="1") {
-						str=Prefs.GetString(isRecallGridSelected ? PrefName.RecallEmailFamMsg2:PrefName.ReactivationEmailFamMsg);
+						str=Preferences.GetString(isRecallGridSelected ? PreferenceName.RecallEmailFamMsg2:PreferenceName.ReactivationEmailFamMsg);
 					}
 					else {
-						str=Prefs.GetString(isRecallGridSelected ? PrefName.RecallEmailFamMsg3:PrefName.ReactivationEmailFamMsg);
+						str=Preferences.GetString(isRecallGridSelected ? PreferenceName.RecallEmailFamMsg3:PreferenceName.ReactivationEmailFamMsg);
 					}
 					str=str.Replace("[FamilyList]",addrTable.Rows[i]["famList"].ToString());
 				}
 				//single
 				else {
 					if(addrTable.Rows[i]["numberOfReminders"].ToString()=="0") {
-						str=Prefs.GetString(isRecallGridSelected ? PrefName.RecallEmailMessage:PrefName.ReactivationEmailMessage);
+						str=Preferences.GetString(isRecallGridSelected ? PreferenceName.RecallEmailMessage:PreferenceName.ReactivationEmailMessage);
 					}
 					else if(addrTable.Rows[i]["numberOfReminders"].ToString()=="1") {
-						str=Prefs.GetString(isRecallGridSelected ? PrefName.RecallEmailMessage2:PrefName.ReactivationEmailMessage);
+						str=Preferences.GetString(isRecallGridSelected ? PreferenceName.RecallEmailMessage2:PreferenceName.ReactivationEmailMessage);
 					}
 					else {
-						str=Prefs.GetString(isRecallGridSelected ? PrefName.RecallEmailMessage3:PrefName.ReactivationEmailMessage);
+						str=Preferences.GetString(isRecallGridSelected ? PreferenceName.RecallEmailMessage3:PreferenceName.ReactivationEmailMessage);
 					}
 					str=str.Replace("[DueDate]",PIn.Date(addrTable.Rows[i]["dateDue"].ToString()).ToShortDateString());
 					str=str.Replace("[NameF]",addrTable.Rows[i]["patientNameF"].ToString());
 					str=str.Replace("[NameFL]",addrTable.Rows[i]["patientNameFL"].ToString());
 				}
 				string officePhone="";
-				string mainPhone=TelephoneNumbers.ReFormat(Prefs.GetString(PrefName.PracticePhone));
+				string mainPhone=TelephoneNumbers.ReFormat(Preferences.GetString(PreferenceName.PracticePhone));
 				if(clinicCur==null) {
-					str=str.Replace("[ClinicName]",Prefs.GetString(PrefName.PracticeTitle));
+					str=str.Replace("[ClinicName]",Preferences.GetString(PreferenceName.PracticeTitle));
 					str=str.Replace("[ClinicPhone]",mainPhone);
 					officePhone=mainPhone;
 				}
@@ -1190,7 +1190,7 @@ namespace OpenDental {
 					str=str.Replace("[ClinicPhone]",TelephoneNumbers.ReFormat(clinicCur.Phone));
 					officePhone=clinicCur.Phone;
 				}
-				str=str.Replace("[PracticeName]",Prefs.GetString(PrefName.PracticeTitle));
+				str=str.Replace("[PracticeName]",Preferences.GetString(PreferenceName.PracticeTitle));
 				str=str.Replace("[PracticePhone]",mainPhone);
 				str=str.Replace("[OfficePhone]",officePhone);
 				message.BodyText=EmailMessages.FindAndReplacePostalAddressTag(str,clinicNumEmail);
@@ -1245,18 +1245,18 @@ namespace OpenDental {
 			long status;
 			if(mode==CommItemMode.Mail) {
 				if(isRecallGridSelected) {
-					status=Prefs.GetLong(PrefName.RecallStatusMailed);
+					status=Preferences.GetLong(PreferenceName.RecallStatusMailed);
 				}
 				else {
-					status=Prefs.GetLong(PrefName.ReactivationStatusMailed);
+					status=Preferences.GetLong(PreferenceName.ReactivationStatusMailed);
 				}
 			}
 			else {//Email
 				if(isRecallGridSelected) {
-					status=Prefs.GetLong(PrefName.RecallStatusEmailed);
+					status=Preferences.GetLong(PreferenceName.RecallStatusEmailed);
 				}
 				else {
-					status=Prefs.GetLong(PrefName.ReactivationStatusEmailed);
+					status=Preferences.GetLong(PreferenceName.ReactivationStatusEmailed);
 				}
 			}
 			listSentRows=listSentRows??_gridCur.SelectedTags<PatRowTag>();
@@ -1314,11 +1314,11 @@ namespace OpenDental {
 	
 		///<summary>raised for each page to be printed.</summary>
 		private void pdCards_PrintPage(object sender, PrintPageEventArgs ev){
-			long postCardsPerSheet=Prefs.GetLong(IsRecallGridSelected()?PrefName.RecallPostcardsPerSheet:PrefName.ReactivationPostcardsPerSheet);
+			long postCardsPerSheet=Preferences.GetLong(IsRecallGridSelected()?PreferenceName.RecallPostcardsPerSheet:PreferenceName.ReactivationPostcardsPerSheet);
 			int totalPages=(int)Math.Ceiling((double)addrTable.Rows.Count/(double)postCardsPerSheet);
 			Graphics g=ev.Graphics;
-			int yAdj=(int)(Prefs.GetDouble(PrefName.RecallAdjustDown)*100);
-			int xAdj=(int)(Prefs.GetDouble(PrefName.RecallAdjustRight)*100);
+			int yAdj=(int)(Preferences.GetDouble(PreferenceName.RecallAdjustDown)*100);
+			int xAdj=(int)(Preferences.GetDouble(PreferenceName.RecallAdjustRight)*100);
 			float yPos=0+yAdj;//these refer to the upper left origin of each postcard
 			float xPos=0+xAdj;
 			const int bottomPageMargin=100;
@@ -1328,8 +1328,8 @@ namespace OpenDental {
 			while(yPos<ev.PageBounds.Height-bottomPageMargin && patientsPrinted<addrTable.Rows.Count){
 				//Return Address--------------------------------------------------------------------------
 				clinicNum=PIn.Long(addrTable.Rows[patientsPrinted]["ClinicNum"].ToString());
-				string practicePhone=TelephoneNumbers.ReFormat(Prefs.GetString(PrefName.PracticePhone));
-				if(Prefs.GetBool(PrefName.RecallCardsShowReturnAdd)){
+				string practicePhone=TelephoneNumbers.ReFormat(Preferences.GetString(PreferenceName.PracticePhone));
+				if(Preferences.GetBool(PreferenceName.RecallCardsShowReturnAdd)){
 					if(PrefC.HasClinicsEnabled && Clinics.Count(true) > 0 //if using clinics
 						&& Clinics.GetById(clinicNum)!=null)//and this patient assigned to a clinic
 					{
@@ -1344,13 +1344,13 @@ namespace OpenDental {
 						str+=TelephoneNumbers.ReFormat(clinic.Phone);
 					}
 					else {
-						str=Prefs.GetString(PrefName.PracticeTitle)+"\r\n";
+						str=Preferences.GetString(PreferenceName.PracticeTitle)+"\r\n";
 						g.DrawString(str,new Font(FontFamily.GenericSansSerif,9,FontStyle.Bold),Brushes.Black,xPos+45,yPos+60);
-						str=Prefs.GetString(PrefName.PracticeAddress)+"\r\n";
-						if(Prefs.GetString(PrefName.PracticeAddress2)!="") {
-							str+=Prefs.GetString(PrefName.PracticeAddress2)+"\r\n";
+						str=Preferences.GetString(PreferenceName.PracticeAddress)+"\r\n";
+						if(Preferences.GetString(PreferenceName.PracticeAddress2)!="") {
+							str+=Preferences.GetString(PreferenceName.PracticeAddress2)+"\r\n";
 						}
-						str+=Prefs.GetString(PrefName.PracticeCity)+",  "+Prefs.GetString(PrefName.PracticeST)+"  "+Prefs.GetString(PrefName.PracticeZip)+"\r\n";
+						str+=Preferences.GetString(PreferenceName.PracticeCity)+",  "+Preferences.GetString(PreferenceName.PracticeST)+"  "+Preferences.GetString(PreferenceName.PracticeZip)+"\r\n";
 						str+=practicePhone;
 					}
 					g.DrawString(str,new Font(FontFamily.GenericSansSerif,8),Brushes.Black,xPos+45,yPos+75);
@@ -1378,11 +1378,11 @@ namespace OpenDental {
 					str=str.Replace("[OfficePhone]",TelephoneNumbers.ReFormat(officePhone));
 				}
 				else {//use practice information for default. 
-					str=str.Replace("[ClinicName]",Prefs.GetString(PrefName.PracticeTitle));
+					str=str.Replace("[ClinicName]",Preferences.GetString(PreferenceName.PracticeTitle));
 					str=str.Replace("[ClinicPhone]",practicePhone);
 					str=str.Replace("[OfficePhone]",practicePhone);
 				}
-				str=str.Replace("[PracticeName]",Prefs.GetString(PrefName.PracticeTitle));
+				str=str.Replace("[PracticeName]",Preferences.GetString(PreferenceName.PracticeTitle));
 				str=str.Replace("[PracticePhone]",practicePhone);
 				g.DrawString(str,new Font(FontFamily.GenericSansSerif,10),Brushes.Black,new RectangleF(xPos+45,yPos+180,250,190));
 				//Patient's Address-----------------------------------------------------------------------
@@ -1616,7 +1616,7 @@ namespace OpenDental {
 			}
 			List<PatRowTag> listSelectedRows=gridReactivations.SelectedTags<PatRowTag>();//remember selected rows
 			long clinicNum=PrefC.HasClinicsEnabled?comboClinicReact.SelectedClinicNum:-1;//-1 will show all patients without filtering clinics.
-			long siteNum=(Prefs.GetBool(PrefName.EasyHidePublicHealth) || comboSiteReact.IsAllSelected)?0:comboSiteReact.GetSelected<Site>().SiteNum;
+			long siteNum=(Preferences.GetBool(PreferenceName.EasyHidePublicHealth) || comboSiteReact.IsAllSelected)?0:comboSiteReact.GetSelected<Site>().SiteNum;
 			DataTable tableReacts=new DataTable();
 			ODProgress.ShowAction(() =>
 				tableReacts=Reactivations.GetReactivationList(datePickerReact.GetDateTimeTo(),datePickerReact.GetDateTimeFrom(),
@@ -1634,7 +1634,7 @@ namespace OpenDental {
 			if(PrefC.HasClinicsEnabled) {
 				gridReactivations.Columns.Add(new GridColumn("Clinic",75));
 			}
-			if(!Prefs.GetBool(PrefName.EasyHidePublicHealth)) {
+			if(!Preferences.GetBool(PreferenceName.EasyHidePublicHealth)) {
 				gridReactivations.Columns.Add(new GridColumn("Site",75));
 			}
 			gridReactivations.Columns.Add(new GridColumn("Billing Type",85));
@@ -1656,7 +1656,7 @@ namespace OpenDental {
 				if(PrefC.HasClinicsEnabled) {
 					rowNew.Cells.Add(Clinics.GetDescription(PIn.Long(row["ClinicNum"].ToString())));
 				}
-				if(!Prefs.GetBool(PrefName.EasyHidePublicHealth)) {
+				if(!Preferences.GetBool(PreferenceName.EasyHidePublicHealth)) {
 					rowNew.Cells.Add(Sites.GetDescription(PIn.Long(row["SiteNum"].ToString())));
 				}
 				rowNew.Cells.Add(row["BillingType"].ToString());
@@ -1785,7 +1785,7 @@ namespace OpenDental {
 
 		///<summary>Shared functionality with Recalls and Reactivations, be careful when making changes.</summary>
 		private bool IsStatusSet(string prefNameRecall, string prefNameReactivation) {
-			if((IsRecallGridSelected() && Prefs.GetLong(prefNameRecall)==0) || (IsReactivationGridSelected() && Prefs.GetLong(prefNameReactivation)==0)) {
+			if((IsRecallGridSelected() && Preferences.GetLong(prefNameRecall)==0) || (IsReactivationGridSelected() && Preferences.GetLong(prefNameReactivation)==0)) {
 				MessageBox.Show($"You need to set a status first in the {(IsRecallGridSelected()?"Recall":"Reactivations")} Setup window.");
 				return false;
 			}
@@ -1819,19 +1819,19 @@ namespace OpenDental {
 
 		///<summary>Shared functionality with Recalls and Reactivations, be careful when making changes.</summary>
 		private string GetPostcardMessage(string numReminders,bool isFam) {
-			string prefName =isFam?PrefName.ReactivationPostcardFamMsg:PrefName.ReactivationPostcardMessage;
+			string prefName =isFam?PreferenceName.ReactivationPostcardFamMsg:PreferenceName.ReactivationPostcardMessage;
 			if(IsRecallGridSelected()) {
 				if(numReminders=="0") {
-					prefName=isFam?PrefName.RecallPostcardFamMsg:PrefName.RecallPostcardMessage;
+					prefName=isFam?PreferenceName.RecallPostcardFamMsg:PreferenceName.RecallPostcardMessage;
 				}
 				else if(numReminders=="1") {
-					prefName=isFam?PrefName.RecallPostcardFamMsg2:PrefName.RecallPostcardMessage2;
+					prefName=isFam?PreferenceName.RecallPostcardFamMsg2:PreferenceName.RecallPostcardMessage2;
 				}
 				else {
-					prefName=isFam?PrefName.RecallPostcardFamMsg3:PrefName.RecallPostcardMessage3;
+					prefName=isFam?PreferenceName.RecallPostcardFamMsg3:PreferenceName.RecallPostcardMessage3;
 				}
 			}
-			return Prefs.GetString(prefName);
+			return Preferences.GetString(prefName);
 		}
 
 		///<summary>Shared functionality with Recalls and Reactivations, be careful when making changes.</summary>

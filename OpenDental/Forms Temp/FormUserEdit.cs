@@ -55,7 +55,7 @@ namespace OpenDental{
 			}
 			textUserName.Text=UserCur.UserName;
 			textDomainUser.Text=UserCur.DomainUser;
-			if(!Prefs.GetBool(PrefName.DomainLoginEnabled)) {
+			if(!Preferences.GetBool(PreferenceName.DomainLoginEnabled)) {
 				labelDomainUser.Visible=false;
 				textDomainUser.Visible=false;
 				butPickDomainUser.Visible=false;
@@ -68,7 +68,7 @@ namespace OpenDental{
 				if(!_isFromAddUser && Userods.IsInUserGroup(UserCur.Id, _listUserGroups[i].Id)) {
 					listUserGroup.SetSelected(i,true);
 				}
-				if(_isFromAddUser && _listUserGroups[i].Id==Prefs.GetLong(PrefName.DefaultUserGroup)) {
+				if(_isFromAddUser && _listUserGroups[i].Id==Preferences.GetLong(PreferenceName.DefaultUserGroup)) {
 					listUserGroup.SetSelected(i,true);
 				}
 			}
@@ -201,13 +201,13 @@ namespace OpenDental{
 		private void butPickDomainUser_Click(object sender,EventArgs e) {
 			//DirectoryEntry does recognize an empty string as a valid LDAP entry and will just return all logins from all available domains
 			//But all logins should be on the same domain, so this field is required
-			if(string.IsNullOrWhiteSpace(Prefs.GetString(PrefName.DomainLoginPath))) {
+			if(string.IsNullOrWhiteSpace(Preferences.GetString(PreferenceName.DomainLoginPath))) {
 				MessageBox.Show("DomainLoginPath is missing in security settings. DomainLoginPath is required before assigning domain logins to user accounts.");
 				return;
 			}
 			//Try to access the specified DomainLoginPath
 			try {
-				DirectoryEntry.Exists(Prefs.GetString(PrefName.DomainLoginPath));
+				DirectoryEntry.Exists(Preferences.GetString(PreferenceName.DomainLoginPath));
 			}
 			catch(Exception ex) {
 				MessageBox.Show("An error occurred while attempting to access the provided DomainLoginPath:"+" "+ex.Message);
@@ -300,7 +300,7 @@ namespace OpenDental{
 			{
 				UserPreference.Set(UserPreferenceName.LogOffTimerOverride, logOffTimerOverride);
 
-				if (!Prefs.GetBool(PrefName.SecurityLogOffAllowUserOverride))
+				if (!Preferences.GetBool(PreferenceName.SecurityLogOffAllowUserOverride))
 				{
 					ODMessageBox.Show("User logoff overrides will not take effect until the Global Security setting \"Allow user override for automatic logoff\" is checked");
 				}
@@ -312,7 +312,7 @@ namespace OpenDental{
 				MessageBox.Show("Please enter a username.");
 				return;
 			}
-			if(!_isFromAddUser && IsNew && Prefs.GetBool(PrefName.PasswordsMustBeStrong) && string.IsNullOrWhiteSpace(_passwordTyped)) {
+			if(!_isFromAddUser && IsNew && Preferences.GetBool(PreferenceName.PasswordsMustBeStrong) && string.IsNullOrWhiteSpace(_passwordTyped)) {
 				MessageBox.Show("Password may not be blank when the strong password feature is turned on.");
 				return;
 			}
@@ -325,11 +325,11 @@ namespace OpenDental{
 				return;
 			}
 			if(_isFromAddUser && !Security.IsAuthorized(Permissions.SecurityAdmin,true)
-				&& (listUserGroup.SelectedItems.Count!=1 || listUserGroup.GetSelected<UserGroup>().Id!=Prefs.GetLong(PrefName.DefaultUserGroup)))
+				&& (listUserGroup.SelectedItems.Count!=1 || listUserGroup.GetSelected<UserGroup>().Id!=Preferences.GetLong(PreferenceName.DefaultUserGroup)))
 			{
 				MessageBox.Show("This user must be assigned to the default user group.");
 				for(int i=0;i<listUserGroup.Items.Count;i++) {
-					if(((ODBoxItem<UserGroup>)listUserGroup.Items[i]).Tag.Id==Prefs.GetLong(PrefName.DefaultUserGroup)) {
+					if(((ODBoxItem<UserGroup>)listUserGroup.Items[i]).Tag.Id==Preferences.GetLong(PreferenceName.DefaultUserGroup)) {
 						listUserGroup.SetSelected(i,true);
 					}
 					else {

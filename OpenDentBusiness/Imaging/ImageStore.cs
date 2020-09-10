@@ -403,8 +403,8 @@ namespace OpenDentBusiness
                 DateCreated = DateTime.Now,
                 PatNum = patient.PatNum,
                 DocCategory = docCategory,
-                WindowingMin = PrefC.GetInt(PrefName.ImageWindowingMin),
-                WindowingMax = PrefC.GetInt(PrefName.ImageWindowingMax)
+                WindowingMin = PrefC.GetInt(PreferenceName.ImageWindowingMin),
+                WindowingMax = PrefC.GetInt(PreferenceName.ImageWindowingMax)
             };
 
             Documents.Insert(document, patient);

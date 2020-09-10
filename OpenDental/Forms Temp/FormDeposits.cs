@@ -6,12 +6,15 @@ using System.Windows.Forms;
 using OpenDental.UI;
 using OpenDentBusiness;
 using System.Collections.Generic;
+using Imedisoft.Data;
 
-namespace OpenDental{
+namespace OpenDental
+{
 	/// <summary>
 	/// Summary description for FormBasicTemplate.
 	/// </summary>
-	public class FormDeposits : ODForm {
+	public class FormDeposits : ODForm
+	{
 		private OpenDental.UI.Button butClose;
 		private OpenDental.UI.Button butAdd;
 		/// <summary>
@@ -24,7 +27,7 @@ namespace OpenDental{
 		///<summary>Use this from Transaction screen when attaching a source document.</summary>
 		public bool IsSelectionMode;
 		///<summary>List of Clinics the user has access to.</summary>
-		private List<Clinic> _listClinics=new List<Clinic>();
+		private List<Clinic> _listClinics = new List<Clinic>();
 		private ComboBoxClinicPicker comboClinics;
 
 		///<summary>In selection mode, when closing form with OK, this contains selected deposit.</summary>
@@ -37,22 +40,22 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			
+
 		}
 
 		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
-		protected override void Dispose( bool disposing )
+		protected override void Dispose(bool disposing)
 		{
-			if( disposing )
+			if (disposing)
 			{
-				if(components != null)
+				if (components != null)
 				{
 					components.Dispose();
 				}
 			}
-			base.Dispose( disposing );
+			base.Dispose(disposing);
 		}
 
 		#region Windows Form Designer generated code
@@ -82,9 +85,9 @@ namespace OpenDental{
 			// 
 			// grid
 			// 
-			this.grid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.grid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.grid.Location = new System.Drawing.Point(18, 34);
 			this.grid.Name = "grid";
 			this.grid.Size = new System.Drawing.Size(339, 567);
@@ -149,52 +152,65 @@ namespace OpenDental{
 		}
 		#endregion
 
-		private void FormDeposits_Load(object sender, System.EventArgs e) {
-			if(IsSelectionMode){
-				butAdd.Visible=false;
+		private void FormDeposits_Load(object sender, System.EventArgs e)
+		{
+			if (IsSelectionMode)
+			{
+				butAdd.Visible = false;
 			}
-			else{
-				butOK.Visible=false;
+			else
+			{
+				butOK.Visible = false;
 			}
 			FillGrid();
 		}
 
-		private void FillGrid(){
-			if(!PrefC.HasClinicsEnabled) {
-				if(IsSelectionMode) {
-					DList=Deposits.GetUnattached();
+		private void FillGrid()
+		{
+			if (!PrefC.HasClinicsEnabled)
+			{
+				if (IsSelectionMode)
+				{
+					DList = Deposits.GetUnattached();
 				}
-				else {
-					DList=Deposits.Refresh();
+				else
+				{
+					DList = Deposits.Refresh();
 				}
 			}
-			else {
+			else
+			{
 				//GetForClinics uses an empty list to indicate "all", which is a loophole if user doesn't select an item.  So:
-				if(comboClinics.ListSelectedClinicNums.Count==0){
-					DList=Deposits.GetForClinics(new List<long>(){Clinics.Active.Id },IsSelectionMode);//restrict to current clinic
+				if (comboClinics.ListSelectedClinicNums.Count == 0)
+				{
+					DList = Deposits.GetForClinics(new List<long>() { Clinics.Active.Id }, IsSelectionMode);//restrict to current clinic
 				}
-				else{
-					DList=Deposits.GetForClinics(comboClinics.ListSelectedClinicNums,IsSelectionMode);
+				else
+				{
+					DList = Deposits.GetForClinics(comboClinics.ListSelectedClinicNums, IsSelectionMode);
 				}
 			}
 			grid.BeginUpdate();
 			grid.Columns.Clear();
-			GridColumn col=new GridColumn("Date",80);
+			GridColumn col = new GridColumn("Date", 80);
 			grid.Columns.Add(col);
-			col=new GridColumn("Amount",90,HorizontalAlignment.Right);
+			col = new GridColumn("Amount", 90, HorizontalAlignment.Right);
 			grid.Columns.Add(col);
-			if(PrefC.HasClinicsEnabled) {
-				col=new GridColumn("Clinic",150);
+			if (PrefC.HasClinicsEnabled)
+			{
+				col = new GridColumn("Clinic", 150);
 				grid.Columns.Add(col);
 			}
 			grid.Rows.Clear();
 			OpenDental.UI.GridRow row;
-			for(int i=0;i<DList.Length;i++){
-				row=new OpenDental.UI.GridRow();
+			for (int i = 0; i < DList.Length; i++)
+			{
+				row = new OpenDental.UI.GridRow();
 				row.Cells.Add(DList[i].DateDeposit.ToShortDateString());
 				row.Cells.Add(DList[i].Amount.ToString("F"));
-				if(PrefC.HasClinicsEnabled) {
-					row.Cells.Add(" "+DList[i].ClinicAbbr);//padding left with space to add separation between amount and clinic abbr
+				if (PrefC.HasClinicsEnabled)
+				{
+					row.Cells.Add(" " + DList[i].ClinicAbbr);//padding left with space to add separation between amount and clinic abbr
 				}
 				grid.Rows.Add(row);
 			}
@@ -202,74 +218,60 @@ namespace OpenDental{
 			grid.ScrollToEnd();
 		}
 
-		private void ComboClinics_SelectionChangeCommitted(object sender, EventArgs e){
+		private void ComboClinics_SelectionChangeCommitted(object sender, EventArgs e)
+		{
 			FillGrid();
 		}
 
-		private void grid_CellDoubleClick(object sender, OpenDental.UI.ODGridClickEventArgs e) {
-			if(IsSelectionMode){
-				SelectedDeposit=DList[e.Row];
-				DialogResult=DialogResult.OK;
+		private void grid_CellDoubleClick(object sender, OpenDental.UI.ODGridClickEventArgs e)
+		{
+			if (IsSelectionMode)
+			{
+				SelectedDeposit = DList[e.Row];
+				DialogResult = DialogResult.OK;
 				return;
 			}
 			//not selection mode.
-			FormDepositEdit FormD=new FormDepositEdit(DList[e.Row]);
+			FormDepositEdit FormD = new FormDepositEdit(DList[e.Row]);
 			FormD.ShowDialog();
-			if(FormD.DialogResult==DialogResult.Cancel){
+			if (FormD.DialogResult == DialogResult.Cancel)
+			{
 				return;
 			}
 			FillGrid();
 		}
 
 		///<summary>Not available in selection mode.</summary>
-		private void butAdd_Click(object sender, System.EventArgs e) {
-			Deposit deposit=new Deposit();
-			deposit.DateDeposit=DateTime.Today;
-			deposit.BankAccountInfo=Prefs.GetString(PrefName.PracticeBankNumber);
-			FormDepositEdit FormD=new FormDepositEdit(deposit);
-			FormD.IsNew=true;
+		private void butAdd_Click(object sender, System.EventArgs e)
+		{
+			Deposit deposit = new Deposit();
+			deposit.DateDeposit = DateTime.Today;
+			deposit.BankAccountInfo = Preferences.GetString(PreferenceName.PracticeBankNumber);
+			FormDepositEdit FormD = new FormDepositEdit(deposit);
+			FormD.IsNew = true;
 			FormD.ShowDialog();
-			if(FormD.DialogResult==DialogResult.Cancel){
+			if (FormD.DialogResult == DialogResult.Cancel)
+			{
 				return;
 			}
 			FillGrid();
 		}
 
 		///<summary>Only available in selection mode.</summary>
-		private void butOK_Click(object sender,EventArgs e) {
-			if(grid.GetSelectedIndex()==-1){
+		private void butOK_Click(object sender, EventArgs e)
+		{
+			if (grid.GetSelectedIndex() == -1)
+			{
 				MessageBox.Show("Please select a deposit first.");
 				return;
 			}
-			SelectedDeposit=DList[grid.GetSelectedIndex()];
-			DialogResult=DialogResult.OK;
+			SelectedDeposit = DList[grid.GetSelectedIndex()];
+			DialogResult = DialogResult.OK;
 		}
 
-		private void butClose_Click(object sender, System.EventArgs e) {
-			DialogResult=DialogResult.Cancel;
+		private void butClose_Click(object sender, System.EventArgs e)
+		{
+			DialogResult = DialogResult.Cancel;
 		}
-
-		
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

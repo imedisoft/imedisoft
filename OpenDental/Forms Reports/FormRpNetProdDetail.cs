@@ -530,7 +530,7 @@ namespace OpenDental{
 			}
 			report.ReportName=reportName;
 			report.AddTitle("Title","Provider Payroll Transactional Report");
-			report.AddSubTitle("PracName",Prefs.GetString(PrefName.PracticeTitle));
+			report.AddSubTitle("PracName",Preferences.GetString(PreferenceName.PracticeTitle));
 			if(radioTransactionalToday.Checked) {
 				report.AddSubTitle("Date",DateTime.Today.ToShortDateString());
 			}
@@ -578,7 +578,7 @@ namespace OpenDental{
 			//setup query
 			QueryObject query;
 			DataTable dt=RpProdInc.GetNetProductionDetailDataSet(dateFrom,dateTo,listProvs,listClinics
-				,checkAllProv.Checked,checkAllClin.Checked,Prefs.GetBool(PrefName.NetProdDetailUseSnapshotToday));
+				,checkAllProv.Checked,checkAllClin.Checked,Preferences.GetBool(PreferenceName.NetProdDetailUseSnapshotToday));
 			query=report.AddQuery(dt,"","",SplitByKind.None,1,true);
 			// add columns to report
 			Font font=new Font("Tahoma",8,FontStyle.Regular);
@@ -622,7 +622,7 @@ namespace OpenDental{
 				MessageBox.Show("To date cannot be before From date.");
 				return;
 			}
-			if(dateFrom!=DateTime.Today && dateTo==DateTime.Today && !Prefs.GetBool(PrefName.NetProdDetailUseSnapshotToday)) {
+			if(dateFrom!=DateTime.Today && dateTo==DateTime.Today && !Preferences.GetBool(PreferenceName.NetProdDetailUseSnapshotToday)) {
 				MessageBox.Show("Cannot run this report for a date range with today's date.  "
 					+"This is due to a preference in report setup for calculating writeoffs by snapshot.");
 				return;

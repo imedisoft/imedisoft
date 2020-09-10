@@ -580,41 +580,41 @@ namespace OpenDental
 			if (Definitions.IsDefinitionInUse(definition))
 			{
 				if (definition.Id.In(
-					Prefs.GetLong(PrefName.BrokenAppointmentAdjustmentType),
-					Prefs.GetLong(PrefName.AppointmentTimeArrivedTrigger),
-					Prefs.GetLong(PrefName.AppointmentTimeSeatedTrigger),
-					Prefs.GetLong(PrefName.AppointmentTimeDismissedTrigger),
-					Prefs.GetLong(PrefName.TreatPlanDiscountAdjustmentType),
-					Prefs.GetLong(PrefName.BillingChargeAdjustmentType),
-					Prefs.GetLong(PrefName.FinanceChargeAdjustmentType),
-					Prefs.GetLong(PrefName.PrepaymentUnearnedType),
-					Prefs.GetLong(PrefName.SalesTaxAdjustmentType),
-					Prefs.GetLong(PrefName.RecurringChargesPayTypeCC),
-					Prefs.GetLong(PrefName.TpUnearnedType)))
+					Preferences.GetLong(PreferenceName.BrokenAppointmentAdjustmentType),
+					Preferences.GetLong(PreferenceName.AppointmentTimeArrivedTrigger),
+					Preferences.GetLong(PreferenceName.AppointmentTimeSeatedTrigger),
+					Preferences.GetLong(PreferenceName.AppointmentTimeDismissedTrigger),
+					Preferences.GetLong(PreferenceName.TreatPlanDiscountAdjustmentType),
+					Preferences.GetLong(PreferenceName.BillingChargeAdjustmentType),
+					Preferences.GetLong(PreferenceName.FinanceChargeAdjustmentType),
+					Preferences.GetLong(PreferenceName.PrepaymentUnearnedType),
+					Preferences.GetLong(PreferenceName.SalesTaxAdjustmentType),
+					Preferences.GetLong(PreferenceName.RecurringChargesPayTypeCC),
+					Preferences.GetLong(PreferenceName.TpUnearnedType)))
 				{
 					ODMessageBox.Show("You cannot hide a definition if it is in use within Module Preferences.");
 					return false;
 				}
 				else if (definition.Id.In(
-					Prefs.GetLong(PrefName.RecallStatusMailed),
-					Prefs.GetLong(PrefName.RecallStatusTexted),
-					Prefs.GetLong(PrefName.RecallStatusEmailed),
-					Prefs.GetLong(PrefName.RecallStatusEmailedTexted)))
+					Preferences.GetLong(PreferenceName.RecallStatusMailed),
+					Preferences.GetLong(PreferenceName.RecallStatusTexted),
+					Preferences.GetLong(PreferenceName.RecallStatusEmailed),
+					Preferences.GetLong(PreferenceName.RecallStatusEmailedTexted)))
 				{
 					ODMessageBox.Show("You cannot hide a definition that is used as a status in the Setup Recall window.");
 					return false;
 				}
-				else if (definition.Id == Prefs.GetLong(PrefName.WebSchedNewPatConfirmStatus))
+				else if (definition.Id == Preferences.GetLong(PreferenceName.WebSchedNewPatConfirmStatus))
 				{
 					ODMessageBox.Show("You cannot hide a definition that is used as an appointment confirmation status in Web Sched New Pat Appt.");
 					return false;
 				}
-				else if (definition.Id == Prefs.GetLong(PrefName.WebSchedRecallConfirmStatus))
+				else if (definition.Id == Preferences.GetLong(PreferenceName.WebSchedRecallConfirmStatus))
 				{
 					ODMessageBox.Show("You cannot hide a definition that is used as an appointment confirmation status in Web Sched Recall Appt.");
 					return false;
 				}
-				else if (definition.Id == Prefs.GetLong(PrefName.PracticeDefaultBillType))
+				else if (definition.Id == Preferences.GetLong(PreferenceName.PracticeDefaultBillType))
 				{
 					ODMessageBox.Show("You cannot hide a billing type when it is selected as the practice default billing type.");
 					return false;

@@ -351,7 +351,7 @@ namespace OpenDental {
 				listClaimProcsForClaim.Insert(0,cpByTotal);
 			}
 			if(isAutomatic) {
-				ClaimL.ReceiveEraPayment(claim,claimPaid,listClaimProcsForClaim,Prefs.GetBool(PrefName.EraIncludeWOPercCoPay),isSupplementalPay);
+				ClaimL.ReceiveEraPayment(claim,claimPaid,listClaimProcsForClaim,Preferences.GetBool(PreferenceName.EraIncludeWOPercCoPay),isSupplementalPay);
 			}
 			else {
 				FormEtrans835ClaimPay FormP=new FormEtrans835ClaimPay(x835,claimPaid,claim,pat,fam,listInsPlans,listPatPlans,listInsSubs,isSupplementalPay);
@@ -594,8 +594,8 @@ namespace OpenDental {
 						Patients.Insert(member.Pat,false);
 						Patient memberPatOld=member.Pat.Copy();
 						member.Pat.PatStatus=PatientStatus.Patient;
-						member.Pat.BillingType=Prefs.GetLong(PrefName.PracticeDefaultBillType);
-						if(!Prefs.GetBool(PrefName.PriProvDefaultToSelectProv)) {
+						member.Pat.BillingType=Preferences.GetLong(PreferenceName.PracticeDefaultBillType);
+						if(!Preferences.GetBool(PreferenceName.PriProvDefaultToSelectProv)) {
 							//Set the patients primary provider to the practice default provider.
 							member.Pat.PriProv=Providers.GetDefaultProvider().Id;
 						}
@@ -827,7 +827,7 @@ namespace OpenDental {
 				insPlan.PlanNote="";
 				insPlan.FeeSched=0;
 				insPlan.PlanType="";
-				insPlan.ClaimFormNum=Prefs.GetLong(PrefName.DefaultClaimForm);
+				insPlan.ClaimFormNum=Preferences.GetLong(PreferenceName.DefaultClaimForm);
 				insPlan.UseAltCode=false;
 				insPlan.ClaimsUseUCR=false;
 				insPlan.CopayFeeSched=0;
@@ -882,7 +882,7 @@ namespace OpenDental {
 				insSub.Subscriber=member.Pat.PatNum;
 				insSub.SubscriberID=member.SubscriberId;
 				insSub.ReleaseInfo=member.IsReleaseInfo;
-				insSub.AssignBen=Prefs.GetBool(PrefName.InsDefaultAssignBen);
+				insSub.AssignBen=Preferences.GetBool(PreferenceName.InsDefaultAssignBen);
 				insSub.DateEffective=healthCoverage.DateEffective;
 				insSub.DateTerm=healthCoverage.DateTerm;
 				InsSubs.Insert(insSub);

@@ -80,7 +80,7 @@ namespace Imedisoft.Data
 			return Database.SelectMany(
 				"SELECT DISTINCT `patient_id` FROM `allergies` " +
 				"WHERE `patient_id` IN (" + string.Join(", ", patientIds) + ") " +
-				"AND `allergies`.`allergy_def_id` != " + Prefs.GetLong(PrefName.AllergiesIndicateNone),
+				"AND `allergies`.`allergy_def_id` != " + Preferences.GetLong(PreferenceName.AllergiesIndicateNone),
 					Database.ToScalar<long>);
 		}
 

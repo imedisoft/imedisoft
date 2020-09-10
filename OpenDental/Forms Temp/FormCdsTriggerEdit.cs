@@ -31,8 +31,8 @@ namespace OpenDental {
 		}
 
 		private void FormEhrTriggerEdit_Load(object sender,EventArgs e) {
-			if(Prefs.GetString(PrefName.SoftwareName)!="") {
-				this.Text+=" - "+Prefs.GetString(PrefName.SoftwareName);
+			if(Preferences.GetString(PreferenceName.SoftwareName)!="") {
+				this.Text+=" - "+Preferences.GetString(PreferenceName.SoftwareName);
 			}
 			if(!CDSPermissions.GetForUser(Security.CurrentUser.Id).EditBibliography) {
 				textBibliography.Enabled=false;

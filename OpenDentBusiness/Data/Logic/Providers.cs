@@ -500,7 +500,7 @@ namespace Imedisoft.Data
 			switch (clinic.InsBillingProviderType)
 			{
 				case 'D':
-					return Prefs.GetLong(PrefName.InsBillingProv);
+					return Preferences.GetLong(PreferenceName.InsBillingProv);
 
 				case 'T':
 					return treatmentProviderId;
@@ -569,13 +569,13 @@ namespace Imedisoft.Data
 				}
 			}
 
-			return GetById(Prefs.GetLong(PrefName.PracticeDefaultProv));
+			return GetById(Preferences.GetLong(PreferenceName.PracticeDefaultProv));
 		}
 
 		public static DataTable GetDefaultPracticeProvider() 
 			=> Database.ExecuteDataTable(
 				"SELECT `first_name`, `last_name`, `suffix`, `state_license` " +
-				"FROM `providers` WHERE `id` = " + Prefs.GetLong(PrefName.PracticeDefaultProv));
+				"FROM `providers` WHERE `id` = " + Preferences.GetLong(PreferenceName.PracticeDefaultProv));
 
 		/// <summary>
 		/// We should merge these results with GetDefaultPracticeProvider(), but that would require
@@ -585,7 +585,7 @@ namespace Imedisoft.Data
 		public static DataTable GetDefaultPracticeProvider2() 
 			=> Database.ExecuteDataTable(
 				"SELECT `first_name`, `last_name`, `speciality` " +
-				"FROM `providers` WHERE `id` = " + Prefs.GetLong(PrefName.PracticeDefaultProv));
+				"FROM `providers` WHERE `id` = " + Preferences.GetLong(PreferenceName.PracticeDefaultProv));
 
 		///<summary>We should merge these results with GetDefaultPracticeProvider(), but
 		///that would require restructuring indexes in different places in the code and this is
@@ -595,7 +595,7 @@ namespace Imedisoft.Data
 
 			string command = @"SELECT NationalProvID " +
 				"FROM provider WHERE provnum=" +
-				POut.Long(Prefs.GetLong(PrefName.PracticeDefaultProv));
+				POut.Long(Preferences.GetLong(PreferenceName.PracticeDefaultProv));
 			return Database.ExecuteDataTable(command);
 		}
 
@@ -631,7 +631,7 @@ namespace Imedisoft.Data
 			//No need to check RemotingRole; no call to db.
 			List<Provider> listProviders = Providers.GetDeepCopy(true);
 			WebSchedProviderRules providerRule = PIn.Enum<WebSchedProviderRules>(
-					ClinicPrefs.GetString(clinicNum, PrefName.WebSchedProviderRule) ?? Prefs.GetString(PrefName.WebSchedProviderRule));
+					ClinicPrefs.GetString(clinicNum, PreferenceName.WebSchedProviderRule) ?? Preferences.GetString(PreferenceName.WebSchedProviderRule));
 			switch (providerRule)
 			{
 				case WebSchedProviderRules.PrimaryProvider:
@@ -703,7 +703,7 @@ namespace Imedisoft.Data
 		{
 			//No need to check RemotingRole; no call to db.
 			List<Provider> listProvs = Providers.GetDeepCopy(true);
-			if (Prefs.GetBool(PrefName.EasyHideDentalSchools))
+			if (Preferences.GetBool(PreferenceName.EasyHideDentalSchools))
 			{//This is here to save doing the logic below for users who have no way to filter the provider picker list.
 				return listProvs;
 			}

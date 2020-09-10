@@ -98,7 +98,7 @@ namespace OpenDentBusiness
 		/// You must manually override using OverrideFields if needed.
 		/// If no default present, returns null.
 		/// </summary>
-		public static Clearinghouse GetDefaultEligibility() => GetClearinghouse(Prefs.GetLong(PrefName.ClearinghouseDefaultEligibility));
+		public static Clearinghouse GetDefaultEligibility() => GetClearinghouse(Preferences.GetLong(PreferenceName.ClearinghouseDefaultEligibility));
 
 		/// <summary>
 		/// Gets the last batch number from db for the HQ version of this clearinghouseClin and increments it by one.
@@ -245,7 +245,7 @@ namespace OpenDentBusiness
 		/// If no default present, returns null.
 		/// </summary>
 		public static Clearinghouse GetDefaultDental() 
-			=> GetClearinghouse(Prefs.GetLong(PrefName.ClearinghouseDefaultDent));
+			=> GetClearinghouse(Preferences.GetLong(PreferenceName.ClearinghouseDefaultDent));
 
 		/// <summary>
 		/// Gets an HQ clearinghouse from cache.
@@ -473,11 +473,11 @@ namespace OpenDentBusiness
             bool isTimeToRetrieve = IsTimeToRetrieveReports(true, out string errMsg);
             if (isTimeToRetrieve)
 			{
-				Prefs.Set(PrefName.ClaimReportReceiveLastDateTime, DateTime.Now);
+				Preferences.Set(PreferenceName.ClaimReportReceiveLastDateTime, DateTime.Now);
 			}
 
 			List<Clearinghouse> listClearinghousesHq = GetDeepCopy();
-			long defaultClearingHouseNum = Prefs.GetLong(PrefName.ClearinghouseDefaultDent);
+			long defaultClearingHouseNum = Preferences.GetLong(PreferenceName.ClearinghouseDefaultDent);
 			for (int i = 0; i < listClearinghousesHq.Count; i++)
 			{
 				Clearinghouse clearinghouseHq = listClearinghousesHq[i];
@@ -497,9 +497,9 @@ namespace OpenDentBusiness
 		{
 			progress ??= new ODProgressExtendedNull();
 
-			DateTime timeLastReport = SIn.Date(Prefs.GetStringNoCache(PrefName.ClaimReportReceiveLastDateTime));
-			double timeReceiveInternal = SIn.Double(Prefs.GetStringNoCache(PrefName.ClaimReportReceiveInterval));//Interval in minutes.
-			DateTime timeToRecieve = DateTime.Now.Date + PrefC.GetDate(PrefName.ClaimReportReceiveTime).TimeOfDay;
+			DateTime timeLastReport = SIn.Date(Preferences.GetStringNoCache(PreferenceName.ClaimReportReceiveLastDateTime));
+			double timeReceiveInternal = SIn.Double(Preferences.GetStringNoCache(PreferenceName.ClaimReportReceiveInterval));//Interval in minutes.
+			DateTime timeToRecieve = DateTime.Now.Date + PrefC.GetDate(PreferenceName.ClaimReportReceiveTime).TimeOfDay;
 			double timeDiff = DateTime.Now.Subtract(timeLastReport).TotalMinutes;
 			errorMessage = "";
 
@@ -842,7 +842,7 @@ namespace OpenDentBusiness
 				// Timer interval OK.  Now we can retrieve the reports from web services.
 				if (!isAutomaticMode)
 				{
-					Prefs.Set(PrefName.ClaimReportReceiveLastDateTime, DateTime.Now);
+					Preferences.Set(PreferenceName.ClaimReportReceiveLastDateTime, DateTime.Now);
 				}
 				errorMessage = RetrieveReports(clearinghouseClin, isAutomaticMode, progress);
 				if (errorMessage != "")
@@ -893,12 +893,12 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static string CheckClearinghouseDefaults()
 		{
-			if (Prefs.GetLong(PrefName.ClearinghouseDefaultDent) == 0)
+			if (Preferences.GetLong(PreferenceName.ClearinghouseDefaultDent) == 0)
 			{
 				return "No default dental clearinghouse defined.";
 			}
 
-			if (Prefs.GetBool(PrefName.ShowFeatureMedicalInsurance) && Prefs.GetLong(PrefName.ClearinghouseDefaultMed) == 0)
+			if (Preferences.GetBool(PreferenceName.ShowFeatureMedicalInsurance) && Preferences.GetLong(PreferenceName.ClearinghouseDefaultMed) == 0)
 			{
 				return "No default medical clearinghouse defined.";
 			}

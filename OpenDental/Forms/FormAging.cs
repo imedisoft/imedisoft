@@ -17,11 +17,11 @@ namespace Imedisoft.Forms
 
 		private void FormAging_Load(object sender, EventArgs e)
 		{
-			var lastDate = Prefs.GetDateTime(PrefName.DateLastAging);
+			var lastDate = Preferences.GetDateTime(PreferenceName.DateLastAging);
 
 			lastDateTextBox.Text = lastDate.ToShortDateString();
 
-            if (Prefs.GetBool(PrefName.AgingCalculatedMonthlyInsteadOfDaily))
+            if (Preferences.GetBool(PreferenceName.AgingCalculatedMonthlyInsteadOfDaily))
             {
                 if (lastDate < DateTime.Today.AddDays(-15))
                 {
@@ -35,7 +35,7 @@ namespace Imedisoft.Forms
             else
             {
                 dateTextBox.Text = DateTime.Today.ToShortDateString();
-                if (Prefs.GetBool(PrefName.AgingIsEnterprise))
+                if (Preferences.GetBool(PreferenceName.AgingIsEnterprise))
                 {
                     dateTextBox.ReadOnly = true;
                     dateTextBox.BackColor = SystemColors.Control;
@@ -45,7 +45,7 @@ namespace Imedisoft.Forms
 
 		private bool RunAgingEnterprise(DateTime date)
 		{
-			DateTime dateLastAging = PrefC.GetDate(PrefName.DateLastAging);
+			DateTime dateLastAging = PrefC.GetDate(PreferenceName.DateLastAging);
 			if (dateLastAging.Date == date.Date)
 			{
 				if (!Confirm( 
@@ -57,9 +57,9 @@ namespace Imedisoft.Forms
 				}
 			}
 
-			Prefs.RefreshCache();
+			Preferences.RefreshCache();
 
-			var agingBeginDateTime = Prefs.GetDateTimeOrNull(PrefName.AgingBeginDateTime);
+			var agingBeginDateTime = Preferences.GetDateTimeOrNull(PreferenceName.AgingBeginDateTime);
 			if (agingBeginDateTime.HasValue)
 			{
 				ShowError(
@@ -71,7 +71,7 @@ namespace Imedisoft.Forms
 
 			SecurityLogs.Write(Permissions.AgingRan, Translation.SecurityLog.AgingStart);
 
-			Prefs.Set(PrefName.AgingBeginDateTime, DateTime.UtcNow);
+			Preferences.Set(PreferenceName.AgingBeginDateTime, DateTime.UtcNow);
 
 			Cursor = Cursors.WaitCursor;
 
@@ -81,7 +81,7 @@ namespace Imedisoft.Forms
 				{
 					Ledgers.ComputeAging(0, date);
 
-					Prefs.Set(PrefName.DateLastAging, date);
+					Preferences.Set(PreferenceName.DateLastAging, date);
 				},
 				startingMessage: "Calculating enterprise aging for all patients as of " + date.ToShortDateString() + "...",
 				actionException: ex =>
@@ -96,7 +96,7 @@ namespace Imedisoft.Forms
 
 			SecurityLogs.Write(Permissions.AgingRan, Translation.SecurityLog.AgingComplete);
 
-			Prefs.Set(PrefName.AgingBeginDateTime, "");
+			Preferences.Set(PreferenceName.AgingBeginDateTime, "");
 
 			return result;
 		}
@@ -110,7 +110,7 @@ namespace Imedisoft.Forms
 				return;
             }
 
-			if (Prefs.GetBool(PrefName.AgingIsEnterprise))
+			if (Preferences.GetBool(PreferenceName.AgingIsEnterprise))
 			{
 				if (!RunAgingEnterprise(date))
 				{
@@ -144,7 +144,7 @@ namespace Imedisoft.Forms
 					return;
 				}
 
-				if (Prefs.Set(PrefName.DateLastAging, date))
+				if (Preferences.Set(PreferenceName.DateLastAging, date))
 				{
 					CacheManager.RefreshGlobal(nameof(InvalidType.Prefs));
 				}

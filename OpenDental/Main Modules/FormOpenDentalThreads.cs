@@ -46,13 +46,13 @@ namespace OpenDental
 		{
 			if (doStart)
 			{
-				if (PrefC.GetInt(PrefName.ProcessSigsIntervalInSecs) == 0)
+				if (PrefC.GetInt(PreferenceName.ProcessSigsIntervalInSecs) == 0)
 				{
 					_hasSignalProcessingPaused = true;
 				}
 				else
 				{
-					timerSignals.Interval = PrefC.GetInt(PrefName.ProcessSigsIntervalInSecs) * 1000;
+					timerSignals.Interval = PrefC.GetInt(PreferenceName.ProcessSigsIntervalInSecs) * 1000;
 					timerSignals.Start();
 				}
 				timerTimeIndic.Start();
@@ -166,8 +166,8 @@ namespace OpenDental
 			}
 			ODThread.WorkerDelegate getAlerts = new ODThread.WorkerDelegate((o) =>
 			{
-				DateTime dtInactive = Security.DateTimeLastActivity.AddMinutes(PrefC.GetInt(PrefName.AlertInactiveMinutes));
-				if (PrefC.GetInt(PrefName.AlertInactiveMinutes) != 0 && DateTime.Now > dtInactive)
+				DateTime dtInactive = Security.DateTimeLastActivity.AddMinutes(PrefC.GetInt(PreferenceName.AlertInactiveMinutes));
+				if (PrefC.GetInt(PreferenceName.AlertInactiveMinutes) != 0 && DateTime.Now > dtInactive)
 				{
 					return;//user has been inactive for a while, so stop checking alerts.
 				}
@@ -195,7 +195,7 @@ namespace OpenDental
 				getAlerts(null);
 				return;
 			}
-			int checkAlertsIntervalMS = (int)TimeSpan.FromSeconds(PrefC.GetInt(PrefName.AlertCheckFrequencySeconds)).TotalMilliseconds;
+			int checkAlertsIntervalMS = (int)TimeSpan.FromSeconds(PrefC.GetInt(PreferenceName.AlertCheckFrequencySeconds)).TotalMilliseconds;
 			if (checkAlertsIntervalMS == 0)
 			{
 				//Office has disabled alert checking. We won't periodically check alerts, but we will do it when the user does something alert related.
@@ -220,14 +220,14 @@ namespace OpenDental
 			{
 				return;
 			}
-			if (Prefs.GetBool(PrefName.ClaimReportReceivedByService))
+			if (Preferences.GetBool(PreferenceName.ClaimReportReceivedByService))
 			{
 				return;
 			}
-			int claimReportRetrieveIntervalMS = (int)TimeSpan.FromMinutes(PrefC.GetInt(PrefName.ClaimReportReceiveInterval)).TotalMilliseconds;
+			int claimReportRetrieveIntervalMS = (int)TimeSpan.FromMinutes(PrefC.GetInt(PreferenceName.ClaimReportReceiveInterval)).TotalMilliseconds;
 			ODThread odThread = new ODThread(claimReportRetrieveIntervalMS, (o) =>
 			{
-				string claimReportComputer = Prefs.GetString(PrefName.ClaimReportComputerName);
+				string claimReportComputer = Preferences.GetString(PreferenceName.ClaimReportComputerName);
 				if (claimReportComputer == "" || claimReportComputer != Dns.GetHostName())
 				{
 					return;
@@ -327,7 +327,7 @@ namespace OpenDental
 				return;
 			}
 			//For EHR users we want to load up the EHR code list from the obfuscated dll in a background thread because it takes roughly 11 seconds to load up.
-			if (!Prefs.GetBool(PrefName.ShowFeatureEhr))
+			if (!Preferences.GetBool(PreferenceName.ShowFeatureEhr))
 			{
 				return;
 			}
@@ -367,7 +367,7 @@ namespace OpenDental
 
 		private void EnableFeaturesWorker()
 		{
-			var featureDate = Prefs.GetDateTimeOrNull(PrefName.ProgramAdditionalFeatures);
+			var featureDate = Preferences.GetDateTimeOrNull(PreferenceName.ProgramAdditionalFeatures);
 			if (!featureDate.HasValue || featureDate > DateTime.UtcNow)
             {
 				return;
@@ -378,7 +378,7 @@ namespace OpenDental
 
 			DateTime dateOriginal = MiscData.GetNowDateTime().AddMinutes(-30);
 
-			Prefs.Set(PrefName.ProgramAdditionalFeatures, dateOriginal.AddDays(1));
+			Preferences.Set(PreferenceName.ProgramAdditionalFeatures, dateOriginal.AddDays(1));
 
 			Signalods.SetInvalid(InvalidType.Prefs);
 			string response = WebServiceMainHQProxy.GetWebServiceMainHQInstance()
@@ -407,7 +407,7 @@ namespace OpenDental
 				long days = 7;//default value;
 				long.TryParse(node.InnerText, out days);
 
-				Prefs.Set(PrefName.ProgramAdditionalFeatures, dateOriginal.AddDays(days));
+				Preferences.Set(PreferenceName.ProgramAdditionalFeatures, dateOriginal.AddDays(days));
 			}
 		}
 
@@ -427,7 +427,7 @@ namespace OpenDental
 				return;//Do not start the listener service monitor for users without permission.
 			}
 			//Process any Error signals that happened due to an update:
-			EServiceSignals.ProcessErrorSignalsAroundTime(PrefC.GetDate(PrefName.ProgramVersionLastUpdated));
+			EServiceSignals.ProcessErrorSignalsAroundTime(PrefC.GetDate(PreferenceName.ProgramVersionLastUpdated));
 			//Create a separate thread that will run every 60 seconds to monitor eService signals.
 			ODThread odThread = new ODThread(60000, EServiceMonitorWorker);
 			//Currently we don't want to do anything if the eService signal processing fails.  Simply try again in a minute.  
@@ -812,7 +812,7 @@ namespace OpenDental
 			{
 				return;
 			}
-			if (!(ODEnvironment.IsRunningOnDbServer(MiscData.GetMySqlServer()) && Prefs.GetBool(PrefName.ShowFeatureEhr)))
+			if (!(ODEnvironment.IsRunningOnDbServer(MiscData.GetMySqlServer()) && Preferences.GetBool(PreferenceName.ShowFeatureEhr)))
 			{
 				return;
 			}
@@ -831,7 +831,7 @@ namespace OpenDental
 			double nistOffset = double.MaxValue;
 			ODException.SwallowAnyException(() =>
 			{//Invalid NIST Server URL if fails
-				nistOffset = ntp.getTime(Prefs.GetString(PrefName.NistTimeServerUrl));
+				nistOffset = ntp.getTime(Preferences.GetString(PreferenceName.NistTimeServerUrl));
 			});
 			if (nistOffset != double.MaxValue)
 			{

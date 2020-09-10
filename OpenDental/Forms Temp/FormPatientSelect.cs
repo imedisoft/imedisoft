@@ -101,7 +101,7 @@ namespace Imedisoft.Forms
 
 		public void FormSelectPatient_Load(object sender, EventArgs e)
 		{
-			checkShowInactive.Checked = Prefs.GetBool(PrefName.PatientSelectShowInactive);
+			checkShowInactive.Checked = Preferences.GetBool(PreferenceName.PatientSelectShowInactive);
 			if (SelectionModeOnly)
 			{
 				groupAddPt.Visible = false;
@@ -124,7 +124,7 @@ namespace Imedisoft.Forms
 				billingTypeComboBox.Items.Add(billingType.Name);
 			}
 
-			if (Prefs.GetBool(PrefName.EasyHidePublicHealth))
+			if (Preferences.GetBool(PreferenceName.EasyHidePublicHealth))
 			{
 				siteComboBox.Visible = false;
 				siteLabel.Visible = false;
@@ -149,7 +149,7 @@ namespace Imedisoft.Forms
 				clinicComboBox.SelectedClinicNum = Clinics.ClinicId.Value;
 			}
 
-			if (Prefs.GetBool(PrefName.PatientSSNMasked, true))
+			if (Preferences.GetBool(PreferenceName.PatientSSNMasked, true))
 			{
 				// Add "View SS#" right click option, MenuItemPopup() will show and hide it as needed.
 				if (patientsGrid.ContextMenu == null)
@@ -181,7 +181,7 @@ namespace Imedisoft.Forms
 				menu.Popup += MenuItemPopupUnmaskSSN;
 			}
 
-			if (Prefs.GetBool(PrefName.PatientDOBMasked))
+			if (Preferences.GetBool(PreferenceName.PatientDOBMasked))
 			{
 				// Add "View DOB" right click option, MenuItemPopup() will show and hide it as needed.
 				if (patientsGrid.ContextMenu == null)
@@ -209,8 +209,8 @@ namespace Imedisoft.Forms
 
 			//Using Prefs.GetString on the following two prefs so that we can call PIn.Int with hasExceptions=false and using the Math.Max and Math.Min we
 			//are guaranteed to get a valid number from these prefs.
-			patientsGridFillTimer.Interval = PIn.Int(Prefs.GetString(PrefName.PatientSelectSearchPauseMs));
-			_patSearchMinChars = PIn.Int(Prefs.GetString(PrefName.PatientSelectSearchMinChars));
+			patientsGridFillTimer.Interval = PIn.Int(Preferences.GetString(PreferenceName.PatientSelectSearchPauseMs));
+			_patSearchMinChars = PIn.Int(Preferences.GetString(PreferenceName.PatientSelectSearchMinChars));
 			if (ExplicitPatNums != null && ExplicitPatNums.Count > 0)
 			{
 				FillGrid(false, ExplicitPatNums);
@@ -237,7 +237,7 @@ namespace Imedisoft.Forms
 		{
             refreshCheckBox.Checked = ComputerPrefs.LocalComputer.PatSelectSearchMode switch
             {
-                SearchMode.Default => !Prefs.GetBool(PrefName.PatientSelectUsesSearchButton),
+                SearchMode.Default => !Preferences.GetBool(PreferenceName.PatientSelectUsesSearchButton),
                 SearchMode.RefreshWhileTyping => true,
                 _ => false,
             };
@@ -299,7 +299,7 @@ namespace Imedisoft.Forms
 		/// </summary>
 		private bool DoRefreshGrid()
 		{
-			return refreshCheckBox.Checked && (PIn.Enum<YN>(PrefC.GetInt(PrefName.PatientSelectSearchWithEmptyParams)) != YN.No || TextBoxCharCount() > 0);
+			return refreshCheckBox.Checked && (PIn.Enum<YN>(PrefC.GetInt(PreferenceName.PatientSelectSearchWithEmptyParams)) != YN.No || TextBoxCharCount() > 0);
 		}
 
 		/// <summary>
@@ -568,7 +568,7 @@ namespace Imedisoft.Forms
 				{
 					//When below preference is false, don't hide user restricted clinics from view. Just return clinicNums as an empty string.
 					//If this preference is true, we DO hide user restricted clinics from view.
-					if (Prefs.GetBool(PrefName.PatientSelectFilterRestrictedClinics) && (Security.CurrentUser.ClinicIsRestricted || !checkShowArchived.Checked))
+					if (Preferences.GetBool(PreferenceName.PatientSelectFilterRestrictedClinics) && (Security.CurrentUser.ClinicIsRestricted || !checkShowArchived.Checked))
 					{
 						//only set clinicNums if user is unrestricted and showing hidden clinics, otherwise the search will show patients from all clinics
 						clinicNums = string.Join(",", clinicComboBox.ListClinics
@@ -679,7 +679,7 @@ namespace Imedisoft.Forms
 							row.Cells.Add(_DataTablePats.Rows[i]["age"].ToString());
 							break;
 						case "SSN":
-							row.Cells.Add(Patients.SSNFormatHelper(_DataTablePats.Rows[i]["SSN"].ToString(), Prefs.GetBool(PrefName.PatientSSNMasked)));
+							row.Cells.Add(Patients.SSNFormatHelper(_DataTablePats.Rows[i]["SSN"].ToString(), Preferences.GetBool(PreferenceName.PatientSSNMasked)));
 							break;
 						case "Hm Phone":
 							row.Cells.Add(_DataTablePats.Rows[i]["HmPhone"].ToString());
@@ -725,7 +725,7 @@ namespace Imedisoft.Forms
 							row.Cells.Add(_DataTablePats.Rows[i]["clinic"].ToString());
 							break;
 						case "Birthdate":
-							row.Cells.Add(Patients.DOBFormatHelper(PIn.Date(_DataTablePats.Rows[i]["Birthdate"].ToString()), Prefs.GetBool(PrefName.PatientDOBMasked)));
+							row.Cells.Add(Patients.DOBFormatHelper(PIn.Date(_DataTablePats.Rows[i]["Birthdate"].ToString()), Preferences.GetBool(PreferenceName.PatientDOBMasked)));
 							break;
 						case "Site":
 							row.Cells.Add(_DataTablePats.Rows[i]["site"].ToString());
@@ -822,7 +822,7 @@ namespace Imedisoft.Forms
 			}
 
 			long? primaryProviderId = null;
-			if (!Prefs.GetBool(PrefName.PriProvDefaultToSelectProv))
+			if (!Preferences.GetBool(PreferenceName.PriProvDefaultToSelectProv))
 			{
 				// Explicitly use the combo clinic instead of FormOpenDental.ClinicNum because the combo box should default to that clinic unless manually changed by the user.
 				if (PrefC.HasClinicsEnabled && !clinicComboBox.IsAllSelected)

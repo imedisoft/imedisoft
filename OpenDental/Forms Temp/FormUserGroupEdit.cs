@@ -1,15 +1,15 @@
-using System;
-using System.Drawing;
-using System.Collections;
-using System.ComponentModel;
-using System.Windows.Forms;
+using Imedisoft.Data;
 using OpenDentBusiness;
+using System;
+using System.Windows.Forms;
 
-namespace OpenDental{
-	/// <summary>
-	/// Summary description for FormBasicTemplate.
-	/// </summary>
-	public class FormUserGroupEdit : ODForm {
+namespace OpenDental
+{
+    /// <summary>
+    /// Summary description for FormBasicTemplate.
+    /// </summary>
+    public class FormUserGroupEdit : ODForm
+	{
 		private OpenDental.UI.Button butCancel;
 		private OpenDental.UI.Button butOK;
 		/// <summary>
@@ -30,23 +30,23 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			
-			CurGroup=curGroup;
+
+			CurGroup = curGroup;
 		}
 
 		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
-		protected override void Dispose( bool disposing )
+		protected override void Dispose(bool disposing)
 		{
-			if( disposing )
+			if (disposing)
 			{
-				if(components != null)
+				if (components != null)
 				{
 					components.Dispose();
 				}
 			}
-			base.Dispose( disposing );
+			base.Dispose(disposing);
 		}
 
 		#region Windows Form Designer generated code
@@ -67,9 +67,9 @@ namespace OpenDental{
 			// butCancel
 			// 
 			this.butCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butCancel.Location = new System.Drawing.Point(362,105);
+			this.butCancel.Location = new System.Drawing.Point(362, 105);
 			this.butCancel.Name = "butCancel";
-			this.butCancel.Size = new System.Drawing.Size(75,26);
+			this.butCancel.Size = new System.Drawing.Size(75, 26);
 			this.butCancel.TabIndex = 2;
 			this.butCancel.Text = "&Cancel";
 			this.butCancel.Click += new System.EventHandler(this.butCancel_Click);
@@ -77,27 +77,27 @@ namespace OpenDental{
 			// butOK
 			// 
 			this.butOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butOK.Location = new System.Drawing.Point(362,64);
+			this.butOK.Location = new System.Drawing.Point(362, 64);
 			this.butOK.Name = "butOK";
-			this.butOK.Size = new System.Drawing.Size(75,26);
+			this.butOK.Size = new System.Drawing.Size(75, 26);
 			this.butOK.TabIndex = 1;
 			this.butOK.Text = "&OK";
 			this.butOK.Click += new System.EventHandler(this.butOK_Click);
 			// 
 			// label1
 			// 
-			this.label1.Location = new System.Drawing.Point(16,21);
+			this.label1.Location = new System.Drawing.Point(16, 21);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(100,16);
+			this.label1.Size = new System.Drawing.Size(100, 16);
 			this.label1.TabIndex = 2;
 			this.label1.Text = "Description";
 			this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// textDescription
 			// 
-			this.textDescription.Location = new System.Drawing.Point(120,19);
+			this.textDescription.Location = new System.Drawing.Point(120, 19);
 			this.textDescription.Name = "textDescription";
-			this.textDescription.Size = new System.Drawing.Size(206,20);
+			this.textDescription.Size = new System.Drawing.Size(206, 20);
 			this.textDescription.TabIndex = 0;
 			// 
 			// butDelete
@@ -105,17 +105,17 @@ namespace OpenDental{
 			this.butDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.butDelete.Image = global::Imedisoft.Properties.Resources.deleteX;
 			this.butDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.butDelete.Location = new System.Drawing.Point(22,105);
+			this.butDelete.Location = new System.Drawing.Point(22, 105);
 			this.butDelete.Name = "butDelete";
-			this.butDelete.Size = new System.Drawing.Size(88,26);
+			this.butDelete.Size = new System.Drawing.Size(88, 26);
 			this.butDelete.TabIndex = 4;
 			this.butDelete.Text = "Delete";
 			this.butDelete.Click += new System.EventHandler(this.butDelete_Click);
 			// 
 			// FormUserGroupEdit
 			// 
-			this.AutoScaleBaseSize = new System.Drawing.Size(5,13);
-			this.ClientSize = new System.Drawing.Size(468,152);
+			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			this.ClientSize = new System.Drawing.Size(468, 152);
 			this.Controls.Add(this.butDelete);
 			this.Controls.Add(this.textDescription);
 			this.Controls.Add(this.label1);
@@ -135,80 +135,66 @@ namespace OpenDental{
 		}
 		#endregion
 
-		private void FormUserGroupEdit_Load(object sender, System.EventArgs e) {
-			textDescription.Text=CurGroup.Description;
+		private void FormUserGroupEdit_Load(object sender, System.EventArgs e)
+		{
+			textDescription.Text = CurGroup.Description;
 		}
 
-		private void butDelete_Click(object sender, System.EventArgs e) {
-			if(IsNew){
-				DialogResult=DialogResult.Cancel;
+		private void butDelete_Click(object sender, System.EventArgs e)
+		{
+			if (IsNew)
+			{
+				DialogResult = DialogResult.Cancel;
 				return;
 			}
-			if(Prefs.GetLong(PrefName.DefaultUserGroup)==CurGroup.Id) {
+			if (Preferences.GetLong(PreferenceName.DefaultUserGroup) == CurGroup.Id)
+			{
 				MessageBox.Show("Cannot delete user group that is set as the default user group.");
 				return;
 			}
-			try{
+			try
+			{
 				UserGroups.Delete(CurGroup);
 				DataValid.SetInvalid(InvalidType.Security);
-				DialogResult=DialogResult.OK;
+				DialogResult = DialogResult.OK;
 			}
-			catch(Exception ex){
+			catch (Exception ex)
+			{
 				MessageBox.Show(ex.Message);
 			}
 		}
 
-		private void butOK_Click(object sender, System.EventArgs e) {
-			if(textDescription.Text==""){
+		private void butOK_Click(object sender, System.EventArgs e)
+		{
+			if (textDescription.Text == "")
+			{
 				MessageBox.Show("Please enter a description.");
 				return;
 			}
-			CurGroup.Description=textDescription.Text;
-			try{
-				if(IsNew){
+			CurGroup.Description = textDescription.Text;
+			try
+			{
+				if (IsNew)
+				{
 					UserGroups.Insert(CurGroup);
 				}
-				else{
+				else
+				{
 					UserGroups.Update(CurGroup);
 				}
 			}
-			catch(Exception ex){
+			catch (Exception ex)
+			{
 				MessageBox.Show(ex.Message);
 				return;
 			}
 			DataValid.SetInvalid(InvalidType.Security);
-			DialogResult=DialogResult.OK;
+			DialogResult = DialogResult.OK;
 		}
 
-		private void butCancel_Click(object sender, System.EventArgs e) {
-			DialogResult=DialogResult.Cancel;
+		private void butCancel_Click(object sender, System.EventArgs e)
+		{
+			DialogResult = DialogResult.Cancel;
 		}
-
-		
-
-		
-
-
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

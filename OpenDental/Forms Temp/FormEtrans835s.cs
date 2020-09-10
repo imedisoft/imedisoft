@@ -1,14 +1,16 @@
-﻿using System;
+﻿using CodeBase;
+using Imedisoft.Data;
+using OpenDental.UI;
+using OpenDentBusiness;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
-using OpenDental.UI;
-using OpenDentBusiness;
-using CodeBase;
 
-namespace OpenDental {
-	public partial class FormEtrans835s:ODForm {
+namespace OpenDental
+{
+    public partial class FormEtrans835s:ODForm {
 	
 		///<summary>Start date used to populate _listEtranss.</summary>
 		private DateTime _reportDateFrom=DateTime.MaxValue;
@@ -108,8 +110,8 @@ namespace OpenDental {
 			string carrierName,string checkTraceNum,string amountMin,string amountMax,string controlId)
 		{
 			Cursor=Cursors.WaitCursor;
-			labelControlId.Visible=Prefs.GetBool(PrefName.EraShowControlIdFilter);
-			textControlId.Visible=Prefs.GetBool(PrefName.EraShowControlIdFilter);
+			labelControlId.Visible=Preferences.GetBool(PreferenceName.EraShowControlIdFilter);
+			textControlId.Visible=Preferences.GetBool(PreferenceName.EraShowControlIdFilter);
 			Action actionCloseProgress=null;
 			if(isRefreshNeeded) {
 				actionCloseProgress=ODProgress.Show(EventCategory.Etrans,typeof(EtransEvent),"Gathering data"+"...");
@@ -180,7 +182,7 @@ namespace OpenDental {
 				gridMain.Columns.Add(new GridColumn("Clinic",70));
 			}
 			gridMain.Columns.Add(new GridColumn("Code",37,HorizontalAlignment.Center));
-			if(Prefs.GetBool(PrefName.EraShowControlIdFilter)) {
+			if(Preferences.GetBool(PreferenceName.EraShowControlIdFilter)) {
 				gridMain.Columns.Add(new GridColumn("ControlID",70){ IsWidthDynamic=true });
 			}
 			gridMain.Columns.Add(new GridColumn("Note",250){ IsWidthDynamic=true,DynamicWeight=2 });
@@ -252,7 +254,7 @@ namespace OpenDental {
 				}
 				#endregion
 				row.Cells.Add(x835._paymentMethodCode);
-				if(Prefs.GetBool(PrefName.EraShowControlIdFilter)) {
+				if(Preferences.GetBool(PreferenceName.EraShowControlIdFilter)) {
 					row.Cells.Add(x835.ControlId);
 				}
 				row.Cells.Add(etrans.Note);

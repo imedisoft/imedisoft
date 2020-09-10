@@ -66,7 +66,7 @@ namespace OpenDental {
 			butPerio.Text="Set Perio";
 			string cellStr;
 			for(int i=0;i<RecallList.Count;i++){
-				if(Prefs.GetLong(PrefName.RecallTypeSpecialPerio)==RecallList[i].RecallTypeNum){
+				if(Preferences.GetLong(PreferenceName.RecallTypeSpecialPerio)==RecallList[i].RecallTypeNum){
 					IsPerio=true;
 					butPerio.Text="Set Prophy";
 				}
@@ -147,9 +147,9 @@ namespace OpenDental {
 			if(IsPerio){
 				//change the perio types to prophy
 				for(int i=0;i<RecallList.Count;i++){
-					if(Prefs.GetLong(PrefName.RecallTypeSpecialPerio)==RecallList[i].RecallTypeNum){
-						RecallList[i].RecallTypeNum=Prefs.GetLong(PrefName.RecallTypeSpecialProphy);
-						RecallList[i].RecallInterval=RecallTypes.GetInterval(Prefs.GetLong(PrefName.RecallTypeSpecialProphy));
+					if(Preferences.GetLong(PreferenceName.RecallTypeSpecialPerio)==RecallList[i].RecallTypeNum){
+						RecallList[i].RecallTypeNum=Preferences.GetLong(PreferenceName.RecallTypeSpecialProphy);
+						RecallList[i].RecallInterval=RecallTypes.GetInterval(Preferences.GetLong(PreferenceName.RecallTypeSpecialProphy));
 						//previous date will be reset below in synch, but probably won't change since similar triggers.
 						Recalls.Update(RecallList[i]);
 						SecurityLogs.MakeLogEntry(Permissions.RecallEdit,RecallList[i].PatNum,"Recall changed to Prophy from the Recalls for Patient window.");
@@ -161,9 +161,9 @@ namespace OpenDental {
 				bool found=false;
 				//change any prophy types to perio
 				for(int i=0;i<RecallList.Count;i++){
-					if(Prefs.GetLong(PrefName.RecallTypeSpecialProphy)==RecallList[i].RecallTypeNum){
-						RecallList[i].RecallTypeNum=Prefs.GetLong(PrefName.RecallTypeSpecialPerio);
-						RecallList[i].RecallInterval=RecallTypes.GetInterval(Prefs.GetLong(PrefName.RecallTypeSpecialPerio));
+					if(Preferences.GetLong(PreferenceName.RecallTypeSpecialProphy)==RecallList[i].RecallTypeNum){
+						RecallList[i].RecallTypeNum=Preferences.GetLong(PreferenceName.RecallTypeSpecialPerio);
+						RecallList[i].RecallInterval=RecallTypes.GetInterval(Preferences.GetLong(PreferenceName.RecallTypeSpecialPerio));
 						//previous date will be reset below in synch, but probably won't change since similar triggers.
 						Recalls.Update(RecallList[i]);
 						SecurityLogs.MakeLogEntry(Permissions.RecallEdit,RecallList[i].PatNum,"Recall changed to Perio from the Recalls for Patient window.");
@@ -175,8 +175,8 @@ namespace OpenDental {
 				if(!found){
 					Recall recall=new Recall();
 					recall.PatNum=PatNum;
-					recall.RecallInterval=RecallTypes.GetInterval(Prefs.GetLong(PrefName.RecallTypeSpecialPerio));
-					recall.RecallTypeNum=Prefs.GetLong(PrefName.RecallTypeSpecialPerio);
+					recall.RecallInterval=RecallTypes.GetInterval(Preferences.GetLong(PreferenceName.RecallTypeSpecialPerio));
+					recall.RecallTypeNum=Preferences.GetLong(PreferenceName.RecallTypeSpecialPerio);
 					Recalls.Insert(recall);
 					SecurityLogs.MakeLogEntry(Permissions.RecallEdit,recall.PatNum,"Perio recall added from the Recalls for Patient window.");
 				}

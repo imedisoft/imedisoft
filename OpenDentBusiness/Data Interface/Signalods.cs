@@ -237,7 +237,7 @@ namespace OpenDentBusiness
 		{
 			if (appt == null) return false;
 
-			int days = PrefC.GetInt(PrefName.ApptAutoRefreshRange);
+			int days = PrefC.GetInt(PreferenceName.ApptAutoRefreshRange);
 			if (days == -1)
 			{
 				// ApptAutoRefreshRange preference is -1, so all appointments are in range
@@ -467,7 +467,7 @@ namespace OpenDentBusiness
 		{
 			try
 			{
-				var dateLastCleared = Prefs.GetDateTimeOrNull(nameof(PrefName.SignalLastClearedDate));
+				var dateLastCleared = Preferences.GetDateTimeOrNull(nameof(PreferenceName.SignalLastClearedDate));
 				if (dateLastCleared.HasValue && dateLastCleared > DateTime.UtcNow.AddDays(-7))
                 {
 					return;
@@ -477,7 +477,7 @@ namespace OpenDentBusiness
 
 				SigMessages.ClearOldSigMessages();
 
-				Prefs.Set(nameof(PrefName.SignalLastClearedDate), DateTime.UtcNow);
+				Preferences.Set(nameof(PreferenceName.SignalLastClearedDate), DateTime.UtcNow);
 			}
 			catch
 			{

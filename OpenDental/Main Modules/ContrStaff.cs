@@ -705,7 +705,7 @@ namespace OpenDental
 
 		private void RefreshModuleData(long patNum)
 		{
-			if (Prefs.GetBool(PrefName.LocalTimeOverridesServerTime))
+			if (Preferences.GetBool(PreferenceName.LocalTimeOverridesServerTime))
 			{
 				TimeDelta = new TimeSpan(0);
 			}
@@ -719,7 +719,7 @@ namespace OpenDental
 
 		private void RefreshModuleScreen()
 		{
-			if (Prefs.GetBool(PrefName.LocalTimeOverridesServerTime))
+			if (Preferences.GetBool(PreferenceName.LocalTimeOverridesServerTime))
 			{
 				labelCurrentTime.Text = "Local Time";
 			}
@@ -738,7 +738,7 @@ namespace OpenDental
 			{
 				butManage.Enabled = false;
 			}
-			if (!Prefs.GetBool(PrefName.ClockEventAllowBreak))
+			if (!Preferences.GetBool(PreferenceName.ClockEventAllowBreak))
 			{//Breaks turned off, Lunch is now "Break", but maintains Lunch functionality.
 				butBreaks.Visible = false;
 			}
@@ -747,7 +747,7 @@ namespace OpenDental
 				butBreaks.Visible = true;
 			}
 			butImportInsPlans.Visible = true;
-			if (Prefs.GetBool(PrefName.EasyHidePublicHealth))
+			if (Preferences.GetBool(PreferenceName.EasyHidePublicHealth))
 			{
 				butImportInsPlans.Visible = false;//Import Ins Plans button is only visible when Public Health feature is enabled.
 			}
@@ -1152,7 +1152,7 @@ namespace OpenDental
 			foreach (TimeClockStatus timeClockStatus in Enum.GetValues(typeof(TimeClockStatus)))
 			{
 				string statusDescript = timeClockStatus.GetDescription();
-				if (!Prefs.GetBool(PrefName.ClockEventAllowBreak))
+				if (!Preferences.GetBool(PreferenceName.ClockEventAllowBreak))
 				{
 					if (timeClockStatus == TimeClockStatus.Break)
 					{
@@ -1181,7 +1181,7 @@ namespace OpenDental
 		/// Also considers PrefName.ClockEventAllowBreak to switch 'Lunch' to 'Break' for the UI.</summary>
 		private string ConvertClockStatus(string status)
 		{
-			if (!Prefs.GetBool(PrefName.ClockEventAllowBreak) && status == TimeClockStatus.Lunch.GetDescription())
+			if (!Preferences.GetBool(PreferenceName.ClockEventAllowBreak) && status == TimeClockStatus.Lunch.GetDescription())
 			{
 				status = TimeClockStatus.Break.GetDescription();
 			}
@@ -1223,7 +1223,7 @@ namespace OpenDental
 				butClockOut.Enabled = false;
 				butTimeCard.Enabled = true;
 				butBreaks.Enabled = true;
-				if (Prefs.GetBool(PrefName.ClockEventAllowBreak))
+				if (Preferences.GetBool(PreferenceName.ClockEventAllowBreak))
 				{
 					listStatus.SelectedIndex = _listShownTimeClockStatuses.IndexOf(TimeClockStatus.Break);
 				}
@@ -1266,7 +1266,7 @@ namespace OpenDental
 				SelectEmpI(-1, false);//Disable various UI elements.
 				return;
 			}
-			if (Prefs.GetBool(PrefName.TimecardSecurityEnabled))
+			if (Preferences.GetBool(PreferenceName.TimecardSecurityEnabled))
 			{
 				if (Security.CurrentUser.EmployeeId != _listEmployees[e.Row].Id)
 				{

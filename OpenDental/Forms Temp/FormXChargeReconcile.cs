@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using OpenDental.ReportingComplex;
 using OpenDentBusiness;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormXChargeReconcile:ODForm {
@@ -104,7 +105,7 @@ namespace OpenDental {
 			FormQuery2.IsReport=true;
 			FormQuery2.SubmitReportQuery();
 			report.Title="XCharge Transactions From "+date1.SelectionStart.ToShortDateString()+" To "+date2.SelectionStart.ToShortDateString();
-			report.SubTitle.Add(Prefs.GetString(PrefName.PracticeTitle));
+			report.SubTitle.Add(Preferences.GetString(PreferenceName.PracticeTitle));
 			report.SetColumn(this,0,"Transaction Date/Time",170);
 			report.SetColumn(this,1,"Transaction Type",120);
 			report.SetColumn(this,2,"Clerk ID",80);
@@ -135,7 +136,7 @@ namespace OpenDental {
 			FormQuery2.IsReport=true;
 			FormQuery2.SubmitReportQuery();
 			report.Title="Payments From "+date1.SelectionStart.ToShortDateString()+" To "+date2.SelectionStart.ToShortDateString();
-			report.SubTitle.Add(Prefs.GetString(PrefName.PracticeTitle));
+			report.SubTitle.Add(Preferences.GetString(PreferenceName.PracticeTitle));
 			report.SetColumn(this,0,"Count",50);
 			report.SetColumn(this,1,"Pat",50);//This name is used to ensure FormQuery does not replace the patnum with the patient name.
 			report.SetColumn(this,2,"LName",100);

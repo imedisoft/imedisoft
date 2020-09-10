@@ -610,12 +610,12 @@ namespace OpenDental
 				return;
 			}
 			InitializedOnStartup=true;
-			checkShowCompleted.Checked=Prefs.GetBool(PrefName.TreatPlanShowCompleted);
+			checkShowCompleted.Checked=Preferences.GetBool(PreferenceName.TreatPlanShowCompleted);
 			if(PrefC.RandomKeys) {//random PKs don't get the option or sorting by order entered
 				tabShowSort.TabPages.Remove(tabPageSort);
 			}
 			else {
-				radioTreatPlanSortTooth.Checked=Prefs.GetBool(PrefName.TreatPlanSortByTooth);
+				radioTreatPlanSortTooth.Checked=Preferences.GetBool(PreferenceName.TreatPlanSortByTooth);
 			}
 			//checkShowIns.Checked=Prefs.GetBool(PrefName.TreatPlanShowIns");
 			//checkShowDiscount.Checked=Prefs.GetBool(PrefName.TreatPlanShowDiscount");
@@ -637,7 +637,7 @@ namespace OpenDental
 				listSetPr.Items.Add(new ODBoxItem<Definition>(def.Name,def));
 			}
 			LayoutToolBar();
-			if(Prefs.GetBool(PrefName.EasyHideInsurance)){
+			if(Preferences.GetBool(PreferenceName.EasyHideInsurance)){
 				checkShowIns.Visible=false;
 				checkShowIns.Checked=false;
 				checkShowMaxDed.Visible=false;
@@ -739,7 +739,7 @@ namespace OpenDental
 			else {
 				butNewTP.Enabled=true;
 			}
-			if(Prefs.GetBool(PrefName.InsChecksFrequency)) {
+			if(Preferences.GetBool(PreferenceName.InsChecksFrequency)) {
 				butRefresh.Visible=true;
 				labelCheckInsFrequency.Visible=true;
 				dateTimeTP.Visible=true;
@@ -813,7 +813,7 @@ namespace OpenDental
 			FormTreatPlanCurEdit FormTPCE=new FormTreatPlanCurEdit();
 			FormTPCE.TreatPlanCur=new TreatPlan() {
 				Heading="Inactive Treatment Plan",
-				Note=Prefs.GetString(PrefName.TreatmentPlanNote),
+				Note=Preferences.GetString(PreferenceName.TreatmentPlanNote),
 				PatNum=PatCur.PatNum,
 				TPStatus=TreatPlanStatus.Inactive,
 			};
@@ -1469,7 +1469,7 @@ namespace OpenDental
 							break;
 						case "Fee":
 							if(checkShowFees.Checked) {
-								if(Prefs.GetBool(PrefName.TreatPlanItemized) || RowsMain[i].Description.ToString()=="Total"
+								if(Preferences.GetBool(PreferenceName.TreatPlanItemized) || RowsMain[i].Description.ToString()=="Total"
 									|| RowsMain[i].Description.ToString()=="Subtotal") 
 								{
 									row.Cells.Add(RowsMain[i].Fee.ToString("F"));
@@ -1482,7 +1482,7 @@ namespace OpenDental
 						case "Pri Ins":
 						case "DPlan":
 							if(checkShowIns.Checked) {
-								if(Prefs.GetBool(PrefName.TreatPlanItemized) || RowsMain[i].Description.ToString()=="Total"
+								if(Preferences.GetBool(PreferenceName.TreatPlanItemized) || RowsMain[i].Description.ToString()=="Total"
 									|| RowsMain[i].Description.ToString()=="Subtotal") 
 								{
 									row.Cells.Add(RowsMain[i].PriIns.ToString("F"));
@@ -1494,7 +1494,7 @@ namespace OpenDental
 							break;
 						case "Sec Ins":
 							if(checkShowIns.Checked) {
-								if(Prefs.GetBool(PrefName.TreatPlanItemized) || RowsMain[i].Description.ToString()=="Total"
+								if(Preferences.GetBool(PreferenceName.TreatPlanItemized) || RowsMain[i].Description.ToString()=="Total"
 									|| RowsMain[i].Description.ToString()=="Subtotal") 
 								{
 									row.Cells.Add(RowsMain[i].SecIns.ToString("F"));
@@ -1506,7 +1506,7 @@ namespace OpenDental
 							break;
 						case "Discount":
 							if(checkShowDiscount.Checked) {
-								if(Prefs.GetBool(PrefName.TreatPlanItemized) || RowsMain[i].Description.ToString()=="Total"
+								if(Preferences.GetBool(PreferenceName.TreatPlanItemized) || RowsMain[i].Description.ToString()=="Total"
 									|| RowsMain[i].Description.ToString()=="Subtotal")
 								{
 									row.Cells.Add(RowsMain[i].Discount.ToString("F"));
@@ -1518,7 +1518,7 @@ namespace OpenDental
 							break;
 						case "Pat":
 							if(checkShowIns.Checked || checkShowDiscount.Checked) {
-								if(Prefs.GetBool(PrefName.TreatPlanItemized) || RowsMain[i].Description.ToString()=="Total"
+								if(Preferences.GetBool(PreferenceName.TreatPlanItemized) || RowsMain[i].Description.ToString()=="Total"
 									|| RowsMain[i].Description.ToString()=="Subtotal") 
 								{
 									row.Cells.Add(RowsMain[i].Pat.ToString("F"));
@@ -1577,7 +1577,7 @@ namespace OpenDental
 							row.Cells.Add(RowsMain[i].Appt);//"X" if procedure has an AptNum>0 otherwise blank.
 							break;
 						case DisplayFields.InternalNames.TreatmentPlanModule.CatPercUCR:
-							if(Prefs.GetBool(PrefName.TreatPlanItemized) 
+							if(Preferences.GetBool(PreferenceName.TreatPlanItemized) 
 								|| RowsMain[i].Description.ToString().In("Total","Subtotal")) 
 							{
 								row.Cells.Add(RowsMain[i].CatPercUCR.ToString("F"));
@@ -2012,7 +2012,7 @@ namespace OpenDental
 				return;
 			}
 			#region FuchsOptionOn
-			if(Prefs.GetBool(PrefName.FuchsOptionsOn)) {
+			if(Preferences.GetBool(PreferenceName.FuchsOptionsOn)) {
 				if(checkShowDiscount.Checked || checkShowIns.Checked) {
 					if(MessageBox.Show(this,string.Format("Do you want to remove insurance estimates and discounts from printed treatment plan?"),"Open Dental",MessageBoxButtons.YesNo,MessageBoxIcon.Question) != DialogResult.No) {
 						checkShowDiscount.Checked=false;
@@ -2023,7 +2023,7 @@ namespace OpenDental
 			}
 			#endregion
 			if(_listTreatPlans[gridPlans.SelectedIndices[0]].TPStatus==TreatPlanStatus.Saved
-				&& Prefs.GetBool(PrefName.TreatPlanSaveSignedToPdf)
+				&& Preferences.GetBool(PreferenceName.TreatPlanSaveSignedToPdf)
 			  && _listTreatPlans[gridPlans.SelectedIndices[0]].Signature!=""
 			  && Documents.DocExists(_listTreatPlans[gridPlans.SelectedIndices[0]].DocNum)) 
 			{
@@ -2074,7 +2074,7 @@ namespace OpenDental
 				return;
 			}
 			#region FuchsOptionOn
-			if(Prefs.GetBool(PrefName.FuchsOptionsOn)) {
+			if(Preferences.GetBool(PreferenceName.FuchsOptionsOn)) {
 				if(checkShowDiscount.Checked || checkShowIns.Checked) {
 					if(MessageBox.Show(this,string.Format("Do you want to remove insurance estimates and discounts from e-mailed treatment plan?"),"Open Dental",MessageBoxButtons.YesNo,MessageBoxIcon.Question) != DialogResult.No) {
 						checkShowDiscount.Checked=false;
@@ -2091,7 +2091,7 @@ namespace OpenDental
 			string filePathAndName=Storage.CombinePaths(attachPath,fileName);
 
 			if(gridPlans.SelectedIndices[0]>0 //not the default plan.
-				&& Prefs.GetBool(PrefName.TreatPlanSaveSignedToPdf) //preference enabled
+				&& Preferences.GetBool(PreferenceName.TreatPlanSaveSignedToPdf) //preference enabled
 			  && _listTreatPlans[gridPlans.SelectedIndices[0]].Signature!="" //and document is signed
 			  && Documents.DocExists(_listTreatPlans[gridPlans.SelectedIndices[0]].DocNum)) //and file exists
 			{
@@ -2158,7 +2158,7 @@ namespace OpenDental
 				this.Controls.Add(toothChartWrapper);
 				toothChartWrapper.BringToFront();
 			
-			_toothChartRelay.SetToothNumberingNomenclature((ToothNumberingNomenclature)PrefC.GetInt(PrefName.UseInternationalToothNumbers));
+			_toothChartRelay.SetToothNumberingNomenclature((ToothNumberingNomenclature)PrefC.GetInt(PreferenceName.UseInternationalToothNumbers));
 			List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.ChartGraphicColors);
 			_toothChartRelay.ColorBackgroundMain=listDefs[14].Color;
 			_toothChartRelay.ColorText=listDefs[15].Color;
@@ -2218,7 +2218,7 @@ namespace OpenDental
 		///Uses the static variable 'PrefC.IsTreatPlanSortByTooth' to determine if procedures should be sorted by tooth order.</summary>
 		private List<ProcTP> LoadActiveTP(ref TreatPlan treatPlan) {
 			LoadActiveTPData loadActiveData=TreatmentPlanModules.GetLoadActiveTpData(PatCur,treatPlan.TreatPlanNum,BenefitList,PatPlanList,
-				InsPlanList,dateTimeTP.Value,SubList,Prefs.GetBool(PrefName.InsChecksFrequency),PrefC.IsTreatPlanSortByTooth,_listSubstLinks);
+				InsPlanList,dateTimeTP.Value,SubList,Preferences.GetBool(PreferenceName.InsChecksFrequency),PrefC.IsTreatPlanSortByTooth,_listSubstLinks);
 			List<TreatPlanAttach> listTreatPlanAttaches=loadActiveData.ListTreatPlanAttaches;
 			List<Procedure> listProcForTP=loadActiveData.listProcForTP;
 			if(listProcForTP.Any(x => ProcedureCodes.GetWhereFromList(y => y.CodeNum==x.CodeNum).Count==0)) {
@@ -2253,7 +2253,7 @@ namespace OpenDental
 			OrthoCase orthoCase=null;
 			OrthoSchedule orthoSchedule=null;
 			List<OrthoProcLink> listOrthoProcLinksForOrthoCase=null;
-			if(Prefs.GetBool(PrefName.InsChecksFrequency)) {
+			if(Preferences.GetBool(PreferenceName.InsChecksFrequency)) {
 				//Taking into account insurance frequency, use the date picker date when loading or when the Refresh button is pressed.  Defaults to today.
 				HistList=loadActiveData.HistList??ClaimProcs.GetHistList(PatCur.PatNum,BenefitList,PatPlanList,InsPlanList,-1,dateTimeTP.Value,SubList);
 				for(int i=0;i<listProcForTP.Count;i++) {
@@ -2342,7 +2342,7 @@ namespace OpenDental
 						Provider patProv=Providers.GetById(PatCur.PriProv);
 						procFee=Fees.GetFee(procCodeCur.CodeNum,patProv.FeeScheduleId,listProcForTP[i].ClinicNum,patProv.Id,loadActiveData.ListFees);
 						if(procFee==null) {//No fee for pat's pri prov feesched and pat's pri prov
-							patProv=Providers.GetById(Prefs.GetLong(PrefName.PracticeDefaultProv));
+							patProv=Providers.GetById(Preferences.GetLong(PreferenceName.PracticeDefaultProv));
 							procFee=Fees.GetFee(procCodeCur.CodeNum,patProv.FeeScheduleId,listProcForTP[i].ClinicNum,patProv.Id,loadActiveData.ListFees);
 						}
 					}
@@ -2452,7 +2452,7 @@ namespace OpenDental
 					row.Surf=(Tooth.SurfTidyFromDbToDisplay(listProcForTP[i].Surf,listProcForTP[i].ToothNum));
 				}
 				else if(ProcedureCodes.GetProcCode(listProcForTP[i].CodeNum).TreatArea==TreatmentArea.Sextant) {
-					row.Surf=Tooth.GetSextant(listProcForTP[i].Surf,(ToothNumberingNomenclature)PrefC.GetInt(PrefName.UseInternationalToothNumbers));
+					row.Surf=Tooth.GetSextant(listProcForTP[i].Surf,(ToothNumberingNomenclature)PrefC.GetInt(PreferenceName.UseInternationalToothNumbers));
 				}
 				else {
 					row.Surf=(listProcForTP[i].Surf); //I think this will properly allow UR, L, etc.
@@ -2632,7 +2632,7 @@ namespace OpenDental
 			retVal.Heading="Proposed Treatment Plan";
 			retVal.DateTP=DateTimeOD.Today;
 			retVal.PatNum=PatCur.PatNum;
-			retVal.Note=Prefs.GetString(PrefName.TreatmentPlanNote);
+			retVal.Note=Preferences.GetString(PreferenceName.TreatmentPlanNote);
 			retVal.ListProcTPs=new List<ProcTP>();
 			ProcTP procTP;
 			Procedure proc;
@@ -2726,10 +2726,10 @@ namespace OpenDental
 			par.AddFormattedText(text,headingFont);
 			par.AddLineBreak();
 			if(PatCur.ClinicNum==0 || !PrefC.HasClinicsEnabled) {
-				text=Prefs.GetString(PrefName.PracticeTitle);
+				text=Preferences.GetString(PreferenceName.PracticeTitle);
 				par.AddText(text);
 				par.AddLineBreak();
-				text=Prefs.GetString(PrefName.PracticePhone);
+				text=Preferences.GetString(PreferenceName.PracticePhone);
 			}
 			else {
 				Clinic clinic=Clinics.GetById(PatCur.ClinicNum);
@@ -2803,7 +2803,7 @@ namespace OpenDental
 			}	
 			#endregion
 			MigraDocHelper.InsertSpacer(section,10);
-			if(!Prefs.GetBool(PrefName.TreatPlanItemized)) {
+			if(!Preferences.GetBool(PreferenceName.TreatPlanItemized)) {
 				FillGridPrint();
 				MigraDocHelper.DrawGrid(section,gridPrint);
 				gridPrint.Visible=false;
@@ -2912,7 +2912,7 @@ namespace OpenDental
 			#region printNote
 			string note="";
 			if(gridPlans.SelectedIndices[0]==0) {//current TP
-				note=Prefs.GetString(PrefName.TreatmentPlanNote);
+				note=Preferences.GetString(PreferenceName.TreatmentPlanNote);
 			}
 			else {
 				note=_listTreatPlans[gridPlans.SelectedIndices[0]].Note;
@@ -3291,7 +3291,7 @@ namespace OpenDental
 			List<TreatPlanAttach> listTreatPlanAttaches=TreatPlanAttaches.GetAllForTreatPlan(_listTreatPlans[gridPlans.SelectedIndices[0]].TreatPlanNum);
 			TreatPlan tp=new TreatPlan();
 			string treatPlanHeading=_listTreatPlans[gridPlans.SelectedIndices[0]].Heading;
-			if(Prefs.GetBool(PrefName.TreatPlanPromptSave)) { 
+			if(Preferences.GetBool(PreferenceName.TreatPlanPromptSave)) { 
 				if(!IsSavedTPHeadingUnique(treatPlanHeading)) {
 					int fileNum=0;
 					while(!IsSavedTPHeadingUnique(treatPlanHeading)) {
@@ -3420,7 +3420,7 @@ namespace OpenDental
 				return;
 			}
 			//string patFolder=ImageStore.GetPatientFolder(PatCur,ImageStore.GetPreferredAtoZpath());
-			if(Prefs.GetBool(PrefName.TreatPlanSaveSignedToPdf) //preference enabled
+			if(Preferences.GetBool(PreferenceName.TreatPlanSaveSignedToPdf) //preference enabled
 			   && _listTreatPlans[gridPlans.SelectedIndices[0]].Signature!="" //and document is signed
 			   && Documents.DocExists(_listTreatPlans[gridPlans.SelectedIndices[0]].DocNum)) //and file exists
 			{
@@ -3479,7 +3479,7 @@ namespace OpenDental
 			//"R"==TreatmentPlan; see FormDefEditImages.cs
 			List<Definition> listImageCatDefs=Definitions.GetDefsForCategory(DefinitionCategory.ImageCats,true);
 			List<long> categories= listImageCatDefs.Where(x => x.Value.Contains("R")).Select(x=>x.Id).ToList();
-			if(isSigSave && categories.Count==0 && Prefs.GetBool(PrefName.TreatPlanSaveSignedToPdf)) {
+			if(isSigSave && categories.Count==0 && Preferences.GetBool(PreferenceName.TreatPlanSaveSignedToPdf)) {
 				//we must save at least one document, pick first non-hidden image category.
 				Definition imgCat=listImageCatDefs.FirstOrDefault(x => !x.IsHidden);
 				if(imgCat==null) {
@@ -3539,11 +3539,11 @@ namespace OpenDental
 
 		///<summary>Similar method in Account</summary>
 		private bool CheckClearinghouseDefaults() {
-			if(Prefs.GetLong(PrefName.ClearinghouseDefaultDent)==0) {
+			if(Preferences.GetLong(PreferenceName.ClearinghouseDefaultDent)==0) {
 				MessageBox.Show("No default dental clearinghouse defined.");
 				return false;
 			}
-			if(Prefs.GetBool(PrefName.ShowFeatureMedicalInsurance) && Prefs.GetLong(PrefName.ClearinghouseDefaultMed)==0) {
+			if(Preferences.GetBool(PreferenceName.ShowFeatureMedicalInsurance) && Preferences.GetLong(PreferenceName.ClearinghouseDefaultMed)==0) {
 				MessageBox.Show("No default medical clearinghouse defined.");
 				return false;
 			}
@@ -3611,7 +3611,7 @@ namespace OpenDental
 			ClaimCur.ClaimForm=FormIPS.SelectedPlan.ClaimFormNum;
 			ClaimCur.MedType=EnumClaimMedType.Dental;
 			if(FormIPS.SelectedPlan.IsMedical) {
-				ClaimCur.MedType=Prefs.GetBool(PrefName.ClaimMedTypeIsInstWhenInsPlanIsMedical) ? EnumClaimMedType.Institutional : EnumClaimMedType.Medical;
+				ClaimCur.MedType=Preferences.GetBool(PreferenceName.ClaimMedTypeIsInstWhenInsPlanIsMedical) ? EnumClaimMedType.Institutional : EnumClaimMedType.Medical;
 			}
 			List<Procedure> listProcsSelected=new List<Procedure>();
 			for(int i=0;i<gridMain.SelectedIndices.Length;i++){
@@ -3635,7 +3635,7 @@ namespace OpenDental
 				}
 				ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
 				//Check to see if the selected procedure is for Ortho and if the customer has preferences set to automatically check the "Is For Ortho" checkbox
-				if(!ClaimCur.IsOrtho && Prefs.GetBool(PrefName.OrthoClaimMarkAsOrtho)) {//If it's already marked as Ortho (from a previous procedure), skip this
+				if(!ClaimCur.IsOrtho && Preferences.GetBool(PreferenceName.OrthoClaimMarkAsOrtho)) {//If it's already marked as Ortho (from a previous procedure), skip this
 					CovCat orthoCategory=CovCats.GetFirstOrDefault(x => x.EbenefitCat==EbenefitCategory.Orthodontics,true);
 					if(orthoCategory!=null) {
 						if(CovSpans.IsCodeInSpans(procCode.ProcCode,CovSpans.GetWhere(x => x.CovCatNum==orthoCategory.Id).ToArray()))	{
@@ -3658,12 +3658,12 @@ namespace OpenDental
 					MessageBox.Show("All procedures do not have the same clinic.");
 					return;
 				}
-				if(!Prefs.GetBool(PrefName.EasyHidePublicHealth) && proc.PlaceService!=placeService) {
+				if(!Preferences.GetBool(PreferenceName.EasyHidePublicHealth) && proc.PlaceService!=placeService) {
 					MessageBox.Show("All procedures do not have the same place of service.");
 					return;
 				}
 			}
-			switch(PIn.Enum<ClaimZeroDollarProcBehavior>(PrefC.GetInt(PrefName.ClaimZeroDollarProcBehavior))) {
+			switch(PIn.Enum<ClaimZeroDollarProcBehavior>(PrefC.GetInt(PreferenceName.ClaimZeroDollarProcBehavior))) {
 				case ClaimZeroDollarProcBehavior.Warn:
 					if(listProcsSelected.FirstOrDefault(x => x.ProcFee.IsZero())!=null
 						&& !MsgBox.Show("ContrTreat",MsgBoxButtons.OKCancel,"You are about to make a claim that will include a $0 procedure.  Continue?"))
@@ -3935,7 +3935,7 @@ namespace OpenDental
 					}
 				}
 				else {//patient has insurance
-					if(!Prefs.GetBool(PrefName.EasyHideInsurance)) {//if insurance isn't hidden
+					if(!Preferences.GetBool(PreferenceName.EasyHideInsurance)) {//if insurance isn't hidden
 						checkShowMaxDed.Visible=true;
 						if(checkShowFees.Checked) {//if fees are showing
 							if(!checkShowInsNotAutomatic) {

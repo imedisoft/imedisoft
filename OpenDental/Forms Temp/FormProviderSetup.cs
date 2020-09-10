@@ -72,7 +72,7 @@ namespace OpenDental{
 		public FormProviderSetup(){
 			InitializeComponent();
 			
-			if(Prefs.GetBool(PrefName.EasyHideDentalSchools)) {
+			if(Preferences.GetBool(PreferenceName.EasyHideDentalSchools)) {
 				this.Width=960;
 			}
 			_filterCommitMs=200;//because we are not doing any database calls, we want a lower time to make the application feel more responsive
@@ -620,7 +620,7 @@ namespace OpenDental{
 				groupCreateUsers.Enabled=false;
 				groupMovePats.Enabled=false;
 			}
-			if(Prefs.GetBool(PrefName.EasyHideDentalSchools)){
+			if(Preferences.GetBool(PreferenceName.EasyHideDentalSchools)){
 				groupDentalSchools.Visible=false;
 				butStudBulkEdit.Visible=false;
 			}
@@ -634,7 +634,7 @@ namespace OpenDental{
 				butUp.Visible=false;
 				butDown.Visible=false;
 			}
-			checkShowHidden.Checked=Prefs.GetBool(PrefName.EasyHideDentalSchools);
+			checkShowHidden.Checked=Preferences.GetBool(PreferenceName.EasyHideDentalSchools);
 			if(!Security.IsAuthorized(Permissions.PatPriProvEdit,true)) {
 				string strToolTip="Not authorized for"+" "+GroupPermissions.GetDesc(Permissions.PatPriProvEdit);
 				_priProvEditToolTip.SetToolTip(butReassign,strToolTip);
@@ -689,7 +689,7 @@ namespace OpenDental{
 			bool isSortAsc=gridMain.SortedIsAscending;
 			gridMain.BeginUpdate();
 			gridMain.Columns.Clear();
-			if(!Prefs.GetBool(PrefName.EasyHideDentalSchools)) {
+			if(!Preferences.GetBool(PreferenceName.EasyHideDentalSchools)) {
 				gridMain.Columns.Add(new GridColumn("ProvNum",60,GridSortingStrategy.AmountParse));
 			}
 			gridMain.Columns.Add(new GridColumn("Abbrev",90));
@@ -698,7 +698,7 @@ namespace OpenDental{
 			gridMain.Columns.Add(new GridColumn("User Name",90));
 			gridMain.Columns.Add(new GridColumn("Hidden",50,HorizontalAlignment.Center));
 			gridMain.Columns.Add(new GridColumn("HideOnReports",100,HorizontalAlignment.Center));
-			if(!Prefs.GetBool(PrefName.EasyHideDentalSchools)) {
+			if(!Preferences.GetBool(PreferenceName.EasyHideDentalSchools)) {
 				gridMain.Columns.Add(new GridColumn("Class",90));
 				gridMain.Columns.Add(new GridColumn("Instructor",60,HorizontalAlignment.Center));
 			}
@@ -725,7 +725,7 @@ namespace OpenDental{
 					}
 					row.ForeColor=Color.Red;
 				}
-				if(!Prefs.GetBool(PrefName.EasyHideDentalSchools)) {
+				if(!Preferences.GetBool(PreferenceName.EasyHideDentalSchools)) {
 					row.Cells.Add(rowCur["ProvNum"].ToString());
 				}
 				row.Cells.Add(rowCur["Abbr"].ToString());
@@ -734,7 +734,7 @@ namespace OpenDental{
 				row.Cells.Add(rowCur["UserName"].ToString());
 				row.Cells.Add(rowCur["IsHidden"].ToString()=="1"?"X":"");
 				row.Cells.Add(rowCur["IsHiddenReport"].ToString()=="1"?"X":"");
-				if(!Prefs.GetBool(PrefName.EasyHideDentalSchools)) {
+				if(!Preferences.GetBool(PreferenceName.EasyHideDentalSchools)) {
 					row.Cells.Add(rowCur["GradYear"].ToString()!=""?(rowCur["GradYear"].ToString()+"-"+rowCur["Descript"].ToString()):"");
 					row.Cells.Add(rowCur["IsInstructor"].ToString()=="1"?"X":"");
 				}
@@ -828,7 +828,7 @@ namespace OpenDental{
 				}
 			}
 			if(!radioStudents.Checked) {
-				if(radioInstructors.Checked && Prefs.GetLong(PrefName.SecurityGroupForInstructors)==0) {
+				if(radioInstructors.Checked && Preferences.GetLong(PreferenceName.SecurityGroupForInstructors)==0) {
 					MessageBox.Show("Security Group for Instructors must be set from the Dental School Setup window before adding instructors.");
 					return;
 				}
@@ -840,7 +840,7 @@ namespace OpenDental{
 				provCur=FormPE.ProvCur;
 			}
 			else {
-				if(radioStudents.Checked && Prefs.GetLong(PrefName.SecurityGroupForStudents)==0) {
+				if(radioStudents.Checked && Preferences.GetLong(PreferenceName.SecurityGroupForStudents)==0) {
 					MessageBox.Show("Security Group for Students must be set from the Dental School Setup window before adding students.");
 					return;
 				}
@@ -937,7 +937,7 @@ namespace OpenDental{
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			Provider provSelected=(Provider)gridMain.Rows[e.Row].Tag;
-			if(!Prefs.GetBool(PrefName.EasyHideDentalSchools) && Providers.IsAttachedToUser(provSelected.Id)) {//Dental schools is turned on and the provider selected is attached to a user.
+			if(!Preferences.GetBool(PreferenceName.EasyHideDentalSchools) && Providers.IsAttachedToUser(provSelected.Id)) {//Dental schools is turned on and the provider selected is attached to a user.
 				//provSelected could be a provider or a student at this point.
 				if(!provSelected.IsInstructor && !Security.IsAuthorized(Permissions.AdminDentalStudents)) {
 					return;
@@ -1262,7 +1262,7 @@ namespace OpenDental{
 
 		private void FormProviderSelect_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
 			string duplicates=Providers.GetDuplicateAbbrs();
-			if(duplicates!="" && Prefs.GetBool(PrefName.EasyHideDentalSchools)) {
+			if(duplicates!="" && Preferences.GetBool(PreferenceName.EasyHideDentalSchools)) {
 				if(MessageBox.Show("Warning.  The following abbreviations are duplicates.  Continue anyway?\r\n"+duplicates,
 					"",MessageBoxButtons.OKCancel)!=DialogResult.OK)
 				{

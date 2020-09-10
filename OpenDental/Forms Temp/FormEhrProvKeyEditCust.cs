@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
 using OpenDentBusiness;
 #if EHRTEST
 using EHR;
@@ -40,7 +41,7 @@ namespace OpenDental {
 			}
 			//Path for testing:
 			//@"E:\My Documents\Shared Projects Subversion\EhrProvKeyGenerator\EhrProvKeyGenerator\bin\Debug\EhrProvKeyGenerator.exe"
-			string progPath=Prefs.GetString(PrefName.EhrProvKeyGeneratorPath);
+			string progPath=Preferences.GetString(PreferenceName.EhrProvKeyGeneratorPath);
 			ProcessStartInfo startInfo=new ProcessStartInfo(progPath);
 			string args="P \""+textLName.Text.Replace("\"","")+"\" \""+textFName.Text.Replace("\"","")+"\" "+textCalYear.Text.Replace("\"","").Trim();
 			startInfo.Arguments=args;

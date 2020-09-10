@@ -9,6 +9,7 @@ using System.Linq;
 using OpenDentBusiness;
 using System.IO;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormBillingDefaults:ODForm {
@@ -29,14 +30,14 @@ namespace OpenDental {
 		}
 
 		private void FormBillingDefaults_Load(object sender,EventArgs e) {
-			textDays.Text=Prefs.GetLong(PrefName.BillingDefaultsLastDays).ToString();
-			checkIntermingled.Checked=Prefs.GetBool(PrefName.BillingDefaultsIntermingle);
-			checkSinglePatient.Checked=Prefs.GetBool(PrefName.BillingDefaultsSinglePatient);
-			textNote.Text=Prefs.GetString(PrefName.BillingDefaultsNote);
-			checkCreatePDF.Checked=Prefs.GetBool(PrefName.BillingElectCreatePDF);
-			checkBoxBillShowTransSinceZero.Checked=Prefs.GetBool(PrefName.BillingShowTransSinceBalZero);
+			textDays.Text=Preferences.GetLong(PreferenceName.BillingDefaultsLastDays).ToString();
+			checkIntermingled.Checked=Preferences.GetBool(PreferenceName.BillingDefaultsIntermingle);
+			checkSinglePatient.Checked=Preferences.GetBool(PreferenceName.BillingDefaultsSinglePatient);
+			textNote.Text=Preferences.GetString(PreferenceName.BillingDefaultsNote);
+			checkCreatePDF.Checked=Preferences.GetBool(PreferenceName.BillingElectCreatePDF);
+			checkBoxBillShowTransSinceZero.Checked=Preferences.GetBool(PreferenceName.BillingShowTransSinceBalZero);
 			listElectBilling.SelectedIndex=0;
-			int billingUseElectronicIdx=PrefC.GetInt(PrefName.BillingUseElectronic);
+			int billingUseElectronicIdx=PrefC.GetInt(PreferenceName.BillingUseElectronic);
 			if(billingUseElectronicIdx==1) {
 				listElectBilling.SelectedIndex=1;
 				checkCreatePDF.Enabled=true;
@@ -53,14 +54,14 @@ namespace OpenDental {
 				listElectBilling.SelectedIndex=4;
 			}
 			arrayOutputPaths[0]="";//Will never be used, but is helpful to keep the indexes of arrayOutputPaths aligned with the options listed in listElectBilling.
-			arrayOutputPaths[1]=Prefs.GetString(PrefName.BillingElectStmtUploadURL);
-			arrayOutputPaths[2]=Prefs.GetString(PrefName.BillingElectStmtOutputPathPos);
-			arrayOutputPaths[3]=Prefs.GetString(PrefName.BillingElectStmtOutputPathClaimX);
-			arrayOutputPaths[4]=Prefs.GetString(PrefName.BillingElectStmtOutputPathEds);
+			arrayOutputPaths[1]=Preferences.GetString(PreferenceName.BillingElectStmtUploadURL);
+			arrayOutputPaths[2]=Preferences.GetString(PreferenceName.BillingElectStmtOutputPathPos);
+			arrayOutputPaths[3]=Preferences.GetString(PreferenceName.BillingElectStmtOutputPathClaimX);
+			arrayOutputPaths[4]=Preferences.GetString(PreferenceName.BillingElectStmtOutputPathEds);
 			textStatementURL.Text=arrayOutputPaths[billingUseElectronicIdx];
-			textVendorId.Text=Prefs.GetString(PrefName.BillingElectVendorId);
-			textVendorPMScode.Text=Prefs.GetString(PrefName.BillingElectVendorPMSCode);
-			string cc=Prefs.GetString(PrefName.BillingElectCreditCardChoices);
+			textVendorId.Text=Preferences.GetString(PreferenceName.BillingElectVendorId);
+			textVendorPMScode.Text=Preferences.GetString(PreferenceName.BillingElectVendorPMSCode);
+			string cc=Preferences.GetString(PreferenceName.BillingElectCreditCardChoices);
 			if(cc.Contains("MC")) {
 				checkMC.Checked=true;
 			}
@@ -73,9 +74,9 @@ namespace OpenDental {
 			if(cc.Contains("A")) {
 				checkAmEx.Checked=true;
 			}
-			textBillingEmailSubject.Text=Prefs.GetString(PrefName.BillingEmailSubject);
-			textBillingEmailBody.Text=Prefs.GetString(PrefName.BillingEmailBodyText);
-			textInvoiceNote.Text=Prefs.GetString(PrefName.BillingDefaultsInvoiceNote);
+			textBillingEmailSubject.Text=Preferences.GetString(PreferenceName.BillingEmailSubject);
+			textBillingEmailBody.Text=Preferences.GetString(PreferenceName.BillingEmailBodyText);
+			textInvoiceNote.Text=Preferences.GetString(PreferenceName.BillingDefaultsInvoiceNote);
 			_listEbills=Ebills.GetDeepCopy();
 			_listEbillsOld=_listEbills.Select(x => x.Copy()).ToList();
 			//Find the default Ebill
@@ -127,12 +128,12 @@ namespace OpenDental {
 			foreach(StatementMode stateMode in Enum.GetValues(typeof(StatementMode))) {
 				listModesToText.Items.Add(new ODBoxItem<StatementMode>(stateMode.GetDescription(),stateMode));
 			}
-			foreach(string modeIdx in Prefs.GetString(PrefName.BillingDefaultsModesToText)
+			foreach(string modeIdx in Preferences.GetString(PreferenceName.BillingDefaultsModesToText)
 				.Split(new string[] { "," },StringSplitOptions.RemoveEmptyEntries)) 
 			{ 
 				listModesToText.SetSelected(PIn.Int(modeIdx),true);
 			}
-			textSmsTemplate.Text=Prefs.GetString(PrefName.BillingDefaultsSmsTemplate);
+			textSmsTemplate.Text=Preferences.GetString(PreferenceName.BillingDefaultsSmsTemplate);
 			//Load _eBillCur's fields into the UI.
 			LoadEbill(_eBillCur);
 		}
@@ -327,25 +328,25 @@ namespace OpenDental {
 				textStatementURL.Text=@"https://claimconnect.dentalxchange.com/dci/upload.svl";//default value from before 16.2.19
 			}
 			string modesToText=string.Join(",",listModesToText.GetListSelected<StatementMode>().Select(x => POut.Int((int)x)));
-			if(Prefs.Set(PrefName.BillingDefaultsLastDays,PIn.Long(textDays.Text))
-				| Prefs.Set(PrefName.BillingDefaultsIntermingle,checkIntermingled.Checked)
-				| Prefs.Set(PrefName.BillingDefaultsNote,textNote.Text)
-				| Prefs.Set(PrefName.BillingUseElectronic,billingUseElectronic)
-				| Prefs.Set(PrefName.BillingEmailSubject,textBillingEmailSubject.Text)
-				| Prefs.Set(PrefName.BillingEmailBodyText,textBillingEmailBody.Text)
-				| Prefs.Set(PrefName.BillingElectVendorId,textVendorId.Text)
-				| Prefs.Set(PrefName.BillingElectVendorPMSCode,textVendorPMScode.Text)
-				| Prefs.Set(PrefName.BillingElectCreditCardChoices,cc)
-				| Prefs.Set(PrefName.BillingDefaultsInvoiceNote,textInvoiceNote.Text)
-				| Prefs.Set(PrefName.BillingElectCreatePDF,checkCreatePDF.Checked)
-				| (listElectBilling.SelectedIndex==1 && Prefs.Set(PrefName.BillingElectStmtUploadURL,textStatementURL.Text))
-				| (listElectBilling.SelectedIndex==2 && Prefs.Set(PrefName.BillingElectStmtOutputPathPos,textStatementURL.Text))
-				| (listElectBilling.SelectedIndex==3 && Prefs.Set(PrefName.BillingElectStmtOutputPathClaimX,textStatementURL.Text))
-				| (listElectBilling.SelectedIndex==4 && Prefs.Set(PrefName.BillingElectStmtOutputPathEds,textStatementURL.Text))
-				| Prefs.Set(PrefName.BillingDefaultsSinglePatient,checkSinglePatient.Checked)
-				| Prefs.Set(PrefName.BillingDefaultsModesToText,modesToText)
-				| Prefs.Set(PrefName.BillingDefaultsSmsTemplate,textSmsTemplate.Text)
-				| Prefs.Set(PrefName.BillingShowTransSinceBalZero,checkBoxBillShowTransSinceZero.Checked))
+			if(Preferences.Set(PreferenceName.BillingDefaultsLastDays,PIn.Long(textDays.Text))
+				| Preferences.Set(PreferenceName.BillingDefaultsIntermingle,checkIntermingled.Checked)
+				| Preferences.Set(PreferenceName.BillingDefaultsNote,textNote.Text)
+				| Preferences.Set(PreferenceName.BillingUseElectronic,billingUseElectronic)
+				| Preferences.Set(PreferenceName.BillingEmailSubject,textBillingEmailSubject.Text)
+				| Preferences.Set(PreferenceName.BillingEmailBodyText,textBillingEmailBody.Text)
+				| Preferences.Set(PreferenceName.BillingElectVendorId,textVendorId.Text)
+				| Preferences.Set(PreferenceName.BillingElectVendorPMSCode,textVendorPMScode.Text)
+				| Preferences.Set(PreferenceName.BillingElectCreditCardChoices,cc)
+				| Preferences.Set(PreferenceName.BillingDefaultsInvoiceNote,textInvoiceNote.Text)
+				| Preferences.Set(PreferenceName.BillingElectCreatePDF,checkCreatePDF.Checked)
+				| (listElectBilling.SelectedIndex==1 && Preferences.Set(PreferenceName.BillingElectStmtUploadURL,textStatementURL.Text))
+				| (listElectBilling.SelectedIndex==2 && Preferences.Set(PreferenceName.BillingElectStmtOutputPathPos,textStatementURL.Text))
+				| (listElectBilling.SelectedIndex==3 && Preferences.Set(PreferenceName.BillingElectStmtOutputPathClaimX,textStatementURL.Text))
+				| (listElectBilling.SelectedIndex==4 && Preferences.Set(PreferenceName.BillingElectStmtOutputPathEds,textStatementURL.Text))
+				| Preferences.Set(PreferenceName.BillingDefaultsSinglePatient,checkSinglePatient.Checked)
+				| Preferences.Set(PreferenceName.BillingDefaultsModesToText,modesToText)
+				| Preferences.Set(PreferenceName.BillingDefaultsSmsTemplate,textSmsTemplate.Text)
+				| Preferences.Set(PreferenceName.BillingShowTransSinceBalZero,checkBoxBillShowTransSinceZero.Checked))
 			{
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}

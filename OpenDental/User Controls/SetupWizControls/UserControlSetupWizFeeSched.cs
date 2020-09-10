@@ -13,7 +13,7 @@ using OpenDental;
 using OpenDentBusiness;
 using System.IO;
 using Microsoft.VisualBasic.FileIO;
-
+using Imedisoft.Data;
 
 namespace OpenDental.User_Controls.SetupWizard {
 	public partial class UserControlSetupWizFeeSched:SetupWizControl {
@@ -95,8 +95,8 @@ namespace OpenDental.User_Controls.SetupWizard {
 			long clinicNum=0;
 			Cursor=Cursors.WaitCursor;
 			OpenFileDialog Dlg=new OpenFileDialog();
-			if(Directory.Exists(Prefs.GetString(PrefName.ExportPath))) {
-				Dlg.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
+			if(Directory.Exists(Preferences.GetString(PreferenceName.ExportPath))) {
+				Dlg.InitialDirectory=Preferences.GetString(PreferenceName.ExportPath);
 			}
 			else if(Directory.Exists("C:\\")) {
 				Dlg.InitialDirectory="C:\\";

@@ -12,35 +12,45 @@ using OpenDental.UI;
 using OpenDental;
 using OpenDentBusiness;
 using System.Text.RegularExpressions;
+using Imedisoft.Data;
 
-namespace OpenDental.User_Controls.SetupWizard {
-	public partial class UserControlSetupWizRegKey:SetupWizControl {
+namespace OpenDental.User_Controls.SetupWizard
+{
+	public partial class UserControlSetupWizRegKey : SetupWizControl
+	{
 
-		public UserControlSetupWizRegKey() {
+		public UserControlSetupWizRegKey()
+		{
 			InitializeComponent();
 		}
 
-		private void UserControlSetupWizRegKey_Load(object sender,EventArgs e) {
-			if(!Security.IsAuthorized(Permissions.SecurityAdmin,true)) {
-				butChangeRegKey.Enabled=false;
+		private void UserControlSetupWizRegKey_Load(object sender, EventArgs e)
+		{
+			if (!Security.IsAuthorized(Permissions.SecurityAdmin, true))
+			{
+				butChangeRegKey.Enabled = false;
 			}
 			FillControls();
 		}
 
-		private void FillControls() {
-			string regkey = Prefs.GetString(PrefName.RegistrationKey);
-			if(regkey.Length==16) {
-				textRegKey.Text=regkey.Substring(0,4)+"-"+regkey.Substring(4,4)+"-"+regkey.Substring(8,4)+"-"+regkey.Substring(12,4);
+		private void FillControls()
+		{
+			string regkey = Preferences.GetString(PreferenceName.RegistrationKey);
+			if (regkey.Length == 16)
+			{
+				textRegKey.Text = regkey.Substring(0, 4) + "-" + regkey.Substring(4, 4) + "-" + regkey.Substring(8, 4) + "-" + regkey.Substring(12, 4);
 			}
-			else {
-				textRegKey.Text=regkey;
+			else
+			{
+				textRegKey.Text = regkey;
 			}
-			IsDone=!string.IsNullOrEmpty(textRegKey.Text);
+			IsDone = !string.IsNullOrEmpty(textRegKey.Text);
 			this.StrIncomplete = "Please click the 'Change' button and type in your registration key.";
-			groupProcTools.Enabled=IsDone;
+			groupProcTools.Enabled = IsDone;
 		}
 
-		private void butProcCodeTools_Click(object sender,EventArgs e) {
+		private void butProcCodeTools_Click(object sender, EventArgs e)
+		{
 			FormProcTools FormP = new FormProcTools();
 			FormP.ShowDialog();
 			//if(FormP.Changed) {
@@ -48,7 +58,8 @@ namespace OpenDental.User_Controls.SetupWizard {
 			//}
 		}
 
-		private void butAdvanced_Click(object sender,EventArgs e) {
+		private void butAdvanced_Click(object sender, EventArgs e)
+		{
 			new FormUpdateSetup().ShowDialog();
 			FillControls();
 		}

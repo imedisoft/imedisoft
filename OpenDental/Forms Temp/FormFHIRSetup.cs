@@ -29,7 +29,7 @@ namespace OpenDental {
 			checkEnabled.Checked=prog.Enabled;
 			textSubInterval.Text=ProgramProperties.GetPropVal(prog.Id,"SubscriptionProcessingFrequency");
 			comboPayType.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.PaymentTypes,true));
-			comboPayType.SetSelectedDefNum(Prefs.GetLong(PrefName.ApiPaymentType));
+			comboPayType.SetSelectedDefNum(Preferences.GetLong(PreferenceName.ApiPaymentType));
 			//Let the load finish before we call HQ
 			this.BeginInvoke(() => {
 				Cursor=Cursors.WaitCursor;
@@ -191,7 +191,7 @@ namespace OpenDental {
 			ProgramProperty progProp=ProgramProperties.GetPropByDesc("SubscriptionProcessingFrequency",ProgramProperties.GetForProgram(prog.Id));
 			ProgramProperties.UpdateProgramPropertyWithValue(progProp,textSubInterval.Text);
 			DataValid.SetInvalid(InvalidType.Programs);
-			if(Prefs.Set(PrefName.ApiPaymentType,comboPayType.GetSelectedDefNum())) {
+			if(Preferences.Set(PreferenceName.ApiPaymentType,comboPayType.GetSelectedDefNum())) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			Close();

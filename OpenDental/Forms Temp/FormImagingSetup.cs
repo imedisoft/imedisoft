@@ -499,8 +499,8 @@ namespace OpenDental{
 			textScanDocResolution.Text=ComputerPrefs.LocalComputer.ScanDocResolution.ToString();
 			textScanDocQuality.Text=ComputerPrefs.LocalComputer.ScanDocQuality.ToString();
 			//textScanDocQuality.Text=Prefs.GetLong(PrefName.ScannerCompression).ToString();
-			slider.MinVal=PrefC.GetInt(PrefName.ImageWindowingMin);
-			slider.MaxVal=PrefC.GetInt(PrefName.ImageWindowingMax);
+			slider.MinVal=PrefC.GetInt(PreferenceName.ImageWindowingMin);
+			slider.MaxVal=PrefC.GetInt(PreferenceName.ImageWindowingMax);
 			Program programSuni=Programs.GetFirstOrDefault(x => x.Description=="Suni");
 			if(programSuni!=null && programSuni.Enabled){
 				int exposureLevelVal=ComputerPrefs.LocalComputer.SensorExposure;
@@ -557,8 +557,8 @@ namespace OpenDental{
 			ComputerPrefs.LocalComputer.ScanDocResolution=PIn.Int(textScanDocResolution.Text);
 			ComputerPrefs.LocalComputer.ScanDocQuality=PIn.Byte(textScanDocQuality.Text);
 			//Prefs.Set(PrefName.ScannerCompression,PIn.Long(textScanDocQuality.Text));
-			Prefs.Set(PrefName.ImageWindowingMin,slider.MinVal);
-			Prefs.Set(PrefName.ImageWindowingMax,slider.MaxVal);
+			Preferences.Set(PreferenceName.ImageWindowingMin,slider.MinVal);
+			Preferences.Set(PreferenceName.ImageWindowingMax,slider.MaxVal);
 			//Prefs.UpdateBool(PrefName.ScannerSuppressDialog,checkScanDocShowOptions.Checked);
 			//Prefs.Set(PrefName.ScannerResolution,PIn.Long(textScanDocResolution.Text));
 			if(groupBoxSuni.Visible){

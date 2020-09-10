@@ -1,4 +1,5 @@
-﻿using Imedisoft.Data.Cache;
+﻿using Imedisoft.Data;
+using Imedisoft.Data.Cache;
 using Imedisoft.UI;
 using OpenDental;
 using OpenDental.UI;
@@ -292,10 +293,10 @@ namespace Imedisoft.Forms
 								OpenDental.customerUpdates.Service1 regService=new OpenDental.customerUpdates.Service1();
 								regService.Url=Prefs.GetString(PrefName.UpdateServerAddress);
 #endif
-							if (Prefs.GetString(PrefName.UpdateWebProxyAddress) != "")
+							if (Preferences.GetString(PreferenceName.UpdateWebProxyAddress) != "")
 							{
-								IWebProxy proxy = new WebProxy(Prefs.GetString(PrefName.UpdateWebProxyAddress));
-								ICredentials cred = new NetworkCredential(Prefs.GetString(PrefName.UpdateWebProxyUserName), Prefs.GetString(PrefName.UpdateWebProxyPassword));
+								IWebProxy proxy = new WebProxy(Preferences.GetString(PreferenceName.UpdateWebProxyAddress));
+								ICredentials cred = new NetworkCredential(Preferences.GetString(PreferenceName.UpdateWebProxyUserName), Preferences.GetString(PreferenceName.UpdateWebProxyPassword));
 								proxy.Credentials = cred;
 								regService.Proxy = proxy;
 							}
@@ -307,7 +308,7 @@ namespace Imedisoft.Forms
 							{
 								writer.WriteStartElement("IsForeignRegKeyRequest");
 								writer.WriteStartElement("RegistrationKey");
-								writer.WriteString(Prefs.GetString(PrefName.RegistrationKey));
+								writer.WriteString(Preferences.GetString(PreferenceName.RegistrationKey));
 								writer.WriteEndElement();
 								writer.WriteEndElement();
 							}
@@ -362,11 +363,11 @@ namespace Imedisoft.Forms
 		private static string RequestCodeSystemsXml()
 		{
 			Imedisoft.customerUpdates.Service1 updateService = new Imedisoft.customerUpdates.Service1();
-			updateService.Url = Prefs.GetString(PrefName.UpdateServerAddress);
-			if (Prefs.GetString(PrefName.UpdateWebProxyAddress) != "")
+			updateService.Url = Preferences.GetString(PreferenceName.UpdateServerAddress);
+			if (Preferences.GetString(PreferenceName.UpdateWebProxyAddress) != "")
 			{
-				IWebProxy proxy = new WebProxy(Prefs.GetString(PrefName.UpdateWebProxyAddress));
-				ICredentials cred = new NetworkCredential(Prefs.GetString(PrefName.UpdateWebProxyUserName), Prefs.GetString(PrefName.UpdateWebProxyPassword));
+				IWebProxy proxy = new WebProxy(Preferences.GetString(PreferenceName.UpdateWebProxyAddress));
+				ICredentials cred = new NetworkCredential(Preferences.GetString(PreferenceName.UpdateWebProxyUserName), Preferences.GetString(PreferenceName.UpdateWebProxyPassword));
 				proxy.Credentials = cred;
 				updateService.Proxy = proxy;
 			}
@@ -1046,19 +1047,19 @@ namespace Imedisoft.Forms
 					//TODO: include more user information
 					writer.WriteStartElement("UpdateRequest");
 					writer.WriteStartElement("RegistrationKey");
-					writer.WriteString(Prefs.GetString(PrefName.RegistrationKey));
+					writer.WriteString(Preferences.GetString(PreferenceName.RegistrationKey));
 					writer.WriteEndElement();
 					writer.WriteStartElement("PracticeTitle");
-					writer.WriteString(Prefs.GetString(PrefName.PracticeTitle));
+					writer.WriteString(Preferences.GetString(PreferenceName.PracticeTitle));
 					writer.WriteEndElement();
 					writer.WriteStartElement("PracticeAddress");
-					writer.WriteString(Prefs.GetString(PrefName.PracticeAddress));
+					writer.WriteString(Preferences.GetString(PreferenceName.PracticeAddress));
 					writer.WriteEndElement();
 					writer.WriteStartElement("PracticePhone");
-					writer.WriteString(Prefs.GetString(PrefName.PracticePhone));
+					writer.WriteString(Preferences.GetString(PreferenceName.PracticePhone));
 					writer.WriteEndElement();
 					writer.WriteStartElement("ProgramVersion");
-					writer.WriteString(Prefs.GetString(PrefName.ProgramVersion));
+					writer.WriteString(Preferences.GetString(PreferenceName.ProgramVersion));
 					writer.WriteEndElement();
 					writer.WriteStartElement("CodeSystemRequested");
 					writer.WriteString(codeSystemName);
@@ -1071,10 +1072,10 @@ namespace Imedisoft.Forms
 				OpenDental.customerUpdates.Service1 updateService=new OpenDental.customerUpdates.Service1();
 				updateService.Url=Prefs.GetString(PrefName.UpdateServerAddress);
 #endif
-				if (Prefs.GetString(PrefName.UpdateWebProxyAddress) != "")
+				if (Preferences.GetString(PreferenceName.UpdateWebProxyAddress) != "")
 				{
-					IWebProxy proxy = new WebProxy(Prefs.GetString(PrefName.UpdateWebProxyAddress));
-					ICredentials cred = new NetworkCredential(Prefs.GetString(PrefName.UpdateWebProxyUserName), Prefs.GetString(PrefName.UpdateWebProxyPassword));
+					IWebProxy proxy = new WebProxy(Preferences.GetString(PreferenceName.UpdateWebProxyAddress));
+					ICredentials cred = new NetworkCredential(Preferences.GetString(PreferenceName.UpdateWebProxyUserName), Preferences.GetString(PreferenceName.UpdateWebProxyPassword));
 					proxy.Credentials = cred;
 					updateService.Proxy = proxy;
 				}

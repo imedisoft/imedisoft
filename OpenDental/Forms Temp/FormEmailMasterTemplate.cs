@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -11,11 +12,11 @@ namespace OpenDental {
 		}
 
 		private void FormEmailSetupMasterTemplate_Load(object sender,EventArgs e) {
-			textMaster.Text=Prefs.GetString(PrefName.EmailMasterTemplate);
+			textMaster.Text=Preferences.GetString(PreferenceName.EmailMasterTemplate);
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {
-			if(Prefs.Set(PrefName.EmailMasterTemplate,textMaster.Text)) {
+			if(Preferences.Set(PreferenceName.EmailMasterTemplate,textMaster.Text)) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			DialogResult=DialogResult.OK;

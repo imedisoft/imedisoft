@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
 using Imedisoft.UI;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -86,7 +87,7 @@ namespace OpenDental {
 				ConstructURLs();
 			}
 			butSave.Enabled=false;
-			checkAutoFillNameAndBirthdate.Checked=Prefs.GetBool(PrefName.WebFormsAutoFillNameAndBirthdate);
+			checkAutoFillNameAndBirthdate.Checked=Preferences.GetBool(PreferenceName.WebFormsAutoFillNameAndBirthdate);
 		}
 
 		private void FormWebFormSetup_Shown(object sender,EventArgs e) {
@@ -111,7 +112,7 @@ namespace OpenDental {
 
 		private void FetchValuesFromWebServer() {
 			try {
-				String WebHostSynchServerURL=Prefs.GetString(PrefName.WebHostSynchServerURL);
+				String WebHostSynchServerURL=Preferences.GetString(PreferenceName.WebHostSynchServerURL);
 				textboxWebHostAddress.Text=WebHostSynchServerURL;
 				butSave.Enabled=false;
 				if((WebHostSynchServerURL==WebFormL.SynchUrlStaging) || (WebHostSynchServerURL==WebFormL.SynchUrlDev)) {
@@ -195,8 +196,8 @@ namespace OpenDental {
 			if(_webFormPrefOld.ColorBorder.ToArgb()!=_webFormPref.ColorBorder.ToArgb()
 				|| _webFormPrefOld.CultureName!=_webFormPref.CultureName
 				|| _webFormPrefOld.DisableSignatures!=_webFormPref.DisableSignatures
-				|| textboxWebHostAddress.Text.Trim()!=Prefs.GetString(PrefName.WebHostSynchServerURL) 
-				|| checkAutoFillNameAndBirthdate.Checked!=Prefs.GetBool(PrefName.WebFormsAutoFillNameAndBirthdate))
+				|| textboxWebHostAddress.Text.Trim()!=Preferences.GetString(PreferenceName.WebHostSynchServerURL) 
+				|| checkAutoFillNameAndBirthdate.Checked!=Preferences.GetBool(PreferenceName.WebFormsAutoFillNameAndBirthdate))
 			{
 				butSave.Enabled=true;
 			}
@@ -224,8 +225,8 @@ namespace OpenDental {
 				return false;
 			}
 			_webFormPrefOld=_webFormPref.Copy();
-			if(Prefs.Set(PrefName.WebHostSynchServerURL,textboxWebHostAddress.Text.Trim())
-				|| (includeAutoFillBirthdatePref && Prefs.Set(PrefName.WebFormsAutoFillNameAndBirthdate,checkAutoFillNameAndBirthdate.Checked)))
+			if(Preferences.Set(PreferenceName.WebHostSynchServerURL,textboxWebHostAddress.Text.Trim())
+				|| (includeAutoFillBirthdatePref && Preferences.Set(PreferenceName.WebFormsAutoFillNameAndBirthdate,checkAutoFillNameAndBirthdate.Checked)))
 			{
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}

@@ -31,22 +31,22 @@ namespace OpenDental {
 				toothChartWrapper.DrawMode=DrawingMode.DirectX;
 			
 			_toothChartRelay.BeginUpdate();
-			_toothChartRelay.SetToothNumberingNomenclature((ToothNumberingNomenclature)PrefC.GetInt(PrefName.UseInternationalToothNumbers));
+			_toothChartRelay.SetToothNumberingNomenclature((ToothNumberingNomenclature)PrefC.GetInt(PreferenceName.UseInternationalToothNumbers));
 			_toothChartRelay.ColorBackgroundMain=Color.White;
 			_toothChartRelay.ColorText=Color.Black;
 			List<Definition> listDefs=Definitions.GetDefsForCategory(DefinitionCategory.MiscColors,true);
 			_toothChartRelay.SetPerioColors(
 				listDefs[1].Color,//bleeding
 				listDefs[2].Color,//suppuration
-				PrefC.GetColor(PrefName.PerioColorProbing),
-				PrefC.GetColor(PrefName.PerioColorProbingRed),
-				PrefC.GetColor(PrefName.PerioColorGM),
-				PrefC.GetColor(PrefName.PerioColorCAL),
-				PrefC.GetColor(PrefName.PerioColorMGJ),
-				PrefC.GetColor(PrefName.PerioColorFurcations),
-				PrefC.GetColor(PrefName.PerioColorFurcationsRed),
-				PrefC.GetInt(PrefName.PerioRedProb),
-				PrefC.GetInt(PrefName.PerioRedFurc)
+				PrefC.GetColor(PreferenceName.PerioColorProbing),
+				PrefC.GetColor(PreferenceName.PerioColorProbingRed),
+				PrefC.GetColor(PreferenceName.PerioColorGM),
+				PrefC.GetColor(PreferenceName.PerioColorCAL),
+				PrefC.GetColor(PreferenceName.PerioColorMGJ),
+				PrefC.GetColor(PreferenceName.PerioColorFurcations),
+				PrefC.GetColor(PreferenceName.PerioColorFurcationsRed),
+				PrefC.GetInt(PreferenceName.PerioRedProb),
+				PrefC.GetInt(PreferenceName.PerioRedFurc)
 			);
 			_toothChartRelay.ResetTeeth();
 			try {
@@ -180,7 +180,7 @@ namespace OpenDental {
 				else if(listMeas[i].SequenceType==PerioSequenceType.Mobility) {
 					int mob=listMeas[i].ToothValue;
 					Color color=Color.Black;
-					if(mob>=PrefC.GetInt(PrefName.PerioRedMob)) {
+					if(mob>=PrefC.GetInt(PreferenceName.PerioRedMob)) {
 						color=Color.Red;
 					}
 					if(mob!=-1) {//-1 represents no measurement taken.
@@ -242,7 +242,7 @@ namespace OpenDental {
 				clinicName=clinic.Description;
 			} 
 			else {
-				clinicName=Prefs.GetString(PrefName.PracticeTitle);
+				clinicName=Preferences.GetString(PreferenceName.PracticeTitle);
 			}
 			float y=70;
 			SizeF sizeFPage=new SizeF(marginBounds.Width,marginBounds.Height);
@@ -274,13 +274,13 @@ namespace OpenDental {
 		private void butSetup_Click(object sender,EventArgs e) {
 			FormPerioGraphicalSetup fpgs=new FormPerioGraphicalSetup();
 			if(fpgs.ShowDialog()==DialogResult.OK){
-				toothChartWrapper.ColorCAL=PrefC.GetColor(PrefName.PerioColorCAL);
-				toothChartWrapper.ColorFurcations=PrefC.GetColor(PrefName.PerioColorFurcations);
-				toothChartWrapper.ColorFurcationsRed=PrefC.GetColor(PrefName.PerioColorFurcationsRed);
-				toothChartWrapper.ColorGingivalMargin=PrefC.GetColor(PrefName.PerioColorGM);
-				toothChartWrapper.ColorMGJ=PrefC.GetColor(PrefName.PerioColorMGJ);	
-				toothChartWrapper.ColorProbing=PrefC.GetColor(PrefName.PerioColorProbing);
-				toothChartWrapper.ColorProbingRed=PrefC.GetColor(PrefName.PerioColorProbingRed);
+				toothChartWrapper.ColorCAL=PrefC.GetColor(PreferenceName.PerioColorCAL);
+				toothChartWrapper.ColorFurcations=PrefC.GetColor(PreferenceName.PerioColorFurcations);
+				toothChartWrapper.ColorFurcationsRed=PrefC.GetColor(PreferenceName.PerioColorFurcationsRed);
+				toothChartWrapper.ColorGingivalMargin=PrefC.GetColor(PreferenceName.PerioColorGM);
+				toothChartWrapper.ColorMGJ=PrefC.GetColor(PreferenceName.PerioColorMGJ);	
+				toothChartWrapper.ColorProbing=PrefC.GetColor(PreferenceName.PerioColorProbing);
+				toothChartWrapper.ColorProbingRed=PrefC.GetColor(PreferenceName.PerioColorProbingRed);
 				this.toothChartWrapper.Invalidate();
 			}
 		}

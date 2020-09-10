@@ -19,7 +19,7 @@ namespace OpenDentBusiness {
 			Stopwatch s=new Stopwatch();
 			s.Start();
 			#endif
-			bool hasClinicsEnabled=Prefs.HasClinicsEnabledNoCache;
+			bool hasClinicsEnabled=Preferences.HasClinicsEnabledNoCache;
 			List<long> listHiddenUnearnedDefNums=
 				Definitions.GetDefsNoCache(DefinitionCategory.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.Value)).Select(x => x.Id).ToList();
 			string query=$@"SELECT proc.ProcDate,CONCAT(patient.LName,', ',patient.FName) Patient,procedurecode.AbbrDesc,proc.Fee,

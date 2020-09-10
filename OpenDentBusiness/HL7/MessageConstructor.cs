@@ -30,7 +30,7 @@ namespace OpenDentBusiness.HL7 {
 			if(hl7DefMessage==null) {//DFT message type is not defined so do nothing and return
 				return null;
 			}
-			if(Prefs.GetBool(PrefName.ShowFeaturePatientClone)) {
+			if(Preferences.GetBool(PreferenceName.ShowFeaturePatientClone)) {
 				pat=Patients.GetOriginalPatientForClone(pat);
 			}
 			Provider prov=Providers.GetById(Patients.GetProvNum(pat));
@@ -109,7 +109,7 @@ namespace OpenDentBusiness.HL7 {
 			if(hl7DefMessage==null) {//ADT message type is not defined so do nothing and return
 				return null;
 			}
-			if(Prefs.GetBool(PrefName.ShowFeaturePatientClone)) {
+			if(Preferences.GetBool(PreferenceName.ShowFeaturePatientClone)) {
 				pat=Patients.GetOriginalPatientForClone(pat);
 			}
 			MessageHL7 messageHL7=new MessageHL7(MessageTypeHL7.ADT);
@@ -186,7 +186,7 @@ namespace OpenDentBusiness.HL7 {
 			if(apt==null) {//SIU messages must have an appointment
 				return null;
 			}
-			if(Prefs.GetBool(PrefName.ShowFeaturePatientClone)) {
+			if(Preferences.GetBool(PreferenceName.ShowFeaturePatientClone)) {
 				pat=Patients.GetOriginalPatientForClone(pat);
 			}
 			MessageHL7 messageHL7=new MessageHL7(MessageTypeHL7.SIU);
@@ -277,7 +277,7 @@ namespace OpenDentBusiness.HL7 {
 			if(hl7DefMessage==null) {//SRR message type is not defined so do nothing and return
 				return null;
 			}
-			if(Prefs.GetBool(PrefName.ShowFeaturePatientClone)) {
+			if(Preferences.GetBool(PreferenceName.ShowFeaturePatientClone)) {
 				pat=Patients.GetOriginalPatientForClone(pat);
 			}
 			MessageHL7 msgHl7=new MessageHL7(MessageTypeHL7.SRR);

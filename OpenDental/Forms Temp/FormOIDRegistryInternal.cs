@@ -6,6 +6,7 @@ using OpenDentBusiness;
 using OpenDental.UI;
 using System.Xml;
 using Imedisoft.UI;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormOIDRegistryInternal:ODForm {
@@ -90,7 +91,7 @@ namespace OpenDental {
 			using(XmlWriter writer=XmlWriter.Create(strbuild,settings)) {
 				writer.WriteStartElement("CustomerIdRequest");
 				writer.WriteStartElement("RegistrationKey");
-				writer.WriteString(Prefs.GetString(PrefName.RegistrationKey));
+				writer.WriteString(Preferences.GetString(PreferenceName.RegistrationKey));
 				writer.WriteEndElement();
 				writer.WriteStartElement("RegKeyDisabledOverride");
 				writer.WriteString("true");

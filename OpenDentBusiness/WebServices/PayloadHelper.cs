@@ -1,4 +1,5 @@
 ﻿using CodeBase;
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -33,16 +34,16 @@ namespace OpenDentBusiness
 				xmlWriter.WriteStartElement("Request");
 				xmlWriter.WriteStartElement("Credentials");
 				xmlWriter.WriteStartElement("RegistrationKey");
-				xmlWriter.WriteString(registrationKey ?? Prefs.GetString(PrefName.RegistrationKey));
+				xmlWriter.WriteString(registrationKey ?? Preferences.GetString(PreferenceName.RegistrationKey));
 				xmlWriter.WriteEndElement();
 				xmlWriter.WriteStartElement("PracticeTitle");
-				xmlWriter.WriteString(practiceTitle ?? Prefs.GetString(PrefName.PracticeTitle));
+				xmlWriter.WriteString(practiceTitle ?? Preferences.GetString(PreferenceName.PracticeTitle));
 				xmlWriter.WriteEndElement();
 				xmlWriter.WriteStartElement("PracticePhone");
-				xmlWriter.WriteString(practicePhone ?? Prefs.GetString(PrefName.PracticePhone));
+				xmlWriter.WriteString(practicePhone ?? Preferences.GetString(PreferenceName.PracticePhone));
 				xmlWriter.WriteEndElement();
 				xmlWriter.WriteStartElement("ProgramVersion");
-				xmlWriter.WriteString(programVersion ?? Prefs.GetString(PrefName.ProgramVersion));
+				xmlWriter.WriteString(programVersion ?? Preferences.GetString(PreferenceName.ProgramVersion));
 				xmlWriter.WriteEndElement();
 				xmlWriter.WriteStartElement("ServiceCode");
 				xmlWriter.WriteString(serviceCode.ToString());

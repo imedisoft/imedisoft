@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Imedisoft.Data;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -43,7 +44,7 @@ namespace OpenDental {
 				row.Tag=patFieldDef;
 				grid.Rows.Add(row);
 			}
-			if(!Prefs.GetBool(PrefName.DisplayRenamedPatFields)) {
+			if(!Preferences.GetBool(PreferenceName.DisplayRenamedPatFields)) {
 				return;
 			}
 			//Now loop through the PatFields that do not have a matching PatFieldDef.

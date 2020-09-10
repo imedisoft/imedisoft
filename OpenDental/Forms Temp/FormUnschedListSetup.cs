@@ -4,6 +4,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -15,11 +16,11 @@ namespace OpenDental {
 		}
 		
 		private void FormUnschedListSetup_Load(object sender,EventArgs e) {
-			int daysPast=PrefC.GetInt(PrefName.UnschedDaysPast);
+			int daysPast=PrefC.GetInt(PreferenceName.UnschedDaysPast);
 			if(daysPast!=-1) {
 				textDaysPast.Text=daysPast.ToString();
 			}
-			int daysFuture=PrefC.GetInt(PrefName.UnschedDaysFuture);
+			int daysFuture=PrefC.GetInt(PreferenceName.UnschedDaysFuture);
 			if(daysFuture!=-1) {
 				textDaysFuture.Text=daysFuture.ToString();
 			}
@@ -35,8 +36,8 @@ namespace OpenDental {
 			if(!string.IsNullOrWhiteSpace(textDaysFuture.Text)) {
 				unschedDaysFutureValue=PIn.Int(textDaysFuture.Text,false);
 			}
-			isPrefsInvalid=Prefs.Set(PrefName.UnschedDaysPast,unschedDaysPastValue) 
-				| Prefs.Set(PrefName.UnschedDaysFuture,unschedDaysFutureValue);
+			isPrefsInvalid=Preferences.Set(PreferenceName.UnschedDaysPast,unschedDaysPastValue) 
+				| Preferences.Set(PreferenceName.UnschedDaysFuture,unschedDaysFutureValue);
 			if(isPrefsInvalid) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}

@@ -905,7 +905,7 @@ namespace OpenDentBusiness {
 			}
 			double retVal=Fees.GetAmount(substCodeNum,copayFeeSched,clinicNum,provNum,listFees);
 			if(retVal==-1) {//blank co-pay
-				if(Prefs.GetBool(PrefName.CoPay_FeeSchedule_BlankLikeZero)) {
+				if(Preferences.GetBool(PreferenceName.CoPay_FeeSchedule_BlankLikeZero)) {
 					return -1;//will act like zero.  No patient co-pay.
 				}
 				else {
@@ -975,9 +975,9 @@ namespace OpenDentBusiness {
 			if(feeSched==0) {
 				if(provNum==0) {//slight corruption
 					if(lookupFees!=null){
-						listFees=lookupFees[new FeeKey2(substCodeNum,Providers.GetById(Prefs.GetLong(PrefName.PracticeDefaultProv)).FeeScheduleId)].ToList();
+						listFees=lookupFees[new FeeKey2(substCodeNum,Providers.GetById(Preferences.GetLong(PreferenceName.PracticeDefaultProv)).FeeScheduleId)].ToList();
 					}
-					return Fees.GetAmount(substCodeNum,Providers.GetById(Prefs.GetLong(PrefName.PracticeDefaultProv)).FeeScheduleId,clinicNum,provNum,listFees);
+					return Fees.GetAmount(substCodeNum,Providers.GetById(Preferences.GetLong(PreferenceName.PracticeDefaultProv)).FeeScheduleId,clinicNum,provNum,listFees);
 				}
 				else{
 					if(lookupFees!=null){
@@ -1247,7 +1247,7 @@ namespace OpenDentBusiness {
 				return false;
 			}
 			if(insPlan.ExclusionFeeRule==ExclusionRule.UseUcrFee
-				|| (insPlan.ExclusionFeeRule==ExclusionRule.PracticeDefault && Prefs.GetBool(PrefName.InsPlanUseUcrFeeForExclusions)))
+				|| (insPlan.ExclusionFeeRule==ExclusionRule.PracticeDefault && Preferences.GetBool(PreferenceName.InsPlanUseUcrFeeForExclusions)))
 			{
 				return true;
 			}
@@ -1275,7 +1275,7 @@ namespace OpenDentBusiness {
 				return planCur.OrthoAutoProcCodeNumOverride;
 			}
 			else {
-				return Prefs.GetLong(PrefName.OrthoAutoProcCodeNum);
+				return Preferences.GetLong(PreferenceName.OrthoAutoProcCodeNum);
 			}
 		}
 

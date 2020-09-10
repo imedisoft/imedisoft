@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
 using OpenDentBusiness;
 using ZXing;
 
@@ -28,7 +29,7 @@ namespace OpenDental {
 		}
 
 		private void FormMobileCode_Shown(object sender,EventArgs e) {
-			if(Prefs.GetBool(PrefName.MobileAutoUnlockCode)) {
+			if(Preferences.GetBool(PreferenceName.MobileAutoUnlockCode)) {
 				VerifyAndSetUnlockCode(MobileDataBytes.GenerateUnlockCode());
 			}
 			_unlockCodeTimer.Interval=1000;

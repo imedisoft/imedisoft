@@ -579,19 +579,19 @@ namespace OpenDental{
 			if(DoPrintUsingSheets) {
 				SheetParameter.SetParameter(SheetTP,"TreatPlan",TPcur); //update TP on sheet to have new signature for generating pdfs
 			}
-			if(TPcur.SignaturePractice.Length>0 && TPcur.DocNum==0 && Prefs.GetBool(PrefName.TreatPlanSaveSignedToPdf)) {
+			if(TPcur.SignaturePractice.Length>0 && TPcur.DocNum==0 && Preferences.GetBool(PreferenceName.TreatPlanSaveSignedToPdf)) {
 				_hasSigPracticeChanged=true;
 			}
-			if(TPcur.Signature.Length>0 && TPcur.DocNum==0 && Prefs.GetBool(PrefName.TreatPlanSaveSignedToPdf)) {
+			if(TPcur.Signature.Length>0 && TPcur.DocNum==0 && Preferences.GetBool(PreferenceName.TreatPlanSaveSignedToPdf)) {
 				_sigChanged=true;
 			}
-			else if(TPcur.DocNum>0 && !Documents.DocExists(TPcur.DocNum) && Prefs.GetBool(PrefName.TreatPlanSaveSignedToPdf)) {
+			else if(TPcur.DocNum>0 && !Documents.DocExists(TPcur.DocNum) && Preferences.GetBool(PreferenceName.TreatPlanSaveSignedToPdf)) {
 				//Setting SigChanged to True will resave document below.
 				bool doResave=MsgBox.Show(MsgBoxButtons.YesNo,"Cannot find saved copy of signed PDF, would you like to resave the document?");
 				_sigChanged=doResave;
 				_hasSigPracticeChanged=doResave;
 			}
-			if(Prefs.GetBool(PrefName.TreatPlanSaveSignedToPdf) && SaveDocDelegate!=null
+			if(Preferences.GetBool(PreferenceName.TreatPlanSaveSignedToPdf) && SaveDocDelegate!=null
 				&& ((_sigChanged && TPcur.Signature.Length>0) || (_hasSigPracticeChanged && TPcur.SignaturePractice.Length>0))) 
 			{
 				List<Document> docs=SaveDocDelegate(true,SheetTP);

@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using Imedisoft.Data.Cache;
 using OpenDentBusiness;
 using System;
@@ -14,7 +15,7 @@ namespace Imedisoft.Forms
 
 		private void FormAccountingLock_Load(object sender, EventArgs e)
 		{
-			var accountingLockDate = Prefs.GetDateTimeOrNull(PrefName.AccountingLockDate);
+			var accountingLockDate = Preferences.GetDateTimeOrNull(PreferenceName.AccountingLockDate);
 			if (accountingLockDate.HasValue)
             {
 				dateTextBox.Text = accountingLockDate.Value.ToShortDateString();
@@ -38,7 +39,7 @@ namespace Imedisoft.Forms
                 }
             }
 
-			if (Prefs.Set(PrefName.AccountingLockDate, accountingLockDate))
+			if (Preferences.Set(PreferenceName.AccountingLockDate, accountingLockDate))
 			{
 				CacheManager.Refresh(nameof(InvalidType.Prefs));
 			}

@@ -32,7 +32,7 @@ namespace OpenDental {
 			}
 			textDateStart.Text=DateTime.Today.AddMonths(-3).ToShortDateString();//default list to start with showing the last three months
 			//One time reconcile may need to be run to create embedded PDFs for MedLabs that are not attached to a patient.
-			if(!Prefs.GetBool(PrefName.MedLabReconcileDone)) {
+			if(!Preferences.GetBool(PreferenceName.MedLabReconcileDone)) {
 				int countMedLabs=MedLabs.GetCountForPatient(0);
 				if(MessageBox.Show(this,"There are MedLabs in the database that have not been associated with a patient.\r\nA one time "
 					+"reconciliation must be performed that will reprocess the HL7 messages for these MedLabs.  This can take some time.\r\nDo you want to "
@@ -48,7 +48,7 @@ namespace OpenDental {
 					MessageBox.Show(this,"Some of the MedLab objects in the database could not be reconciled.\r\nThis may be due to an issue "
 						+"processing the original HL7 message text file.\r\nNumber failed"+": "+reconcileFailedCount);
 				}
-				Prefs.Set(PrefName.MedLabReconcileDone,true);
+				Preferences.Set(PreferenceName.MedLabReconcileDone,true);
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			_dictLabAcctClinic=new Dictionary<string,string>();

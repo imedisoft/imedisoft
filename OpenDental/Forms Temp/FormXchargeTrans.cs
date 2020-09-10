@@ -2,6 +2,7 @@ using System;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.Bridges;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormXchargeTrans:ODForm {
@@ -34,7 +35,7 @@ namespace OpenDental {
 			listTransType.Items.Add("Adjustment");
 			listTransType.Items.Add("Void");
 			listTransType.SelectedIndex=0;
-			checkSaveToken.Checked=Prefs.GetBool(PrefName.StoreCCtokens);
+			checkSaveToken.Checked=Preferences.GetBool(PreferenceName.StoreCCtokens);
 			Program prog=Programs.GetCur(ProgramName.Xcharge);
 			if(prog==null) {
 				return;

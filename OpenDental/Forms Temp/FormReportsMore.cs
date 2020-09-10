@@ -360,7 +360,7 @@ namespace OpenDental {
 			butPW.Visible=Programs.IsEnabled(ProgramName.PracticeWebReports);
 			//hiding feature for 13.3
 			//butPatList.Visible=Prefs.GetBool(PrefName.ShowFeatureEhr);
-			butPatExport.Visible=Prefs.GetBool(PrefName.ShowFeatureEhr);
+			butPatExport.Visible=Preferences.GetBool(PreferenceName.ShowFeatureEhr);
 			FillLists();
 		}
 

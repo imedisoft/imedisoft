@@ -457,7 +457,7 @@ namespace OpenDental {
 			textEobInsPayAmt.Text=_listAllClaimsPaid.Sum(x => x.InsPaid).ToString("F");
 			_insPlan=InsPlans.RefreshOne(_claim.PlanNum);
 			if(_insPlan!=null && _insPlan.PlanType.In("","f")) {
-				checkIncludeWOPercCoPay.Checked=Prefs.GetBool(PrefName.EraIncludeWOPercCoPay);
+				checkIncludeWOPercCoPay.Checked=Preferences.GetBool(PreferenceName.EraIncludeWOPercCoPay);
 			}
 			else {
 				checkIncludeWOPercCoPay.Checked=true;//Current behaviour is to include all WOs regardless of plan type.
@@ -1128,7 +1128,7 @@ namespace OpenDental {
 				MessageBox.Show(ex.Message);
 				return;
 			}
-			if(!Prefs.GetBool(PrefName.EraAllowTotalPayments) && gridPayments.Rows.Select(x => (x.Tag as ClaimProc)).Any(x => x.ProcNum==0 && x.InsPayAmt>0)){
+			if(!Preferences.GetBool(PreferenceName.EraAllowTotalPayments) && gridPayments.Rows.Select(x => (x.Tag as ClaimProc)).Any(x => x.ProcNum==0 && x.InsPayAmt>0)){
 				MsgBox.Show("Please allocate all InsPay amounts from Total Payment rows to a procedure before continuing.");
 				return;
 			}
@@ -1148,7 +1148,7 @@ namespace OpenDental {
 			}
 			SaveAllowedFees();
 			ClaimL.ReceiveEraPayment(_claim,_claimPaid,ListClaimProcsForClaim,checkIncludeWOPercCoPay.Checked,_isSupplementalPay,_insPlan);
-			if(Prefs.GetBool(PrefName.ClaimSnapshotEnabled)) {
+			if(Preferences.GetBool(PreferenceName.ClaimSnapshotEnabled)) {
 				Claim claimCur=Claims.GetClaim(_listClaimProcsOld[0].ClaimNum);
 				if(claimCur.ClaimType!="PreAuth") {
 					ClaimSnapshots.CreateClaimSnapshot(_listClaimProcsOld,ClaimSnapshotTrigger.InsPayment,claimCur.ClaimType);

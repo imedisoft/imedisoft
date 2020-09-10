@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Imedisoft.Data;
 using Imedisoft.UI;
 using OpenDentBusiness;
 
@@ -406,12 +407,12 @@ namespace OpenDental {
 
 		private void panelClose_Click(object sender,EventArgs e) {
 			//It's fairly safe to not have a password, because the program will exit in remote mode, and in simple mode, the patient is usually supervised.
-			if(Prefs.GetString(PrefName.TerminalClosePassword)!="") {
+			if(Preferences.GetString(PreferenceName.TerminalClosePassword)!="") {
 				InputBox iBox=new InputBox("Enter password to exit kiosk.");
 				iBox.textResult.PasswordChar='*';
 				iBox.setTitle("Kiosk Password");
 				iBox.ShowDialog();
-				while(iBox.DialogResult==DialogResult.OK && iBox.textResult.Text!=Prefs.GetString(PrefName.TerminalClosePassword)) {
+				while(iBox.DialogResult==DialogResult.OK && iBox.textResult.Text!=Preferences.GetString(PreferenceName.TerminalClosePassword)) {
 					MessageBox.Show("Invalid Password");
 					iBox.textResult.Text="";
 					iBox.ShowDialog();

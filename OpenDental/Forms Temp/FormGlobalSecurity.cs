@@ -9,97 +9,121 @@ using System.DirectoryServices;
 using System.Linq;
 using CodeBase;
 using Imedisoft.UI;
+using Imedisoft.Data;
 
-namespace OpenDental {
-	public partial class FormGlobalSecurity:ODForm {
+namespace OpenDental
+{
+	public partial class FormGlobalSecurity : ODForm
+	{
 		///<summary>The ObjectGuid for the domain path entered.</summary>
 		private string _domainObjectGuid;
 
-		public FormGlobalSecurity() {
+		public FormGlobalSecurity()
+		{
 			InitializeComponent();
-			
+
 		}
 
-		private void FormGlobalSecurity_Load(object sender,EventArgs e) {
-			textLogOffAfterMinutes.Text=PrefC.GetInt(PrefName.SecurityLogOffAfterMinutes).ToString();
-			checkAllowLogoffOverride.Checked=Prefs.GetBool(PrefName.SecurityLogOffAllowUserOverride);
-			checkPasswordsMustBeStrong.Checked=Prefs.GetBool(PrefName.PasswordsMustBeStrong);
-			checkPasswordsStrongIncludeSpecial.Checked=Prefs.GetBool(PrefName.PasswordsStrongIncludeSpecial);
-			checkPasswordForceWeakToStrong.Checked=Prefs.GetBool(PrefName.PasswordsWeakChangeToStrong);
-			checkTimecardSecurityEnabled.Checked=Prefs.GetBool(PrefName.TimecardSecurityEnabled);
-			checkCannotEditPastPayPeriods.Checked=Prefs.GetBool(PrefName.TimecardUsersCantEditPastPayPeriods);
-			checkCannotEditOwn.Checked=Prefs.GetBool(PrefName.TimecardUsersDontEditOwnCard);
-			checkCannotEditOwn.Enabled=checkTimecardSecurityEnabled.Checked;
-			checkCannotEditPastPayPeriods.Enabled=checkTimecardSecurityEnabled.Checked;
-			checkDomainLoginEnabled.Checked=Prefs.GetBool(PrefName.DomainLoginEnabled);
-			textDomainLoginPath.ReadOnly=!checkDomainLoginEnabled.Checked;
-			textDomainLoginPath.Text=Prefs.GetString(PrefName.DomainLoginPath);
-			checkLogOffWindows.Checked=Prefs.GetBool(PrefName.SecurityLogOffWithWindows);
-			checkUserNameManualEntry.Checked=Prefs.GetBool(PrefName.UserNameManualEntry);
-			checkMaintainPatient.Checked=Prefs.GetBool(PrefName.PatientMaintainedOnUserChange);
-			if(!PrefC.HasClinicsEnabled) {
+		private void FormGlobalSecurity_Load(object sender, EventArgs e)
+		{
+			textLogOffAfterMinutes.Text = PrefC.GetInt(PreferenceName.SecurityLogOffAfterMinutes).ToString();
+			checkAllowLogoffOverride.Checked = Preferences.GetBool(PreferenceName.SecurityLogOffAllowUserOverride);
+			checkPasswordsMustBeStrong.Checked = Preferences.GetBool(PreferenceName.PasswordsMustBeStrong);
+			checkPasswordsStrongIncludeSpecial.Checked = Preferences.GetBool(PreferenceName.PasswordsStrongIncludeSpecial);
+			checkPasswordForceWeakToStrong.Checked = Preferences.GetBool(PreferenceName.PasswordsWeakChangeToStrong);
+			checkTimecardSecurityEnabled.Checked = Preferences.GetBool(PreferenceName.TimecardSecurityEnabled);
+			checkCannotEditPastPayPeriods.Checked = Preferences.GetBool(PreferenceName.TimecardUsersCantEditPastPayPeriods);
+			checkCannotEditOwn.Checked = Preferences.GetBool(PreferenceName.TimecardUsersDontEditOwnCard);
+			checkCannotEditOwn.Enabled = checkTimecardSecurityEnabled.Checked;
+			checkCannotEditPastPayPeriods.Enabled = checkTimecardSecurityEnabled.Checked;
+			checkDomainLoginEnabled.Checked = Preferences.GetBool(PreferenceName.DomainLoginEnabled);
+			textDomainLoginPath.ReadOnly = !checkDomainLoginEnabled.Checked;
+			textDomainLoginPath.Text = Preferences.GetString(PreferenceName.DomainLoginPath);
+			checkLogOffWindows.Checked = Preferences.GetBool(PreferenceName.SecurityLogOffWithWindows);
+			checkUserNameManualEntry.Checked = Preferences.GetBool(PreferenceName.UserNameManualEntry);
+			checkMaintainPatient.Checked = Preferences.GetBool(PreferenceName.PatientMaintainedOnUserChange);
+			if (!PrefC.HasClinicsEnabled)
+			{
 				//This pref only matters when clinics are turned on. When clinics are off it behaves the same as if the pref were on. 
-				checkMaintainPatient.Visible=false;
+				checkMaintainPatient.Visible = false;
 			}
-			if(PrefC.GetDate(PrefName.BackupReminderLastDateRun).ToShortDateString()==DateTime.MaxValue.AddMonths(-1).ToShortDateString()) {
-				checkDisableBackupReminder.Checked=true;
+			if (PrefC.GetDate(PreferenceName.BackupReminderLastDateRun).ToShortDateString() == DateTime.MaxValue.AddMonths(-1).ToShortDateString())
+			{
+				checkDisableBackupReminder.Checked = true;
 			}
-			if(PrefC.GetInt(PrefName.SecurityLockDays)>0) {
-				textDaysLock.Text=PrefC.GetInt(PrefName.SecurityLockDays).ToString();
+			if (PrefC.GetInt(PreferenceName.SecurityLockDays) > 0)
+			{
+				textDaysLock.Text = PrefC.GetInt(PreferenceName.SecurityLockDays).ToString();
 			}
-			if(PrefC.GetDate(PrefName.SecurityLockDate).Year>1880) {
-				textDateLock.Text=PrefC.GetDate(PrefName.SecurityLockDate).ToShortDateString();
+			if (PrefC.GetDate(PreferenceName.SecurityLockDate).Year > 1880)
+			{
+				textDateLock.Text = PrefC.GetDate(PreferenceName.SecurityLockDate).ToShortDateString();
 			}
-			if(Prefs.GetBool(PrefName.CentralManagerSecurityLock)) {
-				butChange.Enabled=false;
-				labelGlobalDateLockDisabled.Visible=true;
+			if (Preferences.GetBool(PreferenceName.CentralManagerSecurityLock))
+			{
+				butChange.Enabled = false;
+				labelGlobalDateLockDisabled.Visible = true;
 			}
-			List<UserGroup> listGroupsNotAdmin=UserGroups.GetList().FindAll(x => !GroupPermissions.HasPermission(x.Id,Permissions.SecurityAdmin,0));
-			for(int i=0;i<listGroupsNotAdmin.Count;i++){
-				comboGroups.Items.Add(listGroupsNotAdmin[i].Description,listGroupsNotAdmin[i]);
-				if(Prefs.GetLong(PrefName.DefaultUserGroup)==listGroupsNotAdmin[i].Id) {
-					comboGroups.SelectedIndex=i;
+			List<UserGroup> listGroupsNotAdmin = UserGroups.GetList().FindAll(x => !GroupPermissions.HasPermission(x.Id, Permissions.SecurityAdmin, 0));
+			for (int i = 0; i < listGroupsNotAdmin.Count; i++)
+			{
+				comboGroups.Items.Add(listGroupsNotAdmin[i].Description, listGroupsNotAdmin[i]);
+				if (Preferences.GetLong(PreferenceName.DefaultUserGroup) == listGroupsNotAdmin[i].Id)
+				{
+					comboGroups.SelectedIndex = i;
 				}
 			}
 		}
 
-		private void checkTimecardSecurityEnabled_Click(object sender,EventArgs e) {
-			if(!checkTimecardSecurityEnabled.Checked) {
-				checkCannotEditOwn.Checked=false;
-				checkCannotEditPastPayPeriods.Checked=false;
+		private void checkTimecardSecurityEnabled_Click(object sender, EventArgs e)
+		{
+			if (!checkTimecardSecurityEnabled.Checked)
+			{
+				checkCannotEditOwn.Checked = false;
+				checkCannotEditPastPayPeriods.Checked = false;
 			}
-			checkCannotEditOwn.Enabled=checkTimecardSecurityEnabled.Checked;//can't edit timecards at all
-			checkCannotEditPastPayPeriods.Enabled=checkTimecardSecurityEnabled.Checked;//can only edit own timecard for current pay period
+			checkCannotEditOwn.Enabled = checkTimecardSecurityEnabled.Checked;//can't edit timecards at all
+			checkCannotEditPastPayPeriods.Enabled = checkTimecardSecurityEnabled.Checked;//can only edit own timecard for current pay period
 		}
 
-		private void checkCanEditOwnCur_Click(object sender,EventArgs e) {
-			if(checkCannotEditPastPayPeriods.Checked) {//one or other can be checked but not both, both can be unchecked
-				checkCannotEditOwn.Checked=false;
-			}
-		}
-
-		private void checkCannotEditOwn_Click(object sender,EventArgs e) {
-			if(checkCannotEditOwn.Checked) {//one or other can be checked but not both, both can be unchecked
-				checkCannotEditPastPayPeriods.Checked=false;
+		private void checkCanEditOwnCur_Click(object sender, EventArgs e)
+		{
+			if (checkCannotEditPastPayPeriods.Checked)
+			{//one or other can be checked but not both, both can be unchecked
+				checkCannotEditOwn.Checked = false;
 			}
 		}
 
-		private void checkDomainLoginEnabled_CheckedChanged(object sender,EventArgs e) {
-			textDomainLoginPath.ReadOnly=!checkDomainLoginEnabled.Checked;
+		private void checkCannotEditOwn_Click(object sender, EventArgs e)
+		{
+			if (checkCannotEditOwn.Checked)
+			{//one or other can be checked but not both, both can be unchecked
+				checkCannotEditPastPayPeriods.Checked = false;
+			}
 		}
 
-		private void checkDomainLoginEnabled_MouseUp(object sender,MouseEventArgs e) {
-			if(checkDomainLoginEnabled.Checked && string.IsNullOrWhiteSpace(textDomainLoginPath.Text)) {
-				if(MsgBox.Show(MsgBoxButtons.YesNo,"Would you like to use your current domain as the domain login path?")) {
-					try {
+		private void checkDomainLoginEnabled_CheckedChanged(object sender, EventArgs e)
+		{
+			textDomainLoginPath.ReadOnly = !checkDomainLoginEnabled.Checked;
+		}
+
+		private void checkDomainLoginEnabled_MouseUp(object sender, MouseEventArgs e)
+		{
+			if (checkDomainLoginEnabled.Checked && string.IsNullOrWhiteSpace(textDomainLoginPath.Text))
+			{
+				if (MsgBox.Show(MsgBoxButtons.YesNo, "Would you like to use your current domain as the domain login path?"))
+				{
+					try
+					{
 						DirectoryEntry rootDSE = new DirectoryEntry("LDAP://RootDSE");
 						string defaultNamingContext = rootDSE.Properties["defaultNamingContext"].Value.ToString();
-						textDomainLoginPath.Text="LDAP://"+defaultNamingContext;
-						DirectoryEntry testEntry=new DirectoryEntry(textDomainLoginPath.Text);
-						_domainObjectGuid=testEntry.Guid.ToString();
+						textDomainLoginPath.Text = "LDAP://" + defaultNamingContext;
+						DirectoryEntry testEntry = new DirectoryEntry(textDomainLoginPath.Text);
+						_domainObjectGuid = testEntry.Guid.ToString();
 					}
-					catch(Exception ex) {
-						FriendlyException.Show("Unable to bind to the current domain.",ex);
+					catch (Exception ex)
+					{
+						FriendlyException.Show("Unable to bind to the current domain.", ex);
 					}
 				}
 			}
@@ -108,126 +132,151 @@ namespace OpenDental {
 		///<summary>Validation for the domain login path provided. 
 		///Accepted formats are those listed here: https://msdn.microsoft.com/en-us/library/aa746384(v=vs.85).aspx, excluding plain "LDAP:"
 		///Does not check if there are users on the domain object, only that the domain object exists and can be searched.</summary>
-		private void textDomainLoginPath_Leave(object sender,EventArgs e) {
-			if(checkDomainLoginEnabled.Checked) {
-				if(string.IsNullOrWhiteSpace(textDomainLoginPath.Text)) {
+		private void textDomainLoginPath_Leave(object sender, EventArgs e)
+		{
+			if (checkDomainLoginEnabled.Checked)
+			{
+				if (string.IsNullOrWhiteSpace(textDomainLoginPath.Text))
+				{
 					MessageBox.Show("Warning. Domain Login is enabled, but no path has been entered. If you do not provide a domain path,"
-						+"you will not be able to assign domain logins to users.");
-					_domainObjectGuid="";
+						+ "you will not be able to assign domain logins to users.");
+					_domainObjectGuid = "";
 				}
-				else {
-					try {
+				else
+				{
+					try
+					{
 						DirectoryEntry testEntry = new DirectoryEntry(textDomainLoginPath.Text);
 						DirectorySearcher search = new DirectorySearcher(testEntry);
 						SearchResultCollection testResults = search.FindAll(); //Just do a generic search to verify the object might have users on it
-						_domainObjectGuid=testEntry.Guid.ToString();
+						_domainObjectGuid = testEntry.Guid.ToString();
 					}
-					catch(Exception ex) {
-						FriendlyException.Show("An error occurred while attempting to access the provided Domain Login Path.",ex);
+					catch (Exception ex)
+					{
+						FriendlyException.Show("An error occurred while attempting to access the provided Domain Login Path.", ex);
 					}
 				}
 			}
 		}
 
-		private void checkPasswordsMustBeStrong_Click(object sender,EventArgs e) {
-			if(!checkPasswordsMustBeStrong.Checked) {//unchecking the box
-				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Warning.  If this box is unchecked, the strong password flag on all users will be reset.  "
-					+"If strong passwords are again turned on later, then each user will have to edit their password in order to cause the strong password flag to be set again.")) 
+		private void checkPasswordsMustBeStrong_Click(object sender, EventArgs e)
+		{
+			if (!checkPasswordsMustBeStrong.Checked)
+			{//unchecking the box
+				if (!MsgBox.Show(MsgBoxButtons.OKCancel, "Warning.  If this box is unchecked, the strong password flag on all users will be reset.  "
+					+ "If strong passwords are again turned on later, then each user will have to edit their password in order to cause the strong password flag to be set again."))
 				{
-					checkPasswordsMustBeStrong.Checked=true;//recheck it.
+					checkPasswordsMustBeStrong.Checked = true;//recheck it.
 					return;
 				}
 			}
 		}
 
-		private void checkDisableBackupReminder_Click(object sender,EventArgs e) {
+		private void checkDisableBackupReminder_Click(object sender, EventArgs e)
+		{
 			InputBox inputbox = new InputBox("Please enter password");
 			inputbox.setTitle("Change Backup Reminder Settings");
 			inputbox.ShowDialog();
-			if(inputbox.DialogResult!=DialogResult.OK) {
-				checkDisableBackupReminder.Checked=!checkDisableBackupReminder.Checked;
+			if (inputbox.DialogResult != DialogResult.OK)
+			{
+				checkDisableBackupReminder.Checked = !checkDisableBackupReminder.Checked;
 				return;
 			}
-			if(inputbox.textResult.Text!="abracadabra") {
-				checkDisableBackupReminder.Checked=!checkDisableBackupReminder.Checked;
+			if (inputbox.textResult.Text != "abracadabra")
+			{
+				checkDisableBackupReminder.Checked = !checkDisableBackupReminder.Checked;
 				MessageBox.Show("Wrong password");
 				return;
 			}
 		}
 
-		private void butChange_Click(object sender,EventArgs e) {
+		private void butChange_Click(object sender, EventArgs e)
+		{
 			FormSecurityLock FormS = new FormSecurityLock();
 			FormS.ShowDialog();//prefs are set invalid within that form if needed.
-			if(PrefC.GetInt(PrefName.SecurityLockDays)>0) {
-				textDaysLock.Text=PrefC.GetInt(PrefName.SecurityLockDays).ToString();
+			if (PrefC.GetInt(PreferenceName.SecurityLockDays) > 0)
+			{
+				textDaysLock.Text = PrefC.GetInt(PreferenceName.SecurityLockDays).ToString();
 			}
-			else {
-				textDaysLock.Text="";
+			else
+			{
+				textDaysLock.Text = "";
 			}
-			if(PrefC.GetDate(PrefName.SecurityLockDate).Year>1880) {
-				textDateLock.Text=PrefC.GetDate(PrefName.SecurityLockDate).ToShortDateString();
+			if (PrefC.GetDate(PreferenceName.SecurityLockDate).Year > 1880)
+			{
+				textDateLock.Text = PrefC.GetDate(PreferenceName.SecurityLockDate).ToShortDateString();
 			}
-			else {
-				textDateLock.Text="";
+			else
+			{
+				textDateLock.Text = "";
 			}
 		}
 
-		private void butOK_Click(object sender,EventArgs e) {
-			if(textLogOffAfterMinutes.Text!="") {
-				try {
+		private void butOK_Click(object sender, EventArgs e)
+		{
+			if (textLogOffAfterMinutes.Text != "")
+			{
+				try
+				{
 					int logOffMinutes = Int32.Parse(textLogOffAfterMinutes.Text);
-					if(logOffMinutes<0) {//Automatic log off must be a positive numerical value.
+					if (logOffMinutes < 0)
+					{//Automatic log off must be a positive numerical value.
 						throw new Exception();
 					}
 				}
-				catch {
+				catch
+				{
 					MessageBox.Show("Log off after minutes is invalid.");
 					return;
 				}
 			}
 			DataValid.SetInvalid(InvalidType.Security);
-			bool invalidatePrefs=false;
-			if( //Prefs.UpdateBool(PrefName.PasswordsMustBeStrong,checkPasswordsMustBeStrong.Checked) //handled when box clicked.
-				Prefs.Set(PrefName.TimecardSecurityEnabled,checkTimecardSecurityEnabled.Checked)
-				| Prefs.Set(PrefName.TimecardUsersCantEditPastPayPeriods,checkCannotEditPastPayPeriods.Checked)
-				| Prefs.Set(PrefName.TimecardUsersDontEditOwnCard,checkCannotEditOwn.Checked)
-				| Prefs.Set(PrefName.SecurityLogOffWithWindows,checkLogOffWindows.Checked)
-				| Prefs.Set(PrefName.UserNameManualEntry,checkUserNameManualEntry.Checked)
-				| Prefs.Set(PrefName.PasswordsStrongIncludeSpecial,checkPasswordsStrongIncludeSpecial.Checked)
-				| Prefs.Set(PrefName.PasswordsWeakChangeToStrong,checkPasswordForceWeakToStrong.Checked)
-				| Prefs.Set(PrefName.SecurityLogOffAfterMinutes,PIn.Int(textLogOffAfterMinutes.Text))
-				| Prefs.Set(PrefName.DomainLoginPath,PIn.String(textDomainLoginPath.Text))
-				| Prefs.Set(PrefName.DomainLoginPath,textDomainLoginPath.Text)
-				| Prefs.Set(PrefName.DomainLoginPath,textDomainLoginPath.Text)
-				| Prefs.Set(PrefName.DomainLoginEnabled,checkDomainLoginEnabled.Checked)
-				| (_domainObjectGuid!=null && Prefs.Set(PrefName.DomainObjectGuid,_domainObjectGuid))
-				| Prefs.Set(PrefName.DefaultUserGroup,comboGroups.SelectedIndex==-1?0:comboGroups.GetSelected<UserGroup>().Id)
-				| Prefs.Set(PrefName.SecurityLogOffAllowUserOverride,checkAllowLogoffOverride.Checked)
-				| Prefs.Set(PrefName.PatientMaintainedOnUserChange,checkMaintainPatient.Checked)
-				) 
+			bool invalidatePrefs = false;
+			if ( //Prefs.UpdateBool(PrefName.PasswordsMustBeStrong,checkPasswordsMustBeStrong.Checked) //handled when box clicked.
+				Preferences.Set(PreferenceName.TimecardSecurityEnabled, checkTimecardSecurityEnabled.Checked)
+				| Preferences.Set(PreferenceName.TimecardUsersCantEditPastPayPeriods, checkCannotEditPastPayPeriods.Checked)
+				| Preferences.Set(PreferenceName.TimecardUsersDontEditOwnCard, checkCannotEditOwn.Checked)
+				| Preferences.Set(PreferenceName.SecurityLogOffWithWindows, checkLogOffWindows.Checked)
+				| Preferences.Set(PreferenceName.UserNameManualEntry, checkUserNameManualEntry.Checked)
+				| Preferences.Set(PreferenceName.PasswordsStrongIncludeSpecial, checkPasswordsStrongIncludeSpecial.Checked)
+				| Preferences.Set(PreferenceName.PasswordsWeakChangeToStrong, checkPasswordForceWeakToStrong.Checked)
+				| Preferences.Set(PreferenceName.SecurityLogOffAfterMinutes, PIn.Int(textLogOffAfterMinutes.Text))
+				| Preferences.Set(PreferenceName.DomainLoginPath, PIn.String(textDomainLoginPath.Text))
+				| Preferences.Set(PreferenceName.DomainLoginPath, textDomainLoginPath.Text)
+				| Preferences.Set(PreferenceName.DomainLoginPath, textDomainLoginPath.Text)
+				| Preferences.Set(PreferenceName.DomainLoginEnabled, checkDomainLoginEnabled.Checked)
+				| (_domainObjectGuid != null && Preferences.Set(PreferenceName.DomainObjectGuid, _domainObjectGuid))
+				| Preferences.Set(PreferenceName.DefaultUserGroup, comboGroups.SelectedIndex == -1 ? 0 : comboGroups.GetSelected<UserGroup>().Id)
+				| Preferences.Set(PreferenceName.SecurityLogOffAllowUserOverride, checkAllowLogoffOverride.Checked)
+				| Preferences.Set(PreferenceName.PatientMaintainedOnUserChange, checkMaintainPatient.Checked)
+				)
 			{
-				invalidatePrefs=true;
+				invalidatePrefs = true;
 			}
 			//if PasswordsMustBeStrong was unchecked, then reset the strong password flags.
-			if(Prefs.Set(PrefName.PasswordsMustBeStrong,checkPasswordsMustBeStrong.Checked) && !checkPasswordsMustBeStrong.Checked) {
-				invalidatePrefs=true;
+			if (Preferences.Set(PreferenceName.PasswordsMustBeStrong, checkPasswordsMustBeStrong.Checked) && !checkPasswordsMustBeStrong.Checked)
+			{
+				invalidatePrefs = true;
 				Userods.ResetStrongPasswordFlags();
 			}
-			if(checkDisableBackupReminder.Checked) {
-				invalidatePrefs|=Prefs.Set(PrefName.BackupReminderLastDateRun,DateTime.MaxValue.AddMonths(-1)); //if MaxValue, gives error on startup.
+			if (checkDisableBackupReminder.Checked)
+			{
+				invalidatePrefs |= Preferences.Set(PreferenceName.BackupReminderLastDateRun, DateTime.MaxValue.AddMonths(-1)); //if MaxValue, gives error on startup.
 			}
-			else {
-				invalidatePrefs|=Prefs.Set(PrefName.BackupReminderLastDateRun,DateTimeOD.Today);
+			else
+			{
+				invalidatePrefs |= Preferences.Set(PreferenceName.BackupReminderLastDateRun, DateTimeOD.Today);
 			}
-			if(invalidatePrefs) {
+			if (invalidatePrefs)
+			{
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
-			DialogResult=DialogResult.OK;
+			DialogResult = DialogResult.OK;
 		}
 
-		private void butCancel_Click(object sender,EventArgs e) {
-			DialogResult=DialogResult.Cancel;
+		private void butCancel_Click(object sender, EventArgs e)
+		{
+			DialogResult = DialogResult.Cancel;
 		}
-		
 	}
 }

@@ -1,27 +1,23 @@
-using System;
+using Imedisoft.Data;
 using System.Collections.Generic;
-using System.Data;
-using System.Reflection;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using CodeBase;
 
-namespace OpenDentBusiness{
-	public class EmailHostingTemplates{
+namespace OpenDentBusiness
+{
+    public class EmailHostingTemplates{
 		#region Get Methods
 
 		///<summary>Returns an instance of the account api for the given Clinic Num.</summary>
 		public static IAccountApi GetAccountApi(long clinicNum)
 		{
-			string guid = ClinicPrefs.GetString(clinicNum, PrefName.MassEmailGuid);
-			string secret = ClinicPrefs.GetString(clinicNum, PrefName.MassEmailSecret);
+			string guid = ClinicPrefs.GetString(clinicNum, PreferenceName.MassEmailGuid);
+			string secret = ClinicPrefs.GetString(clinicNum, PreferenceName.MassEmailSecret);
 
 			if (string.IsNullOrWhiteSpace(guid) || string.IsNullOrWhiteSpace(secret))
 			{
 				//Huge assumption that we have already checked that the current clinic is signed up.
-				guid = ClinicPrefs.GetString(Clinics.Active.Id, PrefName.MassEmailGuid);
-				secret = ClinicPrefs.GetString(Clinics.Active.Id, PrefName.MassEmailSecret);
+				guid = ClinicPrefs.GetString(Clinics.Active.Id, PreferenceName.MassEmailGuid);
+				secret = ClinicPrefs.GetString(Clinics.Active.Id, PreferenceName.MassEmailSecret);
 			}
 			return new AccountApi(guid, secret);
 		}

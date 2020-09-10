@@ -199,17 +199,17 @@ namespace OpenDental {
 				SaveFileDialog saveFileDialog=new SaveFileDialog();
 				saveFileDialog.AddExtension=true;
 				saveFileDialog.FileName=fileName;
-				if(!Directory.Exists(Prefs.GetString(PrefName.ExportPath))) {
+				if(!Directory.Exists(Preferences.GetString(PreferenceName.ExportPath))) {
 					try {
-						Directory.CreateDirectory(Prefs.GetString(PrefName.ExportPath));
-						saveFileDialog.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
+						Directory.CreateDirectory(Preferences.GetString(PreferenceName.ExportPath));
+						saveFileDialog.InitialDirectory=Preferences.GetString(PreferenceName.ExportPath);
 					}
 					catch {
 						//initialDirectory will be blank
 					}
 				}
 				else {
-					saveFileDialog.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
+					saveFileDialog.InitialDirectory=Preferences.GetString(PreferenceName.ExportPath);
 				}
 				saveFileDialog.Filter="Text files(*.txt)|*.txt|Excel Files(*.xls)|*.xls|All files(*.*)|*.*";
 				saveFileDialog.FilterIndex=0;

@@ -80,7 +80,7 @@ namespace OpenDental {
 				});
 			}
 			FillGridPat();
-			if(Prefs.GetBool(PrefName.OrthoCaseInfoInOrthoChart)) {
+			if(Preferences.GetBool(PreferenceName.OrthoCaseInfoInOrthoChart)) {
 				gridOrtho.Visible=true;
 				FillOrtho();
 			}
@@ -299,7 +299,7 @@ namespace OpenDental {
 
 				row = new GridRow();
 				row.Cells.Add("Tx Months Total"+": "); //this patient's OrthoClaimMonthsTreatment, or the practice default if 0.
-				int txMonthsTotal=(_patNoteCur.OrthoMonthsTreatOverride==-1?Prefs.GetByte(PrefName.OrthoDefaultMonthsTreat):_patNoteCur.OrthoMonthsTreatOverride);
+				int txMonthsTotal=(_patNoteCur.OrthoMonthsTreatOverride==-1?Preferences.GetByte(PreferenceName.OrthoDefaultMonthsTreat):_patNoteCur.OrthoMonthsTreatOverride);
 				row.Cells.Add(txMonthsTotal.ToString());
 				gridOrtho.Rows.Add(row);
 

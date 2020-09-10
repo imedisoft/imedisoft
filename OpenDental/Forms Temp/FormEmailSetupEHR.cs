@@ -1,42 +1,48 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
+using Imedisoft.Data;
 using OpenDentBusiness;
+using System;
+using System.Windows.Forms;
 
-namespace OpenDental {
-	public partial class FormEmailSetupEHR:ODForm {
-		public FormEmailSetupEHR() {
+namespace OpenDental
+{
+    public partial class FormEmailSetupEHR : ODForm
+	{
+		public FormEmailSetupEHR()
+		{
 			InitializeComponent();
-			
+
 		}
 
-		private void FormEmailSetupEHR_Load(object sender,EventArgs e) {
-			textPOPserver.Text=Prefs.GetString(PrefName.EHREmailPOPserver);
-			textUsername.Text=Prefs.GetString(PrefName.EHREmailFromAddress);
-			textPassword.Text=Prefs.GetString(PrefName.EHREmailPassword);
-			textPort.Text=Prefs.GetString(PrefName.EHREmailPort);
+		private void FormEmailSetupEHR_Load(object sender, EventArgs e)
+		{
+			textPOPserver.Text = Preferences.GetString(PreferenceName.EHREmailPOPserver);
+			textUsername.Text = Preferences.GetString(PreferenceName.EHREmailFromAddress);
+			textPassword.Text = Preferences.GetString(PreferenceName.EHREmailPassword);
+			textPort.Text = Preferences.GetString(PreferenceName.EHREmailPort);
 		}
 
-		private void butOK_Click(object sender,EventArgs e) {
-			Prefs.Set(PrefName.EHREmailPOPserver,textPOPserver.Text);
-			Prefs.Set(PrefName.EHREmailFromAddress,textUsername.Text);
-			Prefs.Set(PrefName.EHREmailPassword,textPassword.Text);
-			try{
-				Prefs.Set(PrefName.EHREmailPort,PIn.Long(textPort.Text));
+		private void butOK_Click(object sender, EventArgs e)
+		{
+			Preferences.Set(PreferenceName.EHREmailPOPserver, textPOPserver.Text);
+			Preferences.Set(PreferenceName.EHREmailFromAddress, textUsername.Text);
+			Preferences.Set(PreferenceName.EHREmailPassword, textPassword.Text);
+
+			try
+			{
+				Preferences.Set(PreferenceName.EHREmailPort, PIn.Long(textPort.Text));
 			}
-			catch{
+			catch
+			{
 				MessageBox.Show("invalid port number.");
 			}
+
 			DataValid.SetInvalid(InvalidType.Prefs);
-			DialogResult=DialogResult.OK;
+			DialogResult = DialogResult.OK;
 		}
 
-		private void butCancel_Click(object sender,EventArgs e) {
-			DialogResult=DialogResult.Cancel;
+		private void butCancel_Click(object sender, EventArgs e)
+		{
+			DialogResult = DialogResult.Cancel;
 		}
 	}
 }

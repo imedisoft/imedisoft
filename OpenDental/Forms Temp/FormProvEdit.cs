@@ -1413,11 +1413,11 @@ namespace OpenDental{
 			comboEhrMu.Items.Add("Stage 2");
 			comboEhrMu.Items.Add("Modified Stage 2");
 			comboEhrMu.SelectedIndex=ProvCur.EhrMuStage;
-			if(!Prefs.GetBool(PrefName.ShowFeatureEhr)) {
+			if(!Preferences.GetBool(PreferenceName.ShowFeatureEhr)) {
 				comboEhrMu.Visible=false;
 				labelEhrMU.Visible=false;
 			}
-			if(!Prefs.GetBool(PrefName.EasyHideDentalSchools) //Dental Schools is turned on
+			if(!Preferences.GetBool(PreferenceName.EasyHideDentalSchools) //Dental Schools is turned on
 				&& (ProvCur.SchoolClassId!=0 || ProvCur.IsInstructor))//Adding/Editing Students or Instructors
 			{
 				if(ProvCur.Id > 0) {
@@ -1746,7 +1746,7 @@ namespace OpenDental{
 				return;
 			}
 			if(checkIsHidden.Checked) {
-				if(Prefs.GetLong(PrefName.PracticeDefaultProv)==ProvCur.Id) {
+				if(Preferences.GetLong(PreferenceName.PracticeDefaultProv)==ProvCur.Id) {
 					MessageBox.Show("Not allowed to hide practice default provider.");
 					return;
 				}
@@ -1754,7 +1754,7 @@ namespace OpenDental{
 					MessageBox.Show("Not allowed to hide a clinic default provider.");
 					return;
 				}
-				if(Prefs.GetLong(PrefName.InsBillingProv)==ProvCur.Id) {
+				if(Preferences.GetLong(PreferenceName.InsBillingProv)==ProvCur.Id) {
 					if(!MsgBox.Show(MsgBoxButtons.YesNo,"You are about to hide the default ins billing provider. Continue?")) {
 						return;
 					}
@@ -1779,7 +1779,7 @@ namespace OpenDental{
 					#endregion
 				}
 			}
-			if(Providers.GetExists(x => x.Id!=ProvCur.Id && x.Abbr==textAbbr.Text && Prefs.GetBool(PrefName.EasyHideDentalSchools))) {
+			if(Providers.GetExists(x => x.Id!=ProvCur.Id && x.Abbr==textAbbr.Text && Preferences.GetBool(PreferenceName.EasyHideDentalSchools))) {
 				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"This abbreviation is already in use by another provider.  Continue anyway?")) {
 					return;
 				}
@@ -1808,7 +1808,7 @@ namespace OpenDental{
 				}
 				Providers.RemoveProvFromFutureSchedule(ProvCur.Id);
 			}
-			if(!Prefs.GetBool(PrefName.EasyHideDentalSchools) && (ProvCur.IsInstructor || ProvCur.SchoolClassId!=0)) {//Is an Instructor or a Student
+			if(!Preferences.GetBool(PreferenceName.EasyHideDentalSchools) && (ProvCur.IsInstructor || ProvCur.SchoolClassId!=0)) {//Is an Instructor or a Student
 				if(textUserName.Text=="") {
 					MessageBox.Show("User Name is not allowed to be blank.");
 					return;
@@ -1885,7 +1885,7 @@ namespace OpenDental{
 			ProvCur.WebSchedDescription=textWebSchedDescript.Text;
 			ProvCur.HourlyProductionGoal=PIn.Double(textProdGoalHr.Text);
 			ProvCur.TerminationDate=dateTerm.GetDateTime();
-			if(!Prefs.GetBool(PrefName.EasyHideDentalSchools)) {
+			if(!Preferences.GetBool(PreferenceName.EasyHideDentalSchools)) {
 				if(ProvCur.SchoolClassId!=0) {
 					ProvCur.SchoolClassId=_listSchoolClasses[comboSchoolClass.SelectedIndex].Id;
 				}
@@ -1908,7 +1908,7 @@ namespace OpenDental{
 					user.PasswordHash= Password.Hash(textPassword.Text);
 					user.ProviderId=provNum;
 					try {
-						Userods.Insert(user,new List<long> { Prefs.GetLong(PrefName.SecurityGroupForInstructors) });
+						Userods.Insert(user,new List<long> { Preferences.GetLong(PreferenceName.SecurityGroupForInstructors) });
 					}
 					catch(Exception ex) {
 						Providers.Delete(ProvCur);

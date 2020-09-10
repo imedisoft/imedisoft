@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace OpenDental
@@ -139,7 +140,7 @@ namespace OpenDental
 		/// </summary>
 		public static string GetMainTitle(Patient patient, long clinicNum)
 		{
-			string result = Prefs.GetString(PrefName.MainWindowTitle);
+			string result = Preferences.GetString(PreferenceName.MainWindowTitle);
 
 			object[] parameters = { result };
 			Plugins.HookAddCode(null, "PatientL.GetMainTitle_beginning", parameters);
@@ -153,7 +154,7 @@ namespace OpenDental
 					result += " - Clinic: ";
 				}
 
-				if (Prefs.GetBool(PrefName.TitleBarClinicUseAbbr))
+				if (Preferences.GetBool(PreferenceName.TitleBarClinicUseAbbr))
 				{
 					result += Clinics.GetAbbr(clinicNum);
 				}
@@ -174,20 +175,20 @@ namespace OpenDental
 			}
 
 			result += " - " + patient.GetNameLF();
-			if (Prefs.GetBool(PrefName.TitleBarShowSpecialty))
+			if (Preferences.GetBool(PreferenceName.TitleBarShowSpecialty))
 			{
 				result += string.IsNullOrWhiteSpace(patient.Specialty) ? "" : " (" + patient.Specialty + ")";
 			}
 
-			if (Prefs.GetLong(PrefName.ShowIDinTitleBar) == 1)
+			if (Preferences.GetLong(PreferenceName.ShowIDinTitleBar) == 1)
 			{
 				result += " - " + patient.PatNum.ToString();
 			}
-			else if (Prefs.GetLong(PrefName.ShowIDinTitleBar) == 2)
+			else if (Preferences.GetLong(PreferenceName.ShowIDinTitleBar) == 2)
 			{
 				result += " - " + patient.ChartNumber;
 			}
-			else if (Prefs.GetLong(PrefName.ShowIDinTitleBar) == 3)
+			else if (Preferences.GetLong(PreferenceName.ShowIDinTitleBar) == 3)
 			{
 				if (patient.Birthdate.Year > 1880)
 				{

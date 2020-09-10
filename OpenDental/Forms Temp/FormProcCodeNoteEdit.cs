@@ -273,7 +273,7 @@ namespace OpenDental{
 			tbTime.Refresh();
 			butSlider.Location=new Point(tbTime.Location.X+2
 				,(tbTime.Location.Y+strBTime.Length*14+1));
-			textTime2.Text=(strBTime.Length*PrefC.GetInt(PrefName.AppointmentTimeIncrement)).ToString();
+			textTime2.Text=(strBTime.Length*PrefC.GetInt(PreferenceName.AppointmentTimeIncrement)).ToString();
 		}
 
 		private void tbTime_CellClicked(object sender,CellEventArgs e) {

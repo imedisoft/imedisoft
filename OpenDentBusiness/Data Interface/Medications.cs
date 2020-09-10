@@ -111,7 +111,7 @@ namespace Imedisoft.Data
 			}
 
 			// If any more tables are added here in the future, then also update GetAllInUseMedicationNums() to include the new table.
-			if (Prefs.GetLong(PrefName.MedicationsIndicateNone) == med.Id)
+			if (Preferences.GetLong(PreferenceName.MedicationsIndicateNone) == med.Id)
 			{
 				return "Not allowed to delete medication because it is in use by a medication";
 			}
@@ -129,9 +129,9 @@ namespace Imedisoft.Data
 				"UNION SELECT MedicationNum FROM eduresource WHERE MedicationNum!=0 " +
 				"GROUP BY MedicationNum";
 			List<long> listMedicationNums = Database.GetListLong(command);
-			if (Prefs.GetLong(PrefName.MedicationsIndicateNone) != 0)
+			if (Preferences.GetLong(PreferenceName.MedicationsIndicateNone) != 0)
 			{
-				listMedicationNums.Add(Prefs.GetLong(PrefName.MedicationsIndicateNone));
+				listMedicationNums.Add(Preferences.GetLong(PreferenceName.MedicationsIndicateNone));
 			}
 			return listMedicationNums;
 		}

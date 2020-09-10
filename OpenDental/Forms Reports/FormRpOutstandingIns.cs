@@ -834,7 +834,7 @@ namespace OpenDental
 				textDaysOldMin, textDaysOldMax);
 			_hasFormLoaded = false;
 			SetDates(DateTime.MinValue, DateTime.Today.Date.AddDays(-30));
-			if (PrefC.GetInt(PrefName.OutstandingInsReportDateFilterTab) == (int)RpOutstandingIns.DateFilterTab.DaysOld)
+			if (PrefC.GetInt(PreferenceName.OutstandingInsReportDateFilterTab) == (int)RpOutstandingIns.DateFilterTab.DaysOld)
 			{
 				tabControlDate.SelectTab(tabDaysOld);
 			}
@@ -1096,7 +1096,7 @@ namespace OpenDental
 							break;
 						case "PatName":
 							string patName = claimCur.PatLName + ", " + claimCur.PatFName + " " + claimCur.PatMiddleI;
-							if (Prefs.GetBool(PrefName.ReportsShowPatNum))
+							if (Preferences.GetBool(PreferenceName.ReportsShowPatNum))
 							{
 								row.Cells.Add(claimCur.PatNum + "-" + patName);
 							}
@@ -1594,12 +1594,12 @@ namespace OpenDental
 			SaveFileDialog saveFileDialog = new SaveFileDialog();
 			saveFileDialog.AddExtension = true;
 			saveFileDialog.FileName = fileName;
-			if (!Directory.Exists(Prefs.GetString(PrefName.ExportPath)))
+			if (!Directory.Exists(Preferences.GetString(PreferenceName.ExportPath)))
 			{
 				try
 				{
-					Directory.CreateDirectory(Prefs.GetString(PrefName.ExportPath));
-					saveFileDialog.InitialDirectory = Prefs.GetString(PrefName.ExportPath);
+					Directory.CreateDirectory(Preferences.GetString(PreferenceName.ExportPath));
+					saveFileDialog.InitialDirectory = Preferences.GetString(PreferenceName.ExportPath);
 				}
 				catch
 				{
@@ -1608,7 +1608,7 @@ namespace OpenDental
 			}
 			else
 			{
-				saveFileDialog.InitialDirectory = Prefs.GetString(PrefName.ExportPath);
+				saveFileDialog.InitialDirectory = Preferences.GetString(PreferenceName.ExportPath);
 			}
 			saveFileDialog.Filter = "Text files(*.txt)|*.txt|Excel Files(*.xls)|*.xls|All files(*.*)|*.*";
 			saveFileDialog.FilterIndex = 0;

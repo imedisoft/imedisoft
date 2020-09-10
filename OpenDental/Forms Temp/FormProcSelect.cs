@@ -35,7 +35,7 @@ namespace OpenDental{
 		public List<Procedure> ListSelectedProcs=new List<Procedure>();
 		///<summary>List of paysplits for the current payment.</summary>
 		public List<PaySplit> ListSplitsCur=new List<PaySplit>();
-		public bool ShowTpProcs= Prefs.GetBool(PrefName.PrePayAllowedForTpProcs);
+		public bool ShowTpProcs= Preferences.GetBool(PreferenceName.PrePayAllowedForTpProcs);
 		#endregion
 
 		///<summary>Displays completed procedures for the passed-in pat. 
@@ -75,7 +75,7 @@ namespace OpenDental{
 			_listInsPayAsTotal=ClaimProcs.GetByTotForPats(new List<long> { _patNumCur });
 			_listClaimProcs=ClaimProcs.GetForProcs(_listProcedures.Select(x => x.ProcNum).ToList());
 			labelUnallocated.Visible=_doShowUnallocatedLabel;
-			if(PrefC.GetInt(PrefName.RigorousAdjustments)==(int)RigorousAdjustments.DontEnforce) {
+			if(PrefC.GetInt(PreferenceName.RigorousAdjustments)==(int)RigorousAdjustments.DontEnforce) {
 				radioIncludeAllCredits.Checked=true;
 			}
 			else {

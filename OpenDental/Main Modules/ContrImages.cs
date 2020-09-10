@@ -1112,10 +1112,10 @@ namespace OpenDental {
 					SelectTreeNode(treeNode);
 				}
 			}
-			if(PrefC.GetInt(PrefName.ImagesModuleTreeIsCollapsed)==0) {//Expand the document tree each time the Images module is visited
+			if(PrefC.GetInt(PreferenceName.ImagesModuleTreeIsCollapsed)==0) {//Expand the document tree each time the Images module is visited
 					treeMain.ExpandAll();//Invalidates tree too.
 			}
-			else if(PrefC.GetInt(PrefName.ImagesModuleTreeIsCollapsed)==1) {//Document tree collapses when patient changes
+			else if(PrefC.GetInt(PreferenceName.ImagesModuleTreeIsCollapsed)==1) {//Document tree collapses when patient changes
 				TreeNode treeNodeSelected=treeMain.SelectedNode;//Save the selection so we can reselect after collapsing.
 				treeMain.CollapseAll();//Invalidates tree and clears selection too.
 				treeMain.SelectedNode=treeNodeSelected;//This will expand any category/folder nodes necessary to show the selection.
@@ -1668,8 +1668,8 @@ namespace OpenDental {
 					MountItems.Insert(mountItem);
 					FillTree(false);
 					SelectTreeNode(GetTreeNode(MakeIdMount(mount.MountNum)));
-					windowingSlider.MinVal=PrefC.GetInt(PrefName.ImageWindowingMin);
-					windowingSlider.MaxVal=PrefC.GetInt(PrefName.ImageWindowingMax);
+					windowingSlider.MinVal=PrefC.GetInt(PreferenceName.ImageWindowingMin);
+					windowingSlider.MaxVal=PrefC.GetInt(PreferenceName.ImageWindowingMax);
 				}
 				else if(nodeIdTag.NodeType==EnumNodeType.Mount) {//A mount is currently selected. We must allow the user to insert new images into partially complete mounts.
 					//Clear the visible selection so that the user will know when the device is ready for xray exposure.
@@ -1910,7 +1910,7 @@ namespace OpenDental {
 			}
 			OpenFileDialog openFileDialog=new OpenFileDialog();
 			openFileDialog.Multiselect=true;
-			if(Prefs.Exists(PrefName.UseAlternateOpenFileDialogWindow) && Prefs.GetBool(PrefName.UseAlternateOpenFileDialogWindow)){//Hidden pref, almost always false.
+			if(Preferences.Exists(PreferenceName.UseAlternateOpenFileDialogWindow) && Preferences.GetBool(PreferenceName.UseAlternateOpenFileDialogWindow)){//Hidden pref, almost always false.
 				//We don't know why this makes any difference but people have mentioned this will stop some hanging issues.
 				//https://stackoverflow.com/questions/6718148/windows-forms-gui-hangs-when-calling-openfiledialog-showdialog
 				openFileDialog.ShowHelp=true;
@@ -3061,7 +3061,7 @@ namespace OpenDental {
 
 		private void UpdateUserOdPrefForImageCat(long defNum, bool isExpand)
 		{
-			if (PrefC.GetInt(PrefName.ImagesModuleTreeIsCollapsed) != 2)
+			if (PrefC.GetInt(PreferenceName.ImagesModuleTreeIsCollapsed) != 2)
 			{//Document tree folders persistent expand/collapse per user.
 				return;
 			}

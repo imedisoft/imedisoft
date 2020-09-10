@@ -217,7 +217,7 @@ namespace OpenDentBusiness.SheetFramework {
 
 		///<Summary>DataSet should be prefilled with AccountModules.GetAccount() before calling this method.</Summary>
 		private static DataTable GetTable_StatementEnclosed(DataSet dataSet,Statement stmt,Patient patGuar = null) {
-			int payPlanVersionCur=PrefC.GetInt(PrefName.PayPlansVersion);
+			int payPlanVersionCur=PrefC.GetInt(PreferenceName.PayPlansVersion);
 			DataTable tableMisc=dataSet.Tables["misc"];
 			string text="";
 			DataTable table=new DataTable();
@@ -240,7 +240,7 @@ namespace OpenDentBusiness.SheetFramework {
 					double balCur;
 					foreach(Patient guarantor in listSuperFamGuars) {
 						balCur=guarantor.BalTotal;
-						if(!Prefs.GetBool(PrefName.BalancesDontSubtractIns)) {
+						if(!Preferences.GetBool(PreferenceName.BalancesDontSubtractIns)) {
 							balCur-=guarantor.InsEst;
 						}
 						if(balCur<=0) {//if this guarantor has a negative balance, don't subtract from the super statement amount due (Ryan says so)
@@ -251,7 +251,7 @@ namespace OpenDentBusiness.SheetFramework {
 				}
 				else {
 					balTotal=patGuar.BalTotal;
-					if(!Prefs.GetBool(PrefName.BalancesDontSubtractIns)) {
+					if(!Preferences.GetBool(PreferenceName.BalancesDontSubtractIns)) {
 						balTotal-=patGuar.InsEst;
 					}
 				}
@@ -312,7 +312,7 @@ namespace OpenDentBusiness.SheetFramework {
 						|| x["PayNum"].ToString()!="0"//patient payments, will be credits with charges==0
 						|| x["ClaimPaymentNum"].ToString()!="0").ToList()//claimproc payments+writeoffs, will be credits with charges==0
 					.Sum(x => PIn.Double(x["chargesDouble"].ToString())-PIn.Double(x["creditsDouble"].ToString()));//add charges-credits
-				if(Prefs.GetBool(PrefName.BalancesDontSubtractIns)) {
+				if(Preferences.GetBool(PreferenceName.BalancesDontSubtractIns)) {
 					text=statementTotal.ToString("c");
 				}
 				else {
@@ -324,11 +324,11 @@ namespace OpenDentBusiness.SheetFramework {
 			}
 			#endregion Statement Type LimitedStatement
 			row[0]=text;
-			if(Prefs.GetLong(PrefName.StatementsCalcDueDate)==-1) {
+			if(Preferences.GetLong(PreferenceName.StatementsCalcDueDate)==-1) {
 				text="Upon Receipt";
 			}
 			else {
-				text=DateTime.Today.AddDays(Prefs.GetLong(PrefName.StatementsCalcDueDate)).ToShortDateString();
+				text=DateTime.Today.AddDays(Preferences.GetLong(PreferenceName.StatementsCalcDueDate)).ToShortDateString();
 			}
 			row[1]=text;
 			row[2]="";
@@ -338,7 +338,7 @@ namespace OpenDentBusiness.SheetFramework {
 
 		///<summary>DataSet should be prefilled with AccountModules.GetAccount() before calling this method.  Only returns results for invoices.</summary>
 		private static DataTable GetTable_StatementInvoicePayment(Statement stmt) {
-			int payPlanVersionCur=PrefC.GetInt(PrefName.PayPlansVersion);
+			int payPlanVersionCur=PrefC.GetInt(PreferenceName.PayPlansVersion);
 			DataTable table=new DataTable(); //not sure what other codes we should add.
 			table.Columns.Add(new DataColumn("date"));
 			table.Columns.Add(new DataColumn("prov"));
@@ -764,7 +764,7 @@ namespace OpenDentBusiness.SheetFramework {
 				//If any plan allows substitution, show X
 				dRow["Sub"]=SubstitutionLinks.HasSubstCodeForProcCode(procCode,tpRow.Tth,listSubLinks,listInsPlans) ? "X" : "";
 				dRow["Description"]            =tpRow.Description;
-				if(Prefs.GetBool(PrefName.TreatPlanItemized)
+				if(Preferences.GetBool(PreferenceName.TreatPlanItemized)
 					|| tpRow.Description=="Subtotal" || tpRow.Description=="Total") {
 					dRow["Fee"]                  =tpRow.Fee.ToString("F");
 					dRow["Pri Ins"]              =tpRow.PriIns.ToString("F");

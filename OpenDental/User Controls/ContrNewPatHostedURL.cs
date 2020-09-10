@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDental.User_Controls {
 	public partial class ContrNewPatHostedURL:UserControl {
@@ -61,15 +62,15 @@ namespace OpenDental.User_Controls {
 
 		public string GetPrefValue(string prefName) {
 			switch(prefName) {
-				case PrefName.WebSchedNewPatAllowChildren:
+				case PreferenceName.WebSchedNewPatAllowChildren:
 					return FromGridCell(0);
-				case PrefName.WebSchedNewPatVerifyInfo:
+				case PreferenceName.WebSchedNewPatVerifyInfo:
 					return FromGridCell(1);
-				case PrefName.WebSchedNewPatDoAuthEmail:
+				case PreferenceName.WebSchedNewPatDoAuthEmail:
 					return FromGridCell(2);
-				case PrefName.WebSchedNewPatDoAuthText:
+				case PreferenceName.WebSchedNewPatDoAuthText:
 					return FromGridCell(3);
-				case PrefName.WebSchedNewPatWebFormsURL:
+				case PreferenceName.WebSchedNewPatWebFormsURL:
 					return textWebFormToLaunch.Text;
 				default: return "";
 			}
@@ -102,16 +103,16 @@ namespace OpenDental.User_Controls {
 			//Rows
 			gridOptions.Rows.Clear();
 			GridRow row=new GridRow();
-			row.Cells.Add(ToGridStr(ClinicPrefs.GetBool(Signup.ClinicNum, PrefName.WebSchedNewPatAllowChildren)));
-			row.Cells.Add(ToGridStr(ClinicPrefs.GetBool(Signup.ClinicNum, PrefName.WebSchedNewPatVerifyInfo)));
-			row.Cells.Add(ToGridStr(ClinicPrefs.GetBool(Signup.ClinicNum, PrefName.WebSchedNewPatDoAuthEmail)));
-			row.Cells.Add(IsTextingEnabled?ToGridStr(ClinicPrefs.GetBool(Signup.ClinicNum, PrefName.WebSchedNewPatDoAuthText)):"");
+			row.Cells.Add(ToGridStr(ClinicPrefs.GetBool(Signup.ClinicNum, PreferenceName.WebSchedNewPatAllowChildren)));
+			row.Cells.Add(ToGridStr(ClinicPrefs.GetBool(Signup.ClinicNum, PreferenceName.WebSchedNewPatVerifyInfo)));
+			row.Cells.Add(ToGridStr(ClinicPrefs.GetBool(Signup.ClinicNum, PreferenceName.WebSchedNewPatDoAuthEmail)));
+			row.Cells.Add(IsTextingEnabled?ToGridStr(ClinicPrefs.GetBool(Signup.ClinicNum, PreferenceName.WebSchedNewPatDoAuthText)):"");
 			string url="";
 			if(Signup.ClinicNum==0) { //HQ always uses pref.
-				url=Prefs.GetString(PrefName.WebSchedNewPatWebFormsURL);
+				url=Preferences.GetString(PreferenceName.WebSchedNewPatWebFormsURL);
 			}
 			else { //Clinic should not default back to HQ version of URL. This is unlike typical ClinicPref behavior.
-				var pref=ClinicPrefs.GetString(Signup.ClinicNum, PrefName.WebSchedNewPatWebFormsURL);			
+				var pref=ClinicPrefs.GetString(Signup.ClinicNum, PreferenceName.WebSchedNewPatWebFormsURL);			
 				if(pref!=null) {
 					url=pref;
 				}

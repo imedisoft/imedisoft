@@ -292,10 +292,10 @@ namespace OpenDentBusiness{
 					chargeData.RecurringCharge.TotalDue=totalBal;
 				}
 				else {
-					if(PrefC.GetInt(PrefName.PayPlansVersion)==1) {//in PP v2, the PP amt due is included in the pat balance
+					if(PrefC.GetInt(PreferenceName.PayPlansVersion)==1) {//in PP v2, the PP amt due is included in the pat balance
 						totalBal+=Math.Max(chargeData.RecurringCharge.PayPlanDue,0);
 					}
-					else if(PrefC.GetInt(PrefName.PayPlansVersion)==2) {
+					else if(PrefC.GetInt(PreferenceName.PayPlansVersion)==2) {
 						totalBal=Math.Max(totalBal,chargeData.RecurringCharge.PayPlanDue);//At minimum, the Total Due should be the Pay Plan Due amount.
 					}
 					chargeData.RecurringCharge.TotalDue=totalBal;

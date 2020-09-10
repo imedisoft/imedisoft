@@ -1259,7 +1259,7 @@ namespace OpenDental{
 				butClosePlan.Enabled=false;
 				labelClosed.Visible=true;
 			}
-			if(Prefs.GetBool(PrefName.PayPlansUseSheets)) {
+			if(Preferences.GetBool(PreferenceName.PayPlansUseSheets)) {
 				Sheet sheetPP=null;
 				sheetPP=PayPlanToSheet(_payPlanCur);
 				//check to see if sig box is on the sheet
@@ -1271,7 +1271,7 @@ namespace OpenDental{
 					}
 				}
 			}
-			checkExcludePast.Checked=Prefs.GetBool(PrefName.PayPlansExcludePastActivity);
+			checkExcludePast.Checked=Preferences.GetBool(PreferenceName.PayPlansExcludePastActivity);
 			FillCharges();
 			if(_payPlanCur.Signature!="" && _payPlanCur.Signature!=null) {
 				//check to see if sheet is signed before showing
@@ -1808,7 +1808,7 @@ namespace OpenDental{
 				return;
 			}
 			SaveData(true);
-			if(Prefs.GetBool(PrefName.PayPlansUseSheets)) {
+			if(Preferences.GetBool(PreferenceName.PayPlansUseSheets)) {
 				Sheet sheetPP=null;
 				sheetPP=PayPlanToSheet(_payPlanCur);
 				SheetPrinting.Print(sheetPP);
@@ -1820,7 +1820,7 @@ namespace OpenDental{
 				Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
 				ReportComplex report=new ReportComplex(false,false);
 				report.AddTitle("Title","Payment Plan Terms",fontTitle);
-				report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
+				report.AddSubTitle("PracTitle",Preferences.GetString(PreferenceName.PracticeTitle),fontSubTitle);
 				report.AddSubTitle("Date SubTitle",DateTime.Today.ToShortDateString(),fontSubTitle);
 				AreaSectionType sectType=AreaSectionType.ReportHeader;
 				Section section=report.Sections[AreaSectionType.ReportHeader];
@@ -1994,7 +1994,7 @@ namespace OpenDental{
 				MessageBox.Show("A provider must be selected first.");
 				return true;
 			}
-			if(PIn.Date(textDate.Text).Date > DateTime.Today.Date && !Prefs.GetBool(PrefName.FutureTransDatesAllowed)) {
+			if(PIn.Date(textDate.Text).Date > DateTime.Today.Date && !Preferences.GetBool(PreferenceName.FutureTransDatesAllowed)) {
 				MessageBox.Show("Payment plan date cannot be set for the future.");
 				return true;
 			}
@@ -2107,7 +2107,7 @@ namespace OpenDental{
 				MessageBox.Show("Cannot add adjustments to closed payment plans.");
 				return;
 			}
-			if(PrefC.GetInt(PrefName.PayPlanAdjType)==0) {
+			if(PrefC.GetInt(PreferenceName.PayPlanAdjType)==0) {
 				MessageBox.Show("Adjustments cannot be created for payment plans until a default adjustment type has been selected in account preferences.");
 				return;
 			}
@@ -2152,8 +2152,8 @@ namespace OpenDental{
 				adj.AddedByUserId=Security.CurrentUser.Id;
 				adj.LastModifiedDate=DateTime.Now;
 				adj.ClinicId=comboClinic.SelectedClinicNum;
-				if(Definitions.GetDef(DefinitionCategory.AdjTypes,Prefs.GetLong(PrefName.PayPlanAdjType))!=null) {
-					adj.Type=Definitions.GetDef(DefinitionCategory.AdjTypes,Prefs.GetLong(PrefName.PayPlanAdjType)).Id;
+				if(Definitions.GetDef(DefinitionCategory.AdjTypes,Preferences.GetLong(PreferenceName.PayPlanAdjType))!=null) {
+					adj.Type=Definitions.GetDef(DefinitionCategory.AdjTypes,Preferences.GetLong(PreferenceName.PayPlanAdjType)).Id;
 				}
 				_listAdjustments.Add(adj);
 			}
@@ -2270,7 +2270,7 @@ namespace OpenDental{
 				MessageBox.Show("An insurance plan must be selected.");
 				return;
 			}
-			if(PrefC.GetInt(PrefName.RigorousAccounting)==(int)RigorousAccounting.EnforceFully) {
+			if(PrefC.GetInt(PreferenceName.RigorousAccounting)==(int)RigorousAccounting.EnforceFully) {
 				//If there are tx credits, and it's a patient pay plan with no procs attached, and not an adjustment with a negative amount
 				if(!PIn.Double(textTotalTxAmt.Text).IsZero() && _payPlanCur.PlanNum==0
 					&& _listPayPlanCharges.Where(x=> x.ChargeType==PayPlanChargeType.Credit).Any(x => x.ProcNum==0 && !x.IsCreditAdjustment)) 
@@ -2286,7 +2286,7 @@ namespace OpenDental{
 				}
 			}
 			else if(!IsInsPayPlan && PIn.Double(textTotalTxAmt.Text)!=PIn.Double(textAmount.Text) 
-				&& PrefC.GetInt(PrefName.PayPlansVersion)!=(int)PayPlanVersions.NoCharges) //Credits do not matter in ppv4
+				&& PrefC.GetInt(PreferenceName.PayPlansVersion)!=(int)PayPlanVersions.NoCharges) //Credits do not matter in ppv4
 			{
 				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Total Tx Amt and Total Amount do not match, continue?")) {
 					return;

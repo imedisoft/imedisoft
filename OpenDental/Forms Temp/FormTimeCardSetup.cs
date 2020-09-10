@@ -290,13 +290,13 @@ namespace OpenDental{
 		#endregion
 
 		private void FormPayPeriods_Load(object sender,System.EventArgs e) {
-			checkUseDecimal.Checked=Prefs.GetBool(PrefName.TimeCardsUseDecimalInsteadOfColon);
-			checkAdjOverBreaks.Checked=Prefs.GetBool(PrefName.TimeCardsMakesAdjustmentsForOverBreaks);
-			checkShowSeconds.Checked=Prefs.GetBool(PrefName.TimeCardShowSeconds);
+			checkUseDecimal.Checked=Preferences.GetBool(PreferenceName.TimeCardsUseDecimalInsteadOfColon);
+			checkAdjOverBreaks.Checked=Preferences.GetBool(PreferenceName.TimeCardsMakesAdjustmentsForOverBreaks);
+			checkShowSeconds.Checked=Preferences.GetBool(PreferenceName.TimeCardShowSeconds);
 			Employees.RefreshCache();
 			FillGrid();
 			FillRules();
-			textADPCompanyCode.Text=Prefs.GetString(PrefName.ADPCompanyCode);
+			textADPCompanyCode.Text=Preferences.GetString(PreferenceName.ADPCompanyCode);
 		}
 
 		///<summary>Does not refresh the cached list.  Make sure any updates to _listPayPeriods are done before calling this method.</summary>
@@ -454,19 +454,19 @@ namespace OpenDental{
 		}
 
 		private void checkUseDecimal_Click(object sender,EventArgs e) {
-			if(Prefs.Set(PrefName.TimeCardsUseDecimalInsteadOfColon,checkUseDecimal.Checked)) {
+			if(Preferences.Set(PreferenceName.TimeCardsUseDecimalInsteadOfColon,checkUseDecimal.Checked)) {
 				changed=true;
 			}
 		}
 
 		private void checkAdjOverBreaks_Click(object sender,EventArgs e) {
-			if(Prefs.Set(PrefName.TimeCardsMakesAdjustmentsForOverBreaks,checkAdjOverBreaks.Checked)) {
+			if(Preferences.Set(PreferenceName.TimeCardsMakesAdjustmentsForOverBreaks,checkAdjOverBreaks.Checked)) {
 				changed=true;
 			}
 		}
 
 		private void checkShowSeconds_Click(object sender,EventArgs e) {
-			if(Prefs.Set(PrefName.TimeCardShowSeconds,checkShowSeconds.Checked)) {
+			if(Preferences.Set(PreferenceName.TimeCardShowSeconds,checkShowSeconds.Checked)) {
 				changed=true;
 			}
 		}
@@ -550,7 +550,7 @@ namespace OpenDental{
 				MessageBox.Show("ADP Company Code must be two or three alpha-numeric characters.\r\nFix or clear before continuing.");
 				e.Cancel=true;
 			}
-			if(Prefs.Set(PrefName.ADPCompanyCode,textADPCompanyCode.Text)) {
+			if(Preferences.Set(PreferenceName.ADPCompanyCode,textADPCompanyCode.Text)) {
 				changed=true;
 			}
 			if(changed) {

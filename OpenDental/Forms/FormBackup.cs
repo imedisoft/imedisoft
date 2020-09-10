@@ -15,17 +15,17 @@ namespace Imedisoft.Forms
 
 		private void FormBackup_Load(object sender, EventArgs e)
 		{
-			backupDestTextBox.Text = Prefs.GetString(PrefName.BackupToPath);
-			backupSourceTextBox.Text = Prefs.GetString(PrefName.BackupRestoreFromPath);
-			restoreTargetTextBox.Text = Prefs.GetString(PrefName.BackupRestoreToPath);
+			backupDestTextBox.Text = Preferences.GetString(PreferenceName.BackupToPath);
+			backupSourceTextBox.Text = Preferences.GetString(PreferenceName.BackupRestoreFromPath);
+			restoreTargetTextBox.Text = Preferences.GetString(PreferenceName.BackupRestoreToPath);
 
 			saveButton.Enabled = false;
 		}
 
 		private bool SaveTabPrefs() =>
-			Prefs.Set(PrefName.BackupToPath, backupDestTextBox.Text) | 
-			Prefs.Set(PrefName.BackupRestoreFromPath, backupSourceTextBox.Text) |
-			Prefs.Set(PrefName.BackupRestoreToPath, restoreTargetTextBox.Text);
+			Preferences.Set(PreferenceName.BackupToPath, backupDestTextBox.Text) | 
+			Preferences.Set(PreferenceName.BackupRestoreFromPath, backupSourceTextBox.Text) |
+			Preferences.Set(PreferenceName.BackupRestoreToPath, restoreTargetTextBox.Text);
 
 		private void BackupDestButton_Click(object sender, EventArgs e)
 		{
@@ -160,7 +160,7 @@ namespace Imedisoft.Forms
 
 				Close();
 
-				var versionDatabase = new Version(Prefs.GetStringNoCache(PrefName.ProgramVersion));
+				var versionDatabase = new Version(Preferences.GetStringNoCache(PreferenceName.ProgramVersion));
 				var versionCurrent = new Version(Application.ProductVersion);
 
 				if (versionDatabase != versionCurrent)

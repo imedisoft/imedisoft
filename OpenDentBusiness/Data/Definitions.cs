@@ -436,7 +436,7 @@ namespace Imedisoft.Data
 
 			foreach (var preferenceName in preferenceNames)
             {
-				if (Prefs.GetLong(preferenceName) == definition.Id)
+				if (Preferences.GetLong(preferenceName) == definition.Id)
                 {
 					return true;
                 }
@@ -457,11 +457,11 @@ namespace Imedisoft.Data
 			{
 				case DefinitionCategory.AdjTypes:
 					if (IsInUseByPreference(definition,
-						PrefName.BrokenAppointmentAdjustmentType,
-						PrefName.TreatPlanDiscountAdjustmentType,
-						PrefName.BillingChargeAdjustmentType,
-						PrefName.FinanceChargeAdjustmentType,
-						PrefName.SalesTaxAdjustmentType))
+						PreferenceName.BrokenAppointmentAdjustmentType,
+						PreferenceName.TreatPlanDiscountAdjustmentType,
+						PreferenceName.BillingChargeAdjustmentType,
+						PreferenceName.FinanceChargeAdjustmentType,
+						PreferenceName.SalesTaxAdjustmentType))
 					{
 						return true;
 					}
@@ -471,15 +471,15 @@ namespace Imedisoft.Data
 
 				case DefinitionCategory.ApptConfirmed:
 					if (IsInUseByPreference(definition,
-						PrefName.AppointmentTimeArrivedTrigger,
-						PrefName.AppointmentTimeSeatedTrigger,
-						PrefName.AppointmentTimeDismissedTrigger,
-						PrefName.WebSchedNewPatConfirmStatus,
-						PrefName.WebSchedRecallConfirmStatus,
-						PrefName.ApptEConfirmStatusSent,
-						PrefName.ApptEConfirmStatusAccepted,
-						PrefName.ApptEConfirmStatusDeclined,
-						PrefName.ApptEConfirmStatusSendFailed))
+						PreferenceName.AppointmentTimeArrivedTrigger,
+						PreferenceName.AppointmentTimeSeatedTrigger,
+						PreferenceName.AppointmentTimeDismissedTrigger,
+						PreferenceName.WebSchedNewPatConfirmStatus,
+						PreferenceName.WebSchedRecallConfirmStatus,
+						PreferenceName.ApptEConfirmStatusSent,
+						PreferenceName.ApptEConfirmStatusAccepted,
+						PreferenceName.ApptEConfirmStatusDeclined,
+						PreferenceName.ApptEConfirmStatusSendFailed))
 					{
 						return true;
 					}
@@ -492,7 +492,7 @@ namespace Imedisoft.Data
 					break;
 
 				case DefinitionCategory.BillingTypes:
-					if (IsInUseByPreference(definition, PrefName.PracticeDefaultBillType))
+					if (IsInUseByPreference(definition, PreferenceName.PracticeDefaultBillType))
                     {
 						return true;
                     }
@@ -513,8 +513,8 @@ namespace Imedisoft.Data
 
 				case DefinitionCategory.PaymentTypes:
 					if (IsInUseByPreference(definition, 
-						PrefName.RecurringChargesPayTypeCC, 
-						PrefName.AccountingCashPaymentType))
+						PreferenceName.RecurringChargesPayTypeCC, 
+						PreferenceName.AccountingCashPaymentType))
 					{
 						return true;
 					}
@@ -522,7 +522,7 @@ namespace Imedisoft.Data
 					break;
 
 				case DefinitionCategory.PaySplitUnearnedType:
-					if (IsInUseByPreference(definition, PrefName.TpUnearnedType))
+					if (IsInUseByPreference(definition, PreferenceName.TpUnearnedType))
 					{
 						return true;
 					}
@@ -535,10 +535,10 @@ namespace Imedisoft.Data
 
 				case DefinitionCategory.RecallUnschedStatus:
 					if (IsInUseByPreference(definition,
-						PrefName.RecallStatusMailed,
-						PrefName.RecallStatusTexted,
-						PrefName.RecallStatusEmailed,
-						PrefName.RecallStatusEmailedTexted))
+						PreferenceName.RecallStatusMailed,
+						PreferenceName.RecallStatusTexted,
+						PreferenceName.RecallStatusEmailed,
+						PreferenceName.RecallStatusEmailedTexted))
 					{
 						return true;
 					}

@@ -66,7 +66,7 @@ namespace OpenDentBusiness
 				return retVal;
 			}
 			DateTime dateEvaluating = data.DateEvaluating;
-			SearchBehaviorCriteria searchType = (SearchBehaviorCriteria)PrefC.GetInt(PrefName.AppointmentSearchBehavior);
+			SearchBehaviorCriteria searchType = (SearchBehaviorCriteria)PrefC.GetInt(PreferenceName.AppointmentSearchBehavior);
 			if (hasProvAndBlockout)
 			{//searching for intersection of providers and blockouts get as many results as possible.
 				while (dateEvaluating < dateEnd)

@@ -656,7 +656,7 @@ namespace OpenDental
 
 		private void FormDepositEdit_Load(object sender,System.EventArgs e) {
 			butSendQB.Visible=false;
-			IsQuickBooks=PrefC.GetInt(PrefName.AccountingSoftware)==(int)AccountingSoftware.QuickBooks;
+			IsQuickBooks=PrefC.GetInt(PreferenceName.AccountingSoftware)==(int)AccountingSoftware.QuickBooks;
 			if(IsNew) {
 				if(!Security.IsAuthorized(Permissions.DepositSlips,DateTime.Today)) {
 					//we will check the date again when saving
@@ -671,7 +671,7 @@ namespace OpenDental
 					butDelete.Enabled=false;
 				}
 			}
-			if(Prefs.GetBool(PrefName.ShowAutoDeposit)) {
+			if(Preferences.GetBool(PreferenceName.ShowAutoDeposit)) {
 				labelDepositAccountNum.Visible=true;
 				comboDepositAccountNum.Visible=true;
 				List<Definition> listAutoDepositDefsAll=Definitions.GetDefsForCategory(DefinitionCategory.AutoDeposit);
@@ -680,7 +680,7 @@ namespace OpenDental
 				comboDepositAccountNum.SetSelectedDefNum(_depositCur.DepositAccountId);
 			}
 			if(IsNew) {
-				textDateStart.Text=PIn.Date(Prefs.GetString(PrefName.DateDepositsStarted)).ToShortDateString();
+				textDateStart.Text=PIn.Date(Preferences.GetString(PreferenceName.DateDepositsStarted)).ToShortDateString();
 				if(!PrefC.HasClinicsEnabled) {
 					comboClinic.Visible=false;
 					labelClinic.Visible=false;
@@ -763,7 +763,7 @@ namespace OpenDental
 					butSendQB.Visible=true;
 				}
 			}
-			if(Prefs.GetBool(PrefName.QuickBooksClassRefsEnabled)) {
+			if(Preferences.GetBool(PreferenceName.QuickBooksClassRefsEnabled)) {
 				if(!IsNew) {
 					//Show groupbox and hide all the controls except for labelClassRef and comboClassRefs
 					groupSelect.Visible=true;
@@ -779,7 +779,7 @@ namespace OpenDental
 				}
 				labelClassRef.Visible=true;
 				comboClassRefs.Visible=true;
-				string classStr=Prefs.GetString(PrefName.QuickBooksClassRefs);
+				string classStr=Preferences.GetString(PreferenceName.QuickBooksClassRefs);
 				_arrayClassesQB=classStr.Split(new char[] { ',' });
 				for(int i = 0;i<_arrayClassesQB.Length;i++) {
 					if(_arrayClassesQB[i]=="") {
@@ -977,7 +977,7 @@ namespace OpenDental
 				}
 				Cursor.Current=Cursors.WaitCursor;
 				string classRef="";
-				if(Prefs.GetBool(PrefName.QuickBooksClassRefsEnabled)) {
+				if(Preferences.GetBool(PreferenceName.QuickBooksClassRefsEnabled)) {
 					classRef=comboClassRefs.SelectedItem.ToString();
 				}
 				QuickBooks.CreateDeposit(_depositCur.DateDeposit
@@ -1328,12 +1328,12 @@ namespace OpenDental
 			gridIns.SetSelected(true);
 			ComputeAmt();
 			if(!PrefC.HasClinicsEnabled || comboClinic.IsAllSelected){
-				textBankAccountInfo.Text=Prefs.GetString(PrefName.PracticeBankNumber);
+				textBankAccountInfo.Text=Preferences.GetString(PreferenceName.PracticeBankNumber);
 			}
 			else{
 				textBankAccountInfo.Text=Clinics.GetById(comboClinic.SelectedClinicNum).BankNumber;
 			}
-			if(Prefs.Set(PrefName.DateDepositsStarted,POut.Date(PIn.Date(textDateStart.Text),false))){
+			if(Preferences.Set(PreferenceName.DateDepositsStarted,POut.Date(PIn.Date(textDateStart.Text),false))){
 				changed=true;
 			}
 		}
@@ -1398,7 +1398,7 @@ namespace OpenDental
                         DateDisplayed = _depositCur.DateDeposit,//it would be nice to add security here.
                         DebitAmt = _depositCur.Amount,
                         Memo = "Deposit",
-                        Splits = Accounts.GetDescription(Prefs.GetLong(PrefName.AccountingIncomeAccount)),
+                        Splits = Accounts.GetDescription(Preferences.GetLong(PreferenceName.AccountingIncomeAccount)),
                         TransactionNum = trans.Id
                     };
                     JournalEntries.Insert(je);
@@ -1406,7 +1406,7 @@ namespace OpenDental
                     //then, the income entry
                     je = new JournalEntry
                     {
-                        AccountNum = Prefs.GetLong(PrefName.AccountingIncomeAccount),
+                        AccountNum = Preferences.GetLong(PreferenceName.AccountingIncomeAccount),
                         //je.CheckNumber=;
                         DateDisplayed = _depositCur.DateDeposit,//it would be nice to add security here.
                         CreditAmt = _depositCur.Amount,

@@ -184,7 +184,7 @@ namespace OpenDentBusiness
 		{
 			string log = "";
 			bool success = true;
-			if (Prefs.GetBool(PrefName.DatabaseMaintenanceSkipCheckTable))
+			if (Preferences.GetBool(PreferenceName.DatabaseMaintenanceSkipCheckTable))
 			{
 				return ("", success);
 			}
@@ -633,8 +633,8 @@ namespace OpenDentBusiness
 		public static string TransactionsWithFutureDates(bool verbose, DbmMode modeCur)
 		{
 			string log = "";
-			bool isFutureTransAllowed = Prefs.GetBool(PrefName.FutureTransDatesAllowed);
-			bool isFuturePaymentsAllowed = Prefs.GetBool(PrefName.AccountAllowFutureDebits);
+			bool isFutureTransAllowed = Preferences.GetBool(PreferenceName.FutureTransDatesAllowed);
+			bool isFuturePaymentsAllowed = Preferences.GetBool(PreferenceName.AccountAllowFutureDebits);
 			if (isFutureTransAllowed)
 			{//future dates are allowed so this DBM doesn't apply.
 				return log;
@@ -963,9 +963,9 @@ namespace OpenDentBusiness
 								LName = "PATIENT",
 								AddrNote = "DBM created this patient and assigned patientless appointments to it on " + DateTime.Now.ToShortDateString(),
 								Birthdate = DateTime.MinValue,
-								BillingType = Prefs.GetLong(PrefName.PracticeDefaultBillType),
+								BillingType = Preferences.GetLong(PreferenceName.PracticeDefaultBillType),
 								PatStatus = PatientStatus.Inactive,
-								PriProv = Prefs.GetLong(PrefName.PracticeDefaultProv)
+								PriProv = Preferences.GetLong(PreferenceName.PracticeDefaultProv)
 							};
 							//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 							tempPat.SecUserNumEntry = Security.CurrentUser.Id;
@@ -997,9 +997,9 @@ namespace OpenDentBusiness
 								LName = "PATIENT",
 								AddrNote = "DBM re-created this patient because an appointment existed for the patient on " + DateTime.Now.ToShortDateString(),
 								Birthdate = DateTime.MinValue,
-								BillingType = Prefs.GetLong(PrefName.PracticeDefaultBillType),
+								BillingType = Preferences.GetLong(PreferenceName.PracticeDefaultBillType),
 								PatStatus = PatientStatus.Inactive,
-								PriProv = Prefs.GetLong(PrefName.PracticeDefaultProv),
+								PriProv = Preferences.GetLong(PreferenceName.PracticeDefaultProv),
 								//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 								SecUserNumEntry = Security.CurrentUser.Id
 							}, true);
@@ -1387,7 +1387,7 @@ namespace OpenDentBusiness
 		[DbmMethodAttr]
 		public static string BillingTypesInvalid(bool verbose, DbmMode modeCur)
 		{
-			long billingType = Prefs.GetLong(PrefName.PracticeDefaultBillType);
+			long billingType = Preferences.GetLong(PreferenceName.PracticeDefaultBillType);
 			var command = "SELECT COUNT(*) FROM definition WHERE Category=4 AND definition.DefNum=" + billingType;
 			int prefExists = PIn.Int(Database.ExecuteString(command));
 			string log = "";
@@ -1422,13 +1422,13 @@ namespace OpenDentBusiness
 							table = Database.ExecuteDataTable(command);
 						}
 
-						Prefs.Set(PrefName.PracticeDefaultBillType, table.Rows[0][0].ToString());
+						Preferences.Set(PreferenceName.PracticeDefaultBillType, table.Rows[0][0].ToString());
 
 						log += "Default billing type preference was set due to being invalid." + "\r\n";
-						Prefs.RefreshCache();//for the next line.
+						Preferences.RefreshCache();//for the next line.
 					}
 					//Fix for patients with invalid billingtype.
-					command = "UPDATE patient SET patient.BillingType=" + POut.Long(Prefs.GetLong(PrefName.PracticeDefaultBillType));
+					command = "UPDATE patient SET patient.BillingType=" + POut.Long(Preferences.GetLong(PreferenceName.PracticeDefaultBillType));
 					command += " WHERE NOT EXISTS(SELECT * FROM definition WHERE Category=4 AND patient.BillingType=definition.DefNum)";
 					long numberFixed = Database.ExecuteNonQuery(command);
 					if (numberFixed != 0 || verbose)
@@ -1921,11 +1921,11 @@ namespace OpenDentBusiness
 				case DbmMode.Fix:
 					List<DbmLog> listDbmLogs = new List<DbmLog>();
 					string methodName = MethodBase.GetCurrentMethod().Name;
-					command = "UPDATE claim SET ProvTreat=" + POut.Long(Prefs.GetLong(PrefName.PracticeDefaultProv)) +
+					command = "UPDATE claim SET ProvTreat=" + POut.Long(Preferences.GetLong(PreferenceName.PracticeDefaultProv)) +
 							" WHERE ProvTreat > 0 AND ProvTreat NOT IN (SELECT ProvNum FROM provider);";
 					long numFixed = Database.ExecuteNonQuery(command);
 					listClaims.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurrentUser.Id, x.ClaimNum, DbmLogFKeyType.Claim, DbmLogActionType.Update,
-						methodName, "Updated ProvTreat from " + x.ProvTreat + " to " + POut.Long(Prefs.GetLong(PrefName.PracticeDefaultProv)))));
+						methodName, "Updated ProvTreat from " + x.ProvTreat + " to " + POut.Long(Preferences.GetLong(PreferenceName.PracticeDefaultProv)))));
 					if (numFixed > 0 || verbose)
 					{
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -2033,9 +2033,9 @@ namespace OpenDentBusiness
 								dummyPatient.FName = "MISSING";
 								dummyPatient.LName = "PATIENT";
 								dummyPatient.AddrNote = "This patient was inserted due to claimprocs with invalid PatNum on " + DateTime.Now.ToShortDateString() + " while doing database maintenance.";
-								dummyPatient.BillingType = Prefs.GetLong(PrefName.PracticeDefaultBillType);
+								dummyPatient.BillingType = Preferences.GetLong(PreferenceName.PracticeDefaultBillType);
 								dummyPatient.PatStatus = PatientStatus.Archived;
-								dummyPatient.PriProv = Prefs.GetLong(PrefName.PracticeDefaultProv);
+								dummyPatient.PriProv = Preferences.GetLong(PreferenceName.PracticeDefaultProv);
 								//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 								dummyPatient.SecUserNumEntry = Security.CurrentUser.Id;
 								long dummyPatNum = Patients.Insert(dummyPatient, true);
@@ -2740,10 +2740,10 @@ namespace OpenDentBusiness
 					List<DbmLog> listDbmLogs = new List<DbmLog>();
 					string methodName = MethodBase.GetCurrentMethod().Name;
 					//If estimate, set to default prov (doesn't affect finances)
-					command = "UPDATE claimproc SET ProvNum=" + Prefs.GetString(PrefName.PracticeDefaultProv) + " WHERE ProvNum=0 AND Status=" + POut.Int((int)ClaimProcStatus.Estimate);
+					command = "UPDATE claimproc SET ProvNum=" + Preferences.GetString(PreferenceName.PracticeDefaultProv) + " WHERE ProvNum=0 AND Status=" + POut.Int((int)ClaimProcStatus.Estimate);
 					long numberFixed = Database.ExecuteNonQuery(command);
 					listClaimProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurrentUser.Id, x, DbmLogFKeyType.ClaimProc,
-						DbmLogActionType.Update, methodName, "Updated ProvNum from 0 to " + Prefs.GetString(PrefName.PracticeDefaultProv) + ".")));
+						DbmLogActionType.Update, methodName, "Updated ProvNum from 0 to " + Preferences.GetString(PreferenceName.PracticeDefaultProv) + ".")));
 					if (numberFixed > 0 || verbose)
 					{
 						log += "ClaimProcs with missing provnums fixed: " + numberFixed.ToString() + "\r\n";
@@ -3120,12 +3120,12 @@ namespace OpenDentBusiness
 				case DbmMode.Fix:
 					List<DbmLog> listDbmLogs = new List<DbmLog>();
 					string methodName = MethodBase.GetCurrentMethod().Name;
-					command = "UPDATE claimproc SET ProvNum=" + POut.Long(Prefs.GetLong(PrefName.PracticeDefaultProv)) +
+					command = "UPDATE claimproc SET ProvNum=" + POut.Long(Preferences.GetLong(PreferenceName.PracticeDefaultProv)) +
 							" WHERE ProvNum > 0 AND ProvNum NOT IN (SELECT ProvNum FROM provider)";
 					long numFixed = Database.ExecuteNonQuery(command);
 					listClaimProcs.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurrentUser.Id, x.ClaimProcNum, DbmLogFKeyType.ClaimProc,
 						DbmLogActionType.Update, methodName,
-						"Updated ProvNum from " + x.ProvNum + " to " + POut.String(Prefs.GetLong(PrefName.PracticeDefaultProv).ToString()))));
+						"Updated ProvNum from " + x.ProvNum + " to " + POut.String(Preferences.GetLong(PreferenceName.PracticeDefaultProv).ToString()))));
 					if (numFixed > 0 || verbose)
 					{
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -4593,11 +4593,11 @@ namespace OpenDentBusiness
 					string methodName = MethodBase.GetCurrentMethod().Name;
 					command = "SELECT * FROM insplan WHERE ClaimFormNum=0";
 					List<InsPlan> listInsPlans = Crud.InsPlanCrud.SelectMany(command);
-					command = "UPDATE insplan SET ClaimFormNum=" + POut.Long(Prefs.GetLong(PrefName.DefaultClaimForm))
+					command = "UPDATE insplan SET ClaimFormNum=" + POut.Long(Preferences.GetLong(PreferenceName.DefaultClaimForm))
 						+ " WHERE ClaimFormNum=0";
 					long numberFixed = Database.ExecuteNonQuery(command);
 					listInsPlans.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurrentUser.Id, x.PlanNum, DbmLogFKeyType.InsPlan,
-						DbmLogActionType.Update, methodName, "Updated ClaimFormNum from 0 to " + Prefs.GetLong(PrefName.DefaultClaimForm))));
+						DbmLogActionType.Update, methodName, "Updated ClaimFormNum from 0 to " + Preferences.GetLong(PreferenceName.DefaultClaimForm))));
 					if (numberFixed > 0 || verbose)
 					{
 						Crud.DbmLogCrud.InsertMany(listDbmLogs);
@@ -4628,8 +4628,8 @@ namespace OpenDentBusiness
 					}
 					break;
 				case DbmMode.Fix:
-					long priProv = Prefs.GetLong(PrefName.PracticeDefaultProv);
-					long billType = Prefs.GetLong(PrefName.PracticeDefaultBillType);
+					long priProv = Preferences.GetLong(PreferenceName.PracticeDefaultProv);
+					long billType = Preferences.GetLong(PreferenceName.PracticeDefaultBillType);
 					List<DbmLog> listDbmLogs = new List<DbmLog>();
 					string methodName = MethodBase.GetCurrentMethod().Name;
 					for (int i = 0; i < table.Rows.Count; i++)
@@ -5790,10 +5790,10 @@ namespace OpenDentBusiness
 					List<long> listPatNums = Database.GetListLong(command);
 					//previous versions of the program just dealt gracefully with missing provnum.
 					//From now on, we can assum priprov is not missing, making coding easier.
-					command = @"UPDATE patient SET PriProv=" + Prefs.GetString(PrefName.PracticeDefaultProv) + " WHERE PriProv=0";
+					command = @"UPDATE patient SET PriProv=" + Preferences.GetString(PreferenceName.PracticeDefaultProv) + " WHERE PriProv=0";
 					long numberFixed = Database.ExecuteNonQuery(command);
 					listPatNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurrentUser.Id, x, DbmLogFKeyType.Patient, DbmLogActionType.Update,
-						methodName, "Updated PriProv from 0 to " + Prefs.GetString(PrefName.PracticeDefaultProv))));
+						methodName, "Updated PriProv from 0 to " + Preferences.GetString(PreferenceName.PracticeDefaultProv))));
 					if (numberFixed > 0 || verbose)
 					{
 						log += "Patient pri provs fixed: " + numberFixed.ToString() + "\r\n";
@@ -6719,8 +6719,8 @@ namespace OpenDentBusiness
 			switch (modeCur)
 			{
 				case DbmMode.Check:
-					command = "SELECT COUNT(*) FROM allergydef where AllergyDefNum=" + POut.Long(Prefs.GetLong(PrefName.AllergiesIndicateNone));
-					if (PIn.Int(Database.ExecuteString(command)) == 0 && Prefs.GetString(PrefName.AllergiesIndicateNone) != "")
+					command = "SELECT COUNT(*) FROM allergydef where AllergyDefNum=" + POut.Long(Preferences.GetLong(PreferenceName.AllergiesIndicateNone));
+					if (PIn.Int(Database.ExecuteString(command)) == 0 && Preferences.GetString(PreferenceName.AllergiesIndicateNone) != "")
 					{
 						log += "Preference \"AllergyIndicatesNone\" is an invalid value." + "\r\n";
 					}
@@ -6730,10 +6730,10 @@ namespace OpenDentBusiness
 					}
 					break;
 				case DbmMode.Fix:
-					command = "SELECT COUNT(*) FROM allergydef where AllergyDefNum=" + POut.Long(Prefs.GetLong(PrefName.AllergiesIndicateNone));
-					if (PIn.Int(Database.ExecuteString(command)) == 0 && Prefs.GetString(PrefName.AllergiesIndicateNone) != "")
+					command = "SELECT COUNT(*) FROM allergydef where AllergyDefNum=" + POut.Long(Preferences.GetLong(PreferenceName.AllergiesIndicateNone));
+					if (PIn.Int(Database.ExecuteString(command)) == 0 && Preferences.GetString(PreferenceName.AllergiesIndicateNone) != "")
 					{
-						Prefs.Set(PrefName.AllergiesIndicateNone, "");
+						Preferences.Set(PreferenceName.AllergiesIndicateNone, "");
 						Signalods.SetInvalid(InvalidType.Prefs);
 						log += "Preference \"AllergyIndicatesNone\" set to blank due to an invalid value." + "\r\n";
 					}
@@ -6749,7 +6749,7 @@ namespace OpenDentBusiness
 		[DbmMethodAttr]
 		public static string PreferenceDateDepositsStarted(bool verbose, DbmMode modeCur)
 		{
-			DateTime date = PrefC.GetDate(PrefName.DateDepositsStarted);
+			DateTime date = PrefC.GetDate(PreferenceName.DateDepositsStarted);
 			string log = "";
 			switch (modeCur)
 			{
@@ -6768,7 +6768,7 @@ namespace OpenDentBusiness
 					if (date < DateTime.Now.AddMonths(-1))
 					{
 
-						Prefs.Set(PrefName.DateDepositsStarted, DateTime.UtcNow.Date.AddDays(-21));
+						Preferences.Set(PreferenceName.DateDepositsStarted, DateTime.UtcNow.Date.AddDays(-21));
 
 						Signalods.SetInvalid(InvalidType.Prefs);
 						log += "Deposit start date reset.\r\n";
@@ -6790,7 +6790,7 @@ namespace OpenDentBusiness
 				return "";
 			}
 			string log = "";
-			long insBillingProvNum = Prefs.GetLong(PrefName.InsBillingProv);
+			long insBillingProvNum = Preferences.GetLong(PreferenceName.InsBillingProv);
 			Provider prov = Providers.GetById(insBillingProvNum);
 			if (insBillingProvNum == 0 || prov != null)
 			{//0 means the program will use the default practice provider.
@@ -6804,7 +6804,7 @@ namespace OpenDentBusiness
 				log += "Invalid default insurance billing provider set." + "\r\n";
 				if (modeCur != DbmMode.Check)
 				{
-					Prefs.Set(PrefName.InsBillingProv, 0);//Set it to zero so it can default to the practice provider.
+					Preferences.Set(PreferenceName.InsBillingProv, 0);//Set it to zero so it can default to the practice provider.
 					log += "  " + "Fixed." + "\r\n";
 				}
 			}
@@ -6819,8 +6819,8 @@ namespace OpenDentBusiness
 			switch (modeCur)
 			{
 				case DbmMode.Check:
-					command = "SELECT COUNT(*) FROM medication where MedicationNum=" + POut.Long(Prefs.GetLong(PrefName.MedicationsIndicateNone));
-					if (PIn.Int(Database.ExecuteString(command)) == 0 && Prefs.GetString(PrefName.MedicationsIndicateNone) != "")
+					command = "SELECT COUNT(*) FROM medication where MedicationNum=" + POut.Long(Preferences.GetLong(PreferenceName.MedicationsIndicateNone));
+					if (PIn.Int(Database.ExecuteString(command)) == 0 && Preferences.GetString(PreferenceName.MedicationsIndicateNone) != "")
 					{
 						log += "Preference \"MedicationsIndicateNone\" is an invalid value." + "\r\n";
 					}
@@ -6830,10 +6830,10 @@ namespace OpenDentBusiness
 					}
 					break;
 				case DbmMode.Fix:
-					command = "SELECT COUNT(*) FROM medication where MedicationNum=" + POut.Long(Prefs.GetLong(PrefName.MedicationsIndicateNone));
-					if (PIn.Int(Database.ExecuteString(command)) == 0 && Prefs.GetString(PrefName.MedicationsIndicateNone) != "")
+					command = "SELECT COUNT(*) FROM medication where MedicationNum=" + POut.Long(Preferences.GetLong(PreferenceName.MedicationsIndicateNone));
+					if (PIn.Int(Database.ExecuteString(command)) == 0 && Preferences.GetString(PreferenceName.MedicationsIndicateNone) != "")
 					{
-						Prefs.Set(PrefName.MedicationsIndicateNone, "");
+						Preferences.Set(PreferenceName.MedicationsIndicateNone, "");
 						Signalods.SetInvalid(InvalidType.Prefs);
 						log += "Preference \"MedicationsIndicateNone\" set to blank due to an invalid value." + "\r\n";
 					}
@@ -6854,8 +6854,8 @@ namespace OpenDentBusiness
 			switch (modeCur)
 			{
 				case DbmMode.Check:
-					command = "SELECT COUNT(*) FROM diseasedef where DiseaseDefNum=" + POut.Long(Prefs.GetLong(PrefName.ProblemsIndicateNone));
-					if (PIn.Int(Database.ExecuteString(command)) == 0 && Prefs.GetString(PrefName.ProblemsIndicateNone) != "")
+					command = "SELECT COUNT(*) FROM diseasedef where DiseaseDefNum=" + POut.Long(Preferences.GetLong(PreferenceName.ProblemsIndicateNone));
+					if (PIn.Int(Database.ExecuteString(command)) == 0 && Preferences.GetString(PreferenceName.ProblemsIndicateNone) != "")
 					{
 						log += "Preference \"ProblemsIndicateNone\" is an invalid value.\r\n";
 					}
@@ -6865,10 +6865,10 @@ namespace OpenDentBusiness
 					}
 					break;
 				case DbmMode.Fix:
-					command = "SELECT COUNT(*) FROM diseasedef where DiseaseDefNum=" + POut.Long(Prefs.GetLong(PrefName.ProblemsIndicateNone));
-					if (PIn.Int(Database.ExecuteString(command)) == 0 && Prefs.GetString(PrefName.ProblemsIndicateNone) != "")
+					command = "SELECT COUNT(*) FROM diseasedef where DiseaseDefNum=" + POut.Long(Preferences.GetLong(PreferenceName.ProblemsIndicateNone));
+					if (PIn.Int(Database.ExecuteString(command)) == 0 && Preferences.GetString(PreferenceName.ProblemsIndicateNone) != "")
 					{
-						Prefs.Set(PrefName.ProblemsIndicateNone, "");
+						Preferences.Set(PreferenceName.ProblemsIndicateNone, "");
 						Signalods.SetInvalid(InvalidType.Prefs);
 						log += "Preference \"ProblemsIndicateNone\" set to blank due to an invalid value.\r\n";
 					}
@@ -6888,7 +6888,7 @@ namespace OpenDentBusiness
 			switch (modeCur)
 			{
 				case DbmMode.Check:
-					if (PrefC.GetInt(PrefName.TimeCardOvertimeFirstDayOfWeek) < 0 || PrefC.GetInt(PrefName.TimeCardOvertimeFirstDayOfWeek) > 6)
+					if (PrefC.GetInt(PreferenceName.TimeCardOvertimeFirstDayOfWeek) < 0 || PrefC.GetInt(PreferenceName.TimeCardOvertimeFirstDayOfWeek) > 6)
 					{
 						log += "Preference \"TimeCardOvertimeFirstDayOfWeek\" is an invalid value." + "\r\n";
 					}
@@ -6898,9 +6898,9 @@ namespace OpenDentBusiness
 					}
 					break;
 				case DbmMode.Fix:
-					if (PrefC.GetInt(PrefName.TimeCardOvertimeFirstDayOfWeek) < 0 || PrefC.GetInt(PrefName.TimeCardOvertimeFirstDayOfWeek) > 6)
+					if (PrefC.GetInt(PreferenceName.TimeCardOvertimeFirstDayOfWeek) < 0 || PrefC.GetInt(PreferenceName.TimeCardOvertimeFirstDayOfWeek) > 6)
 					{
-						Prefs.Set(PrefName.TimeCardOvertimeFirstDayOfWeek, 0);//0==Sunday
+						Preferences.Set(PreferenceName.TimeCardOvertimeFirstDayOfWeek, 0);//0==Sunday
 						Signalods.SetInvalid(InvalidType.Prefs);
 						log += "Preference \"TimeCardOvertimeFirstDayOfWeek\" set to Sunday due to an invalid value." + "\r\n";
 					}
@@ -6920,7 +6920,7 @@ namespace OpenDentBusiness
 
 			string log = "";
 
-			var defaultProv = Prefs.GetLong(PrefName.PracticeDefaultProv);
+			var defaultProv = Preferences.GetLong(PreferenceName.PracticeDefaultProv);
 
 			if (defaultProv > 0)
 			{
@@ -6936,7 +6936,7 @@ namespace OpenDentBusiness
 				{
 					defaultProv = Database.ExecuteLong("SELECT provnum FROM provider WHERE IsHidden=0 ORDER BY itemorder LIMIT 1");
 
-					Prefs.Set(PrefName.PracticeDefaultProv, defaultProv);
+					Preferences.Set(PreferenceName.PracticeDefaultProv, defaultProv);
 
 					log += "  Fixed.\r\n";
 				}
@@ -7788,7 +7788,7 @@ namespace OpenDentBusiness
 					List<DbmLog> listDbmLogs = new List<DbmLog>();
 					string methodName = MethodBase.GetCurrentMethod().Name;
 					List<long> listProcNums = Database.GetListLong(command);
-					command = "UPDATE procedurelog SET ProvNum=" + POut.Long(Prefs.GetLong(PrefName.PracticeDefaultProv)) +
+					command = "UPDATE procedurelog SET ProvNum=" + POut.Long(Preferences.GetLong(PreferenceName.PracticeDefaultProv)) +
 							" WHERE ProvNum > 0 AND ProvNum NOT IN (SELECT ProvNum FROM provider)";
 					long numFixed = Database.ExecuteNonQuery(command);
 					listProcNums.ForEach(x => listDbmLogs.Add(new DbmLog(Security.CurrentUser.Id, x, DbmLogFKeyType.Procedure,
@@ -9480,7 +9480,7 @@ HAVING cnt>1";
 					activePlan = new TreatPlan
 					{//create active plan, all patients in listPatNumsNoTp do not have an active plan
 						Heading = "Active Treatment Plan",
-						Note = Prefs.GetString(PrefName.TreatmentPlanNote),
+						Note = Preferences.GetString(PreferenceName.TreatmentPlanNote),
 						TPStatus = TreatPlanStatus.Active,
 						PatNum = procCur.PatNum,
 						//UserNumPresenter=userNum,

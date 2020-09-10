@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace OpenDentBusiness
+namespace Imedisoft.Data
 {
     /// <summary>
     /// Because this enum is stored in the database as strings rather than as numbers, we can do the order alphabetically.  
     /// Deprecated preferences will start with "Deprecated" in the summary section.
     /// Preferences that are missing in general will start with "Missing in general" in the summary section.
     /// </summary>
-    public static class PrefName
+    public static class PreferenceName
 	{
 		public const string AccountingCashIncomeAccount = "AccountingCashIncomeAccount";
 

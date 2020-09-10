@@ -653,7 +653,7 @@ namespace OpenDental{
 			_listCPGroups=Definitions.GetDefsForCategory(DefinitionCategory.ClaimPaymentGroups,true);
 			FillComboPaymentGroup(ClaimPaymentCur.PayGroup);
 			CheckUIState();
-			_hasAutoDeposit=Prefs.GetBool(PrefName.ShowAutoDeposit);
+			_hasAutoDeposit=Preferences.GetBool(PreferenceName.ShowAutoDeposit);
 			FillAutoDepositDetails();
 			Plugins.HookAddCode(this,"FormClaimPayEdit.Load_end",ClaimPaymentCur);
 		}
@@ -1144,8 +1144,8 @@ namespace OpenDental{
 				return;
 			}
 			if(PIn.Date(textDate.Text).Date > DateTime.Today.Date
-				&& !Prefs.GetBool(PrefName.FutureTransDatesAllowed) 
-				&& !Prefs.GetBool(PrefName.AllowFutureInsPayments)) 
+				&& !Preferences.GetBool(PreferenceName.FutureTransDatesAllowed) 
+				&& !Preferences.GetBool(PreferenceName.AllowFutureInsPayments)) 
 			{
 				MessageBox.Show("Payment date cannot be in the future.");
 				return;
@@ -1163,7 +1163,7 @@ namespace OpenDental{
 				MessageBox.Show("Please fix data entry errors first.");
 				return;
 			}
-			if(!Prefs.GetBool(PrefName.AllowFutureInsPayments) && PIn.Date(textDate.Text).Date>MiscData.GetNowDateTime().Date) {
+			if(!Preferences.GetBool(PreferenceName.AllowFutureInsPayments) && PIn.Date(textDate.Text).Date>MiscData.GetNowDateTime().Date) {
 				MessageBox.Show("Insurance Payment Date must not be a future date.");
 				return;
 			}

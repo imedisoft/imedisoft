@@ -31,7 +31,7 @@ namespace Imedisoft.Forms
 			patInstructionsTextBox.Text = rxDef.PatientInstruction;
 			controlledCheckBox.Checked = rxDef.IsControlled;
 
-			if (Prefs.GetBool(PrefName.RxHasProc))
+			if (Preferences.GetBool(PreferenceName.RxHasProc))
 			{
 				procRequiredCheckBox.Enabled = true;
 				procRequiredCheckBox.Checked = rxDef.IsProcRequired;

@@ -368,7 +368,7 @@ namespace OpenDental{
 			else {
 				textPatient.Text=Patients.GetLim(PatNum).GetNameLF();
 			}
-			textRows.Text=Prefs.GetString(PrefName.AuditTrailEntriesDisplayed);
+			textRows.Text=Preferences.GetString(PreferenceName.AuditTrailEntriesDisplayed);
 			FillGrid();
 		}
 

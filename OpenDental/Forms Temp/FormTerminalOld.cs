@@ -1359,7 +1359,7 @@ namespace OpenDental{
 			if(input.DialogResult!=DialogResult.OK){
 				return;
 			}
-			if(input.textResult.Text!=Prefs.GetString(PrefName.TerminalClosePassword)){
+			if(input.textResult.Text!=Preferences.GetString(PreferenceName.TerminalClosePassword)){
 				MessageBox.Show("Invalid password.");
 				return;
 			}

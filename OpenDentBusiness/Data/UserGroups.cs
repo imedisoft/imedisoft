@@ -71,13 +71,13 @@ namespace OpenDentBusiness
 					"Must move users to another group first.");
 			}
 
-			if (Prefs.GetLong(PrefName.SecurityGroupForStudents) == group.Id)
+			if (Preferences.GetLong(PreferenceName.SecurityGroupForStudents) == group.Id)
 			{
 				throw new Exception(
 					"Group is the default group for students and cannot be deleted. Change the default student group before deleting.");
 			}
 
-			if (Prefs.GetLong(PrefName.SecurityGroupForInstructors) == group.Id)
+			if (Preferences.GetLong(PreferenceName.SecurityGroupForInstructors) == group.Id)
 			{
 				throw new Exception(
 					"Group is the default group for instructors and cannot be deleted. Change the default instructors group before deleting.");

@@ -99,10 +99,10 @@ namespace OpenDental {
 				paymentCur.ClinicNum=0;
 				if(PrefC.HasClinicsEnabled) {
 					paymentCur.ClinicNum=Clinics.Active.Id;
-					if((PayClinicSetting)PrefC.GetInt(PrefName.PaymentClinicSetting)==PayClinicSetting.PatientDefaultClinic) {
+					if((PayClinicSetting)PrefC.GetInt(PreferenceName.PaymentClinicSetting)==PayClinicSetting.PatientDefaultClinic) {
 						paymentCur.ClinicNum=patCur.ClinicNum;
 					}
-					else if((PayClinicSetting)PrefC.GetInt(PrefName.PaymentClinicSetting)==PayClinicSetting.SelectedExceptHQ) {
+					else if((PayClinicSetting)PrefC.GetInt(PreferenceName.PaymentClinicSetting)==PayClinicSetting.SelectedExceptHQ) {
 						paymentCur.ClinicNum=(Clinics.ClinicId==null ? patCur.ClinicNum : Clinics.ClinicId.Value);
 					}
 				}

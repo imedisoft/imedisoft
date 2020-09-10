@@ -5,37 +5,44 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
 using OpenDental.UI;
 using OpenDentBusiness;
 
-namespace OpenDental {
-	public partial class FormEhrQuarterlyKeys:ODForm {
+namespace OpenDental
+{
+	public partial class FormEhrQuarterlyKeys : ODForm
+	{
 		private List<EhrQuarterlyKey> listKeys;
 
-		public FormEhrQuarterlyKeys() {
+		public FormEhrQuarterlyKeys()
+		{
 			InitializeComponent();
-			
+
 		}
 
-		private void FormEhrQuarterlyKeys_Load(object sender,EventArgs e) {
-			textPracticeTitle.Text=Prefs.GetString(PrefName.PracticeTitle);
+		private void FormEhrQuarterlyKeys_Load(object sender, EventArgs e)
+		{
+			textPracticeTitle.Text = Preferences.GetString(PreferenceName.PracticeTitle);
 			FillGrid();
 		}
 
-		private void FillGrid(){
+		private void FillGrid()
+		{
 			gridMain.BeginUpdate();
 			gridMain.Columns.Clear();
-			GridColumn col=new GridColumn("Year",50);
+			GridColumn col = new GridColumn("Year", 50);
 			gridMain.Columns.Add(col);
-			col=new GridColumn("Quarter",50);
+			col = new GridColumn("Quarter", 50);
 			gridMain.Columns.Add(col);
-			col=new GridColumn("Key",100);
+			col = new GridColumn("Key", 100);
 			gridMain.Columns.Add(col);
-			listKeys=EhrQuarterlyKeys.Refresh(0);
+			listKeys = EhrQuarterlyKeys.Refresh(0);
 			gridMain.Rows.Clear();
 			GridRow row;
-			for(int i=0;i<listKeys.Count;i++) {
-				row=new GridRow();
+			for (int i = 0; i < listKeys.Count; i++)
+			{
+				row = new GridRow();
 				row.Cells.Add(listKeys[i].YearValue.ToString());
 				row.Cells.Add(listKeys[i].QuarterValue.ToString());
 				row.Cells.Add(listKeys[i].KeyValue);
@@ -44,30 +51,29 @@ namespace OpenDental {
 			gridMain.EndUpdate();
 		}
 
-		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			FormEhrQuarterlyKeyEdit formE=new FormEhrQuarterlyKeyEdit();
-			EhrQuarterlyKey keycur=listKeys[e.Row];
-			keycur.IsNew=false;
-			formE.KeyCur=keycur;
+		private void gridMain_CellDoubleClick(object sender, ODGridClickEventArgs e)
+		{
+			FormEhrQuarterlyKeyEdit formE = new FormEhrQuarterlyKeyEdit();
+			EhrQuarterlyKey keycur = listKeys[e.Row];
+			keycur.IsNew = false;
+			formE.KeyCur = keycur;
 			formE.ShowDialog();
 			FillGrid();
 		}
 
-		private void butAdd_Click(object sender,EventArgs e) {
-			FormEhrQuarterlyKeyEdit formE=new FormEhrQuarterlyKeyEdit();
-			EhrQuarterlyKey keycur=new EhrQuarterlyKey();
-			keycur.IsNew=true;
-			formE.KeyCur=keycur;
+		private void butAdd_Click(object sender, EventArgs e)
+		{
+			FormEhrQuarterlyKeyEdit formE = new FormEhrQuarterlyKeyEdit();
+			EhrQuarterlyKey keycur = new EhrQuarterlyKey();
+			keycur.IsNew = true;
+			formE.KeyCur = keycur;
 			formE.ShowDialog();
 			FillGrid();
 		}
 
-		private void butClose_Click(object sender,EventArgs e) {
+		private void butClose_Click(object sender, EventArgs e)
+		{
 			Close();
 		}
-
-	
-
-		
 	}
 }

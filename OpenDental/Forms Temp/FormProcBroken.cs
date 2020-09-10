@@ -96,7 +96,7 @@ namespace OpenDental {
 				MessageBox.Show("Please enter a date first.");
 				return;
 			}
-			if(_procCur.ProcStatus==ProcStat.C && PIn.Date(textProcDate.Text).Date > DateTime.Today.Date && !Prefs.GetBool(PrefName.FutureTransDatesAllowed)) {
+			if(_procCur.ProcStatus==ProcStat.C && PIn.Date(textProcDate.Text).Date > DateTime.Today.Date && !Preferences.GetBool(PreferenceName.FutureTransDatesAllowed)) {
 				MessageBox.Show("Completed procedures cannot be set for future dates.");
 				return;
 			}
@@ -104,7 +104,7 @@ namespace OpenDental {
 				MessageBox.Show("Please enter an amount.");
 				return;
 			}
-			if(comboProv.GetSelectedProvNum()!=_procOld.ProvNum && Prefs.GetBool(PrefName.ProcProvChangesClaimProcWithClaim)) {
+			if(comboProv.GetSelectedProvNum()!=_procOld.ProvNum && Preferences.GetBool(PreferenceName.ProcProvChangesClaimProcWithClaim)) {
 				List<ClaimProc> listClaimProc=ClaimProcs.GetForProc(ClaimProcs.Refresh(_procOld.PatNum),_procOld.ProcNum);
 				if(listClaimProc.Any(x => x.Status==ClaimProcStatus.Received
 					|| x.Status==ClaimProcStatus.Supplemental

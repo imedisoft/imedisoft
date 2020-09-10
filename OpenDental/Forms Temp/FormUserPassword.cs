@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using OpenDentBusiness;
 using System;
 using System.Windows.Forms;
@@ -86,7 +87,7 @@ namespace Imedisoft.Forms
 
 			string explanation = Userods.IsPasswordStrong(newPasswordTextBox.Text);
 
-			if (Prefs.GetBool(PrefName.PasswordsMustBeStrong))
+			if (Preferences.GetBool(PreferenceName.PasswordsMustBeStrong))
 			{
 				if (explanation != "")
 				{

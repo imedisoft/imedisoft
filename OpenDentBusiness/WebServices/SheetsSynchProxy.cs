@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using CodeBase;
-using OpenDentBusiness;
-using WebServiceSerializer;
+﻿using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
-	public class SheetsSynchProxy
+    public class SheetsSynchProxy
 	{
         /// <summary>
 		/// Used when we would like to override the service timeout.
@@ -43,7 +38,7 @@ namespace OpenDentBusiness
 
 			if (string.IsNullOrEmpty(UrlOverride))
 			{
-				service.Url = Prefs.GetString(PrefName.WebHostSynchServerURL);
+				service.Url = Preferences.GetString(PreferenceName.WebHostSynchServerURL);
 			}
 			else
 			{

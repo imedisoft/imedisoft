@@ -527,7 +527,7 @@ namespace OpenDental{
 			}
 
 			_listScreeningSheetDefs=SheetDefs.GetCustomForType(SheetTypeEnum.Screening);
-			if(Prefs.GetBool(PrefName.ScreeningsUseSheets)) {
+			if(Preferences.GetBool(PreferenceName.ScreeningsUseSheets)) {
 				comboSheetDefs.Items.Add("Default");
 				foreach(SheetDef def in _listScreeningSheetDefs) {
 					comboSheetDefs.Items.Add(def.Description);
@@ -980,7 +980,7 @@ namespace OpenDental{
 		}
 
 		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			if(Prefs.GetBool(PrefName.ScreeningsUseSheets)) {
+			if(Preferences.GetBool(PreferenceName.ScreeningsUseSheets)) {
 				ViewScreenForPatWithSheets(_listScreens[e.Row]);
 			}
 			else {
@@ -1011,7 +1011,7 @@ namespace OpenDental{
 		}
 
 		private void butAddAnonymous_Click(object sender,System.EventArgs e) {
-			if(Prefs.GetBool(PrefName.ScreeningsUseSheets)) {
+			if(Preferences.GetBool(PreferenceName.ScreeningsUseSheets)) {
 				AddAnonymousScreensForSheets();
 			}
 			else {
@@ -1067,7 +1067,7 @@ namespace OpenDental{
 				MessageBox.Show("No patients to screen.");
 				return;
 			}
-			if(Prefs.GetBool(PrefName.ScreeningsUseSheets)) {
+			if(Preferences.GetBool(PreferenceName.ScreeningsUseSheets)) {
 				StartScreensForPatsWithSheets();
 			}
 			else {

@@ -118,7 +118,7 @@ namespace OpenDentBusiness{
 		///There are several places in the program that need a BW group.  E.g. when computing limitations.</summary>
 		public static List<long> ListBWCodeNums {
 			get {
-				return GetCodeNumsForPref(PrefName.InsBenBWCodes);
+				return GetCodeNumsForPref(PreferenceName.InsBenBWCodes);
 			}
 		}
 
@@ -126,7 +126,7 @@ namespace OpenDentBusiness{
 		///There are several places in the program that need a Exam group.  E.g. when computing limitations.</summary>
 		public static List<long> ListExamCodeNums {
 			get {
-				return GetCodeNumsForPref(PrefName.InsBenExamCodes);
+				return GetCodeNumsForPref(PreferenceName.InsBenExamCodes);
 			}
 		}
 
@@ -134,7 +134,7 @@ namespace OpenDentBusiness{
 		///There are several places in the program that need a PanoFMX group.  E.g. when computing limitations.</summary>
 		public static List<long> ListPanoFMXCodeNums {
 			get {
-				return GetCodeNumsForPref(PrefName.InsBenPanoCodes);
+				return GetCodeNumsForPref(PreferenceName.InsBenPanoCodes);
 			}
 		}
 
@@ -142,7 +142,7 @@ namespace OpenDentBusiness{
 		///There are several places in the program that need a BW group.  E.g. when computing limitations.</summary>
 		public static List<long> ListCancerScreeningCodeNums {
 			get {
-				return GetCodeNumsForPref(PrefName.InsBenCancerScreeningCodes);
+				return GetCodeNumsForPref(PreferenceName.InsBenCancerScreeningCodes);
 			}
 		}
 
@@ -150,7 +150,7 @@ namespace OpenDentBusiness{
 		///There are several places in the program that need a Exam group.  E.g. when computing limitations.</summary>
 		public static List<long> ListProphyCodeNums {
 			get {
-				return GetCodeNumsForPref(PrefName.InsBenProphyCodes);
+				return GetCodeNumsForPref(PreferenceName.InsBenProphyCodes);
 			}
 		}
 
@@ -158,7 +158,7 @@ namespace OpenDentBusiness{
 		///There are several places in the program that need a PanoFMX group.  E.g. when computing limitations.</summary>
 		public static List<long> ListFlourideCodeNums {
 			get {
-				return GetCodeNumsForPref(PrefName.InsBenFlourideCodes);
+				return GetCodeNumsForPref(PreferenceName.InsBenFlourideCodes);
 			}
 		}
 
@@ -166,7 +166,7 @@ namespace OpenDentBusiness{
 		///There are several places in the program that need a BW group.  E.g. when computing limitations.</summary>
 		public static List<long> ListSealantCodeNums {
 			get {
-				return GetCodeNumsForPref(PrefName.InsBenSealantCodes);
+				return GetCodeNumsForPref(PreferenceName.InsBenSealantCodes);
 			}
 		}
 
@@ -174,7 +174,7 @@ namespace OpenDentBusiness{
 		///There are several places in the program that need a Exam group.  E.g. when computing limitations.</summary>
 		public static List<long> ListCrownCodeNums {
 			get {
-				return GetCodeNumsForPref(PrefName.InsBenCrownCodes);
+				return GetCodeNumsForPref(PreferenceName.InsBenCrownCodes);
 			}
 		}
 
@@ -182,7 +182,7 @@ namespace OpenDentBusiness{
 		///There are several places in the program that need a PanoFMX group.  E.g. when computing limitations.</summary>
 		public static List<long> ListSRPCodeNums {
 			get {
-				return GetCodeNumsForPref(PrefName.InsBenSRPCodes);
+				return GetCodeNumsForPref(PreferenceName.InsBenSRPCodes);
 			}
 		}
 
@@ -190,7 +190,7 @@ namespace OpenDentBusiness{
 		///There are several places in the program that need a BW group.  E.g. when computing limitations.</summary>
 		public static List<long> ListFullDebridementCodeNums {
 			get {
-				return GetCodeNumsForPref(PrefName.InsBenFullDebridementCodes);
+				return GetCodeNumsForPref(PreferenceName.InsBenFullDebridementCodes);
 			}
 		}
 
@@ -198,7 +198,7 @@ namespace OpenDentBusiness{
 		///There are several places in the program that need a Exam group.  E.g. when computing limitations.</summary>
 		public static List<long> ListPerioMaintCodeNums {
 			get {
-				return GetCodeNumsForPref(PrefName.InsBenPerioMaintCodes);
+				return GetCodeNumsForPref(PreferenceName.InsBenPerioMaintCodes);
 			}
 		}
 
@@ -206,7 +206,7 @@ namespace OpenDentBusiness{
 		///There are several places in the program that need a PanoFMX group.  E.g. when computing limitations.</summary>
 		public static List<long> ListDenturesCodeNums {
 			get {
-				return GetCodeNumsForPref(PrefName.InsBenDenturesCodes);
+				return GetCodeNumsForPref(PreferenceName.InsBenDenturesCodes);
 			}
 		}
 
@@ -214,7 +214,7 @@ namespace OpenDentBusiness{
 		///There are several places in the program that need a BW group.  E.g. when computing limitations.</summary>
 		public static List<long> ListImplantCodeNums {
 			get {
-				return GetCodeNumsForPref(PrefName.InsBenImplantCodes);
+				return GetCodeNumsForPref(PreferenceName.InsBenImplantCodes);
 			}
 		}
 
@@ -565,7 +565,7 @@ namespace OpenDentBusiness{
 		
 		///<summary>Gets the proc codes as a comma separated list from the preference and finds the corresponding code nums.</summary>
 		public static List<long> GetCodeNumsForPref(string pref) {
-			List<string> listCodes=Prefs.GetString(pref).Split(',').Select(x => x.Trim()).ToList();
+			List<string> listCodes=Preferences.GetString(pref).Split(',').Select(x => x.Trim()).ToList();
 			return GetWhereFromList(x => x.ProcCode.In(listCodes)).Select(x => x.CodeNum).ToList();
 		}
 
@@ -573,25 +573,25 @@ namespace OpenDentBusiness{
 		public static List<long> GetCodeNumsForInsHistPref(string pref) {
 			List<long> retVal=GetCodeNumsForPref(pref);
 			switch(pref) {
-				case PrefName.InsHistBWCodes:
+				case PreferenceName.InsHistBWCodes:
 					retVal.AddRange(ProcedureCodes.ListBWCodeNums);
 					break;
-				case PrefName.InsHistExamCodes:
+				case PreferenceName.InsHistExamCodes:
 					retVal.AddRange(ProcedureCodes.ListExamCodeNums);
 					break;
-				case PrefName.InsHistPanoCodes:
+				case PreferenceName.InsHistPanoCodes:
 					retVal.AddRange(ProcedureCodes.ListPanoFMXCodeNums);
 					break;
-				case PrefName.InsHistPerioLLCodes:
-				case PrefName.InsHistPerioLRCodes:
-				case PrefName.InsHistPerioULCodes:
-				case PrefName.InsHistPerioURCodes:
+				case PreferenceName.InsHistPerioLLCodes:
+				case PreferenceName.InsHistPerioLRCodes:
+				case PreferenceName.InsHistPerioULCodes:
+				case PreferenceName.InsHistPerioURCodes:
 					retVal.AddRange(ProcedureCodes.ListSRPCodeNums);
 					break;
-				case PrefName.InsHistPerioMaintCodes:
+				case PreferenceName.InsHistPerioMaintCodes:
 					retVal.AddRange(ProcedureCodes.ListPerioMaintCodeNums);
 					break;
-				case PrefName.InsHistProphyCodes:
+				case PreferenceName.InsHistProphyCodes:
 					retVal.AddRange(ProcedureCodes.ListProphyCodeNums);
 					break;
 				default:
@@ -1020,7 +1020,7 @@ namespace OpenDentBusiness{
 		///Otherwise gets all procedure codes that start with D8</summary>
 		public static List<long> GetOrthoBandingCodeNums() {
 			//No need to check RemotingRole; no call to db.
-			string strListOrthoNums = Prefs.GetString(PrefName.OrthoPlacementProcsList);
+			string strListOrthoNums = Preferences.GetString(PreferenceName.OrthoPlacementProcsList);
 			List<long> listCodeNums = new List<long>();
 			if(strListOrthoNums!="") {
 				return strListOrthoNums.Split(new char[] { ',' }).ToList().Select(x => PIn.Long(x)).ToList();

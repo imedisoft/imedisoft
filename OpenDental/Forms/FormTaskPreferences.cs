@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using Imedisoft.Data.Cache;
 using OpenDental;
 using OpenDentBusiness;
@@ -12,9 +13,9 @@ namespace Imedisoft.Forms
 
 		private void FormTaskPreferences_Load(object sender, EventArgs e)
 		{
-			alwaysShowTaskListCheckBox.Checked = Prefs.GetBool(PrefName.TaskListAlwaysShowsAtBottom);
+			alwaysShowTaskListCheckBox.Checked = Preferences.GetBool(PreferenceName.TaskListAlwaysShowsAtBottom);
 			localGroupBox.Enabled = alwaysShowTaskListCheckBox.Checked;
-			showOpenTicketsCheckBox.Checked = Prefs.GetBool(PrefName.TasksShowOpenTickets);
+			showOpenTicketsCheckBox.Checked = Preferences.GetBool(PreferenceName.TasksShowOpenTickets);
 			keepTaskListHiddenCheckBox.Checked = ComputerPrefs.LocalComputer.TaskKeepListHidden;
 
 			if (ComputerPrefs.LocalComputer.TaskDock == 0)
@@ -28,7 +29,7 @@ namespace Imedisoft.Forms
 
 			xDefaultTextBox.Text = ComputerPrefs.LocalComputer.TaskX.ToString();
 			yDefaultTextBox.Text = ComputerPrefs.LocalComputer.TaskY.ToString();
-			sortApptDateTimeCheckBox.Checked = Prefs.GetBool(PrefName.TaskSortApptDateTime);
+			sortApptDateTimeCheckBox.Checked = Preferences.GetBool(PreferenceName.TaskSortApptDateTime);
 		}
 
 		private void InboxSetupButton_Click(object sender, EventArgs e)
@@ -62,9 +63,9 @@ namespace Imedisoft.Forms
 			}
 
 			bool changed =
-				Prefs.Set(PrefName.TaskListAlwaysShowsAtBottom, alwaysShowTaskListCheckBox.Checked) |
-				Prefs.Set(PrefName.TasksShowOpenTickets, showOpenTicketsCheckBox.Checked) |
-				Prefs.Set(PrefName.TaskSortApptDateTime, sortApptDateTimeCheckBox.Checked);
+				Preferences.Set(PreferenceName.TaskListAlwaysShowsAtBottom, alwaysShowTaskListCheckBox.Checked) |
+				Preferences.Set(PreferenceName.TasksShowOpenTickets, showOpenTicketsCheckBox.Checked) |
+				Preferences.Set(PreferenceName.TaskSortApptDateTime, sortApptDateTimeCheckBox.Checked);
 
 			if (ComputerPrefs.LocalComputer.TaskKeepListHidden != keepTaskListHiddenCheckBox.Checked)
 			{

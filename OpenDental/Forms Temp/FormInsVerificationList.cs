@@ -37,7 +37,7 @@ namespace OpenDental {
 		///<summary>Indicates whether the "All" option is enabled for the listbox for clinics.</summary>
 		private bool _isAllClinicsEnabled {
 			get{
-				return PrefC.HasClinicsEnabled && !Security.CurrentUser.ClinicIsRestricted && !Prefs.GetBool(PrefName.EnterpriseApptList);
+				return PrefC.HasClinicsEnabled && !Security.CurrentUser.ClinicIsRestricted && !Preferences.GetBool(PreferenceName.EnterpriseApptList);
 			}
 		}
 
@@ -63,7 +63,7 @@ namespace OpenDental {
 			}
 			SetFilterControlsAndAction(() => FillGrids(),
 				textPatientEnrollmentDays,textInsBenefitEligibilityDays,textAppointmentScheduledDays,textVerifyCarrier);
-			if(Prefs.GetBool(PrefName.InsVerifyDefaultToCurrentUser)) {
+			if(Preferences.GetBool(PreferenceName.InsVerifyDefaultToCurrentUser)) {
 				_verifyUserNum=Security.CurrentUser.Id;
 			}
 			if(!PrefC.HasClinicsEnabled) {
@@ -78,9 +78,9 @@ namespace OpenDental {
 					_dictStatusDefs.Add(defCur.Id,defCur);
 				}
 			}
-			textAppointmentScheduledDays.Text=POut.Int(PrefC.GetInt(PrefName.InsVerifyAppointmentScheduledDays));
-			textInsBenefitEligibilityDays.Text=POut.Int(PrefC.GetInt(PrefName.InsVerifyBenefitEligibilityDays));
-			textPatientEnrollmentDays.Text=POut.Int(PrefC.GetInt(PrefName.InsVerifyPatientEnrollmentDays));
+			textAppointmentScheduledDays.Text=POut.Int(PrefC.GetInt(PreferenceName.InsVerifyAppointmentScheduledDays));
+			textInsBenefitEligibilityDays.Text=POut.Int(PrefC.GetInt(PreferenceName.InsVerifyBenefitEligibilityDays));
+			textPatientEnrollmentDays.Text=POut.Int(PrefC.GetInt(PreferenceName.InsVerifyPatientEnrollmentDays));
 			InsVerifies.CleanupInsVerifyRows(DateTime.Today,DateTime.Today.AddDays(PIn.Int(textAppointmentScheduledDays.Text)));
 		}
 
@@ -314,12 +314,12 @@ namespace OpenDental {
 			{
 				return listGridRows;
 			}
-			bool excludePatVerifyWhenNoIns=Prefs.GetBool(PrefName.InsVerifyExcludePatVerify);
-			bool excludePatClones=(Prefs.GetBool(PrefName.ShowFeaturePatientClone)==true) && Prefs.GetBool(PrefName.InsVerifyExcludePatientClones);
+			bool excludePatVerifyWhenNoIns=Preferences.GetBool(PreferenceName.InsVerifyExcludePatVerify);
+			bool excludePatClones=(Preferences.GetBool(PreferenceName.ShowFeaturePatientClone)==true) && Preferences.GetBool(PreferenceName.InsVerifyExcludePatientClones);
 			DateTime dateTimeStart=DateTime.Today;
 			DateTime dateTimeEnd=DateTime.Today.AddDays(PIn.Int(textAppointmentScheduledDays.Text));//Don't need to add 1 because we will be getting only the date portion of this datetime.
 			if(!isAssignGrid && tabControlVerificationList.SelectedTab==tabPastDue) {
-				dateTimeStart=DateTime.Today.AddDays(-PrefC.GetInt(PrefName.InsVerifyDaysFromPastDueAppt));
+				dateTimeStart=DateTime.Today.AddDays(-PrefC.GetInt(PreferenceName.InsVerifyDaysFromPastDueAppt));
 				dateTimeEnd=DateTime.Today.AddDays(-1);
 			}
 			DateTime dateTimeLastPatEligibility=DateTime.Today.AddDays(-PIn.Int(textPatientEnrollmentDays.Text));

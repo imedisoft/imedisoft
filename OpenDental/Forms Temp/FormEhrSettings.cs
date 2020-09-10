@@ -25,21 +25,21 @@ namespace OpenDental {
 		}
 
 		private void FormEhrSettings_Load(object sender,EventArgs e) {
-			if(Prefs.GetString(PrefName.SoftwareName)!="") {
-				this.Text+=" - "+Prefs.GetString(PrefName.SoftwareName);
+			if(Preferences.GetString(PreferenceName.SoftwareName)!="") {
+				this.Text+=" - "+Preferences.GetString(PreferenceName.SoftwareName);
 			}
-			checkAlertHighSeverity.Checked=Prefs.GetBool(PrefName.EhrRxAlertHighSeverity);
+			checkAlertHighSeverity.Checked=Preferences.GetBool(PreferenceName.EhrRxAlertHighSeverity);
 			comboMU2.Items.Add("Stage 1");
 			comboMU2.Items.Add("Stage 2");
 			comboMU2.Items.Add("Modified Stage 2");
-			comboMU2.SelectedIndex=PrefC.GetInt(PrefName.MeaningfulUseTwo);
-			checkAutoWebmails.Checked=Prefs.GetBool(PrefName.AutomaticSummaryOfCareWebmail);
+			comboMU2.SelectedIndex=PrefC.GetInt(PreferenceName.MeaningfulUseTwo);
+			checkAutoWebmails.Checked=Preferences.GetBool(PreferenceName.AutomaticSummaryOfCareWebmail);
 			FillRecEncCodesList();
 			FillDefaultEncCode();
 			#region DefaultPregnancyGroup
 			FillRecPregCodesList();
-			string defaultPregCode=Prefs.GetString(PrefName.PregnancyDefaultCodeValue);
-			string defaultPregCodeSystem=Prefs.GetString(PrefName.PregnancyDefaultCodeSystem);
+			string defaultPregCode=Preferences.GetString(PreferenceName.PregnancyDefaultCodeValue);
+			string defaultPregCodeSystem=Preferences.GetString(PreferenceName.PregnancyDefaultCodeSystem);
 			NewPregCodeSystem=defaultPregCodeSystem;
 			OldPregListSelectedIdx=-1;
 			int countNotInSnomedTable=0;
@@ -100,7 +100,7 @@ namespace OpenDental {
 
 		private void checkAlertHighSeverity_Click(object sender,EventArgs e) {
 			if(!Security.IsAuthorized(Permissions.SecurityAdmin,false)) {
-				checkAlertHighSeverity.Checked=Prefs.GetBool(PrefName.EhrRxAlertHighSeverity);
+				checkAlertHighSeverity.Checked=Preferences.GetBool(PreferenceName.EhrRxAlertHighSeverity);
 			}
 		}
 
@@ -135,8 +135,8 @@ namespace OpenDental {
 		}
 
 		private void FillDefaultEncCode() {
-			string defaultEncCode=Prefs.GetString(PrefName.CQMDefaultEncounterCodeValue);
-			string defaultEncCodeSystem=Prefs.GetString(PrefName.CQMDefaultEncounterCodeSystem);
+			string defaultEncCode=Preferences.GetString(PreferenceName.CQMDefaultEncounterCodeValue);
+			string defaultEncCodeSystem=Preferences.GetString(PreferenceName.CQMDefaultEncounterCodeSystem);
 			NewEncCodeSystem=defaultEncCodeSystem;
 			OldEncListSelectedIdx=-1;
 			int countNotInSnomedTable=0;
@@ -198,7 +198,7 @@ namespace OpenDental {
 		
 		private void checkMU2_SelectionChangeCommitted(object sender,EventArgs e) {
 			if(!Security.IsAuthorized(Permissions.SecurityAdmin,false)) {
-				comboMU2.SelectedIndex=PrefC.GetInt(PrefName.MeaningfulUseTwo);
+				comboMU2.SelectedIndex=PrefC.GetInt(PreferenceName.MeaningfulUseTwo);
 			}
 		}
 
@@ -414,22 +414,22 @@ namespace OpenDental {
 		}
 
 		private void butOK_Click(object sender,EventArgs e) {
-			Prefs.Set(PrefName.EhrRxAlertHighSeverity,checkAlertHighSeverity.Checked);
-			Prefs.Set(PrefName.MeaningfulUseTwo,comboMU2.SelectedIndex);
-			Prefs.Set(PrefName.CQMDefaultEncounterCodeSystem,NewEncCodeSystem);
-			Prefs.Set(PrefName.PregnancyDefaultCodeSystem,NewPregCodeSystem);
-			Prefs.Set(PrefName.AutomaticSummaryOfCareWebmail,checkAutoWebmails.Checked);
+			Preferences.Set(PreferenceName.EhrRxAlertHighSeverity,checkAlertHighSeverity.Checked);
+			Preferences.Set(PreferenceName.MeaningfulUseTwo,comboMU2.SelectedIndex);
+			Preferences.Set(PreferenceName.CQMDefaultEncounterCodeSystem,NewEncCodeSystem);
+			Preferences.Set(PreferenceName.PregnancyDefaultCodeSystem,NewPregCodeSystem);
+			Preferences.Set(PreferenceName.AutomaticSummaryOfCareWebmail,checkAutoWebmails.Checked);
 			if(comboEncCodes.SelectedIndex==-1) {
-				Prefs.Set(PrefName.CQMDefaultEncounterCodeValue,textEncCodeValue.Text);
+				Preferences.Set(PreferenceName.CQMDefaultEncounterCodeValue,textEncCodeValue.Text);
 			}
 			else {
-				Prefs.Set(PrefName.CQMDefaultEncounterCodeValue,comboEncCodes.SelectedItem.ToString());
+				Preferences.Set(PreferenceName.CQMDefaultEncounterCodeValue,comboEncCodes.SelectedItem.ToString());
 			}
 			if(comboPregCodes.SelectedIndex==-1) {
-				Prefs.Set(PrefName.PregnancyDefaultCodeValue,textPregCodeValue.Text);
+				Preferences.Set(PreferenceName.PregnancyDefaultCodeValue,textPregCodeValue.Text);
 			}
 			else {
-				Prefs.Set(PrefName.PregnancyDefaultCodeValue,comboPregCodes.SelectedItem.ToString());
+				Preferences.Set(PreferenceName.PregnancyDefaultCodeValue,comboPregCodes.SelectedItem.ToString());
 			}
 			//A diseasedef with this default pregnancy code will be inserted if needed the first time they check the pregnant box on a vitalsign.  The DiseaseName will be "Pregnant" with the correct codevalue/system.
 			DialogResult=DialogResult.OK;

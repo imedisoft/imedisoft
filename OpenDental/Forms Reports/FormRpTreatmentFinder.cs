@@ -503,7 +503,7 @@ namespace OpenDental
 			}
 			comboBoxMultiBilling.SetSelected(0, true);
 			comboMonthStart.SelectedIndex = 0;
-			checkBenefitAssumeGeneral.Checked = Prefs.GetBool(PrefName.TreatFinderProcsAllGeneral);
+			checkBenefitAssumeGeneral.Checked = Preferences.GetBool(PreferenceName.TreatFinderProcsAllGeneral);
 
 			comboClinics.IncludeAll = true;
 			comboClinics.SelectionModeMulti = true;
@@ -826,19 +826,19 @@ namespace OpenDental
 			saveFileDialog2.AddExtension = true;
 			saveFileDialog2.Title = "Treatment Finder";
 			saveFileDialog2.FileName = "Treatment Finder";
-			if (!Directory.Exists(Prefs.GetString(PrefName.ExportPath)))
+			if (!Directory.Exists(Preferences.GetString(PreferenceName.ExportPath)))
 			{
 				try
 				{
-					Directory.CreateDirectory(Prefs.GetString(PrefName.ExportPath));
-					saveFileDialog2.InitialDirectory = Prefs.GetString(PrefName.ExportPath);
+					Directory.CreateDirectory(Preferences.GetString(PreferenceName.ExportPath));
+					saveFileDialog2.InitialDirectory = Preferences.GetString(PreferenceName.ExportPath);
 				}
 				catch
 				{
 					//initialDirectory will be blank
 				}
 			}
-			else saveFileDialog2.InitialDirectory = Prefs.GetString(PrefName.ExportPath);
+			else saveFileDialog2.InitialDirectory = Preferences.GetString(PreferenceName.ExportPath);
 			saveFileDialog2.Filter = "Text files(*.txt)|*.txt|Excel Files(*.xls)|*.xls|All files(*.*)|*.*";
 			saveFileDialog2.FilterIndex = 0;
 			if (saveFileDialog2.ShowDialog() != DialogResult.OK)

@@ -8,6 +8,7 @@ using OpenDental.ReportingComplex;
 using OpenDentBusiness;
 using System.Data;
 using CodeBase;
+using Imedisoft.Data;
 
 //using System.IO;
 //using System.Text;
@@ -257,7 +258,7 @@ namespace OpenDental{
 		private void FormRpPPOwriteoffs_Load(object sender, System.EventArgs e) {
 			date1.SelectionStart=new DateTime(DateTime.Today.Year,DateTime.Today.Month,1).AddMonths(-1);
 			date2.SelectionStart=new DateTime(DateTime.Today.Year,DateTime.Today.Month,1).AddDays(-1);
-			switch(PrefC.GetInt(PrefName.ReportsPPOwriteoffDefaultToProcDate)) {
+			switch(PrefC.GetInt(PreferenceName.ReportsPPOwriteoffDefaultToProcDate)) {
 				case 0:	radioWriteoffInsPayDate.Checked=true; break;
 				case 1:	radioWriteoffProcDate.Checked=true; break;
 				case 2:	radioWriteoffClaimDate.Checked=true; break;
@@ -285,7 +286,7 @@ namespace OpenDental{
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
 			ReportComplex report=new ReportComplex(true,false);
 			report.AddTitle("Title","PPO Writeoffs",fontTitle);
-			report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
+			report.AddSubTitle("PracTitle",Preferences.GetString(PreferenceName.PracticeTitle),fontSubTitle);
 			report.AddSubTitle("Date SubTitle",date1.SelectionStart.ToShortDateString()+" - "+date2.SelectionStart.ToShortDateString(),fontSubTitle);
 			report.AddSubTitle("Claims","Individual Claims",fontSubTitle);
 			if(textCarrier.Text!="") {
@@ -317,7 +318,7 @@ namespace OpenDental{
 			Font fontSubTitle=new Font("Tahoma",10,FontStyle.Bold);
 			ReportComplex report=new ReportComplex(true,false);
 			report.AddTitle("Title","PPO Writeoffs",fontTitle);
-			report.AddSubTitle("PracTitle",Prefs.GetString(PrefName.PracticeTitle),fontSubTitle);
+			report.AddSubTitle("PracTitle",Preferences.GetString(PreferenceName.PracticeTitle),fontSubTitle);
 			report.AddSubTitle("Date SubTitle",date1.SelectionStart.ToShortDateString()+" - "+date2.SelectionStart.ToShortDateString(),fontSubTitle);
 			report.AddSubTitle("Claims","Individual Claims",fontSubTitle);
 			if(textCarrier.Text!="") {

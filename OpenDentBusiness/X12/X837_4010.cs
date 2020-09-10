@@ -272,13 +272,13 @@ namespace OpenDentBusiness
 					{
 						sw.Write("N3*" + Sout(clinic.BillingAddressLine1, 55));//N301: Address
 					}
-					else if (Prefs.GetBool(PrefName.UseBillingAddressOnClaims))
+					else if (Preferences.GetBool(PreferenceName.UseBillingAddressOnClaims))
 					{
-						sw.Write("N3*" + Sout(Prefs.GetString(PrefName.PracticeBillingAddress), 55));//N301: Address
+						sw.Write("N3*" + Sout(Preferences.GetString(PreferenceName.PracticeBillingAddress), 55));//N301: Address
 					}
 					else if (clinic == null)
 					{
-						sw.Write("N3*" + Sout(Prefs.GetString(PrefName.PracticeAddress), 55));//N301: Address
+						sw.Write("N3*" + Sout(Preferences.GetString(PreferenceName.PracticeAddress), 55));//N301: Address
 					}
 					else
 					{
@@ -295,28 +295,28 @@ namespace OpenDentBusiness
 							sw.WriteLine("~");
 						}
 					}
-					else if (Prefs.GetBool(PrefName.UseBillingAddressOnClaims))
+					else if (Preferences.GetBool(PreferenceName.UseBillingAddressOnClaims))
 					{
-						if (Prefs.GetString(PrefName.PracticeBillingAddress2) == "")
+						if (Preferences.GetString(PreferenceName.PracticeBillingAddress2) == "")
 						{
 							sw.WriteLine("~");
 						}
 						else
 						{
 							//N302: Address2. Optional.
-							sw.WriteLine("*" + Sout(Prefs.GetString(PrefName.PracticeBillingAddress2), 55) + "~");
+							sw.WriteLine("*" + Sout(Preferences.GetString(PreferenceName.PracticeBillingAddress2), 55) + "~");
 						}
 					}
 					else if (clinic == null)
 					{
-						if (Prefs.GetString(PrefName.PracticeAddress2) == "")
+						if (Preferences.GetString(PreferenceName.PracticeAddress2) == "")
 						{
 							sw.WriteLine("~");
 						}
 						else
 						{
 							//N302: Address2. Optional.
-							sw.WriteLine("*" + Sout(Prefs.GetString(PrefName.PracticeAddress2), 55) + "~");
+							sw.WriteLine("*" + Sout(Preferences.GetString(PreferenceName.PracticeAddress2), 55) + "~");
 						}
 					}
 					else
@@ -339,17 +339,17 @@ namespace OpenDentBusiness
 								+ Sout(clinic.BillingState, 2) + "*"//N402: State
 								+ Sout(clinic.BillingZip.Replace("-", ""), 15) + "~");//N403: Zip
 					}
-					else if (Prefs.GetBool(PrefName.UseBillingAddressOnClaims))
+					else if (Preferences.GetBool(PreferenceName.UseBillingAddressOnClaims))
 					{
-						sw.WriteLine("N4*" + Sout(Prefs.GetString(PrefName.PracticeBillingCity), 30) + "*"//N401: City
-							+ Sout(Prefs.GetString(PrefName.PracticeBillingST), 2) + "*"//N402: State
-							+ Sout(Prefs.GetString(PrefName.PracticeBillingZip).Replace("-", ""), 15) + "~");//N403: Zip
+						sw.WriteLine("N4*" + Sout(Preferences.GetString(PreferenceName.PracticeBillingCity), 30) + "*"//N401: City
+							+ Sout(Preferences.GetString(PreferenceName.PracticeBillingST), 2) + "*"//N402: State
+							+ Sout(Preferences.GetString(PreferenceName.PracticeBillingZip).Replace("-", ""), 15) + "~");//N403: Zip
 					}
 					else if (clinic == null)
 					{
-						sw.WriteLine("N4*" + Sout(Prefs.GetString(PrefName.PracticeCity), 30) + "*"//N401: City
-							+ Sout(Prefs.GetString(PrefName.PracticeST), 2) + "*"//N402: State
-							+ Sout(Prefs.GetString(PrefName.PracticeZip).Replace("-", ""), 15) + "~");//N403: Zip
+						sw.WriteLine("N4*" + Sout(Preferences.GetString(PreferenceName.PracticeCity), 30) + "*"//N401: City
+							+ Sout(Preferences.GetString(PreferenceName.PracticeST), 2) + "*"//N402: State
+							+ Sout(Preferences.GetString(PreferenceName.PracticeZip).Replace("-", ""), 15) + "~");//N403: Zip
 					}
 					else
 					{
@@ -366,7 +366,7 @@ namespace OpenDentBusiness
 							if (clinic == null)
 							{
 								sw.WriteLine("REF*LU*"
-									+ Prefs.GetString(PrefName.PracticePhone) + "~");
+									+ Preferences.GetString(PreferenceName.PracticePhone) + "~");
 							}
 							else
 							{
@@ -405,14 +405,14 @@ namespace OpenDentBusiness
 						if (clinic == null)
 						{
 							sw.WriteLine("PER*IC*"//PER01: IC=Information Contact
-								+ Sout(Prefs.GetString(PrefName.PracticeTitle), 60, 1) + "*"//PER02:Name. Practice title
+								+ Sout(Preferences.GetString(PreferenceName.PracticeTitle), 60, 1) + "*"//PER02:Name. Practice title
 								+ "TE*"//PER03:Comm Number Qualifier: TE=Telephone
-								+ Sout(Prefs.GetString(PrefName.PracticePhone), 256, 1) + "~");//PER04:Comm Number. aka telephone number
+								+ Sout(Preferences.GetString(PreferenceName.PracticePhone), 256, 1) + "~");//PER04:Comm Number. aka telephone number
 						}
 						else
 						{
 							sw.WriteLine("PER*IC*"//PER01: IC=Information Contact
-								+ Sout(Prefs.GetString(PrefName.PracticeTitle), 60, 1) + "*"//PER02:Name. Practice title
+								+ Sout(Preferences.GetString(PreferenceName.PracticeTitle), 60, 1) + "*"//PER02:Name. Practice title
 								+ "TE*"//PER03:Comm Number Qualifier: TE=Telephone
 								+ Sout(clinic.Phone, 256, 1) + "~");//PER04:Comm Number. aka telephone number
 						}
@@ -1458,7 +1458,7 @@ namespace OpenDentBusiness
 					//2410 LIN,CTP,REF: (medical) Not supported
 					//2420A NM1: Rendering provider name. Only if different from the claim.
 					if (claim.ProvTreat != proc.ProvNum
-						&& Prefs.GetBool(PrefName.EclaimsSeparateTreatProv))
+						&& Preferences.GetBool(PreferenceName.EclaimsSeparateTreatProv))
 					{
 						//Used in order to preserve old behavior...  If this fails, then old code would have failed.
 						provTreat = Providers.GetFirstOrDefault(x => x.Id == proc.ProvNum) ?? providerFirst;
@@ -1974,7 +1974,7 @@ namespace OpenDentBusiness
 				}
 				strb.Append("Treating Prov Lic #");
 			}
-			if (Prefs.GetString(PrefName.PracticeTitle) == "")
+			if (Preferences.GetString(PreferenceName.PracticeTitle) == "")
 			{
 				if (strb.Length != 0)
 				{
@@ -1986,7 +1986,7 @@ namespace OpenDentBusiness
 			{
 				X12Validate.Clinic(clinic, strb);
 			}
-			else if (Prefs.GetBool(PrefName.UseBillingAddressOnClaims))
+			else if (Preferences.GetBool(PreferenceName.UseBillingAddressOnClaims))
 			{
 				X12Validate.BillingAddress(strb);
 			}
@@ -2334,7 +2334,7 @@ namespace OpenDentBusiness
 						princDiagExists = true;
 					}
 				}
-				if (claim.ProvTreat != proc.ProvNum && Prefs.GetBool(PrefName.EclaimsSeparateTreatProv))
+				if (claim.ProvTreat != proc.ProvNum && Preferences.GetBool(PreferenceName.EclaimsSeparateTreatProv))
 				{
 					treatProv = Providers.GetFirstOrDefault(x => x.Id == proc.ProvNum) ?? providerFirst;
 					if (treatProv.LastName == "")

@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
 using Imedisoft.Forms;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormEtrans834Preview:ODForm {
@@ -26,8 +27,8 @@ namespace OpenDental {
 		}
 
 		private void FormEtrans834Preview_Load(object sender,EventArgs e) {
-			checkDropExistingIns.Checked=Prefs.GetBool(PrefName.Ins834DropExistingPatPlans);
-			checkIsPatientCreate.Checked=Prefs.GetBool(PrefName.Ins834IsPatientCreate);
+			checkDropExistingIns.Checked=Preferences.GetBool(PreferenceName.Ins834DropExistingPatPlans);
+			checkIsPatientCreate.Checked=Preferences.GetBool(PreferenceName.Ins834IsPatientCreate);
 			FillGridInsPlans();
 		}
 
@@ -235,8 +236,8 @@ namespace OpenDental {
 			butOK.Enabled=false;
 			butCancel.Enabled=false;
 			Cursor=Cursors.WaitCursor;
-			Prefs.Set(PrefName.Ins834DropExistingPatPlans,checkDropExistingIns.Checked);
-			Prefs.Set(PrefName.Ins834IsPatientCreate,checkIsPatientCreate.Checked);
+			Preferences.Set(PreferenceName.Ins834DropExistingPatPlans,checkDropExistingIns.Checked);
+			Preferences.Set(PreferenceName.Ins834IsPatientCreate,checkIsPatientCreate.Checked);
 			//Create all of our count variables.
 			int createdPatsCount,updatedPatsCount,skippedPatsCount,createdCarrierCount,createdInsPlanCount,updatedInsPlanCount,createdInsSubCount,
 				updatedInsSubCount,createdPatPlanCount,droppedPatPlanCount,updatedPatPlanCount;

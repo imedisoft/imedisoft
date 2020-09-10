@@ -11,39 +11,46 @@ using CodeBase;
 using OpenDental.UI;
 using OpenDentBusiness;
 using OpenDental.Thinfinity;
+using Imedisoft.Data;
 
-namespace OpenDental {
-	public partial class FormSheetExport:ODForm {
+namespace OpenDental
+{
+	public partial class FormSheetExport : ODForm
+	{
 		private List<SheetDef> _listSheetDefs;
 		///<summary>Form was opened via Dashboard Setup.</summary>
 		private bool _isOpenedFromDashboardSetup;
 
-		public FormSheetExport(bool isOpenedFromDashboardSetup) {
+		public FormSheetExport(bool isOpenedFromDashboardSetup)
+		{
 			InitializeComponent();
-			
-			_isOpenedFromDashboardSetup=isOpenedFromDashboardSetup;
+
+			_isOpenedFromDashboardSetup = isOpenedFromDashboardSetup;
 		}
 
-		private void FormSheetExport_Load(object sender,EventArgs e) {
+		private void FormSheetExport_Load(object sender, EventArgs e)
+		{
 			FillGridCustomSheet();
 		}
 
-		private void FillGridCustomSheet() {
+		private void FillGridCustomSheet()
+		{
 			SheetDefs.RefreshCache();
 			SheetFieldDefs.RefreshCache();
 			//If from Dashboard Setup, populate when SheetDef is a Dashboard type.
 			//If from normal Sheet window, populate all Sheets except Dashboard types.
-			_listSheetDefs=SheetDefs.GetDeepCopy(false).FindAll(x => SheetDefs.IsDashboardType(x)==_isOpenedFromDashboardSetup);
+			_listSheetDefs = SheetDefs.GetDeepCopy(false).FindAll(x => SheetDefs.IsDashboardType(x) == _isOpenedFromDashboardSetup);
 			gridCustomSheet.BeginUpdate();
 			gridCustomSheet.Columns.Clear();
-			GridColumn col=new GridColumn("Description",170);
+			GridColumn col = new GridColumn("Description", 170);
 			gridCustomSheet.Columns.Add(col);
-			col=new GridColumn("Type",100);
+			col = new GridColumn("Type", 100);
 			gridCustomSheet.Columns.Add(col);
 			gridCustomSheet.Rows.Clear();
 			GridRow row;
-			foreach(SheetDef sheetDef in _listSheetDefs) {
-				row=new GridRow();
+			foreach (SheetDef sheetDef in _listSheetDefs)
+			{
+				row = new GridRow();
 				row.Cells.Add(sheetDef.Description);
 				row.Cells.Add(sheetDef.SheetType.ToString());
 				gridCustomSheet.Rows.Add(row);
@@ -51,47 +58,53 @@ namespace OpenDental {
 			gridCustomSheet.EndUpdate();
 		}
 
-		private void butExport_Click(object sender,EventArgs e) {
-			if(gridCustomSheet.GetSelectedIndex()==-1) {
+		private void butExport_Click(object sender, EventArgs e)
+		{
+			if (gridCustomSheet.GetSelectedIndex() == -1)
+			{
 				MessageBox.Show("Please select a sheet from the list first.");
 				return;
 			}
-			SheetDef sheetdef=SheetDefs.GetSheetDef(_listSheetDefs[gridCustomSheet.GetSelectedIndex()].SheetDefNum);
-			List<SheetFieldDef> listFieldDefImages=sheetdef.SheetFieldDefs
-				.Where(x => x.FieldType==SheetFieldType.Image && x.FieldName!="Patient Info.gif")
+			SheetDef sheetdef = SheetDefs.GetSheetDef(_listSheetDefs[gridCustomSheet.GetSelectedIndex()].SheetDefNum);
+			List<SheetFieldDef> listFieldDefImages = sheetdef.SheetFieldDefs
+				.Where(x => x.FieldType == SheetFieldType.Image && x.FieldName != "Patient Info.gif")
 				.ToList();
-			if(!listFieldDefImages.IsNullOrEmpty()) {//Alert them of any images they need to copy if there are any.
-				string sheetImagesPath="";
-				ODException.SwallowAnyException(() => {
-					sheetImagesPath=SheetUtil.GetImagePath();
+			if (!listFieldDefImages.IsNullOrEmpty())
+			{//Alert them of any images they need to copy if there are any.
+				string sheetImagesPath = "";
+				ODException.SwallowAnyException(() =>
+				{
+					sheetImagesPath = SheetUtil.GetImagePath();
 				});
-				StringBuilder strBuilder=new StringBuilder();
+				StringBuilder strBuilder = new StringBuilder();
 				strBuilder.AppendLine("The following images will need to be manually imported with the same file name when importing this "
-					+"sheet to a new environment.");
+					+ "sheet to a new environment.");
 				strBuilder.AppendLine();
-				listFieldDefImages.ForEach(x => strBuilder.AppendLine(ODFileUtils.CombinePaths(sheetImagesPath,x.FieldName)));
-				MsgBoxCopyPaste msgBox=new MsgBoxCopyPaste(strBuilder.ToString());
+				listFieldDefImages.ForEach(x => strBuilder.AppendLine(ODFileUtils.CombinePaths(sheetImagesPath, x.FieldName)));
+				MsgBoxCopyPaste msgBox = new MsgBoxCopyPaste(strBuilder.ToString());
 				msgBox.ShowDialog();
 			}
-			XmlSerializer serializer=new XmlSerializer(typeof(SheetDef));
-			string filename="SheetDefCustom.xml";
+			XmlSerializer serializer = new XmlSerializer(typeof(SheetDef));
+			string filename = "SheetDefCustom.xml";
 
-				SaveFileDialog saveDlg=new SaveFileDialog();
-				saveDlg.InitialDirectory=Prefs.GetString(PrefName.ExportPath);
-				saveDlg.FileName=filename;
-				if(saveDlg.ShowDialog()!=DialogResult.OK) {
-					return;
-				}
-				using(TextWriter writer=new StreamWriter(saveDlg.FileName)) {
-					serializer.Serialize(writer,sheetdef);
-				}
-			
+			SaveFileDialog saveDlg = new SaveFileDialog();
+			saveDlg.InitialDirectory = Preferences.GetString(PreferenceName.ExportPath);
+			saveDlg.FileName = filename;
+			if (saveDlg.ShowDialog() != DialogResult.OK)
+			{
+				return;
+			}
+			using (TextWriter writer = new StreamWriter(saveDlg.FileName))
+			{
+				serializer.Serialize(writer, sheetdef);
+			}
+
 			MessageBox.Show("Exported");
 		}
 
-		private void butClose_Click(object sender,EventArgs e) {
-			DialogResult=DialogResult.OK;
+		private void butClose_Click(object sender, EventArgs e)
+		{
+			DialogResult = DialogResult.OK;
 		}
-
 	}
 }

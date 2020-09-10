@@ -456,10 +456,10 @@ namespace OpenDentBusiness{
 					//if storing previously completed clinic and we actually completed this clinic's procs, update the pref
 					if(listWriteoffClinicNums.Last()==clinicNumCur) {
 						//if this is the last clinic in the list, clear the last clinic pref so the next time it will run for all clinics
-						Prefs.Set(PrefName.GlobalUpdateWriteOffLastClinicCompleted,"");
+						Preferences.Set(PreferenceName.GlobalUpdateWriteOffLastClinicCompleted,"");
 					}
 					else {
-						Prefs.Set(PrefName.GlobalUpdateWriteOffLastClinicCompleted,POut.Long(clinicNumCur));
+						Preferences.Set(PreferenceName.GlobalUpdateWriteOffLastClinicCompleted,POut.Long(clinicNumCur));
 					}
 					Signalods.SetInvalid(InvalidType.Prefs);
 				}

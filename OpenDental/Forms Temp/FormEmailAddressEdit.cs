@@ -8,10 +8,13 @@ using CodeBase;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Imedisoft.UI;
+using Imedisoft.Data;
 
-namespace OpenDental{
-///<summary></summary>
-	public class FormEmailAddressEdit:ODForm {
+namespace OpenDental
+{
+	///<summary></summary>
+	public class FormEmailAddressEdit : ODForm
+	{
 		private OpenDental.UI.Button butCancel;
 		private OpenDental.UI.Button butOK;
 		private System.Windows.Forms.Label label1;
@@ -56,37 +59,42 @@ namespace OpenDental{
 		private Label label12;
 		private bool _isNew;
 
-		private int _groupAuthLocationXAuthorized=14;
-		private int _groupAuthLocationXNotAuthorized=165;
+		private int _groupAuthLocationXAuthorized = 14;
+		private int _groupAuthLocationXNotAuthorized = 165;
 
 		///<summary></summary>
-		public FormEmailAddressEdit(EmailAddress emailAddress,bool isOpenedFromEmailSetup=false) {
+		public FormEmailAddressEdit(EmailAddress emailAddress, bool isOpenedFromEmailSetup = false)
+		{
 			InitializeComponent();
-			
-			_emailAddressCur=emailAddress;
-			List<long> listDefaultAddressNums=new List<long>() {
-				Prefs.GetLong(PrefName.EmailNotifyAddressNum),
-				Prefs.GetLong(PrefName.EmailDefaultAddressNum)
+
+			_emailAddressCur = emailAddress;
+			List<long> listDefaultAddressNums = new List<long>() {
+				Preferences.GetLong(PreferenceName.EmailNotifyAddressNum),
+				Preferences.GetLong(PreferenceName.EmailDefaultAddressNum)
 			};
-			if(isOpenedFromEmailSetup && Security.IsAuthorized(Permissions.SecurityAdmin,true) 
+			if (isOpenedFromEmailSetup && Security.IsAuthorized(Permissions.SecurityAdmin, true)
 				&& (_isNew || !_emailAddressCur.EmailAddressNum.In(listDefaultAddressNums)))
 			{
-				butPickUserod.Visible=true;
+				butPickUserod.Visible = true;
 			}
 		}
 
-		public FormEmailAddressEdit(long userNum,bool isOpenedFromEmailSetup=false) : this(new EmailAddress() { UserNum=userNum },isOpenedFromEmailSetup) {
-			_isNew=true;
+		public FormEmailAddressEdit(long userNum, bool isOpenedFromEmailSetup = false) : this(new EmailAddress() { UserNum = userNum }, isOpenedFromEmailSetup)
+		{
+			_isNew = true;
 		}
 
 		///<summary></summary>
-		protected override void Dispose( bool disposing ){
-			if( disposing ){
-				if(components != null){
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (components != null)
+				{
 					components.Dispose();
 				}
 			}
-			base.Dispose( disposing );
+			base.Dispose(disposing);
 		}
 
 		#region Windows Form Designer generated code
@@ -303,7 +311,7 @@ namespace OpenDental{
 			this.label13.Size = new System.Drawing.Size(198, 69);
 			this.label13.TabIndex = 0;
 			this.label13.Text = "smtp.comcast.net\r\nmailhost.mycompany.com \r\nmail.mycompany.com\r\nsmtp.gmail.com\r\nor" +
-    " similar...";
+	" similar...";
 			// 
 			// label9
 			// 
@@ -574,206 +582,247 @@ namespace OpenDental{
 		}
 		#endregion
 
-		private void FormEmailAddress_Load(object sender, System.EventArgs e) {
-			if(_emailAddressCur!=null) {
-				textSMTPserver.Text=_emailAddressCur.SMTPserver;
-				textUsername.Text=_emailAddressCur.EmailUsername;
-				if(!String.IsNullOrEmpty(_emailAddressCur.EmailPassword)) { //can happen if creating a new user email.
-					textPassword.Text=MiscUtils.Decrypt(_emailAddressCur.EmailPassword);
+		private void FormEmailAddress_Load(object sender, System.EventArgs e)
+		{
+			if (_emailAddressCur != null)
+			{
+				textSMTPserver.Text = _emailAddressCur.SMTPserver;
+				textUsername.Text = _emailAddressCur.EmailUsername;
+				if (!String.IsNullOrEmpty(_emailAddressCur.EmailPassword))
+				{ //can happen if creating a new user email.
+					textPassword.Text = MiscUtils.Decrypt(_emailAddressCur.EmailPassword);
 				}
-				textPort.Text=_emailAddressCur.ServerPort.ToString();
-				checkSSL.Checked=_emailAddressCur.UseSSL;
-				textSender.Text=_emailAddressCur.SenderAddress;
-				textSMTPserverIncoming.Text=_emailAddressCur.Pop3ServerIncoming;
-				textPortIncoming.Text=_emailAddressCur.ServerPortIncoming.ToString();
+				textPort.Text = _emailAddressCur.ServerPort.ToString();
+				checkSSL.Checked = _emailAddressCur.UseSSL;
+				textSender.Text = _emailAddressCur.SenderAddress;
+				textSMTPserverIncoming.Text = _emailAddressCur.Pop3ServerIncoming;
+				textPortIncoming.Text = _emailAddressCur.ServerPortIncoming.ToString();
 				//Both EmailNotifyAddressNum and EmailDefaultAddressNum could be 0 (unset), in which case we still may want to display the user.
-				List<long> listDefaultAddressNums=new List<long>() {
-					Prefs.GetLong(PrefName.EmailNotifyAddressNum),
-					Prefs.GetLong(PrefName.EmailDefaultAddressNum)
+				List<long> listDefaultAddressNums = new List<long>() {
+					Preferences.GetLong(PreferenceName.EmailNotifyAddressNum),
+					Preferences.GetLong(PreferenceName.EmailDefaultAddressNum)
 				};
-				if(_isNew || !_emailAddressCur.EmailAddressNum.In(listDefaultAddressNums)) {
-					Userod user=Userods.GetUser(_emailAddressCur.UserNum);
-					textUserod.Tag=user;
-					textUserod.Text=user?.UserName;
+				if (_isNew || !_emailAddressCur.EmailAddressNum.In(listDefaultAddressNums))
+				{
+					Userod user = Userods.GetUser(_emailAddressCur.UserNum);
+					textUserod.Tag = user;
+					textUserod.Text = user?.UserName;
 				}
-				else {
-					groupUserod.Visible=false;
+				else
+				{
+					groupUserod.Visible = false;
 				}
-				textAccessToken.Text=_emailAddressCur.AccessToken;
-				textRefreshToken.Text=_emailAddressCur.RefreshToken;
+				textAccessToken.Text = _emailAddressCur.AccessToken;
+				textRefreshToken.Text = _emailAddressCur.RefreshToken;
 			}
-			groupGoogleAuth.Visible=!textAccessToken.Text.IsNullOrEmpty();
-			if(groupGoogleAuth.Visible) {
-				groupAuthentication.Location=new Point(_groupAuthLocationXAuthorized,groupAuthentication.Location.Y);
+			groupGoogleAuth.Visible = !textAccessToken.Text.IsNullOrEmpty();
+			if (groupGoogleAuth.Visible)
+			{
+				groupAuthentication.Location = new Point(_groupAuthLocationXAuthorized, groupAuthentication.Location.Y);
 			}
-			else {
-				groupAuthentication.Location=new Point(_groupAuthLocationXNotAuthorized,groupAuthentication.Location.Y);
+			else
+			{
+				groupAuthentication.Location = new Point(_groupAuthLocationXNotAuthorized, groupAuthentication.Location.Y);
 			}
 		}
 
-		private void butDelete_Click(object sender,EventArgs e) {
-			if(_isNew) {
-				DialogResult=DialogResult.Cancel;
+		private void butDelete_Click(object sender, EventArgs e)
+		{
+			if (_isNew)
+			{
+				DialogResult = DialogResult.Cancel;
 				return;
 			}
-			if(_emailAddressCur.EmailAddressNum==Prefs.GetLong(PrefName.EmailDefaultAddressNum)) {
+			if (_emailAddressCur.EmailAddressNum == Preferences.GetLong(PreferenceName.EmailDefaultAddressNum))
+			{
 				MessageBox.Show("Cannot delete the default email address.");
 				return;
 			}
-			if(_emailAddressCur.EmailAddressNum==Prefs.GetLong(PrefName.EmailNotifyAddressNum)) {
+			if (_emailAddressCur.EmailAddressNum == Preferences.GetLong(PreferenceName.EmailNotifyAddressNum))
+			{
 				MessageBox.Show("Cannot delete the notify email address.");
 				return;
 			}
-			Clinic clinic=Clinics.FirstOrDefault(x => x.EmailAddressId==_emailAddressCur.EmailAddressNum, true);
-			if(clinic!=null) {
-				MessageBox.Show("Cannot delete the email address because it is used by clinic"+" "+clinic.Description);
+			Clinic clinic = Clinics.FirstOrDefault(x => x.EmailAddressId == _emailAddressCur.EmailAddressNum, true);
+			if (clinic != null)
+			{
+				MessageBox.Show("Cannot delete the email address because it is used by clinic" + " " + clinic.Description);
 				return;
 			}
-			if(!MsgBox.Show(MsgBoxButtons.OKCancel,"Delete this email address?")) {
+			if (!MsgBox.Show(MsgBoxButtons.OKCancel, "Delete this email address?"))
+			{
 				return;
 			}
 			EmailAddresses.Delete(_emailAddressCur.EmailAddressNum);
-			DialogResult=DialogResult.OK;//OK triggers a refresh for the grid.
+			DialogResult = DialogResult.OK;//OK triggers a refresh for the grid.
 		}
 
-		private void butRegisterCertificate_Click(object sender,EventArgs e) {
-			FormEmailCertRegister form=new FormEmailCertRegister(textUsername.Text);
+		private void butRegisterCertificate_Click(object sender, EventArgs e)
+		{
+			FormEmailCertRegister form = new FormEmailCertRegister(textUsername.Text);
 			form.ShowDialog();
 		}
 
-		private void butPickUserod_Click(object sender,EventArgs e) {
-			FormUserPick formUserPick=new FormUserPick();
-			formUserPick.SuggestedUserNum=((Userod)textUserod.Tag)?.Id??0;//Preselect current selection.
-			if(formUserPick.ShowDialog()==DialogResult.OK) {
-				Userod user=Userods.GetUser(formUserPick.SelectedUserNum);
-				if(user.Id==(((Userod)textUserod.Tag)?.Id??0)) {
+		private void butPickUserod_Click(object sender, EventArgs e)
+		{
+			FormUserPick formUserPick = new FormUserPick();
+			formUserPick.SuggestedUserNum = ((Userod)textUserod.Tag)?.Id ?? 0;//Preselect current selection.
+			if (formUserPick.ShowDialog() == DialogResult.OK)
+			{
+				Userod user = Userods.GetUser(formUserPick.SelectedUserNum);
+				if (user.Id == (((Userod)textUserod.Tag)?.Id ?? 0))
+				{
 					return;//No change.
 				}
-				EmailAddress emailUserExisting=EmailAddresses.GetForUser(user.Id);
-				if(emailUserExisting!=null) {
-					MessageBox.Show("User email already exists for "+user.UserName);
+				EmailAddress emailUserExisting = EmailAddresses.GetForUser(user.Id);
+				if (emailUserExisting != null)
+				{
+					MessageBox.Show("User email already exists for " + user.UserName);
 					return;
 				}
-				textUserod.Tag=user;
-				textUserod.Text=user.UserName;
+				textUserod.Tag = user;
+				textUserod.Text = user.UserName;
 			}
 		}
 
-		private void butClearTokens_Click(object sender,EventArgs e) {
-			textAccessToken.Text="";
-			textRefreshToken.Text="";
+		private void butClearTokens_Click(object sender, EventArgs e)
+		{
+			textAccessToken.Text = "";
+			textRefreshToken.Text = "";
 		}
 
-		private void butAuthGoogle_Click(object sender,EventArgs e) {
-			try {
-                string url = OpenDentBusiness.Google.GetGoogleAuthorizationUrl(textUsername.Text);
+		private void butAuthGoogle_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				string url = OpenDentBusiness.Google.GetGoogleAuthorizationUrl(textUsername.Text);
 				Process.Start(url);
-				InputBox inputbox=new InputBox("Please enter the authorization code from your browser");
+				InputBox inputbox = new InputBox("Please enter the authorization code from your browser");
 				inputbox.setTitle("Google Account Authorization");
 				inputbox.ShowDialog();
-				if(inputbox.DialogResult!=DialogResult.OK) {
+				if (inputbox.DialogResult != DialogResult.OK)
+				{
 					return;
 				}
-				if(string.IsNullOrWhiteSpace(inputbox.textResult.Text)) {
+				if (string.IsNullOrWhiteSpace(inputbox.textResult.Text))
+				{
 					throw new ODException("There was no authorization code entered.");
 				}
-				string authCode=inputbox.textResult.Text;
-				GoogleToken tokens=OpenDentBusiness.Google.MakeAccessTokenRequest(authCode);
-				if(tokens.ErrorMessage!="") {
+				string authCode = inputbox.textResult.Text;
+				GoogleToken tokens = OpenDentBusiness.Google.MakeAccessTokenRequest(authCode);
+				if (tokens.ErrorMessage != "")
+				{
 					throw new Exception(tokens.ErrorMessage);
 				}
-				textAccessToken.Text=tokens.AccessToken;
-				textRefreshToken.Text=tokens.RefreshToken;
-				groupAuthentication.Location=new Point(_groupAuthLocationXAuthorized,groupAuthentication.Location.Y);
-				groupGoogleAuth.Visible=true;
+				textAccessToken.Text = tokens.AccessToken;
+				textRefreshToken.Text = tokens.RefreshToken;
+				groupAuthentication.Location = new Point(_groupAuthLocationXAuthorized, groupAuthentication.Location.Y);
+				groupGoogleAuth.Visible = true;
 			}
-			catch(ODException ae) {
+			catch (ODException ae)
+			{
 				MsgBox.Show(ae.Message);
 			}
-			catch(Exception ex) {
-				MsgBox.Show("Error: "+ex.Message);
+			catch (Exception ex)
+			{
+				MsgBox.Show("Error: " + ex.Message);
 			}
 		}
 
-		private void butAuthGoogle_MouseEnter(object sender,EventArgs e) {
-			butAuthGoogle.BackgroundImage= Imedisoft.Properties.Resources.google_signin_focus;
+		private void butAuthGoogle_MouseEnter(object sender, EventArgs e)
+		{
+			butAuthGoogle.BackgroundImage = Imedisoft.Properties.Resources.google_signin_focus;
 		}
 
-		private void butAuthGoogle_MouseLeave(object sender,EventArgs e) {
-			butAuthGoogle.BackgroundImage= Imedisoft.Properties.Resources.google_signin_normal;
+		private void butAuthGoogle_MouseLeave(object sender, EventArgs e)
+		{
+			butAuthGoogle.BackgroundImage = Imedisoft.Properties.Resources.google_signin_normal;
 		}
 
-		private void butAuthGoogle_MouseDown(object sender,MouseEventArgs e) {
-			butAuthGoogle.BackgroundImage= Imedisoft.Properties.Resources.google_signin_pressed;
+		private void butAuthGoogle_MouseDown(object sender, MouseEventArgs e)
+		{
+			butAuthGoogle.BackgroundImage = Imedisoft.Properties.Resources.google_signin_pressed;
 		}
 
-		private void butAuthGoogle_MouseUp(object sender,MouseEventArgs e) {
-			butAuthGoogle.BackgroundImage= Imedisoft.Properties.Resources.google_signin_normal;
+		private void butAuthGoogle_MouseUp(object sender, MouseEventArgs e)
+		{
+			butAuthGoogle.BackgroundImage = Imedisoft.Properties.Resources.google_signin_normal;
 		}
 
-		private void butOK_Click(object sender, System.EventArgs e) {
-			try {
+		private void butOK_Click(object sender, System.EventArgs e)
+		{
+			try
+			{
 				PIn.Int(textPort.Text);
 			}
-			catch {
+			catch
+			{
 				MessageBox.Show("Invalid outgoing port number.");
 				return;
 			}
-			try {
+			try
+			{
 				PIn.Int(textPortIncoming.Text);
 			}
-			catch {
+			catch
+			{
 				MessageBox.Show("Invalid incoming port number.");
 				return;
 			}
-			if(string.IsNullOrWhiteSpace(textUsername.Text)) {
+			if (string.IsNullOrWhiteSpace(textUsername.Text))
+			{
 				MessageBox.Show("Please enter a valid email address.");
 				return;
 			}
 			//Only checks against non-user email addresses.
-			if(EmailAddresses.AddressExists(textUsername.Text,_emailAddressCur.EmailAddressNum)) {
+			if (EmailAddresses.AddressExists(textUsername.Text, _emailAddressCur.EmailAddressNum))
+			{
 				MessageBox.Show("This email address already exists.");
 				return;
 			}
-			if(!textPassword.Text.IsNullOrEmpty() && !textAccessToken.Text.IsNullOrEmpty()) {
+			if (!textPassword.Text.IsNullOrEmpty() && !textAccessToken.Text.IsNullOrEmpty())
+			{
 				MessageBox.Show("There is an email password and access token entered.  Please clear one and try again.");
 				return;
 			}
-			_emailAddressCur.AccessToken=textAccessToken.Text;
-			_emailAddressCur.RefreshToken=textRefreshToken.Text;
-			if(!_isNew && (!string.IsNullOrWhiteSpace(_emailAddressCur.AccessToken) || !string.IsNullOrWhiteSpace(_emailAddressCur.RefreshToken))//If has a token
-				&&( _emailAddressCur.SMTPserver!=PIn.String(textSMTPserver.Text) || _emailAddressCur.Pop3ServerIncoming!=PIn.String(textSMTPserverIncoming.Text)))//And changed a server
+			_emailAddressCur.AccessToken = textAccessToken.Text;
+			_emailAddressCur.RefreshToken = textRefreshToken.Text;
+			if (!_isNew && (!string.IsNullOrWhiteSpace(_emailAddressCur.AccessToken) || !string.IsNullOrWhiteSpace(_emailAddressCur.RefreshToken))//If has a token
+				&& (_emailAddressCur.SMTPserver != PIn.String(textSMTPserver.Text) || _emailAddressCur.Pop3ServerIncoming != PIn.String(textSMTPserverIncoming.Text)))//And changed a server
 			{
-				if(!MsgBox.Show(MsgBoxButtons.OKCancel,"There is an access token associated to this email address.  "
-					+"Changing servers will wipe out the access token and may require reauthentication.  Continue?"))
+				if (!MsgBox.Show(MsgBoxButtons.OKCancel, "There is an access token associated to this email address.  "
+					+ "Changing servers will wipe out the access token and may require reauthentication.  Continue?"))
 				{
 					return;
 				}
-				_emailAddressCur.AccessToken="";
-				_emailAddressCur.RefreshToken="";
+				_emailAddressCur.AccessToken = "";
+				_emailAddressCur.RefreshToken = "";
 				//TODO: If this is a google token, we may want to tell Google we no longer require access to their account.
 				//This will limit our total number of active users
 			}
-			_emailAddressCur.SMTPserver=PIn.String(textSMTPserver.Text);
-			_emailAddressCur.EmailUsername=PIn.String(textUsername.Text);
-			_emailAddressCur.EmailPassword=PIn.String(MiscUtils.Encrypt(textPassword.Text));
-			_emailAddressCur.ServerPort=PIn.Int(textPort.Text);
-			_emailAddressCur.UseSSL=checkSSL.Checked;
-			_emailAddressCur.SenderAddress=PIn.String(textSender.Text);
-			_emailAddressCur.Pop3ServerIncoming=PIn.String(textSMTPserverIncoming.Text);
-			_emailAddressCur.ServerPortIncoming=PIn.Int(textPortIncoming.Text);
-			_emailAddressCur.UserNum=((Userod)(textUserod.Tag))?.Id??0;
-			if(_isNew) {
+			_emailAddressCur.SMTPserver = PIn.String(textSMTPserver.Text);
+			_emailAddressCur.EmailUsername = PIn.String(textUsername.Text);
+			_emailAddressCur.EmailPassword = PIn.String(MiscUtils.Encrypt(textPassword.Text));
+			_emailAddressCur.ServerPort = PIn.Int(textPort.Text);
+			_emailAddressCur.UseSSL = checkSSL.Checked;
+			_emailAddressCur.SenderAddress = PIn.String(textSender.Text);
+			_emailAddressCur.Pop3ServerIncoming = PIn.String(textSMTPserverIncoming.Text);
+			_emailAddressCur.ServerPortIncoming = PIn.Int(textPortIncoming.Text);
+			_emailAddressCur.UserNum = ((Userod)(textUserod.Tag))?.Id ?? 0;
+			if (_isNew)
+			{
 				EmailAddresses.Insert(_emailAddressCur);
 			}
-			else {
+			else
+			{
 				EmailAddresses.Update(_emailAddressCur);
 			}
-			DialogResult=DialogResult.OK;
+			DialogResult = DialogResult.OK;
 		}
 
-		private void butCancel_Click(object sender, System.EventArgs e) {
-			DialogResult=DialogResult.Cancel;
+		private void butCancel_Click(object sender, System.EventArgs e)
+		{
+			DialogResult = DialogResult.Cancel;
 		}
 	}
 }

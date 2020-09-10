@@ -101,7 +101,7 @@ namespace OpenDentBusiness
 			{
 				// If there is no prescription attached, don't give a start/stop date. We can't simply check rxPat==null because we needed the info from rxPat elsewhere.
 				medOrder.DateStart = rxPat.RxDate;//Only if actually has Rx
-				int numDays = PrefC.GetInt(PrefName.MedDefaultStopDays);
+				int numDays = PrefC.GetInt(PreferenceName.MedDefaultStopDays);
 				if (numDays != 0)
 				{
 					medOrder.DateStop = rxPat.RxDate.AddDays(numDays);//Only if actually has Rx

@@ -1,4 +1,5 @@
-﻿using Interop.QBFC10;
+﻿using Imedisoft.Data;
+using Interop.QBFC10;
 using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
@@ -106,7 +107,7 @@ namespace OpenDental.Bridges
 			List<string> accountList = new List<string>();
 			try
 			{
-				OpenConnection(8, 0, Prefs.GetString(PrefName.QuickBooksCompanyFile));
+				OpenConnection(8, 0, Preferences.GetString(PreferenceName.QuickBooksCompanyFile));
 				QueryListOfAccounts();
 				DoRequests();
 				CloseConnection();
@@ -192,7 +193,7 @@ namespace OpenDental.Bridges
 			List<string> listClasses = new List<string>();
 			try
 			{
-				OpenConnection(8, 0, Prefs.GetString(PrefName.QuickBooksCompanyFile));
+				OpenConnection(8, 0, Preferences.GetString(PreferenceName.QuickBooksCompanyFile));
 				QueryListOfClasses();
 				DoRequests();
 				CloseConnection();
@@ -272,7 +273,7 @@ namespace OpenDental.Bridges
 		{
 			try
 			{
-				OpenConnection(9, 0, Prefs.GetString(PrefName.QuickBooksCompanyFile));
+				OpenConnection(9, 0, Preferences.GetString(PreferenceName.QuickBooksCompanyFile));
 				BuildDepositAddRq(txnDate, depositAcct, incomeAcct, amount, memo, classRef);
 				DoRequests();
 				CloseConnection();
@@ -318,7 +319,7 @@ namespace OpenDental.Bridges
 			//Set field value for Amount
 			DepositLineAdd1.ORDepositLineAdd.DepositInfo.Amount.SetAsString(amount.ToString("F"));
 			//Set field value for ClassRef which is a way they can group deposits together
-			if (!string.IsNullOrEmpty(classRef) && Prefs.GetBool(PrefName.QuickBooksClassRefsEnabled))
+			if (!string.IsNullOrEmpty(classRef) && Preferences.GetBool(PreferenceName.QuickBooksClassRefsEnabled))
 			{
 				DepositLineAdd1.ORDepositLineAdd.DepositInfo.ClassRef.FullName.SetValue(classRef);
 			}

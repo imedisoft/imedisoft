@@ -176,10 +176,10 @@ namespace OpenDental {
 			paymentCur.ClinicNum=0;
 			if(PrefC.HasClinicsEnabled) {//if clinics aren't enabled default to 0
 				paymentCur.ClinicNum=Clinics.Active.Id;
-				if((PayClinicSetting)PrefC.GetInt(PrefName.PaymentClinicSetting)==PayClinicSetting.PatientDefaultClinic) {
+				if((PayClinicSetting)PrefC.GetInt(PreferenceName.PaymentClinicSetting)==PayClinicSetting.PatientDefaultClinic) {
 					paymentCur.ClinicNum=_patCur.ClinicNum;
 				}
-				else if((PayClinicSetting)PrefC.GetInt(PrefName.PaymentClinicSetting)==PayClinicSetting.SelectedExceptHQ) {
+				else if((PayClinicSetting)PrefC.GetInt(PreferenceName.PaymentClinicSetting)==PayClinicSetting.SelectedExceptHQ) {
 					paymentCur.ClinicNum=(Clinics.ClinicId==null ? _patCur.ClinicNum : Clinics.ClinicId.Value);
 				}
 			}

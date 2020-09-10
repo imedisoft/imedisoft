@@ -68,7 +68,7 @@ namespace OpenDental
 		///Some Rx require certain data to be present when printing.</summary>
 		public static string ValidateRxForSheet(RxPat rx)
 		{
-			if (!Prefs.GetBool(PrefName.RxHasProc))
+			if (!Preferences.GetBool(PreferenceName.RxHasProc))
 			{
 				return "";//The global preference allows the user to completely disable Rx ProcCode validation, even if some Rx are flagged as required.
 			}
@@ -340,7 +340,7 @@ namespace OpenDental
 				formOldBitmap.Controls.Add(toothChartWrapper);
 				//formOldBitmap.Show();
 			
-			toothChartRelay.SetToothNumberingNomenclature((ToothNumberingNomenclature)PrefC.GetInt(PrefName.UseInternationalToothNumbers));
+			toothChartRelay.SetToothNumberingNomenclature((ToothNumberingNomenclature)PrefC.GetInt(PreferenceName.UseInternationalToothNumbers));
 			List<Definition> listDefs = Definitions.GetDefsForCategory(DefinitionCategory.ChartGraphicColors);
 			toothChartRelay.ColorBackgroundMain = listDefs[colorBackgroundIndex].Color;
 			toothChartRelay.ColorText = listDefs[colorTextIndex].Color;

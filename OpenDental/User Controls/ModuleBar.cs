@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Data;
 using Imedisoft.Properties;
 using OpenDentBusiness;
 using System;
@@ -193,7 +194,7 @@ namespace OpenDental
 						_listButtons[i].Caption = "Treat' Plan";
 						break;
 					case EnumModuleType.Chart:
-						if (Prefs.GetBool(PrefName.EasyHideClinical))
+						if (Preferences.GetBool(PreferenceName.EasyHideClinical))
 						{
 							_listButtons[i].Caption = "Procs";
 						}

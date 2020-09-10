@@ -131,7 +131,7 @@ namespace OpenDental
 				}
 				return false;
 			}
-			if (isSecurityLogged && Prefs.GetStringNoCache(PrefName.UpdateStreamLinePassword) != "abracadabra")
+			if (isSecurityLogged && Preferences.GetStringNoCache(PreferenceName.UpdateStreamLinePassword) != "abracadabra")
 			{
 				SecurityLogs.MakeLogEntryNoCache(Permissions.Backup, 0, "A backup was created when running the" + " " + backupLocation.ToString());
 			}

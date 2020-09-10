@@ -226,7 +226,7 @@ namespace OpenDentBusiness
 		public static void Update(ClaimPayment cp, bool isDepNew = false)
 		{
 
-			if (!isDepNew && cp.DepositNum != 0 && Prefs.GetBool(PrefName.ShowAutoDeposit))
+			if (!isDepNew && cp.DepositNum != 0 && Preferences.GetBool(PreferenceName.ShowAutoDeposit))
 			{
 				string cmd = "SELECT deposit.Amount,SUM(COALESCE(claimpayment.CheckAmt,0))+SUM(COALESCE(payment.PayAmt,0)) depAmtOthers "
 					+ "FROM deposit "
@@ -333,7 +333,7 @@ namespace OpenDentBusiness
 
 		public static bool HasAutoDeposit(ClaimPayment cp)
 		{
-			if (cp == null || cp.DepositNum == 0 || !Prefs.GetBool(PrefName.ShowAutoDeposit))
+			if (cp == null || cp.DepositNum == 0 || !Preferences.GetBool(PreferenceName.ShowAutoDeposit))
 			{
 				return false;
 			}

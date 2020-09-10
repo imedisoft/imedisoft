@@ -15,7 +15,7 @@ namespace OpenDentBusiness {
 		/// <param name="listClinics">The list of clinics to filter by. Pass in an empty list if this should not be filtered by clinic.</param>
 		/// <returns></returns>
 		public static DataTable GetLineItemUnearnedData(List<long> listClinics,DateTime date1Start,DateTime date2Start,bool showProvider) {
-			bool hasClinicsEnabled = Prefs.HasClinicsEnabledNoCache;
+			bool hasClinicsEnabled = Preferences.HasClinicsEnabledNoCache;
 			List<long> listHiddenUnearnedDefNums=
 				Definitions.GetDefsNoCache(DefinitionCategory.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.Value)).Select(x => x.Id).ToList();
 			string command = "";
@@ -245,7 +245,7 @@ namespace OpenDentBusiness {
 		/// <param name="listClinics">The list of clinics to filter by. Pass in an empty list if this should not be filtered by clinic.</param>
 		/// <returns></returns>
 		public static DataTable GetUnearnedAccountData(List<long> listClinics) {
-			bool hasClinicsEnabled = Prefs.HasClinicsEnabledNoCache;
+			bool hasClinicsEnabled = Preferences.HasClinicsEnabledNoCache;
 			List<long> listHiddenUnearnedDefNums=
 				Definitions.GetDefsNoCache(DefinitionCategory.PaySplitUnearnedType).FindAll(x => !string.IsNullOrEmpty(x.Value)).Select(x => x.Id).ToList();
 			string command = "";

@@ -4,10 +4,13 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
+using Imedisoft.Data;
 
-namespace OpenDental{
-///<summary></summary>
-	public class FormEmailSetup : ODForm {
+namespace OpenDental
+{
+	///<summary></summary>
+	public class FormEmailSetup : ODForm
+	{
 		private OpenDental.UI.Button butCancel;
 		private OpenDental.UI.Button butOK;
 		private System.Windows.Forms.Label label1;
@@ -28,18 +31,22 @@ namespace OpenDental{
 		private System.ComponentModel.Container components = null;
 
 		///<summary></summary>
-		public FormEmailSetup(){
+		public FormEmailSetup()
+		{
 			InitializeComponent();
 		}
 
 		///<summary></summary>
-		protected override void Dispose( bool disposing ){
-			if( disposing ){
-				if(components != null){
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (components != null)
+				{
 					components.Dispose();
 				}
 			}
-			base.Dispose( disposing );
+			base.Dispose(disposing);
 		}
 
 		#region Windows Form Designer generated code
@@ -132,7 +139,7 @@ namespace OpenDental{
 			this.textBox6.Size = new System.Drawing.Size(589, 30);
 			this.textBox6.TabIndex = 15;
 			this.textBox6.Text = "There is no way to receive e-mail from within Open Dental yet.  These settings ar" +
-    "e for outgoing e-mail.";
+	"e for outgoing e-mail.";
 			// 
 			// textBox1
 			// 
@@ -144,7 +151,7 @@ namespace OpenDental{
 			this.textBox1.Size = new System.Drawing.Size(198, 74);
 			this.textBox1.TabIndex = 16;
 			this.textBox1.Text = "smtp.comcast.net\r\nmailhost.mycompany.com \r\nmail.mycompany.com\r\nsmtp.gmail.com\r\nor" +
-    " similar...";
+	" similar...";
 			// 
 			// textUsername
 			// 
@@ -259,37 +266,42 @@ namespace OpenDental{
 		}
 		#endregion
 
-		private void FormEmailSetup_Load(object sender, System.EventArgs e) {
-			if(!Security.IsAuthorized(Permissions.SecurityAdmin,true)){
-				textPassword.PasswordChar='*';
+		private void FormEmailSetup_Load(object sender, System.EventArgs e)
+		{
+			if (!Security.IsAuthorized(Permissions.SecurityAdmin, true))
+			{
+				textPassword.PasswordChar = '*';
 			}
-			textSMTPserver.Text=Prefs.GetString(PrefName.EmailSMTPserver);
-			textUsername.Text=Prefs.GetString(PrefName.EmailUsername);
-			textPassword.Text=Prefs.GetString(PrefName.EmailPassword);
-			textPort.Text=Prefs.GetString(PrefName.EmailPort);
-			checkSSL.Checked=Prefs.GetBool(PrefName.EmailUseSSL);
-			textSender.Text=Prefs.GetString(PrefName.EmailSenderAddress);
+			textSMTPserver.Text = Preferences.GetString(PreferenceName.EmailSMTPserver);
+			textUsername.Text = Preferences.GetString(PreferenceName.EmailUsername);
+			textPassword.Text = Preferences.GetString(PreferenceName.EmailPassword);
+			textPort.Text = Preferences.GetString(PreferenceName.EmailPort);
+			checkSSL.Checked = Preferences.GetBool(PreferenceName.EmailUseSSL);
+			textSender.Text = Preferences.GetString(PreferenceName.EmailSenderAddress);
 		}
 
-		private void butOK_Click(object sender, System.EventArgs e) {
-			Prefs.Set(PrefName.EmailSMTPserver,textSMTPserver.Text);
-			Prefs.Set(PrefName.EmailUsername,textUsername.Text);
-			Prefs.Set(PrefName.EmailPassword,textPassword.Text);
-			try{
-				Prefs.Set(PrefName.EmailPort,PIn.Long(textPort.Text));
+		private void butOK_Click(object sender, System.EventArgs e)
+		{
+			Preferences.Set(PreferenceName.EmailSMTPserver, textSMTPserver.Text);
+			Preferences.Set(PreferenceName.EmailUsername, textUsername.Text);
+			Preferences.Set(PreferenceName.EmailPassword, textPassword.Text);
+			try
+			{
+				Preferences.Set(PreferenceName.EmailPort, PIn.Long(textPort.Text));
 			}
-			catch{
+			catch
+			{
 				MessageBox.Show("invalid port number.");
 			}
-			Prefs.Set(PrefName.EmailUseSSL,checkSSL.Checked);
-			Prefs.Set(PrefName.EmailSenderAddress,textSender.Text);
+			Preferences.Set(PreferenceName.EmailUseSSL, checkSSL.Checked);
+			Preferences.Set(PreferenceName.EmailSenderAddress, textSender.Text);
 			DataValid.SetInvalid(InvalidType.Prefs);
-			DialogResult=DialogResult.OK;
+			DialogResult = DialogResult.OK;
 		}
 
-		private void butCancel_Click(object sender, System.EventArgs e) {
-			DialogResult=DialogResult.Cancel;
+		private void butCancel_Click(object sender, System.EventArgs e)
+		{
+			DialogResult = DialogResult.Cancel;
 		}
-
 	}
 }

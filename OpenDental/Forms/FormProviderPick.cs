@@ -46,7 +46,7 @@ namespace Imedisoft.Forms
 				firstNameTextBox, lastNameTextBox, providerIdTextBox);
 
 			showAllCheckBox.Visible = IsShowAllAvailable;
-			if (Prefs.GetBool(PrefName.EasyHideDentalSchools))
+			if (Preferences.GetBool(PreferenceName.EasyHideDentalSchools))
 			{
 				dentalSchoolGroupBox.Visible = false;
 			}

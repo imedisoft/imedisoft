@@ -37,7 +37,7 @@ namespace OpenDentBusiness
 					{
 						writer.WriteStartElement("CustomerIdRequest");
 						writer.WriteStartElement("RegistrationKey");
-						writer.WriteString(Prefs.GetString(PrefName.RegistrationKey));
+						writer.WriteString(Preferences.GetString(PreferenceName.RegistrationKey));
 						writer.WriteEndElement();
 						writer.WriteStartElement("RegKeyDisabledOverride");
 						writer.WriteString("true");

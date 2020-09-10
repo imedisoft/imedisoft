@@ -264,7 +264,7 @@ namespace OpenDental {
 			checkShowPat.Checked=IsShowPat;
 			checkShowDoctor.Checked=IsShowDoc;
 			checkShowOther.Checked=IsShowOther;
-			checkPreferred.Checked=Prefs.GetBool(PrefName.ShowPreferedReferrals);
+			checkPreferred.Checked=Preferences.GetBool(PreferenceName.ShowPreferedReferrals);
 			FillTable();
 			//labelResultCount.Text="";
 		}

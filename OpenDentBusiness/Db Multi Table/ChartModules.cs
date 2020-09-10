@@ -587,7 +587,7 @@ namespace OpenDentBusiness
 					else if (procCode.TreatArea == TreatmentArea.Sextant)
 					{
 						row["surf"] = Tooth.GetSextant(rowProc["Surf"].ToString(),
-							(ToothNumberingNomenclature)PrefC.GetInt(PrefName.UseInternationalToothNumbers));
+							(ToothNumberingNomenclature)PrefC.GetInt(PreferenceName.UseInternationalToothNumbers));
 					}
 					else
 					{
@@ -595,7 +595,7 @@ namespace OpenDentBusiness
 					}
 					row["TaskNum"] = 0;
 					row["toothNum"] = Tooth.GetToothLabel(rowProc["ToothNum"].ToString()
-						, (ToothNumberingNomenclature)PrefC.GetInt(PrefName.UseInternationalToothNumbers));
+						, (ToothNumberingNomenclature)PrefC.GetInt(PreferenceName.UseInternationalToothNumbers));
 					row["ToothNum"] = rowProc["ToothNum"].ToString();
 					row["ToothRange"] = rowProc["ToothRange"].ToString();
 					if (rowProc["ProcNumLab"].ToString() == "0")
@@ -1410,7 +1410,7 @@ namespace OpenDentBusiness
 					+ "AND sheetfield.FieldType=" + POut.Long((int)SheetFieldType.SigBox) + " "
 					+ "WHERE (sheet.PatNum=" + POut.Long(patNum);
 				List<Patient> listPatientClonesAll = new List<Patient>();
-				if (Prefs.GetBool(PrefName.ShowFeaturePatientClone))
+				if (Preferences.GetBool(PreferenceName.ShowFeaturePatientClone))
 				{
 					List<long> listPatientClonePatNums = Patients.GetClonePatNumsAll(patNum);
 					//Always include every single sheet for ANY clone or master of said clones.
@@ -1452,7 +1452,7 @@ namespace OpenDentBusiness
 						row["dateTP"] = dateT.ToString(Lans.GetShortDateTimeFormat());
 					}
 					//Add patient name if using clone feature and the sheet belongs to the clone.
-					if (Prefs.GetBool(PrefName.ShowFeaturePatientClone) && rawSheet.Rows[i]["PatNum"].ToString() != patNum.ToString())
+					if (Preferences.GetBool(PreferenceName.ShowFeaturePatientClone) && rawSheet.Rows[i]["PatNum"].ToString() != patNum.ToString())
 					{
 						Patient patientClone = listPatientClonesAll.FirstOrDefault(x => x.PatNum == PIn.Long(rawSheet.Rows[i]["PatNum"].ToString()));
 						if (patientClone != null && !string.IsNullOrWhiteSpace(patientClone.FName))

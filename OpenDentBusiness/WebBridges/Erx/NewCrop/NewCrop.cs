@@ -15,14 +15,14 @@ namespace OpenDentBusiness
 		{
 			get
 			{
-				string newCropName = Prefs.GetString(PrefName.NewCropName);
+				string newCropName = Preferences.GetString(PreferenceName.NewCropName);
 				if (newCropName != "")
 				{ 
 					// Distributors use this field to send different credentials. Thus, if blank, then send OD credentials.
-					return Prefs.GetString(PrefName.NewCropPartnerName); // Distributor
+					return Preferences.GetString(PreferenceName.NewCropPartnerName); // Distributor
 				}
 
-				if (Prefs.GetBool(PrefName.NewCropIsLexiData))
+				if (Preferences.GetBool(PreferenceName.NewCropIsLexiData))
 				{
 					return "OpenDentalLexi";
 				}
@@ -37,7 +37,7 @@ namespace OpenDentBusiness
 		{
 			get
 			{
-				string newCropName = Prefs.GetString(PrefName.NewCropName);
+				string newCropName = Preferences.GetString(PreferenceName.NewCropName);
 				if (newCropName != "")
 				{ //Distributors use this field to send different credentials. Thus, if blank, then send OD credentials.
 					return newCropName;//Distributor
@@ -60,10 +60,10 @@ namespace OpenDentBusiness
 		{
 			get
 			{
-				string newCropName = Prefs.GetString(PrefName.NewCropName);
+				string newCropName = Preferences.GetString(PreferenceName.NewCropName);
 				if (newCropName != "")
 				{ //Distributors use this field to send different credentials. Thus, if blank, then send OD credentials.
-					return Prefs.GetString(PrefName.NewCropPassword);//Distributor
+					return Preferences.GetString(PreferenceName.NewCropPassword);//Distributor
 				}
 #if DEBUG
 				return CodeBase.MiscUtils.Decrypt("Xv40GArhEXYjEZxAE3Fw9g==");//Assigned by NewCrop. Used globally for all customers.

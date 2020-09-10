@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Imedisoft.Data;
 using OpenDentBusiness;
 
 namespace OpenDental {
@@ -17,11 +18,11 @@ namespace OpenDental {
 		}
 
 		private void FormReportSetup_Load(object sender,EventArgs e) {
-			checkPatientFormsShowConsent.Checked=Prefs.GetBool(PrefName.PatientFormsShowConsent);
+			checkPatientFormsShowConsent.Checked=Preferences.GetBool(PreferenceName.PatientFormsShowConsent);
 		}
 		
 		private void butOK_Click(object sender,EventArgs e) {
-			if(Prefs.Set(PrefName.PatientFormsShowConsent,checkPatientFormsShowConsent.Checked)
+			if(Preferences.Set(PreferenceName.PatientFormsShowConsent,checkPatientFormsShowConsent.Checked)
 				) {
 				changed=true;
 			}

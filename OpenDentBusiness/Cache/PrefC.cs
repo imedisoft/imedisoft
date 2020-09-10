@@ -24,7 +24,7 @@ namespace OpenDentBusiness
         /// This pref is used a lot.
         /// </summary>
         // TODO: [Obsolete]
-        public static bool RandomKeys => Prefs.GetBool(PrefName.RandomPrimaryKeys);
+        public static bool RandomKeys => Preferences.GetBool(PreferenceName.RandomPrimaryKeys);
 
 		/// <summary>
 		/// Logical shortcut to the ClaimPaymentNoShowZeroDate pref.
@@ -35,7 +35,7 @@ namespace OpenDentBusiness
 			get
 			{
 				DateTime date = DateTime.MinValue;
-				int days = Prefs.GetInt(PrefName.ClaimPaymentNoShowZeroDate);
+				int days = Preferences.GetInt(PreferenceName.ClaimPaymentNoShowZeroDate);
 				if (days >= 0)
 				{
 					date = DateTime.Today.AddDays(-days);
@@ -56,7 +56,7 @@ namespace OpenDentBusiness
 		{
 			get
 			{
-				string value = Prefs.GetString(PrefName.WebSchedNewPatApptIgnoreBlockoutTypes);
+				string value = Preferences.GetString(PreferenceName.WebSchedNewPatApptIgnoreBlockoutTypes);
 
 				if (string.IsNullOrEmpty(value))
 				{
@@ -74,7 +74,7 @@ namespace OpenDentBusiness
 		{
 			get
 			{
-				string value = Prefs.GetString(PrefName.WebSchedRecallIgnoreBlockoutTypes);
+				string value = Preferences.GetString(PreferenceName.WebSchedRecallIgnoreBlockoutTypes);
 
 				if (string.IsNullOrEmpty(value))
 				{
@@ -94,7 +94,7 @@ namespace OpenDentBusiness
 			{
 				if (_isVerboseLoggingSession == YN.Unknown)
 				{
-					if (Prefs.GetString(PrefName.HasVerboseLogging).ToLower().Split(',').ToList().Exists(x => x == Environment.MachineName.ToLower()))
+					if (Preferences.GetString(PreferenceName.HasVerboseLogging).ToLower().Split(',').ToList().Exists(x => x == Environment.MachineName.ToLower()))
 					{
 						_isVerboseLoggingSession = YN.Yes;
 					}
@@ -121,7 +121,7 @@ namespace OpenDentBusiness
 		/// True if the practice has set a window to restrict the times that automatic communications will be sent out.
 		/// </summary>
 		public static bool DoRestrictAutoSendWindow 
-			=> GetDate(PrefName.AutomaticCommunicationTimeStart).TimeOfDay != GetDate(PrefName.AutomaticCommunicationTimeEnd).TimeOfDay;
+			=> GetDate(PreferenceName.AutomaticCommunicationTimeStart).TimeOfDay != GetDate(PreferenceName.AutomaticCommunicationTimeEnd).TimeOfDay;
 
 
 		/// <summary>
@@ -132,7 +132,7 @@ namespace OpenDentBusiness
 		{
 			get
 			{
-				string format = Prefs.GetString(PrefName.PatientCommunicationDateFormat);
+				string format = Preferences.GetString(PreferenceName.PatientCommunicationDateFormat);
 
 				try
 				{
@@ -152,7 +152,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static string GetLongHideNegOne(string preferenceName, bool useZero = false)
 		{
-			long value = Prefs.GetLong(preferenceName);
+			long value = Preferences.GetLong(preferenceName);
 
 			if (value == -1)
 			{
@@ -163,18 +163,18 @@ namespace OpenDentBusiness
 		}
 
 		public static int GetInt(string key) 
-			=> Prefs.GetInt(key);
+			=> Preferences.GetInt(key);
 
 
 		public static T GetEnum<T>(string key) where T : Enum
-			=> Prefs.GetEnum<T>(key);
+			=> Preferences.GetEnum<T>(key);
 
 		/// <summary>
 		/// Gets YN value for use in pref setup windows with a 3 state checkbox.
 		/// </summary>
 		public static System.Windows.Forms.CheckState GetYNCheckState(string preferenceName)
 		{
-			YN yn = Prefs.GetEnum<YN>(preferenceName);
+			YN yn = Preferences.GetEnum<YN>(preferenceName);
 
 			if (yn == YN.Yes)
 			{
@@ -192,13 +192,13 @@ namespace OpenDentBusiness
 		/// Gets a pref of type date.
 		/// </summary>
 		public static DateTime GetDate(string preferenceName) 
-			=> Prefs.GetDateTime(preferenceName);
+			=> Preferences.GetDateTime(preferenceName);
 
 		/// <summary>
 		/// Gets a color from an int32 pref.
 		/// </summary>
 		public static Color GetColor(string preferenceName) 
-			=> Color.FromArgb(Prefs.GetInt(preferenceName));
+			=> Color.FromArgb(Preferences.GetInt(preferenceName));
 
 		/// <summary>
 		/// Gets culture info from DB if possible, if not returns current culture.
@@ -209,7 +209,7 @@ namespace OpenDentBusiness
 
 			try
 			{
-				var cultureName = Prefs.GetString("LanguageAndRegion");
+				var cultureName = Preferences.GetString("LanguageAndRegion");
 
 				if (!string.IsNullOrEmpty(cultureName))
 				{
@@ -281,7 +281,7 @@ namespace OpenDentBusiness
 			}
 
 			Directory.CreateDirectory(tempPath);
-			if (DateTime.Today > Prefs.GetDateTime(PrefName.TempFolderDateFirstCleaned).AddMonths(1))
+			if (DateTime.Today > Preferences.GetDateTime(PreferenceName.TempFolderDateFirstCleaned).AddMonths(1))
 			{
 				return tempPath;
 			}
@@ -320,7 +320,7 @@ namespace OpenDentBusiness
 			=> ODFileUtils.CreateRandomFile(GetTempFolderPath(), ext);
 
 		public static long GetDefaultSheetDefNum(SheetTypeEnum sheetType) 
-			=> Prefs.GetLong(Prefs.GetSheetDefPref(sheetType));
+			=> Preferences.GetLong(Preferences.GetSheetDefPref(sheetType));
 
 		/// <summary>
 		/// Returns true if the office has a report server set up.
@@ -336,7 +336,7 @@ namespace OpenDentBusiness
 		{
 			get
 			{
-				if (Prefs.GetBool(PrefName.SecurityLogOffAllowUserOverride))
+				if (Preferences.GetBool(PreferenceName.SecurityLogOffAllowUserOverride))
 				{
 					var logOffTimer = UserPreference.GetInt(UserPreferenceName.LogOffTimerOverride);
 
@@ -346,7 +346,7 @@ namespace OpenDentBusiness
 					}
 				}
 
-				return Prefs.GetInt(PrefName.SecurityLogOffAfterMinutes);
+				return Preferences.GetInt(PreferenceName.SecurityLogOffAfterMinutes);
 			}
 		}
 
@@ -371,10 +371,10 @@ namespace OpenDentBusiness
 			}
 
 			public static string Server 
-				=> Prefs.GetString(PrefName.ReportingServerCompName);
+				=> Preferences.GetString(PreferenceName.ReportingServerCompName);
 				
 			public static string Database 
-				=> Prefs.GetString(PrefName.ReportingServerDbName);
+				=> Preferences.GetString(PreferenceName.ReportingServerDbName);
 		}
 	}
 }

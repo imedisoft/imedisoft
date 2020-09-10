@@ -173,7 +173,7 @@ namespace OpenDentBusiness
 					return;
 				}
 
-				if (Prefs.GetString(PrefName.ClinicTrackLast) == "User")
+				if (Preferences.GetString(PreferenceName.ClinicTrackLast) == "User")
 				{
 					UserPreference.Set(UserPreferenceName.ClinicLast, value ?? 0);
 				}
@@ -196,7 +196,7 @@ namespace OpenDentBusiness
 			}
 
 			var clinics = GetByUser(Security.CurrentUser);
-			switch (Prefs.GetString(PrefName.ClinicTrackLast))
+			switch (Preferences.GetString(PreferenceName.ClinicTrackLast))
 			{
 				case "Workstation":
 					if (Security.CurrentUser.ClinicIsRestricted && Security.CurrentUser.ClinicId != ComputerPrefs.LocalComputer.ClinicNum)
@@ -246,7 +246,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		public static void LogOff()
 		{
-			switch (Prefs.GetString(PrefName.ClinicTrackLast))
+			switch (Preferences.GetString(PreferenceName.ClinicTrackLast))
 			{
 				case "Workstation":
 					ComputerPrefs.LocalComputer.ClinicNum = ClinicId ?? 0;
@@ -490,7 +490,7 @@ namespace OpenDentBusiness
 			var clinic = FirstOrDefault(x => x.Id == clinicId, true);
 
 			return clinic?.DefaultPlaceOfService ?? 
-				Prefs.GetString(PrefName.DefaultProcedurePlaceService, PlaceOfService.Office);
+				Preferences.GetString(PreferenceName.DefaultProcedurePlaceService, PlaceOfService.Office);
 		}
 
 		/// <summary>
@@ -551,11 +551,11 @@ namespace OpenDentBusiness
 		/// Gets the default clinic for texting. Returns null if no clinic is set as default.
 		/// </summary>
 		public static Clinic GetDefaultForTexting() 
-			=> FirstOrDefault(x => x.Id == Prefs.GetLong(PrefName.TextingDefaultClinicNum), true);
+			=> FirstOrDefault(x => x.Id == Preferences.GetLong(PreferenceName.TextingDefaultClinicNum), true);
 
 		public static bool IsTextingEnabled(long clinicId)
 		{
-			if (clinicId == 0) clinicId = Prefs.GetLong(PrefName.TextingDefaultClinicNum);
+			if (clinicId == 0) clinicId = Preferences.GetLong(PreferenceName.TextingDefaultClinicNum);
 
 			var clinic = GetById(clinicId);
 			if (clinic == null)
@@ -591,7 +591,7 @@ namespace OpenDentBusiness
 		{
 			if (clinicName == null)
 			{
-				clinicName = Prefs.GetString(PrefName.PracticeTitle);
+				clinicName = Preferences.GetString(PreferenceName.PracticeTitle);
 			}
 
 			return new Clinic
@@ -599,29 +599,29 @@ namespace OpenDentBusiness
 				Id = 0,
 				Abbr = clinicName,
 				Description = clinicName,
-				AddressLine1 = Prefs.GetString(PrefName.PracticeAddress),
-				AddressLine2 = Prefs.GetString(PrefName.PracticeAddress2),
-				City = Prefs.GetString(PrefName.PracticeCity),
-				State = Prefs.GetString(PrefName.PracticeST),
-				Zip = Prefs.GetString(PrefName.PracticeZip),
-				BillingAddressLine1 = Prefs.GetString(PrefName.PracticeBillingAddress),
-				BillingAddressLine2 = Prefs.GetString(PrefName.PracticeBillingAddress2),
-				BillingCity = Prefs.GetString(PrefName.PracticeBillingCity),
-				BillingState = Prefs.GetString(PrefName.PracticeBillingST),
-				BillingZip = Prefs.GetString(PrefName.PracticeBillingZip),
-				PayToAddressLine1 = Prefs.GetString(PrefName.PracticePayToAddress),
-				PayToAddressLine2 = Prefs.GetString(PrefName.PracticePayToAddress2),
-				PayToCity = Prefs.GetString(PrefName.PracticePayToCity),
-				PayToState = Prefs.GetString(PrefName.PracticePayToST),
-				PayToZip = Prefs.GetString(PrefName.PracticePayToZip),
-				Phone = Prefs.GetString(PrefName.PracticePhone),
-				BankNumber = Prefs.GetString(PrefName.PracticeBankNumber),
-				DefaultPlaceOfService = Prefs.GetString(PrefName.DefaultProcedurePlaceService, PlaceOfService.Office),
-				InsBillingProviderId = Prefs.GetLong(PrefName.InsBillingProv),
-				Fax = Prefs.GetString(PrefName.PracticeFax),
-				EmailAddressId = Prefs.GetLong(PrefName.EmailDefaultAddressNum),
-				DefaultProviderId = Prefs.GetLong(PrefName.PracticeDefaultProv),
-				IsMedicalOnly = Prefs.GetBool(PrefName.PracticeIsMedicalOnly)
+				AddressLine1 = Preferences.GetString(PreferenceName.PracticeAddress),
+				AddressLine2 = Preferences.GetString(PreferenceName.PracticeAddress2),
+				City = Preferences.GetString(PreferenceName.PracticeCity),
+				State = Preferences.GetString(PreferenceName.PracticeST),
+				Zip = Preferences.GetString(PreferenceName.PracticeZip),
+				BillingAddressLine1 = Preferences.GetString(PreferenceName.PracticeBillingAddress),
+				BillingAddressLine2 = Preferences.GetString(PreferenceName.PracticeBillingAddress2),
+				BillingCity = Preferences.GetString(PreferenceName.PracticeBillingCity),
+				BillingState = Preferences.GetString(PreferenceName.PracticeBillingST),
+				BillingZip = Preferences.GetString(PreferenceName.PracticeBillingZip),
+				PayToAddressLine1 = Preferences.GetString(PreferenceName.PracticePayToAddress),
+				PayToAddressLine2 = Preferences.GetString(PreferenceName.PracticePayToAddress2),
+				PayToCity = Preferences.GetString(PreferenceName.PracticePayToCity),
+				PayToState = Preferences.GetString(PreferenceName.PracticePayToST),
+				PayToZip = Preferences.GetString(PreferenceName.PracticePayToZip),
+				Phone = Preferences.GetString(PreferenceName.PracticePhone),
+				BankNumber = Preferences.GetString(PreferenceName.PracticeBankNumber),
+				DefaultPlaceOfService = Preferences.GetString(PreferenceName.DefaultProcedurePlaceService, PlaceOfService.Office),
+				InsBillingProviderId = Preferences.GetLong(PreferenceName.InsBillingProv),
+				Fax = Preferences.GetString(PreferenceName.PracticeFax),
+				EmailAddressId = Preferences.GetLong(PreferenceName.EmailDefaultAddressNum),
+				DefaultProviderId = Preferences.GetLong(PreferenceName.PracticeDefaultProv),
+				IsMedicalOnly = Preferences.GetBool(PreferenceName.PracticeIsMedicalOnly)
 			};
 		}
 
@@ -640,15 +640,15 @@ namespace OpenDentBusiness
 		///Replaces: [OfficePhone], [OfficeFax], [OfficeName], [OfficeAddress], and possibly [EmailDisclaimer]. </summary>
 		public static void ReplaceOffice(StringBuilder template, Clinic clinic, bool isHtmlEmail = false, bool doReplaceDisclaimer = false)
 		{
-			string officePhone = Prefs.GetString(PrefName.PracticePhone);
-			string officeFax = Prefs.GetString(PrefName.PracticeFax);
-			string officeName = Prefs.GetString(PrefName.PracticeTitle);
+			string officePhone = Preferences.GetString(PreferenceName.PracticePhone);
+			string officeFax = Preferences.GetString(PreferenceName.PracticeFax);
+			string officeName = Preferences.GetString(PreferenceName.PracticeTitle);
 			string officeAddr = Patients.GetAddressFull(
-				Prefs.GetString(PrefName.PracticeAddress),
-				Prefs.GetString(PrefName.PracticeAddress2),
-				Prefs.GetString(PrefName.PracticeCity),
-				Prefs.GetString(PrefName.PracticeST),
-				Prefs.GetString(PrefName.PracticeZip));
+				Preferences.GetString(PreferenceName.PracticeAddress),
+				Preferences.GetString(PreferenceName.PracticeAddress2),
+				Preferences.GetString(PreferenceName.PracticeCity),
+				Preferences.GetString(PreferenceName.PracticeST),
+				Preferences.GetString(PreferenceName.PracticeZip));
 			if (clinic != null && !String.IsNullOrEmpty(clinic.Phone))
 			{
 				officePhone = clinic.Phone;
@@ -688,7 +688,7 @@ namespace OpenDentBusiness
 			string officeName = clinic?.Description;
 			if (string.IsNullOrEmpty(officeName))
 			{
-				officeName = Prefs.GetString(PrefName.PracticeTitle);
+				officeName = Preferences.GetString(PreferenceName.PracticeTitle);
 			}
 			return officeName;
 		}
@@ -698,7 +698,7 @@ namespace OpenDentBusiness
 			string officePhone = clinic?.Phone;
 			if (string.IsNullOrEmpty(officePhone))
 			{
-				officePhone = Prefs.GetString(PrefName.PracticePhone);
+				officePhone = Preferences.GetString(PreferenceName.PracticePhone);
 			}
 			return officePhone;
 		}

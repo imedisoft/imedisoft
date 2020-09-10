@@ -93,7 +93,7 @@ namespace OpenDentBusiness{
 			}
 			#endregion insurance verification
 			#region Benifit Renewal
-			if(Prefs.GetBool(PrefName.InsVerifyFutureDateBenefitYear)) {
+			if(Preferences.GetBool(PreferenceName.InsVerifyFutureDateBenefitYear)) {
 				InsPlan insPlan=InsPlans.GetPlan(insVer.PlanNum,null);
 				//Setup the month renew dates.  Need all 3 years in case the appointment verify window crosses over a year
 				//e.g. Appt verify date: 12/30/2016 and Appt Date: 1/6/2017
@@ -224,7 +224,7 @@ namespace OpenDentBusiness{
 					whereClinic+=" AND clinic.Region IN("+string.Join(",",listRegionDefNums.Select(x => POut.Long(x)))+") ";
 				}
 			}
-			bool checkBenefitYear=Prefs.GetBool(PrefName.InsVerifyFutureDateBenefitYear);
+			bool checkBenefitYear=Preferences.GetBool(PreferenceName.InsVerifyFutureDateBenefitYear);
 			string mainQuery=@"
 				SELECT insverify.*,
 				patient.LName,patient.FName,patient.Preferred,appointment.PatNum,appointment.AptNum,appointment.AptDateTime,patplan.PatPlanNum,insplan.PlanNum,carrier.CarrierName,
@@ -382,12 +382,12 @@ namespace OpenDentBusiness{
 		///Only runs for carriers that are flagged with TrustedEtransTypes.RealTimeEligibility.</summary>
 		public static List<InsVerify> TryBatchPatInsVerify() {
 			//Mimics FormInsVerificaitonList.GetRowsForGrid(...)
-			bool excludePatVerifyWhenNoIns=Prefs.GetBool(PrefName.InsVerifyExcludePatVerify);
-			bool excludePatClones=(Prefs.GetBool(PrefName.ShowFeaturePatientClone) && Prefs.GetBool(PrefName.InsVerifyExcludePatientClones));
-			DateTime dateTimeStart=DateTime.Today.AddDays(-PrefC.GetInt(PrefName.InsVerifyDaysFromPastDueAppt));//Mimics past due ins verifies logic
-			DateTime dateTimeEnd=DateTime.Today.AddDays(PrefC.GetInt(PrefName.InsVerifyAppointmentScheduledDays));//Non past due logic
-			DateTime dateTimeLastPatEligibility=DateTime.Today.AddDays(-PrefC.GetInt(PrefName.InsVerifyPatientEnrollmentDays));
-			DateTime dateTimeLastPlanBenefits=DateTime.Today.AddDays(-PrefC.GetInt(PrefName.InsVerifyBenefitEligibilityDays));
+			bool excludePatVerifyWhenNoIns=Preferences.GetBool(PreferenceName.InsVerifyExcludePatVerify);
+			bool excludePatClones=(Preferences.GetBool(PreferenceName.ShowFeaturePatientClone) && Preferences.GetBool(PreferenceName.InsVerifyExcludePatientClones));
+			DateTime dateTimeStart=DateTime.Today.AddDays(-PrefC.GetInt(PreferenceName.InsVerifyDaysFromPastDueAppt));//Mimics past due ins verifies logic
+			DateTime dateTimeEnd=DateTime.Today.AddDays(PrefC.GetInt(PreferenceName.InsVerifyAppointmentScheduledDays));//Non past due logic
+			DateTime dateTimeLastPatEligibility=DateTime.Today.AddDays(-PrefC.GetInt(PreferenceName.InsVerifyPatientEnrollmentDays));
+			DateTime dateTimeLastPlanBenefits=DateTime.Today.AddDays(-PrefC.GetInt(PreferenceName.InsVerifyBenefitEligibilityDays));
 			Logger.LogVerbose($"BatchPatInsVerify has started...\r\n" +
 				$"dateTimeStart={dateTimeStart}\r\n" +
 				$"dateTimeEnd={dateTimeEnd}\r\n" +
@@ -518,9 +518,9 @@ namespace OpenDentBusiness{
 		///<summary>Called after recieving a valid 271 response when verifying patient insurance benefits.
 		///Currently only has pat ins verify logic (not insurnace plan logic).</summary>
 		private static void InsVerifyOnVerify(InsVerifyGridObject insVerifyObj){
-			int apptSchedDays=PrefC.GetInt(PrefName.InsVerifyAppointmentScheduledDays);
-			int insBenefitEligibilityDays=PrefC.GetInt(PrefName.InsVerifyBenefitEligibilityDays);
-			int patEnrollmentDays=PrefC.GetInt(PrefName.InsVerifyPatientEnrollmentDays);
+			int apptSchedDays=PrefC.GetInt(PreferenceName.InsVerifyAppointmentScheduledDays);
+			int insBenefitEligibilityDays=PrefC.GetInt(PreferenceName.InsVerifyBenefitEligibilityDays);
+			int patEnrollmentDays=PrefC.GetInt(PreferenceName.InsVerifyPatientEnrollmentDays);
 			//Mimics the logic in FormInsVerificationList.OnVerify(...)
 			insVerifyObj.PatInsVerify=SetTimeAvailableForVerify(insVerifyObj.PatInsVerify,
 				PlanToVerify.PatientEligibility,apptSchedDays,patEnrollmentDays,insBenefitEligibilityDays);

@@ -1303,7 +1303,7 @@ namespace OpenDentBusiness
 			{
 				whereClin = "AND adjustment.ClinicNum IN (" + String.Join(",", listClinicNums) + ") ";
 			}
-			string listBadDebtAdj = Prefs.GetStringNoCache(PrefName.BadDebtAdjustmentTypes);
+			string listBadDebtAdj = Preferences.GetStringNoCache(PreferenceName.BadDebtAdjustmentTypes);
 			if (String.IsNullOrEmpty(listBadDebtAdj))
 			{
 				listBadDebtAdj = "0";
@@ -1554,7 +1554,7 @@ namespace OpenDentBusiness
 			{
 				whereClin = "AND adjustment.ClinicNum IN (" + String.Join(",", listClinicNums) + ") ";
 			}
-			string listBadDebtAdj = Prefs.GetStringNoCache(PrefName.BadDebtAdjustmentTypes);
+			string listBadDebtAdj = Preferences.GetStringNoCache(PreferenceName.BadDebtAdjustmentTypes);
 			if (String.IsNullOrEmpty(listBadDebtAdj))
 			{
 				listBadDebtAdj = "0";
@@ -2165,7 +2165,7 @@ namespace OpenDentBusiness
 				+ "FROM (SELECT appointment.AptDateTime,IFNULL(procedurelog.ProcFee*(procedurelog.UnitQty+procedurelog.BaseUnits),0) Fee,appointment.ClinicNum,";
 			bool isSchedSubWO;
 
-			isSchedSubWO = Prefs.GetBoolNoCache(PrefName.ReportPandIschedProdSubtractsWO);
+			isSchedSubWO = Preferences.GetBoolNoCache(PreferenceName.ReportPandIschedProdSubtractsWO);
 
 			if (isSchedSubWO)
 			{

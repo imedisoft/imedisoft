@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Data;
 using Microsoft.Win32;
 using OpenDentBusiness;
 using System;
@@ -164,7 +165,7 @@ namespace OpenDental.Bridges
 		{
 			//Print the header on the report.
 			Font font = new Font(FontFamily.GenericMonospace, 12);
-			string text = Prefs.GetString(PrefName.PracticeTitle);
+			string text = Preferences.GetString(PreferenceName.PracticeTitle);
 			SizeF size = fpr.Graph.MeasureString(text, font);
 			float y = 20;
 			fpr.Graph.DrawString(text, font, Brushes.Black, fpr.GraphWidth / 2 - size.Width / 2, y);
@@ -270,7 +271,7 @@ namespace OpenDental.Bridges
 		{
 			//Print the header on the report.
 			Font font = new Font(FontFamily.GenericMonospace, 12);
-			string text = Prefs.GetString(PrefName.PracticeTitle);
+			string text = Preferences.GetString(PreferenceName.PracticeTitle);
 			SizeF size = fpr.Graph.MeasureString(text, font);
 			float y = 20;
 			fpr.Graph.DrawString(text, font, Brushes.Black, fpr.GraphWidth / 2 - size.Width / 2, y);

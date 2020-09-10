@@ -239,9 +239,9 @@ namespace OpenDentBusiness
 			double limit = 0;
 			if (!PrefC.HasClinicsEnabled)
 			{
-				if (PrefC.GetDate(PrefName.SmsContractDate).Year > 1880)
+				if (PrefC.GetDate(PreferenceName.SmsContractDate).Year > 1880)
 				{
-					limit = Prefs.GetDouble(PrefName.SmsMonthlyLimit);
+					limit = Preferences.GetDouble(PreferenceName.SmsMonthlyLimit);
 				}
 			}
 			else
@@ -276,7 +276,7 @@ namespace OpenDentBusiness
 
 			if (!PrefC.HasClinicsEnabled)
 			{
-				return PrefC.GetDate(PrefName.SmsContractDate).Year > 1880;
+				return PrefC.GetDate(PreferenceName.SmsContractDate).Year > 1880;
 			}
 
 			return false;
@@ -298,7 +298,7 @@ namespace OpenDentBusiness
 				return clinic.Id;
 			}
 
-			return Prefs.GetLong(PrefName.TextingDefaultClinicNum);
+			return Preferences.GetLong(PreferenceName.TextingDefaultClinicNum);
 		}
 	}
 }

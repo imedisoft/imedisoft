@@ -49,7 +49,7 @@ namespace Imedisoft.Forms
 				viewLabel.Visible = false;
 				sheet = null;
 
-				if (Prefs.GetBool(PrefName.ShowFeatureEhr) && Security.CurrentUser.ProviderId.HasValue) // Is CPOE
+				if (Preferences.GetBool(PreferenceName.ShowFeatureEhr) && Security.CurrentUser.ProviderId.HasValue) // Is CPOE
 				{
 					cpoeLabel.Visible = true;
 					providerComboBox.Enabled = false;
@@ -108,7 +108,7 @@ namespace Imedisoft.Forms
 			dateTextBox.Text = rxPat.RxDate.ToString("d");
 			checkControlled.Checked = rxPat.IsControlled;
 			procedureComboBox.Items.Clear();
-			if (Prefs.GetBool(PrefName.RxHasProc))
+			if (Preferences.GetBool(PreferenceName.RxHasProc))
 			{
 				procRequiredCheckBox.Checked = rxPat.IsProcRequired;
 				procedureComboBox.Items.Add("none");
@@ -178,7 +178,7 @@ namespace Imedisoft.Forms
 			refillsTextBox.Text = rxPat.Refills;
 			patInstructionsTextBox.Text = rxPat.PatientInstruction;
 
-			if (Prefs.GetBool(PrefName.ShowFeatureEhr))
+			if (Preferences.GetBool(PreferenceName.ShowFeatureEhr))
 			{
 				dosageCodeTextBox.Text = rxPat.DosageCode;
 			}
@@ -301,7 +301,7 @@ namespace Imedisoft.Forms
 			rxPat.RxDate = PIn.Date(dateTextBox.Text);
 			rxPat.Drug = drugTextBox.Text;
 			rxPat.IsControlled = checkControlled.Checked;
-			if (Prefs.GetBool(PrefName.RxHasProc))
+			if (Preferences.GetBool(PreferenceName.RxHasProc))
 			{
 				rxPat.IsProcRequired = procRequiredCheckBox.Checked;
 				if (procedureComboBox.SelectedIndex == 0)

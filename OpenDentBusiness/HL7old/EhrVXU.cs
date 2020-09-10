@@ -40,9 +40,9 @@ namespace OpenDentBusiness.HL7 {
 		}
 
 		private void InitializeVariables() {
-			_sendingFacilityName=Prefs.GetString(PrefName.PracticeTitle);
-			cityWhereEntered=Prefs.GetString(PrefName.PracticeCity);
-			stateWhereEntered=Prefs.GetString(PrefName.PracticeST);
+			_sendingFacilityName=Preferences.GetString(PreferenceName.PracticeTitle);
+			cityWhereEntered=Preferences.GetString(PreferenceName.PracticeCity);
+			stateWhereEntered=Preferences.GetString(PreferenceName.PracticeST);
 			if(PrefC.HasClinicsEnabled && _pat.ClinicNum!=0) {//Using clinics and a clinic is assigned.
 				Clinic clinic=Clinics.GetById(_pat.ClinicNum);
 				_sendingFacilityName=clinic.Description;
@@ -1245,10 +1245,10 @@ namespace OpenDentBusiness.HL7 {
 					}
 				}
 				else {
-					if(stateCodes.IndexOf(Prefs.GetString(PrefName.PracticeST).ToUpper())==-1) {
+					if(stateCodes.IndexOf(Preferences.GetString(PreferenceName.PracticeST).ToUpper())==-1) {
 						WriteError(sb,"Practice state must be 2 letter state or territory code for the United States.");
 					}
-					if(Prefs.GetString(PrefName.PracticeCity).Trim()=="") {
+					if(Preferences.GetString(PreferenceName.PracticeCity).Trim()=="") {
 						WriteError(sb,"Missing practice city.");
 					}
 				}

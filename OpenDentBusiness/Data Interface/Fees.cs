@@ -251,7 +251,7 @@ namespace OpenDentBusiness{
 				listFeeScheds.Add(provFirst.FeeScheduleId);
 			}
 			//Add feesched for PracticeDefaultProv------------------------------------------------------------------------------------------------
-			Provider provPracticeDefault=Providers.GetById(Prefs.GetLong(PrefName.PracticeDefaultProv));
+			Provider provPracticeDefault=Providers.GetById(Preferences.GetLong(PreferenceName.PracticeDefaultProv));
 			if(provPracticeDefault!=null && provPracticeDefault.FeeScheduleId!=0 && !listFeeScheds.Contains(provPracticeDefault.FeeScheduleId)){
 				listFeeScheds.Add(provPracticeDefault.FeeScheduleId);
 			}
@@ -370,7 +370,7 @@ namespace OpenDentBusiness{
 		///FeeSchedGroups.</summary>
 		public static bool SynchList(List<Fee> listNew,List<Fee> listDB,bool doCheckFeeSchedGroups=true) {
 			
-			if(Prefs.GetBool(PrefName.ShowFeeSchedGroups) && doCheckFeeSchedGroups) {
+			if(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups) && doCheckFeeSchedGroups) {
 				FeeSchedGroups.SyncGroupFees(listNew,listDB);
 			}
 			return Crud.FeeCrud.Sync(listNew,listDB,0);
@@ -429,7 +429,7 @@ namespace OpenDentBusiness{
 			//No need to check RemotingRole; no call to db.
 			long provNum=proc.ProvNum;
 			if(provNum==0) {//if no prov set, then use practice default.
-				provNum=Prefs.GetLong(PrefName.PracticeDefaultProv);
+				provNum=Preferences.GetLong(PreferenceName.PracticeDefaultProv);
 			}
 			Provider providerFirst=Providers.GetFirst();//Used in order to preserve old behavior...  If this fails, then old code would have failed.
 			Provider provider=Providers.GetFirstOrDefault(x => x.Id==provNum)??providerFirst;
@@ -459,7 +459,7 @@ namespace OpenDentBusiness{
 			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			fee.SecUserNumEntry=Security.CurrentUser.Id;
-			if(Prefs.GetBool(PrefName.ShowFeeSchedGroups) && doCheckFeeSchedGroups) {
+			if(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups) && doCheckFeeSchedGroups) {
 				//If this fee isn't in a group don't bother checking.
 				if(FeeSchedGroups.GetOneForFeeSchedAndClinic(fee.FeeSched,fee.ClinicNum)!=null) {
 					FeeSchedGroups.UpsertGroupFees(new List<Fee>() { fee });
@@ -473,7 +473,7 @@ namespace OpenDentBusiness{
 			
 			//Security.CurUser.UserNum gets set on MT by the DtoProcessor so it matches the user from the client WS.
 			listFees.ForEach(x => x.SecUserNumEntry=Security.CurrentUser.Id);
-			if(Prefs.GetBool(PrefName.ShowFeeSchedGroups) && doCheckFeeSchedGroups) {
+			if(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups) && doCheckFeeSchedGroups) {
 				FeeSchedGroups.UpsertGroupFees(listFees);
 			}
 			Crud.FeeCrud.InsertMany(listFees);
@@ -485,7 +485,7 @@ namespace OpenDentBusiness{
 		public static void Update(Fee fee,bool doCheckFeeSchedGroups=true) {
 			
 			//Check if this fee is associated to a FeeSchedGroup and update the rest of the group as needed.
-			if(Prefs.GetBool(PrefName.ShowFeeSchedGroups) && doCheckFeeSchedGroups) {
+			if(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups) && doCheckFeeSchedGroups) {
 				//If this fee isn't in a group don't bother checking.
 				if(FeeSchedGroups.GetOneForFeeSchedAndClinic(fee.FeeSched,fee.ClinicNum)!=null) {
 					FeeSchedGroups.UpsertGroupFees(new List<Fee>() { fee });
@@ -501,7 +501,7 @@ namespace OpenDentBusiness{
 		{
 			//Even though we do not run a query in this method, there is a lot of back and forth and we should get to the server early to ensure less chattiness.
 
-			if (Prefs.GetBool(PrefName.ShowFeeSchedGroups) && doCheckFeeSchedGroups)
+			if (Preferences.GetBool(PreferenceName.ShowFeeSchedGroups) && doCheckFeeSchedGroups)
 			{
 				//If this fee isn't in a group don't bother checking.
 				if (FeeSchedGroups.GetOneForFeeSchedAndClinic(fee.FeeSched, fee.ClinicNum) != null)
@@ -537,7 +537,7 @@ namespace OpenDentBusiness{
 				return;
 			}
 			
-			if(Prefs.GetBool(PrefName.ShowFeeSchedGroups) && doCheckFeeSchedGroups) {
+			if(Preferences.GetBool(PreferenceName.ShowFeeSchedGroups) && doCheckFeeSchedGroups) {
 				FeeSchedGroups.DeleteGroupFees(listFeeNums);
 			}
 			ClearFkey(listFeeNums);

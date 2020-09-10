@@ -132,7 +132,7 @@ namespace OpenDental
 		/// </summary>
 		public static void DownloadInstallPatchFromURI(string downloadUri, string destinationPath, bool runSetupAfterDownload, bool showShutdownWindow, string destinationPath2)
 		{
-			string[] databases = Prefs.GetString(PrefName.UpdateMultipleDatabases).Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+			string[] databases = Preferences.GetString(PreferenceName.UpdateMultipleDatabases).Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
 
 			bool isShutdownWindowNeeded = showShutdownWindow;
 			while (isShutdownWindowNeeded)
@@ -164,10 +164,10 @@ namespace OpenDental
 				}
 
 				// No other workstation will be able to start up until this value is reset.
-				Prefs.Set(PrefName.UpdateInProgressOnComputerName, Environment.MachineName);
+				Preferences.Set(PreferenceName.UpdateInProgressOnComputerName, Environment.MachineName);
 			}
 
-			Prefs.Set(PrefName.UpdateInProgressOnComputerName, Environment.MachineName);
+			Preferences.Set(PreferenceName.UpdateInProgressOnComputerName, Environment.MachineName);
 
 			try
 			{
@@ -177,7 +177,7 @@ namespace OpenDental
 			{
 				FriendlyException.Show("Error deleting file:\r\n" + ex.Message, ex);
 
-				Prefs.Set(PrefName.UpdateInProgressOnComputerName, "");
+				Preferences.Set(PreferenceName.UpdateInProgressOnComputerName, "");
 
 				return;
 			}
@@ -193,7 +193,7 @@ namespace OpenDental
 				CodeBase.MsgBoxCopyPaste msgbox = new MsgBoxCopyPaste(ex.Message + "\r\nUri: " + downloadUri);
 				msgbox.ShowDialog();
 
-				Prefs.Set(PrefName.UpdateInProgressOnComputerName, "");
+				Preferences.Set(PreferenceName.UpdateInProgressOnComputerName, "");
 
 				return;
 			}
@@ -215,7 +215,7 @@ namespace OpenDental
 			{
 				workerThread.Abort();
 
-				Prefs.Set(PrefName.UpdateInProgressOnComputerName, "");
+				Preferences.Set(PreferenceName.UpdateInProgressOnComputerName, "");
 
 				return;
 			}
@@ -234,7 +234,7 @@ namespace OpenDental
 					{
 						FriendlyException.Show("Error deleting file:\r\n" + ex.Message, ex);
 
-						Prefs.Set(PrefName.UpdateInProgressOnComputerName, "");
+						Preferences.Set(PreferenceName.UpdateInProgressOnComputerName, "");
 
 						return;
 					}
@@ -265,7 +265,7 @@ namespace OpenDental
 			if (CodeBase.ODMessageBox.Show(msg, "", MessageBoxButtons.OKCancel) != DialogResult.OK)
 			{
 				//Clicking cancel gives the user a chance to avoid running the setup program,
-				Prefs.Set(PrefName.UpdateInProgressOnComputerName, "");//unlock workstations, since nothing was actually done.
+				Preferences.Set(PreferenceName.UpdateInProgressOnComputerName, "");//unlock workstations, since nothing was actually done.
 				return;
 			}
 
@@ -276,7 +276,7 @@ namespace OpenDental
 			}
 			catch
 			{
-				Prefs.Set(PrefName.UpdateInProgressOnComputerName, "");//unlock workstations, since nothing was actually done.
+				Preferences.Set(PreferenceName.UpdateInProgressOnComputerName, "");//unlock workstations, since nothing was actually done.
 				MsgBox.Show("Could not launch setup");
 			}
 		}
@@ -358,13 +358,13 @@ namespace OpenDental
 			// There was an old bug where the MySQLVersion preference could be stored as 5,5 instead of 5.5 due to converting the version into a float.
 			// Replace any commas with periods before checking if the preference is going to change.
 			// This is simply an attempt to avoid making unnecessary backups for users with a corrupt version (e.g. 5,5).
-			if (Prefs.GetString(PrefName.MySqlVersion).Contains(","))
+			if (Preferences.GetString(PreferenceName.MySqlVersion).Contains(","))
 			{
-				Prefs.Set(PrefName.MySqlVersion, Prefs.GetString(PrefName.MySqlVersion).Replace(",", "."));
+				Preferences.Set(PreferenceName.MySqlVersion, Preferences.GetString(PreferenceName.MySqlVersion).Replace(",", "."));
 			}
 
 			//Now check to see if the MySQL version has been updated. If it has, make an automatic backup, repair, and optimize all tables.
-			if (Prefs.Set(PrefName.MySqlVersion, thisVersion))
+			if (Preferences.Set(PreferenceName.MySqlVersion, thisVersion))
 			{
 #if !DEBUG
 				if (!isSilent)
@@ -424,13 +424,13 @@ namespace OpenDental
 
 		private static bool CheckProgramVersionClassic()
 		{
-			Version storedVersion = new Version(Prefs.GetString(PrefName.ProgramVersion));
+			Version storedVersion = new Version(Preferences.GetString(PreferenceName.ProgramVersion));
 			Version currentVersion = new Version(Application.ProductVersion);
 
 			string database = MiscData.GetCurrentDatabase();
 			if (storedVersion < currentVersion)
 			{
-				Prefs.Set(PrefName.ProgramVersion, currentVersion.ToString());
+				Preferences.Set(PreferenceName.ProgramVersion, currentVersion.ToString());
 				UpdateHistory updateHistory = new UpdateHistory(currentVersion.ToString());
 				UpdateHistories.Insert(updateHistory);
 				Cache.Refresh(InvalidType.Prefs);

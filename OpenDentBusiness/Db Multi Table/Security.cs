@@ -1,9 +1,9 @@
 using CodeBase;
+using Imedisoft.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using System.Windows.Input;
 
 namespace OpenDentBusiness
 {
@@ -148,7 +148,7 @@ namespace OpenDentBusiness
 			date = date.Date;
 			if (permission == Permissions.AccountingCreate || permission == Permissions.AccountingEdit)
 			{
-				var accountingLockDate = Prefs.GetDateTimeOrNull(PrefName.AccountingLockDate);
+				var accountingLockDate = Preferences.GetDateTimeOrNull(PreferenceName.AccountingLockDate);
 				if (accountingLockDate.HasValue && date <= accountingLockDate)
 				{
 					throw new Exception(Imedisoft.Translation.Common.LockedByAdministrator);
@@ -197,7 +197,7 @@ namespace OpenDentBusiness
 			if (!globalLockPermissions.Contains(permission)) return;
 
 			// Admins are never affected by global date limitation when preference is false.
-			if (!Prefs.GetBool(PrefName.SecurityLockIncludesAdmin) && GroupPermissions.HasPermission(currentUser, Permissions.SecurityAdmin, 0))
+			if (!Preferences.GetBool(PreferenceName.SecurityLockIncludesAdmin) && GroupPermissions.HasPermission(currentUser, Permissions.SecurityAdmin, 0))
 			{
 				return;
 			}
@@ -213,7 +213,7 @@ namespace OpenDentBusiness
 			}
 
 			// If global lock is Date based.
-			var lockDate = Prefs.GetDateTimeOrNull(PrefName.SecurityLockDate);
+			var lockDate = Preferences.GetDateTimeOrNull(PreferenceName.SecurityLockDate);
 			if (lockDate.HasValue && date <= lockDate)
 			{
 				throw new Exception(
@@ -223,7 +223,7 @@ namespace OpenDentBusiness
 			}
 
 			// If global lock is days based.
-			var lockDays = Prefs.GetInt(PrefName.SecurityLockDays);
+			var lockDays = Preferences.GetInt(PreferenceName.SecurityLockDays);
 			if (lockDays > 0 && date <= DateTime.Today.AddDays(-lockDays))
 			{
 				throw new Exception(

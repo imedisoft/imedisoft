@@ -33,7 +33,7 @@ namespace OpenDentBusiness
 			}
 			string whereClin = "";
 			//reports should no longer use the cache
-			bool hasClinicsEnabled =Prefs.HasClinicsEnabledNoCache;
+			bool hasClinicsEnabled =Preferences.HasClinicsEnabledNoCache;
 			if (hasClinicsEnabled)
 			{
 				whereClin += " AND claimproc.ClinicNum IN(";
@@ -130,7 +130,7 @@ namespace OpenDentBusiness
 		public static DataTable GetPatTable(DateTime dateFrom, DateTime dateTo, List<long> listProvNums, List<long> listClinicNums, List<long> listPatientTypes, bool hasAllProvs, bool hasAllClinics, bool hasPatientTypes, bool isGroupedByPatient, bool isUnearnedIncluded, bool doShowProvSeparate, bool doShowHiddenTPUnearned)
 		{
 			//reports should no longer use the cache
-			bool hasClinicsEnabled = Prefs.HasClinicsEnabledNoCache;
+			bool hasClinicsEnabled = Preferences.HasClinicsEnabledNoCache;
 			List<long> listHiddenUnearnedDefNums = new List<long>();
 			if (!doShowHiddenTPUnearned)
 			{

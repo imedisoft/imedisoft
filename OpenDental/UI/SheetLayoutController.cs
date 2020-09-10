@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -62,7 +63,7 @@ namespace OpenDental
 		///This should only be called if a dynamic sheetDef was added/modified/deleted, the SheetLayoutMode has changed, or a new user signed in.</summary>
 		public void ReloadSheetLayout(SheetFieldLayoutMode sheetFieldLayoutMode, Dictionary<string, Control> dictionaryControls)
 		{
-			long practiceDefaultSheetDefNum = Prefs.GetLong(PrefName.SheetsDefaultChartModule);
+			long practiceDefaultSheetDefNum = Preferences.GetLong(PreferenceName.SheetsDefaultChartModule);
 			ListSheetDefsLayout = SheetDefs.GetCustomForType(_sheetType);
 			ListSheetDefsLayout.Add(SheetsInternal.GetSheetDef(SheetsInternal.GetInternalType(_sheetType)));//Internal at bottom of list. UI reflects this too.
 			ListSheetDefsLayout = ListSheetDefsLayout
@@ -103,7 +104,7 @@ namespace OpenDental
 
 				if (PrefC.HasClinicsEnabled && Clinics.ClinicId > 0)
                 {
-					sheetDefNum = ClinicPrefs.GetLong(Clinics.Active.Id, PrefName.SheetsDefaultChartModule);
+					sheetDefNum = ClinicPrefs.GetLong(Clinics.Active.Id, PreferenceName.SheetsDefaultChartModule);
                 }
 
 				if (sheetDefNum == 0)
@@ -111,11 +112,11 @@ namespace OpenDental
 					//Either, clinics are off, HQ is selected, or ClinicPref did not exist.
 					if (_hasUserLoggedOff)
 					{//Currently the cache is not loaded fast enough after logging back on to trust.
-						sheetDefNum = PIn.Long(Prefs.GetStringNoCache(PrefName.SheetsDefaultChartModule));
+						sheetDefNum = PIn.Long(Preferences.GetStringNoCache(PreferenceName.SheetsDefaultChartModule));
 					}
 					else
 					{
-						sheetDefNum = Prefs.GetLong(PrefName.SheetsDefaultChartModule);//Serves as our HQ default.
+						sheetDefNum = Preferences.GetLong(PreferenceName.SheetsDefaultChartModule);//Serves as our HQ default.
 					}
 				}
 
@@ -199,12 +200,12 @@ namespace OpenDental
 
 			if (PrefC.HasClinicsEnabled && Clinics.ClinicId > 0)
             {
-				defaultSheetDefNum = ClinicPrefs.GetLong(Clinics.Active.Id, PrefName.SheetsDefaultChartModule);
+				defaultSheetDefNum = ClinicPrefs.GetLong(Clinics.Active.Id, PreferenceName.SheetsDefaultChartModule);
 			}
 
 			if (defaultSheetDefNum == 0)
 			{
-				defaultSheetDefNum = Prefs.GetLong(PrefName.SheetsDefaultChartModule);
+				defaultSheetDefNum = Preferences.GetLong(PreferenceName.SheetsDefaultChartModule);
 			}
 
 			if (sheetDefId == defaultSheetDefNum)

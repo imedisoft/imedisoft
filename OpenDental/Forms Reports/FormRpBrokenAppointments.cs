@@ -63,14 +63,14 @@ namespace OpenDental {
 					}
 				}
 			}
-			int value=PrefC.GetInt(PrefName.BrokenApptProcedure);
+			int value=PrefC.GetInt(PreferenceName.BrokenApptProcedure);
 			if(value==(int)BrokenApptProcedure.None) {//
 				radioProcs.Visible=false;
 			}
 			if(value>0){
 				radioProcs.Checked=true;
 			}
-			else if(Prefs.GetBool(PrefName.BrokenApptAdjustment)) {
+			else if(Preferences.GetBool(PreferenceName.BrokenApptAdjustment)) {
 				radioAdj.Checked=true;
 			}
 			else {
@@ -113,7 +113,7 @@ namespace OpenDental {
 				listOptions.SelectionMode=SelectionMode.One;
 				int index=0;
 				_listBrokenProcOptions.Clear();
-				BrokenApptProcedure brokenApptCodeDB=(BrokenApptProcedure)PrefC.GetInt(PrefName.BrokenApptProcedure);
+				BrokenApptProcedure brokenApptCodeDB=(BrokenApptProcedure)PrefC.GetInt(PreferenceName.BrokenApptProcedure);
 				switch(brokenApptCodeDB) {
 					case BrokenApptProcedure.None:
 					case BrokenApptProcedure.Missed:
@@ -148,7 +148,7 @@ namespace OpenDental {
 				_listPosAdjTypes.Clear();
 				listOptions.SelectionMode=SelectionMode.MultiSimple;
 				_listPosAdjTypes=Definitions.GetPositiveAdjTypes();
-				long brokenApptAdjDefNum=Prefs.GetLong(PrefName.BrokenAppointmentAdjustmentType);
+				long brokenApptAdjDefNum=Preferences.GetLong(PreferenceName.BrokenAppointmentAdjustmentType);
 				for(int i=0; i<_listPosAdjTypes.Count;i++) {
 					listOptions.Items.Add(_listPosAdjTypes[i].Name);
 					if(_listPosAdjTypes[i].Id==brokenApptAdjDefNum) {

@@ -55,12 +55,12 @@ namespace OpenDental {
 			_dictClinicListProgProps=ProgramProperties.GetForProgram(_progCur.Id)//get list of all props for the program
 				.GroupBy(x => x.ClinicId)//group each clinic
 				.ToDictionary(x => x.Key,x => x.ToList());//turn list into a dictionary of key=ClinicNum, value=List<ProgramProperty> for the clinic
-			DateTime dateTSend=PrefC.GetDate(PrefName.TransworldServiceTimeDue);
+			DateTime dateTSend=PrefC.GetDate(PreferenceName.TransworldServiceTimeDue);
 			if(dateTSend!=DateTime.MinValue) {
 				textUpdatesTimeOfDay.Text=dateTSend.ToShortTimeString();
 			}
 			comboSendFrequencyUnits.Items.AddRange(Enum.GetNames(typeof(FrequencyUnit)));
-			string[] sendFreqStrs=Prefs.GetString(PrefName.TransworldServiceSendFrequency).Split(new char[] { ' ' },StringSplitOptions.RemoveEmptyEntries);
+			string[] sendFreqStrs=Preferences.GetString(PreferenceName.TransworldServiceSendFrequency).Split(new char[] { ' ' },StringSplitOptions.RemoveEmptyEntries);
 			if(sendFreqStrs.Length==2) {
 				int sendFreq=PIn.Int(sendFreqStrs[0],false);
 				FrequencyUnit sendFreqUnit;
@@ -80,7 +80,7 @@ namespace OpenDental {
 		/// <summary>Fill the combo boxes with items. Some will have their indicies set later in FillFields() </summary>
 		private void FillComboBoxes() {
 			comboPaidInFullBillType.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.BillingTypes,true).Where(x => x.Value.ToLower()!="c").ToList());
-			comboPaidInFullBillType.SetSelectedDefNum(Prefs.GetLong(PrefName.TransworldPaidInFullBillingType));
+			comboPaidInFullBillType.SetSelectedDefNum(Preferences.GetLong(PreferenceName.TransworldPaidInFullBillingType));
 			comboPosAdjType.Items.AddDefNone();
 			comboPosAdjType.SetSelected(0);
 			comboPosAdjType.Items.AddDefs(Definitions.GetDefsForCategory(DefinitionCategory.AdjTypes,true).Where(x => x.Value.Contains("+")).ToList());
@@ -333,13 +333,13 @@ namespace OpenDental {
 			DataValid.SetInvalid(InvalidType.Programs);
 			string updateFreq=numericSendFrequency.Value+" "+(FrequencyUnit)comboSendFrequencyUnits.SelectedIndex;
 			bool hasChanged=false;
-			if(Prefs.Set(PrefName.TransworldServiceTimeDue,accountUpdatesRuntime==DateTime.MinValue?"":POut.Time(accountUpdatesRuntime.TimeOfDay,false))
-				| Prefs.Set(PrefName.TransworldServiceSendFrequency,updateFreq))
+			if(Preferences.Set(PreferenceName.TransworldServiceTimeDue,accountUpdatesRuntime==DateTime.MinValue?"":POut.Time(accountUpdatesRuntime.TimeOfDay,false))
+				| Preferences.Set(PreferenceName.TransworldServiceSendFrequency,updateFreq))
 			{
-				Prefs.Set(PrefName.TransworldDateTimeLastUpdated,DateTime.MinValue);
+				Preferences.Set(PreferenceName.TransworldDateTimeLastUpdated,DateTime.MinValue);
 				hasChanged=true;
 			}
-			if(Prefs.Set(PrefName.TransworldPaidInFullBillingType,billTypePaidInFullDefNum) | hasChanged) {
+			if(Preferences.Set(PreferenceName.TransworldPaidInFullBillingType,billTypePaidInFullDefNum) | hasChanged) {
 				DataValid.SetInvalid(InvalidType.Prefs);
 			}
 			DialogResult=DialogResult.OK;

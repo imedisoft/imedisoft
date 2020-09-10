@@ -89,8 +89,8 @@ namespace OpenDental {
 			textNote.Text=VaccinePatCur.Note;
 			if(IsNew) {
 				if(pat.ClinicNum==0) {
-					VaccinePatCur.FilledCity=Prefs.GetString(PrefName.PracticeCity);
-					VaccinePatCur.FilledST=Prefs.GetString(PrefName.PracticeST);
+					VaccinePatCur.FilledCity=Preferences.GetString(PreferenceName.PracticeCity);
+					VaccinePatCur.FilledST=Preferences.GetString(PreferenceName.PracticeST);
 				}
 				else {
 					Clinic clinic=Clinics.GetById(pat.ClinicNum);

@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Data;
 using Imedisoft.Forms;
 using OpenDentBusiness;
 using OpenDentBusiness.IO;
@@ -15,49 +16,58 @@ using System.Xml;
 
 namespace OpenDental
 {
-    public partial class FormEhrSetup:ODForm {
-		public FormEhrSetup() {
+	public partial class FormEhrSetup : ODForm
+	{
+		public FormEhrSetup()
+		{
 			InitializeComponent();
-			
+
 		}
 
-		private void FormEhrSetup_Load(object sender,EventArgs e) {
-			if(Prefs.GetBool(PrefName.EhrEmergencyNow)) {
-				panelEmergencyNow.BackColor=Color.Red;
+		private void FormEhrSetup_Load(object sender, EventArgs e)
+		{
+			if (Preferences.GetBool(PreferenceName.EhrEmergencyNow))
+			{
+				panelEmergencyNow.BackColor = Color.Red;
 			}
-			else {
-				panelEmergencyNow.BackColor=SystemColors.Control;
+			else
+			{
+				panelEmergencyNow.BackColor = SystemColors.Control;
 			}
-			if(!Security.IsAuthorized(Permissions.Setup,true)) {
+			if (!Security.IsAuthorized(Permissions.Setup, true))
+			{
 				//Hide all the buttons except Emergency Now and Close.
 				//Unhiding all code system buttons since code systems can no longer be edited.
-				butAllergies.Visible=false;
+				butAllergies.Visible = false;
 				//Forumularies will now be checked through New Crop
 				//butFormularies.Visible=false;
-				butVaccineDef.Visible=false;
-				butDrugManufacturer.Visible=false;
-				butDrugUnit.Visible=false;
-				butInboundEmail.Visible=false;
-				butReminderRules.Visible=false;
-				butEducationalResources.Visible=false;
-				menuItemSettings.Enabled=false;
-				butTimeSynch.Visible=false;
-				butEhrTriggers.Visible=false;
+				butVaccineDef.Visible = false;
+				butDrugManufacturer.Visible = false;
+				butDrugUnit.Visible = false;
+				butInboundEmail.Visible = false;
+				butReminderRules.Visible = false;
+				butEducationalResources.Visible = false;
+				menuItemSettings.Enabled = false;
+				butTimeSynch.Visible = false;
+				butEhrTriggers.Visible = false;
 			}
 		}
 
-		private void menuItemSettings_Click(object sender,EventArgs e) {
-			FormEhrSettings FormES=new FormEhrSettings();
+		private void menuItemSettings_Click(object sender, EventArgs e)
+		{
+			FormEhrSettings FormES = new FormEhrSettings();
 			FormES.ShowDialog();
 		}
 
-		private void butICD9s_Click(object sender,EventArgs e) {
-			FormIcd9s FormE=new FormIcd9s();
+		private void butICD9s_Click(object sender, EventArgs e)
+		{
+			FormIcd9s FormE = new FormIcd9s();
 			FormE.ShowDialog();
 		}
 
-		private void butAllergies_Click(object sender,EventArgs e) {
-			FormAllergyDefs FAS=new FormAllergyDefs();
+		private void butAllergies_Click(object sender, EventArgs e)
+		{
+			FormAllergyDefs FAS = new FormAllergyDefs();
 			FAS.ShowDialog();
 		}
 
@@ -67,165 +77,192 @@ namespace OpenDental
 		//	FormE.ShowDialog();
 		//}
 
-		private void butVaccineDef_Click(object sender,EventArgs e) {
-			FormVaccineDefSetup FormE=new FormVaccineDefSetup();
+		private void butVaccineDef_Click(object sender, EventArgs e)
+		{
+			FormVaccineDefSetup FormE = new FormVaccineDefSetup();
 			FormE.ShowDialog();
 		}
 
-		private void butDrugManufacturer_Click(object sender,EventArgs e) {
-			FormDrugManufacturerSetup FormE=new FormDrugManufacturerSetup();
+		private void butDrugManufacturer_Click(object sender, EventArgs e)
+		{
+			FormDrugManufacturerSetup FormE = new FormDrugManufacturerSetup();
 			FormE.ShowDialog();
 		}
 
-		private void butDrugUnit_Click(object sender,EventArgs e) {
-			FormDrugUnitSetup FormE=new FormDrugUnitSetup();
+		private void butDrugUnit_Click(object sender, EventArgs e)
+		{
+			FormDrugUnitSetup FormE = new FormDrugUnitSetup();
 			FormE.ShowDialog();
 		}
 
-		private void butInboundEmail_Click(object sender,EventArgs e) {
-			FormEmailAddresses formEA=new FormEmailAddresses();
+		private void butInboundEmail_Click(object sender, EventArgs e)
+		{
+			FormEmailAddresses formEA = new FormEmailAddresses();
 			formEA.ShowDialog();
 		}
 
-		private void butEmergencyNow_Click(object sender,EventArgs e) {
-			if(Prefs.GetBool(PrefName.EhrEmergencyNow)) {
-				panelEmergencyNow.BackColor=SystemColors.Control;
-				Prefs.Set(PrefName.EhrEmergencyNow,false);
+		private void butEmergencyNow_Click(object sender, EventArgs e)
+		{
+			if (Preferences.GetBool(PreferenceName.EhrEmergencyNow))
+			{
+				panelEmergencyNow.BackColor = SystemColors.Control;
+				Preferences.Set(PreferenceName.EhrEmergencyNow, false);
 			}
-			else {
-				panelEmergencyNow.BackColor=Color.Red;
-				Prefs.Set(PrefName.EhrEmergencyNow,true);
+			else
+			{
+				panelEmergencyNow.BackColor = Color.Red;
+				Preferences.Set(PreferenceName.EhrEmergencyNow, true);
 			}
 			DataValid.SetInvalid(InvalidType.Prefs);
 		}
-		
-		private void butReminderRules_Click(object sender,EventArgs e) {
+
+		private void butReminderRules_Click(object sender, EventArgs e)
+		{
 			FormReminderRules FormRR = new FormReminderRules();
 			FormRR.ShowDialog();
 		}
 
-		private void butEducationalResources_Click(object sender,EventArgs e) {
+		private void butEducationalResources_Click(object sender, EventArgs e)
+		{
 			FormEduResourceSetup FormEDUSetup = new FormEduResourceSetup();
 			FormEDUSetup.ShowDialog();
 		}
 
-		private void butRxNorm_Click(object sender,EventArgs e) {
-			FormRxNorms FormR=new FormRxNorms();
+		private void butRxNorm_Click(object sender, EventArgs e)
+		{
+			FormRxNorms FormR = new FormRxNorms();
 			FormR.ShowDialog();
 		}
 
-		private void butLoincs_Click(object sender,EventArgs e) {
-			FormLoincs FormL=new FormLoincs();
+		private void butLoincs_Click(object sender, EventArgs e)
+		{
+			FormLoincs FormL = new FormLoincs();
 			FormL.ShowDialog();
 		}
 
-		private void butSnomeds_Click(object sender,EventArgs e) {
-			FormSnomeds FormS=new FormSnomeds();
+		private void butSnomeds_Click(object sender, EventArgs e)
+		{
+			FormSnomeds FormS = new FormSnomeds();
 			FormS.ShowDialog();
 		}
 
-		private void butTimeSynch_Click(object sender,EventArgs e) {
+		private void butTimeSynch_Click(object sender, EventArgs e)
+		{
 			FormEhrTimeSynch formET = new FormEhrTimeSynch();
 			formET.ShowDialog();
 		}
 
-		private void butPortalSetup_Click(object sender,EventArgs e) {
+		private void butPortalSetup_Click(object sender, EventArgs e)
+		{
 			// TODO: Implement me...
 		}
 
-		private void butCodeImport_Click(object sender,EventArgs e) {
-			FormCodeSystemsImport FormCSI=new FormCodeSystemsImport();
+		private void butCodeImport_Click(object sender, EventArgs e)
+		{
+			FormCodeSystemsImport FormCSI = new FormCodeSystemsImport();
 			FormCSI.ShowDialog();
 		}
 
-		private void butProviderKeys_Click(object sender,EventArgs e) {
-			FormEhrProviderKeys formK=new FormEhrProviderKeys();
+		private void butProviderKeys_Click(object sender, EventArgs e)
+		{
+			FormEhrProviderKeys formK = new FormEhrProviderKeys();
 			formK.ShowDialog();
 		}
 
-		private static string downloadFileHelper(string codeSystemURL,string codeSystemName) {
-			string zipFileDestination=Storage.GetTempFileName(".tmp");//@"c:\users\ryan\desktop\"+codeSystemName+".tmp";
+		private static string downloadFileHelper(string codeSystemURL, string codeSystemName)
+		{
+			string zipFileDestination = Storage.GetTempFileName(".tmp");//@"c:\users\ryan\desktop\"+codeSystemName+".tmp";
 			File.Delete(zipFileDestination);
-			WebRequest wr=WebRequest.Create(codeSystemURL);
-			WebResponse webResp=null;
-			try {
-				webResp=wr.GetResponse();
+			WebRequest wr = WebRequest.Create(codeSystemURL);
+			WebResponse webResp = null;
+			try
+			{
+				webResp = wr.GetResponse();
 			}
-			catch {
+			catch
+			{
 				return null;
 			}
-			DownloadFileWorker(codeSystemURL,zipFileDestination);
+			DownloadFileWorker(codeSystemURL, zipFileDestination);
 			Thread.Sleep(100);//allow file to be released for use by the unzipper.
-			//Unzip the compressed file-----------------------------------------------------------------------------------------------------
-			MemoryStream ms=new MemoryStream();
+							  //Unzip the compressed file-----------------------------------------------------------------------------------------------------
+			MemoryStream ms = new MemoryStream();
 
 			var path = Path.GetTempPath();
 			using (var archive = ZipFile.OpenRead(zipFileDestination))
-            {
+			{
 				var entry = archive.Entries[0];
 				path = Path.Combine(path, entry.Name);
 
 				entry.ExtractToFile(path, true);
 
 				return path;
-            }
+			}
 		}
 
 		///<summary>This is the function that the worker thread uses to actually perform the download.  Can also call this method in the ordinary way if the file to be transferred is short.</summary>
-		private static void DownloadFileWorker(string downloadUri,string destinationPath) {
-			int chunk=10;//KB
+		private static void DownloadFileWorker(string downloadUri, string destinationPath)
+		{
+			int chunk = 10;//KB
 			byte[] buffer;
-			int i=0;
-			WebClient myWebClient=new WebClient();
-			Stream readStream=myWebClient.OpenRead(downloadUri);
-			BinaryReader br=new BinaryReader(readStream);
-			FileStream writeStream=new FileStream(destinationPath,FileMode.Create);
-			BinaryWriter bw=new BinaryWriter(writeStream);
-			try {
-				while(true) {
-					buffer=br.ReadBytes(chunk*1024);
-					if(buffer.Length==0) {
+			int i = 0;
+			WebClient myWebClient = new WebClient();
+			Stream readStream = myWebClient.OpenRead(downloadUri);
+			BinaryReader br = new BinaryReader(readStream);
+			FileStream writeStream = new FileStream(destinationPath, FileMode.Create);
+			BinaryWriter bw = new BinaryWriter(writeStream);
+			try
+			{
+				while (true)
+				{
+					buffer = br.ReadBytes(chunk * 1024);
+					if (buffer.Length == 0)
+					{
 						break;
 					}
 					bw.Write(buffer);
 					i++;
 				}
 			}
-			catch {//for instance, if abort.
+			catch
+			{//for instance, if abort.
 				br.Close();
 				bw.Close();
 				File.Delete(destinationPath);
 			}
-			finally {
+			finally
+			{
 				br.Close();
 				bw.Close();
 			}
 			//myWebClient.DownloadFile(downloadUri,ODFileUtils.CombinePaths(FormPath.GetPreferredImagePath(),"Setup.exe"));
 		}
 
-		private static string SendAndReceiveDownloadXml(string codeSystemName) {
+		private static string SendAndReceiveDownloadXml(string codeSystemName)
+		{
 			//prepare the xml document to send--------------------------------------------------------------------------------------
 			XmlWriterSettings settings = new XmlWriterSettings();
 			settings.Indent = true;
 			settings.IndentChars = ("    ");
-			StringBuilder strbuild=new StringBuilder();
-			using(XmlWriter writer=XmlWriter.Create(strbuild,settings)) {
+			StringBuilder strbuild = new StringBuilder();
+			using (XmlWriter writer = XmlWriter.Create(strbuild, settings))
+			{
 				//TODO: include more user information
 				writer.WriteStartElement("UpdateRequest");
 				writer.WriteStartElement("RegistrationKey");
-				writer.WriteString(Prefs.GetString(PrefName.RegistrationKey));
+				writer.WriteString(Preferences.GetString(PreferenceName.RegistrationKey));
 				writer.WriteEndElement();
 				writer.WriteStartElement("PracticeTitle");
-				writer.WriteString(Prefs.GetString(PrefName.PracticeTitle));
+				writer.WriteString(Preferences.GetString(PreferenceName.PracticeTitle));
 				writer.WriteEndElement();
 				writer.WriteStartElement("PracticeAddress");
-				writer.WriteString(Prefs.GetString(PrefName.PracticeAddress));
+				writer.WriteString(Preferences.GetString(PreferenceName.PracticeAddress));
 				writer.WriteEndElement();
 				writer.WriteStartElement("PracticePhone");
-				writer.WriteString(Prefs.GetString(PrefName.PracticePhone));
+				writer.WriteString(Preferences.GetString(PreferenceName.PracticePhone));
 				writer.WriteEndElement();
 				writer.WriteStartElement("ProgramVersion");
-				writer.WriteString(Prefs.GetString(PrefName.ProgramVersion));
+				writer.WriteString(Preferences.GetString(PreferenceName.ProgramVersion));
 				writer.WriteEndElement();
 				writer.WriteStartElement("CodeSystemRequested");
 				writer.WriteString(codeSystemName);
@@ -233,46 +270,53 @@ namespace OpenDental
 				writer.WriteEndElement();
 			}
 #if DEBUG
-			Imedisoft.localhost.Service1 updateService=new Imedisoft.localhost.Service1();
+			Imedisoft.localhost.Service1 updateService = new Imedisoft.localhost.Service1();
 #else
 			OpenDental.customerUpdates.Service1 updateService=new OpenDental.customerUpdates.Service1();
 			updateService.Url=Prefs.GetString(PrefName.UpdateServerAddress);
 #endif
-			if(Prefs.GetString(PrefName.UpdateWebProxyAddress) !="") {
-				IWebProxy proxy = new WebProxy(Prefs.GetString(PrefName.UpdateWebProxyAddress));
-				ICredentials cred=new NetworkCredential(Prefs.GetString(PrefName.UpdateWebProxyUserName),Prefs.GetString(PrefName.UpdateWebProxyPassword));
-				proxy.Credentials=cred;
-				updateService.Proxy=proxy;
+			if (Preferences.GetString(PreferenceName.UpdateWebProxyAddress) != "")
+			{
+				IWebProxy proxy = new WebProxy(Preferences.GetString(PreferenceName.UpdateWebProxyAddress));
+				ICredentials cred = new NetworkCredential(Preferences.GetString(PreferenceName.UpdateWebProxyUserName), Preferences.GetString(PreferenceName.UpdateWebProxyPassword));
+				proxy.Credentials = cred;
+				updateService.Proxy = proxy;
 			}
-			string result="";
-			try {
-				result=updateService.RequestCodeSystemDownload(strbuild.ToString());//may throw error
+			string result = "";
+			try
+			{
+				result = updateService.RequestCodeSystemDownload(strbuild.ToString());//may throw error
 			}
-			catch(Exception ex) {
+			catch (Exception ex)
+			{
 				//Cursor=Cursors.Default;
-				MessageBox.Show("Error: "+ex.Message);
+				MessageBox.Show("Error: " + ex.Message);
 				return "";
 			}
 			return result;
 		}
 
-		private void butCdsTriggers_Click(object sender,EventArgs e) {
-			FormCdsTriggers FormET=new FormCdsTriggers();
+		private void butCdsTriggers_Click(object sender, EventArgs e)
+		{
+			FormCdsTriggers FormET = new FormCdsTriggers();
 			FormET.ShowDialog();
 		}
 
-		private void butOIDs_Click(object sender,EventArgs e) {
-			FormOIDRegistryInternal FormOIDI=new FormOIDRegistryInternal();
+		private void butOIDs_Click(object sender, EventArgs e)
+		{
+			FormOIDRegistryInternal FormOIDI = new FormOIDRegistryInternal();
 			FormOIDI.ShowDialog();
 		}
 
 
-		private void butClose_Click(object sender,EventArgs e) {
-			DialogResult=DialogResult.Cancel;
+		private void butClose_Click(object sender, EventArgs e)
+		{
+			DialogResult = DialogResult.Cancel;
 		}
 
-		private List<string> getTestMessagesHelper(){
-			List<string> retVal=new List<string>();
+		private List<string> getTestMessagesHelper()
+		{
+			List<string> retVal = new List<string>();
 			#region LRI_1.0-GU_Final
 			retVal.Add(@"MSH|^~\&#|NIST Test Lab APP^2.16.840.1.113883.3.72.5.20^ISO|NIST Lab Facility^2.16.840.1.113883.3.72.5.21^ISO||NIST EHR Facility^2.16.840.1.113883.3.72.5.23^ISO|20110531140551-0500||ORU^R01^ORU_R01|NIST-LRI-GU-001.00|T|2.5.1|||AL|NE|||||LRI_Common_Component^Profile Component^2.16.840.1.113883.9.16^ISO~LRI_GU_Component^Profile Component^2.16.840.1.113883.9.12^ISO~LRI_RU_Component^Profile Component^2.16.840.1.113883.9.14^ISO
 PID|1||PATID1234^^^NIST MPI&2.16.840.1.113883.3.72.5.30.2&ISO^MR||Jones^William^A^JR^^^L||19610615|M||2106-3^White^HL70005^CAUC^Caucasian^L
@@ -405,10 +449,8 @@ SPM|1|||119364003^Serum specimen (specimen)^SCT^SER^Serum^L|||||||||||||20120628
 ORC|RE||R-512^^2.16.840.1.113883.3.72.5.25^ISO|||||||||1234567890^Fine^Larry^^^Dr.^^^&2.16.840.1.113883.3.72.5.30.1&ISO^L^^^NPI
 OBR|2||R-512^^2.16.840.1.113883.3.72.5.25^ISO|11011-4^Hepatitis C virus RNA [Units/volume] (viral load) in Serum or Plasma by Probe and target amplification method^LN^HCVRNA^Hepatitis C RNA PCR^L|||20120628070100||||G|||||1234567890^Fine^Larry^^^Dr.^^^&2.16.840.1.113883.3.72.5.30.1&ISO^L^^^NPI||||||20120629132900-0500|||F|16128-1&Hepatitis C virus Ab [Presence] in Serum&LN&HCVAB&Hepatitis C antibody screen  (anti-HCV)&L|||ORD448811&&2.16.840.1.113883.3.72.5.24&ISO^R-511&&2.16.840.1.113883.3.72.5.25&ISO
 OBX|1|SN|11011-4^Hepatitis C virus RNA [Units/volume] (viral load) in Serum or Plasma by Probe and target amplification method^LN^HCVRNA^Hepatitis C RNA PCR^L||^7611200|[IU]/mL^international unit per milliliter^UCUM^IU/ml^^L|<43 IU/mL|H|||F|||20120628070100|||||20120629092700||||Princeton Hospital Laboratory^^^^^NIST HCAA-1&2.16.840.1.113883.3.72.5.30.1&ISO^XX^^^34D4567890|123 High Street^^Princeton^NJ^08540^USA^O^^34021|^Martin^Steven^M^^Dr.");
-#endregion
+			#endregion
 			return retVal;
 		}
-		
-
 	}
 }
