@@ -39,7 +39,7 @@ namespace OpenDental {
 			GridRow row;
 			for(int i=0;i<summariesSentList.Count;i++) {
 				row = new GridRow();
-				row.Cells.Add(summariesSentList[i].DateTEvent.ToString());
+				row.Cells.Add(summariesSentList[i].Date.ToString());
 				//row.Cells.Add(summariesSentList[i].EventType.ToString());
 				gridEHRMeasureEvents.Rows.Add(row);
 			}
@@ -76,9 +76,9 @@ namespace OpenDental {
 			File.WriteAllText(Path.Combine(dlg.SelectedPath,"ccd.xml"),ccd);
 			File.WriteAllText(Path.Combine(dlg.SelectedPath,"ccd.xsl"),FormEHR.GetEhrResource("CCD"));
 			EhrMeasureEvent newMeasureEvent = new EhrMeasureEvent();
-			newMeasureEvent.DateTEvent = DateTime.Now;
-			newMeasureEvent.EventType = EhrMeasureEventType.ClinicalSummaryProvidedToPt;
-			newMeasureEvent.PatNum = PatCur.PatNum;
+			newMeasureEvent.Date = DateTime.Now;
+			newMeasureEvent.Type = EhrMeasureEventType.ClinicalSummaryProvidedToPt;
+			newMeasureEvent.PatientId = PatCur.PatNum;
 			EhrMeasureEvents.Insert(newMeasureEvent);
 			FillGridEHRMeasureEvents();
 			MessageBox.Show("Exported");	
@@ -145,9 +145,9 @@ namespace OpenDental {
 				return;
 			}
 			EhrMeasureEvent newMeasureEvent=new EhrMeasureEvent();
-			newMeasureEvent.DateTEvent=DateTime.Now;
-			newMeasureEvent.EventType=EhrMeasureEventType.ClinicalSummaryProvidedToPt;
-			newMeasureEvent.PatNum=PatCur.PatNum;
+			newMeasureEvent.Date=DateTime.Now;
+			newMeasureEvent.Type=EhrMeasureEventType.ClinicalSummaryProvidedToPt;
+			newMeasureEvent.PatientId=PatCur.PatNum;
 			EhrMeasureEvents.Insert(newMeasureEvent);
 			FillGridEHRMeasureEvents();//This will cause the measure event to show in the grid below the popup message on the next line.  Reassures the user that the event was immediately recorded.
 			MessageBox.Show("Clinical Summary Sent");
@@ -173,9 +173,9 @@ namespace OpenDental {
 			if(didPrint) {
 				//we are printing a ccd so add new measure event.					
 				EhrMeasureEvent measureEvent = new EhrMeasureEvent();
-				measureEvent.DateTEvent = DateTime.Now;
-				measureEvent.EventType = EhrMeasureEventType.ClinicalSummaryProvidedToPt;
-				measureEvent.PatNum = PatCur.PatNum;
+				measureEvent.Date = DateTime.Now;
+				measureEvent.Type = EhrMeasureEventType.ClinicalSummaryProvidedToPt;
+				measureEvent.PatientId = PatCur.PatNum;
 				EhrMeasureEvents.Insert(measureEvent);
 				FillGridEHRMeasureEvents();
 			}		
@@ -207,7 +207,7 @@ namespace OpenDental {
 				return;
 			}
 			for(int i=0;i<gridEHRMeasureEvents.SelectedIndices.Length;i++) {
-				EhrMeasureEvents.Delete(summariesSentList[gridEHRMeasureEvents.SelectedIndices[i]].EhrMeasureEventNum);
+				EhrMeasureEvents.Delete(summariesSentList[gridEHRMeasureEvents.SelectedIndices[i]].Id);
 			}
 			FillGridEHRMeasureEvents();
 		}

@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using OpenDental.UI;
 using OpenDentBusiness;
 using System;
@@ -57,7 +58,7 @@ namespace Imedisoft.Forms
 					userId = taskHistoryCurrent.UserId;
 				}
 
-				row.Cells.Add(Userods.GetUser(userId).UserName);
+				row.Cells.Add(Users.GetById(userId).UserName);
 				row.Cells.Add(TaskHists.GetChangesDescription(taskHistoryCurrent, taskHistoryNext));
 
 				taskHistoryGrid.Rows.Add(row);
@@ -91,7 +92,7 @@ namespace Imedisoft.Forms
 						userId = taskHistoryCurrent.UserId;
 					}
 
-					row.Cells.Add(Userods.GetUser(userId).UserName);
+					row.Cells.Add(Users.GetById(userId).UserName);
 					row.Cells.Add(TaskHists.GetChangesDescription(taskHistoryCurrent, taskHistoryNext));
 					taskHistoryGrid.Rows.Add(row);
 				}

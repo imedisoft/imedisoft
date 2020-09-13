@@ -1270,7 +1270,7 @@ namespace OpenDental{
 					row.Cells.Add(tableHistory.Rows[i]["ack"].ToString());
 					row.Cells.Add(tableHistory.Rows[i]["Note"].ToString());
 					row.Cells.Add(tableHistory.Rows[i]["OfficeSequenceNumber"].ToString());
-					Userod user=Userods.GetUser(PIn.Long(tableHistory.Rows[i]["UserNum"].ToString()));
+					User user=Users.GetById(PIn.Long(tableHistory.Rows[i]["UserNum"].ToString()));
 					row.Cells.Add(user==null ? "" : user.UserName);
 					row.Cells.Add(tableHistory.Rows[i]["CarrierTransCounter"].ToString());
 					gridHistory.Rows.Add(row);
@@ -1305,7 +1305,7 @@ namespace OpenDental{
 					row.Cells.Add(tableHistory.Rows[i]["etype"].ToString());
 					row.Cells.Add(tableHistory.Rows[i]["ack"].ToString());
 					row.Cells.Add(tableHistory.Rows[i]["Note"].ToString());
-					Userod user=Userods.GetUser(PIn.Long(tableHistory.Rows[i]["UserNum"].ToString()));
+					User user=Users.GetById(PIn.Long(tableHistory.Rows[i]["UserNum"].ToString()));
 					row.Cells.Add(user==null ? "" : user.UserName);
 					gridHistory.Rows.Add(row);
 				}

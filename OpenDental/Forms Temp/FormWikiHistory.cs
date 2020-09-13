@@ -4,6 +4,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Imedisoft.Data;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -81,7 +82,7 @@ namespace OpenDental {
 			if(wp!=null) {
 				listWikiPageHists.Add(WikiPages.PageToHist(wp));
 			}
-			Dictionary<long,string> dictUsers=Userods.GetUsers(listWikiPageHists.Select(x => x.UserNum).Distinct().ToList())//gets from cache, very fast
+			Dictionary<long,string> dictUsers=Users.GetById(listWikiPageHists.Select(x => x.UserNum).Distinct().ToList())//gets from cache, very fast
 				.ToDictionary(x => x.Id,x => x.UserName);//create dictionary of key=UserNum, value=UserName for fast lookup
 			foreach(WikiPageHist wPage in listWikiPageHists) {
 				GridRow row=new GridRow();

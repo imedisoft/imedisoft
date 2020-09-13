@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -111,7 +112,7 @@ namespace OpenDental {
 				}
 				row.Cells.Add(charge.DateTimeCharge.ToString());
 				row.Cells.Add(charge.ChargeStatus.GetDescription());
-				row.Cells.Add(Userods.GetFirstOrDefault(x => x.Id==charge.UserNum)?.UserName??"");
+				row.Cells.Add(Users.FirstOrDefault(x => x.Id==charge.UserNum)?.UserName??"");
 				row.Cells.Add(charge.FamBal.ToString("c"));
 				row.Cells.Add(charge.PayPlanDue.ToString("c"));
 				row.Cells.Add(charge.TotalDue.ToString("c"));

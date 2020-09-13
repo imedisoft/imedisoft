@@ -1,6 +1,7 @@
 using CodeBase;
 using Imedisoft.Bridges;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.Bridges;
 using OpenDental.UI;
 using OpenDentBusiness;

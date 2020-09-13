@@ -34,7 +34,7 @@ namespace OpenDental {
 			if(Preferences.GetString(PreferenceName.SoftwareName)!="") {
 				this.Text+=" - "+Preferences.GetString(PreferenceName.SoftwareName);
 			}
-			if(!CDSPermissions.GetForUser(Security.CurrentUser.Id).EditBibliography) {
+			if(!CdsPermissions.GetByUser(Security.CurrentUser.Id).EditBibliography) {
 				textBibliography.Enabled=false;
 				textInstruction.Enabled=false;
 			}
@@ -200,9 +200,9 @@ namespace OpenDental {
 					continue;
 				}
 				row.Cells.Add("Laboratory");
-				row.Cells.Add(_loincTemp.LoincCode);
+				row.Cells.Add(_loincTemp.Code);
 				row.Cells.Add("LOINC");
-				row.Cells.Add(_loincTemp.NameShort);
+				row.Cells.Add(_loincTemp.ShortName);
 				//switch(arrayString[i].Split(new string[] { ";" },StringSplitOptions.RemoveEmptyEntries).Length) {
 				//	case 1://loinc only comparison
 				//		row.Cells.Add(_loincTemp.NameShort);
@@ -437,7 +437,7 @@ namespace OpenDental {
 		}
 
 		private void butAddLab_Click(object sender,EventArgs e) {
-			FormCDSILabResult FormCLR=new FormCDSILabResult();
+			FormCdsInterventionLabResult FormCLR=new FormCdsInterventionLabResult();
 			FormCLR.ShowDialog();
 			if(FormCLR.DialogResult!=DialogResult.OK) {
 				return;

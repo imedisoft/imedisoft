@@ -15,6 +15,7 @@ using System.IO;
 using Imedisoft.Forms;
 using Imedisoft.Data.Models;
 using Imedisoft.Data;
+using System.Linq;
 #if EHRTEST
 using EHR;
 #endif
@@ -40,10 +41,10 @@ namespace OpenDental {
 			for(int i=0;i<_listProviders.Count;i++) {
 				string ehrKey="";
 				int yearValue=0;
-				List<EhrProvKey> listProvKeys=EhrProvKeys.GetKeysByFLName(_listProviders[i].LastName,_listProviders[i].FirstName);
+				List<EhrProviderKey> listProvKeys=EhrProviderKeys.GetByProviderName(_listProviders[i].LastName,_listProviders[i].FirstName).ToList();
 				if(listProvKeys.Count!=0) {
-					ehrKey=listProvKeys[0].ProvKey;
-					yearValue=listProvKeys[0].YearValue;
+					ehrKey=listProvKeys[0].Key;
+					yearValue=listProvKeys[0].Year;
 				}
 				if(FormEHR.ProvKeyIsValid(_listProviders[i].LastName,_listProviders[i].FirstName,yearValue,ehrKey)) {
 					//EHR has been valid.

@@ -85,19 +85,24 @@ namespace Imedisoft.Forms
 				return;
 			}
 
-			string explanation = Userods.IsPasswordStrong(newPasswordTextBox.Text);
-
+			bool isPasswordStrong = false;
 			if (Preferences.GetBool(PreferenceName.PasswordsMustBeStrong))
 			{
-				if (explanation != "")
+				try
 				{
-					ShowError(explanation);
+					Users.EnsurePasswordStrong(newPasswordTextBox.Text);
+
+					isPasswordStrong = true;
+				}
+				catch (Exception exception)
+				{
+					ShowError(exception.Message);
 
 					return;
 				}
 			}
 
-			PasswordIsStrong = string.IsNullOrEmpty(explanation);
+			PasswordIsStrong = isPasswordStrong;
 			PasswordHash = Password.Hash(newPasswordTextBox.Text);
 
 			DialogResult = DialogResult.OK;

@@ -18,7 +18,7 @@ namespace OpenDental{
 		///<summary></summary>
 		public bool IsNew;
 		///<summary></summary>
-		public Userod UserCur;
+		public User UserCur;
 		private List<AlertSub> _listUserAlertTypesOld;
 		private List<UserGroup> _listUserGroups;
 		private List<Clinic> _listClinics;
@@ -38,7 +38,7 @@ namespace OpenDental{
 		private int _logOffAfterMinutesInitialValue;
 
 		///<summary></summary>
-		public FormUserEdit(Userod userCur,bool isFromAddUser=false) {
+		public FormUserEdit(User userCur,bool isFromAddUser=false) {
 			InitializeComponent();
 			
 			UserCur=userCur.Copy();
@@ -61,11 +61,11 @@ namespace OpenDental{
 				butPickDomainUser.Visible=false;
 			}
 			checkRequireReset.Checked=UserCur.IsPasswordResetRequired;
-			_listUserGroups=UserGroups.GetList();
+			_listUserGroups=UserGroups.GetAll();
 			_isFillingList=true;
 			for(int i=0;i<_listUserGroups.Count;i++){
 				listUserGroup.Items.Add(new ODBoxItem<UserGroup>(_listUserGroups[i].Description,_listUserGroups[i]));
-				if(!_isFromAddUser && Userods.IsInUserGroup(UserCur.Id, _listUserGroups[i].Id)) {
+				if(!_isFromAddUser && Users.IsInUserGroup(UserCur.Id, _listUserGroups[i].Id)) {
 					listUserGroup.SetSelected(i,true);
 				}
 				if(_isFromAddUser && _listUserGroups[i].Id==Preferences.GetLong(PreferenceName.DefaultUserGroup)) {
@@ -261,7 +261,7 @@ namespace OpenDental{
 			UserCur.FailedLoginDate=DateTime.MinValue;
 			UserCur.FailedAttempts=0;
 			try {
-				Userods.Update(UserCur);
+				Users.Update(UserCur);
 				MessageBox.Show("User has been unlocked.");
 			}
 			catch(Exception) {
@@ -388,7 +388,7 @@ namespace OpenDental{
 			}
 			try{
 				if(IsNew){
-					Userods.Insert(UserCur,listUserGroup.SelectedItems.OfType<ODBoxItem<UserGroup>>().Select(x => x.Tag.Id).ToList());
+					Users.Insert(UserCur,listUserGroup.SelectedItems.OfType<ODBoxItem<UserGroup>>().Select(x => x.Tag.Id).ToList());
 					//Set the userodprefs to the new user's UserNum that was just retreived from the database.
 					//_listDoseSpotUserPrefNew.ForEach(x => x.UserNum=UserCur.Id);
 					listUserClinics.ForEach(x => x.UserId=UserCur.Id);//Set the user clinic's UserNum to the one we just inserted.
@@ -396,8 +396,8 @@ namespace OpenDental{
 				}
 				else{
 					List<UserGroup> listNewUserGroups=listUserGroup.SelectedItems.OfType<ODBoxItem<UserGroup>>().Select(x => x.Tag).ToList();
-					List<UserGroup> listOldUserGroups=UserGroups.GetForUser(UserCur.Id,false).ToList();
-					Userods.Update(UserCur,listNewUserGroups.Select(x => x.Id).ToList());
+					List<UserGroup> listOldUserGroups=Users.GetGroups(UserCur.Id,false).ToList();
+					Users.Update(UserCur,listNewUserGroups.Select(x => x.Id).ToList());
 					//if this is the current user, update the user, credentials, etc.
 					if(UserCur.Id==Security.CurrentUser.Id) {
 						Security.CurrentUser=UserCur.Copy();

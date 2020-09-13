@@ -27,8 +27,8 @@ namespace OpenDental {
 				this.Text+=" - "+Preferences.GetString(PreferenceName.SoftwareName);
 			}
 			EhrMeasureEvent measureEvent=new EhrMeasureEvent();
-			measureEvent.DateTEvent=DateTime.Now;
-			measureEvent.EventType=EhrMeasureEventType.PatientList;
+			measureEvent.Date=DateTime.Now;
+			measureEvent.Type=EhrMeasureEventType.PatientList;
 			EhrMeasureEvents.Insert(measureEvent);
 			FillGrid();
 		}

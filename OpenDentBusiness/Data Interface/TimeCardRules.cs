@@ -1,16 +1,17 @@
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Reflection;
-using System.Text;
-using System.Collections;
 using System.Globalization;
 using System.Linq;
-using Imedisoft.Data;
+using System.Text;
 
-namespace OpenDentBusiness{
-	///<summary></summary>
-	public class TimeCardRules{
+namespace OpenDentBusiness
+{
+    ///<summary></summary>
+    public class TimeCardRules{
 		#region Get Methods
 		#endregion
 

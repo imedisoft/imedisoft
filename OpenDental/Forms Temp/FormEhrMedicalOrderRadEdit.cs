@@ -69,11 +69,11 @@ namespace OpenDental {
 			if(IsNew) {
 				MedicalOrders.Insert(MedOrderCur);
 				EhrMeasureEvent newMeasureEvent=new EhrMeasureEvent();
-				newMeasureEvent.DateTEvent=DateTime.Now;
-				newMeasureEvent.EventType=EhrMeasureEventType.CPOE_RadOrdered;
-				newMeasureEvent.PatNum=MedOrderCur.PatNum;
+				newMeasureEvent.Date=DateTime.Now;
+				newMeasureEvent.Type=EhrMeasureEventType.CPOE_RadOrdered;
+				newMeasureEvent.PatientId=MedOrderCur.PatNum;
 				newMeasureEvent.MoreInfo="";
-				newMeasureEvent.FKey=MedOrderCur.MedicalOrderNum;
+				newMeasureEvent.ObjectId=MedOrderCur.MedicalOrderNum;
 				EhrMeasureEvents.Insert(newMeasureEvent);
 			}
 			else {

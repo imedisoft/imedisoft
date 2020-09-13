@@ -13,6 +13,7 @@ using OpenDental.UI;
 using Health.Direct.Common.Mime;
 using OpenDentBusiness.IO;
 using Imedisoft.UI;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class EmailPreviewControl:UserControl {
@@ -243,7 +244,7 @@ namespace OpenDental {
 				}
 				lableUserName.Visible=true;
 				textUserName.Visible=true;
-				textUserName.Text=(Userods.GetName(_emailMessage.UserNum));//Blank if 0.
+				textUserName.Text=(Users.GetUserName(_emailMessage.UserNum));//Blank if 0.
 			}
 			FillAttachments();
 			if(IsComposing) {

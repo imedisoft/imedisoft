@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using CodeBase;
 using Imedisoft.Data;
 using Imedisoft.Data.Models;
+using Imedisoft.Forms;
 using OpenDental.UI.Voice;
 using OpenDentBusiness;
 using SparksToothChart;
@@ -1158,7 +1159,7 @@ namespace OpenDental{
 				listPlaqueHistory.Visible = true;
 				RefreshListPlaque();
 			}
-			listExams.SelectedIndex = PerioExams.ListExams.Count - 1;//this works even if no items.
+			listExams.SelectedIndex = PerioExams.Exams.Count - 1;//this works even if no items.
 
 			checkShowCurrent.Checked = UserPreference.GetBool(UserPreferenceName.PerioCurrentExamOnly);
 
@@ -1187,9 +1188,9 @@ namespace OpenDental{
 		///<summary>Sets the cursor to the first available open perio slot. The path used in this method follows the autoadvance i.e. 1-16 F,16-1 L,32-17 F, and 17-32 L</summary>
 		private void ResumePath() {
 			List<int> listSkippedTeeth=new List<int>();//int 1-32
-			if(PerioExams.ListExams.Count > 0) {
+			if(PerioExams.Exams.Count > 0) {
 				//set skipped teeth based on the last exam in the list: 
-				listSkippedTeeth=PerioMeasures.GetSkipped(PerioExams.ListExams[PerioExams.ListExams.Count-1].PerioExamNum);
+				listSkippedTeeth=PerioMeasures.GetSkipped(PerioExams.Exams[PerioExams.Exams.Count-1].Id);
 			}
 			List<AutoAdvanceCustom> listPaths=AutoAdvanceCustom.GetDefaultPath();
 			if(radioCustom.Checked) {
@@ -1306,14 +1307,14 @@ namespace OpenDental{
 			gridP.SaveCurExam(PerioExamCur);
 			int selectedExam=gridP.SelectedExam;
 			List<int> listSkippedTeeth=new List<int>();//int 1-32
-			if(PerioExams.ListExams.Count > 0) {
+			if(PerioExams.Exams.Count > 0) {
 				//set skipped teeth based on the last exam in the list: 
-				listSkippedTeeth=PerioMeasures.GetSkipped(PerioExams.ListExams[PerioExams.ListExams.Count-1].PerioExamNum);
+				listSkippedTeeth=PerioMeasures.GetSkipped(PerioExams.Exams[PerioExams.Exams.Count-1].Id);
 			}
 			if(!listSkippedTeeth.Contains(toothNum)) {
 				listSkippedTeeth.Add(toothNum);
 			}
-			PerioMeasures.SetSkipped(PerioExamCur.PerioExamNum,listSkippedTeeth);
+			PerioMeasures.SetSkipped(PerioExamCur.Id,listSkippedTeeth);
 			RefreshListExams();
 			listExams.SelectedIndex=selectedExam;
 			FillGrid();
@@ -1684,22 +1685,22 @@ namespace OpenDental{
 		private void RefreshListExams(){
 			//most recent date at the bottom
 			PerioExams.Refresh(PatCur.PatNum);
-			PerioMeasures.Refresh(PatCur.PatNum,PerioExams.ListExams);
+			PerioMeasures.Refresh(PatCur.PatNum,PerioExams.Exams);
 			listExams.Items.Clear();
-			for(int i=0;i<PerioExams.ListExams.Count;i++) {
-				listExams.Items.Add(PerioExams.ListExams[i].ExamDate.ToShortDateString()+"   "
-					+Providers.GetAbbr(PerioExams.ListExams[i].ProvNum));
+			for(int i=0;i<PerioExams.Exams.Count;i++) {
+				listExams.Items.Add(PerioExams.Exams[i].ExamDate.ToShortDateString()+"   "
+					+Providers.GetAbbr(PerioExams.Exams[i].ProviderId));
 			}
 		}
 
 		///<summary>Orion only.</summary>
 		private void RefreshListPlaque() {
 			PerioExams.Refresh(PatCur.PatNum);
-			PerioMeasures.Refresh(PatCur.PatNum,PerioExams.ListExams);
+			PerioMeasures.Refresh(PatCur.PatNum,PerioExams.Exams);
 			listPlaqueHistory.Items.Clear();
-			for(int i=0;i<PerioExams.ListExams.Count;i++) {
+			for(int i=0;i<PerioExams.Exams.Count;i++) {
 				string ph="";
-				ph=PerioExams.ListExams[i].ExamDate.ToShortDateString()+"\t";
+				ph=PerioExams.Exams[i].ExamDate.ToShortDateString()+"\t";
 				gridP.SelectedExam=i;
 				gridP.LoadData();
 				ph+=gridP.ComputeOrionPlaqueIndex();
@@ -1713,10 +1714,10 @@ namespace OpenDental{
 		private void FillGrid(bool doSelectCell=true) {
 			if(listExams.SelectedIndex!=-1){
 				gridP.perioEdit=true;
-				if(!Security.IsAuthorized(Permissions.PerioEdit,PerioExams.ListExams[listExams.SelectedIndex].ExamDate,true)) {
+				if(!Security.IsAuthorized(Permissions.PerioEdit,PerioExams.Exams[listExams.SelectedIndex].ExamDate,true)) {
 					gridP.perioEdit=false;
 				}
-				PerioExamCur=PerioExams.ListExams[listExams.SelectedIndex];
+				PerioExamCur=PerioExams.Exams[listExams.SelectedIndex];
 			}
 			gridP.SelectedExam=listExams.SelectedIndex;
 			gridP.DoShowCurrentExamOnly=checkShowCurrent.Checked;
@@ -1743,7 +1744,7 @@ namespace OpenDental{
 			gridP.SaveCurExam(PerioExamCur);
 			//no need to RefreshListExams because it has not changed
 			PerioExams.Refresh(PatCur.PatNum);//refresh instead
-			PerioMeasures.Refresh(PatCur.PatNum,PerioExams.ListExams);
+			PerioMeasures.Refresh(PatCur.PatNum,PerioExams.Exams);
 			FillGrid();
 		}
 
@@ -1753,15 +1754,14 @@ namespace OpenDental{
 			if(listExams.SelectedIndex==-1) {
 				return;
 			}
-			if(!Security.IsAuthorized(Permissions.PerioEdit,PerioExams.ListExams[listExams.SelectedIndex].ExamDate)) {
+			if(!Security.IsAuthorized(Permissions.PerioEdit,PerioExams.Exams[listExams.SelectedIndex].ExamDate)) {
 				return;
 			}
 			//a PerioExam.Cur will always have been set through mousedown(or similar),then FillGrid
 			gridP.SaveCurExam(PerioExamCur);
 			PerioExams.Refresh(PatCur.PatNum);//list will not change
-			PerioMeasures.Refresh(PatCur.PatNum,PerioExams.ListExams);
-			FormPerioEdit FormPE=new FormPerioEdit();
-			FormPE.PerioExamCur=PerioExamCur;
+			PerioMeasures.Refresh(PatCur.PatNum,PerioExams.Exams);
+			FormPerioEdit FormPE=new FormPerioEdit(PerioExamCur);
 			FormPE.ShowDialog();
 			int curIndex=listExams.SelectedIndex;
 			RefreshListExams();
@@ -1778,7 +1778,7 @@ namespace OpenDental{
 			}
 			CreateNewPerioChart();
 			RefreshListExams();
-			listExams.SelectedIndex=PerioExams.ListExams.Count-1;
+			listExams.SelectedIndex=PerioExams.Exams.Count-1;
 			FillGrid();
 			SecurityLogs.MakeLogEntry(Permissions.PerioEdit,PatCur.PatNum,"Perio exam created");
 		}
@@ -1786,23 +1786,23 @@ namespace OpenDental{
 		///<summary>Creates a new perio chart and marks any teeth missing as necessary.</summary>
 		private void CreateNewPerioChart() {
 			PerioExamCur=new PerioExam();
-			PerioExamCur.PatNum=PatCur.PatNum;
+			PerioExamCur.PatientId=PatCur.PatNum;
 			PerioExamCur.ExamDate=DateTimeOD.Today;
-			PerioExamCur.ProvNum=PatCur.PriProv;
-			PerioExamCur.DateTMeasureEdit=MiscData.GetNowDateTime();
+			PerioExamCur.ProviderId=PatCur.PriProv;
+			PerioExamCur.LastModifiedDate=MiscData.GetNowDateTime();
 			PerioExams.Insert(PerioExamCur);
-			PerioMeasures.SetSkipped(PerioExamCur.PerioExamNum,GetSkippedTeeth());
+			PerioMeasures.SetSkipped(PerioExamCur.Id,GetSkippedTeeth());
 		}
 
 		///<summary>Returns a list of skipped teeth.</summary>
 		private List<int> GetSkippedTeeth() {
 			List<int> listSkippedTeeth=new List<int>();
-			if(PerioExams.ListExams.Count > 0) {
+			if(PerioExams.Exams.Count > 0) {
 				//set skipped teeth based on the last exam in the list: 
-				listSkippedTeeth=PerioMeasures.GetSkipped(PerioExams.ListExams[PerioExams.ListExams.Count-1].PerioExamNum);
+				listSkippedTeeth=PerioMeasures.GetSkipped(PerioExams.Exams[PerioExams.Exams.Count-1].Id);
 			}
 			//For patient's first perio chart, any teeth marked missing are automatically marked skipped.
-			if(PerioExams.ListExams.Count==0 || Preferences.GetBool(PreferenceName.PerioSkipMissingTeeth)) {
+			if(PerioExams.Exams.Count==0 || Preferences.GetBool(PreferenceName.PerioSkipMissingTeeth)) {
 				for(int i=0;i<_listMissingTeeth.Count;i++) {
 					if(_listMissingTeeth[i].CompareTo("A") >= 0 && _listMissingTeeth[i].CompareTo("Z") <= 0) {//if is a letter (not a number)
 						continue;//Skipped teeth are only recorded by tooth number within the perio exam.
@@ -1825,7 +1825,7 @@ namespace OpenDental{
 			if(!Security.IsAuthorized(Permissions.PerioEdit,MiscData.GetNowDateTime())) {
 				return;
 			}
-			if(PerioExams.ListExams.Count==0){
+			if(PerioExams.Exams.Count==0){
 				MessageBox.Show("Please use the Add button to create an initial exam.");
 				return;
 			}
@@ -1840,13 +1840,13 @@ namespace OpenDental{
 			gridP.SaveCurExam(PerioExamCur);
 			CreateNewPerioChart();
 			//get meaures from last exam
-			List<PerioMeasure> listPerio=PerioMeasures.GetAllForExam(PerioExams.ListExams[PerioExams.ListExams.Count-1].PerioExamNum);
+			List<PerioMeasure> listPerio=PerioMeasures.GetByPerioExam(PerioExams.Exams[PerioExams.Exams.Count-1].Id).ToList();
 			for(int i=0;i<listPerio.Count;i++) { //add all of the previous exam's measures to this perio exam.
-				listPerio[i].PerioExamNum=PerioExamCur.PerioExamNum;
+				listPerio[i].PerioExamId=PerioExamCur.Id;
 				PerioMeasures.Insert(listPerio[i]);
 			}
 			RefreshListExams();
-			listExams.SelectedIndex=PerioExams.ListExams.Count-1; //select the exam that was just inserted.
+			listExams.SelectedIndex=PerioExams.Exams.Count-1; //select the exam that was just inserted.
 			FillGrid();
 			SecurityLogs.MakeLogEntry(Permissions.PerioEdit,PatCur.PatNum,"Perio exam copied.");
 		}
@@ -1856,7 +1856,7 @@ namespace OpenDental{
 				MessageBox.Show("Please select an item first.");
 				return;
 			}
-			if(!Security.IsAuthorized(Permissions.PerioEdit,PerioExams.ListExams[listExams.SelectedIndex].ExamDate)) {
+			if(!Security.IsAuthorized(Permissions.PerioEdit,PerioExams.Exams[listExams.SelectedIndex].ExamDate)) {
 				return;
 			}
 			if(MessageBox.Show("Delete Exam?","",MessageBoxButtons.OKCancel)!=DialogResult.OK){
@@ -1868,7 +1868,7 @@ namespace OpenDental{
 			if(curselected < listExams.Items.Count)
 				listExams.SelectedIndex=curselected;
 			else
-				listExams.SelectedIndex=PerioExams.ListExams.Count-1;
+				listExams.SelectedIndex=PerioExams.Exams.Count-1;
 			FillGrid();
 			SecurityLogs.MakeLogEntry(Permissions.PerioEdit,PatCur.PatNum,"Perio exam deleted");
 		}
@@ -1898,7 +1898,7 @@ namespace OpenDental{
 			}
 			gridP.SaveCurExam(PerioExamCur);
 			PerioExams.Refresh(PatCur.PatNum);
-			PerioMeasures.Refresh(PatCur.PatNum,PerioExams.ListExams);
+			PerioMeasures.Refresh(PatCur.PatNum,PerioExams.Exams);
 			FillGrid();
 		}
 
@@ -2098,7 +2098,7 @@ namespace OpenDental{
 				MessageBox.Show("Please select an exam first.");
 				return;
 			}
-			gridP.ToggleSkip(PerioExamCur.PerioExamNum);
+			gridP.ToggleSkip(PerioExamCur.Id);
 		}
 
 		private void updownRed_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e) {
@@ -2207,7 +2207,7 @@ namespace OpenDental{
 			}
 			gridP.SaveCurExam(PerioExamCur);
 			PerioExams.Refresh(PatCur.PatNum);
-			PerioMeasures.Refresh(PatCur.PatNum,PerioExams.ListExams);
+			PerioMeasures.Refresh(PatCur.PatNum,PerioExams.Exams);
 			FillGrid();
 			Bitmap gridImage=null;
 			Bitmap perioPrintImage=null;
@@ -2440,9 +2440,9 @@ namespace OpenDental{
 			//if(listExams.SelectedIndex!=-1) {
 			gridP.SaveCurExam(PerioExamCur);
 			PerioExams.Refresh(PatCur.PatNum);//refresh instead
-			PerioMeasures.Refresh(PatCur.PatNum,PerioExams.ListExams);
+			PerioMeasures.Refresh(PatCur.PatNum,PerioExams.Exams);
 			FillGrid();
-			FormPerioGraphical formg=new FormPerioGraphical(PerioExams.ListExams[listExams.SelectedIndex],PatCur);
+			FormPerioGraphical formg=new FormPerioGraphical(PerioExams.Exams[listExams.SelectedIndex],PatCur);
 			formg.ShowDialog();
 			formg.Dispose();
 		}

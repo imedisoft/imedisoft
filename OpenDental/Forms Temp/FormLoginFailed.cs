@@ -29,7 +29,7 @@ namespace Imedisoft.Forms
 		{
 			try
 			{
-				Security.CurrentUser = Userods.CheckUserAndPassword(userTextBox.Text, passwordTextBox.Text);
+				Security.CurrentUser = Users.CheckUserAndPassword(userTextBox.Text, passwordTextBox.Text);
 			}
 			catch (Exception exception)
 			{
@@ -41,9 +41,9 @@ namespace Imedisoft.Forms
 			if (Preferences.GetBool(PreferenceName.PasswordsMustBeStrong) && 
 				Preferences.GetBool(PreferenceName.PasswordsWeakChangeToStrong))
 			{
-				if (Userods.IsPasswordStrong(passwordTextBox.Text) != "")
+				if (!Users.IsPasswordStrong(passwordTextBox.Text))
 				{
-					ShowInfo("You must change your password to a strong password due to the current Security settings.");
+					ShowInfo(Translation.Common.YouMustChangePasswordToStrongPasswordDueToSecuritySettings);
 
 					if (!SecurityL.ChangePassword(true))
 					{

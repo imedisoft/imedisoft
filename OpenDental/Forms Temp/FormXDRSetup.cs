@@ -8,6 +8,7 @@ using OpenDentBusiness;
 using OpenDental.Bridges;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	public partial class FormXDRSetup:ODForm {

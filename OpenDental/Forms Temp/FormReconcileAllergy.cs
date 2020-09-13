@@ -6,6 +6,7 @@ using OpenDental.UI;
 using Imedisoft.Data.Models;
 using Imedisoft.Data;
 using System.Linq;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormReconcileAllergy:ODForm {
@@ -536,11 +537,9 @@ namespace OpenDental {
 			//newMeasureEvent.MoreInfo="";
 			//EhrMeasureEvents.Insert(newMeasureEvent);
 			for(int inter=0;inter<_listAllergyReconcile.Count;inter++) {
-				if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurrentUser.Id).AllergyCDS) {
+				if(CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowCDS && CdsPermissions.GetByUser(Security.CurrentUser.Id).AllergyCDS) {
 					AllergyDef alDInter=AllergyDefs.GetOne(_listAllergyReconcile[inter].AllergyDefId);
-					FormCDSIntervention FormCDSI=new FormCDSIntervention();
-					FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(alDInter,_patCur);
-					FormCDSI.ShowIfRequired(false);
+					FormCdsIntervention.ShowIfRequired(EhrTriggers.TriggerMatch(alDInter, _patCur), false);
 				}
 			}
 			DialogResult=DialogResult.OK;

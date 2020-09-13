@@ -70,7 +70,7 @@ namespace OpenDentBusiness
 		public DateTime AddedDate;
 
 		///<summary>The ID of the user that created the adjustment.</summary>
-		[Column(ReadOnly = true), ForeignKey(typeof(Userod), nameof(Userod.Id))]
+		[Column(ReadOnly = true), ForeignKey(typeof(User), nameof(User.Id))]
 		public long AddedByUserId;
 
 		/// <summary>

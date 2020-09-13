@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using CodeBase;
 using Imedisoft.Data.Annotations;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness
 {
@@ -20,7 +21,7 @@ namespace OpenDentBusiness
 		[ForeignKey(typeof(Clinic), nameof(Clinic.Id))]
 		public long? ClinicId;
 
-		[ForeignKey(typeof(Userod), nameof(Userod.Id))]
+		[ForeignKey(typeof(User), nameof(User.Id))]
 		public long? UserId;
 
 		/// <summary>

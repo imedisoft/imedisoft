@@ -17,18 +17,18 @@ namespace OpenDental {
 		}
 
 		private void FormEhrMeasureEventEdit_Load(object sender,EventArgs e) {
-			textDateTime.Text=_measureEventCur.DateTEvent.ToString();
-			Patient patCur=Patients.GetPat(_measureEventCur.PatNum);
+			textDateTime.Text=_measureEventCur.Date.ToString();
+			Patient patCur=Patients.GetPat(_measureEventCur.PatientId);
 			if(patCur!=null) {
 				textPatient.Text=patCur.GetNameFL();
 			}
 			if(!String.IsNullOrWhiteSpace(MeasureDescript)) {
 				labelMoreInfo.Text=MeasureDescript;
 			}
-			if(_measureEventCur.EventType==EhrMeasureEventType.TobaccoUseAssessed) {
+			if(_measureEventCur.Type==EhrMeasureEventType.TobaccoUseAssessed) {
 				Loinc lCur=Loincs.GetByCode(_measureEventCur.CodeValueEvent);//TobaccoUseAssessed events can be one of three types, all LOINC codes
 				if(lCur!=null) {
-					textType.Text=lCur.NameLongCommon;//Example: History of tobacco use Narrative
+					textType.Text=lCur.LongCommonName;//Example: History of tobacco use Narrative
 				}
 				Snomed sCur=Snomeds.GetByCode(_measureEventCur.CodeValueResult);//TobaccoUseAssessed results can be any SNOMEDCT code, we recommend one of 8 codes, but the CQM measure allows 54 codes and we let the user select any SNOMEDCT they want
 				if(sCur!=null) {
@@ -42,8 +42,8 @@ namespace OpenDental {
 				labelTobaccoDesireScale.Visible=true;
 				labelTobaccoStartDate.Visible=true;
 				textTobaccoDesireToQuit.Text=_measureEventCur.TobaccoCessationDesire.ToString();
-				if(_measureEventCur.DateStartTobacco.Year>=1880) {
-					textTobaccoStartDate.Text=_measureEventCur.DateStartTobacco.ToShortDateString();
+				if(_measureEventCur.TobaccoStartDate.HasValue) {
+					textTobaccoStartDate.Text=_measureEventCur.TobaccoStartDate.Value.ToShortDateString();
 				}
 				CalcTobaccoDuration();
 			}
@@ -52,7 +52,7 @@ namespace OpenDental {
 				butDelete.Enabled=false;
 			}
 			if(textType.Text==""){//if not set by LOINC name above, then either not a TobaccoUseAssessed event or the code was not in the LOINC table, fill with EventType
-				textType.Text=_measureEventCur.EventType.ToString();
+				textType.Text=_measureEventCur.Type.ToString();
 			}
 			textMoreInfo.Text=_measureEventCur.MoreInfo;
 		}
@@ -100,10 +100,10 @@ namespace OpenDental {
 			}
 			string logEntry="Ehr Measure Event was deleted."+"  "
 				+"Date"+": "+PIn.Date(textDateTime.Text)+"  "
-				+"Type"+": "+_measureEventCur.EventType.ToString()+"  "
+				+"Type"+": "+_measureEventCur.Type.ToString()+"  "
 				+"Patient"+": "+textPatient.Text;
-			SecurityLogs.MakeLogEntry(Permissions.EhrMeasureEventEdit,_measureEventCur.PatNum,logEntry);
-			EhrMeasureEvents.Delete(_measureEventCur.EhrMeasureEventNum);
+			SecurityLogs.MakeLogEntry(Permissions.EhrMeasureEventEdit,_measureEventCur.PatientId,logEntry);
+			EhrMeasureEvents.Delete(_measureEventCur.Id);
 			DialogResult=DialogResult.Cancel;
 		}
 
@@ -131,19 +131,19 @@ namespace OpenDental {
 				listLogEdits.Add("More Info was changed.");
 				_measureEventCur.MoreInfo=textMoreInfo.Text;
 			}
-			if(_measureEventCur.DateTEvent!=dateTEvent) {
-				listLogEdits.Add("Date was changed from"+": "+_measureEventCur.DateTEvent.ToString()+" "+"to"+": "+dateTEvent.ToString()+".");
-				_measureEventCur.DateTEvent=dateTEvent;
+			if(_measureEventCur.Date!=dateTEvent) {
+				listLogEdits.Add("Date was changed from"+": "+_measureEventCur.Date.ToString()+" "+"to"+": "+dateTEvent.ToString()+".");
+				_measureEventCur.Date=dateTEvent;
 			}
 			if(textTobaccoStartDate.Visible && textTobaccoDesireToQuit.Visible) {
-				_measureEventCur.DateStartTobacco=PIn.Date(textTobaccoStartDate.Text);
+				_measureEventCur.TobaccoStartDate=PIn.Date(textTobaccoStartDate.Text);
 				_measureEventCur.TobaccoCessationDesire=PIn.Byte(textTobaccoDesireToQuit.Text);
 			}
 			if(listLogEdits.Count>0) {
 				listLogEdits.Insert(0,"EHR Measure Event was edited.");
-				SecurityLogs.MakeLogEntry(Permissions.EhrMeasureEventEdit,_measureEventCur.PatNum,string.Join("  ",listLogEdits));
+				SecurityLogs.MakeLogEntry(Permissions.EhrMeasureEventEdit,_measureEventCur.PatientId,string.Join("  ",listLogEdits));
 			}
-			if(_measureEventCur.IsNew) {//should never happen, only updates happen here
+			if(_measureEventCur.Id == 0) {//should never happen, only updates happen here
 				EhrMeasureEvents.Insert(_measureEventCur);
 			}
 			else {

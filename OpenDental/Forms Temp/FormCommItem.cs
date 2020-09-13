@@ -80,7 +80,7 @@ namespace OpenDental {
 				timerAutoSave.Start();
 			}
 			textPatientName.Text=Patients.GetLim(_commlogCur.PatNum).GetNameFL();
-			textUser.Text=Userods.GetName(_commlogCur.UserNum);//might be blank.
+			textUser.Text=Users.GetUserName(_commlogCur.UserNum);//might be blank.
 			textDateTime.Text=_commlogCur.CommDateTime.ToShortDateString()+"  "+_commlogCur.CommDateTime.ToShortTimeString();
 			if(_commlogCur.DateTimeEnd.Year>1880) {
 				textDateTimeEnd.Text=_commlogCur.DateTimeEnd.ToShortDateString()+"  "+_commlogCur.DateTimeEnd.ToShortTimeString();
@@ -159,7 +159,7 @@ namespace OpenDental {
 
 		private void signatureBoxWrapper_SignatureChanged(object sender,EventArgs e) {
 			_commlogCur.UserNum=Security.CurrentUser.Id;
-			textUser.Text=Userods.GetName(Security.CurrentUser.Id);//might be blank.
+			textUser.Text=Users.GetUserName(Security.CurrentUser.Id);//might be blank.
 			_sigChanged=true;
 		}
 		

@@ -1,127 +1,80 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Reflection;
-using System.Text;
 
-namespace OpenDentBusiness{
-	///<summary></summary>
-	public class Ebills{
-
-		#region Get Methods
-		#endregion
-
-		#region Modification Methods
-		
-		#region Insert
-		#endregion
-
-		#region Update
-		#endregion
-
-		#region Delete
-		#endregion
-
-		#endregion
-
-		#region Misc Methods
-		#endregion
-
+namespace OpenDentBusiness
+{
+	public class Ebills
+	{
 		#region CachePattern
 
-		private class EbillCache : CacheListAbs<Ebill> {
-			protected override List<Ebill> GetCacheFromDb() {
-				string command="SELECT * FROM ebill";
+		private class EbillCache : CacheListAbs<Ebill>
+		{
+			protected override List<Ebill> GetCacheFromDb()
+			{
+				string command = "SELECT * FROM ebill";
 				return Crud.EbillCrud.SelectMany(command);
 			}
-			protected override List<Ebill> TableToList(DataTable table) {
+			protected override List<Ebill> TableToList(DataTable table)
+			{
 				return Crud.EbillCrud.TableToList(table);
 			}
-			protected override Ebill Copy(Ebill Ebill) {
+			protected override Ebill Copy(Ebill Ebill)
+			{
 				return Ebill.Copy();
 			}
-			protected override DataTable ListToTable(List<Ebill> listEbills) {
-				return Crud.EbillCrud.ListToTable(listEbills,"Ebill");
+			protected override DataTable ListToTable(List<Ebill> listEbills)
+			{
+				return Crud.EbillCrud.ListToTable(listEbills, "Ebill");
 			}
-			protected override void FillCacheIfNeeded() {
+			protected override void FillCacheIfNeeded()
+			{
 				Ebills.GetTableFromCache(false);
 			}
 		}
-		
-		///<summary>The object that accesses the cache in a thread-safe manner.</summary>
-		private static EbillCache _EbillCache=new EbillCache();
 
-		public static List<Ebill> GetDeepCopy(bool isShort=false) {
+		///<summary>The object that accesses the cache in a thread-safe manner.</summary>
+		private static EbillCache _EbillCache = new EbillCache();
+
+		public static List<Ebill> GetDeepCopy(bool isShort = false)
+		{
 			return _EbillCache.GetDeepCopy(isShort);
 		}
 
-		public static Ebill GetFirstOrDefault(Func<Ebill,bool> match,bool isShort=false) {
-			return _EbillCache.GetFirstOrDefault(match,isShort);
+		public static Ebill GetFirstOrDefault(Func<Ebill, bool> match, bool isShort = false)
+		{
+			return _EbillCache.GetFirstOrDefault(match, isShort);
 		}
 
 		///<summary>Refreshes the cache and returns it as a DataTable. This will refresh the ClientWeb's cache and the ServerWeb's cache.</summary>
-		public static DataTable RefreshCache() {
+		public static DataTable RefreshCache()
+		{
 			return GetTableFromCache(true);
 		}
 
 		///<summary>Fills the local cache with the passed in DataTable.</summary>
-		public static void FillCacheFromTable(DataTable table) {
+		public static void FillCacheFromTable(DataTable table)
+		{
 			_EbillCache.FillCacheFromTable(table);
 		}
 
 		///<summary>Always refreshes the ClientWeb's cache.</summary>
-		public static DataTable GetTableFromCache(bool doRefreshCache) {
-			
+		public static DataTable GetTableFromCache(bool doRefreshCache)
+		{
+
 			return _EbillCache.GetTableFromCache(doRefreshCache);
 		}
 
 		#endregion
 
-		/*
-		 
-		///<summary></summary>
-		public static List<Ebill> GetForPat(long patNum){
-			
-			string command="SELECT * FROM ebill WHERE PatNum = "+POut.Long(patNum);
-			return Crud.EbillCrud.SelectMany(command);
+		public static Ebill GetForClinic(long clinicNum)
+		{
+			return GetFirstOrDefault(x => x.ClinicNum == clinicNum);
 		}
 
-		///<summary>Gets one Ebill from the db.</summary>
-		public static Ebill GetOne(long ebillNum){
-			
-			return Crud.EbillCrud.SelectOne(ebillNum);
+		public static bool Sync(List<Ebill> listNew, List<Ebill> listOld)
+		{
+			return Crud.EbillCrud.Sync(listNew, listOld);
 		}
-
-		///<summary></summary>
-		public static long Insert(Ebill ebill){
-			
-			return Crud.EbillCrud.Insert(ebill);
-		}
-
-		///<summary></summary>
-		public static void Update(Ebill ebill){
-			
-			Crud.EbillCrud.Update(ebill);
-		}
-		
-		 ///<summary></summary>
-		public static void Delete(long ebillNum) {
-			
-			Crud.EbillCrud.Delete(ebillNum);
-		} 
-		 
-		*/
-
-		///<summary>To get the defaults, use clinicNum=0.</summary>
-		public static Ebill GetForClinic(long clinicNum) {
-			//No need to check RemotingRole; no call to db.
-			return GetFirstOrDefault(x => x.ClinicNum==clinicNum);
-		}
-
-		public static bool Sync(List<Ebill> listNew,List<Ebill> listOld) {
-			
-			return Crud.EbillCrud.Sync(listNew,listOld);
-		}
-
 	}
 }

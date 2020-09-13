@@ -165,7 +165,7 @@ namespace OpenDentBusiness
 
 			Update(taskList, taskListOld);
 
-			Userods.DisassociateTaskListInBox(taskList.Id);
+			Users.DisassociateTaskListInBox(taskList.Id);
 
 			Signalods.SetInvalid(InvalidType.Security); // Send a signal in case any userod was associated to the task list.
 		}

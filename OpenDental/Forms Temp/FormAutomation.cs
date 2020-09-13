@@ -10,11 +10,13 @@ using CodeBase;
 using Imedisoft.Data.Models;
 using Imedisoft.Data;
 
-namespace OpenDental{
+namespace OpenDental
+{
 	/// <summary>
 	/// Summary description for FormBasicTemplate.
 	/// </summary>
-	public class FormAutomation:ODForm {
+	public class FormAutomation : ODForm
+	{
 		private OpenDental.UI.Button butAdd;
 		private OpenDental.UI.Button butClose;
 		/// <summary>
@@ -33,22 +35,22 @@ namespace OpenDental{
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-			
+
 		}
 
 		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
-		protected override void Dispose( bool disposing )
+		protected override void Dispose(bool disposing)
 		{
-			if( disposing )
+			if (disposing)
 			{
-				if(components != null)
+				if (components != null)
 				{
 					components.Dispose();
 				}
 			}
-			base.Dispose( disposing );
+			base.Dispose(disposing);
 		}
 
 		#region Windows Form Designer generated code
@@ -67,20 +69,20 @@ namespace OpenDental{
 			// 
 			// label1
 			// 
-			this.label1.Location = new System.Drawing.Point(21,9);
+			this.label1.Location = new System.Drawing.Point(21, 9);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(485,22);
+			this.label1.Size = new System.Drawing.Size(485, 22);
 			this.label1.TabIndex = 12;
 			this.label1.Text = "One trigger event will cause one action to be taken";
 			// 
 			// gridMain
 			// 
-			this.gridMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.gridMain.Location = new System.Drawing.Point(21,34);
+			this.gridMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
+			this.gridMain.Location = new System.Drawing.Point(21, 34);
 			this.gridMain.Name = "gridMain";
-			this.gridMain.Size = new System.Drawing.Size(735,394);
+			this.gridMain.Size = new System.Drawing.Size(735, 394);
 			this.gridMain.TabIndex = 11;
 			this.gridMain.Title = "Automation";
 			this.gridMain.TranslationName = "FormAutomation";
@@ -91,9 +93,9 @@ namespace OpenDental{
 			this.butAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.butAdd.Image = global::Imedisoft.Properties.Resources.Add;
 			this.butAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.butAdd.Location = new System.Drawing.Point(19,451);
+			this.butAdd.Location = new System.Drawing.Point(19, 451);
 			this.butAdd.Name = "butAdd";
-			this.butAdd.Size = new System.Drawing.Size(80,24);
+			this.butAdd.Size = new System.Drawing.Size(80, 24);
 			this.butAdd.TabIndex = 10;
 			this.butAdd.Text = "&Add";
 			this.butAdd.Click += new System.EventHandler(this.butAdd_Click);
@@ -101,17 +103,17 @@ namespace OpenDental{
 			// butClose
 			// 
 			this.butClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.butClose.Location = new System.Drawing.Point(681,451);
+			this.butClose.Location = new System.Drawing.Point(681, 451);
 			this.butClose.Name = "butClose";
-			this.butClose.Size = new System.Drawing.Size(75,24);
+			this.butClose.Size = new System.Drawing.Size(75, 24);
 			this.butClose.TabIndex = 0;
 			this.butClose.Text = "&Close";
 			this.butClose.Click += new System.EventHandler(this.butClose_Click);
 			// 
 			// FormAutomation
 			// 
-			this.AutoScaleBaseSize = new System.Drawing.Size(5,13);
-			this.ClientSize = new System.Drawing.Size(788,500);
+			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			this.ClientSize = new System.Drawing.Size(788, 500);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.gridMain);
 			this.Controls.Add(this.butAdd);
@@ -130,50 +132,59 @@ namespace OpenDental{
 		}
 		#endregion
 
-		private void FormAutomation_Load(object sender, System.EventArgs e) {
+		private void FormAutomation_Load(object sender, System.EventArgs e)
+		{
 			FillGrid();
 		}
 
-		private void FillGrid(){
+		private void FillGrid()
+		{
 			Automations.RefreshCache();
-			_listAutomations=Automations.GetDeepCopy();
+			_listAutomations = Automations.GetAll();
 			gridMain.BeginUpdate();
 			gridMain.Columns.Clear();
-			GridColumn col=new GridColumn("Description",200);
+			GridColumn col = new GridColumn("Description", 200);
 			gridMain.Columns.Add(col);
-			col=new GridColumn("Trigger",150);
+			col = new GridColumn("Trigger", 150);
 			gridMain.Columns.Add(col);
-			col=new GridColumn("Action",150);
+			col = new GridColumn("Action", 150);
 			gridMain.Columns.Add(col);
-			col=new GridColumn("Details",200);
+			col = new GridColumn("Details", 200);
 			gridMain.Columns.Add(col);
 			gridMain.Rows.Clear();
 			UI.GridRow row;
 			string detail;
-			for(int i=0;i<_listAutomations.Count;i++){
-				row=new OpenDental.UI.GridRow();
+			for (int i = 0; i < _listAutomations.Count; i++)
+			{
+				row = new OpenDental.UI.GridRow();
 				row.Cells.Add(_listAutomations[i].Description);
-				if(_listAutomations[i].Trigger==AutomationTrigger.CompleteProcedure) {
+				if (_listAutomations[i].Trigger == AutomationTrigger.CompleteProcedure)
+				{
 					row.Cells.Add(_listAutomations[i].ProcedureCodes);
 				}
-				else {
+				else
+				{
 					row.Cells.Add(_listAutomations[i].Trigger.ToString());
 				}
-				row.Cells.Add(_listAutomations[i].AutoAction.ToString());
+				row.Cells.Add(_listAutomations[i].Action.ToString());
 				//details: 
-				detail="";
-				if(_listAutomations[i].AutoAction==AutomationAction.CreateCommlog) {
-					detail+=Definitions.GetName(DefinitionCategory.CommLogTypes,_listAutomations[i].CommType)
-						+".  "+_listAutomations[i].MessageContent;
+				detail = "";
+				if (_listAutomations[i].Action == AutomationAction.CreateCommlog)
+				{
+					detail += Definitions.GetName(DefinitionCategory.CommLogTypes, _listAutomations[i].CommType.Value)
+						+ ".  " + _listAutomations[i].MessageContent;
 				}
-				else if(_listAutomations[i].AutoAction==AutomationAction.PrintPatientLetter) {
-					detail+=SheetDefs.GetDescription(_listAutomations[i].SheetDefinitionId);
+				else if (_listAutomations[i].Action == AutomationAction.PrintPatientLetter)
+				{
+					detail += SheetDefs.GetDescription(_listAutomations[i].SheetDefinitionId.Value);
 				}
-				else if(_listAutomations[i].AutoAction==AutomationAction.PrintReferralLetter) {
-					detail+=SheetDefs.GetDescription(_listAutomations[i].SheetDefinitionId);
+				else if (_listAutomations[i].Action == AutomationAction.PrintReferralLetter)
+				{
+					detail += SheetDefs.GetDescription(_listAutomations[i].SheetDefinitionId.Value);
 				}
-				else if(_listAutomations[i].AutoAction==AutomationAction.ChangePatStatus) {
-					detail+=_listAutomations[i].PatStatus.GetDescription();
+				else if (_listAutomations[i].Action == AutomationAction.ChangePatStatus)
+				{
+					detail += _listAutomations[i].PatientStatus.GetDescription();
 				}
 				row.Cells.Add(detail);
 				gridMain.Rows.Add(row);
@@ -181,65 +192,40 @@ namespace OpenDental{
 			gridMain.EndUpdate();
 		}
 
-		private void gridMain_CellDoubleClick(object sender, OpenDental.UI.ODGridClickEventArgs e) {
-			FormAutomationEdit FormA=new FormAutomationEdit(_listAutomations[e.Row]);
+		private void gridMain_CellDoubleClick(object sender, OpenDental.UI.ODGridClickEventArgs e)
+		{
+			FormAutomationEdit FormA = new FormAutomationEdit(_listAutomations[e.Row]);
 			FormA.ShowDialog();
 			FillGrid();
-			changed=true;
+			changed = true;
 		}
 
-		private void butAdd_Click(object sender, System.EventArgs e) {
-			Automation auto=new Automation();
-			Automations.Insert(auto);//so that we can attach conditions
-			FormAutomationEdit FormA=new FormAutomationEdit(auto);
-			FormA.IsNew=true;
+		private void butAdd_Click(object sender, System.EventArgs e)
+		{
+			Automation auto = new Automation();
+			Automations.Save(auto);//so that we can attach conditions
+			FormAutomationEdit FormA = new FormAutomationEdit(auto);
+			FormA.IsNew = true;
 			FormA.ShowDialog();
-			if(FormA.DialogResult!=DialogResult.OK){
+			if (FormA.DialogResult != DialogResult.OK)
+			{
 				return;
 			}
 			FillGrid();
-			changed=true;
+			changed = true;
 		}
 
-		private void butClose_Click(object sender, System.EventArgs e) {
+		private void butClose_Click(object sender, System.EventArgs e)
+		{
 			Close();
 		}
 
-		private void FormAutomation_FormClosing(object sender,FormClosingEventArgs e) {
-			if(changed) {
+		private void FormAutomation_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			if (changed)
+			{
 				DataValid.SetInvalid(InvalidType.Automation);
 			}
 		}
-
-		
-
-		
-
-		
-
-
-
-		
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

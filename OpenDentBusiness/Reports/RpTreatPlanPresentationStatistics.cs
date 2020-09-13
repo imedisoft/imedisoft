@@ -4,6 +4,8 @@ using System.Data;
 using System.Reflection;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness
 {
@@ -58,7 +60,7 @@ namespace OpenDentBusiness
 			List<ClaimProc> listClaimProcs = ClaimProcs.GetForProcsLimited(listProcsForTreatPlans.Select(x => x.ProcNum).ToList(),
 				  ClaimProcStatus.CapComplete, ClaimProcStatus.NotReceived, ClaimProcStatus.Received, ClaimProcStatus.Supplemental, ClaimProcStatus.Estimate);
 			List<Adjustment> listAdjustments = Adjustments.GetForProcs(listProcsForTreatPlans.Select(x => x.ProcNum).ToList());
-			List<Userod> listUserods = Userods.GetAll();
+			List<User> listUserods = Users.GetAll();
 			List<TreatPlanPresenterEntry> listTreatPlanPresenterEntries = new List<TreatPlanPresenterEntry>();
 			List<ProcedureCode> listProcCodes = ProcedureCodes.GetCodesForCodeNums(listProcsForTreatPlans.Select(x => x.CodeNum).ToList());
 			List<Appointment> listApts = Appointments.GetMultApts(listProcsForTreatPlans.Select(x => x.AptNum).ToList());
@@ -99,7 +101,7 @@ namespace OpenDentBusiness
 				double adjustments = listAdjustments.Where(x => x.ProcedureId == procCur.ProcNum).Sum(x => x.AdjustAmount);
 				double netProd = grossProd - writeOffs + adjustments;
 				TreatPlan treatPlanCur = listProcTPTreatPlans.Where(x => x.ProcTPCur.ProcNumOrig == procCur.ProcNum).First().TreatPlanCur;
-				Userod userPresenter;
+				User userPresenter;
 				if (isPresenter)
 				{
 					userPresenter = listUserods.FirstOrDefault(x => x.Id == treatPlanCur.UserNumPresenter);

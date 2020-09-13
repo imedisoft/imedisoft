@@ -10,6 +10,7 @@ using System.Linq;
 using CodeBase;
 using Imedisoft.UI;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental
 {
@@ -64,7 +65,7 @@ namespace OpenDental
 				butChange.Enabled = false;
 				labelGlobalDateLockDisabled.Visible = true;
 			}
-			List<UserGroup> listGroupsNotAdmin = UserGroups.GetList().FindAll(x => !GroupPermissions.HasPermission(x.Id, Permissions.SecurityAdmin, 0));
+			List<UserGroup> listGroupsNotAdmin = UserGroups.GetAll().FindAll(x => !GroupPermissions.HasPermission(x.Id, Permissions.SecurityAdmin, 0));
 			for (int i = 0; i < listGroupsNotAdmin.Count; i++)
 			{
 				comboGroups.Items.Add(listGroupsNotAdmin[i].Description, listGroupsNotAdmin[i]);
@@ -257,7 +258,7 @@ namespace OpenDental
 			if (Preferences.Set(PreferenceName.PasswordsMustBeStrong, checkPasswordsMustBeStrong.Checked) && !checkPasswordsMustBeStrong.Checked)
 			{
 				invalidatePrefs = true;
-				Userods.ResetStrongPasswordFlags();
+				Users.ResetStrongPasswordFlags();
 			}
 			if (checkDisableBackupReminder.Checked)
 			{

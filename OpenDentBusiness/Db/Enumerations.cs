@@ -412,24 +412,6 @@ namespace OpenDentBusiness
 		PtNoteCompleted
 	}
 
-	public enum PatientStatus
-	{
-		Patient,
-
-		[Description("Non-patient")]
-		NonPatient,
-
-		Inactive,
-		Archived,
-		Deleted,
-		Deceased,
-
-		/// <summary>
-		/// Not an actual patient yet.
-		/// </summary>
-		Prospective
-	}
-
 	///<summary>Known as administrativeGender (HL7 OID of 2.16.840.1.113883.5.1) Male=M, Female=F, Unknown=Undifferentiated=UN.</summary>
 	public enum PatientGender
 	{//known as administrativeGender HL7 OID of 2.16.840.1.113883.5.1
@@ -535,28 +517,6 @@ namespace OpenDentBusiness
 		Holiday
 	}
 
-	public enum AutoCondition
-	{
-		Anterior,
-		Posterior,
-		Premolar,
-		Molar,
-		One_Surf,
-		Two_Surf,
-		Three_Surf,
-		Four_Surf,
-		Five_Surf,
-		First,
-		EachAdditional,
-		Maxillary,
-		Mandibular,
-		Primary,
-		Permanent,
-		Pontic,
-		Retainer,
-		AgeOver18
-	}
-
 	/// <Summary>
 	/// Used for insurance substitutions conditions of procedurecodes. 
 	/// Mostly for posterior composites.
@@ -628,41 +588,7 @@ namespace OpenDentBusiness
 		Break
 	}
 
-	/// <summary>
-	/// In perio, the type of measurements for a given row.
-	/// </summary>
-	public enum PerioSequenceType
-	{
-		Mobility,
-		Furcation,
 
-		/// <summary>
-		/// AKA recession.
-		/// </summary>
-		GingMargin,
-
-		/// <summary>
-		/// MucoGingivalJunction- the division between attached and unattached mucosa.
-		/// </summary>
-		MGJ,
-
-		Probing,
-
-		///<summary>
-		///For the skiptooth type, set surf to none, and ToothValue to 1.
-		///</summary>
-		SkipTooth,
-
-		/// <summary>
-		/// Sum of flags for bleeding(1), suppuration(2), plaque(4), and calculus(8).
-		/// </summary>
-		Bleeding,
-
-		/// <summary>
-		/// But this type is never saved to the db. It is always calculated on the fly.
-		/// </summary>
-		CAL
-	}
 
 	/// <summary>
 	/// Deprecated, use patientrace table instead. 

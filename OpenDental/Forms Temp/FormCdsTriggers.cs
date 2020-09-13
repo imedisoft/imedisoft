@@ -1,101 +1,123 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using System.Xml;
-using OpenDentBusiness;
-using CodeBase;
-using System.Globalization;
-using System.Xml.XPath;
-using System.IO;
+using Imedisoft.Data;
+using OpenDental;
 using OpenDental.UI;
+using OpenDentBusiness;
+using System;
+using System.Windows.Forms;
 
-namespace OpenDental {
-	public partial class FormCdsTriggers:ODForm {
-		public List<EhrTrigger> ListEhrTriggers;
-
-		public FormCdsTriggers() {
+namespace Imedisoft.Forms
+{
+    public partial class FormCdsTriggers : FormBase
+	{
+		public FormCdsTriggers()
+		{
 			InitializeComponent();
-			
 		}
 
-		private void FormEhrTriggers_Load(object sender,EventArgs e) {
-			mainMenu1.MenuItems[0].Enabled=false;
-			butAddTrigger.Enabled=false;
-			gridMain.Enabled=false;
-			if(CDSPermissions.GetForUser(Security.CurrentUser.Id).SetupCDS || Security.IsAuthorized(Permissions.SecurityAdmin,true)) {
-				mainMenu1.MenuItems[0].Enabled=true;
-				butAddTrigger.Enabled=true;
-				gridMain.Enabled=true;
+		private void FormCdsTriggers_Load(object sender, EventArgs e)
+		{
+			if (CdsPermissions.GetByUser(Security.CurrentUser.Id).SetupCDS || Security.IsAuthorized(Permissions.SecurityAdmin, true))
+			{
+				setupButton.Enabled = addButton.Enabled = 
+					ehrTriggersGrid.Enabled = true;
 			}
+
 			FillGrid();
 		}
 
-		private void FillGrid() {
-			gridMain.BeginUpdate();
-			gridMain.Columns.Clear();
-			GridColumn col=new GridColumn("Description",200);
-			gridMain.Columns.Add(col);
-			col=new GridColumn("Cardinality",140);
-			gridMain.Columns.Add(col);
-			col=new GridColumn("Trigger Categories",200);
-			gridMain.Columns.Add(col);
-			ListEhrTriggers=EhrTriggers.GetAll();
-			gridMain.Rows.Clear();
-			GridRow row;
-			for(int i=0;i<ListEhrTriggers.Count;i++) {
-				row=new GridRow();
-				row.Cells.Add(ListEhrTriggers[i].Description);
-				row.Cells.Add(ListEhrTriggers[i].Cardinality.ToString());
-				row.Cells.Add(ListEhrTriggers[i].GetTriggerCategories());
-				gridMain.Rows.Add(row);
+		private void FillGrid()
+		{
+			ehrTriggersGrid.BeginUpdate();
+			ehrTriggersGrid.Columns.Clear();
+			ehrTriggersGrid.Columns.Add(new GridColumn(Translation.Common.Description, 200));
+			ehrTriggersGrid.Columns.Add(new GridColumn(Translation.Ehr.Cardinality, 140));
+			ehrTriggersGrid.Columns.Add(new GridColumn(Translation.Ehr.TriggerCategories, 200));
+			ehrTriggersGrid.Rows.Clear();
+
+			foreach (var erhTrigger in EhrTriggers.GetAll())
+			{
+				var gridRow = new GridRow();
+				gridRow.Cells.Add(erhTrigger.Description);
+				gridRow.Cells.Add(erhTrigger.Cardinality.ToString());
+				gridRow.Cells.Add(erhTrigger.GetTriggerCategories());
+				gridRow.Tag = erhTrigger;
+
+				ehrTriggersGrid.Rows.Add(gridRow);
 			}
-			gridMain.EndUpdate();
+
+			ehrTriggersGrid.EndUpdate();
 		}
 
-		private void butAddTrigger_Click(object sender,EventArgs e) {
-			FormCdsTriggerEdit FormETE=new FormCdsTriggerEdit();
-			FormETE.EhrTriggerCur=new EhrTrigger();
-			FormETE.IsNew=true;
-			FormETE.ShowDialog();
-			if(FormETE.DialogResult!=DialogResult.OK) {
+		private void EhrTriggersGrid_CellDoubleClick(object sender, ODGridClickEventArgs e)
+		{
+			var ehrTrigger = ehrTriggersGrid.SelectedTag<EhrTrigger>();
+			if (ehrTrigger == null)
+            {
+				return;
+            }
+
+            using var formCdsTriggerEdit = new FormCdsTriggerEdit
+            {
+                EhrTriggerCur = ehrTrigger
+            };
+
+            if (formCdsTriggerEdit.ShowDialog(this) != DialogResult.OK)
+			{
 				return;
 			}
-			ListEhrTriggers=EhrTriggers.GetAll();
+
 			FillGrid();
 		}
 
-		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			FormCdsTriggerEdit FormETE=new FormCdsTriggerEdit();
-			FormETE.EhrTriggerCur=ListEhrTriggers[e.Row];
-			FormETE.ShowDialog();
-			if(FormETE.DialogResult!=DialogResult.OK) {
+		private void AddButton_Click(object sender, EventArgs e)
+		{
+            using var formCdsTriggerEdit = new FormCdsTriggerEdit
+            {
+                EhrTriggerCur = new EhrTrigger(),
+                IsNew = true
+            };
+
+            if (formCdsTriggerEdit.ShowDialog(this) != DialogResult.OK)
+			{
 				return;
 			}
-			ListEhrTriggers=EhrTriggers.GetAll();
+
 			FillGrid();
 		}
 
-		private void menuItemSettings_Click(object sender,EventArgs e) {
-			FormCDSSetup FormCS=new FormCDSSetup();
-			FormCS.ShowDialog();
+		private void DeleteButton_Click(object sender, EventArgs e)
+		{
+			var ehrTrigger = ehrTriggersGrid.SelectedTag<EhrTrigger>();
+			if (ehrTrigger == null)
+			{
+				return;
+			}
+
+			if (!Confirm(Translation.Common.ConfirmDeleteSelectedItem))
+            {
+				return;
+            }
+
+			EhrTriggers.Delete(ehrTrigger.EhrTriggerNum);
+
+			FillGrid();
 		}
 
-		private void butCancel_Click(object sender,EventArgs e) {
-			DialogResult=DialogResult.Cancel;
+		private void SettingsButton_Click(object sender, EventArgs e)
+		{
+			using var formCdsSetup = new FormCdsSetup();
+
+			formCdsSetup.ShowDialog();
 		}
 
-		private void FormEhrTriggers_FormClosing(object sender,FormClosingEventArgs e) {
-			EhrMeasureEvent measureEvent=new EhrMeasureEvent();
-			measureEvent.DateTEvent=DateTime.Now;
-			measureEvent.EventType=EhrMeasureEventType.ClinicalInterventionRules;
-			measureEvent.MoreInfo="Triggers currently enabled"+": "+ListEhrTriggers.Count;
-			EhrMeasureEvents.Insert(measureEvent);
+		private void FormCdsTriggers_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			EhrMeasureEvents.Insert(new EhrMeasureEvent
+			{
+				Date = DateTime.UtcNow,
+				Type = EhrMeasureEventType.ClinicalInterventionRules,
+				MoreInfo = Translation.Ehr.TriggersEnabled + ": " + EhrTriggers.GetAll().Count
+			});
 		}
-
-
-	}
+    }
 }

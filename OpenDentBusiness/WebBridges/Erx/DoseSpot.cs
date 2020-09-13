@@ -121,7 +121,7 @@ namespace OpenDentBusiness {
 			}
 			//get a list of users that correspond to a non-hidden provider
 			List<Provider> listProviders=Providers.GetWhere(x => x.NationalProviderID==providerErx.NationalProviderID,true);
-			List<Userod> listDoseUsers=Userods.GetWhere(x => !x.IsHidden && listProviders.Exists(y => y.Id==x.ProviderId));//Only consider non-hidden users.
+			List<User> listDoseUsers=Users.Find(x => !x.IsHidden && listProviders.Exists(y => y.Id==x.ProviderId));//Only consider non-hidden users.
 			if(listDoseUsers.Count==1) {//One provider matched so simply notify the office and set the DoseSpot User Id.
 				alert=new AlertItem {
 					Actions=ActionType.MarkAsRead | ActionType.Delete | ActionType.ShowItemValue,
@@ -612,7 +612,7 @@ namespace OpenDentBusiness {
 		///<summary>Throws exceptions when validating clinic/practice info/provider.
 		///Will register the passed in userNum if that user is not already registered.
 		///Updates the passed in user's UserOdPref for DoseSpot User ID</summary>
-		public static string GetUserID(Userod userCur,long clinicNum) {
+		public static string GetUserID(User userCur,long clinicNum) {
 			//No need to check RemotingRole; no call to db.
 			string retVal="";
 			Clinic clinicCur=GetClinicOrPracticeInfo(clinicNum);

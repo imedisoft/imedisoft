@@ -1,3 +1,4 @@
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 using SparksToothChart.Properties;
 using System;
@@ -852,13 +853,13 @@ namespace SparksToothChart
 		{
             chartData.ListPerioMeasure.Add(new PerioMeasure
 			{
-				MBvalue = mb,
-				Bvalue = b,
-				DBvalue = db,
-				MLvalue = ml,
-				Lvalue = l,
-				DLvalue = dl,
-				IntTooth = intTooth,
+				MB = mb,
+				B = b,
+				DB = db,
+				ML = ml,
+				L = l,
+				DL = dl,
+				Tooth = intTooth,
 				SequenceType = sequenceType
 			});
 		}

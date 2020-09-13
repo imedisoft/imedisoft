@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Reflection;
 using DataConnectionBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness
 {
@@ -142,32 +143,32 @@ namespace OpenDentBusiness
 		{
 			long category;//defNum
 			long procButtonNum;
-			long autoCodeNum;
-			long autoCodeNum2;
+			AutoCode autoCode;
+			AutoCode autoCode2;
 			//Db---------------------------------------------------------------------------------------------------------
 			string command = "INSERT INTO definition (Category,ItemOrder,ItemName,ItemValue,ItemColor,IsHidden) "
 				+ "VALUES (26,0,'General','',0,0)";
 			category = Database.ExecuteInsert(command);
 			//Amalgam
-			autoCodeNum = AutoCodes.GetNumFromDescript("Amalgam");
-			if (autoCodeNum != 0)
+			autoCode = AutoCodes.GetByDescription("Amalgam");
+			if (autoCode != null)
 			{
 				command = "INSERT INTO procbutton (Description,ItemOrder,Category,ButtonImage) VALUES('Amalgam',0,"
 					+ POut.Long(category) + @",'Qk12BgAAAAAAADYAAAAoAAAAFAAAABQAAAABACAAAAAAAAAAAADEDgAAxA4AAAAAAAAAAAAA/////////////////////9bW1v+ctbX/vebv/8XW1v+tvbX/hKWt/36crf9+nKX/nLW1/97v7//m9/f/pdbe/5y9vf/3////////////////////////////////////ztbO/5y1rf+cxcX/hKWt/5S1vf+cvcX/nMXO/5S9zv+Mrb3/jK2t/629vf+cxc7/nL29//f///////////////////////////////////+9zs7/fpSM/5S1vf+cxc7/tdbe/87m5v/O5u//1u/v/8Xe5v+lxdb/jK21/4Slrf+cvbX/9////////////////////////////////////7XW1v+ErbX/rc7W/8Xm5v/F3ub/3u/v/9739//W7+//zubv/87m7/+11t7/jK21/5y9vf/////////////////////////////////39/f/nLW9/5zFzv/O5ub/3vf3/8Xe5v/m////7////+/////O5u//zu/v/9739/+11tb/lLW1/+/39////////////////////////////9bW5v9NXb3/VWbv/8XW9//v////vdbm/+b3///v////9////73e3v+UtbX/5vf3/7XF9/9ufr3/zt7m////////////////////////////xcXv/xws3v8THO//bn73/87e5v+MrbX/xd7m/+/////v////rc7W/4ylpf/e7///PU33/xwk5v+1ve////////////////////////////+1ve//HCze/xwk7/80Pe//doy9/5y9vf/O5ub/9/////f///+1ztb/nLW1/4yc9/8cJOb/EyTv/4SU7////////////////////////////5yl7/8kLOb/HCzv/xwk7/80Rc7/foze/5Sl7/+crff/nK33/36U5v9dbsX/PUXv/xwk5v8cJOb/XW7m///////////////////////m9/f/foTv/yQs5v8cLO//HCzm/xws7/8kLOb/JCzm/yQs5v8kLOb/JCzm/xws5v8cJOb/HCzm/xwk7/9FVdb/9////////////////////+/39/9dbt7/HCTm/xws5v8cLOb/HCzm/xws5v8cLOb/HCzm/xws5v8cLOb/HCzm/xws5v8cLOb/HCTv/0VVzv/3/////////////////////////1Vm1v8cJO//HCzm/xws5v8cJOb/HCTv/xwk5v8cJOb/HCTm/xwk5v8cJO//HCTm/xws5v8cJO//RVXO//f39//////////////////3////RVXO/xwk7/8cLOb/HCTm/yw05v8sNOb/ND3v/zQ97/80Pe//ND3v/yw05v8kLO//HCTm/xwk7/9FVc7/9/f3//////////////////f///9FVc7/HCTv/xwk5v8sNOb/jJzm/3aErf+1xff/xdb3/8XW//+ElL3/nLXe/4yc9/8kLOb/HCTv/0VVzv/39/f/////////////////9////0VVzv8THO//ND3v/7XF9//O5ub/lK2l/87e1v/3////9////5y1rf/W7+//9////4yU9/8cJO//RVXW//f/////////////////////////boTF/1Vm7//Fzv//9////97v9/+1ztb/xdbW//f////m9/f/rcXO/+b39//3////7////5Sl7/9NXbX/9/f3//////////////////////+91tb/nL3F//f////v////5vf3/87m5v/e7/f/7////+b39//W7+//7////+/////v////tc7O/629vf////////////////////////////////+lxcX/pcXF/+/////3////1u/v/9739//3////3u/3/97v9//3////7////7XO1v+lvcX/9/////////////////////////////////////f39/+lvcX/nL3F/+b39//3////7////+/////m////7////97v7/+txcX/pb3F//f39/////////////////////////////////////////////f39/+txcX/lLW1/629vf/O3t7/3vf3/8Xe3v+lxcX/jKWc/7XFxf/39/f//////////////////////w==')";
 				procButtonNum = Database.ExecuteInsert(command);
 				command = "INSERT INTO procbuttonitem (ProcButtonNum,CodeNum,AutoCodeNum) VALUES (" + POut.Long(procButtonNum) + ",0,"
-					+ POut.Long(autoCodeNum) + ")";
+					+ POut.Long(autoCode.Id) + ")";
 				Database.ExecuteNonQuery(command);
 			}
 			//Composite
-			autoCodeNum = AutoCodes.GetNumFromDescript("Composite");
-			if (autoCodeNum != 0)
+			autoCode = AutoCodes.GetByDescription("Composite");
+			if (autoCode != null)
 			{
 				command = "INSERT INTO procbutton (Description,ItemOrder,Category,ButtonImage) VALUES('Composite',1,"
 					+ POut.Long(category) + @",'Qk12BgAAAAAAADYAAAAoAAAAFAAAABQAAAABACAAAAAAAAAAAADEDgAAxA4AAAAAAAAAAAAA///////////e5v//RU3m/yQ05v8kNOb/JDTm/xwk7/8cJO//JCzm/36UnP9+lJT/fpSc/3aUlP9+lIz/xc7O/////////////////////////////////3Z+9/8kLOb/Znbv/3aE7/+ElO//fpTv/zQ97/8kLOb/rcXm/73e3v+11t7/tdbe/5zFzv+EpaX/1t7e////////////////////////////LDTv/11u5v/e7/f/5vf//+/////3////pbX//yQs7//e7///7////+b39//e7/f/zubv/5S1vf+tvbX///////////////////////////80Pff/XW7m/+b////3////7/////f///+1xf//JCzv/+b3///3////7////+b39//W7+//nL3F/629vf///////////////////////////z1F9/9dbu//7/f//+/////v////9////4yc//89Rff/5vf//+/////v////7////9bv7/+cvcX/rb29////////////////////////////ND3v/3aE7//3////7////+/////v////XWb3/36M9//3////7////+/////v////1u/3/5S1vf+9zs7///////////////////////////8sNO//doTv//f////v////7////+////80Pe//pbX///f////v////7////+/////e7/f/jK2t/9be3v///////////////////////////yw07/9ufu//7////+/////v////3u///zQ97/+9zv//9////+/////v////7////87m7/9+lIz/3u/v////////////////////////////JCzv/2Z27//m////7/////f///+MlP//VWb3//f////v////7////+/////v////zubm/36UlP/m7+////////////////////////////89Rff/VWbm/97v9//3////7////11m9/9mbvf/9////+/////v////7////+////+91t7/lK2t//f3/////////////////////////////5yl//80Rd7/zubv//f////O3v//LDTv/7XF///3////7////+/////v////5vf//6W9xf+ctbX/////////////////////////////////1t7//yQ05v+MnO///////4yU//89Rff/5vf//+/////v////7////+/////m9///nL3F/7XFzv/////////////////////////////////39///Zm73/0VV5v+9zvf/LDTv/5yl///3////7////+/////v////7////+b39/+UrbX/1t7e//////////////////////////////////////+UnPf/JCzm/yw07/9dbvf/5vf//+/////v////7////+/////v////1ubv/4ylpf/m7+///////////////////////////////////////97m//8sNO//XW7v/97v///3////7////+/////v////7////+/////F3t7/nK2t/////////////////////////////////////////////////25+vf+Mpc7/7////+/////v////7////+/////v////7////6W9vf/Fzs7/////////////////////////////////////////////////pb21/5Strf/O5ub/7////+/////v////7/////f////e7+//jK2t/+bv7//////////////////////////////////////////////////O5ub/fpyc/7XOzv/e9/f/9////+/////v////9////7XOzv+EpaX/5vf3/////////////////////////////////////////////////+bv7/+MvcX/lK2t/5y1tf/O5ub/5vf3/+bv7/+9zs7/lL29/4ytrf/3////////////////////////////////////////////////////3ubm/5TFxf+95u//rb29/4ylnP+cra3/lK2t/6W9vf+t1t7/nLW1/////////////////////////////////w==')";
 				procButtonNum = Database.ExecuteInsert(command);
 				command = "INSERT INTO procbuttonitem (ProcButtonNum,CodeNum,AutoCodeNum) VALUES (" + POut.Long(procButtonNum) + ",0,"
-					+ POut.Long(autoCodeNum) + ")";
+					+ POut.Long(autoCode.Id) + ")";
 				Database.ExecuteNonQuery(command);
 			}
 			//Crown-PFM
@@ -228,20 +229,20 @@ namespace OpenDentBusiness
 				}
 			}
 			//RCT
-			autoCodeNum = AutoCodes.GetNumFromDescript("Root Canal");
-			if (autoCodeNum != 0)
+			autoCode = AutoCodes.GetByDescription("Root Canal");
+			if (autoCode != null)
 			{
 				command = "INSERT INTO procbutton (Description,ItemOrder,Category,ButtonImage) VALUES('RCT',5,"
 					+ POut.Long(category) + @",'Qk12BgAAAAAAADYAAAAoAAAAFAAAABQAAAABACAAAAAAAAAAAADEDgAAxA4AAAAAAAAAAAAA///////////////////////////////////////////F1tb/boyt/xwkpf/m5ub//////////////////////////////////////////////////////////////////////////////////////36MjP9VbpT/EySc/7XFxf//////////////////////////////////////////////////////////////////////////////////////XWZm/36lzv8kNMX/ZnZu//////////////////////////////////////////////////////////////////////////////////f39/9NXV3/fpz//wMD//9ddm7/zs7O////////////////////////////////////////////////////////////////////////////3t7e/2Z+dv9mfv//AwP//2aEfv+lpaX////////////////////////////////////////////////////////////////////////////FxcX/XXZ2/26E//8DA///jK2t/5ycnP///////////////////////////////////////////////////////////////////////////8XFxf9mfnb/fpT//wMD//+Era3/lJSU//f39///////////////////////////////////////////////////////////////////////nKWl/2aMjP9uhP//AwP//4y1tf+UnJz/9/f3//////////////////////////////////////////////////////////////////////9mbm7/ZoSE/2Z+//8DA///nMXF/4SMjP/39/f//////////////////////////////////////////////////////////////////////2Zubv9ujIT/Znb//wMD//+lzs7/foyM//f39///////////////////////////////////////////////////////////////////////PUVF/36lpf9ufv//AwP//63W1v9ufn7/9/f3/////////////////////////////////////////////////////////////////+/v7/9VVVX/jLW1/2Z2//8DA///td7m/2Z2dv/v7+//////////////////////////////////////////////////////////////////3t7e/1VVVf+Uxb3/bn7//wMD//+13ub/ZnZ2/+bm5v/////////////////////////////////////////////////////////////////e3t7/XWZu/5TFvf9mdv//AwP//7Xe5v9mdnb/3t7e/////////////////////////////////////////////////////////////////8XFxf9mbm7/nMXF/11m//8DA///zu/3/1VmXf/e3t7/////////////////////////////////////////////////////////////////zs7O/11mZv+cxcX/XW7//wMD///O7/f/VWZm/87Ozv/////////////////////////////////////////////////////////////////FxcX/ZnZ2/6XOzv9dbv//AwP//9bv9/9Vbm7/pa2t/////////////////////////////////////////////////////////////////62trf9VZmb/rdbW/01d//8DA///1u/3/01mZv+UlJT/////////////////////////////////////////////////////////////////nJyc/0VNTf+t3tb/XW7//wMD//+Urf//RV1d/4yUlP////////////////////////////////////////////////////////////////+1tbX/RV1d/7Xe3v9dZv//AwP//4yl//89VVX/foSE/////////////////////////////////w==')";
 				procButtonNum = Database.ExecuteInsert(command);
 				command = "INSERT INTO procbuttonitem (ProcButtonNum,CodeNum,AutoCodeNum) VALUES (" + POut.Long(procButtonNum) + ",0,"
-					+ POut.Long(autoCodeNum) + ")";
+					+ POut.Long(autoCode.Id) + ")";
 				Database.ExecuteNonQuery(command);
 			}
 			//RCT BU PFM
-			autoCodeNum = AutoCodes.GetNumFromDescript("Root Canal");
-			autoCodeNum2 = AutoCodes.GetNumFromDescript("BU/P&C");
-			if (autoCodeNum != 0 || ProcedureCodes.IsValidCode("D2750"))
+			autoCode = AutoCodes.GetByDescription("Root Canal");
+			autoCode2 = AutoCodes.GetByDescription("BU/P&C");
+			if (autoCode != null || ProcedureCodes.IsValidCode("D2750"))
 			{//we add this button if either RCT or crown is available.
 				command = "INSERT INTO procbutton (Description,ItemOrder,Category,ButtonImage) VALUES('RCT BU PFM',6,"
 					+ POut.Long(category) + @",'Qk12BgAAAAAAADYAAAAoAAAAFAAAABQAAAABACAAAAAAAAAAAADEDgAAxA4AAAAAAAAAAAAA////////////////pcXF/63W7/89Te//Exzv/01V7/+95u//tebm/7Xm5v9+lO//HCTv/xwk7/9Vbu//pdbe/73m5v////////////////////////////////+cvb3/rdbv/z1N7/8cJO//PUXv/63W7/+15ub/tebm/11u7/8cJO//HCTv/01d7/+cztb/td7e////////////////////////////9/f//5y9tf+t1u//PU3v/xwk7/8kLO//pb33/73m5v/W7/f/PU3v/xwk7/8cJO//PU3v/4zF3v+13t7/////////////////////////////////lL21/6XW7/89Te//HCTv/xwk7/+ElPf/zvfv/5yt9/8kLO//HCTv/xwk7/89Te//lMXe/73e3v////////////////////////////////+UvbX/vd73/0VN7/8cJO//HCzv/yw97/9mbu//LDTv/xwk7/8cLO//HCTv/0VN7/+Uvc7/rc7O/////////////////////////////////6XO1v+13u//RU3v/xwk7/8cLO//HCTv/xwk7/8cJO//HCzv/xws7/8cJO//RU3v/4S13v+lztb////////////////////////////m5v//PU3v/zRF5v8kLO//EyTv/xwk7/8cJO//HCTv/xwk7/8cJO//HCTv/xMk7/8cJO//JCzv/zRF5v/W1v///////////////////////5yl9/8sNO//fn73/4SM9/+EjPf/hIz3/4SM9/+EjPf/hIz3/4SM9/+EjPf/hIz3/4SM9/+EhPf/ND3v/4yU9//////////////////39///TVXv/36E9/////////////////////////////////////////////////////////////////9mbvf/VV3v//f3/////////////8XF//8cLO//zs7//////////////////////////////////////////////////////////////////4SM9/8sPe//7+//////////////hIz3/0VN7//39///////////////////////////////////////////////////////////////////paX3/yQs7//m5v///////+bm//9FTe//hIT3///////////////////////////////////////////////////////////////////////Fxf//JCzv/7299///////xcX//yw07/+9vff//////////////////////////////////////////////////////////////////////+/v//89Re//VV3v///////Ozv//ND3v/7299////////////////////////////+/v///e3v//9/f/////////////////////////////9/f//1Vd7/9FTe///////8XO//80Pe//vb33////////////////////////////ra33/11m7//e3v//////////////////////////////////dn73/yQs7///////xcX//yw07//Fxf////////////////////////////+UlPf/Zm7v//////////////////////////////////////+1tf//JCzv///////W1v//NEXv/7299////////////////////////////5yl9/92fvf//////////////////////////////////////7299/8kLO////////f3//9dZu//fn73////////////////////////////foT3/z1F7//Ozv//////////////////////////////////dn73/zQ97////////////5yl9/8kLO//jJT3/+bm///39///5u///4SM9/8sNO//LDTv/yQs7/9+hPf/vb33/97e///39///5u///3Z+9/8kLO//vb33////////////9/f//5Sc9/9NVe//ND3v/z1F7/80Pe//TVXv/62t9//v7///nKX3/0VN7/8sNO//LDTv/01V7/80Pe//PUXv/7299////////////w==')";
@@ -258,23 +259,23 @@ namespace OpenDentBusiness
 						+ "," + ProcedureCodes.GetCodeNum("N4118") + ",0)";
 					Database.ExecuteNonQuery(command);
 				}
-				if (autoCodeNum != 0)
+				if (autoCode != null)
 				{
 					command = "INSERT INTO procbuttonitem (ProcButtonNum,CodeNum,AutoCodeNum) VALUES (" + POut.Long(procButtonNum) + ",0,"
-					+ POut.Long(autoCodeNum) + ")";
+					+ POut.Long(autoCode.Id) + ")";
 					Database.ExecuteNonQuery(command);
 				}
-				if (autoCodeNum2 != 0)
+				if (autoCode2 != null)
 				{
 					command = "INSERT INTO procbuttonitem (ProcButtonNum,CodeNum,AutoCodeNum) VALUES (" + POut.Long(procButtonNum) + ",0,"
-					+ POut.Long(autoCodeNum2) + ")";
+					+ POut.Long(autoCode2.Id) + ")";
 					Database.ExecuteNonQuery(command);
 				}
 			}
 			//RCT BU Ceramic
-			autoCodeNum = AutoCodes.GetNumFromDescript("Root Canal");
-			autoCodeNum2 = AutoCodes.GetNumFromDescript("BU/P&C");
-			if (autoCodeNum != 0 || ProcedureCodes.IsValidCode("D2740"))
+			autoCode = AutoCodes.GetByDescription("Root Canal");
+			autoCode2 = AutoCodes.GetByDescription("BU/P&C");
+			if (autoCode != null || ProcedureCodes.IsValidCode("D2740"))
 			{//we add this button if either RCT or crown is available.
 				command = "INSERT INTO procbutton (Description,ItemOrder,Category,ButtonImage) VALUES('RCT BU Ceramic',7,"
 					+ POut.Long(category) + @",'Qk12BgAAAAAAADYAAAAoAAAAFAAAABQAAAABACAAAAAAAAAAAADEDgAAxA4AAAAAAAAAAAAA////////////////pcXF/63W7/89Te//Exzv/01V7/+95u//tebm/7Xm5v9+lO//HCTv/xwk7/9Vbu//pdbe/73m5v////////////////////////////////+cvb3/rdbv/z1N7/8cJO//PUXv/63W7/+15ub/tebm/11u7/8cJO//HCTv/01d7/+cztb/td7e////////////////////////////9/f//5y9tf+t1u//PU3v/xwk7/8kLO//pb33/73m5v/W7/f/PU3v/xwk7/8cJO//PU3v/4zF3v+13t7/////////////////////////////////lL21/6XW7/89Te//HCTv/xwk7/+ElPf/zvfv/5yt9/8kLO//HCTv/xwk7/89Te//lMXe/73e3v////////////////////////////////+UvbX/vd73/0VN7/8cJO//HCzv/yw97/9mbu//LDTv/xwk7/8cLO//HCTv/0VN7/+Uvc7/rc7O/////////////////////////////////6XO1v+13u//RU3v/xwk7/8cLO//HCTv/xwk7/8cJO//HCzv/xws7/8cJO//RU3v/4S13v+lztb////////////////////////////m5v//PU3v/zRF5v8kLO//EyTv/xwk7/8cJO//HCTv/xwk7/8cJO//HCTv/xMk7/8cJO//JCzv/zRF5v/W1v///////////////////////5yl9/8sNO//fn73/4SM9/+EjPf/hIz3/4SM9/+EjPf/hIz3/4SM9/+EjPf/hIz3/4SM9/+EhPf/ND3v/4yU9//////////////////39///TVXv/36E9/////////////////////////////////////////////////////////////////9mbvf/VV3v//f3/////////////8XF//8cLO//zs7//////////////////////////////////////////////////////////////////4SM9/8sPe//7+//////////////hIz3/0VN7//39///////////////////////////////////////////////////////////////////paX3/yQs7//m5v///////+bm//9FTe//hIT3///////////////////////////////////////////////////////////////////////Fxf//JCzv/7299///////xcX//yw07/+9vff//////////////////////////////////////////////////////////////////////+/v//89Re//VV3v///////Ozv//ND3v/7299////////////////////////////+/v///e3v//9/f/////////////////////////////9/f//1Vd7/9FTe///////8XO//80Pe//vb33////////////////////////////ra33/11m7//e3v//////////////////////////////////dn73/yQs7///////xcX//yw07//Fxf////////////////////////////+UlPf/Zm7v//////////////////////////////////////+1tf//JCzv///////W1v//NEXv/7299////////////////////////////5yl9/92fvf//////////////////////////////////////7299/8kLO////////f3//9dZu//fn73////////////////////////////foT3/z1F7//Ozv//////////////////////////////////dn73/zQ97////////////5yl9/8kLO//jJT3/+bm///39///5u///4SM9/8sNO//LDTv/yQs7/9+hPf/vb33/97e///39///5u///3Z+9/8kLO//vb33////////////9/f//5Sc9/9NVe//ND3v/z1F7/80Pe//TVXv/62t9//v7///nKX3/0VN7/8sNO//LDTv/01V7/80Pe//PUXv/7299////////////w==')";
@@ -291,22 +292,22 @@ namespace OpenDentBusiness
 						+ "," + ProcedureCodes.GetCodeNum("N4119") + ",0,1)";
 					Database.ExecuteNonQuery(command);
 				}
-				if (autoCodeNum != 0)
+				if (autoCode != null)
 				{
 					command = "INSERT INTO procbuttonitem (ProcButtonNum,CodeNum,AutoCodeNum) VALUES (" + POut.Long(procButtonNum) + ",0,"
-					+ POut.Long(autoCodeNum) + ")";
+					+ POut.Long(autoCode.Id) + ")";
 					Database.ExecuteNonQuery(command);
 				}
-				if (autoCodeNum2 != 0)
+				if (autoCode2 != null)
 				{
 					command = "INSERT INTO procbuttonitem (ProcButtonNum,CodeNum,AutoCodeNum) VALUES (" + POut.Long(procButtonNum) + ",0,"
-					+ POut.Long(autoCodeNum2) + ")";
+					+ POut.Long(autoCode2.Id) + ")";
 					Database.ExecuteNonQuery(command);
 				}
 			}
 			//Bridge-PFM
-			autoCodeNum = AutoCodes.GetNumFromDescript("PFM Bridge");
-			if (autoCodeNum != 0 || ProcedureCodes.IsValidCode("N4127"))
+			autoCode = AutoCodes.GetByDescription("PFM Bridge");
+			if (autoCode != null || ProcedureCodes.IsValidCode("N4127"))
 			{
 				command = "INSERT INTO procbutton (Description,ItemOrder,Category,ButtonImage) VALUES('Bridge-PFM',8,"
 					+ POut.Long(category) + @",'')";
@@ -317,16 +318,16 @@ namespace OpenDentBusiness
 						+ "," + ProcedureCodes.GetCodeNum("N4127") + ",0)";
 					Database.ExecuteNonQuery(command);
 				}
-				if (autoCodeNum != 0)
+				if (autoCode != null)
 				{
 					command = "INSERT INTO procbuttonitem (ProcButtonNum,CodeNum,AutoCodeNum) VALUES (" + POut.Long(procButtonNum) + ",0,"
-					+ POut.Long(autoCodeNum) + ")";
+					+ POut.Long(autoCode.Id) + ")";
 					Database.ExecuteNonQuery(command);
 				}
 			}
 			//Bridge-Ceramic
-			autoCodeNum = AutoCodes.GetNumFromDescript("Ceramic Bridge");
-			if (autoCodeNum != 0 || ProcedureCodes.IsValidCode("N4127"))
+			autoCode = AutoCodes.GetByDescription("Ceramic Bridge");
+			if (autoCode != null || ProcedureCodes.IsValidCode("N4127"))
 			{
 				command = "INSERT INTO procbutton (Description,ItemOrder,Category,ButtonImage) VALUES('Bridge-Ceramic',9,"
 					+ POut.Long(category) + @",'')";
@@ -337,22 +338,22 @@ namespace OpenDentBusiness
 						+ "," + ProcedureCodes.GetCodeNum("N4127") + ",0)";
 					Database.ExecuteNonQuery(command);
 				}
-				if (autoCodeNum != 0)
+				if (autoCode != null)
 				{
 					command = "INSERT INTO procbuttonitem (ProcButtonNum,CodeNum,AutoCodeNum) VALUES (" + POut.Long(procButtonNum) + ",0,"
-					+ POut.Long(autoCodeNum) + ")";
+					+ POut.Long(autoCode.Id) + ")";
 					Database.ExecuteNonQuery(command);
 				}
 			}
 			//Build Up
-			autoCodeNum = AutoCodes.GetNumFromDescript("BU/P&C");
-			if (autoCodeNum != 0)
+			autoCode = AutoCodes.GetByDescription("BU/P&C");
+			if (autoCode != null)
 			{
 				command = "INSERT INTO procbutton (Description,ItemOrder,Category,ButtonImage) VALUES('BU/P&C',10,"
 					+ POut.Long(category) + @",'')";
 				procButtonNum = Database.ExecuteInsert(command);
 				command = "INSERT INTO procbuttonitem (ProcButtonNum,CodeNum,AutoCodeNum) VALUES (" + POut.Long(procButtonNum) + ",0,"
-					+ POut.Long(autoCodeNum) + ")";
+					+ POut.Long(autoCode.Id) + ")";
 				Database.ExecuteNonQuery(command);
 			}
 			//Implant Abutment PFM

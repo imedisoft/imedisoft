@@ -7,15 +7,13 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using MySql.Data.MySqlClient;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 
-namespace OpenDentBusiness
+namespace Imedisoft.Data
 {
-	public partial class AccountingAutoPays
+    public partial class AccountingAutoPays
 	{
 		public static AccountingAutoPay FromReader(MySqlDataReader dataReader)
 		{
@@ -30,36 +28,45 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// Selects a single AccountingAutoPay object from the database using the specified SQL command.
 		/// </summary>
+		/// <param name="command">The SELECT command to execute.</param>
+		/// <param name="parameters">The (optional) command parameters.</param>
 		public static AccountingAutoPay SelectOne(string command, params MySqlParameter[] parameters)
 			=> Database.SelectOne(command, FromReader, parameters);
 
 		/// <summary>
 		/// Selects the <see cref="AccountingAutoPay"/> object with the specified key from the database.
 		/// </summary>
-		public static AccountingAutoPay SelectOne(Int64 id)
+		/// <param name="id">The primary key of the <see cref="AccountingAutoPay"/> to select.</param>
+		public static AccountingAutoPay SelectOne(long id)
 			=> SelectOne("SELECT * FROM `accounting_auto_pays` WHERE `id` = " + id);
 
 		/// <summary>
 		/// Selects multiple <see cref="AccountingAutoPay"/> objects from the database using the specified SQL command.
 		/// </summary>
+		/// <param name="command">The SELECT command to execute.</param>
+		/// <param name="parameters">The (optional) command parameters.</param>
 		public static IEnumerable<AccountingAutoPay> SelectMany(string command, params MySqlParameter[] parameters)
 			=> Database.SelectMany(command, FromReader, parameters);
 
 		/// <summary>
 		/// Inserts the specified <see cref="AccountingAutoPay"/> into the database.
 		/// </summary>
-		public static long Insert(AccountingAutoPay accountingAutoPay)
+		/// <param name="accountingAutoPay">The <see cref="AccountingAutoPay"/> to insert into the database.</param>
+		private static long ExecuteInsert(AccountingAutoPay accountingAutoPay)
 			=> accountingAutoPay.Id = Database.ExecuteInsert(
 				"INSERT INTO `accounting_auto_pays` " +
 				"(`pay_type`, `pick_list`) " +
 				"VALUES (" +
 					"@pay_type, @pick_list" +
-				")");
+				")",
+					new MySqlParameter("pay_type", accountingAutoPay.PayType),
+					new MySqlParameter("pick_list", accountingAutoPay.PickList ?? ""));
 
 		/// <summary>
 		/// Updates the specified <see cref="AccountingAutoPay"/> in the database.
 		/// </summary>
-		public static void Update(AccountingAutoPay accountingAutoPay)
+		/// <param name="accountingAutoPay">The <see cref="AccountingAutoPay"/> to update.</param>
+		private static void ExecuteUpdate(AccountingAutoPay accountingAutoPay)
 			=> Database.ExecuteNonQuery(
 				"UPDATE `accounting_auto_pays` SET " +
 					"`pay_type` = @pay_type, " +
@@ -70,47 +77,17 @@ namespace OpenDentBusiness
 					new MySqlParameter("pick_list", accountingAutoPay.PickList ?? ""));
 
 		/// <summary>
-		/// Updates the specified <see cref="AccountingAutoPay"/> in the database.
-		/// </summary>
-		public static bool Update(AccountingAutoPay accounting_auto_paysNew, AccountingAutoPay accounting_auto_paysOld)
-		{
-			var updates = new List<string>();
-			var parameters = new List<MySqlParameter>();
-
-			if (accounting_auto_paysNew.PayType != accounting_auto_paysOld.PayType)
-			{
-				updates.Add("`pay_type` = @pay_type");
-				parameters.Add(new MySqlParameter("pay_type", accounting_auto_paysNew.PayType));
-			}
-
-			if (accounting_auto_paysNew.PickList != accounting_auto_paysOld.PickList)
-			{
-				updates.Add("`pick_list` = @pick_list");
-				parameters.Add(new MySqlParameter("pick_list", accounting_auto_paysNew.PickList ?? ""));
-			}
-
-			if (updates.Count == 0) return false;
-
-			parameters.Add(new MySqlParameter("id", accounting_auto_paysNew.Id));
-
-			Database.ExecuteNonQuery("UPDATE `accounting_auto_pays` " +
-				"SET " + string.Join(", ", updates) + " " +
-				"WHERE `id` = @id",
-					parameters.ToArray());
-
-			return true;
-		}
-
-		/// <summary>
 		/// Deletes a single <see cref="AccountingAutoPay"/> object from the database.
 		/// </summary>
-		public static void Delete(Int64 id)
+		/// <param name="id">The primary key of the <see cref="AccountingAutoPay"/> to delete.</param>
+		private static void ExecuteDelete(long id)
 			 => Database.ExecuteNonQuery("DELETE FROM `accounting_auto_pays` WHERE `id` = " + id);
 
 		/// <summary>
 		/// Deletes the specified <see cref="AccountingAutoPay"/> object from the database.
 		/// </summary>
-		public static void Delete(AccountingAutoPay accountingAutoPay)
-			=> Delete(accountingAutoPay.Id);
+		/// <param name="accountingAutoPay">The <see cref="AccountingAutoPay"/> to delete.</param>
+		private static void ExecuteDelete(AccountingAutoPay accountingAutoPay)
+			=> ExecuteDelete(accountingAutoPay.Id);
 	}
 }

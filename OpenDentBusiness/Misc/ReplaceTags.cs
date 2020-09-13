@@ -25,7 +25,7 @@ namespace OpenDentBusiness
 		/// Only works if the current user has a linked provider or employee, otherwise the replacements will be blank.
 		/// Replaces: [UserNameF], [UserNameL], [UserNameFL].
 		/// </summary>
-		public static string ReplaceUser(string message, Userod userod)
+		public static string ReplaceUser(string message, User userod)
 		{
 			string retVal = message;
 

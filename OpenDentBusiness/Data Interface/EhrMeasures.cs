@@ -1933,7 +1933,7 @@ namespace OpenDentBusiness{
 							mu.Details="No online access provided.";
 						}
 						else {
-							mu.Details="Online access provided: "+listOnline[listOnline.Count-1].DateTEvent.ToShortDateString();//most recent
+							mu.Details="Online access provided: "+listOnline[listOnline.Count-1].Date.ToShortDateString();//most recent
 							mu.Met=MuMet.True;
 						}
 						mu.Action="Provide online Access";
@@ -1947,7 +1947,7 @@ namespace OpenDentBusiness{
 							mu.Details="No online access provided.";
 						}
 						else {
-							mu.Details="Online access provided: "+listAccess[listAccess.Count-1].DateTEvent.ToShortDateString();//most recent
+							mu.Details="Online access provided: "+listAccess[listAccess.Count-1].Date.ToShortDateString();//most recent
 							mu.Met=MuMet.True;
 						}
 						mu.Action="Provide online Access";
@@ -2277,7 +2277,7 @@ namespace OpenDentBusiness{
 						List<EhrMeasureEvent> listRequests=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.ElectronicCopyRequested);
 						List<EhrMeasureEvent> listRequestsPeriod=new List<EhrMeasureEvent>();
 						for(int r=0;r<listRequests.Count;r++) {
-							if(listRequests[r].DateTEvent < DateTime.Now.AddYears(-1)) {//not within the last year
+							if(listRequests[r].Date < DateTime.Now.AddYears(-1)) {//not within the last year
 								continue;
 							}
 							listRequestsPeriod.Add(listRequests[r]);
@@ -2292,18 +2292,18 @@ namespace OpenDentBusiness{
 							List<EhrMeasureEvent> listCopiesProvided=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.ElectronicCopyProvidedToPt);
 							for(int rp=0;rp<listRequestsPeriod.Count;rp++) {
 								copyProvidedinTime=false;
-								DateTime deadlineDateCopy=listRequestsPeriod[rp].DateTEvent.Date.AddDays(3);
-								if(listRequestsPeriod[rp].DateTEvent.DayOfWeek==DayOfWeek.Wednesday 
-									|| listRequestsPeriod[rp].DateTEvent.DayOfWeek==DayOfWeek.Thursday 
-									|| listRequestsPeriod[rp].DateTEvent.DayOfWeek==DayOfWeek.Friday) 
+								DateTime deadlineDateCopy=listRequestsPeriod[rp].Date.Date.AddDays(3);
+								if(listRequestsPeriod[rp].Date.DayOfWeek==DayOfWeek.Wednesday 
+									|| listRequestsPeriod[rp].Date.DayOfWeek==DayOfWeek.Thursday 
+									|| listRequestsPeriod[rp].Date.DayOfWeek==DayOfWeek.Friday) 
 								{
 									deadlineDateCopy.AddDays(2);//add two days for the weekend
 								}
 								for(int cp=0;cp<listCopiesProvided.Count;cp++) {
-									if(listCopiesProvided[cp].DateTEvent.Date > deadlineDateCopy) {
+									if(listCopiesProvided[cp].Date.Date > deadlineDateCopy) {
 										continue;
 									}
-									if(listCopiesProvided[cp].DateTEvent.Date < listRequestsPeriod[rp].DateTEvent.Date) {
+									if(listCopiesProvided[cp].Date.Date < listRequestsPeriod[rp].Date.Date) {
 										continue;
 									}
 									copyProvidedinTime=true;
@@ -2351,10 +2351,10 @@ namespace OpenDentBusiness{
 									deadlineDate=deadlineDate.AddDays(2);//add two days for the weekend
 								}
 								for(int r=0;r<listClinSum.Count;r++) {
-									if(listClinSum[r].DateTEvent.Date > deadlineDate) {
+									if(listClinSum[r].Date.Date > deadlineDate) {
 										continue;
 									}
-									if(listClinSum[r].DateTEvent.Date < listVisits[p]) {
+									if(listClinSum[r].Date.Date < listVisits[p]) {
 										continue;
 									}
 									summaryProvidedinTime=true;
@@ -2394,7 +2394,7 @@ namespace OpenDentBusiness{
 							//during reporting period.
 							bool withinLastYear=false;
 							for(int r=0;r<listReminders.Count;r++) {
-								if(listReminders[r].DateTEvent > DateTime.Now.AddYears(-1)) {
+								if(listReminders[r].Date > DateTime.Now.AddYears(-1)) {
 									withinLastYear=true;
 								}
 							}
@@ -2433,7 +2433,7 @@ namespace OpenDentBusiness{
 							List<EhrMeasureEvent> listReconciles=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.MedicationReconcile);
 							int countReconciles=0;//during reporting period.
 							for(int r=0;r<listReconciles.Count;r++) {
-								if(listReconciles[r].DateTEvent > DateTime.Now.AddYears(-1)) {//within the same period as the count for referrals.
+								if(listReconciles[r].Date > DateTime.Now.AddYears(-1)) {//within the same period as the count for referrals.
 									countReconciles++;
 								}
 							}
@@ -2464,11 +2464,11 @@ namespace OpenDentBusiness{
 							List<EhrMeasureEvent> listCcds=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.SummaryOfCareProvidedToDr);
 							int countCcds=0;//during reporting period.
 							for(int r=0;r<listCcds.Count;r++) {
-								if(listCcds[r].DateTEvent > DateTime.Now.AddYears(-1) && listCcds[r].FKey!=0) {//Quick filter for measure events that do not meet the criterion.
+								if(listCcds[r].Date > DateTime.Now.AddYears(-1) && listCcds[r].ObjectId!=0) {//Quick filter for measure events that do not meet the criterion.
 									//Loop through all ref attaches and only count the ones that meet all measure requirements.
 									for(int c=0;c<listRefAttach.Count;c++) {
 										if(listRefAttach[c].RefType==ReferralType.RefTo
-											&& listRefAttach[c].RefAttachNum==listCcds[r].FKey
+											&& listRefAttach[c].RefAttachNum==listCcds[r].ObjectId
 											&& listRefAttach[c].IsTransitionOfCare 
 											&& listRefAttach[c].ProvNum!=0 
 											&& listRefAttach[c].RefDate > DateTime.Now.AddYears(-1)) 
@@ -4345,7 +4345,7 @@ namespace OpenDentBusiness{
 							mu.Details="No online access provided.";
 						}
 						else {
-							mu.Details="Online access provided: "+listOnline[listOnline.Count-1].DateTEvent.ToShortDateString();//most recent
+							mu.Details="Online access provided: "+listOnline[listOnline.Count-1].Date.ToShortDateString();//most recent
 							mu.Met=MuMet.True;
 						}
 						mu.Action="Provide online Access";
@@ -4637,7 +4637,7 @@ namespace OpenDentBusiness{
 						List<EhrMeasureEvent> listRequests=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.ElectronicCopyRequested);
 						List<EhrMeasureEvent> listRequestsPeriod=new List<EhrMeasureEvent>();
 						for(int r=0;r<listRequests.Count;r++) {
-							if(listRequests[r].DateTEvent<DateTime.Now.AddYears(-1) || listRequests[r].PatNum!=pat.PatNum) {//not within the last year
+							if(listRequests[r].Date<DateTime.Now.AddYears(-1) || listRequests[r].PatientId!=pat.PatNum) {//not within the last year
 								continue;
 							}
 							listRequestsPeriod.Add(listRequests[r]);
@@ -4680,10 +4680,10 @@ namespace OpenDentBusiness{
 									deadlineDate=deadlineDate.AddDays(2);//add two days for the weekend
 								}
 								for(int r=0;r<listClinSum.Count;r++) {
-									if(listClinSum[r].DateTEvent.Date > deadlineDate) {
+									if(listClinSum[r].Date.Date > deadlineDate) {
 										continue;
 									}
-									if(listClinSum[r].DateTEvent.Date < listVisits[p]) {
+									if(listClinSum[r].Date.Date < listVisits[p]) {
 										continue;
 									}
 									summaryProvidedinTime=true;
@@ -4729,7 +4729,7 @@ namespace OpenDentBusiness{
 							//during reporting period.
 							bool withinLastYear=false;
 							for(int r=0;r<listReminders.Count;r++) {
-								if(listReminders[r].DateTEvent > DateTime.Now.AddYears(-1)) {
+								if(listReminders[r].Date > DateTime.Now.AddYears(-1)) {
 									withinLastYear=true;
 								}
 							}
@@ -4768,7 +4768,7 @@ namespace OpenDentBusiness{
 							List<EhrMeasureEvent> listReconciles=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.MedicationReconcile);
 							int countReconciles=0;//during reporting period.
 							for(int r=0;r<listReconciles.Count;r++) {
-								if(listReconciles[r].DateTEvent > DateTime.Now.AddYears(-1)) {//within the same period as the count for referrals.
+								if(listReconciles[r].Date > DateTime.Now.AddYears(-1)) {//within the same period as the count for referrals.
 									countReconciles++;
 								}
 							}
@@ -4799,11 +4799,11 @@ namespace OpenDentBusiness{
 							List<EhrMeasureEvent> listCcds=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.SummaryOfCareProvidedToDr);
 							int countCcds=0;//during reporting period.
 							for(int r=0;r<listCcds.Count;r++) {
-								if(listCcds[r].DateTEvent > DateTime.Now.AddYears(-1) && listCcds[r].FKey!=0) {//Quick filter for measure events that do not meet the criterion.
+								if(listCcds[r].Date > DateTime.Now.AddYears(-1) && listCcds[r].ObjectId!=0) {//Quick filter for measure events that do not meet the criterion.
 									//Loop through all ref attaches and only count the ones that meet all measure requirements.
 									for(int c=0;c<listRefAttach.Count;c++) {
 										if(listRefAttach[c].RefType==ReferralType.RefTo
-											&& listRefAttach[c].RefAttachNum==listCcds[r].FKey
+											&& listRefAttach[c].RefAttachNum==listCcds[r].ObjectId
 											&& listRefAttach[c].IsTransitionOfCare 
 											&& listRefAttach[c].ProvNum!=0 
 											&& listRefAttach[c].RefDate > DateTime.Now.AddYears(-1)) 
@@ -4841,11 +4841,11 @@ namespace OpenDentBusiness{
 							List<EhrMeasureEvent> listCcds=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.SummaryOfCareProvidedToDrElectronic);
 							int countCcds=0;//during reporting period.
 							for(int r=0;r<listCcds.Count;r++) {
-								if(listCcds[r].DateTEvent > DateTime.Now.AddYears(-1) && listCcds[r].FKey!=0) {//Quick filter for measure events that do not meet the criterion.
+								if(listCcds[r].Date > DateTime.Now.AddYears(-1) && listCcds[r].ObjectId!=0) {//Quick filter for measure events that do not meet the criterion.
 									//Loop through all ref attaches and only count the ones that meet all measure requirements.
 									for(int c=0;c<listRefAttach.Count;c++) {
 										if(listRefAttach[c].RefType==ReferralType.RefTo
-											&& listRefAttach[c].RefAttachNum==listCcds[r].FKey
+											&& listRefAttach[c].RefAttachNum==listCcds[r].ObjectId
 											&& listRefAttach[c].IsTransitionOfCare 
 											&& listRefAttach[c].ProvNum!=0 
 											&& listRefAttach[c].RefDate > DateTime.Now.AddYears(-1)) 
@@ -4880,7 +4880,7 @@ namespace OpenDentBusiness{
 							}
 						}
 						for(int p=0;p<listMsg.Count;p++) {
-							if(listMsg[p].PatNum==pat.PatNum) {
+							if(listMsg[p].PatientId==pat.PatNum) {
 								msgCount++;
 							}
 						}
@@ -5202,7 +5202,7 @@ namespace OpenDentBusiness{
 							mu.Details="No online access provided.";
 						}
 						else {
-							mu.Details="Online access provided: "+listOnline[listOnline.Count-1].DateTEvent.ToShortDateString();//most recent
+							mu.Details="Online access provided: "+listOnline[listOnline.Count-1].Date.ToShortDateString();//most recent
 							mu.Met=MuMet.True;
 						}
 						mu.Action="Provide online Access";
@@ -5407,7 +5407,7 @@ namespace OpenDentBusiness{
 						List<EhrMeasureEvent> listRequests=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.ElectronicCopyRequested);
 						List<EhrMeasureEvent> listRequestsPeriod=new List<EhrMeasureEvent>();
 						for(int r=0;r<listRequests.Count;r++) {
-							if(listRequests[r].DateTEvent<DateTime.Now.AddYears(-1) || listRequests[r].PatNum!=pat.PatNum) {//not within the last year
+							if(listRequests[r].Date<DateTime.Now.AddYears(-1) || listRequests[r].PatientId!=pat.PatNum) {//not within the last year
 								continue;
 							}
 							listRequestsPeriod.Add(listRequests[r]);
@@ -5447,7 +5447,7 @@ namespace OpenDentBusiness{
 							List<EhrMeasureEvent> listReconciles=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.MedicationReconcile);
 							int countReconciles=0;//during reporting period.
 							for(int r=0;r<listReconciles.Count;r++) {
-								if(listReconciles[r].DateTEvent > DateTime.Now.AddYears(-1)) {//within the same period as the count for referrals.
+								if(listReconciles[r].Date > DateTime.Now.AddYears(-1)) {//within the same period as the count for referrals.
 									countReconciles++;
 								}
 							}
@@ -5478,11 +5478,11 @@ namespace OpenDentBusiness{
 							List<EhrMeasureEvent> listCcds=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.SummaryOfCareProvidedToDr);
 							int countCcds=0;//during reporting period.
 							for(int r=0;r<listCcds.Count;r++) {
-								if(listCcds[r].DateTEvent > DateTime.Now.AddYears(-1) && listCcds[r].FKey!=0) {//Quick filter for measure events that do not meet the criterion.
+								if(listCcds[r].Date > DateTime.Now.AddYears(-1) && listCcds[r].ObjectId!=0) {//Quick filter for measure events that do not meet the criterion.
 									//Loop through all ref attaches and only count the ones that meet all measure requirements.
 									for(int c=0;c<listRefAttach.Count;c++) {
 										if(listRefAttach[c].RefType==ReferralType.RefTo
-											&& listRefAttach[c].RefAttachNum==listCcds[r].FKey
+											&& listRefAttach[c].RefAttachNum==listCcds[r].ObjectId
 											&& listRefAttach[c].IsTransitionOfCare 
 											&& listRefAttach[c].ProvNum!=0 
 											&& listRefAttach[c].RefDate > DateTime.Now.AddYears(-1)) 
@@ -5520,11 +5520,11 @@ namespace OpenDentBusiness{
 							List<EhrMeasureEvent> listCcds=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.SummaryOfCareProvidedToDrElectronic);
 							int countCcds=0;//during reporting period.
 							for(int r=0;r<listCcds.Count;r++) {
-								if(listCcds[r].DateTEvent > DateTime.Now.AddYears(-1) && listCcds[r].FKey!=0) {//Quick filter for measure events that do not meet the criterion.
+								if(listCcds[r].Date > DateTime.Now.AddYears(-1) && listCcds[r].ObjectId!=0) {//Quick filter for measure events that do not meet the criterion.
 									//Loop through all ref attaches and only count the ones that meet all measure requirements.
 									for(int c=0;c<listRefAttach.Count;c++) {
 										if(listRefAttach[c].RefType==ReferralType.RefTo
-											&& listRefAttach[c].RefAttachNum==listCcds[r].FKey
+											&& listRefAttach[c].RefAttachNum==listCcds[r].ObjectId
 											&& listRefAttach[c].IsTransitionOfCare 
 											&& listRefAttach[c].ProvNum!=0 
 											&& listRefAttach[c].RefDate > DateTime.Now.AddYears(-1)) 
@@ -6882,7 +6882,7 @@ namespace OpenDentBusiness{
 				List<EhrMeasureEvent> listReconciles=EhrMeasureEvents.GetByType(listMeasureEvents,EhrMeasureEventType.MedicationReconcile);
 				int reconcileCount=0;//during reporting period.
 				for(int i=0;i<listReconciles.Count;i++) {
-					if(listReconciles[i].DateTEvent > DateTime.Now.AddYears(-1)) {//within the same period as the count for referrals.
+					if(listReconciles[i].Date > DateTime.Now.AddYears(-1)) {//within the same period as the count for referrals.
 						reconcileCount++;
 					}
 				}

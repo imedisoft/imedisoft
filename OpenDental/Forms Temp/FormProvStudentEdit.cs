@@ -14,7 +14,7 @@ namespace OpenDental
 	{
 		private long _autoUserName;
 		private bool _isGeneratingAbbr = true;
-		private Userod _existingUser;
+		private User _existingUser;
 		///<summary>Set this when selecting a pre-existing Student.</summary>
 		public Provider ProvStudent;
 		private List<SchoolClass> _listSchoolClasses;
@@ -36,7 +36,7 @@ namespace OpenDental
 			},
 				(int)TimeSpan.FromSeconds(0.5).TotalMilliseconds,
 				textFirstName, textLastName);
-			_existingUser = new Userod();
+			_existingUser = new User();
 			//Load the Combo Box
 			_listSchoolClasses = SchoolClasses.GetAll();
 			for (int i = 0; i < _listSchoolClasses.Count; i++)
@@ -83,7 +83,7 @@ namespace OpenDental
 				textAbbr.Text = ProvStudent.Abbr;
 				textFirstName.Text = ProvStudent.FirstName;
 				textLastName.Text = ProvStudent.LastName;
-				List<Userod> userList = Providers.GetAttachedUsers(ProvStudent.Id);
+				List<User> userList = Providers.GetAttachedUsers(ProvStudent.Id);
 				if (userList.Count > 0)
 				{
 					textUserName.Text = userList[0].UserName;//Should always happen if they are a student.
@@ -146,7 +146,7 @@ namespace OpenDental
 			ProvStudent.LastName = textLastName.Text;
 			ProvStudent.Abbr = textAbbr.Text;
 			ProvStudent.SchoolClassId = _listSchoolClasses[comboClass.SelectedIndex].Id;
-			Userod newUser = new Userod();
+			User newUser = new User();
 			bool isAutoUserName = true;
 			if (ProvStudent.Id > 0 || _autoUserName.ToString() != textUserName.Text)
 			{
@@ -170,7 +170,7 @@ namespace OpenDental
 				newUser.UserName = _autoUserName.ToString();
 				newUser.PasswordHash = Password.Hash(textPassword.Text);
 				newUser.ProviderId = provNum;
-				Userods.Insert(newUser, new List<long> { Preferences.GetLong(PreferenceName.SecurityGroupForStudents) });
+				Users.Insert(newUser, new List<long> { Preferences.GetLong(PreferenceName.SecurityGroupForStudents) });
 			}
 			else
 			{//Has changed the user name from the default or is editing a pre-existing student
@@ -182,14 +182,14 @@ namespace OpenDental
 						newUser.UserName = textUserName.Text;
 						newUser.PasswordHash = Password.Hash(textPassword.Text);
 						newUser.ProviderId = provNum;
-						Userods.Insert(newUser, new List<long> { Preferences.GetLong(PreferenceName.SecurityGroupForStudents) });//Performs validation
+						Users.Insert(newUser, new List<long> { Preferences.GetLong(PreferenceName.SecurityGroupForStudents) });//Performs validation
 					}
 					else
 					{
 						Providers.Update(ProvStudent);
 						_existingUser.UserName = textUserName.Text;
 						_existingUser.PasswordHash = Password.Hash(textPassword.Text);
-						Userods.Update(_existingUser);//Performs validation
+						Users.Update(_existingUser);//Performs validation
 					}
 				}
 				catch (Exception ex)

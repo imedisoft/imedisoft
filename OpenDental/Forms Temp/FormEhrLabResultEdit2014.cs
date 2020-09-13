@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using EhrLaboratories;
+using Imedisoft.Forms;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -271,10 +272,10 @@ namespace OpenDental {
 			if(FormL.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			textObsID.Text=FormL.SelectedLoinc.LoincCode;
+			textObsID.Text=FormL.SelectedLoinc.Code;
 			textObsIDCodeSystemName.Text="LN";
-			textObsIDText.Text=FormL.SelectedLoinc.NameShort;
-			textObsIDOrigText.Text=FormL.SelectedLoinc.NameLongCommon;
+			textObsIDText.Text=FormL.SelectedLoinc.ShortName;
+			textObsIDOrigText.Text=FormL.SelectedLoinc.LongCommonName;
 		}
 
 		private void butCodedElementLoinc_Click(object sender,EventArgs e) {

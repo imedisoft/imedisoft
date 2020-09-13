@@ -5,6 +5,7 @@ using CodeBase;
 using System.Linq;
 using System.Collections.Generic;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	public partial class FormDoseSpotPropertyEdit:ODForm {

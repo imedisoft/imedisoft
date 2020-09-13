@@ -1,4 +1,5 @@
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,7 +7,7 @@ namespace OpenDentBusiness
 {
     public partial class AlertSubs
 	{
-		public static void DeleteAndInsertForSuperUsers(List<Userod> users, List<AlertSub> alertSubs)
+		public static void DeleteAndInsertForSuperUsers(List<User> users, List<AlertSub> alertSubs)
 		{
 			if (users == null || users.Count < 1)
 			{

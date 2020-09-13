@@ -2441,7 +2441,7 @@ namespace OpenDentBusiness
 				procCur.BaseUnits=procCodeCur.BaseUnits;
 				procCur.DiagnosticCode=Preferences.GetString(PreferenceName.ICD9DefaultForNewProcs);
 				procCur.PlaceService=Preferences.GetString(PreferenceName.DefaultProcedurePlaceService, PlaceOfService.Office);//Default Proc Place of Service for the Practice is used.
-				if(Userods.IsUserCpoe(Security.CurrentUser)) {
+				if(Users.IsUserCpoe(Security.CurrentUser)) {
 					//This procedure is considered CPOE because the provider is the one that has added it.
 					procCur.IsCpoe=true;
 				}
@@ -3901,7 +3901,7 @@ namespace OpenDentBusiness
 					Type=Permissions.AppointmentCreate,
 					UserId=appt.SecUserNumEntry,
 					LogDate=DateTime.Now,
-					LogMessage=$"New appointment created from {secLogSource.GetDescription()} by "+Userods.GetUser(appt.SecUserNumEntry)?.UserName,
+					LogMessage=$"New appointment created from {secLogSource.GetDescription()} by "+Users.GetById(appt.SecUserNumEntry)?.UserName,
 					PatientId=appt.PatNum,
 					ObjectId=appt.AptNum,
 					LogSource=secLogSource,
@@ -3916,7 +3916,7 @@ namespace OpenDentBusiness
 					Type=Permissions.AppointmentEdit,
 					UserId=appt.SecUserNumEntry,
 					LogDate=DateTime.Now,
-					LogMessage="Appointment updated from MobileWeb by "+Userods.GetUser(appt.SecUserNumEntry)?.UserName,
+					LogMessage="Appointment updated from MobileWeb by "+Users.GetById(appt.SecUserNumEntry)?.UserName,
 					PatientId=appt.PatNum,
 					ObjectId=appt.AptNum,
 					LogSource=SecurityLogSource.MobileWeb,

@@ -1,5 +1,6 @@
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using Imedisoft.Forms;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -1430,7 +1431,7 @@ namespace OpenDental
 		private void butViewSched_Click(object sender, EventArgs e)
 		{
 			List<long> listPreSelectedEmpNums = gridEmp.SelectedRows.Select(x => ((Employee)x.Tag).Id).ToList();
-			List<long> listPreSelectedProvNums = Userods.GetWhere(x => listPreSelectedEmpNums.Contains(x.EmployeeId.Value) && x.ProviderId != 0)
+			List<long> listPreSelectedProvNums = Users.Find(x => listPreSelectedEmpNums.Contains(x.EmployeeId.Value) && x.ProviderId != 0)
 				.Select(x => x.ProviderId.Value)
 				.ToList();
 			FormSchedule formSched = new FormSchedule(listPreSelectedEmpNums, listPreSelectedProvNums);

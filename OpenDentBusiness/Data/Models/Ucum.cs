@@ -31,5 +31,10 @@ namespace OpenDentBusiness
 		/// True if this unit of measure is or has ever been in use. Useful for assisting users to select common units.
 		/// </summary>
 		public bool IsInUse;
-	}
+
+		/// <summary>
+		/// Returns a string representation of the code.
+		/// </summary>
+		public override string ToString() => Description;
+    }
 }

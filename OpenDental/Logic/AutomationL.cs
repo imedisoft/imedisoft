@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using OpenDentBusiness;
-using System.Windows.Forms;
-using CodeBase;
-using Imedisoft.Data.Models;
+﻿using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using OpenDentBusiness;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace OpenDental
 {
-	public class AutomationL
+    public class AutomationL
 	{
 		///<summary>ProcCodes will be null unless trigger is CompleteProcedure or ScheduledProcedure.
 		///This routine will generally fail silently.  Will return true if a trigger happened.</summary>
@@ -27,7 +25,7 @@ namespace OpenDental
 			{//Could happen for OpenPatient trigger
 				return false;
 			}
-			List<Automation> listAutomations = Automations.GetDeepCopy();
+			List<Automation> listAutomations = Automations.GetAll();
 			bool automationHappened = false;
 			for (int i = 0; i < listAutomations.Count; i++)
 			{
@@ -59,7 +57,7 @@ namespace OpenDental
 				FormSheetFillEdit FormSF;
 				Appointment aptNew;
 				Appointment aptOld;
-				switch (listAutomations[i].AutoAction)
+				switch (listAutomations[i].Action)
 				{
 					case AutomationAction.CreateCommlog:
 						if (Plugins.HookMethod(null, "AutomationL.Trigger_CreateCommlog_start", patNum, aptNum, listAutomations[i].CommType,
@@ -71,7 +69,7 @@ namespace OpenDental
 						Commlog commlogCur = new Commlog();
 						commlogCur.PatNum = patNum;
 						commlogCur.CommDateTime = DateTime.Now;
-						commlogCur.CommType = listAutomations[i].CommType;
+						commlogCur.CommType = listAutomations[i].CommType.Value;
 						commlogCur.Note = listAutomations[i].MessageContent;
 						commlogCur.Mode_ = CommItemMode.None;
 						commlogCur.UserNum = Security.CurrentUser.Id;
@@ -110,7 +108,7 @@ namespace OpenDental
 					case AutomationAction.PrintPatientLetter:
 					case AutomationAction.ShowExamSheet:
 					case AutomationAction.ShowConsentForm:
-						sheetDef = SheetDefs.GetSheetDef(listAutomations[i].SheetDefinitionId);
+						sheetDef = SheetDefs.GetSheetDef(listAutomations[i].SheetDefinitionId.Value);
 						sheet = SheetUtil.CreateSheet(sheetDef, patNum);
 						SheetParameter.SetParameter(sheet, "PatNum", patNum);
 						SheetFiller.FillFields(sheet);
@@ -127,7 +125,7 @@ namespace OpenDental
 							automationHappened = true;
 							continue;
 						}
-						sheetDef = SheetDefs.GetSheetDef(listAutomations[i].SheetDefinitionId);
+						sheetDef = SheetDefs.GetSheetDef(listAutomations[i].SheetDefinitionId.Value);
 						sheet = SheetUtil.CreateSheet(sheetDef, patNum);
 						SheetParameter.SetParameter(sheet, "PatNum", patNum);
 						SheetParameter.SetParameter(sheet, "ReferralNum", referralNum);
@@ -177,7 +175,7 @@ namespace OpenDental
 							continue;
 						}
 						aptOld = aptNew.Copy();
-						aptNew.AppointmentTypeNum = listAutomations[i].AppointmentTypeId;
+						aptNew.AppointmentTypeNum = listAutomations[i].AppointmentTypeId.Value;
 						AppointmentType aptTypeCur = AppointmentTypes.GetFirstOrDefault(x => x.Id == aptNew.AppointmentTypeNum);
 						if (aptTypeCur != null)
 						{
@@ -220,7 +218,7 @@ namespace OpenDental
 						{
 							//This logic is an exact copy of FormRxManage.butPrintSelect_Click()'s logic when 1 Rx is selected.  
 							//If this is updated, that method needs to be updated as well.
-							sheetDef = SheetDefs.GetSheetDef(listAutomations[i].SheetDefinitionId);
+							sheetDef = SheetDefs.GetSheetDef(listAutomations[i].SheetDefinitionId.Value);
 							sheet = SheetUtil.CreateSheet(sheetDef, patNum);
 							SheetParameter.SetParameter(sheet, "RxNum", rx.Id);
 							SheetFiller.FillFields(sheet);
@@ -233,7 +231,7 @@ namespace OpenDental
 					case AutomationAction.ChangePatStatus:
 						Patient pat = Patients.GetPat(patNum);
 						Patient patOld = pat.Copy();
-						pat.PatStatus = listAutomations[i].PatStatus;
+						pat.PatStatus = listAutomations[i].PatientStatus;
 						//Don't allow changing status from Archived if this is a merged patient.
 						if (patOld.PatStatus != pat.PatStatus
 							&& patOld.PatStatus == PatientStatus.Archived
@@ -279,7 +277,7 @@ namespace OpenDental
 						if (Patients.Update(pat, patOld))
 						{
 							SecurityLogs.MakeLogEntry(Permissions.PatientEdit, patNum, "Patient status changed from " + patOld.PatStatus.GetDescription() +
-								" to " + listAutomations[i].PatStatus.GetDescription() + " through ChangePatStatus automation.");
+								" to " + listAutomations[i].PatientStatus.GetDescription() + " through ChangePatStatus automation.");
 						}
 						automationHappened = true;
 						continue;

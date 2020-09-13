@@ -1,5 +1,6 @@
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace OpenDentBusiness
 			Permissions.PayPlanEdit
 		};
 
-		private static Userod currentUser;
+		private static User currentUser;
 
 		/// <summary>
 		/// The last local datetime that there was any mouse or keyboard activity.
@@ -41,7 +42,7 @@ namespace OpenDentBusiness
         /// <summary>
         /// Gets or sets the current user.
         /// </summary>
-        public static Userod CurrentUser
+        public static User CurrentUser
         {
             get => currentUser;
             set
@@ -104,7 +105,7 @@ namespace OpenDentBusiness
 		/// <param name="sheetDefinitionId"></param>
 		/// <param name="objectId">The ID of the object. Set to NULL to check global permission.</param>
 		/// <returns>True if the current user has the specified permission.</returns>
-		public static bool IsAuthorized(Permissions permission, DateTime date, bool silent,  Userod user, long? procedureCodeId, double procedureFee, long? sheetDefinitionId, long? objectId)
+		public static bool IsAuthorized(Permissions permission, DateTime date, bool silent,  User user, long? procedureCodeId, double procedureFee, long? sheetDefinitionId, long? objectId)
 		{
             try
             {
@@ -138,7 +139,7 @@ namespace OpenDentBusiness
 		/// <param name="procedureFee"></param>
 		/// <param name="sheetDefinitionId"></param>
 		/// <param name="objectId"></param>
-		public static void EnsureAuthorized(Permissions permission, DateTime date, Userod user, long? procedureCodeId, double procedureFee, long? sheetDefinitionId, long? objectId)
+		public static void EnsureAuthorized(Permissions permission, DateTime date, User user, long? procedureCodeId, double procedureFee, long? sheetDefinitionId, long? objectId)
 		{
 			if (user == null || !GroupPermissions.HasPermission(user, permission, objectId))
 			{
@@ -165,7 +166,7 @@ namespace OpenDentBusiness
 			}
 
 			// Include CEMT users, as a CEMT user could be logged in when this is checked.
-			var dateAuthorized = GroupPermissions.GetDateRestrictedForPermission(permission, UserGroups.GetForUser(user.Id, true).Select(x => x.Id).ToList());
+			var dateAuthorized = GroupPermissions.GetDateRestrictedForPermission(permission, Users.GetGroups(user.Id, true).Select(x => x.Id).ToList());
 			if (!dateAuthorized.HasValue || date > dateAuthorized)
 			{
 				return;

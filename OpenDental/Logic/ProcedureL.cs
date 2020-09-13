@@ -5,6 +5,7 @@ using OpenDentBusiness;
 using System;
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental
 {

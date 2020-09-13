@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness {
 	public class RpTreatmentFinder {

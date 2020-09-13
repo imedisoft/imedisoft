@@ -6,6 +6,7 @@ using OpenDental.UI;
 using Imedisoft.Data.Models;
 using Imedisoft.Data;
 using System.Linq;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormReconcileProblem:ODForm {
@@ -505,11 +506,9 @@ namespace OpenDental {
 			//newMeasureEvent.MoreInfo="";
 			//EhrMeasureEvents.Insert(newMeasureEvent);
 			for(int inter=0;inter<_listProblemReconcile.Count;inter++) {
-				if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurrentUser.Id).ProblemCDS) {
+				if(CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowCDS && CdsPermissions.GetByUser(Security.CurrentUser.Id).ProblemCDS) {
 					ProblemDefinition disDInter=ProblemDefinitions.GetItem(_listProblemReconcile[inter].ProblemDefId);
-					FormCDSIntervention FormCDSI=new FormCDSIntervention();
-					FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(disDInter,_patCur);
-					FormCDSI.ShowIfRequired(false);
+					FormCdsIntervention.ShowIfRequired(EhrTriggers.TriggerMatch(disDInter, _patCur), false);
 				}
 			}
 			DialogResult=DialogResult.OK;

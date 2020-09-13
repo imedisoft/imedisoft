@@ -350,7 +350,7 @@ namespace OpenDentBusiness{
 			if(tempFileName==null) {
 				return;
 			}
-			Dictionary<string,Loinc> dictLoincs=Loincs.GetAll().ToDictionary(x => x.LoincCode,x => x);
+			Dictionary<string,Loinc> dictLoincs=Loincs.GetAll().ToDictionary(x => x.Code,x => x);
 			string[] lines=File.ReadAllLines(tempFileName);
 			string[] arrayLoinc;
 			Loinc oldLoinc=new Loinc();
@@ -363,42 +363,42 @@ namespace OpenDentBusiness{
 					progress(i+1,lines.Length);
 				}
 				arrayLoinc=lines[i].Split('\t');
-				newLoinc.LoincCode               =arrayLoinc[0];
+				newLoinc.Code               =arrayLoinc[0];
 				newLoinc.Component               =arrayLoinc[1];
-				newLoinc.PropertyObserved        =arrayLoinc[2];
-				newLoinc.TimeAspct               =arrayLoinc[3];
-				newLoinc.SystemMeasured          =arrayLoinc[4];
-				newLoinc.ScaleType               =arrayLoinc[5];
-				newLoinc.MethodType              =arrayLoinc[6];
-				newLoinc.StatusOfCode            =arrayLoinc[7];
-				newLoinc.NameShort               =arrayLoinc[8];
+				newLoinc.Property        =arrayLoinc[2];
+				newLoinc.Time               =arrayLoinc[3];
+				newLoinc.System          =arrayLoinc[4];
+				newLoinc.Scale               =arrayLoinc[5];
+				newLoinc.Method              =arrayLoinc[6];
+				newLoinc.Status            =arrayLoinc[7];
+				newLoinc.ShortName               =arrayLoinc[8];
 				newLoinc.ClassType               =arrayLoinc[9];
 				newLoinc.UnitsRequired           =arrayLoinc[10]=="Y";
 				newLoinc.OrderObs                =arrayLoinc[11];
 				newLoinc.HL7FieldSubfieldID      =arrayLoinc[12];
 				newLoinc.ExternalCopyrightNotice =arrayLoinc[13];
-				newLoinc.NameLongCommon          =arrayLoinc[14];
+				newLoinc.LongCommonName          =arrayLoinc[14];
 				newLoinc.UnitsUCUM               =arrayLoinc[15];
 				newLoinc.RankCommonTests         =PIn.Int(arrayLoinc[16]);
 				newLoinc.RankCommonOrders        =PIn.Int(arrayLoinc[17]);
 				if(dictLoincs.ContainsKey(arrayLoinc[0])) {//code already exists; arrayLoinc[0]==Loinc Code
 					oldLoinc=dictLoincs[arrayLoinc[0]];
 					if(updateExisting &&
-						(oldLoinc.LoincCode                  !=arrayLoinc[0]
+						(oldLoinc.Code                  !=arrayLoinc[0]
 						 || oldLoinc.Component               !=arrayLoinc[1]
-						 || oldLoinc.PropertyObserved        !=arrayLoinc[2]
-						 || oldLoinc.TimeAspct               !=arrayLoinc[3]
-						 || oldLoinc.SystemMeasured          !=arrayLoinc[4]
-						 || oldLoinc.ScaleType               !=arrayLoinc[5]
-						 || oldLoinc.MethodType              !=arrayLoinc[6]
-						 || oldLoinc.StatusOfCode            !=arrayLoinc[7]
-						 || oldLoinc.NameShort               !=arrayLoinc[8]
+						 || oldLoinc.Property        !=arrayLoinc[2]
+						 || oldLoinc.Time               !=arrayLoinc[3]
+						 || oldLoinc.System          !=arrayLoinc[4]
+						 || oldLoinc.Scale               !=arrayLoinc[5]
+						 || oldLoinc.Method              !=arrayLoinc[6]
+						 || oldLoinc.Status            !=arrayLoinc[7]
+						 || oldLoinc.ShortName               !=arrayLoinc[8]
 						 || oldLoinc.ClassType               !=arrayLoinc[9]
 						 || oldLoinc.UnitsRequired           !=(arrayLoinc[10]=="Y")
 						 || oldLoinc.OrderObs                !=arrayLoinc[11]
 						 || oldLoinc.HL7FieldSubfieldID      !=arrayLoinc[12]
 						 || oldLoinc.ExternalCopyrightNotice !=arrayLoinc[13]
-						 || oldLoinc.NameLongCommon          !=arrayLoinc[14]
+						 || oldLoinc.LongCommonName          !=arrayLoinc[14]
 						 || oldLoinc.UnitsUCUM               !=arrayLoinc[15]
 						 || oldLoinc.RankCommonTests         !=PIn.Int(arrayLoinc[16])
 						 || oldLoinc.RankCommonOrders        !=PIn.Int(arrayLoinc[17]))) 

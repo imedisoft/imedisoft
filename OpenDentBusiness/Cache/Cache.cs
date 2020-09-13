@@ -64,7 +64,7 @@ namespace OpenDentBusiness
 				ODEvent.Fire(EventCategory.Cache, suffix + InvalidType.AutoCodes.ToString());
 				AutoCodes.RefreshCache();
 				AutoCodeItems.RefreshCache();
-				AutoCodeConds.RefreshCache();
+				AutoCodeConditions.RefreshCache();
 			}
 
 			if (refreshAll || invalidTypes.Contains(InvalidType.Automation))
@@ -330,11 +330,10 @@ namespace OpenDentBusiness
 				//There is a chance that some future engineer will introduce a signal that tells another workstation to refresh the users when it shouldn't.
 				//It is completely safe to skip over getting the user cache when IsCacheAllowed is false because the setter for that boolean nulls the cache.
 				//This means that the cache will refill itself automatically the next time it is accessed as soon as the boolean flips back to true.
-                Userods.RefreshCache();
+                Users.RefreshCache();
 				UserGroups.RefreshCache();
 
 				GroupPermissions.RefreshCache();
-				UserGroupAttaches.GetTableFromCache(true);
 			}
 			if (invalidTypes.Contains(InvalidType.Sheets) || refreshAll)
 			{

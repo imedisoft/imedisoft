@@ -7,15 +7,14 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
+using Imedisoft.Data.Models;
 using MySql.Data.MySqlClient;
-using OpenDentBusiness;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Imedisoft.Data
 {
-	public partial class Employees
+    public partial class Employees
 	{
 		public static Employee FromReader(MySqlDataReader dataReader)
 		{

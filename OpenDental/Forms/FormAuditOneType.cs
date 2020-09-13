@@ -58,7 +58,7 @@ namespace Imedisoft.Forms
 
 			foreach (var securityLog in securityLogs)
 			{
-				var user = Userods.GetUser(securityLog.UserId);
+				var user = Users.GetById(securityLog.UserId);
 
 				var gridRow = new GridRow();
 				gridRow.Cells.Add(securityLog.LogDate.ToShortDateString() + " " + securityLog.LogDate.ToShortTimeString());

@@ -534,6 +534,15 @@
     <Compile Include="Forms Reports\FormRpServiceDateView.designer.cs">
       <DependentUpon>FormRpServiceDateView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms Temp\FormPerioEdit.Designer.cs">
+      <DependentUpon>FormPerioEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms Temp\FormUserGroupEdit.Designer.cs">
+      <DependentUpon>FormUserGroupEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms Temp\FormUserGroupPicker.Designer.cs">
+      <DependentUpon>FormUserGroupPicker.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\DentalSchools\FormSchoolClassEdit.Designer.cs">
       <DependentUpon>FormSchoolClassEdit.cs</DependentUpon>
     </Compile>
@@ -2266,16 +2275,16 @@
     <Compile Include="Forms\DentalSchools\FormDentalSchoolSetup.designer.cs">
       <DependentUpon>FormDentalSchoolSetup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrProviderKeyEdit.cs">
+    <Compile Include="Forms\Ehr\FormEhrProviderKeyEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrProviderKeyEdit.designer.cs">
+    <Compile Include="Forms\Ehr\FormEhrProviderKeyEdit.Designer.cs">
       <DependentUpon>FormEhrProviderKeyEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrProviderKeys.cs">
+    <Compile Include="Forms\Ehr\FormEhrProviderKeys.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormEhrProviderKeys.designer.cs">
+    <Compile Include="Forms\Ehr\FormEhrProviderKeys.Designer.cs">
       <DependentUpon>FormEhrProviderKeys.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormDisplayFieldOrthoEdit.cs">
@@ -2407,23 +2416,23 @@
     <Compile Include="Forms Temp\FormEhrLabOrderEdit2014.Designer.cs">
       <DependentUpon>FormEhrLabOrderEdit2014.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormCDSILabResult.cs">
+    <Compile Include="Forms Temp\FormCdsInterventionLabResult.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormCDSILabResult.Designer.cs">
-      <DependentUpon>FormCDSILabResult.cs</DependentUpon>
+    <Compile Include="Forms Temp\FormCdsInterventionLabResult.Designer.cs">
+      <DependentUpon>FormCdsInterventionLabResult.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormCDSSetup.cs">
+    <Compile Include="Forms\Ehr\FormCdsSetup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormCDSSetup.designer.cs">
-      <DependentUpon>FormCDSSetup.cs</DependentUpon>
+    <Compile Include="Forms\Ehr\FormCdsSetup.Designer.cs">
+      <DependentUpon>FormCdsSetup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormCDSIntervention.cs">
+    <Compile Include="Forms\Ehr\FormCdsIntervention.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormCDSIntervention.designer.cs">
-      <DependentUpon>FormCDSIntervention.cs</DependentUpon>
+    <Compile Include="Forms\Ehr\FormCdsIntervention.designer.cs">
+      <DependentUpon>FormCdsIntervention.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormAlertSimple.cs">
       <SubType>Form</SubType>
@@ -2736,12 +2745,6 @@
     </Compile>
     <Compile Include="Forms Temp\FormLoincs.Designer.cs">
       <DependentUpon>FormLoincs.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms Temp\FormMedicationUpdate.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormMedicationUpdate.designer.cs">
-      <DependentUpon>FormMedicationUpdate.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormPatListEHR2014.cs">
       <SubType>Form</SubType>
@@ -3270,18 +3273,6 @@
     </Compile>
     <Compile Include="Forms Temp\FormApptPrintSetup.designer.cs">
       <DependentUpon>FormApptPrintSetup.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms Temp\FormEhrProvKeyEditCust.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormEhrProvKeyEditCust.designer.cs">
-      <DependentUpon>FormEhrProvKeyEditCust.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms Temp\FormEhrProvKeysCustomer.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormEhrProvKeysCustomer.designer.cs">
-      <DependentUpon>FormEhrProvKeysCustomer.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormOrthoChart.cs">
       <SubType>Form</SubType>
@@ -6018,11 +6009,11 @@
     <EmbeddedResource Include="Forms\DentalSchools\FormDentalSchoolSetup.resx">
       <DependentUpon>FormDentalSchoolSetup.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEhrProviderKeyEdit.resx">
+    <EmbeddedResource Include="Forms\Ehr\FormEhrProviderKeyEdit.resx">
       <DependentUpon>FormEhrProviderKeyEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEhrProviderKeys.resx">
+    <EmbeddedResource Include="Forms\Ehr\FormEhrProviderKeys.resx">
       <DependentUpon>FormEhrProviderKeys.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -6039,9 +6030,6 @@
     <EmbeddedResource Include="Forms Temp\FormEtrans835ClaimEdit.resx">
       <DependentUpon>FormEtrans835ClaimEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormMedicationUpdate.resx">
-      <DependentUpon>FormMedicationUpdate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormUcums.resx">
       <DependentUpon>FormUcums.cs</DependentUpon>
@@ -6101,15 +6089,15 @@
     <EmbeddedResource Include="Forms Temp\FormEhrLabOrderEdit2014.resx">
       <DependentUpon>FormEhrLabOrderEdit2014.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormCDSILabResult.resx">
-      <DependentUpon>FormCDSILabResult.cs</DependentUpon>
+    <EmbeddedResource Include="Forms Temp\FormCdsInterventionLabResult.resx">
+      <DependentUpon>FormCdsInterventionLabResult.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormCDSSetup.resx">
-      <DependentUpon>FormCDSSetup.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Ehr\FormCdsSetup.resx">
+      <DependentUpon>FormCdsSetup.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormCDSIntervention.resx">
-      <DependentUpon>FormCDSIntervention.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Ehr\FormCdsIntervention.resx">
+      <DependentUpon>FormCdsIntervention.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormAlertSimple.resx">
       <DependentUpon>FormAlertSimple.cs</DependentUpon>
@@ -6578,14 +6566,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormApptPrintSetup.resx">
       <DependentUpon>FormApptPrintSetup.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEhrProvKeyEditCust.resx">
-      <DependentUpon>FormEhrProvKeyEditCust.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormEhrProvKeysCustomer.resx">
-      <DependentUpon>FormEhrProvKeysCustomer.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormOrthoChart.resx">
@@ -8601,6 +8581,26 @@
     <None Include="Web References\NewCrop\Update1.wsdl" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\IconThumbtack.png" />
+    <None Include="Resources\IconCheckGreen.png" />
+    <None Include="Resources\IconArrowRightSmall.png" />
+    <None Include="Resources\IconArrowLeftSmall.png" />
+    <None Include="Resources\Icon32LockOpenGreen.png" />
+    <None Include="Resources\Icon32LockOpen.png" />
+    <None Include="Resources\IconLockRed.png" />
+    <None Include="Resources\IconLockOpen.png" />
+    <None Include="Resources\IconLock.png" />
+    <None Include="Resources\Icon32LockRed.png" />
+    <None Include="Resources\Icon32Lock.png" />
+    <None Include="Resources\IconLockOpenGreen.png" />
+    <None Include="Resources\IconInfoCircleSmall.png" />
+    <None Include="Resources\IconInfoCircle.png" />
+    <None Include="Resources\IconInfo.png" />
+    <None Include="Resources\IconInfoSmall.png" />
+    <None Include="Resources\Icon32Cog.png" />
+    <None Include="Resources\IconCogs.png" />
+    <None Include="Resources\IconCog.png" />
+    <None Include="Resources\Icon32Cogs.png" />
     <None Include="Resources\IconArrowDownGreen.png" />
     <None Include="Resources\IconUnlinkSmallRed.png" />
     <None Include="Resources\IconUnlinkRed.png" />
@@ -8627,7 +8627,6 @@
     <None Include="Resources\IconSave.png" />
     <None Include="Resources\IconDownload.png" />
     <None Include="Resources\Icon32Save.png" />
-    <None Include="Resources\IconThumbtack.png" />
     <None Include="Resources\IconStickyNoteOpen.png" />
     <None Include="Resources\IconStickyNote.png" />
     <None Include="Resources\IconPrint.png" />
@@ -8658,7 +8657,6 @@
     <None Include="Resources\Icon32Users.png" />
     <None Include="Resources\Icon32Tooth.png" />
     <None Include="Resources\Icon32MoneyCheckAlt.png" />
-    <None Include="Resources\Icon32Cogs.png" />
     <None Include="Resources\Icon32ClipboardList.png" />
     <None Include="Resources\ProgramIconBlue.ico" />
     <None Include="Resources\ProgramIconRed.ico" />
@@ -9173,6 +9171,8 @@
     <None Include="Resources\AForge.txt" />
     <Content Include="Resources\Anesth.gif" />
     <None Include="Resources\arrowRightLine.gif" />
+    <None Include="Resources\ArrowRightSmall.png" />
+    <None Include="Resources\ArrowLeftSmall.png" />
     <Content Include="Resources\arrowRightTriangle.gif" />
     <None Include="Resources\arrowDownTriangle.gif" />
     <None Include="Resources\arrowUpTriangle.gif" />

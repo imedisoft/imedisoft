@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using System.Collections.Generic;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	///<summary></summary>
@@ -143,7 +145,7 @@ namespace OpenDental{
 		#endregion
 
  		private void FormAutoItemEdit_Load(object sender, System.EventArgs e) {
-			AutoCodeConds.RefreshCache();    
+			AutoCodeConditions.RefreshCache();    
 			if(IsNew){
 				this.Text="Add Auto Code Item";  
 			}
@@ -156,37 +158,37 @@ namespace OpenDental{
 
 		private void FillList() {
 			listConditions.Items.Clear();
-			foreach(string s in Enum.GetNames(typeof(AutoCondition))) {
+			foreach(string s in Enum.GetNames(typeof(AutoCodeConditionType))) {
 				listConditions.Items.Add(s);
 			}
-			List<AutoCodeCond> listAutoCodeConds=AutoCodeConds.GetWhere(x => x.AutoCodeItemId==AutoCodeItemCur.Id);
+			List<AutoCodeCondition> listAutoCodeConds=AutoCodeConditions.GetWhere(x => x.AutoCodeItemId==AutoCodeItemCur.Id);
 			for(int i=0;i<listAutoCodeConds.Count;i++) {
-				listConditions.SetSelected((int)listAutoCodeConds[i].Cond,true);
+				listConditions.SetSelected((int)listAutoCodeConds[i].Type,true);
 			}
 		}
 
-		private void butOK_Click(object sender,System.EventArgs e) {
-			if(textADA.Text=="") {
+		private void butOK_Click(object sender, System.EventArgs e)
+		{
+			if (textADA.Text == "")
+			{
 				MessageBox.Show("Code cannot be left blank.");
-				listConditions.SelectedIndex=-1;
+				listConditions.SelectedIndex = -1;
 				FillList();
 				return;
 			}
-			AutoCodeItemCur.ProcedureCodeId=ProcedureCodes.GetCodeNum(textADA.Text);
-			if(IsNew) {
-				AutoCodeItems.Insert(AutoCodeItemCur);
+			AutoCodeItemCur.ProcedureCodeId = ProcedureCodes.GetCodeNum(textADA.Text);
+
+			AutoCodeItems.Save(AutoCodeItemCur);
+
+			AutoCodeConditions.DeleteForAutoCodeItemId(AutoCodeItemCur.Id);
+			for (int i = 0; i < listConditions.SelectedIndices.Count; i++)
+			{
+				AutoCodeCondition AutoCodeCondCur = new AutoCodeCondition();
+				AutoCodeCondCur.AutoCodeItemId = AutoCodeItemCur.Id;
+				AutoCodeCondCur.Type = (AutoCodeConditionType)listConditions.SelectedIndices[i];
+				AutoCodeConditions.Save(AutoCodeCondCur);
 			}
-			else {
-				AutoCodeItems.Update(AutoCodeItemCur);
-			}
-			AutoCodeConds.DeleteForAutoCodeItemId(AutoCodeItemCur.Id);
-			for(int i=0;i<listConditions.SelectedIndices.Count;i++) {
-				AutoCodeCond AutoCodeCondCur=new AutoCodeCond();
-				AutoCodeCondCur.AutoCodeItemId=AutoCodeItemCur.Id;
-				AutoCodeCondCur.Cond=(AutoCondition)listConditions.SelectedIndices[i];
-				AutoCodeConds.Insert(AutoCodeCondCur);
-			}
-			DialogResult=DialogResult.OK;
+			DialogResult = DialogResult.OK;
 		}
 
 		private void butChange_Click(object sender,System.EventArgs e) {
@@ -198,11 +200,11 @@ namespace OpenDental{
 				return;
 			}
 			if(AutoCodeItems.GetContainsKey(FormP.SelectedCodeNum)
-				&& AutoCodeItems.GetOne(FormP.SelectedCodeNum).AutoCodeId != AutoCodeItemCur.AutoCodeId) 
+				&& AutoCodeItems.GetById(FormP.SelectedCodeNum).AutoCodeId != AutoCodeItemCur.AutoCodeId) 
 			{
 				//This section is a fix for an old bug that did not cause items to get deleted properly
-				if(!AutoCodes.GetContainsKey(AutoCodeItems.GetOne(FormP.SelectedCodeNum).AutoCodeId)) {
-					AutoCodeItems.Delete(AutoCodeItems.GetOne(FormP.SelectedCodeNum));
+				if(!AutoCodes.GetContainsKey(AutoCodeItems.GetById(FormP.SelectedCodeNum).AutoCodeId)) {
+					AutoCodeItems.Delete(AutoCodeItems.GetById(FormP.SelectedCodeNum));
 					textADA.Text=ProcedureCodes.GetStringProcCode(FormP.SelectedCodeNum);
 				}
 				else {

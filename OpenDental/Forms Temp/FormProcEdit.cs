@@ -59,7 +59,7 @@ namespace OpenDental {
 		private Snomed _snomedBodySite=null;
 		private bool _isQuickAdd=false;
 		///<summary>Users can temporarily log in on this form.  Defaults to Security.CurUser.</summary>
-		private Userod _curUser=Security.CurrentUser;
+		private User _curUser=Security.CurrentUser;
 		///<summary>True if the user clicked the Change User button.</summary>
 		private bool _hasUserChanged;
 		///<summary></summary>
@@ -385,7 +385,7 @@ namespace OpenDental {
 				butAppend.Enabled=false;//don't allow appending notes either.
 				butChangeUser.Enabled=false;
 			}
-			else if(!Userods.CanUserSignNote()) {
+			else if(!Users.CanUserSignNote()) {
 				signatureBoxWrapper.Enabled=false;
 				labelPermAlert.Visible=true;
 				labelPermAlert.Text="Notes can only be signed by providers.";
@@ -691,7 +691,7 @@ namespace OpenDental {
 			}
 			checkIsEmergency.Checked=(_procCur.Urgency==ProcUrgency.Emergency);
 			textClaimNote.Text=_procCur.ClaimNote;
-			textUser.Text=Userods.GetName(_procCur.UserNum);//might be blank. Will change automatically if user changes note or alters sig.
+			textUser.Text=Users.GetUserName(_procCur.UserNum);//might be blank. Will change automatically if user changes note or alters sig.
 			string keyData=GetSignatureKey();
 			signatureBoxWrapper.FillSignature(_procCur.SigIsTopaz,keyData,_procCur.Signature);
 			if(Programs.UsingOrion) {//panelOrion.Visible) {
@@ -3052,10 +3052,10 @@ namespace OpenDental {
 				if(listProcNotes.Count > 0 && _procOld.Note!=listProcNotes[0].Note) {
 					//Manipulate ProcCur.Note to include the most recent note in its entirety with some custom information required by job #2484
 					//Use DateTime.Now because the ProcNote won't get inserted until farther down in this method but we have to do this manipulation before sig.
-					_procCur.Note=DateTime.Now.ToString()+"  "+Userods.GetName(_procCur.UserNum)+"\r\n"+_procCur.Note;
+					_procCur.Note=DateTime.Now.ToString()+"  "+Users.GetUserName(_procCur.UserNum)+"\r\n"+_procCur.Note;
 					//Now we need to append the old note from the database in the same format.
 					_procCur.Note+="\r\n------------------------------------------------------\r\n"
-						+listProcNotes[0].EntryDateTime.ToString()+"  "+Userods.GetName(listProcNotes[0].UserNum)
+						+listProcNotes[0].EntryDateTime.ToString()+"  "+Users.GetUserName(listProcNotes[0].UserNum)
 						+"\r\n"+listProcNotes[0].Note;
 				}
 			}
@@ -3349,7 +3349,7 @@ namespace OpenDental {
 			FormChangeUser.ShowDialog();
 			if(FormChangeUser.DialogResult==DialogResult.OK) { //if successful
 				_curUser=FormChangeUser.User; //assign temp user
-				bool canUserSignNote=Userods.CanUserSignNote(_curUser);//only show if user can sign
+				bool canUserSignNote=Users.CanUserSignNote(_curUser);//only show if user can sign
 				signatureBoxWrapper.Enabled=canUserSignNote;
 				if(!labelPermAlert.Visible && !canUserSignNote) {
 					labelPermAlert.Text="Notes can only be signed by providers.";
@@ -3427,7 +3427,7 @@ namespace OpenDental {
 
 		private void FormProcEdit_FormClosing(object sender,FormClosingEventArgs e) {
 			//We need to update the CPOE status even if the user is cancelling out of the window.
-			if(Userods.IsUserCpoe(_curUser) && !_procOld.IsCpoe) {
+			if(Users.IsUserCpoe(_curUser) && !_procOld.IsCpoe) {
 				//There's a possibility that we are making a second, unnecessary call to the database here but it is worth it to help meet EHR measures.
 				Procedures.UpdateCpoeForProc(_procCur.ProcNum,true);
 				//Make a log that we edited this procedure's CPOE flag.

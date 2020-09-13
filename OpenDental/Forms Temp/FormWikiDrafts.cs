@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormWikiDrafts:ODForm {
@@ -68,7 +69,7 @@ namespace OpenDental {
 			_listWikiPage=WikiPages.GetDraftsByTitle(OwnerForm.WikiPageCur.PageTitle);
 			for(int i=0;i<_listWikiPage.Count;i++) {
 				GridRow row=new GridRow();
-				row.Cells.Add(Userods.GetName(_listWikiPage[i].UserNum));
+				row.Cells.Add(Users.GetUserName(_listWikiPage[i].UserNum));
 				row.Cells.Add(_listWikiPage[i].DateTimeSaved.ToString());
 				gridMain.Rows.Add(row);
 			}

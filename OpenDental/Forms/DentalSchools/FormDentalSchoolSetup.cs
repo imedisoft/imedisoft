@@ -21,8 +21,8 @@ namespace Imedisoft.Forms
 				return;
 			}
 
-			var studentGroup = UserGroups.GetGroup(Preferences.GetLong(PreferenceName.SecurityGroupForStudents));
-			var instructorGroup = UserGroups.GetGroup(Preferences.GetLong(PreferenceName.SecurityGroupForInstructors));
+			var studentGroup = UserGroups.GetById(Preferences.GetLong(PreferenceName.SecurityGroupForStudents));
+			var instructorGroup = UserGroups.GetById(Preferences.GetLong(PreferenceName.SecurityGroupForInstructors));
 
 			studentsTextBox.Text = studentGroup?.Description;
 			instructorsTextBox.Text = instructorGroup?.Description;
@@ -52,7 +52,7 @@ namespace Imedisoft.Forms
 			{
 				try
 				{
-					Userods.UpdateUserGroupsForDentalSchools(formUserGroupPicker.UserGroup, false);
+					Users.UpdateUserGroupsForDentalSchools(formUserGroupPicker.UserGroup, false);
 				}
 				catch
 				{
@@ -90,7 +90,7 @@ namespace Imedisoft.Forms
 			{
 				try
 				{
-					Userods.UpdateUserGroupsForDentalSchools(formUserGroupPicker.UserGroup, true);
+					Users.UpdateUserGroupsForDentalSchools(formUserGroupPicker.UserGroup, true);
 				}
 				catch
 				{

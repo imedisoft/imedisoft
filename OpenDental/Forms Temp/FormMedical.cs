@@ -1153,9 +1153,9 @@ namespace OpenDental{
 			List<EhrMeasureEvent> listDocumentedMedEvents=EhrMeasureEvents.RefreshByType(PatCur.PatNum,EhrMeasureEventType.CurrentMedsDocumented);
 			_EhrMeasureEventNum=0;
 			for(int i=0;i<listDocumentedMedEvents.Count;i++) {
-				if(listDocumentedMedEvents[i].DateTEvent.Date==DateTime.Today) {
+				if(listDocumentedMedEvents[i].Date.Date==DateTime.Today) {
 					radioMedsDocumentedYes.Checked=true;
-					_EhrMeasureEventNum=listDocumentedMedEvents[i].EhrMeasureEventNum;
+					_EhrMeasureEventNum=listDocumentedMedEvents[i].Id;
 					break;
 				}
 			}
@@ -1186,7 +1186,7 @@ namespace OpenDental{
 			gridToFill.BeginUpdate();
 			gridToFill.Columns.Clear();
 			GridColumn col;
-			if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowInfobutton && !isForPrinting) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
+			if(CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowInfoButton && !isForPrinting) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
 				col=new GridColumn("",18);//infoButton
 				col.ImageList=imageListInfoButton;
 				gridToFill.Columns.Add(col);
@@ -1207,7 +1207,7 @@ namespace OpenDental{
 			GridRow row;
 			for(int i=0;i<medList.Count;i++) {
 				row=new GridRow();
-				if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowInfobutton && !isForPrinting) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
+				if(CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowInfoButton && !isForPrinting) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
 					row.Cells.Add("0");//index of infobutton
 				}
 				if(medList[i].MedicationNum==0) {
@@ -1247,7 +1247,7 @@ namespace OpenDental{
 		}
 
 		private void gridMeds_CellClick(object sender,ODGridClickEventArgs e) {
-			if(!CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowInfobutton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
+			if(!CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowInfoButton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
 				return;
 			}
 			if(e.Col!=0) {
@@ -1281,22 +1281,21 @@ namespace OpenDental{
 			FormMP.ShowDialog();
 			if(FormMP.DialogResult==DialogResult.OK 
 				&& FormMP.MedicationPatCur!=null //Can get be null if the user removed the medication from the patient.
-				&& CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowCDS 
-				&& CDSPermissions.GetForUser(Security.CurrentUser.Id).MedicationCDS) 
+				&& CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowCDS 
+				&& CdsPermissions.GetByUser(Security.CurrentUser.Id).MedicationCDS) 
 			{
-				FormCDSIntervention FormCDSI=new FormCDSIntervention();
 				if(FormMP.MedicationPatCur.MedicationNum > 0) {//0 indicats the med is from NewCrop.
 					Medication medication=Medications.GetById(FormMP.MedicationPatCur.MedicationNum);
 					if(medication!=null) {
-						FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(medication,PatCur);
-						FormCDSI.ShowIfRequired(false);
+
+						FormCdsIntervention.ShowIfRequired(EhrTriggers.TriggerMatch(medication, PatCur), false);
 					}
 				}
 				else if(FormMP.MedicationPatCur.RxCui > 0) {//Meds from NewCrop might have a valid RxNorm.
 					RxNorm rxNorm=RxNorms.GetByRxCUI(FormMP.MedicationPatCur.RxCui.ToString());
 					if(rxNorm!=null) {
-						FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(rxNorm,PatCur);
-						FormCDSI.ShowIfRequired(false);
+
+						FormCdsIntervention.ShowIfRequired(EhrTriggers.TriggerMatch(rxNorm, PatCur), false);
 					}
 				}
 			}
@@ -1311,11 +1310,9 @@ namespace OpenDental{
 			if(FormM.DialogResult!=DialogResult.OK){
 				return;
 			} 
-			if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurrentUser.Id).MedicationCDS) {
-				FormCDSIntervention FormCDSI=new FormCDSIntervention();
-				FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(Medications.GetById(FormM.SelectedMedicationNum),PatCur);
-				FormCDSI.ShowIfRequired();
-				if(FormCDSI.DialogResult==DialogResult.Abort) {
+			if(CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowCDS && CdsPermissions.GetByUser(Security.CurrentUser.Id).MedicationCDS) {
+				var result = FormCdsIntervention.ShowIfRequired(EhrTriggers.TriggerMatch(Medications.GetById(FormM.SelectedMedicationNum), PatCur));
+				if (result == DialogResult.Abort) {
 					return;//do not add medication
 				}
 			}
@@ -1526,7 +1523,7 @@ namespace OpenDental{
 			gridDiseases.BeginUpdate();
 			gridDiseases.Columns.Clear();
 			GridColumn col;
-			if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowInfobutton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
+			if(CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowInfoButton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
 				col=new GridColumn("",18);//infoButton
 				col.ImageList=imageListInfoButton;
 				gridDiseases.Columns.Add(col);
@@ -1541,7 +1538,7 @@ namespace OpenDental{
 			GridRow row;
 			for(int i=0;i<DiseaseList.Count;i++){
 				row=new GridRow();
-				if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowInfobutton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
+				if(CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowInfoButton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
 					row.Cells.Add("0");//index of infobutton
 				}
 				if(DiseaseList[i].ProblemDefId!=0) {
@@ -1572,11 +1569,9 @@ namespace OpenDental{
 				disease.PatientId=PatCur.PatNum;
 				disease.ProblemDefId=FormDD.SelectedProblemDefinitions[i].Id;
 				Problems.Insert(disease);
-				if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurrentUser.Id).ProblemCDS){
-					FormCDSIntervention FormCDSI=new FormCDSIntervention();
-					FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(FormDD.SelectedProblemDefinitions[i],PatCur);
-					FormCDSI.ShowIfRequired();
-					if(FormCDSI.DialogResult==DialogResult.Abort) {
+				if(CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowCDS && CdsPermissions.GetByUser(Security.CurrentUser.Id).ProblemCDS){
+					var result = FormCdsIntervention.ShowIfRequired(EhrTriggers.TriggerMatch(FormDD.SelectedProblemDefinitions[i], PatCur));
+					if (result == DialogResult.Abort) {
 						Problems.Delete(disease);
 						continue;//cancel 
 					}
@@ -1601,7 +1596,7 @@ namespace OpenDental{
 		}*/
 
 		private void gridDiseases_CellClick(object sender,ODGridClickEventArgs e) {
-			if(!CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowInfobutton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
+			if(!CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowInfoButton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
 				return;
 			}
 			if(e.Col!=0) {
@@ -1623,12 +1618,10 @@ namespace OpenDental{
 			FormDiseaseEdit FormD=new FormDiseaseEdit(DiseaseList[e.Row]);
 			FormD.ShowDialog();
 			if(FormD.DialogResult==DialogResult.OK 
-				&& CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowCDS 
-				&& CDSPermissions.GetForUser(Security.CurrentUser.Id).ProblemCDS) 
+				&& CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowCDS 
+				&& CdsPermissions.GetByUser(Security.CurrentUser.Id).ProblemCDS) 
 			{
-				FormCDSIntervention FormCDSI=new FormCDSIntervention();
-				FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(ProblemDefinitions.GetItem(DiseaseList[e.Row].ProblemDefId),PatCur);
-				FormCDSI.ShowIfRequired(false);
+				FormCdsIntervention.ShowIfRequired(EhrTriggers.TriggerMatch(ProblemDefinitions.GetItem(DiseaseList[e.Row].ProblemDefId), PatCur), false);
 			}
 			FillProblems();
 		}
@@ -1644,7 +1637,7 @@ namespace OpenDental{
 			gridAllergies.BeginUpdate();
 			gridAllergies.Columns.Clear();
 			GridColumn col;
-			if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowInfobutton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
+			if(CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowInfoButton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
 				col=new GridColumn("",18);//infoButton
 				col.ImageList=imageListInfoButton;
 				gridAllergies.Columns.Add(col);
@@ -1659,7 +1652,7 @@ namespace OpenDental{
 			GridRow row;
 			for(int i=0;i<allergyList.Count;i++){
 				row=new GridRow();
-				if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowInfobutton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
+				if(CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowInfoButton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
 					row.Cells.Add("0");//index of infobutton
 				}
 				AllergyDef allergyDef=AllergyDefs.GetOne(allergyList[i].AllergyDefId);
@@ -1682,7 +1675,7 @@ namespace OpenDental{
 		}
 
 		private void gridAllergies_CellClick(object sender,ODGridClickEventArgs e) {
-			if(!CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowInfobutton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
+			if(!CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowInfoButton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
 				return;
 			}
 			if(e.Col!=0) {
@@ -1701,12 +1694,10 @@ namespace OpenDental{
 			FormAllergyEdit FAE=new FormAllergyEdit(allergy);
 			FAE.ShowDialog();
 			if(FAE.DialogResult==DialogResult.OK 
-				&& CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowCDS 
-				&& CDSPermissions.GetForUser(Security.CurrentUser.Id).AllergyCDS) 
+				&& CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowCDS 
+				&& CdsPermissions.GetByUser(Security.CurrentUser.Id).AllergyCDS) 
 			{
-				FormCDSIntervention FormCDSI=new FormCDSIntervention();
-				FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(AllergyDefs.GetOne(allergy.AllergyDefId),PatCur);
-				FormCDSI.ShowIfRequired(false);
+				FormCdsIntervention.ShowIfRequired(EhrTriggers.TriggerMatch(AllergyDefs.GetOne(allergy.AllergyDefId), PatCur), false);
 			}
 			FillAllergies();
 		}
@@ -1728,11 +1719,9 @@ namespace OpenDental{
 			{
 				return;
 			}
-			if (CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurrentUser.Id).AllergyCDS)
+			if (CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowCDS && CdsPermissions.GetByUser(Security.CurrentUser.Id).AllergyCDS)
 			{
-				FormCDSIntervention FormCDSI = new FormCDSIntervention();
-				FormCDSI.ListCDSI = EhrTriggers.TriggerMatch(AllergyDefs.GetOne(allergy.AllergyDefId), PatCur);
-				FormCDSI.ShowIfRequired(false);
+				FormCdsIntervention.ShowIfRequired(EhrTriggers.TriggerMatch(AllergyDefs.GetOne(allergy.AllergyDefId), PatCur), false);
 			}
 			FillAllergies();
 		}
@@ -1947,9 +1936,9 @@ namespace OpenDental{
 			List<EhrMeasureEvent> listEvents=EhrMeasureEvents.RefreshByType(PatCur.PatNum,EhrMeasureEventType.TobaccoUseAssessed);
 			foreach(EhrMeasureEvent eventCur in listEvents) {
 				row=new GridRow();
-				row.Cells.Add(eventCur.DateTEvent.ToShortDateString());
+				row.Cells.Add(eventCur.Date.ToShortDateString());
 				lCur=Loincs.GetByCode(eventCur.CodeValueEvent);//TobaccoUseAssessed events can be one of three types, all LOINC codes
-				row.Cells.Add(lCur!=null?lCur.NameLongCommon:eventCur.EventType.ToString());
+				row.Cells.Add(lCur!=null?lCur.LongCommonName:eventCur.Type.ToString());
 				sCur=Snomeds.GetByCode(eventCur.CodeValueResult);
 				row.Cells.Add(sCur!=null?sCur.Description:"");
 				row.Cells.Add(eventCur.MoreInfo);
@@ -2077,15 +2066,15 @@ namespace OpenDental{
 			EhrMeasureEvent eventCur;
 			foreach(GridRow row in gridAssessments.Rows) {
 				eventCur=(EhrMeasureEvent)row.Tag;
-				if(eventCur.DateTEvent.Date==dateTEntered.Date) {//one already exists for this date, don't auto insert event
+				if(eventCur.Date.Date==dateTEntered.Date) {//one already exists for this date, don't auto insert event
 					return;
 				}
 			}
 			//no entry for the date entered, so insert one
 			eventCur=new EhrMeasureEvent();
-			eventCur.DateTEvent=dateTEntered;
-			eventCur.EventType=EhrMeasureEventType.TobaccoUseAssessed;
-			eventCur.PatNum=PatCur.PatNum;
+			eventCur.Date=dateTEntered;
+			eventCur.Type=EhrMeasureEventType.TobaccoUseAssessed;
+			eventCur.PatientId=PatCur.PatNum;
 			eventCur.CodeValueEvent=_listAssessmentCodes[comboAssessmentType.SelectedIndex].CodeValue;
 			eventCur.CodeSystemEvent=_listAssessmentCodes[comboAssessmentType.SelectedIndex].CodeSystem;
 			//SelectedIndex guaranteed to be greater than 0
@@ -2220,9 +2209,9 @@ namespace OpenDental{
 			}
 			DateTime dateTEntered=PIn.Date(textDateAssessed.Text);
 			EhrMeasureEvent meas=new EhrMeasureEvent();
-			meas.DateTEvent=dateTEntered;
-			meas.EventType=EhrMeasureEventType.TobaccoUseAssessed;
-			meas.PatNum=PatCur.PatNum;
+			meas.Date=dateTEntered;
+			meas.Type=EhrMeasureEventType.TobaccoUseAssessed;
+			meas.PatientId=PatCur.PatNum;
 			meas.CodeValueEvent=_listAssessmentCodes[comboAssessmentType.SelectedIndex].CodeValue;
 			meas.CodeSystemEvent=_listAssessmentCodes[comboAssessmentType.SelectedIndex].CodeSystem;
 			meas.CodeValueResult=_listTobaccoStatuses[comboTobaccoStatus.SelectedIndex].CodeValue;
@@ -2307,9 +2296,9 @@ namespace OpenDental{
 			//Insert an ehrmeasureevent for CurrentMedsDocumented if user selected Yes and there isn't one with today's date
 			if(radioMedsDocumentedYes.Checked && _EhrMeasureEventNum==0) {
 				EhrMeasureEvent ehrMeasureEventCur=new EhrMeasureEvent();
-				ehrMeasureEventCur.PatNum=PatCur.PatNum;
-				ehrMeasureEventCur.DateTEvent=DateTime.Now;
-				ehrMeasureEventCur.EventType=EhrMeasureEventType.CurrentMedsDocumented;
+				ehrMeasureEventCur.PatientId=PatCur.PatNum;
+				ehrMeasureEventCur.Date=DateTime.Now;
+				ehrMeasureEventCur.Type=EhrMeasureEventType.CurrentMedsDocumented;
 				ehrMeasureEventCur.CodeValueEvent="428191000124101";//SNOMEDCT code for document current meds procedure
 				ehrMeasureEventCur.CodeSystemEvent="SNOMEDCT";
 				EhrMeasureEvents.Insert(ehrMeasureEventCur);

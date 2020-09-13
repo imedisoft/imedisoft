@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI.Voice;
 using OpenDentBusiness;
 
@@ -22,7 +24,7 @@ namespace OpenDental {
 			}
 			DateTime dateSecurity;
 			if(listExams.SelectedIndex > -1) {
-				dateSecurity=PerioExams.ListExams[listExams.SelectedIndex].ExamDate;
+				dateSecurity=PerioExams.Exams[listExams.SelectedIndex].ExamDate;
 			}
 			else {
 				dateSecurity=MiscData.GetNowDateTime();

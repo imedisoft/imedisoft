@@ -331,9 +331,9 @@ namespace OpenDentBusiness
 				{
 					EhrMeasureEvents.Insert(new EhrMeasureEvent()
 					{
-						DateTEvent = DateTime.Now,
-						EventType = EhrMeasureEventType.OnlineAccessProvided,
-						PatNum = userWeb.FKey, //PatNum.
+						Date = DateTime.Now,
+						Type = EhrMeasureEventType.OnlineAccessProvided,
+						PatientId = userWeb.FKey, //PatNum.
 						MoreInfo = "",
 					});
 				}

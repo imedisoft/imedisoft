@@ -48,7 +48,7 @@ namespace OpenDental{
 		private Label label2;
 		private Label label3;
 		private ODGrid grid;
-		private List<Userod> _listUserods;
+		private List<User> _listUserods;
 
 		///<summary></summary>
 		public FormAudit()
@@ -355,7 +355,7 @@ namespace OpenDental{
 				}
 			}
 			comboPermission.SelectedIndex=0;
-			_listUserods=Userods.GetAll();
+			_listUserods=Users.GetAll();
 			comboUser.Items.Add("All");
 			comboUser.SelectedIndex=0;
 			for(int i=0;i<_listUserods.Count;i++){
@@ -456,7 +456,7 @@ namespace OpenDental{
 				row.Cells.Add(logCur.LogDate.ToShortTimeString());
 				row.Cells.Add(logCur.PatientName);
 				//user might be null due to old bugs.
-				row.Cells.Add(Userods.GetUser(logCur.UserId)?.UserName??("Unknown"+"("+POut.Long(logCur.UserId)+")"));
+				row.Cells.Add(Users.GetById(logCur.UserId)?.UserName??("Unknown"+"("+POut.Long(logCur.UserId)+")"));
 				if(logCur.Type==Permissions.ChartModule) {
 					row.Cells.Add("ChartModuleViewed");
 				}

@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormAuditOrtho:ODForm {
@@ -62,7 +63,7 @@ namespace OpenDental {
 			gridMain.Columns.Add(col);
 			gridMain.Rows.Clear();
 			GridRow row;
-			Userod user;
+			User user;
 			//First Selected Ortho Chart Logs
 			foreach(int iDate in gridHist.SelectedIndices) {
 				DateTime dateRow=(DateTime)gridHist.Rows[iDate].Tag;
@@ -72,7 +73,7 @@ namespace OpenDental {
 				for(int i=0;i<DictDateOrthoLogs[dateRow].Count;i++) {
 					row=new GridRow();
 					row.Cells.Add(DictDateOrthoLogs[dateRow][i].LogDate.ToShortDateString()+" "+DictDateOrthoLogs[dateRow][i].LogDate.ToShortTimeString());
-					user=Userods.GetUser(DictDateOrthoLogs[dateRow][i].UserId);
+					user=Users.GetById(DictDateOrthoLogs[dateRow][i].UserId);
 					if(user==null) {//Will be null for audit trails made by outside entities that do not require users to be logged in.  E.g. Web Sched.
 						row.Cells.Add("unknown");
 					}
@@ -88,7 +89,7 @@ namespace OpenDental {
 			for(int i=0;i<PatientFieldLogs.Count;i++) {
 				row=new GridRow();
 				row.Cells.Add(PatientFieldLogs[i].LogDate.ToShortDateString()+" "+PatientFieldLogs[i].LogDate.ToShortTimeString());
-				row.Cells.Add(Userods.GetUser(PatientFieldLogs[i].UserId).UserName);
+				row.Cells.Add(Users.GetById(PatientFieldLogs[i].UserId).UserName);
 				row.Cells.Add(PatientFieldLogs[i].Type.ToString());
 				row.Cells.Add(PatientFieldLogs[i].LogMessage);
 				gridMain.Rows.Add(row);

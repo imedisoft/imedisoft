@@ -5,6 +5,8 @@ using System.Linq;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental.User_Controls {
 	public partial class UserControlReportSetup:UserControl {
@@ -61,10 +63,10 @@ namespace OpenDental.User_Controls {
 					ListGroupPermissionsOld.Add(perm.Copy());
 				}
 				if(!isCEMT) {
-					_listUserGroups=UserGroups.GetList();
+					_listUserGroups=UserGroups.GetAll();
 				}
 				else {
-					_listUserGroups=UserGroups.GetList(true);
+					_listUserGroups=UserGroups.GetAll(true);
 				}
 				for(int i=0;i<_listUserGroups.Count;i++) {
 					comboUserGroup.Items.Add(_listUserGroups[i].Description);

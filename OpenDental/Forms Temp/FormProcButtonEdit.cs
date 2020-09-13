@@ -435,7 +435,7 @@ namespace OpenDental{
       }
 		foreach(int index in listAutoCodes.SelectedIndices){
 				AutoCode autoCode=_listShortDeep[index];
-				if(AutoCodeItems.GetListForCode(autoCode.Id).Count==0) {
+				if(AutoCodeItems.GetByAutoCode(autoCode.Id).Count==0) {
 					//This AutoCode was saved with no AutoCodeItems attached, which is invalid.
 					MessageBox.Show(this,"The following AutoCode has no associated Procedure Codes: "+"\r\n"+autoCode.Description+"\r\n"
 						+"AutoCode must be setup correctly before it can be used with a Quick Proc Button.");

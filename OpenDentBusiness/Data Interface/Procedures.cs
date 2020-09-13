@@ -3363,7 +3363,7 @@ namespace OpenDentBusiness {
 		///Does not add notes to a procedure that already has notes. Only called from ProcedureL.SetCompleteInAppt, security checked
 		///before calling this.  Also sets provider for each proc and claimproc.</summary>
 		public static List<Procedure> SetCompleteInApptInList(Appointment apt,List<InsPlan> planList,List<PatPlan> patPlans,Patient patient,
-			List<Procedure> listProcsForAppt,List<InsSub> subList,Userod curUser)
+			List<Procedure> listProcsForAppt,List<InsSub> subList,User curUser)
 		{
 			
 			if(listProcsForAppt.Count==0) {
@@ -3439,7 +3439,7 @@ namespace OpenDentBusiness {
 					}
 					procCur.Note+=procNoteDefault;
 				}
-				if(Userods.IsUserCpoe(curUser)) {
+				if(Users.IsUserCpoe(curUser)) {
 					//Only change the status of IsCpoe to true.  Never set it back to false for any reason.  Once true, always true.
 					procCur.IsCpoe=true;
 				}
@@ -3755,7 +3755,7 @@ namespace OpenDentBusiness {
 			proc.RevCode=procCodeCur.RevenueCodeDefault;
 			proc.DiagnosticCode=Preferences.GetString(PreferenceName.ICD9DefaultForNewProcs);
 			proc.PlaceService=Preferences.GetString(PreferenceName.DefaultProcedurePlaceService, PlaceOfService.Office);//Default proc place of service for the Practice is used. 
-			if(Userods.IsUserCpoe(Security.CurrentUser)) {
+			if(Users.IsUserCpoe(Security.CurrentUser)) {
 				//This procedure is considered CPOE because the provider is the one that has added it.
 				proc.IsCpoe=true;
 			}

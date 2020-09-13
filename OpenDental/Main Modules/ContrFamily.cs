@@ -1489,7 +1489,7 @@ namespace OpenDental{
 			bool hasRepeat=repeatChargeList.Length>0;
 			bool hasCC=listCreditCards.Count>0;
 			bool hasRegKey=arrayRegistrationKeys.Length>0;
-			bool hasPerio = PerioExams.GetExamsTable(PatCur.PatNum).Rows.Count>0;
+			bool hasPerio = PerioExams.GetByPatient(PatCur.PatNum).Any();
 			bool hasClones=(listPatNumClones.Count > 1);//The list of "clones for all" will always include the current patient.
 			if(hasProcs || hasAppt || hasClaims || hasAdj || hasPay || hasClaimProcs || hasComm || hasPayPlans
 				|| hasInsPlans || hasRef || hasMeds || isSuperFamilyHead || hasSheets || hasRepeat || hasCC || hasRegKey || hasPerio || hasClones) 

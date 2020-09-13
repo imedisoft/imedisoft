@@ -126,6 +126,9 @@
   <data name="All" xml:space="preserve">
     <value>All</value>
   </data>
+  <data name="Allergy" xml:space="preserve">
+    <value>Allergy</value>
+  </data>
   <data name="Amount" xml:space="preserve">
     <value>Amount</value>
   </data>
@@ -170,6 +173,9 @@
   </data>
   <data name="CannotDeleteClinicInUseByUsers" xml:space="preserve">
     <value>Cannot delete clinic because the following users are using it:</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Category</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>Close</value>
@@ -253,11 +259,20 @@
   <data name="Inactive" xml:space="preserve">
     <value>Inactive</value>
   </data>
+  <data name="Inbox" xml:space="preserve">
+    <value>Inbox</value>
+  </data>
   <data name="InsufficientPrivileges" xml:space="preserve">
     <value>You do not have sufficient privileges to perform this operation.</value>
   </data>
   <data name="InvalidPassword" xml:space="preserve">
     <value>Wrong password</value>
+  </data>
+  <data name="InvalidUserNameOrPassword" xml:space="preserve">
+    <value>Invalid username or password.</value>
+  </data>
+  <data name="Key" xml:space="preserve">
+    <value>Key</value>
   </data>
   <data name="LastName" xml:space="preserve">
     <value>LastName</value>
@@ -276,6 +291,9 @@
   </data>
   <data name="LogFileCreatedWouldYouLikeToOpenFile" xml:space="preserve">
     <value>Log file created. Would you like to open the file?</value>
+  </data>
+  <data name="Medication" xml:space="preserve">
+    <value>Medication</value>
   </data>
   <data name="MedLabAccountInUseByAnotherClinic" xml:space="preserve">
     <value>The MedLab Account Number entered is already in use by another clinic.</value>
@@ -314,6 +332,24 @@ If you do have a printer installed, restarting the workstation may solve the pro
   </data>
   <data name="OperationNowAllowedForReason" xml:space="preserve">
     <value>You are not allowed to perform the requested operation. Reason: {0}.</value>
+  </data>
+  <data name="PasswordMayNotBeBlank" xml:space="preserve">
+    <value>Password may not be blank when the strong password feature is turned on.</value>
+  </data>
+  <data name="PasswordMustBeAtLeastEightCharacters" xml:space="preserve">
+    <value>Password must be at least eight characters long when the strong password feature is turned on.</value>
+  </data>
+  <data name="PasswordMustContainAtLeastOneLowerCaseLetter" xml:space="preserve">
+    <value>Password must contain at least one lower case letter when the strong password feature is turned on.</value>
+  </data>
+  <data name="PasswordMustContainAtLeastOneNumber" xml:space="preserve">
+    <value>Password must contain at least one number when the strong password feature is turned on.</value>
+  </data>
+  <data name="PasswordMustContainAtLeastOneSpecialCharacter" xml:space="preserve">
+    <value>Password must contain at least one special character when the 'strong passwords require a special character' feature is turned on.</value>
+  </data>
+  <data name="PasswordMustContainAtLeastOneUpperCaseLetter" xml:space="preserve">
+    <value>Password must contain at least one capital letter when the strong password feature is turned on.</value>
   </data>
   <data name="Patient" xml:space="preserve">
     <value>Patient</value>
@@ -357,6 +393,9 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="PleaseEnterValidPercentage" xml:space="preserve">
     <value>Please enter a valid percentage.</value>
   </data>
+  <data name="PleaseEnterValidYear" xml:space="preserve">
+    <value>Please enter a valid year.</value>
+  </data>
   <data name="PleaseSelectAccountFirst" xml:space="preserve">
     <value>Please select an account first.</value>
   </data>
@@ -377,6 +416,12 @@ If you do have a printer installed, restarting the workstation may solve the pro
   </data>
   <data name="PleaseSelectType" xml:space="preserve">
     <value>Please select a type.</value>
+  </data>
+  <data name="PleaseSelectUser" xml:space="preserve">
+    <value>Please select a user.</value>
+  </data>
+  <data name="Problem" xml:space="preserve">
+    <value>Problem</value>
   </data>
   <data name="Provider" xml:space="preserve">
     <value>Provider</value>
@@ -399,6 +444,9 @@ If you do have a printer installed, restarting the workstation may solve the pro
   </data>
   <data name="Shown" xml:space="preserve">
     <value>Shown</value>
+  </data>
+  <data name="Source" xml:space="preserve">
+    <value>Source</value>
   </data>
   <data name="Specialty" xml:space="preserve">
     <value>Specialty</value>
@@ -433,8 +481,15 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="Text" xml:space="preserve">
     <value>Text</value>
   </data>
+  <data name="TheFollowingUsersCouldNotBeUpdated" xml:space="preserve">
+    <value>The following users could not be updated:</value>
+  </data>
   <data name="Title" xml:space="preserve">
     <value>Title</value>
+  </data>
+  <data name="TooManyFailedLogonAttempts" xml:space="preserve">
+    <value>Account has been locked due to failed log in attempts.
+Call your security admin to unlock your account or wait at least 5 minutes.</value>
   </data>
   <data name="Type" xml:space="preserve">
     <value>Type</value>
@@ -445,13 +500,22 @@ If you do have a printer installed, restarting the workstation may solve the pro
   <data name="Unknown" xml:space="preserve">
     <value>Unknown</value>
   </data>
+  <data name="User" xml:space="preserve">
+    <value>User</value>
+  </data>
   <data name="Value" xml:space="preserve">
     <value>Value</value>
   </data>
   <data name="Weighted" xml:space="preserve">
     <value>Weighted</value>
   </data>
+  <data name="Year" xml:space="preserve">
+    <value>Year</value>
+  </data>
   <data name="YouHaveSelectedProblemWithUnofficialSnomedCode" xml:space="preserve">
     <value>You have selected a problem with an unofficial SNOMED CT code. Please correct the problem definition by going to Lists | Problems and choosing an official code from the SNOMED CT list.</value>
+  </data>
+  <data name="YouMustChangePasswordToStrongPasswordDueToSecuritySettings" xml:space="preserve">
+    <value>You must change your password to a strong password due to the current security settings.</value>
   </data>
 </root>

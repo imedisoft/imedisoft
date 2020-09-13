@@ -36,8 +36,8 @@ namespace OpenDental {
 			GridRow row;
 			for(int i=0;i<listHistory.Count;i++) {
 				row=new GridRow();
-				row.Cells.Add(listHistory[i].DateTEvent.ToString());
-				switch(listHistory[i].EventType) {
+				row.Cells.Add(listHistory[i].Date.ToString());
+				switch(listHistory[i].Type) {
 					case EhrMeasureEventType.ElectronicCopyRequested:
 						row.Cells.Add("Requested by patient");
 						break;
@@ -52,9 +52,9 @@ namespace OpenDental {
 
 		private void butRequest_Click(object sender,EventArgs e) {
 			EhrMeasureEvent measureEvent = new EhrMeasureEvent();
-			measureEvent.DateTEvent = DateTime.Now.AddMinutes(-1);
-			measureEvent.EventType = EhrMeasureEventType.ElectronicCopyRequested;
-			measureEvent.PatNum = PatCur.PatNum;
+			measureEvent.Date = DateTime.Now.AddMinutes(-1);
+			measureEvent.Type = EhrMeasureEventType.ElectronicCopyRequested;
+			measureEvent.PatientId = PatCur.PatNum;
 			measureEvent.MoreInfo = "";
 			EhrMeasureEvents.Insert(measureEvent);
 			FillGrid();
@@ -65,10 +65,10 @@ namespace OpenDental {
 			//If there's not an event for a request within the last 5 days, automatically add one.
 			bool requestExists=false;
 			for(int i=0;i<listHistory.Count;i++) {
-				if(listHistory[i].EventType!=EhrMeasureEventType.ElectronicCopyRequested) {
+				if(listHistory[i].Type!=EhrMeasureEventType.ElectronicCopyRequested) {
 					continue;
 				}
-				if(listHistory[i].DateTEvent.Date >= DateTime.Today.AddDays(-5)) {
+				if(listHistory[i].Date.Date >= DateTime.Today.AddDays(-5)) {
 					requestExists=true;
 					break;
 				}
@@ -76,17 +76,17 @@ namespace OpenDental {
 			EhrMeasureEvent measureEvent;
 			if(!requestExists) {
 				measureEvent = new EhrMeasureEvent();
-				measureEvent.DateTEvent = DateTime.Now.AddMinutes(-1);
-				measureEvent.EventType = EhrMeasureEventType.ElectronicCopyRequested;
-				measureEvent.PatNum = PatCur.PatNum;
+				measureEvent.Date = DateTime.Now.AddMinutes(-1);
+				measureEvent.Type = EhrMeasureEventType.ElectronicCopyRequested;
+				measureEvent.PatientId = PatCur.PatNum;
 				measureEvent.MoreInfo = "";
 				EhrMeasureEvents.Insert(measureEvent);
 			}
 			//Always add an event for providing the electronic copy
 			measureEvent = new EhrMeasureEvent();
-			measureEvent.DateTEvent = DateTime.Now;
-			measureEvent.EventType = EhrMeasureEventType.ElectronicCopyProvidedToPt;
-			measureEvent.PatNum = PatCur.PatNum;
+			measureEvent.Date = DateTime.Now;
+			measureEvent.Type = EhrMeasureEventType.ElectronicCopyProvidedToPt;
+			measureEvent.PatientId = PatCur.PatNum;
 			measureEvent.MoreInfo = "";
 			EhrMeasureEvents.Insert(measureEvent);
 			FillGrid();
@@ -156,7 +156,7 @@ namespace OpenDental {
 				return;
 			}
 			for(int i=0;i<gridMain.SelectedIndices.Length;i++) {
-				EhrMeasureEvents.Delete(listHistory[gridMain.SelectedIndices[i]].EhrMeasureEventNum);
+				EhrMeasureEvents.Delete(listHistory[gridMain.SelectedIndices[i]].Id);
 			}
 			FillGrid();
 		}

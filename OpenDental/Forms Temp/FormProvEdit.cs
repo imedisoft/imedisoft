@@ -120,7 +120,7 @@ namespace OpenDental{
 		private ProviderIdent[] ListProvIdent;
 		private List<SchoolClass> _listSchoolClasses;
 		private List<FeeSched> _listFeeSchedShort;
-		private Userod _existingUser;
+		private User _existingUser;
 		public Provider ProvCur;
 		private ValidDouble textProdGoalHr;
 		private Label labelProdGoalHr;
@@ -1423,7 +1423,7 @@ namespace OpenDental{
 				if(ProvCur.Id > 0) {
 					labelPassDescription.Visible=true;
 					textProvNum.Text=ProvCur.Id.ToString();
-					List<Userod> userList=Providers.GetAttachedUsers(ProvCur.Id);
+					List<User> userList=Providers.GetAttachedUsers(ProvCur.Id);
 					if(userList.Count>0) {
 						textUserName.Text=userList[0].UserName;//Should always happen if they are a student.
 						_existingUser=userList[0];
@@ -1455,7 +1455,7 @@ namespace OpenDental{
 				labelEcwID.Visible=false;
 				textEcwID.Visible=false;
 			}
-			List<EhrProvKey> listProvKey=EhrProvKeys.GetKeysByFLName(ProvCur.LastName,ProvCur.FirstName);
+			List<EhrProviderKey> listProvKey=EhrProviderKeys.GetByProviderName(ProvCur.LastName,ProvCur.FirstName).ToList();
 			if(listProvKey.Count>0) {
 				textLName.Enabled=false;
 				textFName.Enabled=false;
@@ -1903,12 +1903,12 @@ namespace OpenDental{
 				//Set the providerclinics to the new provider's ProvNum that was just retreived from the database.
 				_listProvClinicsNew.ForEach(x => x.ProviderId=provNum);
 				if(ProvCur.IsInstructor) {
-					Userod user=new Userod();
+					User user=new User();
 					user.UserName=textUserName.Text;
 					user.PasswordHash= Password.Hash(textPassword.Text);
 					user.ProviderId=provNum;
 					try {
-						Userods.Insert(user,new List<long> { Preferences.GetLong(PreferenceName.SecurityGroupForInstructors) });
+						Users.Insert(user,new List<long> { Preferences.GetLong(PreferenceName.SecurityGroupForInstructors) });
 					}
 					catch(Exception ex) {
 						Providers.Delete(ProvCur);
@@ -1922,7 +1922,7 @@ namespace OpenDental{
 					if(_existingUser!=null && (ProvCur.IsInstructor || ProvCur.SchoolClassId!=0)) {
 						_existingUser.UserName=textUserName.Text;
 						_existingUser.PasswordHash= Password.Hash(textPassword.Text);
-						Userods.Update(_existingUser);
+						Users.Update(_existingUser);
 					}
 				}
 				catch(Exception ex) {

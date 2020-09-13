@@ -1,85 +1,91 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+﻿using OpenDental.UI;
 using OpenDentBusiness;
-using OpenDental.UI;
-using OpenDental;
+using System;
+using System.Windows.Forms;
 
-namespace OpenDental {
-	public partial class FormLoincs:ODForm {
-		public bool IsSelectionMode;
-		public Loinc SelectedLoinc;
-		private List<Loinc> listLoincSearch;
-		public Loinc LoincCur;
+namespace Imedisoft.Forms
+{
+    public partial class FormLoincs : FormBase
+	{
+		/// <summary>
+		/// Gets or sets a value indicating whether the form is in selection mode.
+		/// </summary>
+		public bool IsSelectionMode { get; set; }
 
-		public FormLoincs() {
+		/// <summary>
+		/// Gets the selected LOINC code.
+		/// </summary>
+		public Loinc SelectedLoinc => loincsGrid.SelectedTag<Loinc>();
+
+		public FormLoincs()
+		{
 			InitializeComponent();
 		}
 
-		private void FormLoincPicker_Load(object sender,EventArgs e) {
-			listLoincSearch=new List<Loinc>();
-			ActiveControl=textCode;
-		}
-
-		private void fillGrid() {
-			gridMain.BeginUpdate();
-			gridMain.Columns.Clear();
-			GridColumn col;
-			col=new GridColumn("Loinc Code",80);//,HorizontalAlignment.Center);
-			gridMain.Columns.Add(col);
-			col=new GridColumn("Status",80);//,HorizontalAlignment.Center);
-			gridMain.Columns.Add(col);
-			col=new GridColumn("Long Name",500);//,HorizontalAlignment.Center);
-			gridMain.Columns.Add(col);
-			col=new GridColumn("UCUM Units",100);//,HorizontalAlignment.Center);
-			gridMain.Columns.Add(col);
-			col=new GridColumn("Order or Observation",100);//,HorizontalAlignment.Center);
-			gridMain.Columns.Add(col);
-			gridMain.Rows.Clear();
-			GridRow row;
-			listLoincSearch=Loincs.GetBySearchString(textCode.Text);
-			for(int i=0;i<listLoincSearch.Count;i++) {
-				row=new GridRow();
-				row.Cells.Add(listLoincSearch[i].LoincCode);
-				row.Cells.Add(listLoincSearch[i].StatusOfCode);
-				row.Cells.Add(listLoincSearch[i].NameLongCommon);
-				row.Cells.Add(listLoincSearch[i].UnitsUCUM);
-				row.Cells.Add(listLoincSearch[i].OrderObs);
-				gridMain.Rows.Add(row);
+		private void FormLoincs_Load(object sender, EventArgs e)
+		{
+			if (IsSelectionMode)
+			{
+				cancelButton.Text = Translation.Common.CancelWithMnemonic;
 			}
-			gridMain.EndUpdate();
-		}
-
-		private void gridMain_CellDoubleClick(object sender,ODGridClickEventArgs e) {
-			if(IsSelectionMode) {
-				SelectedLoinc=listLoincSearch[e.Row];
-				DialogResult=DialogResult.OK;
+			else
+			{
+				acceptButton.Visible = false;
 			}
-			//Nothing to do if not selection mode
 		}
 
-		private void butSearch_Click(object sender,EventArgs e) {
-			fillGrid();
+		private void FillGrid()
+		{
+			loincsGrid.BeginUpdate();
+			loincsGrid.Columns.Clear();
+			loincsGrid.Columns.Add(new GridColumn("Loinc Code", 80));
+			loincsGrid.Columns.Add(new GridColumn("Status", 80));
+			loincsGrid.Columns.Add(new GridColumn("Long Name", 500));
+			loincsGrid.Columns.Add(new GridColumn("UCUM Units", 100));
+			loincsGrid.Columns.Add(new GridColumn("Order or Observation", 100));
+			loincsGrid.Rows.Clear();
+
+			foreach (var loinc in Loincs.GetBySearchString(searchTextBox.Text))
+			{
+				var gridRow = new GridRow();
+				gridRow.Cells.Add(loinc.Code);
+				gridRow.Cells.Add(loinc.Status);
+				gridRow.Cells.Add(loinc.LongCommonName);
+				gridRow.Cells.Add(loinc.UnitsUCUM);
+				gridRow.Cells.Add(loinc.OrderObs);
+				gridRow.Tag = loinc;
+
+				loincsGrid.Rows.Add(gridRow);
+			}
+
+			loincsGrid.EndUpdate();
 		}
 
-		private void butOK_Click(object sender,EventArgs e) {
-			if(gridMain.GetSelectedIndex()==-1) {
-				MessageBox.Show("Please select a Loinc code from the list.");
+		private void SearchButton_Click(object sender, EventArgs e)
+		{
+			FillGrid();
+		}
+
+		private void LoincsGrid_CellDoubleClick(object sender, ODGridClickEventArgs e)
+		{
+			if (IsSelectionMode)
+			{
+				AcceptButton_Click(this, EventArgs.Empty);
+			}
+		}
+
+		private void AcceptButton_Click(object sender, EventArgs e)
+		{
+			if (!IsSelectionMode) return;
+
+			if (SelectedLoinc == null)
+			{
+				ShowError(Translation.Common.PleaseSelectItemFirst);
+
 				return;
 			}
-			if(IsSelectionMode) {
-				SelectedLoinc=listLoincSearch[gridMain.GetSelectedIndex()];
-			}
-			DialogResult=DialogResult.OK;
-		}
 
-		private void butCancel_Click(object sender,EventArgs e) {
-			DialogResult=DialogResult.Cancel;
+			DialogResult = DialogResult.OK;
 		}
 	}
 }

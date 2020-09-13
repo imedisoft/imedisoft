@@ -84,9 +84,11 @@ namespace Imedisoft.Forms
             this.trunkListBox.Name = "trunkListBox";
             this.trunkListBox.Size = new System.Drawing.Size(150, 280);
             this.trunkListBox.TabIndex = 4;
+            this.trunkListBox.SelectedIndexChanged += new System.EventHandler(this.TrunkListBox_SelectedIndexChanged);
             // 
             // setButton
             // 
+            this.setButton.Enabled = false;
             this.setButton.Image = global::Imedisoft.Properties.Resources.IconArrowLeft;
             this.setButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.setButton.Location = new System.Drawing.Point(350, 260);

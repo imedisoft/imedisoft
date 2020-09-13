@@ -79,9 +79,20 @@ namespace OpenDentBusiness
 		///<summary>23. Includes setting procedures complete.</summary>
 		[Description("Create Completed Procedure (or set complete)")]
 		ProcComplCreate,
-		///<summary>24. At least one user must have this permission.</summary>
+
+
+		/// <summary>
+		///		<para>
+		///			This is the highest permission available. Users with this permissions have access to everything.
+		///		</para>
+		///		<para>
+		///			At least one user must have this permission.
+		///		</para>
+		/// </summary>
 		[Description("Security Admin")]
-		SecurityAdmin,
+		SecurityAdmin, // TODO: Should have a better name for this... SuperAdministrator, SystemAdministrator, etc...
+
+
 		///<summary>25. </summary>
 		[Description("Appointment Create")]
 		AppointmentCreate,

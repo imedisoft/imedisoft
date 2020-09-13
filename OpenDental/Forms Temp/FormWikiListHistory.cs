@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using Imedisoft.Data;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -45,7 +46,7 @@ namespace OpenDental {
 			gridMain.Rows.Clear();
 			gridMain.Columns.AddRange(new[] { new GridColumn("User",70),new GridColumn("Saved",80) });
 			gridMain.Rows.AddRange(WikiListHists.GetByNameNoContent(ListNameCur)
-				.Select(x => new GridRow(Userods.GetName(x.UserNum),x.DateTimeSaved.ToString()) { Tag=x }));
+				.Select(x => new GridRow(Users.GetUserName(x.UserNum),x.DateTimeSaved.ToString()) { Tag=x }));
 			gridMain.EndUpdate();
 		}
 

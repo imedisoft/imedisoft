@@ -1,14 +1,12 @@
-using OpenDentBusiness;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Imedisoft.Forms
 {
     public partial class FormCounties : FormBase
 	{
-		private List<County> counties;
-
 		public FormCounties() 
 			=> InitializeComponent();
 
@@ -17,11 +15,9 @@ namespace Imedisoft.Forms
 
 		private void FillList()
 		{
-			counties = Counties.GetAll();
-
 			countiesListBox.Items.Clear();
 
-			foreach (var county in counties)
+			foreach (var county in Counties.GetAll())
             {
 				countiesListBox.Items.Add(county);
             }
@@ -68,18 +64,20 @@ namespace Imedisoft.Forms
             if (!(countiesListBox.SelectedItem is County county))
             {
                 ShowError(Translation.Common.PleaseSelectItemFirst);
+
                 return;
             }
 
-            string usedBy = Counties.UsedBy(county.Name);
-			if (usedBy != "")
+			try
 			{
-				ShowError("Cannot delete County because it is already in use by the following patients: \r" + usedBy);
+				Counties.Delete(county);
+			}
+			catch (Exception exception)
+            {
+				ShowError(exception.Message);
 
 				return;
-			}
-
-			Counties.Delete(county);
+            }
 
 			FillList();
 		}

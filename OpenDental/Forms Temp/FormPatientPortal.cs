@@ -89,9 +89,9 @@ namespace OpenDental
 				_userWebOld.PasswordHash = _userWebCur.PasswordHash;
 				//4. Insert EhrMeasureEvent
 				EhrMeasureEvent newMeasureEvent = new EhrMeasureEvent();
-				newMeasureEvent.DateTEvent = DateTime.Now;
-				newMeasureEvent.EventType = EhrMeasureEventType.OnlineAccessProvided;
-				newMeasureEvent.PatNum = _userWebCur.FKey;
+				newMeasureEvent.Date = DateTime.Now;
+				newMeasureEvent.Type = EhrMeasureEventType.OnlineAccessProvided;
+				newMeasureEvent.PatientId = _userWebCur.FKey;
 				newMeasureEvent.MoreInfo = "";
 				EhrMeasureEvents.Insert(newMeasureEvent);
 				//5. Rename button

@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using CodeBase;
 using OpenDentBusiness;
 using System.Linq;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	public partial class FormSupplyOrderEdit:ODForm {
@@ -35,9 +37,9 @@ namespace OpenDental {
 				textDateReceived.Text=SupplyOrderCur.DateReceived.ToShortDateString();
 			}
 			textNote.Text=SupplyOrderCur.Note;
-			comboUser.Items.AddNone<Userod>();
-			comboUser.Items.AddList(Userods.GetUsers().FindAll(x => !x.IsHidden),x=>x.UserName);//the abbr parameter is usually skipped. <T> is inferred.
-			comboUser.SetSelectedKey<Userod>(SupplyOrderCur.UserNum,x=>x.Id,x=>Userods.GetName(x)); 
+			comboUser.Items.AddNone<User>();
+			comboUser.Items.AddList(Users.GetUsers().FindAll(x => !x.IsHidden),x=>x.UserName);//the abbr parameter is usually skipped. <T> is inferred.
+			comboUser.SetSelectedKey<User>(SupplyOrderCur.UserNum,x=>x.Id,x=>Users.GetUserName(x)); 
 		}
 				
 		private void butToday_Click(object sender,EventArgs e) {
@@ -67,7 +69,7 @@ namespace OpenDental {
 			}
 			else{
 				SupplyOrderCur.DatePlaced=PIn.Date(textDatePlaced.Text);
-				SupplyOrderCur.UserNum=comboUser.GetSelectedKey<Userod>(x=>x.Id);
+				SupplyOrderCur.UserNum=comboUser.GetSelectedKey<User>(x=>x.Id);
 			}
 			SupplyOrderCur.AmountTotal=PIn.Double(textAmountTotal.Text);
 			SupplyOrderCur.Note=textNote.Text;

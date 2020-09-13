@@ -524,8 +524,8 @@ namespace OpenDental.UI {
 			this.sigBoxTopaz=sigBox;
 		}
 		
-		private Userod _userSig;
-		public Userod UserSig {
+		private User _userSig;
+		public User UserSig {
 			get {
 				return _userSig;
 			}
@@ -535,7 +535,7 @@ namespace OpenDental.UI {
 		}
 
 		private void butESign_Click(object sender,EventArgs e) {
-			Userod curUser=_userSig??Security.CurrentUser;
+			User curUser=_userSig??Security.CurrentUser;
 			Provider provCur=Providers.GetById(curUser.ProviderId??0);
 			string digitalSignature="Digitally Signed by ";
 			if(provCur!=null) {

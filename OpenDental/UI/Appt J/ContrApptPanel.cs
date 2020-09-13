@@ -1,26 +1,34 @@
-﻿using System;
+﻿using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using OpenDentBusiness;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
-using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using OpenDentBusiness;
-using CodeBase;
-using Imedisoft.Data;
-using Imedisoft.Data.Models;
 
 namespace OpenDental.UI
 {
-	/// <summary>This class has replaced ApptDrawing, ApptSingleDrawing, ContrApptSheet, ContrApptSingle, and ApptOverlapOrdering.  Encapsulates both Data and Drawing for the main area of Appt module and the operatories header.  The Appt module gathers the data and stores it here.  This class does its drawing based mostly on the information passed in, although it does use the standard cache sometimes. It has defaults so that we will always be able to draw something reasonable, even if we're missing data. This class contains extra data that it doesn't actually need.  Appt module uses this data for other things besides drawing appointments.  This class intentionally supports a single thread only.</summary>
-	public partial class ContrApptPanel : UserControl
+    /// <summary>
+    /// This class has replaced ApptDrawing, ApptSingleDrawing, ContrApptSheet, ContrApptSingle, and ApptOverlapOrdering. 
+    /// Encapsulates both Data and Drawing for the main area of Appt module and the operatories header. 
+    /// The Appt module gathers the data and stores it here. 
+    /// This class does its drawing based mostly on the information passed in, although it does use the standard cache sometimes. 
+    /// It has defaults so that we will always be able to draw something reasonable, even if we're missing data. 
+    /// This class contains extra data that it doesn't actually need. 
+    /// Appt module uses this data for other things besides drawing appointments. 
+    /// This class intentionally supports a single thread only.
+    /// </summary>
+    public partial class ContrApptPanel : UserControl
 	{
 		#region Fields - Public Printing
 		///<summary>Only the hour component gets used.</summary>
@@ -113,7 +121,6 @@ namespace OpenDental.UI
 		private Bitmap _bitmapTimebarRight;
 		//The Brushes, fonts, and pens below will not change once set, and will exist as long as OD is open, so disposing is not needed.
 		//Some colors such as prov and blockout are handled locally, since they change frequently
-		private Brush _brushBackground = SystemBrushes.Control;
 		private Brush _brushBlack = Brushes.Black;
 		private Brush _brushBlockText = Brushes.Black;
 		private Brush _brushClosed = new SolidBrush(Color.FromArgb(219, 219, 219));
@@ -1559,6 +1566,8 @@ namespace OpenDental.UI
 				e.Graphics.DrawImage(_bitmapTempApptSingle, 0, 0);
 			}
 		}
+
+
 		#endregion Methods - Event Handlers OnPaint
 
 		#region Methods - Event Handlers PrintPage
@@ -1900,7 +1909,6 @@ namespace OpenDental.UI
 		///<summary>Returns the index of the opNum within VisOps.  Returns -1 if not in VisOps.</summary>
 		public int GetIndexOp(long opNum)
 		{
-			//No need to check RemotingRole; no call to db.
 			if (_dictOpNumToColumnNum.TryGetValue(opNum, out int index))
 			{
 				return index;
@@ -2819,10 +2827,12 @@ namespace OpenDental.UI
 		#endregion Methods - Private Set Bitmaps
 
 		#region Methods - Private DrawBackground
-		///<summary></summary>
+
+
 		private void DrawBackground(Graphics g)
 		{
-			g.FillRectangle(_brushBackground, 0, 0, _widthMain, _heightMain);
+			g.FillRectangle(SystemBrushes.Control, ClientRectangle);
+
 			DrawMainBackground(g);
 			DrawBlockouts(g);
 			DrawWebSchedASAPSlots(g);
@@ -3271,7 +3281,8 @@ namespace OpenDental.UI
 		#region Methods - Private Draw ProvAndOp Headers
 		private void DrawOpsHeader(Graphics g)
 		{
-			g.FillRectangle(_brushBackground, 0, 0, _widthMain, _heightProvOpHeaders);
+			g.FillRectangle(SystemBrushes.Control, 0, 0, _widthMain, _heightProvOpHeaders);
+
 			if (IsWeeklyView)
 			{
 				for (int d = 0; d < _numOfWeekDaysToDisplay; d++)
@@ -3326,14 +3337,11 @@ namespace OpenDental.UI
 					g.DrawLine(_penVertPrimary, i * _widthOpCol, 0, i * _widthOpCol, _heightProvOpHeaders);//to left of op cell
 				}
 			}
-			//outline
-			//g.DrawRectangle(_penVertPrimary,0,0,_width-1,_heightProvOpHeaders-1);
-			//g.DrawLine(_penVertPrimary,_widthMain-1,0,_widthMain-1,_heightProvOpHeaders);//on right//now handled in OnPaint
 		}
 
 		private void DrawProvBarsHeader(Graphics g)
 		{
-			g.FillRectangle(_brushBackground, 0, 0, _widthProv * _listProvsVisible.Count, _heightProvOpHeaders);
+			g.FillRectangle(SystemBrushes.Control, 0, 0, _widthProv * _listProvsVisible.Count, _heightProvOpHeaders);
 			for (int i = 0; i < ListProvsVisible.Count; i++)
 			{
 				using (SolidBrush solidBrushProvColor = new SolidBrush(ListProvsVisible[i].Color))
@@ -3342,9 +3350,9 @@ namespace OpenDental.UI
 				}
 				g.DrawLine(_penVertPrimary, _widthProv * i, 0, _widthProv * i, _heightProvOpHeaders);//to left of prov cell
 			}
-			//outline
-			//g.DrawRectangle(_penVertPrimary,0,0,_provWidth*_provCount-1,_heightProvOpHeaders-1);
 		}
+
+
 		#endregion Methods - Private Draw ProvAndOp Headers
 
 		#region Methods - Private DrawTimebar	
@@ -5180,19 +5188,19 @@ namespace OpenDental.UI
 		{
 			string patternShowing = GetPatternShowing(dataRow["Pattern"].ToString());//this includes multiple per incr. Example: 10 MinPerIncr, 2 RowsPerIncr, so 12 per hour
 			string pattern2Showing = GetPatternShowing(dataRow["PatternSecondary"].ToString());
-            int indexProv;
-            int indexProv2;
-            if (dataRow["IsHygiene"].ToString() == "1")
-            {
-                indexProv = GetIndexProv(PIn.Long(dataRow["ProvHyg"].ToString()));
-                indexProv2 = GetIndexProv(PIn.Long(dataRow["ProvNum"].ToString()));
-            }
-            else
-            {
-                indexProv = GetIndexProv(PIn.Long(dataRow["ProvNum"].ToString()));
-                indexProv2 = GetIndexProv(PIn.Long(dataRow["ProvHyg"].ToString()));
-            }
-            if (indexProv == -1)
+			int indexProv;
+			int indexProv2;
+			if (dataRow["IsHygiene"].ToString() == "1")
+			{
+				indexProv = GetIndexProv(PIn.Long(dataRow["ProvHyg"].ToString()));
+				indexProv2 = GetIndexProv(PIn.Long(dataRow["ProvNum"].ToString()));
+			}
+			else
+			{
+				indexProv = GetIndexProv(PIn.Long(dataRow["ProvNum"].ToString()));
+				indexProv2 = GetIndexProv(PIn.Long(dataRow["ProvHyg"].ToString()));
+			}
+			if (indexProv == -1)
 			{
 				return;
 			}
@@ -5476,7 +5484,7 @@ namespace OpenDental.UI
 			_boolApptMoved = false;
 		}
 
-		private void panelOpHoverTip_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+		private void panelOpHoverTip_MouseMove(object sender, MouseEventArgs e)
 		{
 			//Calculate the real point in coordinates of this control
 			Point point = new Point(e.X + panelHeaderTip.Left, e.Y + panelHeaderTip.Top);

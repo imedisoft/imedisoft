@@ -1,4 +1,6 @@
+using Imedisoft.Data;
 using Imedisoft.Data.Cache;
+using Imedisoft.Data.Models;
 using OpenDental;
 using OpenDentBusiness;
 using System;
@@ -50,7 +52,7 @@ namespace Imedisoft.Forms
 				AutoCodeCur = autoCode
 			};
 
-			AutoCodes.Insert(formAutoCodeEdit.AutoCodeCur);
+			AutoCodes.Save(formAutoCodeEdit.AutoCodeCur);
 
 			if (formAutoCodeEdit.ShowDialog(this) != DialogResult.OK)
 			{

@@ -99,7 +99,7 @@ namespace OpenDental {
 				//No valid "Notify" email setup for this practice yet.
 				error+="Invalid Web Mail Notify email.  Configure a Web Mail Notify email address in E-mail Setup. ";
 			}
-			List<Userod> listUsers=Userods.GetUsersWithProviders();
+			List<User> listUsers=Users.GetWithProvider();
 			if(listUsers.Count < 1) {
 				error+="Cannot send Web Mail until there is at least one User associated to a Provider. ";
 			}
@@ -297,7 +297,7 @@ namespace OpenDental {
 			if(_provUserCur!=null && _provUserCur.Id==_provCur.Id) {
 				return true;
 			}
-			List<Userod> listUsers=Userods.GetUsersByProvNum(_provCur.Id);//Get all potential users for this provider.
+			List<User> listUsers=Users.GetByProvider(_provCur.Id);//Get all potential users for this provider.
 			InputBox FormIB=new InputBox("Input a password for a User that is associated to provider:"+"\r\n"+_provCur.GetFormalName());
 			FormIB.textResult.PasswordChar='*';
 			while(true) {
@@ -306,7 +306,7 @@ namespace OpenDental {
 				FormIB.ShowDialog();
 				if(FormIB.DialogResult==DialogResult.OK) {
 					//Validate the password typed in against all the users associated to the selected provider.
-					foreach(Userod user in listUsers) {
+					foreach(User user in listUsers) {
 						if(Password.Verify(FormIB.textResult.Text, user.PasswordHash)) {
 							return true;
 						}

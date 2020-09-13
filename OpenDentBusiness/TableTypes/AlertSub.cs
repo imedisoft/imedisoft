@@ -1,4 +1,5 @@
 ﻿using Imedisoft.Data.Annotations;
+using Imedisoft.Data.Models;
 using System;
 
 namespace OpenDentBusiness
@@ -13,7 +14,7 @@ namespace OpenDentBusiness
 		[PrimaryKey]
 		public long Id;
 
-		[ForeignKey(typeof(Userod), nameof(Userod.Id))]
+		[ForeignKey(typeof(User), nameof(User.Id))]
 		public long UserId;
 
 		[ForeignKey(typeof(Clinic), nameof(Clinic.Id))]

@@ -373,7 +373,7 @@ namespace OpenDental
 
 				grid.Rows.Add(gridRow);
 
-				if (definition.Id == selectedDefinition.Id)
+				if (selectedDefinition != null && definition.Id == selectedDefinition.Id)
                 {
 					selectedDefinitionIndex = grid.Rows.Count - 1;
 				}

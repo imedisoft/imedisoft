@@ -1,16 +1,15 @@
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // Db Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("OpenDental")]
+[assembly: AssemblyTitle("Imedisoft")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("OpenDental")]
-[assembly: AssemblyCopyright("Copyright ©  2006")]
+[assembly: AssemblyProduct("Imedisoft")]
+[assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -33,7 +32,4 @@ using System.Runtime.InteropServices;
 //The following line was added because OD was looking mangled when scaling was set above 150%. This line might make not make WPF scale as well,
 //so we might consider removing it when a significant portion of OD is in WPF.
 [assembly: System.Windows.Media.DisableDpiAwareness]
-
 [assembly: AssemblyVersion("20.2.23.0")]
-
-//[assembly: AssemblyFileVersion("1.0.0.0")]

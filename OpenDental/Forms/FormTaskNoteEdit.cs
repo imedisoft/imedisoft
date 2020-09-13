@@ -1,3 +1,4 @@
+using Imedisoft.Data;
 using OpenDental;
 using OpenDentBusiness;
 using System;
@@ -24,7 +25,7 @@ namespace Imedisoft.Forms
 		private void FormTaskNoteEdit_Load(object sender, EventArgs e)
 		{
 			dateTimeTextBox.Text = taskNote.DateModified.ToString();
-			userTextBox.Text = Userods.GetName(taskNote.UserId);
+			userTextBox.Text = Users.GetUserName(taskNote.UserId);
 			noteTextBox.Text = taskNote.Note;
 			noteTextBox.Select(taskNote.Note.Length, 0);
 
@@ -46,7 +47,7 @@ namespace Imedisoft.Forms
 
 		private void DeleteButton_Click(object sender, EventArgs e)
 		{
-			if (Prompt("Delete?") == DialogResult.No) return;
+			if (Prompt(Translation.Common.ConfirmDelete) == DialogResult.No) return;
 
 			if (taskNote.Id > 0)
 			{
@@ -95,7 +96,7 @@ namespace Imedisoft.Forms
 
 			if (!DateTime.TryParse(dateTimeTextBox.Text, out var dateModified))
             {
-				ShowError("Please fix date.");
+				ShowError(Translation.Common.PleaseEnterValidDate);
 
 				return;
 			}

@@ -7,14 +7,12 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using MySql.Data.MySqlClient;
-using OpenDentBusiness;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
-namespace OpenDentBusiness
+namespace Imedisoft.Data
 {
 	public partial class Automations
 	{
@@ -25,165 +23,100 @@ namespace OpenDentBusiness
 				Id = (long)dataReader["id"],
 				Description = (string)dataReader["description"],
 				Trigger = (AutomationTrigger)Convert.ToInt32(dataReader["trigger"]),
+				Action = (AutomationAction)Convert.ToInt32(dataReader["action"]),
 				ProcedureCodes = (string)dataReader["procedure_codes"],
-				AutoAction = (AutomationAction)Convert.ToInt32(dataReader["auto_action"]),
-				SheetDefinitionId = (long)dataReader["sheet_definition_id"],
-				CommType = (long)dataReader["comm_type"],
+				SheetDefinitionId = dataReader["sheet_definition_id"] as long?,
+				CommType = dataReader["comm_type"] as long?,
 				MessageContent = (string)dataReader["message_content"],
-				AptStatus = (ApptStatus)Convert.ToInt32(dataReader["apt_status"]),
-				AppointmentTypeId = (long)dataReader["appointment_type_id"],
-				PatStatus = (PatientStatus)Convert.ToInt32(dataReader["pat_status"])
+				AppointmentTypeId = dataReader["appointment_type_id"] as long?,
+				PatientStatus = (PatientStatus)Convert.ToInt32(dataReader["patient_status"])
 			};
 		}
 
 		/// <summary>
 		/// Selects a single Automation object from the database using the specified SQL command.
 		/// </summary>
+		/// <param name="command">The SELECT command to execute.</param>
+		/// <param name="parameters">The (optional) command parameters.</param>
 		public static Automation SelectOne(string command, params MySqlParameter[] parameters)
 			=> Database.SelectOne(command, FromReader, parameters);
 
 		/// <summary>
 		/// Selects the <see cref="Automation"/> object with the specified key from the database.
 		/// </summary>
-		public static Automation SelectOne(Int64 id)
+		/// <param name="id">The primary key of the <see cref="Automation"/> to select.</param>
+		public static Automation SelectOne(long id)
 			=> SelectOne("SELECT * FROM `automations` WHERE `id` = " + id);
 
 		/// <summary>
 		/// Selects multiple <see cref="Automation"/> objects from the database using the specified SQL command.
 		/// </summary>
+		/// <param name="command">The SELECT command to execute.</param>
+		/// <param name="parameters">The (optional) command parameters.</param>
 		public static IEnumerable<Automation> SelectMany(string command, params MySqlParameter[] parameters)
 			=> Database.SelectMany(command, FromReader, parameters);
 
 		/// <summary>
 		/// Inserts the specified <see cref="Automation"/> into the database.
 		/// </summary>
-		public static long Insert(Automation automation)
+		/// <param name="automation">The <see cref="Automation"/> to insert into the database.</param>
+		private static long ExecuteInsert(Automation automation)
 			=> automation.Id = Database.ExecuteInsert(
 				"INSERT INTO `automations` " +
-				"(`description`, `trigger`, `procedure_codes`, `auto_action`, `sheet_definition_id`, `comm_type`, `message_content`, `apt_status`, `appointment_type_id`, `pat_status`) " +
+				"(`description`, `trigger`, `action`, `procedure_codes`, `sheet_definition_id`, `comm_type`, `message_content`, `appointment_type_id`, `patient_status`) " +
 				"VALUES (" +
-					"@description, @trigger, @procedure_codes, @auto_action, @sheet_definition_id, @comm_type, @message_content, @apt_status, @appointment_type_id, @pat_status" +
-				")");
+					"@description, @trigger, @action, @procedure_codes, @sheet_definition_id, @comm_type, @message_content, @appointment_type_id, @patient_status" +
+				")",
+					new MySqlParameter("description", automation.Description ?? ""),
+					new MySqlParameter("trigger", (int)automation.Trigger),
+					new MySqlParameter("action", (int)automation.Action),
+					new MySqlParameter("procedure_codes", automation.ProcedureCodes ?? ""),
+					new MySqlParameter("sheet_definition_id", (automation.SheetDefinitionId.HasValue ? (object)automation.SheetDefinitionId.Value : DBNull.Value)),
+					new MySqlParameter("comm_type", (automation.CommType.HasValue ? (object)automation.CommType.Value : DBNull.Value)),
+					new MySqlParameter("message_content", automation.MessageContent ?? ""),
+					new MySqlParameter("appointment_type_id", (automation.AppointmentTypeId.HasValue ? (object)automation.AppointmentTypeId.Value : DBNull.Value)),
+					new MySqlParameter("patient_status", (int)automation.PatientStatus));
 
 		/// <summary>
 		/// Updates the specified <see cref="Automation"/> in the database.
 		/// </summary>
-		public static void Update(Automation automation)
+		/// <param name="automation">The <see cref="Automation"/> to update.</param>
+		private static void ExecuteUpdate(Automation automation)
 			=> Database.ExecuteNonQuery(
 				"UPDATE `automations` SET " +
 					"`description` = @description, " +
 					"`trigger` = @trigger, " +
+					"`action` = @action, " +
 					"`procedure_codes` = @procedure_codes, " +
-					"`auto_action` = @auto_action, " +
 					"`sheet_definition_id` = @sheet_definition_id, " +
 					"`comm_type` = @comm_type, " +
 					"`message_content` = @message_content, " +
-					"`apt_status` = @apt_status, " +
 					"`appointment_type_id` = @appointment_type_id, " +
-					"`pat_status` = @pat_status " +
+					"`patient_status` = @patient_status " +
 				"WHERE `id` = @id",
 					new MySqlParameter("id", automation.Id),
 					new MySqlParameter("description", automation.Description ?? ""),
 					new MySqlParameter("trigger", (int)automation.Trigger),
+					new MySqlParameter("action", (int)automation.Action),
 					new MySqlParameter("procedure_codes", automation.ProcedureCodes ?? ""),
-					new MySqlParameter("auto_action", (int)automation.AutoAction),
-					new MySqlParameter("sheet_definition_id", automation.SheetDefinitionId),
-					new MySqlParameter("comm_type", automation.CommType),
+					new MySqlParameter("sheet_definition_id", (automation.SheetDefinitionId.HasValue ? (object)automation.SheetDefinitionId.Value : DBNull.Value)),
+					new MySqlParameter("comm_type", (automation.CommType.HasValue ? (object)automation.CommType.Value : DBNull.Value)),
 					new MySqlParameter("message_content", automation.MessageContent ?? ""),
-					new MySqlParameter("apt_status", (int)automation.AptStatus),
-					new MySqlParameter("appointment_type_id", automation.AppointmentTypeId),
-					new MySqlParameter("pat_status", (int)automation.PatStatus));
-
-		/// <summary>
-		/// Updates the specified <see cref="Automation"/> in the database.
-		/// </summary>
-		public static bool Update(Automation automationsNew, Automation automationsOld)
-		{
-			var updates = new List<string>();
-			var parameters = new List<MySqlParameter>();
-
-			if (automationsNew.Description != automationsOld.Description)
-			{
-				updates.Add("`description` = @description");
-				parameters.Add(new MySqlParameter("description", automationsNew.Description ?? ""));
-			}
-
-			if (automationsNew.Trigger != automationsOld.Trigger)
-			{
-				updates.Add("`trigger` = @trigger");
-				parameters.Add(new MySqlParameter("trigger", (int)automationsNew.Trigger));
-			}
-
-			if (automationsNew.ProcedureCodes != automationsOld.ProcedureCodes)
-			{
-				updates.Add("`procedure_codes` = @procedure_codes");
-				parameters.Add(new MySqlParameter("procedure_codes", automationsNew.ProcedureCodes ?? ""));
-			}
-
-			if (automationsNew.AutoAction != automationsOld.AutoAction)
-			{
-				updates.Add("`auto_action` = @auto_action");
-				parameters.Add(new MySqlParameter("auto_action", (int)automationsNew.AutoAction));
-			}
-
-			if (automationsNew.SheetDefinitionId != automationsOld.SheetDefinitionId)
-			{
-				updates.Add("`sheet_definition_id` = @sheet_definition_id");
-				parameters.Add(new MySqlParameter("sheet_definition_id", automationsNew.SheetDefinitionId));
-			}
-
-			if (automationsNew.CommType != automationsOld.CommType)
-			{
-				updates.Add("`comm_type` = @comm_type");
-				parameters.Add(new MySqlParameter("comm_type", automationsNew.CommType));
-			}
-
-			if (automationsNew.MessageContent != automationsOld.MessageContent)
-			{
-				updates.Add("`message_content` = @message_content");
-				parameters.Add(new MySqlParameter("message_content", automationsNew.MessageContent ?? ""));
-			}
-
-			if (automationsNew.AptStatus != automationsOld.AptStatus)
-			{
-				updates.Add("`apt_status` = @apt_status");
-				parameters.Add(new MySqlParameter("apt_status", (int)automationsNew.AptStatus));
-			}
-
-			if (automationsNew.AppointmentTypeId != automationsOld.AppointmentTypeId)
-			{
-				updates.Add("`appointment_type_id` = @appointment_type_id");
-				parameters.Add(new MySqlParameter("appointment_type_id", automationsNew.AppointmentTypeId));
-			}
-
-			if (automationsNew.PatStatus != automationsOld.PatStatus)
-			{
-				updates.Add("`pat_status` = @pat_status");
-				parameters.Add(new MySqlParameter("pat_status", (int)automationsNew.PatStatus));
-			}
-
-			if (updates.Count == 0) return false;
-
-			parameters.Add(new MySqlParameter("id", automationsNew.Id));
-
-			Database.ExecuteNonQuery("UPDATE `automations` " +
-				"SET " + string.Join(", ", updates) + " " +
-				"WHERE `id` = @id",
-					parameters.ToArray());
-
-			return true;
-		}
+					new MySqlParameter("appointment_type_id", (automation.AppointmentTypeId.HasValue ? (object)automation.AppointmentTypeId.Value : DBNull.Value)),
+					new MySqlParameter("patient_status", (int)automation.PatientStatus));
 
 		/// <summary>
 		/// Deletes a single <see cref="Automation"/> object from the database.
 		/// </summary>
-		public static void Delete(Int64 id)
+		/// <param name="id">The primary key of the <see cref="Automation"/> to delete.</param>
+		private static void ExecuteDelete(long id)
 			 => Database.ExecuteNonQuery("DELETE FROM `automations` WHERE `id` = " + id);
 
 		/// <summary>
 		/// Deletes the specified <see cref="Automation"/> object from the database.
 		/// </summary>
-		public static void Delete(Automation automation)
-			=> Delete(automation.Id);
+		/// <param name="automation">The <see cref="Automation"/> to delete.</param>
+		private static void ExecuteDelete(Automation automation)
+			=> ExecuteDelete(automation.Id);
 	}
 }

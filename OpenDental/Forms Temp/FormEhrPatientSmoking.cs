@@ -179,9 +179,9 @@ namespace OpenDental {
 			List<EhrMeasureEvent> listEvents=EhrMeasureEvents.RefreshByType(PatCur.PatNum,EhrMeasureEventType.TobaccoUseAssessed);
 			foreach(EhrMeasureEvent eventCur in listEvents) {
 				row=new GridRow();
-				row.Cells.Add(eventCur.DateTEvent.ToShortDateString());
+				row.Cells.Add(eventCur.Date.ToShortDateString());
 				Loinc lCur=Loincs.GetByCode(eventCur.CodeValueEvent);//TobaccoUseAssessed events can be one of three types, all LOINC codes
-				row.Cells.Add(lCur!=null?lCur.NameLongCommon:eventCur.EventType.ToString());
+				row.Cells.Add(lCur!=null?lCur.LongCommonName:eventCur.Type.ToString());
 				Snomed sCur=Snomeds.GetByCode(eventCur.CodeValueResult);
 				row.Cells.Add(sCur!=null?sCur.Description:"");
 				row.Cells.Add(eventCur.MoreInfo);
@@ -304,15 +304,15 @@ namespace OpenDental {
 			EhrMeasureEvent eventCur;
 			foreach(GridRow row in gridAssessments.Rows) {
 				eventCur=(EhrMeasureEvent)row.Tag;
-				if(eventCur.DateTEvent.Date==dateTEntered.Date) {//one already exists for this date, don't auto insert event
+				if(eventCur.Date.Date==dateTEntered.Date) {//one already exists for this date, don't auto insert event
 					return;
 				}
 			}
 			//no entry for the date entered, so insert one
 			eventCur=new EhrMeasureEvent();
-			eventCur.DateTEvent=dateTEntered;
-			eventCur.EventType=EhrMeasureEventType.TobaccoUseAssessed;
-			eventCur.PatNum=PatCur.PatNum;
+			eventCur.Date=dateTEntered;
+			eventCur.Type=EhrMeasureEventType.TobaccoUseAssessed;
+			eventCur.PatientId=PatCur.PatNum;
 			eventCur.CodeValueEvent=_listAssessmentCodes[comboAssessmentType.SelectedIndex].CodeValue;
 			eventCur.CodeSystemEvent=_listAssessmentCodes[comboAssessmentType.SelectedIndex].CodeSystem;
 			//SelectedIndex guaranteed to be greater than 0
@@ -446,9 +446,9 @@ namespace OpenDental {
 			}
 			DateTime dateTEntered=PIn.Date(textDateAssessed.Text);
 			EhrMeasureEvent meas=new EhrMeasureEvent();
-			meas.DateTEvent=dateTEntered;
-			meas.EventType=EhrMeasureEventType.TobaccoUseAssessed;
-			meas.PatNum=PatCur.PatNum;
+			meas.Date=dateTEntered;
+			meas.Type=EhrMeasureEventType.TobaccoUseAssessed;
+			meas.PatientId=PatCur.PatNum;
 			meas.CodeValueEvent=_listAssessmentCodes[comboAssessmentType.SelectedIndex].CodeValue;
 			meas.CodeSystemEvent=_listAssessmentCodes[comboAssessmentType.SelectedIndex].CodeSystem;
 			meas.CodeValueResult=_listTobaccoStatuses[comboTobaccoStatus.SelectedIndex].CodeValue;

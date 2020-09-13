@@ -8,6 +8,7 @@ using CodeBase;
 using SparksToothChart;
 using Imedisoft.Data.Models;
 using Imedisoft.Data;
+using System.Linq;
 
 namespace OpenDental {
 	public partial class FormPerioGraphical:ODForm {
@@ -58,7 +59,7 @@ namespace OpenDental {
 				Close();
 				return;
 			}
-			List<PerioMeasure> listMeas=PerioMeasures.GetAllForExam(_perioExamCur.PerioExamNum);
+			List<PerioMeasure> listMeas=PerioMeasures.GetByPerioExam(_perioExamCur.Id).ToList();
 			#region CAL old
 
 				//compute CAL's for each site.  If a CAL is valid, pass it in.
@@ -76,7 +77,7 @@ namespace OpenDental {
 					measureProbe=null;
 					measureGM=null;
 					for(int i=0;i<listMeas.Count;i++) {
-						if(listMeas[i].IntTooth!=t) {
+						if(listMeas[i].Tooth!=t) {
 							continue;
 						}
 						if(listMeas[i].SequenceType==PerioSequenceType.Probing) {
@@ -91,12 +92,12 @@ namespace OpenDental {
 					}
 					//mb
 					calMB=-1;
-					gm=measureGM.MBvalue;//MBvalue must stay over 100 for hyperplasia, because that's how we're storing it in ToothChartData.ListPerioMeasure.
+					gm=measureGM.MB;//MBvalue must stay over 100 for hyperplasia, because that's how we're storing it in ToothChartData.ListPerioMeasure.
 					if(gm>100) {//hyperplasia
 						gm=100-gm;//e.g. 100-103=-3
 					}
-					pd=measureProbe.MBvalue;
-					if(measureGM.MBvalue!=-1 && pd!=-1) {
+					pd=measureProbe.MB;
+					if(measureGM.MB!=-1 && pd!=-1) {
 						calMB=gm+pd;
 						if(calMB<0) {
 							calMB=0;//CALs can't be negative
@@ -104,12 +105,12 @@ namespace OpenDental {
 					}
 					//B
 					calB=-1;
-					gm=measureGM.Bvalue;
+					gm=measureGM.B;
 					if(gm>100) {//hyperplasia
 						gm=100-gm;//e.g. 100-103=-3 
 					}
-					pd=measureProbe.Bvalue;
-					if(measureGM.Bvalue!=-1&&pd!=-1) {
+					pd=measureProbe.B;
+					if(measureGM.B!=-1&&pd!=-1) {
 						calB=gm+pd;
 						if(calB<0) {
 							calB=0;
@@ -117,12 +118,12 @@ namespace OpenDental {
 					}
 					//DB
 					calDB=-1;
-					gm=measureGM.DBvalue;
+					gm=measureGM.DB;
 					if(gm>100) {//hyperplasia
 						gm=100-gm;//e.g. 100-103=-3 
 					}
-					pd=measureProbe.DBvalue;
-					if(measureGM.DBvalue!=-1&&pd!=-1) {
+					pd=measureProbe.DB;
+					if(measureGM.DB!=-1&&pd!=-1) {
 						calDB=gm+pd;
 						if(calDB<0) {
 							calDB=0;
@@ -130,12 +131,12 @@ namespace OpenDental {
 					}
 					//ML
 					calML=-1;
-					gm=measureGM.MLvalue;
+					gm=measureGM.ML;
 					if(gm>100) {//hyperplasia
 						gm=100-gm;//e.g. 100-103=-3 
 					}
-					pd=measureProbe.MLvalue;
-					if(measureGM.MLvalue!=-1&&pd!=-1) {
+					pd=measureProbe.ML;
+					if(measureGM.ML!=-1&&pd!=-1) {
 						calML=gm+pd;
 						if(calML<0) {
 							calML=0;
@@ -143,12 +144,12 @@ namespace OpenDental {
 					}
 					//L
 					calL=-1;
-					gm=measureGM.Lvalue;
+					gm=measureGM.L;
 					if(gm>100) {//hyperplasia
 						gm=100-gm;//e.g. 100-103=-3 
 					}
-					pd=measureProbe.Lvalue;
-					if(measureGM.Lvalue!=-1&&pd!=-1) {
+					pd=measureProbe.L;
+					if(measureGM.L!=-1&&pd!=-1) {
 						calL=gm+pd;
 						if(calL<0) {
 							calL=0;
@@ -156,12 +157,12 @@ namespace OpenDental {
 					}
 					//DL
 					calDL=-1;
-					gm=measureGM.DLvalue;
+					gm=measureGM.DL;
 					if(gm>100) {//hyperplasia
 						gm=100-gm;//e.g. 100-103=-3 
 					}
-					pd=measureProbe.DLvalue;
-					if(measureGM.DLvalue!=-1&&pd!=-1) {
+					pd=measureProbe.DL;
+					if(measureGM.DL!=-1&&pd!=-1) {
 						calDL=gm+pd;
 						if(calDL<0) {
 							calDL=0;
@@ -175,7 +176,7 @@ namespace OpenDental {
 			#endregion CAL old
 			for (int i=0;i<listMeas.Count;i++) {
 				if(listMeas[i].SequenceType==PerioSequenceType.SkipTooth) {
-					_toothChartRelay.SetMissing(listMeas[i].IntTooth.ToString());
+					_toothChartRelay.SetMissing(listMeas[i].Tooth.ToString());
 				} 
 				else if(listMeas[i].SequenceType==PerioSequenceType.Mobility) {
 					int mob=listMeas[i].ToothValue;
@@ -184,12 +185,12 @@ namespace OpenDental {
 						color=Color.Red;
 					}
 					if(mob!=-1) {//-1 represents no measurement taken.
-						_toothChartRelay.SetMobility(listMeas[i].IntTooth.ToString(),mob.ToString(),color);
+						_toothChartRelay.SetMobility(listMeas[i].Tooth.ToString(),mob.ToString(),color);
 					}
 				} 
 				else {
-					_toothChartRelay.AddPerioMeasure(listMeas[i].IntTooth,listMeas[i].SequenceType,listMeas[i].MBvalue,listMeas[i].Bvalue,listMeas[i].DBvalue,
-						listMeas[i].MLvalue,listMeas[i].Lvalue,listMeas[i].DLvalue);
+					_toothChartRelay.AddPerioMeasure(listMeas[i].Tooth,listMeas[i].SequenceType,listMeas[i].MB,listMeas[i].B,listMeas[i].DB,
+						listMeas[i].ML,listMeas[i].L,listMeas[i].DL);
 				}
 			}
 			//if(ToothChartRelay.IsSparks3DPresent){

@@ -12,6 +12,7 @@ using OpenDental.UI;
 using OpenDental;
 using OpenDentBusiness;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental.User_Controls.SetupWizard {
 	public partial class UserControlSetupWizEmployee:SetupWizControl {

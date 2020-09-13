@@ -177,9 +177,9 @@ namespace OpenDentBusiness{
 			com.CommSource = commSource;
 			com.CommlogNum = Insert(com);
 			EhrMeasureEvent newMeasureEvent = new EhrMeasureEvent();
-			newMeasureEvent.DateTEvent = com.CommDateTime;
-			newMeasureEvent.EventType = EhrMeasureEventType.ReminderSent;
-			newMeasureEvent.PatNum = com.PatNum;
+			newMeasureEvent.Date = com.CommDateTime;
+			newMeasureEvent.Type = EhrMeasureEventType.ReminderSent;
+			newMeasureEvent.PatientId = com.PatNum;
 			newMeasureEvent.MoreInfo = com.Note;
 			EhrMeasureEvents.Insert(newMeasureEvent);
 			return com;

@@ -74,9 +74,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Account.cs" />
+    <Compile Include="AccountingAutoPay.cs" />
     <Compile Include="Allergy.cs" />
     <Compile Include="AllergyDef.cs" />
     <Compile Include="AppointmentFieldDefinition.cs" />
+    <Compile Include="AppointmentFieldType.cs" />
+    <Compile Include="AutoCode.cs" />
+    <Compile Include="AutoCodeCondition.cs" />
+    <Compile Include="AutoCodeConditionType.cs" />
+    <Compile Include="AutoCodeItem.cs" />
+    <Compile Include="Automation.cs" />
+    <Compile Include="AutomationAction.cs" />
+    <Compile Include="AutomationTrigger.cs" />
+    <Compile Include="Ehr\EhrProviderKey.cs" />
+    <Compile Include="Ehr\CdsPermission.cs" />
     <Compile Include="Cemt\Connection.cs" />
     <Compile Include="Cemt\ConnectionGroup.cs" />
     <Compile Include="Computer.cs" />
@@ -91,6 +102,9 @@
     <Compile Include="DentalSchools\GradingScale.cs" />
     <Compile Include="DentalSchools\GradingScaleItem.cs" />
     <Compile Include="Medication.cs" />
+    <Compile Include="PatientStatus.cs" />
+    <Compile Include="PerioExam.cs" />
+    <Compile Include="PerioMeasure.cs" />
     <Compile Include="Problem.cs" />
     <Compile Include="ProblemDefinition.cs" />
     <Compile Include="Icd10.cs" />
@@ -108,7 +122,8 @@
     <Compile Include="SecurityLogSource.cs" />
     <Compile Include="Snomed.cs" />
     <Compile Include="SnomedAllergyCode.cs" />
-    <Compile Include="Userod.cs" />
+    <Compile Include="UserGroup.cs" />
+    <Compile Include="User.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Imedisoft.Data\Imedisoft.Data.csproj">

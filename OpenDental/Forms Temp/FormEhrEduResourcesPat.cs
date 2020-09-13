@@ -79,9 +79,9 @@ namespace OpenDental {
 			}
 			if(didPrint) {
 				EhrMeasureEvent newMeasureEvent = new EhrMeasureEvent();
-				newMeasureEvent.DateTEvent=DateTime.Now;
-				newMeasureEvent.EventType=EhrMeasureEventType.EducationProvided;
-				newMeasureEvent.PatNum=patCur.PatNum;
+				newMeasureEvent.Date=DateTime.Now;
+				newMeasureEvent.Type=EhrMeasureEventType.EducationProvided;
+				newMeasureEvent.PatientId=patCur.PatNum;
 				newMeasureEvent.MoreInfo=eduResourceList[e.Row].ResourceUrl;
 				EhrMeasureEvents.Insert(newMeasureEvent);
 				FillGridProvided();
@@ -100,7 +100,7 @@ namespace OpenDental {
 			GridRow row;
 			for(int i=0;i<eduMeasureProvidedList.Count;i++) {
 				row=new GridRow();
-				row.Cells.Add(eduMeasureProvidedList[i].DateTEvent.ToString());
+				row.Cells.Add(eduMeasureProvidedList[i].Date.ToString());
 				row.Cells.Add(eduMeasureProvidedList[i].MoreInfo);
 				gridProvided.Rows.Add(row);
 			}
@@ -113,7 +113,7 @@ namespace OpenDental {
 				return;
 			}
 			for(int i=0;i<gridProvided.SelectedIndices.Length;i++) {
-				EhrMeasureEvents.Delete(eduMeasureProvidedList[gridProvided.SelectedIndices[i]].EhrMeasureEventNum);
+				EhrMeasureEvents.Delete(eduMeasureProvidedList[gridProvided.SelectedIndices[i]].Id);
 			}
 			FillGridProvided();
 		}

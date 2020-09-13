@@ -21,6 +21,7 @@ using OpenDental.UI;
 using System.Text.RegularExpressions;
 using Imedisoft.Forms;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -88,7 +89,7 @@ namespace OpenDental{
 		private UI.Button butEditAutoNote;
 		private DataTable TablePlanned;
 		///<summary>Users can temporarily log in on this form.  Defaults to Security.CurUser.</summary>
-		private Userod _curUser=Security.CurrentUser;
+		private User _curUser=Security.CurrentUser;
 		///<summary>True if the user clicked the Change User button.</summary>
 		private bool _hasUserChanged;
 		private Label labelPermAlert;
@@ -708,7 +709,7 @@ namespace OpenDental{
 			ModifyForOrionMode();
 			textProcDate.Text=GroupCur.ProcDate.ToShortDateString();
 			textDateEntry.Text=GroupCur.DateEntryC.ToShortDateString();
-			textUser.Text=Userods.GetName(GroupCur.UserNum);//might be blank. Will change automatically if user changes note or alters sig.
+			textUser.Text=Users.GetUserName(GroupCur.UserNum);//might be blank. Will change automatically if user changes note or alters sig.
 			textNotes.Text=GroupCur.Note;
 			if(GroupCur.ProcStatus==ProcStat.EC && Preferences.GetBool(PreferenceName.ProcLockingIsAllowed) && !GroupCur.IsLocked) {
 				butLock.Visible=true;
@@ -789,7 +790,7 @@ namespace OpenDental{
 				buttonUseAutoNote.Enabled=false;
 				butChangeUser.Enabled=false;
 			}
-			else if(!Userods.CanUserSignNote()) {
+			else if(!Users.CanUserSignNote()) {
 				signatureBoxWrapper.Enabled=false;
 				labelPermAlert.Visible=true;
 				labelPermAlert.Text="Notes can only be signed by providers.";
@@ -1324,7 +1325,7 @@ namespace OpenDental{
 			FormChangeUser.ShowDialog();
 			if(FormChangeUser.DialogResult==DialogResult.OK) {
 				_curUser=FormChangeUser.User; //assign temp user
-				bool canUserSignNote=Userods.CanUserSignNote(_curUser);//only show if user can sign
+				bool canUserSignNote=Users.CanUserSignNote(_curUser);//only show if user can sign
 				signatureBoxWrapper.Enabled=canUserSignNote;
 				if(!labelPermAlert.Visible && !canUserSignNote) {
 					labelPermAlert.Text="Notes can only be signed by providers.";

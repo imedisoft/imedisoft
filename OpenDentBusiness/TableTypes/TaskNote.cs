@@ -1,4 +1,5 @@
 ﻿using Imedisoft.Data.Annotations;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections;
 
@@ -19,7 +20,7 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// The ID of the user that created the note.
 		/// </summary>
-		[ForeignKey(typeof(Userod), nameof(Userod.Id))]
+		[ForeignKey(typeof(User), nameof(User.Id))]
 		public long UserId;
 
 		/// <summary>

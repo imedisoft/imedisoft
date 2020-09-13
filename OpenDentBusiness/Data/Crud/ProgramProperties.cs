@@ -8,14 +8,14 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using MySql.Data.MySqlClient;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace OpenDentBusiness
 {
-	public partial class ProgramProperties
+    public partial class ProgramProperties
 	{
 		public static ProgramProperty FromReader(MySqlDataReader dataReader)
 		{

@@ -23,7 +23,7 @@ namespace OpenDental {
 		///<summary>Used to filter the list of users shown in the "Users" tab.</summary>
 		private Dictionary<long,Provider> _dictProvNumProvs;
 		///<summary>The currently selected user. Should not be used except for in the selected user property.</summary>
-		private Userod _selectedUser;
+		private User _selectedUser;
 		///<summary>This context menu makes it so you can right click a user in the userGrid and select 'Copy User'</summary>
 		private ContextMenu contextMenuUsers;
 		#endregion
@@ -58,7 +58,7 @@ namespace OpenDental {
 		}
 
 		///<summary>The user selected in the "Users" tab. Setting the SelectedUser to null or a user that does not exist in the listbox does nothing.</summary>
-		public Userod SelectedUser {
+		public User SelectedUser {
 			get {
 				return _selectedUser;
 			}
@@ -72,7 +72,7 @@ namespace OpenDental {
 				}
 				labelUserCurr.Text=_selectedUser.UserName;
 				for(int i=0;i<gridUsers.Rows.Count;i++){
-					if(((Userod)(gridUsers.Rows[i].Tag)).Id==_selectedUser.Id) {
+					if(((User)(gridUsers.Rows[i].Tag)).Id==_selectedUser.Id) {
 						gridUsers.SetSelected(i,true);
 						break;
 					}
@@ -159,21 +159,21 @@ namespace OpenDental {
 			comboGroups.Items.Clear();
 			comboGroups.Items.Add(new ODBoxItem<UserGroup>("All Groups"));
 			comboGroups.SelectedIndex=0;
-			foreach(UserGroup groupCur in UserGroups.GetList(IsForCEMT)) {
+			foreach(UserGroup groupCur in UserGroups.GetAll(IsForCEMT)) {
 				comboGroups.Items.Add(new ODBoxItem<UserGroup>(groupCur.Description,groupCur));
 			}
 		}
 
 		///<summary>Returns a filtered list of userods that should be displayed. Returns all users when IsCEMT is true.</summary>
-		private List<Userod> GetFilteredUsersHelper() {
-			List<Userod> retVal = Userods.GetAll();
+		private List<User> GetFilteredUsersHelper() {
+			List<User> retVal = Users.GetAll();
 			if(IsForCEMT) {
 				return retVal;
 			}
 			if(_dictProvNumProvs == null) { //fill the dictionary if needed
-				_dictProvNumProvs=Providers.GetMultProviders(Userods.GetAll().Select(x => x.ProviderId ?? 0).ToList()).ToDictionary(x => x.Id,x => x);
+				_dictProvNumProvs=Providers.GetMultProviders(Users.GetAll().Select(x => x.ProviderId ?? 0).ToList()).ToDictionary(x => x.Id,x => x);
 			}
-			retVal.RemoveAll(x => x.UserIdCEMT>0);//NEVER show CEMT users when not in the CEMT tool.
+			retVal.RemoveAll(x => x.CentralUserId>0);//NEVER show CEMT users when not in the CEMT tool.
 			if(!checkShowHidden.Checked) {
 				retVal.RemoveAll(x => x.IsHidden);
 			}
@@ -212,7 +212,7 @@ namespace OpenDental {
 				retVal.RemoveAll(x => x.ClinicId!=((ODBoxItem<Clinic>)comboClinic.SelectedItem).Tag.Id);
 			}
 			if(comboGroups.SelectedIndex>0) {
-				retVal.RemoveAll(x => !Userods.IsInUserGroup(x.Id, ((ODBoxItem<UserGroup>)comboGroups.SelectedItem).Tag.Id));
+				retVal.RemoveAll(x => !Users.IsInUserGroup(x.Id, ((ODBoxItem<UserGroup>)comboGroups.SelectedItem).Tag.Id));
 			}
 			if(!string.IsNullOrWhiteSpace(textPowerSearch.Text)) {
 				switch(((ODBoxItem<UserFilters>)comboShowOnly.SelectedItem).Tag) {
@@ -242,7 +242,7 @@ namespace OpenDental {
 		///<summary>Refreshes the UserGroups list box on the "User" tab. Also refreshes the security tree. 
 		///Public so that it can be called from the Form that implements this control.</summary>
 		public void RefreshUserTabGroups() {
-			List<UserGroup> listUserGroups=(SelectedUser==null) ? UserGroups.GetList(IsForCEMT) : UserGroups.GetForUser(SelectedUser.Id, IsForCEMT).ToList();
+			List<UserGroup> listUserGroups=(SelectedUser==null) ? UserGroups.GetAll(IsForCEMT) : Users.GetGroups(SelectedUser.Id, IsForCEMT).ToList();
 			_isFillingList=true;
 			listUserTabUserGroups.Items.Clear();
 			for(int i=0;i<listUserGroups.Count;i++) {
@@ -301,7 +301,7 @@ namespace OpenDental {
 		///<summary>Fills gridUsers. Public so that it can be called from the Form that implements this control.</summary>
 		public void FillGridUsers() {
 			_isFillingList=true;
-			Userod selectedUser=SelectedUser;//preserve user selection.
+			User selectedUser=SelectedUser;//preserve user selection.
 			gridUsers.BeginUpdate();
 			gridUsers.Columns.Clear();
 			gridUsers.Columns.Add(new GridColumn("Username",90));
@@ -313,8 +313,8 @@ namespace OpenDental {
 			}
 			gridUsers.Columns.Add(new GridColumn("Strong\r\nPwd",45,HorizontalAlignment.Center));
 			gridUsers.Rows.Clear();
-			List<Userod> listFilteredUsers=GetFilteredUsersHelper();
-			foreach(Userod user in listFilteredUsers) {
+			List<User> listFilteredUsers=GetFilteredUsersHelper();
+			foreach(User user in listFilteredUsers) {
 				GridRow row=new GridRow();
 				row.Cells.Add(user.UserName);
 				row.Cells.Add(Employees.GetNameFL(user.EmployeeId ?? 0));
@@ -342,7 +342,7 @@ namespace OpenDental {
 				return;
 			}
 			//Call an event that bubbles back up to the calling Form.
-			AddUserClick?.Invoke(this,new SecurityEventArgs(new Userod()));
+			AddUserClick?.Invoke(this,new SecurityEventArgs(new User()));
 		}
 
 		private void butCopyUser_Click(object sender,EventArgs e) {//Not visible by default
@@ -357,7 +357,7 @@ namespace OpenDental {
 			if(_isFillingList) {
 				return;
 			}
-			SelectedUser=gridUsers.SelectedTag<Userod>();
+			SelectedUser=gridUsers.SelectedTag<User>();
 			//Refresh the selected groups and the security tree
 			RefreshUserTabGroups();
 		}
@@ -378,7 +378,7 @@ namespace OpenDental {
 			_isFillingList=true;
 			UserGroup selectedGroup = SelectedUserGroup; //Preserve Usergroup selection.
 			listUserGroupTabUserGroups.Items.Clear();
-			foreach(UserGroup groupCur in UserGroups.GetList(IsForCEMT)) {
+			foreach(UserGroup groupCur in UserGroups.GetAll(IsForCEMT)) {
 				ODBoxItem<UserGroup> boxItemCur = new ODBoxItem<UserGroup>(groupCur.Description,groupCur);
 				listUserGroupTabUserGroups.Items.Add(boxItemCur);
 				if(selectedGroup != null && groupCur.Id == selectedGroup.Id) {
@@ -395,12 +395,12 @@ namespace OpenDental {
 		///This also dynamically sets the height of the control.</summary>
 		private void FillAssociatedUsers() {
 			listAssociatedUsers.Items.Clear();
-			List<Userod> listUsers = Userods.GetForGroup(SelectedUserGroup.Id);
-			foreach(Userod userCur in listUsers) {
-				listAssociatedUsers.Items.Add(new ODBoxItem<Userod>(userCur.UserName,userCur));
+			List<User> listUsers = Users.GetByUserGroup(SelectedUserGroup.Id);
+			foreach(User userCur in listUsers) {
+				listAssociatedUsers.Items.Add(new ODBoxItem<User>(userCur.UserName,userCur));
 			}
 			if(listAssociatedUsers.Items.Count == 0) {
-				listAssociatedUsers.Items.Add(new ODBoxItem<Userod>("None"));
+				listAssociatedUsers.Items.Add(new ODBoxItem<User>("None"));
 			}
 		}
 
@@ -468,7 +468,7 @@ namespace OpenDental {
 
 	///<summary>A rather generic EventArgs class that can contain specific Security Object types (Userod, UserGroup, or GroupPermission).</summary>
 	public class SecurityEventArgs {
-		public Userod User {
+		public User User {
 			get;
 		}
 		public UserGroup Group {
@@ -478,7 +478,7 @@ namespace OpenDental {
 			get;
 		}
 
-		public SecurityEventArgs(Userod user) {
+		public SecurityEventArgs(User user) {
 			User=user;
 		}
 

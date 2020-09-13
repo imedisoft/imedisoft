@@ -9,12 +9,13 @@ using OpenDentBusiness;
 using System.Linq;
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental
 {
 	public partial class FormRpTreatPlanPresentationStatistics : ODForm
 	{
-		private List<Userod> _listUsers;
+		private List<User> _listUsers;
 		private List<Clinic> _listClinics;
 		public FormRpTreatPlanPresentationStatistics()
 		{
@@ -26,7 +27,7 @@ namespace OpenDental
 		{
 			date1.SelectionStart = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(-1);
 			date2.SelectionStart = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddDays(-1);
-			_listUsers = Userods.GetAll(true);
+			_listUsers = Users.GetAll(true);
 			listUser.Items.AddRange(_listUsers.Select(x => x.UserName).ToArray());
 			checkAllUsers.Checked = true;
 			if (PrefC.HasClinicsEnabled)
@@ -57,7 +58,7 @@ namespace OpenDental
 			report.AddTitle("Title", "Presented Procedure Totals");
 			report.AddSubTitle("PracTitle", Preferences.GetString(PreferenceName.PracticeTitle));
 			report.AddSubTitle("Date", date1.SelectionStart.ToShortDateString() + " - " + date2.SelectionStart.ToShortDateString());
-			List<Userod> listSelectedUsers = new List<Userod>();
+			List<User> listSelectedUsers = new List<User>();
 			if (checkAllUsers.Checked)
 			{
 				report.AddSubTitle("Users", "All Users");

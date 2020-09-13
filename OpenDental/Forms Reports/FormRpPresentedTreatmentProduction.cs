@@ -1,20 +1,19 @@
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using OpenDental.ReportingComplex;
+using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using OpenDental.ReportingComplex;
-using OpenDentBusiness;
 using System.Linq;
-using CodeBase;
-using Imedisoft.Data;
+using System.Windows.Forms;
 
 namespace OpenDental
 {
-	public partial class FormRpPresentedTreatmentProduction : ODForm
+    public partial class FormRpPresentedTreatmentProduction : ODForm
 	{
-		private List<Userod> _listUsers;
+		private List<User> _listUsers;
 		private List<Clinic> _listClinics;
 		public FormRpPresentedTreatmentProduction()
 		{
@@ -26,7 +25,7 @@ namespace OpenDental
 		{
 			date1.SelectionStart = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(-1);
 			date2.SelectionStart = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddDays(-1);
-			_listUsers = Userods.GetAll(true);
+			_listUsers = Users.GetAll(true);
 			listUser.Items.AddRange(_listUsers.Select(x => x.UserName).ToArray());
 			checkAllUsers.Checked = true;
 			if (PrefC.HasClinicsEnabled)

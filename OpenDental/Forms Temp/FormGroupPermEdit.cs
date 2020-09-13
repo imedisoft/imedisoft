@@ -249,7 +249,7 @@ namespace OpenDental{
 					GroupPermissions.Update(Cur);
 				}
 				SecurityLogs.MakeLogEntry(Permissions.SecurityAdmin,0,$"Permission '{Cur.Permission}' granted to " +
-					$"'{UserGroups.GetGroup(Cur.UserGroupId).Description}'");
+					$"'{UserGroups.GetById(Cur.UserGroupId).Description}'");
 			}
 			catch(Exception ex){
 				MessageBox.Show(ex.Message);

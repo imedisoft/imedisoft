@@ -88,6 +88,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Allergy.
+        /// </summary>
+        public static string Allergy {
+            get {
+                return ResourceManager.GetString("Allergy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Amount.
         /// </summary>
         public static string Amount {
@@ -219,6 +228,15 @@ namespace Imedisoft.Translation {
         public static string CannotDeleteClinicInUseByUsers {
             get {
                 return ResourceManager.GetString("CannotDeleteClinicInUseByUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Category.
+        /// </summary>
+        public static string Category {
+            get {
+                return ResourceManager.GetString("Category", resourceCulture);
             }
         }
         
@@ -466,6 +484,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Inbox.
+        /// </summary>
+        public static string Inbox {
+            get {
+                return ResourceManager.GetString("Inbox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You do not have sufficient privileges to perform this operation..
         /// </summary>
         public static string InsufficientPrivileges {
@@ -480,6 +507,24 @@ namespace Imedisoft.Translation {
         public static string InvalidPassword {
             get {
                 return ResourceManager.GetString("InvalidPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid username or password..
+        /// </summary>
+        public static string InvalidUserNameOrPassword {
+            get {
+                return ResourceManager.GetString("InvalidUserNameOrPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Key.
+        /// </summary>
+        public static string Key {
+            get {
+                return ResourceManager.GetString("Key", resourceCulture);
             }
         }
         
@@ -534,6 +579,15 @@ namespace Imedisoft.Translation {
         public static string LogFileCreatedWouldYouLikeToOpenFile {
             get {
                 return ResourceManager.GetString("LogFileCreatedWouldYouLikeToOpenFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Medication.
+        /// </summary>
+        public static string Medication {
+            get {
+                return ResourceManager.GetString("Medication", resourceCulture);
             }
         }
         
@@ -644,6 +698,60 @@ namespace Imedisoft.Translation {
         public static string OperationNowAllowedForReason {
             get {
                 return ResourceManager.GetString("OperationNowAllowedForReason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password may not be blank when the strong password feature is turned on..
+        /// </summary>
+        public static string PasswordMayNotBeBlank {
+            get {
+                return ResourceManager.GetString("PasswordMayNotBeBlank", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password must be at least eight characters long when the strong password feature is turned on..
+        /// </summary>
+        public static string PasswordMustBeAtLeastEightCharacters {
+            get {
+                return ResourceManager.GetString("PasswordMustBeAtLeastEightCharacters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password must contain at least one lower case letter when the strong password feature is turned on..
+        /// </summary>
+        public static string PasswordMustContainAtLeastOneLowerCaseLetter {
+            get {
+                return ResourceManager.GetString("PasswordMustContainAtLeastOneLowerCaseLetter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password must contain at least one number when the strong password feature is turned on..
+        /// </summary>
+        public static string PasswordMustContainAtLeastOneNumber {
+            get {
+                return ResourceManager.GetString("PasswordMustContainAtLeastOneNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password must contain at least one special character when the &apos;strong passwords require a special character&apos; feature is turned on..
+        /// </summary>
+        public static string PasswordMustContainAtLeastOneSpecialCharacter {
+            get {
+                return ResourceManager.GetString("PasswordMustContainAtLeastOneSpecialCharacter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password must contain at least one capital letter when the strong password feature is turned on..
+        /// </summary>
+        public static string PasswordMustContainAtLeastOneUpperCaseLetter {
+            get {
+                return ResourceManager.GetString("PasswordMustContainAtLeastOneUpperCaseLetter", resourceCulture);
             }
         }
         
@@ -774,6 +882,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please enter a valid year..
+        /// </summary>
+        public static string PleaseEnterValidYear {
+            get {
+                return ResourceManager.GetString("PleaseEnterValidYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please select an account first..
         /// </summary>
         public static string PleaseSelectAccountFirst {
@@ -837,6 +954,24 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please select a user..
+        /// </summary>
+        public static string PleaseSelectUser {
+            get {
+                return ResourceManager.GetString("PleaseSelectUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Problem.
+        /// </summary>
+        public static string Problem {
+            get {
+                return ResourceManager.GetString("Problem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Provider.
         /// </summary>
         public static string Provider {
@@ -896,6 +1031,15 @@ namespace Imedisoft.Translation {
         public static string Shown {
             get {
                 return ResourceManager.GetString("Shown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Source.
+        /// </summary>
+        public static string Source {
+            get {
+                return ResourceManager.GetString("Source", resourceCulture);
             }
         }
         
@@ -999,11 +1143,30 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The following users could not be updated:.
+        /// </summary>
+        public static string TheFollowingUsersCouldNotBeUpdated {
+            get {
+                return ResourceManager.GetString("TheFollowingUsersCouldNotBeUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Title.
         /// </summary>
         public static string Title {
             get {
                 return ResourceManager.GetString("Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account has been locked due to failed log in attempts.
+        ///Call your security admin to unlock your account or wait at least 5 minutes..
+        /// </summary>
+        public static string TooManyFailedLogonAttempts {
+            get {
+                return ResourceManager.GetString("TooManyFailedLogonAttempts", resourceCulture);
             }
         }
         
@@ -1035,6 +1198,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User.
+        /// </summary>
+        public static string User {
+            get {
+                return ResourceManager.GetString("User", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Value.
         /// </summary>
         public static string Value {
@@ -1053,11 +1225,29 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Year.
+        /// </summary>
+        public static string Year {
+            get {
+                return ResourceManager.GetString("Year", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You have selected a problem with an unofficial SNOMED CT code. Please correct the problem definition by going to Lists | Problems and choosing an official code from the SNOMED CT list..
         /// </summary>
         public static string YouHaveSelectedProblemWithUnofficialSnomedCode {
             get {
                 return ResourceManager.GetString("YouHaveSelectedProblemWithUnofficialSnomedCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must change your password to a strong password due to the current security settings..
+        /// </summary>
+        public static string YouMustChangePasswordToStrongPasswordDueToSecuritySettings {
+            get {
+                return ResourceManager.GetString("YouMustChangePasswordToStrongPasswordDueToSecuritySettings", resourceCulture);
             }
         }
     }

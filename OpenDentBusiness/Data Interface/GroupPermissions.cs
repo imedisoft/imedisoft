@@ -1,13 +1,11 @@
 using CodeBase;
 using Imedisoft.Data;
 using Imedisoft.Data.Cache;
+using Imedisoft.Data.Models;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Reflection;
-using System.Windows.Forms;
 
 namespace OpenDentBusiness
 {
@@ -226,7 +224,7 @@ namespace OpenDentBusiness
 		/// Used to check if user has permission to access the report. 
 		/// Pass in a list of DisplayReports to avoid a call to the db.
 		/// </summary>
-		public static bool HasReportPermission(string reportName, Userod user, List<DisplayReport> reports = null)
+		public static bool HasReportPermission(string reportName, User user, List<DisplayReport> reports = null)
 		{
 			if (!Security.IsAuthorized(Permissions.Reports, true))
 			{
@@ -240,7 +238,7 @@ namespace OpenDentBusiness
 			}
 
 			var reportPermissions = GetPermissionsForReports();
-			if (reportPermissions.Exists(x => x.ObjectId == report.DisplayReportNum && Userods.IsInUserGroup(user.Id, x.UserGroupId)))
+			if (reportPermissions.Exists(x => x.ObjectId == report.DisplayReportNum && Users.IsInUserGroup(user.Id, x.UserGroupId)))
 			{
 				return true;
 			}
@@ -251,7 +249,7 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// Determines whether a single userGroup contains a specific permission.
 		/// </summary>
-		public static bool HasPermission(long userGroupId, Permissions permission, long? objectId)
+		public static bool HasPermission(long userGroupId, Permissions permission, long? objectId = null)
 		{
 			var groupPermission = GetFirstOrDefault(x => x.UserGroupId == userGroupId && x.Permission == permission && x.ObjectId == objectId);
 
@@ -261,9 +259,9 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// Determines whether an individual user has a specific permission.
 		/// </summary>
-		public static bool HasPermission(Userod user, Permissions permission, long? objectId)
+		public static bool HasPermission(User user, Permissions permission, long? objectId = null)
 		{
-			var groupPermission = GetFirstOrDefault(x => x.Permission == permission && x.ObjectId == objectId && Userods.IsInUserGroup(user.Id, x.UserGroupId));
+			var groupPermission = GetFirstOrDefault(x => x.Permission == permission && x.ObjectId == objectId && Users.IsInUserGroup(user.Id, x.UserGroupId));
 
 			return groupPermission != null;
 		}

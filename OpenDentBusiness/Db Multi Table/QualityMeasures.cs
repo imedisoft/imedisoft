@@ -3798,18 +3798,18 @@ namespace OpenDentBusiness {
 				ehrVitalsignCur.HeightExamCode=listVitalsigns[i].HeightExamCode;
 				Loinc lCur=Loincs.GetByCode(ehrVitalsignCur.HeightExamCode);
 				if(lCur!=null) {
-					ehrVitalsignCur.HeightExamDescript=lCur.NameLongCommon;
+					ehrVitalsignCur.HeightExamDescript=lCur.LongCommonName;
 				}
 				ehrVitalsignCur.WeightExamCode=listVitalsigns[i].WeightExamCode;
 				lCur=Loincs.GetByCode(ehrVitalsignCur.WeightExamCode);
 				if(lCur!=null) {
-					ehrVitalsignCur.WeightExamDescript=lCur.NameLongCommon;
+					ehrVitalsignCur.WeightExamDescript=lCur.LongCommonName;
 				}
 				ehrVitalsignCur.BMIPercentile=listVitalsigns[i].BMIPercentile;
 				ehrVitalsignCur.BMIExamCode=listVitalsigns[i].BMIExamCode;//percentile code
 				lCur=Loincs.GetByCode(ehrVitalsignCur.BMIExamCode);
 				if(lCur!=null) {
-					ehrVitalsignCur.BMIPercentileDescript=lCur.NameLongCommon;
+					ehrVitalsignCur.BMIPercentileDescript=lCur.LongCommonName;
 				}
 				ehrVitalsignCur.DateTaken=listVitalsigns[i].DateTaken;
 				if(retval.ContainsKey(ehrVitalsignCur.PatNum)) {

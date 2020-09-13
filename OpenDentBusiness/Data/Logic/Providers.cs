@@ -366,7 +366,7 @@ namespace Imedisoft.Data
 		{
 			//No need to check RemotingRole; no call to db.
 			List<Provider> listProvsWithClinics = new List<Provider>();
-			List<Userod> listUsersShort = Userods.GetAll();
+			List<User> listUsersShort = Users.GetAll();
 			for (int i = 0; i < listUsersShort.Count; i++)
 			{
 				if (!listUsersShort[i].ProviderId.HasValue) continue;
@@ -478,8 +478,8 @@ namespace Imedisoft.Data
 			return -1;
 		}
 
-		public static List<Userod> GetAttachedUsers(long providerId) // TODO: Move to Userods...
-			=> Userods.SelectMany(
+		public static List<User> GetAttachedUsers(long providerId) // TODO: Move to Userods...
+			=> Users.SelectMany(
 				"SELECT * FROM `users` WHERE u.`provider_id` = " + providerId).ToList();
 
 		/// <summary>
@@ -522,9 +522,9 @@ namespace Imedisoft.Data
 			}
 			//The GetWhere uses a "UserClinicNum>-1" in its selection to behave as a "Where true" to retrieve everything from the cache 
 			Dictionary<long, List<long>> dictUserClinicsReference = UserClinics.GetWhere(x => x.Id > -1).GroupBy(x => x.UserId).ToDictionary(x => x.Key, x => x.Select(y => y.ClinicId).ToList());
-			Dictionary<long, List<long>> dictUserClinics = Userods.GetAll()
+			Dictionary<long, List<long>> dictUserClinics = Users.GetAll()
 				.ToDictionary(x => x.Id, x => dictUserClinicsReference.ContainsKey(x.Id) ? dictUserClinicsReference[x.Id] : new List<long>());
-			Dictionary<long?, List<long>> dictProvUsers = Userods.GetWhere(x => x.ProviderId > 0).GroupBy(x => x.ProviderId)
+			Dictionary<long?, List<long>> dictProvUsers = Users.Find(x => x.ProviderId > 0).GroupBy(x => x.ProviderId)
 				.ToDictionary(x => x.Key, x => x.Select(y => y.Id).ToList());
 			HashSet<long> hashSetProvsRestrictedOtherClinic = new HashSet<long>(ProviderClinicLinks.GetProvsRestrictedToOtherClinics(clinicNum));
 			return Providers.GetWhere(x =>

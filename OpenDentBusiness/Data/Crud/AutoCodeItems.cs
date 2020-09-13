@@ -7,15 +7,13 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using MySql.Data.MySqlClient;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 
-namespace OpenDentBusiness
+namespace Imedisoft.Data
 {
-	public partial class AutoCodeItems
+    public partial class AutoCodeItems
 	{
 		public static AutoCodeItem FromReader(MySqlDataReader dataReader)
 		{
@@ -30,36 +28,45 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// Selects a single AutoCodeItem object from the database using the specified SQL command.
 		/// </summary>
+		/// <param name="command">The SELECT command to execute.</param>
+		/// <param name="parameters">The (optional) command parameters.</param>
 		public static AutoCodeItem SelectOne(string command, params MySqlParameter[] parameters)
 			=> Database.SelectOne(command, FromReader, parameters);
 
 		/// <summary>
 		/// Selects the <see cref="AutoCodeItem"/> object with the specified key from the database.
 		/// </summary>
-		public static AutoCodeItem SelectOne(Int64 id)
+		/// <param name="id">The primary key of the <see cref="AutoCodeItem"/> to select.</param>
+		public static AutoCodeItem SelectOne(long id)
 			=> SelectOne("SELECT * FROM `auto_code_items` WHERE `id` = " + id);
 
 		/// <summary>
 		/// Selects multiple <see cref="AutoCodeItem"/> objects from the database using the specified SQL command.
 		/// </summary>
+		/// <param name="command">The SELECT command to execute.</param>
+		/// <param name="parameters">The (optional) command parameters.</param>
 		public static IEnumerable<AutoCodeItem> SelectMany(string command, params MySqlParameter[] parameters)
 			=> Database.SelectMany(command, FromReader, parameters);
 
 		/// <summary>
 		/// Inserts the specified <see cref="AutoCodeItem"/> into the database.
 		/// </summary>
-		public static long Insert(AutoCodeItem autoCodeItem)
+		/// <param name="autoCodeItem">The <see cref="AutoCodeItem"/> to insert into the database.</param>
+		private static long ExecuteInsert(AutoCodeItem autoCodeItem)
 			=> autoCodeItem.Id = Database.ExecuteInsert(
 				"INSERT INTO `auto_code_items` " +
 				"(`auto_code_id`, `procedure_code_id`) " +
 				"VALUES (" +
 					"@auto_code_id, @procedure_code_id" +
-				")");
+				")",
+					new MySqlParameter("auto_code_id", autoCodeItem.AutoCodeId),
+					new MySqlParameter("procedure_code_id", autoCodeItem.ProcedureCodeId));
 
 		/// <summary>
 		/// Updates the specified <see cref="AutoCodeItem"/> in the database.
 		/// </summary>
-		public static void Update(AutoCodeItem autoCodeItem)
+		/// <param name="autoCodeItem">The <see cref="AutoCodeItem"/> to update.</param>
+		private static void ExecuteUpdate(AutoCodeItem autoCodeItem)
 			=> Database.ExecuteNonQuery(
 				"UPDATE `auto_code_items` SET " +
 					"`auto_code_id` = @auto_code_id, " +
@@ -70,47 +77,17 @@ namespace OpenDentBusiness
 					new MySqlParameter("procedure_code_id", autoCodeItem.ProcedureCodeId));
 
 		/// <summary>
-		/// Updates the specified <see cref="AutoCodeItem"/> in the database.
-		/// </summary>
-		public static bool Update(AutoCodeItem auto_code_itemsNew, AutoCodeItem auto_code_itemsOld)
-		{
-			var updates = new List<string>();
-			var parameters = new List<MySqlParameter>();
-
-			if (auto_code_itemsNew.AutoCodeId != auto_code_itemsOld.AutoCodeId)
-			{
-				updates.Add("`auto_code_id` = @auto_code_id");
-				parameters.Add(new MySqlParameter("auto_code_id", auto_code_itemsNew.AutoCodeId));
-			}
-
-			if (auto_code_itemsNew.ProcedureCodeId != auto_code_itemsOld.ProcedureCodeId)
-			{
-				updates.Add("`procedure_code_id` = @procedure_code_id");
-				parameters.Add(new MySqlParameter("procedure_code_id", auto_code_itemsNew.ProcedureCodeId));
-			}
-
-			if (updates.Count == 0) return false;
-
-			parameters.Add(new MySqlParameter("id", auto_code_itemsNew.Id));
-
-			Database.ExecuteNonQuery("UPDATE `auto_code_items` " +
-				"SET " + string.Join(", ", updates) + " " +
-				"WHERE `id` = @id",
-					parameters.ToArray());
-
-			return true;
-		}
-
-		/// <summary>
 		/// Deletes a single <see cref="AutoCodeItem"/> object from the database.
 		/// </summary>
-		public static void Delete(Int64 id)
+		/// <param name="id">The primary key of the <see cref="AutoCodeItem"/> to delete.</param>
+		private static void ExecuteDelete(long id)
 			 => Database.ExecuteNonQuery("DELETE FROM `auto_code_items` WHERE `id` = " + id);
 
 		/// <summary>
 		/// Deletes the specified <see cref="AutoCodeItem"/> object from the database.
 		/// </summary>
-		public static void Delete(AutoCodeItem autoCodeItem)
-			=> Delete(autoCodeItem.Id);
+		/// <param name="autoCodeItem">The <see cref="AutoCodeItem"/> to delete.</param>
+		private static void ExecuteDelete(AutoCodeItem autoCodeItem)
+			=> ExecuteDelete(autoCodeItem.Id);
 	}
 }

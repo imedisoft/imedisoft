@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using OpenDental.UI;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental{
 ///<summary></summary>
@@ -24,7 +26,7 @@ namespace OpenDental{
 		DateTime _endDate=new DateTime();
 		private List<ClaimTracking> _listNewClaimTrackings=new List<ClaimTracking>();
 		private List<ClaimTracking> _listOldClaimTrackings=new List<ClaimTracking>();
-		private List<Userod> _listClaimSentEditUsers=new List<Userod>();
+		private List<User> _listClaimSentEditUsers=new List<User>();
 		private Label labelClaimFilter;
 		private ComboBox comboBoxInsFilter;
 		private ODDateRangePicker odDateRangePicker;
@@ -195,7 +197,7 @@ namespace OpenDental{
 			);
 			odDateRangePicker.SetDateTimeTo(DateTime.Now.Date);
 			odDateRangePicker.SetDateTimeFrom(odDateRangePicker.GetDateTimeTo().AddDays(-7)); //default to the previous week
-			_listClaimSentEditUsers=Userods.GetUsersByPermission(Permissions.ClaimSentEdit,false);
+			_listClaimSentEditUsers=Users.GetByPermission(Permissions.ClaimSentEdit,false);
 			_listOldClaimTrackings=ClaimTrackings.RefreshForUsers(ClaimTrackingType.ClaimUser,_listClaimSentEditUsers.Select(x => x.Id).ToList());
 			_listNewClaimTrackings=_listOldClaimTrackings.Select(x => x.Copy()).ToList();
 			//Fill the Ins Filter box

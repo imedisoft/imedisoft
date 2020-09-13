@@ -1,6 +1,6 @@
 using Imedisoft.Data.Annotations;
 
-namespace OpenDentBusiness
+namespace Imedisoft.Data.Models
 {
     /// <summary>
     /// Some program links (bridges), have properties that need to be set. 

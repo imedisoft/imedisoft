@@ -14,6 +14,7 @@ using CodeBase;
 using System.IO;
 using OpenDental.Thinfinity;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental{
 	/// <summary>

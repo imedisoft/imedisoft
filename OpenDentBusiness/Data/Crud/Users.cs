@@ -7,19 +7,18 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using MySql.Data.MySqlClient;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
-namespace OpenDentBusiness
+namespace Imedisoft.Data
 {
-	public partial class Userods
+    public partial class Users
 	{
-		public static Userod FromReader(MySqlDataReader dataReader)
+		public static User FromReader(MySqlDataReader dataReader)
 		{
-			return new Userod
+			return new User
 			{
 				Id = (long)dataReader["id"],
 				UserName = (string)dataReader["user_name"],
@@ -34,7 +33,7 @@ namespace OpenDentBusiness
 				DefaultHidePopups = (Convert.ToInt32(dataReader["default_hide_popups"]) == 1),
 				ClinicIsRestricted = (Convert.ToInt32(dataReader["clinic_is_restricted"]) == 1),
 				InboxHidePopups = (Convert.ToInt32(dataReader["inbox_hide_popups"]) == 1),
-				UserIdCEMT = dataReader["cemt_user_id"] as long?,
+				CentralUserId = dataReader["central_user_id"] as long?,
 				FailedLoginDate = dataReader["failed_login_date"] as DateTime?,
 				FailedAttempts = (int)dataReader["failed_attempts"],
 				DomainUser = (string)dataReader["domain_user"],
@@ -50,14 +49,14 @@ namespace OpenDentBusiness
 		/// </summary>
 		/// <param name="command">The SELECT command to execute.</param>
 		/// <param name="parameters">The (optional) command parameters.</param>
-		public static Userod SelectOne(string command, params MySqlParameter[] parameters)
+		public static User SelectOne(string command, params MySqlParameter[] parameters)
 			=> Database.SelectOne(command, FromReader, parameters);
 
 		/// <summary>
 		/// Selects the <see cref="Userod"/> object with the specified key from the database.
 		/// </summary>
 		/// <param name="id">The primary key of the <see cref="Userod"/> to select.</param>
-		public static Userod SelectOne(long id)
+		public static User SelectOne(long id)
 			=> SelectOne("SELECT * FROM `users` WHERE `id` = " + id);
 
 		/// <summary>
@@ -65,19 +64,19 @@ namespace OpenDentBusiness
 		/// </summary>
 		/// <param name="command">The SELECT command to execute.</param>
 		/// <param name="parameters">The (optional) command parameters.</param>
-		public static IEnumerable<Userod> SelectMany(string command, params MySqlParameter[] parameters)
+		public static IEnumerable<User> SelectMany(string command, params MySqlParameter[] parameters)
 			=> Database.SelectMany(command, FromReader, parameters);
 
 		/// <summary>
 		/// Inserts the specified <see cref="Userod"/> into the database.
 		/// </summary>
 		/// <param name="userod">The <see cref="Userod"/> to insert into the database.</param>
-		private static long ExecuteInsert(Userod userod)
+		private static long ExecuteInsert(User userod)
 			=> userod.Id = Database.ExecuteInsert(
 				"INSERT INTO `users` " +
-				"(`user_name`, `password_hash`, `password_is_strong`, `employee_id`, `clinic_id`, `provider_id`, `is_hidden`, `inbox_task_list_id`, `root_task_list_id`, `default_hide_popups`, `clinic_is_restricted`, `inbox_hide_popups`, `cemt_user_id`, `failed_login_date`, `failed_attempts`, `domain_user`, `is_password_reset_required`, `mobile_web_pin`, `mobile_web_pin_failed_attempts`, `last_login_date`) " +
+				"(`user_name`, `password_hash`, `password_is_strong`, `employee_id`, `clinic_id`, `provider_id`, `is_hidden`, `inbox_task_list_id`, `root_task_list_id`, `default_hide_popups`, `clinic_is_restricted`, `inbox_hide_popups`, `central_user_id`, `failed_login_date`, `failed_attempts`, `domain_user`, `is_password_reset_required`, `mobile_web_pin`, `mobile_web_pin_failed_attempts`, `last_login_date`) " +
 				"VALUES (" +
-					"@user_name, @password_hash, @password_is_strong, @employee_id, @clinic_id, @provider_id, @is_hidden, @inbox_task_list_id, @root_task_list_id, @default_hide_popups, @clinic_is_restricted, @inbox_hide_popups, @cemt_user_id, @failed_login_date, @failed_attempts, @domain_user, @is_password_reset_required, @mobile_web_pin, @mobile_web_pin_failed_attempts, @last_login_date" +
+					"@user_name, @password_hash, @password_is_strong, @employee_id, @clinic_id, @provider_id, @is_hidden, @inbox_task_list_id, @root_task_list_id, @default_hide_popups, @clinic_is_restricted, @inbox_hide_popups, @central_user_id, @failed_login_date, @failed_attempts, @domain_user, @is_password_reset_required, @mobile_web_pin, @mobile_web_pin_failed_attempts, @last_login_date" +
 				")",
 					new MySqlParameter("user_name", userod.UserName ?? ""),
 					new MySqlParameter("password_hash", userod.PasswordHash ?? ""),
@@ -91,7 +90,7 @@ namespace OpenDentBusiness
 					new MySqlParameter("default_hide_popups", (userod.DefaultHidePopups ? 1 : 0)),
 					new MySqlParameter("clinic_is_restricted", (userod.ClinicIsRestricted ? 1 : 0)),
 					new MySqlParameter("inbox_hide_popups", (userod.InboxHidePopups ? 1 : 0)),
-					new MySqlParameter("cemt_user_id", (userod.UserIdCEMT.HasValue ? (object)userod.UserIdCEMT.Value : DBNull.Value)),
+					new MySqlParameter("central_user_id", (userod.CentralUserId.HasValue ? (object)userod.CentralUserId.Value : DBNull.Value)),
 					new MySqlParameter("failed_login_date", (userod.FailedLoginDate.HasValue ? (object)userod.FailedLoginDate.Value : DBNull.Value)),
 					new MySqlParameter("failed_attempts", userod.FailedAttempts),
 					new MySqlParameter("domain_user", userod.DomainUser ?? ""),
@@ -104,7 +103,7 @@ namespace OpenDentBusiness
 		/// Updates the specified <see cref="Userod"/> in the database.
 		/// </summary>
 		/// <param name="userod">The <see cref="Userod"/> to update.</param>
-		private static void ExecuteUpdate(Userod userod)
+		private static void ExecuteUpdate(User userod)
 			=> Database.ExecuteNonQuery(
 				"UPDATE `users` SET " +
 					"`user_name` = @user_name, " +
@@ -119,7 +118,7 @@ namespace OpenDentBusiness
 					"`default_hide_popups` = @default_hide_popups, " +
 					"`clinic_is_restricted` = @clinic_is_restricted, " +
 					"`inbox_hide_popups` = @inbox_hide_popups, " +
-					"`cemt_user_id` = @cemt_user_id, " +
+					"`central_user_id` = @central_user_id, " +
 					"`failed_login_date` = @failed_login_date, " +
 					"`failed_attempts` = @failed_attempts, " +
 					"`domain_user` = @domain_user, " +
@@ -141,7 +140,7 @@ namespace OpenDentBusiness
 					new MySqlParameter("default_hide_popups", (userod.DefaultHidePopups ? 1 : 0)),
 					new MySqlParameter("clinic_is_restricted", (userod.ClinicIsRestricted ? 1 : 0)),
 					new MySqlParameter("inbox_hide_popups", (userod.InboxHidePopups ? 1 : 0)),
-					new MySqlParameter("cemt_user_id", (userod.UserIdCEMT.HasValue ? (object)userod.UserIdCEMT.Value : DBNull.Value)),
+					new MySqlParameter("central_user_id", (userod.CentralUserId.HasValue ? (object)userod.CentralUserId.Value : DBNull.Value)),
 					new MySqlParameter("failed_login_date", (userod.FailedLoginDate.HasValue ? (object)userod.FailedLoginDate.Value : DBNull.Value)),
 					new MySqlParameter("failed_attempts", userod.FailedAttempts),
 					new MySqlParameter("domain_user", userod.DomainUser ?? ""),
@@ -161,7 +160,7 @@ namespace OpenDentBusiness
 		/// Deletes the specified <see cref="Userod"/> object from the database.
 		/// </summary>
 		/// <param name="userod">The <see cref="Userod"/> to delete.</param>
-		private static void ExecuteDelete(Userod userod)
+		private static void ExecuteDelete(User userod)
 			=> ExecuteDelete(userod.Id);
 	}
 }

@@ -38,14 +38,14 @@ namespace OpenDental {
 			GridRow row;
 			for(int i=0;i<_listHistorySent.Count;i++) {
 				row=new GridRow();
-				row.Cells.Add(_listHistorySent[i].DateTEvent.ToString());
-				if(_listHistorySent[i].FKey==0) {
+				row.Cells.Add(_listHistorySent[i].Date.ToString());
+				if(_listHistorySent[i].ObjectId==0) {
 					row.Cells.Add("");
 				}
 				else {
 					//Only add an X in the grid for the measure events that meet the summary of care measure so that users can see which ones meet.
 					for(int j=0;j<listRefAttaches.Count;j++) {
-						if(listRefAttaches[j].RefAttachNum==_listHistorySent[i].FKey) {
+						if(listRefAttaches[j].RefAttachNum==_listHistorySent[i].ObjectId) {
 							row.Cells.Add("X");
 							break;
 						}
@@ -58,13 +58,13 @@ namespace OpenDental {
 
 		private void gridSent_CellDoubleClick(object sender,ODGridClickEventArgs e) {
 			FormReferralsPatient FormRP=new FormReferralsPatient();
-			FormRP.DefaultRefAttachNum=_listHistorySent[gridSent.GetSelectedIndex()].FKey;
+			FormRP.DefaultRefAttachNum=_listHistorySent[gridSent.GetSelectedIndex()].ObjectId??0;
 			FormRP.PatNum=PatCur.PatNum;
 			FormRP.IsSelectionMode=true;
 			if(FormRP.ShowDialog()==DialogResult.Cancel) {
 				return;
 			}
-			_listHistorySent[gridSent.GetSelectedIndex()].FKey=FormRP.RefAttachNum;
+			_listHistorySent[gridSent.GetSelectedIndex()].ObjectId=FormRP.RefAttachNum;
 			EhrMeasureEvents.Update(_listHistorySent[gridSent.GetSelectedIndex()]);
 			FillGridSent();
 		}
@@ -215,17 +215,17 @@ namespace OpenDental {
 			File.WriteAllText(Path.Combine(dlg.SelectedPath,"ccd.xml"),ccd);
 			File.WriteAllText(Path.Combine(dlg.SelectedPath,"ccd.xsl"),FormEHR.GetEhrResource("CCD"));
 			EhrMeasureEvent newMeasureEvent = new EhrMeasureEvent();
-			newMeasureEvent.DateTEvent = DateTime.Now;
-			newMeasureEvent.EventType = EhrMeasureEventType.SummaryOfCareProvidedToDr;
-			newMeasureEvent.PatNum = PatCur.PatNum;
-			newMeasureEvent.FKey=FormRP.RefAttachNum;//Can be 0 if user didn't pick a referral for some reason.
+			newMeasureEvent.Date = DateTime.Now;
+			newMeasureEvent.Type = EhrMeasureEventType.SummaryOfCareProvidedToDr;
+			newMeasureEvent.PatientId = PatCur.PatNum;
+			newMeasureEvent.ObjectId=FormRP.RefAttachNum;//Can be 0 if user didn't pick a referral for some reason.
 			long fkey=EhrMeasureEvents.Insert(newMeasureEvent);
 			newMeasureEvent=new EhrMeasureEvent();
-			newMeasureEvent.DateTEvent=DateTime.Now;
-			newMeasureEvent.FKey=fkey;
-			newMeasureEvent.EventType=EhrMeasureEventType.SummaryOfCareProvidedToDrElectronic;
-			newMeasureEvent.PatNum=PatCur.PatNum;
-			newMeasureEvent.FKey=FormRP.RefAttachNum;//Can be 0 if user didn't pick a referral for some reason.
+			newMeasureEvent.Date=DateTime.Now;
+			newMeasureEvent.ObjectId=fkey;
+			newMeasureEvent.Type=EhrMeasureEventType.SummaryOfCareProvidedToDrElectronic;
+			newMeasureEvent.PatientId=PatCur.PatNum;
+			newMeasureEvent.ObjectId=FormRP.RefAttachNum;//Can be 0 if user didn't pick a referral for some reason.
 			EhrMeasureEvents.Insert(newMeasureEvent);
 			FillGridSent();
 			MessageBox.Show("Exported");
@@ -275,16 +275,16 @@ namespace OpenDental {
 			FormEmailMessageEdit formE=new FormEmailMessageEdit(emailMessage,emailAddressFrom);//Not "new" message because it already exists in db due to pre-insert.
 			if(formE.ShowDialog()==DialogResult.OK) {
 				EhrMeasureEvent newMeasureEvent=new EhrMeasureEvent();
-				newMeasureEvent.DateTEvent=DateTime.Now;
-				newMeasureEvent.EventType=EhrMeasureEventType.SummaryOfCareProvidedToDr;
-				newMeasureEvent.PatNum=PatCur.PatNum;
-				newMeasureEvent.FKey=FormRP.RefAttachNum;//Can be 0 if user didn't pick a referral for some reason.
+				newMeasureEvent.Date=DateTime.Now;
+				newMeasureEvent.Type=EhrMeasureEventType.SummaryOfCareProvidedToDr;
+				newMeasureEvent.PatientId=PatCur.PatNum;
+				newMeasureEvent.ObjectId=FormRP.RefAttachNum;//Can be 0 if user didn't pick a referral for some reason.
 				EhrMeasureEvents.Insert(newMeasureEvent);
 				newMeasureEvent=new EhrMeasureEvent();
-				newMeasureEvent.DateTEvent=DateTime.Now;
-				newMeasureEvent.EventType=EhrMeasureEventType.SummaryOfCareProvidedToDrElectronic;
-				newMeasureEvent.PatNum=PatCur.PatNum;
-				newMeasureEvent.FKey=FormRP.RefAttachNum;//Can be 0 if user didn't pick a referral for some reason.
+				newMeasureEvent.Date=DateTime.Now;
+				newMeasureEvent.Type=EhrMeasureEventType.SummaryOfCareProvidedToDrElectronic;
+				newMeasureEvent.PatientId=PatCur.PatNum;
+				newMeasureEvent.ObjectId=FormRP.RefAttachNum;//Can be 0 if user didn't pick a referral for some reason.
 				EhrMeasureEvents.Insert(newMeasureEvent);
 				FillGridSent();
 			}
@@ -311,10 +311,10 @@ namespace OpenDental {
 			if(didPrint) {
 				//we are printing a ccd so add new measure event.					
 				EhrMeasureEvent measureEvent = new EhrMeasureEvent();
-				measureEvent.DateTEvent = DateTime.Now;
-				measureEvent.EventType = EhrMeasureEventType.SummaryOfCareProvidedToDr;
-				measureEvent.FKey=FormRP.RefAttachNum;
-				measureEvent.PatNum = PatCur.PatNum;
+				measureEvent.Date = DateTime.Now;
+				measureEvent.Type = EhrMeasureEventType.SummaryOfCareProvidedToDr;
+				measureEvent.ObjectId=FormRP.RefAttachNum;
+				measureEvent.PatientId = PatCur.PatNum;
 				EhrMeasureEvents.Insert(measureEvent);
 				FillGridSent();
 			}		
@@ -360,7 +360,7 @@ namespace OpenDental {
 				return;
 			}
 			for(int i=0;i<gridSent.SelectedIndices.Length;i++) {
-				EhrMeasureEvents.Delete(_listHistorySent[gridSent.SelectedIndices[i]].EhrMeasureEventNum);
+				EhrMeasureEvents.Delete(_listHistorySent[gridSent.SelectedIndices[i]].Id);
 			}
 			FillGridSent();
 		}

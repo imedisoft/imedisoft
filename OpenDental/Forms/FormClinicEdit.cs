@@ -442,7 +442,7 @@ namespace Imedisoft.Forms
 			// would render the restricted users unable to login.
 			if (isHiddenCheckBox.Checked)
 			{
-				var usersRestrictedToClinic = Userods.GetUsersOnlyThisClinic(clinic.Id);
+				var usersRestrictedToClinic = Users.GetUsersOnlyThisClinic(clinic.Id).ToList();
 				if (usersRestrictedToClinic.Count > 0)
 				{
 					ShowError(

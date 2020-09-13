@@ -42,7 +42,7 @@ namespace OpenDental {
 					row.Cells.Add(obs.ValType.ToString()+" - "+obs.ValCodeSystem);//1 Value Type
 					if(obs.ValCodeSystem=="LOINC") {
 						Loinc loincValue=Loincs.GetByCode(obs.ValReported);
-						row.Cells.Add(loincValue.NameShort);//2 Value
+						row.Cells.Add(loincValue.ShortName);//2 Value
 					}
 					else if(obs.ValCodeSystem=="SNOMEDCT") {
 						Snomed snomedValue=Snomeds.GetByCode(obs.ValReported);

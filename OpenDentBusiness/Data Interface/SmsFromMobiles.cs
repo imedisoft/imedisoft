@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using CodeBase;
 using OpenDentBusiness.WebTypes;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness{
 	///<summary></summary>

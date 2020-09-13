@@ -5,6 +5,8 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -21,7 +23,7 @@ namespace OpenDental {
 		public FormDashboardWidgetSetup() {
 			InitializeComponent();
 			
-			_userGroupNum=UserGroups.GetForUser(Security.CurrentUser.Id,false).FirstOrDefault().Id;
+			_userGroupNum=Users.GetGroups(Security.CurrentUser.Id,false).FirstOrDefault().Id;
 		}
 		
 		private void FormDashboardSetup_Load(object sender,EventArgs e) {
@@ -32,7 +34,7 @@ namespace OpenDental {
 		}
 
 		private void InitializeOnStartup() {
-			_listUserGroups=UserGroups.GetList();
+			_listUserGroups=UserGroups.GetAll();
 			comboUserGroup.Items.AddList(_listUserGroups,x => x.Description);
 			comboUserGroup.SetSelectedKey<UserGroup>(_userGroupNum,x=>x.Id);
 			if(comboUserGroup.SelectedIndex==-1) {

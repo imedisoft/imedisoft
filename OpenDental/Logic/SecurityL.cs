@@ -1,4 +1,5 @@
 ﻿using CodeBase;
+using Imedisoft.Data;
 using Imedisoft.Forms;
 using OpenDentBusiness;
 using System;
@@ -16,7 +17,7 @@ namespace OpenDental
 		/// </summary>
 		public static bool ChangePassword(bool forcedLogOff)
 		{
-			if (Security.CurrentUser.UserIdCEMT != 0)
+			if (Security.CurrentUser.CentralUserId != 0)
 			{
 				ODMessageBox.Show("Use the CEMT tool to change your password.", "Imedisoft",
 					MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -43,7 +44,7 @@ namespace OpenDental
 
 				try
 				{
-					Userods.UpdatePassword(Security.CurrentUser, formUserPassword.PasswordHash, isPasswordStrong);
+					Users.UpdatePassword(Security.CurrentUser, formUserPassword.PasswordHash, isPasswordStrong);
 				}
 				catch (Exception exception)
 				{

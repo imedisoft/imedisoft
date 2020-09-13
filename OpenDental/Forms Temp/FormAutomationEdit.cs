@@ -54,7 +54,7 @@ namespace OpenDental{
 			//
 			// Required for Windows Form Designer support
 			//
-			AutoCur=autoCur.Copy();
+			AutoCur=autoCur;
 			InitializeComponent();
 			
 		}
@@ -346,7 +346,7 @@ namespace OpenDental{
 			}
 			_listAutoActions.ForEach(x => comboAction.Items.Add(x.GetDescription()));
 			if((int)AutoCur.Trigger==comboTrigger.SelectedIndex) {
-				comboAction.SelectedIndex=_listAutoActions.IndexOf(AutoCur.AutoAction);
+				comboAction.SelectedIndex=_listAutoActions.IndexOf(AutoCur.Action);
 			}
 			else {
 				comboAction.SelectedIndex=0;//default to first in the list
@@ -425,7 +425,7 @@ namespace OpenDental{
 						}
 						comboActionObject.Items.Add(patStatus.GetDescription(),patStatus);
 					}
-					comboActionObject.SetSelectedEnum(AutoCur.PatStatus);
+					comboActionObject.SetSelectedEnum(AutoCur.PatientStatus);
 					return;
 			}
 		}
@@ -510,13 +510,12 @@ namespace OpenDental{
 				{ AutomationAction.ShowConsentForm,Tuple.Create(SheetTypeEnum.Consent,"a consent form") },
 				{ AutomationAction.PrintRxInstruction,Tuple.Create(SheetTypeEnum.RxInstruction,"an Rx instruction sheet") }
 			};
-			AutoCur.AutoAction=_listAutoActions[comboAction.SelectedIndex];
+			AutoCur.Action=_listAutoActions[comboAction.SelectedIndex];
 			AutoCur.SheetDefinitionId=0;
 			AutoCur.CommType=0;
 			AutoCur.MessageContent="";
-			AutoCur.AptStatus=ApptStatus.None;
 			AutoCur.AppointmentTypeId=0;
-			switch(AutoCur.AutoAction) {
+			switch(AutoCur.Action) {
 				case AutomationAction.CreateCommlog:
 					if(comboActionObject.SelectedIndex==-1) {
 						MessageBox.Show("A commlog type must be selected.");
@@ -543,8 +542,8 @@ namespace OpenDental{
 						return;
 					}
 					List<SheetDef> listSheets=SheetDefs.GetDeepCopy().FindAll(x => !SheetDefs.IsDashboardType(x));
-					if(listSheets[comboActionObject.SelectedIndex].SheetType!=dictAutoActionSheetType[AutoCur.AutoAction].Item1) {
-						MessageBox.Show(this,"The selected sheet type must be"+" "+dictAutoActionSheetType[AutoCur.AutoAction].Item2+".");
+					if(listSheets[comboActionObject.SelectedIndex].SheetType!=dictAutoActionSheetType[AutoCur.Action].Item1) {
+						MessageBox.Show(this,"The selected sheet type must be"+" "+dictAutoActionSheetType[AutoCur.Action].Item2+".");
 						return;
 					}
 					AutoCur.SheetDefinitionId=listSheets[comboActionObject.SelectedIndex].SheetDefNum;
@@ -563,11 +562,11 @@ namespace OpenDental{
 						MessageBox.Show("A patient status must be selected.");
 						return;
 					}
-					AutoCur.PatStatus=comboActionObject.GetSelected<PatientStatus>();
+					AutoCur.PatientStatus=comboActionObject.GetSelected<PatientStatus>();
 					break;
 			}
 			#endregion Automation Action
-			Automations.Update(AutoCur);//Because always inserted before opening this form.
+			Automations.Save(AutoCur);//Because always inserted before opening this form.
 			DialogResult=DialogResult.OK;
 		}
 
@@ -588,24 +587,3 @@ namespace OpenDental{
 
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -4,6 +4,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary></summary>
@@ -309,7 +310,7 @@ namespace OpenDental{
 			else {
 				if(PopupCur.UserNum!=0) {//This check is so that any old popups without a user will still display correctly.
 					//Display last user to edit PopupCur, or "Unknown(5)" if user not found.
-					textUser.Text=Userods.GetUser(PopupCur.UserNum)?.UserName??("Unknown"+$"({POut.Long(PopupCur.UserNum)})");
+					textUser.Text=Users.GetById(PopupCur.UserNum)?.UserName??("Unknown"+$"({POut.Long(PopupCur.UserNum)})");
 				}
 				if(PopupAudit!=null) {//This checks if this window opened from FormPopupAudit
 					textCreateDate.Text="";

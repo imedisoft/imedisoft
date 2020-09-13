@@ -128,7 +128,7 @@ namespace Imedisoft.Forms
 				priorityComboBox.SelectedItem = defaultPriority;
             }
 
-			userTextBox.Text = Userods.GetName(task.UserId);//might be blank.
+			userTextBox.Text = Users.GetUserName(task.UserId);//might be blank.
 			taskListId = task.TaskListId;
 			taskListTextBox.Text = TaskLists.GetOne(taskListId)?.Description;
 
@@ -196,7 +196,7 @@ namespace Imedisoft.Forms
 			}
             else
             {
-				replyLabel.Text = "(Send to " + Userods.GetName(replyToUserId.Value) + ")";
+				replyLabel.Text = "(Send to " + Users.GetUserName(replyToUserId.Value) + ")";
             }
 
 			// If the user is not allowed to edit tasks, hide the audit button.
@@ -285,7 +285,7 @@ namespace Imedisoft.Forms
 				var gridRow = new GridRow();
 
 				gridRow.Cells.Add(taskNote.DateModified.ToShortDateString() + " " + taskNote.DateModified.ToShortTimeString());
-				gridRow.Cells.Add(Userods.GetName(taskNote.UserId));
+				gridRow.Cells.Add(Users.GetUserName(taskNote.UserId));
 				gridRow.Cells.Add(taskNote.Note);
 				gridRow.Tag = taskNote;
 
@@ -511,7 +511,7 @@ namespace Imedisoft.Forms
 			{
 				task.UserId = formLogOn.User.Id;
 
-				userTextBox.Text = Userods.GetName(task.UserId);
+				userTextBox.Text = Users.GetUserName(task.UserId);
 			}
 		}
 
@@ -560,7 +560,7 @@ namespace Imedisoft.Forms
 			foreach (var taskNote in taskNotes)
             {
 				stringBuilder.AppendLine("--------------------------------------------------");
-				stringBuilder.Append($"== {Userods.GetName(taskNote.UserId)}");
+				stringBuilder.Append($"== {Users.GetUserName(taskNote.UserId)}");
 				stringBuilder.Append($" - {taskNote.DateModified.ToShortDateString()} {taskNote.DateModified.ToShortTimeString()}");
 				stringBuilder.Append($" - {taskNote.Note}");
 				stringBuilder.AppendLine();
@@ -855,7 +855,7 @@ namespace Imedisoft.Forms
 
 			long oldTaskListId = task.TaskListId;
 
-			long inboxTaskListId = Userods.GetInbox(replyToUserId.Value);
+			long inboxTaskListId = Users.GetInboxTaskList(replyToUserId.Value);
 			if (inboxTaskListId == 0)
 			{
 				ShowError("No inbox has been set up for this user yet.");

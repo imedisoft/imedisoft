@@ -108,7 +108,6 @@ namespace Imedisoft.Data.CrudGenerator.Generator
 
 			namespaces.Clear();
 			AddNamespace("System");
-			AddNamespace("System.Collections");
 			AddNamespace("System.Collections.Generic");
 			AddNamespace("MySql.Data.MySqlClient");
 

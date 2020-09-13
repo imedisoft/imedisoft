@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 using SharpDX.Direct3D9;
 
@@ -102,7 +104,7 @@ namespace SparksToothChart
 			tcd.ListPerioMeasure = new List<PerioMeasure>();
 			foreach (PerioMeasure pm in ListPerioMeasure)
 			{
-				tcd.ListPerioMeasure.Add(pm.Copy());
+				tcd.ListPerioMeasure.Add(pm);
 			}
 			return tcd;
 		}
@@ -682,7 +684,7 @@ namespace SparksToothChart
 		{
 			for (int i = 0; i < ListPerioMeasure.Count; i++)
 			{
-				if (ListPerioMeasure[i].IntTooth != intTooth)
+				if (ListPerioMeasure[i].Tooth != intTooth)
 				{
 					continue;
 				}
@@ -693,27 +695,27 @@ namespace SparksToothChart
 				int meas = 0;
 				if (surf == PerioSurf.MB)
 				{
-					meas = ListPerioMeasure[i].MBvalue;
+					meas = ListPerioMeasure[i].MB;
 				}
 				if (surf == PerioSurf.B)
 				{
-					meas = ListPerioMeasure[i].Bvalue;
+					meas = ListPerioMeasure[i].B;
 				}
 				if (surf == PerioSurf.DB)
 				{
-					meas = ListPerioMeasure[i].DBvalue;
+					meas = ListPerioMeasure[i].DB;
 				}
 				if (surf == PerioSurf.ML)
 				{
-					meas = ListPerioMeasure[i].MLvalue;
+					meas = ListPerioMeasure[i].ML;
 				}
 				if (surf == PerioSurf.L)
 				{
-					meas = ListPerioMeasure[i].Lvalue;
+					meas = ListPerioMeasure[i].L;
 				}
 				if (surf == PerioSurf.DL)
 				{
-					meas = ListPerioMeasure[i].DLvalue;
+					meas = ListPerioMeasure[i].DL;
 				}
 				if (meas == -1)
 				{
@@ -753,7 +755,7 @@ namespace SparksToothChart
 			int pd = 0;//line length
 			for (int i = 0; i < ListPerioMeasure.Count; i++)
 			{
-				if (ListPerioMeasure[i].IntTooth != intTooth)
+				if (ListPerioMeasure[i].Tooth != intTooth)
 				{
 					continue;
 				}
@@ -762,22 +764,22 @@ namespace SparksToothChart
 					switch (surf)
 					{
 						case PerioSurf.MB:
-							pd = ListPerioMeasure[i].MBvalue;
+							pd = ListPerioMeasure[i].MB;
 							break;
 						case PerioSurf.B:
-							pd = ListPerioMeasure[i].Bvalue;
+							pd = ListPerioMeasure[i].B;
 							break;
 						case PerioSurf.DB:
-							pd = ListPerioMeasure[i].DBvalue;
+							pd = ListPerioMeasure[i].DB;
 							break;
 						case PerioSurf.ML:
-							pd = ListPerioMeasure[i].MLvalue;
+							pd = ListPerioMeasure[i].ML;
 							break;
 						case PerioSurf.L:
-							pd = ListPerioMeasure[i].Lvalue;
+							pd = ListPerioMeasure[i].L;
 							break;
 						case PerioSurf.DL:
-							pd = ListPerioMeasure[i].DLvalue;
+							pd = ListPerioMeasure[i].DL;
 							break;
 					}
 				}
@@ -787,22 +789,22 @@ namespace SparksToothChart
 					{
 						case PerioSurf.MB:
 							//Examples: 0, -1(null), 5, or 105(hyperplasia).  But the null is not even being considered.  So adjusting 100+ vals to -x would work.
-							gm = PerioMeasures.AdjustGMVal(ListPerioMeasure[i].MBvalue);//Converts the above examples to 0, 0, 5, and -5.
+							gm = PerioMeasures.AdjustGMVal(ListPerioMeasure[i].MB);//Converts the above examples to 0, 0, 5, and -5.
 							break;
 						case PerioSurf.B:
-							gm = PerioMeasures.AdjustGMVal(ListPerioMeasure[i].Bvalue);
+							gm = PerioMeasures.AdjustGMVal(ListPerioMeasure[i].B);
 							break;
 						case PerioSurf.DB:
-							gm = PerioMeasures.AdjustGMVal(ListPerioMeasure[i].DBvalue);
+							gm = PerioMeasures.AdjustGMVal(ListPerioMeasure[i].DB);
 							break;
 						case PerioSurf.ML:
-							gm = PerioMeasures.AdjustGMVal(ListPerioMeasure[i].MLvalue);
+							gm = PerioMeasures.AdjustGMVal(ListPerioMeasure[i].ML);
 							break;
 						case PerioSurf.L:
-							gm = PerioMeasures.AdjustGMVal(ListPerioMeasure[i].Lvalue);
+							gm = PerioMeasures.AdjustGMVal(ListPerioMeasure[i].L);
 							break;
 						case PerioSurf.DL:
-							gm = PerioMeasures.AdjustGMVal(ListPerioMeasure[i].DLvalue);
+							gm = PerioMeasures.AdjustGMVal(ListPerioMeasure[i].DL);
 							break;
 					}
 				}
@@ -968,7 +970,7 @@ namespace SparksToothChart
 				surf3 = PerioSurf.None;
 				for (int i = 0; i < ListPerioMeasure.Count; i++)
 				{
-					if (ListPerioMeasure[i].IntTooth != t)
+					if (ListPerioMeasure[i].Tooth != t)
 					{
 						continue;
 					}
@@ -983,7 +985,7 @@ namespace SparksToothChart
 					{//we only care about this if we are trying to calculate MGJ
 						for (int m = 0; m < ListPerioMeasure.Count; m++)
 						{
-							if (ListPerioMeasure[m].IntTooth == t
+							if (ListPerioMeasure[m].Tooth == t
 								&& ListPerioMeasure[m].SequenceType == PerioSequenceType.GingMargin)
 							{
 								pmGM = ListPerioMeasure[m];//get the GM for this same tooth.
@@ -995,22 +997,22 @@ namespace SparksToothChart
 					{
 						if (ToothGraphic.IsRight(t.ToString()))
 						{
-							val1 = ListPerioMeasure[i].DBvalue;
-							val2 = ListPerioMeasure[i].Bvalue;
-							val3 = ListPerioMeasure[i].MBvalue;
+							val1 = ListPerioMeasure[i].DB;
+							val2 = ListPerioMeasure[i].B;
+							val3 = ListPerioMeasure[i].MB;
 							if (sequenceType == PerioSequenceType.MGJ && pmGM != null)
 							{
-								if (pmGM.DBvalue != -1)
+								if (pmGM.DB != -1)
 								{
-									val1 += PerioMeasures.AdjustGMVal(pmGM.DBvalue);
+									val1 += PerioMeasures.AdjustGMVal(pmGM.DB);
 								}
-								if (pmGM.Bvalue != -1)
+								if (pmGM.B != -1)
 								{
-									val2 += PerioMeasures.AdjustGMVal(pmGM.Bvalue);
+									val2 += PerioMeasures.AdjustGMVal(pmGM.B);
 								}
-								if (pmGM.MBvalue != -1)
+								if (pmGM.MB != -1)
 								{
-									val3 += PerioMeasures.AdjustGMVal(pmGM.MBvalue);
+									val3 += PerioMeasures.AdjustGMVal(pmGM.MB);
 								}
 							}
 							surf1 = PerioSurf.DB;
@@ -1019,22 +1021,22 @@ namespace SparksToothChart
 						}
 						else
 						{//for UL and LL
-							val1 = ListPerioMeasure[i].MBvalue;
-							val2 = ListPerioMeasure[i].Bvalue;
-							val3 = ListPerioMeasure[i].DBvalue;
+							val1 = ListPerioMeasure[i].MB;
+							val2 = ListPerioMeasure[i].B;
+							val3 = ListPerioMeasure[i].DB;
 							if (sequenceType == PerioSequenceType.MGJ && pmGM != null)
 							{
-								if (pmGM.MBvalue != -1)
+								if (pmGM.MB != -1)
 								{
-									val1 += PerioMeasures.AdjustGMVal(pmGM.MBvalue);
+									val1 += PerioMeasures.AdjustGMVal(pmGM.MB);
 								}
-								if (pmGM.Bvalue != -1)
+								if (pmGM.B != -1)
 								{
-									val2 += PerioMeasures.AdjustGMVal(pmGM.Bvalue);
+									val2 += PerioMeasures.AdjustGMVal(pmGM.B);
 								}
-								if (pmGM.DBvalue != -1)
+								if (pmGM.DB != -1)
 								{
-									val3 += PerioMeasures.AdjustGMVal(pmGM.DBvalue);
+									val3 += PerioMeasures.AdjustGMVal(pmGM.DB);
 								}
 							}
 							surf1 = PerioSurf.MB;
@@ -1046,22 +1048,22 @@ namespace SparksToothChart
 					{//lingual
 						if (ToothGraphic.IsRight(t.ToString()))
 						{
-							val1 = ListPerioMeasure[i].DLvalue;
-							val2 = ListPerioMeasure[i].Lvalue;
-							val3 = ListPerioMeasure[i].MLvalue;
+							val1 = ListPerioMeasure[i].DL;
+							val2 = ListPerioMeasure[i].L;
+							val3 = ListPerioMeasure[i].ML;
 							if (sequenceType == PerioSequenceType.MGJ && pmGM != null)
 							{
-								if (pmGM.DLvalue != -1)
+								if (pmGM.DL != -1)
 								{
-									val1 += PerioMeasures.AdjustGMVal(pmGM.DLvalue);
+									val1 += PerioMeasures.AdjustGMVal(pmGM.DL);
 								}
-								if (pmGM.Lvalue != -1)
+								if (pmGM.L != -1)
 								{
-									val2 += PerioMeasures.AdjustGMVal(pmGM.Lvalue);
+									val2 += PerioMeasures.AdjustGMVal(pmGM.L);
 								}
-								if (pmGM.MLvalue != -1)
+								if (pmGM.ML != -1)
 								{
-									val3 += PerioMeasures.AdjustGMVal(pmGM.MLvalue);
+									val3 += PerioMeasures.AdjustGMVal(pmGM.ML);
 								}
 							}
 							surf1 = PerioSurf.DL;
@@ -1070,22 +1072,22 @@ namespace SparksToothChart
 						}
 						else
 						{//for UL and LL
-							val1 = ListPerioMeasure[i].MLvalue;
-							val2 = ListPerioMeasure[i].Lvalue;
-							val3 = ListPerioMeasure[i].DLvalue;
+							val1 = ListPerioMeasure[i].ML;
+							val2 = ListPerioMeasure[i].L;
+							val3 = ListPerioMeasure[i].DL;
 							if (sequenceType == PerioSequenceType.MGJ && pmGM != null)
 							{
-								if (pmGM.MLvalue != -1)
+								if (pmGM.ML != -1)
 								{
-									val1 += PerioMeasures.AdjustGMVal(pmGM.MLvalue);
+									val1 += PerioMeasures.AdjustGMVal(pmGM.ML);
 								}
-								if (pmGM.Lvalue != -1)
+								if (pmGM.L != -1)
 								{
-									val2 += PerioMeasures.AdjustGMVal(pmGM.Lvalue);
+									val2 += PerioMeasures.AdjustGMVal(pmGM.L);
 								}
-								if (pmGM.DLvalue != -1)
+								if (pmGM.DL != -1)
 								{
-									val3 += PerioMeasures.AdjustGMVal(pmGM.DLvalue);
+									val3 += PerioMeasures.AdjustGMVal(pmGM.DL);
 								}
 							}
 							surf1 = PerioSurf.ML;
@@ -1216,7 +1218,7 @@ namespace SparksToothChart
 			int siteVal = -1;
 			for (int i = 0; i < ListPerioMeasure.Count; i++)
 			{
-				if (ListPerioMeasure[i].IntTooth != intTooth)
+				if (ListPerioMeasure[i].Tooth != intTooth)
 				{
 					continue;
 				}
@@ -1227,22 +1229,22 @@ namespace SparksToothChart
 				switch (surf)
 				{
 					case PerioSurf.MB:
-						siteVal = ListPerioMeasure[i].MBvalue;
+						siteVal = ListPerioMeasure[i].MB;
 						break;
 					case PerioSurf.B:
-						siteVal = ListPerioMeasure[i].Bvalue;
+						siteVal = ListPerioMeasure[i].B;
 						break;
 					case PerioSurf.DB:
-						siteVal = ListPerioMeasure[i].DBvalue;
+						siteVal = ListPerioMeasure[i].DB;
 						break;
 					case PerioSurf.ML:
-						siteVal = ListPerioMeasure[i].MLvalue;
+						siteVal = ListPerioMeasure[i].ML;
 						break;
 					case PerioSurf.L:
-						siteVal = ListPerioMeasure[i].Lvalue;
+						siteVal = ListPerioMeasure[i].L;
 						break;
 					case PerioSurf.DL:
-						siteVal = ListPerioMeasure[i].DLvalue;
+						siteVal = ListPerioMeasure[i].DL;
 						break;
 				}
 				break;

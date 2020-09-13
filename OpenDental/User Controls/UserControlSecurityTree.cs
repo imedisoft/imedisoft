@@ -626,7 +626,7 @@ namespace OpenDental {
 					try {
 						GroupPermissions.Insert(perm);
 						SecurityLogs.MakeLogEntry(Permissions.SecurityAdmin,0,"Permission '"+perm.Permission+"' granted to '"
-							+UserGroups.GetGroup(perm.UserGroupId).Description+"'");
+							+UserGroups.GetById(perm.UserGroupId).Description+"'");
 					}
 					catch(Exception ex) {
 						MessageBox.Show(ex.Message);
@@ -653,7 +653,7 @@ namespace OpenDental {
 						try {
 							GroupPermissions.Insert(permLimited);
 							SecurityLogs.MakeLogEntry(Permissions.SecurityAdmin,0,"Permission "+"'"+permLimited.Permission+"' "
-								+"granted to"+" '"+UserGroups.GetGroup(perm.UserGroupId).Description+"'");
+								+"granted to"+" '"+UserGroups.GetById(perm.UserGroupId).Description+"'");
 						}
 						catch(Exception ex) {
 							MessageBox.Show(ex.Message);
@@ -666,7 +666,7 @@ namespace OpenDental {
 				try {
 					GroupPermissions.RemovePermission(_listUserGroupNums.First(),(Permissions)_clickedPermNode.Tag);
 					SecurityLogs.MakeLogEntry(Permissions.SecurityAdmin,0,"Permission '"+_clickedPermNode.Tag+"' revoked from '"
-						+UserGroups.GetGroup(_listUserGroupNums.First()).Description+"'");
+						+UserGroups.GetById(_listUserGroupNums.First()).Description+"'");
 				}
 				catch(Exception ex) {
 					MessageBox.Show(ex.Message);
@@ -678,7 +678,7 @@ namespace OpenDental {
 						try {
 							GroupPermissions.RemovePermission(_listUserGroupNums.First(),permEcEo);
 							SecurityLogs.MakeLogEntry(Permissions.SecurityAdmin,0,"Permission"+" '"+permEcEo+"' "
-								+"revoked from"+" '"+UserGroups.GetGroup(_listUserGroupNums.First()).Description+"'");
+								+"revoked from"+" '"+UserGroups.GetById(_listUserGroupNums.First()).Description+"'");
 						}
 						catch(Exception ex) {
 							MessageBox.Show(ex.Message);
@@ -691,7 +691,7 @@ namespace OpenDental {
 				try {
 					GroupPermissions.RemovePermission(_listUserGroupNums.First(),(Permissions)_clickedPermNode.Tag);
 					SecurityLogs.MakeLogEntry(Permissions.SecurityAdmin,0,"Permission '"+_clickedPermNode.Tag+"' revoked from '"
-						+UserGroups.GetGroup(_listUserGroupNums.First()).Description+"'");
+						+UserGroups.GetById(_listUserGroupNums.First()).Description+"'");
 				}
 				catch(Exception ex) {
 					MessageBox.Show(ex.Message);

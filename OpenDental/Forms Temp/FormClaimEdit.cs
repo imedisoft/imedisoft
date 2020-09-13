@@ -1284,7 +1284,7 @@ namespace OpenDental
 				row.Cells.Add(defValue);
 				row.Cells.Add(claimTrackingEntry.Note);
 				row.Cells.Add(Definitions.GetName(DefinitionCategory.ClaimErrorCode,claimTrackingEntry.TrackingErrorDefNum));
-				row.Cells.Add(Userods.GetName(claimTrackingEntry.UserNum));
+				row.Cells.Add(Users.GetUserName(claimTrackingEntry.UserNum));
 				gridStatusHistory.Rows.Add(row);
 				row.Tag=claimTrackingEntry;
 			}
@@ -2167,8 +2167,8 @@ namespace OpenDental
 			gridP.BackColor = System.Drawing.SystemColors.Window;
 			gridP.Size = new System.Drawing.Size(595,665);
 			PerioExams.Refresh(PatCur.PatNum);
-			PerioMeasures.Refresh(PatCur.PatNum,PerioExams.ListExams);
-			gridP.SelectedExam=PerioExams.ListExams.Count-1;
+			PerioMeasures.Refresh(PatCur.PatNum,PerioExams.Exams);
+			gridP.SelectedExam=PerioExams.Exams.Count-1;
 			gridP.LoadData();
 			Bitmap bitmap=new Bitmap(595,665);
 			Graphics g=Graphics.FromImage(bitmap);

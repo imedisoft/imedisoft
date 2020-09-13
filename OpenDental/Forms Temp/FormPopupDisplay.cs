@@ -4,6 +4,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using OpenDentBusiness;
+using Imedisoft.Data;
 
 namespace OpenDental{
 	/// <summary>This control should not be resized, except by the user. Dentists can enter sensitive information in the area below what is normally shown.</summary>
@@ -279,7 +280,7 @@ namespace OpenDental{
 			textDescription.Text=PopupCur.Description.Replace("\r\n","\n").Replace("\n","\r\n");
 			if(PopupCur.UserNum!=0) {
 				//Display last user to edit PopupCur, or "Unknown(5)" if user not found.
-				textUser.Text=Userods.GetUser(PopupCur.UserNum)?.UserName??("Unknown"+$"({POut.Long(PopupCur.UserNum)})");
+				textUser.Text=Users.GetById(PopupCur.UserNum)?.UserName??("Unknown"+$"({POut.Long(PopupCur.UserNum)})");
 			}
 			textCreateDate.Text="";
 			if(PopupCur.DateTimeEntry.Year>1880) {

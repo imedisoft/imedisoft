@@ -1,4 +1,5 @@
 ﻿using Imedisoft.Data.Annotations;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +42,7 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// The user that made this change.
 		/// </summary>
-		[ForeignKey(typeof(Userod), nameof(Userod.Id))]
+		[ForeignKey(typeof(User), nameof(User.Id))]
 		public long UserNum;
 
 		/// <summary>

@@ -1,5 +1,6 @@
 using Imedisoft.Data;
 using Imedisoft.Data.Cache;
+using Imedisoft.Data.Models;
 using Imedisoft.X12.Codes;
 using System;
 using System.Collections.Generic;
@@ -518,7 +519,7 @@ namespace OpenDentBusiness
 		/// </summary>
 		/// <param name="user">The user.</param>
 		/// <returns>All clinics the user has permission to access.</returns>
-		public static List<Clinic> GetByUser(Userod user)
+		public static List<Clinic> GetByUser(User user)
 		{
 			var clinics = GetAll(false);
 

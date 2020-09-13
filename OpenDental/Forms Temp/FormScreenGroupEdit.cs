@@ -502,7 +502,7 @@ namespace OpenDental{
 					comboProv.SelectedIndex=i;
 				}
 			}
-			string[] CountiesListNames=Counties.GetListNames();
+			string[] CountiesListNames=Counties.GetListNames().ToArray();
 			comboCounty.Items.AddRange(CountiesListNames);
 			if(_screenGroup.County==null) {
 				_screenGroup.County="";//prevents the next line from crashing

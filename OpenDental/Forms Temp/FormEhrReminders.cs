@@ -88,7 +88,7 @@ namespace OpenDental {
 			GridRow row;
 			for(int i=0;i<reminderSentList.Count;i++) {
 				row=new GridRow();
-				row.Cells.Add(reminderSentList[i].DateTEvent.ToString());
+				row.Cells.Add(reminderSentList[i].Date.ToString());
 				row.Cells.Add(reminderSentList[i].MoreInfo);
 				gridProvided.Rows.Add(row);
 			}
@@ -97,9 +97,9 @@ namespace OpenDental {
 
 		private void butSend_Click(object sender,EventArgs e) {
 			EhrMeasureEvent newMeasureEvent = new EhrMeasureEvent();
-			newMeasureEvent.DateTEvent=DateTime.Now;
-			newMeasureEvent.EventType=EhrMeasureEventType.ReminderSent;
-			newMeasureEvent.PatNum=PatCur.PatNum;
+			newMeasureEvent.Date=DateTime.Now;
+			newMeasureEvent.Type=EhrMeasureEventType.ReminderSent;
+			newMeasureEvent.PatientId=PatCur.PatNum;
 			string moreInfo="";
 			if(gridMain.GetSelectedIndex() > -1) {
 				moreInfo=gridMain.Rows[gridMain.GetSelectedIndex()].Cells[1].Text;
@@ -115,7 +115,7 @@ namespace OpenDental {
 				return;
 			}
 			for(int i=0;i<gridProvided.SelectedIndices.Length;i++) {
-				EhrMeasureEvents.Delete(reminderSentList[gridProvided.SelectedIndices[i]].EhrMeasureEventNum);
+				EhrMeasureEvents.Delete(reminderSentList[gridProvided.SelectedIndices[i]].Id);
 			}
 			FillGridProvided();
 		}

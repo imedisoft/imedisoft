@@ -6,6 +6,7 @@ using CodeBase;
 using OpenDentBusiness;
 using System.Linq;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	public partial class FormDoseSpotAssignClinicId:ODForm {

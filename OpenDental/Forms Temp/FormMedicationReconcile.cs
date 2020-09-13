@@ -117,8 +117,8 @@ namespace OpenDental {
 			GridRow row;
 			for(int i=0;i<ehrMeasureEventsList.Count;i++) {
 				row=new GridRow();
-				row.Cells.Add(ehrMeasureEventsList[i].DateTEvent.ToString());
-				row.Cells.Add(ehrMeasureEventsList[i].EventType.ToString());
+				row.Cells.Add(ehrMeasureEventsList[i].Date.ToString());
+				row.Cells.Add(ehrMeasureEventsList[i].Type.ToString());
 				gridReconcileEvents.Rows.Add(row);
 			}
 			gridReconcileEvents.EndUpdate();
@@ -184,9 +184,9 @@ namespace OpenDental {
 
 		private void butAddEvent_Click(object sender,EventArgs e) {
 			EhrMeasureEvent newMeasureEvent = new EhrMeasureEvent();
-			newMeasureEvent.DateTEvent=DateTime.Now;
-			newMeasureEvent.EventType=EhrMeasureEventType.MedicationReconcile;
-			newMeasureEvent.PatNum=PatCur.PatNum;
+			newMeasureEvent.Date=DateTime.Now;
+			newMeasureEvent.Type=EhrMeasureEventType.MedicationReconcile;
+			newMeasureEvent.PatientId=PatCur.PatNum;
 			newMeasureEvent.MoreInfo="";
 			EhrMeasureEvents.Insert(newMeasureEvent);
 			FillReconcilesGrid();
@@ -198,7 +198,7 @@ namespace OpenDental {
 				return;
 			}
 			for(int i=0;i<gridReconcileEvents.SelectedIndices.Length;i++) {
-				EhrMeasureEvents.Delete(ehrMeasureEventsList[gridReconcileEvents.SelectedIndices[i]].EhrMeasureEventNum);
+				EhrMeasureEvents.Delete(ehrMeasureEventsList[gridReconcileEvents.SelectedIndices[i]].Id);
 			}
 			FillReconcilesGrid();
 		}

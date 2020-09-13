@@ -1,6 +1,6 @@
 using Imedisoft.Data.Annotations;
 
-namespace OpenDentBusiness
+namespace Imedisoft.Data.Models
 {
 	[Table("counties")]
 	public class County

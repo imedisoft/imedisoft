@@ -23,7 +23,7 @@ namespace OpenDental {
 		}
 
 		private void FormSnomeds_Load(object sender,EventArgs e) {
-			_showingInfoButton=CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowInfobutton;
+			_showingInfoButton=CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowInfoButton;
 			_showingInfobuttonShift=(_showingInfoButton?1:0);
 			if(IsSelectionMode || IsMultiSelectMode) {
 				butClose.Text="Cancel";
@@ -43,10 +43,10 @@ namespace OpenDental {
 			}
 			string ehrKey="";
 			int yearValue=0;
-			List<EhrProvKey> listProvKeys=EhrProvKeys.GetKeysByFLName(prov.LastName,prov.FirstName);
+			List<EhrProviderKey> listProvKeys=EhrProviderKeys.GetByProviderName(prov.LastName,prov.FirstName).ToList();
 			if(listProvKeys.Count!=0) {
-				ehrKey=listProvKeys[0].ProvKey;
-				yearValue=listProvKeys[0].YearValue;
+				ehrKey=listProvKeys[0].Key;
+				yearValue=listProvKeys[0].Year;
 			}
 			if(FormEHR.ProvKeyIsValid(prov.LastName,prov.FirstName,yearValue,ehrKey)) {
 				//EHR has been valid.
@@ -110,7 +110,7 @@ namespace OpenDental {
 		}
 
 		private void gridMain_CellClick(object sender,ODGridClickEventArgs e) {
-			if(!CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowInfobutton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
+			if(!CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowInfoButton) {//Security.IsAuthorized(Permissions.EhrInfoButton,true)) {
 				return;
 			}
 			if(e.Col!=0) {

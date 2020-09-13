@@ -24,8 +24,8 @@ namespace OpenDental {
 		private long _defNumVerifyStatusAssign;
 		///<summary>This will only have a selection if selecting from gridMain.</summary>
 		private InsVerifyGridObject _gridRowSelected;
-		private List<Userod> _listUsersInRegionWithAssignedIns=new List<Userod>();
-		private List<Userod> _listUsersInRegion=new List<Userod>();
+		private List<User> _listUsersInRegionWithAssignedIns=new List<User>();
+		private List<User> _listUsersInRegion=new List<User>();
 		private List<Definition> _listVerifyStatuses=new List<Definition>();
 		private long _userNumVerifyGrid=0;
 		private int _selectedRowVerifyGrid;
@@ -259,8 +259,8 @@ namespace OpenDental {
 				//This will get every clinic associated to any of the currently selected regions.
 				listClinicNums=Clinics.GetListByRegion(_listDefNumsVerifyRegionsFilter);
 			}
-			_listUsersInRegion=Userods.GetUsersForVerifyList(listClinicNums,true);
-			_listUsersInRegionWithAssignedIns=Userods.GetUsersForVerifyList(listClinicNums,false);
+			_listUsersInRegion=Users.GetUsersForVerifyList(listClinicNums,true);
+			_listUsersInRegionWithAssignedIns=Users.GetUsersForVerifyList(listClinicNums,false);
 			for(int i=0;i<_listUsersInRegionWithAssignedIns.Count;i++) {
 				comboVerifyUser.Items.Add(_listUsersInRegionWithAssignedIns[i].UserName);
 				if(_verifyUserNum==_listUsersInRegionWithAssignedIns[i].Id) {
@@ -522,7 +522,7 @@ namespace OpenDental {
 			}
 			menuRightClick.MenuItems.Add(new MenuItem(verifyDescription,gridMainRight_click));
 			MenuItem assignUserToolItem=new MenuItem("Assign to User");
-			foreach(Userod user in _listUsersInRegion) {
+			foreach(User user in _listUsersInRegion) {
 				MenuItem assignUserDropDownCur=new MenuItem(user.UserName);
 				assignUserDropDownCur.Tag=user;
 				assignUserDropDownCur.Click+=new EventHandler(assignUserToolItemDropDown_Click);
@@ -714,7 +714,7 @@ namespace OpenDental {
 
 		private void gridAssign_Popup(object sender,EventArgs e) {
 			MenuItem assignUserToolItem=new MenuItem("Assign to User");
-			foreach(Userod user in _listUsersInRegion) {
+			foreach(User user in _listUsersInRegion) {
 				MenuItem assignUserDropDownCur=new MenuItem(user.UserName);
 				assignUserDropDownCur.Tag=user;
 				assignUserDropDownCur.Click+=new EventHandler(assignUserToolItemDropDown_Click);
@@ -923,7 +923,7 @@ namespace OpenDental {
 		}
 
 		private void assignUserToolItemDropDown_Click(object sender, EventArgs e) {
-			Userod user=(Userod)((MenuItem)sender).Tag;
+			User user=(User)((MenuItem)sender).Tag;
 			if(tabControl1.SelectedTab==tabVerify) {
 				if(_gridRowSelected.PatInsVerify!=null) {
 					_gridRowSelected.PatInsVerify.UserNum=user.Id;
@@ -998,7 +998,7 @@ namespace OpenDental {
 
 			///<summary>An updated dictionary of status defs should be passed in.  
 			///This is to avoid grabbing definitions cache from inside this nested class, which will be instanced in a loop.</summary>
-			public InsVerifyGridRow(InsVerifyGridObject gridObj,Dictionary<long,Definition> dictStatusDefs,List<Userod> listUsers,bool isAssignGrid) {
+			public InsVerifyGridRow(InsVerifyGridObject gridObj,Dictionary<long,Definition> dictStatusDefs,List<User> listUsers,bool isAssignGrid) {
 				if(gridObj==null) {
 					return;
 				}
@@ -1028,13 +1028,13 @@ namespace OpenDental {
 						gridObj.PatInsVerify.DateLastAssigned : 
 						gridObj.PlanInsVerify.DateLastAssigned);
 					if(isPatLastAssignedNewer) {
-						Userod userCur=listUsers.FirstOrDefault(x => x.Id==gridObj.PatInsVerify.UserNum);
+						User userCur=listUsers.FirstOrDefault(x => x.Id==gridObj.PatInsVerify.UserNum);
 						if(userCur!=null) {
 							AssignedTo=userCur.UserName;
 						}
 					}
 					else {
-						Userod userCur=listUsers.FirstOrDefault(x => x.Id==gridObj.PlanInsVerify.UserNum);
+						User userCur=listUsers.FirstOrDefault(x => x.Id==gridObj.PlanInsVerify.UserNum);
 						if(userCur!=null) {
 							AssignedTo=userCur.UserName;
 						}
@@ -1052,7 +1052,7 @@ namespace OpenDental {
 						VerifyStatus=dictStatusDefs[gridObj.PatInsVerify.DefNum].Name;
 					}
 					DateLastAssigned=gridObj.PatInsVerify.DateLastAssigned;
-					Userod userCur=listUsers.FirstOrDefault(x => x.Id==gridObj.PatInsVerify.UserNum);
+					User userCur=listUsers.FirstOrDefault(x => x.Id==gridObj.PatInsVerify.UserNum);
 					if(userCur!=null) {
 						AssignedTo=userCur.UserName;
 					}
@@ -1069,7 +1069,7 @@ namespace OpenDental {
 						VerifyStatus=dictStatusDefs[gridObj.PlanInsVerify.DefNum].Name;
 					}
 					DateLastAssigned=gridObj.PlanInsVerify.DateLastAssigned;
-					Userod userCur=listUsers.FirstOrDefault(x => x.Id==gridObj.PlanInsVerify.UserNum);
+					User userCur=listUsers.FirstOrDefault(x => x.Id==gridObj.PlanInsVerify.UserNum);
 					if(userCur!=null) {
 						AssignedTo=userCur.UserName;
 					}

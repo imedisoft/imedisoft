@@ -45,21 +45,21 @@ namespace OpenDentBusiness.Crud{
 			foreach(DataRow row in table.Rows) {
 				loinc=new Loinc();
 				loinc.LoincNum               = PIn.Long  (row["LoincNum"].ToString());
-				loinc.LoincCode              = PIn.String(row["LoincCode"].ToString());
+				loinc.Code              = PIn.String(row["LoincCode"].ToString());
 				loinc.Component              = PIn.String(row["Component"].ToString());
-				loinc.PropertyObserved       = PIn.String(row["PropertyObserved"].ToString());
-				loinc.TimeAspct              = PIn.String(row["TimeAspct"].ToString());
-				loinc.SystemMeasured         = PIn.String(row["SystemMeasured"].ToString());
-				loinc.ScaleType              = PIn.String(row["ScaleType"].ToString());
-				loinc.MethodType             = PIn.String(row["MethodType"].ToString());
-				loinc.StatusOfCode           = PIn.String(row["StatusOfCode"].ToString());
-				loinc.NameShort              = PIn.String(row["NameShort"].ToString());
+				loinc.Property       = PIn.String(row["PropertyObserved"].ToString());
+				loinc.Time              = PIn.String(row["TimeAspct"].ToString());
+				loinc.System         = PIn.String(row["SystemMeasured"].ToString());
+				loinc.Scale              = PIn.String(row["ScaleType"].ToString());
+				loinc.Method             = PIn.String(row["MethodType"].ToString());
+				loinc.Status           = PIn.String(row["StatusOfCode"].ToString());
+				loinc.ShortName              = PIn.String(row["NameShort"].ToString());
 				loinc.ClassType              = PIn.String(row["ClassType"].ToString());
 				loinc.UnitsRequired          = PIn.Bool  (row["UnitsRequired"].ToString());
 				loinc.OrderObs               = PIn.String(row["OrderObs"].ToString());
 				loinc.HL7FieldSubfieldID     = PIn.String(row["HL7FieldSubfieldID"].ToString());
 				loinc.ExternalCopyrightNotice= PIn.String(row["ExternalCopyrightNotice"].ToString());
-				loinc.NameLongCommon         = PIn.String(row["NameLongCommon"].ToString());
+				loinc.LongCommonName         = PIn.String(row["NameLongCommon"].ToString());
 				loinc.UnitsUCUM              = PIn.String(row["UnitsUCUM"].ToString());
 				loinc.RankCommonTests        = PIn.Int   (row["RankCommonTests"].ToString());
 				loinc.RankCommonOrders       = PIn.Int   (row["RankCommonOrders"].ToString());
@@ -96,21 +96,21 @@ namespace OpenDentBusiness.Crud{
 			foreach(Loinc loinc in listLoincs) {
 				table.Rows.Add(new object[] {
 					POut.Long  (loinc.LoincNum),
-					            loinc.LoincCode,
+					            loinc.Code,
 					            loinc.Component,
-					            loinc.PropertyObserved,
-					            loinc.TimeAspct,
-					            loinc.SystemMeasured,
-					            loinc.ScaleType,
-					            loinc.MethodType,
-					            loinc.StatusOfCode,
-					            loinc.NameShort,
+					            loinc.Property,
+					            loinc.Time,
+					            loinc.System,
+					            loinc.Scale,
+					            loinc.Method,
+					            loinc.Status,
+					            loinc.ShortName,
 					            loinc.ClassType,
 					POut.Bool  (loinc.UnitsRequired),
 					            loinc.OrderObs,
 					            loinc.HL7FieldSubfieldID,
 					            loinc.ExternalCopyrightNotice,
-					            loinc.NameLongCommon,
+					            loinc.LongCommonName,
 					            loinc.UnitsUCUM,
 					POut.Int   (loinc.RankCommonTests),
 					POut.Int   (loinc.RankCommonOrders),
@@ -138,21 +138,21 @@ namespace OpenDentBusiness.Crud{
 				command+=POut.Long(loinc.LoincNum)+",";
 			}
 			command+=
-				 "'"+POut.String(loinc.LoincCode)+"',"
+				 "'"+POut.String(loinc.Code)+"',"
 				+"'"+POut.String(loinc.Component)+"',"
-				+"'"+POut.String(loinc.PropertyObserved)+"',"
-				+"'"+POut.String(loinc.TimeAspct)+"',"
-				+"'"+POut.String(loinc.SystemMeasured)+"',"
-				+"'"+POut.String(loinc.ScaleType)+"',"
-				+"'"+POut.String(loinc.MethodType)+"',"
-				+"'"+POut.String(loinc.StatusOfCode)+"',"
-				+"'"+POut.String(loinc.NameShort)+"',"
+				+"'"+POut.String(loinc.Property)+"',"
+				+"'"+POut.String(loinc.Time)+"',"
+				+"'"+POut.String(loinc.System)+"',"
+				+"'"+POut.String(loinc.Scale)+"',"
+				+"'"+POut.String(loinc.Method)+"',"
+				+"'"+POut.String(loinc.Status)+"',"
+				+"'"+POut.String(loinc.ShortName)+"',"
 				+"'"+POut.String(loinc.ClassType)+"',"
 				+    POut.Bool  (loinc.UnitsRequired)+","
 				+"'"+POut.String(loinc.OrderObs)+"',"
 				+"'"+POut.String(loinc.HL7FieldSubfieldID)+"',"
 				+    DbHelper.ParamChar+"paramExternalCopyrightNotice,"
-				+"'"+POut.String(loinc.NameLongCommon)+"',"
+				+"'"+POut.String(loinc.LongCommonName)+"',"
 				+"'"+POut.String(loinc.UnitsUCUM)+"',"
 				+    POut.Int   (loinc.RankCommonTests)+","
 				+    POut.Int   (loinc.RankCommonOrders)+")";
@@ -189,21 +189,21 @@ namespace OpenDentBusiness.Crud{
 				command+=POut.Long(loinc.LoincNum)+",";
 			}
 			command+=
-				 "'"+POut.String(loinc.LoincCode)+"',"
+				 "'"+POut.String(loinc.Code)+"',"
 				+"'"+POut.String(loinc.Component)+"',"
-				+"'"+POut.String(loinc.PropertyObserved)+"',"
-				+"'"+POut.String(loinc.TimeAspct)+"',"
-				+"'"+POut.String(loinc.SystemMeasured)+"',"
-				+"'"+POut.String(loinc.ScaleType)+"',"
-				+"'"+POut.String(loinc.MethodType)+"',"
-				+"'"+POut.String(loinc.StatusOfCode)+"',"
-				+"'"+POut.String(loinc.NameShort)+"',"
+				+"'"+POut.String(loinc.Property)+"',"
+				+"'"+POut.String(loinc.Time)+"',"
+				+"'"+POut.String(loinc.System)+"',"
+				+"'"+POut.String(loinc.Scale)+"',"
+				+"'"+POut.String(loinc.Method)+"',"
+				+"'"+POut.String(loinc.Status)+"',"
+				+"'"+POut.String(loinc.ShortName)+"',"
 				+"'"+POut.String(loinc.ClassType)+"',"
 				+    POut.Bool  (loinc.UnitsRequired)+","
 				+"'"+POut.String(loinc.OrderObs)+"',"
 				+"'"+POut.String(loinc.HL7FieldSubfieldID)+"',"
 				+    DbHelper.ParamChar+"paramExternalCopyrightNotice,"
-				+"'"+POut.String(loinc.NameLongCommon)+"',"
+				+"'"+POut.String(loinc.LongCommonName)+"',"
 				+"'"+POut.String(loinc.UnitsUCUM)+"',"
 				+    POut.Int   (loinc.RankCommonTests)+","
 				+    POut.Int   (loinc.RankCommonOrders)+")";
@@ -223,21 +223,21 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Updates one Loinc in the database.</summary>
 		public static void Update(Loinc loinc) {
 			string command="UPDATE loinc SET "
-				+"LoincCode              = '"+POut.String(loinc.LoincCode)+"', "
+				+"LoincCode              = '"+POut.String(loinc.Code)+"', "
 				+"Component              = '"+POut.String(loinc.Component)+"', "
-				+"PropertyObserved       = '"+POut.String(loinc.PropertyObserved)+"', "
-				+"TimeAspct              = '"+POut.String(loinc.TimeAspct)+"', "
-				+"SystemMeasured         = '"+POut.String(loinc.SystemMeasured)+"', "
-				+"ScaleType              = '"+POut.String(loinc.ScaleType)+"', "
-				+"MethodType             = '"+POut.String(loinc.MethodType)+"', "
-				+"StatusOfCode           = '"+POut.String(loinc.StatusOfCode)+"', "
-				+"NameShort              = '"+POut.String(loinc.NameShort)+"', "
+				+"PropertyObserved       = '"+POut.String(loinc.Property)+"', "
+				+"TimeAspct              = '"+POut.String(loinc.Time)+"', "
+				+"SystemMeasured         = '"+POut.String(loinc.System)+"', "
+				+"ScaleType              = '"+POut.String(loinc.Scale)+"', "
+				+"MethodType             = '"+POut.String(loinc.Method)+"', "
+				+"StatusOfCode           = '"+POut.String(loinc.Status)+"', "
+				+"NameShort              = '"+POut.String(loinc.ShortName)+"', "
 				+"ClassType              = '"+POut.String(loinc.ClassType)+"', "
 				+"UnitsRequired          =  "+POut.Bool  (loinc.UnitsRequired)+", "
 				+"OrderObs               = '"+POut.String(loinc.OrderObs)+"', "
 				+"HL7FieldSubfieldID     = '"+POut.String(loinc.HL7FieldSubfieldID)+"', "
 				+"ExternalCopyrightNotice=  "+DbHelper.ParamChar+"paramExternalCopyrightNotice, "
-				+"NameLongCommon         = '"+POut.String(loinc.NameLongCommon)+"', "
+				+"NameLongCommon         = '"+POut.String(loinc.LongCommonName)+"', "
 				+"UnitsUCUM              = '"+POut.String(loinc.UnitsUCUM)+"', "
 				+"RankCommonTests        =  "+POut.Int   (loinc.RankCommonTests)+", "
 				+"RankCommonOrders       =  "+POut.Int   (loinc.RankCommonOrders)+" "
@@ -252,41 +252,41 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Updates one Loinc in the database.  Uses an old object to compare to, and only alters changed fields.  This prevents collisions and concurrency problems in heavily used tables.  Returns true if an update occurred.</summary>
 		public static bool Update(Loinc loinc,Loinc oldLoinc) {
 			string command="";
-			if(loinc.LoincCode != oldLoinc.LoincCode) {
+			if(loinc.Code != oldLoinc.Code) {
 				if(command!="") { command+=",";}
-				command+="LoincCode = '"+POut.String(loinc.LoincCode)+"'";
+				command+="LoincCode = '"+POut.String(loinc.Code)+"'";
 			}
 			if(loinc.Component != oldLoinc.Component) {
 				if(command!="") { command+=",";}
 				command+="Component = '"+POut.String(loinc.Component)+"'";
 			}
-			if(loinc.PropertyObserved != oldLoinc.PropertyObserved) {
+			if(loinc.Property != oldLoinc.Property) {
 				if(command!="") { command+=",";}
-				command+="PropertyObserved = '"+POut.String(loinc.PropertyObserved)+"'";
+				command+="PropertyObserved = '"+POut.String(loinc.Property)+"'";
 			}
-			if(loinc.TimeAspct != oldLoinc.TimeAspct) {
+			if(loinc.Time != oldLoinc.Time) {
 				if(command!="") { command+=",";}
-				command+="TimeAspct = '"+POut.String(loinc.TimeAspct)+"'";
+				command+="TimeAspct = '"+POut.String(loinc.Time)+"'";
 			}
-			if(loinc.SystemMeasured != oldLoinc.SystemMeasured) {
+			if(loinc.System != oldLoinc.System) {
 				if(command!="") { command+=",";}
-				command+="SystemMeasured = '"+POut.String(loinc.SystemMeasured)+"'";
+				command+="SystemMeasured = '"+POut.String(loinc.System)+"'";
 			}
-			if(loinc.ScaleType != oldLoinc.ScaleType) {
+			if(loinc.Scale != oldLoinc.Scale) {
 				if(command!="") { command+=",";}
-				command+="ScaleType = '"+POut.String(loinc.ScaleType)+"'";
+				command+="ScaleType = '"+POut.String(loinc.Scale)+"'";
 			}
-			if(loinc.MethodType != oldLoinc.MethodType) {
+			if(loinc.Method != oldLoinc.Method) {
 				if(command!="") { command+=",";}
-				command+="MethodType = '"+POut.String(loinc.MethodType)+"'";
+				command+="MethodType = '"+POut.String(loinc.Method)+"'";
 			}
-			if(loinc.StatusOfCode != oldLoinc.StatusOfCode) {
+			if(loinc.Status != oldLoinc.Status) {
 				if(command!="") { command+=",";}
-				command+="StatusOfCode = '"+POut.String(loinc.StatusOfCode)+"'";
+				command+="StatusOfCode = '"+POut.String(loinc.Status)+"'";
 			}
-			if(loinc.NameShort != oldLoinc.NameShort) {
+			if(loinc.ShortName != oldLoinc.ShortName) {
 				if(command!="") { command+=",";}
-				command+="NameShort = '"+POut.String(loinc.NameShort)+"'";
+				command+="NameShort = '"+POut.String(loinc.ShortName)+"'";
 			}
 			if(loinc.ClassType != oldLoinc.ClassType) {
 				if(command!="") { command+=",";}
@@ -308,9 +308,9 @@ namespace OpenDentBusiness.Crud{
 				if(command!="") { command+=",";}
 				command+="ExternalCopyrightNotice = "+DbHelper.ParamChar+"paramExternalCopyrightNotice";
 			}
-			if(loinc.NameLongCommon != oldLoinc.NameLongCommon) {
+			if(loinc.LongCommonName != oldLoinc.LongCommonName) {
 				if(command!="") { command+=",";}
-				command+="NameLongCommon = '"+POut.String(loinc.NameLongCommon)+"'";
+				command+="NameLongCommon = '"+POut.String(loinc.LongCommonName)+"'";
 			}
 			if(loinc.UnitsUCUM != oldLoinc.UnitsUCUM) {
 				if(command!="") { command+=",";}
@@ -340,31 +340,31 @@ namespace OpenDentBusiness.Crud{
 		///<summary>Returns true if Update(Loinc,Loinc) would make changes to the database.
 		///Does not make any changes to the database and can be called before remoting role is checked.</summary>
 		public static bool UpdateComparison(Loinc loinc,Loinc oldLoinc) {
-			if(loinc.LoincCode != oldLoinc.LoincCode) {
+			if(loinc.Code != oldLoinc.Code) {
 				return true;
 			}
 			if(loinc.Component != oldLoinc.Component) {
 				return true;
 			}
-			if(loinc.PropertyObserved != oldLoinc.PropertyObserved) {
+			if(loinc.Property != oldLoinc.Property) {
 				return true;
 			}
-			if(loinc.TimeAspct != oldLoinc.TimeAspct) {
+			if(loinc.Time != oldLoinc.Time) {
 				return true;
 			}
-			if(loinc.SystemMeasured != oldLoinc.SystemMeasured) {
+			if(loinc.System != oldLoinc.System) {
 				return true;
 			}
-			if(loinc.ScaleType != oldLoinc.ScaleType) {
+			if(loinc.Scale != oldLoinc.Scale) {
 				return true;
 			}
-			if(loinc.MethodType != oldLoinc.MethodType) {
+			if(loinc.Method != oldLoinc.Method) {
 				return true;
 			}
-			if(loinc.StatusOfCode != oldLoinc.StatusOfCode) {
+			if(loinc.Status != oldLoinc.Status) {
 				return true;
 			}
-			if(loinc.NameShort != oldLoinc.NameShort) {
+			if(loinc.ShortName != oldLoinc.ShortName) {
 				return true;
 			}
 			if(loinc.ClassType != oldLoinc.ClassType) {
@@ -382,7 +382,7 @@ namespace OpenDentBusiness.Crud{
 			if(loinc.ExternalCopyrightNotice != oldLoinc.ExternalCopyrightNotice) {
 				return true;
 			}
-			if(loinc.NameLongCommon != oldLoinc.NameLongCommon) {
+			if(loinc.LongCommonName != oldLoinc.LongCommonName) {
 				return true;
 			}
 			if(loinc.UnitsUCUM != oldLoinc.UnitsUCUM) {

@@ -44,7 +44,7 @@ namespace OpenDental {
 		///<summary>Keeps track of the dates that can be edited by the user currently logged in.  This is simply to save database calls.</summary>
 		private Dictionary<DateTime,bool> _dictCanEditDay=new Dictionary<DateTime, bool>();
 		///<summary>Users can temporarily log in on this form.  Defaults to Security.CurUser.</summary>
-		private Userod _curUser=Security.CurrentUser;
+		private User _curUser=Security.CurrentUser;
 
 		public FormOrthoChart(Patient patCur) : this(patCur,0) {
 		}
@@ -483,7 +483,7 @@ namespace OpenDental {
 						gridMain.Rows[gridRow].Cells[_sigColIdx].Text="Valid";
 						//Only display user if the signature is valid.
 						long userNum=_dictOrthoCharts[orthoDate].Where(x => x.FieldName==sigColumnName).Select(x => x.UserNum).FirstOrDefault();
-						textUser.Text=Userods.GetName(userNum);
+						textUser.Text=Users.GetUserName(userNum);
 					}
 				}
 				else {
@@ -720,8 +720,8 @@ namespace OpenDental {
 			}
 		}
 
-		private void EnableSignatureBox(Userod curUser) {
-			bool canUserSignNote=Userods.CanUserSignNote(curUser);//only show if user can sign
+		private void EnableSignatureBox(User curUser) {
+			bool canUserSignNote=Users.CanUserSignNote(curUser);//only show if user can sign
 			signatureBoxWrapper.Enabled=canUserSignNote;
 			labelPermAlert.Visible=!canUserSignNote;
 		}

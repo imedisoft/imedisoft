@@ -1268,8 +1268,19 @@ namespace Imedisoft.Data
 		public const string NewCropPassword = "NewCropPassword";
 		///<summary>URL of the time server to use for EHR time synchronization.  Only used for EHR.  Example nist-time-server.eoni.com</summary>
 		public const string NistTimeServerUrl = "NistTimeServerUrl";
-		///<summary>Boolean. False by default. Set true if notes can only be signed by providers.</summary>
+
+		/// <summary>
+		///		<para>
+		///			A value indicating whether notes can only be signed by providers.
+		///		</para>
+		///		<para>
+		///			Type: <b>bool</b> - Default: <b>false</b>
+		///		</para>
+		/// </summary>
 		public const string NotesProviderSignatureOnly = "NotesProviderSignatureOnly";
+
+
+
 		///<summary>Duration the eConnector will maintain in memory cache of SmsToMobile and SmsFromMobile messages before purging older messages.
 		///Stored as hours.</summary>
 		public const string ODMobileCacheDurationHours = "ODMobileCacheDurationHours";

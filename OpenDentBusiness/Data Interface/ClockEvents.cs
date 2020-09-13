@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness{
 	///<summary></summary>

@@ -8,18 +8,19 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using System.Collections;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	///<summary>This form was originally designed to show providers all radiology procedures that are not flagged as CPOE.
 	///It is named generically because it can be enhanced in the future to actually show more than just radiology orders that need action.</summary>
 	public partial class FormRadOrderList:ODForm {
-		private Userod _user;
+		private User _user;
 		private List<Procedure> _listNonCpoeProcs=new List<Procedure>();
 		private List<Appointment> _listAppointments=new List<Appointment>();
 		private List<Patient> _listPats=new List<Patient>();
 		private List<ProcedureCode> _listProcCodes;
 
-		public FormRadOrderList(Userod user) {
+		public FormRadOrderList(User user) {
 			InitializeComponent();
 			
 			gridMain.ContextMenu=menuRightClick;
@@ -31,7 +32,7 @@ namespace OpenDental {
 		}
 
 		///<summary>Refreshes the list of radiology orders showing with the rad orders associated to the user passed in.</summary>
-		public void RefreshRadOrdersForUser(Userod user) {
+		public void RefreshRadOrdersForUser(User user) {
 			_listNonCpoeProcs.Clear();
 			_listAppointments.Clear();
 			_listPats.Clear();

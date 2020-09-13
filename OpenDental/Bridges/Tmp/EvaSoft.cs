@@ -1,4 +1,5 @@
-﻿using OpenDentBusiness;
+﻿using Imedisoft.Data.Models;
+using OpenDentBusiness;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Sockets;

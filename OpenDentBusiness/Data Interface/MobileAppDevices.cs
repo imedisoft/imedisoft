@@ -1,5 +1,6 @@
 using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -29,7 +30,7 @@ namespace OpenDentBusiness{
 			return Crud.MobileAppDeviceCrud.SelectMany(command);
 		}
 
-		public static List<MobileAppDevice> GetForUser(Userod user) {
+		public static List<MobileAppDevice> GetForUser(User user) {
 			
 			string command=$"SELECT * FROM mobileappdevice ";
 			if(PrefC.HasClinicsEnabled) {

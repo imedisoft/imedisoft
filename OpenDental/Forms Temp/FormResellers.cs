@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using OpenDentBusiness;
 using OpenDental.UI;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	public partial class FormResellers:ODForm {

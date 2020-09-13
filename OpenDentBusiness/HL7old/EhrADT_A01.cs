@@ -201,7 +201,7 @@ namespace OpenDentBusiness.HL7 {
 					string codeSystemAbbrev="";
 					if(obs.ValCodeSystem.Trim().ToUpper()=="LOINC") {
 						Loinc loincVal=Loincs.GetByCode(obs.ValReported);
-						codeDescript=loincVal.NameShort;
+						codeDescript=loincVal.ShortName;
 						codeSystemAbbrev="LN";
 					}
 					else if(obs.ValCodeSystem.Trim().ToUpper()=="SNOMEDCT") {
@@ -572,7 +572,7 @@ namespace OpenDentBusiness.HL7 {
 					if(obs.ValCodeSystem.Trim().ToUpper()=="LOINC") {
 						Loinc loincVal=Loincs.GetByCode(obs.ValReported);
 						if(loincVal==null) {
-							WriteError(sb,"Loinc code not found '"+loincVal.LoincCode+"'.  Please add by going to Setup | Chart | EHR.");
+							WriteError(sb,"Loinc code not found '"+loincVal.Code+"'.  Please add by going to Setup | Chart | EHR.");
 						}
 					}
 					else if(obs.ValCodeSystem.Trim().ToUpper()=="SNOMEDCT") {

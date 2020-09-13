@@ -1,5 +1,6 @@
 ﻿using CodeBase;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using Imedisoft.X12.Codes;
 using OpenDentBusiness;
 using OpenDentBusiness.HL7;

@@ -629,13 +629,6 @@ namespace OpenDental {
 					ModuleSelected(_patCur.PatNum);
 					return;
 				}
-				if(gridPtInfo.Rows[e.Row].Tag.ToString()=="EhrProvKeys") {
-					FormEhrProvKeysCustomer formEhrPKC=new FormEhrProvKeysCustomer();
-					formEhrPKC.Guarantor=_patCur.Guarantor;
-					formEhrPKC.ShowDialog();
-					ModuleSelected(_patCur.PatNum);
-					return;
-				}
 				if(gridPtInfo.Rows[e.Row].Tag.ToString()=="Referral") {
 					//RefAttach refattach=(RefAttach)gridPat.Rows[e.Row].Tag;
 					FormReferralsPatient formRP=new FormReferralsPatient();
@@ -3744,23 +3737,6 @@ namespace OpenDental {
 						row.Tag=null;
 						break;
 					#endregion Date First Visit
-					#region Ehr Provider Keys
-					case "Ehr Provider Keys":
-						//Not even available to most users.
-						List<EhrProvKey> listEhrProvKeys=EhrProvKeys.RefreshForFam(_patCur.Guarantor);
-						string desc="";
-						for(int i = 0;i<listEhrProvKeys.Count;i++) {
-							if(i>0) {
-								desc+="\r\n";
-							}
-							desc+=listEhrProvKeys[i].LName+", "+listEhrProvKeys[i].FName+", "
-								+listEhrProvKeys[i].YearValue+", "+listEhrProvKeys[i].ProvKey;
-						}
-						row.Cells.Add(desc);
-						row.BackColor=Color.PowderBlue;
-						row.Tag="EhrProvKeys";
-						break;
-					#endregion Ehr Provider Keys
 					#region Med Urgent
 					case "Med Urgent":
 						cell=new GridCell();
@@ -4149,7 +4125,7 @@ namespace OpenDental {
 
 						}
 						List<EhrMeasureEvent> listTobaccoStatuses=LoadData.ListTobaccoStatuses
-							.OrderByDescending(x => x.DateTEvent).Take(3).ToList();//only display the last three assessments at most
+							.OrderByDescending(x => x.Date).Take(3).ToList();//only display the last three assessments at most
 						row=new GridRow() { BackColor=listMiscColorDefs[3].Color,Tag="tabTobaccoUse" };
 						row.Cells.Add(new GridCell(Text=fieldCur.Description==""?fieldCur.InternalName:fieldCur.Description) { Bold= true });
 						row.Cells.Add(listTobaccoStatuses.Count>0?"":"none");
@@ -4162,7 +4138,7 @@ namespace OpenDental {
 							row=new GridRow() { BackColor=listMiscColorDefs[3].Color,Tag="tabTobaccoUse" };
 							snmCur=Snomeds.GetByCode(ehrCur.CodeValueResult);
 							row.Cells.Add(snmCur!=null?snmCur.Description:"");
-							row.Cells.Add(ehrCur.DateTEvent.ToShortDateString()+(ehrCur.MoreInfo==""?"":(" - "+ehrCur.MoreInfo)));
+							row.Cells.Add(ehrCur.Date.ToShortDateString()+(ehrCur.MoreInfo==""?"":(" - "+ehrCur.MoreInfo)));
 							if(i==listTobaccoStatuses.Count-1) {
 								break;//don't add last row here, handled outside of switch statement
 							}
@@ -6714,7 +6690,7 @@ namespace OpenDental {
 				if(procNew.ProcStatus.In(ProcStat.EC,ProcStat.EO)) {
 					procNew.DiagnosticCode="";
 				}
-				if(Userods.IsUserCpoe(Security.CurrentUser)) {
+				if(Users.IsUserCpoe(Security.CurrentUser)) {
 					//Only change the status of IsCpoe to true.  Never set it back to false for any reason.  Once true, always true.
 					procNew.IsCpoe=true;
 				}
@@ -7827,7 +7803,7 @@ namespace OpenDental {
 							if(formProviderPick.DialogResult==DialogResult.Cancel) {
 								return;
 							}
-							List<Userod> listDoseUsers=Userods.GetWhere(x => !x.IsHidden && x.ProviderId==formProviderPick.SelectedProviderId);//Only consider non-hidden users.
+							List<User> listDoseUsers=Users.Find(x => !x.IsHidden && x.ProviderId==formProviderPick.SelectedProviderId);//Only consider non-hidden users.
 							listDoseUsers=listDoseUsers.FindAll(x => {//Finds users that have a DoseSpot ID
 								try {
 									return !string.IsNullOrWhiteSpace(DoseSpot.GetUserID(x,clinicNum??0));
@@ -7836,7 +7812,7 @@ namespace OpenDental {
 									return false;
 								}
 							});
-							Userod userOnBehalfOf=null;
+							User userOnBehalfOf=null;
 							if(listDoseUsers.Count==1) {
 								userOnBehalfOf=listDoseUsers[0];
 							}
@@ -8592,7 +8568,7 @@ namespace OpenDental {
 			ProcCur.RevCode=procCodeCur.RevenueCodeDefault;
 			ProcCur.DiagnosticCode=Preferences.GetString(PreferenceName.ICD9DefaultForNewProcs);
 			ProcCur.PlaceService=Preferences.GetString(PreferenceName.DefaultProcedurePlaceService, PlaceOfService.Office);//Default Proc Place of Service for the Practice is used. 
-			if(Userods.IsUserCpoe(Security.CurrentUser)) {
+			if(Users.IsUserCpoe(Security.CurrentUser)) {
 				//This procedure is considered CPOE because the provider is the one that has added it.
 				ProcCur.IsCpoe=true;
 			}
@@ -8896,18 +8872,18 @@ namespace OpenDental {
 					if(_toothChartRelay.SelectedTeeth.Count==0) {
 						AutoCodeItem autoCodeItem=null;
 						if(AutoCodeItems.GetContainsKey(ProcCur.CodeNum)) { 
-							autoCodeItem=AutoCodeItems.GetListForCode(AutoCodeItems.GetOne(ProcCur.CodeNum).AutoCodeId)
+							autoCodeItem=AutoCodeItems.GetByAutoCode(AutoCodeItems.GetById(ProcCur.CodeNum).AutoCodeId)
 								.FirstOrDefault(x => x.ProcedureCodeId==ProcCur.CodeNum);
 						}
-						List<AutoCodeCond> listAutoCodeCond=new List<AutoCodeCond>();
+						List<AutoCodeCondition> listAutoCodeCond=new List<AutoCodeCondition>();
 						if(autoCodeItem!=null) {
-							listAutoCodeCond=AutoCodeConds.GetByAutoCodeItem(autoCodeItem.Id);
+							listAutoCodeCond=AutoCodeConditions.GetByAutoCodeItem(autoCodeItem.Id);
 						}
 						if(listAutoCodeCond.Count==1) {
-							if(listAutoCodeCond[0].Cond==AutoCondition.Maxillary) {
+							if(listAutoCodeCond[0].Type==AutoCodeConditionType.Maxillary) {
 								ProcCur.Surf="U";
 							}
-							else if(listAutoCodeCond[0].Cond==AutoCondition.Mandibular) {
+							else if(listAutoCodeCond[0].Type==AutoCodeConditionType.Mandibular) {
 								ProcCur.Surf="L";
 							}
 						}
@@ -8980,8 +8956,8 @@ namespace OpenDental {
 						$"Run {nameof(DatabaseMaintenances.ProcButtonItemsDeleteWithInvalidAutoCode)} in the Database Maintenance Tool and try again.");
 					return;
 				}
-				AutoCode autoCode=AutoCodes.GetOne(autoCodeNum);
-				if(AutoCodeItems.GetListForCode(autoCode.Id).Count==0) {
+				AutoCode autoCode=AutoCodes.GetById(autoCodeNum);
+				if(AutoCodeItems.GetByAutoCode(autoCode.Id).Count==0) {
 					//AutoCode is not setup correctly.
 					MessageBox.Show(this,"The following AutoCode has no associated Procedure Codes: "+"\r\n"+autoCode.Description+"\r\n"
 						+"AutoCode must be setup correctly before it can be used with a Quick Proc Button.");
@@ -9002,7 +8978,7 @@ namespace OpenDental {
 					if(textSurf.Text=="5" && CultureInfo.CurrentCulture.Name.EndsWith("CA")) surf="V"; else surf=Tooth.SurfTidyForClaims(textSurf.Text,toothNumString);
 					bool isAdditional=n>0;
 					bool willBeMissing=Procedures.WillBeMissing(toothNumString,_patCur.PatNum);//db call, but this NEEDS to happen.
-					long codeNum=AutoCodeItems.GetCodeNum(arrayAutoCodeList[i],toothNumString,surf,isAdditional,_patCur.PatNum,_patCur.Age,willBeMissing);
+					long codeNum=AutoCodeItems.GetProcedureCode(arrayAutoCodeList[i],toothNumString,surf,isAdditional,_patCur.Age,willBeMissing);
 					listProcedureCodes.Add(ProcedureCodes.GetProcCode(codeNum));
 				}
 			}
@@ -9178,7 +9154,7 @@ namespace OpenDental {
 					}
 					procCur.IsAdditional=n>0;	//This is used for determining the correct autocode in a little bit.
 					bool willBeMissing=Procedures.WillBeMissing(toothNumString,_patCur.PatNum);
-					procCur.CodeNum=AutoCodeItems.GetCodeNum(arrayAutoCodeList[i],toothNumString,surf,procCur.IsAdditional,_patCur.PatNum,_patCur.Age,willBeMissing);
+					procCur.CodeNum=AutoCodeItems.GetProcedureCode(arrayAutoCodeList[i],toothNumString,surf,procCur.IsAdditional,_patCur.Age,willBeMissing);
 					tArea=ProcedureCodes.GetProcCode(procCur.CodeNum).TreatArea;
 					if((tArea==TreatmentArea.Arch
 						|| tArea==TreatmentArea.Mouth

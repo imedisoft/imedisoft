@@ -218,7 +218,7 @@ namespace OpenDentBusiness
 			}
 
 			long providerId = 0;
-			if (Security.CurrentUser != null && Userods.IsUserCpoe(Security.CurrentUser))
+			if (Security.CurrentUser != null && Users.IsUserCpoe(Security.CurrentUser))
 			{
 				providerId = Security.CurrentUser.ProviderId.Value;
 			}

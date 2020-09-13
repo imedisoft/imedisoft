@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormProcNoteAppend:ODForm {
@@ -21,7 +22,7 @@ namespace OpenDental {
 			signatureBoxWrapper.SetAllowDigitalSig(true);
 			textUser.Text=Security.CurrentUser.UserName;
 			textNotes.Text=ProcCur.Note;
-			if(!Userods.CanUserSignNote()) {
+			if(!Users.CanUserSignNote()) {
 				signatureBoxWrapper.Enabled=false;
 				labelPermAlert.Visible=true;
 			}

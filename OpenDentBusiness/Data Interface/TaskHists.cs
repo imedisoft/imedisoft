@@ -77,7 +77,7 @@ namespace OpenDentBusiness
 			if (taskNext.UserId != taskCur.UserId)
 			{
 				stringBuilder.AppendLine(
-					$"Task author changed from {Userods.GetUser(taskCur.UserId).UserName} to {Userods.GetUser(taskNext.UserId).UserName}.");
+					$"Task author changed from {Users.GetById(taskCur.UserId).UserName} to {Users.GetById(taskNext.UserId).UserName}.");
 			}
 
 			if (taskNext.DateCompleted != taskCur.DateCompleted)

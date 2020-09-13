@@ -89,7 +89,7 @@ namespace OpenDental {
 					case "LOINC":
 						Loinc lCur=Loincs.GetByCode(listNotPerf[i].CodeValue);
 						if(lCur!=null) {
-							descript=lCur.NameLongCommon;
+							descript=lCur.LongCommonName;
 						}
 						break;
 					case "SNOMEDCT":

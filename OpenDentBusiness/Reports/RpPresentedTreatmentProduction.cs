@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using System.Linq;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDentBusiness {
 	public class RpPresentedTreatmentProduction {
@@ -82,7 +84,7 @@ namespace OpenDentBusiness {
 			List<ClaimProc> listClaimProcs=ClaimProcs.GetForProcsLimited(listTreatPlanProcs.Select(x => x.ProcNum).ToList(),
 				ClaimProcStatus.Received,ClaimProcStatus.Supplemental,ClaimProcStatus.CapComplete,ClaimProcStatus.NotReceived);
 			List<Adjustment> listAdjustments=Adjustments.GetForProcs(listTreatPlanProcs.Select(x => x.ProcNum).ToList());
-			List<Userod> listUserods=Userods.GetAll();
+			List<User> listUserods=Users.GetAll();
 			List<TreatPlanPresenterEntry> listTreatPlanPresenterEntries=new List<TreatPlanPresenterEntry>();
 			List<ProcedureCode> listProcCodes=ProcedureCodes.GetCodesForCodeNums(listTreatPlanProcs.Select(x => x.CodeNum).ToList());
 			foreach(Procedure procCur in listTreatPlanProcs) {
@@ -105,7 +107,7 @@ namespace OpenDentBusiness {
 				else { //radioLastPresented
 					treatPlanCur = listSavedTreatPlans.Where(x => x.ListProcTPs.Any(y => y.ProcNumOrig==procCur.ProcNum)).OrderByDescending(x => x.DateTP).First();
 				}
-				Userod userPresenter;
+				User userPresenter;
 				if(isPresenter) {
 					userPresenter = listUserods.FirstOrDefault(x => x.Id == treatPlanCur.UserNumPresenter);
 				}

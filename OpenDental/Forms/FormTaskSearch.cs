@@ -17,7 +17,7 @@ namespace Imedisoft.Forms
 	{
 		private readonly List<Definition> taskPriorities;
 		private readonly List<long> preloadedTaskIds = new List<long>();
-		private List<Userod> users;
+		private List<User> users;
 		private List<Tasks.TaskSearchResult> searchResults;
 
 		public bool IsSelectionMode { get; set; }
@@ -48,7 +48,7 @@ namespace Imedisoft.Forms
 		{
 			if (IsSelectionMode) cancelButton.Text = "&Cancel";
 
-			users = Userods.GetAll();
+			users = Users.GetAll();
 			userComboBox.Items.Add("All");
 			userComboBox.Items.Add("Me");
 			userComboBox.SelectedIndex = 0;
@@ -112,7 +112,7 @@ namespace Imedisoft.Forms
 
 			long? userId = null;
 			if (userComboBox.SelectedIndex == 1) userId = Security.CurrentUser.Id;
-			else if (userComboBox.SelectedItem is Userod user)
+			else if (userComboBox.SelectedItem is User user)
             {
 				userId = user.Id;
             }
@@ -209,7 +209,7 @@ namespace Imedisoft.Forms
 		{
             using var formUserPick = new FormUserPick
             {
-                ListUserodsFiltered = Userods.GetAll()
+                ListUserodsFiltered = Users.GetAll()
             };
 
             if (formUserPick.ShowDialog(this) != DialogResult.OK)

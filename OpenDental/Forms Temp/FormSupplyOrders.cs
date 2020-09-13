@@ -10,6 +10,7 @@ using OpenDental.UI;
 using System.Drawing.Printing;
 using System.Linq;
 using CodeBase;
+using Imedisoft.Data;
 
 namespace OpenDental
 {
@@ -172,7 +173,7 @@ namespace OpenDental
 				}
 				else
 				{
-					row.Cells.Add(Userods.GetName(_listSupplyOrders[i].UserNum));
+					row.Cells.Add(Users.GetUserName(_listSupplyOrders[i].UserNum));
 				}
 				row.Tag = _listSupplyOrders[i];
 				gridOrders.Rows.Add(row);

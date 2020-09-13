@@ -220,16 +220,10 @@ namespace OpenDentBusiness
 		/// </summary>
 		public double BalTotal;
 
-		/// <summary>
-		/// FK to employer.EmployerNum.
-		/// </summary>
 		[ForeignKey(typeof(Employer), nameof(Employer.Id))]
 		public long EmployerNum;
 
-		/// <summary>
-		/// FK to county.CountyName, although it will not crash if key absent.
-		/// </summary>
-		[ForeignKey(typeof(County), nameof(OpenDentBusiness.County.Name))]
+		[ForeignKey(typeof(County), nameof(Imedisoft.Data.Models.County.Name)), Nullable]
 		public string County;
 
 		/// <summary>
@@ -423,7 +417,7 @@ namespace OpenDentBusiness
 		/// FK to userod.UserNum. 
 		/// Set to the user logged in when the row was inserted at SecDateEntry date and time.
 		/// </summary>
-		[Column(ReadOnly = true), ForeignKey(typeof(Userod), nameof(Userod.Id))]
+		[Column(ReadOnly = true), ForeignKey(typeof(User), nameof(User.Id))]
 		public long SecUserNumEntry;
 
 		/// <summary>

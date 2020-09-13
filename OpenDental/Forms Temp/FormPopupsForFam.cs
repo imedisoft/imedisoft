@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -38,7 +40,7 @@ namespace OpenDental {
 			//Value is Dictionary<long,DateTime>.
 			Popup popup;
 			Automation autoCur;
-			List<Automation> listAutomations=Automations.GetDeepCopy();
+			List<Automation> listAutomations=Automations.GetAll();
 			foreach(long automationNum in listAutoNums) {
 				dictPatDate=FormOpenDental.DicBlockedAutomations[automationNum];//Gets all patnums for current automation.
 				//Second level dictionary key is a patNum for current AutomationNum key.

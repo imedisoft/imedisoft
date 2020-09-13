@@ -89,9 +89,9 @@ namespace OpenDentBusiness{
 		public static long CreateEventForPat(long patNum,EhrMeasureEventType measureEventType) {
 			//No need to check RemotingRole; no call to db.
 			EhrMeasureEvent measureEvent=new EhrMeasureEvent();
-			measureEvent.DateTEvent=DateTime.Now;
-			measureEvent.EventType=measureEventType;
-			measureEvent.PatNum=patNum;
+			measureEvent.Date=DateTime.Now;
+			measureEvent.Type=measureEventType;
+			measureEvent.PatientId=patNum;
 			measureEvent.MoreInfo="";
 			return Insert(measureEvent);
 		}
@@ -120,7 +120,7 @@ namespace OpenDentBusiness{
 			//No need to check RemotingRole; no call to db.
 			List<EhrMeasureEvent> retVal=new List<EhrMeasureEvent>();
 			for(int i=0;i<listMeasures.Count;i++) {
-				if(listMeasures[i].EventType==eventType) {
+				if(listMeasures[i].Type==eventType) {
 					retVal.Add(listMeasures[i]);
 				}
 			}

@@ -6,6 +6,8 @@ using OpenDental.UI;
 using CodeBase;
 using Imedisoft.Data;
 using Imedisoft.Data.Models;
+using Imedisoft.Forms;
+using System.Linq;
 
 namespace OpenDental {
 	public partial class FormEhrLabOrders:ODForm {
@@ -114,15 +116,13 @@ namespace OpenDental {
 					//It would be better to check for updated results, unfortunately results have no unique identifiers.
 				}
 				Provider prov=Providers.GetById(Security.CurrentUser.ProviderId);
-				if(Security.CurrentUser.ProviderId!=0 && EhrProvKeys.GetKeysByFLName(prov.LastName,prov.FirstName).Count>0) {//The user who is currently logged in is a provider and has a valid EHR key.
+				if(Security.CurrentUser.ProviderId!=0 && EhrProviderKeys.GetByProviderName(prov.LastName,prov.FirstName).Count()>0) {//The user who is currently logged in is a provider and has a valid EHR key.
 					ListEhrLabs[i].IsCpoe=true;
 				}
 				listEhrLabs[i]=EhrLabs.SaveToDB(listEhrLabs[i]);//SAVE
 				for(int j=0;j<listEhrLabs[i].ListEhrLabResults.Count;j++) {//EHR TRIGGER
-					if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurrentUser.Id).LabTestCDS) {
-						FormCDSIntervention FormCDSI=new FormCDSIntervention();
-						FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(listEhrLabs[i].ListEhrLabResults[j],PatCur);
-						FormCDSI.ShowIfRequired(false);
+					if(CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowCDS && CdsPermissions.GetByUser(Security.CurrentUser.Id).LabTestCDS) {
+						FormCdsIntervention.ShowIfRequired(EhrTriggers.TriggerMatch(listEhrLabs[i].ListEhrLabResults[j], PatCur), false);
 					}
 				}
 			}
@@ -139,22 +139,20 @@ namespace OpenDental {
 				return;
 			}
 			EhrMeasureEvent newMeasureEvent=new EhrMeasureEvent();
-			newMeasureEvent.DateTEvent=DateTime.Now;
-			newMeasureEvent.EventType=EhrMeasureEventType.CPOE_LabOrdered;//default
+			newMeasureEvent.Date=DateTime.Now;
+			newMeasureEvent.Type=EhrMeasureEventType.CPOE_LabOrdered;//default
 			Loinc loinc=Loincs.GetByCode(FormLOE.EhrLabCur.UsiID);
 			if(loinc!=null && loinc.ClassType=="RAD") {//short circuit logic
-				newMeasureEvent.EventType=EhrMeasureEventType.CPOE_RadOrdered;
+				newMeasureEvent.Type=EhrMeasureEventType.CPOE_RadOrdered;
 			}
-			newMeasureEvent.PatNum=FormLOE.EhrLabCur.PatNum;
+			newMeasureEvent.PatientId=FormLOE.EhrLabCur.PatNum;
 			newMeasureEvent.MoreInfo="";
-			newMeasureEvent.FKey=FormLOE.EhrLabCur.EhrLabNum;
+			newMeasureEvent.ObjectId=FormLOE.EhrLabCur.EhrLabNum;
 			EhrMeasureEvents.Insert(newMeasureEvent);
 			EhrLabs.SaveToDB(FormLOE.EhrLabCur);
 			for(int i=0;i<FormLOE.EhrLabCur.ListEhrLabResults.Count;i++) {
-				if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurrentUser.Id).LabTestCDS) {
-					FormCDSIntervention FormCDSI=new FormCDSIntervention();
-					FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(FormLOE.EhrLabCur.ListEhrLabResults[i],PatCur);
-					FormCDSI.ShowIfRequired(false);
+				if(CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowCDS && CdsPermissions.GetByUser(Security.CurrentUser.Id).LabTestCDS) {
+					FormCdsIntervention.ShowIfRequired(EhrTriggers.TriggerMatch(FormLOE.EhrLabCur.ListEhrLabResults[i], PatCur), false);
 				}
 			}
 			FillGrid();

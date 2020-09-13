@@ -471,7 +471,7 @@ namespace OpenDental
 
 				if (!task.Description.StartsWith("==") && task.UserId != 0)
 				{
-					description += Userods.GetName(task.UserId) + " - ";
+					description += Users.GetUserName(task.UserId) + " - ";
 				}
 
 				var notes = "";
@@ -484,7 +484,7 @@ namespace OpenDental
 
 					notes += 
 						"\r\n\u22EE\r\n" + 
-						"==" + Userods.GetName(lastTaskNote.UserId) + " - " + 
+						"==" + Users.GetUserName(lastTaskNote.UserId) + " - " + 
 						lastTaskNote.DateModified.ToShortDateString() + " " + 
 						lastTaskNote.DateModified.ToShortTimeString() + " - " +
 						lastTaskNote.Note;
@@ -495,7 +495,7 @@ namespace OpenDental
 					{
 						notes += 
 							"\r\n" + 
-							"==" + Userods.GetName(taskNote.UserId) + " - " + 
+							"==" + Users.GetUserName(taskNote.UserId) + " - " + 
 							taskNote.DateModified.ToShortDateString() + " " + 
 							taskNote.DateModified.ToShortTimeString() + " - " + 
 							taskNote.Note;

@@ -1823,7 +1823,7 @@ Laboratory Test Results
 						_w.WriteElementString("td",listLabResultFiltered[i].ObservationIdentifierText);//Test
 					}
 					else {
-						_w.WriteElementString("td",labLoinc.NameShort);//Test
+						_w.WriteElementString("td",labLoinc.ShortName);//Test
 					}
 					_w.WriteElementString("td",value+" "+listLabResultFiltered[i].UnitsID);//Result
 					_w.WriteElementString("td",listLabResultFiltered[i].AbnormalFlags);//Abnormal Flag
@@ -1902,7 +1902,7 @@ Laboratory Test Results
 					StartAndEnd("code","code",listLabResultFiltered[i].ObservationIdentifierID,"displayName",listLabResultFiltered[i].ObservationIdentifierText,"codeSystem",strCodeSystemLoinc,"codeSystemName",strCodeSystemNameLoinc);
 				}
 				else {
-					StartAndEnd("code","code",listLabResultFiltered[i].ObservationIdentifierID,"displayName",labLoinc.NameLongCommon,"codeSystem",strCodeSystemLoinc,"codeSystemName",strCodeSystemNameLoinc);
+					StartAndEnd("code","code",listLabResultFiltered[i].ObservationIdentifierID,"displayName",labLoinc.LongCommonName,"codeSystem",strCodeSystemLoinc,"codeSystemName",strCodeSystemNameLoinc);
 				}
 				StartAndEnd("statusCode","code","completed");//Allowed values: aborted, active, cancelled, completed, held, or suspended.
 				DateTime dateTimeEffective=DateTimeFromString(listLabResultFiltered[i].ObservationDateTime);
@@ -1984,10 +1984,10 @@ Social History
 					else {
 						_w.WriteElementString("td",snomedSmoking.Code+" - "+snomedSmoking.Description);
 					}
-					DateTime dateTimeLow=listEhrMeasureEventsFiltered[i].DateTEvent;
+					DateTime dateTimeLow=listEhrMeasureEventsFiltered[i].Date;
 					DateTime dateTimeHigh=DateTime.Now;
 					if(i<listEhrMeasureEventsFiltered.Count-1) {//There is another smoking event after this one (remember, they are sorted by date).
-						dateTimeHigh=listEhrMeasureEventsFiltered[i+1].DateTEvent.AddDays(-1);//The day before the next smoking event.
+						dateTimeHigh=listEhrMeasureEventsFiltered[i+1].Date.AddDays(-1);//The day before the next smoking event.
 						if(dateTimeHigh<dateTimeLow) {
 							dateTimeHigh=dateTimeLow;//Just in case the user entered two measures for the same date.
 						}
@@ -2033,10 +2033,10 @@ Social History
 				StartAndEnd("code","code","ASSERTION","codeSystem","2.16.840.1.113883.5.4");
 				StartAndEnd("statusCode","code","completed");//Allowed values: completed.
 				//The effectiveTime/low element must be present. If the patient is an ex-smoker (8517006), the effectiveTime/high element must also be present. For simplicity, we always export both low and high dates.
-				DateTime dateTimeLow=listEhrMeasureEventsFiltered[i].DateTEvent;
+				DateTime dateTimeLow=listEhrMeasureEventsFiltered[i].Date;
 				DateTime dateTimeHigh=DateTime.Now;
 				if(i<listEhrMeasureEventsFiltered.Count-1) {//There is another smoking event after this one (remember, they are sorted by date).
-					dateTimeHigh=listEhrMeasureEventsFiltered[i+1].DateTEvent.AddDays(-1);//The day before the next smoking event.
+					dateTimeHigh=listEhrMeasureEventsFiltered[i+1].Date.AddDays(-1);//The day before the next smoking event.
 					if(dateTimeHigh<dateTimeLow) {
 						dateTimeHigh=dateTimeLow;//Just in case the user entered two measures for the same date.
 					}
@@ -2074,10 +2074,10 @@ Social History
 
 		///<summary>Helper for GenerateCcdSectionSocialHistory().  Sort function.  Currently sorts by date ascending.</summary>
 		private int CompareEhrMeasureEvents(EhrMeasureEvent ehrMeasureEventL,EhrMeasureEvent ehrMeasureEventR) {
-			if(ehrMeasureEventL.DateTEvent<ehrMeasureEventR.DateTEvent) {
+			if(ehrMeasureEventL.Date<ehrMeasureEventR.Date) {
 				return -1;
 			}
-			else if(ehrMeasureEventL.DateTEvent>ehrMeasureEventR.DateTEvent) {
+			else if(ehrMeasureEventL.Date>ehrMeasureEventR.Date) {
 				return 1;
 			}
 			return 0;//equal
@@ -2795,7 +2795,7 @@ Vital Signs
 			List<EhrMeasureEvent> listEhrMeasureEventsAll=EhrMeasureEvents.Refresh(patCur.PatNum);
 			List<EhrMeasureEvent> listEhrMeasureEventsFiltered=new List<EhrMeasureEvent>();
 			for(int i=0;i<listEhrMeasureEventsAll.Count;i++) {
-				if(listEhrMeasureEventsAll[i].EventType!=EhrMeasureEventType.TobaccoUseAssessed) {
+				if(listEhrMeasureEventsAll[i].Type!=EhrMeasureEventType.TobaccoUseAssessed) {
 					continue;
 				}
 				if(listEhrMeasureEventsAll[i].CodeSystemResult!="SNOMEDCT") {

@@ -510,7 +510,7 @@ namespace OpenDentBusiness
 
 				if (task.UserId != oldTask.UserId)
 				{
-					TaskEditCreateLog($"Changed user from {Userods.GetName(oldTask.UserId)}.", task);
+					TaskEditCreateLog($"Changed user from {Users.GetUserName(oldTask.UserId)}.", task);
 				}
 
 				static string GetPatientNameForLog(long patientId)

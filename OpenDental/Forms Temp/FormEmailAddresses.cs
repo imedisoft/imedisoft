@@ -7,6 +7,7 @@ using System.Net;
 using System.Text;
 using System.Windows.Forms;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -69,16 +70,16 @@ namespace OpenDental
 			EmailAddresses.RefreshCache();
 			_listEmailAddresses = EmailAddresses.GetDeepCopy();
 			//Add user specific email addresses to the list
-			List<Userod> listUsers = new List<Userod>();
+			List<User> listUsers = new List<User>();
 			if (Security.IsAuthorized(Permissions.SecurityAdmin, true) && !IsSelectionMode)
 			{
-				listUsers.AddRange(Userods.GetUsers());//If authorized, get all non-hidden users.
+				listUsers.AddRange(Users.GetUsers());//If authorized, get all non-hidden users.
 			}
 			else
 			{
 				listUsers.Add(Security.CurrentUser);//Otherwise, just this user.
 			}
-			foreach (Userod user in listUsers)
+			foreach (User user in listUsers)
 			{
 				EmailAddress userAddress = EmailAddresses.GetForUser(user.Id);
 				if (userAddress != null)
@@ -106,7 +107,7 @@ namespace OpenDental
 				row = new GridRow();
 				row.Cells.Add(emailAddress.EmailUsername);
 				row.Cells.Add(emailAddress.SenderAddress);
-				row.Cells.Add(Userods.GetName(emailAddress.UserNum));
+				row.Cells.Add(Users.GetUserName(emailAddress.UserNum));
 				row.Cells.Add((emailAddress.EmailAddressNum == Preferences.GetLong(PreferenceName.EmailDefaultAddressNum)) ? "X" : "");
 				row.Cells.Add((emailAddress.EmailAddressNum == Preferences.GetLong(PreferenceName.EmailNotifyAddressNum)) ? "X" : "");
 				row.Tag = emailAddress;

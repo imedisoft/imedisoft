@@ -56,9 +56,9 @@ namespace Imedisoft.Forms
 		{
 			imagesGrid.BeginUpdate();
 			imagesGrid.Columns.Clear();
-			imagesGrid.Columns.Add(new GridColumn("Date", 100));
-			imagesGrid.Columns.Add(new GridColumn("Category", 120));
-			imagesGrid.Columns.Add(new GridColumn("Description", 300));
+			imagesGrid.Columns.Add(new GridColumn(Translation.Common.Date, 100));
+			imagesGrid.Columns.Add(new GridColumn(Translation.Common.Category, 120));
+			imagesGrid.Columns.Add(new GridColumn(Translation.Common.Description, 300));
 			imagesGrid.Rows.Clear();
 
 			var documents = Documents.GetAllWithPat(patientId).ToList();
@@ -94,7 +94,7 @@ namespace Imedisoft.Forms
 		{
 			if (imagesGrid.GetSelectedIndex() == -1)
 			{
-				MessageBox.Show("Please select an image first.");
+				ShowError(Translation.Common.PleaseSelectItemFirst);
 
 				return;
 			}

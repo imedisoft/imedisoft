@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 
@@ -55,14 +57,14 @@ namespace OpenDental {
 			dateTo=(dateTo==DateTime.MinValue ? DateTime.Now : dateTo);
 			GridRow row;
 			List<GridRow> listGridRows=new List<GridRow>();
-			Dictionary<long,Userod> dictUsers=Userods.GetAll().ToDictionary(x => x.Id,x => x);
+			Dictionary<long,User> dictUsers=Users.GetAll().ToDictionary(x => x.Id,x => x);
 			foreach(InsEditPatLog logCur in _listLogs) {
 				if(!logCur.DateTStamp.Between(dateFrom,dateTo)) {
 					continue;
 				}
 				row=new GridRow();
 				row.Cells.Add(logCur.DateTStamp.ToString());
-				if(dictUsers.TryGetValue(logCur.UserNum,out Userod user)) {
+				if(dictUsers.TryGetValue(logCur.UserNum,out User user)) {
 					row.Cells.Add(user.UserName);
 				}
 				else {

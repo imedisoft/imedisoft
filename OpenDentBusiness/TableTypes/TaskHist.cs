@@ -31,7 +31,7 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// The ID of the user that modified the task from this state.
 		/// </summary>
-		[ForeignKey(typeof(Userod), nameof(Userod.Id))]
+		[ForeignKey(typeof(User), nameof(User.Id))]
 		public long HistoryUserId;
 		
 		/// <summary>
@@ -96,7 +96,7 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// The ID of the user that createed the task.
 		/// </summary>
-		[ForeignKey(typeof(Userod), nameof(Userod.Id))]
+		[ForeignKey(typeof(User), nameof(User.Id))]
 		public long UserId;
 
 		/// <summary>

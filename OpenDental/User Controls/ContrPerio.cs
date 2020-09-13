@@ -895,22 +895,22 @@ namespace OpenDental
 									continue;
 								switch(surfI){
 									case (int)PerioSurf.B:
-										cellBleed=PerioMeasures.List[examI,seqI,toothI].Bvalue;
+										cellBleed=PerioMeasures.List[examI,seqI,toothI].B;
 										break;
 									case (int)PerioSurf.DB:
-										cellBleed=PerioMeasures.List[examI,seqI,toothI].DBvalue;
+										cellBleed=PerioMeasures.List[examI,seqI,toothI].DB;
 										break;
 									case (int)PerioSurf.DL:
-										cellBleed=PerioMeasures.List[examI,seqI,toothI].DLvalue;
+										cellBleed=PerioMeasures.List[examI,seqI,toothI].DL;
 										break;
 									case (int)PerioSurf.L:
-										cellBleed=PerioMeasures.List[examI,seqI,toothI].Lvalue;
+										cellBleed=PerioMeasures.List[examI,seqI,toothI].L;
 										break;
 									case (int)PerioSurf.MB:
-										cellBleed=PerioMeasures.List[examI,seqI,toothI].MBvalue;
+										cellBleed=PerioMeasures.List[examI,seqI,toothI].MB;
 										break;
 									case (int)PerioSurf.ML:
-										cellBleed=PerioMeasures.List[examI,seqI,toothI].MLvalue;
+										cellBleed=PerioMeasures.List[examI,seqI,toothI].ML;
 										break;
 								}
 								perioCellCur=GetPerioCell(curCell,false);
@@ -928,22 +928,22 @@ namespace OpenDental
 								continue;
 							switch(surfI){
 								case (int)PerioSurf.B:
-									cellText=PerioMeasures.List[examI,seqI,toothI].Bvalue.ToString();
+									cellText=PerioMeasures.List[examI,seqI,toothI].B.ToString();
 									break;
 								case (int)PerioSurf.DB:
-									cellText=PerioMeasures.List[examI,seqI,toothI].DBvalue.ToString();
+									cellText=PerioMeasures.List[examI,seqI,toothI].DB.ToString();
 									break;
 								case (int)PerioSurf.DL:
-									cellText=PerioMeasures.List[examI,seqI,toothI].DLvalue.ToString();
+									cellText=PerioMeasures.List[examI,seqI,toothI].DL.ToString();
 									break;
 								case (int)PerioSurf.L:
-									cellText=PerioMeasures.List[examI,seqI,toothI].Lvalue.ToString();
+									cellText=PerioMeasures.List[examI,seqI,toothI].L.ToString();
 									break;
 								case (int)PerioSurf.MB:
-									cellText=PerioMeasures.List[examI,seqI,toothI].MBvalue.ToString();
+									cellText=PerioMeasures.List[examI,seqI,toothI].MB.ToString();
 									break;
 								case (int)PerioSurf.ML:
-									cellText=PerioMeasures.List[examI,seqI,toothI].MLvalue.ToString();
+									cellText=PerioMeasures.List[examI,seqI,toothI].ML.ToString();
 									break;
 							}//switch surfI
 							perioCellCur=GetPerioCell(curCell,false);
@@ -997,7 +997,7 @@ namespace OpenDental
 					if(tableRow==-1)
 						continue;
 					DataArray[0,tableRow].Text
-						=PerioExams.ListExams[examI].ExamDate.ToShortDateString();
+						=PerioExams.Exams[examI].ExamDate.ToShortDateString();
 						//=PerioExams.List[examI+ProbingOffset].ExamDate.ToShortDateString();
 				}
 			}
@@ -1097,20 +1097,19 @@ namespace OpenDental
 			if(listChangedMeasurements.Count==0) {
 				return;//no changes. No need to insert/update periomeasures.
 			}
-			PerioExam perioExamFromDb=PerioExams.GetOnePerioExam(PerioExamCur.PerioExamNum);
-			if(perioExamFromDb==null || PerioExamCur.DateTMeasureEdit!=perioExamFromDb.DateTMeasureEdit) {
+			PerioExam perioExamFromDb=PerioExams.GetById(PerioExamCur.Id);
+			if(perioExamFromDb==null || PerioExamCur.LastModifiedDate!=perioExamFromDb.LastModifiedDate) {
 				//something has changed
 				MessageBox.Show("This perio exam has been altered by another user. A new exam has been created and saved.");
-				PerioExamCur.PerioExamNum=0;
+				PerioExamCur.Id=0;
 				PerioExams.Insert(PerioExamCur);
-				List<PerioExam> perioExamList=PerioExams.GetExamsList(PerioExamCur.PatNum);
-				PerioMeasures.Refresh(PerioExamCur.PatNum,perioExamList);
+				List<PerioExam> perioExamList=PerioExams.GetByPatient(PerioExamCur.PatientId).ToList();
+				PerioMeasures.Refresh(PerioExamCur.PatientId,perioExamList);
 				//isNewExam=true;
-				PerioExamCur.IsNew=true;
 			}
 			//continue saving periomeasures.Update exam with new datetime.
-			if(!PerioExamCur.IsNew) {
-				PerioExamCur.DateTMeasureEdit=MiscData.GetNowDateTime();
+			if(PerioExamCur.Id > 0) {
+				PerioExamCur.LastModifiedDate=MiscData.GetNowDateTime();
 				PerioExams.Update(PerioExamCur);
 			}
 			//In case a tooth was toggled multiple times
@@ -1124,12 +1123,12 @@ namespace OpenDental
 				PerioSequenceType seqI=measureItem.SeqType;
 				int toothI=measureItem.ToothNum;
 				//new measurement
-				if(PerioMeasures.List[selectedExam,(int)seqI,toothI]==null || PerioExamCur.IsNew) {//.PerioMeasureNum==0){
+				if(PerioMeasures.List[selectedExam,(int)seqI,toothI]==null || PerioExamCur.Id == 0) {//.PerioMeasureNum==0){
 					//MessageBox.Show(toothI.ToString());
 					PerioMeasureCur=new PerioMeasure();
-					PerioMeasureCur.PerioExamNum=PerioExamCur.PerioExamNum;
+					PerioMeasureCur.PerioExamId=PerioExamCur.Id;
 					PerioMeasureCur.SequenceType=seqI;
-					PerioMeasureCur.IntTooth=toothI;
+					PerioMeasureCur.Tooth=toothI;
 				}
 				else{
 					PerioMeasureCur=PerioMeasures.List[selectedExam,(int)seqI,toothI];
@@ -1138,12 +1137,12 @@ namespace OpenDental
 					//tooth
 				}
 				if(seqI==PerioSequenceType.Mobility || seqI==PerioSequenceType.SkipTooth){
-					PerioMeasureCur.MBvalue=-1;
-					PerioMeasureCur.Bvalue=-1;
-					PerioMeasureCur.DBvalue=-1;
-					PerioMeasureCur.MLvalue=-1;
-					PerioMeasureCur.Lvalue=-1;
-					PerioMeasureCur.DLvalue=-1;
+					PerioMeasureCur.MB=-1;
+					PerioMeasureCur.B=-1;
+					PerioMeasureCur.DB=-1;
+					PerioMeasureCur.ML=-1;
+					PerioMeasureCur.L=-1;
+					PerioMeasureCur.DL=-1;
 					if(seqI==PerioSequenceType.Mobility){
 						PerioMeasureCur.ToothValue
 							=GetCellValue(selectedExam,seqI,toothI,PerioSurf.B);
@@ -1154,39 +1153,39 @@ namespace OpenDental
 				}
 				else if(seqI==PerioSequenceType.Bleeding){
 					PerioMeasureCur.ToothValue=-1;
-					PerioMeasureCur.MBvalue
+					PerioMeasureCur.MB
 						=GetCellBleedValue(selectedExam,toothI,PerioSurf.MB);
-					PerioMeasureCur.Bvalue
+					PerioMeasureCur.B
 						=GetCellBleedValue(selectedExam,toothI,PerioSurf.B);
-					PerioMeasureCur.DBvalue
+					PerioMeasureCur.DB
 						=GetCellBleedValue(selectedExam,toothI,PerioSurf.DB);
-					PerioMeasureCur.MLvalue
+					PerioMeasureCur.ML
 						=GetCellBleedValue(selectedExam,toothI,PerioSurf.ML);
-					PerioMeasureCur.Lvalue
+					PerioMeasureCur.L
 						=GetCellBleedValue(selectedExam,toothI,PerioSurf.L);
-					PerioMeasureCur.DLvalue
+					PerioMeasureCur.DL
 						=GetCellBleedValue(selectedExam,toothI,PerioSurf.DL);
 				}
 				else{
 					PerioMeasureCur.ToothValue=-1;
-					PerioMeasureCur.MBvalue
+					PerioMeasureCur.MB
 						=GetCellValue(selectedExam,seqI,toothI,PerioSurf.MB);
-					PerioMeasureCur.Bvalue
+					PerioMeasureCur.B
 						=GetCellValue(selectedExam,seqI,toothI,PerioSurf.B);
-					PerioMeasureCur.DBvalue
+					PerioMeasureCur.DB
 						=GetCellValue(selectedExam,seqI,toothI,PerioSurf.DB);
-					PerioMeasureCur.MLvalue
+					PerioMeasureCur.ML
 						=GetCellValue(selectedExam,seqI,toothI,PerioSurf.ML);
-					PerioMeasureCur.Lvalue
+					PerioMeasureCur.L
 						=GetCellValue(selectedExam,seqI,toothI,PerioSurf.L);
-					PerioMeasureCur.DLvalue
+					PerioMeasureCur.DL
 						=GetCellValue(selectedExam,seqI,toothI,PerioSurf.DL);
 				}
 				//then to the database
-				if(seqI==PerioSequenceType.Mobility && PerioMeasureCur.ToothValue==-1 && !PerioExamCur.IsNew) {
+				if(seqI==PerioSequenceType.Mobility && PerioMeasureCur.ToothValue==-1 && PerioExamCur.Id > 0) {
 					PerioMeasures.Delete(PerioMeasureCur);//-1 is an invalid value for mobility, keep Db bloat down
 				}
-				else if(PerioMeasures.List[selectedExam,(int)seqI,toothI]==null || PerioExamCur.IsNew) {
+				else if(PerioMeasures.List[selectedExam,(int)seqI,toothI]==null || PerioExamCur.Id == 0) {
 					PerioMeasures.Insert(PerioMeasureCur);
 				}
 				else{
@@ -2306,31 +2305,31 @@ namespace OpenDental
 				return "";
 			}
 			int counter=0;
-			List<PerioMeasure> pm=PerioMeasures.GetAllForExam(PerioExams.ListExams[selectedExam].PerioExamNum);
+			List<PerioMeasure> pm=PerioMeasures.GetByPerioExam(PerioExams.Exams[selectedExam].Id).ToList();
 			for(int i=0;i<pm.Count;i++) {
 				if(pm[i].SequenceType==PerioSequenceType.Bleeding) {
 					//If tooth has plaque on any of the six points
-					if(((BleedingFlags)pm[i].MBvalue & BleedingFlags.Plaque)==BleedingFlags.Plaque) {
+					if(((BleedingFlags)pm[i].MB & BleedingFlags.Plaque)==BleedingFlags.Plaque) {
 						counter++;
 						continue;
 					}
-					if(((BleedingFlags)pm[i].Bvalue & BleedingFlags.Plaque)==BleedingFlags.Plaque) {
+					if(((BleedingFlags)pm[i].B & BleedingFlags.Plaque)==BleedingFlags.Plaque) {
 						counter++;
 						continue;
 					}
-					if(((BleedingFlags)pm[i].DBvalue & BleedingFlags.Plaque)==BleedingFlags.Plaque) {
+					if(((BleedingFlags)pm[i].DB & BleedingFlags.Plaque)==BleedingFlags.Plaque) {
 						counter++;
 						continue;
 					}
-					if(((BleedingFlags)pm[i].MLvalue & BleedingFlags.Plaque)==BleedingFlags.Plaque) {
+					if(((BleedingFlags)pm[i].ML & BleedingFlags.Plaque)==BleedingFlags.Plaque) {
 						counter++;
 						continue;
 					}
-					if(((BleedingFlags)pm[i].Lvalue & BleedingFlags.Plaque)==BleedingFlags.Plaque) {
+					if(((BleedingFlags)pm[i].L & BleedingFlags.Plaque)==BleedingFlags.Plaque) {
 						counter++;
 						continue;
 					}
-					if(((BleedingFlags)pm[i].DLvalue & BleedingFlags.Plaque)==BleedingFlags.Plaque) {
+					if(((BleedingFlags)pm[i].DL & BleedingFlags.Plaque)==BleedingFlags.Plaque) {
 						counter++;
 						continue;
 					}

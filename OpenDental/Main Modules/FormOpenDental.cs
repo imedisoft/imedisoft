@@ -5119,7 +5119,7 @@ namespace OpenDental
 				}
 				return;
 			}
-			FormUserEdit FormUE = new FormUserEdit(new Userod(), true);
+			FormUserEdit FormUE = new FormUserEdit(new User(), true);
 			FormUE.IsNew = true;
 			FormUE.ShowDialog();
 		}
@@ -6626,7 +6626,7 @@ namespace OpenDental
 			if (listDisplayReports.Count > 0)
 			{
 				List<long> listReportPermissionFkeys = GroupPermissions.GetPermissionsForReports()
-					.Where(x => x.ObjectId.HasValue && Userods.IsInUserGroup(Security.CurrentUser.Id, x.UserGroupId))
+					.Where(x => x.ObjectId.HasValue && Users.IsInUserGroup(Security.CurrentUser.Id, x.UserGroupId))
 					.Select(x => x.ObjectId.Value)
 					.ToList();
 				listDisplayReports.RemoveAll(x => !listReportPermissionFkeys.Contains(x.DisplayReportNum));//Remove reports user does not have permission for
@@ -7046,7 +7046,7 @@ namespace OpenDental
 				moduleBar.Invalidate();
 				UnselectActive();
 				allNeutral();
-				Userod user = Userods.GetUserByName(userName, true);
+				User user = Users.GetByUserName(userName);
 				if (user == null)
 				{
 					ShowLogOn();
@@ -7193,7 +7193,7 @@ namespace OpenDental
 			{
 				try
 				{
-					Security.CurrentUser = Userods.CheckUserAndPassword(odUser, odPassword);
+					Security.CurrentUser = Users.CheckUserAndPassword(odUser, odPassword);
 				}
 				catch (Exception ex)
 				{
@@ -7208,16 +7208,16 @@ namespace OpenDental
 			if (Security.CurrentUser == null)
 			{//Security.CurUser could be set if valid command line arguments were passed in.
 				#region Admin User No Password
-				if (!Userods.HasSecurityAdminUserNoCache())
+				if (!Users.HasSecurityAdminUserNoCache())
 				{
 					MessageBox.Show("There are no users with the SecurityAdmin permission.  Call support.");
 					Application.Exit();
 					return;
 				}
-				long userNumFirstAdminNoPass = Userods.GetFirstSecurityAdminUserNumNoPasswordNoCache();
+				long userNumFirstAdminNoPass = Users.GetFirstSecurityAdminUserIdNoPasswordNoCache();
 				if (userNumFirstAdminNoPass > 0)
 				{
-					Security.CurrentUser = Userods.GetUserNoCache(userNumFirstAdminNoPass);
+					Security.CurrentUser = Users.GetByIdNoCache(userNumFirstAdminNoPass);
 					CheckForPasswordReset();
 
 					SecurityLogs.Write(Permissions.UserLogOnOff, "User '" + Security.CurrentUser.UserName + "' has logged on.");
@@ -7250,7 +7250,7 @@ namespace OpenDental
 							ShowLogOn();
 							return;
 						}
-						SerializableDictionary<long, string> dictDomainUserNumsAndNames = Userods.GetUsersByDomainUserNameNoCache(Environment.UserName);
+						Dictionary<long, string> dictDomainUserNumsAndNames = Users.GetUsersByDomainUserNameNoCache(Environment.UserName);
 						if (dictDomainUserNumsAndNames.Count == 0)
 						{ //Log on normally if no user linked the current domain user
 							ShowLogOn();
@@ -7261,7 +7261,7 @@ namespace OpenDental
 							box.ShowDialog();
 							if (box.DialogResult == DialogResult.OK)
 							{
-								Security.CurrentUser = Userods.GetUserNoCache(dictDomainUserNumsAndNames.Keys.ElementAt(box.SelectedIndex));
+								Security.CurrentUser = Users.GetByIdNoCache(dictDomainUserNumsAndNames.Keys.ElementAt(box.SelectedIndex));
 								CheckForPasswordReset();
 
 								SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, "User:" + " " + Security.CurrentUser.UserName + " "
@@ -7274,7 +7274,7 @@ namespace OpenDental
 						}
 						else
 						{ //log on automatically if only one user is linked to current domain user
-							Security.CurrentUser = Userods.GetUserNoCache(dictDomainUserNumsAndNames.Keys.First());
+							Security.CurrentUser = Users.GetByIdNoCache(dictDomainUserNumsAndNames.Keys.First());
 							CheckForPasswordReset();
 
 							SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, "User:" + " " + Security.CurrentUser.UserName + " "
@@ -7343,10 +7343,10 @@ namespace OpenDental
                     {
                         Security.CurrentUser.IsPasswordResetRequired = false;
 
-                        Userods.Update(Security.CurrentUser);
-                        Userods.UpdatePassword(Security.CurrentUser, formUserPassword.PasswordHash, isPasswordStrong);
+                        Users.Update(Security.CurrentUser);
+                        Users.UpdatePassword(Security.CurrentUser, formUserPassword.PasswordHash, isPasswordStrong);
 
-                        Security.CurrentUser = Userods.GetUserNoCache(Security.CurrentUser.Id);//UpdatePassword() changes multiple fields.  Refresh from db.
+                        Security.CurrentUser = Users.GetByIdNoCache(Security.CurrentUser.Id);//UpdatePassword() changes multiple fields.  Refresh from db.
                     }
                     catch (Exception ex)
                     {
@@ -7361,7 +7361,7 @@ namespace OpenDental
 				try
 				{
 					Security.CurrentUser.LastLoginDate = DateTime.UtcNow;
-					Userods.Update(Security.CurrentUser);//Unfortunately there is no update(new,old) for Userods yet due to comlexity.
+					Users.Update(Security.CurrentUser);//Unfortunately there is no update(new,old) for Userods yet due to comlexity.
 				}
 				catch (Exception ex)
 				{
@@ -7601,7 +7601,7 @@ namespace OpenDental
 				SecurityLogs.MakeLogEntry(Permissions.UserLogOnOff, 0, "User: " + Security.CurrentUser.UserName + " has logged off.");
 			}
 			Clinics.LogOff();
-			Userod oldUser = Security.CurrentUser;
+			User oldUser = Security.CurrentUser;
 			Security.CurrentUser = null;
 			_listReminderTasks = null;
 			_listNormalTaskNums = null;

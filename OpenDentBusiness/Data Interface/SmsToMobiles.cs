@@ -8,6 +8,7 @@ using System.Linq;
 using System.Globalization;
 using CodeBase;
 using WebServiceSerializer;
+using Imedisoft.Data.Models;
 
 namespace OpenDentBusiness{
 	///<summary></summary>
@@ -122,7 +123,7 @@ namespace OpenDentBusiness{
 		}
 		
 		///<summary>Surround with Try/Catch.  Sent as time sensitive message. Returns an instance of the new SmsToMobile row.</summary>
-		public static SmsToMobile SendSmsSingle(long patNum,string wirelessPhone,string message,long clinicNum,SmsMessageSource smsMessageSource,bool makeCommLog=true,Userod user=null,bool canCheckBal=true) {
+		public static SmsToMobile SendSmsSingle(long patNum,string wirelessPhone,string message,long clinicNum,SmsMessageSource smsMessageSource,bool makeCommLog=true,User user=null,bool canCheckBal=true) {
 			//No need to check RemotingRole; no call to db.
 			if(Plugins.HookMethod(null,"SmsToMobiles.SendSmsSingle_start",patNum,wirelessPhone,message,clinicNum)) {
 				return null;
@@ -152,7 +153,7 @@ namespace OpenDentBusiness{
 		}
 
 		///<summary>Surround with try/catch. Returns true if all messages succeded, throws exception if it failed.</summary>
-		public static List<SmsToMobile> SendSmsMany(List<SmsToMobile> listMessages,bool makeCommLog=true,Userod user=null,bool canCheckBal=true) {
+		public static List<SmsToMobile> SendSmsMany(List<SmsToMobile> listMessages,bool makeCommLog=true,User user=null,bool canCheckBal=true) {
 			//No need to check RemotingRole; no call to db.
 			if(listMessages==null || listMessages.Count==0) {
 				return new List<SmsToMobile>();
@@ -172,7 +173,7 @@ namespace OpenDentBusiness{
 		}
 
 		///<summary>Inserts the SmsToMobile to the database and creates a commlog if necessary.</summary>
-		private static void HandleSentSms(List<SmsToMobile> listSmsToMobiles,bool makeCommLog,Userod user) {
+		private static void HandleSentSms(List<SmsToMobile> listSmsToMobiles,bool makeCommLog,User user) {
 			//No need to check RemotingRole; no call to db.
 			foreach(SmsToMobile smsToMobile in listSmsToMobiles) {
 				smsToMobile.DateTimeSent=DateTime.Now;

@@ -473,7 +473,7 @@ namespace OpenDental {
 					if(FormL.DialogResult!=DialogResult.OK) {
 						return;
 					}
-					textCompareString.Text=FormL.SelectedLoinc.LoincCode;
+					textCompareString.Text=FormL.SelectedLoinc.Code;
 					comboUnits.Text=FormL.SelectedLoinc.UnitsUCUM;//may be valued, may be blank.
 					break;
 				case 4://Gender

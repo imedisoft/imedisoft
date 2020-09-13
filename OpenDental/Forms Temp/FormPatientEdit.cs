@@ -1809,7 +1809,7 @@ namespace OpenDental{
 			}
 			countyOriginal=textCounty.Text;//the original text is preserved when using up and down arrows
 			listCounties.Items.Clear();
-			CountiesList=Counties.Refresh(textCounty.Text);
+			CountiesList=Counties.Refresh(textCounty.Text).ToArray();
 			//similarSchools=
 				//Carriers.GetSimilarNames(textCounty.Text);
 			for(int i=0;i<CountiesList.Length;i++){
@@ -3073,10 +3073,8 @@ namespace OpenDental{
 			if(PatCur.Birthdate!=PatOld.Birthdate || PatCur.Gender!=PatOld.Gender) {
 				CDSinterventionCheckRequired=true;
 			}
-			if(CDSinterventionCheckRequired && CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurrentUser.Id).LabTestCDS) {
-				FormCDSIntervention FormCDSI=new FormCDSIntervention();
-				FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(PatCur,PatCur);//both should be patCur.
-				FormCDSI.ShowIfRequired(false);
+			if(CDSinterventionCheckRequired && CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowCDS && CdsPermissions.GetByUser(Security.CurrentUser.Id).LabTestCDS) {
+				FormCdsIntervention.ShowIfRequired(EhrTriggers.TriggerMatch(PatCur, PatCur), false);
 			}
 			#region 'Same' Checkboxes
 			bool isAuthArchivedEdit=Security.IsAuthorized(Permissions.ArchivedPatientEdit,true);

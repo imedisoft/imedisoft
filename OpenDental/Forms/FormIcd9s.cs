@@ -1,6 +1,5 @@
 using Imedisoft.Data;
 using Imedisoft.Data.Models;
-using OpenDental;
 using OpenDental.UI;
 using System;
 using System.Windows.Forms;
@@ -28,7 +27,7 @@ namespace Imedisoft.Forms
 		{
 			if (IsSelectionMode)
 			{
-				cancelButton.Text = "Cancel";
+				cancelButton.Text = Translation.Common.CancelWithMnemonic;
 			}
 			else
 			{

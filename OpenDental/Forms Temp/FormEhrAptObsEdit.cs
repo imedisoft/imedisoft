@@ -51,7 +51,7 @@ namespace OpenDental {
 				_strValCodeSystem=_ehrAptObsCur.ValCodeSystem;
 				if(_ehrAptObsCur.ValCodeSystem=="LOINC") {
 					_loincValue=Loincs.GetByCode(_ehrAptObsCur.ValReported);
-					textValue.Text=_loincValue.NameShort;
+					textValue.Text=_loincValue.ShortName;
 				}
 				else if(_ehrAptObsCur.ValCodeSystem=="SNOMEDCT") {
 					_snomedValue=Snomeds.GetByCode(_ehrAptObsCur.ValReported);
@@ -140,7 +140,7 @@ namespace OpenDental {
 			formL.IsSelectionMode=true;
 			if(formL.ShowDialog()==DialogResult.OK) {
 				_loincValue=formL.SelectedLoinc;
-				textValue.Text=_loincValue.NameShort;
+				textValue.Text=_loincValue.ShortName;
 				_strValCodeSystem="LOINC";
 				labelValue.Text=_strValCodeSystem+" Value";
 			}
@@ -210,7 +210,7 @@ namespace OpenDental {
 			if(_ehrAptObsCur.ValType==EhrAptObsType.Coded) {
 				_ehrAptObsCur.ValCodeSystem=_strValCodeSystem;
 				if(_strValCodeSystem=="LOINC") {
-					_ehrAptObsCur.ValReported=_loincValue.LoincCode;
+					_ehrAptObsCur.ValReported=_loincValue.Code;
 				}
 				else if(_strValCodeSystem=="SNOMEDCT") {
 					_ehrAptObsCur.ValReported=_snomedValue.Code;

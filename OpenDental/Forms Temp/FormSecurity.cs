@@ -8,6 +8,8 @@ using OpenDentBusiness;
 using CodeBase;
 using System.Linq;
 using Imedisoft.Forms;
+using Imedisoft.Data.Models;
+using Imedisoft.Data;
 
 namespace OpenDental {
 	public partial class FormSecurity:ODForm {
@@ -26,7 +28,7 @@ namespace OpenDental {
 		}
 
 		private void userControlSecurityTabs_AddUserClick(object sender,SecurityEventArgs e) {
-			Userod user = new Userod();
+			User user = new User();
 			FormUserEdit FormU = new FormUserEdit(user);
 			FormU.IsNew=true;
 			FormU.ShowDialog();
@@ -39,12 +41,12 @@ namespace OpenDental {
 
 		private void UserControlSecurityTabs_CopyUserClick(object sender,SecurityEventArgs e) {
 			//validation is handled here in GetUniqueUsername(...) 
-			Userod user=e.User;
+			User user=e.User;
 			if (user is null) {
 				MsgBox.Show("Please select a user.");
 				return;
 			}		
-			if(!Userods.TryGetUniqueUsername(user.UserName+"(Copy)",0,false,false,out string newUserName)){//This should really never fail.
+			if(!Users.TryGetUniqueUsername(user.UserName+"(Copy)",0,out string newUserName)){//This should really never fail.
 				MessageBox.Show("Could not generate a unique username.");
 				return;
 			}
@@ -53,7 +55,7 @@ namespace OpenDental {
 			if(formPassword.ShowDialog()!=DialogResult.OK) {
 				return;
 			}
-			Userod newUser=Userods.CopyUser(user,formPassword.PasswordHash,formPassword.PasswordIsStrong,newUserName);
+			User newUser=Users.CopyUser(user,formPassword.PasswordHash,formPassword.PasswordIsStrong,newUserName);
 			DataValid.SetInvalid(InvalidType.Security,InvalidType.UserClinics);//Must be called after Userods.CopyUser(...)
 			userControlSecurityTabs.FillGridUsers();
 			userControlSecurityTabs.SelectedUser=newUser;
@@ -72,7 +74,6 @@ namespace OpenDental {
 		private void userControlSecurityTabs_AddUserGroupClick(object sender,SecurityEventArgs e) {
 			UserGroup group = new UserGroup();
 			FormUserGroupEdit FormU = new FormUserGroupEdit(group);
-			FormU.IsNew=true;
 			FormU.ShowDialog();
 			if(FormU.DialogResult == DialogResult.OK) {
 				userControlSecurityTabs.FillListUserGroupTabUserGroups();//update to reflect changes that were made in FormUserGroupEdit.

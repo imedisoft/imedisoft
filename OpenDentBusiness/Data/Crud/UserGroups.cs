@@ -7,15 +7,14 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using MySql.Data.MySqlClient;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
-namespace OpenDentBusiness
+namespace Imedisoft.Data
 {
-	public partial class UserGroups
+    public partial class UserGroups
 	{
 		public static UserGroup FromReader(MySqlDataReader dataReader)
 		{
@@ -23,43 +22,52 @@ namespace OpenDentBusiness
 			{
 				Id = (long)dataReader["id"],
 				Description = (string)dataReader["description"],
-				CentralUserGroupId = (long)dataReader["central_user_group_id"]
+				CentralUserGroupId = dataReader["central_user_group_id"] as long?
 			};
 		}
 
 		/// <summary>
 		/// Selects a single UserGroup object from the database using the specified SQL command.
 		/// </summary>
+		/// <param name="command">The SELECT command to execute.</param>
+		/// <param name="parameters">The (optional) command parameters.</param>
 		public static UserGroup SelectOne(string command, params MySqlParameter[] parameters)
 			=> Database.SelectOne(command, FromReader, parameters);
 
 		/// <summary>
 		/// Selects the <see cref="UserGroup"/> object with the specified key from the database.
 		/// </summary>
-		public static UserGroup SelectOne(Int64 id)
+		/// <param name="id">The primary key of the <see cref="UserGroup"/> to select.</param>
+		public static UserGroup SelectOne(long id)
 			=> SelectOne("SELECT * FROM `user_groups` WHERE `id` = " + id);
 
 		/// <summary>
 		/// Selects multiple <see cref="UserGroup"/> objects from the database using the specified SQL command.
 		/// </summary>
+		/// <param name="command">The SELECT command to execute.</param>
+		/// <param name="parameters">The (optional) command parameters.</param>
 		public static IEnumerable<UserGroup> SelectMany(string command, params MySqlParameter[] parameters)
 			=> Database.SelectMany(command, FromReader, parameters);
 
 		/// <summary>
 		/// Inserts the specified <see cref="UserGroup"/> into the database.
 		/// </summary>
-		public static long Insert(UserGroup userGroup)
+		/// <param name="userGroup">The <see cref="UserGroup"/> to insert into the database.</param>
+		private static long ExecuteInsert(UserGroup userGroup)
 			=> userGroup.Id = Database.ExecuteInsert(
 				"INSERT INTO `user_groups` " +
 				"(`description`, `central_user_group_id`) " +
 				"VALUES (" +
 					"@description, @central_user_group_id" +
-				")");
+				")",
+					new MySqlParameter("description", userGroup.Description ?? ""),
+					new MySqlParameter("central_user_group_id", (userGroup.CentralUserGroupId.HasValue ? (object)userGroup.CentralUserGroupId.Value : DBNull.Value)));
 
 		/// <summary>
 		/// Updates the specified <see cref="UserGroup"/> in the database.
 		/// </summary>
-		public static void Update(UserGroup userGroup)
+		/// <param name="userGroup">The <see cref="UserGroup"/> to update.</param>
+		private static void ExecuteUpdate(UserGroup userGroup)
 			=> Database.ExecuteNonQuery(
 				"UPDATE `user_groups` SET " +
 					"`description` = @description, " +
@@ -67,50 +75,20 @@ namespace OpenDentBusiness
 				"WHERE `id` = @id",
 					new MySqlParameter("id", userGroup.Id),
 					new MySqlParameter("description", userGroup.Description ?? ""),
-					new MySqlParameter("central_user_group_id", userGroup.CentralUserGroupId));
-
-		/// <summary>
-		/// Updates the specified <see cref="UserGroup"/> in the database.
-		/// </summary>
-		public static bool Update(UserGroup user_groupsNew, UserGroup user_groupsOld)
-		{
-			var updates = new List<string>();
-			var parameters = new List<MySqlParameter>();
-
-			if (user_groupsNew.Description != user_groupsOld.Description)
-			{
-				updates.Add("`description` = @description");
-				parameters.Add(new MySqlParameter("description", user_groupsNew.Description ?? ""));
-			}
-
-			if (user_groupsNew.CentralUserGroupId != user_groupsOld.CentralUserGroupId)
-			{
-				updates.Add("`central_user_group_id` = @central_user_group_id");
-				parameters.Add(new MySqlParameter("central_user_group_id", user_groupsNew.CentralUserGroupId));
-			}
-
-			if (updates.Count == 0) return false;
-
-			parameters.Add(new MySqlParameter("id", user_groupsNew.Id));
-
-			Database.ExecuteNonQuery("UPDATE `user_groups` " +
-				"SET " + string.Join(", ", updates) + " " +
-				"WHERE `id` = @id",
-					parameters.ToArray());
-
-			return true;
-		}
+					new MySqlParameter("central_user_group_id", (userGroup.CentralUserGroupId.HasValue ? (object)userGroup.CentralUserGroupId.Value : DBNull.Value)));
 
 		/// <summary>
 		/// Deletes a single <see cref="UserGroup"/> object from the database.
 		/// </summary>
-		public static void Delete(Int64 id)
+		/// <param name="id">The primary key of the <see cref="UserGroup"/> to delete.</param>
+		private static void ExecuteDelete(long id)
 			 => Database.ExecuteNonQuery("DELETE FROM `user_groups` WHERE `id` = " + id);
 
 		/// <summary>
 		/// Deletes the specified <see cref="UserGroup"/> object from the database.
 		/// </summary>
-		public static void Delete(UserGroup userGroup)
-			=> Delete(userGroup.Id);
+		/// <param name="userGroup">The <see cref="UserGroup"/> to delete.</param>
+		private static void ExecuteDelete(UserGroup userGroup)
+			=> ExecuteDelete(userGroup.Id);
 	}
 }

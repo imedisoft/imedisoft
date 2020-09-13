@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Imedisoft.UI;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental
 {
@@ -604,7 +605,7 @@ namespace OpenDental
 				};
 				if (_isNew || !_emailAddressCur.EmailAddressNum.In(listDefaultAddressNums))
 				{
-					Userod user = Userods.GetUser(_emailAddressCur.UserNum);
+					User user = Users.GetById(_emailAddressCur.UserNum);
 					textUserod.Tag = user;
 					textUserod.Text = user?.UserName;
 				}
@@ -666,11 +667,11 @@ namespace OpenDental
 		private void butPickUserod_Click(object sender, EventArgs e)
 		{
 			FormUserPick formUserPick = new FormUserPick();
-			formUserPick.SuggestedUserNum = ((Userod)textUserod.Tag)?.Id ?? 0;//Preselect current selection.
+			formUserPick.SuggestedUserNum = ((User)textUserod.Tag)?.Id ?? 0;//Preselect current selection.
 			if (formUserPick.ShowDialog() == DialogResult.OK)
 			{
-				Userod user = Userods.GetUser(formUserPick.SelectedUserNum);
-				if (user.Id == (((Userod)textUserod.Tag)?.Id ?? 0))
+				User user = Users.GetById(formUserPick.SelectedUserNum);
+				if (user.Id == (((User)textUserod.Tag)?.Id ?? 0))
 				{
 					return;//No change.
 				}
@@ -808,7 +809,7 @@ namespace OpenDental
 			_emailAddressCur.SenderAddress = PIn.String(textSender.Text);
 			_emailAddressCur.Pop3ServerIncoming = PIn.String(textSMTPserverIncoming.Text);
 			_emailAddressCur.ServerPortIncoming = PIn.Int(textPortIncoming.Text);
-			_emailAddressCur.UserNum = ((Userod)(textUserod.Tag))?.Id ?? 0;
+			_emailAddressCur.UserNum = ((User)(textUserod.Tag))?.Id ?? 0;
 			if (_isNew)
 			{
 				EmailAddresses.Insert(_emailAddressCur);

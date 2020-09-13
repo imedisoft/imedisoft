@@ -6,6 +6,7 @@ using OpenDentBusiness;
 using System.Linq;
 using OpenDental.UI;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	///<summary>This form is used to make changes for the eRx program link.

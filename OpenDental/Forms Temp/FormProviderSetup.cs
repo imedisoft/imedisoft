@@ -608,7 +608,7 @@ namespace OpenDental{
 			}
 			_listProvs=Providers.GetDeepCopy();
 			if(Security.IsAuthorized(Permissions.SecurityAdmin,true)){
-				_listUserGroups=UserGroups.GetList();
+				_listUserGroups=UserGroups.GetAll();
 				for(int i=0;i<_listUserGroups.Count;i++){
 					comboUserGroup.Items.Add(new ODBoxItem<UserGroup>(_listUserGroups[i].Description,_listUserGroups[i]));
 				}
@@ -1175,12 +1175,12 @@ namespace OpenDental{
 			}
 			for(int i=0;i<gridMain.SelectedIndices.Length;i++){
 				Provider prov=(Provider)gridMain.Rows[gridMain.SelectedIndices[i]].Tag;
-				Userod user=new Userod();
+				User user=new User();
 				user.ProviderId=prov.Id;
 				user.UserName=GetUniqueUserName(prov.LastName,prov.FirstName);
 				user.PasswordHash= Password.Hash(user.UserName);
 				try{
-					Userods.Insert(user,comboUserGroup.ListSelectedItems.OfType<ODBoxItem<UserGroup>>().Select(x => x.Tag.Id).ToList());
+					Users.Insert(user,comboUserGroup.ListSelectedItems.OfType<ODBoxItem<UserGroup>>().Select(x => x.Tag.Id).ToList());
 				}
 				catch(ApplicationException ex){
 					MessageBox.Show(ex.Message);
@@ -1197,13 +1197,13 @@ namespace OpenDental{
 			if(fname.Length>0){
 				name+=fname.Substring(0,1);
 			}
-			if(Userods.IsUserNameUnique(name,0,false)){
+			if(Users.IsUserNameUnique(name)){
 				return name;
 			}
 			int fnameI=1;
 			while(fnameI<fname.Length){
 				name+=fname.Substring(fnameI,1);
-				if(Userods.IsUserNameUnique(name,0,false)) {
+				if(Users.IsUserNameUnique(name)) {
 					return name;
 				}
 				fnameI++;
@@ -1212,7 +1212,7 @@ namespace OpenDental{
 			do{
 				name+="x";
 			}
-			while(!Userods.IsUserNameUnique(name,0,false));
+			while(!Users.IsUserNameUnique(name));
 			return name;
 		}
 

@@ -1,4 +1,5 @@
 using CodeBase;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 using System.Collections.Generic;
 

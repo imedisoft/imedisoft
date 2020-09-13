@@ -51,9 +51,9 @@ namespace OpenDental {
 			GridRow row;
 			for(int i=0;i<_listEhrMeasureEvents.Count;i++) {
 				row=new GridRow();
-				row.Cells.Add(_typeNames[(int)_listEhrMeasureEvents[i].EventType]);
-				row.Cells.Add(_listEhrMeasureEvents[i].DateTEvent.ToShortDateString());
-				row.Cells.Add(_listEhrMeasureEvents[i].PatNum.ToString());
+				row.Cells.Add(_typeNames[(int)_listEhrMeasureEvents[i].Type]);
+				row.Cells.Add(_listEhrMeasureEvents[i].Date.ToShortDateString());
+				row.Cells.Add(_listEhrMeasureEvents[i].PatientId.ToString());
 				row.Cells.Add(_listEhrMeasureEvents[i].MoreInfo);
 				gridMain.Rows.Add(row);
 			}

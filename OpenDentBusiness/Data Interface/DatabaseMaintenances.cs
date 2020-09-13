@@ -1112,56 +1112,6 @@ namespace OpenDentBusiness
 		#region AuditTrail, AutoCode, Automation--------------------------------------------------------------------------------------------------------
 
 		[DbmMethodAttr]
-		public static string AutoCodeItemsWithNoAutoCode(bool verbose, DbmMode modeCur)
-		{
-			string log = "";
-			string command;
-			DataTable table;
-			switch (modeCur)
-			{
-				case DbmMode.Check:
-					command = @"SELECT DISTINCT AutoCodeNum FROM autocodeitem WHERE NOT EXISTS(
-						SELECT * FROM autocode WHERE autocodeitem.AutoCodeNum=autocode.AutoCodeNum)";
-					table = Database.ExecuteDataTable(command);
-					int numFound = table.Rows.Count;
-					if (numFound != 0 || verbose)
-					{
-						log += "Auto codes missing due to invalid auto code items: " + numFound.ToString() + "\r\n";
-					}
-					break;
-				case DbmMode.Fix:
-					List<DbmLog> listDbmLogs = new List<DbmLog>();
-					string methodName = MethodBase.GetCurrentMethod().Name;
-					command = @"SELECT DISTINCT AutoCodeNum FROM autocodeitem WHERE NOT EXISTS(
-						SELECT * FROM autocode WHERE autocodeitem.AutoCodeNum=autocode.AutoCodeNum)";
-					table = Database.ExecuteDataTable(command);
-					int numFixed = table.Rows.Count;
-					for (int i = 0; i < table.Rows.Count; i++)
-					{
-                        AutoCode autoCode = new AutoCode
-                        {
-                            Id = PIn.Long(table.Rows[i]["AutoCodeNum"].ToString()),
-                            Description = "UNKNOWN"
-                        };
-                        AutoCodes.Insert(autoCode);
-						listDbmLogs.Add(new DbmLog(Security.CurrentUser.Id, autoCode.Id, DbmLogFKeyType.AutoCode, DbmLogActionType.Insert, methodName,
-							"Added a new AutoCode from AutoCodeItemsWithNoAutoCode"));
-					}
-					if (numFixed > 0)
-					{
-						Signalods.SetInvalid(InvalidType.AutoCodes);
-					}
-					if (numFixed != 0 || verbose)
-					{
-						Crud.DbmLogCrud.InsertMany(listDbmLogs);
-						log += "Auto codes created due to invalid auto code items: " + numFixed.ToString() + "\r\n";
-					}
-					break;
-			}
-			return log;
-		}
-
-		[DbmMethodAttr]
 		public static string AutoCodesDeleteWithNoItems(bool verbose, DbmMode modeCur)
 		{
 			string log = "";
@@ -8696,14 +8646,14 @@ namespace OpenDentBusiness
 			{
 				for (int j = 0; j < measureEvents.Count; j++)
 				{
-					if (refAttaches[i].PatNum == measureEvents[j].PatNum
-							&& measureEvents[j].FKey == 0
-							&& measureEvents[j].DateTEvent >= refAttaches[i].RefDate.AddDays(-3)
-							&& measureEvents[j].DateTEvent <= refAttaches[i].RefDate.AddDays(1))
+					if (refAttaches[i].PatNum == measureEvents[j].PatientId
+							&& measureEvents[j].ObjectId == 0
+							&& measureEvents[j].Date >= refAttaches[i].RefDate.AddDays(-3)
+							&& measureEvents[j].Date <= refAttaches[i].RefDate.AddDays(1))
 					{
 						if (modeCur != DbmMode.Check)
 						{
-							measureEvents[j].FKey = refAttaches[i].RefAttachNum;
+							measureEvents[j].ObjectId = refAttaches[i].RefAttachNum;
 							EhrMeasureEvents.Update(measureEvents[j]);
 						}
 						measureEvents.RemoveAt(j);

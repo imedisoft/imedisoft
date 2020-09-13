@@ -1,4 +1,6 @@
+using Imedisoft.Data;
 using Imedisoft.Data.Cache;
+using Imedisoft.Data.Models;
 using OpenDental.UI;
 using OpenDentBusiness;
 using System;
@@ -11,9 +13,9 @@ namespace Imedisoft.Forms
 {
     public partial class FormTaskInboxSetup : FormBase
 	{
-		private List<Userod> users;
+		private readonly List<User> users = new List<User>();
 		private readonly Dictionary<long, long?> userInboxIds = new Dictionary<long, long?>();
-		private List<TaskList> taskLists;
+		private readonly List<TaskList> taskLists = new List<TaskList>();
 
 		public FormTaskInboxSetup()
 		{
@@ -22,15 +24,15 @@ namespace Imedisoft.Forms
 
 		private void FormTaskInboxSetup_Load(object sender, EventArgs e)
 		{
-			users = Userods.GetAll(true);
+			users.AddRange(Users.GetAll(true));
 			foreach (var user in users)
             {
 				userInboxIds[user.Id] = user.InboxTaskListId;
             }
 
-			taskLists = TaskLists.GetTrunk().ToList().FindAll(x => x.Status == TaskListStatus.Active);
+			taskLists.AddRange(TaskLists.GetTrunk().Where(x => x.Status == TaskListStatus.Active));
 
-			trunkListBox.Items.Add("none");
+			trunkListBox.Items.Add(Translation.Common.None);
 			foreach (var taskList in taskLists)
 			{
 				trunkListBox.Items.Add(taskList);
@@ -43,18 +45,18 @@ namespace Imedisoft.Forms
 		{
 			usersGrid.BeginUpdate();
 			usersGrid.Columns.Clear();
-			usersGrid.Columns.Add(new GridColumn("User", 100));
-			usersGrid.Columns.Add(new GridColumn("Inbox", 100));
+			usersGrid.Columns.Add(new GridColumn(Translation.Common.User, 100));
+			usersGrid.Columns.Add(new GridColumn(Translation.Common.Inbox, 100));
 			usersGrid.Rows.Clear();
 
 			foreach (var user in users)
 			{
-				var row = new GridRow();
+				var gridRow = new GridRow();
+				gridRow.Cells.Add(user.UserName);
+				gridRow.Cells.Add(GetDescription(user.InboxTaskListId));
+				gridRow.Tag = user;
 
-				row.Cells.Add(user.UserName);
-				row.Cells.Add(GetDescription(user.InboxTaskListId));
-
-				usersGrid.Rows.Add(row);
+				usersGrid.Rows.Add(gridRow);
 			}
 
 			usersGrid.EndUpdate();
@@ -69,37 +71,42 @@ namespace Imedisoft.Forms
 
 		private void SetButton_Click(object sender, EventArgs e)
 		{
-			if (usersGrid.GetSelectedIndex() == -1)
+			var user = usersGrid.SelectedTag<User>();
+			if (user == null)
 			{
-				ShowError("Please select a user first.");
+				ShowError(Translation.Common.PleaseSelectUser);
+
 				return;
 			}
 
-			if (trunkListBox.SelectedIndex == -1)
-			{
-				ShowError("Please select an item from the list first.");
-				return;
-			}
-
-			if (trunkListBox.SelectedItem is TaskList taskList)
+            if (!(trunkListBox.SelectedItem is TaskList taskList))
             {
-				users[usersGrid.GetSelectedIndex()].InboxTaskListId = taskList.Id;
+                return;
             }
-            else
+
+			var taskListId = taskList?.Id;
+			if (taskListId == user.InboxTaskListId)
             {
-				users[usersGrid.GetSelectedIndex()].InboxTaskListId = null;
-			}
+				return;
+            }
+
+            user.InboxTaskListId = taskListId;
 
 			FillGrid();
 
 			trunkListBox.SelectedIndex = -1;
 		}
 
+		private void TrunkListBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			setButton.Enabled = trunkListBox.SelectedItem != null;
+		}
+
 		private void AcceptButton_Click(object sender, EventArgs e)
 		{
 			bool changed = false;
 
-			var updateErrors = new Dictionary<string, List<Userod>>();
+			var updateErrors = new Dictionary<string, List<User>>();
 
 			foreach (var user in users)
 			{
@@ -107,7 +114,7 @@ namespace Imedisoft.Forms
 				{
 					try
 					{
-						Userods.Update(user);
+						Users.Update(user);
 
 						changed = true;
 					}
@@ -116,7 +123,7 @@ namespace Imedisoft.Forms
 						if (!updateErrors.TryGetValue(exception.Message, out var errorUsers))
                         {
 							updateErrors[exception.Message] 
-								= errorUsers = new List<Userod>();
+								= errorUsers = new List<User>();
                         }
 
 						errorUsers.Add(user);
@@ -136,16 +143,16 @@ namespace Imedisoft.Forms
 					}
 				}
 
-				ShowError(
-					"The following users could not be updated:\r\n" + stringBuilder.ToString());
+				ShowError(Translation.Common.TheFollowingUsersCouldNotBeUpdated + 
+					"\r\n" + stringBuilder.ToString());
 			}
 
 			if (changed)
 			{
-				CacheManager.Refresh(nameof(InvalidType.Security));
+				CacheManager.RefreshGlobal(nameof(InvalidType.Security));
 			}
 
 			DialogResult = DialogResult.OK;
 		}
-	}
+    }
 }

@@ -163,11 +163,11 @@ namespace Imedisoft.Forms
 
             EhrMeasureEvents.Insert(new EhrMeasureEvent
 			{
-				DateTEvent = DateTime.Now,
-				EventType = EhrMeasureEventType.CPOE_MedOrdered,
-				PatNum = patient.PatNum,
+				Date = DateTime.Now,
+				Type = EhrMeasureEventType.CPOE_MedOrdered,
+				PatientId = patient.PatNum,
 				MoreInfo = "",
-				FKey = MedicalOrderId
+				ObjectId = MedicalOrderId
 			});
 
 			DialogResult = DialogResult.OK;

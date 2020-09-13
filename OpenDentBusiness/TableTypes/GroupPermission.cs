@@ -1,16 +1,15 @@
-using System;
-using System.Collections;
-using System.ComponentModel;
-using CodeBase;
 using Imedisoft.Data.Annotations;
+using Imedisoft.Data.Models;
+using System;
 
-namespace OpenDentBusiness{
+namespace OpenDentBusiness
+{
 
-	/// <summary>
-	/// Every user group has certain permissions. This defines a permission for a group. 
-	/// The absense of permission would cause that row to be deleted from this table.
-	/// </summary>
-	[Table("group_permissions")]
+    /// <summary>
+    /// Every user group has certain permissions. This defines a permission for a group. 
+    /// The absense of permission would cause that row to be deleted from this table.
+    /// </summary>
+    [Table("group_permissions")]
 	public class GroupPermission : TableBase
 	{
 		[PrimaryKey]

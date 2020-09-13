@@ -11,6 +11,7 @@ using System.Reflection;
 using Imedisoft.Forms;
 using Imedisoft.Data;
 using Imedisoft.Data.Models;
+using System.Linq;
 #if EHRTEST
 using EHR;
 #endif
@@ -94,7 +95,7 @@ namespace OpenDental {
 			PatCur=Patients.GetPat(PatNum);
 			ProvPat=Providers.GetById(PatCur.PriProv);
 			labelProvPat.Text=ProvPat.GetLongDesc();
-			if(EhrProvKeys.GetKeysByFLName(ProvPat.LastName,ProvPat.FirstName).Count==0) {
+			if(EhrProviderKeys.GetByProviderName(ProvPat.LastName,ProvPat.FirstName).Count()==0) {
 				labelProvPat.Text+=" (no ehr provider key entered)";
 			}
 			if(Security.CurrentUser.ProviderId==0) {
@@ -103,7 +104,7 @@ namespace OpenDental {
 			else {
 				Provider provUser=Providers.GetById(Security.CurrentUser.ProviderId);
 				labelProvUser.Text=Providers.GetLongDesc(provUser.Id);
-				if(EhrProvKeys.GetKeysByFLName(provUser.LastName,provUser.FirstName).Count==0) {
+				if(EhrProviderKeys.GetByProviderName(provUser.LastName,provUser.FirstName).Count()==0) {
 					labelProvUser.Text+=" (no ehr provider key entered)";
 				}
 			}
@@ -351,10 +352,9 @@ namespace OpenDental {
 						break;
 					case EhrMeasureType.DrugDrugInteractChecking:
 						EhrMeasureEvent measureEventDDIC=new EhrMeasureEvent();
-						measureEventDDIC.DateTEvent=DateTime.Now;
-						measureEventDDIC.EventType=EhrMeasureEventType.DrugDrugInteractChecking;
+						measureEventDDIC.Date=DateTime.Now;
+						measureEventDDIC.Type=EhrMeasureEventType.DrugDrugInteractChecking;
 						measureEventDDIC.MoreInfo=EhrMeasureEvents.GetLatestInfoByType(EhrMeasureEventType.DrugDrugInteractChecking);
-						measureEventDDIC.IsNew=true;
 						FormEhrMeasureEventEdit FormDDIC=new FormEhrMeasureEventEdit(measureEventDDIC);
 						FormDDIC.MeasureDescript="Explain how you have enabled Drug-Drug Interaction Checking";
 						FormDDIC.ShowDialog();
@@ -364,10 +364,9 @@ namespace OpenDental {
 						break;
 					case EhrMeasureType.DrugFormularyChecking:
 						EhrMeasureEvent measureEventDFC=new EhrMeasureEvent();
-						measureEventDFC.DateTEvent=DateTime.Now;
-						measureEventDFC.EventType=EhrMeasureEventType.DrugFormularyChecking;
+						measureEventDFC.Date=DateTime.Now;
+						measureEventDFC.Type=EhrMeasureEventType.DrugFormularyChecking;
 						measureEventDFC.MoreInfo=EhrMeasureEvents.GetLatestInfoByType(EhrMeasureEventType.DrugFormularyChecking);
-						measureEventDFC.IsNew=true;
 						FormEhrMeasureEventEdit FormDFC=new FormEhrMeasureEventEdit(measureEventDFC);
 						FormDFC.MeasureDescript="Explain how you have enabled Drug Formulary Checks";
 						FormDFC.ShowDialog();
@@ -377,10 +376,9 @@ namespace OpenDental {
 						break;
 					case EhrMeasureType.ProtectElectHealthInfo:
 						EhrMeasureEvent measureEventPEHI=new EhrMeasureEvent();
-						measureEventPEHI.DateTEvent=DateTime.Now;
-						measureEventPEHI.EventType=EhrMeasureEventType.ProtectElectHealthInfo;
+						measureEventPEHI.Date=DateTime.Now;
+						measureEventPEHI.Type=EhrMeasureEventType.ProtectElectHealthInfo;
 						measureEventPEHI.MoreInfo=EhrMeasureEvents.GetLatestInfoByType(EhrMeasureEventType.ProtectElectHealthInfo);
-						measureEventPEHI.IsNew=true;
 						FormEhrMeasureEventEdit FormPEHI=new FormEhrMeasureEventEdit(measureEventPEHI);
 						FormPEHI.MeasureDescript="Have you performed your security risk analysis?  Explain.";
 						FormPEHI.ShowDialog();
@@ -390,10 +388,9 @@ namespace OpenDental {
 						break;
 					case EhrMeasureType.ImmunizationRegistries:
 						EhrMeasureEvent measureEventIR=new EhrMeasureEvent();
-						measureEventIR.DateTEvent=DateTime.Now;
-						measureEventIR.EventType=EhrMeasureEventType.ImmunizationRegistries;
+						measureEventIR.Date=DateTime.Now;
+						measureEventIR.Type=EhrMeasureEventType.ImmunizationRegistries;
 						measureEventIR.MoreInfo=EhrMeasureEvents.GetLatestInfoByType(EhrMeasureEventType.ImmunizationRegistries);
-						measureEventIR.IsNew=true;
 						FormEhrMeasureEventEdit FormIR=new FormEhrMeasureEventEdit(measureEventIR);
 						FormIR.MeasureDescript="Check with your state agency for guidance and recommendations.  Usually excluded.  Explain.";
 						FormIR.ShowDialog();
@@ -403,10 +400,9 @@ namespace OpenDental {
 						break;
 					case EhrMeasureType.SyndromicSurveillance:
 						EhrMeasureEvent measureEventSS=new EhrMeasureEvent();
-						measureEventSS.DateTEvent=DateTime.Now;
-						measureEventSS.EventType=EhrMeasureEventType.SyndromicSurveillance;
+						measureEventSS.Date=DateTime.Now;
+						measureEventSS.Type=EhrMeasureEventType.SyndromicSurveillance;
 						measureEventSS.MoreInfo=EhrMeasureEvents.GetLatestInfoByType(EhrMeasureEventType.SyndromicSurveillance);
-						measureEventSS.IsNew=true;
 						FormEhrMeasureEventEdit FormSS=new FormEhrMeasureEventEdit(measureEventSS);
 						FormSS.MeasureDescript="Check with your state agency for guidance and recommendations.  Usually excluded.  Explain.";
 						FormSS.ShowDialog();

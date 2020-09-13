@@ -606,8 +606,8 @@ namespace OpenDental{
 			}
 			textDateTimeEntered.Text=TransCur.DateAdded.ToString();
 			textDateTimeEdited.Text=TransCur.ModifiedDate.ToString();
-			textUserEntered.Text=Userods.GetName(TransCur.UserId);
-			textUserEdited.Text=Userods.GetName(TransCur.ModifiedBy);
+			textUserEntered.Text=Users.GetUserName(TransCur.UserId);
+			textUserEdited.Text=Users.GetUserName(TransCur.ModifiedBy);
 			if(JournalList.Count>0) {
 				textDate.Text=JournalList[0].DateDisplayed.ToShortDateString();
 			}

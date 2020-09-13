@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using CodeBase;
+using Imedisoft.Data;
 using Imedisoft.Forms;
 using OpenDental.UI;
 using OpenDentBusiness;
@@ -116,7 +117,7 @@ namespace OpenDental {
 			Dictionary<long,string> dictPatNames=listFilteredPatLims.ToDictionary(x => x.PatNum,x => x.GetNameLF());
 			Dictionary<long,string> dictClinicAbbrs=_listClinics.Where(x => x.Id>0).ToDictionary(x => x.Id,x => x.Abbr);
 			Dictionary<long,string> dictPatClinicAbbrs=listFilteredPatLims.ToDictionary(x => x.PatNum,x => Clinics.GetAbbr(x.ClinicNum));
-			Dictionary<long,string> dictUserNames=Userods.GetUsers(listLogIndexesFiltered.Select(x => _listTsiTransLogsAll[x].UserNum).Distinct().ToList())
+			Dictionary<long,string> dictUserNames=Users.GetById(listLogIndexesFiltered.Select(x => _listTsiTransLogsAll[x].UserNum).Distinct().ToList())
 				.ToDictionary(x => x.Id,x => x.UserName);
 			gridMain.Rows.Clear();
 			int rowToReselect=-1;

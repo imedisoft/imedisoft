@@ -457,10 +457,10 @@ namespace OpenDental{
 						msgWebMail.Attachments.Add(EmailAttaches.CreateAttach("ccd.xsl",Encoding.UTF8.GetBytes(FormEHR.GetEhrResource("CCD"))));//Create xsl attachment, can throw exceptions
 						EmailMessages.Insert(msgWebMail);//Insert mail into DB for patient portal
 						EhrMeasureEvent newMeasureEvent=new EhrMeasureEvent();
-						newMeasureEvent.DateTEvent=DateTime.Now;
-						newMeasureEvent.EventType=EhrMeasureEventType.SummaryOfCareProvidedToDr;
-						newMeasureEvent.PatNum=PatCur.PatNum;
-						newMeasureEvent.FKey=FormRAE.RefAttachCur.RefAttachNum;//Can be 0 if user didn't pick a referral for some reason.
+						newMeasureEvent.Date=DateTime.Now;
+						newMeasureEvent.Type=EhrMeasureEventType.SummaryOfCareProvidedToDr;
+						newMeasureEvent.PatientId=PatCur.PatNum;
+						newMeasureEvent.ObjectId=FormRAE.RefAttachCur.RefAttachNum;//Can be 0 if user didn't pick a referral for some reason.
 						EhrMeasureEvents.Insert(newMeasureEvent);
 					}
 					catch {

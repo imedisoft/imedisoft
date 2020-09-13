@@ -1,42 +1,40 @@
-﻿using System;
+﻿using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using OpenDentBusiness;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using OpenDentBusiness;
-using OpenDental.UI;
-using CodeBase;
-using Imedisoft.Data;
 
-namespace OpenDental.UI {
-	//Jordan is the only one allowed to edit this file.
-	//One common use use of this control is as a filter for reports, etc.
-	//There should be no problems with this use.  The user cannot "see" clinics that they shouldn't, which is great and very useful.
-	//But we need to be very careful in the case of using this combobox as a picker for fields on an object.
-	//Since clinics with no permission would be hidden, this could inadvertently cause changes in which clinics are linked.  
-	//Also, if the "all" option really means "all", then the calling form must specifically test IsAllSelected. 
-	//"All" should not be used when the intent is ClinicNum=0
-	//If the calling form instead uses ListSelectedClinicNums when All is selected, that's very different, and will exclude clinics not showing due to no permission.
-	//This control is currently used in about 49 places.  Many of these are at the top, in the filter section of reports. 
-	//Others are simple fields on objects.
-	//Here are some complex situations to watch out for:
-	//FormEServiceSetup has 4 comboBoxes.  I understand clinicPickerEClipboard, but not the other 3, so I can't police those 3.
-	//FormPatientAddAll has 5 comboBoxes.  They don't include All or Unassigned, and they are all totally harmless, without potential for bugs.
-	//FormPharmacyEdit: Includes All and Unassigned. It's multiselect. Does not test "All".  Because it uses a synch mechanism, clinics that aren't showing aren't affected either way.
-	//FormRxEdit: Does not include All.  Includes Unassigned.  Single select. On save, if no selection, then it doesn't change the existing clinicNum.  Users can get into this window with "unrestricted search" permission, so ForceShowUnassigned true.
-	//FormPatientEdit: Users can access with "unrestricted search" permission, so ForceShowUnassigned true.
-	//FormProcCodes2: This form makes sure that the clinic pickers stay visible, even when clinics are disabled and they'd normally no longer be visible. 
-	//Here's a list of 8 forms with most of the remaining comboboxes that still need to be switched out eventually: 
-	//FormDoseSpotAssignClinicId(pickerbox & picker), FormEhrPatientExport, FormEServicesECR, FormMedLabs, 
-	//FormPayConnectSetup, FormPaySimpleSetup, FormPendingPayments, FormXWebTransactions
-	
-	///<summary>A Clinic comboBox that can scale up to thousands of Clinics.  Also handles multi select.  Fills itself with a filtered list of clinics that include only clinics that the current user has permission to access.  Automatically handles Visibility, based on PrefC.HasClinicsEnabled.  Notice that you have no access to the selected indices, which are instead handled with ClinicNums.  See bottom of this file for usage examples.</summary>
-	public partial class ComboBoxClinicPicker:UserControl {
+namespace OpenDental.UI
+{
+    //Jordan is the only one allowed to edit this file.
+    //One common use use of this control is as a filter for reports, etc.
+    //There should be no problems with this use.  The user cannot "see" clinics that they shouldn't, which is great and very useful.
+    //But we need to be very careful in the case of using this combobox as a picker for fields on an object.
+    //Since clinics with no permission would be hidden, this could inadvertently cause changes in which clinics are linked.  
+    //Also, if the "all" option really means "all", then the calling form must specifically test IsAllSelected. 
+    //"All" should not be used when the intent is ClinicNum=0
+    //If the calling form instead uses ListSelectedClinicNums when All is selected, that's very different, and will exclude clinics not showing due to no permission.
+    //This control is currently used in about 49 places.  Many of these are at the top, in the filter section of reports. 
+    //Others are simple fields on objects.
+    //Here are some complex situations to watch out for:
+    //FormEServiceSetup has 4 comboBoxes.  I understand clinicPickerEClipboard, but not the other 3, so I can't police those 3.
+    //FormPatientAddAll has 5 comboBoxes.  They don't include All or Unassigned, and they are all totally harmless, without potential for bugs.
+    //FormPharmacyEdit: Includes All and Unassigned. It's multiselect. Does not test "All".  Because it uses a synch mechanism, clinics that aren't showing aren't affected either way.
+    //FormRxEdit: Does not include All.  Includes Unassigned.  Single select. On save, if no selection, then it doesn't change the existing clinicNum.  Users can get into this window with "unrestricted search" permission, so ForceShowUnassigned true.
+    //FormPatientEdit: Users can access with "unrestricted search" permission, so ForceShowUnassigned true.
+    //FormProcCodes2: This form makes sure that the clinic pickers stay visible, even when clinics are disabled and they'd normally no longer be visible. 
+    //Here's a list of 8 forms with most of the remaining comboboxes that still need to be switched out eventually: 
+    //FormDoseSpotAssignClinicId(pickerbox & picker), FormEhrPatientExport, FormEServicesECR, FormMedLabs, 
+    //FormPayConnectSetup, FormPaySimpleSetup, FormPendingPayments, FormXWebTransactions
+
+    ///<summary>A Clinic comboBox that can scale up to thousands of Clinics.  Also handles multi select.  Fills itself with a filtered list of clinics that include only clinics that the current user has permission to access.  Automatically handles Visibility, based on PrefC.HasClinicsEnabled.  Notice that you have no access to the selected indices, which are instead handled with ClinicNums.  See bottom of this file for usage examples.</summary>
+    public partial class ComboBoxClinicPicker:UserControl {
 		#region Fields - Private Constant 
 		///<summary>Represents all clinics.  This is done with a dummy clinic added to the top of the list with a ClinicNum of -2.</summary>
 		private const long CLINIC_NUM_ALL=-2;
@@ -84,7 +82,7 @@ namespace OpenDental.UI {
 		///<summary>Property backer.</summary>
 		private bool _showLabel=true;
 		///<summary>As this combo is initialized, the user defaults to CurUser. Can be changed.</summary>
-		private Userod _userod=Security.CurrentUser;
+		private User _userod=Security.CurrentUser;
 		/// <summary>If this gets changed, then all places where this combo is used must be slightly adjusted.  This is a design weakness of this control, so just don't change it.  Wide enough to handle both "Clinic" and "Clinics".</summary>
 		private int _widthLabelArea=37;
 		#endregion Fields - Private
@@ -578,7 +576,7 @@ namespace OpenDental.UI {
 		}
 
 		///<summary>Lets you change which user is used to load the allowed clinics.</summary>
-		public void SetUser(Userod userod){
+		public void SetUser(User userod){
 			_userod=userod;
 			FillClinics();
 		}

@@ -1,4 +1,5 @@
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDental;
 using OpenDentBusiness;
 using System;
@@ -13,7 +14,7 @@ namespace Imedisoft.Forms
 		/// <summary>
 		/// Gets the user that has logged on.
 		/// </summary>
-		public Userod User { get; private set; }
+		public User User { get; private set; }
 
         /// <summary>
 		/// Will be true when the calling method needs to refresh the security cache themselves due to changes.
@@ -51,7 +52,7 @@ namespace Imedisoft.Forms
 			}
 			else
 			{
-				showCentralUsersCheckBox.Visible = Userods.HasUsersForCEMTNoCache();
+				showCentralUsersCheckBox.Visible = Users.HasUsersForCemtNoCache();
 			}
 
 			FillListBox();
@@ -71,7 +72,7 @@ namespace Imedisoft.Forms
 
 			var currentUserName = Security.CurrentUser?.UserName;
 
-			var userNames = Userods.GetUserNamesNoCache(showCentralUsersCheckBox.Checked);
+			var userNames = Users.GetUserNamesNoCache(showCentralUsersCheckBox.Checked);
 
 			foreach (string userName in userNames)
 			{
@@ -125,7 +126,7 @@ namespace Imedisoft.Forms
 
 			try
 			{
-				User = Userods.CheckUserAndPassword(userName, password);
+				User = Users.CheckUserAndPassword(userName, password);
 			}
 			catch (Exception exception)
 			{
@@ -140,9 +141,9 @@ namespace Imedisoft.Forms
 
 				if (Preferences.GetBool(PreferenceName.PasswordsMustBeStrong) && Preferences.GetBool(PreferenceName.PasswordsWeakChangeToStrong))
 				{
-					if (Userods.IsPasswordStrong(password) != "")
+					if (!Users.IsPasswordStrong(password))
 					{
-						ShowInfo("You must change your password to a strong password due to the current Security settings.");
+						ShowInfo(Translation.Common.YouMustChangePasswordToStrongPasswordDueToSecuritySettings);
 
 						if (!SecurityL.ChangePassword(true))
 						{

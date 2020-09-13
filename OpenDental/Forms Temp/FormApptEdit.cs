@@ -2040,7 +2040,7 @@ namespace OpenDental{
 				Procedure proc=procsForDay[i];
 				ProcedureCode procCode=ProcedureCodes.GetProcCode(proc.CodeNum);
 				Provider prov=Providers.GetDeepCopy().First(x => x.Id==proc.ProvNum);
-				Userod usr=Userods.GetUser(proc.UserNum);
+				User usr=Users.GetById(proc.UserNum);
 				GridRow row=new GridRow();
 				row.LowerBorderColor=System.Drawing.Color.Black;
 				for(int f=0;f<fields.Count;f++) {

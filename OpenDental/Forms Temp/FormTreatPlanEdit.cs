@@ -7,6 +7,7 @@ using OpenDentBusiness;
 using System.Collections.Generic;
 using Imedisoft.Forms;
 using Imedisoft.Data;
+using Imedisoft.Data.Models;
 
 namespace OpenDental{
 	/// <summary>
@@ -41,8 +42,8 @@ namespace OpenDental{
 		private TextBox textPresenter;
 		private Label label5;
 		private OpenDental.UI.Button butDelete;
-		private Userod _presenterCur;
-		private Userod _presenterOld;
+		private User _presenterCur;
+		private User _presenterOld;
 
 		///<summary></summary>
 		public FormTreatPlanEdit(TreatPlan planCur)
@@ -387,11 +388,11 @@ namespace OpenDental{
 				butPickPresenter.Visible=false;
 			}
 			if(PlanCur.UserNumPresenter>0) {
-				_presenterCur=Userods.GetUser(PlanCur.UserNumPresenter);
+				_presenterCur=Users.GetById(PlanCur.UserNumPresenter);
 				_presenterOld=_presenterCur.Copy();
 				textPresenter.Text=_presenterCur.UserName;
 			}
-			textUserEntry.Text=Userods.GetName(PlanCur.SecUserNumEntry);
+			textUserEntry.Text=Users.GetUserName(PlanCur.SecUserNumEntry);
 			textDateTP.Text=PlanCur.DateTP.ToShortDateString();
 			textHeading.Text=PlanCur.Heading;
 			textNote.Text=PlanCur.Note;
@@ -504,7 +505,7 @@ namespace OpenDental{
 
 		private void butPickPresenter_Click(object sender,EventArgs e) {
 			FormUserPick FormUP=new FormUserPick();
-			List<Userod> listUsers=Userods.GetWhere(x => !x.IsHidden && (x.ClinicIsRestricted == false || x.ClinicId == Clinics.ClinicId));
+			List<User> listUsers=Users.Find(x => !x.IsHidden && (x.ClinicIsRestricted == false || x.ClinicId == Clinics.ClinicId));
 			FormUP.ListUserodsFiltered=listUsers;
 			if(_presenterCur!=null) {
 				FormUP.SuggestedUserNum=_presenterCur.Id;
@@ -514,7 +515,7 @@ namespace OpenDental{
 			if(FormUP.DialogResult!=DialogResult.OK) {
 				return;
 			}
-			_presenterCur=Userods.GetUser(FormUP.SelectedUserNum);//can be null
+			_presenterCur=Users.GetById(FormUP.SelectedUserNum);//can be null
 			if(_presenterCur!=null) {
 				textPresenter.Text=_presenterCur.UserName;
 			}

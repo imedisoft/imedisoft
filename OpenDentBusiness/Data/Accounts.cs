@@ -268,7 +268,6 @@ namespace Imedisoft.Data
 		///<summary>Checks the loaded prefs and accountingAutoPays to see if user has setup auto pay linking.  Returns true if so.</summary>
 		public static bool PaymentsLinked()
 		{
-			//No need to check RemotingRole; no call to db.
 			if (AccountingAutoPays.GetCount() == 0)
 			{
 				return false;

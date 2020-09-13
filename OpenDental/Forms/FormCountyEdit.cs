@@ -1,4 +1,5 @@
-using OpenDentBusiness;
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using System;
 using System.Windows.Forms;
 

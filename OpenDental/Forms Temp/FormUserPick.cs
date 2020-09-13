@@ -1,18 +1,18 @@
+using Imedisoft.Data;
+using Imedisoft.Data.Models;
+using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using OpenDentBusiness;
 using System.Linq;
+using System.Windows.Forms;
 
-namespace OpenDental {
-	public partial class FormUserPick:ODForm {
+namespace OpenDental
+{
+    public partial class FormUserPick:ODForm {
 		///<summary>The filtered list of Users to pick from.</summary>
-		public List<Userod> ListUserodsFiltered;
-		public List<Userod> ListUserodsShowing;
+		public List<User> ListUserodsFiltered;
+		public List<User> ListUserodsShowing;
 		///<summary>If this form closes with OK, then this value will be filled.</summary>
 		public long SelectedUserNum;
 		///<summary>When IsMultiSelect, this is the list of selected users after the OK click.</summary>
@@ -61,9 +61,9 @@ namespace OpenDental {
 			FillList(ListUserodsFiltered);
 		}
 
-		private void FillList(List<Userod> listUserods) {
+		private void FillList(List<User> listUserods) {
 			if(listUserods==null) {
-				listUserods=Userods.GetAll(true);
+				listUserods=Users.GetAll(true);
 			}
 			ListUserodsShowing=listUserods.Select(x => x.Copy()).ToList();
 			listUserods.ForEach(x => listUser.Items.Add(x));
@@ -82,7 +82,7 @@ namespace OpenDental {
 			if(listUser.SelectedIndex==-1) {
 				return;
 			}
-			if(!Security.IsAuthorized(Permissions.TaskEdit,true) && Userods.GetInbox(ListUserodsShowing[listUser.SelectedIndex].Id)!=0 && !IsSelectionmode) {
+			if(!Security.IsAuthorized(Permissions.TaskEdit,true) && Users.GetInboxTaskList(ListUserodsShowing[listUser.SelectedIndex].Id)!=0 && !IsSelectionmode) {
 				MessageBox.Show("Please select a user that does not have an inbox.");
 				return;
 			}
@@ -98,7 +98,7 @@ namespace OpenDental {
 				MessageBox.Show("Please pick a user first.");
 				return;
 			}
-			if(!IsSelectionmode && !Security.IsAuthorized(Permissions.TaskEdit,true) && Userods.GetInbox(ListUserodsShowing[listUser.SelectedIndex].Id)!=0) {
+			if(!IsSelectionmode && !Security.IsAuthorized(Permissions.TaskEdit,true) && Users.GetInboxTaskList(ListUserodsShowing[listUser.SelectedIndex].Id)!=0) {
 				MessageBox.Show("Please select a user that does not have an inbox.");
 				return;
 			}

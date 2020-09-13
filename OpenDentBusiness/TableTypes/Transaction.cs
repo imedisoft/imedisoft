@@ -1,4 +1,5 @@
 using Imedisoft.Data.Annotations;
+using Imedisoft.Data.Models;
 using System;
 using System.Collections;
 
@@ -23,7 +24,7 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// The ID of the user that entered the transaction.
 		/// </summary>
-		[Column(ReadOnly = true), ForeignKey(typeof(Userod), nameof(Userod.Id))]
+		[Column(ReadOnly = true), ForeignKey(typeof(User), nameof(User.Id))]
 		public long UserId;
 
 		/// <summary>
@@ -41,7 +42,7 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// The ID of the user that last modified the transaction.
 		/// </summary>
-		[ForeignKey(typeof(Userod), nameof(Userod.Id))]
+		[ForeignKey(typeof(User), nameof(User.Id))]
 		public long ModifiedBy;
 
 		/// <summary>

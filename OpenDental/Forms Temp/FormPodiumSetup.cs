@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using OpenDentBusiness;
 using System.Linq;
+using Imedisoft.Data.Models;
 
 namespace OpenDental {
 	public partial class FormPodiumSetup:ODForm {

@@ -6,6 +6,7 @@ using OpenDental.UI;
 using Imedisoft.Data.Models;
 using Imedisoft.Data;
 using System.Linq;
+using Imedisoft.Forms;
 
 namespace OpenDental {
 	public partial class FormReconcileMedication:ODForm {
@@ -398,17 +399,15 @@ namespace OpenDental {
 				}
 			}
 			EhrMeasureEvent newMeasureEvent=new EhrMeasureEvent();
-			newMeasureEvent.DateTEvent=DateTime.Now;
-			newMeasureEvent.EventType=EhrMeasureEventType.MedicationReconcile;
-			newMeasureEvent.PatNum=_patCur.PatNum;
+			newMeasureEvent.Date=DateTime.Now;
+			newMeasureEvent.Type=EhrMeasureEventType.MedicationReconcile;
+			newMeasureEvent.PatientId=_patCur.PatNum;
 			newMeasureEvent.MoreInfo="";
 			EhrMeasureEvents.Insert(newMeasureEvent);
 			for(int inter=0;inter<_listMedicationPatReconcile.Count;inter++) {
-				if(CDSPermissions.GetForUser(Security.CurrentUser.Id).ShowCDS && CDSPermissions.GetForUser(Security.CurrentUser.Id).MedicationCDS) {
+				if(CdsPermissions.GetByUser(Security.CurrentUser.Id).ShowCDS && CdsPermissions.GetByUser(Security.CurrentUser.Id).MedicationCDS) {
 					Medication medInter=Medications.GetByRxCuiNoCache(_listMedicationPatReconcile[inter].RxCui.ToString());
-					FormCDSIntervention FormCDSI=new FormCDSIntervention();
-					FormCDSI.ListCDSI=EhrTriggers.TriggerMatch(medInter,_patCur);
-					FormCDSI.ShowIfRequired(false);
+					FormCdsIntervention.ShowIfRequired(EhrTriggers.TriggerMatch(medInter, _patCur), false);
 				}
 			}
 			DialogResult=DialogResult.OK;

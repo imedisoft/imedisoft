@@ -1,10 +1,11 @@
-using Imedisoft.Data;
 using Imedisoft.Data.Cache;
+using Imedisoft.Data.Models;
+using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace OpenDentBusiness
+namespace Imedisoft.Data
 {
     public partial class AccountingAutoPays
 	{
@@ -28,6 +29,8 @@ namespace OpenDentBusiness
 
 		public static void RefreshCache() 
 			=> cache.Refresh();
+
+		public static void Delete(AccountingAutoPay accountingAutoPay) => ExecuteDelete(accountingAutoPay);
 
 		/// <summary>
 		/// Converts the comma delimited list of AccountNums into full descriptions separated by carriage returns.
@@ -80,7 +83,7 @@ namespace OpenDentBusiness
 
 			foreach (var accountingAutoPay in accountingAutoPays)
             {
-				Insert(accountingAutoPay);
+				ExecuteInsert(accountingAutoPay);
             }
 		}
 	}

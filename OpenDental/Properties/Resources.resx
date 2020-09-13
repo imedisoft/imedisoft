@@ -688,4 +688,58 @@
   <data name="IconArrowDownGreen" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\IconArrowDownGreen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Icon32Cog" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon32Cog.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconCog" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconCog.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconCogs" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconCogs.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon32Lock" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon32Lock.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon32LockOpen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon32LockOpen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon32LockOpenGreen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon32LockOpenGreen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon32LockRed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon32LockRed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconInfo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconInfo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconInfoCircle" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconInfoCircle.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconInfoCircleSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconInfoCircleSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconInfoSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconInfoSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconLock" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconLock.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconLockOpen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconLockOpen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconLockOpenGreen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconLockOpenGreen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconLockRed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconLockRed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconArrowLeftSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconArrowLeftSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconArrowRightSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconArrowRightSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconCheckGreen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IconCheckGreen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
