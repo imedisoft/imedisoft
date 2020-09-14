@@ -534,16 +534,16 @@
     <Compile Include="Forms Reports\FormRpServiceDateView.designer.cs">
       <DependentUpon>FormRpServiceDateView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormPerioEdit.Designer.cs">
+    <Compile Include="Forms\FormPerioEdit.Designer.cs">
       <DependentUpon>FormPerioEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormUserGroupEdit.Designer.cs">
       <DependentUpon>FormUserGroupEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormUserGroupPicker.Designer.cs">
+    <Compile Include="Forms\FormUserGroupPicker.Designer.cs">
       <DependentUpon>FormUserGroupPicker.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormUpdateSetup.Designer.cs">
+    <Compile Include="Forms\FormUpdateSetup.Designer.cs">
       <DependentUpon>FormUpdateSetup.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\DentalSchools\FormSchoolClassEdit.Designer.cs">
@@ -837,7 +837,7 @@
     <Compile Include="Forms Temp\FormUserEdit.designer.cs">
       <DependentUpon>FormUserEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormUserPassword.Designer.cs">
+    <Compile Include="Forms\FormUserPassword.Designer.cs">
       <DependentUpon>FormUserPassword.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormXDRSetup.cs">
@@ -949,7 +949,7 @@
     <Compile Include="Forms Temp\FormShowFeatures.designer.cs">
       <DependentUpon>FormShowFeatures.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormUpdate.Designer.cs">
+    <Compile Include="Forms\FormUpdate.Designer.cs">
       <DependentUpon>FormUpdate.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormDashboardWidgetSetup.cs">
@@ -967,7 +967,7 @@
     <Compile Include="Forms Temp\FormInsHistSetup.designer.cs">
       <DependentUpon>FormInsHistSetup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormLogOn.Designer.cs">
+    <Compile Include="Forms\FormLogOn.Designer.cs">
       <DependentUpon>FormLogOn.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormEnterpriseSetup.cs">
@@ -1762,10 +1762,10 @@
     <Compile Include="Forms Temp\FormFHIRSetup.designer.cs">
       <DependentUpon>FormFHIRSetup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormTimePick.cs">
+    <Compile Include="Forms\FormTimePick.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormTimePick.Designer.cs">
+    <Compile Include="Forms\FormTimePick.Designer.cs">
       <DependentUpon>FormTimePick.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormPendingPayments.cs">
@@ -1861,10 +1861,10 @@
     <Compile Include="Forms Temp\FormPodiumSetup.designer.cs">
       <DependentUpon>FormPodiumSetup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormPreviousVersions.cs">
+    <Compile Include="Forms\FormPreviousVersions.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormPreviousVersions.Designer.cs">
+    <Compile Include="Forms\FormPreviousVersions.Designer.cs">
       <DependentUpon>FormPreviousVersions.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormEtrans834Preview.cs">
@@ -2269,7 +2269,7 @@
     <Compile Include="Forms Temp\FormTreatPlanDiscount.designer.cs">
       <DependentUpon>FormTreatPlanDiscount.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormUserGroupPicker.cs">
+    <Compile Include="Forms\FormUserGroupPicker.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\DentalSchools\FormDentalSchoolSetup.cs">
@@ -3157,10 +3157,10 @@
     <Compile Include="Forms Temp\FormReferenceSelect.designer.cs">
       <DependentUpon>FormReferenceSelect.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms T\FormUpdateReleaseNotes.cs">
+    <Compile Include="Forms\FormUpdateReleaseNotes.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormUpdateReleaseNotes.Designer.cs">
+    <Compile Include="Forms\FormUpdateReleaseNotes.Designer.cs">
       <DependentUpon>FormUpdateReleaseNotes.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormCreditRecurringDateChoose.cs">
@@ -4124,7 +4124,7 @@
     <Compile Include="Forms\FormLicense.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormUpdateSetup.cs">
+    <Compile Include="Forms\FormUpdateSetup.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormPopupEdit.cs">
@@ -4520,7 +4520,7 @@
     <Compile Include="Forms Temp\FormLetterViewList.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormLogOn.cs">
+    <Compile Include="Forms\FormLogOn.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormMedical.cs">
@@ -4595,7 +4595,7 @@
     <Compile Include="Forms Temp\FormPaySplitEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormPerioEdit.cs">
+    <Compile Include="Forms\FormPerioEdit.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormPlansForFamily.cs">
@@ -4805,7 +4805,7 @@
     <Compile Include="Forms Temp\FormUnsched.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormUpdate.cs">
+    <Compile Include="Forms\FormUpdate.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormUserEdit.cs">
@@ -4814,7 +4814,7 @@
     <Compile Include="Forms Temp\FormUserGroupEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms T\FormUserPassword.cs">
+    <Compile Include="Forms\FormUserPassword.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FormZipCodeEdit.cs">
@@ -5716,7 +5716,7 @@
       <DependentUpon>FormInCaseOfEmergency.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormTimePick.resx">
+    <EmbeddedResource Include="Forms\FormTimePick.resx">
       <DependentUpon>FormTimePick.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormPendingPayments.resx">
@@ -5773,7 +5773,7 @@
     <EmbeddedResource Include="Forms Temp\FormPodiumSetup.resx">
       <DependentUpon>FormPodiumSetup.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormPreviousVersions.resx">
+    <EmbeddedResource Include="Forms\FormPreviousVersions.resx">
       <DependentUpon>FormPreviousVersions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormEtrans834Preview.resx">
@@ -5987,7 +5987,7 @@
     <EmbeddedResource Include="Forms Temp\FormTreatPlanDiscount.resx">
       <DependentUpon>FormTreatPlanDiscount.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormUserGroupPicker.resx">
+    <EmbeddedResource Include="Forms\FormUserGroupPicker.resx">
       <DependentUpon>FormUserGroupPicker.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -6469,7 +6469,7 @@
       <DependentUpon>FormReferenceSelect.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormUpdateReleaseNotes.resx">
+    <EmbeddedResource Include="Forms\FormUpdateReleaseNotes.resx">
       <DependentUpon>FormUpdateReleaseNotes.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -6887,7 +6887,7 @@
       <DependentUpon>FormLicense.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormUpdateSetup.resx">
+    <EmbeddedResource Include="Forms\FormUpdateSetup.resx">
       <DependentUpon>FormUpdateSetup.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7403,7 +7403,7 @@
       <DependentUpon>FormLetterViewList.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormLogOn.resx">
+    <EmbeddedResource Include="Forms\FormLogOn.resx">
       <DependentUpon>FormLogOn.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7503,7 +7503,7 @@
       <DependentUpon>FormPaySplitEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormPerioEdit.resx">
+    <EmbeddedResource Include="Forms\FormPerioEdit.resx">
       <DependentUpon>FormPerioEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7779,7 +7779,7 @@
       <DependentUpon>FormUnsched.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormUpdate.resx">
+    <EmbeddedResource Include="Forms\FormUpdate.resx">
       <DependentUpon>FormUpdate.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7791,7 +7791,7 @@
       <DependentUpon>FormUserGroupEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms T\FormUserPassword.resx">
+    <EmbeddedResource Include="Forms\FormUserPassword.resx">
       <DependentUpon>FormUserPassword.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7860,16 +7860,8 @@
     <EmbeddedResource Include="SheetFramework\SheetComboBox.resx">
       <DependentUpon>SheetComboBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Tables Old Grids\ContrPanelTable.resx">
-      <DependentUpon>ContrPanelTable.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Tables Old Grids\ContrTable.resx">
       <DependentUpon>ContrTable.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tables Old Grids\TableApptProcs.resx">
-      <DependentUpon>TableApptProcs.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Tables Old Grids\TableAutoItem.resx">
@@ -7880,104 +7872,12 @@
       <DependentUpon>TableCarriers.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Tables Old Grids\TableClaimProc.resx">
-      <DependentUpon>TableClaimProc.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tables Old Grids\TableClearinghouses.resx">
-      <DependentUpon>TableClearinghouses.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tables Old Grids\TableCodeList.resx">
-      <DependentUpon>TableCodeList.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tables Old Grids\TableCommLog.resx">
-      <DependentUpon>TableCommLog.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tables Old Grids\TableContacts.resx">
-      <DependentUpon>TableContacts.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tables Old Grids\TableDefs.resx">
-      <DependentUpon>TableDefs.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tables Old Grids\TableLan.resx">
-      <DependentUpon>TableLan.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tables Old Grids\TableMedications.resx">
-      <DependentUpon>TableMedications.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tables Old Grids\TablePatientList.resx">
-      <DependentUpon>TablePatientList.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tables Old Grids\TablePercent.resx">
-      <DependentUpon>TablePercent.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tables Old Grids\TablePermissions.resx">
-      <DependentUpon>TablePermissions.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tables Old Grids\TableProcAdj.resx">
-      <DependentUpon>TableProcAdj.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tables Old Grids\TableProcPay.resx">
-      <DependentUpon>TableProcPay.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tables Old Grids\TableProcSelect.resx">
-      <DependentUpon>TableProcSelect.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tables Old Grids\TableProg.resx">
-      <DependentUpon>TableProg.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Tables Old Grids\TableProvIdent.resx">
       <DependentUpon>TableProvIdent.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Tables Old Grids\TableQueue.resx">
-      <DependentUpon>TableQueue.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tables Old Grids\TableRecall.resx">
-      <DependentUpon>TableRecall.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tables Old Grids\TableRefSelect.resx">
-      <DependentUpon>TableRefSelect.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tables Old Grids\TableTeeth.resx">
-      <DependentUpon>TableTeeth.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Tables Old Grids\TableTimeBar.resx">
       <DependentUpon>TableTimeBar.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tables Old Grids\TableTP.resx">
-      <DependentUpon>TableTP.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tables Old Grids\TableTreat.resx">
-      <DependentUpon>TableTreat.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tables Old Grids\TableUserPermissions.resx">
-      <DependentUpon>TableUserPermissions.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tables Old Grids\TableZips.resx">
-      <DependentUpon>TableZips.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Appt J\ContrApptPanel.resx">
@@ -8193,13 +8093,7 @@
       <DependentUpon>SheetCheckBox.cs</DependentUpon>
     </Compile>
     <Compile Include="SheetFramework\SheetPrinting.cs" />
-    <Compile Include="Tables Old Grids\ContrPanelTable.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="Tables Old Grids\ContrTable.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tables Old Grids\TableApptProcs.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Tables Old Grids\TableAutoItem.cs">
@@ -8208,79 +8102,10 @@
     <Compile Include="Tables Old Grids\TableCarriers.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Tables Old Grids\TableClaimProc.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tables Old Grids\TableClearinghouses.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tables Old Grids\TableCodeList.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tables Old Grids\TableCommLog.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tables Old Grids\TableContacts.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tables Old Grids\TableDefs.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tables Old Grids\TableLan.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tables Old Grids\TableMedications.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tables Old Grids\TablePatientList.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tables Old Grids\TablePercent.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tables Old Grids\TablePermissions.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tables Old Grids\TableProcAdj.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tables Old Grids\TableProcPay.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tables Old Grids\TableProcSelect.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tables Old Grids\TableProg.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="Tables Old Grids\TableProvIdent.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Tables Old Grids\TableQueue.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tables Old Grids\TableRecall.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tables Old Grids\TableRefSelect.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tables Old Grids\TableTeeth.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="Tables Old Grids\TableTimeBar.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tables Old Grids\TableTP.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tables Old Grids\TableTreat.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tables Old Grids\TableUserPermissions.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tables Old Grids\TableZips.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UI\ComboBoxMulti.cs">
@@ -9334,7 +9159,9 @@
       <Name>SparksToothChart</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Forms T\" />
+  </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>

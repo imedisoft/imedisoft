@@ -1,51 +1,45 @@
-using System;
-using System.Collections;
-using System.ComponentModel;
 using System.Drawing;
-using System.Windows.Forms;
 
 namespace OpenDental
 {
-	///<summary></summary>
-	public class TableProvIdent : OpenDental.ContrTable
+    public class TableProvIdent : ContrTable
 	{
 		private System.ComponentModel.IContainer components = null;
 
-		///<summary></summary>
-		public TableProvIdent(){
-			InitializeComponent();//This call is required by the Windows Form Designer.
-			MaxRows=20;
-			MaxCols=3;
-			ShowScroll=true;
-			FieldsArePresent=true;
-			HeadingIsPresent=false;
+		public TableProvIdent()
+		{
+			InitializeComponent();
+
+			MaxRows = 20;
+			MaxCols = 3;
+			ShowScroll = true;
+			FieldsArePresent = true;
+			HeadingIsPresent = false;
 			InstantClassesPar();
-			SetRowHeight(0,19,14);
-			//Heading="Provider Identifiers";
-			Fields[0]="Payor ID";
-			Fields[1]="Type";
-			Fields[2]="ID Number";
-			ColWidth[0]=90;
-			ColWidth[1]=110;
-			ColWidth[2]=100;
-			//ColAlign[1]=HorizontalAlignment.Center;
-			DefaultGridColor=Color.LightGray;
+			SetRowHeight(0, 19, 14);
+			Fields[0] = "Payor ID";
+			Fields[1] = "Type";
+			Fields[2] = "ID Number";
+			ColWidth[0] = 90;
+			ColWidth[1] = 110;
+			ColWidth[2] = 100;
+			DefaultGridColor = Color.LightGray;
 			LayoutTables();
 		}
 
 		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
-		protected override void Dispose( bool disposing )
+		protected override void Dispose(bool disposing)
 		{
-			if( disposing )
+			if (disposing)
 			{
-				if (components != null) 
+				if (components != null)
 				{
 					components.Dispose();
 				}
 			}
-			base.Dispose( disposing );
+			base.Dispose(disposing);
 		}
 
 		#region Designer generated code
@@ -64,12 +58,9 @@ namespace OpenDental
 		}
 		#endregion
 
-		private void TableProvIdent_Load(object sender, System.EventArgs e) {
+		private void TableProvIdent_Load(object sender, System.EventArgs e)
+		{
 			LayoutTables();
 		}
-
-
-
 	}
 }
-
