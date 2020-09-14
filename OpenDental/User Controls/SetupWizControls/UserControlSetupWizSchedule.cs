@@ -6,6 +6,7 @@ using OpenDentBusiness;
 using System.Linq;
 using Imedisoft.Data.Models;
 using Imedisoft.Data;
+using Imedisoft.Forms;
 
 namespace OpenDental.User_Controls.SetupWizard {
 	public partial class UserControlSetupWizSchedule:SetupWizControl {
@@ -109,15 +110,13 @@ namespace OpenDental.User_Controls.SetupWizard {
 
 		private void AddSched(ODGrid grid,List<Schedule> addList) {
 			Schedule sched = new Schedule();
-			FormTimePick FormTP = new FormTimePick(false);
-			FormTP.SelectedDTime=new DateTime(1,1,1,8,0,0);
+			FormTimePick FormTP = new FormTimePick(false, new DateTime(1, 1, 1, 8, 0, 0));
 			MsgBox.Show("Enter a Start Time.");
 			FormTP.ShowDialog();
 			if(FormTP.DialogResult == DialogResult.OK) {
 				sched.StartTime = FormTP.SelectedDTime.TimeOfDay;
 				MsgBox.Show("Enter an End Time.");
-				FormTP = new FormTimePick(false);
-				FormTP.SelectedDTime=new DateTime(1,1,1,17,0,0);
+				FormTP = new FormTimePick(false, new DateTime(1, 1, 1, 17, 0, 0));
 				FormTP.ShowDialog();
 				if(FormTP.DialogResult == DialogResult.OK) {
 					sched.StopTime = FormTP.SelectedDTime.TimeOfDay;

@@ -32,14 +32,8 @@ namespace OpenDentBusiness
 			service.Url="https://10.10.1.184:49997/alpha/opendentalwebservicehq/webservicemainhq.asmx";
 			return service;
 #endif
-			if (string.IsNullOrEmpty(webServiceHqUrl))
-			{ //Default to the production URL.				
-				service.Url = Preferences.GetString(PreferenceName.WebServiceHQServerURL);
-			}
-			else
-			{ //URL was provided so use that.
-				service.Url = webServiceHqUrl;
-			}
+			service.Url = webServiceHqUrl;
+			
 #if DEBUG
 			//Change arguments for debug only.
 			//service.Url="http://localhost/OpenDentalWebServiceHQ/WebServiceMainHQ.asmx";//localhost

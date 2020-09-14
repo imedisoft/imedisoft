@@ -7,13 +7,12 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using MySql.Data.MySqlClient;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
-namespace OpenDentBusiness
+namespace Imedisoft.Data
 {
 	public partial class UpdateHistories
 	{
@@ -30,36 +29,45 @@ namespace OpenDentBusiness
 		/// <summary>
 		/// Selects a single UpdateHistory object from the database using the specified SQL command.
 		/// </summary>
+		/// <param name="command">The SELECT command to execute.</param>
+		/// <param name="parameters">The (optional) command parameters.</param>
 		public static UpdateHistory SelectOne(string command, params MySqlParameter[] parameters)
 			=> Database.SelectOne(command, FromReader, parameters);
 
 		/// <summary>
 		/// Selects the <see cref="UpdateHistory"/> object with the specified key from the database.
 		/// </summary>
-		public static UpdateHistory SelectOne(Int64 id)
+		/// <param name="id">The primary key of the <see cref="UpdateHistory"/> to select.</param>
+		public static UpdateHistory SelectOne(long id)
 			=> SelectOne("SELECT * FROM `update_histories` WHERE `id` = " + id);
 
 		/// <summary>
 		/// Selects multiple <see cref="UpdateHistory"/> objects from the database using the specified SQL command.
 		/// </summary>
+		/// <param name="command">The SELECT command to execute.</param>
+		/// <param name="parameters">The (optional) command parameters.</param>
 		public static IEnumerable<UpdateHistory> SelectMany(string command, params MySqlParameter[] parameters)
 			=> Database.SelectMany(command, FromReader, parameters);
 
 		/// <summary>
 		/// Inserts the specified <see cref="UpdateHistory"/> into the database.
 		/// </summary>
-		public static long Insert(UpdateHistory updateHistory)
+		/// <param name="updateHistory">The <see cref="UpdateHistory"/> to insert into the database.</param>
+		private static long ExecuteInsert(UpdateHistory updateHistory)
 			=> updateHistory.Id = Database.ExecuteInsert(
 				"INSERT INTO `update_histories` " +
 				"(`installed_on`, `version`) " +
 				"VALUES (" +
 					"@installed_on, @version" +
-				")");
+				")",
+					new MySqlParameter("installed_on", updateHistory.InstalledOn),
+					new MySqlParameter("version", updateHistory.Version ?? ""));
 
 		/// <summary>
 		/// Updates the specified <see cref="UpdateHistory"/> in the database.
 		/// </summary>
-		public static void Update(UpdateHistory updateHistory)
+		/// <param name="updateHistory">The <see cref="UpdateHistory"/> to update.</param>
+		private static void ExecuteUpdate(UpdateHistory updateHistory)
 			=> Database.ExecuteNonQuery(
 				"UPDATE `update_histories` SET " +
 					"`installed_on` = @installed_on, " +
@@ -70,47 +78,17 @@ namespace OpenDentBusiness
 					new MySqlParameter("version", updateHistory.Version ?? ""));
 
 		/// <summary>
-		/// Updates the specified <see cref="UpdateHistory"/> in the database.
-		/// </summary>
-		public static bool Update(UpdateHistory update_historiesNew, UpdateHistory update_historiesOld)
-		{
-			var updates = new List<string>();
-			var parameters = new List<MySqlParameter>();
-
-			if (update_historiesNew.InstalledOn != update_historiesOld.InstalledOn)
-			{
-				updates.Add("`installed_on` = @installed_on");
-				parameters.Add(new MySqlParameter("installed_on", update_historiesNew.InstalledOn));
-			}
-
-			if (update_historiesNew.Version != update_historiesOld.Version)
-			{
-				updates.Add("`version` = @version");
-				parameters.Add(new MySqlParameter("version", update_historiesNew.Version ?? ""));
-			}
-
-			if (updates.Count == 0) return false;
-
-			parameters.Add(new MySqlParameter("id", update_historiesNew.Id));
-
-			Database.ExecuteNonQuery("UPDATE `update_histories` " +
-				"SET " + string.Join(", ", updates) + " " +
-				"WHERE `id` = @id",
-					parameters.ToArray());
-
-			return true;
-		}
-
-		/// <summary>
 		/// Deletes a single <see cref="UpdateHistory"/> object from the database.
 		/// </summary>
-		public static void Delete(Int64 id)
+		/// <param name="id">The primary key of the <see cref="UpdateHistory"/> to delete.</param>
+		private static void ExecuteDelete(long id)
 			 => Database.ExecuteNonQuery("DELETE FROM `update_histories` WHERE `id` = " + id);
 
 		/// <summary>
 		/// Deletes the specified <see cref="UpdateHistory"/> object from the database.
 		/// </summary>
-		public static void Delete(UpdateHistory updateHistory)
-			=> Delete(updateHistory.Id);
+		/// <param name="updateHistory">The <see cref="UpdateHistory"/> to delete.</param>
+		private static void ExecuteDelete(UpdateHistory updateHistory)
+			=> ExecuteDelete(updateHistory.Id);
 	}
 }

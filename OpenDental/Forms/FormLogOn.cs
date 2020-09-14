@@ -106,7 +106,7 @@ namespace Imedisoft.Forms
 				userName = userTextBox.Text.Trim();
 				if (userName.Length == 0)
                 {
-					ShowError("You have to enter your username.");
+					ShowError(Translation.Common.YouHaveToEnterYourUsername);
 
 					return;
                 }
@@ -116,7 +116,7 @@ namespace Imedisoft.Forms
 				userName = usersListBox.SelectedItem?.ToString();
 				if (string.IsNullOrEmpty(userName))
                 {
-					ShowError("You have to select a user.");
+					ShowError(Translation.Common.PleaseSelectUser);
 
 					return;
                 }
@@ -154,7 +154,8 @@ namespace Imedisoft.Forms
 					}
 				}
 				
-				SecurityLogs.Write(Permissions.UserLogOnOff, "User '" + Security.CurrentUser.UserName + "' has logged on.");
+				SecurityLogs.Write(Permissions.UserLogOnOff, 
+					string.Format(Translation.SecurityLog.UserHasLoggedOn, Security.CurrentUser.UserName));
 			}
 
 			DialogResult = DialogResult.OK;

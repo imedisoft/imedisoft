@@ -51,7 +51,7 @@ namespace Imedisoft.Forms
 		{
 			if (UserGroup == null)
 			{
-				ShowError("Please select a group.");
+				ShowError(Translation.Common.PleaseSelectUserGroup);
 
 				return;
 			}

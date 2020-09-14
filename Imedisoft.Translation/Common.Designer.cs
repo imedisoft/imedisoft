@@ -295,6 +295,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There is a update available. Would you like to update now?.
+        /// </summary>
+        public static string ConfirmInstallUpdate {
+            get {
+                return ResourceManager.GetString("ConfirmInstallUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Controlled.
         /// </summary>
         public static string Controlled {
@@ -327,6 +336,15 @@ namespace Imedisoft.Translation {
         public static string CountyNameAlreadyExists {
             get {
                 return ResourceManager.GetString("CountyNameAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current password incorrect..
+        /// </summary>
+        public static string CurrentPasswordIncorrect {
+            get {
+                return ResourceManager.GetString("CurrentPasswordIncorrect", resourceCulture);
             }
         }
         
@@ -399,6 +417,15 @@ namespace Imedisoft.Translation {
         public static string End {
             get {
                 return ResourceManager.GetString("End", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error checking for updates..
+        /// </summary>
+        public static string ErrorCheckingForUpdates {
+            get {
+                return ResourceManager.GetString("ErrorCheckingForUpdates", resourceCulture);
             }
         }
         
@@ -619,6 +646,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New Password.
+        /// </summary>
+        public static string NewPassword {
+            get {
+                return ResourceManager.GetString("NewPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to None.
         /// </summary>
         public static string None {
@@ -702,6 +738,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The password cannot be empty..
+        /// </summary>
+        public static string PasswordCannotBeEmpty {
+            get {
+                return ResourceManager.GetString("PasswordCannotBeEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password may not be blank when the strong password feature is turned on..
         /// </summary>
         public static string PasswordMayNotBeBlank {
@@ -752,6 +797,15 @@ namespace Imedisoft.Translation {
         public static string PasswordMustContainAtLeastOneUpperCaseLetter {
             get {
                 return ResourceManager.GetString("PasswordMustContainAtLeastOneUpperCaseLetter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The passwords do not match..
+        /// </summary>
+        public static string PasswordsDoNotMatch {
+            get {
+                return ResourceManager.GetString("PasswordsDoNotMatch", resourceCulture);
             }
         }
         
@@ -963,6 +1017,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please select a group..
+        /// </summary>
+        public static string PleaseSelectUserGroup {
+            get {
+                return ResourceManager.GetString("PleaseSelectUserGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Problem.
         /// </summary>
         public static string Problem {
@@ -986,6 +1049,15 @@ namespace Imedisoft.Translation {
         public static string ProviderIdAbbr {
             get {
                 return ResourceManager.GetString("ProviderIdAbbr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Re-Enter Password.
+        /// </summary>
+        public static string ReEnterPassword {
+            get {
+                return ResourceManager.GetString("ReEnterPassword", resourceCulture);
             }
         }
         
@@ -1152,6 +1224,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There is no update available..
+        /// </summary>
+        public static string ThereIsNoUpdateAvailable {
+            get {
+                return ResourceManager.GetString("ThereIsNoUpdateAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Title.
         /// </summary>
         public static string Title {
@@ -1207,11 +1288,38 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Using Version: {0}.
+        /// </summary>
+        public static string UsingVersion {
+            get {
+                return ResourceManager.GetString("UsingVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Using Version: {0} - Since: {1}.
+        /// </summary>
+        public static string UsingVersionSince {
+            get {
+                return ResourceManager.GetString("UsingVersionSince", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Value.
         /// </summary>
         public static string Value {
             get {
                 return ResourceManager.GetString("Value", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version.
+        /// </summary>
+        public static string Version {
+            get {
+                return ResourceManager.GetString("Version", resourceCulture);
             }
         }
         
@@ -1239,6 +1347,15 @@ namespace Imedisoft.Translation {
         public static string YouHaveSelectedProblemWithUnofficialSnomedCode {
             get {
                 return ResourceManager.GetString("YouHaveSelectedProblemWithUnofficialSnomedCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have to enter your username..
+        /// </summary>
+        public static string YouHaveToEnterYourUsername {
+            get {
+                return ResourceManager.GetString("YouHaveToEnterYourUsername", resourceCulture);
             }
         }
         

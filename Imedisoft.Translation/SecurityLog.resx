@@ -117,10 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AccessedWindowUpdateSetup" xml:space="preserve">
+    <value>Update Setup window accesssed.</value>
+  </data>
   <data name="AgingComplete" xml:space="preserve">
     <value>Aging Complete - Aging Form</value>
   </data>
   <data name="AgingStart" xml:space="preserve">
     <value>Starting Aging - Aging Form</value>
+  </data>
+  <data name="UserHasLoggedOn" xml:space="preserve">
+    <value>User '{0}' has logged on.</value>
   </data>
 </root>

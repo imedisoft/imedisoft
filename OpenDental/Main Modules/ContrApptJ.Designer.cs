@@ -45,7 +45,6 @@
             this.butBack = new OpenDental.UI.Button();
             this.butFwd = new OpenDental.UI.Button();
             this.radioDay = new System.Windows.Forms.RadioButton();
-            this.butGraph = new OpenDental.UI.Button();
             this.butMonth = new OpenDental.UI.Button();
             this.butLab = new OpenDental.UI.Button();
             this.butSearch = new OpenDental.UI.Button();
@@ -139,7 +138,6 @@
             this.panelCalendar.Controls.Add(this.radioWeek);
             this.panelCalendar.Controls.Add(this.panelArrows);
             this.panelCalendar.Controls.Add(this.radioDay);
-            this.panelCalendar.Controls.Add(this.butGraph);
             this.panelCalendar.Controls.Add(this.butMonth);
             this.panelCalendar.Controls.Add(this.butLab);
             this.panelCalendar.Controls.Add(this.butSearch);
@@ -315,18 +313,6 @@
             this.radioDay.TabIndex = 91;
             this.radioDay.Text = "Day";
             this.radioDay.Click += new System.EventHandler(this.radioDay_Click);
-            // 
-            // butGraph
-            // 
-            this.butGraph.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butGraph.Location = new System.Drawing.Point(3, 309);
-            this.butGraph.Name = "butGraph";
-            this.butGraph.Size = new System.Drawing.Size(42, 24);
-            this.butGraph.TabIndex = 78;
-            this.butGraph.TabStop = false;
-            this.butGraph.Text = "Emp";
-            this.butGraph.Visible = false;
-            this.butGraph.Click += new System.EventHandler(this.ButGraph_Click);
             // 
             // butMonth
             // 
@@ -1085,7 +1071,6 @@
 		private UI.Button butBack;
 		private UI.Button butFwd;
 		private System.Windows.Forms.RadioButton radioDay;
-		private UI.Button butGraph;
 		private UI.Button butMonth;
 		private UI.Button butLab;
 		private UI.Button butSearch;

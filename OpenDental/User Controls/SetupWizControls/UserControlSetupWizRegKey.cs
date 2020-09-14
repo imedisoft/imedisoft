@@ -13,6 +13,7 @@ using OpenDental;
 using OpenDentBusiness;
 using System.Text.RegularExpressions;
 using Imedisoft.Data;
+using Imedisoft.Forms;
 
 namespace OpenDental.User_Controls.SetupWizard
 {

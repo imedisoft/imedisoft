@@ -1189,6 +1189,16 @@ namespace Imedisoft.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap IconHistory {
+            get {
+                object obj = ResourceManager.GetObject("IconHistory", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap IconInbox {
             get {
                 object obj = ResourceManager.GetObject("IconInbox", resourceCulture);

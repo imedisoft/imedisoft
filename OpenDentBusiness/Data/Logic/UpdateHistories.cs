@@ -1,33 +1,22 @@
+using Imedisoft.Data.Models;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 
-namespace OpenDentBusiness
+namespace Imedisoft.Data
 {
     public partial class UpdateHistories
 	{
-		/// <summary>
-		/// All updatehistory entries ordered by DateTimeUpdated.
-		/// </summary>
 		public static IEnumerable<UpdateHistory> GetAll() 
 			=> SelectMany("SELECT * FROM `update_histories` ORDER BY `installed_on`");
 
-		/// <summary>
-		/// Get the most recently inserted updatehistory entry. Ordered by DateTimeUpdated.
-		/// </summary>
 		public static UpdateHistory GetLastUpdateHistory() 
 			=> SelectOne("SELECT * FROM `update_histories` ORDER BY `installed_on` DESC LIMIT 1");
 
-		/// <summary>
-		/// Returns the latest version information.
-		/// </summary>
 		public static UpdateHistory GetForVersion(string version) 
 			=> SelectOne("SELECT * FROM `update_histories` WHERE `version` = @version",
 				new MySqlParameter("version", version ?? ""));
 
-		/// <summary>
-		/// Returns the earliest datetime that a version was reached. If that version has not been reached, returns the MinDate.
-		/// </summary>
 		public static DateTime GetDateForVersion(Version version)
 		{
 			foreach (var update in GetAll())
@@ -40,5 +29,8 @@ namespace OpenDentBusiness
 
 			return DateTime.MinValue;
 		}
+
+		public static long Insert(UpdateHistory updateHistory) 
+			=> ExecuteInsert(updateHistory);
 	}
 }

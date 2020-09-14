@@ -143,13 +143,6 @@ namespace OpenDental {
 			FillOptionalPrefBool(checkDBMSkipCheckTable,PreferenceName.DatabaseMaintenanceSkipCheckTable);
 			validDateAgingServiceTimeDue.Text=PrefC.GetDate(PreferenceName.AgingServiceTimeDue).ToShortTimeString();
 			checkEnableClinics.Checked=PrefC.HasClinicsEnabled;
-			string updateStreamline=GetHiddenPrefString(PreferenceName.UpdateStreamLinePassword);
-			if(updateStreamline!=null) {
-				checkUpdateStreamlinePassword.Checked=(updateStreamline=="abracadabra");
-			}
-			else {
-				checkUpdateStreamlinePassword.Visible=false;
-			}
 			string updateLargeTables=GetHiddenPrefString(PreferenceName.UpdateAlterLargeTablesDirectly);
 			if(updateLargeTables!=null) {
 				checkUpdateAlterLargeTablesDirectly.Checked=updateLargeTables=="1";

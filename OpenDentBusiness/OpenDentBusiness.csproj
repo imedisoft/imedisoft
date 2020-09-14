@@ -765,7 +765,7 @@
     <Compile Include="Data Interface\PatRestrictions.cs" />
     <Compile Include="Data Interface\SigMessages.cs" />
     <Compile Include="Data Interface\TreatPlanAttaches.cs" />
-    <Compile Include="Data\UpdateHistories.cs" />
+    <Compile Include="Data\Logic\UpdateHistories.cs" />
     <Compile Include="Data\UserPreference.cs" />
     <Compile Include="Data Interface\UserWebs.cs" />
     <Compile Include="Data Interface\XWebResponses.cs" />
@@ -1239,7 +1239,6 @@
     <Compile Include="TableTypes\HistAppointment.cs" />
     <Compile Include="TableTypes\SubstitutionLink.cs" />
     <Compile Include="TableTypes\TsiTransLog.cs" />
-    <Compile Include="Data\Models\UpdateHistory.cs" />
     <Compile Include="TableTypes\AppointmentType.cs" />
     <Compile Include="TableTypes\ClaimSnapshot.cs" />
     <Compile Include="TableTypes\DashboardCell.cs" />

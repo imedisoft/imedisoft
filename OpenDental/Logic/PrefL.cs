@@ -1,4 +1,5 @@
 ﻿using Imedisoft.Data;
+using Imedisoft.Data.Models;
 using OpenDentBusiness;
 using System;
 using System.Collections.Generic;
@@ -130,10 +131,8 @@ namespace OpenDental
 		/// destinationPath includes filename (Setup.exe). 
 		/// destinationPath2 will create a second copy at the specified path/filename, or it will be skipped if null or empty.
 		/// </summary>
-		public static void DownloadInstallPatchFromURI(string downloadUri, string destinationPath, bool runSetupAfterDownload, bool showShutdownWindow, string destinationPath2)
+		public static void DownloadInstallPatchFromURI(string downloadUri, string destinationPath, bool runSetupAfterDownload, bool showShutdownWindow)
 		{
-			string[] databases = Preferences.GetString(PreferenceName.UpdateMultipleDatabases).Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-
 			bool isShutdownWindowNeeded = showShutdownWindow;
 			while (isShutdownWindowNeeded)
 			{
@@ -220,29 +219,6 @@ namespace OpenDental
 				return;
 			}
 
-			// copy to second destination directory
-
-			if (destinationPath2 != null && destinationPath2 != "")
-			{
-				if (File.Exists(destinationPath2))
-				{
-					try
-					{
-						File.Delete(destinationPath2);
-					}
-					catch (Exception ex)
-					{
-						FriendlyException.Show("Error deleting file:\r\n" + ex.Message, ex);
-
-						Preferences.Set(PreferenceName.UpdateInProgressOnComputerName, "");
-
-						return;
-					}
-				}
-
-				File.Copy(destinationPath, destinationPath2);
-			}
-
 			if (!runSetupAfterDownload)
 			{
 				return;
@@ -252,15 +228,6 @@ namespace OpenDental
 				"Download succeeded. " +
 				"Setup program will now begin. " +
 				"When done, restart the program on this computer, then on the other computers.";
-
-			if (databases.Length > 0)
-			{
-				msg = 
-					"Download succeeded. " +
-					"Setup file probably copied to other AtoZ folders as well. " +
-					"Setup program will now begin. " +
-					"When done, restart the program for each database on this computer, then on the other computers.";
-			}
 
 			if (CodeBase.ODMessageBox.Show(msg, "", MessageBoxButtons.OKCancel) != DialogResult.OK)
 			{
@@ -435,6 +402,7 @@ namespace OpenDental
 				UpdateHistories.Insert(updateHistory);
 				Cache.Refresh(InvalidType.Prefs);
 			}
+
 			if (storedVersion > currentVersion)
 			{
 				//if(PrefC.AtoZfolderUsed==DataStorageType.LocalAtoZ) {

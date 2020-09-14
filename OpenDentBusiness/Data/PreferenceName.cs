@@ -2161,35 +2161,17 @@ namespace Imedisoft.Data
 		/// </summary>
 		public const string UpdateAlterLargeTablesDirectly = "UpdateAlterLargeTablesDirectly";
 
-		public const string UpdateCode = "UpdateCode";
+
+
+
 		public const string UpdateInProgressOnComputerName = "UpdateInProgressOnComputerName";
-
-		/// <summary>
-		/// Described in the Update Setup window and in the manual. 
-		/// Can contain multiple db names separated by commas. 
-		/// Should not include current db name.
-		/// </summary>
-		public const string UpdateMultipleDatabases = "UpdateMultipleDatabases";
-
 		public const string UpdateServerAddress = "UpdateServerAddress";
-		public const string UpdateShowMsiButtons = "UpdateShowMsiButtons";
 
-		/// <summary>
-		/// The next update date and time, set in FormUpdateSetup.
-		/// When this is set in the future, the main form's title bar will count down to the set time.
-		/// </summary>
-		public const string UpdateDateTime = "UpdateDateTime";
-
-		/// <summary>
-		/// Use GetStringNoCache() to get the value of this preference.
-		/// </summary>
-		public const string UpdateStreamLinePassword = "UpdateStreamLinePassword";
-
-		public const string UpdateWebProxyAddress = "UpdateWebProxyAddress";
-		public const string UpdateWebProxyPassword = "UpdateWebProxyPassword";
-		public const string UpdateWebProxyUserName = "UpdateWebProxyUserName";
-		public const string UpdateWebsitePath = "UpdateWebsitePath";
-		public const string UpdateWindowShowsClassicView = "UpdateWindowShowsClassicView";
+		[Obsolete] public const string UpdateWebProxyAddress = "UpdateWebProxyAddress";
+		[Obsolete] public const string UpdateWebProxyPassword = "UpdateWebProxyPassword";
+		[Obsolete] public const string UpdateWebProxyUserName = "UpdateWebProxyUserName";
+		[Obsolete] public const string UpdateWebsitePath = "UpdateWebsitePath";
+		[Obsolete] public const string UpdateWindowShowsClassicView = "UpdateWindowShowsClassicView";
 
 		/// <summary>
 		/// Hidden preference, no UI to enable this feature, but is present in all databases. 
@@ -2362,8 +2344,12 @@ namespace Imedisoft.Data
 		public const string WebSchedVerifyRecallText = "WebSchedVerifyRecallText";
 		///<summary>Enum. The communication type for Web Sched verifications to recalls. 0: None, 1: Text, 2: E-mail, 3: Text and E-mail</summary>
 		public const string WebSchedVerifyRecallType = "WebSchedVerifyRecallType";
-		public const string WebServiceHQServerURL = "WebServiceHQServerURL";
-		public const string WebServiceServerName = "WebServiceServerName";
+
+
+
+		[Obsolete] public const string WebServiceServerName = "WebServiceServerName";
+
+
 		///<summary>If enabled, allows users to right click on ODTextboxes or ODGrids to populate the context menu with any detected wiki links.</summary>
 		public const string WikiDetectLinks = "WikiDetectLinks";
 		///<summary>If enabled, allows users to create new wiki pages when following links from textboxes and grids. (Disable to prevent proliferation of misspelled wiki pages.)</summary>

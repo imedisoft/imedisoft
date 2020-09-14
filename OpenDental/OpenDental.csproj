@@ -534,14 +534,17 @@
     <Compile Include="Forms Reports\FormRpServiceDateView.designer.cs">
       <DependentUpon>FormRpServiceDateView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormPerioEdit.Designer.cs">
+    <Compile Include="Forms T\FormPerioEdit.Designer.cs">
       <DependentUpon>FormPerioEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormUserGroupEdit.Designer.cs">
       <DependentUpon>FormUserGroupEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormUserGroupPicker.Designer.cs">
+    <Compile Include="Forms T\FormUserGroupPicker.Designer.cs">
       <DependentUpon>FormUserGroupPicker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms T\FormUpdateSetup.Designer.cs">
+      <DependentUpon>FormUpdateSetup.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\DentalSchools\FormSchoolClassEdit.Designer.cs">
       <DependentUpon>FormSchoolClassEdit.cs</DependentUpon>
@@ -834,7 +837,7 @@
     <Compile Include="Forms Temp\FormUserEdit.designer.cs">
       <DependentUpon>FormUserEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormUserPassword.Designer.cs">
+    <Compile Include="Forms T\FormUserPassword.Designer.cs">
       <DependentUpon>FormUserPassword.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormXDRSetup.cs">
@@ -946,7 +949,7 @@
     <Compile Include="Forms Temp\FormShowFeatures.designer.cs">
       <DependentUpon>FormShowFeatures.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormUpdate.designer.cs">
+    <Compile Include="Forms T\FormUpdate.Designer.cs">
       <DependentUpon>FormUpdate.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormDashboardWidgetSetup.cs">
@@ -964,7 +967,7 @@
     <Compile Include="Forms Temp\FormInsHistSetup.designer.cs">
       <DependentUpon>FormInsHistSetup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormLogOn.designer.cs">
+    <Compile Include="Forms T\FormLogOn.Designer.cs">
       <DependentUpon>FormLogOn.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormEnterpriseSetup.cs">
@@ -1759,10 +1762,10 @@
     <Compile Include="Forms Temp\FormFHIRSetup.designer.cs">
       <DependentUpon>FormFHIRSetup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormTimePick.cs">
+    <Compile Include="Forms T\FormTimePick.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormTimePick.designer.cs">
+    <Compile Include="Forms T\FormTimePick.Designer.cs">
       <DependentUpon>FormTimePick.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormPendingPayments.cs">
@@ -1858,10 +1861,10 @@
     <Compile Include="Forms Temp\FormPodiumSetup.designer.cs">
       <DependentUpon>FormPodiumSetup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormPreviousVersions.cs">
+    <Compile Include="Forms T\FormPreviousVersions.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormPreviousVersions.designer.cs">
+    <Compile Include="Forms T\FormPreviousVersions.Designer.cs">
       <DependentUpon>FormPreviousVersions.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormEtrans834Preview.cs">
@@ -2266,7 +2269,7 @@
     <Compile Include="Forms Temp\FormTreatPlanDiscount.designer.cs">
       <DependentUpon>FormTreatPlanDiscount.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormUserGroupPicker.cs">
+    <Compile Include="Forms T\FormUserGroupPicker.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\DentalSchools\FormDentalSchoolSetup.cs">
@@ -2764,12 +2767,6 @@
     <Compile Include="Forms Temp\FormPayorTypes.Designer.cs">
       <DependentUpon>FormPayorTypes.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormSnomedEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormSnomedEdit.designer.cs">
-      <DependentUpon>FormSnomedEdit.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms Temp\FormSnomeds.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -3160,11 +3157,11 @@
     <Compile Include="Forms Temp\FormReferenceSelect.designer.cs">
       <DependentUpon>FormReferenceSelect.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms Temp\FormUpdateInstallMsg.cs">
+    <Compile Include="Forms T\FormUpdateReleaseNotes.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormUpdateInstallMsg.designer.cs">
-      <DependentUpon>FormUpdateInstallMsg.cs</DependentUpon>
+    <Compile Include="Forms T\FormUpdateReleaseNotes.Designer.cs">
+      <DependentUpon>FormUpdateReleaseNotes.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormCreditRecurringDateChoose.cs">
       <SubType>Form</SubType>
@@ -3627,12 +3624,6 @@
     </Compile>
     <Compile Include="Forms Temp\FormDatabaseMaintTemp.designer.cs">
       <DependentUpon>FormDatabaseMaintTemp.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms Temp\FormGraphEmployeeTime.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormGraphEmployeeTime.designer.cs">
-      <DependentUpon>FormGraphEmployeeTime.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms Temp\FormGuardianEdit.cs">
       <SubType>Form</SubType>
@@ -4133,7 +4124,7 @@
     <Compile Include="Forms\FormLicense.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormUpdateSetup.cs">
+    <Compile Include="Forms T\FormUpdateSetup.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormPopupEdit.cs">
@@ -4508,12 +4499,6 @@
     <Compile Include="Forms Temp\FormInsSpanEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormInstructorEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms Temp\FormInstructors.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Forms Temp\FormJournal.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -4535,7 +4520,7 @@
     <Compile Include="Forms Temp\FormLetterViewList.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormLogOn.cs">
+    <Compile Include="Forms T\FormLogOn.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormMedical.cs">
@@ -4610,7 +4595,7 @@
     <Compile Include="Forms Temp\FormPaySplitEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormPerioEdit.cs">
+    <Compile Include="Forms T\FormPerioEdit.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormPlansForFamily.cs">
@@ -4820,7 +4805,7 @@
     <Compile Include="Forms Temp\FormUnsched.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormUpdate.cs">
+    <Compile Include="Forms T\FormUpdate.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms Temp\FormUserEdit.cs">
@@ -4829,7 +4814,7 @@
     <Compile Include="Forms Temp\FormUserGroupEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms Temp\FormUserPassword.cs">
+    <Compile Include="Forms T\FormUserPassword.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FormZipCodeEdit.cs">
@@ -5731,7 +5716,7 @@
       <DependentUpon>FormInCaseOfEmergency.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormTimePick.resx">
+    <EmbeddedResource Include="Forms T\FormTimePick.resx">
       <DependentUpon>FormTimePick.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormPendingPayments.resx">
@@ -5788,7 +5773,7 @@
     <EmbeddedResource Include="Forms Temp\FormPodiumSetup.resx">
       <DependentUpon>FormPodiumSetup.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormPreviousVersions.resx">
+    <EmbeddedResource Include="Forms T\FormPreviousVersions.resx">
       <DependentUpon>FormPreviousVersions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormEtrans834Preview.resx">
@@ -6002,7 +5987,7 @@
     <EmbeddedResource Include="Forms Temp\FormTreatPlanDiscount.resx">
       <DependentUpon>FormTreatPlanDiscount.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormUserGroupPicker.resx">
+    <EmbeddedResource Include="Forms T\FormUserGroupPicker.resx">
       <DependentUpon>FormUserGroupPicker.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -6266,10 +6251,6 @@
     <EmbeddedResource Include="Forms Temp\FormPayorTypes.resx">
       <DependentUpon>FormPayorTypes.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormSnomedEdit.resx">
-      <DependentUpon>FormSnomedEdit.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormSnomeds.resx">
       <DependentUpon>FormSnomeds.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -6488,8 +6469,8 @@
       <DependentUpon>FormReferenceSelect.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormUpdateInstallMsg.resx">
-      <DependentUpon>FormUpdateInstallMsg.cs</DependentUpon>
+    <EmbeddedResource Include="Forms T\FormUpdateReleaseNotes.resx">
+      <DependentUpon>FormUpdateReleaseNotes.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormCreditRecurringDateChoose.resx">
@@ -6906,7 +6887,7 @@
       <DependentUpon>FormLicense.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormUpdateSetup.resx">
+    <EmbeddedResource Include="Forms T\FormUpdateSetup.resx">
       <DependentUpon>FormUpdateSetup.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7394,14 +7375,6 @@
       <DependentUpon>FormInsSpanEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormInstructorEdit.resx">
-      <DependentUpon>FormInstructorEdit.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormInstructors.resx">
-      <DependentUpon>FormInstructors.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormJournal.resx">
       <DependentUpon>FormJournal.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -7430,7 +7403,7 @@
       <DependentUpon>FormLetterViewList.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormLogOn.resx">
+    <EmbeddedResource Include="Forms T\FormLogOn.resx">
       <DependentUpon>FormLogOn.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7530,7 +7503,7 @@
       <DependentUpon>FormPaySplitEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormPerioEdit.resx">
+    <EmbeddedResource Include="Forms T\FormPerioEdit.resx">
       <DependentUpon>FormPerioEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7806,7 +7779,7 @@
       <DependentUpon>FormUnsched.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormUpdate.resx">
+    <EmbeddedResource Include="Forms T\FormUpdate.resx">
       <DependentUpon>FormUpdate.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -7818,7 +7791,7 @@
       <DependentUpon>FormUserGroupEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormUserPassword.resx">
+    <EmbeddedResource Include="Forms T\FormUserPassword.resx">
       <DependentUpon>FormUserPassword.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -8581,6 +8554,7 @@
     <None Include="Web References\NewCrop\Update1.wsdl" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\IconHistory.png" />
     <None Include="Resources\IconThumbtack.png" />
     <None Include="Resources\IconCheckGreen.png" />
     <None Include="Resources\IconArrowRightSmall.png" />
@@ -8869,10 +8843,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormDatabaseMaintTemp.resx">
       <DependentUpon>FormDatabaseMaintTemp.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms Temp\FormGraphEmployeeTime.resx">
-      <DependentUpon>FormGraphEmployeeTime.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms Temp\FormGuardianEdit.resx">
@@ -9364,9 +9334,7 @@
       <Name>SparksToothChart</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Forms T\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>

@@ -2787,13 +2787,6 @@ namespace OpenDental
 			formApptSearchAdvanced.ShowDialog();
 		}
 
-		private void ButGraph_Click(object sender, EventArgs e)
-		{
-			//only visible on computers at OD corporate.
-			FormGraphEmployeeTime form = new FormGraphEmployeeTime(contrApptPanel.DateSelected);
-			form.ShowDialog();
-		}
-
 		private void ButLab_Click(object sender, EventArgs e)
 		{
 			FormLabCases formLabCases = new FormLabCases();

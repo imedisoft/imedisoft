@@ -1,8 +1,7 @@
 using Imedisoft.Data.Annotations;
 using System;
-using System.Collections;
 
-namespace OpenDentBusiness
+namespace Imedisoft.Data.Models
 {
     /// <summary>
     ///		<para>
@@ -17,7 +16,7 @@ namespace OpenDentBusiness
     ///		</para>
     /// </summary>
     [Table("update_histories")]
-	public class UpdateHistory : TableBase
+	public class UpdateHistory
 	{
 		[PrimaryKey]
 		public long Id;

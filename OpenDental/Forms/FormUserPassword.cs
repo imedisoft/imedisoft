@@ -36,18 +36,16 @@ namespace Imedisoft.Forms
 		{
 			userTextBox.Text = userName;
 
-			if (isCreate) Text = "Create Password";
-
 			if (inSecurityWindow)
 			{
 				passwordLabel.Visible = false;
 				passwordTextBox.Visible = false;
 			}
 
-			if (isPasswordReset)
+			if (isCreate || isPasswordReset)
 			{
-				passwordLabel.Text = "New Password";
-				newPasswordLabel.Text = "Re-Enter Password";
+				passwordLabel.Text = newPasswordLabel.Text;
+				newPasswordLabel.Text = Translation.Common.ReEnterPassword;
 				cancelButton.Visible = false;
 				acceptButton.Location = cancelButton.Location;
 
@@ -66,21 +64,21 @@ namespace Imedisoft.Forms
 			{
 				if (string.IsNullOrEmpty(newPasswordTextBox.Text))
                 {
-					ShowError("The password cannot be empty.");
+					ShowError(Translation.Common.PasswordCannotBeEmpty);
 
 					return;
                 }
 
 				if (newPasswordTextBox.Text != passwordTextBox.Text)
 				{
-					ShowError("The passwords do not match.");
+					ShowError(Translation.Common.PasswordsDoNotMatch);
 
 					return;
 				}
 			}
 			else if (!inSecurityWindow && !Password.Verify(passwordTextBox.Text, Security.CurrentUser.PasswordHash))
 			{
-				ShowError("Current password incorrect.");
+				ShowError(Translation.Common.CurrentPasswordIncorrect);
 
 				return;
 			}

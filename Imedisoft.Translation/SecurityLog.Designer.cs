@@ -61,6 +61,15 @@ namespace Imedisoft.Translation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Update Setup window accesssed..
+        /// </summary>
+        public static string AccessedWindowUpdateSetup {
+            get {
+                return ResourceManager.GetString("AccessedWindowUpdateSetup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Aging Complete - Aging Form.
         /// </summary>
         public static string AgingComplete {
@@ -75,6 +84,15 @@ namespace Imedisoft.Translation {
         public static string AgingStart {
             get {
                 return ResourceManager.GetString("AgingStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User &apos;{0}&apos; has logged on..
+        /// </summary>
+        public static string UserHasLoggedOn {
+            get {
+                return ResourceManager.GetString("UserHasLoggedOn", resourceCulture);
             }
         }
     }

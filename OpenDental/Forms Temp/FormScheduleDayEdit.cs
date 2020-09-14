@@ -1000,11 +1000,6 @@ namespace OpenDental{
 			butOK_Click(sender,e);
 		}
 
-		private void butViewGraph_Click(object sender,EventArgs e) {
-			FormGraphEmployeeTime formGraphEmployeeTime=new FormGraphEmployeeTime(_dateSched);
-			formGraphEmployeeTime.ShowDialog();
-		}
-
 		private void butOK_Click(object sender,EventArgs e) {
 			try {
 				Schedules.SetForDay(_listScheds,_listSchedsOld);
